@@ -69,8 +69,6 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       line = '''
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
-  # revert this patch to enable font fallback in PUA, QTBUG-110502
-  patch -R -p1 -i ../no-pua-fallback.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
