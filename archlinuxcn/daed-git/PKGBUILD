@@ -14,6 +14,7 @@ provides=('daed')
 conflicts=('daed')
 source=("git+https://github.com/daeuniverse/${_pkgname}.git")
 sha256sums=('SKIP')
+install="${_pkgname}.install"
 options=(!debug)
 
 pkgver() {
