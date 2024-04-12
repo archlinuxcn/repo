@@ -13,6 +13,7 @@ provides=('daed')
 conflicts=('daed')
 source=("${pkgname}-${pkgver}.zip::https://github.com/daeuniverse/${pkgname}/releases/download/v${pkgver}/${pkgname}-full-src.zip")
 sha512sums=('dd38b5b3404f26cd4a58489b3172666eef5f2582c831203e1b30b9d8e5fbee98215aa2dcb2abc2da02f1c51c1a9c8d0ab4ec04fa7b3b1b734362e54fd9b316c6')
+install="${pkgname}.install"
 options=(!debug)
 
 build() {
