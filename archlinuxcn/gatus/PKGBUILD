@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=gatus
-pkgver=5.8.0
+pkgver=5.9.0
 pkgrel=1
 pkgdesc="Automated service health dashboard"
 arch=("x86_64")
@@ -15,7 +15,7 @@ source=('gatus.service'
   "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 b2sums=('4ec6761e07afe08137d28ba38c208e6a6717c4943cea62fb732ce83cab7fa9455ac39ab2faab83a8f6554fbdc8443d99c4d400291d90dbe778e86a2c022e3f67'
         'a1818c1b4ff769285ea1eb3fcede9da445f0abbed0583d1817107b2b2798924559fac0b5e7a658a910c15a6bbf33f2fab4019e43e158eebf11b668a3af5f0a82'
-        '4080599695067edf5871d8b4eb65d9f823bcfb2e855ba5035ad9b9a3c1cf2930bde4f9d5e1804451c67994c013d7988e5b3500c5b975a50b27fa2ac3a3aad1f3')
+        'f950fda31b0fc50d01a5bbaaeb002ba43f88f7491133801668e50e0e8c9d91a4b4193e730a576409620bc241b154e137dbd75bd7871892a2469fa74022087fac')
 
 build() {
   cd "${pkgname}-${pkgver}"
