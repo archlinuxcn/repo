@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="Yet another command-line translator (Chinese <=> English)"
 arch=(i686 x86_64)
 url="https://github.com/wfxr/${_pkgname}"
-license=("MIT" "APACHE")
+license=("MIT OR Apache-2.0")
 makedepends=("git" "rust" "cargo" "alsa-lib" "curl")
 depends=("alsa-lib" "curl")
 conflicts=("${_pkgname}" "${_pkgname}-bin")
