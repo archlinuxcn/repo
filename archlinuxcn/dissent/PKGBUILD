@@ -10,6 +10,8 @@ url="https://github.com/diamondburned/${pkgname}"
 license=('GPL-3.0-or-later')
 depends=('gtk4>=4.10.3' 'gobject-introspection' 'libadwaita>=1.3.2')
 makedepends=('git' 'go>=1.20.3')
+provides=("gtkcord4")
+replaces=("gtkcord4")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
 sha256sums=('7c5e10a6111cd8912c052337c56cb04cbb92b237453d560c85409f1c8f8cc01b')
 
