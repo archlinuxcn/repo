@@ -1,0 +1,359 @@
+From f9d54c9857773a95f6021eb4772173ec3aafe69a Mon Sep 17 00:00:00 2001
+From: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+Date: Tue, 21 Feb 2023 10:58:46 +0530
+Subject: [PATCH] fix python packaging using latest methods
+
+- Change python packaging method following instructions from
+  https://packaging.python.org/en/latest/tutorials/packaging-projects
+- Remove scripts as they can be created automatically from setup.cfg
+- move the sources to src
+- setup.py: remove captialization in package names, conflicts with other
+  packaging methods like debian's
+- modify licence to gpl3+
+- Add setup.cfg and pyproject.toml
+- modify MANIFEST.in to include assets
+- WoeUSB-ng.desktop: add version and change icon; fixes #11
+---
+ .gitignore                                    |   2 +-
+ MANIFEST.in                                   |   5 +-
+ miscellaneous/WoeUSB-ng.desktop               |   7 +-
+ pyproject.toml                                |   3 +
+ setup.cfg                                     |  42 +++++++++++
+ setup.py                                      |  70 ++----------------
+ {WoeUSB => src/WoeUSB}/__init__.py            |   0
+ {WoeUSB => src/WoeUSB}/core.py                |   0
+ {WoeUSB => src/WoeUSB}/data/c501-logo.png     | Bin
+ {WoeUSB => src/WoeUSB}/data/icon.ico          | Bin
+ {WoeUSB => src/WoeUSB}/data/woeusb-logo.png   | Bin
+ {WoeUSB => src/WoeUSB}/gui.py                 |   0
+ {WoeUSB => src/WoeUSB}/list_devices.py        |   0
+ .../WoeUSB}/locale/de/LC_MESSAGES/woeusb.mo   | Bin
+ .../WoeUSB}/locale/de/LC_MESSAGES/woeusb.po   |   0
+ .../WoeUSB}/locale/fr/LC_MESSAGES/woeusb.mo   | Bin
+ .../WoeUSB}/locale/fr/LC_MESSAGES/woeusb.po   |   0
+ .../WoeUSB}/locale/pl/LC_MESSAGES/woeusb.mo   | Bin
+ .../WoeUSB}/locale/pl/LC_MESSAGES/woeusb.po   |   0
+ .../locale/pt_BR/LC_MESSAGES/woeusb.mo        | Bin
+ .../locale/pt_BR/LC_MESSAGES/woeusb.po        |   0
+ .../WoeUSB}/locale/sv/LC_MESSAGES/woeusb.mo   | Bin
+ .../WoeUSB}/locale/sv/LC_MESSAGES/woeusb.po   |   0
+ .../WoeUSB}/locale/tr/LC_MESSAGES/woeusb.mo   | Bin
+ .../WoeUSB}/locale/tr/LC_MESSAGES/woeusb.po   |   0
+ {WoeUSB => src/WoeUSB}/locale/woeusb.pot      |   0
+ .../WoeUSB}/locale/zh/LC_MESSAGES/woeusb.mo   | Bin
+ .../WoeUSB}/locale/zh/LC_MESSAGES/woeusb.po   |   0
+ {WoeUSB => src/WoeUSB}/miscellaneous.py       |   0
+ {WoeUSB => src/WoeUSB}/utils.py               |   0
+ {WoeUSB => src/WoeUSB}/workaround.py          |   0
+ 31 files changed, 58 insertions(+), 71 deletions(-)
+ create mode 100644 pyproject.toml
+ create mode 100644 setup.cfg
+ rename {WoeUSB => src/WoeUSB}/__init__.py (100%)
+ rename {WoeUSB => src/WoeUSB}/core.py (100%)
+ rename {WoeUSB => src/WoeUSB}/data/c501-logo.png (100%)
+ rename {WoeUSB => src/WoeUSB}/data/icon.ico (100%)
+ rename {WoeUSB => src/WoeUSB}/data/woeusb-logo.png (100%)
+ rename {WoeUSB => src/WoeUSB}/gui.py (100%)
+ rename {WoeUSB => src/WoeUSB}/list_devices.py (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/de/LC_MESSAGES/woeusb.mo (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/de/LC_MESSAGES/woeusb.po (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/fr/LC_MESSAGES/woeusb.mo (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/fr/LC_MESSAGES/woeusb.po (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/pl/LC_MESSAGES/woeusb.mo (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/pl/LC_MESSAGES/woeusb.po (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/pt_BR/LC_MESSAGES/woeusb.mo (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/pt_BR/LC_MESSAGES/woeusb.po (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/sv/LC_MESSAGES/woeusb.mo (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/sv/LC_MESSAGES/woeusb.po (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/tr/LC_MESSAGES/woeusb.mo (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/tr/LC_MESSAGES/woeusb.po (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/woeusb.pot (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/zh/LC_MESSAGES/woeusb.mo (100%)
+ rename {WoeUSB => src/WoeUSB}/locale/zh/LC_MESSAGES/woeusb.po (100%)
+ rename {WoeUSB => src/WoeUSB}/miscellaneous.py (100%)
+ rename {WoeUSB => src/WoeUSB}/utils.py (100%)
+ rename {WoeUSB => src/WoeUSB}/workaround.py (100%)
+
+diff --git a/.gitignore b/.gitignore
+index 8931d14..1bebae9 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -4,7 +4,7 @@
+ \.idea/
+ doc/_build
+ venv/
+-WoeUSB_ng\.egg-info/
++*.egg-info*
+ dist/
+ 
+ build/
+diff --git a/MANIFEST.in b/MANIFEST.in
+index 477457b..ff0d4c0 100644
+--- a/MANIFEST.in
++++ b/MANIFEST.in
+@@ -1,5 +1,4 @@
+-graft WoeUSB/data
+-graft WoeUSB/locale
++graft src/WoeUSB/data*
++graft src/WoeUSB/locale*
+ graft miscellaneous
+ include README.md
+-include WoeUSB/woeusbgui
+diff --git a/miscellaneous/WoeUSB-ng.desktop b/miscellaneous/WoeUSB-ng.desktop
+index 171698f..6ba3c73 100644
+--- a/miscellaneous/WoeUSB-ng.desktop
++++ b/miscellaneous/WoeUSB-ng.desktop
+@@ -1,8 +1,11 @@
+-#!/usr/bin/env xdg-open
+ [Desktop Entry]
+ Name=WoeUSB-ng
++Comment=Create your own usb stick windows installer from an iso image or a real DVD.
+ Exec=woeusbgui
+-Icon=/usr/share/icons/WoeUSB-ng/icon.ico
++Icon=woeusb-logo
+ Terminal=false
+ Type=Application
+ Categories=Utility;
++Encoding=UTF-8
++Categories=Application;Utility;
++StartupNotify=true
+diff --git a/pyproject.toml b/pyproject.toml
+new file mode 100644
+index 0000000..b0f0765
+--- /dev/null
++++ b/pyproject.toml
+@@ -0,0 +1,3 @@
++[build-system]
++requires = ["setuptools>=42"]
++build-backend = "setuptools.build_meta"
+diff --git a/setup.cfg b/setup.cfg
+new file mode 100644
+index 0000000..a50e120
+--- /dev/null
++++ b/setup.cfg
+@@ -0,0 +1,42 @@
++[metadata]
++name = woeusb-ng
++version = 0.2.12
++author = Jakub Szymański
++author_email = jakubmateusz@poczta.onet.pl
++description = WoeUSB-ng is a simple tool that enable you to create your own usb stick windows installer from an iso image or a real DVD. This is a rewrite of original WoeUSB.
++long_description = file: README.md
++long_description_content_type = text/markdown
++url = https://github.com/WoeUSB/WoeUSB-ng
++project_urls =
++    Bug Tracker = https://github.com/WoeUSB/WoeUSB-ng/issues
++classifiers =
++    Development Status :: 5 - Production/Stable
++	Environment :: X11 Applications :: GTK
++	Intended Audience :: End Users/Desktop
++	License :: OSI Approved
++	 :: GNU General Public License v3 or later (GPLv3+)
++	Operating System :: POSIX
++	Programming Language :: Python
++	Programming Language :: Python :: 3
++	Programming Language :: Python :: 3.5
++	Programming Language :: Python :: 3.6
++	Programming Language :: Python :: 3.7
++	Programming Language :: Python :: 3.8
++	Programming Language :: Python :: 3 :: Only
++	Topic :: System :: Operating System
++
++[options]
++package_dir =
++    = src
++packages = find:
++python_requires = >=3.6
++include_package_data = True
++
++[options.packages.find]
++where = src
++
++[options.entry_points]
++gui_scripts =
++	woeusbgui = WoeUSB.gui:run
++console_scripts = 
++	woeusb = WoeUSB.core:run
+diff --git a/setup.py b/setup.py
+index abbf1ca..e55054f 100644
+--- a/setup.py
++++ b/setup.py
+@@ -1,73 +1,13 @@
+-import os
+-import shutil
+-import stat
+-
+ from setuptools import setup
+-from setuptools.command.develop import develop
+-from setuptools.command.install import install
+-
+-this_directory = os.path.abspath(os.path.dirname(__file__))
+-
+-with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+-    long_description = f.read()
+-
+-
+-def post_install():
+-    path = '/usr/local/bin/woeusbgui'  # I give up, I have no clue how to get bin path that is used by pip
+-    shutil.copy2(this_directory + '/WoeUSB/woeusbgui', path)  # I'll just hard code it until someone finds better way
+-
+-    shutil.copy2(this_directory + '/miscellaneous/com.github.woeusb.woeusb-ng.policy', "/usr/share/polkit-1/actions")
+-
+-    try:
+-        os.makedirs('/usr/share/icons/WoeUSB-ng')
+-    except FileExistsError:
+-        pass
+-
+-    shutil.copy2(this_directory + '/WoeUSB/data/icon.ico', '/usr/share/icons/WoeUSB-ng/icon.ico')
+-    shutil.copy2(this_directory + '/miscellaneous/WoeUSB-ng.desktop', "/usr/share/applications/WoeUSB-ng.desktop")
+-
+-    os.chmod('/usr/share/applications/WoeUSB-ng.desktop',
+-             stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH | stat.S_IEXEC)  # 755
+-
+-
+-class PostDevelopCommand(develop):
+-    """Post-installation for development mode."""
+-
+-    def run(self):
+-        # TODO
+-        develop.run(self)
+-
+-
+-class PostInstallCommand(install):
+-    """Post-installation for installation mode."""
+-
+-    def run(self):
+-        post_install()
+-        install.run(self)
+-
+ 
+ setup(
+-    name='WoeUSB-ng',
+-    version='0.2.12',
+-    description='WoeUSB-ng is a simple tool that enable you to create your own usb stick windows installer from an iso image or a real DVD. This is a rewrite of original WoeUSB. ',
+-    long_description=long_description,
+-    long_description_content_type='text/markdown',
+-    url='https://github.com/WoeUSB/WoeUSB-ng',
+-    author='Jakub Szymański',
+-    author_email='jakubmateusz@poczta.onet.pl',
+-    license='GPL-3',
+-    zip_safe=False,
+-    packages=['WoeUSB'],
+-    include_package_data=True,
+-    scripts=[
+-        'WoeUSB/woeusb',
++    data_files=[
++        ("share/applications", ["miscellaneous/WoeUSB-ng.desktop"]),
++        ("share/polkit-1/actions", ["miscellaneous/com.github.woeusb.woeusb-ng.policy"]),
++        ("share/icons/hicolor/scalable/apps", ["src/WoeUSB/data/woeusb-logo.png"]),
+     ],
+     install_requires=[
+         'termcolor',
+         'wxPython',
+-    ],
+-    cmdclass={
+-        'develop': PostDevelopCommand,
+-        'install': PostInstallCommand
+-    }
++    ]
+ )
+diff --git a/WoeUSB/__init__.py b/src/WoeUSB/__init__.py
+similarity index 100%
+rename from WoeUSB/__init__.py
+rename to src/WoeUSB/__init__.py
+diff --git a/WoeUSB/core.py b/src/WoeUSB/core.py
+similarity index 100%
+rename from WoeUSB/core.py
+rename to src/WoeUSB/core.py
+diff --git a/WoeUSB/data/c501-logo.png b/src/WoeUSB/data/c501-logo.png
+similarity index 100%
+rename from WoeUSB/data/c501-logo.png
+rename to src/WoeUSB/data/c501-logo.png
+diff --git a/WoeUSB/data/icon.ico b/src/WoeUSB/data/icon.ico
+similarity index 100%
+rename from WoeUSB/data/icon.ico
+rename to src/WoeUSB/data/icon.ico
+diff --git a/WoeUSB/data/woeusb-logo.png b/src/WoeUSB/data/woeusb-logo.png
+similarity index 100%
+rename from WoeUSB/data/woeusb-logo.png
+rename to src/WoeUSB/data/woeusb-logo.png
+diff --git a/WoeUSB/gui.py b/src/WoeUSB/gui.py
+similarity index 100%
+rename from WoeUSB/gui.py
+rename to src/WoeUSB/gui.py
+diff --git a/WoeUSB/list_devices.py b/src/WoeUSB/list_devices.py
+similarity index 100%
+rename from WoeUSB/list_devices.py
+rename to src/WoeUSB/list_devices.py
+diff --git a/WoeUSB/locale/de/LC_MESSAGES/woeusb.mo b/src/WoeUSB/locale/de/LC_MESSAGES/woeusb.mo
+similarity index 100%
+rename from WoeUSB/locale/de/LC_MESSAGES/woeusb.mo
+rename to src/WoeUSB/locale/de/LC_MESSAGES/woeusb.mo
+diff --git a/WoeUSB/locale/de/LC_MESSAGES/woeusb.po b/src/WoeUSB/locale/de/LC_MESSAGES/woeusb.po
+similarity index 100%
+rename from WoeUSB/locale/de/LC_MESSAGES/woeusb.po
+rename to src/WoeUSB/locale/de/LC_MESSAGES/woeusb.po
+diff --git a/WoeUSB/locale/fr/LC_MESSAGES/woeusb.mo b/src/WoeUSB/locale/fr/LC_MESSAGES/woeusb.mo
+similarity index 100%
+rename from WoeUSB/locale/fr/LC_MESSAGES/woeusb.mo
+rename to src/WoeUSB/locale/fr/LC_MESSAGES/woeusb.mo
+diff --git a/WoeUSB/locale/fr/LC_MESSAGES/woeusb.po b/src/WoeUSB/locale/fr/LC_MESSAGES/woeusb.po
+similarity index 100%
+rename from WoeUSB/locale/fr/LC_MESSAGES/woeusb.po
+rename to src/WoeUSB/locale/fr/LC_MESSAGES/woeusb.po
+diff --git a/WoeUSB/locale/pl/LC_MESSAGES/woeusb.mo b/src/WoeUSB/locale/pl/LC_MESSAGES/woeusb.mo
+similarity index 100%
+rename from WoeUSB/locale/pl/LC_MESSAGES/woeusb.mo
+rename to src/WoeUSB/locale/pl/LC_MESSAGES/woeusb.mo
+diff --git a/WoeUSB/locale/pl/LC_MESSAGES/woeusb.po b/src/WoeUSB/locale/pl/LC_MESSAGES/woeusb.po
+similarity index 100%
+rename from WoeUSB/locale/pl/LC_MESSAGES/woeusb.po
+rename to src/WoeUSB/locale/pl/LC_MESSAGES/woeusb.po
+diff --git a/WoeUSB/locale/pt_BR/LC_MESSAGES/woeusb.mo b/src/WoeUSB/locale/pt_BR/LC_MESSAGES/woeusb.mo
+similarity index 100%
+rename from WoeUSB/locale/pt_BR/LC_MESSAGES/woeusb.mo
+rename to src/WoeUSB/locale/pt_BR/LC_MESSAGES/woeusb.mo
+diff --git a/WoeUSB/locale/pt_BR/LC_MESSAGES/woeusb.po b/src/WoeUSB/locale/pt_BR/LC_MESSAGES/woeusb.po
+similarity index 100%
+rename from WoeUSB/locale/pt_BR/LC_MESSAGES/woeusb.po
+rename to src/WoeUSB/locale/pt_BR/LC_MESSAGES/woeusb.po
+diff --git a/WoeUSB/locale/sv/LC_MESSAGES/woeusb.mo b/src/WoeUSB/locale/sv/LC_MESSAGES/woeusb.mo
+similarity index 100%
+rename from WoeUSB/locale/sv/LC_MESSAGES/woeusb.mo
+rename to src/WoeUSB/locale/sv/LC_MESSAGES/woeusb.mo
+diff --git a/WoeUSB/locale/sv/LC_MESSAGES/woeusb.po b/src/WoeUSB/locale/sv/LC_MESSAGES/woeusb.po
+similarity index 100%
+rename from WoeUSB/locale/sv/LC_MESSAGES/woeusb.po
+rename to src/WoeUSB/locale/sv/LC_MESSAGES/woeusb.po
+diff --git a/WoeUSB/locale/tr/LC_MESSAGES/woeusb.mo b/src/WoeUSB/locale/tr/LC_MESSAGES/woeusb.mo
+similarity index 100%
+rename from WoeUSB/locale/tr/LC_MESSAGES/woeusb.mo
+rename to src/WoeUSB/locale/tr/LC_MESSAGES/woeusb.mo
+diff --git a/WoeUSB/locale/tr/LC_MESSAGES/woeusb.po b/src/WoeUSB/locale/tr/LC_MESSAGES/woeusb.po
+similarity index 100%
+rename from WoeUSB/locale/tr/LC_MESSAGES/woeusb.po
+rename to src/WoeUSB/locale/tr/LC_MESSAGES/woeusb.po
+diff --git a/WoeUSB/locale/woeusb.pot b/src/WoeUSB/locale/woeusb.pot
+similarity index 100%
+rename from WoeUSB/locale/woeusb.pot
+rename to src/WoeUSB/locale/woeusb.pot
+diff --git a/WoeUSB/locale/zh/LC_MESSAGES/woeusb.mo b/src/WoeUSB/locale/zh/LC_MESSAGES/woeusb.mo
+similarity index 100%
+rename from WoeUSB/locale/zh/LC_MESSAGES/woeusb.mo
+rename to src/WoeUSB/locale/zh/LC_MESSAGES/woeusb.mo
+diff --git a/WoeUSB/locale/zh/LC_MESSAGES/woeusb.po b/src/WoeUSB/locale/zh/LC_MESSAGES/woeusb.po
+similarity index 100%
+rename from WoeUSB/locale/zh/LC_MESSAGES/woeusb.po
+rename to src/WoeUSB/locale/zh/LC_MESSAGES/woeusb.po
+diff --git a/WoeUSB/miscellaneous.py b/src/WoeUSB/miscellaneous.py
+similarity index 100%
+rename from WoeUSB/miscellaneous.py
+rename to src/WoeUSB/miscellaneous.py
+diff --git a/WoeUSB/utils.py b/src/WoeUSB/utils.py
+similarity index 100%
+rename from WoeUSB/utils.py
+rename to src/WoeUSB/utils.py
+diff --git a/WoeUSB/workaround.py b/src/WoeUSB/workaround.py
+similarity index 100%
+rename from WoeUSB/workaround.py
+rename to src/WoeUSB/workaround.py
