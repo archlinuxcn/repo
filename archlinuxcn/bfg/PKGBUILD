@@ -5,7 +5,7 @@ pkgrel=1
 pkgdesc='Removes large or troublesome blobs like git-filter-branch does, but faster.'
 arch=('any')
 url='http://rtyley.github.io/bfg-repo-cleaner/'
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('java-runtime>8' 'bash')
 source=("https://repo1.maven.org/maven2/com/madgag/${pkgname}/${pkgver}/${pkgname}-${pkgver}.jar"
         "${pkgname}.sh")
