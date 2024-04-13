@@ -12,7 +12,7 @@ declare -gA _tags=(
 BUILDENV+=(!check)
 
 pkgname=zed-editor-preview
-pkgver=0.131.3
+pkgver=0.131.4
 pkgrel=1
 pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
@@ -48,7 +48,7 @@ conflicts=("${pkgname%-preview}")
 _archive="zed-$pkgver-pre"
 source=("$_url/archive/v$pkgver-pre/$_archive.tar.gz"
         "https://github.com/livekit/protocol/archive/${_tags[protocol]}/protocol-${_tags[protocol]}.tar.gz")
-sha256sums=('4dad6939286019b1a2ee3728e17cf4a4b01b485806c1080c47076fd345e1258c'
+sha256sums=('3ead6ab297caa8b435ca87f78e61c6085ff4bc0a6d98b4f899124a6f000fe52a'
             'cd26bc1015fa0b79154c23a385441ae81e9a4385211cf2989eb939ae83d0e414')
 
 prepare() {
