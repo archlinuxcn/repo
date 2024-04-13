@@ -2,11 +2,11 @@
 
 pkgbase=linux-amd-znver3
 _srcname=linux
-gitver=v6.8.5
+gitver=v6.8.6
 patchver=20240221.2
 patchname=more-uarches-for-kernel-6.8-rc4+.patch
-pkgver=6.8.v.5
-pkgrel=1
+pkgver=6.8.v.6
+pkgrel=2
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL-2.0-only')
@@ -16,16 +16,12 @@ options=('!strip')
 source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#tag=$gitver"
         # the main kernel config files
         'config.x86_64'
-        # standard config files for mkinitcpio ramdisk
-        "${pkgbase}.preset"
 	# patch from our graysky archlinux colleague
 	"https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/$patchver/$patchname"
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '3ba52487aebaf19e8d7be1c1f48244fbe9d3d310229e3a45d5eacbf8265d9e81'
-            #.preset file
-            '26828ab61a69fca7ecdbba4179311f7cc3c59e1f8c070bcc626c68065187222b'
+            '3d99340351bd5c0e08653dfee566db8bf2c5fcd0650f4605f89e80888aa9ff46'
             #grayskypatch
             'd69232afd0dd6982ae941cf2d1f577f4be2011e3bb847d1db37952acf416b5d3'
 )
@@ -78,7 +74,6 @@ _package() {
   pkgdesc="Linux kernel aimed at the znver3 AMD Ryzen CPU based hardware"
   depends=('coreutils' 'linux-firmware' 'kmod' 'lzop')
   optdepends=('crda: to set the correct wireless channels of your country')
-  backup=("etc/mkinitcpio.d/${pkgbase}.preset")
 
   cd "${_srcname}"
 
@@ -91,15 +86,6 @@ _package() {
 
   mkdir -p "${pkgdir}"/{lib/modules,lib/firmware,boot}
   make LOCALVERSION= INSTALL_MOD_PATH="${pkgdir}" modules_install
-
-  # install mkinitcpio preset file for kernel
-  install -D -m644 "${srcdir}/${pkgbase}.preset" "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
-  sed \
-    -e "1s|'linux.*'|'${pkgbase}'|" \
-    -e "s|ALL_kver=.*|ALL_kver=\"/boot/vmlinuz-${pkgbase}\"|" \
-    -e "s|default_image=.*|default_image=\"/boot/initramfs-${pkgbase}.img\"|" \
-    -e "s|fallback_image=.*|fallback_image=\"/boot/initramfs-${pkgbase}-fallback.img\"|" \
-    -i "${pkgdir}/etc/mkinitcpio.d/${pkgbase}.preset"
 
   # remove build link
   rm -f "${pkgdir}"/lib/modules/${_kernver}/build
