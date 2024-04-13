@@ -59,7 +59,7 @@ provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
 replaces=(hyprland-nvidia-git)
 source=("git+https://github.com/hyprwm/Hyprland.git"
-	"git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
+	"git+https://github.com/hyprwm/wlroots-hyprland.git"
 	"git+https://github.com/hyprwm/hyprland-protocols.git"
 	"git+https://github.com/canihavesomecoffee/udis86.git"
 	"git+https://github.com/wolfpld/tracy.git")
@@ -71,10 +71,10 @@ sha256sums=('SKIP'
 
 prepare() {
 	cd Hyprland
-	rm -rf subprojects/wlroots subprojects/hyprland-protocols
+	rm -rf subprojects/hyprland-protocols
 
 	git submodule init
-	git config submodule.wlroots.url "${srcdir}/wlroots"
+	git config submodule.subprojects/wlroots-hyprland.url "${srcdir}/wlroots-hyprland"
 	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
 	git config submodule.subprojects/udis86.url "${srcdir}/udis86"
 	git config submodule.subprojects/tracy.url "${srcdir}/tracy"
