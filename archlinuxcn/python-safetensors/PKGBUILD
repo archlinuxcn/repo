@@ -8,9 +8,11 @@ epoch=1
 pkgdesc='Simple, safe way to store and distribute tensors'
 arch=('x86_64')
 url='https://github.com/huggingface/safetensors'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
-  python-pymongo
+  gcc-libs
+  glibc
+  python
 )
 makedepends=(
   python-build
