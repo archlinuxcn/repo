@@ -1,6 +1,6 @@
 pkgname=julia-git-dynamicpolynomials-src
-pkgver=0.5.5
-_commit=5be6070be7289e3f36575a8eab00fd63cd04094c
+pkgver=0.5.6
+_commit=af9ccbdc7f873e6d2af9746357198045e70ca585
 pkgrel=1
 pkgdesc="DynamicPolynomials.jl"
 url="https://github.com/JuliaAlgebra/DynamicPolynomials.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaAlgebra/DynamicPolynomials.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('7eff13dc64d815f66633096657985fd9a523a4dfc63b5e249790972f19d1d81a')
 
 package() {
   cd DynamicPolynomials.jl
