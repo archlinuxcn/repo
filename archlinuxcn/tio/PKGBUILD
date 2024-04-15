@@ -10,6 +10,7 @@ arch=('x86_64' 'i686' 'arm' 'armv7h' 'armv6h' 'aarch64')
 license=('GPL-2.0-or-later')
 depends=('glibc'
          'libinih' 'libinih.so'
+         'lua'
          )
 makedepends=('meson' 'bash-completion')
 source=("https://github.com/tio/tio/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
