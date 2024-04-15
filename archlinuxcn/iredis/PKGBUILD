@@ -1,6 +1,6 @@
 _name=iredis
 pkgname=iredis
-pkgver=1.14.1
+pkgver=1.15.0
 pkgrel=1
 pkgdesc="Terminal client for Redis with auto-completion and syntax highlighting."
 arch=(any)
@@ -8,16 +8,16 @@ url="https://github.com/laixintao/iredis"
 license=('BSD-3-Clause')
 depends=('python' 'python-redis' 'python-packaging' 'python-prompt_toolkit' 'python-pygments' 'python-mistune' 'python-configobj' 'python-click' 'python-pendulum')
 makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel' 'python-poetry' 'python-build' 'python-installer' 'python-wheel')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/iredis-1.14.1.tar.gz")
-sha256sums=('0814a748aa63ddb4fc3fa1defb0a1d4874bc7d05812226f5378f4ceb53b5fe50')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/iredis-1.15.0.tar.gz")
+sha256sums=('70c3c3d260c1f1a49145b3242a054ae1a5142021d49c72c199760874ab2c069c')
 
 build() {
-  cd "$srcdir/iredis-1.14.1"
+  cd "$srcdir/iredis-1.15.0"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/iredis-1.14.1"
+  cd "$srcdir/iredis-1.15.0"
   python -m installer --destdir="$pkgdir" dist/*.whl
 
   # make sure we don't install any world-writable or root-readable-only files
