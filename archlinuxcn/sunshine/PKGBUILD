@@ -1,10 +1,10 @@
 pkgname=sunshine
-pkgver=0.22.2
+pkgver=0.23.0
 pkgrel=1
 pkgdesc="A self-hosted GameStream host for Moonlight."
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev
-license=('GPL3')
+license=('GPL-3.0-only')
 install=sunshine.install
 
 depends=('avahi'
@@ -28,6 +28,7 @@ depends=('avahi'
          'numactl'
          'openssl'
          'opus'
+         'python'
          'udev')
 makedepends=('boost'
              'cmake'
@@ -37,7 +38,8 @@ makedepends=('boost'
              'npm')
 optdepends=('cuda: Nvidia GPU encoding support'
             'libva-mesa-driver: AMD GPU encoding support'
-            'intel-media-driver: Intel GPU encoding support')
+            'intel-media-driver: Intel GPU encoding support'
+            'xorg-server-xvfb: Virtual X server for headless testing')
 
 provides=()
 conflicts=()
