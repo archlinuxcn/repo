@@ -1,0 +1,18 @@
+pkgname=julia-git-polygonalgorithms-src
+pkgver=0.2.0
+_commit=b4aaf0c129fd1de69e41e3a8e9a157ab0c588b41
+pkgrel=1
+pkgdesc="PolygonAlgorithms.jl"
+url="https://github.com/LiorSinai/PolygonAlgorithms.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/LiorSinai/PolygonAlgorithms.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd PolygonAlgorithms.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh PolygonAlgorithms "${pkgdir}" "${pkgname}" julia-git
+}
