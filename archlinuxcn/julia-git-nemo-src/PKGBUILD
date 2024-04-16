@@ -1,7 +1,7 @@
 pkgname=julia-git-nemo-src
 pkgver=0.43.2
 _commit=941a9dfde3d14ab4f2065fa834286d5d5ba71478
-pkgrel=1
+pkgrel=2
 pkgdesc="Nemo.jl"
 url="https://github.com/Nemocas/Nemo.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Nemocas/Nemo.jl.git#commit=$_commit"
         0001-Fix-support-for-new-flint-library-version.patch)
-sha256sums=('SKIP'
+sha256sums=('269599e70a829113094b4acaad3066b009ad27eb9498f53491c2670a84132e80'
             '3d5fc1aaddc94bd7041f4be135efcae841c8c980605058c67f1576e3db1d0dcf')
 
 prepare() {
