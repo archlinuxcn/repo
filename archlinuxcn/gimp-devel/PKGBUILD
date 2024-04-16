@@ -1,7 +1,7 @@
 # Maintainer: twa022 <twa022 at gmail dot com>
 
-_pkgname=gimp
-pkgname=${_pkgname}-devel
+pkgname=gimp-devel
+_pkgname=${pkgname%-devel}
 pkgver=2.99.18
 pkgrel=2
 pkgdesc="GNU Image Manipulation Program (Development version)"
@@ -9,50 +9,49 @@ arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://www.gimp.org/"
 license=('GPL-3.0-or-later')
 depends=("cfitsio" "desktop-file-utils" "enchant" "gtk3" "icu" "lcms2" "libgexiv2" "librsvg" "libwmf"
-         'libexif' 'libgudev' 'openjpeg2' 'poppler-glib' 'poppler-data' 'openexr' 'mypaint-brushes1'
-         'babl>=0.1.98' 'gegl>=0.4.48' 'cairo' 'python-gobject' 'appstream-glib' 'libxmu' 'graphviz')
+	'libexif' 'libgudev' 'openjpeg2' 'poppler-glib' 'poppler-data' 'openexr' 'mypaint-brushes1'
+	'babl>=0.1.98' 'gegl>=0.4.48' 'cairo' 'python-gobject' 'appstream-glib' 'libxmu' 'graphviz')
 makedepends=("appstream" "cmake" "glib-networking" "intltool" "libxslt"
-             'alsa-lib' 'curl' 'ghostscript' 'libxpm'
-             'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'libjxl'
-             'gjs'  'luajit' 'meson' 'gobject-introspection'
-             'gi-docgen' 'xorg-server-xvfb' 'vala' 'highway' 'meson' 'qoi-headers'
-             'cfitsio') #yelp-tools')
+	'alsa-lib' 'curl' 'ghostscript' 'libxpm'
+	'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'libjxl'
+	'gjs' 'luajit' 'meson' 'gobject-introspection'
+	'gi-docgen' 'xorg-server-xvfb' 'vala' 'highway' 'meson' 'qoi-headers'
+	'cfitsio')
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
-            'alsa-lib: for MIDI event controller module'
-            'curl: for URI support'
-            'ghostscript: for postscript support'
-            'libxpm: XPM support'
-            'libheif: HEIF support'
-            'libjxl: JPEG XL support'
-            'libwebp: WebP support'
-            'libmng: MNG support'
-            'qoi-headers: QOI image support'
-            'iso-codes: Language support'
-            'aalib: ASCII art support'
-            'zlib: Compression routines'
-            'gjs: JavaScript scripting support'
-            'luajit: LUA scripting support'
-            'lua51-lgi: LUA scripting support'
-            'cfitsio: FITS support')
+	'alsa-lib: for MIDI event controller module'
+	'curl: for URI support'
+	'ghostscript: for postscript support'
+	'libxpm: XPM support'
+	'libheif: HEIF support'
+	'libjxl: JPEG XL support'
+	'libwebp: WebP support'
+	'libmng: MNG support'
+	'qoi-headers: QOI image support'
+	'iso-codes: Language support'
+	'aalib: ASCII art support'
+	'zlib: Compression routines'
+	'gjs: JavaScript scripting support'
+	'luajit: LUA scripting support'
+	'lua51-lgi: LUA scripting support'
+	'cfitsio: FITS support')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}=${pkgver}")
 source=("https://download.gimp.org/pub/gimp/v${pkgver%.*}/${_pkgname}-${pkgver}.tar.xz"
-        'linux.gpl')
+	'linux.gpl')
 sha256sums=('8c1bb7a94ac0d4d0cde4d701d8b356387c2ecd87abbd35bbf7d222d40f6ddb6e'
             '1003bbf5fc292d0d63be44562f46506f7b2ca5729770da9d38d3bb2e8a2f36b3')
 
 build() {
-  local meson_options=(
-    -Dilbm=disabled
-  )
+	local meson_options=(
+		-Dilbm=disabled
+	)
 
-  arch-meson "${_pkgname}-${pkgver}" build "${meson_options[@]}"
-  meson compile -C build
+	arch-meson "${_pkgname}-${pkgver}/" build "${meson_options[@]}"
+	meson compile -C build
 }
 
 package() {
-  meson install -C build --destdir "$pkgdir"
-
-  install -Dm 644 "${srcdir}/linux.gpl" "${pkgdir}/usr/share/gimp/2.99/palettes/Linux.gpl"
+	meson install -C build --destdir "${pkgdir}"
+	install -Dm644 linux.gpl -t "${pkgdir}/usr/share/gimp/2.99/palettes/"
 }
