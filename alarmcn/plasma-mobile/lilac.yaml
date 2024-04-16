@@ -5,8 +5,9 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
 
 update_on:
-  - source: github
-    github: KDE/plasma-mobile
+  - source: gitlab
+    host: invent.kde.org
+    gitlab: plasma/plasma-mobile
     use_max_tag: true
     prefix: v
 
