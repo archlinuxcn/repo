@@ -30,7 +30,7 @@ optdepends=('yt-dlp: for video-sharing websites playback'
 	'youtube-dl: for video-sharing websites playback')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("${_pkgname}::git+${url}.git")
+source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -39,7 +39,7 @@ pkgver() {
 }
 
 build() {
-	cmake -B build -S "${_pkgname}/" -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=None
+	cmake -B build -S "${_pkgname}/" -DCMAKE_INSTALL_PREFIX=/usr
 	cmake --build build
 }
 
