@@ -1,6 +1,6 @@
 pkgname=julia-git-triangularsolve-src
-pkgver=0.1.21
-_commit=ef56b92a99b690395e42743ff9668f8aedee76d3
+pkgver=0.2.0
+_commit=b7e9640d17f4963806aa89fb42b6373646de19a0
 pkgrel=1
 pkgdesc="TriangularSolve.jl"
 url="https://github.com/JuliaSIMD/TriangularSolve.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/TriangularSolve.jl.git#commit=$_commit")
-sha256sums=('eafc06093b765c843a9bead1c66d826105e82fd543654ab38220887108af80ea')
+sha256sums=('e878a786b40187dcb910e20d69eb4bec4f3081a2bc1b4d8cb4bf2de77edfea2b')
 
 package() {
   cd TriangularSolve.jl
