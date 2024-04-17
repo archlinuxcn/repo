@@ -1,0 +1,36 @@
+# Maintainer: Devin Lin <devin@kde.org>
+
+pkgname=plasma-settings
+pkgver=24.02.0
+pkgrel=1
+pkgdesc="Settings application for Plasma Mobile"
+arch=('x86_64' 'i686' 'armv7h' 'aarch64')
+url="https://invent.kde.org/plasma-mobile/${pkgname}"
+license=('GPL-3.0-or-later')
+depends=(
+	'kcmutils'
+	'plasma-workspace'
+	'kdeclarative'
+	'ki18n'
+	'kirigami-addons'
+)
+makedepends=('cmake' 'extra-cmake-modules')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('b423461aa9c6dc0a7c96170261114ee9ecfe6296c97c9be8522d1942d125a5ad')
+
+prepare() {
+	mkdir -p build
+}
+
+build() {
+	cmake -B build -S "${pkgname}-${pkgver}" \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=/usr/lib
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+}
