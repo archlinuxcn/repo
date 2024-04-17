@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3304' '3373' '3674')
-_merge_requests_to_use=('1441' '3304' '3373' '3674')
+# Merge Requests List: ('579' '1441' '3373')
+_merge_requests_to_use=('1441' '3373')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -32,7 +32,7 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=46.0+r20+g34d79b9dd
+pkgver=46.0+r49+gd53da3819
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -111,22 +111,16 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=34d79b9ddf2b2455dbde78372e7355e8b6f95e96  # tags/46.0^20
+_commit=d53da38198947754bd7e9cc264d6073caeb2447b  # tags/46.0^49
 source=("git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
         'mr1441.patch'
-        'mr3304.patch'
-        'mr3373.patch'
-        'mr3674.patch')
-sha256sums=('d7cac80530a925413d6f69139fa0aa77468d547e5a71de4d04fbb5e69cf09a70'
-            'e5b85a47436cfac47f76f53e540f3e36886e65a991b1dbecbf5756eb062a8ea6'
-            '90261cf4b2133ed3bf8c9c9e37c72ce816e5b0d75b55ae0c3899f7ef5809d593'
-            '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
-            '414e1dad3e527fc6f9ef6e5006700d97738bef6de9b087af9e232a2084b0ac88')
-b2sums=('c3b55a34d1abd3a3e381593741ee0ffc14feebcb8725da92e99829452638abbe596e5149f9ac1460b01b8e5f40c84848ca8b8cedbfe28c8359208ccf7cbb9f74'
-        '75fb3ae1d4149c1cd82ae5cc23335e6d517665ba0527c6cbe112585706fa5191fb67e3264402527229185c0f6fc6638bb604243bb7c8123b7acc0b0a4379ba7e'
-        'f53c0a7cf5fe400e83379be5e3694dba0668e0917b5bf29c485cef802660e38176ab856118a030ddc87bd49b75d0dd6f9e0d8f32d2b2ef27ebb1737f8914bf21'
-        '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
-        '12b128e46f47c077b504f2707a8b0ba407617b50c267f785982dc62ab3045202abe1cce3dfbb49b80fb27b70c2ff5dc188155c93cf7131bebda2e4f1f77077f6')
+	'mr3373.patch')
+sha256sums=('4a87fac85b97038d1b3b1e831c84f9a038d5ff68b68d4f8dced718d337321267'
+            '1a0e4ca2ebf32c9b75085114cb1c6856e6f35ea3a157a7e2c5be765466716a34'
+            '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f')
+b2sums=('85e630084b973eabc831f5f870b1bef1aad344151cc77bc5cc99323dfd6dc16ea8aaa2b2c7660a5d9ae1201cb389a2a91705d491a09b32a8a3e620663c6bfb75'
+        'a40fdd0d5c01c0bd5cea98e8aeae6d313834a863b2c4789aea107c8318ab63783a5e4cb92759f3c2b74e8fcac5775b7fa14bf7d11692524f8d0a46f67ac532d6'
+        '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c')
 
 pkgver() {
   cd $_pkgname
@@ -209,14 +203,6 @@ prepare() {
   #          If you use stenography software or play hardcore rhythm games like Lunatic Rave 2/osumania, use it.
   pick_mr '579' ce86f90efbaa51522ba14c5b4cad933c2106de42 'revert'
 
-  # Title: Nvidia secondary GPU copy acceleration
-  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3304
-  # Type: 3
-  # Status: 2
-  # Comment: This fixes three issues that were preventing GPU copies on the Nvidia proprietary driver.
-  pick_mr '3304' 'mr3304.patch' 'patch'
-
   # Title: kms/crtc: Increase default deadline evasion to 1000 microseconds
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3373
@@ -224,14 +210,6 @@ prepare() {
   # Status: 2
   # Comment: This fix cursor stutter.
   pick_mr '3373' 'mr3373.patch' 'patch'
-
-  # Title: drm-buffer-gbm: Do not call ensure_fb_id from lock_front 
-  # Author: Michel Dänzer <mdaenzer@redhat.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3674
-  # Type: 3
-  # Status: Reviewed and to be merged.
-  # Comment: This closes #3389
-  pick_mr '3674' 'mr3674.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
