@@ -1,0 +1,7 @@
+[Unit]
+Description=Pithos Media Player
+
+[Service]
+Type=dbus
+BusName=io.github.Pithos
+ExecStart=/usr/bin/pithos --gapplication-service
