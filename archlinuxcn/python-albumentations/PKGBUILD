@@ -2,7 +2,7 @@
 
 _pkgname=albumentations
 pkgname=python-albumentations
-pkgver=1.4.3
+pkgver=1.4.4
 pkgrel=1
 pkgdesc='Fast image augmentation library and easy to use wrapper around other libraries'
 arch=('any')
@@ -21,7 +21,7 @@ makedepends=(
   python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/albumentations-team/albumentations/archive/${pkgver}.tar.gz")
-sha512sums=('79543f34dbaf9fe6369fb0822765c313ab0b5636da1d4fcd5ca2920b3f5dc8e00a2e97dd23489b26ccd650916eef8ca36cbc3d09c9cbd70003334bbfdef2d49b')
+sha512sums=('13636691df3d778cc4804915bf63088b18586be3f934bf1272feb075c335223faeda8f3afb0876857ea378a9238d91bfd50000e34af233c453dcf955b86b80fb')
 
 build() {
   cd "${_pkgname}-${pkgver}"
