@@ -8,9 +8,9 @@ pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, org
 arch=(aarch64)
 url="https://www.zotero.org/download"
 license=('AGPL3')
-makedepends=(git perl python curl wget zip unzip awk chromium rsync cmake)
-depends=(dbus-glib gtk3 nss libxt npm poppler nodejs-lts-iron
-         libfontconfig.so libpaper)
+makedepends=(git perl python curl wget zip unzip awk chromium rsync
+             cmake nodejs-lts-iron)
+depends=(dbus-glib gtk3 nss libxt npm poppler libfontconfig.so libpaper)
 install='zotero.install'
 source=("zotero-client::git+https://github.com/zotero/zotero#tag=$pkgver"
         "git+https://github.com/zotero/zotero-build"
