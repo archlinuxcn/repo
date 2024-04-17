@@ -9,8 +9,8 @@ arch=(aarch64)
 url="https://www.zotero.org/download"
 license=('AGPL3')
 makedepends=(git perl python curl wget zip unzip awk chromium rsync
-             cmake nodejs-lts-iron)
-depends=(dbus-glib gtk3 nss libxt npm poppler libfontconfig.so libpaper)
+             cmake nodejs-lts-iron npm)
+depends=(dbus-glib gtk3 nss libxt poppler libfontconfig.so libpaper)
 install='zotero.install'
 source=("zotero-client::git+https://github.com/zotero/zotero#tag=$pkgver"
         "git+https://github.com/zotero/zotero-build"
