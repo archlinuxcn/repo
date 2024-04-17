@@ -10,3 +10,5 @@ def pre_build():
         if line.startswith('MARCH=$'):
             line = 'MARCH=CONFIG_GENERIC_CPU3'
         print(line)
+
+    run_cmd(['updpkgsums'])
