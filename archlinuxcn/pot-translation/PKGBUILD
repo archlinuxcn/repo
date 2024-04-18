@@ -1,4 +1,5 @@
 # Maintainer: Pylogmon <pylogmon@outlook.com>
+# Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=pot-translation
 _pkgname=pot-desktop
@@ -7,7 +8,7 @@ _pkgver=${pkgver/b/-beta}
 pkgrel=1
 pkgdesc="一个跨平台的划词翻译软件 | A cross-platform software for text translation."
 arch=('x86_64' 'aarch64' 'riscv64')
-url="https://github.com/pot-app/pot-desktop"
+url="https://github.com/pot-app/${_pkgname}"
 license=('GPL-3.0-or-later')
 depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata')
 makedepends=('nodejs' 'pnpm' 'cargo' 'dbus')
