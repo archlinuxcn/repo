@@ -15,20 +15,22 @@ arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/QtCurve/qtcurve"
 license=('GPL')
 # groups=(qtcurve)
-depends=(qt5-base qt5-svg libxcb qt5-x11extras
+depends=(qt5-base qt5-svg libxcb qt5-x11extras qt6-base qt6-svg
          libx11 gcc-libs kinit karchive5 kconfig5 kconfigwidgets5
          frameworkintegration5 ki18n5
          kguiaddons5 kio5 kiconthemes5 kwidgetsaddons5 kwindowsystem5 kxmlgui5)
 optdepends=(gtk2)
-makedepends=(cmake git python mesa extra-cmake-modules gtk2)
+makedepends=(cmake git python mesa extra-cmake-modules gtk2 qt6-xcb-private-headers)
 provides=(
   "qtcurve-utils=${_realver}"
   "qtcurve-gtk2=${_realver}"
   "qtcurve-qt5=${_realver}"
+  "qtcurve-kde=${_realver}"
+  "qtcurve-qt6=${_realver}"
   "qtcurve-utils-git"
   "qtcurve-gtk2-git"
   "qtcurve-qt5-git")
-conflicts=("qtcurve-qt5" "qtcurve-gtk2" "qtcurve-utils")
+conflicts=("qtcurve-qt5" "qtcurve-qt6" "qtcurve-kde" "qtcurve-gtk2" "qtcurve-utils")
 if ((ENABLE_QT4)); then
   optdepends+=(qt4)
   makedepends+=(qt4)
@@ -65,9 +67,11 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     "${_qt4_opt}" \
     -DENABLE_QT5=On \
+    -DENABLE_QT6=On \
     -DENABLE_GTK2=On \
     -DQTC_QT4_ENABLE_KDE=Off \
-    -DQTC_QT5_ENABLE_KDE=On
+    -DQTC_QT5_ENABLE_KDE=On \
+    -DQTC_QT6_ENABLE_KDE=Off
   make
 }
 
