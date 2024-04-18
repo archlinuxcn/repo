@@ -2,8 +2,8 @@
 # Contributor: urbanslug
 
 pkgname=kwin-script-switching-git
-pkgver=0.1.0.0.1.gd35ab79
-pkgrel=3
+pkgver=0.1.0.0.2.g5674a23
+pkgrel=1
 pkgdesc="Window switching for kwin"
 arch=('any')
 url="https://github.com/yuyichao/kwin_switching"
@@ -22,6 +22,5 @@ pkgver() {
 package() {
   cd kwin_switching
   install -d "${pkgdir}/usr/share/kwin/scripts/kwin-script-switching"
-  cp -r contents metadata.desktop "${pkgdir}/usr/share/kwin/scripts/kwin-script-switching"
-  install -Dm644 metadata.desktop "${pkgdir}/usr/share/kservices5/kwin-script-switching.desktop"
+  cp -r contents metadata.json "${pkgdir}/usr/share/kwin/scripts/kwin-script-switching"
 }
