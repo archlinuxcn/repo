@@ -16,7 +16,7 @@ depends=(
 )
 backup=("etc/${_pkgname}/config.${_pkgname}")
 source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v2_sse.zip")
-install="${_pkgname}.install"
+install="${pkgname}.install"
 sha256sums=('c14ddccb6d6c66193d8db78609d22e49de919d3bcb6ad41831d72103b0f85dac')
 
 package() {
