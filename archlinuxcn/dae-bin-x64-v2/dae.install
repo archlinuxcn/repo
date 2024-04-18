@@ -1,0 +1,13 @@
+pre_install() {
+        if !(/lib/ld-linux-x86-64.so.2 --help | grep "x86-64-v2 (supported, searched)" &> /dev/null); then
+                echo "Your CPU does NOT support x86-64-v2!"
+                echo "Exiting..."
+                exit 1
+        fi
+}
+
+post_install() {
+	echo "-------------------------------------------------------------------------"
+	echo "After installation, run \"sudo systemctl enable --now dae\" to start dae."
+	echo "-------------------------------------------------------------------------"
+}

@@ -1,0 +1,34 @@
+# Maintainer: cubercsl <2014cais01 at gmail dot com>
+# Maintainer: Integral <integral at member dot fsf dot org>
+
+pkgname=dae-bin-x64-v2
+_pkgname=dae
+pkgver=0.6.0rc2
+pkgrel=1
+pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
+arch=('x86_64' 'aarch64')
+url="https://github.com/daeuniverse/${_pkgname}"
+license=('AGPL-3.0-or-later')
+depends=(
+	'glibc'
+	'v2ray-geoip'
+	'v2ray-domain-list-community'
+)
+backup=("etc/${_pkgname}/config.${_pkgname}")
+source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v2_sse.zip")
+install="${_pkgname}.install"
+sha256sums=('c14ddccb6d6c66193d8db78609d22e49de919d3bcb6ad41831d72103b0f85dac')
+
+package() {
+	# Install binary
+	install -vDm755 "${_pkgname}-linux-x86_64_v2_sse" -t "${pkgdir}/usr/bin/${__pkgname}"
+
+	# Install systemd service
+	install -vDm644 "${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+
+	# Install geoip.dat & geosite.dat
+	install -vDm644 {geoip,geosite}.dat -t "${pkgdir}/usr/share/${__pkgname}/"
+
+	# Install exmaple config
+	install -vDm644 "example.${_pkgname}" -t "${pkgdir}/etc/${_pkgname}/"
+}
