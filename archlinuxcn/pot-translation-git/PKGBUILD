@@ -7,10 +7,10 @@ pkgver=2.7.10.r3.g1207bf2
 pkgrel=1
 pkgdesc="一个跨平台的划词翻译软件 | A cross-platform software for text translation."
 arch=('x86_64' 'aarch64' 'riscv64')
-url="https://github.com/pot-app/pot-desktop"
+url="https://github.com/pot-app/${_pkgname}"
 license=('GPL-3.0-or-later')
 depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata')
-makedepends=('git' 'nodejs' 'pnpm' 'rust' 'dbus')
+makedepends=('git' 'nodejs' 'pnpm' 'cargo' 'dbus')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=("git+${url}.git")
@@ -22,7 +22,7 @@ pkgver() {
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
-build() {
+prepare() {
 	cd "${_pkgname}/"
 
 	# Modify versions in configuration files
@@ -31,12 +31,17 @@ build() {
 	sed -i "s/\"version\":.*/\"version\": \"${_pkgver}\"/g" src-tauri/tauri.conf.json
 	sed -i "s/\"version = \"0.0.0\"/version = \"${_pkgver}\"/g" src-tauri/Cargo.toml
 
-	pnpm install && pnpm tauri build -b deb
+	pnpm i
+}
+
+build() {
+	cd "${_pkgname}/"
+	pnpm tauri build -b deb
 }
 
 package() {
 	cd "${_pkgname}/"
 	_pkgver=$(sed 's/.\(r[0-9]\)/\-\1/' <<<${pkgver})
-	tar -xpf "src-tauri/target/release/bundle/deb/pot_${_pkgver}_amd64/data.tar.gz" -C ${pkgdir}
-	chown -R root:root ${pkgdir}
+	tar -xpf "src-tauri/target/release/bundle/deb/pot_${_pkgver}_amd64/data.tar.gz" -C "${pkgdir}"
+	chown -R root:root "${pkgdir}"
 }
