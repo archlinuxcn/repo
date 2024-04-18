@@ -82,7 +82,6 @@ package() {
   # Prepare directories layout for deploying
   # These makes setup-seafile*.sh happy, whether we use them or not
   mkdir -p "$pkgdir/usr/share/seafile-server/"{runtime,seafile/docs}
-  cp -p doc/*.doc "$pkgdir/usr/share/seafile-server/seafile/docs"
   # The scripts needs this bin directory.
   ln -s /usr/bin/ "$pkgdir/usr/share/seafile-server/seafile/bin"
 
