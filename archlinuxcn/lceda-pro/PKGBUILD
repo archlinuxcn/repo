@@ -2,8 +2,8 @@
 # Co-Maintainer: Misaka13514 <Misaka13514 at gmail dot com>
 
 pkgname=lceda-pro
-pkgver=2.1.51
-pkgrel=2
+pkgver=2.1.57
+pkgrel=1
 pkgdesc="免费、专业、强大的国产PCB设计工具"
 arch=(x86_64)
 url="https://pro.lceda.cn/"
