@@ -1,16 +1,15 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
-pkgname=qt-heic-image-plugin-git
+pkgbase=qt-heic-image-plugin-git
+pkgname=(qt5-heic-image-plugin-git qt6-heic-image-plugin-git)
 pkgver=0.4.0
 pkgrel=1
 pkgdesc='Qt plug-in to allow Qt and KDE based applications to read/write HEIF/HEIC images.'
 arch=(i686 x86_64 armv7h aarch64)
 url="https://github.com/novomesk/qt-heic-image-plugin"
 license=('GPL')
-depends=(qt5-base libheif)
-makedepends=(cmake git extra-cmake-modules)
-provides=(qt-heic-image-plugin)
-conflicts=(qt-heic-image-plugin)
+depends=(libheif)
+makedepends=(cmake git extra-cmake-modules qt5-base qt6-base)
 options=('debug')
 source=("git+https://github.com/novomesk/qt-heic-image-plugin")
 md5sums=('SKIP')
@@ -22,19 +21,30 @@ pkgver() {
 }
 
 build() {
-  cd qt-heic-image-plugin
+  cmake -B build-5 -S qt-heic-image-plugin \
+        -DQT_MAJOR_VERSION=5 \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr
+  make -C build-5
 
-  mkdir -p build
-  cd build
-
-  cmake .. \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make
+  cmake -B build-6 -S qt-heic-image-plugin \
+        -DQT_MAJOR_VERSION=6 \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr
+  make -C build-6
 }
 
-package() {
-  cd qt-heic-image-plugin/build
+package_qt5-heic-image-plugin-git() {
+  provides=(qt-heic-image-plugin qt5-heic-image-plugin)
+  conflicts=(qt-heic-image-plugin qt5-heic-image-plugin)
+  replaces=(qt-heic-image-plugin-git)
 
-  make DESTDIR="$pkgdir/" install
+  make -C build-5 DESTDIR="$pkgdir/" install
+}
+
+package_qt6-heic-image-plugin-git() {
+  provides=(qt6-heic-image-plugin)
+  conflicts=(qt6-heic-image-plugin)
+
+  make -C build-6 DESTDIR="$pkgdir/" install
 }

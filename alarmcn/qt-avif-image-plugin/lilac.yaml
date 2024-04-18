@@ -9,5 +9,13 @@ update_on:
     github: novomesk/qt-avif-image-plugin
     use_latest_tag: true
     include_regex: 'v\d+\.\d+\.\d+'
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt5-base
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt6-base
   - source: manual
     manual: 1

@@ -11,8 +11,12 @@ update_on:
     to_pattern: \1
     alpm: qt5-base
   - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt6-base
+  - source: alpm
     from_pattern: ^(\d+).*
     to_pattern: \1
     alpm: libheif
   - source: manual
-    manual: 2
+    manual: 1

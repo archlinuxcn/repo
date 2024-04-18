@@ -1,0 +1,52 @@
+# Maintainer: Marc ROGER de CAMPAGNOLLE <fora at mrdc dot fr>
+
+_pkgname=qt-avif-image-plugin
+pkgbase=$_pkgname
+pkgname=(qt5-avif-image-plugin qt6-avif-image-plugin)
+pkgver=0.8.2
+pkgrel=1
+pkgdesc='Qt plug-in to allow Qt and KDE based applications to read/write AVIF images'
+arch=(armv7h aarch64 i686 x86_64)
+url="https://github.com/novomesk/$_pkgname"
+license=('BSD')
+depends=('libavif')
+makedepends=('cmake' 'extra-cmake-modules' 'qt5-base' 'qt6-base')
+checkdepends=('appstream')
+source=("$url/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
+        'avif.desktop')
+sha256sums=('c33dd6f2db8ee4d81e05db6411558fe3794ab68e0739f1cee1665e655ccda0f6'
+            'e0d5dea2c8e0d5f1354dc0491de4fe252f8f05eff5102da3a3f41015fe608f31')
+
+build() {
+  cmake -B build-5 -S "$_pkgname-$pkgver" \
+        -DQT_MAJOR_VERSION=5 \
+        -DCMAKE_BUILD_TYPE:STRING='None' \
+        -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+        -Wno-dev
+  make -C build-5
+
+  cmake -B build-6 -S "$_pkgname-$pkgver" \
+        -DQT_MAJOR_VERSION=6 \
+        -DCMAKE_BUILD_TYPE:STRING='None' \
+        -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+        -Wno-dev
+  make -C build-6
+}
+
+check() {
+  make -C build-5 test
+  make -C build-6 test
+}
+
+package_qt5-avif-image-plugin() {
+  depends+=('qt5-base')
+  make -C build-5 DESTDIR="$pkgdir" install
+  install -Dm644 avif.desktop -t "$pkgdir/usr/share/kservices5/qimageioplugins"
+  install -Dm644 "$_pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_qt6-avif-image-plugin() {
+  depends+=('qt6-base')
+  make -C build-6 DESTDIR="$pkgdir" install
+  install -Dm644 "$_pkgname-$pkgver/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
