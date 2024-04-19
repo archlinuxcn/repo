@@ -18,6 +18,7 @@ _cachy_config=${_cachy_config-y}
 # 'rt' - select EEVDF, but includes a series of realtime patches
 # 'rt-bore' - select Burst-Oriented Response Enhancer, but includes a series of realtime patches
 # 'sched-ext' - select 'sched-ext' Scheduler, based on EEVDF
+# 'echo' - select 'ECHO Scheduler'
 _cpusched=${_cpusched-cachyos}
 
 ### Tweak kernel options prior to a build via nconfig
@@ -168,7 +169,7 @@ _stable=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux SCHED-EXT + Cachy Sauce Kernel by CachyOS with other patches and improvements'
-pkgrel=1
+pkgrel=2
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
@@ -186,12 +187,8 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
     )
 fi
 
-if [[ "$_cpusched" = "sched-ext" || "$_cpusched" = "cachyos" ]]; then
-    depends+=(scx-scheds)
-fi
-
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=550.67
+_nv_ver=550.76
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 source=(
     "https://github.com/torvalds/linux/archive/refs/tags/v${_major}-${_rcver}.tar.gz"
@@ -217,7 +214,7 @@ fi
 
 ## List of CachyOS schedulers
 case "$_cpusched" in
-    cachyos) ## SCHED-EXT
+    cachyos) # CachyOS Scheduler (BORE + SCHED-EXT)
         source+=("${_patchsource}/sched/0001-sched-ext.patch"
                  "${_patchsource}/sched/0001-bore-cachy-ext.patch");;
     bore) ## BORE Scheduler
@@ -289,12 +286,12 @@ prepare() {
 
     case "$_cpusched" in
         cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT;;
-        sched-ext) scripts/config -e SCHED_CLASS_EXT;;
-        bore|hardened|cachyos) scripts/config -e SCHED_BORE;;
+        bore|hardened) scripts/config -e SCHED_BORE;;
         echo) scripts/config -e ECHO_SCHED;;
         eevdf) ;;
         rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
         rt-bore) scripts/config -e SCHED_BORE -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
+        sched-ext) scripts/config -e SCHED_CLASS_EXT;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
 
@@ -567,7 +564,7 @@ build() {
 
 _package() {
     pkgdesc="The $pkgdesc kernel and modules"
-    depends=('coreutils' 'kmod' 'initramfs')
+    depends=('coreutils' 'kmod' 'initramfs' 'scx-scheds')
     optdepends=('wireless-regdb: to set the correct wireless channels of your country'
                 'linux-firmware: firmware images needed for some devices'
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
@@ -717,8 +714,8 @@ for _p in "${pkgname[@]}"; do
 done
 
 b2sums=('3adb7f15d8ffae93fa368f3cba673a39b6d29d175b9a0d993e1223826f1b423b4a3884012d2a20f44084d2082cee617bb04221c66c8dbcb284ebc244437278cb'
-        '42ae471f73ad3a35e6cf84a1591d925a39d74b423650896a3067c76845a2abdab68deea9c89b83a009881bdae42b99729023866b98f092637a14a7730222aa74'
+        '88b91d85a0d0eb984a02cb6d7e9268521212f4a66de62f35bc7dd1899a56552a5e43f4bd3d15307be04814dc96ff2cd1556b32c9fbeb93b185bc3bca9c8d17f4'
         '43ef7a347878592740d9eb23b40a56083fa747f7700fa1e2c6d039d660c0b876d99bf1a3160e15d041fb13d45906cdb5defef034d4d0ae429911864239c94d8d'
         '7a55b9793b615e28005380553092dc8143de593bbe79661a1c7e0be29023be4d3b7e965a312e494d9d24dde5eaa7d6153114c8cfca4456ba05b540cb8e4f77b5'
-        '5179f484ae0b54f4e3818cfd0dab3fc021239a85fedf7100820fae5902c37655f3589ba85ea827b91176bd6a8aba8ab9352810a92a3283726e6952ac22b39e4e'
+        'f51b2de9a9e028044de2816d00334119346b9cb59f9c4241b6fd80f61a7c7c86ee5bc61e5715a8b48dbba2423ec8c18d99f9235664762af923e7769cd830f957'
         '2878d8388184ffb0bbaae9ef3516702f20d54d202e29fea5d56c994094dc464946ef6c0d2f97d954c1186bfe32ea716188393634b37269aed8f0d01d0af60ec9')
