@@ -1,0 +1,70 @@
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
+
+pkgbase=pop-launcher-git
+pkgname=("${pkgbase}" 'pop-shell-plugin-system76-power-git')
+pkgver=1.2.1.r56.ga7fc5bc
+pkgrel=1
+arch=('x86_64' 'aarch64')
+url="https://github.com/pop-os/launcher"
+license=('MPL-2.0')
+depends=(
+	'dbus'
+	'fd'
+	'libqalculate'
+	'pop-icon-theme-git'
+	'xdg-utils'
+)
+makedepends=(
+	'cargo'
+	'git'
+	'just'
+	'libegl'
+	'libxkbcommon'
+)
+source=('git+https://github.com/pop-os/launcher.git')
+sha256sums=('SKIP')
+
+pkgver() {
+	cd launcher
+	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd launcher
+	just vendor
+
+	sed -i 's|{{bin-path}}|/usr/bin/pop-launcher|g' justfile
+}
+
+build() {
+	cd launcher
+	CFLAGS+=" -ffat-lto-objects"
+	just build-vendored
+}
+
+package_pop-launcher-git() {
+	_pkgname=${pkgname%-git}
+	pkgdesc="Modular IPC-based desktop launcher service"
+	arch=('x86_64' 'aarch64')
+	optdepends=('pop-shell-plugin-system76-power')
+	provides=("${pkgname%-git}")
+	conflicts=("${pkgname%-git}")
+
+	cd launcher
+	install -Dm755 "target/release/${_pkgname}-bin" "${pkgdir}/usr/bin/${_pkgname}"
+	just rootdir="${pkgdir}" install-plugins install-scripts
+	rm -rf "${pkgdir}/usr/lib/${_pkgname}/scripts/system76-power/"
+}
+
+package_pop-shell-plugin-system76-power-git() {
+	_pkgname=${pkgname%-git}
+	pkgdesc="System76 Power scripts for the launcher"
+	arch=('any')
+	depends=('bash' 'gnome-terminal' 'pop-launcher-git' 'system76-power')
+	provides=("${pkgname%-git}")
+	conflicts=("${pkgname%-git}" 'pop-launcher-system76-power')
+
+	cd launcher
+	install -d "${pkgdir}/usr/lib/${_pkgname}/scripts/"
+	cp -r scripts/system76-power "${pkgdir}/usr/lib/${_pkgbase}/scripts/"
+}
