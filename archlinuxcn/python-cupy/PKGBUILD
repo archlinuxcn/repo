@@ -3,7 +3,7 @@
 
 _pkgname=cupy
 pkgname=python-cupy
-pkgver=13.0.0
+pkgver=13.1.0
 pkgrel=1
 pkgdesc='A NumPy-compatible array library accelerated by CUDA'
 url='https://cupy.dev'
@@ -30,7 +30,7 @@ optdepends=(
   nccl
 )
 source=("${_pkgname}-${pkgver}::git+https://github.com/cupy/cupy.git#tag=v${pkgver}")
-sha256sums=('SKIP')
+sha256sums=('ece153d6fb3c4441f6b88bd5f397505dc53f0c24588c1279bbf57406ce1db0ca')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
