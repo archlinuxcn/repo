@@ -1,0 +1,16 @@
+maintainers:
+  - github: Integral-Tech
+
+pre_build_script: aur_pre_build(maintainers=['soloturn','yochananmarqos'])
+post_build: aur_post_build
+
+repo_depends:
+  - pop-icon-theme-git
+  - pop-launcher-git
+
+update_on:
+  - source: github
+    github: pop-os/cosmic-epoch
+      
+  - source: aur
+    aur: cosmic-epoch-git
