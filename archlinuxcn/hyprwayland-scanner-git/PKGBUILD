@@ -1,0 +1,33 @@
+# Maintainer: alba4k <blaskoazzolaaaron@gmail.com>
+
+pkgname=hyprwayland-scanner-git
+_pkgname=${pkgname%-git}
+pkgver=0.1.0.r1.geb11420c
+pkgrel=1
+pkgdesc="A Hyprland implementation of wayland-scanner, in and for C++"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('BSD-3-Clause')
+depends=('pugixml')
+makedepends=('git' 'cmake')
+source=("git+${url}.git")
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cd "${_pkgname}/"
+	cmake -DCMAKE_INSTALL_PREFIX=/usr -B build
+	cmake --build build
+}
+
+package() {
+	cd "${_pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
