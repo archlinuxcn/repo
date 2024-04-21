@@ -1,7 +1,7 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 # Maintainer: Integral <integral at member dot fsf dot org>
 
-pkgname=dae-bin-x64-v2
+pkgname=dae-bin-x64-v3
 _pkgname=dae
 pkgver=0.6.0rc2
 pkgrel=2
@@ -15,19 +15,19 @@ depends=(
 	'v2ray-domain-list-community'
 )
 backup=("etc/${_pkgname}/config.${_pkgname}")
-source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v2_sse.zip")
+source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip")
 install="${pkgname}.install"
-sha256sums=('c14ddccb6d6c66193d8db78609d22e49de919d3bcb6ad41831d72103b0f85dac')
+sha256sums=('3735f7459d4bac32ee91cae7983458ed6a19228d039cb0d62b750fe2ce2653e3')
 
 package() {
 	# Install binary
-	install -vDm755 "${_pkgname}-linux-x86_64_v2_sse" -t "${pkgdir}/usr/bin/${__pkgname}"
+	install -vDm755 "${_pkgname}-linux-x86_64_v3_avx2" "${pkgdir}/usr/bin/${_pkgname}"
 
 	# Install systemd service
 	install -vDm644 "${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
 
 	# Install geoip.dat & geosite.dat
-	install -vDm644 {geoip,geosite}.dat -t "${pkgdir}/usr/share/${__pkgname}/"
+	install -vDm644 {geoip,geosite}.dat -t "${pkgdir}/usr/share/${_pkgname}/"
 
 	# Install exmaple config
 	install -vDm644 "example.${_pkgname}" -t "${pkgdir}/etc/${_pkgname}/"
