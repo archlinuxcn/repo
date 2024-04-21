@@ -14,6 +14,8 @@ depends=(
 	'v2ray-geoip'
 	'v2ray-domain-list-community'
 )
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
 backup=("etc/${_pkgname}/config.${_pkgname}")
 source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip")
 install="${pkgname}.install"
