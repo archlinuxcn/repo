@@ -10,15 +10,15 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/daeuniverse/daed"
 license=('AGPL-3.0-or-later AND MIT')
 makedepends=('git' 'pnpm' 'clang' 'go')
-provides=('daed')
-conflicts=('daed')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
 source=("git+https://github.com/daeuniverse/${_pkgname}.git")
 sha256sums=('SKIP')
 install="${_pkgname}.install"
 options=(!debug)
 
 pkgver() {
-	cd "$srcdir/$_pkgname"
+	cd "${_pkgname}/"
 	(
 		set -o pipefail
 		git describe --tags --long --abbrev=7 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
@@ -27,15 +27,15 @@ pkgver() {
 }
 
 prepare() {
-	cd "$srcdir/$_pkgname"
+	cd "${_pkgname}/"
 	git submodule update --init --recursive
 }
 
 build() {
 	export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
 	export CFLAGS="-fno-stack-protector"
-	cd "$srcdir/$_pkgname"
-	make VERSION="unstable-$pkgver"
+	cd "${_pkgname}/"
+	make VERSION="unstable-${pkgver}"
 }
 
 package() {
@@ -44,16 +44,14 @@ package() {
 		v2ray-domain-list-community
 	)
 
-	cd "$srcdir/$_pkgname"
+	cd "${_pkgname}/"
 
 	install -vDm755 "${_pkgname}" -t "${pkgdir}/usr/bin/"
 	install -vDm644 "install/${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
-	install -vDm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+	install -vDm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -d "${pkgdir}/etc/daed/"
 
-	mkdir -p "${pkgdir}/usr/share/daed"
+	install -d "${pkgdir}/usr/share/daed"
 	ln -vs "/usr/share/v2ray/geoip.dat" "${pkgdir}/usr/share/daed/geoip.dat"
 	ln -vs "/usr/share/v2ray/geosite.dat" "${pkgdir}/usr/share/daed/geosite.dat"
-
-	echo "After installation completed, open your browser and navigate to http://localhost:2023"
 }
