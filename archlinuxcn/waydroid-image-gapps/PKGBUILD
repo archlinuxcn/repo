@@ -4,20 +4,20 @@
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
 _pkgver_images_system="18.1-20240420"
-_pkgver_images_vendor="18.1-20240413"
+_pkgver_images_vendor="18.1-20240420"
 
 _pkgver_images_system_x86="18.1-20240420"
-_pkgver_images_vendor_x86="18.1-20240413"
+_pkgver_images_vendor_x86="18.1-20240420"
 
 _pkgver_images_system_arm64="18.1-20240420"
 _pkgver_images_vendor_arm64="18.1-20240420"
 
 _pkgver_images_system_arm="18.1-20240420"
-_pkgver_images_vendor_arm="18.1-20240413"
+_pkgver_images_vendor_arm="18.1-20240420"
 
 pkgname=waydroid-image-gapps
 pkgver="${_pkgver_images_system//-/_}"
-pkgrel=1
+pkgrel=2
 pkgdesc="A container-based approach to boot a full Android system on a regular Linux system (Android image, GAPPS)."
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 license=('Apache-2.0')
@@ -48,10 +48,10 @@ package() {
 }
 
 sha256sums_x86_64=('e33a1e8775b6a18a121f7581222782c6d500bcf26ef6336907a8adc3ed493ddb'
-                   'cf77494e1b72f3031bf9b04e789eec3915a21a27197d1e48a01dfc8932ea9962')
+                   '2dcd399348e6e5452e318e9cce44955bd2af046dd64be2744dbcea4b8a02ac32')
 sha256sums_i686=('3fcb02334afcd21d7d364fa0a186233252f457faea348423a37c527f40dbb44f'
-                 '7dfd068f2de7e7c34a1bde6405c437b3d44f2b3fe42e95ea24314b4943423c03')
+                 '35a6959be4c0626598acb8b79da2ece586dbc574ad2790468fd0b88e8fe96d9e')
 sha256sums_armv7h=('5659703f40f7c96f27aeb0bbd72023c0e6e3985cb8eafaa82bb8840dfe49792b'
-                   'a0159ee65d5e6f96e595a59db0e806860abd80fcb02de3379ad8d131ca968f6a')
+                   'd68ebe75a82caa4369f42e0ebcadabe8e9ccc5fb960105c9b52bd4009d13f01b')
 sha256sums_aarch64=('0b65ce1199edec9abba94179cb64fa4070cb1ae533ac956fd1cdb162fec097e5'
                     '694ee88e94a92d2da08caf35cc666f0a77693730aeccf9f1c9d3df4e68f2e78f')
