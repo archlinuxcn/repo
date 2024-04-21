@@ -54,7 +54,8 @@ makedepends=(
 	gcc
 	meson
 	wayland-protocols
-	xorgproto)
+	xorgproto
+	hyprwayland-scanner)
 provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
 replaces=(hyprland-nvidia-git)
