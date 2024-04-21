@@ -29,7 +29,7 @@ package() {
 	install -vDm644 "${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
 
 	# Install geoip.dat & geosite.dat
-	install -vDm644 {geoip,geosite}.dat -t "${pkgdir}/usr/share/${_pkgname}/"
+	install -vDm644 geo{ip,site}.dat -t "${pkgdir}/usr/share/${_pkgname}/"
 
 	# Install exmaple config
 	install -vDm644 "example.${_pkgname}" -t "${pkgdir}/etc/${_pkgname}/"
