@@ -1,5 +1,5 @@
 maintainers:
-    - github: yuyichao
+  - github: yuyichao
 
 pre_build_script: |
   update_pkgver_and_pkgrel(_G.newver)
@@ -7,9 +7,9 @@ pre_build_script: |
 post_build: git_pkgbuild_commit
 
 update_on:
-    - source: github
-  github: lief-project/LIEF
-  use_max_tag: true
-    - source: manual
-  manual: 2
-    - alias: python
+  - source: github
+    github: lief-project/LIEF
+    use_max_tag: true
+  - source: manual
+    manual: 2
+  - alias: python
