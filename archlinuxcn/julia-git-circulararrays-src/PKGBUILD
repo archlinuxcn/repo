@@ -1,6 +1,6 @@
 pkgname=julia-git-circulararrays-src
-pkgver=1.3.3
-_commit=21a55c20f5193d7a0b749c06d25dabbe8f57df19
+pkgver=1.4.0
+_commit=01761873b85167ecc0a45823b95aaab85d4a2ee1
 pkgrel=1
 pkgdesc="CircularArrays.jl"
 url="https://github.com/Vexatos/CircularArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Vexatos/CircularArrays.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('16e2b001fa0030733f8958e75e41b7e2ad26b94c09ff7e37e421fe66bb8d8905')
 
 package() {
   cd CircularArrays.jl
