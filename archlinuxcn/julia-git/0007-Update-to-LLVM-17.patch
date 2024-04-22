@@ -1,4 +1,4 @@
-From 455237d97426dc01809fac99c6f6ca62db3bb841 Mon Sep 17 00:00:00 2001
+From d3bd1d8aa4ab816dc2bfd0e9d88b152b2a74eb8f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 13 Mar 2024 11:13:25 -0400
 Subject: [PATCH 7/7] Update to LLVM 17
@@ -286,11 +286,11 @@ index 2d4343a00a..acea9db93f 100644
          functype,
          ptr, ArrayRef<Value*>(args));
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index 8385b5682a..5ede416a8b 100644
+index 344bc7c5be..dbbd1f5af5 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
 @@ -60,7 +60,11 @@ static Value *decay_derived(jl_codectx_t &ctx, Value *V)
-     if (cast<PointerType>(T)->getAddressSpace() == AddressSpace::Derived)
+     if (T->getPointerAddressSpace() == AddressSpace::Derived)
          return V;
      // Once llvm deletes pointer element types, we won't need it here any more either.
 +    #if JL_LLVM_VERSION >= 170000
@@ -303,7 +303,7 @@ index 8385b5682a..5ede416a8b 100644
  
 @@ -70,7 +74,11 @@ static Value *maybe_decay_tracked(jl_codectx_t &ctx, Value *V)
      Type *T = V->getType();
-     if (cast<PointerType>(T)->getAddressSpace() != AddressSpace::Tracked)
+     if (T->getPointerAddressSpace() != AddressSpace::Tracked)
          return V;
 +    #if JL_LLVM_VERSION >= 170000
 +    Type *NewT = PointerType::get(T, AddressSpace::Derived);
@@ -387,7 +387,7 @@ index 8385b5682a..5ede416a8b 100644
                  originalAlloca->mutateType(decayed->getType());
                  recursively_adjust_ptr_type(originalAlloca, 0, AddressSpace::Derived);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 744c3dd983..d1c19e0fd5 100644
+index e3da26c77f..f823d941ed 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -22,7 +22,11 @@
@@ -415,7 +415,7 @@ index 744c3dd983..d1c19e0fd5 100644
              return ctx.builder.CreateAddrSpaceCast(ptr, ty);
      }
      ++EmittedIntToPtrs;
-@@ -4826,7 +4834,9 @@ static jl_cgval_t emit_call_specfun_other(jl_codectx_t &ctx, bool is_opaque_clos
+@@ -4820,7 +4828,9 @@ static jl_cgval_t emit_call_specfun_other(jl_codectx_t &ctx, bool is_opaque_clos
          break;
      case jl_returninfo_t::SRet:
          result = emit_static_alloca(ctx, getAttributeAtIndex(returninfo.attrs, 1, Attribute::StructRet).getValueAsType());
@@ -425,7 +425,7 @@ index 744c3dd983..d1c19e0fd5 100644
          argvals[idx] = result;
          idx++;
          break;
-@@ -6688,7 +6698,9 @@ static void emit_cfunc_invalidate(
+@@ -6682,7 +6692,9 @@ static void emit_cfunc_invalidate(
      case jl_returninfo_t::SRet: {
          if (return_roots) {
              Value *root1 = gf_thunk->arg_begin() + 1; // root1 has type [n x {}*]*
@@ -435,7 +435,7 @@ index 744c3dd983..d1c19e0fd5 100644
              root1 = ctx.builder.CreateConstInBoundsGEP2_32(get_returnroots_type(ctx, return_roots), root1, 0, 0);
              ctx.builder.CreateStore(gf_ret, root1);
          }
-@@ -7111,11 +7123,15 @@ static Function* gen_cfun_wrapper(
+@@ -7105,11 +7117,15 @@ static Function* gen_cfun_wrapper(
                  if (jlfunc_sret) {
                      result = emit_static_alloca(ctx, getAttributeAtIndex(returninfo.attrs, 1, Attribute::StructRet).getValueAsType());
                      setName(ctx.emission_context, result, "sret");
@@ -451,7 +451,7 @@ index 744c3dd983..d1c19e0fd5 100644
                  }
              }
              args.push_back(result);
-@@ -7175,7 +7191,9 @@ static Function* gen_cfun_wrapper(
+@@ -7169,7 +7185,9 @@ static Function* gen_cfun_wrapper(
              theFptr = ctx.builder.CreateSelect(age_ok, theFptr, gf_thunk);
          }
  
@@ -461,7 +461,7 @@ index 744c3dd983..d1c19e0fd5 100644
          CallInst *call = ctx.builder.CreateCall(
              returninfo.decl.getFunctionType(),
              theFptr, ArrayRef<Value*>(args));
-@@ -7548,7 +7566,9 @@ static Function *gen_invoke_wrapper(jl_method_instance_t *lam, jl_value_t *jlret
+@@ -7542,7 +7560,9 @@ static Function *gen_invoke_wrapper(jl_method_instance_t *lam, jl_value_t *jlret
      case jl_returninfo_t::Ghosts:
          break;
      case jl_returninfo_t::SRet:
@@ -471,7 +471,7 @@ index 744c3dd983..d1c19e0fd5 100644
          result = ctx.builder.CreateAlloca(getAttributeAtIndex(f.attrs, 1, Attribute::StructRet).getValueAsType());
          setName(ctx.emission_context, result, "sret");
          args[idx] = result;
-@@ -7843,8 +7863,6 @@ static jl_returninfo_t get_specsig_function(jl_codectx_t &ctx, Module *M, Value
+@@ -7837,8 +7857,6 @@ static jl_returninfo_t get_specsig_function(jl_codectx_t &ctx, Module *M, Value
  
  static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T, Value *Shadow, Type *ShadowT, unsigned count)
  {
@@ -480,7 +480,7 @@ index 744c3dd983..d1c19e0fd5 100644
      unsigned emitted = TrackWithShadow(Src, T, isptr, Shadow, ShadowT, ctx.builder); //This comes from Late-GC-Lowering??
      assert(emitted == count); (void)emitted; (void)count;
  }
-@@ -7852,6 +7870,10 @@ static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T,
+@@ -7846,6 +7864,10 @@ static void emit_sret_roots(jl_codectx_t &ctx, bool isptr, Value *Src, Type *T,
  static DISubroutineType *
  get_specsig_di(jl_codectx_t &ctx, jl_debugcache_t &debuginfo, jl_value_t *rt, jl_value_t *sig, DIBuilder &dbuilder)
  {
@@ -491,7 +491,7 @@ index 744c3dd983..d1c19e0fd5 100644
      size_t nargs = jl_nparams(sig); // TODO: if this is a Varargs function, our debug info for the `...` var may be misleading
      SmallVector<Metadata*, 0> ditypes(nargs + 1);
      ditypes[0] = julia_type_to_di(ctx, debuginfo, rt, &dbuilder, false);
-@@ -9965,7 +9987,9 @@ char jl_using_perf_jitevents = 0;
+@@ -9959,7 +9981,9 @@ char jl_using_perf_jitevents = 0;
  
  int jl_is_timing_passes = 0;
  
@@ -501,7 +501,7 @@ index 744c3dd983..d1c19e0fd5 100644
  
  extern "C" void jl_init_llvm(void)
  {
-@@ -10016,6 +10040,7 @@ extern "C" void jl_init_llvm(void)
+@@ -10010,6 +10034,7 @@ extern "C" void jl_init_llvm(void)
      if (clopt && clopt->getNumOccurrences() == 0)
          cl::ProvidePositionalOption(clopt, "4", 1);
  
@@ -509,7 +509,7 @@ index 744c3dd983..d1c19e0fd5 100644
      // we want the opaque-pointers to be opt-in, per LLVMContext, for this release
      // so change the default value back to pre-14.x, without changing the NumOccurrences flag for it
      clopt = llvmopts.lookup("opaque-pointers");
-@@ -10024,6 +10049,7 @@ extern "C" void jl_init_llvm(void)
+@@ -10018,6 +10043,7 @@ extern "C" void jl_init_llvm(void)
      } else {
          jl_opaque_ptrs_set = 1;
      }
@@ -862,7 +862,7 @@ index 931f007004..a849148653 100644
  void optimizeDLSyms(Module &M);
  
 diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
-index 5df4f52aca..275de5cef3 100644
+index 08a8843047..7634929b3c 100644
 --- a/src/llvm-alloc-opt.cpp
 +++ b/src/llvm-alloc-opt.cpp
 @@ -753,6 +753,14 @@ void Optimizer::moveToStack(CallInst *orig_inst, size_t sz, bool has_ref, AllocF
@@ -888,18 +888,19 @@ index 5df4f52aca..275de5cef3 100644
              push_frame(user, replace_i);
          }
          else if (auto gep = dyn_cast<GetElementPtrInst>(user)) {
-@@ -1067,7 +1076,11 @@ void Optimizer::splitOnStack(CallInst *orig_inst)
+@@ -1067,8 +1076,12 @@ void Optimizer::splitOnStack(CallInst *orig_inst)
                      store_ty = T_pjlvalue;
                  }
                  else {
 +                    #if JL_LLVM_VERSION >= 170000
-+                    store_ty = PointerType::get(T_pjlvalue, cast<PointerType>(store_ty)->getAddressSpace());
++                    store_ty = PointerType::get(T_pjlvalue, store_ty->getPointerAddressSpace());
 +                    #else
-                     store_ty = PointerType::getWithSamePointeeType(T_pjlvalue, cast<PointerType>(store_ty)->getAddressSpace());
+                     store_ty = PointerType::getWithSamePointeeType(
+                         T_pjlvalue, store_ty->getPointerAddressSpace());
 +                    #endif
                      store_val = builder.CreateBitCast(store_val, store_ty);
                  }
-                 if (cast<PointerType>(store_ty)->getAddressSpace() != AddressSpace::Tracked)
+                 if (store_ty->getPointerAddressSpace() != AddressSpace::Tracked)
 diff --git a/src/llvm-codegen-shared.h b/src/llvm-codegen-shared.h
 index b355dd0543..e8ca62f519 100644
 --- a/src/llvm-codegen-shared.h
@@ -1057,7 +1058,7 @@ index 0110fa8efc..65fbcd3e08 100644
  #include <llvm/IR/Function.h>
  #include <llvm/IR/Instructions.h>
 diff --git a/src/llvm-propagate-addrspaces.cpp b/src/llvm-propagate-addrspaces.cpp
-index cc7dace28b..902d4a3b03 100644
+index 485eabefb5..4e5a2ee5e0 100644
 --- a/src/llvm-propagate-addrspaces.cpp
 +++ b/src/llvm-propagate-addrspaces.cpp
 @@ -163,14 +163,22 @@ Value *PropagateJuliaAddrspacesVisitor::LiftPointer(Module *M, Value *V, Instruc
