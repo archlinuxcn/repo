@@ -84,7 +84,7 @@ pkgver(){
   local _kcommit="$(git rev-parse --short HEAD)"
 
   local _revnum=$(($_kcommits + $_ocommits + $_bcommits + $_fcommits + $pkgrel))
-  local _version="${_pkgver}.${_revnum}.${_kcommit}"
+  local _version="${_pkgver}.r${_revnum}.${_kcommit}"
   echo $_version > pkgver
   printf $_version
 }
