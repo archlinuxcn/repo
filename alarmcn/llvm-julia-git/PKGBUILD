@@ -3,8 +3,8 @@
 
 pkgname=(llvm-julia-git llvm-libs-julia-git)
 pkgver=17.0.6
-pkgrel=1
-_julia_rel=1
+pkgrel=2
+_julia_rel=2
 _julia_commit=
 _versioned_llvm=
 arch=(i686 x86_64 armv7h aarch64)
@@ -23,7 +23,7 @@ else
   source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz)
   repodir=llvm-project-julia-$pkgver-$_julia_rel
 fi
-sha256sums=('317bf5a8a24a69224e5e9fd6be9656f9cfec76da6eb42983773cb660f58fe8b8')
+sha256sums=('309c11dd843f222b214702251e9a154e8416a197d29129c4eb2972c8d1d8787a')
 
 if [[ -z $_versioned_llvm ]]; then
   _llvm_prefix=/usr
