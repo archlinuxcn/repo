@@ -23,13 +23,13 @@ prepare() {
 
 build() {
 	cd "${pkgname}-${pkgver}/"
-	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${pkgname}/themes"
+	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${pkgname}/themes/"
 	cargo build --release --frozen --all-targets --all-features
 }
 
 check() {
 	cd "${pkgname}-${pkgver}/"
-	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/$pkgname/themes"
+	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${pkgname}/themes/"
 	cargo test --release --frozen --all-features
 }
 
@@ -40,7 +40,7 @@ package() {
 	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
 	install -Dm644 "${APP_ID}.desktop" -t "${pkgdir}/usr/share/applications/"
 	install -Dm644 "${APP_ID}.gschema.xml" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
-	install -Dm644 themes/*.css -t "${pkgdir}/usr/share/${pkgname}/"
+	install -Dm644 themes/*.css -t "${pkgdir}/usr/share/${pkgname}/themes/"
 
 	for locale in locales/*/LC_MESSAGES/waylyrics.po; do
 		echo "Installing locale $locale..."
