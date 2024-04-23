@@ -1,7 +1,7 @@
 # Maintainer: Haden Collins <collinshaden@gmail.com>
 pkgname='wlogout'
-pkgver=1.2.1
-pkgrel=1
+pkgver=1.2.2
+pkgrel=0
 pkgdesc="Logout menu for wayland"
 arch=('x86_64')
 license=("MIT")
@@ -20,5 +20,5 @@ package() {
     DESTDIR="$pkgdir" ninja -C build install
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
-md5sums=('705a12400cc99284a087a7975c09da50'
+md5sums=('2d129a847cdf9aa212b834f690f86e4a'
          'SKIP')
