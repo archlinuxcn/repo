@@ -3,7 +3,7 @@
 
 pkgname=yass-proxy
 pkgver=1.9.1
-pkgrel=1
+pkgrel=2
 _pkgver=1.9.1
 _pkgrel=1
 pkgdesc="lightweight http/socks proxy"
@@ -17,13 +17,16 @@ checkdepends=(curl)
 provides=(yass-proxy)
 conflicts=(yass-proxy-git)
 source=("https://github.com/Chilledheart/yass/releases/download/${_pkgver}/yass-${_pkgver}.tar.bz2"
+        "gtk4-fix-broken-alert-dialog-on-failure.patch"
        )
 sha256sums=('a2b7c2ac47778b6513788ca58e6293ce701eef28d29c8cb4efd4a1fb51ef0690'
+            'b0fc6a9593308816361ea33737c0a0d9818b344f0a380b2b020276cb6927bace'
        )
 
 prepare() {
   SRC_DIR="${srcdir}/yass-${_pkgver}"
   pushd $SRC_DIR
+  patch --forward --strip=1 --input=../gtk4-fix-broken-alert-dialog-on-failure.patch
   cd tools
   go build
   cd ..
