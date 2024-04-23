@@ -4,6 +4,7 @@ maintainers:
 pre_build_script: |
   clean_directory()
   aur_pre_build(maintainers=['ptr1337','sir_lucjan'])
+  run_cmd(['updpkgsums'])
 
 post_build: aur_post_build
 
