@@ -2,7 +2,7 @@
 # Contributor: Fancy Zhang <springzfx@gmail.com>
 
 pkgname=cgproxy-git
-pkgver=v0.20.r0.g86fe42e
+pkgver=0.20.r0.g86fe42e
 pkgrel=3
 pkgdesc="A transparent proxy program powered by cgroup2 and tproxy"
 arch=('x86_64')
@@ -20,7 +20,7 @@ b2sums=('SKIP')
 pkgver() {
   cd "$pkgname"
   ( set -o pipefail
-    git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    git describe --long --tags 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//' ||
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
   )
 }
