@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=python-clickgen
 _name=${pkgname#python-}
-pkgver=2.2.1
+pkgver=2.2.2
 pkgrel=1
 pkgdesc="X11 & Windows cursor building API"
 arch=('any')
@@ -21,7 +21,7 @@ makedepends=(
   'python-wheel'
 )
 source=("${_name}-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('27e48e1daca55031b11000ce08833323acd613cbf2df10c54c244390bfd32bc4')
+sha256sums=('678b4dfef7733efb409b307eaf0179a5dfc6af995df02e5ae85136067265dbbc')
 
 build() {
   cd "${_name}-$pkgver"
