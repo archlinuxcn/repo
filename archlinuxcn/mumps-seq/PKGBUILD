@@ -22,8 +22,7 @@ options=(staticlibs '!lto')
 prepare() {
   cd ${_PKGNAME}_${pkgver}
 
-  sed -e 's/-lpord/-lpord_seq/g' -e 's/-lmpiseq/-lmpiseq_seq/g' \
-      Make.inc/Makefile.G95.SEQ > Makefile.inc
+  cp Make.inc/Makefile.G95.SEQ Makefile.inc
 }
 
 build() {
@@ -48,7 +47,8 @@ build() {
              LIBBLAS="-lblas"
              LAPACK="-llapack")
 
-  make allshared "${make_args[@]}"
+  # Workaround Bug in 5.7.0 missing the SHARED_OPT definition in PORD/lib/Makefile
+  SHARED_OPT='-shared' make allshared "${make_args[@]}"
 }
 
 package(){
@@ -60,7 +60,7 @@ package(){
 
   # Install all libraries
   install -dm755 "${pkgdir}/usr/lib"
-  install -Dm644 -- lib/*.so "${pkgdir}/usr/lib"
+  install -Dm755 -- lib/*.so "${pkgdir}/usr/lib"
 
   # Install mpiseq headers
   install -dm755 "${pkgdir}/usr/include/mpiseq"
