@@ -2,9 +2,9 @@
 
 pkgname=waylyrics-git
 _pkgname=waylyrics
-_appname="io.poly000.${_pkgname}"
-pkgver=0.2.21_r10.g7d3059da
-pkgrel=4
+_appname="io.github.waylyrics.Waylyrics"
+pkgver=0.3.0_r4.gc5cda888
+pkgrel=2
 pkgdesc="the furry way to show desktop lyrics (git version)"
 url="https://github.com/waylyrics/waylyrics"
 conflicts=('waylyrics')
@@ -72,14 +72,14 @@ check() {
 package() {
     cd "${_pkgname}"
 
-    install -vDm644 "${_appname}.desktop" -t "${pkgdir}/usr/share/applications/"
+    install -vDm644 metainfo/"${_appname}.desktop" -t "${pkgdir}/usr/share/applications/"
 
     install -vDm755 "target/release/${_pkgname}" -t "${pkgdir}/usr/bin/"
-    install -vDm644 "${_appname}.gschema.xml" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
+    install -vDm644 metainfo/"${_appname}.gschema.xml" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
 
     install -vdm755 "${pkgdir}/usr/share/${_pkgname}/themes"
     cp -arv themes/* "${pkgdir}/usr/share/${_pkgname}/themes/"
-    cp -arv res/* "${pkgdir}/usr/share/"
+    cp -arv res/icons "${pkgdir}/usr/share/icons"
     
     # Locale files
     (
@@ -92,5 +92,5 @@ package() {
     )
 
     # License
-    install -vDm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -vDm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${_pkgname}"
 }
