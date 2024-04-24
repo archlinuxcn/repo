@@ -3,8 +3,8 @@
 _CUDA_ARCH_LIST="6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6;8.9;9.0;9.0+PTX"
 _pkgname=mmcv
 pkgname=(python-mmcv python-mmcv-full)
-pkgver=2.1.0
-pkgrel=3
+pkgver=2.2.0
+pkgrel=1
 epoch=1
 pkgdesc='OpenMMLab Computer Vision Foundation'
 arch=('x86_64')
@@ -32,7 +32,7 @@ makedepends=(
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmcv/archive/v${pkgver}.tar.gz"
 )
-sha512sums=('f12a501b9571e78701e4cdad34301e2c9fa0ea64f4c1887232285c6df6b6c3f493e6257366c89b3103965b900046b7532bdb6449c0a36b62f0a4d68284f50d5a')
+sha512sums=('e2899272a2b9015f8a73af15d36b7d2ccf2a56a69dbd9f02186b31a5939a2b8e257a15a68957599ede48d688475e344e23b3cae749b79c5e405a0d2aa0937306')
 prepare() {
   # fix glog error
   sed -i "s/define_macros = \[\]/define_macros = [('GLOG_USE_GLOG_EXPORT', None)]/g" "${_pkgname}-${pkgver}/setup.py"
