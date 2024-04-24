@@ -1,0 +1,54 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=waylyrics
+pkgver=0.2.21
+pkgrel=1
+pkgdesc="the furry way to show desktop lyrics"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/${pkgname}/${pkgname}"
+license=("MIT")
+depends=(
+	"openssl" "dbus" "gcc-libs" "glib2" "cairo" "dconf" "gtk4" "gettext"
+	"opencc" "hicolor-icon-theme"
+)
+makedepends=("cargo")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('aa3cb37821a898581c464214f2238d3c4d0dafbdb9caaa69ec1a50f9b8032a70')
+options=('!lto')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${pkgname}/themes/"
+	cargo build --release --frozen --all-targets --all-features
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${pkgname}/themes/"
+	cargo test --release --frozen --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	local APP_ID=io.github.waylyrics.Waylyrics
+
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 "metainfo/${APP_ID}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "metainfo/${APP_ID}.gschema.xml" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
+	install -Dm644 themes/*.css -t "${pkgdir}/usr/share/${pkgname}/themes/"
+
+	for locale in locales/*/LC_MESSAGES/waylyrics.po; do
+		echo "Installing locale $locale..."
+		mo=${locale/#locales\//} # */LC_MESSAGES/waylyrics.po
+		mo=${mo/%.po/.mo}        # */LC_MESSAGES/waylyrics.mo
+		msgfmt "${locale}" -o - | install -Dm644 /dev/stdin "${pkgdir}/usr/share/locale/${mo}"
+	done
+
+	cp -r res/icons/ "${pkgdir}/usr/share/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
