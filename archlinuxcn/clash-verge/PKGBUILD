@@ -64,6 +64,7 @@ package() {
 
 	install -d ${pkgdir}/usr/lib/${pkgname}/resources
 	ln -sf /etc/clash/Country.mmdb -t ${pkgdir}/usr/lib/${pkgname}/resources
+ 	install -Dm755 src-tauri/target/release/resources/{clash-verge,install,uninstall}-service -t ${pkgdir}/usr/lib/${pkgname}/resources
 
 	install -Dm644 src/assets/image/logo.bak.svg ${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg
 
