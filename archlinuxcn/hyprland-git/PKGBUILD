@@ -117,12 +117,18 @@ package() {
 	install -Dm644 "${pkgdir}/tmpwlr/usr/local/lib/libwlroots.a" -t "${pkgdir}/usr/lib/"
 	install -d ${pkgdir}/usr/include/hyprland/{protocols,wlroots-hyprland}
 
+	for cmd in hyprctl hyprpm; do
+		install -Dm644 "${cmd}/${cmd}.bash" "${pkgdir}/usr/share/bash-completion/completions/${cmd}"
+		install -Dm644 "${cmd}/${cmd}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${cmd}"
+		install -Dm644 "${cmd}/${cmd}.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
+	done
+
 	cp -R src "${pkgdir}/usr/include/hyprland/"
 	cp -R ${pkgdir}/tmpwlr/usr/local/include/* "${pkgdir}/usr/include/hyprland/wlroots-hyprland/"
 
 	find "${pkgdir}/usr/include/hyprland/" -type f ! -name '*.h*' -delete
 	rm -rf "${pkgdir}/tmpwlr/"
 
-	cp protocols/*-protocol.h "${pkgdir}/usr/include/hyprland/protocols/"
+	cp protocols/*.h* "${pkgdir}/usr/include/hyprland/protocols/"
 	install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig/"
 }
