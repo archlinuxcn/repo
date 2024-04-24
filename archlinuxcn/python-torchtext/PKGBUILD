@@ -2,7 +2,7 @@
 
 pkgname=python-torchtext
 _pkgname=text
-pkgver=0.17.2
+pkgver=0.18.0
 pkgrel=1
 epoch=1
 pkgdesc='Data loaders and abstractions for text and NLP'
@@ -38,7 +38,7 @@ makedepends=(
 source=("${_pkgname}::git+https://github.com/pytorch/text.git#tag=v${pkgver}"
         "0001-add-GLOG_USE_GLOG_EXPORT-definition.patch"
 )
-sha512sums=('3851c3079f83cfc62c3c8fc3c2b799a95a4e97c209ac60ce695b5d4ab67aa8f96881615211c9aeeb7d7aaf82d02bcbb38a7ac4aadf83af5e0247c20f9e8aa06e'
+sha512sums=('696404634cca1d535a5cf19105e4727fe441e47ecfab7e88fbdf0066abfe69b39103addd148cbca1d74471e89a74a1b6ea6e02e71e06e9cc8d9bac4414d36554'
             '8d5faf99d3e82039ebf0daffb1f15e5e6195141a79e1809006d75597bd322bfd6495ae63d4396dbe9ec7a007b0986bf92e66b87cf2f4e062f5732d3675343b5f')
 
 prepare() {
