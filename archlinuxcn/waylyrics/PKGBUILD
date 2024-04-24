@@ -35,7 +35,7 @@ check() {
 
 package() {
 	cd "${pkgname}-${pkgver}/"
-	local APP_ID=io.poly000.waylyrics
+	local APP_ID=io.github.waylyrics.Waylyrics
 
 	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
 	install -Dm644 "${APP_ID}.desktop" -t "${pkgdir}/usr/share/applications/"
