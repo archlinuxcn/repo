@@ -1,7 +1,7 @@
 # Maintainer: txtsd <aur.archlinux@ihavea.quest>
 
 pkgname=dissent
-pkgver=0.0.23
+pkgver=0.0.24
 _pkgver=$(sed 's/\./-/3' <<<${pkgver})
 pkgrel=1
 pkgdesc="Discord client written in go and gtk4"
@@ -13,7 +13,7 @@ makedepends=('git' 'go>=1.20.3')
 provides=("gtkcord4")
 replaces=("gtkcord4")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('7c5e10a6111cd8912c052337c56cb04cbb92b237453d560c85409f1c8f8cc01b')
+sha256sums=('65537bbc947acfc53fdd7bf0ab98e083fb78af73507b27deec9ba92c1bc783cc')
 
 prepare() {
 	mkdir -p "${pkgname}-${_pkgver}/build/"
