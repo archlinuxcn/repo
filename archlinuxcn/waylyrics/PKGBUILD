@@ -38,8 +38,8 @@ package() {
 	local APP_ID=io.github.waylyrics.Waylyrics
 
 	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
-	install -Dm644 "${APP_ID}.desktop" -t "${pkgdir}/usr/share/applications/"
-	install -Dm644 "${APP_ID}.gschema.xml" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
+	install -Dm644 "metainfo/${APP_ID}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "metainfo/${APP_ID}.gschema.xml" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
 	install -Dm644 themes/*.css -t "${pkgdir}/usr/share/${pkgname}/themes/"
 
 	for locale in locales/*/LC_MESSAGES/waylyrics.po; do
