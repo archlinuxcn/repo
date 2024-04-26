@@ -2,9 +2,10 @@
 # Contributor: Håvard Pettersson <mail@haavard.me>
 # Contributor: Andrew Stubbs <andrew.stubbs@gmail.com>
 
+_nodeversion=20
 pkgname=balena-etcher
 _pkgname=etcher
-pkgver=1.18.14
+pkgver=1.19.16
 pkgrel=1
 epoch=2
 pkgdesc='Flash OS images to SD cards & USB drives, safely and easily'
@@ -12,7 +13,7 @@ arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 _github_url='https://github.com/balena-io/etcher'
 url='https://balena.io/etcher'
 license=(Apache)
-depends=("electron25" "gtk3" "libxtst" "libxss" "nss" "alsa-lib" "glib2" "polkit" "libusb")
+depends=()
 makedepends=("git" "python" "nvm")
 optdepends=("libnotify: for notifications")
 conflicts=("${_pkgname}"
@@ -21,12 +22,10 @@ conflicts=("${_pkgname}"
 )
 options=('!strip')
 source=("etcher::git+https://github.com/balena-io/${_pkgname}.git#tag=v${pkgver}"
-        "${pkgname}-electron.sh"
-        "${pkgname}-electron.desktop"
+        "${pkgname}.desktop"
         )
-sha256sums=('SKIP'
-            '280d47d714974b30ca706b12fc3f4bf059c4b19aee87d84778009653003fb41e'
-            'c950d9578f9cf60998c920bb60c6617559963f06a4918e7072fdc706b0ef5754')
+sha256sums=('51022d670029b8bfd06d17b3db518375e5c480fd928315c90c72044ed9f77db7'
+            '6c5fb48aeb636272689c86d7cf9beea4515214636bc617a61c3e8387628b3415')
 
 _ensure_local_nvm() {
     # let's be sure we are starting clean
@@ -37,6 +36,8 @@ _ensure_local_nvm() {
     # in ./.nvrc is not (yet) installed in $NVM_DIR
     # but nvm itself still gets loaded ok
     source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
+    nvm install ${_nodeversion}
+    nvm use "${_nodeversion}"
 }
 
 prepare() {
@@ -44,39 +45,35 @@ prepare() {
   git submodule init
   git submodule update || cd "${srcdir}/${_pkgname}/scripts/resin" && git checkout --
   _ensure_local_nvm
-  nvm install 16
 }
 
 build() {
-  unset MAKEFLAGS       # unset MAKEFLAGS to avoid some error
   _ensure_local_nvm
   cd "${_pkgname}"
-  npm ci --openssl_fips=""
-  npm run webpack
-  npm prune --production
+  export npm_config_build_from_source=true
+  export npm_config_cache="${srcdir}/.npm_cache"
+  export npm_config_disturl=https://electronjs.org/headers
+  npm install
+  npm run package
 }
 
 package() {
   cd "${_pkgname}"
 
-  _appdir="${pkgdir}/usr/lib/${pkgname}"
+  _appdir="${pkgdir}/opt/${pkgname}"
   install -d "${_appdir}"
 
-  install package.json "${_appdir}"
-  cp -a {lib,generated,node_modules} "${_appdir}"
-  install -D assets/icon.png "${_appdir}/assets/icon.png"
-  install -D lib/gui/app/index.html "${_appdir}/lib/gui/app/index.html"
+  cp -a out/balenaEtcher-linux-*/* "${_appdir}"
 
-  install -Dm755 "${srcdir}/${pkgname}-electron.sh" "${pkgdir}/usr/bin/${pkgname}-electron"
-  install -Dm644 "${srcdir}/${pkgname}-electron.desktop" \
-    "${pkgdir}/usr/share/applications/${pkgname}-electron.desktop"
+  install -d "${pkgdir}/usr/bin"
+  ln -s /opt/${pkgname}/${pkgname} "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 "${srcdir}/${pkgname}.desktop" \
+    "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
   for size in 16x16 32x32 48x48 128x128 256x256 512x512; do
     install -Dm644 "assets/iconset/${size}.png" \
-      "${pkgdir}/usr/share/icons/hicolor/${size}/apps/${pkgname}-electron.png"
+      "${pkgdir}/usr/share/icons/hicolor/${size}/apps/${pkgname}.png"
   done
 
-  find "${pkgdir}" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
 }
 
-# vim:set ts=2 sw=2 et:
