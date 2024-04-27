@@ -4,7 +4,7 @@
 # shellcheck disable=SC2034,2164,2154
 pkgname=auto-cpufreq
 pkgver=2.2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
 url="https://github.com/AdnanHodzic/auto-cpufreq"
@@ -57,7 +57,7 @@ package() {
 	
 	install -Dm755 scripts/auto-cpufreq-install.sh "$pkgdir/usr/share/$pkgname/scripts/"
 	install -Dm755 scripts/auto-cpufreq-remove.sh "$pkgdir/usr/share/$pkgname/scripts/"
-	install -Dm644 $srcdir/auto-cpufreq.service "$pkgdir/etc/systemd/system/$pkgname.service"
+	install -Dm644 $srcdir/auto-cpufreq.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
 	install -Dm755 scripts/cpufreqctl.sh "$pkgdir/usr/share/$pkgname/scripts/"
 	install -Dm644 scripts/style.css "$pkgdir/usr/share/$pkgname/scripts/"
 	install -Dm644 scripts/auto-cpufreq-gtk.desktop -t "$pkgdir/usr/share/applications/"
