@@ -3,7 +3,7 @@
 pkgname=fava
 pkgdesc='Web interface for beancount'
 pkgver=1.26.2
-pkgrel=2
+pkgrel=3
 arch=('any')
 url='https://github.com/beancount/fava'
 license=('MIT')
@@ -14,6 +14,6 @@ depends=('beancount' 'python-setuptools' 'python-click' 'python-markdown2' 'pyth
 makedepends=('python-pip')
 
 package () {
-  PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps fava-${pkgver}-py3-none-any.whl
-  python -O -m compileall "${pkgdir}/usr/lib/python3.11/site-packages/${pkgname}/"
+  PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps --no-warn-script-location fava-${pkgver}-py3-none-any.whl
+  python -O -m compileall "${pkgdir}/usr/lib/python3.*/site-packages/${pkgname}/"
 }
