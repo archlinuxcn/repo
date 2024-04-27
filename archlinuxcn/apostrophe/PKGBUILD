@@ -1,18 +1,36 @@
-# Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=apostrophe
 pkgver=2.6.3
-pkgrel=7
+pkgrel=8
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
 arch=('any')
 url="https://world.pages.gitlab.gnome.org/apostrophe"
 license=('GPL-3.0-or-later')
-depends=('gspell' 'libhandy' 'otf-fira-mono' 'otf-fira-sans' 'python-cairo'
-         'python-chardet' 'python-gobject' 'python-levenshtein' 'python-pyenchant'
-         'python-pypandoc' 'python-regex' 'python-setuptools' 'webkit2gtk-4.1')
-makedepends=('meson' 'gobject-introspection' 'sassc')
-optdepends=('texlive-bin: for the pdftex module'
-            'mathjax: for formula preview')
+depends=(
+  'gspell'
+  'libhandy'
+  'otf-fira-mono'
+  'otf-fira-sans'
+  'python-cairo'
+  'python-chardet'
+  'python-gobject'
+  'python-levenshtein'
+  'python-pyenchant'
+  'python-pypandoc'
+  'python-regex'
+  'python-setuptools'
+  'webkit2gtk-4.1'
+)
+makedepends=(
+  'gobject-introspection'
+  'meson'
+  'sassc'
+)
 checkdepends=('appstream-glib')
+optdepends=(
+  'mathjax: for formula preview'
+  'texlive-bin: for the pdftex module'
+)
 source=("https://gitlab.gnome.org/World/apostrophe/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz"
         'Allow-building-with-webkitgtk-4.1.patch')
 sha256sums=('6f73c80146af0820ec705ec8b32ec64f0f323f51de6b6a4cfd4d02f0719876f3'
