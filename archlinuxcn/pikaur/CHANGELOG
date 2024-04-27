@@ -2186,3 +2186,14 @@ Fri Apr 5 02:41:34 2024 +0200
     *  2024-02-17 3ff6194 actionless feat(install_cli, build, aur_dep,conflicts): when resolving AUR deps add to recovery prompt an option to skip check() func and its deps (fixes #774)
     *  2024-02-17 40694dc actionless fix(aur_deps: find_dep_graph_to): avoid recursion (fixes #774)
     *  2024-02-09 de46955 actionless feat(install_cli: build_pkgs): mark already built pkgs between restart of whole installation loop (fixes #772)
+
+
+Sat Apr 27 20:16:19 2024 +0200
+-------------------------------------------------
+1.20            Release 1.20
+    
+    *  2024-04-26 45de718 actionless fix(aur_deps, install_cli): don't require runtime deps if --pkgbuild (-P) provided but not --install (-i) (Fixes #786)
+    *  2024-04-25 f3540b7 actionless chore(argparse): make it compatible with python 3.12.3+ (fixes #787)
+    *  2024-04-15 9d2fc7a Knirps1 fix(main: cli_dynamic_select): off by one error (#785)
+    *  2024-04-12 6992118 actionless fix(args): improve detection when interactive package selection is chosen (fixes #783)
+    *  2024-04-11 c6b75f0 Osman Karagöz chore(locale): update tr.po (#782)
