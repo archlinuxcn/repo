@@ -2,7 +2,7 @@
 
 pkgname=brunsli
 pkgver=0.1
-pkgrel=5
+pkgrel=6
 pkgdesc='Practical JPEG Repacker'
 arch=('x86_64')
 url='https://github.com/google/brunsli'
@@ -13,7 +13,7 @@ makedepends=(
   git
 )
 source=("${pkgname}::git+https://github.com/google/brunsli.git#tag=v${pkgver}")
-sha256sums=('SKIP')
+sha256sums=('842cb1ec23a6d244e6eebd1b253ae44e0bbff57c0fbf5dc8b153b10220ec4ca2')
 
 prepare() {
   cd "${srcdir}/${pkgname}"
