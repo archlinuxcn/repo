@@ -2,22 +2,22 @@
 
 pkgname=hyperglot
 pkgver=0.6.3
-pkgrel=2
+pkgrel=3
 pkgdesc='A database and tools for detecting language support in fonts'
 arch=(any)
 url="https://github.com/rosettatype/$pkgname"
 license=(GPL-3.0-only)
-_py_deps=(click
-          colorlog
-          fonttools
-          unicodedata2
-          yaml)
+_pydeps=(click
+         colorlog
+         fonttools
+         unicodedata2
+         yaml)
 depends=(python
-         "${_py_deps[@]/#/python-}")
+         "${_pydeps[@]/#/python-}")
 makedepends=(python-{build,installer,wheel}
              python-setuptools)
 _archive="$pkgname-$pkgver"
-source=("$_archive.tar.gz::$url/archive/$pkgver.tar.gz")
+source=("$url/archive/$pkgver/$_archive.tar.gz")
 sha256sums=('ac4c0ee94703fca06a4d088b8a25e8fd795f9d1a8c6c498286446ddf673b729b')
 
 build() {
