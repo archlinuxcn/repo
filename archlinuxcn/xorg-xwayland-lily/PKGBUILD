@@ -2,7 +2,7 @@
 
 pkgname=xorg-xwayland-lily
 pkgver=23.2.6
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=(
     LicenseRef-Adobe-Display-PostScript
@@ -26,7 +26,7 @@ pkgdesc="run X clients under wayland, with !733 HiDPI patch"
 depends=('nettle' 'libepoxy' 'systemd-libs' 'libxfont2' 
          'pixman' 'xorg-server-common' 'libxcvt' 'mesa'
          'libglvnd' 'libxau' 'wayland' 'libdrm' 'libtirpc'
-         'libxshmfence' 'glibc')
+         'libei' 'libxshmfence' 'glibc')
 makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
              'xorg-font-util' 'wayland-protocols' 'mesa-libgl'
              'systemd' 'egl-wayland')
