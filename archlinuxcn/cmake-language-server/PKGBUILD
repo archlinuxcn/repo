@@ -1,7 +1,7 @@
 # Maintainer: Otreblan <otreblain@gmail.com>
 
 pkgname=cmake-language-server
-pkgver=0.1.9
+pkgver=0.1.10
 pkgrel=1
 pkgdesc="Python based cmake language server"
 arch=('any')
@@ -20,7 +20,7 @@ install=
 changelog=
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
 noextract=()
-sha256sums=('8db5472db8cb2c2aadfe21b6c7e66fb0e6dcd421ab5a0f569a2971c7e3fec33f')
+sha256sums=('8faaf3bce811b4de5b060a0b9eb664b18b506310d4e96b6b77f958dbb24b3639')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
