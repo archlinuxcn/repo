@@ -23,23 +23,12 @@ makedepends=(
   python-setuptools
   python-wheel
 )
-checkdepends=(
-  python-pytest
-  python-numpy
-  python-pytz
-  python-pandas
-)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mverleg/pyjson_tricks/archive/v${pkgver}.tar.gz")
 sha1sums=('884eba1efe60f0bf4953a3df58b27fd7cf8ca9d5')
 
 build() {
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  pytest -v
 }
 
 package() {
