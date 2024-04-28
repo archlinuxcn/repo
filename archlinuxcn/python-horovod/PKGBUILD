@@ -42,15 +42,18 @@ optdepends=(
 source=("${_pkgname}-${pkgver}::git+https://github.com/horovod/horovod.git#tag=v${pkgver}"
         "0001-fix-building-with-torch-2.1.patch::https://github.com/horovod/horovod/pull/3998.patch"
         "0002-fix-building-torch-extension-with-glog.patch"
+        "https://github.com/horovod/horovod/pull/3957.patch"
 )
 sha512sums=('SKIP'
             '7c56b56e665e0590ced4366d71dcd5ed83cab7e2943b0548d0472ef19b5a051a9dcaa8800c417882b171acbe4dc5f745e1c876aabb0bb8564215ce121f14cf67'
-            '52850f5e4f60122e0064307f0d5d5fb6781c8f77f0e54d4b9c306e98bd15d1edc1c670a1623653fb571332c74cb11d7ffd5a1b7e6fe3403f990cc96ca5ccf7c0')
+            '52850f5e4f60122e0064307f0d5d5fb6781c8f77f0e54d4b9c306e98bd15d1edc1c670a1623653fb571332c74cb11d7ffd5a1b7e6fe3403f990cc96ca5ccf7c0'
+            'd3f808a9b8cd887dfe4b117e6c715ad28b15083b59334001da565108c9764eaf8dda76c9ae9c507fcc06362effcc72f3d9c2fdb443db9d0c9c839073359db613')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
   patch -p1 -i "${srcdir}/0001-fix-building-with-torch-2.1.patch"
   patch -p1 -i "${srcdir}/0002-fix-building-torch-extension-with-glog.patch"
+  patch -p1 -i "${srcdir}/3957.patch"
   git submodule update --init --recursive
 }
 
