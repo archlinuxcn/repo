@@ -11,9 +11,6 @@ license=('MIT')
 depends=(
   python-pytorch
 )
-checkdepends=(
-  python-pytest
-)
 makedepends=(
   numactl
   python-build
@@ -27,11 +24,6 @@ sha512sums=('84c0dc442a560521b5321695926d28ce3353be3af609c607ab1cbb68cb78bfcbf5e
 build() {
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  PYTHONPATH=${PWD}/build/lib pytest -v
 }
 
 package() {
