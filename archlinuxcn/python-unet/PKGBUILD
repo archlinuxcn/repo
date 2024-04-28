@@ -13,7 +13,10 @@ depends=(
 )
 makedepends=(
   numactl
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 checkdepends=(
   python-pytest
@@ -24,7 +27,7 @@ sha512sums=('06bd7da3d661e3a8d85436e3638118d87df3a5b0238977ac4446e61f1b6dfef0c32
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -34,7 +37,7 @@ check() {
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
