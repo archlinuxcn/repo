@@ -1,0 +1,51 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Jaroslav Lichtblau <svetlemodry@archlinux.org>
+# Contributor: Morten Linderud <foxboron@archlinux.org>
+# Contributor: Gaetan Bisson <bisson@archlinux.org>
+# Contributor: Callan Barrett <wizzomafizzo@gmail.com>
+# Contributor: mucknert <mucknert@gmx.net>
+
+pkgname=offlineimap-lily-git
+pkgver=8.0.0.r39.gaf043e7
+pkgrel=1
+pkgdesc='Synchronizes emails between two repositories'
+arch=('any')
+url='https://www.offlineimap.org/'
+license=('GPL-2.0-or-later')
+depends=('python-imaplib2' 'python-distro' 'python-rfc6555')
+makedepends=('asciidoc' 'python-setuptools' 'python-build' 'python-installer' 'python-wheel')
+optdepends=(
+    "python-gssapi: for Kerberos authentication"
+    "python-pysocks: for SOCKS5 proxy functionality")
+conflicts=(offlineimap)
+provides=(offlineimap=$pkgver)
+source=(git+https://github.com/lilydjwg/offlineimap3)
+sha256sums=(SKIP)
+
+pkgver() {
+  cd offlineimap3
+  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
+}
+
+build() {
+  cd offlineimap3
+  python -m build --wheel --no-isolation
+  make -C docs man
+}
+
+package() {
+  cd offlineimap3
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -Dm644 docs/offlineimap.1 "${pkgdir}"/usr/share/man/man1/offlineimap.1
+  install -Dm644 docs/offlineimapui.7 "${pkgdir}"/usr/share/man/man7/offlineimapui.7
+  install -Dm644 offlineimap.conf "${pkgdir}"/usr/share/offlineimap/offlineimap.conf
+  install -Dm644 offlineimap.conf.minimal "${pkgdir}"/usr/share/offlineimap/offlineimap.conf.minimal
+
+  install -Dm644 contrib/systemd/offlineimap.service "${pkgdir}"/usr/lib/systemd/user/offlineimap.service
+  install -Dm644 contrib/systemd/offlineimap@.service "${pkgdir}"/usr/lib/systemd/user/offlineimap@.service
+  install -Dm644 contrib/systemd/offlineimap-oneshot.service "${pkgdir}"/usr/lib/systemd/user/offlineimap-oneshot.service
+  install -Dm644 contrib/systemd/offlineimap-oneshot.timer "${pkgdir}"/usr/lib/systemd/user/offlineimap-oneshot.timer
+  install -Dm644 contrib/systemd/offlineimap-oneshot@.service "${pkgdir}"/usr/lib/systemd/user/offlineimap-oneshot@.service
+  install -Dm644 contrib/systemd/offlineimap-oneshot@.timer "${pkgdir}"/usr/lib/systemd/user/offlineimap-oneshot@.timer
+}
