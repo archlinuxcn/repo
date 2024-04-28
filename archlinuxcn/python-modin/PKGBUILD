@@ -28,7 +28,12 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/modin-project/modin/archive/${pkgver}.tar.gz")
-sha512sums=('9c6273a13b4d3458a15c084befa2a2868c7e24cce00bace549194dbcc7d00fe63b91084a333342a4d80702020d25792a468f18a66bd3175111ad50df995c1c79')
+sha512sums=('7a04c6fbfa548fbaaab5bb159ada9bad7331926c57359d7156c80a387287d6843c9c6d21b08f75077ec3e4db9b8f48d0edcb2005b6c0b91f14ec33bfd3881120')
+
+prepare() {
+  sed -i "s,SafeConfigParser,ConfigParser," "${srcdir}/${_pkgname}-${pkgver}/versioneer.py"
+  sed -i "s,readfp,read_file," "${srcdir}/${_pkgname}-${pkgver}/versioneer.py"
+}
 
 build() {
   cd "${_pkgname}-${pkgver}"
@@ -38,5 +43,7 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rfv "${pkgdir}${site_packages}/modin/tests"
 }
 # vim:set ts=2 sw=2 et:
