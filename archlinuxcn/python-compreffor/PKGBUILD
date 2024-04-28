@@ -1,16 +1,14 @@
 # Maintainer: Guillaume Horel <guillaume.horel@gmail.com>
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 
-BUILDENV+=(!check)
-
 pkgname=python-compreffor
 _pyname=${pkgname#python-}
 pkgver=0.5.5
-pkgrel=2
+pkgrel=3
 pkgdesc='A CFF table suroutinizer for FontTools'
 arch=(x86_64)
 url="https://github.com/googlefonts/$_pyname"
-license=(Apache)
+license=(Apache-2.0)
 depends=(python
          python-fonttools)
 makedepends=(cython
@@ -31,7 +29,7 @@ check() {
 	cd "$_archive/src/python"
 	local _pyver=$(python -c 'import sys; print("".join(map(str, sys.version_info[:2])))')
 	export PYTHONPATH="$PWD/build/lib.linux-$CARCH-cpython-$_pyver"
-	pytest
+	# pytest
 }
 
 package() {
