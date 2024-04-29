@@ -6,7 +6,7 @@ gitver=v6.8.8
 patchver=20240221.2
 patchname=more-uarches-for-kernel-6.8-rc4+.patch
 pkgver=6.8.v.8
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="https://www.kernel.org/"
 license=('GPL2')
@@ -18,12 +18,16 @@ source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#ta
         'config.x86_64'
 	# patch from our graysky archlinux colleague
 	"https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/$patchver/$patchname"
+	# fast cppc patch
+	'fast_cppc.patch'
 )
 sha256sums=('SKIP'
             #config.x86_64
             '5330fce19698bef9deb603bb20addc1abf137ad9f4dbdad57587228e3f69e713'
             #grayskypatch
             'd69232afd0dd6982ae941cf2d1f577f4be2011e3bb847d1db37952acf416b5d3'
+            #fast cppc patch
+            'f8a69166a3ee91b797198b4e82b6e397a8f7749feed8aed7f3b323b020798a66'
 )
 
 _kernelname=${pkgbase#linux}
