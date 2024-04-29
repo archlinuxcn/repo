@@ -6,8 +6,8 @@
 
 pkgbase=linux-mainline               # Build stock -ARCH kernel
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v6.9-rc5
-pkgver=6.9rc5
+_tag=v6.9-rc6
+pkgver=6.9rc6
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)
@@ -88,7 +88,8 @@ prepare() {
 build() {
   cd $_srcname
   _make all
-  _make htmldocs
+# Disabled for now, fails since python 3.12 with AttributeError: module 'docutils.nodes' has no attribute 'reprunicode'
+#_make htmldocs
 }
 
 _package() {
@@ -211,6 +212,8 @@ _package-headers() {
 
 _package-docs() {
   pkgdesc="Documentation for the $pkgdesc kernel"
+    return # Disabled
+
 
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
