@@ -1,7 +1,7 @@
 Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
 Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Commit: 745d25c4fc20e8bf474e00756fa93a0c63d3b816
-Last Updated: 04/17/24 (Mutter 46.0+r49)
+Commit: abe84f8ef3e075f7caae6ced8dfb6d536948d2d8
+Last Updated: 04/29/24 (Mutter 46.1)
 ---
 
 Use triple buffering if and when the previous frame is running late.
@@ -16,7 +16,7 @@ there's no latency penalty when the system is able to maintain full frame rate.
 
 ---
 diff --git a/clutter/clutter/clutter-frame-clock.c b/clutter/clutter/clutter-frame-clock.c
-index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51253e9586 100644
+index 93e4c9329020286d3c1202ef4f6420b2deb74942..b637fac637f956b2ae5eb71b755f4f00bf689062 100644
 --- a/clutter/clutter/clutter-frame-clock.c
 +++ b/clutter/clutter/clutter-frame-clock.c
 @@ -42,6 +42,15 @@ enum
@@ -391,7 +391,33 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
            break;
          }
  
-@@ -770,11 +892,18 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
+@@ -753,6 +875,25 @@ clutter_frame_clock_uninhibit (ClutterFrameClock *frame_clock)
+     maybe_reschedule_update (frame_clock);
+ }
+ 
++static gboolean
++want_triple_buffering (ClutterFrameClock *frame_clock)
++{
++  switch (triple_buffering_mode)
++    {
++    case TRIPLE_BUFFERING_MODE_NEVER:
++      return FALSE;
++    case TRIPLE_BUFFERING_MODE_AUTO:
++      return frame_clock->mode == CLUTTER_FRAME_CLOCK_MODE_FIXED &&
++             !(frame_clock->last_flip_hints &
++               CLUTTER_FRAME_HINT_DIRECT_SCANOUT_ATTEMPTED);
++    case TRIPLE_BUFFERING_MODE_ALWAYS:
++      return TRUE;
++    }
++
++  g_assert_not_reached ();
++  return FALSE;
++}
++
+ void
+ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
+ {
+@@ -770,11 +911,24 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
      case CLUTTER_FRAME_CLOCK_STATE_INIT:
      case CLUTTER_FRAME_CLOCK_STATE_IDLE:
      case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED:
@@ -402,17 +428,23 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
        return;
 -    case CLUTTER_FRAME_CLOCK_STATE_DISPATCHING:
 -    case CLUTTER_FRAME_CLOCK_STATE_PENDING_PRESENTED:
-+    case CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_ONE:
 +    case CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_ONE_AND_SCHEDULED:
-+      next_update_time_us = g_get_monotonic_time ();
 +      frame_clock->state =
 +        CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_ONE_AND_SCHEDULED_NOW;
 +      break;
++    case CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_ONE:
++      if (want_triple_buffering (frame_clock))
++        {
++          frame_clock->state =
++            CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_ONE_AND_SCHEDULED_NOW;
++          break;
++        }
++      G_GNUC_FALLTHROUGH;
 +    case CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_TWO:
        frame_clock->pending_reschedule = TRUE;
        frame_clock->pending_reschedule_now = TRUE;
        return;
-@@ -803,13 +932,18 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
+@@ -803,13 +957,17 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
  
    frame_clock->next_update_time_us = next_update_time_us;
    g_source_set_ready_time (frame_clock->source, next_update_time_us);
@@ -426,13 +458,12 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
 +  TripleBufferingMode current_mode = triple_buffering_mode;
 +
 +  if (current_mode == TRIPLE_BUFFERING_MODE_AUTO &&
-+      (frame_clock->last_flip_hints &
-+       CLUTTER_FRAME_HINT_DIRECT_SCANOUT_ATTEMPTED))
++      !want_triple_buffering (frame_clock))
 +    current_mode = TRIPLE_BUFFERING_MODE_NEVER;
  
    if (frame_clock->inhibit_count > 0)
      {
-@@ -825,12 +959,41 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
+@@ -825,12 +983,33 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
        frame_clock->state = CLUTTER_FRAME_CLOCK_STATE_SCHEDULED;
        return;
      case CLUTTER_FRAME_CLOCK_STATE_IDLE:
@@ -452,14 +483,6 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
 +          frame_clock->pending_reschedule = TRUE;
 +          return;
 +        case TRIPLE_BUFFERING_MODE_AUTO:
-+          calculate_next_update_time_us (frame_clock,
-+                                         &next_update_time_us,
-+                                         &frame_clock->next_presentation_time_us,
-+                                         &frame_clock->next_frame_deadline_us);
-+          frame_clock->is_next_presentation_time_valid =
-+            (frame_clock->next_presentation_time_us != 0);
-+          frame_clock->has_next_frame_deadline =
-+            (frame_clock->next_frame_deadline_us != 0);
 +          frame_clock->state =
 +            CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_ONE_AND_SCHEDULED;
 +          break;
@@ -469,14 +492,14 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
 +          frame_clock->is_next_presentation_time_valid = FALSE;
 +          frame_clock->state =
 +            CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_ONE_AND_SCHEDULED;
-+          break;
++          return;
 +        }
 +      break;
 +    case CLUTTER_FRAME_CLOCK_STATE_DISPATCHED_TWO:
        frame_clock->pending_reschedule = TRUE;
        return;
      }
-@@ -859,7 +1022,6 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
+@@ -859,7 +1038,6 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
  
    frame_clock->next_update_time_us = next_update_time_us;
    g_source_set_ready_time (frame_clock->source, next_update_time_us);
@@ -484,7 +507,7 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
  }
  
  void
-@@ -875,6 +1037,8 @@ clutter_frame_clock_set_mode (ClutterFrameClock     *frame_clock,
+@@ -875,6 +1053,8 @@ clutter_frame_clock_set_mode (ClutterFrameClock     *frame_clock,
      {
      case CLUTTER_FRAME_CLOCK_STATE_INIT:
      case CLUTTER_FRAME_CLOCK_STATE_IDLE:
@@ -493,7 +516,7 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
        break;
      case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED:
        frame_clock->pending_reschedule = TRUE;
-@@ -885,8 +1049,14 @@ clutter_frame_clock_set_mode (ClutterFrameClock     *frame_clock,
+@@ -885,8 +1065,14 @@ clutter_frame_clock_set_mode (ClutterFrameClock     *frame_clock,
        frame_clock->pending_reschedule_now = TRUE;
        frame_clock->state = CLUTTER_FRAME_CLOCK_STATE_IDLE;
        break;
@@ -510,7 +533,7 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
        break;
      }
  
-@@ -922,7 +1092,7 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -922,7 +1108,7 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
                               frame_clock->refresh_interval_us;
  
    lateness_us = time_us - ideal_dispatch_time_us;
@@ -519,7 +542,7 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
      frame_clock->last_dispatch_lateness_us = 0;
    else
      frame_clock->last_dispatch_lateness_us = lateness_us;
-@@ -943,10 +1113,27 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -943,10 +1129,27 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
      }
  #endif
  
@@ -548,7 +571,7 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
  
    frame_count = frame_clock->frame_count++;
  
-@@ -977,26 +1164,36 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -977,26 +1180,36 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
    result = iface->frame (frame_clock, frame, frame_clock->listener.user_data);
    COGL_TRACE_END (ClutterFrameClockFrame);
  
@@ -598,7 +621,7 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
          }
        break;
      }
-@@ -1029,21 +1226,31 @@ frame_clock_source_dispatch (GSource     *source,
+@@ -1029,21 +1242,31 @@ frame_clock_source_dispatch (GSource     *source,
  }
  
  void
@@ -635,7 +658,7 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
  
    if (frame_clock->got_measurements_last_frame)
      g_string_append_printf (string, " =");
-@@ -1210,8 +1417,6 @@ clutter_frame_clock_dispose (GObject *object)
+@@ -1210,8 +1433,6 @@ clutter_frame_clock_dispose (GObject *object)
  {
    ClutterFrameClock *frame_clock = CLUTTER_FRAME_CLOCK (object);
  
@@ -644,7 +667,7 @@ index 93e4c9329020286d3c1202ef4f6420b2deb74942..a6c7ecea21fa0bf40baf992c4b800f51
    if (frame_clock->source)
      {
        g_signal_emit (frame_clock, signals[DESTROY], 0);
-@@ -1235,6 +1440,15 @@ static void
+@@ -1235,6 +1456,15 @@ static void
  clutter_frame_clock_class_init (ClutterFrameClockClass *klass)
  {
    GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -738,10 +761,10 @@ index 34f0770bd7dd630a3d9da5728254b0b5fbcc9e99..c7b3d02acb940bf5712179b576fb5eb7
 +
  G_DEFINE_AUTOPTR_CLEANUP_FUNC (ClutterFrame, clutter_frame_unref)
 diff --git a/clutter/clutter/clutter-stage-view.c b/clutter/clutter/clutter-stage-view.c
-index b503ef839a059c83d90b221cafd7b8c6f7d55b34..1fbe3ae7a3372cffe14b3250ae7dbae2f5b4b5f0 100644
+index f5188e2acf36125c8c6c58f917a6167423d3c2eb..d53e37785101dda48e673a181a4ffc8802e09784 100644
 --- a/clutter/clutter/clutter-stage-view.c
 +++ b/clutter/clutter/clutter-stage-view.c
-@@ -902,14 +902,21 @@ handle_frame_clock_frame (ClutterFrameClock *frame_clock,
+@@ -898,14 +898,21 @@ handle_frame_clock_frame (ClutterFrameClock *frame_clock,
  
        _clutter_stage_window_redraw_view (stage_window, view, frame);
  
