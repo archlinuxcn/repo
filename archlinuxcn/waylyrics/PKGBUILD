@@ -12,6 +12,10 @@ depends=(
 	"opencc" "hicolor-icon-theme"
 )
 makedepends=("cargo")
+optdepends=(
+	"breeze-icons: better tray-icon icons"
+	"xdg-desktop-portal: file dialog to import LRC"
+)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('7d0bc6ede24b6ad242e45f1e38e184939689ea8cbdc7de1d526748a01bc7fcc9')
 options=('!lto')
