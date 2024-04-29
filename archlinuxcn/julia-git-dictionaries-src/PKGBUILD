@@ -1,0 +1,18 @@
+pkgname=julia-git-dictionaries-src
+pkgver=0.4.2
+_commit=7c4190f3cec53b654a43a9a88d080ef69030401f
+pkgrel=1
+pkgdesc="Dictionaries.jl"
+url="https://github.com/andyferris/Dictionaries.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/andyferris/Dictionaries.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Dictionaries.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Dictionaries "${pkgdir}" "${pkgname}" julia-git
+}
