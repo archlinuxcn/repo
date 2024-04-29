@@ -3,7 +3,7 @@
 # Initial Maintainer: Augusto F. Hack <hack.augusto@gmail.com>
 pkgname=python-carbon
 pkgver=1.1.10
-pkgrel=2
+pkgrel=3
 pkgdesc='Backend data caching and persistence daemon for Graphite'
 arch=('any')
 url='https://github.com/graphite-project/carbon'
@@ -13,11 +13,13 @@ optdepends=('python-txamqp: AMQP support')
 makedepends=('python-setuptools')
 options=(!emptydirs)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/graphite-project/carbon/archive/$pkgver.tar.gz"
+        https://github.com/graphite-project/carbon/pull/951/commits/dea2ddb038b01eff16f5da4a19c7282e438ec19a.patch
         carbon.service
         carbon.tmpfiles
         carbon.sysusers
         carbon.conf)
 sha1sums=('ea38f4e5ad9070c90dc9b68a4804164c9d4a3092'
+          'eb1e05d6a6f7febe94fdc2ec440d7c4e7a2dd14d'
           'a2d216abc6f5a27a0725eb4f87cc533074ed63b2'
           '1cbaf55a0d5c532901b6c6fe039bc15c8a54c7dd'
           'c2bdf80507458a2a9fb999f4c99db45eb5ac6f64'
@@ -33,6 +35,11 @@ backup=(etc/carbon/aggregation-rules.conf
         etc/carbon/whitelist.conf)
 conflicts=(python2-carbon)
 replaces=(python2-carbon)
+
+prepare() {
+  cd "$srcdir/carbon-$pkgver"
+  patch -Np1 < ../dea2ddb038b01eff16f5da4a19c7282e438ec19a.patch
+}
 
 package() {
   cd "$srcdir/carbon-$pkgver"

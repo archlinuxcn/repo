@@ -1,0 +1,14 @@
+diff --git a/src/core/window.c b/src/core/window.c
+index 47c29d94a8..5ac054e88f 100644
+--- a/src/core/window.c
++++ b/src/core/window.c
+@@ -5993,6 +5993,9 @@ meta_window_foreach_transient (MetaWindow            *window,
+   GSList *windows;
+   GSList *tmp;
+ 
++  if (!window)
++    return;
++
+   windows = meta_display_list_windows (window->display, META_LIST_DEFAULT);
+ 
+   tmp = windows;

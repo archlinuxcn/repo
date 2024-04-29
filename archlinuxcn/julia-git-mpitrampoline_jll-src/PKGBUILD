@@ -1,6 +1,6 @@
 pkgname=julia-git-mpitrampoline_jll-src
-pkgver=5.3.2+0
-_commit=48d25d26bd304f9a1bc9766eccc8c5cc7e7f841f
+pkgver=5.3.3+0
+_commit=8d9deb67de17c4ebaa344e1f2b9ecf7121d22782
 pkgrel=1
 pkgdesc="MPItrampoline_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/MPItrampoline_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git mpich mpitrampoline)
 source=("git+https://github.com/JuliaBinaryWrappers/MPItrampoline_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('73f1943fbaae83b02ecbfb2747cd68c91a384d530712bea03cdf33d6783da8bf'
             'e1197b7447ffc68092e753fc1822d7601e8188ea7e1ff4028e04181a654efa7f')
 
 build() {

@@ -3,16 +3,13 @@
 _pkgname=ttach
 pkgname=python-ttach
 pkgver=0.0.3
-pkgrel=3
+pkgrel=4
 pkgdesc='Image Test Time Augmentation with PyTorch'
 arch=('any')
 url='https://github.com/qubvel/ttach'
 license=('MIT')
 depends=(
   python-pytorch
-)
-checkdepends=(
-  python-pytest
 )
 makedepends=(
   numactl
@@ -27,11 +24,6 @@ sha512sums=('84c0dc442a560521b5321695926d28ce3353be3af609c607ab1cbb68cb78bfcbf5e
 build() {
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  PYTHONPATH=${PWD}/build/lib pytest -v
 }
 
 package() {

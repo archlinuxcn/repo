@@ -1,19 +1,21 @@
 maintainers:
   - github: CoelacanthusHex
     email: CoelacanthusHex@gmail.com
+  - github: Kimiblock
 
 build_prefix: extra-x86_64
 
-pre_build: vcs_update
+pre_build_script: |
+  aur_pre_build(maintainers=['Kimiblock'])
 
-post_build: git_pkgbuild_commit
+post_build_script: |
+  aur_post_build()
+
 
 update_on:
-  - source: github
-    github: springzfx/cgproxy
-    branch: master
+  - source: aur
+    aur: cgproxy-git
   - source: alpm
     alpm: libbpf
     provided: libbpf.so
-    strip_release: true
 

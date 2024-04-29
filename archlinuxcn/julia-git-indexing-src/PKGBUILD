@@ -1,0 +1,18 @@
+pkgname=julia-git-indexing-src
+pkgver=1.1.1
+_commit=10005a1bb9e02e06699fc16cf57adc0bf0b74065
+pkgrel=1
+pkgdesc="Indexing.jl"
+url="https://github.com/andyferris/Indexing.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/andyferris/Indexing.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Indexing.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Indexing "${pkgdir}" "${pkgname}" julia-git
+}

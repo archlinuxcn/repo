@@ -1,0 +1,18 @@
+pkgname=julia-git-typedtables-src
+pkgver=1.4.6
+_commit=702cf7fdde8d6ac9822c8f43d695b50f6b183508
+pkgrel=1
+pkgdesc="TypedTables.jl"
+url="https://github.com/JuliaData/TypedTables.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaData/TypedTables.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TypedTables.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TypedTables "${pkgdir}" "${pkgname}" julia-git
+}

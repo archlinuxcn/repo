@@ -1,0 +1,27 @@
+--- a/util.py	2023-09-11 20:17:35.000000000 +0800
++++ b/util.py	2024-04-29 20:26:53.942145127 +0800
+@@ -12,7 +12,6 @@
+ See the License for the specific language governing permissions and
+ limitations under the License."""
+ 
+-import imp
+ import io
+ import json as _json
+ import socket
+@@ -129,13 +128,10 @@
+ 
+ 
+ def load_module(module_path, member=None):
++  import importlib.util
+   module_name = splitext(basename(module_path))[0]
+-  try:  # 'U' is default from Python 3.0 and deprecated since 3.9
+-    module_file = open(module_path, 'U')
+-  except ValueError:
+-    module_file = open(module_path, 'rt')
+-  description = ('.py', 'U', imp.PY_SOURCE)
+-  module = imp.load_module(module_name, module_file, module_path, description)
++  spec = importlib.util.spec_from_file_location(module_name, module_path)
++  module = importlib.util.module_from_spec(spec)
+   if member:
+     return getattr(module, member)
+   else:

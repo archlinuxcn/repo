@@ -3,13 +3,14 @@
 pkgname=python-ydata-profiling
 _pkgname=ydata-profiling
 pkgver=4.7.0
-pkgrel=1
+pkgrel=3
 pkgdesc='Create HTML profiling reports from pandas DataFrame objects'
 arch=('any')
 url='https://github.com/ydataai/ydata-profiling'
 license=('MIT')
 depends=(
   ipython
+  python-dacite
   python-dateutil
   python-htmlmin
   python-imagehash
@@ -20,6 +21,7 @@ depends=(
   python-missingno
   python-multimethod
   python-networkx
+  python-numba
   python-numpy
   python-pandas
   python-phik
@@ -31,7 +33,9 @@ depends=(
   python-statsmodels
   python-tangled-up-in-unicode
   python-tqdm
+  python-typeguard
   python-visions
+  python-wordcloud
   python-yaml
 )
 conflicts=(python-pandas-profiling)

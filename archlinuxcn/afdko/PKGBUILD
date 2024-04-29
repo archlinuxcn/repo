@@ -3,29 +3,29 @@
 
 pkgname=afdko
 pkgver=4.0.1
-pkgrel=3
+pkgrel=5
 pkgdesc='Adobe Font Development Kit for OpenType'
 arch=(x86_64)
 url="https://github.com/adobe-type-tools/$pkgname"
 license=(Apache-2.0)
-_py_deps=(booleanoperations
-          brotli # for fonttools[woff]
-          defcon
-          fontmath
-          fontpens # for defcon[pens]
-          fonttools
-          fs # for fonttools[ufo]
-          lxml # for defcon[lxml] and fonttools[lxml]
-          tqdm
-          ufonormalizer
-          ufoprocessor
-          unicodedata2 # for fonttools[unicode]
-          zopfli) # for fonttools[woff]
+_pydeps=(booleanoperations
+         brotli # for fonttools[woff]
+         defcon
+         fontmath
+         fontpens # for defcon[pens]
+         fonttools
+         fs # for fonttools[ufo]
+         lxml # for defcon[lxml] and fonttools[lxml]
+         tqdm
+         ufonormalizer
+         ufoprocessor
+         unicodedata2 # for fonttools[unicode]
+         zopfli) # for fonttools[woff]
 depends=(gcc-libs
          glibc
          libxml2
          python
-         "${_py_deps[@]/#/python-}")
+         "${_pydeps[@]/#/python-}")
 makedepends=(cmake
              git # Upstream Issue: https://github.com/adobe-type-tools/afdko/issues/1407
              ninja
@@ -47,7 +47,7 @@ prepare () {
 
 build() {
 	cd "$_archive"
-	python -m build --wheel --no-isolation
+	python -m build -wn
 }
 
 check() {
@@ -58,6 +58,6 @@ check() {
 
 package() {
 	cd "$_archive"
-	python -m installer --destdir="$pkgdir" dist/*.whl
-	install -Dm0644  -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE.md
+	python -m installer -d "$pkgdir" dist/*.whl
+	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE.md
 }

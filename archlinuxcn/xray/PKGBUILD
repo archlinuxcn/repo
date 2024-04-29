@@ -5,7 +5,7 @@
 # Contributor: pandada8 <pandada8@gmail.com>
 
 pkgname=xray
-pkgver=1.8.10
+pkgver=1.8.11
 pkgrel=1
 pkgdesc="The best v2ray-core, with XTLS support"
 arch=('x86_64')
@@ -19,7 +19,7 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "xray.tmpfiles"
         "xray.service"
         "xray@.service")
-sha256sums=('af5bb501b50e3abe6b54c8d8ea764d7f8b021c4d53540a468254a24f3334afc5'
+sha256sums=('d99ee6008c508abbad6bbb242d058b22efb50fb35867d15447a2b4602ab4b283'
             '801131bf2eb079750f17d3e703e414eab8494db0d512164cdef3cc68cef308b8'
             '2d301e9f2fae728da55f33a15b2c36e90cdb657deafb5d6ab7d74375ce9fdf38'
             '66a8a3280aa5b3ed41b9855ba3de3f884bd2113b4a965cf097fcb31c3a6066ed'
