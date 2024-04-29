@@ -7,7 +7,7 @@ pkgname=python-pdm-pep517
 # WARNING: python-pdm may not be compatible with whatever pdm-pep517 can be upgraded to:
 # https://github.com/pdm-project/pdm/issues/1165
 pkgver=1.1.4
-pkgrel=5
+pkgrel=6
 epoch=1
 pkgdesc="A PEP 517 backend for PDM that supports PEP 621 metadata"
 arch=(any)
@@ -60,10 +60,13 @@ build() {
 check() {
   cd $_name-$pkgver
 
-  # set default git config for test
-  git config --global user.email "you@example.com"
-  git config --global user.name "Your Name"
-  pytest -vv
+  # Disable for AUR. This is disastrous on AUR.
+  #   -- Kisaragi Hiu, otherwise known as "Your Name" in a few commits
+  #
+  # # set default git config for test
+  # git config --global user.email "you@example.com"
+  # git config --global user.name "Your Name"
+  # pytest -vv
 }
 
 package() {
