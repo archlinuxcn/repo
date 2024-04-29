@@ -3,7 +3,7 @@
 
 pkgname=graphite-web
 pkgver=1.1.10
-pkgrel=10
+pkgrel=11
 pkgdesc="a Django-based web application that renders graphs and dashboards"
 url="https://github.com/graphite-project/graphite-web"
 license=('Apache')
@@ -17,11 +17,13 @@ arch=('any')
 backup=('etc/graphite/local_settings.py')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/graphite-project/${pkgname}/archive/${pkgver}.tar.gz"
         https://github.com/graphite-project/graphite-web/commit/e7d08e6af65c47c5a5dd6421c5b352d7ac3d381c.patch
+        imp.patch
         "local_settings.py"
         "graphite-web.service" "graphite-web.socket"
         "graphite-web-setup")
 sha256sums=('1ac42a2871ea58b76b42aa3671affb87c7a92616e949bf1312fca831075a501b'
             'f6cd36e00b3ba3cf77bb806e9db705c1396c4a449179e395f4b75658ee2ea854'
+            'f51af4a248c1f9ab3f96903c6ad44c5e378d9d79c30e90bffae7af9c90d602fa'
             'aaf70cb4d900e878693fb2c93a290b5e0d98c3ebfd3a113b55c178dd63b6e3b5'
             'b20c2bddcbe6520bf61fa53c16919982efa5754e98a3cadaa0887ca028d87f65'
             '318238773e37e1297d1eaf4c7b9e5dc9e8ae74298c381034b5476b14f0ab76bf'
@@ -30,6 +32,7 @@ sha256sums=('1ac42a2871ea58b76b42aa3671affb87c7a92616e949bf1312fca831075a501b'
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"
   patch -Np1 < ../e7d08e6af65c47c5a5dd6421c5b352d7ac3d381c.patch
+  patch -Np1 < ../imp.patch
 }
 
 build() {
