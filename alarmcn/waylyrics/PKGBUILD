@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=waylyrics
-pkgver=0.3.5
+pkgver=0.3.6
 pkgrel=1
 pkgdesc="the furry way to show desktop lyrics"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -13,7 +13,7 @@ depends=(
 )
 makedepends=("cargo")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('7d0bc6ede24b6ad242e45f1e38e184939689ea8cbdc7de1d526748a01bc7fcc9')
+sha256sums=('64641795153cc53e62e5d678877e90cfd438d0c52d68785dcb20b8cadcb316bb')
 options=('!lto')
 
 prepare() {
