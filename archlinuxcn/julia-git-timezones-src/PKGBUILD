@@ -11,13 +11,6 @@ depends=(julia-git)
 source=("git+https://github.com/JuliaTime/TimeZones.jl.git#commit=$_commit")
 sha256sums=('6d41f8f03153c3ebcb35c08beb91cb27c20004b5ab33cdd328dfdfec26d5dd67')
 
-build() {
-  cd TimeZones.jl
-
-  rm Artifacts.toml
-  rm -rf src/winzone
-}
-
 package() {
   cd TimeZones.jl
 
