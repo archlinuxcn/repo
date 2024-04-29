@@ -33,7 +33,7 @@ else
 fi
 epoch=1
 pkgver=46.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -103,6 +103,7 @@ makedepends=(
   gobject-introspection
   gtk3
   meson
+  python-packaging
   sysprof
   wayland-protocols
   xorg-server
@@ -112,15 +113,18 @@ if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
 _commit=b57c80602d3780bb9b13fddcf2caca394910e6b4  # tags/46.1^0
-source=("git+https://gitlab.gnome.org/GNOME/mutter.git#commit=$_commit"
+source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
-	'mr3373.patch')
+        'mr3373.patch'
+        'fix-sigsegv-in-meta_window_foreach_transient.patch')
 sha256sums=('56dc25f7743ca3d72e5471ceadeb774e19e34feeb7ba106a6a78c8bb2cc20b56'
             '1a0e4ca2ebf32c9b75085114cb1c6856e6f35ea3a157a7e2c5be765466716a34'
-            '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f')
+            '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
+            '488326a7b1eca1e3a91cbfcec0101b217b66b440c3b14e4333406373a84b3682')
 b2sums=('4acd4a192455890b12b2fc9b6553ed65bd2176307cd6c6683fc2ab476b7fa88f4b5e507a1209b3e900c68d94768f3cf749b4f5d87d25300b33a112182c8a62a7'
         'a40fdd0d5c01c0bd5cea98e8aeae6d313834a863b2c4789aea107c8318ab63783a5e4cb92759f3c2b74e8fcac5775b7fa14bf7d11692524f8d0a46f67ac532d6'
-        '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c')
+        '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
+        '03c9531036437dcb145f5676055bc29a2f855d2c53513be3063b87797a994fcaa86f59fc6d22cd490f2dec92bd1afc6e8556a881045a89ab69127be43f32ba27')
 
 pkgver() {
   cd $_pkgname
@@ -168,6 +172,10 @@ prepare() {
   #git fetch vanvugt
   #git fetch verdre
   #git fetch 3v1no
+
+  # Shell crashes with SIGSEGV in "meta_window_foreach_transient ()"
+  ## https://gitlab.gnome.org/GNOME/mutter/-/issues/3427
+  patch -Np1 -i ../"fix-sigsegv-in-meta_window_foreach_transient.patch"
 
   ### Merge Requests
 
