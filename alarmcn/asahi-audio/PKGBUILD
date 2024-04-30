@@ -1,7 +1,7 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-audio
-pkgver=2.0
+pkgver=2.1
 pkgrel=1
 pkgdesc='Linux Userspace Audio Configuration'
 arch=('aarch64')
@@ -11,7 +11,7 @@ makedepends=(wireplumber pipewire)
 source=(
   "asahi-audio-${pkgver}.tar.gz::https://github.com/AsahiLinux/asahi-audio/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha256sums=('57a7791d69d9e448551da65b1e32da40919eae9667770108e2b9be2786207bc3')
+sha256sums=('5cda5d8b29b73e5c07d253db552d802bc2d9ecac4efa8e61929038f92ba6ab9a')
 
 build() {
   cd "${srcdir}/asahi-audio-${pkgver}"
