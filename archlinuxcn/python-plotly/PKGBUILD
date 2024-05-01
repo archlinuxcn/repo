@@ -3,8 +3,8 @@
 
 _pkgname=plotly.py
 pkgname=python-plotly
-pkgver=5.21.0
-pkgrel=2
+pkgver=5.22.0
+pkgrel=1
 pkgdesc='The interactive graphing library for Python (includes Plotly Express)'
 url='https://plotly.com/python'
 depends=(
@@ -31,7 +31,7 @@ makedepends=(
 license=('MIT')
 arch=('any')
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/plotly/plotly.py/archive/v${pkgver}.tar.gz")
-sha512sums=('38841fae844452550004fd22126c12c19fa65dae8985e8449eb5ff5be53dcb04a20658afc13a675c6086db2c623e0902e4138cd28f3b4c9d0a9a0013c1465c13')
+sha512sums=('447072a78a5914aea5546edc6c51ea36475d12fd7e4b9f845ebe8396fb531c9b7ba942b6b5f9680f897acd9e2aefb8c09d08aadf106a78531faa8995d5ac218e')
 
 build() {
   cd ${_pkgname}-${pkgver}/packages/python/plotly
