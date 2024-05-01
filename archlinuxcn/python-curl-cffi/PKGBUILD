@@ -1,0 +1,26 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Maintainer: Matthew Sexton <mssxtn@gmail.com>
+
+pkgname=python-curl-cffi
+_name=curl_cffi
+pkgver=0.7.0b4
+pkgrel=2
+pkgdesc="Python binding for curl-impersonate via CFFI"
+arch=('x86_64')
+url="https://github.com/yifeikong/curl_cffi"
+license=('MIT')
+depends=('curl-impersonate-chrome' 'glibc' 'python' 'python-certifi' 'python-cffi' 'python-eventlet' 'python-gevent')
+makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
+source=("${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('9f6a6d70b4d4e7abe77357a621d0581c4d94ac9885fe323f19bca5ff8ab64cbb')
+
+build() {
+    cd "$_name-$pkgver"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "$_name-$pkgver"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
