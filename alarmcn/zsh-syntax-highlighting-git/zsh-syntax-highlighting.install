@@ -1,0 +1,8 @@
+post_install() {
+  cat << EOF
+To activate zsh-syntax-highlighting, add the following line at the end of ~/.zshrc:
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+EOF
+}
+
+# vim:set ts=2 sw=2 et:
