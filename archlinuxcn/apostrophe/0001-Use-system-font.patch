@@ -1,0 +1,34 @@
+From 2bda071943a224ac424b1c46828acd35ee04f3e7 Mon Sep 17 00:00:00 2001
+From: Kimiblock <pn3535@icloud.com>
+Date: Tue, 29 Aug 2023 20:38:16 +0800
+Subject: [PATCH] Use system font
+
+---
+ data/media/css/gtk/style.css | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/data/media/css/gtk/style.css b/data/media/css/gtk/style.css
+index 9b6840d..c0357ec 100644
+--- a/data/media/css/gtk/style.css
++++ b/data/media/css/gtk/style.css
+@@ -32,7 +32,7 @@
+ }
+ 
+ .apostrophe-editor {
+-  font-family: 'Fira Mono', monospace;
++  font-family: monospace;
+   font-size: 1.091em;
+   /*text-decoration-color: @error_color;
+   background: @base_color;
+@@ -88,7 +88,7 @@
+ } 
+ 
+ .lexikon {
+-  font-family: serif;
++  font-family: sans-serif;
+   font-size: 12px;
+   background: @theme_selected_bg_color;
+   border: 4px solid @theme_selected_bg_color;
+-- 
+2.42.0
+
