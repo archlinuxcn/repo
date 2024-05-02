@@ -1,6 +1,6 @@
 pkgname=julia-git-symbolicindexinginterface-src
-pkgver=0.3.17
-_commit=632032fc71372729872e303f210e792859152cc0
+pkgver=0.3.19
+_commit=e44c134032127e84b14b862d9549264eaaf58b5f
 pkgrel=1
 pkgdesc="SymbolicIndexingInterface.jl"
 url="https://github.com/SciML/SymbolicIndexingInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/SymbolicIndexingInterface.jl.git#commit=$_commit")
-sha256sums=('111268398d8013b2485bef84b2451c9f2a2f283720d07a2b56c998ec4e28dbde')
+sha256sums=('0e3a7e248ed0347c39f95628960a395a1e23b5c35683d70af5a862944d2248fd')
 
 package() {
   cd SymbolicIndexingInterface.jl
