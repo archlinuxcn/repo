@@ -5,10 +5,10 @@
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 epoch=1
-pkgver=1.1.1
-pkgrel=2
+pkgver=1.2.0
+pkgrel=1
 # curl https://api.github.com/repos/archlinuxcn/devtools/git/ref/tags/$pkgver-archlinuxcn1 | jq -r .object.sha
-_tag=1184c720ee2ed94963e9efa96d2583023e9d520b
+_tag=74fb845cf28be24f73fbb1b096fad64e4f725d2c
 _upstream_pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
@@ -22,6 +22,7 @@ depends=(
   coreutils
   curl
   diffutils
+  expac
   fakeroot
   findutils
   grep
@@ -38,14 +39,16 @@ depends=(
   subversion
 )
 makedepends=(
-  asciidoc
+  asciidoctor
   shellcheck
+)
+checkdepends=(
+  bats
 )
 optdepends=(
   'btrfs-progs: btrfs support'
   'bat: pretty printing for pkgctl search'
   'nvchecker: pkgctl version subcommand'
-  'pacman-contrib: support for the --update-checksums option'
 )
 provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
@@ -63,6 +66,11 @@ pkgver() {
 build() {
   cd ${pkgname}
   make BUILDTOOLVER="${epoch}:${pkgver}-${_upstream_pkgrel}-${arch}" PREFIX=/usr
+}
+
+check() {
+  cd ${pkgname}
+  make PREFIX=/usr test
 }
 
 package() {
