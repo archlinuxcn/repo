@@ -2,6 +2,7 @@
 
 from lilaclib import aur_pre_build
 from lilaclib import edit_file
+from lilaclib import run_cmd
 
 
 def pre_build():
@@ -10,3 +11,4 @@ def pre_build():
         if line.startswith("_py="):
             line = "_py=cp312"
         print(line)
+    run_cmd(["updpkgsums"])
