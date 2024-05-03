@@ -1,0 +1,21 @@
+diff --git a/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp b/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
+index 188d512e8..9c417671d 100644
+--- a/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
++++ b/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
+@@ -15,6 +15,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "data/data_session.h"
+ #include "dialogs/ui/dialogs_layout.h"
+ #include "ui/painter.h"
++#include "ui/power_saving.h"
+ #include "styles/style_dialogs.h"
+ 
+ namespace Dialogs::Ui {
+@@ -165,7 +166,7 @@ void PaintUserpic(
+ 		int size,
+ 		bool paused) {
+ 	if (videoUserpic) {
+-		videoUserpic->paintLeft(p, view, x, y, outerWidth, size, paused);
++		videoUserpic->paintLeft(p, view, x, y, outerWidth, size, paused || On(PowerSaving::kAnimations));
+ 	} else {
+ 		peer->paintUserpicLeft(p, view, x, y, outerWidth, size);
+ 	}
