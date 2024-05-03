@@ -4,7 +4,7 @@
 pkgname=python-ufo2ft
 _pyname=${pkgname#python-}
 pkgver=3.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A bridge from UFOs to FontTools objects'
 arch=(any)
 url="https://github.com/googlefonts/$_pyname"
