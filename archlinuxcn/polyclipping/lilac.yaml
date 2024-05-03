@@ -4,8 +4,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+# The AUR package is maintained by Bevan, while the last packager is gromit,
+# who dropped this package from [extra] to AUR
 pre_build_script: |
-    aur_pre_build(maintainers='Bevan')
+    aur_pre_build(maintainers=['Bevan', 'gromit'])
 
 post_build: aur_post_build
 
