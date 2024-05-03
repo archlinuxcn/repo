@@ -161,7 +161,7 @@ fi
 _major=6.9
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc5
+_rcver=rc6
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -188,7 +188,7 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
 fi
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=550.76
+_nv_ver=550.78
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 source=(
     "https://github.com/torvalds/linux/archive/refs/tags/v${_major}-${_rcver}.tar.gz"
@@ -713,9 +713,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('86640286e9c979f45cf3211b99c7c1fe1ae7347e01772b52231863ba726443ec3c1c6b961b7f8e6d7505b80ab692893df926567664abf7f09f10a4590d5e83f8'
-        '88b91d85a0d0eb984a02cb6d7e9268521212f4a66de62f35bc7dd1899a56552a5e43f4bd3d15307be04814dc96ff2cd1556b32c9fbeb93b185bc3bca9c8d17f4'
+b2sums=('8a35ad6226eb60e5a74c729d5556feb3838c05d1dd0a9fd9d808826c8dc1db82cb015b07c8acd130c47569f700e455ec07cfe7acaa824a7ad1ee4f4ac700314d'
+        'e5bbca5fac16a8336084a863e0ab042e1d55ef2299df5c8d39f1f8331262d97ad265426f6a4796e907773dd1cb0ae9d473d78d3628f632efcf25203a221de8aa'
         '43ef7a347878592740d9eb23b40a56083fa747f7700fa1e2c6d039d660c0b876d99bf1a3160e15d041fb13d45906cdb5defef034d4d0ae429911864239c94d8d'
-        '880172d44bcd4564e765dd260f5c8e8c09420d67635938df901a6f63af5c27545b43c75a8393b095c351386487baacdd4f0f3bfe19e561c7cd4c84b47eff40fb'
+        'a27e1185bc22506fa73ff314281650d79be3791789032b0397fa7ce4b41c6a200cb3461830a7daffe4266fd89b853a843001448cda8cb5c8c74042c082b93819'
         'f51b2de9a9e028044de2816d00334119346b9cb59f9c4241b6fd80f61a7c7c86ee5bc61e5715a8b48dbba2423ec8c18d99f9235664762af923e7769cd830f957'
-        'bbe41fb39d1a7ec5a9764a4c84b24608f0d5f52f4be36a08ea4688aaaab287ee59a98fc411fc2d81a47225f446c33120309f93be69fde33f0e679d7549421a94')
+        '0fa23df9ca224e2da208b39af0d479b758622f06543ed9b6a7c1058813d5d498d3057d45cb774ed496c54c36cc686eec09a47ef5860ceeb2b11ed267e66612f7')

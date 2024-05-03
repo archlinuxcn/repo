@@ -1,6 +1,6 @@
 pkgname=julia-git-yaosym-src
-pkgver=0.6.7
-_commit=6a4c4753efe96d78d60e672997734a809b9724b5
+pkgver=0.6.8
+_commit=6b006e598e76185ae7081d4c61a2eb8c241a2f7f
 pkgrel=1
 pkgdesc="YaoSym.jl"
 url="https://github.com/QuantumBFS/Yao.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumBFS/Yao.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('fd0577c0f7814b131199fef4b5547e24e202e696df5cf7d0ef4ca1e3399e6fba')
 
 package() {
   cd Yao.jl/lib/YaoSym

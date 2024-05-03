@@ -1,16 +1,15 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=apostrophe
-pkgver=2.6.3
-pkgrel=8
+pkgver=3.0
+pkgrel=1
 pkgdesc="A distraction free Markdown editor for GNU/Linux made with GTK+"
 arch=('any')
 url="https://world.pages.gitlab.gnome.org/apostrophe"
 license=('GPL-3.0-or-later')
 depends=(
-  'gspell'
-  'libhandy'
-  'otf-fira-mono'
-  'otf-fira-sans'
+  'gtksourceview5'
+  'libadwaita'
+  'libspelling'
   'python-cairo'
   'python-chardet'
   'python-gobject'
@@ -19,22 +18,24 @@ depends=(
   'python-pypandoc'
   'python-regex'
   'python-setuptools'
-  'webkit2gtk-4.1'
+  'webkitgtk-6.0'
 )
 makedepends=(
   'gobject-introspection'
   'meson'
-  'sassc'
 )
-checkdepends=('appstream-glib')
 optdepends=(
   'mathjax: for formula preview'
   'texlive-bin: for the pdftex module'
+  'ttf-fira-mono: recommended Mono font'
+  'ttf-fira-sans: recommended Sans font'
 )
 source=("https://gitlab.gnome.org/World/apostrophe/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz"
-        'Allow-building-with-webkitgtk-4.1.patch')
-sha256sums=('6f73c80146af0820ec705ec8b32ec64f0f323f51de6b6a4cfd4d02f0719876f3'
-            'c5c64aa312a17fcf761b0da956147f91532c8c43b33d608ca3acb6f10bd53d12')
+        '0001-Use-system-font.patch'
+        '2-rm-reveal-check.patch')
+sha256sums=('5f06a923ab2bffa16ba623f05b7ac67ea75b49891cee99048c157a15dae29f19'
+            'e909c05f259a874afd5e414fd13b0f162972e59c61c23e6d619e502254fcd4fe'
+            'a3e2eea5fca084f53fd6d0f9e61ace8e14b4c83d9c2f1d5ea74c8589c8c10b8f')
 
 prepare() {
   cd "$pkgname-v$pkgver"
@@ -48,7 +49,11 @@ prepare() {
   # W: hidden-file-or-dir
   rm apostrophe/.pylintrc
 
-  patch -Np1 -i ../Allow-building-with-webkitgtk-4.1.patch
+  # Use system monospace & sans font instead of hard dependency on Fira Mono / Fira Sans
+  patch -Np1 -i "$srcdir/0001-Use-system-font.patch"
+
+  ## TODO Find a way to package reveal.js
+  patch meson.build < "$srcdir/2-rm-reveal-check.patch"
 }
 
 build() {

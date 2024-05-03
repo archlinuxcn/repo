@@ -1,0 +1,13 @@
+diff --git a/ui/style/style_core_font.cpp b/ui/style/style_core_font.cpp
+index af0928c..7590256 100644
+--- a/ui/style/style_core_font.cpp
++++ b/ui/style/style_core_font.cpp
+@@ -345,7 +345,7 @@ struct Metrics {
+ 		if (!style.isEmpty() && !style.startsWith(
+ 				"Semibold",
+ 				Qt::CaseInsensitive)) {
+-			font.setBold(true);
++			font.setBold(false);
+ 		}
+ 	}
+ 

@@ -3,7 +3,7 @@
 pkgname=waylyrics-git
 _pkgname=waylyrics
 _appname="io.github.waylyrics.Waylyrics"
-pkgver=0.3.5_r19.g61b962cd
+pkgver=0.3.8_r3.gb7496051
 pkgrel=2
 pkgdesc="the furry way to show desktop lyrics (git version)"
 url="https://github.com/waylyrics/waylyrics"
@@ -22,7 +22,10 @@ depends=('openssl' 'hicolor-icon-theme'
     'gettext'
     'mimalloc')
 makedepends=('rust' 'git' 'jq')
-optdepends=('breeze-icons: better tray-icon icons')
+optdepends=(
+    'breeze-icons: better tray-icon icons'
+    'xdg-desktop-portal: file dialog to import LRC'
+)
 
 source=("git+${url}.git")
 

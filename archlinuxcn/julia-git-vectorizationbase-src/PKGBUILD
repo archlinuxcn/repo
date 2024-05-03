@@ -1,6 +1,6 @@
 pkgname=julia-git-vectorizationbase-src
-pkgver=0.21.66
-_commit=bf6857c949f877ee0636626f8e8078aae1e7d754
+pkgver=0.21.67
+_commit=a472ff94495f2430dafc080eda4d70752e0084c3
 pkgrel=1
 pkgdesc="VectorizationBase.jl"
 url="https://github.com/JuliaSIMD/VectorizationBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/VectorizationBase.jl.git#commit=$_commit")
-sha256sums=('9f37c3474011e4faad5ae6319521ceb4dbe50a3e7e0b9cf015ba292df105e940')
+sha256sums=('6f9a1d8391674e8f713f04206e1dad0b35d007cfae518c6bd1920dfb63073605')
 
 package() {
   cd VectorizationBase.jl

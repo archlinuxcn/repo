@@ -4,8 +4,8 @@
 
 pkgname=gdcm
 _pkgname=GDCM
-pkgver=3.0.23
-pkgrel=4
+pkgver=3.0.24
+pkgrel=1
 pkgdesc='A C++ library for DICOM medical files'
 arch=('x86_64')
 url='http://gdcm.sourceforge.net'
@@ -81,7 +81,7 @@ source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/malaterre/GDCM/archive/v${pkgver}.tar.gz"
   "0001-fix-building-with-VTK.patch"
 )
-sha512sums=('a1c45434e925ddac293993014686865aecf1b6745013ed6a141b6ee1bdbe7ddef6abcfc2491583e63f33f4292617ee65412da4c41f38731409df9149903a8772'
+sha512sums=('2fe28444cee171a536d63f26c1ad7308a03b946e79dc8b7d648b5c7e6f4a8f52c0c32ec9cf463d95b876db31becc81541638b97fc7f15b79ae04de5988d6941e'
             '73a10de2ac729efe93a662841aa7e8e201d64716ff5a88806611afcbeb36ee81260ec439aab70d601a360dde1c34fa885a71d8178315d5add8c33dea5a1e001c')
 
 prepare() {
