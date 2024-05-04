@@ -1,18 +1,18 @@
-From dd4c76d021daaf8852095d144f83c2a39b5f3f7f Mon Sep 17 00:00:00 2001
+From 35b789879967ee77f5b044978f063a27800628d8 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 28 Sep 2023 14:16:04 +0300
 Subject: [PATCH 5/5] AUR: Fix hwnd redefinition
 
 ---
- steam_helper/steam.cpp                       | 2 ++
- vrclient_x64/vrclient_x64/json_converter.cpp | 2 ++
- 2 files changed, 4 insertions(+)
+ steam_helper/steam.cpp          | 4 ++++
+ vrclient_x64/json_converter.cpp | 2 ++
+ 2 files changed, 6 insertions(+)
 
 diff --git a/steam_helper/steam.cpp b/steam_helper/steam.cpp
-index 6a23b9ac..5437560c 100644
+index 38712c62..46f6e187 100644
 --- a/steam_helper/steam.cpp
 +++ b/steam_helper/steam.cpp
-@@ -34,7 +34,9 @@
+@@ -34,10 +34,14 @@
  
  #include "ntstatus.h"
  #define WIN32_NO_STATUS
@@ -20,19 +20,28 @@ index 6a23b9ac..5437560c 100644
  #include <windows.h>
 +}
  #include <winternl.h>
- #include <shlwapi.h>
- #include <shlobj.h>
-diff --git a/vrclient_x64/vrclient_x64/json_converter.cpp b/vrclient_x64/vrclient_x64/json_converter.cpp
-index 83fd2ec0..64d209a2 100644
---- a/vrclient_x64/vrclient_x64/json_converter.cpp
-+++ b/vrclient_x64/vrclient_x64/json_converter.cpp
-@@ -1,4 +1,6 @@
+ #include <shellapi.h>
 +extern "C" {
- #include <windows.h>
+ #include <shlwapi.h>
 +}
- #include <wine/debug.h>
+ #include <string.h>
+ #include <stdio.h>
+ #include <limits.h>
+diff --git a/vrclient_x64/json_converter.cpp b/vrclient_x64/json_converter.cpp
+index 7d6b4f66..c5533d79 100644
+--- a/vrclient_x64/json_converter.cpp
++++ b/vrclient_x64/json_converter.cpp
+@@ -3,8 +3,10 @@
  
- WINE_DEFAULT_DEBUG_CHANNEL(vrclient);
+ #include "ntstatus.h"
+ #define WIN32_NO_STATUS
++extern "C" {
+ #include "windef.h"
+ #include "winbase.h"
++}
+ 
+ #undef min
+ #undef max
 -- 
-2.43.0
+2.45.0
 
