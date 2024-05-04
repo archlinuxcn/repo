@@ -3,17 +3,17 @@
 
 _basename=libsrtp
 pkgname=lib32-libsrtp
-pkgver=2.5.0
+pkgver=2.6.0
 pkgrel=1
 epoch=1
 pkgdesc="Library for SRTP (Secure Realtime Transport Protocol) (32-bit)"
 url="https://github.com/cisco/libsrtp"
 arch=('x86_64')
-license=(BSD)
+license=(BSD-3-Clause)
 depends=('lib32-glibc' 'lib32-nss' 'libsrtp')
 makedepends=('git' 'lib32-libpcap' 'meson')
 checkdepends=('procps-ng')
-_commit=a566a9cfcd619e8327784aa7cff4a1276dc1e895 # tags/v2
+_commit=fd08747fa6800b321d53e15feb34da12dc697dee  # tags/v2
 source=("git+https://github.com/cisco/libsrtp#commit=$_commit")
 sha256sums=('SKIP')
 
