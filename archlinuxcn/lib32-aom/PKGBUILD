@@ -4,15 +4,12 @@ _basename=aom
 pkgname=(
     lib32-aom
 )
-pkgver=3.6.1
+pkgver=3.9.0
 pkgrel=1
 pkgdesc="Alliance for Open Media video codec (32-bit)"
 url="https://aomedia.org/"
 arch=(x86_64)
-license=(
-    BSD
-    custom:PATENTS
-)
+license=(BSD-3-Clause)
 depends=(
     lib32-glibc
     aom
@@ -25,7 +22,7 @@ makedepends=(
 source=(
     https://storage.googleapis.com/aom-releases/libaom-$pkgver.tar.gz{,.asc}
 )
-b2sums=('c47b748e3dc43e39ecb55c4d61ea3d2d4a889bb8c6c399e29e14269757d271cd759a553f5da765bcdf7cd19546b408fce060d5ed3fb13e3aba4f8d22d612bf29'
+b2sums=('4c68b58f6a8e347ee912e309a030804c4a3cc99714e2aaf127add63222df3056c7cf4b6c50f4861557b0892739035149b5e002e25272882eff55cde5d9b745b7'
         'SKIP')
 validpgpkeys=(
     B002F08B74A148DAA01F7123A48E86DB0B830498 # AOMedia release signing key <av1-discuss@aomedia.org>
@@ -37,17 +34,16 @@ prepare() {
 
 build() {
     local cmake_options=(
-        -DCMAKE_INSTALL_PREFIX=/usr \
-            -DCMAKE_INSTALL_LIBDIR=lib32 \
-            -DCMAKE_BUILD_TYPE=None \
-            -DBUILD_SHARED_LIBS=1 \
-            -DENABLE_TESTS=0 \
-            -DENABLE_DOCS=0
+        # Upstream would like Release, adding -O3 and removing assertions
+        # https://gitlab.archlinux.org/archlinux/packaging/packages/aom/-/issues/1
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D CMAKE_INSTALL_LIBDIR=lib32
+        -D CMAKE_BUILD_TYPE=None
+        -D BUILD_SHARED_LIBS=1
+        -D ENABLE_TESTS=0
+        -D ENABLE_DOCS=0
     )
-
-    # Upstream would like -O3
-    CFLAGS="${CFLAGS/-O2/-O3}"
-    CXXFLAGS="${CXXFLAGS/-O2/-O3}"
 
     export CC='gcc -m32'
     export CXX='g++ -m32'
