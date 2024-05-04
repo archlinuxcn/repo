@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=boxbuddy
 _app_id=io.github.dvlv.boxbuddyrs
-pkgver=2.2.2
+pkgver=2.2.3
 pkgrel=1
 pkgdesc="A Graphical Interface for Distrobox"
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('distrobox' 'libadwaita')
 makedepends=('cargo')
 options=('!lto')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('49f616b50868e4d6255e3e7c95e89fa1e65421fdb9d72a0ed31e7a6b4fdcef71')
+sha256sums=('914a474e46bf3505374e1b2147d2b1c0738a119d0898fb97bcd3a85688a9e95e')
 
 prepare() {
   cd "BoxBuddyRS-$pkgver"
@@ -22,7 +22,7 @@ prepare() {
 
 build() {
   cd "BoxBuddyRS-$pkgver"
-#  CFLAGS+=" -ffat-lto-objects"  ## gettext-sys crate fails
+#  CFLAGS+=" -ffat-lto-objects"  # gettext-sys crate fails
   export CARGO_HOME="$srcdir/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
