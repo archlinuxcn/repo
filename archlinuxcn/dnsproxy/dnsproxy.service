@@ -1,0 +1,22 @@
+[Unit]
+Description=Simple DNS proxy with DoH, DoT, and DNSCrypt support
+Documentation=https://github.com/AdguardTeam/dnsproxy#readme
+After=network.target
+Before=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=true
+WorkingDirectory=/etc/dnsproxy
+ProtectSystem=true
+ProtectHome=true
+PrivateTmp=true
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+ExecStart=/usr/bin/dnsproxy --config-path=/etc/dnsproxy/dnsproxy.yaml
+Restart=on-failure
+RestartSec=30
+StartLimitBurst=10
+
+[Install]
+WantedBy=multi-user.target
