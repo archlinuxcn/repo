@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373')
-_merge_requests_to_use=('1441' '3373')
+# Merge Requests List: ('579' '1441' '3373' '3729')
+_merge_requests_to_use=('1441' '3373' '3729')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -32,8 +32,8 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=46.1
-pkgrel=3
+pkgver=46.1+r7+g35836f0f1
+pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -112,19 +112,19 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=b57c80602d3780bb9b13fddcf2caca394910e6b4  # tags/46.1^0
+_commit=35836f0f1a526a846d909b31f185dc838beb0664  # tags/46.1^7
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
-        'fix-sigsegv-in-meta_window_foreach_transient.patch')
-sha256sums=('56dc25f7743ca3d72e5471ceadeb774e19e34feeb7ba106a6a78c8bb2cc20b56'
+        'mr3729.patch')
+sha256sums=('e5f178cc9692498c6cc3d6466102c8906f77dd112c12efb4762a903a28a574f5'
             '24385020adda767feb95c7dd25427dce229c3d9e47cb7d87760eeb0b1f4183c2'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
-            '488326a7b1eca1e3a91cbfcec0101b217b66b440c3b14e4333406373a84b3682')
-b2sums=('4acd4a192455890b12b2fc9b6553ed65bd2176307cd6c6683fc2ab476b7fa88f4b5e507a1209b3e900c68d94768f3cf749b4f5d87d25300b33a112182c8a62a7'
+            'c8d04c276bdec2c96cbd4ea6d23998107e24b9b5cc7bd1f8e707a07b2367adb6')
+b2sums=('28f0cba4142dee6526ddc1147e26e32d875674a927bfda271b3abbc65ddda4021e6765bf74390e37718056b5b5ab44c5b5566ca20f23dc4e846887ed79961d26'
         '6d3f086ea407fe68b9eaa0a1d19fc3d28e75374a65ba023385b8314ec2f6f7110ac89d422f1c1db063d65b163235a66569cb073d8941499903beba7f8f531846'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
-        '03c9531036437dcb145f5676055bc29a2f855d2c53513be3063b87797a994fcaa86f59fc6d22cd490f2dec92bd1afc6e8556a881045a89ab69127be43f32ba27')
+        '59d067ab7fd50a7bf4eda549f5d89cbc66a463897c1005f7a272dfd14bf7094acd69c4065c1340c089d8214021e2e08c02019f2489144cd3338e3c0ff9c83fb2')
 
 pkgver() {
   cd $_pkgname
@@ -173,10 +173,6 @@ prepare() {
   #git fetch verdre
   #git fetch 3v1no
 
-  # Shell crashes with SIGSEGV in "meta_window_foreach_transient ()"
-  ## https://gitlab.gnome.org/GNOME/mutter/-/issues/3427
-  patch -Np1 -i ../"fix-sigsegv-in-meta_window_foreach_transient.patch"
-
   ### Merge Requests
 
   # Merge Request Prototype
@@ -218,6 +214,14 @@ prepare() {
   # Status: 2
   # Comment: This fix cursor stutter.
   pick_mr '3373' 'mr3373.patch' 'patch'
+
+  # Title: Enforce non-reactiveness of unsuitable surface actors harder
+  # Author: Carlos Garnacho <carlosg@gnome.org>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3729
+  # Type: 3
+  # Status: 3
+  # Comment: This closes https://gitlab.gnome.org/GNOME/mutter/-/issues/3393
+  pick_mr '3729' 'mr3729.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
