@@ -1,6 +1,6 @@
 pkgname=julia-git-gr-src
-pkgver=0.73.3
-_commit=4d9abc34c63c5d963f2433296b72c62a7d54114c
+pkgver=0.73.5
+_commit=f06989c51a8486cc81df419a90aca40ab345e248
 pkgrel=1
 pkgdesc="GR.jl"
 url="https://github.com/jheinen/GR.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jheinen/GR.jl.git#commit=$_commit"
         0001-Get-rid-of-problematic-path-dance.patch)
-sha256sums=('SKIP'
+sha256sums=('02d4ff3b6ca1f809dd6d3644a120c30a16a4b7f700dfb5c0dc8823c0fe711c6d'
             'aba1b40eaa494441a542c8e3bf324a38bab851606f57832c151f9a98f354da12')
 
 prepare() {
