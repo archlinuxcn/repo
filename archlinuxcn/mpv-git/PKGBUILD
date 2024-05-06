@@ -76,6 +76,8 @@ build() {
     )
     
     local _other_os_flags=(
+        '-Dmacos-11-features=disabled' # macOS
+        '-Dmacos-12-features=disabled' # macOS
         '-Dmacos-cocoa-cb=disabled' # macOS
         '-Dmacos-media-player=disabled' # macOS
         '-Dmacos-touchbar=disabled' # macOS
