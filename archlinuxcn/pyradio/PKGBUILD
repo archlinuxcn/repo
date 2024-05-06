@@ -3,8 +3,8 @@
 # Contributor: aksr <aksr at t-com dot me>
 
 pkgname=pyradio
-pkgver=0.9.3.4
-pkgrel=2
+pkgver=0.9.3.5
+pkgrel=1
 pkgdesc="Internet radio player for the command line"
 arch=('any')
 url="https://github.com/coderholic/pyradio"
@@ -13,11 +13,13 @@ depends=("python" "python-dateutil" "python-dnspython" "python-netifaces" "pytho
 optdepends=('mplayer: as backend' 'mpv: as backend' 'vlc: as backend' 'mkvtoolnix-cli: fix mplayer recordings, add chapters to recordings')
 makedepends=('python-pip' 'python-setuptools' 'python-build' 'python-installer' 'python-wheel')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/coderholic/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('ad12c5853f2c51c8fb595174399304bccffd4ca2cb2fdfea78f4c36dc23dcfd7')
+sha256sums=('8cc1600018c0a5c27577755262a9e9576766ab59934d7e5fcab803658cf133b4')
 
 prepare() {
   cd $pkgname-$pkgver
-  sed -i 's/distro = None/distro = Arch Linux (AUR)/' $pkgname/config
+  sed -i -e 's/distro = None/distro = Arch Linux (AUR)/' \
+      -e 's/xdg_compliant = False/xdg_compliant = True/' \
+      $pkgname/config
 }
 
 build() {
