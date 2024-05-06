@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_libxrender_jll-src
-pkgver=0.9.10+4
-_commit=2b2846a5f147f58f77b2ea0a26692a0160d438e8
-pkgrel=3
+pkgver=0.9.11+0
+_commit=637a4c081dc4eaafc3597b20870fb3744f38f568
+pkgrel=1
 pkgdesc="Xorg_libXrender_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXrender_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxrender)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXrender_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('6e512cfdef0ee97ee38c089ad4ef3e6fa15c7e22ae67e2217749373eb138a467'
             '8d7f637f105213fe648d70c8aa301fea8ad5612f5c093725c594830e48fecf91')
 
 build() {
