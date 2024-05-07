@@ -4,8 +4,8 @@ maintainers:
 build_prefix: extra-x86_64
 
 pre_build_script: |
-  add_depends(['python-pip'])
   aur_pre_build(maintainers=['loonies'])
+  add_depends(['python-pip'])
 
 update_on:
   - source: aur
