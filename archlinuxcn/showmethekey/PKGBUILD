@@ -1,7 +1,7 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=showmethekey
-pkgver=1.13.0
-pkgrel=1
+pkgver=1.13.1
+pkgrel=2
 pkgdesc="A screenkey alternative that works under Wayland via libinput."
 arch=("x86_64" "i686" "aarch64" "armv7h" "armv6h")
 url="https://showmethekey.alynx.one/"
@@ -9,7 +9,7 @@ license=("Apache")
 depends=("libevdev" "udev" "libinput" "glib2" "gtk4" "libadwaita" "json-glib" "cairo" "pango" "libxkbcommon" "polkit")
 makedepends=("meson")
 source=("https://github.com/AlynxZhou/${pkgname}/archive/v${pkgver}.tar.gz")
-sha512sums=('f67bd5a55521be520fe3de8d668a44ea10de014a6421abdf07b8465778d36ec4d44b9e489c61c5e7c627f25c7687bb16feb8bda3e547253fe0871ed042345785')
+sha512sums=('4d15c257078c2b941197a968b9b81784f0603a70b0feba7b77e12b5c6eb75655a6c14fa857a6d4cd33ef657d3630d94be4a5d672331d2edbbda7923c76b87bf1')
 
 prepare() {
   cd "${pkgname}-${pkgver}"
@@ -25,6 +25,4 @@ build() {
 package() {
   cd "${pkgname}-${pkgver}/build"
   meson install --destdir "${pkgdir}"
-  # Meson sets 755 for dirs, but polkit is 750.
-  install -d -o root -g 102 -m 750 "$pkgdir/usr/share/polkit-1/rules.d"
 }
