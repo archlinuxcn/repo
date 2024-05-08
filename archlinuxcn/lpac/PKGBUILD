@@ -1,0 +1,31 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Peter Cai <peter@typeblog.net>
+
+pkgname=lpac
+pkgver=2.0.1
+pkgrel=1
+pkgdesc="Local Profile Agent (LPA) for eSIM cards via PC/SC readers, or AT / APDU commands over stdio."
+arch=(x86_64 aarch64 armv7h)
+url="https://github.com/estkme-group/lpac"
+license=('AGPL-3.0-only AND LGPL-2.0-only AND MIT')
+depends=(curl pcsclite glibc)
+makedepends=(cmake ninja)
+source=($pkgname-$pkgver.tar.gz::https://github.com/estkme-group/lpac/archive/refs/tags/v$pkgver.tar.gz)
+b2sums=('9da39b942162c9ea2c7c08ece39121d2a2cb87f39e29719f6752404a76cd1bee809c089bad533cc78792f29f294090fb3ff5dcc0e9240c75dd2b51e0556de563')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  cmake -S . -B build \
+    -G Ninja \
+    -DCMAKE_INSTALL_PREFIX="/usr" \
+    -DLPAC_DYNAMIC_LIBEUICC=ON \
+    -DLPAC_DYNAMIC_DRIVERS=ON
+  ninja -C build
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  DESTDIR="$pkgdir" ninja -C build install
+  install -Dm644 -t "$pkgdir"/usr/share/licenses/"$pkgname" README.md
+}
+
