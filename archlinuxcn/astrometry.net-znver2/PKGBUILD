@@ -5,7 +5,7 @@
 pkgname=astrometry.net-znver2
 _pkgname=astrometry.net
 pkgver=0.95
-pkgrel=1
+pkgrel=2
 pkgdesc="Automatic recognition of astronomical images. Compiled with -march=znver2 for AMD Ryzen CPUs."
 arch=('x86_64')
 url="https://astrometry.net/"
@@ -22,7 +22,7 @@ optdepends=(
 backup=(etc/astrometry.cfg)
 install=astrometry.net.install
 source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz")
-sha1sums=('3664347b473d96bcf7eed5b91e77c8f85a587eeb')
+sha1sums=('984de6879215794d4fec7916fa82741367d3b10d')
 
 build() {
     cd ${_pkgname}-${pkgver}
