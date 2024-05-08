@@ -10,7 +10,7 @@
 pkgbase=sip4
 pkgname=(sip4 python-sip4)
 pkgver=4.19.25
-pkgrel=7
+pkgrel=8
 arch=(x86_64)
 url='https://www.riverbankcomputing.com/software/sip/intro'
 license=('LicenseRef-sip')
@@ -52,8 +52,6 @@ package_sip4() {
 package_python-sip4() {
   pkgdesc="Python SIP4 bindings for C and C++ libraries"
   depends=(python)
-  provides=(python-sip4)
-  replaces=(python-sip4)
 
   cd build
   make DESTDIR="$pkgdir" install
