@@ -4,9 +4,10 @@
 
 pkgbase=qt6-base-24hms
 pkgname=(qt6-base-24hms)
+
 _qtver=6.7.0
 pkgver=${_qtver/-/}
-pkgrel=3.4
+pkgrel=6.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -105,8 +106,12 @@ prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
   patch -d $_pkgfn -p1 < fix-wrong-cpp-if.patch # https://bugreports.qt.io/browse/QTBUG-123937
-
   cd $_pkgfn
+  git cherry-pick -n 7c4e1357e49baebdd2d20710fccb5604cbb36c0d # CVE-2024-33861
+  git cherry-pick -n a8ef8ea55014546e0e835cd0eacf694919702a11 # https://bugreports.qt.io/browse/QTBUG-124386
+  git cherry-pick -n 062f701a11d2c46660f5c5edd73f245477918a47 # Fix dependencies in pc files
+  git cherry-pick -n 5ee9da89af7efe31ac45858bf1eb04e5155a3b50 # Fix dependencies in pc files
+
   patch -p1 -i ../oldherl-24hms.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
