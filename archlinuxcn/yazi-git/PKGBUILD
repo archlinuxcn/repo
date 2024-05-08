@@ -38,6 +38,7 @@ package() {
 	cd "${_pkgname}/"
 	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm755 "target/release/${_pkgname}" -t "${pkgdir}/usr/bin/"
+ 	install -Dm755 "target/release/ya" -t "${pkgdir}/usr/bin/"
 	install -Dm644 "assets/yazi.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	local r
@@ -50,4 +51,9 @@ package() {
 	install -Dm644 "${_pkgname}.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
 	install -Dm644 "${_pkgname}.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
 	install -Dm644 "_${_pkgname}" -t "${pkgdir}/usr/share/zsh/site-functions/"
+
+ 	cd "${_pkgname}-cli/completions"
+	install -Dm644 "ya.bash" "${pkgdir}/usr/share/bash-completion/completions/ya"
+	install -Dm644 "ya.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
+	install -Dm644 "_ya" -t "${pkgdir}/usr/share/zsh/site-functions/"
 }
