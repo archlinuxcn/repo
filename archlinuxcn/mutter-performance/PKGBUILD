@@ -33,7 +33,7 @@ else
 fi
 epoch=1
 pkgver=46.1+r7+g35836f0f1
-pkgrel=1
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -118,13 +118,13 @@ source=("git+$url.git#commit=$_commit"
         'mr3373.patch'
         'mr3729.patch')
 sha256sums=('e5f178cc9692498c6cc3d6466102c8906f77dd112c12efb4762a903a28a574f5'
-            '24385020adda767feb95c7dd25427dce229c3d9e47cb7d87760eeb0b1f4183c2'
+            '7d5c90e3f18b2c0645e6224759e571acef723d53495cff2ceaac3c44168226b3'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
-            'c8d04c276bdec2c96cbd4ea6d23998107e24b9b5cc7bd1f8e707a07b2367adb6')
+            'c072d1983ddd482db993514e86e15fb44024887c5c4d7c1d6f4cf4b8d01743ce')
 b2sums=('28f0cba4142dee6526ddc1147e26e32d875674a927bfda271b3abbc65ddda4021e6765bf74390e37718056b5b5ab44c5b5566ca20f23dc4e846887ed79961d26'
-        '6d3f086ea407fe68b9eaa0a1d19fc3d28e75374a65ba023385b8314ec2f6f7110ac89d422f1c1db063d65b163235a66569cb073d8941499903beba7f8f531846'
+        '135b9a24273328c8010d08c3688b527741b0d678814ed52fb983be649b7d40ce6f2d6151d1087a8fed311f35cb3033d8b9d1c7b04cdd2bbef7dff43ee80ea530'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
-        '59d067ab7fd50a7bf4eda549f5d89cbc66a463897c1005f7a272dfd14bf7094acd69c4065c1340c089d8214021e2e08c02019f2489144cd3338e3c0ff9c83fb2')
+        'a1b283fc3b45160d740702f8bee3c89d6dcef7ecedece5e01b4f1a414ea85a1251481af7b94e2c77e5a895cd93d3b708df97e80749a69edb3b0108bef8c2bf9f')
 
 pkgver() {
   cd $_pkgname
@@ -219,7 +219,7 @@ prepare() {
   # Author: Carlos Garnacho <carlosg@gnome.org>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3729
   # Type: 3
-  # Status: 3
+  # Status: 2
   # Comment: This closes https://gitlab.gnome.org/GNOME/mutter/-/issues/3393
   pick_mr '3729' 'mr3729.patch' 'patch'
 
