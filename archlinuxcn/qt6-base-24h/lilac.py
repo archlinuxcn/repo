@@ -20,6 +20,8 @@ def pre_build():
   in_build_qt6_base = False
   checks = ''
   variant = '-24h'
+  variant_sha256 = '6ab571d50f0c17d31ed33bb2ebf6eadf41c18cbf2dd8cb5260b939915a139a28'
+  variant_desc = '24-hour HH:mm notation'
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgrel='):
       line = line + '.4'
@@ -33,7 +35,7 @@ def pre_build():
       else:
         raise ValueError('PKGBUILD pkgname mismatch with preset')
     elif in_build_qt6_base and line.strip().startswith('pkgdesc='):
-      line = "pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'"
+      line = f"pkgdesc='A cross-platform application and UI framework. This package uses {variant_desc} in all locales.'"
       checks = checks + 'b'
     elif line.startswith('makedepends=('):
       line = line.replace('(', "(python ")
@@ -47,16 +49,16 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       line = line.replace('${pkgbase/6-/}', 'qtbase')
       checks = checks + '5'
     elif line.startswith('source=('):
-      line = line.replace('=(', '''=(
-      oldherl-24h.patch
+      line = line.replace('=(', f'''=(
+      oldherl{variant}.patch
       no-pua-fallback.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/44/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       ''')
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
-      line = line.replace('=(', '''=(
-      '6ab571d50f0c17d31ed33bb2ebf6eadf41c18cbf2dd8cb5260b939915a139a28'
+      line = line.replace('=(', f'''=(
+      '{variant_sha256}'
       'b2cefcd7f1297dc4703dc5c541fb284d4979bbfed3376fa1ba525417be7492d0'
       'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
@@ -66,9 +68,9 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       in_prepare = True
       checks = checks + '8'
     elif in_prepare and line.startswith('}'):
-      line = '''
+      line = f'''
   cd $_pkgfn
-  patch -p1 -i ../oldherl-24h.patch
+  patch -p1 -i ../oldherl{variant}.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
