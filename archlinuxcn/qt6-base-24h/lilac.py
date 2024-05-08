@@ -29,11 +29,14 @@ def pre_build():
       line = f"pkgbase=qt6-base{variant}"
       checks = checks + 'f'
     elif line.startswith('pkgname='):
-      if line == "pkgname=(qt6-base qt6-xcb-private-headers)":
+      if line.strip() == "pkgname=(qt6-base":
         line = f"pkgname=(qt6-base{variant})"
         checks = checks + '1'
       else:
         raise ValueError('PKGBUILD pkgname mismatch with preset')
+    elif line.strip().startswith('qt6-xcb-private-headers)'):
+      line = ''
+      checks = checks + 'f'
     elif in_build_qt6_base and line.strip().startswith('pkgdesc='):
       line = f"pkgdesc='A cross-platform application and UI framework. This package uses {variant_desc} in all locales.'"
       checks = checks + 'b'
@@ -94,7 +97,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       line = line.replace('=(', '=(libicui18n.so ')
       checks = checks + 'c'
     print(line)
-  if len(checks) != 13:
+  if len(checks) != 14:
     raise ValueError('PKGBUILD editing not completed. checks=' + checks)
 
 def post_build():
