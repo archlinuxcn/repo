@@ -3,7 +3,7 @@ options=(!strip)  # Don't strip libs because there aren't any
 
 pkgname=hydrus
 _pkgname=hydrus
-pkgver=573
+pkgver=574
 pkgrel=1
 pkgdesc="Danbooru-like image tagging and searching system for the desktop"
 arch=(any)
@@ -17,7 +17,7 @@ depends=(python python-opencv python-beautifulsoup4 python-yaml
          python-service-identity  # required by twisted for https hostname verification
          qt6-multimedia  # https://aur.archlinux.org/packages/hydrus#comment-914337
          qt6-svg  # https://aur.archlinux.org/packages/hydrus#comment-923550
-         python-pyqt6)
+         pyside6)
 makedepends=(git)
 optdepends=('ffmpeg: show duration and other information on video thumbnails'
             'miniupnpc: automatic port forwarding'
@@ -38,14 +38,14 @@ optdepends=('ffmpeg: show duration and other information on video thumbnails'
             # 'speedcopy: may speed up file transfers'
             'swftools: to display SWF thumbnails')
 conflicts=(hydrus-docs-dummy)
-source=("${_pkgname}::git+https://github.com/hydrusnetwork/${_pkgname}.git#commit=e820b5ef22352702f39cc510fb87059100dbaf2f"
+source=("${_pkgname}::git+https://github.com/hydrusnetwork/${_pkgname}.git#commit=686dee1b8426be8de812b2668092bc9dd56c61d5"
         paths-in-opt.patch
         hydrus-client
         hydrus-server
         hydrus.desktop)
 sha256sums=('SKIP'
             'f9f5a5927c7f2c016dbab3e4135a921918617ba393babd9b6a903ff5d0154cdd'
-            'b1854ecac184385f0aa48fcefd426223fac3eeec0f1180ba58b6a58b03257d68'
+            '39d3404b75320be6a9e33dc256f4fc313c65fe11458e96bd5af6268c2f78eaf0'
             '5956d418d29fe19f54263acf47adce7c6d134d19ec65e2810d4517ce83529480'
             '9b8c2603a8040ae80152ff9a718ad3e8803fdc3029a939e3c0e932ea35ded923')
 
