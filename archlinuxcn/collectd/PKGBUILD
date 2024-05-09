@@ -59,6 +59,8 @@ prepare() {
 
 build() {
 	cd ${pkgname}-${pkgver}
+        # fix nut plugin build
+        export CFLAGS="$CFLAGS -Wno-incompatible-pointer-types"
 	./configure \
 		--prefix=/usr \
 		--sysconfdir=/etc \
@@ -67,7 +69,7 @@ build() {
 		--disable-werror \
 		--with-perl-bindings='INSTALLDIRS=vendor' \
 
-	make all
+	make all V=1
 }
 
 package() {
