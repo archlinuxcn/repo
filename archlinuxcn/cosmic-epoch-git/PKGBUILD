@@ -2,7 +2,7 @@
 # Co-Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 
 pkgname=cosmic-epoch-git
-pkgver=r132.417fb93
+pkgver=r133.39eafda
 pkgrel=1
 pkgdesc="Cosmic desktop environment from System76's Pop!_OS written in Rust utilizing Iced inspired by GNOME"
 arch=('x86_64' 'aarch64')
@@ -189,6 +189,9 @@ build() {
 #  CFLAGS+=" -ffat-lto-objects"  ## cosmic-edit fails
   export CARGO_HOME="$srcdir/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
+
+  # use mold instead of lld to speed up build
+  RUSTFLAGS="-C link-arg=-fuse-ld=mold"
 
   # use nice to build with lower priority
   nice just build
