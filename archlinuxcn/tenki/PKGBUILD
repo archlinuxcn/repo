@@ -2,7 +2,7 @@
 # https://github.com/orhun/pkgbuilds
 
 pkgname=tenki
-pkgver=1.8.0
+pkgver=1.9.0
 pkgrel=1
 pkgdesc="TTY-clock with weather effect"
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('gcc-libs')
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha512sums=('f04c1ad2782da62af63d2cf38a789846084e851d4f8eb72679a5877aaad3db2737ee784096dd85fd3242e87e11bd1b2adea923217c181e337b8a131ebdbbe657')
+sha512sums=('9316579dcc2fa7e4372a3bfb1c7b5ee24155dac2ef50f673dc77f5c06152bd85ba59ed5e6c68a42507d1ccc7a26f38201fee0d53bc07b349e5707e40c2e39ffc')
 
 prepare() {
   cd "$pkgname-$pkgver"
