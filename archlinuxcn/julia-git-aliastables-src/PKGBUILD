@@ -1,6 +1,6 @@
 pkgname=julia-git-aliastables-src
-pkgver=1.1.1
-_commit=ca6eacd2c222e7e797ec446b5cf6343a733f756e
+pkgver=1.1.2
+_commit=2b1a786223158d845057ef98b60768a121af2afa
 pkgrel=1
 pkgdesc="AliasTables.jl"
 url="https://github.com/LilithHafner/AliasTables.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/LilithHafner/AliasTables.jl.git#commit=$_commit")
-sha256sums=('d22f131b42d8a96f06715cc89d1df4e10f380352212b2c5ca6f88f256e330085')
+sha256sums=('9c76f16de3990a210615dc2e607d80e363f0ebc9f48c558d52445d5b8c1be5c7')
 
 package() {
   cd AliasTables.jl
