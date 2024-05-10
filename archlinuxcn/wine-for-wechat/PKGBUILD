@@ -6,7 +6,7 @@
 _pkgname=wine
 pkgname=wine-for-wechat
 pkgver=9.8
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
@@ -101,6 +101,11 @@ build() {
 
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="$CFLAGS -ffat-lto-objects"
+
+  # Apply flags for cross-compilation
+  export CROSSCFLAGS="${CFLAGS/-Werror=format-security/}"
+  export CROSSCXXFLAGS="${CXXFLAGS/-Werror=format-security/}"
+  export CROSSLDFLAGS="${LDFLAGS//-Wl,-z*([^[:space:]])/}"
 
   msg2 "Building Wine-64..."
   mkdir "$_pkgname-64-build"
