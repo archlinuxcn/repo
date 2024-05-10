@@ -2,8 +2,8 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgbase=linux-amd-drm-fixes              
-_tag='amd-drm-fixes-6.9-2024-05-08'
-pkgver=6.9.2024.05.08
+_tag='amd-drm-fixes-6.9-2024-05-10'
+pkgver=6.9.2024.05.10
 pkgrel=1
 pkgdesc="Linux kernel fixes with bleeding edge AMD DRM drivers"
 arch=(x86_64)
@@ -27,7 +27,7 @@ source=(
   "$_srcname::git+https://gitlab.freedesktop.org/agd5f/linux#tag=$_tag"
   config::https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/config         # the main kernel config file
 )
-sha256sums=('3f7f14ec51c562f98421c9dbd8b5e2c44e588d48f9a25ae2d8882a13c30642a2'
+sha256sums=('d757ee9d5c2ccdfd7174428b52bd480bd136bebbf1debf59a84cca22108a9c7f'
             '6b337a9d3cfdc00005589a80b8d36fa500f6a92ed21565a3aceec48d7202a7da')
 
 export KBUILD_BUILD_HOST=archlinux
