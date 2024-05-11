@@ -1,7 +1,7 @@
 # Maintainer: dalto <dalto at fastmail.com>
 
 pkgname=btrfs-assistant
-pkgver=2.0
+pkgver=2.1
 pkgrel=1
 pkgdesc="An application for managing BTRFS subvolumes and Snapper snapshots"
 arch=('x86_64' 'aarch64')
@@ -12,7 +12,7 @@ optdepends=('snapper' 'btrfsmaintenance')
 makedepends=('git' 'cmake' 'qt6-tools')
 backup=("etc/${pkgname}.conf")
 source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('2e82c5fca35e29452fc74a9ba17b987b03862dc2e8b3da02b351d9c763bf5cf5')
+sha256sums=('4851b97c4d15ecc825e061b24e6ecbe565a9747f3c0a84d660a174d55957f0a2')
 
 build() {
 	cmake -B build -S "${pkgname}-${pkgver}/" -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
