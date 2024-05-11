@@ -8,8 +8,8 @@
 
 _target="armv7l-linux-gnueabihf"
 pkgname=${_target}-binutils
-pkgver=2.38
-pkgrel=2
+pkgver=2.42
+pkgrel=1
 pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
 arch=(aarch64 armv7h i686 x86_64)
 url='https://www.gnu.org/software/binutils/'
@@ -19,7 +19,7 @@ depends=(glibc zlib elfutils)
 options=(staticlibs !distcc !ccache)
 # source=(https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.xz)
 source=(https://ftpmirror.gnu.org/gnu/binutils/binutils-$pkgver.tar.xz)
-sha256sums=('e316477a914f567eccc34d5d29785b8b0f5a10208d36bbacedcc39048ecfe024')
+sha256sums=('f6e4d41fd5fc778b06b7891457b3620da5ecea1006c6a4a41ae998109f85a800')
 
 prepare() {
   mkdir -p binutils-build
