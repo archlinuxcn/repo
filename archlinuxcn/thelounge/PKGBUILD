@@ -3,14 +3,14 @@
 pkgname=thelounge
 pkgver=4.4.3
 pkgsuffix="" #-rc.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Modern self-hosted web IRC client'
 url='https://thelounge.chat/'
 arch=('any')
 license=('MIT')
 depends=('nodejs')
 options=('!lto')
-makedepends=('yarn' 'python' 'git')
+makedepends=('yarn' 'python' 'python-setuptools' 'git')
 backup=('etc/thelounge/config.js')
 source=(
     "https://registry.npmjs.org/$pkgname/-/$pkgname-${pkgver}${pkgsuffix}.tgz"
