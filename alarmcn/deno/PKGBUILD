@@ -2,8 +2,8 @@
 # Contributor: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
-pkgver=1.42.2
-_commit=04c0a4cbf7c00811d3ace3184c1cb8597a0e88f1
+pkgver=1.43.3
+_commit=d6ad253882a6c066e0c673ff64e6554a37bb3487
 pkgrel=1
 pkgdesc="A secure runtime for JavaScript and TypeScript"
 arch=(aarch64 x86_64)
@@ -13,7 +13,7 @@ options=('!lto')
 depends=('gcc-libs')
 makedepends=('git' 'python' 'rust' 'nodejs' 'gn' 'ninja' 'clang' 'lld' 'cmake' 'protobuf')
 source=("git+https://github.com/denoland/deno.git#commit=$_commit")
-sha512sums=('8c25d2906cb9209c31fb1fd3950f39323010acb56e8b47e9351bcdf1b1722b98925faa89485e6c35c120a0d515b8597d7463d6561b71a8a95e069c2d822a6089')
+sha512sums=('9d5ff9f6e40b43c0e26556a57dabfab9b94721e8c9a0d6fdddfad62694ce69afcaac555d8028a7d83306f4942e65c0c110ee86f39117158e8794cfa82cddaf8b')
 
 build() {
   cd $pkgname
@@ -28,8 +28,6 @@ build() {
   )
 
   export CC=clang CXX=clang++ AR=ar NM=nm
-  export CFLAGS="${CFLAGS//-fstack-clash-protection/}"
-  export CXXFLAGS="${CXXFLAGS//-fstack-clash-protection/}"
   export V8_FROM_SOURCE=1
   export CLANG_BASE_PATH=/usr
   export GN=/usr/bin/gn NINJA=/usr/bin/ninja
