@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=6.8.7
+pkgver=6.8.9
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -38,10 +38,11 @@ _srcname=linux-${pkgver%.*}
 source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver%.*}-gnu/linux-libre-${pkgver%.*}-gnu.tar.lz"{,.sign}
         "http://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/patch-${pkgver%.*}-gnu-${pkgver}-gnu.bz2"{,.sign}
         'https://repo.parabola.nu/other/linux-libre/logos/logo_linux_'{clut224.ppm,vga16.ppm,mono.pbm}{,.sig}
-        'config')
+        'config'
+        '010-linux-fix-documentation-with-python-docutils0.21.patch')
 sha256sums=('f6c64e8ea831ffb71dedd1311e168fc7b142b025ec5fafa22ff6aedd9925bbe7'
             'SKIP'
-            '4cd27c89ef52256bd6efb03b4fbeaf5d0d9dc60f0ae8d7d36893a45701963036'
+            'ee612605003564cd8e1f55366e53c235dcd27dbb5e12c9f8f8038d16bec87852'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -49,7 +50,8 @@ sha256sums=('f6c64e8ea831ffb71dedd1311e168fc7b142b025ec5fafa22ff6aedd9925bbe7'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP'
-            '879a4a8e65790ae85ba69d73dd48d90324cdeb83449892aaf0589c0a46f52f5f')
+            '090a295bbdf5137fe848c8794faab5cd1ac1b1e30b6036cb1e82d8921f14e5c6'
+            '0a6e9bc8bb4e1aaaa08e466c972d95ac96aa63c3a4b76d21ee8e319980d13db5')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
