@@ -2,7 +2,7 @@
 
 pkgname=lemon-lime
 pkgver=0.3.4.4
-pkgrel=1
+pkgrel=2
 pkgdesc="为了 OI 比赛而生的基于 Lemon 的轻量评测系统 | A tiny judging environment for OI contest based on Project_LemonPlus"
 arch=('x86_64' 'i686')
 url="https://github.com/Project-LemonLime/Project_LemonLime"
@@ -10,13 +10,13 @@ license=('GPL-3.0-or-later')
 depends=('gcc-libs'
          'glibc'
          'hicolor-icon-theme'
-         'qt5-base'
+         'qt6-base'
          'xdg-utils'
          )
 makedepends=('cmake'
              'git'
              'ninja'
-             'qt5-tools'
+             'qt6-tools'
              )
 optdepends=('fpc: Pascal support'
             'freebasic: BASIC support'
@@ -55,6 +55,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr" \
         -DLEMON_BUILD_INFO="Build for Arch Linux" \
         -DLEMON_BUILD_EXTRA_INFO="Build on $(uname -a | cut -d " " -f3,13)" \
+        -DLEMON_QT6=ON \
         -DEMBED_TRANSLATIONS=OFF \
         -DEMBED_DOCS=OFF
     ninja -C build
