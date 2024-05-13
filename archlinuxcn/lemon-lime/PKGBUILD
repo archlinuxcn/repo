@@ -1,68 +1,57 @@
-# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Maintainer: Coelacanthus <coelacanthus@outlook.com>
 
 pkgname=lemon-lime
 pkgver=0.3.4.4
-pkgrel=2
+pkgrel=3
+epoch=
 pkgdesc="为了 OI 比赛而生的基于 Lemon 的轻量评测系统 | A tiny judging environment for OI contest based on Project_LemonPlus"
 arch=('x86_64' 'i686')
 url="https://github.com/Project-LemonLime/Project_LemonLime"
-license=('GPL-3.0-or-later')
-depends=('gcc-libs'
-         'glibc'
-         'hicolor-icon-theme'
-         'qt6-base'
-         'xdg-utils'
-         )
-makedepends=('cmake'
-             'git'
-             'ninja'
-             'qt6-tools'
-             )
-optdepends=('fpc: Pascal support'
-            'freebasic: BASIC support'
-            'gcc: C and C++ support'
+license=('GPL3')
+groups=()
+depends=('qt5-base' 'hicolor-icon-theme')
+makedepends=('git' 'qt5-tools' 'cmake' 'ninja')
+checkdepends=()
+optdepends=('gcc: C and C++ support'
+            'fpc: Pascal support'
             'java-environment: Java support'
+            'freebasic: BASIC support'
             'python: Python support')
-provides=('lemon-lime')
-conflicts=('lemon-lime-git')
+provides=("lemon-lime")
+conflicts=("lemon-lime-git")
+replaces=()
+backup=()
+options=(debug strip)
+install=
+changelog=
 
-source=(Project_LemonLime::git+https://github.com/Project-LemonLime/Project_LemonLime.git#tag=$pkgver
-        SingleApplication::git+https://github.com/itay-grudev/SingleApplication.git
-        Testlib-for-Lemons::git+https://github.com/GitPinkRabbit/Testlib-for-Lemons.git
-        )
-
-b2sums=('SKIP'
-        'SKIP'
-        'SKIP')
+source=(
+    "https://github.com/Project-LemonLime/Project_LemonLime/releases/download/${pkgver}/Lemon-${pkgver}-source-all.7z"
+)
+noextract=("Lemon-${pkgver}-source-all.7z")
+b2sums=('b7fc9167b4a74f33d7d2bae103c9c55c64dac29804ba4948139cbb42baed378d0c12e52130f8c4ed1e4d49c36a44908a2729e5c587beb776de29b02ad2f8befa')
 
 prepare() {
-    cd "Project_LemonLime"
-    git submodule init
-    submodules=('SingleApplication')
-    for module in ${submodules[@]}; do
-        git config submodule."3rdparty/$module".url "${srcdir}/$module"
-    done
-
-    git config submodule."assets/Testlib-for-Lemons".url "${srcdir}/Testlib-for-Lemons"
-
-    git -c protocol.file.allow=always submodule update
+    cd "$srcdir"
+    bsdtar -xvf Lemon-${pkgver}-source-all.7z
 }
 
 build() {
-    cmake -S Project_LemonLime -B build \
-        -DCMAKE_BUILD_TYPE=None \
-        -GNinja \
-        -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr" \
-        -DLEMON_BUILD_INFO="Build for Arch Linux" \
-        -DLEMON_QT6=ON \
-        -DEMBED_TRANSLATIONS=OFF \
-        -DEMBED_DOCS=OFF
-    ninja -C build
+	cd "$srcdir"
+	cmake -S. -B build \
+		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+		-GNinja \
+		-DCMAKE_INSTALL_PREFIX=${pkgdir}/usr \
+		-DLEMON_BUILD_INFO="Build for Arch Linux" \
+		-DLEMON_BUILD_EXTRA_INFO="Build on $(uname -a | cut -d " " -f3,13)" \
+		-DEMBED_TRANSLATIONS=OFF \
+		-DEMBED_DOCS=OFF
+	ninja -C build
 
 }
 
 package() {
-    ninja -C build install
+	cd "$srcdir"
+	ninja -C build install
+	install -D -m644 README.md "$pkgdir/usr/share/doc/$_pkgname/README.md"
 }
-
-# vim: set ts=4 sw=4 et:
