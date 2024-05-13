@@ -1,7 +1,7 @@
 pkgname=julia-git-littlecms_jll-src
-pkgver=2.15.0+0
-_commit=3c37202942cb0437adb59dd4d071251161faabf9
-pkgrel=2
+pkgver=2.16.0+0
+_commit=e7fd7d7e486682a11da7ecc0c7447a24b3f0fb86
+pkgrel=1
 pkgdesc="LittleCMS_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LittleCMS_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git lcms2)
 source=("git+https://github.com/JuliaBinaryWrappers/LittleCMS_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('dc76a3d8dd1912f39172917c4f44376f2800a23cf0a5d58558e7ed72845fb244'
             '1185f3f767f1d6a25fef33cf6d3cb69fc6309f4ff660fd5817c8773ca4c76f06')
 
 build() {
