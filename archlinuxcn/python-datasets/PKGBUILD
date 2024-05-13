@@ -1,0 +1,45 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=datasets
+pkgname=python-datasets
+pkgver=2.19.1
+pkgrel=1
+pkgdesc='The largest hub of ready-to-use datasets for ML models with fast, easy-to-use and efficient data manipulation tools'
+arch=('any')
+url='https://github.com/huggingface/datasets'
+license=('Apache-2.0')
+depends=(
+  python-aiohttp
+  python-dill
+  python-filelock
+  python-fsspec
+  python-huggingface-hub
+  python-multiprocess
+  python-numpy
+  python-packaging
+  python-pandas
+  python-pyarrow
+  python-requests
+  python-tqdm
+  python-xxhash
+  python-yaml
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/datasets/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('6dab029dadfbe6346ce954425c1feba2c97c81ad2d18e3de49bd8147a42560d69712b730c9c64824974366bd30821bd94266caa1dc081d00206cfded66bbb95e')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
+# vim:set ts=2 sw=2 et:
