@@ -54,7 +54,6 @@ build() {
         -GNinja \
         -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr" \
         -DLEMON_BUILD_INFO="Build for Arch Linux" \
-        -DLEMON_BUILD_EXTRA_INFO="Build on $(uname -a | cut -d " " -f3,13)" \
         -DLEMON_QT6=ON \
         -DEMBED_TRANSLATIONS=OFF \
         -DEMBED_DOCS=OFF
