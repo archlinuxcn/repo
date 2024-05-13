@@ -10,44 +10,70 @@ arch=('x86_64')
 license=('GPL-3.0-or-later AND LGPL-2.1-or-later')
 url='https://mpv.io/'
 depends=(
-        'glibc' 'gcc-libs' 'bash'
-        'libx11' 'libxext' 'libxrandr' 'libxss' 'libxv' 'libxpresent'
-        'hicolor-icon-theme' 'luajit' 'mujs'
-        'libgl' 'libdvdnav' 'libdvdread' 'uchardet' 'mesa' 'libdrm' 'libcaca'
-        'zlib' 'vapoursynth' 'sdl2' 'libsixel' 'libcdio-paranoia' 'libcdio'
+    'alsa-lib'
+    'bash'
+    'ffmpeg'
+    'gcc-libs'
+    'glibc'
+    'hicolor-icon-theme'
+    'lcms2'
+    'libarchive'
+    'libass'
+    'libbluray'
+    'libcaca'
+    'libcdio'
+    'libcdio-paranoia'
+    'libdrm'
+    'libdvdnav'
+    'libdvdread'
+    'libgl'
+    'libjpeg'
+    'libpipewire'
+    'libplacebo'
+    'libpulse'
+    'libsixel'
+    'libva'
+    'libvdpau'
+    'libx11'
+    'libxext'
+    'libxkbcommon'
+    'libxpresent'
+    'libxrandr'
+    'libxss'
+    'libxv'
+    'luajit'
+    'mesa'
+    'mujs'
+    'rubberband'
+    'sdl2'
+    'sndio'
+    'uchardet'
+    'vapoursynth'
+    'vulkan-icd-loader'
+    'wayland'
+    'zimg'
+    'zlib'
 
-        'libva' 'libva.so' 'libva-x11.so' 'libva-wayland.so' 'libva-drm.so'
-        'libxkbcommon' 'libxkbcommon.so'
-        'wayland' 'libwayland-client.so' 'libwayland-cursor.so' 'libwayland-egl.so'
-        'libjpeg' 'libjpeg.so'
-        'sndio' 'libsndio.so'
-        'libjack.so'
-        'alsa-lib' 'libasound.so'
-        'zimg' 'libzimg.so'
-        'rubberband' 'librubberband.so'
-        'libbluray' 'libbluray.so'
-        'libarchive' 'libarchive.so'
-        'libass' 'libass.so'
-        'lcms2' 'liblcms2.so'
-        'vulkan-icd-loader' 'libvulkan.so'
-        'ffmpeg' 'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
-        'libplacebo' 'libplacebo.so'
-        'libpipewire' 'libpipewire-0.3.so'
-        'libpulse' 'libpulse.so'
-        'libvdpau' 'libvdpau.so'
-
-        # for development
-        'wayland-protocols' 'ffnvcodec-headers'
+    # for development
+    'ffnvcodec-headers'
+    'wayland-protocols'
 )
-makedepends=('git' 'python-docutils' 'vulkan-headers' 'meson' 'openal'
+makedepends=(
+    'git'
+    'meson'
+    'openal'
+    'python-docutils'
+    'vulkan-headers'
 )
-optdepends=('youtube-dl: for video-sharing websites playback'
-            'yt-dlp: for video-sharing websites playback'
-            'openal: OpenAL audio output'
-            'pulseaudio: PulseAudio audio output'
-            'pipewire: PipeWire audio output'
-            'smbclient: Samba support'
-            'nvidia-utils: for hardware accelerated video decoding with CUDA')
+optdepends=(
+    'nvidia-utils: for hardware accelerated video decoding with CUDA'
+    'openal: OpenAL audio output'
+    'pipewire: PipeWire audio output'
+    'pulseaudio: PulseAudio audio output'
+    'smbclient: Samba support'
+    'youtube-dl: for video-sharing websites playback'
+    'yt-dlp: for video-sharing websites playback'
+)
 provides=('mpv' 'libmpv.so')
 conflicts=('mpv')
 options=('!emptydirs')
@@ -122,6 +148,28 @@ build() {
 
 package() {
     cd "$srcdir/mpv"
+
+    depends+=(
+        'libarchive.so'
+        'libasound.so'
+        'libass.so'
+        'libavcodec.so' 'libavdevice.so' 'libavfilter.so' 'libavformat.so' 'libavutil.so' 'libswresample.so' 'libswscale.so'
+        'libbluray.so'
+        'libjack.so'
+        'libjpeg.so'
+        'liblcms2.so'
+        'libpipewire-0.3.so'
+        'libplacebo.so'
+        'libpulse.so'
+        'librubberband.so'
+        'libsndio.so'
+        'libva.so' 'libva-x11.so' 'libva-wayland.so' 'libva-drm.so'
+        'libvdpau.so'
+        'libvulkan.so'
+        'libwayland-client.so' 'libwayland-cursor.so' 'libwayland-egl.so'
+        'libxkbcommon.so'
+        'libzimg.so'
+    )
     
     meson install -C build --no-rebuild --destdir="$pkgdir"
     
@@ -133,3 +181,5 @@ check() {
     cd "$srcdir/mpv"
     meson test -C build --print-errorlogs --no-suite ffmpeg # ffmpeg testsuite need fixed ffmpeg version
 }
+
+# vim: set ts=4 sw=4 et:
