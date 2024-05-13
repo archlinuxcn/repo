@@ -24,7 +24,7 @@ depends=(
 makedepends=(
 #  castxml
   cmake
-  gcc12
+  gcc13
   git
   gtest
   python
@@ -51,8 +51,8 @@ build() {
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
     -DCMAKE_BUILD_TYPE=Release
-    -DCMAKE_CXX_COMPILER=g++-12
-    -DCMAKE_C_COMPILER=gcc-12
+    -DCMAKE_CXX_COMPILER=g++-13
+    -DCMAKE_C_COMPILER=gcc-13
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DCMAKE_SKIP_RPATH=ON
