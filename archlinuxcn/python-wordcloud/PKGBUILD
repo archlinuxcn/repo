@@ -24,6 +24,12 @@ makedepends=(
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/amueller/word_cloud/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('9863bec2d3cc8972e30a147cfd4ae2eadb79cbb0b472936e7ca789363cde549bb5b8bf6c5669462e9e96288cafc844510e4b33a5fb0f574c771222e85689ca87')
 
+prepare() {
+  # quick fix for missing files
+  echo "include wordcloud/DroidSansMono.ttf" >> ${srcdir}/${_pkgname}-${pkgver}/MANIFEST.in
+  echo "include wordcloud/stopwords" >> ${srcdir}/${_pkgname}-${pkgver}/MANIFEST.in
+}
+
 build() {
   cd "${_pkgname}-${pkgver}"
   SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
