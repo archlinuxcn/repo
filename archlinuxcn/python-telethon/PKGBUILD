@@ -1,24 +1,26 @@
 _name=Telethon
 pkgname=python-telethon
 pkgver=1.35.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Full-featured Telegram client library for Python 3"
 arch=(any)
 url="https://github.com/LonamiWebs/Telethon"
 license=('MIT')
 depends=('python-pyaes' 'python-rsa')
-makedepends=('python-setuptools')
+makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel')
+optdepends=('python-cryptg: alternative crypto library' 'python-pysocks: socks proxy support' 'python-python-socks: socks proxy support' 'python-hachoir: parse media metadata for uploading' 'python-pillow: resize photos for uploading')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/Telethon-1.35.0.tar.gz")
 sha256sums=('99d7a2e161e9af1cdf03feef7a3fea6eef304a9caf620fe13aefc53099845555')
 
 build() {
   cd "$srcdir/Telethon-1.35.0"
-  python3 setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "$srcdir/Telethon-1.35.0"
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
   # make sure we don't install any world-writable or root-readable-only files
   # we shouldn't need to fix ownership as we extract tarballs as a non-root user
