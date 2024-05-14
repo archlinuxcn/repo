@@ -33,6 +33,12 @@ makedepends=(
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/datasets/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('6dab029dadfbe6346ce954425c1feba2c97c81ad2d18e3de49bd8147a42560d69712b730c9c64824974366bd30821bd94266caa1dc081d00206cfded66bbb95e')
 
+prepare() {
+  # pyarrow_hotfix is only used for pyarrow < 14.0.1
+  sed -i "/pyarrow_hotfix/d" "${srcdir}/${_pkgname}-${pkgver}/src/datasets/features/features.py"
+  sed -i "/pyarrow-hotfix/d" "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+}
+
 build() {
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
