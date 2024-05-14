@@ -1,13 +1,13 @@
 # Maintainer: HurricanePootis <hurricanepootis@protonmail.com>
 pkgname=imgbrd-grabber
-pkgver=7.11.2
-pkgrel=6
+pkgver=7.12.1
+pkgrel=1
 pkgdesc="Very customizable imageboard/booru downloader with powerful filenaming features."
 arch=('x86_64')
 url="https://github.com/Bionus/imgbrd-grabber"
 license=('Apache-2.0')
-depends=('qt5-multimedia' 'qt5-declarative' 'nodejs' 'qt5-networkauth' 'hicolor-icon-theme' 'gcc-libs' 'glibc' 'qt5-base')
-makedepends=('git' 'cmake' 'qt5-tools' 'npm')
+depends=("gcc-libs" "glibc" "hicolor-icon-theme" "nodejs" "qt6-base" "qt6-declarative" "qt6-multimedia" "qt6-networkauth" "qt6-shadertools" "qt6-webengine")
+makedepends=("clang" "cmake" "git" "jq" "npm" "qt6-tools")
 optdepends=('openssl: Access HTTPS sources')
 conflicts=("imgbrd-grabber-git" 'imgbrd-grabber-bin' 'imgbrd-grabber-appimage')
 source=('git+https://github.com/Bionus/imgbrd-grabber.git#tag=v'${pkgver}''
@@ -15,7 +15,7 @@ source=('git+https://github.com/Bionus/imgbrd-grabber.git#tag=v'${pkgver}''
         'git+https://github.com/sakra/cotire.git'
         'git+https://github.com/lexbor/lexbor.git'
         'git+https://github.com/catchorg/Catch2.git')
-sha256sums=('7e2e90768266caa806e0db74630bd58df96fe192a08f17ec85d71196e834621a'
+sha256sums=('4be9ba8ecdcb74c52086f571f609584abc33f53b53addfcbec59cfde56b10b8b'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -40,8 +40,7 @@ build() {
 
     cmake -S $pkgname/src -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DUSE_QSCINTILLA=0 \
-    -DUSE_BREAKPAD=O \
+    -DLEXBOR_BUILD_TESTS_CPP=0 \
     -Wno-dev
 
     cmake --build build
