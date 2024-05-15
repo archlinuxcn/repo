@@ -5,7 +5,7 @@
 
 pkgname=vitetris
 pkgver=0.59.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Virtual terminal *tris clone"
 arch=('i686' 'x86_64')
 url="http://victornils.net/tetris"
@@ -15,14 +15,17 @@ makedepends=('patch')
 options=('!makeflags')
 source=($pkgname-$pkgver.tar.gz::https://github.com/vicgeralds/$pkgname/archive/v$pkgver.tar.gz
         $pkgname-makefile.patch
+	$pkgname-netplay.patch
         $pkgname.tmpfiles.conf)
 sha256sums=('699443df03c8d4bf2051838c1015da72039bbbdd0ab0eede891c59c840bdf58d'
             '2a9e1ea8daf42b833719c2fa1098f9e9c6259b8e077ca387eecd9a2ee54cc8af'
+            '1591b4b1e2c9cf9eedfb5abc139e535ac98cfc7092a4ccb1fbbbd071de9a9e94'
             '898c741a41defccd6b38fe3a5b97fb84d5656b2c9df05c79196ac1bf2151ba7d')
 
 prepare() {
   cd ${pkgname}-${pkgver}
   patch -Np1 -i "${srcdir}"/${pkgname}-makefile.patch
+  patch -Np1 -i "${srcdir}"/${pkgname}-netplay.patch
 
 # Change configuration file to a standard one:
   sed -i 's|#define CONFIG_FILENAME ".vitetris"|#define CONFIG_FILENAME ".config/vitetris"|' src/config2.h
