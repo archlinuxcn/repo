@@ -8,7 +8,7 @@ else
 fi
 
 pkgname=enzyme-julia
-pkgver=0.0.109
+pkgver=0.0.110
 pkgrel=1
 pkgdesc="High-performance automatic differentiation of LLVM and MLIR."
 arch=(aarch64 x86_64)
@@ -18,7 +18,7 @@ depends=(llvm-libs-julia-git)
 makedepends=(cmake git $_clang llvm-julia-git)
 source=("https://github.com/EnzymeAD/Enzyme/archive/v${pkgver}.tar.gz"
         0001-fix-gsl64-patching-script.patch)
-sha256sums=('375e09faaa43679592641cc586c7457825cf679d4acee91239d6235d4b807e25'
+sha256sums=('350ff70d870fa5d92fb8e5c72dfea76ad01e9de700f9045dc157636b63c3b546'
             '34644e0e64dae1b6ca5567373176fc9431b3ca7c4a87071a2e25e292215ab56b')
 
 prepare() {
