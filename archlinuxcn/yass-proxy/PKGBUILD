@@ -2,9 +2,9 @@
 # Contributor: Chilledheart <hukeyue@hotmail.com>
 
 pkgname=yass-proxy
-pkgver=1.9.5
-pkgrel=3
-_pkgver=1.9.5
+pkgver=1.10.0
+pkgrel=1
+_pkgver=1.10.0
 _pkgrel=1
 pkgdesc="lightweight http/socks proxy"
 arch=(x86_64)
@@ -17,22 +17,16 @@ checkdepends=(curl)
 provides=(yass-proxy)
 conflicts=(yass-proxy-git)
 source=("https://github.com/Chilledheart/yass/releases/download/${_pkgver}/yass-${_pkgver}.tar.bz2"
-        "boringssl-gcc-14.patch"
         "libcxx-gcc-14.patch"
-        "cmake.patch"
         )
-sha256sums=('26e013c811f0b4cb194bfd4587fa6e644b5f155593df0c6a15c026120084a635'
-            '6201584f8c5c983405e07f99a83e33a28e1aa907a752bc07bc641d0cf1087662'
+sha256sums=('3140611a5f70148664fd54cb2db8aa6b178395eeec56ffdc6b5dd22b011e0a6f'
             '72f55c55adb141d31dd9cd892cd04a08df2d95a1d94ad3a4b421a312075782e4'
-            '24cef2470a32381e771ce110e5bae4f1f96e589e9d59a3aa6c294ba5cf6a8d71'
             )
 
 prepare() {
   SRC_DIR="${srcdir}/yass-${_pkgver}"
   pushd $SRC_DIR
-  patch --forward --strip=1 --input=../boringssl-gcc-14.patch
   patch --forward --strip=1 --input=../libcxx-gcc-14.patch
-  patch --forward --strip=1 --input=../cmake.patch
   cd tools
   go build
   cd ..
