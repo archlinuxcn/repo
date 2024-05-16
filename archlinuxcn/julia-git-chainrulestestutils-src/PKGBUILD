@@ -1,7 +1,7 @@
 pkgname=julia-git-chainrulestestutils-src
-pkgver=1.12.0
-_commit=ebfe4c1cba28cf463fdd1d052167e5c0371afcf5
-pkgrel=2
+pkgver=1.13.0
+_commit=ea867a50896d3a9d31f311b5f7fb098eca1620fe
+pkgrel=1
 pkgdesc="ChainRulesTestUtils.jl"
 url="https://github.com/JuliaDiff/ChainRulesTestUtils.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDiff/ChainRulesTestUtils.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('04abef6ed86b622c0cc3ff1841fc06b91802ed1a5641679bb104685d0651eaa5')
 
 package() {
   cd ChainRulesTestUtils.jl
