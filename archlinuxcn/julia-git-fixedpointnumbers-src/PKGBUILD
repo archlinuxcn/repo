@@ -1,7 +1,7 @@
 pkgname=julia-git-fixedpointnumbers-src
-pkgver=0.8.4
-_commit=cab78d7c4aa31673cc6f9f7f9de8aaddef2e8854
-pkgrel=3
+pkgver=0.8.5
+_commit=c372941791804d35e45b03615edd1dcb86a09da8
+pkgrel=1
 pkgdesc="FixedPointNumbers.jl"
 url="https://github.com/JuliaMath/FixedPointNumbers.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/FixedPointNumbers.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('23c57ae406d956107e90b8dd9c234562ad011dc20213f99b9b3b19395710bd22')
 
 package() {
   cd FixedPointNumbers.jl
