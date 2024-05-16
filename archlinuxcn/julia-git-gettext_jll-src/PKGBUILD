@@ -1,7 +1,7 @@
 pkgname=julia-git-gettext_jll-src
 pkgver=0.21.0+0
 _commit=fc208fa027772a7529fa4d2a3fe3c024b6515eee
-pkgrel=5
+pkgrel=6
 pkgdesc="Gettext_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Gettext_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git gettext)
 source=("git+https://github.com/JuliaBinaryWrappers/Gettext_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('03d0e1e8eb900a144e75d0a7482a2c350a74e96438b9c4f65647346a5b6b5594'
             '9009ff327c034857f028e27b0a8f15d2eae9920d71f88872416a34c213d132cf')
 
 build() {
