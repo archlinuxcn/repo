@@ -1,6 +1,6 @@
 pkgname=julia-git-cairo_jll-src
-pkgver=1.18.0+1
-_commit=33e86d059da1e2aab3b502534f43e63cc3b82383
+pkgver=1.18.0+2
+_commit=af26a6fdcd067d20c5a031aa7cca84b6f1f95a6c
 pkgrel=1
 pkgdesc="Cairo_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Cairo_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git cairo)
 source=("git+https://github.com/JuliaBinaryWrappers/Cairo_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('b2b186b96e42e9862ddb968ffdc57dbb34191178beea2d73bbf756b8a24121c3'
             'd8406820b96d76ec0eeae2dbe3fc1965898e0af72919fd92d5172010326c1433')
 
 build() {
