@@ -1,0 +1,47 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+
+pkgname=sentencepiece
+pkgver=0.2.0
+pkgrel=1
+pkgdesc="Unsupervised text tokenizer for Neural Network-based text generation"
+arch=('x86_64')
+url="https://github.com/google/sentencepiece"
+license=('Apache-2.0')
+depends=(
+  abseil-cpp
+  gcc-libs
+  gperftools
+  glibc
+  protobuf
+)
+makedepends=(
+  cmake
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/google/sentencepiece/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('b4214f5bfbe2a0757794c792e87e7c53fda7e65b2511b37fc757f280bf9287ba59b5d630801e17de6058f8292a3c6433211917324cb3446a212a51735402e614')
+
+build() {
+  cmake \
+    -B "${srcdir}/build" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_SKIP_INSTALL_RPATH=ON \
+    -DSPM_BUILD_TEST=OFF \
+    -DSPM_ABSL_PROVIDER=package \
+    -DSPM_ENABLE_TCMALLOC=ON \
+    -DSPM_ENABLE_SHARED=ON \
+    -DSPM_PROTOBUF_PROVIDER=package \
+    -S "${srcdir}/${pkgname}-${pkgver}"
+  make -C "${srcdir}/build"
+
+}
+
+package() {
+  provides=(
+    libsentencepiece.so
+    libsentencepiece_train.so
+  )
+  DESTDIR="${pkgdir}" make -C "${srcdir}/build" install
+}
+# vim:set ts=2 sw=2 et:
+
+
