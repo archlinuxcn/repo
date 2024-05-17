@@ -1,6 +1,6 @@
 # Maintainer: HurricanePootis <hurricanepootis@protonmail.com>
 pkgname=imgbrd-grabber
-pkgver=7.12.1
+pkgver=7.12.2
 pkgrel=1
 pkgdesc="Very customizable imageboard/booru downloader with powerful filenaming features."
 arch=('x86_64')
@@ -15,7 +15,7 @@ source=('git+https://github.com/Bionus/imgbrd-grabber.git#tag=v'${pkgver}''
         'git+https://github.com/sakra/cotire.git'
         'git+https://github.com/lexbor/lexbor.git'
         'git+https://github.com/catchorg/Catch2.git')
-sha256sums=('4be9ba8ecdcb74c52086f571f609584abc33f53b53addfcbec59cfde56b10b8b'
+sha256sums=('47d682e0496439ca1c193a32288f4031142c6780cb3469e66479e46750483a36'
             'SKIP'
             'SKIP'
             'SKIP'
