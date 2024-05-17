@@ -1,5 +1,4 @@
-# Maintainer: TurtleRuss <tttturtleruss@gmail.com>
-# Contributor: coolingtool <coolingtool-backup@outlook.com>
+# Maintainer: coolingtool <coolingtool-backup@outlook.com>
 # Contributor: Maintainer of qt5-wayland Felix Yan <felixonmars@archlinux.org>
 # Contributor: Contributor of qt5-wayland Andrea Scarpino <andrea@archlinux.org>
 # (Modified from qt5-wayland's PKGBUILD)
@@ -8,12 +7,12 @@ _basename=qt5-wayland
 pkgname=qt5-wayland-decorations
 _basever=5.15.13
 pkgver=5.15.13+kde+r60
-pkgrel=1
+pkgrel=2
 _commit=9c82b5461736f59a06923ab68c6f7584ecab4f77
 _patchcommit=1d8e08648debad9741dca0820f5f0e91633b5a4e
 arch=('x86_64')
 url='https://www.qt.io'
-license=('GPL-3.0-only' 'LGPL-3.0-only' 'FDL' 'custom')
+license=('GPL3' 'LGPL3' 'FDL' 'custom')
 pkgdesc='Provides APIs for Wayland (with patch required for shadows on qadwaitadecorations-qt5)'
 depends=('qt5-declarative' 'libxcomposite')
 provides=('qt5-wayland')
@@ -54,4 +53,3 @@ package() {
   install -d "$pkgdir"/usr/share/licenses
   ln -s /usr/share/licenses/qt5-base "$pkgdir"/usr/share/licenses/${pkgname}
 }
-
