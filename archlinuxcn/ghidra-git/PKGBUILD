@@ -5,7 +5,7 @@
 # Contributor: nullableVoidPtr <nullableVoidPtr _ gmail _ com>
 
 pkgname=ghidra-git
-pkgver=11.0.3.r789.e6c8f5b53c
+pkgver=11.0.3.r904.8b5f6daf4e
 pkgrel=1
 pkgdesc='Software reverse engineering framework (git)'
 arch=('x86_64' 'aarch64')
@@ -23,7 +23,7 @@ depends=(
   'java-environment=17'
   'polkit'
 )
-makedepends=(
+makedepends=("python-pip"
   'fop'
   'git'
   'gradle'
