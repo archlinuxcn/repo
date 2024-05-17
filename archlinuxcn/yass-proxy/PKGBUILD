@@ -3,7 +3,7 @@
 
 pkgname=yass-proxy
 pkgver=1.10.0
-pkgrel=1
+pkgrel=2
 _pkgver=1.10.0
 _pkgrel=1
 pkgdesc="lightweight http/socks proxy"
@@ -18,15 +18,18 @@ provides=(yass-proxy)
 conflicts=(yass-proxy-git)
 source=("https://github.com/Chilledheart/yass/releases/download/${_pkgver}/yass-${_pkgver}.tar.bz2"
         "libcxx-gcc-14.patch"
+        "telegram-http-proxy-fix.patch"
         )
 sha256sums=('3140611a5f70148664fd54cb2db8aa6b178395eeec56ffdc6b5dd22b011e0a6f'
             '72f55c55adb141d31dd9cd892cd04a08df2d95a1d94ad3a4b421a312075782e4'
+            '8d8ef6f29774609c5457354afc6b7a314eaef9eb753edcfd4a86cab8f20693ff'
             )
 
 prepare() {
   SRC_DIR="${srcdir}/yass-${_pkgver}"
   pushd $SRC_DIR
   patch --forward --strip=1 --input=../libcxx-gcc-14.patch
+  patch --forward --strip=1 --input=../telegram-http-proxy-fix.patch
   cd tools
   go build
   cd ..
