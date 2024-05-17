@@ -1,0 +1,104 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
+Date: Mon, 18 Mar 2024 02:14:24 +0100
+Subject: [PATCH] Allow disabling legacy Tracker search
+
+---
+ docs/reference/gtk/meson.build | 2 --
+ gtk/gtksearchengine.c          | 5 ++---
+ gtk/meson.build                | 5 ++++-
+ meson.build                    | 5 +++++
+ meson_options.txt              | 2 ++
+ 5 files changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/docs/reference/gtk/meson.build b/docs/reference/gtk/meson.build
+index 9fa282d38cb5..b2f977363a5a 100644
+--- a/docs/reference/gtk/meson.build
++++ b/docs/reference/gtk/meson.build
+@@ -129,7 +129,6 @@ private_headers = [
+   'gtksearchenginemodel.h',
+   'gtksearchenginequartz.h',
+   'gtksearchenginesimple.h',
+-  'gtksearchenginetracker.h',
+   'gtksearchentryprivate.h',
+   'gtkselectionprivate.h',
+   'gtksettingsprivate.h',
+@@ -208,7 +207,6 @@ private_headers = [
+   'gtkrecentchooserdefault.h',
+   'gtkrecentchooserutils.h',
+   'gtksearchengine.h',
+-  'gtksearchenginetracker.h',
+   'gtksearchenginesimple.h',
+   'gtksearchenginequartz.h',
+   'gtksequence.h',
+diff --git a/gtk/gtksearchengine.c b/gtk/gtksearchengine.c
+index 1910cc0ad337..dd4022c2cc4d 100644
+--- a/gtk/gtksearchengine.c
++++ b/gtk/gtksearchengine.c
+@@ -29,9 +29,8 @@
+ #if defined(HAVE_TRACKER3)
+ #include "gtksearchenginetracker3.h"
+ #endif
+-#if !defined G_OS_WIN32 /* No tracker on windows */
++#if defined(HAVE_TRACKER)
+ #include "gtksearchenginetracker.h"
+-#define HAVE_TRACKER 1
+ #endif
+ 
+ #include <gdk/gdk.h> /* for GDK_WINDOWING_QUARTZ */
+@@ -388,7 +387,7 @@ _gtk_search_engine_new (void)
+     }
+ #endif
+ 
+-#ifdef HAVE_TRACKER
++#if defined(HAVE_TRACKER)
+   if (!engine->priv->native)
+     {
+       engine->priv->native = _gtk_search_engine_tracker_new ();
+diff --git a/gtk/meson.build b/gtk/meson.build
+index ea866d8231c2..03677b120f60 100644
+--- a/gtk/meson.build
++++ b/gtk/meson.build
+@@ -652,9 +652,12 @@ gtk_unix_sources = files(
+   'gtkprintoperation-portal.c',
+   'gtkprintunixdialog.c',
+   'gtkprintbackend.c',
+-  'gtksearchenginetracker.c',
+ )
+ 
++if os_unix and tracker_enabled
++  gtk_unix_sources += 'gtksearchenginetracker.c'
++endif
++
+ if os_unix and tracker3_enabled
+   gtk_unix_sources += 'gtksearchenginetracker3.c'
+ endif
+diff --git a/meson.build b/meson.build
+index 24785bfe4dd8..1999f526d987 100644
+--- a/meson.build
++++ b/meson.build
+@@ -466,6 +466,11 @@ if require_harfbuzz and not harfbuzz_dep.found()
+                               fallback: ['harfbuzz', 'libharfbuzz_dep'])
+ endif
+ 
++tracker_enabled = get_option('tracker')
++if tracker_enabled
++  cdata.set('HAVE_TRACKER', true)
++endif
++
+ tracker3_enabled = get_option('tracker3')
+ if tracker3_enabled
+   tracker3_dep = dependency('tracker-sparql-3.0', required: false)
+diff --git a/meson_options.txt b/meson_options.txt
+index 94099aa01eb3..3b5485a88f74 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -17,6 +17,8 @@ option('cloudproviders', type: 'boolean', value: false,
+   description : 'Enable the cloudproviders support')
+ option('profiler', type: 'boolean', value: false,
+   description : 'Enable profiler support')
++option('tracker', type: 'boolean', value: true,
++  description : 'Enable Tracker filechooser search')
+ option('tracker3', type: 'boolean', value: false,
+   description : 'Enable Tracker3 filechooser search')
+ 
