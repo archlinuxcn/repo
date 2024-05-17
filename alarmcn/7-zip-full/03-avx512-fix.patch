@@ -1,0 +1,21 @@
+--- a/C/Blake2s.c
++++ b/C/Blake2s.c
+@@ -1164,7 +1164,9 @@
+ #if 1 && defined(Z7_BLAKE2S_USE_AVX512_ALWAYS)
+   #define MM256_ROR_EPI32  _mm256_ror_epi32
+   #define Z7_MM256_ROR_EPI32_IS_SUPPORTED
++#ifdef Z7_BLAKE2S_USE_AVX2_WAY2
+   #define LOAD_ROTATE_CONSTS_256
++#endif
+ #else
+ #ifdef Z7_BLAKE2S_USE_AVX2_WAY_SLOW
+ #ifdef Z7_BLAKE2S_USE_AVX2_WAY2
+@@ -2548,7 +2550,7 @@
+   Z7_BLAKE2SP_FUNC_INIT func_Final = NULL;
+ 
+ #if defined(MY_CPU_X86_OR_AMD64)
+-    #if defined(Z7_BLAKE2S_USE_AVX512_ALWAYS)
++    #if 0 && defined(Z7_BLAKE2S_USE_AVX512_ALWAYS)
+       if (CPU_IsSupported_AVX512F_AVX512VL())
+     #endif
+     #if defined(Z7_BLAKE2S_USE_SSE41)

@@ -1,7 +1,7 @@
 _name=7-zip
 pkgname=${_name}-full
 pkgver=24.05
-pkgrel=1
+pkgrel=2
 pkgdesc='File archiver with a high compression ratio (full package to replace p7zip)'
 url='https://7-zip.org/'
 license=('LGPL-2.1-or-later' 'BSD-3-Clause' 'LicenseRef-UnRAR')
@@ -20,6 +20,7 @@ source=(
     "${_url}/releases/download/${pkgver}/${_manarc}" # to get the manual
     '01-make.patch'
     '02-lib-load-path.patch'
+    '03-avx512-fix.patch' # https://github.com/ip7z/7zip/issues/27
 )
 
 sha256sums=(
@@ -27,6 +28,7 @@ sha256sums=(
     '7294f7478d90d2dc122137ff64607d354c66bd45b10911359658b85ca8892118'
     'f54dfe73ad045f200d5512dfd4387ef626068662a5af6e17d81052996544af54'
     '338b732445d3cfa416e40384bd9f0596506aa4b464b3f86aa971af4cfa6084c7'
+    'ba77276422af8d818a10a252005de2d7694002e059c5557dd6cfe1e7b1761d96'
 )
 
 noextract=("${_manarc}")
