@@ -1,18 +1,13 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 # Contributor: Marcell Pardavi <marcell.pardavi@gmail.com>
 
-# git submodules with vendored dependencies
-declare -gA _tags=(
-    [protocol]="8645a138fb2ea72c4dab13e739b1f3c9ea29ac84"
-)
-
 # Tests assume access to vulkan video drivers, Wayland window creation,
 # detecting system keymaps, etc. Until their is something sensical for
 # a package to test in the suite, just skip it by default.
 BUILDENV+=(!check)
 
 pkgname=zed-editor-preview
-pkgver=0.135.2
+pkgver=0.136.2
 pkgrel=1
 pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
@@ -46,15 +41,11 @@ optdepends=('clang: improved C/C++ language support'
 provides=("${pkgname%-preview}=$pkgver")
 conflicts=("${pkgname%-preview}")
 _archive="zed-$pkgver-pre"
-source=("$_url/archive/v$pkgver-pre/$_archive.tar.gz"
-        "https://github.com/livekit/protocol/archive/${_tags[protocol]}/protocol-${_tags[protocol]}.tar.gz")
-sha256sums=('bf1603ed7e37b005f80868a261de43aeb4d1d868e32d6dcd4c42e491239a2989'
-            'cd26bc1015fa0b79154c23a385441ae81e9a4385211cf2989eb939ae83d0e414')
+source=("$_url/archive/v$pkgver-pre/$_archive.tar.gz")
+sha256sums=('744ce7c5f7dc2fa8e269c384d2f6037995fa159dd9ffe22bb25016bb87aa6f3b')
 
 prepare() {
 	cd "$_archive"
-	rm -r crates/live_kit_server/protocol
-	ln -sT "$srcdir/protocol-${_tags[protocol]}" crates/live_kit_server/protocol
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 	gendesk -q -f -n \
 		--name 'Zed' \
