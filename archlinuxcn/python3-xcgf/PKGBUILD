@@ -1,12 +1,13 @@
 #Maintainer: Xyne <gro xunilhcra enyx, backwards>
 pkgname=python3-xcgf
 pkgver=2021
-pkgrel=14
+pkgrel=15
 pkgdesc='Xyne'"'"'s common generic functions, for internal use.'
 arch=(any)
 license=(GPL)
 url="https://xyne.dev/projects/python3-xcgf"
 depends=(python3)
+makedepends=(python-setuptools)
 source=(
   https://xyne.dev/projects/python3-xcgf/src/python3-xcgf-2021.tar.xz
   https://xyne.dev/projects/python3-xcgf/src/python3-xcgf-2021.tar.xz.sig
