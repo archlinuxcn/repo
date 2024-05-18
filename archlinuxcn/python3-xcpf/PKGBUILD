@@ -1,12 +1,13 @@
 #Maintainer: Xyne <gro xunilhcra enyx, backwards>
 pkgname=python3-xcpf
 pkgver=2021.12
-pkgrel=13
+pkgrel=14
 pkgdesc='Xyne'"'"'s common Pacman functions, for internal use.'
 arch=(any)
 license=(GPL)
 url="https://xyne.dev/projects/python3-xcpf"
 depends=(pyalpm python-pyxdg python3 python3-memoizedb python3-xcgf)
+makedepends=(python-setuptools)
 optdepends=('rsync: Retrieve ABS files via rsync.')
 source=(
   https://xyne.dev/projects/python3-xcpf/src/python3-xcpf-2021.12.tar.xz
