@@ -1,12 +1,13 @@
 #Maintainer: Xyne <gro xunilhcra enyx, backwards>
 pkgname=python3-aur
 pkgver=2021.11.20.1
-pkgrel=14
+pkgrel=15
 pkgdesc='AUR-related modules and helper utilities (aurploader, aurquery, aurtomatic).'
 arch=(any)
 license=(GPL)
 url="https://xyne.dev/projects/python3-aur"
 depends=(pyalpm python-pyxdg python3 python3-xcgf python3-xcpf)
+makedepends=(python-setuptools)
 optdepends=('curl: Aurploader support' 'git: Clone AUR Git repositories.')
 replaces=(aurploader)
 conflicts=(aurploader)
