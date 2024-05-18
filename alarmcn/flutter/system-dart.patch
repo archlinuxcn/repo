@@ -28,15 +28,15 @@
 +exec "${DART_ROOT:-"/opt/dart-sdk"}/bin/dart" "${FLUTTER_ROOT}/packages/flutter_tools/bin/tool_backend.dart" "${@:1}"
 --- ./packages/flutter_tools/gradle/src/main/groovy/flutter.groovy.orig
 +++ ./packages/flutter_tools/gradle/src/main/groovy/flutter.groovy
-@@ -264,7 +264,7 @@
+@@ -324,7 +324,7 @@
          }
 
          String flutterExecutableName = Os.isFamily(Os.FAMILY_WINDOWS) ? "flutter.bat" : "flutter"
--        flutterExecutable = Paths.get(flutterRoot.absolutePath, "bin", flutterExecutableName).toFile();
-+        flutterExecutable = Paths.get("/usr", "bin", flutterExecutableName).toFile();
+-        flutterExecutable = Paths.get(flutterRoot.absolutePath, "bin", flutterExecutableName).toFile()
++        flutterExecutable = Paths.get("/usr", "bin", flutterExecutableName).toFile()
 
-         if (project.hasProperty("multidex-enabled") &&
-             project.property("multidex-enabled").toBoolean()) {
+         // Validate that the provided Gradle, Java, AGP, and KGP versions are all within our
+         // supported range.
 --- ./packages/flutter_tools/lib/src/artifacts.dart.orig
 +++ ./packages/flutter_tools/lib/src/artifacts.dart
 @@ -2,6 +2,8 @@
@@ -48,7 +48,7 @@
  import 'package:file/memory.dart';
  import 'package:meta/meta.dart';
  import 'package:process/process.dart';
-@@ -1059,48 +1061,7 @@
+@@ -1176,50 +1176,7 @@
    }
 
    String _getDartSdkPath() {
@@ -82,6 +82,8 @@
 -        return 'linux-x64';
 -      case TargetPlatform.windows_x64:
 -        return 'windows-x64';
+-      case TargetPlatform.windows_arm64:
+-        return 'windows-arm64';
 -      case TargetPlatform.ios:
 -      case TargetPlatform.android:
 -      case TargetPlatform.android_arm:
