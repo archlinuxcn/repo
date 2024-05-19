@@ -3,10 +3,10 @@
 
 pkgbase=linux-amd-znver3
 _srcname=linux
-gitver=v6.8.9
+gitver=v6.9.1
 patchver=20240221.2
 patchname=more-uarches-for-kernel-6.8-rc4+.patch
-pkgver=6.8.v.9
+pkgver=6.9.v.1
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
@@ -17,14 +17,10 @@ options=('!strip')
 source=("git+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git#tag=$gitver"
         # the main kernel config files
         'config.x86_64'
-	# patch from our graysky archlinux colleague
-	"https://raw.githubusercontent.com/graysky2/kernel_compiler_patch/$patchver/$patchname"
 )
 sha256sums=('SKIP'
             #config.x86_64
-            '2c6beaf99119298f0b535e578a2d2580a54d0d047c467b0bb78beda5fa21ec82'
-            #grayskypatch
-            'd69232afd0dd6982ae941cf2d1f577f4be2011e3bb847d1db37952acf416b5d3'
+	    '50a7ee4b208a6396dd96e01b3c0ae7d920485c44115a7f7191f8c4c5b8e8d4ad'
 )
 
 _kernelname=${pkgbase#linux}
@@ -41,13 +37,6 @@ prepare() {
     echo "Sorry, non x86_64 arch not supported."
       exit 2
   fi
-
-  # Implement all packaged patches and reverts.
-  msg2 "Implementing custom kernel patches/reverts"
-  while read patch; do
-   echo "Applying $patch"
-   git apply $patch || exit 2
-  done <<< $(ls ../*.patch)
 
   # get kernel version
   msg2 "Preparing kernel"
@@ -68,7 +57,9 @@ build() {
   cd "${_srcname}"
 
   #Force zenv3 architecture optimisation and other optimisations.
-  make ${MAKEFLAGS} LOCALVERSION= bzImage modules KCFLAGS="-O2 -pipe -march=znver3 -mtune=znver3 -fstack-protector-strong"
+  export KCFLAGS=' -march=znver3 -mtune=znver3 -O2 -pipe -fstack-protector-strong'
+  export KCPPFLAGS=' -march=znver3 -mtune=znver3'
+  make ${MAKEFLAGS} LOCALVERSION= bzImage modules
 }
 
 _package() {
