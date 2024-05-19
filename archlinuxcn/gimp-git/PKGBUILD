@@ -8,7 +8,7 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=2
-pkgver=51857.85ed2847a6d
+pkgver=52262.bf66900493
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
@@ -70,17 +70,18 @@ pkgver() {
 }
 
 prepare() {
-  export CFLAGS CXXFLAGS LDFLAGS
-  cd ${srcdir}
-  mkdir "${srcdir}/build" -p
-  meson "${srcdir}/${_pkgname}"\
-        "${srcdir}/build"\
-        --prefix=/usr
+  cd ${srcdir}/${_pkgname}
+  git submodule update --init --recursive
 }
 
 build() {
+  meson "${srcdir}/${_pkgname}"\
+        "${srcdir}/build"\
+        --prefix=/usr \
+        -Dbug-report-url='https://github.com/bartoszek/AUR-gimp-git/issues'
   export NINJA_STATUS="[%p | %f<%r<%u | %cbps ] "
-  ninja -C "${srcdir}/build"
+# shellcheck disable=SC2046 # allow MAKEFLAGS to split when passing multiple flags.
+  ninja $(grep -oP -- '-+[A-z]+ ?[0-9]*'<<<"${MAKEFLAGS:--j1}") -C "${srcdir}/build"
 }
 
 package() {
