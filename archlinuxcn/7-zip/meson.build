@@ -4,7 +4,7 @@ project(
     'c',
     'cpp',
   ],
-  version: '23.01',
+  version: '24.05',
   default_options: [
     'warning_level=2',
     'werror=true',
@@ -74,11 +74,13 @@ c_files = [
   'C/Sort.c',
   'C/SwapBytes.c',
   'C/Threads.c',
+  'C/Xxh64.c',
   'C/Xz.c',
   'C/XzCrc64.c',
   'C/XzDec.c',
   'C/XzEnc.c',
   'C/XzIn.c',
+  'C/ZstdDec.c',
 ]
 
 cpp_files = [
@@ -100,6 +102,7 @@ cpp_files = [
   'CPP/7zip/Archive/ApmHandler.cpp',
   'CPP/7zip/Archive/ArHandler.cpp',
   'CPP/7zip/Archive/ArjHandler.cpp',
+  'CPP/7zip/Archive/AvbHandler.cpp',
   'CPP/7zip/Archive/Base64Handler.cpp',
   'CPP/7zip/Archive/Bz2Handler.cpp',
   'CPP/7zip/Archive/Cab/CabBlockInStream.cpp',
@@ -138,6 +141,7 @@ cpp_files = [
   'CPP/7zip/Archive/Iso/IsoIn.cpp',
   'CPP/7zip/Archive/Iso/IsoRegister.cpp',
   'CPP/7zip/Archive/LpHandler.cpp',
+  'CPP/7zip/Archive/LvmHandler.cpp',
   'CPP/7zip/Archive/LzhHandler.cpp',
   'CPP/7zip/Archive/LzmaHandler.cpp',
   'CPP/7zip/Archive/MachoHandler.cpp',
@@ -188,6 +192,7 @@ cpp_files = [
   'CPP/7zip/Archive/Zip/ZipOut.cpp',
   'CPP/7zip/Archive/Zip/ZipRegister.cpp',
   'CPP/7zip/Archive/Zip/ZipUpdate.cpp',
+  'CPP/7zip/Archive/ZstdHandler.cpp',
   'CPP/7zip/Common/CWrappers.cpp',
   'CPP/7zip/Common/CreateCoder.cpp',
   'CPP/7zip/Common/FilePathAutoRename.cpp',
@@ -261,6 +266,7 @@ cpp_files = [
   'CPP/7zip/Compress/ZDecoder.cpp',
   'CPP/7zip/Compress/ZlibDecoder.cpp',
   'CPP/7zip/Compress/ZlibEncoder.cpp',
+  'CPP/7zip/Compress/ZstdDecoder.cpp',
   'CPP/7zip/Crypto/7zAes.cpp',
   'CPP/7zip/Crypto/7zAesRegister.cpp',
   'CPP/7zip/Crypto/HmacSha1.cpp',
@@ -329,6 +335,7 @@ cpp_files = [
   'CPP/Common/StringToInt.cpp',
   'CPP/Common/UTFConvert.cpp',
   'CPP/Common/Wildcard.cpp',
+  'CPP/Common/Xxh64Reg.cpp',
   'CPP/Common/XzCrc64Init.cpp',
   'CPP/Common/XzCrc64Reg.cpp',
   'CPP/Windows/ErrorMsg.cpp',
@@ -354,8 +361,6 @@ project_dependencies = [
   m_dep,
   dl_dep,
 ]
-
-
 
 add_project_arguments(
   [
