@@ -9,7 +9,13 @@ project(
     'warning_level=2',
     'werror=true',
   ],
-  license: 'LGPL',
+  license: [
+    'BSD-2-Clause',
+    'BSD-3-Clause',
+    'LGPL-2.1-or-later',
+    'LicenseRef-LGPL-2.1-or-later-with-unRAR-restriction',
+    'LicenseRef-unRAR',
+  ],
 )
 
 uasm = find_program('uasm', required: true)
@@ -407,16 +413,6 @@ if cpp.get_id() == 'gcc'
       'cpp',
     ],
   )
-elif cpp.get_id() == 'clang'
-  add_project_arguments(
-    [
-      '-Wno-unused-but-set-variable',
-    ],
-    language: [
-      'c',
-      'cpp',
-    ],
-  )
 endif
 
 project_target = executable('7zz',
@@ -432,9 +428,24 @@ project_target = executable('7zz',
 
 install_data(
   [
+    'BSD-2-Clause.txt',
+    'BSD-3-Clause.txt',
+  ],
+  follow_symlinks: true,
+  install_mode: 'rw-r--r--',
+  install_dir: '/usr/share/licenses/' + meson.project_name(),
+)
+
+install_data(
+  [
     'DOC/License.txt',
     'DOC/unRarLicense.txt',
   ],
+  rename: [
+    'LicenseRef-LGPL-2.1-or-later-with-unRAR-restriction.txt',
+    'LicenseRef-unRAR.txt',
+  ],
+  install_mode: 'rw-r--r--',
   install_dir: '/usr/share/licenses/' + meson.project_name(),
 )
 
@@ -447,5 +458,6 @@ install_data(
     'DOC/readme.txt',
     'DOC/src-history.txt',
   ],
+  install_mode: 'rw-r--r--',
   install_dir: '/usr/share/doc/' + meson.project_name(),
 )
