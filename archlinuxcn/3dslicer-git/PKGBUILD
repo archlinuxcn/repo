@@ -13,7 +13,7 @@ depends=(
   curl
   dcmtk
   fftw
-  gcc-libs
+  gcc13-libs
   glibc
   hwloc
   libarchive
@@ -51,6 +51,7 @@ depends=(
 )
 makedepends=(
   cmake
+  gcc13
   gendesk
   git
   subversion
@@ -86,6 +87,8 @@ prepare() {
 }
 
 build() {
+  export CC=/usr/bin/gcc-13
+  export CXX=/usr/bin/g++-13
   cmake -B build -S "${srcdir}/${_pkgname}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
