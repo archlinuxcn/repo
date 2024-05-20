@@ -6,29 +6,31 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=8.2.0
-pkgrel=3
+pkgver=8.4.0
+pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
 makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'systemd-libs' 'libaio'
              'jemalloc' 'rpcsvc-proto' 'libtirpc' 'icu' 'libedit' 'libevent'
              'libfido2' 're2' 'rapidjson')
-license=('GPL')
+license=('GPL-2.0-only')
 url="https://www.mysql.com/products/community/"
-source=("https://cdn.mysql.com/Downloads/MySQL-8.2/${pkgbase}-boost-${pkgver}.tar.gz"
+source=("https://cdn.mysql.com/Downloads/MySQL-8.4/${pkgbase}-${pkgver}.tar.gz"{,.asc}
         "my-default.cnf"
         "mysql-ld.so.conf"
         "mysql.sysconfig"
         "mysqld_service.patch"
         "systemd-tmpfiles.patch"
         "systemd-sysusers.conf")
-sha256sums=('9a6fe88c889dfb54a8ee203a3aaa2af4d21c97fbaf171dadaf5956714552010e'
+sha256sums=('47a5433fcdd639db836b99e1b5459c2b813cbdad23ff2b5dd4ad27f792ba918e'
+            'SKIP'
             '6bc24ae510f6b6bbad6b3edda2d0028b29292937b482274a4c2fae335f4de328'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
             '203dcd22fea668477ac7123dbd9909fae72d3d07f8855417a669a9c94db072ae'
             '8fbedfc2c5fe271ed13217feeceeac00202d2cb135e4283eeee2f9a13d6251af'
             '270074dc0a01e0f959590ad95e5bbaaac3f821bb44eba32d039a6aee506b9c6a'
             '200a992eb41c95efa99845d017439ddd4018a3e51f57ffca8cb802b0d25123f1')
+validpgpkeys=('BCA43417C3B485DD128EC6D4B7B3B788A8D3785C') # MySQL Release Engineering
 
 build() {
   rm -rf build
@@ -132,12 +134,9 @@ package_mysql-clients(){
   install -m 644 -D "${srcdir}/build/scripts/mysqlclient.pc" "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
 
   # provided by mysql
-  rm "${pkgdir}/usr/bin/mysql_upgrade"
   rm "${pkgdir}/usr/bin/mysqlbinlog"
   rm "${pkgdir}/usr/bin/mysql_migrate_keyring"
-  rm "${pkgdir}/usr/bin/mysqlpump"
   rm "${pkgdir}/usr/bin/mysql_secure_installation"
-  rm "${pkgdir}/usr/bin/mysql_ssl_rsa_setup"
   rm "${pkgdir}/usr/bin/mysqltest"
 }
 
@@ -167,8 +166,8 @@ package_mysql(){
   rm "${pkgdir}/usr/bin/mysql_config"
   rm "${pkgdir}/usr/lib/libmysqlclient.a"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.22"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.22.1.0"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.24"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.24.0.0"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
   rm "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
   rmdir "${pkgdir}/usr/lib/pkgconfig"
