@@ -26,6 +26,9 @@ depends=(
 makedepends=(
   cmake
 )
+checkdepends=(
+  expat
+)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/DCMTK/dcmtk/archive/DCMTK-${pkgver}.tar.gz")
 sha512sums=('df78a7b8b2d602aec5428b9b27be1cd5993212f62eaf28c3a442838c56601a0628b3381aae5d076ec8a28b2aa1d0e751c2a7f41ad87a3c789220b312b9ac28a3')
 
