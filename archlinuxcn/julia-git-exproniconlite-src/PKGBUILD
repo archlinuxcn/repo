@@ -1,6 +1,6 @@
 pkgname=julia-git-exproniconlite-src
-pkgver=0.10.7
-_commit=6c6d8aca40251a387d3c4e4b37c13a2bd818bab0
+pkgver=0.10.8
+_commit=91a07fa55542b8806b57525165634166be48609d
 pkgrel=1
 pkgdesc="ExproniconLite.jl"
 url="https://github.com/Roger-luo/ExproniconLite.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Roger-luo/ExproniconLite.jl.git#commit=$_commit")
-sha256sums=('693c6d425a273f4bfad145708664411aca35d97a4dab9ad92dc88d31711a6c6b')
+sha256sums=('8cb72bb94850a83078f3aac21a5dc12039c998b7a10f945fc535765b693bc87e')
 
 package() {
   cd ExproniconLite.jl
