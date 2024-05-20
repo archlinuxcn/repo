@@ -5,7 +5,7 @@
 
 pkgname=mbedtls2-cmac
 pkgver=2.28.8
-pkgrel=2
+pkgrel=3
 pkgdesc='An open source, portable, easy to use, readable and flexible TLS library'
 arch=(x86_64)
 url=https://tls.mbed.org
@@ -34,8 +34,10 @@ pkgver() {
 }
 
 build() {
+cd mbedtls
+scripts/config.py set MBEDTLS_CMAC_C
+cd ..
   export CFLAGS+=' -ffat-lto-objects'
-  scripts/config.py set MBEDTLS_CMAC_C
   cmake -S mbedtls -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/usr \
