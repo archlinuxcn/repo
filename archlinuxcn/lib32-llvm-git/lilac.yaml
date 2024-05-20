@@ -5,7 +5,8 @@ build_prefix: multilib
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 repo_makedepends:
-    - llvm-git
+    - llvm-git: llvm-git
+    - llvm-git: llvm-libs-git
     - spirv-headers-git
     - lib32-spirv-tools-git
 time_limit_hours: 2
