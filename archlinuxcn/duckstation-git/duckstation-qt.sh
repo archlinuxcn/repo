@@ -1,3 +1,3 @@
-#!/usr/bin/sh
+#!/bin/sh
 
-/opt/duckstation/duckstation-qt "$@"
+/usr/lib/duckstation/duckstation-qt "$@"
