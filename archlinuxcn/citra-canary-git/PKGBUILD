@@ -2,8 +2,8 @@
 
 _pkgname=citra
 pkgname=$_pkgname-canary-git
-epoch=2
-pkgver=2798.r0.gd9969810e
+epoch=3
+pkgver=2798.r0.gfeea91b03
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedi
 makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers' 'vulkan-memory-allocator' 'catch2' 'spirv-tools' 'cpp-httplib')
 provides=('citra')
 conflicts=('citra')
-source=("$_pkgname::git+https://github.com/citra-emu/citra-canary"
+source=("$_pkgname::git+https://github.com/rtiangha/citra-emu"
 ext-lib.patch
 gc.patch)
 md5sums=('SKIP'
@@ -23,7 +23,7 @@ options=('!debug')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
-    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/canary.//g'
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/Canary.//g'
 }
 
 prepare() {
@@ -62,7 +62,6 @@ build() {
 	  -DCMAKE_BUILD_TYPE=Release \
 	  -DENABLE_QT_TRANSLATION=ON \
       -DCITRA_ENABLE_COMPATIBILITY_REPORTING=ON \
-      -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
       -DUSE_DISCORD_PRESENCE=ON \
       -DUSE_SYSTEM_LIBS=ON \
       -DENABLE_TESTS=OFF \
