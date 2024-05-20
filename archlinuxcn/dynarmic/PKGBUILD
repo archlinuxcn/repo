@@ -1,13 +1,14 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 pkgname=dynarmic
 pkgver=6.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An ARM dynamic recompiler"
 arch=('aarch64' 'x86_64')
-url="https://github.com/merryhime/dynarmic"
+url="https://github.com/yuzu-mirror/dynarmic"
 license=('BSD')
 depends=('llvm-libs' 'fmt' 'zydis' 'gcc-libs' 'glibc')
 makedepends=(
+    'git'
 	'boost>=1.57'
 	'cmake>=3.12'
 	'llvm'
@@ -15,11 +16,11 @@ makedepends=(
 	'xbyak>=6.68'
 )
 provides=('libdynarmic.so')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-b2sums=('1f8df7386e296f0ba2bce032c629530e9c1afc742c801605b51a42906b39182c7055090a07ad273580671113979834963756d32509e5e2df0a221bf14d385843')
+source=("git+$url")
+b2sums=('SKIP')
 
 build() {
-	cmake -S $pkgname-$pkgver -B build \
+	cmake -S $pkgname -B build \
 		-DBUILD_SHARED_LIBS=ON \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG" \
@@ -36,5 +37,5 @@ build() {
 package() {
 	# shellcheck disable=SC2154
 	DESTDIR="$pkgdir" cmake --install build
-	install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname $pkgname-$pkgver/LICENSE.txt
+	install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname $pkgname/LICENSE.txt
 }
