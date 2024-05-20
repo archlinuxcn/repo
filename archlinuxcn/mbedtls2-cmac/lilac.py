@@ -16,7 +16,9 @@ def pre_build():
             print('conflicts=(mbedtls2)')
         elif line.startswith('build()'):
             print(line)
+            print('cd mbedtls')
             print('scripts/config.py set MBEDTLS_CMAC_C')
+            print('cd ..')
         else:
             print(line)
 
