@@ -1,6 +1,6 @@
 pkgname=julia-git-diffeqbase-src
-pkgver=6.149.2
-_commit=acab35cb62d7889a57b4609d5d414d973008f802
+pkgver=6.150.0
+_commit=d3a3cf756c05fdc9c35b3b5c180624d1d19f1382
 pkgrel=1
 pkgdesc="DiffEqBase.jl"
 url="https://github.com/SciML/DiffEqBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/DiffEqBase.jl.git#commit=$_commit")
-sha256sums=('4b93ca946604380ee8c8d9978058baf0d32fba22cf64de86d7336470c83196ba')
+sha256sums=('5cfa039dc52481ade93c886bad9695dd50980ebdf4034b2de9c52c9f485741ca')
 
 package() {
   cd DiffEqBase.jl
