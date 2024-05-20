@@ -2,8 +2,8 @@
 
 _pkgname=ITK
 pkgname=(itk python-itk)
-pkgver=5.4rc04
-pkgrel=2
+pkgver=5.4.0
+pkgrel=1
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
 url='https://www.itk.org'
@@ -32,7 +32,7 @@ makedepends=(
 options=(!emptydirs !lto)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('0f9a5e47bfd3fd86b797f04e838adf5e9185e3ea278674117d13bc235174193d0eda967a4dcfb12f9cf6cc16920bfe79ce4345461f9961d5e78050f1fa9be09c')
+sha512sums=('3a98ececf258aac545f094dd3e97918c93cc82bc623ddf793c4bf0162ab06c83fbfd4d08130bdec6e617bda85dd17225488bc1394bc91b17f1232126a5d990db')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
