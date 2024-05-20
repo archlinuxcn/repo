@@ -11,9 +11,6 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.startswith('pkgname='):
             print('pkgname=mbedtls2-cmac')
-        elif line.startswith('pkgdesc='):
-            line = line[:-1] + ' (with CMAC)'
-            print(line)
         elif line.startswith('checkdepends='):
             print(line)
             print('conflicts=(mbedtls2)')
