@@ -31,13 +31,14 @@ sha256sums=(
  )
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}/build"
+  mkdir -p "${srcdir}/${pkgname}-${pkgver}/build"
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
   cmake "${srcdir}/${pkgname}-${pkgver}" \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DBUILD_TESTING=ON \
         -DCMAKE_BUILD_TYPE=Release
-    make
+  make
 }
 
 package() {
