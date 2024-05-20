@@ -1,27 +1,28 @@
-# Maintainer: oscareczek <oscareczek at gmail dot com>
+# Maintainer: Lili1228 <aur at lili dot lgbt>
 pkgname=86box-git
-pkgver=4.1.r129.g11b645dec6
+pkgver=4.1.1.r394.gd07f018e6
 pkgrel=1
-pkgdesc='Emulator of x86-based machines based on PCem.'
-arch=('pentium4' 'x86_64' 'arm7h' 'aarch64')
+pkgdesc='An emulator for classic IBM PC clones'
+arch=('pentium4' 'x86_64' 'armv7h' 'aarch64')
 url='https://86box.net/'
-license=('GPL2')
-depends=( 'fluidsynth' 'alsa-lib' 'freetype2' 'libpng' 'libslirp' 'openal' 'qt6-base' 'rtmidi' 'sdl2' 'faudio')
-makedepends=('git' 'cmake>=3.16' 'qt6-tools' 'extra-cmake-modules' 'ninja' 'vde2')
-optdepends=('86box-roms-git: ROM files')
-source=(
-    "${pkgname}::git+https://github.com/86Box/86Box.git"
-)
-sha256sums=(
-    'SKIP'
+license=('GPL-2.0-or-later')
+depends=('fluidsynth' 'hicolor-icon-theme' 'libslirp' 'openal' 'qt6-base' 'rtmidi' 'sdl2' # explicit
+'freetype2' 'gcc-libs' 'glib2' 'glibc' 'libevdev' 'libglvnd' 'libpng' 'libx11' 'libxcb' 'libxext' 'libxi' 'libxkbcommon-x11' 'libxkbcommon' 'wayland' 'zlib') # implicit 
+makedepends=('git' 'cmake>=3.21' 'extra-cmake-modules' 'ninja' 'qt6-tools' 'vde2') # vulkan-headers on qt5
+optdepends=(
+    '86box-roms-git: ROM files'
+    'discord-game-sdk: Discord Rich Presence'
+    'libpcap: Networking not limited to TCP/IP'
 )
 provides=('86box')
 conflicts=('86box')
 options=('!buildflags')
+source=("${pkgname}::git+https://github.com/86Box/86Box.git")
+sha512sums=('SKIP')
 
 pkgver() {
-  cd ${pkgname}
-  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+    cd ${pkgname}
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
@@ -31,7 +32,7 @@ build() {
         arm7h)    _NDR=on;  _TOOLCHAIN=cmake/flags-gcc-armv7.cmake ;;
         aarch64)  _NDR=on;  _TOOLCHAIN=cmake/flags-gcc-aarch64.cmake ;;
     esac
-    LDFLAGS='-z now' cmake -S"${pkgname}" -Bbuild --preset regular --toolchain "$_TOOLCHAIN" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT6=on -DNEW_DYNAREC="$_NDR" 
+    LDFLAGS='-z now -z shstk' cmake -S"${pkgname}" -Bbuild --preset regular --toolchain "$_TOOLCHAIN" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT6=on -DNEW_DYNAREC="$_NDR"
     cmake --build build
 }
 
