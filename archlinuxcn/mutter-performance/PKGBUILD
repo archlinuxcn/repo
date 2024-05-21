@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373' '3729')
-_merge_requests_to_use=('1441' '3373' '3729')
+# Merge Requests List: ('579' '1441' '3373' '3720' '3729' '3742')
+_merge_requests_to_use=('1441' '3373' '3720' '3729' '3742')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -33,7 +33,7 @@ else
 fi
 epoch=1
 pkgver=46.1+r7+g35836f0f1
-pkgrel=2
+pkgrel=3
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -116,15 +116,21 @@ _commit=35836f0f1a526a846d909b31f185dc838beb0664  # tags/46.1^7
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
-        'mr3729.patch')
+        'mr3720.patch'
+        'mr3729.patch'
+        'mr3742.patch')
 sha256sums=('e5f178cc9692498c6cc3d6466102c8906f77dd112c12efb4762a903a28a574f5'
             '7d5c90e3f18b2c0645e6224759e571acef723d53495cff2ceaac3c44168226b3'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
-            'c072d1983ddd482db993514e86e15fb44024887c5c4d7c1d6f4cf4b8d01743ce')
+            'c6070384f7272813a8ac6f5e27e0216e4c7da168adbe697f46578e0b4494c89a'
+            'c072d1983ddd482db993514e86e15fb44024887c5c4d7c1d6f4cf4b8d01743ce'
+            '204dee1642fcd4818d1bb8f161e7c68a6b11754cf0354b6ea92ead36a1b50e94')
 b2sums=('28f0cba4142dee6526ddc1147e26e32d875674a927bfda271b3abbc65ddda4021e6765bf74390e37718056b5b5ab44c5b5566ca20f23dc4e846887ed79961d26'
         '135b9a24273328c8010d08c3688b527741b0d678814ed52fb983be649b7d40ce6f2d6151d1087a8fed311f35cb3033d8b9d1c7b04cdd2bbef7dff43ee80ea530'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
-        'a1b283fc3b45160d740702f8bee3c89d6dcef7ecedece5e01b4f1a414ea85a1251481af7b94e2c77e5a895cd93d3b708df97e80749a69edb3b0108bef8c2bf9f')
+        '0e77ab7c0477554eaa5060ad8ca3c509fc092ca63e2f40e9db21bdb54420fce568982a39ee4f1ec5bd60fd298633359205b1112cf03cfedc9924c4e801748790'
+        'a1b283fc3b45160d740702f8bee3c89d6dcef7ecedece5e01b4f1a414ea85a1251481af7b94e2c77e5a895cd93d3b708df97e80749a69edb3b0108bef8c2bf9f'
+        'aa658b3717048507b627abbe9dfaf574e78f944bfa7b34a95f82ea551e291a4b6413568fe70fba20c18e58e30a01040add94f66afda52228651d96d6730b56de')
 
 pkgver() {
   cd $_pkgname
@@ -135,23 +141,23 @@ pick_mr() {
   for mr in "${_merge_requests_to_use[@]}"; do
     if [ "$1" = "$mr" ]; then
       if [ "$2" = "merge" ] || [ -z "$2" ]; then
-        echo "Downloading then Merging $1..."
+        msg2 "Downloading then Merging $1..."
         curl -O "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/$mr.diff"
         git apply "$mr.diff"
       elif [ "$3" = "revert" ]; then
-        echo "Reverting $1..."
+        msg2 "Reverting $1..."
         git revert "$2" --no-commit
       elif [ "$3" = "patch" ]; then
 	if [ -e ../"$2" ]; then 
-          echo "Patching with $2..."
+          msg2 "Patching with $2..."
           patch -Np1 -i ../"$2"
         else
-          echo "Downloading $mr as $2 then patching..."
+          msg2 "Downloading $mr as $2 then patching..."
           curl -O "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/$mr.diff" -o "$2"
           patch -Np1 -i "$2"
         fi
       else
-        echo "ERROR: wrong argument given: $2"
+        msg2 "ERROR: wrong argument given: $2"
       fi
       break
     fi
@@ -215,6 +221,14 @@ prepare() {
   # Comment: This fix cursor stutter.
   pick_mr '3373' 'mr3373.patch' 'patch'
 
+  # Title: x11/window: Compare input shape to client rect when undecorating
+  # Author: Sebastian Keller <skeller@gnome.org>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3720
+  # Type: 3
+  # Status: 4
+  # Comment: This closes https://gitlab.gnome.org/GNOME/mutter/-/issues/3451
+  pick_mr '3720' 'mr3720.patch' 'patch'
+
   # Title: Enforce non-reactiveness of unsuitable surface actors harder
   # Author: Carlos Garnacho <carlosg@gnome.org>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3729
@@ -222,6 +236,15 @@ prepare() {
   # Status: 2
   # Comment: This closes https://gitlab.gnome.org/GNOME/mutter/-/issues/3393
   pick_mr '3729' 'mr3729.patch' 'patch'
+
+  # Title: x11/window: Compare input shape to client rect when undecorating
+  # Author: Michel Dänzer <mdaenzer@redhat.com>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3742
+  # Type: 1
+  # Status: 4
+  # Comment: This ensures that an up-to-date gamma LUT is applied for newly-enabled
+  #          monitors.
+  pick_mr '3742' 'mr3742.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>

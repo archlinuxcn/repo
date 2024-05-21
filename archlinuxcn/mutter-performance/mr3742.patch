@@ -1,0 +1,118 @@
+From 9ed00280f7a876dd0aceb0243605107dd5039e0e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Tue, 7 May 2024 17:19:03 +0200
+Subject: [PATCH 1/2] color-manager: Move update_all_gamma helper up
+
+Preparation for next commit, no functional change intended.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3742>
+---
+ src/backends/meta-color-manager.c | 52 +++++++++++++++----------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/src/backends/meta-color-manager.c b/src/backends/meta-color-manager.c
+index 6483813eadd..2425f1d99cb 100644
+--- a/src/backends/meta-color-manager.c
++++ b/src/backends/meta-color-manager.c
+@@ -239,6 +239,32 @@ update_devices (MetaColorManager *color_manager)
+   priv->devices = devices;
+ }
+ 
++static void
++update_all_gamma (MetaColorManager *color_manager)
++{
++  MetaColorManagerPrivate *priv =
++    meta_color_manager_get_instance_private (color_manager);
++  MetaMonitorManager *monitor_manager =
++    meta_backend_get_monitor_manager (priv->backend);
++  GList *l;
++
++  for (l = meta_monitor_manager_get_monitors (monitor_manager); l; l = l->next)
++    {
++      MetaMonitor *monitor = META_MONITOR (l->data);
++      MetaColorDevice *color_device;
++
++      color_device = meta_color_manager_get_color_device (color_manager,
++                                                          monitor);
++      if (!color_device)
++        continue;
++
++      if (!meta_color_device_is_ready (color_device))
++          continue;
++
++      meta_color_device_update (color_device, priv->temperature);
++    }
++}
++
+ static void
+ on_monitors_changed (MetaMonitorManager *monitor_manager,
+                      MetaColorManager   *color_manager)
+@@ -282,32 +308,6 @@ cd_client_connect_cb (GObject      *source_object,
+   priv->is_ready = TRUE;
+ }
+ 
+-static void
+-update_all_gamma (MetaColorManager *color_manager)
+-{
+-  MetaColorManagerPrivate *priv =
+-    meta_color_manager_get_instance_private (color_manager);
+-  MetaMonitorManager *monitor_manager =
+-    meta_backend_get_monitor_manager (priv->backend);
+-  GList *l;
+-
+-  for (l = meta_monitor_manager_get_monitors (monitor_manager); l; l = l->next)
+-    {
+-      MetaMonitor *monitor = META_MONITOR (l->data);
+-      MetaColorDevice *color_device;
+-
+-      color_device = meta_color_manager_get_color_device (color_manager,
+-                                                          monitor);
+-      if (!color_device)
+-        continue;
+-
+-      if (!meta_color_device_is_ready (color_device))
+-          continue;
+-
+-      meta_color_device_update (color_device, priv->temperature);
+-    }
+-}
+-
+ static void
+ update_temperature (MetaColorManager *color_manager)
+ {
+-- 
+GitLab
+
+
+From 09a6ff6eb78d9436d1930b7431facce1325061d6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Tue, 7 May 2024 17:20:07 +0200
+Subject: [PATCH 2/2] color-manager: Call update_all_gamma from
+ on_monitors_changed
+
+This ensures that an up-to-date gamma LUT is applied for newly-enabled
+monitors.
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/2480
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/2546
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3439
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3742>
+---
+ src/backends/meta-color-manager.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/backends/meta-color-manager.c b/src/backends/meta-color-manager.c
+index 2425f1d99cb..8742212ab4d 100644
+--- a/src/backends/meta-color-manager.c
++++ b/src/backends/meta-color-manager.c
+@@ -270,6 +270,7 @@ on_monitors_changed (MetaMonitorManager *monitor_manager,
+                      MetaColorManager   *color_manager)
+ {
+   update_devices (color_manager);
++  update_all_gamma (color_manager);
+ }
+ 
+ static void
+-- 
+GitLab
+
