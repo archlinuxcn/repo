@@ -1,15 +1,15 @@
 #
 
 pkgname=intel-libdfp
-pkgver=20U2
-pkgrel=2
+pkgver=20U3
+pkgrel=1
 pkgdesc='Intel(R) Decimal Floating-Point Math Library'
 arch=(aarch64 armv7h i686 x86_64)
 url='https://www.intel.com/content/www/us/en/developer/articles/tool/intel-decimal-floating-point-math-library.html'
 license=('custom')
 source=("https://www.netlib.org/misc/intel/IntelRDFPMathLib${pkgver}.tar.gz"
         decfp.patch)
-sha256sums=('93c0c78e0989df88f8540bf38d6743734804cef1e40706fd8fe5c6a03f79e173'
+sha256sums=('13f6924b2ed71df9b137a7df98706a0dcc3b43c283a0e32f8b6eadca4305136a'
             '87cbeaf15742c6fc941c89078b2752a8a8d101c6ac54e9e236ec38450f0602af')
 
 prepare() {
