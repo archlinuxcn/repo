@@ -1,5 +1,5 @@
 pkgname=mingw-w64-tools
-pkgver=10.0.0
+pkgver=11.0.1
 pkgrel=1
 pkgdesc="MinGW-w64 utilities"
 arch=(i686 x86_64)
@@ -10,7 +10,7 @@ license=("GPL3" "LGPL2")
 options=(!libtool !emptydirs)
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
 source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig})
-sha256sums=('ba6b430aed72c63a3768531f6a3ffc2b0fde2c57a3b251450dcf489a894f0894'
+sha256sums=('3f66bce069ee8bed7439a1a13da7cb91a5e67ea6170f21317ac7f5794625ee10'
             'SKIP')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
