@@ -1,6 +1,5 @@
 Arch Linux Chinese Community Repository
 ====
-
 [![Packaging consistency check](https://github.com/archlinuxcn/repo/actions/workflows/test.yml/badge.svg)](https://github.com/archlinuxcn/repo/actions/workflows/test.yml)
 
 For detailed information in Chinese, [visit here](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/).
