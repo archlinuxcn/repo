@@ -42,7 +42,16 @@ build() {
 	ninja
 
 	cd ..
-	GOOS=linux GOARCH=arm64 ./libs/build_go.sh
+
+	export GOARCH
+
+	case $CARCH in
+	x86_64) GOARCH=amd64 ;;
+	aarch64) GOARCH=arm64 ;;
+	riscv64) GOARCH=riscv64 ;;
+	esac
+
+	GOOS=linux ./libs/build_go.sh
 }
 
 package() {
@@ -53,7 +62,15 @@ package() {
 	install -Dm644 ${pkgname}/res/public/{nekoray,nekobox}.png -t "${pkgdir}/usr/share/pixmaps/"
 
 	# core
-	install -Dm755 ${pkgname}/deployment/linux-arm64/{nekoray,nekobox}_core -t "${pkgdir}/usr/lib/${pkgname}/"
+	local core_srcdir
+
+	case $CARCH in
+	x86_64) core_srcdir=linux64 ;;
+	aarch64) core_srcdir=linux-arm64 ;;
+	riscv64) core_srcdir=linux-riscv64 ;;
+	esac
+
+	install -Dm755 ${pkgname}/deployment/${core_srcdir}/{nekoray,nekobox}_core -t "${pkgdir}/usr/lib/${pkgname}/"
 
 	# app
 	install -Dm755 "${pkgname}/build/${pkgname}" -t "${pkgdir}/usr/lib/${pkgname}/"
