@@ -15,7 +15,7 @@ sha512sums=('561b6ffaf26d063f107a0769b41d0ed02f1f6c4656b6284e653e8baf69b2f34d5f6
 
 build(){
   cd "${srcdir}/${pkgname}-${pkgver}"
-  make
+  make CFLAGS="$CFLAGS -include stdlib.h -O2 -Wall -g $(xml2-config --cflags)"
 }
 
 package(){
