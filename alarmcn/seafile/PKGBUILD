@@ -45,6 +45,7 @@ prepare() {
 
 build() {
   cd "$srcdir/seafile-$pkgver"
+  CFLAGS+=' -Wno-incompatible-pointer-types'
   ./autogen.sh
   ./configure \
     --enable-console \
