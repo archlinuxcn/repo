@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373' '3720' '3729' '3742')
-_merge_requests_to_use=('1441' '3373' '3720' '3729' '3742')
+# Merge Requests List: ('579' '1441' '3373' '3720' '3729' '3742' '3751')
+_merge_requests_to_use=('1441' '3373' '3720' '3729' '3742' '3751')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -32,8 +32,8 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=46.1+r7+g35836f0f1
-pkgrel=3
+pkgver=46.1+r8+gc23274cd2
+pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -112,25 +112,28 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=35836f0f1a526a846d909b31f185dc838beb0664  # tags/46.1^7
+_commit=c23274cd2344fddab12a60e221a966322a3eb9cc  # tags/46.1^8
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
         'mr3720.patch'
         'mr3729.patch'
-        'mr3742.patch')
-sha256sums=('e5f178cc9692498c6cc3d6466102c8906f77dd112c12efb4762a903a28a574f5'
+        'mr3742.patch'
+        'mr3751.patch')
+sha256sums=('8853e7359867d4c739fcc5d47f649c04a823109a01ef863b13f3a49d2c51020c'
             '7d5c90e3f18b2c0645e6224759e571acef723d53495cff2ceaac3c44168226b3'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
             'c6070384f7272813a8ac6f5e27e0216e4c7da168adbe697f46578e0b4494c89a'
             'c072d1983ddd482db993514e86e15fb44024887c5c4d7c1d6f4cf4b8d01743ce'
-            '204dee1642fcd4818d1bb8f161e7c68a6b11754cf0354b6ea92ead36a1b50e94')
-b2sums=('28f0cba4142dee6526ddc1147e26e32d875674a927bfda271b3abbc65ddda4021e6765bf74390e37718056b5b5ab44c5b5566ca20f23dc4e846887ed79961d26'
+            '204dee1642fcd4818d1bb8f161e7c68a6b11754cf0354b6ea92ead36a1b50e94'
+            '7eec91f857cf1d8183c32199f33cc86a1a8a95017282e602738a90fe219c8b33')
+b2sums=('f9a995a1e289e8a2e8afa54610e411b33f9a6b136a529d0eaebfecb63f9639f9621171543fac5384dd3d85b4b8094e68fe7af3886add4736044afcbf7d1363ba'
         '135b9a24273328c8010d08c3688b527741b0d678814ed52fb983be649b7d40ce6f2d6151d1087a8fed311f35cb3033d8b9d1c7b04cdd2bbef7dff43ee80ea530'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
         '0e77ab7c0477554eaa5060ad8ca3c509fc092ca63e2f40e9db21bdb54420fce568982a39ee4f1ec5bd60fd298633359205b1112cf03cfedc9924c4e801748790'
         'a1b283fc3b45160d740702f8bee3c89d6dcef7ecedece5e01b4f1a414ea85a1251481af7b94e2c77e5a895cd93d3b708df97e80749a69edb3b0108bef8c2bf9f'
-        'aa658b3717048507b627abbe9dfaf574e78f944bfa7b34a95f82ea551e291a4b6413568fe70fba20c18e58e30a01040add94f66afda52228651d96d6730b56de')
+        'aa658b3717048507b627abbe9dfaf574e78f944bfa7b34a95f82ea551e291a4b6413568fe70fba20c18e58e30a01040add94f66afda52228651d96d6730b56de'
+        'a79155ce4f11d8ccc674b08baccb18ac3bf254a0e41d9830a0ca964027633317bbd157f33b1f12f21bb378bfeedd4ebd111d993cdfd39b98ff3ce0f34850f6b1')
 
 pkgver() {
   cd $_pkgname
@@ -245,6 +248,15 @@ prepare() {
   # Comment: This ensures that an up-to-date gamma LUT is applied for newly-enabled
   #          monitors.
   pick_mr '3742' 'mr3742.patch' 'patch'
+
+  # Title: wayland/text-input-v1: Implement basic text-input-v1 support
+  # Author: Alynx Zhou <alynx.zhou@gmail.com>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3751
+  # Type: 1
+  # Status: Not gonna be merged considering the maintainers' feedbacks.
+  # Comment: This commit makes input methods work in text-input-v1 only clients.
+  #          (mostly Chromium/Electron based apps with Ozone Wayland.)
+  pick_mr '3751' 'mr3751.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
