@@ -1,6 +1,6 @@
 pkgname=julia-git-rotations-src
-pkgver=1.7.0
-_commit=2662b4fac96adf5c3484625fb90c7569ad4d6267
+pkgver=1.7.1
+_commit=cee8b77d1e44dd464b40f44f57364dbfff79c42c
 pkgrel=1
 pkgdesc="Rotations.jl"
 url="https://github.com/JuliaGeometry/Rotations.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeometry/Rotations.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('588f389e48ddaedf89bed6445b13979475696ea1036e2f722a80f12bc8e20d25')
 
 package() {
   cd Rotations.jl
