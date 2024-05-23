@@ -2,8 +2,8 @@
 # Contributor: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
-pkgver=1.43.3
-_commit=d6ad253882a6c066e0c673ff64e6554a37bb3487
+pkgver=1.43.4
+_commit=d64921c1906ee1ac39230c16abe9ff8c546bd645
 pkgrel=1
 pkgdesc="A secure runtime for JavaScript and TypeScript"
 arch=(aarch64 x86_64)
@@ -13,7 +13,7 @@ options=('!lto')
 depends=('gcc-libs')
 makedepends=('git' 'python' 'rust' 'nodejs' 'gn' 'ninja' 'clang' 'lld' 'cmake' 'protobuf')
 source=("git+https://github.com/denoland/deno.git#commit=$_commit")
-sha512sums=('9d5ff9f6e40b43c0e26556a57dabfab9b94721e8c9a0d6fdddfad62694ce69afcaac555d8028a7d83306f4942e65c0c110ee86f39117158e8794cfa82cddaf8b')
+sha512sums=('40c65d44dade334e59de94c1c54b68be08c2a1cc0f6d20676c376f1f72970e334ae61e3c8c2192fe4ae49e69ccc9ff64c210eda6c06e41a6c383059e0c476970')
 
 build() {
   cd $pkgname
