@@ -1,6 +1,6 @@
 pkgname=julia-git-domainsets-src
-pkgver=0.7.13
-_commit=4e36278622df67839cea860a5d0f958c849db988
+pkgver=0.7.14
+_commit=952975a5e1182b486ecc60f64950cfa2c4d82bf7
 pkgrel=1
 pkgdesc="DomainSets.jl"
 url="https://github.com/JuliaApproximation/DomainSets.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaApproximation/DomainSets.jl.git#commit=$_commit")
-sha256sums=('fac35a8629e1619d8eaa9bed4cd9349931b209dd903e3ef6388be080e8768b38')
+sha256sums=('f43f57f5485596a1dc450f286b480e0111cbd0016f2df527c85b59bfae19130f')
 
 package() {
   cd DomainSets.jl
