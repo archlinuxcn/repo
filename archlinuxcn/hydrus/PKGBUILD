@@ -3,8 +3,8 @@ options=(!strip)  # Don't strip libs because there aren't any
 
 pkgname=hydrus
 _pkgname=hydrus
-pkgver=575
-pkgrel=1
+pkgver=576
+pkgrel=2
 pkgdesc="Danbooru-like image tagging and searching system for the desktop"
 arch=(any)
 license=(custom)
@@ -32,13 +32,14 @@ optdepends=('ffmpeg: show duration and other information on video thumbnails'
             'python-pympler: debug menus to profile memory usage'
             # 'python-pyqt6-charts: display bandwidth usage charts'
             'python-cryptography: to generate certificates for accessing client API and server via HTTPS'
+            'python-olefile: support legacy microsoft office file formats'
             'python-pyopenssl: to generate certificates for accessing client API and server via HTTPS'
             'qt6-webengine: to display PDF thumbnails'
             # 'python-pyparsing: currently unused'
             # 'speedcopy: may speed up file transfers'
             'swftools: to display SWF thumbnails')
 conflicts=(hydrus-docs-dummy)
-source=("${_pkgname}::git+https://github.com/hydrusnetwork/${_pkgname}.git#commit=2e28ed3ca9ba9d0f92b34adf7bc520cb9ffb66fa"
+source=("${_pkgname}::git+https://github.com/hydrusnetwork/${_pkgname}.git#commit=b202eb70dfecc38ad858c7c9a185f571be8ee197"
         paths-in-opt.patch
         hydrus-client
         hydrus-server
