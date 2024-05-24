@@ -4,7 +4,7 @@
 pkgname='libeb'
 _pkgname='eb'
 pkgver=4.4.3
-pkgrel=10
+pkgrel=11
 _pkgrel_debian=14  # Version of Debian package patch
 pkgdesc='C library for accessing CD-ROM books. Supports EB, EBG, EBXA, EBXA-C, S-EBXA and EPWING formats.'
 arch=('i686' 'x86_64')
@@ -46,6 +46,7 @@ prepare() {
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  CFLAGS+=' -Wno-incompatible-pointer-types'
   ./configure \
     --prefix='/usr' \
     --libexecdir="/usr/lib/${pkgname}" \
