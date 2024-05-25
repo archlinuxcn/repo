@@ -1,26 +1,26 @@
 # Maintainer: Daniel Bermond <dbermond@archlinux.org>
 
 pkgname=spirv-cross
-pkgver=2023.10.16
+pkgver=1.3.283.0
 pkgrel=1
-_tag=vulkan-sdk-1.3.268.0
-_glslang_commit=06a7078ce74ab5c7801a165b8145859678831fb8
-_spirv_tools_commit=f62e121b0df5374d1f043d1fbda98467406af0b1
-_spirv_headers_commit=d13b52222c39a7e9a401b44646f0ca3a640fbd47
+epoch=1
+_glslang_commit=a7785ea1ff5b10bfc2d8ca77fdad5929562897b7
+_spirv_tools_commit=afaf8fda2ad0364655909b56c8b634ce89095bb5
+_spirv_headers_commit=e867c06631767a2d96424cbec530f9ee5e78180f
 pkgdesc='A tool and library for parsing and converting SPIR-V to other shader languages'
 arch=('x86_64')
 url='https://github.com/KhronosGroup/SPIRV-Cross/'
-license=('Apache')
+license=('Apache-2.0')
 depends=('gcc-libs')
 makedepends=('git' 'cmake' 'python')
-source=("git+https://github.com/KhronosGroup/SPIRV-Cross.git#tag=${_tag}"
+source=("git+https://github.com/KhronosGroup/SPIRV-Cross.git#tag=vulkan-sdk-${pkgver}"
         "git+https://github.com/KhronosGroup/glslang.git#commit=${_glslang_commit}"
         "git+https://github.com/KhronosGroup/SPIRV-Tools.git#commit=${_spirv_tools_commit}"
         "git+https://github.com/KhronosGroup/SPIRV-Headers.git#commit=${_spirv_headers_commit}")
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+sha256sums=('9c2a148a1e4c7ca16ab54991980ed6393c1c21794081083f2779d880b3dbf1d4'
+            'e057bbfcfef5392f7af0fcf034e01b62eb40f66cc3202bb4717e61199a8ce96d'
+            'e1fca43e16eb9b9ea4f1914ab572ca0f66910b96bd8b1069d48dd1e7cdf30352'
+            '7eab7bb5368f2f841812a5ce10400d5f3301c7ae700512997f2462909b10aeac')
 
 prepare() {
     mkdir -p SPIRV-Cross/external/{glslang,spirv-tools}
@@ -30,13 +30,9 @@ prepare() {
     ln -sf "${srcdir}/SPIRV-Headers" SPIRV-Tools/external/spirv-headers
 }
 
-pkgver() {
-    git -C SPIRV-Cross log -1 --date='short' --pretty='format:%ci' "$_tag" | awk '{ gsub("-", ".", $1); print $1 }'
-}
-
 build() {
     # NOTE: test suite fails when using 'None' build type
-    local -a _common_opts=('-G Unix Makefiles' '-DCMAKE_BUILD_TYPE:STRING=Release' '-Wno-dev')
+    local -a _common_opts=('-GUnix Makefiles' '-DCMAKE_BUILD_TYPE:STRING=Release' '-Wno-dev')
     
     export CFLAGS+=' -ffat-lto-objects'
     export CXXFLAGS+=' -ffat-lto-objects'
@@ -44,7 +40,8 @@ build() {
     # glslang (required for tests)
     cmake -B SPIRV-Cross/external/glslang-build -S glslang \
         "${_common_opts[@]}" \
-        -DCMAKE_INSTALL_PREFIX:PATH='output'
+        -DCMAKE_INSTALL_PREFIX:PATH='output' \
+        -DENABLE_OPT:BOOL='OFF'
     cmake --build SPIRV-Cross/external/glslang-build --target install
     
     # spirv-tools (required for tests)
