@@ -1,8 +1,8 @@
 pkgname=mpitrampoline
-pkgver=5.3.1
+pkgver=5.4.0
 _mpiconstants_ver=1.5.0
-_mpiwrapper_ver=2.10.6
-pkgrel=4
+_mpiwrapper_ver=2.11.0
+pkgrel=1
 pkgdesc="A forwarding MPI implementation that can use any other MPI implementation via an MPI ABI"
 url="https://github.com/eschnett/MPItrampoline"
 arch=(aarch64 armv7h x86_64)
@@ -13,9 +13,9 @@ source=("MPItrampoline-${pkgver}.tar.gz::https://github.com/eschnett/MPItrampoli
         "MPIconstants-${_mpiconstants_ver}.tar.gz::https://github.com/eschnett/MPIconstants/archive/refs/tags/v${_mpiconstants_ver}.tar.gz"
         "MPIwrapper-${_mpiwrapper_ver}.tar.gz::https://github.com/eschnett/MPIwrapper/archive/refs/tags/v${_mpiwrapper_ver}.tar.gz"
         )
-sha256sums=('8671370750587f212f059138abc6dcaa5a1079d3dbd9189dc21bf353611159eb'
+sha256sums=('e33c97ac874dc4bcaacedda2aa193a8f96a8e01382db316a4965ad64be1e4f3a'
             'eee6ae92bb746d3c50ea231aa58607fc5bac373680ff5c45c8ebc10e0b6496b4'
-            '5a34e5604a1ec62bf26d72a6a79115220fbbe554c25a60690a1c39375da2c11e')
+            '6eaac6b2b8912136d2ee37922c4226008bef07b82f4c677892d0d4e0bc9da71d')
 
 build() {
   (
