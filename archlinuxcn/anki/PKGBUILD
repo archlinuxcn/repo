@@ -20,7 +20,7 @@ declare -gA _caches=(
 
 pkgname=anki
 pkgver=24.04.1
-pkgrel=3
+pkgrel=4
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
@@ -112,7 +112,7 @@ prepare() {
 
     # fetch node packages already in prepare()
     export YARN_CACHE_FOLDER="$srcdir/${_caches[yarn]}" # do not litter in ~
-    yarn install --immutable --modules-folder out/node_modules
+    yarn install --immutable --modules-folder out/node_modules --ignore-scripts
     ln -sf out/node_modules ./
 
     # mask pip-sync as we provide dependencies ourselves
