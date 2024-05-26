@@ -10,17 +10,16 @@ pkgdesc="Official Telegram Desktop client with megumifox & lily's patch"
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL-3.0-only WITH x11vnc-openssl-exception')
-depends=('hunspell'
-         'ffmpeg' 'libavfilter.so' 'libavformat.so' 'libavcodec.so' 'libavutil.so'
-         'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt6-base=6.7.1' 'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash' 'glibmm-2.68'
-         'rnnoise' 'pipewire' 'libxcomposite' 'libxdamage' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp' 'libdispatch'
+depends=('hunspell' 'ffmpeg' 'libavfilter.so' 'libavformat.so' 'libavcodec.so' 'libavutil.so' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
+         'qt6-base=6.7.1' 'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash'
+         'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'libxcomposite' 'libxdamage' 'abseil-cpp' 'libdispatch'
          'openssl' 'libcrypto.so' 'libssl.so'
          'protobuf' 'libprotobuf-lite.so'
-         'libvpx' 'libvpx.so')
+         'libvpx' 'libvpx.so'
+         'glib2' 'libsigc++-3.0' 'libsigc-3.0.so' 'kcoreaddons')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'meson'
              'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt'
-             'gobject-introspection' 'glib2' 'boost' 'fmt' 'python-packaging')
+             'gobject-introspection' 'boost' 'fmt' 'mm-common' 'perl-xml-parser' 'python-packaging')
 optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
@@ -54,6 +53,7 @@ prepare() {
 
 build() {
     CXXFLAGS+=' -ffat-lto-objects'
+
     # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
     # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
     # Thanks @primeos!
