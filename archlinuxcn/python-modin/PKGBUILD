@@ -2,7 +2,7 @@
 
 _pkgname=modin
 pkgname=python-modin
-pkgver=0.28.2
+pkgver=0.30.0
 pkgrel=1
 pkgdesc='Speed up your Pandas workflows by changing a single line of code'
 arch=('any')
@@ -28,7 +28,12 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/modin-project/modin/archive/${pkgver}.tar.gz")
-sha512sums=('2a17b40c6ee8e7c7155deac576e02be7cb518e4c5b62f46ca69b6ff149e93f88265f49cb6ae3a843827dd530fe81336a1a374e9a8930ec89b7a654ceb34f794d')
+sha512sums=('018c1e1a8995d77dea0f5bd876c15bc1d009a4faf254e5b50b2a08969f39049817ff43968457b3022d173ae0aaf1babffe8ada8845784a2ea61827373044345e')
+
+prepare() {
+  sed -i "s,SafeConfigParser,ConfigParser," "${srcdir}/${_pkgname}-${pkgver}/versioneer.py"
+  sed -i "s,readfp,read_file," "${srcdir}/${_pkgname}-${pkgver}/versioneer.py"
+}
 
 build() {
   cd "${_pkgname}-${pkgver}"
@@ -38,5 +43,7 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rfv "${pkgdir}${site_packages}/modin/tests"
 }
 # vim:set ts=2 sw=2 et:

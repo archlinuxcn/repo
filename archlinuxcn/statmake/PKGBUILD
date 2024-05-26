@@ -2,17 +2,17 @@
 
 pkgname=statmake
 pkgver=0.6.0
-pkgrel=3
+pkgrel=5
 pkgdesc='Dump, merge and compile Visual TrueType data in UFO3 with FontTools'
 arch=(any)
 url="https://github.com/daltonmaag/$pkgname"
 license=(MIT)
-_py_deps=(attrs
-          cattrs
-          fonttools
-          fs) # optdepends of fonttools required for [ufo]
+_pydeps=(attrs
+         cattrs
+         fonttools
+         fs) # for fonttools[ufo]
 depends=(python
-         "${_py_deps[@]/#/python-}")
+         "${_pydeps[@]/#/python-}")
 makedepends=(python-{build,installer,wheel}
              python-poetry)
 _archive="$pkgname-$pkgver"

@@ -2,7 +2,7 @@
 # Contributor: Stephen Zhang <zsrkmyn at gmail dot com>
 _mirrorlist_name=archlinuxcn-mirrorlist
 pkgname=$_mirrorlist_name-git
-pkgver=20240326
+pkgver=20240508
 pkgver() {
   date +'%Y%m%d'
 }
@@ -23,7 +23,7 @@ package() {
   mkdir -p "$pkgdir/etc/pacman.d/"
   cp "$_mirrorlist_name" "$pkgdir/etc/pacman.d/"
   mkdir -p "$pkgdir/etc/debuginfod/"
-  cp "b-archlinuxcn.urls" "$pkgdir/etc/debuginfod/"
+  cp "archlinuxcn.urls" "$pkgdir/etc/debuginfod/"
 }
 
 # vim:set ts=2 sw=2 et:

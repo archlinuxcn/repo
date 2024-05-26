@@ -1,46 +1,47 @@
 _name=7-zip
 pkgname=${_name}-full
-pkgver=23.01
-pkgrel=5
-pkgdesc="File archiver with a high compression ratio (full package to replace p7zip)"
-url="https://7-zip.org/"
-license=('LGPL')
+pkgver=24.05
+pkgrel=2
+pkgdesc='File archiver with a high compression ratio (full package to replace p7zip)'
+url='https://7-zip.org/'
+license=('LGPL-2.1-or-later' 'BSD-3-Clause' 'LicenseRef-UnRAR')
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
-provides=("${_name}" 'p7zip')
-conflicts=("${provides[@]}")
+provides=("${_name}" 'p7zip' '7z.so')
+conflicts=("${_name}" 'p7zip')
 makedepends=('uasm')
 
-_sver="${pkgver//./}"
+_repo='7zip'
+_snapshot="${_repo}-${pkgver}"
+_url="https://github.com/ip7z/${_repo}"
+_manarc="7z${pkgver//./}-linux-x64.tar.xz"
+
 source=(
-    "${url}a/7z${_sver}-src.tar.xz"
-    "${url}a/7z${_sver}-linux-x64.tar.xz" # To get the manual
+    "${_url}/archive/${pkgver}/${_snapshot}.tar.gz"
+    "${_url}/releases/download/${pkgver}/${_manarc}" # to get the manual
     '01-make.patch'
     '02-lib-load-path.patch'
-    '03-version-string.patch' # Fix for Ark https://invent.kde.org/utilities/ark/-/merge_requests/232
+    '03-avx512-fix.patch' # https://github.com/ip7z/7zip/issues/27
 )
 
 sha256sums=(
-    '356071007360e5a1824d9904993e8b2480b51b570e8c9faf7c0f58ebe4bf9f74'
-    '23babcab045b78016e443f862363e4ab63c77d75bc715c0b3463f6134cbcf318'
-    '3c6b0ee8ecae06a4f0ff91205989e93e22d03a33e5b7cc6982396c32041fc0a8'
-    '5b49bd8c22f2fcc4e6011adc36c2d7a3fb195ba86596b366974f7b6311d0df00'
-    '272d0d5ad64738e38f21b4596114824160318322c79a6eb1d69867c57c8f487e'
+    '182d6e12ff8af0beafe46c9cd8e82b4271efb61c334c1068f8772777b535a03c'
+    '7294f7478d90d2dc122137ff64607d354c66bd45b10911359658b85ca8892118'
+    'f54dfe73ad045f200d5512dfd4387ef626068662a5af6e17d81052996544af54'
+    '338b732445d3cfa416e40384bd9f0596506aa4b464b3f86aa971af4cfa6084c7'
+    'ba77276422af8d818a10a252005de2d7694002e059c5557dd6cfe1e7b1761d96'
 )
 
-_msrc="${source[1]##*/}"
-noextract=("${_msrc}")
+noextract=("${_manarc}")
 
 prepare() {
-    chmod -R a=rw,a+X .
-
     for p in *.patch; do
-        patch -p1 --binary -Z -i "${p}"
+        patch -p1 -d "${_snapshot}" < "${p}"
     done
 }
 
 _make() {
     echo "Building '${1}'..."
-    cd "${1}"
+    cd "${_snapshot}/${1}"
     mkdir -p '_o'
     make -sf 'makefile.gcc'
 }
@@ -50,28 +51,28 @@ _build() {
 
     set -a
     PLATFORM="${platforms["${CARCH}"]}"
-    IS_X64=$([ "${CARCH}" = 'x86_64' ] && echo '1' || echo '')
-    IS_X86=$([ "${CARCH}" = 'i686' ] && echo '1' || echo '')
-    IS_ARM64=$([ "${CARCH}" = 'aarch64' ] && echo '1' || echo '')
-    MY_ARCH=
+    [ "${CARCH}" = 'x86_64' ] && IS_X64=1
+    [ "${CARCH}" = 'i686' ] && IS_X86=1
+    [ "${CARCH}" = 'aarch64' ] && IS_ARM64=1
     USE_ASM=1
     CFLAGS_WARN='-Wno-error'
-    CFLAGS_ADD="${CFLAGS}"
-    LDFLAGS_ADD="${LDFLAGS}"
-    CXXFLAGS_ADD="${CXXFLAGS}"
+    CFLAGS_USER="${CFLAGS}"
+    CXXFLAGS_USER="${CXXFLAGS}"
+    LDFLAGS_USER="${LDFLAGS}"
     set +a
 
-    local targets=('CPP/7zip/'{'UI/Console','Bundles/'{'Alone','Alone7z','Format7zF'}})
-    for target in "${targets[@]}"; do
+    for target in "$@"; do
         (_make "${target}")
     done
 }
 
 build() {
-    (_build)
+    (_build 'CPP/7zip/'{'UI/Console','Bundles/'{'Alone','Alone7z','Format7zF'}})
 }
 
 package() {
+    cd "${_snapshot}"
+
     install -Dm755 -t "${pkgdir}/usr/bin" \
         'CPP/7zip/'{'UI/Console/_o/7z','Bundles/'{'Alone/_o/7za','Alone7z/_o/7zr'}}
 
@@ -79,11 +80,11 @@ package() {
         'CPP/7zip/Bundles/Format7zF/_o/7z.so'
 
     install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" \
-        'DOC/'{'copying.txt','License.txt','unRarLicense.txt'}
+        'DOC/unRarLicense.txt'
 
     local doc="${pkgdir}/usr/share/doc/${pkgname}"
     install -Dm644 -t "${doc}" \
         'DOC/'{'7zC.txt','7zFormat.txt','lzma.txt','Methods.txt','readme.txt','src-history.txt'}
 
-    bsdtar -C "${doc}" -xf "${_msrc}" 'MANUAL'
+    bsdtar -C "${doc}" -xf "${srcdir}/${_manarc}" 'MANUAL'
 }

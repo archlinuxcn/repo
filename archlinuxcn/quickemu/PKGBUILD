@@ -1,6 +1,6 @@
 # Maintainer: Steffen Hansen <steffengrundsoe@gmail.com>
 pkgname=quickemu
-pkgver=4.9.2
+pkgver=4.9.4
 pkgrel=1
 pkgdesc="Quickly create and run optimised Windows, macOS and Linux desktop virtual machines."
 arch=(any)
@@ -11,15 +11,17 @@ optdepends=('quickgui: graphical user interface' 'aria2: faster downloads')
 provides=("$pkgname")
 conflicts=("$pkgname")
 source=("$pkgname-$pkgver.tar.gz"::"https://github.com/quickemu-project/quickemu/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('fa5e2e5112deb836c0ab6035ab0aaabd1465b13e945d4a49dc975b94f1b01233')
+sha256sums=('d516eb4e596d18d123389dca491554e914406e0172772c613f5c26646ae990a9')
 
 package() {
   cd "$pkgname-$pkgver"
 
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm755 chunkcheck "$pkgdir/usr/bin/chunkcheck"
   install -Dm755 quickemu "$pkgdir/usr/bin/quickemu"
-  install -Dm755 macrecovery "$pkgdir/usr/bin/macrecovery"
   install -Dm755 quickget "$pkgdir/usr/bin/quickget"
+  install -Dm755 quickreport "$pkgdir/usr/bin/quickreport"
+  install -Dm755 windowskey "$pkgdir/usr/bin/windowskey"
 
   install -Dm644 docs/quickget.1 $pkgdir/usr/share/man/man1/quickget.1
   install -Dm644 docs/quickemu.1 $pkgdir/usr/share/man/man1/quickemu.1

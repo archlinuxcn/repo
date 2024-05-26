@@ -1,7 +1,7 @@
 pkgname=julia-git-pcre_jll-src
-pkgver=8.44.0+0
-_commit=c232e29425687399e429af02804f9790d1363738
-pkgrel=2
+pkgver=8.45.0+0
+_commit=86f783c0504b5c27ad691038853f7a3377fe15b0
+pkgrel=1
 pkgdesc="PCRE_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/PCRE_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git pcre)
 source=("git+https://github.com/JuliaBinaryWrappers/PCRE_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('98544487a0e03b2ecdd02f12d868a30f0a3b12cb77dbc92776ebe4353097fd3e'
             'e42de539bcf55116c903c9f08ed33548d7d81d58179b0b8a86ad3c0a375b5936')
 
 build() {

@@ -1,8 +1,8 @@
-# Maintainer: Zion Nimchuk <zionnimchuk@gmail.com
+# Maintainer: Zion Nimchuk <zionnimchuk@gmail.com>
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.31.16206.77485747f1
+pkgver=0.0.32.r16541.a3457c29cb
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -26,6 +26,7 @@ depends=(
   libxext
   openal
   qt6-base
+  qt6-declarative
   qt6-multimedia
   qt6-svg
   sdl2
@@ -33,9 +34,8 @@ depends=(
   zlib
   curl
   pugixml
-  xxhash
-  libusb
-  faudio
+# newer system flatbuffers is incompatible with the version RPCS3 depends on
+# flatbuffers
 )
 makedepends=(
   cmake
@@ -43,17 +43,19 @@ makedepends=(
   libglvnd
   python
   vulkan-validation-layers
-  flatbuffers
-  glslang
+  # clang is required because audio is broken with latest gcc
+  clang
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
 options=(!emptydirs !lto)
 source=(
   git+https://github.com/RPCS3/rpcs3.git
+  llvm::git+https://github.com/llvm/llvm-project.git
   git+https://github.com/KhronosGroup/glslang.git
 )
 sha256sums=(
+  SKIP
   SKIP
   SKIP
 )
@@ -64,17 +66,18 @@ pkgver() {
   COMM_TAG="$(grep 'version{.*}' rpcs3/rpcs3_version.cpp | awk -F[{,] '{printf "%d.%d.%d", $2, $3, $4}')"
   COMM_COUNT="$(git rev-list --count HEAD)"
   COMM_HASH="$(git rev-parse --short HEAD)"
-  echo "${COMM_TAG}.${COMM_COUNT}.${COMM_HASH}"
+  echo "${COMM_TAG}.r${COMM_COUNT}.${COMM_HASH}"
 }
 
 prepare() {
   cd rpcs3
   
-  git submodule init 3rdparty/glslang/glslang
+  git submodule init 3rdparty/glslang/glslang 3rdparty/llvm/llvm
   git config submodule.3rdparty/glslang.url ../glslang
+  git config submodule.3rdparty/llvm/llvm.url ../llvm
   
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
-    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/glslang/ && !/pugixml/ && !/xxHash/ && !/libusb/ && !/SDL/ && !/flatbuffers/ && !/FAudio/'))
+    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/pugixml/ '))
 
   # We need to convert from a relative folder path to a https://github.com path
   for ((i=0;i<${#SUBMODULES[@]};i+=2))
@@ -89,17 +92,18 @@ prepare() {
     url=$(git config $urlid | awk -F/ '{print $(NF-1)"/"$(NF-0)}')
 
     git config $urlid https://github.com/$url
-    git submodule--helper update --init --depth=1 $path
+    git -c protocol.file.allow=always submodule update --init --filter=tree:0 $path
   done
-
-  git submodule--helper update 3rdparty/glslang/glslang
+  
+  git -c protocol.file.allow=always submodule update 3rdparty/glslang/glslang 3rdparty/llvm/llvm
 }
 
 build() {
+  # GLIBCXX_ASSERTIONS is know to cause unwanted assertions and crash rpcs3
   BAD_FLAG="-Wp,-D_GLIBCXX_ASSERTIONS"
   CXXFLAGS="${CXXFLAGS//$BAD_FLAG/}"
 
-  cmake -S rpcs3 -B build \
+  CC=clang CXX=clang++ cmake -S rpcs3 -B build \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
@@ -108,16 +112,11 @@ build() {
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=ON \
-    -DUSE_SYSTEM_FLATBUFFERS=ON \
+    -DUSE_SYSTEM_FLATBUFFERS=OFF \
     -DUSE_SYSTEM_PUGIXML=ON \
-    -DUSE_SYSTEM_WOLFSSL=OFF \
-    -DUSE_SYSTEM_CURL=ON \
-    -DUSE_SYSTEM_XXHASH=ON \
-    -DUSE_SYSTEM_LIBUSB=ON \
     -DBUILD_LLVM=ON \
-    -DUSE_SYSTEM_FAUDIO=ON \
-    -DUSE_SYSTEM_SDL=ON \
-    -DDISABLE_LTO=ON
+    -DUSE_SYSTEM_WOLFSSL=OFF
+  
   make -C build
 }
 

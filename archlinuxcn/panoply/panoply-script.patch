@@ -1,6 +1,6 @@
 --- panoply.sh.old	2015-02-10 00:07:44.000000000 -0500
 +++ panoply.sh	2015-02-11 10:44:26.634980046 -0500
-@@ -1,8 +1,8 @@
+@@ -1,10 +1,10 @@
  #!/bin/sh
  #
  
@@ -9,6 +9,8 @@
 +CLASSPATH='/usr/share/java/panoply/*'
 +MAIN_CLASS='gov.nasa.giss.panoply.Panoply'
  
--java -Xms512m -Xmx1600m -jar $SCRIPTDIR/jars/Panoply.jar "$@"
+-java -Xms512m -Xmx2000m -jar $SCRIPTDIR/jars/Panoply.jar "$@"
 +java -Xms512m -cp "${CLASSPATH}" "${MAIN_CLASS}" "$@"
  
+ # If you are on a single-user Linux system and somehow find multiple instances of Panoply
+ # running on your computer, change the above line to include a -single flag, like this: 

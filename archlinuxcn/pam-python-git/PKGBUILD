@@ -3,13 +3,13 @@
 pkgname=pam-python-git
 _pkgname="${pkgname%-git}"
 pkgver=r31.9641aa5
-pkgrel=3
+pkgrel=4
 pkgdesc='Python for PAM (py3 fork)'
 arch=('x86_64')
 url="https://github.com/castlabs/${_pkgname}"
 license=('AGPL-3.0-or-later')
 depends=('pam' 'python')
-makedepends=('git' 'make' 'python-sphinx')
+makedepends=('git' 'make' 'python-sphinx' 'python-distutils-extra')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+${url}.git")
@@ -22,7 +22,7 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	sed -i'' 's|LIBDIR ?= /lib/security|LIBDIR ?= /usr/lib/security|g' src/Makefile
+	sed -i'' 's|LIBDIR ?= /lib/security|LIBDIR ?= /usr/lib/security|g;s|-Werror||' src/Makefile
 	sed -n '/^License/,/^--$/p' README.txt | grep -v -e '^License' -e '^-\+' >LICENSE
 }
 

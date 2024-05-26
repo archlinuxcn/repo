@@ -1,7 +1,7 @@
 pkgname=julia-git-solvercore-src
-pkgver=0.3.7
-_commit=1d10536e19a0b07fb6939db284ea6dfde004946b
-pkgrel=2
+pkgver=0.3.8
+_commit=cb02e10991e25c636c082c11c766925df3efe228
+pkgrel=1
 pkgdesc="SolverCore.jl"
 url="https://github.com/JuliaSmoothOptimizers/SolverCore.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSmoothOptimizers/SolverCore.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('bfdabbbf7cdcdaf51498c18423919b66504c84fdf78b50f0bf75949bde9f22e3')
 
 package() {
   cd SolverCore.jl

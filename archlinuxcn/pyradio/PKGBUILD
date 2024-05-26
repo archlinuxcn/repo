@@ -3,21 +3,23 @@
 # Contributor: aksr <aksr at t-com dot me>
 
 pkgname=pyradio
-pkgver=0.9.3.2
+pkgver=0.9.3.7
 pkgrel=1
 pkgdesc="Internet radio player for the command line"
 arch=('any')
 url="https://github.com/coderholic/pyradio"
 license=('MIT')
-depends=("python" "python-dateutil" "python-dnspython" "python-netifaces" "python-psutil" "python-requests" "python-rich" "ttf-dejavu")
+depends=("python" "python-dateutil" "python-dnspython" "python-netifaces" "python-psutil" "python-requests" "python-rich")
 optdepends=('mplayer: as backend' 'mpv: as backend' 'vlc: as backend' 'mkvtoolnix-cli: fix mplayer recordings, add chapters to recordings')
 makedepends=('python-pip' 'python-setuptools' 'python-build' 'python-installer' 'python-wheel')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/coderholic/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('c1036145051c562aec943ac9b00cb0c680239212880a93d2a6ac5c4b8ca00666')
+sha256sums=('389e9707c525956c873866a1e1279c7a7dcc7208020d1f0a4fef638396963028')
 
 prepare() {
   cd $pkgname-$pkgver
-  sed -i 's/distro = None/distro = Arch Linux (AUR)/' $pkgname/config
+  sed -i -e 's/distro = None/distro = Arch Linux (AUR)/' \
+      -e 's/xdg_compliant = False/xdg_compliant = True/' \
+      $pkgname/config
 }
 
 build() {

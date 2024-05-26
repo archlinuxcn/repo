@@ -1,6 +1,6 @@
 pkgname=julia-git-polynomials-src
-pkgver=4.0.6
-_commit=e535733ebd483330f27497e8512b5def4cdba356
+pkgver=4.0.8
+_commit=263b965ba2b5c6cec7b48aa4d760658707fba1c4
 pkgrel=1
 pkgdesc="Polynomials.jl"
 url="https://github.com/JuliaMath/Polynomials.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/Polynomials.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('d8c5767011df730c71b261a6ee2c1b3fe4c421507edb849906a763790dcb103f')
 
 package() {
   cd Polynomials.jl

@@ -1,4 +1,2 @@
 #!/bin/sh
-: "${QT_API:=pyqt6}"
-export QT_API
 exec python -OO /opt/hydrus/hydrus_client.py "$@"

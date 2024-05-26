@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_libice_jll-src
-pkgver=1.0.10+1
-_commit=2d0fa0480859395115dfb3a83eeac58ad052aee2
-pkgrel=3
+pkgver=1.1.1+0
+_commit=b9bd5f0073ad58de94d0f09ca0d692bb7e7f3ec9
+pkgrel=1
 pkgdesc="Xorg_libICE_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libICE_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libice)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libICE_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('03f73ab03d17f5b4885dd1daef2d5671227281218f7420e75a95bb6c68f02ee1'
             'c2ad1d6dc09b6fb697efde82a01e3845c63b3d8347c7cc396027f5b50c8fbb54')
 
 build() {

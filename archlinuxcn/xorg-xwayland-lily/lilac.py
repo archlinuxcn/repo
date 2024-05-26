@@ -25,7 +25,7 @@ prepare() {
     elif line.startswith('source=('):
       line = line.replace(')', ' hidpi.patch)')
     elif "'SKIP'" in line:
-      line = line.replace(')', '\n            16ccf43bdde029c21d9733cb65809f242a6d95111d03d72a7263e0aca2810a12507ed95b83320c5ed7a2b96bdde044aa57f218e20731a4e2e96f888a087271fd)')
+      line = line.replace(')', "\n            '4ac0347b5e75b1e165a85a5921dba34ac4fd5fe63f579018250bf90197fdcd32c7af24bb498d1020f031f2d6132457e1f0396c657b386f26fcf65042bc5b20e0')")
     elif line.startswith('groups='):
       continue
     print(line)

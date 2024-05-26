@@ -1,10 +1,11 @@
 # $Id: PKGBUILD 266875 2017-11-15 14:29:11Z foutrelis $
+# Maintainer:  https://aur.archlinux.org/account/toropisco
 # Contributor: Alexander F Rødseth <xyproto@archlinux.org>
 # Contributor: yugrotavele <yugrotavele@archlinux.us>
 # Contributor: Paolo Stivanin <admin@polslinux.it>
 
 pkgname=winff
-pkgver=1.6.3
+pkgver=1.6.4
 pkgrel=1
 pkgdesc='GUI for ffmpeg written in Lazarus/GTK+2'
 url='https://github.com/WinFF/winff/'

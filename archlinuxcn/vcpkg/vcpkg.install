@@ -1,24 +1,27 @@
+all_off="$(tput sgr0)"
+bold="$(tput bold)"
+blue="$(tput setaf 4)"
+indent="   "
+tab="  "
+
+note() {
+    echo "${all_off}${indent}$1"
+}
+
 post_install() {
-  export VCPKG_ROOT=/opt/vcpkg
-  export VCPKG_DOWNLOADS=/var/cache/vcpkg
+    export VCPKG_ROOT=/opt/vcpkg
+    export VCPKG_DOWNLOADS=/var/cache/vcpkg
 
-  cat << _EOF
-
-  ==> vcpkg user note:
-  ------------------------------------------------------------------------------
-    "VCPKG_ROOT" is set to "$VCPKG_ROOT"
-    "VCPKG_DOWNLOADS" is set to "$VCPKG_DOWNLOADS"
-    $(
-      if [ $(uname -m) == "aarch64" ]; then
-        echo '"VCPKG_FORCE_SYSTEM_BINARIES" is also set to 1 as this is required for vcpkg to run on aarch64.'
-      fi
-    )
-    To cooperate with CMake, add "-DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
-
-    Please add the intended users to the group 'vcpkg':
-    # gpasswd -a <user> vcpkg
-
-_EOF
+    echo "${blue}${bold}::${all_off} ${bold}vcpkg user note"
+    note "'VCPKG_ROOT' is set to '${VCPKG_ROOT}'"
+    note "'VCPKG_DOWNLOADS' is set to '${VCPKG_DOWNLOADS}'"
+    if [ $(uname -m) == "aarch64" ]; then
+        note "'VCPKG_FORCE_SYSTEM_BINARIES' is set to 1 as this is required for vcpkg to run on aarch64."
+    fi
+    note "To cooperate with CMake, add '-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake'"
+    echo ""
+    note "Please add the intended users to the group 'vcpkg':"
+    note "${tab}# gpasswd -a <user> vcpkg"
 }
 
 post_upgrade() {

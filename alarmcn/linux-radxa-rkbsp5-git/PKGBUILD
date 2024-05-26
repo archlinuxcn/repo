@@ -3,25 +3,25 @@
 # Contributor: Kevin Mihelich <kevin@archlinuxarm.org>
 
 buildarch=8
-_pkgver=5.10
+_pkgver=6.1
 _user="radxa"
 _kernel=linux-radxa-rkbsp5
 pkgbase=$_kernel-git
 pkgname=("${pkgbase}-headers" $pkgbase)
-pkgver=5.10.1081439.25cc8b1fe517
+pkgver=5.10.1081442.25cc8b1fe517
 blobcommit="9869c5a8aa0c103efac5a5d5eefe03468a6b8396"
 fwcommit="488f49467f5b4adb8ae944221698e9a4f9acb0ed"
-pkgrel=1
+pkgrel=2
 arch=('aarch64')
-license=('GPL2')
+license=('GPL-2.0-only')
 url="https://github.com/${_user}"
 _kernelrepo="kernel"
 _overlayrepo="overlays"
 _bsprepo="bsp"
-_kernelbranch=linux-5.10-gen-rkr4.1
+_kernelbranch=linux-6.1-stan-rkr1
 _overlaybranch=main
 _bspbranch="main"
-pkgdesc="Latest git Linux kernel package based on 5.10.x BSP kernel published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards" 
+pkgdesc="Latest git Linux kernel package based on 6.1.x BSP kernel published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
 makedepends=('xmlto' 'docbook-xsl' 'kmod' 'inetutils' 'bc' 'git' 'uboot-tools' 'vboot-utils' 'dtc')
 options=('!strip')
 
@@ -84,7 +84,7 @@ pkgver(){
   local _kcommit="$(git rev-parse --short HEAD)"
 
   local _revnum=$(($_kcommits + $_ocommits + $_bcommits + $_fcommits + $pkgrel))
-  local _version="${_pkgver}.${_revnum}.${_kcommit}"
+  local _version="${_pkgver}.r${_revnum}.${_kcommit}"
   echo $_version > pkgver
   printf $_version
 }
@@ -140,7 +140,7 @@ build() {
 }
 
 _package-git() {
-  pkgdesc="Latest Git Linux kernel based on 5.10.x BSP published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
+  pkgdesc="Latest Git Linux kernel based on 6.1.x BSP published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
   depends=('coreutils' 'kmod' 'mkinitcpio>=0.7' 'mali-valhall-g610-firmware')
   optdepends=('wireless-regdb: to set the correct wireless channels of your country')
   provides=("linux=${pkgver}" "linux-rkbsp")
@@ -181,7 +181,7 @@ _package-git() {
 }
 
 _package-git-headers() {
-  pkgdesc="Latest Git Linux kernel headers based on 5.10.x BSP published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
+  pkgdesc="Latest Git Linux kernel headers based on 6.1.x BSP published by RADXA targetting rk3399 based rock4 and rk3588 based rock5 boards"
   depends=("python")
   provides=("linux-headers=${pkgver}" "linux-rkbsp-headers")
   conflicts=('linux-headers')

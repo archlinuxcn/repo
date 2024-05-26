@@ -13,9 +13,10 @@ offered which are good for supported Intel or AMD CPUs:
 • x86-64-v3
 • x86-64-v4
 
-Users of glibc 2.33 and above can see which level is supported by current
-hardware by running:
+Users of glibc 2.33 and above can see which level is supported by running:
   /lib/ld-linux-x86-64.so.2 --help | grep supported
+Or
+  /lib64/ld-linux-x86-64.so.2 --help | grep supported
 
 Alternatively, compare the flags from /proc/cpuinfo to this list.[1]
 

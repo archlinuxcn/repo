@@ -1,29 +1,34 @@
 # Maintainer: Pylogmon <pylogmon@outlook.com>
+# Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=pot-translation
 _pkgname=pot-desktop
-pkgver=2.7.9
+pkgver=2.7.10
 _pkgver=${pkgver/b/-beta}
-pkgrel=1
+pkgrel=2
 pkgdesc="一个跨平台的划词翻译软件 | A cross-platform software for text translation."
 arch=('x86_64' 'aarch64' 'riscv64')
-url="https://github.com/pot-app/pot-desktop"
+url="https://github.com/pot-app/${_pkgname}"
 license=('GPL-3.0-or-later')
 depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata')
-makedepends=('nodejs' 'pnpm' 'rust' 'dbus')
+makedepends=('nodejs' 'pnpm' 'cargo' 'dbus')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${_pkgver}.tar.gz")
-sha512sums=('fc3bc3269bc7aa2453989ce814b6f7ca3532fba8844e359c245b827833f126419acfc32206b598aee7d053429f92fc051317f1764079c109e59c82ffeffd0975')
+sha512sums=('7528145a81e6f6fee63bec65f8dab83a266af307d6fa67594439bf8750d5935a31460b8290b26796ef8c70f0f8c4a8e07fa7c65bd8a1431e67b79a405daab84d')
 options=('!lto')
 
-build() {
+prepare() {
 	cd "${_pkgname}-${_pkgver}/"
 	sed -i "s/\"version\".*/\"version\": \"${_pkgver}\"/g" "src-tauri/tauri.conf.json"
 	pnpm i
+}
+
+build() {
+	cd "${_pkgname}-${_pkgver}/"
 	pnpm tauri build -b deb
 }
 
 package() {
 	cd "${_pkgname}-${_pkgver}/"
-	tar -xpf "src-tauri/target/release/bundle/deb/pot_${_pkgver}_amd64/data.tar.gz" -C ${pkgdir}
-	chown -R root:root ${pkgdir}
+	tar -xpf "src-tauri/target/release/bundle/deb/pot_${_pkgver}_amd64/data.tar.gz" -C "${pkgdir}"
+	chown -R root:root "${pkgdir}"
 }

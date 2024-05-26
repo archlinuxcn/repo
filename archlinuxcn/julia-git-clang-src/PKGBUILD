@@ -1,6 +1,6 @@
 pkgname=julia-git-clang-src
-pkgver=0.18.1
-_commit=29c3d753b315bd1ef4b9fb0bbca548898c184a58
+pkgver=0.18.3
+_commit=0a0d245be658b814c498ed4ac85578770d692dc8
 pkgrel=1
 pkgdesc="Clang.jl"
 url="https://github.com/JuliaInterop/Clang.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaInterop/Clang.jl.git#commit=$_commit")
-sha256sums=('8324f270d2bfa4c13c1237d9f102364c0f4334103f2cf53a0c516718a8df235a')
+sha256sums=('568e020246884f57f87444d4e54f706c7ceb848db3d9b03885892f7c6ccf8bbc')
 
 package() {
   cd Clang.jl

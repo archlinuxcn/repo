@@ -1,0 +1,16 @@
+Remove pip_system_certs import as Arch provides this in python-requests
+--- a/qt/aqt/__init__.py	2024-04-15 20:34:08.000000000 +0200
++++ b/qt/aqt/__init__.py	2024-04-15 20:34:58.526822612 +0200
+@@ -6,13 +6,6 @@
+ import logging
+ import sys
+
+-try:
+-    import pip_system_certs.wrapt_requests
+-except ModuleNotFoundError:
+-    print(
+-        "Python module pip_system_certs is not installed. System certificate store and custom SSL certificates may not work. See: https://github.com/ankitects/anki/issues/3016"
+-    )
+-
+ if sys.version_info[0] < 3 or sys.version_info[1] < 9:
+     raise Exception("Anki requires Python 3.9+")

@@ -2,7 +2,7 @@
 
 pkgname=haruna-git
 _pkgname=${pkgname%-git}
-pkgver=1.0.2.r26.g1462d69
+pkgver=1.1.1.r14.gf4b002c
 pkgrel=1
 pkgdesc="A Qt/QML video player built on top of libmpv"
 url="https://invent.kde.org/multimedia/${_pkgname}"
@@ -30,7 +30,7 @@ optdepends=('yt-dlp: for video-sharing websites playback'
 	'youtube-dl: for video-sharing websites playback')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("${_pkgname}::git+${url}.git")
+source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -39,7 +39,7 @@ pkgver() {
 }
 
 build() {
-	cmake -B build -S "${_pkgname}/" -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=None
+	cmake -B build -S "${_pkgname}/" -DCMAKE_INSTALL_PREFIX=/usr
 	cmake --build build
 }
 

@@ -2,7 +2,7 @@
 
 pkgname=python-ydata-profiling
 _pkgname=ydata-profiling
-pkgver=4.7.0
+pkgver=4.8.3
 pkgrel=1
 pkgdesc='Create HTML profiling reports from pandas DataFrame objects'
 arch=('any')
@@ -10,6 +10,7 @@ url='https://github.com/ydataai/ydata-profiling'
 license=('MIT')
 depends=(
   ipython
+  python-dacite
   python-dateutil
   python-htmlmin
   python-imagehash
@@ -20,6 +21,7 @@ depends=(
   python-missingno
   python-multimethod
   python-networkx
+  python-numba
   python-numpy
   python-pandas
   python-phik
@@ -31,7 +33,9 @@ depends=(
   python-statsmodels
   python-tangled-up-in-unicode
   python-tqdm
+  python-typeguard
   python-visions
+  python-wordcloud
   python-yaml
 )
 conflicts=(python-pandas-profiling)
@@ -43,8 +47,8 @@ makedepends=(
   python-wheel
 )
 
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ydataai/ydata-profiling/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('2c107298a7e6794b303c00836068f1aae0d7e9423a434343a052f6d8751eef37c21e6db2359c4db838cc76ecc79f28cb32b9188b678495a7948df29de2640dea')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ydataai/ydata-profiling/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('2cd426c1abc7d6c7db76736e465f3d0babcdefe6d9524addadec81fdd02555be2ae720afc96993a6796d2d2a6a4849dc751450f714abe0b7c927fa1d2ca78028')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"

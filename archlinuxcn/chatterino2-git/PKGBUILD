@@ -1,7 +1,7 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=2.5.0.beta.1.r9.g7285f08
+pkgver=2.5.1.r27.g49bdeb3
 pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
@@ -24,6 +24,7 @@ source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/zaphoyd/websocketpp"
         "git+https://github.com/Neargye/magic_enum"
         "git+https://github.com/mackron/miniaudio"
+        "git+https://github.com/lua/lua"
         "git+https://github.com/Chatterino/crash-handler")
 md5sums=('SKIP'
          'SKIP'
@@ -35,8 +36,10 @@ md5sums=('SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
+         'SKIP'
          'SKIP')
 # We temporarily disable LTO since we get an ICE when compiling with gcc since this commit https://github.com/Chatterino/chatterino2/commit/ed20e71db4c957d3b2a8ce9350b847f4c805cb83
+# Bug report tracking https://gcc.gnu.org/bugzilla/show_bug.cgi?id=114501
 options=('!lto')
 
 pkgver() {
@@ -56,6 +59,7 @@ prepare () {
     git config submodule.lib/websocketpp.url "$srcdir/websocketpp"
     git config submodule.lib/miniaudio.url "$srcdir/miniaudio"
     git config submodule.lib/magicenum.url "$srcdir/magicenum"
+    git config submodule.lib/lua/src.url "$srcdir/lua"
     git config submodule.tools/crash-handler.url "$srcdir/crash-handler"
     git -c protocol.file.allow=always submodule update
 }
@@ -74,6 +78,7 @@ build() {
         -DUSE_PRECOMPILED_HEADERS=OFF \
         -DBUILD_WITH_QT6=ON \
         -DCHATTERINO_UPDATER=OFF \
+        -DCHATTERINO_PLUGINS=ON \
         "${flags[@]}" \
         ..
     cmake --build .

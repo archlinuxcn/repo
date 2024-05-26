@@ -4,50 +4,56 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
-pkgver=4.16.6
+pkgver=5.0.2
 pkgrel=2
 pkgdesc="Official Telegram Desktop client with megumifox & lily's patch"
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL-3.0-only WITH x11vnc-openssl-exception')
-depends=('hunspell'
-         'ffmpeg' 'libavfilter.so' 'libavformat.so' 'libavcodec.so' 'libavutil.so'
-         'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash' 'glibmm-2.68'
-         'rnnoise' 'pipewire' 'libxcomposite' 'libxdamage' 'libxtst' 'libxrandr' 'jemalloc' 'abseil-cpp' 'libdispatch'
+depends=('hunspell' 'ffmpeg' 'libavfilter.so' 'libavformat.so' 'libavcodec.so' 'libavutil.so' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
+         'qt6-base=6.7.1' 'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash'
+         'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'libxcomposite' 'libxdamage' 'abseil-cpp' 'libdispatch'
          'openssl' 'libcrypto.so' 'libssl.so'
          'protobuf' 'libprotobuf-lite.so'
-         'libvpx' 'libvpx.so')
+         'libvpx' 'libvpx.so'
+         'glib2' 'libsigc++-3.0' 'libsigc-3.0.so' 'kcoreaddons')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'meson'
              'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt'
-             'gobject-introspection' 'glib2' 'boost' 'fmt' 'python-packaging')
+             'gobject-introspection' 'boost' 'fmt' 'mm-common' 'perl-xml-parser' 'python-packaging')
 optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
-        "0001-Use-font-from-environment-variables.patch"
+        "no-embolded-font.patch"
+        "dont-adjust-fontsize.patch"
+        "animated-avatar-follows-power-setting.patch"
         "0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
         "0003-make-blockquote-markup-less-distractive.patch"
         "0004-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch"
         "warn-before-delete-all-2.patch")
-sha512sums=('5b580d36c8b8a90981c3541d4c148df37bb7ebdec0970bfbfe4c1a9a1175e3cf41c2a14d854d7d917482aa9086ee712844ec40780741df22ad6d42fcf3c48f1f'
-            '13b1b0f34b0937a98aa61fed776318717c659358794c0ffa8b1af00c5c80fe195a11816db9183eee8e8e02f76c72f10c723093a24a9c0de249af18dcf2755126'
+sha512sums=('f85bbf54c2fca1a86598f32d93e7e580047fdd6732e291074ddcaee8c64d65adb01c58d07e05c13e70390b98dadc43bf1c7f86c10f89d4953add8e2ebd5e92c7'
+            '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
+            'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
+            'ba9279136f5bad3410d79fa09024c202529d5029f27e972bea797edfc9af086d6d6b22e655ab3f3613472d6e9c165819528439c8c48f18ced87e3f7d41d9fe0b'
             'f6c6945ac28e7fa88ab2b2747041a4dec6ff861206422749d4d5ba7d2fc56f1c384b57f5b55eb512786d5c7d6c617c23bc2f7b5aea64dd1d2761748ade8a4df6'
             'c5d284e41edfc67910561d04f50547922688994d665ae973a716a32eb127c7b22e6b06f8f0cf841726fb051d3946be4d5bf9d1bbdd03ad7136496f1879ebdb39'
-            '40bd638f1b6d6448b32a878f684b0c46d5b241fa06638df9d76a615d853ce74aad2f5c112e4536b9d8e34d26c047898916e0f9f02d84a38909f2beb854e042a5'
+            'cb7fd34288a4ff53455c8dc7cd5245525a072bc72c43f78cb180d9d8172c07bde0e9a5d8a3b96a3f1a112751be9f3499b54d66e21ec60c7069eabf707f1a7b29'
             '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d')
 
 prepare() {
-    patch -b -d tdesktop-$pkgver-full/Telegram/lib_ui/ -Np1 -i ${srcdir}/0001-Use-font-from-environment-variables.patch
+    patch -b -l -d tdesktop-$pkgver-full/Telegram/lib_ui -Np1 -i ${srcdir}/no-embolded-font.patch
+    patch -b -l -d tdesktop-$pkgver-full/Telegram/lib_ui -Np1 -i ${srcdir}/dont-adjust-fontsize.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0003-make-blockquote-markup-less-distractive.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0004-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch
+    patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/animated-avatar-follows-power-setting.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/warn-before-delete-all-2.patch
 }
 
 build() {
     CXXFLAGS+=' -ffat-lto-objects'
+
     # Turns out we're allowed to use the official API key that telegram uses for their snap builds:
     # https://github.com/telegramdesktop/tdesktop/blob/8fab9167beb2407c1153930ed03a4badd0c2b59f/snap/snapcraft.yaml#L87-L88
     # Thanks @primeos!

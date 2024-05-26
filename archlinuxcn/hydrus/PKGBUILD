@@ -3,7 +3,7 @@ options=(!strip)  # Don't strip libs because there aren't any
 
 pkgname=hydrus
 _pkgname=hydrus
-pkgver=570
+pkgver=576
 pkgrel=2
 pkgdesc="Danbooru-like image tagging and searching system for the desktop"
 arch=(any)
@@ -17,7 +17,7 @@ depends=(python python-opencv python-beautifulsoup4 python-yaml
          python-service-identity  # required by twisted for https hostname verification
          qt6-multimedia  # https://aur.archlinux.org/packages/hydrus#comment-914337
          qt6-svg  # https://aur.archlinux.org/packages/hydrus#comment-923550
-         python-pyqt6)
+         pyside6)
 makedepends=(git)
 optdepends=('ffmpeg: show duration and other information on video thumbnails'
             'miniupnpc: automatic port forwarding'
@@ -32,20 +32,21 @@ optdepends=('ffmpeg: show duration and other information on video thumbnails'
             'python-pympler: debug menus to profile memory usage'
             # 'python-pyqt6-charts: display bandwidth usage charts'
             'python-cryptography: to generate certificates for accessing client API and server via HTTPS'
+            'python-olefile: support legacy microsoft office file formats'
             'python-pyopenssl: to generate certificates for accessing client API and server via HTTPS'
             'qt6-webengine: to display PDF thumbnails'
             # 'python-pyparsing: currently unused'
             # 'speedcopy: may speed up file transfers'
             'swftools: to display SWF thumbnails')
 conflicts=(hydrus-docs-dummy)
-source=("${_pkgname}::git+https://github.com/hydrusnetwork/${_pkgname}.git#commit=abaea811340afa9262e230e77d263f2b2348718f"
+source=("${_pkgname}::git+https://github.com/hydrusnetwork/${_pkgname}.git#commit=b202eb70dfecc38ad858c7c9a185f571be8ee197"
         paths-in-opt.patch
         hydrus-client
         hydrus-server
         hydrus.desktop)
-sha256sums=('2fc593c662151f4cbe79f9d7926e322a6c5a2e55358b4f21a456e561ab95b923'
+sha256sums=('SKIP'
             'f9f5a5927c7f2c016dbab3e4135a921918617ba393babd9b6a903ff5d0154cdd'
-            'b1854ecac184385f0aa48fcefd426223fac3eeec0f1180ba58b6a58b03257d68'
+            '39d3404b75320be6a9e33dc256f4fc313c65fe11458e96bd5af6268c2f78eaf0'
             '5956d418d29fe19f54263acf47adce7c6d134d19ec65e2810d4517ce83529480'
             '9b8c2603a8040ae80152ff9a718ad3e8803fdc3029a939e3c0e932ea35ded923')
 

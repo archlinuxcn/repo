@@ -5,11 +5,11 @@
 # Contributor: Erez Raviv (erezraviv@gmail.com)
 
 pkgname=chirp-next
-pkgver=20240401
+pkgver=20240524
 pkgrel=1
 pkgdesc="GUI tool for programming ham radios, built from daily build"
 arch=('any')
-url="https://chirp.danplanet.com"
+url="https://chirpmyradio.com/projects/chirp/wiki/Home"
 license=('GPL-3.0-or-later')
 depends=('python-six' 'python-pyserial' 'python-future' 'python-requests' 'python-suds' 'python-yattag' 'python-wxpython')
 optdepends=('hamradio-menus: XDG menus for ham radio software')
@@ -18,9 +18,9 @@ options=(!emptydirs)
 conflicts=('chirp' 'chirp-daily')
 provides=(chirp)
 install=$pkgname.install
-source=("${pkgname}-${pkgver}.tar.gz::https://trac.chirp.danplanet.com/chirp_next/next-${pkgver}/chirp-${pkgver}.tar.gz")
-# Checksums: https://trac.chirp.danplanet.com/chirp_next/next-$pkgver/SHA1SUM
-sha1sums=('890d7305807a473aee0a97dd9947312f9b112c8c')
+source=("${pkgname}-${pkgver}.tar.gz::https://archive.chirpmyradio.com/chirp_next/next-${pkgver}/chirp-${pkgver}.tar.gz")
+# Checksums: https://archive.chirpmyradio.com/chirp_next/next-$pkgver/SHA1SUM
+sha1sums=('64e3fab1730f4472639be45d035e49669fbec72b')
 
 build() {
     cd "chirp-${pkgver}"

@@ -3,7 +3,7 @@
 _pkgname=3dslicer
 pkgname=3dslicer
 pkgver=5.6.2
-pkgrel=1
+pkgrel=2
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
 url='https://www.slicer.org'
@@ -13,7 +13,7 @@ depends=(
   curl
   dcmtk
   fftw
-  gcc-libs
+  gcc13-libs
   glibc
   hwloc
   libarchive
@@ -54,6 +54,7 @@ makedepends=(
   gendesk
   git
   subversion
+  gcc13
 )
 options=(!emptydirs !strip)
 source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
@@ -74,6 +75,8 @@ prepare() {
 }
 
 build() {
+  export CC=gcc-13
+  export CXX=g++-13
   cmake -B build -S "${srcdir}/${_pkgname}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \

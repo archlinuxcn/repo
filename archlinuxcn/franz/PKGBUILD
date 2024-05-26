@@ -5,7 +5,7 @@
 pkgname=franz
 _pkgver=5.10.0 # -beta.0
 pkgver=${_pkgver//-/} # Leaving it here for possible dev/beta package :)
-pkgrel=2
+pkgrel=3
 # Due to the previous "_beta" naming
 epoch=1
 pkgdesc='Free messaging app for services like WhatsApp, Slack, Messenger and many more.'
@@ -16,7 +16,7 @@ license=(Apache)
 # Expected one is 'electron19' (Electron 19). May change soon.
 # This is automatically replaced in `franz.sh` with the package name, as
 # the executable matches the package name (as of 2020-11-15).
-_electron='electron22'
+_electron='electron24'
 depends=($_electron bash)
 makedepends=(git python nodejs-lts-hydrogen npm nvm expac)
 source=("git+https://github.com/meetfranz/$pkgname#branch=chore/electron-19"

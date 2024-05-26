@@ -3,13 +3,14 @@
 # Contributor: Astro Benzene <universebenzene at sina dot com>
 
 pkgname=astrometry.net
-pkgver=0.94
-pkgrel=9
+pkgver=0.95
+pkgrel=2
 pkgdesc="Automatic recognition of astronomical images. Compiled with -march=x86-64 -mtune=core2 for most modern x86-64 CPUs."
 arch=('x86_64')
 url="https://astrometry.net/"
 license=("GPL-3.0-or-later")
 depends=('bzip2' 'cairo' 'libpng' 'libjpeg-turbo' 'python-astropy' 'netpbm' 'cfitsio' 'gsl' 'swig')
+makedepends=('python-setuptools')
 optdepends=(
 'astrometry.net-data-4108-wide: index data for wide field'
 'astrometry.net-data-5007: index data for features 22 to 30 arcmin'
@@ -18,13 +19,7 @@ optdepends=(
 backup=(etc/astrometry.cfg)
 install=astrometry.net.install
 source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz")
-sha1sums=('3664347b473d96bcf7eed5b91e77c8f85a587eeb')
-
-prepare() {
-    cd ${pkgname}-${pkgver}
-    sed -e 's/NETPBM_INC\ ?=/NETPBM_INC\ ?=\ -I\/usr\/include\/netpbm/g' -i util/makefile.netpbm
-    sed -e 's/-L.\ -lnetpbm/-L\/usr\/lib\ -lnetpbm/g' -i util/makefile.netpbm
-}
+sha1sums=('984de6879215794d4fec7916fa82741367d3b10d')
 
 build() {
     cd ${pkgname}-${pkgver}
@@ -56,7 +51,8 @@ package() {
     sed -e "s|${pkgdir}/usr/data|/usr/share/astrometry/data|" -e 's|#inparallel|inparallel|' -i ${pkgdir}/etc/astrometry.cfg
     # remove useless file
     rm ${pkgdir}/usr/share/doc/astrometry/report.txt
-    # those two executables are included in cfitsio package
+    # those executables are included in cfitsio package
     rm ${pkgdir}/usr/bin/fitscopy
     rm ${pkgdir}/usr/bin/imcopy
+    rm ${pkgdir}/usr/bin/fitsverify
 }

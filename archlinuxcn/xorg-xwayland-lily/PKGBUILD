@@ -1,8 +1,8 @@
 # Maintainer: AndyRTR <andyrtr@archlinux.org>
 
 pkgname=xorg-xwayland-lily
-pkgver=23.2.6
-pkgrel=1
+pkgver=24.1.0
+pkgrel=2
 arch=('x86_64')
 license=(
     LicenseRef-Adobe-Display-PostScript
@@ -23,17 +23,17 @@ license=(
 )
 url="https://xorg.freedesktop.org"
 pkgdesc="run X clients under wayland, with !733 HiDPI patch"
-depends=('nettle' 'libepoxy' 'systemd-libs' 'libxfont2' 
-         'pixman' 'xorg-server-common' 'libxcvt' 'mesa'
+depends=('nettle' 'libepoxy' 'libxfont2' 'pixman'
+         'xorg-server-common' 'libxcvt' 'mesa'
          'libglvnd' 'libxau' 'wayland' 'libdrm' 'libtirpc'
-         'libxshmfence' 'glibc')
+         'libei' 'libxshmfence' 'glibc')
 makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
              'xorg-font-util' 'wayland-protocols' 'mesa-libgl'
-             'systemd' 'egl-wayland')
+             'systemd')
 source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver.tar.xz{,.sig} hidpi.patch)
-sha512sums=('9e3c2253af335a559d0f890fa8f9bc381beca6531e0842d739ac15cbca008b3d07c0eefafd03611b04917c626861a7871a83657afa2a298994f4b162f714fc49'
+sha512sums=('7592609ad112652cb870761f938f280802d7d3b4bbc82acc7bf741a763d862aa97bbbd7f78250c63a961d76be73fb55555832045514092d89e406839564f0003'
             'SKIP'
-            16ccf43bdde029c21d9733cb65809f242a6d95111d03d72a7263e0aca2810a12507ed95b83320c5ed7a2b96bdde044aa57f218e20731a4e2e96f888a087271fd)
+            '4ac0347b5e75b1e165a85a5921dba34ac4fd5fe63f579018250bf90197fdcd32c7af24bb498d1020f031f2d6132457e1f0396c657b386f26fcf65042bc5b20e0')
 provides=('xorg-server-xwayland' 'xorg-xwayland' 'xorg-xwayland-hidpi-xprop')
 conflicts=('xorg-server-xwayland' 'xorg-xwayland')
 replaces=('xorg-server-xwayland')
@@ -53,7 +53,6 @@ build() {
     -D xdmcp=false \
     -D xcsecurity=true \
     -D dri3=true \
-    -D xwayland_eglstream=true \
     -D glamor=true \
     -D xkb_dir=/usr/share/X11/xkb \
     -D xkb_output_dir=/var/lib/xkb

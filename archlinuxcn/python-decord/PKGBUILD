@@ -3,7 +3,7 @@
 _pkgname=decord
 pkgname=('python-decord' 'python-decord-cuda')
 pkgver=0.6.0
-pkgrel=6
+pkgrel=7
 pkgdesc="An efficient video loader for deep learning with smart shuffling that's super easy to digest"
 arch=('x86_64')
 url='https://github.com/dmlc/decord'
@@ -29,7 +29,7 @@ makedepends=(
 source=("${_pkgname}-${pkgver}::git+https://github.com/dmlc/decord.git#tag=v${pkgver}"
         "0001-fix-building-with-ffmpeg4.4.patch"
 )
-sha512sums=('SKIP'
+sha512sums=('f91944e7931f18576cdedd69edc9f651189db2dbc63e7f211cb894cea71bc9df0f4f83ef27f2449da4c9cf13517c310ed0ef6bdd01d01f48258e0f7bf3efa027'
             'e4b8450ee48583b40f99bf9c981e1f37529c16ba002f6781187621fb6b94d3856db34e90c4c1fd88978601deb88d1e0d31f161232882651c6c6cd61dd91da45a')
 
 prepare() {

@@ -3,7 +3,7 @@
 
 pkgname=python-ufo2ft
 _pyname=${pkgname#python-}
-pkgver=3.2.1
+pkgver=3.2.3
 pkgrel=1
 pkgdesc='A bridge from UFOs to FontTools objects'
 arch=(any)
@@ -29,7 +29,7 @@ optdepends=(python-compreffor
             python-skia-pathops)
 _archive="$_pyname-$pkgver"
 source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz")
-sha256sums=('fe7ea8130af5b34012d3d75e25845187344934782a5c009f649b0a4ee107c5ff')
+sha256sums=('ef84db141783efa53f6ecc14a344de1f4ae74b27f12c7614f960605f3351bacb')
 
 build() {
 	cd "$_archive"

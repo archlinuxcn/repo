@@ -4,6 +4,7 @@ from lilaclib import *
 
 def pre_build():
     aur_pre_build(maintainers=['encounter','class101','nullableVoidPtr'])
+    add_makedepends(['python-pip'])
 
     for line in edit_file('PKGBUILD'):
         if line.startswith('license='):

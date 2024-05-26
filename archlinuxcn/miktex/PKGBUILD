@@ -2,8 +2,8 @@
 # Maintainer: heavysink <winstonwu91 at gmail>
 
 pkgname=miktex
-pkgver=23.12
-pkgrel=1
+pkgver=24.4
+pkgrel=2
 pkgdesc="a distribution of the TeX/LaTeX typesetting system"
 arch=('x86_64')
 url="https://miktex.org"
@@ -11,16 +11,19 @@ license=('custom')
 depends=('apr' 'boost-libs' 'apr-util' 'bzip2' 'cairo' 'expat' 'fontconfig' 'freetype2'
          'fribidi' 'gd' 'gmp' 'graphite' 'harfbuzz-icu' 'hunspell' 'icu'
          'libjpeg' 'log4cxx' 'xz' 'mpfr' 'libmspack' 'openssl' 'pixman' 'libpng'
-         'poppler' 'popt' 'potrace' 'uriparser' 'hicolor-icon-theme' 'zziplib' 'poppler-qt5' 'qt5-script' 'qt5-declarative')
-makedepends=('cmake' 'coreutils' 'fop' 'sed' 'libxslt' 'qt5-tools' 'boost')
+         'poppler' 'popt' 'potrace' 'uriparser' 'hicolor-icon-theme' 'zziplib' 'poppler-qt6' 'qt6-declarative' 'qt6-5compat' 'mpfi')
+makedepends=('cmake' 'coreutils' 'fop' 'sed' 'libxslt' 'qt6-tools' 'boost')
 source=("https://github.com/MiKTeX/miktex/archive/${pkgver}.tar.gz")
-md5sums=('7139553e820439ccab60dd0443805a13')
+md5sums=('d9dbaedcc2efe3020d00be0ce0548d99')
 options=('!buildflags')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
     find . -name "*.h" -exec sed -i 's|log4cxx/rollingfileappender.h|log4cxx/rolling/rollingfileappender.h|g' {} +
     find . -name "*.cpp" -exec sed -i 's|log4cxx/rollingfileappender.h|log4cxx/rolling/rollingfileappender.h|g' {} +
+    cp cmake/modules/FindPOPPLER_QT5.cmake cmake/modules/FindPOPPLER_QT6.cmake
+    sed -i 's/QT5/QT6/g' cmake/modules/FindPOPPLER_QT6.cmake
+    sed -i 's/qt5/qt6/g' cmake/modules/FindPOPPLER_QT6.cmake
 }
 build() {
     cd "$srcdir/$pkgname-$pkgver"

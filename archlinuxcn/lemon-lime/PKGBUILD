@@ -1,14 +1,17 @@
-# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Maintainer: Coelacanthus <coelacanthus@outlook.com>
 
 pkgname=lemon-lime
 pkgver=0.3.4.4
-pkgrel=1
+pkgrel=3
+epoch=
 pkgdesc="为了 OI 比赛而生的基于 Lemon 的轻量评测系统 | A tiny judging environment for OI contest based on Project_LemonPlus"
 arch=('x86_64' 'i686')
 url="https://github.com/Project-LemonLime/Project_LemonLime"
-license=('GPL-3.0-or-later')
+license=('GPL3')
+groups=()
 depends=('qt5-base' 'hicolor-icon-theme')
 makedepends=('git' 'qt5-tools' 'cmake' 'ninja')
+checkdepends=()
 optdepends=('gcc: C and C++ support'
             'fpc: Pascal support'
             'java-environment: Java support'
@@ -16,6 +19,11 @@ optdepends=('gcc: C and C++ support'
             'python: Python support')
 provides=("lemon-lime")
 conflicts=("lemon-lime-git")
+replaces=()
+backup=()
+options=(debug strip)
+install=
+changelog=
 
 source=(
     "https://github.com/Project-LemonLime/Project_LemonLime/releases/download/${pkgver}/Lemon-${pkgver}-source-all.7z"
@@ -31,7 +39,7 @@ prepare() {
 build() {
 	cd "$srcdir"
 	cmake -S. -B build \
-		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-GNinja \
 		-DCMAKE_INSTALL_PREFIX=${pkgdir}/usr \
 		-DLEMON_BUILD_INFO="Build for Arch Linux" \

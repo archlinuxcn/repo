@@ -1,18 +1,18 @@
 # Maintainer: Jerry <isjerryxiao at outlook dot com>
 _srcname=pacroller
 pkgname=pacroller
-pkgver=0.1.8
+pkgver=0.1.9
 pkgrel=1
 pkgdesc="Unattended upgrade for archlinux"
 arch=('any')
 url="https://github.com/isjerryxiao/pacroller"
-license=('GPL3')
+license=('GPL-3.0-only')
 depends=('python')
 makedepends=('python-setuptools' 'git')
 optdepends=('needrestart')
 backup=('etc/pacroller/config.json' 'etc/pacroller/smtp.json' 'etc/pacroller/telegram.json' 'etc/pacroller/known_output_override.py')
 source=("$_srcname::git+https://github.com/isjerryxiao/pacroller#tag=${pkgver}")
-md5sums=('SKIP')
+md5sums=('46a1b320d91793fa7fbd86c3ccaafd89')
 
 package() {
     cd "$srcdir/$_srcname"

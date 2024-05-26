@@ -1,17 +1,16 @@
 # Maintainer: Juanma Hernandez <juanmah@gmail.com>
 
 pkgname=zotero
-pkgver=6.0.30
+pkgver=6.0.37
 pkgrel=1
 _xpdf_ver=4.03
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=(aarch64)
 url="https://www.zotero.org/download"
 license=('AGPL3')
-makedepends=(git perl python curl wget zip unzip awk chromium rsync cmake)
-# Build error with nodejs 17
-depends=(dbus-glib gtk3 nss libxt npm poppler nodejs-lts-gallium
-         libfontconfig.so libpaper)
+makedepends=(git perl python curl wget zip unzip awk chromium rsync
+             cmake nodejs-lts-iron npm)
+depends=(dbus-glib gtk3 nss libxt poppler libfontconfig.so libpaper)
 install='zotero.install'
 source=("zotero-client::git+https://github.com/zotero/zotero#tag=$pkgver"
         "git+https://github.com/zotero/zotero-build"
@@ -19,7 +18,7 @@ source=("zotero-client::git+https://github.com/zotero/zotero#tag=$pkgver"
         "git+https://github.com/yuyichao/cross-xpdf#branch=aarch64"
         "https://dl.xpdfreader.com/old/xpdf-${_xpdf_ver}.tar.gz"
         zotero.desktop)
-sha256sums=('SKIP'
+sha256sums=('dd5e3dfce0330299967c7bdffe8533385c50b177e2e69f8af5ec62505281c5f9'
             'SKIP'
             'SKIP'
             'SKIP'

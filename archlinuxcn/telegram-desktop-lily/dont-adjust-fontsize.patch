@@ -1,0 +1,22 @@
+diff --git a/ui/style/style_core_font.cpp b/ui/style/style_core_font.cpp
+index 626ba05..4df9aea 100644
+--- a/ui/style/style_core_font.cpp
++++ b/ui/style/style_core_font.cpp
+@@ -195,7 +195,7 @@ struct Metrics {
+ 	copy.setFamily(basic);
+ 	const auto basicMetrics = QFontMetricsF(copy);
+ 
+-	static const auto Full = u"bdfghijklpqtyBDFGHIJKLPQTY1234567890[]{}()"_q;
++	static const auto Full = u"bdfghijklpqtyBDFGHIJKLPQTY1234567890[]{}()你好"_q;
+ 
+ 	// I tried to choose height in such way that
+ 	// - normal fonts won't be too large,
+@@ -334,7 +334,7 @@ struct Metrics {
+ 
+ 	const auto adjust = (overriden || system);
+ 	const auto metrics = ComputeMetrics(font, adjust);
+-	font.setPixelSize(metrics.pixelSize);
++        // font.setPixelSize(metrics.pixelSize);
+ 
+ 	font.setWeight((flags & (FontFlag::Bold | FontFlag::Semibold))
+ 		? QFont::DemiBold

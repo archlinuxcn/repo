@@ -18,6 +18,7 @@ _cachy_config=${_cachy_config-y}
 # 'rt' - select EEVDF, but includes a series of realtime patches
 # 'rt-bore' - select Burst-Oriented Response Enhancer, but includes a series of realtime patches
 # 'sched-ext' - select 'sched-ext' Scheduler, based on EEVDF
+# 'echo' - select 'ECHO Scheduler'
 _cpusched=${_cpusched-cachyos}
 
 ### Tweak kernel options prior to a build via nconfig
@@ -160,7 +161,7 @@ fi
 _major=6.9
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc3
+_rcver=rc7
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -168,7 +169,7 @@ _stable=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux SCHED-EXT + Cachy Sauce Kernel by CachyOS with other patches and improvements'
-pkgrel=1
+pkgrel=5
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
@@ -186,12 +187,8 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
     )
 fi
 
-if [[ "$_cpusched" = "sched-ext" || "$_cpusched" = "cachyos" ]]; then
-    depends+=(scx-scheds)
-fi
-
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=550.67
+_nv_ver=550.78
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 source=(
     "https://github.com/torvalds/linux/archive/refs/tags/v${_major}-${_rcver}.tar.gz"
@@ -212,14 +209,15 @@ fi
 
 # NVIDIA pre-build module support
 if [ -n "$_build_nvidia" ]; then
-    source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run")
+    source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
+             "${_patchsource}/misc/nvidia/make-modeset-fbdev-default.patch"
+             "${_patchsource}/misc/nvidia/0001-NVIDIA-take-modeset-ownership-early.patch")
 fi
 
 ## List of CachyOS schedulers
 case "$_cpusched" in
-    cachyos) ## SCHED-EXT
-        source+=("${_patchsource}/sched/0001-sched-ext.patch"
-                 "${_patchsource}/sched/0001-bore-cachy-ext.patch");;
+    cachyos) # CachyOS Scheduler (SCHED-EXT)
+        source+=("${_patchsource}/sched/0001-sched-ext.patch");;
     bore) ## BORE Scheduler
         source+=("${_patchsource}/sched/0001-bore-cachy.patch");;
     echo) ## ECHO Scheduler
@@ -257,6 +255,8 @@ prepare() {
         src="${src%%::*}"
         src="${src##*/}"
         src="${src%.zst}"
+        [[ $src = make-modeset-fbdev-default.patch ]] && continue
+        [[ $src = 0001-NVIDIA-take-modeset-ownership-early.patch ]] && continue
         [[ $src = *.patch ]] || continue
         echo "Applying patch $src..."
         patch -Np1 < "../$src"
@@ -288,13 +288,13 @@ prepare() {
     [ -z "$_cpusched" ] && _die "The value is empty. Choose the correct one again."
 
     case "$_cpusched" in
-        cachyos) scripts/config -e SCHED_BORE -e SCHED_CLASS_EXT;;
-        sched-ext) scripts/config -e SCHED_CLASS_EXT;;
-        bore|hardened|cachyos) scripts/config -e SCHED_BORE;;
+        cachyos) scripts/config -e SCHED_CLASS_EXT;;
+        bore|hardened) scripts/config -e SCHED_BORE;;
         echo) scripts/config -e ECHO_SCHED;;
         eevdf) ;;
         rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
         rt-bore) scripts/config -e SCHED_BORE -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
+        sched-ext) scripts/config -e SCHED_CLASS_EXT;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
 
@@ -528,6 +528,10 @@ prepare() {
     if [ -n "$_build_nvidia" ]; then
         cd "${srcdir}"
         sh "${_nv_pkg}.run" --extract-only
+
+        # Use fbdev and modeset as default
+        patch -Np1 -i "${srcdir}/make-modeset-fbdev-default.patch" -d "${srcdir}/${_nv_pkg}"
+        patch -Np2 --no-backup-if-mismatch -i "${srcdir}/0001-NVIDIA-take-modeset-ownership-early.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 }
 
@@ -567,7 +571,7 @@ build() {
 
 _package() {
     pkgdesc="The $pkgdesc kernel and modules"
-    depends=('coreutils' 'kmod' 'initramfs')
+    depends=('coreutils' 'kmod' 'initramfs' 'scx-scheds')
     optdepends=('wireless-regdb: to set the correct wireless channels of your country'
                 'linux-firmware: firmware images needed for some devices'
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
@@ -716,9 +720,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('cea6d02fe83a8e0a37e2be487fbc2f952d6a64194c4d8c2322b7baa3f8f203088e8061eceea9b3d8ae131ce17ca0ccea84c951ad33a52134c164e097956db398'
-        'b95d8fd061110e38cf5dc28cc043387f0cc440478ed73da9190c6fad0dc1a6877330162c85413c82914d9e6fa6dde1a879a899227339d42d6a9970fef55b788a'
+b2sums=('9f346bbd6c540249de07d2e20efcdaecec7159a2ef04d9208dc0ee5165fc1bab80fc1424e1391ec4aa8c1682c49989188beba902d34472bbf39ae3440845d216'
+        '47ef1bc417813cd6eac010c9e35c01c0bcddba095bcdd5b974e85bd37ca562ca9525914797eab81040ff5d4e2395236b854e4fc6a44ad7096d51a74a854e13ec'
         '43ef7a347878592740d9eb23b40a56083fa747f7700fa1e2c6d039d660c0b876d99bf1a3160e15d041fb13d45906cdb5defef034d4d0ae429911864239c94d8d'
-        'a019c5085cac0dca1f0a49f4a418aaa2dfe8ff5b53f39d65b16ed7c4816af6fac86d735f82747d1f527a072b0feb3a9dd21377924054f785d56d460ef3f9902f'
-        'b0c5d00c25922e1a11911855a65b98997be7e4911e608d34e9be2ded4d241331e6dadf05c3f71db11aacf4db81f2c4dff9222f2a7499a8e2b8b65df7706fee0f'
-        '2878d8388184ffb0bbaae9ef3516702f20d54d202e29fea5d56c994094dc464946ef6c0d2f97d954c1186bfe32ea716188393634b37269aed8f0d01d0af60ec9')
+        'ed251f65beef8681814df599adb5becb617b7bfa6957b4316811b119879a5c69bdc27e499aac7eac310a6f3b4ae09b2d604ad1e0a38eeab2847469e62095cf4f'
+        '1ebb80c0e3838f017062b2de09ca1a2a8989b7ddadc817497aa37de29c17e99397e2d35cb64b7d9c1f1eec4281f0a3dcd2d9796d43f2f2c892cb4c4edafda68f')

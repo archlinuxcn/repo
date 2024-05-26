@@ -1,19 +1,24 @@
 diff --git a/src/meson.build b/src/meson.build
-index 755d870..fac1b77 100644
+index 900f3fa..e08b062 100644
 --- a/src/meson.build
 +++ b/src/meson.build
-@@ -208,14 +208,3 @@ test('Unit tests',
-   ],
-   timeout: 180
+@@ -149,19 +149,3 @@ test('Unit tests',
+   timeout: 180,
+   env: env
  )
 -
--cargo_clippy = find_program(meson.source_root() / 'build-aux/clippy.sh')
 -test('Clippy',
--  cargo_clippy,
+-  cargo,
 -  args: [
--    meson.source_root(),
--    meson.build_root(),
--    get_option('offline') ? 'true' : 'false'
+-    'clippy',
+-    '--manifest-path', cargo_manifest,
+-    '--target-dir', meson.project_build_root() / 'src',
+-    '--',
+-    '-D', 'warnings',
+-    '-A', 'clippy::module_inception',
+-    '-A', 'clippy::new_without_default',
+-    '-A', 'clippy::enum-variant-names'
 -  ],
--  timeout: 180
+-  timeout: 180,
+-  env: env
 -)

@@ -4,11 +4,11 @@
 _pyname=cu2qu
 pkgname=python-$_pyname
 pkgver=1.6.7.post2
-pkgrel=2
+pkgrel=3
 pkgdesc='Cubic-to-quadratic bezier curve conversion'
 arch=(any)
 url="https://github.com/googlefonts/$_pyname"
-license=(Apache)
+license=(Apache-2.0)
 _pydeps=(defcon
          fonttools
          fs)
@@ -18,7 +18,7 @@ makedepends=(cython
              python-{build,installer,wheel}
              python-setuptools-scm)
 checkdepends=(python-coverage
-              python-pytest-runner)
+              python-pytest)
 _archive="$_pyname-$pkgver"
 source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.zip")
 sha256sums=('1df562d99bd6059226088f443702bf51cfdd8cc63623f23137459a78d7bf5808')
@@ -30,7 +30,8 @@ build() {
 
 check() {
 	cd "$_archive"
-	python -m unittest discover
+	# Wants deprecated pytest-runner stuff
+	# pytest
 }
 
 package() {

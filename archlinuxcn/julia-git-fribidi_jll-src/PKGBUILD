@@ -1,7 +1,7 @@
 pkgname=julia-git-fribidi_jll-src
-pkgver=1.0.10+0
-_commit=eced19faae5bd18582567893a470ef24690dc3e8
-pkgrel=2
+pkgver=1.0.14+0
+_commit=9de4bd3f41feae23dc5d6f76bee2d3947999a5ed
+pkgrel=1
 pkgdesc="FriBidi_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/FriBidi_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git fribidi)
 source=("git+https://github.com/JuliaBinaryWrappers/FriBidi_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('2b585a3f726bd9b88a6ac1aeee0514dc435ae80fdf64f1a140b61418f0e3ba27'
             '1fd161310b17c92625098ce133ab0492ed313da7501d7f82a37c124f0bda296f')
 
 build() {

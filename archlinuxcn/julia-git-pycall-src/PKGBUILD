@@ -1,7 +1,7 @@
 pkgname=julia-git-pycall-src
 pkgver=1.96.4
 _commit=e54c4ee3962f423a4c77fbc8afc20f5fb66296c3
-pkgrel=1
+pkgrel=2
 pkgdesc="PyCall.jl"
 url="https://github.com/JuliaPy/PyCall.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts julia-git-conda-src julia-git-json-src
              julia-git-parsers-src julia-git-versionparsing-src)
 depends=(julia-git python)
 source=("git+https://github.com/JuliaPy/PyCall.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('5660913663e8c7f1151b6e6fc4a55e8e4f15794a8f583ac384ebed593f08abb1')
 
 build() {
   cd PyCall.jl/deps

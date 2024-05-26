@@ -2,7 +2,7 @@
 
 pkgname=devtools-riscv64
 epoch=1
-pkgver=1.1.0+patch2
+pkgver=1.2.0+patch1
 pkgrel=1
 pkgdesc='Tools for Arch Linux RISC-V package maintainers'
 arch=('x86_64' 'riscv64')
@@ -15,7 +15,7 @@ source=(makepkg-riscv64.patch
         sogrep-riscv64.patch
         valid-repos-riscv64.sh)
 source_x86_64=(z-archriscv-qemu-riscv64.conf)
-sha256sums=('3e79aaf0c4d9f94c56768fc15cf88665dbe206be9ef2c00fb1dba96f7da1b7b4'
+sha256sums=('9a920657b363f983c92bbd2b78ddf381e5b1350c963428ec29414111dc8990e3'
             '5c80d7f727c4cca6c3ae515dbcb9b9a69d2cae952aa520a82df97cf37432c9cc'
             'c8e9bfc390e42d358007578ca54212bda1d44c754c976be9ef262944d4a0d83c'
             '94ee35597de8e46b1f0c09f95ced34c47ece2f95f92d1a7f2415373f2d129c63')

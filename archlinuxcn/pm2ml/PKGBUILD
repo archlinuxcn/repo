@@ -1,12 +1,13 @@
 #Maintainer: Xyne <gro xunilhcra enyx, backwards>
 pkgname=pm2ml
 pkgver=2021.11.20.1
-pkgrel=14
+pkgrel=15
 pkgdesc='Generate metalinks for downloading Pacman packages and databases.'
 arch=(any)
 license=(GPL)
 url="https://xyne.dev/projects/pm2ml"
 depends=(pyalpm python3 python3-xcgf python3-xcpf)
+makedepends=(python-setuptools)
 optdepends=('aria2: ppl script support.' 'python3-aur: AUR support' 'reflector: Reflector support')
 backup=(etc/ppl.conf)
 source=(

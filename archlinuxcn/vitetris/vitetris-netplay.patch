@@ -1,0 +1,22 @@
+--- a/src/menu/netplay.c
++++ b/src/menu/netplay.c
+@@ -17,7 +17,7 @@ static char name_str[18];
+ 
+ static int cursor = -1;
+ 
+-static init_field(char *str, const char *val, int maxlen)
++static void init_field(char *str, const char *val, int maxlen)
+ {
+ 	memset(str, ' ', maxlen+1);
+ 	if (val) {
+diff --git a/src/netw/tty_socket.c b/src/netw/tty_socket.c
+index c6858a4..1593498 100644
+--- a/src/netw/tty_socket.c
++++ b/src/netw/tty_socket.c
+@@ -11,6 +11,7 @@
+ #include <sys/un.h>
+ #include <pwd.h>
+ #include <errno.h>
++#include <time.h>
+ #include "sock.h"
+ #include "internal.h"

@@ -10,7 +10,7 @@ pkgdesc='The Free Software Media System'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url='https://github.com/jellyfin/jellyfin'
 license=('GPL2')
-makedepends=('dotnet-sdk-6.0-bin' 'nodejs' 'npm' 'git')
+makedepends=('dotnet-sdk-bin' 'nodejs' 'npm' 'git')
 source=("jellyfin-$pkgver.tar.gz::https://github.com/jellyfin/jellyfin/archive/v$pkgver.tar.gz"
         "jellyfin-web-$pkgver.tar.gz::https://github.com/jellyfin/jellyfin-web/archive/v$pkgver.tar.gz"
         'jellyfin.conf'
@@ -37,7 +37,7 @@ build(){
   export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
   # Force dotnet to use 6.x when multiple SDKs are installed
-  dotnet new globaljson --sdk-version 6.0.0 --roll-forward latestMinor --force
+  # dotnet new globaljson --sdk-version 6.0.0 --roll-forward latestMinor --force
 
   dotnet build --configuration Release Jellyfin.Server
   # Ideally, this would be run in package() with the --output variable pointing
@@ -57,7 +57,7 @@ package_jellyfin() {
 
 package_jellyfin-server() {
   pkgdesc="Jellyfin server component"
-  depends=('dotnet-runtime-6.0-bin' 'aspnet-runtime-6.0-bin' 'ffmpeg' 'sqlite')
+  depends=('dotnet-runtime-bin' 'aspnet-runtime-bin' 'ffmpeg' 'sqlite')
   backup=('etc/conf.d/jellyfin')
 
   mkdir -p "$pkgdir"/usr/lib

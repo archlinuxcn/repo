@@ -4,7 +4,7 @@
 
 pkgname=blast+
 pkgver=2.15.0
-pkgrel=4
+pkgrel=6
 pkgdesc='BLAST tool suite from NCBI (blastn, blastp, blastx, psiblast, etc)'
 arch=('x86_64')
 url='http://blast.ncbi.nlm.nih.gov'
@@ -28,7 +28,6 @@ makedepends=(
   fcgi
   freeglut
   freetype2
-  gcc12
   giflib
   gl2ps
   glew
@@ -60,8 +59,6 @@ source=("${pkgname}-${pkgver}.tar.gz::https://ftp.ncbi.nlm.nih.gov/blast/executa
 sha256sums=('6918c370524c8d44e028bf491e8f245a895e07c66c77b261ce3b38d6058216e0')
 
 build() {
-  export CC=gcc-12
-  export CXX=g++-12
   cd "${srcdir}/ncbi-blast-${pkgver}+-src/c++"
   ./configure \
     --prefix=/usr \

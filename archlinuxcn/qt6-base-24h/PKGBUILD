@@ -4,8 +4,8 @@
 
 pkgbase=qt6-base-24h
 pkgname=(qt6-base-24h)
-_qtver=6.7.0
-pkgver=${_qtver/-/}
+
+pkgver=6.7.1
 pkgrel=2.4
 arch=(x86_64)
 url='https://www.qt.io'
@@ -89,24 +89,23 @@ source=(
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       git+https://code.qt.io/qt/$_pkgfn#tag=v$pkgver
         qt6-base-cflags.patch
-        qt6-base-nostrip.patch
-        fix-wrong-cpp-if.patch::https://code.qt.io/cgit/qt/qtbase.git/patch/?id=68102202)
+        qt6-base-nostrip.patch)
 sha256sums=(
       '6ab571d50f0c17d31ed33bb2ebf6eadf41c18cbf2dd8cb5260b939915a139a28'
       'b2cefcd7f1297dc4703dc5c541fb284d4979bbfed3376fa1ba525417be7492d0'
       'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      'ee87abbfdf2d5bb204056bcb6c53e21c03e1abd779e3669faa56db7249c5e39e'
+      'bc68440a69a331b6b79b3c36acc8346b5dc0aad1b53536fe363860af31dd494b'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
-            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094'
-            '81c4821fb1c258603474771a267d450aa8b5d1d298443bc04620d70719c7eab7')
+            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-  patch -d $_pkgfn -p1 < fix-wrong-cpp-if.patch # https://bugreports.qt.io/browse/QTBUG-123937
 
   cd $_pkgfn
+  git cherry-pick -n f05cf3f11f4e42e05d069b5d9249d4b9aff41ffe # Fix locale issues
+
   patch -p1 -i ../oldherl-24h.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
@@ -139,7 +138,7 @@ build() {
 }
 
 package_qt6-base-24h() {
-pkgdesc='A cross-platform application and UI framework. This package uses 24-hour notation in all locales.'
+pkgdesc='A cross-platform application and UI framework. This package uses 24-hour HH:mm notation in all locales.'
   depends+=(qt6-translations)
   DESTDIR="$pkgdir" cmake --install build
 

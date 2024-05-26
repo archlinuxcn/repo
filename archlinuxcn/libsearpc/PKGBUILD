@@ -5,10 +5,10 @@
 
 pkgname=libsearpc
 epoch=2
-pkgver=3.2.0
+pkgver=3.3.0
 # tagname=$pkgver
-_tagname=3.2-latest
-pkgrel=10
+_tagname=3.3-latest
+pkgrel=2
 pkgdesc="A simple C language RPC framework (including both server side & client side)"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/libsearpc"
@@ -18,7 +18,7 @@ provides=(libsearpc.so)
 makedepends=(python)
 # upstream seems to change tag so let's rename the download...
 source=("libsearpc-${pkgver}-6.tar.gz::${url}/archive/v${_tagname}.tar.gz")
-sha256sums=('683a78cc6dc66d4db5fd90e3260a23845c6a5ff2510b8f55d2f46b86f9c3f271')
+sha256sums=('143ada255ea852a58577a833df0462af98376a3fd2886dc43ead621d656c317d')
 
 prepare () {
   cd ${pkgname}-${_tagname}
@@ -29,7 +29,7 @@ build () {
   echo "Building python3 version"
   cd ${pkgname}-${_tagname}
   ./autogen.sh
-  ./configure --prefix=/usr PYTHON=/usr/bin/python
+  ./configure --prefix=/usr PYTHON=/usr/bin/python --disable-compile-demo
   make
 }
 

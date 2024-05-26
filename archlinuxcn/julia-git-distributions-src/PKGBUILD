@@ -1,6 +1,6 @@
 pkgname=julia-git-distributions-src
-pkgver=0.25.107
-_commit=c1705a3015d438f7e841e82ef5148224813831e8
+pkgver=0.25.108
+_commit=818814fd4ebd46b53e37a6768d33877b546bf8fa
 pkgrel=1
 pkgdesc="Distributions.jl"
 url="https://github.com/JuliaStats/Distributions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStats/Distributions.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('5f67a04a68cc0daa81fc521ff2a60d3ec67b25df0ad2fde6cac59f9213f64db5')
 
 package() {
   cd Distributions.jl

@@ -3,17 +3,20 @@
 pkgbase=flutter-artifacts-google-bin
 _group=flutter
 groups=("$_group")
-pkgver=3.19.5
+pkgver=3.22.0
 # in order to update these version hashes, consult the PKGBUILD and update-artifact-versions.sh
 # script of https://aur.archlinux.org/pkgbase/flutter
-_enginever=e76c956498841e1ab458577d3892003e553e4f3c
+_enginever=f6344b75dcf861d8bf1f1322780b8811f982e31a
 _materialfontsver=3012db47f3130e62f7cc0beabff968a33cbec8d8
 _gradlewver=fd5c1f2c013565a3bea56ada6df9d2b8e96d56aa
-_flutterarch=$(uname -m | sed s/aarch64/arm64/ | sed s/x86_64/x64/)
+_flutterarch=$(echo "$CARCH" | sed s/aarch64/arm64/ | sed s/x86_64/x64/)
+_dartver="3.4.0"
+_dartmin="3.4.0"
+_dartmax="3.5.0"
 # this host is blocked in China, according to Flutter docs, the FLUTTER_STORAGE_BASE_URL environment variable
 # should be used to provide an alternative mirror
 _storagebase="${FLUTTER_STORAGE_BASE_URL:-"https://storage.googleapis.com"}"
-pkgrel=11
+pkgrel=10
 _pkgdesc="Flutter SDK artifacts (binary from Google)"
 pkgdesc="${_pkgdesc}"
 arch=("x86_64" "aarch64")
@@ -65,6 +68,8 @@ source=(
   "flutter_patched_sdk_product-${_enginever}.zip::${_storagebase}/flutter_infra_release/flutter/${_enginever}/flutter_patched_sdk_product.zip"
 )
 source_x86_64=(
+  # dart-sdk
+  "dart-sdk-x64-${_enginever}.zip::${_storagebase}/flutter_infra_release/flutter/${_enginever}/dart-sdk-linux-x64.zip"
   # engine/android-arm-profile/linux-x64
   "android-arm-profile-linux-x64-${_enginever}.zip::${_storagebase}/flutter_infra_release/flutter/${_enginever}/android-arm-profile/linux-x64.zip"
   # engine/android-arm-release/linux-x64
@@ -90,6 +95,8 @@ source_x86_64=(
   "font-subset-x64-${_enginever}.zip::${_storagebase}/flutter_infra_release/flutter/${_enginever}/linux-x64/font-subset.zip"
 )
 source_aarch64=(
+  # dart-sdk
+  "dart-sdk-arm64-${_enginever}.zip::${_storagebase}/flutter_infra_release/flutter/${_enginever}/dart-sdk-linux-arm64.zip"
   # engine/linux-$ARCH
   "engine-arm64-${_enginever}.zip::${_storagebase}/flutter_infra_release/flutter/${_enginever}/linux-arm64/artifacts.zip"
   # engine/linux-$ARCH
@@ -143,45 +150,53 @@ noextract=(
   "gtk-profile-arm64-${_enginever}.zip"
   "gtk-release-arm64-${_enginever}.zip"
   "font-subset-arm64-${_enginever}.zip"
+
+  # dart
+  "dart-sdk-x64-${_enginever}.zip"
+  "dart-sdk-arm64-${_enginever}.zip"
 )
 
 
 
 sha256sums=('e56fa8e9bb4589fde964be3de451f3e5b251e4a1eafb1dc98d94add034dd5a86'
             '31e9428baf1a2b2f485f1110c5899f852649b33d46a2e9b07f9d17752d50190a'
-            'a97418bd50f1da93664282d005d1926f47732958b4f6462d5b3ba235a4079089'
-            '6f874ff1b8443a727386f6e55d10282a5b4fc3b49466415213c167636e2c5a90'
-            'c54b26c4c0ecaa314fa1aa019f8ee58bd6e5d70c178d76cb894fec59087ae1c5'
-            '13b6ba6ad76008ed988ab9994a38cfa34f533861b87030fb7ff92e1240d794f2'
-            '4f905e3ea7245bc59e38a40997d7c70dc55f10cc421773ebc090019666798fe8'
-            'bcbda790c44771db96f898daf7f58c0cc94ab4573f26ac6050d9e66eca5ed2a1'
-            '5d64976b232c2047122e6d72b79cc90a6f0a833ca03a43ba84b095a0cfeef4c0'
-            'bd00c62bdfa014149bae4197eafaa7ecdce1c2ca56ddd09077f6ac99b6a46939'
-            '5a644638321619a2b7cd32b8439eac5a91e1776f888f85cce79c558101a9cf9d'
-            '5680e339439b55511ec82350a2b53f65f60a8a2c2ce2444e21a49a6836d098f4'
-            '2f7257bb89835ed2aa84b678ffb560a173eabecfe6098e0eff5f19b6bed04cbc'
-            '03177bff99bdd5ee32c12a86784db98e9e94bb1c07c805ab54ce2adc73d5eebc'
-            'c3dae7db1edf5afb373aa57c364c6320988b17da26a9529d054a6fe9579cc924'
-            '806f42883cdcbab617d27dae222603784471756c5ebcc2d8a50d453749c144a4'
-            '9711ba3d3be41f8cd24912dbf9cc7e77b6a048ce779420345de910a4ad532af4')
-sha256sums_x86_64=('b81e5ad671f1cc5779d3ab2e3e43feda65caec7fbf27060a8229867c82422596'
-                   'a0e18483ec27d0a6b6d9b6795c9fd200af1f6c485c09bf0b367e020dfc9788cb'
-                   'bdf715209d1682924648e8a960d1f20302e5f8c2e24597c647d6dccf270e962d'
-                   'cc5314adeb0466298e988fdf2009a80bcb0449bb76a397e1b39e0d7b033f2d07'
-                   '9498f428db4d09fae625a650027780cb7d6cfff33b69822cb48f6da59ddee83f'
-                   'f9bda382dd0a40eacb55d9a8af1a616fc7b119ce3137c6f91d346f97eda0340f'
-                   'da06ec3550254dcacbfe5a417dc303d3cbc85313ac4e3a63691effc1a3902e7d'
-                   '5f4c9d85d5e7f7f0de9cf8ed0cb4bea9fceba4182449e808b621a996cc6a8aee'
-                   'e38158311e81fbc3ef767a32a0e20155602b83efb14bd8ee0a2253860dbf874c'
-                   '06709a7cdbe22c47a3a24fa51411a1c85a563aa04cb93e34cb6aa6089062e91f'
-                   'eb58b40d563078ebd0cb3ccc617b022f6752bec35905a1516c9d84e543bc1ec6')
-sha256sums_aarch64=('cd8212efab86911917e00d742e608b4aa72655a6655030ab157207c91ca3df24'
-                    'ae9a3455ab950cdec9b6a58327fa2d78fa2bd351fbe9f2a81236874179a5c301'
-                    'b4d89c5a25cb8a87b36a8e48023a93cf45c6f49556e5864fc4e420334861314a'
-                    'a7fc7ca0875d1b74697ebdbb857eb7520f16f46a9c23bd0debc5802be8e571ac'
-                    'a3056052b070468e84e836da2cb4d9219373472d1e9d1fee5391f5c37174a84a')
+            '4d03b78fce54de2ac2cd5b789e9f2ae0430e00f2653a09a470f3ca134eff428f'
+            '7c50a3a045e030b76123b24b281e5de65263225f827d306650559ba741642672'
+            '8f1cd581cd4639a9f1742f469b39bbf4a7d38d896bfd96b96853eb51d178ce71'
+            '3d24e405b858160ed716c4b2af433f3dd6687b9f86f621a808593bdf904e07a8'
+            '16043e9b590686cb5d0c4849ec555edcd4b7e699a7d9269ac7474bd364243dc4'
+            '39f874b7da686d236c32eba59968a8659b1ced1cabec3ccf20d17ab593d4b619'
+            '1213dd2e8fecc6f02d3a618b37f396b496665b4a252eb3937873b0a7bc18960e'
+            '3cf822481da54227cc76cbad4c0e24e40a0d86ad64e10929b119f1a534e16872'
+            '4924ffc98dd206a3e0e18231433f7d5892dac311b015c2a0b9d57148a85395f1'
+            '48ad9a882ddfced16d879d610913d31c3778e3bc3612739b11bcb8752fcbe782'
+            'a4931c7e103cd918cbac88d35562bb4215ec7845296e5513b77b5331705ec07d'
+            '99c7bd39913daa35e5d06c2cd159ff3aa159da1a145974674943bd49d9a2ff41'
+            'd2367fbb953d36cb5e6fbc807c042d5d48e59b46c1aacabbfe4ea1b1049f8b66'
+            '075b445b48a3f75a76e788f6d6d66cf717944c1cfa98d6687afb3e66140ab671'
+            '85bdee6c2599e33271819a7cf127023d63985ee72ca72a20ef56481ac381fac8')
+sha256sums_x86_64=('fb4cb6d441acbb7d347715a6c8b85f2c1241549adc66020aab4623b3f075b325'
+                   'ee9782b0c4f015ef4d053d211e6de7ed1bf09377ed34cbf690b7cc16324ef0cc'
+                   'dc0de9b74288a4f6729a34cf07cf2c1166a0921b47d65cfaff214b0e8dceb850'
+                   'bccf0551c9ab6c6aa38282d817425076030259b16fafe23edcab52485103a052'
+                   '10df50608378b9fd8879cedb800f1586662f7de9f1c3cd25d29d4dc33baa1719'
+                   'a2910abd36ddf2df4f55e5f9788d1d25d13c8a625a24bb112ee8480d9383d1df'
+                   '02895a2fe157c424ba2356dbab4d8135ee8d4fca6141dd8bb4da26fd71f385b8'
+                   '6cea78fc0d9c7a214866811a0a233e1239bd97bcb9e6f869b454d4962cba7fab'
+                   '1fe8226eef08099ab4f6621748e7f3849295581df5a37a26f40a2dd013189d24'
+                   '815e6b22f192bf72660c9d8aece0c1dd55d7e991b0e7c83a74afbd986642d0cc'
+                   '5b22aedbbbf82369ac634d9a60762611280c0d79fbf6d5641923e4b94a6cb813'
+                   '974a88d81beb9f4ed53540ce9413dc75e382aa190b8bc21212ee378914c3fcfe')
+sha256sums_aarch64=('00d18dece7a077d1c0d85ff27ed83d2c7442d0ab7f6bb83ccf77022d2e6b33c3'
+                    'd82a17ccc05e57df885128fed7ef0bf1046472fdbb13290235996cac27dfdca8'
+                    '36fcd5afd93354b2134d13d7a8460da1680416e93d4f6bfd272e3127224fbe41'
+                    '8e479fbd55cab96983b5c89f480c53006d78e33763338af9724e9d6798e48271'
+                    'db5c01f1da453afb8b11b16c834d5c9663f574907fa452871b8fd7c8eeec277c'
+                    'd90dc74203f24ade650d38cd91d303d3795cfd994a67579854eb32e9045da03e')
 
 prepare() {
+  unzip -o -q "${srcdir}/dart-sdk-${_flutterarch}-${_enginever}.zip" -d dart
+
   mkdir -p "${srcdir}/${_group}/bin/cache/artifacts"
 
   cd "${srcdir}/${_group}/bin/cache"
@@ -246,6 +261,8 @@ _package-engine-common-google-bin() {
 	"${_group}-common=${pkgver}"
 	"${_group}-sky-engine=${pkgver}"
 	"${_group}-material-fonts=${pkgver}"
+	"dart>=${_dartmin}"
+	"dart<${_dartmax}"
   )
   provides=(
 	"${_group}-engine-common=${pkgver}"
@@ -380,7 +397,31 @@ _package-engine-android-google-bin() {
   cp -ra "${srcdir}/${_group}/bin/cache/artifacts/engine/android-x86-jit-release" "${pkgdir}/usr/lib/${_group}/bin/cache/artifacts/engine"
 }
 
-pkgname=("${_group}-engine-common-google-bin" "${_group}-engine-linux-google-bin" "${_group}-engine-web-google-bin" "${_group}-engine-android-google-bin" "${_group}-sky-engine-google-bin" "${_group}-material-fonts-google-bin" "${_group}-gradle-google-bin")
+_package-dart-google-bin() {
+  pkgdesc="${_pkgdesc} - Dart SDK"
+  depends=(
+	"glibc"
+  )
+  provides=(
+	"dart=${_dartver}"
+  )
+  conflicts=(
+	"dart"
+  )
+
+  install -dm755 "${pkgdir}/opt"
+  install -dm755 "${pkgdir}/usr/bin"
+  install -Dm755 "${srcdir}/dart/LICENSE.dart_sdk_archive.md" "${pkgdir}/usr/share/licenses/dart/LICENSE"
+
+  cp -ra "${srcdir}/dart/dart-sdk" "${pkgdir}/opt/dart-sdk"
+
+  chmod -R ugo+rX "${pkgdir}/opt"
+
+  ln -sf "/opt/dart-sdk/bin/dart" "${pkgdir}/usr/bin/dart"
+  ln -sf "/opt/dart-sdk/bin/dartaotruntime" "${pkgdir}/usr/bin/dartaotruntime"
+}
+
+pkgname=("${_group}-engine-common-google-bin" "${_group}-engine-linux-google-bin" "${_group}-engine-web-google-bin" "${_group}-engine-android-google-bin" "${_group}-sky-engine-google-bin" "${_group}-material-fonts-google-bin" "${_group}-gradle-google-bin" "${_group}-dart-google-bin")
 
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {

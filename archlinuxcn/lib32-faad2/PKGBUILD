@@ -5,49 +5,46 @@
 
 _basename=faad2
 pkgname=lib32-faad2
-pkgver=2.10.1
+pkgver=2.11.1
 pkgrel=1
 pkgdesc="Freeware Advanced Audio (AAC) Decoder"
 arch=('x86_64')
 url="https://github.com/knik0/faad2"
-license=('GPL2')
-depends=('lib32-glibc' 'faad2')
-source=($_basename-$pkgver.tar.gz::https://github.com/knik0/faad2/archive/$pkgver.tar.gz)
-sha512sums=('8df69278350c68dd770c4bc482e42bc95eb04cd784eeea3f3fc58d615833c8b07dc3c72029bb7e5bfed612b7c1b8daefc9cb57be9789befb587120ef115e55b3')
-b2sums=('f25bf9242675250b910bd5540487cf708d6e195e1ddca0b27588678e5fbf2bedf9d41e6bc607aa34bb2dbff95a8a4071e74e2f9bd9493ccb7ef040ce9bf81b4c')
-
-prepare() {
-    cd $_basename-$pkgver
-
-    autoreconf -vfi
-}
+license=(GPL-2.0-or-later)
+depends=(lib32-glibc faad2)
+makedepends=(cmake)
+source=($_basename-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz)
+sha512sums=('b8f17680610b2f47344ea52b54412a02810a85eaf9d4c91b97ca09b2c6415c62d4af1b0771bfcacb9dfee400ed34504c0bd3c28369921c0392b3809e7de46ec5')
+b2sums=('f1e58a5618bdd93ee919f2d77dd461972cf4bc930c4a1738a8b4ec949fd2572ce0662a08ea01a4caca0da5fe007ec119d00184cd76e6f9f98c3141d24a589504')
 
 build() {
-    cd $_basename-$pkgver
+    local cmake_options=(
+        -B build
+        -D CMAKE_INSTALL_LIBDIR=lib32
+        -D CMAKE_BUILD_TYPE=None
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -S $_basename-$pkgver
+        -W no-dev
+    )
 
     export CC='gcc -m32'
     export CXX='g++ -m32'
     export PKG_CONFIG_PATH='/usr/lib32/pkgconfig'
 
-    ./configure \
-        --build=i686-pc-linux-gnu \
-        --prefix=/usr \
-        --libdir=/usr/lib32
+    cmake "${cmake_options[@]}"
 
-    make
+    cmake --build build --verbose
 }
 
 check() {
-    make -k check -C $_basename-$pkgver
+    ctest --test-dir build --output-on-failure
 }
 
 package() {
-    cd $_basename-$pkgver
-
-    make DESTDIR="$pkgdir" install
+    DESTDIR="$pkgdir" cmake --install build
 
     rm -rf "${pkgdir}/usr"/{bin,include,share}
 
-    install -vDm 644 {AUTHORS,ChangeLog,NEWS,README*,TODO} -t "$pkgdir/usr/share/doc/$pkgname/"
+    install -vDm 644 $_basename-$pkgver/{AUTHORS,ChangeLog,README} -t "$pkgdir/usr/share/doc/$pkgname/"
 }
 provides=("libfaad.so" "libfaad_drm.so")

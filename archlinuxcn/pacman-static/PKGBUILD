@@ -16,14 +16,14 @@ _libarchive_ver=3.7.2
 _gpgerrorver=1.48
 _libassuanver=2.5.6
 _gpgmever=1.23.2
-pkgrel=14
+pkgrel=20
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
 license=('GPL')
 depends=('pacman')
 makedepends=('meson' 'musl' 'kernel-headers-musl' 'git')
-options=('!emptydirs')
+options=('!emptydirs' '!lto')
 
 # pacman
 source=("https://gitlab.archlinux.org/pacman/pacman/-/releases/v$pkgver/downloads/pacman-$pkgver.tar.xz"{,.sig}

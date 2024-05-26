@@ -1,45 +1,43 @@
-# Maintainer: Thorsten Töpper <atsutane-tu@freethoughts.de>
-# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Thorsten Töpper <atsutane-tu@freethoughts.de>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
 # Contributor: Juergen Hoetzel <juergen@archlinux.org>
 # Contributor: Gregor Ibic <gregor.ibic@intelicom.si>
 
 pkgname=dia-git
 _pkgname=dia
-pkgver=6846.b2b4f7879
-pkgrel=1
-pkgdesc="A GTK+ based diagram creation program (GIT VERSION)"
+pkgver=6871.4139f5aff
+pkgrel=3
+pkgdesc="A GTK+ based diagram creation program"
 arch=('x86_64')
-license=('GPL')
-url="http://live.gnome.org/Dia"
-depends=('poppler' 'python' 'libxslt' 'gtk3' 'freetype2' 'graphene' 'libemf')
-makedepends=('git' 'cmake' 'meson' 'intltool' 'dblatex' 'docbook-xsl')
+license=('GPL-2.0-or-later')
+url="https://wiki.gnome.org/action/show/Apps/Dia"
+depends=('poppler' 'python-gobject' 'libxslt' 'gtk3' 'freetype2' 'graphene' 'libemf')
+makedepends=('git' 'meson' 'intltool' 'dblatex' 'appstream-glib')
 provides=('dia')
 conflicts=('dia')
 options=('docs' '!emptydirs')
-source=("git+https://gitlab.gnome.org/GNOME/dia.git")
-md5sums=('SKIP')
+source=("git+https://gitlab.gnome.org/GNOME/dia.git"
+        "git+https://gitlab.gnome.org/ZanderBrown/xpm-pixbuf.git")
+sha256sums=('SKIP'
+            'SKIP')
 
 pkgver() {
-  cd "${srcdir}/${_pkgname}"
+  cd "${_pkgname}"
   printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  cd "${srcdir}/${_pkgname}"
-  sed -i "s/cc.find_library('emf'/cc.find_library('EMF'/g" meson.build
+  cd "${_pkgname}"
   sed -i "s/cc.find_library('ogdf'/cc.find_library('OGDF'/g" meson.build
-  sed -i '/  sheet,/d' sheets/meson.build
-  sed -i 's/POPLLER/POPPLER/g' plug-ins/pdf/pdf-import.cpp
+  sed -i 's/gnu++17/gnu++20/' meson.build
+  ln -s ../../xpm-pixbuf subprojects
 }
 
 build() {
-  cd "${srcdir}/${_pkgname}"
-
-  arch-meson . build
+  arch-meson -Ddoc=true build ${_pkgname}
   ninja -C build
 }
 
 package() {
-  cd "${srcdir}/${_pkgname}"
   DESTDIR="${pkgdir}" ninja -C build install
 }

@@ -1,17 +1,28 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=python-mpris_server
 _name=${pkgname#python-}
-pkgver=0.4.2
-pkgrel=3
+pkgver=0.9.0
+pkgrel=1
 epoch=1
 pkgdesc="Integrate MPRIS Media Player support into your app"
 arch=('any')
 url="https://github.com/alexdelorenzo/mpris_server"
 license=('AGPL-3.0-or-later')
-depends=('python-gobject' 'python-pydbus' 'python-unidecode' 'python-emoji')
-makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz")
-sha256sums=('a779ccf347ce32d46678abce5ee5f8d05bbdc47f203e06329de5db512ebbf1f1')
+depends=(
+  'python-emoji'
+  'python-gobject'
+  'python-pydbus'
+  'python-strenum'
+  'python-unidecode'
+)
+makedepends=(
+  'python-build'
+  'python-installer'
+  'python-setuptools'
+  'python-wheel'
+)
+source=("$_name-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('d259badafd2b63fa5f22e7993689f55907eb5f4e1394a699109507f77bec330f')
 
 build() {
   cd "$_name-$pkgver"

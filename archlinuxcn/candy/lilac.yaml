@@ -8,3 +8,11 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: candy
+  - source: alpm
+    alpm: spdlog
+    provided: libspdlog.so
+  - source: alpm
+    alpm: fmt
+    provided: libfmt.so
+  - source: alpm
+    alpm: poco

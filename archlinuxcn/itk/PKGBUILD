@@ -2,8 +2,8 @@
 
 _pkgname=ITK
 pkgname=(itk python-itk)
-pkgver=5.3.0
-pkgrel=5
+pkgver=5.4.0
+pkgrel=1
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
 url='https://www.itk.org'
@@ -21,21 +21,27 @@ depends=(
   libtiff.so
 )
 makedepends=(
-#  castxml
+  castxml
   cmake
-  gcc12
+  gcc13
   git
   gtest
   subversion
-#   swig
+  swig
 )
 options=(!emptydirs !lto)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('66cd0b0e959753f722fa277baeadd4cdbc51905d666f794e44b4768fad4e55e88dcfbd43e3f46b3ec673fc0d11335edec0f11f2a54813b1ff46a3e4d1491260f')
+sha512sums=('3a98ececf258aac545f094dd3e97918c93cc82bc623ddf793c4bf0162ab06c83fbfd4d08130bdec6e617bda85dd17225488bc1394bc91b17f1232126a5d990db')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+}
+
+prepare() {
+  # quick fix for building with swig < 4.3.0
+  find ${_pkgname}-${pkgver} -type f -exec sed -i "s/SWIG_Py_DECREF/Py_DECREF/g" {} \;
+  find ${_pkgname}-${pkgver} -type f -exec sed -i "s/SWIG_Py_INCREF/Py_INCREF/g" {} \;
 }
 
 build() {
@@ -45,15 +51,15 @@ build() {
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
     -DCMAKE_BUILD_TYPE=Release
-    -DCMAKE_CXX_COMPILER=g++-12
-    -DCMAKE_C_COMPILER=gcc-12
+    -DCMAKE_CXX_COMPILER=g++-13
+    -DCMAKE_C_COMPILER=gcc-13
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DCMAKE_SKIP_RPATH=ON
     -DITK_BUILD_DEFAULT_MODULES=ON
     -DITK_LEGACY_REMOVE=ON
     -DITK_USE_MKL=ON
-    -DITK_USE_SYSTEM_CASTXML=OFF
+    -DITK_USE_SYSTEM_CASTXML=ON
     -DITK_USE_SYSTEM_DCMTK=ON
     -DITK_USE_SYSTEM_DOUBLECONVERSION=ON
     -DITK_USE_SYSTEM_EIGEN=ON
@@ -65,7 +71,7 @@ build() {
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
-    -DITK_USE_SYSTEM_SWIG=OFF
+    -DITK_USE_SYSTEM_SWIG=ON
     -DITK_USE_SYSTEM_TIFF=ON
     -DITK_USE_SYSTEM_VXL=OFF
     -DITK_USE_SYSTEM_ZLIB=ON

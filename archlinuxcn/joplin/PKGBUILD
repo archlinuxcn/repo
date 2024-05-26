@@ -1,14 +1,14 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=2.14.20
+pkgver=2.14.22
 groups=('joplin')
 pkgrel=1
 _electronVersion=27
 depends=("electron${_electronVersion}" "nodejs" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
-makedepends=('npm' 'git' 'rsync' 'yarn')
+makedepends=('npm' 'git' 'rsync' 'yarn' 'python-setuptools')
 url="https://joplinapp.org/"
 license=('MIT')
 source=(
@@ -19,10 +19,11 @@ source=(
 sha256sums=(
     'SKIP'
     'SKIP'
-    '919e9300e66bc6c24a282cbf93c43c228cdfe3227bdb1eaa50fdadef4734901b'
+    '5cbda5b19aa41ff2371a13a08a74c08f321c8320bbbe729392d4ed5d5e65e826'
 )
 
 _setup_env() {
+    export UV_USE_IO_URING=0  # https://github.com/nodejs/node/issues/53051
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     #export npm_config_build_from_source=true
@@ -39,9 +40,6 @@ prepare() {
 
     # Delete unused components
     rm -r "packages/app-mobile" "packages/app-clipper" "packages/server"
-
-    # Disable optional dependencies
-    sed -i 's_"optionalDependencies":_"UNUSED":_' package.json packages/*/package.json
 }
 
 build() {

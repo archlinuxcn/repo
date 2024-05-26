@@ -1,5 +1,5 @@
 diff --git a/PKGBUILD b/PKGBUILD
-index 0af1311..60167f5 100644
+index ba3314e..8e1dce8 100644
 --- a/PKGBUILD
 +++ b/PKGBUILD
 @@ -3,14 +3,14 @@
@@ -13,35 +13,36 @@ index 0af1311..60167f5 100644
 +  # gtk3-demos
 +  # gtk3-docs
  )
- pkgver=3.24.41
+ pkgver=3.24.42
  pkgrel=1
  epoch=1
 -pkgdesc="GObject-based multi-platform GUI toolkit"
 +pkgdesc="GObject-based multi-platform GUI toolkit, with lilydjwg's patches"
  url="https://www.gtk.org/"
  arch=(x86_64)
- license=(LGPL-2.0-only)
-@@ -62,9 +62,11 @@ makedepends=(
- _commit=77ebdd85091833a7869ece48c3114fa6d9966321  # tags/3.24.41^0
+ license=(LGPL-2.1-or-later)
+@@ -64,10 +64,12 @@ makedepends=(
+ )
  source=(
-   "git+https://gitlab.gnome.org/GNOME/gtk.git#commit=$_commit"
+   "git+https://gitlab.gnome.org/GNOME/gtk.git#tag=$pkgver"
 +  0001-wayland-im-notify-wayland-after-set_cursor_location.patch
    gtk-query-immodules-3.0.hook
+   0001-Allow-disabling-legacy-Tracker-search.patch
  )
- b2sums=('SKIP'
+ b2sums=('3f79244cfeac535186b84e6c9ad3dad7dbb5737e4ebd8762985fce95930a9bbb07fcc331fb915b7f6ab8496afd7995a5aa501377af01710ff2649e5adabcb249'
 +        '2718db7adc07ee2df86b6dacbfb7638217b2cb76c5f5acde4ce9bd7a4617989744326069670b6cc4e5aff59fac410db9b60db7f07dd2a2e36a40b7a3b0d2d8b9'
-         '8e6a3906126749c6d853f582e3802254cdbba099c6af7190ad576eff6ea5425404a72b1b36950a87e3afdac82295cfe246003172c3e0341a73bd931a36f3b407')
+         '8e6a3906126749c6d853f582e3802254cdbba099c6af7190ad576eff6ea5425404a72b1b36950a87e3afdac82295cfe246003172c3e0341a73bd931a36f3b407'
+         '7da1746e7702e4bf397f59dd1019e2c8fa8951b2bcc6bf64ec05f322de6dcec6fe5552848d6b389818f625988a3fb2211501d7f72ae97d2c49fbad1e5fe9cd6a')
  
- pkgver() {
-@@ -74,6 +76,7 @@ pkgver() {
- 
+@@ -79,6 +81,7 @@ pkgver() {
  prepare() {
    cd gtk
+   git apply -3 ../0001-Allow-disabling-legacy-Tracker-search.patch
 +  patch -Np1 < ../0001-wayland-im-notify-wayland-after-set_cursor_location.patch
  }
  
  build() {
-@@ -102,16 +105,17 @@ _pick() {
+@@ -108,16 +111,17 @@ _pick() {
    done
  }
  

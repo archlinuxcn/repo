@@ -1,7 +1,7 @@
 # Maintainer: Otreblan <otreblain@gmail.com>
 
 pkgname=monophony
-pkgver=2.8.2
+pkgver=2.10.0
 pkgrel=1
 pkgdesc="Linux app for streaming music from YouTube."
 arch=('x86_64')
@@ -14,30 +14,40 @@ depends=(
 	'python-gobject'
 	'python-mpris_server'
 	'python-mutagen'
-	'python-ordered-set'
 	'python-pycryptodomex'
 	'python-requests'
 	'python-websockets'
 	'python-ytmusicapi'
 	'yt-dlp'
 )
-makedepends=('nuitka')
+makedepends=("python-setuptools"
+	'python-build'
+	'python-installer'
+	'python-wheel'
+)
 checkdepends=()
 optdepends=()
 provides=()
 conflicts=()
 replaces=()
 source=("$url/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz")
-sha256sums=('1ed75f87a5f7677ab0e67ad9d68db6e063fc06a59f62c1932a85f2b5f43caf78')
+sha256sums=('16babcb25afb43f45900d8939d84d55e451f6afdd571f4c17a086f85959eff98')
+
+prepare() {
+	cd "$srcdir/$pkgname-v$pkgver/source"
+
+	sed -i "/pip install/d" Makefile
+}
 
 build() {
 	cd "$srcdir/$pkgname-v$pkgver/source"
 
-	make
+	python -m build --wheel --no-isolation
 }
 
 package() {
 	cd "$srcdir/$pkgname-v$pkgver/source"
 
+	python -m installer --destdir="$pkgdir" dist/*.whl
 	make install prefix="$pkgdir/usr"
 }
