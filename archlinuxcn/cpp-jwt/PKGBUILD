@@ -9,7 +9,7 @@ url="https://github.com/arun11299/cpp-jwt"
 license=('MIT')
 depends=('nlohmann-json' 'openssl')
 makedepends=('cmake')
-checkdepends=('gtest')
+checkdepends=('gtest' 'expat')
 provides=("$pkgname=$pkgver")
 conflicts=($pkgname-git)
 source=("$url/archive/refs/tags/v$pkgver.tar.gz")
