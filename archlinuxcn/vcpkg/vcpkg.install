@@ -9,7 +9,7 @@ note() {
 }
 
 post_install() {
-    export VCPKG_ROOT=/opt/vcpkg
+    export VCPKG_ROOT=/usr/lib/vcpkg
     export VCPKG_DOWNLOADS=/var/cache/vcpkg
 
     echo "${blue}${bold}::${all_off} ${bold}vcpkg user note"
@@ -18,6 +18,7 @@ post_install() {
     if [ $(uname -m) == "aarch64" ]; then
         note "'VCPKG_FORCE_SYSTEM_BINARIES' is set to 1 as this is required for vcpkg to run on aarch64."
     fi
+    echo ""
     note "To cooperate with CMake, add '-DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake'"
     echo ""
     note "Please add the intended users to the group 'vcpkg':"
