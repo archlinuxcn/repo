@@ -1,6 +1,6 @@
 pkgname=julia-git-prettytables-src
-pkgver=2.3.1
-_commit=73fa073e9ae2742d25820d2d009fa1001000f202
+pkgver=2.3.2
+_commit=bc0b8580ccc7e6c2c359140da1d561f791815233
 pkgrel=1
 pkgdesc="PrettyTables.jl"
 url="https://github.com/ronisbr/PrettyTables.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/ronisbr/PrettyTables.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('6a8dda722a144a9ef11be7b5b50f64ac09cfa9299b8f5a9b8a578cd24ad660ad')
 
 package() {
   cd PrettyTables.jl
