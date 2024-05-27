@@ -2,7 +2,7 @@
 
 pkgname=7-zip
 pkgver=24.06
-pkgrel=1
+pkgrel=3
 pkgdesc="File archiver with a high compression ratio"
 url=https://7-zip.org
 license=('LGPL-2.1-or-later AND BSD-3-Clause AND LicenseRef-unRAR')
@@ -10,16 +10,23 @@ arch=(x86_64)
 depends=(gcc-libs glibc)
 makedepends=(meson uasm)
 # Alternative sources:
-# * https://7-zip.org/a/7z2406-src.tar.xz
-# * https://downloads.sourceforge.net/project/sevenzip/7-Zip/24.06/7z2406-src.tar.xz
+# * https://7-zip.org/a/7z${pkgver//\./}-src.tar.xz
+# * https://downloads.sourceforge.net/project/sevenzip/7-Zip/${pkgver}/7z${pkgver//\./}-src.tar.xz
+# ${pkgver//\./} substitution doesn't work with openSUSE Build Service
 source=("${url}/a/7z${pkgver/./}-src.tar.xz"
-		meson.build
+		meson.build.template
 		BSD-2-Clause.txt
 		BSD-3-Clause.txt)
 sha256sums=('2aa1660c773525b2ed84d6cd7ff0680c786ec0893b87e4db44654dcb7f5ac8b5'
-            '657f3c6b825b55c8f308e32ca8fe632bdef0176eab3e5bd65c77d02bc7b94161'
+            '73c785bcdb161296048ec56e0ba2f28b6052890eea01405b6a1e837782d28d65'
             '017b5ee48f680e82cba79141c7895a1f02b856df2512225f5c427fe36765ef0b'
             '3cf06aba3588c41c514f6946bb2d757b413ff6491647d474800f55edca75dcb4')
+
+prepare() {
+	cp meson.build.template meson.build
+
+	meson rewrite kwargs set project / version ${pkgver}
+}
 
 build() {
 	arch-meson . build
