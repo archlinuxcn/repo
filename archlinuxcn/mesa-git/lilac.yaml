@@ -19,6 +19,9 @@ repo_makedepends:
     - rust-nightly: rust-std-nightly-x86_64-unknown-linux-gnu
     - rust-nightly: rust-nightly
     - rust-nightly: cargo-nightly
+    - rust-nightly: rustfmt-nightly
+    - directx-headers-nightly
+    - spirv-tools-git
 update_on:
     - source: cmd # Update every other day
       cmd: python -c "import time; print(int(time.time()) // (2 * 24 * 60 * 60))"
