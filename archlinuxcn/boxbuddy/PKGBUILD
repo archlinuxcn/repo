@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=boxbuddy
 _app_id=io.github.dvlv.boxbuddyrs
-pkgver=2.2.3
+pkgver=2.2.4
 pkgrel=1
 pkgdesc="A Graphical Interface for Distrobox"
 arch=('x86_64')
@@ -9,9 +9,9 @@ url="https://github.com/Dvlv/BoxBuddyRS"
 license=('MIT')
 depends=('distrobox' 'libadwaita')
 makedepends=('cargo')
-options=('!lto')
+#options=('!lto')  # gettext-sys crate fails with LTO enabled
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('914a474e46bf3505374e1b2147d2b1c0738a119d0898fb97bcd3a85688a9e95e')
+sha256sums=('32ed0d35236bb7ca4150c27e3df520562a7e8a9b91ce3a1e9606b3ebf23b53b3')
 
 prepare() {
   cd "BoxBuddyRS-$pkgver"
@@ -22,7 +22,8 @@ prepare() {
 
 build() {
   cd "BoxBuddyRS-$pkgver"
-#  CFLAGS+=" -ffat-lto-objects"  # gettext-sys crate fails
+  CFLAGS+=" -ffat-lto-objects"
+  export GETTEXT_SYSTEM=true
   export CARGO_HOME="$srcdir/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
@@ -43,8 +44,10 @@ package() {
   install -Dm644 "${_app_id}.metainfo.xml" -t "$pkgdir/usr/share/metainfo/"
   install -Dm644 "icons/${_app_id}.svg" -t \
     "$pkgdir/usr/share/icons/hicolor/scalable/apps/"
+  install -Dm644 icons/build-alt-{symbolic,symbolic-light}.svg -t \
+    "$pkgdir/usr/share/icons/hicolor/symbolic/apps/"
 
-  for lang in de_DE el es hi it_IT pt_BR ru_RU uk_UA; do
+  for lang in de_DE el es hi it_IT pt_BR ru_RU uk_UA zh_CN; do
     install -Dm644 "po/${lang}/LC_MESSAGES/${pkgname}rs.mo" -t \
       "$pkgdir/usr/share/locale/${lang}/LC_MESSAGES/"
   done
