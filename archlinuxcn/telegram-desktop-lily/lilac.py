@@ -1,6 +1,6 @@
 import re
 from lilaclib import (
-    _G, update_pkgver_and_pkgrel, edit_file,
+    update_pkgver_and_pkgrel, edit_file,
     git_add_files, git_commit,
 )
 
