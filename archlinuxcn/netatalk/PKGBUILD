@@ -6,7 +6,7 @@
 
 pkgname=netatalk
 pkgver=3.1.18
-pkgrel=1
+pkgrel=2
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.sourceforge.io'
 license=('GPL2')
@@ -14,7 +14,8 @@ license=('GPL2')
 source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.bz2)
 md5sums=('d41227251dece4f51bb12f7bb5fee148')
 
-arch=('i686'
+arch=('pentium4'
+      'i686'
       'x86_64'
       'armv6h'
       'armv7h'
