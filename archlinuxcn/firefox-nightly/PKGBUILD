@@ -7,7 +7,7 @@ _channel=nightly
 pkgbase=firefox-nightly
 pkgname=()
 _version=128.0a1
-pkgver=128.0a1.20240529.04
+pkgver=128.0a1.20240529.12
 pkgrel=1
 arch=('x86_64')
 license=('MPL-2.0')
@@ -22,16 +22,16 @@ optdepends=('pulseaudio: audio support'
             'xdg-desktop-portal: Screensharing with Wayland'
             'startup-notification: support for FreeDesktop Startup Notification')
 _url="https://ftp.mozilla.org/pub/${_name}/nightly/latest-mozilla-central-l10n"
-_filename_prefix="20240529.04-"
+_filename_prefix="20240529.12-"
 source=("${pkgbase}.desktop")
 sha512sums=('b58c1b3b09772d0866d511e83e3c7f54db0fe71d2978d2a06bd19b25c020f16e201aab825f0b3d5e9f0c1a3e9db028018e5e38f7ee4868e321938f11cb5ac817'
             '37411276c2d8c102a216323fea267829f45965ecf39bd69ab7a58e03ebca60bff679dc96515834b6c01dc90e7d876541523c2f428ddc45cce98899a686e9abd5'
             'SKIP'
-            'c8731ecc76255daf1fe8abe8ccd6e0c0cb5d16ee5806b3f32198bf223f5d7ffdd7e1ffb84a69a36ed965c9bac1fda2855f6eaa5b36304f6f0e76ec34d91d8845'
+            'ed3e69f6b8d1850cefe09d95c0d0ebf35945c81da7d43689dd74e9ef84cbf771c75d0b2163bbda626b2a6b50e84bfb9a91566e50e384a491ca3124b0522e70b3'
             'SKIP'
-            '57a41b3c2532597a644e739fe225e26f89d9e369fd5307e236d7e0213ea9792c81d9d6af37dd1b626801ae6f532d89f63172a3e4add3fc8454abe3ce0ba1a4b8'
+            '79ffceea23638f49a553cb44a6860c967df44f2d5f041dd504a219feda23b9ab89e01f3ef406865fba7777024c8f995d4a75251c8775bff5558bfe553f1b5a46'
             'SKIP'
-            '9198977e5a856b49b0be120037fb4149bd983944b58c700b1ffad63d98201bd6d7e99d01528a387ff64870ce33dacecd46f16601a6e952cb62e64966d5c66f2a'
+            '3aedb595e32b088cc72904818e7a93ce556eef61a1af9face16c43a03fdae8db4179f119664bb49cd293e1dfdda400c215562deb0fdabb2411cbb0c239effb36'
             'SKIP')
 validpgpkeys=('14F26682D0916CDD81E37B6D61B7B526D98F0353'
               '097B313077AE62A02F84DA4DF1A6668FBB7D572E') # Mozilla’s GnuPG release key
