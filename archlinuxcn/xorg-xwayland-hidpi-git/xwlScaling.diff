@@ -1,5 +1,5 @@
 diff --git a/hw/xwayland/xwayland-output.c b/hw/xwayland/xwayland-output.c
-index f77ba82..2ba9676 100644
+index 7c8ebd49a..0bd8e8957 100644
 --- a/hw/xwayland/xwayland-output.c
 +++ b/hw/xwayland/xwayland-output.c
 @@ -194,6 +194,13 @@ update_screen_size(struct xwl_screen *xwl_screen, int width, int height)
@@ -47,7 +47,7 @@ index f77ba82..2ba9676 100644
                       xwl_output->rotation, NULL, 1, &xwl_output->randr_output);
          /* RROutputSetModes takes ownership of the passed in modes, so we only
           * have to free the pointer array.
-@@ -719,7 +727,7 @@ output_handle_done(void *data, struct wl_output *wl_output)
+@@ -740,7 +748,7 @@ output_handle_done(void *data, struct wl_output *wl_output)
       */
      if (xwl_output->xdg_output_done || !xwl_output->xdg_output ||
          zxdg_output_v1_get_version(xwl_output->xdg_output) >= 3)
@@ -56,7 +56,7 @@ index f77ba82..2ba9676 100644
  }
  
  static void
-@@ -787,7 +795,7 @@ xdg_output_handle_done(void *data, struct zxdg_output_v1 *xdg_output)
+@@ -808,7 +816,7 @@ xdg_output_handle_done(void *data, struct zxdg_output_v1 *xdg_output)
  
      if (xwl_output->wl_output_done &&
          zxdg_output_v1_get_version(xdg_output) < 3)
@@ -65,7 +65,7 @@ index f77ba82..2ba9676 100644
  }
  
  static void
-@@ -923,6 +931,8 @@ xwl_output_create(struct xwl_screen *xwl_screen, uint32_t id,
+@@ -944,6 +952,8 @@ xwl_output_create(struct xwl_screen *xwl_screen, uint32_t id,
      RROutputSetConnection(xwl_output->randr_output,
                            connected ? RR_Connected : RR_Disconnected);
  
@@ -74,19 +74,11 @@ index f77ba82..2ba9676 100644
      /* We want the output to be in the list as soon as created so we can
       * use it when binding to the xdg-output protocol...
       */
-@@ -1325,7 +1335,6 @@ xwl_screen_init_randr_fixed(struct xwl_screen *xwl_screen)
- 
-     xwl_output->xwl_screen = xwl_screen;
-     xwl_screen->fixed_output = xwl_output;
--    xwl_output->xscale = 1.0;
- 
-     return TRUE;
- 
 diff --git a/hw/xwayland/xwayland-output.h b/hw/xwayland/xwayland-output.h
-index 0e5ee6b..339c795 100644
+index 0d36f459a..123d01380 100644
 --- a/hw/xwayland/xwayland-output.h
 +++ b/hw/xwayland/xwayland-output.h
-@@ -116,4 +116,6 @@ void xwl_output_set_window_randr_emu_props(struct xwl_screen *xwl_screen,
+@@ -121,4 +121,6 @@ void xwl_output_set_window_randr_emu_props(struct xwl_screen *xwl_screen,
  
  void xwl_screen_init_xdg_output(struct xwl_screen *xwl_screen);
  
@@ -94,10 +86,10 @@ index 0e5ee6b..339c795 100644
 +
  #endif /* XWAYLAND_OUTPUT_H */
 diff --git a/hw/xwayland/xwayland-present.c b/hw/xwayland/xwayland-present.c
-index d973dea..ad0bb88 100644
+index 4d2410568..2ebe166cf 100644
 --- a/hw/xwayland/xwayland-present.c
 +++ b/hw/xwayland/xwayland-present.c
-@@ -798,6 +798,7 @@ xwl_present_flip(present_vblank_ptr vblank, RegionPtr damage)
+@@ -911,6 +911,7 @@ xwl_present_flip(present_vblank_ptr vblank, RegionPtr damage)
  
      /* We can flip directly to the main surface (full screen window without clips) */
      wl_surface_attach(xwl_window->surface, buffer, 0, 0);
@@ -106,10 +98,10 @@ index d973dea..ad0bb88 100644
      if (xorg_list_is_empty(&xwl_present_window->frame_callback_list)) {
          xorg_list_add(&xwl_present_window->frame_callback_list,
 diff --git a/hw/xwayland/xwayland-screen.c b/hw/xwayland/xwayland-screen.c
-index 42c9a0e..a22872b 100644
+index 287fe8b06..c9f0c9da6 100644
 --- a/hw/xwayland/xwayland-screen.c
 +++ b/hw/xwayland/xwayland-screen.c
-@@ -121,6 +121,12 @@ xwl_screen_has_resolution_change_emulation(struct xwl_screen *xwl_screen)
+@@ -124,6 +124,12 @@ xwl_screen_has_resolution_change_emulation(struct xwl_screen *xwl_screen)
      return xwl_screen->rootless && xwl_screen_has_viewport_support(xwl_screen);
  }
  
@@ -122,7 +114,7 @@ index 42c9a0e..a22872b 100644
  /* Return the output @ 0x0, falling back to the first output in the list */
  struct xwl_output *
  xwl_screen_get_first_output(struct xwl_screen *xwl_screen)
-@@ -692,8 +698,14 @@ void xwl_surface_damage(struct xwl_screen *xwl_screen,
+@@ -721,8 +727,14 @@ void xwl_surface_damage(struct xwl_screen *xwl_screen,
  {
      if (wl_surface_get_version(surface) >= WL_SURFACE_DAMAGE_BUFFER_SINCE_VERSION)
          wl_surface_damage_buffer(surface, x, y, width, height);
@@ -138,7 +130,7 @@ index 42c9a0e..a22872b 100644
  }
  
  void
-@@ -825,6 +837,18 @@ xwl_screen_update_global_surface_scale(struct xwl_screen *xwl_screen)
+@@ -854,6 +866,18 @@ xwl_screen_update_global_surface_scale(struct xwl_screen *xwl_screen)
      return (xwl_screen->global_surface_scale != old_scale);
  }
  
@@ -157,7 +149,7 @@ index 42c9a0e..a22872b 100644
  Bool
  xwl_screen_init(ScreenPtr pScreen, int argc, char **argv)
  {
-@@ -865,6 +889,7 @@ xwl_screen_init(ScreenPtr pScreen, int argc, char **argv)
+@@ -894,6 +918,7 @@ xwl_screen_init(ScreenPtr pScreen, int argc, char **argv)
  #ifdef XWL_HAS_GLAMOR
      xwl_screen->glamor = XWL_GLAMOR_DEFAULT;
  #endif
@@ -166,10 +158,10 @@ index 42c9a0e..a22872b 100644
      for (i = 1; i < argc; i++) {
          if (strcmp(argv[i], "-rootless") == 0) {
 diff --git a/hw/xwayland/xwayland-screen.h b/hw/xwayland/xwayland-screen.h
-index 477473e..9c77923 100644
+index 0800fb392..a49813a16 100644
 --- a/hw/xwayland/xwayland-screen.h
 +++ b/hw/xwayland/xwayland-screen.h
-@@ -174,5 +174,7 @@ int xwl_screen_get_next_output_serial(struct xwl_screen * xwl_screen);
+@@ -181,5 +181,7 @@ int xwl_screen_get_next_output_serial(struct xwl_screen * xwl_screen);
  void xwl_screen_lost_focus(struct xwl_screen *xwl_screen);
  Bool xwl_screen_update_global_surface_scale(struct xwl_screen *xwl_screen);
  Bool xwl_screen_should_use_fractional_scale(struct xwl_screen *xwl_screen);
@@ -178,10 +170,10 @@ index 477473e..9c77923 100644
  
  #endif /* XWAYLAND_SCREEN_H */
 diff --git a/hw/xwayland/xwayland-window.c b/hw/xwayland/xwayland-window.c
-index f4d8a02..da4a494 100644
+index 05f45e16f..56e4338be 100644
 --- a/hw/xwayland/xwayland-window.c
 +++ b/hw/xwayland/xwayland-window.c
-@@ -1208,7 +1208,8 @@ xwl_create_root_surface(struct xwl_window *xwl_window)
+@@ -1317,7 +1317,8 @@ xwl_create_root_surface(struct xwl_window *xwl_window)
      }
  
      wl_region_add(region, 0, 0,
@@ -191,7 +183,7 @@ index f4d8a02..da4a494 100644
      wl_surface_set_opaque_region(xwl_window->surface, region);
      wl_region_destroy(region);
  
-@@ -1712,6 +1713,7 @@ xwl_window_attach_buffer(struct xwl_window *xwl_window)
+@@ -1955,6 +1956,7 @@ xwl_window_attach_buffer(struct xwl_window *xwl_window)
      }
  
      wl_surface_attach(xwl_window->surface, buffer, 0, 0);
@@ -200,10 +192,10 @@ index f4d8a02..da4a494 100644
      /* Arbitrary limit to try to avoid flooding the Wayland
       * connection. If we flood it too much anyway, this could
 diff --git a/hw/xwayland/xwayland.c b/hw/xwayland/xwayland.c
-index 81b8a7e..8663de1 100644
+index cbd2437d6..0d0587b74 100644
 --- a/hw/xwayland/xwayland.c
 +++ b/hw/xwayland/xwayland.c
-@@ -328,6 +328,18 @@ xwl_log_handler(const char *format, va_list args)
+@@ -333,6 +333,18 @@ xwl_log_handler(const char *format, va_list args)
  #ifdef XWL_HAS_XWAYLAND_EXTENSION
  #include <X11/extensions/xwaylandproto.h>
  
@@ -222,7 +214,7 @@ index 81b8a7e..8663de1 100644
  Bool noXwaylandExtension = FALSE;
  
  static int
-@@ -381,6 +393,28 @@ SProcXwlQueryVersion(ClientPtr client)
+@@ -386,6 +398,28 @@ SProcXwlQueryVersion(ClientPtr client)
      return ProcXwlQueryVersion(client);
  }
  
@@ -251,7 +243,7 @@ index 81b8a7e..8663de1 100644
  static int
  ProcXwaylandDispatch(ClientPtr client)
  {
-@@ -389,6 +423,8 @@ ProcXwaylandDispatch(ClientPtr client)
+@@ -394,6 +428,8 @@ ProcXwaylandDispatch(ClientPtr client)
      switch (stuff->data) {
      case X_XwlQueryVersion:
          return ProcXwlQueryVersion(client);
