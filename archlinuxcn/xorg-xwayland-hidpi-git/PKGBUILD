@@ -73,10 +73,11 @@ build() {
 }
 
 package() {
-
-  # bin + manpage + .pc file
-  install -m755 -Dt "${pkgdir}"/usr/bin build/hw/xwayland/Xwayland
-  install -m644 -Dt "${pkgdir}"/usr/share/man/man1 build/hw/xwayland/Xwayland.1
+  DESTDIR="${pkgdir}" ninja -C build install
+  # xorg-server-common file /usr/lib/xorg/protocol.txt
+  rm "${pkgdir}"/usr/lib/xorg/protocol.txt
+  rmdir "${pkgdir}"/usr/lib/xorg
+  rm "${pkgdir}"/usr/share/man/man1/Xserver.1
 
   # license
   install -m644 -Dt "${pkgdir}/usr/share/licenses/${pkgname}" xserver-hidpi/COPYING
