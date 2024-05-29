@@ -15,10 +15,10 @@ index 27058587..dde5c62f 100644
  sway_cmd cmd_ipc_events;
  sway_cmd cmd_ipc_event_cmd;
 diff --git a/include/sway/config.h b/include/sway/config.h
-index f9da1967..fa1879cd 100644
+index 5ccc3e77..9024a919 100644
 --- a/include/sway/config.h
 +++ b/include/sway/config.h
-@@ -515,6 +515,7 @@ struct sway_config {
+@@ -523,6 +523,7 @@ struct sway_config {
  	enum sway_fowa focus_on_window_activation;
  	enum sway_popup_during_fullscreen popup_during_fullscreen;
  	enum xwayland_mode xwayland;
@@ -27,10 +27,10 @@ index f9da1967..fa1879cd 100644
  	// swaybg
  	char *swaybg_command;
 diff --git a/sway/commands.c b/sway/commands.c
-index 6becf3c8..740cdfbc 100644
+index 8d003dfa..a8f3d512 100644
 --- a/sway/commands.c
 +++ b/sway/commands.c
-@@ -98,6 +98,7 @@ static const struct cmd_handler handlers[] = {
+@@ -97,6 +97,7 @@ static const struct cmd_handler handlers[] = {
  	{ "unbindsym", cmd_unbindsym },
  	{ "workspace", cmd_workspace },
  	{ "workspace_auto_back_and_forth", cmd_ws_auto_back_and_forth },
@@ -38,7 +38,7 @@ index 6becf3c8..740cdfbc 100644
  };
  
  /* Config-time only commands. Keep alphabetized */
-@@ -108,7 +109,6 @@ static const struct cmd_handler config_handlers[] = {
+@@ -107,7 +108,6 @@ static const struct cmd_handler config_handlers[] = {
  	{ "swaybg_command", cmd_swaybg_command },
  	{ "swaynag_command", cmd_swaynag_command },
  	{ "workspace_layout", cmd_workspace_layout },
@@ -47,7 +47,7 @@ index 6becf3c8..740cdfbc 100644
  
  /* Runtime-only commands. Keep alphabetized */
 diff --git a/sway/commands/xwayland.c b/sway/commands/xwayland.c
-index 584a8e3a..1c4218c4 100644
+index c0b175fc..26a1cdd6 100644
 --- a/sway/commands/xwayland.c
 +++ b/sway/commands/xwayland.c
 @@ -4,29 +4,39 @@
@@ -68,7 +68,7 @@ index 584a8e3a..1c4218c4 100644
 +};
  
 +struct cmd_results *cmd_xwayland(int argc, char **argv) {
- #ifdef HAVE_XWAYLAND
+ #ifdef WLR_HAS_XWAYLAND
 -	enum xwayland_mode xwayland;
 -	if (strcmp(argv[0], "force") == 0) {
 -		xwayland = XWAYLAND_MODE_IMMEDIATE;
@@ -210,10 +210,10 @@ index 00000000..f462fea5
 +	return NULL;
 +}
 diff --git a/sway/config.c b/sway/config.c
-index e91c0c8b..501e3a89 100644
+index 5058efcc..bf2b426a 100644
 --- a/sway/config.c
 +++ b/sway/config.c
-@@ -248,6 +248,7 @@ static void config_defaults(struct sway_config *config) {
+@@ -257,6 +257,7 @@ static void config_defaults(struct sway_config *config) {
  	config->focus_on_window_activation = FOWA_URGENT;
  	config->popup_during_fullscreen = POPUP_SMART;
  	config->xwayland = XWAYLAND_MODE_LAZY;
@@ -222,10 +222,10 @@ index e91c0c8b..501e3a89 100644
  	config->titlebar_border_thickness = 1;
  	config->titlebar_h_padding = 5;
 diff --git a/sway/desktop/xwayland.c b/sway/desktop/xwayland.c
-index 9f3f4d5f..53b619a3 100644
+index 270cf08f..d3197d97 100644
 --- a/sway/desktop/xwayland.c
 +++ b/sway/desktop/xwayland.c
-@@ -887,6 +887,8 @@ void handle_xwayland_ready(struct wl_listener *listener, void *data) {
+@@ -886,6 +886,8 @@ void handle_xwayland_ready(struct wl_listener *listener, void *data) {
  		wl_container_of(listener, server, xwayland_ready);
  	struct sway_xwayland *xwayland = &server->xwayland;
  
@@ -235,7 +235,7 @@ index 9f3f4d5f..53b619a3 100644
  	int err = xcb_connection_has_error(xcb_conn);
  	if (err) {
 diff --git a/sway/meson.build b/sway/meson.build
-index d937e425..3c208289 100644
+index 47b51d0c..39e75b4f 100644
 --- a/sway/meson.build
 +++ b/sway/meson.build
 @@ -203,6 +203,11 @@ sway_sources = files(
