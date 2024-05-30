@@ -1,6 +1,6 @@
 pkgname=julia-git-inflate-src
-pkgver=0.1.4
-_commit=f16eec8924fa48490df241122dfdf2030a5a2a44
+pkgver=0.1.5
+_commit=cc77be73388f4160d187ab0c3fdaa3df13aa7f3b
 pkgrel=1
 pkgdesc="Inflate.jl"
 url="https://github.com/GunnarFarneback/Inflate.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/GunnarFarneback/Inflate.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('7133b2dee55c6c68a7092d0a9e2e7e9d0bcd1dd0eddfdd77e9965c1d665cc060')
 
 package() {
   cd Inflate.jl
