@@ -11,6 +11,7 @@ arch=('x86_64')
 license=('BSD-3-Clause')
 makedepends=(
   cython
+  gcc13
   python-build
   python-installer
   python-setuptools
@@ -26,6 +27,8 @@ sha512sums=('595a8b12d057ccaa9d120929ef335a74fd8688aa37ed5ac3c994b6472611e25b178
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  CC=gcc-13 \
+  CXX=g++-13 \
   python -m build --wheel --no-isolation --skip-dependency-check
 }
 
