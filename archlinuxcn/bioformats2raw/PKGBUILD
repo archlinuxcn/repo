@@ -10,12 +10,12 @@ license=('GPL-2.0-or-later')
 depends=(
   bash
   blosc
-  java-runtime
+  java-runtime=17
 )
 makedepends=(
   git
   gradle
-  java-environment
+  java-environment=17
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/glencoesoftware/bioformats2raw/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('7985e974a247cd990a9e2b5cbed63e31c7f483b7b0ac0d147dd2dbabc23e516ad59c46b590af80b26bcea7ee3d2182f0ba811da7bcbb885b54b202d7fc204f36')
