@@ -54,8 +54,6 @@ prepare() {
   git submodule update --init --recursive
   # quick fix for https://github.com/archlinuxcn/repo/issues/2877
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
-  export CC=/opt/cuda/bin/gcc
-  export CXX=/opt/cuda/bin/g++
   # fix lib not found error
   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${srcdir}/build/dali/python/nvidia/dali:${srcdir}/build/lib"
 }
