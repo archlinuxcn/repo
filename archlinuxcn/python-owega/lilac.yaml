@@ -1,0 +1,11 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['darkgeem'])
+post_build: aur_post_build
+repo_depends:
+  - python-markdownify
+update_on:
+  - source: aur
+    aur: python-owega
+  - alias: python
+maintainers:
+  - github: roaldclark
