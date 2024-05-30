@@ -7,7 +7,7 @@
 BUILDENV+=(!check)
 
 pkgname=zed-editor
-pkgver=0.136.2
+pkgver=0.137.3
 pkgrel=1
 pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
@@ -40,7 +40,7 @@ optdepends=('clang: improved C/C++ language support'
             'rust-analyzer: improved Rust language support')
 _archive="zed-$pkgver"
 source=("$_url/archive/v$pkgver/$_archive.tar.gz")
-sha256sums=('caf4f16fcc8490fc220a507d2287cfac6a84041c03bd9f51b5b4f63f0704737e')
+sha256sums=('d80b144ae7c3b7b2d0266256cd9d6994cbaad46e2d9800d88c622de67034fc7a')
 
 prepare() {
 	cd "$_archive"
