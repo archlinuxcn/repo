@@ -10,12 +10,12 @@ license=('GPL-2.0-or-later')
 depends=(
   bash
   blosc
-  java-runtime
+  java-runtime=17
 )
 makedepends=(
   git
   gradle
-  java-environment
+  java-environment=17
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/glencoesoftware/raw2ometiff/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('797b2049ff266e82a2dea59e2fb8f76639a179851ca86aca811eb696e3a612cf62edda026c591051992f0abf2fafe328bd5b71ac8498777dd1bbbc405173cee4')
