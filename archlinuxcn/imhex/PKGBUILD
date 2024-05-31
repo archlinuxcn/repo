@@ -3,7 +3,7 @@
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.32.0
+pkgver=1.33.2
 pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
@@ -37,8 +37,12 @@ source=("$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
         "HashLibPlus::git+https://github.com/WerWolv/HashLibPlus"
         "jthread::git+https://github.com/josuttis/jthread"
         "cli11::git+https://github.com/CLIUtils/CLI11"
+        "lunasvg::git+https://github.com/sammycage/lunasvg"
+        "edlib::git+https://github.com/Martinsos/edlib"
         )
-sha256sums=('7bc4c462c32d8ec85e7f523d1220525f1bd8b23d22f5b920d9b287975803bd5c'
+sha256sums=('da88d459e9b372582d63b653c6e6cce147a29c4e9b882ab545cc9c1ddb1e42ea'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -48,7 +52,9 @@ sha256sums=('7bc4c462c32d8ec85e7f523d1220525f1bd8b23d22f5b920d9b287975803bd5c'
             'SKIP'
             'SKIP'
             'SKIP')
-b2sums=('1176c495febd1377602e6453fcee47e2bc9011492e4c72886aa6401e170d0f9814946bf89d89696c4200b1a8c8f373eff4a5478f7aaafc82b55f9137ab7c84a5'
+b2sums=('d381ba8cf4ce203f0d9eed83107c8887521345b9c0e11c74bec438fd375472d0781dacf21625e062930f1bb04f0c582dd92ebf69829b028fb99d8b0220547d50'
+        'SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -67,7 +73,7 @@ prepare() {
     git submodule set-url lib/external/$name "$srcdir/$name"
     git -c protocol.file.allow=always submodule update lib/external/$name
   done
-  for name in nativefiledialog xdgpp capstone HashLibPlus; do
+  for name in nativefiledialog xdgpp capstone HashLibPlus edlib lunasvg; do
     git submodule set-url lib/third_party/$name "$srcdir/$name"
     git -c protocol.file.allow=always submodule update lib/third_party/$name
   done
