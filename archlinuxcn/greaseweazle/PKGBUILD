@@ -10,8 +10,17 @@ license=('Unlicense')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools-scm')
 depends=('glibc' 'python' 'python-crcmod' 'python-bitarray' 'python-pyserial' 'python-requests')
 optdepends=('capsimage: Read IPF files')
-source=("https://github.com/keirf/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.zip")
+source=("https://github.com/keirf/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.zip"
+	0001-drop-Werror-because-redefinition-of-_FORTIFY_SOURCE.patch
+	)
 b2sums=('01c51c87e87950e66ff5ff2298a804a1af84b6e4baf5c019d26c70cd0bf8e627633ed989a7620e6286f678df057be2fc402a02498d722ede61ef72ff79c18156')
+
+prepare() {
+	cd "$pkgname-$pkgver"
+	# Upstream prefer vendored patch in downstream.
+	# https://github.com/keirf/greaseweazle/issues/430
+	patch -Np1 -i ../0001-drop-Werror-because-redefinition-of-_FORTIFY_SOURCE.patch
+}
 
 build() {
 	cd "$pkgname-$pkgver"

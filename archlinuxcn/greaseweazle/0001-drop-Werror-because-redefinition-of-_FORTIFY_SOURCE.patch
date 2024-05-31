@@ -1,0 +1,29 @@
+From 1a3a649942c10f9e3643ae42090000194ec83169 Mon Sep 17 00:00:00 2001
+From: Coelacanthus <CoelacanthusHex@gmail.com>
+Date: Fri, 31 May 2024 23:46:09 +0800
+Subject: [PATCH] drop -Werror because redefinition of _FORTIFY_SOURCE
+
+Upstream prefer vendored patch in downstream.
+See https://github.com/keirf/greaseweazle/issues/430
+
+Signed-off-by: Coelacanthus <CoelacanthusHex@gmail.com>
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 37bfea4..a42139a 100644
+--- a/setup.py
++++ b/setup.py
+@@ -3,7 +3,7 @@
+ 
+ import platform
+ if platform.system() == 'Linux':
+-    extra_compile_args = ['-Wall', '-Werror']
++    extra_compile_args = ['-Wall']
+ else:
+     extra_compile_args = []
+ 
+-- 
+2.45.1
+
