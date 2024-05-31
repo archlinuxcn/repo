@@ -2,7 +2,7 @@
 # Contributor: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=resvg
-pkgver=0.40.0
+pkgver=0.41.0
 pkgrel=1
 pkgdesc='SVG rendering library and CLI'
 arch=(i686 x86_64)
@@ -16,7 +16,7 @@ optdepends=(
 )
 makedepends=(cargo clang qt5-base qt5-tools kio5 cairo pango cmake extra-cmake-modules)
 source=("$url/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('82d1cac871a60071e963749228ef8d52954bd0549d0ee2358092b8115fb4915b')
+sha256sums=('489e767d4e87f18336ead22a99e64f338cd980a948bf875cfa60742eff7170cc')
 
 prepare() {
 	cd "$pkgname-$pkgver"
