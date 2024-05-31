@@ -13,7 +13,8 @@ optdepends=('capsimage: Read IPF files')
 source=("https://github.com/keirf/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.zip"
 	0001-drop-Werror-because-redefinition-of-_FORTIFY_SOURCE.patch
 	)
-b2sums=('01c51c87e87950e66ff5ff2298a804a1af84b6e4baf5c019d26c70cd0bf8e627633ed989a7620e6286f678df057be2fc402a02498d722ede61ef72ff79c18156')
+b2sums=('01c51c87e87950e66ff5ff2298a804a1af84b6e4baf5c019d26c70cd0bf8e627633ed989a7620e6286f678df057be2fc402a02498d722ede61ef72ff79c18156'
+        '4d521f0e92af1d08a7f87a393abf5260ca8a684a13ce4afb4b96748201b34c3dabc2eff3610d9ab7215acc544b75a50371afff77ffe584ec968ed0102eeafec3')
 
 prepare() {
 	cd "$pkgname-$pkgver"
