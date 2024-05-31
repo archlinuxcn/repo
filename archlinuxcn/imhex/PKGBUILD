@@ -73,7 +73,7 @@ prepare() {
     git submodule set-url lib/external/$name "$srcdir/$name"
     git -c protocol.file.allow=always submodule update lib/external/$name
   done
-  for name in nativefiledialog xdgpp capstone HashLibPlus edlib lunasvg; do
+  for name in nativefiledialog xdgpp capstone HashLibPlus edlib; do
     git submodule set-url lib/third_party/$name "$srcdir/$name"
     git -c protocol.file.allow=always submodule update lib/third_party/$name
   done
