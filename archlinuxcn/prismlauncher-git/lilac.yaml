@@ -6,6 +6,7 @@ pre_build: vcs_update
 update_on:
   - source: github
     github: PrismLauncher/PrismLauncher
+    lilac_throttle: 3d
   - source: alpm
     from_pattern: ^(\d+\.\d+\.\d+)\..*
     to_pattern: \1
