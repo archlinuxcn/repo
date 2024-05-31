@@ -32,7 +32,7 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=46.2
+pkgver=46.2+r6+g62e559d75
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -112,16 +112,16 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=02050414855b370dbf2b08a971c8b332f7b3c9f4  # tags/46.2^0
+_commit=62e559d752c74b86d40ffd4bea6d2532c67675e2  # tags/46.2^6
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
         'mr3751.patch')
-sha256sums=('eae0b3a75353b752ea5a3766e62702a2dcef22ad6ad81ec9bb849fc9e09c7701'
+sha256sums=('2721ebc05ce318a040e611e5ad93d1281f11750cf9d5fefbf139ec3bc439e32e'
             '7d5c90e3f18b2c0645e6224759e571acef723d53495cff2ceaac3c44168226b3'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
             '7eec91f857cf1d8183c32199f33cc86a1a8a95017282e602738a90fe219c8b33')
-b2sums=('4b474f4bbb5ed15db053cba509c3f4b0d112a74359597dc1ab9af118b0e1360a20ccc6af89af3b248895e5dd95193c039cd3396b0fd2c71a0deadc3ff4e15920'
+b2sums=('15deba95ef7693bda55bebbcb4fd9f43b44d2c176e63984b98aa81375bfc78da7996ad05a73fea278c44667d726486283a2809a23aebcdf6e77d654f5be0ff95'
         '135b9a24273328c8010d08c3688b527741b0d678814ed52fb983be649b7d40ce6f2d6151d1087a8fed311f35cb3033d8b9d1c7b04cdd2bbef7dff43ee80ea530'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
         'a79155ce4f11d8ccc674b08baccb18ac3bf254a0e41d9830a0ca964027633317bbd157f33b1f12f21bb378bfeedd4ebd111d993cdfd39b98ff3ce0f34850f6b1')
