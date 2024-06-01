@@ -9,44 +9,49 @@ pkgdesc="A spin-off of Qucs that supports other free SPICE circuit simulators li
 arch=('x86_64' 'i686')
 url="https://ra3xdh.github.io"
 license=('GPL-2.0-or-later')
-depends=('glibc'
-         'gcc-libs'
-         'sh'
-         'qt6-base'
-         'qt6-svg'
-         'ngspice'
-         'python'
-         'python-numpy'
-         'python-matplotlib'
-         'hicolor-icon-theme'
-         )
-makedepends=('cmake'
-             'qt6-tools'
-             'ninja'
-             'gperf'
-             'dos2unix'
-             )
-optdepends=('qucs: Qucsator simulation backend'
-            'xyce-serial: SPICE-compatible simulation backend'
-            'spiceopus: general purpose simulation backend for optimization loops'
-            'openvaf: compiler for Verilog-A devices support'
-            'octave: high-level language for post-simulation data processing'
-            )
+depends=(
+    'glibc'
+    'gcc-libs'
+    'sh'
+    'qt6-base'
+    'qt6-svg'
+    'ngspice'
+    'python'
+    'python-numpy'
+    'python-matplotlib'
+    'hicolor-icon-theme'
+)
+makedepends=(
+    'cmake'
+    'qt6-tools'
+    'ninja'
+    'gperf'
+    'dos2unix'
+)
+optdepends=(
+    'qucs: Qucsator simulation backend'
+    'xyce-serial: SPICE-compatible simulation backend'
+    'spiceopus: general purpose simulation backend for optimization loops'
+    'openvaf: compiler for Verilog-A devices support'
+    'octave: high-level language for post-simulation data processing'
+)
 source=(https://github.com/ra3xdh/qucs_s/releases/download/$pkgver/$pkgname-$pkgver.tar.gz)
 b2sums=('30ec44183d62459dfe63a8d9686890b21dd15051ce4f38c916e72f760d9b88766494eae0c30495f2b4f122f390115f0c2eaabf2143427b4ca4f1b984cf21f515')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-  mkdir -p build
-  cmake -S . -B build \
-    -G Ninja \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DWITH_QT6=ON
-	
-  ninja -C build
+    cd $srcdir/$pkgname-$pkgver
+    mkdir -p build
+    cmake -S . -B build \
+        -G Ninja \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWITH_QT6=ON
+        
+    ninja -C build
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
-  DESTDIR="$pkgdir" ninja -C build install
+    cd $srcdir/$pkgname-$pkgver
+    DESTDIR="$pkgdir" ninja -C build install
 }
+
+# vim: set ts=4 sw=4 et:
