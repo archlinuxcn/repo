@@ -22,7 +22,7 @@ depends=(
 	'cubeb' 'zlib-ng'
 	'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so'
 	'libminiupnpc.so' 'libsfml-network.so' 'libsfml-system.so' 'libspng.so'
-	'libswscale.so' 'libudev.so' 'libusb-1.0.so' 'libxxhash.so' 'vulkan-memory-allocator'
+	'libswscale.so' 'libudev.so' 'libusb-1.0.so' 'libxxhash.so' 'vulkan-memory-allocator' 'minizip-ng' 'enet'
 )
 makedepends=('cmake' 'git' 'ninja' 'python' 'qt6-base' 'qt6-svg')
 checkdepends=('gtest')
@@ -52,7 +52,7 @@ prepare() {
 
 	# Provide submodules
 	declare -A _submodules=(
-		[enet]='enet/enet'
+	#	[enet]='enet/enet'
 		[implot]='implot/implot'
 		[mgba]='mGBA/mgba'
 		[rcheevos]='rcheevos/rcheevos'
@@ -90,8 +90,8 @@ build() {
 		-DENABLE_AUTOUPDATE=OFF \
 		-DUSE_SYSTEM_LIBS=ON \
 		-DUSE_SYSTEM_LIBMGBA=OFF \
-		-DUSE_SYSTEM_ENET=OFF \
-		-DUSE_SYSTEM_MINIZIP=OFF \
+		-DUSE_SYSTEM_ENET=ON \
+		-DUSE_SYSTEM_MINIZIP=ON \
 		-Wno-dev
 	cmake --build 'build/'
 }
