@@ -9,37 +9,39 @@ pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value t
 url='https://imhex.werwolv.net'
 license=('GPL-2.0-only')
 arch=('x86_64')
-depends=( 'glfw'
-          'hicolor-icon-theme' 'xdg-desktop-portal'
-          'dbus'
-          'mbedtls' 'libmbedcrypto.so'
-          'curl' 'libcurl.so'
-          'freetype2' 'libfreetype.so'
-          'fmt' 'libfmt.so'
-          'yara' 'libyara.so'
-          'file' 'libmagic.so'
-          'libglvnd'
-          'libarchive'
-          'glibc' 'gcc-libs' 'bash'
-          )
+depends=(
+    'glfw'
+    'hicolor-icon-theme' 'xdg-desktop-portal'
+    'dbus'
+    'mbedtls' 'libmbedcrypto.so'
+    'curl' 'libcurl.so'
+    'freetype2' 'libfreetype.so'
+    'fmt' 'libfmt.so'
+    'yara' 'libyara.so'
+    'file' 'libmagic.so'
+    'libglvnd'
+    'libarchive'
+    'glibc' 'gcc-libs' 'bash'
+)
 makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime')
 optdepends=(
-  'imhex-patterns-git: ImHex base patterns'
-  'dotnet-runtime'
+    'imhex-patterns-git: ImHex base patterns'
+    'dotnet-runtime'
 )
-source=("$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
-        "nativefiledialog::git+https://github.com/btzy/nativefiledialog-extended.git"
-        "xdgpp::git+https://git.sr.ht/~danyspin97/xdgpp"
-        "libromfs::git+https://github.com/WerWolv/libromfs"
-        "capstone::git+https://github.com/capstone-engine/capstone"
-        "pattern_language::git+https://github.com/WerWolv/PatternLanguage"
-        "libwolv::git+https://github.com/WerWolv/libwolv"
-        "HashLibPlus::git+https://github.com/WerWolv/HashLibPlus"
-        "jthread::git+https://github.com/josuttis/jthread"
-        "cli11::git+https://github.com/CLIUtils/CLI11"
-        "lunasvg::git+https://github.com/sammycage/lunasvg"
-        "edlib::git+https://github.com/Martinsos/edlib"
-        )
+source=(
+    "$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
+    "nativefiledialog::git+https://github.com/btzy/nativefiledialog-extended.git"
+    "xdgpp::git+https://git.sr.ht/~danyspin97/xdgpp"
+    "libromfs::git+https://github.com/WerWolv/libromfs"
+    "capstone::git+https://github.com/capstone-engine/capstone"
+    "pattern_language::git+https://github.com/WerWolv/PatternLanguage"
+    "libwolv::git+https://github.com/WerWolv/libwolv"
+    "HashLibPlus::git+https://github.com/WerWolv/HashLibPlus"
+    "jthread::git+https://github.com/josuttis/jthread"
+    "cli11::git+https://github.com/CLIUtils/CLI11"
+    "lunasvg::git+https://github.com/sammycage/lunasvg"
+    "edlib::git+https://github.com/Martinsos/edlib"
+)
 sha256sums=('da88d459e9b372582d63b653c6e6cce147a29c4e9b882ab545cc9c1ddb1e42ea'
             'SKIP'
             'SKIP'
@@ -66,76 +68,78 @@ b2sums=('d381ba8cf4ce203f0d9eed83107c8887521345b9c0e11c74bec438fd375472d0781dacf
         'SKIP')
 
 prepare() {
-  cd "$srcdir/$pkgname"
+    cd "$srcdir/$pkgname"
 
-  git submodule init
-  for name in libromfs pattern_language libwolv; do
-    git submodule set-url lib/external/$name "$srcdir/$name"
-    git -c protocol.file.allow=always submodule update lib/external/$name
-  done
-  for name in nativefiledialog xdgpp capstone HashLibPlus edlib; do
-    git submodule set-url lib/third_party/$name "$srcdir/$name"
-    git -c protocol.file.allow=always submodule update lib/third_party/$name
-  done
-  git submodule set-url lib/third_party/jthread/jthread "$srcdir/jthread"
-  git -c protocol.file.allow=always submodule update lib/third_party/jthread/jthread
-  pushd lib/external/pattern_language
     git submodule init
-    git submodule set-url external/libwolv "$srcdir"/libwolv
-    git -c protocol.file.allow=always submodule update external/libwolv
-    git submodule set-url external/cli11 "$srcdir"/cli11
-    git -c protocol.file.allow=always submodule update external/cli11
-  popd
-  for name in fmt yara/yara; do
-    git config --remove-section submodule.lib/third_party/$name
-  done
+    for name in libromfs pattern_language libwolv; do
+        git submodule set-url lib/external/$name "$srcdir/$name"
+        git -c protocol.file.allow=always submodule update lib/external/$name
+    done
+    for name in nativefiledialog xdgpp capstone HashLibPlus edlib; do
+        git submodule set-url lib/third_party/$name "$srcdir/$name"
+        git -c protocol.file.allow=always submodule update lib/third_party/$name
+    done
+    git submodule set-url lib/third_party/jthread/jthread "$srcdir/jthread"
+    git -c protocol.file.allow=always submodule update lib/third_party/jthread/jthread
+    pushd lib/external/pattern_language
+        git submodule init
+        git submodule set-url external/libwolv "$srcdir"/libwolv
+        git -c protocol.file.allow=always submodule update external/libwolv
+        git submodule set-url external/cli11 "$srcdir"/cli11
+        git -c protocol.file.allow=always submodule update external/cli11
+    popd
+    for name in fmt yara/yara; do
+        git config --remove-section submodule.lib/third_party/$name
+    done
 
 }
 
 build() {
-  cd "$srcdir"
-  cmake -B build -S "$pkgname" \
-    -G Ninja \
-    -Wno-dev \
-    -D CMAKE_BUILD_TYPE=None \
-    -D CMAKE_INSTALL_PREFIX=/usr \
-    -D CMAKE_SKIP_RPATH=ON \
-    -D IMHEX_OFFLINE_BUILD=ON \
-    -D IMHEX_IGNORE_BAD_CLONE=ON \
-    -D IMHEX_STRIP_RELEASE=OFF \
-    -D IMHEX_USE_GTK_FILE_PICKER=OFF \
-    -D IMHEX_STRICT_WARNINGS=OFF \
-    -D IMHEX_BUNDLE_DOTNET=OFF \
-    -D USE_SYSTEM_LLVM=ON \
-    -D USE_SYSTEM_YARA=ON \
-    -D USE_SYSTEM_FMT=ON \
-    -D USE_SYSTEM_CURL=ON \
-    -D USE_SYSTEM_NLOHMANN_JSON=ON \
-    -D USE_SYSTEM_CAPSTONE=OFF \
-    -D LIBPL_ENABLE_CLI=ON \
-    -D LIBPL_BUILD_CLI_AS_EXECUTABLE=OFF \
-    -D IMHEX_VERSION="$pkgver"
+    cd "$srcdir"
+    cmake -B build -S "$pkgname" \
+        -G Ninja \
+        -Wno-dev \
+        -D CMAKE_BUILD_TYPE=None \
+        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D CMAKE_SKIP_RPATH=ON \
+        -D IMHEX_OFFLINE_BUILD=ON \
+        -D IMHEX_IGNORE_BAD_CLONE=ON \
+        -D IMHEX_STRIP_RELEASE=OFF \
+        -D IMHEX_USE_GTK_FILE_PICKER=OFF \
+        -D IMHEX_STRICT_WARNINGS=OFF \
+        -D IMHEX_BUNDLE_DOTNET=OFF \
+        -D USE_SYSTEM_LLVM=ON \
+        -D USE_SYSTEM_YARA=ON \
+        -D USE_SYSTEM_FMT=ON \
+        -D USE_SYSTEM_CURL=ON \
+        -D USE_SYSTEM_NLOHMANN_JSON=ON \
+        -D USE_SYSTEM_CAPSTONE=OFF \
+        -D LIBPL_ENABLE_CLI=ON \
+        -D LIBPL_BUILD_CLI_AS_EXECUTABLE=OFF \
+        -D IMHEX_VERSION="$pkgver"
 
-  cmake --build build --parallel
+    cmake --build build --parallel
 }
 
 package() {
-  cd "$srcdir"
-  # FIXME: upstream install SDK in /usr/share and seems no way to disable it...
-  DESTDIR="${pkgdir}" cmake --install build
-  
-  install -Dm0644 "$pkgname/resources/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/imhex.svg"
-  for size in 32 48 64 128 256; do
-    install -dm0755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
-    rsvg-convert -a -f png -w $size -o "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/imhex.png" \
-      "$pkgname/resources/icon.svg"
-  done
+    cd "$srcdir"
+    # FIXME: upstream install SDK in /usr/share and seems no way to disable it...
+    DESTDIR="${pkgdir}" cmake --install build
+    
+    install -Dm0644 "$pkgname/resources/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/imhex.svg"
+    for size in 32 48 64 128 256; do
+        install -dm0755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
+        rsvg-convert -a -f png -w $size -o "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/imhex.png" \
+            "$pkgname/resources/icon.svg"
+    done
 
-  # License
-  install -Dm0644 "$pkgname/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    # License
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/LICENSE" \
+        "$pkgname/LICENSE"
 
-  # Documentation
-  install -Dm0644 -t "$pkgdir/usr/share/doc/$pkgname" \
-    "$pkgname/README.md"
+    # Documentation
+    install -Dm0644 -t "$pkgdir/usr/share/doc/$pkgname" \
+        "$pkgname/README.md"
 }
 
+# vim: set ts=4 sw=4 et:
