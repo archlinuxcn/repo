@@ -4,9 +4,9 @@
 
 _pkgname='github-desktop'
 pkgname="${_pkgname}-bin"
-pkgver=3.3.12.linux2
+pkgver=3.3.18.linux1
 pkgrel=1
-_pkgver='3.3.12-linux2'
+_pkgver='3.3.18-linux1'
 _gitname="release-${_pkgver}"
 pkgdesc="GUI for managing Git and GitHub."
 arch=('x86_64')
@@ -29,7 +29,7 @@ source=(
     https://github.com/shiftkey/desktop/releases/download/${_gitname}/GitHubDesktop-linux-amd64-${_pkgver}.deb
     ${_pkgname}.desktop
 )
-sha256sums=('89f94a0fb34fb99be1c6f88d5bcc66b4239881d473d6b5e21b8db27160a35e26'
+sha256sums=('05755785c29e3e3f3b99a698d53d54d0b96e402eba066f5042264220e742b63b'
             '932e4c456e8c6db03d27172cf0daa37806bf025bb560d8b3d758c0997d1a618c')
 package() {
     tar xf data.tar.xz -C "${pkgdir}"
