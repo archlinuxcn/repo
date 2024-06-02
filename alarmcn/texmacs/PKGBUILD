@@ -5,8 +5,8 @@
 # Contributor: Christopher Reimer <c.reimer1993@gmail.com>
 
 pkgname=texmacs
-pkgver=2.1.2
-pkgrel=2
+pkgver=2.1.4
+pkgrel=1
 pkgdesc="Free scientific text editor, inspired by TeX and GNU Emacs. WYSIWYG editor TeX-fonts and CAS-interface (Giac, GTybalt, Macaulay 2, Maxima, Octave, Pari, Qcl, R and Yacas) in one."
 arch=(aarch64 x86_64)
 url="http://www.texmacs.org"
@@ -23,7 +23,7 @@ optdepends=('transfig: convert images using fig2ps'
 makedepends=('ghostscript' 'cmake')
 source=(https://github.com/texmacs/texmacs/archive/refs/tags/v${pkgver}.tar.gz)
 options=('!emptydirs')
-sha512sums=('7462deef349f95968ee99c37617f722bfddd0b1efb6d5e413fd7a3b53b77840609807ef0bc6f9a83973fe2d1b71bf032d38e7c6a35d69c6954653449c43425a2')
+sha512sums=('79ff9409639661910d7c05839af2a8b6f1539010e54f37c443588915308516add013fb803f80b35330174c0344b31f08bed9d5e8929b59b96aea417ba40b1f61')
 
 build() {
   cmake \
