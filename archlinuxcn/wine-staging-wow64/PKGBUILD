@@ -7,7 +7,7 @@
 # https://github.com/wine-staging/wine-staging
 
 pkgname="wine-staging-wow64"
-pkgver=9.9
+pkgver=9.10
 _pkgver="${pkgver/rc/-rc}"
 pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs"
@@ -84,10 +84,10 @@ source=(
   "wine-binfmt.conf"
   "git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v$pkgver"
 )
-b2sums=('7fdefcba26c416efe831ce8c292805de4cae222f92326ecc6f7e4edabe9debbd417ff4ee78252f00d7a6cdac54db254b425e761cde42decc3c26366f488f3995'
+b2sums=('5985066c2a96e7c4d6c32dd69f330d1cbbdbc324af0674b968cb9424a65a3c456d34205ad81a900a3ca42c1ddec8a4c72bcf1510b5f76b5b6f8be530fce0a264'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588'
-        '16e367af9906ca52dee811cbcbf660a0d02fc64fb3502d77945e2fec70b1096d5c5cfeed8af8443afb46ecc1570f7dfac0a266ef2d7d5e32d7b25771b0698899')
+        'a709c1050b20d403895b19ab3c4c206c7db1bf4be1c2356e94487ea7a9f327c555d5cb9c3522d185035c0504f31dbf11d278e598590b5a91d024948c7dec1d6f')
 
 prepare() {
   # apply wine-staging patchset
@@ -97,9 +97,9 @@ prepare() {
 
 build() {
   # Apply flags for cross-compilation
-  export CROSSCFLAGS="${CFLAGS/-Werror=format-security/}"
-  export CROSSCXXFLAGS="${CXXFLAGS/-Werror=format-security/}"
-  export CROSSLDFLAGS="${LDFLAGS//-Wl,-z*([^[:space:]])/}"
+  export CROSSCFLAGS="-O2 -pipe"
+  export CROSSCXXFLAGS="-O2 -pipe"
+  export CROSSLDFLAGS="-Wl,-O1"
 
   mkdir -p build
   cd build
