@@ -4,7 +4,7 @@
 pkgname=freetube
 _pkgname=FreeTube
 pkgver=0.20.0
-pkgrel=3
+pkgrel=4
 pkgdesc='An open source desktop YouTube player built with privacy in mind.'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 license=('AGPL3')
@@ -25,8 +25,8 @@ prepare() {
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver-beta"
-  yarn --cache-folder "${srcdir}/yarn-cache" install
-  yarn --cache-folder "${srcdir}/yarn-cache" run build
+  UV_USE_IO_URING=0 yarn --cache-folder "${srcdir}/yarn-cache" install
+  UV_USE_IO_URING=0 yarn --cache-folder "${srcdir}/yarn-cache" run build
 }
 
 package() {
