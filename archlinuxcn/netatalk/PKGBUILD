@@ -5,14 +5,14 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=3.1.18
-pkgrel=2
+pkgver=3.2.0
+pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.sourceforge.io'
 license=('GPL2')
 
-source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('d41227251dece4f51bb12f7bb5fee148')
+source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
+md5sums=('2894607a1fc93b9031d27896e775f7f9')
 
 arch=('pentium4'
       'i686'
@@ -40,6 +40,7 @@ backup=('etc/afp.conf'
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
+  ./bootstrap
   ./configure \
     --prefix=/usr \
     --sbindir=/usr/bin \
