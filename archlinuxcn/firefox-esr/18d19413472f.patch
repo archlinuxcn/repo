@@ -1,0 +1,135 @@
+
+# HG changeset patch
+# User James Graham <james@hoppipolla.co.uk>
+# Date 1714409991 0
+# Node ID 18d19413472fa83236e4d6d0259ad3d9e7b72137
+# Parent  ce0c34e548fa0a7299d1299ad04ffefda2fd908e
+Bug 1893961 - Remove distutils use from mozbase, , ahal r=Sasha
+
+This has been removed from the stdlib in Python 3.12
+
+Differential Revision: https://phabricator.services.mozilla.com/D208884
+
+diff --git a/testing/mozbase/mozgeckoprofiler/mozgeckoprofiler/symbolication.py b/testing/mozbase/mozgeckoprofiler/mozgeckoprofiler/symbolication.py
+--- a/testing/mozbase/mozgeckoprofiler/mozgeckoprofiler/symbolication.py
++++ b/testing/mozbase/mozgeckoprofiler/mozgeckoprofiler/symbolication.py
+@@ -1,18 +1,18 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ import hashlib
+ import http.client
+ import os
+ import platform
++import shutil
+ import subprocess
+ import zipfile
+-from distutils import spawn
+ 
+ import six
+ from mozlog import get_proxy_logger
+ 
+ from .symbolicationRequest import SymbolicationRequest
+ from .symFileManager import SymFileManager
+ 
+ LOG = get_proxy_logger("profiler")
+@@ -90,17 +90,17 @@ class OSXSymbolDumper:
+             result = process_file(arch)
+             if result is not None:
+                 return result
+         return None
+ 
+ 
+ class LinuxSymbolDumper:
+     def __init__(self):
+-        self.nm = spawn.find_executable("nm")
++        self.nm = shutil.which("nm")
+         if not self.nm:
+             raise SymbolError("Could not find nm, necessary for symbol dumping")
+ 
+     def store_symbols(self, lib_path, breakpad_id, output_filename_without_extension):
+         """
+         Returns the filename at which the .sym file was created, or None if no
+         symbols were dumped.
+         """
+diff --git a/testing/mozbase/moznetwork/tests/test_moznetwork.py b/testing/mozbase/moznetwork/tests/test_moznetwork.py
+--- a/testing/mozbase/moznetwork/tests/test_moznetwork.py
++++ b/testing/mozbase/moznetwork/tests/test_moznetwork.py
+@@ -1,16 +1,16 @@
+ #!/usr/bin/env python
+ """
+ Unit-Tests for moznetwork
+ """
+ 
+ import re
++import shutil
+ import subprocess
+-from distutils.spawn import find_executable
+ from unittest import mock
+ 
+ import mozinfo
+ import moznetwork
+ import mozunit
+ import pytest
+ 
+ 
+@@ -32,17 +32,17 @@ def ip_addresses():
+         # Explicitly search '/sbin' because it doesn't always appear
+         # to be on the $PATH of all systems
+         ["/sbin/ip", "addr", "show"],
+         ["/sbin/ifconfig"],
+     )
+ 
+     cmd = None
+     for command in commands:
+-        if find_executable(command[0]):
++        if shutil.which(command[0]):
+             cmd = command
+             break
+     else:
+         raise OSError(
+             "No program for detecting ip address found! Ensure one of 'ip', "
+             "'ifconfig' or 'ipconfig' exists on your $PATH."
+         )
+ 
+diff --git a/testing/mozbase/mozrunner/mozrunner/devices/android_device.py b/testing/mozbase/mozrunner/mozrunner/devices/android_device.py
+--- a/testing/mozbase/mozrunner/mozrunner/devices/android_device.py
++++ b/testing/mozbase/mozrunner/mozrunner/devices/android_device.py
+@@ -8,17 +8,16 @@ import platform
+ import posixpath
+ import re
+ import shutil
+ import signal
+ import subprocess
+ import sys
+ import telnetlib
+ import time
+-from distutils.spawn import find_executable
+ from enum import Enum
+ 
+ import six
+ from mozdevice import ADBDeviceFactory, ADBHost
+ from six.moves import input, urllib
+ 
+ MOZBUILD_PATH = os.environ.get(
+     "MOZBUILD_STATE_PATH", os.path.expanduser(os.path.join("~", ".mozbuild"))
+@@ -937,17 +936,17 @@ def _find_sdk_exe(substs, exe, tools):
+             if os.path.exists(exe_path):
+                 found = True
+                 break
+             else:
+                 _log_debug("Unable to find executable at %s" % exe_path)
+ 
+     if not found:
+         # Is exe on PATH?
+-        exe_path = find_executable(exe)
++        exe_path = shutil.which(exe)
+         if exe_path:
+             found = True
+         else:
+             _log_debug("Unable to find executable on PATH")
+ 
+     if found:
+         _log_debug("%s found at %s" % (exe, exe_path))
+         try:
+

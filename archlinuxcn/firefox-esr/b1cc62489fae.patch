@@ -1,0 +1,76 @@
+
+# HG changeset patch
+# User Jeff Muizelaar <jmuizelaar@mozilla.com>
+# Date 1711588046 0
+# Node ID b1cc62489fae8d475f67dec2d9abdf69e2d47614
+# Parent  2ce47a20dd081e3152289d79f3cc1125e06c268c
+Bug 1887281. Use shutil.which instead of find_executable. r=glandium
+
+Python 3.12 dropped support for distutils:
+https://docs.python.org/3.12/whatsnew/3.12.html#distutils
+
+Differential Revision: https://phabricator.services.mozilla.com/D205839
+
+diff --git a/testing/mozbase/mozdebug/mozdebug/mozdebug.py b/testing/mozbase/mozdebug/mozdebug/mozdebug.py
+--- a/testing/mozbase/mozdebug/mozdebug/mozdebug.py
++++ b/testing/mozbase/mozdebug/mozdebug/mozdebug.py
+@@ -1,19 +1,19 @@
+ #!/usr/bin/env python
+ 
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ # You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ import json
+ import os
++import shutil
+ import sys
+ from collections import namedtuple
+-from distutils.spawn import find_executable
+ from subprocess import check_output
+ 
+ import mozinfo
+ 
+ __all__ = [
+     "get_debugger_info",
+     "get_default_debugger_name",
+     "DebuggerSearch",
+@@ -103,34 +103,34 @@ def get_debugger_path(debugger):
+         # Attempt to use the xcrun util to find the path.
+         try:
+             path = check_output(
+                 ["xcrun", "--find", "lldb"], universal_newlines=True
+             ).strip()
+             if path:
+                 return path
+         except Exception:
+-            # Just default to find_executable instead.
++            # Just default to shutil.which instead.
+             pass
+ 
+     if mozinfo.os == "win" and debugger == "devenv.exe":
+         # Attempt to use vswhere to find the path.
+         try:
+             encoding = "mbcs" if sys.platform == "win32" else "utf-8"
+             vswhere = _vswhere_path()
+             vsinfo = check_output([vswhere, "-format", "json", "-latest"])
+             vsinfo = json.loads(vsinfo.decode(encoding, "replace"))
+             return os.path.join(
+                 vsinfo[0]["installationPath"], "Common7", "IDE", "devenv.exe"
+             )
+         except Exception:
+-            # Just default to find_executable instead.
++            # Just default to shutil.which instead.
+             pass
+ 
+-    return find_executable(debugger)
++    return shutil.which(debugger)
+ 
+ 
+ def get_debugger_info(debugger, debuggerArgs=None, debuggerInteractive=False):
+     """
+     Get the information about the requested debugger.
+ 
+     Returns a dictionary containing the ``path`` of the debugger executable,
+     if it will run in ``interactive`` mode, its arguments and whether it needs
+

@@ -1,0 +1,157 @@
+
+# HG changeset patch
+# User serge-sans-paille <sguelton@mozilla.com>
+# Date 1702968636 0
+# Node ID 6af7194e2778af0e9a597dfa6fac1a3cfa505b5a
+# Parent  05b607c3bbe6ca02e9133ecb969e033fd3d7959e
+Bug 1866829 - Replace obsolete distutils reference by portable alternatives r=ahochheiden
+
+distutils.dir_util.copy_tree -> shutil.copytree
+distutils.spawn.find_executable -> shutil.which
+
+Also fix a warning about escape sequence in the process.
+
+Differential Revision: https://phabricator.services.mozilla.com/D194781
+
+diff --git a/testing/mozbase/mozdevice/mozdevice/adb.py b/testing/mozbase/mozdevice/mozdevice/adb.py
+--- a/testing/mozbase/mozdevice/mozdevice/adb.py
++++ b/testing/mozbase/mozdevice/mozdevice/adb.py
+@@ -10,17 +10,17 @@ import re
+ import shlex
+ import shutil
+ import signal
+ import subprocess
+ import sys
+ import tempfile
+ import time
+ import traceback
+-from distutils import dir_util
++from shutil import copytree
+ from threading import Thread
+ 
+ import six
+ from six.moves import range
+ 
+ from . import version_codes
+ 
+ _TEST_ROOT = None
+@@ -2978,17 +2978,17 @@ class ADBDevice(ADBCommand):
+         if os.path.isfile(local) and self.is_dir(remote):
+             # force push to use the correct filename in the remote directory
+             remote = posixpath.join(remote, os.path.basename(local))
+         elif os.path.isdir(local):
+             copy_required = True
+             temp_parent = tempfile.mkdtemp()
+             remote_name = os.path.basename(remote)
+             new_local = os.path.join(temp_parent, remote_name)
+-            dir_util.copy_tree(local, new_local)
++            copytree(local, new_local)
+             local = new_local
+             # See do_sync_push in
+             # https://android.googlesource.com/platform/system/core/+/master/adb/file_sync_client.cpp
+             # Work around change in behavior in adb 1.0.36 where if
+             # the remote destination directory exists, adb push will
+             # copy the source directory *into* the destination
+             # directory otherwise it will copy the source directory
+             # *onto* the destination directory.
+@@ -3131,17 +3131,17 @@ class ADBDevice(ADBCommand):
+                     self.cp(remote, intermediate, recursive=True, timeout=timeout)
+                     self.command_output(["pull", intermediate, local], timeout=timeout)
+                 except ADBError as e:
+                     self._logger.error("pull %s %s: %s" % (intermediate, local, str(e)))
+                 finally:
+                     self.rm(intermediate, recursive=True, force=True, timeout=timeout)
+         finally:
+             if copy_required:
+-                dir_util.copy_tree(local, original_local)
++                copytree(local, original_local, dirs_exist_ok=True)
+                 shutil.rmtree(temp_parent)
+ 
+     def get_file(self, remote, offset=None, length=None, timeout=None):
+         """Pull file from device and return the file's content
+ 
+         :param str remote: The path of the remote file.
+         :param offset: If specified, return only content beyond this offset.
+         :param length: If specified, limit content length accordingly.
+diff --git a/testing/mozbase/mozdevice/mozdevice/remote_process_monitor.py b/testing/mozbase/mozdevice/mozdevice/remote_process_monitor.py
+--- a/testing/mozbase/mozdevice/mozdevice/remote_process_monitor.py
++++ b/testing/mozbase/mozdevice/mozdevice/remote_process_monitor.py
+@@ -130,17 +130,17 @@ class RemoteProcessMonitor:
+                     if message.get("action") == "test_start":
+                         self.last_test_seen = message["test"]
+                     elif message.get("action") == "test_end":
+                         self.last_test_seen = "{} (finished)".format(message["test"])
+                     elif message.get("action") == "suite_end":
+                         self.last_test_seen = "Last test finished"
+                     elif message.get("action") == "log":
+                         line = message["message"].strip()
+-                        m = re.match(".*:\s*(\d*)", line)
++                        m = re.match(r".*:\s*(\d*)", line)
+                         if m:
+                             try:
+                                 val = int(m.group(1))
+                                 if "Passed:" in line:
+                                     self.counts["pass"] += val
+                                     self.last_test_seen = "Last test finished"
+                                 elif "Failed:" in line:
+                                     self.counts["fail"] += val
+diff --git a/testing/mozbase/mozrunner/mozrunner/application.py b/testing/mozbase/mozrunner/mozrunner/application.py
+--- a/testing/mozbase/mozrunner/mozrunner/application.py
++++ b/testing/mozbase/mozrunner/mozrunner/application.py
+@@ -1,16 +1,16 @@
+ # This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ import os
+ import posixpath
+ from abc import ABCMeta, abstractmethod
+-from distutils.spawn import find_executable
++from shutil import which
+ 
+ import six
+ from mozdevice import ADBDeviceFactory
+ from mozprofile import (
+     ChromeProfile,
+     ChromiumProfile,
+     FirefoxProfile,
+     Profile,
+@@ -46,17 +46,17 @@ class RemoteContext(object):
+     profile_class = Profile
+     _bindir = None
+     remote_test_root = ""
+     remote_process = None
+ 
+     @property
+     def bindir(self):
+         if self._bindir is None:
+-            paths = [find_executable("emulator")]
++            paths = [which("emulator")]
+             paths = [p for p in paths if p is not None if os.path.isfile(p)]
+             if not paths:
+                 self._bindir = ""
+             else:
+                 self._bindir = os.path.dirname(paths[0])
+         return self._bindir
+ 
+     @property
+@@ -83,17 +83,17 @@ class RemoteContext(object):
+         return self._remote_profile
+ 
+     def which(self, binary):
+         paths = os.environ.get("PATH", {}).split(os.pathsep)
+         if self.bindir is not None and os.path.abspath(self.bindir) not in paths:
+             paths.insert(0, os.path.abspath(self.bindir))
+             os.environ["PATH"] = os.pathsep.join(paths)
+ 
+-        return find_executable(binary)
++        return which(binary)
+ 
+     @abstractmethod
+     def stop_application(self):
+         """Run (device manager) command to stop application."""
+         pass
+ 
+ 
+ devices = {}
+
