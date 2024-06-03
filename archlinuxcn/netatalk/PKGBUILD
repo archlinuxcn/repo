@@ -6,7 +6,7 @@
 
 pkgname=netatalk
 pkgver=3.2.0
-pkgrel=1
+pkgrel=3
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.sourceforge.io'
 license=('GPL2')
@@ -14,23 +14,22 @@ license=('GPL2')
 source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
 md5sums=('2894607a1fc93b9031d27896e775f7f9')
 
-arch=('pentium4'
-      'i686'
-      'x86_64'
-      'armv6h'
-      'armv7h'
-      'aarch64')
+arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
 depends=('acl'
          'avahi>=0.6'
          'cracklib'
+         'db'
          'dbus-glib'
-         'dbus-python'
          'libevent'
-         'mariadb-libs'
+         'libgcrypt'
+         'pam'
          'perl'
-         'python'
-         'tdb>=1.4.5')
+         'perl-net-dbus')
+
+optdepends=('mariadb-libs: mysql CNID backend support'
+            'talloc: AFP Spotlight support'
+            'tracker3: AFP Spotlight support')
 
 conflicts=('netatalk-ddp'
            'netatalk2')
@@ -43,15 +42,15 @@ build() {
   ./bootstrap
   ./configure \
     --prefix=/usr \
+    --localstatedir=/var/state \
     --sbindir=/usr/bin \
     --sysconfdir=/etc \
-    --localstatedir=/var/state \
-    --enable-silent-rules \
     --enable-pgp-uam \
-    --with-init-style=systemd \
+    --with-acls=yes \
     --with-cracklib \
-    --with-cnid-cdb-backend \
-    --without-tdb
+    --with-init-style=systemd \
+    --with-pam-confdir=/etc/pam.d \
+    --with-tracker-pkgconfig-version=3.0
   make
 }
 
