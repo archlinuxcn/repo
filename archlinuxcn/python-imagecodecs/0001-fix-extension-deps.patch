@@ -1,46 +1,86 @@
-From d02152619bbd4976563dd67da1fefcf6203597a5 Mon Sep 17 00:00:00 2001
+From 34d1a82f1b6d9b758c0c74d4057b60f744ef2e9a Mon Sep 17 00:00:00 2001
 From: Butui Hu <hot123tea123@gmail.com>
-Date: Mon, 4 Mar 2024 11:20:53 +0800
+Date: Mon, 3 Jun 2024 13:09:03 +0800
 Subject: [PATCH] fix extension deps
 
 ---
- setup.py | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ setup.py | 52 ++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 44 insertions(+), 8 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index e527a75..3ea18db 100644
+index 0c9da6a..37cf5d4 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -233,24 +233,19 @@ def customize_build_default(EXTENSIONS, OPTIONS):
-     import platform
+@@ -270,25 +270,61 @@ def customize_build_default(EXTENSIONS, OPTIONS):
+     # EXTENSIONS['jpeg8']['sources'] = []  # requires libjpeg-turbo v3
  
-     del EXTENSIONS['apng']  # apng patch not commonly available
--    del EXTENSIONS['avif']  # libavif library not commonly available
--    del EXTENSIONS['blosc2']  # c-blosc2 library not commonly available
-     # del EXTENSIONS['heif']  # LGPL/GPL
-     del EXTENSIONS['jetraw']  # commercial
--    del EXTENSIONS['lerc']  # LERC library not commonly available
-     del EXTENSIONS['lz4f']  # requires static linking
--    del EXTENSIONS['lzfse']  # lzfse not commonly available
-     del EXTENSIONS['lzham']  # lzham not commonly available
-     del EXTENSIONS['lzo']  # lzokay not commonly available
-     del EXTENSIONS['mozjpeg']  # Win32 only
-     del EXTENSIONS['sperr']  # sperr not commonly available
--    del EXTENSIONS['zlibng']  # zlib-ng library not commonly available
- 
--    if 'arch' not in platform.platform():
--        del EXTENSIONS['jpegls']  # CharLS 2.1 library not commonly available
--        del EXTENSIONS['jpegxl']  # jpeg-xl library not commonly available
--        del EXTENSIONS['brunsli']  # Brunsli library not commonly available
--        del EXTENSIONS['zfp']  # ZFP library not commonly available
-+    # if 'arch' not in platform.platform():
-+    #     del EXTENSIONS['jpegls']  # CharLS 2.1 library not commonly available
-+    #     del EXTENSIONS['jpegxl']  # jpeg-xl library not commonly available
-+    #     del EXTENSIONS['brunsli']  # Brunsli library not commonly available
-+    #     del EXTENSIONS['zfp']  # ZFP library not commonly available
- 
-     if sys.platform == 'win32':
-         EXTENSIONS['bz2']['libraries'] = ['libbz2']
+     # these extensions are required by core dependent libraries
+-    keep = {
+-        'shared',
+-        'imcd',
++    del EXTENSIONS["apng"]
++    keep = [
++        'aec',
++        'avif',
++        'bcn',
++        'bitshuffle',
++        'blosc',
++        'blosc2',
+         'bmp',
++        'brotli',
++        'brunsli',
++        'bz2',
+         'cms',
+         'deflate',
++        'gif',
++        'h5checksum',
++        'heif',
++        'imcd',
++        # 'jetraw',
+         'jpeg2k',
+         'jpeg8',
+-        # 'jpegxl',  # requires v0.10
++        'jpegls',
++        'jpegsof3',
++        'jpegxl',
+         'jpegxr',
+-        'lerc',  # requires v4
++        'lerc',
++        'ljpeg',
+         'lz4',
++        'lz4f',
++        'lzf',
++        'lzfse',
++        # 'lzham',
+         'lzma',
++        # 'lzo',
++        # 'mozjpeg',
++        # 'pcodec',
++        'pglz',
+         'png',
+-        'tiff',  # requires v4.6
++        'qoi',
++        'quantize',
++        'rcomp',
++        'rgbe',
++        'shared',
++        'snappy',
++        # 'sperr',
++        'spng',
++        'szip',
++        'tiff',
+         'webp',
++        'zfp',
+         'zlib',
+-        'zstd',
+-    }
++        'zlibng',
++        'zopfli',
++        'zstd'
++    ]
+     for name in tuple(EXTENSIONS.keys()):
+         if name not in keep:
+             del EXTENSIONS[name]
 -- 
-2.44.0
+2.45.2
 
