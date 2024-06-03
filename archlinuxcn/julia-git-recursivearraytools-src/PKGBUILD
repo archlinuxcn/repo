@@ -1,6 +1,6 @@
 pkgname=julia-git-recursivearraytools-src
-pkgver=3.20.0
-_commit=5e9e8f89974cb1fecb4ae02904089be77e826ab8
+pkgver=3.21.0
+_commit=036cbf79b21505155bd7858e99136c8d25731428
 pkgrel=1
 pkgdesc="RecursiveArrayTools.jl"
 url="https://github.com/SciML/RecursiveArrayTools.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/RecursiveArrayTools.jl.git#commit=$_commit")
-sha256sums=('00cf7b8205dd13d3641f178755502c64956a5e9471dbe9a59e0f47e90c59e3e6')
+sha256sums=('63b6ca96ea970aa89144be707164ab8f9a4b6be052d80f533fa71331eb168da7')
 
 package() {
   cd RecursiveArrayTools.jl
