@@ -8,7 +8,7 @@ update_on:
   exclude_regex: '.*rc.*'
 - source: alpm
   alpm: nginx
-  from_pattern: ^(\d+\.\d+).*
+  from_pattern: ^(\d+\.\d+\.\d+).*
   to_pattern: \1
 repo_depends:
 - lua-resty-core
