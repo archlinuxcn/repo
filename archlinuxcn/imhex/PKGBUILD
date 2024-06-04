@@ -3,8 +3,8 @@
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.33.2
-pkgrel=2
+pkgver=1.34.0
+pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
 license=('GPL-2.0-only')
@@ -41,20 +41,10 @@ source=(
     "cli11::git+https://github.com/CLIUtils/CLI11"
     "lunasvg::git+https://github.com/sammycage/lunasvg"
     "edlib::git+https://github.com/Martinsos/edlib"
+    "throwing_ptr::git+https://github.com/rockdreamer/throwing_ptr"
 )
-sha256sums=('da88d459e9b372582d63b653c6e6cce147a29c4e9b882ab545cc9c1ddb1e42ea'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
-b2sums=('d381ba8cf4ce203f0d9eed83107c8887521345b9c0e11c74bec438fd375472d0781dacf21625e062930f1bb04f0c582dd92ebf69829b028fb99d8b0220547d50'
+b2sums=('62df40839b2a7ccf6d6f5f7d70e8029816ff88bce9705337425d02873f50eac00dd262a108e44981d575ab8926a554281b3fbb64396d3fa460f99889e49d87e5'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -68,34 +58,33 @@ b2sums=('d381ba8cf4ce203f0d9eed83107c8887521345b9c0e11c74bec438fd375472d0781dacf
         'SKIP')
 
 prepare() {
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
 
     git submodule init
     for name in libromfs pattern_language libwolv; do
-        git submodule set-url lib/external/$name "$srcdir/$name"
+        git submodule set-url lib/external/"$name" "$srcdir/$name"
         git -c protocol.file.allow=always submodule update lib/external/$name
     done
-    for name in nativefiledialog xdgpp capstone HashLibPlus edlib; do
-        git submodule set-url lib/third_party/$name "$srcdir/$name"
-        git -c protocol.file.allow=always submodule update lib/third_party/$name
+    for name in nativefiledialog xdgpp capstone HashLibPlus edlib lunasvg; do
+        git submodule set-url lib/third_party/"$name" "$srcdir/$name"
+        git -c protocol.file.allow=always submodule update lib/third_party/"$name"
     done
     git submodule set-url lib/third_party/jthread/jthread "$srcdir/jthread"
     git -c protocol.file.allow=always submodule update lib/third_party/jthread/jthread
     pushd lib/external/pattern_language
         git submodule init
-        git submodule set-url external/libwolv "$srcdir"/libwolv
-        git -c protocol.file.allow=always submodule update external/libwolv
-        git submodule set-url external/cli11 "$srcdir"/cli11
-        git -c protocol.file.allow=always submodule update external/cli11
+        for name in libwolv cli11 throwing_ptr; do
+            git submodule set-url external/"$name" "$srcdir/$name"
+            git -c protocol.file.allow=always submodule update external/"$name"
+        done
     popd
     for name in fmt yara/yara; do
-        git config --remove-section submodule.lib/third_party/$name
+        git config --remove-section submodule.lib/third_party/"$name"
     done
 
 }
 
 build() {
-    cd "$srcdir"
     cmake -B build -S "$pkgname" \
         -G Ninja \
         -Wno-dev \
@@ -122,21 +111,9 @@ build() {
 }
 
 package() {
-    cd "$srcdir"
     # FIXME: upstream install SDK in /usr/share and seems no way to disable it...
-    DESTDIR="${pkgdir}" cmake --install build
+    DESTDIR="$pkgdir" cmake --install build
     
-    install -Dm0644 "$pkgname/resources/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/imhex.svg"
-    for size in 32 48 64 128 256; do
-        install -dm0755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
-        rsvg-convert -a -f png -w $size -o "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/imhex.png" \
-            "$pkgname/resources/icon.svg"
-    done
-
-    # License
-    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/LICENSE" \
-        "$pkgname/LICENSE"
-
     # Documentation
     install -Dm0644 -t "$pkgdir/usr/share/doc/$pkgname" \
         "$pkgname/README.md"
