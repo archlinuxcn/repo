@@ -6,7 +6,7 @@
 
 pkgname=netatalk
 pkgver=3.2.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.sourceforge.io'
 license=('GPL2')
@@ -41,13 +41,14 @@ build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   ./bootstrap
   ./configure \
+    --enable-pgp-uam \
+    --localstatedir=/var/lib \
     --prefix=/usr \
-    --localstatedir=/var/state \
     --sbindir=/usr/bin \
     --sysconfdir=/etc \
-    --enable-pgp-uam \
     --with-acls=yes \
     --with-cracklib \
+    --with-dbus-sysconf-dir=/usr/share/dbus-1/system.d \
     --with-init-style=systemd \
     --with-pam-confdir=/etc/pam.d \
     --with-tracker-pkgconfig-version=3.0
