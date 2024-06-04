@@ -1,4 +1,4 @@
-# Maintainer: Carson Rueter <roachh at proton mail dot com>
+# Maintainer: Carson Rueter <swurl at swurl dot x y z>
 # Maintainer: Icelk <main at icelk.dev>
 # Contributor: Cameron Katri <katri.cameron@gmail.com>
 # Contributor: Plague-doctor <plague <at>> privacyrequired <<dot>> com >
@@ -8,7 +8,7 @@
 pkgname=vscodium-bin
 _pkgname=VSCodium
 pkgver=1.89.1.24130
-pkgrel=1
+pkgrel=2
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64' 'aarch64')
 url="https://github.com/VSCodium/vscodium"
@@ -25,13 +25,14 @@ provides=('vscode' 'codium' 'vscodium')
 conflicts=('vscodium')
 install=$pkgname.install
 
-sha256sums=('f76eb3ecf7fa531e0f711938e4e10f82145b5a7bf8b24bda218acb2d47466d60'
+sha256sums=('3a5bc109974fcf408855c13965f6d6be0997655c5b359de0bfd19a678c00844e'
             '6eef345b65bf2679c928c763529540435ab9c6e1836917319810a7a2d484ae1b'
             '01ba3d33e76804e2346d08f4eda256a29610c9eb59432e4b016d05ad93d901ba'
             '63b9f3e07dcfe92f59e851fdeeaed6ee986950672f75cc950489bce67e85d884'
-            '1841d08fdb512f32433eefa21132bf7ad13e106cb45ca3218d0da7b7be9cfc81')
+            'ef5759114cb0bada639bf89b778679bc7cf4d829151dc5fbf95eb33df4addcd6')
 sha256sums_x86_64=('818f6759fde29e8b188f6535b7eeec5e694a0b89871938c634964246d1e2ac35')
 sha256sums_aarch64=('a2ad2bdf3c84a1d3ab127309c0f80987e61ffbf3dda30e367c4dcb908f62c549')
+
 source=('vscodium-bin.desktop'
         'vscodium-bin-uri-handler.desktop'
         'vscodium-bin.install'
