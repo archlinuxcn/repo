@@ -1,0 +1,55 @@
+From 33337bb1bc9447ed5bb738efd83fd7fe9095329e Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Tue, 23 Nov 2021 18:22:46 +0800
+Subject: [PATCH] use last_scale initially to avoid many redraws (which cause
+ flickering)
+
+---
+ include/mako.h | 1 +
+ main.c         | 1 +
+ wayland.c      | 3 ++-
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/include/mako.h b/include/mako.h
+index dc2c372..73c29b2 100644
+--- a/include/mako.h
++++ b/include/mako.h
+@@ -75,6 +75,7 @@ struct mako_state {
+ 	struct wl_list notifications; // mako_notification::link
+ 	struct wl_list history; // mako_notification::link
+ 	struct wl_array current_modes; // char *
++	uint32_t last_scale;
+ 
+ 	int argc;
+ 	char **argv;
+diff --git a/main.c b/main.c
+index d235cef..8e6247c 100644
+--- a/main.c
++++ b/main.c
+@@ -74,6 +74,7 @@ static bool init(struct mako_state *state) {
+ 	wl_array_init(&state->current_modes);
+ 	const char *mode = "default";
+ 	set_modes(state, &mode, 1);
++	state->last_scale = 1;
+ 	return true;
+ }
+ 
+diff --git a/wayland.c b/wayland.c
+index eeefb30..a42a5c7 100644
+--- a/wayland.c
++++ b/wayland.c
+@@ -595,9 +595,10 @@ static void send_frame(struct mako_surface *surface) {
+ 		return;
+ 	}
+ 
+-	int scale = 1;
++	int scale = state->last_scale;
+ 	if (surface->surface_output != NULL) {
+ 		scale = surface->surface_output->scale;
++		state->last_scale = scale;
+ 	}
+ 
+ 	surface->current_buffer =
+-- 
+2.45.2
+

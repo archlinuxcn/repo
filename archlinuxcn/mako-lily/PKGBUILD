@@ -1,0 +1,54 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Brett Cornwall <ainola@archlinux.org>
+# Contributor: Maxim Baz <archlinux at maximbaz dot com>
+# Contributor: Drew DeVault
+
+pkgname=mako-lily
+pkgver=1.9.0
+pkgrel=1
+license=('MIT')
+pkgdesc='Lightweight notification daemon for Wayland'
+makedepends=("meson" "scdoc" "systemd" "wayland-protocols")
+depends=(
+	"gdk-pixbuf2"
+	"pango"
+	"systemd-libs"
+	"wayland"
+)
+optdepends=("jq: support for 'makoctl menu'")
+arch=("x86_64")
+url='https://mako-project.org'
+source=(
+	"$pkgname-$pkgver.tar.gz::https://github.com/emersion/mako/releases/download/v$pkgver/mako-$pkgver.tar.gz"
+	"$pkgname-$pkgver.tar.gz.sig::https://github.com/emersion/mako/releases/download/v$pkgver/mako-$pkgver.tar.gz.sig"
+	"systemd-dbus-activation.patch"
+        "0001-use-last_scale-initially-to-avoid-many-redraws-which.patch"
+)
+validpgpkeys=("34FF9526CFEF0E97A340E2E40FDE7BE0E88F5E48") # emersion
+sha256sums=('16d821ef49acfc8503367e1a886d28b2f8578ae9ceb1a7e284888b1e32b3a337'
+            'SKIP'
+            '4579a2673dcf2114779e10ed52d771f3930c2192e8e35d3e145163d9e0b45c20'
+            'ac29b17d0b82df2d4e19236999c34db541d7b1567557d31250ed9a7c69196b4e')
+provides=(mako=$pkgver)
+conflicts=(mako)
+
+prepare() {
+	patch -Np1 -i "$srcdir/systemd-dbus-activation.patch" -d "$pkgname-$pkgver"
+	patch -Np1 -i "$srcdir/0001-use-last_scale-initially-to-avoid-many-redraws-which.patch" -d "$pkgname-$pkgver"
+}
+
+build() {
+	arch-meson \
+		-Dbash-completions=true \
+		-Dfish-completions=true \
+		-Dzsh-completions=true \
+		-Dsd-bus-provider=libsystemd \
+		"$pkgname-$pkgver" build
+	ninja -C build
+}
+
+package() {
+	DESTDIR="$pkgdir" ninja -C build install
+	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname/" "$pkgname-$pkgver/LICENSE"
+	install -Dm644 -t "$pkgdir/usr/lib/systemd/user/" "$pkgname-$pkgver/contrib/systemd/mako.service"
+}
