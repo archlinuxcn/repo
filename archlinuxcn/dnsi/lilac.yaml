@@ -1,0 +1,11 @@
+pre_build_script: aur_pre_build(maintainers=['extmind'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: dnsi
+
+maintainers:
+  - github: CoelacanthusHex
+    email: CoelacanthusHex@gmail.com

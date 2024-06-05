@@ -1,0 +1,36 @@
+pkgname=dnsi
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="A tool to investigate the DNS"
+arch=('x86_64')
+url="https://github.com/NLnetLabs/dnsi"
+license=('BSD-3-Clause')
+depends=('glibc' 'gcc-libs')
+makedepends=('cargo')
+source=("https://github.com/NLnetLabs/dnsi/archive/refs/tags/v${pkgver}.tar.gz")
+
+prepare() {
+    cd "$srcdir/$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release --all-features
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$pkgname"
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" "LICENSE"
+    install -Dm0644 -t "$pkgdir/usr/share/man/man1/" "doc/dnsi.1" "doc/dnsi-query.1"
+}
+
+md5sums=('a1cfe0f4fe7e3df28c18ad517994eb2a')
+sha1sums=('2fd288a9fa0281a60fda45440eea3d60b205c705')
+sha256sums=('89075d6957e31af278bb05e719a42a522b60afad84527af3718d36f20f328a79')
+sha384sums=('bd18171e41dbb0bcb1557f6b8300a5425f8e7827515b8bbc4a475926400584f893a399c0a6b6cfd459ed9ecd30c79fde')
+sha512sums=('08693c5b9be6b6e042465173110dfad4b04774dacc5c4aef27e2240a3eadaf8b7565779029cbbb2077b9b453b68925c81993aff2f3acb23f402f391b780f0797')
