@@ -19,8 +19,8 @@ optdepends=("jq: support for 'makoctl menu'")
 arch=("x86_64")
 url='https://mako-project.org'
 source=(
-	"$pkgname-$pkgver.tar.gz::https://github.com/emersion/mako/releases/download/v$pkgver/mako-$pkgver.tar.gz"
-	"$pkgname-$pkgver.tar.gz.sig::https://github.com/emersion/mako/releases/download/v$pkgver/mako-$pkgver.tar.gz.sig"
+	"mako-$pkgver.tar.gz::https://github.com/emersion/mako/releases/download/v$pkgver/mako-$pkgver.tar.gz"
+	"mako-$pkgver.tar.gz.sig::https://github.com/emersion/mako/releases/download/v$pkgver/mako-$pkgver.tar.gz.sig"
 	"systemd-dbus-activation.patch"
         "0001-use-last_scale-initially-to-avoid-many-redraws-which.patch"
 )
@@ -33,8 +33,8 @@ provides=(mako=$pkgver)
 conflicts=(mako)
 
 prepare() {
-	patch -Np1 -i "$srcdir/systemd-dbus-activation.patch" -d "$pkgname-$pkgver"
-	patch -Np1 -i "$srcdir/0001-use-last_scale-initially-to-avoid-many-redraws-which.patch" -d "$pkgname-$pkgver"
+	patch -Np1 -i "$srcdir/systemd-dbus-activation.patch" -d "mako-$pkgver"
+	patch -Np1 -i "$srcdir/0001-use-last_scale-initially-to-avoid-many-redraws-which.patch" -d "mako-$pkgver"
 }
 
 build() {
@@ -43,12 +43,12 @@ build() {
 		-Dfish-completions=true \
 		-Dzsh-completions=true \
 		-Dsd-bus-provider=libsystemd \
-		"$pkgname-$pkgver" build
+		"mako-$pkgver" build
 	ninja -C build
 }
 
 package() {
 	DESTDIR="$pkgdir" ninja -C build install
-	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname/" "$pkgname-$pkgver/LICENSE"
-	install -Dm644 -t "$pkgdir/usr/lib/systemd/user/" "$pkgname-$pkgver/contrib/systemd/mako.service"
+	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname/" "mako-$pkgver/LICENSE"
+	install -Dm644 -t "$pkgdir/usr/lib/systemd/user/" "mako-$pkgver/contrib/systemd/mako.service"
 }
