@@ -2,8 +2,15 @@ maintainers:
   - github: zjuyk
     email: zjuyk@archlinuxcn.org
 
-uild_prefix: extra-x86_64
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+
+post_build: git_pkgbuild_commit
 
 update_on:
+  - source: github
+    github: blackadderkate/weather-widget-2
+    branch: QT6
   - source: manual
     manual: 1
