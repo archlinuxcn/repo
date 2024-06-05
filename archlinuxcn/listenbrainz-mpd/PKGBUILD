@@ -1,6 +1,6 @@
 # Maintainer: elomatreb <ole@bertr.am>
 pkgname=listenbrainz-mpd
-pkgver=2.3.6
+pkgver=2.3.7
 pkgrel=1
 pkgdesc="ListenBrainz submission client for MPD"
 arch=('x86_64')
@@ -9,7 +9,7 @@ license=('AGPL3')
 depends=('sqlite' 'libssl.so=3-64' 'libcrypto.so=3-64')
 makedepends=('openssl' 'cargo' 'asciidoctor')
 source=("$pkgname-$pkgver.tar.gz::https://static.crates.io/crates/$pkgname/$pkgname-$pkgver.crate")
-b2sums=('0187b580aa97e3b0843ae62c7bbe45706132a031ba0e4f3a70dc8c4fa9b8eef727b5ccd6a2a9ed2c4027d5779612b4db699aa7e2ac7730f94ba6ad0bf5c4a42c')
+b2sums=('a2db4fab30d9ae8bfe39855ee71b8903ea41eaebfbb44a507ac5ab0df6d9dee0c52b3733e52c8bf44c5ab92f77dbb349d948a9a149e4d79e27da60123e231392')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
