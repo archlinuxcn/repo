@@ -2,7 +2,7 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=2.4.4
+pkgver=2.4.5
 pkgrel=1
 pkgdesc='A powerful, lightning fast and censorship resistant proxy'
 arch=('x86_64')
@@ -39,7 +39,7 @@ build() {
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
-  local _app_src_cmd_pkg="github.com/apernet/hysteria/app/cmd"
+  local _app_src_cmd_pkg="github.com/apernet/hysteria/app/v2/cmd"
   local _goldflags="-w -s -linkmode=external"
   local _goldflags="$_goldflags -buildid="
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appVersion=$(git describe --tags --always --match 'app/v*' | grep -o "v.*")'"
