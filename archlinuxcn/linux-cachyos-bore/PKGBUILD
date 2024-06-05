@@ -160,7 +160,7 @@ _stable=${_major}.${_minor}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + Cachy Sauce scheduler Kernel by CachyOS with other patches and improvements'
-pkgrel=1
+pkgrel=2
 _kernver=$pkgver-$pkgrel
 arch=('x86_64' 'x86_64_v3')
 url="https://github.com/CachyOS/linux-cachyos"
@@ -179,7 +179,7 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
 fi
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=555.42.02
+_nv_ver=555.52.04
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="open-gpu-kernel-modules-${_nv_ver}"
 source=(
@@ -727,7 +727,7 @@ for _p in "${pkgname[@]}"; do
 done
 
 b2sums=('8d8fe931d304458bcaa8c8b9572a5354ad272d88d1e0642e76b37247ce13bf70c49c8de6d8843fbb3037ee074ebc6cc94f0cc2b5b7e7187385a9dd0b0e2e250d'
-        '4a4dad106a2b04e35a33b39dbed416738c544fa933d8e719e727a5da53fa865296097198aeffcf18894c1caf83b3dc1413356c83ffa29625e76b69a5a50c99ed'
-        '653926532b58b6ff84397496c8b247cae8f2fe48b5867ef85096522f9405daf9a32a2ba7cfe4230bf2f01d9ae5951322e96ef9a9e9ba04d4f050aedace1c48c7'
+        'a6ac159cdbb8865e9746a6801a3ae3f4b67d5ce50803452706206df8187febe2b3d1912b94d7c4539a7b635ad81f5ddff9f85bfe6439bd6d7854af6e3decb7d9'
+        '681a7055df1e18554154590cd80dbc4b2cfae3597eb7f0214e0c18428ecad52a3bcaabdce79d25e40a8fa1a5e1fa5e5bdee2b6fbeab83fd79355d2070f1573b0'
         '93bfcde7ac4f0f4cae7605c4cc94d63a9752e4fa078c3de1336db9e3f48d168e0443f772662e86bf6e2413ea3fc7aa3dccd45cb96385eaa7451a2d9546c218a5'
         '8e0812b25e590f329a3809acef93d142643f2056e14d34f76d6d35dd395c16f88ab24df391d0568d82d555933920695b059f3cfc98a2e2ee554b42d23677a284')
