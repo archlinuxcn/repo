@@ -9,7 +9,7 @@ arch=('x86_64')
 url='https://github.com/dmlc/decord'
 license=('Apache-2.0')
 depends=(
-  ffmpeg4.4
+  ffmpeg
   glibc
   gcc-libs
   python-numpy
@@ -20,6 +20,7 @@ makedepends=(
   cuda
   cython
   git
+  nvidia-utils
   python-build
   python-installer
   python-setuptools
@@ -27,16 +28,16 @@ makedepends=(
   chrpath
 )
 source=("${_pkgname}-${pkgver}::git+https://github.com/dmlc/decord.git#tag=v${pkgver}"
-        "0001-fix-building-with-ffmpeg4.4.patch"
+        "0002-fix-building-with-ffmpeg.patch"
 )
 sha512sums=('f91944e7931f18576cdedd69edc9f651189db2dbc63e7f211cb894cea71bc9df0f4f83ef27f2449da4c9cf13517c310ed0ef6bdd01d01f48258e0f7bf3efa027'
-            'e4b8450ee48583b40f99bf9c981e1f37529c16ba002f6781187621fb6b94d3856db34e90c4c1fd88978601deb88d1e0d31f161232882651c6c6cd61dd91da45a')
+            'b5d01e3666ce961276100eeea779333ab440a169f0de23c4382e88436a362a1c732eb5e99137701f689cbbde13a14fec9118195e22a58253c3a8bc595aab54af')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
   git submodule update --init --recursive
-  # fix building with ffmpeg4.4
-  patch -p1 -i ${srcdir}/0001-fix-building-with-ffmpeg4.4.patch
+  # fix building with ffmpeg 6
+  patch -p1 -i ${srcdir}/0002-fix-building-with-ffmpeg.patch
   cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}-cuda-${pkgver}"
 }
 
@@ -58,8 +59,6 @@ build() {
   cmake \
     -B "${srcdir}/${_pkgname}-cuda-${pkgver}/build" \
     -DCMAKE_BUILD_TYPE=None \
-    -DCMAKE_CXX_COMPILER=/opt/cuda/bin/g++ \
-    -DCMAKE_C_COMPILER=/opt/cuda/bin/gcc \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
     -DFFMPEG_DIR=/usr \
