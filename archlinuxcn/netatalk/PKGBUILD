@@ -6,7 +6,7 @@
 
 pkgname=netatalk
 pkgver=3.2.0
-pkgrel=4
+pkgrel=5
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.sourceforge.io'
 license=('GPL2')
@@ -27,7 +27,8 @@ depends=('acl'
          'perl'
          'perl-net-dbus')
 
-optdepends=('mariadb-libs: mysql CNID backend support'
+optdepends=('libwrap: TCP wrapper support'
+            'mariadb-libs: mysql CNID backend support'
             'talloc: AFP Spotlight support'
             'tracker3: AFP Spotlight support')
 
@@ -44,12 +45,14 @@ build() {
     --enable-pgp-uam \
     --localstatedir=/var/lib \
     --prefix=/usr \
+    --runstatedir=/run \
     --sbindir=/usr/bin \
     --sysconfdir=/etc \
     --with-acls=yes \
     --with-cracklib \
     --with-dbus-sysconf-dir=/usr/share/dbus-1/system.d \
     --with-init-style=systemd \
+    --with-lockfile=/run/netatalk.pid \
     --with-pam-confdir=/etc/pam.d \
     --with-tracker-pkgconfig-version=3.0
   make
