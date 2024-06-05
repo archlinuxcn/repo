@@ -2,8 +2,8 @@
 
 _gemname=jaro_winkler
 pkgname=ruby-${_gemname}
-pkgver=1.5.6
-pkgrel=2
+pkgver=1.6.0
+pkgrel=1
 pkgdesc="Ruby & C implementation of Jaro-Winkler distance algorithm"
 arch=(i686 x86_64)
 depends=(ruby)
@@ -13,7 +13,7 @@ url=https://github.com/tonytonyjan/jaro_winkler
 license=(MIT)
 options=(!emptydirs)
 source=(https://github.com/tonytonyjan/jaro_winkler/archive/v$pkgver/$_gemname-$pkgver.tar.gz)
-sha256sums=('b27eb01c660e965898239f069e13634b83793d88569b2ddc22d3dbe97a3277d3')
+sha256sums=('22616c7f54b13ab9b0c61f0ab7cd9c7bd64c9e3ba441a7646238b2d2e609234e')
 
 build() {
   cd ${_gemname}-${pkgver}
