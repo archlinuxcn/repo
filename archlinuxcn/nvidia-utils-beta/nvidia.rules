@@ -1,6 +1,8 @@
-# Make sure device nodes are present even when the DDX is not started for the Wayland/EGLStream case
-KERNEL=="nvidia", RUN+="/usr/bin/bash -c '/usr/bin/mknod -Z -m 666 /dev/nvidiactl c $$(grep nvidia /proc/devices | cut -d \  -f 1) 255'"
-KERNEL=="nvidia", RUN+="/usr/bin/bash -c 'for i in $$(cat /proc/driver/nvidia/gpus/*/information | grep Minor | cut -d \  -f 4); do /usr/bin/mknod -Z -m 666 /dev/nvidia$${i} c $$(grep nvidia /proc/devices | cut -d \  -f 1) $${i}; done'"
-KERNEL=="nvidia_modeset", RUN+="/usr/bin/bash -c '/usr/bin/mknod -Z -m 666 /dev/nvidia-modeset c $$(grep nvidia /proc/devices | cut -d \  -f 1) 254'"
-KERNEL=="nvidia_uvm", RUN+="/usr/bin/bash -c '/usr/bin/mknod -Z -m 666 /dev/nvidia-uvm c $$(grep nvidia-uvm /proc/devices | cut -d \  -f 1) 0'"
-KERNEL=="nvidia_uvm", RUN+="/usr/bin/bash -c '/usr/bin/mknod -Z -m 666 /dev/nvidia-uvm-tools c $$(grep nvidia-uvm /proc/devices | cut -d \  -f 1) 1'"
+# Device nodes are created by nvidia-modprobe, which is called by the nvidia DDX.
+# In case the DDX is not started, the device nodes are never created, so call
+# nvidia-modprobe in the udev rules to cover the Wayland/EGLStream and compute
+# case without a started display. In the case where vfio-pci is used
+# nvidia-modprobe should not be invoked.
+ACTION=="add", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", DRIVER=="nvidia", \
+    RUN+="/usr/bin/nvidia-modprobe", \
+    RUN+="/usr/bin/nvidia-modprobe -c0 -u"
