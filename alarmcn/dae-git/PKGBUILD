@@ -1,0 +1,58 @@
+# Maintainer: cubercsl <2014cais01 at gmail dot com>
+
+pkgname=dae-git
+_pkgname=${pkgname%-git}
+pkgver=0.6.0rc2
+pkgrel=1
+pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
+arch=('x86_64' 'aarch64')
+url="https://github.com/daeuniverse/${_pkgname}"
+license=('AGPL-3.0-or-later')
+depends=(
+	'glibc'
+	'v2ray-geoip'
+	'v2ray-domain-list-community'
+)
+makedepends=('git' 'clang' 'go')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+backup=("etc/${_pkgname}/config.${_pkgname}")
+source=(
+	"git+${url}.git"
+	"git+https://github.com/daeuniverse/dae_bpf_headers.git"
+)
+install="${_pkgname}.install"
+sha256sums=('SKIP'
+            'SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	git submodule init
+	git config submodule.control/kern/headers.url "${srcdir}/dae_bpf_headers"
+	git config submodule.trace/kern/headers.url "${srcdir}/dae_bpf_headers"
+	git -c protocol.file.allow=always submodule update
+}
+
+build() {
+	cd "${_pkgname}/"
+	export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
+	export CFLAGS="-fno-stack-protector"
+	make VERSION="unstable-${pkgver}"
+}
+
+package() {
+	cd "${_pkgname}/"
+	install -Dm755 "${_pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 "install/${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+	install -Dm640 "install/empty.${_pkgname}" "${pkgdir}/etc/${_pkgname}/config.${_pkgname}"
+	install -Dm644 "example.${_pkgname}" "${pkgdir}/etc/${_pkgname}/config.${_pkgname}.example"
+
+	mkdir -p "${pkgdir}/usr/share/${_pkgname}/"
+	ln -vs /usr/share/v2ray/geoip.dat "${pkgdir}/usr/share/${_pkgname}/geoip.dat"
+	ln -vs /usr/share/v2ray/geosite.dat "${pkgdir}/usr/share/${_pkgname}/geosite.dat"
+}
