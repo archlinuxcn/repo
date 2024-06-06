@@ -8,7 +8,7 @@
 
 pkgbase=lib32-nvidia-utils-beta
 pkgname=('lib32-nvidia-utils-beta' 'lib32-opencl-nvidia-beta')
-pkgver=555.42.02
+pkgver=555.52.04
 pkgrel=1
 pkgdesc='NVIDIA drivers utilities (32-bit, beta version)'
 arch=('x86_64')
@@ -18,7 +18,7 @@ makedepends=("nvidia-utils-beta>=${pkgver}") # to avoid conflict during installa
 options=('!strip')
 _pkg="NVIDIA-Linux-${CARCH}-${pkgver}"
 source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}.run")
-sha256sums=('93b708dd90e52a9e264f8ea33242da22b736614c75961d708ff2784954875b29')
+sha256sums=('9d53ae6dbef32ae95786ec7d02bb944d5050c1c70516e6065ab5356626a44402')
 
 # create soname links
 _create_links() {
@@ -88,6 +88,8 @@ package_lib32-nvidia-utils-beta() {
     install -D -m755 "libnvidia-glvkspirv.so.${pkgver}" -t "${pkgdir}/usr/lib32"
     install -D -m755 "libnvidia-gpucomp.so.${pkgver}"   -t "${pkgdir}/usr/lib32"
     install -D -m755 "libnvidia-allocator.so.${pkgver}" -t "${pkgdir}/usr/lib32"
+    install -d -m755 "${pkgdir}/usr/lib32/gbm"
+    ln -s "../libnvidia-allocator.so.${pkgver}" "${pkgdir}/usr/lib32/gbm/nvidia-drm_gbm.so"
     
     # VDPAU
     install -D -m755 "libvdpau_nvidia.so.${pkgver}" -t "${pkgdir}/usr/lib32/vdpau"
