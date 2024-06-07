@@ -1,0 +1,15 @@
+Author: Reiner Herrmann <reiner@reiner-h.de>
+Description: Sort list of .po files for deterministic output order
+Forwarded: https://savannah.gnu.org/bugs/index.php?53159
+
+--- a/tools/buildutil.py
++++ b/tools/buildutil.py
+@@ -35,7 +35,7 @@
+ languages = [
+    'system default',
+    'English/United States [en-us]',""", file=f)
+-    for fn in glob.glob("po/*.po"):
++    for fn in sorted(glob.glob("po/*.po")):
+         print("   '%s'," % os.path.splitext(os.path.basename(fn))[0], file=f)
+     print("]", file=f)
+     f.close()
