@@ -1,0 +1,23 @@
+With the switch to SvelteKit, anki does not yet respect the YARN_BINARY env var
+for this specific function. This patch includes this until upstream adds it.
+Discussion of this issue can be found in the Anki forums:
+https://forums.ankiweb.net/t/sveltekit-does-not-respect-yarn-binary-env-var-in-build/45715 for discussion
+--- a/build/ninja_gen/src/node.rs
++++ b/build/ninja_gen/src/node.rs
+@@ -460,7 +460,7 @@ impl BuildAction for SveltekitBuild {
+             if cfg!(windows) {
+                 "cmd /c yarn build"
+             } else {
+-                "./yarn build"
++                "$yarn build"
+             }
+         } else {
+             "echo"
+@@ -469,6 +469,7 @@ impl BuildAction for SveltekitBuild {
+
+     fn files(&mut self, build: &mut impl build::FilesHandle) {
+         build.add_inputs("node_modules", inputs![":node_modules"]);
++        build.add_inputs("yarn", inputs![":yarn:bin"]);
+         build.add_inputs("", &self.deps);
+         build.add_inputs("", inputs!["yarn.lock"]);
+         build.add_output_stamp("sveltekit.marker");
