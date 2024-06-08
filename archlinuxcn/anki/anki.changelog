@@ -1,3 +1,14 @@
+# 24.06.1-1
+What's Changed:
+
+  * Fix image occlusion not working during review
+  * Fix for building with custom yarn by @AlexBocken[1] in #3226[2]
+
+PKGBUILD
+
+  * bump required nodejs to >=20 (lts-iron or greater)
+  * Remove patch for yarn binary as PR has been merged upstream
+
 # 24.06-1
 This release includes some security fixes for the handling of shared decks. If you make use of shared decks from untrusted authors, updating to the latest version is recommended. A big thank you to Autumn and Jay for the reports.
 Image occlusion during review has been reported as broken in this release. An update is expected to follow in a day or so.
