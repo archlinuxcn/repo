@@ -8,6 +8,7 @@ pkgdesc="The official implementation library for the hypr config language"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/hyprwm/${_pkgname}"
 license=('GPL-3.0-or-later')
+depends=('hyprutils')
 makedepends=('git' 'cmake')
 source=("git+${url}.git")
 conflicts=("${_pkgname}")
