@@ -4,6 +4,7 @@ from lilaclib import *
 
 def pre_build():
     aur_pre_build(name='linux-ck', maintainers=['graysky'])
+    add_depends(['libbpf'])
 
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith('_subarch='):
