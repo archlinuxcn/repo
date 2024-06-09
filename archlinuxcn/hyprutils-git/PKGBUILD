@@ -1,0 +1,32 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=hyprutils-git
+_pkgname="${pkgname%-git}"
+pkgver=0.5.2.r1.g87d5d98
+pkgrel=1
+pkgdesc="Hyprland utilities library used across the ecosystem"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('BSD-3-Clause')
+makedepends=('git' 'cmake')
+source=("git+${url}.git")
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cd "${_pkgname}/"
+	cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+	cmake --build ./build --config Release --target all -j$(nproc 2>/dev/null || getconf NPROCESSORS_CONF)
+}
+
+package() {
+	cd "${_pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install ./build
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
