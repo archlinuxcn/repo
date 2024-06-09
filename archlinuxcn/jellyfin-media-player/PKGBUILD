@@ -1,7 +1,7 @@
 # Maintainer: Andrew Rabert <ar@nullsum.net>
 
 pkgname=jellyfin-media-player
-pkgver=1.11.0
+pkgver=1.11.1
 pkgrel=1
 pkgdesc='Jellyfin Desktop Client'
 arch=('i686' 'x86_64')
@@ -11,7 +11,7 @@ depends=('mpv' 'libcec' 'sdl2' 'p8-platform' 'protobuf' 'qt5-webengine' 'qt5-x11
 makedepends=('cmake' 'git' 'python')
 source=("https://github.com/jellyfin/jellyfin-media-player/archive/refs/tags/v${pkgver}.tar.gz"
         "disable-update-check.patch")
-sha256sums=('a9a2c422f1dae1e501fe706cb2464952f3a23e1b188addfd7bdbd677e558b14f'
+sha256sums=('75499ed2721b77ea0f757da20615aff8e5e9d8e9ff9d4b2572e71067be17ea29'
             '23727ef8f727ac17af228f29aa5508230caac9d02f37d6c12908fcf50d4f382a')
 
 prepare() {
