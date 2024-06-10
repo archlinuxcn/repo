@@ -21,8 +21,7 @@ depends=('cairo'
          'libsoup'
          'openssl'
          'webkit2gtk')
-makedepends=('cargo-tauri'
-             'jq'
+makedepends=('jq'
              'moreutils'
              'pnpm'
              'rust')
@@ -55,7 +54,9 @@ build() {
 	# export HOME=$srcdir
 	pnpm install
 	pnpm run check
-	cargo-tauri build
+	cd src-tauri
+	mkdir ../dist # placeholder to avoid compile error
+	cargo build --release
 }
 
 package() {
