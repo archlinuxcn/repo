@@ -1,24 +1,25 @@
 # Maintainer: oldherl <oldherl@gmail.com>
 
 pkgname=skychart
-pkgver=4.2.1
-pkg_commit=4073
-pkgrel=2
-pkgdesc="Free software to draw sky charts, also known as Cartes du Ciel"
+pkgver=4.3.4852
+_pkgver=4.3-4852
+pkgrel=1
+pkgdesc="Free software to draw sky charts, also known as Cartes du Ciel. Beta version"
 arch=('x86_64')
 license=('GPL')
-depends=('gtk2' 'xplanet' 'libpasastro')
-makedepends=('fpc' 'lazarus')
+depends=('qt5-base' 'xplanet' 'libpasastro')
+makedepends=('fpc' 'lazarus-qt5')
 url="http://www.ap-i.net/skychart/start"
 
+# Using my own copy of source code because upstream deletes beta tarballs regularly.
 source=(
-"https://sourceforge.net/projects/skychart/files/1-software/version_$pkgver/skychart-$pkgver-$pkg_commit-src.tar.xz"
+'https://build.archlinuxcn.org/~oldherl/files/skychart/skychart-4.3-4852-src.tar.xz'
 )
 
-sha256sums=('1f76d3c981b361e16d52851cb27bc97552630d6e25c832af617af88e2d322ca2')
+sha256sums=('c62ea3b8cb426a5aca056185bf4b11933e210e9031a9ebd665b2b4d07a307887')
 
 build() {
-  cd "skychart-$pkgver-$pkg_commit-src"
+  cd "skychart-$_pkgver-src"
   fpc="/usr/lib/fpc/""`fpc -iV`""/units/x86_64-linux/"
   echo fpc=$fpc
   echo ./configure fpc="$fpc" lazarus=/usr/lib/lazarus prefix="$pkgdir/usr" target=x86_64-linux 
@@ -28,7 +29,7 @@ build() {
 }
 
 package() {
-  cd "skychart-$pkgver-$pkg_commit-src"
+  cd "skychart-$_pkgver-src"
   echo pkgdir $pkgdir
   mkdir -p "$pkgdir/usr"
   make install
