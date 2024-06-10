@@ -3,7 +3,7 @@
 
 pkgname=cgproxy-git
 pkgver=0.20.r0.g86fe42ec
-pkgrel=2
+pkgrel=3
 pkgdesc="A transparent proxy program powered by cgroup2 and tproxy"
 arch=('x86_64')
 url="https://github.com/springzfx/cgproxy"
