@@ -54,8 +54,8 @@ build() {
 	# export HOME=$srcdir
 	pnpm install
 	pnpm run check
+	pnpm run web:build
 	cd src-tauri
-	mkdir ../dist # placeholder to avoid compile error
 	cargo build --release
 }
 
