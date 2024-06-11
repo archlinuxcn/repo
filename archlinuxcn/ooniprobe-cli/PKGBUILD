@@ -1,0 +1,38 @@
+# Maintainer: bgme <i@bgme.me>
+# Contributor: ml <>
+
+_pkgname=probe-cli
+pkgname=ooniprobe-cli
+pkgver=3.22.0
+_pkgver=3.22.0
+pkgrel=1
+pkgdesc='Next generation OONI Probe CLI'
+arch=('x86_64')
+url='https://ooni.org/'
+license=('GPL-3.0-or-later')
+depends=('glibc')
+makedepends=('go')
+source=("${_pkgname}-${_pkgver}.tar.gz::https://github.com/ooni/${_pkgname}/archive/refs/tags/v${_pkgver}.tar.gz")
+sha256sums=('07b03ee7e23dfbd125616c8b565009a1dde736d28f731eca722c98d7a5b67e91')
+sha512sums=('93ece0ab6755f76434db5dea370f105e33522dd218972abbbb4fd529086ecf24b8e7d8bc45f816fcbe54585d9028b963476b8b152262f95edf7ea5e18d298c26')
+
+build() {
+  cd "${_pkgname}-${_pkgver}"
+  GOVERSION=$(cat GOVERSION)
+  export GOTOOLCHAIN=go${GOVERSION}
+
+  export CGO_ENABLED=1
+  export CGO_LDFLAGS="$LDFLAGS"
+  export CGO_CFLAGS="$CFLAGS"
+  export CGO_CPPFLAGS="$CPPFLAGS"
+  export CGO_CXXFLAGS="$CXXFLAGS"
+  export GOFLAGS='-ldflags=-linkmode=external -buildmode=pie -trimpath -modcacherw'
+  go build ./cmd/ooniprobe
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  install -Dm755 ooniprobe -t "$pkgdir/usr/bin"
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 Readme.md -t "$pkgdir/usr/share/doc/$pkgname"
+}
