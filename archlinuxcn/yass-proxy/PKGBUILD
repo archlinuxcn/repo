@@ -2,9 +2,9 @@
 # Contributor: Keeyou <keeyou-cn@outlook.com>
 
 pkgname=yass-proxy
-pkgver=1.10.5
-pkgrel=2
-_pkgver=1.10.5
+pkgver=1.11.0
+pkgrel=1
+_pkgver=1.11.0
 _pkgrel=1
 pkgdesc="lightweight http/socks proxy"
 arch=(x86_64)
@@ -17,16 +17,12 @@ checkdepends=(curl)
 provides=(yass-proxy)
 conflicts=(yass-proxy-git yass-proxy-qt6 yass-proxy-gtk3)
 source=("https://github.com/Chilledheart/yass/releases/download/${_pkgver}/yass-${_pkgver}.tar.bz2"
-        "libcxx-gcc-14.patch"
         )
-sha256sums=('0b94788d253a4437fa632ddcce4dd283537934eb036b590bb2691ad8824c408d'
-            '72f55c55adb141d31dd9cd892cd04a08df2d95a1d94ad3a4b421a312075782e4'
-            )
+sha256sums=('860dcf98328d4988647abc2c9c79ff8b2346e1bc95dffe891a0f9fdfa1891fab')
 
 prepare() {
   SRC_DIR="${srcdir}/yass-${_pkgver}"
   pushd $SRC_DIR
-  patch --forward --strip=1 --input=../libcxx-gcc-14.patch
   cd tools
   go build
   cd ..
