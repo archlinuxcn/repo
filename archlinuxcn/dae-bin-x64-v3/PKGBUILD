@@ -3,8 +3,8 @@
 
 pkgname=dae-bin-x64-v3
 _pkgname=dae
-pkgver=0.6.0rc2
-pkgrel=5
+pkgver=0.6.0
+pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=('x86_64')
 url="https://github.com/daeuniverse/${_pkgname}"
@@ -19,7 +19,7 @@ conflicts=("${_pkgname}")
 backup=("etc/${_pkgname}/config.${_pkgname}")
 source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip")
 install="${pkgname}.install"
-sha256sums=('3735f7459d4bac32ee91cae7983458ed6a19228d039cb0d62b750fe2ce2653e3')
+sha256sums=('0c8959877acbc444aa6365fc67bebd08b31b7513b72335b70f9aaeb373a016e1')
 
 package() {
 	# Install binary
