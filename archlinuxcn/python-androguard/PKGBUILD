@@ -1,9 +1,10 @@
-pkgname=python-androguard
+_pkgname=androguard
+pkgname="python-${_pkgname}"
 pkgver=4.1.1
 pkgrel=1
 pkgdesc="Python framework for Android application analysis."
 arch=("any")
-url="https://github.com/androguard/androguard"
+url="https://github.com/${_pkgname}/${_pkgname}"
 license=("Apache-2.0")
 depends=("python-setuptools" "ipython" "python-future" "python-networkx" "python-pygments" "python-lxml" "python-colorama" "python-matplotlib" "python-asn1crypto" "python-click" "python-pydot")
 makedepends=("python-build" "python-installer" "python-wheel" "python-poetry")
@@ -11,11 +12,11 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('88fbcf59e5d86af1ab73a2ead776a3431026606e61a7b9e11440aac2a9e0a964')
 
 build() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${_pkgname}-${pkgver}/"
 	python -m build --wheel --no-isolation
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${_pkgname}-${pkgver}/"
 	python -m installer --destdir="${pkgdir}" dist/*.whl
 }
