@@ -1,7 +1,7 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 
 pkgname=dae
-pkgver=0.6.0rc2
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=('x86_64' 'aarch64')
@@ -16,7 +16,7 @@ makedepends=('clang' 'go')
 backup=("etc/${pkgname}/config.${pkgname}")
 source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${pkgname}-full-src.zip")
 install="${pkgname}.install"
-sha256sums=('4a7340a7fa3039884ef3da275d3a9294b2f27c53a312c95a5c636ca1946f1949')
+sha256sums=('e4ab51493f7a65402b468c38647e79cfa669203b5295a616b7f8c1416d8f1bbe')
 
 build() {
 	export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
