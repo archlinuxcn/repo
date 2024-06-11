@@ -1,29 +1,27 @@
 # Maintainer: Colin Woodbury <colin@fosskers.ca>
 
 pkgname=fortls
-pkgver=2.13.0
-pkgrel=6
+pkgver=3.1.1
+pkgrel=1
 pkgdesc="A modern Language Server for Fortran."
 arch=(any)
 url="https://github.com/gnikit/fortls"
 license=("MIT")
-depends=("python-json5"
-		 "python-setuptools")
-makedepends=("python-packaging"
-			 "python-setuptools-scm")
+depends=("python-json5")
+makedepends=("python-build" "python-installer" "python-wheel" "python-setuptools-scm")
 provides=("fortran-language-server")
 conflicts=("fortran-language-server")
 source=("https://pypi.io/packages/source/f/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('23c5013e8dd8e1d65bf07be610d0827bc48aa7331a7a7ce13612d4c646d0db31')
+sha256sums=('ef248ce72bd1656d37ddb4d52f67c4764926102c749fc65b58429dcf9120e48d')
 
 build() {
 	cd "$pkgname-$pkgver"
-	python setup.py build
+    python -m build --wheel --no-isolation
 }
 
 package() {
 	cd "$pkgname-$pkgver"
-	python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
+    python -m installer --destdir="$pkgdir" dist/*.whl
 
 	# License
 	install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
