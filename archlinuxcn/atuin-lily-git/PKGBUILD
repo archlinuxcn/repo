@@ -54,8 +54,8 @@ package() {
   install -Dm644 "completions/$__pkgname.bash" "${pkgdir}/usr/share/bash-completion/completions/$_pkgname"
   install -Dm644 "completions/$__pkgname.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d"
   install -Dm644 "completions/_$__pkgname" -t "${pkgdir}/usr/share/zsh/site-functions"
-  install -Dm644 "$srcdir"/systemd/atuin-server.service -t "$pkgdir"/usr/lib/systemd/system/
-  install -Dm644 "$srcdir"/systemd/atuin-server.sysusers -t "$pkgdir"/usr/lib/sysusers.d/
+  install -Dm644 systemd/atuin-server.service -t "$pkgdir"/usr/lib/systemd/system/
+  install -Dm644 systemd/atuin-server.sysusers -t "$pkgdir"/usr/lib/sysusers.d/
 }
 
 # vim: ts=2 sw=2 et:
