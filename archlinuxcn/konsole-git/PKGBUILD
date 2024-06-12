@@ -4,14 +4,14 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=konsole-git
-pkgver=21.11.90.r1209.g8b844fb1b
+pkgver=24.01.90.r219.g4cc7a91c7
 pkgrel=1
 arch=(x86_64)
 url=https://kde.org/applications/system/konsole
 pkgdesc="KDE's terminal emulator"
 license=(GPL LGPL FDL)
-depends=(knotifyconfig kpty kparts kinit knewstuff)
-makedepends=(extra-cmake-modules kdoctools git)
+depends=(qt6-multimedia knotifyconfig kpty kparts knewstuff ktextwidgets)
+makedepends=('extra-cmake-modules>=5.240.0' kdoctools git)
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 optdepends=('keditbookmarks: to manage bookmarks')
