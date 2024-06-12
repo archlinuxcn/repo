@@ -8,7 +8,7 @@
 pkgname=vscodium-bin
 _pkgname=VSCodium
 pkgver=1.90.0.24158
-pkgrel=1
+pkgrel=2
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64' 'aarch64')
 url="https://github.com/VSCodium/vscodium"
@@ -56,6 +56,10 @@ package() {
   install -D -m644 "${srcdir}/resources/app/resources/linux/code.png" \
           "${pkgdir}/usr/share/pixmaps/vscodium.png"
   install -m755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/codium"
+
+  # Fix chrome-sandbox permissions
+  chown root "${pkgdir}/opt/${pkgname}/chrome-sandbox"
+  chmod 4755 "${pkgdir}/opt/${pkgname}/chrome-sandbox"
 
   # Symlink shell completions
   install -d -m755 "${pkgdir}/usr/share/zsh/site-functions"
