@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373' '3751')
-_merge_requests_to_use=('1441' '3373' '3751')
+# Merge Requests List: ('579' '1441' '3373' '3751' '3729')
+_merge_requests_to_use=('1441' '3373' '3751' '3729')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -33,7 +33,7 @@ else
 fi
 epoch=1
 pkgver=46.2+r6+g62e559d75
-pkgrel=1
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -116,15 +116,18 @@ _commit=62e559d752c74b86d40ffd4bea6d2532c67675e2  # tags/46.2^6
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
-        'mr3751.patch')
+        'mr3751.patch'
+	'mr3729.patch')
 sha256sums=('2721ebc05ce318a040e611e5ad93d1281f11750cf9d5fefbf139ec3bc439e32e'
             '7d5c90e3f18b2c0645e6224759e571acef723d53495cff2ceaac3c44168226b3'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
-            '7eec91f857cf1d8183c32199f33cc86a1a8a95017282e602738a90fe219c8b33')
+            '7eec91f857cf1d8183c32199f33cc86a1a8a95017282e602738a90fe219c8b33'
+            '9d2ca68355dd4f07bae433ce91fda09fdb8d7fccf1462340e8295cee3cacb932')
 b2sums=('15deba95ef7693bda55bebbcb4fd9f43b44d2c176e63984b98aa81375bfc78da7996ad05a73fea278c44667d726486283a2809a23aebcdf6e77d654f5be0ff95'
         '135b9a24273328c8010d08c3688b527741b0d678814ed52fb983be649b7d40ce6f2d6151d1087a8fed311f35cb3033d8b9d1c7b04cdd2bbef7dff43ee80ea530'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
-        'a79155ce4f11d8ccc674b08baccb18ac3bf254a0e41d9830a0ca964027633317bbd157f33b1f12f21bb378bfeedd4ebd111d993cdfd39b98ff3ce0f34850f6b1')
+        'a79155ce4f11d8ccc674b08baccb18ac3bf254a0e41d9830a0ca964027633317bbd157f33b1f12f21bb378bfeedd4ebd111d993cdfd39b98ff3ce0f34850f6b1'
+        '4a950db6a8225cc364082ea65f545a86ce6eee21b622656397d9fa515eabc471137e4bfd754510927f59963ccbdad84cdcdb5875d8a371042111263bf8ccc935')
 
 pkgver() {
   cd $_pkgname
@@ -231,6 +234,14 @@ prepare() {
   # Status: 2 & 3
   # Comment: Help GPU frequencies to scale up but not currently working on Wayland.
   pick_mr '1441' 'mr1441.patch' 'patch'
+
+  # Title: Enforce non-reactiveness of unsuitable surface actors harder
+  # Author: Carlos Garnacho <carlosg@gnome.org>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3729
+  # Type: 3
+  # Status: 4
+  # Comment: This closes https://gitlab.gnome.org/GNOME/mutter/-/issues/3393
+  pick_mr '3729' 'mr3729.patch' 'patch'
 
 }
 
