@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rm -f *.zip *.tar.gz
+makepkg -ofC
 
 readonly ENGINE_VERSION="$(cat src/flutter/bin/internal/engine.version)"
 
@@ -15,7 +15,8 @@ readonly SDK_STRING="$(grep sdk src/flutter/packages/flutter_tools/pubspec.yaml 
 readonly SDK_MIN="$(echo $SDK_STRING | awk -F '=' '{print $2}' | awk -F '-' '{print $1}')"
 readonly SDK_MAX="$(echo $SDK_STRING | awk -F '<' '{print $2}' | awk -F '-' '{print $1}')"
 
-sed -i 's/_dartver=.*/_dartver=('"${SDK_MIN}"' '"${SDK_MAX}"')/g' PKGBUILD
+# currently disabled since the constraints in upstream are not perfectly correct
+# sed -i 's/_dartver=.*/_dartver=('"${SDK_MIN}"' '"${SDK_MAX}"')/g' PKGBUILD
 sed -i 's/_enginever=.*/_enginever='"${ENGINE_VERSION}"'/g' PKGBUILD
 sed -i 's/_materialfontsver=.*/_materialfontsver='"${MATERIAL_FONTS_VERSION}"'/g' PKGBUILD
 sed -i 's/_gradlewver=.*/_gradlewver='"${GRADLE_WRAPPER_VERSION}"'/g' PKGBUILD
