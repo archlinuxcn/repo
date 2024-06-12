@@ -8,10 +8,14 @@ repo_depends:
   - mumps-seq
   - metis
 
+update_on_build:
+  - pkgbase: mumps-seq
+  - pkgbase: metis
+
 update_on:
   - source: github
     github: coin-or/Ipopt
     use_latest_tag: true
     include_regex: 'releases/\d+\.\d+\.\d+'
   - source: manual
-    manual: 3
+    manual: 1
