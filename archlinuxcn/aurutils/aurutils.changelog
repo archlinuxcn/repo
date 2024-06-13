@@ -1,3 +1,48 @@
+## 19.6
+
+* `aur-graph`
+  + add `REVERSE`
+
+* `aur-sync`
+  + fix `--optdepends` dependency order (#1164)
+
+* `aur-view`
+  + diff from `/dev/null` on invalid revision (#1162)
+
+* `perl`
+  + `AUR::Depends`: warn about targets that are not found, refactor (#1165)
+
+## 19.5
+
+* `aur-repo`
+  + print `[]` for no matches with `-Js` (#1153)
+
+* `aur-repo-parse`
+  + do not emit repo filename suffix for `Repository` key (#1158)
+
+* `man1`
+  + `ccache` with `aur-chroot` needs `--bind-rw` (#1156)
+
+## 19.4
+
+* `aur-sync`
+  + add error if `aur-build --status` fails
+
+* `aur-build`
+  + add error if `aur-repo --status` or `aur-chroot --status` fails
+
+* `perl`
+  + `AUR::Repo`: add `parse_db_file()`
+
+## 19.3
+
+* Revert 19.2
+
+## 19.2
+
+* `aur-chroot`
+  + add diagnostic when devtools is not installed
+
 ## 19.1
 
 * `aur-sync`
