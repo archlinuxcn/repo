@@ -3,10 +3,10 @@
 
 pkgbase=linux-amd-znver3
 _srcname=linux
-gitver=v6.9.3
+gitver=v6.9.4
 patchver=20240221.2
 patchname=more-uarches-for-kernel-6.8-rc4+.patch
-pkgver=6.9.v.3
+pkgver=6.9.v.4
 pkgrel=1
 arch=('x86_64')
 url="https://www.kernel.org/"
