@@ -1,0 +1,16 @@
+--- crates/cli/src/main.rs-orig	2024-06-13 12:38:14.826892974 +0300
++++ crates/cli/src/main.rs	2024-06-13 12:39:16.980401842 +0300
+@@ -194,7 +194,12 @@
+                     .and_then(Path::parent)
+                     .ok_or_else(|| anyhow!("no parent path for cli"))?;
+ 
+-                match dir.join("libexec").join("zed-editor").canonicalize() {
++                match dir
++                    .join("lib")
++                    .join("zed")
++                    .join("zed-editor")
++                    .canonicalize()
++                {
+                     Ok(path) => Ok(path),
+                     // In development cli and zed are in the ./target/ directory together
+                     Err(e) => match cli.parent().unwrap().join("zed").canonicalize() {
