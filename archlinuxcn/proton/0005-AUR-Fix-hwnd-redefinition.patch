@@ -1,4 +1,4 @@
-From 35b789879967ee77f5b044978f063a27800628d8 Mon Sep 17 00:00:00 2001
+From 9bcb5b327f9aaa1e3c3e71ee4c287b1c1229b657 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 28 Sep 2023 14:16:04 +0300
 Subject: [PATCH 5/5] AUR: Fix hwnd redefinition
@@ -9,16 +9,17 @@ Subject: [PATCH 5/5] AUR: Fix hwnd redefinition
  2 files changed, 6 insertions(+)
 
 diff --git a/steam_helper/steam.cpp b/steam_helper/steam.cpp
-index 38712c62..46f6e187 100644
+index 1eb55b87..a94cc968 100644
 --- a/steam_helper/steam.cpp
 +++ b/steam_helper/steam.cpp
-@@ -34,10 +34,14 @@
+@@ -34,11 +34,15 @@
  
  #include "ntstatus.h"
  #define WIN32_NO_STATUS
 +extern "C" {
  #include <windows.h>
 +}
+ #include <winsvc.h>
  #include <winternl.h>
  #include <shellapi.h>
 +extern "C" {
@@ -43,5 +44,5 @@ index 7d6b4f66..c5533d79 100644
  #undef min
  #undef max
 -- 
-2.45.0
+2.45.2
 
