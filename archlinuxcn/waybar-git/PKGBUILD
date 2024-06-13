@@ -11,28 +11,44 @@ license=('MIT')
 provides=('waybar')
 conflicts=('waybar')
 depends=(
-	'gtkmm3'
-	'libjsoncpp.so'
-	'libsigc++'
+	'atkmm'
+	'cairomm'
 	'fmt'
-	'jack' 'libjack.so'
-	'wayland'
-	'libdate-tz.so'
-	'spdlog'
+	'gcc-libs'
+	'glib2'
+	'glibc'
+	'glibmm'
 	'gtk-layer-shell'
-	'libupower-glib.so'
-	'upower'
+	'gtk3'
+	'gtkmm3'
+	'jack'
+	'jsoncpp'
+	'libdbusmenu-gtk3'
 	'libevdev'
 	'libinput'
-	'libpulse'
-	'libnl'
-	'libappindicator-gtk3'
-	'libdbusmenu-gtk3'
 	'libmpdclient'
-	'libsndio.so'
-	'libxkbcommon'
+	'libnl'
+	'libpipewire'
+	'libpulse'
+	'libsigc++'
 	'libwireplumber'
+	'libxkbcommon'
 	'playerctl'
+	'sndio'
+	'spdlog'
+	'systemd-libs'
+	'upower'
+	'wayland'
+	'libatkmm-1.6.so'
+	'libcairomm-1.0.so'
+	'libgtk-3.so'
+	'libjack.so'
+	'libjsoncpp.so'
+	'libpipewire-0.3.so'
+	'libsndio.so'
+	'libspdlog.so'
+	'libudev.so'
+	'libupower-glib.so'
 )
 makedepends=(
 	'git'
@@ -45,13 +61,12 @@ makedepends=(
 	'glib2-devel'
 )
 backup=(
-	etc/xdg/waybar/config
+	etc/xdg/waybar/config.jsonc
 	etc/xdg/waybar/style.css
 )
 optdepends=(
 	'otf-font-awesome: Icons in the default configuration'
 )
-
 replaces=("waybar-hyprland-git")
 source=("git+${url}.git")
 sha256sums=('SKIP')
@@ -64,18 +79,26 @@ pkgver() {
 build() {
 	cd "${_pkgname}/"
 
-	rm -rf "${srcdir}/build"
 	meson --prefix=/usr \
 		--buildtype=plain \
 		--auto-features=enabled \
+		--wrap-mode=nodownload \
+		-Dcpp_std=c++20 \
 		-Dexperimental=true \
 		-Dcava=disabled \
-		-Dtests=disabled \
-		"${srcdir}/build"
-	ninja -C "${srcdir}/build"
+		-Dtests=enabled \
+		build
+
+	meson compile -C build
+}
+
+check() {
+	cd "${_pkgname}/"
+	meson test -C build --print-errorlogs --no-rebuild --suite waybar
 }
 
 package() {
-	DESTDIR="${pkgdir}" ninja -C "${srcdir}/build" install
-	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	cd "${_pkgname}/"
+	meson install -C build --destdir "${pkgdir}"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
