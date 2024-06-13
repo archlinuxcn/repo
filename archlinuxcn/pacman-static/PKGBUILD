@@ -4,19 +4,19 @@
 
 pkgname=pacman-static
 pkgver=6.1.0
-_cares_ver=1.27.0
-_nghttp2_ver=1.60.0
-_curlver=8.6.0
-_sslver=3.2.1
+_cares_ver=1.29.0
+_nghttp2_ver=1.62.1
+_curlver=8.8.0
+_sslver=3.3.1
 _zlibver=1.3.1
-_xzver=5.6.1
+_xzver=5.6.2
 _bzipver=1.0.8
-_zstdver=1.5.5
-_libarchive_ver=3.7.2
-_gpgerrorver=1.48
-_libassuanver=2.5.6
+_zstdver=1.5.6
+_libarchive_ver=3.7.4
+_gpgerrorver=1.49
+_libassuanver=2.5.7
 _gpgmever=1.23.2
-pkgrel=22
+pkgrel=23
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -40,7 +40,7 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 # nghttp2
 source+=("https://github.com/nghttp2/nghttp2/releases/download/v$_nghttp2_ver/nghttp2-$_nghttp2_ver.tar.xz")
 # c-ares
-source+=("https://c-ares.haxx.se/download/c-ares-${_cares_ver}.tar.gz"{,.asc})
+source+=('https://github.com/c-ares/c-ares/releases/download/cares-1_29_0/c-ares-1.29.0.tar.gz'{,.asc})
 validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg <daniel@haxx.se>
 # curl
 source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc})
@@ -94,29 +94,29 @@ sha512sums=('da5e78506e0505aac47def4b658a8cd6012be90c7ad7f7343da2edca2df5bd01909
             '35e1b7f37dc440317c2f1530f0d8ce2c8cd1ef4ddc0d68a22e89f792e53ce9f48719abd9661378b31496b780ad493dbc13a73770385a7af35595941007971aa5'
             '8adb3696579e3b771a7a61dd6ff013afb1444bbb087a0a71f3971da4d51e6b304ad631cbafe8187c837bd763b1a3298e2bd19605438d515743a73ff24192e33f'
             '2ff45ed5e27b1d90524ec0de45acf55891b6f5bf7242dbfeec5c370b7c5d6e35eb49254b19f2a2d194dbab38fa27bca34afaf6175888a911a105237f2bab8d19'
-            '5e6365d9118596d41848930de70f4a918d72463920184df60a7e1678c3a6c9cf1416236888e7e34395c87f41bba00a114994ba5a6e73f6a389769abf1b5cc842'
-            'd0bffeeabdc5f1d4cececd46bd495b8224a64eaaf6d2a91c5475517440effe0e096146a1ebf19ece07367198be576c61b11961d5e4c3f601c5c5529ce4fcb46a'
+            'd5d6b068712e9b467547b0e5380465b8540317134f3f26c2b0c60eb9c604be2f37b4517a98b371d5f5fb668ce2ee35603ddd944224f11e96382aa541a6a17b4c'
+            '0287fd59aa6d831e0d1705deb6b4b1ab3b97a28c5c42feeeaa1eeab55ffb429998c7f0735f15cf5eaeb9177cb77800e6b0b01107bd28fb082cf737f8c12766d0'
             'SKIP'
-            '43fdb6b81b394f3382d353d5f57673b2b3d26cfe34b25d08a526bc0597f508d5298e5a7088d0736d1f139cad19cd922affa51533c3a5a4bb5f2de68891c2958d'
+            '7686d34ab627750dbc63c8fb1e4ef7bd30a5f7996d9070d2ad02748886c6514b8105f201295d5c299d9ca8d355b662d2a77f6647df87a47294bf8f1dd565d82c'
             'SKIP'
-            'bab2b2419319f1feffaba4692f03edbf13b44d1090c6e075a2d69dad67a2d51e64e6edbf83456a26c83900a726d20d2c4ee4ead9c94b322fd0b536f3b5a863c4'
+            'd3682a5ae0721748c6b9ec2f1b74d2b1ba61ee6e4c0d42387b5037a56ef34312833b6abb522d19400b45d807dd65cc834156f5e891cb07fbaf69fcf67e1c595d'
             'SKIP'
             'b1873dbb7a49460b007255689102062756972de5cc2d38b12cc9f389b6be412da6797579b1acd3717a8cd2ee118fd9801b94e55f063d4328f050f0876a5eb53c'
             'b5887ea77417fae49b6cb1e9fa782d3021f268d5219701d87a092235964f73fa72a31428b630445517f56f2bb69dcbbb24119ef9dbf8b4e40a753369a9f9a16f'
             '580677aad97093829090d4b605ac81c50327e74a6c2de0b85dd2e8525553f3ddde17556ea46f8f007f89e435493c9a20bc997d1ef1c1c2c23274528e3c46b94f'
             'SKIP'
-            'SKIP'
+            'f369f126dd3d538ef27ecce62e8ae01a2c9056eeb22c6b21d9a1d5e456f35330bc7f2bb0df525ad4a4f95ba84c0196c7c79ad768359786d3a73f876aa043f164'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
-            'c2d88b2c2050262f85be32877142c94e36a8ee451890f579cd2426c7de565fb22d21c369bad11f306093f0b356e935cef5a8ff5a2b0c007ade0f7e7eb944d2a5'
+            '21f9da445afd76acaf3acb22d216c2b584d95e8c68e00f5cb3f6673f2d556dd14a7593344adf8ffd194bba3314387ee0e486d6248f6c935abca2edd8a4cf95ed'
             'SKIP'
-            '3e9ea99cfb7d706791eb3349a9356b6bc44a53ef8bfa9a4e89afb5203dad5af3f466a039a1764361c0c7f697a6fa668a21d05ceaeb8e44ec5a11d6468998adf2'
+            'bb4dd3faa8e2ec945e61fb2006697b48a51da7ee510b6650a6ab09c8734a987bc33c9835bc710ca9a9395c088271939091be418efc6ca5130b426c2fbc4959a3'
             'SKIP'
-            'dcca942d222a2c226a7e34ba7988ee0c3c55bd6032166eb472caf2053db89aeeea7a40e93d8c2887c7ee73c5f838e8b0725e8cfb595accc1606646559362f7ee'
+            'ca33bd0325bbebccb63b6a84cc0aa5c85b25c6275a68df83aeb3f3729b2cd38220198a941c3479bd461f16b7ddb6b558c0664697ca3153c7fb430544303d773f'
             'SKIP'
             '6cfcd07e81a93de240582de5a46545420cee93d1f27fe20ea2c983780fdd3036b69fdba073cf549d68a20791e189bf4b3cdde14a43f912d2ab9ef3414c83ac75'
             'SKIP'
-            'a21bebb27b808cb7d2ed13a70739904a1b7b55661d8dea83c9897a0129cf71e20c962f13666c571782ff0f4f753ca885619c2097d9e7691c2dee4e6e4b9a2971'
+            '84bc346ba15861ab10aa54a3d687de955178e4efbe12bf3a49a467181e7f819673949f131f4c8338de8ed6e319a8565af376e5a540380bda08e60dffbc7c8686'
             'SKIP')
 
 export LDFLAGS="$LDFLAGS -static"
