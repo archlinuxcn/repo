@@ -6,19 +6,23 @@
 
 _pkgname=teleport
 pkgname=teleport-bin
-pkgver=15.4.2
+pkgver=16.0.0
 pkgrel=1
 pkgdesc="Modern SSH server for teams managing distributed infrastructure"
 arch=('i386' 'x86_64' 'armv7h' 'aarch64')
 url="https://goteleport.com/"
-license=('Apache-2.0')
+license=('LicenseRef-TeleportCommunityLicense')
+depends=(glibc gcc-libs)
+optdepends=("python: for the examples"
+            "bash: for the examples")
 provides=('teleport' 'tctl' 'tsh' 'tbot')
 conflicts=('teleport')
 install=teleport.install
 
 source=("teleport.service"
         "teleport@.service"
-        "teleport.install")
+        "teleport.install"
+        "LICENSE-community::https://raw.githubusercontent.com/gravitational/teleport/master/LICENSE-community")
 
 # The teleport servers do not allow for byte ranges to continue download so we set -C0
 # https://aur.archlinux.org/packages/teleport-bin#comment-906339
@@ -31,11 +35,12 @@ source_aarch64=("teleport-bin-${pkgver}-aarch64.tar.gz::https://get.gravitationa
 
 sha256sums=('b7ac1b9fa9788989b9cef9e555b278635faa4be8350a959580f19076241cde85'
             'b7aa05eeb0d39875481c56bc21edf60a5bd7184bc5c424df68a5d4eb2b2882f1'
-            'c71bbe70179aceb0f49d2a4f1e0a83da040ca72373e17ca82cc2489cd6e07801')
-sha256sums_i386=('62b70997a38abca5008fb147cde43857ca613b6752d5047a7078b3f9a12f4193')
-sha256sums_x86_64=('6fbd2e4012309f20ea63774a49e188cc911fb9db959113d85250a6d6f43c1d0e')
-sha256sums_armv7h=('30c33d18e9a45ad254f88fd3cd3d409a713a0b0d24af2c6e3be78c65efd48d80')
-sha256sums_aarch64=('cb4fd2fa36685779750f7eb24824e01b21c8d1d958da1a1cf42259ceca1665a3')
+            'c71bbe70179aceb0f49d2a4f1e0a83da040ca72373e17ca82cc2489cd6e07801'
+            'a45b5a4bdfe894ebd901568b29517fe3d8342d49f1f394feb62a8dc8fe233dda')
+sha256sums_i386=('eee82720d88b1d2a57aaface035f676029cc919137f6b42c18de7c817a687c3c')
+sha256sums_x86_64=('9d359184b2f16243a66e502f46cbf8673c013b757d16bc468de5c7097c18ef31')
+sha256sums_armv7h=('85eb8641625c93c71241dc478ddb4f4d5230c4e0e40cd4a59cb5a4bea0074ca4')
+sha256sums_aarch64=('794cb475b1917ebdf742727be0430649e799983cb9d78a52a678f282a4ee698c')
 
 options=(!strip)
 
@@ -55,4 +60,7 @@ package() {
     # Copy example files
     install -dm755 "${pkgdir}/usr/share/teleport"
     cp -r examples "${pkgdir}/usr/share/teleport/"
+
+    # Install license
+    install -Dm644 "${srcdir}/LICENSE-community" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
