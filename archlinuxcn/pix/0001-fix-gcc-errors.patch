@@ -1,0 +1,48 @@
+From 75545a20c5f71c598db6c4a152396fb389de868f Mon Sep 17 00:00:00 2001
+From: nate <njsimon10@gmail.com>
+Date: Sun, 9 Jun 2024 08:47:22 -0500
+Subject: [PATCH] fix missing type cast and invalid return type gcc errors
+
+---
+ extensions/file_tools/cairo-blur.c | 4 ++--
+ pix/gth-file-source-vfs.c          | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/extensions/file_tools/cairo-blur.c b/extensions/file_tools/cairo-blur.c
+index 44a92d4..f9b4ece 100644
+--- a/extensions/file_tools/cairo-blur.c
++++ b/extensions/file_tools/cairo-blur.c
+@@ -238,7 +238,7 @@ _cairo_image_surface_box_blur (cairo_surface_t *source,
+ 
+     if (cairo_surface_status (tmp) != CAIRO_STATUS_SUCCESS) {
+         cairo_surface_destroy (tmp);
+-        return;
++        return FALSE;
+     }
+ 
+ 	while (completed && (iterations-- > 0)) {
+@@ -305,7 +305,7 @@ _cairo_image_surface_sharpen (cairo_surface_t *source,
+ 	blurred = _cairo_image_surface_copy (source);
+ 	if (cairo_surface_status (blurred) != CAIRO_STATUS_SUCCESS) {
+ 		cairo_surface_destroy (blurred);
+-		return;
++		return FALSE;
+ 	}
+ 
+ 	if (! _cairo_image_surface_blur_with_progress (blurred, radius, &progress_data)) {
+diff --git a/pix/gth-file-source-vfs.c b/pix/gth-file-source-vfs.c
+index c57852b..eaeac2d 100644
+--- a/pix/gth-file-source-vfs.c
++++ b/pix/gth-file-source-vfs.c
+@@ -961,7 +961,7 @@ gth_file_mananger_delete_files (GtkWindow *window,
+ 					     _GTK_LABEL_DELETE, GTK_RESPONSE_YES,
+ 					     NULL);
+ 		_gtk_dialog_add_class_to_response (GTK_DIALOG (d), GTK_RESPONSE_YES, GTK_STYLE_CLASS_DESTRUCTIVE_ACTION);
+-		gtk_dialog_set_default_response (d, GTK_RESPONSE_YES);
++		gtk_dialog_set_default_response (GTK_DIALOG (d), GTK_RESPONSE_YES);
+ 		g_signal_connect (d, "response", G_CALLBACK (delete_permanently_response_cb), file_list);
+ 		gtk_widget_show (d);
+ 
+-- 
+2.45.1
+
