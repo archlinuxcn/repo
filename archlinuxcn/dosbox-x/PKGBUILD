@@ -7,7 +7,7 @@ pkgrel=1
 pkgdesc="x86 emulator with builtin DOS, with patches with more features"
 arch=(i686 x86_64 aarch64)
 url="http://dosbox-x.com"
-license=(GPL) # FIXME: waiting for upstream reply
+license=('GPL-2.0-or-later AND LGPL-2.0-or-later AND LGPL-2.1-or-later AND GPL-3.0-or-later')
 depends=(
   'alsa-lib' 'libasound.so'
   'ffmpeg' 'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libswscale.so'
@@ -32,12 +32,15 @@ makedepends=(
 conflicts=(dosbox-x-git)
 source=(
   "https://github.com/joncampbell123/dosbox-x/archive/dosbox-x-v$pkgver.tar.gz"
+  "$pkgname-fix-gcc14.patch"
 )
 
-sha256sums=('2a89d3196ddc15361f6dc7e6ab142bfe95945d93d527cfd6bacca1f7a401a513')
+sha256sums=('2a89d3196ddc15361f6dc7e6ab142bfe95945d93d527cfd6bacca1f7a401a513'
+            'fa9c3ccca232fa9ad4b1c1f22bc8b6a6124d11ea69a38e917566f743fa765625')
 
 prepare() {
   cd "dosbox-x-dosbox-x-v$pkgver"
+  patch -Np1 -i ../"$pkgname-fix-gcc14.patch"
   autoreconf -fiv
 }
 
