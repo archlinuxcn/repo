@@ -8,11 +8,15 @@ pkgdesc="The simple TTY terminal I/O application"
 url="http://tio.github.io/"
 arch=('x86_64' 'i686' 'arm' 'armv7h' 'armv6h' 'aarch64')
 license=('GPL-2.0-or-later')
-depends=('glibc'
-         'libinih' 'libinih.so'
-         'lua'
-         )
-makedepends=('meson' 'bash-completion')
+depends=(
+  'glibc'
+  'libinih' 'libinih.so'
+  'lua'
+)
+makedepends=(
+  'bash-completion'
+  'meson'
+)
 source=("https://github.com/tio/tio/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
 b2sums=('3cd9da5f69b8e9b0028846cc5b9ea8110df6a592c53f13aa64bd144aec9fb20ace56d5ee750a0b4ee589e389feb4bcb0cba7a11fe7193f4ced40d3251b47b2d7')
 
