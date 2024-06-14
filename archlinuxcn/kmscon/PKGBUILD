@@ -49,12 +49,11 @@ build() {
   meson compile -C build
 }
 
-check() {
-  # FIXME: Disable tests for wrong unit tests
-  # https://github.com/Aetf/kmscon/issues/50
-  #meson test -C build
-  :
-}
+# FIXME: Disable tests for wrong unit tests
+# https://github.com/Aetf/kmscon/issues/50
+#check() {
+#  meson test -C build
+#}
 
 package() {
   depends+=(
