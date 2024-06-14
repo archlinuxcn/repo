@@ -1,7 +1,7 @@
 # Patched package:
 # Maintainer: Térence Clastres <t.clastres@gmail.com>
 # Co-maintainer: Saren Arterius <saren@wtako.net>
-# Co-maintainer: Mingi Sung <me@saltyming.pe.kr>
+# Co-maintainer: Mingi Sung <sungmg@saltyming.net>
 
 # Official package:
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
@@ -33,7 +33,7 @@ else
 fi
 epoch=1
 pkgver=46.2+r6+g62e559d75
-pkgrel=2
+pkgrel=3
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -100,10 +100,10 @@ makedepends=(
   egl-wayland
   gi-docgen
   git
+  glib2-devel
   gobject-introspection
   gtk3
   meson
-  python-packaging
   sysprof
   wayland-protocols
   xorg-server
