@@ -9,8 +9,8 @@ url="https://github.com/tio/tio"
 arch=('x86_64' 'i686' 'arm' 'armv7h' 'armv6h' 'aarch64')
 license=('GPL-2.0-or-later')
 depends=(
+  'glib2'
   'glibc'
-  'libinih' 'libinih.so'
   'lua'
 )
 makedepends=(
@@ -26,6 +26,7 @@ build() {
 }
 
 package() {
+  depends+=('libglib-2.0.so')
   meson install -C build --destdir "$pkgdir"
 }
 
