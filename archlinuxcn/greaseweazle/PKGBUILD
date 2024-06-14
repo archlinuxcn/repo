@@ -7,33 +7,47 @@ pkgdesc="Tools for accessing a floppy drive at the raw flux level"
 arch=('x86_64')
 url="https://github.com/keirf/greaseweazle"
 license=('Unlicense')
-makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools-scm')
-depends=('glibc' 'python' 'python-crcmod' 'python-bitarray' 'python-pyserial' 'python-requests')
+makedepends=(
+  'python-build'
+  'python-installer'
+  'python-setuptools-scm'
+  'python-wheel'
+)
+depends=(
+  'glibc'
+  'python'
+  'python-bitarray'
+  'python-crcmod'
+  'python-pyserial'
+  'python-requests'
+)
 optdepends=('capsimage: Read IPF files')
-source=("https://github.com/keirf/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.zip"
-	0001-drop-Werror-because-redefinition-of-_FORTIFY_SOURCE.patch
-	)
+source=(
+  "https://github.com/keirf/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.zip"
+  "$pkgname-0001-drop-Werror-because-redefinition-of-_FORTIFY_SOURCE.patch"
+  )
 b2sums=('01c51c87e87950e66ff5ff2298a804a1af84b6e4baf5c019d26c70cd0bf8e627633ed989a7620e6286f678df057be2fc402a02498d722ede61ef72ff79c18156'
         '4d521f0e92af1d08a7f87a393abf5260ca8a684a13ce4afb4b96748201b34c3dabc2eff3610d9ab7215acc544b75a50371afff77ffe584ec968ed0102eeafec3')
 
 prepare() {
-	cd "$pkgname-$pkgver"
-	# Upstream prefer vendored patch in downstream.
-	# https://github.com/keirf/greaseweazle/issues/430
-	patch -Np1 -i ../0001-drop-Werror-because-redefinition-of-_FORTIFY_SOURCE.patch
+  cd "$pkgname-$pkgver"
+  # Upstream prefer vendored patch in downstream.
+  # https://github.com/keirf/greaseweazle/issues/430
+  patch -Np1 -i ../"$pkgname-0001-drop-Werror-because-redefinition-of-_FORTIFY_SOURCE.patch"
 }
 
 build() {
-	cd "$pkgname-$pkgver"
-	python -m build --wheel --no-isolation
+  cd "$pkgname-$pkgver"
+  python -m build --wheel --no-isolation
 
-	# use systemd access gain
-        sed 's/, MODE:="0666"/, TAG+="uaccess"/g' -i scripts/49-greaseweazle.rules
+  # use systemd access gain
+  sed 's/, MODE:="0666"/, TAG+="uaccess"/g' -i scripts/49-greaseweazle.rules
 }
 
 package() {
-	cd "$pkgname-$pkgver"
-	python -m installer --destdir="$pkgdir" dist/*.whl
+  cd "$pkgname-$pkgver"
+  python -m installer --destdir="$pkgdir" dist/*.whl
 
-	install -Dm644 scripts/49-greaseweazle.rules "$pkgdir/usr/lib/udev/rules.d/49-greaseweazle.rules"
+  install -Dm644 scripts/49-greaseweazle.rules "$pkgdir/usr/lib/udev/rules.d/49-greaseweazle.rules"
 }
+# vim:set ts=2 sw=2 et:
