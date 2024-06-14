@@ -8,6 +8,7 @@ arch=('x86_64')
 url="https://github.com/zu1k/nali"
 license=('MIT')
 conflicts=('nali-cli')
+depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver::https://github.com/zu1k/nali/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('8918e4c1c720dad1590a42fa04c5fea1ec862148127206e716daa16c1ce3561c')
@@ -16,24 +17,28 @@ b2sums=('20954cd7071469abcd6caf19d5264b2f45bfd4fe0ebecc203965f305cc2e9d0a1b80006
 options=(!lto)
 
 build() {
-    cd "$srcdir/nali-$pkgver"
-    go build \
-        -buildmode=pie \
-        -mod=readonly \
-        -modcacherw \
-        -ldflags "-compressdwarf=false -linkmode external -X \"github.com/zu1k/nali/internal/constant.Version=$pkgver\" -extldflags $LDFLAGS" \
-        -o $pkgname .
+  cd "$srcdir/nali-$pkgver"
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOPATH="${srcdir}"
+  export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+  go build \
+      -ldflags "-compressdwarf=false -linkmode external -X \"github.com/zu1k/nali/internal/constant.Version=$pkgver\"" \
+      -o $pkgname .
 }
 
 package() {
-    cd "$srcdir/nali-$pkgver"
-    install -Dm755 $pkgname "$pkgdir"/usr/bin/$pkgname
-    ln -sf ./$pkgname "$pkgdir"/usr/bin/nali
-    mkdir -p "$pkgdir/usr/share/bash-completion/completions/"
-    ./$pkgname completion bash > "$pkgdir/usr/share/bash-completion/completions/nali"
-    mkdir -p "$pkgdir/usr/share/zsh/site-functions/"
-    ./$pkgname completion zsh > "$pkgdir/usr/share/zsh/site-functions/_nali"
-    mkdir -p "$pkgdir/usr/share/fish/completions/"
-    ./$pkgname completion fish > "$pkgdir/usr/share/fish/completions/nali.fish"
-    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cd "$srcdir/nali-$pkgver"
+  install -Dm755 $pkgname "$pkgdir"/usr/bin/$pkgname
+  ln -sf ./$pkgname "$pkgdir"/usr/bin/nali
+  mkdir -p "$pkgdir/usr/share/bash-completion/completions/"
+  ./$pkgname completion bash > "$pkgdir/usr/share/bash-completion/completions/nali"
+  mkdir -p "$pkgdir/usr/share/zsh/site-functions/"
+  ./$pkgname completion zsh > "$pkgdir/usr/share/zsh/site-functions/_nali"
+  mkdir -p "$pkgdir/usr/share/fish/completions/"
+  ./$pkgname completion fish > "$pkgdir/usr/share/fish/completions/nali.fish"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
+# vim:set ts=2 sw=2 et:
