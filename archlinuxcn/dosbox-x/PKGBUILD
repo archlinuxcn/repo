@@ -27,14 +27,18 @@ source=(https://github.com/joncampbell123/dosbox-x/archive/dosbox-x-v${pkgver}.t
 
 sha256sums=('2a89d3196ddc15361f6dc7e6ab142bfe95945d93d527cfd6bacca1f7a401a513')
 
+prepare() {
+  cd dosbox-x-dosbox-x-v${pkgver}
+  autoreconf -fiv
+}
+
 build() {
-  cd $srcdir/dosbox-x-dosbox-x-v${pkgver}
+  cd dosbox-x-dosbox-x-v${pkgver}
 
   # FIXME: Workaround bug https://github.com/joncampbell123/dosbox-x/issues/3039
   export CFLAGS=${CFLAGS/-Werror=format-security/}
   export CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
 
-  autoreconf -fiv
   ./configure \
     --prefix=/usr \
     --enable-sdl2 \
@@ -48,4 +52,4 @@ package() {
   cd $srcdir/dosbox-x-dosbox-x-v${pkgver}
   make DESTDIR="${pkgdir}" install
 }
-
+# vim:set ts=2 sw=2 et:
