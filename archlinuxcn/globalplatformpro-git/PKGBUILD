@@ -8,7 +8,7 @@ pkgdesc="Manage applets and keys on JavaCard-s like a pro"
 arch=('any')
 url="https://github.com/martinpaljak/GlobalPlatformPro"
 license=('LGPL-3.0-or-later AND MIT')
-depends=('java-runtime-headless>=17' 'pcsclite' 'bash')
+depends=('java-runtime-headless=21' 'pcsclite' 'bash')
 makedepends=('git' 'java-environment=17' 'maven' 'which')
 conflicts=('globalplatformpro')
 provides=('globalplatformpro')
@@ -17,7 +17,7 @@ source=(
   'gpp'
 )
 b2sums=('SKIP'
-        '0fd110a0431ab4bf35adc83ff7205c7eae71ea8cda04520a01e7aa5c045010282357ad9d61dcee414728a225fad640fc4275165bd05457f451de76437bbae976')
+        'd2831bd58c1efc43a3e3460d4deef5067252141562e3825ce9054655ac9b949fc100549136de062d35a2147eb68b277c17fe0041de0e8b88af0800a85aa570f5')
 
 pkgver() {
   cd $_pkgname
