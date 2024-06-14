@@ -8,20 +8,27 @@ pkgdesc="x86 emulator with builtin DOS, with patches with more features"
 arch=(i686 x86_64 aarch64)
 url="http://dosbox-x.com"
 license=(GPL) # FIXME: waiting for upstream reply
-depends=('glibc' 'gcc-libs' 'hicolor-icon-theme' 'physfs'
-        'alsa-lib' 'libasound.so'
-        'libglvnd' 'libGL.so'
-        'libx11' 'libxrandr' 'libxkbfile'
-        'zlib' 'libz.so'
-        'freetype2' 'libfreetype.so'
-        'ffmpeg' 'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libswscale.so'
-        'sdl2' 'sdl2_net'
-        'libpng' 'libpng16.so'
-        'libpcap' 'libpcap.so'
-        'libslirp' 'libslirp.so'
-        'fluidsynth' 'libfluidsynth.so'
-        )
-makedepends=(glu nasm)
+depends=(
+  'alsa-lib' 'libasound.so'
+  'ffmpeg' 'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libswscale.so'
+  'fluidsynth' 'libfluidsynth.so'
+  'freetype2' 'libfreetype.so'
+  'gcc-libs'
+  'glibc'
+  'hicolor-icon-theme'
+  'libglvnd' 'libGL.so'
+  'libpng' 'libpng16.so'
+  'libpcap' 'libpcap.so'
+  'libslirp' 'libslirp.so'
+  'libx11' 'libxrandr' 'libxkbfile'
+  'physfs'
+  'sdl2' 'sdl2_net'
+  'zlib' 'libz.so'
+)
+makedepends=(
+  glu
+  nasm
+)
 conflicts=(dosbox-x-git)
 source=(
   "https://github.com/joncampbell123/dosbox-x/archive/dosbox-x-v$pkgver.tar.gz"
