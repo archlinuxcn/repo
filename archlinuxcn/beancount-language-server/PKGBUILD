@@ -8,7 +8,11 @@ pkgdesc="A Language Server Protocol (LSP) for beancount files"
 arch=('x86_64' 'aarch64')
 url="https://github.com/polarmutex/${pkgname}"
 license=('MIT')
-depends=('beancount')
+depends=(
+    'beancount'
+    'glibc'
+    'gcc-libs'
+)
 makedepends=('cargo')
 source=($pkgname-$pkgver.tar.gz::https://github.com/polarmutex/${pkgname}/archive/v${pkgver//_/-}.tar.gz)
 b2sums=('c35e4b7c359364ec83b452b4a1a051f0fa70ea332d4c6590c2967462d770f874ff2add60594f464209e31f626cfb1e2e5c941d5814c82fd484cad01399e30133')
