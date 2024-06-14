@@ -12,8 +12,9 @@ url='https://software.sil.org/andika/'
 arch=('any')
 license=('OFL-1.1')
 conflicts=('ttf-sil-fonts<=6')
-source=(https://github.com/silnrsi/font-andika/releases/download/v$pkgver/Andika-$pkgver.tar.xz)
-b2sums=('47e40f19490564a480e62ad17246748b53b35655fb34a87c051b755700516cace0f469bee25eb81af7511ede6411caaea5108d5e62ae2d76ce8e17d4ac288bad')
+source=(https://github.com/silnrsi/font-andika/releases/download/v$pkgver/Andika-$pkgver.tar.xz{,.asc})
+b2sums=('47e40f19490564a480e62ad17246748b53b35655fb34a87c051b755700516cace0f469bee25eb81af7511ede6411caaea5108d5e62ae2d76ce8e17d4ac288bad'
+        'SKIP')
 validpgpkeys=('15D41BC02EB807D405EFFAF6C9183BEA0288CDEE') # Robert de Vos <bobby_devos@sil.org>
 
 package_ttf-andika() {
