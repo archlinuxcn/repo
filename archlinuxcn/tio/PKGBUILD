@@ -21,13 +21,11 @@ source=("https://github.com/tio/tio/releases/download/v$pkgver/$pkgname-$pkgver.
 b2sums=('3cd9da5f69b8e9b0028846cc5b9ea8110df6a592c53f13aa64bd144aec9fb20ace56d5ee750a0b4ee589e389feb4bcb0cba7a11fe7193f4ced40d3251b47b2d7')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  arch-meson . build
+  arch-meson "$pkgname-$pkgver" build
   meson compile -C build
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
   meson install -C build --destdir "$pkgdir"
 }
 
