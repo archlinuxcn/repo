@@ -9,20 +9,22 @@ arch=(i686 x86_64 aarch64)
 url="http://dosbox-x.com"
 license=('GPL-2.0-or-later AND LGPL-2.0-or-later AND LGPL-2.1-or-later AND GPL-3.0-or-later')
 depends=(
-  'alsa-lib' 'libasound.so'
-  'ffmpeg' 'libavcodec.so' 'libavformat.so' 'libavutil.so' 'libswscale.so'
-  'fluidsynth' 'libfluidsynth.so'
-  'freetype2' 'libfreetype.so'
+  'alsa-lib'
+  'ffmpeg'
+  'fluidsynth'
+  'freetype2'
   'gcc-libs'
   'glibc'
   'hicolor-icon-theme'
-  'libglvnd' 'libGL.so'
-  'libpng' 'libpng16.so'
-  'libpcap' 'libpcap.so'
-  'libslirp' 'libslirp.so'
-  'libx11' 'libxrandr' 'libxkbfile'
-  'physfs'
-  'sdl2' 'sdl2_net'
+  'libglvnd'
+  'libpng'
+  'libpcap'
+  'libslirp'
+  'libx11'
+  'libxkbfile'
+  'libxrandr'
+  'sdl2'
+  'sdl2_net'
   'zlib' 'libz.so'
 )
 makedepends=(
@@ -61,6 +63,19 @@ build() {
 }
 
 package() {
+  depends+=(
+    'libasound.so'
+    'libavcodec.so'
+    'libavformat.so'
+    'libavutil.so'
+    'libswscale.so'
+    'libfluidsynth.so'
+    'libfreetype.so'
+    'libpng16.so'
+    'libpcap.so'
+    'libslirp.so'
+    'libz.so'
+  )
   cd "dosbox-x-dosbox-x-v$pkgver"
   make DESTDIR="$pkgdir" install
 }
