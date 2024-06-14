@@ -30,7 +30,7 @@ prepare() {
 
 build() {
   cd $_pkgname
-  ./mvnw package # FIXME: Use maven wrapper because Arch Linux has too old maven in repo
+  mvn package
 }
 
 package() {
