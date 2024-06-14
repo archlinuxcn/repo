@@ -13,14 +13,14 @@ url='https://github.com/Aetf/kmscon/'
 license=('MIT')
 depends=(
   'glibc'
-  'glib2' 'libgobject-2.0.so'
+  'glib2'
   'libdrm'
   'libgl'
-  'libtsm' 'libtsm.so'
-  'libxkbcommon' 'libxkbcommon'
+  'libtsm'
+  'libxkbcommon'
   'mesa'
-  'pango' 'libpango-1.0.so' 'libpangoft2-1.0.so'
-  'pixman' 'libpixman-1.so'
+  'pango'
+  'pixman'
   'sh'
   'systemd-libs'
 )
@@ -57,6 +57,14 @@ check() {
 }
 
 package() {
+  depends+=(
+    'libgobject-2.0.so'
+    'libtsm.so'
+    'libxkbcommon'
+    'libpango-1.0.so'
+    'libpangoft2-1.0.so'
+    'libpixman-1.so'
+  )
   meson install -C build --destdir="$pkgdir"
   install -Dm644 $pkgname-$pkgver/COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
