@@ -34,11 +34,9 @@ build() {
 }
 
 package() {
-  install -d "$pkgdir"/usr/bin/
-  install -m 755 gpp "$pkgdir"/usr/bin/
+  install -Dm755 gpp -t "$pkgdir"/usr/bin/
   cd $_pkgname
-  install -d "$pkgdir"/usr/share/java/globalplatformpro/
-  install -m 644 tool/target/gp.jar "$pkgdir"/usr/share/java/globalplatformpro/
-  install -d "$pkgdir"/usr/share/licenses/"$pkgname"
-  install -m 644 README.md "$pkgdir"/usr/share/licenses/"$pkgname"
+  install -Dm644 tool/target/gp.jar -t "$pkgdir"/usr/share/java/"$_pkgname"
+  install -Dm644 README.md -t "$pkgdir"/usr/share/licenses/"$pkgname"
 }
+# vim:set ts=2 sw=2 et:
