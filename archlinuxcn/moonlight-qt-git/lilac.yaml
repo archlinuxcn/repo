@@ -1,0 +1,10 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['XenHat'])
+post_build: aur_post_build
+update_on:
+  - source: github
+    github: moonlight-stream/moonlight-qt
+  - source: aur
+    aur: moonlight-qt-git
+maintainers:
+  - github: roaldclark
