@@ -1,0 +1,38 @@
+# Maintainer: XenHat <me at xenh.at>
+# Contributors: SoftwareRat <jaguar5018@gmail.com>, Michael Herzberg
+
+pkgname=moonlight-qt-git
+pkgver=6.0.0.r10.g640ac3f
+pkgrel=1
+pkgdesc='GameStream client for PCs (Windows, Mac, and Linux) (master branch)'
+arch=('aarch64' 'x86_64')
+license=('GPL-3.0-or-later')
+url='https://github.com/moonlight-stream/moonlight-qt'
+depends=('qt6-base' 'qt6-quickcontrols2' 'qt6-svg' 'ffmpeg' 'sdl2_ttf')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+source=($pkgname::"git+https://github.com/moonlight-stream/${pkgname%-git}.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+  git describe --long --tags --abbrev=7 --exclude='*[a-zA-Z][a-zA-Z]*' \
+    | sed -E 's/^[^0-9]*//;s/([^-]*-g)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "$pkgname"
+  git submodule update --init --recursive
+  qmake6 PREFIX="$pkgdir/usr" moonlight-qt.pro
+}
+
+build() {
+  cd "$pkgname"
+  make
+}
+
+package() {
+  cd "$pkgname"
+  make install
+}
