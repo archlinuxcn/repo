@@ -1,0 +1,21 @@
+--- src/JCloisterZone-4.6.1/src/main/java/com/jcloisterzone/ui/panel/StartPanel.java	2020-06-02 18:14:19.000000000 +1000
++++ StartPanel.java	2024-06-16 19:23:15.766330409 +1000
+@@ -113,17 +113,8 @@
+         playOnlinePanel.setLayout(new MigLayout("", "[grow,center]", "20[40px]20[grow]"));
+ 
+         playOnlinePanel.add(new MultiLineLabel(
+-          _tr("Connect to other players and play with them using internet connection and public game server play.jcloisterzone.com.")), "wrap, grow");
++          _tr("Public server is not compatible with this legacy version.")), "wrap, grow");
+ 
+-        btn = new JButton(_tr("Play online"));
+-        playOnlinePanel.add(btn, "wrap, alignx center, aligny top");
+-        btn.addActionListener(new ActionListener() {
+-            @Override
+-            public void actionPerformed(ActionEvent e) {
+-                client.mountView(new ConnectPlayOnlineView(client));
+-            }
+-        });
+-        btn.setFont(FONT_LARGE_BUTTON);
+ 
+     }
+ 

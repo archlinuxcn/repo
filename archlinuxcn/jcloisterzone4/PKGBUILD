@@ -1,0 +1,45 @@
+# Contributor: BluePeril <blueperil (at) blueperil _dot_ de>
+
+pkgname=jcloisterzone4
+_pkgname=jcloisterzone
+pkgver=4.6.1
+pkgrel=1
+pkgdesc="A Java version of the Carcassonne board game. Legacy version 4."
+arch=('any')
+url="https://jcloisterzone.com/en/"
+license=('AGPL')
+depends=('java-runtime>=8')
+makedepends=(jdk-openjdk maven)
+replaces=("$_pkgname<5")
+source=("https://github.com/farin/JCloisterZone/archive/refs/tags/v${pkgver}.tar.gz"
+        'legacy.patch'
+        'jcloisterzone4.sh'
+        'jcloisterzone4.desktop'
+        'jcloisterzone4.png')
+sha256sums=('5629e704a5c367e932c36a1be6249eae924c1406736eb98800d11f1c3be57dee'
+            'a56ff8a482e934195a3fc9b541e8d24b6554b42997ea4b93c8441a41d6422336'
+            '9d1eca2a50b93bde73458368511dc645ea9bd4106d6c141597948a32a45f145a'
+            'f479abd8cacfe0f56b81cc2d260d4b929fdeb35e0612a8a1990df03646e29bea'
+            '012a090df7f1fa30fe3ede444eab92cb2f6fd3c37e1b6786f04da9feb3f7cf38')
+
+prepare() {
+    patch -p1 -i ../legacy.patch
+}
+
+build() {
+    cd JCloisterZone-${pkgver}
+    scripts/build.sh ${pkgver}.final
+}
+
+package() {
+    install -d "$pkgdir/usr/share/JCloisterZone4"
+    cp -r -T "$srcdir/JCloisterZone-${pkgver}/build/JCloisterZone.jar" "$pkgdir/usr/share/JCloisterZone4/JCloisterZone.jar"
+    cp -r -T "$srcdir/JCloisterZone-${pkgver}/build/plugins" "$pkgdir/usr/share/JCloisterZone4/plugins"
+    find $pkgdir -type d -exec chmod 755 {} \;
+    find $pkgdir -type f -exec chmod 644 {} \;
+    install -D -m755 "$srcdir/${pkgname}.sh" "$pkgdir/usr/bin/${pkgname}"
+    install -D -m644 "$srcdir/${pkgname}.desktop" "$pkgdir/usr/share/applications/${pkgname}.desktop"
+    install -D -m644 "$srcdir/${pkgname}.png" "$pkgdir/usr/share/pixmaps/${pkgname}.png"
+}
+
+# vim:set ts=2 sw=2 et:
