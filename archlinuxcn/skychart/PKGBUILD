@@ -1,19 +1,22 @@
 # Maintainer: oldherl <oldherl@gmail.com>
 
 pkgname=skychart
-pkgver=4.3.4852
 _pkgver=4.3-4852
-pkgrel=1
+pkgver=${_pkgver/-/.}
+pkgrel=2
 pkgdesc="Free software to draw sky charts, also known as Cartes du Ciel. Beta version"
 arch=('x86_64')
 license=('GPL')
-depends=('qt5-base' 'xplanet' 'libpasastro')
+depends=('qt5-base' 'xplanet' 'libpasastro' 'qt5pas')
 makedepends=('fpc' 'lazarus-qt5' 'wget')
+optdepends=(
+"xplanet: for displaying textures on planets"
+)
 url="http://www.ap-i.net/skychart/start"
 
 # Using my own copy of source code because upstream deletes beta tarballs regularly.
 source=(
-'https://build.archlinuxcn.org/~oldherl/files/skychart/skychart-4.3-4852-src.tar.xz'
+"https://build.archlinuxcn.org/~oldherl/files/skychart/skychart-${_pkgver}-src.tar.xz"
 )
 
 sha256sums=('c62ea3b8cb426a5aca056185bf4b11933e210e9031a9ebd665b2b4d07a307887')
