@@ -72,7 +72,7 @@ url="https://mesa3d.org"
 license=('MIT AND BSD-3-Clause AND SGI-B-2.0')
 source=('mesa::git+https://gitlab.freedesktop.org/mesa/mesa.git'
         'meson-build-root.patch::https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/29275.patch'
-        'LICENSE')
+       )
 options=(!lto)
 
 # Rust crates for NVK, used as Meson subprojects
@@ -89,8 +89,7 @@ for _crate in "${!_crates[@]}"; do
 done
 
 sha256sums=('SKIP'
-            '0385b5021e47a0e13e2ed5c58f115d29c410e3b3ec28a9795fdc377333779ee0'
-            '7052ba73bb07ea78873a2431ee4e828f4e72bda7d176d07f770fa48373dec537'
+            '74699530bbf6f99da9e942ca4f989dacec9bdd70c56b63f2ef035e25771701dd'
             '39278fbbf5fb4f646ce651690877f89d1c5811a3d4acb27700c1cb3cdb78fd3b'
             '3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b'
             '5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae'
