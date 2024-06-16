@@ -9,7 +9,7 @@ arch=('any')
 url="https://jcloisterzone.com/en/"
 license=('AGPL')
 depends=('java-runtime>=8')
-makedepends=(jdk-openjdk maven)
+makedepends=(jdk-openjdk maven git)
 replaces=("$_pkgname<5")
 source=("https://github.com/farin/JCloisterZone/archive/refs/tags/v${pkgver}.tar.gz"
         "jws::git+https://github.com/farin/Java-WebSocket.git"
