@@ -1,5 +1,4 @@
-# Maintainer: Evgeniy Dombek <edombek@yandex.ru>
-# Maintainer:  Yigit Dallilar <yigit.dallilar at gmail dot com>
+# Maintainer: Zhijun Zhang <zhangzhijun23@mails.ucas.ac.cn>
 
 pkgname=ds9
 pkgver=8.6b1
@@ -7,39 +6,32 @@ pkgrel=1
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="https://sites.google.com/cfa.harvard.edu/saoimageds9"
 arch=('x86_64')
-license=('GPL2')
-provides=(ds9)
-conflicts=(ds9-bin)
-depends=("desktop-file-utils" "libx11" "libxft" "libxml2" "libxslt" "tcl" "tk" "zlib")
+license=('GPL3')
+depends=(libx11 zlib libxslt libxml2 libxft tcl tk)
 options=(!strip !lto)
-makedepends=(gcc make automake autoconf zip)
-replaces=()
-backup=()
-source=("https://github.com/SAOImageDS9/SAOImageDS9/archive/v${pkgver}.tar.gz"
-        "ds9.desktop")
-sha1sums=(
-'1475b13669d4ae2f15b0a32cc01accf08981e4d1'
-'84f033877023f70625bd111a8670d88d00c2bfbc'
-)
-
+makedepends=(git gcc make automake autoconf zip)
+conflicts=('ds9' 'ds9-bin')
+# Using my branch to fix gcc14 compiling and hidpi side tabs
+source=("$pkgname::git+https://github.com/oldherl/SAOImageDS9.git#branch=fix-prefs-tabs"
+        "ds9.desktop"
+        )
+sha256sums=('SKIP'
+         'cf41109f31b9be057ab04a96613a59a87fb6cb3ed405fa93545f6bfd8fd98975'
+         )
 
 build() {
-    cd ${srcdir}/SAOImageDS9-${pkgver}
+    cd ${srcdir}/${pkgname}
     unix/configure
-    # Suppress warning, until commit 8d30858 is included in the release.
-    CFLAGS="-Wno-incompatible-pointer-types" make
+    make
 }
 
 package() {
-    
-    install -Dm644 ${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
-    install -Dm644 ${srcdir}/SAOImageDS9-${pkgver}/ds9/doc/sun.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
+    install -Dm644 ds9.desktop ${pkgdir}/usr/share/applications/ds9.desktop
+    install -Dm644 ${srcdir}/${pkgname}/ds9/doc/sun.png ${pkgdir}/usr/share/pixmaps/ds9.png
+    install -Dm644 ${srcdir}/${pkgname}/ds9/doc/sun.png ${pkgdir}/usr/share/pixmaps/"SAOImage ds9".png
 
-    cd ${srcdir}/SAOImageDS9-${pkgver}
+    cd ${srcdir}/${pkgname}
     install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    install -Dm755 bin/ds9 ${pkgdir}/usr/bin/${pkgname}
+    install -Dm755 ./bin/ds9 ${pkgdir}/usr/bin/ds9
 
 }
-
-# vim:set ts=4 sw=4 et:
-
