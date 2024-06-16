@@ -2,8 +2,8 @@
 # Contributor: Peter Cai <peter@typeblog.net>
 
 pkgname=lpac
-pkgver=2.0.1
-pkgrel=2
+pkgver=2.0.2
+pkgrel=1
 pkgdesc="Local Profile Agent (LPA) for eSIM cards via PC/SC readers, or AT / APDU commands over stdio."
 arch=(x86_64 aarch64 armv7h)
 url="https://github.com/estkme-group/lpac"
@@ -11,7 +11,7 @@ license=('AGPL-3.0-only AND LGPL-2.0-only AND MIT')
 depends=(curl pcsclite glibc)
 makedepends=(cmake ninja)
 source=($pkgname-$pkgver.tar.gz::https://github.com/estkme-group/lpac/archive/refs/tags/v$pkgver.tar.gz)
-b2sums=('9da39b942162c9ea2c7c08ece39121d2a2cb87f39e29719f6752404a76cd1bee809c089bad533cc78792f29f294090fb3ff5dcc0e9240c75dd2b51e0556de563')
+b2sums=('1fab67348100176ebfa94a0da676b79a4193efd41c649e3033c0da8433aa42a9c94f4e46c2ea1a67fae05ff17c86f8bdc35497e7456494c031f3c186ee9051f0')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
