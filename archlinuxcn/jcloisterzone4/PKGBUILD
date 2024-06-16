@@ -23,7 +23,7 @@ sha256sums=('5629e704a5c367e932c36a1be6249eae924c1406736eb98800d11f1c3be57dee'
             '012a090df7f1fa30fe3ede444eab92cb2f6fd3c37e1b6786f04da9feb3f7cf38')
 
 prepare() {
-    patch -p1 -i ../legacy.patch
+    patch -p1 -i legacy.patch
 }
 
 build() {
