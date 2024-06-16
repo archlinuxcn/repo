@@ -22,7 +22,7 @@ sha256sums=('SKIP'
 build() {
     cd ${srcdir}/${pkgname}
     unix/configure
-    make
+    make -j 1
 }
 
 package() {
