@@ -4,7 +4,7 @@
 # Contributor: Daniil Kovalev <daniil@kovalev.website>
 pkgname=64gram-desktop
 _pkgname=64Gram
-pkgver=1.1.28
+pkgver=1.1.29
 pkgrel=1
 epoch=1
 pkgdesc='Unofficial desktop version of Telegram messaging app'
@@ -18,7 +18,8 @@ depends=('hunspell' 'ffmpeg' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
          'libxcomposite' 'libvpx' 'libxdamage' 'kcoreaddons' 'jemalloc')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'meson'
              'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt'
-             'gobject-introspection' 'boost' 'fmt' 'mm-common' 'perl-xml-parser' 'python-packaging' 'dos2unix')
+             'gobject-introspection' 'boost' 'fmt' 'mm-common' 'perl-xml-parser' 'python-packaging'
+             'dos2unix' 'glib2-devel')
 optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 
@@ -29,7 +30,7 @@ source=("https://github.com/TDesktop-x64/tdesktop/releases/download/v${pkgver}/$
 
 noextract=("${_pkgname}-${pkgver}-full.tar.gz")
 
-sha512sums=('7ceceeeaf1134da4857e8ece3a1d860ad549b9e71eba81d05bd0f19ef116466139eeb8e439f74cf3d465f0eaf89c6ad69b24c9369ac7568f2a6b4d612465e924'
+sha512sums=('9140bf413a3e631d3a4398c42a819f922fe6aba5edf909bf0d8f2e10646eb48f101c9adf40138fbf2bdd64188e3990f773eee2284acf0fcb2944ec3b6a00f5ef'
             '0e0f0dcb99ed6c7566e7a75404e39e16c27658eb5999e041a82aa975447ce8719ce6703cc36efc039e16a3ff3721f4a7c76df24f0ead9aa48ce5e23001142072'
             'd813a5ac6ff2208b693ecf494d7bf036087e223662f9f34aaaeafea0afe0fe798e867b9610f7221ea80319865502c20b61310d5a31634b888793873d63322463'
             'ea027bc2d40c74507adf32380444207210a8c31cdba57f3f468d23d8e9c7376647cc8c713f188660f9b1dacd9041227aafd5a27c7889f47ea3985712b6b74b8b')
