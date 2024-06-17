@@ -2,8 +2,8 @@
 
 pkgname=python-pycocotools
 _pkgname=pycocotools
-pkgver=2.0.7
-pkgrel=3
+pkgver=2.0.8
+pkgrel=1
 pkgdesc='Official APIs for the MS-COCO dataset'
 arch=(x86_64)
 url='https://pypi.org/project/pycocotools'
@@ -23,7 +23,7 @@ makedepends=(
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
         "LICENSE::https://github.com/cocodataset/cocoapi/raw/master/license.txt")
-sha512sums=('39f03f1df283ad9a286d821811a7c3b1d6800e85785200eec91ae9640d2fdad6c1e2a3efb7f65b6b3052292d7b436b73562fe79654f92ef937707ed55e33c774'
+sha512sums=('3f2ed81561c6fa6fdce9cd934adfb14323a48c7eb589cbf307262d98462a17fd6588c5fdb53bf8d9ba0ecaaa2c6f26f71617951d8fec55046f5e736ca3feb1c0'
             '5fe64df67e41aa3fa97db466cedfbf659c308db1917d46396721e2d05146083323ef35f18b45e792f2bff70919449fc74394518d60c8ccf63979ae20ceb21595')
 
 build() {
