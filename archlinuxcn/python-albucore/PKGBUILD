@@ -2,7 +2,7 @@
 
 _pkgname=albucore
 pkgname=python-albucore
-pkgver=0.0.10
+pkgver=0.0.11
 pkgrel=1
 pkgdesc='A high-performance image processing library designed to optimize and extend the Albumentations library with specialized functions for advanced image transformations'
 arch=('any')
@@ -20,7 +20,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/albumentations-team/albucore/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('d01ee69d513a3bf14130938ea8733673e8d6d8f315ad9b88262433a22c64fc0110018ea922d1ab3cb1569ab4e182ce2c81eef3ba5cf0fe45f4c0de349bc92c12')
+sha512sums=('4bac2befbbe2be165dbd12bd75723dbb47ffb6dc9be0cd54bf75224e9ad68cb75c7370ec2f7e095278df1e5d22e09741942482760994a1160fdb746e2b0c50da')
 
 build() {
   cd "${_pkgname}-${pkgver}"
