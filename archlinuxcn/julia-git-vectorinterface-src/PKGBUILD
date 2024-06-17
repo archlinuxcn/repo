@@ -1,6 +1,6 @@
 pkgname=julia-git-vectorinterface-src
-pkgver=0.4.5
-_commit=897bfefe656a4184823b81a2ae5435a641048c82
+pkgver=0.4.6
+_commit=83f69fe8d6a1faf711a04362ffacb058df6a5f28
 pkgrel=1
 pkgdesc="VectorInterface.jl"
 url="https://github.com/Jutho/VectorInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Jutho/VectorInterface.jl.git#commit=$_commit")
-sha256sums=('fc5223effc74e6976f88cd6f07cbb7fd2f6b80dbedc7a738acf517ed1fd73247')
+sha256sums=('4f72f4d5987fd7952474b6264b7bb4831d58468e6af9d18b455e80abd36d283e')
 
 package() {
   cd VectorInterface.jl
