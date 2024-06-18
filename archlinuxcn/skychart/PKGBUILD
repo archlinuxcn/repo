@@ -3,7 +3,7 @@
 pkgname=skychart
 _pkgver=4.3-4852
 pkgver=${_pkgver/-/.}
-pkgrel=2
+pkgrel=3
 pkgdesc="Free software to draw sky charts, also known as Cartes du Ciel. Beta version"
 arch=('x86_64')
 license=('GPL')
@@ -21,10 +21,20 @@ source=(
 
 sha256sums=('c62ea3b8cb426a5aca056185bf4b11933e210e9031a9ebd665b2b4d07a307887')
 
+prepare() {
+  cd "skychart-$_pkgver-src"
+  # Do not strip binaries when installing. Let makepkg do so.
+  # makepkg will produce a -debug package of the debug symbols.
+  sed -i 's/-m 755 -s/-m 755/g' install.sh
+}
+
 build() {
   cd "skychart-$_pkgver-src"
   fpc="/usr/lib/fpc/""`fpc -iV`""/units/x86_64-linux/"
   echo fpc=$fpc
+  # Keep debug symbols and do not strip
+  export fpcopts="-g -gl -O3 -CX -XX"
+  echo fpcopts="$fpcopts"
   echo ./configure fpc="$fpc" lazarus=/usr/lib/lazarus prefix="$pkgdir/usr" target=x86_64-linux 
   ./configure fpc="$fpc" lazarus=/usr/lib/lazarus prefix="$pkgdir/usr" target=x86_64-linux 
   make CPU_TARGET=x86_64 OS_TARGET=linux clean
