@@ -2208,3 +2208,25 @@ Mon May 20 14:56:15 2024 +0200
     *  2024-05-10 1f67c5c samuel-jimenez feat(config): make cache and data dirs configurable (fixes #722) (#796)
     *  2024-05-04 7def088 Bundy01 chore(locale): update es.po, fr.po (#794)
     *  2024-04-28 1821e8d Osman Karagöz chore(locale): update tr.po (#789)
+
+
+Tue Jun 18 14:16:21 2024 +0200
+-------------------------------------------------
+1.22            Release 1.22
+    
+    Notable changes:
+    *  2024-06-16 cb3ddd5 actionless fix(pyproject): update minimal python version here as well
+    *  2024-06-15 f81bc99 actionless chore(pkgbuild): specify minimal python version (for Arch-derivative distros)
+    *  2024-06-15 bab9dd4 actionless fix(main: dynamic_select): add repo name prefix when passing user-chosen packages for installation (fixes #542)
+    *  2024-06-15 a3a476c samuel-jimenez fix(asrgs, config): Correctly source xdg data paths  (#806) (fixes: #801)
+    *  2024-06-14 0b34e1e actionless feat: <FINALLY> implement lookup by `provides` field (fixes #402)
+    *  2024-06-08 d06977b actionless fix(main: check_runtime_deps): treat missing base-devel as warning, not error
+    *  2024-06-07 ea44b9d actionless fix(main: check_systemd_dynamic_users): add back check for executable itself
+    *  2024-06-07 bbd3fc4 actionless feat(main: check_runtime_deps): improve error message
+    *  2024-06-07 63bad56 actionless chore(core: check_runtime_deps): fakeroot is now part of base-devel
+    *  2024-06-07 85fd126 actionless fix(core: check_systemd_dynamic_users_version): use pyalpm instead of systemd --version (fixes #807)
+    *  2024-06-07 5dd4b94 actionless fix(core: check_runtime_deps): don't check check for systemd version if DynamicUsers is turned off
+    *  2024-06-05 a05b1b9 Bundy01 chore(locale): update es.po, fr.po (#804)
+    *  2024-06-04 51e4a49 actionless feat(config: schema, migration): add `old_default` for migrating default values
+    *  2024-05-22 e7060e4 actionless fix(pikaur: main: execute_pikaur_opertaion): handle read-stdin case correctly together with sudo
+    *  2024-05-22 cc55858 actionless fix(pikaur: main: cli_dynamic_select): require sudo only after selecting a package (fixes: #790)
