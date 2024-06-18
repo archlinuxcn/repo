@@ -8,6 +8,7 @@ pkgdesc="Hyprland utilities library used across the ecosystem"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/hyprwm/${_pkgname}"
 license=('BSD-3-Clause')
+depends=('pixman')
 makedepends=('git' 'cmake')
 source=("git+${url}.git")
 conflicts=("${_pkgname}")
