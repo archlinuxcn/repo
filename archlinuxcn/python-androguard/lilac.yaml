@@ -4,6 +4,12 @@ maintainers:
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
 
+repo_depends:
+  - python-apkinspector
+  - python-mutf8
+  - python-dataset
+  - python-frida
+
 update_on:
   - source: github
     github: androguard/androguard
