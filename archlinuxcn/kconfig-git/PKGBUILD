@@ -6,7 +6,7 @@ pkgname=kconfig-git
 _pkgname=${pkgname%-git}
 pkgver=6.3.0.rc1.r8.g270c352
 pkgrel=1
-epoch=1
+epoch=2
 pkgdesc="Configuration system"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://community.kde.org/Frameworks"
@@ -21,7 +21,7 @@ sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	git describe --long --tags --match="v[0-9]*" --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
