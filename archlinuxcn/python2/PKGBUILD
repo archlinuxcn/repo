@@ -6,7 +6,7 @@
 
 pkgname=python2
 pkgver=2.7.18
-pkgrel=11
+pkgrel=12
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('x86_64' 'aarch64')
@@ -56,6 +56,25 @@ prepare() {
   patch -p1 -i ../0015-bpo-42278-Use-tempfile.TemporaryDirectory-rather-tha.patch
   patch -p1 -i ../0016-Fix-accidentally-leaving-one-sub-test-commented-out.patch
   patch -p1 -i ../0017-bpo-46811-Make-test-suite-support-Expat-2.4.5-GH-314.patch
+  patch -p1 -i ../0018-bpo-46756-Fix-authorization-check-in-urllib.request-.patch
+  patch -p1 -i ../0019-Install-libpythonX.Y.a-in-usr-lib-instead-of-usr-lib.patch
+  patch -p1 -i ../0020-Disable-modules-and-SSL.patch
+#  patch -p1 -i ../0021-Gentoo-libdir.patch # Gentoo specific patch
+#  patch -p1 -i ../0022-Non-zero-exit-status-on-failure.patch # Don't need this
+#  patch -p1 -i ../0023-sqlite-loadable-extensions.patch # causes error: IndentationError: expected an indented block
+  patch -p1 -i ../0024-Regenerate-platform-specific-modules.patch
+#  patch -p1 -i ../0025-distutils-C.patch # Causes failure on test_distutils
+  patch -p1 -i ../0026-Turkish-locale.patch
+  patch -p1 -i ../0027-ARM-OABI.patch
+  patch -p1 -i ../0028-use_pyxml.patch
+  patch -p1 -i ../0029-Disable-nis.patch
+#  patch -p1 -i ../0030-Make-module-byte-compilation-non-fatal.patch # Does not apply cleanly
+  patch -p1 -i ../0031-Use-ncurses-to-find-pkg-config.patch
+  patch -p1 -i ../0032-Use-specific-Werror-for-cross-compile-tests.patch
+  patch -p1 -i ../0033-Force-using-system-libffi.patch
+  patch -p1 -i ../0034-test.support.unlink-ignore-EACCES.patch
+  patch -p1 -i ../0035-ssl-Hard-disable-SSLv3-to-avoid-automagic-deps.patch
+  patch -p1 -i ../0036-Fix-Wimplicit-int-Wimplicit-function-declaration.patch
 
   # Temporary workaround for FS#22322
   # See http://bugs.python.org/issue10835 for upstream report
@@ -114,7 +133,7 @@ check() {
   local -x TZ=UTC
   cd Python-${pkgver}
   LD_LIBRARY_PATH="${srcdir}/Python-${pkgver}":${LD_LIBRARY_PATH} \
-    xvfb-run "${srcdir}/Python-${pkgver}/python" -m test.regrtest -v -uall -x test_idle test_tk test_ttk_guionly test_ctypes test_ssl test_ftplib test_imaplib test_urllib2_localnet test_codecmaps_jp
+    xvfb-run "${srcdir}/Python-${pkgver}/python" -m test.regrtest -v -uall -x test_idle test_tk test_ttk_guionly test_ctypes test_ssl test_ftplib test_imaplib test_urllib2_localnet test_codecmaps_jp test_ossaudiodev
 }
 
 package() {
