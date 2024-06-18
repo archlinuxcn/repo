@@ -2,7 +2,7 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=126.0
+pkgver=127.0
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
@@ -14,13 +14,33 @@ license=(
 )
 depends=(
   dbus
+  alsa-lib
+  at-spi2-core
+  bash
+  cairo
   ffmpeg
+  fontconfig
+  freetype2
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
   gtk3
+  hicolor-icon-theme
   libpulse
+  libx11
+  libxcb
+  libxcomposite
+  libxdamage
+  libxext
+  libxfixes
+  libxrandr
   libxss
   libxt
   mime-types
+  nspr
   nss
+  pango
   ttf-font
 )
 makedepends=(
@@ -53,7 +73,6 @@ optdepends=(
   'hunspell-en_US: Spell checking, American English'
   'libnotify: Notification integration'
   'networkmanager: Location detection via available WiFi networks'
-  'pulseaudio: Audio support'
   'speech-dispatcher: Text-to-Speech'
   'xdg-desktop-portal: Screensharing with Wayland'
 )
@@ -74,7 +93,7 @@ source=(
   "default192x192.png"
 )
 
-sha256sums=('545e4d26522c4ed1a669814340dc8fee7ca8d60452a07a91f30ec28198ec072d'
+sha256sums=('eb7c03ad394dd8445110d718b90da6a0252c0533b8cb6ab27dd1a6e83b6853e7'
             '7d01d317b7db7416783febc18ee1237ade2ec86c1567e2c2dd628a94cbf2f25d'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
 
@@ -172,6 +191,10 @@ build() {
   CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
   CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
+  # Breaks compilation since https://bugzilla.mozilla.org/show_bug.cgi?id=1896066
+  CFLAGS="${CFLAGS/-fexceptions/}"
+  CXXFLAGS="${CXXFLAGS/-fexceptions/}"
+
   # LTO needs more open files
   ulimit -n 4096
 
@@ -194,7 +217,7 @@ END
 
   if [[ $CARCH == 'aarch64' && $_build_profiled_aarch64 == true || $CARCH == 'x86_64' && $_build_profiled_x86_64 == true ]]; then
 
-    ./mach build
+    ./mach build --priority normal
 
     echo "Profiling instrumented browser..."
 
@@ -214,7 +237,7 @@ END
     test -s jarlog
 
     echo "Removing instrumented browser..."
-    ./mach clobber
+    ./mach clobber objdir
 
     echo "Building optimized browser..."
 
@@ -243,7 +266,7 @@ END
     cat >.mozconfig ../mozconfig
   fi
 
-  ./mach build
+  ./mach build --priority normal
 }
 
 package() {
