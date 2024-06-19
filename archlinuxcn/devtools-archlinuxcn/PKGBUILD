@@ -5,10 +5,9 @@
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 epoch=1
-pkgver=1.2.0
-pkgrel=2
-# curl https://api.github.com/repos/archlinuxcn/devtools/git/ref/tags/$pkgver-archlinuxcn1 | jq -r .object.sha
-_tag=74fb845cf28be24f73fbb1b096fad64e4f725d2c
+pkgver=1.2.1
+pkgrel=1
+_tag=$pkgver-archlinuxcn1
 _upstream_pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
 arch=('any')
@@ -52,11 +51,16 @@ optdepends=(
 )
 provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
-source=("$pkgname::git+https://github.com/archlinuxcn/devtools.git?signed#tag=$_tag")
-b2sums=('SKIP')
-validpgpkeys=(
-  'E62545315B012B69C8C94A1D56EC201BFC794362'  # https://github.com/yan12125
-)
+source=("$pkgname::git+https://github.com/archlinuxcn/devtools.git#tag=$_tag"
+        "ssh_allowed_signers")
+b2sums=('07c725a8b12c1327c088c37d9f5e1a76cab05daac536ca0dada7ca86a23cf41b23c863cfa2f62a395d9a19d73624258a095b97e6fadf25a2c53083884fb75262'
+        '6c9fab6619bcc3ab0d1bf0944a6dc53296caa1a2dccb0cf833957c5820f3f47bae44d26ed85edf294b4efffb18b59773cfb7f89ea961c582556b4a28ee1f9d0c')
+
+# XXX: move to verify() when devtools supports it
+# https://gitlab.archlinux.org/archlinux/devtools/-/issues/224
+prepare() {
+  git -C ${pkgname} -c gpg.ssh.allowedSignersFile="$srcdir/ssh_allowed_signers" verify-tag $_tag
+}
 
 pkgver() {
   cd ${pkgname}
