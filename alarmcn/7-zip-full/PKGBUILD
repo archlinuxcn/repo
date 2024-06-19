@@ -1,6 +1,6 @@
 _name=7-zip
 pkgname=${_name}-full
-pkgver=24.06
+pkgver=24.07
 pkgrel=1
 pkgdesc='File archiver with a high compression ratio (full package to replace p7zip)'
 url='https://7-zip.org/'
@@ -8,6 +8,8 @@ license=('LGPL-2.1-or-later' 'BSD-3-Clause' 'LicenseRef-UnRAR')
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 provides=("${_name}" 'p7zip' '7z.so')
 conflicts=('p7zip')
+
+depends=('glibc')
 makedepends=('uasm')
 
 _repo='7zip'
@@ -23,8 +25,8 @@ source=(
 )
 
 sha256sums=(
-    '0e0d3e2b1baaba81d8b6f5d26e55152fdea4a2453d79ef2d96f3a31405f0ad46'
-    '807bd858433b13215abc915cbb9ccdc806fc7b421418a4088a194e1729a6a6b2'
+    '3c81290ecb0da2bc1dcf72301c009fbb7a2b3424497bbc9fdf38700d34d9b8c7'
+    '4a47877a7f6eba7fe6c900f7379bb2061b9620b588cf3189d99ae2a8aaa8f503'
     'f54dfe73ad045f200d5512dfd4387ef626068662a5af6e17d81052996544af54'
     '338b732445d3cfa416e40384bd9f0596506aa4b464b3f86aa971af4cfa6084c7'
 )
@@ -45,13 +47,24 @@ _make() {
 }
 
 _build() {
-    local -A platforms=(['x86_64']='x64' ['i686']='x86' ['aarch64']='arm64' ['armv7h']='arm')
-
     set -a
-    PLATFORM="${platforms["${CARCH}"]}"
-    [ "${CARCH}" = 'x86_64' ] && IS_X64=1
-    [ "${CARCH}" = 'i686' ] && IS_X86=1
-    [ "${CARCH}" = 'aarch64' ] && IS_ARM64=1
+    case "${CARCH}" in
+        'x86_64')
+            PLATFORM='x64'
+            IS_X64=1
+            ;;
+        'i686')
+            PLATFORM='x86'
+            IS_X86=1
+            ;;
+        'aarch64')
+            PLATFORM='arm64'
+            IS_ARM64=1
+            ;;
+        'armv7h')
+            PLATFORM='arm'
+            ;;
+    esac
     USE_ASM=1
     CFLAGS_WARN='-Wno-error'
     CFLAGS_USER="${CFLAGS}"
