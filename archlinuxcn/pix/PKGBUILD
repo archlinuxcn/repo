@@ -1,8 +1,8 @@
 # Maintainer: Nate Simon <njsimon10@gmail.com>
 
 pkgname=pix
-pkgver=3.4.0
-pkgrel=2
+pkgver=3.4.1
+pkgrel=1
 pkgdesc="Image viewer and browser based on gthumb. X-Apps Project."
 arch=('i686' 'x86_64' 'armv7h')
 license=('GPL')
@@ -42,13 +42,13 @@ provides=($pkgname)
 conflicts=('pix-git')
 url='https://github.com/linuxmint/pix'
 
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/linuxmint/${pkgname}/archive/${pkgver}.tar.gz" '0001-fix-gcc-errors.patch')
-md5sums=('f0531bec33032e352df9b1dac75a5d24' '5fa2d73ff17bf3165edd35f5bea67448')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/linuxmint/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('005a0b736d2d1d01d65b3766959cfe3e')
 
 prepare() {
     cd "${srcdir}"/${pkgname}-${pkgver}
 
-    patch --forward --strip=1 --input=../0001-fix-gcc-errors.patch
+    #patch --forward --strip=1 --input=../0001-fix-gcc-errors.patch
 }
 
 build() {
