@@ -1,6 +1,6 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
-_pkgname=lazy_loader
+_pkgname=lazy-loader
 pkgname=python-lazy-loader
 pkgver=0.4
 pkgrel=2
@@ -40,6 +40,6 @@ package() {
   install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
 
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
-  rm -rfv ${pkgdir}${site_packages}/${_pkgname}/tests
+  rm -rfv ${pkgdir}${site_packages}/lazy_loader/tests
 }
 # vim:set ts=2 sw=2 et:
