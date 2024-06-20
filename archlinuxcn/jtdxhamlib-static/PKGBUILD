@@ -8,7 +8,11 @@ pkgdesc='Modified hamlib for jtdx'
 arch=('x86_64')
 url='https://github.com/jtdx-project/jtdxhamlib'
 license=('GPL-2.0-or-later AND LGPL-2.1-or-later')
-depends=('libusb' 'readline')
+depends=(
+  'glibc'
+  'libusb'
+  'readline'
+)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/jtdx-project/${_pkgname}/archive/${pkgver}.tar.gz")
 sha256sums=('a5678cb3ede7d75371b9baee046a3ae43ce94af647dcfe07142dc2e4e5f147d4')
 sha512sums=('8eb5a01e299e90b0e95ac782e7ee7e121f85157c990e812226165758e57a595a287ac1391a04f08d2258f6b6e568833e25009d182fc80249764edcc6590bb3fe')
@@ -18,20 +22,24 @@ options=(staticlibs)
 prepare() {
   cd "${_pkgname}-${pkgver}"
   autoreconf -fiv
+  mkdir -p build
 }
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  mkdir -p build
   cd build
   CFLAGS+=" -ffat-lto-objects"
   CXXFLAGS+=" -ffat-lto-objects"
+  # conflict with hamlib and only used by jdtx
+  # so install it in /opt
   ../configure \
     "--prefix=/opt/${_pkgname}" \
     --disable-shared \
     --enable-static \
     --without-cxx-binding \
     --disable-winradio
+  # avoid overlink
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' ../libtool
   make
 }
 
