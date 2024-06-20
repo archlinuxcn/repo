@@ -7,7 +7,9 @@ pkgrel=4
 pkgdesc='For amateur radio communication using very weak signals. Forked from WSJT-X.'
 arch=('x86_64')
 url='https://github.com/jtdx-project/jtdx'
-license=('GPL3') # FIXME: waiting for upstream reply
+# FIXME: waiting for upstream reply
+# https://github.com/jtdx-project/jtdx/issues/27
+license=('GPL3')
 depends=( 'fftw' 'libfftw3f.so' 'libfftw3f_threads.so'
           'libusb' 'libusb-1.0.so' 'readline' 'libreadline.so' # For executable files from hamlib
           'qt5-serialport' 'qt5-multimedia' 'qt5-websockets'
@@ -31,3 +33,4 @@ package() {
   cd "${pkgname}-${pkgver}"
   DESTDIR="${pkgdir}/" ninja -C build install
 }
+# vim: set ts=4 sw=4 et:
