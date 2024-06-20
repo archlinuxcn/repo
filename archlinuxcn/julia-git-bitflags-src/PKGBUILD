@@ -1,6 +1,6 @@
 pkgname=julia-git-bitflags-src
-pkgver=0.1.8
-_commit=d3d6a845408e476e11a7200c477c05aacf5f4dcc
+pkgver=0.1.9
+_commit=b08d1e089da18a89fdf81c3c7bee7b40ab1f52bc
 pkgrel=1
 pkgdesc="BitFlags.jl"
 url="https://github.com/jmert/BitFlags.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jmert/BitFlags.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('001f6025444b65f062d88fab6a0eca18677d8c26a6f67cb9da9a05c865b6407e')
 
 package() {
   cd BitFlags.jl
