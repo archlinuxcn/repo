@@ -40,8 +40,9 @@ build() {
   cmake -S . -B build \
     -D CMAKE_PREFIX_PATH=/opt/jtdxhamlib \
     -D CMAKE_INSTALL_PREFIX=/usr \
+    -D CMAKE_BUILD_TYPE=None \
     -G Ninja
-  ninja -C build
+  cmake --build build
 }
 
 package() {
@@ -52,6 +53,6 @@ package() {
     'libreadline.so'
   )
   cd "${pkgname}-${pkgver}"
-  DESTDIR="${pkgdir}/" ninja -C build install
+  DESTDIR="${pkgdir}/" cmake --install build
 }
 # vim:set ts=2 sw=2 et:
