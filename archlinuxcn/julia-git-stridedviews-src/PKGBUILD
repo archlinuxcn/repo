@@ -1,6 +1,6 @@
 pkgname=julia-git-stridedviews-src
-pkgver=0.2.2
-_commit=517e6762606e47cfa4c3ba80a8eca731bd515131
+pkgver=0.3.0
+_commit=490a9170a0efa1949a847820e66a0dc10ecfab99
 pkgrel=1
 pkgdesc="StridedViews.jl"
 url="https://github.com/Jutho/StridedViews.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Jutho/StridedViews.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('3095585538b506100ca7219761bd46cc5eb77861bdc600b7a601b572b72fa4f8')
 
 prepare() {
   cd StridedViews.jl
