@@ -11,13 +11,13 @@ url='https://github.com/jtdx-project/jtdx'
 # https://github.com/jtdx-project/jtdx/issues/27
 license=('GPL3')
 depends=(
-  'fftw' 'libfftw3f.so' 'libfftw3f_threads.so'
+  'fftw'
   'qt5-multimedia'
   'qt5-serialport'
   'qt5-websockets'
   # For executable files from hamlib
-  'libusb' 'libusb-1.0.so'
-  'readline' 'libreadline.so'
+  'libusb'
+  'readline'
 )
 makedepends=(
   'asciidoc'
@@ -45,6 +45,12 @@ build() {
 }
 
 package() {
+  depends+=(
+    'libfftw3f.so'
+    'libfftw3f_threads.so'
+    'libusb-1.0.so'
+    'libreadline.so'
+  )
   cd "${pkgname}-${pkgver}"
   DESTDIR="${pkgdir}/" ninja -C build install
 }
