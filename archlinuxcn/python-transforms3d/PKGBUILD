@@ -3,8 +3,8 @@
 _name=transforms3d
 pkgname=python-transforms3d
 pkgdesc='3 dimensional spatial transformations for Python'
-pkgver=0.4.1
-pkgrel=3
+pkgver=0.4.2
+pkgrel=1
 url='https://github.com/matthew-brett/transforms3d'
 arch=('any')
 license=('BSD')
@@ -29,7 +29,7 @@ optdepends=(
 source=(
   "${_name}-${pkgver}.tar.gz::https://github.com/matthew-brett/transforms3d/archive/refs/tags/${pkgver}.tar.gz"
 )
-sha256sums=('27ff96c6dcc12bebc6faddea15916c29727fb33be0f85dda7dc7d8b376c0deed')
+sha256sums=('d92d8a5a959fbf1e625a58094076b600f4f2909e45b4c0218d3354927d2800e4')
 
 build() {
   cd "${_name}-${pkgver}"
