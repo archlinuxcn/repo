@@ -10,12 +10,13 @@ arch=('i686' 'x86_64')
 url="https://www.xnec2c.org/"
 license=('GPL-2.0-or-later')
 depends=(
-  'cairo' 'libcairo.so'
-  'gdk-pixbuf2' 'libgdk_pixbuf-2.0.so'
-  'glib2' 'libgio-2.0.so' 'libgobject-2.0.so' 'libglib-2.0.so' 'libgmodule-2.0.so'
-  'gtk3' 'libgtk-3.so' 'libgtk-3.so'
-  'hicolor-icon-theme' 'glibc'
-  'pango' 'libpango-1.0.so' 'libpangocairo-1.0.so' 
+  'cairo'
+  'gdk-pixbuf2'
+  'glib2'
+  'glibc'
+  'gtk3'
+  'hicolor-icon-theme'
+  'pango'
 )
 makedepends=('openblas' 'intel-oneapi-mkl')
 optdepends=(
@@ -41,6 +42,13 @@ build() {
 }
 
 package() {
+  depends+=(
+    'libcairo.so'
+    'libgdk_pixbuf-2.0.so'
+    'libgio-2.0.so' 'libgobject-2.0.so' 'libglib-2.0.so' 'libgmodule-2.0.so'
+    'libgtk-3.so' 'libgtk-3.so'
+    'libpango-1.0.so' 'libpangocairo-1.0.so'
+  )
     cd "$srcdir/$pkgname-$pkgver"
 
     make DESTDIR="$pkgdir" install
