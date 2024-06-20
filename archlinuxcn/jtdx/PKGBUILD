@@ -10,11 +10,26 @@ url='https://github.com/jtdx-project/jtdx'
 # FIXME: waiting for upstream reply
 # https://github.com/jtdx-project/jtdx/issues/27
 license=('GPL3')
-depends=( 'fftw' 'libfftw3f.so' 'libfftw3f_threads.so'
-          'libusb' 'libusb-1.0.so' 'readline' 'libreadline.so' # For executable files from hamlib
-          'qt5-serialport' 'qt5-multimedia' 'qt5-websockets'
-          )
-makedepends=('cmake' 'ninja' 'asciidoc' 'asciidoctor' 'jtdxhamlib-static' 'gcc' 'gcc-fortran' 'boost' 'qt5-tools')
+depends=(
+  'fftw' 'libfftw3f.so' 'libfftw3f_threads.so'
+  'qt5-multimedia'
+  'qt5-serialport'
+  'qt5-websockets'
+  # For executable files from hamlib
+  'libusb' 'libusb-1.0.so'
+  'readline' 'libreadline.so'
+)
+makedepends=(
+  'asciidoc'
+  'asciidoctor'
+  'boost'
+  'cmake'
+  'gcc'
+  'gcc-fortran'
+  'jtdxhamlib-static'
+  'ninja'
+  'qt5-tools'
+)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/jtdx-project/${pkgname}/archive/${pkgver}.tar.gz")
 sha256sums=('85b02fbe7f1d53e29dd592fc78e32a458a2facf6ae08bbd24ec2b1fe16155dcc')
 sha512sums=('53fbaf805aef04544e952a8ca77b6780f475c458407b39631e48001b17c4fa813c9bfb24e06c7eba039f9d4f445c6e66bb7e945bc1b74319de179d0476f617ad')
@@ -33,4 +48,4 @@ package() {
   cd "${pkgname}-${pkgver}"
   DESTDIR="${pkgdir}/" ninja -C build install
 }
-# vim: set ts=4 sw=4 et:
+# vim:set ts=2 sw=2 et:
