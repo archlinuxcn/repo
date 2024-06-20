@@ -32,11 +32,11 @@ b2sums=('710a13e534da3faeabe8c62771cd7c45d121d6ef28869647f5aac45f499f71854880383
 prepare() {
     cd "$pkgname-$pkgver"
     sed -i 's/Categories=/Categories=HamRadio;/' files/xnec2c.desktop
+    ./autogen.sh
 }
 
 build() {
     cd "$pkgname-$pkgver"
-    ./autogen.sh
     ./configure --prefix=/usr
     make
 }
