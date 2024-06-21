@@ -4,22 +4,20 @@
 
 _pkgname=lenovolegionlinux
 pkgname=${_pkgname}-dkms-git
-pkgver=r817.00021b0
-pkgrel=2
+pkgver=r818.0e9b861
+pkgrel=1
 pkgdesc="LenovoLegionLinux (LLL) DKMS module"
 arch=("x86_64")
 url="https://github.com/johnfanv2/LenovoLegionLinux"
 license=('GPL')
 makedepends=("git"
-		"dkms"
 		"lm_sensors"
 		"i2c-tools" 
 		"dmidecode"
 		"lenovolegionlinux-git"
 )
-depends=(lenovolegionlinux-git)
-conflicts=(
-  legion-fan-utils-linux-git
+depends=("dkms"
+    "lenovolegionlinux-git"
 )
 source=("${_pkgname}::git+https://github.com/johnfanv2/LenovoLegionLinux")
 sha256sums=('SKIP')
