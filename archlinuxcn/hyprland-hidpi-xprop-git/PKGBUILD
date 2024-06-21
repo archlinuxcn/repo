@@ -1,135 +1,150 @@
-# Maintainer: Aleksana QwQ <me@aleksana.moe>
 # Maintainer: q234 rty <q23456yuiop at gmail dot com>
-# Contributor: ThatOneCalculator <kainoa@t1c.dev>
-# Contributor: lilydjwg <lilydjwg@gmail.com>
+# Maintainer: moetayuko <loli at yuko dot moe>
 # Contributor: FabioLolix
+# Contributor: éclairevoyant
+# Contributor: ThatOneCalculator <kainoa at t1c dot dev>
+# Contributor: Aleksana QwQ <me@aleksana.moe>
+# Contributor: lilydjwg <lilydjwg@gmail.com>
 
-_pkgname="hyprland"
-pkgname="${_pkgname}-hidpi-xprop-git"
-pkgver=0.41.0.r1.811429bf
+_pkgname=hyprland
+pkgname=$_pkgname-hidpi-xprop-git
+pkgver=0.41.1.r52.fabc30df
 pkgrel=2
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/hyprwm/Hyprland"
-license=('BSD-3-Clause')
+license=(BSD)
 depends=("libdisplay-info.so" "libhyprlang.so"
-	libxcb
-	xcb-proto
-	xcb-util
-	xcb-util-keysyms
-	libxfixes
-	libx11
-	libxcomposite
-	xorg-xinput
-	libxrender
-	pixman
-	wayland-protocols
-	cairo
-	pango
-	polkit
-	glslang
-	libdisplay-info
-	libliftoff
-	libinput
-	libxcb
-	libxkbcommon
-	opengl-driver
-	pixman
-	wayland
-	xcb-util-errors
-	xcb-util-renderutil
-	xcb-util-wm
-	xcb-util-image
-	seatd
-	xorg-xwayland-hidpi-xprop
-	tomlplusplus
-	hyprlang
-	hyprcursor
+  cairo
+  gcc-libs
+  glib2
+  glibc
+  glslang
+  hyprutils
+  hyprcursor
+  hyprlang
+  hyprwayland-scanner
+  libdisplay-info
+  libdrm
+  libglvnd
+  libinput
+  libliftoff
+  libx11
+  libxcb
+  libxcomposite
+  libxfixes
+  libxkbcommon
+  libxrender
+  mesa
+  opengl-driver
+  pango
+  pixman
+  polkit
+  seatd
+  systemd-libs
+  tomlplusplus
+  wayland
+  wayland-protocols
+  xcb-proto
+  xcb-util
+  xcb-util-errors
+  xcb-util-image
+  xcb-util-keysyms
+  xcb-util-renderutil
+  xcb-util-wm
+  xorg-xinput
+  xorg-xwayland-hidpi-xprop
 )
+depends+=(libdisplay-info.so)
 makedepends=(
-	git
-	cmake
-	ninja
-	gcc
-	meson
-	wayland-protocols
-	xorgproto
-	hyprwayland-scanner
+  cmake
+  gdb
+  git
+  jq
+  make
+  meson
+  ninja
+  patch
+  pkgconf
+  xorgproto
 )
-source=("${_pkgname}::git+https://github.com/hyprwm/Hyprland.git"
-        "git+https://github.com/hyprwm/wlroots-hyprland.git"
-        "git+https://github.com/hyprwm/hyprland-protocols.git"
-        "git+https://github.com/canihavesomecoffee/udis86.git"
-        "0001-Revert-compositor-send-WL_SURFACE_ERROR_INVALID_SIZE.patch"
-        "0001-xwayland-support-HiDPI-scale.patch"
-        "0002-Fix-configure_notify-event.patch"
-        "0003-Fix-size-hints-under-Xwayland-scaling.patch")
-conflicts=("${_pkgname}")
-provides=("${_pkgname}=${pkgver}")
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            '7758eb3ca20b657e53b01c239c5234898342322f41af1cd9e9a8841fca2d5e2b'
-            'b717f2f61aeb3bf670fe60424a8cd638d51e73dc66bd84277fada289bf2330d8'
-            'acced048ce6359f4f9f894ee648e4c47fd5093db3fce285b60f73b9f80bb7ac9'
-            '4e6b32ea58ecfd6a2cce7e5ddf09160136714de8b58e41a9919b30e06e998178')
+optdepends=(
+  'cmake: to build and install plugins using hyprpm'
+  'cpio: to build and install plugins using hyprpm'
+  'meson: to build and install plugins using hyprpm'
+)
+provides=("hyprland=${pkgver%%.r*}")
+conflicts=(hyprland)
+source=(
+  "git+https://github.com/hyprwm/Hyprland.git"
+  "git+https://github.com/hyprwm/wlroots-hyprland.git"
+  "git+https://github.com/hyprwm/hyprland-protocols.git"
+  "git+https://github.com/canihavesomecoffee/udis86.git"
+)
+b2sums=(
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+)
 options=(debug)
 
-pkgver() {
-	git -C "${_pkgname}" describe --long --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g'
+pick_mr() {
+  git pull origin pull/$1/head --no-ff --no-commit
 }
 
 prepare() {
-	cd "${srcdir}/${_pkgname}"
-	rm -rf subprojects/wlroots-hyprland subprojects/hyprland-protocols
-	git submodule init
-	git config submodule.subprojects/wlroots-hyprland.url "${srcdir}"/wlroots-hyprland
-	git config submodule.subprojects/hyprland-protocols.url "${srcdir}"/hyprland-protocols
-	git config submodule.subprojects/udis86.url "${srcdir}"/udis86
-	git -c protocol.file.allow=always submodule update subprojects/wlroots-hyprland
-	git -c protocol.file.allow=always submodule update subprojects/hyprland-protocols
-	git -c protocol.file.allow=always submodule update subprojects/udis86
-	cd subprojects/wlroots-hyprland
-	patch -Np1 -i "${srcdir}"/0001-Revert-compositor-send-WL_SURFACE_ERROR_INVALID_SIZE.patch
-	patch -Np1 -i "${srcdir}"/0001-xwayland-support-HiDPI-scale.patch
-	patch -Np1 -i "${srcdir}"/0002-Fix-configure_notify-event.patch
-	patch -Np1 -i "${srcdir}"/0003-Fix-size-hints-under-Xwayland-scaling.patch
+  cd Hyprland
+  git submodule init
+  git config submodule.subprojects/wlroots-hyprland.url "$srcdir/wlroots-hyprland"
+  git config submodule.subprojects/hyprland-protocols.url "$srcdir/hyprland-protocols"
+  git config submodule.subprojects/udis86.url "$srcdir/udis86"
+  git config submodule.subprojects/tracy.update none
+  git -c protocol.file.allow=always submodule update
+
+  if [[ -z "$(git config --get user.name)" ]]; then
+    git config user.name local && git config user.email '<>' && git config commit.gpgsign false
+  fi
+  # Pick pull requests from github using `pick_mr <pull request number>`.
+  pick_mr 6446
+
+  git -C subprojects/wlroots-hyprland reset --hard
+}
+
+pkgver() {
+  git -C Hyprland describe --long --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g'
 }
 
 build() {
-	cd "${srcdir}/${_pkgname}"
-	mkdir -p build && cd build
-	cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr ..
-	ninja
+  cd Hyprland
+
+  mkdir -p build && cd build
+  cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr ..
+  ninja
 }
 
 package() {
-	cd "${srcdir}/${_pkgname}"
-	meson install -C subprojects/wlroots-hyprland/build --destdir "${pkgdir}/tmpwlr"
-	install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin"
-	pushd "${pkgdir}/usr/bin" && ln -sf Hyprland hyprland && popd
-	install -Dm755 build/hyprctl/hyprctl -t "${pkgdir}/usr/bin"
-	install -Dm755 build/hyprpm/hyprpm -t "${pkgdir}/usr/bin"
-	install -Dm644 assets/*.png -t "${pkgdir}/usr/share/hyprland"
-	install -Dm644 example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions"
-	install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
-	install -Dm644 subprojects/wlroots-hyprland/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-wlroots-hyprland"
-	install -Dm644 subprojects/udis86/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-udis86"
-	install -Dm644 docs/*.1 -t "${pkgdir}/usr/share/man/man1"
-	for cmd in hyprctl hyprpm; do
-		install -Dm644 "${cmd}/${cmd}.bash" "${pkgdir}/usr/share/bash-completion/completions/$cmd"
-		install -Dm644 "${cmd}/${cmd}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_$cmd"
-		install -Dm644 "$cmd/$cmd.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
-	done
-	install -d "${pkgdir}/usr/include/hyprland/protocols"
-	install -d "${pkgdir}/usr/include/hyprland/wlroots-hyprland"
-	cp -R src ${pkgdir}/usr/include/hyprland/
-	cp -R ${pkgdir}/tmpwlr/usr/local/include/* ${pkgdir}/usr/include/hyprland/wlroots-hyprland/
-	find ${pkgdir}/usr/include/hyprland/ -type f ! -name '*.h*' -delete
-	rm -rf ${pkgdir}/tmpwlr
-	cp protocols/*.h* ${pkgdir}/usr/include/hyprland/protocols
-	install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig"
+  cd Hyprland
+  find src \( -name '*.h' -o -name '*.hpp' \) -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/{}" \;
+  meson install -C subprojects/wlroots-hyprland/build --destdir "${pkgdir}/tmpwlr"
+  cp -R ${pkgdir}/tmpwlr/usr/local/include/hyprland ${pkgdir}/usr/include/
+  rm -rf ${pkgdir}/tmpwlr
+  mkdir -p "$pkgdir/usr/include/hyprland/protocols"
+  cp protocols/*.h* "$pkgdir/usr/include/hyprland/protocols"
+  install -Dm0644 -t "$pkgdir/usr/share/pkgconfig" build/hyprland.pc
+  install -Dm0644 -t "$pkgdir/usr/share/man/man1" docs/{Hyprland,hyprctl}.1
+  for cmd in hyprctl hyprpm; do
+    install -Dm0644 "$cmd/$cmd.bash" "$pkgdir/usr/share/bash-completion/completions/$cmd"
+    install -Dm0644 "$cmd/$cmd.zsh" "$pkgdir/usr/share/zsh/site-functions/_$cmd"
+    install -Dm0644 -t "$pkgdir/usr/share/fish/vendor_completions.d/" "$cmd/$cmd.fish"
+  done
+  install -Dm0755 -t "$pkgdir/usr/bin/" build/Hyprland build/hyprctl/hyprctl build/hyprpm/hyprpm
+  install -Dm0644 -t "$pkgdir/usr/share/$_pkgname/" assets/*.png
+  install -Dm0644 -t "$pkgdir/usr/share/wayland-sessions/" "example/$_pkgname.desktop"
+  install -Dm0644 -t "$pkgdir/usr/share/$_pkgname/" "example/$_pkgname.conf"
+  install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
+  install -Dm0644 subprojects/wlroots-hyprland/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE-wlroots-hyprland"
+  install -Dm0644 subprojects/udis86/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE-udis86"
 }
+# vi: et ts=2 sw=2
 replaces=("hyprland-nvidia-hidpi-git")
