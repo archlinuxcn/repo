@@ -1,0 +1,34 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Jaroslav Lichtblau <svetlemodry@archlinux.org>
+
+pkgname=python-rfc6555-lily
+pkgver=0.1.0
+pkgrel=3
+arch=('any')
+url="https://pypi.org/project/rfc6555/"
+license=('Apache')
+pkgdesc="Python implementation of the Happy Eyeballs Algorithm described in RFC 6555 (with lilydjwg's fix)."
+depends=('python')
+makedepends=('python-setuptools')
+#checkdepends=('python-tox')
+source=("https://pypi.io/packages/source/r/rfc6555/rfc6555-$pkgver.tar.gz"
+        "https://github.com/sethmlarson/rfc6555/pull/9.patch")
+sha256sums=('123905b8f68e2bec0c15f321998a262b27e2eaadea29a28bd270021ada411b67'
+            'c6d4ffca1c6a3ee48a040a13e236fc1cf2fd47449a6f04901501a6fe8b55fec4')
+conflicts=(python-rfc6555)
+provides=(python-rfc6555=$pkgver)
+
+prepare() {
+  cd rfc6555-${pkgver}
+  patch -p1 < ../9.patch
+}
+
+build() {
+  cd rfc6555-${pkgver}
+  python setup.py build
+}
+
+package() {
+  cd rfc6555-${pkgver}
+  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
