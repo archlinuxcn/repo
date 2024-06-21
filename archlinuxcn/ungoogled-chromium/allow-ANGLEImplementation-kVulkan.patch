@@ -1,0 +1,48 @@
+From 9ca21ac45af570ce11a1b0b96fdb163985b59178 Mon Sep 17 00:00:00 2001
+From: Ho Cheung <hocheung@chromium.org>
+Date: Wed, 29 May 2024 00:10:25 +0000
+Subject: [PATCH] [ozone+wayland] Allow ANGLEImplementation::kVulkan when ozone
+ platform is Wayland
+
+When passing `gl=egl-angle,angle=vulkan` flags on
+a device with an AMD graphics card and using
+`ozone wayland`, since
+`gl::ANGLEImplementation::kVulkan` is not in
+`WaylandSurfaceFactory::GetAllowedGLImplementations`,
+As a result, it cannot be initialized normally.
+
+This CL adds `gl::ANGLEImplementation::kVulkan` to
+`WaylandSurfaceFactory::GetAllowedGLImplementations`
+to ensure that it can be initialized normally.
+
+In addition, the changes made in this CL have been
+verified by many developers or users in the Linux
+community, and should not break other things
+without passing specific flags.
+
+Get VAAPI acceleration working on amdgpus,such as
+Radeon 780M.
+
+Bug: 334275637,40722838,41392107
+Change-Id: Id1c9720159ee6149b620e12e5dc7b9df89d38409
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5568860
+Commit-Queue: Ho Cheung <hocheung@chromium.org>
+Reviewed-by: Kramer Ge <fangzhoug@chromium.org>
+Reviewed-by: Nick Yamane <nickdiego@igalia.com>
+Cr-Commit-Position: refs/heads/main@{#1307136}
+---
+ ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc b/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
+index b6e99324c02b..7602a6b8e693 100644
+--- a/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
++++ b/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
+@@ -214,6 +214,7 @@ WaylandSurfaceFactory::GetAllowedGLImplementations() {
+     impls.emplace_back(gl::ANGLEImplementation::kOpenGL);
+     impls.emplace_back(gl::ANGLEImplementation::kOpenGLES);
+     impls.emplace_back(gl::ANGLEImplementation::kSwiftShader);
++    impls.emplace_back(gl::ANGLEImplementation::kVulkan);
+     impls.emplace_back(gl::kGLImplementationEGLGLES2);
+   }
+   return impls;

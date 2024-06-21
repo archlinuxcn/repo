@@ -1,18 +1,18 @@
 diff --git a/google_apis/google_api_keys-inc.cc b/google_apis/google_api_keys-inc.cc
-index 49c396d69d17..9493e7e5aa48 100644
+index 4d13e697a54d..61aac7b48662 100644
 --- a/google_apis/google_api_keys-inc.cc
 +++ b/google_apis/google_api_keys-inc.cc
-@@ -182,11 +182,11 @@ class APIKeyCache {
- 
+@@ -193,11 +193,11 @@ class APIKeyCache {
      std::string default_client_id = CalculateKeyValue(
          GOOGLE_DEFAULT_CLIENT_ID,
--        STRINGIZE_NO_EXPANSION(GOOGLE_DEFAULT_CLIENT_ID), nullptr,
-+        STRINGIZE_NO_EXPANSION(GOOGLE_DEFAULT_CLIENT_ID), ::switches::kOAuth2ClientID,
-         std::string(), environment.get(), command_line, gaia_config);
+         STRINGIZE_NO_EXPANSION(GOOGLE_DEFAULT_CLIENT_ID), std::string(),
+-        nullptr, std::string(), environment.get(), command_line, gaia_config);
++        ::switches::kOAuth2ClientID, std::string(), environment.get(), command_line, gaia_config);
      std::string default_client_secret = CalculateKeyValue(
          GOOGLE_DEFAULT_CLIENT_SECRET,
--        STRINGIZE_NO_EXPANSION(GOOGLE_DEFAULT_CLIENT_SECRET), nullptr,
-+        STRINGIZE_NO_EXPANSION(GOOGLE_DEFAULT_CLIENT_SECRET), ::switches::kOAuth2ClientSecret,
-         std::string(), environment.get(), command_line, gaia_config);
+         STRINGIZE_NO_EXPANSION(GOOGLE_DEFAULT_CLIENT_SECRET), std::string(),
+-        nullptr, std::string(), environment.get(), command_line, gaia_config);
++        ::switches::kOAuth2ClientSecret, std::string(), environment.get(), command_line, gaia_config);
  
      // We currently only allow overriding the baked-in values for the
+     // default OAuth2 client ID and secret using a command-line
