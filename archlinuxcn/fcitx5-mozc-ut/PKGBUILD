@@ -5,7 +5,7 @@
 
 pkgname='fcitx5-mozc-ut'
 pkgver=2.30.5490.102
-pkgrel=1
+pkgrel=2
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
@@ -91,25 +91,25 @@ package() {
 
     unzip -o icons.zip
 
-    install -Dm644 mozc.png                                     "${pkgdir}"/usr/share/icons/hicolor/128x128/apps/org.fcitx.Fcitx5.fcitx-mozc.png
-    install -Dm644 alpha_full.svg                               "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-alpha-full.svg
-    install -Dm644 alpha_half.svg                               "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-alpha-half.svg
-    install -Dm644 direct.svg                                   "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-direct.svg
-    install -Dm644 hiragana.svg                                 "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-hiragana.svg
-    install -Dm644 katakana_full.svg                            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-katakana-full.svg
-    install -Dm644 katakana_half.svg                            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-katakana-half.svg
-    install -Dm644 outlined/dictionary.svg                      "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-dictionary.svg
-    install -Dm644 outlined/properties.svg                      "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-properties.svg
-    install -Dm644 outlined/tool.svg                            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx-mozc-tool.svg
+    install -Dm644 mozc.png                                     "${pkgdir}"/usr/share/icons/hicolor/128x128/apps/org.fcitx.Fcitx5.fcitx_mozc.png
+    install -Dm644 alpha_full.svg                               "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_alpha_full.svg
+    install -Dm644 alpha_half.svg                               "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_alpha_half.svg
+    install -Dm644 direct.svg                                   "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_direct.svg
+    install -Dm644 hiragana.svg                                 "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_hiragana.svg
+    install -Dm644 katakana_full.svg                            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_katakana_full.svg
+    install -Dm644 katakana_half.svg                            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_katakana_half.svg
+    install -Dm644 outlined/dictionary.svg                      "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_dictionary.svg
+    install -Dm644 outlined/properties.svg                      "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_properties.svg
+    install -Dm644 outlined/tool.svg                            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/org.fcitx.Fcitx5.fcitx_mozc_tool.svg
 
-    ln -s org.fcitx.Fcitx5.fcitx-mozc.png                       "${pkgdir}"/usr/share/icons/hicolor/128x128/apps/fcitx-mozc.png
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-alpha-full.svg            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-alpha-full.svg
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-alpha-half.svg            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-alpha-half.svg
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-direct.svg                "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-direct.svg
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-hiragana.svg              "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-hiragana.svg
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-katakana-full.svg         "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-katakana-full.svg
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-katakana-half.svg         "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-katakana-half.svg
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-dictionary.svg            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-dictionary.svg
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-properties.svg            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-properties.svg
-    ln -s org.fcitx.Fcitx5.fcitx-mozc-tool.svg                  "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx-mozc-tool.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc.png                       "${pkgdir}"/usr/share/icons/hicolor/128x128/apps/fcitx_mozc.png
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_alpha_full.svg            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_alpha_full.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_alpha_half.svg            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_alpha_half.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_direct.svg                "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_direct.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_hiragana.svg              "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_hiragana.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_katakana_full.svg         "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_katakana_full.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_katakana_half.svg         "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_katakana_half.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_dictionary.svg            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_dictionary.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_properties.svg            "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_properties.svg
+    ln -s org.fcitx.Fcitx5.fcitx_mozc_tool.svg                  "${pkgdir}"/usr/share/icons/hicolor/scalable/apps/fcitx_mozc_tool.svg
 }
