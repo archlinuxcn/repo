@@ -1,0 +1,67 @@
+From 8dbad9ac2974f9db776838e3f87c57c15291e983 Mon Sep 17 00:00:00 2001
+From: tytan652 <tytan652@tytanium.xyz>
+Date: Sat, 6 Apr 2024 08:50:07 +0200
+Subject: [PATCH] obs-ffmpeg: Fix incompatible-pointer-types with FFmpeg 7
+
+---
+ plugins/obs-ffmpeg/ffmpeg-mux/ffmpeg-mux.c |  5 +++++
+ plugins/obs-ffmpeg/obs-ffmpeg-mpegts.c     | 18 ++++++++++++------
+ 2 files changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/plugins/obs-ffmpeg/ffmpeg-mux/ffmpeg-mux.c b/plugins/obs-ffmpeg/ffmpeg-mux/ffmpeg-mux.c
+index a05c33c94..b4e9203bf 100644
+--- a/plugins/obs-ffmpeg/ffmpeg-mux/ffmpeg-mux.c
++++ b/plugins/obs-ffmpeg/ffmpeg-mux/ffmpeg-mux.c
+@@ -886,7 +886,12 @@ static int64_t ffmpeg_mux_seek_av_buffer(void *opaque, int64_t offset,
+ 	return 0;
+ }
+ 
++#if LIBAVFORMAT_VERSION_MAJOR >= 61
++static int ffmpeg_mux_write_av_buffer(void *opaque, const uint8_t *buf,
++				      int buf_size)
++#else
+ static int ffmpeg_mux_write_av_buffer(void *opaque, uint8_t *buf, int buf_size)
++#endif
+ {
+ 	struct ffmpeg_mux *ffm = opaque;
+ 
+diff --git a/plugins/obs-ffmpeg/obs-ffmpeg-mpegts.c b/plugins/obs-ffmpeg/obs-ffmpeg-mpegts.c
+index f23bf25c0..69ec8a7c2 100644
+--- a/plugins/obs-ffmpeg/obs-ffmpeg-mpegts.c
++++ b/plugins/obs-ffmpeg/obs-ffmpeg-mpegts.c
+@@ -421,6 +421,12 @@ fail:
+ 	return err;
+ }
+ 
++#if LIBAVFORMAT_VERSION_MAJOR >= 61
++typedef int (*write_packet_cb)(void *, const uint8_t *, int);
++#else
++typedef int (*write_packet_cb)(void *, uint8_t *, int);
++#endif
++
+ static inline int allocate_custom_aviocontext(struct ffmpeg_output *stream,
+ 					      bool is_rist)
+ {
+@@ -437,13 +443,13 @@ static inline int allocate_custom_aviocontext(struct ffmpeg_output *stream,
+ 		return AVERROR(ENOMEM);
+ 	/* allocate custom avio_context */
+ 	if (is_rist)
+-		s = avio_alloc_context(
+-			buffer, buffer_size, AVIO_FLAG_WRITE, h, NULL,
+-			(int (*)(void *, uint8_t *, int))librist_write, NULL);
++		s = avio_alloc_context(buffer, buffer_size, AVIO_FLAG_WRITE, h,
++				       NULL, (write_packet_cb)librist_write,
++				       NULL);
+ 	else
+-		s = avio_alloc_context(
+-			buffer, buffer_size, AVIO_FLAG_WRITE, h, NULL,
+-			(int (*)(void *, uint8_t *, int))libsrt_write, NULL);
++		s = avio_alloc_context(buffer, buffer_size, AVIO_FLAG_WRITE, h,
++				       NULL, (write_packet_cb)libsrt_write,
++				       NULL);
+ 	if (!s)
+ 		goto fail;
+ 	s->max_packet_size = h->max_packet_size;
+-- 
+2.45.1
+
