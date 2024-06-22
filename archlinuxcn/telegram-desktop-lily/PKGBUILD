@@ -24,6 +24,7 @@ optdepends=('webkit2gtk: embedded browser features'
             'xdg-desktop-portal: desktop integration')
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
+replaces=('telegram-desktop-megumifox')
 source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
         "no-embolded-font.patch"
         "dont-adjust-fontsize.patch"
