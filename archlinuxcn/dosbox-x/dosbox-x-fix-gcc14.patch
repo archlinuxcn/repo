@@ -1,0 +1,22 @@
+From 572961f8ea203d13b97aaad94583bb6d2840e91f Mon Sep 17 00:00:00 2001
+From: maron2000 <68574602+maron2000@users.noreply.github.com>
+Date: Tue, 5 Mar 2024 17:47:17 +0900
+Subject: [PATCH] Fix compile error of speexdsp/fftwrap.c on gcc-14
+
+---
+ CHANGELOG    | 5 +++--
+ configure.ac | 1 +
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index f0f0dc6e969..fcc57637d62 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -379,6 +379,7 @@ AC_CHECK_CXXFLAGS([ -Wextra ])
+ AC_CHECK_CXXFLAGS([ -Wunused ])
+ AC_CHECK_CXXFLAGS([ -pedantic ])
+ AC_CHECK_CXXFLAGS([ -Wno-error=format-security ])     # imfc.cpp and later versions of GCC, see https://github.com/joncampbell123/dosbox-x/issues/4436
++AC_CHECK_CXXFLAGS([ -Wno-error=incompatible-pointer-types ]) # required to compile speexdsp/fftwrap.c with GCC 14
+ #AC_CHECK_CXXFLAGS([ -Wconversion ])      DO NOT ENABLE. THIS WARNING IS WAY TOO PEDANTIC TO BE USEFUL, EXCEPT FOR SPECIFIC CASES
+ #AC_CHECK_CXXFLAGS([ -Wsign-conversion ])
+ AC_CHECK_CXXFLAGS([ -Wlogical-op ])
