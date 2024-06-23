@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=boxbuddy
 _app_id=io.github.dvlv.boxbuddyrs
-pkgver=2.2.7
+pkgver=2.2.8
 pkgrel=1
 pkgdesc="A Graphical Interface for Distrobox"
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('distrobox' 'libadwaita')
 makedepends=('cargo')
 #options=('!lto')  # gettext-sys crate fails with LTO enabled
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('d3c1a4c17de28519ccdbd052a260d960f7d48062dd4cf46a668d1392128969ea')
+sha256sums=('f9736bf7ba5761168559fc90950623602d974b2e1a5f26c4eef4692b87e9517e')
 
 prepare() {
   cd "BoxBuddyRS-$pkgver"
