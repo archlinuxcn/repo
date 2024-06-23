@@ -45,8 +45,6 @@ build() {
   python -m build --wheel --no-isolation
 
   cd "${srcdir}/${_pkgname}-full-${pkgver}"
-  CC=/opt/cuda/bin/gcc \
-  CXX=/opt/cuda/bin/g++ \
   FORCE_CUDA=1 \
   MMCV_WITH_OPS=1 \
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
