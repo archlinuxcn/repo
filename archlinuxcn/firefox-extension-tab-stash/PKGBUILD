@@ -2,7 +2,7 @@
 
 pkgname=firefox-extension-tab-stash
 _pkgname=tab-stash
-pkgver=3.0
+pkgver=3.0.1
 pkgrel=1
 pkgdesc="Firefox extension to save and restore tabs as bookmarks"
 arch=('any')
@@ -12,7 +12,7 @@ license=('MPL2')
 depends=('firefox')
 makedepends=('git' 'inkscape' 'nodejs' 'npm' 'p7zip' 'rsync' 'strip-nondeterminism')
 source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('SKIP')
+sha256sums=('3ecbdfa4cc13a2e0f218da75d455900760dcfa2dee7fe78338eb97c4ffaf5919')
 
 build() {
     cd "${srcdir}"/"${_pkgname}"/
