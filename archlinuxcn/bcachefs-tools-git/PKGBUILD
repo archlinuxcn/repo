@@ -9,6 +9,7 @@ pkgdesc="BCacheFS filesystem utilities"
 url="https://bcachefs.org/"
 arch=("x86_64")
 license=("GPL-2.0-only")
+conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 depends=(
 	fuse3
@@ -37,12 +38,6 @@ sha512sums=('SKIP')
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
-}
-
-# Temporarily fix build error
-prepare() {
-	cd "${_pkgname}/"
-	sed -i 's/BTREE_ITER_INTENT/BTREE_ITER_intent/' c_src/cmd_fusemount.c
 }
 
 build() {
