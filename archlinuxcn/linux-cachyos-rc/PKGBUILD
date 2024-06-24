@@ -141,6 +141,9 @@ _build_nvidia=${_build_nvidia-}
 # Use this only if you have Turing+ GPU
 _build_nvidia_open=${_build_nvidia_open-}
 
+# Build a debug package with non-stripped vmlinux
+_build_debug=${_build_debug-}
+
 if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] && [ "$_use_lto_suffix" = "y"  ]; then
     pkgsuffix=cachyos-rc-lto
     pkgbase=linux-$pkgsuffix
@@ -152,7 +155,7 @@ fi
 _major=6.10
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc4
+_rcver=rc5
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -266,7 +269,14 @@ prepare() {
     ### Select CPU optimization
     if [ -n "$_processor_opt" ]; then
         MARCH="${_processor_opt^^}"
-        MARCH2=M${MARCH}
+        MARCH2=${MARCH}
+
+        if [[ ! "$MARCH" =~ GENERIC* ]]; then
+            MARCH2="M${MARCH}"
+        else
+            MARCH2="${MARCH/V/CPU}"
+        fi
+
         scripts/config -k -d CONFIG_GENERIC_CPU
         scripts/config -k -e CONFIG_${MARCH2}
     fi
@@ -675,6 +685,15 @@ _package-headers() {
     ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
 }
 
+_package-dbg(){
+    pkgdesc="Non-stripped vmlinux file for the $pkgdesc kernel"
+    depends=(linux-${pkgsuffix}-headers)
+
+    cd "${srcdir}/${_srcname}"
+    mkdir -p "$pkgdir/usr/src/debug/linux-${pkgsuffix}"
+    install -Dt "$pkgdir/usr/src/debug/linux-${pkgsuffix}" -m644 vmlinux
+}
+
 _package-zfs(){
     pkgdesc="zfs module for the $pkgdesc kernel"
     depends=('pahole' $pkgbase=$_kernver)
@@ -718,7 +737,9 @@ _package-nvidia-open(){
     find "$pkgdir" -name '*.ko' -exec zstd --rm -10 {} +
 }
 
-pkgname=("$pkgbase" "$pkgbase-headers")
+pkgname=("$pkgbase")
+[ -n "$_build_debug" ] && pkgname+=("$pkgbase-dbg")
+pkgname+=("$pkgbase-headers")
 [ -n "$_build_zfs" ] && pkgname+=("$pkgbase-zfs")
 [ -n "$_build_nvidia" ] && pkgname+=("$pkgbase-nvidia")
 [ -n "$_build_nvidia_open" ] && pkgname+=("$pkgbase-nvidia-open")
@@ -729,8 +750,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('a0847ae4628d473ace458ac88ec08dfb3576370f8bf50a8030d57fbfcfc21c2fc66bf6e54711d905de9ed900803c7bb49f72e1e11642179ca4eec0e3fa44381e'
-        '72a99a400bbdc022dc14a39bbe650ec785a98a2e57685626a23a41fff42409fed959810d6f8cddc1f41bfc4f46efc2526e5764426c168c1270d802a792ead03b'
+b2sums=('0a5915aec7985441b5386980360d1e9f2210e28de4f5f22375eb90a66a820ce3f5d63bf645ee3d399941bb36481ab5755c88789f8fcff34130d504b463694da6'
+        'c86334d81ff116345e83d288dbe3a695907cc4219ad53dcbff9d2cb81e4290bf5767294734db8cd78169ed1f636afd6cba4d7053c77614f4e6a243325ea23369'
         'b1e964389424d43c398a76e7cee16a643ac027722b91fe59022afacb19956db5856b2808ca0dd484f6d0dfc170482982678d7a9a00779d98cd62d5105200a667'
         'f8ceedd6df34305d377d86b7144e7cef3869b2f206b0e839e8f58c39542be796f8b274baf228222c778510356da256a151df7df921a4cb589a9d1844b5eeac70'
         '456d7708c5cee4b20e9151112d1182dd1162d75b44aae1a20471080508038389a5765ad11b025aaa2604ca693bff6bee46d6a9e74ac0a66bcf48b01ed5e6eaa5'
