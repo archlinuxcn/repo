@@ -3,16 +3,16 @@
 # Contributer: Danct12 <danct12@disroot.org>
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
-_pkgver_images_system="18.1-20240608"
+_pkgver_images_system="18.1-20240622"
 _pkgver_images_vendor="18.1-20240427"
 
-_pkgver_images_system_x86="18.1-20240608"
+_pkgver_images_system_x86="18.1-20240622"
 _pkgver_images_vendor_x86="18.1-20240504"
 
-_pkgver_images_system_arm64="18.1-20240608"
+_pkgver_images_system_arm64="18.1-20240622"
 _pkgver_images_vendor_arm64="18.1-20240504"
 
-_pkgver_images_system_arm="18.1-20240608"
+_pkgver_images_system_arm="18.1-20240622"
 _pkgver_images_vendor_arm="18.1-20240504"
 
 pkgname=waydroid-image-gapps
@@ -47,11 +47,11 @@ package() {
   mv "$srcdir/vendor.img" "$pkgdir/usr/share/waydroid-extra/images"
 }
 
-sha256sums_x86_64=('a6186b4af2ae4a25bd020758ea5976eb68259864a535684eec00112245b4d584'
+sha256sums_x86_64=('b18a8bd2dae5c02767f8c29b38fc33764f40b163d78e569a7ee60218c08f3cb9'
                    'ece31f8558065bf063f0c93adb52ca8c9bce20dbde7a64237b7cd21bbcf46313')
-sha256sums_i686=('7c34880ca53c51c1ab11f0e4b9437b8374876520b49ad65875f3a0972092317a'
+sha256sums_i686=('4f956cd70ff1619a25565a838f93db0b4856dff55e7fbc3a37719b8cff54ffef'
                  'f4b15d8a116e19f28140d9e09ad1186860bb89fe7c48fd674273528714f3369e')
-sha256sums_armv7h=('31649d33ea8d1d94560c11dcc55d1d333af041f5b9f37a0b8c40aaf0c13dcefb'
+sha256sums_armv7h=('1bf7a5c09290b521661b72dc985d95c78fa85710f6a4b264f1c909976586c045'
                    '79333fa3a30c537ecd3f982938098bc27eb465fd69bace82c705cdb42db28373')
-sha256sums_aarch64=('a810545936d37ed0782efd8b7e7dc45c93165f5827af8b322ad1b9d00adcc0cb'
+sha256sums_aarch64=('14c9a0cfb628a137b569e5d5a99ebdb3e0c757c3e9d21ca99ad3846b465f12aa'
                     'c2a41a1d7ae145f2f97e9a51be94cffbb19e1cc0b4227d94348223c502914cd5')
