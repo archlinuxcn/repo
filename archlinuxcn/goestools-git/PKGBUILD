@@ -70,12 +70,12 @@ build() {
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=None
-  ninja -C build
+  cmake --build build
 }
 
 package() {
   cd "${pkgname%-git}"
-  DESTDIR="$pkgdir" ninja -C build install
+  DESTDIR="$pkgdir" cmake --install build
   install -d "${pkgdir}/usr/share/licenses/goestools-git/"
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/goestools-git/"
 }
