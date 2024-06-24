@@ -1,40 +1,43 @@
-# Maintainer: Cooper Pierce <cppierce@andrew.cmu.edu>
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Cooper Pierce <cppierce@andrew.cmu.edu>
+
 pkgname=millet
 pkgver=0.14.5
 pkgrel=1
 pkgdesc="Language server implementation for Standard ML"
-url="https://github.com/azdavis/millet"
 arch=('x86_64')
 license=('Apache-2.0 AND MIT')
+url="https://github.com/azdavis/millet"
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tgz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-md5sums=('9c9a93471ab07be9518786921e2086f9')
+b2sums=('b9312e79a3dba097631a9611783edb0c733bc46b7c759911e94eec4e7645a900e30be7bdb50f09ca19c05fc8fc2bb40b27311d5217a81d09897535924c2ab0a1')
 
 prepare() {
-    cd "$pkgname-$pkgver"
-    export RUSTUP_TOOLCHAIN=stable
-    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 
 build() {
-    cd "$pkgname-$pkgver"
-    export RUSTUP_TOOLCHAIN=stable
-    export CARGO_TARGET_DIR=target
-    cargo build --frozen --release --all-features
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release --all-features
 }
 
 package() {
-    cd "$pkgname-$pkgver"
-    install -Dm755 "target/release/millet-ls" "$pkgdir/usr/bin/millet"
-    install -Dm644 "LICENSE-MIT.md" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE-MIT"
+  cd "$pkgname-$pkgver"
+  install -Dm755 "target/release/millet-ls" "$pkgdir/usr/bin/millet"
+  install -Dm644 "LICENSE-MIT.md" "$pkgdir/usr/share/licenses/${pkgname}/LICENSE-MIT"
 }
 
 check() {
-    cd "$pkgname-$pkgver"
+  cd "$pkgname-$pkgver"
 
-    # Ignores tests starting with repo. These tests assume we're in a git repo
-    # (we're not, here, since this is a source tarball), and test for things
-    # like changelog entries existing.
-    cargo test --frozen --all-features --workspace -- --skip repo
+  # Ignores tests starting with repo. These tests assume we're in a git repo
+  # (we're not, here, since this is a source tarball), and test for things
+  # like changelog entries existing.
+  cargo test --frozen --all-features --workspace -- --skip repo
 }
+# vim: set ts=2 sw=2 et:
