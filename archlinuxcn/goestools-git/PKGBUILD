@@ -1,4 +1,5 @@
-# Maintainer: Michael Breedlove <me@michaelbreedlove.net>
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Michael Breedlove <me@michaelbreedlove.net>
 
 pkgname=goestools-git
 pkgver=r404.80ece1a
@@ -24,12 +25,13 @@ depends=(
 )
 provides=('goestools-git')
 conflicts=('goestools-git')
-source=(git+${url}.git
-        git+https://gitlab.dkrz.de/k202009/libaec.git
-        git+https://github.com/pietern/libcorrect.git
-        git+https://github.com/arsenm/sanitizers-cmake.git
-        git+https://github.com/mayah/tinytoml.git
-        )
+source=(
+  git+${url}.git
+  git+https://gitlab.dkrz.de/k202009/libaec.git
+  git+https://github.com/pietern/libcorrect.git
+  git+https://github.com/arsenm/sanitizers-cmake.git
+  git+https://github.com/mayah/tinytoml.git
+)
 b2sums=('SKIP'
         'SKIP'
         'SKIP'
@@ -76,3 +78,4 @@ package() {
   install -d "${pkgdir}/usr/share/licenses/goestools-git/"
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/goestools-git/"
 }
+# vim: set ts=2 sw=2 et:
