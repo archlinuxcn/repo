@@ -14,9 +14,9 @@ def pre_build():
     elif line.startswith('pkgdesc='):
       line = line[:-1] + " (with AMD HEVC VAAPI alignment patch)'"
 
-    elif line.startswith('depends=('):
-      state = 'depends'
-    elif state == 'depends' and line == ')':
+    elif line.startswith('provides=('):
+      state = 'provides'
+    elif state == 'provides' and line == ')':
       line = '''  ffmpeg=$epoch:$pkgver\n''' + line + '\nconflicts=(ffmpeg)'
       state = 'out'
 
