@@ -22,7 +22,6 @@ makedepends=('openblas' 'intel-oneapi-mkl')
 optdepends=(
   'cblas: to use OpenBLAS'
   'gnuplot: to use plotted output/data files'
-  'hamradio-menus: desktop entry categories'
   'intel-oneapi-mkl: to use Intel MKL'
   'lapacke: to use OpenBLAS'
 )
@@ -31,7 +30,6 @@ b2sums=('710a13e534da3faeabe8c62771cd7c45d121d6ef28869647f5aac45f499f71854880383
 
 prepare() {
     cd "$pkgname-$pkgver"
-    sed -i 's/Categories=/Categories=HamRadio;/' files/xnec2c.desktop
     ./autogen.sh
 }
 
