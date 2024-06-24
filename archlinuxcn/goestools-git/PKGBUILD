@@ -57,6 +57,9 @@ prepare() {
     git -c protocol.file.allow=always submodule update vendor/"${submodule#*::}"
   done
 
+  # Allow to use system nanomsg and nlohmann_json
+  # https://github.com/pietern/goestools/pull/88
+  # https://github.com/pietern/goestools/pull/87
   git cherry-pick -n 4568f1fa79146566de4d6f93a3c5fabfb43263f1 # nanomsg
   git cherry-pick -n 6109d5e060208a77d0a163bec0c15c2b1506f5c9 # nlohmann_json
 
