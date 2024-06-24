@@ -4,14 +4,16 @@
 # Contributor: Tom Newsom <Jeepster@gmx.co.uk>
 # Contributor: Paul Mattal <paul@archlinux.org>
 
-pkgname=ffmpeg
+pkgname=ffmpeg-lily
 pkgver=7.0.1
-pkgrel=1.1
+pkgrel=2
 epoch=2
-pkgdesc='Complete solution to record, convert and stream audio and video'
-arch=(x86_64_v3 x86_64)
+pkgdesc='Complete solution to record, convert and stream audio and video (with AMD HEVC VAAPI alignment patch)'
+arch=(x86_64)
 url=https://ffmpeg.org
 license=(GPL-3.0-only)
+conflicts=('ffmpeg')
+provides=("ffmpeg=$pkgver")
 depends=(
   alsa-lib
   aom
@@ -124,13 +126,13 @@ source=(
 )
 b2sums=('d2d6a645509e697932dc8f7a57719e069299e53eb37cda7bf01fd94c9e9956e5532dc5c923fa86d72d0e3a051a7f405e768c73c66ca8aea29271923a17222e03'
         '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de'
-        '136c870cc4f9a235c8bca377a698df84c9856205020c76e90242bc75a660c23af67e6bd6c0b4b70d0b41bbdebf827735831181ef25ad84ecfb6750d2517a7fd2')
+        136c870cc4f9a235c8bca377a698df84c9856205020c76e90242bc75a660c23af67e6bd6c0b4b70d0b41bbdebf827735831181ef25ad84ecfb6750d2517a7fd2)
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {
   cd ffmpeg
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
-  patch -Np1 -i ../FFmpeg-devel-v4-avcodec-vaapi_encode-add-customized-surface-alignment.diff # https://patchwork.ffmpeg.org/project/ffmpeg/patch/20240321170219.1487-1-Primeadvice@gmail.com/
+  patch -Np1 -i ../FFmpeg-devel-v4-avcodec-vaapi_encode-add-customized-surface-alignment.diff
 }
 
 pkgver() {
