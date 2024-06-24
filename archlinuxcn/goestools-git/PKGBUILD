@@ -2,6 +2,7 @@
 # Contributor: Michael Breedlove <me@michaelbreedlove.net>
 
 pkgname=goestools-git
+_name=${pkgname%-git}
 pkgver=r404.80ece1a
 pkgrel=1
 pkgdesc="Tools to work with signals and files from GOES satellites"
@@ -39,12 +40,12 @@ b2sums=('SKIP'
         'SKIP')
 
 pkgver() {
-  cd ${pkgname%-git}
+  cd "$_name"
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  cd ${pkgname%-git}
+  cd "$_name"
   _submodules=(
     libaec
     libcorrect
@@ -65,7 +66,7 @@ prepare() {
 }
 
 build() {
-  cd ${pkgname%-git}
+  cd "$_name"
   cmake -S . -B build \
     -GNinja \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -74,7 +75,7 @@ build() {
 }
 
 package() {
-  cd "${pkgname%-git}"
+  cd "$_name"
   DESTDIR="$pkgdir" cmake --install build
   install -d "${pkgdir}/usr/share/licenses/goestools-git/"
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/goestools-git/"
