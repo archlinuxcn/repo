@@ -6,14 +6,12 @@
 
 pkgname=ffmpeg-lily
 pkgver=7.0.1
-pkgrel=2
+pkgrel=3
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video (with AMD HEVC VAAPI alignment patch)'
 arch=(x86_64)
 url=https://ffmpeg.org
 license=(GPL-3.0-only)
-conflicts=('ffmpeg')
-provides=("ffmpeg=$pkgver")
 depends=(
   alsa-lib
   aom
@@ -83,7 +81,9 @@ depends=(
   xz
   zimg
   zlib
+  ffmpeg=$epoch:$pkgver
 )
+conflicts=(ffmpeg)
 makedepends=(
   amf-headers
   avisynthplus
