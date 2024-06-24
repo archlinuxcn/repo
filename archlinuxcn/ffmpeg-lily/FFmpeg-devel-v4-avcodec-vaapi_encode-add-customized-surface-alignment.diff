@@ -1,0 +1,56 @@
+diff --git a/libavcodec/vaapi_encode.c b/libavcodec/vaapi_encode.c
+index 940f0678a5..2a74db23b1 100644
+--- a/libavcodec/vaapi_encode.c
++++ b/libavcodec/vaapi_encode.c
+@@ -2711,6 +2711,17 @@ static av_cold int vaapi_encode_create_recon_frames(AVCodecContext *avctx)
+     av_log(avctx, AV_LOG_DEBUG, "Using %s as format of "
+            "reconstructed frames.\n", av_get_pix_fmt_name(recon_format));
+ 
++    if (constraints->log2_alignment) {
++        ctx->surface_width = FFALIGN(avctx->width,
++                              1 << (constraints->log2_alignment & 0xf));
++        ctx->surface_height = FFALIGN(avctx->height,
++                              1 << ((constraints->log2_alignment & 0xf0) >> 4));
++        av_log(avctx, AV_LOG_VERBOSE, "Using customized alignment size "
++                "[%dx%d].\n",
++                (1 << (constraints->log2_alignment & 0xf)),
++                (1 << ((constraints->log2_alignment & 0xf0) >> 4)));
++    }
++
+     if (ctx->surface_width  < constraints->min_width  ||
+         ctx->surface_height < constraints->min_height ||
+         ctx->surface_width  > constraints->max_width ||
+diff --git a/libavutil/hwcontext.h b/libavutil/hwcontext.h
+index bac30debae..1eb56aff78 100644
+--- a/libavutil/hwcontext.h
++++ b/libavutil/hwcontext.h
+@@ -465,6 +465,13 @@ typedef struct AVHWFramesConstraints {
+      */
+     int max_width;
+     int max_height;
++
++    /**
++     * The frame width/height log2 alignment when available
++     * the lower 4 bits, width; another 4 bits, height
++     * (Zero is not applied, use the default value)
++     */
++    int log2_alignment;
+ } AVHWFramesConstraints;
+ 
+ /**
+diff --git a/libavutil/hwcontext_vaapi.c b/libavutil/hwcontext_vaapi.c
+index 56d03aa4cd..6cda0fd811 100644
+--- a/libavutil/hwcontext_vaapi.c
++++ b/libavutil/hwcontext_vaapi.c
+@@ -294,6 +294,11 @@ static int vaapi_frames_get_constraints(AVHWDeviceContext *hwdev,
+             case VASurfaceAttribMaxHeight:
+                 constraints->max_height = attr_list[i].value.value.i;
+                 break;
++#if VA_CHECK_VERSION(1, 21, 0)
++            case VASurfaceAttribAlignmentSize:
++                constraints->log2_alignment = attr_list[i].value.value.i;
++                break;
++#endif
+             }
+         }
+         if (pix_fmt_count == 0) {
