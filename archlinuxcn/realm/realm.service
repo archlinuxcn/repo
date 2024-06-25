@@ -1,0 +1,11 @@
+[Unit]
+Description=realm
+Wants=network.target
+After=network-online.target
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/realm -c /etc/realm/config.json
+
+[Install]
+WantedBy=multi-user.target
