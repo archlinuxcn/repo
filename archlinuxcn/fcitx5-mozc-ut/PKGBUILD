@@ -5,7 +5,7 @@
 
 pkgname='fcitx5-mozc-ut'
 pkgver=2.30.5490.102
-pkgrel=2
+pkgrel=3
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
@@ -30,7 +30,7 @@ build() {
 
     unset ANDROID_NDK_HOME
     unset ANDROID_HOME
-    export JAVA_HOME='/usr/lib/jvm/java-11-openjdk/'
+    export JAVA_HOME='/usr/lib/jvm/java-21-openjdk/'
 
     # Temp fix for GCC 14
     sed -i -e '/Werror/d' third_party/protobuf/build_defs/cpp_opts.bzl
