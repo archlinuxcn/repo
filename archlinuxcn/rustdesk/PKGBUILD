@@ -6,6 +6,12 @@
 # 1 for build.py which should stay current
 _opt_BUILD_PY=1
 
+# 0 for download vcpkg, set _opt_VCPKG_COMMIT_ID
+# 1 for system vcpkg, ignore _opt_VCPKG_COMMIT_ID
+_opt_SYS_VCPKG=0
+#_opt_VCPKG_COMMIT_ID='#commit=14e7bb4ae24616ec54ff6b2f6ef4e8659434ea44'
+_opt_VCPKG_COMMIT_ID=''
+
 # 0 for package flutter, version checked
 # 1 for system flutter, version warned
 _opt_SYS_FLUTTER=0
@@ -13,7 +19,7 @@ _opt_SYS_FLUTTER=0
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.2.3-2'
+_pkgver='1.2.6'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -29,15 +35,24 @@ depends+=('glibc' 'gcc-libs' 'glib2' 'libxtst' 'libepoxy' 'gdk-pixbuf2' 'cairo' 
 _mdp=('unzip' 'git' 'cmake' 'gcc' 'curl' 'wget' 'yasm' 'nasm' 'zip' 'make' 'pkg-config' 'clang') # from Readme.MD
 makedepends=("${_mdp[@]}" 'rust' 'python' 'python-yaml' 'python-toml')
 makedepends+=('ninja') # vcpkg build can use the latest ninja
-options=('!strip' '!makeflags' '!lto')
+options=('!makeflags' '!lto')
 install="${pkgname}.install"
 _srcdir="${pkgname}-${_pkgver}"
 source=(
   "${_srcdir}.tar.gz::https://github.com/rustdesk/rustdesk/archive/refs/tags/${_pkgver}.tar.gz"
 )
+_vcs=(
+)
+if [ "${_opt_SYS_VCPKG}" -ne 0 ]; then
   makedepends+=('vcpkg')
+  _vcs+=(
+  )
+else
+  source+=("git+https://github.com/microsoft/vcpkg${_opt_VCPKG_COMMIT_ID}")
+fi
+source+=("${_vcs[@]}")
   if [ "${_opt_SYS_FLUTTER}" -eq 0 ]; then
-    _FLUVER='3.19.5'
+    _FLUVER='3.19.6'
     source+=(
       "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${_FLUVER}-stable.tar.xz"
     )
@@ -54,21 +69,54 @@ if ! :; then
   _srcdir="${_pkgname}"
   source[0]="git+${_giturl}#tag=${_pkgver}"
 fi
-md5sums=('a92955fb2130498feca68170b1e674bc'
-         '36faacc6645c87f1cdb9829a75e3458b'
+md5sums=('81074e3e8b6f0385d47d19fbd0688577'
+         'SKIP'
+         '74dc171bf2cfc1ada56b6e284adabca8'
          'a63659fb966758db9fe95e5aae89757a')
-sha256sums=('88c2342ffe6c09c38c58fca43a7fae7732d238be0b94e5a0c7ad30306393e3fc'
-            '6590607e7f2fb23bcc7e0a2d6aac292f9208cbf12a40862c281058c758604fb3'
+sha256sums=('b01b9d6ba5c5f0ff9777eff688237f26b87c4e1cc0d971d4d06e6b24903777cd'
+            'SKIP'
+            'db6742a20626d0d2a089eb41ad61b9b2138b996679911e9c8268c1f896191f97'
             'b3a05ffca1f57afa48bd006d732969146dafa164c71390070623ba569977f9d3')
+_vcs=("${_vcs[@]%%::*}")
+_vcs=("${_vcs[@]##*/}")
+noextract=("${_vcs[@]}")
 
 _vcpkg=(libvpx libyuv opus aom)
 
 _prepare_vc() {
   msg '_prepare_vc'
   set -u
-    rm -rf 'vcpkg'
-    set +u; msg2 'Copy /opt/vcpkg'; set -u
-    cp -pr '/opt/vcpkg' .
+  if [ "${_opt_SYS_VCPKG}" -ne 0 ] && [ ! -d 'vcpkg' ]; then
+    local _vcp='/opt/vcpkg'
+    if [ ! -d "${_vcp}" ]; then
+      _vcp='/usr/lib/vcpkg'
+    fi
+    set +u; msg2 "Copy ${_vcp}"; set -u
+    cp -pr "${_vcp}" .
+  fi
+  mkdir -p 'vcpkg/downloads'
+  if [ "${#_vcs[@]}" -gt 0 ]; then
+    cp -p "${_vcs[@]}" 'vcpkg/downloads'
+  fi
+
+  # Check commit ID
+  if [ "${_opt_SYS_VCPKG}" -eq 0 ] && [ ! -z "${_opt_VCPKG_COMMIT_ID}" ]; then
+    local _vcc
+    local _pyvcc="
+import yaml
+import io
+with open('rustdesk/.github/workflows/flutter-build.yml', 'r') as stream:
+    data_loaded = yaml.safe_load(stream)
+#print(data_loaded.get('env').keys())
+print(data_loaded.get('env').get('VCPKG_COMMIT_ID'))
+"
+    _vcc="$(python -c "${_pyvcc}")"
+    if [ "${_vcc}" != "${_opt_VCPKG_COMMIT_ID#*=}" ]; then
+      echo "Flag package out of date: _opt_VCPKG_COMMIT_ID must be changed to ${_vcc}"
+      set +u
+      false
+    fi
+  fi
   set +u
 }
 
@@ -86,6 +134,7 @@ _dpr_check() {
     for((f=0; f<"${#_dpr[@]}"; f++)); do
       if [ "${_dpr[f]}" != "${depends[f]}" ]; then
         echo 'Flag package out of date: Update _dpr from res/PKGBUILD/depends=()'
+        set +u
         false
       fi
     done
@@ -193,7 +242,9 @@ prepare() {
 build() {
   msg2 'Build vcpkg'
   set -u
-
+  if [ ! -x vcpkg/vcpkg ]; then
+    vcpkg/bootstrap-vcpkg.sh
+  fi
   export VCPKG_ROOT="${PWD}/vcpkg"
   nice vcpkg/vcpkg install "${_vcpkg[@]}"
 
@@ -211,14 +262,11 @@ build() {
       nice ./build.py --hwcodec --flutter
     else
       git checkout src/ui/common.tis
-      nice cargo build --features hwcodec,flutter,flutter_texture_render --lib --release
-      #ain't there no more
-      #sed -i "s/ffi.NativeFunction<ffi.Bool Function(DartPort/ffi.NativeFunction<ffi.Uint8 Function(DartPort/g" flutter/lib/generated_bridge.dart
+      nice cargo build --features hwcodec,flutter --lib --release
       pushd flutter
-      nice flutter build linux --release # || :
+      nice flutter build linux --release
       popd
     fi
-    #pushd flutter && flutter build linux --release && popd
     set +x
   set +u
 }
