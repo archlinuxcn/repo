@@ -18,7 +18,7 @@ ENABLED_DICTIONARIES=(
 
 pkgname='mozc-ut'
 pkgver=2.30.5490.102.20240609
-pkgrel=1
+pkgrel=2
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
 url='https://github.com/google/mozc'
@@ -41,8 +41,8 @@ source=("${pkgname}-git::git+https://github.com/google/mozc.git#commit=7967c42e5
         'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=2dfabeab535c90308e0d25bdd9b95de90cfc904e'
         'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=5a996bfd369ee44ec681f86bb7880904e9171cdd'
         'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=c109f062a6c80e52be4b96adbf4123404b2048d1'
-        'https://dumps.wikimedia.org/jawiki/20240501/jawiki-20240501-all-titles-in-ns0.gz')
-noextract=('jawiki-20240501-all-titles-in-ns0.gz')
+        'https://dumps.wikimedia.org/jawiki/20240620/jawiki-20240620-all-titles-in-ns0.gz')
+noextract=('jawiki-20240620-all-titles-in-ns0.gz')
 sha256sums=('72b43e715364e9ea40336e4733689b528e4a8a59cd6e6df09c1492f204a62c4a'
             '3ecd05af2f57e6c803e0798fa74a36580d541229e28b5d15f446b12ec367c9e4'
             '89317143e6396f2f8b4265a932c7f3607f55210854a3f5ccb9b265c1d222f6ed'
@@ -53,7 +53,7 @@ sha256sums=('72b43e715364e9ea40336e4733689b528e4a8a59cd6e6df09c1492f204a62c4a'
             '6144ac853ed47a9a2f8022887253c0ff1883b3a5b9470396b2ce84dbf2c91c59'
             '7ef9d90e6dd00af84fa5e14026fda54bbaa1c30fb03dfed2365c4043292bb39a'
             'bbe04bc6b9768b1c167788cb417aefad9f0a1ac60a63ea5a2bfd2056b7aa32c2'
-            '1f064a117c45c80486cffa158855ad26b5c35fd93dc92cb4dce5b83f12154874')
+            'b8bdd8ae8ee65cb33ef5bee4b543d031950f093b76ef916c15de8902066d8d96')
 
 prepare() {
     cd ${pkgname}-git/src
@@ -68,7 +68,7 @@ prepare() {
     # Use a dated snapshot for the JAWiki dump data
     sed -i -e '/wget/d' count_word_hits.rb
     sed -i -e "s|filename = \"jawiki-|filename = \"${srcdir}/jawiki-|g" count_word_hits.rb
-    sed -i -e 's|jawiki-[a-z0-9]\{6,8\}|jawiki-20240501|g' count_word_hits.rb apply_word_hits.rb
+    sed -i -e 's|jawiki-[a-z0-9]\{6,8\}|jawiki-20240620|g' count_word_hits.rb apply_word_hits.rb
 
     # Compile the UT dictionary
     printf '\nCompiling the UT dictionary...\n\n'
@@ -94,7 +94,7 @@ build() {
 
     unset ANDROID_NDK_HOME
     unset ANDROID_HOME
-    export JAVA_HOME='/usr/lib/jvm/java-11-openjdk/'
+    export JAVA_HOME='/usr/lib/jvm/java-21-openjdk/'
 
     # Temp fix for GCC 14
     sed -i -e '/Werror/d' third_party/protobuf/build_defs/cpp_opts.bzl
