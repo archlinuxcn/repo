@@ -1,14 +1,14 @@
 # Maintainer: lanthora <lanthora@outlook.com>
 
 pkgname=candy
-pkgver=5.9.0
+pkgver=5.9.1
 pkgrel=1
 pkgdesc="A reliable, low-latency, and anti-censorship virtual private network"
 url="https://github.com/lanthora/candy"
 license=('MIT')
 arch=('x86_64' 'aarch64' 'armv7h' 'riscv64')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/lanthora/candy/archive/refs/tags/v$pkgver.tar.gz" )
-sha256sums=('16e9cffe79371614c07e15f464fba74148af868bdac28739fb999ebef17d0497')
+sha256sums=('4273c67348bf5e7af5e58663f35984155cab4d8dcc29b286494d7a7299346125')
 makedepends=('cmake' 'ninja' 'pkgconf' 'gcc' 'git')
 depends=('fmt' 'glibc' 'gcc-libs' 'openssl' 'spdlog' 'poco')
 backup=('etc/candy.cfg')
