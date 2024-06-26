@@ -13,8 +13,9 @@ depends=(
 )
 makedepends=(
   python-build
+  python-hatch-requirements-txt
+  python-hatchling
   python-installer
-  python-setuptools
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mongodb/motor/archive/refs/tags/${pkgver}.tar.gz")
