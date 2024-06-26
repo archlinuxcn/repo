@@ -1,0 +1,11 @@
+pre_build_script: aur_pre_build(maintainers=['meanjollies'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: python-circuitbreaker
+  - alias: python
+
+maintainers:
+  - github: oldherl
