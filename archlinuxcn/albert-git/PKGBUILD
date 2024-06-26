@@ -26,11 +26,13 @@ provides=("${_pkgname}")
 source=("mirrors/${_pkgname}::git+${url}/${_pkgname}.git"
 	"mirrors/plugins::git+${url}/plugins.git"
 	"mirrors/python::git+${url}/python.git"
-	"mirrors/qhotkey::git+https://github.com/Skycoder42/QHotkey.git")
+	"mirrors/qhotkey::git+https://github.com/Skycoder42/QHotkey.git"
+	"mirrors/qnotification::git+https://github.com/QtCommunity/QNotification.git")
 sha512sums=('SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP')
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -47,11 +49,12 @@ prepare() {
 	git -c protocol.file.allow=always submodule update plugins
 
 	git config submodule.lib/QHotkey.url "${srcdir}/qhotkey/"
-	git -c protocol.file.allow=always submodule update lib/QHotkey
+	git config submodule.lib/QNotification.url "${srcdir}/qnotification/"
+	git -c protocol.file.allow=always submodule update lib/{QHotkey,QNotification}
 
 	cd plugins/
 	git submodule init
-	git config submodule.python/plugins.url "${srcdir}/python"
+	git config submodule.python/plugins.url "${srcdir}/python/"
 	git -c protocol.file.allow=always submodule update python/plugins
 }
 
