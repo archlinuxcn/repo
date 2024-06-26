@@ -5,6 +5,10 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: nomacs
+  - source: alpm
+    alpm: opencv
+    repo: extra
+    strip_release: true
 
 build_prefix: extra-x86_64
 
