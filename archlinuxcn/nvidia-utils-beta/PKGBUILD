@@ -6,7 +6,7 @@
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
 pkgver=555.52.04
-pkgrel=2
+pkgrel=3
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
 url='https://www.nvidia.com/'
@@ -17,11 +17,15 @@ source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}
         'nvidia-drm-outputclass.conf'
         'nvidia-utils.sysusers'
         'nvidia.rules'
+        'systemd-homed-override.conf'
+        'systemd-suspend-override.conf'
         '120-nvidia-settings-change-desktop-paths.patch')
 sha256sums=('9d53ae6dbef32ae95786ec7d02bb944d5050c1c70516e6065ab5356626a44402'
             'be99ff3def641bb900c2486cce96530394c5dc60548fc4642f19d3a4c784134d'
             'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167'
-            'c307ac71a3297e96a3fe8df47313429f4dcdab4c96621efcff380398acc976d5'
+            '0e54249a7754b668b436f0f7aa7e95fff68edbb12a93dbee4660e09a8c695f84'
+            'c5aa7b8abe69e72bfdc6b9ee8afbfd350bcc557e894558f2e6e4087fa9aa0dd8'
+            '1d053c5078387021338cfc3a732bed61be1a20a549775573788e9134775c8149'
             '6f0f4a23706241e9e37e0fe30a09bd30ca29bb446d8fe7861cb4959f0a010ef4')
 
 # create soname links
@@ -221,10 +225,13 @@ package_nvidia-utils-beta() {
     install -D -m644 systemd/system/*.service -t "${pkgdir}/usr/lib/systemd/system"
     install -D -m755 systemd/system-sleep/nvidia -t "${pkgdir}/usr/lib/systemd/system-sleep"
     install -D -m755 systemd/nvidia-sleep.sh -t "${pkgdir}/usr/bin"
-    
-    # dynamic boost power management
     install -D -m755 nvidia-powerd -t "${pkgdir}/usr/bin"
     install -D -m644 nvidia-dbus.conf -t "${pkgdir}/usr/share/dbus-1/system.d"
+    install -D -m644 "${srcdir}/systemd-homed-override.conf"   "${pkgdir}/usr/lib/systemd/systemd-homed.service.d/10-nvidia-no-freeze-session.conf"
+    install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/systemd-suspend.service.d/10-nvidia-no-freeze-session.conf"
+    install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/systemd-suspend-then-hibernate.service.d/10-nvidia-no-freeze-session.conf"
+    install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/systemd-hibernate.service.d/10-nvidia-no-freeze-session.conf"
+    install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/systemd-hybrid-sleep.service.d/10-nvidia-no-freeze-session.conf"
     
     # distro specific files must be installed in /usr/share/X11/xorg.conf.d
     install -D -m644 "${srcdir}/nvidia-drm-outputclass.conf" "${pkgdir}/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf"
