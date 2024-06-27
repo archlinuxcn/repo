@@ -61,7 +61,7 @@ package() {
 	install -Dm644 ${_pkgname}/res/public/{nekoray,nekobox}.png -t "${pkgdir}/usr/share/pixmaps/"
 
 	# core
-	install -Dm755 ${_pkgname}/deployment/linux64/{nekoray,nekobox}_core -t "${pkgdir}/usr/lib/${_pkgname}/"
+	install -Dm755 "${_pkgname}/deployment/linux64/nekobox_core" -t "${pkgdir}/usr/lib/${_pkgname}/"
 
 	# app
 	install -Dm755 "${_pkgname}/build/${_pkgname}" -t "${pkgdir}/usr/lib/${_pkgname}/"
