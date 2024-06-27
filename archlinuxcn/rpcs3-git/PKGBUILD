@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.32.r16618.bceaf46e2f
+pkgver=0.0.32.r16644.703de01ebf
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64)
@@ -71,7 +71,9 @@ pkgver() {
 
 prepare() {
   cd rpcs3
-  
+
+  sed -i 's/av.video.context->frame_number/av.video.context->frame_num/g' rpcs3/util/media_utils.cpp
+
   git submodule init 3rdparty/glslang/glslang 3rdparty/llvm/llvm
   git config submodule.3rdparty/glslang.url ../glslang
   git config submodule.3rdparty/llvm/llvm.url ../llvm
