@@ -4,6 +4,7 @@
 # Contributor: Mika Fischer <mika.fischer@zoopnet.de>
 
 pkgname=soci
+epoch=2
 pkgver=4.0.3.r0.g438e3549
 pkgrel=5
 pkgdesc="Database access library for C++"
@@ -17,6 +18,7 @@ optdepends=('instantclient-basic: support for oracle databases'
             'postgresql-libs: support for postgresql databases'
             'sqlite3: support for sqlite databases'
             'unixodbc: support for ODBC databases')
+options=('staticlibs' '!debug' '!lto')
 source=("git+https://github.com/SOCI/soci.git#branch=release/4.0")
 sha1sums=('SKIP')
 
