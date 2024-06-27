@@ -8,7 +8,7 @@
 
 pkgname=megasync
 pkgver=5.3.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Official MEGA desktop application for syncing with MEGA Cloud Drive'
 arch=('x86_64')
 url='https://github.com/meganz/MEGAsync/'
@@ -42,14 +42,12 @@ source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_OSX"
         'meganz-sdk'::'git+https://github.com/meganz/sdk.git'
         '010-megasync-freeimage-remove-obsolete-ffmpeg-macros.patch'
         '020-megasync-sdk-fix-cmake-dependencies-detection.patch'
-        '030-megasync-app-fix-cmake-dependencies-detection.patch'
-        '040-megasync-sdk-remove-invalid-mutex-method-call.patch')
+        '030-megasync-app-fix-cmake-dependencies-detection.patch')
 sha256sums=('feb8c083afa82f9d888414b9a69370df50872b63cb33c3bf8d4f4a555fdb95fd'
             'SKIP'
             '3df5d43ca1951c9e48dbb7f8e221bc8fff1a9fb1b7c934cb5ea7f195ae8f2e04'
             '2da83bb6a20aa19b58b4115646bacb9d76e2504b45b5094abeba94beac2301fb'
-            'a5883be2d00dbacaacf78231bfeeac27f4e8a471c3256370e94fec3e55b1d171'
-            '68697633d839e05bbbf0a5bdb54c5568c85023535cbda30e8cf06b494c224d66')
+            'a5883be2d00dbacaacf78231bfeeac27f4e8a471c3256370e94fec3e55b1d171')
 
 prepare() {
     git -C MEGAsync submodule init
@@ -59,12 +57,10 @@ prepare() {
     patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/010-megasync-freeimage-remove-obsolete-ffmpeg-macros.patch"
     patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/020-megasync-sdk-fix-cmake-dependencies-detection.patch"
     patch -d MEGAsync -Np1 -i "${srcdir}/030-megasync-app-fix-cmake-dependencies-detection.patch"
-    
-    # https://github.com/meganz/sdk/issues/2679
-    patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/040-megasync-sdk-remove-invalid-mutex-method-call.patch"
 }
 
 build() {
+    export CXXFLAGS+=' -DNDEBUG'
     cmake -B build -S MEGAsync \
         -G 'Unix Makefiles' \
         -DCMAKE_BUILD_TYPE:STRING='None' \
