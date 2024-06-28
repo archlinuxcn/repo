@@ -1,19 +1,19 @@
 # Maintainer: Patrick Northon <northon_patrick3@yahoo.ca>
 
 pkgname=renpy
-pkgver=8.2.2
-_commit=db12aca24b913a983ee3ac8a171c82b58005b223
+pkgver=8.2.3
+_commit=5a88385e7a23d1862818dea0aaf5ce3bdea46f2e
 pkgrel=1
 pkgdesc="Visual novel engine Ren'Py along with its platdeps libs"
 arch=('i686' 'x86_64')
 license=('MIT')
 url='http://www.renpy.org'
 depends=(
-	'glibc' 'ffmpeg' 'fribidi' 'harfbuzz' 'freetype2' 'libpng'
+	'glibc' 'ffmpeg6.1' 'fribidi' 'harfbuzz' 'freetype2' 'libpng'
 	'python-pygame-sdl2' 'sdl2' 'sdl2_image' 'sdl2_mixer'
 	'sdl2_gfx' 'sdl2_ttf' 'python-future' 'python-ecdsa')
 makedepends=(
-	'cython0' 'python-setuptools-scm' 'python-sphinx' 'python-sphinx_rtd_dark_mode'
+	'cython0' 'python-setuptools-scm' 'python-sphinx_rtd_dark_mode'
 	'python-sphinx_rtd_theme' 'python-build' 'python-installer' 'python-wheel' 'git')
 provides=('python-renpy')
 replaces=('renpy64')
@@ -22,17 +22,20 @@ install='renpy.install'
 source=("git+https://github.com/${pkgname}/${pkgname}.git#commit=${_commit}"
         "${pkgname}.desktop"
         "${pkgname}-launcher.sh")
-sha256sums=('551d595e30be55e73037a5d537cab0118cbb8e5c159bd90f74734107fe4bba7e'
+sha256sums=('041334162e9a572107d51a4e183eab251c8e11be1744626f7a475a9f187b4cf6'
             'b58efcc42526c4de15e8963b02991e558b5e3d15d720b3777b791ac13fc815e6'
             'a38112859bf659d48c30be5c7c20ed1a1c72271ffd74eb4b4e730afbd87d73dc')
 
 build() {
 	cd "${pkgname}"
 
+	export CFLAGS+=' -I/usr/include/ffmpeg6.1 -Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration'
+	export RENPY_DEPS_INSTALL='/usr/include/ffmpeg6.1:/usr/lib/ffmpeg6.1:/usr'
+
 	pushd 'module'
 		python -m build --wheel --no-isolation
-		rm -rf "$srcdir/tempinstall"
-		python -m installer --destdir="$srcdir/tempinstall" dist/*.whl
+		#rm -rf "$srcdir/tempinstall"
+		#python -m installer --destdir="$srcdir/tempinstall" dist/*.whl
 	popd
 
 	# build docs
