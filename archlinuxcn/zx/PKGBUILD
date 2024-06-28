@@ -2,8 +2,8 @@
 # Contributor: Alex D'Andrea <alex at dandrea dot io>
 
 pkgname=zx
-pkgver=8.1.2
-_commit=73f05586c68c7fbcd91541e007a24a7765c38841 # tags/8.1.2
+pkgver=8.1.3
+_commit=a3b7316ee6bf5bd954573c1a69770652b82d837d # tags/8.1.3
 pkgrel=1
 pkgdesc='A tool for writing better scripts'
 arch=(any)
@@ -12,7 +12,7 @@ license=(Apache)
 depends=('nodejs>=16')
 makedepends=(npm git)
 source=("git+$url.git#commit=$_commit")
-md5sums=('24dbd5e34f9e017055696ed36ea84aa3')
+md5sums=('d325ba49143363aa2181b3eb96c85e50')
 
 build() {
 	cd "$pkgname"
