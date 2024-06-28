@@ -1,14 +1,13 @@
 # Maintainer: slbtty <shenlebantongying@gmail.com>
 
 pkgname=goldendict-ng-git
-pkgver=24.02.16.r5505.d30de48f
+pkgver=24.05.13.r5505.d30de48f
 pkgrel=1
 pkgdesc="The next generation GoldenDict (Supports Qt WebEngine & Qt6)."
 arch=('i686' 'x86_64' 'aarch64')
 url="https://github.com/xiaoyifang/goldendict-ng"
 license=('GPL3')
 depends=(
-	ffmpeg
 	hunspell
 	libvorbis
 	libxtst
@@ -42,7 +41,7 @@ md5sums=('SKIP')
 
 pkgver() {
 	cd "$srcdir/$pkgname"
-	printf "%s.r%s.%s" "$(git describe | cut -c 2-9)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	printf "%s.r%s.%s" "$(git describe --tags --abbrev=0 | cut -c 2-9)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
@@ -55,6 +54,7 @@ build(){
 		-DCMAKE_INSTALL_PREFIX='/usr' \
 		-DUSE_SYSTEM_FMT=ON \
 		-DUSE_SYSTEM_TOML=ON \
+		-DWITH_FFMPEG_PLAYER=OFF \
 		-Wno-dev
 	cmake --build build_dir
 }
