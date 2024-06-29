@@ -26,15 +26,18 @@ makedepends=(
   imagemagick
   python-sphinx
   texlive-latexextra
+  python-yaml
 )
 options=('!strip' '!debug')
 _srcname=linux-amd-drm-next
 source=(
   "$_srcname::git+https://gitlab.freedesktop.org/agd5f/linux#tag=$_tag"
   config::https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/config         # the main kernel config file
+fix-sphinx.patch
 )
-sha256sums=('SKIP'
-            '6b337a9d3cfdc00005589a80b8d36fa500f6a92ed21565a3aceec48d7202a7da')
+sha256sums=('0da08ee4e10ea02737741aa34ecc8b0dd26cbe0e2494556d222baf97a10c7a86'
+            '6b337a9d3cfdc00005589a80b8d36fa500f6a92ed21565a3aceec48d7202a7da'
+            'a29e9e4d94b8d267b01786c103e7ad847b124e83d91408f810ef1b6188c61603')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
