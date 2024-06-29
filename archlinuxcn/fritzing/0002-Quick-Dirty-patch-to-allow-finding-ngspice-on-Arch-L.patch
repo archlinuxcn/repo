@@ -17,13 +17,13 @@ index cfff340a..2e229ec5 100644
  
  
 -message("Using fritzing ngspice detect script.")
--NGSPICEPATH = ../../ngspice-40
+-NGSPICEPATH = ../../ngspice-42
 -NGSPICEPATH = $$absolute_path($${NGSPICEPATH})
 +message("Using customized ngspice detect script.")
 +NGSPICEPATH = "/usr/include/ngspice/"
  
  exists($$NGSPICEPATH) {
-     message("using $${NGSPICEPATH}")
+ 	message("found $${NGSPICEPATH}")
 -	INCLUDEPATH += $$NGSPICEPATH/include
 +	INCLUDEPATH += $$NGSPICEPATH
  } else {
