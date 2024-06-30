@@ -26,9 +26,11 @@ provides=("${_pkgname}")
 source=("mirrors/${_pkgname}::git+${url}/${_pkgname}.git"
 	"mirrors/plugins::git+${url}/plugins.git"
 	"mirrors/python::git+${url}/python.git"
+	"mirrors/pybind11::git+https://github.com/pybind/pybind11.git"
 	"mirrors/qhotkey::git+https://github.com/Skycoder42/QHotkey.git"
 	"mirrors/qnotification::git+https://github.com/QtCommunity/QNotification.git")
 sha512sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -56,6 +58,9 @@ prepare() {
 	git submodule init
 	git config submodule.python/plugins.url "${srcdir}/python/"
 	git -c protocol.file.allow=always submodule update python/plugins
+
+	git config submodule.python/pybind11.url "${srcdir}/pybind11/"
+	git -c protocol.file.allow=always submodule update python/pybind11
 }
 
 build() {
