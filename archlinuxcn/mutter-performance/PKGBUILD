@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373' '3751' '3729')
-_merge_requests_to_use=('1441' '3751' '3729')
+# Merge Requests List: ('579' '1441' '3373' '3751')
+_merge_requests_to_use=('1441' '3751')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -32,7 +32,7 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=46.2+r17+gec5444f54
+pkgver=46.3
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -112,22 +112,19 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=ec5444f541a5126de253e0462b68e8805ed09033  # tags/46.2^17
+_commit=3998f8a422e89c6a64a79e2ce23f9389c0feb7f9  # tags/46.3^0
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
-        'mr3751.patch'
-	'mr3729.patch')
-sha256sums=('e2985058fea0cf20a4e3ceea3c0ef4a53487f093fe70e6ed1fa06c48e267d5d8'
+        'mr3751.patch')
+sha256sums=('c6497a3045eed064eac55f0780b6a91f919b92450d083d81eaee3c65b13cdb9f'
             '649dac49f7655f4bd21deb244bb47f2b5a211caa29364d1155454eb155076dbb'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
-            '7eec91f857cf1d8183c32199f33cc86a1a8a95017282e602738a90fe219c8b33'
-            '9d2ca68355dd4f07bae433ce91fda09fdb8d7fccf1462340e8295cee3cacb932')
-b2sums=('6b402c0ab86ed5432de52bb1dd381da775977633fb13c113834bb1c041bb68b6a4847e8b734f4c59d3a12f4f722669f198e7ec7c3639bf8fbd99f57e53b79b1c'
+            '9d925b810629074285388b5a1a9a88514a6cb45463a98ada6f66c2cba2ad9d2f')
+b2sums=('b228db453c22a94783ceed71eb9489117e0576293f6daa37b7f20b6992b80ee4e67ebeee3b1cf474d306d2341e8d0e26b16820cec9d6c53132ddc7ffd4157634'
         '8f5f7c4caae32f46d35f2cd73a0d00ddfde38c0b53e13d60c8a977362b8bfd6fc41f3af1a88353b6f2778d7d6d01881f14198b40532bcda53caf43aba7287804'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
-        'a79155ce4f11d8ccc674b08baccb18ac3bf254a0e41d9830a0ca964027633317bbd157f33b1f12f21bb378bfeedd4ebd111d993cdfd39b98ff3ce0f34850f6b1'
-        '4a950db6a8225cc364082ea65f545a86ce6eee21b622656397d9fa515eabc471137e4bfd754510927f59963ccbdad84cdcdb5875d8a371042111263bf8ccc935')
+        'f720718049c1f9d0f338c203a5ae4520b5e7079b57e692ec95d8183705d7b7627ccd7d3d350d0010d0b225226641afccd699b65a81bd044fd32c441d413a0779')
 
 pkgver() {
   cd $_pkgname
