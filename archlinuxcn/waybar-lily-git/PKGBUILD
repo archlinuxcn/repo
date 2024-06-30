@@ -2,12 +2,12 @@
 # Contributor: Brett Cornwall <ainola@archlinux.org>
 # Contributor: Maxim Baz <$pkgname at maximbaz dot com>
 
-pkgname=waybar-lily
+pkgname=waybar-lily-git
 pkgver=0.10.3
 pkgrel=1
-pkgdesc='Highly customizable Wayland bar for Sway and Wlroots based compositors, with less modules and deps, for PulseAudio users'
+pkgdesc='Highly customizable Wayland bar for Sway and Wlroots based compositors, with less modules and deps, for PulseAudio users, and other changes'
 arch=('x86_64')
-url="https://github.com/Alexays/Waybar/"
+url="https://github.com/lilydjwg/Waybar"
 license=('MIT')
 depends=(
     'fmt'
@@ -38,13 +38,19 @@ backup=(
 optdepends=(
     'otf-font-awesome: Icons in the default configuration'
 )
-source=("$pkgname-$pkgver.tar.gz::https://github.com/Alexays/Waybar/archive/$pkgver.tar.gz")
-sha256sums=('50a9ae85d3dcfef04e4bc4e0f3470f187964e4466c156e5558850cea84a3df5c')
-provides=(waybar=$pkgver)
-conflicts=(waybar)
+source=("git+https://github.com/lilydjwg/Waybar.git")
+sha256sums=('SKIP')
+provides=(waybar=$pkgver waybar-lily=$pkgver)
+conflicts=(waybar waybar-lily)
+replaces=(waybar-lily)
+
+pkgver() {
+    cd Waybar
+    git describe --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+}
 
 build() {
-    cd "Waybar-$pkgver"
+    cd Waybar
     meson setup --prefix=/usr \
           --buildtype=plain \
           --wrap-mode=nodownload \
@@ -57,7 +63,7 @@ build() {
 }
 
 package() {
-    cd "Waybar-$pkgver"
+    cd Waybar
     meson install -C build --destdir "$pkgdir"
     install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
