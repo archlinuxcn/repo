@@ -8,6 +8,10 @@ pkgdesc="Language server implementation for Standard ML"
 arch=('x86_64')
 license=('Apache-2.0 AND MIT')
 url="https://github.com/azdavis/millet"
+depends=(
+  gcc-libs
+  glibc
+)
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tgz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 b2sums=('b9312e79a3dba097631a9611783edb0c733bc46b7c759911e94eec4e7645a900e30be7bdb50f09ca19c05fc8fc2bb40b27311d5217a81d09897535924c2ab0a1')
