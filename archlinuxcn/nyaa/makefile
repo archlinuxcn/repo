@@ -1,4 +1,4 @@
-.phony: pkg src
+.PHONY: pkg src
 
 src: PKGBUILD
 	makepkg --printsrcinfo > .SRCINFO
