@@ -6,7 +6,7 @@
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
 pkgver=555.58
-pkgrel=1
+pkgrel=2
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
 url='https://www.nvidia.com/'
@@ -227,11 +227,12 @@ package_nvidia-utils-beta() {
     install -D -m755 systemd/nvidia-sleep.sh -t "${pkgdir}/usr/bin"
     install -D -m755 nvidia-powerd -t "${pkgdir}/usr/bin"
     install -D -m644 nvidia-dbus.conf -t "${pkgdir}/usr/share/dbus-1/system.d"
-    install -D -m644 "${srcdir}/systemd-homed-override.conf"   "${pkgdir}/usr/lib/systemd/systemd-homed.service.d/10-nvidia-no-freeze-session.conf"
-    install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/systemd-suspend.service.d/10-nvidia-no-freeze-session.conf"
-    install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/systemd-suspend-then-hibernate.service.d/10-nvidia-no-freeze-session.conf"
-    install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/systemd-hibernate.service.d/10-nvidia-no-freeze-session.conf"
-    install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/systemd-hybrid-sleep.service.d/10-nvidia-no-freeze-session.conf"
+    install -D -m644 "${srcdir}/systemd-homed-override.conf" "${pkgdir}/usr/lib/systemd/system/systemd-homed.service.d/10-nvidia-no-freeze-session.conf"
+    local _dir
+    for _dir in systemd-{suspend{,-then-hibernate},hibernate,hybrid-sleep}.service.d
+    do
+        install -D -m644 "${srcdir}/systemd-suspend-override.conf" "${pkgdir}/usr/lib/systemd/system/${_dir}/10-nvidia-no-freeze-session.conf"
+    done
     
     # distro specific files must be installed in /usr/share/X11/xorg.conf.d
     install -D -m644 "${srcdir}/nvidia-drm-outputclass.conf" "${pkgdir}/usr/share/X11/xorg.conf.d/10-nvidia-drm-outputclass.conf"
