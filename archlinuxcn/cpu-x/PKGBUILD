@@ -1,22 +1,28 @@
 # Maintainer: UnicornDarkness
+# Maintainer: Integral <integral@member.fsf.org>
 
-_realname=CPU-X
 pkgname=cpu-x
+_pkgname=CPU-X
 pkgver=5.0.4
 pkgrel=3
 pkgdesc="A Free software that gathers information on CPU, motherboard and more"
 arch=('i686' 'x86_64')
-url="https://thetumultuousunicornofdarkness.github.io/CPU-X"
-license=('GPL3')
+url="https://thetumultuousunicornofdarkness.github.io/${_pkgname}"
+license=('GPL-3.0-or-later')
 depends=('gtkmm3' 'ncurses' 'libcpuid>=0.6.0' 'pciutils' 'glfw' 'vulkan-icd-loader' 'procps-ng>=4.0.0')
 makedepends=('cmake' 'ninja' 'nasm' 'vulkan-headers')
 optdepends=('opengl-driver: packaged openGL driver'
-            'vulkan-driver: packaged Vulkan driver')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/TheTumultuousUnicornOfDarkness/CPU-X/archive/v$pkgver.tar.gz")
+	'vulkan-driver: packaged Vulkan driver')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/TheTumultuousUnicornOfDarkness/${_pkgname}/archive/v${pkgver}.tar.gz")
 sha512sums=('134f8a8fe6782279f7288d891a66b3d426b0e173de3d5445367c94029aa9d33348d037f5bca25690aff16f00d261777a71de6847991e564578099b03ff398453')
 
 build() {
-	cmake -S "$_realname-$pkgver" -B build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBEXECDIR="lib/cpu-x"
+	cmake -S "${_pkgname}-${pkgver}" \
+		-B build \
+		-G Ninja \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr
+
 	cmake --build build
 }
 
@@ -25,5 +31,5 @@ check() {
 }
 
 package() {
-	DESTDIR="$pkgdir" cmake --install build
+	DESTDIR="${pkgdir}" cmake --install build
 }
