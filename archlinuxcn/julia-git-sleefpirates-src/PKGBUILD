@@ -1,6 +1,6 @@
 pkgname=julia-git-sleefpirates-src
-pkgver=0.6.42
-_commit=b69a4b3810cce91d2977559122b3e3dcc4862caa
+pkgver=0.6.43
+_commit=0e3dffe36c53290bfc2a2693ee5d6dc51e70cf97
 pkgrel=1
 pkgdesc="SLEEFPirates.jl"
 url="https://github.com/JuliaSIMD/SLEEFPirates.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/SLEEFPirates.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('822281061f55e3a1ff6801a886b7cb90f1018f2541fbb2da7cea4526d15b9222')
 
 package() {
   cd SLEEFPirates.jl
