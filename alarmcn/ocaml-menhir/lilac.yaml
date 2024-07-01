@@ -1,14 +1,11 @@
 maintainers:
-  - github: dctxmei
   - github: yuyichao
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: aur_post_build
 
 update_on:
-  - source: gitlab
-    gitlab: fpottier/menhir
-    host: gitlab.inria.fr
-    use_max_tag: true
+  - source: aur
+    aur: ocaml-menhir
   - source: alpm
     alpm: ocaml
     repo: extra
