@@ -3,7 +3,7 @@
 # Initial Maintainer: Augusto F. Hack <hack.augusto@gmail.com>
 pkgname=python-carbon
 pkgver=1.1.10
-pkgrel=3
+pkgrel=4
 pkgdesc='Backend data caching and persistence daemon for Graphite'
 arch=('any')
 url='https://github.com/graphite-project/carbon'
@@ -48,6 +48,9 @@ package() {
   install -Dm644 "$srcdir"/carbon.service "$pkgdir"/usr/lib/systemd/system/carbon.service
   install -Dm644 "$srcdir"/carbon.sysusers "$pkgdir"/usr/lib/sysusers.d/carbon.conf
   install -Dm644 "$srcdir"/carbon.tmpfiles "$pkgdir"/usr/lib/tmpfiles.d/carbon.conf
+
+  # this generated file was too old to use
+  rm -f "$pkgdir"/usr/lib/python$_pyver/site-packages/carbon/carbon_pb2.py
 
   # change the directory of the config files
   ls conf | while read conf; do
