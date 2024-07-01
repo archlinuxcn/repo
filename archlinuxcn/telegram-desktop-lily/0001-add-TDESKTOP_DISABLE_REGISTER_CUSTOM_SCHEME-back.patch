@@ -1,7 +1,7 @@
-From 6c475fda3cf11d79cf0cdaa0e47ed3f2d6bc0711 Mon Sep 17 00:00:00 2001
+From 5a15563a85d989060013acda0209fd156fb541ad Mon Sep 17 00:00:00 2001
 From: Megumi_fox <i@megumifox.com>
 Date: Wed, 14 Apr 2021 22:56:55 +0800
-Subject: [PATCH 2/4] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
+Subject: [PATCH 1/4] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
 
 ---
  Telegram/SourceFiles/core/application.cpp        | 2 ++
@@ -10,10 +10,10 @@ Subject: [PATCH 2/4] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
  3 files changed, 9 insertions(+)
 
 diff --git a/Telegram/SourceFiles/core/application.cpp b/Telegram/SourceFiles/core/application.cpp
-index 3f643b6dd..f9c3c1741 100644
+index 21d3aa7ca..e936e8f14 100644
 --- a/Telegram/SourceFiles/core/application.cpp
 +++ b/Telegram/SourceFiles/core/application.cpp
-@@ -1799,6 +1799,7 @@ void Application::startShortcuts() {
+@@ -1779,6 +1779,7 @@ void Application::startShortcuts() {
  }
  
  void Application::RegisterUrlScheme() {
@@ -21,7 +21,7 @@ index 3f643b6dd..f9c3c1741 100644
  	base::Platform::RegisterUrlScheme(base::Platform::UrlSchemeDescriptor{
  		.executable = Platform::ExecutablePathForShortcuts(),
  		.arguments = Launcher::Instance().customWorkingDir()
-@@ -1811,6 +1812,7 @@ void Application::RegisterUrlScheme() {
+@@ -1791,6 +1792,7 @@ void Application::RegisterUrlScheme() {
  		.displayAppName = AppName.utf16(),
  		.displayAppDescription = AppName.utf16(),
  	});
@@ -70,5 +70,5 @@ index 18fa73671..0b5cce634 100644
      target_compile_definitions(Telegram PRIVATE TDESKTOP_ALLOW_CLOSED_ALPHA)
  endif()
 -- 
-2.44.0
+2.45.2
 
