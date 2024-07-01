@@ -1,22 +1,20 @@
-pre_build_script: aur_pre_build(maintainers=['UnicornDarkness'])
+maintainers:
+  - github: Integral-Tech
 
-post_build: aur_post_build
-
-repo_depends:
-  - mawk
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
 
 update_on:
-  - source: aur
-    aur: cpu-x
+  - source: github
+    github: TheTumultuousUnicornOfDarkness/CPU-X
+    use_latest_release: true
+    prefix: v
+
   - source: alpm
     alpm: glibc
     strip_release: true
+
   - source: alpm
     alpm: procps-ng
     strip_release: true
     provided: libproc2.so
-  - source: manual
-    manual: 1.0.3
-
-maintainers:
-  - github: dctxmei
