@@ -1,7 +1,7 @@
 pkgname=julia-git-closeopenintervals-src
-pkgver=0.1.12
-_commit=84825f0f2bcef24ac356d9ed640908d3b4e955be
-pkgrel=2
+pkgver=0.1.13
+_commit=7fe58658656fee23407d07f0506774d037afbe26
+pkgrel=1
 pkgdesc="CloseOpenIntervals.jl"
 url="https://github.com/JuliaSIMD/CloseOpenIntervals.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/CloseOpenIntervals.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('03cb0866167c3a72117dc636d4a8bf6185a335d104d47feee62349f3cb91cb6a')
 
 package() {
   cd CloseOpenIntervals.jl
