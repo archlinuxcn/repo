@@ -4,8 +4,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
-pkgver=5.1.7
-pkgrel=4
+pkgver=5.2.0
+pkgrel=1
 pkgdesc="Official Telegram Desktop client with megumifox & lily's patch"
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -33,13 +33,13 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0003-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch"
         "0004-make-animated-avatar-follow-power-settings.patch"
         "warn-before-delete-all-2.patch")
-sha512sums=('7d457bb1fe5f533340faf8e92853aede8a6586b0b78b0ee51780a16a49b00a99c9142403f0c89952ed4eb864faaa74bed104c8069eaadf9ccf565d01413585ca'
+sha512sums=('fc411634d06a8621916bc0cfd989fc38329991a6fc667de9caf7a3606b9e6b173ce45f6e9b255ff7cb9e8b855920a265ee1dbb832b109a5be5c99d8e65900046'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
-            'ba9279136f5bad3410d79fa09024c202529d5029f27e972bea797edfc9af086d6d6b22e655ab3f3613472d6e9c165819528439c8c48f18ced87e3f7d41d9fe0b'
-            'f6c6945ac28e7fa88ab2b2747041a4dec6ff861206422749d4d5ba7d2fc56f1c384b57f5b55eb512786d5c7d6c617c23bc2f7b5aea64dd1d2761748ade8a4df6'
-            'c5d284e41edfc67910561d04f50547922688994d665ae973a716a32eb127c7b22e6b06f8f0cf841726fb051d3946be4d5bf9d1bbdd03ad7136496f1879ebdb39'
-            'cb7fd34288a4ff53455c8dc7cd5245525a072bc72c43f78cb180d9d8172c07bde0e9a5d8a3b96a3f1a112751be9f3499b54d66e21ec60c7069eabf707f1a7b29'
+            'f1774ca438f2c32d4b8a593530e30f12c5ea225ac489cfc5602c88d81b1c4eee0d3514768364c682f3fa2f0bd0e6f6520c4c84c6b2ecbdb33def5b3737f7396a'
+            'e472b945a6afdc43a48b6bf011b87ec19a9208583b410ec0213b7b16e5e5b21e66952f71974d0dce0ef6cb8c360ab9ed98f0bf9411dcd9c0440840ec2f7c2242'
+            'bc1228eb3e65ece220b26460063189e5283d13f9e626f52737c464b65e32cd5975350754ee27ce1a67eccda6eb489776b6317e4a5746a3b27bb51494d6d0e27e'
+            '970cb4f69c9420213825977a4711a6abf786c78d96737bba746d3946b1191cc79d59f3215f5ec5ccf1511b457850149b529b2966aeac58061058ab0fdaec920b'
             '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d')
 
 prepare() {
