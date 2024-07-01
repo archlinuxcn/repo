@@ -1,8 +1,6 @@
 maintainers:
-  - github: isjerryxiao
-    email: archcn@mail.jerryxiao.cc
-  - github: dctxmei
-
+- github: isjerryxiao
+  email: archcn@mail.jerryxiao.cc
 build_prefix: extra-x86_64
 
 pre_build_script: aur_pre_build(maintainers=['yochananmarqos'])
@@ -10,8 +8,8 @@ pre_build_script: aur_pre_build(maintainers=['yochananmarqos'])
 post_build: aur_post_build
 
 update_on:
-  - source: github
-    github: liske/needrestart
-  - source: aur
-    aur: needrestart-git
-  - alias: perl
+- source: github
+  github: liske/needrestart
+- source: aur
+  aur: needrestart-git
+- alias: perl

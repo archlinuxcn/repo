@@ -1,6 +1,5 @@
 maintainers:
-  - github: dctxmei
-  - github: everyx
+- github: everyx
 
 pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 post_build_script: |
@@ -8,6 +7,6 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: github
-    github: SagerNet/sing-box
-    use_latest_release: true
+- source: github
+  github: SagerNet/sing-box
+  use_latest_release: true

@@ -1,23 +1,20 @@
 maintainers:
-  - github: ykelvis
-  - github: yan12125
-    email: f2q9sf79f9owdg2o@chyen.cc
-
+- github: ykelvis
 build_prefix: extra-x86_64
 
 pre_build_script: |
-    aur_pre_build(maintainers="yan12125")
+  aur_pre_build(maintainers="yan12125")
 
 post_build_script: |
-    aur_post_build()
+  aur_post_build()
 
 update_on:
-  - source: github
-    github: keepassxreboot/keepassxc
-  - source: alpm
-    from_pattern: ^(\d+\.\d+)\..*
-    to_pattern: \1
-    alpm: botan
-    repo: extra
-  - source: aur
-    aur: keepassxc-git
+- source: github
+  github: keepassxreboot/keepassxc
+- source: alpm
+  from_pattern: ^(\d+\.\d+)\..*
+  to_pattern: \1
+  alpm: botan
+  repo: extra
+- source: aur
+  aur: keepassxc-git
