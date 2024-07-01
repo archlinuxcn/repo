@@ -76,7 +76,7 @@ pkgname=(
     otc-shanggu-serif-vf
 )
 pkgver=1.020
-pkgrel=3
+pkgrel=4
 pkgdesc='基於思源的傳承字形（舊字形）字體。'
 url='https://github.com/GuiWonder/Shanggu'
 arch=('any')
@@ -406,10 +406,10 @@ package_otc-shanggu-serif-vf() {
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSerif/LICENSE.txt
 }
 package_ttc-shanggu-serif() {
-    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" SansTTCs/*.ttc
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" SerifTTCs/*.ttc
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSerif/LICENSE.txt
 }
 package_otc-shanggu-serif() {
-    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" SansOTCs/*.ttc
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" SerifOTCs/*.ttc
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" ShangguSerif/LICENSE.txt
 }
