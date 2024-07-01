@@ -1,6 +1,6 @@
 pkgname=julia-git-layoutpointers-src
-pkgver=0.1.16
-_commit=e50635c6146e7246188c89ee1eb4c4f68cd3c540
+pkgver=0.1.17
+_commit=f3be7cea0746499fa6927abe3c53aa2b80fcd1af
 pkgrel=1
 pkgdesc="LayoutPointers.jl"
 url="https://github.com/JuliaSIMD/LayoutPointers.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/LayoutPointers.jl.git#commit=$_commit")
-sha256sums=('ccae64eca46a37044dff3396a2e17ac439120d1d5595b082133ce509e22c5be6')
+sha256sums=('5ad480e36d0080ef18c3f3bc5557bdcd3a43d84d2546c4756941fcdc22f42dab')
 
 package() {
   cd LayoutPointers.jl
