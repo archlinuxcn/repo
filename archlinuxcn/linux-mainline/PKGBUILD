@@ -6,8 +6,8 @@
 
 pkgbase=linux-mainline
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v6.10-rc5
-pkgver=6.10rc5
+_tag=v6.10-rc6
+pkgver=6.10rc6
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)
