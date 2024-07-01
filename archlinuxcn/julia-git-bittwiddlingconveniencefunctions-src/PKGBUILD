@@ -1,7 +1,7 @@
 pkgname=julia-git-bittwiddlingconveniencefunctions-src
-pkgver=0.1.5
-_commit=1e8f8a1c46a14fea6dca004d6798dd69c5946c37
-pkgrel=2
+pkgver=0.1.6
+_commit=91b9348adc901a7b3b32bba2224bf05a01fb9b9c
+pkgrel=1
 pkgdesc="BitTwiddlingConvenienceFunctions.jl"
 url="https://github.com/JuliaSIMD/BitTwiddlingConvenienceFunctions.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/BitTwiddlingConvenienceFunctions.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('7c468f9a9981eeea03beb409c62ad00400b7dc5c75c306e731ef35e2a0e0e108')
 
 package() {
   cd BitTwiddlingConvenienceFunctions.jl
