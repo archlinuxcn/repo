@@ -1,9 +1,10 @@
-# XXX: The format for `maintainers` is subjected to changes.
-# See https://github.com/archlinuxcn/lilac/pull/68
-
 maintainers:
-  - github: farseerfc
+  - github: Integral-Tech
 
-build_prefix: extra-x86_64
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
 
-managed: false
+update_on:
+  - source: github
+    github: LongSoft/UEFITool
+    use_latest_release: true
