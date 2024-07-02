@@ -1,0 +1,36 @@
+# Maintainer: fossdd <fossdd@pwned.life>
+
+pkgname=redlib
+pkgver=0.35.1
+pkgrel=1
+pkgdesc="Private front-end for Reddit"
+url="https://github.com/${pkgname}-org/${pkgname}"
+license=('AGPL-3.0-or-later')
+arch=('x86_64' 'aarch64' 'riscv64')
+makedepends=('cargo')
+backup=("etc/${pkgname}.conf")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.zip")
+sha256sums=('0704b696a41f4a666fb899ed447cbdd5773024a314a62cc7234c81b8d44d77d5')
+options=('!lto')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	cargo build --release --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}"
+
+	install -Dm755 "target/release/${pkgname}" -t "$pkgdir/usr/bin/"
+
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/${pkgname}/"
+	install -Dm644 README.md -t "$pkgdir/usr/share/doc/${pkgname}/"
+
+	install -Dm644 "contrib/${pkgname}.service" -t "$pkgdir/usr/lib/systemd/system/"
+	install -Dm644 "contrib/${pkgname}.conf" -t "$pkgdir/etc/"
+}
