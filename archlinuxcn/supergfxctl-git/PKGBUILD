@@ -9,7 +9,7 @@ url="https://gitlab.com/asus-linux/supergfxctl"
 license=('MPL2')
 depends=('systemd-libs')
 makedepends=('git' 'rust' 'systemd')
-provides=('supergfxctl')
+provides=("supergfxctl=$pkgver")
 conflicts=('supergfxctl')
 source=('git+https://gitlab.com/asus-linux/supergfxctl.git')
 md5sums=('SKIP')
