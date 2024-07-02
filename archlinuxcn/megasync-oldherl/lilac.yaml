@@ -1,0 +1,17 @@
+maintainers:
+  - github: ykelvis
+
+update_on:
+  - source: github
+    github: oldherl/MEGAsync
+    use_latest_release: true
+  - source: alpm
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: crypto++
+  - alias: libcrypto
+  - alias: libssl
+  - alias: icu
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
