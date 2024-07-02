@@ -2,7 +2,7 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=v2ray-rules-dat
-pkgver=202406302210
+pkgver=202407012211
 pkgrel=1
 pkgdesc="Enhanced edition of V2Ray rules dat files"
 arch=(any)
