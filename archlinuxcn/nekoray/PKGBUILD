@@ -72,7 +72,7 @@ package() {
 	riscv64) core_srcdir=linux-riscv64 ;;
 	esac
 
-	install -Dm755 ${pkgname}/deployment/${core_srcdir}/{nekoray,nekobox}_core -t "${pkgdir}/usr/lib/${pkgname}/"
+	install -Dm755 ${pkgname}/deployment/${core_srcdir}/nekobox_core -t "${pkgdir}/usr/lib/${pkgname}/"
 
 	# app
 	install -Dm755 "${pkgname}/build/${pkgname}" -t "${pkgdir}/usr/lib/${pkgname}/"
