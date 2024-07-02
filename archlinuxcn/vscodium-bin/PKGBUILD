@@ -8,7 +8,7 @@
 pkgname=vscodium-bin
 _pkgname=VSCodium
 pkgver=1.90.2.24171
-pkgrel=1
+pkgrel=2
 pkgdesc="Binary releases of VS Code without MS branding/telemetry/licensing."
 arch=('x86_64' 'aarch64')
 url="https://github.com/VSCodium/vscodium"
@@ -34,7 +34,7 @@ sha256sums_x86_64=('194f0ab933ff7ed2b6fb87dd85485b413909714c8b03e81b6ae8504188da
 sha256sums_aarch64=('58b43fd036b31498dd6d14107ceb734a8a1b697ff3edb2565603de150bb961d2')
 
 source=('vscodium-bin.desktop'
-        'vscodium-bin-uri-handler.desktop'
+        'vscodium-bin-url-handler.desktop'
         'vscodium-bin.install'
         'vscodium-bin.sh'
         'vscodium-bin-wayland.desktop')
@@ -47,12 +47,12 @@ package() {
   install -d -m755 "${pkgdir}/opt/${pkgname}"
   install -d -m755 "${pkgdir}/usr/bin"
   install -d -m755 "${pkgdir}/usr/share/"{applications,pixmaps}
-  cp -r "${srcdir}"/!(vscodium-bin?(-uri-handler).desktop|${_pkgname}-linux-@(x|arm)64-${pkgver}.tar.gz) "${pkgdir}/opt/${pkgname}"
+  cp -r "${srcdir}"/!(vscodium-bin?(-url-handler).desktop|${_pkgname}-linux-@(x|arm)64-${pkgver}.tar.gz) "${pkgdir}/opt/${pkgname}"
   ln -s "/opt/${pkgname}/bin/codium" "${pkgdir}/usr/bin/codium"
   ln -s "/opt/${pkgname}/bin/codium" "${pkgdir}/usr/bin/vscodium"
   install -D -m644 "${srcdir}/vscodium-bin.desktop" "${pkgdir}/usr/share/applications/codium.desktop"
   install -D -m644 "${srcdir}/vscodium-bin-wayland.desktop" "${pkgdir}/usr/share/applications/codium-wayland.desktop"
-  install -D -m644 "${srcdir}/vscodium-bin-uri-handler.desktop" "${pkgdir}/usr/share/applications/codium-uri-handler.desktop"
+  install -D -m644 "${srcdir}/vscodium-bin-url-handler.desktop" "${pkgdir}/usr/share/applications/codium-url-handler.desktop"
   install -D -m644 "${srcdir}/resources/app/resources/linux/code.png" \
           "${pkgdir}/usr/share/pixmaps/vscodium.png"
   install -m755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/codium"
