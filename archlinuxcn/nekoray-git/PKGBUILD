@@ -63,5 +63,5 @@ package() {
 	install -Dm755 "${_pkgname}/build/${_pkgname}" -t "${pkgdir}/usr/lib/${_pkgname}/"
 
 	# Launcher
-	install -Dm755 "${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+	install -Dm755 "${_pkgname}.sh" "${pkgdir}/usr/bin/${_pkgname}"
 }
