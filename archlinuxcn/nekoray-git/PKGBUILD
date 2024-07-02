@@ -22,9 +22,11 @@ conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=(
 	"git+https://github.com/MatsuriDayo/${_pkgname}.git"
+	"${_pkgname}.sh"
 	"${_pkgname}.desktop"
 )
 sha512sums=('SKIP'
+            'b377f7e8c859ee0b5bc05f89e2dc6c0b8535e740e089e9afe5e5f145c38a05fccbbddfcb6eb8ced9a7478e4d9ccc3cbd3ffb6843c128189c75599c40c87737e8'
             'c8ad5a0cf5d813e1e35b827f92d526c022d529d34dd4019066b550c8f0dbdb89b0fb62e6bfc650e8c18acac826591e858eff3b2e5e6c6f5014f0f4b50f1fa88b')
 
 pkgver() {
@@ -50,15 +52,16 @@ build() {
 package() {
 	install -dm755 "${pkgdir}/usr/bin/"
 
-	# assets
+	# Assets
 	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 	install -Dm644 ${_pkgname}/res/public/{nekoray,nekobox}.png -t "${pkgdir}/usr/share/pixmaps/"
 
-	# core
+	# Core
 	install -Dm755 "${_pkgname}/deployment/linux64/nekobox_core" -t "${pkgdir}/usr/lib/${_pkgname}/"
 
-	# app
+	# Binary file
 	install -Dm755 "${_pkgname}/build/${_pkgname}" -t "${pkgdir}/usr/lib/${_pkgname}/"
 
-	ln -s "/usr/lib/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+	# Launcher
+	install -Dm755 "${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
 }
