@@ -1,26 +1,33 @@
 # Maintainer: Alexander Seiler <seileralex@gmail.com>
 pkgname=sioyek
 pkgver=2.0.0
-pkgrel=3
+pkgrel=7
 pkgdesc="PDF viewer for research papers and technical books."
 arch=('x86_64')
 license=('GPL3')
 url="https://github.com/ahrm/sioyek"
 depends=(
+	'freetype2'
+	'gcc-libs'
+	'glibc'
 	'gumbo-parser'
 	'harfbuzz'
 	'jbig2dec'
+	'libglvnd'
+	'libjpeg-turbo'
 	'libmupdf'
 	'openjpeg2'
 	'qt5-3d'
 	'qt5-base'
 	'zlib')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('92398b6da5e297c59f22cd3c6b562194846f28bc17bb4ae9432869aafeb5df17')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz" "mupdf-1.23.0.patch")
+sha256sums=('92398b6da5e297c59f22cd3c6b562194846f28bc17bb4ae9432869aafeb5df17' 'b04aa1a64eff87a83f7c885bbb92e0a4a2a76e72052c89eb4cfd64fbf1a1ad71')
 
 prepare() {
 	cd "$pkgname-$pkgver"
+	patch --forward --strip=1 --input="${srcdir}/mupdf-1.23.0.patch"
 	sed -i 's/-lmupdf-threads/-lfreetype -lgumbo -ljbig2dec -lopenjp2 -ljpeg/' pdf_viewer_build_config.pro
+	sed -i 's/-lmupdf-third//' pdf_viewer_build_config.pro
 	sed -i '/#define LINUX_STANDARD_PATHS/s/\/\///' pdf_viewer/main.cpp
 }
 
@@ -38,5 +45,5 @@ package() {
 	install -Dm644 build/shaders/* -t "$pkgdir/usr/share/$pkgname/shaders/"
 	install -Dm644 -t "$pkgdir/etc/sioyek/" build/keys.config build/prefs.config
 	install -Dm644 -t "$pkgdir/usr/share/man/man1" resources/sioyek.1
-  install -Dm644 -t "$pkgdir/usr/share/sioyek" build/tutorial.pdf
+	install -Dm644 -t "$pkgdir/usr/share/sioyek" build/tutorial.pdf
 }
