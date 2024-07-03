@@ -1,0 +1,11 @@
+--- solfege-3.23.4/solfege/soundcard/Makefile	2016-06-24 21:55:37.000000000 +0200
++++ solfege-3.23.4/solfege/soundcard/Makefile.new	2024-07-03 12:17:57.589179709 +0200
+@@ -23,7 +23,7 @@
+ 	solfege/soundcard/winmidi.dsp solfege/soundcard/winmidi.dsw solfege/soundcard/winmidi.def \
+ 	$(wildcard solfege/soundcard/tests/*.py)
+ 
+-CFLAGS:=$(CFLAGS) -I/usr/src/linux/include -Wall -pedantic -fPIC -I.
++CFLAGS:=$(CFLAGS) -Wall -pedantic -fPIC -I.
+ CC:=$(CC) $(CFLAGS) -DHAVE_CONFIG_H 
+ 
+ ifeq ($(ENABLE_OSS_SOUND),yes)

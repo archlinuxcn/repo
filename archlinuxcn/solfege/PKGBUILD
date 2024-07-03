@@ -6,7 +6,7 @@
 
 pkgname=solfege
 pkgver=3.23.4
-pkgrel=10
+pkgrel=11
 pkgdesc="Music education and ear training software"
 arch=('x86_64')
 url="https://www.gnu.org/software/solfege/"
@@ -29,6 +29,7 @@ source=("https://git.savannah.gnu.org/cgit/solfege.git/snapshot/${pkgname}-${pkg
         'reproducible-build.patch'
         'do-not-run-xmllint.patch'
         'itstool.patch'
+        'rm-linux-headers-from-CFLAGS.patch'
         'solfege.install')
 sha512sums=('f2ef7bdb3d1eb15842d803d4d093a177096b6960b211cd3607101f2c03c29fcd3f5151d3b02be4a04236305d18658ba6fa3b5a771b04be4a65f646e27b31914b'
             '1f7340b7ba4224900b94af8060c125f631748938488c87b5c26e20feb2f8b24e927fe5fc8bb9591d6ab87d6b16a11462373b6d3324a9a95c97f1d4352b35de1f'
@@ -37,6 +38,7 @@ sha512sums=('f2ef7bdb3d1eb15842d803d4d093a177096b6960b211cd3607101f2c03c29fcd3f5
             'f853d37106f079c18fe699ba70ecff6671d3ed5fdc3a45bfd8dd9ccef3737dd209c666ad4ce09278b6beb429cf27d8cb62f771ec5c348130a4073adbfb3bf49e'
             '3eda0a2c845d6f4e82b79542835a9a20658a522c86b162821b0b0a61187505c811710660ee1fa5395709f14607fbd8e95b542263c155284e47950b5178a1854d'
             'c18dce43d22f81b288ce6b3b42f76457e7371adf83e89f92676b3c96535c1b4eaf64037e32d4d650d126c65551aab4fa67f4479a86e7c2579305790829de6f44'
+            'a9c87b29e54311f457d932d8638f030226b059b04a230cb306fe6b1af4eb2950e4520f8aed0c58b49be3740585a58b372ab6ee4f2f63b6d31af378bc8bebb20e'
             '647a4b0a108e9e4cd9dd67799811e29f3c5ab1563cf5238086130d6d109ae1657d226988c604046c39e75de4bb3d98178947c1656ce70d43fa1c6c4dfc5368de')
 install=solfege.install
 
