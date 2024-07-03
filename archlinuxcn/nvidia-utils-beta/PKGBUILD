@@ -5,8 +5,8 @@
 
 pkgbase=nvidia-utils-beta
 pkgname=('nvidia-utils-beta' 'opencl-nvidia-beta' 'nvidia-settings-beta')
-pkgver=555.58
-pkgrel=2
+pkgver=555.58.02
+pkgrel=1
 pkgdesc='NVIDIA drivers utilities (beta version)'
 arch=('x86_64')
 url='https://www.nvidia.com/'
@@ -20,7 +20,7 @@ source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}
         'systemd-homed-override.conf'
         'systemd-suspend-override.conf'
         '120-nvidia-settings-change-desktop-paths.patch')
-sha256sums=('6d7bdc5e483691066e08d29164ce50a136938c5e25d93b6bb0a52fca2723e5ec'
+sha256sums=('c5cb6de133d194e27aaf94b9e21e56e8f4faff7672d91e0048d14fbbc4d21ca3'
             'be99ff3def641bb900c2486cce96530394c5dc60548fc4642f19d3a4c784134d'
             'd8d1caa5d72c71c6430c2a0d9ce1a674787e9272ccce28b9d5898ca24e60a167'
             '0e54249a7754b668b436f0f7aa7e95fff68edbb12a93dbee4660e09a8c695f84'
