@@ -3,10 +3,10 @@
 pkgname=tauon-music-box
 _pkgname=tauonmb
 _gitname=TauonMusicBox
-pkgver=7.7.2
+pkgver=7.8.0
 pkgrel=1
 _kissfftver=131.1.0
-_miniaudiocommit=1778a5e839514f35f41d31449f3573e3adffc51a
+_miniaudiocommit=4a5b74bef029b3592c54b6048650ee5f972c1a48
 pkgdesc="A modern streamlined music player"
 arch=('any')
 url="https://tauonmusicbox.rocks"
@@ -41,25 +41,27 @@ depends=('python-pillow'
          'libappindicator-gtk3'
          'libopenmpt'
          'libsamplerate'
-         'python-httpx' # Workaround for https://bugs.archlinux.org/task/74611
+         'opencc'
+         'libgme'
          )
-         
+
 optdepends=('noto-fonts-cjk: Matching font for CJK characters'
             'p7zip: 7z archive extraction support'
             'unrar: RAR archive extraction support'
             'python-plexapi: Plex streaming'
             'python-pypresence: Discord status support'
-            'python-pychromecast: Chromecast stream support' 
+            'python-pychromecast: Chromecast stream support'
             'picard: Recommended tag editor'
             'python-jxlpy: JPEG XL image support' # AUR
+            'python-tekore: Spotify feature support'
             )
-            
+
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Taiko2k/TauonMusicBox/archive/v$pkgver.tar.gz"
 	"kissfft.tar.gz::https://github.com/mborgerding/kissfft/archive/refs/tags/$_kissfftver.tar.gz"
 	"miniaudio.tar.gz::https://github.com/mackron/miniaudio/archive/$_miniaudiocommit.tar.gz"
 	)
 
-b2sums=('a7aca5e3aea42e045147f3768a57d74cf877f9b4e0114b982dc4f6291acdeacda9b5f709a4b26a340d162b9768bb1de4847f82839ec894d03d744531028e6584'
+b2sums=('6c671efc10f0e7340bb2db0ebcc59f25784a665a9a2e85ab5132a10362d9d0f7041affedc763ed5acde19c529c742e127eb1493578f9f79ca7f3b1dfd4439784'
         '74e6d2e7d132a311b31c28a468e13d9772a53f0ea0abed0e0f49d8db9c183fb0646f58fd38df3e797b8577285899daf6b80446b149ce2582bb828410656d96df'
         '4a1de7006beae269b7109dfd6e3b9f2402e2c408d85ec982184295746934aca32d8452ad39cc4fa3a615b8549bd75d4551fa885b42c282a4a0c8b9c98bb22ae6')
 
@@ -75,13 +77,13 @@ package() {
     cd "$_gitname-$pkgver"
     install -Dm755 tauon.py -t "$pkgdir/opt/$pkgname"
     install -Dm644 input.txt -t "$pkgdir/opt/$pkgname"
-    
+
     cp -r  assets templates theme t_modules lib "$pkgdir/opt/$pkgname"
- 
+
     for t in de es fr_FR hu id ja_JP nb_NO pl pt pt_BR pt_PT ru sv zh_CN tr; do
         install -Dm644 locale/${t}/LC_MESSAGES/*.mo -t "$pkgdir/usr/share/locale/${t}/LC_MESSAGES"
     done
- 
+
     install -Dm644 "extra/$_pkgname.desktop" -t "$pkgdir/usr/share/applications"
     install -Dm644 "extra/$_pkgname-symbolic.svg" -t "$pkgdir/usr/share/icons/hicolor/symbolic/apps"
     install -Dm644 "extra/$_pkgname.svg" -t "$pkgdir/usr/share/icons/hicolor/scalable/apps"
