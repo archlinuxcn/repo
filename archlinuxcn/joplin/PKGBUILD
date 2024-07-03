@@ -1,14 +1,14 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=2.14.22
+pkgver=3.0.12
 groups=('joplin')
 pkgrel=1
-_electronVersion=27
+_electronVersion=31
 depends=("electron${_electronVersion}" "nodejs" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
-makedepends=('npm' 'git' 'rsync' 'yarn' 'python-setuptools')
+makedepends=('npm' 'git' 'rsync' 'python-setuptools')
 url="https://joplinapp.org/"
 license=('MIT')
 source=(
@@ -19,14 +19,14 @@ source=(
 sha256sums=(
     'SKIP'
     'SKIP'
-    '5cbda5b19aa41ff2371a13a08a74c08f321c8320bbbe729392d4ed5d5e65e826'
+    '5819e78b8e4b61dc1129851b7b9e91d6548e10e8b4fc545784c8814b4301c69b'
 )
 
 _setup_env() {
-    export UV_USE_IO_URING=0  # https://github.com/nodejs/node/issues/53051
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     #export npm_config_build_from_source=true
+    export npm_config_yes=true
     export SHARP_IGNORE_GLOBAL_LIBVIPS=1
 }
 
@@ -39,7 +39,7 @@ prepare() {
     cd "${srcdir}/joplin-${pkgver}"
 
     # Delete unused components
-    rm -r "packages/app-mobile" "packages/app-clipper" "packages/server"
+    rm -r packages/{app-mobile,app-clipper,server,doc-builder}
 }
 
 build() {
@@ -47,7 +47,11 @@ build() {
 
     cd "${srcdir}/joplin-${pkgver}"
 
-    yarn install
+    # Fix: Build error due to removal of app-mobile
+    sed -i '/app-mobile\/commands/d' packages/tools/gulp/tasks/buildScriptIndexes.js
+
+    corepack install
+    npx yarn install
 }
 
 check() {
@@ -57,7 +61,7 @@ check() {
 
     env ELECTRON_OVERRIDE_DIST_PATH=/usr/lib/electron${_electronVersion}/ \
         TZ=UTC \
-        yarn test
+        npx yarn workspaces foreach -Rptiv --from 'joplin' --from '@joplin/app-desktop' run test
 }
 
 package_joplin() {
