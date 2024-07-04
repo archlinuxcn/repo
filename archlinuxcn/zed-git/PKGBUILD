@@ -2,12 +2,13 @@
 # Contributor: Marcell Pardavi <marcell.pardavi@gmail.com>
 
 pkgname=zed-git
-pkgver=0.143.1.r13.ged09bb9
+_pkgname=${pkgname%-git}
+pkgver=0.143.1.r15.gd450a1d
 pkgrel=1
 pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
 url=https://zed.dev
-_url="https://github.com/zed-industries/zed"
+_url="https://github.com/zed-industries/$_pkgname"
 license=(GPL-3.0-or-later AGPL-3.0-or-later Apache-2.0)
 depends=(alsa-lib libasound.so
          fontconfig
@@ -35,8 +36,8 @@ optdepends=('clang: improved C/C++ language support'
             'eslint: improved Javascript language support'
             'rust-analyzer: improved Rust language support')
 replaces=(zed-editor-git)
-provides=("${pkgname%-git}=$pkgver")
-conflicts=("${pkgname%-git}")
+provides=("$_pkgname=$pkgver")
+conflicts=("$_pkgname")
 source=("$pkgname::git+$_url.git")
 sha256sums=('SKIP')
 
@@ -66,8 +67,8 @@ _srcenv() {
 	cd "$pkgname"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
-	export CFLAGS+=' -ffat-lto-objects'
-	export CXXFLAGS+=' -ffat-lto-objects'
+	CFLAGS+=' -ffat-lto-objects'
+	CXXFLAGS+=' -ffat-lto-objects'
 	RUSTFLAGS+=" --remap-path-prefix $PWD=/"
 }
 
@@ -90,5 +91,5 @@ package() {
 	install -Dm0755 target/release/cli "$pkgdir/usr/bin/$_binname"
 	install -Dm0755 target/release/zed "$pkgdir/usr/lib/zed/zed-editor"
 	install -Dm0644 -t "$pkgdir/usr/share/applications/" "$_appid.desktop"
-	install -Dm0644 crates/zed/resources/app-icon.png "$pkgdir/usr/share/icons/${pkgname%-git}.png"
+	install -Dm0644 crates/zed/resources/app-icon.png "$pkgdir/usr/share/icons/$_pkgname.png"
 }
