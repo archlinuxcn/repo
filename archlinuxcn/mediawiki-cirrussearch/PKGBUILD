@@ -1,14 +1,14 @@
 _name=CirrusSearch
 pkgname=mediawiki-cirrussearch
-pkgver=20240113
+pkgver=20240704
 pkgrel=1
 pkgdesc="MediaWiki extension that implements searching for MediaWiki using Elasticsearch"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:CirrusSearch"
 license=(''GPL'')
-depends=('mediawiki>=1.41' 'mediawiki<1.42')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/CirrusSearch-REL1_41-b225e99.tar.gz")
-sha256sums=('8605cf6aaa8eea40de83da99eda1f8fe3e7c35fd6e1d00905555c6e6c5f3464a')
+depends=('mediawiki>=1.42' 'mediawiki<1.43')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/CirrusSearch-REL1_42-9cfe801.tar.gz")
+sha256sums=('762a5dc6639dff1653cfa59131c140c33de5a50097361f80d99c69cbff0ccea1')
 
 build() {
   true
