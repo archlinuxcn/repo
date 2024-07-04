@@ -1,10 +1,11 @@
-# Maintainer: "Amhairghin" Oscar Garcia Amor (https://ogarcia.me)
+# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+# Contributor: "Amhairghin" Oscar Garcia Amor (https://ogarcia.me)
 # Contributor: Nicolas Leclercq <nicolas.private@gmail.com>
 # Contributor: Adam S Levy <adam@aslevy.com>
 
 pkgname=telegraf
-pkgver=1.30.3
-pkgrel=1
+pkgver=1.31.1
+pkgrel=0
 pkgdesc='Plugin-driven server agent for reporting metrics into InfluxDB'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url='http://influxdb.org/'
@@ -15,9 +16,11 @@ options=('!lto')
 backup=('etc/telegraf/telegraf.conf')
 install="${pkgname}.install"
 source=("https://github.com/influxdata/${pkgname}/archive/v${pkgver}/${pkgname}-v${pkgver}.tar.gz"
+        "telegraf.conf"
         "${pkgname}.install"
         "${pkgname}.service")
-b2sums=('810b32c4b56d371f4161bc0724e27c9212d58f2b55f5c38e437dbc5f3a30b08118a4ec0416c2f8eaefa2b7959c73f28498ceef3b27a7f7a8e8d8a69e18707b1e'
+b2sums=('683c87b9a82ce80aa15d202c76448b9699e06b5fa2ab2f2cbb402458b1633c387db31bf3cf1f8610a7ffb74d5ca4eba8fd4cbe53e8dcd4d1b85c175fbe87702a'
+        '9d0497cc7a8d883bbb61b316ecfec430c43d9ca7790299b5ccda03898ed36cd9b9ae41c24e7e80adb3189208774d3b0c632a95c0d37bc751a71084091a817ea1'
         'a6b2fd7a688ef5a23539c1256380a6389e6fa474312ad9dee5cc77bcfabe92910a8913ffcf599c940a93bb3a5c89e01f3bedad4176f4d57dd33a68e0499c30bd'
         'd5a6845cb1ddb07f0cac20215c15d059f0c18aa43a7b549e7e738e58b8686b4db26b71426aafc8e682d6fd6f676fc0f468f53ea61968c4184feaaa22a23f5bc5')
 
@@ -43,9 +46,8 @@ package() {
     "${pkgdir}/usr/bin/telegraf"
 
   # configuration files
-  install -dD -m755 "${pkgdir}/etc/telegraf/telegraf.d"
-  "${srcdir}/${pkgname}-${pkgver}/build/telegraf" -sample-config > \
-    "${pkgdir}/etc/telegraf/telegraf.conf"
+  install -Dm644 "${srcdir}/${pkgname}.conf" \
+    "${pkgdir}/etc/${pkgname}/${pkgname}.conf"
 
   # license
   install -Dm644 "${srcdir}/${pkgname}-${pkgver}/LICENSE" \
