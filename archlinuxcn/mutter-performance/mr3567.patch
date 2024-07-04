@@ -1,7 +1,7 @@
-From faa34e33b16e41df7ac677dd09eb82f20f064afb Mon Sep 17 00:00:00 2001
+From e59a419987c8ff7207f0cadd4f59aae9cb0e8f71 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
 Date: Tue, 12 Dec 2023 22:41:20 +0100
-Subject: [PATCH 1/4] x11-display: Expose UI scaling factor via D-Bus
+Subject: [PATCH 1/5] x11-display: Expose UI scaling factor via D-Bus
 
 This replaces the `legacy-ui-scaling-factor` entry in
 `org.gnome.Mutter.DisplayConfig`, with the motivation being to no longer
@@ -214,10 +214,10 @@ index 3cbf82844..fe152d20b 100644
 2.45.2
 
 
-From 263ad502aadbc3c6029214174bb2075ccac40ac2 Mon Sep 17 00:00:00 2001
+From 42ece5f5f528fb44f63772826fe928f88327a7dc Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
 Date: Tue, 20 Feb 2024 23:51:48 +0100
-Subject: [PATCH 2/4] Add an experimental feature for letting Xwayland clients
+Subject: [PATCH 2/5] Add an experimental feature for letting Xwayland clients
  scale natively
 
 With the next commits we'll introduce a new mode for scaling of Xwayland apps,
@@ -285,10 +285,10 @@ index 3703b23b0..1ae59d636 100644
 2.45.2
 
 
-From de7052a9e376d1703cd77b6a0115e035a6f23bbe Mon Sep 17 00:00:00 2001
+From e518927c779f8498f50fe2087efcd3ee88d75c12 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
 Date: Tue, 12 Dec 2023 22:42:46 +0100
-Subject: [PATCH 3/4] context: Put Wayland compositor getter in the context
+Subject: [PATCH 3/5] context: Put Wayland compositor getter in the context
  header
 
 Signed-off-by: Mingi Sung <sungmg@saltyming.net>
@@ -341,10 +341,10 @@ index cbe2a9a3d..8fba4a839 100644
 2.45.2
 
 
-From e553d954182dd713d485296edbd822a1668d61c4 Mon Sep 17 00:00:00 2001
+From 8f5fe12656db5a0488cbeb73298520b7d859b7fc Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
 Date: Tue, 12 Dec 2023 22:52:44 +0100
-Subject: [PATCH 4/4] Add experimental mode to use native scaling of Xwayland
+Subject: [PATCH 4/5] Add experimental mode to use native scaling of Xwayland
  clients
 
 Allow scale-aware Xwayland clients to scale by an integer scale
@@ -2090,6 +2090,40 @@ index 205eaaa63..fa3fbea6a 100644
 +                                        int           *stage_y,
 +                                        int           *stage_width,
 +                                        int           *stage_heigth);
+-- 
+2.45.2
+
+
+From 26bac17fc06d840006c86935b6e9486ccf033082 Mon Sep 17 00:00:00 2001
+From: HydroH <ixlesis@gmail.com>
+Date: Tue, 21 May 2024 19:15:36 +0800
+Subject: [PATCH 5/5] Correctly set bounding region for undecorated windows
+
+Signed-off-by: Mingi Sung <sungmg@saltyming.net>
+---
+ src/x11/window-x11.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/src/x11/window-x11.c b/src/x11/window-x11.c
+index ccbd75d1a..5f37c634a 100644
+--- a/src/x11/window-x11.c
++++ b/src/x11/window-x11.c
+@@ -2573,8 +2573,13 @@ meta_window_x11_update_input_region (MetaWindow *window)
+   else
+     {
+       xwindow = priv->xwindow;
+-      bounding_rect.width = priv->client_rect.width;
+-      bounding_rect.height = priv->client_rect.height;
++      meta_window_x11_stage_to_protocol(window_x11,
++                                        0, 0,
++                                        priv->client_rect.width,
++                                        priv->client_rect.height,
++                                        NULL, NULL,
++                                        &bounding_rect.width,
++                                        &bounding_rect.height);
+     }
+ 
+   if (META_X11_DISPLAY_HAS_SHAPE (x11_display))
 -- 
 2.45.2
 
