@@ -7,8 +7,8 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 post_build: git_pkgbuild_commit
 
 update_on:
-  - source: influxdata
-    github: telegraf
+  - source: github
+    github: influxdata/telegraf
     use_latest_release: true
   - source: manual
     manual: 1
