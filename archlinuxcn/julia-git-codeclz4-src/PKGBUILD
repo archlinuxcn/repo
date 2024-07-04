@@ -1,6 +1,6 @@
 pkgname=julia-git-codeclz4-src
-pkgver=0.4.3
-_commit=030bb68e8be3ea830d3585c902a3c41af35523b9
+pkgver=0.4.4
+_commit=3909cdbb1f809d945278d0703b65f840550aaede
 pkgrel=1
 pkgdesc="CodecLz4.jl"
 url="https://github.com/JuliaIO/CodecLz4.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/CodecLz4.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('a7194b1ca53b283745b2a7e63e81090abd72fd6fc2d8bce1fcd48e46ac1d1323')
 
 package() {
   cd CodecLz4.jl
