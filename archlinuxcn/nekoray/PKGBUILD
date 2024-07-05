@@ -2,9 +2,9 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=nekoray
-pkgver=4.0.beta1
+pkgver=4.0.beta2
 _pkgver=${pkgver/.beta/-beta}
-pkgrel=2
+pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-box)"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://matsuridayo.github.io"
@@ -24,8 +24,8 @@ source=(
 	"nekobox.sh"
 	"nekobox.desktop"
 )
-sha512sums=('ef2005cbdd99be3a7c596cbfed0ddac098949952a6cfbffb363d4fac50bddb54976d38558b3f9b339e4810255c729dfd34377e8f6eccf0ff643abdd9f036f343'
-            '096954ad77b17909e8431a2d39de31e9d831dda6790dd852694e2c2458276f5f884f22e3a1c5395a8a06ffc982dccda7d911199915a6e7eb587bd44112534844'
+sha512sums=('2280cefaba461e9c953be11efce8a3170932124faf33d91da08783d000ec794e012b145ae4679006ace267773a4d801ec0aea7759b508b13ce59d18aab67ac02'
+            '3a65300520462bd6a5667c50b7db1ccbf7107b9d5c65959d00451a68cdd77d9e13288da03ccb0d712cd4fb076cdfb3c635490d6148268f920cde7ba11b7237a9'
             'f99795f5f82fca74bbc36569d3595bc141c3fef00a0c6076585da683f0a5144dbfdbbe4525cf82576e9010262f74f462ae40f5a7b95dafc01033763a9b1711bd')
 
 build() {
