@@ -64,7 +64,7 @@ package() {
 
 	case $CARCH in
 	x86_64) core_srcdir+=64 ;;
-	aarch64) core_srcdir+=arm64 ;;
+	aarch64) core_srcdir+=-arm64 ;;
 	riscv64) core_srcdir+=-riscv64 ;;
 	esac
 
