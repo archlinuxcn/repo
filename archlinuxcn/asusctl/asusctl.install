@@ -1,0 +1,19 @@
+post_install() {
+  printf ":: asusd provides a service that is activated by an udev rule on\n"
+  printf ":: startup. Please reboot the system or run\n"
+  printf ":: # systemctl start asusd.service\n"
+  printf ":: to make it work.\n"
+  printf ":: See https://gitlab.com/asus-linux/asusctl#kernel-support.\n"
+  printf ":: for latest required kernel patches/versions\n"
+}
+
+post_upgrade() {
+  if systemctl is-active asusd.service --quiet
+    then
+      printf ":: asusd service will be restarted…\n"
+      systemctl daemon-reload
+      systemctl restart asusd.service
+  fi
+  printf ":: See https://gitlab.com/asus-linux/asusctl#kernel-support.\n"
+  printf ":: for latest required kernel patches/versions\n"
+}
