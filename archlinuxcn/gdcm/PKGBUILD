@@ -91,9 +91,11 @@ prepare() {
 
 build() {
   local python_version=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+  # fix https://sourceforge.net/p/gdcm/bugs/561/ by setting -DCMAKE_CXX_STANDARD=20
   cmake \
     -B build \
     -S "${_pkgname}-${pkgver}" \
+    -DCMAKE_CXX_STANDARD=20 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
     -DEXPAT_LIBRARY=/usr/lib/libexpat.so \
