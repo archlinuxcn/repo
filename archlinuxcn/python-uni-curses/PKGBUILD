@@ -1,8 +1,8 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=python-uni-curses
 _name=unicurses
-pkgver=3.0.0
-pkgrel=2
+pkgver=3.1.2
+pkgrel=1
 pkgdesc="Unified Curses Wrapper for Python"
 arch=('any')
 url="https://github.com/unicurses/unicurses"
@@ -10,7 +10,7 @@ license=('GPL-3.0-or-later')
 depends=('ncurses' 'python' 'python-x256')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
 source=("$_name-$pkgver.tar.gz::$url/archive/refs/tags/v.$pkgver.tar.gz")
-sha256sums=('a9d81ec28d0fb32fb5ccc1cd80dfa5c2ffd7bdcf28f70c62e7334b35253bcd48')
+sha256sums=('306d63739bfb47032f9c9d7c6ac00eea08667b09559fbac49d57d55e4cb9f676')
 
 prepare() {
   cd "$_name-v.$pkgver"
