@@ -57,7 +57,7 @@ package() {
 
 	# Assets
 	install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-	install -Dm644 ${pkgname}/res/public/{nekoray,nekobox}.png -t "${pkgdir}/usr/share/pixmaps/"
+	install -Dm644 ${pkgname}/res/public/nekobox.png -t "${pkgdir}/usr/share/pixmaps/"
 
 	# Core
 	local core_srcdir=linux
