@@ -1,8 +1,8 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=pndpd
-pkgver=1.2.12
-pkgrel=2
+pkgver=1.2.13
+pkgrel=1
 pkgdesc="NDP Proxy / Responder daemon (IPv6)"
 arch=("x86_64" "i686")
 url="https://github.com/Kioubit/pndpd"
@@ -13,7 +13,7 @@ depends=('glibc')
 makedepends=('go')
 backup=("etc/pndpd.conf")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-b2sums=('94250c9061db61dac050eb9c80b9e6d2a347452bb9bdcc379aed6035bb4e163c8fda26d9fceeda29ccbcb857bac4828df0971d38231a911d5d2f6378b0f7ccec')
+b2sums=('1687c661644435d5c47412bc03e6703b16ada19715d53984ee4186cb471f6e5a808073bedd13d52843ad7f564ea77fad576b8323e05a471582e559cf0a81b724')
 
 build() {
   cd ${pkgname}-${pkgver}
