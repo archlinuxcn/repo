@@ -1,0 +1,43 @@
+# Maintainer: Julian <juliannfairfax@protonmail.com>
+
+_pkgname=flare
+pkgname="${_pkgname}-primary-device-git"
+pkgver=0.14.3.r35.g8ec2a63
+pkgrel=1
+pkgdesc="Chat with your friends on Signal (\"Primary Device\" feature enabled)"
+url="https://gitlab.com/schmiddi-on-mobile/${_pkgname}"
+arch=("i686" "x86_64" "armv6h" "armv7h" "aarch64")
+license=("AGPL-3.0-or-later")
+makedepends=("git" "blueprint-compiler" "cargo" "meson")
+depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5")
+optdepends=(
+	"feedbackd: for vibrating notifications"
+	"libspelling-git: for spell-checking support"
+)
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=(
+	"git+${url}.git"
+	"enable-primary-device.patch"
+)
+sha256sums=('SKIP'
+            'a11cd8a6a8d0df67da0a94852ddc31105d880634b71959f8fc95c4e3653f6baa')
+options=('!lto')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	patch -p1 <../enable-primary-device.patch
+	arch-meson . build/
+}
+
+package() {
+	cd "${_pkgname}/"
+	DESTDIR="${pkgdir}" ninja -C build/ install
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"
+}
