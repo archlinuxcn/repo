@@ -15,6 +15,8 @@ optdepends=(
 	"feedbackd: for vibrating notifications"
 	"libspelling-git: for spell-checking support"
 )
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=(
 	"https://gitlab.com/schmiddi-on-mobile/${_pkgname}/-/archive/${_pkgver}/${_pkgname}-${_pkgver}.tar.gz"
 	"enable-primary-device.patch"
