@@ -1,0 +1,12 @@
+maintainers:
+  - github: merrkry
+    email: merrkry@tsubasa.moe
+
+pre_build_script: aur_pre_build(maintainers=['dr460nf1r3'])
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: gitlab
+    github: ananicy-cpp/ananicy-cpp
+  - source: aur
+    aur: ananicy-cpp-git
