@@ -14,9 +14,11 @@ license=('MIT')
 source=(
     "joplin-desktop.sh"
     "joplin-desktop.desktop"
+    "joplin.patch"
     "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz"
 )
 sha256sums=(
+    'SKIP'
     'SKIP'
     'SKIP'
     '2bf91efec385801bb13b62b459e21c1eb80d35a772f517ba7d079eb91faa1f98'
@@ -37,6 +39,8 @@ prepare() {
     mkdir -p "${YARN_CACHE_FOLDER}"
 
     cd "${srcdir}/joplin-${pkgver}"
+
+    patch -p1 < ../joplin.patch
 
     # Delete unused components
     rm -r packages/{app-mobile,app-clipper,server,doc-builder}
