@@ -2,8 +2,8 @@
 
 pkgname=python-pillow-avif-plugin
 _pkgname=pillow-avif-plugin
-pkgver=1.4.3
-pkgrel=2
+pkgver=1.4.4
+pkgrel=1
 pkgdesc="A Python Pillow plugin that adds AVIF support via libavif"
 arch=(armv7h aarch64 i686 x86_64)
 url="https://github.com/fdintino/$_pkgname"
@@ -12,7 +12,7 @@ options=(!emptydirs)
 depends=("python" "python-pillow" "libavif")
 makedepends=("python-setuptools")
 source=("$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('9e1c4f2aded66fa78900a4e6881b993a899cb99e57240aaa20d1c2c0144b4407')
+sha256sums=('fa47be50e0b0f3e0475df8dbc671c9e6c3202c8fbbfc0873baf7d66f8c5b93a2')
 
 build() {
   cd "$_pkgname-$pkgver"
