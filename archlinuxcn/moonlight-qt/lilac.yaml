@@ -10,7 +10,11 @@ update_on:
     alpm: ffmpeg
     strip_release: true
     provided: libavcodec.so
+  - source: alpm
+    alpm: libplacebo
+    strip_release: true
+    provided: libplacebo.so
   - source: manual
-    manual: 1.0.2
+    manual: 1.0.3
 maintainers:
   - github: roaldclark
