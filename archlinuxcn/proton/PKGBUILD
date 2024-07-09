@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton
-_srctag=9.0-2
+_srctag=9.0-2d
 _commit=
-pkgver=${_srctag//-/.}
+pkgver=9.0.2.4
 _geckover=2.47.4
 _monover=9.1.0
 _xaliaver=0.4.2
-pkgrel=2
+pkgrel=1
 epoch=1
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -259,13 +259,13 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('2215370461d8beea8d8fda006d1fd206ec1407b90eeff6d3ede5990c2a403d91'
+sha256sums=('df8fce600c604125f59bdf87f453907fc5d6fff03832c52b5446140430fd0284'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '601169d0203b291fbfd946b356a9538855e01de22abd470ded73baf312c88767'
             '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            '70274a898d45516b90ee0a40a7bb56e84d60900be2adaa165f7a0f605c11d13f'
-            'f6a29f55aa845f95ed78e183a876d8caeffce3254e3fc61c8bf25f3c2bed483c'
-            '47f7fec21f8f00b4af7ddd82643481232bd4fcbc5021d2f69797717d7a02a41e'
-            '1d41b6e5140da5914a326327b17b1b34bb0d04a201da38bdbce87a04d2b75d32'
-            '8187fea6a7daf9fed0e63292711d79166ffa2b0f110685e4b995f68469531cca')
+            '533350e650d363299cb0059eb915c445b751407d06df838829634c2034645622'
+            '293c9777170858d41c5cbf3fa24671f98fdb27d1ebbe88e2e44b6d0fd0abd952'
+            '0e17de26cb8ada427b5b5721d87d0229b11a794a738331e1eb66320e8ede7d8e'
+            'eec6e45bc03fd07e5ba26602cd039752c2d27d297930ae3adad05b0426cc3ba0'
+            'fadaf0a4c364c18b13f0337b6bb5d13df41ad8709603c09add86d752665d2b08')
