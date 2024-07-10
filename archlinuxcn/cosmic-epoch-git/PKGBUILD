@@ -2,11 +2,12 @@
 # Co-Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 
 pkgname=cosmic-epoch-git
+_pkgname=${pkgname%-git}
 pkgver=r137.7348756
 pkgrel=1
 pkgdesc="Cosmic desktop environment from System76's Pop!_OS written in Rust utilizing Iced inspired by GNOME"
 arch=('x86_64' 'aarch64')
-url="https://github.com/pop-os/cosmic-epoch"
+url="https://github.com/pop-os/${_pkgname}"
 license=('GPL-3.0-or-later AND MPL-2.0 AND CC-BY-SA-4.0')
 depends=(
   'accountsservice'
@@ -49,7 +50,6 @@ optdepends=(
   'flatpak: Flatpak packages support for COSMIC Store'
   'packagekit: package manager integration module for COSMIC Store'
 )
-
 _submodules=(
   cosmic-applets
   cosmic-applibrary
@@ -72,44 +72,43 @@ _submodules=(
   cosmic-workspaces-epoch
   xdg-desktop-portal-cosmic
 )
-
 provides=(
-  'cosmic-epoch'
-  'cosmic-icons'
-  'cosmic-workspaces'
+  "${_pkgname}"
+  "cosmic-icons"
+  "cosmic-workspaces"
   "${_submodules[@]}"
 )
 conflicts=(
-  'cosmic-epoch'
-  'cosmic-icons'
-  'cosmic-workspaces'
+  "${_pkgname}"
+  "cosmic-icons"
+  "cosmic-workspaces"
   "${_submodules[@]}"
 )
 backup=('etc/cosmic-comp/config.ron')
 source=(
-  'git+https://github.com/pop-os/cosmic-epoch.git'
-  'git+https://github.com/pop-os/cosmic-applets.git'
-  'git+https://github.com/pop-os/cosmic-applibrary.git'
-  'git+https://github.com/pop-os/cosmic-bg.git'
-  'git+https://github.com/pop-os/cosmic-comp.git'
-  'git+https://github.com/pop-os/cosmic-edit.git'
-  'git+https://github.com/pop-os/cosmic-files.git'
-  'git+https://github.com/pop-os/cosmic-greeter.git'
-  'git+https://github.com/pop-os/cosmic-icons.git'
-  'git+https://github.com/pop-os/cosmic-launcher.git'
-  'git+https://github.com/pop-os/cosmic-notifications.git'
-  'git+https://github.com/pop-os/cosmic-osd.git'
-  'git+https://github.com/pop-os/cosmic-panel.git'
-  'git+https://github.com/pop-os/cosmic-randr.git'
-  'git+https://github.com/pop-os/cosmic-screenshot.git'
-  'git+https://github.com/pop-os/cosmic-session.git'
-  'git+https://github.com/pop-os/cosmic-settings.git'
-  'git+https://github.com/pop-os/cosmic-settings-daemon.git'
-  'git+https://github.com/pop-os/cosmic-store.git'
-  'git+https://github.com/pop-os/cosmic-term.git'
-  'git+https://github.com/pop-os/cosmic-workspaces-epoch.git'
-  'git+https://github.com/pop-os/xdg-desktop-portal-cosmic.git'
-  'justfile.diff'
+  "git+https://github.com/pop-os/${_pkgname}.git"
+  "git+https://github.com/pop-os/cosmic-applets.git"
+  "git+https://github.com/pop-os/cosmic-applibrary.git"
+  "git+https://github.com/pop-os/cosmic-bg.git"
+  "git+https://github.com/pop-os/cosmic-comp.git"
+  "git+https://github.com/pop-os/cosmic-edit.git"
+  "git+https://github.com/pop-os/cosmic-files.git"
+  "git+https://github.com/pop-os/cosmic-greeter.git"
+  "git+https://github.com/pop-os/cosmic-icons.git"
+  "git+https://github.com/pop-os/cosmic-launcher.git"
+  "git+https://github.com/pop-os/cosmic-notifications.git"
+  "git+https://github.com/pop-os/cosmic-osd.git"
+  "git+https://github.com/pop-os/cosmic-panel.git"
+  "git+https://github.com/pop-os/cosmic-randr.git"
+  "git+https://github.com/pop-os/cosmic-screenshot.git"
+  "git+https://github.com/pop-os/cosmic-session.git"
+  "git+https://github.com/pop-os/cosmic-settings.git"
+  "git+https://github.com/pop-os/cosmic-settings-daemon.git"
+  "git+https://github.com/pop-os/cosmic-store.git"
+  "git+https://github.com/pop-os/cosmic-term.git"
+  "git+https://github.com/pop-os/cosmic-workspaces-epoch.git"
+  "git+https://github.com/pop-os/xdg-desktop-portal-cosmic.git"
+  "justfile.diff"
 )
 sha256sums=('SKIP'
             'SKIP'
@@ -136,19 +135,19 @@ sha256sums=('SKIP'
             '5a642677504184fd2b4957aa3ce6596d426083dd17f5bba2217e882975d599d9')
 
 pkgver() {
-  cd cosmic-epoch
+  cd "${_pkgname}/"
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  cd cosmic-epoch
-  export CARGO_HOME="$srcdir/cargo-home"
+  cd "${_pkgname}/"
+  export CARGO_HOME="${srcdir}/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
 
   for submodule in "${_submodules[@]}"; do
     git submodule init
-    git config submodule."${submodule#*::}".url "$srcdir/${submodule%::*}"
-    git config submodule.cosmic-icons.url "$srcdir/cosmic-icons"
+    git config submodule."${submodule#*::}".url "${srcdir}/${submodule%::*}"
+    git config submodule.cosmic-icons.url "${srcdir}/cosmic-icons"
     git -c protocol.file.allow=always submodule update
 
     pushd "${submodule#*::}"
@@ -173,9 +172,9 @@ prepare() {
 }
 
 build() {
-  cd cosmic-epoch
+  cd "${_pkgname}/"
   CFLAGS+=" -ffat-lto-objects"
-  export CARGO_HOME="$srcdir/cargo-home"
+  export CARGO_HOME="${srcdir}/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
 
   # use mold instead of lld to speed up build
@@ -186,10 +185,10 @@ build() {
 }
 
 package() {
-  cd cosmic-epoch
-  just rootdir="$pkgdir" install
+  cd "${_pkgname}/"
+  just rootdir="${pkgdir}" install
 
   # Keybinding config
   # https://github.com/pop-os/cosmic-epoch#cosmic-comp
-  install -Dm644 cosmic-comp/config.ron -t "$pkgdir/etc/cosmic-comp/"
+  install -Dm644 cosmic-comp/config.ron -t "${pkgdir}/etc/cosmic-comp/"
 }
