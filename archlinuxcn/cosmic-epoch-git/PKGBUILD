@@ -141,8 +141,6 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	export CARGO_HOME="${srcdir}/cargo-home"
-	export RUSTUP_TOOLCHAIN=stable
 
 	for submodule in "${_submodules[@]}"; do
 		git submodule init
@@ -174,8 +172,6 @@ prepare() {
 build() {
 	cd "${_pkgname}/"
 	CFLAGS+=" -ffat-lto-objects"
-	export CARGO_HOME="${srcdir}/cargo-home"
-	export RUSTUP_TOOLCHAIN=stable
 
 	# use mold instead of lld to speed up build
 	RUSTFLAGS="-C link-arg=-fuse-ld=mold"
