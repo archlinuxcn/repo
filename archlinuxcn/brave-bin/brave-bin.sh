@@ -1,12 +1,25 @@
 #!/usr/bin/env bash
-XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
-# Allow users to override command-line options
-USER_FLAGS_FILE="$XDG_CONFIG_HOME/brave-flags.conf"
-if [[ -f $USER_FLAGS_FILE ]]; then
-   USER_FLAGS="$(cat $USER_FLAGS_FILE | sed 's/#.*//')"
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-"${HOME}/.config"}"
+
+CONF_FILE="${XDG_CONFIG_HOME}/brave-flags.conf"
+
+if
+	test -f "${CONF_FILE}"
+then
+	mapfile -t CONF_LIST < "${CONF_FILE}"
 fi
 
-export CHROME_VERSION_EXTRA="stable"
+for CONF_LINE in "${CONF_LIST[@]}"
+do
+	if ! [[
+		"${CONF_LINE}" =~ ^[[:space:]]*(#|$)
+	]]
+	then
+		FLAG_LIST+=("${CONF_LINE}")
+	fi
+done
 
-exec /opt/brave-bin/brave "$@" $USER_FLAGS
+export CHROME_VERSION_EXTRA='stable'
+
+exec /opt/brave-bin/brave "${FLAG_LIST[@]}" "${@}"
