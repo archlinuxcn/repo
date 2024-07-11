@@ -3,7 +3,7 @@
 
 pkgname=python-curl-cffi
 _name=curl_cffi
-pkgver=0.6.3
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="Python binding for curl-impersonate via CFFI"
 arch=('x86_64')
@@ -26,7 +26,7 @@ makedepends=(
     'python-wheel'
 )
 source=("${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('6152e534724966db08f000c97700eb537342f31b55153251ebcff7cda30cd9db')
+sha256sums=('259b8520d3aa30ebc6603c3e48121397ce163a3d0e6d0da78a675ea2dc3b590c')
 
 build() {
     cd "$_name-$pkgver"
