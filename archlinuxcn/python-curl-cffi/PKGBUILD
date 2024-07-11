@@ -9,13 +9,31 @@ pkgdesc="Python binding for curl-impersonate via CFFI"
 arch=('x86_64')
 url="https://github.com/yifeikong/curl_cffi"
 license=('MIT')
-depends=('curl-impersonate-chrome' 'glibc' 'python' 'python-certifi' 'python-cffi' 'python-eventlet' 'python-gevent')
-makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
+depends=(
+    'curl-impersonate-chrome'
+    'glibc'
+    'python'
+    'python-certifi'
+    'python-cffi'
+    'python-eventlet'
+    'python-gevent'
+)
+makedepends=(
+    'gcc13'
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-wheel'
+)
 source=("${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('6152e534724966db08f000c97700eb537342f31b55153251ebcff7cda30cd9db')
 
 build() {
     cd "$_name-$pkgver"
+    # Fix for GCC
+    # https://github.com/nebulosa2007/PKGBUILDs/blob/main/archive/python-curl-cffi/PKGBUILD
+    export CC=gcc-13
+    export CXX=g++-13
     python -m build --wheel --no-isolation
 }
 
