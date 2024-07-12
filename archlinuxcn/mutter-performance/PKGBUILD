@@ -33,7 +33,7 @@ else
 fi
 epoch=1
 pkgver=46.3.1+r3+g7e0e428016
-pkgrel=1
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -136,8 +136,8 @@ for mr in "${_merge_requests_to_use[@]}"; do
 done
 
 pkgver() {
-  cd $_pkgname
-  git describe --tags | sed 's/[^-]*-g/r&/;s/-/+/g'
+  cd mutter
+  git describe --tags | sed -r 's/\.([a-z])/\1/;s/([a-z])\./\1/;s/[^-]*-g/r&/;s/-/+/g'
 }
 
 pick_mr() {
