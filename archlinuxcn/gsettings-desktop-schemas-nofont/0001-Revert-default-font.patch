@@ -1,0 +1,41 @@
+--- a/schemas/org.gnome.desktop.interface.gschema.xml.in
++++ b/schemas/org.gnome.desktop.interface.gschema.xml.in
+@@ -105,7 +105,7 @@
+       </description>
+     </key>
+     <key name="font-name" type="s">
+-      <default>'Cantarell 11'</default>
++      <default>'Sans 11'</default>
+       <summary>Default font</summary>
+       <description>
+         Name of the default font used by gtk+.
+@@ -156,14 +156,14 @@
+       </description>
+     </key>
+     <key name="document-font-name" type="s">
+-      <default>'Cantarell 11'</default>
++      <default>'Sans 11'</default>
+       <summary>Document font</summary>
+       <description>
+         Name of the default font used for reading documents.
+       </description>
+     </key>
+     <key name="monospace-font-name" type="s">
+-      <default>'Source Code Pro 10'</default>
++      <default>'Monospace 10'</default>
+       <summary>Monospace font</summary>
+       <description>
+         Name of a monospaced (fixed-width) font for use in locations like
+diff --git a/schemas/org.gnome.desktop.wm.preferences.gschema.xml.in b/schemas/org.gnome.desktop.wm.preferences.gschema.xml.in
+index 81f8db1..d44842b 100644
+--- a/schemas/org.gnome.desktop.wm.preferences.gschema.xml.in
++++ b/schemas/org.gnome.desktop.wm.preferences.gschema.xml.in
+@@ -185,7 +185,7 @@
+       </description>
+     </key>
+     <key name="titlebar-font" type="s">
+-      <default>'Cantarell Bold 11'</default>
++      <default>'Sans Bold 11'</default>
+       <summary>Window title font</summary>
+       <description>
+         A font description string describing a font for window titlebars.
