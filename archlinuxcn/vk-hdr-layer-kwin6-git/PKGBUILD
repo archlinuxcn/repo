@@ -1,0 +1,47 @@
+# Maintainer: hexchain <arch at hexchain dot org>
+
+pkgname=vk-hdr-layer-kwin6-git
+_pkgname=vk-hdr-layer
+pkgver=r31.f5f13b7
+pkgrel=1
+pkgdesc="Vulkan Wayland HDR WSI Layer (Xaver Hugl's fork for KWin 6)"
+url=https://github.com/Zamundaaa/VK_hdr_layer
+license=("MIT")
+arch=(x86_64)
+makedepends=("git" "meson" "libx11" "vulkan-headers" "vulkan-icd-loader")
+depends=("glibc" "gcc-libs" "wayland")
+source=(
+    "$_pkgname::git+$url"
+    "vkroots::git+https://github.com/Joshua-Ashton/vkroots"
+)
+sha256sums=('SKIP'
+            'SKIP')
+
+pkgver() {
+    cd "$_pkgname"
+    (
+        set -o pipefail
+        git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+    )
+}
+
+prepare() {
+    cd "$_pkgname"
+    git submodule init
+    git config submodule.subprojects/vkroots.url "$srcdir/vkroots"
+    git -c protocol.file.allow=always submodule update
+}
+
+build() {
+    cd "$_pkgname"
+
+    arch-meson . build
+    meson compile -C build
+}
+
+package() {
+    cd "$_pkgname"
+    meson install -C build --destdir "$pkgdir" --skip-subprojects vkroots
+    install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}
