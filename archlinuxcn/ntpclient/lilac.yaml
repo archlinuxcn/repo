@@ -9,7 +9,7 @@ update_on:
     url: 'http://doolittle.icarus.com/ntpclient/'
     enconding: 'utf8'
     # <a href="ntpclient_2024_132.tar.gz">
-    regex: '<a href=ntpclient_(\d+_\d+)\.tar\.gz>'
+    regex: '<a href="ntpclient_(\d+_\d+)\.tar\.gz">'
     from_pattern: '(\d+)_(\d+)'
     to_pattern: '\1.\2'
 
