@@ -1,0 +1,49 @@
+# Maintainer: Rocket Aaron <i at rocka dot me>
+
+pkgname='ksysguard6-git'
+pkgver=6.0.1.r3605.gd3570748
+pkgrel=1
+pkgdesc='KSysGuard port for KDE 6'
+arch=('x86_64')
+url='https://github.com/zvova7890/ksysguard6'
+license=('GPL-2.0-or-later')
+depends=(gcc-libs
+         glibc
+         kcompletion
+         kconfig
+         kconfigwidgets
+         kcoreaddons
+         kdbusaddons
+         ki18n
+         kiconthemes
+         kio
+         knewstuff
+         knotifications
+         ksystemstats
+         kwidgetsaddons
+         kwindowsystem
+         kxmlgui
+         libksysguard
+         lm_sensors
+         qt6-base
+         zlib)
+makedepends=(extra-cmake-modules
+             kdoctools
+             git)
+source=("git+${url}.git#branch=kf6")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd ksysguard6
+  local ver=$(sed -nr 's/set\(PROJECT_VERSION "(.+)"\)/\1/p' CMakeLists.txt)
+  printf "${ver}.r%s.g%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cmake -B build -S ksysguard6
+  cmake --build build
+}
+
+package() {
+  DESTDIR="${pkgdir}" cmake --install build
+}
