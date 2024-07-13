@@ -1,8 +1,8 @@
 # Maintainer: AndyRTR <andyrtr@archlinux.org>
 
 pkgname=xorg-xwayland-lily
-pkgver=24.1.0
-pkgrel=2
+pkgver=24.1.1
+pkgrel=1
 arch=('x86_64')
 license=(
     LicenseRef-Adobe-Display-PostScript
@@ -31,9 +31,9 @@ makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
              'xorg-font-util' 'wayland-protocols' 'mesa-libgl'
              'systemd')
 source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver.tar.xz{,.sig} hidpi.patch)
-sha512sums=('7592609ad112652cb870761f938f280802d7d3b4bbc82acc7bf741a763d862aa97bbbd7f78250c63a961d76be73fb55555832045514092d89e406839564f0003'
+sha512sums=('e44f47adab3830846360fd05fdc06d9016832133c662f2e4b0763b98de0c9b48dbfce7d757ffea5538b5fabb68170e5d1057acc1b9a086e396b147deaa750998'
             'SKIP'
-            '4ac0347b5e75b1e165a85a5921dba34ac4fd5fe63f579018250bf90197fdcd32c7af24bb498d1020f031f2d6132457e1f0396c657b386f26fcf65042bc5b20e0')
+            'c1eb92b042befcffe5ba2b0797d2dde4984adf76acbba778eda638d1fab45eac34e2341338cf562460d58d380f768dd40966183e550a29e186f092e8112ab674')
 provides=('xorg-server-xwayland' 'xorg-xwayland' 'xorg-xwayland-hidpi-xprop')
 conflicts=('xorg-server-xwayland' 'xorg-xwayland')
 replaces=('xorg-server-xwayland')

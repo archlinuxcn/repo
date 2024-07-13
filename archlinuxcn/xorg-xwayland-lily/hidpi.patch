@@ -239,7 +239,7 @@ index 4b575667a..ff536883a 100644
 +         * (this doesn't occur automatically because as far as Xorg is
 +         *  concerned, the window's size is the same) */
 +        xorg_list_for_each_entry(xwl_window, &xwl_screen->window_list, link_window) {
-+            xwl_window_buffers_dispose(xwl_window);
++            xwl_window_buffers_dispose(xwl_window, FALSE);
 +        }
 +    }
 +}
