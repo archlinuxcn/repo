@@ -1,0 +1,23 @@
+# Maintainer: Rocket Aaron <i at rocka dot me>
+
+pkgname='ntpclient'
+pkgver='2024.132'
+pkgrel='1'
+pkgdesc='NTP (RFC-1305) client for unix-alike computers.'
+url='http://doolittle.icarus.com/ntpclient/'
+arch=('x86_64')
+depends=('glibc')
+license=('GPL-2.0-only')
+source=("http://doolittle.icarus.com/ntpclient/ntpclient_${pkgver/./_}.tar.gz")
+sha256sums=('9f47c0933deb4ac1ab7bbd069bc2e97c9d5fcd669fa43f188aaf73966f092cd5')
+
+build() {
+  cd "ntpclient-${pkgver%.*}"
+  make ntpclient adjtimex
+}
+
+package() {
+  cd "ntpclient-${pkgver%.*}"
+  install -t "${pkgdir}/usr/bin" -Dm755 ntpclient adjtimex
+  install -t "${pkgdir}/usr/share/man/man1" -Dm644 ntpclient.1 adjtimex.1
+}
