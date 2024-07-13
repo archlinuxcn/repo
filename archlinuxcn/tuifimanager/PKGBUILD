@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=tuifimanager
 _name=TUIFIManager
-pkgver=4.1.5
+pkgver=4.1.7
 pkgrel=1
 pkgdesc="A cross-platform terminal-based termux-oriented file manager"
 arch=('any')
@@ -22,7 +22,7 @@ makedepends=(
   'python-wheel'
 )
 source=("$_name-$pkgver.tar.gz::$url/archive/refs/tags/v.$pkgver.tar.gz")
-sha256sums=('09e40b0fb06b41ab322ed6e46a137936cb4267b12b20182baa4706baf7ac4eee')
+sha256sums=('a3bd22d2ada94f02178007cb17d890c1e10262ecb58904b76be94021522854ce')
 
 build() {
   cd "$_name-v.$pkgver"
