@@ -72,7 +72,7 @@ package() {
     install -Dm 755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
 
     # Desktop entry
-    install -Dm 644 -t "${pkgdir}/usr/share/applications" "${srcdir}/${pkgname}-${pkgver}/sflatpak/com.adilhanney.saber.desktop"
+    install -Dm 644 -t "${pkgdir}/usr/share/applications" "${srcdir}/${pkgname}-${pkgver}/flatpak/com.adilhanney.saber.desktop"
 
     # Install images
     cd "${srcdir}/${pkgname}-${pkgver}/assets/icon/resized"
