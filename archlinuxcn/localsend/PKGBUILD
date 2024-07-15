@@ -11,8 +11,8 @@
 # basic info
 _pkgname="localsend"
 pkgname="$_pkgname"
-pkgver=1.14.0
-pkgrel=5
+pkgver=1.15.0
+pkgrel=2
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
 license=('MIT')
@@ -34,9 +34,10 @@ makedepends=(
   'fvm'
 )
 
-_pkgsrc="$_pkgname"
-source=("$_pkgsrc"::"git+$url.git#tag=v$pkgver")
-sha256sums=('SKIP')
+_pkgsrc="$_pkgname-$pkgver"
+_pkgext="tar.gz"
+source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
+sha256sums=('81869c30da552661602a2b9c678273577bb6c13a748df79901f6e0abb226caa2')
 
 build() {
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
@@ -70,7 +71,7 @@ package() {
   ln -sfr "$pkgdir/$_install_path/$_pkgname/$_pkgname" "$pkgdir/usr/bin/${_pkgname}"
 
   # icon
-  install -Dm644 "$srcdir/$_pkgname/app/build/flutter_assets/assets/img/logo-512.png" "$pkgdir/usr/share/pixmaps/$_pkgname.png"
+  install -Dm644 "$srcdir/$_pkgsrc/app/build/flutter_assets/assets/img/logo-512.png" "$pkgdir/usr/share/pixmaps/$_pkgname.png"
 
   # .desktop file
   install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/$_pkgname.desktop" << END
