@@ -2,14 +2,13 @@
 # Contributor: Rustmilian Rustmilian@proton.me
 
 pkgname=('calamares')
-
 pkgver=3.3.8
 pkgrel=1
 pkgdesc='Distribution-independent installer framework'
 arch=('x86_64')
 url="https://github.com/calamares/calamares"
 license=('BSD-2-Clause'
-		 'MIT'
+         'MIT'
          'CC-BY-4.0'
          'CC0-1.0'
          'GPL-3.0-or-later'
@@ -35,21 +34,19 @@ depends=('sh'
          'kcrash'
          'hicolor-icon-theme'
          'parted'
-         #?
-#          'kio'
-#          'ckbcomp'
-#          'efibootmgr'
-#          'gtk-update-icon-cache'
-#          'hwinfo'
-#          'mkinitcpio-openswap'
-#          'squashfs-tools'
-#          'kconfig'
-#          'ki18n'
-#          'kiconthemes'
-#          'polkit-qt6'
-#          'solid'
-#          'kparts'
-         )
+         'kio'
+         'ckbcomp'
+         'efibootmgr'
+         'gtk-update-icon-cache'
+         'hwinfo'
+         'mkinitcpio-openswap'
+         'squashfs-tools'
+         'kconfig'
+         'ki18n'
+         'kiconthemes'
+         'polkit-qt6'
+         'solid'
+         'kparts')
 
 makedepends=('extra-cmake-modules'
              'qt6-tools')
