@@ -34,7 +34,11 @@ sha256sums=('54fca828a75728faf77ed699a8ca910445e70920fbbaa896c929a6221c164ac3'
 
 prepare() {
     cd "${pkgname}-${pkgver}"
-    fvm global stable
+    # avoid choice
+    echo ".fvm/" >> .gitignore
+    
+    fvm install stable
+    fvm use stable
 
     # Disable analytics and enable linux desktop
     fvm flutter --no-version-check config --no-analytics
