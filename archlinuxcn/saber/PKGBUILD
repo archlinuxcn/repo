@@ -19,17 +19,17 @@ depends=('at-spi2-core'
          'libepoxy'
          'libsecret'
          'pango'
-         'hicolor-icon-theme')
+         'hicolor-icon-theme'
+         'gstreamer')
 makedepends=('clang'
              'cmake'
              'fvm'
              'ninja'
-             'patchelf')
+             'patchelf'
+             'gst-plugins-base-libs')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
-        "0001-Modify-.desktop-for-Arch-Linux.patch"
         "saber.sh")
 sha256sums=('54fca828a75728faf77ed699a8ca910445e70920fbbaa896c929a6221c164ac3'
-            '93e6e067fefad597117d7f6889df204082898b79dcd29853eaa5c879ab35b2df'
             'a193df48dcff375178c415b40007c50517c97cc1b148bb0d1ee073042924aa27')
 
 prepare() {
@@ -39,9 +39,6 @@ prepare() {
     # Disable analytics and enable linux desktop
     fvm flutter --no-version-check config --no-analytics
     fvm flutter --no-version-check config --enable-linux-desktop
-
-    # Patch source to allow for better .desktop naming
-    patch -p1 -i "$srcdir/0001-Modify-.desktop-for-Arch-Linux.patch"
 
     # Pull dependencies within prepare, allowing for offline builds later on
     fvm flutter --no-version-check pub get
@@ -77,7 +74,7 @@ package() {
     cd "${srcdir}/${pkgname}-${pkgver}/assets/icon/resized"
     for res in 16x16 24x24 32x32 48x48 64x64 128x128 256x256 512x512
         do
-            install -Dm 644 icon-${res}.png "${pkgdir}/usr/share/icons/hicolor/${res}/apps/${pkgname}.png"
+            install -Dm 644 icon-${res}.png "${pkgdir}/usr/share/icons/hicolor/${res}/apps/com.adilhanney.saber.png"
         done
 
     # Fix rpath which cause "Insecure RUNPATH" or "outside of a valid path"
