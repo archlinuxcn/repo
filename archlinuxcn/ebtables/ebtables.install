@@ -1,9 +1,0 @@
-## arg 1:  the new package version
-## arg 2:  the old package version
-post_upgrade() {
-  (( $(vercmp "$2" '2.0.10_4-1') > 0 )) || cat <<EOF
-Config file have been moved to /etc/ebtables.conf and only support text format.
-EOF
-}
-
-# vim:set ts=2 sw=2 ft=sh et:

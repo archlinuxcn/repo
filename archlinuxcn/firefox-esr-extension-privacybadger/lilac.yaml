@@ -1,8 +1,0 @@
-update_on:
-  - source: cmd
-    cmd: curl -sS 'https://addons.mozilla.org/api/v5/addons/addon/privacy-badger17/' | jq --raw-output '.current_version.version'
-  - source: manual
-    manual: 1.0.1
-
-maintainers:
-  - github: dctxmei
