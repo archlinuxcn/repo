@@ -1,66 +1,82 @@
 # Maintainer: Yurii Kolesnykov <root@yurikoles.com>
 
 # Based on aur/electron8-bin by Tom Vincent <http://tlvince.com/contact>
-# Based on extra/electron* by
-# Bruno Pagani <archange@archlinux.org>
-# Caleb Maclennan <caleb@alerque.com>
 
-_projectname=electron
-_major=25
-_pkgname="${_projectname}${_major}"
-pkgname="${_pkgname}"-bin
-_subver="9.8"
-_pkgver="${_major}.${_subver}"
+# Based on extra/electron25 by
+# Caleb Maclennan <caleb@alerque.com>
+# Pascal Ernster <archlinux@hardfalcon.net>
+# loqs <bugs-archlinux@entropy-collector.net>
+# kxxt <rsworktech@outlook.com>
+
+# https://releases.electronjs.org/
+
+_pkgver=25.9.8
+pkgrel=2
 pkgver="${_pkgver/-/.}"
-pkgrel=1
-pkgdesc="Build cross platform desktop apps with web technologies — prebuilt"
-arch=(x86_64 aarch64)
+_major_ver=${pkgver%%.*}
+_projectname=electron
+_pkgname="${_projectname}${_major_ver}"
+pkgname="${_pkgname}"-bin
+pkgdesc='Build cross platform desktop apps with web technologies'
+pkgdesc+=' — binary'
+arch=(x86_64 armv7h aarch64)
 url='https://electronjs.org'
-license=(MIT custom)
-depends=("alsa-lib"
-         "gtk3"
-         "nss"
-         "libx11"
-         "mesa"
-         "libxdamage"
-         "expat"
-         "libxcomposite"
-         "glibc"
-         "libxext"
-         "libxrandr"
-         "glib2"
-         "libxfixes"
-         "gcc-libs"
-         "dbus"
-         "cairo"
-         "libdrm"
-         "nspr"
-         "pango"
-         "libcups"
-         "libxcb"
-         "libxkbcommon"
-         "at-spi2-core")
+license=(MIT BSD-3-Clause)
+depends=(alsa-lib 
+         gcc-libs     
+         glibc     
+         gtk3 
+         libgtk-3.so
+         nss 
+         # libasound.so.2
+         # libnss3.so
+         # libc.so 
+         # libm.so
+         # libgcc_s.so
+         pango
+         glib2
+         mesa
+         libxcomposite
+         libx11
+         libxcb
+         libxdamage
+         libdrm
+         libcups
+         expat
+         libxext
+         nspr
+         at-spi2-core
+         libxrandr
+         dbus
+         cairo
+         libxkbcommon
+         libxfixes)
 optdepends=('kde-cli-tools: file deletion support (kioclient5)'
             'pipewire: WebRTC desktop sharing under Wayland'
             'qt5-base: enable Qt5 with --enable-features=AllowQt'
             'trash-cli: file deletion support (trash-put)'
             'xdg-utils: open URLs with desktop’s default (xdg-email, xdg-open)')
-provides=("${_pkgname}=${pkgver}" "${_projectname}=${pkgver}")
+provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
 _releaseurl="https://github.com/${_projectname}/${_projectname}/releases/download/v${_pkgver}"
-source_x86_64=(
-	"${pkgname}-chromedriver-${pkgver}-x86_64.zip::${_releaseurl}/chromedriver-v${_pkgver}-linux-x64.zip"
-	"${pkgname}-${pkgver}-x86_64.zip::${_releaseurl}/${_projectname}-v${_pkgver}-linux-x64.zip"
-)
 source_aarch64=(
-	"${pkgname}-chromedriver-${pkgver}-aarch64.zip::${_releaseurl}/chromedriver-v${_pkgver}-linux-arm64.zip"
-	"${pkgname}-${pkgver}-aarch64.zip::${_releaseurl}/${_projectname}-v${_pkgver}-linux-arm64.zip"
+	"${_releaseurl}/chromedriver-v${_pkgver}-linux-arm64.zip"
+	"${_releaseurl}/${_projectname}-v${_pkgver}-linux-arm64.zip"
+)
+source_armv7h=(
+	"${_releaseurl}/chromedriver-v${_pkgver}-linux-armv7l.zip"
+	"${_releaseurl}/${_projectname}-v${_pkgver}-linux-armv7l.zip"
+)
+source_x86_64=(
+	"${_releaseurl}/chromedriver-v${_pkgver}-linux-x64.zip"
+	"${_releaseurl}/${_projectname}-v${_pkgver}-linux-x64.zip"
 )
 sha256sums_x86_64=('ceceb5c2ea8569b837952005d71f61036c1827128f387fd467c95a175771f3b7'
                    'c77fec4d32d473f75611c76ef46d947da253821a64e48edf70dafb120b434752')
+sha256sums_armv7h=('4d5a84bd413a40475c6b545cb63c34ec17323fa753887012283d02c32a851f3b'
+                   '0a8bff6d84f934c3387d24c467aa3a0bec817d735b7b16677043c47692ef3524')
 sha256sums_aarch64=('d60463f02ee09e3b620ee1c1a4441a05992a1937f98e47ed8b249d392fc9d212'
                     'e1a0e898410569fbc9b1611b55f99d7ca0d50d1e8dad0450e6a0959ad9b3ed93')
-
 package() {
 	install -dm755 "${pkgdir}/usr/lib/${_pkgname}/"
 	find . -mindepth 1 -maxdepth 1 -type f ! -name "*.zip" ! -name "LICENSE*" -exec cp -r --no-preserve=ownership --preserve=mode -t "${pkgdir}/usr/lib/${_pkgname}/." {} +
