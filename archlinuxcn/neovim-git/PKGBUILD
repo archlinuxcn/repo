@@ -4,10 +4,11 @@
 # Contributor: Caleb Maclennan <caleb@alerque.com>
 # Contributor: Florian Walch <florian+aur@fwalch.com>
 # Contributor: Florian Hahn <flo@fhahn.com>
+# Contributor: Gregory Anders <aur@gpanders.com>
 
 _pkgname=neovim
 pkgname="$_pkgname-git"
-pkgver=0.10.0.r2543.gade1b12f49
+pkgver=0.11.0.r425.gc2b51e6c41
 pkgrel=1
 pkgdesc='Fork of Vim aiming to improve user experience, plugins, and GUIs'
 arch=(i686 x86_64 armv7h armv6h aarch64)
@@ -16,18 +17,25 @@ backup=('etc/xdg/nvim/sysinit.vim')
 license=('custom:neovim')
 depends=(
   'libluv'
-  'libtermkey'
+  'libutf8proc'
   'libuv'
   'libvterm>0.1.4'
+  'lua51-lpeg'
   'luajit'
   'msgpack-c'
-  'tree-sitter-git'
+  'tree-sitter-c'
+  'tree-sitter-lua'
+  'tree-sitter-markdown'
+  'tree-sitter-query'
+  'tree-sitter-vimdoc'
+  'tree-sitter>=0.22.2'
   'unibilium'
-  'lua51-lpeg'
 )
 makedepends=('cmake' 'git' 'ninja' 'unzip')
 optdepends=(
   'python-pynvim: for Python plugin support (see :help python)'
+  'tree-sitter-bash: tree-sitter parser for bash'
+  'tree-sitter-python: tree-sitter parser for python'
   'xclip: for clipboard support on X11 (or xsel) (see :help clipboard)'
   'xsel: for clipboard support on X11 (or xclip) (see :help clipboard)'
   'wl-clipboard: for clipboard support on wayland (see :help clipboard)'
@@ -57,11 +65,11 @@ build() {
   cd "$_pkgname"
   cmake \
     -Bbuild \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DUSE_BUNDLED=OFF \
+    -G Ninja \
     -W no-dev
-  cmake --build build --verbose
+  cmake --build build
 }
 
 check() {
@@ -89,6 +97,8 @@ package() {
 
   mkdir -p "${pkgdir}"/usr/share/vim
   echo "set runtimepath+=/usr/share/vim/vimfiles" > "${pkgdir}"/usr/share/nvim/archlinux.vim
+
+  ln -s /usr/lib/tree_sitter "${pkgdir}"/usr/lib/nvim/parser
 }
 
 # vim:set sw=2 sts=2 et:
