@@ -11,8 +11,7 @@ post_build_script: |
   git_pkgbuild_commit()
 
 update_on:
-  - source: gitlab
-    gitlab: jpu/cambalache
-    host: gitlab.gnome.org
-    use_max_tag: true
+  - source: regex
+    url: https://gitlab.gnome.org/jpu/cambalache/-/tags
+    regex: "\d+\.(0|2|4|6|8)(\.\d+)*"gm
   - alias: python
