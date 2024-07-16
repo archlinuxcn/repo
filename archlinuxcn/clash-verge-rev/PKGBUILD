@@ -1,0 +1,34 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Pylogmon <pylogmon@outlook.com>
+
+pkgname=clash-verge-rev
+_pkgname=${pkgname%-rev}
+pkgver=1.7.5
+pkgrel=1
+pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
+arch=('x86_64' 'i686' 'aarch64' 'armv7h')
+url="https://github.com/${pkgname}/${pkgname}"
+license=('GPL-3.0-or-later')
+depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator')
+conflicts=("${pkgname}-bin" "${pkgname}-alpha" "${pkgname}-alpha-bin" "${pkgname}-git" "${_pkgname}" "${_pkgname}-bin")
+makedepends=('nodejs' 'pnpm' 'cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('8ca48a722b4018857e18ea06d4b4c2ff1eef3d00506f738a2ca3bce01f27118887cd48e3d95530052e5577f88f9337440c0a1fa3b88e203ecaf4bf699d4080cd')
+options=('!lto')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	pnpm install
+	pnpm check
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	NODE_OPTIONS="--max_old_space_size=4096" pnpm build -b deb
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	tar -xpf src-tauri/target/release/bundle/deb/${_pkgname}_${pkgver}_*/data.tar.gz -C "${pkgdir}"
+	chown -R root:root ${pkgdir}
+}
