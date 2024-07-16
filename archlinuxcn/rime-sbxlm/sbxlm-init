@@ -5,7 +5,4 @@ if [[ -d $RIME_DIR ]];then
   cp -r $RIME_DIR $RIME_DIR-sbxlm-init-backup-"$(date +%s)"
 fi
 mkdir -p $RIME_DIR
-for f in /usr/share/sbxlm/init-userdb/*.tar.gz;do
-  tar xf $f --directory="$RIME_DIR"
-done
-cp /usr/share/rime-data/default.custom.yaml $RIME_DIR
+cp /usr/share/sbxlm/default.custom.yaml $RIME_DIR
