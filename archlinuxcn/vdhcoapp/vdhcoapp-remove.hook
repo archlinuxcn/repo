@@ -1,9 +1,0 @@
-[Trigger]
-Operation = Remove
-Type = Package
-Target = vdhcoapp
-
-[Action]
-Description = Uninstalling JSON configuration file ...
-When = PreTransaction
-Exec = /usr/bin/vdhcoapp uninstall --system
