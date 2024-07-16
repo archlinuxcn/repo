@@ -1,9 +1,0 @@
-diff -aur plymouth.src/scripts/plymouth-update-initrd plymouth.patch/scripts/plymouth-update-initrd
---- plymouth.src/scripts/plymouth-update-initrd        2014-02-20 19:38:13.319427393 +1100
-+++ plymouth.patch/scripts/plymouth-update-initrd      2014-02-20 19:54:13.035553244 +1100
-@@ -1,2 +1,4 @@
- #!/bin/bash
--dracut -f
-+find /etc/mkinitcpio.d/ -name \*.preset -a \! -name example.preset | while read p; do
-+  mkinitcpio -p $p
-+done
