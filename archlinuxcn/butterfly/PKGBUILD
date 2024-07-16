@@ -33,10 +33,11 @@ sha512sums=('0c902f6781361822e9c0e5bb4b074f6146ae50490f349b84e6157b4d6d375b4d2e6
             '5168949aae29562326da8edb738b0568bc79a5b47a70d13373065100e6cb359e0243215245d569d636a2f5b1db2081b7679ac98db1a898064559baa0f941f54c')
 
 prepare() {
+    FLUTTER_VERSION=$(cat "${_pkgname}-${pkgver}/FLUTTER_VERSION")
     cd "${_pkgname}-${pkgver}/app"
     echo ".fvm/" >> .gitignore
-    fvm install stable
-    fvm use stable
+    fvm install ${FLUTTER_VERSION}
+    fvm use ${FLUTTER_VERSION}
 
     # Disable analytics and enable linux desktop
     fvm flutter --no-version-check config --no-analytics
