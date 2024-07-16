@@ -25,9 +25,11 @@ depends=(dconf
          python-gobject
          python-lxml
          webkit2gtk-4.1
-         webkitgtk-6.0)
+         webkitgtk-6.0
+         wlroots)
 makedepends=(gobject-introspection
-             meson)
+             meson
+             cmake)
 source=("$url/-/archive/$pkgver/$pkgname-$pkgver.tar.gz")
 sha256sums=('8a59274302752263f086e4ce22492ac88f9876cccf1a3e213e2134024fecd56d')
 
