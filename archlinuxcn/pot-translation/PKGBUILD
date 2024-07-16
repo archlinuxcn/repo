@@ -29,6 +29,6 @@ build() {
 
 package() {
 	cd "${_pkgname}-${_pkgver}/"
-	tar -xpf "src-tauri/target/release/bundle/deb/pot_${_pkgver}_amd64/data.tar.gz" -C "${pkgdir}"
+	tar -xpf src-tauri/target/release/bundle/deb/pot_${_pkgver}_*/data.tar.gz -C "${pkgdir}"
 	chown -R root:root "${pkgdir}"
 }
