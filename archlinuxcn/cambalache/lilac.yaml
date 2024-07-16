@@ -11,7 +11,8 @@ post_build_script: |
   git_pkgbuild_commit()
 
 update_on:
-  - source: regex
-    url: 'https://gitlab.gnome.org/jpu/cambalache/-/tags'
-    regex: 'Rolling (\d+.\d+.(0|2|4|6|8))'
+  - source: gitlab
+    gitlab: jpu/cambalache
+    host: gitlab.gnome.org
+    include_regex: 'Rolling (\d+.\d+.(0|2|4|6|8))'
   - alias: python
