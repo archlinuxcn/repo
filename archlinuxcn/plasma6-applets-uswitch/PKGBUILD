@@ -13,9 +13,17 @@ arch=('any')
 depends=('plasma-workspace')
 makedepends=('cmake' 'extra-cmake-modules')
 source=("$_repo-$pkgver.tar.gz::https://gitlab.com/divinae/$_repo/-/archive/$_ref/archive.tar.gz"
+        "https://gitlab.com/divinae/uswitch/-/merge_requests/7.patch"
         "CMakeLists.txt")
 sha256sums=('c1752af72c5df6a456de058dd8d5248ea68a312ed3fe3cf821fc15ecb7a08cca'
+            'e5bf03cef1c8c0369b253135bae95927fa3bb2a21c29975dd9834dedd19d7590'
             '6a650bb4f2e4781a2b0a33f088cc1dad97f21547cc93b2b7b1b64d0dfbb9f35b')
+
+prepare() {
+  local _src="$_repo-$_ref"
+  cd "$_src"
+  patch -Np1 -i "$srcdir/7.patch"
+}
 
 build() {
   local _src="$_repo-$_ref"
