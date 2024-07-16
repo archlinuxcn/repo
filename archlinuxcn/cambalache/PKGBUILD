@@ -2,8 +2,8 @@
 # Contributor: Dušan Simić <dusan.simic1810@gmail.com>
 
 pkgname=cambalache
-pkgver=0.90.2
-pkgrel=2
+pkgver=0.90.4
+pkgrel=1
 pkgdesc='A new RAD tool for Gtk 4 and 3 with a clear MVC design and data model first philosophy.'
 arch=(x86_64)
 url=https://gitlab.gnome.org/jpu/cambalache
@@ -31,7 +31,7 @@ makedepends=(gobject-introspection
              meson
              cmake)
 source=("$url/-/archive/$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('8a59274302752263f086e4ce22492ac88f9876cccf1a3e213e2134024fecd56d')
+sha256sums=('9678cd09960363fc219b00e564486cd1ec3645403268a6da04f2c212847b865e')
 
 build() {
   arch-meson "$pkgname-$pkgver" build
