@@ -1,0 +1,93 @@
+# Maintainer: Kiri <kiri@vern.cc>
+# Contributer: zxp19821005 <zxp19821005 at 163 dot com>
+pkgname=butterfly
+_pkgname=Butterfly
+pkgver=2.0.3
+pkgrel=1
+pkgdesc="Powerful, minimalistic, cross-platform, opensource note-taking app"
+arch=("x86_64")
+url="https://github.com/LinwoodDev/Butterfly"
+license=('AGPL-3.0-only')
+conflicts=("${pkgname%-bin}"
+           "linwood-butterfly-bin")
+depends=('gtk3'
+         'at-spi2-core'
+         'libsecret'
+         'jsoncpp'
+         'hicolor-icon-theme'
+         'libepoxy'
+         'gcc-libs'
+         'glib2'
+         'fontconfig'
+         'glibc'
+         'pango'
+         'sh')
+makedepends=('clang'
+             'fvm'
+             'cmake'
+             'ninja'
+             'patchelf')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+        "${pkgname}.sh")
+sha512sums=('0c902f6781361822e9c0e5bb4b074f6146ae50490f349b84e6157b4d6d375b4d2e6922eeb7e8f0adb30423f13d39524f5f443c7ec72cc91123aa030afc821048'
+            '5168949aae29562326da8edb738b0568bc79a5b47a70d13373065100e6cb359e0243215245d569d636a2f5b1db2081b7679ac98db1a898064559baa0f941f54c')
+
+prepare() {
+    FLUTTER_VERSION=$(cat "${_pkgname}-${pkgver}/FLUTTER_VERSION")
+    cd "${_pkgname}-${pkgver}/app"
+    echo ".fvm/" >> .gitignore
+    fvm install ${FLUTTER_VERSION}
+    fvm use ${FLUTTER_VERSION}
+
+    # Disable analytics and enable linux desktop
+    fvm flutter --no-version-check config --no-analytics
+    fvm flutter --no-version-check config --enable-linux-desktop
+
+    # Pull dependencies within prepare, allowing for offline builds later on
+    fvm flutter --no-version-check pub get
+}
+
+build() {
+    cd "${_pkgname}-${pkgver}/app"
+    fvm flutter --no-version-check build linux --release --prefixed-errors
+}
+package() {
+
+    install -Dm 755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+
+    cd "${srcdir}/${_pkgname}-${pkgver}/app/build/linux/x64/release/bundle"
+    install -Dm 755 butterfly "${pkgdir}/usr/share/${pkgname}/butterfly"
+    install -Dm 644 lib/* -t "${pkgdir}/usr/lib/${pkgname}"
+    cp -r data "${pkgdir}/usr/share/${pkgname}/data"
+    ln -sr "${pkgdir}/usr/lib/${pkgname}" "${pkgdir}/usr/share/${pkgname}/lib"
+
+    cd "${srcdir}/${_pkgname}-${pkgver}/app/linux/debian/usr/share"
+    install -Dm 664  "applications/dev.linwood.butterfly.desktop" "${pkgdir}/usr/share/applications/dev.linwood.butterfly.desktop"
+    install -Dm 664  "icons/hicolor/128x128/apps/dev.linwood.butterfly.png" "${pkgdir}/usr/share/icons/hicolor/128x128/apps/dev.linwood.butterfly.png"
+    install -Dm 664  "icons/hicolor/256x256/apps/dev.linwood.butterfly.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/dev.linwood.butterfly.png"
+    install -Dm 664  "metainfo/dev.linwood.butterfly.appdata.xml" "${pkgdir}/usr/share/metainfo/dev.linwood.butterfly.appdata.xml"
+    install -Dm 664  "mime/packages/dev.linwood.butterfly.xml" "${pkgdir}/usr/share/mime/packages/dev.linwood.butterfly.xml"
+
+
+    # Fix rpath which cause "Insecure RUNPATH" or "outside of a valid path"
+    # Fix .so files using patchelf
+    cd "${pkgdir}/usr/lib/${pkgname}"
+    for file in *.so; do
+        PATCHELF_OUTPUT=$(patchelf --print-rpath $file)
+        echo "Checking $file: $PATCHELF_OUTPUT"
+    # Skip file if PATCHELF_OUTPUT does not contain CURRENT_DIR
+        if [[ ! $PATCHELF_OUTPUT =~ $CURRENT_DIR ]]; then
+            echo "Skipping $file"
+            continue
+        fi
+    # Remove rpath if it not contain ORIGIN before
+        if [[ ! $PATCHELF_OUTPUT =~ 'ORIGIN' ]]; then
+            echo "Removing rpath for $file"
+            patchelf --remove-rpath $file
+            continue
+        fi
+    # Set rpath to ORIGIN if it contain ORIGIN before
+        echo "Setting ORIGIN rpath for $file"
+        patchelf --set-rpath '$ORIGIN' $file
+    done
+}
