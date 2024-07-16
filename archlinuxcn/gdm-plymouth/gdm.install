@@ -1,7 +1,0 @@
-post_upgrade() {
-  if (( $(vercmp $2 3.34.0-2) < 0 )); then
-    usermod --expiredate= gdm >/dev/null
-  fi
-}
-
-# vim:set ft=sh sw=2 et:
