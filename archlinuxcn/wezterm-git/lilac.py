@@ -4,6 +4,8 @@ from lilaclib import *
 def pre_build():
     aur_pre_build(maintainers=['wez', 'gabor_bernat'])
     for line in edit_file('PKGBUILD'):
-        if "pkgname=" in line:
-            print("options=(!lto)")
+        # terminfo file conflicts with ncurse
+        # https://github.com/archlinuxcn/repo/issues/3838
+        if "/usr/share/terminfo/w/wezterm" in line:
+            line = ""
         print(line)
