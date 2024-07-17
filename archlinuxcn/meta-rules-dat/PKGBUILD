@@ -3,11 +3,11 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=meta-rules-dat
-pkgver=20240716
+pkgver=20240717
 pkgver() {
   date +'%Y%m%d'
 }
-pkgrel=2
+pkgrel=1
 pkgdesc="rules dat files by MetaCubeX"
 arch=(any)
 url="https://github.com/MetaCubeX/$pkgname"
