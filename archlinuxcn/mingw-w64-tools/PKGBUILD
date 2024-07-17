@@ -1,23 +1,24 @@
 pkgname=mingw-w64-tools
-pkgver=11.0.1
+pkgver=12.0.0
 pkgrel=1
 pkgdesc="MinGW-w64 utilities"
-arch=(i686 x86_64)
+arch=(x86_64)
 url="http://mingw-w64.sourceforge.net"
 license=("GPL3" "LGPL2")
 
 
+depends=(glibc)
 options=(!libtool !emptydirs)
 validpgpkeys=('CAF5641F74F7DFBA88AE205693BDB53CD4EBC740')
 source=(https://sourceforge.net/projects/mingw-w64/files/mingw-w64/mingw-w64-release/mingw-w64-v${pkgver}.tar.bz2{,.sig})
-sha256sums=('3f66bce069ee8bed7439a1a13da7cb91a5e67ea6170f21317ac7f5794625ee10'
+sha256sums=('cc41898aac4b6e8dd5cffd7331b9d9515b912df4420a3a612b5ea2955bbeed2f'
             'SKIP')
 
 _architectures="i686-w64-mingw32 x86_64-w64-mingw32"
 
 build() {
   cd "${srcdir}"
-  for tool in gendef genidl genlib genpeimg; do
+  for tool in gendef genidl genpeimg; do
     mkdir -p "${srcdir}"/${tool}-build && cd "${srcdir}"/${tool}-build
     "${srcdir}"/mingw-w64-v${pkgver}/mingw-w64-tools/${tool}/configure --prefix=/usr
     make
@@ -31,7 +32,7 @@ build() {
 }
 
 package() {
-  for tool in gendef genidl genlib genpeimg; do
+  for tool in gendef genidl genpeimg; do
     cd "${srcdir}/${tool}-build"
     make DESTDIR="${pkgdir}" install
   done
@@ -40,7 +41,7 @@ package() {
     make DESTDIR="${pkgdir}" install
   done
   install -d "${pkgdir}"/usr/share/licenses/${pkgname}
-  for tool in gendef genidl genlib genpeimg; do
+  for tool in gendef genidl genpeimg; do
     install -m644 "${srcdir}/mingw-w64-v${pkgver}/mingw-w64-tools/${tool}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING.${tool}"
   done
 }
