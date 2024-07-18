@@ -15,7 +15,9 @@ post_upgrade()  {
   if pacman -Qq | grep -q "^rime-sbxlm-sbzr"; then
     echo -e "  \033[1;33m提示：声笔自然(sbzr)方案更名为声笔双拼(sbsp)，需要手动更新相关配置文件\033[0m"
   fi
+  if pacman -Qq | grep -q "^librime-sbxlm"; then
+    echo -e "  \033[1;33m提示：librime-sbxlm已经被废弃，请安装 librime\033[0m"
+    echo -e "  \033[1;33m提示：由声笔输入法提供的用户配置目录下的 userdb 文件已经不再需要，请删除它们以避免兼容性问题\033[0m"
+  fi
   echo -e "  \033[1;33m提示：声笔双拼方案又更名回声笔自然(sbzr)，需要手动更新相关配置文件\033[0m"
-  echo -e "  \033[1;33m提示：声笔自然和声笔小鹤的自定义词典（zrzdy.dict, xhzdy.dict）功能因为存在引起 fcitx5 崩溃的问题，暂时被移除了\033[0m"
-
 }

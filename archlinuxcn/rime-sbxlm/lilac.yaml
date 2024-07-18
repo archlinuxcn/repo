@@ -13,7 +13,6 @@ post_build_script: |
     update_aur_repo()
 
 update_on:
-  - source: regex
-    url: https://gitee.com/api/v5/repos/sbxlm/sbxlm/releases/latest
-    encoding: utf8
-    regex: "\"tag_name\":\"(\\d{8})\""
+  - source: github
+    github: sbsrf/home
+    use_latest_release: true

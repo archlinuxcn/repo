@@ -1,42 +1,34 @@
 # Maintainer: ZeekoZhu <vaezt@outlook.com>
 
 pkgname=rime-sbxlm
-pkgver=20240131
+pkgver=20240712
 pkgrel=1
 pkgdesc='声笔系列码配置'
 arch=(any)
-url="https://gitee.com/sbxlm/sbxlm"
-source=('fetch-release.sh' 'sbxlm-init')
-license=('CC-BY-NC-4.0')
-sha256sums=('8a63e188b5f0601d881503d7d058362eda5fcfdfcf88fa6b4010c8f063c5689e'
-            '38115af55a8cbe99901d9cdc187659cdcb8010d8f24cbe509a26eac24dffec85')
-depends=('bash')
-makedepends=('jq' 'unzip')
-optdepends=('librime-sbxlm-git' 'fcitx5-rime')
+url="https://github.com/sbsrf/sbsrf"
+source=('sbxlm-init' "${pkgname}-${pkgver}.zip::${url}/releases/download/${pkgver}/sbsrf.zip" "${pkgname}-${pkgver}-src.zip::${url}/archive/refs/tags/${pkgver}.zip")
+noextract=("${pkgname}-${pkgver}.zip" "${pkgname}-${pkgver}-src.zip")
+license=('BSD-3-Clause')
+sha256sums=('ddd93d18c5ecd40df142666df06d8588d4c345d662c38e31ea22402c3308549f' 'cebaf325d17bcdc3704ca3a694b901fd7db75083097b9a48d4335d940e74fb91' 'faa82122f2a8e459f62f4d1319224aa08c9e73bcc0ebaab5f1f805f4d208ac08')
+makedepends=('unzip')
+optdepends=('librime' 'fcitx5-rime')
 replaces=('rime-sbxlm-sbfm' 'rime-sbxlm-sbkm' 'rime-sbxlm-sbzr' 'rime-sbxlm-sbxh')
 install=$pkgname.install
 groups=(sbxlm)
 
 prepare () {
   cd "$srcdir"
-  curl -L $(./fetch-release.sh url $pkgver) -o assets.zip
-  unzip -uo ./assets.zip -d ./assets
-  cd $srcdir/assets/sbxlm
-  rm zrzdy*
-  rm xhzdy*
-  rm build/zrzdy*
-  rm build/xhzdy*
-  chmod 755 $srcdir/assets/sbxlm
-  mv symbols.yaml sbxlm-symbols.yaml
-  sed -i 's/import_preset: symbols/import_preset: sbxlm-symbols/g' *.schema.yaml
+  unzip -juo ./${pkgname}-${pkgver}-src.zip sbsrf-${pkgver}/LICENSE
+  unzip -uo ./${pkgname}-${pkgver}.zip -d ./assets
+  chmod 755 $srcdir/assets
 }
 
 package() {
-  mkdir -p $pkgdir/usr/share/sbxlm/init-userdb
+  mkdir -p $pkgdir/usr/share/sbxlm/
+  mv $srcdir/assets/default.custom.yaml $pkgdir/usr/share/sbxlm
   mkdir -p $pkgdir/usr/bin
   cp sbxlm-init $pkgdir/usr/bin
-  cd $srcdir/assets/sbxlm
-  tar czf $pkgdir/usr/share/sbxlm/init-userdb/$pkgname.tar.gz *.userdb
-  cp -r $srcdir/assets/sbxlm/ $pkgdir/usr/share/rime-data/
-  rm -rf $pkgdir/usr/share/rime-data/*.userdb
+  mkdir -p $pkgdir/usr/share/rime-data/
+  cp -r $srcdir/assets/* $pkgdir/usr/share/rime-data/
+  install -Dm664 $srcdir/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
