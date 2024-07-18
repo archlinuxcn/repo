@@ -37,7 +37,7 @@ pkgver() {
 }
 
 prepare() {
-	cd "${pkgname}/"
+	cd "${_pkgname}/"
 	patch -p1 <../1350.patch # Add /usr/share/sing-box to core asset search path
 }
 
