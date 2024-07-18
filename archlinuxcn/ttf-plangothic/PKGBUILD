@@ -2,7 +2,7 @@
 
 pkgname=ttf-plangothic
 epoch=2
-pkgver=1.8.5760
+pkgver=1.8.5764
 pkgrel=1
 pkgdesc='A project based on SourceHan to expand and supplement characters, and its ultimate goal is to complete the entire Unicode as much as possible.'
 url='https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic'
@@ -13,9 +13,9 @@ source=($pkgname-$pkgver-PlangothicP1-Regular.ttf::https://github.com/Fitzgerald
         $pkgname-$pkgver-PlangothicP2-Regular.ttf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP2-Regular.ttf
         $pkgname-$pkgver-LICENSE::https://raw.githubusercontent.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/V$pkgver/LICENSE
         )
-b2sums=('b652a2b4e449f64da7e773a5b51803e7f88f98ff0491da58ba1a3cf49b9e76b7328cde979b3000b6b505ff99c9dd0216d61c041f88daea9fb537875caf53396a'
-        'b80be873fc476e268474e84a3e4ef4de75b241b312a68d9af393fd086d9d4a1bd56cefb50221dc3d3690ddec5786d809baa05d49026b6ff9b43b350ebde60abb'
-        '00f56a3253b80650754652fbd230072b94a335de1d38f7007992a1eecb529f77a11535531db8bc6c12857818e5dfd391c33b08f4885c91ca318bdf181f53f2b4')
+b2sums=('9e46f6bd9e80923590331135925d99a56028aec990af460ca55333d15b62281fa6ad97be7e0dd6f5c70ca8c2067e984d108dfd4ca8c4cc88c020fa9743003e81'
+        '6bba1b5045678b33722378d621b98a4df960047af49bb6665d400f1616bc9d8e20fd136ca0bb30b150158d788b22922f1012b1befc72265fbdfde0cbf465fb50'
+        'c685b6f4f9c6c9042c12834df568f835155387d32a41b30ae524fa28acd569245a01c02e6c9ba7ef5012eca88536155236bbf36cf243e6d658a33d11bc7552ae')
 
 package_ttf-plangothic() {
     install -Dm755 -d "$pkgdir/usr/share/fonts/TTF/Plangothic"
