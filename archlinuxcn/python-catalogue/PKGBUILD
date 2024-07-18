@@ -4,7 +4,7 @@
 
 _pkgname=catalogue
 pkgname="python-${_pkgname}"
-pkgver=2.0.7
+pkgver=2.0.10
 pkgrel=1
 pkgdesc='Super lightweight function registries for your library'
 arch=(any)
@@ -19,7 +19,7 @@ depends=(
 makedepends=('python-setuptools')
 #source=("https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-b2sums=('a14548ab9892dc84f34b256708009dccaa8f1e1f13538f12d7c06ad3f2eaf9c7fcceffb93ab63e6ebb2459ba9b6343ba87f1f89a59b12bec49a3c7df7fc159d6')
+b2sums=('961d654fff1cb56d0d1f9327aeead81f2f10fdbe95266a607ce2c9e42b747d71db14d21b3e387bb59fe50d9d05ead0ece4a2c83b8e1343417f02a11694126ac1')
 
 build() {
     cd "${_pkgname}-${pkgver}"
