@@ -1,0 +1,31 @@
+# Maintainer: Rocket Aaron <i at rocka dot me>
+
+pkgbase=xray-geodata
+pkgname=('xray-geoip' 'xray-geosite')
+pkgdesc='v2ray geodata compatibility for xray'
+epoch=1
+pkgver=1
+pkgrel=1
+arch=('any')
+
+package_xray-geoip() {
+    pkgdesc+=' (geoip)'
+    url='https://github.com/v2fly/geoip'
+    license=('CC-BY-SA-4.0')
+    depends=('v2ray-geoip')
+
+    # v2ray-geoip compatibility
+    install -d "${pkgdir}"/usr/share/xray/
+    ln -s ../v2ray/geoip.dat "${pkgdir}"/usr/share/xray/geoip.dat
+}
+
+package_xray-geosite() {
+    pkgdesc+=' (geosite)'
+    url='https://github.com/v2fly/domain-list-community'
+    license=('MIT')
+    depends=('v2ray-domain-list-community')
+
+    # v2ray-domain-list-community compatibility
+    install -d "${pkgdir}"/usr/share/xray/
+    ln -s ../v2ray/geosite.dat "${pkgdir}"/usr/share/xray/geosite.dat
+}

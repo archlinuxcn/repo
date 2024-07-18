@@ -1,3 +1,7 @@
+repo_depends:
+  - xray-geoip
+  - xray-geosite
+
 pre_build_script: |
   update_pkgver_and_pkgrel(_G.newver)
 

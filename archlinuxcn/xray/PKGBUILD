@@ -13,11 +13,9 @@ pkgdesc='The best v2ray-core, with XTLS support'
 arch=('x86_64')
 url='https://github.com/XTLS/Xray-core'
 license=('MPL-2.0')
-depends=('glibc')
+depends=('glibc' 'xray-geoip' 'xray-geosite')
 makedepends=('go')
-optdepends=('v2ray-domain-list-community: domain list for routing'
-            'v2ray-geoip: GeoIP list for routing')
-replaces=('xray-domain-list-community' 'xray-geoip')
+provides=('v2raya-core')
 source=("${url}/archive/v${pkgver}.tar.gz"
         "xray.sysusers"
         "xray.tmpfiles"
@@ -52,9 +50,4 @@ package() {
     install -Dm 644 "${srcdir}"/xray.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/xray.conf
     install -Dm 644 "${srcdir}"/xray.service -t "${pkgdir}"/usr/lib/systemd/system/
     install -Dm 644 "${srcdir}"/xray@.service -t "${pkgdir}"/usr/lib/systemd/system/
-
-    # v2ray-{geoip,domain-list-community} compatibility
-    install -d "${pkgdir}"/usr/share/xray/
-    ln -s ../v2ray/geoip.dat "${pkgdir}"/usr/share/xray/geoip.dat
-    ln -s ../v2ray/geosite.dat "${pkgdir}"/usr/share/xray/geosite.dat
 }
