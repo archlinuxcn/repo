@@ -4,7 +4,7 @@ _base=notctyparser
 pkgname=python-${_base}
 pkgdesc="A fork and extension of ctyparser."
 pkgver=23.6.21
-pkgrel=3
+pkgrel=3.1
 arch=(any)
 url="https://github.com/mbridak/ctyparser"
 license=(MIT)
@@ -21,5 +21,7 @@ build() {
 package() {
   cd ${_base}-${pkgver}
   PYTHONPYCACHEPREFIX="${PWD}/.cache/cpython/" python -m installer --destdir="${pkgdir}" dist/*.whl
+  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "$pkgdir/$_site_packages/docs/"
   install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
