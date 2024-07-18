@@ -7,8 +7,8 @@ pkgrel=1
 pkgdesc="A web GUI client of Project V which supports VMess, VLESS, SS, SSR, Trojan and Pingtunnel protocols"
 arch=('x86_64')
 url="https://github.com/v2rayA/v2rayA"
-license=('AGPL3')
-depends=('glibc')
+license=('AGPL-3.0')
+depends=('glibc' 'v2raya-core')
 makedepends=('git' 'go>=2:1.17.0-1' 'nodejs<=19' 'yarn')
 backup=("etc/default/v2raya")
 install="${pkgname}.install"
@@ -39,8 +39,6 @@ build() {
 }
 
 package() {
-    depends+=('v2ray')
-
     cd "${srcdir}"/"${_pkgname}-${pkgver}"/
     install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/v2raya/
     install -Dm 755 service/v2raya -t "${pkgdir}"/usr/bin/
