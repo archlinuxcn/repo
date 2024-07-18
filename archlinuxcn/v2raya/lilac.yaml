@@ -1,3 +1,6 @@
+repo_depends:
+  - v2raya-core
+
 pre_build_script: |
     update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 
