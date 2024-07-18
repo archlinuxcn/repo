@@ -24,14 +24,21 @@ source=(
 	"git+https://github.com/MatsuriDayo/${_pkgname}.git"
 	"nekobox.sh"
 	"nekobox.desktop"
+	"https://github.com/MatsuriDayo/nekoray/pull/1350.patch"
 )
 sha512sums=('SKIP'
             '3a65300520462bd6a5667c50b7db1ccbf7107b9d5c65959d00451a68cdd77d9e13288da03ccb0d712cd4fb076cdfb3c635490d6148268f920cde7ba11b7237a9'
-            'f99795f5f82fca74bbc36569d3595bc141c3fef00a0c6076585da683f0a5144dbfdbbe4525cf82576e9010262f74f462ae40f5a7b95dafc01033763a9b1711bd')
+            'f99795f5f82fca74bbc36569d3595bc141c3fef00a0c6076585da683f0a5144dbfdbbe4525cf82576e9010262f74f462ae40f5a7b95dafc01033763a9b1711bd'
+            '0e16f4e4f88f6e46af93911a8cd19a5624c9f4aeaa542b53e4ea974612055b1bd422e70246ea0e033391a28c41ac65193d464efbd8162a45eabaa01280ee0f28')
 
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "${pkgname}/"
+	patch -p1 <../1350.patch # Add /usr/share/sing-box to core asset search path
 }
 
 build() {
