@@ -38,6 +38,8 @@ sha512sums=('6914344534e10bace76de6a01f9c170a8b264fcf1c4ab756532cbda49d59437be72
 prepare() {
   cd "${_pkgname}-${pkgver}"
   patch -p1 -i "${srcdir}/0001-fix-building-with-zlib-1.3.1.patch"
+  # quick fix for numpy 2.0
+  find . -type f -name "*.py" -exec sed -i "s,np.NaN,np.nan,g" {} \;
 }
 
 build() {
