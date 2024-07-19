@@ -2,7 +2,7 @@
 # Contributor: Martin Hundebøll <martin@hundeboll.net>
 
 pkgname=tio
-pkgver=3.5
+pkgver=3.6
 pkgrel=1
 pkgdesc="The simple TTY terminal I/O application"
 url="https://github.com/tio/tio"
@@ -18,7 +18,7 @@ makedepends=(
   'meson'
 )
 source=("https://github.com/tio/tio/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
-b2sums=('47423adff5be1cb15fcb0312ded179f3e1b3e872d927f5c81ad623ef708f593ff445617605b531360e5bc3310c66f43b6f45c3b05bba825cf8a9e85642cd7fd5')
+b2sums=('52152a133b497e7f39f0bb48348ef869ad5fa2135f323796ef16f0caf7c8b3bb5dc38dde7b40c858bd27a1e3addbb97911eef219be5f8b9885638389cd45f9e2')
 
 build() {
   arch-meson "$pkgname-$pkgver" build
