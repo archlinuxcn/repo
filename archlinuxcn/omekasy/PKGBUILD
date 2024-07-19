@@ -1,7 +1,7 @@
-# Maintainer: vitaliikuzhdin <vitaliikuzhdin@gmail.com>
+# Maintainer:  Vitalii Kuzhdin <vitaliikuzhdin@gmail.com>
 
 pkgname="omekasy"
-pkgver=1.2.3
+pkgver=1.3.0
 pkgrel=1
 pkgdesc="Convert alphanumeric characters to various styles defined in Unicode"
 arch=('any')
@@ -11,7 +11,7 @@ depends=('glibc' 'gcc-libs')
 makedepends=('cargo')
 _pkgsrc="${pkgname}-${pkgver}"
 source=("${_pkgsrc}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('68965748361c85cd37b809482b3ef18debb908d8a32ff1764f1583ca745489ed')
+sha256sums=('38776adbd99bbfc78737e1500e8f2a121f2e7ecac315b288d657873d88de76d1')
 
 prepare() {
   cd "${srcdir}/${_pkgsrc}"
