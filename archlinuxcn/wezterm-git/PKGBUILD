@@ -1,10 +1,9 @@
 # Maintainer:  Wez Furlong <wez at wezfurlong dot org>
 # Co-Maintainer: Bernat Gabor <gaborjbernat@gmail.com>
 
-options=(!lto)
 pkgname=("wezterm-git")
 pkgdesc="A terminal emulator implemented in Rust, using OpenGL ES 2 for rendering."
-pkgver=20240715.080945.c9116830
+pkgver=20240719.081740.643d85f8
 pkgrel=1
 arch=("x86_64" "i686")
 url="https://github.com/wez/wezterm"
@@ -68,7 +67,7 @@ package() {
   install -Dm644 assets/wezterm.desktop "$pkgdir/usr/share/applications/org.wezfurlong.wezterm.desktop"
   install -Dm644 assets/wezterm.appdata.xml "$pkgdir/usr/share/metainfo/org.wezfurlong.wezterm.appdata.xml"
   install -Dm644 assets/wezterm-nautilus.py "$pkgdir/usr/share/nautilus-python/extensions/wezterm-nautilus.py"
-  install -Dm644 ../terminfo/w/wezterm "$pkgdir/usr/share/terminfo/w/wezterm"
+
 
   install -Dm644 assets/shell-integration/wezterm.sh "$pkgdir/etc/profile.d/wezterm.sh"
   install -Dm644 assets/shell-completion/bash "$pkgdir/usr/share/bash-completion/completions/wezterm"
