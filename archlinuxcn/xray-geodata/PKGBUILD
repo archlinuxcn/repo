@@ -24,7 +24,8 @@ package_xray-geosite() {
     url='https://github.com/v2fly/domain-list-community'
     license=('MIT')
     depends=('v2ray-domain-list-community')
-
+    replaces=('xray-domain-list-community')
+    
     # v2ray-domain-list-community compatibility
     install -d "${pkgdir}"/usr/share/xray/
     ln -s ../v2ray/geosite.dat "${pkgdir}"/usr/share/xray/geosite.dat
