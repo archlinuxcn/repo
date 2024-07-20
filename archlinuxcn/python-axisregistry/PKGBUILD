@@ -2,8 +2,8 @@
 
 _pyname=axisregistry
 pkgname=python-$_pyname
-pkgver=0.4.9
-pkgrel=3
+pkgver=0.4.10
+pkgrel=1
 pkgdesc='easy access to the GF Axis Registry'
 arch=(any)
 url="https://github.com/googlefonts/$_pyname"
@@ -24,7 +24,7 @@ checkdepends=(
 )
 _archive="$_pyname-$pkgver"
 source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz")
-sha256sums=('a1ba63897f3a7f3a246a8ed459051781aaca61135dc6996bebfaf60f677b0c22')
+sha256sums=('fcdebb543af56450d1999b31602153f8a75499cd8496018d77c9631960b95745')
 
 prepare() {
     cd "$_archive"
