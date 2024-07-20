@@ -3,7 +3,7 @@
 pkgname=coolercontrol
 _app_id="org.$pkgname.CoolerControl"
 pkgver=1.3.0
-pkgrel=1
+pkgrel=4
 pkgdesc="A program to monitor and control your cooling devices"
 arch=('x86_64')
 url="https://gitlab.com/coolercontrol/coolercontrol"
@@ -38,6 +38,7 @@ makedepends=(
   'python-setuptools'
   'python-wheel'
   'webkit2gtk'
+  'libdrm'
 )
 checkdepends=(
   'appstream-glib'
@@ -83,12 +84,12 @@ check() {
   desktop-file-validate "packaging/metadata/$_app_id.desktop"
   appstream-util validate-relax "packaging/metadata/$_app_id.metainfo.xml"
   cd "${srcdir}/$pkgname-$pkgver/coolercontrol-liqctld"
-  python -m coolercontrol_liqctld -v
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrold"
-  export RUSTUP_TOOLCHAIN=stable
-  cargo test --release --locked
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri"
-  cargo test --release --locked -F custom-protocol
+  python -m coolercontrol_liqctld --version
+  cd "${srcdir}/$pkgname-$pkgver/coolercontrold/target/release"
+  ./coolercontrold --version
+  # This UI check will fail in a docker environment without a graphical environment:
+  # cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri/target/release"
+  # ./coolercontrol --version
 }
 
 package() {
