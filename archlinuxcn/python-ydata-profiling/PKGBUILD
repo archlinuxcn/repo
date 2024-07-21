@@ -18,6 +18,7 @@ depends=(
   python-jinja
   python-joblib
   python-matplotlib
+  python-markupsafe
   python-missingno
   python-multimethod
   python-networkx
@@ -47,7 +48,7 @@ makedepends=(
   python-wheel
 )
 
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ydataai/ydata-profiling/archive/refs/tags/${pkgver}.tar.gz")
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ydataai/ydata-profiling/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('2cd426c1abc7d6c7db76736e465f3d0babcdefe6d9524addadec81fdd02555be2ae720afc96993a6796d2d2a6a4849dc751450f714abe0b7c927fa1d2ca78028')
 
 build() {
