@@ -5,7 +5,7 @@
 
 pkgname='fcitx5-mozc-ut'
 pkgver=2.30.5520.102
-pkgrel=1
+pkgrel=2
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
@@ -16,30 +16,49 @@ optdepends=('fcitx5-configtool')
 provides=('fcitx5-mozc=2.30.5520.102')
 conflicts=('fcitx5-mozc')
 options=(!distcc !ccache)
-source=("${pkgname}-git::git+https://github.com/fcitx/mozc.git#commit=5c09e44fbba173031dd6441343e2c59dd728da98")
-sha256sums=('9ba312422d0609b6c30d0359e26d39780709af77b7418bb7eca13d229e73210d')
+source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=5c09e44fbba173031dd6441343e2c59dd728da98'
+        'git+https://github.com/abseil/abseil-cpp.git#commit=2f9e432cce407ce0ae50676696666f33a77d42ac'
+        'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
+        'git+https://github.com/google/googletest.git#commit=58d77fa8070e8cec2dc1ed015d66b454c8d78850'
+        'git+https://github.com/chromium/gyp.git#commit=9ecf45e37677743503342ee4c6a76eaee80e4a7f'
+        'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
+        'git+https://github.com/protocolbuffers/protobuf.git#commit=a978b75794a6ce4547c9db08a115c458d9190934'
+        'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d')
+sha256sums=('9ba312422d0609b6c30d0359e26d39780709af77b7418bb7eca13d229e73210d'
+            '8380cac08316c35118999b95845b8c28d9c9c4688402960fb1558d5eeda90f73'
+            '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
+            '2acda2cf88e375a7638f521f25c61b308d0eae8a7e188a54fafa2f2c8c2a063f'
+            '8a136786407526c64686c3f9990d6416d62c7e2d474ef4a75ced337ecfc58cef'
+            '10a13d356071f2b0c2b6dcab1d841fae451f6a2020ee9b901533533fc7ac3008'
+            'f09520ceeb7f1f1bb7e1cb61a8cd7a490fff84302ed5dc91f923f0e82ee191dc'
+            'abb86ac4d546c98d7d9a10fdeb1059d6e3395e892d5397fb03179361f37c98fe')
 
 prepare() {
-    cd ${pkgname}-git/src
+    cd mozc-fcitx/src
 
-    git submodule update --init --recursive
+    git submodule init
+    git config submodule.src/third_party/abseil-cpp.url "$srcdir/abseil-cpp"
+    git config submodule.src/third_party/breakpad.url "$srcdir/breakpad"
+    git config submodule.src/third_party/gtest.url "$srcdir/googletest"
+    git config submodule.src/third_party/gyp.url "$srcdir/gyp"
+    git config submodule.src/third_party/japanese_usage_dictionary.url "$srcdir/japanese-usage-dictionary"
+    git config submodule.src/third_party/protobuf.url "$srcdir/protobuf"
+    git config submodule.src/third_party/wil.url "$srcdir/wil"
+    git -c protocol.file.allow=always submodule update
 }
 
 build() {
-    cd ${pkgname}-git/src
+    cd mozc-fcitx/src
 
     unset ANDROID_NDK_HOME
     unset ANDROID_HOME
     export JAVA_HOME='/usr/lib/jvm/java-21-openjdk/'
 
-    # Temp fix for GCC 14
-    sed -i -e '/Werror/d' third_party/protobuf/build_defs/cpp_opts.bzl
-
-    bazel build unix/fcitx5:fcitx5-mozc.so unix/icons --config oss_linux --compilation_mode opt
+    bazel build unix/fcitx5:fcitx5-mozc.so unix/icons --config oss_linux --compilation_mode opt --copt='-Wno-maybe-uninitialized' --host_copt='-Wno-maybe-uninitialized'
 }
 
 package() {
-    cd ${pkgname}-git/src
+    cd mozc-fcitx/src
 
     # BSD-3-Clause
     sed -n 1,29p unix/fcitx5/fcitx_key_translator.h > Fcitx5
