@@ -13,6 +13,9 @@ makedepends=('git')
 provides=(mpv-osc-thumbfast)
 conflicts=('mpv-osc-thumbfast' 'mpv-thumbfast-git')
 backup=("etc/mpv/script-opts/thumbfast.conf")
+optdepends=('mpv-osc-modern-git: UI support'
+            'mpv-osc-modernx-git: UI support'
+            'mpv-osc-uosc: UI support')
 source=(
   "git+https://github.com/po5/thumbfast.git"
 )

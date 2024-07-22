@@ -1,0 +1,18 @@
+#!/bin/bash
+
+function whisperer(){
+    echo "-----------------------------------------------------------------------"
+    echo "Please add config to mpv.conf"
+    echo "# uosc provides seeking & volume indicators (via flash-timeline and flash-volume commands)
+          # if you decide to use them, you don't need osd-bar
+          osd-bar=no
+
+          # uosc will draw its own window controls and border if you disable window border
+          border=no"
+    echo "-----------------------------------------------------------------------"
+}
+
+post_install()
+{
+    whisperer
+}

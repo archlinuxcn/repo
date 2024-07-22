@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function whisperer(){
+    echo "-----------------------------------------------------------------------"
+    echo "Please add config to mpv.conf"
+    echo "osc=no
+          border = no # Optional, but recommended"
+    echo "-----------------------------------------------------------------------"
+}
+
+post_install()
+{
+    whisperer
+}

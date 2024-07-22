@@ -1,0 +1,38 @@
+# Maintainer: zjuyk <ownbyzjuyk@gmail.com>
+
+pkgname=mpv-osc-uosc
+_gitname=uosc
+pkgver=5.2.0
+pkgrel=1
+pkgdesc="Feature-rich minimalist proximity-based UI for MPV player."
+arch=('x86_64')
+url="https://github.com/tomasklaen/${_gitname}"
+license=('LGPL-2.1-only')
+depends=('mpv')
+conflicts=(mpv-osc-uosc-git)
+backup=("etc/mpv/script-opts/uosc.conf")
+install=uosc.install
+source=(
+  "uosc.conf::${url}/releases/download/${pkgver}/uosc.conf"
+  "uosc.zip::${url}/releases/download/${pkgver}/uosc.zip"
+)
+sha256sums=('d684e1a8871298f1c9df1ad23a567b900d97ad7b3d0bd0e021276fa40f3417b6'
+            '1c7e1b2c82161c2d07eecffece6a260538cbe6788daa4fc3e2fa0c24857712e8')
+
+package() {
+
+  # remove unwanted binary files
+  rm -rf "${srcdir}/scripts/uosc/bin/ziggy-windows.exe"
+  rm -rf "${srcdir}/scripts/uosc/bin/ziggy-darwin"
+
+  # install uosc
+  mkdir -p "${pkgdir}/etc/mpv/scripts/"
+  cp -r "${srcdir}/scripts/uosc/" "${pkgdir}/etc/mpv/scripts/"
+
+  # install fonts
+  cp -r "${srcdir}/fonts/" "${pkgdir}/etc/mpv/"
+
+  # install config files
+  mkdir -p "${pkgdir}/etc/mpv/script-opts"
+  install -D -m644 "${srcdir}/uosc.conf" -t "${pkgdir}/etc/mpv/script-opts/"
+}

@@ -1,0 +1,35 @@
+# Maintainer: zjuyk <ownbyzjuyk@gmail.com>
+
+pkgname=mpv-osc-modernx-git
+_gitname=ModernX
+pkgver=1856_9.rc1.178.g05ef18d_2023.04.01
+pkgrel=1
+pkgdesc="A modern OSC UI replacement for MPV that retains the functionality of the default OSC."
+arch=('x86_64')
+url="https://github.com/cyl0/${_gitname}"
+license=('LGPL-2.1-or-later')
+depends=('mpv' 'ttf-material-design-iconic-font')
+makedepends=('git')
+provides=(mpv-osc-modernx)
+conflicts=(mpv-osc-modernx)
+backup=("etc/mpv/script-opts/modernx.conf")
+install=modernx.install
+source=(
+  "git+https://github.com/cyl0/${_gitname}.git"
+  "modernx.conf"
+)
+md5sums=('SKIP'
+         '59746419670e6d4b3a0d31327ede8c8f')
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+  cd "${srcdir}/${_gitname}"
+  mkdir -p "${pkgdir}/etc/mpv/scripts"
+  install -D -m644 "modernx.lua" -t "${pkgdir}/etc/mpv/scripts/"
+  mkdir -p "${pkgdir}/etc/mpv/script-opts"
+  install -D -m644 "${srcdir}/modernx.conf" -t "${pkgdir}/etc/mpv/script-opts/"
+}
