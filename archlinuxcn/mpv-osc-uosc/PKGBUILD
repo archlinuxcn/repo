@@ -20,6 +20,11 @@ sha256sums=('d684e1a8871298f1c9df1ad23a567b900d97ad7b3d0bd0e021276fa40f3417b6'
             '1c7e1b2c82161c2d07eecffece6a260538cbe6788daa4fc3e2fa0c24857712e8')
 
 package() {
+
+  # remove unwanted binary files
+  rm -rf "${srcdir}/scripts/uosc/bin/ziggy-windows.exe"
+  rm -rf "${srcdir}/scripts/uosc/bin/ziggy-darwin"
+
   # install uosc
   mkdir -p "${pkgdir}/etc/mpv/scripts/"
   cp -r "${srcdir}/scripts/uosc/" "${pkgdir}/etc/mpv/scripts/"
