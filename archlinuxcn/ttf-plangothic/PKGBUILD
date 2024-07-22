@@ -25,8 +25,8 @@ b2sums=('5cb2ea77fc8a6b4c3dc9a436cc0046d4d423bbf64d8320aaa95907f69f29ec0a5b54e1c
 
 package_otf-plangothic() {
     install -Dm755 -d "$pkgdir/usr/share/fonts/OTF/Plangothic"
-    install -Dm644 "$pkgbase-$pkgver-PlangothicP1-Regular.otf" "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP1-Regular.otf"
-    install -Dm644 "$pkgbase-$pkgver-PlangothicP2-Regular.otf" "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP2-Regular.otf"
+    install -Dm644 "$pkgbase-$pkgver-PlangothicP1-Regular.otf" "$pkgdir/usr/share/fonts/OTF/Plangothic/PlangothicP1-Regular.otf"
+    install -Dm644 "$pkgbase-$pkgver-PlangothicP2-Regular.otf" "$pkgdir/usr/share/fonts/OTF/Plangothic/PlangothicP2-Regular.otf"
     install -Dm644 "$pkgbase-$pkgver-LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_ttf-plangothic() {
