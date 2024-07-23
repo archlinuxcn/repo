@@ -1,0 +1,33 @@
+# Maintainer: dawfukfr <dawfukfr@gmail.com>
+
+pkgname=aquamarine-git
+_pkgname=${pkgname%-git}
+pkgver=0.1.0_r147.g7a84686
+pkgrel=1
+pkgdesc="A very light linux rendering backend library"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('BSD-3-Clause')
+depends=('pugixml' 'seatd' 'wayland-protocols' 'pixman' 'libdisplay-info' 'opengl-driver' 'hyprutils' 'libinput')
+makedepends=('git' 'cmake' 'hyprwayland-scanner-git')
+source=("git+${url}.git")
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cd "${_pkgname}/"
+	cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
+	cmake --build ./build --config Release --target all
+}
+
+package() {
+	cd "${_pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
