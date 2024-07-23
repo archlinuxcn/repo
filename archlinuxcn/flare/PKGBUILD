@@ -2,7 +2,7 @@
 
 pkgname=flare
 pkgver=0.15.0.beta.1
-_pkgver=$(sed 's/\./-/3' <<<${pkgver})
+_pkgver=${pkgver/beta/-beta/}
 pkgrel=2
 pkgdesc="Chat with your friends on Signal"
 url="https://gitlab.com/schmiddi-on-mobile/${pkgname}"
