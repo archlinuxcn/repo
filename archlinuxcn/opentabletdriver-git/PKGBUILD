@@ -1,19 +1,20 @@
 # Maintainer: Sebastian 'gonX' Jensen <gonx@gonx.dk>
+# Maintainer: jamesbt365 <jamesbt365@mothoxi.de>
 # Contibutor: MoeLava <me@lava.moe>
 # Contibutor: InfinityGhost <infinityghostgit@gmail.com>
 pkgname=opentabletdriver-git
 _pkgname=OpenTabletDriver
 _lpkgname=opentabletdriver
 _spkgname=otd
-pkgver=v0.7.0.0pre.r896.g75db8d22
-pkgrel=1
+pkgver=v0.7.0.0pre.r900.g928b4072
+pkgrel=2
 pkgdesc="A cross-platform open source tablet driver"
 arch=('x86_64')
 url="https://opentabletdriver.net"
 license=('LGPL-3.0-or-later')
-depends=('dotnet-runtime-7.0' 'gtk3' 'libevdev')
+depends=('dotnet-runtime' 'gtk3' 'libevdev')
 optdepends=('libxrandr: x11 display querying support' 'libx11')
-makedepends=('git' 'dotnet-sdk-7.0' 'jq')
+makedepends=('git' 'dotnet-sdk' 'jq')
 provides=("opentabletdriver")
 conflicts=('opentabletdriver' 'digimend-kernel-drivers-dkms-git' 'digimend-drivers-git-dkms' 'digimend-kernel-drivers-dkms' 'digimend-kernel-drivers')
 install="notes.install"
