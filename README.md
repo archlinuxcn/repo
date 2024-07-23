@@ -24,12 +24,6 @@ Import PGP Keys:
 sudo pacman -Sy && sudo pacman -S archlinuxcn-keyring
 ```
 
-Due to a developer's retirement, newly installed systems need to manually trust farseerfc's key:
-
-```bash
-sudo pacman-key --lsign-key "farseerfc@archlinux.org"
-```
-
 ### Issues
 
 * Flag package OUT-OF-DATE by submiting new issues (please follow the template).
