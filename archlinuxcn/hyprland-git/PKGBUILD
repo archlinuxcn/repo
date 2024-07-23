@@ -39,9 +39,7 @@ depends=(cairo
 	xcb-util-keysyms
 	xcb-util-renderutil
 	xcb-util-wm
-	xorg-xinput
 	xorg-xwayland
-	libdisplay-info.so
 	tomlplusplus
 	hyprlang
 	libhyprlang.so
@@ -58,27 +56,24 @@ makedepends=(
 	meson
 	wayland-protocols
 	xorgproto
-	hyprwayland-scanner)
+	hyprwayland-scanner-git)
 provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
 replaces=(hyprland-nvidia-git)
 source=("git+https://github.com/hyprwm/Hyprland.git"
-	"git+https://github.com/hyprwm/wlroots-hyprland.git"
 	"git+https://github.com/hyprwm/hyprland-protocols.git"
 	"git+https://github.com/canihavesomecoffee/udis86.git"
 	"git+https://github.com/wolfpld/tracy.git")
 sha256sums=('SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP')
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 prepare() {
 	cd Hyprland
-	rm -rf subprojects/{wlroots-hyprland,hyprland-protocols}
+	rm -rf subprojects/hyprland-protocols
 
 	git submodule init
-	git config submodule.subprojects/wlroots-hyprland.url "${srcdir}/wlroots-hyprland"
 	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
 	git config submodule.subprojects/udis86.url "${srcdir}/udis86"
 	git config submodule.subprojects/tracy.url "${srcdir}/tracy"
@@ -99,7 +94,6 @@ build() {
 package() {
 	cd Hyprland
 
-	meson install -C subprojects/wlroots-hyprland/build --destdir "${pkgdir}/tmpwlr"
 	install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin/"
 
 	pushd "${pkgdir}/usr/bin"
@@ -113,12 +107,10 @@ package() {
 	install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland"
 
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-	install -Dm644 subprojects/wlroots-hyprland/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-wlroots"
 	install -Dm644 subprojects/udis86/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-udis86"
 
 	install -Dm644 docs/*.1 -t "${pkgdir}/usr/share/man/man1/"
-	install -Dm644 "${pkgdir}/tmpwlr/usr/local/lib/libwlroots.a" -t "${pkgdir}/usr/lib/"
-	install -d ${pkgdir}/usr/include/hyprland/{protocols,wlroots-hyprland}
+	install -d ${pkgdir}/usr/include/hyprland/protocols
 
 	for cmd in hyprctl hyprpm; do
 		install -Dm644 "${cmd}/${cmd}.bash" "${pkgdir}/usr/share/bash-completion/completions/${cmd}"
@@ -127,10 +119,8 @@ package() {
 	done
 
 	cp -R src "${pkgdir}/usr/include/hyprland/"
-	cp -R ${pkgdir}/tmpwlr/usr/local/include/* "${pkgdir}/usr/include/hyprland/wlroots-hyprland/"
 
 	find "${pkgdir}/usr/include/hyprland/" -type f ! -name '*.h*' -delete
-	rm -rf "${pkgdir}/tmpwlr/"
 
 	cp protocols/*.h* "${pkgdir}/usr/include/hyprland/protocols/"
 	install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig/"
