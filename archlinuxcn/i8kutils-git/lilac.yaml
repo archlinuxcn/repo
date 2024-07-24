@@ -1,0 +1,10 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['initnull'])
+post_build: aur_post_build
+update_on:
+  - source: github
+    github: vitorafsr/i8kutils
+  - source: aur
+    aur: i8kutils-git
+maintainers:
+  - github: roaldclark
