@@ -2,8 +2,8 @@
 
 pkgname=python-pyreadr
 _pkgname=pyreadr
-pkgver=0.5.0
-pkgrel=3
+pkgver=0.5.1
+pkgrel=1
 pkgdesc='Read and write R RData and Rds files into/from pandas dataframes'
 arch=('x86_64')
 url='https://github.com/ofajardo/pyreadr'
@@ -29,18 +29,8 @@ checkdepends=(
 optdepends=(
   "python-xarray: for reading 3D arrays"
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ofajardo/pyreadr/archive/refs/tags/v${pkgver}.tar.gz"
-        "0001-fix-building-with-zlib-1.3.1.patch"
-)
-sha512sums=('6914344534e10bace76de6a01f9c170a8b264fcf1c4ab756532cbda49d59437be72c322dcea4b7cda0294a69c8947fc4857425bf41598185025bbe3e2613eb1c'
-            '5f39b53d2e414c6998d90feb9b62c639f87d2c8d6e8ce67fb2aa4680d6dd92d9dd6eebfb10a8c0994bab6ab92dccdf088ee892fa475d7b2d2bb73341e1020139')
-
-prepare() {
-  cd "${_pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}/0001-fix-building-with-zlib-1.3.1.patch"
-  # quick fix for numpy 2.0
-  find . -type f -name "*.py" -exec sed -i "s,np.NaN,np.nan,g" {} \;
-}
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ofajardo/pyreadr/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('fc88566d2fb8c0bf58979eb0f5c93b6947f74c95adb186f38f600df0fc801c2ab505125022b8f8685d79423eb23293cbdf058b9f1ba4730f1ad2a2fbead967e5')
 
 build() {
   cd "${_pkgname}-${pkgver}"
