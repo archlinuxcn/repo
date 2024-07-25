@@ -44,6 +44,6 @@ package() {
   install -Dm755 'cpdf' -t "${pkgdir}/usr/bin/"
   install -Dm644 'cpdf.1' -t "${pkgdir}/usr/share/man/man1/"
   install -Dpm644 'cpdfmanual.pdf' -t "${pkgdir}/usr/share/doc/${pkgname}"
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
