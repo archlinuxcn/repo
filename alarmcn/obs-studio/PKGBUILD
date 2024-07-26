@@ -1,17 +1,18 @@
 # Maintainer: Jonathan Steel <jsteel at archlinux.org>
 # Contributor: Benjamin Klettbach <b.klettbach@gmail.com>
+# Contributor: Maciek Marciniak <mm2pl at kotmisia.pl>
 
 pkgname=obs-studio
-pkgver=30.1.2
-pkgrel=5
+pkgver=30.2.1
+pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
 license=('GPL2')
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
          'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
-         'libdatachannel')
-makedepends=('cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio')
+         'libdatachannel' 'uthash')
+makedepends=('cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'nlohmann-json')
 optdepends=('libfdk-aac: FDK AAC codec support'
             'libva-intel-driver: hardware encoding'
             'libva-mesa-driver: hardware encoding'
@@ -19,24 +20,19 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'python: scripting support'
             'sndio: Sndio input client'
             'v4l2loopback-dkms: virtual camera support')
-source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/archive/$pkgver.tar.gz
-        fix_python_binary_loading.patch
-        ignore_unused_submodules.patch
-        0001-obs-ffmpeg-Fix-incompatible-pointer-types-with-FFmpe.patch)
-sha256sums=('490bae1c392b3b344b0270afd8cb887da4bc50bd92c0c426e96713c1ccb9701a'
-            'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd'
-            '60b0ee1f78df632e1a8c13cb0a7a5772b2a4b092c4a2a78f23464a7d239557c3'
-            'f4356ddabd4b54662f685ec88432e2830cdeb1904665d14c64d2daa3ea7d254e')
+source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz
+        nv-codec-headers.tar.gz::https://github.com/FFmpeg/nv-codec-headers/releases/download/n12.1.14.0/nv-codec-headers-12.1.14.0.tar.gz)
+# XXX nv-codec-headers are kept back at version n12.1.14.0 due to OBS not supporting any newer version
+sha256sums=('6fa2f11e9bb492ed1a494d612d8c00dffe62c1a12d5aaa71c49ba950f8e028bc'
+            '62b30ab37e4e9be0d0c5b37b8fee4b094e38e570984d56e1135a6b6c2c164c9f')
 
 prepare() {
-  cd $pkgname-$pkgver
-  patch -Np1 < "$srcdir"/fix_python_binary_loading.patch
-  patch -Np1 < "$srcdir"/ignore_unused_submodules.patch
-  patch -Np1 < "$srcdir"/0001-obs-ffmpeg-Fix-incompatible-pointer-types-with-FFmpe.patch
+  cd $pkgname-$pkgver-sources
 }
 
 build() {
-  cmake -B build -S $pkgname-$pkgver \
+  cmake -B build -S $pkgname-$pkgver-sources \
+    -DFFnvcodec_INCLUDE_DIR="nv-codec-headers-12.1.14.0/include/" \
     -DENABLE_QSV11=OFF \
     -DCMAKE_INSTALL_PREFIX="/usr" \
     -DENABLE_BROWSER=OFF \
@@ -49,6 +45,7 @@ build() {
     -DENABLE_WEBRTC=ON \
     -DOBS_VERSION_OVERRIDE="$pkgver-$pkgrel" \
     -DCALM_DEPRECATION=ON \
+    -DENABLE_WEBSOCKET=OFF \
     -Wno-dev
   cmake --build build
 }
