@@ -1,0 +1,19 @@
+maintainers:
+  - github: Misaka13514
+
+pre_build_script: |
+  tag = _G.newver.lstrip('v')
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('_tagname='):
+      line = f"_tagname='{tag}'"
+    print(line)
+  update_pkgver_and_pkgrel(tag.replace('-', ''))
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: SagerNet/serenity
+    use_latest_release: true
