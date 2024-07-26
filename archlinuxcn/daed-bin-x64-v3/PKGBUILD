@@ -8,8 +8,8 @@ pkgdesc="A modern dashboard for dae, bundled with dae-wing (backend API server) 
 url="https://daeuniverse.github.io/daed"
 arch=('x86_64')
 license=('AGPL-3.0-or-later AND MIT')
-provides=("${_pkgname}")
-conflicts=("${_pkgname}" "${_pkgname}-git")
+provides=("${_pkgname}" "dae")
+conflicts=("${_pkgname}" "${_pkgname}-git" "dae")
 source=("${pkgname}-${pkgver}.zip::https://github.com/daeuniverse/${_pkgname}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip"
        "${_pkgname}-${pkgver}-LICENSE::https://raw.githubusercontent.com/daeuniverse/daed/v${pkgver}/LICENSE")
 install="${pkgname}.install"
