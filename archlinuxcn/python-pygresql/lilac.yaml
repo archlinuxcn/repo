@@ -3,7 +3,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['beeender'])
+pre_build_script: |
+  aur_pre_build(maintainers=['redchenjs'])
+  add_makedepends(['postgresql-libs'])
 
 update_on:
   - source: aur
