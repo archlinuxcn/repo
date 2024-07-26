@@ -11,7 +11,7 @@
 # basic info
 _pkgname="localsend"
 pkgname="$_pkgname"
-pkgver=1.15.1
+pkgver=1.15.2
 pkgrel=1
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
@@ -37,7 +37,7 @@ makedepends=(
 _pkgsrc="$_pkgname-$pkgver"
 _pkgext="tar.gz"
 source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
-sha256sums=('5ebd5aab3586236d9dab8653aad3bb41e9fb06ab7407753c9bfcfe2a3a825dee')
+sha256sums=('2fd2a5280a21222a3aa29a362d8aecfae9cf4e7cc86e24ddbc626744d4a5c9b5')
 
 build() {
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
