@@ -1,6 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=fotema
-pkgver=1.9.5
+pkgver=1.9.6
 pkgrel=1
 pkgdesc="Photo gallery for Linux"
 arch=('x86_64')
@@ -22,12 +22,11 @@ makedepends=(
 )
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
         'i18n.patch')
-sha256sums=('21c8bbc3955f33c36e329fb8d30623e2725eec4084f7067d35c35a742ee37c07'
+sha256sums=('f9db802fe2559f4876db1b3b04458d30c9ad4665bbfa912ff4c8da5121cd9f6e'
             'ebe2f2c74ca282a918c748e7e1e08b0e8f3ec964244746c299211df38e7da396')
 
 prepare() {
   cd "$pkgname-$pkgver"
-  export CARGO_HOME="$srcdir/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
   cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')"
 
@@ -36,7 +35,6 @@ prepare() {
 }
 
 build() {
-  export CARGO_HOME="$srcdir/cargo-home"
   export RUSTUP_TOOLCHAIN=stable
   RUSTFLAGS="-C link-arg=-fuse-ld=mold"
   arch-meson "$pkgname-$pkgver" build
