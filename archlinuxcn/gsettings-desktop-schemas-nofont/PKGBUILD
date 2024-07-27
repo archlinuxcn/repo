@@ -7,13 +7,13 @@ pkgver=46.0
 pkgrel=2
 pkgdesc='Shared GSettings schemas for the desktop (without font dependencies)'
 arch=('any')
-url="https://gitlab.gnome.org/GNOME/${_pkgname%-nofont}"
+url="https://gitlab.gnome.org/GNOME/${_pkgname}"
 license=('LGPL-2.1-or-later')
 depends=('dconf' 'glib2')
 makedepends=('glib2-devel' 'gobject-introspection' 'meson')
-provides=("${_pkgname}")
-conflicts=("${_pkgname}")
-source=("${url}/-/archive/46.0/${_pkgname}-${pkgver}.tar.gz"
+provides=('gsettings-desktop-schemas' 'gsettings-system-schemas')
+conflicts=('gsettings-desktop-schemas' 'gsettings-system-schemas')
+source=("${url}/-/archive/${pkgver}/${_pkgname}-${pkgver}.tar.gz"
         '0001-Revert-default-font.patch')
 sha256sums=('7e61db80e827d0648f58499f505353b319fee2173628afd27c930e1608e15f17'
             '5683807b3f17a5577fdbb9f77be78681c9b935fd81584b38c8f1f0e1a50f5fb0')
