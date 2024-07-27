@@ -1,0 +1,37 @@
+# Maintainer: taotieren <admin@taotieren.com>
+
+pkgname=asciidoctor-web-pdf-git
+pkgver=1.0.0.alpha.16.r5.gc613be3
+pkgrel=1
+pkgdesc="A PDF converter for AsciiDoc based on web technologies. It allows complex layouts to be defined with CSS and JavaScript, while writing the content in AsciiDoc."
+arch=('any')
+url="https://github.com/Mogztter/asciidoctor-web-pdf"
+license=('MIT')
+provides=(${pkgname})
+conflicts=(${pkgname}  ${pkgname%-git} asciidoctor-pdf)
+#replaces=(${pkgname})
+depends=(npm poppler ghostscript)
+makedepends=()
+backup=()
+options=('!strip')
+install=
+source=("${pkgname%-git}::git+${url}.git")
+sha256sums=('SKIP')
+noextract=()
+
+pkgver() {
+    cd "${srcdir}/${pkgname%-git}"
+    git describe --long --tags | sed 's/^v//g;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+    npm install -g --prefix "${pkgdir}/usr" "${srcdir}/${pkgname%-git}"
+
+    # Non-deterministic race in npm gives 777 permissions to random directories.
+    # See https://github.com/npm/cli/issues/1103 for details.
+    find "${pkgdir}/usr" -type d -exec chmod 755 {} +
+
+    # npm gives ownership of ALL FILES to build user
+    # https://bugs.archlinux.org/task/63396
+    chown -R root:root "${pkgdir}"
+}
