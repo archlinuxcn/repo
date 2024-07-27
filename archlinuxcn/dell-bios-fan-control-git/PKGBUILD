@@ -13,16 +13,12 @@ makedepends=('git')
 optdepends=('i8kutils: to control Dell laptop system temperature')
 provides=('dell-bios-fan-control')
 conflicts=('dell-bios-fan-control')
-source=(
-    'git+https://github.com/TomFreudenberg/dell-bios-fan-control.git'
-    'dell-bios-fan-control.service'
-    'dell-bios-fan-control-resume.service'
-)
-sha256sums=(
-    'SKIP'
-    '0a7e12c6c720be14411654b934a7b045a121510079f42788f30af06cedd659c6'
-    '58216810f57ab7574d017451396f132c61c805bba46565b982385c73a479cd9f'
-)
+source=('git+https://github.com/TomFreudenberg/dell-bios-fan-control.git'
+        'dell-bios-fan-control.service'
+        'dell-bios-fan-control-resume.service')
+sha256sums=('SKIP'
+            '37b964f6b2279ff2e8ac6791ac3ce23d0d8e21502a6f644617543e445524b555'
+            '97a224af3ba5c534e1e547aa425d5667f1fe5c2d3cdf0c45c5485768c0de9f77')
 
 pkgver() {
     cd "${srcdir}/${_pkgname}"
