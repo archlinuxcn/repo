@@ -4,12 +4,18 @@ pkgname=clash-meta-alpha-git
 _pkgname=clash-meta
 pkgver=2024072811.c830b8aa
 pkgrel=1
-pkgdesc="Another Clash Kernel by MetaCubeX (git virsion)"
+pkgdesc="Another Clash Kernel by MetaCubeX (git version)"
 arch=(x86_64)
 url="https://github.com/MetaCubeX/mihomo"
 license=(GPL-3.0-or-later)
-depends=(clash-geoip glibc)
-makedepends=(git go)
+depends=(
+    'clash-geoip'
+    'glibc'
+)
+makedepends=(
+    'git'
+    'go'
+)
 provides=(clash-meta clash-meta-alpha)
 conflicts=(clash-meta clash-meta-alpha)
 backup=('etc/clash-meta/config.yaml')
@@ -68,5 +74,5 @@ package() {
     install -Dm644 "$_pkgname.tmpfiles"    "$pkgdir/usr/lib/tmpfiles.d/$_pkgname.conf"
     install -Dm644 docs/config.yaml        "$pkgdir/etc/clash-meta/config.yaml"
     install -Dm644 "$_pkgname.service"     "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
-    ln -s          /etc/clash/Country.mmdb "$pkgdir/etc/$_pkgname/Country.mmdb"
+    ln -s /etc/clash/Country.mmdb          "$pkgdir/etc/$_pkgname/Country.mmdb"
 }
