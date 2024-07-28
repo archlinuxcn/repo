@@ -17,25 +17,22 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=(
 	"git+${url}.git"
-	"keyd.sysusers"
+	"${_pkgname}.sysusers"
 )
 sha256sums=('SKIP'
             'b3fa546c31f61be824a84a33af5c723692e2cedd4e5f87ff655e90f33227395d')
 
 pkgver() {
-	cd "${_pkgname}/"
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	git -C "${_pkgname}/" describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
-	cd "${_pkgname}/"
-	make DESTDIR="${pkgdir}" PREFIX=/usr
+	make -C "${_pkgname}/" DESTDIR="${pkgdir}" PREFIX=/usr
 }
 
 package() {
 	cd "${_pkgname}/"
 	make DESTDIR="${pkgdir}" PREFIX=/usr install
-	install -Dm644 ../keyd.sysusers "${pkgdir}/usr/lib/sysusers.d/keyd.conf"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/keyd"
-	install -Dm644 keyd.service -t "${pkgdir}/usr/lib/systemd/system/"
+	install -Dm644 "../${_pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${_pkgname}.conf"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 }
