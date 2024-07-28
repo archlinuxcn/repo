@@ -35,11 +35,11 @@ fi
 ###################################################################################
 
 pkgbase=linux-amd-znver2
-pkgver=6.9.0
-_pkgver=6.9
+pkgver=6.10.1
+_pkgver=6.10.1
 pkgrel=1
-major=6.9
-commit=1e29f0ecf2221b2fbf580752f42ab5040d88b5e0
+major=6.10
+commit=c46c57d605e71bd94b6842006b68ce9277fddf15
 arch=(x86_64)
 url='https://www.kernel.org/'
 license=(GPL-2.0-only)
@@ -95,7 +95,6 @@ source=(https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$_pkgver.tar.xz
         0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
         0002-drivers-firmware-skip-simpledrm-if-nvidia-drm.modese.patch
         0003-arch-Kconfig-Default-to-maximum-amount-of-ASLR-bits.patch
-        0004-docs-kernel_include.py-Fix-build-with-docutils-0.21..patch
         more-uarches-for-kernel-6.8-rc4+.patch)
 
 export KBUILD_BUILD_HOST=archlinux
@@ -171,6 +170,15 @@ prepare(){
   msg "Enable AMD Zen2 support"
   scripts/config --disable CONFIG_GENERIC_CPU
   scripts/config --enable CONFIG_MZEN2
+
+  sleep 2s
+
+  plain ""
+
+  msg "Set Font"
+  scripts/config --disable CONFIG_FONTS
+  scripts/config --enable CONFIG_FONT_8x8
+  scripts/config --enable CONFIG_FONT_8x16
 
   sleep 2s
 
@@ -340,12 +348,11 @@ _package-headers(){
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
 }
 
-sha256sums=('24fa01fb989c7a3e28453f117799168713766e119c5381dac30115f18f268149'
-            '5f8a4de3f17d6d1b624e70514327b05fafffe8af913f95829b9c6830b4a8a4e3'
-            'e3ff7450ac5ce41729febf471cba26446f88c3e711808cb01a012ed4d9f8d345'
-            '29c297704b3e6a8b865457061dd829e449e4c7a5fda29b74352738643ef649cc'
-            '87470fae9a8a0080c2cb3d38be224b3ccbcb2004316207e0d148ff8a62764a9e'
-            '1e36095b05ee849ad05e3696f3e16cc15e0467b7065ec8fe4624bffa3afaf6b5'
+sha256sums=('70109dfd1cd1c5f8a58eb1cb37122b9bf93f9c6a6280bf91019263c7339cf76b'
+            'b7fc249683be13c565a941976c2d2c0bc90185ae1bf97779ee0c269fb3d90a37'
+            '34af4212998f8866c13edbaca3f6da262aba7807856802b7588426e6cd5359c9'
+            '893a8b1f0cfd419f22b04aebc2790f5384d42ed7e2f3703774b69afce7b72cdc'
+            '997777f15a43e2e5f9e97e61f1cccbd00e62f236851a1016d43ecb6865375f35'
             'f4e7fcd011f2691840d2c8c2361dca850a78ea33cc5c24d2e27c3e0294fd1dc5')
 
 pkgname=($pkgbase $pkgbase-headers)

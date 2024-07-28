@@ -1,7 +1,7 @@
-From e48fc436c0546b349d510ba457097bd99f3f526c Mon Sep 17 00:00:00 2001
+From 75dcda9b2a1a306a6fbfb923c53303eb13ce4955 Mon Sep 17 00:00:00 2001
 From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
 Date: Sat, 13 Jan 2024 15:29:25 +0100
-Subject: [PATCH 3/4] arch/Kconfig: Default to maximum amount of ASLR bits
+Subject: [PATCH 3/3] arch/Kconfig: Default to maximum amount of ASLR bits
 
 To mitigate https://zolutal.github.io/aslrnt/; do this with a patch to
 avoid having to enable `CONFIG_EXPERT`.
@@ -10,10 +10,10 @@ avoid having to enable `CONFIG_EXPERT`.
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/Kconfig b/arch/Kconfig
-index 30f793027..318a4e750 100644
+index 975dd22a2..de69b8f5b 100644
 --- a/arch/Kconfig
 +++ b/arch/Kconfig
-@@ -1033,7 +1033,7 @@ config ARCH_MMAP_RND_BITS
+@@ -1050,7 +1050,7 @@ config ARCH_MMAP_RND_BITS
  	int "Number of bits to use for ASLR of mmap base address" if EXPERT
  	range ARCH_MMAP_RND_BITS_MIN ARCH_MMAP_RND_BITS_MAX
  	default ARCH_MMAP_RND_BITS_DEFAULT if ARCH_MMAP_RND_BITS_DEFAULT
@@ -22,7 +22,7 @@ index 30f793027..318a4e750 100644
  	depends on HAVE_ARCH_MMAP_RND_BITS
  	help
  	  This value can be used to select the number of bits to use to
-@@ -1067,7 +1067,7 @@ config ARCH_MMAP_RND_COMPAT_BITS
+@@ -1084,7 +1084,7 @@ config ARCH_MMAP_RND_COMPAT_BITS
  	int "Number of bits to use for ASLR of mmap base address for compatible applications" if EXPERT
  	range ARCH_MMAP_RND_COMPAT_BITS_MIN ARCH_MMAP_RND_COMPAT_BITS_MAX
  	default ARCH_MMAP_RND_COMPAT_BITS_DEFAULT if ARCH_MMAP_RND_COMPAT_BITS_DEFAULT
@@ -32,5 +32,5 @@ index 30f793027..318a4e750 100644
  	help
  	  This value can be used to select the number of bits to use to
 -- 
-2.45.1
+2.45.2
 
