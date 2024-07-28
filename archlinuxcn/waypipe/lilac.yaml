@@ -4,5 +4,9 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: waypipe
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+
 maintainers:
   - github: roaldclark
