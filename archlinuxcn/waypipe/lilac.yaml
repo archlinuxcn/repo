@@ -7,6 +7,15 @@ update_on:
   - source: alpm
     alpm: ffmpeg
     provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libswscale.so
+  - source: alpm
+    alpm: libva
+    provided: libva.so
 
 maintainers:
   - github: roaldclark
