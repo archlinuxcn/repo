@@ -4,7 +4,7 @@
 _module="markdownify"
 _pkgname="python-$_module"
 pkgname="$_pkgname"
-pkgver=0.12.1
+pkgver=0.13.1
 pkgrel=1
 pkgdesc="Convert HTML to Markdown"
 url="https://github.com/matthewwithanm/python-markdownify"
@@ -19,46 +19,26 @@ depends=(
 makedepends=(
   'python-build'
   'python-installer'
-  'python-setuptools'
+  'python-setuptools-scm'
   'python-wheel'
 )
-checkdepends=(
-  'python-pytest'
-)
 
-options=(!emptydirs)
-
-_pkgsrc="$_module-${pkgver%%.r*}"
+_pkgsrc="$_module-$pkgver"
 _pkgext="tar.gz"
 source=(
-  "$_pkgsrc.$_pkgext"::"https://pypi.io/packages/source/${_module::1}/$_module/$_module-${pkgver%%.r*}.$_pkgext"
+  "$_pkgsrc.$_pkgext"::"https://pypi.io/packages/source/${_module::1}/$_module/$_module-$pkgver.$_pkgext"
 )
 sha256sums=(
-  '1fb08c618b30e0ee7a31a39b998f44a18fb28ab254f55f4af06b6d35a2179e27'
+  'ab257f9e6bd4075118828a28c9d02f8a4bfeb7421f558834aa79b2dfeb32a098'
 )
-
-prepare() {
-  cd "$_pkgsrc"
-
-  # don't package tests
-  sed -E \
-    -e 's@^(\s*packages=find_packages).*$@\1(exclude=["tests"]),@' \
-    -i setup.py
-}
 
 build() {
   cd "$_pkgsrc"
   python -m build --wheel --no-isolation
 }
 
-check() {
-  cd "$_pkgsrc"
-  python -m pytest
-}
-
 package() {
   cd "$_pkgsrc"
-  python -m installer --destdir="$pkgdir" "$(ls -1 dist/*.whl | sort -rV | head -1)"
-
+  python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
