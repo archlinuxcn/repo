@@ -1,7 +1,8 @@
-Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
-Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Source: https://gitlab.gnome.org/Community/Ubuntu/mutter/-/tree/triple-buffering-v4-46
----
+From a04f307c44746fadb957aaf0f406a4fb9c2d5748 Mon Sep 17 00:00:00 2001
+From: Mingi Sung <sungmg@saltyming.net>
+Date: Sun, 14 Jul 2024 08:22:25 +0900
+Subject: [PATCH] Merge remote-tracking branch 'Ubuntu/triple-buffering-v4-46'
+ into gnome-46
 
 Use triple buffering if and when the previous frame is running late.
 This means the next frame will be dispatched on time instead of also starting
@@ -13,12 +14,12 @@ because even a fixed frequency GPU will benefit from not over-sleeping anymore.
 If the previous frame is not running late then we stick to double buffering so
 there's no latency penalty when the system is able to maintain full frame rate.
 
----
-From 8a4f0f780a66c3b5c77af7ea4729ae8a1ae1352b Mon Sep 17 00:00:00 2001
-From: Mingi Sung <sungmg@saltyming.net>
-Date: Sun, 23 Jun 2024 20:53:22 +0900
-Subject: [PATCH] Merge branch 'triple-buffering-v4-46' into gnome-46
+Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
+Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
+Source: https://gitlab.gnome.org/Community/Ubuntu/mutter/-/tree/triple-buffering-v4-46
+Commit: 0d46de978d3dccc3784ba1902cbd9dada61d8a86
 
+Signed-off-by: Mingi Sung <sungmg@saltyming.net>
 ---
  clutter/clutter/clutter-frame-clock.c      | 369 +++++++++++++++++++++++------
  clutter/clutter/clutter-frame-clock.h      |  11 +-
@@ -39,7 +40,7 @@ Subject: [PATCH] Merge branch 'triple-buffering-v4-46' into gnome-46
  16 files changed, 779 insertions(+), 173 deletions(-)
 
 diff --git a/clutter/clutter/clutter-frame-clock.c b/clutter/clutter/clutter-frame-clock.c
-index 30a319f60..75e33088c 100644
+index 30a319f604..75e33088c1 100644
 --- a/clutter/clutter/clutter-frame-clock.c
 +++ b/clutter/clutter/clutter-frame-clock.c
 @@ -42,6 +42,15 @@ enum
@@ -712,7 +713,7 @@ index 30a319f60..75e33088c 100644
    object_class->dispose = clutter_frame_clock_dispose;
  
 diff --git a/clutter/clutter/clutter-frame-clock.h b/clutter/clutter/clutter-frame-clock.h
-index a7be5ef31..bfc89bde0 100644
+index a7be5ef316..bfc89bde09 100644
 --- a/clutter/clutter/clutter-frame-clock.h
 +++ b/clutter/clutter/clutter-frame-clock.h
 @@ -33,6 +33,12 @@ typedef enum _ClutterFrameResult
@@ -740,7 +741,7 @@ index a7be5ef31..bfc89bde0 100644
  
  GString * clutter_frame_clock_get_max_render_time_debug_info (ClutterFrameClock *frame_clock);
 diff --git a/clutter/clutter/clutter-frame-private.h b/clutter/clutter/clutter-frame-private.h
-index ef66b874e..ce140560a 100644
+index ef66b874ed..ce140560a8 100644
 --- a/clutter/clutter/clutter-frame-private.h
 +++ b/clutter/clutter/clutter-frame-private.h
 @@ -36,6 +36,7 @@ struct _ClutterFrame
@@ -752,7 +753,7 @@ index ef66b874e..ce140560a 100644
  
  CLUTTER_EXPORT
 diff --git a/clutter/clutter/clutter-frame.c b/clutter/clutter/clutter-frame.c
-index 7436f9f18..53c289b2c 100644
+index 7436f9f182..53c289b2c5 100644
 --- a/clutter/clutter/clutter-frame.c
 +++ b/clutter/clutter/clutter-frame.c
 @@ -115,3 +115,16 @@ clutter_frame_set_result (ClutterFrame       *frame,
@@ -773,7 +774,7 @@ index 7436f9f18..53c289b2c 100644
 +  return frame->hints;
 +}
 diff --git a/clutter/clutter/clutter-frame.h b/clutter/clutter/clutter-frame.h
-index 34f0770bd..c7b3d02ac 100644
+index 34f0770bd7..c7b3d02acb 100644
 --- a/clutter/clutter/clutter-frame.h
 +++ b/clutter/clutter/clutter-frame.h
 @@ -54,4 +54,11 @@ void clutter_frame_set_result (ClutterFrame       *frame,
@@ -789,7 +790,7 @@ index 34f0770bd..c7b3d02ac 100644
 +
  G_DEFINE_AUTOPTR_CLEANUP_FUNC (ClutterFrame, clutter_frame_unref)
 diff --git a/clutter/clutter/clutter-stage-view.c b/clutter/clutter/clutter-stage-view.c
-index f5188e2ac..d53e37785 100644
+index f5188e2acf..d53e377851 100644
 --- a/clutter/clutter/clutter-stage-view.c
 +++ b/clutter/clutter/clutter-stage-view.c
 @@ -898,14 +898,21 @@ handle_frame_clock_frame (ClutterFrameClock *frame_clock,
@@ -817,7 +818,7 @@ index f5188e2ac..d53e37785 100644
    _clutter_stage_window_finish_frame (stage_window, view, frame);
  
 diff --git a/cogl/cogl/cogl-onscreen-private.h b/cogl/cogl/cogl-onscreen-private.h
-index 959a60533..86d8ea2d5 100644
+index 959a60533b..86d8ea2d5f 100644
 --- a/cogl/cogl/cogl-onscreen-private.h
 +++ b/cogl/cogl/cogl-onscreen-private.h
 @@ -78,4 +78,7 @@ COGL_EXPORT CoglFrameInfo *
@@ -830,7 +831,7 @@ index 959a60533..86d8ea2d5 100644
 +COGL_EXPORT unsigned int
 +cogl_onscreen_count_pending_frames (CoglOnscreen *onscreen);
 diff --git a/cogl/cogl/cogl-onscreen.c b/cogl/cogl/cogl-onscreen.c
-index afb648bcd..086be7ed7 100644
+index afb648bcd8..086be7ed7a 100644
 --- a/cogl/cogl/cogl-onscreen.c
 +++ b/cogl/cogl/cogl-onscreen.c
 @@ -515,6 +515,14 @@ cogl_onscreen_pop_head_frame_info (CoglOnscreen *onscreen)
@@ -849,7 +850,7 @@ index afb648bcd..086be7ed7 100644
  cogl_onscreen_add_frame_callback (CoglOnscreen *onscreen,
                                    CoglFrameCallback callback,
 diff --git a/src/backends/meta-stage-impl.c b/src/backends/meta-stage-impl.c
-index 7aa24439d..727e1a5f3 100644
+index 7aa24439d7..727e1a5f30 100644
 --- a/src/backends/meta-stage-impl.c
 +++ b/src/backends/meta-stage-impl.c
 @@ -774,6 +774,8 @@ meta_stage_impl_redraw_view (ClutterStageWindow *stage_window,
@@ -862,7 +863,7 @@ index 7aa24439d..727e1a5f3 100644
                                          stage_view,
                                          scanout,
 diff --git a/src/backends/native/meta-kms-impl-device.c b/src/backends/native/meta-kms-impl-device.c
-index 6758982a6..315ed2717 100644
+index 6758982a6a..315ed27174 100644
 --- a/src/backends/native/meta-kms-impl-device.c
 +++ b/src/backends/native/meta-kms-impl-device.c
 @@ -1586,9 +1586,11 @@ meta_kms_impl_device_handle_update (MetaKmsImplDevice *impl_device,
@@ -879,7 +880,7 @@ index 6758982a6..315ed2717 100644
  
    feedback = do_process (impl_device, latch_crtc, update, flags);
 diff --git a/src/backends/native/meta-kms.c b/src/backends/native/meta-kms.c
-index 795008b21..70d1e792c 100644
+index d41fcefb5a..4809ca0593 100644
 --- a/src/backends/native/meta-kms.c
 +++ b/src/backends/native/meta-kms.c
 @@ -63,6 +63,8 @@ struct _MetaKms
@@ -899,7 +900,7 @@ index 795008b21..70d1e792c 100644
    meta_kms_run_impl_task_sync (kms, prepare_shutdown_in_impl, NULL, NULL);
    meta_thread_flush_callbacks (META_THREAD (kms));
  
-@@ -408,6 +411,12 @@ meta_kms_new (MetaBackend   *backend,
+@@ -413,6 +416,12 @@ meta_kms_new (MetaBackend   *backend,
    return kms;
  }
  
@@ -913,7 +914,7 @@ index 795008b21..70d1e792c 100644
  meta_kms_finalize (GObject *object)
  {
 diff --git a/src/backends/native/meta-kms.h b/src/backends/native/meta-kms.h
-index 743401406..f6b19520b 100644
+index 7434014063..f6b19520be 100644
 --- a/src/backends/native/meta-kms.h
 +++ b/src/backends/native/meta-kms.h
 @@ -60,6 +60,8 @@ MetaKmsDevice * meta_kms_create_device (MetaKms            *kms,
@@ -926,7 +927,7 @@ index 743401406..f6b19520b 100644
                          MetaKmsFlags   flags,
                          GError       **error);
 diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
-index 1a31f04a1..9836663d0 100644
+index 1a31f04a16..9836663d0c 100644
 --- a/src/backends/native/meta-onscreen-native.c
 +++ b/src/backends/native/meta-onscreen-native.c
 @@ -76,7 +76,7 @@ typedef struct _MetaOnscreenNativeSecondaryGpuState
@@ -1581,7 +1582,7 @@ index 1a31f04a1..9836663d0 100644
  
  static void
 diff --git a/src/backends/native/meta-onscreen-native.h b/src/backends/native/meta-onscreen-native.h
-index 0e1193325..e30357d19 100644
+index 0e1193325a..e30357d19d 100644
 --- a/src/backends/native/meta-onscreen-native.h
 +++ b/src/backends/native/meta-onscreen-native.h
 @@ -48,6 +48,8 @@ void meta_onscreen_native_dummy_power_save_page_flip (CoglOnscreen *onscreen);
@@ -1594,7 +1595,7 @@ index 0e1193325..e30357d19 100644
                                      MetaRendererView *view);
  
 diff --git a/src/backends/native/meta-renderer-native.c b/src/backends/native/meta-renderer-native.c
-index aa76d018c..3c22b4e86 100644
+index aa76d018ca..3c22b4e86a 100644
 --- a/src/backends/native/meta-renderer-native.c
 +++ b/src/backends/native/meta-renderer-native.c
 @@ -731,12 +731,18 @@ static gboolean
@@ -1664,7 +1665,7 @@ index aa76d018c..3c22b4e86 100644
    g_hash_table_remove_all (renderer_native->mode_set_updates);
  
 diff --git a/src/tests/native-kms-render.c b/src/tests/native-kms-render.c
-index f5ebc23fe..2f870fdc3 100644
+index f5ebc23fec..2f870fdc33 100644
 --- a/src/tests/native-kms-render.c
 +++ b/src/tests/native-kms-render.c
 @@ -39,6 +39,8 @@
