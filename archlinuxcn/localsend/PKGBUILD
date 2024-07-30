@@ -11,7 +11,7 @@
 # basic info
 _pkgname="localsend"
 pkgname="$_pkgname"
-pkgver=1.15.2
+pkgver=1.15.3
 pkgrel=1
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
@@ -24,20 +24,18 @@ depends=(
 makedepends=(
   'clang'
   'cmake'
+  'fvm' # AUR
   'git'
   'lld'
   'llvm'
   'ninja'
   'patchelf'
-
-  ## AUR
-  'fvm'
 )
 
 _pkgsrc="$_pkgname-$pkgver"
 _pkgext="tar.gz"
 source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
-sha256sums=('2fd2a5280a21222a3aa29a362d8aecfae9cf4e7cc86e24ddbc626744d4a5c9b5')
+sha256sums=('4fd10964e641cad7d447f642dcb0dc30f16aeb252ea73fb686117fd2b2f2e590')
 
 build() {
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
@@ -85,7 +83,7 @@ Terminal=false
 Categories=Utility;Network;
 END
 
-  #license
+  # license
   install -Dm644 "$srcdir/$_pkgsrc/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
 
   # permissions
