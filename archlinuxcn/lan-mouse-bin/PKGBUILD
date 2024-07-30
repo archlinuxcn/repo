@@ -3,7 +3,7 @@
 
 pkgname=lan-mouse-bin
 _pkgname=lan-mouse
-pkgver=0.8.0
+pkgver=0.9.1
 pkgrel=1
 pkgdesc="Software KVM Switch / mouse & keyboard sharing software for Local Area Networks"
 url="https://github.com/feschber/lan-mouse"
@@ -12,7 +12,7 @@ arch=(any)
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=(
-  "https://github.com/ferdinandschober/lan-mouse/releases/download/v$pkgver/lan-mouse"
+  "https://github.com/feschber/lan-mouse/releases/download/v$pkgver/lan-mouse"
   "de.feschber.LanMouse.desktop"
   "de.feschber.LanMouse.svg"
   "LICENSE"
