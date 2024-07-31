@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373' '3567' '3751')
-_merge_requests_to_use=('1441' '3751')
+# Merge Requests List: ('579' '1441' '3373' '3567' '3751' '3912')
+_merge_requests_to_use=('1441' '3751' '3912')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -33,7 +33,7 @@ else
 fi
 epoch=1
 pkgver=46.3.1+r5+g1ccf2cfb56
-pkgrel=1
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -117,17 +117,20 @@ source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
         'mr3567.patch'
-        'mr3751.patch')
+        'mr3751.patch'
+        'mr3912.patch')
 sha256sums=('893c784ff14ab886615e7a58cd37c2409895fd73b8c95cc83fca209fbecbc1aa'
             '7a5e1bcc90bbab100bf57b0dd052a96f34dd1673a5f43e53acd34ee648fd7b29'
             '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
             '47885ffe6c0aa06fa798cc0b9b48b4f6acf21b6f250b7003819db3854d52635a'
-            '9d925b810629074285388b5a1a9a88514a6cb45463a98ada6f66c2cba2ad9d2f')
+            '9d925b810629074285388b5a1a9a88514a6cb45463a98ada6f66c2cba2ad9d2f'
+            '43ea9e96f2bafaa40edc48510b1391a055ee507af82d81721fb76752c9295c6b')
 b2sums=('3d2fccc192c53d7c80ba7f6d97e6392d8e5d6d884161b4b9d120294cc95627167e45d43737374781a8e52ca64e21caab3a07abb7bc38e3f358e593c43d9e69c6'
         '55bf09c286a361297952dc55670e3974ad35a91d54649892259fe423c422c6580e00e9f194bad97bebe3c53a65858a23d6e332d426c8572bd14cdc8e5cbcbbfb'
         '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
         '8e57fa09e4742cf350436c5d54f3114495543151df71fbb684199d85ca9b138bcedd1dfb5df5724d0efc74aa786f6b1ebf54f3c260a48a4937a700dcb1d5b178'
-        'f720718049c1f9d0f338c203a5ae4520b5e7079b57e692ec95d8183705d7b7627ccd7d3d350d0010d0b225226641afccd699b65a81bd044fd32c441d413a0779')
+        'f720718049c1f9d0f338c203a5ae4520b5e7079b57e692ec95d8183705d7b7627ccd7d3d350d0010d0b225226641afccd699b65a81bd044fd32c441d413a0779'
+        'f7a7ef368d2d15cc7edcb1d2def23ed9a349410620aeebe83d8ca0e612dad868e7a2fe731323bd4382fb4cef71d65a15c849df0b4ff0f8da972261728fdf6f6f')
 
 for mr in "${_merge_requests_to_use[@]}"; do
   if [ '3567' = "$mr" ]; then
@@ -241,6 +244,13 @@ prepare() {
   # Comment: This commit makes input methods work in text-input-v1 only clients.
   #          (mostly Chromium/Electron based apps with Ozone Wayland.)
   pick_mr '3751' 'mr3751.patch' 'patch'
+
+  # Title: backends/native: Avoid duplicating or losing KMS property sets
+  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3912
+  # Type: 1
+  # Status: 2
+  pick_mr '3912' 'mr3912.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>

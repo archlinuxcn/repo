@@ -1,0 +1,81 @@
+From cd9e973930c5a93c7dc752a9b041a4ab649165ee Mon Sep 17 00:00:00 2001
+From: Daniel van Vugt <daniel.van.vugt@canonical.com>
+Date: Mon, 29 Jul 2024 17:44:53 +0800
+Subject: [PATCH] backends/native: Avoid duplicating or losing KMS property
+ sets
+
+When triple buffering, `meta_onscreen_native_prepare_frame` for the next
+frame is called before `notify_view_crtc_presented` for the previous frame.
+So our booleans were unfortunately still TRUE in the second prepare_frame,
+resulting in two frames with the same property updates.
+
+When double buffering, having roughly one frame interval between
+`meta_onscreen_native_prepare_frame` and `notify_view_crtc_presented`
+meant that property updates signalled between the swap and presentation
+wouldn't get attached to a KMS update, and would be forgotten when
+`notify_view_crtc_presented` resets the flags to FALSE.
+
+Signed-off-by: Mingi Sung <sungmg@saltyming.net>
+---
+ src/backends/native/meta-onscreen-native.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
+index 1a31f04a16..43a7d186a4 100644
+--- a/src/backends/native/meta-onscreen-native.c
++++ b/src/backends/native/meta-onscreen-native.c
+@@ -225,7 +225,6 @@ notify_view_crtc_presented (MetaRendererView *view,
+   CoglFramebuffer *framebuffer =
+     clutter_stage_view_get_onscreen (stage_view);
+   CoglOnscreen *onscreen = COGL_ONSCREEN (framebuffer);
+-  MetaOnscreenNative *onscreen_native = META_ONSCREEN_NATIVE (onscreen);
+   CoglFrameInfo *frame_info;
+   MetaCrtc *crtc;
+ 
+@@ -233,11 +232,6 @@ notify_view_crtc_presented (MetaRendererView *view,
+ 
+   g_return_if_fail (frame_info != NULL);
+ 
+-  onscreen_native->is_gamma_lut_invalid = FALSE;
+-  onscreen_native->is_privacy_screen_invalid = FALSE;
+-  onscreen_native->is_color_space_invalid = FALSE;
+-  onscreen_native->is_hdr_metadata_invalid = FALSE;
+-
+   crtc = META_CRTC (meta_crtc_kms_from_kms_crtc (kms_crtc));
+   maybe_update_frame_info (crtc, frame_info, time_us, flags, sequence);
+ 
+@@ -1786,6 +1780,7 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
+ 
+       gamma = meta_crtc_kms_peek_gamma_lut (crtc_kms);
+       meta_kms_update_set_crtc_gamma (kms_update, kms_crtc, gamma);
++      onscreen_native->is_gamma_lut_invalid = FALSE;
+     }
+ 
+   if (onscreen_native->is_privacy_screen_invalid)
+@@ -1800,6 +1795,7 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
+ 
+       enabled = meta_output_is_privacy_screen_enabled (onscreen_native->output);
+       meta_kms_update_set_privacy_screen (kms_update, kms_connector, enabled);
++      onscreen_native->is_privacy_screen_invalid = FALSE;
+     }
+ 
+   if (onscreen_native->is_color_space_invalid)
+@@ -1814,6 +1810,7 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
+ 
+       color_space = meta_output_peek_color_space (onscreen_native->output);
+       meta_kms_update_set_color_space (kms_update, kms_connector, color_space);
++      onscreen_native->is_color_space_invalid = FALSE;
+     }
+ 
+   if (onscreen_native->is_hdr_metadata_invalid)
+@@ -1828,6 +1825,7 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
+ 
+       metadata = meta_output_peek_hdr_metadata (onscreen_native->output);
+       meta_kms_update_set_hdr_metadata (kms_update, kms_connector, metadata);
++      onscreen_native->is_hdr_metadata_invalid = FALSE;
+     }
+ }
+ 
+-- 
+2.45.2
+
