@@ -14,6 +14,11 @@ makedepends=("python-setuptools")
 source=("$url/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('21b4925e678955b1003b37663e6c5032eec8580e6cec018a95775d21b74ae2d1')
 
+prepare() {
+  cd "$_pkgname-$pkgver"
+  sed -i -e 's/"-Werror"/"-g"/' setup.py
+}
+
 build() {
   cd "$_pkgname-$pkgver"
   python setup.py build
