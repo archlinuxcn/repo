@@ -15,3 +15,4 @@ sha1sums=('c9a7f8ca0dfe5a9f6da6c4aac1f8eebb98a5deb4')
 package() {
     install -D -o root -m 755 -d "$pkgdir/usr/share/kwin/scripts/karousel"
     cp -r package/* "$pkgdir/usr/share/kwin/scripts/karousel/"
+}
