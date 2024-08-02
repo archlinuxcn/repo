@@ -20,7 +20,7 @@ declare -gA _caches=(
 
 pkgname=anki
 pkgver=24.06.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
@@ -108,6 +108,7 @@ prepare() {
     pacman -Qo $(which cargo) | grep -q rustup && rustup update
     # fetch rust packages
     export CARGO_HOME="$srcdir/${_caches[cargo]}"       # do not litter in ~
+    cargo update time@0.3.34 --precise 0.3.36	# allows to build with newer rust versions https://github.com/time-rs/time/issues/693
     cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 
 
@@ -137,13 +138,13 @@ build() {
     export CARGO_HOME="$srcdir/${_caches[cargo]}"    # do not litter in ~
     export RELEASE=2	        # anki-internal variable for optimization
     				# set to "1" for faster but less optimized build
+    export OFFLINE_BUILD=1 # do not download anything, disables git checks
     # if you want to use your linker of choice, comment out the following lines and disbale the mold line
     # This appears to create issues for memory-constrained (<= 8GB) systems
     # use fat LTO objects, allows for LTO, needed for rust crate "ring"
     # See https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20 and https://github.com/briansmith/ring/issues/1444
     # export CFLAGS+=' -ffat-lto-objects'
     # ./ninja wheels -v
-    export OFFLINE_BUILD=1 # do not download anything, disables git checks
     mold -run ./ninja wheels -v
 }
 
