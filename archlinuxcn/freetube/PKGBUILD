@@ -3,7 +3,7 @@
 
 pkgname=freetube
 _pkgname=FreeTube
-pkgver=0.21.2
+pkgver=0.21.3
 pkgrel=1
 pkgdesc='An open source desktop YouTube player built with privacy in mind.'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -14,7 +14,7 @@ url=https://freetubeapp.io
 source=(https://github.com/FreeTubeApp/FreeTube/archive/v$pkgver-beta.tar.gz
         freetube.desktop
         freetube.sh)
-sha256sums=(548c1f5f5ac0d4965123783760ff1f472c69858dcdc8d848b451774ac3cdd620
+sha256sums=(4454c94c5fc2290c31006f5897f06b8132154fc8d889f872de100461842541d9
             ada2b4b8f6a1e8896acbce4f4d311228d2c86026c273ffa00afa3247294f8b1e
 			380704e34595fd430ab48dcf778e1c671757f914f7b81ac6707dce13ca3a67f6)
 
