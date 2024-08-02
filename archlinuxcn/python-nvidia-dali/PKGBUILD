@@ -56,6 +56,9 @@ prepare() {
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
   # fix lib not found error
   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${srcdir}/build/dali/python/nvidia/dali:${srcdir}/build/lib"
+  # fix missing cstdint header
+  # ref https://github.com/NVIDIA/DALI/issues/5591
+  sed -i '18i#include <cstdint>' dali/util/uri.h
 }
 
 build() {
@@ -91,7 +94,7 @@ build() {
   python -m build --wheel --no-isolation
   # built tf plugin
   cmake -B ${srcdir}/build-tf \
-    -DCUDA_VERSION=12.3 \
+    -DCUDA_VERSION=12.5.1 \
     -S ${srcdir}/${pkgname}/dali_tf_plugin
   make -C ${srcdir}/build-tf
 }
