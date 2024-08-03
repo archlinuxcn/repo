@@ -53,13 +53,14 @@ pkgver() {
 
 prepare() {
 	cd Qcm
-	if [ -d build ]; then
-		echo "Deleting ${srcdir}/Qcm/build..."
+
+	if [ -d qml_material ]; then
+		echo "Deleting ${srcdir}/Qcm/qml_material..."
 		rm -rf build
 	fi
 
 	git submodule update --init
-	mkdir build
+	mkdir -p build
 }
 
 build() {
@@ -77,5 +78,6 @@ package() {
 	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${APP_ID}.svg"
 	install -Dm644 "app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/${APP_ID}.desktop"
 	install -Dm755 "build/app/Qcm" -t "${pkgdir}/usr/bin/"
+	install -Dm755 build/{qcm_interface/libqcm_interface,asio_helper/libqcm_asio}.so -t "${pkgdir}/usr/lib/"
 	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
