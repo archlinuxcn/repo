@@ -5,9 +5,9 @@
 
 pkgname=qt5-wayland-decorations
 _basever=5.15.14
-pkgver=5.15.14+kde+r58
+pkgver=5.15.14+kde+r59
 pkgrel=1
-_commit=11e099c6b7fbec0e198bffaf8016676ef430cfba
+_commit=16e1ce54c6a83e90af2273e8d4eb3f7f3369440b
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -29,7 +29,7 @@ source=("git+https://invent.kde.org/qt/qt/qtwayland#commit=${_commit}"
         "${_fpatchfile100}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile100}"
         "${_fpatchfile101}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile101}"
         "${_fpatchfile102}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile102}")
-sha256sums=('e659f4b1e029866c7475822837b3db019a5821ffcb8a85d72e7edec9ef42a6d6'
+sha256sums=('35138ab4dcfb481245c1f12a0eacf79927107b47a34de483a4448a4105e74774'
             '5b606c5526b44c0db9f5f7fd4be91c95bcb73bd06af304589c9f8c1922607fca'
             '4d8c5d686666cbaae7550ec3defee66ea56ca624152c56c51ff945693706c29d'
             '569ae734860335b72a0fc04e3418bc87086f574baf8db22c0dc5ba0846e22d4f')
