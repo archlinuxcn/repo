@@ -2,8 +2,8 @@
 
 _name=imread
 pkgname=python-imread
-pkgver=0.7.5
-pkgrel=2
+pkgver=0.7.6
+pkgrel=1
 pkgdesc='Read images to numpy arrays'
 arch=('x86_64')
 url='https://github.com/luispedro/imread'
@@ -26,7 +26,7 @@ optdepends=(
 )
 
 source=("${_name}-${pkgver}.tar.gz::https://github.com/luispedro/imread/archive/v${pkgver}.tar.gz")
-sha256sums=('e743cdac57d478a9c6efa00d69c43ea32bbe421497f3d70286608536093fcb28')
+sha256sums=('f0ab1cb5ec7eb8b61ad8f462c467e994f44790cd226c13f12439b14a46611b73')
 
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
