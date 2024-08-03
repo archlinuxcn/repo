@@ -3,7 +3,7 @@
 pkgname=librewolf
 _pkgname=LibreWolf
 pkgver=128.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -91,17 +91,11 @@ source=(
   https://gitlab.com/api/v4/projects/32320088/packages/generic/librewolf-source/${pkgver}-${pkgrel}/librewolf-${pkgver}-${pkgrel}.source.tar.gz # {,.sig} sig files are currently broken, it seems
   $pkgname.desktop
   "default192x192.png"
-  ${_arch_git}/a98925a6a72a94fdd46f84ba76ec9be25da682aa/0001-Bug-1898476-Wayland-Move-MozContainerSurfaceLock-fro.patch
-  ${_arch_git}/a98925a6a72a94fdd46f84ba76ec9be25da682aa/0002-Bug-1898476-Wayland-Provide-surface-lock-by-GtkCompo.patch
-  ${_arch_git}/a98925a6a72a94fdd46f84ba76ec9be25da682aa/0003-Bug-1898476-Wayland-Lock-Wayland-surface-before-Swap.patch
 )
 
-sha256sums=('ee4afcfe0d42da5a3b8002ed867134ffa0ccf83a29402ecd311bbc3ccfb6517c'
+sha256sums=('df1033b7d825da65e1892f599e65525e8d138374f75c5ebb76ee13ab818b4020'
             '7d01d317b7db7416783febc18ee1237ade2ec86c1567e2c2dd628a94cbf2f25d'
-            '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1'
-            'f4e1db05768325bce5f38b67263c47b3aa4038cfadbdbf8a9e0cbec061a58c57'
-            '37d70141e9bb9f118cfc74d4f50e7d7f5be4eee6273818a491892da926941519'
-            'cbe19f6c95d27d50e3b6664907f8d084784162ea35d5d98fadbb91dbb77ef700')
+            '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
 
 validpgpkeys=('034F7776EF5E0C613D2F7934D29FBD5F93C0CFC3') # maltej(?)
 
@@ -112,13 +106,6 @@ _build_profiled_x86_64=true
 prepare() {
   mkdir -p mozbuild
   cd librewolf-$pkgver-$pkgrel
-
-  # Backport fixes for NVIDIA crashes
-  # https://gitlab.archlinux.org/archlinux/packaging/packages/firefox/-/issues/7
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1898476
-  patch -Np1 -i ../0001-Bug-1898476-Wayland-Move-MozContainerSurfaceLock-fro.patch
-  patch -Np1 -i ../0002-Bug-1898476-Wayland-Provide-surface-lock-by-GtkCompo.patch
-  patch -Np1 -i ../0003-Bug-1898476-Wayland-Lock-Wayland-surface-before-Swap.patch
 
   mv mozconfig ../mozconfig
 
