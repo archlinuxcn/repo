@@ -1,60 +1,64 @@
-# Maintainer: Lukas Fleischer <lfleischer@archlinux.org>
+# Maintainer: Fabio 'Lolix' Loli <fabio.loli@disroot.org> -> https://github.com/FabioLolix
+# Contributor: Lukas Fleischer <lfleischer@archlinux.org>
 # Contributor: Alexey Yakovenko <waker@users.sourceforge.net>
 
 pkgname=deadbeef
 pkgver=1.9.6
-pkgrel=10
-pkgdesc='A GTK+ audio player for GNU/Linux.'
-arch=('x86_64')
-url='http://deadbeef.sourceforge.net'
-license=('GPL2')
-depends=('alsa-lib' 'hicolor-icon-theme' 'desktop-file-utils' 'jansson' 'libdispatch')
-makedepends=('libvorbis' 'libmad' 'flac' 'curl' 'imlib2' 'wavpack' 'libsndfile' 'libcdio' 'libcddb'
-             'libx11' 'faad2' 'zlib' 'intltool' 'pkgconfig' 'libpulse' 'libzip' 'libsamplerate'
-             'yasm' 'ffmpeg' 'gtk2' 'gtk3' 'clang' 'opusfile' 'mpg123' 'git' 'libpipewire')
-optdepends=('gtk2: for the GTK2 interface'
-            'gtk3: for the GTK3 interface'
-            'libsamplerate: for Resampler plugin'
-            'libvorbis: for Ogg Vorbis playback'
-            'libmad: for MP1/MP2/MP3 playback'
-            'mpg123: for MP1/MP2/MP3 playback'
-            'flac: for FLAC playback'
-            'curl: for Last.fm scrobbler, SHOUTcast, Icecast, Podcast support'
+pkgrel=12
+pkgdesc="Modular GTK audio player for GNU/Linux"
+arch=(x86_64 i686 pentium4 armv7h aarch64)
+url="https://deadbeef.sourceforge.io/"
+license=(GPL2 LGPL2.1 ZLIB)
+depends=(gtk3 alsa-lib jansson libdispatch)
+makedepends=(libvorbis libmad flac curl imlib2 wavpack libsndfile libcdio libcddb
+             libx11 faad2 zlib intltool libpipewire libpulse libzip libsamplerate
+             yasm ffmpeg clang opusfile mpg123)
+optdepends=('alsa-oss: for OSS output plugin'
+            'cdparanoia: for cd audio plugin'
+            'curl: for last.fm, vfs_curl (shoutcast/icecast), artwork plugins'
+            'dbus: for notification daemon support (OSD current song notifications)'
+            'faad2: for AAC plugin'
+            'ffmpeg: for ffmpeg plugin'
+            'flac: for flac plugin'
             'imlib2: for artwork plugin'
-            'wavpack: for WavPack playback'
-            'libsndfile: for Wave playback'
-            'libcdio: audio cd plugin'
-            'libcddb: audio cd plugin'
-            'faad2: for AAC/MP4 support'
-            'dbus: for OSD notifications support'
-            'pulseaudio: for PulseAudio output plugin'
+            'libcddb: for cd audio plugin'
+            'libcdio: for cd audio plugin'
+            'libice: optional dependency for gtkui session client support'
+            'libmad: for mp3 plugin (mpeg1,2 layers1,2,3)'
+            'libogg: for ogg vorbis plugin'
+            'libpipewire: for pipewire plugin'
+            'libsamplerate: for dsp_libsrc plugin (resampler)'
+            'libsm: optional dependency for gtkui session client support'
+            'libsndfile: for sndfile plugin'
+            'libvorbis: for ogg vorbis plugin'
             'libx11: for global hotkeys plugin'
-            'zlib: for Audio Overload plugin'
             'libzip: for vfs_zip plugin'
-            'ffmpeg4.4: for ffmpeg plugin'
+            'mpg123: for MP1/MP2/MP3 playback'
             'opusfile: for opus plugin'
-            'pipewire: for pipewire support')
-source=($pkgname::"git+https://github.com/DeaDBeeF-Player/${pkgname}.git#tag=$pkgver")
-replaces=('deadbeef-pipewire-plugin-git' 'deadbeef-pipewire-plugin')
-provides=('deadbeef-pipewire-plugin')
-md5sums=('SKIP')
+            'pulseaudio: for PulseAudio output plugin'
+            'wavpack: for wavpack plugin'
+            'yasm: required to build assembly portions of ffap plugin'
+            'zlib: for Audio Overload plugin (psf, psf2, etc), GME (for vgz)')
+conflicts=(deadbeef-pipewire-plugin-git)
+source=("https://sourceforge.net/projects/deadbeef/files/travis/linux/${pkgver}/deadbeef-${pkgver}.tar.bz2"
+        "deadbeef-ffmpeg-7.patch::https://github.com/DeaDBeeF-Player/deadbeef/commit/d4cca5605447122cd080691f43e46047a6039359.patch")
+sha512sums=('6e507399f7452a66c5591e09d4309f2aab676992d048625c9b4d801ea40af6ce79862fb497e8c94efdf3a13572c964dca717b42f1c946f5ec4695dc38c1db572'
+            'fa5cff98758b0ab473e3eb0cd52c73a59bc1ec4884416194ba33ed904e8f174cb76ede92cca68c94eb68fe692f2a6dc5e45210e728fa0ef3d321c3a5c8cba449')
 
 prepare() {
-	cd "${srcdir}/${pkgname}"
-    git submodule update --init --recursive
-    sed -i 's/adplug_la_CXXFLAGS = $(CXXFLAGS)/adplug_la_CXXFLAGS = $(CXXFLAGS) -std=c++11/g' plugins/adplug/Makefile.am
-
-	./autogen.sh 
-	CC=clang CXX=clang++ ./configure --prefix=/usr
+  cd "${pkgname}-${pkgver}"
+  patch -Np1 -i ../deadbeef-ffmpeg-7.patch
 }
 
 build () {
-	cd "${srcdir}/${pkgname}"
-	make
+  cd "${pkgname}-${pkgver}"
+  export CC=clang CXX=clang++
+  ./configure --prefix=/usr --disable-gtk2
+  make
 }
 
 package() {
-	cd "${srcdir}/${pkgname}"
-	make DESTDIR="$pkgdir" install
-  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  cd "${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  install -D COPYING -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
