@@ -12,7 +12,7 @@
 
 pkgname="vlc-git"
 pkgdesc="Multi-platform MPEG, VCD/DVD, and DivX player"
-pkgver=4.0.0.r29808.g3b5e3e2b985
+pkgver=4.0.0.r30228.g41cfa87fb3
 pkgrel=1
 url='https://code.videolan.org/videolan/vlc'
 arch=('i686' 'x86_64')
@@ -124,7 +124,7 @@ prepare() {
   sed -e 's:truetype/ttf-dejavu:TTF:g' -i modules/visualization/projectm.cpp
   sed -e 's|-Werror-implicit-function-declaration||g' -i configure
   patch -Np1 < "${srcdir}"/vlc-live-media-2021.patch
-  patch -Np1 < "${srcdir}"/1c15a5e1.patch
+#  patch -Np1 < "${srcdir}"/1c15a5e1.patch
   sed 's|whoami|echo builduser|g' -i configure
   sed 's|hostname -f|echo arch|g' -i configure
   autoreconf -vf
