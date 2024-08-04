@@ -7,6 +7,9 @@ pre_build_script: |
 
 post_build_script: git_pkgbuild_commit()
 
+repo_depends:
+  - qrcodegen-cmake: qrcodegencpp-cmake
+
 repo_makedepends:
   - ffnvcodec-headers-12-1
 
