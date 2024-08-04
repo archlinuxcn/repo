@@ -1,0 +1,7 @@
+post_install() {
+	systemd-tmpfiles --create tuned.conf
+}
+
+pre_remove() {
+	systemd-tmpfiles --remove tuned.conf
+}
