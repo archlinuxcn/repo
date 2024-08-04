@@ -1,0 +1,41 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: 6-6-6 <33645950+6-6-6@users.noreply.github.com>
+# Contributor: huggy <arch@huggy.moe>
+# Contributor: Zhang Zongyu <zongyu@novazy.net>
+
+pkgname=swan-updown
+pkgver=0.3.1
+pkgrel=1
+pkgdesc="A swan plugin helps create XFRM interfaces on demand"
+arch=('x86_64' 'aarch64')
+url="https://github.com/6-6-6/swan-updown"
+license=('MIT')
+depends=(
+  gcc-libs
+  glibc
+)
+makedepends=('cargo')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/6-6-6/swan-updown/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('4ab0162a5641fd0316a90662b6f58e0d95bc36ac75c74b1ce731e487bf98426df7cfced753e98d7cdf4e0d993bff204a245bee010e54100d92f6748c851eff7a')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  # FIXME: Cargo.lock need to update.
+  cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release --all-features
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm0755 -t "$pkgdir/usr/bin/" target/release/"$pkgname"
+  install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
+}
+
+# vim set: ts=2 sw=2 et:
