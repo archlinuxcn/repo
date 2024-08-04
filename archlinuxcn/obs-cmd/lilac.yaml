@@ -1,0 +1,10 @@
+maintainers: 
+- github: lilydjwg
+
+pre_build_script: aur_pre_build(maintainers=['dhtseany'])
+
+post_build: aur_post_build
+
+update_on:
+- source: aur
+  aur: obs-cmd
