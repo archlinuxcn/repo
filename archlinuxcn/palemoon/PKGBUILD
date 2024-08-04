@@ -7,9 +7,9 @@
 pkgname=palemoon
 _repo=Pale-Moon
 epoch=1
-pkgver=33.1.1
+pkgver=33.2.1
 # Commit ID can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/tags
-_commit=d91782a997
+_commit=e1afd4fc47
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -17,8 +17,7 @@ url="https://www.palemoon.org/"
 license=('MPL-2.0')
 depends=('gtk2' 'dbus-glib' 'desktop-file-utils' 'libxt' 'mime-types' 'alsa-lib'
          'startup-notification')
-makedepends=('python2' 'autoconf2.13' 'unzip' 'zip' 'yasm'
-             'libpulse' 'git')
+makedepends=('python2' 'unzip' 'zip' 'yasm' 'libpulse' 'git')
 optdepends=('libpulse: PulseAudio audio driver'
             'ffmpeg: various video and audio support')
 source=(git+"https://repo.palemoon.org/MoonchildProductions/${_repo}?signed#commit=${_commit}"
@@ -47,10 +46,7 @@ build() {
   export LDFLAGS="${LDFLAGS/-Wl,-z,pack-relative-relocs/}"
   export MOZBUILD_STATE_PATH="${srcdir}/mozbuild"
   export MOZCONFIG="${srcdir}/mozconfig"
-  export CPPFLAGS="${CPPFLAGS} -O2 -Wno-format-overflow"
-
-  # Fix build failures with GCC>=14
-  export CFLAGS="${CFLAGS} -Wno-implicit-int -Wno-incompatible-pointer-types -Wno-int-conversion"
+  export CPPFLAGS="${CPPFLAGS} -O2"
 
   ./mach build
 }
