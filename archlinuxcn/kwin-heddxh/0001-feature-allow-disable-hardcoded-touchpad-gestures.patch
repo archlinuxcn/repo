@@ -1,9 +1,20 @@
+From b649c9b0820c182d61946d2fc4a181c22c6bd998 Mon Sep 17 00:00:00 2001
+From: Wind He <g311571057@gmail.com>
+Date: Sun, 4 Aug 2024 20:43:18 +0800
+Subject: [PATCH] feature: allow disable hardcoded touchpad gestures
+
+setting KWIN_WAYLAND_NO_GESTURE environment variable to disable the hardcoded touchpad gestures
+---
+ src/plugins/overview/overvieweffect.cpp | 26 +++++-----
+ src/virtualdesktops.cpp                 | 69 +++++++++++++------------
+ 2 files changed, 50 insertions(+), 45 deletions(-)
+
 diff --git a/src/plugins/overview/overvieweffect.cpp b/src/plugins/overview/overvieweffect.cpp
-index eb59b476c4..c79f686f1c 100644
+index c4b9d1f9eb..00538f50f2 100644
 --- a/src/plugins/overview/overvieweffect.cpp
 +++ b/src/plugins/overview/overvieweffect.cpp
-@@ -29,18 +29,20 @@ OverviewEffect::OverviewEffect()
-     , m_border(new EffectTogglableTouchBorder(m_overviewState))
+@@ -32,18 +32,20 @@ OverviewEffect::OverviewEffect()
+     , m_gridBorder(new EffectTogglableTouchBorder(m_gridState))
      , m_shutdownTimer(new QTimer(this))
  {
 -    auto gesture = new EffectTogglableGesture(m_overviewState);
@@ -36,10 +47,10 @@ index eb59b476c4..c79f686f1c 100644
      connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
      connect(m_overviewState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::overviewPartialActivationFactorChanged);
 diff --git a/src/virtualdesktops.cpp b/src/virtualdesktops.cpp
-index 540c3eddbb..d6f4f40ba8 100644
+index a0a09040d4..9b4f96e282 100644
 --- a/src/virtualdesktops.cpp
 +++ b/src/virtualdesktops.cpp
-@@ -751,39 +751,42 @@ void VirtualDesktopManager::initShortcuts()
+@@ -754,39 +754,42 @@ void VirtualDesktopManager::initShortcuts()
  
      // Gestures
      // These connections decide which desktop to end on after gesture ends
@@ -115,3 +126,6 @@ index 540c3eddbb..d6f4f40ba8 100644
  
      // axis events
      input()->registerAxisShortcut(Qt::MetaModifier | Qt::AltModifier, PointerAxisDown,
+-- 
+2.46.0
+
