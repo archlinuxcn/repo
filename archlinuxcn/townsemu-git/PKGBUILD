@@ -1,14 +1,14 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgname=townsemu-git
-pkgver=3053.4196d8a
+pkgver=3141.b6cbfbbb
 pkgrel=1
 pkgdesc="An emulator of legendary Fujitsu FM TOWNS computer"
 arch=('i686' 'x86_64')
 url="https://github.com/captainys/TOWNSEMU"
 license=('GPL')
-depends=('alsa-lib' 'glu')
-makedepends=('git' 'cmake')
+depends=('alsa-lib' 'glu' 'llvm-libs')
+makedepends=('git' 'cmake' 'clang')
 provides=('townsemu')
 conflicts=('townsemu')
 source=("git+https://github.com/captainys/TOWNSEMU")
@@ -41,6 +41,9 @@ prepare() {
 }
 
 build() {
+  export CC=/usr/bin/clang
+  export CXX=/usr/bin/clang++
+
   cd TOWNSEMU/build
   cmake ../src -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
   make
