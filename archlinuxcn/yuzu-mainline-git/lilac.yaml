@@ -7,7 +7,6 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - dynarmic
   - discord-rpc-git
   - cubeb-git
   - cpp-httplib
@@ -20,6 +19,6 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - source: github
-    github: yuzu-emu/yuzu-mainline
+  - source: vcs
+    vcs: git+https://notabug.org/yuzu-emu-mirror/yuzu-mainline
   - alias: boost
