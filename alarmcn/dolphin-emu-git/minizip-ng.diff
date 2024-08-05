@@ -1,0 +1,21 @@
+commit c0754c5870ad03d0ff46a6e34cde20fad64270fb
+Author: Daniel Peukert <daniel@peukert.cc>
+Date:   Fri Jul 26 08:51:52 2024 +0200
+
+    Revert "cmake: Fix building with system minizip-ng"
+    
+    This reverts commit b06b816d4c29edd314e0611f4305af4c50a4c56f.
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ce5d64715f..5b246b193b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -677,7 +677,7 @@ dolphin_find_optional_system_library_pkgconfig(ZSTD libzstd>=1.4.0 zstd::zstd Ex
+ dolphin_find_optional_system_library_pkgconfig(ZLIB zlib-ng ZLIB::ZLIB Externals/zlib-ng)
+ 
+ dolphin_find_optional_system_library_pkgconfig(MINIZIP
+-  "minizip>=4.0.4" minizip::minizip Externals/minizip-ng
++  "minizip-ng>=4.0.4;minizip>=4.0.4" minizip::minizip Externals/minizip-ng
+ )
+ 
+ dolphin_find_optional_system_library(LZO Externals/LZO)
