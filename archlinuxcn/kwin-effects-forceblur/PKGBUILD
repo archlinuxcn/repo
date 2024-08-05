@@ -2,7 +2,7 @@
 # Contributor: Nico <d3sox at protonmail dot com>
 
 pkgname=kwin-effects-forceblur
-pkgver=1.3.0
+pkgver=1.3.1
 pkgrel=1
 pkgdesc="KWin Blur effect fork with window class force blur feature (Wayland & X11)"
 arch=(x86_64)
@@ -13,7 +13,7 @@ makedepends=(git extra-cmake-modules qt6-tools)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}.install")
 install="${pkgname}.install"
-sha256sums=('ebfed2aff6abfbbcfaa1e8ade024966f773a82abd863f8f9c198aa2c0283bc76'
+sha256sums=('8bf25e7c636031fc191326223c84945ff9e5fb61fed4f8c5d3abced05b287bf5'
             '93a5015b3a00685205052e1666e1ef7ef03f2d41d924e70b6ee7ff08bf4c2fd8')
 
 build() {
