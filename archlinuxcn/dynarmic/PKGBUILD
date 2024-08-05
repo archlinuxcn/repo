@@ -1,0 +1,50 @@
+# Maintainer: Alexandre Bouvier <contact@amb.tf>
+pkgname=dynarmic
+epoch=2
+pkgver=6.7.0
+pkgrel=2
+pkgdesc="An ARM dynamic recompiler"
+arch=('aarch64' 'x86_64')
+url="https://github.com/lioncash/dynarmic"
+license=('0BSD')
+depends=('gcc-libs' 'glibc' 'llvm-libs')
+makedepends=(
+	'boost>=1.57'
+	'cmake>=3.12'
+	'fmt>=10.1.1'
+	'llvm'
+	'robin-map>=0.6.2'
+)
+makedepends_aarch64=('oaknut>=2.0.2')
+makedepends_x86_64=('xbyak>=7.05' 'zydis>=4')
+checkdepends=('catch2>=3.5' 'oaknut>=2.0.2')
+provides=('libdynarmic.so')
+_commit=fa6cc2e4b2a2954f2298b6548174479c5b106c2a
+source=("$pkgname-$_commit.tar.gz::$url/archive/$_commit.tar.gz")
+b2sums=('9f25e019f2a80486f11ebdb9872bea5345877074150024baadb959ae038b92bb550e0674f27f14c89cff2cab49ddb5d826c267303093934ae9db54791ba69dc8')
+
+build() {
+	cmake -S $pkgname-$_commit -B build \
+		-DBUILD_SHARED_LIBS=ON \
+		-DBUILD_TESTING="$CHECKFUNC" \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DDYNARMIC_IGNORE_ASSERTS=ON \
+		-DDYNARMIC_USE_LLVM=ON \
+		-DDYNARMIC_USE_PRECOMPILED_HEADERS=OFF \
+		-Wno-dev
+	cmake --build build
+}
+
+check() {
+	ctest --test-dir build
+}
+
+package() {
+	depends+=('libfmt.so')
+	depends_x86_64+=('libZydis.so')
+	# shellcheck disable=SC2154
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 -t "$pkgdir"/usr/share/licenses/$pkgname $pkgname-$_commit/LICENSE.txt
+}
