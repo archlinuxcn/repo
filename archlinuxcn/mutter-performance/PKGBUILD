@@ -12,7 +12,7 @@
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
 # Merge Requests List: ('579' '1441' '3373' '3567' '3751' '3912')
-_merge_requests_to_use=('1441' '3751' '3912')
+_merge_requests_to_use=('1441' '3751')
 
 ## Disable building the DOCS package (Enabled if not set)
 # Remember to unset this variable when producing .SRCINFO
@@ -32,8 +32,8 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=46.3.1+r5+g1ccf2cfb56
-pkgrel=2
+pkgver=46.4
+pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -112,25 +112,25 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=1ccf2cfb568d4f9aeee2d23e5ededca21927d133  # tags/46.3.1^5
+_commit=04995f56641012d71b5b226782e63d82c3ca3081  # tags/46.4^0
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
         'mr3567.patch'
         'mr3751.patch'
         'mr3912.patch')
-sha256sums=('893c784ff14ab886615e7a58cd37c2409895fd73b8c95cc83fca209fbecbc1aa'
-            '7a5e1bcc90bbab100bf57b0dd052a96f34dd1673a5f43e53acd34ee648fd7b29'
-            '3e1f07b696ad37b1c639a524c092cd9259444bc6156542901ccaec936bea240f'
-            '47885ffe6c0aa06fa798cc0b9b48b4f6acf21b6f250b7003819db3854d52635a'
-            '9d925b810629074285388b5a1a9a88514a6cb45463a98ada6f66c2cba2ad9d2f'
-            '43ea9e96f2bafaa40edc48510b1391a055ee507af82d81721fb76752c9295c6b')
-b2sums=('3d2fccc192c53d7c80ba7f6d97e6392d8e5d6d884161b4b9d120294cc95627167e45d43737374781a8e52ca64e21caab3a07abb7bc38e3f358e593c43d9e69c6'
-        '55bf09c286a361297952dc55670e3974ad35a91d54649892259fe423c422c6580e00e9f194bad97bebe3c53a65858a23d6e332d426c8572bd14cdc8e5cbcbbfb'
-        '71f10db4ebe04a787940c7048131eac67cffd3ec8e415cfc961b8041b881f272650581e9df273e2a8da23a50ec9151c790dc2d5ecc0309ab2847a22f8c922c9c'
-        '8e57fa09e4742cf350436c5d54f3114495543151df71fbb684199d85ca9b138bcedd1dfb5df5724d0efc74aa786f6b1ebf54f3c260a48a4937a700dcb1d5b178'
-        'f720718049c1f9d0f338c203a5ae4520b5e7079b57e692ec95d8183705d7b7627ccd7d3d350d0010d0b225226641afccd699b65a81bd044fd32c441d413a0779'
-        'f7a7ef368d2d15cc7edcb1d2def23ed9a349410620aeebe83d8ca0e612dad868e7a2fe731323bd4382fb4cef71d65a15c849df0b4ff0f8da972261728fdf6f6f')
+sha256sums=('864cce3adbb04b4213fda77b715f84fe1ed918a58adbc251c4804bbaf6e348ed'
+            '07909ef8fc77f5527e169c31637a3bfdf080bc8040863f059db5541b35ec6ff7'
+            '1292f1dcefa0a3cfff753db942e7c974e39b1265d246634f239aad9437d45609'
+            '2e474a574edad8dc047a53a920fc7cbe005cac0102907eef80a252fc556d0517'
+            '4c15b0e6d0001c8c3feedf05a9140f7f17d52eb36ff7b8039e0281c1373ccdfe'
+            'f02f07abc4072118e175e8028d3ee16ff0aa9b238dd2b10155b3ae2a0534a4a0')
+b2sums=('fc21cb8e56728873196fba12ba7a0522aeb9d6e7f6204ac21ade4c632b081fe45e0633d1c072c2416d81faa0f6b63cb69b278ef7b440e2bfccaff775501d3028'
+        '0419379cda7871c0b45b7a707948738b5a55fd81083ba325e915928aaa731cd2be23cebddf04b179bc69a26e1f4176b06fabb4d5baffba604a4980f578f5ba4d'
+        '38de03d5fbe7c9d1b9c41a4bc6b76b8d3acc270b93f279c5db591d79a689d9ea748f34da08ec584e49bbfc2d35a5bceeaf2f6b3fd91bc620139b4ee8b4ca6a04'
+        '65302b1fa24a7aba26915269fb694c7a64b134ee2062ec7e649036a3a41efb2f2f4110cff6194808af34985855ade641c5fb01f0b97536cd3c912892ea3a0d4c'
+        'f9f2284d7236d6072a818de3784a339c2d934490da8870876f49d4effd59ce807593ce8b8a3c5e06586fd5fd7e81fb31fedca84115acf1e71cfe23d4a5e727b3'
+        '14ed5e8fe9844739903150bf69de03b7136e74eb4b080d2e0264ba9bf5f2ba2c826cb45b78f8c38b2e80c223dd7926aa8e756e9bee23b75ced16ba5af45c2d8d')
 
 for mr in "${_merge_requests_to_use[@]}"; do
   if [ '3567' = "$mr" ]; then
@@ -250,6 +250,7 @@ prepare() {
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3912
   # Type: 1
   # Status: 2
+  # Comment: Cannot be used with mr1441 as it already includes mr3912.
   pick_mr '3912' 'mr3912.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)

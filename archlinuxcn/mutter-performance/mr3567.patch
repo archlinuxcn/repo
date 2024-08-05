@@ -1,4 +1,4 @@
-From e59a419987c8ff7207f0cadd4f59aae9cb0e8f71 Mon Sep 17 00:00:00 2001
+From 1a482cbbea109406e48962669a89465f3f8bb98d Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
 Date: Tue, 12 Dec 2023 22:41:20 +0100
 Subject: [PATCH 1/5] x11-display: Expose UI scaling factor via D-Bus
@@ -18,7 +18,7 @@ Signed-off-by: Mingi Sung <sungmg@saltyming.net>
  create mode 100644 data/dbus-interfaces/org.gnome.Mutter.X11.xml
 
 diff --git a/data/dbus-interfaces/org.gnome.Mutter.DisplayConfig.xml b/data/dbus-interfaces/org.gnome.Mutter.DisplayConfig.xml
-index b05337d74..7294c57a8 100644
+index b05337d74f..7294c57a84 100644
 --- a/data/dbus-interfaces/org.gnome.Mutter.DisplayConfig.xml
 +++ b/data/dbus-interfaces/org.gnome.Mutter.DisplayConfig.xml
 @@ -426,10 +426,6 @@
@@ -34,7 +34,7 @@ index b05337d74..7294c57a8 100644
        <arg name="serial" direction="out" type="u" />
 diff --git a/data/dbus-interfaces/org.gnome.Mutter.X11.xml b/data/dbus-interfaces/org.gnome.Mutter.X11.xml
 new file mode 100644
-index 000000000..3d3c8a42f
+index 0000000000..3d3c8a42f8
 --- /dev/null
 +++ b/data/dbus-interfaces/org.gnome.Mutter.X11.xml
 @@ -0,0 +1,8 @@
@@ -47,7 +47,7 @@ index 000000000..3d3c8a42f
 +  </interface>
 +</node>
 diff --git a/src/backends/meta-monitor-manager.c b/src/backends/meta-monitor-manager.c
-index 77743bc72..7f98c2d98 100644
+index 77743bc722..7f98c2d983 100644
 --- a/src/backends/meta-monitor-manager.c
 +++ b/src/backends/meta-monitor-manager.c
 @@ -2051,14 +2051,12 @@ meta_monitor_manager_handle_get_current_state (MetaDBusDisplayConfig *skeleton,
@@ -78,7 +78,7 @@ index 77743bc72..7f98c2d98 100644
                                                  &max_screen_width,
                                                  &max_screen_height))
 diff --git a/src/meson.build b/src/meson.build
-index 05df3bfd2..e658f98ca 100644
+index 05df3bfd28..e658f98caa 100644
 --- a/src/meson.build
 +++ b/src/meson.build
 @@ -949,6 +949,11 @@ dbus_interfaces = [
@@ -94,7 +94,7 @@ index 05df3bfd2..e658f98ca 100644
  
  if have_profiler
 diff --git a/src/x11/meta-x11-display.c b/src/x11/meta-x11-display.c
-index 3cbf82844..fe152d20b 100644
+index 65eb217aaf..8768e14dac 100644
 --- a/src/x11/meta-x11-display.c
 +++ b/src/x11/meta-x11-display.c
 @@ -70,7 +70,7 @@
@@ -168,7 +168,7 @@ index 3cbf82844..fe152d20b 100644
    g_clear_pointer (&x11_display->alarm_filters, g_ptr_array_unref);
  
    g_clear_list (&x11_display->event_funcs,
-@@ -1196,6 +1237,23 @@ meta_x11_display_init_frames_client (MetaX11Display *x11_display)
+@@ -1220,6 +1261,23 @@ meta_x11_display_init_frames_client (MetaX11Display *x11_display)
                             on_frames_client_died, x11_display);
  }
  
@@ -192,7 +192,7 @@ index 3cbf82844..fe152d20b 100644
  /**
   * meta_x11_display_new:
   *
-@@ -1290,6 +1348,8 @@ meta_x11_display_new (MetaDisplay  *display,
+@@ -1314,6 +1372,8 @@ meta_x11_display_new (MetaDisplay  *display,
    x11_display = g_object_new (META_TYPE_X11_DISPLAY, NULL);
    x11_display->display = display;
  
@@ -201,7 +201,7 @@ index 3cbf82844..fe152d20b 100644
    /* here we use XDisplayName which is what the user
     * probably put in, vs. DisplayString(display) which is
     * canonicalized by XOpenDisplay()
-@@ -1951,6 +2011,8 @@ on_monitors_changed_internal (MetaMonitorManager *monitor_manager,
+@@ -1975,6 +2035,8 @@ on_monitors_changed_internal (MetaMonitorManager *monitor_manager,
      }
  
    x11_display->has_xinerama_indices = FALSE;
@@ -211,10 +211,10 @@ index 3cbf82844..fe152d20b 100644
  
  static Bool
 -- 
-2.45.2
+2.46.0
 
 
-From 42ece5f5f528fb44f63772826fe928f88327a7dc Mon Sep 17 00:00:00 2001
+From dd50b8639bcab08fceb5d3af206e2c41aa6f2f02 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20Dre=C3=9Fler?= <verdre@v0yd.nl>
 Date: Tue, 20 Feb 2024 23:51:48 +0100
 Subject: [PATCH 2/5] Add an experimental feature for letting Xwayland clients
@@ -232,7 +232,7 @@ Signed-off-by: Mingi Sung <sungmg@saltyming.net>
  3 files changed, 10 insertions(+)
 
 diff --git a/data/org.gnome.mutter.gschema.xml.in b/data/org.gnome.mutter.gschema.xml.in
-index 92c97b12e..6751a8d7a 100644
+index 92c97b12e3..6751a8d7a9 100644
 --- a/data/org.gnome.mutter.gschema.xml.in
 +++ b/data/org.gnome.mutter.gschema.xml.in
 @@ -5,6 +5,7 @@
@@ -257,7 +257,7 @@ index 92c97b12e..6751a8d7a 100644
      </key>
  
 diff --git a/src/backends/meta-settings-private.h b/src/backends/meta-settings-private.h
-index afbba054a..2081a81b1 100644
+index afbba054af..2081a81b1a 100644
 --- a/src/backends/meta-settings-private.h
 +++ b/src/backends/meta-settings-private.h
 @@ -32,6 +32,7 @@ typedef enum _MetaExperimentalFeature
@@ -269,7 +269,7 @@ index afbba054a..2081a81b1 100644
  
  typedef enum _MetaXwaylandExtension
 diff --git a/src/backends/meta-settings.c b/src/backends/meta-settings.c
-index 3703b23b0..1ae59d636 100644
+index 3703b23b07..1ae59d6360 100644
 --- a/src/backends/meta-settings.c
 +++ b/src/backends/meta-settings.c
 @@ -296,6 +296,8 @@ experimental_features_handler (GVariant *features_variant,
@@ -282,10 +282,10 @@ index 3703b23b0..1ae59d636 100644
        if (feature)
          g_message ("Enabling experimental feature '%s'", feature_str);
 -- 
-2.45.2
+2.46.0
 
 
-From e518927c779f8498f50fe2087efcd3ee88d75c12 Mon Sep 17 00:00:00 2001
+From 398a04f2558877e4876ea1551907719031b5adc1 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
 Date: Tue, 12 Dec 2023 22:42:46 +0100
 Subject: [PATCH 3/5] context: Put Wayland compositor getter in the context
@@ -299,7 +299,7 @@ Signed-off-by: Mingi Sung <sungmg@saltyming.net>
  3 files changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/src/meta/meta-context.h b/src/meta/meta-context.h
-index ef36bd2c3..2adb9b07e 100644
+index ef36bd2c30..2adb9b07e0 100644
 --- a/src/meta/meta-context.h
 +++ b/src/meta/meta-context.h
 @@ -101,3 +101,8 @@ gboolean meta_context_raise_rlimit_nofile (MetaContext  *context,
@@ -312,7 +312,7 @@ index ef36bd2c3..2adb9b07e 100644
 +MetaWaylandCompositor * meta_context_get_wayland_compositor (MetaContext *context);
 +#endif
 diff --git a/src/meta/meta-wayland-compositor.h b/src/meta/meta-wayland-compositor.h
-index 7f4a50705..3df92fda5 100644
+index 7f4a507057..3df92fda57 100644
 --- a/src/meta/meta-wayland-compositor.h
 +++ b/src/meta/meta-wayland-compositor.h
 @@ -31,9 +31,6 @@ G_DECLARE_FINAL_TYPE (MetaWaylandCompositor,
@@ -326,7 +326,7 @@ index 7f4a50705..3df92fda5 100644
  struct wl_display *meta_wayland_compositor_get_wayland_display (MetaWaylandCompositor *compositor);
  
 diff --git a/src/meta/types.h b/src/meta/types.h
-index cbe2a9a3d..8fba4a839 100644
+index cbe2a9a3d7..8fba4a839e 100644
 --- a/src/meta/types.h
 +++ b/src/meta/types.h
 @@ -38,3 +38,7 @@ typedef struct _MetaSettings    MetaSettings;
@@ -338,10 +338,10 @@ index cbe2a9a3d..8fba4a839 100644
 +typedef struct _MetaWaylandCompositor MetaWaylandCompositor;
 +#endif
 -- 
-2.45.2
+2.46.0
 
 
-From 8f5fe12656db5a0488cbeb73298520b7d859b7fc Mon Sep 17 00:00:00 2001
+From 3b799a9250aa0d1df0ab8f611a730c140dfc9017 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
 Date: Tue, 12 Dec 2023 22:52:44 +0100
 Subject: [PATCH 4/5] Add experimental mode to use native scaling of Xwayland
@@ -387,7 +387,7 @@ Signed-off-by: Mingi Sung <sungmg@saltyming.net>
  18 files changed, 896 insertions(+), 166 deletions(-)
 
 diff --git a/src/backends/meta-monitor-manager-private.h b/src/backends/meta-monitor-manager-private.h
-index 0760a341a..6ed3fc2c3 100644
+index 0760a341a8..6ed3fc2c3f 100644
 --- a/src/backends/meta-monitor-manager-private.h
 +++ b/src/backends/meta-monitor-manager-private.h
 @@ -436,3 +436,5 @@ gboolean meta_monitor_manager_apply_monitors_config (MetaMonitorManager        *
@@ -397,7 +397,7 @@ index 0760a341a..6ed3fc2c3 100644
 +
 +MetaLogicalMonitorLayoutMode meta_monitor_manager_get_layout_mode (MetaMonitorManager *manager);
 diff --git a/src/backends/meta-monitor-manager.c b/src/backends/meta-monitor-manager.c
-index 7f98c2d98..45033d966 100644
+index 7f98c2d983..45033d966e 100644
 --- a/src/backends/meta-monitor-manager.c
 +++ b/src/backends/meta-monitor-manager.c
 @@ -4116,3 +4116,9 @@ meta_monitor_manager_get_virtual_monitors (MetaMonitorManager *manager)
@@ -411,7 +411,7 @@ index 7f98c2d98..45033d966 100644
 +  return manager->layout_mode;
 +}
 diff --git a/src/compositor/meta-window-actor-x11.c b/src/compositor/meta-window-actor-x11.c
-index 19827af33..7df10e6c1 100644
+index 19827af331..7df10e6c15 100644
 --- a/src/compositor/meta-window-actor-x11.c
 +++ b/src/compositor/meta-window-actor-x11.c
 @@ -688,11 +688,23 @@ meta_window_actor_x11_process_damage (MetaWindowActorX11 *actor_x11,
@@ -444,7 +444,7 @@ index 19827af33..7df10e6c1 100644
    meta_window_actor_notify_damaged (META_WINDOW_ACTOR (actor_x11));
  }
 diff --git a/src/core/frame.c b/src/core/frame.c
-index 7a09f89f1..57daf00ee 100644
+index 7a09f89f14..57daf00ee5 100644
 --- a/src/core/frame.c
 +++ b/src/core/frame.c
 @@ -77,6 +77,7 @@ meta_window_x11_set_frame_xwindow (MetaWindow *window,
@@ -643,7 +643,7 @@ index 7a09f89f1..57daf00ee 100644
    event.xconfigure.above = None;
    event.xconfigure.override_redirect = False;
 diff --git a/src/wayland/meta-wayland-cursor-surface.c b/src/wayland/meta-wayland-cursor-surface.c
-index 87a8895c8..5a16ce7d8 100644
+index 87a8895c88..5a16ce7d87 100644
 --- a/src/wayland/meta-wayland-cursor-surface.c
 +++ b/src/wayland/meta-wayland-cursor-surface.c
 @@ -92,37 +92,29 @@ cursor_sprite_prepare_at (MetaCursorSprite         *cursor_sprite,
@@ -707,7 +707,7 @@ index 87a8895c8..5a16ce7d8 100644
  
    meta_wayland_surface_update_outputs (surface);
 diff --git a/src/wayland/meta-wayland-outputs.c b/src/wayland/meta-wayland-outputs.c
-index 89ae86445..f957bc339 100644
+index 89ae864450..f957bc339d 100644
 --- a/src/wayland/meta-wayland-outputs.c
 +++ b/src/wayland/meta-wayland-outputs.c
 @@ -31,6 +31,10 @@
@@ -802,7 +802,7 @@ index 89ae86445..f957bc339 100644
  
    compositor->outputs =
 diff --git a/src/wayland/meta-wayland-pointer.c b/src/wayland/meta-wayland-pointer.c
-index cf6008064..b8c49849a 100644
+index cf6008064a..b8c49849ad 100644
 --- a/src/wayland/meta-wayland-pointer.c
 +++ b/src/wayland/meta-wayland-pointer.c
 @@ -1247,6 +1247,20 @@ pointer_set_cursor (struct wl_client *client,
@@ -827,7 +827,7 @@ index cf6008064..b8c49849a 100644
                                                 hot_x, hot_y);
  
 diff --git a/src/wayland/meta-wayland-private.h b/src/wayland/meta-wayland-private.h
-index e8d442c03..834753ffd 100644
+index e8d442c039..834753ffdd 100644
 --- a/src/wayland/meta-wayland-private.h
 +++ b/src/wayland/meta-wayland-private.h
 @@ -77,6 +77,8 @@ struct _MetaXWaylandManager
@@ -840,7 +840,7 @@ index e8d442c03..834753ffd 100644
  
  struct _MetaWaylandCompositor
 diff --git a/src/wayland/meta-wayland-surface.c b/src/wayland/meta-wayland-surface.c
-index d8b36ff92..4ad95cd9d 100644
+index d8b36ff92b..4ad95cd9d5 100644
 --- a/src/wayland/meta-wayland-surface.c
 +++ b/src/wayland/meta-wayland-surface.c
 @@ -782,8 +782,19 @@ meta_wayland_surface_apply_state (MetaWaylandSurface      *surface,
@@ -895,7 +895,7 @@ index d8b36ff92..4ad95cd9d 100644
  
  void
 diff --git a/src/wayland/meta-window-xwayland.c b/src/wayland/meta-window-xwayland.c
-index 1299a351c..5fb006962 100644
+index 1299a351ca..5fb0069626 100644
 --- a/src/wayland/meta-window-xwayland.c
 +++ b/src/wayland/meta-window-xwayland.c
 @@ -27,8 +27,9 @@
@@ -992,7 +992,7 @@ index 1299a351c..5fb006962 100644
    gobject_class->get_property = meta_window_xwayland_get_property;
    gobject_class->set_property = meta_window_xwayland_set_property;
 diff --git a/src/wayland/meta-xwayland-private.h b/src/wayland/meta-xwayland-private.h
-index 7a9cb73fd..9e06f0315 100644
+index 7a9cb73fdf..9e06f03155 100644
 --- a/src/wayland/meta-xwayland-private.h
 +++ b/src/wayland/meta-xwayland-private.h
 @@ -20,6 +20,7 @@
@@ -1004,7 +1004,7 @@ index 7a9cb73fd..9e06f0315 100644
  gboolean
  meta_xwayland_init (MetaXWaylandManager    *manager,
 diff --git a/src/wayland/meta-xwayland-surface.c b/src/wayland/meta-xwayland-surface.c
-index 8fa1c72a9..c6daf9b26 100644
+index 8fa1c72a96..c6daf9b267 100644
 --- a/src/wayland/meta-xwayland-surface.c
 +++ b/src/wayland/meta-xwayland-surface.c
 @@ -163,13 +163,19 @@ meta_xwayland_surface_get_relative_coordinates (MetaWaylandSurfaceRole *surface_
@@ -1030,7 +1030,7 @@ index 8fa1c72a9..c6daf9b26 100644
  
  static MetaWaylandSurface *
 diff --git a/src/wayland/meta-xwayland.c b/src/wayland/meta-xwayland.c
-index ea9c27d74..828e6f64e 100644
+index 7f2915cfeb..f6f9d01ff4 100644
 --- a/src/wayland/meta-xwayland.c
 +++ b/src/wayland/meta-xwayland.c
 @@ -1051,6 +1051,29 @@ meta_xwayland_shutdown (MetaWaylandCompositor *compositor)
@@ -1084,7 +1084,7 @@ index ea9c27d74..828e6f64e 100644
    return TRUE;
  }
  
-@@ -1312,3 +1342,29 @@ meta_xwayland_set_should_enable_ei_portal (MetaXWaylandManager  *manager,
+@@ -1313,3 +1343,29 @@ meta_xwayland_set_should_enable_ei_portal (MetaXWaylandManager  *manager,
  {
    manager->should_enable_ei_portal = should_enable_ei_portal;
  }
@@ -1115,7 +1115,7 @@ index ea9c27d74..828e6f64e 100644
 +  return 1;
 +}
 diff --git a/src/wayland/meta-xwayland.h b/src/wayland/meta-xwayland.h
-index daf9d1abb..ae7a06977 100644
+index daf9d1abb0..ae7a06977e 100644
 --- a/src/wayland/meta-xwayland.h
 +++ b/src/wayland/meta-xwayland.h
 @@ -48,3 +48,5 @@ META_EXPORT_TEST
@@ -1125,7 +1125,7 @@ index daf9d1abb..ae7a06977 100644
 +
 +int meta_xwayland_get_effective_scale (MetaXWaylandManager *manager);
 diff --git a/src/x11/meta-x11-display.c b/src/x11/meta-x11-display.c
-index fe152d20b..602879aac 100644
+index 8768e14dac..024374e7ef 100644
 --- a/src/x11/meta-x11-display.c
 +++ b/src/x11/meta-x11-display.c
 @@ -130,6 +130,42 @@ backend_from_x11_display (MetaX11Display *x11_display)
@@ -1207,7 +1207,7 @@ index fe152d20b..602879aac 100644
    meta_dbus_x11_set_ui_scaling_factor (priv->dbus_api, ui_scaling_factor);
  }
  
-@@ -613,6 +671,9 @@ set_desktop_geometry_hint (MetaX11Display *x11_display)
+@@ -637,6 +695,9 @@ set_desktop_geometry_hint (MetaX11Display *x11_display)
      return;
  
    meta_display_get_size (x11_display->display, &monitor_width, &monitor_height);
@@ -1217,7 +1217,7 @@ index fe152d20b..602879aac 100644
  
    data[0] = monitor_width;
    data[1] = monitor_height;
-@@ -1022,14 +1083,22 @@ set_workspace_work_area_hint (MetaWorkspace  *workspace,
+@@ -1046,14 +1107,22 @@ set_workspace_work_area_hint (MetaWorkspace  *workspace,
  
    for (l = logical_monitors; l; l = l->next)
      {
@@ -1246,7 +1246,7 @@ index fe152d20b..602879aac 100644
  
        tmp += 4;
      }
-@@ -1058,7 +1127,6 @@ set_work_area_hint (MetaDisplay    *display,
+@@ -1082,7 +1151,6 @@ set_work_area_hint (MetaDisplay    *display,
    int num_workspaces;
    GList *l;
    unsigned long *data, *tmp;
@@ -1254,7 +1254,7 @@ index fe152d20b..602879aac 100644
  
    num_workspaces = meta_workspace_manager_get_n_workspaces (workspace_manager);
    data = g_new (unsigned long, num_workspaces * 4);
-@@ -1067,14 +1135,22 @@ set_work_area_hint (MetaDisplay    *display,
+@@ -1091,14 +1159,22 @@ set_work_area_hint (MetaDisplay    *display,
    for (l = workspace_manager->workspaces; l; l = l->next)
      {
        MetaWorkspace *workspace = l->data;
@@ -1282,7 +1282,7 @@ index fe152d20b..602879aac 100644
  
        tmp += 4;
      }
-@@ -1254,6 +1330,41 @@ initialize_dbus_interface (MetaX11Display *x11_display)
+@@ -1278,6 +1354,41 @@ initialize_dbus_interface (MetaX11Display *x11_display)
    update_ui_scaling_factor (x11_display);
  }
  
@@ -1324,7 +1324,7 @@ index fe152d20b..602879aac 100644
  /**
   * meta_x11_display_new:
   *
-@@ -1272,6 +1383,7 @@ meta_x11_display_new (MetaDisplay  *display,
+@@ -1296,6 +1407,7 @@ meta_x11_display_new (MetaDisplay  *display,
    MetaBackend *backend = meta_context_get_backend (context);
    MetaMonitorManager *monitor_manager =
      meta_backend_get_monitor_manager (backend);
@@ -1332,7 +1332,7 @@ index fe152d20b..602879aac 100644
    g_autoptr (MetaX11Display) x11_display = NULL;
    Display *xdisplay;
    Screen *xscreen;
-@@ -1442,7 +1554,7 @@ meta_x11_display_new (MetaDisplay  *display,
+@@ -1466,7 +1578,7 @@ meta_x11_display_new (MetaDisplay  *display,
                             "monitors-changed-internal",
                             G_CALLBACK (on_monitors_changed_internal),
                             x11_display,
@@ -1341,7 +1341,7 @@ index fe152d20b..602879aac 100644
  
    init_leader_window (x11_display, &timestamp);
    x11_display->timestamp = timestamp;
-@@ -1535,6 +1647,11 @@ meta_x11_display_new (MetaDisplay  *display,
+@@ -1559,6 +1671,11 @@ meta_x11_display_new (MetaDisplay  *display,
  
    meta_prefs_add_listener (prefs_changed_callback, x11_display);
  
@@ -1353,7 +1353,7 @@ index fe152d20b..602879aac 100644
    set_work_area_hint (display, x11_display);
  
    g_signal_connect_object (display, "workareas-changed",
-@@ -1748,16 +1865,12 @@ meta_x11_display_reload_cursor (MetaX11Display *x11_display)
+@@ -1772,16 +1889,12 @@ meta_x11_display_reload_cursor (MetaX11Display *x11_display)
  }
  
  static void
@@ -1375,7 +1375,7 @@ index fe152d20b..602879aac 100644
  }
  
  static void
-@@ -1809,8 +1922,37 @@ static void
+@@ -1833,8 +1946,37 @@ static void
  update_cursor_theme (MetaX11Display *x11_display)
  {
    MetaBackend *backend = backend_from_x11_display (x11_display);
@@ -1414,7 +1414,7 @@ index fe152d20b..602879aac 100644
    schedule_reload_x11_cursor (x11_display);
  
    if (META_IS_BACKEND_X11 (backend))
-@@ -1818,7 +1960,7 @@ update_cursor_theme (MetaX11Display *x11_display)
+@@ -1842,7 +1984,7 @@ update_cursor_theme (MetaX11Display *x11_display)
        MetaBackendX11 *backend_x11 = META_BACKEND_X11 (backend);
        Display *xdisplay = meta_backend_x11_get_xdisplay (backend_x11);
  
@@ -1424,7 +1424,7 @@ index fe152d20b..602879aac 100644
      }
  }
 diff --git a/src/x11/window-props.c b/src/x11/window-props.c
-index c18b3eab5..494fbe843 100644
+index c18b3eab59..494fbe8431 100644
 --- a/src/x11/window-props.c
 +++ b/src/x11/window-props.c
 @@ -305,10 +305,15 @@ reload_icon_geometry (MetaWindow    *window,
@@ -1566,7 +1566,7 @@ index c18b3eab5..494fbe843 100644
    /* Put back saved ConfigureRequest. */
    window->size_hints.x = x;
 diff --git a/src/x11/window-x11.c b/src/x11/window-x11.c
-index 443f40f28..ccbd75d1a 100644
+index 443f40f284..ccbd75d1a9 100644
 --- a/src/x11/window-x11.c
 +++ b/src/x11/window-x11.c
 @@ -110,6 +110,113 @@ meta_window_x11_get_private (MetaWindowX11 *window_x11)
@@ -2038,7 +2038,7 @@ index 443f40f28..ccbd75d1a 100644
    priv->client_rect = window->rect;
    window->buffer_rect = window->rect;
 diff --git a/src/x11/window-x11.h b/src/x11/window-x11.h
-index 205eaaa63..fa3fbea6a 100644
+index 205eaaa632..fa3fbea6a8 100644
 --- a/src/x11/window-x11.h
 +++ b/src/x11/window-x11.h
 @@ -45,6 +45,24 @@ struct _MetaWindowX11Class
@@ -2091,10 +2091,10 @@ index 205eaaa63..fa3fbea6a 100644
 +                                        int           *stage_width,
 +                                        int           *stage_heigth);
 -- 
-2.45.2
+2.46.0
 
 
-From 26bac17fc06d840006c86935b6e9486ccf033082 Mon Sep 17 00:00:00 2001
+From 6f35aed57a4a98ef878e483958e930840a6667ae Mon Sep 17 00:00:00 2001
 From: HydroH <ixlesis@gmail.com>
 Date: Tue, 21 May 2024 19:15:36 +0800
 Subject: [PATCH 5/5] Correctly set bounding region for undecorated windows
@@ -2105,7 +2105,7 @@ Signed-off-by: Mingi Sung <sungmg@saltyming.net>
  1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/src/x11/window-x11.c b/src/x11/window-x11.c
-index ccbd75d1a..5f37c634a 100644
+index ccbd75d1a9..5f37c634ac 100644
 --- a/src/x11/window-x11.c
 +++ b/src/x11/window-x11.c
 @@ -2573,8 +2573,13 @@ meta_window_x11_update_input_region (MetaWindow *window)
@@ -2125,5 +2125,5 @@ index ccbd75d1a..5f37c634a 100644
  
    if (META_X11_DISPLAY_HAS_SHAPE (x11_display))
 -- 
-2.45.2
+2.46.0
 

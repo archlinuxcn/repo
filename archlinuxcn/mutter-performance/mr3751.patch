@@ -1,4 +1,4 @@
-From 033b1b83a8484247519bc98eee70add380d1e3fc Mon Sep 17 00:00:00 2001
+From 0bcbfa0ae68bac604b6922c236a2dc42e535e994 Mon Sep 17 00:00:00 2001
 From: Alynx Zhou <alynx.zhou@gmail.com>
 Date: Wed, 15 May 2024 00:07:41 +0800
 Subject: [PATCH] wayland/text-input-v1: Implement basic text-input-v1 support
@@ -9,6 +9,9 @@ needed by users who needs IME to input their languages, like Chinese,
 Japanese or Korean.
 
 Closes <https://gitlab.gnome.org/GNOME/mutter/-/issues/3200>.
+
+Origin: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3751
+Commit: 2a94e19b00434fe4d7ab858a6cdcff6364f6e408
 
 Signed-off-by: Mingi Sung <sungmg@saltyming.net>
 ---
@@ -27,7 +30,7 @@ Signed-off-by: Mingi Sung <sungmg@saltyming.net>
  create mode 100644 src/wayland/meta-wayland-text-input-v1.h
 
 diff --git a/clutter/clutter/clutter-enums.h b/clutter/clutter/clutter-enums.h
-index 45956bf57..8198e7351 100644
+index 45956bf57b..8198e73516 100644
 --- a/clutter/clutter/clutter-enums.h
 +++ b/clutter/clutter/clutter-enums.h
 @@ -1183,6 +1183,9 @@ typedef enum
@@ -41,7 +44,7 @@ index 45956bf57..8198e7351 100644
  
  typedef enum
 diff --git a/src/core/events.c b/src/core/events.c
-index 1f36d2feb..a1874d673 100644
+index 1f36d2feb6..a1874d6737 100644
 --- a/src/core/events.c
 +++ b/src/core/events.c
 @@ -238,6 +238,7 @@ meta_display_handle_event (MetaDisplay        *display,
@@ -77,7 +80,7 @@ index 1f36d2feb..a1874d673 100644
  
    if (wayland_compositor)
 diff --git a/src/meson.build b/src/meson.build
-index 05df3bfd2..fad08706a 100644
+index 05df3bfd28..fad08706a6 100644
 --- a/src/meson.build
 +++ b/src/meson.build
 @@ -688,6 +688,8 @@ if have_wayland
@@ -98,7 +101,7 @@ index 05df3bfd2..fad08706a 100644
      ['xdg-activation', 'staging', 'v1', ],
      ['xdg-foreign', 'unstable', 'v1', ],
 diff --git a/src/wayland/meta-wayland-seat.c b/src/wayland/meta-wayland-seat.c
-index 2301e0068..d0f888084 100644
+index 2301e00685..d0f8880840 100644
 --- a/src/wayland/meta-wayland-seat.c
 +++ b/src/wayland/meta-wayland-seat.c
 @@ -229,6 +229,7 @@ default_focus (MetaWaylandEventHandler *handler,
@@ -149,7 +152,7 @@ index 2301e0068..d0f888084 100644
  
        break;
 diff --git a/src/wayland/meta-wayland-seat.h b/src/wayland/meta-wayland-seat.h
-index 83fd7de1e..37704cf5a 100644
+index 83fd7de1ed..37704cf5a1 100644
 --- a/src/wayland/meta-wayland-seat.h
 +++ b/src/wayland/meta-wayland-seat.h
 @@ -30,6 +30,7 @@
@@ -170,7 +173,7 @@ index 83fd7de1e..37704cf5a 100644
    MetaWaylandEventHandler *default_handler;
 diff --git a/src/wayland/meta-wayland-text-input-v1.c b/src/wayland/meta-wayland-text-input-v1.c
 new file mode 100644
-index 000000000..1826a4ff4
+index 0000000000..1826a4ff43
 --- /dev/null
 +++ b/src/wayland/meta-wayland-text-input-v1.c
 @@ -0,0 +1,859 @@
@@ -1035,7 +1038,7 @@ index 000000000..1826a4ff4
 +}
 diff --git a/src/wayland/meta-wayland-text-input-v1.h b/src/wayland/meta-wayland-text-input-v1.h
 new file mode 100644
-index 000000000..79b1c0a54
+index 0000000000..79b1c0a541
 --- /dev/null
 +++ b/src/wayland/meta-wayland-text-input-v1.h
 @@ -0,0 +1,38 @@
@@ -1078,7 +1081,7 @@ index 000000000..79b1c0a54
 +gboolean meta_wayland_text_input_v1_handle_event (MetaWaylandTextInputV1 *text_input,
 +                                                  const ClutterEvent     *event);
 diff --git a/src/wayland/meta-wayland-versions.h b/src/wayland/meta-wayland-versions.h
-index 900f30d78..a77b81461 100644
+index 900f30d788..a77b81461b 100644
 --- a/src/wayland/meta-wayland-versions.h
 +++ b/src/wayland/meta-wayland-versions.h
 @@ -49,6 +49,7 @@
@@ -1090,7 +1093,7 @@ index 900f30d78..a77b81461 100644
  #define META_ZWP_PRIMARY_SELECTION_V1_VERSION 1
  #define META_WP_PRESENTATION_VERSION        1
 diff --git a/src/wayland/meta-wayland.c b/src/wayland/meta-wayland.c
-index 501b69a91..0114823c1 100644
+index 501b69a91c..0114823c14 100644
 --- a/src/wayland/meta-wayland.c
 +++ b/src/wayland/meta-wayland.c
 @@ -865,6 +865,7 @@ meta_wayland_compositor_new (MetaContext *context)
@@ -1115,7 +1118,7 @@ index 501b69a91..0114823c1 100644
  meta_wayland_compositor_update_focus (MetaWaylandCompositor *compositor,
                                        MetaWindow            *window)
 diff --git a/src/wayland/meta-wayland.h b/src/wayland/meta-wayland.h
-index 0a0476eba..c23e82cdc 100644
+index 0a0476eba0..c23e82cdca 100644
 --- a/src/wayland/meta-wayland.h
 +++ b/src/wayland/meta-wayland.h
 @@ -26,6 +26,7 @@
@@ -1135,5 +1138,5 @@ index 0a0476eba..c23e82cdc 100644
  #ifdef HAVE_XWAYLAND
  void                    meta_wayland_compositor_notify_surface_id (MetaWaylandCompositor *compositor,
 -- 
-2.45.2
+2.46.0
 
