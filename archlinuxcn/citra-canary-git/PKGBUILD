@@ -2,7 +2,7 @@
 
 _pkgname=citra
 pkgname=$_pkgname-canary-git
-epoch=3
+epoch=4
 pkgver=2798.r0.gfeea91b03
 pkgrel=1
 pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
@@ -19,7 +19,7 @@ gc.patch)
 md5sums=('SKIP'
          'cd9e6be75ae839618f747ea6d653f349'
          'f151510cd1fc233992710405cbf44323')
-options=('!debug')
+options=('!debug' '!buildflags')
 
 pkgver() {
 	cd "$srcdir/$_pkgname"
@@ -36,8 +36,10 @@ prepare() {
     sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateBuildInfo.cmake
     sed -i 's/cpp-httplib::cpp-httplib/httplib::httplib/g' externals/CMakeLists.txt
     sed -i 's/CppHttp/httplib/g' externals/CMakeLists.txt
-    sed -i 's/0.14.1/0.15.3/g' externals/CMakeLists.txt
+    sed -i 's/ 0.14.1//g' externals/CMakeLists.txt
     sed -i 's/SPIRV/SPIRV SPIRV-Tools/' src/video_core/CMakeLists.txt
+    sed -i 's/AV_OPT_TYPE_CHANNEL_LAYOUT/AV_OPT_TYPE_CHLAYOUT/g' src/core/dumping/ffmpeg_backend.cpp 
+    sed -i 's/AV_OPT_TYPE_CHANNEL_LAYOUT/AV_OPT_TYPE_CHLAYOUT/g' src/citra_qt/dumping/option_set_dialog.cpp 
 
     git submodule update --init --remote externals/nihstro
     git submodule update --init --remote externals/sirit
