@@ -7,7 +7,6 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - dynarmic
   - discord-rpc-git
   - cubeb-git
   - cpp-httplib
@@ -16,8 +15,6 @@ repo_depends:
   - vulkan-memory-allocator-git
 
 update_on:
-  - source: github
-    github:  pineappleEA/pineapple-src
-    use_latest_tag: true
-    query: EA-
+  - source: vcs
+    vcs: 
   - alias: boost
