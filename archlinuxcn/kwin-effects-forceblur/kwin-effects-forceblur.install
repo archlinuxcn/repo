@@ -1,7 +1,7 @@
 msg() {
-  printf "%b" "\e[1;31m==> WARNING: To use kwin-effects-forceblur, you need to disable the stock blur effect and any other blur effects you may be using (such as the one provided by LightlyShaders).\n\e[0m"
+  printf "%b" "\e[1;31m==> WARNING: To use kwin-effects-forceblur, you need to disable the stock blur effect and any other blur effects you may be using (such as the one provided by LightlyShaders).\e[0m"
 }
 
-post_upgrade() {
+post_install() {
   msg
 }
