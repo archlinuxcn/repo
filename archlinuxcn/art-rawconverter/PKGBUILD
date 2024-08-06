@@ -2,7 +2,7 @@
 
 pkgname=art-rawconverter
 _pkgname=ART
-pkgver=1.22.1
+pkgver=1.23
 pkgrel=1
 pkgdesc="raw image converter ART (forked from RawTherapee with ease of use in mind)"
 arch=('i686' 'x86_64' 'aarch64')
@@ -14,7 +14,7 @@ optdepends=('perl-image-exiftool: metadata support for CR3 images'
 	'lcms2-ff: lcms2 with fast-float plugin for improved export speed')
 makedepends=('pkgconf' 'cmake' 'git' 'gcc' 'hicolor-icon-theme' 'fakeroot')
 source=("https://bitbucket.org/agriggio/art/downloads/${_pkgname}-${pkgver}.tar.xz")
-sha256sums=('2432b4ce277cb97c015a90fd61c3b1e945f8c0955e11769e72af98514ad1626a')
+sha256sums=('21693473dba473b3e43f025588e3e12552a0c61b783eedb5d29f5f78e4129059')
 
 build() {
 	mkdir build/
