@@ -1,0 +1,27 @@
+post_install() {
+cat <<'EOF'
+[+] Please enable this input scheme through the `default.custom.yaml` file
+    in the user configuration directory or `rime_deployer` command
+    and re-deploy rime to take effect.
+
+    Example `default.custom.yaml`:
+    
+      patch:
+        schema_list:
+          - schema: flypy
+
+[+] If you want to use "flypy_full" which equivalent to `oqm` on windows,
+    please symlink `flypy_full.txt` to your user configuration directory.
+
+    For example (fcitx5-rime):
+
+      ln -s /usr/share/rime-data/flypy_full/flypy_full.txt ~/.local/share/fcitx5/rime/
+
+EOF
+}
+
+post_upgrade() {
+cat <<'EOF'
+[+] Please re-deploy rime to take effect.
+EOF
+}
