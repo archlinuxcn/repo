@@ -6,23 +6,13 @@
 
 pkgbase=mesa-amd-tmpfix
 pkgname=(
-  mesa-amd-tmpfix
   libva-mesa-driver-amd-tmpfix
-  mesa-vdpau-amd-tmpfix
-  opencl-clover-mesa-amd-tmpfix
-  opencl-rusticl-mesa-amd-tmpfix
-  vulkan-intel-amd-tmpfix
-  vulkan-mesa-layers-amd-tmpfix
-  vulkan-nouveau-amd-tmpfix
-  vulkan-radeon-amd-tmpfix
-  vulkan-swrast-amd-tmpfix
-  vulkan-virtio-amd-tmpfix
 )
 
 pkgver=24.1.5
-pkgrel=103
+pkgrel=104
 epoch=1
-pkgdesc="Open-source OpenGL drivers. Temporary fix MR30510 applied for AMD."
+pkgdesc="Open-source OpenGL drivers."
 url="https://www.mesa3d.org/"
 arch=(x86_64)
 license=("MIT AND BSD-3-Clause AND SGI-B-2.0")
@@ -193,84 +183,8 @@ _pick() {
   done
 }
 
-package_mesa-amd-tmpfix() {
-  depends=(
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libelf
-    libglvnd
-    libx11
-    libxcb
-    libxext
-    libxfixes
-    libxshmfence
-    libxxf86vm
-    llvm-libs
-    lm_sensors
-    wayland
-    zlib
-    zstd
-
-    libomxil-bellagio
-  )
-  optdepends=("opengl-man-pages: for the OpenGL API man pages")
-  provides=(
-    mesa
-    mesa-libgl
-    opengl-driver
-  )
-  conflicts=(mesa mesa-libgl)
-  replaces=(mesa-libgl)
-
-  meson install -C build --destdir "$pkgdir"
-
-  (
-    local libdir=usr/lib icddir=usr/share/vulkan/icd.d
-
-    cd "$pkgdir"
-
-    _pick libva $libdir/dri/*_drv_video.so
-
-    _pick vdpau $libdir/vdpau
-
-    _pick clover $libdir/gallium-pipe
-    _pick clover $libdir/libMesaOpenCL*
-    _pick clover etc/OpenCL/vendors/mesa.icd
-
-    _pick clrust $libdir/libRusticlOpenCL*
-    _pick clrust etc/OpenCL/vendors/rusticl.icd
-
-    _pick vkintel $icddir/intel_*.json
-    _pick vkintel $libdir/libvulkan_intel*.so
-
-    _pick vklayer $libdir/libVkLayer_*.so
-    _pick vklayer usr/bin/mesa-overlay-control.py
-    _pick vklayer usr/share/vulkan/{ex,im}plicit_layer.d
-
-    _pick vknvidia $icddir/nouveau_*.json
-    _pick vknvidia $libdir/libvulkan_nouveau*.so
-
-    _pick vkradeon $icddir/radeon_icd*.json
-    _pick vkradeon $libdir/libvulkan_radeon.so
-    _pick vkradeon usr/share/drirc.d/00-radv-defaults.conf
-
-    _pick vkswrast $icddir/lvp_icd*.json
-    _pick vkswrast $libdir/libvulkan_lvp.so
-
-    _pick vkvirtio $icddir/virtio_icd*.json
-    _pick vkvirtio $libdir/libvulkan_virtio.so
-
-    # indirect rendering
-    ln -sr $libdir/libGLX_{mesa,indirect}.so.0
-  )
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
 package_libva-mesa-driver-amd-tmpfix() {
-  pkgdesc="Open-source VA-API drivers"
+  pkgdesc="Open-source VA-API drivers. Temporary fix MR30510 applied for AMD."
   depends=(
     expat
     gcc-libs
@@ -284,235 +198,12 @@ package_libva-mesa-driver-amd-tmpfix() {
     zlib
     zstd
   )
-  provides=(libva-driver)
+  provides=(libva-mesa-driver libva-driver)
+  conflicts=(libva-mesa-driver)
 
   mv libva/* "$pkgdir"
 
   install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_mesa-vdpau-amd-tmpfix() {
-  pkgdesc="Open-source VDPAU drivers"
-  depends=(
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libelf
-    libx11
-    libxcb
-    libxshmfence
-    llvm-libs
-    zlib
-    zstd
-  )
-  provides=(vdpau-driver)
-
-  mv vdpau/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_opencl-clover-mesa-amd-tmpfix() {
-  pkgdesc="Open-source OpenCL drivers - Clover variant"
-  depends=(
-    clang
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libelf
-    llvm-libs
-    spirv-llvm-translator
-    spirv-tools
-    zlib
-    zstd
-
-    libclc
-  )
-  optdepends=("opencl-headers: headers necessary for OpenCL development")
-  provides=(opencl-driver)
-  replaces=("opencl-mesa<=23.1.4-1")
-  conflicts=(opencl-mesa)
-
-  mv clover/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_opencl-rusticl-mesa-amd-tmpfix() {
-  pkgdesc="Open-source OpenCL drivers - RustICL variant"
-  depends=(
-    clang
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libelf
-    llvm-libs
-    spirv-llvm-translator
-    spirv-tools
-    zlib
-    zstd
-
-    libclc
-  )
-  optdepends=("opencl-headers: headers necessary for OpenCL development")
-  provides=(opencl-driver)
-  replaces=("opencl-mesa<=23.1.4-1")
-  conflicts=(opencl-mesa)
-
-  mv clrust/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-intel-amd-tmpfix() {
-  pkgdesc="Open-source Vulkan driver for Intel GPUs"
-  depends=(
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libx11
-    libxcb
-    libxshmfence
-    systemd-libs
-    vulkan-icd-loader
-    wayland
-    xcb-util-keysyms
-    zlib
-    zstd
-  )
-  optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver)
-
-  mv vkintel/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-mesa-layers-amd-tmpfix() {
-  pkgdesc="Mesa's Vulkan layers"
-  depends=(
-    gcc-libs
-    glibc
-    libdrm
-    libxcb
-    wayland
-
-    python
-  )
-  conflicts=(vulkan-mesa-layer)
-  replaces=(vulkan-mesa-layer)
-
-  mv vklayer/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-nouveau-amd-tmpfix() {
-  pkgdesc="Open-source Vulkan driver for Nvidia GPUs"
-  depends=(
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libx11
-    libxcb
-    libxshmfence
-    systemd-libs
-    vulkan-icd-loader
-    wayland
-    xcb-util-keysyms
-    zlib
-    zstd
-  )
-  optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver)
-
-  mv vknvidia/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-radeon-amd-tmpfix() {
-  pkgdesc="Open-source Vulkan driver for AMD GPUs"
-  depends=(
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libelf
-    libx11
-    libxcb
-    libxshmfence
-    llvm-libs
-    systemd-libs
-    vulkan-icd-loader
-    wayland
-    xcb-util-keysyms
-    zlib
-    zstd
-  )
-  optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver)
-
-  mv vkradeon/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-swrast-amd-tmpfix() {
-  pkgdesc="Open-source Vulkan driver for CPUs (Software Rasterizer)"
-  depends=(
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libx11
-    libxcb
-    libxshmfence
-    llvm-libs
-    systemd-libs
-    vulkan-icd-loader
-    wayland
-    xcb-util-keysyms
-    zlib
-    zstd
-  )
-  optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  conflicts=(vulkan-mesa)
-  replaces=(vulkan-mesa)
-  provides=(vulkan-driver)
-
-  mv vkswrast/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-virtio-amd-tmpfix() {
-  pkgdesc="Open-source Vulkan driver for Virtio-GPU (Venus)"
-  depends=(
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libx11
-    libxcb
-    libxshmfence
-    systemd-libs
-    vulkan-icd-loader
-    wayland
-    xcb-util-keysyms
-    zlib
-    zstd
-  )
-  optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver)
-
-  mv vkvirtio/* "$pkgdir"
-
-  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
 # vim:set sw=2 sts=-1 et:
