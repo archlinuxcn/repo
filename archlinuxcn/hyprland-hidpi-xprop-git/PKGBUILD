@@ -8,12 +8,12 @@
 
 _pkgname=hyprland
 pkgname=$_pkgname-hidpi-xprop-git
-pkgver=0.41.2.r101.68286563
+pkgver=0.41.2.r166.0e86808e
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on aquamarine that doesn't sacrifice on its looks."
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/hyprwm/Hyprland"
-license=(BSD)
+license=('BSD-3-Clause')
 depends=("libdisplay-info.so" "libhyprlang.so"
   aquamarine
   cairo
@@ -21,7 +21,7 @@ depends=("libdisplay-info.so" "libhyprlang.so"
   glib2
   glibc
   glslang
-  hyprutils
+  hyprutils-git
   hyprcursor
   hyprlang
   libdisplay-info
@@ -44,6 +44,7 @@ depends=("libdisplay-info.so" "libhyprlang.so"
   seatd
   systemd-libs
   tomlplusplus
+  util-linux-libs
   wayland
   wayland-protocols
   xcb-proto
@@ -115,25 +116,22 @@ build() {
 
   mkdir -p build && cd build
   cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr ..
-  ninja
+  cmake --build .
 }
 
 package() {
   cd Hyprland
-  find src \( -name '*.h' -o -name '*.hpp' \) -exec install -Dm0644 {} "$pkgdir/usr/include/hyprland/{}" \;
-  mkdir -p "$pkgdir/usr/include/hyprland/protocols"
-  cp protocols/*.h* "$pkgdir/usr/include/hyprland/protocols"
-  install -Dm0644 -t "$pkgdir/usr/share/pkgconfig" build/hyprland.pc
-  install -Dm0644 -t "$pkgdir/usr/share/man/man1" docs/{Hyprland,hyprctl}.1
+  DESTDIR="$pkgdir" cmake --install build
+  pushd "$pkgdir/usr/bin"
+  ln -sf Hyprland hyprland
+  popd
+  # Avoid conflict w/ extra/xdg-desktop-portal-hyprland
+  rm -rf "$pkgdir/usr/share/xdg-desktop-portal"
   for cmd in hyprctl hyprpm; do
     install -Dm0644 "$cmd/$cmd.bash" "$pkgdir/usr/share/bash-completion/completions/$cmd"
     install -Dm0644 "$cmd/$cmd.zsh" "$pkgdir/usr/share/zsh/site-functions/_$cmd"
     install -Dm0644 -t "$pkgdir/usr/share/fish/vendor_completions.d/" "$cmd/$cmd.fish"
   done
-  install -Dm0755 -t "$pkgdir/usr/bin/" build/Hyprland build/hyprctl/hyprctl build/hyprpm/hyprpm
-  install -Dm0644 -t "$pkgdir/usr/share/$_pkgname/" assets/*.png
-  install -Dm0644 -t "$pkgdir/usr/share/wayland-sessions/" "example/$_pkgname.desktop"
-  install -Dm0644 -t "$pkgdir/usr/share/$_pkgname/" "example/$_pkgname.conf"
   install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
   install -Dm0644 subprojects/udis86/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE-udis86"
 }
