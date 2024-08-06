@@ -209,6 +209,8 @@ package_libva-mesa-driver-amd-tmpfix() {
 
     _pick libva $libdir/dri/*_drv_video.so
 
+  cd "$srcdir"
+  rm -r "$pkgdir"/*
   mv libva/* "$pkgdir"
 
   install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
