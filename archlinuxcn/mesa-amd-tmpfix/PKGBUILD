@@ -10,7 +10,7 @@ pkgname=(
 )
 
 pkgver=24.1.5
-pkgrel=104
+pkgrel=106
 epoch=1
 pkgdesc="Open-source OpenGL drivers."
 url="https://www.mesa3d.org/"
@@ -200,6 +200,14 @@ package_libva-mesa-driver-amd-tmpfix() {
   )
   provides=(libva-mesa-driver libva-driver)
   conflicts=(libva-mesa-driver)
+
+  meson install -C build --destdir "$pkgdir"
+
+    local libdir=usr/lib icddir=usr/share/vulkan/icd.d
+
+    cd "$pkgdir"
+
+    _pick libva $libdir/dri/*_drv_video.so
 
   mv libva/* "$pkgdir"
 
