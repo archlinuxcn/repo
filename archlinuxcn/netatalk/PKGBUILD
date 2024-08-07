@@ -6,7 +6,7 @@
 
 pkgname=netatalk
 pkgver=3.2.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL2')
@@ -28,7 +28,7 @@ depends=('acl'
          'perl-net-dbus')
 
 optdepends=('libwrap: TCP wrapper support'
-            'mariadb-libs: mysql CNID backend support'
+            'mariadb-libs: MySQL CNID backend support'
             'talloc: AFP Spotlight support'
             'tracker3: AFP Spotlight support')
 
@@ -36,7 +36,8 @@ conflicts=('netatalk-ddp'
            'netatalk2')
 
 backup=('etc/afp.conf'
-        'etc/extmap.conf')
+        'etc/extmap.conf'
+        'etc/pam.d/netatalk')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
