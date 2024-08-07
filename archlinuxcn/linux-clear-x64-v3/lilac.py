@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(name='linux-clear', maintainers=['metak'])
+    aur_pre_build(name='linux-clear', maintainers=['JeremyStarTM'])
 
     for line in edit_file('PKGBUILD'):
         if line.strip().startswith(': "${_subarch:=""}"'):
