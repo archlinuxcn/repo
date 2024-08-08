@@ -1,7 +1,7 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=pict-rs
-_pkgver=0.4.5
+_pkgver=0.5.16
 pkgver="${_pkgver/-/.}"
 pkgrel=1
 pkgdesc="A simple image hosting service"
@@ -11,7 +11,7 @@ license=('AGPL3')
 depends=('glibc' 'gcc-libs' 'imagemagick' 'ffmpeg' 'perl-image-exiftool')
 makedepends=('rust' 'protobuf')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$_pkgver.tar.gz")
-b2sums=('340bf6239cf1bfe157614b0da66b4996665a642fccc3884d68ea1418e462122570497e535f97c11c0073ae2ef8f34f85e9de8a005c6f60d6ef62c5c22668a505')
+b2sums=('978d8fbf642bf52514f4978fecfd750d246738f9a5584e4722eb9788ba0f9f4671f07d9ec25c9f61e555955842d1b60873d5a903c517f9fa417231dce2f12943')
 
 prepare() {
   cd "$pkgname"
