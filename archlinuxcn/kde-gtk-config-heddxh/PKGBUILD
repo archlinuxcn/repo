@@ -5,7 +5,7 @@
 
 pkgname=kde-gtk-config-heddxh
 _pkgname=kde-gtk-config
-pkgver=6.1.3
+pkgver=6.1.4
 _dirver=$(echo $pkgver | cut -d. -f1-3)
 _patch_1=01.feature-sync-options.patch
 pkgrel=1
@@ -33,7 +33,7 @@ makedepends=(extra-cmake-modules
 optdepends=('gtk3: GTK3 apps support')
 source=(https://download.kde.org/stable/plasma/$_dirver/$_pkgname-$pkgver.tar.xz{,.sig}
         $_patch_1)
-sha256sums=('0fa4f95557a93d8ad6d454a677fe3fd7690f7ae05a6788524c42576618404e46'
+sha256sums=('b3d4e5c8da2e7525bd23c77a85468e3a7cf3b1a9d9c9e8ae6a87e207a3f98019'
             'SKIP'
             '61fa7eb770b23486cb20505259630bf89d7aeee4e147e87a43f2860e5815b684')
 validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
