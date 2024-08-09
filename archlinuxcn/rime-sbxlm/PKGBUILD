@@ -1,8 +1,8 @@
 # Maintainer: ZeekoZhu <vaezt@outlook.com>
 
 pkgname=rime-sbxlm
-pkgver=20240712
-pkgrel=2
+pkgver=20240809
+pkgrel=1
 pkgdesc='声笔系列码配置'
 arch=(any)
 url="https://github.com/sbsrf/sbsrf"
@@ -10,8 +10,8 @@ source=('sbxlm-init' "${pkgname}-${pkgver}.zip::${url}/releases/download/${pkgve
 noextract=("${pkgname}-${pkgver}.zip" "${pkgname}-${pkgver}-src.zip")
 license=('BSD-3-Clause')
 sha256sums=('ddd93d18c5ecd40df142666df06d8588d4c345d662c38e31ea22402c3308549f'
-            'cebaf325d17bcdc3704ca3a694b901fd7db75083097b9a48d4335d940e74fb91'
-            'faa82122f2a8e459f62f4d1319224aa08c9e73bcc0ebaab5f1f805f4d208ac08')
+            '434d8505086ed18239fb0e1420eb514d86b94dc74f6ccc41221b20b495b15104'
+            'f0013dacbeecc217df5416e873680fb42cd7ed5411d1d3f3133fc7817bcd849f')
 makedepends=('unzip')
 optdepends=('librime' 'fcitx5-rime')
 replaces=('rime-sbxlm-sbfm' 'rime-sbxlm-sbkm' 'rime-sbxlm-sbzr' 'rime-sbxlm-sbxh')
