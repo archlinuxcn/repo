@@ -12,7 +12,7 @@ pkgbase=python-dlib
 [[ $_build_cpu -eq 1 ]] && pkgname+=('python-dlib')
 [[ $_build_cuda -eq 1 ]] && pkgname+=('python-dlib-cuda')
 _pkgname=dlib
-pkgver=19.24.4
+pkgver=19.24.6
 pkgrel=1
 pkgdesc="Dlib is a general purpose cross-platform C++ library designed using contract programming and modern C++ techniques."
 arch=('x86_64')
@@ -25,7 +25,7 @@ optdepends=('sqlite')
 #source=("$url/files/${_pkgname}-${pkgver}.tar.bz2")
 #source=("https://pypi.io/packages/source/${_pkgname:0:1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
 source=("https://github.com/davisking/dlib/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('d881911d68972d11563bb9db692b8fcea0ac1b3fd2e3f03fa0b94fde6c739e43')
+sha256sums=('22513c353ec9c153300c394050c96ca9d088e02966ac0f639e989e50318c82d6')
 [[ $_build_cuda -eq 1 ]] && options=(!lto)
 
 prepare() {
