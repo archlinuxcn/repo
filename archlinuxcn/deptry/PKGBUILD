@@ -1,7 +1,7 @@
 # Maintainer: Carl Smedstad <carsme@archlinux.org>
 
 pkgname=deptry
-pkgver=0.19.0
+pkgver=0.19.1
 pkgrel=1
 pkgdesc="Find unused, missing and transitive dependencies in a Python project"
 arch=(x86_64)
@@ -26,7 +26,7 @@ checkdepends=(
   python-pytest-xdist
 )
 source=("$pkgname::git+$url.git#tag=$pkgver")
-sha256sums=('e92d1c8e1936748b6b2fac983587ad013b8354d177ae7cf3e097fc0d76e390a6')
+sha256sums=('8d71a31ea0418e90722243f0975087d21e4c584bf58693705e3e24aa24550e18')
 
 build() {
   cd $pkgname
