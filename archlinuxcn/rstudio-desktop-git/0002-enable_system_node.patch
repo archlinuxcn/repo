@@ -1,0 +1,11 @@
+--- a/src/cpp/session/SessionOptions.cpp	2024-05-07 06:31:08.000000000 +1200
++++ b/src/cpp/session/SessionOptions.cpp	2024-05-21 19:33:46.308996710 +1200
+@@ -713,7 +713,7 @@ void Options::resolveNodePath(const File
+ {
+ #if defined(__linux__) && !defined(RSTUDIO_PACKAGE_BUILD)
+    // node version should match RSTUDIO_INSTALLED_NODE_VERSION
+-   FilePath dependenciesPath = resourcePath.completePath("../../dependencies/common/node/20.15.1-patched");
++   FilePath dependenciesPath = resourcePath.completePath("/usr");
+    resolvePath(dependenciesPath, pPath);
+ #else
+    resolvePath(resourcePath, pPath);
