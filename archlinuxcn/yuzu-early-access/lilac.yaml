@@ -19,6 +19,11 @@ repo_depends:
   - vulkan-memory-allocator-git
 
 update_on:
+  - source: alpm
+    alpm: fmt
+    repo: extra
+  - source: alpm
+    alpm: openssl
+  - alias: boost
   - source: vcs
     vcs:  
-  - alias: boost
