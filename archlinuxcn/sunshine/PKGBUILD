@@ -1,14 +1,14 @@
 # Maintainer:
 
 ## options
-: ${_build_cuda=false} # nvenc
+: ${_build_cuda=true} # nvenc
 
 : ${_commit=8b21db64fb8e8ffb9c24a412dbc66b7410699211}
 
 _pkgname="sunshine"
 pkgname="$_pkgname"
 pkgver=0.23.1
-pkgrel=4
+pkgrel=5
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
