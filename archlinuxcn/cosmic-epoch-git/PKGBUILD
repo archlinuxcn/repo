@@ -3,7 +3,7 @@
 
 pkgname=cosmic-epoch-git
 _pkgname=${pkgname%-git}
-pkgver=r140.22e5cf3
+pkgver=1.0.0alpha.1.r0.g0b34a97
 pkgrel=1
 pkgdesc="Cosmic desktop environment from System76's Pop!_OS written in Rust utilizing Iced inspired by GNOME"
 arch=('x86_64' 'aarch64')
@@ -136,7 +136,7 @@ sha256sums=('SKIP'
 
 pkgver() {
 	cd "${_pkgname}/"
-	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/epoch.//;s/.alpha/alpha/'
 }
 
 prepare() {
@@ -186,5 +186,5 @@ package() {
 
 	# Keybinding config
 	# https://github.com/pop-os/cosmic-epoch#cosmic-comp
-	install -Dm644 cosmic-comp/config.ron -t "${pkgdir}/etc/cosmic-comp/"
+	# install -Dm644 cosmic-comp/config.ron -t "${pkgdir}/etc/cosmic-comp/"
 }

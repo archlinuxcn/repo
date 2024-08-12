@@ -6,18 +6,23 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+pre_build: vcs_update
+
+post_build: git_pkgbuild_commit
+
 repo_depends:
-  - dynarmic
   - discord-rpc-git
   - cubeb-git
   - cpp-httplib
   - cpp-jwt
-  - xbyak
   - vulkan-memory-allocator-git
 
 update_on:
-  - source: github
-    github:  pineappleEA/pineapple-src
-    use_latest_tag: true
-    query: EA-
+  - source: alpm
+    alpm: fmt
+    repo: extra
+  - source: alpm
+    alpm: openssl
   - alias: boost
+  - source: vcs
+    vcs:  

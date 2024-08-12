@@ -6,13 +6,19 @@ update_on:
     github: moonlight-stream/moonlight-qt
   - source: aur
     aur: moonlight-qt-git
+  - alias: libssl
+  - alias: libcrypto
   - source: alpm
     alpm: ffmpeg
     provided: libavcodec.so
   - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
     alpm: libplacebo
     provided: libplacebo.so
-  - alias: libcrypto
-  - alias: libssl
+  - source: alpm
+    alpm: libva
+    provided: libva.so
 maintainers:
   - github: roaldclark

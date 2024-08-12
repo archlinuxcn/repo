@@ -1,0 +1,40 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: huggy <arch@huggy.moe>
+# Contributor: Nick Cao <nickcao@nichi.co>
+
+pkgname=ranet
+pkgver=0.10.0
+pkgrel=3
+pkgdesc="ranet, acronym for redundant array of networks, forms full mesh IPSec VPN"
+arch=('x86_64' 'aarch64')
+url="https://github.com/NickCao/ranet"
+license=('MIT')
+depends=(
+  gcc-libs
+  glibc
+  openssl
+)
+makedepends=('cargo')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/NickCao/ranet/archive/refs/tags/v${pkgver}.tar.gz")
+b2sums=('a9e2dfb5f1580985057ab80fc632d0cecdb9124434a2811ef962a0eef50eda3474796cc41f28b65ee726fb8d50dbf4dbfdb7ae9c36935d8c2268471b7e0d88f6')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm0755 -t "$pkgdir/usr/bin/" target/release/"$pkgname"
+  install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
+}
+
+# vim :set ts=2 sw=2 et:

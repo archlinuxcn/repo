@@ -5,7 +5,7 @@
 
 pkgname=obs-studio-git
 _pkgname=${pkgname%-git}
-pkgver=30.2.2.r1.gce6f9a4
+pkgver=30.2.2.r77.g8adc76f
 pkgrel=1
 epoch=2
 pkgdesc="Free, open source software for live streaming and recording"
@@ -14,8 +14,8 @@ url="https://obsproject.com/"
 license=("GPL-2.0-or-later")
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
 	'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
-	'libdatachannel')
-makedepends=('git' 'cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'ffnvcodec-headers' 'uthash' 'nlohmann-json')
+	'libdatachannel' 'qrcodegencpp-cmake')
+makedepends=('git' 'cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'ffnvcodec-headers' 'uthash' 'nlohmann-json' 'ffnvcodec-headers-12-1' 'asio' 'websocketpp')
 optdepends=('libfdk-aac: FDK AAC codec support'
 	'libva-intel-driver: hardware encoding'
 	'libva-mesa-driver: hardware encoding'
@@ -26,9 +26,13 @@ optdepends=('libfdk-aac: FDK AAC codec support'
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/obsproject/${_pkgname}.git"
+	"git+https://github.com/obsproject/obs-browser.git"
+	"git+https://github.com/obsproject/obs-websocket.git"
 	"fix_python_binary_loading.patch"
 	"ignore_unused_submodules.patch")
 sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
             'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd'
             '60b0ee1f78df632e1a8c13cb0a7a5772b2a4b092c4a2a78f23464a7d239557c3')
 
@@ -41,12 +45,18 @@ prepare() {
 	cd "${_pkgname}/"
 	patch -Np1 <"${srcdir}/fix_python_binary_loading.patch"
 	patch -Np1 <"${srcdir}/ignore_unused_submodules.patch"
+
+	git submodule init
+	git config submodule.plugins/obs-browser.url "${srcdir}/obs-browser/"
+	git config submodule.plugins/obs-websocket.url "${srcdir}/obs-websocket/"
+	git -c protocol.file.allow=always submodule update
 }
 
 build() {
 	cmake -B build -S "${_pkgname}/" \
 		-DCMAKE_INSTALL_PREFIX="/usr" \
-		-DENABLE_BROWSER=OFF \
+		-DENABLE_BROWSER=ON \
+		-DENABLE_WEBSOCKET=ON \
 		-DENABLE_VST=ON \
 		-DENABLE_VLC=OFF \
 		-DENABLE_NEW_MPEGTS_OUTPUT=OFF \

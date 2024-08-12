@@ -5,15 +5,15 @@
 _pkgname=catalogue
 pkgname="python-${_pkgname}"
 pkgver=2.0.10
-pkgrel=1
+pkgrel=2
 pkgdesc='Super lightweight function registries for your library'
 arch=(any)
 url='https://github.com/explosion/catalogue'
 license=('MIT')
 depends=(
     'python'
-    #'pythin-typing-extensions'
     'python-pytest'
+    'python-typing_extensions'
     'python-zipp'
 )
 makedepends=('python-setuptools')

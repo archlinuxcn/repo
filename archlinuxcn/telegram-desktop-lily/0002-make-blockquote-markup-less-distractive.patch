@@ -1,4 +1,4 @@
-From d28cf31de9c51bbbe9cff42d5f203bf1c4ae6154 Mon Sep 17 00:00:00 2001
+From d2da930cd227b641075f8562d1e27d28d3388798 Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Sun, 29 Oct 2023 18:14:47 +0800
 Subject: [PATCH 2/4] make blockquote markup less distractive
@@ -11,10 +11,10 @@ Subject: [PATCH 2/4] make blockquote markup less distractive
  4 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/Telegram/SourceFiles/chat_helpers/chat_helpers.style b/Telegram/SourceFiles/chat_helpers/chat_helpers.style
-index 0b1290dc8..6deccecc4 100644
+index d48f32c00..145ffbf71 100644
 --- a/Telegram/SourceFiles/chat_helpers/chat_helpers.style
 +++ b/Telegram/SourceFiles/chat_helpers/chat_helpers.style
-@@ -996,7 +996,7 @@ historyQuoteStyle: QuoteStyle(defaultQuoteStyle) {
+@@ -1000,7 +1000,7 @@ historyQuoteStyle: QuoteStyle(defaultQuoteStyle) {
  	verticalSkip: 4px;
  	outline: 3px;
  	outlineShift: 2px;
@@ -91,5 +91,5 @@ index a00fe941a..81e5b05bd 100644
  inline constexpr auto kDefaultOutline2Opacity = 0.3;
  inline constexpr auto kDefaultOutline3Opacity = 0.6;
 -- 
-2.45.2
+2.46.0
 

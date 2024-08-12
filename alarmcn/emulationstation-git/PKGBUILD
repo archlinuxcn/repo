@@ -4,15 +4,15 @@
 
 pkgname=emulationstation-git
 _gitname=EmulationStation
-pkgrel=1
-pkgver=1744.362b675e
+pkgrel=2
+pkgver=1823.81c62c97
 pkgdesc="A graphical front-end for emulators with controller navigation. Developed for the Raspbery Pi, but runs on most Linux systems."
 arch=('x86_64' 'aarch64')
 url="https://github.com/RetroPie/EmulationStation"
 license=('MIT')
 install=emulationstation.install
-depends=('python' 'vlc' 'alsa-lib' 'sdl2' 'boost-libs' 'freeimage' 'curl' 'libraw' 'libcec' 'rapidjson' 'pugixml')
-makedepends=('git' 'boost' 'freetype2' 'cmake' 'curl')
+depends=('python' 'vlc' 'alsa-lib' 'sdl2' 'freeimage' 'curl' 'pugixml')
+makedepends=('git' 'freetype2' 'cmake' 'curl' 'rapidjson') 
 optdepends=('ttf-droid: Fallback fonts for Chinese/Japanese/Korean characters'
             'dolphin-emu: GameCube and Wii support'
             'mupen64plus: Nintendo 64 support'
@@ -42,7 +42,6 @@ prepare() {
     rm -rf "${_gitname}/.gitmodules"
 
     patch -d "${_gitname}" -Np1 -i "${srcdir}/install.patch"
-    patch -d "${_gitname}" -Np1 -i "${srcdir}/pugixml.patch"
 }
 
 build() {
@@ -63,8 +62,7 @@ build() {
         -DCMAKE_INSTALL_LIBDIR:PATH='lib' \
         -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
         ${_cmakeflags} \
-        -Wno-dev -Wno-deprecated \
-    ..
+        -Wno-dev -Wno-deprecated
     make -C "${_gitname}/build" all
 }
 

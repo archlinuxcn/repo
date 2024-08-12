@@ -7,12 +7,10 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - dynarmic
   - discord-rpc-git
   - cubeb-git
   - cpp-httplib
   - cpp-jwt
-  - xbyak
   - vulkan-memory-allocator-git
 
 pre_build: vcs_update
@@ -20,6 +18,11 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - source: github
-    github: yuzu-emu/yuzu-mainline
+  - source: alpm
+    alpm: fmt
+    repo: extra
+  - source: alpm
+    alpm: openssl
   - alias: boost
+  - source: vcs
+    vcs: git+https://notabug.org/yuzu-emu-mirror/yuzu-mainline

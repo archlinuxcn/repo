@@ -2,45 +2,63 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-early-access
+epoch=2
 pkgver=4176
-pkgrel=1
+pkgrel=3
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'vulkan-utility-libraries' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'perl' 'yasm')
+depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib' 'enet') 
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'vulkan-utility-libraries' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'perl' 'yasm' 'python-jsonschema' 'python-jinja')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
-source=("https://github.com/pineappleEA/pineapple-src/archive/EA-${pkgver}.tar.gz"
-        "https://raw.githubusercontent.com/pineappleEA/Pineapple-Linux/master/yuzu.xml"
-        "https://github.com/pineappleEA/pineapple-src/releases/download/EA-${pkgver}/Windows-Yuzu-EA-${pkgver}.zip")
+source=("git+https://source.hodakov.me/hdkv/yuzu.git"
+yuzu-mainline::"git+https://notabug.org/yuzu-emu-mirror/yuzu-mainline")
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
-sha256sums=('fc8c79e6b52336b5f83486fbb20f4a40357535497d350b9420daa7c778cf4e64'
-            'e76ab2b3566d8135930e570ede5bed3da8f131270b60db818e453d248880bdf2'
-            'b5d5a12dd2320f442187919ef9e9680a83c36d98fa80584f13114face49bf2a0')
+sha256sums=('SKIP'
+            'SKIP')
 
-prepare() {
-  cd "$srcdir/yuzu-windows-msvc-early-access"
-  tar -xvf *.tar.xz
-  cd $(ls *.tar.xz | sed -e 's/.tar.xz//')
-  cp -Rf .git* $srcdir/pineapple-src-EA-${pkgver}/
-  
-  cd $srcdir/pineapple-src-EA-${pkgver}
+prepare() {    
+  cd ${srcdir}/yuzu-mainline
+  cp -Rf .git* $srcdir/yuzu/
+ 
+  cd $srcdir/yuzu
   for i in $(git config --file .gitmodules --get-regexp path | awk '{ print $2 }') ; do
       rm -rf "$i"
   done
 
+  git submodule set-url externals/mbedtls https://github.com/yuzu-mirror/mbedtls
+  git submodule set-url externals/sirit https://github.com/yuzu-mirror/sirit
+  git submodule set-url externals/dynarmic https://github.com/lioncash/dynarmic
   git submodule update --init --remote externals/sirit
-  git submodule update --init --remote externals/mbedtls
   git submodule update --init --remote externals/libadrenotools
   git submodule update --init --remote --recursive externals/nx_tzdb
   git submodule update --init --remote externals/simpleini
   git submodule update --init --remote externals/ffmpeg
+  git submodule update --init --remote externals/mbedtls
+  git submodule update --init --remote externals/dynarmic
+  git submodule update --init --remote externals/xbyak
 
- # sed -i -e '/#elif defined(__linux__) || defined(__FreeBSD__)/,/^ return true;/d' src/yuzu/util/util.cpp
+  cd externals/mbedtls
+  git checkout 8c88150
+  cd ../sirit
+  git checkout ab75463
+  cd ../libadrenotools
+  git checkout 5cd3f5c
+  cd ../dynarmic
+  git checkout ba8192d
+  cd ../xbyak
+  git checkout a1ac375
+  cd ../nx_tzdb/tzdb_to_nx
+  git checkout 9792969
+  cd ../../simpleini
+  git checkout 382ddbb
+  cd ../ffmpeg/ffmpeg
+  git checkout 9c1294e
 
+  cd $srcdir/yuzu
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
@@ -57,20 +75,20 @@ prepare() {
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
 
   perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n        -msse4.1/igs' src/video_core/CMakeLists.txt
-
-  cp -f  $srcdir/yuzu.xml dist/yuzu.xml
 }
 build() {
-  cd "$srcdir/pineapple-src-EA-${pkgver}"
+  cd yuzu
 	mkdir -p build && cd build
-  cmake .. -GNinja \
+
+  export CXXFLAGS+=' -Wno-switch'
+  cmake -GNinja .. \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DTITLE_BAR_FORMAT_IDLE="yuzu Early Access $pkgver" \
     -DTITLE_BAR_FORMAT_RUNNING="yuzu Early Access $pkgver | {3}" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
-    -DYUZU_ENABLE_COMPATIBILITY_REPORTING=ON \
-    -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=ON \
+    -DYUZU_ENABLE_COMPATIBILITY_REPORTING=OFF \
+    -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=OFF \
     -DYUZU_USE_QT_WEB_ENGINE=ON \
     -DUSE_DISCORD_PRESENCE=ON \
     -DENABLE_QT_TRANSLATION=ON \
@@ -90,7 +108,7 @@ build() {
 }
 
 package() {
-	cd "$srcdir/pineapple-src-EA-${pkgver}/build"
+	cd yuzu/build
 	DESTDIR="$pkgdir" ninja install
 
     rm -rf $pkgdir/usr/lib $pkgdir/usr/include 

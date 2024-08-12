@@ -3,8 +3,8 @@
 
 pkgname=python-ufonormalizer
 _pyname=${pkgname#python-}
-pkgver=0.6.1
-pkgrel=12
+pkgver=0.6.2
+pkgrel=1
 pkgdesc='A tool that will normalize XML and other data inside of a UFO'
 arch=(any)
 url="https://github.com/unified-font-object/ufoNormalizer"
@@ -15,7 +15,7 @@ makedepends=(python-{build,installer,wheel}
 checkdepends=(python-pytest)
 _archive="$_pyname-$pkgver"
 source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.zip")
-sha256sums=('e61110e75a500083f265385b1354b578610f9542e3bbbeedb98a2a6155e4aa6c')
+sha256sums=('4c5715bb948381f2c641af82b94938ad242d9b5365dd1c5b7ce3d75556a26c3a')
 
 prepare() {
 	cd "$_archive"

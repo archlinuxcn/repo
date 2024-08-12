@@ -1,43 +1,59 @@
-# Maintainer: coolingtool <coolingtool-backup@outlook.com>
-# Contributor: Maintainer of qt5-wayland Felix Yan <felixonmars@archlinux.org>
-# Contributor: Contributor of qt5-wayland Andrea Scarpino <andrea@archlinux.org>
-# (Modified from qt5-wayland's PKGBUILD)
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
+# Contributor: coolingtool <coolingtool-backup@outlook.com>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
 
-_basename=qt5-wayland
 pkgname=qt5-wayland-decorations
-_basever=5.15.13
-pkgver=5.15.13+kde+r60
-pkgrel=2
-_commit=9c82b5461736f59a06923ab68c6f7584ecab4f77
-_patchcommit=1d8e08648debad9741dca0820f5f0e91633b5a4e
+_basever=5.15.14
+pkgver=5.15.14+kde+r59
+pkgrel=1
+_commit=16e1ce54c6a83e90af2273e8d4eb3f7f3369440b
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
-pkgdesc='Provides APIs for Wayland (with patch required for shadows on qadwaitadecorations-qt5)'
+pkgdesc='Provides APIs for Wayland - using QAdwaitaDecorations'
 depends=('qt5-declarative' 'libxcomposite')
+makedepends=('vulkan-headers' 'git')
 provides=('qt5-wayland')
 conflicts=('qt5-wayland')
-makedepends=('vulkan-headers' 'git')
-_pkgfqn=${_basename/5-/}
-source=(git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
-        https://src.fedoraproject.org/rpms/qt5-qtwayland/raw/$_patchcommit/f/qtwayland-decoration-support-backports-from-qt6.patch)
-sha256sums=('SKIP'
-            '4d8c5d686666cbaae7550ec3defee66ea56ca624152c56c51ff945693706c29d')
+
+# Fedora patches: https://src.fedoraproject.org/rpms/qt5-qtwayland/tree
+_frepourl="https://src.fedoraproject.org/rpms/qt5-qtwayland"
+_frepobranch=rawhide
+_fcommit=c0ca8c9d633f93c5f65c61ba7fe220ddb7641866
+_fpatchfile100='qtwayland-use-adwaita-decorations-by-default.patch'
+_fpatchfile101='qtwayland-decoration-support-backports-from-qt6.patch'
+_fpatchfile102='qtwayland-client-fix-window-margin-calculation.patch'
+
+source=("git+https://invent.kde.org/qt/qt/qtwayland#commit=${_commit}"
+        "${_fpatchfile100}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile100}"
+        "${_fpatchfile101}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile101}"
+        "${_fpatchfile102}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile102}")
+sha256sums=('35138ab4dcfb481245c1f12a0eacf79927107b47a34de483a4448a4105e74774'
+            '5b606c5526b44c0db9f5f7fd4be91c95bcb73bd06af304589c9f8c1922607fca'
+            '4d8c5d686666cbaae7550ec3defee66ea56ca624152c56c51ff945693706c29d'
+            '569ae734860335b72a0fc04e3418bc87086f574baf8db22c0dc5ba0846e22d4f')
 
 pkgver() {
-  cd $_pkgfqn
-  echo "$_basever+kde+r"`git rev-list --count v$_basever-lts-lgpl..$_commit` | sed -e 's|+kde+r0||'
+  cd qtwayland
+  echo "${_basever}+kde+r$(git rev-list --count v${_basever}-lts-lgpl..${_commit})" | sed -e 's|+kde+r0||'
 }
 
 prepare() {
   mkdir -p build
-  patch --directory="$_pkgfqn" --strip=1 --input="${srcdir}/qtwayland-decoration-support-backports-from-qt6.patch"
+
+  cd qtwayland
+
+  # Use QAdwaitaDecorations by default
+  patch -p1 -i "../${_fpatchfile100}-${_fcommit}"
+  patch -p1 -i "../${_fpatchfile101}-${_fcommit}"
+  patch -p1 -i "../${_fpatchfile102}-${_fcommit}"
 }
 
 build() {
   cd build
 
-  qmake ../${_pkgfqn}
+  qmake ../qtwayland
   make
 }
 
@@ -51,5 +67,5 @@ package() {
     -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
 
   install -d "$pkgdir"/usr/share/licenses
-  ln -s /usr/share/licenses/qt5-base "$pkgdir"/usr/share/licenses/${pkgname}
+  ln -s /usr/share/licenses/qt5-base "$pkgdir/usr/share/licenses/$pkgname"
 }

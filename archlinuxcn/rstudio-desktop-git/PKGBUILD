@@ -1,30 +1,45 @@
-# Maintainer: Artem Klevtsov <a.a.klevtso@gmail.com>
-# Maintainer: Stephen Martin <hwkiller@gmail.com>
-# Contributor: Conor Anderson <conor@conr.ca>
+# Maintainer: Aleksandr Beliaev <trap000d@gmail.com>
 
 pkgname=rstudio-desktop-git
 _gitname=rstudio
-pkgver=41984.06e08648c1
-_nodever=18.18.2
+pkgver=42520.878a44dcec
+_srcname=rstudio-${_vermajor}.${_verminor}.${_verpatch}-${_versuffix}
+_nodever=20.15.1
 _pandocver="current"
-pkgrel=1
+_sociver="4.0.3"
+_quarto="TRUE"
+
+pkgrel=2
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
-arch=('i686' 'x86_64')
-url="https://www.rstudio.com/products/rstudio/"
-license=('AGPL3')
-depends=('r>=3.0.3' boost-libs qt5-sensors qt5-svg qt5-webengine qt5-xmlpatterns postgresql-libs sqlite3 soci clang hunspell-en_US mathjax2 pandoc yaml-cpp quarto-cli-bin libldap)
-makedepends=(git 'cmake>=3.1.0' boost desktop-file-utils jdk8-openjdk apache-ant unzip openssl libcups pam patchelf wget yarn nodejs ninja)
+arch=('x86_64')
+url="https://github.com/rstudio/rstudio"
+license=('AGPL-3.0-only')
+depends=('r>=3.3.0' 'boost-libs' 'postgresql-libs' 'sqlite3' 'clang' 'hunspell-en_US' 'mathjax2' 'pandoc' 'yaml-cpp' 'quarto-cli-bin' 'nodejs')
+makedepends=('git' 'cmake>=3.29' 'boost' 'ninja' 'npm' 'gyp' 'desktop-file-utils' 'jdk11-openjdk' 'apache-ant' 'unzip' 'openssl' 'python-setuptools' 'libcups' 'pam' 'patchelf' 'wget' 'yarn')
 optdepends=('git: for git support'
             'subversion: for subversion support'
-            'openssh-askpass: for a git ssh access')
+            'openssh-askpass: for a git ssh access'
+            'quarto: for Quarto projects support')
 provides=('rstudio-desktop')
-conflicts=('rstudio-desktop' 'rstudio-desktop-bin' 'rstudio-desktop-preview')
+conflicts=('rstudio-desktop')
+
 source=("git+https://github.com/rstudio/rstudio.git"
-	    "qt.conf"
-	    "pandoc_version.patch")
+        "git+https://github.com/quarto-dev/quarto.git#branch=release/rstudio-cherry-blossom"
+        "https://github.com/SOCI/soci/archive/refs/tags/v${_sociver}.tar.gz"
+        "https://nodejs.org/dist/v${_nodever}/node-v${_nodever}-linux-x64.tar.gz"
+        "qt.conf"
+        "0001-skip_node_install.patch"
+        "0002-enable_system_node.patch")
+
 sha256sums=('SKIP'
+            'SKIP'
+            '4b1ff9c8545c5d802fbe06ee6cd2886630e5c03bf740e269bb625b45cf934928'
+            'a9db028c0a1c63e3aa0d97de24b0966bc507d8239b3aedc4e752eea6b0580665'
             '723626bfe05dafa545e135e8e61a482df111f488583fef155301acc5ecbbf921'
-            '286925c442c1818979714feeec1577f03ae8a3527d2478b0f55238e2272a0b9e')
+            'ed60b18cde77177cd624e904adb7aafa627fc6015c5ab8ff1ef86a9fca54916b'
+            'a8abe9c5222cadc7cb06b8a540fab2fc08a8b88ee48332113501f3653a894006')
+
+options=('!emptydirs' '!debug')
 
 pkgver() {
     cd "${srcdir}/${_gitname}"
@@ -33,33 +48,88 @@ pkgver() {
 
 prepare() {
     cd ${srcdir}/${_gitname}
-    # Do not use outdated version name of pandoc
-    patch -p1 < ${srcdir}/pandoc_version.patch
-    git clone https://github.com/quarto-dev/quarto src/gwt/lib/quarto
+    msg "Do not use outdated version name of pandoc"
+    sed -i '/PANDOC_VERSION/s/2.18/current/' "${srcdir}/${_gitname}/cmake/globals.cmake"
+    sed -i 's|/etc/os-release|/usr/lib/os-release|g' "${srcdir}/${_gitname}/cmake/modules/OsRelease.cmake"
+
+    msg "Suppress _FORTIFY_SOURCE mismatch warnings"
+    sed -i 's/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=3/' "${srcdir}/${_gitname}/src/cpp/CMakeLists.txt"
+    
+    sed -i 's/add_subdirectory(package)/# add_subdirectory(package)/' "${srcdir}/${_gitname}/CMakeLists.txt"
+
+    # Add option to use system node
+    patch -p1 < ${srcdir}/0001-skip_node_install.patch
+    patch -p1 < ${srcdir}/0002-enable_system_node.patch
 
     cd "${srcdir}/${_gitname}/dependencies/common"
     install -d pandoc/${_pandocver}
-    install -d node/${_nodever}/bin
-
+ 
     ln -sfT /usr/share/myspell/dicts dictionaries
     ln -sfT /usr/share/mathjax2 mathjax-27
     ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
-    ln -sfT /usr/bin/node node/${_nodever}/bin/node
-    ln -sfT /usr/bin/corepack node/${_nodever}/bin/corepack
 
+    # Nodejs
+    install -d node/${_nodever}
+    cp -r "${srcdir}/node-v${_nodever}-linux-x64/"* node/${_nodever}
+
+    # Fix links for src/cpp/session/CMakeLists.txt
     cd "${srcdir}/${_gitname}/dependencies"
-    ln -sfT common/dictionaries dictionaries
-    ln -sfT common/mathjax-27 mathjax-27
-    install -d quarto/bin/tools
-    ln -sfT /usr/bin/quarto quarto/bin/quarto
-    ln -sfT /usr/bin/pandoc quarto/bin/tools/pandoc
+    ln -sfT /usr/share/myspell/dicts dictionaries
+    ln -sfT /usr/share/mathjax2 mathjax-27
+
+    # Bundled SOCI libs
+    ln -sfT "${srcdir}/soci-${_sociver}" "soci-${_sociver}"
+
+    # Panmirror is picked up from Quarto repo
+    ln -sfT "${srcdir}/quarto" "${srcdir}/${_gitname}/src/gwt/lib/quarto"
 }
 
 build() {
-    cd ${srcdir}
+    # Quarto set up
+    if (pacman -Q quarto-cli-bin >/dev/null 2>/dev/null) ; then
+        _quarto="TRUE"
+        msg "Quarto is installed, include it to build"
+        cd "${srcdir}/${_gitname}/dependencies"
+        install -d quarto/bin/tools
+        ln -sfT /usr/bin/quarto quarto/bin/quarto
+        ln -sfT /usr/bin/pandoc quarto/bin/tools/pandoc
+    else
+        _quarto="FALSE"
+        msg "Quarto is not installed, use Pandoc"
+        cd "${srcdir}/${_gitname}/dependencies"
+        install -d pandoc/${_pandocver}/bin/tools
+        ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/bin/tools/pandoc
+    fi
 
+    cd "${srcdir}/${_gitname}/dependencies/soci-${_sociver}"
+    msg "Building SOCI libs..."
+
+    local _CMAKE_SOCI_OPTIONS=(
+      -DCMAKE_POLICY_DEFAULT_CMP0063="NEW"
+      -DCMAKE_POLICY_DEFAULT_CMP0074="NEW"
+      -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true
+      -DCMAKE_CXX_VISIBILITY_PRESET="$COMPILE_VISIBILITY"
+      -DSOCI_TESTS=OFF
+      -DSOCI_CXX11=ON
+      -DSOCI_EMPTY=OFF
+      -DWITH_BOOST=ON
+      -DWITH_POSTGRESQL=ON
+      -DWITH_SQLITE3=ON
+      -DWITH_DB2=OFF
+      -DWITH_MYSQL=OFF
+      -DWITH_ORACLE=OFF
+      -DWITH_FIREBIRD=OFF
+      -DWITH_ODBC=OFF
+    )
+
+    cmake -G Ninja -S "${srcdir}/${_gitname}/dependencies/soci-${_sociver}" -B build "${_CMAKE_SOCI_OPTIONS[@]}"
+    cmake --build build --target all
+
+    export LDFLAGS="${LDFLAGS} -L${srcdir}/${_gitname}/dependencies/soci-${_sociver}/build/lib"
+
+    cd ${srcdir}
     msg "Downloading and installing R packages..."
-    export R_LIBS_USER="${srcdir}/${_srcname}/dependencies/R"
+    export R_LIBS_USER="${srcdir}/${_gitname}/dependencies/R"
     _JOBS="$(grep -oP -- "-j\s*\K[0-9]+" <<< "${MAKEFLAGS}")" || _JOBS="1"
     mkdir -p "${R_LIBS_USER}"
     for RPKG in rmarkdown renv testthat xml2 yaml; do
@@ -68,38 +138,53 @@ build() {
         Rscript -e "$RINSTALLCMD"
     done
 
-    export PATH=/usr/lib/jvm/java-8-openjdk/jre/bin/:${PATH}
-    export JAVA_TOOL_OPTIONS="-Djava.util.prefs.userRoot=${srcdir}"
-    export BUILD_ID="local"
+    export PATH=/usr/lib/jvm/java-11-openjdk/jre/bin/:${PATH}
+    export RSTUDIO_TOOLS_ROOT="${srcdir}/${_gitname}/dependencies"
+    export RSTUDIO_NODE_PATH=/usr/
+    export RSTUDIO_VERSION_MAJOR=${_vermajor}
+    export RSTUDIO_VERSION_MINOR=${_verminor}
+    export RSTUDIO_VERSION_PATCH=${_verpatch}
+    export RSTUDIO_VERSION_SUFFIX="+${_versuffix}"
+    export GIT_COMMIT=${_gitcommit}
     export PACKAGE_OS=$(uname -om)
 
-    cmake -S "${srcdir}/${_gitname}" -B build \
-          -GNinja \
-          -DRSTUDIO_TARGET=Desktop \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_PREFIX=/usr/lib/rstudio \
-          -DRSTUDIO_USE_SYSTEM_BOOST=yes \
-          -DRSTUDIO_USE_SYSTEM_YAML_CPP=yes \
-          -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
-          -DBoost_NO_BOOST_CMAKE=ON \
-          -DQUARTO_ENABLED=TRUE \
-          -DRSTUDIO_USE_SYSTEM_SOCI=yes \
-          -DRSTUDIO_BUNDLE_QT=FALSE
-    cd ${srcdir}/build
-    ninja
+    # node-gyp or node have a bug that prevents building with "text file busy"
+    # if the kernel is too fast, so we have to disable IO_URING support. This
+    # is cleary a hack and needs to be removed as soon as possible
+    # nodejs/node#48444 is the necro bumped thread
+    # originally from docker
+    # https://github.com/nodejs/node/issues/48444
+    export UV_USE_IO_URING=0
+
+    # -DCMAKE_INSTALL_PREFIX seems ignored for sub-dependencies, 
+    # which results as empty '/usr/local/bin' in package
+    # Following override works for cmake >3.29
+    export CMAKE_INSTALL_PREFIX=/usr/lib/rstudio
+    
+    local _CMAKE_RSTUDIO_OPTIONS=(
+      -DRSTUDIO_TARGET=Electron
+      -DCMAKE_BUILD_TYPE=Release
+      -DRSTUDIO_USE_SYSTEM_BOOST=yes
+      -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake
+      -DBoost_NO_BOOST_CMAKE=ON
+      -DQUARTO_ENABLED=${_quarto}
+      -DRSTUDIO_BUNDLE_QT=FALSE
+    )
+    cmake -G Ninja -S "${srcdir}/${_gitname}" -B build "${_CMAKE_RSTUDIO_OPTIONS[@]}"
+    cmake --build build
 }
 
 package() {
+
     # Install the program
-    cd ${srcdir}/build
-    DESTDIR="${pkgdir}" ninja install
+    DESTDIR="${pkgdir}" cmake --install build
 
     # Install the license
     install -Dm 644 "${srcdir}/${_gitname}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 
     # Symlink main binary
     install -d "${pkgdir}/usr/bin"
-    ln -s "/usr/lib/rstudio/bin/rstudio" "${pkgdir}/usr/bin/rstudio"
+    ln -s "/usr/lib/rstudio/rstudio" "${pkgdir}/usr/bin/rstudio"
 
     # BUGFIX: qt5-webengine isn't init'ing properly. Likely an Rstudio bug.
     install -Dm 644 "${srcdir}/qt.conf" "${pkgdir}/usr/lib/qt/libexec/qt.conf"

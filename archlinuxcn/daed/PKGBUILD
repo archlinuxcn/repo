@@ -2,8 +2,8 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 
 pkgname=daed
-pkgver=0.7.0rc1.1
-pkgrel=2
+pkgver=0.7.0
+pkgrel=1
 pkgdesc="A modern dashboard for dae, bundled with dae-wing (backend API server) and dae (core)."
 arch=('x86_64' 'aarch64')
 url="https://github.com/daeuniverse/${pkgname}"
@@ -12,7 +12,7 @@ makedepends=('pnpm' 'clang' 'go')
 provides=('dae')
 conflicts=('dae')
 source=("${pkgname}-${pkgver}.zip::https://github.com/daeuniverse/${pkgname}/releases/download/v${pkgver}/${pkgname}-full-src.zip")
-sha512sums=('ffcc0d98bc7db022498f3b06d803f7fe4c353885eada2d84cf9f7bd0070e6a79fc41059f9ba43d5bf6514f2146828346b8e203d7a6858840dead9a249cbbbf16')
+sha512sums=('4ceb651aadb7103d512eb7a243c719a2956f052b5334d52fd475305a99323ee918fbbedc027e0f2026211c0e35f2c4115046039ec04ad31128fdc534b019bf86')
 install="${pkgname}.install"
 options=(!debug)
 

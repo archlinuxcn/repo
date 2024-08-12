@@ -1,8 +1,8 @@
 # Maintainer: Tomislav Ivek <tomislav dot ivek at gmail dot com>
 
 pkgname=python-patch-ng
-pkgver=1.17.4
-pkgrel=9
+pkgver=1.18.0
+pkgrel=1
 pkgdesc='Library to parse and apply unified diffs forked from python-patch.'
 arch=('any')
 url="https://github.com/conan-io/python-patch/"
@@ -11,7 +11,7 @@ depends=('python')
 makedepends=('python-setuptools')
 source=($pkgname-$pkgver.tar.gz::"https://github.com/conan-io/python-patch-ng/archive/$pkgver.tar.gz")
 #        "https://raw.githubusercontent.com/conan-io/python-patch-ng/${pkgver}/LICENSE")
-md5sums=('b8c0dc0d722a3cecdc8f246c45133b5c')
+md5sums=('aa5bcc39132488bfe093f6d413f22c00')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"

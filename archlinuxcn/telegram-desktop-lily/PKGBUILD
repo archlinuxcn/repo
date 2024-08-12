@@ -4,8 +4,8 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
-pkgver=5.2.3
-pkgrel=1
+pkgver=5.3.2
+pkgrel=2
 pkgdesc="Official Telegram Desktop client with megumifox & lily's patch"
 arch=('x86_64')
 url="https://desktop.telegram.org/"
@@ -16,7 +16,8 @@ depends=('hunspell' 'ffmpeg' 'libavfilter.so' 'libavformat.so' 'libavcodec.so' '
          'openssl' 'libcrypto.so' 'libssl.so'
          'protobuf' 'libprotobuf-lite.so'
          'libvpx' 'libvpx.so'
-         'glib2' 'libsigc++-3.0' 'libsigc-3.0.so' 'kcoreaddons')
+         'glib2' 'libsigc++-3.0' 'libsigc-3.0.so' 'kcoreaddons'
+         'openh264' 'libopenh264.so' 'ada')
 makedepends=('cmake' 'git' 'ninja' 'python' 'range-v3' 'tl-expected' 'microsoft-gsl' 'meson'
              'extra-cmake-modules' 'wayland-protocols' 'plasma-wayland-protocols' 'libtg_owt'
              'glib2-devel' 'gobject-introspection' 'boost' 'fmt' 'mm-common' 'perl-xml-parser' 'python-packaging')
@@ -33,13 +34,13 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0003-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch"
         "0004-make-animated-avatar-follow-power-settings.patch"
         "warn-before-delete-all-2.patch")
-sha512sums=('5d5bf1f5c35af11b2adf7db075832e7cca5768c2c5f82d9fc5054b9d45f964a3520eb88864aefc3de593ce1359534b210b1e5d89495819e7386f6ca15fd4a15c'
+sha512sums=('594c6c9664b52b7eb5bbd2a1f052ddacee0e689b8f6553f332d126add37dc931d4ff7cd68911f709e16cb5f02ecc0d1f27bfc9bc2a92c83f856a43e7d1b554fa'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
-            'f1774ca438f2c32d4b8a593530e30f12c5ea225ac489cfc5602c88d81b1c4eee0d3514768364c682f3fa2f0bd0e6f6520c4c84c6b2ecbdb33def5b3737f7396a'
-            'e472b945a6afdc43a48b6bf011b87ec19a9208583b410ec0213b7b16e5e5b21e66952f71974d0dce0ef6cb8c360ab9ed98f0bf9411dcd9c0440840ec2f7c2242'
-            'bc1228eb3e65ece220b26460063189e5283d13f9e626f52737c464b65e32cd5975350754ee27ce1a67eccda6eb489776b6317e4a5746a3b27bb51494d6d0e27e'
-            '970cb4f69c9420213825977a4711a6abf786c78d96737bba746d3946b1191cc79d59f3215f5ec5ccf1511b457850149b529b2966aeac58061058ab0fdaec920b'
+            '53f11ce2ca0d26f80ce44ec0c746236b22f27319a7a2a7773a265f6c69f413d2cde0d5f735a40c67674091792c548b426b22981a65cacca2690fc8551a51f18a'
+            '9d2e7512734044682a18b79cdda4fd21aa1427c4e066c9288e8218e890744225ff19114a5a129e861a9d382fb5dae0bf19e82e0e9ca862c112ad9a2b54a853d0'
+            '51c8a2533f047f5ceafb58a11a40426c242618c7583f2f0d47b2e43bfa6276cbd3ea66e8268392c3a67cef48db64457a31f733b1b3f1dd4d088b375ab87c1e5b'
+            '871fd0994bb35dcf32d3d2cbf222db92c30acfd76df06fe87feecbac205f08e3bbed8e48a56c4e11737638fafddc12a1e278519481f77f7dab3f9957ea6e61ed'
             '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d')
 
 prepare() {

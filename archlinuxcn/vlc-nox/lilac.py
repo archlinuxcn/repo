@@ -2,7 +2,8 @@
 
 from lilaclib import aur_pre_build
 from lilaclib import edit_file
-from lilaclib import run_cmd
+
+from pathlib import Path
 
 
 def pre_build():
@@ -11,3 +12,7 @@ def pre_build():
         if line.startswith("replaces="):
             continue
         print(line)
+
+    file_path = Path("vlc.install")
+    if file_path.exists():
+        file_path.unlink()

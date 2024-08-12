@@ -4,19 +4,19 @@
 # Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 pkgname='fcitx5-mozc-ut'
-pkgver=2.30.5520.102
-pkgrel=2
+pkgver=2.30.5544.102
+pkgrel=1
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
-depends=('fcitx5' 'mozc>=2.30.5520.102')
+depends=('fcitx5' 'mozc>=2.30.5544.102')
 makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-configtool')
-provides=('fcitx5-mozc=2.30.5520.102')
+provides=('fcitx5-mozc=2.30.5544.102')
 conflicts=('fcitx5-mozc')
 options=(!distcc !ccache)
-source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=5c09e44fbba173031dd6441343e2c59dd728da98'
+source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=57e67f2a25e4c0861e0e422da0c7d4c232d89fcc'
         'git+https://github.com/abseil/abseil-cpp.git#commit=2f9e432cce407ce0ae50676696666f33a77d42ac'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=58d77fa8070e8cec2dc1ed015d66b454c8d78850'
@@ -24,7 +24,7 @@ source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=5c09e44fbba173
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
         'git+https://github.com/protocolbuffers/protobuf.git#commit=a978b75794a6ce4547c9db08a115c458d9190934'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d')
-sha256sums=('9ba312422d0609b6c30d0359e26d39780709af77b7418bb7eca13d229e73210d'
+sha256sums=('714934cd6d59448510bc3496ddfbb9d91a75b5e9e01d36a0727be17d72124b60'
             '8380cac08316c35118999b95845b8c28d9c9c4688402960fb1558d5eeda90f73'
             '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
             '2acda2cf88e375a7638f521f25c61b308d0eae8a7e188a54fafa2f2c8c2a063f'

@@ -7,15 +7,16 @@ pkgver=2.4.0
 pkgrel=2
 epoch=1
 pkgdesc="An advanced menu editor that provides modern features in a clean, easy-to-use interface"
-arch=("any")
-url="https://github.com/bluesabre/menulibre"
-license=("GPL3")
+arch=('any')
+url="https://github.com/bluesabre/${pkgname}"
+license=('GPL-3.0-or-later')
 depends=("gdk-pixbuf2" "gnome-menus" "gsettings-desktop-schemas" "gtksourceview3" "python" "python-gobject" "python-psutil" "python-xdg" "xdg-utils")
 makedepends=("python-distutils-extra")
-install=menulibre.install
-source=("$pkgname-$pkgver.tar.gz::$url/releases/download/$pkgname-$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('b972469dc90394d3e43c7ee69a280770')
+install="${pkgname}.install"
+source=("${url}/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('d906acf9cc13b0e15b8e342ae9aab8b0680db336a382d0c42f5d5f465f593c9f')
 
 package() {
-  cd "$pkgname-$pkgver" && python setup.py install --root="$pkgdir/" --optimize=1
+	cd "${pkgname}-${pkgver}/"
+	python setup.py install --root="${pkgdir}/" --optimize=1
 }

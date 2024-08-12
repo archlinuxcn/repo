@@ -1,4 +1,4 @@
-From e33f0ce5ad8af87a6f16c1d46aa32c487252e53b Mon Sep 17 00:00:00 2001
+From b7b8056728abdae962b55d67b136893ec2317e51 Mon Sep 17 00:00:00 2001
 From: q234rty <q23456yuiop@gmail.com>
 Date: Tue, 26 Sep 2023 21:36:09 +0800
 Subject: [PATCH 3/4] Drop usage of Qt 6.5 colorScheme API on Linux
@@ -48,10 +48,10 @@ index 147a9f03c..9828b829b 100644
  	LOG(("Icon theme: %1").arg(QIcon::themeName()));
  	LOG(("Fallback icon theme: %1").arg(QIcon::fallbackThemeName()));
 diff --git a/Telegram/SourceFiles/platform/linux/specific_linux.cpp b/Telegram/SourceFiles/platform/linux/specific_linux.cpp
-index 474f47746..7d3c87041 100644
+index 32437fb77..d67b84184 100644
 --- a/Telegram/SourceFiles/platform/linux/specific_linux.cpp
 +++ b/Telegram/SourceFiles/platform/linux/specific_linux.cpp
-@@ -506,7 +506,7 @@ QString SingleInstanceLocalServerName(const QString &hash) {
+@@ -533,7 +533,7 @@ QString SingleInstanceLocalServerName(const QString &hash) {
  #endif // !Q_OS_LINUX || Qt < 6.2.0
  }
  
@@ -87,5 +87,5 @@ index 88bbe9cf2..e6915b70b 100644
  		QGuiApplication::styleHints()->colorScheme()
  	) | rpl::then(
 -- 
-2.45.2
+2.46.0
 

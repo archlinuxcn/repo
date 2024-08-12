@@ -1,23 +1,21 @@
-# Maintainer: Łukasz Mariański <lmarianski at protonmail dot com>
-
-function _nvidia_check() {
-	pacman -Qi nvidia &>/dev/null
-}
+# Maintainer: m00nw4tch3r <m00nwtchr at duck dot com>
 
 pkgname=alvr
-pkgver=20.4.3
-pkgrel=1
+pkgver=20.9.1
+pkgrel=3
 pkgdesc="Experimental Linux version of ALVR. Stream VR games from your PC to your headset via Wi-Fi."
 arch=('x86_64')
 url="https://github.com/alvr-org/ALVR"
 license=('MIT')
-groups=()
-depends=('vulkan-driver' 'libunwind' 'libdrm')
-makedepends=('git' 'cargo' 'clang' 'imagemagick' 'vulkan-headers' 'jack' 'libxrandr' 'nasm' 'unzip' 'ffnvcodec-headers' 'nvidia' 'cuda' 'x264')
+depends=('vulkan-icd-loader' 'libunwind' 'libdrm' 'x264' 'alsa-lib' 'libva.so' 'libva-drm.so' 'libva-x11.so' 'bash' 'hicolor-icon-theme' 'libpipewire')
+makedepends=('git' 'cargo' 'clang' 'imagemagick' 'vulkan-headers' 'jack' 'libxrandr' 'nasm' 'unzip')
 provides=("${pkgname}")
 conflicts=("${pkgname}")
-source=("${pkgname}"::"git+https://github.com/alvr-org/ALVR.git#tag=v$pkgver")
-md5sums=('SKIP')
+source=("${pkgname}"::"git+https://github.com/alvr-org/ALVR.git#tag=v$pkgver"
+		"git+https://github.com/ValveSoftware/openvr.git"
+)
+md5sums=('f127285737bcc5a04aa3ad5ce99a0660'
+         'SKIP')
 options=('!lto')
 
 export CARGO_PROFILE_RELEASE_LTO=true
@@ -27,6 +25,10 @@ export CARGO_TARGET_DIR=target
 
 prepare() {
 	cd "$srcdir/${pkgname}"
+
+	git submodule init
+	git config submodule.openvr.url "$srcdir/openvr"
+	git -c protocol.file.allow=always submodule update
 
 	sed -i 's:../../../lib64/libalvr_vulkan_layer.so:libalvr_vulkan_layer.so:' alvr/vulkan_layer/layer/alvr_x86_64.json
 
@@ -42,11 +44,7 @@ build() {
 	export ALVR_VRCOMPOSITOR_WRAPPER_DIR="$ALVR_LIBRARIES_DIR/alvr/"
 	export FIREWALL_SCRIPT_DIR="$ALVR_ROOT_DIR/share/alvr/"
 
-	if _nvidia_check; then
-		cargo run --release --frozen -p alvr_xtask -- prepare-deps --platform linux
-	else
-		cargo run --release --frozen -p alvr_xtask -- prepare-deps --platform linux --no-nvidia
-	fi
+	cargo run --release --frozen -p alvr_xtask -- prepare-deps --platform linux --no-nvidia
 
 	cargo build \
 		--frozen \
@@ -69,6 +67,7 @@ package() {
 
 	# vrcompositor wrapper
 	install -Dm755 target/release/alvr_vrcompositor_wrapper "$pkgdir/usr/lib/alvr/vrcompositor-wrapper"
+	install -Dm644 target/release/alvr_drm_lease_shim.so "$pkgdir/usr/lib/alvr/alvr_drm_lease_shim.so"
 
 	# OpenVR Driver
 	install -Dm644 target/release/libalvr_server.so "$pkgdir/usr/lib/steamvr/alvr/bin/linux64/driver_alvr_server.so"
@@ -86,7 +85,6 @@ package() {
 	cp -ar icons/* $pkgdir/usr/share/icons/
 
 	# Firewall
-	install -Dm644 alvr/xtask/firewall/alvr-firewalld.xml "$pkgdir/usr/lib/firewalld/services/${_pkgname}.xml"
 	install -Dm644 alvr/xtask/firewall/ufw-alvr -t "$pkgdir/etc/ufw/applications.d/"
 
 	install -Dm755 alvr/xtask/firewall/alvr_fw_config.sh -t "$pkgdir/usr/share/alvr/"

@@ -11,9 +11,17 @@ update_on:
     strip_release: true
     provided: libavcodec.so
   - source: alpm
+    alpm: ffmpeg
+    strip_release: true
+    provided: libavutil.so
+  - source: alpm
     alpm: libplacebo
     strip_release: true
     provided: libplacebo.so
+  - source: alpm
+    alpm: libva
+    strip_release: true
+    provided: libva.so
   - source: manual
     manual: 1.0.3
 maintainers:

@@ -1,0 +1,125 @@
+# Maintainer: Rocket Aaron <i at rocka dot me>
+# Contributor: Luke Horwell <code@horwell.me>
+# Contributor: Jonathon Fernyhough <jonathon+m2x.dev>
+# Contributor: Tomasz Gąsior <tomaszgasior.pl>
+
+# credit:
+# https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=gtk3-classic
+# https://gitlab.archlinux.org/archlinux/packaging/packages/gtk3/-/blob/main/PKGBUILD
+
+pkgname=gtk3-classic
+_tagname=3.24.43-2
+_gtkver="${_tagname%-*}"
+pkgver="${_tagname/-/_}"
+pkgrel=2
+pkgdesc="Patched GTK+3 that provides a more classic experience"
+url="https://github.com/lah7/gtk3-classic"
+arch=(x86_64)
+license=(LGPL-2.1-or-later)
+conflicts=(
+  gtk3
+  gtk3-print-backends
+  gtk3-mushrooms
+  gtk3-nocsd
+)
+provides=(
+  gtk3=$_gtkver
+  gtk3-print-backends
+  libgtk-3.so
+  libgdk-3.so
+  libgailutil-3.so
+)
+depends=(
+  at-spi2-core
+  cairo
+  desktop-file-utils
+  fontconfig
+  fribidi
+  gdk-pixbuf2
+  glib2
+  glibc
+  harfbuzz
+  gtk-update-icon-cache
+  libepoxy
+  librsvg
+  libx11
+  libxcomposite
+  libxcursor
+  libxdamage
+  libxext
+  libxfixes
+  libxi
+  libxinerama
+  libxkbcommon
+  libxrandr
+  pango
+  shared-mime-info
+  wayland
+)
+optdepends=(
+  'adwaita-icon-theme: default icon theme'
+  'colord: color management support'
+  'dconf: default GSettings backend'
+  'libcups: printer support in print dialog'
+)
+makedepends=(
+  glib2-devel
+  gobject-introspection
+  hicolor-icon-theme
+  libcups
+  libegl
+  libgl
+  meson
+  python-packaging
+  quilt
+  sassc
+  wayland-protocols
+)
+install=gtk3.install
+source=(
+  "${pkgname}-${_tagname}.tar.gz::${url}/archive/refs/tags/${_tagname}.tar.gz"
+  "https://download.gnome.org/sources/gtk+/${_gtkver%.*}/gtk+-${_gtkver}.tar.xz"
+  gtk-query-immodules-3.0.hook
+  settings.ini
+)
+sha256sums=('e6ecceae848537122bec384d3eceac3ca28b3d5a403e302b18c2ef404c828002'
+            '7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7'
+            'a0319b6795410f06d38de1e8695a9bf9636ff2169f40701671580e60a108e229'
+            '3c7d08538b04692b112d6850935aecd177b10c142df17bbc64a4f83ecb6c7a53')
+
+prepare() {
+  local _src="${srcdir}/${pkgname}-${_tagname}"
+  local gtk_src="${srcdir}/gtk+-${_gtkver}"
+
+  cd "${gtk_src}"
+  QUILT_PATCHES="${_src}" quilt push -av
+
+  rm -f "${gtk_src}"/gtk/theme/Adwaita/gtk-contained{,-dark}.css
+  cat "${_src}/smaller-adwaita.css" | tee -a "${gtk_src}"/gtk/theme/Adwaita/gtk-contained{,-dark}.css > /dev/null
+}
+
+build() {
+  local meson_options=(
+    -D broadway_backend=true
+    -D colord=auto
+    -D demos=false
+    -D examples=false
+    -D introspection=true
+    -D tests=false
+    -D installed_tests=false
+  )
+
+  CFLAGS+=" -DG_DISABLE_CAST_CHECKS"
+  arch-meson "${srcdir}/gtk+-${_gtkver}" build "${meson_options[@]}"
+  meson compile -C build
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+
+  install -Dt "${pkgdir}/usr/share/gtk-3.0" -m644 settings.ini
+  install -Dt "${pkgdir}/usr/share/libalpm/hooks" -m644 gtk-query-immodules-3.0.hook
+
+  # Built by GTK 4, shared with GTK 3
+  rm "${pkgdir}/usr/bin/gtk-update-icon-cache"
+}

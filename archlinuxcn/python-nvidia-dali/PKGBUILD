@@ -3,7 +3,7 @@
 _CUDA_ARCH_LIST="60;61;62;70;72;75;80;86;89;90"
 pkgname=python-nvidia-dali
 _pkgname=dali
-pkgver=1.39.0
+pkgver=1.40.0
 pkgrel=1
 pkgdesc='A library containing both highly optimized building blocks and an execution engine for data pre-processing in deep learning applications'
 arch=('x86_64')
@@ -46,7 +46,7 @@ optdepends=(
 options=(!emptydirs !lto)
 source=("${pkgname}::git+https://github.com/NVIDIA/DALI.git#tag=v${pkgver}"
 )
-sha512sums=('84bb27be923d2e3c62f688deb7c0f072b8630560d437eb3a741a6ea4b2a34d8a685d4c65025278223957ddfb1b57f95f2dc6a3dc5b003163eb83663f42602797')
+sha512sums=('033a6b8e082ddd3fd5edbae9ac2417100eeefe82656940bac9ac2712f2bcc446e0c28cab8122b5932eccc7f7c2b5e80648e855254b6dab2fced76ab9f61ba4f3')
 
 prepare() {
   cd "${srcdir}/${pkgname}"
@@ -56,6 +56,9 @@ prepare() {
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
   # fix lib not found error
   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${srcdir}/build/dali/python/nvidia/dali:${srcdir}/build/lib"
+  # fix missing cstdint header
+  # ref https://github.com/NVIDIA/DALI/issues/5591
+  sed -i '18i#include <cstdint>' dali/util/uri.h
 }
 
 build() {
@@ -91,7 +94,7 @@ build() {
   python -m build --wheel --no-isolation
   # built tf plugin
   cmake -B ${srcdir}/build-tf \
-    -DCUDA_VERSION=12.3 \
+    -DCUDA_VERSION=12.5.1 \
     -S ${srcdir}/${pkgname}/dali_tf_plugin
   make -C ${srcdir}/build-tf
 }

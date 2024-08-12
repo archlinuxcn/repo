@@ -1,6 +1,6 @@
 pkgname=otf-noto-serif-cjk
-pkgver=2.002
-pkgrel=3
+pkgver=2.003
+pkgrel=1
 pkgdesc='Noto CJK fonts (Serif, Static OTC)'
 provides=(noto-fonts-cjk)
 arch=(any)

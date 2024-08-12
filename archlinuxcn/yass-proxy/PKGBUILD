@@ -2,9 +2,9 @@
 # Contributor: Keeyou <keeyou-cn@outlook.com>
 
 pkgname=yass-proxy
-pkgver=1.12.1
+pkgver=1.12.3
 pkgrel=1
-_pkgver=1.12.1
+_pkgver=1.12.3
 _pkgrel=1
 pkgdesc="lightweight http/socks proxy"
 arch=(x86_64)
@@ -15,10 +15,10 @@ optdepends=(gtk-update-icon-cache)
 makedepends=(gcc binutils git ninja perl pkg-config cmake gettext curl go)
 checkdepends=(curl)
 provides=(yass-proxy)
-conflicts=(yass-proxy-git yass-proxy-qt6 yass-proxy-gtk3)
+conflicts=(yass-proxy-git)
 source=("https://github.com/Chilledheart/yass/releases/download/${_pkgver}/yass-${_pkgver}.tar.bz2"
         )
-sha256sums=('dfb55663d256816fbe468a8e82a8ea8ab626960b4b6a48a2a0846961daf69dbc')
+sha256sums=('3b0554bd991c884637a83a496dba26138f5e651126fe77dae1026823ce88c124')
 
 build(){
   SRC_DIR="${srcdir}/yass-${_pkgver}"
@@ -30,6 +30,7 @@ build(){
     -DUSE_TCMALLOC=on -DUSE_SYSTEM_TCMALLOC=on \
     -DUSE_SYSTEM_ZLIB=on -DUSE_SYSTEM_CARES=on -DUSE_SYSTEM_NGHTTP2=on \
     -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_SYSCONFDIR=/etc \
+    -DUSE_CET=on \
     -DGUI=ON -DUSE_GTK4=on -DCLI=off -DSERVER=off
   ninja yass yass_test
   cd ..

@@ -5,16 +5,9 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
+  - oaknut-git
   - xbyak
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver)
-
-post_build: git_pkgbuild_commit
-
 update_on:
-  - source: github
-    github: yuzu-mirror/dynarmic
-  - source: alpm
-    alpm: fmt
-  - source: alpm
-    alpm: llvm-libs
+  - source: manual
+    manual: 2

@@ -2,19 +2,20 @@
 
 _pkgname=yuzu
 pkgname=$_pkgname-mainline-git
-pkgver=1731.r0.g6879db182
-pkgrel=1
+epoch=3
+pkgver=1733.r0.g7ffac53c9
+pkgrel=3
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (mainline GIT version)"
 arch=('i686' 'x86_64')
 url="https://github.com/yuzu-emu/yuzu-mainline"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'ffmpeg' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'dynarmic' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'xbyak' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'python' 'gamemode' 'stb' 'vulkan-utility-libraries')
+depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'ninja' 'graphviz' 'doxygen' 'clang' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'python' 'gamemode' 'stb' 'vulkan-utility-libraries' 'python-jsonschema' 'python-jinja')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
 replaces=('yuzu-canary-git')
-source=("$_pkgname::git+https://github.com/yuzu-emu/yuzu-mainline")
+source=("$_pkgname::git+https://notabug.org/yuzu-emu-mirror/yuzu-mainline")
 md5sums=('SKIP')
 
 pkgver() {
@@ -25,12 +26,37 @@ pkgver() {
 prepare() {
   cd "$srcdir/$_pkgname"
 
+  git submodule set-url externals/mbedtls https://github.com/yuzu-mirror/mbedtls
+  git submodule set-url externals/sirit https://github.com/yuzu-mirror/sirit
+  git submodule set-url externals/dynarmic https://github.com/lioncash/dynarmic
   git submodule update --init --remote externals/sirit
   git submodule update --init --remote externals/mbedtls
   git submodule update --init --remote externals/libadrenotools
   git submodule update --init --remote --recursive externals/nx_tzdb
   git submodule update --init --remote externals/simpleini
-  
+  git submodule update --init --remote externals/ffmpeg
+  git submodule update --init --remote externals/mbedtls
+  git submodule update --init --remote externals/dynarmic
+  git submodule update --init --remote externals/xbyak
+
+  cd externals/mbedtls
+  git checkout 8c88150
+  cd ../sirit
+  git checkout ab75463
+  cd ../libadrenotools
+  git checkout 5cd3f5c
+  cd ../dynarmic
+  git checkout ba8192d
+  cd ../xbyak
+  git checkout a1ac375
+  cd ../nx_tzdb/tzdb_to_nx
+  git checkout 9792969
+  cd ../../simpleini
+  git checkout 382ddbb
+  cd ../ffmpeg/ffmpeg
+  git checkout 9c1294e
+
+  cd "$srcdir/$_pkgname"
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +

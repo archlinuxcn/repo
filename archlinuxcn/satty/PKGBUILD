@@ -2,7 +2,7 @@
 
 pkgname=satty
 _pkgname=Satty
-pkgver=0.13.0
+pkgver=0.14.0
 pkgrel=1
 pkgdesc="A Screenshot Annotation Tool inspired by Swappy and Flameshot"
 url="https://github.com/gabm/satty"
@@ -22,19 +22,17 @@ depends=(
 )
 makedepends=(cargo)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('7903b9886894c86983089994e9abb864ad2c8aacca01cf66a9536de619982052')
-
-_archive="$_pkgname-$pkgver"
+sha256sums=('3118784377da9254fbccf5fe85b7622aa6ed0054a4c9d977bc72ac817e2c1f96')
 
 prepare() {
-  cd "$_archive"
+  cd $_pkgname-$pkgver
 
   export RUSTUP_TOOLCHAIN=stable
   cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
-  cd "$_archive"
+  cd $_pkgname-$pkgver
 
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
@@ -42,24 +40,24 @@ build() {
 }
 
 package() {
-  cd "$_archive"
+  cd $_pkgname-$pkgver
 
-  install -Dm755 -t "$pkgdir/usr/bin" target/release/satty
+  install -vDm755 -t "$pkgdir/usr/bin" target/release/satty
 
-  install -Dm644 completions/_satty \
+  install -vDm644 completions/_satty \
     "$pkgdir/usr/share/zsh/site-functions/_satty"
-  install -Dm644 completions/satty.bash \
+  install -vDm644 completions/satty.bash \
     "$pkgdir/usr/share/bash-completion/completions/satty"
-  install -Dm644 completions/satty.fish \
+  install -vDm644 completions/satty.fish \
     "$pkgdir/usr/share/fish/vendor_completions.d/satty.fish"
-  install -Dm644 completions/satty.nu \
+  install -vDm644 completions/satty.nu \
     "$pkgdir/usr/share/nushell/completions/satty.nu"
-  install -Dm644 completions/satty.elv \
+  install -vDm644 completions/satty.elv \
     "$pkgdir/usr/share/elvish/lib/satty.elv"
 
-  install -Dm644 -t "$pkgdir/usr/share/applications" satty.desktop
-  install -Dm644 -t "$pkgdir/usr/share/icons/hicolor/scalable/apps" assets/satty.svg
+  install -vDm644 -t "$pkgdir/usr/share/applications" satty.desktop
+  install -vDm644 -t "$pkgdir/usr/share/icons/hicolor/scalable/apps" assets/satty.svg
 
-  install -Dm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
-  cp -a -t "$pkgdir/usr/share/doc/$pkgname" assets
+  install -vDm644 -t "$pkgdir/usr/share/doc/$pkgname" README.md
+  cp -va -t "$pkgdir/usr/share/doc/$pkgname" assets
 }

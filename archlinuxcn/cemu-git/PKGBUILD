@@ -1,15 +1,21 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=cemu
 pkgname=$_pkgname-git
-pkgver=2.0.88.r3.g9d366937
-pkgrel=1
+pkgver=2.0.92.r0.g9812a47c
+pkgrel=2
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://cemu.info/"
 license=('MPL2')
 depends=(
 	'discord-rpc'
+	'gcc-libs'
+	'glibc'
+	'glslang>=14'
+	'hicolor-icon-theme'
+	'libx11'
 	'pugixml'
+	'sdl2'
 	'wxwidgets-gtk3>=3.2'
 )
 makedepends=(
@@ -17,23 +23,26 @@ makedepends=(
 	'cmake>=3.21.1'
 	'cubeb'
 	'curl'
-    'fmt9'
+	'fmt>=9'
 	'git'
+	'glib2'
 	'glm'
-	'glslang'
 	'glu'
+	'gtk3'
+	'hidapi'
 	'libgl'
 	'libpng'
+	'libusb'
 	'libzip'
 	'nasm'
 	'openssl'
 	'rapidjson'
-	'sdl2'
-	'vulkan-headers>=1.3.225'
+	'vulkan-headers>=1:1.3.225'
+	'wayland'
+	'wayland-protocols'
 	'zarchive>=0.1.2'
 	'zlib'
 	'zstd'
-    'wayland-protocols'
 )
 provides=("$_pkgname")
 conflicts=("$_pkgname")
@@ -55,14 +64,13 @@ prepare() {
 	cd $_pkgname
 	git config submodule.dependencies/imgui.url ../imgui
 	git -c protocol.file.allow=always submodule update
-	rm -r bin/shaderCache
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
-    sed -i '/find_package(glslang REQUIRED)/a find_package(SPIRV-Tools REQUIRED)' CMakeLists.txt
-    sed -i '/add_library(glslang::SPIRV ALIAS SPIRV)/a add_library(SPIRV-Tools)' CMakeLists.txt
-    sed -i '/glslang::SPIRV/a SPIRV-Tools' src/Cafe/CMakeLists.txt
+    #sed -i '/find_package(glslang REQUIRED)/a find_package(SPIRV-Tools REQUIRED)' CMakeLists.txt
+    #sed -i '/add_library(glslang::SPIRV ALIAS SPIRV)/a add_library(SPIRV-Tools)' CMakeLists.txt
+    #sed -i '/glslang::SPIRV/a SPIRV-Tools' src/Cafe/CMakeLists.txt
 	sed -i '/discord-rpc/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
-	sed -i 's/glm::glm/glm/' src/{Common,input}/CMakeLists.txt
+	#sed -i 's/glm::glm/glm/' src/{Common,input}/CMakeLists.txt
 }
 
 build() {
@@ -71,25 +79,30 @@ build() {
 		-DCMAKE_C_FLAGS_RELEASE="-DNDEBUG" \
 		-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG" \
 		-DENABLE_VCPKG=OFF \
-		-DPORTABLE=OFF \
 		-Wno-dev
 	cmake --build build
 }
 
 package() {
-	depends+=(
-		'libboost_filesystem.so'
+		depends+=(
 		'libboost_program_options.so'
+		'libcrypto.so'
 		'libcubeb.so'
 		'libcurl.so'
 		'libfmt.so'
-        'libssl.so'
-        'libcrypto.so'
+		'libgdk-3.so'
+		'libgobject-2.0.so'
+		'libgtk-3.so'
+		'libhidapi-hidraw.so'
+		'libssl.so'
+		'libusb-1.0.so'
+		'libwayland-client.so'
+		'libz.so'
 		'libzarchive.so'
 		'libzip.so'
 		'libzstd.so'
 	)
-	cd $_pkgname
+    cd $_pkgname
 	# shellcheck disable=SC2154
 	install -d "$pkgdir"/usr/{bin,share/Cemu}
 	mv bin/Cemu_release "$pkgdir"/usr/bin/Cemu

@@ -1,3 +1,20 @@
+## GE-Proton9-11
+
+- Update wine to latest bleeding edge
+- Update dxvk to latest git
+- Update vkd3d-proton to latest git
+- Import upstream proton changes
+- Rebase staging
+- Add xinput patch for Dragon Age: Inquisition ( thanks cammoore1 )
+
+Protonfixes:
+
+- Add protonfix and steamgameid envvar to trigger Dragon Age: Inquisition xinput patch (allows to work with EA version in umu)
+- Add protonfix for Flowers - Le Volume series (thanks R1kaB3rN)
+- Add protonfix for The Last Blade (thanks ranplayer)
+- Add protonfix for GOG Beyond Good and Evil (thanks ImLinguin)
+- Add protonfix for WRC4 (thanks ToRRen1812)
+
 ## GE-Proton9-10
 
 - Updated wine to latest bleeding edge
