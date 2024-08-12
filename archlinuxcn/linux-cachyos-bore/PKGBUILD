@@ -153,7 +153,7 @@ elif [ -n "$_use_llvm_lto" ]  ||  [[ "$_use_lto_suffix" = "n" ]]; then
     pkgbase=linux-$pkgsuffix
 fi
 _major=6.10
-_minor=3
+_minor=4
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -198,7 +198,7 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
 fi
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=555.58.02
+_nv_ver=560.31.02
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="open-gpu-kernel-modules-${_nv_ver}"
 source=(
@@ -227,8 +227,7 @@ fi
 if [ -n "$_build_nvidia_open" ]; then
     source+=("nvidia-open-${_nv_ver}.tar.gz::https://github.com/NVIDIA/open-gpu-kernel-modules/archive/refs/tags/${_nv_ver}.tar.gz"
              "${_patchsource}/misc/nvidia/make-modeset-fbdev-default.patch"
-             "${_patchsource}/misc/nvidia/nvidia-open-gcc-ibt-sls.patch"
-             "${_patchsource}/misc/nvidia/gsp-fix-stutter.patch")
+             "${_patchsource}/misc/nvidia/nvidia-open-gcc-ibt-sls.patch")
 fi
 
 ## List of CachyOS schedulers
@@ -275,7 +274,6 @@ prepare() {
         src="${src%.zst}"
         [[ $src = make-modeset-fbdev-default.patch ]] && continue
         [[ $src = nvidia-open-gcc-ibt-sls.patch ]] && continue
-        [[ $src = gsp-fix-stutter.patch ]] && continue
         [[ $src = *.patch ]] || continue
         echo "Applying patch $src..."
         patch -Np1 < "../$src"
@@ -318,8 +316,8 @@ prepare() {
         bore|hardened) scripts/config -e SCHED_BORE --set-val MIN_BASE_SLICE_NS 1000000;;
         echo) scripts/config -e ECHO_SCHED;;
         eevdf) ;;
-        rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
-        rt-bore) scripts/config -e SCHED_BORE --set-val MIN_BASE_SLICE_NS 1000000 -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
+        rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -d PREEMPT_RT -d PREEMPT_DYNAMIC -e PREEMPT_BUILD -e PREEMPT_BUILD_AUTO -e PREEMPT_AUTO;;
+        rt-bore) scripts/config -e SCHED_BORE --set-val MIN_BASE_SLICE_NS 1000000 -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -d PREEMPT_RT -d PREEMPT_DYNAMIC -e PREEMPT_BUILD -e PREEMPT_BUILD_AUTO -e PREEMPT_AUTO;;
         sched-ext) scripts/config -e SCHED_CLASS_EXT;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
@@ -539,8 +537,6 @@ prepare() {
         patch -Np1 -i "${srcdir}/make-modeset-fbdev-default.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
         # Fix for https://bugs.archlinux.org/task/74886
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/nvidia-open-gcc-ibt-sls.patch" -d "${srcdir}/${_nv_open_pkg}"
-        # Fix for Stutters in KDE
-        patch -Np1 -i "${srcdir}/gsp-fix-stutter.patch" -d "${srcdir}/${_nv_open_pkg}"
     fi
 }
 
@@ -778,8 +774,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('e114bbaea91d03efa318f5a85c11e28257defa5f0c8467d3a5d467a7985bdfd7c23a5f54856c85afe800c32694f382df9b147484a3aa85e1e3f4efefbd80b564'
+b2sums=('ea7e9a7d74621a6e76b2828ee80cf5df1fcf139469bb8877d93f30d7766f9145961324de5b2cadba29126d7df82a7eeba80303c82c7c1140be3fb46cf213e503'
         '6fa10f1f0320e46b88ee7afe7ffb6a93168f91136a04b4896b671b905b96a4dca038c1a04d7dc4f4715475eafb01f87449076a2ef111accd171f52cee11f99d3'
         '681a7055df1e18554154590cd80dbc4b2cfae3597eb7f0214e0c18428ecad52a3bcaabdce79d25e40a8fa1a5e1fa5e5bdee2b6fbeab83fd79355d2070f1573b0'
-        '5da048ff11b0371fda80f0c06f9b24a322d687effc28a23229381cbdf4f05d206440697dd19225c247e7c106f2c9f9a6877f7f84d210339290445857402d681a'
+        'c473c33b9be3da30c6c1627c37f7b56cd54bd6b5c88e666c23766ce62782641c65e3332a93d9530c3f9da8f3153265491e2f318bcbca61f58c7c4d2766fc6429'
         '9df21e46a1d2e48ad9bc30007586e6c3e7a423b402f606f4ac69f9e08a26b3323d3dcb3537e5188e08de771b1d40abb97f1ed8e53c3f3c8ec66368b0f0662c4a')
