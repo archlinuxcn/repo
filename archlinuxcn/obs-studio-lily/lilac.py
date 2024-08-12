@@ -15,8 +15,6 @@ def pre_build():
       line = line[:-1] + ' (with websocket support)' + line[-1]
     elif '-DENABLE_WEBSOCKET=OFF' in line:
       line = line.replace('OFF', 'ON')
-    elif '-DENABLE_BROWSER=OFF' in line:
-      line = line.replace('OFF', 'ON')
     elif line.startswith('makedepends='):
       line = line.replace(')', " 'websocketpp' 'asio' 'qrcodegencpp-cmake')")
       line = line + '\nprovides=(obs-studio=$pkgver)\nconflicts=(obs-studio)'
