@@ -155,7 +155,7 @@ fi
 _major=6.11
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc1
+_rcver=rc3
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -198,7 +198,7 @@ if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_k
 fi
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=555.58.02
+_nv_ver=560.31.02
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="open-gpu-kernel-modules-${_nv_ver}"
 source=(
@@ -215,7 +215,7 @@ fi
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=55a3483f28e69bf0514abb8c0a8e3812da282e73")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=a1f1f269e1de4880a5fdc47e0e2c1fb3a4404330")
 fi
 
 # NVIDIA pre-build module support
@@ -227,8 +227,7 @@ fi
 if [ -n "$_build_nvidia_open" ]; then
     source+=("nvidia-open-${_nv_ver}.tar.gz::https://github.com/NVIDIA/open-gpu-kernel-modules/archive/refs/tags/${_nv_ver}.tar.gz"
              "${_patchsource}/misc/nvidia/make-modeset-fbdev-default.patch"
-             "${_patchsource}/misc/nvidia/nvidia-open-gcc-ibt-sls.patch"
-             "${_patchsource}/misc/nvidia/gsp-fix-stutter.patch")
+             "${_patchsource}/misc/nvidia/nvidia-open-gcc-ibt-sls.patch")
 fi
 
 ## List of CachyOS schedulers
@@ -275,7 +274,6 @@ prepare() {
         src="${src%.zst}"
         [[ $src = make-modeset-fbdev-default.patch ]] && continue
         [[ $src = nvidia-open-gcc-ibt-sls.patch ]] && continue
-        [[ $src = gsp-fix-stutter.patch ]] && continue
         [[ $src = *.patch ]] || continue
         echo "Applying patch $src..."
         patch -Np1 < "../$src"
@@ -318,8 +316,8 @@ prepare() {
         bore|hardened) scripts/config -e SCHED_BORE --set-val MIN_BASE_SLICE_NS 1000000;;
         echo) scripts/config -e ECHO_SCHED;;
         eevdf) ;;
-        rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
-        rt-bore) scripts/config -e SCHED_BORE --set-val MIN_BASE_SLICE_NS 1000000 -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -e PREEMPT_RT -d PREEMPT_DYNAMIC -d PREEMPT_BUILD;;
+        rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -d PREEMPT_RT -d PREEMPT_DYNAMIC -e PREEMPT_BUILD -e PREEMPT_BUILD_AUTO -e PREEMPT_AUTO;;
+        rt-bore) scripts/config -e SCHED_BORE --set-val MIN_BASE_SLICE_NS 1000000 -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -d PREEMPT_RT -d PREEMPT_DYNAMIC -e PREEMPT_BUILD -e PREEMPT_BUILD_AUTO -e PREEMPT_AUTO;;
         sched-ext) scripts/config -e SCHED_CLASS_EXT;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
@@ -539,8 +537,6 @@ prepare() {
         patch -Np1 -i "${srcdir}/make-modeset-fbdev-default.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
         # Fix for https://bugs.archlinux.org/task/74886
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/nvidia-open-gcc-ibt-sls.patch" -d "${srcdir}/${_nv_open_pkg}"
-        # Fix for Stutters in KDE
-        patch -Np1 -i "${srcdir}/gsp-fix-stutter.patch" -d "${srcdir}/${_nv_open_pkg}"
     fi
 }
 
@@ -778,9 +774,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('4ac19e7af10038b95b3c66d8e9ee8c73dcd430be56f156e8af586209a2b8743f9e865364eb61b922fc143538e81f06479b94f7ab5db4998fd5f7f607deb3219d'
-        'e9966287ae2d0a638b0afcb1b986564559865f1377d5bf856b7cd703f053b29b2564c31da677dbac972badc257e446e2126ca4d71768c285dd5e58c3667e7609'
+b2sums=('b3c832d6e1e2d29c8987b30f907b9583ce61159eb25476e5d355e426c72bce89b7d4590358ee55f4aa829aecb75c3f772547a11e7b072e80400d7bb7cb572767'
+        'cd869fcaf377ee037d717f06276ac70b837fd8c2fd2d5f8bce8352718d9b169df4b264108fbac12d718cc2b015fa903233cfada4a0632a3444fb02378512b954'
         'b1e964389424d43c398a76e7cee16a643ac027722b91fe59022afacb19956db5856b2808ca0dd484f6d0dfc170482982678d7a9a00779d98cd62d5105200a667'
-        'b42a622eed93bce9f0ef77e735215a82c507406fda0db878f5a9ce49c57fb6f661aa682731cfadbf90efda812162e0d4993116f88bf487b6475a332810a0bc6c'
+        '6e7b233a139d6548108f4ea60a24a51e060003da51ffeb58bf5d61f0aec5ee82a66c79be75906c73259caf4f4244c77b7f80eaec9ae2f330e8ef796213510fbb'
         '5d47ec49a326505c6199239d6b710ab329e47c3d23220a9f15d037e150f224cc0231499b99a4df2c6ec044a630577eeaa20a807a1c28fc36f253ef4cfff4bdce'
-        'e4ae410e322d16d212c5b0e35c5a3fba786274f8c77621661aabfc69fd82faefb1bb29916c25529f4f696fa84102de2d88e0f5ccdcfeaa31ccb8275c31cc8362')
+        '0d17cee1662f2e47f9f77b3493bb4859846f4b5944d03c1f8ee1e3d831ed09a5be92d19a7ac7dab84aba24ed66fe6d4b2de95e3eb2dd7e0e89fe375eebfed625')
