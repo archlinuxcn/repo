@@ -2276,3 +2276,21 @@ Wed Jul 10 15:27:13 2024 +0200
     *  2024-07-04 3012f5e actionless fix(news: htmlparser): add space after the url to make them easier to copy-paste
     *  2024-07-04 3db0119 actionless feat(news: htmlparser): don't print link url if it equal to link text
     *  2024-07-03 88fbc92 actionless feat(info_cli, aur): add AUR Web URL field to -Si command
+
+
+Tue Aug 13 04:29:53 2024 +0200
+-------------------------------------------------
+1.24            Release 1.24
+    
+    Notable changes:
+    *  2024-08-04 c034b11 actionless fix(pacman: find_upgradeable_packages): print dep resolution result to debug log instead of stderr
+    *  2024-08-04 f3606f8 jeberger fix(news, install_cli): fix bug that prevented confirmation from doing anything. (#824)
+    *  2024-08-04 4f5b453 actionless fix(config: migrate_value): mark config part as migrated
+    *  2024-08-04 6123c0e Markus Hansmair chore(config: newsurl): change to https://archlinux.org/feeds/news/ (#803)
+    *  2024-08-03 7a422b8 actionless fix(install_info_fetcher: get_info_from_pkgbuilds): always regenerate .SRCINFO (that's a case when there are multiple PKGBUILDs in the same dir)
+    *  2024-08-03 4602874 actionless fix(install_cli: build_packages): set built package path for already built packages
+    *  2024-08-03 295f1cd actionless fix(install_cli: get_info_from_pkgbuild, handle_pkgbuild_changed): resolve full path to PKGBUILD to prevent collisions
+    *  2024-07-30 4fec585 Bundy01 chore(locale): update es.po, fr.po and regeneration of others (#823)
+    *  2024-07-29 4951d16 actionless fix(build: install_all_deps): if deps there only from AUR - package list what not saved correctly - so leftover deps might be not uninstalled after the build
+    *  2024-07-16 0a3b6bd actionless fix(aur: find_aur_provided_deps): don't attempt to ask for pkg provider if zero providers found
+    *  2024-07-16 9c6df59 actionless feat(aur, pacman): interactively select package provider (fixes #211)
