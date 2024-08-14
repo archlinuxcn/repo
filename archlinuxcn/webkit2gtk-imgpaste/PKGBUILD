@@ -4,11 +4,37 @@
 
 pkgname=webkit2gtk-imgpaste
 pkgver=2.44.3
-pkgrel=1
+pkgrel=3
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
-license=('LicenseRef-custom')
+license=(
+  # :sort ui /\v^\s*['"]?/
+  'AFL-2.0 OR GPL-2.0-or-later'
+  Apache-2.0
+  'Apache-2.0 WITH LLVM-exception'
+  BSD-2-Clause
+  BSD-2-Clause-Views
+  BSD-3-Clause
+  BSD-Source-Code
+  BSL-1.0
+  bzip2-1.0.6
+  GPL-2.0-only
+  'GPL-3.0-only WITH Autoconf-exception-3.0'
+  'GPL-3.0-or-later WITH Bison-exception-2.2'
+  ICU
+  ISC
+  LGPL-2.1-only
+  LGPL-2.1-or-later
+  MIT
+  MPL-1.1
+  MPL-2.0
+  NCSA
+  'NCSA OR MIT'
+  OFL-1.1
+  SunPro
+  Unicode-TOU
+)
 depends=(
   at-spi2-core
   atk
@@ -17,7 +43,10 @@ depends=(
   enchant
   fontconfig
   freetype2
+  gcc-libs
+  gdk-pixbuf2
   glib2
+  glibc
   gst-plugins-bad-libs
   gst-plugins-base-libs
   gstreamer
@@ -26,6 +55,7 @@ depends=(
   harfbuzz-icu
   hyphen
   icu
+  lcms2
   libavif
   libdrm
   libegl
@@ -43,30 +73,25 @@ depends=(
   libsystemd
   libtasn1
   libwebp
-  libwpe
   libx11
-  libxcomposite
   libxml2
   libxslt
-  libxt
   mesa
   openjpeg2
+  pango
   sqlite
   wayland
   woff2
-  wpebackend-fdo
   xdg-dbus-proxy
   zlib
 )
 makedepends=(
-  clang
   cmake
   gi-docgen
   glib2-devel
   gobject-introspection
   gperf
   gst-plugins-bad
-  lld
   ninja
   python
   ruby
@@ -74,6 +99,11 @@ makedepends=(
   systemd
   unifdef
   wayland-protocols
+)
+options=(
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/webkit2gtk-4.1/-/issues/1
+  # https://bugs.webkit.org/show_bug.cgi?id=278090
+  !lto
 )
 provides=(webkit2gtk)
 conflicts=(webkit2gtk)
@@ -115,15 +145,6 @@ build() {
     -DENABLE_MINIBROWSER=ON
   )
 
-  # GCC with LTO fails to link libjavascriptcoregtk
-  #     /usr/bin/ld: /tmp/ccXxyWZV.ltrans0.ltrans.o: in function `ipint_table_size_validate':
-  #     <artificial>:(.text+0x49f0f): undefined reference to `ipint_extern_table_size'
-  #     /usr/bin/ld: /tmp/ccXxyWZV.ltrans0.ltrans.o: in function `ipint_table_fill_validate':
-  #     <artificial>:(.text+0x4a019): undefined reference to `ipint_extern_table_fill'
-  #     collect2: error: ld returned 1 exit status
-  export CC=clang CXX=clang++
-  LDFLAGS+=" -fuse-ld=lld"
-
   # JITted code crashes when CET is used
   CFLAGS+=' -fcf-protection=none'
   CXXFLAGS+=' -fcf-protection=none'
@@ -138,10 +159,6 @@ build() {
 }
 
 package() {
-  depends+=(
-    libWPEBackend-fdo-1.0.so
-    libwpe-1.0.so
-  )
   provides+=(
     libjavascriptcoregtk-4.0.so
     libwebkit2gtk-4.0.so
