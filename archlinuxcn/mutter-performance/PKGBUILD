@@ -11,7 +11,7 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373' '3567' '3751' '3912')
+# Merge Requests List: ('579' '1441' '3373' '3567' '3751' '3912' '3934')
 _merge_requests_to_use=('1441' '3751')
 
 ## Disable building the DOCS package (Enabled if not set)
@@ -33,7 +33,7 @@ else
 fi
 epoch=1
 pkgver=46.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -118,19 +118,22 @@ source=("git+$url.git#commit=$_commit"
         'mr3373.patch'
         'mr3567.patch'
         'mr3751.patch'
-        'mr3912.patch')
+        'mr3912.patch'
+        'mr3934.patch')
 sha256sums=('864cce3adbb04b4213fda77b715f84fe1ed918a58adbc251c4804bbaf6e348ed'
-            '07909ef8fc77f5527e169c31637a3bfdf080bc8040863f059db5541b35ec6ff7'
+            'c319d2b1b9060f37ef37ac7112729883192e59bfc42aa13b4c2d73e2e1cccc61'
             '1292f1dcefa0a3cfff753db942e7c974e39b1265d246634f239aad9437d45609'
             '2e474a574edad8dc047a53a920fc7cbe005cac0102907eef80a252fc556d0517'
             '4c15b0e6d0001c8c3feedf05a9140f7f17d52eb36ff7b8039e0281c1373ccdfe'
-            'f02f07abc4072118e175e8028d3ee16ff0aa9b238dd2b10155b3ae2a0534a4a0')
+            'f02f07abc4072118e175e8028d3ee16ff0aa9b238dd2b10155b3ae2a0534a4a0'
+            '45d9c998053c9b8def5a7b122861101137ce6ac4fd6be9d9c475232529ecb98c')
 b2sums=('fc21cb8e56728873196fba12ba7a0522aeb9d6e7f6204ac21ade4c632b081fe45e0633d1c072c2416d81faa0f6b63cb69b278ef7b440e2bfccaff775501d3028'
-        '0419379cda7871c0b45b7a707948738b5a55fd81083ba325e915928aaa731cd2be23cebddf04b179bc69a26e1f4176b06fabb4d5baffba604a4980f578f5ba4d'
+        '9b7a3922c631dfdd7b4466d5aab7309c81527c013fb0c92f520734264b30bfaca0f2b660afbd1e7cf14ce419033ad1ec1d39c00af3ce1576da85c298d1e6b03e'
         '38de03d5fbe7c9d1b9c41a4bc6b76b8d3acc270b93f279c5db591d79a689d9ea748f34da08ec584e49bbfc2d35a5bceeaf2f6b3fd91bc620139b4ee8b4ca6a04'
         '65302b1fa24a7aba26915269fb694c7a64b134ee2062ec7e649036a3a41efb2f2f4110cff6194808af34985855ade641c5fb01f0b97536cd3c912892ea3a0d4c'
         'f9f2284d7236d6072a818de3784a339c2d934490da8870876f49d4effd59ce807593ce8b8a3c5e06586fd5fd7e81fb31fedca84115acf1e71cfe23d4a5e727b3'
-        '14ed5e8fe9844739903150bf69de03b7136e74eb4b080d2e0264ba9bf5f2ba2c826cb45b78f8c38b2e80c223dd7926aa8e756e9bee23b75ced16ba5af45c2d8d')
+        '14ed5e8fe9844739903150bf69de03b7136e74eb4b080d2e0264ba9bf5f2ba2c826cb45b78f8c38b2e80c223dd7926aa8e756e9bee23b75ced16ba5af45c2d8d'
+        '1ecb06542e117b980329cdc16b14860f045f83be735247f1433d9d2564bc27befd47b124f4d96f0ebc7cc986224ab66d3f1d30b92a831f0f59a11eb6d8aedb8d')
 
 for mr in "${_merge_requests_to_use[@]}"; do
   if [ '3567' = "$mr" ]; then
@@ -253,12 +256,21 @@ prepare() {
   # Comment: Cannot be used with mr1441 as it already includes mr3912.
   pick_mr '3912' 'mr3912.patch' 'patch'
 
+  # Title: kms/impl-device: Track dispatch duration in crtc_frame_deadline_dispatch
+  # Author: Michel Dänzer <mdaenzer@redhat.com>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3934
+  # Type: 1
+  # Status: 2
+  # Comment: Cannot be used with mr1441 as it already includes mr3934.
+  pick_mr '3934' 'mr3934.patch' 'patch'
+
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
   # Type: 1
   # Status: 2 & 3
   # Comment: Help GPU frequencies to scale up but not currently working on Wayland.
+  #          Including mr3912 and mr3934.
   pick_mr '1441' 'mr1441.patch' 'patch'
 
 }
