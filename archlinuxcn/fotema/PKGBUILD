@@ -1,6 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=fotema
-pkgver=1.10.0
+pkgver=1.11.0
 pkgrel=1
 pkgdesc="Photo gallery for Linux"
 arch=('x86_64')
@@ -22,18 +22,13 @@ makedepends=(
   'meson'
   'mold'
 )
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
-        'i18n.patch')
-sha256sums=('593a16b6203f1e73ee2b13836d31f088df9ac098288b68258bfbb49745e8fe42'
-            'ebe2f2c74ca282a918c748e7e1e08b0e8f3ec964244746c299211df38e7da396')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('61ed190181fa06a1d52515b7161fde1bb1ae53a052aebc38c3989aeeb49208f2')
 
 prepare() {
   cd "$pkgname-$pkgver"
   export RUSTUP_TOOLCHAIN=stable
   cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')"
-
-  # Correct i18n path
-  patch -Np1 meson.build <../i18n.patch
 }
 
 build() {
