@@ -26,7 +26,7 @@ makedepends=(
   cmake
   gcc13
   git
-  gtest
+#  gtest
   python
   subversion
   swig
@@ -72,7 +72,7 @@ build() {
     -DITK_USE_SYSTEM_EXPAT=ON
     -DITK_USE_SYSTEM_FFTW=ON
     -DITK_USE_SYSTEM_GDCM=OFF
-    -DITK_USE_SYSTEM_GOOGLETEST=ON
+    -DITK_USE_SYSTEM_GOOGLETEST=OFF
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF
