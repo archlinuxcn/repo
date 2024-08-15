@@ -1,0 +1,36 @@
+From 86c1b23453d7d5c3e3769b300a4e8c8b1c019cbb Mon Sep 17 00:00:00 2001
+From: Steven Barrett <steven@liquorix.net>
+Date: Mon, 11 Jul 2022 19:10:30 -0500
+Subject: [PATCH] ZEN: cpufreq: Remove schedutil dependency on Intel/AMD
+ P-State drivers
+
+Although both P-State drivers depend on schedutil in Kconfig, both code
+bases do not use any schedutil code.  This arbitrarily enables schedutil
+when unwanted in some configurations.
+---
+ drivers/cpufreq/Kconfig.x86 | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
+index 438c9e75a..1bbfeca5f 100644
+--- a/drivers/cpufreq/Kconfig.x86
++++ b/drivers/cpufreq/Kconfig.x86
+@@ -9,7 +9,6 @@ config X86_INTEL_PSTATE
+ 	select ACPI_PROCESSOR if ACPI
+ 	select ACPI_CPPC_LIB if X86_64 && ACPI && SCHED_MC_PRIO
+ 	select CPU_FREQ_GOV_PERFORMANCE
+-	select CPU_FREQ_GOV_SCHEDUTIL if SMP
+ 	help
+ 	  This driver provides a P state for Intel core processors.
+ 	  The driver implements an internal governor and will become
+@@ -39,7 +38,6 @@ config X86_AMD_PSTATE
+ 	depends on X86 && ACPI
+ 	select ACPI_PROCESSOR
+ 	select ACPI_CPPC_LIB if X86_64
+-	select CPU_FREQ_GOV_SCHEDUTIL if SMP
+ 	help
+ 	  This driver adds a CPUFreq driver which utilizes a fine grain
+ 	  processor performance frequency control range instead of legacy
+-- 
+2.46.0
+

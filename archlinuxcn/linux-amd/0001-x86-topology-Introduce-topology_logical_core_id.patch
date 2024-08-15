@@ -1,0 +1,90 @@
+From e663824f99782d93eb50ffc236b1506b589eb58f Mon Sep 17 00:00:00 2001
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+Date: Thu, 11 Jul 2024 10:24:28 +0000
+Subject: [PATCH 01/11] x86/topology: Introduce topology_logical_core_id()
+
+On x86, topology_core_id() returns a unique core ID within the PKG
+domain. Looking at match_smt() suggests that a core ID just needs to be
+unique within a LLC domain. For use cases such as the per-core RAPL PMU,
+there exists a need for a unique core ID across the entire system with
+multiple PKG domains. Introduce topology_logical_core_id() to derive a
+unique core ID across the system.
+
+Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Reviewed-by: Zhang Rui <rui.zhang@intel.com>
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+---
+ Documentation/arch/x86/topology.rst   | 4 ++++
+ arch/x86/include/asm/processor.h      | 1 +
+ arch/x86/include/asm/topology.h       | 1 +
+ arch/x86/kernel/cpu/debugfs.c         | 1 +
+ arch/x86/kernel/cpu/topology_common.c | 1 +
+ 5 files changed, 8 insertions(+)
+
+diff --git a/Documentation/arch/x86/topology.rst b/Documentation/arch/x86/topology.rst
+index 7352ab89a..c12837e61 100644
+--- a/Documentation/arch/x86/topology.rst
++++ b/Documentation/arch/x86/topology.rst
+@@ -135,6 +135,10 @@ Thread-related topology information in the kernel:
+     The ID of the core to which a thread belongs. It is also printed in /proc/cpuinfo
+     "core_id."
+ 
++  - topology_logical_core_id();
++
++    The logical core ID to which a thread belongs.
++
+ 
+ 
+ System topology examples
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index cb4f6c513..1ffe4260b 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -98,6 +98,7 @@ struct cpuinfo_topology {
+ 	// Logical ID mappings
+ 	u32			logical_pkg_id;
+ 	u32			logical_die_id;
++	u32			logical_core_id;
+ 
+ 	// AMD Node ID and Nodes per Package info
+ 	u32			amd_node_id;
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index abe3a8f22..2a6dbf965 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -137,6 +137,7 @@ extern const struct cpumask *cpu_clustergroup_mask(int cpu);
+ #define topology_logical_package_id(cpu)	(cpu_data(cpu).topo.logical_pkg_id)
+ #define topology_physical_package_id(cpu)	(cpu_data(cpu).topo.pkg_id)
+ #define topology_logical_die_id(cpu)		(cpu_data(cpu).topo.logical_die_id)
++#define topology_logical_core_id(cpu)		(cpu_data(cpu).topo.logical_core_id)
+ #define topology_die_id(cpu)			(cpu_data(cpu).topo.die_id)
+ #define topology_core_id(cpu)			(cpu_data(cpu).topo.core_id)
+ #define topology_ppin(cpu)			(cpu_data(cpu).ppin)
+diff --git a/arch/x86/kernel/cpu/debugfs.c b/arch/x86/kernel/cpu/debugfs.c
+index 3baf3e435..b1eb6d782 100644
+--- a/arch/x86/kernel/cpu/debugfs.c
++++ b/arch/x86/kernel/cpu/debugfs.c
+@@ -24,6 +24,7 @@ static int cpu_debug_show(struct seq_file *m, void *p)
+ 	seq_printf(m, "core_id:             %u\n", c->topo.core_id);
+ 	seq_printf(m, "logical_pkg_id:      %u\n", c->topo.logical_pkg_id);
+ 	seq_printf(m, "logical_die_id:      %u\n", c->topo.logical_die_id);
++	seq_printf(m, "logical_core_id:     %u\n", c->topo.logical_core_id);
+ 	seq_printf(m, "llc_id:              %u\n", c->topo.llc_id);
+ 	seq_printf(m, "l2c_id:              %u\n", c->topo.l2c_id);
+ 	seq_printf(m, "amd_node_id:         %u\n", c->topo.amd_node_id);
+diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
+index 9a6069e71..23722aa21 100644
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -151,6 +151,7 @@ static void topo_set_ids(struct topo_scan *tscan, bool early)
+ 	if (!early) {
+ 		c->topo.logical_pkg_id = topology_get_logical_id(apicid, TOPO_PKG_DOMAIN);
+ 		c->topo.logical_die_id = topology_get_logical_id(apicid, TOPO_DIE_DOMAIN);
++		c->topo.logical_core_id = topology_get_logical_id(apicid, TOPO_CORE_DOMAIN);
+ 	}
+ 
+ 	/* Package relative core ID */
+-- 
+2.46.0
+

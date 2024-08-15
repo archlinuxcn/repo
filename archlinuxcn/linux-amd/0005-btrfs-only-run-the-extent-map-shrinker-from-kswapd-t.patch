@@ -1,0 +1,140 @@
+From 9566896326ec76d00c98a08cdc0d450d09b88b89 Mon Sep 17 00:00:00 2001
+From: Filipe Manana <fdmanana@suse.com>
+Date: Sun, 11 Aug 2024 16:31:06 +0100
+Subject: [PATCH 5/5] btrfs: only run the extent map shrinker from kswapd tasks
+
+Currently the extent map shrinker can be run by any task when attempting
+to allocate memory and there's enough memory pressure to trigger it.
+
+To avoid too much latency we stop iterating over extent maps and removing
+them once the task needs to reschudle. This logic was introduced in commit
+b3ebb9b7e92a ("btrfs: stop extent map shrinker if reschedule is needed").
+
+While that solved high latency problems for some use cases, it's still
+not enough because with a too high number of tasks entering the extent map
+shrinker code, either due to memory allocations or because they are a
+kswapd task, we end up having a very high level of contention on some
+spin locks, namely:
+
+1) The fs_info->fs_roots_radix_lock spin lock, which we need to find
+   roots to iterate over their inodes;
+
+2) The spin lock of the xarray used to track open inodes for a root
+   (struct btrfs_root::inodes) - on 6.10 kernels and below, it used to
+   be a red black tree and the spin lock was root->inode_lock;
+
+3) The fs_info->delayed_iput_lock spin lock since the shrinker adds
+   delayed iputs (calls btrfs_add_delayed_iput()).
+
+Instead of allowing the extent map shrinker to be run by any task, make
+it run only by kswapd tasks. This still solves the problem of running
+into OOM situations due to an unbounded extent map creation, which is
+simple to trigger by direct IO writes, as described in the changelog
+of commit 956a17d9d050 ("btrfs: add a shrinker for extent maps"), and
+by a similar case when doing buffered IO on files with a very large
+number of holes (keeping the file open and creating many holes, whose
+extent maps are only released when the file is closed).
+
+Reported-by: kzd <kzd@56709.net>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=219121
+Reported-by: Octavia Togami <octavia.togami@gmail.com>
+Link: https://lore.kernel.org/linux-btrfs/CAHPNGSSt-a4ZZWrtJdVyYnJFscFjP9S7rMcvEMaNSpR556DdLA@mail.gmail.com/
+Fixes: 956a17d9d050 ("btrfs: add a shrinker for extent maps")
+CC: stable@vger.kernel.org # 6.10+
+Tested-by: kzd <kzd@56709.net>
+Tested-by: Octavia Togami <octavia.togami@gmail.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Cherry-picked-for: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/70
+---
+ fs/btrfs/extent_map.c | 22 ++++++----------------
+ fs/btrfs/super.c      | 10 ++++++++++
+ 2 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/fs/btrfs/extent_map.c b/fs/btrfs/extent_map.c
+index b4c9a6aa1..6853f043c 100644
+--- a/fs/btrfs/extent_map.c
++++ b/fs/btrfs/extent_map.c
+@@ -1065,8 +1065,7 @@ static long btrfs_scan_inode(struct btrfs_inode *inode, struct btrfs_em_shrink_c
+ 		return 0;
+ 
+ 	/*
+-	 * We want to be fast because we can be called from any path trying to
+-	 * allocate memory, so if the lock is busy we don't want to spend time
++	 * We want to be fast so if the lock is busy we don't want to spend time
+ 	 * waiting for it - either some task is about to do IO for the inode or
+ 	 * we may have another task shrinking extent maps, here in this code, so
+ 	 * skip this inode.
+@@ -1109,9 +1108,7 @@ static long btrfs_scan_inode(struct btrfs_inode *inode, struct btrfs_em_shrink_c
+ 		/*
+ 		 * Stop if we need to reschedule or there's contention on the
+ 		 * lock. This is to avoid slowing other tasks trying to take the
+-		 * lock and because the shrinker might be called during a memory
+-		 * allocation path and we want to avoid taking a very long time
+-		 * and slowing down all sorts of tasks.
++		 * lock.
+ 		 */
+ 		if (need_resched() || rwlock_needbreak(&tree->lock))
+ 			break;
+@@ -1139,12 +1136,7 @@ static long btrfs_scan_root(struct btrfs_root *root, struct btrfs_em_shrink_ctx
+ 		if (ctx->scanned >= ctx->nr_to_scan)
+ 			break;
+ 
+-		/*
+-		 * We may be called from memory allocation paths, so we don't
+-		 * want to take too much time and slowdown tasks.
+-		 */
+-		if (need_resched())
+-			break;
++		cond_resched();
+ 
+ 		inode = btrfs_find_first_inode(root, min_ino);
+ 	}
+@@ -1202,14 +1194,12 @@ long btrfs_free_extent_maps(struct btrfs_fs_info *fs_info, long nr_to_scan)
+ 							   ctx.last_ino);
+ 	}
+ 
+-	/*
+-	 * We may be called from memory allocation paths, so we don't want to
+-	 * take too much time and slowdown tasks, so stop if we need reschedule.
+-	 */
+-	while (ctx.scanned < ctx.nr_to_scan && !need_resched()) {
++	while (ctx.scanned < ctx.nr_to_scan) {
+ 		struct btrfs_root *root;
+ 		unsigned long count;
+ 
++		cond_resched();
++
+ 		spin_lock(&fs_info->fs_roots_radix_lock);
+ 		count = radix_tree_gang_lookup(&fs_info->fs_roots_radix,
+ 					       (void **)&root,
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index f05cce7c8..11faf5e98 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -28,6 +28,7 @@
+ #include <linux/btrfs.h>
+ #include <linux/security.h>
+ #include <linux/fs_parser.h>
++#include <linux/swap.h>
+ #include "messages.h"
+ #include "delayed-inode.h"
+ #include "ctree.h"
+@@ -2394,6 +2395,15 @@ static long btrfs_free_cached_objects(struct super_block *sb, struct shrink_cont
+ 	const long nr_to_scan = min_t(unsigned long, LONG_MAX, sc->nr_to_scan);
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(sb);
+ 
++	/*
++	 * We may be called from any task trying to allocate memory and we don't
++	 * want to slow it down with scanning and dropping extent maps. It would
++	 * also cause heavy lock contention if many tasks concurrently enter
++	 * here. Therefore only allow kswapd tasks to scan and drop extent maps.
++	 */
++	if (!current_is_kswapd())
++		return 0;
++
+ 	return btrfs_free_extent_maps(fs_info, nr_to_scan);
+ }
+ 
+-- 
+2.46.0
+
