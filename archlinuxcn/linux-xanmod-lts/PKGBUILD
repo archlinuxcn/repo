@@ -73,9 +73,9 @@ fi
 
 pkgbase=linux-xanmod-lts
 _major=6.6
-pkgver=${_major}.45
+pkgver=${_major}.46
 _branch=6.x
-xanmod=2
+xanmod=1
 _revision=
 pkgrel=${xanmod}
 pkgdesc='Linux Xanmod - Long Term Support [LTS]'
@@ -117,7 +117,7 @@ done
 
 sha256sums=('d926a06c63dd8ac7df3f86ee1ffc2ce2a3b81a2d168484e76b5b389aba8e56d0'
             'SKIP'
-            'c77dddbba316b2dae14072c4b6ef3a088ef1c1d51448606943083afcebfb3d50'
+            '90b17e8d09f8e701e97e101f59b81beb936df9f52d8ed493496cc546988db8fe'
             'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
