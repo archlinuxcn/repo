@@ -16,7 +16,7 @@ pkgname=(
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=9.1.0.rc1.r35.gc4d0628855
+pkgver=9.1.0.rc2.r6.gecdfa31beb
 pkgrel=1
 epoch=22
 arch=(i686 x86_64)
@@ -84,7 +84,7 @@ makedepends=(
   zlib
   zstd 
 )
-options=(!debug)
+options=(!debug !lto)
 source=(git+https://gitlab.com/qemu-project/qemu.git
         qemu-guest-agent.service
         65-kvm.rules)
