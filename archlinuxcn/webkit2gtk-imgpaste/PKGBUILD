@@ -4,7 +4,7 @@
 
 pkgname=webkit2gtk-imgpaste
 pkgver=2.44.3
-pkgrel=3
+pkgrel=4
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -111,13 +111,14 @@ source=(
   $url/releases/webkitgtk-$pkgver.tar.xz{,.asc}
   EnlargeObjectSize.patch
   PasteBoardGtk.patch
+  revert-271175.patch
 )
 sha256sums=('dc82d042ecaca981a4852357c06e5235743319cf10a94cd36ad41b97883a0b54'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
-            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
+            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2'
+            '640b392081d913f5522aec83e32213983f35603d28fceecc9bff3f33e59468a7')
 validpgpkeys=(
-  D7FCF61CF9A2DEAB31D81BD3F3D322D0EC4582C3 # Carlos Garcia Campos <cgarcia@igalia.com>
   # https://www.webkitgtk.org/verifying.html
   5AA3BC334FD7E3369E7C77B291C559DBE4C9123B # Adrián Pérez de Castro <aperez@igalia.com>
   013A0127AC9C65B34FFA62526C1009B693975393 # Carlos Garcia Campos <cgarcia@igalia.com>
@@ -128,6 +129,9 @@ prepare() {
 
   patch -Np1 -i ../PasteBoardGtk.patch
   patch -Np1 -i ../EnlargeObjectSize.patch
+  # https://bugs.webkit.org/show_bug.cgi?id=278113
+  # https://github.com/WebKit/WebKit/commit/9140ce712aa87091613874d802787ab476be0e39
+  patch -Np1 -i ../revert-271175.patch
 }
 
 build() {
