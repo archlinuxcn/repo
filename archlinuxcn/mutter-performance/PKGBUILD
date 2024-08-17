@@ -32,8 +32,8 @@ else
   pkgname=(mutter-performance mutter-performance-docs)
 fi
 epoch=1
-pkgver=46.4
-pkgrel=2
+pkgver=46.4+r4+gc2c694464c
+pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -112,7 +112,7 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=04995f56641012d71b5b226782e63d82c3ca3081  # tags/46.4^0
+_commit=c2c694464c6558bf91a15d6f6807ae5fa6175658  # tags/46.4^4
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3373.patch'
@@ -120,14 +120,14 @@ source=("git+$url.git#commit=$_commit"
         'mr3751.patch'
         'mr3912.patch'
         'mr3934.patch')
-sha256sums=('864cce3adbb04b4213fda77b715f84fe1ed918a58adbc251c4804bbaf6e348ed'
+sha256sums=('01e53f26a46819a9b933c20a4f845e9aaa0ffaf2632d29d883111d99903b8269'
             'c319d2b1b9060f37ef37ac7112729883192e59bfc42aa13b4c2d73e2e1cccc61'
             '1292f1dcefa0a3cfff753db942e7c974e39b1265d246634f239aad9437d45609'
             '2e474a574edad8dc047a53a920fc7cbe005cac0102907eef80a252fc556d0517'
             '4c15b0e6d0001c8c3feedf05a9140f7f17d52eb36ff7b8039e0281c1373ccdfe'
             'f02f07abc4072118e175e8028d3ee16ff0aa9b238dd2b10155b3ae2a0534a4a0'
             '45d9c998053c9b8def5a7b122861101137ce6ac4fd6be9d9c475232529ecb98c')
-b2sums=('fc21cb8e56728873196fba12ba7a0522aeb9d6e7f6204ac21ade4c632b081fe45e0633d1c072c2416d81faa0f6b63cb69b278ef7b440e2bfccaff775501d3028'
+b2sums=('c6cc96e1a4044bc3a54a460a5dc5e85f04bb45d975d07711891cb32f41172446bcc537336e937f7196c4e2a2c2f2e3cd944908edee160b2e76ee2a1c0d561f48'
         '9b7a3922c631dfdd7b4466d5aab7309c81527c013fb0c92f520734264b30bfaca0f2b660afbd1e7cf14ce419033ad1ec1d39c00af3ce1576da85c298d1e6b03e'
         '38de03d5fbe7c9d1b9c41a4bc6b76b8d3acc270b93f279c5db591d79a689d9ea748f34da08ec584e49bbfc2d35a5bceeaf2f6b3fd91bc620139b4ee8b4ca6a04'
         '65302b1fa24a7aba26915269fb694c7a64b134ee2062ec7e649036a3a41efb2f2f4110cff6194808af34985855ade641c5fb01f0b97536cd3c912892ea3a0d4c'
@@ -269,7 +269,7 @@ prepare() {
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
   # Type: 1
   # Status: 2 & 3
-  # Comment: Help GPU frequencies to scale up but not currently working on Wayland.
+  # Comment: Help GPU frequencies to scale up.
   #          Including mr3912 and mr3934.
   pick_mr '1441' 'mr1441.patch' 'patch'
 
