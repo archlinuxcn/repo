@@ -11,6 +11,8 @@ license=('Apache-2.0')
 depends=(
   double-conversion
   dcmtk
+  eigen
+  intel-oneapi-mkl
   expat
 #  fftw
   gcc-libs
@@ -25,11 +27,9 @@ depends=(
 makedepends=(
   castxml
   cmake
-  eigen
   gcc13
   git
   gtest
-  intel-oneapi-mkl
   subversion
   swig
 )
