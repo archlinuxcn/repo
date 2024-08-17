@@ -1,0 +1,23 @@
+# Maintainer: Gavin Luo <lunt.luo#gmail.com>
+# Contributor: smowtenshi <smowtenshi at protonmail dot com>
+# Contributor: Asim Bera <asimbera at outlook dot in>
+
+
+pkgname=lunacy
+pkgver=9.6.2
+pkgrel=1
+pkgdesc="Free design software that keeps your flow with AI tools and built-in graphics"
+arch=('x86_64')
+url="https://icons8.com/lunacy"
+license=('custom:commercial')
+depends=('gcc-libs' 'hicolor-icon-theme' 'zlib' 'fontconfig')
+
+source_x86_64=(lunacy_x86_64_${pkgver}.deb::https://lcdn.icons8.com/setup/Lunacy_${pkgver}.deb)
+sha256sums_x86_64=('8939defaf527bfe3bff9050a81252bf8009d6695ebbd1424666aa08491f57c3c')
+
+package() {
+  bsdtar -xf data.tar.xz -C "$pkgdir/"
+
+  install -d "${pkgdir}/usr/bin"
+  ln -s /opt/icons8/${pkgname}/Lunacy "${pkgdir}"/usr/bin/lunacy
+}
