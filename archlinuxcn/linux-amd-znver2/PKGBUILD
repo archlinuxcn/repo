@@ -35,11 +35,11 @@ fi
 ###################################################################################
 
 pkgbase=linux-amd-znver2
-pkgver=6.10.1
-_pkgver=6.10.1
+pkgver=6.10.5
+_pkgver=6.10.5
 pkgrel=1
 major=6.10
-commit=c46c57d605e71bd94b6842006b68ce9277fddf15
+commit=335b711f590650ef037442bf876f3551e5af0669
 arch=(x86_64)
 url='https://www.kernel.org/'
 license=(GPL-2.0-only)
@@ -95,6 +95,8 @@ source=(https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-$_pkgver.tar.xz
         0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
         0002-drivers-firmware-skip-simpledrm-if-nvidia-drm.modese.patch
         0003-arch-Kconfig-Default-to-maximum-amount-of-ASLR-bits.patch
+        0004-x86-apic-Remove-logical-destination-mode-for-64-bit.patch
+        0005-btrfs-only-run-the-extent-map-shrinker-from-kswapd-t.patch
         more-uarches-for-kernel-6.8-rc4+.patch)
 
 export KBUILD_BUILD_HOST=archlinux
@@ -348,11 +350,13 @@ _package-headers(){
   ln -sr "$builddir" "$pkgdir/usr/src/$pkgbase"
 }
 
-sha256sums=('70109dfd1cd1c5f8a58eb1cb37122b9bf93f9c6a6280bf91019263c7339cf76b'
-            'b7fc249683be13c565a941976c2d2c0bc90185ae1bf97779ee0c269fb3d90a37'
-            '34af4212998f8866c13edbaca3f6da262aba7807856802b7588426e6cd5359c9'
-            '893a8b1f0cfd419f22b04aebc2790f5384d42ed7e2f3703774b69afce7b72cdc'
-            '997777f15a43e2e5f9e97e61f1cccbd00e62f236851a1016d43ecb6865375f35'
+sha256sums=('30909eb2e0434dce97a93cd97ed0dfab7688a124bc3ebc3ecf6c776de09ccc0b'
+            '09bc22332affedcdf96cfa7b4ff3dcf1d087d1bde818b9929f5ad1102bc4f775'
+            'd2d673e130d2a8006aeca9892238db432fe6de628327e6999b3567c0e40a01ae'
+            '2bd0cd7ea72b0330006a5159e8016fdf391cbd3e222b263c6603670d90383d05'
+            '6759cdb5efcacc56b071dddb85f2dd6a54485a046f61f40f9854246c1480603c'
+            '74d12e96b8ce056a5f1b4fd10cf3f4b671eb3d50d4124cd8fa7a81c83b55ae1e'
+            '994514f16122c25e6b8debf79aab539f92ad3f25f94729197912f250eaf75a11'
             'f4e7fcd011f2691840d2c8c2361dca850a78ea33cc5c24d2e27c3e0294fd1dc5')
 
 pkgname=($pkgbase $pkgbase-headers)
