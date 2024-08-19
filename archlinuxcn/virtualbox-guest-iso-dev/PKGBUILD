@@ -1,8 +1,8 @@
 # Maintainer: heavysink
 
 pkgname=virtualbox-guest-iso-dev
-_pkgver=7.1.0-164393
-pkgver=7.1.0.164393
+_pkgver=7.1.0-164434
+pkgver=7.1.0.164434
 pkgrel=1
 pkgdesc='The official VirtualBox Guest Additions ISO image for virtualbox dev version'
 arch=('any')
@@ -15,7 +15,7 @@ conflicts=('virtualbox-additions' 'virtualbox-iso-additions')
 noextract=(VBoxGuestAdditions_$pkgver.iso)
 source=("https://www.virtualbox.org/download/testcase/VBoxGuestAdditions_$_pkgver.iso"
         'license')
-sha256sums=('a5e148c488cfe24c2c2c4f19a353ab3b6a35f0382f0c8d54d47c1ca2db225983'
+sha256sums=('0dee19b9166e90393744e44dfed9a763031030d74a79972beed93df22e402f0e'
             'fbe9cd6288037bff44716642ee4bea9c42c2d60eb5ed86cb48fa95147d9e8623')
 
 package() {
