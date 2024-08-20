@@ -16,13 +16,11 @@ source=("${_srcname}.tar.gz::https://cdn.kernel.org/pub/linux/kernel/v6.x/${_src
 	'1002-net-wireless-uwe5622-driver.patch'
 	'config'
 	'linux.preset')
-md5sums=('85f2d2fc402a365ff4ad33339db42fb8'
-	'37adbbfa41043d95e7aa5f18ea786b70'
-	'ffafea1feb500a3364c2f53df320a943'
-	'e23d7394738cba7b6dcfea21edde0fe1'
-	'86d4a35722b5410e3b29fc92dae15d4b'
-	'ce6c81ad1ad1f8b333fd6077d47abdaf'
-	'3dc88030a8f2f5a5f97266d99b149f77')
+sha256sums=('3c88ff4648122e81832b7067be6456ef28e119b64649a29e84f7f04691e489f9'
+            'fe2bcc1b54c2d033e69d99234f1c480b44ff08b9921a1572746f5b745394d924'
+            '7c4c7a29c9aff64297c7e7a0d4189ea858d9a8fa94b807d1d0329bcf296286a8'
+            'd96360a0c23084bbc4a845ada82189ed47d1f1ed25600708f35678af21d5abec'
+            '66644820faa950a5fc59181f5aefcbed6d7ed652b29aee69979a2be2a032025d')
 
 prepare() {
 	apply_patches() {
