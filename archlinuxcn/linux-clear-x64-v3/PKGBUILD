@@ -97,7 +97,7 @@
 #  43. Generic-x86-64-v4 (GENERIC_CPU4)
 #  44. Intel-Native optimizations autodetected by the compiler (MNATIVE_INTEL)
 #  45. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD)
-_subarch=38
+_subarch=42
 
 # Enable compilation with LLVM
 # Be warned, this is largely untested by me (JeremyStarTM). It *should* work,
@@ -121,7 +121,7 @@ _subarch=38
 _kernel_major=6.10
 _kernel_minor=5
 # Clear Linux patches version
-_clr=4-1456
+_clr=5-1458
 # kernel_compiler_patch version
 _kernelcompilerpatch="20240221.2"
 # Source directory names
@@ -131,7 +131,7 @@ _src_clr=${_kernel_major}.${_clr}
 # Package information
 pkgbase=linux-clear-x64-v3
 pkgver=${_kernel_major}.${_kernel_minor}
-pkgrel=1
+pkgrel=2
 pkgdesc="Linux kernel with patches from Clear Linux which allow for higher performance."
 arch=("x86_64")
 url="https://github.com/clearlinux-pkgs/linux"
