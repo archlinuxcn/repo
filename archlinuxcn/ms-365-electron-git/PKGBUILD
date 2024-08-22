@@ -1,0 +1,40 @@
+# Maintainer: Agampreet
+# Contributor: Agampreet
+pkgname=ms-365-electron-git
+pkgver=2.0.0.r36.ga0cb625
+pkgrel=1
+pkgdesc="Unofficial Microsoft 365 Web Desktop Wrapper made with Electron"
+arch=('x86_64')
+url="https://github.com/agam778/MS-365-Electron"
+license=('MIT')
+depends=('libxcrypt-compat' 'at-spi2-core' 'desktop-file-utils' 'gtk3' 'hicolor-icon-theme' 'libappindicator-gtk3' 'libnotify' 'libsecret' 'libxss' 'libxtst' 'util-linux-libs' 'xdg-utils')
+makedepends=('git' 'yarn' 'nodejs' 'python')
+provides=("ms-365-electron" 'MS-365-Electron')
+conflicts=("ms-365-electron-bin")
+source=("${pkgname%-git}::git+https://github.com/agam778/MS-365-Electron.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/${pkgname%-git}"
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "$srcdir/${pkgname%-git}"
+    yarn config set cacheFolder "$srcdir/yarn-cache"
+    yarn install
+    yarn dist -l deb --config.artifactName="MS-365-Electron.deb"
+}
+
+package() {
+    cd "$srcdir/${pkgname%-git}"
+    bsdtar -xf "${srcdir}/${pkgname%-git}/release/MS-365-Electron.deb" -C "${srcdir}" --include data.tar.xz
+    bsdtar -xf ${srcdir}/data.tar.xz -C ${pkgdir}
+    install -d ${pkgdir}/usr/bin/
+    ln -s /opt/MS-365-Electron/ms-365-electron ${pkgdir}/usr/bin/ms-365-electron
+    for icon_size in 16 24 32 48 64 128 256 512 1024; do
+        icons_dir=/usr/share/icons/hicolor/${icon_size}x${icon_size}/apps
+        install -Dm644 assets/icons/png/${icon_size}x${icon_size}.png \
+        $pkgdir$icons_dir/${pkgname%-git}.png
+    done
+}
