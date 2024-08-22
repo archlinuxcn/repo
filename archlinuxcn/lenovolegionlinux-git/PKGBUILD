@@ -5,7 +5,7 @@
 
 _pkgname=lenovolegionlinux
 pkgname=${_pkgname}-git
-pkgver=r825.d960251
+pkgver=r829.1da451f
 pkgrel=1
 pkgdesc="LenovoLegionLinux (LLL) brings additional drivers and tools for Lenovo Legion series laptops to Linux. PLEASE READ THE REPO BEFORE INSTALL THIS PACKAGE!!!"
 arch=("x86_64")
@@ -18,7 +18,6 @@ depends=(
   python-pyqt6
   polkit
   python-darkdetect
-  acpid
 )
 makedepends=(
   git
@@ -61,7 +60,6 @@ build() {
 }
 package() {
   mkdir -p ${pkgdir}/etc/systemd/system
-  mkdir -p ${pkgdir}/etc/acpi/{events,actions}
 
   cd "${srcdir}/${_pkgname}/python/legion_linux"
   python -m installer --destdir="$pkgdir" dist/*.whl
@@ -73,9 +71,5 @@ package() {
   
 # legiond daemon
   install -Dm775 service/legiond/legiond "${pkgdir}/usr/bin"
-  install -Dm775 service/legiond/legiond-ctl "${pkgdir}/usr/bin"
-	
-# ACPI events
-  install -Dm775 acpi/events/legion_ppd "${pkgdir}/etc/acpi/events/"
-  install -Dm664 acpi/events/legion_ac "${pkgdir}/etc/acpi/events/"
+  install -Dm775 service/legiond/legiond-ctl "${pkgdir}/usr/bin"	
 }
