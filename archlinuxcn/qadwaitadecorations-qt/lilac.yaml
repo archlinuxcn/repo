@@ -1,6 +1,8 @@
 maintainers:
   - github: everyx
 
+build_prefix: archlinuxcn-x86_64
+
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: |
   git_pkgbuild_commit()
