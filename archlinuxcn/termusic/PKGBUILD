@@ -11,7 +11,7 @@ license=('GPL-3.0-or-later AND MIT')
 depends=('gstreamer' 'gst-plugins-base' 'gst-plugins-good' 'gst-plugins-bad' 'gst-plugins-ugly' 'gst-libav' 'dbus' 'ueberzug' 'protobuf')
 optdepends=('yt-dlp: download mp3'
 	'ffmpeg: download mp3')
-makedepends=('cargo')
+makedepends=('cargo' 'clang')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha512sums=('59e81060852e6a215c24ce7faaf74c34f8d588895f0254a471a3bd895c68612d4e816f0f2a66cfd62885ae5706d27b11d34aa6a02c9d8620e2d0779a1edae8e6')
 options=('!lto')
