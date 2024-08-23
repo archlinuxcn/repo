@@ -7,53 +7,54 @@ pkgname=kde-gtk-config-heddxh
 _pkgname=kde-gtk-config
 pkgver=6.1.4
 _dirver=$(echo $pkgver | cut -d. -f1-3)
-_patch_1=01.feature-sync-options.patch
 pkgrel=1
 pkgdesc='Syncs KDE settings to GTK applications with patch from Heddxh'
 arch=(x86_64)
 url='https://kde.org/plasma-desktop/'
 license=(LGPL-2.0-or-later)
+provides=("$_pkgname=$pkgver")
+conflicts=("$_pkgname")
 depends=(gcc-libs
-         glib2
-         glibc
-         kcolorscheme
-         kconfig
-         kcoreaddons
-         kdbusaddons
-         kdecoration
-         kguiaddons
-         kwindowsystem
-         qt6-base
-         qt6-svg
-         sh
-         xsettingsd)
+    glib2
+    glibc
+    kcolorscheme
+    kconfig
+    kcoreaddons
+    kdbusaddons
+    kdecoration
+    kguiaddons
+    kwindowsystem
+    qt6-base
+    qt6-svg
+    sh
+    xsettingsd)
 makedepends=(extra-cmake-modules
-             gtk3
-             sassc)
+    gtk3
+    sassc
+    git)
 optdepends=('gtk3: GTK3 apps support')
 source=(https://download.kde.org/stable/plasma/$_dirver/$_pkgname-$pkgver.tar.xz{,.sig}
-        $_patch_1)
+    0001-feat-customize-what-options-to-sync.patch)
 sha256sums=('b3d4e5c8da2e7525bd23c77a85468e3a7cf3b1a9d9c9e8ae6a87e207a3f98019'
             'SKIP'
-            '61fa7eb770b23486cb20505259630bf89d7aeee4e147e87a43f2860e5815b684')
-validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
-              '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'  # Bhushan Shah <bshah@kde.org>
-              'D07BD8662C56CB291B316EB2F5675605C74E02CF'  # David Edmundson <davidedmundson@kde.org>
-              '1FA881591C26B276D7A5518EEAAF29B42A678C20') # Marco Martin <notmart@gmail.com>
+            'afe854f49b46b76a825e73427addf150c08f47f34bf53c3b90c562ba30f73f0a')
+validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D' # Jonathan Esk-Riddell <jr@jriddell.org>
+    '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'           # Bhushan Shah <bshah@kde.org>
+    'D07BD8662C56CB291B316EB2F5675605C74E02CF'           # David Edmundson <davidedmundson@kde.org>
+    '1FA881591C26B276D7A5518EEAAF29B42A678C20')          # Marco Martin <notmart@gmail.com>
 
 prepare() {
-  # Control what to sync from kde to gtk settings
-  patch -d $_pkgname-$pkgver -p1 < $_patch_1
+    cd $_pkgname-$pkgver
+    git apply ../0001-feat-customize-what-options-to-sync.patch
 }
 
 build() {
-  cmake -B build -S $_pkgname-$pkgver \
-    -DCMAKE_INSTALL_LIBEXECDIR=lib \
-    -DBUILD_TESTING=OFF
-  cmake --build build
+    cmake -B build -S $_pkgname-$pkgver \
+        -DCMAKE_INSTALL_LIBEXECDIR=lib \
+        -DBUILD_TESTING=OFF
+    cmake --build build
 }
 
 package() {
-  DESTDIR="$pkgdir" cmake --install build
+    DESTDIR="$pkgdir" cmake --install build
 }
-
