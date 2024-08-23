@@ -1,0 +1,44 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: AdmiringWorm <kim.nordmo@gmail.com>
+# Contributor: nirnakinho <aur at dominikbodi dot de>
+
+pkgname=dnscontrol
+pkgver=4.12.5
+pkgrel=0
+pkgdesc="Synchronize your DNS to multiple providers from a simple DSL"
+arch=('x86_64' 'armv7h' 'aarch64')
+url="https://stackexchange.github.io/$pkgname/"
+license=('MIT')
+depends=('glibc')
+makedepends=('go')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/StackExchange/$pkgname/archive/v$pkgver.tar.gz")
+b2sums=('788cbe0a47a87aa9aecc947e94afbc8535559f8b471cb0f1effb9e49615cea85013d914a85ca1f46fe3aac7090277208d9273a114241ce5720499780eaefb7f2')
+
+prepare(){
+    cd "$pkgname-$pkgver"
+    mkdir -p build/
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+    export CGO_CPPFLAGS="$CPPFLAGS"
+    export CGO_CFLAGS="$CFLAGS"
+    export CGO_CXXFLAGS="$CXXFLAGS"
+    export CGO_LDFLAGS="$LDFLAGS"
+    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+    go build \
+        -o build \
+        -ldflags "-compressdwarf=false -linkmode external"
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    install -Dm755 "build/$pkgname" -t "$pkgdir/usr/bin/"
+    mkdir -p "$pkgdir/usr/share/bash-completion/completions/"
+    build/$pkgname shell-completion bash > "$pkgdir/usr/share/bash-completion/completions/$pkgname"
+    mkdir -p "$pkgdir/usr/share/zsh/site-functions/"
+    build/$pkgname shell-completion zsh > "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
+    install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
+
+# vim: set ts=4 sw=4 et:
