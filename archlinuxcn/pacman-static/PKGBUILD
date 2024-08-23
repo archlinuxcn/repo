@@ -4,9 +4,9 @@
 
 pkgname=pacman-static
 pkgver=6.1.0
-_cares_ver=1.29.0
+_cares_ver=1.33.0
 _nghttp2_ver=1.62.1
-_curlver=8.8.0
+_curlver=8.9.1
 _sslver=3.3.1
 _zlibver=1.3.1
 _xzver=5.6.2
@@ -16,7 +16,7 @@ _libarchive_ver=3.7.4
 _gpgerrorver=1.50
 _libassuanver=3.0.0
 _gpgmever=1.23.2
-pkgrel=27
+pkgrel=28
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -40,8 +40,9 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 # nghttp2
 source+=("https://github.com/nghttp2/nghttp2/releases/download/v$_nghttp2_ver/nghttp2-$_nghttp2_ver.tar.xz")
 # c-ares
-source+=('https://github.com/c-ares/c-ares/releases/download/cares-1_29_0/c-ares-1.29.0.tar.gz'{,.asc})
-validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg <daniel@haxx.se>
+source+=('https://github.com/c-ares/c-ares/releases/download/v1.33.0/c-ares-1.33.0.tar.gz'{,.asc})
+validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2'  # Daniel Stenberg <daniel@haxx.se>
+               'DA7D64E4C82C6294CB73A20E22E3D13B5411B7CA') # Brad House <brad@brad-house.com>
 # curl
 source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc})
 validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg
@@ -95,9 +96,9 @@ sha512sums=('da5e78506e0505aac47def4b658a8cd6012be90c7ad7f7343da2edca2df5bd01909
             '8adb3696579e3b771a7a61dd6ff013afb1444bbb087a0a71f3971da4d51e6b304ad631cbafe8187c837bd763b1a3298e2bd19605438d515743a73ff24192e33f'
             '2ff45ed5e27b1d90524ec0de45acf55891b6f5bf7242dbfeec5c370b7c5d6e35eb49254b19f2a2d194dbab38fa27bca34afaf6175888a911a105237f2bab8d19'
             'd5d6b068712e9b467547b0e5380465b8540317134f3f26c2b0c60eb9c604be2f37b4517a98b371d5f5fb668ce2ee35603ddd944224f11e96382aa541a6a17b4c'
-            '0287fd59aa6d831e0d1705deb6b4b1ab3b97a28c5c42feeeaa1eeab55ffb429998c7f0735f15cf5eaeb9177cb77800e6b0b01107bd28fb082cf737f8c12766d0'
+            '3cf1b94d6e8e53742703a679d7e35d3f985320720f41fa58189a0bcad4aca80405c73c4689abe7879df292dbe8f3ddca34b2d48429af5afcc9d2933edb075788'
             'SKIP'
-            '7686d34ab627750dbc63c8fb1e4ef7bd30a5f7996d9070d2ad02748886c6514b8105f201295d5c299d9ca8d355b662d2a77f6647df87a47294bf8f1dd565d82c'
+            '27c91a58f23f02dd150556edaa73e1be08a93134d3d05049e546b39f05e0f4383e41bf6a56a643eae03eda0f39a527059510b2e34167ae9e7c75b393964a9f8b'
             'SKIP'
             'd3682a5ae0721748c6b9ec2f1b74d2b1ba61ee6e4c0d42387b5037a56ef34312833b6abb522d19400b45d807dd65cc834156f5e891cb07fbaf69fcf67e1c595d'
             'SKIP'
