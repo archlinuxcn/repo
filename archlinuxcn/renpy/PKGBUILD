@@ -1,8 +1,8 @@
 # Maintainer: Patrick Northon <northon_patrick3@yahoo.ca>
 
 pkgname=renpy
-pkgver=8.2.3
-_commit=5a88385e7a23d1862818dea0aaf5ce3bdea46f2e
+pkgver=8.3.0
+_commit=276e4b18083a3fd6e2bf3798766b4c5ce543645a
 pkgrel=1
 pkgdesc="Visual novel engine Ren'Py along with its platdeps libs"
 arch=('i686' 'x86_64')
@@ -22,7 +22,7 @@ install='renpy.install'
 source=("git+https://github.com/${pkgname}/${pkgname}.git#commit=${_commit}"
         "${pkgname}.desktop"
         "${pkgname}-launcher.sh")
-sha256sums=('041334162e9a572107d51a4e183eab251c8e11be1744626f7a475a9f187b4cf6'
+sha256sums=('8b5ea90b4193e4b6c784afe473d34fc8ad3886ce0daddd199602bc8950c7dc6a'
             'b58efcc42526c4de15e8963b02991e558b5e3d15d720b3777b791ac13fc815e6'
             'a38112859bf659d48c30be5c7c20ed1a1c72271ffd74eb4b4e730afbd87d73dc')
 
