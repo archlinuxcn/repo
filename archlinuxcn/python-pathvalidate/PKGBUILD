@@ -1,6 +1,6 @@
 _pkgname='pathvalidate'
 pkgname=python-$_pkgname
-pkgver=3.2.0
+pkgver=3.2.1
 pkgrel=1
 pkgdesc='Sanitize/validate strings in filenames/file-paths/etc'
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('python' 'python-click')
 makedepends=('python-setuptools')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/thombashi/pathvalidate/archive/v$pkgver.tar.gz")
-sha256sums=('b99879d7ba4aea8bcdce2bdf68ae8e52da7c50dbe1e264ff42114056a103b95e')
+sha256sums=('c93ce719682d9e2c6f9869e8b52446402e6e880eee397e0aec123a273c015c2f')
 
 build() {
   cd "${_pkgname}-${pkgver}"
