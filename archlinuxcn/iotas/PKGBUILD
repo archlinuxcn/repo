@@ -3,7 +3,7 @@
 
 pkgname=iotas
 pkgver=0.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Simple note taking"
 arch=('any')
 url="https://gitlab.gnome.org/World/iotas"
@@ -11,6 +11,12 @@ license=('GPL3')
 depends=('libadwaita' 'python' 'gtksourceview5')
 makedepends=('meson' 'gobject-introspection')
 checkdepends=('appstream-glib')
+optdepends=(
+	'aspell: spell check.'
+	'hspell: hebrew spell check.'
+	'nuspell: spell check, depends on hunspell dictionary.'
+	'hunspell: spell check.'
+)
 source=("$url/-/archive/$pkgver/$pkgname-$pkgver.tar.gz")
 b2sums=('625c103e7b7ab453504c7a5399582ad728cd790fb07fd8830ec0b586003b444764676275afc79cd9a2be1024b64472bcecfefafdcd94468cd7ec4800bad6e9b6')
 
