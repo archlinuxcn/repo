@@ -17,26 +17,29 @@ makedepends=(
     'cython'
     'python-build'
     'python-installer'
-    'python-scikit-build'
+    'python-pkgconfig'
+    'python-setuptools'
     'python-setuptools-scm'
     'python-wheel'
 )
 checkdepends=('python-pytest')
 _archive="$_pyname-$pkgver"
-source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.zip")
+source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz")
 sha256sums=('1102d9fd371cdea6a859be380a3cc554237f4cf2933bc09e98aceaeae8a42229')
 
 build() {
-    cd "$_archive"
+    cd "$srcdir/$_archive"
     python -m build --wheel --no-isolation
 }
 
-package() {
-    cd "$_archive"
-    pytest -v
+check() {
+    cd "$srcdir/$_archive"
+    python -m venv --system-site-packages .venv
+    .venv/bin/python -m installer dist/*.whl
+    .venv/bin/python -m pytest -v -r a
 }
 
 package() {
-    cd "$_archive"
+    cd "$srcdir/$_archive"
     python -m installer --destdir="${pkgdir}" dist/*.whl
 }
