@@ -4,8 +4,8 @@
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 
 pkgname=nvidia-lily
-pkgver=555.58.02
-pkgrel=3
+pkgver=560.35.03
+pkgrel=1
 pkgdesc="NVIDIA drivers for linux-lily"
 arch=('x86_64')
 url="https://www.nvidia.com/"
@@ -17,7 +17,7 @@ provides=("nvidia=$pkgver")
 conflicts=('nvidia-dkms')
 _pkg="NVIDIA-Linux-x86_64-${pkgver}"
 source=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/${_pkg}.run")
-sha512sums=('7a8c84c15d87d2cf5f6261b12d3d683e0a7a1847d7c5461b3995f78b8dd862272fd11be07018593a8d5ef5d8274040f15b9e6fe92e9212dcd7a97be668852433')
+sha512sums=('97137160b64928ff84fd6145a0ebc209c045d6a07ccc53ec6df6ba1fda2ad72038eda7ecdc0a0178a2628aa4e18819a9b3ff3b693b22bdc9de543be0a968f8aa')
 
 prepare() {
     sh "${_pkg}.run" --extract-only
