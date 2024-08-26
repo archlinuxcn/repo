@@ -2294,3 +2294,21 @@ Tue Aug 13 04:29:53 2024 +0200
     *  2024-07-29 4951d16 actionless fix(build: install_all_deps): if deps there only from AUR - package list what not saved correctly - so leftover deps might be not uninstalled after the build
     *  2024-07-16 0a3b6bd actionless fix(aur: find_aur_provided_deps): don't attempt to ask for pkg provider if zero providers found
     *  2024-07-16 9c6df59 actionless feat(aur, pacman): interactively select package provider (fixes #211)
+
+
+Sun Aug 25 23:47:50 2024 +0200
+-------------------------------------------------
+1.25            Release 1.25
+    
+    Notable changes:
+    *  2024-08-25 7b344c1 actionless feat(pikaprint, print_dept): extract drawing logic and use it for `pikasay` tool (which later could be reused for print special messages/warnings)
+    *  2024-08-13 3f45adb actionless feat(install_cli: install_prompt; install_info_fetcher: mark_dependant; core: InstallInfo; print_dept: pformat_upgradeable): add new option to install prompt: `[r] show if packages are required by already installed packages`
+
+
+Mon Aug 26 01:08:00 2024 +0200
+-------------------------------------------------
+1.25.1          Hotfix release 1.25.1
+    
+    Notable changes:
+    *  2024-08-26 3b2a7ce actionless fix(pikasay): correctly handle newlines when reading from stdin
+    *  2024-08-26 ca8c8f3 actionless fix(pikaprint: format_paragraph): preserve newlines and leading spaces
