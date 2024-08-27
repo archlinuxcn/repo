@@ -1,0 +1,12 @@
+maintainers:
+  - github: heddxh
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: alpm
+    repo: extra
+    alpm: libspelling-apostrophe
+    strip_release: true
