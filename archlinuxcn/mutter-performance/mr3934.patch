@@ -1,6 +1,6 @@
-From 85e79bbb26f2248ec1387f89568c52c4b3048d67 Mon Sep 17 00:00:00 2001
+From adb26372d0dc18c90293733f1c5f3b0479badf6c Mon Sep 17 00:00:00 2001
 From: Mingi Sung <sungmg@saltyming.net>
-Date: Wed, 14 Aug 2024 17:25:41 +0900
+Date: Wed, 28 Aug 2024 20:21:07 +0900
 Subject: [PATCH] Merge branch 'crtc_frame_deadline_dispatch-track-duration'
  into gnome-46
 MIME-Version: 1.0
@@ -444,10 +444,10 @@ index 6758982a6a..6ce62cd697 100644
    return;
  
 diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
-index 1a31f04a16..98e106fffa 100644
+index 9b739faf39..b790c1e5c8 100644
 --- a/src/backends/native/meta-onscreen-native.c
 +++ b/src/backends/native/meta-onscreen-native.c
-@@ -1757,11 +1757,15 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
+@@ -1786,11 +1786,15 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
                                      ClutterFrame *frame)
  {
    MetaOnscreenNative *onscreen_native = META_ONSCREEN_NATIVE (onscreen);

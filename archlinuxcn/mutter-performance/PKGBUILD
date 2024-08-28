@@ -11,28 +11,16 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373' '3567' '3751' '3912' '3934')
+# Merge Requests List: ('579' '1441' '3567' '3751' '3934')
 _merge_requests_to_use=('1441' '3751')
-
-## Disable building the DOCS package (Enabled if not set)
-# Remember to unset this variable when producing .SRCINFO
-: "${_disable_docs:=""}"
-
-## Enable the `check()` operation (Disabled if not set)
-: "${_enable_check:=""}"
 
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing!
 
 _pkgname=mutter
-pkgbase=mutter-performance
-if [ -n "$_disable_docs" ]; then
-  pkgname=mutter-performance
-else
-  pkgname=(mutter-performance mutter-performance-docs)
-fi
+pkgname=mutter-performance
 epoch=1
-pkgver=46.4+r4+gc2c694464c
+pkgver=46.4+r17+g0d60d07204
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -112,28 +100,22 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=c2c694464c6558bf91a15d6f6807ae5fa6175658  # tags/46.4^4
+_commit=0d60d072048c8ce8ebb527284e5baa10df26bc7c  # tags/46.4^17
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
-        'mr3373.patch'
         'mr3567.patch'
         'mr3751.patch'
-        'mr3912.patch'
         'mr3934.patch')
-sha256sums=('01e53f26a46819a9b933c20a4f845e9aaa0ffaf2632d29d883111d99903b8269'
-            'c319d2b1b9060f37ef37ac7112729883192e59bfc42aa13b4c2d73e2e1cccc61'
-            '1292f1dcefa0a3cfff753db942e7c974e39b1265d246634f239aad9437d45609'
+sha256sums=('f72340218b99f0278ca358cfb94fc213ec3e91b5ff7ecae198b3d220829b7e4e'
+            '60638078a3f3c46da61f868c04b2a3424488510702648452c3e8214a3790e37b'
             '2e474a574edad8dc047a53a920fc7cbe005cac0102907eef80a252fc556d0517'
             '4c15b0e6d0001c8c3feedf05a9140f7f17d52eb36ff7b8039e0281c1373ccdfe'
-            'f02f07abc4072118e175e8028d3ee16ff0aa9b238dd2b10155b3ae2a0534a4a0'
-            '45d9c998053c9b8def5a7b122861101137ce6ac4fd6be9d9c475232529ecb98c')
-b2sums=('c6cc96e1a4044bc3a54a460a5dc5e85f04bb45d975d07711891cb32f41172446bcc537336e937f7196c4e2a2c2f2e3cd944908edee160b2e76ee2a1c0d561f48'
-        '9b7a3922c631dfdd7b4466d5aab7309c81527c013fb0c92f520734264b30bfaca0f2b660afbd1e7cf14ce419033ad1ec1d39c00af3ce1576da85c298d1e6b03e'
-        '38de03d5fbe7c9d1b9c41a4bc6b76b8d3acc270b93f279c5db591d79a689d9ea748f34da08ec584e49bbfc2d35a5bceeaf2f6b3fd91bc620139b4ee8b4ca6a04'
+            'c0ae2855247cddde806a320d031021fd0f7c867c61ac95af99ea3765f290bbf5')
+b2sums=('86db7a63e6dfd33baf5a6cebc30b96d57de1688de6cbc475a9b46fe21b5e02c50bcb56b4065ab8e2092c4fc7303d2d6d86c75f4d555fcef8a00a9cd243d30e25'
+        '802cf82c0d4fa4514dc376bac57a65453df0ce789e6efac334d2f76a24349ad0a2b6e9ce02345839e8de719d7696dfcae911b1e66922103b2ec315e9fbaa8f01'
         '65302b1fa24a7aba26915269fb694c7a64b134ee2062ec7e649036a3a41efb2f2f4110cff6194808af34985855ade641c5fb01f0b97536cd3c912892ea3a0d4c'
         'f9f2284d7236d6072a818de3784a339c2d934490da8870876f49d4effd59ce807593ce8b8a3c5e06586fd5fd7e81fb31fedca84115acf1e71cfe23d4a5e727b3'
-        '14ed5e8fe9844739903150bf69de03b7136e74eb4b080d2e0264ba9bf5f2ba2c826cb45b78f8c38b2e80c223dd7926aa8e756e9bee23b75ced16ba5af45c2d8d'
-        '1ecb06542e117b980329cdc16b14860f045f83be735247f1433d9d2564bc27befd47b124f4d96f0ebc7cc986224ab66d3f1d30b92a831f0f59a11eb6d8aedb8d')
+        '18e8d521336422f4c441979fe77ff22c60406e94cd2159c08bbfd127bf6b010dece55c7226b99a953c560b05194fe72e5c2140765577069d970c93479b573bcb')
 
 for mr in "${_merge_requests_to_use[@]}"; do
   if [ '3567' = "$mr" ]; then
@@ -142,7 +124,7 @@ for mr in "${_merge_requests_to_use[@]}"; do
 done
 
 pkgver() {
-  cd mutter
+  cd $_pkgname
   git describe --tags | sed -r 's/\.([a-z])/\1/;s/([a-z])\./\1/;s/[^-]*-g/r&/;s/-/+/g'
 }
 
@@ -222,14 +204,6 @@ prepare() {
   #          If you use stenography software or play hardcore rhythm games like Lunatic Rave 2/osumania, use it.
   pick_mr '579' ce86f90efbaa51522ba14c5b4cad933c2106de42 'revert'
 
-  # Title: kms/crtc: Increase default deadline evasion to 1000 microseconds
-  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3373
-  # Type: 3
-  # Status: 2
-  # Comment: This fix cursor stutter.
-  pick_mr '3373' 'mr3373.patch' 'patch'
-
   # Title: Let scaling-aware Xwayland clients scale themselves with "scale-monitor-framebuffers"
   # Author: Jonas Dreßler <verdre@v0yd.nl>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
@@ -248,20 +222,13 @@ prepare() {
   #          (mostly Chromium/Electron based apps with Ozone Wayland.)
   pick_mr '3751' 'mr3751.patch' 'patch'
 
-  # Title: backends/native: Avoid duplicating or losing KMS property sets
-  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3912
-  # Type: 1
-  # Status: 2
-  # Comment: Cannot be used with mr1441 as it already includes mr3912.
-  pick_mr '3912' 'mr3912.patch' 'patch'
-
   # Title: kms/impl-device: Track dispatch duration in crtc_frame_deadline_dispatch
   # Author: Michel Dänzer <mdaenzer@redhat.com>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3934
   # Type: 1
   # Status: 2
-  # Comment: Cannot be used with mr1441 as it already includes mr3934.
+  # Comment: This fixes cursor stutter.
+  #          Do not enable this if !1441 is enabled since it already includes !3934.
   pick_mr '3934' 'mr3934.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
@@ -269,8 +236,8 @@ prepare() {
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
   # Type: 1
   # Status: 2 & 3
-  # Comment: Help GPU frequencies to scale up.
-  #          Including mr3912 and mr3934.
+  # Comment: Helps GPU frequencies to scale up.
+  #          Backported: !3934.
   pick_mr '1441' 'mr1441.patch' 'patch'
 
 }
@@ -281,8 +248,8 @@ build() {
     -D wayland_eglstream=true
     -D installed_tests=false
     -D libdisplay_info=enabled
-    -D docs=$(if ! [ -n "$_disable_docs" ]; then echo "true"; else echo "false"; fi)
-    -D tests=$(if [ -n "$_enable_check" ]; then echo "true"; else echo "false"; fi)
+    -D docs=false
+    -D tests=false
   )
 
   CFLAGS="${CFLAGS/-O2/-O3} -fno-semantic-interposition"
@@ -292,57 +259,10 @@ build() {
   meson compile -C build
 }
 
-
-if [ -n "$_enable_check" ]; then
-  check() {
-    mkdir -p -m 700 "${XDG_RUNTIME_DIR:=$PWD/runtime-dir}"
-    glib-compile-schemas "${GSETTINGS_SCHEMA_DIR:=$PWD/build/data}"
-    export XDG_RUNTIME_DIR GSETTINGS_SCHEMA_DIR
-    export NO_AT_BRIDGE=1 GTK_A11Y=none
-    export MUTTER_DEBUG_DUMMY_MODE_SPECS="800x600@10.0"
-    local _pipewire_session_manager=$(pacman -Qq pipewire-session-manager)
-
-    msg2 "It is possible to fail some tests. Use with caution!"
-    # Tests fail:
-    # mutter:cogl+cogl/conform / cogl-test-offscreen-texture-formats-gles2
-    # mutter:core+mutter/stacking / fullscreen-maximize
-    ## https://gitlab.gnome.org/GNOME/mutter/-/issues/3343
-    xvfb-run -s '-nolisten local +iglx -noreset' \
-      ${_pkgname}/src/tests/meta-dbus-runner.py --launch=pipewire --launch=${_pipewire_session_manager} \
-      meson test -C build --no-suite 'mutter/kvm' --no-rebuild \
-      --print-errorlogs --setup plain ||:
-  }
-fi
-
-_pick() {
-  local p="$1" f d; shift
-  for f; do
-    d="$srcdir/$p/${f#$pkgdir/}"
-    mkdir -p "$(dirname "$d")"
-    mv "$f" "$d"
-    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
-  done
-}
-
-package_mutter-performance() {
+package() {
   provides=(mutter libmutter-14.so)
   conflicts=(mutter)
   
 
   meson install -C build --destdir "$pkgdir"
-
-  if ! [ -n "$_disable_docs" ]; then
-    _pick docs "$pkgdir"/usr/share/mutter-*/doc
-  fi
 }
-
-if ! [ -n "$_disable_docs" ]; then
-  package_mutter-performance-docs() {
-    provides=(mutter-docs)
-    conflicts=(mutter-docs)
-    pkgdesc+=" (documentation)"
-    depends=()
-
-    mv docs/* "$pkgdir"
-  }
-fi
