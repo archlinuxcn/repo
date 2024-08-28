@@ -1,0 +1,13 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['jpegxguy'])
+post_build: aur_post_build
+update_on:
+  - source: aur
+    aur: ksmbd-tools
+  - source: alpm
+    alpm: libnl
+    strip_release: true
+    provided: libnl-3.so
+
+maintainers:
+  - github: roaldclark
