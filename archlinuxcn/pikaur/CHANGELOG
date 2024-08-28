@@ -2331,3 +2331,18 @@ Tue Aug 27 01:15:14 2024 +0200
     
     Notable changes:
     *  2024-08-27 161666f actionless fix(pikaprint: printable_length, range_printable): use blacklist instead of whitelist for filtering printable characters
+
+
+Wed Aug 28 20:48:15 2024 +0200
+-------------------------------------------------
+1.26            Release 1.26
+    
+    Notable Changes:
+    
+    *  2024-08-28 6c475e1 actionless feat(print_dept: pformat_sysupgrade): add extra space if both `verbose` and `required_by_installed` options are chosen
+    *  2024-08-28 4bacc06 actionless feat(print_dept: pformat_sysupgrade; core: install_info; install_info_fetcher): print install reason together with info if pkg is required by other pkgs
+    *  2024-08-28 bde6470 Peng-Yu Chen test(unit: provider) add test case for Provider.choose (#833)
+    *  2024-08-28 f10c956 actionless chore(config): use unique message decorators to make it easy to distinguish pikaur's and pacman's output messages
+    *  2024-08-28 93f5458 actionless refactor: use DECORATION variable instead of hardcoded "::"
+    *  2024-08-28 d6aac5c actionless fix(provider): package sorting was applied only visually but not internally (fixes #830)
+    *  2024-08-27 160d20a actionless feat(pikasay): add --orientation arg
