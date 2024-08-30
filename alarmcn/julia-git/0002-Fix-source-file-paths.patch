@@ -1,4 +1,4 @@
-From 6fe0ecb45d0cad560f0b8e3344f17d2287197bee Mon Sep 17 00:00:00 2001
+From 7245b266fe7bb7f6f025f1e09921450be889c3a5 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
 Subject: [PATCH 2/7] Fix source file paths
@@ -11,10 +11,10 @@ Subject: [PATCH 2/7] Fix source file paths
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 62241de9ff..e3ff79f6da 100644
+index 966ed76751..3eab0924f2 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
-@@ -111,6 +111,13 @@ let
+@@ -118,6 +118,13 @@ let
  
          print_time("Stdlibs total", tot_time_stdlib)
      end
@@ -29,7 +29,7 @@ index 62241de9ff..e3ff79f6da 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index 3cb9539650..63cf3874d6 100644
+index d0dcac8c6d..32fc340a69 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
 @@ -55,7 +55,7 @@ A string containing the full path to the directory containing the `stdlib` packa
@@ -59,10 +59,10 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index b265ebdba2..ab7e17ab58 100644
+index 26b95225fb..22d32e0afe 100644
 --- a/src/ast.c
 +++ b/src/ast.c
-@@ -826,6 +826,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
+@@ -834,6 +834,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
      return julia_to_scm_noalloc2(fl_ctx, v, check_valid);
  }
  
@@ -81,7 +81,7 @@ index b265ebdba2..ab7e17ab58 100644
  // Parse `text` starting at 0-based `offset` and attributing the content to
  // `filename`. Return an svec of (parsed_expr, final_offset)
  JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
-@@ -851,6 +863,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
+@@ -859,6 +871,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
      fl_context_t *fl_ctx = &ctx->fl;
      value_t fl_text = cvalue_static_cstrn(fl_ctx, text, text_len);
      fl_gc_handle(fl_ctx, &fl_text);
@@ -90,5 +90,5 @@ index b265ebdba2..ab7e17ab58 100644
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
 -- 
-2.44.0
+2.45.2
 
