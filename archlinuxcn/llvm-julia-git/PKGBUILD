@@ -2,9 +2,9 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=(llvm-julia-git llvm-libs-julia-git)
-pkgver=17.0.6
-pkgrel=10
-_julia_rel=5
+pkgver=18.1.7
+pkgrel=1
+_julia_rel=2
 _julia_commit=
 _versioned_llvm=
 arch=(i686 x86_64 armv7h aarch64)
@@ -23,7 +23,7 @@ else
   source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz)
   repodir=llvm-project-julia-$pkgver-$_julia_rel
 fi
-sha256sums=('517ac37f9c97bb32c6d1c2945a93945a17f8b6fb3f616f51bafde9593f7b4282')
+sha256sums=('925d23e9dcba92600b149efc6ba173ffc1a489ff6563e8fdc9117ccbba88a7b2')
 
 if [[ -z $_versioned_llvm ]]; then
   _llvm_prefix=/usr
