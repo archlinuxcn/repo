@@ -14,22 +14,22 @@ pkgname=(
 	"mesa$_suffix"
 )
 pkgdesc="An open-source implementation of the OpenGL specification"
-_asahiver=20240228
+_asahiver=20240727
 _commit=asahi-$_asahiver
-pkgver=24.1.0_pre$_asahiver
-pkgrel=2
+pkgver=24.2.0_pre$_asahiver
+pkgrel=1
 arch=('aarch64')
 makedepends=('python-mako' 'libxml2' 'libx11' 'xorgproto' 'libdrm' 'libxshmfence' 'libxxf86vm'
-             'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'zstd' 'elfutils' 'llvm'
+             'libxdamage' 'libvdpau' 'libva' 'wayland' 'wayland-protocols' 'zstd' 'elfutils' 'llvm' 'spirv-llvm-translator'
              'libomxil-bellagio' 'libclc' 'clang' 'libglvnd' 'libunwind' 'lm_sensors' 'libxrandr'
              'systemd' 'valgrind' 'glslang' 'vulkan-icd-loader' 'directx-headers' 'cmake' 'meson'
-             'rust' 'rust-bindgen' 'spirv-llvm-translator')
+             'rust' 'rust-bindgen' 'python-pycparser' 'python-packaging')
 url="https://www.mesa3d.org/"
 license=('custom')
 options=('debug' '!lto')
 source=(https://gitlab.freedesktop.org/asahi/mesa/-/archive/$_commit/mesa-$_commit.tar.gz
         LICENSE)
-sha512sums=('7c0125e67ad34b283a4aebf2236d709c3d783583f7d851b725c8fd50767ca29c10337794953e291f6aa87eac2432856e00a90e363b820edd45e500e0891f78bb'
+sha512sums=('49264ffd06aadd00e587aec5fa52054a6c2d9796a2ecdc972167694a82c4a1514eba39c879fb56d08ac05f6ac94e0ebf89895892a0f7bbe5536eaed88817da65'
             'f9f0d0ccf166fe6cb684478b6f1e1ab1f2850431c06aa041738563eb1808a004e52cdec823c103c9e180f03ffc083e95974d291353f0220fe52ae6d4897fecc7')
 
 prepare() {
@@ -61,7 +61,7 @@ build() {
     -D opengl=true \
     -D gles1=enabled \
     -D gles2=enabled \
-    -D glvnd=true \
+    -D glvnd=enabled \
     -D glx=dri \
     -D libunwind=disabled \
     -D llvm=enabled \
@@ -70,10 +70,11 @@ build() {
     -D shared-glapi=enabled \
     -D microsoft-clc=disabled \
     -D valgrind=enabled \
-    -D android-libbacktrace=disabled
+    -D android-libbacktrace=disabled \
+    -D intel-rt=disabled
 
   # Print config
-  meson configure build
+  meson configure --no-pager build
 
   ninja -C build
   meson compile -C build

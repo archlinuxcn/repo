@@ -19,7 +19,8 @@ build() {
 }
 
 package() {
-  depends=('wireplumber>=0.4.16' pipewire bankstown lsp-plugins-lv2 speakersafetyd)
+  depends=('wireplumber>=0.4.16' pipewire bankstown
+           'lsp-plugins-lv2>=1.2.15' speakersafetyd)
   cd "${srcdir}/asahi-audio-${pkgver}"
   make DESTDIR="${pkgdir}" install
 }
