@@ -14,12 +14,12 @@ update_on:
     # This is the expected upstream major version.
     # we'll check in pre_build if this matches since manual update
     # may be necessary when a major version update happens.
-    manual: 17
+    manual: 18
   - source: manual
     # This is the expected llvm-julia version.
     # This may be different from the upstream version if we need to build llvm-julia
     # as a older version.
-    manual: 17
+    manual: 18
   - source: github
     # This may cause spurious update if julia releases a new version that isn't
     # the major version we want. This shouldn't happen that often though
