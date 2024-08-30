@@ -25,15 +25,16 @@ pkgver() {
 
 build() {
   cd auctex
-  ./autogen.sh
-  ./configure --prefix=/usr --localstatedir=/var --with-texmf-dir=/usr/share/texmf-dist
   make
 }
 
 package() {
   cd auctex
-  make -j1 DESTDIR="$pkgdir" install
-  rm -rf "$pkgdir"/var/auctex
-  # provided by texlive-latexextra
-  rm -rf "$pkgdir"/usr/share/texmf-dist
+
+  find -type f \( -name '*.elc' -or -name '*.el' \) \
+       -exec install -Dm644 {} "${pkgdir}/usr/share/emacs/site-lisp/auctex/"{} \;
+  install -dm755 "${pkgdir}/usr/share/info/"
+  for f in doc/*.info; do
+    install -m644 "$f" "${pkgdir}/usr/share/info/"
+  done
 }
