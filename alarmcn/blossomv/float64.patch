@@ -1,0 +1,33 @@
+--- PerfectMatching.h	2017-05-30 17:56:13.670015051 +0200
++++ PerfectMatching.new.h	2017-05-30 17:56:58.223569773 +0200
+@@ -37,7 +37,7 @@
+ 
+ 
+ // if defined, edge costs are of type 'double', otherwise 'int'
+-//#define PERFECT_MATCHING_DOUBLE
++#define PERFECT_MATCHING_DOUBLE
+ 
+ // Note: with floating point numbers polynomial complexity is not guaranteed;
+ // the code may even get stuck due to rounding errors. If the code terminates,
+--- interface.h	2017-05-30 17:52:54.969027698 +0200
++++ interface.new.h	2017-05-30 17:58:10.237260946 +0200
+@@ -16,7 +16,7 @@
+ void matching_destruct(matching_t matching);
+ 
+ INTERFACE_EXPORT
+-int32_t matching_add_edge(matching_t matching, int32_t first_node, int32_t second_node, int32_t cost);
++int32_t matching_add_edge(matching_t matching, int32_t first_node, int32_t second_node, double cost);
+ 
+ INTERFACE_EXPORT
+ void matching_solve(matching_t matching);
+--- interface.cpp	2017-05-30 17:52:54.969027698 +0200
++++ interface.new.cpp	2017-05-30 18:00:09.814521797 +0200
+@@ -30,7 +30,7 @@
+     delete matching;
+ }
+ 
+-int32_t matching_add_edge(matching_t matching, int32_t first_node, int32_t second_node, int32_t cost) {
++int32_t matching_add_edge(matching_t matching, int32_t first_node, int32_t second_node, double cost) {
+     return matching->actual.AddEdge(first_node, second_node, cost);
+ }
+ 
