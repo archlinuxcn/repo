@@ -22,3 +22,8 @@ update_on:
   - source: alpm
     alpm: pciutils
     strip_release: true
+
+  - source: alpm
+    alpm: libcpuid
+    strip_release: true
+    provided: libcpuid.so
