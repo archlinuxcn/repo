@@ -16,6 +16,8 @@ build() {
 
   rm -rf deps/*
 
+  sed -i -e '/^BinDeps/d' Project.toml
+
   cat > deps/deps.jl <<EOF
 const _jl_blossom5int32 = "/usr/lib/blossom5int32.so"
 const _jl_blossom5float64 = "/usr/lib/blossom5float64.so"
