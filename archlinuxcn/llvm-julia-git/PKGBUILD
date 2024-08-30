@@ -12,7 +12,7 @@ url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('cmake' 'ninja' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses'
              'libxml2' 'python-setuptools' 'python-psutil' 'python-sphinx'
-             'python-recommonmark' 'git')
+             'python-recommonmark' 'python-myst-parser' 'git')
 # Disable LTO for now since there seems to be some issue at least on aarch64
 # https://github.com/llvm/llvm-project/issues/57740
 options=('staticlibs' '!strip' '!lto')
