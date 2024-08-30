@@ -1,0 +1,18 @@
+pkgname=julia-git-einsum-src
+pkgver=0.4.1
+_commit=28960e40075b287089eb6fcea679541041b8204a
+pkgrel=1
+pkgdesc="Einsum.jl"
+url="https://github.com/ahwillia/Einsum.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/ahwillia/Einsum.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Einsum.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Einsum "${pkgdir}" "${pkgname}" julia-git
+}

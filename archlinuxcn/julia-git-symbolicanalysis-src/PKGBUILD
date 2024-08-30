@@ -1,0 +1,18 @@
+pkgname=julia-git-symbolicanalysis-src
+pkgver=0.3.0
+_commit=f947583ddc4ab1b363883ee538d350949061e67c
+pkgrel=1
+pkgdesc="SymbolicAnalysis.jl"
+url="https://github.com/Vaibhavdixit02/SymbolicAnalysis.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Vaibhavdixit02/SymbolicAnalysis.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SymbolicAnalysis.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SymbolicAnalysis "${pkgdir}" "${pkgname}" julia-git
+}

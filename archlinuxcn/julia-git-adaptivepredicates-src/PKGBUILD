@@ -1,0 +1,18 @@
+pkgname=julia-git-adaptivepredicates-src
+pkgver=1.1.1
+_commit=e6a89abca50c79e1734fd42d3aa83ed12de30ad8
+pkgrel=1
+pkgdesc="AdaptivePredicates.jl"
+url="https://github.com/JuliaGeometry/AdaptivePredicates.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGeometry/AdaptivePredicates.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd AdaptivePredicates.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh AdaptivePredicates "${pkgdir}" "${pkgname}" julia-git
+}

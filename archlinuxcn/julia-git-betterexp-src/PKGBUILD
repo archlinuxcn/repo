@@ -1,0 +1,18 @@
+pkgname=julia-git-betterexp-src
+pkgver=0.1.0
+_commit=d369ab599538e501205ba08e1e4b6a0551ad78ae
+pkgrel=1
+pkgdesc="BetterExp.jl"
+url="https://github.com/oscardssmith/BetterExp.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/oscardssmith/BetterExp.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd BetterExp.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BetterExp "${pkgdir}" "${pkgname}" julia-git
+}

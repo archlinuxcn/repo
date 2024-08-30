@@ -1,0 +1,26 @@
+pkgname=julia-git-qt6wayland_jll-src
+pkgver=6.7.1+1
+_commit=48dde0390385565a4f16ad0c9f54bb9351104a2c
+pkgrel=1
+pkgdesc="Qt6Wayland_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Qt6Wayland_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaBinaryWrappers/Qt6Wayland_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('1b0eea9f12b8a8709f56b73b9803be35bb3b905678849e5f14e5404f2df17a2a'
+            '7bdec004c4ab6d55fc708015d8edc491d35a3c821a7f1bbbffa7cfae4c21cd7f')
+
+build() {
+  cd Qt6Wayland_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Qt6Wayland_jll ../jll.toml
+}
+
+package() {
+  cd Qt6Wayland_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Qt6Wayland_jll "${pkgdir}" "${pkgname}" julia-git
+}

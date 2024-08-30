@@ -1,0 +1,26 @@
+pkgname=julia-git-libdecor_jll-src
+pkgver=0.2.2+0
+_commit=b4f2264af6960746911135fd0d29bc99d024656b
+pkgrel=1
+pkgdesc="libdecor_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libdecor_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libdecor)
+source=("git+https://github.com/JuliaBinaryWrappers/libdecor_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('dd35104c6f2745649f399cab8cc957439956ac5a83d2d9fa51859ae00b6a8731'
+            'fc5ef8d93f643b3178d2108bc3d3325af700640f5811d6cdba91035f1b366b0c')
+
+build() {
+  cd libdecor_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libdecor_jll ../jll.toml
+}
+
+package() {
+  cd libdecor_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libdecor_jll "${pkgdir}" "${pkgname}" julia-git
+}

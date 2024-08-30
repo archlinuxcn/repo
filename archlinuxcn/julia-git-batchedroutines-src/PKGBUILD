@@ -1,0 +1,18 @@
+pkgname=julia-git-batchedroutines-src
+pkgver=0.2.2
+_commit=abf1d6a5e9b7db60abaf02d20381894ff1b5c054
+pkgrel=1
+pkgdesc="BatchedRoutines.jl"
+url="https://github.com/Roger-luo/BatchedRoutines.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Roger-luo/BatchedRoutines.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd BatchedRoutines.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BatchedRoutines "${pkgdir}" "${pkgname}" julia-git
+}

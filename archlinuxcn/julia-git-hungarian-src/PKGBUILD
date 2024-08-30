@@ -1,0 +1,18 @@
+pkgname=julia-git-hungarian-src
+pkgver=0.6.0
+_commit=09e909cde795404c798f1799fa55c7556a544481
+pkgrel=1
+pkgdesc="Hungarian.jl"
+url="https://github.com/Gnimuc/Hungarian.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Gnimuc/Hungarian.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Hungarian.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Hungarian "${pkgdir}" "${pkgname}" julia-git
+}

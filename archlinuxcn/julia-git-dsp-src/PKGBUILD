@@ -1,0 +1,18 @@
+pkgname=julia-git-dsp-src
+pkgver=0.7.9
+_commit=3e3524f6ac7a52ab2f06843328f0b3b41bd62bb8
+pkgrel=1
+pkgdesc="DSP.jl"
+url="https://github.com/JuliaDSP/DSP.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDSP/DSP.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd DSP.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DSP "${pkgdir}" "${pkgname}" julia-git
+}

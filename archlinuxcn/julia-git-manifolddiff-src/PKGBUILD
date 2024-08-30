@@ -1,0 +1,18 @@
+pkgname=julia-git-manifolddiff-src
+pkgver=0.3.11
+_commit=cedafffddcf4223daa85d73eed2c23267db61818
+pkgrel=1
+pkgdesc="ManifoldDiff.jl"
+url="https://github.com/JuliaManifolds/ManifoldDiff.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaManifolds/ManifoldDiff.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ManifoldDiff.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ManifoldDiff "${pkgdir}" "${pkgname}" julia-git
+}

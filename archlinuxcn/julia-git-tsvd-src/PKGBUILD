@@ -1,0 +1,18 @@
+pkgname=julia-git-tsvd-src
+pkgver=0.4.4
+_commit=3bf5637327bd3149e275191b41f994cbe396d5db
+pkgrel=1
+pkgdesc="TSVD.jl"
+url="https://github.com/JuliaLinearAlgebra/TSVD.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLinearAlgebra/TSVD.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TSVD.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TSVD "${pkgdir}" "${pkgname}" julia-git
+}
