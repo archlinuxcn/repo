@@ -1,6 +1,6 @@
 pkgname=julia-git-linearalgebrax-src
-pkgver=0.2.7
-_commit=3ae9f757d482d6027e01b9a48f1c55935e3ec064
+pkgver=0.2.10
+_commit=57c17fc5d398051a633dc3f6ac4c95842a092d12
 pkgrel=1
 pkgdesc="LinearAlgebraX.jl"
 url="https://github.com/scheinerman/LinearAlgebraX.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/scheinerman/LinearAlgebraX.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('5b3aed066ce008cc781262c9f08af59a707a75c38cf25999d445d722b0041c9c')
 
 package() {
   cd LinearAlgebraX.jl
