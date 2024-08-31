@@ -1,7 +1,7 @@
 pkgname=julia-git-batchedroutines-src
 pkgver=0.2.2
 _commit=abf1d6a5e9b7db60abaf02d20381894ff1b5c054
-pkgrel=1
+pkgrel=2
 pkgdesc="BatchedRoutines.jl"
 url="https://github.com/Roger-luo/BatchedRoutines.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Roger-luo/BatchedRoutines.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('9ef6d106932aa46d8745c159e792d19be52d780aa0cfe9e5cc93bc0f5df987c6')
 
 package() {
   cd BatchedRoutines.jl
