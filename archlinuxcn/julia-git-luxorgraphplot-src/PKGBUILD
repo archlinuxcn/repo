@@ -1,6 +1,6 @@
 pkgname=julia-git-luxorgraphplot-src
-pkgver=0.2.2
-_commit=6345523a2842f98e0b83be98a846938de69c0a23
+pkgver=0.5.1
+_commit=7bba14aaacb3fec107aa9c60a715a397dda849ce
 pkgrel=1
 pkgdesc="LuxorGraphPlot.jl"
 url="https://github.com/GiggleLiu/LuxorGraphPlot.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/GiggleLiu/LuxorGraphPlot.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('d885f638517864ee0fcba49cd730ba21121c5794aceafaf63706b90385e26c63')
 
 package() {
   cd LuxorGraphPlot.jl
