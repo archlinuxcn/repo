@@ -1,6 +1,6 @@
 pkgname=julia-git-terminterface-src
-pkgver=0.4.1
-_commit=4459f428cd163017fa7b7b4605312f5b546b2696
+pkgver=2.0.0
+_commit=fec455251fb831e7d85afa1b23b853f5cd348760
 pkgrel=1
 pkgdesc="TermInterface.jl"
 url="https://github.com/JuliaSymbolics/TermInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSymbolics/TermInterface.jl.git#commit=$_commit")
-sha256sums=('fe2c78f7860295e61b83f11d6925e06e55d9a4123cd2a158f56333558f45f119')
+sha256sums=('cfeae146db967b00a448456d87baa97939617d45b19e10f0b27751ba906901d7')
 
 package() {
   cd TermInterface.jl
