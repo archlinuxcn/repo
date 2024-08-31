@@ -1,7 +1,7 @@
 pkgname=julia-git-structio-src
-pkgver=0.3.0
-_commit=455543ce2f240402fca7fe65622734ff8a2eda8f
-pkgrel=2
+pkgver=0.3.1
+_commit=f66b10db12af39ffd9d211f9db03cc74709a19c6
+pkgrel=1
 pkgdesc="StructIO.jl"
 url="https://github.com/JuliaIO/StructIO.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/StructIO.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('d0d997f4cd10eb55e4fe1bfcd7940ff6a94fd7c551c30b8c6397edcc55cad59b')
 
 package() {
   cd StructIO.jl
