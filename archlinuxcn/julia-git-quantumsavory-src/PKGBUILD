@@ -1,6 +1,6 @@
 pkgname=julia-git-quantumsavory-src
-pkgver=0.3.4
-_commit=ce7dceab29ce82dff210ef268e0090fd68bdaf49
+pkgver=0.4.2
+_commit=6e99352aed1da5ee7067e07e287415f182514e3f
 pkgrel=1
 pkgdesc="QuantumSavory.jl"
 url="https://github.com/QuantumSavory/QuantumSavory.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumSavory/QuantumSavory.jl.git#commit=$_commit")
-sha256sums=('280c17f6c7965f5fb17f2a3a67143eea8b443644cb5793d1e6153d37e55fb9c9')
+sha256sums=('0f1b13d98c7f1d61ac59e7ce7fc8fa2dc08418560e4319bb68a0ff9b4e0a6f24')
 
 package() {
   cd QuantumSavory.jl
