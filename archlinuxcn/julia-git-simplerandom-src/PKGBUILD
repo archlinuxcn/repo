@@ -1,7 +1,7 @@
 pkgname=julia-git-simplerandom-src
-pkgver=0.3.1
-_commit=a49fe8797e35eb1794b99fbccc6f1681ae26e089
-pkgrel=2
+pkgver=0.3.2
+_commit=e988e24dc10bcbdb8fa2bcfba3242d1ead5a7b44
+pkgrel=1
 pkgdesc="SimpleRandom.jl"
 url="https://github.com/scheinerman/SimpleRandom.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/scheinerman/SimpleRandom.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('c2c5a2ed2fcf8864b29bd16492bfe9a05720138eff1c569425663a10a7ce9634')
 
 package() {
   cd SimpleRandom.jl
