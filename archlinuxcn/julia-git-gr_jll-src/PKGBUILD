@@ -1,6 +1,6 @@
 pkgname=julia-git-gr_jll-src
-pkgver=0.73.6+0
-_commit=bb9ecd27a01bb6366edde9aa75210d77d3c1837b
+pkgver=0.73.7+0
+_commit=0038ea8317fddf7fdf59da8e5cdd64faa21bdc17
 pkgrel=1
 pkgdesc="GR_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/GR_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git gr-framework)
 source=("git+https://github.com/JuliaBinaryWrappers/GR_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('be7ed3c2d19c4e192f7362e7cf43cdb5881bfdc562ba4f2edca8b832712d196a'
+sha256sums=('50f9b90b62130de158592fd6baf86b011f447ecb72a98c5ede238a8cc9c93872'
             '9dba19d68c090a9b25c1ed5af55ad805e73b1f305ec37b42abc0c35bdec461d6')
 
 build() {
