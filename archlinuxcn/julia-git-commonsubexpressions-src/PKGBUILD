@@ -1,7 +1,7 @@
 pkgname=julia-git-commonsubexpressions-src
-pkgver=0.3.0
-_commit=2ff3077e570afed267b7447592723846cf4bb7cd
-pkgrel=3
+pkgver=0.3.1
+_commit=7dc5dc2c25298f62ff352bfd2a2f56af52672cae
+pkgrel=1
 pkgdesc="CommonSubexpressions.jl"
 url="https://github.com/rdeits/CommonSubexpressions.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/rdeits/CommonSubexpressions.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('a83af4c4575a2b16d255b620491ae7845f45440872151ddd6860983759585ebe')
 
 package() {
   cd CommonSubexpressions.jl
