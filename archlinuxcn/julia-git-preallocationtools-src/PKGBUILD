@@ -1,6 +1,6 @@
 pkgname=julia-git-preallocationtools-src
-pkgver=0.4.22
-_commit=36263af8739fed36efbbf58816f6a613b24f6121
+pkgver=0.4.24
+_commit=e1478991c8915b0097053cc4b254a396b0221de7
 pkgrel=1
 pkgdesc="PreallocationTools.jl"
 url="https://github.com/SciML/PreallocationTools.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/PreallocationTools.jl.git#commit=$_commit")
-sha256sums=('44174a0f830ba765d438471fc54a605655ac41c7aa2fd48a1bac9942209d8ddc')
+sha256sums=('bcc4f8bdb5e7482185ced5fb8336ecffc735e53de2784a45cedde4deedd1f7a5')
 
 package() {
   cd PreallocationTools.jl
