@@ -1,6 +1,6 @@
 pkgname=julia-git-randommatrices-src
-pkgver=0.5.4
-_commit=6b01eb2cb3c6cb2cf2d5676e8d1223022f3a8d9c
+pkgver=0.5.5
+_commit=b8f33f34e3a82dc8e8d2547aa73fa4f3bd6c6217
 pkgrel=1
 pkgdesc="RandomMatrices.jl"
 url="https://github.com/JuliaMath/RandomMatrices.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/RandomMatrices.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('9c85c743161dde25d5c0bfac98038ca17010e109349b78d5b38c73d0b71bafb7')
 
 package() {
   cd RandomMatrices.jl
