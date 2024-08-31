@@ -1,6 +1,6 @@
 pkgname=julia-git-quantuminterface-src
-pkgver=0.3.4
-_commit=a3b09c203e12bd297dc44635edee60bbb1ce0da0
+pkgver=0.3.5
+_commit=521a05bd9b4437c14906f9f1d6366686d9416715
 pkgrel=1
 pkgdesc="QuantumInterface.jl"
 url="https://github.com/qojulia/QuantumInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/qojulia/QuantumInterface.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('846892b0f1f291a6ac45ffa1be5e51e8bc0d9b905b3e9e34a2111218fbaccf99')
 
 package() {
   cd QuantumInterface.jl
