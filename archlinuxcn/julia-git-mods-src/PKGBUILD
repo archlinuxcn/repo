@@ -1,6 +1,6 @@
 pkgname=julia-git-mods-src
-pkgver=2.2.4
-_commit=6c5b3beff07ae3c5a3d35d4c041cce59d1f55dff
+pkgver=2.2.5
+_commit=335eedd291dceb712c0f0612597cfd31e4a0f92f
 pkgrel=1
 pkgdesc="Mods.jl"
 url="https://github.com/scheinerman/Mods.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/scheinerman/Mods.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('4b26831f15f92d93d003ae6dbd11ae815a9948a4960333ba3fe2a3ef3d4f304b')
 
 package() {
   cd Mods.jl
