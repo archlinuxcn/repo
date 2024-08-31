@@ -1,6 +1,6 @@
 pkgname=julia-git-bloqadeexpr-src
-pkgver=0.2.1
-_commit=9247ea9ad619d8d367362b5157e750ee325582c7
+pkgver=0.2.2
+_commit=78a960f9191422f9fa93458369c885f6926b797f
 pkgrel=1
 pkgdesc="BloqadeExpr.jl"
 url="https://github.com/QuEraComputing/Bloqade.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuEraComputing/Bloqade.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('30524af45db5c00b553a71769f432c94457e1dc19cdeb6c1928e755bd39430d5')
 
 package() {
   cd Bloqade.jl/lib/BloqadeExpr
