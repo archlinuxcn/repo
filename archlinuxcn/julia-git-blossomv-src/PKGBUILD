@@ -1,7 +1,7 @@
 pkgname=julia-git-blossomv-src
 pkgver=0.4.3
 _commit=fca1d332d98259c3928f4eecebb574ee9554d340
-pkgrel=1
+pkgrel=2
 pkgdesc="BlossomV.jl"
 url="https://github.com/mlewe/BlossomV.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/mlewe/BlossomV.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('f3aba19713b7575facb53ef0a04e597d289a156d83ca131c387b8d444b04cf2d')
 
 build() {
   cd BlossomV.jl
