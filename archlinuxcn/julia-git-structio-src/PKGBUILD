@@ -3,22 +3,13 @@ pkgver=0.3.0
 _commit=455543ce2f240402fca7fe65622734ff8a2eda8f
 pkgrel=2
 pkgdesc="StructIO.jl"
-url="https://github.com/Keno/StructIO.jl.git"
+url="https://github.com/JuliaIO/StructIO.jl.git"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/Keno/StructIO.jl.git#commit=$_commit"
-        Project.toml)
-sha256sums=('SKIP'
-            'e1dc8f8c6c284007dfc8a89acd60be59a85c5d9b65ac505cd4a6de52b264daf6')
-
-prepare() {
-  cd StructIO.jl
-
-  cp -n ../Project.toml .
-  rm REQUIRE
-}
+source=("git+https://github.com/JuliaIO/StructIO.jl.git#commit=$_commit")
+sha256sums=('SKIP')
 
 package() {
   cd StructIO.jl
