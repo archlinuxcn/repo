@@ -1,6 +1,6 @@
 pkgname=julia-git-openblas32_jll-src
-pkgver=0.3.27+1
-_commit=9ebae3582b9696cadea3f0b5f0e33d26113873ef
+pkgver=0.3.28+2
+_commit=41ea9db287d338b9b65fa293e95e846ce4e9de53
 pkgrel=1
 pkgdesc="OpenBLAS32_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenBLAS32_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git openblas)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenBLAS32_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('1a7bbac844a1d5d90efb0a0c40048db27f619578efa58dcadc7b18b0b2af3142'
+sha256sums=('9135467526a078f969f26afedf90cba612ce43f3a76f106b8198fbe4f8dc668c'
             'd3589066d900fb9a24e34e3ded79f464ad01eae3dc5d359171ddffe1a49c1ed3')
 
 build() {
