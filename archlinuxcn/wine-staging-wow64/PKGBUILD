@@ -9,39 +9,37 @@
 pkgname="wine-staging-wow64"
 pkgver=9.16
 _pkgver="${pkgver/rc/-rc}"
-pkgrel=1
+pkgrel=2
 pkgdesc="A compatibility layer for running Windows programs"
 url="https://www.winehq.org"
 license=('LGPL-2.1-or-later')
 arch=('x86_64')
 
 depends=(
-  alsa-plugins          #lib32-alsa-plugins
+  alsa-lib              #lib32-alsa-lib
   fontconfig            #lib32-fontconfig
   freetype2             #lib32-freetype2
   gettext               #lib32-gettext
+  gnutls                #lib32-gnutls
   gst-plugins-base-libs #lib32-gst-plugins-base-libs
+  libpcap               #lib32-libpcap
   libpulse              #lib32-libpulse
   libxcomposite         #lib32-libxcomposite
   libxcursor            #lib32-libxcursor
   libxi                 #lib32-libxi
   libxinerama           #lib32-libxinerama
+  libxkbcommon          #lib32-libkbcommon
   libxrandr             #lib32-libxrandr
   opencl-icd-loader     #lib32-opencl-icd-loader
   pcsclite              #lib32-pcsclite
   sdl2                  #lib32-sdl2
+  unixodbc              #lib32-unixodbc
   v4l-utils             #lib32-v4l-utils
+  wayland               #lib32-wayland
   desktop-file-utils
   libgphoto2
-
-  # with-wayland
-  libxkbcommon
-  wayland
 )
 makedepends=(
-  # staging
-  git
-
   libxxf86vm        #lib32-libxxf86vm
   mesa              #lib32-mesa
   mesa-libgl        #lib32-mesa-libgl
@@ -49,6 +47,7 @@ makedepends=(
   autoconf
   bison
   flex
+  git
   mingw-w64-gcc
   opencl-headers
   perl
