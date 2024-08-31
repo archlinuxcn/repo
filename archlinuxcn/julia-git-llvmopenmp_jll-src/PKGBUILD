@@ -1,6 +1,6 @@
 pkgname=julia-git-llvmopenmp_jll-src
-pkgver=15.0.7+0
-_commit=fc8f1210195416028969be1ef32b5cb9657fc959
+pkgver=17.0.6+0
+_commit=5731b9344b039c5bab2dc3582363d79b3ed66201
 pkgrel=1
 pkgdesc="LLVMOpenMP_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LLVMOpenMP_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git openmp)
 source=("git+https://github.com/JuliaBinaryWrappers/LLVMOpenMP_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('930e8914263542dae091b4ce434113e39440c66379246ba96e829e48ef822ead'
             '009760887560c5a302acc26980dc00aff304fdfce3f70acac597ca7b83a2b7a2')
 
 build() {
