@@ -1,6 +1,6 @@
 pkgname=julia-git-functors-src
-pkgver=0.4.11
-_commit=2eddcb74f9589e61b847362c2a91d91bd90ef628
+pkgver=0.4.12
+_commit=3c6b131defa22c6e1db72643cdee402115745eb9
 pkgrel=1
 pkgdesc="Functors.jl"
 url="https://github.com/FluxML/Functors.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FluxML/Functors.jl.git#commit=$_commit")
-sha256sums=('07f4bcfb7b42a89590a92e2e83b0e791e1e068b76a83900bc57c7d4d0e308cd0')
+sha256sums=('74a09f270b0bf2f1efa669f255d37a1ee884ff57bc5a00184dc01480b5d6951f')
 
 package() {
   cd Functors.jl
