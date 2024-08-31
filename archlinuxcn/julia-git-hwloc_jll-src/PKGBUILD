@@ -1,6 +1,6 @@
 pkgname=julia-git-hwloc_jll-src
-pkgver=2.11.0+0
-_commit=e398b91c67dbd2e1d57ef8c2dca8bbc82f5caf03
+pkgver=2.11.1+0
+_commit=604f828ac281b750e23d69167f19770e211dc392
 pkgrel=1
 pkgdesc="Hwloc_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Hwloc_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git hwloc)
 source=("git+https://github.com/JuliaBinaryWrappers/Hwloc_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('aa23ba6f5d3c09e54ee4e070e355ce524ad698b1223dcb99eb613cf4693ed76c'
+sha256sums=('075114fe6b51bd9bf6fe4cc14e42b814d623f1c64079eda90aaf0015faa26627'
             '277fae3fad11afb45cd0ee676820badb5f9a1c489109f7a606cb533d5cc0f3c9')
 
 build() {
