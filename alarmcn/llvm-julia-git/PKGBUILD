@@ -4,8 +4,8 @@
 pkgname=(llvm-julia-git llvm-libs-julia-git)
 pkgver=18.1.7
 pkgrel=1
-_julia_rel=2
-_julia_commit=
+_archcn_rel=2
+_archcn_commit=
 _versioned_llvm=
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
@@ -16,12 +16,12 @@ makedepends=('cmake' 'ninja' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses'
 # Disable LTO for now since there seems to be some issue at least on aarch64
 # https://github.com/llvm/llvm-project/issues/57740
 options=('staticlibs' '!strip' '!lto')
-if [[ -z $_julia_rel ]]; then
-  source=(https://github.com/JuliaLang/llvm-project/archive/${_julia_commit}.tar.gz)
-  repodir=llvm-project-${_julia_commit}
+if [[ -z $_archcn_rel ]]; then
+  source=(https://github.com/yuyichao/llvm-project/archive/${_archcn_commit}.tar.gz)
+  repodir=llvm-project-${_archcn_commit}
 else
-  source=(https://github.com/JuliaLang/llvm-project/archive/refs/tags/julia-$pkgver-$_julia_rel.tar.gz)
-  repodir=llvm-project-julia-$pkgver-$_julia_rel
+  source=(https://github.com/yuyichao/llvm-project/archive/refs/tags/archcn-$pkgver-$_archcn_rel.tar.gz)
+  repodir=llvm-project-archcn-$pkgver-$_archcn_rel
 fi
 sha256sums=('925d23e9dcba92600b149efc6ba173ffc1a489ff6563e8fdc9117ccbba88a7b2')
 
@@ -164,9 +164,9 @@ package_llvm-libs-julia-git() {
      "$pkgdir/${_llvm_prefix}/lib/"
 
   if [[ -n $_versioned_llvm ]]; then
-    ln -rs "$pkgdir/${_llvm_prefix}/lib/libLLVM-15.so" \
-       "$pkgdir/usr/lib/libLLVM-15.so"
-    ln -rs "$pkgdir/${_llvm_prefix}/lib/libLLVM-15.so" \
+    ln -rs "$pkgdir/${_llvm_prefix}/lib/libLLVM-$_versioned_llvm.so" \
+       "$pkgdir/usr/lib/libLLVM-$_versioned_llvm.so"
+    ln -rs "$pkgdir/${_llvm_prefix}/lib/libLLVM-$_versioned_llvm.so" \
        "$pkgdir/usr/lib/libLLVM-$pkgver.so"
   fi
 
