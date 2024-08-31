@@ -1,7 +1,7 @@
 pkgname=julia-git-multisets-src
-pkgver=0.4.4
-_commit=fe08c9c214b1053b8326e79cf3ad3ae006fcbdf0
-pkgrel=2
+pkgver=0.4.5
+_commit=c204c0e4864ba44662145704e9aacd8859071d12
+pkgrel=1
 pkgdesc="Multisets.jl"
 url="https://github.com/scheinerman/Multisets.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/scheinerman/Multisets.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('ce0189dcdbc4539918e4e277913c24937f6666e6c360159dbfceb83e265646aa')
 
 package() {
   cd Multisets.jl
