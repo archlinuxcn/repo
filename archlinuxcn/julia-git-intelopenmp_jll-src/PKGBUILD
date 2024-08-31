@@ -22,9 +22,14 @@ build() {
   cd IntelOpenMP_jll.jl
 
   if [[ $CARCH = x86_64 ]]; then
+    found=0
     for path in $(find /opt/intel/oneapi/compiler/ -name 'libiomp5.so'); do
-        sed -e "s/@LIBIOMP5_PATH@/${path}/g" ../jll_x86_64.toml.in > ../jll_x86_64.toml
+      echo "Found libiomp5.so at ${path}"
+      sed -e "s:@LIBIOMP5_PATH@:${path}:g" ../jll_x86_64.toml.in > ../jll_x86_64.toml
+      found=1
+      break
     done
+    ((found))
     julia /usr/lib/julia/julia-gen-jll.jl IntelOpenMP_jll ../jll_x86_64.toml
   else
     julia /usr/lib/julia/julia-gen-jll.jl IntelOpenMP_jll ../jll.toml
