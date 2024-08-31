@@ -1,7 +1,7 @@
 pkgname=julia-git-osi_jll-src
-pkgver=0.10800.700+0
-_commit=c5a32e17b03cf85820118d4424c86e5549e68d3a
-pkgrel=3
+pkgver=0.10800.1000+0
+_commit=74decc05cb3682ff857ec4d9637d942d0224f194
+pkgrel=1
 pkgdesc="Osi_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Osi_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git coin-or-osi)
 source=("git+https://github.com/JuliaBinaryWrappers/Osi_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('d51a287710321372576510f1c5656cb2b6a345ab18391fc8bc93e6d89ddaaf3e'
             '708d85eeff169b55962e3c9af1a1b926840d4187bb780834c77a266f538a68dd')
 
 build() {
