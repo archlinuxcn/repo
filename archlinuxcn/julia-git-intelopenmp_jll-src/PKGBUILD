@@ -25,7 +25,7 @@ build() {
     found=0
     for path in $(find /opt/intel/oneapi/compiler/ -name 'libiomp5.so'); do
       echo "Found libiomp5.so at ${path}"
-      sed -e "s:@LIBIOMP5_PATH@:${path}:g" ../jll_x86_64.toml.in > ../jll_x86_64.toml
+      sed -e "s:@LIBIOMP_PATH@:${path}:g" ../jll_x86_64.toml.in > ../jll_x86_64.toml
       found=1
       break
     done
