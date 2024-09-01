@@ -1,15 +1,15 @@
 # Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=7.0.0
+pkgver=7.0.3
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686')
 url="https://github.com/zotero/zotero"
-license=('AGPL3')
+license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'git-lfs' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs')
-_tag=fd9a07ffe3f90c13140cd54e9ba0ea89cab2e2f8  # git rev-parse $pkgver
+_tag=2a86a4cce7ff392c221719e14ead145d85466296  # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
@@ -105,6 +105,7 @@ package() {
   install -Dm644 "$pkgdir/usr/lib/zotero/icons/icon32.png" "$pkgdir/usr/share/icons/hicolor/32x32/apps/zotero.png"
   install -Dm644 "$pkgdir/usr/lib/zotero/icons/icon64.png" "$pkgdir/usr/share/icons/hicolor/64x64/apps/zotero.png"
   install -Dm644 "$pkgdir/usr/lib/zotero/icons/icon128.png" "$pkgdir/usr/share/icons/hicolor/128x128/apps/zotero.png"
+  install -Dm644 "$pkgdir/usr/lib/zotero/icons/symbolic.svg" "$pkgdir/usr/share/icons/hicolor/symbolic/apps/zotero-symbolic.svg"
 
   # Close shell when launching
   sed -i -r 's:^("\$CALLDIR/zotero-bin" -app "\$CALLDIR/application.ini" "\$@"):exec \1:' "$pkgdir/usr/lib/zotero/zotero"
