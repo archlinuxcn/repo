@@ -14,5 +14,7 @@ sha256sums=('e2b1fdc8d92bcf8764a5d010c5a6b6479244e7b43ad48a19947cc3742f061ea2')
 package() {
   cd OrdinaryDiffEq.jl
 
+  rm -rf lib/
+
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OrdinaryDiffEq "${pkgdir}" "${pkgname}" julia-git
 }

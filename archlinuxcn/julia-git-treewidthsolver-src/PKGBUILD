@@ -1,0 +1,18 @@
+pkgname=julia-git-treewidthsolver-src
+pkgver=0.3.2
+_commit=3e76ddcc8061fc5e205d6f2894051b2bc2217125
+pkgrel=1
+pkgdesc="TreeWidthSolver.jl"
+url="https://github.com/ArrogantGao/TreeWidthSolver.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/ArrogantGao/TreeWidthSolver.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TreeWidthSolver.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TreeWidthSolver "${pkgdir}" "${pkgname}" julia-git
+}
