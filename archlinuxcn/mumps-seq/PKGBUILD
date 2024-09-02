@@ -10,9 +10,7 @@ pkgrel=1
 pkgdesc="Sparse solver library using Gaussian elimination (sequential version)"
 url="http://mumps-solver.org"
 license=('custom')
-# The build system only links to blas but uses lapack function
-# Just use openblas for now but this could probably be fixed fairly easily...
-depends=('gcc-libs' 'lapack' 'metis')
+depends=('gcc-libs' 'lapack' 'lapack64' 'metis')
 makedepends=(gcc-fortran)
 arch=('aarch64' 'x86_64')
 source=("http://mumps-solver.org/${_PKGNAME}_${pkgver}.tar.gz")
@@ -20,61 +18,118 @@ sha256sums=('84a47f7c4231b9efdf4d4f631a2cae2bdd9adeaabc088261d15af040143ed112')
 options=(staticlibs '!lto')
 
 prepare() {
-  cd ${_PKGNAME}_${pkgver}
-
-  cp Make.inc/Makefile.G95.SEQ Makefile.inc
+  (cd ${_PKGNAME}_${pkgver}
+   cp Make.inc/Makefile.G95.SEQ Makefile.inc)
+  cp -r ${_PKGNAME}_${pkgver} ${_PKGNAME}-64_${pkgver}
 }
 
 build() {
-  cd ${_PKGNAME}_${pkgver}
+  (
+    cd ${_PKGNAME}_${pkgver}
+    FFLAGS+=' -fallow-argument-mismatch'
+    export FFLAGS
 
-  FFLAGS+=' -fallow-argument-mismatch'
-  export FFLAGS
+    make_args=(OPTF=-O3
+               OPTL=-O3
+               OPTC=-O3
+               CDEFS=-DAdd_
+               LMETIS="-lmetis"
+               ORDERINGSF="-Dpord -Dmetis"
+               LIBEXT_SHARED=".so"
+               SHARED_OPT='-shared'
+               SONAME="-soname"
+               PLAT="_seq"
+               CC="gcc -fPIC ${CFLAGS}"
+               FC="gfortran -fPIC ${FFLAGS}"
+               FL="gfortran -fPIC"
+               RANLIB="ranlib"
+               LIBBLAS="-lblas"
+               LAPACK="-llapack")
 
-  make_args=(OPTF=-O3
-             OPTL=-O3
-             OPTC=-O3
-             CDEFS=-DAdd_
-             LMETIS="-lmetis"
-             ORDERINGSF="-Dpord -Dmetis"
-             LIBEXT_SHARED=".so"
-             SONAME="-soname"
-             PLAT="_seq"
-             CC="gcc -fPIC ${CFLAGS}"
-             FC="gfortran -fPIC ${FFLAGS}"
-             FL="gfortran -fPIC"
-             RANLIB="ranlib"
-             LIBBLAS="-lblas"
-             LAPACK="-llapack")
+    make allshared "${make_args[@]}"
+  )
 
-  # Workaround Bug in 5.7.0 missing the SHARED_OPT definition in PORD/lib/Makefile
-  SHARED_OPT='-shared' make allshared "${make_args[@]}"
+  (
+    cd ${_PKGNAME}-64_${pkgver}
+    FFLAGS+=' -fallow-argument-mismatch'
+    for sym in isamax idamax ilaenv slamch dlamch \
+                      saxpy scopy sgemm sgemv sgesvd slarfg sorgqr sormqr sscal \
+                      sswap strsv strsm strtrs snrm2 \
+                      daxpy dcopy dgemm dgemv dgesvd dlarfg dorgqr dormqr dscal \
+                      dswap dtrsv dtrsm dtrtrs dnrm2 \
+                      caxpy ccopy cgemm cgemv cgesvd clarfg cungqr cunmqr cscal \
+                      cswap ctrsv ctrsm ctrtrs scnrm2 \
+                      zaxpy zcopy zgemm zgemv zgesvd zlarfg zungqr zunmqr zscal \
+                      zswap ztrsv ztrsm ztrtrs dznrm2
+    do
+      FFLAGS+=("-D${sym}=${sym}_64")
+    done
+    export FFLAGS
+
+    make_args=(OPTF="-O3 -fdefault-integer-8 -ffixed-line-length-none"
+               OPTL=-O3
+               OPTC="-O3 -DINTSIZE64 -DMETIS_USE_LONGINDEX"
+               CDEFS=-DAdd_
+               IMETIS="-I/usr/lib/metis_Int64_Real32/include"
+               LMETIS="-lmetis_Int64_Real32"
+               ORDERINGSF="-Dpord -Dmetis"
+               LIBEXT_SHARED=".so"
+               SHARED_OPT='-shared'
+               SONAME="-soname"
+               PLAT="64_seq"
+               CC="gcc -fPIC ${CFLAGS}"
+               FC="gfortran -fPIC ${FFLAGS}"
+               FL="gfortran -fPIC"
+               RANLIB="ranlib"
+               LIBBLAS="-lblas64"
+               LAPACK="-llapack64")
+
+    make allshared "${make_args[@]}"
+  )
 }
 
 package(){
-  cd ${_PKGNAME}_${pkgver}
+  (cd ${_PKGNAME}_${pkgver}
 
-  # Install all headers
-  install -dm755 "${pkgdir}/usr/include/mumps-seq"
-  install -Dm644 -- include/*.h "${pkgdir}/usr/include/mumps-seq"
+   # Install all headers
+   install -dm755 "${pkgdir}/usr/include/mumps-seq"
+   install -Dm644 -- include/*.h "${pkgdir}/usr/include/mumps-seq"
 
-  # Install all libraries
-  install -dm755 "${pkgdir}/usr/lib"
-  install -Dm755 -- lib/*.so "${pkgdir}/usr/lib"
+   # Install all libraries
+   install -dm755 "${pkgdir}/usr/lib"
+   install -Dm755 -- lib/*.so "${pkgdir}/usr/lib"
 
-  # Install mpiseq headers
-  install -dm755 "${pkgdir}/usr/include/mpiseq"
-  install -Dm644 -- libseq/*.h "${pkgdir}/usr/include/mpiseq"
+   # Install mpiseq headers
+   install -dm755 "${pkgdir}/usr/include/mpiseq"
+   install -Dm644 -- libseq/*.h "${pkgdir}/usr/include/mpiseq"
 
-  # Install mpiseq libraries
-  install -m755 libseq/libmpiseq_seq.so "${pkgdir}/usr/lib"
-  ln -sf libmpiseq_seq.so "${pkgdir}/usr/lib/libmpiseq.so"
+   # Install mpiseq libraries
+   install -m755 libseq/libmpiseq_seq.so "${pkgdir}/usr/lib"
+   ln -sf libmpiseq_seq.so "${pkgdir}/usr/lib/libmpiseq.so"
 
-  # Install license
-  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+   # Install license
+   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
-  # Install examples
-  install -dm755 "${pkgdir}/usr/share/doc/mumps-seq/examples"
-  cp -r examples/* "${pkgdir}/usr/share/doc/mumps-seq/examples"
-  rm -- "${pkgdir}/usr/share/doc/mumps-seq/examples/"*.o
+   # Install examples
+   install -dm755 "${pkgdir}/usr/share/doc/mumps-seq/examples"
+   cp -r examples/* "${pkgdir}/usr/share/doc/mumps-seq/examples"
+   rm -- "${pkgdir}/usr/share/doc/mumps-seq/examples/"*.o)
+
+  (cd ${_PKGNAME}-64_${pkgver}
+
+   # Install all headers
+   install -dm755 "${pkgdir}/usr/include/mumps-seq64"
+   install -Dm644 -- include/*.h "${pkgdir}/usr/include/mumps-seq64"
+
+   # Install all libraries
+   install -dm755 "${pkgdir}/usr/lib"
+   install -Dm755 -- lib/*.so "${pkgdir}/usr/lib"
+
+   # Install mpiseq headers
+   install -dm755 "${pkgdir}/usr/include/mpiseq64"
+   install -Dm644 -- libseq/*.h "${pkgdir}/usr/include/mpiseq64"
+
+   # Install mpiseq libraries
+   install -m755 libseq/libmpiseq64_seq.so "${pkgdir}/usr/lib"
+   ln -sf libmpiseq64_seq.so "${pkgdir}/usr/lib/libmpiseq64.so")
 }
