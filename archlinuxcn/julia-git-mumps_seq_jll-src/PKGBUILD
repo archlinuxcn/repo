@@ -11,7 +11,7 @@ depends=(julia-git mumps-seq)
 source=("git+https://github.com/JuliaBinaryWrappers/MUMPS_seq_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('dea6cde1dd1c042541a680ccd64d33208a93903ff19c420a2289815da5c4441a'
-            'b71e388b1841d377c371c54fbf1cfc2ad7a8327f8dffbc9eb2ae7f8b220ce471')
+            '246eae931b5582ea5889ff528c2d876fd7023a075105f473663bbb26625a0625')
 
 build() {
   cd MUMPS_seq_jll.jl
