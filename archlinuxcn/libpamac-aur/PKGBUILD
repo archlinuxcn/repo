@@ -6,7 +6,7 @@ ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
 pkgver=11.6.4
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 
 _commit='9108cba3ae01c60c198e996a4956474a66597a7b'
@@ -25,7 +25,7 @@ depends=('glib2>=2.42' 'json-glib' 'libsoup3' 'dbus-glib' 'polkit' 'vte3>=0.38' 
 makedepends=('gettext' 'itstool' 'vala>=0.46'  'asciidoc' 'meson' 'ninja' 'gobject-introspection' 'systemd')
 backup=('etc/pamac.conf')
 conflicts=('libpamac' 'libpamac-all')
-provides=('libpamac')
+provides=("libpamac=$pkgver")
 options=(!emptydirs !strip)
 install=pamac.install
 source=("libpamac-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/libpamac-$_commit.tar.gz"
@@ -75,7 +75,7 @@ package() {
   DESTDIR="$pkgdir" ninja install
   # fix appstream issue
   install -Dm644 "$srcdir/fix-appstream-data.hook" "$pkgdir/etc/pacman.d/hooks/fix-appstream-data.hook"
-  install -Dm755 "$srcdir/fix-appstream-data.sh" "$pkgdir/etc/pacman.d/hooks.bin/fix-appstream-data.sh"  
+  install -Dm755 "$srcdir/fix-appstream-data.sh" "$pkgdir/etc/pacman.d/hooks.bin/fix-appstream-data.sh"
   create_links
 
 }
