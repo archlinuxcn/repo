@@ -1,7 +1,7 @@
 pkgname=julia-git-omeinsumcontractionorders-src
-pkgver=0.8.3
-_commit=cc2295faae60f813f17d6dfdbf539ced8d138942
-pkgrel=2
+pkgver=0.9.2
+_commit=3713c9b623843dc6e39669bfef30c86a4efa9512
+pkgrel=1
 pkgdesc="OMEinsumContractionOrders.jl"
 url="https://github.com/TensorBFS/OMEinsumContractionOrders.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/TensorBFS/OMEinsumContractionOrders.jl.git#commit=$_commit")
-sha256sums=('7d68aabb1b4eb626b774f6016fd82d23fd3b8e90c38792fb0b81d04d189581ea')
+sha256sums=('11393edf3a6aa8a0d5b2f1d76f42921667430055f46d79583aafd91e70ab0343')
 
 package() {
   cd OMEinsumContractionOrders.jl
