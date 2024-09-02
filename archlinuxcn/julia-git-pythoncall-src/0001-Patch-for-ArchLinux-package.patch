@@ -1,4 +1,4 @@
-From 53b8942086e876b10b1e26105cd6436a09391160 Mon Sep 17 00:00:00 2001
+From e5f66a896442b0b3daff252886a91b0cb2e09d31 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 30 Oct 2023 17:17:47 -0400
 Subject: [PATCH] Patch for ArchLinux package
@@ -8,7 +8,7 @@ Subject: [PATCH] Patch for ArchLinux package
  1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/src/C/context.jl b/src/C/context.jl
-index 66122cfb..b7d8836d 100644
+index 57c7d3ad..ba8bb1bc 100644
 --- a/src/C/context.jl
 +++ b/src/C/context.jl
 @@ -50,7 +50,7 @@ function init_context()
@@ -20,13 +20,13 @@ index 66122cfb..b7d8836d 100644
          if exe_path == "" || exe_path == "@CondaPkg"
              if CondaPkg.backend() == :Null
                  exe_path = Sys.which("python")
-@@ -81,12 +81,6 @@ function init_context()
+@@ -83,12 +83,6 @@ function init_context()
              CTX.which = :unknown
          end
  
 -        # Ensure Python is runnable
 -        try
--            run(pipeline(`$exe_path --version`, stdout=devnull, stderr=devnull))
+-            run(pipeline(`$exe_path --version`, stdout = devnull, stderr = devnull))
 -        catch
 -            error("Python executable $(repr(exe_path)) is not executable.")
 -        end
@@ -34,5 +34,5 @@ index 66122cfb..b7d8836d 100644
  
          # For calling Python with UTF-8 IO
 -- 
-2.44.0
+2.45.2
 

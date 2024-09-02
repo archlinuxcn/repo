@@ -1,6 +1,6 @@
 pkgname=julia-git-nnlib-src
-pkgver=0.9.18
-_commit=62f6074a3944ba7db8f09f928db2121f0ea7ef07
+pkgver=0.9.22
+_commit=013aa51f7ff9c2e035afa8763b5d02e105d81b78
 pkgrel=1
 pkgdesc="NNlib.jl"
 url="https://github.com/FluxML/NNlib.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FluxML/NNlib.jl.git#commit=$_commit")
-sha256sums=('58ae99a47329f5d1ad16550e5c8acd88dc58a2593501396908f8089a5f70d87f')
+sha256sums=('bb1a1f7979c2fbcd4dfc6c08f49447a6745010e8b50ae26077c368488edc862d')
 
 package() {
   cd NNlib.jl

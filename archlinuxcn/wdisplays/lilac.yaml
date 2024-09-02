@@ -4,5 +4,10 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: wdisplays
+  - source: alpm
+    alpm: wayland
+    strip_release: true
+    provided: libwayland-client.so
+
 maintainers:
   - github: roaldclark

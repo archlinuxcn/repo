@@ -5,7 +5,7 @@
 # Co-maintainer: Rhinoceros <https://aur.archlinux.org/account/rhinoceros>
 
 pkgname=igv
-pkgver=2.18.0_test
+pkgver=2.18.1
 pkgrel=1
 pkgdesc="High-performance visualization tool for interactive exploration of large, integrated genomic datasets. From Broad Institute. https://doi.org/10.1093/bioinformatics/btac830"
 arch=('any')
@@ -14,7 +14,7 @@ license=('MIT')
 makedepends=('gendesk' 'gradle' 'jdk17-openjdk')
 depends=('java-runtime>=17' 'sh')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/igvteam/igv/archive/v${pkgver}.tar.gz")
-sha256sums=('46e504a82227d85dd261a7ebbcc64fea8fa0ed70619f5d060867b4dec5db960c')
+sha256sums=('5c1c71bb73216e930e0d17a77aa1529ad54e437a0fbf5d4c729f649df9b05f71')
 
 prepare() {
     # generate /usr/bin entry

@@ -3,7 +3,7 @@
 
 pkgname=cosmic-epoch-git
 _pkgname=${pkgname%-git}
-pkgver=1.0.0alpha.1.r0.g0b34a97
+pkgver=1.0.0alpha.1.r9.ge3dd894
 pkgrel=1
 pkgdesc="Cosmic desktop environment from System76's Pop!_OS written in Rust utilizing Iced inspired by GNOME"
 arch=('x86_64' 'aarch64')
@@ -12,7 +12,7 @@ license=('GPL-3.0-or-later AND MPL-2.0 AND CC-BY-SA-4.0')
 depends=(
 	'accountsservice'
 	'acpid'
-	'adw-gtk3'
+	'adw-gtk-theme'
 	'archlinux-appstream-data'
 	'cage'
 	'fontconfig'
@@ -28,7 +28,7 @@ depends=(
 	'org.freedesktop.secrets'
 	'otf-fira-mono'
 	'otf-fira-sans'
-	'pop-icon-theme-git'
+	'pop-icon-theme'
 	'pop-launcher-git'
 	'systemd-libs'
 	'wayland'

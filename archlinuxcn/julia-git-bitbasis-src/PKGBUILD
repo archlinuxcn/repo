@@ -1,7 +1,7 @@
 pkgname=julia-git-bitbasis-src
-pkgver=0.8.1
-_commit=0c0285f5d3e4e7c8ce0d75527b0ff403bca39af5
-pkgrel=2
+pkgver=0.9.6
+_commit=7380c639e9bdb6673a0101332946d0d7bbb2a8c9
+pkgrel=1
 pkgdesc="BitBasis.jl"
 url="https://github.com/QuantumBFS/BitBasis.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumBFS/BitBasis.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('67427fa8485e593a30d5afb309f94270c5a02d980de258c57298a362ab97dffc')
 
 package() {
   cd BitBasis.jl

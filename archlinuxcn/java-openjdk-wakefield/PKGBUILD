@@ -12,25 +12,32 @@ _majorver=21
 _minorver=0
 _securityver=1
 _updatever=0
-pkgver=21.0.1.0.r230.ge515e80
-pkgrel=120
+pkgver=21.0.1.0.r248.g5b39055
+pkgrel=15
 _git_tag=jdk-${_majorver}.${_minorver}.${_securityver}+${_updatever}
 arch=('x86_64')
-url='https://openjdk.java.net/'
-license=('custom')
-makedepends=('java-environment>=17' 'cpio' 'unzip' 'zip' 'libelf' 'libcups' 'libx11'
+url='https://openjdk.org/projects/wakefield/'
+license=('LicenseRef-Java')
+makedepends=('java-environment=21' 'cpio' 'unzip' 'zip' 'libelf' 'libcups' 'libx11'
              'libxrender' 'libxtst' 'libxt' 'libxext' 'libxrandr' 'alsa-lib' 'pandoc'
              'graphviz' 'libfreetype.so' 'libjpeg.so' 'libgif.so' 'libpng' 'liblcms2.so'
              'libnet' 'bash' 'libharfbuzz.so' 'gcc-libs' 'glibc' 'git' 'jdk21-openjdk'
              'wayland')
+optdepends=('gvfs: open links e.g. hyperlinks')
 source=("git+https://github.com/openjdk/wakefield.git#branch=jdk21.0.1-wayland"
         "freedesktop-java.desktop"
         "freedesktop-jconsole.desktop"
-        "freedesktop-jshell.desktop")
+        "freedesktop-jshell.desktop"
+        "install_jdk-openjdk.sh"
+        "install_jre-openjdk-headless.sh"
+        "install_jre-openjdk.sh")
 sha256sums=('SKIP'
             '72111743ab6ab36854b0c85a504172983715d0798fce10bc4e35689b7d15fd93'
             '8ecdf5c1605bafa58b3f7da615e6d8d3d943e3a2d3831930d6efa7815aacce07'
-            '50fc0d677489b73d549df2f08d759d5f057f200adbbab83ea5e87456152ee03e')
+            '50fc0d677489b73d549df2f08d759d5f057f200adbbab83ea5e87456152ee03e'
+            '372ec6c61e53d5f52bd805ef4a7223ea39b6d55b8465ee41aa5b51f29a1394ba'
+            'e0815cc98f30d7ec1e9eb53b66794a87837de55cb47b5b0f5b857830937eda3e'
+            '67cf0aed52028c8f2264b3e20c890d97b4c106d63ca23ba8ed262ea8ac638a95')
 
 case "${CARCH}" in
   x86_64) _JARCH='x86_64';;
@@ -125,13 +132,14 @@ build() {
     --with-native-debug-symbols=internal \
     --enable-unlimited-crypto \
     --disable-warnings-as-errors \
+    --with-vendor-name="Arch Linux" \
     ${NUM_PROC_OPT}
     #--disable-javac-server
 
   make images legacy-jre-image docs
 
   # https://bugs.openjdk.java.net/browse/JDK-8173610
-  find "../${_imgdir}" -iname '*.so' -exec chmod +x {} \;
+  find "${srcdir}/${_imgdir}" -iname '*.so' -exec chmod +x {} \;
 }
 
 check() {
@@ -202,7 +210,6 @@ package_jre-openjdk-wakefield() {
   pkgdesc="OpenJDK Java ${_majorver} full wayland runtime environment"
   depends=("${_commondeps[@]}" 'giflib' 'libgif.so' 'libpng')
   optdepends=('alsa-lib: for basic sound support'
-              'gtk2: for the Gtk+ 2 look and feel - desktop usage'
               'gtk3: for the Gtk+ 3 look and feel - desktop usage')
   provides=("java-runtime=${_majorver}" "java-runtime-openjdk=${_majorver}" "jre${_majorver}-openjdk=${pkgver}-${pkgrel}"
             "java-runtime-headless=${_majorver}" "java-runtime-headless-openjdk=${_majorver}" "jre${_majorver}-openjdk-headless=${pkgver}-${pkgrel}"
@@ -275,7 +282,6 @@ package_jdk-openjdk-wakefield() {
            'libharfbuzz.so')
   optdepends=('java-rhino: for some JavaScript support'
               'alsa-lib: for basic sound support'
-              'gtk2: for the Gtk+ 2 look and feel - desktop usage'
               'gtk3: for the Gtk+ 3 look and feel - desktop usage')
   provides=("java-environment=${_majorver}" "java-environment-openjdk=${_majorver}" "jdk${_majorver}-openjdk=${pkgver}-${pkgrel}"
             "java-runtime=${_majorver}" "java-runtime-openjdk=${_majorver}" "jre${_majorver}-openjdk=${pkgver}-${pkgrel}"

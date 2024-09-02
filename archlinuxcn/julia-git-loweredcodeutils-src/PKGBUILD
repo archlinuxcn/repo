@@ -1,6 +1,6 @@
 pkgname=julia-git-loweredcodeutils-src
-pkgver=2.4.8
-_commit=ac18aed686f37132271d2bad38a71dc04f9c6b45
+pkgver=3.0.1
+_commit=5277734ea04beffc5f87a54738aee4a7363ad922
 pkgrel=1
 pkgdesc="LoweredCodeUtils.jl"
 url="https://github.com/JuliaDebug/LoweredCodeUtils.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDebug/LoweredCodeUtils.jl.git#commit=$_commit")
-sha256sums=('9b157fe5a42c2ea158116f10ceb9000ccbe20bcd5ea8bfda4b6b272d0a69e4ae')
+sha256sums=('6ca9e4695777c95e66c5a1496167884c2e11b5803b62da47028ea41f292b2a49')
 
 package() {
   cd LoweredCodeUtils.jl

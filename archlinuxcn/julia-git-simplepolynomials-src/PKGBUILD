@@ -1,6 +1,6 @@
 pkgname=julia-git-simplepolynomials-src
-pkgver=0.2.17
-_commit=e9660b0cf8ce787d987260e17212ad62e5db360c
+pkgver=0.2.18
+_commit=7ee44c28192cbf2d5c126b69f6233aed9cdd3d0a
 pkgrel=1
 pkgdesc="SimplePolynomials.jl"
 url="https://github.com/scheinerman/SimplePolynomials.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/scheinerman/SimplePolynomials.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('67441f36bf3b4cdb806833d05b94eb07fc33e7763ef008a20f7f7488630193a5')
 
 package() {
   cd SimplePolynomials.jl

@@ -1,0 +1,44 @@
+From 1d408de1538427653f776b5e5e646503d0d0f0c5 Mon Sep 17 00:00:00 2001
+From: Ho Cheung <hocheung@chromium.org>
+Date: Fri, 2 Aug 2024 00:10:43 +0000
+Subject: [PATCH] Reland "[ozone+wayland] Allow ANGLEImplementation::kVulkan
+ when ozone platform is Wayland"
+
+This reverts commit 49aad997bfc37ab236c4cb593ebc2306960a43f5.
+
+Reason: This CL has caused failed tests in at
+least two tryjobs of Lacros FYI and Linux Tests
+(dbg).
+
+These failed tests seem to be related to the
+Vulkan field trial. Now the Vulkan field trial has
+been disabled and the related failed tests have
+also been suppressed.
+
+Based on the above, all blockers have been
+removed, and we can try to merge this CL again.
+
+Bug: 334275637,40722838,41392107
+Change-Id: I5fcafff1d3dad431a64c9b429c807c996f6a0d74
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/5740783
+Reviewed-by: Kramer Ge <fangzhoug@chromium.org>
+Commit-Queue: Ho Cheung <hocheung@chromium.org>
+Reviewed-by: Nick Yamane <nickdiego@igalia.com>
+Reviewed-by: Vasiliy Telezhnikov <vasilyt@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#1336353}
+---
+ ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc b/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
+index 051e26171012..dcb947ae88f4 100644
+--- a/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
++++ b/ui/ozone/platform/wayland/gpu/wayland_surface_factory.cc
+@@ -213,6 +213,7 @@ WaylandSurfaceFactory::GetAllowedGLImplementations() {
+     impls.emplace_back(gl::ANGLEImplementation::kOpenGL);
+     impls.emplace_back(gl::ANGLEImplementation::kOpenGLES);
+     impls.emplace_back(gl::ANGLEImplementation::kSwiftShader);
++    impls.emplace_back(gl::ANGLEImplementation::kVulkan);
+   }
+   return impls;
+ }

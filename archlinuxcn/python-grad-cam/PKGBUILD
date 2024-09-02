@@ -2,7 +2,7 @@
 
 _pkgname=grad-cam
 pkgname=python-grad-cam
-pkgver=1.5.2
+pkgver=1.5.3
 pkgrel=1
 pkgdesc='Image Test Time Augmentation with PyTorch'
 arch=('any')
@@ -30,7 +30,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('c5261b73366a5f7cc260163eb8ee7a0a1fc8ba1cc2bca4880d491b56115b5664665250610b2e87f3d4f77097e765b3f42b825627b8caedde38dfee18f3fbb9e6')
+sha512sums=('97b601abdd1ed44547c7bc8af6185afa91396ff155ab37acb4089dddfae20ca08533c90aea7f432c614883c6697384f6f792e5254cccc85ea9fb7a21fbba974e')
 
 build() {
   cd "${_pkgname}-${pkgver}"

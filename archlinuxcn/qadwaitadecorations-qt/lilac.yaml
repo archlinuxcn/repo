@@ -1,10 +1,13 @@
 maintainers:
-  - github: tttturtle-russ
-    email: tttturtleruss@gmail.com
+  - github: everyx
 
-post_build: aur_post_build
-pre_build: aur_pre_build
+build_prefix: archlinuxcn-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
 
 update_on:
-  - source: aur
-    aur: qadwaitadecorations-qt5
+  - source: github
+    github: FedoraQt/QAdwaitaDecorations
+    use_latest_release: true

@@ -1,0 +1,41 @@
+From da16f6995453d1c2ccfef18a2e45a4d8993abc73 Mon Sep 17 00:00:00 2001
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Date: Thu, 11 Jul 2024 10:24:39 +0000
+Subject: [PATCH 11/11] perf/x86/rapl: Remove the unused function
+ cpu_to_rapl_pmu
+
+After the addition of per-core counters support, this function
+does not work as the same CPU can be mapped to multiple rapl_pmu
+structs (package or per-core). So, remove it.
+
+Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+---
+ arch/x86/events/rapl.c | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 94cd6e66e..1e225863c 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -183,18 +183,6 @@ static inline const struct cpumask *get_rapl_pmu_cpumask(int cpu)
+ 					 topology_die_cpumask(cpu);
+ }
+ 
+-static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
+-{
+-	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
+-
+-	/*
+-	 * The unsigned check also catches the '-1' return value for non
+-	 * existent mappings in the topology map.
+-	 */
+-	return rapl_pmu_idx < rapl_pmus_pkg->nr_rapl_pmu ?
+-	       rapl_pmus_pkg->rapl_pmu[rapl_pmu_idx] : NULL;
+-}
+-
+ static inline u64 rapl_read_counter(struct perf_event *event)
+ {
+ 	u64 raw;
+-- 
+2.46.0
+

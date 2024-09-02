@@ -4,19 +4,16 @@
 
 pkgname=musescore-git
 _realver=2.0.4
-pkgver=34904.f788da88d07
+pkgver=37402.b2633d73fe7
 pkgrel=1
 epoch=1
 pkgdesc="A music score editor - git-version"
 arch=(aarch64 i686 x86_64)
 url="http://www.musescore.org/en/"
 license=('GPL')
-depends=('shared-mime-info' 'alsa-lib' 'zlib' 'freetype2'
-         'libvorbis' 'libopusenc' 'flac'
-         'qt5-base' 'qt5-networkauth' 'qt5-quickcontrols2'
-         'qt5-svg' 'qt5-tools' 'qt5-x11extras' 'qt5-xmlpatterns'
-         'portaudio' 'libpulse' 'libsndfile' 'libogg' 'gcc-libs'
-         'portmidi')
+depends=(shared-mime-info alsa-lib zlib freetype2 libvorbis libopusenc flac
+         qt6-base qt6-networkauth qt6-quickcontrols2 qt6-svg qt6-tools qt6-5compat
+         qt6-scxml portaudio libpulse libsndfile libogg gcc-libs portmidi)
 makedepends=('cmake' 'doxygen' 'git' 'lame')
 optdepends=('jack')
 conflicts=("musescore" 'mscore' 'musescore-svn')
@@ -27,7 +24,7 @@ source=('git+https://github.com/musescore/MuseScore.git'
   '0001-Do-not-force-fusion-style.patch')
 md5sums=('SKIP'
          '969696178e56de36f9af37d7da61baaa'
-         '093ffb3a06f68e278aadd3bb395fa330')
+         '855e0c1c5394bbe15273ba61fd8a6501')
 options=(strip debug)
 
 pkgver() {
@@ -42,22 +39,24 @@ prepare() {
   # Upstream add hard coded Fusion theme and they refuse to change it.
   patch -Np1 < ../0001-Do-not-force-fusion-style.patch
 
-  rm -rf thirdparty/lame/*/
-  cat > thirdparty/lame/CMakeLists.txt <<EOF
+  (cd src/framework/audio
+   rm -rf thirdparty/lame/*/
+   cat > thirdparty/lame/CMakeLists.txt <<EOF
 add_library(lame INTERFACE)
 target_link_libraries(lame INTERFACE libmp3lame.so)
 target_include_directories(lame INTERFACE /usr/include/lame)
 EOF
-  rm -rf thirdparty/opusenc/*/
-  echo > thirdparty/opusenc/CMakeLists.txt
-  rm -rf thirdparty/opus/*/
-  echo > thirdparty/opus/CMakeLists.txt
-  rm -rf thirdparty/flac/*/
-  cat > thirdparty/flac/CMakeLists.txt <<EOF
+   rm -rf thirdparty/opusenc/*/
+   echo > thirdparty/opusenc/CMakeLists.txt
+   rm -rf thirdparty/opus/*/
+   echo > thirdparty/opus/CMakeLists.txt
+   rm -rf thirdparty/flac/*/
+   cat > thirdparty/flac/CMakeLists.txt <<EOF
 add_library(flac INTERFACE)
 target_link_libraries(flac INTERFACE libFLAC.so)
 target_link_libraries(flac INTERFACE libFLAC++.so)
 EOF
+  )
 }
 
 build() {
@@ -91,9 +90,6 @@ build() {
     -DUSE_SYSTEM_FREETYPE=On \
     -DMUSESCORE_BUILD_MODE=release \
     -DMUE_BUILD_UNIT_TESTS=Off
-  make lrelease -j1
-  make manpages -j1
-  make mscore_alias -j1
   make
 }
 

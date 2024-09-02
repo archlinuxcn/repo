@@ -1,6 +1,6 @@
 pkgname=julia-git-transcodingstreams-src
-pkgver=0.10.10
-_commit=f62b761c6fbc727f75cee0d95bb31f9e302e9d12
+pkgver=0.11.2
+_commit=130a1ff0b8c7ea047d3acf1b591c30ec2f5797de
 pkgrel=1
 pkgdesc="TranscodingStreams.jl"
 url="https://github.com/JuliaIO/TranscodingStreams.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/TranscodingStreams.jl.git#commit=$_commit")
-sha256sums=('2382613cd704aa266d2710ea30c43a01f1dda37b40630fac05d8d8bcb5e142fd')
+sha256sums=('f1ede6d1e2d8ca0a3cc6015b6a199ef57aacb223ccd7626d83d4ad5bf13558ff')
 
 package() {
   cd TranscodingStreams.jl

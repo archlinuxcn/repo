@@ -2,18 +2,19 @@
 
 pkgbase=lief
 pkgname=(lief python-lief)
-pkgver=0.14.1
-pkgrel=3
+pkgver=0.15.1
+pkgrel=1
 pkgdesc='Library to instrument executable formats'
 arch=(armv7h aarch64 x86_64)
 url='https://lief.quarkslab.com/'
 license=(apache)
-makedepends=(git cmake ninja mbedtls python python-build python-installer python-wheel
+makedepends=(git cmake ninja python python-build python-installer python-wheel
              python-pydantic-core python-pydantic python-tomli python-scikit-build-core
-             python-pyproject-metadata python-pathspec python-setuptools)
+             python-pyproject-metadata python-pathspec python-setuptools
+             nlohmann-json tl-expected) # mbedtls
 provides=(libLIEF.so)
 source=("git+https://github.com/lief-project/LIEF#tag=${pkgver}")
-md5sums=('14bc71490b763bda87454d08a5dc5783')
+md5sums=('d3a3a372276b0cb39a391aac5d57fb1a')
 
 prepare() {
   cd LIEF
@@ -44,8 +45,11 @@ build() {
         -DCMAKE_SKIP_BUILD_RPATH=On \
         -DLIEF_PYTHON_API=On \
         -DLIEF_C_API=On \
-        -DLIEF_OPT_MBEDTLS_EXTERNAL=ON \
+        -DLIEF_OPT_NLOHMANN_JSON_EXTERNAL=ON \
+        -DLIEF_OPT_EXTERNAL_EXPECTED=ON \
         -DLIEF_EXAMPLES=Off -G Ninja
+  # LIEF uses functions that was made private in mbedtls 3.6
+  # -DLIEF_OPT_MBEDTLS_EXTERNAL=ON
   cmake --build build
 
   cd api/python

@@ -2,13 +2,13 @@
 
 pkgname=dissent-git
 _pkgname=${pkgname%-git}
-pkgver=0.0.27.r3.g2490db6
+pkgver=0.0.29.r8.gff2f067
 pkgrel=1
 pkgdesc="Discord client written in go and gtk4"
 arch=('x86_64' 'aarch64')
 url="https://github.com/diamondburned/${_pkgname}"
 license=('GPL-3.0-or-later')
-depends=('gtk4' 'gobject-introspection' 'libadwaita')
+depends=('gtk4' 'gobject-introspection' 'libadwaita' 'gtksourceview5' 'libspelling')
 provides=("${_pkgname}" "gtkcord4")
 conflicts=("${_pkgname}" "gtkcord4")
 replaces=("gtkcord4-git")
@@ -18,13 +18,11 @@ sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
-	git describe --long --tags --abbrev=7 --match 'v[0-9]*' |
-		sed -e 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	git describe --long --tags --abbrev=7 --match 'v[0-9]*' | sed -e 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-	cd "${_pkgname}/"
-	mkdir -p build
+	mkdir -p "${_pkgname}/build/"
 }
 
 build() {

@@ -1,0 +1,29 @@
+--- Makefile.old	2014-09-30 14:36:05.951631966 +0200
++++ Makefile	2014-09-30 14:33:56.258293849 +0200
+@@ -3,7 +3,7 @@
+ SOURCES := $(foreach dir, $(DIRS), $(wildcard $(dir)/*.cpp))
+ OBJS := $(patsubst %.cpp, %.o, $(SOURCES))
+ 
+-CFLAGS := -O3 -D_NDEBUG
++CFLAGS := -O3 -D_NDEBUG -fPIC -fvisibility=hidden -std=c++0x
+ CXX ?= c++
+ LIBS := 
+ INCLUDES := 
+@@ -14,10 +14,10 @@
+     LIBS += -lrt
+ endif
+  
+-all: blossom5
++all: blossom5.so
+ 
+-blossom5: ${OBJS}
+-	$(CXX) $(CFLAGS) ${LIBDIR} -o $@ ${OBJS} ${LIBS}
++blossom5.so: ${OBJS}
++	$(CXX) -shared $(CFLAGS) ${LIBDIR} -o $@ ${OBJS} ${LIBS}
+ 
+ .cpp.o:
+ 	$(CXX) $(CFLAGS) ${INCLUDES} $< -c -o $@
+ 
+ clean:
+-	rm -f ${OBJS} blossom5
++	rm -f ${OBJS} blossom5.so

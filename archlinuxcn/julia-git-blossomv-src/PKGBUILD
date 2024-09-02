@@ -1,0 +1,31 @@
+pkgname=julia-git-blossomv-src
+pkgver=0.4.3
+_commit=fca1d332d98259c3928f4eecebb574ee9554d340
+pkgrel=2
+pkgdesc="BlossomV.jl"
+url="https://github.com/mlewe/BlossomV.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/mlewe/BlossomV.jl.git#commit=$_commit")
+sha256sums=('f3aba19713b7575facb53ef0a04e597d289a156d83ca131c387b8d444b04cf2d')
+
+build() {
+  cd BlossomV.jl
+
+  rm -rf deps/*
+
+  sed -i -e '/^BinDeps/d' Project.toml
+
+  cat > deps/deps.jl <<EOF
+const _jl_blossom5int32 = "/usr/lib/blossom5int32.so"
+const _jl_blossom5float64 = "/usr/lib/blossom5float64.so"
+EOF
+}
+
+package() {
+  cd BlossomV.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BlossomV "${pkgdir}" "${pkgname}" julia-git
+}

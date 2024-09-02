@@ -1,6 +1,6 @@
 pkgname=julia-git-codecbzip2-src
-pkgver=0.8.3
-_commit=8dd665c16feecb60e93252c0092adeaa3b42df3b
+pkgver=0.8.4
+_commit=072dd7a464f5ea84f910f2b5a5de66cfec42d6d1
 pkgrel=1
 pkgdesc="CodecBzip2.jl"
 url="https://github.com/JuliaIO/CodecBzip2.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/CodecBzip2.jl.git#commit=$_commit")
-sha256sums=('b9e19de791bef4fc22c858ad4c557d2ec489a2387d571607551f28128a9269a2')
+sha256sums=('28c0b875e0797ced8552dfc2acc2893b07d03192b6a7cada1f3dd2c90865d65b')
 
 package() {
   cd CodecBzip2.jl

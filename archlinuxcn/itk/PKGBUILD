@@ -3,22 +3,26 @@
 _pkgname=ITK
 pkgname=(itk python-itk)
 pkgver=5.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
 url='https://www.itk.org'
 license=('Apache-2.0')
 depends=(
-  dcmtk
   double-conversion
+  dcmtk
   eigen
   expat
   fftw
+  gcc-libs
   gdcm
+  glibc
   hdf5
   intel-oneapi-mkl
+  libjpeg-turbo
   libpng
   libtiff.so
+  zlib
 )
 makedepends=(
   castxml
@@ -66,7 +70,7 @@ build() {
     -DITK_USE_SYSTEM_EXPAT=ON
     -DITK_USE_SYSTEM_FFTW=ON
     -DITK_USE_SYSTEM_GDCM=ON
-    -DITK_USE_SYSTEM_GOOGLETEST=ON
+    -DITK_USE_SYSTEM_GOOGLETEST=OFF
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF
@@ -96,7 +100,12 @@ build() {
     -DITK_WRAP_unsigned_long_long=ON
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON
+    -DModule_GenericLabelInterpolator=ON \
+    -DModule_ITKIODCMTK=ON \
+    -DModule_ITKIOTransformMINC=ON \
+    -DModule_ITKReview=ON \
     -DModule_MorphologicalContourInterpolation=ON
+    -DModule_SimpleITKFilters=ON \
     -DPY_SITE_PACKAGES_PATH=/usr/lib/python$(get_pyver)/site-packages
 )
 

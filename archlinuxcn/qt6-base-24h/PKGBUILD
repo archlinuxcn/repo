@@ -6,7 +6,7 @@ pkgbase=qt6-base-24h
 pkgname=(qt6-base-24h)
 
 pkgver=6.7.2
-pkgrel=1.4
+pkgrel=2.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -108,6 +108,7 @@ prepare() {
   git cherry-pick -n a8ef8ea55014546e0e835cd0eacf694919702a11 # https://bugreports.qt.io/browse/QTBUG-124386
   git cherry-pick -n 062f701a11d2c46660f5c5edd73f245477918a47 # Fix dependencies in pc files
   git cherry-pick -n 5ee9da89af7efe31ac45858bf1eb04e5155a3b50 # Fix dependencies in pc files
+  git cherry-pick -n 0f35729f2cb43f0eb94e2a8d5e2d478a2c6a5007 # Fix potential Plasma crashes
 
   patch -p1 -i ../oldherl-24h.patch
   cd util/locale_database

@@ -1,0 +1,18 @@
+pkgname=julia-git-hybridarrays-src
+pkgver=0.4.16
+_commit=8c32f4c63ae6a3a32f2d737cd410547e79afe033
+pkgrel=2
+pkgdesc="HybridArrays.jl"
+url="https://github.com/JuliaArrays/HybridArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/HybridArrays.jl.git#commit=$_commit")
+sha256sums=('50124fe787bf9ed93e3a336df809063027afbdd1756226940b3928e0aa185184')
+
+package() {
+  cd HybridArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh HybridArrays "${pkgdir}" "${pkgname}" julia-git
+}

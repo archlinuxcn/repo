@@ -3,12 +3,38 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-4.1-imgpaste
-pkgver=2.44.2
-pkgrel=1
+pkgver=2.44.3
+pkgrel=4
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
-license=('LicenseRef-custom')
+license=(
+  # :sort ui /\v^\s*['"]?/
+  'AFL-2.0 OR GPL-2.0-or-later'
+  Apache-2.0
+  'Apache-2.0 WITH LLVM-exception'
+  BSD-2-Clause
+  BSD-2-Clause-Views
+  BSD-3-Clause
+  BSD-Source-Code
+  BSL-1.0
+  bzip2-1.0.6
+  GPL-2.0-only
+  'GPL-3.0-only WITH Autoconf-exception-3.0'
+  'GPL-3.0-or-later WITH Bison-exception-2.2'
+  ICU
+  ISC
+  LGPL-2.1-only
+  LGPL-2.1-or-later
+  MIT
+  MPL-1.1
+  MPL-2.0
+  NCSA
+  'NCSA OR MIT'
+  OFL-1.1
+  SunPro
+  Unicode-TOU
+)
 depends=(
   at-spi2-core
   atk
@@ -17,7 +43,10 @@ depends=(
   enchant
   fontconfig
   freetype2
+  gcc-libs
+  gdk-pixbuf2
   glib2
+  glibc
   gst-plugins-bad-libs
   gst-plugins-base-libs
   gstreamer
@@ -26,6 +55,7 @@ depends=(
   harfbuzz-icu
   hyphen
   icu
+  lcms2
   libavif
   libdrm
   libegl
@@ -43,35 +73,37 @@ depends=(
   libsystemd
   libtasn1
   libwebp
-  libwpe
   libx11
-  libxcomposite
   libxml2
   libxslt
-  libxt
   mesa
   openjpeg2
+  pango
   sqlite
   wayland
   woff2
-  wpebackend-fdo
   xdg-dbus-proxy
   zlib
 )
 makedepends=(
-  clang
   cmake
   gi-docgen
+  glib2-devel
   gobject-introspection
   gperf
   gst-plugins-bad
-  lld
   ninja
   python
   ruby
+  ruby-stdlib
   systemd
   unifdef
   wayland-protocols
+)
+options=(
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/webkit2gtk-4.1/-/issues/1
+  # https://bugs.webkit.org/show_bug.cgi?id=278090
+  !lto
 )
 provides=(webkit2gtk-4.1)
 conflicts=(webkit2gtk-4.1)
@@ -79,13 +111,14 @@ source=(
   $url/releases/webkitgtk-$pkgver.tar.xz{,.asc}
   EnlargeObjectSize.patch
   PasteBoardGtk.patch
+  revert-271175.patch
 )
-sha256sums=('523f42c8ff24832add17631f6eaafe8f9303afe316ef1a7e1844b952a7f7521b'
+sha256sums=('dc82d042ecaca981a4852357c06e5235743319cf10a94cd36ad41b97883a0b54'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
-            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
+            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2'
+            '640b392081d913f5522aec83e32213983f35603d28fceecc9bff3f33e59468a7')
 validpgpkeys=(
-  D7FCF61CF9A2DEAB31D81BD3F3D322D0EC4582C3 # Carlos Garcia Campos <cgarcia@igalia.com>
   # https://www.webkitgtk.org/verifying.html
   5AA3BC334FD7E3369E7C77B291C559DBE4C9123B # Adrián Pérez de Castro <aperez@igalia.com>
   013A0127AC9C65B34FFA62526C1009B693975393 # Carlos Garcia Campos <cgarcia@igalia.com>
@@ -96,6 +129,9 @@ prepare() {
 
   patch -Np1 -i ../PasteBoardGtk.patch
   patch -Np1 -i ../EnlargeObjectSize.patch
+  # https://bugs.webkit.org/show_bug.cgi?id=278113
+  # https://github.com/WebKit/WebKit/commit/9140ce712aa87091613874d802787ab476be0e39
+  patch -Np1 -i ../revert-271175.patch
 }
 
 build() {
@@ -113,16 +149,7 @@ build() {
     -DENABLE_MINIBROWSER=ON
   )
 
-  # GCC with LTO fails to link libjavascriptcoregtk
-  #     /usr/bin/ld: /tmp/ccXxyWZV.ltrans0.ltrans.o: in function `ipint_table_size_validate':
-  #     <artificial>:(.text+0x49f0f): undefined reference to `ipint_extern_table_size'
-  #     /usr/bin/ld: /tmp/ccXxyWZV.ltrans0.ltrans.o: in function `ipint_table_fill_validate':
-  #     <artificial>:(.text+0x4a019): undefined reference to `ipint_extern_table_fill'
-  #     collect2: error: ld returned 1 exit status
-  export CC=clang CXX=clang++
-  LDFLAGS+=" -fuse-ld=lld"
-
-    # JITted code crashes when CET is used
+  # JITted code crashes when CET is used
   CFLAGS+=' -fcf-protection=none'
   CXXFLAGS+=' -fcf-protection=none'
 
@@ -136,10 +163,6 @@ build() {
 }
 
 package() {
-  depends+=(
-    libWPEBackend-fdo-1.0.so
-    libwpe-1.0.so
-  )
   provides+=(
     libjavascriptcoregtk-4.1.so
     libwebkit2gtk-4.1.so

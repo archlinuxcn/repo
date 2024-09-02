@@ -1,7 +1,7 @@
-From 20226b79958e490dbed5043bc825878e738261d5 Mon Sep 17 00:00:00 2001
+From 353ef8b10466f17b9594ffb5cbffe880cebc246a Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
-Subject: [PATCH 3/7] Clear soname
+Subject: [PATCH 3/8] Clear soname
 
 ---
  stdlib/LibGit2_jll/src/LibGit2_jll.jl         |  2 +-
@@ -68,7 +68,7 @@ index 297cd25512..21d94be081 100644
  
  function __init__()
 diff --git a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
-index e5edfa7699..4211f2fd58 100644
+index 9e03033c4e..d906f8ebe8 100644
 --- a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 +++ b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 @@ -66,18 +66,18 @@ elseif Sys.isapple()
@@ -103,5 +103,5 @@ index e5edfa7699..4211f2fd58 100644
  
  function __init__()
 -- 
-2.44.0
+2.45.2
 

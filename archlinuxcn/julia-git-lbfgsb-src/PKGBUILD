@@ -1,0 +1,18 @@
+pkgname=julia-git-lbfgsb-src
+pkgver=0.4.1
+_commit=1db46a5260aa378aac3e0dfa31392627d7daeb62
+pkgrel=2
+pkgdesc="LBFGSB.jl"
+url="https://github.com/Gnimuc/LBFGSB.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Gnimuc/LBFGSB.jl.git#commit=$_commit")
+sha256sums=('62645300233560c3b191b1aae40d67890efb1e56dfbd218656223ee084757751')
+
+package() {
+  cd LBFGSB.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LBFGSB "${pkgdir}" "${pkgname}" julia-git
+}

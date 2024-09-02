@@ -1,0 +1,18 @@
+pkgname=julia-git-expronicon-src
+pkgver=0.8.5
+_commit=266ce3e03aa82cee260757aa8d7c307993b42e36
+pkgrel=2
+pkgdesc="Expronicon.jl"
+url="https://github.com/Roger-luo/Expronicon.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Roger-luo/Expronicon.jl.git#commit=$_commit")
+sha256sums=('ee8f0be1120fa916b82469743c6ec1692f83e6775b008f4114ee5c362fbd9fc7')
+
+package() {
+  cd Expronicon.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Expronicon "${pkgdir}" "${pkgname}" julia-git
+}

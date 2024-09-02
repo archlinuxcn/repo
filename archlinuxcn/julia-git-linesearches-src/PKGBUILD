@@ -1,7 +1,7 @@
 pkgname=julia-git-linesearches-src
-pkgver=7.2.0
-_commit=ded667a80f47886c77d67e8890f6adb127679ab4
-pkgrel=2
+pkgver=7.3.0
+_commit=3259cd240144b96a5a3a309ea96dfb19181058b2
+pkgrel=1
 pkgdesc="LineSearches.jl"
 url="https://github.com/JuliaNLSolvers/LineSearches.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaNLSolvers/LineSearches.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('a23e80bb9e7b6dda22b8cc717c1c547a1e1b74ee338e3f5ddd0f293c02215b65')
 
 package() {
   cd LineSearches.jl

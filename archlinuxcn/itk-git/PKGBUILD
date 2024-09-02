@@ -3,7 +3,7 @@
 _pkgname=ITK
 pkgname=(itk-git python-itk-git)
 _pkgver=5.4
-pkgver=5.4.r55936.72f509f357
+pkgver=5.4.r55978.9eb13596ce
 pkgrel=1
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
@@ -26,7 +26,7 @@ makedepends=(
   cmake
   gcc13
   git
-  gtest
+#  gtest
   python
   subversion
   swig
@@ -72,7 +72,7 @@ build() {
     -DITK_USE_SYSTEM_EXPAT=ON
     -DITK_USE_SYSTEM_FFTW=ON
     -DITK_USE_SYSTEM_GDCM=OFF
-    -DITK_USE_SYSTEM_GOOGLETEST=ON
+    -DITK_USE_SYSTEM_GOOGLETEST=OFF
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF

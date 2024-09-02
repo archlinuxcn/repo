@@ -1,6 +1,6 @@
 pkgname=julia-git-inlinestrings-src
-pkgver=1.4.1
-_commit=36839e5ecc9da8ca985d104f174db17cb7df43c1
+pkgver=1.4.2
+_commit=b1f99b4919fdffa7103bfb75103a4b2bcd2b816b
 pkgrel=1
 pkgdesc="InlineStrings.jl"
 url="https://github.com/JuliaStrings/InlineStrings.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStrings/InlineStrings.jl.git#commit=$_commit")
-sha256sums=('b6697dedfd5034671fc1222c74c2c12a81236b49140f9ddf764629b88977da84')
+sha256sums=('f589a1c20b90016007e60653848395c66d203604d0005f2867def07e17a2b627')
 
 package() {
   cd InlineStrings.jl

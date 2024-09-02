@@ -1,0 +1,617 @@
+From adb26372d0dc18c90293733f1c5f3b0479badf6c Mon Sep 17 00:00:00 2001
+From: Mingi Sung <sungmg@saltyming.net>
+Date: Wed, 28 Aug 2024 20:21:07 +0900
+Subject: [PATCH] Merge branch 'crtc_frame_deadline_dispatch-track-duration'
+ into gnome-46
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Track dispatch duration in crtc_frame_deadline_dispatch
+and take it into account in meta_kms_crtc_get_deadline_evasion.
+
+This uses the same fundamental approach as clutter frame clock scheduling:
+
+Measure the deadline timer dispatch duration, keep track of the longest
+duration, and set the timer to fire such that the longest measured
+dispatch duration would result in it completing shortly before start of
+vblank.
+
+Closes: #3612
+
+Author: Michel Dänzer <mdaenzer@redhat.com>
+Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3934
+Commit: 88e7f353c482b2574927dbd06b483ebb3197379b
+
+Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3184
+Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3265
+
+Signed-off-by: Mingi Sung <sungmg@saltyming.net>
+---
+ clutter/clutter/clutter-frame-clock.c           | 12 ++++-
+ clutter/clutter/clutter-frame-clock.h           |  4 ++
+ clutter/clutter/clutter-stage-view.c            |  4 ++
+ clutter/clutter/clutter-stage-view.h            |  2 +
+ src/backends/native/meta-crtc-kms.c             | 10 ++++
+ src/backends/native/meta-crtc-native.c          |  8 ++++
+ src/backends/native/meta-crtc-native.h          |  3 ++
+ src/backends/native/meta-crtc-virtual.c         |  8 ++++
+ src/backends/native/meta-kms-crtc.c             | 63 ++++++++++++++++++++++---
+ src/backends/native/meta-kms-crtc.h             |  5 ++
+ src/backends/native/meta-kms-impl-device.c      | 51 ++++++++++++++++++--
+ src/backends/native/meta-onscreen-native.c      | 12 +++--
+ src/backends/native/meta-renderer-view-native.c | 41 ++++++++++++++++
+ src/core/util.c                                 |  3 ++
+ src/meta/meta-debug.h                           |  2 +
+ src/meta/util.h                                 |  3 ++
+ src/tests/meta-monitor-manager-test.c           |  6 +++
+ 17 files changed, 222 insertions(+), 15 deletions(-)
+
+diff --git a/clutter/clutter/clutter-frame-clock.c b/clutter/clutter/clutter-frame-clock.c
+index 30a319f604..4bba34887a 100644
+--- a/clutter/clutter/clutter-frame-clock.c
++++ b/clutter/clutter/clutter-frame-clock.c
+@@ -137,6 +137,8 @@ struct _ClutterFrameClock
+ 
+   int64_t last_dispatch_interval_us;
+ 
++  int64_t deadline_evasion_us;
++
+   char *output_name;
+ };
+ 
+@@ -389,7 +391,8 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
+ 
+       frame_clock->shortterm_max_update_duration_us =
+         CLAMP (frame_clock->last_dispatch_lateness_us + dispatch_to_swap_us +
+-               MAX (swap_to_rendering_done_us, swap_to_flip_us),
++               MAX (swap_to_rendering_done_us,
++                    swap_to_flip_us + frame_clock->deadline_evasion_us),
+                frame_clock->shortterm_max_update_duration_us,
+                frame_clock->refresh_interval_us);
+ 
+@@ -1253,3 +1256,10 @@ clutter_frame_clock_class_init (ClutterFrameClockClass *klass)
+                   G_TYPE_NONE,
+                   0);
+ }
++
++void
++clutter_frame_clock_set_deadline_evasion (ClutterFrameClock *frame_clock,
++                                          int64_t            deadline_evasion_us)
++{
++  frame_clock->deadline_evasion_us = deadline_evasion_us;
++}
+diff --git a/clutter/clutter/clutter-frame-clock.h b/clutter/clutter/clutter-frame-clock.h
+index a7be5ef316..6a940f48be 100644
+--- a/clutter/clutter/clutter-frame-clock.h
++++ b/clutter/clutter/clutter-frame-clock.h
+@@ -106,3 +106,7 @@ void clutter_frame_clock_record_flip_time (ClutterFrameClock *frame_clock,
+                                            int64_t            flip_time_us);
+ 
+ GString * clutter_frame_clock_get_max_render_time_debug_info (ClutterFrameClock *frame_clock);
++
++CLUTTER_EXPORT
++void clutter_frame_clock_set_deadline_evasion (ClutterFrameClock *frame_clock,
++                                               int64_t            deadline_evasion_us);
+diff --git a/clutter/clutter/clutter-stage-view.c b/clutter/clutter/clutter-stage-view.c
+index f5188e2acf..2aabe9aa4c 100644
+--- a/clutter/clutter/clutter-stage-view.c
++++ b/clutter/clutter/clutter-stage-view.c
+@@ -740,6 +740,10 @@ clutter_stage_view_schedule_update (ClutterStageView *view)
+ {
+   ClutterStageViewPrivate *priv =
+     clutter_stage_view_get_instance_private (view);
++  ClutterStageViewClass *view_class = CLUTTER_STAGE_VIEW_GET_CLASS (view);
++
++  if (view_class->schedule_update)
++    view_class->schedule_update (view);
+ 
+   clutter_frame_clock_schedule_update (priv->frame_clock);
+ }
+diff --git a/clutter/clutter/clutter-stage-view.h b/clutter/clutter/clutter-stage-view.h
+index c0888f7f94..bdaa065c00 100644
+--- a/clutter/clutter/clutter-stage-view.h
++++ b/clutter/clutter/clutter-stage-view.h
+@@ -54,6 +54,8 @@ struct _ClutterStageViewClass
+   ClutterFrame * (* new_frame) (ClutterStageView *view);
+ 
+   ClutterPaintFlag (* get_default_paint_flags) (ClutterStageView *view);
++
++  void (* schedule_update) (ClutterStageView *view);
+ };
+ 
+ CLUTTER_EXPORT
+diff --git a/src/backends/native/meta-crtc-kms.c b/src/backends/native/meta-crtc-kms.c
+index 3498f922a3..8cb0e935a7 100644
+--- a/src/backends/native/meta-crtc-kms.c
++++ b/src/backends/native/meta-crtc-kms.c
+@@ -348,6 +348,15 @@ meta_crtc_kms_is_hw_cursor_supported (MetaCrtcNative *crtc_native)
+   return meta_kms_device_has_cursor_plane_for (kms_device, kms_crtc);
+ }
+ 
++static int64_t
++meta_crtc_kms_get_deadline_evasion (MetaCrtcNative *crtc_native)
++{
++  MetaCrtcKms *crtc_kms = META_CRTC_KMS (crtc_native);
++  MetaKmsCrtc *kms_crtc = meta_crtc_kms_get_kms_crtc (crtc_kms);
++
++  return meta_kms_crtc_get_deadline_evasion (kms_crtc);
++}
++
+ MetaKmsPlane *
+ meta_crtc_kms_get_assigned_cursor_plane (MetaCrtcKms *crtc_kms)
+ {
+@@ -479,6 +488,7 @@ meta_crtc_kms_class_init (MetaCrtcKmsClass *klass)
+ 
+   crtc_native_class->is_transform_handled = meta_crtc_kms_is_transform_handled;
+   crtc_native_class->is_hw_cursor_supported = meta_crtc_kms_is_hw_cursor_supported;
++  crtc_native_class->get_deadline_evasion = meta_crtc_kms_get_deadline_evasion;
+ 
+   signals[GAMMA_LUT_CHANGED] =
+     g_signal_new ("gamma-lut-changed",
+diff --git a/src/backends/native/meta-crtc-native.c b/src/backends/native/meta-crtc-native.c
+index fc280f696e..80406a5033 100644
+--- a/src/backends/native/meta-crtc-native.c
++++ b/src/backends/native/meta-crtc-native.c
+@@ -39,6 +39,14 @@ meta_crtc_native_is_hw_cursor_supported (MetaCrtcNative *crtc_native)
+   return klass->is_hw_cursor_supported (crtc_native);
+ }
+ 
++int64_t
++meta_crtc_native_get_deadline_evasion (MetaCrtcNative *crtc_native)
++{
++  MetaCrtcNativeClass *klass = META_CRTC_NATIVE_GET_CLASS (crtc_native);
++
++  return klass->get_deadline_evasion (crtc_native);
++}
++
+ static void
+ meta_crtc_native_init (MetaCrtcNative *crtc_native)
+ {
+diff --git a/src/backends/native/meta-crtc-native.h b/src/backends/native/meta-crtc-native.h
+index 3fb4bc7586..1f9a2ed46c 100644
+--- a/src/backends/native/meta-crtc-native.h
++++ b/src/backends/native/meta-crtc-native.h
+@@ -31,9 +31,12 @@ struct _MetaCrtcNativeClass
+   gboolean (* is_transform_handled) (MetaCrtcNative       *crtc_native,
+                                      MetaMonitorTransform  monitor_transform);
+   gboolean (* is_hw_cursor_supported) (MetaCrtcNative *crtc_native);
++  int64_t (* get_deadline_evasion) (MetaCrtcNative *crtc_native);
+ };
+ 
+ gboolean meta_crtc_native_is_transform_handled (MetaCrtcNative       *crtc_native,
+                                                 MetaMonitorTransform  transform);
+ 
+ gboolean meta_crtc_native_is_hw_cursor_supported (MetaCrtcNative *crtc_native);
++
++int64_t meta_crtc_native_get_deadline_evasion (MetaCrtcNative *crtc_native);
+diff --git a/src/backends/native/meta-crtc-virtual.c b/src/backends/native/meta-crtc-virtual.c
+index 76165eb1bd..00b599c612 100644
+--- a/src/backends/native/meta-crtc-virtual.c
++++ b/src/backends/native/meta-crtc-virtual.c
+@@ -70,6 +70,12 @@ meta_crtc_virtual_is_hw_cursor_supported (MetaCrtcNative *crtc_native)
+   return TRUE;
+ }
+ 
++static int64_t
++meta_crtc_virtual_get_deadline_evasion (MetaCrtcNative *crtc_native)
++{
++  return 0;
++}
++
+ static void
+ meta_crtc_virtual_init (MetaCrtcVirtual *crtc_virtual)
+ {
+@@ -89,4 +95,6 @@ meta_crtc_virtual_class_init (MetaCrtcVirtualClass *klass)
+     meta_crtc_virtual_is_transform_handled;
+   crtc_native_class->is_hw_cursor_supported =
+     meta_crtc_virtual_is_hw_cursor_supported;
++  crtc_native_class->get_deadline_evasion =
++    meta_crtc_virtual_get_deadline_evasion;
+ }
+diff --git a/src/backends/native/meta-kms-crtc.c b/src/backends/native/meta-kms-crtc.c
+index a0872089a0..cad9f88ce5 100644
+--- a/src/backends/native/meta-kms-crtc.c
++++ b/src/backends/native/meta-kms-crtc.c
+@@ -28,8 +28,7 @@
+ #include "backends/native/meta-kms-update-private.h"
+ #include "backends/native/meta-kms-utils.h"
+ 
+-#define DEADLINE_EVASION_US 800
+-#define DEADLINE_EVASION_WITH_KMS_TOPIC_US 1000
++#define DEADLINE_EVASION_CONSTANT_US 200
+ 
+ #define MINIMUM_REFRESH_RATE 30.f
+ 
+@@ -50,6 +49,10 @@ struct _MetaKmsCrtc
+   MetaKmsCrtcState current_state;
+ 
+   MetaKmsCrtcPropTable prop_table;
++
++  int64_t shortterm_max_dispatch_duration_us;
++  int64_t deadline_evasion_us;
++  int64_t deadline_evasion_update_time_us;
+ };
+ 
+ G_DEFINE_TYPE (MetaKmsCrtc, meta_kms_crtc, G_TYPE_OBJECT)
+@@ -543,6 +546,33 @@ get_crtc_type_bitmask (MetaKmsCrtc *crtc)
+     }
+ }
+ 
++static void
++maybe_update_deadline_evasion (MetaKmsCrtc *crtc,
++                               int64_t      next_presentation_time_us)
++{
++  /* Do not update long-term max if there has been no measurement */
++  if (!crtc->shortterm_max_dispatch_duration_us)
++    return;
++
++  if (next_presentation_time_us - crtc->deadline_evasion_update_time_us <
++      G_USEC_PER_SEC)
++    return;
++
++  if (crtc->deadline_evasion_us > crtc->shortterm_max_dispatch_duration_us)
++    {
++      /* Exponential drop-off toward the clamped short-term max */
++      crtc->deadline_evasion_us -=
++        (crtc->deadline_evasion_us - crtc->shortterm_max_dispatch_duration_us) / 2;
++    }
++  else
++    {
++      crtc->deadline_evasion_us = crtc->shortterm_max_dispatch_duration_us;
++    }
++
++  crtc->shortterm_max_dispatch_duration_us = 0;
++  crtc->deadline_evasion_update_time_us = next_presentation_time_us;
++}
++
+ gboolean
+ meta_kms_crtc_determine_deadline (MetaKmsCrtc  *crtc,
+                                   int64_t      *out_next_deadline_us,
+@@ -610,10 +640,8 @@ meta_kms_crtc_determine_deadline (MetaKmsCrtc  *crtc,
+        *
+        */
+ 
+-      if (meta_is_topic_enabled (META_DEBUG_KMS))
+-        deadline_evasion_us = DEADLINE_EVASION_WITH_KMS_TOPIC_US;
+-      else
+-        deadline_evasion_us = DEADLINE_EVASION_US;
++      deadline_evasion_us = meta_kms_crtc_get_deadline_evasion (crtc);
++      maybe_update_deadline_evasion (crtc, next_presentation_us);
+ 
+       vblank_duration_us = meta_calculate_drm_mode_vblank_duration_us (drm_mode);
+       next_deadline_us = next_presentation_us - (vblank_duration_us +
+@@ -625,3 +653,26 @@ meta_kms_crtc_determine_deadline (MetaKmsCrtc  *crtc,
+ 
+   return TRUE;
+ }
++
++void
++meta_kms_crtc_update_shortterm_max_dispatch_duration (MetaKmsCrtc *crtc,
++                                                      int64_t      duration_us)
++{
++  int64_t refresh_interval_us;
++
++  if (duration_us <= crtc->shortterm_max_dispatch_duration_us)
++    return;
++
++  refresh_interval_us =
++    (int64_t) (0.5 + G_USEC_PER_SEC /
++               meta_calculate_drm_mode_refresh_rate (&crtc->current_state.drm_mode));
++
++  crtc->shortterm_max_dispatch_duration_us = MIN (duration_us, refresh_interval_us);
++}
++
++int64_t
++meta_kms_crtc_get_deadline_evasion (MetaKmsCrtc *crtc)
++{
++  return MAX (crtc->shortterm_max_dispatch_duration_us,
++              crtc->deadline_evasion_us) + DEADLINE_EVASION_CONSTANT_US;
++}
+diff --git a/src/backends/native/meta-kms-crtc.h b/src/backends/native/meta-kms-crtc.h
+index 580ee9a89c..b293f8e7cc 100644
+--- a/src/backends/native/meta-kms-crtc.h
++++ b/src/backends/native/meta-kms-crtc.h
+@@ -65,3 +65,8 @@ int meta_kms_crtc_get_idx (MetaKmsCrtc *crtc);
+ 
+ META_EXPORT_TEST
+ gboolean meta_kms_crtc_is_active (MetaKmsCrtc *crtc);
++
++void meta_kms_crtc_update_shortterm_max_dispatch_duration (MetaKmsCrtc *crtc,
++                                                           int64_t      duration_us);
++
++int64_t meta_kms_crtc_get_deadline_evasion (MetaKmsCrtc *crtc);
+diff --git a/src/backends/native/meta-kms-impl-device.c b/src/backends/native/meta-kms-impl-device.c
+index 6758982a6a..6ce62cd697 100644
+--- a/src/backends/native/meta-kms-impl-device.c
++++ b/src/backends/native/meta-kms-impl-device.c
+@@ -39,6 +39,7 @@
+ #include "backends/native/meta-kms-plane-private.h"
+ #include "backends/native/meta-kms-plane.h"
+ #include "backends/native/meta-kms-private.h"
++#include "backends/native/meta-kms-utils.h"
+ #include "backends/native/meta-thread-private.h"
+ 
+ #include "meta-default-modes.h"
+@@ -71,6 +72,7 @@ typedef struct _CrtcDeadline
+     GSource *source;
+     gboolean armed;
+     gboolean is_deadline_page_flip;
++    int64_t expected_deadline_time_us;
+     int64_t expected_presentation_time_us;
+     gboolean has_expected_presentation_time;
+   } deadline;
+@@ -1165,6 +1167,7 @@ arm_crtc_frame_deadline_timer (CrtcFrame *crtc_frame,
+   timerfd_settime (crtc_frame->deadline.timer_fd,
+                    TFD_TIMER_ABSTIME, &its, NULL);
+ 
++  crtc_frame->deadline.expected_deadline_time_us = next_deadline_us;
+   crtc_frame->deadline.expected_presentation_time_us = next_presentation_us;
+   crtc_frame->deadline.has_expected_presentation_time = next_presentation_us != 0;
+   crtc_frame->deadline.armed = TRUE;
+@@ -1197,7 +1200,7 @@ crtc_page_flip_feedback_flipped (MetaKmsCrtc  *crtc,
+   CrtcFrame *crtc_frame = user_data;
+ 
+   if (crtc_frame->deadline.is_deadline_page_flip &&
+-      meta_is_topic_enabled (META_DEBUG_KMS))
++      meta_is_topic_enabled (META_DEBUG_KMS_DEADLINE))
+     {
+       struct timeval page_flip_timeval;
+       int64_t presentation_time_us;
+@@ -1210,7 +1213,7 @@ crtc_page_flip_feedback_flipped (MetaKmsCrtc  *crtc,
+ 
+       if (crtc_frame->deadline.has_expected_presentation_time)
+         {
+-          meta_topic (META_DEBUG_KMS,
++          meta_topic (META_DEBUG_KMS_DEADLINE,
+                       "Deadline page flip presentation time: %" G_GINT64_FORMAT " us, "
+                       "expected %" G_GINT64_FORMAT " us "
+                       "(diff: %" G_GINT64_FORMAT ")",
+@@ -1221,7 +1224,7 @@ crtc_page_flip_feedback_flipped (MetaKmsCrtc  *crtc,
+         }
+       else
+         {
+-          meta_topic (META_DEBUG_KMS,
++          meta_topic (META_DEBUG_KMS_DEADLINE,
+                       "Deadline page flip presentation time: %" G_GINT64_FORMAT " us",
+                       presentation_time_us);
+         }
+@@ -1390,11 +1393,16 @@ crtc_frame_deadline_dispatch (MetaThreadImpl  *thread_impl,
+                               GError         **error)
+ {
+   CrtcFrame *crtc_frame = user_data;
+-  MetaKmsDevice *device = meta_kms_crtc_get_device (crtc_frame->crtc);
++  MetaKmsCrtc *crtc = crtc_frame->crtc;
++  MetaKmsDevice *device = meta_kms_crtc_get_device (crtc);
+   MetaKmsImplDevice *impl_device = meta_kms_device_get_impl_device (device);
+   g_autoptr (MetaKmsFeedback) feedback = NULL;
+   uint64_t timer_value;
+   ssize_t ret;
++  int64_t dispatch_time_us = 0, update_done_time_us, interval_us;
++
++  if (meta_is_topic_enabled (META_DEBUG_KMS_DEADLINE))
++    dispatch_time_us = g_get_monotonic_time ();
+ 
+   ret = read (crtc_frame->deadline.timer_fd,
+               &timer_value,
+@@ -1416,6 +1424,36 @@ crtc_frame_deadline_dispatch (MetaThreadImpl  *thread_impl,
+                          crtc_frame->crtc,
+                          g_steal_pointer (&crtc_frame->pending_update),
+                          META_KMS_UPDATE_FLAG_NONE);
++
++  update_done_time_us = g_get_monotonic_time ();
++  /* Calculate how long after the planned start of deadline dispatch it finished */
++  interval_us = update_done_time_us - crtc_frame->deadline.expected_deadline_time_us;
++
++  if (meta_is_topic_enabled (META_DEBUG_KMS_DEADLINE))
++    {
++      int64_t deadline_evasion_us, lateness_us, duration_us, vblank_delta_us;
++
++      deadline_evasion_us = meta_kms_crtc_get_deadline_evasion (crtc);
++      lateness_us = dispatch_time_us -
++                    crtc_frame->deadline.expected_deadline_time_us;
++      duration_us = update_done_time_us - dispatch_time_us;
++      vblank_delta_us = deadline_evasion_us - lateness_us - duration_us;
++
++      meta_topic (META_DEBUG_KMS_DEADLINE,
++                  "Deadline evasion %3"G_GINT64_FORMAT "µs, "
++                  "dispatch started %3"G_GINT64_FORMAT "µs %s and "
++                  "completed %3"G_GINT64_FORMAT "µs after that, "
++                  "%3"G_GINT64_FORMAT "µs %s start of vblank.",
++                  deadline_evasion_us,
++                  ABS (lateness_us),
++                  lateness_us >= 0 ? "late" : "early",
++                  duration_us,
++                  ABS (vblank_delta_us),
++                  vblank_delta_us >= 0 ? "before" : "after");
++    }
++
++  meta_kms_crtc_update_shortterm_max_dispatch_duration (crtc, interval_us);
++
+   if (meta_kms_feedback_did_pass (feedback))
+     crtc_frame->deadline.is_deadline_page_flip = TRUE;
+   disarm_crtc_frame_deadline_timer (crtc_frame);
+@@ -1592,6 +1630,11 @@ meta_kms_impl_device_handle_update (MetaKmsImplDevice *impl_device,
+   meta_kms_device_handle_flush (priv->device, latch_crtc);
+ 
+   feedback = do_process (impl_device, latch_crtc, update, flags);
++
++  if (meta_kms_feedback_did_pass (feedback) &&
++      crtc_frame->deadline.armed)
++    disarm_crtc_frame_deadline_timer (crtc_frame);
++
+   meta_kms_feedback_unref (feedback);
+   return;
+ 
+diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
+index 9b739faf39..b790c1e5c8 100644
+--- a/src/backends/native/meta-onscreen-native.c
++++ b/src/backends/native/meta-onscreen-native.c
+@@ -1786,11 +1786,15 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
+                                     ClutterFrame *frame)
+ {
+   MetaOnscreenNative *onscreen_native = META_ONSCREEN_NATIVE (onscreen);
+-  MetaCrtcKms *crtc_kms = META_CRTC_KMS (onscreen_native->crtc);
+-  MetaKmsCrtc *kms_crtc = meta_crtc_kms_get_kms_crtc (crtc_kms);
+ 
+-  meta_kms_device_await_flush (meta_kms_crtc_get_device (kms_crtc),
+-                               kms_crtc);
++  if (meta_get_debug_paint_flags () & META_DEBUG_PAINT_SYNC_CURSOR_PRIMARY)
++    {
++      MetaCrtcKms *crtc_kms = META_CRTC_KMS (onscreen_native->crtc);
++      MetaKmsCrtc *kms_crtc = meta_crtc_kms_get_kms_crtc (crtc_kms);
++
++      meta_kms_device_await_flush (meta_kms_crtc_get_device (kms_crtc), kms_crtc);
++    }
++
+   maybe_update_frame_sync (onscreen_native, frame);
+ }
+ 
+diff --git a/src/backends/native/meta-renderer-view-native.c b/src/backends/native/meta-renderer-view-native.c
+index a04e2e3533..5699f9a558 100644
+--- a/src/backends/native/meta-renderer-view-native.c
++++ b/src/backends/native/meta-renderer-view-native.c
+@@ -24,6 +24,7 @@
+ 
+ #include "backends/native/meta-renderer-view-native.h"
+ 
++#include "backends/native/meta-crtc-native.h"
+ #include "backends/native/meta-frame-native.h"
+ 
+ struct _MetaRendererViewNative
+@@ -34,18 +35,58 @@ struct _MetaRendererViewNative
+ G_DEFINE_TYPE (MetaRendererViewNative, meta_renderer_view_native,
+                META_TYPE_RENDERER_VIEW)
+ 
++static void
++update_frame_clock_deadline_evasion (MetaRendererView *renderer_view)
++{
++  ClutterStageView *stage_view = CLUTTER_STAGE_VIEW (renderer_view);
++  ClutterFrameClock *frame_clock;
++  MetaCrtc *crtc;
++  MetaCrtcNative *crtc_native;
++  int64_t deadline_evasion_us;
++
++  frame_clock = clutter_stage_view_get_frame_clock (stage_view);
++  crtc = meta_renderer_view_get_crtc (renderer_view);
++  crtc_native = META_CRTC_NATIVE (crtc);
++
++  deadline_evasion_us = meta_crtc_native_get_deadline_evasion (crtc_native);
++  clutter_frame_clock_set_deadline_evasion (frame_clock,
++                                            deadline_evasion_us);
++}
++
++static void
++meta_renderer_view_native_constructed (GObject *object)
++{
++  MetaRendererView *renderer_view = META_RENDERER_VIEW (object);
++
++  G_OBJECT_CLASS (meta_renderer_view_native_parent_class)->constructed (object);
++
++  update_frame_clock_deadline_evasion (renderer_view);
++}
++
+ static ClutterFrame *
+ meta_renderer_view_native_new_frame (ClutterStageView *stage_view)
+ {
+   return (ClutterFrame *) meta_frame_native_new ();
+ }
+ 
++static void
++meta_renderer_view_native_schedule_update (ClutterStageView *stage_view)
++{
++  MetaRendererView *renderer_view = META_RENDERER_VIEW (stage_view);
++
++  update_frame_clock_deadline_evasion (renderer_view);
++}
++
+ static void
+ meta_renderer_view_native_class_init (MetaRendererViewNativeClass *klass)
+ {
++  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+   ClutterStageViewClass *stage_view_class = CLUTTER_STAGE_VIEW_CLASS (klass);
+ 
++  object_class->constructed = meta_renderer_view_native_constructed;
++
+   stage_view_class->new_frame = meta_renderer_view_native_new_frame;
++  stage_view_class->schedule_update = meta_renderer_view_native_schedule_update;
+ }
+ 
+ static void
+diff --git a/src/core/util.c b/src/core/util.c
+index 05a0dea398..f8a08c747f 100644
+--- a/src/core/util.c
++++ b/src/core/util.c
+@@ -69,6 +69,7 @@ static const GDebugKey meta_debug_keys[] = {
+   { "color", META_DEBUG_COLOR },
+   { "input-events", META_DEBUG_INPUT_EVENTS },
+   { "eis", META_DEBUG_EIS },
++  { "kms-deadline", META_DEBUG_KMS_DEADLINE },
+ };
+ 
+ static gint verbose_topics = 0;
+@@ -326,6 +327,8 @@ meta_topic_to_string (MetaDebugTopic topic)
+       return "INPUT_EVENTS";
+     case META_DEBUG_EIS:
+       return "EIS";
++    case META_DEBUG_KMS_DEADLINE:
++      return "KMS_DEADLINE";
+     }
+ 
+   return "WM";
+diff --git a/src/meta/meta-debug.h b/src/meta/meta-debug.h
+index b4c70144b7..2de9a89d75 100644
+--- a/src/meta/meta-debug.h
++++ b/src/meta/meta-debug.h
+@@ -50,6 +50,7 @@
+  * @META_DEBUG_COLOR: color management
+  * @META_DEBUG_INPUT_EVENTS: input events
+  * @META_DEBUG_EIS: eis state
++ * @META_DEBUG_KMS_DEADLINE: KMS deadline timers
+  */
+ typedef enum
+ {
+@@ -83,6 +84,7 @@ typedef enum
+   META_DEBUG_COLOR           = 1 << 26,
+   META_DEBUG_INPUT_EVENTS    = 1 << 27,
+   META_DEBUG_EIS             = 1 << 28,
++  META_DEBUG_KMS_DEADLINE    = 1 << 29,
+ } MetaDebugTopic;
+ 
+ META_EXPORT
+diff --git a/src/meta/util.h b/src/meta/util.h
+index ca8ca2adeb..91ca6a8366 100644
+--- a/src/meta/util.h
++++ b/src/meta/util.h
+@@ -51,11 +51,14 @@ void meta_fatal      (const char *format,
+  * MetaDebugPaintFlag:
+  * @META_DEBUG_PAINT_NONE: default
+  * @META_DEBUG_PAINT_OPAQUE_REGION: paint opaque regions
++ * @META_DEBUG_PAINT_SYNC_CURSOR_PRIMARY: make cursor updates await compositing
++ *   frames
+  */
+ typedef enum
+ {
+   META_DEBUG_PAINT_NONE          = 0,
+   META_DEBUG_PAINT_OPAQUE_REGION = 1 << 0,
++  META_DEBUG_PAINT_SYNC_CURSOR_PRIMARY = 1 << 1,
+ } MetaDebugPaintFlag;
+ 
+ META_EXPORT
+diff --git a/src/tests/meta-monitor-manager-test.c b/src/tests/meta-monitor-manager-test.c
+index f9275160c3..fd37eab380 100644
+--- a/src/tests/meta-monitor-manager-test.c
++++ b/src/tests/meta-monitor-manager-test.c
+@@ -517,6 +517,12 @@ meta_crtc_test_set_gamma_lut (MetaCrtc           *crtc,
+                                      sizeof (uint16_t) * lut->size);
+ }
+ 
++static int64_t
++meta_crtc_test_get_deadline_evasion (MetaCrtcNative *crtc_native)
++{
++  return 0;
++}
++
+ static void
+ meta_crtc_test_finalize (GObject *object)
+ {

@@ -1,0 +1,26 @@
+pkgname=julia-git-l_bfgs_b_jll-src
+pkgver=3.0.1+0
+_commit=eda2952c613d9b4a9835cc67ec783f036c84d872
+pkgrel=2
+pkgdesc="L_BFGS_B_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/L_BFGS_B_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git l_bfgs_b)
+source=("git+https://github.com/JuliaBinaryWrappers/L_BFGS_B_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('b7af9b2e7a53b3ba7b562f05c8a8b07ced490c483b5e698336c390ee6f40024a'
+            '2a0b9c46c08d021a86d3a8875cc25ea004b610243bc50fb330fc52ecc5dc2903')
+
+build() {
+  cd L_BFGS_B_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl L_BFGS_B_jll ../jll.toml
+}
+
+package() {
+  cd L_BFGS_B_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh L_BFGS_B_jll "${pkgdir}" "${pkgname}" julia-git
+}

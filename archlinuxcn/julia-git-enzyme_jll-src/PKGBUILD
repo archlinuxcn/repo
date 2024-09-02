@@ -1,6 +1,6 @@
 pkgname=julia-git-enzyme_jll-src
-pkgver=0.0.130+0
-_commit=9103fbbdc3863b35a5b12bf5644fdbdd1ee865bd
+pkgver=0.0.146+0
+_commit=cab43e7cc218cac5c91ccd497421765b47a14512
 pkgrel=1
 pkgdesc="Enzyme_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Enzyme_jll.jl.git"
@@ -10,8 +10,8 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git enzyme-julia)
 source=("git+https://github.com/JuliaBinaryWrappers/Enzyme_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('0942c584868430f3f6951451082f74aa0a3024e8993b937ade49b3f6cdc99cc1'
-            '2473640708f3accb5652c040715e8c6567ec102720a2f2e37530f5f53da6455e')
+sha256sums=('f20c16cfe3791a2760ade765dd328cb613d1d109e7dd206f9bf03d507533b2d6'
+            'da8def816e482ea94b902e27c62b0eb4ff2103f40b29ba27d401b13eef6360ed')
 
 build() {
   cd Enzyme_jll.jl

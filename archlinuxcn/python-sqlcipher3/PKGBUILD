@@ -1,7 +1,7 @@
 # Maintainer: Chih-Hsuan Yen <base64_decode("eXUzYWN0eHQydHR0ZmlteEBjaHllbi5jYwo=")>
 
 pkgname=python-sqlcipher3
-pkgver=0.5.2
+pkgver=0.5.3
 pkgrel=2
 pkgdesc='Python 3 bindings for SQLCipher'
 arch=(x86_64)
@@ -14,7 +14,7 @@ depends=(python glibc sqlcipher)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 source=("https://github.com/coleifer/sqlcipher3/archive/refs/tags/$pkgver/$pkgname-$pkgver.zip")
-sha256sums=('1580a8a0747d57897a2377866d68932cc4b59f4e7a52c6d411a3e5d6a5b3b728')
+sha256sums=('67297bf5c2e25ae24ccf5d28c0f2090c42c3fdeb6cc7f7c4792f23f602671643')
 
 build() {
   cd sqlcipher3-$pkgver
@@ -25,8 +25,8 @@ check() {
   cd sqlcipher3-$pkgver
 
   pyver=$(python -c "import sys; print('{}{}'.format(*sys.version_info[:2]))")
-  # see https://github.com/coleifer/sqlcipher3/blob/0.5.2/.github/workflows/tests.yaml#L23
-  PYTHONPATH="$PWD/build/lib.linux-$CARCH-cpython-$pyver:$PWD" python test/
+  # see https://github.com/coleifer/sqlcipher3/blob/0.5.3/.github/workflows/tests.yaml#L24
+  PYTHONPATH="$PWD/build/lib.linux-$CARCH-cpython-$pyver:$PWD" python tests/
 }
 
 package() {

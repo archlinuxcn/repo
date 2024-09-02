@@ -3,7 +3,7 @@
 
 pkgname=zed-git
 _pkgname=${pkgname%-git}
-pkgver=0.148.0.r59.g10937c6
+pkgver=0.151.1.r107.g6b8bdcf
 pkgrel=1
 pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
@@ -53,6 +53,7 @@ prepare() {
 	export APP_NAME="Zed"
 	export APP_CLI="$_binname"
 	export APP_ID="$_appid"
+	export APP_ARGS="%U"
 	envsubst < "crates/zed/resources/zed.desktop.in" > $_appid.desktop
 	./script/generate-licenses
 }

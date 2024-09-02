@@ -1,6 +1,6 @@
 pkgname=julia-git-juliasyntax-src
-pkgver=0.4.8
-_commit=b1c758cb7e770e13b35cff7940464449cd8f6b79
+pkgver=0.4.9
+_commit=e32b4489303f3d284e41fa9bae5418b8202c1c5d
 pkgrel=1
 pkgdesc="JuliaSyntax.jl"
 url="https://github.com/JuliaLang/JuliaSyntax.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLang/JuliaSyntax.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('77858fa2076592262e086502bf11b887470959bd6bae4160340d0eb44ededf7a')
 
 package() {
   cd JuliaSyntax.jl

@@ -1,0 +1,45 @@
+diff --git a/cmake/Libraries.cmake b/cmake/Libraries.cmake
+index ea590395..3b581289 100644
+--- a/cmake/Libraries.cmake
++++ b/cmake/Libraries.cmake
+@@ -310,11 +310,6 @@ endmacro()
+ 
+ macro(configure_test_libs)
+ 
+-  if(BUILD_TESTS AND NOT EXISTS
+-                     "${PROJECT_SOURCE_DIR}/ext/googletest/CMakeLists.txt")
+-    message(FATAL_ERROR "Git submodule for Google Test is missing")
+-  endif()
+-
+   if(ENABLE_COVERAGE)
+     message(STATUS "Enabling code coverage")
+     include(cmake/CodeCoverage.cmake)
+@@ -347,7 +342,7 @@ macro(configure_test_libs)
+   endif()
+ 
+   include_directories(BEFORE SYSTEM
+-                      ${PROJECT_SOURCE_DIR}/ext/googletest/googletest/include)
++                      /usr/include/gtest)
+ endmacro()
+ 
+ macro(update_submodules)
+diff --git a/src/test/CMakeLists.txt b/src/test/CMakeLists.txt
+index f550d3db..5e1f2ab0 100644
+--- a/src/test/CMakeLists.txt
++++ b/src/test/CMakeLists.txt
+@@ -137,11 +137,11 @@ macro(config_test_deps)
+     COMPONENTS Core Widgets Network Test
+     REQUIRED)
+ 
+-  set(gtest_dir ${gtest_base_dir}/googletest)
+-  set(gmock_dir ${gtest_base_dir}/googlemock)
++  set(gtest_dir /usr/src/googletest)
++  set(gmock_dir /usr/src/gmock)
+ 
+-  include_directories(${gtest_dir} ${gmock_dir} ${gtest_dir}/include
+-                      ${gmock_dir}/include)
++  include_directories(${gtest_dir} ${gmock_dir} /usr/include/gtest
++                      /usr/include/gmock)
+ 
+   add_library(gtest STATIC ${gtest_dir}/src/gtest-all.cc)
+   add_library(gmock STATIC ${gmock_dir}/src/gmock-all.cc)

@@ -1,7 +1,7 @@
 pkgname=julia-git-randomnumbers-src
-pkgver=1.5.3
-_commit=20992caa581473dc805f9236760c35d96fbc4f29
-pkgrel=2
+pkgver=1.6.0
+_commit=82c752e0c0e3cc3f273baad93aede3836b689db6
+pkgrel=1
 pkgdesc="RandomNumbers.jl"
 url="https://github.com/JuliaRandom/RandomNumbers.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaRandom/RandomNumbers.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('b4a272718b5a363a12933d29dc73d1485ac6614397d2d5bf324403d854f6b6d0')
 
 package() {
   cd RandomNumbers.jl

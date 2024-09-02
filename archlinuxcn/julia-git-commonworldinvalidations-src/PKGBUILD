@@ -1,0 +1,18 @@
+pkgname=julia-git-commonworldinvalidations-src
+pkgver=1.0.0
+_commit=ae2a2688bf11c79691e179191fe14fb0b2c19eb5
+pkgrel=2
+pkgdesc="CommonWorldInvalidations.jl"
+url="https://github.com/SciML/CommonWorldInvalidations.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/CommonWorldInvalidations.jl.git#commit=$_commit")
+sha256sums=('8dcf230490983c6158faa8d710844e37b0d6d3229849b1c25ed49d45314bef1c')
+
+package() {
+  cd CommonWorldInvalidations.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CommonWorldInvalidations "${pkgdir}" "${pkgname}" julia-git
+}

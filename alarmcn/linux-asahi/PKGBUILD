@@ -3,12 +3,12 @@
 
 buildarch=8
 
-_rcver=6.6
+_rcver=6.9.12
 #_rcrel=3
-_asahirel=16
-pkgrel=2
+_asahirel=1
+pkgrel=3
 
-_m1n1_version=1.4.11
+_m1n1_version=1.4.14
 
 pkgbase=linux-asahi
 #_commit_id=asahi-${_nextver}-${_asahirel}
@@ -29,19 +29,13 @@ source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
   config.edge    # overrides for linux-asahi-edge
-  0001-READ-COMMIT-MESSAGE-macaudio-Enable-first-round-of-m.patch
-  0002-READ-COMMIT-MESSAGE-macaudio-Enable-second-round-of-.patch
 )
-sha256sums=('e5a6f08681e8514c6d1cbd06c5637b20eb16b330dac4597006742ab304d64a15'
-            '6c9a3baf939b50c2438a1b1a5617554ccc8880aac0dec14d0174251216882919'
-            '5cbdda1262f989a5247f4ef70690b569f9be8212bf8f576242bf6ac69036bddf'
-            '95a19c29c8ac22049a06fcb880bb7d8d72fb7a8dae206cf4b9b6da22df246637'
-            '2b08c2623b87a7e8bb16451d09db9f0cfe032c75054e1a0e6d345e5228028adc')
-b2sums=('e8f90373fe3cfb0ee8824158c59d548af05d1e68626715a65dcf086b35cfe7f4d44b184f02bbfad33474040b86f488e4fa99c8886ae329cf138933161658f94c'
-        '8ff9f64748f9695479dfcbffc5b4f565229d17840e846d8cea59bccfddfc0d722725a937f80d57ad8bfbfa8a9dae2f886983a2db87e37930d84661e9f3f9c85e'
-        '01a8b3b7e3c7bd528f6d07d2b581b8a56688305d42fdd0b1555fd26319c4369e2357bcaa8434a1a5e3123aa9fdc6f1a24de4813b819397af89ba8d0c5e896228'
-        'bf1adcbbaf3dfb5a31c77f2ff8a467b91a304d8487dba866f9e18808d6a503940b794403e27ab3d065e8c97a3f138e819c2513fb16719321c72f5235aea6f1b5'
-        '9c761ddaa1cb1f1570ecc2f8e116c416fc57a0df952f0635b9a2fe1287988ce3e4e0b6e3025703a21637b8551784f9b1d5c6ae8faff188ebcd9361013e20b0a5')
+sha256sums=('9b97ea144b652c041ef1366e0391485c6cdbbf8a84842cbd35767df788a6ca66'
+            'c919489632ec77a59fbb6bb210940fceb2cac30e3ab80566915a581d2f8159fb'
+            '5cbdda1262f989a5247f4ef70690b569f9be8212bf8f576242bf6ac69036bddf')
+b2sums=('b514c5df2d92403e0df5033d0e072708cdf0b913b5346a418a3b39b9f3c38e1a7656baf90fbf3a9bb67582d63a9a8090f28f5ecf8b69daecffbe52832668e033'
+        '2fcdbba91b905a19d1a27fd268b7f04e1ee7f8f41e9a9a0975611f00a2820120c90b02235d49255362512f4ffe7aa9f28e24856cc575ffe6a7fa54f397f90f1c'
+        '01a8b3b7e3c7bd528f6d07d2b581b8a56688305d42fdd0b1555fd26319c4369e2357bcaa8434a1a5e3123aa9fdc6f1a24de4813b819397af89ba8d0c5e896228')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
@@ -49,12 +43,12 @@ export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EP
 prepare() {
   cd $_srcname
 
-  rustup install 1.71.1
+  rustup install 1.80.0
   rustup component add rust-src
   _path=$PATH
-  PATH="$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  PATH="$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$_path"
   cargo install --locked --version 0.65.1 bindgen-cli
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$_path"
 
   echo "Setting version..."
   echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
@@ -86,7 +80,7 @@ prepare() {
 }
 
 build() {
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$PATH"
 
   cd $_srcname
   echo "Building base..."
@@ -104,7 +98,7 @@ build() {
 }
 
 _package_kernel() {
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.71.1-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$PATH"
 
   pkgdesc="The $pkgdesc kernel and modules"
   depends=(coreutils kmod initramfs $2 "m1n1>=$_m1n1_version")

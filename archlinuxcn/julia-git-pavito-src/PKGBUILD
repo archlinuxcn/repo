@@ -1,6 +1,6 @@
 pkgname=julia-git-pavito-src
-pkgver=0.3.8
-_commit=1ca63463d80991ac27766470df4e1e64d308aad6
+pkgver=0.3.9
+_commit=13cb770e39f67d762bb01adcb7b138f8d779f208
 pkgrel=1
 pkgdesc="Pavito.jl"
 url="https://github.com/jump-dev/Pavito.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/Pavito.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('9c0839736964c1a0c788c231309260ca9124f60020b9bf58d88a871a08fba7de')
 
 package() {
   cd Pavito.jl

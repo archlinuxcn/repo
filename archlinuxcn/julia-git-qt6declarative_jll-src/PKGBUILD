@@ -1,0 +1,26 @@
+pkgname=julia-git-qt6declarative_jll-src
+pkgver=6.7.1+2
+_commit=1816db76d4d3e5d1bdfad0f11906aeeb0f39e834
+pkgrel=2
+pkgdesc="Qt6Declarative_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Qt6Declarative_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git qt6-declarative)
+source=("git+https://github.com/JuliaBinaryWrappers/Qt6Declarative_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('0192cdb83c700906867f82e61af9cd37e1ee2a9e42dfdf9d6f4059dd1730475c'
+            '6fbef4984d706a0a67d28ae2308e8ee14fa0e41e8428682adabdcd1b5b3bffda')
+
+build() {
+  cd Qt6Declarative_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Qt6Declarative_jll ../jll.toml
+}
+
+package() {
+  cd Qt6Declarative_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Qt6Declarative_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,6 +1,6 @@
 pkgname=julia-git-codecbase-src
-pkgver=0.3.3
-_commit=45d9bc0c8ecc064a29ddb2038c0a806c57792cd6
+pkgver=0.3.4
+_commit=849c91fc1585629dbd4cb64860bd359720dc5762
 pkgrel=1
 pkgdesc="CodecBase.jl"
 url="https://github.com/JuliaIO/CodecBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/CodecBase.jl.git#commit=$_commit")
-sha256sums=('0637c36d65e910cbce0c435471a9a6880bf605eeff7fb2ea50d854ddeb413e68')
+sha256sums=('a06f6d344ee27a9f8d8237d229db65e0a447aada63fe9e9bf0f4a312128d2f99')
 
 package() {
   cd CodecBase.jl

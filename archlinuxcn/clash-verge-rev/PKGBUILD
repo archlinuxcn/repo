@@ -3,8 +3,8 @@
 
 pkgname=clash-verge-rev
 _pkgname=${pkgname%-rev}
-pkgver=1.7.5
-pkgrel=2
+pkgver=1.7.7
+pkgrel=1
 pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://github.com/${pkgname}/${pkgname}"
@@ -13,7 +13,7 @@ depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator')
 conflicts=("${pkgname}-bin" "${pkgname}-alpha" "${pkgname}-alpha-bin" "${pkgname}-git" "${_pkgname}" "${_pkgname}-bin")
 makedepends=('nodejs' 'pnpm' 'cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('8ca48a722b4018857e18ea06d4b4c2ff1eef3d00506f738a2ca3bce01f27118887cd48e3d95530052e5577f88f9337440c0a1fa3b88e203ecaf4bf699d4080cd')
+sha512sums=('22d915d2946ad327236769aa95594060dfd8f0e53d3e6d7c6a567512a2152ac80797afa45104a0b7f200abe37bba7629567fa4d0d247324c154e009fe76231d4')
 options=('!lto')
 
 prepare() {

@@ -1,0 +1,18 @@
+pkgname=julia-git-kronecker-src
+pkgver=0.5.5
+_commit=2656a5f55f0fe09713cb8d85e87b6ef20b1eccc1
+pkgrel=2
+pkgdesc="Kronecker.jl"
+url="https://github.com/MichielStock/Kronecker.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/MichielStock/Kronecker.jl.git#commit=$_commit")
+sha256sums=('4fa5ce37bada3aaed742b1fb63d1076b1ae6ec93837fc1214710a82c4ae3e881')
+
+package() {
+  cd Kronecker.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Kronecker "${pkgdir}" "${pkgname}" julia-git
+}

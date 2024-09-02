@@ -1,0 +1,37 @@
+#
+
+pkgname=l_bfgs_b
+pkgver=3.0
+pkgrel=2
+pkgdesc='Software for Large-scale Bound-constrained Optimization'
+arch=(aarch64 armv7h i686 x86_64)
+url='http://users.iems.northwestern.edu/~nocedal/lbfgsb.html'
+license=('custom:BSD')
+makedepends=(git gcc-fortran)
+source=('http://users.iems.northwestern.edu/~nocedal/Software/Lbfgsb.3.0.tar.gz'
+        lbfgsb.patch)
+sha1sums=('2d8992e2ca4f90a621a03ea6d5c729bdc527c3e0'
+          '45a3983ffa66f9e0a14f2b96005ea1f127aa4a67')
+
+prepare() {
+  cd Lbfgsb.3.0
+  patch -Np0 --no-backup-if-mismatch < "$srcdir/lbfgsb.patch"
+}
+
+build() {
+  cd Lbfgsb.3.0
+
+  gfortran ${LDFLAGS} ${FFLAGS} \
+           -O3 -fPIC -shared -Wall -fbounds-check -Wno-uninitialized \
+           lbfgsb.f linpack.f blas.f timer.f \
+           -o "liblbfgsb.so"
+}
+
+package() {
+  cd Lbfgsb.3.0
+
+  install -dm755 "${pkgdir}/usr/lib/"
+  install -Dm755 liblbfgsb.so "${pkgdir}/usr/lib/"
+  install -dm755 "${pkgdir}/usr/share/licenses/$pkgname/"
+  install -Dm644 License.txt "${pkgdir}/usr/share/licenses/$pkgname/"
+}

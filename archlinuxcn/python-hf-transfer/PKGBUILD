@@ -1,0 +1,37 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=hf_transfer
+pkgname=python-hf-transfer
+pkgver=0.1.8
+pkgrel=2
+pkgdesc='Speed up file transfers with the Hugging Face Hub'
+arch=('x86_64')
+url='https://github.com/huggingface/hf_transfer'
+license=('Apache-2.0')
+depends=(
+  gcc-libs
+  glibc
+  openssl
+  python
+)
+makedepends=(
+  python-build
+  python-maturin
+  python-installer
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/hf_transfer/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('d837e32df1eb7ea7c021948b58d5783fb5f2469da0803e4c989eaf2a04761631f4c9f3a263f02da934c32c72d42d1aa930663d7c348b432829c4915c3ffdd5e5')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  # use system openssl
+  OPENSSL_NO_VENDOR=1 \
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
+# vim:set ts=2 sw=2 et:

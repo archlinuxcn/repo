@@ -1,7 +1,7 @@
-From 41bcfacb47533d7aeff7398c641bf8bbe7c6e63f Mon Sep 17 00:00:00 2001
+From 21fe0f94e6472d94f8a4943442464eb01785d6bc Mon Sep 17 00:00:00 2001
 From: Mingi Sung <sungmg@saltyming.net>
-Date: Mon, 5 Aug 2024 12:30:34 +0900
-Subject: [PATCH] Merge branch 'triple-buffering-v4-46' into gnome-46
+Date: Wed, 28 Aug 2024 20:11:32 +0900
+Subject: [PATCH] Merge branch 'sungmg-triple-buffering-v4-46' into gnome-46
 
 Use triple buffering if and when the previous frame is running late.
 This means the next frame will be dispatched on time instead of also starting
@@ -15,38 +15,52 @@ there's no latency penalty when the system is able to maintain full frame rate.
 
 Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
 Source: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-Source: https://gitlab.gnome.org/Community/Ubuntu/mutter/-/tree/triple-buffering-v4-46
-Commit: 9abd14c9b77d382a8ef792d990d423fbb1db4698
+Commit: 7a1dbab76a49b6dde6813604a3776ced39be91e1
 
+Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3184
+Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3265
 Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3799
 Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3829
 Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3830
 Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3891
+Backported: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3934
 
 Signed-off-by: Mingi Sung <sungmg@saltyming.net>
 ---
- clutter/clutter/clutter-frame-clock.c      | 372 +++++++++++++++----
- clutter/clutter/clutter-frame-clock.h      |  11 +-
- clutter/clutter/clutter-frame-private.h    |   1 +
- clutter/clutter/clutter-frame.c            |  13 +
- clutter/clutter/clutter-frame.h            |   7 +
- clutter/clutter/clutter-stage-view.c       |  11 +-
- cogl/cogl/cogl-onscreen-private.h          |   5 +-
- cogl/cogl/cogl-onscreen.c                  |   8 +
- src/backends/meta-stage-impl.c             |   2 +
- src/backends/native/meta-frame-native.c    |  63 ++++
- src/backends/native/meta-frame-native.h    |  20 +
- src/backends/native/meta-kms-impl-device.c |   4 +-
- src/backends/native/meta-kms.c             |   9 +
- src/backends/native/meta-kms.h             |   2 +
- src/backends/native/meta-onscreen-native.c | 574 ++++++++++++++++++++---------
- src/backends/native/meta-onscreen-native.h |   2 +
- src/backends/native/meta-renderer-native.c |  34 +-
- src/tests/native-kms-render.c              | 106 +++++-
- 18 files changed, 973 insertions(+), 271 deletions(-)
+ clutter/clutter/clutter-frame-clock.c           | 384 +++++++++++++++----
+ clutter/clutter/clutter-frame-clock.h           |  15 +-
+ clutter/clutter/clutter-frame-private.h         |   1 +
+ clutter/clutter/clutter-frame.c                 |  13 +
+ clutter/clutter/clutter-frame.h                 |   7 +
+ clutter/clutter/clutter-stage-view.c            |  15 +-
+ clutter/clutter/clutter-stage-view.h            |   2 +
+ cogl/cogl/cogl-onscreen-private.h               |   5 +-
+ cogl/cogl/cogl-onscreen.c                       |   8 +
+ src/backends/meta-stage-impl.c                  |   2 +
+ src/backends/native/meta-crtc-kms.c             |  10 +
+ src/backends/native/meta-crtc-native.c          |   8 +
+ src/backends/native/meta-crtc-native.h          |   3 +
+ src/backends/native/meta-crtc-virtual.c         |   8 +
+ src/backends/native/meta-frame-native.c         |  63 ++++
+ src/backends/native/meta-frame-native.h         |  20 +
+ src/backends/native/meta-kms-crtc.c             |  63 +++-
+ src/backends/native/meta-kms-crtc.h             |   5 +
+ src/backends/native/meta-kms-impl-device.c      |  51 ++-
+ src/backends/native/meta-kms.c                  |   9 +
+ src/backends/native/meta-kms.h                  |   2 +
+ src/backends/native/meta-onscreen-native.c      | 478 +++++++++++++++++-------
+ src/backends/native/meta-onscreen-native.h      |   2 +
+ src/backends/native/meta-renderer-native.c      |  34 +-
+ src/backends/native/meta-renderer-view-native.c |  41 ++
+ src/core/util.c                                 |   3 +
+ src/meta/meta-debug.h                           |   2 +
+ src/meta/util.h                                 |   3 +
+ src/tests/meta-monitor-manager-test.c           |   6 +
+ src/tests/native-kms-render.c                   | 106 +++++-
+ 30 files changed, 1125 insertions(+), 244 deletions(-)
 
 diff --git a/clutter/clutter/clutter-frame-clock.c b/clutter/clutter/clutter-frame-clock.c
-index 30a319f604..e91b31d80b 100644
+index 30a319f604..c299705663 100644
 --- a/clutter/clutter/clutter-frame-clock.c
 +++ b/clutter/clutter/clutter-frame-clock.c
 @@ -42,6 +42,15 @@ enum
@@ -96,7 +110,16 @@ index 30a319f604..e91b31d80b 100644
  
    /* Last time we promoted short-term maximum to long-term one */
    int64_t longterm_promotion_us;
-@@ -247,10 +262,6 @@ static void
+@@ -137,6 +152,8 @@ struct _ClutterFrameClock
+ 
+   int64_t last_dispatch_interval_us;
+ 
++  int64_t deadline_evasion_us;
++
+   char *output_name;
+ };
+ 
+@@ -247,10 +264,6 @@ static void
  maybe_update_longterm_max_duration_us (ClutterFrameClock *frame_clock,
                                         ClutterFrameInfo  *frame_info)
  {
@@ -107,7 +130,7 @@ index 30a319f604..e91b31d80b 100644
    if ((frame_info->presentation_time - frame_clock->longterm_promotion_us) <
        G_USEC_PER_SEC)
      return;
-@@ -277,6 +288,12 @@ void
+@@ -277,6 +290,12 @@ void
  clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
                                        ClutterFrameInfo  *frame_info)
  {
@@ -120,7 +143,7 @@ index 30a319f604..e91b31d80b 100644
    COGL_TRACE_BEGIN_SCOPED (ClutterFrameClockNotifyPresented,
                             "Clutter::FrameClock::presented()");
    COGL_TRACE_DESCRIBE (ClutterFrameClockNotifyPresented,
-@@ -366,22 +383,54 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
+@@ -366,22 +385,54 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
  
    frame_clock->got_measurements_last_frame = FALSE;
  
@@ -132,10 +155,7 @@ index 30a319f604..e91b31d80b 100644
      {
        int64_t dispatch_to_swap_us, swap_to_rendering_done_us, swap_to_flip_us;
 +      int64_t dispatch_time_us = 0, flip_time_us = 0;
- 
--      dispatch_to_swap_us =
--        frame_info->cpu_time_before_buffer_swap_us -
--        frame_clock->last_dispatch_time_us;
++
 +      switch (frame_clock->state)
 +        {
 +        case CLUTTER_FRAME_CLOCK_STATE_INIT:
@@ -155,7 +175,10 @@ index 30a319f604..e91b31d80b 100644
 +          flip_time_us = frame_clock->prev_last_flip_time_us;
 +          break;
 +        }
-+
+ 
+-      dispatch_to_swap_us =
+-        frame_info->cpu_time_before_buffer_swap_us -
+-        frame_clock->last_dispatch_time_us;
 +      if (frame_info->cpu_time_before_buffer_swap_us == 0)
 +        {
 +          /* User thread cursor-only updates with no "swap": we do know
@@ -184,16 +207,20 @@ index 30a319f604..e91b31d80b 100644
                      frame_clock->last_dispatch_lateness_us,
                      dispatch_to_swap_us,
                      swap_to_rendering_done_us,
-@@ -391,7 +440,7 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
+@@ -389,9 +440,10 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
+ 
+       frame_clock->shortterm_max_update_duration_us =
          CLAMP (frame_clock->last_dispatch_lateness_us + dispatch_to_swap_us +
-                MAX (swap_to_rendering_done_us, swap_to_flip_us),
+-               MAX (swap_to_rendering_done_us, swap_to_flip_us),
++               MAX (swap_to_rendering_done_us,
++                    swap_to_flip_us + frame_clock->deadline_evasion_us),
                 frame_clock->shortterm_max_update_duration_us,
 -               frame_clock->refresh_interval_us);
 +               2 * frame_clock->refresh_interval_us);
  
        maybe_update_longterm_max_duration_us (frame_clock, frame_info);
  
-@@ -400,7 +449,8 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
+@@ -400,7 +452,8 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
      }
    else
      {
@@ -203,7 +230,7 @@ index 30a319f604..e91b31d80b 100644
                      frame_clock->last_dispatch_lateness_us);
      }
  
-@@ -418,11 +468,22 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
+@@ -418,11 +471,22 @@ clutter_frame_clock_notify_presented (ClutterFrameClock *frame_clock,
      case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED_NOW:
        g_warn_if_reached ();
        break;
@@ -228,7 +255,7 @@ index 30a319f604..e91b31d80b 100644
      }
  }
  
-@@ -440,26 +501,37 @@ clutter_frame_clock_notify_ready (ClutterFrameClock *frame_clock)
+@@ -440,26 +504,37 @@ clutter_frame_clock_notify_ready (ClutterFrameClock *frame_clock)
      case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED_NOW:
        g_warn_if_reached ();
        break;
@@ -272,7 +299,7 @@ index 30a319f604..e91b31d80b 100644
  
    /* Max render time shows how early the frame clock needs to be dispatched
     * to make it to the predicted next presentation time. It is an estimate of
-@@ -473,15 +545,15 @@ clutter_frame_clock_compute_max_render_time_us (ClutterFrameClock *frame_clock)
+@@ -473,15 +548,15 @@ clutter_frame_clock_compute_max_render_time_us (ClutterFrameClock *frame_clock)
     * - The duration of vertical blank.
     * - A constant to account for variations in the above estimates.
     */
@@ -291,7 +318,7 @@ index 30a319f604..e91b31d80b 100644
  }
  
  static void
-@@ -496,7 +568,9 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+@@ -496,7 +571,9 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
    int64_t min_render_time_allowed_us;
    int64_t max_render_time_allowed_us;
    int64_t next_presentation_time_us;
@@ -301,7 +328,7 @@ index 30a319f604..e91b31d80b 100644
  
    now_us = g_get_monotonic_time ();
  
-@@ -516,10 +590,13 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+@@ -516,10 +593,13 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
      }
  
    min_render_time_allowed_us = refresh_interval_us / 2;
@@ -318,7 +345,7 @@ index 30a319f604..e91b31d80b 100644
      min_render_time_allowed_us = max_render_time_allowed_us;
  
    /*
-@@ -540,7 +617,29 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+@@ -540,7 +620,29 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
     *
     */
    last_presentation_time_us = frame_clock->last_presentation_time_us;
@@ -349,7 +376,7 @@ index 30a319f604..e91b31d80b 100644
  
    /*
     * However, the last presentation could have happened more than a frame ago.
-@@ -607,7 +706,7 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+@@ -607,7 +709,7 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
      }
  
    if (frame_clock->last_presentation_flags & CLUTTER_FRAME_INFO_FLAG_VSYNC &&
@@ -358,7 +385,7 @@ index 30a319f604..e91b31d80b 100644
      {
        /* There was an idle period since the last presentation, so there seems
         * be no constantly updating actor. In this case it's best to start
-@@ -619,6 +718,24 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
+@@ -619,6 +721,24 @@ calculate_next_update_time_us (ClutterFrameClock *frame_clock,
      }
    else
      {
@@ -383,7 +410,7 @@ index 30a319f604..e91b31d80b 100644
        while (next_presentation_time_us - min_render_time_allowed_us < now_us)
          next_presentation_time_us += refresh_interval_us;
  
-@@ -650,7 +767,9 @@ calculate_next_variable_update_time_us (ClutterFrameClock *frame_clock,
+@@ -650,7 +770,9 @@ calculate_next_variable_update_time_us (ClutterFrameClock *frame_clock,
  
    refresh_interval_us = frame_clock->refresh_interval_us;
  
@@ -394,7 +421,7 @@ index 30a319f604..e91b31d80b 100644
      {
        *out_next_update_time_us =
          frame_clock->last_dispatch_time_us ?
-@@ -663,9 +782,6 @@ calculate_next_variable_update_time_us (ClutterFrameClock *frame_clock,
+@@ -663,9 +785,6 @@ calculate_next_variable_update_time_us (ClutterFrameClock *frame_clock,
        return;
      }
  
@@ -404,7 +431,7 @@ index 30a319f604..e91b31d80b 100644
    last_presentation_time_us = frame_clock->last_presentation_time_us;
    next_presentation_time_us = last_presentation_time_us + refresh_interval_us;
  
-@@ -739,8 +855,17 @@ clutter_frame_clock_inhibit (ClutterFrameClock *frame_clock)
+@@ -739,8 +858,17 @@ clutter_frame_clock_inhibit (ClutterFrameClock *frame_clock)
            frame_clock->pending_reschedule_now = TRUE;
            frame_clock->state = CLUTTER_FRAME_CLOCK_STATE_IDLE;
            break;
@@ -424,7 +451,7 @@ index 30a319f604..e91b31d80b 100644
            break;
          }
  
-@@ -759,6 +884,25 @@ clutter_frame_clock_uninhibit (ClutterFrameClock *frame_clock)
+@@ -759,6 +887,25 @@ clutter_frame_clock_uninhibit (ClutterFrameClock *frame_clock)
      maybe_reschedule_update (frame_clock);
  }
  
@@ -450,7 +477,7 @@ index 30a319f604..e91b31d80b 100644
  void
  clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
  {
-@@ -776,11 +920,24 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
+@@ -776,11 +923,24 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
      case CLUTTER_FRAME_CLOCK_STATE_INIT:
      case CLUTTER_FRAME_CLOCK_STATE_IDLE:
      case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED:
@@ -477,7 +504,7 @@ index 30a319f604..e91b31d80b 100644
        frame_clock->pending_reschedule = TRUE;
        frame_clock->pending_reschedule_now = TRUE;
        return;
-@@ -809,13 +966,17 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
+@@ -809,13 +969,17 @@ clutter_frame_clock_schedule_update_now (ClutterFrameClock *frame_clock)
  
    frame_clock->next_update_time_us = next_update_time_us;
    g_source_set_ready_time (frame_clock->source, next_update_time_us);
@@ -496,7 +523,7 @@ index 30a319f604..e91b31d80b 100644
  
    if (frame_clock->inhibit_count > 0)
      {
-@@ -831,12 +992,33 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
+@@ -831,12 +995,33 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
        frame_clock->state = CLUTTER_FRAME_CLOCK_STATE_SCHEDULED;
        return;
      case CLUTTER_FRAME_CLOCK_STATE_IDLE:
@@ -532,7 +559,7 @@ index 30a319f604..e91b31d80b 100644
        frame_clock->pending_reschedule = TRUE;
        return;
      }
-@@ -861,11 +1043,11 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
+@@ -861,11 +1046,11 @@ clutter_frame_clock_schedule_update (ClutterFrameClock *frame_clock)
        break;
      }
  
@@ -545,7 +572,7 @@ index 30a319f604..e91b31d80b 100644
  }
  
  void
-@@ -881,6 +1063,8 @@ clutter_frame_clock_set_mode (ClutterFrameClock     *frame_clock,
+@@ -881,6 +1066,8 @@ clutter_frame_clock_set_mode (ClutterFrameClock     *frame_clock,
      {
      case CLUTTER_FRAME_CLOCK_STATE_INIT:
      case CLUTTER_FRAME_CLOCK_STATE_IDLE:
@@ -554,7 +581,7 @@ index 30a319f604..e91b31d80b 100644
        break;
      case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED:
        frame_clock->pending_reschedule = TRUE;
-@@ -891,8 +1075,14 @@ clutter_frame_clock_set_mode (ClutterFrameClock     *frame_clock,
+@@ -891,8 +1078,14 @@ clutter_frame_clock_set_mode (ClutterFrameClock     *frame_clock,
        frame_clock->pending_reschedule_now = TRUE;
        frame_clock->state = CLUTTER_FRAME_CLOCK_STATE_IDLE;
        break;
@@ -571,7 +598,7 @@ index 30a319f604..e91b31d80b 100644
        break;
      }
  
-@@ -928,7 +1118,7 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -928,7 +1121,7 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
                               frame_clock->refresh_interval_us;
  
    lateness_us = time_us - ideal_dispatch_time_us;
@@ -580,7 +607,7 @@ index 30a319f604..e91b31d80b 100644
      frame_clock->last_dispatch_lateness_us = 0;
    else
      frame_clock->last_dispatch_lateness_us = lateness_us;
-@@ -949,10 +1139,27 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -949,10 +1142,27 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
      }
  #endif
  
@@ -609,7 +636,7 @@ index 30a319f604..e91b31d80b 100644
  
    frame_count = frame_clock->frame_count++;
  
-@@ -983,26 +1190,36 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
+@@ -983,26 +1193,36 @@ clutter_frame_clock_dispatch (ClutterFrameClock *frame_clock,
    result = iface->frame (frame_clock, frame, frame_clock->listener.user_data);
    COGL_TRACE_END (ClutterFrameClockFrame);
  
@@ -619,12 +646,12 @@ index 30a319f604..e91b31d80b 100644
 -    case CLUTTER_FRAME_CLOCK_STATE_INIT:
 -    case CLUTTER_FRAME_CLOCK_STATE_PENDING_PRESENTED:
 -      g_warn_if_reached ();
-+    case CLUTTER_FRAME_RESULT_PENDING_PRESENTED:
-       break;
+-      break;
 -    case CLUTTER_FRAME_CLOCK_STATE_IDLE:
 -    case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED:
 -    case CLUTTER_FRAME_CLOCK_STATE_SCHEDULED_NOW:
--      break;
++    case CLUTTER_FRAME_RESULT_PENDING_PRESENTED:
+       break;
 -    case CLUTTER_FRAME_CLOCK_STATE_DISPATCHING:
 -      switch (result)
 +    case CLUTTER_FRAME_RESULT_IDLE:
@@ -659,7 +686,7 @@ index 30a319f604..e91b31d80b 100644
          }
        break;
      }
-@@ -1035,21 +1252,31 @@ frame_clock_source_dispatch (GSource     *source,
+@@ -1035,21 +1255,31 @@ frame_clock_source_dispatch (GSource     *source,
  }
  
  void
@@ -696,7 +723,7 @@ index 30a319f604..e91b31d80b 100644
  
    if (frame_clock->got_measurements_last_frame)
      g_string_append_printf (string, " =");
-@@ -1216,8 +1443,6 @@ clutter_frame_clock_dispose (GObject *object)
+@@ -1216,8 +1446,6 @@ clutter_frame_clock_dispose (GObject *object)
  {
    ClutterFrameClock *frame_clock = CLUTTER_FRAME_CLOCK (object);
  
@@ -705,7 +732,7 @@ index 30a319f604..e91b31d80b 100644
    if (frame_clock->source)
      {
        g_signal_emit (frame_clock, signals[DESTROY], 0);
-@@ -1241,6 +1466,15 @@ static void
+@@ -1241,6 +1469,15 @@ static void
  clutter_frame_clock_class_init (ClutterFrameClockClass *klass)
  {
    GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -721,8 +748,19 @@ index 30a319f604..e91b31d80b 100644
  
    object_class->dispose = clutter_frame_clock_dispose;
  
+@@ -1253,3 +1490,10 @@ clutter_frame_clock_class_init (ClutterFrameClockClass *klass)
+                   G_TYPE_NONE,
+                   0);
+ }
++
++void
++clutter_frame_clock_set_deadline_evasion (ClutterFrameClock *frame_clock,
++                                          int64_t            deadline_evasion_us)
++{
++  frame_clock->deadline_evasion_us = deadline_evasion_us;
++}
 diff --git a/clutter/clutter/clutter-frame-clock.h b/clutter/clutter/clutter-frame-clock.h
-index a7be5ef316..bfc89bde09 100644
+index a7be5ef316..23e3357d3a 100644
 --- a/clutter/clutter/clutter-frame-clock.h
 +++ b/clutter/clutter/clutter-frame-clock.h
 @@ -33,6 +33,12 @@ typedef enum _ClutterFrameResult
@@ -738,7 +776,7 @@ index a7be5ef316..bfc89bde09 100644
  #define CLUTTER_TYPE_FRAME_CLOCK (clutter_frame_clock_get_type ())
  CLUTTER_EXPORT
  G_DECLARE_FINAL_TYPE (ClutterFrameClock, clutter_frame_clock,
-@@ -102,7 +108,8 @@ void clutter_frame_clock_remove_timeline (ClutterFrameClock *frame_clock,
+@@ -102,7 +108,12 @@ void clutter_frame_clock_remove_timeline (ClutterFrameClock *frame_clock,
  CLUTTER_EXPORT
  float clutter_frame_clock_get_refresh_rate (ClutterFrameClock *frame_clock);
  
@@ -749,6 +787,10 @@ index a7be5ef316..bfc89bde09 100644
 +                                      ClutterFrameHint   hints);
  
  GString * clutter_frame_clock_get_max_render_time_debug_info (ClutterFrameClock *frame_clock);
++
++CLUTTER_EXPORT
++void clutter_frame_clock_set_deadline_evasion (ClutterFrameClock *frame_clock,
++                                               int64_t            deadline_evasion_us);
 diff --git a/clutter/clutter/clutter-frame-private.h b/clutter/clutter/clutter-frame-private.h
 index ef66b874ed..ce140560a8 100644
 --- a/clutter/clutter/clutter-frame-private.h
@@ -799,10 +841,21 @@ index 34f0770bd7..c7b3d02acb 100644
 +
  G_DEFINE_AUTOPTR_CLEANUP_FUNC (ClutterFrame, clutter_frame_unref)
 diff --git a/clutter/clutter/clutter-stage-view.c b/clutter/clutter/clutter-stage-view.c
-index f5188e2acf..d53e377851 100644
+index f5188e2acf..a89a520efb 100644
 --- a/clutter/clutter/clutter-stage-view.c
 +++ b/clutter/clutter/clutter-stage-view.c
-@@ -898,14 +898,21 @@ handle_frame_clock_frame (ClutterFrameClock *frame_clock,
+@@ -740,6 +740,10 @@ clutter_stage_view_schedule_update (ClutterStageView *view)
+ {
+   ClutterStageViewPrivate *priv =
+     clutter_stage_view_get_instance_private (view);
++  ClutterStageViewClass *view_class = CLUTTER_STAGE_VIEW_GET_CLASS (view);
++
++  if (view_class->schedule_update)
++    view_class->schedule_update (view);
+ 
+   clutter_frame_clock_schedule_update (priv->frame_clock);
+ }
+@@ -898,14 +902,21 @@ handle_frame_clock_frame (ClutterFrameClock *frame_clock,
  
        _clutter_stage_window_redraw_view (stage_window, view, frame);
  
@@ -826,6 +879,19 @@ index f5188e2acf..d53e377851 100644
  
    _clutter_stage_window_finish_frame (stage_window, view, frame);
  
+diff --git a/clutter/clutter/clutter-stage-view.h b/clutter/clutter/clutter-stage-view.h
+index c0888f7f94..bdaa065c00 100644
+--- a/clutter/clutter/clutter-stage-view.h
++++ b/clutter/clutter/clutter-stage-view.h
+@@ -54,6 +54,8 @@ struct _ClutterStageViewClass
+   ClutterFrame * (* new_frame) (ClutterStageView *view);
+ 
+   ClutterPaintFlag (* get_default_paint_flags) (ClutterStageView *view);
++
++  void (* schedule_update) (ClutterStageView *view);
+ };
+ 
+ CLUTTER_EXPORT
 diff --git a/cogl/cogl/cogl-onscreen-private.h b/cogl/cogl/cogl-onscreen-private.h
 index 959a60533b..cfd45a6250 100644
 --- a/cogl/cogl/cogl-onscreen-private.h
@@ -840,10 +906,10 @@ index 959a60533b..cfd45a6250 100644
 +COGL_EXPORT unsigned int
 +cogl_onscreen_get_pending_frame_count (CoglOnscreen *onscreen);
 diff --git a/cogl/cogl/cogl-onscreen.c b/cogl/cogl/cogl-onscreen.c
-index afb648bcd8..8c010b8cd5 100644
+index e2b3a0b462..53ffa649bc 100644
 --- a/cogl/cogl/cogl-onscreen.c
 +++ b/cogl/cogl/cogl-onscreen.c
-@@ -515,6 +515,14 @@ cogl_onscreen_pop_head_frame_info (CoglOnscreen *onscreen)
+@@ -514,6 +514,14 @@ cogl_onscreen_pop_head_frame_info (CoglOnscreen *onscreen)
    return g_queue_pop_head (&priv->pending_frame_infos);
  }
  
@@ -871,6 +937,94 @@ index 7aa24439d7..727e1a5f30 100644
        if (meta_stage_impl_scanout_view (stage_impl,
                                          stage_view,
                                          scanout,
+diff --git a/src/backends/native/meta-crtc-kms.c b/src/backends/native/meta-crtc-kms.c
+index 3498f922a3..8cb0e935a7 100644
+--- a/src/backends/native/meta-crtc-kms.c
++++ b/src/backends/native/meta-crtc-kms.c
+@@ -348,6 +348,15 @@ meta_crtc_kms_is_hw_cursor_supported (MetaCrtcNative *crtc_native)
+   return meta_kms_device_has_cursor_plane_for (kms_device, kms_crtc);
+ }
+ 
++static int64_t
++meta_crtc_kms_get_deadline_evasion (MetaCrtcNative *crtc_native)
++{
++  MetaCrtcKms *crtc_kms = META_CRTC_KMS (crtc_native);
++  MetaKmsCrtc *kms_crtc = meta_crtc_kms_get_kms_crtc (crtc_kms);
++
++  return meta_kms_crtc_get_deadline_evasion (kms_crtc);
++}
++
+ MetaKmsPlane *
+ meta_crtc_kms_get_assigned_cursor_plane (MetaCrtcKms *crtc_kms)
+ {
+@@ -479,6 +488,7 @@ meta_crtc_kms_class_init (MetaCrtcKmsClass *klass)
+ 
+   crtc_native_class->is_transform_handled = meta_crtc_kms_is_transform_handled;
+   crtc_native_class->is_hw_cursor_supported = meta_crtc_kms_is_hw_cursor_supported;
++  crtc_native_class->get_deadline_evasion = meta_crtc_kms_get_deadline_evasion;
+ 
+   signals[GAMMA_LUT_CHANGED] =
+     g_signal_new ("gamma-lut-changed",
+diff --git a/src/backends/native/meta-crtc-native.c b/src/backends/native/meta-crtc-native.c
+index fc280f696e..80406a5033 100644
+--- a/src/backends/native/meta-crtc-native.c
++++ b/src/backends/native/meta-crtc-native.c
+@@ -39,6 +39,14 @@ meta_crtc_native_is_hw_cursor_supported (MetaCrtcNative *crtc_native)
+   return klass->is_hw_cursor_supported (crtc_native);
+ }
+ 
++int64_t
++meta_crtc_native_get_deadline_evasion (MetaCrtcNative *crtc_native)
++{
++  MetaCrtcNativeClass *klass = META_CRTC_NATIVE_GET_CLASS (crtc_native);
++
++  return klass->get_deadline_evasion (crtc_native);
++}
++
+ static void
+ meta_crtc_native_init (MetaCrtcNative *crtc_native)
+ {
+diff --git a/src/backends/native/meta-crtc-native.h b/src/backends/native/meta-crtc-native.h
+index 3fb4bc7586..1f9a2ed46c 100644
+--- a/src/backends/native/meta-crtc-native.h
++++ b/src/backends/native/meta-crtc-native.h
+@@ -31,9 +31,12 @@ struct _MetaCrtcNativeClass
+   gboolean (* is_transform_handled) (MetaCrtcNative       *crtc_native,
+                                      MetaMonitorTransform  monitor_transform);
+   gboolean (* is_hw_cursor_supported) (MetaCrtcNative *crtc_native);
++  int64_t (* get_deadline_evasion) (MetaCrtcNative *crtc_native);
+ };
+ 
+ gboolean meta_crtc_native_is_transform_handled (MetaCrtcNative       *crtc_native,
+                                                 MetaMonitorTransform  transform);
+ 
+ gboolean meta_crtc_native_is_hw_cursor_supported (MetaCrtcNative *crtc_native);
++
++int64_t meta_crtc_native_get_deadline_evasion (MetaCrtcNative *crtc_native);
+diff --git a/src/backends/native/meta-crtc-virtual.c b/src/backends/native/meta-crtc-virtual.c
+index 76165eb1bd..00b599c612 100644
+--- a/src/backends/native/meta-crtc-virtual.c
++++ b/src/backends/native/meta-crtc-virtual.c
+@@ -70,6 +70,12 @@ meta_crtc_virtual_is_hw_cursor_supported (MetaCrtcNative *crtc_native)
+   return TRUE;
+ }
+ 
++static int64_t
++meta_crtc_virtual_get_deadline_evasion (MetaCrtcNative *crtc_native)
++{
++  return 0;
++}
++
+ static void
+ meta_crtc_virtual_init (MetaCrtcVirtual *crtc_virtual)
+ {
+@@ -89,4 +95,6 @@ meta_crtc_virtual_class_init (MetaCrtcVirtualClass *klass)
+     meta_crtc_virtual_is_transform_handled;
+   crtc_native_class->is_hw_cursor_supported =
+     meta_crtc_virtual_is_hw_cursor_supported;
++  crtc_native_class->get_deadline_evasion =
++    meta_crtc_virtual_get_deadline_evasion;
+ }
 diff --git a/src/backends/native/meta-frame-native.c b/src/backends/native/meta-frame-native.c
 index 146144db0e..8dc9dba9b9 100644
 --- a/src/backends/native/meta-frame-native.c
@@ -992,23 +1146,240 @@ index f86d3b0b02..84bd43b8c6 100644
 +int
 +meta_frame_native_get_damage (MetaFrameNative  *frame_native,
 +                              int             **rectangles);
+diff --git a/src/backends/native/meta-kms-crtc.c b/src/backends/native/meta-kms-crtc.c
+index a0872089a0..cad9f88ce5 100644
+--- a/src/backends/native/meta-kms-crtc.c
++++ b/src/backends/native/meta-kms-crtc.c
+@@ -28,8 +28,7 @@
+ #include "backends/native/meta-kms-update-private.h"
+ #include "backends/native/meta-kms-utils.h"
+ 
+-#define DEADLINE_EVASION_US 800
+-#define DEADLINE_EVASION_WITH_KMS_TOPIC_US 1000
++#define DEADLINE_EVASION_CONSTANT_US 200
+ 
+ #define MINIMUM_REFRESH_RATE 30.f
+ 
+@@ -50,6 +49,10 @@ struct _MetaKmsCrtc
+   MetaKmsCrtcState current_state;
+ 
+   MetaKmsCrtcPropTable prop_table;
++
++  int64_t shortterm_max_dispatch_duration_us;
++  int64_t deadline_evasion_us;
++  int64_t deadline_evasion_update_time_us;
+ };
+ 
+ G_DEFINE_TYPE (MetaKmsCrtc, meta_kms_crtc, G_TYPE_OBJECT)
+@@ -543,6 +546,33 @@ get_crtc_type_bitmask (MetaKmsCrtc *crtc)
+     }
+ }
+ 
++static void
++maybe_update_deadline_evasion (MetaKmsCrtc *crtc,
++                               int64_t      next_presentation_time_us)
++{
++  /* Do not update long-term max if there has been no measurement */
++  if (!crtc->shortterm_max_dispatch_duration_us)
++    return;
++
++  if (next_presentation_time_us - crtc->deadline_evasion_update_time_us <
++      G_USEC_PER_SEC)
++    return;
++
++  if (crtc->deadline_evasion_us > crtc->shortterm_max_dispatch_duration_us)
++    {
++      /* Exponential drop-off toward the clamped short-term max */
++      crtc->deadline_evasion_us -=
++        (crtc->deadline_evasion_us - crtc->shortterm_max_dispatch_duration_us) / 2;
++    }
++  else
++    {
++      crtc->deadline_evasion_us = crtc->shortterm_max_dispatch_duration_us;
++    }
++
++  crtc->shortterm_max_dispatch_duration_us = 0;
++  crtc->deadline_evasion_update_time_us = next_presentation_time_us;
++}
++
+ gboolean
+ meta_kms_crtc_determine_deadline (MetaKmsCrtc  *crtc,
+                                   int64_t      *out_next_deadline_us,
+@@ -610,10 +640,8 @@ meta_kms_crtc_determine_deadline (MetaKmsCrtc  *crtc,
+        *
+        */
+ 
+-      if (meta_is_topic_enabled (META_DEBUG_KMS))
+-        deadline_evasion_us = DEADLINE_EVASION_WITH_KMS_TOPIC_US;
+-      else
+-        deadline_evasion_us = DEADLINE_EVASION_US;
++      deadline_evasion_us = meta_kms_crtc_get_deadline_evasion (crtc);
++      maybe_update_deadline_evasion (crtc, next_presentation_us);
+ 
+       vblank_duration_us = meta_calculate_drm_mode_vblank_duration_us (drm_mode);
+       next_deadline_us = next_presentation_us - (vblank_duration_us +
+@@ -625,3 +653,26 @@ meta_kms_crtc_determine_deadline (MetaKmsCrtc  *crtc,
+ 
+   return TRUE;
+ }
++
++void
++meta_kms_crtc_update_shortterm_max_dispatch_duration (MetaKmsCrtc *crtc,
++                                                      int64_t      duration_us)
++{
++  int64_t refresh_interval_us;
++
++  if (duration_us <= crtc->shortterm_max_dispatch_duration_us)
++    return;
++
++  refresh_interval_us =
++    (int64_t) (0.5 + G_USEC_PER_SEC /
++               meta_calculate_drm_mode_refresh_rate (&crtc->current_state.drm_mode));
++
++  crtc->shortterm_max_dispatch_duration_us = MIN (duration_us, refresh_interval_us);
++}
++
++int64_t
++meta_kms_crtc_get_deadline_evasion (MetaKmsCrtc *crtc)
++{
++  return MAX (crtc->shortterm_max_dispatch_duration_us,
++              crtc->deadline_evasion_us) + DEADLINE_EVASION_CONSTANT_US;
++}
+diff --git a/src/backends/native/meta-kms-crtc.h b/src/backends/native/meta-kms-crtc.h
+index 580ee9a89c..b293f8e7cc 100644
+--- a/src/backends/native/meta-kms-crtc.h
++++ b/src/backends/native/meta-kms-crtc.h
+@@ -65,3 +65,8 @@ int meta_kms_crtc_get_idx (MetaKmsCrtc *crtc);
+ 
+ META_EXPORT_TEST
+ gboolean meta_kms_crtc_is_active (MetaKmsCrtc *crtc);
++
++void meta_kms_crtc_update_shortterm_max_dispatch_duration (MetaKmsCrtc *crtc,
++                                                           int64_t      duration_us);
++
++int64_t meta_kms_crtc_get_deadline_evasion (MetaKmsCrtc *crtc);
 diff --git a/src/backends/native/meta-kms-impl-device.c b/src/backends/native/meta-kms-impl-device.c
-index 6758982a6a..315ed27174 100644
+index 6758982a6a..6ce62cd697 100644
 --- a/src/backends/native/meta-kms-impl-device.c
 +++ b/src/backends/native/meta-kms-impl-device.c
-@@ -1586,9 +1586,11 @@ meta_kms_impl_device_handle_update (MetaKmsImplDevice *impl_device,
-       meta_kms_update_merge_from (crtc_frame->pending_update, update);
-       meta_kms_update_free (update);
-       update = g_steal_pointer (&crtc_frame->pending_update);
--      disarm_crtc_frame_deadline_timer (crtc_frame);
-     }
+@@ -39,6 +39,7 @@
+ #include "backends/native/meta-kms-plane-private.h"
+ #include "backends/native/meta-kms-plane.h"
+ #include "backends/native/meta-kms-private.h"
++#include "backends/native/meta-kms-utils.h"
+ #include "backends/native/meta-thread-private.h"
  
-+  if (crtc_frame->deadline.armed)
-+    disarm_crtc_frame_deadline_timer (crtc_frame);
+ #include "meta-default-modes.h"
+@@ -71,6 +72,7 @@ typedef struct _CrtcDeadline
+     GSource *source;
+     gboolean armed;
+     gboolean is_deadline_page_flip;
++    int64_t expected_deadline_time_us;
+     int64_t expected_presentation_time_us;
+     gboolean has_expected_presentation_time;
+   } deadline;
+@@ -1165,6 +1167,7 @@ arm_crtc_frame_deadline_timer (CrtcFrame *crtc_frame,
+   timerfd_settime (crtc_frame->deadline.timer_fd,
+                    TFD_TIMER_ABSTIME, &its, NULL);
+ 
++  crtc_frame->deadline.expected_deadline_time_us = next_deadline_us;
+   crtc_frame->deadline.expected_presentation_time_us = next_presentation_us;
+   crtc_frame->deadline.has_expected_presentation_time = next_presentation_us != 0;
+   crtc_frame->deadline.armed = TRUE;
+@@ -1197,7 +1200,7 @@ crtc_page_flip_feedback_flipped (MetaKmsCrtc  *crtc,
+   CrtcFrame *crtc_frame = user_data;
+ 
+   if (crtc_frame->deadline.is_deadline_page_flip &&
+-      meta_is_topic_enabled (META_DEBUG_KMS))
++      meta_is_topic_enabled (META_DEBUG_KMS_DEADLINE))
+     {
+       struct timeval page_flip_timeval;
+       int64_t presentation_time_us;
+@@ -1210,7 +1213,7 @@ crtc_page_flip_feedback_flipped (MetaKmsCrtc  *crtc,
+ 
+       if (crtc_frame->deadline.has_expected_presentation_time)
+         {
+-          meta_topic (META_DEBUG_KMS,
++          meta_topic (META_DEBUG_KMS_DEADLINE,
+                       "Deadline page flip presentation time: %" G_GINT64_FORMAT " us, "
+                       "expected %" G_GINT64_FORMAT " us "
+                       "(diff: %" G_GINT64_FORMAT ")",
+@@ -1221,7 +1224,7 @@ crtc_page_flip_feedback_flipped (MetaKmsCrtc  *crtc,
+         }
+       else
+         {
+-          meta_topic (META_DEBUG_KMS,
++          meta_topic (META_DEBUG_KMS_DEADLINE,
+                       "Deadline page flip presentation time: %" G_GINT64_FORMAT " us",
+                       presentation_time_us);
+         }
+@@ -1390,11 +1393,16 @@ crtc_frame_deadline_dispatch (MetaThreadImpl  *thread_impl,
+                               GError         **error)
+ {
+   CrtcFrame *crtc_frame = user_data;
+-  MetaKmsDevice *device = meta_kms_crtc_get_device (crtc_frame->crtc);
++  MetaKmsCrtc *crtc = crtc_frame->crtc;
++  MetaKmsDevice *device = meta_kms_crtc_get_device (crtc);
+   MetaKmsImplDevice *impl_device = meta_kms_device_get_impl_device (device);
+   g_autoptr (MetaKmsFeedback) feedback = NULL;
+   uint64_t timer_value;
+   ssize_t ret;
++  int64_t dispatch_time_us = 0, update_done_time_us, interval_us;
 +
++  if (meta_is_topic_enabled (META_DEBUG_KMS_DEADLINE))
++    dispatch_time_us = g_get_monotonic_time ();
+ 
+   ret = read (crtc_frame->deadline.timer_fd,
+               &timer_value,
+@@ -1416,6 +1424,36 @@ crtc_frame_deadline_dispatch (MetaThreadImpl  *thread_impl,
+                          crtc_frame->crtc,
+                          g_steal_pointer (&crtc_frame->pending_update),
+                          META_KMS_UPDATE_FLAG_NONE);
++
++  update_done_time_us = g_get_monotonic_time ();
++  /* Calculate how long after the planned start of deadline dispatch it finished */
++  interval_us = update_done_time_us - crtc_frame->deadline.expected_deadline_time_us;
++
++  if (meta_is_topic_enabled (META_DEBUG_KMS_DEADLINE))
++    {
++      int64_t deadline_evasion_us, lateness_us, duration_us, vblank_delta_us;
++
++      deadline_evasion_us = meta_kms_crtc_get_deadline_evasion (crtc);
++      lateness_us = dispatch_time_us -
++                    crtc_frame->deadline.expected_deadline_time_us;
++      duration_us = update_done_time_us - dispatch_time_us;
++      vblank_delta_us = deadline_evasion_us - lateness_us - duration_us;
++
++      meta_topic (META_DEBUG_KMS_DEADLINE,
++                  "Deadline evasion %3"G_GINT64_FORMAT "µs, "
++                  "dispatch started %3"G_GINT64_FORMAT "µs %s and "
++                  "completed %3"G_GINT64_FORMAT "µs after that, "
++                  "%3"G_GINT64_FORMAT "µs %s start of vblank.",
++                  deadline_evasion_us,
++                  ABS (lateness_us),
++                  lateness_us >= 0 ? "late" : "early",
++                  duration_us,
++                  ABS (vblank_delta_us),
++                  vblank_delta_us >= 0 ? "before" : "after");
++    }
++
++  meta_kms_crtc_update_shortterm_max_dispatch_duration (crtc, interval_us);
++
+   if (meta_kms_feedback_did_pass (feedback))
+     crtc_frame->deadline.is_deadline_page_flip = TRUE;
+   disarm_crtc_frame_deadline_timer (crtc_frame);
+@@ -1592,6 +1630,11 @@ meta_kms_impl_device_handle_update (MetaKmsImplDevice *impl_device,
    meta_kms_device_handle_flush (priv->device, latch_crtc);
  
    feedback = do_process (impl_device, latch_crtc, update, flags);
++
++  if (meta_kms_feedback_did_pass (feedback) &&
++      crtc_frame->deadline.armed)
++    disarm_crtc_frame_deadline_timer (crtc_frame);
++
+   meta_kms_feedback_unref (feedback);
+   return;
+ 
 diff --git a/src/backends/native/meta-kms.c b/src/backends/native/meta-kms.c
 index d41fcefb5a..4809ca0593 100644
 --- a/src/backends/native/meta-kms.c
@@ -1057,7 +1428,7 @@ index 7434014063..f6b19520be 100644
                          MetaKmsFlags   flags,
                          GError       **error);
 diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
-index 1a31f04a16..f1553d3b2c 100644
+index 9b739faf39..6120eeec7b 100644
 --- a/src/backends/native/meta-onscreen-native.c
 +++ b/src/backends/native/meta-onscreen-native.c
 @@ -76,7 +76,7 @@ typedef struct _MetaOnscreenNativeSecondaryGpuState
@@ -1069,21 +1440,7 @@ index 1a31f04a16..f1553d3b2c 100644
    } cpu;
  
    gboolean noted_primary_gpu_copy_ok;
-@@ -84,6 +84,13 @@ typedef struct _MetaOnscreenNativeSecondaryGpuState
-   MetaSharedFramebufferImportStatus import_status;
- } MetaOnscreenNativeSecondaryGpuState;
- 
-+typedef struct _KmsProperty
-+{
-+  gboolean invalidated;
-+  int updates_pending;
-+  gulong signal_handler_id;
-+} KmsProperty;
-+
- struct _MetaOnscreenNative
- {
-   CoglOnscreenEgl parent;
-@@ -95,12 +102,13 @@ struct _MetaOnscreenNative
+@@ -102,12 +102,13 @@ struct _MetaOnscreenNative
  
    MetaOnscreenNativeSecondaryGpuState *secondary_gpu_state;
  
@@ -1101,7 +1458,7 @@ index 1a31f04a16..f1553d3b2c 100644
    } gbm;
  
  #ifdef HAVE_EGL_DEVICE
-@@ -111,20 +119,23 @@ struct _MetaOnscreenNative
+@@ -118,6 +119,9 @@ struct _MetaOnscreenNative
    } egl;
  #endif
  
@@ -1111,30 +1468,7 @@ index 1a31f04a16..f1553d3b2c 100644
    gboolean frame_sync_requested;
    gboolean frame_sync_enabled;
  
-   MetaRendererView *view;
- 
--  gboolean is_gamma_lut_invalid;
--  gboolean is_privacy_screen_invalid;
--  gboolean is_color_space_invalid;
--  gboolean is_hdr_metadata_invalid;
--
--  gulong gamma_lut_changed_handler_id;
--  gulong privacy_screen_changed_handler_id;
--  gulong color_space_changed_handler_id;
--  gulong hdr_metadata_changed_handler_id;
-+  union {
-+    struct {
-+      KmsProperty gamma_lut;
-+      KmsProperty privacy_screen;
-+      KmsProperty color_space;
-+      KmsProperty hdr_metadata;
-+    } property;
-+    KmsProperty properties[4];
-+  };
- };
- 
- G_DEFINE_TYPE (MetaOnscreenNative, meta_onscreen_native,
-@@ -132,44 +143,37 @@ G_DEFINE_TYPE (MetaOnscreenNative, meta_onscreen_native,
+@@ -139,44 +143,37 @@ G_DEFINE_TYPE (MetaOnscreenNative, meta_onscreen_native,
  
  static GQuark blit_source_quark = 0;
  
@@ -1192,7 +1526,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static void
-@@ -207,7 +211,7 @@ meta_onscreen_native_notify_frame_complete (CoglOnscreen *onscreen)
+@@ -214,7 +211,7 @@ meta_onscreen_native_notify_frame_complete (CoglOnscreen *onscreen)
  
    info = cogl_onscreen_pop_head_frame_info (onscreen);
  
@@ -1201,24 +1535,7 @@ index 1a31f04a16..f1553d3b2c 100644
  
    _cogl_onscreen_notify_frame_sync (onscreen, info);
    _cogl_onscreen_notify_complete (onscreen, info);
-@@ -233,16 +237,20 @@ notify_view_crtc_presented (MetaRendererView *view,
- 
-   g_return_if_fail (frame_info != NULL);
- 
--  onscreen_native->is_gamma_lut_invalid = FALSE;
--  onscreen_native->is_privacy_screen_invalid = FALSE;
--  onscreen_native->is_color_space_invalid = FALSE;
--  onscreen_native->is_hdr_metadata_invalid = FALSE;
-+  for (int i = 0; i < G_N_ELEMENTS (onscreen_native->properties); i++)
-+    {
-+      KmsProperty *prop = &onscreen_native->properties[i];
-+
-+      if (prop->updates_pending > 0)
-+        prop->updates_pending--;
-+    }
- 
-   crtc = META_CRTC (meta_crtc_kms_from_kms_crtc (kms_crtc));
-   maybe_update_frame_info (crtc, frame_info, time_us, flags, sequence);
+@@ -256,6 +253,7 @@ notify_view_crtc_presented (MetaRendererView *view,
  
    meta_onscreen_native_notify_frame_complete (onscreen);
    meta_onscreen_native_swap_drm_fb (onscreen);
@@ -1226,7 +1543,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static void
-@@ -292,15 +300,13 @@ page_flip_feedback_ready (MetaKmsCrtc *kms_crtc,
+@@ -305,15 +303,13 @@ page_flip_feedback_ready (MetaKmsCrtc *kms_crtc,
    CoglFramebuffer *framebuffer =
      clutter_stage_view_get_onscreen (CLUTTER_STAGE_VIEW (view));
    CoglOnscreen *onscreen = COGL_ONSCREEN (framebuffer);
@@ -1243,31 +1560,8 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static void
-@@ -333,6 +339,7 @@ page_flip_feedback_discarded (MetaKmsCrtc  *kms_crtc,
-   CoglFramebuffer *framebuffer =
-     clutter_stage_view_get_onscreen (CLUTTER_STAGE_VIEW (view));
-   CoglOnscreen *onscreen = COGL_ONSCREEN (framebuffer);
-+  MetaOnscreenNative *onscreen_native = META_ONSCREEN_NATIVE (onscreen);
-   CoglFrameInfo *frame_info;
- 
-   /*
-@@ -346,11 +353,23 @@ page_flip_feedback_discarded (MetaKmsCrtc  *kms_crtc,
-                         G_IO_ERROR_PERMISSION_DENIED))
-     g_warning ("Page flip discarded: %s", error->message);
- 
-+  for (int i = 0; i < G_N_ELEMENTS (onscreen_native->properties); i++)
-+    {
-+      KmsProperty *prop = &onscreen_native->properties[i];
-+
-+      if (prop->updates_pending > 0)
-+        {
-+          prop->invalidated = TRUE;
-+          prop->updates_pending--;
-+        }
-+    }
-+
-   frame_info = cogl_onscreen_peek_head_frame_info (onscreen);
-   frame_info->flags |= COGL_FRAME_INFO_FLAG_SYMBOLIC;
+@@ -379,7 +375,8 @@ page_flip_feedback_discarded (MetaKmsCrtc  *kms_crtc,
+     }
  
    meta_onscreen_native_notify_frame_complete (onscreen);
 -  meta_onscreen_native_clear_next_fb (onscreen);
@@ -1276,7 +1570,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static const MetaKmsPageFlipListenerVtable page_flip_listener_vtable = {
-@@ -411,18 +430,36 @@ custom_egl_stream_page_flip (gpointer custom_page_flip_data,
+@@ -440,18 +437,36 @@ custom_egl_stream_page_flip (gpointer custom_page_flip_data,
  }
  #endif /* HAVE_EGL_DEVICE */
  
@@ -1316,7 +1610,7 @@ index 1a31f04a16..f1553d3b2c 100644
  static void
  apply_transform (MetaCrtcKms            *crtc_kms,
                   MetaKmsPlaneAssignment *kms_plane_assignment,
-@@ -499,12 +536,15 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
+@@ -528,12 +543,15 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
  {
    MetaOnscreenNative *onscreen_native = META_ONSCREEN_NATIVE (onscreen);
    MetaRendererNative *renderer_native = onscreen_native->renderer_native;
@@ -1332,7 +1626,7 @@ index 1a31f04a16..f1553d3b2c 100644
    MetaKmsPlaneAssignment *plane_assignment;
    graphene_rect_t src_rect;
    MtkRectangle dst_rect;
-@@ -512,6 +552,9 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
+@@ -541,6 +559,9 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
    COGL_TRACE_BEGIN_SCOPED (MetaOnscreenNativeFlipCrtcs,
                             "Meta::OnscreenNative::flip_crtc()");
  
@@ -1342,7 +1636,7 @@ index 1a31f04a16..f1553d3b2c 100644
    gpu_kms = META_GPU_KMS (meta_crtc_get_gpu (crtc));
  
    g_assert (meta_gpu_kms_is_crtc_active (gpu_kms, crtc));
-@@ -521,14 +564,14 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
+@@ -550,14 +571,14 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
    switch (renderer_gpu_data->mode)
      {
      case META_RENDERER_NATIVE_MODE_GBM:
@@ -1363,7 +1657,7 @@ index 1a31f04a16..f1553d3b2c 100644
          }
        else
          {
-@@ -571,6 +614,10 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
+@@ -600,6 +621,10 @@ meta_onscreen_native_flip_crtc (CoglOnscreen           *onscreen,
  #endif
      }
  
@@ -1374,7 +1668,7 @@ index 1a31f04a16..f1553d3b2c 100644
    meta_kms_update_add_page_flip_listener (kms_update,
                                            kms_crtc,
                                            &page_flip_listener_vtable,
-@@ -918,12 +965,17 @@ static MetaDrmBufferDumb *
+@@ -947,12 +972,17 @@ static MetaDrmBufferDumb *
  secondary_gpu_get_next_dumb_buffer (MetaOnscreenNativeSecondaryGpuState *secondary_gpu_state)
  {
    MetaDrmBufferDumb *current_dumb_fb;
@@ -1396,7 +1690,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static MetaDrmBuffer *
-@@ -1163,56 +1215,54 @@ update_secondary_gpu_state_pre_swap_buffers (CoglOnscreen *onscreen,
+@@ -1192,56 +1222,54 @@ update_secondary_gpu_state_pre_swap_buffers (CoglOnscreen *onscreen,
    return copy;
  }
  
@@ -1489,7 +1783,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static void
-@@ -1255,10 +1305,36 @@ swap_buffer_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1284,10 +1312,36 @@ swap_buffer_result_feedback (const MetaKmsFeedback *kms_feedback,
      g_warning ("Page flip failed: %s", error->message);
  
    frame_info = cogl_onscreen_peek_head_frame_info (onscreen);
@@ -1529,7 +1823,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static const MetaKmsResultListenerVtable swap_buffer_result_listener_vtable = {
-@@ -1279,32 +1355,38 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1308,32 +1362,38 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    CoglRendererEGL *cogl_renderer_egl = cogl_renderer->winsys;
    MetaRendererNativeGpuData *renderer_gpu_data = cogl_renderer_egl->platform;
    MetaRendererNative *renderer_native = renderer_gpu_data->renderer_native;
@@ -1576,7 +1870,7 @@ index 1a31f04a16..f1553d3b2c 100644
    secondary_gpu_fb =
      update_secondary_gpu_state_pre_swap_buffers (onscreen,
                                                   rectangles,
-@@ -1371,21 +1453,17 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1400,21 +1460,17 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  #endif
      }
  
@@ -1604,7 +1898,7 @@ index 1a31f04a16..f1553d3b2c 100644
          {
            g_warning ("Failed to ensure KMS FB ID on %s: %s",
                       meta_device_file_get_path (render_device_file),
-@@ -1404,6 +1482,11 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1433,6 +1489,11 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  #endif
      }
  
@@ -1616,7 +1910,7 @@ index 1a31f04a16..f1553d3b2c 100644
    /*
     * If we changed EGL context, cogl will have the wrong idea about what is
     * current, making it fail to set it when it needs to. Avoid that by making
-@@ -1413,12 +1496,73 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1442,12 +1503,73 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    if (egl_context_changed)
      _cogl_winsys_egl_ensure_current (cogl_display);
  
@@ -1692,7 +1986,7 @@ index 1a31f04a16..f1553d3b2c 100644
        kms_update = meta_frame_native_ensure_kms_update (frame_native,
                                                          kms_device);
        meta_kms_update_add_result_listener (kms_update,
-@@ -1440,13 +1584,11 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1469,13 +1591,11 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
      {
        meta_renderer_native_queue_power_save_page_flip (renderer_native,
                                                         onscreen);
@@ -1707,7 +2001,7 @@ index 1a31f04a16..f1553d3b2c 100644
  
    switch (renderer_gpu_data->mode)
      {
-@@ -1461,8 +1603,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1490,8 +1610,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
            kms_update = meta_frame_native_steal_kms_update (frame_native);
            meta_renderer_native_queue_mode_set_update (renderer_native,
                                                        kms_update);
@@ -1716,7 +2010,7 @@ index 1a31f04a16..f1553d3b2c 100644
            return;
          }
        else if (meta_renderer_native_has_pending_mode_set (renderer_native))
-@@ -1476,8 +1616,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1505,8 +1623,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  
            meta_frame_native_steal_kms_update (frame_native);
            meta_renderer_native_post_mode_set_updates (renderer_native);
@@ -1725,7 +2019,7 @@ index 1a31f04a16..f1553d3b2c 100644
            return;
          }
        break;
-@@ -1493,8 +1631,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1522,8 +1638,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
                                                        kms_update);
  
            meta_renderer_native_post_mode_set_updates (renderer_native);
@@ -1734,7 +2028,7 @@ index 1a31f04a16..f1553d3b2c 100644
            return;
          }
        break;
-@@ -1509,7 +1645,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1538,7 +1652,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    kms_update = meta_frame_native_steal_kms_update (frame_native);
    meta_kms_device_post_update (kms_device, kms_update,
                                 META_KMS_UPDATE_FLAG_NONE);
@@ -1742,7 +2036,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  gboolean
-@@ -1577,11 +1712,15 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1606,11 +1719,15 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
                          G_IO_ERROR_PERMISSION_DENIED))
      {
        ClutterStageView *view = CLUTTER_STAGE_VIEW (onscreen_native->view);
@@ -1760,7 +2054,7 @@ index 1a31f04a16..f1553d3b2c 100644
        clutter_stage_view_add_redraw_clip (view, NULL);
        clutter_stage_view_schedule_update_now (view);
      }
-@@ -1590,7 +1729,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1619,7 +1736,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
    frame_info->flags |= COGL_FRAME_INFO_FLAG_SYMBOLIC;
  
    meta_onscreen_native_notify_frame_complete (onscreen);
@@ -1769,7 +2063,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static const MetaKmsResultListenerVtable scanout_result_listener_vtable = {
-@@ -1642,16 +1781,28 @@ meta_onscreen_native_direct_scanout (CoglOnscreen   *onscreen,
+@@ -1671,16 +1788,28 @@ meta_onscreen_native_direct_scanout (CoglOnscreen   *onscreen,
        return FALSE;
      }
  
@@ -1803,7 +2097,7 @@ index 1a31f04a16..f1553d3b2c 100644
  
    frame_info->cpu_time_before_buffer_swap_us = g_get_monotonic_time ();
  
-@@ -1757,11 +1908,7 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
+@@ -1786,11 +1915,15 @@ meta_onscreen_native_before_redraw (CoglOnscreen *onscreen,
                                      ClutterFrame *frame)
  {
    MetaOnscreenNative *onscreen_native = META_ONSCREEN_NATIVE (onscreen);
@@ -1812,67 +2106,18 @@ index 1a31f04a16..f1553d3b2c 100644
  
 -  meta_kms_device_await_flush (meta_kms_crtc_get_device (kms_crtc),
 -                               kms_crtc);
++  if (meta_get_debug_paint_flags () & META_DEBUG_PAINT_SYNC_CURSOR_PRIMARY)
++    {
++      MetaCrtcKms *crtc_kms = META_CRTC_KMS (onscreen_native->crtc);
++      MetaKmsCrtc *kms_crtc = meta_crtc_kms_get_kms_crtc (crtc_kms);
++
++      meta_kms_device_await_flush (meta_kms_crtc_get_device (kms_crtc), kms_crtc);
++    }
++
    maybe_update_frame_sync (onscreen_native, frame);
  }
  
-@@ -1776,7 +1923,7 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
-   MetaKmsDevice *kms_device = meta_kms_crtc_get_device (kms_crtc);;
-   MetaFrameNative *frame_native = meta_frame_native_from_frame (frame);
- 
--  if (onscreen_native->is_gamma_lut_invalid)
-+  if (onscreen_native->property.gamma_lut.invalidated)
-     {
-       const MetaGammaLut *gamma;
-       MetaKmsUpdate *kms_update;
-@@ -1786,9 +1933,11 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
- 
-       gamma = meta_crtc_kms_peek_gamma_lut (crtc_kms);
-       meta_kms_update_set_crtc_gamma (kms_update, kms_crtc, gamma);
-+      onscreen_native->property.gamma_lut.invalidated = FALSE;
-+      onscreen_native->property.gamma_lut.updates_pending++;
-     }
- 
--  if (onscreen_native->is_privacy_screen_invalid)
-+  if (onscreen_native->property.privacy_screen.invalidated)
-     {
-       MetaKmsConnector *kms_connector =
-         meta_output_kms_get_kms_connector (output_kms);
-@@ -1800,9 +1949,11 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
- 
-       enabled = meta_output_is_privacy_screen_enabled (onscreen_native->output);
-       meta_kms_update_set_privacy_screen (kms_update, kms_connector, enabled);
-+      onscreen_native->property.privacy_screen.invalidated = FALSE;
-+      onscreen_native->property.privacy_screen.updates_pending++;
-     }
- 
--  if (onscreen_native->is_color_space_invalid)
-+  if (onscreen_native->property.color_space.invalidated)
-     {
-       MetaKmsConnector *kms_connector =
-         meta_output_kms_get_kms_connector (output_kms);
-@@ -1814,9 +1965,11 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
- 
-       color_space = meta_output_peek_color_space (onscreen_native->output);
-       meta_kms_update_set_color_space (kms_update, kms_connector, color_space);
-+      onscreen_native->property.color_space.invalidated = FALSE;
-+      onscreen_native->property.color_space.updates_pending++;
-     }
- 
--  if (onscreen_native->is_hdr_metadata_invalid)
-+  if (onscreen_native->property.hdr_metadata.invalidated)
-     {
-       MetaKmsConnector *kms_connector =
-         meta_output_kms_get_kms_connector (output_kms);
-@@ -1828,6 +1981,8 @@ meta_onscreen_native_prepare_frame (CoglOnscreen *onscreen,
- 
-       metadata = meta_output_peek_hdr_metadata (onscreen_native->output);
-       meta_kms_update_set_hdr_metadata (kms_update, kms_connector, metadata);
-+      onscreen_native->property.hdr_metadata.invalidated = FALSE;
-+      onscreen_native->property.hdr_metadata.updates_pending++;
-     }
- }
- 
-@@ -1877,22 +2032,79 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+@@ -1919,22 +2052,79 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
    MetaKmsDevice *kms_device = meta_kms_crtc_get_device (kms_crtc);
    MetaFrameNative *frame_native = meta_frame_native_from_frame (frame);
    MetaKmsUpdate *kms_update;
@@ -1960,7 +2205,7 @@ index 1a31f04a16..f1553d3b2c 100644
    meta_kms_update_add_result_listener (kms_update,
                                         &finish_frame_result_listener_vtable,
                                         NULL,
-@@ -1915,7 +2127,17 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+@@ -1957,7 +2147,17 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
    meta_kms_update_set_flushing (kms_update, kms_crtc);
    meta_kms_device_post_update (kms_device, kms_update,
                                 META_KMS_UPDATE_FLAG_NONE);
@@ -1979,125 +2224,7 @@ index 1a31f04a16..f1553d3b2c 100644
  }
  
  static gboolean
-@@ -2677,15 +2899,15 @@ meta_onscreen_native_invalidate (MetaOnscreenNative *onscreen_native)
-     meta_output_get_info (onscreen_native->output);
- 
-   if (meta_crtc_get_gamma_lut_size (onscreen_native->crtc) > 0)
--    onscreen_native->is_gamma_lut_invalid = TRUE;
-+    onscreen_native->property.gamma_lut.invalidated = TRUE;
-   if (output_info->supports_privacy_screen)
--    onscreen_native->is_privacy_screen_invalid = TRUE;
-+    onscreen_native->property.privacy_screen.invalidated = TRUE;
-   if (output_info->supported_color_spaces &
-       (1 << META_OUTPUT_COLORSPACE_DEFAULT))
--    onscreen_native->is_color_space_invalid = TRUE;
-+    onscreen_native->property.color_space.invalidated = TRUE;
-   if (output_info->supported_hdr_eotfs &
-       (1 << META_OUTPUT_HDR_METADATA_EOTF_TRADITIONAL_GAMMA_SDR))
--    onscreen_native->is_hdr_metadata_invalid = TRUE;
-+    onscreen_native->property.hdr_metadata.invalidated = TRUE;
- }
- 
- static void
-@@ -2694,7 +2916,7 @@ on_gamma_lut_changed (MetaCrtc           *crtc,
- {
-   ClutterStageView *stage_view = CLUTTER_STAGE_VIEW (onscreen_native->view);
- 
--  onscreen_native->is_gamma_lut_invalid = TRUE;
-+  onscreen_native->property.gamma_lut.invalidated = TRUE;
-   clutter_stage_view_schedule_update (stage_view);
- }
- 
-@@ -2705,7 +2927,7 @@ on_privacy_screen_enabled_changed (MetaOutput         *output,
- {
-   ClutterStageView *stage_view = CLUTTER_STAGE_VIEW (onscreen_native->view);
- 
--  onscreen_native->is_privacy_screen_invalid = TRUE;
-+  onscreen_native->property.privacy_screen.invalidated = TRUE;
-   clutter_stage_view_schedule_update (stage_view);
- }
- 
-@@ -2715,7 +2937,7 @@ on_color_space_changed (MetaOutput         *output,
- {
-   ClutterStageView *stage_view = CLUTTER_STAGE_VIEW (onscreen_native->view);
- 
--  onscreen_native->is_color_space_invalid = TRUE;
-+  onscreen_native->property.color_space.invalidated = TRUE;
-   clutter_stage_view_schedule_update (stage_view);
- }
- 
-@@ -2725,7 +2947,7 @@ on_hdr_metadata_changed (MetaOutput         *output,
- {
-   ClutterStageView *stage_view = CLUTTER_STAGE_VIEW (onscreen_native->view);
- 
--  onscreen_native->is_hdr_metadata_invalid = TRUE;
-+  onscreen_native->property.hdr_metadata.invalidated = TRUE;
-   clutter_stage_view_schedule_update (stage_view);
- }
- 
-@@ -2760,8 +2982,8 @@ meta_onscreen_native_new (MetaRendererNative *renderer_native,
- 
-   if (meta_crtc_get_gamma_lut_size (crtc) > 0)
-     {
--      onscreen_native->is_gamma_lut_invalid = TRUE;
--      onscreen_native->gamma_lut_changed_handler_id =
-+      onscreen_native->property.gamma_lut.invalidated = TRUE;
-+      onscreen_native->property.gamma_lut.signal_handler_id =
-         g_signal_connect (crtc, "gamma-lut-changed",
-                           G_CALLBACK (on_gamma_lut_changed),
-                           onscreen_native);
-@@ -2769,8 +2991,8 @@ meta_onscreen_native_new (MetaRendererNative *renderer_native,
- 
-   if (output_info->supports_privacy_screen)
-     {
--      onscreen_native->is_privacy_screen_invalid = TRUE;
--      onscreen_native->privacy_screen_changed_handler_id =
-+      onscreen_native->property.privacy_screen.invalidated = TRUE;
-+      onscreen_native->property.privacy_screen.signal_handler_id =
-         g_signal_connect (output, "notify::is-privacy-screen-enabled",
-                           G_CALLBACK (on_privacy_screen_enabled_changed),
-                           onscreen_native);
-@@ -2779,8 +3001,8 @@ meta_onscreen_native_new (MetaRendererNative *renderer_native,
-   if (output_info->supported_color_spaces &
-       (1 << META_OUTPUT_COLORSPACE_DEFAULT))
-     {
--      onscreen_native->is_color_space_invalid = TRUE;
--      onscreen_native->color_space_changed_handler_id =
-+      onscreen_native->property.color_space.invalidated = TRUE;
-+      onscreen_native->property.color_space.signal_handler_id =
-         g_signal_connect (output, "color-space-changed",
-                           G_CALLBACK (on_color_space_changed),
-                           onscreen_native);
-@@ -2789,8 +3011,8 @@ meta_onscreen_native_new (MetaRendererNative *renderer_native,
-   if (output_info->supported_hdr_eotfs &
-       (1 << META_OUTPUT_HDR_METADATA_EOTF_TRADITIONAL_GAMMA_SDR))
-     {
--      onscreen_native->is_hdr_metadata_invalid = TRUE;
--      onscreen_native->hdr_metadata_changed_handler_id =
-+      onscreen_native->property.hdr_metadata.invalidated = TRUE;
-+      onscreen_native->property.hdr_metadata.signal_handler_id =
-         g_signal_connect (output, "hdr-metadata-changed",
-                           G_CALLBACK (on_hdr_metadata_changed),
-                           onscreen_native);
-@@ -2802,13 +3024,13 @@ meta_onscreen_native_new (MetaRendererNative *renderer_native,
- static void
- clear_invalidation_handlers (MetaOnscreenNative *onscreen_native)
- {
--  g_clear_signal_handler (&onscreen_native->gamma_lut_changed_handler_id,
-+  g_clear_signal_handler (&onscreen_native->property.gamma_lut.signal_handler_id,
-                           onscreen_native->crtc);
--  g_clear_signal_handler (&onscreen_native->privacy_screen_changed_handler_id,
-+  g_clear_signal_handler (&onscreen_native->property.privacy_screen.signal_handler_id,
-                           onscreen_native->output);
--  g_clear_signal_handler (&onscreen_native->color_space_changed_handler_id,
-+  g_clear_signal_handler (&onscreen_native->property.color_space.signal_handler_id,
-                           onscreen_native->output);
--  g_clear_signal_handler (&onscreen_native->hdr_metadata_changed_handler_id,
-+  g_clear_signal_handler (&onscreen_native->property.hdr_metadata.signal_handler_id,
-                           onscreen_native->output);
- }
- 
-@@ -2823,15 +3045,17 @@ meta_onscreen_native_dispose (GObject *object)
+@@ -2865,15 +3065,17 @@ meta_onscreen_native_dispose (GObject *object)
  
    meta_onscreen_native_detach (onscreen_native);
  
@@ -2201,6 +2328,154 @@ index aa76d018ca..3c22b4e86a 100644
    meta_kms_discard_pending_page_flips (kms);
    g_hash_table_remove_all (renderer_native->mode_set_updates);
  
+diff --git a/src/backends/native/meta-renderer-view-native.c b/src/backends/native/meta-renderer-view-native.c
+index a04e2e3533..5699f9a558 100644
+--- a/src/backends/native/meta-renderer-view-native.c
++++ b/src/backends/native/meta-renderer-view-native.c
+@@ -24,6 +24,7 @@
+ 
+ #include "backends/native/meta-renderer-view-native.h"
+ 
++#include "backends/native/meta-crtc-native.h"
+ #include "backends/native/meta-frame-native.h"
+ 
+ struct _MetaRendererViewNative
+@@ -34,18 +35,58 @@ struct _MetaRendererViewNative
+ G_DEFINE_TYPE (MetaRendererViewNative, meta_renderer_view_native,
+                META_TYPE_RENDERER_VIEW)
+ 
++static void
++update_frame_clock_deadline_evasion (MetaRendererView *renderer_view)
++{
++  ClutterStageView *stage_view = CLUTTER_STAGE_VIEW (renderer_view);
++  ClutterFrameClock *frame_clock;
++  MetaCrtc *crtc;
++  MetaCrtcNative *crtc_native;
++  int64_t deadline_evasion_us;
++
++  frame_clock = clutter_stage_view_get_frame_clock (stage_view);
++  crtc = meta_renderer_view_get_crtc (renderer_view);
++  crtc_native = META_CRTC_NATIVE (crtc);
++
++  deadline_evasion_us = meta_crtc_native_get_deadline_evasion (crtc_native);
++  clutter_frame_clock_set_deadline_evasion (frame_clock,
++                                            deadline_evasion_us);
++}
++
++static void
++meta_renderer_view_native_constructed (GObject *object)
++{
++  MetaRendererView *renderer_view = META_RENDERER_VIEW (object);
++
++  G_OBJECT_CLASS (meta_renderer_view_native_parent_class)->constructed (object);
++
++  update_frame_clock_deadline_evasion (renderer_view);
++}
++
+ static ClutterFrame *
+ meta_renderer_view_native_new_frame (ClutterStageView *stage_view)
+ {
+   return (ClutterFrame *) meta_frame_native_new ();
+ }
+ 
++static void
++meta_renderer_view_native_schedule_update (ClutterStageView *stage_view)
++{
++  MetaRendererView *renderer_view = META_RENDERER_VIEW (stage_view);
++
++  update_frame_clock_deadline_evasion (renderer_view);
++}
++
+ static void
+ meta_renderer_view_native_class_init (MetaRendererViewNativeClass *klass)
+ {
++  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+   ClutterStageViewClass *stage_view_class = CLUTTER_STAGE_VIEW_CLASS (klass);
+ 
++  object_class->constructed = meta_renderer_view_native_constructed;
++
+   stage_view_class->new_frame = meta_renderer_view_native_new_frame;
++  stage_view_class->schedule_update = meta_renderer_view_native_schedule_update;
+ }
+ 
+ static void
+diff --git a/src/core/util.c b/src/core/util.c
+index 05a0dea398..f8a08c747f 100644
+--- a/src/core/util.c
++++ b/src/core/util.c
+@@ -69,6 +69,7 @@ static const GDebugKey meta_debug_keys[] = {
+   { "color", META_DEBUG_COLOR },
+   { "input-events", META_DEBUG_INPUT_EVENTS },
+   { "eis", META_DEBUG_EIS },
++  { "kms-deadline", META_DEBUG_KMS_DEADLINE },
+ };
+ 
+ static gint verbose_topics = 0;
+@@ -326,6 +327,8 @@ meta_topic_to_string (MetaDebugTopic topic)
+       return "INPUT_EVENTS";
+     case META_DEBUG_EIS:
+       return "EIS";
++    case META_DEBUG_KMS_DEADLINE:
++      return "KMS_DEADLINE";
+     }
+ 
+   return "WM";
+diff --git a/src/meta/meta-debug.h b/src/meta/meta-debug.h
+index b4c70144b7..2de9a89d75 100644
+--- a/src/meta/meta-debug.h
++++ b/src/meta/meta-debug.h
+@@ -50,6 +50,7 @@
+  * @META_DEBUG_COLOR: color management
+  * @META_DEBUG_INPUT_EVENTS: input events
+  * @META_DEBUG_EIS: eis state
++ * @META_DEBUG_KMS_DEADLINE: KMS deadline timers
+  */
+ typedef enum
+ {
+@@ -83,6 +84,7 @@ typedef enum
+   META_DEBUG_COLOR           = 1 << 26,
+   META_DEBUG_INPUT_EVENTS    = 1 << 27,
+   META_DEBUG_EIS             = 1 << 28,
++  META_DEBUG_KMS_DEADLINE    = 1 << 29,
+ } MetaDebugTopic;
+ 
+ META_EXPORT
+diff --git a/src/meta/util.h b/src/meta/util.h
+index ca8ca2adeb..91ca6a8366 100644
+--- a/src/meta/util.h
++++ b/src/meta/util.h
+@@ -51,11 +51,14 @@ void meta_fatal      (const char *format,
+  * MetaDebugPaintFlag:
+  * @META_DEBUG_PAINT_NONE: default
+  * @META_DEBUG_PAINT_OPAQUE_REGION: paint opaque regions
++ * @META_DEBUG_PAINT_SYNC_CURSOR_PRIMARY: make cursor updates await compositing
++ *   frames
+  */
+ typedef enum
+ {
+   META_DEBUG_PAINT_NONE          = 0,
+   META_DEBUG_PAINT_OPAQUE_REGION = 1 << 0,
++  META_DEBUG_PAINT_SYNC_CURSOR_PRIMARY = 1 << 1,
+ } MetaDebugPaintFlag;
+ 
+ META_EXPORT
+diff --git a/src/tests/meta-monitor-manager-test.c b/src/tests/meta-monitor-manager-test.c
+index f9275160c3..fd37eab380 100644
+--- a/src/tests/meta-monitor-manager-test.c
++++ b/src/tests/meta-monitor-manager-test.c
+@@ -517,6 +517,12 @@ meta_crtc_test_set_gamma_lut (MetaCrtc           *crtc,
+                                      sizeof (uint16_t) * lut->size);
+ }
+ 
++static int64_t
++meta_crtc_test_get_deadline_evasion (MetaCrtcNative *crtc_native)
++{
++  return 0;
++}
++
+ static void
+ meta_crtc_test_finalize (GObject *object)
+ {
 diff --git a/src/tests/native-kms-render.c b/src/tests/native-kms-render.c
 index f5ebc23fec..2f870fdc33 100644
 --- a/src/tests/native-kms-render.c

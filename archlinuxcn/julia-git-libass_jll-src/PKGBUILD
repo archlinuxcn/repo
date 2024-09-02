@@ -1,7 +1,7 @@
 pkgname=julia-git-libass_jll-src
-pkgver=0.15.1+0
-_commit=22590b2f0d8fa1b36219a275a75252067e53cc1f
-pkgrel=2
+pkgver=0.15.2+0
+_commit=90b869844fae9f7fdd817b7e9498fbe49e0941d8
+pkgrel=1
 pkgdesc="libass_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libass_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libass)
 source=("git+https://github.com/JuliaBinaryWrappers/libass_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('2722c19e8c812c065e8037f434e3269e286cf017a978ce4a7842a436c4090827'
             '1412e538eba69b592dee34b43506db84bf96169f860b326044df7aafd6645378')
 
 build() {

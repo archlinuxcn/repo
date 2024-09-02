@@ -1,0 +1,7 @@
+post_install() {
+	post_upgrade
+}
+
+post_upgrade() {
+    echo "!! You should uninstall this package and use libva-mesa-driver instead."
+}

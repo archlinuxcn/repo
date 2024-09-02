@@ -15,6 +15,7 @@ _jlpackages=(
   AbstractTrees
   Accessors
   Adapt
+  AdaptivePredicates
   AliasTables
   Alpine
   AmplNLWriter
@@ -41,7 +42,9 @@ _jlpackages=(
   BangBang
   BaseType
   Baselet
+  BatchedRoutines
   BenchmarkTools
+  BetterExp
   Bijections
   BitBasis
   BitFlags
@@ -60,6 +63,7 @@ _jlpackages=(
   BloqadeWaveforms
   Blosc
   Blosc_jll
+  BlossomV
   Bonito
   BoundaryValueDiffEq
   Braket
@@ -75,6 +79,7 @@ _jlpackages=(
   CSV
   CacheServers
   Cairo
+  CairoMakie
   Cairo_jll
   Calcium_jll
   Calculus
@@ -111,6 +116,7 @@ _jlpackages=(
   CommonMark
   CommonSolve
   CommonSubexpressions
+  CommonWorldInvalidations
   Compat
   CompositeTypes
   CompositionsBase
@@ -126,15 +132,18 @@ _jlpackages=(
   ConstructionBase
   Contour
   CoordinateTransformations
+  CovarianceEstimation
   CpuId
   Crayons
   Cubature
   Cubature_jll
   CustomUnitRanges
+  DSP
   DataAPI
   DataFrames
   DataStructures
   DataValueInterfaces
+  Dbus_jll
   DecFP
   DecFP_jll
   DeepDiffs
@@ -152,6 +161,7 @@ _jlpackages=(
   DiffResults
   DiffRules
   DifferentialEquations
+  DifferentiationInterface
   DimensionalData
   Distances
   Distributions
@@ -161,6 +171,7 @@ _jlpackages=(
   DynamicPolynomials
   DynamicQuantities
   EarCut_jll
+  Einsum
   EliminateGraphs
   EllipsisNotation
   EnumX
@@ -175,6 +186,7 @@ _jlpackages=(
   ExponentialAction
   ExponentialUtilities
   ExprTools
+  Expronicon
   ExproniconLite
   Extents
   EzXML
@@ -241,6 +253,7 @@ _jlpackages=(
   Graphics
   Graphite2_jll
   Graphs
+  GraphsMatching
   GridLayoutBase
   Grisu
   Groebner
@@ -262,7 +275,9 @@ _jlpackages=(
   HiGHS_jll
   HistogramThresholding
   HostCPUFeatures
+  Hungarian
   Hwloc_jll
+  HybridArrays
   HypergeometricFunctions
   Hyperscript
   HypothesisTests
@@ -332,10 +347,12 @@ _jlpackages=(
   KLU
   KernelAbstractions
   KernelDensity
+  Kronecker
   Krylov
   KrylovKit
   LAME_jll
   LAPACK_jll
+  LBFGSB
   LDLFactorizations
   LERC_jll
   LLVM
@@ -343,6 +360,7 @@ _jlpackages=(
   LLVMOpenMP_jll
   LRUCache
   LZO_jll
+  L_BFGS_B_jll
   LaTeXStrings
   LabelledArrays
   LambertW
@@ -399,11 +417,15 @@ _jlpackages=(
   MadNLP
   Makie
   MakieCore
+  ManifoldDiff
+  Manifolds
+  ManifoldsBase
   ManualMemory
   MappedArrays
   MarchingCubes
   MathOptInterface
   MathTeXEngine
+  MatrixEquations
   MatrixFactorizations
   MaybeInplace
   MbedTLS
@@ -422,6 +444,7 @@ _jlpackages=(
   MosaicViews
   MsgPack
   MuladdMacro
+  MultiFloats
   Multisets
   MultivariatePolynomials
   Mustache
@@ -435,6 +458,7 @@ _jlpackages=(
   NaNMath
   NameResolution
   NamedArrays
+  NamedDims
   NamedTupleTools
   NearestNeighbors
   Nemo
@@ -445,6 +469,8 @@ _jlpackages=(
   ODE
   ODEInterface
   ODEInterface_jll
+  OMEinsum
+  OMEinsumContractionOrders
   ObjectFile
   Observables
   OffsetArrays
@@ -509,6 +535,7 @@ _jlpackages=(
   Primes
   ProgressLogging
   ProgressMeter
+  PtrArrays
   PyCall
   PyPlot
   PythonCall
@@ -516,6 +543,9 @@ _jlpackages=(
   QPSReader
   Qt5Base_jll
   Qt6Base_jll
+  Qt6Declarative_jll
+  Qt6ShaderTools_jll
+  Qt6Wayland_jll
   QuadGK
   QuantumClifford
   QuantumCumulants
@@ -592,6 +622,7 @@ _jlpackages=(
   SparseDiffTools
   SparseInverseSubset
   SparseMatricesCSR
+  SparseMatrixColorings
   Sparspak
   SpecialFunctions
   SplitApplyCombine
@@ -624,10 +655,12 @@ _jlpackages=(
   SymDict
   SymEngine
   SymEngine_jll
+  SymbolicAnalysis
   SymbolicIndexingInterface
   SymbolicLimits
   SymbolicUtils
   Symbolics
+  TSVD
   TZJData
   TableTraits
   Tables
@@ -714,8 +747,10 @@ _jlpackages=(
   YaoAPI
   YaoArrayRegister
   YaoBlocks
+  YaoPlots
   YaoSubspaceArrayReg
   YaoSym
+  YaoToEinsum
   ZMQ
   ZeroMQ_jll
   Zstd_jll
@@ -732,6 +767,7 @@ _jlpackages=(
   libaec_jll
   libaom_jll
   libass_jll
+  libdecor_jll
   libevdev_jll
   libevent_jll
   libfdk_aac_jll
@@ -750,7 +786,7 @@ _jlpackages=(
 ###=== }} JLPKG_JLNAME_LIST
 )
 pkgname=()
-pkgver=20240704.223136
+pkgver=20240902.054043
 pkgrel=1
 pkgdesc="Precompiled packages for julia-git"
 # This is against the official recommendation but

@@ -1,32 +1,32 @@
-From 8e166a813b56165d7a147cf7ab92e1d1abcb085a Mon Sep 17 00:00:00 2001
+From 90d97c45dc3f53db32e5e04e0e1f8769d1669c9c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 13 Jul 2022 09:08:18 -0400
 Subject: [PATCH] Do not force fusion style
 
 ---
- src/app/app.cpp                   |  1 -
- src/framework/ui/view/uitheme.cpp | 10 +++++++++-
+ src/app/main.cpp                  |  1 -
+ src/framework/ui/api/themeapi.cpp | 10 +++++++++-
  2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/src/app/app.cpp b/src/app/app.cpp
-index 397b46edea..f62f1abda3 100644
---- a/src/app/app.cpp
-+++ b/src/app/app.cpp
-@@ -63,7 +63,6 @@ int App::run(int argc, char** argv)
-     // ====================================================
-     // Setup global Qt application variables
-     // ====================================================
+diff --git a/src/app/main.cpp b/src/app/main.cpp
+index acc4ad4146..1b446f5ec4 100644
+--- a/src/app/main.cpp
++++ b/src/app/main.cpp
+@@ -90,7 +90,6 @@ int main(int argc, char** argv)
+ 
+     app_init_qrc();
+ 
 -    qputenv("QT_STYLE_OVERRIDE", "Fusion");
      qputenv("QML_DISABLE_DISK_CACHE", "true");
  
  #ifdef Q_OS_LINUX
-diff --git a/src/framework/ui/view/uitheme.cpp b/src/framework/ui/view/uitheme.cpp
-index 3d8f4cf455..b355ed6c33 100644
---- a/src/framework/ui/view/uitheme.cpp
-+++ b/src/framework/ui/view/uitheme.cpp
-@@ -89,8 +89,16 @@ struct FontConfig
-     FontSizeType sizeType = FontSizeType::BODY;
- };
+diff --git a/src/framework/ui/api/themeapi.cpp b/src/framework/ui/api/themeapi.cpp
+index 380c372a4f..b980ee2b37 100644
+--- a/src/framework/ui/api/themeapi.cpp
++++ b/src/framework/ui/api/themeapi.cpp
+@@ -502,8 +502,16 @@ void ThemeApi::notifyAboutThemeChanged()
+ // QStyle
+ // ====================================================
  
 +static QString _get_style_name()
 +{
@@ -36,12 +36,12 @@ index 3d8f4cf455..b355ed6c33 100644
 +    return "Fusion";
 +}
 +
- UiTheme::UiTheme()
--    : QProxyStyle(QStyleFactory::create("Fusion"))
-+    : QProxyStyle(QStyleFactory::create(_get_style_name()))
+ ProxyStyle::ProxyStyle(ThemeApi* t)
+-    : QProxyStyle(QStyleFactory::create("Fusion")), m_theme(t)
++    : QProxyStyle(QStyleFactory::create(_get_style_name())), m_theme(t)
  {
-     setObjectName("UiTheme");
  }
+ 
 -- 
-2.39.2
+2.45.2
 

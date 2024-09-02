@@ -1,9 +1,0 @@
-[Unit]
-Description=Anbox Container Manager
-
-[Service]
-ExecStart=/usr/bin/anbox container-manager --daemon --privileged --data-path=/var/lib/anbox --container-network-gateway=192.168.250.1 --container-network-address=192.168.250.2
-
-[Install]
-WantedBy=multi-user.target
-Also=dev-binderfs.mount

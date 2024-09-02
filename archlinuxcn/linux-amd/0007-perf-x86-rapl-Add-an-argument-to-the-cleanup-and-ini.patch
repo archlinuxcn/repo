@@ -1,0 +1,79 @@
+From d5e3e523b536bf2d6f46511179f5fb70938bbbb0 Mon Sep 17 00:00:00 2001
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Date: Thu, 11 Jul 2024 10:24:35 +0000
+Subject: [PATCH 07/11] perf/x86/rapl: Add an argument to the cleanup and init
+ functions
+
+Prep for per-core RAPL PMU addition.
+
+No functional change.
+
+Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+---
+ arch/x86/events/rapl.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 288d1dde4..555a4bbe4 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -694,7 +694,7 @@ static void __init rapl_advertise(void)
+ 	}
+ }
+ 
+-static void cleanup_rapl_pmus(void)
++static void cleanup_rapl_pmus(struct rapl_pmus *rapl_pmus)
+ {
+ 	int i;
+ 
+@@ -712,9 +712,10 @@ static const struct attribute_group *rapl_attr_update[] = {
+ 	NULL,
+ };
+ 
+-static int __init init_rapl_pmus(void)
++static int __init init_rapl_pmus(struct rapl_pmus **rapl_pmus_ptr)
+ {
+ 	int nr_rapl_pmu = topology_max_packages();
++	struct rapl_pmus *rapl_pmus;
+ 
+ 	if (!rapl_pmu_is_pkg_scope())
+ 		nr_rapl_pmu *= topology_max_dies_per_package();
+@@ -738,6 +739,9 @@ static int __init init_rapl_pmus(void)
+ 	rapl_pmus->pmu.read		= rapl_pmu_event_read;
+ 	rapl_pmus->pmu.module		= THIS_MODULE;
+ 	rapl_pmus->pmu.capabilities	= PERF_PMU_CAP_NO_EXCLUDE;
++
++	*rapl_pmus_ptr = rapl_pmus;
++
+ 	return 0;
+ }
+ 
+@@ -879,7 +883,7 @@ static int __init rapl_pmu_init(void)
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = init_rapl_pmus();
++	ret = init_rapl_pmus(&rapl_pmus);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -903,7 +907,7 @@ static int __init rapl_pmu_init(void)
+ 	cpuhp_remove_state(CPUHP_AP_PERF_X86_RAPL_ONLINE);
+ out:
+ 	pr_warn("Initialization failed (%d), disabled\n", ret);
+-	cleanup_rapl_pmus();
++	cleanup_rapl_pmus(rapl_pmus);
+ 	return ret;
+ }
+ module_init(rapl_pmu_init);
+@@ -912,6 +916,6 @@ static void __exit intel_rapl_exit(void)
+ {
+ 	cpuhp_remove_state_nocalls(CPUHP_AP_PERF_X86_RAPL_ONLINE);
+ 	perf_pmu_unregister(&rapl_pmus->pmu);
+-	cleanup_rapl_pmus();
++	cleanup_rapl_pmus(rapl_pmus);
+ }
+ module_exit(intel_rapl_exit);
+-- 
+2.46.0
+

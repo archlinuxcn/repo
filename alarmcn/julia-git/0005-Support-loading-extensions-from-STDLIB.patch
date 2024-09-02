@@ -1,17 +1,17 @@
-From 8ba4657448607783d9a73c6e31f972b0e936d86a Mon Sep 17 00:00:00 2001
+From a9ba37bf7ebfce688f805bbc6f9059706d98fbcb Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
-Subject: [PATCH 5/7] Support loading extensions from STDLIB
+Subject: [PATCH 5/8] Support loading extensions from STDLIB
 
 ---
  base/loading.jl | 55 +++++++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 55 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index ec90015350..f4993971dd 100644
+index 4dc735f009..6fd5ec310e 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
-@@ -1067,6 +1067,14 @@ end
+@@ -1070,6 +1070,14 @@ end
  # if there's a project file, look up `name` in its deps and return that
  # otherwise return `nothing` to indicate the caller should keep searching
  function implicit_manifest_deps_get(dir::String, where::PkgId, name::String)::Union{Nothing,PkgId}
@@ -26,7 +26,7 @@ index ec90015350..f4993971dd 100644
      @assert where.uuid !== nothing
      project_file = entry_point_and_project_file(dir, where.name)[2]
      if project_file === nothing
-@@ -1096,6 +1104,33 @@ end
+@@ -1099,6 +1107,33 @@ end
  
  # look for an entry-point for `pkg` and return its path if UUID matches
  function implicit_manifest_uuid_path(dir::String, pkg::PkgId)::Union{Nothing,String}
@@ -60,7 +60,7 @@ index ec90015350..f4993971dd 100644
      path, project_file = entry_point_and_project_file(dir, pkg.name)
      if project_file === nothing
          pkg.uuid === nothing || return nothing
-@@ -1365,11 +1400,31 @@ const EXT_PRIMED = Dict{PkgId, PkgId}() # Extension -> Parent
+@@ -1364,11 +1399,31 @@ const EXT_PRIMED = Dict{PkgId, PkgId}() # Extension -> Parent
  const EXT_DORMITORY = Dict{PkgId,Vector{ExtensionId}}() # Trigger -> Extensions that can be triggered by it
  const EXT_DORMITORY_FAILED = ExtensionId[]
  
@@ -93,5 +93,5 @@ index ec90015350..f4993971dd 100644
  end
  
 -- 
-2.44.0
+2.45.2
 

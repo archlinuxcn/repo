@@ -3,13 +3,14 @@
 # Contributor: Christian Pfeiffer <cpfeiffer at live dot de>
 pkgname=superlu_dist
 pkgver=9.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Distributed memory, MPI based SuperLU"
 arch=(aarch64 x86_64)
 url="https://github.com/xiaoyeli/superlu_dist"
 license=('custom')
 depends=(blas lapack parmetis libmpi.so)
 makedepends=(cmake)
+provides=(libsuperlu_dist.so)
 source=(superlu_dist-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
 sha512sums=('0e35285780d149e0851d7e62d54d306beed2c81a406d32eaf182c79ba92494b9b87f30fe2e4c4154c8599eacf441329ad93a756ae732bd5b47161cf9aeb7282c')
 

@@ -1,7 +1,7 @@
 pkgname=julia-git-libvorbis_jll-src
-pkgver=1.3.7+1
-_commit=6d8beef6fc50e574aa657f69a14e9d52dd0af4a2
-pkgrel=2
+pkgver=1.3.7+2
+_commit=34eb0ceb8f17e6f5f83a288409413b0251f0e80e
+pkgrel=1
 pkgdesc="libvorbis_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libvorbis_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libvorbis)
 source=("git+https://github.com/JuliaBinaryWrappers/libvorbis_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('1f01c70998e3e41a74fa99a5054828de9e70eea17fcb821c6d3eb578c08a3dd7'
             'a340c6cb4e0b4b1d56e25c03f2352687b83309d64de20fe6d403dbf8fd52ff21')
 
 build() {

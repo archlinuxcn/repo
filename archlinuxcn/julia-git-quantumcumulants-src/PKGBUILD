@@ -1,6 +1,6 @@
 pkgname=julia-git-quantumcumulants-src
-pkgver=0.3.2
-_commit=91edb9c723f2c60b9c7cbf071ea5da9ae3cf5005
+pkgver=0.3.3
+_commit=6184afd6471c32e5f2a02995cdb77facd8e67bba
 pkgrel=1
 pkgdesc="QuantumCumulants.jl"
 url="https://github.com/qojulia/QuantumCumulants.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/qojulia/QuantumCumulants.jl.git#commit=$_commit")
-sha256sums=('96991d1158397e74633886233e4cdcb8da837770fac268f874f02829eae6718c')
+sha256sums=('448245da3e57c090e210b5bb382eae8dba2c791c40903d1057cdc4e71734fa01')
 
 package() {
   cd QuantumCumulants.jl

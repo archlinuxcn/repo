@@ -1,23 +1,23 @@
 _name=django-webpack-loader
 pkgname=python-django-webpack-loader
-pkgver=3.1.0
-pkgrel=2
+pkgver=3.1.1
+pkgrel=1
 pkgdesc="Transparently use webpack with django"
 arch=(any)
 url="https://github.com/django-webpack/django-webpack-loader"
 license=('MIT License')
 depends=('python-lxml' 'python-six' 'python-requests')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-webpack-loader-3.1.0.tar.gz")
-sha256sums=('b06b83ca819ed4bbb858ab57b8d8cb67a25c4a57ed822dedd4e9fee4c097afd5')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-webpack-loader-3.1.1.tar.gz")
+sha256sums=('f11b79700d1bfc1299131bdf4ba479c1ec200f83a1400e1a2feb5c2ba7b6f8c4')
 
 build() {
-  cd "$srcdir/django-webpack-loader-3.1.0"
+  cd "$srcdir/django-webpack-loader-3.1.1"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/django-webpack-loader-3.1.0"
+  cd "$srcdir/django-webpack-loader-3.1.1"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files

@@ -1,0 +1,48 @@
+#
+
+pkgname=blossomv
+pkgver=2.05
+pkgrel=2
+pkgdesc='Implementation of a minimum-cost perfect matching algorithm'
+arch=(aarch64 armv7h i686 x86_64)
+url='https://xip.uclb.com/product/BlossomV'
+license=('custom:MIT')
+makedepends=(git)
+source=('https://pub.ist.ac.at/~vnk/software/blossom5-v2.05.src.tar.gz'
+        float64.patch
+        sharedlib.patch
+        interface.cpp
+        interface.h
+        visibility.h)
+sha1sums=('d66b20e98170b9aa34aac18c97439263827f0396'
+          '5dea267d5e298553e5083726a5da670151863e55'
+          '5f11baa4b10ef3b4162e59fd28c9b0235c3dc514'
+          '81e6f448d716a3a2bc47ec2764ed898b353ac8f9'
+          '6a211c28dcc77794c02a68367faf4743df455b3a'
+          '09dc6a0d047e3ff9c1b6f0f3be64fe56a0ca9404')
+
+prepare() {
+  rm -rf blossom5-v2.05.src-i32 blossom5-v2.05.src-f64
+  (cd blossom5-v2.05.src
+   patch -Np0 --no-backup-if-mismatch < "$srcdir/sharedlib.patch"
+   cp "${srcdir}"/{interface.cpp,interface.h,visibility.h} .)
+
+  cp -r blossom5-v2.05.src blossom5-v2.05.src-i32
+  cp -r blossom5-v2.05.src blossom5-v2.05.src-f64
+
+  (cd blossom5-v2.05.src-f64
+   patch -Np0 --no-backup-if-mismatch < "$srcdir/float64.patch")
+}
+
+build() {
+  make -C blossom5-v2.05.src-i32
+  make -C blossom5-v2.05.src-f64
+}
+
+package() {
+  install -dm755 "${pkgdir}/usr/lib/"
+  install -Dm755 blossom5-v2.05.src-i32/blossom5.so \
+          "${pkgdir}/usr/lib/blossom5int32.so"
+  install -Dm755 blossom5-v2.05.src-f64/blossom5.so \
+          "${pkgdir}/usr/lib/blossom5float64.so"
+}

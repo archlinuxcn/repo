@@ -13,7 +13,7 @@ pkgname=(
   ${_pkgbase}-double-pinyin-ziguang-git
 )
 
-pkgver=r595.f0bf04f
+pkgver=r612.0367c85
 pkgrel=1
 pkgdesc="Rime 配置：雾凇拼音 | 长期维护的简体词库"
 arch=("any")
@@ -94,8 +94,6 @@ build() {
 
   rm -f custom_phrase.txt
 }
-
-conflicts=("rime-emoji")
 
 _package_schema() {
   _schema_name=$1                                 # 方案名
@@ -213,6 +211,7 @@ package_rime-ice-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库'
   provides=(rime-ice)
   conflicts=(
+    rime-emoji
     # ${_pkgbase}
     ${_pkgbase}-pinyin
     ${_pkgbase}-double-pinyin
@@ -232,6 +231,7 @@ package_rime-ice-pinyin-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 拼音方案'
   provides=(rime-ice-pinyin)
   conflicts=(
+    rime-emoji
     ${_pkgbase}
     # ${_pkgbase}-pinyin
     ${_pkgbase}-double-pinyin
@@ -249,6 +249,7 @@ package_rime-ice-double-pinyin-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 自然码双拼'
   provides=(rime-ice-double-pinyin)
   conflicts=(
+    rime-emoji
     ${_pkgbase}
     ${_pkgbase}-pinyin
     # ${_pkgbase}-double-pinyin
@@ -266,6 +267,7 @@ package_rime-ice-double-pinyin-abc-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 智能ABC双拼'
   provides=(rime-ice-double-pinyin-abc)
   conflicts=(
+    rime-emoji
     ${_pkgbase}
     ${_pkgbase}-pinyin
     ${_pkgbase}-double-pinyin
@@ -283,6 +285,7 @@ package_rime-ice-double-pinyin-mspy-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 微软双拼'
   provides=(rime-ice-double-pinyin-mspy)
   conflicts=(
+    rime-emoji
     ${_pkgbase}
     ${_pkgbase}-pinyin
     ${_pkgbase}-double-pinyin
@@ -300,6 +303,7 @@ package_rime-ice-double-pinyin-sogou-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 搜狗双拼'
   provides=(rime-ice-double-pinyin-sogou)
   conflicts=(
+    rime-emoji
     ${_pkgbase}
     ${_pkgbase}-pinyin
     ${_pkgbase}-double-pinyin
@@ -317,6 +321,7 @@ package_rime-ice-double-pinyin-flypy-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 小鹤双拼'
   provides=(rime-ice-double-pinyin-flypy)
   conflicts=(
+    rime-emoji
     ${_pkgbase}
     ${_pkgbase}-pinyin
     ${_pkgbase}-double-pinyin
@@ -334,6 +339,7 @@ package_rime-ice-double-pinyin-ziguang-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 紫光双拼'
   provides=(rime-ice-double-pinyin-ziguang)
   conflicts=(
+    rime-emoji
     ${_pkgbase}
     ${_pkgbase}-pinyin
     ${_pkgbase}-double-pinyin

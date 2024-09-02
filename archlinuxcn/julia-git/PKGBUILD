@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.12.0.DEV.816.ga5f00160080
+pkgver=1.12.0.DEV.1128.g42d00107b0b
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -71,6 +71,7 @@ _patches=(
   0005-Support-loading-extensions-from-STDLIB.patch
   0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
   0007-Fix-gcc12-error-on-aarch64.patch
+  0008-Disable-per-thread-TLS-cache-for-now.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         'git+https://github.com/yuyichao/archcn-julia-scripts'
@@ -79,13 +80,14 @@ source=('git+https://github.com/JuliaLang/julia'
         sysp7z.diff)
 sha512sums=('SKIP'
             'SKIP'
-            'fe2ced456eadbbdc7f63c5390530504e7135f9a57b01d18cf293cc59a984f48f269593f9f257346249a8f2b4a06a4c93eaf7bdd80379cb4cc3325607cc80b264'
-            '37b0be3c00cc3dbcd12f30ebac03726d1786c0bead068517cb2d8397175d37d615c7b2dcdef052f41aa9c68969433e28f51ecf4b3245cbab7597cc6f8c8f47b6'
-            '02eec9ce13ceaea1ef8469fc8d51ea37068df0e9ddf77b78f3b5b5aa38f84a9b118404ee06283ca5fd66ad68457ac0e2139d2e6bd641c67aa15a28ecef693442'
-            'bd4396dad5e774a3461bab54611a2db82f8046772edc4326e08785f470adc55288bc488d36c9d4078010589a350221040599142a3aac3d8eb5445ca3af6e110b'
-            'cffc58e47f59c04dbbb36109c23f52db8ca47b35a5aa1592ac39ea12bdab0089698bc6fbcee6f18259605f890f6e035b90e68c309ff8ba3120a6b4d1fca2a5f3'
-            '86a075c53a255ea4eeba47462386931119b5010746e90867e9c345d91b773a24cb91a0c8fe420d152851d861b8e73ddabfd643865ba39f1b100d1d585c638470'
-            'c2bbed26196db053fe8750e0b994af83b402e8f2996fe229b00068b273b9505ab5088264271a803bad7d8ab724249d5c63a189e4038da62309e136beb20e7071'
+            'bb72169ac154aeb7868e72cc70bc137f2dc73c79889291369ba29b70676b3498928e2c12d201f36a0328aecaa7fcbfbdd855ef92c2383b2f734639b1ea1f9f23'
+            '081fb86ce1d75a9c0811f7d339dc530a46fa62262a14814cb5843d7f9eb4c3192b94a329a728bc82e9b1be1cc3fcdee758d22db610964cc71dc8b116a241128a'
+            '619e1e7b71431d1068dc402baf85125cc6a7289def83fb11051762627494e0b3b3d708b86196444006fa21d0f3f6b3c0797c9c69045cb2711f225d811329f995'
+            'b761c381a0384fa763c0259e8b9454220c0398e2464e118bc97f1970a7e9ab90e4e95864441554e94b69987e371e51d1dee0419f8a317bd5285f3cc366ab12dd'
+            'f3dc1b75b71aab366fa02e262e4cb9a71a9e8f801fc4d55e2ad871fd9b2beb82fe85525930d74bfffcebb5334983769b229b32fb1ec232558209569d96ee7d5d'
+            'dc52af7742fdbffb3bde4bda08ac406c30a2aa6bc49155633f88ff09a790063f80f217d7b35d627dc10f26a43596f0d75a56b1a4a2875fb2a88ebaba75bfa2ad'
+            '2f70c400da56ce05ea79659e1ef82854cf1011d9d68d4dee4ac89a8fa8844a1d1465dd73a6c5ee53f0310a22f6d5a4e48aef10dfb8d5f324561207c9b4521365'
+            'b0b2a55f73c691615a65ec31775c1e52f01ac5c1129ebf6831814f313a57ee735bc6ae74ec14b8cb21c003fd40d9e9efa2c24e8fab0fe085a7eb16d200e01576'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
 
@@ -136,6 +138,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_INTEL_JITEVENTS=0
             USE_LLVM_SHLIB=1
             USE_BINARYBUILDER=0
+            WITH_TERMINFO=0
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
             LLVM_CONFIG=${_LLVM_CONFIG})
 

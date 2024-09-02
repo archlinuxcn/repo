@@ -7,36 +7,37 @@
 # https://github.com/wine-staging/wine-staging
 
 pkgname="wine-wow64"
-pkgver=9.15
+pkgver=9.16
 _pkgver="${pkgver/rc/-rc}"
-pkgrel=1
+pkgrel=2
 pkgdesc="A compatibility layer for running Windows programs"
 url="https://www.winehq.org"
 license=('LGPL-2.1-or-later')
 arch=('x86_64')
 
 depends=(
-  alsa-plugins          #lib32-alsa-plugins
+  alsa-lib              #lib32-alsa-lib
   fontconfig            #lib32-fontconfig
   freetype2             #lib32-freetype2
   gettext               #lib32-gettext
+  gnutls                #lib32-gnutls
   gst-plugins-base-libs #lib32-gst-plugins-base-libs
+  libpcap               #lib32-libpcap
   libpulse              #lib32-libpulse
   libxcomposite         #lib32-libxcomposite
   libxcursor            #lib32-libxcursor
   libxi                 #lib32-libxi
   libxinerama           #lib32-libxinerama
+  libxkbcommon          #lib32-libkbcommon
   libxrandr             #lib32-libxrandr
   opencl-icd-loader     #lib32-opencl-icd-loader
   pcsclite              #lib32-pcsclite
   sdl2                  #lib32-sdl2
+  unixodbc              #lib32-unixodbc
   v4l-utils             #lib32-v4l-utils
+  wayland               #lib32-wayland
   desktop-file-utils
   libgphoto2
-
-  # with-wayland
-  libxkbcommon
-  wayland
 )
 makedepends=(
   libxxf86vm        #lib32-libxxf86vm
@@ -76,7 +77,7 @@ source=(
   "30-win32-aliases.conf"
   "wine-binfmt.conf"
 )
-b2sums=('70a3dd1d566ce2022a197735bfbc6a879f99608d3b44dcb170dde68762b86cd880581bdc857090dad2733468f5aca3bb2613ef884fa35e361fce19e6e15dcef6'
+b2sums=('65665d674842980345d4f3730a75a1734fd5b9c3f08a2700624e4cc18b3d496a1db790e6098c404e05ea9544e671e2cf3f5d10f7fdc0863c6cf0714a9b597af9'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588')
 

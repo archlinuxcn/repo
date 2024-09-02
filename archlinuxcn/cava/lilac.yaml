@@ -4,7 +4,32 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: cava
+  - source: alpm
+    alpm: alsa-lib
+    strip_release: true
+    provided: libasound.so
+  - source: alpm
+    alpm: fftw
+    strip_release: true
+    provided: libfftw3.so
+  - source: alpm
+    alpm: iniparser
+    strip_release: true
+    provided: libiniparser.so
+  - source: alpm
+    alpm: ncurses
+    strip_release: true
+    provided: libncursesw.so
+  - source: alpm
+    alpm: portaudio
+    strip_release: true
+    provided: libportaudio.so
+  - source: alpm
+    alpm: sndio
+    strip_release: true
+    provided: libsndio.so
   - source: manual
-    manual: 1
+    manual: 1.1
+
 maintainers:
   - github: roaldclark

@@ -1,22 +1,22 @@
 _name=mwclient
 pkgname=python-mwclient
-pkgver=0.10.1
-pkgrel=6
+pkgver=0.11.0
+pkgrel=1
 pkgdesc="MediaWiki API client"
 arch=(any)
-url="https://github.com/btongminh/mwclient"
+url="https://github.com/mwclient/mwclient"
 license=('MIT')
 depends=('python-requests-oauthlib' 'python-six' 'python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/mwclient-0.10.1.tar.gz")
-sha256sums=('79363dd8d12f5e3b91b92b63152bf9dfef27da786c076a244e1f148c8dd67139')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/mwclient-0.11.0.tar.gz")
+sha256sums=('2bb7696f3703243eb33514ab162d7f6076dcedd011be90682936046c5e34fd06')
 
 build() {
-  cd "$srcdir/mwclient-0.10.1"
+  cd "$srcdir/mwclient-0.11.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/mwclient-0.10.1"
+  cd "$srcdir/mwclient-0.11.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files

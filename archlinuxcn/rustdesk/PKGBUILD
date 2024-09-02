@@ -19,9 +19,9 @@ _opt_SYS_FLUTTER=0
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.2.7'
+_pkgver='1.3.0'
 pkgver="${_pkgver//-/.}"
-pkgrel=2
+pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
 url='https://rustdesk.com/'
@@ -69,11 +69,11 @@ if ! :; then
   _srcdir="${_pkgname}"
   source[0]="git+${_giturl}#tag=${_pkgver}"
 fi
-md5sums=('d0452ce5d02ea6a9acd4ae6d0f3ddafc'
+md5sums=('768dff080ac91c9f50b68d98d26a1aad'
          'SKIP'
          '74dc171bf2cfc1ada56b6e284adabca8'
          'a63659fb966758db9fe95e5aae89757a')
-sha256sums=('97a33f4cc0972be8e9a1ed24b9b416167c954eb5407541aca21ce4cdc1a71e10'
+sha256sums=('7aef14a0106482e61823976740f3e57e03da7c79d7f2a05337529ca1e8afce57'
             'SKIP'
             'db6742a20626d0d2a089eb41ad61b9b2138b996679911e9c8268c1f896191f97'
             'b3a05ffca1f57afa48bd006d732969146dafa164c71390070623ba569977f9d3')
@@ -259,10 +259,10 @@ build() {
     local _CGdefault=~/.cargo
     "${CARGO_HOME:-${_CGdefault}}"/bin/flutter_rust_bridge_codegen --rust-input ./src/flutter_ffi.rs --dart-output ./flutter/lib/generated_bridge.dart
     if [ "${_opt_BUILD_PY}" -ne 0 ]; then
-      nice ./build.py --hwcodec --flutter
+      nice ./build.py --flutter
     else
       git checkout src/ui/common.tis
-      nice cargo build --features hwcodec,flutter --lib --release
+      nice cargo build --features flutter --lib --release
       pushd flutter
       nice flutter build linux --release
       popd

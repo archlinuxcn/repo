@@ -1,6 +1,6 @@
 pkgname=julia-git-inversefunctions-src
-pkgver=0.1.14
-_commit=fbca2801120c69e2311231fe7e2aa19f239fdc66
+pkgver=0.1.16
+_commit=6cc1001fb718bd45fc59468555d0292eace0819c
 pkgrel=1
 pkgdesc="InverseFunctions.jl"
 url="https://github.com/JuliaMath/InverseFunctions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/InverseFunctions.jl.git#commit=$_commit")
-sha256sums=('ec64c59c0c9b5b86c07ab944f868d140222e31f7c7118b8021bfa45cf19bacfe')
+sha256sums=('9dac216c8d5d8e81dd0d7d1f090fc3df286f50d95eaa5a2be483bab3d41fd08a')
 
 package() {
   cd InverseFunctions.jl

@@ -1,0 +1,15 @@
+maintainers:
+  - github: heddxh
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: git_pkgbuild_commit()
+
+repo_depends:
+  - gtksourceview5-apostrophe
+
+update_on:
+  - source: alpm
+    repo: extra
+    alpm: libspelling
+    strip_release: true

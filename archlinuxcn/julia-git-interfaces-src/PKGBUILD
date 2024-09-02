@@ -1,6 +1,6 @@
 pkgname=julia-git-interfaces-src
-pkgver=0.3.1
-_commit=e0243ed953aa7d7ac302bd63449e37667e791262
+pkgver=0.3.2
+_commit=61f3365547f0203625d3574a76587080303b1e23
 pkgrel=1
 pkgdesc="Interfaces.jl"
 url="https://github.com/rafaqz/Interfaces.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/rafaqz/Interfaces.jl.git#commit=$_commit")
-sha256sums=('4370e67fd084344c71b99e2216c6f320de54967d44bf45021b88be431604ee22')
+sha256sums=('a339c667b5b17128caa5f8c0169fb257993604d13ff82f233f0fc9d947477b65')
 
 package() {
   cd Interfaces.jl

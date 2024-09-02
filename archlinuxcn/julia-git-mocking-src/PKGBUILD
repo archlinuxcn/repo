@@ -1,6 +1,6 @@
 pkgname=julia-git-mocking-src
-pkgver=0.7.8
-_commit=5e484242898c24340432b24d5f54201377f7986a
+pkgver=0.7.9
+_commit=6a0c9b947709b30017a062a179224b8c9d6df516
 pkgrel=1
 pkgdesc="Mocking.jl"
 url="https://github.com/JuliaTesting/Mocking.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaTesting/Mocking.jl.git#commit=$_commit")
-sha256sums=('5deeb88071084f7779a0b3b020e964638419d562e6fdb9132e74469fb0bf4ed8')
+sha256sums=('df8d611370316870cc154dc0f7dcc29592cd5f4f352380fbefedb80304b1680c')
 
 package() {
   cd Mocking.jl

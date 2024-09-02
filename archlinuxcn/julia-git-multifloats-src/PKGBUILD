@@ -1,0 +1,18 @@
+pkgname=julia-git-multifloats-src
+pkgver=2.0.2
+_commit=e97b09afc39ba0f0706ac044c14a4f1ecc3da8b8
+pkgrel=2
+pkgdesc="MultiFloats.jl"
+url="https://github.com/dzhang314/MultiFloats.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/dzhang314/MultiFloats.jl.git#commit=$_commit")
+sha256sums=('ce24e1cda85838dafcb1697e5bdfe1e80e492dc7408bb4f3feaba39b4b8d6fe8')
+
+package() {
+  cd MultiFloats.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MultiFloats "${pkgdir}" "${pkgname}" julia-git
+}

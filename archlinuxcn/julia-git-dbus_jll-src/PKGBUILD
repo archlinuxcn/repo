@@ -1,0 +1,26 @@
+pkgname=julia-git-dbus_jll-src
+pkgver=1.14.10+0
+_commit=d3ffcd36827172fb0667a8e5653607b410f6ad5f
+pkgrel=2
+pkgdesc="Dbus_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Dbus_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git dbus)
+source=("git+https://github.com/JuliaBinaryWrappers/Dbus_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('a3368e36e5e21f8786f36d0dffb025f1fc5d94f4e9703dc6ac64b5b45941a636'
+            '0020642e5ba339901d32ec2638902cff5d22500b907a7e1924db4ffea610410f')
+
+build() {
+  cd Dbus_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Dbus_jll ../jll.toml
+}
+
+package() {
+  cd Dbus_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Dbus_jll "${pkgdir}" "${pkgname}" julia-git
+}

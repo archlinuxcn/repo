@@ -1,0 +1,20 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+pre_build_script: aur_pre_build(maintainers=['cedricroijakkers'])
+
+post_build: aur_post_build
+
+# For nvm
+build_prefix: archlinuxcn-aarch64
+
+repo_depends:
+  - electron31-bin
+
+update_on:
+  - source: aur
+    aur: ferdium
+  - source: manual
+    manual: 1

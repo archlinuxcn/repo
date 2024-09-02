@@ -1,0 +1,52 @@
+From 8ada13f55d8069f4c07d37f5bfda1698f449ebca Mon Sep 17 00:00:00 2001
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Date: Thu, 11 Jul 2024 10:24:37 +0000
+Subject: [PATCH 09/11] perf/x86/rapl: Remove the global variable rapl_msrs
+
+After making the rapl_model struct global, the rapl_msrs global
+variable isn't needed, so remove it.
+
+Also it will be cleaner when new per-core scope PMU is added. As we will
+need to maintain two rapl_msrs array(one for per-core scope and one for
+package scope PMU), inside the rapl_model struct.
+
+Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+---
+ arch/x86/events/rapl.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index e172c455c..a010497d4 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -145,7 +145,6 @@ static int rapl_pkg_hw_unit[NR_RAPL_PKG_DOMAINS] __read_mostly;
+ static struct rapl_pmus *rapl_pmus_pkg;
+ static unsigned int rapl_pkg_cntr_mask;
+ static u64 rapl_timer_ms;
+-static struct perf_msr *rapl_msrs;
+ static struct rapl_model *rapl_model;
+ 
+ /*
+@@ -387,7 +386,7 @@ static int rapl_pmu_event_init(struct perf_event *event)
+ 		return -EINVAL;
+ 	event->cpu = rapl_pmu->cpu;
+ 	event->pmu_private = rapl_pmu;
+-	event->hw.event_base = rapl_msrs[bit].msr;
++	event->hw.event_base = rapl_model->rapl_msrs[bit].msr;
+ 	event->hw.config = cfg;
+ 	event->hw.idx = bit;
+ 
+@@ -875,9 +874,7 @@ static int __init rapl_pmu_init(void)
+ 
+ 	rapl_model = (struct rapl_model *) id->driver_data;
+ 
+-	rapl_msrs = rapl_model->rapl_pkg_msrs;
+-
+-	rapl_pkg_cntr_mask = perf_msr_probe(rapl_msrs, PERF_RAPL_PKG_EVENTS_MAX,
++	rapl_pkg_cntr_mask = perf_msr_probe(rapl_model->rapl_msrs, PERF_RAPL_PKG_EVENTS_MAX,
+ 					false, (void *) &rapl_model->pkg_events);
+ 
+ 	ret = rapl_check_hw_unit();
+-- 
+2.46.0
+

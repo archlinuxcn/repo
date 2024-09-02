@@ -11,28 +11,16 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3373' '3567' '3751' '3912')
+# Merge Requests List: ('579' '1441' '3567' '3751' '3934')
 _merge_requests_to_use=('1441' '3751')
-
-## Disable building the DOCS package (Enabled if not set)
-# Remember to unset this variable when producing .SRCINFO
-: "${_disable_docs:=""}"
-
-## Enable the `check()` operation (Disabled if not set)
-: "${_enable_check:=""}"
 
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing!
 
 _pkgname=mutter
-pkgbase=mutter-performance
-if [ -n "$_disable_docs" ]; then
-  pkgname=mutter-performance
-else
-  pkgname=(mutter-performance mutter-performance-docs)
-fi
+pkgname=mutter-performance
 epoch=1
-pkgver=46.4
+pkgver=46.4+r18+g081b918bac
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -112,25 +100,22 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=04995f56641012d71b5b226782e63d82c3ca3081  # tags/46.4^0
+_commit=081b918bac2eae6a19066ea30ab18d5dbd5b8ea7  # tags/46.4^18
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
-        'mr3373.patch'
         'mr3567.patch'
         'mr3751.patch'
-        'mr3912.patch')
-sha256sums=('864cce3adbb04b4213fda77b715f84fe1ed918a58adbc251c4804bbaf6e348ed'
-            '07909ef8fc77f5527e169c31637a3bfdf080bc8040863f059db5541b35ec6ff7'
-            '1292f1dcefa0a3cfff753db942e7c974e39b1265d246634f239aad9437d45609'
+        'mr3934.patch')
+sha256sums=('81978164d9f2715438fbc623c77ea7529332cac5c4c519e4781daa5bf1a315eb'
+            '60638078a3f3c46da61f868c04b2a3424488510702648452c3e8214a3790e37b'
             '2e474a574edad8dc047a53a920fc7cbe005cac0102907eef80a252fc556d0517'
             '4c15b0e6d0001c8c3feedf05a9140f7f17d52eb36ff7b8039e0281c1373ccdfe'
-            'f02f07abc4072118e175e8028d3ee16ff0aa9b238dd2b10155b3ae2a0534a4a0')
-b2sums=('fc21cb8e56728873196fba12ba7a0522aeb9d6e7f6204ac21ade4c632b081fe45e0633d1c072c2416d81faa0f6b63cb69b278ef7b440e2bfccaff775501d3028'
-        '0419379cda7871c0b45b7a707948738b5a55fd81083ba325e915928aaa731cd2be23cebddf04b179bc69a26e1f4176b06fabb4d5baffba604a4980f578f5ba4d'
-        '38de03d5fbe7c9d1b9c41a4bc6b76b8d3acc270b93f279c5db591d79a689d9ea748f34da08ec584e49bbfc2d35a5bceeaf2f6b3fd91bc620139b4ee8b4ca6a04'
+            'c0ae2855247cddde806a320d031021fd0f7c867c61ac95af99ea3765f290bbf5')
+b2sums=('aaed24cb5bac5f62096d44bfdf0e6acfff3944137a06f5cbd7fd1f18d03ebb816d02ab170c9128eafb023a339de3e7ea79480654687ec449d29f9e45d66218e3'
+        '802cf82c0d4fa4514dc376bac57a65453df0ce789e6efac334d2f76a24349ad0a2b6e9ce02345839e8de719d7696dfcae911b1e66922103b2ec315e9fbaa8f01'
         '65302b1fa24a7aba26915269fb694c7a64b134ee2062ec7e649036a3a41efb2f2f4110cff6194808af34985855ade641c5fb01f0b97536cd3c912892ea3a0d4c'
         'f9f2284d7236d6072a818de3784a339c2d934490da8870876f49d4effd59ce807593ce8b8a3c5e06586fd5fd7e81fb31fedca84115acf1e71cfe23d4a5e727b3'
-        '14ed5e8fe9844739903150bf69de03b7136e74eb4b080d2e0264ba9bf5f2ba2c826cb45b78f8c38b2e80c223dd7926aa8e756e9bee23b75ced16ba5af45c2d8d')
+        '18e8d521336422f4c441979fe77ff22c60406e94cd2159c08bbfd127bf6b010dece55c7226b99a953c560b05194fe72e5c2140765577069d970c93479b573bcb')
 
 for mr in "${_merge_requests_to_use[@]}"; do
   if [ '3567' = "$mr" ]; then
@@ -139,7 +124,7 @@ for mr in "${_merge_requests_to_use[@]}"; do
 done
 
 pkgver() {
-  cd mutter
+  cd $_pkgname
   git describe --tags | sed -r 's/\.([a-z])/\1/;s/([a-z])\./\1/;s/[^-]*-g/r&/;s/-/+/g'
 }
 
@@ -219,14 +204,6 @@ prepare() {
   #          If you use stenography software or play hardcore rhythm games like Lunatic Rave 2/osumania, use it.
   pick_mr '579' ce86f90efbaa51522ba14c5b4cad933c2106de42 'revert'
 
-  # Title: kms/crtc: Increase default deadline evasion to 1000 microseconds
-  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3373
-  # Type: 3
-  # Status: 2
-  # Comment: This fix cursor stutter.
-  pick_mr '3373' 'mr3373.patch' 'patch'
-
   # Title: Let scaling-aware Xwayland clients scale themselves with "scale-monitor-framebuffers"
   # Author: Jonas Dreßler <verdre@v0yd.nl>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3567
@@ -245,20 +222,22 @@ prepare() {
   #          (mostly Chromium/Electron based apps with Ozone Wayland.)
   pick_mr '3751' 'mr3751.patch' 'patch'
 
-  # Title: backends/native: Avoid duplicating or losing KMS property sets
-  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3912
+  # Title: kms/impl-device: Track dispatch duration in crtc_frame_deadline_dispatch
+  # Author: Michel Dänzer <mdaenzer@redhat.com>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3934
   # Type: 1
   # Status: 2
-  # Comment: Cannot be used with mr1441 as it already includes mr3912.
-  pick_mr '3912' 'mr3912.patch' 'patch'
+  # Comment: This fixes cursor stutter.
+  #          Do not enable this if !1441 is enabled since it already includes !3934.
+  pick_mr '3934' 'mr3934.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
   # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
   # Type: 1
   # Status: 2 & 3
-  # Comment: Help GPU frequencies to scale up but not currently working on Wayland.
+  # Comment: Helps GPU frequencies to scale up.
+  #          Backported: !3934.
   pick_mr '1441' 'mr1441.patch' 'patch'
 
 }
@@ -269,8 +248,8 @@ build() {
     -D wayland_eglstream=true
     -D installed_tests=false
     -D libdisplay_info=enabled
-    -D docs=$(if ! [ -n "$_disable_docs" ]; then echo "true"; else echo "false"; fi)
-    -D tests=$(if [ -n "$_enable_check" ]; then echo "true"; else echo "false"; fi)
+    -D docs=false
+    -D tests=false
   )
 
   CFLAGS="${CFLAGS/-O2/-O3} -fno-semantic-interposition"
@@ -280,57 +259,10 @@ build() {
   meson compile -C build
 }
 
-
-if [ -n "$_enable_check" ]; then
-  check() {
-    mkdir -p -m 700 "${XDG_RUNTIME_DIR:=$PWD/runtime-dir}"
-    glib-compile-schemas "${GSETTINGS_SCHEMA_DIR:=$PWD/build/data}"
-    export XDG_RUNTIME_DIR GSETTINGS_SCHEMA_DIR
-    export NO_AT_BRIDGE=1 GTK_A11Y=none
-    export MUTTER_DEBUG_DUMMY_MODE_SPECS="800x600@10.0"
-    local _pipewire_session_manager=$(pacman -Qq pipewire-session-manager)
-
-    msg2 "It is possible to fail some tests. Use with caution!"
-    # Tests fail:
-    # mutter:cogl+cogl/conform / cogl-test-offscreen-texture-formats-gles2
-    # mutter:core+mutter/stacking / fullscreen-maximize
-    ## https://gitlab.gnome.org/GNOME/mutter/-/issues/3343
-    xvfb-run -s '-nolisten local +iglx -noreset' \
-      ${_pkgname}/src/tests/meta-dbus-runner.py --launch=pipewire --launch=${_pipewire_session_manager} \
-      meson test -C build --no-suite 'mutter/kvm' --no-rebuild \
-      --print-errorlogs --setup plain ||:
-  }
-fi
-
-_pick() {
-  local p="$1" f d; shift
-  for f; do
-    d="$srcdir/$p/${f#$pkgdir/}"
-    mkdir -p "$(dirname "$d")"
-    mv "$f" "$d"
-    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
-  done
-}
-
-package_mutter-performance() {
+package() {
   provides=(mutter libmutter-14.so)
   conflicts=(mutter)
   
 
   meson install -C build --destdir "$pkgdir"
-
-  if ! [ -n "$_disable_docs" ]; then
-    _pick docs "$pkgdir"/usr/share/mutter-*/doc
-  fi
 }
-
-if ! [ -n "$_disable_docs" ]; then
-  package_mutter-performance-docs() {
-    provides=(mutter-docs)
-    conflicts=(mutter-docs)
-    pkgdesc+=" (documentation)"
-    depends=()
-
-    mv docs/* "$pkgdir"
-  }
-fi

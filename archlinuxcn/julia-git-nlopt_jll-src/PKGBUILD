@@ -1,7 +1,7 @@
 pkgname=julia-git-nlopt_jll-src
-pkgver=2.7.1+0
-_commit=e0ef1060266aa3e5f035748efc52627e319b9e3a
-pkgrel=4
+pkgver=2.8.0+0
+_commit=43c6d7041d0efd5ca534cc4d8387ab44fe22c852
+pkgrel=1
 pkgdesc="NLopt_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/NLopt_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git nlopt)
 source=("git+https://github.com/JuliaBinaryWrappers/NLopt_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('bc7a302c27e42c97d9b6977b5ad911e736db4e9fbf9fb59d7cc5fb26b0246016'
             '0c77da7ca0095eefef9f279adad5e4f5ec38d02ebfc830c062ea91169592bb9c')
 
 build() {
