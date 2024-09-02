@@ -24,13 +24,16 @@ pkgver() {
 }
 
 build() {
+	export STACK_ROOT="${srcdir}/.stack"
 	cd "$srcdir/${pkgname%-git}"
-	stack build
+	# https://github.com/commercialhaskell/stack/issues/6525#issuecomment-2060688061
+	stack --compiler ghc-9.6.5 build
 }
 
 package() {
+	export STACK_ROOT="${srcdir}/.stack"
 	cd "$srcdir/${pkgname%-git}"
-	stack install --local-bin-path="$pkgdir/usr/bin"
+	stack --compiler ghc-9.6.5 install --local-bin-path="$pkgdir/usr/bin"
 	install -Dm644 "startup/${pkgname%-git}@.service" -t "$pkgdir/usr/lib/systemd/system"
 	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
