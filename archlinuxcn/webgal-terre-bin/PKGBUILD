@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 pkgname=webgal-terre-bin
 _appname=WebGAL_Terre
-pkgver=4.5.6
+pkgver=4.5.7
 pkgrel=1
 pkgdesc="Galgame Editing. Redefined | 视觉小说编辑，再进化"
 arch=(
@@ -35,8 +35,8 @@ source=(
 )
 sha256sums=('1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5'
             'd51d809af628cc8292bd430a4847adb4adefa9d4b0aee00a55a84ff9630e167c')
-sha256sums_aarch64=('f7118dcaae7db7bf273dba68aa470f81c874deb062be23d2f9f55d720e3676cd')
-sha256sums_x86_64=('f78796eed7bb37ab1187aca82e2b40b2d268222964bd5823cb9eef93b66b3022')
+sha256sums_aarch64=('875ccc9153640ecc8d969fef99d710ab3844b7a35c433f2d8623e410847c670e')
+sha256sums_x86_64=('b59bbe423ed3c71d2f7e801274b8565ca29284801366c8549e9090dfaae738c1')
 build() {
     sed -e "s|@appname@|${pkgname%-bin}|g" \
         -e "s|@runname@|${_appname}|g" \
