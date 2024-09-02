@@ -1,0 +1,18 @@
+pkgname=julia-git-dispatchdoctor-src
+pkgver=0.4.14
+_commit=b34a0b8819ccdcaf9ae1e5b14fbd6713c505cacc
+pkgrel=1
+pkgdesc="DispatchDoctor.jl"
+url="https://github.com/MilesCranmer/DispatchDoctor.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/MilesCranmer/DispatchDoctor.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd DispatchDoctor.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DispatchDoctor "${pkgdir}" "${pkgname}" julia-git
+}

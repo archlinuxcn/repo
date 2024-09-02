@@ -1,0 +1,18 @@
+pkgname=julia-git-testitems-src
+pkgver=1.0.0
+_commit=b3a9a0958acf7ff3837386449ecb96cdc63980d8
+pkgrel=1
+pkgdesc="TestItems.jl"
+url="https://github.com/julia-vscode/TestItems.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/julia-vscode/TestItems.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TestItems.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TestItems "${pkgdir}" "${pkgname}" julia-git
+}
