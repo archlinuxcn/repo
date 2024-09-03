@@ -1,7 +1,7 @@
 # Maintainer: Zhijun Zhang <zhangzhijun23@mails.ucas.ac.cn>
 
 pkgname=ds9
-pkgver=8.6b1
+pkgver=8.6
 pkgrel=1
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="https://sites.google.com/cfa.harvard.edu/saoimageds9"
@@ -11,8 +11,7 @@ depends=(libx11 zlib libxslt libxml2 libxft tcl tk)
 options=(!strip !lto)
 makedepends=(git gcc make automake autoconf zip)
 conflicts=('ds9' 'ds9-bin')
-# Using my branch to fix gcc14 compiling and hidpi side tabs
-source=("$pkgname::git+https://github.com/oldherl/SAOImageDS9.git#branch=fix-prefs-tabs"
+source=("$pkgname::git+https://github.com/SAOImageDS9/SAOImageDS9.git#tag=v$pkgver"
         "ds9.desktop"
         )
 sha256sums=('SKIP'

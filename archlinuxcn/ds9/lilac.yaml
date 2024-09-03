@@ -2,9 +2,12 @@ maintainers:
   - github: oldherl
 
 update_on:
-#  - source: aur
-#    aur: ds9
+  - source: github
+    github: SAOImageDS9/SAOImageDS9
+    use_max_tag: true
+    exclude_regex: '.*b.*'
+    prefix: v
   - alias: icu
   - source: manual
-    manual: 1
+    manual: 2
 #post_build: aur_post_build
