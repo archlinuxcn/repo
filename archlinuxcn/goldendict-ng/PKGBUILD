@@ -1,0 +1,53 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=goldendict-ng
+pkgver=24.05.05
+pkgrel=1
+pkgdesc="The next generation GoldenDict (Supports Qt WebEngine & Qt6)."
+arch=('i686' 'x86_64' 'aarch64')
+url="https://github.com/xiaoyifang/${pkgname}"
+license=('GPL-3.0-or-later')
+depends=(
+	'ffmpeg'
+	'hunspell'
+	'libvorbis'
+	'libxtst'
+	'lzo'
+	'zlib'
+	'xz'
+	'libeb'
+	'tomlplusplus'
+	'fmt'
+	'opencc'
+	'xapian-core'
+	'libzim'
+	'qt6-base'
+	'qt6-svg'
+	'qt6-multimedia'
+	'qt6-webengine'
+	'qt6-speech'
+	'qt6-5compat'
+)
+makedepends=(
+	'cmake'
+	'ninja'
+	'qt6-tools'
+)
+conflicts=('goldendict' 'goldendict-git' 'goldendict-svn' 'goldendict-git-opt')
+provides=('goldendict')
+replaces=('goldendict-svn' 'goldendict-git-opt' 'goldendict-webengine-git')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-LiXia.ecd1138c.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+	cmake -B build -S "${pkgname}-${pkgver}" -G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DUSE_SYSTEM_FMT=ON \
+		-DUSE_SYSTEM_TOML=ON
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+}
