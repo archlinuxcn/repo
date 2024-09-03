@@ -40,7 +40,7 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-LiXia.
 sha256sums=('SKIP')
 
 build() {
-	cmake -B build -S "${pkgname}-${pkgver}" -G Ninja \
+	cmake -B build -S "${pkgname}-${pkgver}-LiXia.ecd1138c" -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DUSE_SYSTEM_FMT=ON \
 		-DUSE_SYSTEM_TOML=ON
