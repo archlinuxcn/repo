@@ -8,7 +8,6 @@ arch=('i686' 'x86_64' 'aarch64')
 url="https://github.com/xiaoyifang/${pkgname}"
 license=('GPL-3.0-or-later')
 depends=(
-	'ffmpeg4.4'
 	'hunspell'
 	'libvorbis'
 	'libxtst'
@@ -43,7 +42,8 @@ build() {
 	cmake -B build -S "${pkgname}-${pkgver}-LiXia.ecd1138c" -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DUSE_SYSTEM_FMT=ON \
-		-DUSE_SYSTEM_TOML=ON
+		-DUSE_SYSTEM_TOML=ON \
+		-DWITH_FFMPEG_PLAYER=OFF # Temporarily turn off ffmpeg
 
 	cmake --build build
 }
