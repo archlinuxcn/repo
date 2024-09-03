@@ -21,7 +21,8 @@ sha256sums=('SKIP'
 build() {
     cd ${srcdir}/${pkgname}
     unix/configure
-    make -j 1
+    # workaround for unsatisfying build order in upstream
+    make -j 1 || make -j 1 || make -j 1
 }
 
 package() {
