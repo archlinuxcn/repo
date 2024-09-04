@@ -30,7 +30,7 @@ sha1sums=('984de6879215794d4fec7916fa82741367d3b10d'
           'd3450d5e88f62f7f6c681f12156816f6d30bb225')
 
 prepare() {
-    cd ${pkgname}-${pkgver}
+    cd ${_pkgname}-${pkgver}
     # for fixing numpy 2.0
     patch -p1 -i ../298.patch
     patch -p1 -i ../299.patch
