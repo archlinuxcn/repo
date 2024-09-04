@@ -32,7 +32,7 @@ prepare() {
     patch -p1 -i ../298.patch
     patch -p1 -i ../299.patch
     rm util/util_wrap.c
-    grep -RnI elsize . || echo 0
+#    grep -RnI elsize . || echo 0
 }
 
 build() {
