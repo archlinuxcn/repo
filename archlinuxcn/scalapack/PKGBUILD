@@ -26,7 +26,7 @@ build() {
   mkdir build
   cd build
 
-  CFLAGS+=' -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug} -fno-strict-aliasing'
+  CFLAGS+=' -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug} -fno-strict-aliasing -Wno-implicit-function-declaration'
   CXXFLAGS+=' -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug} -fno-strict-aliasing'
   FFLAGS+=" -g -O3 -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug} -fallow-argument-mismatch"
   export FFLAGS
