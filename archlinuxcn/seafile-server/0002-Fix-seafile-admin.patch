@@ -1,7 +1,7 @@
-From 6129ff145c1859d9f72f11a740ec33908c5f9869 Mon Sep 17 00:00:00 2001
+From 0216b23f4e17a21f491ffb3bf10f8e2944d14422 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 25 Feb 2023 14:09:12 -0500
-Subject: [PATCH 2/2] Fix seafile-admin
+Subject: [PATCH 2/3] Fix seafile-admin
 
 ---
  tools/seafile-admin | 155 ++++++++++++++++++++++++++++++++------------
@@ -324,5 +324,5 @@ index b5e199e..164e98f 100755
          with open(pidfile, 'r') as fp:
              pid = fp.read().strip('\n ')
 -- 
-2.39.2
+2.46.0
 

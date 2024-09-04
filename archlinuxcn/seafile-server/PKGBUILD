@@ -4,8 +4,8 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile-server
-pkgver=11.0.8
-pkgrel=2
+pkgver=11.0.12
+pkgrel=0
 pkgdesc='Seafile server core'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url='https://github.com/haiwen/seafile-server'
@@ -24,11 +24,13 @@ source=(
   "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver-server.tar.gz"
   0001-Fix-controller-path-and-migrate-old-pids-directory.patch
   0002-Fix-seafile-admin.patch
+  0003-Fix-incorrect-error-usage-and-incorrect-comparison-f.patch
   'seafile-server@.service'
 )
-sha256sums=('ba08253d2e54ca236aeac71d28238ca8ffe42d6904a2f445870cade787c0d9ca'
-            'f76e0187670c67a48e6aebae1e193d7829a9ab7d942a07607fb4714bd416c9d1'
-            'f9f863fef90aee48b6a03103b94d6718cb45f44fab74ca65e499c847935ec447'
+sha256sums=('d6bdab0990ed7e63d8f06fcff081a346cf22099c78107460863e19bb98fe9507'
+            '5b07463acdd9ac1a9063eabcec8b691401de13fc611e518b83337570514988ee'
+            'af1808c4413cb05829d1e6f8416fd042a6d771b8a6486a85e756557e20e79325'
+            'ca0231fe8c130a4a8a3850cdb631012eead49e59c2b2ebd885f81fc7addbc454'
             '347982254a025ce86cd53fbb6bf505320638bf69736d65a96d17f74551139072')
 
 prepare() {
@@ -40,6 +42,7 @@ prepare() {
   sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./lib/libseafile.pc.in"
   patch -Np1 --no-backup-if-mismatch < ../0001-Fix-controller-path-and-migrate-old-pids-directory.patch
   patch -Np1 --no-backup-if-mismatch < ../0002-Fix-seafile-admin.patch
+  patch -Np1 --no-backup-if-mismatch < ../0003-Fix-incorrect-error-usage-and-incorrect-comparison-f.patch
   2to3 -nw --no-diffs tools/seafile-admin
 }
 
