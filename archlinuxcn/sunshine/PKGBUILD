@@ -8,7 +8,7 @@
 _pkgname="sunshine"
 pkgname="$_pkgname"
 pkgver=0.23.1
-pkgrel=5
+pkgrel=6
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
@@ -57,9 +57,11 @@ fi
 
 install="sunshine.install"
 
-_pkgsrc="$_pkgname"
-source=("$_pkgsrc"::"git+$url.git#commit=$_commit")
-sha256sums=('b9ac221ca53c86010d02d7144c289053e7055c537d7313a8ff3063ec59477e4d')
+_source_main() {
+  _pkgsrc="$_pkgname"
+  source=("$_pkgsrc"::"git+$url.git#commit=$_commit")
+  sha256sums=('b9ac221ca53c86010d02d7144c289053e7055c537d7313a8ff3063ec59477e4d')
+}
 
 _source_sunshine() {
   source+=(
@@ -133,6 +135,7 @@ _prepare_moonlight_common_c() (
   _submodule_update
 )
 
+_source_main
 _source_sunshine
 _source_moonlight_common_c
 
@@ -149,8 +152,22 @@ prepare() {
   _prepare_sunshine
   _prepare_moonlight_common_c
 
-  # fix for miniupnpc
-  git -C "$_pkgsrc" cherry-pick -n -m1 a940cdb394055139ca6a964289f414da562452e3
+  # cherry-pick
+  sed -E \
+    -e '/#include <string>/s&$&\n\n#include <boost/core/noncopyable.hpp>&' \
+    -i "$_pkgsrc/src/platform/common.h"
+
+  git -C "$_pkgsrc" add .
+  git -c user.email="makepkg@example.com" -c user.name="makepkg" \
+    -C "$_pkgsrc" commit -m "prepare for cherry-pick"
+
+  local _cherrypick=(
+    a940cdb394055139ca6a964289f414da562452e3 # miniupnpc
+    45265fb10387d329dc813a0dd7778c5998b787cd # boost
+  )
+  for i in ${_cherrypick[@]}; do
+    git -C "$_pkgsrc" cherry-pick -n -m1 $i
+  done
 
   # force features enabled
   sed -E \
