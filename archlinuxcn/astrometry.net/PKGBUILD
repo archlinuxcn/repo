@@ -31,6 +31,7 @@ prepare() {
     # for fixing numpy 2.0
     patch -p1 -i ../298.patch
     patch -p1 -i ../299.patch
+    grep -RnI elsize .
 }
 
 build() {
