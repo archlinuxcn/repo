@@ -4,10 +4,10 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt5-wayland-decorations
-_basever=5.15.14
-pkgver=5.15.14+kde+r59
+_basever=5.15.15
+pkgver=5.15.15+kde+r59
 pkgrel=1
-_commit=16e1ce54c6a83e90af2273e8d4eb3f7f3369440b
+_commit=6b1ba1cd0e1389d13e59b94e65da8f20a89ba03f
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -20,7 +20,7 @@ conflicts=('qt5-wayland')
 # Fedora patches: https://src.fedoraproject.org/rpms/qt5-qtwayland/tree
 _frepourl="https://src.fedoraproject.org/rpms/qt5-qtwayland"
 _frepobranch=rawhide
-_fcommit=c0ca8c9d633f93c5f65c61ba7fe220ddb7641866
+_fcommit=53787a724b3d43d432b23dc2f14ddd6515da7c12
 _fpatchfile100='qtwayland-use-adwaita-decorations-by-default.patch'
 _fpatchfile101='qtwayland-decoration-support-backports-from-qt6.patch'
 _fpatchfile102='qtwayland-client-fix-window-margin-calculation.patch'
@@ -29,7 +29,7 @@ source=("git+https://invent.kde.org/qt/qt/qtwayland#commit=${_commit}"
         "${_fpatchfile100}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile100}"
         "${_fpatchfile101}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile101}"
         "${_fpatchfile102}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile102}")
-sha256sums=('35138ab4dcfb481245c1f12a0eacf79927107b47a34de483a4448a4105e74774'
+sha256sums=('e5463d376b0db2d0cbc9f517a39cfbbb85f3946d7792579da6e83978a25ee53b'
             '5b606c5526b44c0db9f5f7fd4be91c95bcb73bd06af304589c9f8c1922607fca'
             '4d8c5d686666cbaae7550ec3defee66ea56ca624152c56c51ff945693706c29d'
             '569ae734860335b72a0fc04e3418bc87086f574baf8db22c0dc5ba0846e22d4f')
