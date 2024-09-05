@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for f in /usr/share/nvim/site/pack/dist/start/*/doc/; do
+    /usr/bin/nvim -es "+helptags $f" +q
+done

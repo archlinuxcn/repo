@@ -21,9 +21,14 @@ optdepends=('python2-neovim: for Python 2 plugin support (see :help provider-pyt
             'wl-clipboard: for clipboard support on wayland (see :help clipboard)')
 provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
-source=("https://github.com/${_pkgname}/${_pkgname}.git")
+source=(
+	"git+https://github.com/${_pkgname}/${_pkgname}.git"
+	nvimdoc{,.hook}
+)
 install="${pkgname}.install"
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            '0881cf186965ac3d601c25866c7540f8d82064e7a84f5b644ca6a41b54c2c9a6'
+            '69794b783cb004ec9fe2bbe2d7ac347681701bbcb15304b0324d8ec95fbd6e81')
 
 pkgver() {
   cd "${_pkgname}/"
@@ -31,7 +36,7 @@ pkgver() {
 }
 
 build() {
-  cmake -S "${pkgname}/" \
+  cmake -S "${_pkgname}/" \
         -B build \
 	-G Ninja \
         -D CMAKE_INSTALL_PREFIX=/usr \
