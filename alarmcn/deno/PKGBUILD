@@ -2,8 +2,9 @@
 # Contributor: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
-pkgver=1.45.5
+pkgver=1.46.0
 pkgrel=1
+_rusty_v8_ver=0.104.0
 pkgdesc="A secure runtime for JavaScript and TypeScript"
 arch=(aarch64 x86_64)
 url="https://deno.land"
@@ -11,8 +12,24 @@ license=('MIT')
 options=('!lto')
 depends=('gcc-libs')
 makedepends=('git' 'python' 'rust' 'nodejs' 'gn' 'ninja' 'clang' 'lld' 'cmake' 'protobuf')
-source=("git+https://github.com/denoland/deno.git#tag=v$pkgver")
-sha512sums=('43acd662964cbb62d9d430da6aa06dc65c6404c843d397c781853e7bfeda7c3ba6270ddf2c356f52e94485c011b6dafb6a32201d3f54d123c3fcd139f075b32a')
+source=("git+https://github.com/denoland/deno.git#tag=v$pkgver"
+        "git+https://github.com/denoland/rusty_v8.git#tag=v$_rusty_v8_ver"
+        "compiler-rt-adjust-paths.patch")
+sha512sums=('96e6027e631710d99572aa863c1d04876f92a89bca1b632a2086b5ec460ce2cfb3e641cdaee4880941fb361e155998b4bbb329ab607edafdbcd9e009c6403963'
+            'e3750ea7445a8c7f2ff104bd48b74138667aefe6d1df091c0238eb2722513586d13ec5facdc8e6d5c4549434b902f2855aae057b2fbbe8051d3644cdb081e482'
+            '796dd9dcb44ac65b3a1e47b13219549af3c55598f1ce1493ae5ebed469b3791f977415e4dc8528e5f0f4520398665400411f2ecdf15968aa7e405aadd6fbe125')
+
+prepare() {
+  cd rusty_v8
+  git config -f .gitmodules submodule.v8.shallow true
+  git submodule update --init --recursive
+
+  # https://github.com/denoland/rusty_v8/issues/1587
+  patch -Np1 -i ../compiler-rt-adjust-paths.patch
+
+  cd ../deno
+  echo -e "\n[patch.crates-io]\nv8 = { path = '../rusty_v8' }" >> Cargo.toml
+}
 
 build() {
   cd $pkgname
@@ -21,9 +38,11 @@ build() {
   export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
   export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
+  local _clang_version=$(clang --version | grep -m1 version | sed 's/.* \([0-9]\+\).*/\1/')
   local _extra_gn_args=(
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
+    "clang_version=\"$_clang_version\""
   )
 
   export CC=clang CXX=clang++ AR=ar NM=nm
