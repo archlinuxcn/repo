@@ -170,4 +170,23 @@ package() {
     # trick extract_function_variable() in makepkg into not detecting the
     # backup array modification and adding remaining configuration files
     [[ /usr/bin/true ]] && backup=( ${backup[@]} $(find "etc/${_pkgname}.d/" -type f | LC_ALL=C sort) )
+
+    # check if apparmor.d package is already installed
+    if pacman -Qq apparmor.d &> /dev/null; then
+        echo "apparmor.d is installed, checking for file conflicts..."
+
+        APPARMORD_FILES=$(mktemp)
+        pacman -Qlq apparmor.d > $APPARMORD_FILES
+
+        # Check for conflicts with files from apparmor.d package
+        find "$pkgdir/etc/apparmor.d/" -type f | while read -r file; do
+            apparmor_file="${file#$pkgdir}"
+            if grep -Fxq "$apparmor_file" "$APPARMORD_FILES"; then
+                rm -v "$file"
+            fi
+        done
+        rm "$APPARMORD_FILES"
+    else
+        echo "apparmor.d is not installed, skipping conflict checks"
+    fi
 }
