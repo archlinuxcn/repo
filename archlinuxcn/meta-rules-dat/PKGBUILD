@@ -3,7 +3,7 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=meta-rules-dat
-pkgver=20240904
+pkgver=20240905
 pkgver() {
   date +'%Y%m%d'
 }
