@@ -1,17 +1,18 @@
-# Maintainer: Yauheni Kirylau <actionless DOT loveless PLUS aur AT gmail DOT com>
-# shellcheck disable=SC2034,SC2154
+# Maintainer: Yauheni Kirylau <actionless DOT loveless PLUS aur AT gmail MF com>
+# shellcheck disable=SC2001,SC2034,SC2154 shell=bash
 
-pkgname=pikaur
-pkgver=1.26.1
+_pkgname=pikaur
+pkgname="${_pkgname}"
+pkgver=1.27
 pkgrel=1
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
 url="https://github.com/actionless/pikaur"
-license=('GPL3')
+license=('GPL-3.0-only')
 source=(
-	"$pkgname-$pkgver.tar.gz"::https://github.com/actionless/pikaur/archive/"$pkgver".tar.gz
+	"$pkgname-$pkgver.tar.gz"::${url}/archive/"$pkgver".tar.gz
 )
-b2sums=('9d9184976dbe109989d24a4d682ba5913356bcc959a3e9967c2f459239fca65dd43b2efba65e0d42f6a894625e2ce8fb59fadaefd18f3cc46121afe9973de99f')
+b2sums=('e9a3d8f9ac33f21db2a514fed4dbb46ace15dcdd5419f85ff7045ce0bb5ee23808f602c8995bbf1c0b3536c688b1e7ec4deae7d6f159ec1cc37b55e69652cffe')
 depends=(
 	'pyalpm'
 	'git'
@@ -30,13 +31,13 @@ optdepends=(
 	'python-defusedxml: securely wrap Arch news replies'
 	'pacman-contrib: to use in pacman hook/systemd timer for cleaning up pikaur cache'
 )
-conflicts=('pikaur-git')
-provides=('pikaur')
+conflicts=("${_pkgname}-git")
+provides=("$_pkgname")
 changelog="CHANGELOG"
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}" || exit 2
-	sed -i -e "s/^VERSION.*=.*/VERSION = '${pkgver}'/g" pikaur/config.py
+	sed -i -e "s/^VERSION[: ].*=.*/VERSION = '${pkgver}'/g" pikaur/config.py
 	if test -d ./dist ; then
 		rm -r ./dist
 	fi
@@ -51,7 +52,7 @@ package() {
 		lang=$(sed -e 's/.mo$//' <<< "${langmo}")
 		install -Dm644 "locale/${langmo}" "$pkgdir/usr/share/locale/${lang}/LC_MESSAGES/pikaur.mo"
 	done
-	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-	install -Dm644 pikaur.1 "$pkgdir/usr/share/man/man1/pikaur.1"
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -Dm644 pikaur.1 "${pkgdir}/usr/share/man/man1/${_pkgname}.1"
 	cp -r ./packaging/* "${pkgdir}"
 }

@@ -2355,3 +2355,24 @@ Fri Aug 30 00:25:37 2024 +0200
     Changes:
     *  2024-08-30 ee41bf4 actionless fix(install_cli: manual_package_selection): force encoding when writing and reading temp file (fixes #836)
     *  2024-08-28 1ba61ef Bundy01 chore(locale): update es.po, fr.po and regeneration of others (#834)
+
+
+Thu Sep 5 00:20:56 2024 +0200
+-------------------------------------------------
+1.27            Release 1.27
+    
+    Add `pikaur-static` version, similar to `pacman-static`:
+    *  2024-09-04 2090622 actionless chore(pkgbuild; maintenance_scripts: tag_release): add static releases
+    *  2024-09-03 53cb77b actionless feat(makefile): add `standalone` target
+    ( --pacman-path could be used to use custom pacman executable during recovery)
+    
+    Other Notable Changes:
+    *  2024-09-04 9d856d5 actionless feat(args): add --pacman-conf-path flag
+    *  2024-08-31 934fd03 actionless chore: add pure-python fork of pyalpm, compatible with pypy
+    *  2024-08-31 1455694 actionless refactor: downgrade code to work with older python version, implemented in pypy3 7.3.17
+    *  2024-09-04 770cf3d actionless feat(args): add --pacman-path flag
+    *  2024-09-03 49ff187 actionless feat(pikspect): bypass env vars to spawned process
+    *  2024-09-03 4b2d6ab actionless feat(args, alpm): implement support for pacman's --dbpath and --root flags
+    *  2024-09-02 a89ebf9 actionless feat(pikspect): implement support for SIGWINCH, so inner terminal would be resized automatically when user resizing terminal
+    *  2024-09-01 e0778b3 actionless chore(packaging: bin): use unbuffered python by default
+    *  2024-08-30 3696579 actionless fix(search_cli): handle the case when one of multi-word search queries found nothing in repos (but others found smth)
