@@ -1,3 +1,81 @@
+Mullvad Browser 13.5.3 - September 03 2024
+ * All Platforms
+   * Updated Firefox to 115.15.0esr
+   * Updated NoScript to 11.4.35
+   * Bug 332: Rebase Mullvad Browser Stable onto 115.15.0esr [mullvad-browser]
+   * Bug 40056: Ensure that the lazy loading attribute is ignored on script-disabled documents [tor-browser]
+   * Bug 42686: Backport Mozilla 1885101 [tor-browser]
+   * Bug 42829: Prevent CSS-based scriptless interaction tracking [tor-browser]
+   * Bug 43100: Backport security fixes from Firefox 130 [tor-browser]
+ * Linux
+   * Bug 43064: Make copy/paste and drag/drop file filtering more specific [tor-browser]
+ * Build System
+   * All Platforms
+     * Bug 41218: Use new Tor Browser gpg subkey for signing stable releases [tor-browser-build]
+     * Bug 41222: link_old_mar_filenames still referenced in torbrowser-incrementals-{release,alpha}-unsigned [tor-browser-build]
+
+Mullvad Browser 14.0a3 - August 26 2024
+ * All Platforms
+   * Updated Firefox to 128.2.0esr
+   * Bug 333: Rebase Mullvad Browser Alpha onto 128.2.0esr [mullvad-browser]
+   * Bug 40056: Ensure that the lazy loading attribute is ignored on script-disabled documents [tor-browser]
+   * Bug 41817: Add more color aliases that take dark mode into account [tor-browser]
+   * Bug 42603: Remove safebrowsing URLs [tor-browser]
+   * Bug 42611: Set clipboard.imageAsFile.enabled to false [tor-browser]
+   * Bug 42646: Drop patch for tor-browser#40166 [tor-browser]
+   * Bug 42665: Drop "Learn More" spacing [tor-browser]
+ * Linux
+   * Bug 43064: Make copy/paste and drag/drop file filtering more specific [tor-browser]
+ * Build System
+   * All Platforms
+     * Bug 41013: Add a README to each project [tor-browser-build]
+     * Bug 41222: link_old_mar_filenames still referenced in torbrowser-incrementals-{release,alpha}-unsigned [tor-browser-build]
+
+Mullvad Browser 14.0a2 - August 16 2024
+ * All Platforms
+   * Updated Firefox to 128.1.0esr
+   * Updated NoScript to 11.4.34
+   * Updated uBlock Origin to 1.59.0
+   * Bug 326: Rebase Mullvad Browser Alpha onto 128.1.0esr [mullvad-browser]
+   * Bug 42596: Several console errors: Console.maxLogLevelPref used with a non-existing pref: [tor-browser]
+   * Bug 42641: Move from panel-footer class to moz-button-group [tor-browser]
+   * Bug 42644: toolbar rules in panelUI-shared.css are unneccessary [tor-browser]
+   * Bug 42667: Add description-deemphasized class to our additions to about:preferences [tor-browser]
+   * Bug 42679: Use a more robust approach to hide the "tracking protection" urlbar button [tor-browser]
+   * Bug 42699: Drop level="top" attribute from panels [tor-browser]
+   * Bug 42704: Drop the badged="true" attribute from security level button [tor-browser]
+   * Bug 42705: Update our preferences to account for new line height [tor-browser]
+   * Bug 42762: Review Mozilla 1498512: Enable by default setSinkId pref [tor-browser]
+   * Bug 42788: Review Mozilla 1828606: Add Recently Closed tabs to its own page [tor-browser]
+   * Bug 42789: Review Mozilla 1830157: Add new telemetry probe to determine how often an extension process had to be... [tor-browser]
+   * Bug 42792: Review Mozilla 1837097: Implement "Show less frequently" behavior for Pocket suggestions [tor-browser]
+   * Bug 42810: Review Mozilla 1840584: Support autofilling `first name` and `last name` field in a credit card form [tor-browser]
+   * Bug 42814: Opt out from Firefox relay by default. [tor-browser]
+   * Bug 42818: Review Mozilla 1841295: Update PocketSuggestions for the final suggestions schema [tor-browser]
+   * Bug 42835: Filter data transfers containing files [tor-browser]
+   * Bug 42846: Review Mozilla 1841995: Enable Credit Card Autofill in ES and IT in nightly [tor-browser]
+   * Bug 42847: Review Mozilla 1841996: Enable Credit Card Autofill in AT, BE, and PL in nightly [tor-browser]
+   * Bug 42848: Review Mozilla 1841998: Enable Credit Card Autofill for ES,IT,AT,BE and PL locales in release. r=dimi... [tor-browser]
+   * Bug 42855: Review Mozilla 1843130: Pocket newtab use new recs api for locale list config if new api pref is set [tor-browser]
+   * Bug 42862: Review Mozilla 1845428: Instrument Translations Panel With Telemetry [tor-browser]
+   * Bug 42863: Review Mozilla 1847150: Add more TranslationsTelemetry event keys for panel open r=gregtatum, a=dsmith [tor-browser]
+   * Bug 42864: Review Mozilla 1848845: Pocket newtab migrate existing markets to new API. r=gvn a=RyanVM [tor-browser]
+   * Bug 42872: Disable translations until audited and solved the UX problems [tor-browser]
+   * Bug 42886: Review Mozilla 1848048: Add a result menu to disable trending results. r=dao,fluent-reviewers,setting... [tor-browser]
+   * Bug 42996: Review Mozilla 1517786: Implement and ship CanvasRenderingContext2D.getContextAttributes() [tor-browser]
+ * Windows + macOS
+   * Bug 42774: Review Mozilla 1848815: Add a user-facing setting to enable enterprise roots import, and enable it by default [tor-browser]
+   * Bug 43021: Revert the OS deprecation notification introduced in #42347 [tor-browser]
+ * Windows
+   * Bug 43051: windows: remove UI for "open Tor Browser automatically when computer starts" [tor-browser]
+ * Build System
+   * All Platforms
+     * Bug 42799: Do not run lint pipelines on new tag [tor-browser]
+     * Bug 41204: NoScript isn't added automatically to Mullvad Browser changelogs [tor-browser-build]
+   * Windows
+     * Bug 41185: Drop Windows 7 support for 14.0 from build tools [tor-browser-build]
+     * Bug 41201: Bump the Windows version checked by the installer [tor-browser-build]
+
 Mullvad Browser 13.5.2 - August 06 2024
  * All Platforms
    * Updated Firefox to 115.14.0esr
