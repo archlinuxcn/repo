@@ -11,8 +11,8 @@ arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://${_pkgname}.io"
 backup=('etc/xdg/nvim/sysinit.vim')
 license=('Apache-2.0 AND LicenseRef-vim')
-depends=('libluv' 'libtermkey' 'libutf8proc' 'libuv' 'libvterm>=0.3' 'luajit' 'msgpack-c' 'unibilium' 'tree-sitter-git' 'lua51-lpeg' 'libutf8proc-git')
-makedepends=('cmake' 'git' 'gperf' 'lua51-mpack')
+depends=('libluv' 'libtermkey' 'libutf8proc' 'libuv' 'libvterm>=0.3' 'luajit' 'msgpack-c' 'unibilium' 'tree-sitter-git' 'libutf8proc-git')
+makedepends=('cmake' 'git' 'ninja' 'lua51-mpack' 'lua51-lpeg')
 optdepends=('python2-neovim: for Python 2 plugin support (see :help provider-python)'
             'python-neovim: for Python 3 plugin support (see :help provider-python)'
             'ruby-neovim: for Ruby plugin support (see :help provider-ruby)'
@@ -33,6 +33,7 @@ pkgver() {
 build() {
   cmake -S "${pkgname}/" \
         -B build \
+	-G Ninja \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D USE_BUNDLED=OFF
 
@@ -40,24 +41,35 @@ build() {
 }
 
 check() {
-  cd build
-  ./bin/nvim --version
-  ./bin/nvim --headless -u NONE -i NONE -c ':quit'
+  cd build/bin
+  ./nvim --version
+  ./nvim --headless -u NONE -i NONE +q
 }
 
 package() {
-  DESTDIR="${pkgdir}" cmake --build build --target install
+  install -Dm644 nvimdoc.hook -t "${pkgdir}/usr/share/libalpm/hooks/"
+  install -Dm755 nvimdoc -t "${pkgdir}/usr/share/libalpm/scripts/"
 
   cd "${_pkgname}/"
+  DESTDIR="${pkgdir}" cmake --install build
+
   install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
   install -Dm644 runtime/nvim.desktop -t "${pkgdir}/usr/share/applications/"
+  install -Dm644 runtime/nvim.appdata.xml -t "${pkgdir}/usr/share/metainfo/"
   install -Dm644 runtime/nvim.png -t "${pkgdir}/usr/share/pixmaps/"
 
-  # Make Arch vim packages work
+  # Tree-sitter grammars are packaged separately and installed into
+  # /usr/lib/tree_sitter.
+  ln -s /usr/lib/tree_sitter "${pkgdir}/usr/share/nvim/runtime/parser"
+
+  # Include system-wide Vim directory in runtimepath
   install -d "${pkgdir}/etc/xdg/nvim/"
-  echo "\" This line makes pacman-installed global Arch Linux vim packages work." > "${pkgdir}"/etc/xdg/nvim/sysinit.vim
-  echo "source /usr/share/nvim/archlinux.vim" >> "${pkgdir}/etc/xdg/nvim/sysinit.vim"
+  echo "source /usr/share/nvim/archlinux.lua" > "${pkgdir}/etc/xdg/nvim/sysinit.vim"
 
   install -d "${pkgdir}/usr/share/vim/"
-  echo "set runtimepath+=/usr/share/vim/vimfiles" > "${pkgdir}/usr/share/nvim/archlinux.vim"
+  cat > "${pkgdir}/usr/share/nvim/archlinux.lua" << EOF
+-- Modify runtimepath to also search the system-wide Vim directory
+-- (eg. for Vim runtime files from Arch Linux packages)
+vim.opt.runtimepath:append({ '/usr/share/vim/vimfiles', '/usr/share/vim/vimfiles/after' })
+EOF
 }
