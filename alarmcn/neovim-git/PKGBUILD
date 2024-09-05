@@ -14,11 +14,11 @@ license=('Apache-2.0 AND LicenseRef-vim')
 depends=('libluv' 'libtermkey' 'libutf8proc' 'libuv' 'libvterm>=0.3' 'luajit' 'msgpack-c' 'unibilium' 'tree-sitter-git' 'libutf8proc-git')
 makedepends=('cmake' 'git' 'ninja' 'lua51-mpack' 'lua51-lpeg')
 optdepends=('python2-neovim: for Python 2 plugin support (see :help provider-python)'
-            'python-neovim: for Python 3 plugin support (see :help provider-python)'
-            'ruby-neovim: for Ruby plugin support (see :help provider-ruby)'
-            'xclip: for clipboard support (or xsel) (see :help provider-clipboard)'
-            'xsel: for clipboard support (or xclip) (see :help provider-clipboard)'
-            'wl-clipboard: for clipboard support on wayland (see :help clipboard)')
+	'python-neovim: for Python 3 plugin support (see :help provider-python)'
+	'ruby-neovim: for Ruby plugin support (see :help provider-ruby)'
+	'xclip: for clipboard support (or xsel) (see :help provider-clipboard)'
+	'xsel: for clipboard support (or xclip) (see :help provider-clipboard)'
+	'wl-clipboard: for clipboard support on wayland (see :help clipboard)')
 provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
 source=(
@@ -31,48 +31,49 @@ sha256sums=('SKIP'
             '69794b783cb004ec9fe2bbe2d7ac347681701bbcb15304b0324d8ec95fbd6e81')
 
 pkgver() {
-  cd "${_pkgname}/"
-  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	cd "${_pkgname}/"
+	git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cmake -S "${_pkgname}/" \
-        -B build \
-	-G Ninja \
-        -D CMAKE_INSTALL_PREFIX=/usr \
-        -D USE_BUNDLED=OFF
+	cmake -S "${_pkgname}/" \
+		-B build \
+		-G Ninja \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D USE_BUNDLED=OFF
 
-  cmake --build build
+	cmake --build build
 }
 
 check() {
-  cd build/bin
-  ./nvim --version
-  ./nvim --headless -u NONE -i NONE +q
+	cd build/bin
+	./nvim --version
+	./nvim --headless -u NONE -i NONE +q
 }
 
 package() {
-  install -Dm644 nvimdoc.hook -t "${pkgdir}/usr/share/libalpm/hooks/"
-  install -Dm755 nvimdoc -t "${pkgdir}/usr/share/libalpm/scripts/"
+	install -Dm644 nvimdoc.hook -t "${pkgdir}/usr/share/libalpm/hooks/"
+	install -Dm755 nvimdoc -t "${pkgdir}/usr/share/libalpm/scripts/"
 
-  cd "${_pkgname}/"
-  DESTDIR="${pkgdir}" cmake --install build
+	DESTDIR="${pkgdir}" cmake --install build
 
-  install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
-  install -Dm644 runtime/nvim.desktop -t "${pkgdir}/usr/share/applications/"
-  install -Dm644 runtime/nvim.appdata.xml -t "${pkgdir}/usr/share/metainfo/"
-  install -Dm644 runtime/nvim.png -t "${pkgdir}/usr/share/pixmaps/"
+	cd "${_pkgname}/"
+	install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -Dm644 runtime/nvim.desktop -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 runtime/nvim.appdata.xml -t "${pkgdir}/usr/share/metainfo/"
+	install -Dm644 runtime/nvim.png -t "${pkgdir}/usr/share/pixmaps/"
 
-  # Tree-sitter grammars are packaged separately and installed into
-  # /usr/lib/tree_sitter.
-  ln -s /usr/lib/tree_sitter "${pkgdir}/usr/share/nvim/runtime/parser"
+	# Tree-sitter grammars are packaged separately and installed into
+	# /usr/lib/tree_sitter.
+	ln -s /usr/lib/tree_sitter "${pkgdir}/usr/share/nvim/runtime/parser"
 
-  # Include system-wide Vim directory in runtimepath
-  install -d "${pkgdir}/etc/xdg/nvim/"
-  echo "source /usr/share/nvim/archlinux.lua" > "${pkgdir}/etc/xdg/nvim/sysinit.vim"
+	# Include system-wide Vim directory in runtimepath
+	install -d "${pkgdir}/etc/xdg/nvim/"
+	echo "source /usr/share/nvim/archlinux.lua" >"${pkgdir}/etc/xdg/nvim/sysinit.vim"
 
-  install -d "${pkgdir}/usr/share/vim/"
-  cat > "${pkgdir}/usr/share/nvim/archlinux.lua" << EOF
+	install -d "${pkgdir}/usr/share/vim/"
+	cat >"${pkgdir}/usr/share/nvim/archlinux.lua" <<EOF
 -- Modify runtimepath to also search the system-wide Vim directory
 -- (eg. for Vim runtime files from Arch Linux packages)
 vim.opt.runtimepath:append({ '/usr/share/vim/vimfiles', '/usr/share/vim/vimfiles/after' })
