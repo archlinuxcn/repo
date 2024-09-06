@@ -1,12 +1,12 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=fvm
 pkgver=3.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Flutter Version Management: A simple CLI to manage Flutter SDK versions."
 arch=('x86_64')
 url="https://fvm.app"
 license=('MIT')
-depends=('glibc')
+depends=('git' 'glibc' 'unzip')
 makedepends=('dart')
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/leoafarias/fvm/archive/refs/tags/$pkgver.tar.gz")
