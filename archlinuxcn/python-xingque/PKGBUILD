@@ -1,0 +1,45 @@
+# Maintainer: weilinfox <sakurakaze.fox at gmail.com>
+
+_pkgname=xingque
+pkgname=python-xingque
+pkgver=0.2.0
+pkgrel=6
+pkgdesc="Yet another Python binding to starlark-rust, exposing the Starlark language to your Python projects."
+arch=('aarch64' 'armv7h' 'loong64' 'riscv64' 'x86_64' 'x86_64_v3')
+url="https://github.com/xen0n/xingque"
+license=(Apache-2.0)
+depends=(
+	'gcc-libs'
+	'glibc'
+	'python>=3.8'
+)
+makedepends=(
+	'maturin>=1.6'
+	'python-installer'
+)
+checkdepends=('python-pytest')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/xen0n/xingque/archive/${pkgver}.tar.gz")
+sha512sums=('866593df8a05e32f7ebe42362dbd3baac4cf1e0a55379a8e0ab96c1c14b366409d0cc30cb8872c8f67f392b4676a20ce649dc5c92f1d115406a31a06c3094724')
+
+build() {
+  cd "$_pkgname-$pkgver"
+
+  maturin build --release --strip
+}
+
+check() {
+  cd "$_pkgname-$pkgver"
+
+  pyver=$(python -c "import sys; print('{}.{}'.format(*sys.version_info[:2]))")
+  python -m installer --destdir="$PWD/tmp_install" target/wheels/*.whl
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python$pyver/site-packages" python -m pytest -v
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+
+  python -m installer --destdir="$pkgdir" target/wheels/*.whl
+
+  install -Dm644 {CHANGELOG,README}.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+  install -Dm644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

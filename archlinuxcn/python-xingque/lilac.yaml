@@ -1,0 +1,19 @@
+maintainers:
+  - github: weilinfox
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+repo_depends:
+  - glibc
+
+update_on:
+  - source: github
+    github: xen0n/xingque
+    use_max_tag: true
+    prefix:
