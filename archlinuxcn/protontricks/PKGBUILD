@@ -3,7 +3,7 @@
 
 pkgname=protontricks
 pkgver=1.11.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A simple wrapper that does winetricks things for Proton enabled games."
 arch=('any')
 url="https://github.com/Matoking/protontricks"
@@ -22,7 +22,7 @@ sha512sums=('SKIP')
 build() {
   cd "${srcdir}/${pkgname}"
 
-  python -m build --wheel
+  python -m build --wheel --no-isolation
 }
 
 package() {
