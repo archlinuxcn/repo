@@ -5,8 +5,10 @@
 
 # TODO add test, see about packaging jtreg and using it here
 
-pkgbase=java-openjdk-wakefield
-pkgname=('jre-openjdk-wakefield-headless' 'jre-openjdk-wakefield' 'jdk-openjdk-wakefield' 'openjdk-wakefield-src' 'openjdk-wakefield-doc')
+pkgbase=java-openjdk-wakefield-git
+_pkgbase=${pkgbase%-git}
+pkgname=('jre-openjdk-wakefield-headless-git' 'jre-openjdk-wakefield-git' 'jdk-openjdk-wakefield-git' 'openjdk-wakefield-src-git' 'openjdk-wakefield-doc-git')
+_pkgname=('jre-openjdk-wakefield-headless' 'jre-openjdk-wakefield' 'jdk-openjdk-wakefield' 'openjdk-wakefield-src' 'openjdk-wakefield-doc')
 # on a majorver change, don't forget to update the misc files that come along this PKGBUILD
 _majorver=21
 _minorver=0
@@ -148,27 +150,27 @@ check() {
   # make -k check
 }
 
-package_jre-openjdk-wakefield-headless() {
+package_jre-openjdk-wakefield-headless-git() {
   pkgdesc="OpenJDK Java ${_majorver} headless wayland runtime environment"
   depends=("${_commondeps[@]}" 'giflib')
   optdepends=('java-rhino: for some JavaScript support')
   provides=("java-runtime-headless=${_majorver}" "java-runtime-headless-openjdk=${_majorver}" "jre${_majorver}-openjdk-headless=${pkgver}-${pkgrel}"
             "jre${_majorver}-openjdk-wakefield-headless=${pkgver}-${pkgrel}")
   conflicts=("jdk-openjdk" "jre-openjdk" "jdk-openjdk-wakefield" "jre-openjdk-wakefield")
-  backup=(etc/${pkgbase}/logging.properties
-          etc/${pkgbase}/management/jmxremote.access
-          etc/${pkgbase}/management/jmxremote.password.template
-          etc/${pkgbase}/management/management.properties
-          etc/${pkgbase}/net.properties
-          etc/${pkgbase}/security/java.policy
-          etc/${pkgbase}/security/java.security
-          etc/${pkgbase}/security/policy/README.txt
-          etc/${pkgbase}/security/policy/limited/default_US_export.policy
-          etc/${pkgbase}/security/policy/limited/default_local.policy
-          etc/${pkgbase}/security/policy/limited/exempt_local.policy
-          etc/${pkgbase}/security/policy/unlimited/default_US_export.policy
-          etc/${pkgbase}/security/policy/unlimited/default_local.policy
-          etc/${pkgbase}/sound.properties)
+  backup=(etc/${_pkgbase}/logging.properties
+          etc/${_pkgbase}/management/jmxremote.access
+          etc/${_pkgbase}/management/jmxremote.password.template
+          etc/${_pkgbase}/management/management.properties
+          etc/${_pkgbase}/net.properties
+          etc/${_pkgbase}/security/java.policy
+          etc/${_pkgbase}/security/java.security
+          etc/${_pkgbase}/security/policy/README.txt
+          etc/${_pkgbase}/security/policy/limited/default_US_export.policy
+          etc/${_pkgbase}/security/policy/limited/default_local.policy
+          etc/${_pkgbase}/security/policy/limited/exempt_local.policy
+          etc/${_pkgbase}/security/policy/unlimited/default_US_export.policy
+          etc/${_pkgbase}/security/policy/unlimited/default_local.policy
+          etc/${_pkgbase}/sound.properties)
   install=install_jre-openjdk-headless.sh
 
   cd ${_imgdir}/jre
@@ -184,14 +186,14 @@ package_jre-openjdk-wakefield-headless() {
 
   # Conf
   install -dm 755 "${pkgdir}/etc"
-  cp -r conf "${pkgdir}/etc/${pkgbase}"
-  ln -s /etc/${pkgbase} "${pkgdir}/${_jvmdir}/conf"
+  cp -r conf "${pkgdir}/etc/${_pkgbase}"
+  ln -s /etc/${_pkgbase} "${pkgdir}/${_jvmdir}/conf"
 
   # Legal
   install -dm 755 "${pkgdir}/usr/share/licenses"
-  cp -r legal "${pkgdir}/usr/share/licenses/${pkgbase}"
-  ln -s ${pkgbase} "${pkgdir}/usr/share/licenses/${pkgname}"
-  ln -s /usr/share/licenses/${pkgbase} "${pkgdir}/${_jvmdir}/legal"
+  cp -r legal "${pkgdir}/usr/share/licenses/${_pkgbase}"
+  ln -s ${_pkgbase} "${pkgdir}/usr/share/licenses/${_pkgname}"
+  ln -s /usr/share/licenses/${_pkgbase} "${pkgdir}/${_jvmdir}/legal"
 
   # Man pages
   for f in bin/*; do
@@ -206,7 +208,7 @@ package_jre-openjdk-wakefield-headless() {
   ln -sf /etc/ssl/certs/java/cacerts "${pkgdir}${_jvmdir}/lib/security/cacerts"
 }
 
-package_jre-openjdk-wakefield() {
+package_jre-openjdk-wakefield-git() {
   pkgdesc="OpenJDK Java ${_majorver} full wayland runtime environment"
   depends=("${_commondeps[@]}" 'giflib' 'libgif.so' 'libpng')
   optdepends=('alsa-lib: for basic sound support'
@@ -215,20 +217,20 @@ package_jre-openjdk-wakefield() {
             "java-runtime-headless=${_majorver}" "java-runtime-headless-openjdk=${_majorver}" "jre${_majorver}-openjdk-headless=${pkgver}-${pkgrel}"
             "jre${_majorver}-openjdk-wakefield=${pkgver}-${pkgrel}")
   conflicts=("jdk-openjdk" "jdk-openjdk-wakefield" "jre-openjdk-headless" "jre-openjdk-wakefield-headless")
-  backup=(etc/${pkgbase}/logging.properties
-          etc/${pkgbase}/management/jmxremote.access
-          etc/${pkgbase}/management/jmxremote.password.template
-          etc/${pkgbase}/management/management.properties
-          etc/${pkgbase}/net.properties
-          etc/${pkgbase}/security/java.policy
-          etc/${pkgbase}/security/java.security
-          etc/${pkgbase}/security/policy/README.txt
-          etc/${pkgbase}/security/policy/limited/default_US_export.policy
-          etc/${pkgbase}/security/policy/limited/default_local.policy
-          etc/${pkgbase}/security/policy/limited/exempt_local.policy
-          etc/${pkgbase}/security/policy/unlimited/default_US_export.policy
-          etc/${pkgbase}/security/policy/unlimited/default_local.policy
-          etc/${pkgbase}/sound.properties)
+  backup=(etc/${_pkgbase}/logging.properties
+          etc/${_pkgbase}/management/jmxremote.access
+          etc/${_pkgbase}/management/jmxremote.password.template
+          etc/${_pkgbase}/management/management.properties
+          etc/${_pkgbase}/net.properties
+          etc/${_pkgbase}/security/java.policy
+          etc/${_pkgbase}/security/java.security
+          etc/${_pkgbase}/security/policy/README.txt
+          etc/${_pkgbase}/security/policy/limited/default_US_export.policy
+          etc/${_pkgbase}/security/policy/limited/default_local.policy
+          etc/${_pkgbase}/security/policy/limited/exempt_local.policy
+          etc/${_pkgbase}/security/policy/unlimited/default_US_export.policy
+          etc/${_pkgbase}/security/policy/unlimited/default_local.policy
+          etc/${_pkgbase}/sound.properties)
   install=install_jre-openjdk.sh
 
   cd ${_imgdir}/jre
@@ -244,14 +246,14 @@ package_jre-openjdk-wakefield() {
 
   # Conf
   install -dm 755 "${pkgdir}/etc"
-  cp -r conf "${pkgdir}/etc/${pkgbase}"
-  ln -s /etc/${pkgbase} "${pkgdir}/${_jvmdir}/conf"
+  cp -r conf "${pkgdir}/etc/${_pkgbase}"
+  ln -s /etc/${_pkgbase} "${pkgdir}/${_jvmdir}/conf"
 
   # Legal
   install -dm 755 "${pkgdir}/usr/share/licenses"
-  cp -r legal "${pkgdir}/usr/share/licenses/${pkgbase}"
-  ln -s ${pkgbase} "${pkgdir}/usr/share/licenses/${pkgname}"
-  ln -s /usr/share/licenses/${pkgbase} "${pkgdir}/${_jvmdir}/legal"
+  cp -r legal "${pkgdir}/usr/share/licenses/${_pkgbase}"
+  ln -s ${_pkgbase} "${pkgdir}/usr/share/licenses/${_pkgname}"
+  ln -s /usr/share/licenses/${_pkgbase} "${pkgdir}/${_jvmdir}/legal"
 
   # Man pages
   for f in bin/*; do
@@ -269,11 +271,11 @@ package_jre-openjdk-wakefield() {
   for f in java; do
     install -Dm 644 \
       "${srcdir}/freedesktop-${f}.desktop" \
-      "${pkgdir}/usr/share/applications/${f}-${pkgbase}.desktop"
+      "${pkgdir}/usr/share/applications/${f}-${_pkgbase}.desktop"
   done
 }
 
-package_jdk-openjdk-wakefield() {
+package_jdk-openjdk-wakefield-git() {
   pkgdesc="OpenJDK Java ${_majorver} wayland development kit"
   depends=("${_commondeps[@]}" 'java-environment-common=3'
            'hicolor-icon-theme' 'libelf' 'libgif.so' 'libpng'
@@ -288,20 +290,20 @@ package_jdk-openjdk-wakefield() {
             "java-runtime-headless=${_majorver}" "java-runtime-headless-openjdk=${_majorver}" "jre${_majorver}-openjdk-headless=${pkgver}-${pkgrel}"
             "jdk${_majorver}-openjdk-wakefield=${pkgver}-${pkgrel}")
   conflicts=("jre-openjdk" "jre-openjdk-wakefield" "jre-openjdk-headless" "jre-openjdk-wakefield-headless")
-  backup=(etc/${pkgbase}/logging.properties
-          etc/${pkgbase}/management/jmxremote.access
-          etc/${pkgbase}/management/jmxremote.password.template
-          etc/${pkgbase}/management/management.properties
-          etc/${pkgbase}/net.properties
-          etc/${pkgbase}/security/java.policy
-          etc/${pkgbase}/security/java.security
-          etc/${pkgbase}/security/policy/README.txt
-          etc/${pkgbase}/security/policy/limited/default_US_export.policy
-          etc/${pkgbase}/security/policy/limited/default_local.policy
-          etc/${pkgbase}/security/policy/limited/exempt_local.policy
-          etc/${pkgbase}/security/policy/unlimited/default_US_export.policy
-          etc/${pkgbase}/security/policy/unlimited/default_local.policy
-          etc/${pkgbase}/sound.properties)
+  backup=(etc/${_pkgbase}/logging.properties
+          etc/${_pkgbase}/management/jmxremote.access
+          etc/${_pkgbase}/management/jmxremote.password.template
+          etc/${_pkgbase}/management/management.properties
+          etc/${_pkgbase}/net.properties
+          etc/${_pkgbase}/security/java.policy
+          etc/${_pkgbase}/security/java.security
+          etc/${_pkgbase}/security/policy/README.txt
+          etc/${_pkgbase}/security/policy/limited/default_US_export.policy
+          etc/${_pkgbase}/security/policy/limited/default_local.policy
+          etc/${_pkgbase}/security/policy/limited/exempt_local.policy
+          etc/${_pkgbase}/security/policy/unlimited/default_US_export.policy
+          etc/${_pkgbase}/security/policy/unlimited/default_local.policy
+          etc/${_pkgbase}/sound.properties)
   install=install_jdk-openjdk.sh
 
   cd ${_imgdir}/jdk
@@ -315,14 +317,14 @@ package_jdk-openjdk-wakefield() {
 
     # Conf
   install -dm 755 "${pkgdir}/etc"
-  cp -r conf "${pkgdir}/etc/${pkgbase}"
-  ln -s /etc/${pkgbase} "${pkgdir}/${_jvmdir}/conf"
+  cp -r conf "${pkgdir}/etc/${_pkgbase}"
+  ln -s /etc/${_pkgbase} "${pkgdir}/${_jvmdir}/conf"
 
   # Legal
   install -dm 755 "${pkgdir}/usr/share/licenses"
-  cp -r legal "${pkgdir}/usr/share/licenses/${pkgbase}"
-  ln -s ${pkgbase} "${pkgdir}/usr/share/licenses/${pkgname}"
-  ln -s /usr/share/licenses/${pkgbase} "${pkgdir}/${_jvmdir}/legal"
+  cp -r legal "${pkgdir}/usr/share/licenses/${_pkgbase}"
+  ln -s ${_pkgbase} "${pkgdir}/usr/share/licenses/${_pkgname}"
+  ln -s /usr/share/licenses/${_pkgbase} "${pkgdir}/${_jvmdir}/legal"
 
   # Man pages
   for f in bin/*; do
@@ -340,18 +342,18 @@ package_jdk-openjdk-wakefield() {
   for s in 16 24 32 48; do
     install -Dm 644 \
       "${srcdir}/${_jdkdir}/src/java.desktop/unix/classes/sun/awt/X11/java-icon${s}.png" \
-      "${pkgdir}/usr/share/icons/hicolor/${s}x${s}/apps/${pkgbase}.png"
+      "${pkgdir}/usr/share/icons/hicolor/${s}x${s}/apps/${_pkgbase}.png"
   done
 
   # Desktop files
   for f in jconsole java jshell; do
     install -Dm 644 \
       "${srcdir}/freedesktop-${f}.desktop" \
-      "${pkgdir}/usr/share/applications/${f}-${pkgbase}.desktop"
+      "${pkgdir}/usr/share/applications/${f}-${_pkgbase}.desktop"
   done
 }
 
-package_openjdk-wakefield-src() {
+package_openjdk-wakefield-src-git() {
   pkgdesc="OpenJDK Java ${_majorver} wayland sources"
   arch=('any')
   # Depends on JDK to get license files
@@ -361,10 +363,10 @@ package_openjdk-wakefield-src() {
   install -Dm 644 -t "${pkgdir}${_jvmdir}/lib" ${_imgdir}/jdk/lib/src.zip
 
   install -dm 755 "${pkgdir}/usr/share/licenses"
-  ln -s ${pkgbase} "${pkgdir}/usr/share/licenses/${pkgname}"
+  ln -s ${_pkgbase} "${pkgdir}/usr/share/licenses/${_pkgname}"
 }
 
-package_openjdk-wakefield-doc() {
+package_openjdk-wakefield-doc-git() {
   pkgdesc="OpenJDK Java ${_majorver} wayland documentation"
   arch=('any')
   # Depends on JDK to get license files
@@ -372,10 +374,10 @@ package_openjdk-wakefield-doc() {
   provides=("openjdk${_majorver}-doc=${pkgver}-${pkgrel}")
 
   install -dm 755 "${pkgdir}/usr/share/doc"
-  cp -r ${_imgdir}/docs "${pkgdir}/usr/share/doc/${pkgbase}"
+  cp -r ${_imgdir}/docs "${pkgdir}/usr/share/doc/${_pkgbase}"
 
   install -dm 755 "${pkgdir}/usr/share/licenses"
-  ln -s ${pkgbase} "${pkgdir}/usr/share/licenses/${pkgname}"
+  ln -s ${_pkgbase} "${pkgdir}/usr/share/licenses/${_pkgname}"
 }
 
 # vim: ts=2 sw=2 et:
