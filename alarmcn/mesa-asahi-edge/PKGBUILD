@@ -87,8 +87,8 @@ build() {
 _install() {
   local src f dir
   for src; do
-    f="${src#fakeinstall/}"
-    dir="${pkgdir}/${f%/*}"
+    f="/${src#fakeinstall/}"
+    dir="${pkgdir}${f%/*}"
     install -m755 -d "${dir}"
     mv -v "${src}" "${dir}/"
   done
