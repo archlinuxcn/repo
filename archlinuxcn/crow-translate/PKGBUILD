@@ -1,26 +1,26 @@
 # Maintainer: Shatur95 <genaloner@gmail.com>
 
 pkgname=crow-translate
-pkgver=2.11.1
-pkgrel=2
-pkgdesc='A simple and lightweight translator that allows you to translate and speak text using Google, Yandex Bing, LibreTranslate and Lingva'
+pkgver=3.0.0
+pkgrel=1
+pkgdesc='Application that allows you to translate and speak text'
 arch=(x86_64 aarch64)
-url=https://github.com/crow-translate/crow-translate
+url=https://apps.kde.org/crowtranslate/
 license=(GPL-3.0-or-later)
 depends=(qt5-svg qt5-multimedia qt5-x11extras kwayland5 gst-plugins-good openssl tesseract)
 makedepends=(qt5-tools extra-cmake-modules)
-source=($pkgname-$pkgver.tar.gz::$url/releases/download/$pkgver/$pkgname-$pkgver-source.tar.gz)
-sha256sums=(74591a350892594946b36b198d981826a0756326a1a7991b942fccb7971ec95d)
+source=(https://download.kde.org/stable/$pkgname/$pkgver/$pkgname-v$pkgver.tar.gz)
+sha256sums=(978edc8e9a2faba79126e4c3538bc391de8e29b97b98ea1acc0a99e713ad08b6)
 
 build() {
-  cd $pkgname-$pkgver
+  cd $pkgname-v$pkgver
 
   cmake -B build -D CMAKE_INSTALL_PREFIX="$pkgdir/usr"
   cmake --build build
 }
 
 package() {
-  cd $pkgname-$pkgver
+  cd $pkgname-v$pkgver
 
   cmake --install build
   rm -f "${pkgdir}/usr/share/icons/hicolor/icon-theme.cache"
