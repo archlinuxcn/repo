@@ -26,7 +26,7 @@ optdepends=('obs-build: required to run local builds'
 )
 conflicts=('osc-git' 'osc-bash-completion' 'zsh-completion-osc')
 replaces=('osc-bash-completion' 'zsh-completion-osc')
-source=("${pkgname}-${pkgver}::https://github.com/openSUSE/${pkgname}/archive/${pkgver}.tar.gz"
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
 	"_${pkgname}"
 	"0001-Add-sb2install-support-to-osc.patch"
 	"0002-Support-osc-copyprj-in-api-by-Islam-Amer-usage-osc-c.patch"
