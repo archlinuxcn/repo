@@ -1,3 +1,19 @@
+## GE-Proton9-13
+
+Hotfix:
+
+- Update vkd3d-proton to latest git to include World of Warcraft MSAA fix
+
+proton:
+
+- wine updated to latest bleeding edge
+- dxvk updated to latest git
+- proton upstream fixes added
+
+Additional:
+
+- protonfixes updated to latest git
+
 ## GE-Proton9-12
 
 - added latest upstream proton changes

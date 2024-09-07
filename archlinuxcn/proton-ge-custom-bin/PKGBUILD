@@ -11,8 +11,8 @@
 ## pkginfo
 pkgdesc='A fancy custom distribution of Valves Proton with various patches'
 pkgname=proton-ge-custom-bin
-pkgver=GE_Proton9_12
-pkgrel=2
+pkgver=GE_Proton9_13
+pkgrel=1
 epoch=1
 arch=('x86_64')
 license=('BSD' 'LGPL' 'zlib' 'MIT' 'MPL' 'custom')
@@ -77,7 +77,7 @@ source=("${_pkgver}_${pkgrel}.tar.gz::${url}/releases/download/${_pkgver}/${_pkg
   'user_settings.py'
   'launcher.sh'
   'pam_limits.conf')
-sha512sums=('3f53647c183b89e584fc4988dbd3979807e70f15e7008d2b643a81353cda21026010bc49e3eb1c7684d8800f0fe6b95085f96e20ecd485b85e7c564564c2dd09'
+sha512sums=('ac13b7a1da1dd80dd79527d506f7178ea33e61d20f1c7041d461329f4580b0481e1adc8d10963bcd061cc0d41f1859ab06f769b4c8f99c48e3f93c38bca67b9b'
             'babe2a461118bef6a777656a10bb89abeee2c8c3ed4285eb1b99f5ba517b779f18372d1d93ed2cce63b0d8111cf0b08e14a0c92435680239f6936783c3e4cbc5'
             '78ede6d50f9c43407da511c8b37dcf60aae2ddbd461c0081f0d0ce3de08ace3a84dee86e9253acbac829b47c5818ef4e1a354ccb05feaa9853ce279dc3f903fd'
             'c64898bd41801470925fb0efdcf7d247e5cb476fb4745f83ceeccf12041474e5c309fb1c2ac1483b419d12b4ade7668c046bebded4e3bf4708737ee505b080a1')
