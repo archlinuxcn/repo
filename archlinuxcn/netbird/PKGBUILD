@@ -1,0 +1,114 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: tarball <bootctl@gmail.com>
+# Contributor: brody <archfan@brodix.de>
+
+pkgbase=netbird
+pkgname=(
+	${pkgbase}{,-{management,signal}}
+)
+pkgver=0.28.9
+pkgrel=1
+url="https://${pkgbase}.io"
+arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
+license=('BSD-3-Clause')
+makedepends=('go')
+source=(
+	"${pkgname}-${pkgver}.tar.gz::https://github.com/netbirdio/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
+	${pkgbase}{,-{management,signal}}.env
+)
+sha256sums=('c3cc721330cbe8341665e982f8e7c77e0a37f0fedaee07f44fc78b5e200eb1c3'
+            '128e36e1f814a12886f3122a1809a404be17f81481275b6624e66937941f5269'
+            '7d31d7847f5a25bca81def470f7fc5a277c3064e5a0ad71a3f19a29202537315'
+            '80cd7b6a22087a83c1332c15693d8a18b780ef5ecf3fbc562af28d1a623eef3b')
+
+prepare() {
+	cd "${pkgbase}-${pkgver}/"
+	mkdir -p build
+	go mod download
+}
+
+build() {
+	cd "${pkgbase}-${pkgver}/"
+
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+	go build \
+		-o build \
+		-trimpath \
+		-buildmode=pie \
+		-mod=readonly \
+		-modcacherw \
+		-ldflags "-linkmode external -extldflags \"${LDFLAGS}\" -X github.com/netbirdio/${pkgname}/version.version=${pkgver}" \
+		./client ./signal ./management
+
+	for bin in client signal management; do
+		for shell in bash fish zsh; do
+			./build/${bin} completion ${shell} >build/${bin}.${shell}
+		done
+	done
+}
+
+check() {
+	cd "${pkgbase}-${pkgver}/build/"
+
+	[[ "$(./client version)" == ${pkgver} ]]
+	[[ "$(./management --version)" == "${pkgbase}-mgmt version ${pkgver}" ]]
+	[[ "$(./signal --version)" == "${pkgbase}-signal version ${pkgver}" ]]
+}
+
+package_netbird() {
+	optdepends=('resolvconf: Private DNS')
+	pkgdesc="WireGuard-based mesh network: client"
+	replaces=('wiretrustee')
+	backup=("etc/default/${pkgname}")
+
+	install -Dm644 "${pkgname}.env" "${pkgdir}/etc/default/${pkgname}"
+
+	cd "${pkgbase}-${pkgver}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "release_files/systemd/${pkgname}@.service" -t "${pkgdir}/usr/lib/systemd/system/"
+
+	cd build
+	install -Dm755 client "${pkgdir}/usr/bin/${pkgname}"
+	install -Dm644 client.bash "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+	install -Dm644 client.fish "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
+	install -Dm644 client.zsh "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
+}
+
+package_netbird-management() {
+	depends=('ca-certificates')
+	pkgdesc="WireGuard-based mesh network: management service"
+	backup=("etc/default/${pkgname}")
+
+	install -Dm644 "${pkgname}.env" "${pkgdir}/etc/default/${pkgname}"
+
+	cd "${pkgbase}-${pkgver}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "release_files/systemd/${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+
+	cd build
+	install -Dm755 management "${pkgdir}/usr/bin/${pkgbase}-mgmt"
+	install -Dm644 management.bash "${pkgdir}/usr/share/bash-completion/completions/${pkgbase}-mgmt"
+	install -Dm644 management.fish "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgbase}-mgmt.fish"
+	install -Dm644 management.zsh "${pkgdir}/usr/share/zsh/site-functions/_${pkgbase}-mgmt"
+}
+
+package_netbird-signal() {
+	pkgdesc="WireGuard-based mesh network: signal service"
+	backup=("etc/default/${pkgname}")
+
+	install -Dm644 "${pkgname}.env" "${pkgdir}/etc/default/${pkgname}"
+
+	cd "${pkgbase}-${pkgver}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "release_files/systemd/${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+
+	cd build
+	install -Dm755 signal "${pkgdir}/usr/bin/${pkgname}"
+	install -Dm644 signal.bash "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+	install -Dm644 signal.fish "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
+	install -Dm644 signal.zsh "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
+}
