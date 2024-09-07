@@ -1,8 +1,11 @@
 build_prefix: multilib
-pre_build_script: aur_pre_build(maintainers=['chaotic-aur'])
+pre_build_script: aur_pre_build(maintainers=['chaotic-aur', 'PedroHLC'])
 post_build: aur_post_build
 update_on:
   - source: aur
     aur: proton-ge-custom-bin
+  - source: manual
+    manual: 1
+
 maintainers:
   - github: roaldclark
