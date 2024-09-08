@@ -1,0 +1,28 @@
+post_install() {
+	echo "Installing Netbird systemd service..."
+	netbird service install
+
+	echo "---------------------------------------------------------------------------"
+	echo "After installation, run \"netbird service start\" to start Netbird service."
+	echo "---------------------------------------------------------------------------"
+}
+
+post_upgrade() {
+	echo "Stopping Netbird systemd service..."
+	systemctl stop netbird
+
+	echo "Upgrading Netbird systemd service..."
+	netbird service uninstall &>/dev/null
+	netbird service install &>/dev/null
+
+	echo "Starting Netbird systemd service..."
+	netbird service start
+}
+
+pre_remove() {
+	echo "Stopping Netbird systemd service..."
+	systemctl stop netbird
+
+	echo "Uninstalling Netbird systemd service..."
+	netbird service uninstall
+}

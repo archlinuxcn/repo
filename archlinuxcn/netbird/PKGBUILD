@@ -64,6 +64,7 @@ package_netbird() {
 	pkgdesc="WireGuard-based mesh network: client"
 	replaces=('wiretrustee')
 	backup=("etc/default/${pkgname}")
+	install="${pkgname}.install"
 
 	install -Dm644 "${pkgname}.env" "${pkgdir}/etc/default/${pkgname}"
 
