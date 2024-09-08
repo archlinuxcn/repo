@@ -6,7 +6,7 @@
 
 pkgname=mullvad-browser-bin
 pkgver=13.5.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Privacy-focused web browser developed by Mullvad VPN and the Tor Project'
 arch=(x86_64)
 url=https://mullvad.net/en/browser
@@ -93,6 +93,9 @@ package() {
 
   # ask it to create profiles in ~
   touch "$pkgdir/opt/mullvad-browser/system-install"
+
+  # disable built-in updates
+  touch "$pkgdir/opt/mullvad-browser/is-packaged-app"
 
   # cli wrapper
   install -Dm0755 "$srcdir/mullvad-browser.sh" "$pkgdir/usr/bin/mullvad-browser"
