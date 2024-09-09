@@ -20,19 +20,22 @@ optdepends=(
   'python-pylibjpeg: for working with compressed JPEG images'
 )
 makedepends=(
-  python-setuptools
+  python-build
+  python-flit-core
+  python-installer
+  python-wheel
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pydicom/archive/v${pkgver}.tar.gz")
 sha512sums=('566f3bedabc56606f087601038b5477a76c407809b4b74c61af7e0cc9e0994025f0d6294903ad89e8f4c0302d777ba4a28d5be63337046136c9aef5abe104a0c')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
