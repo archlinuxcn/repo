@@ -61,6 +61,7 @@ prepare() {
   find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
   find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
   sed -i -e 's/0.11 //g' CMakeLists.txt
+  sed -i -e '/-DBOOST_ASIO_DISABLE_CONCEPTS/d' CMakeLists.txt
   sed -i -e 's/1.3.238/1.3.233/g' CMakeLists.txt
   sed -i -e 's/xbyak 6/xbyak 7.0/g' CMakeLists.txt
   sed -i -e 's/httplib 0.12/httplib/g' CMakeLists.txt
