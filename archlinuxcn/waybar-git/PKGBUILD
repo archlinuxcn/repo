@@ -57,16 +57,10 @@ makedepends=(
 	'meson'
 	'scdoc' # For generating manpages
 	'wayland-protocols'
-	'python-packaging'
 	'glib2-devel'
 )
-backup=(
-	etc/xdg/waybar/config.jsonc
-	etc/xdg/waybar/style.css
-)
-optdepends=(
-	'otf-font-awesome: Icons in the default configuration'
-)
+backup=(etc/xdg/waybar/{config.jsonc,style.css})
+optdepends=('otf-font-awesome: Icons in the default configuration')
 replaces=("waybar-hyprland-git")
 source=("git+${url}.git")
 sha256sums=('SKIP')
@@ -79,11 +73,7 @@ pkgver() {
 build() {
 	cd "${_pkgname}/"
 
-	meson --prefix=/usr \
-		--buildtype=plain \
-		--auto-features=enabled \
-		--wrap-mode=nodownload \
-		-Dcpp_std=c++20 \
+	arch-meson -Dcpp_std=c++20 \
 		-Dexperimental=true \
 		-Dcava=disabled \
 		-Dtests=enabled \
