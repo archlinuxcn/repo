@@ -2,11 +2,11 @@
 
 pkgname=cemu
 _major=2
-_minor=1
+_minor=2
 _patch=0
 pkgver=$_major.$_minor
 cemu_tag="v$pkgver"
-pkgrel=2
+pkgrel=1
 pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
 url=https://cemu.info
@@ -44,7 +44,7 @@ source=(
 	git+https://github.com/arsenm/sanitizers-cmake.git#commit=aab6948fa863bc1cbe5d0850bc46b9ef02ed4c1a
 	git+https://github.com/google/googletest.git#commit=800f5422ac9d9e0ad59cd860a2ef3a679588acb4
 )
-sha512sums=('310312b54c5499b305db2a0a5804bde1821239019e4f41a1860cda7b3f7ccb75550f807f28a8a0b09e5ea587cd9cce0d698981cff5cf5e4488eb72a181f36e92'
+sha512sums=('820e60e9c195f7a92ae4a5841bbe3e212b35ab770282e6089688238fd33b62acdc5545f3b9a5c05719eaa695b3d0e1ffc272c0313f4f2ca81d686ac77ff35af3'
             '770a67624181e4c7f05c88c3f1a10dc14012d4967d5bf95f48af1a5bd7a90dd5d8242a868dbe74d8beb043365eababd0d62768b74ccc9867c0c4fd1883849828'
             '0c3d10999772aa92e97aa3082f10e6ebba93f2a738e402f9833f350eb525b71afca178bf834db3bbe965eb0073f249f68b5c8124176add0af997f1c897282803'
             '6ac14841ef983fe5202b23ea5c647959a04b9815bb187c0a0141fb14fb3e2edf8ce14b0c43474774d5ff779284f365981e6d45cc011612e5cd8fb429b3accf5e'
