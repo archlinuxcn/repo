@@ -3,7 +3,7 @@
 # Maintainer: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
 # shellcheck disable=SC2034,2164,2154
 pkgname=auto-cpufreq
-pkgver=2.3.0
+pkgver=2.4.0
 pkgrel=1
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
@@ -29,10 +29,10 @@ prepare() {
 
 }
 
-sha256sums=('dba5a29a23b209f4ab398fd355cd9214353699e59df83d3eeb001a83a659cb00'
+sha256sums=('cbaad1562c4fce3e0d9ae5b2749027bfd52190c55a19a3e2ceb2bc41371b9ee9'
             '8ff1c82788f7cb6bf06151e6632aa4006eb09337daf03faa4866d23075b39e1b'
-            'afe7e64dbde2ea599b319e8632d72a3c237b5c4275dd31d0f40e39719193a67b'
-            '1f6ee3f549a0fe4d818c8301d9e6a893bfb473ad3c0d9d0b93d38fd4a6635dc5')
+            '227d85df7f71187c87e24388104f0127b13a680c1e859a90a14864a0d29e1fdf'
+            '0db58e3a6185418677a5c4f2ea15d7a1becf08bc2d955b8ffb9783190dd4666c')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
