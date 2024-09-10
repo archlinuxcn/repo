@@ -22,7 +22,9 @@ build() {
     cd ${srcdir}/${pkgname}
     unix/configure
     # workaround for unsatisfying build order in upstream
-    make -j 1
+    # "-j 1" doesn't work, need to change JOBS in Makefile
+    sed -i 's/^JOBS.*/JOBS = 1/' Makefile
+    make
 }
 
 package() {
