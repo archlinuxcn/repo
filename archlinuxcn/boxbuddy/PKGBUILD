@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=boxbuddy
 _app_id=io.github.dvlv.boxbuddyrs
-pkgver=2.2.11
+pkgver=2.2.12
 pkgrel=1
 pkgdesc="A Graphical Interface for Distrobox"
 arch=('x86_64')
@@ -9,9 +9,8 @@ url="https://github.com/Dvlv/BoxBuddyRS"
 license=('MIT')
 depends=('distrobox' 'libadwaita')
 makedepends=('cargo')
-#options=('!lto')  # gettext-sys crate fails with LTO enabled
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('2811ff196ef5207a90349f5060245c781a0acd4de426ed79ed342184ee84283f')
+sha256sums=('1b2495d4525f2ebddc0cef72d424957a67c24953a9da2fed4423aac9cac53a58')
 
 prepare() {
   cd "BoxBuddyRS-$pkgver"
@@ -21,8 +20,10 @@ prepare() {
 
 build() {
   cd "BoxBuddyRS-$pkgver"
-#  CFLAGS+=" -ffat-lto-objects"
+
+  # Use system gettext as gettext-sys crate fails with LTO enabled
   export GETTEXT_SYSTEM=true
+
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
   cargo build --frozen --release --all-features
