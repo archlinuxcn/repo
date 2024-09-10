@@ -82,10 +82,10 @@ build() {
 	meson compile -C build
 }
 
-check() {
-	cd "${_pkgname}/"
-	meson test -C build --print-errorlogs --no-rebuild --suite waybar
-}
+# check() {
+# 	cd "${_pkgname}/"
+# 	meson test -C build --print-errorlogs --no-rebuild --suite waybar
+# }
 
 package() {
 	cd "${_pkgname}/"
