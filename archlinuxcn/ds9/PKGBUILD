@@ -22,7 +22,7 @@ build() {
     cd ${srcdir}/${pkgname}
     unix/configure
     # workaround for unsatisfying build order in upstream
-    make || make || make
+    make -j 1
 }
 
 package() {
