@@ -1,8 +1,8 @@
 # Maintainer: m00nw4tch3r <m00nwtchr at duck dot com>
 
 pkgname=alvr
-pkgver=20.10.0
-pkgrel=2
+pkgver=20.11.0
+pkgrel=1
 pkgdesc="Experimental Linux version of ALVR. Stream VR games from your PC to your headset via Wi-Fi."
 arch=('x86_64')
 url="https://github.com/alvr-org/ALVR"
@@ -14,7 +14,7 @@ conflicts=("${pkgname}")
 source=("${pkgname}"::"git+https://github.com/alvr-org/ALVR.git#tag=v$pkgver"
 		"git+https://github.com/ValveSoftware/openvr.git"
 )
-md5sums=('a21ba7fdc0b51a862f48656202f1eaee'
+md5sums=('b30ea19375aa6e2989ca8c721ef56392'
          'SKIP')
 options=('!lto')
 
