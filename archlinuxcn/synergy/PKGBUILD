@@ -12,8 +12,10 @@
 # installed version of that library. They change around paths every
 # update and just generally don't seem to care much.
 pkgname=synergy
-_tag=1.15.1+r3
-pkgver=${_tag/-}
+pkgver=1.15.1+r3
+# Avoid external commands like `sed` here, as PKGBUILD may be sourced without /usr/bin in $PATH
+_tag=${pkgver/snapshot/-snapshot}
+_tag=${_tag/beta/-beta}
 pkgrel=4
 pkgdesc='Share a single mouse and keyboard between multiple computers'
 url='https://symless.com/synergy/'

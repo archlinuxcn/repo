@@ -1,19 +1,11 @@
 from lilaclib import (
-    edit_file,
     git_pkgbuild_commit,
-    run_cmd,
     update_aur_repo,
+    update_pkgver_and_pkgrel,
 )
 
 def pre_build():
-    tag = _G.newver
-
-    for line in edit_file('PKGBUILD'):
-        if line.startswith('_tag'):
-            line = f'_tag={tag}'
-        print(line)
-
-    run_cmd(['updpkgsums'])
+    update_pkgver_and_pkgrel(_G.newver)
 
 def post_build():
     git_pkgbuild_commit()
