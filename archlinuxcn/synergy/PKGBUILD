@@ -12,11 +12,11 @@
 # installed version of that library. They change around paths every
 # update and just generally don't seem to care much.
 pkgname=synergy
-pkgver=1.15.1+r3
+pkgver=1.15.1+r4
 # Avoid external commands like `sed` here, as PKGBUILD may be sourced without /usr/bin in $PATH
 _tag=${pkgver/snapshot/-snapshot}
 _tag=${_tag/beta/-beta}
-pkgrel=4
+pkgrel=1
 pkgdesc='Share a single mouse and keyboard between multiple computers'
 url='https://symless.com/synergy/'
 arch=('x86_64')
@@ -30,7 +30,7 @@ source=("git+https://github.com/symless/synergy-core.git#tag=${_tag}"
         use-system-libs.patch
         synergys.socket
         synergys.service)
-sha512sums=('fe9b15498a243f1adeb0e100bca86abba6401240b14be5292ea9330e1ab6c8336573de6a84da7d9cc4aa64a3574d6536b73e2c514a721c25dd38717ded145731'
+sha512sums=('a4ba508972a222ada73b7a9009f52fc2872422c0bf903d1bdcde57f398465e60a4585223596e0e54a8d94986586c8bfa4c87173e219f200ea491df7289746fc0'
             'fd521ed2464d91fe20576b51060224bc402489d5c08c13a34122f573ab4c77812c289ad09258829e190cbe2533dd170fd636587f68751965cbcc6039be5b6859'
             'f9c124533dfd0bbbb1b5036b7f4b06f7f86f69165e88b9146ff17798377119eb9f1a4666f3b2ee9840bc436558d715cdbfe2fdfd7624348fae64871f785a1a62'
             '9663a11b915e10e60317e732a4d1191e8f8ff19176994c27dd20aa445daab7565bd624e5575c9c639d144293879fbe8376834a076723f778fd322ebd1c9f2029')
