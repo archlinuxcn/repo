@@ -56,5 +56,4 @@ package() {
 
 	install -dm755 "${pkgdir}/usr/bin/"
 	ln -s "/usr/lib/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
-
 }
