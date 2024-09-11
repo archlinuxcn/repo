@@ -17,7 +17,7 @@ source=(
 	"${_pkgname}.desktop"
 )
 sha256sums=('SKIP'
-            '21532a3cdf1cdfca186c1221f6f1bcd015d259a63861056330f2be5f760676d1')
+            '9d527cc7aaa8a4c4bc2ac80b88fb358aec2256eb503580e352c88671fa8653eb')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -38,6 +38,7 @@ package() {
 	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	cd "${_pkgname}/"
+	install -Dm644 assets/icon/icon.png "${pkgdir}/usr/share/icons/hicolor/1024x1024/apps/${_pkgname}.png"
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 
 	case "${CARCH}" in
@@ -55,4 +56,5 @@ package() {
 
 	install -dm755 "${pkgdir}/usr/bin/"
 	ln -s "/usr/lib/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+
 }
