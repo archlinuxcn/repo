@@ -2,7 +2,7 @@
 # Maintainer: Juanma Hernandez <juanmah@gmail.com>
 
 pkgname=zotero-bin
-pkgver=7.0.4
+pkgver=7.0.5
 pkgrel=1
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64')
@@ -13,7 +13,7 @@ provides=('zotero')
 conflicts=('zotero')
 
 sha256sums=('8504fea45af534515f21019a4ba17435c832ccb918f046601030e3ed562fa587')
-sha256sums_x86_64=('5c82ffe14ee258dec29ad72de8682d47a2e309c6319f3a18322f788711535554')
+sha256sums_x86_64=('2e39f62143171a196ffd1629472cf1a5d113c5038759dc3bd0ac0f8eb726213d')
 source=("zotero.desktop")
 source_x86_64=("Zotero-${pkgver}_linux_$CARCH.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-$CARCH&version=${pkgver}")
 
