@@ -20,10 +20,11 @@ conflicts=(
 )
 depends=(
   'bash'
-  'java-environment=17'
+  'java-environment=21'
   'polkit'
 )
-makedepends=("python-pip"
+makedepends=(
+  'python-pip'
   'fop'
   'git'
   'gradle'
@@ -54,13 +55,6 @@ pkgver() {
 
 prepare() {
   cd "$_pkgname"
-
-  # Check Java version (thanks @ignapk)
-  JDK_VERSION=$(java -version 2>&1)
-  if [[ ! $JDK_VERSION =~ 1[7|9]\.0 ]]; then
-    echo "FAILURE: You seem to have jdk17 or jdk19 installed correctly but your system defaults to another java version. To enable it please type: sudo archlinux-java set java-17-openjdk"
-    exit 1
-  fi
 
   # DEPRECATED PATCH - GP-793 corrected missing IP info - https://github.com/NationalSecurityAgency/ghidra/commit/70675fce99a4c6e6e650729e5dda6ccbbbbbd40d
 #  echo -e "${_prefix}[PATCH] - GP-793 corrected missing IP info (https://github.com/NationalSecurityAgency/ghidra/commit/70675fce99a4c6e6e650729e5dda6ccbbbbbd40d)"
