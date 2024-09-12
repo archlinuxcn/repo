@@ -15,20 +15,20 @@ license=('Apache-2.0')
 provides=("${_pkgname}")
 conflicts=(${_pkgname}{,-{dev,desktop}})
 depends=(
-  'java-environment=21'
-  'polkit'
+	'java-environment=21'
+	'polkit'
 )
 makedepends=(
-  'git'
-  'python-pip'
-  'fop'
-  'gradle'
-  'unzip'
+	'git'
+	'python-pip'
+	'fop'
+	'gradle'
+	'unzip'
 )
 source=(
-  "git+https://github.com/NationalSecurityAgency/${_pkgname}"
-  ${_pkgname}{,-root}.desktop
-  "${_pkgname}.policy"
+	"git+https://github.com/NationalSecurityAgency/${_pkgname}"
+	${_pkgname}{,-root}.desktop
+	"${_pkgname}.policy"
 )
 sha512sums=('SKIP'
             'a85b8b3276e2ff4ed8bda6470c15d02711ebaa48463c775cd2a36549fad738e9fe073dab80f8c57646490ffc959cdc27e9d25b1dc2a5810b0ddb249b5dc99a9b'
@@ -37,46 +37,46 @@ sha512sums=('SKIP'
 options=('!strip')
 
 pkgver() {
-  cd "${_pkgname}/"
-  printf "%s" "$(git describe --tags | sed 's/Ghidra_\([^_]*\)_build/\1/;s/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+	cd "${_pkgname}/"
+	printf "%s" "$(git describe --tags | sed 's/Ghidra_\([^_]*\)_build/\1/;s/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
 }
 
 prepare() {
-  cd "${_pkgname}/"
-  echo "Setting up the build dependencies..."
-  gradle --parallel --init-script gradle/support/fetchDependencies.gradle init --overwrite
+	cd "${_pkgname}/"
+	echo "Setting up the build dependencies..."
+	gradle --parallel --init-script gradle/support/fetchDependencies.gradle init --overwrite
 }
 
 build() {
-  cd "${_pkgname}/"
-  echo "Building Ghidra..."
-  gradle --parallel buildGhidra -x ip
+	cd "${_pkgname}/"
+	echo "Building Ghidra..."
+	gradle --parallel buildGhidra -x ip
 }
 
 package() {
-  cd "${_pkgname}/"
+	cd "${_pkgname}/"
 
-  echo "Creating the package base..."
-  install -d ${pkgdir}/{opt,usr/bin}
+	echo "Creating the package base..."
+	install -d ${pkgdir}/{opt,usr/bin}
 
-  echo "Extracting the zip archive..."
-  local _appver=$(grep -oP '(?<=^application.version=).*$' Ghidra/application.properties)
-  local _relname=$(grep -oP '(?<=^application.release.name=).*$' Ghidra/application.properties)
-  unzip -u build/dist/${_pkgname}_${_appver}_${_relname}_$(date +%Y%m%d)_linux_*.zip -d "${pkgdir}/opt/"
+	echo "Extracting the zip archive..."
+	local _appver=$(grep -oP '(?<=^application.version=).*$' Ghidra/application.properties)
+	local _relname=$(grep -oP '(?<=^application.release.name=).*$' Ghidra/application.properties)
+	unzip -u build/dist/${_pkgname}_${_appver}_${_relname}_$(date +%Y%m%d)_linux_*.zip -d "${pkgdir}/opt/"
 
-  echo "Setting up a versionless directory name..."
-  mv ${pkgdir}/opt/${_pkgname}{_${_appver}_${_relname},}
+	echo "Setting up a versionless directory name..."
+	mv ${pkgdir}/opt/${_pkgname}{_${_appver}_${_relname},}
 
-  echo "Setting up /usr/bin launchers..."
-  ln -s "/opt/${_pkgname}/${_pkgname}Run" "${pkgdir}/usr/bin/${_pkgname}"
-  ln -s "/opt/${_pkgname}/support/analyzeHeadless" "${pkgdir}/usr/bin/${_pkgname}-headless"
+	echo "Setting up /usr/bin launchers..."
+	ln -s "/opt/${_pkgname}/${_pkgname}Run" "${pkgdir}/usr/bin/${_pkgname}"
+	ln -s "/opt/${_pkgname}/support/analyzeHeadless" "${pkgdir}/usr/bin/${_pkgname}-headless"
 
-  echo "Setting up desktop shortcuts..."
-  install -Dm644 ../${_pkgname}{,-root}.desktop -t "${pkgdir}/usr/share/applications/"
+	echo "Setting up desktop shortcuts..."
+	install -Dm644 ../${_pkgname}{,-root}.desktop -t "${pkgdir}/usr/share/applications/"
 
-  echo "Setting up desktop icon..."
-  install -Dm644 Ghidra/Framework/Gui/src/main/resources/images/GhidraIcon64.png "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
+	echo "Setting up desktop icon..."
+	install -Dm644 Ghidra/Framework/Gui/src/main/resources/images/GhidraIcon64.png "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
 
-  echo "Setting up policy file for the \"run as root\" desktop shortcut..."
-  install -Dm644 "../${_pkgname}.policy" -t "${pkgdir}/usr/share/polkit-1/actions/"
+	echo "Setting up policy file for the \"run as root\" desktop shortcut..."
+	install -Dm644 "../${_pkgname}.policy" -t "${pkgdir}/usr/share/polkit-1/actions/"
 }
