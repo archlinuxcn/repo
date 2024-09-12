@@ -4,7 +4,7 @@
 pkgname=nekoray
 pkgver=4.0.beta3
 _pkgver=${pkgver/.beta/-beta}
-pkgrel=4
+pkgrel=5
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-box)"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://matsuridayo.github.io"
@@ -28,7 +28,7 @@ source=(
 sha512sums=('86a5bd9c86b12b1bee5678917bf9c3da744b02141589cc737b3ba65dc918f7abb881a899aed47be11b0a0ae09511be1bedd0a8a8819a20efe6a2874efe942bb0'
             '3a65300520462bd6a5667c50b7db1ccbf7107b9d5c65959d00451a68cdd77d9e13288da03ccb0d712cd4fb076cdfb3c635490d6148268f920cde7ba11b7237a9'
             'f99795f5f82fca74bbc36569d3595bc141c3fef00a0c6076585da683f0a5144dbfdbbe4525cf82576e9010262f74f462ae40f5a7b95dafc01033763a9b1711bd'
-            '0e16f4e4f88f6e46af93911a8cd19a5624c9f4aeaa542b53e4ea974612055b1bd422e70246ea0e033391a28c41ac65193d464efbd8162a45eabaa01280ee0f28')
+            '132b4c9b278baf494ddf6739f0188253ed3830b6fb7b232be0029f52ad7c04a6fb0210cc330330e84f82d1def7b88f7911caf7db23c28ac9f8a91a8386437f8f')
 
 prepare() {
 	cd "${pkgname}/"
