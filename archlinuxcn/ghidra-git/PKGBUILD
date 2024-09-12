@@ -46,8 +46,6 @@ _color="\e[33m"
 _bold='\e[1m'
 _prefix=" ${_bold}${_color}==>$_stop "
 
-
-
 pkgver() {
   cd "$_pkgname"
   printf "%s" "$(git describe --tags | sed 's/Ghidra_\([^_]*\)_build/\1/;s/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
@@ -56,30 +54,8 @@ pkgver() {
 prepare() {
   cd "$_pkgname"
 
-  # DEPRECATED PATCH - GP-793 corrected missing IP info - https://github.com/NationalSecurityAgency/ghidra/commit/70675fce99a4c6e6e650729e5dda6ccbbbbbd40d
-#  echo -e "${_prefix}[PATCH] - GP-793 corrected missing IP info (https://github.com/NationalSecurityAgency/ghidra/commit/70675fce99a4c6e6e650729e5dda6ccbbbbbd40d)"
-#  patch --no-backup-if-mismatch --forward --strip=2 --input="${srcdir}/0000-GP-793-corrected-missing-IP-info.patch"
-
   echo -e "${_prefix}Setting up the build dependencies"
-  gradle --parallel --init-script gradle/support/fetchDependencies.gradle init
-
-  ##
-  ## FOR GHIDRA DEVELOPERS
-  ## (Left commented because the steps below are only required if you want to develop and contribute to ghidra)
-  ## https://github.com/NationalSecurityAgency/ghidra/blob/master/DevGuide.md
-  ##
-
-#  echo -e "${_prefix}Setting up the developers environment"
-#  gradle --parallel prepDev
-#
-#  echo -e "${_prefix}Setting up the eclipse configurations"
-#  gradle --parallel eclipse
-#
-#  echo -e "${_prefix}Compiling the linux64 native binaries"
-#  gradle --parallel buildNatives_linux64
-#
-#  echo -e "${_prefix}Compiling the precompile language modules"
-#  gradle --parallel sleighCompile
+  gradle --parallel --init-script gradle/support/fetchDependencies.gradle init --overwrite
 }
 
 build() {
