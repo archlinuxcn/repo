@@ -1,0 +1,14 @@
+maintainers:
+  - github: weilinfox
+
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: xen0n/xingque
+    use_max_tag: true
+    prefix:
