@@ -2,7 +2,7 @@
 
 pkgname=debspawn
 pkgver=0.6.4
-pkgrel=2
+pkgrel=3
 pkgdesc='Debspawn is a tool to build Debian packages in an isolated environment, using systemd-nspawn containers'
 arch=('any')
 url="https://github.com/lkhq/debspawn"
@@ -20,7 +20,7 @@ makedepends=(
   'python-wheel'
 )
 source=("https://github.com/lkhq/debspawn/archive/refs/tags/v$pkgver.tar.gz")
-sha512sums=(''a60a8c98f89342368209ffdb07bd40efbe83ceedb3896972bee8984f24a792885431d127de68c05bb4e2abfaf43f764943a096e47fcf29a01bffdde7a70ce14f)
+sha512sums=('a60a8c98f89342368209ffdb07bd40efbe83ceedb3896972bee8984f24a792885431d127de68c05bb4e2abfaf43f764943a096e47fcf29a01bffdde7a70ce14f')
 
 build() {
 	cd "$pkgname-$pkgver"
