@@ -21,7 +21,7 @@ _clangbuild=
 
 # Optionally select a sub architecture by number or leave blank which will
 # require user interaction during the build. Note that the generic (default)
-# option is 39.
+# option is 40.
 _subarch=42
 
 #  1. AMD Opteron/Athlon64/Hammer/K8 (MK8)
@@ -62,16 +62,20 @@ _subarch=42
 #  36. Intel Alder Lake (MALDERLAKE) (NEW)
 #  37. Intel Raptor Lake (MRAPTORLAKE) (NEW)
 #  38. Intel Meteor Lake (MMETEORLAKE) (NEW)
-#  39. Generic-x86-64 (GENERIC_CPU)
-#  40. Generic-x86-64-v2 (GENERIC_CPU2) (NEW)
-#  41. Generic-x86-64-v3 (GENERIC_CPU3) (NEW)
-#  42. Generic-x86-64-v4 (GENERIC_CPU4) (NEW)
-#  43. Intel-Native optimizations autodetected by the compiler (MNATIVE_INTEL) (NEW)
-#  44. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD) (NEW)
+#  39. Intel Emerald Rapids (MEMERALDRAPIDS) (NEW)
+#  40. Generic-x86-64 (GENERIC_CPU)
+#  41. AMD-x86-64-v2 (MAMD_CPU_V2) (NEW)
+#  42. AMD-x86-64-v3 (MAMD_CPU_V3) (NEW)
+#  43. AMD-x86-64-v4 (MAMD_CPU_V4) (NEW)
+#  44. Intel-x86-64-v2 (MINTEL_CPU_V2) (NEW)
+#  45. Intel-x86-64-v3 (MINTEL_CPU_V3) (NEW)
+#  46. Intel-x86-64-v4 (MINTEL_CPU_V4) (NEW)
+#  47. Intel-Native optimizations autodetected by the compiler (MNATIVE_INTEL) (NEW)
+#  48. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD) (NEW)
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 pkgbase=linux-ck-x64-v4
-pkgver=6.10.6
+pkgver=6.10.10
 _upstream=arch1
 pkgrel=1
 arch=(x86_64)
@@ -99,7 +103,7 @@ options=(
 _ckhrtimer=linux-6.8.y
 _commit=ae3cbb29c43ca1baa6781f547d17b8ee5663e9d7
 
-_gcc_more_v=20240221.2
+_gcc_more_v=20240912.1
 source=(
   "https://www.kernel.org/pub/linux/kernel/v6.x/linux-$pkgver.tar".{xz,sign}
   config  # the main kernel config file
@@ -111,11 +115,11 @@ validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
-sha256sums=('e0d50d5b74f8599375660e79f187af7493864dba5ff6671b14983376a070b3d1'
+sha256sums=('e687e735b5eb9efb6d67b42433c93fc9118106a995514f062652873b5e809bcd'
             'SKIP'
-            'a1b07c8204f98afb31fecd896ebebc9b0bc1055be20b72acf8ab01dc2aa11b47'
-            '744bb671da084dd2c45652340d672379c8e29ce50c4d460d4f3bd589a2ac72a7'
-            '1d3ac3e581cbc5108f882fcdc75d74f7f069654c71bad65febe5ba15a7a3a14f'
+            'a32a48ab46061a1275b23f15c390e0aa48682ffe953f4f04d650bfe398700a87'
+            '064b9841dd6738e8a6f8859743c66e0d603541b6afa021ab98ea7e3623fca108'
+            '3d0d5741a7e37a038a1bfc194c194afdc5e025fcaf1646f8591ce1bea5919893'
             '111adfc5b9c7d3bfd7d1a06286e7bee853dd1f51ecca3948eed39710eaf51381')
 
 prepare() {
