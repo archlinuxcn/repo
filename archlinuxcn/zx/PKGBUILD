@@ -2,17 +2,17 @@
 # Contributor: Alex D'Andrea <alex at dandrea dot io>
 
 pkgname=zx
-pkgver=8.1.4
-_commit=d7d074d5945b33d85c8e68085839d16b2c55b943 # tags/8.1.3
+pkgver=8.1.6
+_commit=ac2567f5aef4375ac441b8236f5e7b1f59f5d5e5 # tags/8.1.6
 pkgrel=1
 pkgdesc='A tool for writing better scripts'
 arch=(any)
 url=https://github.com/google/zx
-license=(Apache)
+license=(Apache-2.0)
 depends=('nodejs>=16')
 makedepends=(npm git)
 source=("git+$url.git#commit=$_commit")
-md5sums=('a4be3f4f432f6008ea9d20ac31cc04e4')
+md5sums=('99e33768c0fb603ee0e89e07c0dcd068')
 
 build() {
 	cd "$pkgname"
