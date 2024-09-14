@@ -1,0 +1,322 @@
+From 36a1a74f7a6ea674e3911e89935256f1c6c5a149 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
+Date: Tue, 20 Aug 2024 11:07:29 +0200
+Subject: [PATCH] kms: Inhibit real time scheduling until initial mode set
+
+We're already inhibiting real time scheduling when reading new KMS state
+after hot plugs, as well as when during mode sets, due to the kernel not
+being able to reliably handle these within the 250 ms limit. However, we
+didn't do this during initial probing, which meant that occasionally
+we'd run into these kind of issues during startup.
+
+Handle this by always inhibiting real time scheduling up front, and
+don't uninhibit until all initially discovered device have finished
+processing their initial mode set.
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3628
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3960>
+
+Signed-off-by: Mingi Sung <sungmg@saltyming.net>
+---
+ src/backends/native/meta-backend-native.c  |  3 ++
+ src/backends/native/meta-kms-impl-device.c | 32 ++++++++++++++++++++++
+ src/backends/native/meta-kms-impl.c        | 20 ++++++++++++++
+ src/backends/native/meta-kms-impl.h        |  2 ++
+ src/backends/native/meta-kms.c             | 17 ++++++++++++
+ src/backends/native/meta-kms.h             |  2 ++
+ src/backends/native/meta-thread-impl.c     |  9 ++++++
+ src/backends/native/meta-thread-impl.h     |  4 +++
+ src/backends/native/meta-thread.c          | 26 ++++++++++++------
+ 9 files changed, 106 insertions(+), 9 deletions(-)
+
+diff --git a/src/backends/native/meta-backend-native.c b/src/backends/native/meta-backend-native.c
+index 131a687e21..e3ed02894a 100644
+--- a/src/backends/native/meta-backend-native.c
++++ b/src/backends/native/meta-backend-native.c
+@@ -609,6 +609,7 @@ init_gpus (MetaBackendNative  *native,
+ {
+   MetaBackend *backend = META_BACKEND (native);
+   MetaUdev *udev = meta_backend_native_get_udev (native);
++  MetaKms *kms = meta_backend_native_get_kms (native);
+   g_autoptr (GError) local_error = NULL;
+   MetaUdevDeviceType device_type = 0;
+   GList *devices;
+@@ -669,6 +670,8 @@ init_gpus (MetaBackendNative  *native,
+ 
+   g_list_free_full (devices, g_object_unref);
+ 
++  meta_kms_notify_probed (kms);
++
+   if (!meta_backend_is_headless (backend) &&
+       g_list_length (meta_backend_get_gpus (backend)) == 0)
+     {
+diff --git a/src/backends/native/meta-kms-impl-device.c b/src/backends/native/meta-kms-impl-device.c
+index 6758982a6a..f73aecac7a 100644
+--- a/src/backends/native/meta-kms-impl-device.c
++++ b/src/backends/native/meta-kms-impl-device.c
+@@ -108,6 +108,8 @@ typedef struct _MetaKmsImplDevicePrivate
+ 
+   GHashTable *crtc_frames;
+ 
++  gboolean realtime_inhibited_pending_mode_set;
++
+   MetaDeadlineTimerState deadline_timer_state;
+ 
+   gboolean sync_file_retrieved;
+@@ -1734,6 +1736,12 @@ process_mode_set_update (MetaKmsImplDevice *impl_device,
+   feedback = do_process (impl_device, NULL, update, flags);
+   meta_thread_uninhibit_realtime_in_impl (thread);
+ 
++  if (priv->realtime_inhibited_pending_mode_set)
++    {
++      priv->realtime_inhibited_pending_mode_set = FALSE;
++      meta_thread_uninhibit_realtime_in_impl (thread);
++    }
++
+   return feedback;
+ }
+ 
+@@ -1924,6 +1932,15 @@ meta_kms_impl_device_finalize (GObject *object)
+   MetaKmsImplDevicePrivate *priv =
+     meta_kms_impl_device_get_instance_private (impl_device);
+ 
++  if (priv->realtime_inhibited_pending_mode_set)
++    {
++      MetaThreadImpl *thread_impl = META_THREAD_IMPL (priv->impl);
++      MetaThread *thread = meta_thread_impl_get_thread (thread_impl);
++
++      priv->realtime_inhibited_pending_mode_set = FALSE;
++      meta_thread_uninhibit_realtime_in_impl (thread);
++    }
++
+   meta_kms_impl_remove_impl_device (priv->impl, impl_device);
+ 
+   g_list_free_full (priv->planes, g_object_unref);
+@@ -1973,6 +1990,16 @@ meta_kms_impl_device_init_mode_setting (MetaKmsImplDevice  *impl_device,
+ 
+   update_connectors (impl_device, drm_resources, 0);
+ 
++  if (!priv->crtcs)
++    {
++      MetaThreadImpl *thread_impl = META_THREAD_IMPL (priv->impl);
++      MetaThread *thread = meta_thread_impl_get_thread (thread_impl);
++
++      g_warn_if_fail (priv->realtime_inhibited_pending_mode_set);
++      meta_thread_uninhibit_realtime_in_impl (thread);
++      priv->realtime_inhibited_pending_mode_set = FALSE;
++    }
++
+   drmModeFreeResources (drm_resources);
+ 
+   return TRUE;
+@@ -2050,6 +2077,8 @@ meta_kms_impl_device_initable_init (GInitable     *initable,
+   MetaKmsImplDevice *impl_device = META_KMS_IMPL_DEVICE (initable);
+   MetaKmsImplDevicePrivate *priv =
+     meta_kms_impl_device_get_instance_private (impl_device);
++  MetaThreadImpl *thread_impl = META_THREAD_IMPL (priv->impl);
++  MetaThread *thread = meta_thread_impl_get_thread (thread_impl);
+   int fd;
+ 
+   if (!ensure_device_file (impl_device, error))
+@@ -2075,6 +2104,9 @@ meta_kms_impl_device_initable_init (GInitable     *initable,
+ 
+   priv->sync_file = -1;
+ 
++  meta_thread_inhibit_realtime_in_impl (thread);
++  priv->realtime_inhibited_pending_mode_set = TRUE;
++
+   return TRUE;
+ }
+ 
+diff --git a/src/backends/native/meta-kms-impl.c b/src/backends/native/meta-kms-impl.c
+index 99019ca85f..e34af98202 100644
+--- a/src/backends/native/meta-kms-impl.c
++++ b/src/backends/native/meta-kms-impl.c
+@@ -172,12 +172,32 @@ meta_kms_impl_finalize (GObject *object)
+   G_OBJECT_CLASS (meta_kms_impl_parent_class)->finalize (object);
+ }
+ 
++static void
++meta_kms_impl_setup (MetaThreadImpl *thread_impl)
++{
++  MetaThread *thread = meta_thread_impl_get_thread (thread_impl);
++
++  meta_thread_inhibit_realtime_in_impl (thread);
++}
++
++void
++meta_kms_impl_notify_probed (MetaKmsImpl *impl)
++{
++  MetaThreadImpl *thread_impl = META_THREAD_IMPL (impl);
++  MetaThread *thread = meta_thread_impl_get_thread (thread_impl);
++
++  meta_thread_uninhibit_realtime_in_impl (thread);
++}
++
+ static void
+ meta_kms_impl_class_init (MetaKmsImplClass *klass)
+ {
+   GObjectClass *object_class = G_OBJECT_CLASS (klass);
++  MetaThreadImplClass *thread_impl_class = META_THREAD_IMPL_CLASS (klass);
+ 
+   object_class->finalize = meta_kms_impl_finalize;
++
++  thread_impl_class->setup = meta_kms_impl_setup;
+ }
+ 
+ MetaKmsUpdateFilter *
+diff --git a/src/backends/native/meta-kms-impl.h b/src/backends/native/meta-kms-impl.h
+index f8379fab28..582bebf5e6 100644
+--- a/src/backends/native/meta-kms-impl.h
++++ b/src/backends/native/meta-kms-impl.h
+@@ -53,6 +53,8 @@ void meta_kms_impl_notify_modes_set (MetaKmsImpl *impl);
+ 
+ MetaKmsImpl * meta_kms_impl_new (MetaKms *kms);
+ 
++void meta_kms_impl_notify_probed (MetaKmsImpl *impl);
++
+ MetaKmsUpdateFilter * meta_kms_impl_add_update_filter (MetaKmsImpl             *impl,
+                                                        MetaKmsUpdateFilterFunc  func,
+                                                        gpointer                 user_data);
+diff --git a/src/backends/native/meta-kms.c b/src/backends/native/meta-kms.c
+index d41fcefb5a..d989337a10 100644
+--- a/src/backends/native/meta-kms.c
++++ b/src/backends/native/meta-kms.c
+@@ -413,6 +413,23 @@ meta_kms_new (MetaBackend   *backend,
+   return kms;
+ }
+ 
++static gpointer
++notify_probed_in_impl (MetaThreadImpl  *thread_impl,
++                       gpointer         user_data,
++                       GError         **error)
++{
++  meta_kms_impl_notify_probed (META_KMS_IMPL (thread_impl));
++  return NULL;
++}
++
++void
++meta_kms_notify_probed (MetaKms *kms)
++{
++  meta_thread_post_impl_task (META_THREAD (kms),
++                              notify_probed_in_impl,
++                              NULL, NULL, NULL, NULL);
++}
++
+ static void
+ meta_kms_finalize (GObject *object)
+ {
+diff --git a/src/backends/native/meta-kms.h b/src/backends/native/meta-kms.h
+index 7434014063..057c7a2348 100644
+--- a/src/backends/native/meta-kms.h
++++ b/src/backends/native/meta-kms.h
+@@ -64,6 +64,8 @@ MetaKms * meta_kms_new (MetaBackend   *backend,
+                         MetaKmsFlags   flags,
+                         GError       **error);
+ 
++void meta_kms_notify_probed (MetaKms *kms);
++
+ META_EXPORT_TEST
+ void meta_kms_inhibit_kernel_thread (MetaKms *kms);
+ 
+diff --git a/src/backends/native/meta-thread-impl.c b/src/backends/native/meta-thread-impl.c
+index 28ef349f7c..d02d49203f 100644
+--- a/src/backends/native/meta-thread-impl.c
++++ b/src/backends/native/meta-thread-impl.c
+@@ -568,6 +568,15 @@ meta_thread_impl_dispatch (MetaThreadImpl *thread_impl)
+   return 1;
+ }
+ 
++void
++meta_thread_impl_setup (MetaThreadImpl *thread_impl)
++{
++  MetaThreadImplClass *klass = META_THREAD_IMPL_GET_CLASS (thread_impl);
++
++  if (klass->setup)
++    klass->setup (thread_impl);
++}
++
+ void
+ meta_thread_impl_run (MetaThreadImpl         *thread_impl,
+                       MetaThreadImplRunFlags  flags)
+diff --git a/src/backends/native/meta-thread-impl.h b/src/backends/native/meta-thread-impl.h
+index 2083b3bf16..1837c465cb 100644
+--- a/src/backends/native/meta-thread-impl.h
++++ b/src/backends/native/meta-thread-impl.h
+@@ -38,6 +38,8 @@ G_DECLARE_DERIVABLE_TYPE (MetaThreadImpl, meta_thread_impl,
+ struct _MetaThreadImplClass
+ {
+   GObjectClass parent_class;
++
++  void (* setup) (MetaThreadImpl *thread_impl);
+ };
+ 
+ typedef enum _MetaThreadTaskFeedbackType
+@@ -70,6 +72,8 @@ void meta_thread_impl_queue_task (MetaThreadImpl *thread_impl,
+ 
+ void meta_thread_impl_terminate (MetaThreadImpl *thread_impl);
+ 
++void meta_thread_impl_setup (MetaThreadImpl *thread_impl);
++
+ void meta_thread_impl_run (MetaThreadImpl         *thread_impl,
+                            MetaThreadImplRunFlags  flags);
+ 
+diff --git a/src/backends/native/meta-thread.c b/src/backends/native/meta-thread.c
+index 08bd9b8fe2..5dcdb05eba 100644
+--- a/src/backends/native/meta-thread.c
++++ b/src/backends/native/meta-thread.c
+@@ -333,22 +333,28 @@ request_normal_scheduling (MetaThread  *thread,
+ }
+ 
+ static gboolean
+-should_use_realtime_scheduling_in_impl (MetaThread *thread)
++can_use_realtime_scheduling_in_impl (MetaThread *thread)
+ {
+   MetaThreadPrivate *priv = meta_thread_get_instance_private (thread);
+-  gboolean should_use_realtime_scheduling = FALSE;
+ 
+   switch (priv->thread_type)
+     {
+     case META_THREAD_TYPE_USER:
+-      break;
++      return FALSE;
+     case META_THREAD_TYPE_KERNEL:
+-      if (priv->wants_realtime && priv->kernel.realtime_inhibit_count == 0)
+-        should_use_realtime_scheduling = TRUE;
+-      break;
++      return priv->wants_realtime;
+     }
+ 
+-  return should_use_realtime_scheduling;
++  g_assert_not_reached ();
++}
++
++static gboolean
++should_use_realtime_scheduling_in_impl (MetaThread *thread)
++{
++  MetaThreadPrivate *priv = meta_thread_get_instance_private (thread);
++
++  return (can_use_realtime_scheduling_in_impl (thread) &&
++          priv->kernel.realtime_inhibit_count == 0);
+ }
+ 
+ static void
+@@ -417,11 +423,13 @@ thread_impl_func (gpointer user_data)
+   priv->kernel.realtime_inhibit_count = 0;
+   priv->kernel.is_realtime = FALSE;
+ 
++  meta_thread_impl_setup (impl);
++
+   sync_realtime_scheduling_in_impl (thread);
+ 
+-  if (priv->kernel.is_realtime)
++  if (can_use_realtime_scheduling_in_impl (thread))
+     {
+-      g_message ("Made thread '%s' realtime scheduled", priv->name);
++      g_message ("Thread '%s' will be using real time scheduling", priv->name);
+       run_flags |= META_THREAD_IMPL_RUN_FLAG_REALTIME;
+     }
+ 
+-- 
+2.46.0
+

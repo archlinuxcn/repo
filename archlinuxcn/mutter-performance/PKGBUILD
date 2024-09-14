@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3567' '3751' '3934' '4015')
-_merge_requests_to_use=('1441' '3751' '4015')
+# Merge Requests List: ('579' '1441' '3567' '3751' '3960')
+_merge_requests_to_use=('1441' '3751' '3960')
 
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing!
@@ -21,7 +21,7 @@ _pkgname=mutter
 pkgname=mutter-performance
 epoch=1
 pkgver=46.4+r18+g081b918bac
-pkgrel=2
+pkgrel=3
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -105,20 +105,17 @@ source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3567.patch'
         'mr3751.patch'
-        'mr3934.patch'
-        'mr4015.patch')
+        'mr3960.patch')
 sha256sums=('81978164d9f2715438fbc623c77ea7529332cac5c4c519e4781daa5bf1a315eb'
-            '60638078a3f3c46da61f868c04b2a3424488510702648452c3e8214a3790e37b'
+            '043d6f4abce085b5ecc3debf0d334cc9fe826d256a421a4cbbe6aee8cffce255'
             '2e474a574edad8dc047a53a920fc7cbe005cac0102907eef80a252fc556d0517'
             '4c15b0e6d0001c8c3feedf05a9140f7f17d52eb36ff7b8039e0281c1373ccdfe'
-            'c0ae2855247cddde806a320d031021fd0f7c867c61ac95af99ea3765f290bbf5'
-            '261d08c54142cd462b651e236565e2289074f53743f30afa9c62a1e20bff37e7')
+            '361af6ed4ff6039c3b24dca8cd737468b7a441ea9855f8033c8348ce1aab0f0c')
 b2sums=('aaed24cb5bac5f62096d44bfdf0e6acfff3944137a06f5cbd7fd1f18d03ebb816d02ab170c9128eafb023a339de3e7ea79480654687ec449d29f9e45d66218e3'
-        '802cf82c0d4fa4514dc376bac57a65453df0ce789e6efac334d2f76a24349ad0a2b6e9ce02345839e8de719d7696dfcae911b1e66922103b2ec315e9fbaa8f01'
+        '3231bdae36ae05892d2106199dc75a0dd8dc59b45bc77a51090ad35bec9e21420aeb86578e97fb64565b265beb7406a406362a06a091ef066965c7c9ea2fe50e'
         '65302b1fa24a7aba26915269fb694c7a64b134ee2062ec7e649036a3a41efb2f2f4110cff6194808af34985855ade641c5fb01f0b97536cd3c912892ea3a0d4c'
         'f9f2284d7236d6072a818de3784a339c2d934490da8870876f49d4effd59ce807593ce8b8a3c5e06586fd5fd7e81fb31fedca84115acf1e71cfe23d4a5e727b3'
-        '18e8d521336422f4c441979fe77ff22c60406e94cd2159c08bbfd127bf6b010dece55c7226b99a953c560b05194fe72e5c2140765577069d970c93479b573bcb'
-        'a7ce3e4288ad4b14a6b7cb4d9e3f77fc27445f46e5439bc4fe85b696c63298487909a48d4bc4238333c9f9724ba1b5779c29ef8df6a61ac9eb78dd2e83de6502')
+        '9517c7c84b20ff28ccb3cfd1168eb3ca294934df6088c7938b1ff659933043d2687031b2da1eac7eaf0a8cec21284147cb925aa08584563488fce1bcef361184')
 
 for mr in "${_merge_requests_to_use[@]}"; do
   if [ '3567' = "$mr" ]; then
@@ -225,24 +222,12 @@ prepare() {
   #          (mostly Chromium/Electron based apps with Ozone Wayland.)
   pick_mr '3751' 'mr3751.patch' 'patch'
 
-  # Title: kms/impl-device: Track dispatch duration in crtc_frame_deadline_dispatch
-  # Author: Michel Dänzer <mdaenzer@redhat.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3934
-  # Type: 1
-  # Status: 2
-  # Comment: This fixes cursor stutter.
-  #          Do not enable this if !1441 is enabled since it already includes !3934.
-  pick_mr '3934' 'mr3934.patch' 'patch'
-
-  # Title: onscreen/native: Use EGLSyncs instead of cogl_framebuffer_finish
-  # Author: Gert <Gert-dev@users.noreply.github.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4015
-  # Type: 1
-  # Status: 2
-  # Comment: This can unblock the CPU in situations where the primary GPU wasn't done
-  #          processing the queue by the time cogl_framebuffer_finish was called.
-  #          It is not intended to be merged in its current state and more of a proof-of-concept.
-  pick_mr '4015' 'mr4015.patch' 'patch'
+  # Title: kms: Inhibit real time scheduling until initial mode set
+  # Author: Jonas Ådahl <jadahl@gmail.com>
+  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3960
+  # Type: 3
+  # Status: 4
+  pick_mr '3960' 'mr3960.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
@@ -250,7 +235,7 @@ prepare() {
   # Type: 1
   # Status: 2 & 3
   # Comment: Helps GPU frequencies to scale up.
-  #          Backported: !3934.
+  #          Backported: !3184 !3265 !3799 !3817 !3829 !3830 !3891 !3934 !3958 !4015
   pick_mr '1441' 'mr1441.patch' 'patch'
 
 }
