@@ -6,6 +6,14 @@ repo_depends:
 update_on:
   - source: aur
     aur: lebiniou
+  - source: alpm
+    alpm: ulfius
+    strip_release: true
+    provided: libulfius.so
+  - source: alpmfiles
+    pkgname: imagemagick
+    filename: libMagickWand-[0-9]+\.[^.]+\.so\.([0-9]+)
+    strip_dir: true
 
 maintainers:
   - github: roaldclark

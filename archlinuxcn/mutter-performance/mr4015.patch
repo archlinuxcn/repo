@@ -1,0 +1,345 @@
+From cf97df46f751470b6df99376840842afc211636d Mon Sep 17 00:00:00 2001
+From: Gert <Gert-dev@users.noreply.github.com>
+Date: Thu, 12 Sep 2024 20:13:33 +0200
+Subject: [PATCH] onscreen/native: Use EGLSyncs instead of
+ cogl_framebuffer_finish
+
+cogl_framebuffer_finish can result in a CPU-side stall because it waits for
+the primary GPU to flush and execute all commands that were queued before
+that. By using a GPU-side EGLSync we can let the primary GPU inform us when
+it is done with the queued commands instead. We then create another EGLSync
+on the secondary GPU using the same fd so the primary GPU effectively
+signals the secondary GPU when it is done rendering, causing the latter
+to wait for the former before copying part of the frames it needs for
+monitors attached to it directly.
+
+This solves the corruption that cogl_framebuffer_finish also solved, but
+without needing a CPU-side stall.
+---
+ src/backends/meta-egl.c                    |  94 +++++++++++++++++++
+ src/backends/meta-egl.h                    |  23 +++++
+ src/backends/native/meta-onscreen-native.c | 100 ++++++++++++++++++---
+ 3 files changed, 206 insertions(+), 11 deletions(-)
+
+diff --git a/src/backends/meta-egl.c b/src/backends/meta-egl.c
+index cc023f705c4..9e9fada375a 100644
+--- a/src/backends/meta-egl.c
++++ b/src/backends/meta-egl.c
+@@ -44,6 +44,11 @@ struct _MetaEgl
+   PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR;
+   PFNEGLDESTROYIMAGEKHRPROC eglDestroyImageKHR;
+ 
++  PFNEGLCREATESYNCPROC eglCreateSync;
++  PFNEGLDESTROYSYNCPROC eglDestroySync;
++  PFNEGLWAITSYNCPROC eglWaitSync;
++  PFNEGLDUPNATIVEFENCEFDANDROIDPROC eglDupNativeFenceFDANDROID;
++
+   PFNEGLBINDWAYLANDDISPLAYWL eglBindWaylandDisplayWL;
+   PFNEGLQUERYWAYLANDBUFFERWL eglQueryWaylandBufferWL;
+ 
+@@ -1162,6 +1167,90 @@ meta_egl_query_display_attrib (MetaEgl     *egl,
+   return TRUE;
+ }
+ 
++gboolean
++meta_egl_create_sync (MetaEgl           *egl,
++                      EGLDisplay         display,
++                      EGLenum            type,
++                      const EGLAttrib   *attrib_list,
++                      EGLSync           *egl_sync,
++                      GError           **error)
++{
++  if (!is_egl_proc_valid (egl->eglCreateSync, error))
++    return FALSE;
++
++  EGLSync sync;
++  
++  sync = egl->eglCreateSync(display, type, attrib_list);
++
++  if (sync == EGL_NO_SYNC)
++    {
++      set_egl_error (error);
++      return FALSE;
++    }
++
++  *egl_sync = sync;
++
++  return TRUE;
++}
++
++gboolean
++meta_egl_destroy_sync (MetaEgl     *egl,
++                       EGLDisplay   display,
++                       EGLSync      sync,
++                       GError     **error)
++{
++  if (!is_egl_proc_valid (egl->eglDestroySync, error))
++    return FALSE;
++
++  if (!egl->eglDestroySync (display, sync))
++    {
++      set_egl_error (error);
++      return FALSE;
++    }
++
++  return TRUE;
++}
++
++gboolean
++meta_egl_wait_sync (MetaEgl     *egl,
++                    EGLDisplay   display,
++                    EGLSync      sync,
++                    EGLint       flags,
++                    GError     **error)
++{
++  if (!is_egl_proc_valid (egl->eglWaitSync, error))
++    return FALSE;
++
++  if (!egl->eglWaitSync (display, sync, flags))
++    {
++      set_egl_error (error);
++      return FALSE;
++    }
++
++  return TRUE;
++}
++
++EGLint
++meta_egl_duplicate_native_fence_fd (MetaEgl    *egl,
++                                    EGLDisplay  display,
++                                    EGLSync     sync,
++                                    GError     **error)
++{
++  if (!is_egl_proc_valid (egl->eglDupNativeFenceFDANDROID, error))
++    return EGL_NO_NATIVE_FENCE_FD_ANDROID;
++
++  EGLint fd = EGL_NO_NATIVE_FENCE_FD_ANDROID;
++  
++  fd = egl->eglDupNativeFenceFDANDROID (display, sync);
++
++  if (fd == EGL_NO_NATIVE_FENCE_FD_ANDROID)
++    {
++      set_egl_error (error);
++    }
++
++  return fd;
++}
++
+ #define GET_EGL_PROC_ADDR(proc) \
+   egl->proc = (void *) eglGetProcAddress (#proc);
+ 
+@@ -1175,6 +1264,11 @@ meta_egl_constructed (GObject *object)
+   GET_EGL_PROC_ADDR (eglCreateImageKHR);
+   GET_EGL_PROC_ADDR (eglDestroyImageKHR);
+ 
++  GET_EGL_PROC_ADDR (eglCreateSync);
++  GET_EGL_PROC_ADDR (eglDestroySync);
++  GET_EGL_PROC_ADDR (eglWaitSync);
++  GET_EGL_PROC_ADDR (eglDupNativeFenceFDANDROID);
++
+   GET_EGL_PROC_ADDR (eglBindWaylandDisplayWL);
+   GET_EGL_PROC_ADDR (eglQueryWaylandBufferWL);
+ 
+diff --git a/src/backends/meta-egl.h b/src/backends/meta-egl.h
+index 8b955c90c38..55775c7a421 100644
+--- a/src/backends/meta-egl.h
++++ b/src/backends/meta-egl.h
+@@ -276,3 +276,26 @@ gboolean meta_egl_query_display_attrib (MetaEgl     *egl,
+                                         EGLint       attribute,
+                                         EGLAttrib   *value,
+                                         GError     **error);
++
++gboolean meta_egl_create_sync (MetaEgl           *egl,
++                               EGLDisplay         display,
++                               EGLenum            type,
++                               const EGLAttrib   *attrib_list,
++                               EGLSync           *egl_sync,
++                               GError           **error);
++
++gboolean meta_egl_destroy_sync (MetaEgl     *egl,
++                                EGLDisplay   display,
++                                EGLSync      sync,
++                                GError     **error);
++
++gboolean meta_egl_wait_sync (MetaEgl     *egl,
++                             EGLDisplay   display,
++                             EGLSync      sync,
++                             EGLint       flags,
++                             GError     **error);
++
++EGLint meta_egl_duplicate_native_fence_fd (MetaEgl    *egl,
++                                           EGLDisplay  display,
++                                           EGLSync     sync,
++                                           GError     **error);
+\ No newline at end of file
+diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
+index 1a31f04a164..4f80b394f65 100644
+--- a/src/backends/native/meta-onscreen-native.c
++++ b/src/backends/native/meta-onscreen-native.c
+@@ -29,6 +29,7 @@
+ 
+ #include "backends/native/meta-onscreen-native.h"
+ 
++#include <glib/gstdio.h>
+ #include <drm_fourcc.h>
+ 
+ #include "backends/meta-egl-ext.h"
+@@ -828,20 +829,53 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
+   MetaRendererNative *renderer_native = renderer_gpu_data->renderer_native;
+   MetaEgl *egl = meta_renderer_native_get_egl (renderer_native);
+   MetaGles3 *gles3 = meta_renderer_native_get_gles3 (renderer_native);
++  CoglContext *cogl_context = cogl_framebuffer_get_context (COGL_FRAMEBUFFER (onscreen));
++  CoglRendererEGL *cogl_renderer_egl = cogl_context->display->renderer->winsys;
+   MetaRenderDevice *render_device;
+   EGLDisplay egl_display;
+-  GError *error = NULL;
++  g_autoptr (GError) error = NULL;
+   gboolean use_modifiers;
+   MetaDeviceFile *device_file;
+   MetaDrmBufferFlags flags;
+   MetaDrmBufferGbm *buffer_gbm;
+   struct gbm_bo *bo;
++  EGLSync primary_gpu_egl_sync = EGL_NO_SYNC;
++  EGLSync secondary_gpu_egl_sync = EGL_NO_SYNC;
++  g_autofd int primary_gpu_sync_fence = EGL_NO_NATIVE_FENCE_FD_ANDROID;
+ 
+   COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferSecondaryGpu,
+                            "copy_shared_framebuffer_gpu()");
+-
++  
+   if (renderer_gpu_data->secondary.needs_explicit_sync)
+-    cogl_framebuffer_finish (COGL_FRAMEBUFFER (onscreen));
++    {
++      if (!meta_egl_create_sync (egl,
++                                cogl_renderer_egl->edpy,
++                                EGL_SYNC_NATIVE_FENCE_ANDROID,
++                                NULL,
++                                &primary_gpu_egl_sync,
++                                &error))
++       {
++         g_warning ("Failed to create EGLSync on primary GPU: %s", error->message);
++         return NULL;
++       }
++
++      // According to the EGL_KHR_fence_sync specification we must ensure
++      // the fence command is flushed in this context to be able to await it
++      // in another (secondary GPU context) or we risk waiting indefinitely.
++      cogl_framebuffer_flush (COGL_FRAMEBUFFER (onscreen));
++
++      primary_gpu_sync_fence =
++        meta_egl_duplicate_native_fence_fd (egl,
++                                            cogl_renderer_egl->edpy,
++                                            primary_gpu_egl_sync,
++                                            &error);
++
++      if (primary_gpu_sync_fence == EGL_NO_NATIVE_FENCE_FD_ANDROID)
++        {
++          g_warning ("Failed to duplicate EGLSync FD on primary GPU: %s", error->message);
++          goto out;
++        }
++    }
+ 
+   render_device = renderer_gpu_data->render_device;
+   egl_display = meta_render_device_get_egl_display (render_device);
+@@ -854,13 +888,45 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
+                               &error))
+     {
+       g_warning ("Failed to make current: %s", error->message);
+-      g_error_free (error);
+-      return NULL;
++      goto out;
+     }
+ 
+   *egl_context_changed = TRUE;
+ 
++  if (primary_gpu_sync_fence != EGL_NO_NATIVE_FENCE_FD_ANDROID)
++    {
++      EGLAttrib attribs[3];
++
++      attribs[0] = EGL_SYNC_NATIVE_FENCE_FD_ANDROID;
++      attribs[1] = primary_gpu_sync_fence;
++      attribs[2] = EGL_NONE;
++
++      if (!meta_egl_create_sync (egl,
++                                egl_display,
++                                EGL_SYNC_NATIVE_FENCE_ANDROID,
++                                attribs,
++                                &secondary_gpu_egl_sync,
++                                &error))
++        {
++          g_warning ("Failed to create EGLSync on secondary GPU: %s", error->message);
++          goto out;
++        }
++
++      // eglCreateSync takes ownership of an existing fd that is passed, so
++      // don't try to clean it up twice.
++      primary_gpu_sync_fence = EGL_NO_NATIVE_FENCE_FD_ANDROID;
+ 
++      if (!meta_egl_wait_sync (egl,
++                               egl_display,
++                               secondary_gpu_egl_sync,
++                               0,
++                               &error))
++        {
++          g_warning ("Failed to wait for EGLSync on secondary GPU: %s", error->message);
++          goto out;
++        }
++    }
++  
+   buffer_gbm = META_DRM_BUFFER_GBM (primary_gpu_fb);
+   bo = meta_drm_buffer_gbm_get_bo (buffer_gbm);
+   if (!meta_renderer_native_gles3_blit_shared_bo (egl,
+@@ -872,8 +938,7 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
+                                                   &error))
+     {
+       g_warning ("Failed to blit shared framebuffer: %s", error->message);
+-      g_error_free (error);
+-      return NULL;
++      goto out;
+     }
+ 
+   if (!meta_egl_swap_buffers (egl,
+@@ -882,8 +947,7 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
+                               &error))
+     {
+       g_warning ("Failed to swap buffers: %s", error->message);
+-      g_error_free (error);
+-      return NULL;
++      goto out;
+     }
+ 
+   use_modifiers = meta_renderer_native_use_modifiers (renderer_native);
+@@ -902,8 +966,7 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
+     {
+       g_warning ("meta_drm_buffer_gbm_new_lock_front failed: %s",
+                  error->message);
+-      g_error_free (error);
+-      return NULL;
++      goto out;
+     }
+ 
+   g_object_set_qdata_full (G_OBJECT (buffer_gbm),
+@@ -911,6 +974,21 @@ copy_shared_framebuffer_gpu (CoglOnscreen                        *onscreen,
+                            g_object_ref (primary_gpu_fb),
+                            g_object_unref);
+ 
++out:
++  if (primary_gpu_egl_sync != EGL_NO_SYNC &&
++      !meta_egl_destroy_sync (egl,
++                              cogl_renderer_egl->edpy,
++                              primary_gpu_egl_sync,
++                              &error))
++    g_warning ("Failed to destroy primary GPU EGLSync: %s", error->message);
++
++  if (secondary_gpu_egl_sync != EGL_NO_SYNC &&
++      !meta_egl_destroy_sync (egl,
++                              egl_display,
++                              secondary_gpu_egl_sync,
++                              &error))
++    g_warning ("Failed to destroy secondary GPU EGLSync: %s", error->message);
++
+   return META_DRM_BUFFER (buffer_gbm);
+ }
+ 
+-- 
+GitLab

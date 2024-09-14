@@ -1,34 +1,35 @@
 # Maintainer: Andrej Radović <r.andrej@gmail.com>
 
 pkgname=litecli
-pkgver=1.10.0
-pkgrel=2
-pkgdesc="A command-line client for SQLite databases that has auto-completion "\
-"and syntax highlighting."
+pkgver=1.12.2
+pkgrel=1
+pkgdesc="A command-line client for SQLite databases that has auto-completion ""\
+and syntax highlighting."
 url="https://github.com/dbcli/litecli"
 arch=(any)
 license=('BSD')
 depends=(
-  'python'
-  'python-click'
-  'python-pygments'
-  'python-prompt_toolkit'
-  'python-sqlparse'
-  'python-configobj'
-  'python-cli_helpers'
+	'python'
+	'python-click'
+	'python-pygments'
+	'python-prompt_toolkit'
+	'python-sqlparse'
+	'python-configobj'
+	'python-cli_helpers'
 )
-makedepends=('python-distribute')
-source=(
-  $pkgname-$pkgver.zip::https://github.com/dbcli/litecli/archive/v$pkgver.zip
-)
+makedepends=(python-build python-installer python-wheel python-setuptools)
+source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/$pkgname/$pkgname-$pkgver.tar.gz")
 provides=('litecli')
 conflicts=('litecli-git')
-md5sums=('749a0ab4ba215ce0c06c15fe3cc5172b')
+md5sums=('0ff5c0b443b1316ea78eb67e0840834e')
+
+build() {
+	cd "$srcdir/${pkgname}-${pkgver}"
+	python -m build --wheel --no-isolation
+}
 
 package() {
-  cd "$srcdir/${pkgname}-${pkgver}"
-  sed -i "s/cli_helpers\[styles\] >= 1.0.1/cli_helpers >= 1.1.0/g" \
-    setup.py
-  python setup.py install --root="$pkgdir/" --optimize=1
-  install -D "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+	cd "$srcdir/${pkgname}-${pkgver}"
+	python -m installer --destdir="$pkgdir" dist/*.whl
+	install -D "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

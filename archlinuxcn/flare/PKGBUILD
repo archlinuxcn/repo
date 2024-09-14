@@ -1,22 +1,19 @@
 # Maintainer: Julian <juliannfairfax@protonmail.com>
 
 pkgname=flare
-pkgver=0.15.0
+pkgver=0.15.1
 _pkgver=${pkgver/beta/-beta/}
-pkgrel=4
+pkgrel=1
 epoch=1
 pkgdesc="Chat with your friends on Signal"
 url="https://gitlab.com/schmiddi-on-mobile/${pkgname}"
 arch=("i686" "x86_64" "armv6h" "armv7h" "aarch64")
 license=("AGPL-3.0-or-later")
 makedepends=("blueprint-compiler" "cargo" "meson")
-depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5")
-optdepends=(
-	"feedbackd: for vibrating notifications"
-	"libspelling: for spell-checking support"
-)
+depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling")
+optdepends=("feedbackd: for vibrating notifications")
 source=("https://gitlab.com/schmiddi-on-mobile/${pkgname}/-/archive/${_pkgver}/${pkgname}-${_pkgver}.tar.gz")
-sha256sums=('6bd9fe77f9e40fc3d081baf5bd5665b94b3514c5cc488305e46d2656b1f68f7b')
+sha256sums=('23306cf6f14a35eeea39b426e1bdaf05cc7fab47b6ba55a24675c6ba20ad7a6c')
 options=('!lto')
 
 prepare() {

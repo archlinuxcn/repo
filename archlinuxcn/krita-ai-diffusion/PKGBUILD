@@ -1,7 +1,7 @@
 # Maintainer: Roald Clark <roaldclark@gmail.com>
 
 pkgname=krita-ai-diffusion
-pkgver=1.23.0
+pkgver=1.24.0
 pkgrel=1
 pkgdesc="A plugin to use generative AI in image painting and editing workflows from within Krita"
 arch=('any')
@@ -18,7 +18,7 @@ checkdepends=('openssl-1.1')
 install=krita-ai-diffusion.install
 source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}"
         "add-regex-to-requirements.patch")
-sha256sums=('c78cd0ebdf51e3f9711f048b26470fbb5e3df950af038724adb9f227bbc9e37a'
+sha256sums=('1c3b2ea6319eac9b3750f3a8df598ceb9a443c46a8ae955f04f15b19a197609a'
             '57bf33f43ec7181d3a507539eb9f14e7ff54d6fa3c729df98493bc171d1cee83')
 
 prepare() {

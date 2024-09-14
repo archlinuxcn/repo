@@ -2,8 +2,8 @@
 # Contributor: Henry-ZHR <henry-zhr@qq.com>
 
 pkgname=serenity
-pkgver=1.0.0beta.17
-_tagname='1.0.0-beta.17'
+pkgver=1.0.0beta.19
+_tagname='1.0.0-beta.19'
 pkgrel=1
 pkgdesc='The configuration generator for sing-box'
 arch=('i686' 'x86_64' 'aarch64' 'armv7h')
@@ -14,7 +14,7 @@ makedepends=('go')
 optdepends=('sing-box')
 backup=("etc/$pkgname/config.json")
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$_tagname.tar.gz")
-sha256sums=('1278f75334cf908717a90745aa1e179227ffaaa98b5e6832df6be6d61b24b3c0')
+sha256sums=('b1886aed78595735e1cae42b4bebeabfb398c4cb287fc2a437a741981b17ede6')
 
 prepare() {
   cd $pkgname-$_tagname

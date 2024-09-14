@@ -1,25 +1,27 @@
 # Maintainer: opale95
 # Contributor: Namarrgon
+
 pkgname=lebiniou-data
 pkgver=3.67.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Data files for lebiniou"
 arch=('any')
-url="https://biniou.lenain.info/"
-license=('GPL')
-source=("https://gitlab.com/lebiniou/lebiniou-data/-/archive/version-$pkgver/lebiniou-data-version-$pkgver.tar.gz")
+url="https://gitlab.com/lebiniou/lebiniou-data"
+license=('GPL-2.0-or-later')
+depends=('bash')
+source=("${url}/-/archive/version-${pkgver}/lebiniou-data-version-${pkgver}.tar.gz")
 sha256sums=('19b83dbcbf60cdc5ab6dd9cf42cd1442d32075219c70553b2b3d7bf05acac81c')
 
 build() {
-	cd "$pkgname-version-$pkgver"
+    cd "$srcdir/$pkgname-version-$pkgver"
 
-	./bootstrap
-	./configure --prefix=/usr
+    ./bootstrap
+    ./configure --prefix=/usr
 }
 
 package() {
-	cd "$pkgname-version-$pkgver"
+    cd "$srcdir/$pkgname-version-$pkgver"
 
-	make DESTDIR="$pkgdir/" install
+    make DESTDIR="$pkgdir/" install
+    install -Dm644 COPYING -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
-
