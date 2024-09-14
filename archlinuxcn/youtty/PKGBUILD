@@ -2,7 +2,7 @@
 
 pkgname=youtty
 pkgver=0.4.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Search, download and watch any youtube video from the tty"
 arch=(x86_64)
 url="https://github.com/Dvd-Znf/youtty"
@@ -18,7 +18,7 @@ makedepends=(
     'make'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=("43f5a065e63fbbc5c4ce0e463b6b924b9e444be6e4c177d2cf1039a8d7ca165e")
+sha256sums=('43f5a065e63fbbc5c4ce0e463b6b924b9e444be6e4c177d2cf1039a8d7ca165e')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
