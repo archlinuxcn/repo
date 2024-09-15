@@ -1,0 +1,27 @@
+From dd63df3cc5083cfef6d11d7488cdc62052d25203 Mon Sep 17 00:00:00 2001
+From: Masato TOYOSHIMA <phoepsilonix@phoepsilonix.love>
+Date: Mon, 27 May 2024 06:07:25 +0900
+Subject: [PATCH 1/2] There were multiple snap_trans_runs. The flatpak process
+ also had a typo as snap_trans_run.
+
+typo fix: snap_trans_run -> flatpak_trans_run
+---
+ src/daemon.vala | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/daemon.vala b/src/daemon.vala
+index 5b55bf1..8d81997 100644
+--- a/src/daemon.vala
++++ b/src/daemon.vala
+@@ -696,7 +696,7 @@ namespace Pamac {
+ 				bool authorized = check_authorization.end (res);
+ 				if (authorized) {
+ 					try {
+-						new Thread<int>.try ("snap_trans_run", () => {
++						new Thread<int>.try ("flatpak_trans_run", () => {
+ 							AtomicInt.inc (ref running_threads);
+ 							bool success = flatpak_plugin.trans_run (sender, to_install_copy, to_remove_copy, to_upgrade_copy);
+ 							flatpak_trans_run_finished (sender, success);
+--
+2.45.0
+

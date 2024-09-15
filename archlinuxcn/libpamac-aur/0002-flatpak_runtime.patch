@@ -1,0 +1,26 @@
+From e780334bbacdf7616272560a5c080940d6649f8d Mon Sep 17 00:00:00 2001
+From: Masato TOYOSHIMA <phoepsilonix@phoepsilonix.love>
+Date: Mon, 27 May 2024 06:08:45 +0900
+Subject: [PATCH 2/2] With the following changes, we were able to add a flatpak
+ RUNTIME check when updating.
+
+---
+ src/flatpak_plugin.vala | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/flatpak_plugin.vala b/src/flatpak_plugin.vala
+index d5908ae..a93919b 100644
+--- a/src/flatpak_plugin.vala
++++ b/src/flatpak_plugin.vala
+@@ -702,7 +702,7 @@ namespace Pamac {
+ 				lock (pkgs_cache)  {
+ 					GenericArray<unowned Flatpak.InstalledRef> update_apps = installation.list_installed_refs_for_update ();
+ 					foreach (unowned Flatpak.InstalledRef installed_ref in update_apps) {
+-						if (installed_ref.kind == Flatpak.RefKind.APP) {
++						if (installed_ref.kind == Flatpak.RefKind.APP || installed_ref.kind == Flatpak.RefKind.RUNTIME) {
+ 							string id = "%s/%s".printf (installed_ref.get_origin (), installed_ref.format_ref ());
+ 							FlatpakPackageLinked? pkg = pkgs_cache.lookup (id);
+ 							if (pkg == null) {
+--
+2.45.0
+
