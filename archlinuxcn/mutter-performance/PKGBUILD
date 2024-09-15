@@ -11,8 +11,8 @@
 
 ### PACKAGE OPTIONS
 ## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3567' '3751' '3960')
-_merge_requests_to_use=('1441' '3751' '3960')
+# Merge Requests List: ('579' '1441' '3567' '3751')
+_merge_requests_to_use=('1441' '3751')
 
 
 ### IMPORTANT: Do no edit below this line unless you know what you're doing!
@@ -20,8 +20,8 @@ _merge_requests_to_use=('1441' '3751' '3960')
 _pkgname=mutter
 pkgname=mutter-performance
 epoch=1
-pkgver=46.4+r18+g081b918bac
-pkgrel=3
+pkgver=46.5
+pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -100,22 +100,19 @@ makedepends=(
 if [ -n "$_enable_check" ]; then
   checkdepends=(gnome-session xorg-server-xvfb pipewire-session-manager python-dbusmock zenity)
 fi
-_commit=081b918bac2eae6a19066ea30ab18d5dbd5b8ea7  # tags/46.4^18
+_commit=f585134c114797aae27f1a82013c665a5c1b94ed  # tags/46.5^0
 source=("git+$url.git#commit=$_commit"
         'mr1441.patch'
         'mr3567.patch'
-        'mr3751.patch'
-        'mr3960.patch')
-sha256sums=('81978164d9f2715438fbc623c77ea7529332cac5c4c519e4781daa5bf1a315eb'
-            '043d6f4abce085b5ecc3debf0d334cc9fe826d256a421a4cbbe6aee8cffce255'
+        'mr3751.patch')
+sha256sums=('caf3b0c514334e4684d294ba65a64e22c94bf3458118ea2a3f02de761e0b71f2'
+            '1fe74042bc5d4369680036918eae10fb3d788983d7b57043a75b291b7f1050c8'
             '2e474a574edad8dc047a53a920fc7cbe005cac0102907eef80a252fc556d0517'
-            '4c15b0e6d0001c8c3feedf05a9140f7f17d52eb36ff7b8039e0281c1373ccdfe'
-            '361af6ed4ff6039c3b24dca8cd737468b7a441ea9855f8033c8348ce1aab0f0c')
-b2sums=('aaed24cb5bac5f62096d44bfdf0e6acfff3944137a06f5cbd7fd1f18d03ebb816d02ab170c9128eafb023a339de3e7ea79480654687ec449d29f9e45d66218e3'
-        '3231bdae36ae05892d2106199dc75a0dd8dc59b45bc77a51090ad35bec9e21420aeb86578e97fb64565b265beb7406a406362a06a091ef066965c7c9ea2fe50e'
+            '4c15b0e6d0001c8c3feedf05a9140f7f17d52eb36ff7b8039e0281c1373ccdfe')
+b2sums=('3c7990afd584836dd092e30813194ac24608416051a9b06c51d2f9577206360cb0f8bafceccc42ce1809d47e7a1676326fe8b87fa231c6abe2d9dddba10b6581'
+        'cd0ae704aefdee7052f18fa75b156027da93243e1abd32692fe7d264b1e63bb41b63c7ea7ca76b74650e4dcdc76c456c83e5d37972196864bbe185aa2819f876'
         '65302b1fa24a7aba26915269fb694c7a64b134ee2062ec7e649036a3a41efb2f2f4110cff6194808af34985855ade641c5fb01f0b97536cd3c912892ea3a0d4c'
-        'f9f2284d7236d6072a818de3784a339c2d934490da8870876f49d4effd59ce807593ce8b8a3c5e06586fd5fd7e81fb31fedca84115acf1e71cfe23d4a5e727b3'
-        '9517c7c84b20ff28ccb3cfd1168eb3ca294934df6088c7938b1ff659933043d2687031b2da1eac7eaf0a8cec21284147cb925aa08584563488fce1bcef361184')
+        'f9f2284d7236d6072a818de3784a339c2d934490da8870876f49d4effd59ce807593ce8b8a3c5e06586fd5fd7e81fb31fedca84115acf1e71cfe23d4a5e727b3')
 
 for mr in "${_merge_requests_to_use[@]}"; do
   if [ '3567' = "$mr" ]; then
@@ -221,13 +218,6 @@ prepare() {
   # Comment: This commit makes input methods work in text-input-v1 only clients.
   #          (mostly Chromium/Electron based apps with Ozone Wayland.)
   pick_mr '3751' 'mr3751.patch' 'patch'
-
-  # Title: kms: Inhibit real time scheduling until initial mode set
-  # Author: Jonas Ådahl <jadahl@gmail.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3960
-  # Type: 3
-  # Status: 4
-  pick_mr '3960' 'mr3960.patch' 'patch'
 
   # Title: Draft: Dynamic triple/double buffering (v4)
   # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
