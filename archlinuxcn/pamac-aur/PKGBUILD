@@ -5,19 +5,20 @@ ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
 pkgver=11.7.1
-pkgrel=4
+pkgrel=5
 _pkgfixver=$pkgver
 _pkgfixvercli=11.6.0
 _pkgrelcli=5
 
 _commit='61b7570aace3def9b048668fa23a52f08423ecf1'
 _commitcli='3985c4d7e95312f79bb2a7f33766912c329f4697'
-sha256sums=('5202a72287aaaf83530448cacd13940d779e3fe12c0a2dd62eaada9721de9ed0'
+sha256sums=('9d15c4d26a4f4d095c00d2918acb1183eefd5e1eb93158f1c7da0c8fcd89d721'
             '95b192d8bc71764e50f73394b068e78159d2b1d976a2ae22f943c51cfdd7b9ca')
 
 pkgdesc="A Gtk frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
-url="https://gitlab.manjaro.org/applications/pamac"
+url="https://github.com/manjaro/pamac"
+urlcli="https://gitlab.manjaro.org/applications/pamac-cli"
 license=('GPL-3.0-or-later')
 depends=('libnotify' 'libhandy' 'libadwaita' 'gtk4' 'desktop-file-utils' 'libpamac-aur>=11.6' 'gnutls>=3.4' 'git')
 
@@ -28,8 +29,8 @@ conflicts=('pamac' 'pamac-tray-appindicator' 'pamac-cli')
 provides=("pamac=$_pkgfixver-$pkgrel" "pamac-cli=$_pkgfixvercli-$_pkgrelcli")
 options=(!emptydirs !strip)
 install=pamac.install
-source=("pamac-$_pkgfixver-$pkgrel.tar.gz::$url/-/archive/$_commit/pamac-$_commit.tar.gz"
-        "pamac-cli-$_pkgfixvercli-$_pkgrelcli.tar.gz::$url-cli/-/archive/$_commitcli/pamac-cli-$_commitcli.tar.gz")
+source=("pamac-$_pkgfixver-$pkgrel.zip::$url/archive/$_commit.zip"
+        "pamac-cli-$_pkgfixvercli-$_pkgrelcli.tar.gz::$urlcli/-/archive/$_commitcli/pamac-cli-$_commitcli.tar.gz")
 
 define_meson=''
 if [ "${ENABLE_FAKE_GNOME_SOFTWARE}" = 1 ]; then
