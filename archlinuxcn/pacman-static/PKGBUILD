@@ -3,7 +3,7 @@
 # All my PKGBUILDs are managed at https://github.com/eli-schwartz/pkgbuilds
 
 pkgname=pacman-static
-pkgver=6.1.0
+pkgver=7.0.0.r3.g7736133
 _cares_ver=1.33.1
 _nghttp2_ver=1.63.0
 _curlver=8.9.1
@@ -16,24 +16,21 @@ _libarchive_ver=3.7.4
 _gpgerrorver=1.50
 _libassuanver=3.0.0
 _gpgmever=1.23.2
-pkgrel=34
+pkgrel=1
+# use annotated tag and patch level commit from release branch (can be empty for no patches)
+_git_tag=7.0.0
+_git_patch_level_commit=77361331ae3864c6ea880e715c5864d59336f275
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
-license=('GPL')
+license=('GPL-2.0-or-later')
 depends=('pacman')
 makedepends=('meson' 'musl' 'kernel-headers-musl' 'git')
 options=('!emptydirs' '!lto')
 
 # pacman
-source=("https://gitlab.archlinux.org/pacman/pacman/-/releases/v$pkgver/downloads/pacman-$pkgver.tar.xz"{,.sig}
-        revertme-makepkg-remove-libdepends-and-libprovides.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/354a300cd26bb1c7e6551473596be5ecced921de.patch
-        "$pkgname-fix-msg-unknown-key.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/6bb95c8856437513ee0ab19226bc090d6fd0fb06.patch"
-        "$pkgname-man-gitlab.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/95f148c2222db608a0d72d5c5577d0c71e7fa199.patch"
-        "$pkgname-make-aligned-titles.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/5e0496260b7d3f9c9fcf2b1c4899e4dbcc20ff03.patch"
-        "$pkgname-repo-add-parseopts.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/0571ee82bff0edbd5ffac2228d4e6ac510b9008e.patch"
-        "$pkgname-drop-result-warn.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/111eed0251238a9d3f90e76d62f2ac01aeccce48.patch"
-        "$pkgname-fix-debugedit.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/bae9594ac1806ce30f2af1de27c49bb101a00d44.patch")
+source=("git+https://gitlab.archlinux.org/pacman/pacman.git#tag=v${_git_tag}?signed"
+        pacman-revertme-makepkg-remove-libdepends-and-libprovides.patch::https://gitlab.archlinux.org/pacman/pacman/-/commit/354a300cd26bb1c7e6551473596be5ecced921de.patch)
 
 validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@archlinux.org>
               'B8151B117037781095514CA7BBDFFC92306B1121') # Andrew Gregory (pacman) <andrew@archlinux.org>
@@ -87,15 +84,8 @@ source+=("https://github.com/libarchive/libarchive/releases/download/v${_libarch
 validpgpkeys+=('A5A45B12AD92D964B89EEE2DEC560C81CEC2276E'  # Martin Matuska <mm@FreeBSD.org>
               'DB2C7CF1B4C265FAEF56E3FC5848A18B8F14184B') # Martin Matuska <martin@matuska.org>
 
-sha512sums=('da5e78506e0505aac47def4b658a8cd6012be90c7ad7f7343da2edca2df5bd019091eec0a297f79c6f2fc264c139f139175778015d928cace26cb81c87d0477b'
-            'SKIP'
+sha512sums=('44e00c2bc259fe6a85de71f7fd8a43fcfd1b8fb7d920d2267bd5b347e02f1dab736b3d96e31faf7b535480398e2348f7c0b9914e51ca7e12bab2d5b8003926b4'
             '1a108c4384b6104e627652488659de0b1ac3330640fc3250f0a283af7c5884daab187c1efc024b2545262da1911d2b0b7b0d5e4e5b68bb98db25a760c9f1fb1a'
-            'b50a8c7734c884f2a645eba18a42081d8d6becf77cef04467ac1b755dcf58f8e79fc9a65cb9b2fda11ca87f1150a685adcf2d11b4a20441472b2f68e830c9394'
-            'fb79497bd2ea6d12a2234aa6b0acae0341cbdf1bd6358c4eb5e20548f4edf6b7159abcae0635574b1b0e1e05e34e73f11afa463f32f43bcb156bef3d5e2a3663'
-            '22ee8654ee131292eb124170544bf15aeb70922049c5447f33c5e211a6b489bde9feb6fc1ef3022ad09b7b5d781edad1c233110cea1b6638e4f7a3bf9b716d09'
-            '35e1b7f37dc440317c2f1530f0d8ce2c8cd1ef4ddc0d68a22e89f792e53ce9f48719abd9661378b31496b780ad493dbc13a73770385a7af35595941007971aa5'
-            '8adb3696579e3b771a7a61dd6ff013afb1444bbb087a0a71f3971da4d51e6b304ad631cbafe8187c837bd763b1a3298e2bd19605438d515743a73ff24192e33f'
-            '2ff45ed5e27b1d90524ec0de45acf55891b6f5bf7242dbfeec5c370b7c5d6e35eb49254b19f2a2d194dbab38fa27bca34afaf6175888a911a105237f2bab8d19'
             'ac5005f33664981e194730223881f4207c9570cb8d9bba51b5592a3e7eb59455ebe25bf190211811513c64497a1b42ec7a82cc7f810059f46c99a83dd2d6cef9'
             'b5ec4f08539be552f01d49f03327e3999754b940d83c63fbd934c2ed34cf7f05c3f90c9eb64a78a3d7862280bf75765296576a70a6029257daaf90e3e35ab3e4'
             'SKIP'
@@ -107,7 +97,7 @@ sha512sums=('da5e78506e0505aac47def4b658a8cd6012be90c7ad7f7343da2edca2df5bd01909
             'b5887ea77417fae49b6cb1e9fa782d3021f268d5219701d87a092235964f73fa72a31428b630445517f56f2bb69dcbbb24119ef9dbf8b4e40a753369a9f9a16f'
             '580677aad97093829090d4b605ac81c50327e74a6c2de0b85dd2e8525553f3ddde17556ea46f8f007f89e435493c9a20bc997d1ef1c1c2c23274528e3c46b94f'
             'SKIP'
-            'f369f126dd3d538ef27ecce62e8ae01a2c9056eeb22c6b21d9a1d5e456f35330bc7f2bb0df525ad4a4f95ba84c0196c7c79ad768359786d3a73f876aa043f164'
+            '5c9cd3eb2d2126a5ccc6973c66f46ee5787e1808cbcdfada35ea9566206bf77969fb8ba401694ce75f6866fafde3c59114d22694f811f3b251cb073fd0c4ec47'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
             '21f9da445afd76acaf3acb22d216c2b584d95e8c68e00f5cb3f6673f2d556dd14a7593344adf8ffd194bba3314387ee0e486d6248f6c935abca2edd8a4cf95ed'
@@ -144,16 +134,34 @@ export CXXFLAGS+=' -D_LARGEFILE64_SOURCE'
 [[ $PKGEXT = .pkg.tar.zst ]] && PKGEXT=.pkg.tar.xz
 
 prepare() {
-    # pacman
-    cd "${srcdir}"/pacman-${pkgver}
-    local src
-    for src in "${source[@]}"; do
-        src="${src%%::*}"
-        src="${src##*/}"
-        [[ $src = pacman-*.patch ]] || continue
-        msg2 "Applying pacman patch $src..."
-        patch -Np1 < "../$src"
-    done
+    cd "${srcdir}/pacman"
+
+    # apply patch level commits on top of annotated tag for pacman
+    if [[ -n ${_git_patch_level_commit} ]]; then
+        if [[ v${_git_tag} != $(git describe --tags --abbrev=0 "${_git_patch_level_commit}") ]] then
+            error "patch level commit ${_git_patch_level_commit} is not a descendant of v${_git_tag}"
+            exit 1
+        fi
+        git rebase "${_git_patch_level_commit}"
+    fi
+
+    # handle local pacman patches
+    local -a patches
+    patches=($(printf '%s\n' "${source[@]}" | grep 'pacman-.*.patch'))
+    patches=("${patches[@]%%::*}")
+    patches=("${patches[@]##*/}")
+
+    if (( ${#patches[@]} != 0 )); then
+        for patch in "${patches[@]}"; do
+            if [[ $patch =~ revertme-* ]]; then
+                msg2 "Reverting patch $patch..."
+                patch -RNp1 < "../$patch"
+            else
+                msg2 "Applying patch $patch..."
+                patch -Np1 < "../$patch"
+            fi
+        done
+    fi
 
     # openssl
     cd "${srcdir}"/openssl-${_sslver}
@@ -312,10 +320,9 @@ build() {
     rm "${srcdir}"/temp/usr/lib/lib*.la
 
     # Finally, it's a pacman!
-    mkdir -p "${srcdir}"/pacman-${pkgver}/builddir
-    cd "${srcdir}"/pacman-${pkgver}/builddir
-    meson setup \
-        --prefix=/usr \
+    mkdir -p "${srcdir}"/pacman
+    cd "${srcdir}"/pacman
+    meson --prefix=/usr \
         --includedir=lib/pacman/include \
         --libdir=lib/pacman/lib \
         --buildtype=plain \
@@ -325,13 +332,13 @@ build() {
         -Ddoxygen=disabled \
         -Dldconfig=/usr/bin/ldconfig \
         -Dscriptlet-shell=/usr/bin/bash \
-        ..
-    ninja
+        build
+    meson compile -C build
 }
 
 package() {
-    cd "${srcdir}"/pacman-${pkgver}/builddir
-    DESTDIR="${pkgdir}" ninja install
+    cd "${srcdir}"/pacman
+    DESTDIR="${pkgdir}" meson install -C build
 
     rm -rf "${pkgdir}"/usr/share "${pkgdir}"/etc
     for exe in "${pkgdir}"/usr/bin/*; do
