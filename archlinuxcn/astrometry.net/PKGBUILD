@@ -19,20 +19,17 @@ optdepends=(
 backup=(etc/astrometry.cfg)
 install=astrometry.net.install
 source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz"
-"https://github.com/dstndstn/astrometry.net/pull/298.patch"
-"https://github.com/dstndstn/astrometry.net/pull/299.patch"
 )
 sha1sums=('984de6879215794d4fec7916fa82741367d3b10d'
-          '0af88525e2e87ed2141ed072039d26fe464d3612'
-          'd3450d5e88f62f7f6c681f12156816f6d30bb225')
+)
 
 prepare() {
     cd ${pkgname}-${pkgver}
     # for fixing numpy 2.0
-    patch -p1 -i ../298.patch
-    patch -p1 -i ../299.patch
+    #patch -p1 -i ../298.patch
+    #patch -p1 -i ../299.patch
     rm util/util_wrap.c
-#    grep -RnI elsize . || echo 0
+    #grep -RnI elsize . || echo 0
 }
 
 build() {
