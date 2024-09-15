@@ -1,9 +1,9 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 pkgname="nginx-ui"
-pkgver=2.0.0_beta.32_patch.1
+pkgver=2.0.0_beta.33
 _pkgver=${pkgver//_/-}
-pkgrel=2
+pkgrel=1
 pkgdesc="Yet another WebUI for Nginx"
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
 url="https://github.com/0xJacky/${pkgname}"
@@ -12,7 +12,7 @@ license=("AGPL-3.0-or-later")
 depends=("nginx")
 makedepends=("pnpm" "go")
 source=("${pkgname}-${_pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('de2c4260540a699b459f55c0b464175f323b3e676b906cb5e7f262283b4cf593')
+sha256sums=('19d85c3a7e0fc52ef1d2fb6062097c5f1b6481cc06c16e38077d21c661d940b0')
 
 build() {
     export CGO_CFLAGS="${CFLAGS}"
