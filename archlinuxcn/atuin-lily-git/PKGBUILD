@@ -13,7 +13,7 @@ pkgdesc="Magical shell history (lilydjwg's fork)"
 arch=('x86_64')
 url="https://github.com/lilydjwg/atuin"
 license=('MIT')
-depends=('gcc-libs')
+depends=('gcc-libs' 'sqlite3')
 makedepends=('cargo' 'git' 'protobuf')
 optdepends=('bash-preexec: bash integration')
 source=("${_pkgname}::git+https://github.com/lilydjwg/atuin.git")
@@ -35,7 +35,7 @@ prepare() {
 
 build() {
   cd "$_pkgname"
-  cargo build --release --frozen --all-features
+  LIBSQLITE3_SYS_USE_PKG_CONFIG=1 cargo build --release --frozen --all-features
   for sh in 'bash' 'fish' 'zsh'; do
     "target/release/$__pkgname" gen-completions -s "$sh" -o completions/
   done
@@ -43,7 +43,7 @@ build() {
 
 check() {
   cd "$_pkgname"
-  cargo test --frozen --all-features --workspace --lib
+  LIBSQLITE3_SYS_USE_PKG_CONFIG=1 cargo test --frozen --all-features --workspace --lib
 }
 
 package() {
