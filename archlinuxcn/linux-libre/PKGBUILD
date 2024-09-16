@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=6.10.7
+pkgver=6.10.10
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -42,7 +42,7 @@ source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${_basever}-gnu/
         'config')
 sha256sums=('c9e303da8c96421f72ab1f64cda090dc3a88c48e40c30111747ce94b94b2311f'
             'SKIP'
-            '9e82b47cadb0e890abf556a5bf630916a1fc718769845b2b09f26d26d9b08653'
+            '0ef51599b9fed77fabfa0efdb069b3aee79064e43eec6a0928a0efe6a05c8ec3'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -50,7 +50,7 @@ sha256sums=('c9e303da8c96421f72ab1f64cda090dc3a88c48e40c30111747ce94b94b2311f'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP'
-            'e6816f4df8b48267a9f11fbd042e91d9a6249fbf40b09dcb1252eed380eb9f13')
+            '8b0565f121ed6d28744049195f1349bb0c61bf24da9eb8f2a6592c312d34ccde')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
@@ -147,6 +147,7 @@ _package-headers() {
   install -Dt "$_builddir/kernel" -m644 kernel/Makefile
   install -Dt "$_builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$_builddir" -a scripts
+  ln -srt "$_builddir" "$_builddir/scripts/gdb/vmlinux-gdb.py"
 
   # required when STACK_VALIDATION is enabled
   install -Dt "$_builddir/tools/objtool" tools/objtool/objtool
