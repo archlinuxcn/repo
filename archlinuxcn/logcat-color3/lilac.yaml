@@ -6,13 +6,11 @@ build_prefix: extra-x86_64
 
 repo_depends:
   - python-pyasyncore
-  - python-pyasynchat
-
 pre_build_script: |
-    aur_pre_build(maintainers="yan12125")
+  aur_pre_build(maintainers="yan12125")
 
 post_build_script: |
-    aur_post_build()
+  aur_post_build()
 
 update_on:
   - source: aur
