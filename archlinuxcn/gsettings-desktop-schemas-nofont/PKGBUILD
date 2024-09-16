@@ -3,7 +3,7 @@
 
 _pkgname=gsettings-desktop-schemas
 pkgname="${_pkgname}-nofont"
-pkgver=46.1
+pkgver=47.1
 pkgrel=1
 pkgdesc='Shared GSettings schemas for the desktop (without font dependencies)'
 arch=('any')
@@ -15,7 +15,7 @@ provides=('gsettings-desktop-schemas' 'gsettings-system-schemas')
 conflicts=('gsettings-desktop-schemas' 'gsettings-system-schemas')
 source=("${url}/-/archive/${pkgver}/${_pkgname}-${pkgver}.tar.gz"
         '0001-Revert-default-font.patch')
-sha256sums=('fad2699aef6e2379ed5d7a16d1dbbb284aae9e1d2957293e296c6794061f5939'
+sha256sums=('77cbca64af31e243c1bb387f939175f47b6776001fb2f6232f4d2bb1f71bbb71'
             '5683807b3f17a5577fdbb9f77be78681c9b935fd81584b38c8f1f0e1a50f5fb0')
 
 prepare() {
