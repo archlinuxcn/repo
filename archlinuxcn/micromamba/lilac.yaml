@@ -19,6 +19,9 @@ update_on:
   - source: alpm
     alpm: curl
     provided: libcurl.so
+  - source: alpm
+    alpm: fmt
+    provided: libfmt.so
   - source: alpmfiles
     pkgname: libsolv
     strip_dir: true
