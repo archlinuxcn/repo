@@ -6,7 +6,7 @@ ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
 pkgver=11.6.4
-pkgrel=5
+pkgrel=6
 _pkgfixver=$pkgver
 
 _commit='14212835ca50c3cb90aac0eed88e07b764dcba0e'
@@ -27,7 +27,7 @@ depends=('glib2>=2.42' 'json-glib' 'libsoup3' 'dbus-glib' 'polkit' 'vte3>=0.38' 
 makedepends=('gettext' 'itstool' 'vala>=0.46'  'asciidoc' 'meson' 'ninja' 'gobject-introspection' 'systemd')
 backup=('etc/pamac.conf')
 conflicts=('libpamac' 'libpamac-all')
-provides=('libpamac.so=11' 'libpamac-aur.so=11' 'libpamac-appstream.so=11')
+provides=('libpamac.so=11' 'libpamac-appstream.so=11' "libpamac=$_pkgfixver")
 options=(!emptydirs !strip)
 install=pamac.install
 source=("libpamac-$pkgver-$pkgrel.zip::$url/archive/$_commit.zip"
