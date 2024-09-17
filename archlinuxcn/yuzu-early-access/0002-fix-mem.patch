@@ -1,0 +1,107 @@
+From f1f12d9b36b738936cb99c8934fcf3a4c2383873 Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Mon, 16 Sep 2024 14:42:45 +0800
+Subject: [PATCH 2/2] fix mem
+
+
+1	0	src/core/frontend/applets/cabinet.h
+1	0	src/core/memory/dmnt_cheat_vm.h
+1	1	src/hid_core/resources/applet_resource.h
+1	1	src/hid_core/resources/npad/npad_vibration.h
+1	1	src/hid_core/resources/touch_screen/gesture.h
+1	1	src/hid_core/resources/touch_screen/touch_screen.h
+1	0	src/hid_core/resources/touch_screen/touch_screen_resource.h
+
+diff --git a/src/core/frontend/applets/cabinet.h b/src/core/frontend/applets/cabinet.h
+index af3fc6c3d..7c0694f3c 100755
+--- a/src/core/frontend/applets/cabinet.h
++++ b/src/core/frontend/applets/cabinet.h
+@@ -6,6 +6,7 @@
+ #include <functional>
+ #include "core/frontend/applets/applet.h"
+ #include "core/hle/service/nfp/nfp_types.h"
++#include <memory>
+ 
+ namespace Service::NFC {
+ class NfcDevice;
+diff --git a/src/core/memory/dmnt_cheat_vm.h b/src/core/memory/dmnt_cheat_vm.h
+index ca13dec14..8391d2d78 100755
+--- a/src/core/memory/dmnt_cheat_vm.h
++++ b/src/core/memory/dmnt_cheat_vm.h
+@@ -3,6 +3,7 @@
+ 
+ #pragma once
+ 
++#include <memory>
+ #include <variant>
+ #include <vector>
+ #include <fmt/printf.h>
+diff --git a/src/hid_core/resources/applet_resource.h b/src/hid_core/resources/applet_resource.h
+index 4a5416fb2..81a8122fa 100755
+--- a/src/hid_core/resources/applet_resource.h
++++ b/src/hid_core/resources/applet_resource.h
+@@ -4,8 +4,8 @@
+ #pragma once
+ 
+ #include <array>
++#include <memory>
+ #include <mutex>
+-
+ #include "common/bit_field.h"
+ #include "common/common_types.h"
+ #include "core/hle/result.h"
+diff --git a/src/hid_core/resources/npad/npad_vibration.h b/src/hid_core/resources/npad/npad_vibration.h
+index 6412ca4ab..4b22098d7 100755
+--- a/src/hid_core/resources/npad/npad_vibration.h
++++ b/src/hid_core/resources/npad/npad_vibration.h
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-3.0-or-later
+ 
+ #pragma once
+-
++#include <memory>
+ #include <mutex>
+ 
+ #include "common/common_types.h"
+diff --git a/src/hid_core/resources/touch_screen/gesture.h b/src/hid_core/resources/touch_screen/gesture.h
+index d92912bb6..271064247 100755
+--- a/src/hid_core/resources/touch_screen/gesture.h
++++ b/src/hid_core/resources/touch_screen/gesture.h
+@@ -3,8 +3,8 @@
+ 
+ #pragma once
+ 
++#include <memory>
+ #include <mutex>
+-
+ #include "common/common_types.h"
+ #include "core/hle/result.h"
+ 
+diff --git a/src/hid_core/resources/touch_screen/touch_screen.h b/src/hid_core/resources/touch_screen/touch_screen.h
+index 2fcb6247f..0a05dd37b 100755
+--- a/src/hid_core/resources/touch_screen/touch_screen.h
++++ b/src/hid_core/resources/touch_screen/touch_screen.h
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-3.0-or-later
+ 
+ #pragma once
+-
++#include <memory>
+ #include <mutex>
+ 
+ #include "common/common_types.h"
+diff --git a/src/hid_core/resources/touch_screen/touch_screen_resource.h b/src/hid_core/resources/touch_screen/touch_screen_resource.h
+index 095cddd76..c0e7be70a 100755
+--- a/src/hid_core/resources/touch_screen/touch_screen_resource.h
++++ b/src/hid_core/resources/touch_screen/touch_screen_resource.h
+@@ -4,6 +4,7 @@
+ #pragma once
+ 
+ #include <array>
++#include <memory>
+ #include <mutex>
+ 
+ #include "common/common_types.h"
+-- 
+2.46.1
+
