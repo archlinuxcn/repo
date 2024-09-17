@@ -1,0 +1,39 @@
+From f598929fc8a1d404d0364f67f7123f62d824dbe4 Mon Sep 17 00:00:00 2001
+From: Keeyou <keeyou-cn@outlook.com>
+Date: Tue, 17 Sep 2024 09:18:21 +0800
+Subject: [PATCH] gtk4: fix typo in icon name
+
+---
+ src/gtk4/yass.cpp       | 2 +-
+ src/gtk4/yass_window.ui | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/gtk4/yass.cpp b/src/gtk4/yass.cpp
+index 922354be..be100ebc 100644
+--- a/src/gtk4/yass.cpp
++++ b/src/gtk4/yass.cpp
+@@ -32,7 +32,7 @@ ABSL_FLAG(bool, background, false, "start up background");
+ 
+ YASSApp* mApp = nullptr;
+ 
+-static const char* kAppId = "io.github.Chilledheart.yass";
++static const char* kAppId = "io.github.chilledheart.yass";
+ static const char* kAppName = YASS_APP_PRODUCT_NAME;
+ 
+ extern "C" {
+diff --git a/src/gtk4/yass_window.ui b/src/gtk4/yass_window.ui
+index 9764307f..6aa20b55 100644
+--- a/src/gtk4/yass_window.ui
++++ b/src/gtk4/yass_window.ui
+@@ -9,7 +9,7 @@
+         <child type="end">
+           <object class="GtkMenuButton" id="gears">
+             <property name="direction">none</property>
+-            <property name="icon-name">io.github.Chilledheart.yass</property>
++            <property name="icon-name">io.github.chilledheart.yass</property>
+           </object>
+         </child>
+       </object>
+-- 
+2.46.0
+
