@@ -26,7 +26,7 @@ depends=('gcc-libs' 'libxtst' 'libxinerama' 'libxkbfile' 'openssl' 'libxrandr' '
 makedepends=('git' 'libxt' 'cmake' 'qt6-base' 'qt6-tools' 'gmock' 'gtest')
 optdepends=('qt6-base: gui support')
 checkdepends=('xorg-server-xvfb')
-source=("git+https://github.com/symless/synergy-core.git#tag=${_tag}"
+source=("git+https://github.com/deskflow/deskflow.git#tag=${_tag}"
         use-system-libs.patch
         synergys.socket
         synergys.service)
@@ -36,14 +36,14 @@ sha512sums=('a4ba508972a222ada73b7a9009f52fc2872422c0bf903d1bdcde57f398465e60a45
             '9663a11b915e10e60317e732a4d1191e8f8ff19176994c27dd20aa445daab7565bd624e5575c9c639d144293879fbe8376834a076723f778fd322ebd1c9f2029')
 
 prepare() {
-  cd synergy-core
+  cd deskflow
 
   # get rid of shitty bundled gtest and gmock
   patch -Np1 < "${srcdir}/use-system-libs.patch"
 }
 
 build() {
-  cd synergy-core
+  cd deskflow
   cmake -B build -S . \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DGIT_SUBMODULE=OFF \
@@ -52,13 +52,13 @@ build() {
 }
 
 check() {
-  cd synergy-core/build
+  cd deskflow/build
   xvfb-run --auto-display ./bin/unittests
   xvfb-run --auto-display ./bin/integtests
 }
 
 package() {
-  cd synergy-core
+  cd deskflow
 
   # install binary
   install -Dm 755 build/bin/{synergy,synergyc,synergyd,synergys,syntool} -t "${pkgdir}/usr/bin"
