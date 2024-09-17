@@ -1,15 +1,14 @@
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['patlefort'])
-post_build: aur_post_build
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
 repo_makedepends:
   - cython0
 update_on:
   - source: github
     github: renpy/pygame_sdl2
-  - source: aur
-    aur: python-pygame-sdl2-git
   - alias: python
   - source: manual
-    manual: 1
+    manual: 1.1
+
 maintainers:
   - github: roaldclark

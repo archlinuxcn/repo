@@ -6,29 +6,48 @@ _dir=pygame_sdl2
 pkgver=2.1.0.r456.97659bb
 pkgrel=1
 pkgdesc="SDL2-based implementation of the Pygame API"
-arch=('i686' 'x86_64' 'aarch64')
+arch=('x86_64')
 url="https://github.com/renpy/$_dir"
-license=('LGPL2.1' 'ZLIB')
-depends=('python' 'sdl2_image' 'sdl2_mixer' 'sdl2_ttf')
-makedepends=('cython0' 'git' 'python-setuptools')
+license=('LGPL-2.1-or-later' 'Zlib')
+depends=(
+    'glibc'
+    'python'
+    'sdl2'
+    'sdl2_image'
+    'sdl2_mixer'
+    'sdl2_ttf'
+)
+makedepends=(
+    'cython0'
+    'git'
+    'python-setuptools'
+)
 provides=($_pkgname)
 conflicts=($_pkgname)
-source=("git+$url.git")
-b2sums=('SKIP')
+source=("git+${url}.git"
+        "setup.patch")
+sha256sums=('SKIP'
+            '6af94ba4424b0687de0af68c4e69733920d5948293b501cd51e9ffb2a2271da9')
 
 pkgver() {
-	cd "$_dir"
-	version="$(cat 'src/pygame_sdl2/version.py' | grep '^vernum = ' | sed 's/^vernum = //; s/(//; s/)//; s/, /./g')"
-	echo "${version}.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+    cd "$srcdir/$_dir"
+    version="$(cat 'src/pygame_sdl2/version.py' | grep '^vernum = ' | sed 's/^vernum = //; s/(//; s/)//; s/, /./g')"
+    echo "${version}.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    cd "$srcdir/$_dir"
+    patch -Np1 -i ../setup.patch
 }
 
 build() {
-	cd "$_dir"
-	python setup.py build
+    cd "$srcdir/$_dir"
+    python setup.py build
 }
 
 package() {
-	cd "$_dir"
-	python setup.py install --root="$pkgdir" --optimize=1 --skip-build
-	install -Dm644 'COPYING.ZLIB' "$pkgdir/usr/share/licenses/$_pkgname/LICENSE.zlib"
+    cd "$srcdir/$_dir"
+    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+    install -Dm644 'COPYING.LGPL21' "$pkgdir/usr/share/licenses/$pkgname/COPYING.LGPL-2.1"
+    install -Dm644 'COPYING.ZLIB' "$pkgdir/usr/share/licenses/$pkgname/COPYING.Zlib"
 }
