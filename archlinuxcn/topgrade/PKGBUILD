@@ -1,26 +1,53 @@
-# Maintainer: Thomas Schoenauer <t.schoenauer@hgs-wt.at>
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
+# Contributor: Thomas Schoenauer <t.schoenauer@hgs-wt.at>
 # Contributor: Roey Darwish Dror <roey.ghost@gmail.com>
-
 pkgname=topgrade
-pkgver=14.0.1
-pkgrel=1
-pkgdesc='Invoke the upgrade procedure of multiple package managers'
-arch=('x86_64' 'aarch64' 'armv7')
-url='https://github.com/topgrade-rs/topgrade'
+pkgver=15.0.0
+pkgrel=2
+pkgdesc="Upgrade all the things"
+arch=('x86_64' 'aarch64')
+url="https://topgrade-rs.github.io"
 license=('GPL-3.0-or-later')
-makedepends=('rust')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('e4262fae2c89efe889b5a3533dc25d35dd3fbaf373091170f20bcc852017e8be')
+depends=('gcc-libs')
+makedepends=('cargo')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/topgrade-rs/topgrade/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('53c6521041a6ffddf1ccb13f404f131919a2ef48deb3974fc71dc3be08db6cd0')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
 
 build() {
   cd "$pkgname-$pkgver"
+  CFLAGS+=" -ffat-lto-objects"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release
 
-  cargo build --release
+  # Generate completions
+  for shell in bash fish zsh; do
+    ./"target/release/$pkgname" --gen-completion "${shell}" > "$pkgname.${shell}"
+  done
+
+  # Generate man page
+  ./"target/release/$pkgname" --gen-manpage > "$pkgname.1"
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo test --frozen
 }
 
 package() {
   cd "$pkgname-$pkgver"
-
-  install -Dm755 target/release/$pkgname "$pkgdir/usr/bin/$pkgname"
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm755 "target/release/$pkgname" -t "$pkgdir/usr/bin/"
+  install -Dm644 "$pkgname.1" -t "$pkgdir/usr/share/man/man1/"
+  install -Dm644 "$pkgname.bash" "$pkgdir/usr/share/bash-completion/completions/$pkgname"
+  install -Dm644 "$pkgname.fish" -t "$pkgdir/usr/share/fish/vendor_completions.d/"
+  install -Dm644 "$pkgname.zsh" "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
+  install -Dm644 config.example.toml -t "$pkgdir/usr/share/doc/$pkgname/"
 }
+
