@@ -4,33 +4,33 @@
 # Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 pkgname='fcitx5-mozc-ut'
-pkgver=2.30.5544.102
+pkgver=2.30.5595.102
 pkgrel=1
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
-depends=('fcitx5' 'mozc>=2.30.5544.102')
+depends=('fcitx5' 'mozc>=2.30.5595.102')
 makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-configtool')
-provides=('fcitx5-mozc=2.30.5544.102')
+provides=('fcitx5-mozc=2.30.5595.102')
 conflicts=('fcitx5-mozc')
 options=(!distcc !ccache)
-source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=57e67f2a25e4c0861e0e422da0c7d4c232d89fcc'
-        'git+https://github.com/abseil/abseil-cpp.git#commit=2f9e432cce407ce0ae50676696666f33a77d42ac'
+source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=ce08bdfa567d1e1d7dd740f684c37344681a6b3d'
+        'git+https://github.com/abseil/abseil-cpp.git#commit=4447c7562e3bc702ade25105912dce503f0c4010'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
-        'git+https://github.com/google/googletest.git#commit=58d77fa8070e8cec2dc1ed015d66b454c8d78850'
+        'git+https://github.com/google/googletest.git#commit=b514bdc898e2951020cbdca1304b75f5950d1f59'
         'git+https://github.com/chromium/gyp.git#commit=9ecf45e37677743503342ee4c6a76eaee80e4a7f'
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
-        'git+https://github.com/protocolbuffers/protobuf.git#commit=a978b75794a6ce4547c9db08a115c458d9190934'
+        'git+https://github.com/protocolbuffers/protobuf.git#commit=7cc670c1809e704ebeba90fb430d50e009f36727'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d')
-sha256sums=('714934cd6d59448510bc3496ddfbb9d91a75b5e9e01d36a0727be17d72124b60'
-            '8380cac08316c35118999b95845b8c28d9c9c4688402960fb1558d5eeda90f73'
+sha256sums=('e669aa16bf19939dcfaa86893d9bb662eb989c2f641e5b291daa1e3ccdf7c383'
+            'e131bbdd4e207d6cc2930bca9db82d6da9e347175c1125d9d1f2e09a36652278'
             '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
-            '2acda2cf88e375a7638f521f25c61b308d0eae8a7e188a54fafa2f2c8c2a063f'
+            'c081295f2c22705e07fc430e152a30b36f949a179075d47d3e12ff3109d43c6a'
             '8a136786407526c64686c3f9990d6416d62c7e2d474ef4a75ced337ecfc58cef'
             '10a13d356071f2b0c2b6dcab1d841fae451f6a2020ee9b901533533fc7ac3008'
-            'f09520ceeb7f1f1bb7e1cb61a8cd7a490fff84302ed5dc91f923f0e82ee191dc'
+            '578ead09a4a3fbf2f70b6af56e0b385ca136c79a4f4a62c777cb13e7a6f733f5'
             'abb86ac4d546c98d7d9a10fdeb1059d6e3395e892d5397fb03179361f37c98fe')
 
 prepare() {
