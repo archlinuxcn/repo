@@ -1,0 +1,243 @@
+From aea04951d07c00e3665e80278e84eb9e6c9e3666 Mon Sep 17 00:00:00 2001
+From: Hind-M <70631848+Hind-M@users.noreply.github.com>
+Date: Thu, 5 Sep 2024 17:21:19 +0200
+Subject: [PATCH] [1.x] Backport fmt 11 support (#3429)
+
+* Fix linter
+
+* Remove constraint on fmt
+
+* Backport fmt 11 support from main
+
+* Add missing header
+
+* Try removing upper bound on fmt
+
+---------
+
+Co-authored-by: Julien Jerphanion <git@jjerphan.xyz>
+---
+ libmamba/environment-dev.yml                          | 2 +-
+ libmamba/include/mamba/core/mamba_fs.hpp              | 2 +-
+ libmamba/include/mamba/specs/version.hpp              | 4 ++--
+ libmamba/include/mamba/version.hpp                    | 3 +--
+ libmamba/src/api/install.cpp                          | 1 +
+ libmamba/src/core/context.cpp                         | 2 +-
+ libmamba/src/core/package_info.cpp                    | 1 +
+ libmamba/src/core/query.cpp                           | 1 +
+ libmamba/src/core/run.cpp                             | 1 +
+ libmamba/tests/src/core/test_satisfiability_error.cpp | 1 +
+ libmamba/tests/src/doctest-printer/array.hpp          | 1 +
+ libmamba/tests/src/doctest-printer/vector.hpp         | 1 +
+ libmamba/tests/src/specs/test_version.cpp             | 1 +
+ libmambapy/src/main.cpp                               | 1 +
+ micromamba/environment-dev.yml                        | 2 +-
+ micromamba/src/run.cpp                                | 1 +
+ 16 files changed, 17 insertions(+), 8 deletions(-)
+
+diff --git a/libmamba/environment-dev.yml b/libmamba/environment-dev.yml
+index ea2b2d5d99..615f10e839 100644
+--- a/libmamba/environment-dev.yml
++++ b/libmamba/environment-dev.yml
+@@ -16,5 +16,5 @@ dependencies:
+   - yaml-cpp >=0.8.0
+   - cli11 >=2.2
+   - spdlog
+-  - fmt < 11 # TODO remove constraint when backporting the fix for fmt last release (from mamba main branch)
++  - fmt
+   - sel(win): winreg
+diff --git a/libmamba/include/mamba/core/mamba_fs.hpp b/libmamba/include/mamba/core/mamba_fs.hpp
+index 65c515c890..0f158a8e1b 100644
+--- a/libmamba/include/mamba/core/mamba_fs.hpp
++++ b/libmamba/include/mamba/core/mamba_fs.hpp
+@@ -1379,7 +1379,7 @@ struct fmt::formatter<::fs::u8path>
+     }
+ 
+     template <class FormatContext>
+-    auto format(const ::fs::u8path& path, FormatContext& ctx)
++    auto format(const ::fs::u8path& path, FormatContext& ctx) const
+     {
+         return fmt::format_to(ctx.out(), "'{}'", path.string());
+     }
+diff --git a/libmamba/include/mamba/specs/version.hpp b/libmamba/include/mamba/specs/version.hpp
+index 4272f18fa4..cf69cd4211 100644
+--- a/libmamba/include/mamba/specs/version.hpp
++++ b/libmamba/include/mamba/specs/version.hpp
+@@ -168,7 +168,7 @@ struct fmt::formatter<mamba::specs::VersionPartAtom>
+     }
+ 
+     template <class FormatContext>
+-    auto format(const ::mamba::specs::VersionPartAtom atom, FormatContext& ctx)
++    auto format(const ::mamba::specs::VersionPartAtom atom, FormatContext& ctx) const
+     {
+         return fmt::format_to(ctx.out(), "{}{}", atom.numeral(), atom.literal());
+     }
+@@ -188,7 +188,7 @@ struct fmt::formatter<mamba::specs::Version>
+     }
+ 
+     template <class FormatContext>
+-    auto format(const ::mamba::specs::Version v, FormatContext& ctx)
++    auto format(const ::mamba::specs::Version v, FormatContext& ctx) const
+     {
+         auto out = ctx.out();
+         if (v.epoch() != 0)
+diff --git a/libmamba/include/mamba/version.hpp b/libmamba/include/mamba/version.hpp
+index 7993f8d84b..ce249040da 100644
+--- a/libmamba/include/mamba/version.hpp
++++ b/libmamba/include/mamba/version.hpp
+@@ -26,8 +26,7 @@
+     (LIBMAMBA_VERSION_MAJOR * 10000 + LIBMAMBA_VERSION_MINOR * 100 + LIBMAMBA_VERSION_PATCH)
+ #define LIBMAMBA_VERSION_STRING                                                                    \
+     __LIBMAMBA_STRINGIZE(LIBMAMBA_VERSION_MAJOR)                                                   \
+-    "." __LIBMAMBA_STRINGIZE(LIBMAMBA_VERSION_MINOR) "." __LIBMAMBA_STRINGIZE(                     \
+-        LIBMAMBA_VERSION_PATCH)
++    "." __LIBMAMBA_STRINGIZE(LIBMAMBA_VERSION_MINOR) "." __LIBMAMBA_STRINGIZE(LIBMAMBA_VERSION_PATCH)
+ 
+ namespace mamba
+ {
+diff --git a/libmamba/src/api/install.cpp b/libmamba/src/api/install.cpp
+index c749b24e6a..672ee29eda 100644
+--- a/libmamba/src/api/install.cpp
++++ b/libmamba/src/api/install.cpp
+@@ -9,6 +9,7 @@
+ #include <fmt/color.h>
+ #include <fmt/format.h>
+ #include <fmt/ostream.h>
++#include <fmt/ranges.h>
+ #include <reproc++/run.hpp>
+ #include <reproc/reproc.h>
+ 
+diff --git a/libmamba/src/core/context.cpp b/libmamba/src/core/context.cpp
+index 5d1b65bca8..c8b87054bd 100644
+--- a/libmamba/src/core/context.cpp
++++ b/libmamba/src/core/context.cpp
+@@ -6,8 +6,8 @@
+ 
+ #include <iostream>
+ 
+-#include <fmt/format.h>
+ #include <fmt/ostream.h>
++#include <fmt/ranges.h>
+ #include <spdlog/pattern_formatter.h>
+ #include <spdlog/sinks/stdout_color_sinks.h>
+ #include <spdlog/spdlog.h>
+diff --git a/libmamba/src/core/package_info.cpp b/libmamba/src/core/package_info.cpp
+index 00d80e8579..8726d1c0b3 100644
+--- a/libmamba/src/core/package_info.cpp
++++ b/libmamba/src/core/package_info.cpp
+@@ -11,6 +11,7 @@
+ #include <tuple>
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "mamba/core/package_info.hpp"
+ #include "mamba/specs/archive.hpp"
+diff --git a/libmamba/src/core/query.cpp b/libmamba/src/core/query.cpp
+index d1ac04c6e0..017522ae62 100644
+--- a/libmamba/src/core/query.cpp
++++ b/libmamba/src/core/query.cpp
+@@ -13,6 +13,7 @@
+ #include <fmt/color.h>
+ #include <fmt/format.h>
+ #include <fmt/ostream.h>
++#include <fmt/ranges.h>
+ #include <solv/evr.h>
+ #include <spdlog/spdlog.h>
+ 
+diff --git a/libmamba/src/core/run.cpp b/libmamba/src/core/run.cpp
+index ec84ed53d6..5584cf5958 100644
+--- a/libmamba/src/core/run.cpp
++++ b/libmamba/src/core/run.cpp
+@@ -15,6 +15,7 @@
+ #include <fmt/color.h>
+ #include <fmt/format.h>
+ #include <fmt/ostream.h>
++#include <fmt/ranges.h>
+ #include <nlohmann/json.hpp>
+ #include <reproc++/run.hpp>
+ #include <spdlog/spdlog.h>
+diff --git a/libmamba/tests/src/core/test_satisfiability_error.cpp b/libmamba/tests/src/core/test_satisfiability_error.cpp
+index bb3372461d..081367b197 100644
+--- a/libmamba/tests/src/core/test_satisfiability_error.cpp
++++ b/libmamba/tests/src/core/test_satisfiability_error.cpp
+@@ -11,6 +11,7 @@
+ 
+ #include <doctest/doctest.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <nlohmann/json.hpp>
+ #include <solv/solver.h>
+ 
+diff --git a/libmamba/tests/src/doctest-printer/array.hpp b/libmamba/tests/src/doctest-printer/array.hpp
+index 123ffff927..6b544689b0 100644
+--- a/libmamba/tests/src/doctest-printer/array.hpp
++++ b/libmamba/tests/src/doctest-printer/array.hpp
+@@ -8,6 +8,7 @@
+ 
+ #include <doctest/doctest.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ namespace doctest
+ {
+diff --git a/libmamba/tests/src/doctest-printer/vector.hpp b/libmamba/tests/src/doctest-printer/vector.hpp
+index 0eb5cf0424..b397f9e651 100644
+--- a/libmamba/tests/src/doctest-printer/vector.hpp
++++ b/libmamba/tests/src/doctest-printer/vector.hpp
+@@ -8,6 +8,7 @@
+ 
+ #include <doctest/doctest.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ namespace doctest
+ {
+diff --git a/libmamba/tests/src/specs/test_version.cpp b/libmamba/tests/src/specs/test_version.cpp
+index d22a78b303..2ca0d4c4f6 100644
+--- a/libmamba/tests/src/specs/test_version.cpp
++++ b/libmamba/tests/src/specs/test_version.cpp
+@@ -11,6 +11,7 @@
+ 
+ #include <doctest/doctest.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "mamba/specs/version.hpp"
+ 
+diff --git a/libmambapy/src/main.cpp b/libmambapy/src/main.cpp
+index 94d38ce522..0e82ad8a6c 100644
+--- a/libmambapy/src/main.cpp
++++ b/libmambapy/src/main.cpp
+@@ -7,6 +7,7 @@
+ #include <stdexcept>
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <nlohmann/json.hpp>
+ #include <pybind11/functional.h>
+ #include <pybind11/iostream.h>
+diff --git a/micromamba/environment-dev.yml b/micromamba/environment-dev.yml
+index a094512e71..28298c8e40 100644
+--- a/micromamba/environment-dev.yml
++++ b/micromamba/environment-dev.yml
+@@ -23,6 +23,6 @@ dependencies:
+   - conda-package-handling
+   - pyyaml
+   - spdlog
+-  - fmt <10
++  - fmt
+   - sel(win): winreg
+   - sel(win): pywin32
+diff --git a/micromamba/src/run.cpp b/micromamba/src/run.cpp
+index c3af4eacf0..7c561aff0a 100644
+--- a/micromamba/src/run.cpp
++++ b/micromamba/src/run.cpp
+@@ -10,6 +10,7 @@
+ 
+ #include <fmt/color.h>
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include <nlohmann/json.hpp>
+ #include <reproc++/run.hpp>
+ #include <spdlog/spdlog.h>
