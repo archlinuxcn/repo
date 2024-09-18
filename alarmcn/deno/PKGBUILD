@@ -2,7 +2,7 @@
 # Contributor: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
-pkgver=1.46.0
+pkgver=1.46.1
 pkgrel=1
 _rusty_v8_ver=0.104.0
 pkgdesc="A secure runtime for JavaScript and TypeScript"
@@ -15,7 +15,7 @@ makedepends=('git' 'python' 'rust' 'nodejs' 'gn' 'ninja' 'clang' 'lld' 'cmake' '
 source=("git+https://github.com/denoland/deno.git#tag=v$pkgver"
         "git+https://github.com/denoland/rusty_v8.git#tag=v$_rusty_v8_ver"
         "compiler-rt-adjust-paths.patch")
-sha512sums=('96e6027e631710d99572aa863c1d04876f92a89bca1b632a2086b5ec460ce2cfb3e641cdaee4880941fb361e155998b4bbb329ab607edafdbcd9e009c6403963'
+sha512sums=('74d68c92a98da864f5225005fcf61143dab5437047f318569eaa1fe22d32972397c865cd46978390706eefadfdebf41caa416ee641a16a48d4ddca571bdc1301'
             'e3750ea7445a8c7f2ff104bd48b74138667aefe6d1df091c0238eb2722513586d13ec5facdc8e6d5c4549434b902f2855aae057b2fbbe8051d3644cdb081e482'
             '796dd9dcb44ac65b3a1e47b13219549af3c55598f1ce1493ae5ebed469b3791f977415e4dc8528e5f0f4520398665400411f2ecdf15968aa7e405aadd6fbe125')
 
