@@ -3,8 +3,8 @@
 # Contributor: Michael Herzberg <{firstname}@{firstinitial}{lastname}.de>
 
 pkgname=moonlight-qt
-pkgver=6.0.1
-pkgrel=4
+pkgver=6.1.0
+pkgrel=1
 pkgdesc='GameStream client for PCs (Windows, Mac, and Linux)'
 arch=('x86_64')
 license=('GPL-3.0-or-later')
@@ -13,7 +13,7 @@ depends=('qt6-base' 'qt6-declarative' 'qt6-svg' 'ffmpeg' 'sdl2_ttf')
 optdepends=('libva-intel-driver: hardware acceleration for Intel GPUs GMA 4500 (2008) up to Coffee Lake (2017)'
             'intel-media-driver: hardware acceleration for Intel GPUs starting from Broadwell (2014) and newer (e.g. Intel Arc)')
 source=("https://github.com/moonlight-stream/${pkgname}/releases/download/v${pkgver}/MoonlightSrc-${pkgver}.tar.gz")
-sha256sums=('c4e59b033f4cfa78c7af54213d1eec158bc1676472c358be61482375e1a38ee0')
+sha512sums=('390fe3f686c86a52dd0ff4b67e8e8beb6edcb175ddf92bc5de11d92ffdaf0b6a8d76be781c483b685626c705e63f07e156506112923c848a4a798ba703254829')
 
 prepare() {
   qmake6 PREFIX="$pkgdir/usr" moonlight-qt.pro
