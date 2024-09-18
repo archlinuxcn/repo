@@ -2,13 +2,13 @@
 
 _pkgname=olive
 pkgname=$_pkgname-git
-pkgver=continuous.r2629.gf7e1bff0d
+pkgver=r6626.617ff87
 pkgrel=1
 arch=('x86_64')
 pkgdesc="Free non-linear video editor"
 url="https://www.olivevideoeditor.org/"
 license=('GPL-3.0-or-later')
-depends=('ffmpeg' 'openimageio' 'opentimelineio' 'portaudio' 'qt5-x11extras')
+depends=('ffmpeg4.4' 'openimageio' 'opentimelineio' 'portaudio' 'qt5-x11extras')
 makedepends=('cmake' 'git' 'ninja' 'qt5-svg' 'qt5-tools')
 
 # Temporarily, the "olive-git" package is incompatible
@@ -20,8 +20,8 @@ makedepends=('cmake' 'git' 'ninja' 'qt5-svg' 'qt5-tools')
 provides=('olive')
 conflicts=('olive')
 source=('git+https://github.com/olive-editor/olive.git'
-        'git+https://github.com/olive-editor/KDDockWidgets.git'
-        'git+https://github.com/olive-editor/core.git'
+        'olive-core::git+https://github.com/olive-editor/core.git'
+        'olive-KDDockWidgets::git+https://github.com/olive-editor/KDDockWidgets.git'
         'support_ocio_2_3.patch')
 b2sums=('SKIP'
         'SKIP'
@@ -30,14 +30,14 @@ b2sums=('SKIP'
 
 pkgver() {
   cd $_pkgname
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
 }
 
 prepare(){
   cd $_pkgname
   git submodule init
-  git config submodule.ext/core.url "$srcdir"/core
-  git config submodule.ext/KDDockWidgets.url "$srcdir"/KDDockWidgets
+  git config submodule.ext/core.url "$srcdir"/olive-core
+  git config submodule.ext/KDDockWidgets.url "$srcdir"/olive-KDDockWidgets
   git -c protocol.file.allow=always submodule update
 
   # Add support for OpenColorIO version 2.3
@@ -50,6 +50,7 @@ build() {
         -Bbuild \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_PREFIX_PATH="/usr/lib/ffmpeg4.4;/usr/include/ffmpeg4.4" \
         -DOTIO_DEPS_INCLUDE_DIR=/usr/include/opentimelineio
   ninja -C build/
 }
