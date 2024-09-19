@@ -2,8 +2,8 @@
 # Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
 
 pkgname=iotas
-pkgver=0.8.2
-pkgrel=2
+pkgver=0.9.0
+pkgrel=1
 pkgdesc="Simple note taking"
 arch=('any')
 url="https://gitlab.gnome.org/World/iotas"
@@ -18,7 +18,7 @@ optdepends=(
 	'hunspell: spell check.'
 )
 source=("$url/-/archive/$pkgver/$pkgname-$pkgver.tar.gz")
-b2sums=('625c103e7b7ab453504c7a5399582ad728cd790fb07fd8830ec0b586003b444764676275afc79cd9a2be1024b64472bcecfefafdcd94468cd7ec4800bad6e9b6')
+b2sums=('6f4cfc40ef811703513b767ca79dd18ce497607df8b1c86c33a55ec14d5e6756eddbb5bd91eb5a9d1b21fb8899a0e4a4310466ef41c5e84fc733b9e2e527158b')
 
 _srcdir="$pkgname-$pkgver"
 
@@ -39,6 +39,7 @@ package() {
 		'python-linkify-it-py'
 		'python-mdit_py_plugins'
 		'python-gtkspellcheck'
+		'python-strenum'
 		'libvoikko'
 		'sqlite'
 		'org.freedesktop.secrets')
