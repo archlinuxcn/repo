@@ -5,8 +5,8 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 
 pkgname=gtksourceview5-apostrophe
-pkgver=5.12.1
-pkgrel=2
+pkgver=5.14.0
+pkgrel=1
 pkgdesc="A text widget adding syntax highlighting and more to GNOME, patched for Apostrophe"
 url="https://wiki.gnome.org/Projects/GtkSourceView"
 arch=(x86_64)
@@ -39,7 +39,7 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/gtksourceview.git#tag=$pkgver"
   "https://gitlab.gnome.org/World/apostrophe/-/raw/main/build-aux/flatpak/sourceview_text_commits.patch"
 )
-b2sums=('490bd11ed98ec9e11b6db05ca073970d104e99e16dc8f7655abdd5b1055b23ee330e67959db90c615d735b9cb506a26aefc65fd419d667b6a8e393d89a20599c'
+b2sums=('3d09132d128d1837ae23f89a4ebc1c48e1769d901b75f69d33ceb35d50c9b55c06e59e332272057012c0aa1149d4e3bf167fb2eb2f9cd7617e45cbffaffcfb5b'
         '1e33c2f8f6dcd404bba1022d6e294fb8dd6a8670b05c7d3f50fc6ea6b2e6eab17179dfd8191957d8f49b8f346f246f26b06d148817fc259661d454451fc034ef')
 
 prepare() {
