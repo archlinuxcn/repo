@@ -1,4 +1,4 @@
-From 0bcbfa0ae68bac604b6922c236a2dc42e535e994 Mon Sep 17 00:00:00 2001
+From f5adba2fae5da369338d142880f6d8481c2a5601 Mon Sep 17 00:00:00 2001
 From: Alynx Zhou <alynx.zhou@gmail.com>
 Date: Wed, 15 May 2024 00:07:41 +0800
 Subject: [PATCH] wayland/text-input-v1: Implement basic text-input-v1 support
@@ -9,9 +9,6 @@ needed by users who needs IME to input their languages, like Chinese,
 Japanese or Korean.
 
 Closes <https://gitlab.gnome.org/GNOME/mutter/-/issues/3200>.
-
-Origin: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3751
-Commit: 2a94e19b00434fe4d7ab858a6cdcff6364f6e408
 
 Signed-off-by: Mingi Sung <sungmg@saltyming.net>
 ---
@@ -30,10 +27,10 @@ Signed-off-by: Mingi Sung <sungmg@saltyming.net>
  create mode 100644 src/wayland/meta-wayland-text-input-v1.h
 
 diff --git a/clutter/clutter/clutter-enums.h b/clutter/clutter/clutter-enums.h
-index 45956bf57b..8198e73516 100644
+index 9bd508fb67..8f174087e6 100644
 --- a/clutter/clutter/clutter-enums.h
 +++ b/clutter/clutter/clutter-enums.h
-@@ -1183,6 +1183,9 @@ typedef enum
+@@ -1172,6 +1172,9 @@ typedef enum
    CLUTTER_INPUT_CONTENT_HINT_SENSITIVE_DATA      = 1 << 7,
    CLUTTER_INPUT_CONTENT_HINT_LATIN               = 1 << 8,
    CLUTTER_INPUT_CONTENT_HINT_MULTILINE           = 1 << 9,
@@ -44,10 +41,10 @@ index 45956bf57b..8198e73516 100644
  
  typedef enum
 diff --git a/src/core/events.c b/src/core/events.c
-index 1f36d2feb6..a1874d6737 100644
+index fb4c7574c8..31f5af705f 100644
 --- a/src/core/events.c
 +++ b/src/core/events.c
-@@ -238,6 +238,7 @@ meta_display_handle_event (MetaDisplay        *display,
+@@ -239,6 +239,7 @@ meta_display_handle_event (MetaDisplay        *display,
  #ifdef HAVE_WAYLAND
    MetaWaylandCompositor *wayland_compositor;
    MetaWaylandTextInput *wayland_text_input = NULL;
@@ -55,7 +52,7 @@ index 1f36d2feb6..a1874d6737 100644
  #endif
  
  #ifdef HAVE_WAYLAND
-@@ -246,6 +247,8 @@ meta_display_handle_event (MetaDisplay        *display,
+@@ -247,6 +248,8 @@ meta_display_handle_event (MetaDisplay        *display,
      {
        wayland_text_input =
          meta_wayland_compositor_get_text_input (wayland_compositor);
@@ -64,7 +61,7 @@ index 1f36d2feb6..a1874d6737 100644
      }
  #endif
  
-@@ -287,9 +290,11 @@ meta_display_handle_event (MetaDisplay        *display,
+@@ -288,9 +291,11 @@ meta_display_handle_event (MetaDisplay        *display,
      }
  
  #ifdef HAVE_WAYLAND
@@ -80,10 +77,10 @@ index 1f36d2feb6..a1874d6737 100644
  
    if (wayland_compositor)
 diff --git a/src/meson.build b/src/meson.build
-index 05df3bfd28..fad08706a6 100644
+index bfa8306d2f..396d58eb43 100644
 --- a/src/meson.build
 +++ b/src/meson.build
-@@ -688,6 +688,8 @@ if have_wayland
+@@ -696,6 +696,8 @@ if have_wayland
      'wayland/meta-wayland-tablet-tool.h',
      'wayland/meta-wayland-text-input.c',
      'wayland/meta-wayland-text-input.h',
@@ -92,19 +89,19 @@ index 05df3bfd28..fad08706a6 100644
      'wayland/meta-wayland-touch.c',
      'wayland/meta-wayland-touch.h',
      'wayland/meta-wayland-transaction.c',
-@@ -1076,6 +1078,7 @@ if have_wayland
+@@ -1109,6 +1111,7 @@ if have_wayland
      ['single-pixel-buffer', 'staging', 'v1', ],
      ['tablet', 'unstable', 'v2', ],
      ['text-input', 'unstable', 'v3', ],
 +    ['text-input', 'unstable', 'v1', ],
      ['viewporter', 'stable', ],
      ['xdg-activation', 'staging', 'v1', ],
-     ['xdg-foreign', 'unstable', 'v1', ],
+     ['xdg-dialog', 'staging', 'v1', ],
 diff --git a/src/wayland/meta-wayland-seat.c b/src/wayland/meta-wayland-seat.c
-index 2301e00685..d0f8880840 100644
+index 8e592d6c88..e72a7a1f45 100644
 --- a/src/wayland/meta-wayland-seat.c
 +++ b/src/wayland/meta-wayland-seat.c
-@@ -229,6 +229,7 @@ default_focus (MetaWaylandEventHandler *handler,
+@@ -232,6 +232,7 @@ default_focus (MetaWaylandEventHandler *handler,
                                                    surface);
        meta_wayland_tablet_seat_set_pad_focus (seat->tablet_seat, surface);
        meta_wayland_text_input_set_focus (seat->text_input, surface);
@@ -112,7 +109,7 @@ index 2301e00685..d0f8880840 100644
      }
  
    if (caps & CLUTTER_INPUT_CAPABILITY_TABLET_TOOL)
-@@ -290,6 +291,8 @@ meta_wayland_seat_new (MetaWaylandCompositor *compositor,
+@@ -297,6 +298,8 @@ meta_wayland_seat_new (MetaWaylandCompositor *compositor,
                                NULL);
  
    seat->text_input = meta_wayland_text_input_new (seat);
@@ -121,7 +118,7 @@ index 2301e00685..d0f8880840 100644
  
    meta_wayland_data_device_init (&seat->data_device, seat);
    meta_wayland_data_device_primary_init (&seat->primary_data_device, seat);
-@@ -338,6 +341,7 @@ meta_wayland_seat_free (MetaWaylandSeat *seat)
+@@ -342,6 +345,7 @@ meta_wayland_seat_free (MetaWaylandSeat *seat)
    g_object_unref (seat->touch);
  
    meta_wayland_text_input_destroy (seat->text_input);
@@ -129,7 +126,7 @@ index 2301e00685..d0f8880840 100644
  
    g_free (seat);
  }
-@@ -478,7 +482,10 @@ meta_wayland_seat_handle_event_internal (MetaWaylandSeat    *seat,
+@@ -494,7 +498,10 @@ meta_wayland_seat_handle_event_internal (MetaWaylandSeat    *seat,
    if (event_type == CLUTTER_BUTTON_PRESS ||
        event_type == CLUTTER_TOUCH_BEGIN)
      {
@@ -141,7 +138,7 @@ index 2301e00685..d0f8880840 100644
      }
  
    switch (event_type)
-@@ -510,7 +517,8 @@ meta_wayland_seat_handle_event_internal (MetaWaylandSeat    *seat,
+@@ -526,7 +533,8 @@ meta_wayland_seat_handle_event_internal (MetaWaylandSeat    *seat,
      case CLUTTER_IM_COMMIT:
      case CLUTTER_IM_DELETE:
      case CLUTTER_IM_PREEDIT:
@@ -152,7 +149,7 @@ index 2301e00685..d0f8880840 100644
  
        break;
 diff --git a/src/wayland/meta-wayland-seat.h b/src/wayland/meta-wayland-seat.h
-index 83fd7de1ed..37704cf5a1 100644
+index cfca962385..fd5772aa54 100644
 --- a/src/wayland/meta-wayland-seat.h
 +++ b/src/wayland/meta-wayland-seat.h
 @@ -30,6 +30,7 @@
@@ -163,7 +160,7 @@ index 83fd7de1ed..37704cf5a1 100644
  #include "wayland/meta-wayland-touch.h"
  #include "wayland/meta-wayland-types.h"
  
-@@ -49,6 +50,7 @@ struct _MetaWaylandSeat
+@@ -51,6 +52,7 @@ struct _MetaWaylandSeat
    MetaWaylandDataDevicePrimary primary_data_device;
  
    MetaWaylandTextInput *text_input;
@@ -1081,7 +1078,7 @@ index 0000000000..79b1c0a541
 +gboolean meta_wayland_text_input_v1_handle_event (MetaWaylandTextInputV1 *text_input,
 +                                                  const ClutterEvent     *event);
 diff --git a/src/wayland/meta-wayland-versions.h b/src/wayland/meta-wayland-versions.h
-index 900f30d788..a77b81461b 100644
+index f0d0355067..21d14b4895 100644
 --- a/src/wayland/meta-wayland-versions.h
 +++ b/src/wayland/meta-wayland-versions.h
 @@ -49,6 +49,7 @@
@@ -1093,10 +1090,10 @@ index 900f30d788..a77b81461b 100644
  #define META_ZWP_PRIMARY_SELECTION_V1_VERSION 1
  #define META_WP_PRESENTATION_VERSION        1
 diff --git a/src/wayland/meta-wayland.c b/src/wayland/meta-wayland.c
-index 501b69a91c..0114823c14 100644
+index fd7b6e4731..c42d8a9c31 100644
 --- a/src/wayland/meta-wayland.c
 +++ b/src/wayland/meta-wayland.c
-@@ -865,6 +865,7 @@ meta_wayland_compositor_new (MetaContext *context)
+@@ -887,6 +887,7 @@ meta_wayland_compositor_new (MetaContext *context)
    meta_wayland_keyboard_shortcuts_inhibit_init (compositor);
    meta_wayland_surface_inhibit_shortcuts_dialog_init ();
    meta_wayland_text_input_init (compositor);
@@ -1104,7 +1101,7 @@ index 501b69a91c..0114823c14 100644
    meta_wayland_init_presentation_time (compositor);
    meta_wayland_activation_init (compositor);
    meta_wayland_transaction_init (compositor);
-@@ -1124,6 +1125,12 @@ meta_wayland_compositor_get_text_input (MetaWaylandCompositor *compositor)
+@@ -1153,6 +1154,12 @@ meta_wayland_compositor_get_text_input (MetaWaylandCompositor *compositor)
    return compositor->seat->text_input;
  }
  
