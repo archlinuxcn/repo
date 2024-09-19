@@ -16,7 +16,7 @@ epoch=2
 pkgdesc="Kernel modules for the Zettabyte File System."
 arch=('any')
 url="https://zfsonlinux.org/"
-license=('CDDL')
+license=('CDDL-1.0')
 groups=('zfs-git')
 depends=('dkms')
 makedepends=('git')
@@ -67,9 +67,8 @@ build() {
 package() {
     cd zfs
 
-    dkmsdir="${pkgdir}/usr/src/zfs-${pkgver}"
-    install -d "${dkmsdir}"/{config,scripts}
-    cp -a configure dkms.conf Makefile.in META zfs_config.h.in zfs.release.in include/ module/ "${dkmsdir}"/
-    cp config/compile config/config.* config/missing config/*sh "${dkmsdir}"/config/
-    cp scripts/enum-extract.pl scripts/dkms.postbuild "${dkmsdir}"/scripts/
+    local dkmsdir="${pkgdir}/usr/src/zfs-${pkgver}"
+    install -d ${dkmsdir}/{config,scripts}
+    cp -a configure dkms.conf Makefile.in META zfs_config.h.in zfs.release.in include/ module/ "${dkmsdir}/"
+    install -Dm644 config/compile config/config.* config/missing config/*sh "${dkmsdir}/config/"
 }
