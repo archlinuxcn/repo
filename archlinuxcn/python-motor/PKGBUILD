@@ -2,7 +2,7 @@
 
 _pkgname=motor
 pkgname=python-motor
-pkgver=3.5.1
+pkgver=3.6.0
 pkgrel=1
 pkgdesc='The async Python driver for MongoDB and Tornado or asyncio'
 arch=('any')
@@ -19,7 +19,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mongodb/motor/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('d46ff193d57664fdb7d3545ce6d814d3ec4ecea581ebda7369cde538565aa9ca7d527a75a1f12c21ff073b3fc8bedf60a87bcfc2b0b1e74a27144391b4150d80')
+sha512sums=('8a048f15df6e30c8d467fb323f1e9258d73c992dee01888d3644b20ebf7ba597ecfe6c0e201f664653e5d430e9d90c4358fff67ced4e8206f736a2a8453ba7b1')
 
 build() {
   cd "${_pkgname}-${pkgver}"
