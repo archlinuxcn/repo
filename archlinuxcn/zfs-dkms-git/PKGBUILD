@@ -69,5 +69,4 @@ package() {
 	install -d ${dkmsdir}/{config,scripts}
 	cp -a configure dkms.conf Makefile.in META zfs_config.h.in zfs.release.in include/ module/ "${dkmsdir}/"
 	install -Dm644 config/compile config/config.* config/missing config/*sh "${dkmsdir}/config/"
-	install -Dm755 scripts/enum-extract.pl scripts/dkms.postbuild "${dkmsdir}/scripts/"
 }
