@@ -15,22 +15,28 @@ source=("$pkgname::git+https://github.com/roddhjav/apparmor.d.git")
 sha512sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/$pkgname"
-  echo "0.$(git rev-list --count HEAD)"
+    cd "$srcdir/$pkgname"
+    echo "0.$(git rev-list --count HEAD)"
 }
 
 build() {
-  cd "$srcdir/$pkgname"
-  export CGO_CPPFLAGS="${CPPFLAGS}"
-  export CGO_CFLAGS="${CFLAGS}"
-  export CGO_CXXFLAGS="${CXXFLAGS}"
-  export CGO_LDFLAGS="${LDFLAGS}"
-  export GOPATH="${srcdir}"
-  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
-  make DISTRIBUTION=arch
+    cd "$srcdir/$pkgname"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOPATH="${srcdir}"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+    make DISTRIBUTION=arch
 }
 
 package() {
-  cd "$srcdir/$pkgname"
-  make install DESTDIR="$pkgdir"
+    cd "$srcdir/$pkgname"
+
+    # Applying test development changes leads to conflicts with the
+    # abstractions/authentication file in the apparmor.d-git package
+    sed -i '/unix_chkpwd/s/rpx/rPx/' .build/apparmor.d/abstractions/authentication.d/complete
+    #
+
+    make install DESTDIR="$pkgdir"
 }
