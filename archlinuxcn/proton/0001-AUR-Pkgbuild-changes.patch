@@ -1,4 +1,4 @@
-From 7c2e1a859041253ed8dacb4b2b58585e57094de0 Mon Sep 17 00:00:00 2001
+From 1dc2a239afe2ee9bc1d689f0c4e2869721a16074 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 26 Apr 2023 14:22:23 +0300
 Subject: [PATCH 1/5] AUR Pkgbuild changes
@@ -16,11 +16,11 @@ Subject: [PATCH 1/5] AUR Pkgbuild changes
  make/rules-meson.mk            |  3 +-
  make/rules-winemaker.mk        |  2 +-
  proton                         |  6 +--
- toolmanifest_runtime.vdf       |  3 --
- 13 files changed, 84 insertions(+), 43 deletions(-)
+ toolmanifest_runtime.vdf       |  1 -
+ 13 files changed, 84 insertions(+), 41 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 44d0447e..3d75a148 100644
+index 4ecab562..11da8142 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -54,11 +54,12 @@ else
@@ -62,7 +62,7 @@ index 44d0447e..3d75a148 100644
  
  include $(SRC)/make/utility.mk
  include $(SRC)/make/rules-source.mk
-@@ -117,6 +126,7 @@ $(eval $(call rules-meson,dav1d,64))
+@@ -118,6 +127,7 @@ $(eval $(call rules-meson,dav1d,64))
  ##
  
  GST_ORC_MESON_ARGS := \
@@ -70,7 +70,7 @@ index 44d0447e..3d75a148 100644
  	-Dorc-test=disabled
  
  $(eval $(call rules-source,gst_orc,$(SRCDIR)/gst-orc))
-@@ -129,7 +139,12 @@ $(eval $(call rules-meson,gst_orc,64))
+@@ -130,7 +140,12 @@ $(eval $(call rules-meson,gst_orc,64))
  ##
  
  GSTREAMER_MESON_ARGS := \
@@ -83,7 +83,7 @@ index 44d0447e..3d75a148 100644
  	-Dbenchmarks=disabled \
  	-Dtools=disabled \
  	-Dbash-completion=disabled
-@@ -145,6 +160,11 @@ $(eval $(call rules-meson,gstreamer,64))
+@@ -146,6 +161,11 @@ $(eval $(call rules-meson,gstreamer,64))
  ## graphene
  ##
  
@@ -95,7 +95,7 @@ index 44d0447e..3d75a148 100644
  $(eval $(call rules-source,graphene,$(SRCDIR)/graphene))
  $(eval $(call rules-meson,graphene,32))
  $(eval $(call rules-meson,graphene,64))
-@@ -155,7 +175,10 @@ $(eval $(call rules-meson,graphene,64))
+@@ -156,7 +176,10 @@ $(eval $(call rules-meson,graphene,64))
  ##
  
  GST_BASE_MESON_ARGS := \
@@ -106,17 +106,18 @@ index 44d0447e..3d75a148 100644
  	-Dadder=enabled \
  	-Dapp=enabled \
  	-Daudioconvert=enabled \
-@@ -187,7 +210,9 @@ $(eval $(call rules-meson,gst_base,64))
+@@ -188,8 +211,10 @@ $(eval $(call rules-meson,gst_base,64))
  ##
  
  GST_GOOD_MESON_ARGS := \
 +	$(GST_LTO) \
+ 	-Dapetag=enabled \
  	-Dauto_features=disabled \
 +	-Ddoc=disabled \
  	-Daudioparsers=enabled \
  	-Dautodetect=enabled \
  	-Davi=enabled \
-@@ -217,12 +242,16 @@ $(eval $(call rules-meson,gst_good,64))
+@@ -235,12 +260,16 @@ $(eval $(call rules-meson,gst_bad,64))
  
  FFMPEG_CONFIGURE_ARGS := \
  	--enable-shared \
@@ -133,7 +134,7 @@ index 44d0447e..3d75a148 100644
  $(eval $(call rules-source,ffmpeg,$(SRCDIR)/ffmpeg))
  $(eval $(call rules-configure,ffmpeg,32))
  $(eval $(call rules-configure,ffmpeg,64))
-@@ -339,7 +368,7 @@ $(eval $(call rules-cmake,openxr,64))
+@@ -342,7 +371,7 @@ $(eval $(call rules-cmake,openxr,64))
  ## Note 32-bit is not supported by SteamVR, so we don't build it.
  ##
  
@@ -142,8 +143,8 @@ index 44d0447e..3d75a148 100644
  WINEOPENXR_DEPENDS = wine openxr
  
  $(eval $(call rules-source,wineopenxr,$(SRCDIR)/wineopenxr))
-@@ -402,8 +431,10 @@ WINE_SOURCE_ARGS = \
-   --exclude dlls/winevulkan/winevulkan.spec
+@@ -410,8 +439,10 @@ WINE_SOURCE_ARGS = \
+   --exclude server/trace.c \
  
  WINE_CONFIGURE_ARGS = \
 -  --enable-werror \
@@ -154,9 +155,9 @@ index 44d0447e..3d75a148 100644
    --disable-tests
  
  WINE_CONFIGURE_ARGS32 = \
-@@ -462,10 +493,14 @@ $(eval $(call rules-makedep,vrclient,64))
- DXVK_SOURCE_DATE_EPOCH32 := $(shell expr $(BASE_SOURCE_DATE_EPOCH32) - 1)
- DXVK_SOURCE_DATE_EPOCH64 := $(shell expr $(BASE_SOURCE_DATE_EPOCH64) - 1)
+@@ -473,10 +504,14 @@ DXVK_SOURCE_DATE_EPOCH64 := $(shell expr $(BASE_SOURCE_DATE_EPOCH64) - 1)
+ DXVK_SOURCE_ARGS = \
+   --exclude version.h.in \
  
 +DXVK_MESON_ARGS = --force-fallback-for=libdisplay-info
  DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
@@ -169,7 +170,7 @@ index 44d0447e..3d75a148 100644
  $(eval $(call rules-source,dxvk,$(SRCDIR)/dxvk))
  $(eval $(call rules-meson,dxvk,32,CROSS))
  $(eval $(call rules-meson,dxvk,64,CROSS))
-@@ -493,6 +528,9 @@ $(OBJ)/.dxvk-post-build32:
+@@ -504,6 +539,9 @@ $(OBJ)/.dxvk-post-build32:
  DXVK_NVAPI_MESON_ARGS32 = --bindir=$(DXVK_NVAPI_DST32)/lib/wine/nvapi
  DXVK_NVAPI_MESON_ARGS64 = --bindir=$(DXVK_NVAPI_DST64)/lib64/wine/nvapi
  
@@ -179,7 +180,7 @@ index 44d0447e..3d75a148 100644
  $(eval $(call rules-source,dxvk-nvapi,$(SRCDIR)/dxvk-nvapi))
  $(eval $(call rules-meson,dxvk-nvapi,32,CROSS))
  $(eval $(call rules-meson,dxvk-nvapi,64,CROSS))
-@@ -572,6 +610,9 @@ ifneq ($(UNSTRIPPED_BUILD),)
+@@ -583,6 +621,9 @@ ifneq ($(UNSTRIPPED_BUILD),)
  	VKD3D_PROTON_MESON_ARGS = -Denable_trace=true
  endif
  
@@ -189,7 +190,7 @@ index 44d0447e..3d75a148 100644
  $(eval $(call rules-source,vkd3d-proton,$(SRCDIR)/vkd3d-proton))
  $(eval $(call rules-meson,vkd3d-proton,32,CROSS))
  $(eval $(call rules-meson,vkd3d-proton,64,CROSS))
-@@ -842,14 +883,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+@@ -853,14 +894,14 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
  	mkdir -p $(FONTS_OBJ)/source-han
  	# Do not immediately create the target file, so that make is interrupted
  	# it will restart again
@@ -207,7 +208,7 @@ index 44d0447e..3d75a148 100644
  	mv $@.tmp $@
  
  $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
-@@ -859,12 +900,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -870,12 +911,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
  	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
  
  $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
@@ -223,10 +224,10 @@ index 44d0447e..3d75a148 100644
  
  $(micross.ttf): $(FONTS)/scripts/merge.py $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
  		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
-@@ -1013,8 +1054,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
+@@ -1024,8 +1065,8 @@ all-dist: $(DIST_OVR32) $(DIST_OVR64)
  ##
  
- default_pfx: wine gst_good gst_libav gst_plugins_rs lsteamclient steamexe vrclient wineopenxr dxvk dxvk-nvapi vkd3d-proton
+ default_pfx: wine gst_good gst_bad gst_libav gst_plugins_rs lsteamclient steamexe vrclient wineopenxr dxvk dxvk-nvapi vkd3d-proton
 -	find $(DST_LIBDIR32)/wine -type f -execdir chmod a-w '{}' '+'
 -	find $(DST_LIBDIR64)/wine -type f -execdir chmod a-w '{}' '+'
 +	find $(DST_LIBDIR32)/wine -type f -execdir chmod go-w '{}' '+'
@@ -234,7 +235,7 @@ index 44d0447e..3d75a148 100644
  	rm -rf $(abspath $(DIST_PREFIX))
  	python3 $(SRCDIR)/default_pfx.py $(abspath $(DIST_PREFIX)) $(abspath $(DST_DIR))
  
-@@ -1146,7 +1187,6 @@ ifeq ($(ENABLE_CCACHE),1)
+@@ -1157,7 +1198,6 @@ ifeq ($(ENABLE_CCACHE),1)
  	export CCACHE_DIR := $(if $(CCACHE_DIR),$(CCACHE_DIR),$(HOME)/.ccache)
  	override DOCKER_OPTS := -v $(CCACHE_DIR):$(CCACHE_DIR)$(CONTAINER_MOUNT_OPTS) $(CCACHE_ENV) -e CCACHE_DIR=$(CCACHE_DIR) $(DOCKER_OPTS)
  else
@@ -242,7 +243,7 @@ index 44d0447e..3d75a148 100644
  	override DOCKER_OPTS := $(CCACHE_ENV) -e CCACHE_DISABLE=1 $(DOCKER_OPTS)
  endif
  
-@@ -1161,9 +1201,6 @@ ifeq ($(CONTAINER_ENGINE),)
+@@ -1172,9 +1212,6 @@ ifeq ($(CONTAINER_ENGINE),)
  	CONTAINER_ENGINE := docker
  endif
  
@@ -454,10 +455,10 @@ index 5c3b59a3..ed6589e0 100644
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
 diff --git a/proton b/proton
-index 0c8e1ca3..d641562a 100755
+index 9abb5b83..5ab09749 100755
 --- a/proton
 +++ b/proton
-@@ -424,7 +424,6 @@ class Proton:
+@@ -422,7 +422,6 @@ class Proton:
          self.wine_bin = self.bin_dir + "wine"
          self.wine64_bin = self.bin_dir + "wine64"
          self.wineserver_bin = self.bin_dir + "wineserver"
@@ -465,7 +466,7 @@ index 0c8e1ca3..d641562a 100755
  
      def path(self, d):
          return self.base_dir + d
-@@ -1552,8 +1551,6 @@ if __name__ == "__main__":
+@@ -1586,8 +1585,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -474,7 +475,7 @@ index 0c8e1ca3..d641562a 100755
  
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
-@@ -1562,7 +1559,8 @@ if __name__ == "__main__":
+@@ -1596,7 +1593,8 @@ if __name__ == "__main__":
      g_session.init_wine()
  
      if g_proton.missing_default_prefix():
@@ -485,17 +486,17 @@ index 0c8e1ca3..d641562a 100755
      g_session.init_session(sys.argv[1] != "runinprefix")
  
 diff --git a/toolmanifest_runtime.vdf b/toolmanifest_runtime.vdf
-index beddcbbb..b6f36788 100644
+index beddcbbb..5404093e 100644
 --- a/toolmanifest_runtime.vdf
 +++ b/toolmanifest_runtime.vdf
-@@ -2,7 +2,4 @@
+@@ -2,7 +2,6 @@
  {
    "version" "2"
    "commandline" "/proton %verb%"
 -  "require_tool_appid" "1628350"
--  "use_sessions" "1"
--  "compatmanager_layer_name" "proton"
+   "use_sessions" "1"
+   "compatmanager_layer_name" "proton"
  }
 -- 
-2.45.2
+2.46.1
 
