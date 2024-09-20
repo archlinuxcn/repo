@@ -2,7 +2,7 @@
 
 pkgname=python-apkinspector
 _pkgname=apkInspector
-pkgver=1.3.1
+pkgver=1.3.2
 pkgrel=1
 pkgdesc="A tool to decode and manipulate android apks"
 arch=('any')
@@ -18,7 +18,7 @@ depends=(
 	'python'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('4d20522cc86c8d072b7602a46e2e2dda244dd47831dfcd5e609e49c89cc98ec6')
+sha256sums=('adcdb075e4914acc9e1592bbc31436a20332e7e8bd3eedd6d8b4accf94f8e9e3')
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
