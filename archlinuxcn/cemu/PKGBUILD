@@ -14,7 +14,7 @@ license=(MPL2)
 options+=(!strip)
 depends=(
 	# unbundled vcpkg
-	'boost-libs>=1.79' 'fmt' 'libzip>=1.9.2' 'libpng>=1.6.37' 'pugixml>=1.12.1' 'sdl2>=2.0.22' 'wxwidgets-gtk3>=3.2' 'wayland' 'wayland-protocols'
+	'boost-libs>=1.79' 'fmt10' 'libzip>=1.9.2' 'libpng>=1.6.37' 'pugixml>=1.12.1' 'sdl2>=2.0.22' 'wxwidgets-gtk3>=3.2' 'wayland' 'wayland-protocols'
 	'llvm-libs>=17'
 )
 makedepends=(
