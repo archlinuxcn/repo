@@ -23,7 +23,7 @@ makedepends=(
 	'cmake>=3.21.1'
 	'cubeb'
 	'curl'
-	'fmt>=9'
+	'fmt10'
 	'git'
 	'glib2'
 	'glm'
@@ -65,12 +65,10 @@ prepare() {
 	git config submodule.dependencies/imgui.url ../imgui
 	git -c protocol.file.allow=always submodule update
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
-    #sed -i '/find_package(glslang REQUIRED)/a find_package(SPIRV-Tools REQUIRED)' CMakeLists.txt
-    #sed -i '/add_library(glslang::SPIRV ALIAS SPIRV)/a add_library(SPIRV-Tools)' CMakeLists.txt
-    #sed -i '/glslang::SPIRV/a SPIRV-Tools' src/Cafe/CMakeLists.txt
 	sed -i '/discord-rpc/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
-	#sed -i 's/glm::glm/glm/' src/{Common,input}/CMakeLists.txt
+    # Temporarily require fmt version 10
+	sed -i 's/find_package(fmt 9/find_package(fmt 10.0.0...<11.0.0/' CMakeLists.txt
 }
 
 build() {
