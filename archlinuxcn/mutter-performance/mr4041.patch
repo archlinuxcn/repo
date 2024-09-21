@@ -1,0 +1,49 @@
+From 12aee186dd8e2dc27350f300b04e91375e7aa6d6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
+Date: Thu, 27 Jun 2024 23:40:09 +0200
+Subject: [PATCH] Revert "window/wayland: Use scale for configured rect in
+ configuration"
+
+This caused https://gitlab.gnome.org/GNOME/mutter/-/issues/2616.
+
+This reverts commit 2a62e690a21f98c22549d8a8c8a9b39916e1bc44.
+
+
+(cherry picked from commit 2ea002c0df875b9bba18a8580b23e8f4ddfb042f)
+---
+ src/wayland/meta-window-wayland.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/src/wayland/meta-window-wayland.c b/src/wayland/meta-window-wayland.c
+index c3d0f48540..1fd7a0752b 100644
+--- a/src/wayland/meta-window-wayland.c
++++ b/src/wayland/meta-window-wayland.c
+@@ -1184,14 +1184,7 @@ meta_window_wayland_finish_move_resize (MetaWindow              *window,
+    * scale new_geom to physical pixels given what buffer scale and texture scale
+    * is in use. */
+ 
+-  acked_configuration = acquire_acked_configuration (wl_window, pending,
+-                                                     &is_client_resize);
+-
+-  if (acked_configuration)
+-    geometry_scale = acked_configuration->scale;
+-  else
+-    geometry_scale = meta_window_wayland_get_geometry_scale (window);
+-
++  geometry_scale = meta_window_wayland_get_geometry_scale (window);
+   new_geom.x *= geometry_scale;
+   new_geom.y *= geometry_scale;
+   new_geom.width *= geometry_scale;
+@@ -1221,6 +1214,9 @@ meta_window_wayland_finish_move_resize (MetaWindow              *window,
+ 
+   flags = META_MOVE_RESIZE_WAYLAND_FINISH_MOVE_RESIZE;
+ 
++  acked_configuration = acquire_acked_configuration (wl_window, pending,
++                                                     &is_client_resize);
++
+   window_drag = meta_compositor_get_current_window_drag (display->compositor);
+ 
+   /* x/y are ignored when we're doing interactive resizing */
+-- 
+GitLab
+
