@@ -6,7 +6,7 @@ _minor=2
 _patch=0
 pkgver=$_major.$_minor
 cemu_tag="v$pkgver"
-pkgrel=1
+pkgrel=2
 pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
 url=https://cemu.info
@@ -74,6 +74,9 @@ prepare() {
 
 	# glm fix
 	sed -i 's/glm::glm/glm/' src/Common/CMakeLists.txt src/input/CMakeLists.txt
+
+	# Temporarily require fmt version 10
+	sed -i 's/find_package(fmt 9/find_package(fmt 10.0.0...<11.0.0/' CMakeLists.txt
 }
 
 build() {

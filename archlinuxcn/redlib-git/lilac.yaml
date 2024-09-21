@@ -7,13 +7,6 @@ pre_build_script: |
 
 post_build_script: git_pkgbuild_commit()
 
-repo_depends:
-  - hyprwayland-scanner-git
-
 update_on:
   - source: github
-    github: hyprwm/xdg-desktop-portal-hyprland
-
-  - source: alpm
-    alpm: sdbus-cpp
-    provided: libsdbus-c++.so
+    github: redlib-org/redlib

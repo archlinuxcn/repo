@@ -19,7 +19,7 @@ install=krita-ai-diffusion.install
 source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}"
         "add-regex-to-requirements.patch")
 sha256sums=('1c3b2ea6319eac9b3750f3a8df598ceb9a443c46a8ae955f04f15b19a197609a'
-            '57bf33f43ec7181d3a507539eb9f14e7ff54d6fa3c729df98493bc171d1cee83')
+            'ea9504979bc5f4341d2ee2083a660a6d980be47493b710398ea618918c121f91')
 
 prepare() {
     # The plugin itself will run inside Krita's embedded Python,

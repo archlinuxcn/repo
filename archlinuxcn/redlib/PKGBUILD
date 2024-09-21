@@ -2,7 +2,7 @@
 
 pkgname=redlib
 pkgver=0.35.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Private front-end for Reddit"
 url="https://github.com/${pkgname}-org/${pkgname}"
 license=('AGPL-3.0-or-later')
@@ -26,11 +26,11 @@ build() {
 package() {
 	cd "${pkgname}-${pkgver}"
 
-	install -Dm755 "target/release/${pkgname}" -t "$pkgdir/usr/bin/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
 
-	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/${pkgname}/"
-	install -Dm644 README.md -t "$pkgdir/usr/share/doc/${pkgname}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
 
-	install -Dm644 "contrib/${pkgname}.service" -t "$pkgdir/usr/lib/systemd/system/"
-	install -Dm644 "contrib/${pkgname}.conf" -t "$pkgdir/etc/"
+	install -Dm644 "contrib/${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+	install -Dm644 "contrib/${pkgname}.conf" -t "${pkgdir}/etc/"
 }
