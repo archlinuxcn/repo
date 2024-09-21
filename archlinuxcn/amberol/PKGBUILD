@@ -2,8 +2,8 @@
 # Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
 
 pkgname=amberol
-pkgver=0.10.3
-pkgrel=2
+pkgver=2024.1
+pkgrel=1
 pkgdesc="Plays music, and nothing else"
 arch=(x86_64)
 url="https://gitlab.gnome.org/World/amberol"
@@ -31,7 +31,7 @@ checkdepends=(appstream-glib
 _archive="$pkgname-$pkgver"
 source=("$_archive.tar.gz::$url/-/archive/$pkgver/$_archive.tar.gz")
 options=('!lto')
-sha512sums=('12684a222e06d0abbab03f6196021c262416ca9ed48526dd5343432a314c2615866ad6b97032c45d93003bb198a2bc90cb23baaf7debe3d3581cb3fd925021cf')
+sha512sums=('1f1bc220036236d9a1a5eee401022fef319b2dc05be1f03c8a67298b6e2f94bc7683f4eb2b676197ff40f0b4774df5cfd0dc33b53a8b25214e7f97b1382d76e4')
 
 prepare() {
   cd $_archive
