@@ -32,6 +32,7 @@ prepare() {
     patch -p1 -i ../gc.patch
 
 	mkdir -p build
+    sed -i -e '/-DBOOST_ASIO_DISABLE_CONCEPTS/d' CMakeLists.txt
     sed -i 's/OUTVAR ${BUILD_TAG}/OUTVAR "${BUILD_TAG}"/g' CMakeModules/GenerateSCMRev.cmake
     sed -i 's/OUTVAR ${BUILD_REPOSITORY}/OUTVAR "${BUILD_REPOSITORY}"/g' CMakeModules/GenerateBuildInfo.cmake
     sed -i 's/cpp-httplib::cpp-httplib/httplib::httplib/g' externals/CMakeLists.txt
