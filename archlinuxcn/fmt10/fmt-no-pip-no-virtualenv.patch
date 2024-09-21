@@ -1,0 +1,61 @@
+diff '--color=auto' -rupN fmt.orig/doc/build.py fmt/doc/build.py
+--- fmt.orig/doc/build.py	2024-01-04 17:40:34.014213222 +0100
++++ fmt/doc/build.py	2024-01-04 17:41:48.775161340 +0100
+@@ -11,34 +11,6 @@ versions = [
+   '7.1.3', '8.0.0', '8.0.1', '8.1.0', '8.1.1', '9.0.0', '9.1.0']
+ versions += ['10.0.0', '10.1.0', '10.1.1', '10.1.1', '10.2.0']
+ 
+-class Pip:
+-  def __init__(self, venv_dir):
+-    self.path = os.path.join(venv_dir, 'bin', 'pip')
+-
+-  def install(self, package, commit=None):
+-    "Install package using pip."
+-    if commit:
+-      package = 'git+https://github.com/{0}.git@{1}'.format(package, commit)
+-    print('Installing {0}'.format(package))
+-    check_call([self.path, 'install', package])
+-
+-def create_build_env(venv_dir='virtualenv'):
+-  # Create virtualenv.
+-  if not os.path.exists(venv_dir):
+-    check_call(['python3', '-m', 'venv', venv_dir])
+-  # Install Sphinx and Breathe. Require the exact version of Sphinx which is
+-  # compatible with Breathe.
+-  pip = Pip(venv_dir)
+-  pip.install('wheel')
+-  pip.install('six')
+-  # See: https://github.com/sphinx-doc/sphinx/issues/9777
+-  pip.install('docutils==0.17.1')
+-  # Jinja2 >= 3.1 incompatible with sphinx 3.3.0
+-  # See: https://github.com/sphinx-doc/sphinx/issues/10291
+-  pip.install('Jinja2<3.1')
+-  pip.install('sphinx==3.3.0')
+-  pip.install('michaeljones/breathe', 'v4.25.0')
+-
+ def build_docs(version='dev', **kwargs):
+   doc_dir = kwargs.get('doc_dir', os.path.dirname(os.path.realpath(__file__)))
+   work_dir = kwargs.get('work_dir', '.')
+@@ -103,13 +75,14 @@ def build_docs(version='dev', **kwargs):
+ 
+   html_dir = os.path.join(work_dir, 'html')
+   main_versions = reversed(versions[-3:])
+-  check_call([os.path.join(work_dir, 'virtualenv', 'bin', 'sphinx-build'),
++  check_call(['sphinx-build',
+               '-Dbreathe_projects.format=' + os.path.abspath(doxyxml_dir),
+               '-Dversion=' + version, '-Drelease=' + version,
+               '-Aversion=' + version, '-Aversions=' + ','.join(main_versions),
+               '-b', 'html', doc_dir, html_dir])
+   try:
+-    check_call(['lessc', '--verbose', '--clean-css',
++    check_call(['npm', 'install', 'less', 'less-plugin-clean-css'])
++    check_call(['npx', 'lessc', '--verbose', '--clean-css',
+                 '--include-path=' + os.path.join(doc_dir, 'bootstrap'),
+                 os.path.join(doc_dir, 'fmt.less'),
+                 os.path.join(html_dir, '_static', 'fmt.css')])
+@@ -122,5 +95,4 @@ def build_docs(version='dev', **kwargs):
+   return html_dir
+ 
+ if __name__ == '__main__':
+-  create_build_env()
+   build_docs(sys.argv[1])

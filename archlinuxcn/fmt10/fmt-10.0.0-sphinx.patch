@@ -1,0 +1,13 @@
+diff --git i/doc/basic-bootstrap/layout.html w/doc/basic-bootstrap/layout.html
+index 5519c4b5..c6794102 100644
+--- i/doc/basic-bootstrap/layout.html
++++ w/doc/basic-bootstrap/layout.html
+@@ -102,7 +102,7 @@
+ {%- endmacro %}
+ 
+ {%- macro css() %}
+-    <link rel="stylesheet" href="{{ pathto('_static/' + style, 1) }}" type="text/css" />
++    <link rel="stylesheet" href="{{ pathto('_static/' + styles[-1], 1) }}" type="text/css" />
+     <link rel="stylesheet" href="{{ pathto('_static/pygments.css', 1) }}" type="text/css" />
+     {%- for cssfile in css_files %}
+     <link rel="stylesheet" href="{{ pathto(cssfile, 1) }}" type="text/css" />
