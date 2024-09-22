@@ -1,7 +1,7 @@
 # Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=7.0.3
+pkgver=7.0.6
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686')
@@ -9,7 +9,7 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'git-lfs' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs')
-_tag=2a86a4cce7ff392c221719e14ead145d85466296  # git rev-parse $pkgver
+_tag=da58a3eb726e722c0096d91ae64b479e4b1a8c20  # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
