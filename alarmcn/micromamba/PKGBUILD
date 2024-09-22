@@ -11,18 +11,10 @@ depends=('libarchive.so' 'libcurl.so' 'libsolv' 'libfmt.so'
          'python')
 makedepends=('gtest' 'termcolor' 'cmake' 'cli11' 'nlohmann-json'
              'ghc-filesystem' 'tl-expected')
-source=(micromamba-${pkgver}.tar.gz::https://github.com/mamba-org/mamba/archive/refs/tags/micromamba-${pkgver}.tar.gz
-        aea04951d07c00e3665e80278e84eb9e6c9e3666.patch)
-sha256sums=('9ac3fb39fffb9a57a7cc102e885cf49d9bac47ec6446c7d8c850f6fc87b26af6'
-            '424bd94759673e381008ab77d3de4a7804118b2eb0741fc2650051921c31f126')
+source=(micromamba-${pkgver}.tar.gz::https://github.com/mamba-org/mamba/archive/refs/tags/micromamba-${pkgver}.tar.gz)
+sha256sums=('9ac3fb39fffb9a57a7cc102e885cf49d9bac47ec6446c7d8c850f6fc87b26af6')
 provides=('micromamba')
 conflict=('micromamba' 'micromamba-bin')
-
-prepare() {
-  cd mamba-micromamba-${pkgver}
-
-  patch -Np1 --no-backup-if-mismatch < ../aea04951d07c00e3665e80278e84eb9e6c9e3666.patch
-}
 
 build() {
   cd mamba-micromamba-${pkgver}
