@@ -32,6 +32,12 @@ prepare() {
     pip install -r requirements.txt
 }
 
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    source .venv/bin/activate
+    python scripts/package.py
+}
+
 check() {
     cd "$srcdir/$pkgname-$pkgver"
     source .venv/bin/activate
@@ -42,12 +48,6 @@ check() {
     fi
     python -m pytest tests/test_server.py -vs --test-install
     python -m pytest tests -vs --ci
-}
-
-build() {
-    cd "$srcdir/$pkgname-$pkgver"
-    source .venv/bin/activate
-    python scripts/package.py
 }
 
 package() {
