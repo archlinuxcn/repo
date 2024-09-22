@@ -2,14 +2,14 @@
 
 _pkgname=nm-tray
 pkgname=$_pkgname-git
-pkgver=r249.fda2cb5
+pkgver=r251.1d55df4
 pkgrel=1
 pkgdesc='Pure Qt NetworkManager front-end residing in panels'
 arch=('i686' 'x86_64')
 url='https://github.com/palinek/nm-tray'
 license=('GPL')
-depends=('networkmanager-qt5')
-makedepends=('git' 'cmake' 'qt5-tools')
+depends=('networkmanager-qt')
+makedepends=('git' 'cmake' 'qt6-tools' 'ninja')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 source=("git+https://github.com/palinek/nm-tray.git")
@@ -21,13 +21,21 @@ pkgver() {
 }
 
 build() {
-  mkdir -p build
-  cd build
-  cmake $srcdir/$_pkgname -DBIN_NM_VERSION=1.2.0 -DCMAKE_INSTALL_PREFIX=/
-  make
+  local _cmake_options=(
+    -B build
+    -S "$_pkgname"
+    -G Ninja
+    -DCMAKE_INSTALL_PREFIX='/usr'
+    -DNM_TRAY_XDG_AUTOSTART_DIR='/etc/xdg/autostart'
+    -Wno-dev
+  )
+
+  cmake "${_cmake_options[@]}"
+  cmake --build build
 }
 
 package() {
-  cd build
-  make DESTDIR="$pkgdir" install
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 "$_pkgname/COPYING" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
+
