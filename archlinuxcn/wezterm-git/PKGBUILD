@@ -3,7 +3,7 @@
 
 pkgname=("wezterm-git")
 pkgdesc="A terminal emulator implemented in Rust, using OpenGL ES 2 for rendering."
-pkgver=20240921.204652.1c4fdd3f
+pkgver=20240922.105911.de0ecc60
 pkgrel=1
 arch=("x86_64" "i686")
 url="https://github.com/wez/wezterm"
@@ -21,8 +21,8 @@ depends=(
 )
 makedepends=("cargo" "cmake" "git" "pkgconf" "python")
 options=(!lto)
-provides=("wezterm" "wezterm-gui" "wezterm-mux-server" "wezterm-shell-integration" "wezterm-terminfo")
-conflicts=("wezterm" "wezterm-bin" "wezterm-nightly-bin" "wezterm-shell-integration" "wezterm-terminfo")
+provides=("wezterm" "wezterm-gui" "wezterm-mux-server" "wezterm-shell-integration")
+conflicts=("wezterm" "wezterm-bin" "wezterm-nightly-bin" "wezterm-shell-integration")
 source=(
   "wezterm::git+https://github.com/wez/wezterm.git"
   "harfbuzz::git+https://github.com/harfbuzz/harfbuzz.git"
@@ -52,7 +52,6 @@ build() {
   cd "$srcdir/wezterm" || exit 1
   bash ci/check-rust-version.sh
   cargo build --frozen --release
-  tic -x -o "$srcdir/terminfo" "$srcdir/wezterm/termwiz/data/wezterm.terminfo"
 }
 
 package() {
@@ -67,7 +66,6 @@ package() {
   install -Dm644 assets/wezterm.desktop "$pkgdir/usr/share/applications/org.wezfurlong.wezterm.desktop"
   install -Dm644 assets/wezterm.appdata.xml "$pkgdir/usr/share/metainfo/org.wezfurlong.wezterm.appdata.xml"
   install -Dm644 assets/wezterm-nautilus.py "$pkgdir/usr/share/nautilus-python/extensions/wezterm-nautilus.py"
-
 
   install -Dm644 assets/shell-integration/wezterm.sh "$pkgdir/etc/profile.d/wezterm.sh"
   install -Dm644 assets/shell-completion/bash "$pkgdir/usr/share/bash-completion/completions/wezterm"
