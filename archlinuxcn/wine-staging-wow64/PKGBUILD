@@ -7,7 +7,7 @@
 # https://github.com/wine-staging/wine-staging
 
 pkgname="wine-staging-wow64"
-pkgver=9.17
+pkgver=9.18
 _pkgver="${pkgver/rc/-rc}"
 pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs"
@@ -83,10 +83,10 @@ source=(
   "wine-binfmt.conf"
   "git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v$pkgver"
 )
-b2sums=('36049b7ed096865a647cea9ac1def6cf2a35984a72ae192d402a40f34c8a97e967cee31724d84d422f835f272fcba9ba818e1e787f7940b18d835aa234b0c6b7'
+b2sums=('2ac93d28c76358be47615d6a1f053fc61ff023193bd000cacded262ceafb39072778461c72fc797657df6ae71c7fc072d0bfe69da04660cd14e4b6ddec36a0b5'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588'
-        'a2102b8dfca6a9e8d61742af24fb8c2a27570fa63e7b3a37a0b28da92fcfa2369e3b0d716269128dfe04057be78b4b1834dc5d287f6bfbbe1344e16dbcbd1ea4')
+        '9a52f8d79ab88b645461eeda5b6ca99cedef9b60b6e300090a873cbc231e4c3ac9a6e4dafe6c0302204e6cf34ff5e0cf7b1db15028a05cf304ae606893d9b29d')
 
 prepare() {
   # apply wine-staging patchset
