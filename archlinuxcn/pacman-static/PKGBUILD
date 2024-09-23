@@ -6,17 +6,17 @@ pkgname=pacman-static
 pkgver=7.0.0.r3.g7736133
 _cares_ver=1.33.1
 _nghttp2_ver=1.63.0
-_curlver=8.9.1
+_curlver=8.10.1
 _sslver=3.3.2
 _zlibver=1.3.1
 _xzver=5.6.2
 _bzipver=1.0.8
 _zstdver=1.5.6
-_libarchive_ver=3.7.4
+_libarchive_ver=3.7.5
 _gpgerrorver=1.50
 _libassuanver=3.0.0
 _gpgmever=1.23.2
-pkgrel=3
+pkgrel=4
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.0.0
 _git_patch_level_commit=77361331ae3864c6ea880e715c5864d59336f275
@@ -89,7 +89,7 @@ sha512sums=('44e00c2bc259fe6a85de71f7fd8a43fcfd1b8fb7d920d2267bd5b347e02f1dab736
             'ac5005f33664981e194730223881f4207c9570cb8d9bba51b5592a3e7eb59455ebe25bf190211811513c64497a1b42ec7a82cc7f810059f46c99a83dd2d6cef9'
             'b5ec4f08539be552f01d49f03327e3999754b940d83c63fbd934c2ed34cf7f05c3f90c9eb64a78a3d7862280bf75765296576a70a6029257daaf90e3e35ab3e4'
             'SKIP'
-            '27c91a58f23f02dd150556edaa73e1be08a93134d3d05049e546b39f05e0f4383e41bf6a56a643eae03eda0f39a527059510b2e34167ae9e7c75b393964a9f8b'
+            '27f04d00c5c30133b68a427b7aa226de51afcb75a9c31406ed4a242b6fec4c6c1bfcb6d6b98e1437cff93fb42e3f91550185f6a4a33a293513968fb6710fa88c'
             'SKIP'
             '5ae47bf1aed2740a33ba5df7dc7345a6738aa6bfa3c9c4de5e51742485e24b25192988d7a2c1b8201ef70056ad8abd0ca78b3d55abe24c0b0373d83b47ed9b74'
             'SKIP'
@@ -108,7 +108,7 @@ sha512sums=('44e00c2bc259fe6a85de71f7fd8a43fcfd1b8fb7d920d2267bd5b347e02f1dab736
             'SKIP'
             '6cfcd07e81a93de240582de5a46545420cee93d1f27fe20ea2c983780fdd3036b69fdba073cf549d68a20791e189bf4b3cdde14a43f912d2ab9ef3414c83ac75'
             'SKIP'
-            '84bc346ba15861ab10aa54a3d687de955178e4efbe12bf3a49a467181e7f819673949f131f4c8338de8ed6e319a8565af376e5a540380bda08e60dffbc7c8686'
+            'b9cfb0a147bf0f77cca9e2bdea173f47a78dcba5df1d97a8e0e7b14a15039ac6d5467e325423b2a05741848f73ca7ab4fece922153f24f934f9370cb521d20df'
             'SKIP')
 
 export LDFLAGS="$LDFLAGS -static"
