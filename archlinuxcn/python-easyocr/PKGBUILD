@@ -2,8 +2,8 @@
 
 _pkgname=EasyOCR
 pkgname=python-easyocr
-pkgver=1.7.0
-pkgrel=3
+pkgver=1.7.2
+pkgrel=1
 pkgdesc='End-to-End Multi-Lingual Optical Character Recognition (OCR) Solution for 80+ supported languages'
 arch=('any')
 url='https://github.com/jaidedai/easyocr'
@@ -27,7 +27,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/JaidedAI/EasyOCR/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('d337e4f463764623d492968216320c894c24b551898c621966dfb92c18277d676389b3cb0154da4a56a9c3a6416675157e53d3be00876a69969330d36077b546')
+sha512sums=('83a909e068add24075057d5e043a1269440e3fd319305e7bbe02adc28add028a2f699ce7dedda88157245bb3ffaaf9bb801b31e2b0fb052244b4853c507d1967')
 
 build() {
   cd "${_pkgname}-${pkgver}"
