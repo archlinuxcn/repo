@@ -1,3 +1,25 @@
+## GE-Proton9-14
+
+Proton:
+
+- Update wine to latest bleeding edge
+- Update dxvk to latest git
+- Update vkd3d-proton to latest git
+- Update dxvk-nvapi to latest git
+- Import upstream proton changes
+- Update mono to 9.3.0
+- Rebase wine-staging
+
+Protonfixes:
+
+- Added god of war ragnarok SteamDeck=1 workaround (thanks UserNamesAreNotMyThing)
+- Added Star Citizen libcuda nvidia fix (thanks ProjectSynchro)
+- Added fix for Plain Site (thanks iodream)
+- Added fix for Worms: Blast (thanks iodream)
+- Remove deprecated Sleeping Dogs: DE fix
+- winetricks now built from source
+- Elden Ring fix updated (thanks UserNamesAreNotMyThing)
+
 ## GE-Proton9-13
 
 Hotfix:
