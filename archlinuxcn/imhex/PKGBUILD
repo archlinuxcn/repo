@@ -3,7 +3,7 @@
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.35.3
+pkgver=1.35.4
 pkgrel=2
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
@@ -22,6 +22,7 @@ depends=(
     'libglvnd'
     'libarchive'
     'glibc' 'gcc-libs' 'bash'
+    'libxrandr'
 )
 makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime')
 optdepends=(
@@ -43,7 +44,7 @@ source=(
     "edlib::git+https://github.com/Martinsos/edlib"
     "throwing_ptr::git+https://github.com/rockdreamer/throwing_ptr"
 )
-b2sums=('f4fc2e10eb9a35e005800f8395279934806dd0f1acfca3b2883137b12bf8e7ef6548bfb90d4dfcb6bc266368f6c1f26bc5ab0e14b843fcc2e6f2a59bf3f0ca0a'
+b2sums=('6ced0ee6bec205a1dd032e599e8f9ad15da329fb1b926ef295bcdbd7f8963d8f8b7c14e50f3920b2a05177bd11f1bfbcde7b8e07aeea23ef530e074a5eb5afe9'
         'SKIP'
         'SKIP'
         'SKIP'
