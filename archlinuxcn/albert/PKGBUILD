@@ -3,8 +3,8 @@
 # Contributor: Manuel Schneider  <manuelschneid3r at googles mail>
 
 pkgname=albert
-pkgver=0.26.3
-pkgrel=2
+pkgver=0.26.4
+pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
 url="https://github.com/albertlauncher"
@@ -21,7 +21,7 @@ optdepends=('ddgr: duckduckgo search plugin'
 	'python-urllib3: python web plugins'
 	'python-virtualbox: virtualbox plugin')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/albertlauncher/${pkgname}/releases/download/v${pkgver}/v${pkgver}.tar.gz")
-sha512sums=('f3367226a78937607aa2feb9bf0ff3cb453d5213d141af501f858b8d7f57dc81024a261ba5feaf52219a03718895cc3551eeab337163fb07c0339ada7c0b0519')
+sha512sums=('4dbb78dcc768b9d76aae7bdd251bb078dd42ee53f98ae88962b4de555714d1e5e935c1c278220e5c5ec36072876d7d3ba45e5d706615ca88eae09fc61d75504a')
 
 build() {
 	mkdir -p build
