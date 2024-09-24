@@ -19,7 +19,7 @@ _opt_SYS_FLUTTER=0
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.3.0'
+_pkgver='1.3.1'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -69,11 +69,11 @@ if ! :; then
   _srcdir="${_pkgname}"
   source[0]="git+${_giturl}#tag=${_pkgver}"
 fi
-md5sums=('768dff080ac91c9f50b68d98d26a1aad'
+md5sums=('0e9b385effaed05e1249aaecf3232ad7'
          'SKIP'
          '74dc171bf2cfc1ada56b6e284adabca8'
          'a63659fb966758db9fe95e5aae89757a')
-sha256sums=('7aef14a0106482e61823976740f3e57e03da7c79d7f2a05337529ca1e8afce57'
+sha256sums=('410c98efb24de873d25c667c1f5421ff84992d711561ed62d0344f8b5da7710b'
             'SKIP'
             'db6742a20626d0d2a089eb41ad61b9b2138b996679911e9c8268c1f896191f97'
             'b3a05ffca1f57afa48bd006d732969146dafa164c71390070623ba569977f9d3')
@@ -302,7 +302,7 @@ GenericName[zh_CN]=远程桌面
 Comment=Remote Desktop
 Comment[zh_CN]=远程桌面
 Exec=${_pkgname} %u
-Icon=${_pkgname}.svg
+Icon=${_pkgname}
 Terminal=false
 Type=Application
 MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
