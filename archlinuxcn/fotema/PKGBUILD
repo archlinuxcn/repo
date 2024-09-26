@@ -1,6 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=fotema
-pkgver=1.14.1
+pkgver=1.14.2
 pkgrel=1
 pkgdesc="Photo gallery for Linux"
 arch=('x86_64')
@@ -23,7 +23,7 @@ makedepends=(
   'mold'
 )
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('cdc0815723d9ff3a5e071f644971b73115fa36af6b36e95e41b958504b5a66e1')
+sha256sums=('6ed138909ff2b1e25450d454c07ae1a803ea4d213e672a1a0a8c4c0f25b8da26')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -33,7 +33,7 @@ prepare() {
 
 build() {
   export RUSTUP_TOOLCHAIN=stable
-  RUSTFLAGS="-C link-arg=-fuse-ld=mold"
+  RUSTFLAGS+=" -C link-arg=-fuse-ld=mold"
   arch-meson "$pkgname-$pkgver" build
   meson compile -C build
 }
