@@ -23,11 +23,11 @@ source=(
 sha256sums=('0ccd11a7c77cb9e5a61f4daacdc9170d561112f9cfaf9e9a2d9867c0587d1950')
 
 build() {
-  cd "aiohttp-session-$pkgver"
+  cd "$_pypi-$pkgver"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "aiohttp-session-$pkgver"
+  cd "$_pypi-$pkgver"
   python -m installer --destdir="$pkgdir" dist/*.whl
 }
