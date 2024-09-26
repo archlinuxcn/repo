@@ -33,7 +33,8 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0002-make-blockquote-markup-less-distractive.patch"
         "0003-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch"
         "0004-make-animated-avatar-follow-power-settings.patch"
-        "warn-before-delete-all-2.patch")
+        "warn-before-delete-all-2.patch"
+        "telegram-desktop-5_5_5-fix_build_with_cppgir.patch")
 sha512sums=('88cd526fb02b7b0459cb1bd1b0c57147b2261e57c392d2cb62964015ef6b26e202fba717b35d74201c41becf0a5d78ef4d9d593b5666b3f0a0db646e40bfd1fc'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
@@ -41,7 +42,8 @@ sha512sums=('88cd526fb02b7b0459cb1bd1b0c57147b2261e57c392d2cb62964015ef6b26e202f
             '9d2e7512734044682a18b79cdda4fd21aa1427c4e066c9288e8218e890744225ff19114a5a129e861a9d382fb5dae0bf19e82e0e9ca862c112ad9a2b54a853d0'
             '51c8a2533f047f5ceafb58a11a40426c242618c7583f2f0d47b2e43bfa6276cbd3ea66e8268392c3a67cef48db64457a31f733b1b3f1dd4d088b375ab87c1e5b'
             '871fd0994bb35dcf32d3d2cbf222db92c30acfd76df06fe87feecbac205f08e3bbed8e48a56c4e11737638fafddc12a1e278519481f77f7dab3f9957ea6e61ed'
-            '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d')
+            '891a58e7d1a4d4a27a17a2b56bd614d87d22322f2f6e1247665b2b873c5c6d78336de04bc7a11feceb7cd8f1a2f79a858ad2520352644e808634e2989a17357d'
+            'a65bca7d330519657fa647922df4c6d69f3d6af4008656084945a3c448aad62f228f91de8c5988cd9163856f376c0c136254eb68f6c9654ffdf9f5d3f52bc235')
 
 prepare() {
     patch -b -l -d tdesktop-$pkgver-full/Telegram/lib_ui -Np1 -i ${srcdir}/no-embolded-font.patch
@@ -51,6 +53,7 @@ prepare() {
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0003-Drop-usage-of-Qt-6.5-colorScheme-API-on-Linux.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0004-make-animated-avatar-follow-power-settings.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/warn-before-delete-all-2.patch
+    patch -Np1 -d tdesktop-$pkgver-full/cmake/external/glib/cppgir -i "${srcdir}/telegram-desktop-5_5_5-fix_build_with_cppgir.patch"
 }
 
 build() {
