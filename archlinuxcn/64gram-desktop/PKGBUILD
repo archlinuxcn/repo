@@ -40,11 +40,10 @@ sha512sums=('928be9f3771763a22dec0441b47bec2e57ec7ed7910c0d09cf40abac7d8b59d2535
 prepare() {
     LANG=C.UTF-8 bsdtar -xf ${_pkgname}-${pkgver}-full.tar.gz
     cd $_pkgname-$pkgver-full
-    patch -Np1 -d 
     find "${srcdir}"/ -type f -exec dos2unix {} \;
     patch -Np1 -d cmake/external/glib/cppgir -i ${srcdir}/telegram-desktop-5_5_5-fix_build_with_cppgir.patch
     patch -Np1 -i ${srcdir}/block-sponsored_messages.patch
-    patch -p1 -i ${srcdir}/fix-lzma-link.patch
+    patch -Np1 -i ${srcdir}/fix-lzma-link.patch
 }
 
 build() {
