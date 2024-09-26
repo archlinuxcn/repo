@@ -2,7 +2,7 @@
 
 _pkgname=datasets
 pkgname=python-datasets
-pkgver=3.0.0
+pkgver=3.0.1
 pkgrel=1
 pkgdesc='The largest hub of ready-to-use datasets for ML models with fast, easy-to-use and efficient data manipulation tools'
 arch=('any')
@@ -31,7 +31,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/datasets/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('ae93b5cdd4eeb4ca470034decdbc54db7ddb7bc36db5b0f867a5db56dd133f56ca3ac0bc08714c9de0ae1ebbd2eb9d1bc18fa11ab3fb8368609299390ecccc42')
+sha512sums=('382d27963b3db3dc4389f2499556cfffe6fa81959d0fcb78cd13b497b76d6adbdfc5b05aac0ef92f98ca761e4ec6e8516b80f0e42a354a1f5e03bbf3856609af')
 
 prepare() {
   # pyarrow_hotfix is only used for pyarrow < 14.0.1
