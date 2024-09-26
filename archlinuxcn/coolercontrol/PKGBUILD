@@ -1,27 +1,23 @@
+# Maintainer: Eren Simsek <18117384-caferen@users.noreply.gitlab.com>
 # Maintainer: Guy Boldon <gb@guyboldon.com>
 
 pkgname=coolercontrol
 _app_id="org.$pkgname.CoolerControl"
-pkgver=1.4.0
+pkgver=1.4.1
 pkgrel=2
 pkgdesc="A program to monitor and control your cooling devices"
 arch=('x86_64')
 url="https://gitlab.com/coolercontrol/coolercontrol"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=(
   'gcc-libs'
   'glibc'
   'gtk3'
   'hicolor-icon-theme'
   'libappindicator-gtk3'
-  'liquidctl'
-  'python'
-  'python-setproctitle'
-  'python-fastapi'
-  'python-pydantic'
-  'python-urllib3'
-  'uvicorn'
   'webkit2gtk-4.1'
+  'coolercontrold'
+  'coolercontrol-liqctld'
 )
 makedepends=(
   'appmenu-gtk-module'
@@ -33,24 +29,17 @@ makedepends=(
   'nodejs>=18'
   'npm'
   'openssl'
-  'python-build'
-  'python-installer'
-  'python-setuptools'
-  'python-wheel'
   'webkit2gtk-4.1'
 )
 checkdepends=(
   'appstream-glib'
   'desktop-file-utils'
 )
-optdepends=(
-  'nvidia-utils: NVIDIA GPU support'
-)
 provides=(
   "$pkgname"
 )
 conflicts=(
-  "$pkgname" coolero
+  "$pkgname"
 )
 # lto is handled by cargo and can conflict with makepkg settings
 options=(
@@ -60,21 +49,16 @@ source=(
   "https://gitlab.com/coolercontrol/coolercontrol/-/archive/$pkgver/$pkgname-$pkgver.tar.gz"
 )
 sha256sums=(
-  '6f783f12e44c977cecd7aadd75c1a30e19a36eff6aaa25bb2fb50c45e1b8ae84'
+  '378ca7d9bb4ffc5caa5fe08c17e4a2986397a59c7305fb1511140e52b7950098'
 )
 
 build() {
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-liqctld"
-  python -m build --wheel --no-isolation
   cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui"
   npm ci
   npm run build
-  cp -r dist/* "${srcdir}/$pkgname-$pkgver/coolercontrold/resources/app/"
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrold"
+  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
-  cargo build --release --locked
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri"
   cargo build --release --locked -F custom-protocol
 }
 
@@ -82,28 +66,16 @@ check() {
   cd "${srcdir}/$pkgname-$pkgver"
   desktop-file-validate "packaging/metadata/$_app_id.desktop"
   appstream-util validate-relax "packaging/metadata/$_app_id.metainfo.xml"
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-liqctld"
-  python -m coolercontrol_liqctld --version
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrold/target/release"
-  ./coolercontrold --version
   # This UI check will fail in a docker environment without a graphical environment:
   # cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri/target/release"
   # ./coolercontrol --version
 }
 
 package() {
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-liqctld"
-  python -m installer --destdir="$pkgdir" dist/*.whl
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrold"
-  install -Dm755 "target/release/coolercontrold" -t "$pkgdir/usr/bin"
   cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri"
   install -Dm755 "target/release/coolercontrol" -t "$pkgdir/usr/bin"
 
   cd "${srcdir}/$pkgname-$pkgver"
-  # systemd service files
-  install -Dm644 "packaging/systemd/${pkgname}d.service" -t "$pkgdir/usr/lib/systemd/system/"
-  install -Dm644 "packaging/systemd/${pkgname}-liqctld.service" -t "$pkgdir/usr/lib/systemd/system/"
-
   # desktop metadata
   install -Dm644 "packaging/metadata/$_app_id.desktop" -t "$pkgdir/usr/share/applications/"
   install -Dm644 "packaging/metadata/$_app_id.metainfo.xml" -t "$pkgdir/usr/share/metainfo/"
