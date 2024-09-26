@@ -9,13 +9,13 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=129.0.6668.58
-pkgrel=3
+pkgver=129.0.6668.70
+pkgrel=2
 _launcher_ver=8
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=129.0.6668.58-1
+_uc_ver=129.0.6668.70-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -49,8 +49,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         p010-Zero-Copy-for-VA-API-Decoding-for-Vulkan.patch
         add-feature-to-allow-zero-copy-video-formats.patch
         fix-ungoogled-third-party-re2.patch)
-sha256sums=('eaf850183d32627ce0cde9f3d3f853bc11c217ef7f41540303214ed47803d96d'
-            'a52872325dcf1121acbabec781edfabe068a50a9080e81e69b249dd6301f2eac'
+sha256sums=('094ddec3774b54feb04dcfb020e61766de16feabb04850d73ef82e38c4bbf2b5'
+            'a9eb8896329304e429552fb15c640debd87bc6c66b051f802d3da5d707c24744'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'b3de01b7df227478687d7517f61a777450dca765756002c80c4915f271e2d961'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
@@ -124,8 +124,6 @@ prepare() {
 
   # Increase _FORTIFY_SOURCE level to match Arch's default flags
   patch -Np1 -i ../increase-fortify-level.patch
-
-  patch -Np1 -i ../fix-ungoogled-third-party-re2.patch
 
   # Fixes for building with libstdc++ instead of libc++
 
