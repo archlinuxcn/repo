@@ -2,8 +2,8 @@
 
 pkgname=python-aiohttp-session
 pkgdesc='Web sessions for aiohttp.web'
-pkgver=2.12.0
-pkgrel=2
+pkgver=2.12.1
+pkgrel=1
 url='https://aiohttp-session.readthedocs.io/'
 license=('Apache')
 arch=('any')
@@ -20,7 +20,7 @@ _pypi=aiohttp_session
 source=(
   "https://files.pythonhosted.org/packages/source/${_pypi::1}/$_pypi/$_pypi-$pkgver.tar.gz"
 )
-sha256sums=('0ccd11a7c77cb9e5a61f4daacdc9170d561112f9cfaf9e9a2d9867c0587d1950')
+sha256sums=('15e6e0288e9bcccd4b1d0c28aae9c20e19a252b12d0cb682223ca9c83180e899')
 
 build() {
   cd "$_pypi-$pkgver"
