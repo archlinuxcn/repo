@@ -10,7 +10,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=129.0.6668.70
-pkgrel=2
+pkgrel=3
 _launcher_ver=8
 _system_clang=1
 # ungoogled chromium variables
@@ -47,8 +47,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch
         p010-Zero-Copy-for-VA-API-Decoding-for-Vulkan.patch
-        add-feature-to-allow-zero-copy-video-formats.patch
-        fix-ungoogled-third-party-re2.patch)
+        add-feature-to-allow-zero-copy-video-formats.patch)
 sha256sums=('094ddec3774b54feb04dcfb020e61766de16feabb04850d73ef82e38c4bbf2b5'
             'a9eb8896329304e429552fb15c640debd87bc6c66b051f802d3da5d707c24744'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
@@ -61,8 +60,7 @@ sha256sums=('094ddec3774b54feb04dcfb020e61766de16feabb04850d73ef82e38c4bbf2b5'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
             '40db59162df2b7a2c0387bd620802f15424f637c09ba305b674fc09410ab21d1'
-            '713dab4f8c26790c0e4a4c5ce6a9269e90446df5370cc14214a01a363f7afe39'
-            'ffa3cf9d1386bd1a2c400c09ddf2790f125f44ccf108d1a3c62a21cd7fb1ff09')
+            '713dab4f8c26790c0e4a4c5ce6a9269e90446df5370cc14214a01a363f7afe39')
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
