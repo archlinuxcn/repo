@@ -8,9 +8,6 @@ post_build_script: git_pkgbuild_commit()
 repo_depends:
   - gtksourceview5-apostrophe
 
-managed: false 
-#update_on:
-#  - source: alpm
-#    repo: extra
-#    alpm: libspelling
-#    strip_release: true
+update_on:
+  - source: manual
+    manual: 0.2.1
