@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=boxbuddy
 _app_id=io.github.dvlv.boxbuddyrs
-pkgver=2.2.12
+pkgver=2.2.13
 pkgrel=1
 pkgdesc="A Graphical Interface for Distrobox"
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('distrobox' 'libadwaita')
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('1b2495d4525f2ebddc0cef72d424957a67c24953a9da2fed4423aac9cac53a58')
+sha256sums=('c9f8235439ce9b1b039ab7a74e9b25747aec4c1ada80fa92aa40a8eb31ccad7c')
 
 prepare() {
   cd "BoxBuddyRS-$pkgver"
@@ -46,7 +46,7 @@ package() {
   install -Dm644 icons/build-alt-{symbolic,symbolic-light}.svg -t \
     "$pkgdir/usr/share/icons/hicolor/symbolic/apps/"
 
-  for lang in de_DE el es fr_FR hi it_IT nl_NL pt_BR ru_RU uk_UA zh_CN zh_TW; do
+  for lang in cs de_DE el es fr_FR hi it_IT nl_NL pt_BR ru_RU uk_UA zh_CN zh_TW; do
     install -Dm644 "po/${lang}/LC_MESSAGES/${pkgname}rs.mo" -t \
       "$pkgdir/usr/share/locale/${lang}/LC_MESSAGES/"
   done
