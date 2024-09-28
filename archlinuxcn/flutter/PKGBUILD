@@ -11,7 +11,7 @@ _enginever=a6bd3f1de158bb61090e0c8053df93a10cb548e1
 _materialfontsver=3012db47f3130e62f7cc0beabff968a33cbec8d8
 _gradlewver=fd5c1f2c013565a3bea56ada6df9d2b8e96d56aa
 _flutterarch=$(echo "$CARCH" | sed s/aarch64/arm64/ | sed s/x86_64/x64/)
-pkgrel=2
+pkgrel=3
 pkgdesc="A new mobile app SDK to help developers and designers build modern mobile apps for iOS and Android."
 _pkgdesc="Flutter SDK component"
 arch=("x86_64" "aarch64")
@@ -52,8 +52,8 @@ sha256sums=('4218dc3bb923fc0b3816d1fb15371a82f0c10fdad034ced900609389486c190b'
 
 prepare() {
   # this is required in case people try to build with `aur/dart-sdk-dev` instead of `extra/dart`
-  DART_BINARY=$(readlink $(which dart))
-  DART_ROOT=${DART_ROOT:-${DART_BINARY/\/bin\/dart/}}
+  DART_BINARY=$(readlink $(command -v dart))
+  DART_ROOT=${DART_ROOT:-${DART_BINARY/\/bin\/dart*/}}
 
   if [ "${DART_ROOT}" != "/opt/dart-sdk" ]; then
     echo -e "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n"
@@ -65,7 +65,7 @@ prepare() {
     echo -e "  Please consider using the original 'extra/dart' package"
     echo -e "  from the Arch Linux package repositories. We otherwise"
     echo -e "  cannot ensure the Flutter tool will work as expected.\n\n"
-    echo -e "  Dart executable:	$(which dart)"
+    echo -e "  Dart executable:	$(command -v dart)"
     echo -e "  Resolved Dart SDK:	${DART_ROOT}"
 
     echo -e "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n"
@@ -321,8 +321,8 @@ _package-intellij-patch() {
   )
 
   # this is required in case people try to build with `aur/dart-sdk-dev` instead of `extra/dart`
-  DART_BINARY=$(readlink $(which dart))
-  DART_ROOT=${DART_ROOT:-${DART_BINARY/\/bin\/dart/}}
+  DART_BINARY=$(readlink $(command -v dart))
+  DART_ROOT=${DART_ROOT:-${DART_BINARY/\/bin\/dart*/}}
 
   install -dm755 "${pkgdir}/usr/lib/${_group}/bin/cache"
   
