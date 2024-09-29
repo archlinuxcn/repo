@@ -1,3 +1,20 @@
+## GE-Proton9-15
+
+Hotfix build:
+
+Proton:
+
+- Updated wine to latest bleeding edge -- fixes regression in video playback from 9-14
+- Updated dxvk to latest git -- fixes regression which causes black textures and stuttering on NVIDIA cards.
+- Updated vkd3d-proton to latest git
+- import upstream changes for lsteamclient
+- update xalia to 0.4.4
+
+Protonfixes:
+
+- Remove deprecated workaround for Total War Rome 2
+
+
 ## GE-Proton9-14
 
 Proton:
