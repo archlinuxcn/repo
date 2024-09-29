@@ -1,8 +1,6 @@
-# Maintainer: Eikano <lcuoin@gmail.com>
-
 _pkgname="tsukimi"
 pkgname="${_pkgname}-git"
-pkgver=0.13.0.r633.d1d1a0e
+pkgver=0.13.0.r635.g1d1a0e
 pkgrel=1
 pkgdesc='A simple third-party Emby client'
 arch=('x86_64')
@@ -21,15 +19,13 @@ makedepends=(
 source=(
 	tsukimi::git+https://github.com/tsukinaha/tsukimi.git
 	tsukimi.desktop
-	tsukimi.png
 )
 sha256sums=('SKIP'
-	'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3'
-	'04a712d60bbf5cc8873af24fb8ff76b47f27ef77ba45c7901fb7d3cd26dd6893')
+	'SKIP')
 
 pkgver() {
 	cd "${_pkgname}"
-	echo $(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).r$(git rev-list --count HEAD).g$(git describe --always)
+	echo $(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).r$(git rev-list --count HEAD).g$(git describe --long --tags --abbrev=7 | tail -c 7)
 }
 
 prepare() {
@@ -50,7 +46,7 @@ package() {
 	install -Dm0755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
 	install -Dm 644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "moe.tsuna.tsukimi.gschema.xml"
 	install -Dm 644 -t "${pkgdir}/usr/share/applications/" "${srcdir}/tsukimi.desktop"
-	install -Dm 644 -t "${pkgdir}/usr/share/pixmaps/" "${srcdir}/tsukimi.png"
+	install -Dm 644 -t "${pkgdir}/usr/share/pixmaps/" "resources/ui/icons/tsukimi.png"
 
 	# install i18n files
 	cp -r "i18n/locale" "${pkgdir}/usr/share/locale"

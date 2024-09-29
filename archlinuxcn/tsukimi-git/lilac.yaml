@@ -2,14 +2,15 @@ maintainers:
   - github: merrkry
     email: merrkry@archlinuxcn.org
 
-pre_build_script: aur_pre_build(maintainers=['Eikano'])
-post_build: git_pkgbuild_commit
+pre_build_script: |
+  update_pkgrel()
+  vcs_update()
+
+post_build_script: git_pkgbuild_commit()
 
 update_on:
   - source: github
     github: tsukinaha/tsukimi
-  - source: aur
-    aur: tsukimi-git
   - source: alpm
     alpm: mpv
   - source: alpm
