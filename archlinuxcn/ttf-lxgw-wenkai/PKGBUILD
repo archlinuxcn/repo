@@ -8,7 +8,7 @@ url="https://github.com/lxgw/LxgwWenKai"
 license=("custom:OFL")
 arch=(any)
 source=(
-"https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKai-Bold.ttf"
+"https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKai-Medium.ttf"
 "https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKai-Light.ttf"
 "https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKai-Regular.ttf"
 "LICENSE::https://raw.githubusercontent.com/lxgw/LxgwWenKai/main/OFL.txt"
@@ -21,7 +21,7 @@ sha256sums=('9ea66f4aba2d3f04ffa47c7153480ce54a533754f7b5cf8453329e040d59ec3a'
 package(){
   install -d "$pkgdir/usr/share/fonts/TTF"
   install -d "$pkgdir/usr/share/licenses/${pkgname}"
-  install -m644 LXGWWenKai-Bold.ttf "$pkgdir/usr/share/fonts/TTF/"
+  install -m644 LXGWWenKai-Medium.ttf "$pkgdir/usr/share/fonts/TTF/"
   install -m644 LXGWWenKai-Light.ttf "$pkgdir/usr/share/fonts/TTF/"
   install -m644 LXGWWenKai-Regular.ttf "$pkgdir/usr/share/fonts/TTF/"
   install -m644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/"

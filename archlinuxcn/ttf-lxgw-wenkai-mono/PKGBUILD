@@ -8,7 +8,7 @@ url="https://github.com/lxgw/LxgwWenKai"
 license=("custom:OFL")
 arch=(any)
 source=(
-"https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKaiMono-Bold.ttf"
+"https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKaiMono-Medium.ttf"
 "https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKaiMono-Light.ttf"
 "https://github.com/lxgw/LxgwWenKai/releases/download/v$pkgver/LXGWWenKaiMono-Regular.ttf"
 "LICENSE::https://raw.githubusercontent.com/lxgw/LxgwWenKai/main/OFL.txt"
@@ -21,7 +21,7 @@ sha256sums=('f6f0aea4a06c3b8febc3c9671cc6a6a05641b14858fd892a6901e2f8ac2986dd'
 package(){
   install -d "$pkgdir/usr/share/fonts/TTF"
   install -d "$pkgdir/usr/share/licenses/${pkgname}"
-  install -m644 LXGWWenKaiMono-Bold.ttf "$pkgdir/usr/share/fonts/TTF/"
+  install -m644 LXGWWenKaiMono-Medium.ttf "$pkgdir/usr/share/fonts/TTF/"
   install -m644 LXGWWenKaiMono-Light.ttf "$pkgdir/usr/share/fonts/TTF/"
   install -m644 LXGWWenKaiMono-Regular.ttf "$pkgdir/usr/share/fonts/TTF/"
   install -m644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/"
