@@ -2,7 +2,7 @@
 
 pkgname=daed-bin-x64-v3
 _pkgname=daed
-pkgver=0.7.4
+pkgver=0.8.0
 pkgrel=1
 pkgdesc="A modern dashboard for dae, bundled with dae-wing (backend API server) and dae (core)."
 url="https://daeuniverse.github.io/daed"
@@ -13,7 +13,7 @@ conflicts=("${_pkgname}" "${_pkgname}-git" "dae")
 source=("${pkgname}-${pkgver}.zip::https://github.com/daeuniverse/${_pkgname}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip"
        "${_pkgname}-${pkgver}-LICENSE::https://raw.githubusercontent.com/daeuniverse/daed/v${pkgver}/LICENSE")
 install="${pkgname}.install"
-sha512sums=('ae10c7fa06b7cf00263467315b8b3fcbfb58c0fa769f15e87ad2a9778fe540506fe7dcd1e27e0e30b551d420d08d54089d006b4c87411d4661236415d16788fd'
+sha512sums=('dc30c561fdd9d8ea1f787787fefdac6e7c300ccba49401d6415548eb8830e22cdef2aedd99e7d8ffc4903c6a173984998504650cbc42b6f8504647f8d278082c'
             '82e50adf3228132f787522c8562b8b85958ce3f33b76445c148e2517c937b62999d3b4594ee1adc9bbe473619840b181ea984a34772c9f65fd592847e621fd66')
 
 package() {
