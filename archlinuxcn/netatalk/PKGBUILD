@@ -5,14 +5,14 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=3.2.9
+pkgver=3.2.10
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL2')
 
 source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
-md5sums=('c2e9e97ebfd52a5ab394aa43f6e7c9b8')
+md5sums=('9e9d34d68c6b836d2e7ee561605232a1')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -30,7 +30,7 @@ depends=('acl'
 optdepends=('libwrap: TCP wrapper support'
             'mariadb-libs: MySQL CNID backend support'
             'talloc: AFP Spotlight support'
-            'tracker3: AFP Spotlight support')
+            'tinysparql: AFP Spotlight support')
 
 conflicts=('netatalk-ddp'
            'netatalk2')
