@@ -2,28 +2,19 @@
 # Contributor: oldherl <oldherl@gmail.com>
 
 pkgname=ttf-lxgw-wenkai-tc
-pkgver=1.330
+pkgver=1.500
 pkgrel=1
 pkgdesc="霞鹜文楷 An open-source Chinese font derived from Fontworks' Klee One."
 url="https://github.com/lxgw/LxgwWenKaiTC"
 license=("OFL-1.1-RFN")
 arch=(any)
 source=(
-"https://github.com/lxgw/LxgwWenKaiTC/releases/download/v$pkgver/LXGWWenKaiTC-Bold.ttf"
-"https://github.com/lxgw/LxgwWenKaiTC/releases/download/v$pkgver/LXGWWenKaiTC-Light.ttf"
-"https://github.com/lxgw/LxgwWenKaiTC/releases/download/v$pkgver/LXGWWenKaiTC-Regular.ttf"
-"LICENSE::https://raw.githubusercontent.com/lxgw/LxgwWenKaiTC/main/OFL.txt"
+  "https://github.com/lxgw/LxgwWenkaiTC/releases/download/v$pkgver/lxgw-wenkai-tc-v1.500.tar.gz"
 )
-sha256sums=('3af411211d85763bf390ffbcfb661e3141eb9f6fe46d3436bafdfae2c265ab61'
-            '3c42577bd9728eaf1f59e903fe8eb18feeabe8492ba9be354bbb71ec64e2face'
-            '407f37e152d2eb2099f79f01180a5faf5fed466fb128e9027af5525329406103'
-            'ef03e6b48bdd10d615b9f800863d7044eaffde9883e92e687316575de0e83e8e')
+sha256sums=('1ae1884600504e694a99aac4545999d91818b65c3a9b3de77c57566e3966f77e')
 
 package(){
-  install -d "$pkgdir/usr/share/fonts/TTF"
-  install -d "$pkgdir/usr/share/licenses/${pkgname}"
-  install -m644 LXGWWenKaiTC-Bold.ttf "$pkgdir/usr/share/fonts/TTF/"
-  install -m644 LXGWWenKaiTC-Light.ttf "$pkgdir/usr/share/fonts/TTF/"
-  install -m644 LXGWWenKaiTC-Regular.ttf "$pkgdir/usr/share/fonts/TTF/"
-  install -m644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/"
+  cd "lxgw-wenkai-tc-v$pkgver"
+  install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/" LXGWWenKaiTC-*.ttf
+  install -Dm644 -t "$pkgdir/usr/share/licenses/${pkgname}/" OFL.txt
 }
