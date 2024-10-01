@@ -8,11 +8,12 @@ pkgdesc="A Qt/QML video player built on top of libmpv"
 url="https://invent.kde.org/multimedia/${_pkgname}"
 arch=('x86_64')
 license=('GPL-3.0-or-later')
-depends=('breeze'
-	'ffmpeg'
+depends=('ffmpeg'
+	'gcc-libs'
+	'kcolorscheme'
 	'kconfig'
-	'kconfigwidgets'
 	'kcoreaddons'
+	'kcrash'
 	'kdeclarative'
 	'kfilemetadata'
 	'ki18n'
@@ -20,12 +21,11 @@ depends=('breeze'
 	'kirigami'
 	'kwindowsystem'
 	'mpvqt'
+	'qqc2-desktop-style'
+	'qt6-5compat'
 	'qt6-base'
-	'qt6-declarative'
-	'qt6-quickcontrols2')
-makedepends=('git'
-	'extra-cmake-modules'
-	'kdoctools')
+	'qt6-declarative')
+makedepends=('git' 'extra-cmake-modules')
 optdepends=('yt-dlp: for video-sharing websites playback'
 	'youtube-dl: for video-sharing websites playback')
 provides=("${_pkgname}")
