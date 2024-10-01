@@ -16,16 +16,16 @@ optdepends=("lz4: extracting LZ4 archives"
     "unarchiver: extracting various formats"
     "unrar: extracting RAR files"
     "zstd: extracting ZSTANDARD files")
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wummel/${pkgname}/archive/upstream/${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wummel/${pkgname}/archive/${pkgver}.tar.gz")
 sha256sums=('18ac4b3271c15f6a6435594f930c4e806fa1bf7007471daf55e5ac1ab67e8e47')
 
 build() {
-	cd "${pkgname}-upstream-${pkgver}/"
+	cd "${pkgname}-${pkgver}/"
 	python -m build --wheel --no-isolation
 }
 
 package() {
-	cd "${pkgname}-upstream-${pkgver}/"
+	cd "${pkgname}-${pkgver}/"
 	python -m installer --destdir="${pkgdir}" dist/*.whl
 
 	install -dm755 "${pkgdir}/usr/share/bash-completion/completions/"
