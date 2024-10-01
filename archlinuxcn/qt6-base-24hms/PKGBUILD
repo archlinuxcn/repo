@@ -6,7 +6,7 @@ pkgbase=qt6-base-24hms
 pkgname=(qt6-base-24hms)
 
 pkgver=6.7.3
-pkgrel=1.4
+pkgrel=2.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL3 LGPL3 FDL custom)
@@ -104,11 +104,7 @@ prepare() {
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
 
   cd $_pkgfn
-  git cherry-pick -n f05cf3f11f4e42e05d069b5d9249d4b9aff41ffe # Fix locale issues
-  git cherry-pick -n a8ef8ea55014546e0e835cd0eacf694919702a11 # https://bugreports.qt.io/browse/QTBUG-124386
-  git cherry-pick -n 062f701a11d2c46660f5c5edd73f245477918a47 # Fix dependencies in pc files
-  git cherry-pick -n 5ee9da89af7efe31ac45858bf1eb04e5155a3b50 # Fix dependencies in pc files
-  git cherry-pick -n 0f35729f2cb43f0eb94e2a8d5e2d478a2c6a5007 # Fix potential Plasma crashes
+  git revert -n 9c1f39b93e6fd5261da4324d17a5ecd40db5f05b # Fix https://bugreports.qt.io/browse/QTBUG-129509
 
   patch -p1 -i ../oldherl-24hms.patch
   cd util/locale_database
