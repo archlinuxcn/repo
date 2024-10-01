@@ -8,17 +8,17 @@ pkgname=aria2-fast
 _pkgname=${pkgname%-fast}
 pkgver=1.37.0
 pkgrel=2
-pkgdesc='Aria2 Download utility with little patch to maximize aria2 download speed'
+pkgdesc="Aria2 Download utility with little patch to maximize aria2 download speed"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
-url='http://aria2.sourceforge.net/'
+url="http://${_pkgname}.github.io"
 license=('GPL-2.0-or-later AND (OpenSSL OR LicenseRef-SSLeay)')
 depends=('gnutls' 'libxml2' 'sqlite' 'c-ares' 'ca-certificates' 'libssh2')
 checkdepends=('cppunit')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("https://github.com/${_pkgname}/${_pkgname}/releases/download/release-${pkgver}/${_pkgname}-${pkgver}.tar.xz" "${pkgname}.patch")
-md5sums=('dd00565c2f671331735089e6b807ece0'
-         '93c7981c1b7c3bc44226245d3d718894')
+sha256sums=('60a420ad7085eb616cb6e2bdf0a7206d68ff3d37fb5a956dc44242eb2f79b66b'
+            'd4cd567e98a009c2c24b77d5f4eb42ce3b0576af9315eee475a778f71a7786d2')
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
