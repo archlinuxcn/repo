@@ -11,16 +11,16 @@ pkgname=aria2-git
 _pkgname=${pkgname%-git}
 pkgver=1.37.0.r30.gb519ce04
 pkgrel=1
-pkgdesc='Download utility that supports HTTP(S), FTP, BitTorrent, and Metalink'
-arch=('i686' 'x86_64')
-url="https://${_pkgname}.github.io/"
+pkgdesc="Download utility that supports HTTP(S), FTP, BitTorrent, and Metalink"
+arch=('i686' 'x86_64' 'aarch64')
+url="https://${_pkgname}.github.io"
 license=('GPL-2.0-or-later AND (OpenSSL OR LicenseRef-SSLeay)')
 depends=('gnutls' 'libxml2' 'sqlite' 'c-ares' 'ca-certificates' 'libssh2')
 makedepends=('git')
 checkdepends=('cppunit')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}=${pkgver%.*}")
-source=("${_pkgname}::git+https://github.com/tatsuhiro-t/${_pkgname}.git")
+source=("git+https://github.com/tatsuhiro-t/${_pkgname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
