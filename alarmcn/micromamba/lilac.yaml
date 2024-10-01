@@ -8,6 +8,7 @@ post_build: git_pkgbuild_commit
 build_prefix: archlinuxcn-aarch64
 
 repo_depends:
+  - simdjson
   - reproc
 
 update_on:
@@ -44,6 +45,5 @@ update_on:
   - source: alpm
     alpm: fmt
     provided: libfmt.so
-  - alias: python
   - source: manual
     manual: 1

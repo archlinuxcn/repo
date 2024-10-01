@@ -5,6 +5,7 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('micromamba-'))
 post_build: git_pkgbuild_commit
 
 repo_depends:
+  - simdjson
   - reproc
   - termcolor
 
@@ -42,6 +43,5 @@ update_on:
   - source: alpm
     alpm: fmt
     provided: libfmt.so
-  - alias: python
   - source: manual
     manual: 1
