@@ -4,7 +4,7 @@
 
 _pkgname=scx
 pkgname="${_pkgname}-scheds"
-pkgver=1.0.4
+pkgver=1.0.5
 pkgrel=1
 pkgdesc="Sched_ext schedulers"
 url="https://github.com/sched-ext/${_pkgname}"
@@ -14,7 +14,7 @@ depends=('libbpf' 'bpf' 'libelf' 'zlib' 'systemd')
 makedepends=('git' 'python' 'meson' 'clang' 'llvm' 'cargo' 'jq')
 backup=('etc/default/scx')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('e47840f58dfc5e3c03c04352a72b73d87da0e2b494afd4666af1136cd666c2c67553810a1e1aa26fbb83fa817698e09d3e2a3f564d816bf8eaf6f1e9f78ff9b0')
+sha512sums=('05517e5d796fb79e8625b17c3ffedafa2eebc17501e05c1fb99319282729e4cae9cfcfbf32c8034d7b4c6ed20f7e37dcbd9db8d074c49eb70185b6186f7db827')
 options=('!lto')
 
 build() {
