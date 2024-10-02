@@ -32,7 +32,7 @@ build() {
         arm7h)    _NDR=on;  _TOOLCHAIN=cmake/flags-gcc-armv7.cmake ;;
         aarch64)  _NDR=on;  _TOOLCHAIN=cmake/flags-gcc-aarch64.cmake ;;
     esac
-    LDFLAGS='-z now -z shstk' cmake -S"${pkgname}" -Bbuild --preset development --toolchain "$_TOOLCHAIN" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT6=on -DNEW_DYNAREC="$_NDR"
+    LDFLAGS='-z now -z shstk' cmake -S"${pkgname}" -Bbuild --preset development --toolchain "$_TOOLCHAIN" -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT6=on -DNEW_DYNAREC="$_NDR" -DDEV_BRANCH=ON
     cmake --build build
 }
 
