@@ -17,6 +17,7 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("${_pkgname}::git+https://github.com/Beep6581/RawTherapee.git")
 sha256sums=('SKIP')
+options=('!lto')
 
 pkgver() {
 	cd "${_pkgname}/"
