@@ -8,7 +8,7 @@ pkgrel=1
 epoch=1
 pkgdesc="A powerful cross-platform raw image processing program"
 arch=('x86_64' 'i686' 'pentium4' 'arm' 'armv6h' 'armv7h' 'aarch64')
-url="https://www.rawtherapee.com/"
+url="https://www.${_pkgname}.com"
 license=('GPL-3.0-or-later')
 depends=('fftw' 'gtk3' 'glibmm' 'gtkmm3' 'lcms2' 'lensfun' 'libcanberra'
 	'libiptcdata' 'desktop-file-utils' 'hicolor-icon-theme' 'exiv2')
@@ -24,8 +24,7 @@ pkgver() {
 }
 
 prepare() {
-	cd "${_pkgname}/"
-	mkdir -p build
+	mkdir -p "${_pkgname}/build/"
 }
 
 build() {
@@ -38,6 +37,5 @@ build() {
 }
 
 package() {
-	cd "${_pkgname}/build/"
-	make DESTDIR="${pkgdir}/" install
+	make -C "${_pkgname}/build/" DESTDIR="${pkgdir}" install
 }
