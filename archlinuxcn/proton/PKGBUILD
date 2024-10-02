@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton
-_srctag=9.0-3
+_srctag=9.0-3c
 _commit=
-pkgver=9.0.3
+pkgver=9.0.3.1
 _geckover=2.47.4
 _monover=9.2.0
 _xaliaver=0.4.2
-pkgrel=2
+pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -198,8 +198,8 @@ build() {
     # AVX is "hard" disabled for 32bit in any case.
     # AVX/AVX2 for 64bit is disabled below.
     # Seems unnecessery for 64bit if -mtune=generic is used
-    CFLAGS+=" -mno-avx2" # -mno-avx"
-    CXXFLAGS+=" -mno-avx2" # -mno-avx"
+    #CFLAGS+=" -mno-avx2 -mno-avx"
+    #CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
@@ -259,7 +259,7 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('ef3e79b5e1be8b9cc7d4b4979460f56febda9fe92d36d5b5ce755def111eddb0'
+sha256sums=('37ecac911be06564785d9de4173418651ce4c5fe7e7eaca0e1f04cc1c4c989c2'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757'
