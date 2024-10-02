@@ -3,6 +3,7 @@
 # Contributor: Tobias Martin <tm-x at gmx dot net>
 
 pkgname=binder_linux-dkms-git
+_pkgname=${pkgname%-git}
 pkgver=6.8
 pkgrel=1
 arch=('any')
@@ -10,8 +11,8 @@ _srcname=anbox-modules
 url="https://github.com/choff/${_srcname}"
 pkgdesc="Android kernel driver fork by @choff in DKMS format, binder only"
 license=('GPL-2.0-only')
-conflicts=('anbox-modules-dkms')
-replaces=("${pkgname%-git}")
+conflicts=("${_pkgname}" "anbox-modules-dkms")
+replaces=("${_pkgname}")
 depends=('dkms')
 makedepends=('git')
 source=("git+${url}.git")
