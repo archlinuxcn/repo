@@ -1,8 +1,9 @@
-# Maintainer: skydrome <skydrome@mail.i2p>
+# Maintainer: Salama <salama@salama.xyz>
+# Contributor: skydrome <skydrome@mail.i2p>
 # Contributor: Artyom Olshevskiy <siasia@siasia>
 
 pkgname=java-service-wrapper
-pkgver=3.5.54
+pkgver=3.5.59
 pkgrel=1
 pkgdesc="Enables a Java Application to be run as a Windows Service or Unix Daemon"
 url="https://wrapper.tanukisoftware.com/doc/english/introduction.html"
@@ -10,7 +11,7 @@ arch=('i686' 'x86_64' 'aarch64' 'armv6h' 'armv7h')
 license=('GPL2' 'custom:tanuki-community')
 makedepends=('ant' 'jdk8-openjdk')
 source=("https://wrapper.tanukisoftware.com/download/${pkgver}/wrapper_${pkgver}_src.tar.gz")
-sha256sums=('b75ea2d56aaf0eaaf8279b0395d79493af8303237fea858657a78c139ca3fa2e')
+sha256sums=('3b47e7facdd1208ae2570eac301da748a006b551744f3e8db3825bf4ea5c6e06')
 
 prepare() {
     cd "wrapper_${pkgver}_src"
