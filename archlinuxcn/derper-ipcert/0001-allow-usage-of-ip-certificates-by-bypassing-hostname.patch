@@ -1,0 +1,30 @@
+From f28a942601e485bd284675b0310d7fd0ec8ef579 Mon Sep 17 00:00:00 2001
+From: Roald Clark <roaldclark@gmail.com>
+Date: Thu, 3 Oct 2024 18:10:16 +0800
+Subject: [PATCH] allow usage of ip certificates by bypassing hostname check
+
+Signed-off-by: Roald Clark <roaldclark@gmail.com>
+---
+ cmd/derper/cert.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cmd/derper/cert.go b/cmd/derper/cert.go
+index db84aa515..7a3e1351c 100644
+--- a/cmd/derper/cert.go
++++ b/cmd/derper/cert.go
+@@ -88,9 +88,9 @@ func (m *manualCertManager) TLSConfig() *tls.Config {
+ }
+ 
+ func (m *manualCertManager) getCertificate(hi *tls.ClientHelloInfo) (*tls.Certificate, error) {
+-	if hi.ServerName != m.hostname {
+-		return nil, fmt.Errorf("cert mismatch with hostname: %q", hi.ServerName)
+-	}
++	//if hi.ServerName != m.hostname {
++	//	return nil, fmt.Errorf("cert mismatch with hostname: %q", hi.ServerName)
++	//}
+ 
+ 	// Return a shallow copy of the cert so the caller can append to its
+ 	// Certificate field.
+-- 
+2.46.2
+
