@@ -1,0 +1,32 @@
+# Maintainer: Atte Lautanala <atte@lautana.la>
+# Contributor: Trevor Mosey <trevor dot mosey at gmail dot com>
+
+pkgname=flyctl
+pkgver=0.3.14
+pkgrel=1
+pkgdesc="Command line tools for fly.io services"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/superfly/${pkgname}"
+license=("Apache-2.0")
+makedepends=('go')
+source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('3fe214e1b641c5846d728da4af2e68da1bb8b823eaffa7d6456b5146658f6a2e')
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+	go build -o bin/flyctl
+}
+
+check() {
+	make -C "${pkgname}-${pkgver}" test
+}
+
+package() {
+	install -Dm755 "${pkgname}-${pkgver}/bin/flyctl" -t "${pkgdir}/usr/bin/"
+	ln -s "/usr/bin/${pkgname}" "${pkgdir}/usr/bin/fly"
+}
