@@ -3,7 +3,7 @@
 
 pkgname=zed-git
 _pkgname=${pkgname%-git}
-pkgver=0.153.3.r81.gca2cce7
+pkgver=0.156.0.r19.g9cd4242
 pkgrel=1
 pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
@@ -11,12 +11,13 @@ url=https://zed.dev
 _url="https://github.com/zed-industries/$_pkgname"
 license=(GPL-3.0-or-later AGPL-3.0-or-later Apache-2.0)
 depends=(alsa-lib libasound.so
+         curl libcurl.so
          fontconfig
          gcc-libs # libgcc_s.so libstdc++.so
          glibc # libc.so libm.so
          # libgit2 libgit2.so
          # libxau libXau.so
-         libxcb # libxcb-xkb.so
+         libxcb # libxcb.so libxcb-xkb.so
          # libxdmcp libXdmcp.so
          libxkbcommon # libxkbcommon.so
          libxkbcommon-x11 # libxkbcommon-x11.so
@@ -26,10 +27,13 @@ depends=(alsa-lib libasound.so
          vulkan-icd-loader
          vulkan-tools
          wayland
-         zlib libz.so)
+         zlib libz.so
+         zstd libzstd.so)
 makedepends=(cargo
              clang
+             cmake
              git
+             protobuf
              vulkan-headers
              vulkan-validation-layers)
 optdepends=('clang: improved C/C++ language support'
@@ -43,7 +47,7 @@ source=("$pkgname::git+$_url.git")
 sha256sums=('SKIP')
 
 _binname=zeditor
-_appid=dev.zed.Zed
+_appid=dev.zed.Zed-Git
 
 prepare() {
 	cd "$pkgname"
@@ -79,6 +83,8 @@ build() {
 	_srcenv
 	export ZED_UPDATE_EXPLANATION='Updates are handled by pacman'
 	export RELEASE_VERSION="$pkgver"
+	export PROTOC=/usr/bin/protoc
+	export PROTOC_INCLUDE=/usr/include
 	cargo build --release --frozen --package zed --package cli
 }
 
