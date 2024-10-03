@@ -48,4 +48,5 @@ package() {
     install -Dm644 ../derper.service -t "$pkgdir/usr/lib/systemd/system/"
     install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
     install -Dm755 derper -t "$pkgdir/usr/bin/"
+    install -dm750 "${pkgdir}/etc/derper/certs"
 }
