@@ -24,6 +24,6 @@ pkgver() {
 }
 
 package() {
-	install -dm755 "${pkgdir}/usr/src/binder-1/"
-	cp -r ${_srcname}/binder/* "${pkgdir}/usr/src/binder-1/"
+	install -dm755 "${pkgdir}/usr/src/binder-${pkgver}/"
+	cp -r ${_srcname}/binder/* "${pkgdir}/usr/src/binder-${pkgver}/"
 }
