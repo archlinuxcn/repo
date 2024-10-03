@@ -1,3 +1,93 @@
+Mullvad Browser 13.5.6 - September 30 2024
+ * All Platforms
+   * Updated Firefox to 115.16.0esr
+   * Updated NoScript to 11.4.40
+   * Bug 356: Rebase Mullvad Browser Release onto Firefox 115.16.0esr [mullvad-browser]
+   * Bug 42832: Download spam prevention should not affect browser extensions [tor-browser]
+   * Bug 43173: Backport security fixes from Firefox 131 [tor-browser]
+ * Linux
+   * Bug 334: When set as default browser on Linux in standard mode, links don't open correctly [mullvad-browser]
+ * Build System
+   * macOS
+     * Bug 41231: Use var/browser_release_date in tools/signing/gatekeeper-bundling.sh [tor-browser-build]
+
+Mullvad Browser 14.0a7 - September 27 2024
+ * All Platforms
+   * Updated Firefox to 128.3.0esr
+   * Updated NoScript to 11.4.40
+   * Bug 355: Rebase Mullvad Browser Alpha onto Firefox 128.3.0esr [mullvad-browser]
+   * Bug 42070: Backport Bugzilla 1834307 and hide smooth-scroll UX [tor-browser]
+   * Bug 42362: "New window" missing from File menu [tor-browser]
+   * Bug 42742: Inconsistent use of "New private window" vs "New window" [tor-browser]
+   * Bug 42832: Download spam prevention should not affect browser extensions [tor-browser]
+   * Bug 43163: Disable offscreen canvas until verified it is not fingerprintable [tor-browser]
+   * Bug 41248: Check and update bundled font versions [tor-browser-build]
+ * Build System
+   * All Platforms
+     * Bug 41236: Remove binutils when not needed [tor-browser-build]
+
+Mullvad Browser 14.0a6 - September 19 2024
+ * All Platforms
+   * Bug 344: set media.navigator.enabled = true [mullvad-browser]
+   * Bug 42718: Remove the firefox-view button from UI, even when always-on private-browsing mode is disabled [tor-browser]
+   * Bug 42740: Stop trying to hide "Restore previous session" [tor-browser]
+   * Bug 42831: Remove the shopping components [tor-browser]
+   * Bug 43072: moz-message-bar does not get announced on Orca screen-reader [tor-browser]
+   * Bug 43083: Backport fix for Mozilla 1436462 [tor-browser]
+   * Bug 43144: Ensure non-privacy browsing also sets the GPC header [tor-browser]
+ * Linux
+   * Bug 43141: Hardcode Arimo as a system-ui font [tor-browser]
+   * Bug 41237: Add some aliases to our Linux font config for compatibility [tor-browser-build]
+
+Mullvad Browser 14.0a5 - September 12 2024
+ * All Platforms
+   * Updated NoScript to 11.4.37
+   * Bug 328: Provide search engine icons [mullvad-browser]
+   * Bug 42255: pdfjs.disabled used to be part of RFP until Bug 1838415; lock pref to false in stable [tor-browser]
+   * Bug 42647: "Switching to a new device" regressed on 128 [tor-browser]
+   * Bug 42653: The Neterror page has a checkbox to report iframe origin errors to TPO [tor-browser]
+   * Bug 42777: Remove 'Website Privacy Preferences' and ensure sensible default prefs [tor-browser]
+   * Bug 43046: Review Mozilla 1866927: Adds ability to enable email tracker blocking protection in private mode [tor-browser]
+   * Bug 43054: check bounceTrackingProtection in PB mode does not persist to disk [tor-browser]
+   * Bug 43109: Remove mention of Firefox Relay from settings [tor-browser]
+   * Bug 43117: Hide 'Always underline links' option [tor-browser]
+ * Linux
+   * Bug 334: When set as default browser on Linux in standard mode, links don't open correctly [mullvad-browser]
+ * Build System
+   * macOS
+     * Bug 41231: Use var/browser_release_date in tools/signing/gatekeeper-bundling.sh [tor-browser-build]
+
+Mullvad Browser 14.0a4 - September 06 2024
+ * All Platforms
+   * Updated NoScript to 11.4.35
+   * Bug 329: Remove the Security Levels icon from the toolbar [mullvad-browser]
+   * Bug 30862: 10ms time precision via EXSLT date-time function [tor-browser]
+   * Bug 40147: Re-enable Picture-in-Picture mode [tor-browser]
+   * Bug 41309: Re-enable screenshots component [tor-browser]
+   * Bug 42601: Check Bug 1894779: Allow font-face urls to be resource:// urls and relax CORS for resource:// URLs [tor-browser]
+   * Bug 42617: Restore the HTML form on DDG when using safest in 128 [tor-browser]
+   * Bug 42630: Review LaterRun in 128 [tor-browser]
+   * Bug 42640: Disable Firefox Flame button due to unknown interactions with New Identity [tor-browser]
+   * Bug 42684: Disable network prefetch [tor-browser]
+   * Bug 42685: compat: ESR128: enable textmetrics [tor-browser]
+   * Bug 42686: Backport Mozilla 1885101 [tor-browser]
+   * Bug 42730: Make RemoteSettings use only local dumps [tor-browser]
+   * Bug 42735: Disable recent search suggestions [tor-browser]
+   * Bug 42745: Remove some residuals from update scripts [tor-browser]
+   * Bug 42764: Unconditionally disable find-bar transition animation [tor-browser]
+   * Bug 42867: Disable contentRelevancy component [tor-browser]
+   * Bug 43100: Backport security fixes from Firefox 130 [tor-browser]
+   * Bug 43103: Verify whether an update is unsupported before choosing one [tor-browser]
+ * macOS
+   * Bug 42494: mac: add Arial Black and Arial Narrow to allowlist [tor-browser]
+ * Linux
+   * Bug 42773: Replace ~ with the original HOME [tor-browser]
+   * Bug 43092: Disable Wayland by default in 14.0 [tor-browser]
+ * Build System
+   * All Platforms
+     * Bug 41096: Set SOURCE_DATE_EPOCH in the default env variables [tor-browser-build]
+     * Bug 41188: Upgrade binutils to 2.41 [tor-browser-build]
+
 Mullvad Browser 13.5.3 - September 03 2024
  * All Platforms
    * Updated Firefox to 115.15.0esr
