@@ -1,6 +1,6 @@
-From f3253e81ed9b50a6d43202805c0a9fa4a6cf1d8f Mon Sep 17 00:00:00 2001
+From 38ad90831831896d6a22a4621f9f2d1b43fa2ee1 Mon Sep 17 00:00:00 2001
 From: Mingi Sung <sungmg@saltyming.net>
-Date: Tue, 1 Oct 2024 14:05:24 +0900
+Date: Fri, 4 Oct 2024 13:24:58 +0900
 Subject: [PATCH] Merge branch 'sungmg-triple-buffering-v4-47' into gnome-47
 
 Use triple buffering if and when the previous frame is running late.
@@ -18,30 +18,35 @@ Origin: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
 Commit: 511a502e1a6ff6c88dcb650f1bee8f6eb894d1f6
 
 Included: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4015
+Included: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4027
 
 Source: https://git.saltyming.net/sungmg/mutter-performance-source
 Signed-off-by: Mingi Sung <sungmg@saltyming.net>
 ---
- clutter/clutter/clutter-frame-clock.c      | 372 +++++++++++++++++++++------
- clutter/clutter/clutter-frame-clock.h      |  11 +-
- clutter/clutter/clutter-frame-private.h    |   1 +
- clutter/clutter/clutter-frame.c            |  13 +
- clutter/clutter/clutter-frame.h            |   7 +
- clutter/clutter/clutter-stage-view.c       |  11 +-
- cogl/cogl/cogl-onscreen-private.h          |   5 +-
- cogl/cogl/cogl-onscreen.c                  |   8 +
- src/backends/meta-egl.c                    |  71 ++++++
- src/backends/meta-egl.h                    |  18 ++
- src/backends/meta-stage-impl.c             |   2 +
- src/backends/native/meta-frame-native.c    |  31 +++
- src/backends/native/meta-frame-native.h    |   9 +
- src/backends/native/meta-kms.c             |   9 +
- src/backends/native/meta-kms.h             |   2 +
- src/backends/native/meta-onscreen-native.c | 386 +++++++++++++++++++++++------
- src/backends/native/meta-onscreen-native.h |   2 +
- src/backends/native/meta-renderer-native.c |  34 ++-
- src/tests/native-kms-render.c              | 106 ++++++--
- 19 files changed, 934 insertions(+), 164 deletions(-)
+ clutter/clutter/clutter-frame-clock.c            | 372 +++++++++++++++++----
+ clutter/clutter/clutter-frame-clock.h            |  11 +-
+ clutter/clutter/clutter-frame-private.h          |   1 +
+ clutter/clutter/clutter-frame.c                  |  13 +
+ clutter/clutter/clutter-frame.h                  |   7 +
+ clutter/clutter/clutter-stage-view.c             |  11 +-
+ cogl/cogl/cogl-onscreen-private.h                |   5 +-
+ cogl/cogl/cogl-onscreen.c                        |   8 +
+ src/backends/meta-egl.c                          |  71 ++++
+ src/backends/meta-egl.h                          |  18 +
+ src/backends/meta-stage-impl.c                   |   2 +
+ src/backends/native/meta-drm-buffer-gbm.c        | 188 ++++++++---
+ src/backends/native/meta-drm-buffer-gbm.h        |   6 +
+ src/backends/native/meta-frame-native.c          |  31 ++
+ src/backends/native/meta-frame-native.h          |   9 +
+ src/backends/native/meta-kms.c                   |   9 +
+ src/backends/native/meta-kms.h                   |   2 +
+ src/backends/native/meta-onscreen-native.c       | 397 +++++++++++++++++++----
+ src/backends/native/meta-onscreen-native.h       |   2 +
+ src/backends/native/meta-renderer-native-gles3.c |  54 +--
+ src/backends/native/meta-renderer-native-gles3.h |   2 +-
+ src/backends/native/meta-renderer-native.c       |  34 +-
+ src/tests/native-kms-render.c                    | 106 ++++--
+ 23 files changed, 1090 insertions(+), 269 deletions(-)
 
 diff --git a/clutter/clutter/clutter-frame-clock.c b/clutter/clutter/clutter-frame-clock.c
 index 0cc1f2eb4a..3418cb86c0 100644
@@ -858,7 +863,7 @@ index 3bcb23307e..cde6da308f 100644
  cogl_onscreen_add_frame_callback (CoglOnscreen *onscreen,
                                    CoglFrameCallback callback,
 diff --git a/src/backends/meta-egl.c b/src/backends/meta-egl.c
-index cc023f705c..391ce8b9a3 100644
+index cc023f705c..50da9c4646 100644
 --- a/src/backends/meta-egl.c
 +++ b/src/backends/meta-egl.c
 @@ -44,6 +44,10 @@ struct _MetaEgl
@@ -884,10 +889,10 @@ index cc023f705c..391ce8b9a3 100644
 +                      EGLSync           *egl_sync,
 +                      GError           **error)
 +{
++  EGLSync sync;
++
 +  if (!is_egl_proc_valid (egl->eglCreateSync, error))
 +    return FALSE;
-+
-+  EGLSync sync;
 +
 +  sync = egl->eglCreateSync (display, type, attrib_list);
 +
@@ -992,6 +997,266 @@ index 6a5dcb92c7..dc17846146 100644
        if (meta_stage_impl_scanout_view (stage_impl,
                                          stage_view,
                                          scanout,
+diff --git a/src/backends/native/meta-drm-buffer-gbm.c b/src/backends/native/meta-drm-buffer-gbm.c
+index 01963cd754..85c20d7716 100644
+--- a/src/backends/native/meta-drm-buffer-gbm.c
++++ b/src/backends/native/meta-drm-buffer-gbm.c
+@@ -23,6 +23,7 @@
+ 
+ #include "backends/native/meta-drm-buffer-gbm.h"
+ 
++#include <EGL/egl.h>
+ #include <drm_fourcc.h>
+ #include <errno.h>
+ #include <gio/gio.h>
+@@ -43,6 +44,14 @@ struct _MetaDrmBufferGbm
+   struct gbm_bo *bo;
+ };
+ 
++typedef struct _MetaDrmBufferGbmBoUserData
++{
++  EGLImageKHR egl_image;
++
++  MetaEgl *egl;
++  EGLDisplay egl_display;
++} MetaDrmBufferGbmBoUserData;
++
+ static void
+ cogl_scanout_buffer_iface_init (CoglScanoutBufferInterface *iface);
+ 
+@@ -229,6 +238,125 @@ meta_drm_buffer_gbm_new_take (MetaDeviceFile      *device_file,
+   return buffer_gbm;
+ }
+ 
++static EGLImageKHR
++meta_drm_buffer_gbm_create_native_blit_image (MetaEgl        *egl,
++                                              EGLDisplay      egl_display,
++                                              struct gbm_bo  *shared_bo,
++                                              GError        **error)
++{
++  int shared_bo_fd;
++  unsigned int width;
++  unsigned int height;
++  uint32_t i, n_planes;
++  uint32_t *strides;
++  uint32_t *offsets;
++  uint64_t *modifiers;
++  int *fds;
++  uint32_t format;
++  EGLImageKHR egl_image;
++  gboolean use_modifiers;
++
++  shared_bo_fd = gbm_bo_get_fd (shared_bo);
++  if (shared_bo_fd < 0)
++    {
++      g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,
++                   "Failed to export gbm_bo: %s", strerror (errno));
++      return FALSE;
++    }
++
++  width = gbm_bo_get_width (shared_bo);
++  height = gbm_bo_get_height (shared_bo);
++  format = gbm_bo_get_format (shared_bo);
++
++  n_planes = gbm_bo_get_plane_count (shared_bo);
++  fds = g_alloca (sizeof (int) * n_planes);
++  strides = g_alloca (sizeof (uint32_t) * n_planes);
++  offsets = g_alloca (sizeof (uint32_t) * n_planes);
++  modifiers = g_alloca (sizeof (uint64_t) * n_planes);
++
++  for (i = 0; i < n_planes; i++)
++    {
++      strides[i] = gbm_bo_get_stride_for_plane (shared_bo, i);
++      offsets[i] = gbm_bo_get_offset (shared_bo, i);
++      modifiers[i] = gbm_bo_get_modifier (shared_bo);
++      fds[i] = shared_bo_fd;
++    }
++
++  /* Workaround for https://gitlab.gnome.org/GNOME/mutter/issues/18 */
++  if (modifiers[0] == DRM_FORMAT_MOD_LINEAR ||
++      modifiers[0] == DRM_FORMAT_MOD_INVALID)
++    use_modifiers = FALSE;
++  else
++    use_modifiers = TRUE;
++
++  egl_image = meta_egl_create_dmabuf_image (egl,
++                                            egl_display,
++                                            width,
++                                            height,
++                                            format,
++                                            n_planes,
++                                            fds,
++                                            strides,
++                                            offsets,
++                                            use_modifiers ? modifiers : NULL,
++                                            error);
++  close (shared_bo_fd);
++
++  return egl_image;
++}
++
++static void
++meta_drm_buffer_gbm_free_native_blit_image (struct gbm_bo *bo,
++                                            void          *data)
++{
++  MetaDrmBufferGbmBoUserData *user_data = data;
++  g_autoptr (GError) error = NULL;
++
++  if (!meta_egl_destroy_image (user_data->egl,
++                               user_data->egl_display,
++                               user_data->egl_image,
++                               &error))
++    g_prefix_error (&error, "Could not destroy EGLImage: ");
++
++  g_free (data);
++}
++
++
++EGLImageKHR
++meta_drm_buffer_gbm_get_native_blit_image (MetaEgl        *egl,
++                                           EGLDisplay      egl_display,
++                                           struct gbm_bo  *bo,
++                                           GError        **error)
++{
++  MetaDrmBufferGbmBoUserData *bo_user_data = NULL;
++
++  bo_user_data = gbm_bo_get_user_data (bo);
++
++  if (!bo_user_data)
++    {
++      EGLImageKHR egl_image = EGL_NO_IMAGE;
++
++      egl_image = meta_drm_buffer_gbm_create_native_blit_image (egl,
++                                                                egl_display,
++                                                                bo,
++                                                                error);
++
++      if (!egl_image)
++        {
++          return EGL_NO_IMAGE;
++        }
++
++      bo_user_data = g_new0 (MetaDrmBufferGbmBoUserData, 1);
++      bo_user_data->egl = egl;
++      bo_user_data->egl_display = egl_display;
++      bo_user_data->egl_image = egl_image;
++
++      gbm_bo_set_user_data (bo, bo_user_data, meta_drm_buffer_gbm_free_native_blit_image);
++    }
++
++  return bo_user_data->egl_image;
++}
++
+ static gboolean
+ meta_drm_buffer_gbm_blit_to_framebuffer (CoglScanout      *scanout,
+                                          CoglFramebuffer  *framebuffer,
+@@ -256,67 +384,28 @@ meta_drm_buffer_gbm_blit_to_framebuffer (CoglScanout      *scanout,
+   CoglEglImageFlags flags;
+   CoglOffscreen *cogl_fbo = NULL;
+   CoglTexture *cogl_tex;
+-  uint32_t n_planes;
+-  uint64_t *modifiers;
+-  uint32_t *strides;
+-  uint32_t *offsets;
+   uint32_t width;
+   uint32_t height;
+-  uint32_t drm_format;
+-  int *fds;
++  uint32_t format;
+   gboolean result;
+-  int dmabuf_fd = -1;
+-  uint32_t i;
+   const MetaFormatInfo *format_info;
+ 
+-  dmabuf_fd = gbm_bo_get_fd (buffer_gbm->bo);
+-  if (dmabuf_fd == -1)
+-    {
+-      g_set_error (error, G_IO_ERROR, G_IO_ERROR_EXISTS,
+-                   "Failed to export buffer's DMA fd: %s",
+-                   g_strerror (errno));
+-      return FALSE;
+-    }
+-
+-  drm_format = gbm_bo_get_format (buffer_gbm->bo);
+-
+-  format_info = meta_format_info_from_drm_format (drm_format);
+-  g_assert (format_info);
+-  cogl_format = format_info->cogl_format;
+-
+-  width = gbm_bo_get_width (buffer_gbm->bo);
+-  height = gbm_bo_get_height (buffer_gbm->bo);
+-  n_planes = gbm_bo_get_plane_count (buffer_gbm->bo);
+-  fds = g_alloca (sizeof (int) * n_planes);
+-  strides = g_alloca (sizeof (uint32_t) * n_planes);
+-  offsets = g_alloca (sizeof (uint32_t) * n_planes);
+-  modifiers = g_alloca (sizeof (uint64_t) * n_planes);
+-
+-  for (i = 0; i < n_planes; i++)
+-    {
+-      fds[i] = dmabuf_fd;
+-      strides[i] = gbm_bo_get_stride_for_plane (buffer_gbm->bo, i);
+-      offsets[i] = gbm_bo_get_offset (buffer_gbm->bo, i);
+-      modifiers[i] = gbm_bo_get_modifier (buffer_gbm->bo);
+-    }
++  egl_image = meta_drm_buffer_gbm_create_native_blit_image (egl, egl_display, buffer_gbm->bo, error);
+ 
+-  egl_image = meta_egl_create_dmabuf_image (egl,
+-                                            egl_display,
+-                                            width,
+-                                            height,
+-                                            drm_format,
+-                                            n_planes,
+-                                            fds,
+-                                            strides,
+-                                            offsets,
+-                                            modifiers,
+-                                            error);
+   if (egl_image == EGL_NO_IMAGE_KHR)
+     {
+       result = FALSE;
+       goto out;
+     }
+ 
++  width = gbm_bo_get_width (buffer_gbm->bo);
++  height = gbm_bo_get_height (buffer_gbm->bo);
++  format = gbm_bo_get_format (buffer_gbm->bo);
++
++  format_info = meta_format_info_from_drm_format (format);
++  g_assert (format_info);
++  cogl_format = format_info->cogl_format;
++
+   flags = COGL_EGL_IMAGE_FLAG_NO_GET_DATA;
+   cogl_tex = cogl_texture_2d_new_from_egl_image (cogl_context,
+                                                  width,
+@@ -352,7 +441,6 @@ meta_drm_buffer_gbm_blit_to_framebuffer (CoglScanout      *scanout,
+ 
+ out:
+   g_clear_object (&cogl_fbo);
+-  close (dmabuf_fd);
+ 
+   return result;
+ }
+diff --git a/src/backends/native/meta-drm-buffer-gbm.h b/src/backends/native/meta-drm-buffer-gbm.h
+index ab5a7fd865..12296cba47 100644
+--- a/src/backends/native/meta-drm-buffer-gbm.h
++++ b/src/backends/native/meta-drm-buffer-gbm.h
+@@ -21,6 +21,7 @@
+ 
+ #include <gbm.h>
+ 
++#include "backends/meta-egl.h"
+ #include "backends/native/meta-backend-native-types.h"
+ #include "backends/native/meta-drm-buffer-private.h"
+ 
+@@ -42,3 +43,8 @@ MetaDrmBufferGbm * meta_drm_buffer_gbm_new_take (MetaDeviceFile      *device_fil
+                                                  GError             **error);
+ 
+ struct gbm_bo * meta_drm_buffer_gbm_get_bo (MetaDrmBufferGbm *buffer_gbm);
++
++EGLImageKHR meta_drm_buffer_gbm_get_native_blit_image (MetaEgl        *egl,
++                                                       EGLDisplay      egl_display,
++                                                       struct gbm_bo  *shared_bo,
++                                                       GError        **error);
 diff --git a/src/backends/native/meta-frame-native.c b/src/backends/native/meta-frame-native.c
 index 70461be32a..8dc9dba9b9 100644
 --- a/src/backends/native/meta-frame-native.c
@@ -1110,7 +1375,7 @@ index f5ec4c1c3b..77fd62662d 100644
                          MetaKmsFlags   flags,
                          GError       **error);
 diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
-index 021ada3677..30a245a6f3 100644
+index 021ada3677..d885315293 100644
 --- a/src/backends/native/meta-onscreen-native.c
 +++ b/src/backends/native/meta-onscreen-native.c
 @@ -29,6 +29,7 @@
@@ -1300,12 +1565,13 @@ index 021ada3677..30a245a6f3 100644
    meta_kms_update_add_page_flip_listener (kms_update,
                                            kms_crtc,
                                            &page_flip_listener_vtable,
-@@ -851,12 +887,14 @@ copy_shared_framebuffer_gpu (CoglOnscreen                         *onscreen,
+@@ -851,12 +887,15 @@ copy_shared_framebuffer_gpu (CoglOnscreen                         *onscreen,
    MetaDrmBufferFlags flags;
    MetaDrmBufferGbm *buffer_gbm = NULL;
    struct gbm_bo *bo;
++  EGLImageKHR egl_image;
 +  EGLSync egl_sync = EGL_NO_SYNC;
-+  g_autofd int sync_fd = EGL_NO_NATIVE_FENCE_FD_ANDROID;
++  g_autofd int sync_fd = -1;
  
    COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferSecondaryGpu,
                             "copy_shared_framebuffer_gpu()");
@@ -1316,16 +1582,16 @@ index 021ada3677..30a245a6f3 100644
  
    render_device = renderer_gpu_data->render_device;
    egl_display = meta_render_device_get_egl_display (render_device);
-@@ -872,6 +910,40 @@ copy_shared_framebuffer_gpu (CoglOnscreen                         *onscreen,
+@@ -872,13 +911,51 @@ copy_shared_framebuffer_gpu (CoglOnscreen                         *onscreen,
        goto done;
      }
  
-+  if (sync_fd != EGL_NO_NATIVE_FENCE_FD_ANDROID)
++  if (sync_fd >= 0)
 +    {
 +      EGLAttrib attribs[3];
 +
 +      attribs[0] = EGL_SYNC_NATIVE_FENCE_FD_ANDROID;
-+      attribs[1] = sync_fd;
++      attribs[1] = g_steal_fd (&sync_fd);
 +      attribs[2] = EGL_NONE;
 +
 +      if (!meta_egl_create_sync (egl,
@@ -1338,10 +1604,6 @@ index 021ada3677..30a245a6f3 100644
 +          g_prefix_error (error, "Failed to create EGLSync on secondary GPU: ");
 +          goto done;
 +        }
-+
-+      // eglCreateSync takes ownership of an existing fd that is passed, so
-+      // don't try to clean it up twice.
-+      sync_fd = EGL_NO_NATIVE_FENCE_FD_ANDROID;
 +
 +      if (!meta_egl_wait_sync (egl,
 +                               egl_display,
@@ -1356,22 +1618,42 @@ index 021ada3677..30a245a6f3 100644
 +
    buffer_gbm = META_DRM_BUFFER_GBM (primary_gpu_fb);
    bo = meta_drm_buffer_gbm_get_bo (buffer_gbm);
++  egl_image = meta_drm_buffer_gbm_get_native_blit_image (egl, egl_display, bo, error);
++
++  if (!egl_image)
++    {
++      g_prefix_error (error, "Failed to create EGL image from buffer object for secondary GPU: ");
++      goto done;
++    }
++
    if (!meta_renderer_native_gles3_blit_shared_bo (egl,
-@@ -921,6 +993,13 @@ copy_shared_framebuffer_gpu (CoglOnscreen                         *onscreen,
+                                                   gles3,
+                                                   egl_display,
+                                                   renderer_gpu_data->secondary.egl_context,
+-                                                  secondary_gpu_state->egl_surface,
++                                                  egl_image,
+                                                   bo,
+                                                   error))
+     {
+@@ -919,6 +996,17 @@ copy_shared_framebuffer_gpu (CoglOnscreen                         *onscreen,
+                            g_object_unref);
+ 
  done:
++  if (egl_sync != EGL_NO_SYNC)
++    {
++      g_autoptr (GError) local_error = NULL;
++
++      if (!meta_egl_destroy_sync (egl,
++                                  egl_display,
++                                  egl_sync,
++                                  &local_error))
++        g_warning ("Failed to destroy secondary GPU EGLSync: %s", local_error->message);
++    }
++
    _cogl_winsys_egl_ensure_current (cogl_display);
  
-+  if (egl_sync != EGL_NO_SYNC &&
-+      !meta_egl_destroy_sync (egl,
-+                              egl_display,
-+                              egl_sync,
-+                              error))
-+    g_prefix_error (error, "Failed to destroy secondary GPU EGLSync: ");
-+
    return buffer_gbm ? META_DRM_BUFFER (buffer_gbm) : NULL;
- }
- 
-@@ -928,12 +1007,17 @@ static MetaDrmBufferDumb *
+@@ -928,12 +1016,17 @@ static MetaDrmBufferDumb *
  secondary_gpu_get_next_dumb_buffer (MetaOnscreenNativeSecondaryGpuState *secondary_gpu_state)
  {
    MetaDrmBufferDumb *current_dumb_fb;
@@ -1393,7 +1675,7 @@ index 021ada3677..30a245a6f3 100644
  }
  
  static MetaDrmBuffer *
-@@ -1269,10 +1353,36 @@ swap_buffer_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1269,10 +1362,36 @@ swap_buffer_result_feedback (const MetaKmsFeedback *kms_feedback,
      g_warning ("Page flip failed: %s", error->message);
  
    frame_info = cogl_onscreen_peek_head_frame_info (onscreen);
@@ -1433,7 +1715,7 @@ index 021ada3677..30a245a6f3 100644
  }
  
  static const MetaKmsResultListenerVtable swap_buffer_result_listener_vtable = {
-@@ -1292,35 +1402,37 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1292,35 +1411,37 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    CoglRendererEGL *cogl_renderer_egl = cogl_renderer->winsys;
    MetaRendererNativeGpuData *renderer_gpu_data = cogl_renderer_egl->platform;
    MetaRendererNative *renderer_native = renderer_gpu_data->renderer_native;
@@ -1482,7 +1764,7 @@ index 021ada3677..30a245a6f3 100644
    secondary_gpu_fb =
      update_secondary_gpu_state_pre_swap_buffers (onscreen,
                                                   rectangles,
-@@ -1402,15 +1514,86 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1402,15 +1523,86 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  #endif
      }
  
@@ -1573,7 +1855,7 @@ index 021ada3677..30a245a6f3 100644
        kms_update = meta_frame_native_ensure_kms_update (frame_native,
                                                          kms_device);
        meta_kms_update_add_result_listener (kms_update,
-@@ -1432,13 +1615,11 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1432,13 +1624,11 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
      {
        meta_renderer_native_queue_power_save_page_flip (renderer_native,
                                                         onscreen);
@@ -1588,7 +1870,7 @@ index 021ada3677..30a245a6f3 100644
  
    switch (renderer_gpu_data->mode)
      {
-@@ -1453,8 +1634,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1453,8 +1643,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
            kms_update = meta_frame_native_steal_kms_update (frame_native);
            meta_renderer_native_queue_mode_set_update (renderer_native,
                                                        kms_update);
@@ -1597,7 +1879,7 @@ index 021ada3677..30a245a6f3 100644
            return;
          }
        else if (meta_renderer_native_has_pending_mode_set (renderer_native))
-@@ -1468,8 +1647,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1468,8 +1656,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
  
            meta_frame_native_steal_kms_update (frame_native);
            meta_renderer_native_post_mode_set_updates (renderer_native);
@@ -1606,7 +1888,7 @@ index 021ada3677..30a245a6f3 100644
            return;
          }
        break;
-@@ -1485,8 +1662,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1485,8 +1671,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
                                                        kms_update);
  
            meta_renderer_native_post_mode_set_updates (renderer_native);
@@ -1615,7 +1897,7 @@ index 021ada3677..30a245a6f3 100644
            return;
          }
        break;
-@@ -1503,13 +1678,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
+@@ -1503,13 +1687,6 @@ meta_onscreen_native_swap_buffers_with_damage (CoglOnscreen  *onscreen,
    meta_kms_update_set_sync_fd (kms_update, sync_fd);
    meta_kms_device_post_update (kms_device, kms_update,
                                 META_KMS_UPDATE_FLAG_NONE);
@@ -1629,7 +1911,7 @@ index 021ada3677..30a245a6f3 100644
  }
  
  gboolean
-@@ -1577,11 +1745,11 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1577,11 +1754,11 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
                          G_IO_ERROR_PERMISSION_DENIED))
      {
        ClutterStageView *view = CLUTTER_STAGE_VIEW (onscreen_native->view);
@@ -1645,7 +1927,7 @@ index 021ada3677..30a245a6f3 100644
  
        g_warning ("Direct scanout page flip failed: %s", error->message);
  
-@@ -1594,7 +1762,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
+@@ -1594,7 +1771,7 @@ scanout_result_feedback (const MetaKmsFeedback *kms_feedback,
    frame_info->flags |= COGL_FRAME_INFO_FLAG_SYMBOLIC;
  
    meta_onscreen_native_notify_frame_complete (onscreen);
@@ -1654,7 +1936,7 @@ index 021ada3677..30a245a6f3 100644
  }
  
  static const MetaKmsResultListenerVtable scanout_result_listener_vtable = {
-@@ -1646,13 +1814,24 @@ meta_onscreen_native_direct_scanout (CoglOnscreen   *onscreen,
+@@ -1646,13 +1823,24 @@ meta_onscreen_native_direct_scanout (CoglOnscreen   *onscreen,
        return FALSE;
      }
  
@@ -1681,7 +1963,7 @@ index 021ada3677..30a245a6f3 100644
  
    meta_frame_native_set_scanout (frame_native, scanout);
    meta_frame_native_set_buffer (frame_native,
-@@ -1899,22 +2078,79 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+@@ -1899,22 +2087,79 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
    MetaKmsDevice *kms_device = meta_kms_crtc_get_device (kms_crtc);
    MetaFrameNative *frame_native = meta_frame_native_from_frame (frame);
    MetaKmsUpdate *kms_update;
@@ -1769,7 +2051,7 @@ index 021ada3677..30a245a6f3 100644
    meta_kms_update_add_result_listener (kms_update,
                                         &finish_frame_result_listener_vtable,
                                         NULL,
-@@ -1937,7 +2173,17 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+@@ -1937,7 +2182,17 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
    meta_kms_update_set_flushing (kms_update, kms_crtc);
    meta_kms_device_post_update (kms_device, kms_update,
                                 META_KMS_UPDATE_FLAG_NONE);
@@ -1788,7 +2070,7 @@ index 021ada3677..30a245a6f3 100644
  }
  
  static gboolean
-@@ -2842,6 +3088,8 @@ meta_onscreen_native_dispose (GObject *object)
+@@ -2842,6 +3097,8 @@ meta_onscreen_native_dispose (GObject *object)
    meta_onscreen_native_detach (onscreen_native);
  
    g_clear_pointer (&onscreen_native->next_frame, clutter_frame_unref);
@@ -1809,6 +2091,104 @@ index 0e1193325a..e30357d19d 100644
 +
  void meta_onscreen_native_set_view (CoglOnscreen     *onscreen,
                                      MetaRendererView *view);
+ 
+diff --git a/src/backends/native/meta-renderer-native-gles3.c b/src/backends/native/meta-renderer-native-gles3.c
+index 159e2daef0..51a449a96d 100644
+--- a/src/backends/native/meta-renderer-native-gles3.c
++++ b/src/backends/native/meta-renderer-native-gles3.c
+@@ -352,21 +352,12 @@ meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
+                                            MetaGles3      *gles3,
+                                            EGLDisplay      egl_display,
+                                            EGLContext      egl_context,
+-                                           EGLSurface      egl_surface,
++                                           EGLImageKHR     egl_image,
+                                            struct gbm_bo  *shared_bo,
+                                            GError        **error)
+ {
+-  int shared_bo_fd;
+   unsigned int width;
+   unsigned int height;
+-  uint32_t i, n_planes;
+-  uint32_t strides[4] = { 0 };
+-  uint32_t offsets[4] = { 0 };
+-  uint64_t modifiers[4] = { 0 };
+-  int fds[4] = { -1, -1, -1, -1 };
+-  uint32_t format;
+-  EGLImageKHR egl_image;
+-  gboolean use_modifiers;
+   GQuark context_data_quark;
+   ContextData *context_data;
+   gboolean can_blit;
+@@ -390,57 +381,14 @@ meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
+                               gbm_bo_get_format (shared_bo),
+                               gbm_bo_get_modifier (shared_bo));
+ 
+-  shared_bo_fd = gbm_bo_get_fd (shared_bo);
+-  if (shared_bo_fd < 0)
+-    {
+-      g_set_error (error, G_IO_ERROR, G_IO_ERROR_FAILED,
+-                   "Failed to export gbm_bo: %s", strerror (errno));
+-      return FALSE;
+-    }
+-
+   width = gbm_bo_get_width (shared_bo);
+   height = gbm_bo_get_height (shared_bo);
+-  format = gbm_bo_get_format (shared_bo);
+-
+-  n_planes = gbm_bo_get_plane_count (shared_bo);
+-  for (i = 0; i < n_planes; i++)
+-    {
+-      strides[i] = gbm_bo_get_stride_for_plane (shared_bo, i);
+-      offsets[i] = gbm_bo_get_offset (shared_bo, i);
+-      modifiers[i] = gbm_bo_get_modifier (shared_bo);
+-      fds[i] = shared_bo_fd;
+-    }
+-
+-  /* Workaround for https://gitlab.gnome.org/GNOME/mutter/issues/18 */
+-  if (modifiers[0] == DRM_FORMAT_MOD_LINEAR ||
+-      modifiers[0] == DRM_FORMAT_MOD_INVALID)
+-    use_modifiers = FALSE;
+-  else
+-    use_modifiers = TRUE;
+-
+-  egl_image = meta_egl_create_dmabuf_image (egl,
+-                                            egl_display,
+-                                            width,
+-                                            height,
+-                                            format,
+-                                            n_planes,
+-                                            fds,
+-                                            strides,
+-                                            offsets,
+-                                            use_modifiers ? modifiers : NULL,
+-                                            error);
+-  close (shared_bo_fd);
+-
+-  if (!egl_image)
+-    return FALSE;
+ 
+   if (can_blit)
+     blit_egl_image (gles3, egl_image, width, height);
+   else
+     paint_egl_image (context_data, gles3, egl_image, width, height);
+ 
+-  meta_egl_destroy_image (egl, egl_display, egl_image, NULL);
+-
+   return TRUE;
+ }
+ 
+diff --git a/src/backends/native/meta-renderer-native-gles3.h b/src/backends/native/meta-renderer-native-gles3.h
+index f5791a171f..6a935c7e6b 100644
+--- a/src/backends/native/meta-renderer-native-gles3.h
++++ b/src/backends/native/meta-renderer-native-gles3.h
+@@ -30,7 +30,7 @@ gboolean meta_renderer_native_gles3_blit_shared_bo (MetaEgl        *egl,
+                                                     MetaGles3      *gles3,
+                                                     EGLDisplay      egl_display,
+                                                     EGLContext      egl_context,
+-                                                    EGLSurface      egl_surface,
++                                                    EGLImageKHR     egl_image,
+                                                     struct gbm_bo  *shared_bo,
+                                                     GError        **error);
  
 diff --git a/src/backends/native/meta-renderer-native.c b/src/backends/native/meta-renderer-native.c
 index 7034206bcd..d4ff9e2177 100644
