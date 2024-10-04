@@ -22,7 +22,7 @@ source=("${pkgname}-v${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "0001-allow-usage-of-ip-certificates-by-bypassing-hostname.patch")
 sha256sums=('ef7b8a76ce81133dc10f243d733302c070232cdd6594b685c6adbf32769d4f2c'
             '28f550b84a1873983763f8914d81fb057199d61e6d2781a7232dfb7aae717cda'
-            '2547fa9f0bfb250507d5edfef3bb6304835c9de2c061386a89543eebf16a8bc8'
+            '5fc707b560fee9e49c7eb0e147c7cbc00a50184cbf74f858a281beb30d866ca0'
             '66407bec41131197d2b0133dafe0e04b814b6c458052509515a1284a42046719')
 
 prepare() {
@@ -48,5 +48,6 @@ package() {
     install -Dm644 ../derper.service -t "$pkgdir/usr/lib/systemd/system/"
     install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
     install -Dm755 derper -t "$pkgdir/usr/bin/"
-    install -dm750 "${pkgdir}/etc/derper/certs"
+    install -dm750 "${pkgdir}/etc/derper"
+    ln -sfv /var/lib/derper "${pkgdir}/etc/derper/certs"
 }

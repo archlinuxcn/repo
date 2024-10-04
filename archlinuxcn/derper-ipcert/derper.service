@@ -5,6 +5,9 @@ After=network-online.target
 
 [Service]
 Restart=on-failure
+DynamicUser=yes
+StateDirectory=derper
+WorkingDirectory=/var/lib/derper
 EnvironmentFile=-/etc/conf.d/derper
 ExecStart=/usr/bin/derper $DERPER_ARGS
 ExecReload=/bin/kill -HUP $MAINPID
