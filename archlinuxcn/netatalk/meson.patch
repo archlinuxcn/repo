@@ -1,0 +1,113 @@
+Only in netatalk.orig: build
+diff --color -ru -x '.*' netatalk.orig/etc/netatalk/meson.build netatalk/etc/netatalk/meson.build
+--- netatalk.orig/etc/netatalk/meson.build	2024-10-04 09:00:02.842066433 +0100
++++ netatalk/etc/netatalk/meson.build	2024-10-04 15:10:26.559327484 +0100
+@@ -5,10 +5,10 @@
+     netatalk_deps += mysqlclient
+ endif
+ 
+-if have_dns
+-    netatalk_deps += dns_sd_libs
+-elif avahi.found()
++if avahi.found()
+     netatalk_deps += avahi
++elif have_dns
++    netatalk_deps += dns_sd_libs
+ endif
+ 
+ executable(
+diff --color -ru -x '.*' netatalk.orig/meson.build netatalk/meson.build
+--- netatalk.orig/meson.build	2024-10-04 14:49:09.580786678 +0100
++++ netatalk/meson.build	2024-10-04 15:10:16.992512869 +0100
+@@ -417,13 +417,6 @@
+     '/usr',
+ ]
+ bdb_subdirs = [
+-    'db4.6',
+-    'db4.7',
+-    'db4.8',
+-    'db4',
+-    'db46',
+-    'db47',
+-    'db48',
+     'db5.0',
+     'db5.1',
+     'db5.2',
+@@ -431,8 +424,6 @@
+     'db5',
+     'db50',
+     'db51',
+-    'db6.1',
+-    '',
+ ]
+ 
+ if bdb_path != ''
+@@ -492,7 +483,6 @@
+     bdb_minimum_version = bdb_version.version_compare('>=4.6')
+ 
+     bdb_libnames = [
+-        'db',
+         'db' + bdb_major_version,
+         'db' + bdb_major_version + '.' + bdb_minor_version,
+         'db' + bdb_major_version + bdb_minor_version,
+@@ -702,6 +692,10 @@
+ 
+ enable_zeroconf = get_option('with-zeroconf')
+ 
++have_zeroconf = false
++
++zeroconf_provider = ''
++
+ avahi = dependency('avahi-client', required: false)
+ 
+ dns_sd_libs = []
+@@ -716,8 +710,6 @@
+     dns_sd_libs += system
+ endif
+ 
+-zeroconf_provider = ''
+-
+ have_dns = (
+     (dns_sd.found() or system.found())
+     and cc.has_header('dns_sd.h')
+@@ -727,28 +719,22 @@
+     )
+ )
+ 
+-if not enable_zeroconf
+-    have_zeroconf = false
+-else
+-    have_zeroconf = have_dns
+-    if have_dns
++if enable_zeroconf
++    if avahi.found()
++        have_zeroconf = true
++        cdata.set('USE_ZEROCONF', 1)
++        cdata.set('HAVE_AVAHI', 1)
++        if avahi.version() >= '0.6.4'
++            cdata.set('HAVE_AVAHI_THREADED_POLL', 1)
++        endif
++        cdata.set('freebsd_zeroconf', 'avahi_daemon')
++        zeroconf_provider += 'Avahi'
++    elif have_dns
++        have_zeroconf = true
+         cdata.set('USE_ZEROCONF', 1)
+         cdata.set('HAVE_MDNS', 1)
+         cdata.set('freebsd_zeroconf', 'mdnsd')
+         zeroconf_provider += 'mDNS'
+-    else
+-        have_zeroconf = avahi.found()
+-        if avahi.found()
+-            cdata.set('USE_ZEROCONF', 1)
+-            cdata.set('HAVE_AVAHI', 1)
+-            if avahi.version() >= '0.6.4'
+-                cdata.set('HAVE_AVAHI_THREADED_POLL', 1)
+-            endif
+-            cdata.set('freebsd_zeroconf', 'avahi_daemon')
+-            zeroconf_provider += 'Avahi'
+-        else
+-            have_zeroconf = false
+-        endif
+     endif
+ endif
+ 
