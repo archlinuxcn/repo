@@ -7,8 +7,8 @@
 
 _pkgname=ffmpeg
 pkgname=${_pkgname}6.1
-pkgver=6.1.1
-pkgrel=4
+pkgver=6.1.2
+pkgrel=1
 pkgdesc='Complete solution to record, convert and stream audio and video (legacy v6.1)'
 arch=(x86_64)
 url=https://ffmpeg.org
@@ -102,14 +102,14 @@ optdepends=(
   'nvidia-utils: Nvidia NVDEC/NVENC support'
   'onevpl-intel-gpu: Intel QuickSync support'
 )
-_tag=6f4048827982a8f48f71f551a6e1ed2362816eec
+_tag=b1a4534186ca51b0457579fc05a5739eb2cc45cd
 source=(
-  git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
+  git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}
   add-av_stream_get_first_dts-for-chromium.patch
 )
-b2sums=('9c19bd6b68d4224af2a93fdce199fd0ce9b00432c8818801d124ca993ac45a01d3a7618b66804c02c1f26787a5ca88d2d9f682f3e819cee8c2b6b3dc77e64052'
+b2sums=('3b34bb1ff8f909d95c554fa40275f7dda0bb4e922480ae0bb990a7c33c250ca36109cb5ad0dafb6fa028dd5ff66f7c5d028a1eedc2ce81e1507527db2a7b41ff'
         '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de')
-validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
+#validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {
   cd "${_pkgname}"
@@ -120,7 +120,6 @@ prepare() {
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
   # use non-deprecated nvenc GUID for conftest
   git cherry-pick -n 03823ac0c6a38bd6ba972539e3203a592579792f
-  git cherry-pick -n d2b46c1ef768bc31ba9180f6d469d5b8be677500
   # Fix VDPAU vo
   git cherry-pick -n e9c93009fc34ca9dfcf0c6f2ed90ef1df298abf7
   # Fix bug in av_fft_end
