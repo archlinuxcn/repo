@@ -14,7 +14,7 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
-_progs=('mkapfs' 'apfs-snap' 'apfsck')
+_progs=('mkapfs' 'apfs-snap' 'apfsck' 'apfs-label')
 
 pkgver() {
 	cd "${_pkgname}/"
