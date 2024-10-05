@@ -95,13 +95,124 @@ build() {
   rm -f custom_phrase.txt
 }
 
+_install_schema_dicts() {
+  _name=$1
+  _install_base=$2
+
+    # 遍历所有依赖方案，获取所有所有依赖词库
+  _dicts=()
+  mapfile -t _dicts <<< "$(
+    sed -n '/dictionary:/ {
+      s/.*: *//;          # 去除 dictionary: 后的内容
+      s/ *#.*//;          # 去除注释部分
+      s/""//;             # 去除空引号
+      /^[[:space:]]*$/d;  # 去除空行
+      p;                  # 打印处理后的结果
+    }' "$_name.schema.yaml"
+  )"
+
+  for _dict in "${_dicts[@]}"; do
+    # 处理 import_tables
+    _import_tables=()
+    mapfile -t _import_tables <<< "$(
+      sed -n '/import_tables:/,/^$/ {
+        /^[^ ]/d;         # 删除不以空格开头的行
+        s/.*: *//;        # 去除: 前内容和后随空格
+        s/.*- *//g;       # 去除列表标记
+        s/ *#.*//g;       # 去除注释部分
+        p;                # 打印处理后的结果
+        }' "${_dict}.dict.yaml"
+    )"
+    install -Dm644 "${_dict}.dict.yaml" -t "$_install_base/";
+    
+    # 处理 user_dict
+    _user_dicts=()
+    mapfile -t _user_dicts <<< "$(
+      sed -n '/user_dict:/ {
+        s/.*: *//;          # 去除 user_dict: 后的内容
+        s/ *#.*//;          # 去除注释部分
+        s/""//;             # 去除空引号
+        /^[[:space:]]*$/d;  # 去除空行
+        p;                  # 打印处理后的结果
+      }' "$_name.schema.yaml"
+    )"
+
+    _dict_src_files=("${_import_tables[@]}" "${_user_dicts[@]}")
+
+    for _src_file in "${_dict_src_files[@]}"; do
+      # 遍历词库文件，获取所有依赖词库文件
+      for _f in "${_src_file}".*{yaml,txt}; do
+        if [ -f "$_f" ]; then
+          install -Dm644 "$_f" -t "$_install_base/$(dirname "${_src_file}")"
+        fi
+      done
+    done
+
+  done
+}
+
+_install_schema() {
+  _name=$1
+  _install_base=$2
+
+  # schema 文件
+  install -Dm644 "${_name}.schema.yaml" -t "$_install_base/";
+
+  # 预编译的二进制语料库
+  install -Dm644 ./build/"${_name}".*.{bin,yaml} -t "$_install_base/build";
+
+  # emoji
+  grep -q "opencc_config: emoji.json" "${_name}.schema.yaml" &&
+    install -Dm644 ./opencc/* -t "$_install_base/opencc/"
+
+  # __include 文件，例如：symbols.yaml
+  _include_files=()
+  mapfile -t _include_files <<< "$(
+      sed -n '/__include:/ {
+        s/ *__include: *//;        # 去除 dictionary: 后的内容
+        s/:.*//;                   # 去除 dictionary: 后的内容
+        s/ *#.*//g;                # 去除注释部分
+        p;                         # 打印处理后的结果
+      }' "$_name.schema.yaml"
+  )"
+  for _f in "${_include_files[@]}"; do
+    if [ -f "${_f}.yaml" ]; then
+      install -Dm644 "${_f}.yaml" -t "$_install_base/"
+    fi
+
+  done
+
+  _install_schema_dicts "${_name}" "${_install_base}"
+}
+
+_patch_double_pinyin() {
+  _schema=$1
+  _install_base=$2
+  _algebra="algebra_${_schema//double_pinyin_/}"
+  _schemas_to_patch=(
+    radical_pinyin
+    melt_eng
+  )
+
+  # patch radical_pinyin
+  set -ex
+  for _f in "${_schemas_to_patch[@]}"; do
+    _patch_f="${_install_base}/${_f}.schema.yaml"
+    if [ -f "${_patch_f}" ]; then
+      sed -i "{
+          s/^\(\s*\)\(__include.*\)$/\1# \2/;          # 注释掉未注释的行
+          s/^\(\s*\)#\s*\([^#]*${_algebra}.*\)$/\1\2/; # 启用当前的方案
+        }" "${_patch_f}";
+    fi
+  done
+}
+
 _package_schema() {
-  _schema_name=$1                                 # 方案名
-  _suggestion=${2:-${_schema_name}.default.yaml}  # 默认配置源文件名
+  _schema=$1                                 # 方案名
+  _suggestion=${2:-${_schema}.default.yaml}  # 默认配置源文件名
+  _install_base="${pkgdir}/usr/share/rime-data"
 
   cd "${srcdir}/${_pkgbase}"
-
-  _install_base="${pkgdir}/usr/share/rime-data"
 
   # 方案默认配置
   install -Dm644 "$_suggestion" "$_install_base/rime_ice_suggestion.yaml"
@@ -114,97 +225,27 @@ _package_schema() {
   # 处理词库
   # 
   # 获取当前方案依赖的所有方案
-  _schemas_deps=()
-  mapfile -t _schemas_deps <<< "$(
+  _schema_deps=()
+  mapfile -t _schema_deps <<< "$(
     sed -n '/dependencies:/,/^$/ {
       /dependencies:/d; # 去除 dependencies:
       /^$/d;            # 去除空行
       s/.*- *//g;       # 去除列表标记
       s/ *#.*//g;       # 去除注释部分
       p;                # 打印处理后的结果
-    }' "$_schema_name.schema.yaml"
+    }' "$_schema.schema.yaml"
   )"
-  mapfile -t _schemas_deps <<< "$(printf "%s\n" "${_schemas_deps[@]}" | sort -u)"
+  mapfile -t _schema_deps <<< "$(printf "%s\n" "${_schema_deps[@]}" | sort -u)"
 
-  _compile_schemas=("${_schemas_deps[@]}" "${_schema_name}")
-  for _name in "${_compile_schemas[@]}"; do
-    # schema 文件
-    install -Dm644 "${_name}.schema.yaml" -t "$_install_base/";
-
-    # 预编译的二进制语料库
-    install -Dm644 ./build/"${_name}".*.{bin,yaml} -t "$_install_base/build";
-
-    # emoji
-    grep -q "opencc_config: emoji.json" "${_name}.schema.yaml" &&
-        install -Dm644 ./opencc/* -t "$_install_base/opencc/"
-
-    # __include 文件，例如：symbols.yaml
-    _include_files=()
-    mapfile -t _include_files <<< "$(
-       sed -n '/__include:/ {
-          s/ *__include: *//;        # 去除 dictionary: 后的内
-          s/:.*//;                   # 去除 dictionary: 后的内
-          s/ *#.*//g;                # 去除注释部分
-          p;                         # 打印处理后的结果
-        }' "$_name.schema.yaml"
-    )"
-    for _f in "${_include_files[@]}"; do
-      if [ -f "${_f}.yaml" ]; then
-        install -Dm644 "${_f}.yaml" -t "$_install_base/"
-      fi
-    done
-
-    # 遍历所有依赖方案，获取所有所有依赖词库
-    _dicts=()
-    mapfile -t _dicts <<< "$(
-      sed -n '/dictionary:/ {
-        s/.*: *//;          # 去除 dictionary: 后的内容
-        s/ *#.*//;          # 去除注释部分
-        s/""//;             # 去除空引号
-        /^[[:space:]]*$/d;  # 去除空行
-        p;                  # 打印处理后的结果
-      }' "$_name.schema.yaml"
-    )"
-
-    for _dict in "${_dicts[@]}"; do
-      # 处理 import_tables
-      _dict_import_tables=()
-      mapfile -t _dict_import_tables <<< "$(
-        sed -n '/import_tables:/,/^$/ {
-          /^[^ ]/d;         # 删除不以空格开头的行
-          s/.*: *//;        # 去除: 前内容和后随空格
-          s/.*- *//g;       # 去除列表标记
-          s/ *#.*//g;       # 去除注释部分
-          p;                # 打印处理后的结果
-          }' "${_dict}.dict.yaml"
-      )"
-      install -Dm644 "${_dict}.dict.yaml" -t "$_install_base/";
-      
-      # 处理 user_dict
-      _dict_user_dict=()
-      mapfile -t _dict_user_dict <<< "$(
-        sed -n '/user_dict:/ {
-          s/.*: *//;          # 去除 user_dict: 后的内容
-          s/ *#.*//;          # 去除注释部分
-          s/""//;             # 去除空引号
-          /^[[:space:]]*$/d;  # 去除空行
-          p;                  # 打印处理后的结果
-        }' "$_name.schema.yaml"
-      )"
-
-      _dict_src_files=("${_dict_import_tables[@]}" "${_dict_user_dict[@]}")
-
-      for _table_file in "${_dict_src_files[@]}"; do
-        # 遍历词库文件，获取所有依赖词库文件
-        for _f in "${_table_file}".*{yaml,txt}; do
-          if [ -f "$_f" ]; then
-            install -Dm644 "$_f" -t "$_install_base/$(dirname "${_table_file}")"
-          fi
-        done
-      done
-
-    done
+  _schemas_to_install=("${_schema_deps[@]}" "${_schema}")
+  for _s in "${_schemas_to_install[@]}"; do
+    _install_schema "$_s" "$_install_base"
   done
+
+  # 对于双拼输入法，patch radical_pinyin 和 melt_eng 方案
+  if [[ $_schema == "double_pinyin"* ]]; then
+    _patch_double_pinyin "$_schema" "$_install_base"
+  fi
 }
 
 package_rime-ice-git() {
