@@ -1,0 +1,15 @@
+post_install() {
+    echo ">>> Please check the contents of /etc/derper/openssl.cnf and /etc/conf.d/derper"
+    echo ">>> After confirming they are correct, enable the service with the following command:"
+    echo "systemctl enable derper.service --now"
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    if [[ -d "/var/lib/derper/certs" ]]; then
+        echo ">>> The certificate files are stored in /var/lib/derper/certs/"
+    fi
+}
