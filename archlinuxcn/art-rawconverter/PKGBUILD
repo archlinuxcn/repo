@@ -15,6 +15,7 @@ optdepends=('perl-image-exiftool: metadata support for CR3 images'
 makedepends=('pkgconf' 'cmake' 'git' 'gcc' 'hicolor-icon-theme' 'fakeroot')
 source=("https://bitbucket.org/agriggio/art/downloads/${_pkgname}-${pkgver}.tar.xz")
 sha256sums=('21693473dba473b3e43f025588e3e12552a0c61b783eedb5d29f5f78e4129059')
+options=('!lto')
 
 build() {
 	mkdir build/
