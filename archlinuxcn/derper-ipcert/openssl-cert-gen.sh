@@ -1,15 +1,18 @@
-#!/bin/bash
+#!/usr/bin/bash
 
-# Define the paths for the certificate and private key files
-CERT_DIR="/var/lib/derper/certs"
+# Path to the OpenSSL configuration file
 CONFIG_FILE="/etc/derper/openssl.cnf"
 
-# Extract the commonName (CN) value from the openssl.cnf file using sed
+# Directory for storing generated certificate files
+CERT_DIR="/var/lib/derper/certs"
+
+# Extract the commonName (CN) from the OpenSSL configuration file
 DOMAIN=$(sed -n 's/^[[:space:]]*commonName[[:space:]]*=[[:space:]]*//p' "$CONFIG_FILE")
 
-# Define the certificate and key files based on the commonName
+# Paths for the generated certificate and key files
 CERT_FILE="$CERT_DIR/$DOMAIN.crt"
 KEY_FILE="$CERT_DIR/$DOMAIN.key"
+
 
 # Check if the directory exists
 if [[ ! -d "$CERT_DIR" ]]; then
