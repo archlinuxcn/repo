@@ -40,7 +40,9 @@ prepare() {
     sed -i 's/ 0.14.1//g' externals/CMakeLists.txt
     sed -i 's/SPIRV/SPIRV SPIRV-Tools/' src/video_core/CMakeLists.txt
     sed -i 's/AV_OPT_TYPE_CHANNEL_LAYOUT/AV_OPT_TYPE_CHLAYOUT/g' src/core/dumping/ffmpeg_backend.cpp 
-    sed -i 's/AV_OPT_TYPE_CHANNEL_LAYOUT/AV_OPT_TYPE_CHLAYOUT/g' src/citra_qt/dumping/option_set_dialog.cpp 
+    sed -i 's/AV_OPT_TYPE_CHANNEL_LAYOUT/AV_OPT_TYPE_CHLAYOUT/g' src/citra_qt/dumping/option_set_dialog.cpp
+    sed -i 's/auto format(const T& value, FormatContext& ctx)/ auto format(const T& value, FormatContext& ctx) const/g' src/common/logging/log.h
+
 
     git submodule update --init --remote externals/nihstro
     git submodule update --init --remote externals/sirit
