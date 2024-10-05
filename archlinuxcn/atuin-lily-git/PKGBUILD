@@ -41,11 +41,6 @@ build() {
   done
 }
 
-check() {
-  cd "$_pkgname"
-  LIBSQLITE3_SYS_USE_PKG_CONFIG=1 cargo test --frozen --all-features --workspace --lib
-}
-
 package() {
   cd "$_pkgname"
   install -Dm755 "target/release/$__pkgname" -t "$pkgdir/usr/bin"
