@@ -45,29 +45,25 @@ sha256sums=('07f80869a0a602500e3b75605375c449b822bb3dae652feac7a68ceb7e8b1a22')
 
 prepare() {
 	cd Qcm
-	if [ -d build ]; then
-		echo "Deleting ${srcdir}/Qcm/build..."
-		rm -rf build
-	fi
-
-	git submodule update --init
+	git submodule update --init --recursive
 	mkdir build
 }
 
 build() {
 	cd Qcm/build
-	echo "Starting Build..."
-	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
+	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 	ninja
 }
 
 package() {
-	echo "Copying files..."
 	cd Qcm
 
-	local APP_ID=io.github.hypengw.Qcm
-	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${APP_ID}.svg"
-	install -Dm644 "app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/${APP_ID}.desktop"
-	install -Dm755 "build/app/Qcm" -t "${pkgdir}/usr/bin/"
+	DESTDIR="${pkgdir}" cmake --install build
 	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+
+	# Install QML Modules
+	install -d "${pkgdir}/usr/share/Qcm/"
+	cp -r build/qml_modules "${pkgdir}/usr/share/Qcm/"
+	sed -i 's|Exec=Qcm|Exec=env QML_IMPORT_PATH=/usr/share/Qcm/qml_modules Qcm|g' \
+		"${pkgdir}/usr/share/applications/io.github.hypengw.Qcm.desktop"
 }
