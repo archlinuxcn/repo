@@ -40,13 +40,22 @@ makedepends=(
 	'cmake'
 	'extra-cmake-modules'
 	'ninja')
-source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('07f80869a0a602500e3b75605375c449b822bb3dae652feac7a68ceb7e8b1a22')
+source=(
+	"git+${url}.git#tag=v${pkgver}"
+	{qcm,qml-material}-cmakelists.patch
+)
+sha256sums=('07f80869a0a602500e3b75605375c449b822bb3dae652feac7a68ceb7e8b1a22'
+            'fa8c036089de9a548e9202d6426ceaf42ffe2424fe3a4c1b4840e0b5ffb21c09'
+            '60444e9b7c3f1285074c5880a3ef76532a1ff1752a688e0e7c10ced35cbaccc6')
 
 prepare() {
 	cd Qcm
 	git submodule update --init --recursive
 	mkdir build
+
+	patch -p1 < ../qcm-cmakelists.patch
+	cd qml_material
+	patch -p1 < ../../qml-material-cmakelists.patch
 }
 
 build() {
@@ -60,10 +69,4 @@ package() {
 
 	DESTDIR="${pkgdir}" cmake --install build
 	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-
-	# Install QML Modules
-	install -d "${pkgdir}/usr/share/Qcm/"
-	cp -r build/qml_modules "${pkgdir}/usr/share/Qcm/"
-	sed -i 's|Exec=Qcm|Exec=env QML_IMPORT_PATH=/usr/share/Qcm/qml_modules Qcm|g' \
-		"${pkgdir}/usr/share/applications/io.github.hypengw.Qcm.desktop"
 }
