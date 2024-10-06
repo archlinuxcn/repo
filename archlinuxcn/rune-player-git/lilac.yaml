@@ -5,7 +5,12 @@ post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()
 repo_makedepends:
+  - flutter: flutter-common
+  - flutter: flutter-engine-common-google-bin
+  - flutter: flutter-engine-linux-google-bin
   - flutter: flutter-intellij-patch
+  - flutter: flutter-material-fonts-google-bin
+  - flutter: flutter-sky-engine-google-bin
   - flutter: flutter-target-linux
   - flutter: flutter-tool
   - protoc-gen-dart
@@ -13,6 +18,8 @@ repo_makedepends:
 update_on:
   - source: github
     github: Losses/rune
+  - source: manual
+    manual: 1
 
 maintainers:
   - github: roaldclark
