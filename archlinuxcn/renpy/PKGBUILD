@@ -2,7 +2,7 @@
 
 pkgname=renpy
 pkgver=8.3.1.24090601
-pkgrel=1
+pkgrel=2
 pkgdesc="Visual novel engine Ren'Py along with its platdeps libs"
 arch=('i686' 'x86_64')
 license=('MIT')
@@ -31,17 +31,35 @@ build() {
 	export CFLAGS+=' -I/usr/include/ffmpeg6.1 -Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration'
 	export RENPY_DEPS_INSTALL='/usr/include/ffmpeg6.1:/usr/lib/ffmpeg6.1:/usr'
 
+	# This always return the last version from HEAD regardless of what version we are building.
+	#python 'distribute.py' --vc-version-only
+
+	install -Dm644 <(cat << EOF
+branch = 'master'
+nightly = False
+official = False
+version = '$pkgver'
+version_name = 'Second Star to the Right'
+EOF
+	) 'renpy/vc_version.py'
+
 	pushd 'module'
 		python -m build --wheel --no-isolation
 		#rm -rf "$srcdir/tempinstall"
 		#python -m installer --destdir="$srcdir/tempinstall" dist/*.whl
 	popd
 
+	python -m compileall 'renpy'
+
+	#local python_version="$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')"
+	#for game in 'tutorial' 'launcher' 'the_question'; do
+		#PYTHONPATH="$srcdir/tempinstall/usr/lib/python${python_version}/site-packages" python 'renpy.py' --compile "$game"
+	#done
+
 	# build docs
 	#cd 'sphinx'
 	#mkdir -p 'source/inc'
 
-	#local python_version="$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')"
 	#PYTHONPATH="$srcdir/tempinstall/usr/lib/python${python_version}/site-packages" python ../renpy.py .
 	#RENPY_NO_FIGURES=1 sphinx-build -E -a source ../doc -j ${SPHINX_JOBS:-auto}
 }
