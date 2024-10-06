@@ -1,0 +1,90 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+
+_pkgname=rune-player
+pkgname=rune-player-git
+pkgver=0.0.0
+pkgrel=1
+pkgdesc="The player that blends classic design with modern technology"
+arch=('x86_64')
+url="https://github.com/Losses/rune"
+license=('MPL-2.0')
+depends=(
+    'alsa-lib'
+    'at-spi2-core'
+    'cairo'
+    'dbus'
+    'fontconfig'
+    'gcc-libs'
+    'glib2'
+    'glibc'
+    'gtk3'
+    'hicolor-icon-theme'
+    'libepoxy'
+    'lmdb'
+    'pango'
+)
+makedepends=(
+    'flutter-intellij-patch'
+    'flutter-target-linux'
+    'flutter-tool'
+    'git'
+    'protobuf'
+    'protoc-gen-dart'
+    'protoc-gen-prost'
+    'rustup'
+)
+provides=("${_pkgname}=${pkgver}")
+conflicts=("${_pkgname}")
+options=(!lto)
+source=(
+    "${_pkgname}::git+${url}.git"
+    "rune-player.desktop"
+)
+sha256sums=('SKIP'
+            '7da52f8c68eafc20e85e60996e2c6ac677009a96a67e77a38753201096a3333a')
+
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
+    git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+    cd "${srcdir}/${_pkgname}"
+    flutter pub get
+}
+
+build() {
+    cd "${srcdir}/${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    flutter pub run rinf message
+    flutter build linux --no-pub --release --verbose
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}"
+
+    install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+
+    pushd assets/icons
+    find . -type f -exec install -v -Dm644 {} $pkgdir/usr/share/icons/{} \;
+    cd Papirus
+    find . -type f -exec install -v -Dm644 {} $pkgdir/usr/share/icons/hicolor/{} \;
+    popd
+    ln -sfrv $pkgdir/usr/share/icons/Papirus $pkgdir/usr/share/icons/Papirus-Dark
+    ln -sfrv $pkgdir/usr/share/icons/Papirus $pkgdir/usr/share/icons/Papirus-Light
+    ln -sfrv $pkgdir/usr/share/icons/breeze/apps/1024/rune.png $pkgdir/usr/share/icons/rune.png
+
+    cd build/linux/x64/release/bundle
+    install -Dm755 player -t "$pkgdir/usr/lib/$_pkgname/"
+    pushd lib
+    find . -type f -exec install -v -Dm644 {} $pkgdir/usr/lib/$_pkgname/lib/{} \;
+    popd
+    pushd data
+    find . -type f -exec install -v -Dm644 {} $pkgdir/usr/lib/$_pkgname/data/{} \;
+    popd
+    install -dm755 "$pkgdir/usr/bin"
+    ln -sfrv "$pkgdir/usr/lib/$_pkgname/player" "$pkgdir/usr/bin/player"
+
+    install -Dm644 "$srcdir/$_pkgname.desktop" -t "$pkgdir/usr/share/applications/"
+}

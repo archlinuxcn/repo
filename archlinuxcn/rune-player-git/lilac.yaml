@@ -1,0 +1,18 @@
+build_prefix: extra-x86_64
+pre_build_script: |
+  vcs_update()
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+repo_makedepends:
+  - flutter: flutter-intellij-patch
+  - flutter: flutter-target-linux
+  - flutter: flutter-tool
+  - protoc-gen-dart
+  - protoc-gen-prost
+update_on:
+  - source: github
+    github: Losses/rune
+
+maintainers:
+  - github: roaldclark
