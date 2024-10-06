@@ -27,9 +27,9 @@ def pre_build():
             line = 'PGTK="YES"'
             checks = checks + '5'
 
-        if line.startswith('XWIDGETS='):
-            line = 'XWIDGETS="YES"'
-            checks = checks + '6'
+        #if line.startswith('XWIDGETS='):
+        #    line = 'XWIDGETS="YES"'
+        #    checks = checks + '6'
 
         # enable tree-sitter, request from #3094
         if line.startswith('SITTER='):
@@ -47,5 +47,5 @@ def pre_build():
         print(line)
 
     # make sure PKGBUILD is modified
-    if len(checks) != 6:
+    if len(checks) != 5:
         raise ValueError('PKGBUILD editing not completed. checks=' + checks)
