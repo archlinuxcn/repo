@@ -4,7 +4,7 @@
 
 pkgname=zfs-utils
 pkgver=2.2.6
-pkgrel=2
+pkgrel=3
 pkgdesc="Userspace utilities for the Zettabyte File System."
 arch=("i686" "x86_64" "aarch64")
 url="https://zfsonlinux.org/"
@@ -57,6 +57,7 @@ build() {
                 --with-udevdir=/usr/lib/udev \
                 --libexecdir=/usr/lib \
                 --localstatedir=/var \
+                --without-libunwind \
                 --with-python="$PWD/python3-fake" \
                 --enable-pyzfs=no \
                 --enable-systemd \
