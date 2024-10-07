@@ -42,20 +42,21 @@ makedepends=(
 	'ninja')
 source=(
 	"git+${url}.git#tag=v${pkgver}"
-	{qcm,qml-material}-cmakelists.patch
+	"qcm.patch::https://github.com/hypengw/Qcm/pull/34.patch"
+	"qml-material.patch::https://github.com/hypengw/QmlMaterial/pull/1.patch"
 )
 sha256sums=('07f80869a0a602500e3b75605375c449b822bb3dae652feac7a68ceb7e8b1a22'
-            'fa8c036089de9a548e9202d6426ceaf42ffe2424fe3a4c1b4840e0b5ffb21c09'
-            '60444e9b7c3f1285074c5880a3ef76532a1ff1752a688e0e7c10ced35cbaccc6')
+            'ac714b4d3f3647ebe7254fb574df28e78bc78f54b90931c40278fa9e2f6c294c'
+            'a77a2ada3fcce697658745cfac47a1ac7fdf9f2ff4a367c5cb65e7ef18ddf343')
 
 prepare() {
 	cd Qcm
 	git submodule update --init --recursive
 	mkdir build
 
-	patch -p1 < ../qcm-cmakelists.patch
+	patch -p1 < ../qcm.patch
 	cd qml_material
-	patch -p1 < ../../qml-material-cmakelists.patch
+	patch -p1 < ../../qml-material.patch
 }
 
 build() {
@@ -66,7 +67,6 @@ build() {
 
 package() {
 	cd Qcm
-
 	DESTDIR="${pkgdir}" cmake --install build
 	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
