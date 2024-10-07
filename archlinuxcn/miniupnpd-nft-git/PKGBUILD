@@ -31,7 +31,7 @@ build() {
 package() {
   cd "miniupnp/miniupnpd"
 
-  make DESTDIR="$pkgdir" SBININSTALLDIR="/usr/bin" install
+  make DESTDIR="$pkgdir" PREFIX=/ INSTALLPREFIX=/usr SBINDIR=/usr/bin -f Makefile.linux install
 
   rm -r "$pkgdir/etc/init.d"
 
