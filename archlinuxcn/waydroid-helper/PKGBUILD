@@ -1,0 +1,25 @@
+# Maintainer: Rikka <ayasa0520@gmail.com>
+
+pkgname=waydroid-helper
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="A GUI application for Waydroid configuration and extension installation"
+arch=('any')
+url="https://github.com/ayasa520/${pkgname}"
+license=('GPL-3.0-or-later')
+depends=('python' 'python-httpx' 'python-gobject>=3.50.0' 'python-yaml' 'gtk4' 'libadwaita' 'python-aiofiles')
+makedepends=('git' 'python-setuptools' 'meson')
+provides=("${pkgname}")
+conflicts=("${pkgname}")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('532d9149b33c2b51a21e06e871f1267445d1a3fb98cabbd0996c1f881fbfc020')
+
+build() {
+	arch-meson "${pkgname}-${pkgver}/" build
+	meson compile -C build
+}
+
+package() {
+	meson install -C build --destdir "${pkgdir}"
+	install -Dm644 "${pkgname}-${pkgver}/COPYING" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
