@@ -5,12 +5,12 @@ post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()
 repo_makedepends:
+  - flutter-artifacts-google-bin: flutter-engine-common-google-bin
+  - flutter-artifacts-google-bin: flutter-engine-linux-google-bin
+  - flutter-artifacts-google-bin: flutter-material-fonts-google-bin
+  - flutter-artifacts-google-bin: flutter-sky-engine-google-bin
   - flutter: flutter-common
-  - flutter: flutter-engine-common-google-bin
-  - flutter: flutter-engine-linux-google-bin
   - flutter: flutter-intellij-patch
-  - flutter: flutter-material-fonts-google-bin
-  - flutter: flutter-sky-engine-google-bin
   - flutter: flutter-target-linux
   - flutter: flutter-tool
   - protoc-gen-dart
