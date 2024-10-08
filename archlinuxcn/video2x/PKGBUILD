@@ -1,26 +1,16 @@
-# Maintainer : Antoine Viallon <antoine+aur@lesviallon.fr>
+# Maintainer: Integral <i7arch@member.fsf.org>
+# Contributor: Antoine Viallon <antoine+aur@lesviallon.fr>
 
 pkgname=video2x
 pkgver=5.0.0.beta6
 _pkgver=${pkgver/.beta/-beta}
 pkgrel=1
 pkgdesc="Machine learning video/GIF/image upscaling"
-url="https://${pkgname}.org/"
-arch=("any")
-license=("GPL-3.0-or-later")
-depends=(
-	"python"
-	"ffmpeg"
-	"python-pyaml"
-	"python-avalon_framework" # AUR
-	"python-colorama"
-	"patool" # AUR, should be named python-patool
-	"python-pillow"
-	#"python-pyqt5"
-	"python-requests"
-	"python-tqdm"
-	"python-magic"
-)
+url="https://${pkgname}.org"
+arch=('x86_64' 'aarch64' 'riscv64')
+license=("AGPL-3.0-or-later")
+depends=('ffmpeg' 'ncnn' 'vulkan-driver')
+makedepends=('git' 'cmake' 'vulkan-headers')
 optdepends=(
 	"waifu2x-ncnn-vulkan: for anime/cartoon upscaling and JPEG denoising - fast"
 	"realsr-ncnn-vulkan: real photos upscaling and denoising - slow"
@@ -28,24 +18,28 @@ optdepends=(
 	"waifu2x-converter-cpp: C++ implemenation of waifu2x working on all platforms"
 )
 source=(
-	"${pkgname}-${_pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${_pkgver}.tar.gz"
-	"${pkgname}.yaml"
+	"git+https://github.com/k4yt3x/${pkgname}.git#tag=${_pkgver}"
+	"git+https://github.com/k4yt3x/libreal-esrgan-ncnn-vulkan.git"
+	"git+https://github.com/Tencent/ncnn.git"
 )
-sha256sums=('6fd01242986265dfedd59cfa589c0649e1036d4bcc959af4427067acc3e23d8c'
-            'dae9fb91b965d27a868ab71e36c8d6633f0c4be770c8f70c2ea41bc957b7c796')
+sha256sums=('c6fffaaae2b5b9050100aa8d488c9a405efbdcebe31840d48ea6ba57196cf095'
+	    'SKIP'
+	    'SKIP')
+
+prepare() {
+	cd "${pkgname}/"
+	git submodule init
+	git config submodule.third_party/libreal_esrgan_ncnn_vulkan.url "${srcdir}/libreal-esrgan-ncnn-vulkan"
+	git config submodule.third_party/ncnn.url "${srcdir}/ncnn"
+	git -c protocol.file.allow=always submodule update
+}
+
+build() {
+	cmake -B build -S "${pkgname}" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
+}
 
 package() {
-	cd "${pkgname}-${_pkgver}/"
-
-	install -d "${pkgdir}/usr/share/${pkgname}/wrappers/"
-	install -d "${pkgdir}/usr/bin/"
-
-	for file in video2x/*.py; do
-		install -Dm755 "${file}" -t "${pkgdir}/usr/share/${pkgname}/"
-	done
-
-	install -Dm644 "${srcdir}/${pkgname}.yaml" -t "${pkgdir}/etc/"
-	ln -s "/usr/share/${pkgname}/${pkgname}.py" "${pkgdir}/usr/bin/${pkgname}"
-	install -d "${pkgdir}/usr/share/licenses/${pkgname}/"
-	install -Dm644 licenses/* "${pkgdir}/usr/share/licenses/${pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
