@@ -109,14 +109,17 @@ _use_auto_optimization=${_use_auto_optimization-y}
 # "full: uses 1 thread for Linking, slow and uses more memory, theoretically with the highest performance gains."
 # "thin: uses multiple threads, faster and uses less memory, may have a lower runtime performance than Full."
 # "none: disable LTO
-_use_llvm_lto=${_use_llvm_lto-none}
+_use_llvm_lto=${_use_llvm_lto-thin}
 
 # Use suffix -lto only when requested by the user
-# Enabled by default.
 # y - enable -lto suffix
 # n - disable -lto suffix
 # https://github.com/CachyOS/linux-cachyos/issues/36
-_use_lto_suffix=${_use_lto_suffix-y}
+_use_lto_suffix=${_use_lto_suffix-}
+
+# Use suffix -gcc when requested by the user
+# Enabled by default to show the difference between LTO kernels and GCC kernels
+_use_gcc_suffix=${_use_gcc_suffix-y}
 
 # KCFI is a proposed forward-edge control-flow integrity scheme for
 # Clang, which is more suitable for kernel use than the existing CFI
@@ -139,21 +142,27 @@ _build_nvidia=${_build_nvidia-}
 # Use this only if you have Turing+ GPU
 _build_nvidia_open=${_build_nvidia_open-}
 
+_is_lto_kernel() {
+    [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_kcfi" ]
+    return $?
+}
+
 # Build a debug package with non-stripped vmlinux
 _build_debug=${_build_debug-}
 
 if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] && [ "$_use_lto_suffix" = "y"  ]; then
-    _pkgsuffix=cachyos-rc-lto
-    pkgbase="linux-$_pkgsuffix"
-
-elif [ -n "$_use_llvm_lto" ]  ||  [[ "$_use_lto_suffix" = "n" ]]; then
-    _pkgsuffix=cachyos-rc
-    pkgbase="linux-$_pkgsuffix"
+    _pkgsuffix="cachyos-rc-lto"
+elif [ "$_use_llvm_lto" = "none" ]  && [ -z "$_use_kcfi" ] && [ "$_use_gcc_suffix" = "y" ]; then
+    _pkgsuffix="cachyos-rc-gcc"
+else
+    _pkgsuffix="cachyos-rc"
 fi
+
+pkgbase="linux-$_pkgsuffix"
 _major=6.12
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc1
+_rcver=rc2
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -192,7 +201,7 @@ source=(
     "${_patchsource}/all/0001-cachyos-base-all.patch")
 
 # LLVM makedepends
-if [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_kcfi" ]; then
+if _is_lto_kernel; then
     makedepends+=(clang llvm lld)
     source+=("${_patchsource}/misc/dkms-clang.patch")
     BUILD_FLAGS=(
@@ -211,7 +220,7 @@ fi
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=ff0419a334fca57d1e3baa62440cfb701eb3f05f")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=965343f1141aeb38aa7f8bb8f27f82278b87db6e")
 fi
 
 # NVIDIA pre-build module support
@@ -219,7 +228,7 @@ if [ -n "$_build_nvidia" ]; then
     source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
              "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch"
              "${_patchsource}/misc/nvidia/0004-6.11-Add-fix-for-fbdev.patch"
-             "${_patchsource}/misc/nvidia/0005-6.12-drm_outpull_pill-changed-check.patch")
+             "${_patchsource}/misc/nvidia/0006-Fix-for-6.12.0-rc1-drm_mode_config_funcs.output_poll.patch")
 fi
 
 if [ -n "$_build_nvidia_open" ]; then
@@ -228,7 +237,8 @@ if [ -n "$_build_nvidia_open" ]; then
              "${_patchsource}/misc/nvidia/0002-Do-not-error-on-unkown-CPU-Type-and-add-Zen5-support.patch"
              "${_patchsource}/misc/nvidia/0003-Add-IBT-Support.patch"
              "${_patchsource}/misc/nvidia/0004-6.11-Add-fix-for-fbdev.patch"
-             "${_patchsource}/misc/nvidia/0005-6.12-drm_outpull_pill-changed-check.patch")
+             "${_patchsource}/misc/nvidia/0006-Fix-for-6.12.0-rc1-drm_mode_config_funcs.output_poll.patch"
+             "${_patchsource}/misc/nvidia/0007-6.12-replace-pageswapcache.patch")
 fi
 
 ## List of CachyOS schedulers
@@ -307,11 +317,11 @@ prepare() {
     [ -z "$_cpusched" ] && _die "The value is empty. Choose the correct one again."
 
     case "$_cpusched" in
-        cachyos|bore|hardened) scripts/config -e SCHED_BORE --set-val MIN_BASE_SLICE_NS 1000000;;
+        cachyos|bore|hardened) scripts/config -e SCHED_BORE;;
         bmq) scripts/config -e SCHED_ALT -e SCHED_BMQ;;
         eevdf) ;;
         rt) scripts/config -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -d PREEMPT_RT -d PREEMPT_DYNAMIC -e PREEMPT_BUILD -e PREEMPT_BUILD_AUTO -e PREEMPT_AUTO;;
-        rt-bore) scripts/config -e SCHED_BORE --set-val MIN_BASE_SLICE_NS 1000000 -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -d PREEMPT_RT -d PREEMPT_DYNAMIC -e PREEMPT_BUILD -e PREEMPT_BUILD_AUTO -e PREEMPT_AUTO;;
+        rt-bore) scripts/config -e SCHED_BORE -e PREEMPT_COUNT -e PREEMPTION -d PREEMPT_VOLUNTARY -d PREEMPT -d PREEMPT_NONE -d PREEMPT_RT -d PREEMPT_DYNAMIC -e PREEMPT_BUILD -e PREEMPT_BUILD_AUTO -e PREEMPT_AUTO;;
         sched-ext) ;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
@@ -525,9 +535,8 @@ prepare() {
         patch -Np1 -i "${srcdir}/0001-Make-modeset-and-fbdev-default-enabled.patch" -d "${srcdir}/${_nv_pkg}/kernel"
         # Fix broken fbdev on 6.11
         patch -Np2 -i "${srcdir}/0004-6.11-Add-fix-for-fbdev.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-        # Fix 6.12 Kernel Compilation
-        patch -Np2 -i "${srcdir}/0005-6.12-drm_outpull_pill-changed-check.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-#        patch -Np2 -i "${srcdir}/0006-6.12-drop-swappagecache.patch" -d "${srcdir}/${_nv_pkg}/kernel"
+        # Fix for 6.12
+        patch -Np2 -i "${srcdir}/0006-Fix-for-6.12.0-rc1-drm_mode_config_funcs.output_poll.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 
     if [ -n "$_build_nvidia_open" ]; then
@@ -538,9 +547,9 @@ prepare() {
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0002-Do-not-error-on-unkown-CPU-Type-and-add-Zen5-support.patch" -d "${srcdir}/${_nv_open_pkg}"
         # Fix broken fbdev on 6.11
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0004-6.11-Add-fix-for-fbdev.patch" -d "${srcdir}/${_nv_open_pkg}"
-        # Fix for 6.12 Module Compilation
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0005-6.12-drm_outpull_pill-changed-check.patch" -d "${srcdir}/${_nv_open_pkg}"
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0006-6.12-drop-swappagecache.patch" -d "${srcdir}/${_nv_open_pkg}"
+        # Fix for 6.12
+        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0006-Fix-for-6.12.0-rc1-drm_mode_config_funcs.output_poll.patch" -d "${srcdir}/${_nv_open_pkg}"
+        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0007-6.12-replace-pageswapcache.patch" -d "${srcdir}/${_nv_open_pkg}"
     fi
 }
 
@@ -772,8 +781,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('957e0b3ab15532aec7d8994fed1085f081220eda231043b344d373b1d5d597021e24444ca4a73e28a29592d6b2f133b558eca7b42f640749c05eb76bddb7247d'
-        'a004e097a7b40862b4ca5a1a44bb19cef5e233b59341650487598c94896b2f15cd344a94e8613b4105db115c3aab45db730a26e4913e2e464d4e86350c4b1107'
+b2sums=('45e9b6cf1d73993ff518183dac2896e13371a0161aa3573734d891c5a5b81808bce596ad1d5c4e2152d628d3af5b62f307633c822970395a0bb861e3d8e0e1b6'
+        'f1301a71f17e70c43ecbcbdc6ce636bc2b0d31bec06287292bc7f0eebe50ef15f1b6d1b162d993226607b73083adce5e955943f42390ae7be9f0ee59c9ffb9a6'
         'b1e964389424d43c398a76e7cee16a643ac027722b91fe59022afacb19956db5856b2808ca0dd484f6d0dfc170482982678d7a9a00779d98cd62d5105200a667'
-        '077cf6ef02ea4a81725f706e5a871f0654251ca6bec4e965ed81e2f7aea174ea2c29621b66da8bb4814f856746ec0402eac1b6e181be45c0d82d2f0138b59f7d'
-        '7364b546e7e6d466655eee161645cbc75debe1834be81c929e72bf27b0cac2148916577999477f5062d7893c30968cdf2ae7ddb79babb790cdba46868a93b73c')
+        '891a82ea17a7738266b645ebecd52786af9540e23f464f2573b451511cd1a8d20c0b0a5b05064f1f1688a9bccf9a53c7d600d787a95602d28bbefcf6cd1003db'
+        'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
+        '97b59b7976ed5096998229429b067cb1ab945a2353a0b5973bc48c7f014ed684358b3294dfff78fbe464d9bf981e2112de459bb615d980ef1721d2e79ee7dd9f')
