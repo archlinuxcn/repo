@@ -1,6 +1,6 @@
-From 38ad90831831896d6a22a4621f9f2d1b43fa2ee1 Mon Sep 17 00:00:00 2001
+From 95d7bc12da169609b9c0a39c94c9128150ac7eac Mon Sep 17 00:00:00 2001
 From: Mingi Sung <sungmg@saltyming.net>
-Date: Fri, 4 Oct 2024 13:24:58 +0900
+Date: Tue, 8 Oct 2024 18:16:41 +0900
 Subject: [PATCH] Merge branch 'sungmg-triple-buffering-v4-47' into gnome-47
 
 Use triple buffering if and when the previous frame is running late.
@@ -1375,7 +1375,7 @@ index f5ec4c1c3b..77fd62662d 100644
                          MetaKmsFlags   flags,
                          GError       **error);
 diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
-index 021ada3677..d885315293 100644
+index 021ada3677..a9d54f43c0 100644
 --- a/src/backends/native/meta-onscreen-native.c
 +++ b/src/backends/native/meta-onscreen-native.c
 @@ -29,6 +29,7 @@
@@ -1569,9 +1569,9 @@ index 021ada3677..d885315293 100644
    MetaDrmBufferFlags flags;
    MetaDrmBufferGbm *buffer_gbm = NULL;
    struct gbm_bo *bo;
-+  EGLImageKHR egl_image;
 +  EGLSync egl_sync = EGL_NO_SYNC;
 +  g_autofd int sync_fd = -1;
++  EGLImageKHR egl_image;
  
    COGL_TRACE_BEGIN_SCOPED (CopySharedFramebufferSecondaryGpu,
                             "copy_shared_framebuffer_gpu()");
