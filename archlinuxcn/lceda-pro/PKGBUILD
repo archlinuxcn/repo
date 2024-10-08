@@ -2,8 +2,8 @@
 # Co-Maintainer: Misaka13514 <Misaka13514 at gmail dot com>
 
 pkgname=lceda-pro
-pkgver=2.2.27.1
-pkgrel=2
+pkgver=2.2.32.3
+pkgrel=1
 pkgdesc="免费、专业、强大的国产PCB设计工具"
 arch=(x86_64)
 url="https://pro.lceda.cn/"
@@ -42,17 +42,35 @@ package() {
         install -Dm0644 icon/icon_${_icon}x${_icon}.png \
                         ${pkgdir}/usr/share/icons/hicolor/${_icon}x${_icon}/apps/${pkgname}.png
     done
-    install -Dm644 icon/icon_512x512@2x.png \
-                   ${pkgdir}/usr/share/icons/hicolor/1024x1024/apps/${pkgname}.png
+    if [ -f icon/icon_512x512@2x.png ]; then
+        install -Dm644 icon/icon_512x512@2x.png \
+                       ${pkgdir}/usr/share/icons/hicolor/1024x1024/apps/${pkgname}.png
+    fi
 
     # desktop entry
-    install -Dm0644 lceda-pro.dkt \
-                    ${pkgdir}/usr/share/applications/${pkgname}.desktop
+    if [ -f lceda-pro.dkt ]; then
+        install -Dm0644 lceda-pro.dkt \
+                       ${pkgdir}/usr/share/applications/${pkgname}.desktop
 
-    sed -i 's|/opt/lceda-pro/icon/icon_128x128.png|lceda-pro|g' \
-        ${pkgdir}/usr/share/applications/${pkgname}.desktop
-    sed -i 's|/opt/lceda-pro/||g' \
-        ${pkgdir}/usr/share/applications/${pkgname}.desktop
+        sed -i 's|/opt/lceda-pro/icon/icon_128x128.png|lceda-pro|g' \
+            ${pkgdir}/usr/share/applications/${pkgname}.desktop
+        sed -i 's|/opt/lceda-pro/||g' \
+            ${pkgdir}/usr/share/applications/${pkgname}.desktop
+    else
+        install -Dm644 /dev/stdin $pkgdir/usr/share/applications/${pkgname}.desktop << "EOF"
+[Desktop Entry]
+Categories=Development;Electronics;
+Comment=免费、强大、易用的在线电路设计软件
+Exec=lceda-pro %f
+Keywords=PCB;LCEDA;嘉立创EDA;LC;EDA
+GenericName=嘉立创EDA(专业版)
+Icon=lceda-pro
+Name=嘉立创EDA(专业版)
+Type=Application
+Name[en_US]=LCEDA Pro
+MimeType=application/eprj
+EOF
+    fi
 
     # lceda-pro file
     install -Dm0755 /dev/stdin ${pkgdir}/usr/bin/${pkgname} << EOF
