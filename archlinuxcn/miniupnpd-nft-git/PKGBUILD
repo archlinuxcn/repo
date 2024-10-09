@@ -4,7 +4,7 @@ pkgrel=1
 pkgdesc="Lightweight UPnP IGD daemon with nftables support"
 arch=('x86_64')
 url="https://miniupnp.tuxfamily.org"
-license=('BSD')
+license=('BSD-3-Clause')
 depends=('iptables' 'util-linux' 'util-linux-libs' libuuid.so 'libcap-ng' libcap-ng.so 'libnftnl')
 makedepends=('git' 'lsb-release' 'procps-ng')
 provides=('miniupnpd')
@@ -31,7 +31,7 @@ build() {
 package() {
   cd "miniupnp/miniupnpd"
 
-  make DESTDIR="$pkgdir" PREFIX=/ INSTALLPREFIX=/usr SBINDIR=/usr/bin -f Makefile.linux install
+  make DESTDIR="$pkgdir" PREFIX=/ INSTALLPREFIX=/usr SBINDIR=/usr/bin install
 
   rm -r "$pkgdir/etc/init.d"
 
