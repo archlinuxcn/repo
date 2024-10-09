@@ -35,8 +35,7 @@ depends=(
 	'graphite'
 	'lz4'
 	'libgpg-error'
-	'ffmpeg'
-	'fmt')
+	'ffmpeg')
 makedepends=(
 	'git'
 	'cmake'
@@ -54,31 +53,18 @@ pkgver() {
 
 prepare() {
 	cd Qcm
-
-	if [ -d qml_material ]; then
-		echo "Deleting ${srcdir}/Qcm/qml_material..."
-		rm -rf build
-	fi
-
-	git submodule update --init
-	mkdir -p build
+	git submodule update --init --recursive
+	mkdir build
 }
 
 build() {
 	cd Qcm/build
-	echo "Starting Build..."
-	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
+	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 	ninja
 }
 
 package() {
-	echo "Copying files..."
 	cd Qcm
-
-	local APP_ID=io.github.hypengw.Qcm
-	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${APP_ID}.svg"
-	install -Dm644 "app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/${APP_ID}.desktop"
-	install -Dm755 "build/app/Qcm" -t "${pkgdir}/usr/bin/"
-	install -Dm755 build/{qcm_interface/libqcm_interface,asio_helper/libqcm_asio}.so -t "${pkgdir}/usr/lib/"
+	DESTDIR="${pkgdir}" cmake --install build
 	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
