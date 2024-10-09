@@ -1,0 +1,32 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
+
+pkgname=firefox-tridactyl-native
+pkgver=0.5.0
+pkgrel=1
+pkgdesc="Tridactyl native messaging host application for Firefox."
+arch=('x86_64')
+url=https://github.com/tridactyl/tridactyl
+license=('BSD-2-Clause')
+depends=('glibc')
+makedepends=('nim' 'nimble' 'git')
+source=("$pkgname::git+https://github.com/tridactyl/native_messenger.git#tag=$pkgver")
+b2sums=('a058303a24eea1797072b2366d4faba2b8a0380f1044d5cd43f92d14221dbdff135e15f9af11dcf796cbad554333d8482c2e0009de41f1c98b2c31ff71b8635d')
+
+prepare() {
+    cd "$pkgname"
+    nimble setup
+}
+
+build() {
+    cd "$pkgname"
+    sed -i -e "s%REPLACE_ME_WITH_SED%/usr/lib/tridactyl/native_main%" tridactyl.json
+    nimble build -d:release -d:danger -d:lto --debuginfo:on --opt:speed -Y
+}
+
+package() {
+    cd "$pkgname"
+    install -D -m755 -t "$pkgdir/usr/lib/tridactyl" "native_main"
+    install -D -m644 -t "$pkgdir/usr/lib/mozilla/native-messaging-hosts" "tridactyl.json"
+    install -D -m644 -t "$pkgdir/usr/share/licenses/$pkgname" "LICENSE"
+}
