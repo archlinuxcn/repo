@@ -40,23 +40,13 @@ makedepends=(
 	'cmake'
 	'extra-cmake-modules'
 	'ninja')
-source=(
-	"git+${url}.git#tag=v${pkgver}"
-	"qcm.patch::https://github.com/hypengw/Qcm/pull/34.patch"
-	"qml-material.patch::https://github.com/hypengw/QmlMaterial/pull/1.patch"
-)
-sha256sums=('07f80869a0a602500e3b75605375c449b822bb3dae652feac7a68ceb7e8b1a22'
-            'ac714b4d3f3647ebe7254fb574df28e78bc78f54b90931c40278fa9e2f6c294c'
-            'a77a2ada3fcce697658745cfac47a1ac7fdf9f2ff4a367c5cb65e7ef18ddf343')
+source=("git+${url}.git#tag=v${pkgver}")
+sha256sums=('07f80869a0a602500e3b75605375c449b822bb3dae652feac7a68ceb7e8b1a22')
 
 prepare() {
 	cd Qcm
 	git submodule update --init --recursive
 	mkdir build
-
-	patch -p1 < ../qcm.patch
-	cd qml_material
-	patch -p1 < ../../qml-material.patch
 }
 
 build() {
