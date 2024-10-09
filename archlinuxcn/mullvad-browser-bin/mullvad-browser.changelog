@@ -1,3 +1,25 @@
+Mullvad Browser 13.5.7 - October 08 2024
+ * All Platforms
+   * Updated uBlock Origin to 1.60.0
+   * Bug 361: SSL_ERROR_NO_CYPHER_OVERLAP on some Brazilian government websites [mullvad-browser]
+   * Bug 43201: Security fixes from Firefox 131.0.2 [tor-browser]
+
+Mullvad Browser 14.0a8 - October 07 2024
+ * All Platforms
+   * Updated uBlock Origin to 1.60.0
+   * Bug 349: Tidy up mullvad Fluent files [mullvad-browser]
+   * Bug 30543: compat: make spoofed orientation reflect spoofed screen dimensions [1607032 + 1918202] [tor-browser]
+   * Bug 42054: ESR128: investigate - thorin's list [tor-browser]
+   * Bug 43164: Prevent search-bar from being auto-hidden when not used for awhile [tor-browser]
+   * Bug 43169: compat: align userAgent in navigator + HTTP Header [tor-browser]
+   * Bug 43173: Backport security fixes from Firefox 131 [tor-browser]
+   * Bug 43178: Audit fingerprinting overrides (MozBug 1834274) [tor-browser]
+ * Build System
+   * All Platforms
+     * Bug 43157: Move tb-dev to base-browser [tor-browser]
+     * Bug 41256: tools/signing/upload-update_responses-to-staticiforme should regenerate update-responses when it already exists [tor-browser-build]
+     * Bug 41259: Skip versions which don't set incremental_from when generating incrementals [tor-browser-build]
+
 Mullvad Browser 13.5.6 - September 30 2024
  * All Platforms
    * Updated Firefox to 115.16.0esr
