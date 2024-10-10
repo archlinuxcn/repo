@@ -3,7 +3,7 @@
 _pkgname=tokenizers
 pkgname=python-tokenizers
 epoch=1
-pkgver=0.20.0
+pkgver=0.20.1
 pkgrel=1
 pkgdesc='Fast State-of-the-Art Tokenizers optimized for Research and Production'
 arch=('x86_64')
@@ -25,7 +25,7 @@ makedepends=(
 # ref https://bugs.gentoo.org/show_bug.cgi?id=860063
 options=(!lto)
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('997e44dab819b31957d63dc346c8796003d10e6af4e9dda9fc343d40c736797c3e73a97ac333f81ee75a76ef2d28b13b804895216170dc5fe5838460eca55964')
+sha512sums=('a523ec2f4d499aedbac62defe07de1e1677e95f40986e359278d3065569dcb22063b7ca506b385c48273b7890f20ba7b5195050ad9cc09d9a9166afa923ab0ca')
 
 build() {
   cd "${_pkgname}-${pkgver}"
