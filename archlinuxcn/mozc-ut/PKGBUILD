@@ -17,7 +17,7 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname='mozc-ut'
-pkgver=2.30.5595.102.20240918
+pkgver=2.30.5618.102.20241010
 pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
@@ -28,10 +28,10 @@ makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=2.30.5595.102')
+provides=('mozc=2.30.5618.102')
 conflicts=('mozc')
 options=(!distcc !ccache)
-source=('git+https://github.com/google/mozc.git#commit=b52f3048e4becb08f0addc997e40540f6baa5508'
+source=('git+https://github.com/google/mozc.git#commit=1d74ac4a0f569aaa99838df861997f3e882add3c'
         'git+https://github.com/abseil/abseil-cpp.git#commit=4447c7562e3bc702ade25105912dce503f0c4010'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=b514bdc898e2951020cbdca1304b75f5950d1f59'
@@ -42,15 +42,15 @@ source=('git+https://github.com/google/mozc.git#commit=b52f3048e4becb08f0addc997
         'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=35dfcca5c8657f2bf78bc000baa349c322ecb771'
         'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=50fee0397b87fe508f9edd45bac56f5290d8ce66'
         'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=b2112277d0d479b9218f42772356da3601b3e8cf'
-        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=08814f70cc0cc9b0f4757fa46f40d918dfd7073d'
+        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=773cc08e71c4daa3c06fc577853f715a2bb4d9aa'
         'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=b7035b88db25ad1a933f05a33f193711c6c3b2db'
-        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=bbf04c902d8640d0799d151272c968cea7d91de9'
+        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=b61a5af7992d6fcdc82fa08b67b1c9771bbc4449'
         'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=4525819546a26fc994d7ca4a2e883fde14bf908c'
         'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=7300f19e6a3f27334ed7af64589de8782549a13f'
         'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=a754f1fff5fded62cc066aa6be0ab0169059a144'
-        'https://dumps.wikimedia.org/jawiki/20240901/jawiki-20240901-all-titles-in-ns0.gz')
-noextract=('jawiki-20240901-all-titles-in-ns0.gz')
-sha256sums=('367dbf90873203766785ce17e00df56d9682af6d0082a9974934d599e7e29e93'
+        'https://dumps.wikimedia.org/jawiki/20241001/jawiki-20241001-all-titles-in-ns0.gz')
+noextract=('jawiki-20241001-all-titles-in-ns0.gz')
+sha256sums=('6510cf464223d46042d446652a4f7e4bafc3be89ca5aa3990223d73a0df70089'
             'e131bbdd4e207d6cc2930bca9db82d6da9e347175c1125d9d1f2e09a36652278'
             '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
             'c081295f2c22705e07fc430e152a30b36f949a179075d47d3e12ff3109d43c6a'
@@ -61,13 +61,13 @@ sha256sums=('367dbf90873203766785ce17e00df56d9682af6d0082a9974934d599e7e29e93'
             '11759b412db8382c4ae956c45202951575edcede10bfac3a7bb16dbb012da8de'
             '1e7a58fcac2599be29b0ced9cb0bb8210703c1a568e06038d2779106a100a33a'
             '86e95d1aba4b2ab5ec67f7b2d59d14fd1d20ecf08ef4e12f7c20e122ee61d2b1'
-            '21dd679762febe1ec92f206b100a84c3ecb33360c7ae4a89f7400407b0fcff70'
+            '3657173dde6497e2e36d40ee1d5abcf4ff040209d59be705cbf744def301b73e'
             'b348668059cc75744b4eb82fb8ae1c0cc72a4dc6d24c430db652db0090149534'
-            '7d6556a7f6a101e499f793c48d438a86ce57ad4b299721fd02b15e5e2636a6cc'
+            'abe8b91049a651aeaa94412756cbbbf2012ac88136816d9ad5d0967ae4d60879'
             'b20c240b9a76d92afe0da3f5bddcf1dd09dd1ad8b273523806127669a8c469fd'
             '5afa03b188822e5e056dc7517e838935f5c5547f8cb2adee4c60059805850b97'
             'd58121b2b1166d7349e95e331571111282b524003b5ee3e53db9cd5150ba439f'
-            'baea6951c6a0622833557c7e767f7a08e786133ef294b3cf2ed5f319f763babe')
+            '3ac4b5d6ab988f3da2e1828ef7f09c60a00f768c69a17f440070db82986b68cd')
 
 prepare() {
     cd mozc/src
@@ -90,7 +90,7 @@ prepare() {
     # Use a dated snapshot for the JAWiki dump data
     sed -i -e '/wget/d' count_word_hits.py
     sed -i -e "s|file_name = \"jawiki-|file_name = \"${srcdir}/jawiki-|g" count_word_hits.py
-    sed -i -e 's|jawiki-[a-z0-9]\{6,8\}|jawiki-20240901|g' count_word_hits.py apply_word_hits.py
+    sed -i -e 's|jawiki-[a-z0-9]\{6,8\}|jawiki-20241001|g' count_word_hits.py apply_word_hits.py
 
     # Compile the UT dictionary
     printf '\nCompiling the UT dictionary...\n\n'
