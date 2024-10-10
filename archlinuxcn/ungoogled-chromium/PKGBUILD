@@ -9,13 +9,13 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=129.0.6668.89
+pkgver=129.0.6668.100
 pkgrel=1
 _launcher_ver=8
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=129.0.6668.89-1
+_uc_ver=129.0.6668.100-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -48,8 +48,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-vaapi-flag-ozone-wayland.patch
         p010-Zero-Copy-for-VA-API-Decoding-for-Vulkan.patch
         add-feature-to-allow-zero-copy-video-formats.patch)
-sha256sums=('a0833f508663bf82d3f800732ef1a2be4f7de791afbb47c2bf89041caba97755'
-            '07b1f22f67b03ec884f5b71ffdd9fa54e80441185feacd3156f7a125aca2bb3b'
+sha256sums=('281daed29a5cb546f6273130035d9980666d2232f356ad95fc06af3c90121bc2'
+            '0d5688bffb7050913a5e0749da1926e551468fd3362c2f9b33912d68a6dccfa9'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'b3de01b7df227478687d7517f61a777450dca765756002c80c4915f271e2d961'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
