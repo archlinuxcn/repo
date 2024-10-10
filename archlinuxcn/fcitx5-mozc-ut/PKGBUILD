@@ -4,19 +4,19 @@
 # Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 pkgname='fcitx5-mozc-ut'
-pkgver=2.30.5595.102
+pkgver=2.30.5618.102
 pkgrel=1
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
-depends=('fcitx5' 'mozc>=2.30.5595.102')
+depends=('fcitx5' 'mozc>=2.30.5618.102')
 makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-configtool')
-provides=('fcitx5-mozc=2.30.5595.102')
+provides=('fcitx5-mozc=2.30.5618.102')
 conflicts=('fcitx5-mozc')
 options=(!distcc !ccache)
-source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=ce08bdfa567d1e1d7dd740f684c37344681a6b3d'
+source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=0cbb8f18e8df5eb4e110bab850cebc1f57811f16'
         'git+https://github.com/abseil/abseil-cpp.git#commit=4447c7562e3bc702ade25105912dce503f0c4010'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=b514bdc898e2951020cbdca1304b75f5950d1f59'
@@ -24,7 +24,7 @@ source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=ce08bdfa567d1e
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
         'git+https://github.com/protocolbuffers/protobuf.git#commit=7cc670c1809e704ebeba90fb430d50e009f36727'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d')
-sha256sums=('e669aa16bf19939dcfaa86893d9bb662eb989c2f641e5b291daa1e3ccdf7c383'
+sha256sums=('391abf0a97facf3d59cece846ce230f7087179a4bf1c71e9ab36b4a16c285f7b'
             'e131bbdd4e207d6cc2930bca9db82d6da9e347175c1125d9d1f2e09a36652278'
             '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
             'c081295f2c22705e07fc430e152a30b36f949a179075d47d3e12ff3109d43c6a'
