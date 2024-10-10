@@ -2,16 +2,16 @@
 # Contributor: oldherl <oldherl@gmail.com>
 
 pkgname=ttf-lxgw-wenkai-tc
-pkgver=1.500
-pkgrel=2
+pkgver=1.501
+pkgrel=1
 pkgdesc="霞鹜文楷 An open-source Chinese font derived from Fontworks' Klee One."
 url="https://github.com/lxgw/LxgwWenKaiTC"
 license=("OFL-1.1-RFN")
 arch=(any)
 source=(
-  "https://github.com/lxgw/LxgwWenkaiTC/releases/download/v$pkgver/lxgw-wenkai-tc-v1.500.tar.gz"
+  "https://github.com/lxgw/LxgwWenkaiTC/releases/download/v$pkgver/lxgw-wenkai-tc-v$pkgver.tar.gz"
 )
-sha256sums=('1ae1884600504e694a99aac4545999d91818b65c3a9b3de77c57566e3966f77e')
+sha256sums=('1a7965c1644ed8f6bb8657a164aac626bd9fe2444937524fc6dcf850631bab28')
 
 package(){
   cd "lxgw-wenkai-tc-v$pkgver"
