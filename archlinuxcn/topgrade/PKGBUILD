@@ -2,7 +2,7 @@
 # Contributor: Thomas Schoenauer <t.schoenauer@hgs-wt.at>
 # Contributor: Roey Darwish Dror <roey.ghost@gmail.com>
 pkgname=topgrade
-pkgver=16.0.0
+pkgver=16.0.1
 pkgrel=1
 pkgdesc="Upgrade all the things"
 arch=('x86_64' 'aarch64')
@@ -11,7 +11,7 @@ license=('GPL-3.0-or-later')
 depends=('gcc-libs')
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/topgrade-rs/topgrade/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('c4af5ae7c03b92d726301c56aa7e6003ae9ba3d852afb77a8297add7001b2cc3')
+sha256sums=('9cfcf31db3322f536f0c48d8a75c6750f18762e0ef60eb7446e3d4a0ab60853f')
 
 prepare() {
   cd "$pkgname-$pkgver"
