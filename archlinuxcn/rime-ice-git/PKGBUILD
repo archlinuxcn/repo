@@ -195,7 +195,6 @@ _patch_double_pinyin() {
   )
 
   # patch radical_pinyin
-  set -ex
   for _f in "${_schemas_to_patch[@]}"; do
     _patch_f="${_install_base}/${_f}.schema.yaml"
     if [ -f "${_patch_f}" ]; then
