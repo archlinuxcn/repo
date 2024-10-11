@@ -1,7 +1,7 @@
-From ba3a74dda07d02801951939103ad6d814386c0ca Mon Sep 17 00:00:00 2001
+From de4bb6bc2729865f3823ccf456ebd09675ebd39c Mon Sep 17 00:00:00 2001
 From: Thomas Gleixner <tglx@linutronix.de>
 Date: Sun, 28 Jul 2024 13:06:10 +0200
-Subject: [PATCH 4/5] x86/apic: Remove logical destination mode for 64-bit
+Subject: [PATCH 3/3] x86/apic: Remove logical destination mode for 64-bit
 
 Logical destination mode of the local APIC is used for systems with up to
 8 CPUs. It has an advantage over physical destination mode as it allows to
@@ -215,5 +215,5 @@ index f37ad3392..e0308d8c4 100644
 +struct apic *apic __ro_after_init = &apic_physflat;
 +EXPORT_SYMBOL_GPL(apic);
 -- 
-2.46.0
+2.46.1
 
