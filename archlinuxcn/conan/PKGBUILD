@@ -1,8 +1,8 @@
-# Maintainer: FirstAirBender <noblechuk5[at]web[dot]de>
-# Contributor: Tomislav Ivek <tomislav.ivek@gmail.com>
+# Maintainer: Tomislav Ivek <tomislav.ivek@gmail.com>
+# Contributor: FirstAirBender <noblechuk5[at]web[dot]de>
 
 pkgname=('conan')
-pkgver=2.7.1
+pkgver=2.8.0
 pkgrel=1
 pkgdesc="A distributed, open source, C/C++ package manager."
 arch=('any')
@@ -48,4 +48,4 @@ package() {
   install -m755 -d "${pkgdir}/usr/share/doc/conan"
   install -m644 contributors.txt "${pkgdir}/usr/share/doc/conan/"
 }
-md5sums=('26b3b6b6391cc648967065d77dd03130')
+md5sums=('ef0182e14be1fd2b6bed9aaeeb3bc800')
