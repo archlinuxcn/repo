@@ -2,7 +2,9 @@ maintainers:
   - github: Integral-Tech
     email: integral@archlinuxcn.org
 
-post_build: aur_post_build
+post_build_script: |
+  aur_post_build()
+  git_pkgbuild_commit()
 
 update_on:
   - source: aur

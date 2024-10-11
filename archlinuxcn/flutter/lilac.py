@@ -9,3 +9,5 @@ def pre_build():
         if line.startswith('license='):
             line = "license=('BSD-3-Clause')"
         print(line)
+
+    update_pkgver_and_pkgrel(_G.newver)
