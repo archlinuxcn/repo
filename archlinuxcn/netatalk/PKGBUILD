@@ -5,7 +5,7 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.0.0
+pkgver=4.0.1
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
@@ -13,8 +13,8 @@ license=('GPL-2.0-or-later')
 
 source=(meson.patch
         https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
-md5sums=('4bf64508fc167c95e36f31330981c96b'
-         '545ae9ad8589f72a0f7e198d53fa92ea')
+md5sums=('788265d9100fee191b0d4b60a26c92d8'
+         '1704dc454eb6332cd80caae3a5ce28e4')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -66,6 +66,7 @@ build() {
   arch-meson . build \
     --localstatedir /var/lib \
     -Dwith-appletalk=true \
+    -Dwith-bdb-version=5.3 \
     -Dwith-dbus-sysconf-path=/usr/share/dbus-1/system.d \
     -Dwith-debug=true \
     -Dwith-docbook-path=/usr/share/xml/docbook/xsl-stylesheets-${docbookver} \

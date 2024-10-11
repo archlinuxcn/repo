@@ -1,113 +1,250 @@
-Only in netatalk.orig: build
-diff --color -ru -x '.*' netatalk.orig/etc/netatalk/meson.build netatalk/etc/netatalk/meson.build
---- netatalk.orig/etc/netatalk/meson.build	2024-10-04 09:00:02.842066433 +0100
-+++ netatalk/etc/netatalk/meson.build	2024-10-04 15:10:26.559327484 +0100
-@@ -5,10 +5,10 @@
-     netatalk_deps += mysqlclient
- endif
+From bf794d2e33ae492340ff21f025153b04e2430da2 Mon Sep 17 00:00:00 2001
+From: Denis Yantarev <denis.yantarev@gmail.com>
+Date: Fri, 11 Oct 2024 09:28:54 +0100
+Subject: [PATCH] meson: Rewrite Berkley DB detection #1604
+
+---
+ meson.build       | 180 +++++++++++++++++++++++++---------------------
+ meson_options.txt |   6 ++
+ 2 files changed, 106 insertions(+), 80 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index f162b0d2..4f189882 100644
+--- a/meson.build
++++ b/meson.build
+@@ -400,6 +400,9 @@ endif
+ #
  
--if have_dns
--    netatalk_deps += dns_sd_libs
--elif avahi.found()
-+if avahi.found()
-     netatalk_deps += avahi
-+elif have_dns
-+    netatalk_deps += dns_sd_libs
- endif
+ bdb_path = get_option('with-bdb-path')
++bdb_req_version = get_option('with-bdb-version')
++
++have_bdb = false
  
- executable(
-diff --color -ru -x '.*' netatalk.orig/meson.build netatalk/meson.build
---- netatalk.orig/meson.build	2024-10-04 14:49:09.580786678 +0100
-+++ netatalk/meson.build	2024-10-04 15:10:16.992512869 +0100
-@@ -417,13 +417,6 @@
-     '/usr',
- ]
+ bdb_header = ''
+ bdb_includes = []
+@@ -409,108 +412,125 @@ bdb_major_version = ''
+ bdb_minor_version = ''
+ bdb_version = ''
+ 
+-bdb_dirs = [
+-    '/usr/local',
+-    '/usr/pkg',
+-    '/opt/local',
+-    macos_prefix / 'opt/berkeley-db',
+-    '/usr',
+-]
++if bdb_path != ''
++    bdb_dirs = [ bdb_path ]
++else
++    bdb_dirs = [
++        '/usr/local',
++        '/usr/pkg',
++        '/opt/local',
++        macos_prefix / 'opt/berkeley-db',
++        '/usr',
++    ]
++endif
++
  bdb_subdirs = [
--    'db4.6',
+     'db4.6',
 -    'db4.7',
 -    'db4.8',
 -    'db4',
--    'db46',
--    'db47',
--    'db48',
+     'db46',
++    'db4.7',
+     'db47',
++    'db4.8',
+     'db48',
++    'db4',
      'db5.0',
++    'db50',
      'db5.1',
++    'db51',
      'db5.2',
-@@ -431,8 +424,6 @@
++    'db52',
+     'db5.3',
++    'db53',
      'db5',
-     'db50',
-     'db51',
--    'db6.1',
--    '',
+-    'db50',
+-    'db51',
+     'db6.1',
++    'db61',
++    'db6.2',
++    'db62',
+     '',
  ]
  
- if bdb_path != ''
-@@ -492,7 +483,6 @@
-     bdb_minimum_version = bdb_version.version_compare('>=4.6')
- 
-     bdb_libnames = [
--        'db',
-         'db' + bdb_major_version,
-         'db' + bdb_major_version + '.' + bdb_minor_version,
-         'db' + bdb_major_version + bdb_minor_version,
-@@ -702,6 +692,10 @@
- 
- enable_zeroconf = get_option('with-zeroconf')
- 
-+have_zeroconf = false
+-if bdb_path != ''
++if bdb_req_version != ''
++    if not bdb_req_version.version_compare('>=4.6')
++        error('Berkley DB library version is below supported 4.6')
++    endif
++    message('Searching for Berkley DB library version', bdb_req_version)
++endif
 +
-+zeroconf_provider = ''
-+
- avahi = dependency('avahi-client', required: false)
- 
- dns_sd_libs = []
-@@ -716,8 +710,6 @@
-     dns_sd_libs += system
- endif
- 
--zeroconf_provider = ''
--
- have_dns = (
-     (dns_sd.found() or system.found())
-     and cc.has_header('dns_sd.h')
-@@ -727,28 +719,22 @@
-     )
- )
- 
--if not enable_zeroconf
--    have_zeroconf = false
--else
--    have_zeroconf = have_dns
--    if have_dns
-+if enable_zeroconf
-+    if avahi.found()
-+        have_zeroconf = true
-+        cdata.set('USE_ZEROCONF', 1)
-+        cdata.set('HAVE_AVAHI', 1)
-+        if avahi.version() >= '0.6.4'
-+            cdata.set('HAVE_AVAHI_THREADED_POLL', 1)
-+        endif
-+        cdata.set('freebsd_zeroconf', 'avahi_daemon')
-+        zeroconf_provider += 'Avahi'
-+    elif have_dns
-+        have_zeroconf = true
-         cdata.set('USE_ZEROCONF', 1)
-         cdata.set('HAVE_MDNS', 1)
-         cdata.set('freebsd_zeroconf', 'mdnsd')
-         zeroconf_provider += 'mDNS'
--    else
--        have_zeroconf = avahi.found()
--        if avahi.found()
--            cdata.set('USE_ZEROCONF', 1)
--            cdata.set('HAVE_AVAHI', 1)
--            if avahi.version() >= '0.6.4'
--                cdata.set('HAVE_AVAHI_THREADED_POLL', 1)
--            endif
--            cdata.set('freebsd_zeroconf', 'avahi_daemon')
--            zeroconf_provider += 'Avahi'
--        else
--            have_zeroconf = false
++foreach dir : bdb_dirs
+     foreach subdir : bdb_subdirs
+-        if fs.exists(bdb_path / 'include' / subdir / 'db.h')
+-            bdb_header += bdb_path / 'include' / subdir / 'db.h'
+-            bdb_libdir += bdb_path / 'lib'
+-            bdb_includes += include_directories(
+-                bdb_path / 'include' / subdir,
+-            )
 -        endif
-     endif
+-        if bdb_header != ''
+-            break
+-        endif
+-    endforeach
+-else
+-    foreach dir : bdb_dirs
+-        foreach subdir : bdb_subdirs
+-            if fs.exists(dir / 'include' / subdir / 'db.h')
+-                bdb_header += dir / 'include' / subdir / 'db.h'
+-                if target_os == 'sunos' and compiler_64_bit_mode and fs.exists(dir / 'lib/64')
+-                    bdb_libdir += dir / 'lib/64'
+-                else
+-                    bdb_libdir += dir / 'lib'
+-                endif
+-                bdb_includes += include_directories(
+-                    dir / 'include' / subdir,
+-                )
++        bdb_include_path = dir / 'include' / subdir
++        bdb_header = bdb_include_path / 'db.h'
++        if fs.exists(bdb_header)
++            bdb_includes = include_directories(bdb_include_path)
++
++            bdb_major_version = run_command(
++                'grep',
++                'DB_VERSION_MAJOR',
++                bdb_header,
++                check: true,
++            ).stdout().strip().substring(25)
++        
++            bdb_minor_version = run_command(
++                'grep',
++                'DB_VERSION_MINOR',
++                bdb_header,
++                check: true,
++            ).stdout().strip().substring(25)
++        
++            bdb_version = bdb_major_version + '.' + bdb_minor_version
++
++            if not bdb_version.version_compare('>=4.6')
++                continue
++            endif
++
++            if bdb_req_version != '' and not bdb_version.version_compare('~' + bdb_req_version)
++                continue
++            endif
++
++            message('Berkley DB header found at', bdb_header)
++
++            # Now find lib file matching header
++            if target_os == 'sunos' and compiler_64_bit_mode and fs.exists(dir / 'lib/64')
++                bdb_libdir = dir / 'lib/64'
++            else
++                bdb_libdir = dir / 'lib'
+             endif
+-            if bdb_header != ''
++
++            # Guess lib name starting from more specific ones
++            bdb_libnames = [
++                'db-' + bdb_major_version + '.' + bdb_minor_version,
++                'db'  + bdb_major_version + '.' + bdb_minor_version,
++                'db'  + bdb_major_version + bdb_minor_version,
++                'db-' + bdb_major_version,
++                'db'  + bdb_major_version,
++                'db',
++            ]
++
++            foreach name : bdb_libnames
++                db = cc.find_library(name, dirs: bdb_libdir, required: false)
++                if db.found()
++                    have_bdb = true
++                    break
++                endif
++            endforeach
++
++            if have_bdb
+                 break
+             endif
+-        endforeach
+-        if bdb_header != ''
+-            break
+         endif
+     endforeach
+-endif
+ 
+-if bdb_header != ''
+-    have_bdb = true
+-    bdb_major_version += run_command(
+-        'grep',
+-        'DB_VERSION_MAJOR',
+-        bdb_header,
+-        check: true,
+-    ).stdout().strip().substring(25)
+-
+-    bdb_minor_version += run_command(
+-        'grep',
+-        'DB_VERSION_MINOR',
+-        bdb_header,
+-        check: true,
+-    ).stdout().strip().substring(25)
+-
+-    bdb_version += bdb_major_version + '.' + bdb_minor_version
+-    bdb_minimum_version = bdb_version.version_compare('>=4.6')
+-
+-    bdb_libnames = [
+-        'db',
+-        'db' + bdb_major_version,
+-        'db' + bdb_major_version + '.' + bdb_minor_version,
+-        'db' + bdb_major_version + bdb_minor_version,
+-        'db-' + bdb_major_version,
+-        'db-' + bdb_major_version + '.' + bdb_minor_version,
+-    ]
++    if have_bdb
++        break
++    endif
++endforeach
+ 
+-    foreach name : bdb_libnames
+-        db = cc.find_library(name, dirs: bdb_libdir, required: false)
+-        if db.found()
+-            break
+-        endif
+-    endforeach
+-else
+-    have_bdb = false
+-    error(
+-        'Berkeley DB library required but not found! Please specify an installation path using the -Dwith-bdb= configure option (must include lib and include dirs)',
+-    )
++if not have_bdb
++    if bdb_req_version != ''
++        msg = 'Berkeley DB library version ' + bdb_req_version + ' requested via -Dwith-bdb-version= not found!'
++    else
++        msg = 'Berkeley DB library required but not found!'
++    endif
++    error(msg, 'Please specify an installation path using the -Dwith-bdb-path= configure option (must include lib and include dirs)')
  endif
  
+ #
+diff --git a/meson_options.txt b/meson_options.txt
+index ccf6f710..02bf78bc 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -207,6 +207,12 @@ option(
+     value: '',
+     description: 'Set path to Berkeley DB installation. Must contain lib and include dirs',
+ )
++option(
++    'with-bdb-version',
++    type: 'string',
++    value: '',
++    description: 'Set installed Berkeley DB version to link against',
++)
+ option(
+     'with-cracklib-path',
+     type: 'string',
+-- 
+2.47.0
+
