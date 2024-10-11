@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
 
 pkgname=qcm
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=1
 pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
@@ -41,7 +41,7 @@ makedepends=(
 	'extra-cmake-modules'
 	'ninja')
 source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('b5f28737571ac338382a38f4827cde1651ee4f242ef7dbe1ec709013e3ef80bb')
+sha256sums=('639978c7c56be70aed1b16c444d6f577310942283be7951cf647f3ad34ca5af3')
 
 prepare() {
 	cd Qcm
