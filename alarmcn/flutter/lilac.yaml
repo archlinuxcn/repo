@@ -4,13 +4,18 @@ maintainers:
 
 pre_build_script: |
   aur_pre_build(maintainers=['frealgagu','WithTheBraid','PolarianDev'])
-  run_cmd(['updpkgsums'])
+  update_pkgver_and_pkgrel(_G.newver)
 
-post_build: aur_post_build
+post_build_script: git_pkgbuild_commit()
 
 update_on:
   - source: aur
     aur: flutter
+
+  - source: github
+    github: flutter/flutter
+    use_max_tag: true
+    exclude_regex: ".*pre.*"
 
   - source: alpm
     alpm: dart
