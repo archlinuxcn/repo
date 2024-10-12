@@ -3,11 +3,12 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=extra-cmake-modules-git
+_pkgname=${pkgname%-git}
 pkgver=6.7.0.r3728.b86907d5
 pkgrel=1
-pkgdesc='Extra modules and scripts for CMake. (GIT version)'
+pkgdesc="Extra modules and scripts for CMake. (GIT version)"
 arch=('any')
-url='https://projects.kde.org/projects/kdesupport/extra-cmake-modules'
+url="https://community.kde.org/Frameworks"
 license=('LGPL')
 groups=('kf6-git')
 depends=('cmake')
@@ -15,39 +16,28 @@ makedepends=(
 	'git'
 	'python-sphinx'
 	'python-requests'
-	'qt6-base'
-)
-checkdepends=(
-	'reuse'
 	'qt6-tools'
 	'qt6-base'
 	'qt6-declarative'
 )
-conflicts=('extra-cmake-modules')
-provides=('extra-cmake-modules')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 optdepends=(
 	'python-pyxdg: to generate fastlane metadata for Android apps'
 	'python-requests: to generate fastlane metadata for Android apps'
 	'python-yaml: to generate fastlane metadata for Android apps'
 	'clang: for clang support'
 )
-source=('git+https://invent.kde.org/frameworks/extra-cmake-modules.git')
+source=("git+https://invent.kde.org/frameworks/${_pkgname}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd extra-cmake-modules
-	_ver="$(cat CMakeLists.txt | grep -m1 'set(VERSION' | grep -o "[[:digit:]]*" | paste -sd'.')"
-	echo "${_ver}.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
-}
-
-prepare() {
-	sed 's|frameworks/||g' -i extra-cmake-modules/tests/KDEFetchTranslations/CMakeLists.txt
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
-	export LC_ALL=C
-
-	cmake -S extra-cmake-modules -B build \
+	cmake -S "${_pkgname}" -B build \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DBUILD_QTHELP_DOCS=ON \
