@@ -1,8 +1,8 @@
 # Maintainer: Chih-Hsuan Yen <base64_decode("eXUzYWN0eHQydHR0ZmlteEBjaHllbi5jYwo=")>
 
 pkgname=python-sqlcipher3
-pkgver=0.5.3
-pkgrel=2
+pkgver=0.5.4
+pkgrel=1
 pkgdesc='Python 3 bindings for SQLCipher'
 arch=(x86_64)
 url='https://github.com/coleifer/sqlcipher3'
@@ -14,7 +14,7 @@ depends=(python glibc sqlcipher)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 source=("https://github.com/coleifer/sqlcipher3/archive/refs/tags/$pkgver/$pkgname-$pkgver.zip")
-sha256sums=('67297bf5c2e25ae24ccf5d28c0f2090c42c3fdeb6cc7f7c4792f23f602671643')
+sha256sums=('245619d456f65bc3f4ad9967ae72d0ad48fed69a1f511b9cf084ebfd46a41eb1')
 
 build() {
   cd sqlcipher3-$pkgver
