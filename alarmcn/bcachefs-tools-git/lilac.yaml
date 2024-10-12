@@ -8,6 +8,8 @@ pre_build_script: |
 
 post_build_script: git_pkgbuild_commit()
 
+time_limit_hours: 2
+
 update_on:
   - source: github
     github: koverstreet/bcachefs-tools
