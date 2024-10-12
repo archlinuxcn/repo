@@ -9,7 +9,6 @@ pre_build_script: |
 post_build_script: git_pkgbuild_commit()
 
 update_on:
-  - source: github
-    github: KDE/extra-cmake-modules
-
-  - source: manual
+  - source: gitlab
+    host: invent.kde.org
+    gitlab: frameworks/extra-cmake-modules
