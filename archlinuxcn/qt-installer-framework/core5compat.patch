@@ -1,0 +1,12 @@
+diff -Naur installer-framework-4.8.1.orig/tools/devtool/devtool.pro installer-framework-4.8.1/tools/devtool/devtool.pro
+--- installer-framework-4.8.1.orig/tools/devtool/devtool.pro	2024-09-19 09:12:38.000000000 +0200
++++ installer-framework-4.8.1/tools/devtool/devtool.pro	2024-10-13 15:05:28.478689204 +0200
+@@ -1,7 +1,7 @@
+ TEMPLATE = app
+ TARGET = devtool
+ 
+-QT = core network qml xml concurrent
++QT = core network qml xml concurrent core5compat
+ 
+ include(../../installerfw.pri)
+ 

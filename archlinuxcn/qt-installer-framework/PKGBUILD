@@ -4,34 +4,38 @@
 
 pkgbase=qt-installer-framework
 pkgname=(qt-installer-framework qt-installer-framework-docs)
-pkgver=4.7.0
+pkgver=4.8.1
 pkgrel=1
 pkgdesc='The Qt Installer Framework used for the Qt SDK installer'
 arch=('x86_64')
 url='http://qt-project.org/wiki/Qt-Installer-Framework'
 license=('GFDL-1.3-only' 'LicenseRef-GPL3-EXCEPT')
-makedepends=('qt5-tools' 'qt5-declarative' 'clang')
+makedepends=('qt6-tools' 'qt6-declarative' 'qt6-5compat' 'clang' 'libarchive')
 source=("${pkgbase}-${pkgver}.tar.gz"::"https://github.com/qtproject/installer-framework/archive/${pkgver}.tar.gz"
-        "componentalias_const_qjsonarray.patch")
-sha256sums=('bb5cccd294fa357ca6571397e22adb8e88bf6827adf96d02152b95f01d4c4cb9'
-            '7190ba7321dde12b4b13963f1b6d94f10299766980578f2498f21f985a4f2e46')
+        "qt6_7.patch"::"https://github.com/qtproject/installer-framework/commit/0b1103b41db101d2a509e1bdf5385b29410e41e9.patch"
+        "core5compat.patch")
+sha256sums=('cab2fa4d5f04298cfe4f63b9721bb389d1efb0fa7333a0ed0795b4ff51108978'
+            '7e1961f741f0de55b01d568b57a3f4a25841c774b6eb293866272e048d73412a'
+            'e6013877697814051f1e1483d106da05b612ac24d9b43c868764f77d91b91b20')
+options=('!lto')
 
 prepare() {
   cd "installer-framework-${pkgver}"
-  patch -p1 -i "${srcdir}/componentalias_const_qjsonarray.patch"
+  patch -p1 -i "${srcdir}/qt6_7.patch"
+  patch -p1 -i "${srcdir}/core5compat.patch"
 }
 
 build() {
   # Build tools and libraries
   cd "installer-framework-${pkgver}"
-  qmake .
-  make
+  /usr/lib/qt6/bin/qmake CONFIG+=libarchive QT+=core5compat .
+  make -w --no-silent
   make html_docs_ifw
 }
 
 package_qt-installer-framework() {
   pkgdesc='The Qt Installer Framework used for the Qt SDK installer'
-  depends=('qt5-declarative')
+  depends=('qt6-declarative' 'libarchive')
   optdepends=('python: needed to run some sample tests'
               'qt-installer-framework-docs: examples and documentation files')
 
