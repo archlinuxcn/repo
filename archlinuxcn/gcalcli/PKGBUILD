@@ -6,14 +6,20 @@
 # Contributor: Thomas Zervogiannis
 
 pkgname=gcalcli
-pkgver=4.5.0
-pkgrel=2
+pkgver=4.5.1
+pkgrel=1
 pkgdesc='Google calendar command line interface'
 arch=('any')
 url=https://github.com/insanum/gcalcli
 license=('MIT')
-makedepends=('python-setuptools')
-depends=(
+makedepends=("git"
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-setuptools-scm'
+    'python-wheel'
+)
+depends=("python"
     'python-argcomplete'
     'python-babel'
     'python-dateutil'
@@ -22,17 +28,19 @@ depends=(
     'python-google-auth-oauthlib'
     'python-httplib2'
     'python-parsedatetime'
+    'python-platformdirs'
+    'python-pydantic'
     'python-truststore'
 )
 optdepends=(
     'python-vobject: for ics/vcal importing'
 )
-source=("gcalcli-$pkgver.tar.gz::https://github.com/insanum/gcalcli/archive/v$pkgver.tar.gz")
-sha256sums=('db906fde41236a5563af58d359f5b35ba586a4ad4c6cf2646dd6ba976857c1e3')
+source=("git+https://github.com/insanum/$pkgname.git#tag=v$pkgver")
+sha256sums=('093572d0151245d061c1504953e7ad9f8f2b883ea70fd2d2f48fa766c919e8af')
 
 build() {
-    cd "gcalcli-$pkgver"
-    python setup.py build
+    cd "${pkgname}"
+    python -m build --wheel --no-isolation
 }
 
 # Disabled because it downloads deps via pip. Report this upstream (if
@@ -44,8 +52,8 @@ build() {
 # }
 
 package() {
-    cd "gcalcli-$pkgver"
-    python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
+    cd "${pkgname}"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
     install -Dm644 docs/*.{md,png} -t "$pkgdir/usr/share/doc/$pkgname"
     install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
 }
