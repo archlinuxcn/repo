@@ -3,9 +3,9 @@
 
 pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
-pkgver=129.0.6668.81_1
+pkgver=130.0.6723.40_1
 pkgrel=1
-_pkgver=129.0.6668.81
+_pkgver=130.0.6723.40
 _pkgrel=1
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
@@ -14,8 +14,8 @@ depends=("gcc-libs" "glibc")
 makedepends=("ninja" "gn" "ccache" "python")
 checkdepends=("python" "openssl")
 
-_PGO_PATH='chrome-linux-main-1723053597-b7a6f793b48020befd6a1e60819840a456c519b3-98f747673cbba839fedf299e6c76ac032fad32f0.profdata'
-_clang_path='clang-llvmorg-20-init-1009-g7088a5ed-10.tar.xz'
+_PGO_PATH='chrome-linux-6723-1728387217-9f5646f93bc4ba3a2a9310010e81c26b70db13b1-f044eaa32696eb5c9c4d3ffede525cf50c8cc3e9.profdata'
+_clang_path='clang-llvmorg-20-init-3847-g69c43468-28.tar.xz'
 
 source=(
   "naiveproxy.service"
@@ -33,15 +33,15 @@ noextract=(
 sha1sums=('4c18f44ba51d40bfd7e6ae8ecb30b8e812acb8e8'
           '013b31ae43e309bc6560b61e8b4196f8f14f738f'
           '3727d7da81b1480d60e593a7d6878d981b35c4f6'
-          'b9cb58e9019b966c91d50b65e423d57fde4be9b2'
-          'b7a6f793b48020befd6a1e60819840a456c519b3'
-          'a85fffead72cf01a4e0ca72381896e550dd9bc60')
+          'fd18fa5b79036f095c6d97a9a705da6507677be9'
+          '9f5646f93bc4ba3a2a9310010e81c26b70db13b1'
+          'e24758e3441d38fc7b38597de48a18999ba87eb1')
 sha256sums=('c05026423ca08e2c712745b717c23395e344f2c99b2dad30beed8e26922d268f'
             'daa0f591233625730168f3ea006f1d5a7e439e26b35a1051d957e394aa8a4440'
             '5bc9ef361e6303e151b6e63deb31b47e24a4f34ade4d8f092a04bc98e89a2edb'
-            'ff5de0c38685d75a9821c41f283f040fd7de790213e7eeb526edcca2f849f02a'
-            'f4df544116e10c5495148ee9afedbb07f4ee2659e461dbf0f69755b8d338ceec'
-            '32ac9d9864a6bd99242f1a97778b3a074ac1151ce3eca369903f2ef5337c787a')
+            '307b334020bccf1e02b676318bfff82f6bc7c0cfccad8fd8347027ef0c50e9e8'
+            '157240225fdd60edcc09ea28a861add344641eff5dd726c437fe241a44c92bd2'
+            '6a30f7bc7c5f0eac02a40a4ec9a1ab906ddff2adacf2c9ff065916047c79f0fb')
 
 backup=('etc/naiveproxy/config.json')
 provides=('naiveproxy')
