@@ -73,8 +73,8 @@ def get_pgo_path_and_clang_path():
     clang_scripts = import_module_from_path(
         'clang_scripts', clang_scripts_path
     )
-    CLANG_REVISION = clang_scripts.PACKAGE_VERSION
-    clang_path = 'clang-{}.tgz'.format(CLANG_REVISION)
+    CLANG_VERSION = clang_scripts.PACKAGE_VERSION
+    clang_path = 'clang-{}.tar.xz'.format(CLANG_VERSION)
 
     shutil.rmtree(tmp_folder)
 
