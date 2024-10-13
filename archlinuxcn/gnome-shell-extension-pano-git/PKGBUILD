@@ -1,0 +1,60 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+_pkgbase="gnome-shell-extension-pano"
+pkgname=${_pkgbase}-git
+pkgver=23.alpha3.r4.gd0d71f8
+pkgrel=1
+pkgdesc="Next-gen Clipboard Manager for Gnome Shell"
+arch=('any')
+url="https://github.com/oae/gnome-shell-pano"
+license=('GPL-2.0-or-later')
+depends=(
+    'gnome-shell>=45'
+    'libgda6'
+    'cogl'
+    'gsound'
+)
+makedepends=(
+    'gobject-introspection'
+    'yarn'
+    'appstream'
+    'zip'
+    'git'
+)
+provides=("${_pkgbase}")
+conflicts=("${_pkgbase}")
+source=("$_pkgbase::git+${url}.git")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd "${srcdir}/${_pkgbase}"
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "${srcdir}/${_pkgbase}"
+  yarn install
+}
+
+build() {
+  cd "${srcdir}/${_pkgbase}"
+  yarn build:package
+}
+
+package() {
+  cd "${srcdir}/${_pkgbase}/dist"
+
+  local uuid
+  local destdir
+  uuid=$(grep -Po '(?<="uuid": ")[^"]*' metadata.json)
+  destdir="${pkgdir}/usr/share/gnome-shell/extensions/${uuid}"
+
+  install -d "${destdir}"
+  bsdtar xvf "${uuid}.zip" -C "$pkgdir/usr/share/gnome-shell/extensions/${uuid}/"
+  
+  local schema
+  schema=$(grep -Po '(?<="settings-schema": ")[^"]*' metadata.json).gschema.xml
+  install -Dm644 "schemas/${schema}" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
+
+  rm -rf "${destdir}/schemas"
+}
