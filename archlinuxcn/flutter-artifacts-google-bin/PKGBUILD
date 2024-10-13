@@ -3,7 +3,7 @@
 pkgbase=flutter-artifacts-google-bin
 _group=flutter
 groups=("$_group")
-pkgver=3.24.2
+pkgver=3.24.3
 # in order to update these version hashes, consult the PKGBUILD and update-artifact-versions.sh
 # script of https://aur.archlinux.org/pkgbase/flutter
 _enginever=a6bd3f1de158bb61090e0c8053df93a10cb548e1
@@ -16,7 +16,7 @@ _dartmax="3.6.0"
 # this host is blocked in China, according to Flutter docs, the FLUTTER_STORAGE_BASE_URL environment variable
 # should be used to provide an alternative mirror
 _storagebase="${FLUTTER_STORAGE_BASE_URL:-"https://storage.googleapis.com"}"
-pkgrel=10
+pkgrel=1
 _pkgdesc="Flutter SDK artifacts (binary from Google)"
 pkgdesc="${_pkgdesc}"
 arch=("x86_64" "aarch64")
