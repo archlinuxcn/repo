@@ -9,7 +9,7 @@ pkgdesc="Machine learning video/GIF/image upscaling"
 url="https://${pkgname}.org"
 arch=('x86_64' 'aarch64' 'riscv64')
 license=("AGPL-3.0-or-later")
-depends=('ffmpeg' 'ncnn' 'vulkan-driver')
+depends=('ffmpeg' 'ncnn' 'vulkan-driver' 'spdlog')
 makedepends=('git' 'cmake' 'vulkan-headers')
 optdepends=(
 	"waifu2x-ncnn-vulkan: for anime/cartoon upscaling and JPEG denoising - fast"
