@@ -44,7 +44,7 @@ source=(
     "rune-player.desktop"
 )
 sha256sums=('SKIP'
-            '7da52f8c68eafc20e85e60996e2c6ac677009a96a67e77a38753201096a3333a')
+            'c15f664477a7d1ed4f6b040cc348d5bfc43884b44722bc2598b79d36139811c1')
 
 pkgver() {
     cd "${srcdir}/${_pkgname}"
@@ -71,7 +71,7 @@ package() {
     install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
 
     pushd assets/icons
-    find . -type f -exec install -v -Dm644 {} $pkgdir/usr/share/icons/{} \;
+    find . \( -path "./fluent" -o -path "./macos" \) -prune -o -type f -exec install -v -Dm644 {} $pkgdir/usr/share/icons/{} \;
     cd Papirus
     find . -type f -exec install -v -Dm644 {} $pkgdir/usr/share/icons/hicolor/{} \;
     popd
@@ -80,7 +80,7 @@ package() {
     ln -sfrv $pkgdir/usr/share/icons/breeze/apps/1024/rune.png $pkgdir/usr/share/icons/rune.png
 
     cd build/linux/x64/release/bundle
-    install -Dm755 player -t "$pkgdir/usr/lib/$_pkgname/"
+    install -Dm755 player "$pkgdir/usr/lib/$_pkgname/rune"
     pushd lib
     find . -type f -exec install -v -Dm644 {} $pkgdir/usr/lib/$_pkgname/lib/{} \;
     popd
@@ -88,7 +88,7 @@ package() {
     find . -type f -exec install -v -Dm644 {} $pkgdir/usr/lib/$_pkgname/data/{} \;
     popd
     install -dm755 "$pkgdir/usr/bin"
-    ln -sfrv "$pkgdir/usr/lib/$_pkgname/player" "$pkgdir/usr/bin/player"
+    ln -sfrv "$pkgdir/usr/lib/$_pkgname/rune" "$pkgdir/usr/bin/rune"
 
     # Fix rpath that causes 'Insecure RUNPATH'
     for shared_lib in "$pkgdir/usr/lib/$_pkgname/lib"/*.so; do
