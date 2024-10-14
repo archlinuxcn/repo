@@ -15,13 +15,15 @@ depends=(
     'dbus'
     'fontconfig'
     'gcc-libs'
+    'gdk-pixbuf2'
     'glib2'
     'glibc'
     'gtk3'
+    'harfbuzz'
     'hicolor-icon-theme'
     'libepoxy'
-    'lmdb'
     'pango'
+    'zlib'
 )
 makedepends=(
     'flutter-intellij-patch'
@@ -56,6 +58,7 @@ prepare() {
 
 build() {
     cd "${srcdir}/${_pkgname}"
+    export LDFLAGS="${LDFLAGS} -Wl,--no-as-needed"
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
     flutter pub run rinf message
