@@ -43,8 +43,12 @@ makedepends=(
 	'ninja')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("git+${url}.git")
-sha256sums=('SKIP')
+source=(
+	"git+${url}.git"
+	"${_pkgname}-fix-qt6.8-build.patch::${url}/pull/36.patch"
+)
+sha256sums=('SKIP'
+            '495a50534960a0f46b6e843543dd06d82f4c7514dd78122a074191f759ba6316')
 
 pkgver() {
 	cd Qcm
@@ -54,6 +58,7 @@ pkgver() {
 prepare() {
 	cd Qcm
 	git submodule update --init --recursive
+	patch -p1 <"../${_pkgname}-fix-qt6.8-build.patch"
 	mkdir build
 }
 
