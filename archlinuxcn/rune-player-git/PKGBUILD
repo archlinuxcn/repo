@@ -81,7 +81,7 @@ package() {
     ln -sfrv ${pkgdir}/usr/share/icons/breeze/apps/1024/${_name}.png ${pkgdir}/usr/share/icons/${_name}.png
 
     cd build/linux/x64/release/bundle
-    install -Dm755 player "${pkgdir}/usr/lib/${_pkgname}/${_name}"
+    install -Dm755 ${_name} -t "${pkgdir}/usr/lib/${_pkgname}/"
     pushd lib
     find . -type f -exec install -v -Dm644 {} ${pkgdir}/usr/lib/${_pkgname}/lib/{} \;
     popd
