@@ -4,14 +4,14 @@
 # Contributor: hexchain <i@hexchain.org>
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
-pkgver=5.6.1
+pkgver=5.6.2
 pkgrel=1
 pkgdesc="Official Telegram Desktop client with megumifox & lily's patch"
 arch=('x86_64')
 url="https://desktop.telegram.org/"
 license=('GPL-3.0-only WITH x11vnc-openssl-exception')
 depends=('hunspell' 'ffmpeg' 'libavfilter.so' 'libavformat.so' 'libavcodec.so' 'libavutil.so' 'hicolor-icon-theme' 'lz4' 'minizip' 'openal'
-         'qt6-base=6.7.3' 'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash'
+         'qt6-base=6.8.0' 'qt6-imageformats' 'qt6-svg' 'qt6-wayland' 'xxhash'
          'rnnoise' 'pipewire' 'libxtst' 'libxrandr' 'libxcomposite' 'libxdamage' 'abseil-cpp' 'libdispatch'
          'openssl' 'libcrypto.so' 'libssl.so'
          'protobuf' 'libprotobuf-lite.so'
@@ -32,7 +32,7 @@ source=("https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver
         "0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
         "0002-make-blockquote-markup-less-distractive.patch"
         "0004-make-animated-avatar-follow-power-settings.patch")
-sha512sums=('c5a49e7c228c51dc545bd68fc35c307ca60b67f1a0796ba4770336c2be9ae277ef8aad0d1a98b9393738f638568538b40804a35c2b108f23bcf47d881afb9913'
+sha512sums=('dde4739bc18822113277c2b56f3399aae8f19ce88c9cd22d9a1470f5bb29904ece05b7dcbcdb2957286cec9f347277afdbe1421ee49d75c868cd9b12610cae42'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
             '53f11ce2ca0d26f80ce44ec0c746236b22f27319a7a2a7773a265f6c69f413d2cde0d5f735a40c67674091792c548b426b22981a65cacca2690fc8551a51f18a'
