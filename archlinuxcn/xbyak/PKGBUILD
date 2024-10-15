@@ -1,7 +1,7 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=xbyak
-pkgver=7.10
+pkgver=7.20
 pkgrel=1
 pkgdesc='A C++ JIT assembler for x86 (IA32), x64 (AMD64, x86-64)'
 arch=('any')
@@ -11,7 +11,7 @@ makedepends=('git' 'cmake')
 # tests require multilib repository
 #checkdepends=('nasm' 'yasm' 'boost')
 source=("$url/archive/refs/tags/v$pkgver.tar.gz")
-b2sums=('48d4b1aa9fa2b15dbefa2229a6d60a4e940350a19bcf2e2635dc112b3023dff390c79698cb0f203bb9af23167d1dbc946e1dcecb15cb9f0ac1447cce129df860')
+b2sums=('f4ea9420a6b96e029eebbef0f3a0791aef22f967e7f7d73780b8e99223ad2753d7d430afcb92e3e2bda307e3802e17fbfc272400f57780a3ce1b3b308f1048c0')
 
 build() {
   cmake \
