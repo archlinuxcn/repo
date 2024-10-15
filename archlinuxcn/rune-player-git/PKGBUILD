@@ -1,12 +1,13 @@
 # Maintainer: Roald Clark <roaldclark@gmail.com>
 
+_name=rune
 _pkgname=rune-player
 pkgname=rune-player-git
 pkgver=0.0.0.dev.12.r8.g814baab
 pkgrel=1
 pkgdesc="The player that blends classic design with modern technology"
 arch=('x86_64')
-url="https://github.com/Losses/rune"
+url="https://github.com/Losses/${_name}"
 license=('MPL-2.0')
 depends=(
     'alsa-lib'
@@ -41,10 +42,10 @@ conflicts=("${_pkgname}")
 options=(!lto)
 source=(
     "${_pkgname}::git+${url}.git"
-    "rune-player.desktop"
+    "${_name}.desktop"
 )
 sha256sums=('SKIP'
-            'c15f664477a7d1ed4f6b040cc348d5bfc43884b44722bc2598b79d36139811c1')
+            '8c680492966831e2da2968007f2d5d3dbfbf72fdab670592689ac42f37af2121')
 
 pkgver() {
     cd "${srcdir}/${_pkgname}"
@@ -68,34 +69,34 @@ build() {
 package() {
     cd "${srcdir}/${_pkgname}"
 
-    install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+    install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 
     pushd assets/icons
-    find . \( -path "./fluent" -o -path "./macos" \) -prune -o -type f -exec install -v -Dm644 {} $pkgdir/usr/share/icons/{} \;
+    find . \( -path "./fluent" -o -path "./macos" \) -prune -o -type f -exec install -v -Dm644 {} ${pkgdir}/usr/share/icons/{} \;
     cd Papirus
-    find . -type f -exec install -v -Dm644 {} $pkgdir/usr/share/icons/hicolor/{} \;
+    find . -type f -exec install -v -Dm644 {} ${pkgdir}/usr/share/icons/hicolor/{} \;
     popd
-    ln -sfrv $pkgdir/usr/share/icons/Papirus $pkgdir/usr/share/icons/Papirus-Dark
-    ln -sfrv $pkgdir/usr/share/icons/Papirus $pkgdir/usr/share/icons/Papirus-Light
-    ln -sfrv $pkgdir/usr/share/icons/breeze/apps/1024/rune.png $pkgdir/usr/share/icons/rune.png
+    ln -sfrv ${pkgdir}/usr/share/icons/Papirus ${pkgdir}/usr/share/icons/Papirus-Dark
+    ln -sfrv ${pkgdir}/usr/share/icons/Papirus ${pkgdir}/usr/share/icons/Papirus-Light
+    ln -sfrv ${pkgdir}/usr/share/icons/breeze/apps/1024/${_name}.png ${pkgdir}/usr/share/icons/${_name}.png
 
     cd build/linux/x64/release/bundle
-    install -Dm755 player "$pkgdir/usr/lib/$_pkgname/rune"
+    install -Dm755 player "${pkgdir}/usr/lib/${_pkgname}/${_name}"
     pushd lib
-    find . -type f -exec install -v -Dm644 {} $pkgdir/usr/lib/$_pkgname/lib/{} \;
+    find . -type f -exec install -v -Dm644 {} ${pkgdir}/usr/lib/${_pkgname}/lib/{} \;
     popd
     pushd data
-    find . -type f -exec install -v -Dm644 {} $pkgdir/usr/lib/$_pkgname/data/{} \;
+    find . -type f -exec install -v -Dm644 {} ${pkgdir}/usr/lib/${_pkgname}/data/{} \;
     popd
-    install -dm755 "$pkgdir/usr/bin"
-    ln -sfrv "$pkgdir/usr/lib/$_pkgname/rune" "$pkgdir/usr/bin/rune"
+    install -dm755 "${pkgdir}/usr/bin"
+    ln -sfrv "${pkgdir}/usr/lib/${_pkgname}/${_name}" "${pkgdir}/usr/bin/${_name}"
 
     # Fix rpath that causes 'Insecure RUNPATH'
-    for shared_lib in "$pkgdir/usr/lib/$_pkgname/lib"/*.so; do
-        [[ -z $(patchelf --print-rpath "$shared_lib") ]] && continue
-        [[ $(patchelf --print-rpath "$shared_lib") == '$ORIGIN' ]] && continue
-        patchelf --set-rpath '$ORIGIN' "$shared_lib"
+    for shared_lib in "${pkgdir}/usr/lib/${_pkgname}/lib"/*.so; do
+        [[ -z $(patchelf --print-rpath "${shared_lib}") ]] && continue
+        [[ $(patchelf --print-rpath "${shared_lib}") == '$ORIGIN' ]] && continue
+        patchelf --set-rpath '$ORIGIN' "${shared_lib}"
     done
 
-    install -Dm644 "$srcdir/$_pkgname.desktop" -t "$pkgdir/usr/share/applications/"
+    install -Dm644 "${srcdir}/${_name}.desktop" -t "${pkgdir}/usr/share/applications/"
 }
