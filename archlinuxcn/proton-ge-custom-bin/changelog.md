@@ -1,3 +1,37 @@
+## GE-Proton9-16
+
+Proton:
+
+- import upstream makefile changes
+- import upstream proton changes
+- import upstream steam_helper changes
+- import upstream vkd3d-shader changes
+- update wine to latest bleeding edge
+- updated dxvk to latest git
+- update vkd3d-proton to latest git
+- update dxvk-nvapi to e4bad70
+
+Protonfixes:
+
+- fixed issue with game_titles not being pulled correctly for UMU
+- game_titles are now looked up as part of included umu-database csv instead of trying to send online website api call
+- games run with UMU will now have /mnt,/run/media,/media/, and the user's home folder added as drives u:,v:,w:,x: respectively inside the prefix if they are not empty. This is to allow users to install or import games outside of the prefix more conveniently. A typical scenario for this would be if you have your games pre-installed on a different mounted drive, or somewhere else in your home folder outside of the prefix and you want to add them without reinstalling the game, OR if you want to install the game to one of those mounts instead of the C:\ drive inside the wine prefix. With steam, users don't really have to worry about this because steam handles the drive mounts and the install locations, however we found that outside of steam users were trying to use the Z: drive (which is symlinked to root (/)) -- which is of course containerized and read only, and therefore also unable to provide a proper drive size, resulting in users being told they don't have enough space. With the new drives added into the prefix it should fix this, allowing users to access their mount locations or existing game folders for installation or importing via the new drives instead of Z:.
+- Mod support for various bethesda games has been added (Thanks Root-Core). If a mod executable is found for bethesda games it will launch the mod executable instead of the original:
+ mapping = {
+ '22380': ('FalloutNV.exe', 'nvse_loader.exe'), # Fallout New Vegas
+ '22370': ('FalloutLauncher.exe', 'fose_loader.exe'), # Fallout 3
+ '377160': ('Fallout4Launcher.exe', 'f4se_loader.exe'), # Fallout 4
+ '22330': ('OblivionLauncher.exe', 'obse_loader.exe'), # Oblivion
+ '72850': ('SkyrimLauncher.exe', 'skse_loader.exe'), # Skyrim
+ '489830': ('SkyrimSELauncher.exe', 'skse64_loader.exe'), # Skyrim SE
+ '1716740': ('Starfield.exe', 'sfse_loader.exe') # Starfield
+ }.get(game_id, ('', ''))
+- protonfix added for metal gear solid 2 (thanks FranjeGueje)
+- protonfix for Kindom Hearts HD Remix added for steam version (already existed for egs version) (thanks Internetbestfriend)
+- protonfix added for Gothic Playable Teaser (thanks Root-Core)
+- Star Citizen protonfix updated (no longer requires EAC workaround)
+
+
 ## GE-Proton9-15
 
 Hotfix build:
