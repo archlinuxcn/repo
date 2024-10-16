@@ -18,6 +18,7 @@ def pre_build():
       line = 'pkgname=gperftools-dynamic-tls'
     if line.startswith('prepare()'):
       print(f"_{line}")
+      continue
     if line.startswith('build()'):
       print("""prepare() {
   (cd gperftools
