@@ -17,11 +17,17 @@ makedepends=(
 	'git'
 	'cargo')
 source=(
-	tsukimi::git+https://github.com/tsukinaha/tsukimi.git
+	git+https://github.com/tsukinaha/tsukimi.git
+	git+https://github.com/tsukimi-rs/danmaku.git
+	git+https://github.com/tsukimi-rs/libmpv2-rs.git
 	tsukimi.desktop
 )
-sha256sums=('SKIP'
-	'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3')
+sha256sums=(
+	'SKIP'
+	'SKIP'
+	'SKIP'
+	'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3'
+)
 
 pkgver() {
 	cd "${_pkgname}"
@@ -29,8 +35,19 @@ pkgver() {
 }
 
 prepare() {
-	cd "${srcdir}/${_pkgname}"
+	# fetch all submodules
+	cd "${_pkgname}"
+	git submodule init
+	git config submodule.sub-projects/danmaku.url "$srcdir/danmaku"
+	git config submodule.libmpv2-rs.url "$srcdir/libmpv2-rs"
+	git -c protocol.file.allow=always submodule update
+
+	cd "$srcdir/${_pkgname}"
 	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	# cd "$srcdir/danmaku"
+	# cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	# cd "$srcdir/libmpv2-rs"
+	# cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
@@ -51,3 +68,7 @@ package() {
 	# install i18n files
 	cp -r "i18n/locale" "${pkgdir}/usr/share/locale"
 }
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3')
