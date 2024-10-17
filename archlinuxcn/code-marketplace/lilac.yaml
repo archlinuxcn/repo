@@ -1,0 +1,12 @@
+maintainers:
+  - github: yingziwu
+    email: i@bgme.me
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['sainnhe'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: code-marketplace
