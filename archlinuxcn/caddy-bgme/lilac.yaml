@@ -1,0 +1,55 @@
+maintainers:
+  - github: yingziwu
+    email: i@bgme.me
+
+build_prefix: extra-x86_64
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: caddyserver/caddy
+    use_latest_release: true
+  - source: github
+    github: klzgrad/forwardproxy
+    branch: naive
+  - source: go
+    go: github.com/fvbommel/caddy-combine-ip-ranges
+  - source: go
+    go: github.com/fvbommel/caddy-dns-ip-range
+  - source: go
+    go: github.com/fvbommel/caddy-dns-ip-range
+  - source: go
+    go: github.com/fvbommel/caddy-dns-ip-range
+  - source: go
+    go: github.com/WeidiDeng/caddy-cloudflare-ip
+  - source: go
+    go: github.com/xcaddyplugins/caddy-trusted-cloudfront
+  - source: go
+    go: github.com/digilolnet/caddy-bunny-ip
+  - source: go
+    go: github.com/tuzzmaniandevil/caddy-dynamic-clientip
+  - source: go
+    go: github.com/lanrat/caddy-dynamic-remoteip
+  - source: go
+    go: github.com/corazawaf/coraza-caddy
+  - source: go
+    go: github.com/caddyserver/cache-handler
+  - source: go
+    go: github.com/sillygod/cdp-cache
+  - source: go
+    go: github.com/caddy-dns/cloudflare
+  - source: go
+    go: github.com/dunglas/caddy-cbrotli
+  - source: go
+    go: github.com/silinternational/certmagic-storage-dynamodb/v3
+  - source: go
+    go: github.com/zhangjiayin/caddy-geoip2
+  - source: go
+    go: github.com/mholt/caddy-ratelimit
+  - source: go
+    go: github.com/caddyserver/replace-response
+  - source: go
+    go: github.com/mholt/caddy-webdav
+  - source: go
+    go: github.com/abiosoft/caddy-json-schema
