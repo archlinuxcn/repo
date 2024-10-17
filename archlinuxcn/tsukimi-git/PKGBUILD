@@ -1,30 +1,29 @@
 _pkgname="tsukimi"
 pkgname="${_pkgname}-git"
 pkgver=0.16.2.r768.gf43bca
-pkgrel=1
+pkgrel=3
 pkgdesc='A simple third-party Emby client'
 arch=('x86_64')
 url="https://github.com/tsukinaha/tsukimi"
 license=('GPL-3.0-or-later')
-provides=('tsukimi' 'tsukimi-git')
+provides=('tsukimi')
 conflicts=('tsukimi')
-depends=('mpv'
+depends=(
+	'mpv'
 	'ffmpeg'
 	'libadwaita'
 	'gstreamer'
-	'gtk4')
+	'gtk4'
+)
 makedepends=(
 	'git'
-	'cargo')
+	'cargo'
+)
 source=(
 	git+https://github.com/tsukinaha/tsukimi.git
-	git+https://github.com/tsukimi-rs/danmaku.git
-	git+https://github.com/tsukimi-rs/libmpv2-rs.git
 	tsukimi.desktop
 )
 sha256sums=(
-	'SKIP'
-	'SKIP'
 	'SKIP'
 	'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3'
 )
@@ -35,19 +34,9 @@ pkgver() {
 }
 
 prepare() {
-	# fetch all submodules
-	cd "${_pkgname}"
-	git submodule init
-	git config submodule.sub-projects/danmaku.url "$srcdir/danmaku"
-	git config submodule.libmpv2-rs.url "$srcdir/libmpv2-rs"
-	git -c protocol.file.allow=always submodule update
-
-	cd "$srcdir/${_pkgname}"
+	cd "${srcdir}/${_pkgname}"
+	git submodule update --init --recursive
 	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
-	# cd "$srcdir/danmaku"
-	# cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
-	# cd "$srcdir/libmpv2-rs"
-	# cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
@@ -60,15 +49,11 @@ build() {
 package() {
 	cd "${_pkgname}"
 	export RUSTUP_TOOLCHAIN=stable
-	install -Dm0755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
-	install -Dm 644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "moe.tsuna.tsukimi.gschema.xml"
-	install -Dm 644 -t "${pkgdir}/usr/share/applications/" "${srcdir}/tsukimi.desktop"
-	install -Dm 644 -t "${pkgdir}/usr/share/pixmaps/" "resources/ui/icons/tsukimi.png"
+	install -Dm755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
+	install -Dm644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "moe.tsuna.tsukimi.gschema.xml"
+	install -Dm644 -t "${pkgdir}/usr/share/applications/" "${srcdir}/tsukimi.desktop"
+	install -Dm644 -t "${pkgdir}/usr/share/pixmaps/" "resources/ui/icons/tsukimi.png"
 
 	# install i18n files
 	cp -r "i18n/locale" "${pkgdir}/usr/share/locale"
 }
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3')
