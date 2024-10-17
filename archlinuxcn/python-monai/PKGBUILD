@@ -3,7 +3,7 @@
 _CUDA_ARCH_LIST="6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6;8.9;9.0;9.0+PTX"
 pkgname=python-monai
 _pkgname=MONAI
-pkgver=1.3.2
+pkgver=1.4.0
 pkgrel=1
 pkgdesc='AI Toolkit for Healthcare Imaging'
 arch=('x86_64')
@@ -39,7 +39,7 @@ optdepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAI/archive/refs/tags/${pkgver}.tar.gz"
         "0001-fix-building-torch-extension-with-glog.patch"
 )
-sha512sums=('e735f0318a75cd39fc123e6ab876b1c85d280b202d66d1a3fead4f59900c44a5736ce3b6b1bbdd1bf620034dca21d2b28111157d60ed7c7bbdabd94c98e1e1cc'
+sha512sums=('e9860f6bd7987a802d763d1296ecb7eb466acce66ac2ddf7887c844b3004cd427e4d9dd6a588937abd536f01a728c8f82023ae3cc44ba4e39579bb4f16ce0363'
             '7096cc49314e366e60ce07e76709a6ccf13221cf95f01267a91ac5668e65935ede33eb28f957a561d16c5ff42f45a5b0bd65d869be0ef96f9ed61b9517157343')
 
 prepare() {
