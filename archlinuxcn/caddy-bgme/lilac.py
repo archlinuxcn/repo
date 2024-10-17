@@ -38,4 +38,4 @@ def pre_build():
             line = '_distcommit={}'.format(dist_commit)
         print(line)
 
-    update_pkgver_and_pkgrel(pkgver)
+    update_pkgver_and_pkgrel(pkgver, updpkgsums=True)

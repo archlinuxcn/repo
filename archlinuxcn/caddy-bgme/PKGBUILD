@@ -1,4 +1,5 @@
 # Base on https://gitlab.archlinux.org/archlinux/packaging/packages/caddy
+# Maintainer: BGME <i@bgme.me>
 # Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
 # Contributor: Christian Rebischke <chris.rebischke@archlinux.org>
 # Contributor: Wei Congrui < crvv.mail at gmail dot com >
@@ -16,10 +17,10 @@ pkgrel=5
 pkgdesc='Fast web server with automatic HTTPS'
 url='https://caddyserver.com'
 arch=('x86_64')
-license=('Apache')
+license=('Apache-2.0')
 depends=('glibc' 'brotli')
 makedepends=('go' 'git' 'gzip')
-conflicts=('caddy' 'caddy-bgme-git')
+conflicts=('caddy' 'caddy-naiveproxy')
 provides=('caddy')
 backup=('etc/caddy/Caddyfile')
 source=(
