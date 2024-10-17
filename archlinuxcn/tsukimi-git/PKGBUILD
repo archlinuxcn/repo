@@ -49,19 +49,11 @@ build() {
 package() {
 	cd "${_pkgname}"
 	export RUSTUP_TOOLCHAIN=stable
-	install -Dm0755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
-	install -Dm 644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "moe.tsuna.tsukimi.gschema.xml"
-	install -Dm 644 -t "${pkgdir}/usr/share/applications/" "${srcdir}/tsukimi.desktop"
-	install -Dm 644 -t "${pkgdir}/usr/share/pixmaps/" "resources/ui/icons/tsukimi.png"
+	install -Dm755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
+	install -Dm644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "moe.tsuna.tsukimi.gschema.xml"
+	install -Dm644 -t "${pkgdir}/usr/share/applications/" "${srcdir}/tsukimi.desktop"
+	install -Dm644 -t "${pkgdir}/usr/share/pixmaps/" "resources/ui/icons/tsukimi.png"
 
 	# install i18n files
 	cp -r "i18n/locale" "${pkgdir}/usr/share/locale"
 }
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3')
-sha256sums=('SKIP'
-            'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3')
-sha256sums=('SKIP'
-            'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3')
