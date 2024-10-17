@@ -16,6 +16,6 @@ def pre_build():
             print("_clr=3-1472")
         elif 'more-uarches-for-kernel-' in line.strip(): # Temporarily fix patch filename
             index = line.find('uarches')
-            print('{}ISA-levels-and{}'.format(line[:index], line[index:]))
+            print('{}ISA-levels-and-{}'.format(line[:index], line[index:]))
         else:
             print(line)
