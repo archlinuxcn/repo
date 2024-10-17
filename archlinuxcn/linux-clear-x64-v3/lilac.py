@@ -12,5 +12,7 @@ def pre_build():
             print('pkgbase=linux-clear-x64-v3')
         elif line.strip().startswith('license='):
             print("license=('GPL-2.0-only')")
+        elif line.strip().startswith('_clr='): # Temporarily fix tag typo
+            print("_clr=3-1472")
         else:
             print(line)
