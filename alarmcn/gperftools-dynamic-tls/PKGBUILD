@@ -7,35 +7,58 @@
 # Contributor: Jan Rüegg <rggjan@gmail.com>
 
 pkgname=gperftools-dynamic-tls
-pkgver=2.15
-pkgrel=4
+pkgver=2.16
+pkgrel=1
 pkgdesc='Fast, multi-threaded malloc and nifty performance analysis tools'
 arch=(aarch64 x86_64)
 url='https://github.com/gperftools/gperftools'
-license=('BSD-3-Clause')
-depends=('gcc-libs' 'glibc' 'libunwind')
-optdepends=('graphviz: pprof graph generation'
-            'perl: pprof and pprof-symbolize commands')
-source=("https://github.com/gperftools/gperftools/releases/download/gperftools-$pkgver/gperftools-$pkgver.tar.gz")
-sha256sums=('c69fef855628c81ef56f12e3c58f2b7ce1f326c0a1fe783e5cae0b88cbbe9a80')
+license=(BSD-3-Clause)
+depends=(
+  gcc-libs
+  glibc
+  libunwind
+)
+makedepends=(git)
+optdepends=(
+  'graphviz: pprof graph generation'
+  'perl: pprof and pprof-symbolize commands'
+)
+source=("git+https://github.com/gperftools/gperftools.git#tag=gperftools-$pkgver")
+b2sums=(e48d103d3954aea25b1dc0315cbfe080a12ca45154e25d824b4096fc735928104e4c28d98287fd44993f38ec28f56fa72be6ecee85227d03f69235c70063e5da)
+
+_prepare() {
+  cd gperftools
+  autoreconf -fi
+}
 
 prepare() {
-  cd gperftools-$pkgver
+  (cd gperftools
   find -type f -exec sed -i -e 's/ABSL_ATTRIBUTE_INITIAL_EXEC//g' {} \;
-  find -type f -exec sed -i -e 's/__attribute__ *( *( *tls_model *( *"initial-exec" *) *) *)//g' {} \;
+  find -type f -exec sed -i -e 's/__attribute__ *( *( *tls_model *( *"initial-exec" *) *) *)//g' {} \;)
+  _prepare
 }
 
 build() {
-  cd gperftools-$pkgver
-  ./configure --prefix=/usr --enable-frame-pointers --enable-libunwind
+  cd gperftools
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --enable-frame-pointers \
+    --enable-libunwind
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
+}
+
+check() {
+  cd gperftools
+  make check
 }
 
 package() {
   provides+=(gperftools=$pkgver)
   conflicts+=(gperftools=$pkgver)
-  cd gperftools-$pkgver
+  cd gperftools
   make DESTDIR="$pkgdir" install
-  install -Dm644 COPYING "$pkgdir/usr/share/licenses/gperftools/COPYING"
+  install -Dm644 -t "$pkgdir/usr/share/licenses/gperftools/" COPYING
 }
