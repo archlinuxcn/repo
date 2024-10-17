@@ -2,7 +2,7 @@
 # Contributor: lotation <xlapsiu@gmail.com>
 
 pkgname=bottles
-pkgver=51.13
+pkgver=51.15
 pkgrel=1
 epoch=2
 pkgdesc='Easily manage wine and proton prefix'
@@ -19,7 +19,7 @@ depends=(
   'icoextract'
   'imagemagick'
   'libadwaita'
-  'libhandy'
+#  'libhandy'
   'libportal-gtk4'
   'p7zip'
   'patool'
@@ -49,7 +49,7 @@ optdepends=(
 )
 makedepends=('meson' 'ninja' 'blueprint-compiler')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/bottlesdevs/Bottles/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('ba582ef2eaec4f3e533fd92b9b064223373e55b4d942113f071fc90800d49c34')
+sha256sums=('f31cc20c10242a1e4df462de28a353429154e2f62e7ed0a36b62740fecb47360')
 
 build() {
   if [[ -d Bottles ]]; then 
