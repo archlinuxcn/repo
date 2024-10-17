@@ -1,7 +1,7 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=boxbuddy
 _app_id=io.github.dvlv.boxbuddyrs
-pkgver=2.2.13
+pkgver=2.3.0
 pkgrel=1
 pkgdesc="A Graphical Interface for Distrobox"
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('distrobox' 'libadwaita')
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('c9f8235439ce9b1b039ab7a74e9b25747aec4c1ada80fa92aa40a8eb31ccad7c')
+sha256sums=('b9e98188afb7aced769281d56708b249b1e194ce46435bd7b57b1c30c98033e8')
 
 prepare() {
   cd "BoxBuddyRS-$pkgver"
