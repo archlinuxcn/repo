@@ -19,6 +19,9 @@ def pre_build():
     if line.startswith('prepare()'):
       print(f"_{line}")
       continue
+    if line.startswith('check()'):
+      print(f"_{line}")
+      continue
     if line.startswith('build()'):
       print("""prepare() {
   (cd gperftools
