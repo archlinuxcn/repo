@@ -2,13 +2,13 @@
 
 pkgname=zotero
 pkgver=7.0.7
-pkgrel=1
+pkgrel=2
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686')
 url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
-makedepends=('npm' 'git' 'git-lfs' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs')
+makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch')
 _tag=88ff06841605a2812394060ef4fd3194702d50e0  # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
@@ -24,7 +24,8 @@ source=("zotero.desktop"
         "zotero-csl::git+https://github.com/citation-style-language/locales.git"
         "zotero-libreoffice-integration::git+https://github.com/zotero/zotero-libreoffice-integration.git"
         "zotero-pdf-js::git+https://github.com/zotero/pdf.js.git"
-        "zotero-epub-js::git+https://github.com/zotero/epub.js.git")
+        "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
+        "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
             'SKIP'
             'SKIP'
@@ -39,7 +40,8 @@ sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP')
+            'SKIP'
+            'dc1894ac2e1520c3dae8e9cd5e09608f4bb3298bdede2891a77118187edffa9d')
 
 pkgver() {
   cd "$srcdir/zotero-client"
@@ -49,9 +51,7 @@ pkgver() {
 prepare() {
   cd "$srcdir/zotero-client"
 
-  git lfs install --local
-  git remote add network-origin https://github.com/zotero/zotero.git
-  git lfs pull -I app/linux/updater.tar.xz network-origin
+  patch -N -p1 < "$srcdir/disable-updater.patch"
 
   npm i --legacy-peer-deps
 
