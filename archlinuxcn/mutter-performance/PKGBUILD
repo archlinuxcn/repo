@@ -20,8 +20,8 @@ _merge_requests_to_use=('1441' '3751')
 _pkgname=mutter
 pkgname=mutter-performance
 epoch=1
-pkgver=47.0.r23.g6e1e870e5
-pkgrel=1
+pkgver=47.0.r24.g95f9bb2f0
+pkgrel=2
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -97,18 +97,18 @@ makedepends=(
   xorg-server
   xorg-server-xvfb
 )
-_commit=6e1e870e5a8b9809171178379f60e73c224b44c0  # tags/47.0^23
+_commit=95f9bb2f0340d7d54801dbc44a7e7fbdf7a6e77d  # tags/47.0^24
 source=("git+$url.git#commit=$_commit"
         "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
         'mr1441.patch'
         'mr3751.patch')
-sha256sums=('6763e710815990ececee06dddf08588040bc5f1bb34a088dcbb96b6719b0dbc7'
+sha256sums=('bfff6a5bc0f4878c195ef65dc1e16cd4a8d08fe37369ea3f0a3fb4fd1da2f151'
             'ba56c003c1c16f1f8e411f6d5213878bcf059d4d39ece100fc414228a1bf22d5'
-            '4ebee5cd088908d1953168237995e67fe65ba588e89de865833f22bbd27a978c'
+            '0d799553ecb6250ba62e90fac7cfccc0e1dfce77342b8dabf67ff5f71ce14785'
             '67943a22cb75df955fc475e5ae101984d87e4a1f51d56be5f50696cc3355a3c4')
-b2sums=('060181a2af6f9c5f9b6a302766af70d512164c62c17466553154b17c8b6e739bbe1ba8e1ab3f2f34d6866e214a4099185399192055a1cf3e30a2773e3d6b8599'
+b2sums=('ca45717b56f2871b89f7931da092082ceda46a86dd3a3701734b7acde32b866f7b8c1c9b4efd7b32bb61e5dc17ee077a3e0f59f1a761b8f947e6224ebecc4a38'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
-        'f5278ff99dba458e18dca65b75164a8a389eb35f396c3434d7411769c18699d20cd00104695487c9e9f938ea6dee03b670156000a9e51b9a5658681cfdd97f5c'
+        '8b22fd802de0309d8e30c5fe575b454939c9d2d296bc06b792647435194539fcbd55f770ab77e53476da91dccc830ca94ba4d9aa224b706a20fea5f5891ede34'
         'e13742a68cd831827e88ddf1801caca39fa9c77dd8c08a851bc87914f2961119fc1a7643628fc63cad8dedf03533148539a242cca23313c250bd65867ea84d8d')
 
 pkgver() {
@@ -207,7 +207,7 @@ prepare() {
   # Type: 1
   # Status: 2 & 3
   # Comment: Helps GPU frequencies to scale up.
-  #          Backported: !3184 !3265 !3799 !3817 !3829 !3830 !3891 !3934 !3958 !4015
+  #          Included: !4015 !4027 !4060
   pick_mr '1441' 'mr1441.patch' 'patch'
 
 }
