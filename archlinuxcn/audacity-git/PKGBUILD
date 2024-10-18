@@ -9,13 +9,15 @@ pkgver=3.6.4.r459.gb1df79366b
 pkgrel=1
 pkgdesc="A program that lets you manipulate digital audio waveforms"
 arch=('i686' 'x86_64')
-url="https://www.audacityteam.org/"
+url="https://www.audacityteam.org"
 license=('(GPL-3.0-only OR GPL-2.0-or-later) AND CC-BY-3.0')
 groups=('pro-audio-git')
 depends=(
 	'alsa-lib'
 	'expat'
 	'flac'
+	'gcc-libs'
+	'gdk-pixbuf2'
 	'glib2'
 	'gtk3'
 	'hicolor-icon-theme'
@@ -31,21 +33,46 @@ depends=(
 	'libx11'
 	'lilv'
 	'mpg123'
+	'opusfile'
 	'portaudio'
 	'portmidi'
 	'portsmf'
+	'python'
+	'rapidjson'
 	'soundtouch'
 	'sqlite'
 	'suil'
 	'twolame'
 	'util-linux-libs'
+	'wxwidgets-gtk3'
 	'vamp-plugin-sdk'
 	'wavpack'
-	'wxwidgets-gtk3'
+	'wxwidgets-common'
 )
-makedepends=('cmake' 'git' 'nasm' 'rapidjson' 'vst3sdk' 'xcb-util' 'xcb-util-cursor' 'xcb-util-keysyms' 'gtkmm3' 'libxkbcommon-x11' 'opusfile')
-optdepends=('ffmpeg: additional import/export capabilities')
-provides=("${_pkgname}")
+makedepends=(
+	'cmake'
+	'git'
+	'nasm'
+	'rapidjson'
+	'vst3sdk'
+	'xcb-util'
+	'xcb-util-cursor'
+	'xcb-util-keysyms'
+	'gtkmm3'
+	'libxkbcommon-x11'
+)
+optdepends=(
+	'audacity-docs: for documentation'
+	'ffmpeg: for additional import/export capabilities'
+)
+provides=(
+	"${_pkgname}"
+	"ladspa-host"
+	"lv2-host"
+	"vamp-host"
+	"vst-host"
+	"vst3-host"
+)
 conflicts=("${_pkgname}")
 source=("git+https://github.com/${_pkgname}/${_pkgname}.git")
 sha256sums=('SKIP')
@@ -56,23 +83,35 @@ pkgver() {
 }
 
 build() {
-	export CC=gcc
-	export VST3_SDK_DIR="/usr/src/vst3sdk"
+	export VST3SDK='/usr/src/vst3sdk'
+	export CFLAGS+=" -DNDEBUG"
+	export CXXFLAGS+=" -DNDEBUG"
 
-	cmake_args=(
-		-D CMAKE_BUILD_TYPE=Release
-		-D CMAKE_INSTALL_PREFIX=/usr
-		-D audacity_lib_preference=system
-		-D audacity_obey_system_dependencies=On
-		-D audacity_conan_enabled=Off
-		-D audacity_use_wxwidgets=system
-	)
+	cmake -B build \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D AUDACITY_BUILD_LEVEL=2 \
+		-D audacity_conan_enabled=OFF \
+		-D audacity_has_networking=OFF \
+		-D audacity_has_crashreports=OFF \
+		-D audacity_has_updates_check=OFF \
+		-D audacity_has_sentry_reporting=OFF \
+		-D audacity_lib_preference=system \
+		-D audacity_obey_system_dependencies=ON \
+		-D audacity_use_vst3sdk=system \
+		-D audacity_has_tests=ON \
+		-S "${_pkgname}" \
+		-W no-dev
 
-	cmake -S ${_pkgname} -B build "${cmake_args[@]}"
-	cmake --build build
+	cmake --build build --verbose
+}
+
+check() {
+	# disable two tests which do not work without an alsa/jack instance
+	ctest --test-dir build --output-on-failure --exclude-regex "lib-stretching-sequence|journal_sanity"
 }
 
 package() {
-	cd build
-	make DESTDIR="${pkgdir}" install
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/lib-src/libnyquist/nyquist/license.txt" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE.nyquist"
 }
