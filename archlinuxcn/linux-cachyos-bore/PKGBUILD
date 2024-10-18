@@ -156,7 +156,7 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=6.11
-_minor=3
+_minor=4
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -596,7 +596,7 @@ _package() {
                 'linux-firmware: firmware images needed for some devices'
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
                 'uksmd: Userspace KSM helper daemon')
-    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN)
+    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN NTSYNC-MODULE)
 
     cd "$_srcname"
 
@@ -776,8 +776,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('69582e4745850f3ec004d87859ac88994e3715ed38cd66aff2633fbcb6c20ca2e3be83417cd2c42c2757ab4e084e622c688799b5ad28e15c391adb2afab79a68'
-        'de8ce27719874bda9132a4b5b18be05b26e75bdf1ecf7370a65518d400f1840c71859ad41bc5afc93944f096f3eb26d80a7afe0ac8bd377244a3e8cdcac35b5f'
+b2sums=('0c77f514e29881b27b8bf815a55845b65182a25be006815541c0e843c2bbc0d12ee978d2a418d779d296c361bbba2d78ff58a0c13ae78382552afadb1e43aaec'
+        '362795780f8fba58025621263af15ca06f9240cefcd248ffc8ffe79e2f9a6427d67b95c5bd13d0a861a459ed0ad4931ce4b62bd5d4ab80aa9374a24c5cc7633f'
         '681a7055df1e18554154590cd80dbc4b2cfae3597eb7f0214e0c18428ecad52a3bcaabdce79d25e40a8fa1a5e1fa5e5bdee2b6fbeab83fd79355d2070f1573b0'
-        'd79b732315c88d373946b817ed7deb0215521ec260ac0e3a22f75bf9716d4d1d9e364c24b339e18797c016abacacef139aa7a2a612df23e7fa07cc3ace8638c0'
+        'a657ccdd799c18bdccbb90db63d0accd2b388da827d8cfc8b758deb94cb003b39e1fd99aecbd7b2605a2938eff334b3a5387ff4848cdde408a0f2bd70d92f394'
         '7a41b35dd68457724b23b769803edac7f090d2032177fdada6fbf67604cfc6f167f68853b9be15eacd04204f16bbf06af26307720dfe9d78f400365b9616871f')
