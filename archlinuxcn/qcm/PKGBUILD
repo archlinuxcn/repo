@@ -40,17 +40,12 @@ makedepends=(
 	'cmake'
 	'extra-cmake-modules'
 	'ninja')
-source=(
-	"git+${url}.git#tag=v${pkgver}"
-	"${pkgname}-fix-qt6.8-build.patch::${url}/pull/36.patch"
-)
-sha256sums=('639978c7c56be70aed1b16c444d6f577310942283be7951cf647f3ad34ca5af3'
-            '495a50534960a0f46b6e843543dd06d82f4c7514dd78122a074191f759ba6316')
+source=("git+${url}.git#tag=v${pkgver}")
+sha256sums=('639978c7c56be70aed1b16c444d6f577310942283be7951cf647f3ad34ca5af3')
 
 prepare() {
 	cd Qcm
 	git submodule update --init --recursive
-	patch -p1 <"../${pkgname}-fix-qt6.8-build.patch"
 	mkdir build
 }
 
