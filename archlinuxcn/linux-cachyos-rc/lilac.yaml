@@ -3,7 +3,7 @@ maintainers:
     email: integral@archlinuxcn.org
 
 pre_build_script: |
-  clean_directory()
+  run_cmd(['cleanup-package-files', 'linux-cachyos-rc', '--real'])
   aur_pre_build(maintainers=['ptr1337','sir_lucjan'])
   run_cmd(['updpkgsums'])
 
