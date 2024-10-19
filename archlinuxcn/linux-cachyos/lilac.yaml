@@ -5,7 +5,7 @@ maintainers:
 time_limit_hours: 2
 
 pre_build_script: |
-  clean_directory()
+  run_cmd(['cleanup-package-files', 'linux-cachyos', '--real'])
   aur_pre_build(maintainers=['ptr1337','sir_lucjan'])
   run_cmd(['updpkgsums'])
 
