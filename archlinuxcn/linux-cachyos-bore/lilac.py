@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    clean_directory()
+    run_cmd(['cleanup-package-files', 'linux-cachyos-bore', '--real'])
     aur_pre_build(maintainers=['ptr1337','sir_lucjan'])
 
     for line in edit_file('auto-cpu-optimization.sh'):
