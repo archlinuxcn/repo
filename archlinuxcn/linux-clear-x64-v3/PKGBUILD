@@ -119,7 +119,7 @@ _subarch=42
 
 # Kernel version
 _kernel_major=6.11
-_kernel_minor=3
+_kernel_minor=4
 # Clear Linux patches version
 _clr=3-1472
 # kernel_compiler_patch version
@@ -131,7 +131,7 @@ _src_clr=${_kernel_major}.${_clr}
 # Package information
 pkgbase=linux-clear-x64-v3
 pkgver=${_kernel_major}.${_kernel_minor}
-pkgrel=3
+pkgrel=0
 pkgdesc="Linux kernel with patches from Clear Linux which allow for higher performance."
 arch=("x86_64")
 url="https://github.com/clearlinux-pkgs/linux"
@@ -432,6 +432,6 @@ validpgpkeys=(
 )
 sha256sums=("55d2c6c025ebc27810c748d66325dd5bc601e8d32f8581d9e77673529bdacb2e"
             "SKIP"
-            "4c808f6dd8814ab55a343649a2e2b925895b7f97044d15fa3424e5cf69349c3e"
+            "d0c22d3f7a5ea64938cb8a003e6f6ad3226a0dab855e89fa0fff3578946c9498"
             "SKIP"
             "3c0a38110cc21dca6b6efec03ce82ed24f473da190354cf740b5ecd6f6589aa7")
