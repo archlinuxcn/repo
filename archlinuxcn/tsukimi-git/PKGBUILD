@@ -1,6 +1,6 @@
 _pkgname="tsukimi"
 pkgname="${_pkgname}-git"
-pkgver=0.16.3.r782.gadeb5f
+pkgver=0.16.3.r792.g497795
 pkgrel=1
 pkgdesc='A simple third-party Emby client'
 arch=('x86_64')
@@ -21,11 +21,9 @@ makedepends=(
 )
 source=(
 	git+https://github.com/tsukinaha/tsukimi.git
-	tsukimi.desktop
 )
 sha256sums=(
 	'SKIP'
-	'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3'
 )
 
 pkgver() {
@@ -51,9 +49,10 @@ package() {
 	cd "${_pkgname}"
 
 	install -Dm755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
-	install -Dm644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "moe.tsuna.tsukimi.gschema.xml"
-	install -Dm644 -t "${pkgdir}/usr/share/applications/" "${srcdir}/tsukimi.desktop"
-	install -Dm644 -t "${pkgdir}/usr/share/pixmaps/" "resources/ui/icons/tsukimi.png"
+	install -Dm644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "resources/moe.tsuna.tsukimi.gschema.xml"
+	install -Dm644 -t "${pkgdir}/usr/share/pixmaps/" "resources/icons/tsukimi.png"
+
+	install -Dm644 "resources/moe.tsuna.tsukimi.desktop.in" "${pkgdir}/usr/share/applications/moe.tsuna.tsukimi.desktop"
 
 	cp -r "i18n/locale" "${pkgdir}/usr/share/locale"
 }
