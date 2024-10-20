@@ -7,11 +7,22 @@ pkgver=1.6.5
 pkgrel=1
 pkgdesc="An unofficial WhatsApp desktop application for linux"
 url="https://github.com/xeco23/${_srcname}"
-arch=(i686 x86_64 armv7h aarch64)
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 license=('GPL-3.0-or-later')
-depends=(gtkmm3 webkit2gtk libayatana-appindicator libcanberra gst-plugins-base gst-plugins-good gst-plugins-bad gst-libav)
-makedepends=(cmake)
+depends=(
+	'gtkmm3'
+	'webkit2gtk'
+	'libayatana-appindicator'
+	'libcanberra'
+	'gst-plugins-base'
+	'gst-plugins-good'
+	'gst-plugins-bad'
+	'gst-libav'
+)
+makedepends=('cmake')
 optdepends=('hunspell-en_us: spell-checking')
+provides=('whatsapp-for-linux')
+replaces=('whatsapp-for-linux')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('c88a7454271b021335dae5340e3d260f8f020aca7e7b47201e8c8e3fcd19679f')
 
