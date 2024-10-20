@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-imgpaste
-pkgver=2.46.0
-pkgrel=2
+pkgver=2.46.1
+pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -63,7 +63,7 @@ depends=(
   libgcrypt
   libgl
   libgles
-  libjpeg
+  libjpeg-turbo
   libjxl
   libmanette
   libpng
@@ -86,12 +86,14 @@ depends=(
   zlib
 )
 makedepends=(
+  clang
   cmake
   gi-docgen
   glib2-devel
   gobject-introspection
   gperf
   gst-plugins-bad
+  lld
   ninja
   python
   ruby
@@ -100,11 +102,6 @@ makedepends=(
   unifdef
   wayland-protocols
 )
-options=(
-  # https://gitlab.archlinux.org/archlinux/packaging/packages/webkit2gtk-4.1/-/issues/1
-  # https://bugs.webkit.org/show_bug.cgi?id=278090
-  !lto
-)
 provides=(webkit2gtk)
 conflicts=(webkit2gtk)
 source=(
@@ -112,7 +109,7 @@ source=(
   EnlargeObjectSize.patch
   PasteBoardGtk.patch
 )
-sha256sums=('d4d433040f190151560c50bde840850089f87bad4fefa9ebdb4aae856a3df43a'
+sha256sums=('2a14faac359aff941d0bc4443eb5537e3702bcaf316b0a129e0e65f3ff8eaac0'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
             '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
@@ -144,14 +141,18 @@ build() {
     -DENABLE_MINIBROWSER=ON
   )
 
+  # Upstream prefers Clang
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/webkitgtk-6.0/-/issues/4
+  export CC=clang CXX=clang++
+  LDFLAGS+=" -fuse-ld=lld"
+
+  # Skia uses malloc_usable_size
+  CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+  CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+
   # JITted code crashes when CET is used
   CFLAGS+=' -fcf-protection=none'
   CXXFLAGS+=' -fcf-protection=none'
-
-  # Produce minimal debug info: 4.3 GB of debug data makes the
-  # build too slow and is too much to package for debuginfod
-  CFLAGS+=' -g1'
-  CXXFLAGS+=' -g1'
 
   cmake -S webkitgtk-$pkgver -B build -G Ninja "${cmake_options[@]}"
   cmake --build build
