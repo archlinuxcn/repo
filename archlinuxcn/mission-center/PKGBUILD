@@ -11,20 +11,16 @@ license=('GPL-3.0-or-later')
 depends=('dmidecode' 'libadwaita' 'nvtop')
 makedepends=('blueprint-compiler' 'cargo' 'meson')
 checkdepends=('appstream-glib')
-options=('!lto')
 source=("${url}/-/archive/v${_pkgver}/${pkgname}-v${_pkgver}.tar.gz")
 sha256sums=('0c76860edebc612dbda1c0b872be8455ca23a24ef3a2d66698cc591a57ecd800')
+options=('!lto')
 
 prepare() {
 	cd "${pkgname}-v${_pkgver}/"
-	export CARGO_HOME="$srcdir/cargo-home"
-	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
-	export CARGO_HOME="${srcdir}/cargo-home"
-	export RUSTUP_TOOLCHAIN=stable
 	arch-meson "${pkgname}-v${_pkgver}" build
 	meson compile -C build
 }
