@@ -21,6 +21,7 @@ depends=(
 )
 makedepends=('cmake')
 optdepends=('hunspell-en_us: spell-checking')
+conflicts=('whatsapp-for-linux')
 provides=('whatsapp-for-linux')
 replaces=('whatsapp-for-linux')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
