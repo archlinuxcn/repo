@@ -1,20 +1,31 @@
 # Maintainer: Mattia Borda <mattiagiovanni.borda@icloud.com>
 # Contributor: Enes Hecan <nshecan@gmail.com>
 
-pkgname=whatsapp-for-linux-git
+pkgname=wasistlos-git
 _pkgname=${pkgname%-git}
+_srcname=WasIstLos
 pkgver=1.7.0.r2.gf0f5ec2
 pkgrel=1
 pkgdesc="An unofficial WhatsApp desktop application for linux"
-url="https://github.com/eneshecan/${_pkgname}"
+url="https://github.com/xeco23/${_srcname}"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 license=('GPL-3.0-or-later')
-depends=('gtkmm3' 'webkit2gtk' 'libayatana-appindicator' 'libcanberra' 'gst-plugins-base' 'gst-plugins-good' 'gst-plugins-bad' 'gst-libav')
+depends=(
+	'gtkmm3'
+	'webkit2gtk'
+	'libayatana-appindicator'
+	'libcanberra'
+	'gst-plugins-base'
+	'gst-plugins-good'
+	'gst-plugins-bad'
+	'gst-libav'
+)
 makedepends=('cmake' 'git')
 optdepends=('hunspell-en_us: spell-checking')
 conflicts=("${_pkgname}")
-provides=("${_pkgname}")
-source=("git+${url}.git")
+provides=("${_pkgname}" "whatsapp-for-linux")
+replaces=('whatsapp-for-linux')
+source=("${_pkgname}::git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -25,10 +36,10 @@ pkgver() {
 build() {
 	cd "${_pkgname}/"
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
-	make
+	cmake --build .
 }
 
 package() {
 	cd "${_pkgname}/"
-	make DESTDIR="${pkgdir}/" install
+	DESTDIR="${pkgdir}" cmake --install .
 }
