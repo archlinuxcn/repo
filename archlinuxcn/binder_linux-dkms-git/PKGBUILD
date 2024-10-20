@@ -12,6 +12,7 @@ url="https://github.com/choff/${_srcname}"
 pkgdesc="Android kernel driver fork by @choff in DKMS format, binder only"
 license=('GPL-2.0-only')
 conflicts=("${_pkgname}" "anbox-modules-dkms")
+provides=("${_pkgname}")
 replaces=("${_pkgname}")
 depends=('dkms')
 makedepends=('git')
