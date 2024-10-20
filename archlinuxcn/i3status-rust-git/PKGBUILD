@@ -25,6 +25,7 @@ conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
+options=('!lto')
 
 pkgver() {
 	cd "${_pkgname}/"
