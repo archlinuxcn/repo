@@ -1,0 +1,34 @@
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
+
+pkgname=mission-center
+pkgver=0.6.1
+_pkgver=$(sed 's/\./-/3' <<<${pkgver})
+pkgrel=1
+pkgdesc="Monitor your CPU, Memory, Disk, Network and GPU usage"
+arch=('x86_64' 'aarch64')
+url="https://gitlab.com/mission-center-devs/${pkgname}"
+license=('GPL-3.0-or-later')
+depends=('dmidecode' 'libadwaita' 'nvtop')
+makedepends=('blueprint-compiler' 'cargo' 'meson')
+checkdepends=('appstream-glib')
+source=("${url}/-/archive/v${_pkgver}/${pkgname}-v${_pkgver}.tar.gz")
+sha256sums=('0c76860edebc612dbda1c0b872be8455ca23a24ef3a2d66698cc591a57ecd800')
+options=('!lto')
+
+prepare() {
+	cd "${pkgname}-v${_pkgver}/"
+	cargo fetch --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	arch-meson "${pkgname}-v${_pkgver}" build
+	meson compile -C build
+}
+
+check() {
+	meson test -C build --print-errorlogs || :
+}
+
+package() {
+	meson install -C build --no-rebuild --destdir "${pkgdir}"
+}
