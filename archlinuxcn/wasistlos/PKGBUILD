@@ -29,10 +29,10 @@ sha256sums=('c88a7454271b021335dae5340e3d260f8f020aca7e7b47201e8c8e3fcd19679f')
 build() {
 	cd "${_srcname}-${pkgver}/"
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
-	make
+	cmake --build .
 }
 
 package() {
 	cd "${_srcname}-${pkgver}/"
-	make DESTDIR="${pkgdir}/" install
+	DESTDIR="${pkgdir}" cmake --install .
 }
