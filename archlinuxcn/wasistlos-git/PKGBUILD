@@ -22,7 +22,7 @@ depends=(
 )
 makedepends=('cmake' 'git')
 optdepends=('hunspell-en_us: spell-checking')
-conflicts=("${_pkgname}")
+conflicts=("${_pkgname}" "whatsapp-for-linux")
 provides=("${_pkgname}" "whatsapp-for-linux")
 replaces=('whatsapp-for-linux')
 source=("${_pkgname}::git+${url}.git")
