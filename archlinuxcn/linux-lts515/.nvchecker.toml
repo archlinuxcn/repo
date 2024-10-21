@@ -1,0 +1,7 @@
+[linux-lts515]
+source = "git"
+git = "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
+branch = "linux-5.15.y"
+prefix = "v"
+include_regex = "v5.15.*"
+exclude_regex = ".*(rc|alpha|beta).*"
