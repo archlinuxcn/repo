@@ -162,7 +162,7 @@ pkgbase="linux-$_pkgsuffix"
 _major=6.12
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc3
+_rcver=rc4
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -238,7 +238,9 @@ if [ -n "$_build_nvidia_open" ]; then
              "${_patchsource}/misc/nvidia/0003-Add-IBT-Support.patch"
              "${_patchsource}/misc/nvidia/0004-6.11-Add-fix-for-fbdev.patch"
              "${_patchsource}/misc/nvidia/0006-Fix-for-6.12.0-rc1-drm_mode_config_funcs.output_poll.patch"
-             "${_patchsource}/misc/nvidia/0007-6.12-replace-pageswapcache.patch")
+             "${_patchsource}/misc/nvidia/0007-6.12-replace-pageswapcache.patch"
+             "${_patchsource}/misc/nvidia/0008-silence-event-assert-until-570.patch"
+             "${_patchsource}/misc/nvidia/0009-fix-hdmi-names.patch")
 fi
 
 ## List of CachyOS schedulers
@@ -550,6 +552,9 @@ prepare() {
         # Fix for 6.12
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0006-Fix-for-6.12.0-rc1-drm_mode_config_funcs.output_poll.patch" -d "${srcdir}/${_nv_open_pkg}"
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0007-6.12-replace-pageswapcache.patch" -d "${srcdir}/${_nv_open_pkg}"
+        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0008-silence-event-assert-until-570.patch" -d "${srcdir}/${_nv_open_pkg}"
+        # Fix for HDMI names
+        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0009-fix-hdmi-names.patch" -d "${srcdir}/${_nv_open_pkg}"
     fi
 }
 
@@ -601,7 +606,7 @@ _package() {
                 'linux-firmware: firmware images needed for some devices'
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
                 'uksmd: Userspace KSM helper daemon')
-    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN)
+    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN NTSYNC-MODULE)
 
     cd "$_srcname"
 
@@ -781,9 +786,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('e148032d194fabd22e667b8b3423c4efbd3d973a0d660322573f2cdf54559013afa2649f678de80c092b92e86d8ab6ca15b46d0511f61763e8dc783a40929bac'
-        'e6417b88e8bab284870d0cbcc72529908e6a32062815ecf0db19e80ce3fa4f861d12fe9732b5bfaed9a82df2f1d87dc5697ce68692f2a863473222a93e0b041a'
+b2sums=('89aee10b780b34766df64e1a899f4df036f726fd23bacfd502f9038d2c19e7ea6c04aef4d91b621c1e1374dac1876d897533aef9224f78d09697c398525c7326'
+        '950238271f488e2284913593648fc7b1d559f7c5c3fa05bd0dab6f29bb4a85920b0c0264266f90f20d0816120194274d12e016c8c4b96b581ecb6cfcee57d036'
         'b1e964389424d43c398a76e7cee16a643ac027722b91fe59022afacb19956db5856b2808ca0dd484f6d0dfc170482982678d7a9a00779d98cd62d5105200a667'
-        '891a82ea17a7738266b645ebecd52786af9540e23f464f2573b451511cd1a8d20c0b0a5b05064f1f1688a9bccf9a53c7d600d787a95602d28bbefcf6cd1003db'
+        '03f877865d6e797f23e1583cdaa6ef6d15e7f28d0d9c99bb6a547dfc39c681d235b3c6f842a50caf40e2cd4ea498578bb8de28336635f919f05ffebdae535a80'
         'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
-        '97b59b7976ed5096998229429b067cb1ab945a2353a0b5973bc48c7f014ed684358b3294dfff78fbe464d9bf981e2112de459bb615d980ef1721d2e79ee7dd9f')
+        '0e6bd40a4ebe934c8121b6deb31c85f429e135adf2ac9cc7c0b5dc917c89b33eea1552d6cbf82a74a13d5929d51b25247df62204de323a7a22ba3144521dfce6')
