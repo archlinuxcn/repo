@@ -6,6 +6,12 @@ update_on:
     github: MrGlockenspiel/activate-linux
   - source: aur
     aur: activate-linux-git
+  - source: alpm
+    alpm: cairo
+    provided: libcairo.so
+  - source: alpm
+    alpm: wayland
+    provided: libwayland-client.so
 
 maintainers:
   - github: roaldclark
