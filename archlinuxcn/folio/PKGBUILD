@@ -2,7 +2,7 @@
 
 pkgname=folio
 _name=Folio
-pkgver=24.11
+pkgver=24.12
 pkgrel=1
 pkgdesc="A pretty note-taking app for GNOME | forked from Paper"
 arch=('x86_64' 'aarch64')
@@ -29,7 +29,7 @@ makedepends=('meson'
 checkdepends=('appstream-glib')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
         "folio.sh")
-sha256sums=('8c15bc0dd701c127d93a8343843450ed65350f272fbf73103d181dd168422373'
+sha256sums=('3a4c9f4715c26aad8ce6d9af95224e39323170500c9cf9aadad4ee0c9639debd'
             'bc7370d74d9581ef5301753a4ef72018c1e66af852bc5a9fc5fe602408705d6b')
 
 build() {
