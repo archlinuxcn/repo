@@ -156,7 +156,7 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=6.11
-_minor=4
+_minor=5
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -232,7 +232,9 @@ if [ -n "$_build_nvidia_open" ]; then
              "${_patchsource}/misc/nvidia/0002-Do-not-error-on-unkown-CPU-Type-and-add-Zen5-support.patch"
              "${_patchsource}/misc/nvidia/0003-Add-IBT-Support.patch"
              "${_patchsource}/misc/nvidia/0004-6.11-Add-fix-for-fbdev.patch"
-             "${_patchsource}/misc/nvidia/0005-6.12-drm_outpull_pill-changed-check.patch")
+             "${_patchsource}/misc/nvidia/0005-6.12-drm_outpull_pill-changed-check.patch"
+             "${_patchsource}/misc/nvidia/0008-silence-event-assert-until-570.patch"
+             "${_patchsource}/misc/nvidia/0009-fix-hdmi-names.patch")
 fi
 
 ## List of CachyOS schedulers
@@ -545,6 +547,10 @@ prepare() {
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0004-6.11-Add-fix-for-fbdev.patch" -d "${srcdir}/${_nv_open_pkg}"
         # Fix for 6.12 Module Compilation
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0005-6.12-drm_outpull_pill-changed-check.patch" -d "${srcdir}/${_nv_open_pkg}"
+        # Fix for CS2 dmesg spam
+        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0008-silence-event-assert-until-570.patch" -d "${srcdir}/${_nv_open_pkg}"
+        # Fix for HDMI names
+        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0009-fix-hdmi-names.patch" -d "${srcdir}/${_nv_open_pkg}"
     fi
 }
 
@@ -776,8 +782,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('0c77f514e29881b27b8bf815a55845b65182a25be006815541c0e843c2bbc0d12ee978d2a418d779d296c361bbba2d78ff58a0c13ae78382552afadb1e43aaec'
-        '362795780f8fba58025621263af15ca06f9240cefcd248ffc8ffe79e2f9a6427d67b95c5bd13d0a861a459ed0ad4931ce4b62bd5d4ab80aa9374a24c5cc7633f'
+b2sums=('8749d9f78cca3d64e97d081b3ededf506c07c7fe894253e7435afb37eb7c86b690a65293fb4b582ecd951229ca61f13679d10197e4629352262db776352b96dc'
+        '86742b3076b0a3b9ca586cb731f2cc2c5834dc3c12339a9ba22aa22c11b49ccb759935fb7483362bc40bbdfd6fd46ff71aac2270e526a0c3b46df2f3a6816ece'
         '681a7055df1e18554154590cd80dbc4b2cfae3597eb7f0214e0c18428ecad52a3bcaabdce79d25e40a8fa1a5e1fa5e5bdee2b6fbeab83fd79355d2070f1573b0'
-        'a657ccdd799c18bdccbb90db63d0accd2b388da827d8cfc8b758deb94cb003b39e1fd99aecbd7b2605a2938eff334b3a5387ff4848cdde408a0f2bd70d92f394'
+        'edac683ac8e059c43ea2071b095326d6e5664d2a25e992af14c2cea134763cdd477cc0166e7a47b98be5a47d80e1fee77a9822a9a3c48f841ad1ad8a55d44a28'
         '7a41b35dd68457724b23b769803edac7f090d2032177fdada6fbf67604cfc6f167f68853b9be15eacd04204f16bbf06af26307720dfe9d78f400365b9616871f')
