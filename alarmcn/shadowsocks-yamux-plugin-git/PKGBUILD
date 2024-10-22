@@ -1,0 +1,50 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+
+_pkgname=shadowsocks-yamux-plugin
+pkgname=shadowsocks-yamux-plugin-git
+pkgver=r23.3a6cccd
+pkgrel=1
+pkgdesc="A shadowsocks SIP003 (SIP003u) Plugin with connection multiplexor in YAMUX protocol"
+arch=('x86_64' 'aarch64')
+url="https://github.com/zonyitoo/${_pkgname}"
+license=('MIT')
+depends=(
+    'gcc-libs'
+    'glibc'
+)
+makedepends=(
+    'cargo'
+    'git'
+)
+provides=("${_pkgname}=${pkgver}")
+conflicts=("${_pkgname}")
+options=(!lto)
+source=("${_pkgname}::git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+prepare() {
+    cd "${srcdir}/${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    [[ ! -f "Cargo.lock" ]] && cargo update
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+    cd "${srcdir}/${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --release --frozen --all-features
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}"
+    install -Dm0644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    cd target/release
+    install -Dm0755 yamux-plugin-local -t "${pkgdir}/usr/bin/"
+    install -Dm0755 yamux-plugin-server -t "${pkgdir}/usr/bin/"
+}
