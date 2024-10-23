@@ -20,7 +20,7 @@ def pre_build():
   in_build_qt6_base = False
   checks = ''
   variant = '-24h'
-  variant_sha256 = '937db171462a817f84ab11b3a77b0da418e42000add0207790229ba61a94454b'
+  variant_sha256 = '8c1599167d7ed0b326f6bc19ea8a93be584ae8144570104be3584d0c4eae677f'
   variant_desc = '24-hour HH:mm notation'
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgrel='):
