@@ -1,16 +1,16 @@
 diff -Naur qtbase-everywhere-src-6.8.0/util/locale_database/qlocalexml.py qtbase-everywhere-src-6.8.0_oldherl/util/locale_database/qlocalexml.py
 --- qtbase-everywhere-src-6.8.0/util/locale_database/qlocalexml.py      2024-10-15 00:00:00.000000000 +0800
 +++ qtbase-everywhere-src-6.8.0_oldherl/util/locale_database/qlocalexml.py      2024-10-15 09:01:52.422017489 +0800
-@@ -917,6 +917,9 @@
-         data = {}
-         for k in cls.__asint:
-             data[k] = int(lookup(k))
+@@ -928,6 +928,9 @@
+         for k in cls.propsMonthDay('months'):
+             data[k] = {cal: lookup('_'.join((k, cal))) for cal in calendars}
+ 
 +        data['shortDateFormat'] = "yyyy-MM-dd"
 +        data['longTimeFormat'] = "HH:mm:ss t"
 +        data['shortTimeFormat'] = "HH:mm:ss"
- 
-         for k in cls.__asdow:
-             data[k] = cls.__qDoW[lookup(k)]
+         grouping = lookup('groupSizes').split(';')
+         data.update(groupLeast = int(grouping[0]),
+                     groupHigher = int(grouping[1]),
 diff -Naur qtbase-everywhere-src-6.5.0/util/locale_database/localetools.py qtbase-everywhere-src-6.5.0_oldherl/util/locale_database/localetools.py
 --- qtbase-everywhere-src-6.5.0/util/locale_database/localetools.py	2023-04-13 11:25:19.548970629 +0800
 +++ qtbase-everywhere-src-6.5.0_oldherl/util/locale_database/localetools.py	2023-04-13 11:25:04.568831028 +0800
