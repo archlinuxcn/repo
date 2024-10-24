@@ -11,6 +11,7 @@ license=('MIT')
 depends=(
   python-numpy
   python-opencv
+  python-stringzilla
 )
 makedepends=(
   python-build
@@ -29,5 +30,6 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

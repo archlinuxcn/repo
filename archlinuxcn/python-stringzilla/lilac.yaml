@@ -3,13 +3,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-repo_depends:
-  - python-stringzilla
-
 update_on:
   - source: github
-    github: albumentations-team/albucore
-    use_max_tag: true
+    github: ashvardanian/StringZilla
+    use_latest_release: true
   - source: manual
     manual: 1
   - alias: python
