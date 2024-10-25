@@ -1,14 +1,14 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=clash-geoip
-pkgver=202410240115
+pkgver=202410242348
 pkgrel=1
 pkgdesc="GeoIP files for Clash"
 arch=(any)
 url="https://github.com/Loyalsoldier/geoip"
 license=(CC-BY-SA-4.0 GPL-3.0-or-later)
 source=("${pkgname}-${pkgver}.mmdb::${url}/releases/download/${pkgver}/Country.mmdb")
-sha256sums=('d5978bc310da359e5b5ca55b81a10fae74e9c2b83d1d931e4d2175da83f1e8c6')
+sha256sums=('4b413481c3763ddbbeb472c58e0a355d3b81ecef733536c2863489eca5f4e1b6')
 
 package() {
     install -Dm0644 "${pkgname}-${pkgver}.mmdb" "${pkgdir}/etc/clash/Country.mmdb"
