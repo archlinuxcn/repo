@@ -9,13 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=130.0.6723.58
+pkgver=130.0.6723.69
 pkgrel=1
 _launcher_ver=8
+_manual_clone=1
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=130.0.6723.58-1
+_uc_ver=130.0.6723.69-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -46,8 +47,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager_v3.patch
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch)
-sha256sums=('aa296edec7275d19feade5ef32cbe7dfdd41594d4c0c1afd94bbf4d310c38c4e'
-            '366cfa97db2fedccc2670c0547d24b820a781e7e1dbccaf39574c167fb257833'
+sha256sums=('720a1196410080056cd97a1f5ec34d68ba216a281d9b5157b7ea81ea018ec661'
+            'b7a3975ed17ec7cc4ab6143e3f3e1a056ab4b522d98643bc82cdfee726e919c1'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'b3de01b7df227478687d7517f61a777450dca765756002c80c4915f271e2d961'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
@@ -57,6 +58,11 @@ sha256sums=('aa296edec7275d19feade5ef32cbe7dfdd41594d4c0c1afd94bbf4d310c38c4e'
             'd9974ddb50777be428fd0fa1e01ffe4b587065ba6adefea33678e1b3e25d1285'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec')
+
+if (( _manual_clone )); then
+  source[0]=fetch-chromium-release
+  makedepends+=('python-httplib2' 'python-pyparsing' 'python-six' 'npm' 'rsync')
+fi
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
 # Keys are the names in the above script; values are the dependencies in Arch
@@ -91,6 +97,9 @@ _unwanted_bundled_libs=(
 depends+=(${_system_libs[@]})
 
 prepare() {
+  if (( _manual_clone )); then
+    ./fetch-chromium-release $pkgver
+  fi
   cd "$srcdir/chromium-$pkgver"
 
   # Allow building against system libraries in official builds

@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+readonly VERSION=$1
+if [[ -z $VERSION ]]; then
+  echo >&2 'No version given as an argument'
+  exit 1
+fi
+
+mkdir chromium-checkout
+cd chromium-checkout
+cat >.gclient <<EOF
+solutions = [
+  {
+    "name": "src",
+    "url": "https://chromium.googlesource.com/chromium/src.git",
+    "managed": False,
+    "custom_deps": {},
+    "custom_vars": {},
+  },
+]
+EOF
+
+git clone --depth=1 https://chromium.googlesource.com/chromium/tools/depot_tools
+export PATH+=":$PWD/depot_tools" DEPOT_TOOLS_UPDATE=0
+# system python fails to load six.moves module
+#export VPYTHON_BYPASS='manually managed python not supported by chrome operations'
+
+git clone -b $VERSION --depth=2 https://chromium.googlesource.com/chromium/src
+gclient sync --no-history --nohooks
+src/build/util/lastchange.py -o src/build/util/LASTCHANGE
+src/build/util/lastchange.py -m GPU_LISTS_VERSION \
+  --revision-id-only --header src/gpu/config/gpu_lists_version.h
+src/build/util/lastchange.py -m SKIA_COMMIT_HASH \
+  -s src/third_party/skia --header src/skia/ext/skia_commit_hash.h
+src/build/util/lastchange.py \
+  -s src/third_party/dawn --revision src/gpu/webgpu/DAWN_VERSION
+src/tools/update_pgo_profiles.py --target=linux update \
+  --gs-url-base=chromium-optimization-profiles/pgo_profiles
+
+# https://gitlab.archlinux.org/archlinux/packaging/packages/electron32/-/issues/1
+src/third_party/node/update_npm_deps
+
+find src/third_party/jdk/current -type f -delete
+mv src ../chromium-$VERSION
