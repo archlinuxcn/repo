@@ -40,6 +40,10 @@ pkgver() {
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
+prepare() {
+	sed -i "/^VERSION/c\VERSION=${pkgver}" "${_pkgname}/Makefile"
+}
+
 build() {
 	cd "${_pkgname}/"
 	export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
