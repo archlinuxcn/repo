@@ -1,11 +1,11 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.0.13
+pkgver=3.1.20
 groups=('joplin')
 pkgrel=1
-_electronVersion=31
-depends=("electron${_electronVersion}" "nodejs" "libvips")
+_electronVersion=33
+depends=("electron${_electronVersion}" "nodejs<23" "nodejs>18" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
 makedepends=('npm' 'git' 'rsync' 'python-setuptools')
@@ -14,14 +14,12 @@ license=('MIT')
 source=(
     "joplin-desktop.sh"
     "joplin-desktop.desktop"
-    "joplin.patch"
     "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz"
 )
 sha256sums=(
     'SKIP'
     'SKIP'
-    'SKIP'
-    '2bf91efec385801bb13b62b459e21c1eb80d35a772f517ba7d079eb91faa1f98'
+    '90de45f98b22d18189ccb5012642a67c03c3f77498133def97543d417b83e518'
 )
 
 _setup_env() {
@@ -39,11 +37,6 @@ prepare() {
     mkdir -p "${YARN_CACHE_FOLDER}"
 
     cd "${srcdir}/joplin-${pkgver}"
-
-    patch -p1 < ../joplin.patch
-
-    # Delete unused components
-    rm -r packages/{app-mobile,app-clipper,server,doc-builder}
 }
 
 build() {
@@ -51,11 +44,16 @@ build() {
 
     cd "${srcdir}/joplin-${pkgver}"
 
+    # Delete unused components
+    rm -r packages/{app-mobile,app-clipper,server,doc-builder}
     # Fix: Build error due to removal of app-mobile
     sed -i '/app-mobile\/commands/d' packages/tools/gulp/tasks/buildScriptIndexes.js
 
     corepack install
     npx yarn install
+
+    cd "packages"
+    sed -i -E 's_"@joplin/(\w+)": .*_"@joplin/\1": "file://'$PWD'/\1",_g' */package.json
 }
 
 check() {
@@ -71,6 +69,7 @@ check() {
 package_joplin() {
     pkgdesc="A note taking and to-do application with synchronization capabilities - CLI App"
     depends=('nodejs')
+    optdepends=( )
 
     _setup_env
 
@@ -81,7 +80,7 @@ package_joplin() {
     # Install the package
     cd build
     npm pack
-    npm install -g --prefix "${pkgdir}/usr" *.tgz
+    npm install -g --install-links --prefix "${pkgdir}/usr" *.tgz
 
     # Fix permissions set by npm
     chown -R root:root "${pkgdir}"
