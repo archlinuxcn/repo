@@ -1,16 +1,13 @@
 # Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
 # Contributor: Edgar Luque <git@edgarluque.com>
 
-# Maintainer: Rafael Fontenelle <rafaelff@gnome.org>
-# Contributor: Edgar Luque <git@edgarluque.com>
-
 pkgname=ddnet
-pkgver=17.3
+pkgver=18.6
 pkgrel=1
 pkgdesc="A Teeworlds modification with a unique cooperative gameplay."
 arch=('x86_64')
 url="https://ddnet.org"
-license=('custom:BSD' 'CCPL:by-nc-sa')
+license=('CC-BY-SA-3.0' 'Zlib' 'OFL-1.1' 'Bitstream-Vera' 'LicenseRef-Arev')
 depends=('freetype2' 'opusfile' 'curl' 'glew' 'wavpack' 'ffmpeg' 'libnotify' 'miniupnpc' 'sqlite' 'mariadb-libs' 'vulkan-icd-loader')
 makedepends=('cargo' 'cmake' 'ninja' 'python' 'vulkan-headers' 'glslang' 'spirv-tools' 'discord-game-sdk')
 checkdepends=('gmock')
@@ -18,64 +15,47 @@ optdepends=('ddnet-maps-git: All the maps used on the official DDNet Servers.'
             'discord-game-sdk: Enable rich presence in Discord desktop client.')
 backup=('usr/share/ddnet/data/autoexec_server.cfg')
 source=("https://ddnet.org/downloads/DDNet-$pkgver.tar.xz"
-        "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf")
-sha256sums=('7058ad095648fe8d161b20c3666572fbab87e3f4c4d61281e5108c8c6ba193c6'
+        "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf"
+        # Licenses extracted from license.txt
+        "Zlib.txt" "OFL-1.1.txt" "Bitstream-Vera.txt" "Arev.txt")
+sha256sums=('510cd2ac00f8a4fb07089b27b593ce4a471a40626e573c437c2f26733907b1ce'
             '9377a9d7c87abae166c8fa98cd79a61c74482f80f80bc930ae043349e9a84965'
             '70034f237270b38bf312238a26cfd322e212ca5714bfea4ae91e80c639ce8738'
-            '043452f4de3c86d903973009bb3e59b3492a6669b86d0b1410e59a1476a87369')
+            '043452f4de3c86d903973009bb3e59b3492a6669b86d0b1410e59a1476a87369'
+            '7ad4796759efa0186f5a0600f30903ce9a63d3ee0353ab4e435b43b469683402'
+            'cc97348511b4e9bf6e2f0ee6fbc329fb001e6f1049401026cf212d091390d900'
+            'da8e7278deea5296b56374fd048f8bc975be069a526d0119c9d32aa555558b4c'
+            '8acb2a0b769d9e0b3ae9f35c12110189c82790af3254419f86c46105bca70075')
+
 
 build() {
     mkdir -p build
     cd build
+    # https://bbs.archlinux.org/viewtopic.php?id=293078
+    CXXFLAGS+=' -ffat-lto-objects'
     cmake ../DDNet-$pkgver          \
-        -DCMAKE_BUILD_TYPE=Release  \
+        -DCMAKE_BUILD_TYPE=None     \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DAUTOUPDATE=OFF            \
         -DDISCORD=ON                \
         -DDISCORD_DYNAMIC=ON        \
         -DVIDEORECORDER=ON          \
         -DUPNP=ON                   \
-        -DMYSQL=OFF                 \
+        -DMYSQL=ON                  \
         -DTEST_MYSQL=OFF            \
         -GNinja
     ninja
 }
 
-# Couldn't compile the test.
-# ---- console.rs - console::ffi::IConsole_IResult::GetString (line 26) stdout ----
-# error: linking with `cc` failed: exit status: 1
-#   |
-#   = note: "cc" "-m64" "/tmp/rustcj7SpaD/symbols.o" "/tmp/rustdoctestODoyJK/rust_out.rust_out.d606595e-cgu.0.rcgu.o" "/tmp/rustdoctestODoyJK/rust_out.am13d5ha65bb1ih.rcgu.o" "-Wl,--as-needed" "-L" "/build/ddnet/src/build/debug/deps" "-L" "/build/ddnet/src/build/debug/deps" "-L" "/build/ddnet/src/build" "-L" "/usr/lib" "-L" "/build/ddnet/src/build/debug/build/cxx-f09e91ed539c0fa7/out" "-L" "/build/ddnet/src/build/debug/build/link-cplusplus-1857e583b7d6bb4e/out" "-L" "/usr/lib64/rustlib/x86_64-unknown-linux-gnu/lib" "-Wl,-Bstatic" "/build/ddnet/src/build/debug/deps/libddnet_engine_shared-65aeacf671a52a93.rlib" "/build/ddnet/src/build/debug/deps/libddnet_engine-cc9f1f5253b92803.rlib" "/build/ddnet/src/build/debug/deps/libddnet_base-44e9cec9972a1803.rlib" "/build/ddnet/src/build/debug/deps/libcxx-fa1a94661ca49657.rlib" "/build/ddnet/src/build/debug/deps/liblink_cplusplus-7295d76a5b66fac3.rlib" "/build/ddnet/src/build/debug/deps/libddnet_test-f65dd13211af81ae.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libstd-8e20380b4b9fd6be.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libpanic_unwind-a06485200ce26f7a.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libobject-2dd0454343e4f4fc.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libmemchr-d0ea83c0a7b3e9a0.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libaddr2line-04397e76f19401d3.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libgimli-db7410605ab6dc00.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/librustc_demangle-fe4d24a59cfc3703.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libstd_detect-51d7bdeefbe4cf60.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libhashbrown-a2986b1c83374eb4.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libminiz_oxide-d021298679525c17.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libadler-07477ce913344fbe.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/librustc_std_workspace_alloc-bfcfd0b3e74b40cd.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libunwind-a99d4acd8904850e.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libcfg_if-95ea7685e5bfdc81.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/liblibc-5dd797956cdd0919.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/liballoc-2bcc936797a96b7b.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/librustc_std_workspace_core-0d5f5dfbd9c7aca5.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libcore-9fb4851878f34383.rlib" "/usr/lib/rustlib/x86_64-unknown-linux-gnu/lib/libcompiler_builtins-0fa80fcac3958bad.rlib" "-Wl,-Bdynamic" "-lstdc++" "-lcrypto" "-lcurl" "-lsqlite3" "-lz" "-lrt" "-ldl" "-lgcc_s" "-lutil" "-lrt" "-lpthread" "-lm" "-ldl" "-lc" "-Wl,--eh-frame-hdr" "-Wl,-znoexecstack" "-L" "/usr/lib64/rustlib/x86_64-unknown-linux-gnu/lib" "-o" "/tmp/rustdoctestODoyJK/rust_out" "-Wl,--gc-sections" "-pie" "-Wl,-zrelro,-znow" "-nodefaultlibs"
-#   = note: /usr/bin/ld: /build/ddnet/src/build/debug/deps/libddnet_engine-cc9f1f5253b92803.rlib(ddnet_engine-cc9f1f5253b92803.htorww8pogcfvp4.rcgu.o): in function `ddnet_engine::console::ffi::IConsole_IResult::GetString':
-#           /usr/src/debug/ddnet/DDNet-16.7.2/src/engine/console.rs:138: undefined reference to `cxxbridge1$IConsole_IResult$GetString'
-#           /usr/bin/ld: /build/ddnet/src/build/debug/deps/libddnet_engine-cc9f1f5253b92803.rlib(ddnet_engine-cc9f1f5253b92803.htorww8pogcfvp4.rcgu.o): in function `ddnet_engine::console::ffi::IConsole::ExecuteLine':
-#           /usr/src/debug/ddnet/DDNet-16.7.2/src/engine/console.rs:336: undefined reference to `cxxbridge1$IConsole$ExecuteLine'
-#           /usr/bin/ld: /build/ddnet/src/build/debug/deps/libddnet_engine-cc9f1f5253b92803.rlib(ddnet_engine-cc9f1f5253b92803.htorww8pogcfvp4.rcgu.o): in function `ddnet_engine::console::ffi::IConsole::Register':
-#           /usr/src/debug/ddnet/DDNet-16.7.2/src/engine/console.rs:470: undefined reference to `cxxbridge1$IConsole$Register'
-#           /usr/bin/ld: /build/ddnet/src/build/debug/deps/libddnet_engine-cc9f1f5253b92803.rlib(ddnet_engine-cc9f1f5253b92803.htorww8pogcfvp4.rcgu.o): in function `ddnet_engine::console::ffi::CreateConsole':
-#           /usr/src/debug/ddnet/DDNet-16.7.2/src/engine/console.rs:497: undefined reference to `cxxbridge1$CreateConsole'
-#           /usr/bin/ld: /build/ddnet/src/build/debug/deps/libddnet_engine-cc9f1f5253b92803.rlib(ddnet_engine-cc9f1f5253b92803.htorww8pogcfvp4.rcgu.o): in function `<ddnet_engine::console::ffi::IConsole as cxx::unique_ptr::UniquePtrTarget>::__raw':
-#           /usr/src/debug/ddnet/DDNet-16.7.2/src/engine/console.rs:497: undefined reference to `cxxbridge1$unique_ptr$IConsole$raw'
-#           /usr/bin/ld: /build/ddnet/src/build/debug/deps/libddnet_engine-cc9f1f5253b92803.rlib(ddnet_engine-cc9f1f5253b92803.htorww8pogcfvp4.rcgu.o): in function `<ddnet_engine::console::ffi::IConsole as cxx::unique_ptr::UniquePtrTarget>::__get':
-#           /usr/src/debug/ddnet/DDNet-16.7.2/src/engine/console.rs:497: undefined reference to `cxxbridge1$unique_ptr$IConsole$get'
-#           /usr/bin/ld: /build/ddnet/src/build/debug/deps/libddnet_engine-cc9f1f5253b92803.rlib(ddnet_engine-cc9f1f5253b92803.htorww8pogcfvp4.rcgu.o): in function `<ddnet_engine::console::ffi::IConsole as cxx::unique_ptr::UniquePtrTarget>::__drop':
-#           /usr/src/debug/ddnet/DDNet-16.7.2/src/engine/console.rs:497: undefined reference to `cxxbridge1$unique_ptr$IConsole$drop'
-#           collect2: error: ld returned 1 exit status
-#           
-#   = note: some `extern` functions couldn't be found; some native libraries may need to be installed or have their path specified
-#   = note: use the `-l` flag to specify native libraries to link
-#   = note: use the `cargo:rustc-link-lib` directive to specify the native libraries to link with Cargo (see https://doc.rust-lang.org/cargo/reference/build-scripts.html#cargorustc-link-libkindname)
-# 
-# error: aborting due to previous error
-# # Net.Ipv4AndIpv6Work fails when building in clean chroot, hence disabled
-# check() {
-#     export GTEST_FILTER='-Net.Ipv4AndIpv6Work'
-#     ninja run_tests -C build
-# }
+# Net.Ipv4AndIpv6Work fails when building in clean chroot, hence disabled
+check() {
+    export GTEST_FILTER='-Net.Ipv4AndIpv6Work'
+    ninja run_tests -C build
+}
 
 package() {
     DESTDIR="$pkgdir" ninja install -C build
-    install -vDm644 DDNet-$pkgver/license.txt      "$pkgdir/usr/share/licenses/$pkgname/license.txt"
+    install -vDm644 -t "$pkgdir/usr/share/licenses/$pkgname/" 'Zlib.txt' 'OFL-1.1.txt' 'Bitstream-Vera.txt' 'Arev.txt'
     install -vDm644 "$srcdir/ddnet-server.service" "$pkgdir/usr/lib/systemd/system/ddnet-server.service"
     install -vDm644 "$srcdir/ddnet-sysusers.conf"  "$pkgdir/usr/lib/sysusers.d/ddnet.conf"
     install -vDm644 "$srcdir/ddnet-tmpfiles.conf"  "$pkgdir/usr/lib/tmpfiles.d/ddnet.conf"
