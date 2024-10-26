@@ -12,7 +12,7 @@ license=("GPL-2.0-only")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 depends=(
-	fuse3
+	# fuse3
 	libaio.so libaio
 	libblkid.so libuuid.so util-linux-libs
 	libkeyutils.so keyutils
@@ -45,7 +45,8 @@ build() {
 	export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 	export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
-	BCACHEFS_FUSE=1 make \
+	# BCACHEFS_FUSE=1 make \
+	make \
 		LIBEXECDIR=/usr/lib \
 		DESTDIR="${pkgdir}" \
 		ROOT_SBINDIR="/usr/bin" \
@@ -59,7 +60,8 @@ package() {
 	export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 	export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
-	BCACHEFS_FUSE=1 make \
+	# BCACHEFS_FUSE=1 make \
+	make \
 		PREFIX="/usr" \
 		LIBEXECDIR=/usr/lib \
 		DESTDIR="${pkgdir}" \
