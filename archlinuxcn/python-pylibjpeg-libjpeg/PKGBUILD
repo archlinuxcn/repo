@@ -2,7 +2,7 @@
 
 _pkgname=pylibjpeg-libjpeg
 pkgname=python-pylibjpeg-libjpeg
-pkgver=2.2.0
+pkgver=2.3.0
 pkgrel=1
 epoch=1
 pkgdesc='A JPEG, JPEG-LS and JPEG XT plugin for pylibjpeg'
@@ -20,7 +20,7 @@ makedepends=(
   python-installer
 )
 source=("${pkgname}::git+https://github.com/pydicom/pylibjpeg-libjpeg.git#tag=v${pkgver}")
-sha512sums=('4b405e2e679595199d3bfaf39f9e41e222041d6d57a3baedf4a31fc8d6eb411875e95c24719c861df9706210d7bb220d0e14e28fd122f31a4313128679f210c6')
+sha512sums=('2c60a1e48e77cdfa46b7d40fa5c9c251b3e29a9523d49f38cc6bbd9cf9935ac28f0a4277d7090db923915c700801288ae96358ca5ef2e963b69491afd5d69748')
 
 prepare() {
   cd "${pkgname}"
