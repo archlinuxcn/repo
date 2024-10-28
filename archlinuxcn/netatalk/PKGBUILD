@@ -5,14 +5,14 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.0.2
+pkgver=4.0.3
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
 
 source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
-md5sums=('45c9fa973a3b669227f5c668deba2fc4')
+md5sums=('0213b7f41808b81e425c9a779b2017fa')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -21,7 +21,6 @@ makedepends=('docbook-xsl'
              'unicode-character-database')
 
 depends=('acl'
-         'avahi>=0.6'
          'bash'
          'db5.3'
          'glib2'
@@ -37,12 +36,13 @@ depends=('acl'
 optdepends=('localsearch: AFP Spotlight support'
             'talloc: AFP Spotlight support'
             'tinysparql: AFP Spotlight support'
+            'avahi>=0.6: Automatic service discovery support'
             'krb5: Kerberos user authentication support'
             'mariadb-libs: MySQL CNID backend support'
             'libcups: Network printer queues support'
             'libtirpc: Quota support'
             'rpcsvc-proto: Quota support'
-            'libwrap: TCP wrapper support'
+            'libwrap: TCP wrappers support'
             'cracklib: Weak password detection')
 
 conflicts=('netatalk-ddp'
@@ -62,14 +62,12 @@ build() {
     -Dwith-appletalk=true \
     -Dwith-bdb-version=5.3 \
     -Dwith-dbus-sysconf-path=/usr/share/dbus-1/system.d \
-    -Dwith-debug=true \
     -Dwith-docbook-path=/usr/share/xml/docbook/xsl-stylesheets-${docbookver} \
     -Dwith-dtrace=false \
     -Dwith-init-hooks=false \
     -Dwith-init-style=systemd \
     -Dwith-lockfile-path=/run/netatalk.pid \
     -Dwith-overwrite=true \
-    -Dwith-pam-config-path=/etc/pam.d \
     -Dwith-readmes=false \
     -Dwith-spooldir=/var/spool/netatalk
   meson compile -C build
