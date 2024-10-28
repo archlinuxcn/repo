@@ -5,16 +5,14 @@ ENABLE_FLATPAK=0
 ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
-pkgver=11.6.4
-pkgrel=6
+pkgver=11.7.0
+pkgrel=1
 _pkgfixver=$pkgver
 
-_commit='14212835ca50c3cb90aac0eed88e07b764dcba0e'
-sha256sums=('19b80dd064e913713cce45aa8e05350a851f4e1489a95d3ce0169a5fc7042ff3'
+_commit='49bfde599ed00c127869a2797b5bb26e28e11c2a'
+sha256sums=('6191f2cf6955a0041fbf72449efe000803cc2a81654a6da96653e27fc9d08452'
             '6e0c25f0fcb0076ce78845b037e32925fcc3f1cd1670062c48ed35f564a10244'
-            'b5236af02c25cd7de4b2c9c2d0f064dac3c2f54da5cc72bf72fc6236a34bd9c4'
-            'e90cb38ce31fac5eae86b73dfd94936f920b50f260afd4979b7cc7f62ca93bae'
-            '06fcfece7de3ebebacaab895e62eac842e521e73868679394adf6171d3e43514')
+            'b5236af02c25cd7de4b2c9c2d0f064dac3c2f54da5cc72bf72fc6236a34bd9c4')
 
 pkgdesc="Pamac package manager library based on libalpm"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -31,8 +29,7 @@ provides=('libpamac.so=11' 'libpamac-appstream.so=11' "libpamac=$_pkgfixver")
 options=(!emptydirs !strip)
 install=pamac.install
 source=("libpamac-$pkgver-$pkgrel.zip::$url/archive/$_commit.zip"
-        'fix-appstream-data.sh' 'fix-appstream-data.hook'
-        '0001-flatpak_trans_run.patch' '0002-flatpak_runtime.patch')
+        'fix-appstream-data.sh' 'fix-appstream-data.hook')
 
 define_meson=''
 if [ "${ENABLE_FLATPAK}" = 1 ]; then
@@ -59,8 +56,6 @@ prepare() {
   cd "$srcdir/libpamac-$_commit"
   # adjust version string
   sed -i -e "s|\"$_pkgfixver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
-  patch -Np1 -i ../0001-flatpak_trans_run.patch
-  patch -Np1 -i ../0002-flatpak_runtime.patch
 }
 
 build() {
