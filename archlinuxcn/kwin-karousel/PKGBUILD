@@ -2,17 +2,17 @@
 
 _pkgname=karousel
 pkgname=kwin-karousel
-pkgver=0.9.4
+pkgver=0.10
 pkgrel=1
 pkgdesc='KWin tiling script with scrolling '
 arch=('any')
 url='https://github.com/peterfajdiga/karousel/'
 license=('GPL-3.0-or-later')
-depends=('kwin')
+depends=('qt6-declarative' 'knotifications')
 source=("$_pkgname-$pkgver.tar.gz::https://github.com/peterfajdiga/karousel/releases/download/v$pkgver/karousel_${pkgver//./_}.tar.gz")
-sha1sums=('75a481cc8072310a9374632383035d15e2542d47')
+sha1sums=('ac83b489bb710193271184ba2861b315888b1977')
 
 package() {
     install -D -o root -m 755 -d "$pkgdir/usr/share/kwin/scripts/karousel"
-    cp -r package/* "$pkgdir/usr/share/kwin/scripts/karousel/"
+    cp -r ${_pkgname}/* "$pkgdir/usr/share/kwin/scripts/karousel/"
 }
