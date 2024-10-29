@@ -3,7 +3,6 @@
 
 pkgname=video2x
 pkgver=6.0.0.beta.5
-_pkgver=${pkgver/.beta/-beta}
 pkgrel=1
 pkgdesc="Machine learning video/GIF/image upscaling"
 url="https://${pkgname}.org"
@@ -18,19 +17,16 @@ optdepends=(
 	"waifu2x-converter-cpp: C++ implemenation of waifu2x working on all platforms"
 )
 source=(
-	"git+https://github.com/k4yt3x/${pkgname}.git#tag=${_pkgver}"
+	"git+https://github.com/k4yt3x/${pkgname}.git#tag=${pkgver}"
 	"git+https://github.com/k4yt3x/libreal-esrgan-ncnn-vulkan.git"
-	"git+https://github.com/Tencent/ncnn.git"
 )
 sha256sums=('2219618fd6ab42ef8c40ba0c143759d5fa17b186f8f32d56eeca160ee201be86'
-            'SKIP'
             'SKIP')
 
 prepare() {
 	cd "${pkgname}/"
 	git submodule init
 	git config submodule.third_party/libreal_esrgan_ncnn_vulkan.url "${srcdir}/libreal-esrgan-ncnn-vulkan"
-	git config submodule.third_party/ncnn.url "${srcdir}/ncnn"
 	git -c protocol.file.allow=always submodule update
 }
 
