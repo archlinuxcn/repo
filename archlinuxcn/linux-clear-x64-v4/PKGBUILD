@@ -4,7 +4,7 @@
 ### BUILD OPTIONS
 # You can modify these settings by executing "env _<setting>=<value> makepkg"
 # instead of modifying the PKGBUILD file. Here's an example:
-# env _makemenuconfig=y _copyfinalconfig=y _subarch=42 makepkg
+# env _makemenuconfig=y _copyfinalconfig=y _subarch=30 makepkg
 
 # Tweak kernel options prior to a build via menuconfig.
 # 
@@ -50,7 +50,7 @@
 
 # Optionally select a sub architecture by number or
 # leave blank, which will require user interaction during the build.
-# Note that the default option is 40.
+# Note that the default option is 41.
 #
 #  1. AMD Opteron/Athlon64/Hammer/K8 (MK8)
 #  2. AMD Opteron/Athlon64/Hammer/K8 with SSE3 (MK8SSE3)
@@ -66,37 +66,35 @@
 #  12. AMD Zen 2 (MZEN2)
 #  13. AMD Zen 3 (MZEN3)
 #  14. AMD Zen 4 (MZEN4)
-#  15. Intel P4 / older Netburst based Xeon (MPSC)
-#  16. Intel Core 2 (MCORE2)
+#  15. AMD Zen 5 (MZEN5)
+#  16. Intel P4 / older Netburst based Xeon (MPSC)
 #  17. Intel Atom (MATOM)
-#  18. Intel Nehalem (MNEHALEM)
-#  19. Intel Westmere (MWESTMERE)
-#  20. Intel Silvermont (MSILVERMONT)
-#  21. Intel Goldmont (MGOLDMONT)
-#  22. Intel Goldmont Plus (MGOLDMONTPLUS)
-#  23. Intel Sandy Bridge (MSANDYBRIDGE)
-#  24. Intel Ivy Bridge (MIVYBRIDGE)
-#  25. Intel Haswell (MHASWELL)
-#  26. Intel Broadwell (MBROADWELL)
-#  27. Intel Skylake (MSKYLAKE)
-#  28. Intel Skylake X (MSKYLAKEX)
-#  29. Intel Cannon Lake (MCANNONLAKE)
-#  30. Intel Ice Lake (MICELAKE)
-#  31. Intel Cascade Lake (MCASCADELAKE)
-#  32. Intel Cooper Lake (MCOOPERLAKE)
-#  33. Intel Tiger Lake (MTIGERLAKE)
-#  34. Intel Sapphire Rapids (MSAPPHIRERAPIDS)
-#  35. Intel Rocket Lake (MROCKETLAKE)
-#  36. Intel Alder Lake (MALDERLAKE)
-#  37. Intel Raptor Lake (MRAPTORLAKE)
-#  38. Intel Meteor Lake (MMETEORLAKE)
-#  39. Intel Emerald Rapids (MEMERALDRAPIDS)
-#  40. Generic-x86-64 (GENERIC_CPU)
-#  41. Generic-x86-64-v2 (GENERIC_CPU2)
-#  42. Generic-x86-64-v3 (GENERIC_CPU3)
-#  43. Generic-x86-64-v4 (GENERIC_CPU4)
-#  44. Intel-Native optimizations autodetected by the compiler (MNATIVE_INTEL)
-#  45. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD)
+#  18. Intel Core 2 (MCORE2)
+#  19. Intel Nehalem (MNEHALEM)
+#  20. Intel Westmere (MWESTMERE)
+#  21. Intel Silvermont (MSILVERMONT)
+#  22. Intel Goldmont (MGOLDMONT)
+#  23. Intel Goldmont Plus (MGOLDMONTPLUS)
+#  24. Intel Sandy Bridge (MSANDYBRIDGE)
+#  25. Intel Ivy Bridge (MIVYBRIDGE)
+#  26. Intel Haswell (MHASWELL)
+#  27. Intel Broadwell (MBROADWELL)
+#  28. Intel Skylake (MSKYLAKE)
+#  29. Intel Skylake X (MSKYLAKEX)
+#  30. Intel Cannon Lake (MCANNONLAKE)
+#  31. Intel Ice Lake (MICELAKE)
+#  32. Intel Cascade Lake (MCASCADELAKE)
+#  33. Intel Cooper Lake (MCOOPERLAKE)
+#  34. Intel Tiger Lake (MTIGERLAKE)
+#  35. Intel Sapphire Rapids (MSAPPHIRERAPIDS)
+#  36. Intel Rocket Lake (MROCKETLAKE)
+#  37. Intel Alder Lake (MALDERLAKE)
+#  38. Intel Raptor Lake (MRAPTORLAKE)
+#  39. Intel Meteor Lake (MMETEORLAKE)
+#  40. Intel Emerald Rapids (MEMERALDRAPIDS)
+#  41. Generic-x86-64 (GENERIC_CPU)
+#  42. Intel-Native optimizations autodetected by the compiler (MNATIVE_INTEL)
+#  43. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD)
 _subarch=43
 
 # Enable compilation with LLVM
@@ -119,11 +117,11 @@ _subarch=43
 
 # Kernel version
 _kernel_major=6.11
-_kernel_minor=4
+_kernel_minor=5
 # Clear Linux patches version
 _clr=3-1472
 # kernel_compiler_patch version
-_kernelcompilerpatch="20241001"
+_kernelcompilerpatch="20241018"
 # Source directory names
 _src_linux=linux-${_kernel_major}
 _src_clr=${_kernel_major}.${_clr}
@@ -263,7 +261,7 @@ prepare() {
     # Patch with kernel_compiler_patch patches
     # This must be executed after olddefconfig
     # to allow for the next section to run.
-    patch -Np1 -i "$srcdir/kernel_compiler_patch-$_kernelcompilerpatch/more-ISA-levels-and-uarches-for-kernel-6.8-rc4+.patch"
+    patch -Np1 -i "$srcdir/kernel_compiler_patch-$_kernelcompilerpatch/more-ISA-levels-and-uarches-for-kernel-6.1.79+.patch"
     
     # Set subarch automatically
     [[ -n "${_subarch}" ]] && yes "${_subarch}" | make ${BUILD_FLAGS[*]} oldconfig
@@ -432,6 +430,6 @@ validpgpkeys=(
 )
 sha256sums=("55d2c6c025ebc27810c748d66325dd5bc601e8d32f8581d9e77673529bdacb2e"
             "SKIP"
-            "d0c22d3f7a5ea64938cb8a003e6f6ad3226a0dab855e89fa0fff3578946c9498"
+            "1922b3b321c7f53109338a4e5a675b5ed65ba598c579a29b106843c00166a939"
             "SKIP"
-            "3c0a38110cc21dca6b6efec03ce82ed24f473da190354cf740b5ecd6f6589aa7")
+            "b3fd8b1c5bbd39a577afcccf6f1119fdf83f6d72119f4c0811801bdd51d1bc61")
