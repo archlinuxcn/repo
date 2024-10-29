@@ -2,17 +2,13 @@ maintainers:
   - github: Integral-Tech
     email: integral@archlinuxcn.org
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver.replace('-','.'))
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
-
-repo_depends:
-  - patool
-  - python-avalon_framework
 
 update_on:
   - source: github
     github: k4yt3x/video2x
-    use_latest_tag: true
+    use_latest_release: true
 
   - source: alpm
     alpm: spdlog
