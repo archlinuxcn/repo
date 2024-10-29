@@ -1,7 +1,7 @@
 # Maintainer: AndyRTR <andyrtr@archlinux.org>
 
 pkgname=xorg-xwayland-lily
-pkgver=24.1.3
+pkgver=24.1.4
 pkgrel=1
 arch=('x86_64')
 license=(
@@ -31,7 +31,7 @@ makedepends=('meson' 'xorgproto' 'xtrans' 'libxkbfile' 'dbus'
              'xorg-font-util' 'wayland-protocols' 'mesa-libgl'
              'systemd')
 source=(https://xorg.freedesktop.org/archive/individual/xserver/xwayland-$pkgver.tar.xz{,.sig} hidpi.patch)
-sha512sums=('7e0e11b07408f41a81bafa7bc519d02ed9bdc36e11be16abe255a7d779d04824af23d79323f1602119b046c545cdd43ea91b93e23feb0ffe411aa6989b462c1d'
+sha512sums=('7d3e4fdf67f07f79d8ddefc0077d10f811fe5ab1f919a922b5afc5dd9843eb2e0bc0a8b225555a0886521eb04a993e06a250469d3594d5add34d6412c76c60f8'
             'SKIP'
             'c1eb92b042befcffe5ba2b0797d2dde4984adf76acbba778eda638d1fab45eac34e2341338cf562460d58d380f768dd40966183e550a29e186f092e8112ab674')
 provides=('xorg-server-xwayland' 'xorg-xwayland' 'xorg-xwayland-hidpi-xprop')
