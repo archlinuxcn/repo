@@ -1,7 +1,7 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 pkgname="nginx-ui"
-pkgver=2.0.0_beta.38
+pkgver=2.0.0_beta.39
 _pkgver=${pkgver//_/-}
 pkgrel=1
 pkgdesc="Yet another WebUI for Nginx"
@@ -12,7 +12,7 @@ license=("AGPL-3.0-or-later")
 depends=("nginx")
 makedepends=("pnpm" "go")
 source=("${pkgname}-${_pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('b8cc4736981363186c04591d65193d0765d25cd1ebb7decb3d497758e8c44d78')
+sha256sums=('51284ecc6cfa778474ad578841f4f81d866651c8ed6377e6603c0835d1008749')
 
 build() {
     export CGO_CFLAGS="${CFLAGS}"
@@ -47,5 +47,5 @@ package() {
     install -Dm755 "${pkgname}"         "${pkgdir}/usr/bin/${pkgname}"
     install -Dm644 "${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
     install -Dm644 app.example.ini      "${pkgdir}/etc/${pkgname}/config.ini"
-    install -Dm644 *.md             -t "${pkgdir}/usr/share/doc/${pkgname}"
+    install -Dm644 *.md              -t "${pkgdir}/usr/share/doc/${pkgname}"
 }
