@@ -1,0 +1,41 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=ptyxis
+pkgver=47.3
+pkgrel=1
+pkgdesc='A terminal for a container-oriented desktop'
+arch=('x86_64')
+url='https://gitlab.gnome.org/chergert/ptyxis'
+license=('GPL-3.0-or-later')
+groups=()
+depends=('dconf'
+         'gcc-libs'
+         'glib2'
+         'glibc'
+         'gtk4'
+         'hicolor-icon-theme'
+         'json-glib'
+         'libadwaita'
+         'libportal'
+         'libportal-gtk4'
+         'pango'
+         'vte4')
+makedepends=('git'
+             'glib2-devel'
+             'meson')
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+source=("$pkgname::git+$url#tag=$pkgver")
+sha256sums=('242c4c9b1fd8a5a086328a43f8e2ffd355a2fba35172c25c2548ef77c262ff69')
+
+build() {
+  arch-meson "$pkgname" build --buildtype=release
+  meson compile -C build
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}
