@@ -1,0 +1,41 @@
+# Maintainer: Mark Weiman <mark.weiman@markzz.com>
+# Contributor: hdhoang <arch@hdhoang.space>
+
+pkgname=nginx-mod-fancyindex
+pkgver=0.5.2
+pkgrel=1
+
+_modname="${pkgname#nginx-mod-}"
+
+pkgdesc='Fancy indexes module for the Nginx web server'
+arch=('i686' 'x86_64')
+depends=('nginx')
+makedepends=('nginx-src')
+url="https://github.com/aperezdc/ngx-fancyindex"
+license=('BSD')
+
+source=(https://github.com/aperezdc/ngx-$_modname/archive/v$pkgver.tar.gz
+)
+validpgpkeys=(B0F4253373F8F6F510D42178520A9993A1C052F8) # Maxim Dounin <mdounin@mdounin.ru>
+md5sums=('5d29c959724b7f1b23879cd122bd0b1d')
+
+prepare() {
+  cp -r /usr/src/nginx .
+}
+
+build() {
+  cd "$srcdir"/nginx
+  ./configure --with-compat --add-dynamic-module=../ngx-$_modname-$pkgver
+  make modules
+}
+
+package() {
+  install -Dm644 "$srcdir/"ngx-$_modname-$pkgver/LICENSE \
+                 "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+  cd "$srcdir"/nginx/objs
+  for mod in *.so; do
+    install -Dm755 $mod "$pkgdir"/usr/lib/nginx/modules/$mod
+  done
+}
+
