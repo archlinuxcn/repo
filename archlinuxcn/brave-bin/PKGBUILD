@@ -12,7 +12,7 @@
 # `curl https://brave-browser-downloads.s3.brave.com/latest/release.version`
 
 pkgname=brave-bin
-pkgver=1.71.118
+pkgver=1.71.121
 pkgrel=1
 epoch=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
@@ -20,13 +20,13 @@ arch=(x86_64 aarch64)
 url=https://brave.com
 license=(MPL2 BSD custom:chromium)
 depends=(alsa-lib
-         gtk3
-         libxss
-         nss
-         ttf-font)
+  gtk3
+  libxss
+  nss
+  ttf-font)
 optdepends=('cups: Printer support'
-            'libgnome-keyring: Enable GNOME keyring support'
-            'libnotify: Native notification support')
+  'libgnome-keyring: Enable GNOME keyring support'
+  'libnotify: Native notification support')
 provides=("${pkgname%-bin}=$pkgver" 'brave-browser')
 conflicts=("${pkgname%-bin}")
 options=(!strip)
@@ -37,28 +37,28 @@ source_aarch64=(${pkgname}-${pkgver}-aarch64.zip::https://github.com/brave/brave
 noextract=(${pkgname}-${pkgver}-x86_64.zip ${pkgname}-${pkgver}-aarch64.zip)
 sha256sums=('75a87dd17b42fcc6f27adfd16c82bed1c08e9251b07d2012f8d49f7412fa1d00'
             'c07276b69c7304981525ecb022f92daf7ae125a4fb05ac3442157b50826e257a')
-sha256sums_x86_64=('c9e7a3bab27cc9fc8c0da947e4c7442b3c9d2211200c292e22dbafeb6bd8a7f9')
-sha256sums_aarch64=('0652451a9f1cd9e840b3162305e1e8901e821d1f564068d3ab8487b74bda17a2')
+sha256sums_x86_64=('6a76f69548ce259f6eaa4db1c67b9000cddd36319347b821c47e544cfdec160e')
+sha256sums_aarch64=('e98eb6d1b46a256dc096f5527b3ac2e8a36a1f4126beaa2b8fd6caf39986e3e7')
 
 prepare() {
-	mkdir -p brave
-	bsdtar -xf "$pkgname-$pkgver-$CARCH.zip" -C brave
-	chmod +x brave/brave
+  mkdir -p brave
+  bsdtar -xf "$pkgname-$pkgver-$CARCH.zip" -C brave
+  chmod +x brave/brave
 }
 
 package() {
-	install -dm0755 "$pkgdir/opt"
-	cp -a brave "$pkgdir/opt/$pkgname"
+  install -dm0755 "$pkgdir/opt"
+  cp -a brave "$pkgdir/opt/$pkgname"
 
-	# allow firejail users to get the suid sandbox working
-	chmod 4755 "$pkgdir/opt/brave-bin/chrome-sandbox"
+  # allow firejail users to get the suid sandbox working
+  chmod 4755 "$pkgdir/opt/brave-bin/chrome-sandbox"
 
-	install -Dm0755 "$pkgname.sh" "$pkgdir/usr/bin/brave"
-	install -Dm0644 -t "$pkgdir/usr/share/applications/" "brave-browser.desktop"
-	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" brave/LICENSE
-	pushd "$pkgdir/usr/"
-	for size in 16x16 24x24 32x32 48x48 64x64 128x128 256x256; do
-		install -Dm0644 "$pkgdir/opt/$pkgname/product_logo_${size/x*/}.png" \
-			"share/icons/hicolor/$size/apps/brave-desktop.png"
-	done
+  install -Dm0755 "$pkgname.sh" "$pkgdir/usr/bin/brave"
+  install -Dm0644 -t "$pkgdir/usr/share/applications/" "brave-browser.desktop"
+  install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" brave/LICENSE
+  pushd "$pkgdir/usr/"
+  for size in 16x16 24x24 32x32 48x48 64x64 128x128 256x256; do
+    install -Dm0644 "$pkgdir/opt/$pkgname/product_logo_${size/x*/}.png" \
+      "share/icons/hicolor/$size/apps/brave-desktop.png"
+  done
 }
