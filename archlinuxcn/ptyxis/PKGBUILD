@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=ptyxis
-pkgver=47.3
+pkgver=47.4
 pkgrel=1
 pkgdesc='A terminal for a container-oriented desktop'
 arch=('x86_64')
@@ -29,7 +29,7 @@ conflicts=()
 replaces=()
 backup=()
 source=("$pkgname::git+$url#tag=$pkgver")
-sha256sums=('242c4c9b1fd8a5a086328a43f8e2ffd355a2fba35172c25c2548ef77c262ff69')
+sha256sums=('c233918d600a6a9d57bb3716a5b9913a635fb961b1ad934ecdad3b753f75766a')
 
 build() {
   arch-meson "$pkgname" build --buildtype=release
