@@ -1,5 +1,5 @@
 pkgname=dida
-pkgver=6.0.0
+pkgver=6.0.10
 pkgrel=1
 pkgdesc='DIDA is a powerful to-do & task management app with seamless cloud synchronization across all your devices. Whether you need to schedule an agenda, make memos, share shopping lists, collaborate in a team, or even develop a new habit, DIDA is always here to help you get stuff done and keep life on track.'
 arch=('x86_64')
@@ -10,8 +10,8 @@ provides=('dida365')
 conflicts=('dida365')
 source=("${pkgname}-${pkgver}.deb::https://cdn.dida365.cn/download/linux/linux_deb_x64/${pkgname}-${pkgver}-amd64.deb"
 	"LICENSE::https://dida365.com/tos")
-sha256sums=('7d178e16ebd668a1af81fbcf2594031a0217fb1fd163f186f830c977b6e71dae'
-            'dc9eb0c8f4fcab5a37b1025d61b29d3da4cfbe04e22c53a26a67cd2822cf78dd')
+sha256sums=('3a458c50cbb6b58a4c0bb46bf851f4a19f0fc6dd1a73b5eefe8df43f270758fc'
+            'fadce37fdf8b3f7311ae18f7eab01ba398893e7d42aed0170c17567547aa5d3d')
 
 package() {
   cd "${srcdir}"
