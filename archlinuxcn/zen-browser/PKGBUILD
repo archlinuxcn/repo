@@ -1,0 +1,107 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgbase=zen-browser
+pkgname=("$pkgbase-generic"
+         "$pkgbase-specific")
+
+pkgver=1.0.1.a.14
+_version=${pkgver//.a/-a}
+pkgrel=1
+pkgdesc='Performance oriented Firefox-based web browser'
+url='https://zen-browser.app/'
+arch=('x86_64')
+license=(MPL-2.0)
+depends=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
+optdepends=('pulseaudio: audio support'
+            'ffmpeg: h.264 video'
+            'hunspell: spell checking'
+            'hyphen: hyphenation'
+            'libnotify: notification integration'
+            'networkmanager: location detection via available WiFi networks'
+            'speech-dispatcher: text-to-speech'
+            'xdg-desktop-portal: Screensharing with Wayland'
+            'startup-notification: support for FreeDesktop Startup Notification')
+
+_repo='https://github.com/zen-browser/desktop'
+source=(zen-browser.desktop
+        "generic-$_version.tar.bz2::$_repo/releases/download/$_version/zen.linux-generic.tar.bz2"
+        "specific-$_version.tar.bz2::$_repo/releases/download/$_version/zen.linux-specific.tar.bz2")
+sha256sums=('59d421bd21bd8683d5d1cc47f8c3f13e37eaaee75833e24e8540c8fcb85cc015'
+            'cdb07f9a7d1c63774f3e4a10526900926ec2bf963f07788c392174fbc2aa20a2'
+            'a678385a6cc3a38ed4199997997a40764fa0b73a76353e5bf24013754542e472')
+
+# Don't extract anything because they'll override each other
+noextract=("${source[@]%%::*}")
+
+_xdirname=zen
+for _pkgname in "${pkgname[@]}"; do
+  _variant="${_pkgname//$pkgbase-/}"
+  _filename="$_variant-$_version.tar.bz2"
+
+  eval "package_$_pkgname() {
+    provides=('$pkgbase=$pkgver')
+    conflicts=('$pkgbase')
+
+    msg2 'Removing old ${_xdirname} directory...'
+    rm -rf ${_xdirname}
+
+    msg2 'Extract $_filename...'
+    bsdtar -xf $_filename
+
+    _package $_variant
+  }"
+done
+
+_bin='zen'
+_package() {
+  if [[ "$1" == 'specific' ]]; then
+    pkgdesc="${pkgdesc} with optimizations for modern devices (AVX2...)"
+  fi
+
+  OPT_PATH="opt/$pkgbase"
+
+  # Install the package files
+  install -d "$pkgdir"/{usr/bin,opt}
+  cp -r ${_xdirname} "${pkgdir}"/${OPT_PATH}
+  ln -s /${OPT_PATH}/${_bin} "${pkgdir}"/usr/bin/
+
+  # Replace duplicate binary with wrapper
+  # https://bugzilla.mozilla.org/show_bug.cgi?id=658850
+  ln -sf "$pkgdir"/${OPT_PATH}/${_bin} "$pkgdir"/${OPT_PATH}/${_bin}-bin
+
+  # Install the desktop file
+  install -Dm644 "${srcdir}"/${pkgbase}.desktop -t "${pkgdir}"/usr/share/applications
+
+  # Install icons
+  SRC_LOC="${srcdir}"/${_xdirname}/browser
+  DEST_LOC="${pkgdir}"/usr/share/icons/hicolor
+  for i in 16 32 48 64 128; do
+      install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgbase}.png
+  done
+
+  # Use system certificates
+  local nssckbi="${pkgdir}"/${OPT_PATH}/libnssckbi.so
+  if [[ -e $nssckbi ]]; then
+    ln -sf "${pkgdir}"/usr/lib/libnssckbi.so "${nssckbi}"
+  fi
+
+  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/browser/defaults/preferences/vendor.js
+// Use LANG environment variable to choose locale
+pref("intl.locale.requested", "");
+
+// Use system-provided dictionaries
+pref("spellchecker.dictionary_path", "/usr/share/hunspell");
+EOF
+
+  # Disable auto-updates
+  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
+{
+  "policies": {
+    "DisableAppUpdate": true,
+    "AppAutoUpdate": false,
+    "ManualAppUpdateOnly": true,
+    "BackgroundAppUpdate": false
+  }
+}
+EOF
+}
