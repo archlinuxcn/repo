@@ -1,0 +1,44 @@
+[Unit]
+Description=Jackett Daemon
+After=network.target
+
+[Service]
+User=jackett
+Group=jackett
+SyslogIdentifier=jackett
+Restart=always
+RestartSec=5
+Type=simple
+Environment=XDG_CONFIG_HOME=/var/lib/jackett
+WorkingDirectory=/usr/lib/jackett
+ExecStart=/usr/lib/jackett/jackett --NoRestart --NoUpdates --DataFolder /var/lib/jackett
+TimeoutStopSec=20
+CapabilityBoundingSet=
+LockPersonality=true
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateNetwork=false
+PrivateTmp=true
+PrivateUsers=true
+ProcSubset=pid
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectSystem=full
+RemoveIPC=true
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+SocketBindDeny=udp
+SystemCallArchitectures=native
+SystemCallErrorNumber=EPERM
+SystemCallFilter=@basic-io @file-system @io-event @ipc @network-io @process @resources @signal @sync uname
+
+[Install]
+WantedBy=multi-user.target
