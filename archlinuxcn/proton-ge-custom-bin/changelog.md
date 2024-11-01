@@ -1,3 +1,26 @@
+## GE-Proton9-18
+
+Hotfix:
+- Add missing proton script python uuid import (which broke prefix creation)
+
+
+## GE-Prooton-17
+
+Proton:
+- wine updated to latest bleeding edge
+- dxvk updated to latest git
+- vkd3d-proton updated to latest git
+- dxvk-nvapi updated to latest git
+- ICU building + linking imported from upstream
+- misc proton script fixes imported from upstream
+
+Protonfixes:
+- Audio fix for Mini Ninjas (thanks UsernamesAreNotMyThing)
+- Fix typo'd mod support for ES: Oblivion (thanks MaxBosse)
+- Disable esync/fsync in Disgaea 4 to prevent crash (thanks UsernamesAreNotMyThing)
+
+Nothing major here, just a refresh of various parts that need updates from git, mostly to add new video playback fixes from upstream proton.
+
 ## GE-Proton9-16
 
 Proton:
