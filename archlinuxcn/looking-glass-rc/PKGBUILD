@@ -15,7 +15,7 @@ pkgrel=4
 pkgdesc="An extremely low latency KVMFR (KVM FrameRelay) implementation for guests with VGA PCI Passthrough. (Candidate Version)"
 url="https://looking-glass.io/"
 arch=('x86_64')
-license=('GPL2')
+license=('GPL-2.0-or-later')
 makedepends=('cmake' 'fontconfig' 'libpipewire' 'libpulse'
 	'libsamplerate' 'libxi' 'libxpresent' 'libxss' 'obs-studio'
 	'spice-protocol' 'wayland-protocols')
@@ -36,7 +36,9 @@ build() {
 	for b in {client,host,obs}/build; do
 		mkdir "${b}"
 		pushd "${b}"
-		cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+		# OPTIMIZE_FOR_NATIVE defined in ../cmake/OptimizeForNative.cmake
+		# Defaults to AUTO and is automatically set if unspecified
+		cmake -DOPTIMIZE_FOR_NATIVE=x86-64-v2 -DCMAKE_INSTALL_PREFIX=/usr ..
 		make
 		popd
 	done

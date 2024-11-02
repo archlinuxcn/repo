@@ -1,6 +1,7 @@
 maintainers:
   - github: merrkry
     email: merrkry@archlinuxcn.org
+  - github: roaldclark
 
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: |
@@ -14,3 +15,5 @@ update_on:
     include_prereleases: true
     from_pattern: "-"
     to_pattern: ""
+  - source: manual
+    manual: 1
