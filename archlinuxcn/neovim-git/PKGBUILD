@@ -8,7 +8,7 @@
 
 _pkgname=neovim
 pkgname="$_pkgname-git"
-pkgver=0.11.0.r425.gc2b51e6c41
+pkgver=0.11.0.r1081.gb25ae5d328
 pkgrel=1
 pkgdesc='Fork of Vim aiming to improve user experience, plugins, and GUIs'
 arch=(i686 x86_64 armv7h armv6h aarch64)
@@ -19,7 +19,6 @@ depends=(
   'libluv'
   'libutf8proc'
   'libuv'
-  'libvterm>0.1.4'
   'lua51-lpeg'
   'luajit'
   'msgpack-c'
@@ -28,6 +27,7 @@ depends=(
   'tree-sitter-markdown'
   'tree-sitter-query'
   'tree-sitter-vimdoc'
+  'tree-sitter-vim'
   'tree-sitter>=0.22.2'
   'unibilium'
 )
@@ -63,6 +63,11 @@ pkgver() {
 
 build() {
   cd "$_pkgname"
+
+  # Use bundled utf8proc until upstream pins back to a stable release
+  cmake -S cmake.deps -B .deps -G Ninja -DUSE_BUNDLED=OFF -DUSE_BUNDLED_UTF8PROC=ON
+  cmake --build .deps
+
   cmake \
     -Bbuild \
     -DCMAKE_BUILD_TYPE=Release \
