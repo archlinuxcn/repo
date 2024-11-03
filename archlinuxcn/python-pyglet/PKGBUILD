@@ -1,0 +1,41 @@
+# Maintainer: konez2k@aur
+# Contributor: bruceutut@aur
+# Contributor: Kyle Keen <keenerd@gmail.com>
+# Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
+# Contributor: Ryan Coyner <rcoyner@gmail.com>
+# Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
+
+_pkgname=pyglet
+pkgname=python-pyglet
+pkgver=2.0.17
+pkgrel=1
+pkgdesc="A cross-platform windowing and multimedia library for Python"
+arch=('any')
+url="https://github.com/pyglet/pyglet"
+license=('BSD-3-Clause')
+depends=(
+    'glu'
+    'python'
+)
+makedepends=(
+    'python-build'
+    'python-flit-core'
+    'python-installer'
+)
+optdepends=(
+    'ffmpeg: provides audio & video support'
+    'openal: live audio'
+)
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('9cbf9a02d5db6336d339bbf40feae708b0e20fa767c31ace32a88767ae11ae15')
+
+build() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    install -Dm0644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+}
