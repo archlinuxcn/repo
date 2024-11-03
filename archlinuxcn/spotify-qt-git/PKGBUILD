@@ -1,3 +1,6 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: kraxarn <kraxie@protonmail.com>
+
 pkgname=spotify-qt-git
 _pkgname=${pkgname%-git}
 pkgver=3.11.r74.g5d74fbc7
@@ -6,7 +9,7 @@ pkgdesc="Lightweight Spotify client using Qt"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/kraxarn/${_pkgname}"
 license=("GPL-3.0-or-later")
-depends=('qt5-base' 'qt5-svg' 'hicolor-icon-theme')
+depends=('qt6-base' 'qt6-svg' 'hicolor-icon-theme')
 makedepends=('git' 'cmake')
 optdepends=(
 	"librespot: Recommended playback client"
@@ -22,12 +25,14 @@ pkgver() {
 }
 
 build() {
-	cd "${_pkgname}/"
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
-	make $MAKEFLAGS
+	cmake -B build -S "${pkgname}-${pkgver}" \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr
+
+	cmake --build build
+
 }
 
 package() {
-	cd "${_pkgname}/"
-	make DESTDIR="${pkgdir}" install
+	DESTDIR="${pkgdir}" cmake --install build
 }
