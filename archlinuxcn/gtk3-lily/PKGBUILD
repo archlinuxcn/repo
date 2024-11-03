@@ -65,11 +65,13 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/gtk.git#tag=$pkgver"
   gtk-query-immodules-3.0.hook
   0001-Allow-disabling-legacy-Tracker-search.patch
-  0001-wayland-im-notify-wayland-after-set_cursor_location.patch)
+  0001-wayland-im-notify-wayland-after-set_cursor_location.patch
+  0001-inhibit-hex-check.patch)
 b2sums=('fdda77eebdc0b8e378f0258cb241eda4412b868d59ea1fd90815f459e925e6433f94c22a088d695b72fab99ecca827b370942bea47043debef4fab78e0e03dca'
         '8e6a3906126749c6d853f582e3802254cdbba099c6af7190ad576eff6ea5425404a72b1b36950a87e3afdac82295cfe246003172c3e0341a73bd931a36f3b407'
         'ae371c52f24d00153037622de12a7e0026223c50fcb4b83e88138e2fd8b69a27422dfc91dae3a83c24705c57370bc9d75de4228210041c10c55482443478e240'
-        '2718db7adc07ee2df86b6dacbfb7638217b2cb76c5f5acde4ce9bd7a4617989744326069670b6cc4e5aff59fac410db9b60db7f07dd2a2e36a40b7a3b0d2d8b9')
+        '2718db7adc07ee2df86b6dacbfb7638217b2cb76c5f5acde4ce9bd7a4617989744326069670b6cc4e5aff59fac410db9b60db7f07dd2a2e36a40b7a3b0d2d8b9'
+        '805b43b9be928362fc9e5ec1738bc9c069d2f3fc32c6d740aefdbab1f8cbd43a5d11aea8113cf9df613f203f6dd77ac250a1e3a6f2399848de58642f08ac0aac')
 
 prepare() {
   cd gtk
@@ -82,6 +84,7 @@ prepare() {
   # Don't try to use the old Tracker
   git apply -3 ../0001-Allow-disabling-legacy-Tracker-search.patch
   patch -Np1 -i ../0001-wayland-im-notify-wayland-after-set_cursor_location.patch
+  patch -Np1 -i ../0001-inhibit-hex-check.patch
 }
 
 build() {
