@@ -34,7 +34,7 @@ def pre_build():
     elif line.startswith('b2sums='):
       state = 'b2sums'
     elif state == 'b2sums' and line.endswith(')'):
-      line = line.replace(')', "\n        '2718db7adc07ee2df86b6dacbfb7638217b2cb76c5f5acde4ce9bd7a4617989744326069670b6cc4e5aff59fac410db9b60db7f07dd2a2e36a40b7a3b0d2d8b9'\n        '805b43b9be928362fc9e5ec1738bc9c069d2f3fc32c6d740aefdbab1f8cbd43a5d11aea8113cf9df613f203f6dd77ac250a1e3a6f2399848de58642f08ac0aac')")
+      line = line.replace(')', "\n        '2718db7adc07ee2df86b6dacbfb7638217b2cb76c5f5acde4ce9bd7a4617989744326069670b6cc4e5aff59fac410db9b60db7f07dd2a2e36a40b7a3b0d2d8b9'\n        '9b7bf67ff3f5398bec57ca405c33757c14721d012aaa465df3f629b1d685b2183850e91ff6b1e879ec927b6d710806790a0302e2307e782eb7d64eb34dd71820')")
       state = ''
 
     elif line.startswith('prepare('):
