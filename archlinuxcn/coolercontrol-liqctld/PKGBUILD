@@ -2,7 +2,7 @@
 # Maintainer: Guy Boldon <gb@guyboldon.com>
 
 pkgname=coolercontrol-liqctld
-pkgver=1.4.2
+pkgver=1.4.4
 pkgrel=1
 pkgdesc="liquidctl daemon for CoolerControl"
 arch=('x86_64')
@@ -35,7 +35,7 @@ source=(
   "https://gitlab.com/coolercontrol/coolercontrol/-/archive/$pkgver/coolercontrol-$pkgver.tar.gz"
 )
 sha256sums=(
-  '0185f95f000cf2a587ceecde9aadaf58901afe9a35fdc56acf7e1df81c56b13e'
+  'acf5a27111122230d243e66eae85212f9c01a402b12028a8918fc785414bb713'
 )
 
 build() {
