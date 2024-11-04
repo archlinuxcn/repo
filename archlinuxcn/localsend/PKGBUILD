@@ -6,12 +6,12 @@
 # https://github.com/localsend/localsend
 
 ## options
-: ${_install_path:=opt}
+: ${_install_path:=usr/lib}
 
 # basic info
 _pkgname="localsend"
 pkgname="$_pkgname"
-pkgver=1.15.4
+pkgver=1.16.0
 pkgrel=1
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
@@ -30,12 +30,15 @@ makedepends=(
   'llvm'
   'ninja'
   'patchelf'
+  'rustup'
 )
+
+options=('!lto')
 
 _pkgsrc="$_pkgname-$pkgver"
 _pkgext="tar.gz"
 source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
-sha256sums=('db2b41fc26bbe70195280c565d1994d0a6d117a6053e96d2556046c751df084e')
+sha256sums=('f45f4c846cee6d8e1a15d96c5b9e1f2554ceca9e6db436d6dbf35dfda88b8c86')
 
 build() {
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
@@ -43,16 +46,16 @@ build() {
   cd "$_pkgsrc/app"
   fvm install
 
-  fvm flutter --disable-telemetry
+  fvm flutter --disable-analytics
   #fvm flutter pub upgrade --major-versions
   fvm flutter --no-version-check pub get
-  fvm flutter build linux --release
+  fvm flutter build linux --no-pub --release
 }
 
 package() {
   cd "$_pkgsrc/app/build/linux/x64/release/bundle"
 
-  # app files
+  # files
   install -Dm755 "localsend_app" "$pkgdir/$_install_path/$_pkgname/$_pkgname"
   cp --reflink=auto -r lib/ "$pkgdir/$_install_path/$_pkgname/"
   cp --reflink=auto -r data/ "$pkgdir/$_install_path/$_pkgname/"
@@ -71,7 +74,7 @@ package() {
   # icon
   install -Dm644 "$srcdir/$_pkgsrc/app/build/flutter_assets/assets/img/logo-512.png" "$pkgdir/usr/share/pixmaps/$_pkgname.png"
 
-  # .desktop file
+  # launcher
   install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/$_pkgname.desktop" << END
 [Desktop Entry]
 Type=Application
