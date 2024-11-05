@@ -3,6 +3,7 @@
 pkgname=gimp-devel
 _pkgname=${pkgname%-devel}
 pkgver=2.99.18
+_majorver=$(cut -d '.' -f 1-2 <<<${pkgver})
 pkgrel=4
 pkgdesc="GNU Image Manipulation Program (Development version)"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -37,7 +38,7 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
 	'cfitsio: FITS support')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}=${pkgver}")
-source=("https://download.gimp.org/pub/gimp/v${pkgver%.*}/${_pkgname}-${pkgver}.tar.xz"
+source=("https://download.gimp.org/pub/gimp/v${_majorver}/${_pkgname}-${pkgver}.tar.xz"
 	'linux.gpl')
 sha256sums=('8c1bb7a94ac0d4d0cde4d701d8b356387c2ecd87abbd35bbf7d222d40f6ddb6e'
             '1003bbf5fc292d0d63be44562f46506f7b2ca5729770da9d38d3bb2e8a2f36b3')
