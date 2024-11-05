@@ -10,7 +10,7 @@ url="https://${pkgname}.org"
 arch=('x86_64' 'aarch64' 'riscv64')
 license=("AGPL-3.0-or-later")
 depends=('ffmpeg' 'ncnn' 'vulkan-driver' 'spdlog' 'opencv')
-makedepends=('git' 'cmake' 'vulkan-headers')
+makedepends=('git' 'cmake' 'vulkan-headers' 'boost')
 optdepends=(
 	"waifu2x-ncnn-vulkan: for anime/cartoon upscaling and JPEG denoising - fast"
 	"realsr-ncnn-vulkan: real photos upscaling and denoising - slow"
