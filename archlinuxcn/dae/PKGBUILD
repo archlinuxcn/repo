@@ -19,8 +19,13 @@ install="${pkgname}.install"
 sha256sums=('f96455861e8dcdf5e05736a68ab900d1195f35a4836b32dfa1cd2eced0990155')
 
 build() {
-	export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
 	export CFLAGS="-fno-stack-protector"
+	export CGO_ENABLED=1
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export BUILD_ARGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 	make VERSION="${pkgver}"
 }
 
