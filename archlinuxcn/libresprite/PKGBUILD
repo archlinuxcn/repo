@@ -1,0 +1,75 @@
+# Maintainer: Eragon <eragon at eragon dot re>
+# Contributor: MintStudios <mintstudios dot dev at gmail dot com>
+# Contributor: Kuba Kowalik <bell@0x07.pl>
+
+_pkgname=LibreSprite
+pkgname=libresprite
+pkgver=1.1
+pkgrel=1
+pkgdesc="A free and open source program for creating and animating your sprites"
+arch=('x86_64')
+url="https://github.com/LibreSprite/LibreSprite"
+license=('GPL-2.0-or-later')
+depends=(
+    'curl'
+    'freetype2'
+    'gcc-libs'
+    'giflib'
+    'glibc'
+    'libarchive'
+    'libjpeg-turbo'
+    'libpng'
+    'libwebp'
+    'libxcb'
+    'pixman'
+    'sdl2'
+    'sdl2_image'
+    'tinyxml2'
+    'zlib'
+)
+makedepends=(
+    'cmake'
+    'git'
+    'ninja'
+)
+conflicts=('libresprite-appimage')
+# The source code is packaged without a root folder, we need to extract it by ourself to fix that
+source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}"
+        "${pkgname}.desktop")
+sha256sums=('0e13be335a1eeadb3116dc9bf6519ed35b56f6ed4bbe1572895e3d9b784f2158'
+            'bd5afd5a2bf4ae864ecd608af421ebf6c3066b958ba82aefc243d848182be985')
+
+prepare() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    git submodule update --init --recursive
+    mkdir -p build
+}
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}/build"
+    cmake -DENABLE_UPDATER=OFF \
+        -DUSE_SDL2_BACKEND=ON \
+        -DUSE_SHARED_CURL=ON \
+        -DUSE_SHARED_FREETYPE=ON \
+        -DUSE_SHARED_GIFLIB=ON \
+        -DUSE_SHARED_JPEGLIB=ON \
+        -DUSE_SHARED_LIBLOADPNG=OFF \
+        -DUSE_SHARED_LIBPNG=ON \
+        -DUSE_SHARED_LIBWEBP=ON \
+        -DUSE_SHARED_PIXMAN=ON \
+        -DUSE_SHARED_SDL2=ON \
+        -DUSE_SHARED_TINYXML=ON \
+        -DUSE_SHARED_ZLIB=ON \
+        -DWITH_WEBP_SUPPORT=ON \
+        -DCMAKE_INSTALL_PREFIX:STRING=/usr\
+        -DFREETYPE_INCLUDE_DIR=/usr/include/freetype2 \
+        -G Ninja ..
+    ninja libresprite
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}/build"
+    DESTDIR="${pkgdir}" ninja install
+    install -Dm0644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+    install -Dm0644 ../data/icons/ase48.png "${pkgdir}/usr/share/pixmaps/libresprite.png"
+}
