@@ -1,33 +1,76 @@
-# Maintainer: mnussbaum <michaelnussbaum08@gmail.com>
+# Maintainer: Richard Lees <git zero at bitservices dot io>
+# Contributor: mnussbaum <michaelnussbaum08@gmail.com>
+################################################################################
 
 _gemname=reverse_markdown
-pkgname=ruby-reverse_markdown
+
+################################################################################
+
+pkgname="ruby-${_gemname}"
 pkgver=2.1.1
-pkgrel=3
+pkgrel=4
 pkgdesc="Ruby gem to convert html into markdown"
 arch=("any")
-depends=(
-  ruby
-  ruby-nokogiri
-  license-wtfpl
-)
-makedepends=(rubygems)
-url="https://github.com/xijo/reverse_markdown"
-noextract=($_gemname-$pkgver.gem)
-license=("custom:WTFPL")
+url="https://github.com/xijo/${_gemname}"
+license=(WTFPL)
+depends=("ruby" "ruby-nokogiri")
+makedepends=("rubygems")
+source=("${url}/archive/refs/tags/v${pkgver}.tar.gz"
+        "0001-gemspec.patch")
 options=(!emptydirs)
-source=(https://rubygems.org/downloads/$_gemname-$pkgver.gem)
-sha256sums=("b2206466b682ac1177b6b8ec321d00a84fca02d096c5d676a7a0cc5838dc0701")
+sha256sums=('7e5befcf8f2d155302a08ed45a11341e7c3930a6596a40e99ecec77cce855a20'
+            'f40289fd12c3a65b31a9eadd19258204f60556b8841decde918afabc6b361b5b')
 
-package() {
-  local _gemdir="$(ruby -e'puts Gem.default_dir')"
+################################################################################
 
+prepare() {
+  cd "${_gemname}-${pkgver}"
+  patch --strip=1 --input "../0001-gemspec.patch"
+}
+
+################################################################################
+
+build() {
+  local _gemdir="$(gem env gemdir)"
+  local _tmpdir="tmpinstall"
+
+  cd "${_gemname}-${pkgver}"
+
+  gem build "${_gemname}.gemspec"
   gem install \
+    --local \
+    --verbose \
     --ignore-dependencies \
     --no-user-install \
-    -i "$pkgdir/$_gemdir" \
-    -n "$pkgdir/usr/bin" \
-    $_gemname-$pkgver.gem
+    --install-dir "${_tmpdir}/${_gemdir}" \
+    --bindir "${_tmpdir}/usr/bin" \
+    "${_gemname}-${pkgver}.gem"
 
-  rm "$pkgdir/$_gemdir/cache/$_gemname-$pkgver.gem"
+  find "${_tmpdir}/${_gemdir}/gems/" \
+    -type f \
+    \( \
+        -iname "*.o" -o \
+        -iname "*.c" -o \
+        -iname "*.so" -o \
+        -iname "*.time" -o \
+        -iname "gem.build_complete" -o \
+        -iname "Makefile" \
+    \) \
+    -delete
+
+  rm -r "${_tmpdir}/${_gemdir}/cache"
 }
+
+################################################################################
+
+package() {
+  local _tmpdir="tmpinstall"
+
+  cd "${_gemname}-${pkgver}"
+
+  cp -a "${_tmpdir}"/* "${pkgdir}"/
+
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"/
+}
+
+################################################################################
