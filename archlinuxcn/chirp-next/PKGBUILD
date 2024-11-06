@@ -1,13 +1,14 @@
+# Maintainer: WT5A <K5TRP[at]onlyhams[dot]ca>
+# Maintainer: Helmut Stult <hst[at]e-mail[dot]de>
 # Thanks to the maintainer(s) of chirp-daily
-# Maintainer: WT5A <K5TRP@onlyhams.ca>
 # Contributor: 0b100100 <0b100100 at protonmail dot ch>
 # Contributor: Ashley Roll (ash@digitalnemesis.com)
 # Contributor: Erez Raviv (erezraviv@gmail.com)
 
 pkgname=chirp-next
 pkgver=20241101
-pkgrel=1
-pkgdesc="GUI tool for programming ham radios, built from daily build"
+pkgrel=2
+pkgdesc="GUI tool for programming ham radios, built from chirp-next"
 arch=('any')
 url="https://chirpmyradio.com/projects/chirp/wiki/Home"
 license=('GPL-3.0-or-later')
@@ -20,7 +21,7 @@ provides=(chirp)
 install=$pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::https://archive.chirpmyradio.com/chirp_next/next-${pkgver}/chirp-${pkgver}.tar.gz")
 # Checksums: https://archive.chirpmyradio.com/chirp_next/next-$pkgver/SHA1SUM
-sha1sums=('6b083d494deb2fb0b9723c728e83b1b470626b31')
+sha1sums=('d69cf839045adea03d2bdb7ef0e061d8dad8ebcc')
 
 build() {
     cd "chirp-${pkgver}"
