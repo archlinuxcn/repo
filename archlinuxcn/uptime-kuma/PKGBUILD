@@ -1,21 +1,30 @@
 # Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
 
 pkgname=uptime-kuma
-pkgver=1.23.13
+pkgver=1.23.15
 pkgrel=1
 pkgdesc="A free and open source uptime monitoring solution"
 arch=('x86_64')
 url="https://github.com/louislam/uptime-kuma"
 license=('MIT')
-depends=('nodejs' 'sqlite')
-makedepends=('npm' 'chromium' 'jq')
+depends=(
+    'nodejs'
+    'sqlite'
+)
+makedepends=(
+    'chromium'
+    'jq'
+    'npm'
+    'python'
+)
 optdepends=(
-            'cloudflared: reverse proxy with Cloudflare tunnel'
+    'cloudflared: reverse proxy with Cloudflare tunnel'
 )
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
-        "uptime-kuma.service"
+source=(
+    "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+    "uptime-kuma.service"
 )
-b2sums=('ec21484f7cbf69df3e05e677e7f3d36aea6316f44d545ce06ee5030450d0e75a79ef0c42dc7a55791972ede286e996f67241769e07cea7c8f50e5e35d945e0fc'
+b2sums=('37bac888edb4182c27e117ad96ce19a1878487770ac8fcbb981e78babacb8083c964ef194e4360741fda3c7b9991fe52561c9abd8a8f94d4599390a94406891c'
         '4a0d02dc226a6d80400d16300f672e7fcf50bdb112e2629e1f1c8177cac499e2ca23f0e3fee4c314f50610b2daea3a98a839c04cd960aaba94765399ffd1b30a')
 
 build() {
