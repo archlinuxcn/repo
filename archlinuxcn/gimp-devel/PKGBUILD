@@ -58,5 +58,5 @@ package() {
 	install -Dm644 linux.gpl -t "${pkgdir}/usr/share/gimp/2.99/palettes/"
 
 	# Fix wayland icon issue
-	sed -i "s/${_pkgname}-2.99/${_pkgname}/g" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+	sed -i "s/${_pkgname}-${_majorver}/${_pkgname}/g" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
 }
