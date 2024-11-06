@@ -2,8 +2,8 @@
 # Contributor: Mike Cuche <cuche AT mailbox.org>
 
 pkgname=dosbox-x
-pkgver=2024.03.01
-pkgrel=2
+pkgver=2024.10.01
+pkgrel=1
 pkgdesc="x86 emulator with builtin DOS, with patches with more features"
 arch=(i686 x86_64 aarch64)
 url="http://dosbox-x.com"
@@ -34,15 +34,12 @@ makedepends=(
 conflicts=(dosbox-x-git)
 source=(
   "https://github.com/joncampbell123/dosbox-x/archive/dosbox-x-v$pkgver.tar.gz"
-  "$pkgname-fix-gcc14.patch"
 )
 
-sha256sums=('2a89d3196ddc15361f6dc7e6ab142bfe95945d93d527cfd6bacca1f7a401a513'
-            'fa9c3ccca232fa9ad4b1c1f22bc8b6a6124d11ea69a38e917566f743fa765625')
+sha256sums=('9940662759b9910e3c4549216be8db0278ceaaa80ace5b19f87b04d0b6ff8a3a')
 
 prepare() {
   cd "dosbox-x-dosbox-x-v$pkgver"
-  patch -Np1 -i ../"$pkgname-fix-gcc14.patch"
   autoreconf -fiv
 }
 
