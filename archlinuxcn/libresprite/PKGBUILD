@@ -8,7 +8,7 @@ pkgver=1.1
 pkgrel=1
 pkgdesc="A free and open source program for creating and animating your sprites"
 arch=('x86_64')
-url="https://github.com/LibreSprite/LibreSprite"
+url="https://github.com/${_pkgname}/${_pkgname}"
 license=('GPL-2.0-or-later')
 depends=(
     'curl'
@@ -61,15 +61,15 @@ build() {
         -DUSE_SHARED_TINYXML=ON \
         -DUSE_SHARED_ZLIB=ON \
         -DWITH_WEBP_SUPPORT=ON \
-        -DCMAKE_INSTALL_PREFIX:STRING=/usr\
         -DFREETYPE_INCLUDE_DIR=/usr/include/freetype2 \
+        -DCMAKE_INSTALL_PREFIX:STRING=/usr \
         -G Ninja ..
-    ninja libresprite
+    ninja "${pkgname}"
 }
 
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}/build"
     DESTDIR="${pkgdir}" ninja install
     install -Dm0644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-    install -Dm0644 ../data/icons/ase48.png "${pkgdir}/usr/share/pixmaps/libresprite.png"
+    install -Dm0644 ../data/icons/ase48.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 }
