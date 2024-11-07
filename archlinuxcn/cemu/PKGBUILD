@@ -2,11 +2,11 @@
 
 pkgname=cemu
 _major=2
-_minor=2
+_minor=3
 _patch=0
 pkgver=$_major.$_minor
 cemu_tag="v$pkgver"
-pkgrel=2
+pkgrel=1
 pkgdesc='Software to emulate Wii U games and applications on PC'
 arch=(x86_64)
 url=https://cemu.info
@@ -14,7 +14,7 @@ license=(MPL2)
 options+=(!strip)
 depends=(
 	# unbundled vcpkg
-	'boost-libs>=1.79' 'fmt10' 'libzip>=1.9.2' 'libpng>=1.6.37' 'pugixml>=1.12.1' 'sdl2>=2.0.22' 'wxwidgets-gtk3>=3.2' 'wayland' 'wayland-protocols'
+	'boost-libs>=1.79' 'fmt<12' 'libzip>=1.9.2' 'libpng>=1.6.37' 'pugixml>=1.12.1' 'sdl2>=2.0.22' 'wxwidgets-gtk3>=3.2' 'wayland' 'wayland-protocols'
 	'llvm-libs>=17'
 )
 makedepends=(
@@ -44,7 +44,7 @@ source=(
 	git+https://github.com/arsenm/sanitizers-cmake.git#commit=aab6948fa863bc1cbe5d0850bc46b9ef02ed4c1a
 	git+https://github.com/google/googletest.git#commit=800f5422ac9d9e0ad59cd860a2ef3a679588acb4
 )
-sha512sums=('820e60e9c195f7a92ae4a5841bbe3e212b35ab770282e6089688238fd33b62acdc5545f3b9a5c05719eaa695b3d0e1ffc272c0313f4f2ca81d686ac77ff35af3'
+sha512sums=('ac76aeffb6c5b152a024a22164af6cc88788ecb50a8f012fbfa43b48fa24122e1d9e9cf69a4b132fa6fbf13ff80c4d59e343417768aa129c1eb40f17f5cd8853'
             '770a67624181e4c7f05c88c3f1a10dc14012d4967d5bf95f48af1a5bd7a90dd5d8242a868dbe74d8beb043365eababd0d62768b74ccc9867c0c4fd1883849828'
             '0c3d10999772aa92e97aa3082f10e6ebba93f2a738e402f9833f350eb525b71afca178bf834db3bbe965eb0073f249f68b5c8124176add0af997f1c897282803'
             '6ac14841ef983fe5202b23ea5c647959a04b9815bb187c0a0141fb14fb3e2edf8ce14b0c43474774d5ff779284f365981e6d45cc011612e5cd8fb429b3accf5e'
@@ -74,9 +74,6 @@ prepare() {
 
 	# glm fix
 	sed -i 's/glm::glm/glm/' src/Common/CMakeLists.txt src/input/CMakeLists.txt
-
-	# Temporarily require fmt version 10
-	sed -i 's/find_package(fmt 9/find_package(fmt 10.0.0...<11.0.0/' CMakeLists.txt
 }
 
 build() {
