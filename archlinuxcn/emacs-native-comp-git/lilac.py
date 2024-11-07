@@ -39,6 +39,9 @@ def pre_build():
         #if line.startswith('source='):
         #    line = 'source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")'
         #    checks = checks + '3'
+        if '../configure' in line:
+            line = f'{line}\n  make bootstrap'
+
 
         print(line)
 
