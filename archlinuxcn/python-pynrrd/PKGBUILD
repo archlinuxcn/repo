@@ -1,4 +1,5 @@
-# Maintainer of this PKGBUILD file: Martino Pilia <martino.pilia@gmail.com>
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Martino Pilia <martino.pilia@gmail.com>
 
 _pkgname=pynrrd
 pkgname=python-pynrrd
@@ -10,27 +11,35 @@ url='https://github.com/mhe/pynrrd'
 license=('MIT')
 depends=(
   python-numpy
-  python-nptyping
+  python-typing_extensions
 )
 makedepends=(
+  python-build
   python-setuptools
+  python-installer
+  python-wheel
+)
+checkdepends=(
+  python-pytest
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mhe/pynrrd/archive/v${pkgver}.tar.gz")
 sha256sums=('d0c98f607e6218768b1b8bd83edf7348a85f4f748d426857ae08264acbecfbca')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
-  cd "${_pkgname}-${pkgver}"
-  python -m unittest discover -v nrrd/tests
+  cd "${_pkgname}-${pkgver}/nrrd"
+  pytest -v
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rfv ${pkgdir}${site_packages}/docs
 }
 # vim:set ts=2 sw=2 et:
