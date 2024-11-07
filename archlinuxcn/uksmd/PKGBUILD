@@ -2,8 +2,8 @@
 # Contributor:Oleksandr Natalenko <oleksandr@natalenko.name>
 
 pkgname=uksmd
-pkgver=6.5.1
-pkgrel=2
+pkgver=6.11.1
+pkgrel=1
 pkgdesc="Userspace KSM helper daemon"
 url=https://codeberg.org/pf-kernel/uksmd
 license=(GPL-3.0-only)
@@ -12,7 +12,7 @@ depends=(systemd-libs glibc procps-ng libcap-ng UKSMD-BUILTIN)
 optdepends=('uksmdstats: for parsing /sys KSM statistics')
 makedepends=(meson)
 source=($pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz)
-b2sums=('12c0ed088ce189470a63ed74de02b35c994363500a04a28e2b1a8e7ad1ad3b75970cf69af939476b00b8bf1a9838591f83051dc004f2f91d74f19fd17746c37f')
+b2sums=('f8a8a81079ca558353c8ce785e1cabb7ae374d70a1b16ae97b93a2ae1f2c4be9e12744facf21e7d832f949aaa4ba5d4715763bd05d27b013559ff57f75d635e9')
 
 build() {
 	cd $pkgname
