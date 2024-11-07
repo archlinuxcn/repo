@@ -1,0 +1,33 @@
+# Maintainer: Butui Hu <hot123tea123@gmail.com>
+
+_pkgname=SimSIMD
+pkgname=python-simsimd
+pkgver=6.0.1
+pkgrel=1
+pkgdesc='A Fast Dot Products & Similarity Metrics for Python using SIMD'
+arch=('x86_64')
+url='https://github.com/ashvardanian/simsimd'
+license=('Apache-2.0')
+depends=(
+  gcc-libs
+  glibc
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ashvardanian/SimSIMD/archive/refs/tags/v${pkgver}.tar.gz")
+sha512sums=('889fd41365f978c236d8ddc33600f02839f7169cca26f18bc45322c167e56ae21a15a7ff1e8d51b47f70066a8b2611ae23c5be2f9897a6287690613d3e6e33dc')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
+# vim:set ts=2 sw=2 et:

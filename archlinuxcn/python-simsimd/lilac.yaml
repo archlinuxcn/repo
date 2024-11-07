@@ -4,14 +4,12 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - python-simsimd
   - python-stringzilla
 
 update_on:
   - source: github
-    github: albumentations-team/albucore
-    use_max_tag: true
-  - source: manual
-    manual: 1
+    github: ashvardanian/simsimd
+    use_latest_release: true
   - alias: python
 # vim:set ts=2 sw=2 et:
+
