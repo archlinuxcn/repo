@@ -2,10 +2,12 @@ maintainers:
   - github: lilydjwg
 
 update_on:
-  - source: github
-    github: telegramdesktop/tdesktop
-    branch: dev
-    use_latest_release: true
+  - source: manual
+    manual: 5.6.3
+  # - source: github
+  #   github: telegramdesktop/tdesktop
+  #   branch: dev
+  #   use_latest_release: true
   - source: alpm
     alpm: ffmpeg
     provided: libavcodec.so

@@ -1,0 +1,27 @@
+From 8755e3795cbe67699d0e70f39b22cad0f31be3d4 Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Thu, 7 Nov 2024 20:43:27 +0800
+Subject: [PATCH] don't ask which program to use when opening a file with xdg
+ portal's API
+
+It's annoying. Just use the default one.
+---
+ Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp b/Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp
+index f314fb0af..8319684db 100644
+--- a/Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp
++++ b/Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp
+@@ -104,7 +104,7 @@ bool UnsafeShowOpenWith(const QString &filepath) {
+ 			GLib::Variant::new_dict_entry(
+ 				GLib::Variant::new_string("ask"),
+ 				GLib::Variant::new_variant(
+-					GLib::Variant::new_boolean(true))),
++					GLib::Variant::new_boolean(false))),
+ 		}),
+ 		Gio::UnixFDList::new_from_array(&fd, 1),
+ 		nullptr);
+-- 
+2.47.0
+
