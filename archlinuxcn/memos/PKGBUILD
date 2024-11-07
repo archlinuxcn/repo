@@ -3,7 +3,7 @@
 
 pkgname="memos"
 pkgver=0.22.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A privacy-first, lightweight note-taking service. Easily capture and share your great thoughts."
 url="https://github.com/usememos/${pkgname}"
 arch=("any")
@@ -12,7 +12,7 @@ makedepends=("go" "git" "npm" "pnpm" "nvm")
 backup=('etc/memos.conf')
 options=(!strip !debug)
 source=(
-  "https://github.com/usememos/memos/archive/refs/tags/v${pkgver}.tar.gz"
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/usememos/memos/archive/refs/tags/v${pkgver}.tar.gz"
   "systemd.service"
   "sysusers.conf"
   "memos.conf"
