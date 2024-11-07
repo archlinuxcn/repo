@@ -3,8 +3,8 @@
 
 _pkgname=pynrrd
 pkgname=python-pynrrd
-pkgver=1.0.0
-pkgrel=3
+pkgver=1.1.1
+pkgrel=1
 pkgdesc='Simple pure-python module for reading and writing nrrd files'
 arch=('any')
 url='https://github.com/mhe/pynrrd'
@@ -23,7 +23,7 @@ checkdepends=(
   python-pytest
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/mhe/pynrrd/archive/v${pkgver}.tar.gz")
-sha256sums=('d0c98f607e6218768b1b8bd83edf7348a85f4f748d426857ae08264acbecfbca')
+sha256sums=('698fbf3384ce2f5637cb6c2991917f2208fccaeaebc0fdc20ab5fa0a8666c0c4')
 
 build() {
   cd "${_pkgname}-${pkgver}"
