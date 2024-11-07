@@ -1,0 +1,16 @@
+# Maintainer: Federico Di Pierro <nierro92@gmail.com>
+# Maintainer: Sefa Eyeoglu <contact@scrumplex.net>
+
+pkgname=systemd-boot-pacman-hook
+pkgver=3
+pkgrel=1
+pkgdesc="Pacman hook to upgrade systemd-boot after systemd upgrade"
+arch=('any')
+license=('GPL-2.0-or-later')
+depends=('systemd')
+source=("systemd-boot.hook")
+sha256sums=('9df1256f5e08b1a68a6291a2a901361681d19d522e8f2b4f1906e40a37d808b8')
+
+package() {
+    install -Dm0644 "${srcdir}/systemd-boot.hook" "${pkgdir}/usr/share/libalpm/hooks/95-systemd-boot.hook"
+}
