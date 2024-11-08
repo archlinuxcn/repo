@@ -8,14 +8,14 @@ _pkgname=${pkgname%-git}
 pkgver=31.0.0.beta3.r1.gd7292a4
 pkgrel=1
 epoch=3
-pkgdesc="Free, open source software for live streaming and recording"
+pkgdesc="Free, open source software for live streaming and recording (with websocket support)"
 arch=("i686" "x86_64")
 url="https://obsproject.com/"
 license=("GPL-2.0-or-later")
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
 	'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
 	'libdatachannel')
-makedepends=('git' 'cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'ffnvcodec-headers' 'uthash' 'nlohmann-json' 'ffnvcodec-headers' 'asio' 'websocketpp')
+makedepends=('git' 'cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'ffnvcodec-headers' 'uthash' 'nlohmann-json' 'ffnvcodec-headers' 'asio' 'websocketpp' 'qrcodegencpp-cmake')
 optdepends=('libfdk-aac: FDK AAC codec support'
 	'libva-intel-driver: hardware encoding'
 	'libva-mesa-driver: hardware encoding'
@@ -26,10 +26,8 @@ optdepends=('libfdk-aac: FDK AAC codec support'
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/obsproject/${_pkgname}.git"
-	"git+https://github.com/obsproject/obs-browser.git"
 	"git+https://github.com/obsproject/obs-websocket.git")
 sha256sums=('SKIP'
-            'SKIP'
             'SKIP')
 
 pkgver() {
@@ -41,7 +39,6 @@ prepare() {
 	cd "${_pkgname}/"
 
 	git submodule init
-	git config submodule.plugins/obs-browser.url "${srcdir}/obs-browser/"
 	git config submodule.plugins/obs-websocket.url "${srcdir}/obs-websocket/"
 	git -c protocol.file.allow=always submodule update
 }
