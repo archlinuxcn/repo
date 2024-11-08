@@ -56,6 +56,7 @@ build() {
 		-DENABLE_LIBFDK=ON \
 		-DENABLE_WEBRTC=ON \
 		-DCALM_DEPRECATION=ON \
+		-DOBS_COMPILE_DEPRECATION_AS_WARNING=ON \
 		-Wno-dev
 
 	cmake --build build
