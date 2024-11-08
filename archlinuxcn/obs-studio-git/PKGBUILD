@@ -27,14 +27,10 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/obsproject/${_pkgname}.git"
 	"git+https://github.com/obsproject/obs-browser.git"
-	"git+https://github.com/obsproject/obs-websocket.git"
-	"fix_python_binary_loading.patch"
-	"ignore_unused_submodules.patch")
+	"git+https://github.com/obsproject/obs-websocket.git")
 sha256sums=('SKIP'
             'SKIP'
-            'SKIP'
-            'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd'
-            'a6927bfd75984197913a348e7f9b6ef06026f653e38cdf9dbad0f508912aa793')
+            'SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -43,8 +39,6 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	patch -Np1 <"${srcdir}/fix_python_binary_loading.patch"
-	patch -Np1 <"${srcdir}/ignore_unused_submodules.patch"
 
 	git submodule init
 	git config submodule.plugins/obs-browser.url "${srcdir}/obs-browser/"
