@@ -42,14 +42,16 @@ pkgver() {
 }
 
 prepare() {
-	cd "${_pkgname}/subprojects/"
-	rm -rf hyprland-protocols sdbus-cpp
-	ln -sfT "${srcdir}/hyprland-protocols/" hyprland-protocols
+	cd "${_pkgname}/"
+
+	git rm subprojects/sdbus-cpp # Use sdbus-cpp from [extra]
+	git submodule init
+	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
+	git -c protocol.file.allow=always submodule update
 }
 
 build() {
-	cd "${_pkgname}/"
-	cmake -B build \
+	cmake -B build -S "${_pkgname}" \
 		-D CMAKE_INSTALL_PREFIX=/usr \
 		-D CMAKE_INSTALL_LIBEXECDIR=/usr/lib \
 		-D CMAKE_BUILD_TYPE=Release
@@ -58,8 +60,7 @@ build() {
 }
 
 package() {
-	cd "${_pkgname}/"
 	DESTDIR="${pkgdir}" cmake --install build
 	install -Dm644 "${srcdir}/hyprland-portals.conf" -t "${pkgdir}/usr/share/xdg-desktop-portal/"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
