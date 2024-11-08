@@ -3,11 +3,11 @@
 pkgname=kwin-effects-burn-my-windows-git
 _pkgname=Burn-My-Windows-git
 pkgver=r1540.1d522a4
-pkgrel=1
+pkgrel=2
 pkgdesc="Disintegrate your windows with style."
 arch=('any')
 url="https://github.com/Schneegans/Burn-My-Windows"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('kwin')
 makedepends=('git')
 provides=("${pkgname%-git}")
@@ -16,7 +16,7 @@ source=("$_pkgname::git+$url.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd ${srcdir}/${_pkgname}
+  cd "$_pkgname"
   ( set -o pipefail
     git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
@@ -24,11 +24,14 @@ pkgver() {
 }
 
 build() {
-  cd "${srcdir}/${_pkgname}/kwin"
+  cd "$_pkgname/kwin"
   sh build.sh
 }
 
 package() {
-  mkdir -p "${pkgdir}/usr/share/kwin/effects/"
-  cp -r "${srcdir}/${_pkgname}/kwin/_build/." "${pkgdir}/usr/share/kwin/effects/"
+  cd "$_pkgname"
+  install -dm0755 "$pkgdir/usr/share/kwin/effects"
+  tar -xf "$srcdir/$_pkgname/kwin/burn_my_windows_kwin6.tar.gz" -C "$pkgdir/usr/share/kwin/effects"
+
+  install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
 }
