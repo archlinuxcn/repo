@@ -117,7 +117,7 @@ _subarch=43
 
 # Kernel version
 _kernel_major=6.11
-_kernel_minor=6
+_kernel_minor=7
 # Clear Linux patches version
 _clr=3-1472
 # kernel_compiler_patch version
@@ -129,10 +129,10 @@ _src_clr=${_kernel_major}.${_clr}
 # Package information
 pkgbase=linux-clear-x64-v4
 pkgver=${_kernel_major}.${_kernel_minor}
-pkgrel=0
+pkgrel=1
 pkgdesc="Linux kernel with patches from Clear Linux which allow for higher performance."
 arch=("x86_64")
-url="https://github.com/clearlinux-pkgs/linux"
+url="https://git.staropensource.de/JeremyStarTM/aur-linux-clear"
 license=('GPL-2.0-only')
 makedepends=("bc" "cpio" "gettext" "git" "libelf" "pahole" "perl" "python" "tar" "xz" "zstd")
 [[ -n "${_use_llvm_to}" ]] && makedepends+=("clang" "llvm" "lld")
@@ -229,6 +229,8 @@ prepare() {
                    -e SECURITY_TOMOYO \
                    -e SECURITY_APPARMOR \
                    -e SECURITY_YAMA
+    # Security options -> Landlock options
+    scripts/config -e SECURITY_LANDLOCK
     # Library routines
     scripts/config -k -e FONT_TER16x32
     
@@ -430,6 +432,6 @@ validpgpkeys=(
 )
 sha256sums=("55d2c6c025ebc27810c748d66325dd5bc601e8d32f8581d9e77673529bdacb2e"
             "SKIP"
-            "4d4f5a5a982d77ddc9455f878e1cb8ee1d2308581f777cddd5c4bbe604f03cc8"
+            "4ccabe59805d7efd8165405624695255a87811cbea5c0e1d7a3981c21789b2ec"
             "SKIP"
             "b3fd8b1c5bbd39a577afcccf6f1119fdf83f6d72119f4c0811801bdd51d1bc61")
