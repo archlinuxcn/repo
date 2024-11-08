@@ -14,7 +14,7 @@ url="https://obsproject.com/"
 license=("GPL-2.0-or-later")
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
 	'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
-	'libdatachannel' 'qrcodegencpp-cmake')
+	'libdatachannel')
 makedepends=('git' 'cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'ffnvcodec-headers' 'uthash' 'nlohmann-json' 'ffnvcodec-headers' 'asio' 'websocketpp')
 optdepends=('libfdk-aac: FDK AAC codec support'
 	'libva-intel-driver: hardware encoding'
@@ -49,7 +49,7 @@ prepare() {
 build() {
 	cmake -B build -S "${_pkgname}/" \
 		-DCMAKE_INSTALL_PREFIX="/usr" \
-		-DENABLE_BROWSER=ON \
+		-DENABLE_BROWSER=OFF \
 		-DENABLE_WEBSOCKET=ON \
 		-DENABLE_VST=ON \
 		-DENABLE_VLC=OFF \
