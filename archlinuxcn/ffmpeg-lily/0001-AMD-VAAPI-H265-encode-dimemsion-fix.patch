@@ -1,9 +1,20 @@
-diff --git a/libavcodec/vaapi_encode.c b/libavcodec/vaapi_encode.c
-index 940f0678a5..2a74db23b1 100644
---- a/libavcodec/vaapi_encode.c
-+++ b/libavcodec/vaapi_encode.c
-@@ -2711,6 +2711,17 @@ static av_cold int vaapi_encode_create_recon_frames(AVCodecContext *avctx)
-     av_log(avctx, AV_LOG_DEBUG, "Using %s as format of "
+From 93264dffed0f2a306683a5581eb3dbc62faa36eb Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Fri, 8 Nov 2024 14:20:09 +0800
+Subject: [PATCH] AMD VAAPI H265 encode dimemsion fix
+
+---
+ libavcodec/hw_base_encode.c | 11 +++++++++++
+ libavutil/hwcontext.h       |  7 +++++++
+ libavutil/hwcontext_vaapi.c |  5 +++++
+ 3 files changed, 23 insertions(+)
+
+diff --git a/libavcodec/hw_base_encode.c b/libavcodec/hw_base_encode.c
+index 7b6ec97d3b..56eb2b06c1 100644
+--- a/libavcodec/hw_base_encode.c
++++ b/libavcodec/hw_base_encode.c
+@@ -749,6 +749,17 @@ int ff_hw_base_get_recon_format(FFHWBaseEncodeContext *ctx, const void *hwconfig
+     av_log(ctx->log_ctx, AV_LOG_DEBUG, "Using %s as format of "
             "reconstructed frames.\n", av_get_pix_fmt_name(recon_format));
  
 +    if (constraints->log2_alignment) {
@@ -39,7 +50,7 @@ index bac30debae..1eb56aff78 100644
  
  /**
 diff --git a/libavutil/hwcontext_vaapi.c b/libavutil/hwcontext_vaapi.c
-index 56d03aa4cd..6cda0fd811 100644
+index 95aa38d9d2..caed5104e5 100644
 --- a/libavutil/hwcontext_vaapi.c
 +++ b/libavutil/hwcontext_vaapi.c
 @@ -294,6 +294,11 @@ static int vaapi_frames_get_constraints(AVHWDeviceContext *hwdev,
@@ -54,3 +65,6 @@ index 56d03aa4cd..6cda0fd811 100644
              }
          }
          if (pix_fmt_count == 0) {
+-- 
+2.47.0
+
