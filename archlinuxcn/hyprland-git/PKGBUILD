@@ -50,7 +50,6 @@ makedepends=(
 	git
 	cmake
 	ninja
-	gcc
 	meson
 	wayland-protocols
 	xorgproto
@@ -69,7 +68,6 @@ sha256sums=('SKIP'
 
 prepare() {
 	cd Hyprland
-	rm -rf subprojects/hyprland-protocols
 
 	git submodule init
 	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
@@ -83,43 +81,11 @@ pkgver() {
 }
 
 build() {
-	cd Hyprland
-	mkdir -p build && cd build
-	cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr ..
-	ninja
+	make -C Hyprland PREFIX=/usr all
 }
 
 package() {
 	cd Hyprland
-
-	install -Dm755 build/Hyprland -t "${pkgdir}/usr/bin/"
-
-	pushd "${pkgdir}/usr/bin"
-	ln -sf Hyprland hyprland
-	popd
-
-	install -Dm755 build/{hyprctl/hyprctl,hyprpm/hyprpm} -t "${pkgdir}/usr/bin/"
-	install -Dm644 assets/*.png -t "${pkgdir}/usr/share/hyprland/"
-
-	install -Dm644 example/hyprland.desktop -t "${pkgdir}/usr/share/wayland-sessions"
-	install -Dm644 example/hyprland.conf -t "${pkgdir}/usr/share/hyprland"
-
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-	install -Dm644 subprojects/udis86/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-udis86"
-
-	install -Dm644 docs/*.1 -t "${pkgdir}/usr/share/man/man1/"
-	install -d ${pkgdir}/usr/include/hyprland/protocols
-
-	for cmd in hyprctl hyprpm; do
-		install -Dm644 "${cmd}/${cmd}.bash" "${pkgdir}/usr/share/bash-completion/completions/${cmd}"
-		install -Dm644 "${cmd}/${cmd}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${cmd}"
-		install -Dm644 "${cmd}/${cmd}.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
-	done
-
-	cp -R src "${pkgdir}/usr/include/hyprland/"
-
-	find "${pkgdir}/usr/include/hyprland/" -type f ! -name '*.h*' -delete
-
-	cp protocols/*.h* "${pkgdir}/usr/include/hyprland/protocols/"
-	install -Dm644 build/hyprland.pc -t "${pkgdir}/usr/share/pkgconfig/"
+	make DESTDIR="${pkgdir}" install
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
