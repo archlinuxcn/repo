@@ -8,7 +8,7 @@
 _pkgname=ffmpeg
 pkgname=${_pkgname}6.1
 pkgver=6.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Complete solution to record, convert and stream audio and video (legacy v6.1)'
 arch=(x86_64)
 url=https://ffmpeg.org
@@ -140,6 +140,9 @@ pkgver() {
 
 build() {
   cd "${_pkgname}"
+
+  export CFLAGS+=' -Wno-error=incompatible-pointer-types'
+
   ./configure \
     --prefix=/usr \
     --incdir="/usr/include/${pkgname}" \
