@@ -1,0 +1,27 @@
+diff --git a/scripts/download-language-packs.sh b/scripts/download-language-packs.sh
+index 7fa7047..ca8d00e 100644
+--- a/scripts/download-language-packs.sh
++++ b/scripts/download-language-packs.sh
+@@ -1,16 +1,16 @@
+ 
+-set -ex
++# set -ex
+ 
+ CURRENT_DIR=$(pwd)
+ 
+-git config --global init.defaultBranch main
+-git config --global fetch.prune true
++# git config --global init.defaultBranch main
++# git config --global fetch.prune true
+ 
+ cd $CURRENT_DIR
+ 
+-cd ./l10n
+-git clone https://github.com/mozilla-l10n/firefox-l10n
+-cd $CURRENT_DIR
++# cd ./l10n
++# git clone https://github.com/mozilla-l10n/firefox-l10n
++# cd $CURRENT_DIR
+ 
+ update_language() {
+   langId=$1

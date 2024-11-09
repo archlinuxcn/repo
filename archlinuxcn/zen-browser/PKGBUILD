@@ -1,107 +1,360 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgbase=zen-browser
-pkgname=("$pkgbase-generic"
-         "$pkgbase-specific")
-
-pkgver=1.0.1.a.19
-_version=${pkgver//.a/-a}
+pkgname=()
+pkgver=1.0.1_a.19
+_zen_version=${pkgver//_/-}
+_firefox_version=132.0.1
 pkgrel=1
-pkgdesc='Performance oriented Firefox-based web browser'
+pkgdesc='Experience tranquillity while browsing the web without people tracking you'
 url='https://zen-browser.app/'
 arch=('x86_64')
 license=(MPL-2.0)
-depends=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
-optdepends=('pulseaudio: audio support'
-            'ffmpeg: h.264 video'
-            'hunspell: spell checking'
-            'hyphen: hyphenation'
-            'libnotify: notification integration'
-            'networkmanager: location detection via available WiFi networks'
-            'speech-dispatcher: text-to-speech'
-            'xdg-desktop-portal: Screensharing with Wayland'
-            'startup-notification: support for FreeDesktop Startup Notification')
+depends=(
+  alsa-lib
+  at-spi2-core
+  bash
+  cairo
+  dbus
+  ffmpeg
+  fontconfig
+  freetype2
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
+  gtk3
+  hicolor-icon-theme
+  libpulse
+  libx11
+  libxcb
+  libxcomposite
+  libxdamage
+  libxext
+  libxfixes
+  libxrandr
+  libxss
+  libxt
+  mime-types
+  nspr
+  nss
+  pango
+  ttf-font
+)
+makedepends=(
+  git
+  pnpm
+  rsync
+  cbindgen
+  clang
+  diffutils
+  imake
+  jack
+  lld
+  llvm
+  mesa
+  nasm
+  nodejs
+  python
+  rust
+  unzip
+  wasi-compiler-rt
+  wasi-libc
+  wasi-libc++
+  wasi-libc++abi
+  xorg-server-xvfb
+  yasm
+  zip
+)
+optdepends=(
+  'hunspell-en_US: Spell checking, American English'
+  'libnotify: Notification integration'
+  'networkmanager: Location detection via available WiFi networks'
+  'speech-dispatcher: Text-to-Speech'
+  'xdg-desktop-portal: Screensharing with Wayland'
+)
+options=(
+  !emptydirs
+  !lto
+  !makeflags
+  !debug
+)
 
 _repo='https://github.com/zen-browser/desktop'
-source=(zen-browser.desktop
-        "generic-$_version.tar.bz2::$_repo/releases/download/$_version/zen.linux-generic.tar.bz2"
-        "specific-$_version.tar.bz2::$_repo/releases/download/$_version/zen.linux-specific.tar.bz2")
-sha256sums=('59d421bd21bd8683d5d1cc47f8c3f13e37eaaee75833e24e8540c8fcb85cc015'
-            '96eff8dd894ad03e7e5e6d25e6dc491bc5dad9f3dde1ec16fbb3a40c6930dfff'
-            'b897d9728ac34858d2267d9b13e3f1f60522270feabeb80738a55452c3392306')
+source=(
+  "git+$_repo.git#tag=$_zen_version"
+  "git+https://github.com/mozilla-l10n/firefox-l10n"
+  "https://archive.mozilla.org/pub/firefox/releases/${_firefox_version}/source/firefox-${_firefox_version}.source.tar.xz"
+  desktop.patch
+  enable-jack-instead-of-pulseaudio.patch
+  download-language-packs.patch
+)
+noextract=("firefox-${_firefox_version}.source.tar.xz")
+sha256sums=(
+  '148680d55e075d8a22f2a188e73d3d7a4b69d416872fae08b5ac61af6a38649f'
+  'SKIP'
+  '5c031b572c1da726677e2ff97b6ad5a7e3b23387a6fc3963391cb562f80a5e48'
+  'fb8a1373a1e9f1b8b1443f75368b647f370735e5b95da82bab106000ef71fa76'
+  'd5f41103ed28b1abf4f7cffed1d53708dbff39d2c2b8db4d9ddff10530a13edb'
+  'f2a917dea2c5cbd702da69c0c8648047f2f28ae77c5807350f4cb4d2dd5fe4fb'
+)
 
-# Don't extract anything because they'll override each other
-noextract=("${source[@]%%::*}")
+_zen_variant=(generic specific)
+_languages=(zh-CN zh-TW ja)
 
-_xdirname=zen
-for _pkgname in "${pkgname[@]}"; do
-  _variant="${_pkgname//$pkgbase-/}"
-  _filename="$_variant-$_version.tar.bz2"
+for _variant in "${_zen_variant[@]}"; do
+  _pkgname=$pkgbase-$_variant
+  pkgname+=("$_pkgname")
+  
+  _pkgdesc="$pkgdesc"
+  if test "$_variant" = "specific"; then
+    _pkgdesc="${pkgdesc} (optimized for modern devices)"
+  fi
 
   eval "package_$_pkgname() {
-    provides=('$pkgbase=$pkgver')
-    conflicts=('$pkgbase')
+  provides=('$pkgbase=$pkgver')
+  conflicts=('$pkgbase')
+  pkgdesc='$_pkgdesc'
 
-    msg2 'Removing old ${_xdirname} directory...'
-    rm -rf ${_xdirname}
-
-    msg2 'Extract $_filename...'
-    bsdtar -xf $_filename
-
-    _package $_variant
-  }"
+  _package_zen '$_variant'
+}"
 done
 
-_bin='zen'
-_package() {
-  if [[ "$1" == 'specific' ]]; then
-    pkgdesc="${pkgdesc} with optimizations for modern devices (AVX2...)"
+for _lang in "${_languages[@]}"; do
+  _pkgname=$pkgbase-i18n-${_lang,,}
+  pkgname+=("$_pkgname")
+
+  eval "package_$_pkgname() {
+  arch=(any)
+  depends=('$pkgbase>=$pkgver')
+  optdepends=()
+  pkgdesc='Language pack for Zen Browser ($_lang)'
+
+  _package_i18n '$_lang'
+}"
+done
+
+
+# Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
+# Note: These are for Arch Linux use ONLY. For your own distribution, please
+# get your own set of keys. Feel free to contact foutrelis@archlinux.org for
+# more information.
+_google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
+
+_OBJ_DIR=obj
+prepare() {
+  cd desktop
+
+  msg2 "init repo submodules"
+  git submodule update --init --recursive --depth 1
+
+  # Apply patches
+  msg2 "apply patches"
+  git apply -3 "$srcdir"/*.patch
+
+  msg2 "prepare dependencies"
+  pnpm config set store-dir "$srcdir"/pnpm-store
+  pnpm --silent install --frozen-lockfile
+
+  msg2 "prepare surfer build environment"
+  pnpm surfer ci --brand alpha --display-version "$_zen_version"
+  # setup Firefox source
+  install -Dvm644 "$srcdir/firefox-${_firefox_version}.source.tar.xz" -t "./.surfer/engine"
+  pnpm surfer download > /dev/null
+  # Import patches into the firefox
+  pnpm surfer import > /dev/null
+
+  msg2 "prepare firefox l10n"
+  rm -rf "$srcdir/desktop/l10n/firefox-l10n"
+  cp -r "$srcdir/firefox-l10n" "$srcdir/desktop/l10n/"
+  sh scripts/download-language-packs.sh > /dev/null
+
+  msg2 "prepare custom mozconfig"
+  echo -n "$_google_api_key" >google-api-key
+  cat > mozconfig <<END
+# # sccache
+# mk_add_options 'export RUSTC_WRAPPER=sccache'
+# mk_add_options 'export CCACHE_CPP2=yes'
+# ac_add_options --with-ccache=sccache
+
+# ac_add_options --enable-application=browser
+# Incompatible with surfer, disable this configuration
+mk_add_options MOZ_OBJDIR=${srcdir}/$_OBJ_DIR
+
+ac_add_options --prefix=/usr
+# ac_add_options --enable-release
+# ac_add_options --enable-hardening
+# ac_add_options --enable-optimize
+# ac_add_options --enable-rust-simd
+# ac_add_options --enable-linker=lld
+# ac_add_options --disable-install-strip
+# ac_add_options --disable-elf-hack
+# It seems to be overwritten by surfer internal mozconfg, let's keep it for now
+ac_add_options --disable-bootstrap
+ac_add_options --with-wasi-sysroot=/usr/share/wasi-sysroot
+
+# Branding
+# ac_add_options --enable-official-branding
+# ac_add_options --enable-update-channel=release
+# ac_add_options --with-distribution-id=org.archlinux
+# ac_add_options --with-unsigned-addon-scopes=app,system
+ac_add_options --allow-addon-sideload
+# export MOZILLA_OFFICIAL=1
+export MOZ_APP_REMOTINGNAME=$pkgbase
+
+# Keys
+ac_add_options --with-google-location-service-api-keyfile=${PWD@Q}/google-api-key
+ac_add_options --with-google-safebrowsing-api-keyfile=${PWD@Q}/google-api-key
+
+# System libraries
+ac_add_options --with-system-nspr
+ac_add_options --with-system-nss
+
+# Features
+# ac_add_options --enable-alsa
+# ac_add_options --enable-jack
+# ac_add_options --enable-crashreporter
+ac_add_options --disable-updater
+# ac_add_options --disable-tests
+END
+}
+
+_mach() {
+  "$srcdir/desktop/engine/mach" "$@" > /dev/null
+}
+
+_build() {
+  export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=pip
+  export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
+  MOZ_BUILD_DATE="$(date -u${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH} +%Y%m%d%H%M%S)"
+  export MOZ_BUILD_DATE
+  # export MOZ_BUILD_PRIORITY=normal
+  export MOZ_NOSPAM=1
+
+  # malloc_usable_size is used in various parts of the codebase
+  CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+  CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+
+  # Breaks compilation since https://bugzilla.mozilla.org/show_bug.cgi?id=1896066
+  CFLAGS="${CFLAGS/-fexceptions/}"
+  CXXFLAGS="${CXXFLAGS/-fexceptions/}"
+
+  # LTO needs more open files
+  ulimit -n 4096
+
+  local _variant=$1
+  if test "$_variant" = "generic"; then
+    export SURFER_COMPAT=true
+  else
+    export SURFER_COMPAT=false
   fi
 
-  OPT_PATH="opt/$pkgbase"
+  # Run PGO Build
+  msg2 "build zen browser: $_variant"
+  (
+    cd "$srcdir/desktop"
+    ZEN_RELEASE=1 LLVM_PROFDATA=llvm-profdata \
+      dbus-run-session \
+        xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
+          pnpm surfer build --skip-patch-check
+  )
 
-  # Install the package files
-  install -d "$pkgdir"/{usr/bin,opt}
-  cp -r ${_xdirname} "${pkgdir}"/${OPT_PATH}
-  ln -s /${OPT_PATH}/${_bin} "${pkgdir}"/usr/bin/
+  # Build langpacks
+  if test "$_variant" = "${_zen_variant[0]}"; then
+    msg2 "build langpacks: ${_languages[*]}"
+    echo $_firefox_version > "$srcdir/desktop/engine/browser/config/version.txt"
+    for _lang in "${_languages[@]}"; do
+      _mach build "merge-$_lang"
+      _mach build "langpack-$_lang"
+    done
+  fi
+}
 
-  # Replace duplicate binary with wrapper
+_package_zen() {
+  _build "$1"
+
+  # package variant
+  msg2 "install to pkgdir"
+  DESTDIR="$pkgdir" _mach install
+
+  local _appdir="$pkgdir/usr/lib/$pkgbase"
+
+  msg2 "zen -> $pkgbase"
+  rm -rf "$_appdir"
+  mv "$pkgdir"/usr/lib/zen "$_appdir"
+
+  # Replace duplicate binary
   # https://bugzilla.mozilla.org/show_bug.cgi?id=658850
-  ln -sf "$pkgdir"/${OPT_PATH}/${_bin} "$pkgdir"/${OPT_PATH}/${_bin}-bin
+  msg2 "replace duplicate zen binary"
+  ln -srvf "$_appdir"/zen "$_appdir/zen-bin"
+  ln -srvf "$_appdir"/zen "$pkgdir"/usr/bin/zen
 
-  # Install the desktop file
-  install -Dm644 "${srcdir}"/${pkgbase}.desktop -t "${pkgdir}"/usr/share/applications
+  msg2 "install distribution config files from Zen Browser"
+  install -Dvm644 "$srcdir"/desktop/AppDir/distribution/*.json -t "$_appdir/distribution"
 
-  # Install icons
-  SRC_LOC="${srcdir}"/${_xdirname}/browser
-  DEST_LOC="${pkgdir}"/usr/share/icons/hicolor
-  for i in 16 32 48 64 128; do
-      install -Dm644 "${SRC_LOC}"/chrome/icons/default/default${i}.png "${DEST_LOC}"/${i}x${i}/apps/${pkgbase}.png
-  done
-
-  # Use system certificates
-  local nssckbi="${pkgdir}"/${OPT_PATH}/libnssckbi.so
-  if [[ -e $nssckbi ]]; then
-    ln -sf "${pkgdir}"/usr/lib/libnssckbi.so "${nssckbi}"
-  fi
-
-  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/browser/defaults/preferences/vendor.js
+  msg2 "install vendor.js"
+  local _vendorjs="$_appdir/browser/defaults/preferences/vendor.js"
+  install -Dvm644 /dev/stdin "$_vendorjs" <<END
 // Use LANG environment variable to choose locale
 pref("intl.locale.requested", "");
 
 // Use system-provided dictionaries
 pref("spellchecker.dictionary_path", "/usr/share/hunspell");
-EOF
 
-  # Disable auto-updates
-  cat <<EOF | install -Dm644 /dev/stdin "${pkgdir}"/${OPT_PATH}/distribution/policies.json
-{
-  "policies": {
-    "DisableAppUpdate": true,
-    "AppAutoUpdate": false,
-    "ManualAppUpdateOnly": true,
-    "BackgroundAppUpdate": false
-  }
+// Don't disable extensions in the application directory
+pref("extensions.autoDisableScopes", 11);
+
+// TODO: Enable GNOME Shell search provider
+// pref("browser.gnome-search-provider.enabled", true);
+END
+
+  msg2 "install distribution.ini"
+  local _distini="$_appdir/distribution/distribution.ini"
+  install -Dvm644 /dev/stdin "$_distini" <<END
+[Global]
+id=archlinux
+version=1.0
+about=Zen Browser for Arch Linux
+
+[Preferences]
+app.distributor=archlinux
+app.distributor.channel=$pkgbase
+app.partner.archlinux=archlinux
+END
+
+  msg2 "install icons"
+  for i in 16 32 48 64 128; do
+    install -d "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps"
+    ln -srvf \
+      "$_appdir/browser/chrome/icons/default/default${i}.png" \
+      "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$pkgbase.png"
+  done
+  install -Dm0644 "$srcdir"/desktop/docs/assets/zen-black.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgbase.svg"
+  install -Dvm644 "$srcdir"/desktop/docs/assets/zen-black.svg "$pkgdir/usr/share/icons/hicolor/symbolic/apps/$pkgbase-symbolic.svg"
+
+  msg2 "install desktop file"
+  install -Dvm644 "$srcdir"/desktop/AppDir/*.desktop "$pkgdir/usr/share/applications/$pkgbase.desktop"
+
+  msg2 "use system certificates"
+  local _nssckbi="$_appdir/libnssckbi.so"
+  if test -e "$_nssckbi"; then
+    ln -srvf "$pkgdir/usr/lib/libnssckbi.so" "$_nssckbi"
+  fi
+
+  # TODO: Enable GNOME Shell search provider
+#   local sprovider="$pkgdir/usr/share/gnome-shell/search-providers/$pkgbase.search-provider.ini"
+#   install -Dvm644 /dev/stdin "$sprovider" <<END
+# [Shell Search Provider]
+# DesktopId=$pkgbase.desktop
+# BusName=org.mozilla.${pkgname//-/_}.SearchProvider
+# ObjectPath=/org/mozilla/${pkgname//-/_}/SearchProvider
+# Version=2
+# END
 }
-EOF
+
+_package_i18n() {
+  msg2 "install langpack $1"
+  install -Dvm644 \
+    "$srcdir/$_OBJ_DIR/dist/linux-$CARCH/xpi/zen-$_firefox_version.$1.langpack.xpi" \
+    "$pkgdir/usr/lib/$pkgbase/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
 }
