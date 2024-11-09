@@ -3,28 +3,27 @@
 
 pkgname=bottles
 pkgver=51.15
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc='Easily manage wine and proton prefix'
-arch=('x86_64')
+arch=(any)
 url="https://github.com/bottlesdevs/Bottles"
 license=('GPL-3.0-only')
 depends=(
   'cabextract'
   'dconf'
-  'fvs'
   'gtk4'
   'gtksourceview5'
   'hicolor-icon-theme'
   'icoextract'
   'imagemagick'
   'libadwaita'
-#  'libhandy'
   'libportal-gtk4'
   'p7zip'
   'patool'
   'python'
   'python-chardet'
+  'python-fvs'
   'python-gobject'
   'python-markdown'
   'python-orjson'
@@ -65,3 +64,4 @@ package() {
   cd "Bottles"
   DESTDIR="${pkgdir}" ninja -C build install
 }
+
