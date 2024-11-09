@@ -21,10 +21,6 @@ pkgver() {
   git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
-prepare() {
-  cd "${srcdir}/${_pkgname}"
-}
-
 package() {
   depends+=('xone-dongle-firmware')
 
@@ -35,7 +31,7 @@ package() {
 
   echo "* Copying module into /usr/src..."
   install -dm755 "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
-  cp -r ${srcdir}/$_pkgname/{auth,bus,driver,transport,Kbuild,dkms.conf} "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
+  cp -r ${srcdir}/$_pkgname/* "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
 
   echo "* Blacklisting xpad module..."
   install -D -m 644 install/modprobe.conf "${pkgdir}/etc/modprobe.d/xone-blacklist.conf"
