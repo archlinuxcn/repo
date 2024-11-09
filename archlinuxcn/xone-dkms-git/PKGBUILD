@@ -15,7 +15,6 @@ conflicts=('xone-dkms')
 provides=('xone-dkms')
 source=("git+https://github.com/medusalix/xone.git")
 sha256sums=('SKIP')
-install=xone-dkms.install
 
 pkgver() {
   cd "$srcdir/$_pkgname"
@@ -27,6 +26,8 @@ prepare() {
 }
 
 package() {
+  depends+=('xone-dongle-firmware')
+
   cd "${srcdir}/${_pkgname}"
 
   find . -type f \( -name 'dkms.conf' -o -name '*.c' \) -exec sed -i "s/#VERSION#/$pkgver/" {} +
@@ -38,7 +39,5 @@ package() {
 
   echo "* Blacklisting xpad module..."
   install -D -m 644 install/modprobe.conf "${pkgdir}/etc/modprobe.d/xone-blacklist.conf"
-
-  install -Dm 755 install/firmware.sh "${pkgdir}/usr/lib/xone/firmware.sh"
 }
 
