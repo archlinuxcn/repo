@@ -1,0 +1,38 @@
+# Maintainer: edward-p <edward@edward-p.xyz>
+
+_pkgname=xone
+pkgname=xone-dlundqvist-dkms-git
+pkgver=0.3.r57.g29ec357
+pkgrel=1
+pkgdesc='Modern Linux driver for Xbox One and Xbox Series X|S controllers'
+arch=('x86_64')
+url='https://github.com/medusalix/xone'
+license=('GPL-2.0-only')
+depends=('dkms')
+makedepends=('git')
+conflicts=('xone-dkms')
+provides=('xone-dkms')
+source=("git+https://github.com/medusalix/xone.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+  depends+=('xone-dongle-firmware')
+
+  cd "${srcdir}/${_pkgname}"
+
+  find . -type f \( -name 'dkms.conf' -o -name '*.c' \) -exec sed -i "s/#VERSION#/$pkgver/" {} +
+  echo 'ccflags-y += -DDEBUG' >> "Kbuild"
+
+  echo "* Copying module into /usr/src..."
+  install -dm755 "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
+  cp -r ${srcdir}/$_pkgname/* "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
+
+  echo "* Blacklisting xpad module..."
+  install -D -m 644 install/modprobe.conf "${pkgdir}/etc/modprobe.d/xone-blacklist.conf"
+}
+
