@@ -1,8 +1,8 @@
-# Maintainer: hekel <hekel(at)vivaldi(dot)net>
+# Maintainer: hekel <hekel at vivaldi dot net>
 
 pkgname=kwin-effects-burn-my-windows-git
 _pkgname=Burn-My-Windows-git
-pkgver=r1543.4538ff3
+pkgver=44.r7.g4538ff3
 pkgrel=1
 pkgdesc="Disintegrate your windows with style."
 arch=('any')
@@ -18,8 +18,8 @@ sha256sums=('SKIP')
 pkgver() {
   cd "$_pkgname"
   ( set -o pipefail
-    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    git describe --long --tags --abbrev=7 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
   )
 }
 
