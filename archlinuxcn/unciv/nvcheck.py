@@ -29,12 +29,12 @@ def remove_prefix(s, prefix):
 
 # Check github tags
 # Replace by regex before sorting. This is not currently supported by nvchecker
-req = urllib.request.Request('https://api.github.com/repos/{}/tags'.format(github_repo))
+req = urllib.request.Request('https://api.github.com/repos/{}/releases'.format(github_repo))
 body = None
 with urllib.request.urlopen(req) as res:
   body = json.load(res)
 
-versions = [ custom_preproc(remove_prefix(re.sub(from_pattern, to_pattern, it['name']), prefix)) for it in body ]
+versions = [ custom_preproc(remove_prefix(re.sub(from_pattern, to_pattern, it['tag_name']), prefix)) for it in body if it['prerelease'] != True ]
 versions.sort(key=cmp_to_key(vercmp))
 
 print(versions[-1])
