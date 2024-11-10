@@ -1,0 +1,40 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+
+pkgname=gotestfmt
+pkgver=2.4.1
+pkgrel=1
+pkgdesc="go test output for humans"
+arch=('x86_64')
+url="https://github.com/GoTestTools/gotestfmt"
+license=('Unlicense')
+depends=('glibc')
+makedepends=('go')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('6d72bda2b97c87139a01feacbca0cddfbd29b487434f1c0e7de2113917aaeeea')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+    go build \
+        -trimpath \
+        -buildmode=pie \
+        -mod=readonly \
+        -modcacherw \
+        -ldflags "-linkmode external -extldflags \"${LDFLAGS}\"" \
+        ./cmd/gotestfmt
+}
+
+check() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    go test ./...
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    install -Dm0644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm0755 "${pkgname}" -t "${pkgdir}/usr/bin/"
+}
