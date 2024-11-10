@@ -40,6 +40,7 @@ sha512sums=('0cce16f780f1350199d8a10a9eff6e8052888aede5d3839d3435acdfb34f445098e
             '9d2e7512734044682a18b79cdda4fd21aa1427c4e066c9288e8218e890744225ff19114a5a129e861a9d382fb5dae0bf19e82e0e9ca862c112ad9a2b54a853d0'
             '871fd0994bb35dcf32d3d2cbf222db92c30acfd76df06fe87feecbac205f08e3bbed8e48a56c4e11737638fafddc12a1e278519481f77f7dab3f9957ea6e61ed'
             '653945cb6e6425fb4631b4c98f47d4769b069e205be822156a8c455dbddd65f6ff38b57f279350a1891a16c53d2623564803274a8700fc4573b4ba3810979766')
+options=(!debug)
 
 prepare() {
     patch -b -l -d tdesktop-$pkgver-full/Telegram/lib_ui -Np1 -i ${srcdir}/no-embolded-font.patch
