@@ -1,3 +1,16 @@
+## GE-Proton9-19
+
+- bump wine to latest bleeding edge
+- bump dxvk to latest git
+- bump vkd3d-proton to latest git (contains additional MH Wilds fix)
+- bump dxvk-nvapi to latest git
+- import upstream lsteamclient changes
+- import upstream vrclient changes
+- add xdefiant patch (thanks tperalta82)
+- auto-apply DRI_PRIME=1 when more than one gpu is detected. This allows Diablo IV to get passed the grey screen on igpu+dgpu systems.
+- add protonfixes for silent hill 3 video playback
+- add protonfixes for Horizon Zero Dawn Remastered internet connection (thanks UsernamesAreNotMyThing)
+
 ## GE-Proton9-18
 
 Hotfix:
