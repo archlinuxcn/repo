@@ -10,6 +10,7 @@ post_build_script: git_pkgbuild_commit()
 
 repo_depends:
   - aquamarine-git
+  - hyprcursor-git
 
 repo_makedepends:
   - hyprwayland-scanner-git
@@ -17,14 +18,6 @@ repo_makedepends:
 update_on:
   - source: github
     github: hyprwm/Hyprland
-
-  - source: alpm
-    alpm: hyprlang
-    provided: libhyprlang.so
-
-  - source: alpm
-    alpm: hyprcursor
-    provided: libhyprcursor.so
 
   - source: alpm
     alpm: libdisplay-info
