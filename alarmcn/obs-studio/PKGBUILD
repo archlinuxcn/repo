@@ -3,8 +3,8 @@
 # Contributor: Maciek Marciniak <mm2pl at kotmisia.pl>
 
 pkgname=obs-studio
-pkgver=30.2.1
-pkgrel=2
+pkgver=30.2.3
+pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
@@ -23,7 +23,7 @@ optdepends=('libfdk-aac: FDK AAC codec support'
 source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz
         nv-codec-headers.tar.gz::https://github.com/FFmpeg/nv-codec-headers/releases/download/n12.1.14.0/nv-codec-headers-12.1.14.0.tar.gz)
 # XXX nv-codec-headers are kept back at version n12.1.14.0 due to OBS not supporting any newer version
-sha256sums=('6fa2f11e9bb492ed1a494d612d8c00dffe62c1a12d5aaa71c49ba950f8e028bc'
+sha256sums=('1dddc0d042e64329f9dd7b540295d1a03af9b8fda5f0a165d81de8ef51e0373d'
             '62b30ab37e4e9be0d0c5b37b8fee4b094e38e570984d56e1135a6b6c2c164c9f')
 
 prepare() {
