@@ -1,0 +1,38 @@
+# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+
+pkgname=shh
+pkgver=2024.6.4
+pkgrel=0
+pkgdesc="Automatic systemd service hardening guided by strace profiling"
+arch=("x86_64")
+url="https://github.com/desbma/shh"
+license=("GPL-3.0-or-later")
+depends=("gcc-libs" "glibc" "strace")
+makedepends=("cargo")
+source=("${url}/archive/v${pkgver}/${pkgname}-v${pkgver}.tar.gz")
+b2sums=("9c1343144500112afcc895f59f54171ee83d688004523d57a36636977ae9b547882d9c196b4be30a4768eb8232e6f8e088b7650079e77c1fa03699038eb6125b")
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n "s/host: //p")"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  export RUSTFLAGS='-C link-args=-Wl,-z,shstk'
+  cargo build --frozen --release
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo test --frozen --bins
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$pkgname"
+}
