@@ -2,7 +2,7 @@
 # Contributor: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=hyprcursor-git
-_pkgname=${pkgname%-got}
+_pkgname=${pkgname%-git}
 pkgver=0.1.10
 pkgrel=1
 pkgdesc="The hyprland cursor format, library and utilities"
@@ -15,7 +15,7 @@ depends=('cairo'
 	'librsvg'
 	'libzip'
 	'tomlplusplus')
-makedepends=('cmake')
+makedepends=('git' 'cmake')
 provides=("${_pkgname}" "lib${_pkgname}.so")
 conflicts=("${_pkgname}")
 source=("git+${url}.git")
