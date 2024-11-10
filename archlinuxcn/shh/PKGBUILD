@@ -2,7 +2,7 @@
 
 pkgname=shh
 pkgver=2024.6.4
-pkgrel=0
+pkgrel=1
 pkgdesc="Automatic systemd service hardening guided by strace profiling"
 arch=("x86_64")
 url="https://github.com/desbma/shh"
@@ -10,7 +10,7 @@ license=("GPL-3.0-or-later")
 depends=("gcc-libs" "glibc" "strace")
 makedepends=("cargo")
 source=("${url}/archive/v${pkgver}/${pkgname}-v${pkgver}.tar.gz")
-b2sums=("9c1343144500112afcc895f59f54171ee83d688004523d57a36636977ae9b547882d9c196b4be30a4768eb8232e6f8e088b7650079e77c1fa03699038eb6125b")
+b2sums=('9c1343144500112afcc895f59f54171ee83d688004523d57a36636977ae9b547882d9c196b4be30a4768eb8232e6f8e088b7650079e77c1fa03699038eb6125b')
 
 prepare() {
   cd "$pkgname-$pkgver"
