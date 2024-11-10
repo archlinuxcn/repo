@@ -1,0 +1,39 @@
+# Maintainer: Integral <integral@integral@member.fsf.org>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
+
+pkgname=hyprcursor-git
+_pkgname=${pkgname%-got}
+pkgver=0.1.10
+pkgrel=1
+pkgdesc="The hyprland cursor format, library and utilities"
+arch=('x86_64' 'aarch64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('BSD-3-Clause')
+depends=('cairo'
+	'gcc-libs'
+	'hyprlang-git'
+	'librsvg'
+	'libzip'
+	'tomlplusplus')
+makedepends=('cmake')
+provides=("${_pkgname}" "lib${_pkgname}.so")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+preprare() {
+	git -C "${_pkgname}" describe --long --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g'
+}
+
+build() {
+	cmake -S "${_pkgname}" -B build \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_BUILD_TYPE=None
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
