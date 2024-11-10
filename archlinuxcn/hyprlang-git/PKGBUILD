@@ -8,7 +8,7 @@ pkgdesc="The official implementation library for the hypr config language"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/hyprwm/${_pkgname}"
 license=('GPL-3.0-or-later')
-depends=('hyprutils')
+depends=('hyprutils-git')
 makedepends=('git' 'cmake')
 source=("git+${url}.git")
 conflicts=("${_pkgname}")
@@ -21,14 +21,14 @@ pkgver() {
 }
 
 build() {
-	cd "${_pkgname}/"
-	cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
-	cmake --build ./build --config Release --target "${_pkgname}" -j$(nproc 2>/dev/null || getconf NPROCESSORS_CONF)
+	cmake -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr -S "${_pkgname}/" -B build
+	cmake --build build
 }
 
 package() {
+	DESTDIR="${pkgdir}" cmake --install build
+
 	cd "${_pkgname}/"
-	DESTDIR="${pkgdir}" cmake --install ./build
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 	install -Dm644 "${_pkgname}-docs" -t "${pkgdir}/usr/share/doc/${_pkgname}/"
 }
