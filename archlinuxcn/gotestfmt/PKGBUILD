@@ -1,7 +1,7 @@
 # Maintainer: Roald Clark <roaldclark@gmail.com>
 
 pkgname=gotestfmt
-pkgver=2.4.1
+pkgver=2.5.0
 pkgrel=1
 pkgdesc="go test output for humans"
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('Unlicense')
 depends=('glibc')
 makedepends=('go')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('6d72bda2b97c87139a01feacbca0cddfbd29b487434f1c0e7de2113917aaeeea')
+sha256sums=('dd9481db9472dbc7a4c1f15b7a25f3ce783e793bcc1ab25e336a88d0912e2121')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
