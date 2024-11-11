@@ -4,7 +4,7 @@ pkgbase=zen-browser
 pkgname=("$pkgbase-generic"
          "$pkgbase-specific")
 
-pkgver=1.0.1.a.18
+pkgver=1.0.1.a.19
 _version=${pkgver//.a/-a}
 pkgrel=1
 pkgdesc='Performance oriented Firefox-based web browser'
@@ -27,8 +27,8 @@ source=(zen-browser.desktop
         "generic-$_version.tar.bz2::$_repo/releases/download/$_version/zen.linux-generic.tar.bz2"
         "specific-$_version.tar.bz2::$_repo/releases/download/$_version/zen.linux-specific.tar.bz2")
 sha256sums=('59d421bd21bd8683d5d1cc47f8c3f13e37eaaee75833e24e8540c8fcb85cc015'
-            'cb86a817b403ff2d1947d2996c5f11b11db711f56145bddbb40041846f5b991e'
-            'e36294c4c54bd4eceebc310bd9def39539ac89d3c5acf1cb063449c6a767a463')
+            '96eff8dd894ad03e7e5e6d25e6dc491bc5dad9f3dde1ec16fbb3a40c6930dfff'
+            'b897d9728ac34858d2267d9b13e3f1f60522270feabeb80738a55452c3392306')
 
 # Don't extract anything because they'll override each other
 noextract=("${source[@]%%::*}")
