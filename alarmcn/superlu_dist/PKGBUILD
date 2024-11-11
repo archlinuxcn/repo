@@ -9,10 +9,12 @@ arch=(aarch64 x86_64)
 url="https://github.com/xiaoyeli/superlu_dist"
 license=('custom')
 depends=(blas lapack parmetis libmpi.so)
-makedepends=(cmake)
+optdepends=(python)
+makedepends=(cmake gcc-fortran python)
 provides=(libsuperlu_dist.so)
 source=(superlu_dist-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('0e35285780d149e0851d7e62d54d306beed2c81a406d32eaf182c79ba92494b9b87f30fe2e4c4154c8599eacf441329ad93a756ae732bd5b47161cf9aeb7282c')
+sha512sums=('76251ac49ff03ca9b040a9ce34764047fe182f1361d05e5e73b6df92510135170c9c946d15d716dadc3326995515a703b999a56bd762e6f77e9b8749f298fed1')
+options=('!emptydirs')
 
 build() {
   cmake \
@@ -25,7 +27,7 @@ build() {
     -DCMAKE_CXX_STANDARD=14 \
     -DCMAKE_C_COMPILER=mpicc \
     -DCMAKE_CXX_COMPILER=mpicxx \
-    -DXSDK_ENABLE_Fortran=OFF \
+    -DXSDK_ENABLE_Fortran=ON \
     -Denable_doc=OFF \
     -Denable_single=ON \
     -Denable_double=ON \
@@ -46,6 +48,15 @@ build() {
 
 package() {
   DESTDIR="${pkgdir}" cmake --build build --target install
+
+  rm "${pkgdir}"/usr/lib/PYTHON/pddrive.py
+  local _sitedir=$(python -c 'import site; print(site.getsitepackages()[0])')
+  mkdir -p "${pkgdir}/${_sitedir}"
+  mv "${pkgdir}"/usr/lib/PYTHON/* "${pkgdir}/${_sitedir}"
+  rmdir "${pkgdir}"/usr/lib/PYTHON/
+
+  python -m compileall "${pkgdir}/${_sitedir}" -s "${pkgdir}" -o 0 -o 1 -o 2
+
   install -Dm644 superlu_dist-${pkgver}/README.md \
           "${pkgdir}/usr/share/doc/superlu_dist/README.md"
   install -Dm644 superlu_dist-${pkgver}/DOC/ug.pdf \
