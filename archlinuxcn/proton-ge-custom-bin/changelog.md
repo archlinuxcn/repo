@@ -1,3 +1,10 @@
+## GE-Proton9-20
+
+Hotfix:
+- Revert DRI_PRIME auto-setting (broke too many non-standard setups)
+- DXVK updated with dxvk.hideIntegratedGraphics = True for Diablo IV (doitsujin/dxvk@125f0ac) to resolve the grey screen issue on systems with AMD iGPU + dGPU.
+
+
 ## GE-Proton9-19
 
 - bump wine to latest bleeding edge
