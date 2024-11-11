@@ -5,14 +5,14 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.0.4
+pkgver=4.0.5
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
 
 source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
-md5sums=('00890865e735a27602d4d04816b3a017')
+md5sums=('ed69f446e95c2914e8815087afcc4c65')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
