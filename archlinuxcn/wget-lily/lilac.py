@@ -23,7 +23,11 @@ provides=("wget=$pkgver")'''
       state = ''
 
     elif line.startswith('source=('):
-      state = 'source'
+      if line.endswith(')'):
+        line = line.replace(')', ' wget.patch)')
+        state = ''
+      else:
+        state = 'source'
     elif state == 'source' and line.endswith(')'):
       line = line.replace(')', ' wget.patch)')
       state = ''

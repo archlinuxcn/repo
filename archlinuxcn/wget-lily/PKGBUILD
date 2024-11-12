@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=wget-lily
-pkgver=1.24.5
-pkgrel=3
+pkgver=1.25.0
+pkgrel=1
 pkgdesc='Network utility to retrieve files from the Web'
 url='https://www.gnu.org/software/wget/wget.html'
 arch=('x86_64')
@@ -16,14 +16,11 @@ optdepends=('ca-certificates: HTTPS downloads')
 conflicts=('wget')
 provides=("wget=$pkgver")
 backup=('etc/wgetrc')
-source=(https://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.lz{,.sig}
-        CVE-2024-38428.patch wget.patch)
-sha256sums=('57a107151e4ef94fdf94affecfac598963f372f13293ed9c74032105390b36ee'
-            'SKIP'
-            '9da45c5d34163fe0c0cc8d75402b2d1e6a752b794e52187da5d9141b825db24f' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)
-b2sums=('8057e5992ddaf39b3daffbde99871ddec1328c6bbafbc6b9f1d3cd294bb928b2a80f813024d4cd664c396f84477f1d93d5a21c60c6fe2932f9196d29bb9aa896'
-        'SKIP'
-        'fb0cf748b4f5aa34e0b43cc7c010e8f95324433fb3298365065708f8d092ab63c57f778fc1bfa17a121c651a6cd3296331992c5abe3958c368d523d11b3db067' c6a292c1be5606c007d1dcd25f02b3760ac98e86f2c1de30b50847b65c5ecfdb5cd89a482ab1e6a5b5978d38057c21d671b72ec45f10f6e59c5596519cecdf2e)
+source=(https://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.lz{,.sig} wget.patch)
+sha256sums=('19225cc756b0a088fc81148dc6a40a0c8f329af7fd8483f1c7b2fe50f4e08a1f'
+            'SKIP' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)
+b2sums=('58edd7393b5109804d7a6ce77466d30e1fba3c5ae4b5b8634758c9ebd7fa95cf106d35ad0b4f9151833d88b0221fc488a1005ec0b98417766bf2092309744954'
+        'SKIP' c6a292c1be5606c007d1dcd25f02b3760ac98e86f2c1de30b50847b65c5ecfdb5cd89a482ab1e6a5b5978d38057c21d671b72ec45f10f6e59c5596519cecdf2e)
 validpgpkeys=(
   'AC404C1C0BF735C63FF4D562263D6DF2E163E1EA' # Giuseppe Scrivano <gscrivano@gnu.org>
   '7845120B07CBD8D6ECE5FF2B2A1743EDA91A35B6' # Darshit Shah <darnir@gnu.org>
@@ -32,7 +29,6 @@ validpgpkeys=(
 
 prepare() {
   cd wget-${pkgver}
-  patch -Np1 -i ../CVE-2024-38428.patch
   cat >> doc/sample.wgetrc <<EOF
 
 # default root certs location
