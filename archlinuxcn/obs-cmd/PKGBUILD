@@ -1,7 +1,7 @@
 # Maintainer: Sean Snell <ssnell@lakecs.net>
 
 pkgname=obs-cmd
-pkgver=0.17.9
+pkgver=0.18.0
 pkgrel=1
 pkgdesc="A minimal OBS CLI for obs-websocket v5"
 arch=('x86_64')
@@ -12,8 +12,7 @@ provides=('obs-cmd')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/grigio/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz")
 
 # Upstream tar.gz
-
-sha512sums=('f794db7a578fae66997d9ba79ef0e1450d19e63033554329077fd1c3dd21fd6269b5b8724d93f38da10f856563702cc08c7aa8daab55ef11abb47a4fffdfe4a2')
+sha512sums=('56497b6a402c0f065765f8d6374913abbe3a7387b0ba0ef48bfb0da98f5830ec4909cd9065ad47c2c521ae2979027d544d5e9c2949ade24fd6d460021a596145')
 
 build() {
   cd "${pkgname}-${pkgver}"
