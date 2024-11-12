@@ -2,14 +2,14 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=2.5.2
+pkgver=2.6.0
 pkgrel=1
 pkgdesc='A powerful, lightning fast and censorship resistant proxy'
 arch=('x86_64')
 url="https://hysteria.network/"
 license=('MIT')
 depends=('glibc')
-makedepends=('go' 'git')
+makedepends=('go' 'git' 'sed' 'grep')
 optdepends=('v2ray-rules-dat: geoip/geosite data originating from V2Ray'
             'meta-rules-dat: geoip/geosite data originating from MetaCubeX')
 install=$_pkgbase.install
@@ -32,6 +32,14 @@ prepare(){
   mkdir -p build/
 }
 
+_get_toolchain_version() {
+  go version | sed 's/^\s*//;s/\s*$//;s/^go version //'
+}
+
+_get_lib_version() {
+  cat core/go.mod | sed -n 's/^\s*//;s/\s*$//;/github\.com\/apernet\/quic-go/{s/^[^ ]* //p}'
+}
+
 build() {
   cd "$srcdir/$_pkgbase-git"
   #export GOAMD64=v3
@@ -45,7 +53,9 @@ build() {
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appVersion=$(git describe --tags --always --match 'app/v*' | grep -o "v.*")'"
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appDate=$(date -u '+%Y-%m-%dT%H:%M:%SZ')'"
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appType=release'"
+  local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appToolchain=$(_get_toolchain_version)'"
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appCommit=$(git rev-parse HEAD)'"
+  local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.libVersion=$(_get_lib_version)'"
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appPlatform=$(go env GOOS)'"
   local _goldflags="$_goldflags -X '$_app_src_cmd_pkg.appArch=$(go env GOARCH)'"
   go build \
