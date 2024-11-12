@@ -4,9 +4,9 @@
 
 pkgname=extra-cmake-modules-git
 _pkgname=${pkgname%-git}
-pkgver=6.8.0.rc1.r3.g57bcb93
+pkgver=6.8.0.r4.g1cc1752
 pkgrel=1
-epoch=1
+epoch=2
 pkgdesc="Extra modules and scripts for CMake. (GIT version)"
 arch=('any')
 url="https://community.kde.org/Frameworks"
@@ -34,7 +34,7 @@ sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//;s/.rc/rc/'
 }
 
 build() {
