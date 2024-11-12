@@ -7,8 +7,4 @@ def pre_build():
     add_replaces(["hyprland-nvidia-hidpi-git"])
 
     for line in edit_file("PKGBUILD"):
-        print(
-            line.replace("aquamarine", "aquamarine-git")
-            .replace("hyprcursor", "hyprcursor-git")
-            .replace("hyprlang", "hyprlang-git")
-        )
+        print(line.replace("hyprcursor", "hyprcursor-git"))
