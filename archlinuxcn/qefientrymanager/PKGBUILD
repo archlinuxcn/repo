@@ -11,49 +11,36 @@ license=('GPL-3.0-or-later')
 depends=('qt6-base' 'qt6-wayland' 'efivar' 'hicolor-icon-theme')
 makedepends=('git' 'cmake')
 source=(
-	"git+${url}.git#tag=v.${pkgver}"
+	"git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/Inokinoki/qefivar.git"
-	"${pkgname}-wayland.desktop"
 )
-sha256sums=('SKIP'
-            'SKIP'
-            'c31daa87fe9e2b94cbcf3ff073b820e4a91c4b3da160b7a4f8af4c82ee236be2')
+sha256sums=('b034f2e66229310b03ee235313b31d04525497e317d6ea395ee1b462fb377f4d'
+            'SKIP')
 
 prepare() {
 	cd "${_srcname}/"
+
 	git submodule init
 	git config submodule.qefivar.url "${srcdir}/qefivar/"
 	git -c protocol.file.allow=always submodule update
+
+	mkdir -p build
 }
 
 build() {
-	cd "${_srcname}/"
-	mkdir build && cd build
-	cmake ..
-	make
+	cd "${_srcname}/build/"
+	cmake -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr ..
+	cmake --build .
 }
 
 package() {
 	cd "${_srcname}/"
 
-	# Binary file
-	install -Dm755 "build/${_srcname}" -t "${pkgdir}/usr/bin/"
-
-	# Desktop file (Xorg)
-	sed -i '/Exec=/c\
-Exec=pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY QEFIEntryManager
-' "${pkgname}.desktop"
-	install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-
-	# Desktop file (Wayland)
-	install -Dm644 "${srcdir}/${pkgname}-wayland.desktop" -t "${pkgdir}/usr/share/applications/"
-
-	# Icon
-	install -Dm644 cc.inoki.qefientrymanager.png -t "${pkgdir}/usr/share/icons/hicolor/96x96/apps/"
+	DESTDIR="${pkgdir}" cmake --install build
 
 	# License
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 
 	# Documentation
-	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"
 }
