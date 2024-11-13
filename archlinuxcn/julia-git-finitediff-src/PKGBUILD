@@ -1,6 +1,6 @@
 pkgname=julia-git-finitediff-src
-pkgver=2.24.0
-_commit=b574440c5d54708aa23a90c48f4a000dd1c6d915
+pkgver=2.26.0
+_commit=6e9bfb01543de7c0872403ced1a057d82050e7da
 pkgrel=1
 pkgdesc="FiniteDiff.jl"
 url="https://github.com/JuliaDiff/FiniteDiff.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDiff/FiniteDiff.jl.git#commit=$_commit")
-sha256sums=('310184eb2219fbf43b77130b4cd8b64daab3d686133218a3a1f98b6fb55b8a6a')
+sha256sums=('dbbbdfe324b8d7a47d3876226f7b8177ef64acbf2f475ae17c7eb64eaeb65d15')
 
 package() {
   cd FiniteDiff.jl
