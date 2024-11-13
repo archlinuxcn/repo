@@ -1,4 +1,4 @@
-# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
 # Contributor: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
 
 pkgname=firefox-tridactyl-native
@@ -10,7 +10,6 @@ pkgdesc="Tridactyl native messaging host application for Firefox."
 arch=('x86_64')
 url=https://github.com/tridactyl/tridactyl
 license=('BSD-2-Clause')
-depends=('glibc')
 makedepends=('nim' 'nimble' 'git')
 source=("$pkgname::git+https://github.com/tridactyl/native_messenger.git#tag=$pkgver")
 b2sums=('a058303a24eea1797072b2366d4faba2b8a0380f1044d5cd43f92d14221dbdff135e15f9af11dcf796cbad554333d8482c2e0009de41f1c98b2c31ff71b8635d')
