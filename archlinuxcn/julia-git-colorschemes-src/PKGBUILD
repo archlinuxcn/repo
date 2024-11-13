@@ -1,6 +1,6 @@
 pkgname=julia-git-colorschemes-src
-pkgver=3.26.0
-_commit=487ed2d87d790c71c2d23fd1706b1da07548c620
+pkgver=3.27.1
+_commit=ae547a4cf5a37bfc58217f1bbd9f48a0b8079703
 pkgrel=1
 pkgdesc="ColorSchemes.jl"
 url="https://github.com/JuliaGraphics/ColorSchemes.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphics/ColorSchemes.jl.git#commit=$_commit")
-sha256sums=('b61c96c0c24937b71ab097b70e7e9086b892534c7bb58223da90e7283ae5668e')
+sha256sums=('e2a942153ea8b193920ec5e0ef5ed12796c6d87c28e3d546dfccd6ab6f7cf0e2')
 
 package() {
   cd ColorSchemes.jl
