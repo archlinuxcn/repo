@@ -1,6 +1,6 @@
 pkgname=julia-git-codeczstd-src
-pkgver=0.8.5
-_commit=31cf7427f5ba8ac1e1364b7ea9dac6d0698d64be
+pkgver=0.8.6
+_commit=85626316e36755cf2aa792eb3b7f4c2674efbf7c
 pkgrel=1
 pkgdesc="CodecZstd.jl"
 url="https://github.com/JuliaIO/CodecZstd.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/CodecZstd.jl.git#commit=$_commit")
-sha256sums=('b166c8b79b3a15f57e1ad62f559109ca0b2d895567dde7bde2553412b07ecf21')
+sha256sums=('9d19592eb945553d017c452193b79e3dfb51904fb4cc1378fdc3a9c6b05bc6c1')
 
 package() {
   cd CodecZstd.jl
