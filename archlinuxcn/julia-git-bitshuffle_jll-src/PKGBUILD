@@ -1,6 +1,6 @@
 pkgname=julia-git-bitshuffle_jll-src
-pkgver=0.5.1+0
-_commit=745979ede84d0578219ea441e0d7bb2aa5867732
+pkgver=0.5.1+1
+_commit=0ffafa424b3e326d0033b2f6ab6aabd04fba6366
 pkgrel=1
 pkgdesc="bitshuffle_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/bitshuffle_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libbitshuffle)
 source=("git+https://github.com/JuliaBinaryWrappers/bitshuffle_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('267044a7d4fda1d1de35c4a87a7c7d86aaff04cbedea2659cea537cbc27e884e'
             '953d7675eb3145361dab682ad537cce55c46567461b953dba1699f0c2183386c')
 
 build() {
