@@ -1,6 +1,6 @@
 pkgname=julia-git-tracker-src
-pkgver=0.2.35
-_commit=2febf9f1737eeb48f8d841eba0c3b332adc78f7b
+pkgver=0.2.37
+_commit=ce231f93b275079bf8390724a383eb762c092791
 pkgrel=1
 pkgdesc="Tracker.jl"
 url="https://github.com/FluxML/Tracker.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FluxML/Tracker.jl.git#commit=$_commit")
-sha256sums=('f5034d49a2a87f6c1c56ab53c2cbbea0e776f06aa31c9056ba7476dc075aaa76')
+sha256sums=('d5b6dfeaf9ae2c2f2174007c803450514cca86e56d04e92278cbef7b2a7fbeeb')
 
 package() {
   cd Tracker.jl
