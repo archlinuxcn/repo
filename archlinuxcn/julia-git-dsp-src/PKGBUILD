@@ -1,7 +1,7 @@
 pkgname=julia-git-dsp-src
-pkgver=0.7.9
-_commit=3e3524f6ac7a52ab2f06843328f0b3b41bd62bb8
-pkgrel=2
+pkgver=0.7.10
+_commit=dd9fffc68b23393e3e0f763215d9633c4cdce4ca
+pkgrel=1
 pkgdesc="DSP.jl"
 url="https://github.com/JuliaDSP/DSP.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDSP/DSP.jl.git#commit=$_commit")
-sha256sums=('bcb6d413486fe47c7447faeb807ff1463702d5e9f2a2317b369b295a5875fcd9')
+sha256sums=('78745bcee495f84611d776fd954e31849bd883974da6964cff5cf5061ccea1e1')
 
 package() {
   cd DSP.jl
