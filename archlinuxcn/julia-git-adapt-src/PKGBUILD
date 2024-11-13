@@ -1,6 +1,6 @@
 pkgname=julia-git-adapt-src
-pkgver=4.0.4
-_commit=2e11553e6bc12714736abe5377b031705104b268
+pkgver=4.1.1
+_commit=2ea76e230f57d52eb01b3af93509dbcc59244334
 pkgrel=1
 pkgdesc="Adapt.jl"
 url="https://github.com/JuliaGPU/Adapt.jl"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGPU/Adapt.jl#commit=$_commit")
-md5sums=('c2d3aeaa7c088e4588f7c00c2faabe01')
+md5sums=('451371f4b9134c9ff8e5c2a499b94a0a')
 
 package() {
   cd Adapt.jl
