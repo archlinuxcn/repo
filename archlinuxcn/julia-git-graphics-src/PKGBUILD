@@ -1,7 +1,7 @@
 pkgname=julia-git-graphics-src
-pkgver=1.1.2
-_commit=79057259348148db687cffed7272a57d3810ab64
-pkgrel=2
+pkgver=1.1.3
+_commit=4bbdb7336ff4ca97805e07a032ecef451342c52a
+pkgrel=1
 pkgdesc="Graphics.jl"
 url="https://github.com/JuliaGraphics/Graphics.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphics/Graphics.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('fbab6c24c2fd93853d19d6ccc266768f938c0386ee4e9f9c7990c2500dc617ae')
 
 package() {
   cd Graphics.jl
