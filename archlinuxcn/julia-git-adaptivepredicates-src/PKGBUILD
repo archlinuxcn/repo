@@ -1,7 +1,7 @@
 pkgname=julia-git-adaptivepredicates-src
-pkgver=1.1.1
-_commit=e6a89abca50c79e1734fd42d3aa83ed12de30ad8
-pkgrel=2
+pkgver=1.2.0
+_commit=871ac22e5aeeb5877c1291c25d5e4cd8a91e9cc9
+pkgrel=1
 pkgdesc="AdaptivePredicates.jl"
 url="https://github.com/JuliaGeometry/AdaptivePredicates.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeometry/AdaptivePredicates.jl.git#commit=$_commit")
-sha256sums=('9176942748c102987ee1a4d341eaf554111f65a269c6309997720c42987db314')
+sha256sums=('508c744e19da9732fd5878a88ac781def19ae652f96230327a73a798675f83a4')
 
 package() {
   cd AdaptivePredicates.jl
