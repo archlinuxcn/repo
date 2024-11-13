@@ -1,7 +1,7 @@
 pkgname=julia-git-dualnumbers-src
-pkgver=0.6.8
-_commit=b54f132ea3274754f51b8a5f170349eb83a070ac
-pkgrel=2
+pkgver=0.6.9
+_commit=5821433409922ebe7e7207167eb5d19fb114093c
+pkgrel=1
 pkgdesc="DualNumbers.jl"
 url="https://github.com/JuliaDiff/DualNumbers.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDiff/DualNumbers.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('c6bea6fb9a7190b57be7028b1093412be0355d85079452456653dc02cb780e0f')
 
 package() {
   cd DualNumbers.jl
