@@ -1,6 +1,6 @@
 pkgname=julia-git-amplnlwriter-src
-pkgver=1.2.1
-_commit=fe306167c4919e6f0463940c745ef17aaba37804
+pkgver=1.2.2
+_commit=69220aff78bd769b164e960926a5947f568bff6d
 pkgrel=1
 pkgdesc="AmplNLWriter.jl"
 url="https://github.com/jump-dev/AmplNLWriter.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/AmplNLWriter.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('e64e230a8bac39beb37a86dd413fb952f7836bedc016f8f877bcfdbe287dc0a8')
 
 package() {
   cd AmplNLWriter.jl
