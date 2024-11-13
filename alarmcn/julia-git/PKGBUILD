@@ -76,7 +76,8 @@ source=('git+https://github.com/JuliaLang/julia'
         'git+https://github.com/yuyichao/archcn-julia-scripts'
         "${_patches[@]}"
         arch-source-translate.cpp
-        sysp7z.diff)
+        sysp7z.diff
+        download_curl.diff)
 sha512sums=('SKIP'
             'SKIP'
             'bbc446fff179c22ef105ac2758bf6163551490a23df9ed0c5f01f01ad1fc85634c2fcc95978ff3a08c8b17580058b6167cee9f44d32f22f6291f433c95aff9f9'
@@ -87,7 +88,8 @@ sha512sums=('SKIP'
             '390927b87bdd49eebca8739c23a7a0477d20e3a9d743cc188067cafb3facaad045983b65fd857e9d1e10addacd88a37d08bb42bd565c455aa1793857cff001aa'
             '778e0096a3f86e30d2944840157ece6706a9278b048b6db89bc43203f8548da7c3c9f589fc674db22f6905861411d930b108e60208d6ee19cd9631a3038d46ad'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
-            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849')
+            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
+            '5be40dcb72428885c06c8353019bd8fac0ea186a7536cf2bab2554d2724fb3d4a5b0b3f61727428e5cf7906f14a213f08dcb238b5bd10d408d86669e2c93ca78')
 
 _versioned_llvm=
 
@@ -248,6 +250,10 @@ EOF
     cd usr/share/julia/stdlib/v*/Pkg
     patch -Np0 --no-backup-if-mismatch < "$srcdir/sysp7z.diff"
   )
+  (
+    cd usr/share/julia/stdlib/v*/Downloads
+    patch -Np0 --no-backup-if-mismatch < "$srcdir/download_curl.diff"
+  )
   for f in usr/share/julia/stdlib/v*/*/*Artifacts.toml; do
     echo "Clearing $f"
     echo > "$f"
@@ -404,7 +410,7 @@ package-julia-in() {
   mkdir -p "${pkgdir}/usr/share/julia/contrib"
   install -m644 -t "${pkgdir}/usr/share/julia/contrib" contrib/generate_precompile.jl
 
-  # From ca-certificates-utils, needed by Download stdlib
+  # From ca-certificates-utils, needed by Downloads stdlib
   ln -sf /etc/ssl/cert.pem "${pkgdir}/usr/share/julia/cert.pem"
 
   rm "$pkgdir"/usr/lib/julia/libccalltest.so.debug # Remove debug testing library
