@@ -1,6 +1,6 @@
 pkgname=julia-git-freetypeabstraction-src
-pkgver=0.10.3
-_commit=6e525c984c4c0a3ff20468b332345d4916f5fa0d
+pkgver=0.10.4
+_commit=32cc71b0740129ba38c10fbd75b6a2995563e82a
 pkgrel=1
 pkgdesc="FreeTypeAbstraction.jl"
 url="https://github.com/JuliaGraphics/FreeTypeAbstraction.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphics/FreeTypeAbstraction.jl.git#commit=$_commit")
-sha256sums=('ec4bf1618d898d43c4a5b6d1b361fba68eb0a27995db567ccd39394a12ab9a33')
+sha256sums=('816f244c3367f0bae220fe9f03d7fefa6db5d2ae14c16f89ecd8b30f7d8010bb')
 
 package() {
   cd FreeTypeAbstraction.jl
