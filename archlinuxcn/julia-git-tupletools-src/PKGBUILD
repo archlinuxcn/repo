@@ -1,6 +1,6 @@
 pkgname=julia-git-tupletools-src
-pkgver=1.5.0
-_commit=75ac53632e9b6294cb3b3a7d306064e8d51e608e
+pkgver=1.6.0
+_commit=a57ef2a1189604bba10ac08b2e2bae02d29d1a3e
 pkgrel=1
 pkgdesc="TupleTools.jl"
 url="https://github.com/Jutho/TupleTools.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Jutho/TupleTools.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('b88cbfc9fa6229e44ca2ea3aa03073d1e20b34dc9730a50eaa5f4cd21fa4d123')
 
 package() {
   cd TupleTools.jl
