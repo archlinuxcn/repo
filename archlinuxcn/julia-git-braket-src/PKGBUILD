@@ -1,6 +1,6 @@
 pkgname=julia-git-braket-src
-pkgver=0.9.4
-_commit=7422cb39ba9f5de46c6c793c803cb86cf997830d
+pkgver=0.9.5
+_commit=2efe7c3082da22da2e993a8ad92768151098d244
 pkgrel=1
 pkgdesc="Braket.jl"
 url="https://github.com/awslabs/Braket.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/awslabs/Braket.jl.git#commit=$_commit")
-sha256sums=('ecbd7a45170174317f7fc788ed640a2159bc7549180180ab83fc238ce516e02d')
+sha256sums=('36b5038817d039f0c2379a759698ec5560bfbdde57aeea67242205d9900326ea')
 
 package() {
   cd Braket.jl
