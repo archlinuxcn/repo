@@ -1,6 +1,6 @@
 pkgname=julia-git-lz4_jll-src
-pkgver=1.10.0+0
-_commit=4ebfd047ba11ce4dd435b6bcae190343ac1d9e21
+pkgver=1.10.0+1
+_commit=9c76c337701b01869b0343b0b097c2d5ddf1e48e
 pkgrel=1
 pkgdesc="Lz4_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Lz4_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git lz4)
 source=("git+https://github.com/JuliaBinaryWrappers/Lz4_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('d859523fda58b5b6928cfeb875b4de4d6dae5bda6fd53b758000c62c811d85a1'
+sha256sums=('c486fe7c9dc3c6ed2bacf36af32e8e47aa1ed97812ab3d7eb37bc86cb7c43f47'
             '0469ddd020319012e653f137c23c708e9978a91463af99cf23c265e99cbe3cbc')
 
 build() {
