@@ -1,6 +1,6 @@
 pkgname=julia-git-partitionedarrays-src
-pkgver=0.4.7
-_commit=56a68db77b4c1b5562984db22360852e68bac5ba
+pkgver=0.5.6
+_commit=04411e4a3459ab1db9dcc906f0c29cacf0c5e717
 pkgrel=1
 pkgdesc="PartitionedArrays.jl"
 url="https://github.com/fverdugo/PartitionedArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/fverdugo/PartitionedArrays.jl.git#commit=$_commit")
-sha256sums=('8ab0293e32b1f6128c63478a242f4e2f85fbdae49969ff3557e0419fa38f3f79')
+sha256sums=('94ae5dc589f53aa7015289c244281315082eaca15d65f3260d30c0a6fcd3d820')
 
 package() {
   cd PartitionedArrays.jl
