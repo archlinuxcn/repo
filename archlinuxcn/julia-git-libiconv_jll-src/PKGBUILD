@@ -1,7 +1,7 @@
 pkgname=julia-git-libiconv_jll-src
-pkgver=1.17.0+0
-_commit=b2a1b4cc914d523285129b19708a6bea214bde4c
-pkgrel=4
+pkgver=1.17.0+1
+_commit=3c5d6ae629d45016a705fdda91a326608f732654
+pkgrel=1
 pkgdesc="Libiconv_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Libiconv_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libiconv)
 source=("git+https://github.com/JuliaBinaryWrappers/Libiconv_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('d8a3c2ba5a61371b020d2b7ddfaf8de6112e8226fd13586f9cee1126c0e03939'
             '3c5424f408833b376ed0aa78599b9ca18a46a8fc0fcca70192fc567028ae4501')
 
 build() {
