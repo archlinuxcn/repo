@@ -1,7 +1,7 @@
 pkgname=julia-git-sparsematricescsr-src
-pkgver=0.6.7
-_commit=79a5a6ffae9cd5589112b290a85470764d2adbbe
-pkgrel=2
+pkgver=0.6.8
+_commit=94c2c06b5cca68f287f4891b732f1b1fb623bc6d
+pkgrel=1
 pkgdesc="SparseMatricesCSR.jl"
 url="https://github.com/gridap/SparseMatricesCSR.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/gridap/SparseMatricesCSR.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('0c6a557bd8e543d730ef8dec6e2e35adb8504ec633e47b2e95d867a113b6f3e9')
 
 package() {
   cd SparseMatricesCSR.jl
