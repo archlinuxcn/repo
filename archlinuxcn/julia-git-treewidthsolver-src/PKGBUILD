@@ -1,7 +1,7 @@
 pkgname=julia-git-treewidthsolver-src
-pkgver=0.3.2
-_commit=3e76ddcc8061fc5e205d6f2894051b2bc2217125
-pkgrel=2
+pkgver=0.3.3
+_commit=efd41e3ff5e548cdf81f56f62c7fa0167ff4ea2c
+pkgrel=1
 pkgdesc="TreeWidthSolver.jl"
 url="https://github.com/ArrogantGao/TreeWidthSolver.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/ArrogantGao/TreeWidthSolver.jl.git#commit=$_commit")
-sha256sums=('9cb16be7cf1dea29044ac428626d1432c3f6da6acaf7c4e12e867cb310c62df6')
+sha256sums=('eb438a2c60f624ebf028129f92a5ddaac289a22f46179824da02bd84f865a1df')
 
 package() {
   cd TreeWidthSolver.jl
