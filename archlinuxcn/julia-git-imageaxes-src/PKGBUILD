@@ -1,7 +1,7 @@
 pkgname=julia-git-imageaxes-src
-pkgver=0.6.11
-_commit=680a3cefc81b9ad6ed07b356bf794c1fb816a0a0
-pkgrel=2
+pkgver=0.6.12
+_commit=6cdd5407e402369ce1c77c4e59dc0bc439410fd7
+pkgrel=1
 pkgdesc="ImageAxes.jl"
 url="https://github.com/JuliaImages/ImageAxes.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaImages/ImageAxes.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('84f54e61dd420db227fcd82b23d88919783089aa43f9f3b11fcd732343c3b5da')
 
 package() {
   cd ImageAxes.jl
