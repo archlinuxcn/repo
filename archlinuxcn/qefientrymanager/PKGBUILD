@@ -2,7 +2,7 @@
 
 pkgname=qefientrymanager
 _srcname=QEFIEntryManager
-pkgver=0.3.1
+pkgver=0.3.1_1
 pkgrel=1
 pkgdesc="A userspace cross-platform EFI boot entry management GUI App based on Qt"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -14,7 +14,7 @@ source=(
 	"git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/Inokinoki/qefivar.git"
 )
-sha256sums=('6a717d88841b6906be6ee951984ebb7d00d1950845af248b533535bc3febabba'
+sha256sums=('1c7fa2414a1d096c13167e2decc3a935d252022765b2e2118ab2de41457efec1'
             'SKIP')
 
 prepare() {
