@@ -1,7 +1,7 @@
 pkgname=julia-git-flamegraphs-src
-pkgver=1.0.0
-_commit=2f9656eb9afe4b5630a7eaa67bf9d9d9b0c8e68a
-pkgrel=3
+pkgver=1.0.1
+_commit=ccbe05247d9fa53983d1a461858d03e82668f947
+pkgrel=1
 pkgdesc="FlameGraphs.jl"
 url="https://github.com/timholy/FlameGraphs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/timholy/FlameGraphs.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('befef6ef26b7ec5d12332833f806537c60c682c233e397423cb14b7df9424b74')
 
 package() {
   cd FlameGraphs.jl
