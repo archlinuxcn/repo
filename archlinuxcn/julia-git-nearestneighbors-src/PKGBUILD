@@ -1,6 +1,6 @@
 pkgname=julia-git-nearestneighbors-src
-pkgver=0.4.20
-_commit=fe9c35e8f903afc1ae1dda10bb85f6b741810809
+pkgver=0.4.21
+_commit=8867613ce97d6cf16850c54dbcdc2c999cb2a69a
 pkgrel=1
 pkgdesc="NearestNeighbors.jl"
 url="https://github.com/KristofferC/NearestNeighbors.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/KristofferC/NearestNeighbors.jl.git#commit=$_commit")
-sha256sums=('79c4477a264f7581e35e6b39040f8d093cbd3d366aac81a2a31ca59557de81db')
+sha256sums=('c2522edafd9e2eec69be6606504b2b8019da33df1b97b5237ab02fdf506fa5fc')
 
 package() {
   cd NearestNeighbors.jl
