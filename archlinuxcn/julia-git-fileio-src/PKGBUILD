@@ -1,6 +1,6 @@
 pkgname=julia-git-fileio-src
-pkgver=1.16.4
-_commit=e6385d95fd2c455be000f5e74c769e541b78f55b
+pkgver=1.16.5
+_commit=50ea61f34eb30cdb1bb76caeb79251e5ce90e154
 pkgrel=1
 pkgdesc="FileIO.jl"
 url="https://github.com/JuliaIO/FileIO.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/FileIO.jl.git#commit=$_commit")
-sha256sums=('8f8094ae6b847c6d31cd3e1314d580d71b4d71bcc638521b42709d9cffda995f')
+sha256sums=('8f2761686bb28edacea0fd0946ec9bfaa4f22c921e9c893ecc01cbf6e76f9fce')
 
 package() {
   cd FileIO.jl
