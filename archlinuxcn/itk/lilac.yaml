@@ -9,6 +9,7 @@ update_on:
   - source: github
     github: InsightSoftwareConsortium/ITK
     use_max_tag: true
+    include_regex: 'v(\d+\.\d+\.\d+)'
   - source: manual
     manual: 9
   - alias: python
