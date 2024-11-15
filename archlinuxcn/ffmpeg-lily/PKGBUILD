@@ -5,8 +5,8 @@
 # Contributor: Paul Mattal <paul@archlinux.org>
 
 pkgname=ffmpeg-lily
-pkgver=7.0.2
-pkgrel=3
+pkgver=7.1
+pkgrel=2
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video (with AMD HEVC VAAPI alignment patch)'
 arch=(x86_64)
@@ -23,6 +23,7 @@ depends=(
   fribidi
   glib2
   glibc
+  glslang
   gmp
   gnutls
   gsm
@@ -119,26 +120,21 @@ conflicts=(ffmpeg)
 options=(
   debug
 )
-_tag=a18b979d17fa169a6f93c5be8732533c8e06337d
+_tag=507a51fbe9732f0f6f12f43ce12431e8faa834b7
 source=(
   git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
   add-av_stream_get_first_dts-for-chromium.patch
-  FFmpeg-devel-v4-avcodec-vaapi_encode-add-customized-surface-alignment.diff
+  0001-AMD-VAAPI-H265-encode-dimemsion-fix.patch
 )
-b2sums=('bcc0fb367d2822665f0918292a0cf581e0119d6ba6d2e3d0b6e794b6f74d30c118b5c47e26b5687473f01b346f8ec7e885f80729ce6115e18003b2371ff4553f'
+b2sums=('c7ec6b1db61608195117b79f3f0c8f6323c3abeb39721359da0f10e7d739da8301e04ff5fa83c022f86fc760f66e00066f9a50d97b771f797ccc679f9d912c40'
         '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de'
-        136c870cc4f9a235c8bca377a698df84c9856205020c76e90242bc75a660c23af67e6bd6c0b4b70d0b41bbdebf827735831181ef25ad84ecfb6750d2517a7fd2)
+        b520886c53d3a1ad2e3eb482058dd38e04df298b89f199c3cc23d498bd9d27d28fa4fffba6262319ec3e2dd7c940a3bc8de701871fc5f200cd4793ffedb76210)
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
 prepare() {
   cd ffmpeg
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
-
-  # Fix VAAPI AV1 performance with Mesa
-  git cherry-pick -n fe9d889dcd79ea18d4dfaa39df4ddbd4c8c3b15c
-  git cherry-pick -n d2d911eb9a2fc6eb8d86b3ae025a56c1a2692fba
-
-  patch -Np1 -i ../FFmpeg-devel-v4-avcodec-vaapi_encode-add-customized-surface-alignment.diff
+  patch -Np1 -i ../0001-AMD-VAAPI-H265-encode-dimemsion-fix.patch
 }
 
 pkgver() {
@@ -174,6 +170,7 @@ build() {
     --enable-libdvdread \
     --enable-libfreetype \
     --enable-libfribidi \
+    --enable-libglslang \
     --enable-libgsm \
     --enable-libharfbuzz \
     --enable-libiec61883 \
