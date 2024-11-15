@@ -2,7 +2,7 @@
 # Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
 
 pkgname=iotas
-pkgver=0.9.4
+pkgver=0.9.5
 pkgrel=1
 pkgdesc="Simple note taking"
 arch=('any')
@@ -18,7 +18,7 @@ optdepends=(
 	'hunspell: spell check.'
 )
 source=("$url/-/archive/$pkgver/$pkgname-$pkgver.tar.gz")
-b2sums=('70c5fb5ba0bd6b9e9faa64436d9c661436c7d0905853793f4e35c803e6e01cd9a3a7f66138204cb88c8091a2517729221570b740810256d75009b62f425d9301')
+b2sums=('30c55f00f43abf7a7bc6ee7f76e4ef55ec2c0e7dd857e6621a1bb9e87f947099e8bc96d82acc2b4e7ef438a1c37ab384d23ab7a5228743a88951f01fa40aa7f1')
 
 _srcdir="$pkgname-$pkgver"
 
