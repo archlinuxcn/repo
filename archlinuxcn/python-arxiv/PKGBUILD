@@ -1,26 +1,33 @@
 # Maintainer: Mateen Ulhaq <mulhaq2005+aur at gmail dot com>
 
-pkgbase="python-arxiv"
-pkgname=("python-arxiv")
-_module="arxiv"
+_pkgname=arxiv.py
+pkgname=python-arxiv
 pkgver=2.1.0
 pkgrel=1
-pkgdesc="Python wrapper for the arXiv API: http://arxiv.org/help/api/"
-url="https://github.com/lukasschwab/arxiv.py"
-depends=("python" "python-feedparser" "python-requests")
-makedepends=("python-setuptools")
-license=("MIT")
-arch=("any")
-source=("https://files.pythonhosted.org/packages/source/${_module::1}/$_module/$_module-$pkgver.tar.gz")
-sha256sums=("eb4b1d5ab9dfd66027c344bb324c20be21d56fe15f6ce216ed5b209df747dea8")
+pkgdesc="Python wrapper for the arXiv API: https://info.arxiv.org/help/api/"
+arch=('any')
+url="https://github.com/lukasschwab/${_pkgname}"
+license=('MIT')
+depends=(
+    'python'
+    'python-feedparser'
+    'python-requests'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+)
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('f3e3617f250dade5e958271daa26622018dd4bdd3a8cd57b9b1db335d8b1f1f8')
 
 build() {
-    cd "${srcdir}/${_module}-${pkgver}"
-    python setup.py build
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    python -m build --wheel --no-isolation
 }
 
 package() {
-    depends+=()
-    cd "${srcdir}/${_module}-${pkgver}"
-    python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    install -Dm0644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }
