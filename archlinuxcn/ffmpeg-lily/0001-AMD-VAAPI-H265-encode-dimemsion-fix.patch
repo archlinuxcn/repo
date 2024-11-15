@@ -1,19 +1,34 @@
-From 93264dffed0f2a306683a5581eb3dbc62faa36eb Mon Sep 17 00:00:00 2001
+From 35056124e159c516de9493bdab985729fc57a371 Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
-Date: Fri, 8 Nov 2024 14:20:09 +0800
+Date: Fri, 15 Nov 2024 16:27:22 +0800
 Subject: [PATCH] AMD VAAPI H265 encode dimemsion fix
 
 ---
- libavcodec/hw_base_encode.c | 11 +++++++++++
+ libavcodec/hw_base_encode.c | 14 +++++++++++++-
+ libavcodec/hw_base_encode.h |  2 +-
+ libavcodec/vaapi_encode.c   |  2 +-
+ libavcodec/vulkan_encode.c  |  2 +-
  libavutil/hwcontext.h       |  7 +++++++
  libavutil/hwcontext_vaapi.c |  5 +++++
- 3 files changed, 23 insertions(+)
+ 6 files changed, 28 insertions(+), 4 deletions(-)
 
 diff --git a/libavcodec/hw_base_encode.c b/libavcodec/hw_base_encode.c
-index 7b6ec97d3b..56eb2b06c1 100644
+index 4d8bf4fe71..99ce6ba8ed 100644
 --- a/libavcodec/hw_base_encode.c
 +++ b/libavcodec/hw_base_encode.c
-@@ -749,6 +749,17 @@ int ff_hw_base_get_recon_format(FFHWBaseEncodeContext *ctx, const void *hwconfig
+@@ -711,9 +711,10 @@ int ff_hw_base_init_gop_structure(FFHWBaseEncodeContext *ctx, AVCodecContext *av
+     return 0;
+ }
+ 
+-int ff_hw_base_get_recon_format(FFHWBaseEncodeContext *ctx, const void *hwconfig,
++int ff_hw_base_get_recon_format(AVCodecContext *avctx, const void *hwconfig,
+                                 enum AVPixelFormat *fmt)
+ {
++    FFHWBaseEncodeContext *ctx = avctx->priv_data;
+     AVHWFramesConstraints *constraints = NULL;
+     enum AVPixelFormat recon_format;
+     int err, i;
+@@ -749,6 +750,17 @@ int ff_hw_base_get_recon_format(FFHWBaseEncodeContext *ctx, const void *hwconfig
      av_log(ctx->log_ctx, AV_LOG_DEBUG, "Using %s as format of "
             "reconstructed frames.\n", av_get_pix_fmt_name(recon_format));
  
@@ -31,6 +46,45 @@ index 7b6ec97d3b..56eb2b06c1 100644
      if (ctx->surface_width  < constraints->min_width  ||
          ctx->surface_height < constraints->min_height ||
          ctx->surface_width  > constraints->max_width ||
+diff --git a/libavcodec/hw_base_encode.h b/libavcodec/hw_base_encode.h
+index e30b1e60ad..6665b25483 100644
+--- a/libavcodec/hw_base_encode.h
++++ b/libavcodec/hw_base_encode.h
+@@ -229,7 +229,7 @@ int ff_hw_base_init_gop_structure(FFHWBaseEncodeContext *ctx, AVCodecContext *av
+                                   uint32_t ref_l0, uint32_t ref_l1,
+                                   int flags, int prediction_pre_only);
+ 
+-int ff_hw_base_get_recon_format(FFHWBaseEncodeContext *ctx, const void *hwconfig,
++int ff_hw_base_get_recon_format(AVCodecContext *ctx, const void *hwconfig,
+                                 enum AVPixelFormat *fmt);
+ 
+ int ff_hw_base_encode_init(AVCodecContext *avctx, FFHWBaseEncodeContext *ctx);
+diff --git a/libavcodec/vaapi_encode.c b/libavcodec/vaapi_encode.c
+index 16a9a364f0..af13d27d7d 100644
+--- a/libavcodec/vaapi_encode.c
++++ b/libavcodec/vaapi_encode.c
+@@ -2042,7 +2042,7 @@ static av_cold int vaapi_encode_create_recon_frames(AVCodecContext *avctx)
+     }
+     hwconfig->config_id = ctx->va_config;
+ 
+-    err = ff_hw_base_get_recon_format(base_ctx, (const void*)hwconfig, &recon_format);
++    err = ff_hw_base_get_recon_format(avctx, (const void*)hwconfig, &recon_format);
+     if (err < 0)
+         goto fail;
+ 
+diff --git a/libavcodec/vulkan_encode.c b/libavcodec/vulkan_encode.c
+index 9ad02e8c52..51e1b980f2 100644
+--- a/libavcodec/vulkan_encode.c
++++ b/libavcodec/vulkan_encode.c
+@@ -551,7 +551,7 @@ static int vulkan_encode_create_dpb(AVCodecContext *avctx, FFVulkanEncodeContext
+     AVVulkanFramesContext *hwfc;
+ 
+     enum AVPixelFormat dpb_format;
+-    err = ff_hw_base_get_recon_format(base_ctx, NULL, &dpb_format);
++    err = ff_hw_base_get_recon_format(avctx, NULL, &dpb_format);
+     if (err < 0)
+         return err;
+ 
 diff --git a/libavutil/hwcontext.h b/libavutil/hwcontext.h
 index bac30debae..1eb56aff78 100644
 --- a/libavutil/hwcontext.h

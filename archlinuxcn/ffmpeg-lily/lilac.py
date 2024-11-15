@@ -35,7 +35,7 @@ def pre_build():
     elif line.startswith('b2sums='):
       state = 'b2sums'
     elif state == 'b2sums' and line.endswith(')'):
-      line = line.replace(')', '\n        ef0ab4810b612683123ee082483e94afda07b8179b8ad846b9af442f48ea31cd8ecea3519fea7271a765089d544e5708ddf6ffc67c80504313dfbd033bb85230)')
+      line = line.replace(')', '\n        b520886c53d3a1ad2e3eb482058dd38e04df298b89f199c3cc23d498bd9d27d28fa4fffba6262319ec3e2dd7c940a3bc8de701871fc5f200cd4793ffedb76210)')
       state = 'out'
 
     print(line)
