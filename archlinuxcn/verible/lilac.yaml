@@ -2,7 +2,7 @@ maintainers:
   - github: poscat0x04
 
 pre_build_script: |
-  aur_pre_build()
+  run_cmd(['curl' '-L' '-o' 'PKGBUILD' 'https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=verible'])
 
   for line in edit_file('PKGBUILD'):
     if line.startswith('_gittag='):
