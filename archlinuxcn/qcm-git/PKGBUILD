@@ -1,4 +1,5 @@
-# Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Kimiblock Zhou <pn3535 at icloud dot com>
 
 pkgname=qcm-git
 _pkgname=${pkgname%-git}
@@ -10,61 +11,45 @@ url="https://github.com/hypengw/Qcm"
 license=('GPL-2.0-or-later')
 depends=(
 	'qt6-base'
+	'qt6-quick3d'
 	'hicolor-icon-theme'
 	'curl'
 	'openssl'
-	'qt6-tools'
-	'qt6-declarative'
-	'qt6-shadertools'
-	'gcc-libs'
-	'glibc'
 	'dbus'
-	'libnghttp2'
-	'libidn2'
-	'krb5'
-	'zstd'
-	'zlib'
-	'qt6-wayland'
-	'libx11'
-	'libxkbcommon'
-	'libpng'
-	'freetype2'
-	'icu'
-	'pcre2'
-	'gnutls'
-	'graphite'
-	'lz4'
-	'libgpg-error'
-	'ffmpeg')
+	'ffmpeg'
+	'fmt')
 makedepends=(
 	'git'
 	'cmake'
-	'extra-cmake-modules'
-	'ninja')
+	'ninja'
+	'asio'
+	'cubeb-git'
+	'pegtl'
+	'nlohmann-json')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd Qcm
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 prepare() {
-	cd Qcm
-	git submodule update --init --recursive
-	mkdir build
+	git -C Qcm submodule update --init --recursive
 }
 
 build() {
-	cd Qcm/build
-	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-	ninja
+	cmake -B build \
+		-S Qcm \
+		-GNinja \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX=/usr
+
+	cmake --build build
 }
 
 package() {
-	cd Qcm
 	DESTDIR="${pkgdir}" cmake --install build
-	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 Qcm/LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
