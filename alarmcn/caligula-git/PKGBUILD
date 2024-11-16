@@ -1,0 +1,46 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=caligula-git
+_pkgname=${pkgname%-git}
+pkgver=0.4.7.r11.g5b3b9f4
+pkgrel=1
+pkgdesc="A user-friendly, lightweight TUI for disk imaging"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/ifd3f/${_pkgname}"
+license=('GPL-3.0-or-later')
+depends=('gcc-libs')
+makedepends=('git' 'cargo')
+source=("git+${url}.git")
+sha256sums=('SKIP')
+options=('!lto')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	RUSTFLAGS="--cfg tracing_unstable" cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	RUSTFLAGS="--cfg tracing_unstable" cargo test --frozen --all-features
+}
+
+package() {
+	cd "${_pkgname}/"
+	install -Dm755 "target/release/${_pkgname}" -t "$pkgdir/usr/bin/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"
+}
