@@ -10,8 +10,7 @@ pkgdesc="xdg-desktop-portal backend for hyprland"
 url="https://github.com/hyprwm/${_pkgname}"
 arch=('x86_64')
 license=('BSD-3-Clause')
-depends=('hyprlang'
-	'libinih'
+depends=('libinih'
 	'pipewire'
 	'qt6-base'
 	'qt6-wayland'
@@ -19,7 +18,8 @@ depends=('hyprlang'
 	'util-linux-libs'
 	'wlroots'
 	'xdg-desktop-portal'
-	'hyprutils'
+	'hyprlang-git'
+	'hyprutils-git'
 	'hyprwayland-scanner-git')
 makedepends=('git'
 	'cmake'
