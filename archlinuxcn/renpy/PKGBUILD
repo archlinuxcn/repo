@@ -1,8 +1,8 @@
 # Maintainer: Patrick Northon <northon_patrick3@yahoo.ca>
 
 pkgname=renpy
-pkgver=8.3.1.24090601
-pkgrel=2
+pkgver=8.3.3.24111502
+pkgrel=1
 pkgdesc="Visual novel engine Ren'Py along with its platdeps libs"
 arch=('i686' 'x86_64')
 license=('MIT')
@@ -21,14 +21,14 @@ install='renpy.install'
 source=("git+https://github.com/${pkgname}/${pkgname}.git#tag=${pkgver}"
         "${pkgname}.desktop"
         "${pkgname}-launcher.sh")
-sha256sums=('0233b9cd4e196fefb38c51cbd3f76e3f58fa7cd27d872e68b6ed08bd915c6430'
+sha256sums=('1bbc19d889b8d0eb312e0285ae97294f3bb37406c2ed1181936d2a5f319b406f'
             'b58efcc42526c4de15e8963b02991e558b5e3d15d720b3777b791ac13fc815e6'
             'a38112859bf659d48c30be5c7c20ed1a1c72271ffd74eb4b4e730afbd87d73dc')
 
 build() {
 	cd "${pkgname}"
 
-	export CFLAGS+=' -I/usr/include/ffmpeg6.1 -Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration'
+	export CFLAGS+=' -I/usr/include/ffmpeg6.1 -L/usr/lib/ffmpeg6.1 -Wno-error=incompatible-pointer-types -Wno-error=implicit-function-declaration'
 	export RENPY_DEPS_INSTALL='/usr/include/ffmpeg6.1:/usr/lib/ffmpeg6.1:/usr'
 
 	# This always return the last version from HEAD regardless of what version we are building.
