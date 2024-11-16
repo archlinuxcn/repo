@@ -7,6 +7,7 @@ pre_build_script: |
   for line in edit_file('PKGBUILD'):
     if line.startswith('_gittag='):
       line = f'_gittag="{_G.newver}"'
+    print(line)
 
 post_build_script: |
   git_pkgbuild_commit()
