@@ -1,0 +1,28 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: tocic <tocic at protonmail dot ch>
+# Contributor: Ruijie Yu (first.last@outlook.com)
+
+pkgname=ctre
+_srcname=compile-time-regular-expressions
+pkgver=3.9.0
+pkgrel=1
+pkgdesc="Compile Time Regular Expression in C++"
+url="https://compile-time.re"
+arch=('any')
+license=('Apache-2.0')
+makedepends=('cmake')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/hanickadot/${_srcname}/archive/v${pkgver}.tar.gz")
+sha256sums=('55778712968d4f3ad00e9d20fc4d2149d14d96b4ff3dab086613797cd2ccd2b2')
+
+build() {
+	cmake -B build -S "${_srcname}-${pkgver}" -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+
+	cd "${_srcname}-${pkgver}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 docs/* -t "${pkgdir}/usr/share/doc/${pkgname}/"
+}
