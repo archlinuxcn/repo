@@ -1,8 +1,8 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=payload-dumper-go
-pkgver=1.2.2
-pkgrel=3
+pkgver=1.3.0
+pkgrel=1
 epoch=
 pkgdesc="An Android OTA payload dumper written in Go"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -11,7 +11,7 @@ license=('Apache-2.0')
 makedepends=("go>=1.14")
 options=(!buildflags)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('7f80f6c29ad8b835d71f361ba073988a27a33043acec37eea9d9430c1fb04b57')
+sha256sums=('42635d70b3e95164108dc35973bc0a8a866717786570e576efcbd84b3729ddda')
 
 prepare() {
 	export GOPATH="${srcdir}/gopath"
