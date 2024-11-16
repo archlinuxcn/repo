@@ -1,0 +1,20 @@
+maintainers:
+  - github: poscat0x04
+
+pre_build_script: |
+  _download_aur_pkgbuild('verible')
+
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('_gittag='):
+      line = f'_gittag="{_G.newver}"'
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: chipsalliance/verible
+    use_latest_tag: true
+  - source: aur
+    aur: verible
