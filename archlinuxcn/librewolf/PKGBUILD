@@ -2,8 +2,8 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-pkgver=130.0
-pkgrel=3
+pkgver=132.0.2
+pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
 arch=(x86_64 aarch64)
@@ -93,7 +93,7 @@ source=(
   "default192x192.png"
 )
 
-sha256sums=('68446ada62836cb232617796cf58870626d053a8af3513f0142c9c93affbc448'
+sha256sums=('763acf3a25719634c7967b06bdd91980326a1b2af162f66db7f033894bd2c8f1'
             '7d01d317b7db7416783febc18ee1237ade2ec86c1567e2c2dd628a94cbf2f25d'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
 
@@ -227,6 +227,7 @@ END
     # LIBGL_ALWAYS_SOFTWARE=true \
     LLVM_PROFDATA=llvm-profdata \
       JARLOG_FILE="$PWD/jarlog" \
+      dbus-run-session \
       xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
       ./mach python build/pgo/profileserver.py
 
