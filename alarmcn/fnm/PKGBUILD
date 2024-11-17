@@ -1,7 +1,7 @@
 # Maintainer: Wesley Moore <wes@wezm.net>
 
 pkgname=fnm
-pkgver=1.38.0
+pkgver=1.38.1
 pkgrel=1
 pkgdesc="Fast and simple Node.js version manager, built with Rust"
 arch=('x86_64' 'aarch64')
@@ -11,7 +11,7 @@ depends=('xz' 'bzip2' 'gcc-libs')
 makedepends=('cargo')
 conflicts=('fnm-bin')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('1bf4552dd6a4eb63fa49c739d0ee18bf06c2c023a5ac00958aadf71e24fe8a49')
+sha256sums=('c24e4c26183a4d88a33e343902ed2d45da23e78c66b2a696a7420eb86deddda9')
 options=('!lto')
 
 build() {
