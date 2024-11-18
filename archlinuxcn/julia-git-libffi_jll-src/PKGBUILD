@@ -1,6 +1,6 @@
 pkgname=julia-git-libffi_jll-src
-pkgver=3.4.6+0
-_commit=ebd01230a12fbf7c731d09a509c805eb866adf3a
+pkgver=3.4.6+1
+_commit=ac9595d8d6f336c2095daac42e573f45405d9093
 pkgrel=1
 pkgdesc="Libffi_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Libffi_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libffi)
 source=("git+https://github.com/JuliaBinaryWrappers/Libffi_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('9be85d0c3868840a8fc2db6868d2bf3793f5cce09906e7c163c30301450908e4'
             '3d8313c423d42b3db6878765065dc5b4c41630d85401b54bd3c9a23ed5e26435')
 
 build() {
