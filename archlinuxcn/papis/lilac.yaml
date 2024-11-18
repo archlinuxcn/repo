@@ -2,15 +2,20 @@ build_prefix: extra-x86_64
 pre_build_script: aur_pre_build(maintainers=['BoostCookie', 'gesh'])
 post_build: aur_post_build
 repo_depends:
-  - python-arxiv2bib
+  - python-arxiv
   - python-doi
+  - python-filetype
   - python-habanero
   - python-isbnlib
 repo_makedepends:
   - python-markdownify
+  - python-sphinx_design
 update_on:
   - source: aur
     aur: papis
   - alias: python
+  - source: manual
+    manual: 1
+
 maintainers:
   - github: roaldclark
