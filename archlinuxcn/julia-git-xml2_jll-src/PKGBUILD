@@ -1,6 +1,6 @@
 pkgname=julia-git-xml2_jll-src
-pkgver=2.13.4+0
-_commit=1294993b6cec87f41b9b0dc0412ad3cf2743b8a5
+pkgver=2.13.5+0
+_commit=9a9b38fefc15b322203cd8553818963ddd093678
 pkgrel=1
 pkgdesc="XML2_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/XML2_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxml2)
 source=("git+https://github.com/JuliaBinaryWrappers/XML2_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('cbd44a973e5a31a34ce158efb9aaa799f88375ea06d87fa87e19dad93383b079'
+sha256sums=('6e2679ea7d261523f3ff49c188d1673016cb511711fcb95d25f9d6619235a949'
             '28549d3cd53f7f90d6974823d11e99548db90a0f4941e2fdbc8724847796143a')
 
 build() {
