@@ -11,8 +11,5 @@ post_build_script: |
   git_pkgbuild_commit()
 
 update_on:
-    - source: httpheader
-      url: https://www.dida365.com/static/getApp/download?type=linux_deb_x64
-      regex: ([\d.]+)-[^-]+\.deb
     - source: manual
       manual: 1
