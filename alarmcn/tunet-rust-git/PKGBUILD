@@ -1,0 +1,53 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=tunet-rust-git
+_pkgname=tunet-rust
+pkgver=0.9.4.r34.g5acbc06
+pkgrel=1
+pkgdesc="A Tsinghua University network authentication client for Linux, written in Rust. 清华大学校园网 Rust 客户端"
+url="https://github.com/Berrysoft/tunet-rust"
+arch=('x86_64' 'aarch64')
+license=('MIT')
+depends=('openssl' 'freetype2' 'hicolor-icon-theme')
+makedepends=('git' 'cargo')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+${url}.git")
+sha512sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	(
+		set -o pipefail
+		git describe --tags --long --abbrev=7 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+			printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+	)
+}
+
+build() {
+	cd "${_pkgname}/"
+	cargo build --release --workspace --exclude native
+}
+
+package() {
+	cd "${_pkgname}/"
+
+	# Binaries
+	pushd "target/release/"
+	for bin in tunet tunet-gui tunet-cui tunet-service; do
+		install -Dm755 "${bin}" -t "${pkgdir}/usr/bin/"
+	done
+
+	popd
+	# Desktop file
+	install -Dm644 "tunet/tunet.desktop" -t "${pkgdir}/usr/share/applications/"
+
+	# Icon
+	install -Dm644 "logo.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/tunet.png"
+
+	# Service
+	install -Dm644 "tunet-service/tunet@.service" -t "${pkgdir}/usr/lib/systemd/system/"
+
+	# License
+	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
