@@ -20,7 +20,6 @@ depends=('gcc-libs'
 makedepends=('extra-cmake-modules' 'qt6-tools')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-groups=('kf6')
 source=("https://download.kde.org/stable/frameworks/${pkgver%.*}/${_pkgname}-${pkgver}.tar.xz"
 	"qt-text-rendering.patch::https://invent.kde.org/frameworks/${_pkgname}/-/merge_requests/429.patch")
 sha256sums=('e9692f00d79b963bdcae716caab964c2534750c85d7fe02fce7a908003eb4da3'
