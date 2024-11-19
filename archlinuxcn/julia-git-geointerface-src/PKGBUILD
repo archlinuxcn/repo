@@ -1,6 +1,6 @@
 pkgname=julia-git-geointerface-src
-pkgver=1.3.5
-_commit=dd766b45290061c3bbc531003bbcc2b440243308
+pkgver=1.3.8
+_commit=a652094fc0bfd000f2564e5da14e4f63f3838cb5
 pkgrel=1
 pkgdesc="GeoInterface.jl"
 url="https://github.com/JuliaGeo/GeoInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeo/GeoInterface.jl.git#commit=$_commit")
-sha256sums=('53dcbd0ba87fa4f65a38a1a724b97a0c8e1290a620e16c14bb4018cf4340b72f')
+sha256sums=('9225b76fb964fcc7ccdae3bb6f7def7ab597dc06782ac08ae708b12848b5de3e')
 
 package() {
   cd GeoInterface.jl
