@@ -6,5 +6,9 @@ def pre_build():
 
     for line in edit_file('PKGBUILD'):
         if "pkgname=" in line:
-            print("options=(!lto)")
+            # upstream added, dont need lto anymore
+            #print("options=(!lto)")
+            # version number somehow become .1.1.0-1,
+            # add epoch to force pacman update
+            print("epoch=1")
         print(line)
