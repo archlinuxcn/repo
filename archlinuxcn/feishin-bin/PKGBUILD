@@ -2,7 +2,7 @@
 
 pkgname=feishin-bin
 pkgdesc='Rewrite of Sonixd'
-pkgver=0.11.1
+pkgver=0.12.0
 pkgrel=1
 arch=('x86_64' 'aarch64')
 url='https://github.com/jeffvli/feishin'
@@ -15,8 +15,8 @@ source=("feishin.desktop")
 source_x86_64=("https://github.com/jeffvli/feishin/releases/download/v${pkgver//_/-}/${_filename}-x64.tar.xz")
 source_aarch64=("https://github.com/jeffvli/feishin/releases/download/v${pkgver//_/-}/${_filename}-arm64.tar.xz")
 sha256sums=('ef112b1a9ef80d8bf27f721fdbb12de0a195da4e464dbf27282503ba398bef8d')
-sha256sums_x86_64=('ab84c52807df29ef8cbe011edf2ef6041d639efacf6e41a71862145e89e777ce')
-sha256sums_aarch64=('15dc1c63c16ece9552c4cb495120d098914367362b2e635b905b9e038ea24049')
+sha256sums_x86_64=('cad52978650fe361c911b9176a54e86417910ffb23ebd737323fe1bfb1925d2d')
+sha256sums_aarch64=('368e23dfd87feac5bdde16cd8d0b4d41f59578f2397af437f731e0c3390e0480')
 
 package() {
   # create target file structure
