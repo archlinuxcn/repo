@@ -1,0 +1,26 @@
+From 79e800db9be534b4e205af442d051bb2058bd2e9 Mon Sep 17 00:00:00 2001
+From: Roald Clark <roaldclark@gmail.com>
+Date: Tue, 19 Nov 2024 20:22:58 +0800
+Subject: [PATCH] fix(test): remove redundant backslash to resolve E502
+
+Signed-off-by: Roald Clark <roaldclark@gmail.com>
+---
+ utils/test/test-parser-simple-tests.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/utils/test/test-parser-simple-tests.py b/utils/test/test-parser-simple-tests.py
+index 6428b846..acef48e5 100644
+--- a/utils/test/test-parser-simple-tests.py
++++ b/utils/test/test-parser-simple-tests.py
+@@ -417,7 +417,7 @@ syntax_failure = (
+     'generated_perms_leading/dominate-Cuxtarget.sd',
+     'generated_perms_leading/dominate-ownerPuxtarget2.sd',
+ 
+-    # escaping with \
++    # escaping with
+     'file/ok_embedded_spaces_4.sd',  # \-escaped space
+     'file/file/ok_embedded_spaces_4.sd',  # \-escaped space
+     'file/ok_quoted_4.sd',  # quoted string including \"
+-- 
+2.47.0
+
