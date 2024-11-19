@@ -1,6 +1,6 @@
 pkgname=julia-git-revise-src
-pkgver=3.6.3
-_commit=2a1e0bd66d0bea34c957c36e82ca1c483345ff85
+pkgver=3.6.4
+_commit=71eb16a31b8432a8815e1c522a1146b97790407d
 pkgrel=1
 pkgdesc="Revise.jl"
 url="https://github.com/timholy/Revise.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/timholy/Revise.jl.git#commit=$_commit")
-sha256sums=('d46733077afd0e2f620a86464386ec9c715ddfd90c0a9efe14294b01c8eee8f0')
+sha256sums=('aeb120ed267db9d479ff687c23a65a0a44278c31fbc4818274c31b6bc898ef80')
 
 package() {
   cd Revise.jl
