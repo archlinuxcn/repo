@@ -1,7 +1,7 @@
 pkgname=julia-git-intervalrootfinding-src
-pkgver=0.5.11
-_commit=da80b0d36aa6d1d42694d37d68567b53902327d7
-pkgrel=2
+pkgver=0.6.0
+_commit=321599da464282c585590e78cac7c30a478a61b9
+pkgrel=1
 pkgdesc="IntervalRootFinding.jl"
 url="https://github.com/JuliaIntervals/IntervalRootFinding.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIntervals/IntervalRootFinding.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('941921e38aaa29c43c726603a7db0dcb3894ea1445242c782ac7d02bad2070c7')
 
 package() {
   cd IntervalRootFinding.jl
