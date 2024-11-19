@@ -1,0 +1,47 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Antonio Rojas <arojas@archlinux.org>
+
+_pkgname=qqc2-desktop-style
+pkgname="${_pkgname}-fractional"
+pkgver=6.8.0
+pkgrel=1
+pkgdesc="A style for Qt Quick Controls 2 to make it follow your desktop theme (with Qt text rendering patch)"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://community.kde.org/Frameworks"
+license=('LGPL-2.0-only OR LGPL-3.0-only')
+depends=('gcc-libs'
+	'glibc'
+	'kcolorscheme'
+	'kconfig'
+	'kiconthemes'
+	'kirigami'
+	'qt6-base'
+	'qt6-declarative'
+	'sonnet')
+makedepends=('extra-cmake-modules' 'qt6-tools')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+groups=('kf6')
+source=("https://download.kde.org/stable/frameworks/${pkgver%.*}/${_pkgname}-${pkgver}.tar.xz"
+	"qt-text-rendering.patch::https://invent.kde.org/frameworks/qqc2-desktop-style/-/merge_requests/429.patch")
+sha256sums=('e9692f00d79b963bdcae716caab964c2534750c85d7fe02fce7a908003eb4da3'
+            'abe73232f1f36f13f82959ddda888089b2d58cba5ccd801ad3d79707fe28be53')
+
+prepare() {
+	patch -d "${_pkgname}-${pkgver}" -p1 -i ../qt-text-rendering.patch
+}
+
+build() {
+	cmake -B build \
+		-S "${_pkgname}-${pkgver}" \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DBUILD_TESTING=OFF
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 ${_pkgname}-${pkgver}/LICENSES/* -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+}
