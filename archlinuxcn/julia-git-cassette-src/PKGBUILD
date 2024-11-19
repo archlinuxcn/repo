@@ -1,7 +1,7 @@
 pkgname=julia-git-cassette-src
 pkgver=0.3.14
 _commit=c29b237c1ec0deda3a1037ec519eebe216952bfe
-pkgrel=1
+pkgrel=2
 pkgdesc="Cassette.jl"
 url="https://github.com/JuliaLabs/Cassette.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLabs/Cassette.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('99a3639a31354f8ebfc5098797c4dd96ae8bee23d29daa5aff3978ff1b2a54d9')
 
 package() {
   cd Cassette.jl
