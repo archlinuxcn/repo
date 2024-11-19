@@ -1,0 +1,18 @@
+pkgname=julia-git-geoformattypes-src
+pkgver=0.4.2
+_commit=5e21c9351a020d8919d3d6cb70585b115ad7c91b
+pkgrel=1
+pkgdesc="GeoFormatTypes.jl"
+url="https://github.com/JuliaGeo/GeoFormatTypes.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGeo/GeoFormatTypes.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GeoFormatTypes.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GeoFormatTypes "${pkgdir}" "${pkgname}" julia-git
+}

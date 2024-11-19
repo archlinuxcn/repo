@@ -1,0 +1,27 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - julia-git
+  - julia-pkg-scripts
+
+update_on:
+  - source: regex
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/libwebp_jll/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpm
+    alpm: libwebp
+    provided: libwebp.so
+  - source: alpm
+    alpm: libwebp
+    provided: libwebpdecoder.so
+  - source: alpm
+    alpm: libwebp
+    provided: libwebpdemux.so
+  - source: alpm
+    alpm: libwebp
+    provided: libwebpmux.so
+  - source: manual
+    manual: 1

@@ -14,5 +14,7 @@ sha256sums=('6da4f3aa815804dbfae15c710680cc61d97c0df9bf5bd2243d92a08453331f83')
 package() {
   cd BoundaryValueDiffEq.jl
 
+  rm -rf lib/
+
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BoundaryValueDiffEq "${pkgdir}" "${pkgname}" julia-git
 }

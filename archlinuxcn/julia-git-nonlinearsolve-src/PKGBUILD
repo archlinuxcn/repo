@@ -14,5 +14,7 @@ sha256sums=('01b0f90758679e70fa29aee27280faab8f834129f9b709229e5ea7098cb3a4a8')
 package() {
   cd NonlinearSolve.jl
 
+  rm -rf lib/
+
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh NonlinearSolve "${pkgdir}" "${pkgname}" julia-git
 }

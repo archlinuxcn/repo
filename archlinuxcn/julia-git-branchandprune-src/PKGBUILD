@@ -1,0 +1,18 @@
+pkgname=julia-git-branchandprune-src
+pkgver=0.2.1
+_commit=fa4858ddbbfb4ff7fd1532e1cc48764ecba73f64
+pkgrel=1
+pkgdesc="BranchAndPrune.jl"
+url="https://github.com/Kolaru/BranchAndPrune.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Kolaru/BranchAndPrune.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd BranchAndPrune.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh BranchAndPrune "${pkgdir}" "${pkgname}" julia-git
+}

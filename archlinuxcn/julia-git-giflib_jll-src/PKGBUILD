@@ -1,0 +1,26 @@
+pkgname=julia-git-giflib_jll-src
+pkgver=5.2.2+0
+_commit=201260e5760e3ec1318b159880967f3fdeabb68e
+pkgrel=1
+pkgdesc="Giflib_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Giflib_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git giflib)
+source=("git+https://github.com/JuliaBinaryWrappers/Giflib_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('74bb080bad7327083c05b90b1541c896f9ee8a6658c3ab48346d652beae9491e'
+            '05e01c82246f84e5bd2c27f8f15dfcaf242d7dc49b70a6a400742bf3f6be695a')
+
+build() {
+  cd Giflib_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Giflib_jll ../jll.toml
+}
+
+package() {
+  cd Giflib_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Giflib_jll "${pkgdir}" "${pkgname}" julia-git
+}

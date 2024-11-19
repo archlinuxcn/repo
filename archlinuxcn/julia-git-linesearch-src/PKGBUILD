@@ -1,0 +1,18 @@
+pkgname=julia-git-linesearch-src
+pkgver=0.1.4
+_commit=74da8e8e973282adf7f272f9ceb05a0b1d1cd563
+pkgrel=1
+pkgdesc="LineSearch.jl"
+url="https://github.com/SciML/LineSearch.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/LineSearch.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd LineSearch.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LineSearch "${pkgdir}" "${pkgname}" julia-git
+}

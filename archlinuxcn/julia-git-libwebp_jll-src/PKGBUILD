@@ -1,0 +1,26 @@
+pkgname=julia-git-libwebp_jll-src
+pkgver=1.4.0+0
+_commit=29c6e9d2298847c967e0f69d5d131190eda9f22e
+pkgrel=1
+pkgdesc="libwebp_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libwebp_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libwebp)
+source=("git+https://github.com/JuliaBinaryWrappers/libwebp_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('21fd8a6ae110a11ec1da3dc6d2278631724f49fa6123386cb92dcd0ca2945131'
+            'ac1a7f802576726ddac20254a04d7b57fe07f5f158e61bfebb74b5b6fb024f0e')
+
+build() {
+  cd libwebp_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libwebp_jll ../jll.toml
+}
+
+package() {
+  cd libwebp_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libwebp_jll "${pkgdir}" "${pkgname}" julia-git
+}

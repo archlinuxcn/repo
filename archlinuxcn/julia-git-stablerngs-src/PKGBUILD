@@ -1,0 +1,18 @@
+pkgname=julia-git-stablerngs-src
+pkgver=1.0.2
+_commit=18aa75faac29ac977cb1cf6fa69a67f258090823
+pkgrel=1
+pkgdesc="StableRNGs.jl"
+url="https://github.com/JuliaRandom/StableRNGs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaRandom/StableRNGs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StableRNGs.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StableRNGs "${pkgdir}" "${pkgname}" julia-git
+}
