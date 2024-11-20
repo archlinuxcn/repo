@@ -1,7 +1,7 @@
 # Maintainer: Julian <juliannfairfax@protonmail.com>
 
 pkgname=flare
-pkgver=0.15.5
+pkgver=0.15.6
 _pkgver=${pkgver/beta/-beta/}
 pkgrel=1
 epoch=1
@@ -13,7 +13,7 @@ makedepends=("blueprint-compiler" "cargo" "meson")
 depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling")
 optdepends=("feedbackd: for vibrating notifications")
 source=("https://gitlab.com/schmiddi-on-mobile/${pkgname}/-/archive/${_pkgver}/${pkgname}-${_pkgver}.tar.gz")
-sha256sums=('8ddedc8f00c7e346143695293f1995080fa748e6bc6be8631102d626f2322cd8')
+sha256sums=('7dad44a1192f02a4a335823fd9084ad8b0066d28416e74d1c4432b4e2a47caf3')
 options=('!lto')
 
 prepare() {
