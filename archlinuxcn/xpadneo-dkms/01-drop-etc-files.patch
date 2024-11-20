@@ -1,3 +1,7 @@
+# This patch disables install of modprobe and udev file in '/etc' at
+# DKMS step. For Arch at least, these files usually go on '/usr/lib'
+# when they aren't actual user files.
+
 diff -crB hid-xpadneo/dkms.post_install hid-xpadneo.new/dkms.post_install
 *** hid-xpadneo/dkms.post_install	2023-03-01 02:13:11.483605532 -0300
 --- hid-xpadneo.new/dkms.post_install	2023-03-01 03:21:07.876809434 -0300
