@@ -1,0 +1,27 @@
+From 9b0bf7bf9673c1f42107f38303a0ddbc6f955c56 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 20 Nov 2024 01:04:28 -0500
+Subject: [PATCH 2/2] Fix snprintf buffer length limit
+
+The current limit of 17 is wrong since it is not the length of the buffer
+with the offset `j`. This causes a hardened build to fail.
+---
+ lib/gks/pdf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/gks/pdf.c b/lib/gks/pdf.c
+index bba517e5..2a0c69b8 100644
+--- a/lib/gks/pdf.c
++++ b/lib/gks/pdf.c
+@@ -838,7 +838,7 @@ static void create_patterns(void)
+       gks_inq_pattern_array(pattern, parray);
+       for (j = 0, k = 1; j < 16; j += 2)
+         {
+-          snprintf(bitmap[i] + j, 17, "%02x", parray[k]);
++          snprintf(bitmap[i] + j, 17 - j, "%02x", parray[k]);
+           if (++k > *parray) k = 1;
+         }
+       bitmap[i][16] = '\0';
+-- 
+2.46.0
+

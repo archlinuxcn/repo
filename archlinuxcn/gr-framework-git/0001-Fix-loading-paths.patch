@@ -1,7 +1,7 @@
-From cd2c07bdac1226f57a3f7840b335b5e881e049e0 Mon Sep 17 00:00:00 2001
+From ae2768903eb55967d64a1310ef9c3cebd41b922c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 5 Jul 2022 09:27:51 -0400
-Subject: [PATCH] Fix loading paths
+Subject: [PATCH 1/2] Fix loading paths
 
 ---
  lib/gks/font.c   | 2 +-
@@ -10,7 +10,7 @@ Subject: [PATCH] Fix loading paths
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/lib/gks/font.c b/lib/gks/font.c
-index 096c3163..ae3322bd 100644
+index dd64f9f3..738b9762 100644
 --- a/lib/gks/font.c
 +++ b/lib/gks/font.c
 @@ -41,7 +41,7 @@ int gks_open_font(void)
@@ -23,10 +23,10 @@ index 096c3163..ae3322bd 100644
    wchar_t wfontdb[MAXPATHLEN];
    if (!GetEnvironmentVariableW(L"GKS_FONTPATH", wfontdb, MAXPATHLEN))
 diff --git a/lib/gks/ft.c b/lib/gks/ft.c
-index 34a56602..f3cc5b55 100644
+index 5f081626..5152bced 100644
 --- a/lib/gks/ft.c
 +++ b/lib/gks/ft.c
-@@ -739,9 +739,9 @@ static ft_path_char_t *gks_ft_get_font_path(const char *font_name, const char *f
+@@ -741,9 +741,9 @@ static ft_path_char_t *gks_ft_get_font_path(const char *font_name, const char *f
        prefix = GRDIR;
      }
  
@@ -39,7 +39,7 @@ index 34a56602..f3cc5b55 100644
    strcat(font_path, font_file_extension);
  #endif
 diff --git a/lib/gks/plugin.c b/lib/gks/plugin.c
-index e435b116..820ba8bc 100644
+index abc92ee1..e764d1e6 100644
 --- a/lib/gks/plugin.c
 +++ b/lib/gks/plugin.c
 @@ -69,7 +69,7 @@ static void *load_library(const char *name)
@@ -52,5 +52,5 @@ index e435b116..820ba8bc 100644
      }
  #endif
 -- 
-2.38.1
+2.46.0
 

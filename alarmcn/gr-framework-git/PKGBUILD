@@ -15,9 +15,11 @@ optdepends=("ffmpeg: video support")
 provides=("${pkgname%-*}=${pkgver}")
 conflicts=("${pkgname%-*}")
 source=("gr-framework::git+https://github.com/sciapp/gr.git#branch=develop"
-        0001-Fix-loading-paths.patch)
+        0001-Fix-loading-paths.patch
+        0002-Fix-snprintf-buffer-length-limit.patch)
 sha256sums=('SKIP'
-            '22fc9f6826c06df031c69bc4a6fff45debcf3ea502f53390b62b00f4a69a31ca')
+            '3883b1ad0a5c2d723bdfb83450cdc949a7671817e01e5d3b5f5c607843b09094'
+            '5d59ec33121cb67bbf5a8a4e12697ab1fdbe61b110bc1dae90d90fa17de6dc32')
 
 pkgver() {
   cd gr-framework
@@ -29,6 +31,7 @@ prepare() {
   cd gr-framework
 
   patch -Np1 < ../0001-Fix-loading-paths.patch
+  patch -Np1 < ../0002-Fix-snprintf-buffer-length-limit.patch
 }
 
 build() {
