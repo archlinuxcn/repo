@@ -1,14 +1,14 @@
 # Maintainer: HurricanePootis <hurricanepootis@protonmail.com>
 pkgname=imgbrd-grabber
 pkgver=7.12.2
-pkgrel=4
+pkgrel=5
 pkgdesc="Very customizable imageboard/booru downloader with powerful filenaming features."
 arch=('x86_64')
 url="https://github.com/Bionus/imgbrd-grabber"
 license=('Apache-2.0')
 depends=("gcc-libs" "glibc" "hicolor-icon-theme" "nodejs" "qt6-base" "qt6-declarative" "qt6-multimedia" "qt6-networkauth" "qt6-shadertools" "qt6-webengine"
 	 'qt6-webengine')
-makedepends=("clang" "cmake" "git" "jq" "npm" "qt6-shadertools" "qt6-tools")
+makedepends=("clang" "cmake" "git" "jq" "ninja" "npm" "qt6-shadertools" "qt6-tools")
 optdepends=('openssl: Access HTTPS sources')
 conflicts=("imgbrd-grabber-git" 'imgbrd-grabber-bin' 'imgbrd-grabber-appimage')
 source=('git+https://github.com/Bionus/imgbrd-grabber.git#tag=v'${pkgver}''
@@ -44,6 +44,8 @@ build() {
     cd "$srcdir" 
 
     cmake -S $pkgname/src -B build \
+    -G Ninja \
+    -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLEXBOR_BUILD_TESTS_CPP=0 \
     -Wno-dev
