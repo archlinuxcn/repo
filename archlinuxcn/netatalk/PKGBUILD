@@ -5,14 +5,14 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.0.5
+pkgver=4.0.6
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
 
 source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
-md5sums=('ed69f446e95c2914e8815087afcc4c65')
+md5sums=('67cb4e956a0674a1bd64b33c72d73920')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -65,7 +65,6 @@ build() {
     -Dwith-docbook-path=/usr/share/xml/docbook/xsl-stylesheets-${docbookver} \
     -Dwith-dtrace=false \
     -Dwith-init-hooks=false \
-    -Dwith-init-style=systemd \
     -Dwith-lockfile-path=/run/netatalk.pid \
     -Dwith-overwrite=true \
     -Dwith-readmes=false \
