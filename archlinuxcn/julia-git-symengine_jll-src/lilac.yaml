@@ -11,5 +11,9 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/SymEngine_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: symengine
+    strip_dir: true
+    filename: libsymengine.so.\d+
   - source: manual
     manual: 2
