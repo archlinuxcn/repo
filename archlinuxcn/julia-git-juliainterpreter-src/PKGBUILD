@@ -1,6 +1,6 @@
 pkgname=julia-git-juliainterpreter-src
-pkgver=0.9.37
-_commit=0421a756327370fcfc886d0e1b5a3973098e8207
+pkgver=0.9.38
+_commit=cc89e748519e4a7d0898adbfc9cdb3278179d8b3
 pkgrel=1
 pkgdesc="JuliaInterpreter.jl"
 url="https://github.com/JuliaDebug/JuliaInterpreter.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDebug/JuliaInterpreter.jl.git#commit=$_commit")
-sha256sums=('ff53eaef6360ae0a450a66f9d17506adb2a58269404dd9524160a9070525429c')
+sha256sums=('f19015058fe0fc45b7ff6f0f7969589e5b3979065f379d4a60310d3031fc65d6')
 
 package() {
   cd JuliaInterpreter.jl
