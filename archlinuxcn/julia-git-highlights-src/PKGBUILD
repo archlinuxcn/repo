@@ -1,0 +1,18 @@
+pkgname=julia-git-highlights-src
+pkgver=0.5.3
+_commit=715e1a235d30257a2df7f1637c8a186449623121
+pkgrel=1
+pkgdesc="Highlights.jl"
+url="https://github.com/JuliaDocs/Highlights.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDocs/Highlights.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Highlights.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Highlights "${pkgdir}" "${pkgname}" julia-git
+}
