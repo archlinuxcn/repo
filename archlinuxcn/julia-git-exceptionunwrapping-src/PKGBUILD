@@ -1,6 +1,6 @@
 pkgname=julia-git-exceptionunwrapping-src
-pkgver=0.1.10
-_commit=f9f8410eba64b058e0d8c7989e1108d2170633f9
+pkgver=0.1.11
+_commit=02007f59d24d7e01dadae834fd4683751a23ebe1
 pkgrel=1
 pkgdesc="ExceptionUnwrapping.jl"
 url="https://github.com/JuliaServices/ExceptionUnwrapping.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaServices/ExceptionUnwrapping.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('ba63452264802df210c7d47c777f115b6bbfbaaaceb864d343d3c7ccc7044a8f')
 
 package() {
   cd ExceptionUnwrapping.jl
