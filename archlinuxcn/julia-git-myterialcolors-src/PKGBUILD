@@ -1,7 +1,7 @@
 pkgname=julia-git-myterialcolors-src
 pkgver=0.3.0
 _commit=781a361d6386b27db598501583cf78bb2256ef2a
-pkgrel=1
+pkgrel=2
 pkgdesc="MyterialColors.jl"
 url="https://github.com/FedeClaudi/MyterialColors.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FedeClaudi/MyterialColors.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('73a39bf6cd12de86a00a171f642a32f2db080581db85f2815fe7832f37b36cd5')
 
 package() {
   cd MyterialColors.jl
