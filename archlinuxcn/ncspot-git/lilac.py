@@ -3,6 +3,7 @@ from lilaclib import *
 
 def pre_build():
     aur_pre_build(maintainers=['gugylucky'])
+    add_makedepends(['git'])
 
     for line in edit_file('PKGBUILD'):
         if "pkgname=" in line:
