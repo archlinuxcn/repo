@@ -1,7 +1,7 @@
 pkgname=julia-git-metis_jll-src
-pkgver=5.1.2+0
-_commit=3d2d606028ecaaa2e37e1ad2fec9c807dba9e188
-pkgrel=3
+pkgver=5.1.2+1
+_commit=d68f801eaef8b8fdc2fe2578a1ffef6e265ad379
+pkgrel=1
 pkgdesc="METIS_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/METIS_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaBinaryWrappers/METIS_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('8af258c99cbd32e384dd16018422276fd2ab83422ad63ddec1a9a8178636447a'
             'eef4595fe9a68459b0ab7cec086725071fcaf3fb4c9c902e451e040114e0c08d')
 
 build() {
