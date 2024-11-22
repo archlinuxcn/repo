@@ -17,8 +17,8 @@ depends=("glib2>=2.26.0" libgobject-2.0.so libglib-2.0.so "jansson>=2.2.1")
 provides=(libsearpc.so)
 makedepends=(python)
 # upstream seems to change tag so let's rename the download...
-source=("libsearpc-${pkgver}-6.tar.gz::${url}/archive/v${_tagname}.tar.gz")
-sha256sums=('143ada255ea852a58577a833df0462af98376a3fd2886dc43ead621d656c317d')
+source=("libsearpc-${pkgver}-7.tar.gz::${url}/archive/v${_tagname}.tar.gz")
+sha256sums=('3d6bef12f5ce957309886c2effa83775ded8b568584c555b2746474afab96d5e')
 
 prepare () {
   cd ${pkgname}-${_tagname}
