@@ -63,9 +63,6 @@ _use_current=${_use_current-}
 ### Enable KBUILD_CFLAGS -O3
 _cc_harder=${_cc_harder-y}
 
-### Set this to your number of threads you have in your machine otherwise it will default to 320
-_nr_cpus=${_nr_cpus-}
-
 ### Set performance governor as default
 _per_gov=${_per_gov-}
 
@@ -170,7 +167,7 @@ _stable=${_major}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + LTO + Cachy Sauce Kernel by CachyOS with other patches and improvements.'
-pkgrel=1
+pkgrel=2
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -220,7 +217,7 @@ fi
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=965343f1141aeb38aa7f8bb8f27f82278b87db6e")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=6206603bf663aaa91f36f69a81c739314685d577")
 fi
 
 # NVIDIA pre-build module support
@@ -366,17 +363,6 @@ prepare() {
             -d NEED_MULTIPLE_NODES \
             -d NUMA_BALANCING \
             -d NUMA_BALANCING_DEFAULT_ENABLED
-    fi
-
-    ### Setting NR_CPUS
-    if [[ "$_nr_cpus" -ge 2 && "$_nr_cpus" -le 512 ]]; then
-        echo "Setting custom NR_CPUS..."
-        scripts/config --set-val NR_CPUS "$_nr_cpus"
-    elif [ -z "$_nr_cpus" ]; then
-        echo "Setting default NR_CPUS..."
-        scripts/config --set-val NR_CPUS 320
-    else
-        _die "The value '$_nr_cpus' is invalid. Please select a numerical value from 2 to 512..."
     fi
 
     ### Select performance governor
@@ -583,11 +569,11 @@ build() {
 
 _package() {
     pkgdesc="The $pkgdesc kernel and modules"
-    depends=('coreutils' 'kmod' 'initramfs' 'scx-scheds')
+    depends=('coreutils' 'kmod' 'initramfs')
     optdepends=('wireless-regdb: to set the correct wireless channels of your country'
                 'linux-firmware: firmware images needed for some devices'
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
-                'uksmd: Userspace KSM helper daemon')
+                'scx-scheds: to use sched-ext schedulers')
     provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN NTSYNC-MODULE)
 
     cd "$_srcname"
@@ -769,8 +755,8 @@ for _p in "${pkgname[@]}"; do
 done
 
 b2sums=('b2ec2fc69218cacabbbe49f78384a5d259ca581b717617c12b000b16f4a4c59ee348ea886b37147f5f70fb9a7a01c1e2c8f19021078f6b23f5bc62d1c48d5e5e'
-        '62c6d3bb71a0d16b42e37958c46363d086964705e98c2e117af0913d71529b4973cf8e95cd20bed058857da15a00d0cb3d3f57fa5bf3ed89ca89d664af521578'
+        'd5f647e8517b423cb3dec37b5b3a65c90c8dcedf36187fb5024a650dfb1817f6cde5f1b0a588a96c374e4b4e78dd7d534b6aa273ed28510e5c0900b96fc48049'
         'b1e964389424d43c398a76e7cee16a643ac027722b91fe59022afacb19956db5856b2808ca0dd484f6d0dfc170482982678d7a9a00779d98cd62d5105200a667'
-        'eb40c22ca0f424c575e1360948e972d5b0265436ec7a27d1312e5840207e98927556a24eb65cb2ff30d059a10299feec2a572f2dda88072e0f5b533713c1255e'
+        '661f9db267a57fa4af49879d17350820fd1cb0bd167eab92a6c54652df6a1f32e33a21a6bc69b07a9be5d2409aeb17cad4b6efac311774e5e93f9d17f812cbda'
         'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
         'a1bad436ffcaf36266949471ed025b889cf88fe7ecf8174ab73783f3f83630df90911e0b962386c964056b79ab0ec50babe0a3a81b83904216b0eec65f80eb2d')
