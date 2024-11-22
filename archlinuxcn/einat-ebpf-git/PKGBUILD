@@ -3,13 +3,13 @@
 pkgname=einat-ebpf-git
 _pkgname=einat-ebpf
 _target=einat
-pkgver=0.1.2.r21.gbd64ad3
+pkgver=0.1.4.r6.g068d80a
 pkgrel=1
 pkgdesc="eBPF-based Endpoint-Independent NAT"
 arch=('x86_64')
 url="https://github.com/EHfive/einat-ebpf"
 license=('GPL-2.0-only')
-depends=('glibc' 'gcc-libs' 'zlib' 'libelf')
+depends=('glibc' 'gcc-libs' 'zlib' 'libelf' 'libbpf')
 provides=('einat')
 conflicts=('einat')
 makedepends=('git' 'cargo' 'clang')
@@ -17,7 +17,6 @@ source=("$_pkgname::git+https://github.com/EHfive/einat-ebpf.git"
         "einat.service")
 sha512sums=('SKIP'
             '52ce570ef64664cc9eb1180c9f98fbc00249db7ed28352835d4574383e399fd5b2f142515169e609344538680b4c949c5342a0607b31a16ae4857491da052b91')
-options=(!lto !debug)
 
 pkgver(){
   cd "$_pkgname"
@@ -31,7 +30,7 @@ prepare() {
 
 build() {
   cd "$_pkgname"
-  cargo build --release --features ipv6 --frozen
+  cargo build --release --features libbpf,pkg-config,ipv6 --frozen
 }
 
 check() {
