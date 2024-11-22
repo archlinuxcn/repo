@@ -28,6 +28,7 @@ build() {
         -DBUILD_MAMBA=ON \
         -DBUILD_SHARED=ON \
         -DBUILD_STATIC=OFF \
+        -DMAMBA_WARNING_AS_ERROR=OFF \
         -B build
   cmake --build build
 }
