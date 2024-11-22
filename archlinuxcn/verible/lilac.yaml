@@ -4,10 +4,14 @@ maintainers:
 pre_build_script: |
   run_cmd(['curl', '-L', '-o', 'PKGBUILD', 'https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=verible'])
 
+  print(f"new ver: {_G.newver}")
+
   for line in edit_file('PKGBUILD'):
     if line.startswith('_gittag='):
       line = f'_gittag="{_G.newver}"'
     print(line)
+
+  print(open("PKGBUILD").read())
 
 post_build_script: |
   git_pkgbuild_commit()
