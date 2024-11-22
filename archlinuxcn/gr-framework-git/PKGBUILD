@@ -9,9 +9,10 @@ url="https://gr-framework.org"
 license=("MIT")
 depends=("bzip2" "cairo" "fontconfig" "freetype2" "ghostscript" "glfw"
          "libjpeg-turbo" "libpng" "libtiff" "libx11" "libxft" "libxt" "pixman"
-         "qhull" "qt5-base" "zlib")
-makedepends=("git" "cmake" "patchelf")
-optdepends=("ffmpeg: video support")
+         "qhull" "zlib" "qt6-base" "zeromq" "xerces-c")
+makedepends=("git" "cmake" "patchelf" "ffmpeg" "qt5-base")
+optdepends=("ffmpeg: video support"
+            "qt5-base: qt5 plugin")
 provides=("${pkgname%-*}=${pkgver}")
 conflicts=("${pkgname%-*}")
 source=("gr-framework::git+https://github.com/sciapp/gr.git#branch=develop"
