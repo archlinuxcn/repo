@@ -1,0 +1,55 @@
+# Maintainer: Roald Clark <roaldclark 'at' gmail 'dot' com>
+# Maintainer: Andy Breuhan <andybreuhan 'at' andybreuhan 'dot' de>
+
+pkgbase=blender-benchmark-launcher-bin
+pkgname=(
+    'blender-benchmark-launcher-bin'
+    'blender-benchmark-launcher-cli-bin'
+)
+pkgver=3.1.0
+pkgrel=0
+pkgdesc="A benchmark based on Blender to perform hardware and software performance tests"
+arch=('x86_64')
+url="https://opendata.blender.org/"
+license=(
+    'CC0-1.0'
+    'GPL-3.0-or-later'
+)
+depends=('glibc')
+optdepends=(
+    'cuda: Cycles render CUDA support'
+    'intel-compute-runtime: Cycles renderer Intel OneAPI support'
+    'rocm-hip-runtime: Support AMD GPU acceleration'
+)
+options=('!strip')
+source=(
+    "https://download.blender.org/release/BlenderBenchmark2.0/launcher/benchmark-launcher-${pkgver}-linux.tar.gz"
+    "https://download.blender.org/release/BlenderBenchmark2.0/launcher/benchmark-launcher-cli-${pkgver}-linux.tar.gz"
+)
+sha256sums=('4059c576407aa5add4f6280c59d68070b721572ec91aa6d5dfd528441070bb62'
+            'b1b616a12d3f5a3a39ee1322b6489cfb7c4f921f5eadda01d1ef9af422b7520f')
+
+package_blender-benchmark-launcher-bin() {
+    depends+=(
+        'gcc-libs'
+        'libglvnd'
+        'libx11'
+        'libxcursor'
+        'libxi'
+        'libxinerama'
+        'libxrandr'
+        'libxxf86vm'
+    )
+    provides=("${pkgname%-bin}=${pkgver}")
+    conflicts=("${pkgname%-bin}")
+
+    install -Dm0755 "${srcdir}/benchmark-launcher" -t "${pkgdir}/usr/bin/"
+}
+
+package_blender-benchmark-launcher-cli-bin() {
+    provides=("${pkgname%-bin}=${pkgver}")
+    conflicts=("${pkgname%-bin}")
+
+    install -Dm0644 "${srcdir}/README.txt" -t "${pkgdir}/usr/share/doc/${pkgname}/"
+    install -Dm0755 "${srcdir}/benchmark-launcher-cli" -t "${pkgdir}/usr/bin/"
+}
