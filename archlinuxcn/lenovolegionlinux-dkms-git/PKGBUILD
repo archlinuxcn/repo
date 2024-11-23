@@ -4,8 +4,8 @@
 
 _pkgname=lenovolegionlinux
 pkgname=${_pkgname}-dkms-git
-pkgver=r859.e0a361f
-pkgrel=2
+pkgver=r860.c1e9b55
+pkgrel=1
 pkgdesc="LenovoLegionLinux (LLL) DKMS module"
 arch=("x86_64")
 url="https://github.com/johnfanv2/LenovoLegionLinux"
@@ -30,8 +30,9 @@ pkgver() {
 
 prepare() {
   cd "${_pkgname}"
-  pkgver_commit=$(echo $pkgver | cut -c 6-)
-  git checkout $pkgver_commit
+  # Use latest commit instead
+  #pkgver_commit=$(echo $pkgver | cut -c 6-)
+  #git checkout $pkgver_commit
 }
 
 package() {
