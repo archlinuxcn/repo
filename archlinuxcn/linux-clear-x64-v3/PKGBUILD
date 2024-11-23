@@ -1,5 +1,8 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2034 disable=SC2048 disable=SC2086 disable=SC2154
 # Maintainer: JeremyStarTM <jeremystartm@staropensource.de>
 # Maintainer: Josip Ponjavic <josipponjavic at gmail dot com>
+# Contributor: yarost12 <yaro330@gmail.com>
 
 ### BUILD OPTIONS
 # You can modify these settings by executing "env _<setting>=<value> makepkg"
@@ -117,7 +120,7 @@ _subarch=42
 
 # Kernel version
 _kernel_major=6.11
-_kernel_minor=7
+_kernel_minor=10
 # Clear Linux patches version
 _clr=3-1472
 # kernel_compiler_patch version
@@ -148,13 +151,12 @@ source=(
 
 [[ -n "${_use_llvm_lto}" ]] && BUILD_FLAGS=("LLVM=1" "LLVM_IAS=1")
 
-export KBUILD_BUILD_HOST=archlinux
-export KBUILD_BUILD_USER=${pkgbase}
-export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
+export "KBUILD_BUILD_HOST=archlinux"
+export "KBUILD_BUILD_USER=${pkgbase}"
+export "KBUILD_BUILD_TIMESTAMP=$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
-prepare() {
-    cd "${_src_linux}" || exit 1
-    
+# Applies all patches
+apply_patches() {
     # Patch with kernel version patches
     patch -Np1 -i ../patch-${_kernel_major}.${_kernel_minor} || true
     
@@ -172,7 +174,27 @@ prepare() {
         
         patch -Np1 -i "${srcdir}/cl-linux/${i}" || true
     done
-    
+}
+
+# Copies the kernel config
+copy_defconfig() {
+    local "_cur_major_ver=$(zcat /proc/config.gz | grep Linux | grep -o '[0-9]*[0-9]\.[0-9]*[0-9]')"
+    [[ "${_cur_major_ver}" != "${_kernel_major}" ]] &&
+        warning "Major version was updated, you should regen the defconfig"
+
+    if [[ -s /proc/config.gz ]]; then
+        # modprobe configs
+        zcat /proc/config.gz > ./.config
+        make ${BUILD_FLAGS[*]} olddefconfig
+    else
+        warning "Your kernel was not compiled with IKCONFIG_PROC."
+        warning "Unable to read kernel configuration, aborting."
+        exit
+    fi
+}
+
+# Updates the kernel config
+update_defconfig() {
     # Copy configuration file (if found)
     if [ -f "${startdir}/kconfig" ]; then
         echo ":: Using configuration file \"${startdir}/kconfig\""
@@ -185,12 +207,12 @@ prepare() {
     # Extra configuration
     # General setup
     scripts/config --set-str DEFAULT_HOSTNAME archlinux \
-                   -e IKCONFIG \
-                   -e IKCONFIG_PROC \
-                   -u RT_GROUP_SCHED
+                -e IKCONFIG \
+                -e IKCONFIG_PROC \
+                -u RT_GROUP_SCHED
     # Power management and ACPI options
     scripts/config -e ACPI_REV_OVERRIDE_POSSIBLE \
-                   -e ACPI_TABLE_UPGRADE
+                -e ACPI_TABLE_UPGRADE
     # Virtualization
     scripts/config -e KVM_SMM
     # General architecture-dependent options
@@ -201,34 +223,34 @@ prepare() {
     scripts/config -e NETFILTER_INGRESS
     # Device Drivers
     scripts/config -e FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER \
-                   -e DELL_SMBIOS_SMM \
-                   -m PATA_JMICRON \
-                   -E SOUND SOUND_OSS_CORE \
-                   -e SND_OSSEMUL \
-                   -M SND_OSSEMUL SND_MIXER_OSS \
-                   -M SND_MIXER_OSS SND_PCM_OSS \
-                   -E SND_PCM_OSS SND_PCM_OSS_PLUGINS \
-                   -m AGP -M AGP AGP_INTEL -M AGP_INTEL AGP_VIA
+                -e DELL_SMBIOS_SMM \
+                -m PATA_JMICRON \
+                -E SOUND SOUND_OSS_CORE \
+                -e SND_OSSEMUL \
+                -M SND_OSSEMUL SND_MIXER_OSS \
+                -M SND_MIXER_OSS SND_PCM_OSS \
+                -E SND_PCM_OSS SND_PCM_OSS_PLUGINS \
+                -m AGP -M AGP AGP_INTEL -M AGP_INTEL AGP_VIA
     # Kernel hacking -> Compile-time checks and compiler options -> Make section mismatch errors non-fatal
     scripts/config -e SECTION_MISMATCH_WARN_ONLY
     # File systems
     scripts/config -m NTFS3_FS \
-                   -e NTFS3_LZX_XPRESS \
-                   -e NTFS3_FS_POSIX_ACL
+                -e NTFS3_LZX_XPRESS \
+                -e NTFS3_FS_POSIX_ACL
     scripts/config -m SMB_SERVER \
-                   -e SMB_SERVER_SMBDIRECT \
-                   -e SMB_SERVER_CHECK_CAP_NET_ADMIN \
-                   -e SMB_SERVER_KERBEROS5
+                -e SMB_SERVER_SMBDIRECT \
+                -e SMB_SERVER_CHECK_CAP_NET_ADMIN \
+                -e SMB_SERVER_KERBEROS5
     # Security options
     scripts/config -e SECURITY_SELINUX \
-                   -e SECURITY_SELINUX_BOOTPARAM \
-                   -e SECURITY_SMACK \
-                   -e SECURITY_SMACK_BRINGUP \
-                   -e SECURITY_SMACK_NETFILTER \
-                   -e SECURITY_SMACK_APPEND_SIGNALS \
-                   -e SECURITY_TOMOYO \
-                   -e SECURITY_APPARMOR \
-                   -e SECURITY_YAMA
+                -e SECURITY_SELINUX_BOOTPARAM \
+                -e SECURITY_SMACK \
+                -e SECURITY_SMACK_BRINGUP \
+                -e SECURITY_SMACK_NETFILTER \
+                -e SECURITY_SMACK_APPEND_SIGNALS \
+                -e SECURITY_TOMOYO \
+                -e SECURITY_APPARMOR \
+                -e SECURITY_YAMA
     # Security options -> Landlock options
     scripts/config -e SECURITY_LANDLOCK
     # Library routines
@@ -236,30 +258,30 @@ prepare() {
     
     # Enable LLVM compilation
     [[ -n "${_use_llvm_lto}" ]] && scripts/config -d LTO_NONE \
-                                                  -e LTO \
-                                                  -e LTO_CLANG \
-                                                  -e ARCH_SUPPORTS_LTO_CLANG \
-                                                  -e ARCH_SUPPORTS_LTO_CLANG_THIN \
-                                                  -e HAS_LTO_CLANG \
-                                                  -e LTO_CLANG_THIN \
-                                                  -e HAVE_GCC_PLUGINS
+                                                -e LTO \
+                                                -e LTO_CLANG \
+                                                -e ARCH_SUPPORTS_LTO_CLANG \
+                                                -e ARCH_SUPPORTS_LTO_CLANG_THIN \
+                                                -e HAS_LTO_CLANG \
+                                                -e LTO_CLANG_THIN \
+                                                -e HAVE_GCC_PLUGINS
     
     # Enable or disable debug settings
     [[ "${_debug}" == "y" ]] && scripts/config -e DEBUG_INFO \
-                                               -e DEBUG_INFO_BTF \
-                                               -e DEBUG_INFO_DWARF4 \
-                                               -e PAHOLE_HAS_SPLIT_BTF \
-                                               -e DEBUG_INFO_BTF_MODULES
+                                            -e DEBUG_INFO_BTF \
+                                            -e DEBUG_INFO_DWARF4 \
+                                            -e PAHOLE_HAS_SPLIT_BTF \
+                                            -e DEBUG_INFO_BTF_MODULES
     [[ "${_debug}" == "n" ]] && scripts/config -d DEBUG_INFO \
-                                               -d DEBUG_INFO_BTF \
-                                               -d DEBUG_INFO_DWARF4 \
-                                               -d PAHOLE_HAS_SPLIT_BTF \
-                                               -d DEBUG_INFO_BTF_MODULES
+                                            -d DEBUG_INFO_BTF \
+                                            -d DEBUG_INFO_DWARF4 \
+                                            -d PAHOLE_HAS_SPLIT_BTF \
+                                            -d DEBUG_INFO_BTF_MODULES
     
     # Run olddefconfig
     make ${BUILD_FLAGS[*]} olddefconfig
     diff -u $srcdir/cl-linux/config .config || :
-    
+
     # Patch with kernel_compiler_patch patches
     # This must be executed after olddefconfig
     # to allow for the next section to run.
@@ -269,19 +291,25 @@ prepare() {
     [[ -n "${_subarch}" ]] && yes "${_subarch}" | make ${BUILD_FLAGS[*]} oldconfig
     # Ask for subarch
     [[ -z "${_subarch}" ]] && make ${BUILD_FLAGS[*]} oldconfig
+
+    # Open configuration editors
+    [[ -n "$_makemenuconfig" ]] && make ${BUILD_FLAGS[*]} menuconfig
+    [[ -n "$_makexconfig" ]] && make ${BUILD_FLAGS[*]} xconfig
+    [[ -n "$_makenconfig" ]] && make ${BUILD_FLAGS[*]} nconfig
+
+    # Save configuration
+    # shellcheck disable=SC2015
+    [[ -n "${_copyfinalconfig}" ]] && cp -Tf ./.config "${startdir}/kconfig-new" || true
+}
+
+# Prepares the installation
+prepare() {
+    cd "${_src_linux}" || exit 1
+
+    apply_patches
     
-    # Optionally use the configuration of the running kernel
-    # Written originally by nous, see
-    # https://web.archive.org/web/20110711231356/https://aur.archlinux.org/packages.php?ID=40191 (package doesn't exist anymore)
-    [[ -n "${_use_current}" ]] &&
-        if [[ -s /proc/config.gz ]]; then
-            # modprobe configs
-            zcat /proc/config.gz > ./.config
-        else
-            warning "Your kernel was not compiled with IKCONFIG_PROC."
-            warning "Unable to read kernel configuration, aborting."
-            exit
-        fi
+    [[ -n "${_use_current}" ]] && copy_defconfig
+    [[ -z "${_use_current}" ]] && update_defconfig
     
     # Read and apply modprobed database
     # See https://aur.archlinux.org/packages/modprobed-db
@@ -294,21 +322,15 @@ prepare() {
     
     # Write kernel version
     make -s kernelrelease > version
-    
-    # Open configuration editors
-    [[ -n "$_makemenuconfig" ]] && make ${BUILD_FLAGS[*]} menuconfig
-    [[ -n "$_makexconfig" ]] && make ${BUILD_FLAGS[*]} xconfig
-    [[ -n "$_makenconfig" ]] && make ${BUILD_FLAGS[*]} nconfig
-
-    # Save configuration
-    [[ -n "${_copyfinalconfig}" ]] && cp -Tf ./.config "${startdir}/kconfig-new" || true
 }
 
+# Build kernel
 build() {
     cd "${_src_linux}" || exit 1
     make ${BUILD_FLAGS[*]} all
 }
 
+# Packages the kernel package
 _package() {
     pkgdesc="${pkgdesc} This package includes the kernel and compiled modules."
     depends=("coreutils" "kmod" "initramfs")
@@ -318,7 +340,7 @@ _package() {
     install=linux.install
     
     cd "${_src_linux}" || exit 1
-    local modulesdir="${pkgdir}/usr/lib/modules/$(<version)"
+    local "modulesdir=${pkgdir}/usr/lib/modules/$(<version)"
     
     # Create boot image
     # systemd expects to find the kernel there to allow hibernation
@@ -336,12 +358,13 @@ _package() {
     rm "${modulesdir}"/build
 }
 
+# Packages the headers package
 _package-headers() {
     pkgdesc="${pkgdesc} This package includes header files and scripts for building kernel modules."
     depends=("pahole")
     
     cd "${_src_linux}" || exit 1
-    local builddir="${pkgdir}/usr/lib/modules/$(<version)/build"
+    local "builddir=${pkgdir}/usr/lib/modules/$(<version)/build"
     
     install -Dt "${builddir}" -m644 .config Makefile Module.symvers System.map \
         localversion.* version vmlinux
@@ -418,8 +441,8 @@ _package-headers() {
 pkgname=("$pkgbase" "$pkgbase-headers")
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {
-    $(declare -f "_package${_p#$pkgbase}")
-    _package${_p#$pkgbase}
+    $(declare -f "_package${_p#"$pkgbase"}")
+    _package${_p#"$pkgbase"}
   }"
 done
 
@@ -432,6 +455,6 @@ validpgpkeys=(
 )
 sha256sums=("55d2c6c025ebc27810c748d66325dd5bc601e8d32f8581d9e77673529bdacb2e"
             "SKIP"
-            "4ccabe59805d7efd8165405624695255a87811cbea5c0e1d7a3981c21789b2ec"
+            "d2a794cfdb4f2979e6aec50e6a6ac3f9242a266df929a1daf923cc701cf88c67"
             "SKIP"
             "b3fd8b1c5bbd39a577afcccf6f1119fdf83f6d72119f4c0811801bdd51d1bc61")
