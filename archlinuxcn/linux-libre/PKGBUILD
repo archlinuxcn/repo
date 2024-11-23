@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=6.11.9
+pkgver=6.12.1
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -40,9 +40,9 @@ source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${_basever}-gnu/
         "http://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/patch-${_basever}-gnu-${pkgver}-gnu.bz2"{,.sign}
         'https://repo.parabola.nu/other/linux-libre/logos/logo_linux_'{clut224.ppm,vga16.ppm,mono.pbm}{,.sig}
         'config')
-sha256sums=('e77016caac51b9d26721689c2f58ae945171bccaa97a98623661c3f826e6068d'
+sha256sums=('8ca6702084d352b1f856aa4dbf14706e2432136c6c64395628f0185d899658c7'
             'SKIP'
-            'c8b8157326ba1ec0e6898fba5b61e237b6bc977605ebfc58f71c1c43da186997'
+            '73194a33ad797d079277d74dbb9ffb51c051d2cea1a8f271dba0f09c4b9aab2c'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -50,7 +50,7 @@ sha256sums=('e77016caac51b9d26721689c2f58ae945171bccaa97a98623661c3f826e6068d'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP'
-            '5f7d607d3fb184dfd999163dfb2d7dc360da0dc3412ad4673123197fa3df6150')
+            '1f2753dc0171ae54951d5350bef21da8af8ec144ad73513f4aeb9a874c257527')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
@@ -104,6 +104,7 @@ _package() {
   optdepends=(
     'wireless-regdb: to set the correct wireless channels of your country'
     'linux-firmware: firmware images needed for some devices'
+    'scx-scheds: to use sched-ext schedulers'
   )
   provides=(
     KSMBD-MODULE
