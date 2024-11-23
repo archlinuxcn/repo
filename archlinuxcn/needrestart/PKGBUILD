@@ -3,8 +3,8 @@
 pkgname=needrestart
 url=https://github.com/liske/needrestart
 pkgdesc='Restart daemons after library updates.'
-pkgver=3.7
-pkgrel=2
+pkgver=3.8
+pkgrel=1
 source=(
 	"needrestart-${pkgver}.tar.gz::https://github.com/liske/needrestart/archive/v${pkgver}.tar.gz"
 	'needrestart.hook'
@@ -45,5 +45,5 @@ package() {
 		"${pkgdir}/usr/share/libalpm/hooks/needrestart.hook"
 }
 
-sha256sums=('d801a9f9c9c2f9e10222d7c5dd068d3c9e02390db40b3944d4d0bcabc6c738ad'
+sha256sums=('42664e0b1b98fef1e5e849118b9985ac951516c4d5eb24a7da15d058da647c90'
             'e5c6696a281f5445a3b7e2b7d1055f9189a2c39d4940721aa0c2718780f15f63')
