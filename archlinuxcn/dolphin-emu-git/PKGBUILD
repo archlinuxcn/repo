@@ -9,8 +9,8 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2409.r231.g500728360c
-pkgrel=2
+pkgver=2409.r316.ge0c387416d
+pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
 arch=('x86_64' 'aarch64')
@@ -22,9 +22,9 @@ depends=(
 	'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so' 'libgl'
 	'libsfml-network.so' 'libsfml-system.so' 'libspng.so' 'libswscale.so'
 	'libusb-1.0.so' 'libx11' 'libxi' 'libxrandr' 'lz4' 'lzo' 'mbedtls2'
-	'minizip-ng' 'pugixml' 'sdl2' 'sfml' 'speexdsp' 'xz' 'zstd' 'fmt'
+	'pugixml' 'sdl2' 'sfml' 'speexdsp' 'xz' 'zstd' 'fmt'
 	# Addition dependencies to replace vendored deps
-	'cubeb' 'libxxhash.so' 'zlib-ng' 'vulkan-memory-allocator' 'cubeb'
+	'cubeb' 'libxxhash.so' 'vulkan-memory-allocator' 'minizip-ng' 
 )
 makedepends=(
 	'alsa-lib' 'cmake' 'git' 'libevdev' 'libminiupnpc.so' 'libpulse' 'libudev.so'
@@ -39,9 +39,11 @@ source=(
 	"$pkgbase-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
-	'minizip-ng.diff'
+    "$pkgbase-zlib-ng::git+https://github.com/zlib-ng/zlib-ng.git"
+    "minizip-ng.diff"
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -64,6 +66,7 @@ prepare() {
 		[mgba]='mGBA/mgba'
 		[rcheevos]='rcheevos/rcheevos'
 		[tinygltf]='tinygltf/tinygltf'
+		[zlib-ng]='zlib-ng/zlib-ng'
 	#	[vh]='Vulkan-Headers'
 #		[vma]='VulkanMemoryAllocator'
 	)
@@ -85,7 +88,7 @@ build() {
 	cd "$srcdir/$_sourcedirectory/"
 
 	# Consider symbols in dependencies of directly specified dynamic libraries as available to fix the build
-	export LDFLAGS="-Wl,--copy-dt-needed-entries"
+	export LDFLAGS="$LDFLAGS -Wl,--copy-dt-needed-entries"
 
 	# CMAKE_BUILD_TYPE - the dolphin-emu package in the repos uses 'None' for some reason, so we use it as well
 	# CMAKE_SKIP_RPATH - do not add run time path information (the package in the repos does it, presumably because of reproducible builds)
