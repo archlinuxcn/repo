@@ -1,4 +1,4 @@
-From 1dc2a239afe2ee9bc1d689f0c4e2869721a16074 Mon Sep 17 00:00:00 2001
+From 6411a85f27a5cd1b8730dbfea40368555b0769d0 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Wed, 26 Apr 2023 14:22:23 +0300
 Subject: [PATCH 1/5] AUR Pkgbuild changes
@@ -455,10 +455,10 @@ index 5c3b59a3..ed6589e0 100644
  	winebuild --$(lastword $(subst ., ,$(4))) --fake-module -E "$(basename $(4)).spec" -o "$(4).fake"
  	mkdir -p $$($(2)_LIBDIR$(3))/$(LIBDIR_WINE_$(3))
 diff --git a/proton b/proton
-index 9abb5b83..5ab09749 100755
+index 7505ea84..839e63ca 100755
 --- a/proton
 +++ b/proton
-@@ -422,7 +422,6 @@ class Proton:
+@@ -474,7 +474,6 @@ class Proton:
          self.wine_bin = self.bin_dir + "wine"
          self.wine64_bin = self.bin_dir + "wine64"
          self.wineserver_bin = self.bin_dir + "wineserver"
@@ -466,7 +466,7 @@ index 9abb5b83..5ab09749 100755
  
      def path(self, d):
          return self.base_dir + d
-@@ -1586,8 +1585,6 @@ if __name__ == "__main__":
+@@ -1644,8 +1643,6 @@ if __name__ == "__main__":
  
      g_proton = Proton(os.path.dirname(sys.argv[0]))
  
@@ -475,7 +475,7 @@ index 9abb5b83..5ab09749 100755
  
      g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
  
-@@ -1596,7 +1593,8 @@ if __name__ == "__main__":
+@@ -1654,7 +1651,8 @@ if __name__ == "__main__":
      g_session.init_wine()
  
      if g_proton.missing_default_prefix():
@@ -498,5 +498,5 @@ index beddcbbb..5404093e 100644
    "compatmanager_layer_name" "proton"
  }
 -- 
-2.46.1
+2.47.0
 

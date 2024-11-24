@@ -6,6 +6,8 @@ maintainers:
 
 build_prefix: multilib
 
+pre_build: aur_pre_build(maintainers=['loathingkernel'])
+
 post_build: aur_post_build
 
 time_limit_hours: 4
@@ -13,7 +15,6 @@ time_limit_hours: 4
 repo_depends:
   - lib32-lzo
   - mingw-w64-tools
-  - lib32-gsm
 
 update_on:
   - source: aur

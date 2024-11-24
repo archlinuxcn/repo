@@ -1,9 +1,9 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton
-_srctag=9.0-3c
+_srctag=9.0-3e
 _commit=
-pkgver=9.0.3.1
+pkgver=9.0.3.5
 _geckover=2.47.4
 _monover=9.2.0
 _xaliaver=0.4.2
@@ -39,9 +39,9 @@ depends+=(
   wayland          lib32-wayland
 )
 
-makedepends=("autoconf" "bison" "flex" "mingw-w64-gcc" "perl" "python-pip" "python-virtualenv"
+makedepends=(autoconf bison perl flex mingw-w64-gcc
   git wget rsync unzip mingw-w64-tools lld nasm
-  meson cmake fontforge  python-pefile glib2-devel
+  meson cmake fontforge afdko python-pefile glib2-devel
   glslang vulkan-headers
   clang
   giflib                lib32-giflib
@@ -131,14 +131,6 @@ EOF
 }
 
 prepare() {
-[ -d build_venv ] && rm -rf build_venv
-
-virtualenv --app-data "$srcdir"/build_venv/cache --no-wheel build_venv
-
-source build_venv/bin/activate
-
-pip install --no-cache-dir afdko
-
 
     # Provide wrappers to compiler tools
     rm -rf wrappers && mkdir wrappers
@@ -259,13 +251,13 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('37ecac911be06564785d9de4173418651ce4c5fe7e7eaca0e1f04cc1c4c989c2'
+sha256sums=('3eda5843a8fa2ff72beed26c57574092eec469953ad4f17a51bd8a9f04949719'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757'
             '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            'f0ab49114768788dac224256f1c38503c2cf06a95b8a214c5ae82698216fd398'
-            '9074aa46a99f93b0b219a81a41e983fad8cca40d52a8a2f88cb556e8ad4fb91e'
-            'bced3cd932190fdeb386d2fdf9fc2d20ddb86f0904ddf711248f7de5d7beb784'
-            '492e748a4eaa51dc1bf4f0ee295fd41a66495c5ad38f91718d4d6e0f3a79cf6d'
-            '2e0b17cbc248dbb8cbd67f7fa2d2df1de9496ee6f0eaea4954f0ad4109f36bff')
+            'd5bc7871247ce9fddefb03813b70853a79e7b340a1dbfbb2213bd8b93b5a4e62'
+            '0d5f2cc441b04928773a8dc0424cf9898e6ba4feda296566cbcf125d103a8d14'
+            'b6c3f47f6ef3055a74b838c0d372271925c607d2477eee75eda9646a18f33e7a'
+            '2912d7b587cd309cb5f063bea03bf109c7225fdcb54d7ed72c7c064007f72f48'
+            '239e4d8d462cbb0da223caa6f52d5987a5b2f4c6d7b5ddb274229f654a07b295')
