@@ -1,0 +1,31 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: iff <iff@ik.me>
+
+pkgname=pay-respects
+pkgver=0.5.14
+pkgrel=1
+pkgdesc="Terminal command suggestion, alternative to thefuck written in Rust with AI support"
+arch=('x86_64' 'aarch64')
+url="https://codeberg.org/iff/${pkgname}"
+license=('AGPL-3.0-or-later')
+makedepends=('cargo')
+optdepends=('curl: for fetching AI suggestions')
+replaces=('pay_respects')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('3491d2f691cdae82c98d3cdfb98dd473593198eb945bdf2e520c044c9cbdbedd')
+
+prepare() {
+	cd "${pkgname}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${pkgname}/"
+	cargo build --frozen --release --all-features
+}
+
+package() {
+	cd "${pkgname}/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
