@@ -2,7 +2,7 @@
 
 pkgname=v2raya
 _pkgname=v2rayA
-pkgver=2.2.6.2
+pkgver=2.2.6.3
 pkgrel=1
 pkgdesc="A web GUI client of Project V which supports VMess, VLESS, SS, SSR, Trojan and Pingtunnel protocols"
 arch=('x86_64')
@@ -14,7 +14,7 @@ backup=("etc/default/v2raya")
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "v2raya.default")
-b2sums=('38f0da5ab30b6f9c3dad5e3c9df60ecda508d1b1b1c9eb83dc7cf8167fcacbc65791086465970952d755a0cef602455c5e9e6347023ce0ca06961e9820a6d091'
+b2sums=('2b38f174b0b96c6321ee0d808f2fff6d9ecf4189befd127669d3a87c8ba6b84481e56931de645bbdf1fa2b857831199cc18b68f43e61eca4de5bf99708113685'
         '3a7be361041f2eda3fe36bb69268c316caf307bf3ec4f5d7b05bd994dd27032b2fc812d7776a669db471dda61594cc3f4fb98570e1abfe29758e1f4b8aea94b6')
 
 build() {
