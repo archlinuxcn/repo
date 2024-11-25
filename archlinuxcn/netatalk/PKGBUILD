@@ -5,14 +5,14 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.0.6
+pkgver=4.0.7
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
 
 source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
-md5sums=('67cb4e956a0674a1bd64b33c72d73920')
+md5sums=('a2079c8e4a618aa9f8fe434116494bc3')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -66,6 +66,7 @@ build() {
     -Dwith-dtrace=false \
     -Dwith-init-hooks=false \
     -Dwith-lockfile-path=/run/netatalk.pid \
+    -Dwith-manual=man_only \
     -Dwith-overwrite=true \
     -Dwith-readmes=false \
     -Dwith-spooldir=/var/spool/netatalk
@@ -75,6 +76,5 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   meson install -C build --destdir "${pkgdir}"
-  rm -rf "${pkgdir}/usr/share/doc"
 }
 
