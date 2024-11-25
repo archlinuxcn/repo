@@ -1,6 +1,6 @@
 pkgname=julia-git-modelingtoolkit-src
-pkgver=9.52.0
-_commit=dddcd2c9c568dfe22e49a8b81afda21b3bee2d58
+pkgver=9.53.0
+_commit=e3e20cfeacce1adb67c24a5240df741b813823b6
 pkgrel=1
 pkgdesc="ModelingToolkit.jl"
 url="https://github.com/SciML/ModelingToolkit.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/ModelingToolkit.jl.git#commit=$_commit")
-sha256sums=('81eabbe27582ea585aa2f115d73d110b4528aca1be09572a0f728284350c3dc2')
+sha256sums=('6ae4dc8cbf932f4fba1309b64bedefc75f238dc9918d723f18b7cf2133b65c52')
 
 package() {
   cd ModelingToolkit.jl
