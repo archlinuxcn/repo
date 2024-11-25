@@ -1,8 +1,8 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 
 pkgname=dae
-pkgver=0.9.0rc1
-pkgrel=2
+pkgver=0.9.0rc2
+pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=('x86_64' 'aarch64')
 url="https://github.com/daeuniverse/${pkgname}"
@@ -16,7 +16,7 @@ makedepends=('clang' 'go')
 backup=("etc/${pkgname}/config.${pkgname}")
 source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${pkgname}-full-src.zip")
 install="${pkgname}.install"
-sha256sums=('f96455861e8dcdf5e05736a68ab900d1195f35a4836b32dfa1cd2eced0990155')
+sha256sums=('11b5ed23b04c8fe126d9fbba67c7ea4cb5d468d833166113621297d5fef0640d')
 
 build() {
 	export CFLAGS="-fno-stack-protector"
