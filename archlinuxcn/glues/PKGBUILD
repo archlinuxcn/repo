@@ -1,0 +1,36 @@
+# Maintainer: orhun <orhunparmaksiz@gmail.com>
+# https://github.com/orhun/pkgbuilds
+
+pkgname=glues
+pkgver=0.5.1
+pkgrel=1
+pkgdesc="Vim-inspired TUI note-taking app with Git, MongoDB support"
+arch=('x86_64')
+url="https://github.com/gluesql/glues"
+license=('Apache-2.0')
+depends=("gcc-libs" "glibc")
+makedepends=('cargo')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha512sums=('84d1467c47fcb022e3bdd01e9287d57ea74ecd004c559994ef0d236fcaf8495a0c4e186497042ff5ce663099f2b651bf99bdc0fd1b30aeaf4c171cbcef5c3e00')
+options=('!lto')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  cargo build --release --frozen
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  cargo test --frozen
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm 755 "target/release/$pkgname" -t "$pkgdir/usr/bin"
+  install -Dm 644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}
