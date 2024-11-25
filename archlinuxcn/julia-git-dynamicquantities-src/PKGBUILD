@@ -1,6 +1,6 @@
 pkgname=julia-git-dynamicquantities-src
-pkgver=1.3.0
-_commit=8b1eb461ff8435155646105dad48332ccd156122
+pkgver=1.4.0
+_commit=9625403f76385603a3acd0fa1119fada3912a5ba
 pkgrel=1
 pkgdesc="DynamicQuantities.jl"
 url="https://github.com/SymbolicML/DynamicQuantities.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SymbolicML/DynamicQuantities.jl.git#commit=$_commit")
-sha256sums=('373370b98c6058fa9a6c046c0e65871c44afca45bb7bde89136674c0c5126761')
+sha256sums=('abf538d5e406380ef4e02ea2544daf0dcebb34069dea323c3ff637304e5e316a')
 
 package() {
   cd DynamicQuantities.jl
