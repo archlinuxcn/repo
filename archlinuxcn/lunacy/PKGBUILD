@@ -6,7 +6,7 @@
 # https://github.com/icons8/lunacy-docs/issues/84#issuecomment-2302582626
 
 pkgname=lunacy
-pkgver=10.6
+pkgver=10.7.0.1613
 pkgrel=1
 pkgdesc="Free design software that keeps your flow with AI tools and built-in graphics"
 arch=('x86_64')
@@ -19,7 +19,7 @@ source=(mime.xml)
 source_x86_64=("lunacy_x86_64_${pkgver}.deb::https://lcdn.icons8.com/setup/Lunacy_${pkgver}.deb")
 
 sha256sums=('be1683401bdd1d39df283e8bdceb01704566a753fef3e4da7717827e8ebe2c55')
-sha256sums_x86_64=('0e6285cb423c8a25cc96af9722a2b2c477460ada67714a669946f0a6e1d83014')
+sha256sums_x86_64=('14b985b0cc5e560463a9e5581176c905553ce5bbba5a0f2b03a7a2b21048b444')
 
 package() {
   bsdtar -xf data.tar.xz -C "$pkgdir/"
