@@ -3,8 +3,8 @@
 # Contributor: Petr Mrázek <petr@mojang.com>
 
 pkgname=minecraft-launcher
-pkgver=1.0.1221
-pkgrel=3
+pkgver=2.1.3
+pkgrel=1
 epoch=1
 pkgdesc="Official Minecraft Launcher"
 arch=('x86_64')
@@ -15,11 +15,11 @@ optdepends=('flite: narrator support'
             'org.freedesktop.secrets: persistent login support')
 conflicts=('minecraft-launcher-beta')
 provides=('minecraft-launcher-beta')
-source=("https://launcher.mojang.com/download/linux/x86_64/minecraft-launcher_${pkgver}.tar.gz"
+source=("https://launcher.mojang.com/download/Minecraft.tar.gz"
         "minecraft-launcher.desktop"
         "https://launcher.mojang.com/download/minecraft-launcher.svg")
 
-sha256sums=('cd9f0b44fc9cec42829cb2e71145ee599f3d34c7715b55963514d0a8d36214ab'
+sha256sums=('695269281547bbbcf47fe74633027a0e4ddc13a61060c686a7217e85d314e45e'
             '431040831069a1ea867cb7c6f708e3c8f5788fb3d3e41d068f8afbef60cfafbd'
             '35c2bcaeb09fa4b8864e9422fd66bf60847706f8b4400ec4a66ba6436b101f71')
 
