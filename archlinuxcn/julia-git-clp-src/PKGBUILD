@@ -1,6 +1,6 @@
 pkgname=julia-git-clp-src
-pkgver=1.1.0
-_commit=ddd60c5caf39d268091c8de1eaf98e4a5d7fd429
+pkgver=1.2.0
+_commit=ef11e6062c11a7d45ee09bec0741a71c6fe753dc
 pkgrel=1
 pkgdesc="Clp.jl"
 url="https://github.com/jump-dev/Clp.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/Clp.jl.git#commit=$_commit")
-sha256sums=('3db174f7cb524d2e811fd0ab5ee82e643f55bead6c20e18bc0de87b0c9ece151')
+sha256sums=('11713c0542d34d611152d6215716e43114e9b7907bc6c9b9c84ee2fee28234fb')
 
 package() {
   cd Clp.jl
