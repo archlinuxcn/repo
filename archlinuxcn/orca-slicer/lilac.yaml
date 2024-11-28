@@ -7,6 +7,8 @@ pre_build_script: |
   aur_pre_build(maintainers=['c2h5oh'])
 post_build_script: |
   aur_post_build()
+repo_depends:
+  - ttf-harmonyos-sans
 
 update_on:
   - source: aur
