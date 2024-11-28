@@ -3,7 +3,7 @@
 _CUDA_ARCH_LIST="60;61;62;70;72;75;80;86;89;90"
 pkgname=python-nvidia-dali
 _pkgname=dali
-pkgver=1.43.0
+pkgver=1.44.0
 pkgrel=1
 pkgdesc='A library containing both highly optimized building blocks and an execution engine for data pre-processing in deep learning applications'
 arch=('x86_64')
@@ -46,7 +46,7 @@ optdepends=(
 options=(!emptydirs !lto)
 source=("${pkgname}::git+https://github.com/NVIDIA/DALI.git#tag=v${pkgver}"
 )
-sha512sums=('273cb889fa87e675150f62aebb054d8fb6f42a77a2aee611e1ebcb20d3d35dec3d17949dbc4fce40430d7b62969f5f14c79e5dd228165260ca170b51790642a1')
+sha512sums=('3394cf5e9aa30755068605672b87927e852f32628786f6f35e431c75159ecc3dcc54549cfe214516f6527af9359a50274d39fc792ea80924cebe3d31508ccc4f')
 
 prepare() {
   cd "${srcdir}/${pkgname}"
