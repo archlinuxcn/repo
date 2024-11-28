@@ -1,6 +1,8 @@
 maintainers:
   - github: poscat0x04
 
+build_prefix: archlinuxcn-x86_64
+
 pre_build_script: |
   aur_pre_build(maintainers=['c2h5oh'])
 post_build_script: |
