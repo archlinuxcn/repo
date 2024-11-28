@@ -42,11 +42,11 @@ for _lang in "${_languages[@]}"; do
   _locale=${_lang}
   _pkgname=firefox-nightly-${_locale,,}
   _src="${_name}-${_version}.${_lang}.linux"
-  _filename="${_filename_prefix}${_src}-x86_64.tar.bz2"
+  _filename="${_filename_prefix}${_src}-x86_64.tar.xz"
 
   pkgname+=($_pkgname)
-  source+=("${_filename}"::"${_url}/${_src}-x86_64.tar.bz2"
-           "${_filename}.asc"::"${_url}/${_src}-x86_64.tar.bz2.asc")
+  source+=("${_filename}"::"${_url}/${_src}-x86_64.tar.xz"
+           "${_filename}.asc"::"${_url}/${_src}-x86_64.tar.xz.asc")
   eval "package_$_pkgname() {
     msg2 'Removing old firefox directory...'
     rm -rf firefox
