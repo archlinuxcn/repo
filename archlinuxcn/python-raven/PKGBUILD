@@ -1,25 +1,29 @@
 # Maintainer: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
 
+_pyname=raven
 pkgname=python-raven
 pkgver=6.10.0
 pkgrel=1
-pkgdesc="Python client for Sentry"
-arch=(any)
+pkgdesc="A legacy Python client for Sentry"
+arch=('any')
 url="https://github.com/getsentry/raven-python"
-license=('BSD')
+license=('BSD-3-Clause')
 depends=('python')
-makedepends=('python-setuptools')
-source=("https://pypi.python.org/packages/source/r/raven/raven-$pkgver.tar.gz")
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+)
+source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/${_pyname}/${_pyname}-${pkgver}.tar.gz")
+sha256sums=('3fa6de6efa2493a7c827472e984ce9b020797d0da16f1db67197bcc23c8fae54')
 
 build() {
-    cd "$srcdir/raven-$pkgver"
-    python setup.py build
+    cd "${srcdir}/${_pyname}-${pkgver}"
+    python -m build --wheel --no-isolation
 }
 
 package() {
-    cd "$srcdir/raven-$pkgver"
-    python setup.py install -O1 --skip-build --root="$pkgdir"
-    install -Dm0644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    cd "${srcdir}/${_pyname}-${pkgver}"
+    install -Dm0644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }
-
-sha256sums=('3fa6de6efa2493a7c827472e984ce9b020797d0da16f1db67197bcc23c8fae54')
