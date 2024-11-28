@@ -2,7 +2,7 @@
 
 pkgname=cemu
 _major=2
-_minor=3
+_minor=4
 _patch=0
 pkgver=$_major.$_minor
 cemu_tag="v$pkgver"
@@ -44,7 +44,7 @@ source=(
 	git+https://github.com/arsenm/sanitizers-cmake.git#commit=aab6948fa863bc1cbe5d0850bc46b9ef02ed4c1a
 	git+https://github.com/google/googletest.git#commit=800f5422ac9d9e0ad59cd860a2ef3a679588acb4
 )
-sha512sums=('ac76aeffb6c5b152a024a22164af6cc88788ecb50a8f012fbfa43b48fa24122e1d9e9cf69a4b132fa6fbf13ff80c4d59e343417768aa129c1eb40f17f5cd8853'
+sha512sums=('ecf9de9425c45b870273955dc311f30aab2eeb60a3e2c29a8f5f525fd3540f51eceb29bbe688726082d02d83eb6340b97356301a987f6f198aa97bcd0133dba4'
             '770a67624181e4c7f05c88c3f1a10dc14012d4967d5bf95f48af1a5bd7a90dd5d8242a868dbe74d8beb043365eababd0d62768b74ccc9867c0c4fd1883849828'
             '0c3d10999772aa92e97aa3082f10e6ebba93f2a738e402f9833f350eb525b71afca178bf834db3bbe965eb0073f249f68b5c8124176add0af997f1c897282803'
             '6ac14841ef983fe5202b23ea5c647959a04b9815bb187c0a0141fb14fb3e2edf8ce14b0c43474774d5ff779284f365981e6d45cc011612e5cd8fb429b3accf5e'
