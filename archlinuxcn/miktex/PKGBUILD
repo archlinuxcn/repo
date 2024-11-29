@@ -24,11 +24,13 @@ prepare() {
     cp cmake/modules/FindPOPPLER_QT5.cmake cmake/modules/FindPOPPLER_QT6.cmake
     sed -i 's/QT5/QT6/g' cmake/modules/FindPOPPLER_QT6.cmake
     sed -i 's/qt5/qt6/g' cmake/modules/FindPOPPLER_QT6.cmake
+    sed -i 's|tm/packages/|tm/packages|g' CMakeLists.txt
 }
 build() {
     cd "$srcdir/$pkgname-$pkgver"
     [ -d build ] || mkdir build
     cd build
+    export MIKTEX_REPOSITORY=https://mirrors.aliyun.com/CTAN/systems/win32/miktex/tm/packages/
     cmake -DCMAKE_INSTALL_PREFIX=/opt/miktex -DWITH_UI_QT=ON -DUSE_SYSTEM_POPPLER=TRUE -DUSE_SYSTEM_POPPLER_QT=TRUE ..
     make -j2
 }
