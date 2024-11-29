@@ -5,6 +5,9 @@ pre_build_script: |
   aur_pre_build(maintainers=['nomisge'])
 
   for line in edit_file('PKGBUILD'):
+    if line.startswith('makedepends=()'):
+      print('makedepends=(git)')
+
     if not line.startswith('groups='):
       print(line)
 post_build_script: |
