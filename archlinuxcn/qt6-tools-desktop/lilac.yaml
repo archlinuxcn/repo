@@ -6,13 +6,11 @@ pre_build_script: |
 
   for line in edit_file('PKGBUILD'):
     if line.startswith('makedepends=()'):
-      print('makedepends=(git)')
+      line = 'makedepends=(git)'
+      print(line)
 
     if not line.startswith('groups='):
       print(line)
-
-  with open('PKGBUILD') as f:
-    print(f.read())
 post_build_script: |
   aur_post_build()
 
