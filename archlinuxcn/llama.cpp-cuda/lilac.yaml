@@ -1,6 +1,8 @@
 maintainers:
   - github: poscat0x04
 
+build_prefix: archlinuxcn-x86_64
+
 pre_build_script: |
   aur_pre_build(maintainers=['txtsd'])
 
@@ -11,6 +13,9 @@ pre_build_script: |
     print(line)
 post_build_script: |
   aur_post_build()
+
+repo_depends:
+  - python-sentencepiece
 
 update_on:
   - source: aur
