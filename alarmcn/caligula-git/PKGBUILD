@@ -24,20 +24,20 @@ pkgver() {
 prepare() {
 	cd "${_pkgname}/"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')" # --locked
 }
 
 build() {
 	cd "${_pkgname}/"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
-	RUSTFLAGS="--cfg tracing_unstable" cargo build --frozen --release --all-features
+	RUSTFLAGS="--cfg tracing_unstable" cargo build --release --all-features # --frozen
 }
 
 check() {
 	cd "${_pkgname}/"
 	export RUSTUP_TOOLCHAIN=stable
-	RUSTFLAGS="--cfg tracing_unstable" cargo test --frozen --all-features
+	RUSTFLAGS="--cfg tracing_unstable" cargo test --all-features # --frozen
 }
 
 package() {
