@@ -1,0 +1,22 @@
+From 5374679e4bb26e115b9a9b4a2d8ef4253d7a8bf3 Mon Sep 17 00:00:00 2001
+From: Zachary Snow <zach@zachjs.com>
+Date: Sun, 29 Sep 2024 15:47:11 -0400
+Subject: [PATCH] allow building with happy v2
+
+---
+ sv2v.cabal | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sv2v.cabal b/sv2v.cabal
+index 3016285..59634e4 100644
+--- a/sv2v.cabal
++++ b/sv2v.cabal
+@@ -25,7 +25,7 @@ executable sv2v
+   hs-source-dirs: src
+   build-tool-depends:
+     , alex:alex >= 3.2 && < 4
+-    , happy:happy >= 1.19 && < 2
++    , happy:happy >= 1.19 && < 3
+   build-depends:
+     , array
+     , base
