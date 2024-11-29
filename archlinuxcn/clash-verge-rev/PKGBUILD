@@ -30,7 +30,6 @@ build() {
 package() {
 	cd "${pkgname}-${pkgver}/"
 
-	local deb_prefix="Clash\ Verge"
-	tar -xpf src-tauri/target/release/bundle/deb/${deb_prefix}_${pkgver}_*/data.tar.gz -C "${pkgdir}"
+	tar -xpf src-tauri/target/release/bundle/deb/Clash\ Verge_${pkgver}_*/data.tar.gz -C "${pkgdir}"
 	chown -R root:root ${pkgdir}
 }
