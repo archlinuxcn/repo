@@ -1,0 +1,307 @@
+From 114d4ee7dcab35a53c09af76f3552a67fca56907 Mon Sep 17 00:00:00 2001
+From: gigas002 <gigas002@pm.me>
+Date: Tue, 23 Jul 2024 02:17:23 +0000
+Subject: [PATCH] Kf6 fixes
+
+---
+ CMakeLists.txt                           | 16 ++++------------
+ plugins/player_mpv/CMakeLists.txt        |  2 +-
+ plugins/player_mpv/src/qthelper.hpp      |  6 +-----
+ qimgv/CMakeLists.txt                     | 10 +---------
+ qimgv/gui/folderview/foldergridview.cpp  |  4 ++--
+ qimgv/gui/folderview/treeviewcustom.cpp  |  2 +-
+ qimgv/gui/mainwindow.cpp                 | 24 ++++++++++++++++++------
+ qimgv/gui/mainwindow.h                   |  5 +----
+ qimgv/gui/overlays/mapoverlay.cpp        |  4 ++--
+ qimgv/gui/overlays/renameoverlay.cpp     |  2 +-
+ qimgv/gui/panels/mainpanel/mainpanel.cpp |  2 ++
+ qimgv/main.cpp                           | 12 ------------
+ qimgv/tests/CMakeLists.txt               |  4 ++--
+ 13 files changed, 36 insertions(+), 57 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf7f4215..edae12d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -34,19 +34,11 @@ if(UNIX AND NOT APPLE)
+ endif()
+ 
+ # FIND PACKAGES
+-find_package(Qt5 COMPONENTS Widgets QUIET)
+-if(Qt5_FOUND)
+-    find_package(QT NAMES Qt5 REQUIRED COMPONENTS Core Widgets Svg PrintSupport)
+-else()
+-    find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Widgets Svg PrintSupport OpenGLWidgets)
+-endif()
++find_package(Qt6 COMPONENTS Widgets QUIET)
++find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Widgets Svg PrintSupport OpenGLWidgets)
+ 
+ message(STATUS "Qt Version: " ${QT_VERSION})
+-if(QT_VERSION_MAJOR GREATER_EQUAL 6)
+-    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Svg PrintSupport OpenGLWidgets)
+-else()
+-    find_package(Qt${QT_VERSION_MAJOR} 5.12 REQUIRED COMPONENTS Core Widgets Svg PrintSupport)
+-endif()
++find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets Svg PrintSupport OpenGLWidgets)
+ 
+ if(EXIV2)
+     find_package(PkgConfig REQUIRED)
+@@ -54,7 +46,7 @@ if(EXIV2)
+ endif()
+ 
+ if(KDE_SUPPORT)
+-    find_package(KF5WindowSystem REQUIRED)
++    find_package(KF6WindowSystem REQUIRED)
+ endif()
+ 
+ if(OPENCV_SUPPORT)
+diff --git a/plugins/player_mpv/CMakeLists.txt b/plugins/player_mpv/CMakeLists.txt
+index 32b229cf..445560bc 100644
+--- a/plugins/player_mpv/CMakeLists.txt
++++ b/plugins/player_mpv/CMakeLists.txt
+@@ -8,7 +8,7 @@ set(CMAKE_AUTOMOC ON)
+ # only export CreatePlayerWidget function
+ ADD_DEFINITIONS(-DQIMGV_PLAYER_MPV_LIBRARY)
+ 
+-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core Widgets)
++find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core Widgets)
+ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Widgets)
+ 
+ if(NOT WIN32)
+diff --git a/plugins/player_mpv/src/qthelper.hpp b/plugins/player_mpv/src/qthelper.hpp
+index fb30e2fc..b298c66a 100644
+--- a/plugins/player_mpv/src/qthelper.hpp
++++ b/plugins/player_mpv/src/qthelper.hpp
+@@ -113,11 +113,7 @@ struct node_builder {
+         return r;
+     }
+     bool test_type(const QVariant &v, QMetaType::Type t) {
+-        // The Qt docs say: "Although this function is declared as returning
+-        // "QVariant::Type(obsolete), the return value should be interpreted
+-        // as QMetaType::Type."
+-        // So a cast really seems to be needed to avoid warnings (urgh).
+-        return static_cast<int>(v.type()) == static_cast<int>(t);
++        return v.userType() == static_cast<int>(t);
+     }
+     void set(mpv_node *dst, const QVariant &src) {
+         if (test_type(src, QMetaType::QString)) {
+diff --git a/qimgv/CMakeLists.txt b/qimgv/CMakeLists.txt
+index fff71130..b92d3f59 100644
+--- a/qimgv/CMakeLists.txt
++++ b/qimgv/CMakeLists.txt
+@@ -24,14 +24,6 @@ set(TS_FILES
+ list(TRANSFORM TS_FILES PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/res/translations/)
+ set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION ${PROJECT_BINARY_DIR}/qimgv/translations)
+ 
+-# 1. Create 'qimgv_lupdate' target to update .ts files (needs to be called manually)
+-# 2. Compile .ts > .qm
+-if(${QT_VERSION_MAJOR} EQUAL 5)
+-    add_custom_target(qimgv_lupdate COMMAND ${Qt5_LUPDATE_EXECUTABLE} -recursive
+-        ${CMAKE_CURRENT_SOURCE_DIR} -ts ${TS_FILES})
+-    qt5_add_translation(QM_FILES ${TS_FILES})
+-endif()
+-
+ # ADD EXECUTABLE
+ add_executable(qimgv
+     appversion.cpp
+@@ -80,7 +72,7 @@ if(EXIV2)
+     target_compile_definitions(qimgv PRIVATE USE_EXIV2)
+ endif()
+ if(KDE_SUPPORT)
+-    target_link_libraries(qimgv PRIVATE KF5::WindowSystem)
++    target_link_libraries(qimgv PRIVATE KF6::WindowSystem)
+     target_compile_definitions(qimgv PRIVATE USE_KDE_BLUR)
+ endif()
+ if(VIDEO_SUPPORT)
+diff --git a/qimgv/gui/folderview/foldergridview.cpp b/qimgv/gui/folderview/foldergridview.cpp
+index 3ac816ee..5f7ba949 100644
+--- a/qimgv/gui/folderview/foldergridview.cpp
++++ b/qimgv/gui/folderview/foldergridview.cpp
+@@ -29,7 +29,7 @@ FolderGridView::FolderGridView(QWidget *parent)
+ 
+ void FolderGridView::dropEvent(QDropEvent *event) {
+     event->accept();
+-    ThumbnailWidget *item = dynamic_cast<ThumbnailWidget*>(itemAt(event->pos()));
++    ThumbnailWidget *item = dynamic_cast<ThumbnailWidget*>(itemAt(event->position().toPoint()));
+     int index = -1;
+     if(item) {
+         index = thumbnails.indexOf(item);
+@@ -44,7 +44,7 @@ void FolderGridView::dragEnterEvent(QDragEnterEvent *event) {
+ 
+ void FolderGridView::dragMoveEvent(QDragMoveEvent *event) {
+     event->accept();
+-    ThumbnailWidget *item = dynamic_cast<ThumbnailWidget*>(itemAt(event->pos()));
++    ThumbnailWidget *item = dynamic_cast<ThumbnailWidget*>(itemAt(event->position().toPoint()));
+     int index = -1;
+     if(item)
+         index = thumbnails.indexOf(item);
+diff --git a/qimgv/gui/folderview/treeviewcustom.cpp b/qimgv/gui/folderview/treeviewcustom.cpp
+index 454263d2..85250858 100644
+--- a/qimgv/gui/folderview/treeviewcustom.cpp
++++ b/qimgv/gui/folderview/treeviewcustom.cpp
+@@ -17,7 +17,7 @@ TreeViewCustom::TreeViewCustom(QWidget *parent) : QTreeView(parent) {
+ }
+ 
+ void TreeViewCustom::dropEvent(QDropEvent *event) {
+-    QModelIndex dropIndex = indexAt(event->pos());
++    QModelIndex dropIndex = indexAt(event->position().toPoint());
+     if(dropIndex.isValid()) {
+         QList<QString> paths;
+         // TODO: QUrl gave me some issues previosly, test
+diff --git a/qimgv/gui/mainwindow.cpp b/qimgv/gui/mainwindow.cpp
+index 9f8e0445..0933e110 100644
+--- a/qimgv/gui/mainwindow.cpp
++++ b/qimgv/gui/mainwindow.cpp
+@@ -466,7 +466,14 @@ void MW::mouseReleaseEvent(QMouseEvent *event) {
+ 
+ void MW::mouseDoubleClickEvent(QMouseEvent *event) {
+     event->accept();
+-    QMouseEvent *fakePressEvent = new QMouseEvent(QEvent::MouseButtonPress, event->pos(), event->button(), event->buttons(), event->modifiers());
++    QMouseEvent *fakePressEvent = new QMouseEvent(
++        QEvent::MouseButtonPress,
++        event->position(),
++        event->globalPosition(),
++        event->button(),
++        event->buttons(),
++        event->modifiers()
++    );
+     actionManager->processEvent(fakePressEvent);
+     actionManager->processEvent(event);
+ }
+@@ -919,16 +926,21 @@ void MW::readSettings() {
+ // todo: remove/rename?
+ void MW::applyWindowedBackground() {
+ #ifdef USE_KDE_BLUR
+-    if(settings->backgroundOpacity() == 1.0)
+-        KWindowEffects::enableBlurBehind(winId(), false);
+-    else
+-        KWindowEffects::enableBlurBehind(winId(), settings->blurBackground());
++    QWindow* window = this->windowHandle();
++    if(window) {
++        if(settings->backgroundOpacity() == 1.0)
++            KWindowEffects::enableBlurBehind(window, false);
++        else
++            KWindowEffects::enableBlurBehind(window, settings->blurBackground());
++    }
+ #endif
+ }
+ 
+ void MW::applyFullscreenBackground() {
+ #ifdef USE_KDE_BLUR
+-    KWindowEffects::enableBlurBehind(winId(), false);
++    QWindow* window = this->windowHandle();
++    if(window)
++        KWindowEffects::enableBlurBehind(window, false);
+ #endif
+ }
+ 
+diff --git a/qimgv/gui/mainwindow.h b/qimgv/gui/mainwindow.h
+index 42422480..dee3c893 100644
+--- a/qimgv/gui/mainwindow.h
++++ b/qimgv/gui/mainwindow.h
+@@ -8,10 +8,7 @@
+ #include <QFileDialog>
+ #include <QMimeData>
+ #include <QImageWriter>
+-
+-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+-#include <QDesktopWidget>
+-#endif
++#include <QWindow>
+ 
+ #include "gui/customwidgets/floatingwidgetcontainer.h"
+ #include "gui/viewers/viewerwidget.h"
+diff --git a/qimgv/gui/overlays/mapoverlay.cpp b/qimgv/gui/overlays/mapoverlay.cpp
+index 1e6487bc..4efb229a 100644
+--- a/qimgv/gui/overlays/mapoverlay.cpp
++++ b/qimgv/gui/overlays/mapoverlay.cpp
+@@ -257,7 +257,7 @@ void MapOverlay::updateMap(const QRectF &drawingRect) {
+ void MapOverlay::mousePressEvent(QMouseEvent *event) {
+     QWidget::mousePressEvent(event);
+     setCursor(Qt::ClosedHandCursor);
+-    d->moveMainImage(event->x(), event->y());
++    d->moveMainImage(event->position().x(), event->position().y());
+     event->accept();
+ }
+ 
+@@ -265,7 +265,7 @@ void MapOverlay::mouseMoveEvent(QMouseEvent *event) {
+     QWidget::mouseMoveEvent(event);
+ 
+     if(event->buttons() & Qt::LeftButton) {
+-        d->moveMainImage(event->x(), event->y());
++        d->moveMainImage(event->position().x(), event->position().y());
+     }
+     event->accept();
+ }
+diff --git a/qimgv/gui/overlays/renameoverlay.cpp b/qimgv/gui/overlays/renameoverlay.cpp
+index 2af710ba..7b1d4ec3 100644
+--- a/qimgv/gui/overlays/renameoverlay.cpp
++++ b/qimgv/gui/overlays/renameoverlay.cpp
+@@ -60,7 +60,7 @@ void RenameOverlay::recalculateGeometry() {
+ void RenameOverlay::selectName() {
+     int end = ui->fileName->text().lastIndexOf(".");
+     if(end < 0)
+-        end = ui->fileName->text().count();
++        end = ui->fileName->text().size();
+     ui->fileName->setSelection(0, end);
+ }
+ 
+diff --git a/qimgv/gui/panels/mainpanel/mainpanel.cpp b/qimgv/gui/panels/mainpanel/mainpanel.cpp
+index ccfacdb1..5862cee3 100644
+--- a/qimgv/gui/panels/mainpanel/mainpanel.cpp
++++ b/qimgv/gui/panels/mainpanel/mainpanel.cpp
+@@ -108,6 +108,8 @@ QSize MainPanel::sizeHint() const {
+         case PANEL_LEFT:
+         case PANEL_RIGHT:
+             return QSize(thumbnailStrip->itemSize().width() + 16, height());
++        default:
++            return QSize(0, 0);
+     }
+ }
+ 
+diff --git a/qimgv/main.cpp b/qimgv/main.cpp
+index af8ec934..696f1c79 100644
+--- a/qimgv/main.cpp
++++ b/qimgv/main.cpp
+@@ -50,12 +50,6 @@ int main(int argc, char *argv[]) {
+     // do we still need this?
+     qputenv("QT_AUTO_SCREEN_SCALE_FACTOR","0");
+ 
+-    // some qt5 hidpi vars
+-#if (QT_VERSION_MAJOR == 5)
+-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+-    QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+-#endif
+-
+     // Qt6 hidpi rendering on windows still has artifacts
+     // This disables it for scale factors < 1.75
+     // In this case only fonts are scaled
+@@ -97,12 +91,6 @@ int main(int argc, char *argv[]) {
+     mallopt(M_MMAP_THRESHOLD, 64000);
+ #endif
+ 
+-#ifdef USE_EXIV2
+-#if EXIV2_TEST_VERSION(0,27,4)
+-    Exiv2::enableBMFF(true);
+-#endif
+-#endif
+-
+     // use custom types in signals
+     qRegisterMetaType<ScalerRequest>("ScalerRequest");
+     qRegisterMetaType<Script>("Script");
+diff --git a/qimgv/tests/CMakeLists.txt b/qimgv/tests/CMakeLists.txt
+index 60b626c9..adaf9692 100644
+--- a/qimgv/tests/CMakeLists.txt
++++ b/qimgv/tests/CMakeLists.txt
+@@ -1,9 +1,9 @@
+ enable_testing()
+-find_package(Qt5 REQUIRED COMPONENTS Test Widgets)
++find_package(Qt6 REQUIRED COMPONENTS Test Widgets)
+ 
+ include_directories(${CMAKE_SOURCE_DIR})
+ 
+ add_executable(unit_tests test_mapoverlay.cpp)
+-target_link_libraries(unit_tests PRIVATE Qt5::Test Qt5::Widgets)
++target_link_libraries(unit_tests PRIVATE Qt6::Test Qt6::Widgets)
+ 
+ add_test(NAME QUI_TEST COMMAND unit_tests)
