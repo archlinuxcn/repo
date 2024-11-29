@@ -40,9 +40,9 @@ if [ "${_compiler}" = "clang" ]; then
 fi
 
 # Choose between the 4 main configs for stable branch. Default x86-64-v1 which use CONFIG_GENERIC_CPU2:
-# Possible values: config_x86-64-v2 (default) / config_x86-64-v3 / config_x86-64-v4
+# Possible values: config_x86-64-v1 / config_x86-64-v2 (default) / config_x86-64-v3
 # This will be overwritten by selecting any option in microarchitecture script
-# Source files: https://github.com/xanmod/linux/tree/5.17/CONFIGS/xanmod/gcc
+# Source files: https://gitlab.com/xanmod/linux/-/tree/6.12/CONFIGS/xanmod/gcc?ref_type=heads
 if [ -z ${_config+x} ]; then
   _config=config_x86-64-v2
 fi
@@ -75,7 +75,7 @@ pkgbase=linux-xanmod-edge
 _major=6.12
 pkgver=${_major}.1
 _branch=6.x
-xanmod=1
+xanmod=2
 _revision=
 _sf_branch=edge
 pkgrel=${xanmod}
@@ -117,7 +117,7 @@ done
 
 sha256sums=('b1a2562be56e42afb3f8489d4c2a7ac472ac23098f1ef1c1e40da601f54625eb'
             'SKIP'
-            '21f486f5ca92eead76083b1b8ba2e7464a3aec36e097c0039b53d564486aa632'
+            '9ccdd5ccff9de04ddfd0d49d24f91b958d0ca198b6d4eb726399b16a12814944'
             'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
@@ -139,6 +139,7 @@ prepare() {
   for src in "${source[@]}"; do
     src="${src%%::*}"
     src="${src##*/}"
+    src="${src%.zst}"
     [[ $src = *.patch ]] || continue
     msg2 "Applying patch $src..."
     patch -Np1 < "../$src"
@@ -255,8 +256,9 @@ _package() {
     kmod
   )
   optdepends=(
-    'wireless-regdb: to set the correct wireless channels of your country'
     'linux-firmware: firmware images needed for some devices'
+    'scx-scheds: to use sched-ext schedulers'
+    'wireless-regdb: to set the correct wireless channels of your country'
   )
   provides=(
     KSMBD-MODULE
@@ -301,6 +303,7 @@ _package-headers() {
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
+  ln -srt "$builddir" "$builddir/scripts/gdb/vmlinux-gdb.py"
 
   # required when STACK_VALIDATION is enabled
   install -Dt "$builddir/tools/objtool" tools/objtool/objtool
