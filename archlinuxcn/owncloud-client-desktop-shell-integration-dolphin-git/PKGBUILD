@@ -8,7 +8,7 @@ pkgdesc='ownCloud Dolphin integration'
 url="https://github.com/owncloud/client-desktop-shell-integration-dolphin"
 license=('GPL-2.0')
 arch=('any')
-depends=('owncloud-client')
+depends=('owncloud-client' 'kio' 'kcoreaddons' 'qt6-base')
 makedepends=('git' 'cmake' 'extra-cmake-modules>=5.52.0')
 source=("${_pkgname}::git+${url}.git"
         "dependency.patch")
