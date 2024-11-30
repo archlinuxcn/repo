@@ -6,21 +6,30 @@ pkgname=python-${_module}
 pkgver='1.1.5'
 pkgrel=1
 pkgdesc="Optimize JPEGs losslessly using MozJPEG"
+arch=('x86_64')
 url="https://github.com/wanadev/mozjpeg-lossless-optimization"
-depends=('python>=3')
-makedepends=("cmake" "gcc" "python-build" "python-installer" "python-pip" "python-setuptools")
-license=('BSD')
-arch=(x86_64 armv7h aarch64 riscv32 riscv64)
-source=("https://files.pythonhosted.org/packages/source/${_module::1}/$_module/$_module_underscore-$pkgver.tar.gz")
+license=('BSD-3-Clause')
+depends=(
+    'glibc'
+    'python'
+    'python-cffi'
+)
+makedepends=(
+    'cmake'
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+)
+source=("https://files.pythonhosted.org/packages/source/${_module::1}/${_module}/${_module_underscore}-${pkgver}.tar.gz")
 sha256sums=('a78cb0fd361b01c26bb5f1d986ef4fa4026877b1a95925facaeec997ff250288')
 
 build() {
-  cd "${srcdir}/${_module_underscore}-${pkgver}"
-  python -m build --wheel --no-isolation
+    cd "${srcdir}/${_module_underscore}-${pkgver}"
+    python -m build --wheel --no-isolation
 }
 
 package() {
-  depends+=()
-  cd "${srcdir}/${_module_underscore}-${pkgver}"
-  python -m installer --destdir="${pkgdir}" dist/*.whl
+    cd "${srcdir}/${_module_underscore}-${pkgver}"
+    install -Dm0644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }

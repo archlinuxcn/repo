@@ -1,11 +1,12 @@
 build_prefix: extra-x86_64
-pre_build_script: |
-  aur_pre_build(maintainers=['lihe07'])
-  add_makedepends(['python-setuptools'])
-post_build: aur_post_build
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
 update_on:
-  - source: aur
-    aur: python-mozjpeg-lossless-optimization
+  - source: pypi
+    pypi: mozjpeg-lossless-optimization
+  - alias: python
+  - source: manual
+    manual: 1
 
 maintainers:
   - github: roaldclark
