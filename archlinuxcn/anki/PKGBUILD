@@ -9,9 +9,9 @@
 # anki -> git rev-parse --short=8 $pkgver
 # ftl -> git submodule
 declare -gA _tags=(
- [ftl_core]="b4813a328f44c8224d2649adbdbcbef095db9a40"
- [ftl_desktop]="b95608421ba2ba1cdca407933aff9ba25d567e12"
- [anki]="a5c90890"
+ [ftl_core]="e1545f7f0ddeb617eeb1ca86e82862e552843578"
+ [ftl_desktop]="e0f9724f75f6248f4e74558b25c3182d4f348bce"
+ [anki]="8e5efc59"
 )
 declare -gA _caches=(
     [yarn]="yarn-cache"
@@ -19,8 +19,8 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=24.06.3
-pkgrel=2
+pkgver=24.11
+pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
@@ -76,13 +76,13 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
         "strip-type-checking-deps.patch"
         "strip-python-pip-system-certs.patch"
 )
-sha256sums=('d0c9d819e87bc404fff7ca7c74880ff8ce1024c683ef939ba312bf37377bbf5f'
-            'aba298094f38c3fbdedae32a959322178d82ba76ac14155d70fcb9f685dd3024'
-            '69281d29573f787dc4520f7f86fc9b95f989353eabcf964819efed7dba42a4e6'
-            'cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff'
-            '9858fefa254812980d252b29fc6f32bd19bb83ee7e5a96d72c707626ed5193a7'
-            '198bc2ec14439e3ba41a03c4823f07df4b0c559c1dcbdaf678416ed12a720c2e'
-            '2506cf9d5b0c47a2c519ec4bb0ef87e7921dca8db5cae39b0dae265d01e253b3'
+sha256sums=(4c9b5d272240b76fa052760071c89d0eca5202dfd678a9464505ab99b121c868
+            65ea76e3e876dcf1feb9882f36ff0a1d86b9a1369fef5915eb17a5f26fd7c6fe
+            a0893a459a4c5fc3a8235d9b19d5f6ce868070aa12b604e2cc523e3db4224c09
+            cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff
+            9858fefa254812980d252b29fc6f32bd19bb83ee7e5a96d72c707626ed5193a7
+            198bc2ec14439e3ba41a03c4823f07df4b0c559c1dcbdaf678416ed12a720c2e
+            2506cf9d5b0c47a2c519ec4bb0ef87e7921dca8db5cae39b0dae265d01e253b3
 )
 
 prepare() {
@@ -108,7 +108,6 @@ prepare() {
     pacman -Qo $(which cargo) | grep -q rustup && rustup update
     # fetch rust packages
     export CARGO_HOME="$srcdir/${_caches[cargo]}"       # do not litter in ~
-    cargo update time@0.3.34 --precise 0.3.36	# allows to build with newer rust versions https://github.com/time-rs/time/issues/693
     cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 
 
