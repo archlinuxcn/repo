@@ -1,7 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=cemu
 pkgname=$_pkgname-git
-pkgver=2.4.r6.g90eb2e01
+pkgver=2.4.r7.g07352376
 pkgrel=1
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
@@ -23,7 +23,7 @@ makedepends=(
 	'cmake>=3.21.1'
 	'cubeb'
 	'curl'
-	'fmt10'
+	'fmt'
 	'git'
 	'glib2'
 	'glm'
@@ -49,11 +49,11 @@ conflicts=("$_pkgname")
 source=(
 	"$_pkgname::git+https://github.com/cemu-project/Cemu.git"
 	'imgui::git+https://github.com/ocornut/imgui.git'
+    'glslang.patch::https://github.com/cemu-project/Cemu/commit/c291376bf998059b5c88cf6cf16400d36c161437.patch'
 )
-b2sums=(
-	'SKIP'
-	'SKIP'
-)
+b2sums=('SKIP'
+        'SKIP'
+        '3a8c662984c7f98ba94434dae4bf2491b351caf763b04ae093630bb24d2da9ce3d3f7f44561fc1589acce749ba73053a8ccc15ca0dd800555b7402aa33d3bc00')
 
 pkgver() {
 	cd $_pkgname
@@ -62,13 +62,13 @@ pkgver() {
 
 prepare() {
 	cd $_pkgname
+    git apply ${srcdir}/glslang.patch
+
 	git config submodule.dependencies/imgui.url ../imgui
 	git -c protocol.file.allow=always submodule update
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
 	sed -i '/discord-rpc/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
-    # Temporarily require fmt version 10
-	sed -i 's/find_package(fmt 9/find_package(fmt 10.0.0...<11.0.0/' CMakeLists.txt
 }
 
 build() {
