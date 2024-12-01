@@ -3,7 +3,7 @@
 
 pkgname=cpu-x
 _pkgname=CPU-X
-pkgver=5.1.0
+pkgver=5.1.1
 pkgrel=1
 pkgdesc="A Free software that gathers information on CPU, motherboard and more"
 arch=('i686' 'x86_64')
@@ -15,7 +15,7 @@ optdepends=('opengl-driver: packaged openGL driver'
 	'vulkan-driver: packaged Vulkan driver')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/TheTumultuousUnicornOfDarkness/${_pkgname}/archive/v${pkgver}.tar.gz"
 	"fix-strequal.patch::https://github.com/TheTumultuousUnicornOfDarkness/${_pkgname}/commit/b0b57a2d9b1438512110e1752c38ea0204d2ed65.patch")
-sha512sums=('7f0ce6123cdd957663aa1012194cee12a09cdd3a44b0bcdfecad36315a3b1c1e5e6461ffa0d9613c0ff275332d4aae0499f8687d1acbcd921703971508819ed6'
+sha512sums=('8601946feaed567e144350c69761a46a7f5ff1aa47c1d550afca11d6b3eb7546b125c56ecd4f266a33d5ee8a6ef09eba01f7c6570dde25c4f1989971eb6dbb27'
             '85cca54210bd898ce5f37c48f4f54ac8d4cfbbb2cbffc14bb52f9cd5414247b248c4eb214b0bddda5a9ab365339783efaa3e8abf20127e0ad8bfbd8db17d3e44')
 
 prepare() {
