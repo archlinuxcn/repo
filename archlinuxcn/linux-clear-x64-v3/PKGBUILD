@@ -119,10 +119,10 @@ _subarch=42
 ### BUILD OPTIONS END
 
 # Kernel version
-_kernel_major=6.11
-_kernel_minor=10
+_kernel_major=6.12
+_kernel_minor=1
 # Clear Linux patches version
-_clr=3-1472
+_clr=1-1493
 # kernel_compiler_patch version
 _kernelcompilerpatch="20241018"
 # Source directory names
@@ -136,7 +136,7 @@ pkgrel=1
 pkgdesc="Linux kernel with patches from Clear Linux which allow for higher performance."
 arch=("x86_64")
 url="https://git.staropensource.de/JeremyStarTM/aur-linux-clear"
-license=('GPL-2.0-only')
+license=(GPL-2.0-only)
 makedepends=("bc" "cpio" "gettext" "git" "libelf" "pahole" "perl" "python" "tar" "xz" "zstd")
 [[ -n "${_use_llvm_to}" ]] && makedepends+=("clang" "llvm" "lld")
 options=("!strip" "!debug")
@@ -453,8 +453,8 @@ validpgpkeys=(
   "E27E5D8A3403A2EF66873BBCDEA66FF797772CDC"  # Sasha Levin
   "AC2B29BD34A6AFDDB3F68F35E7BFC8EC95861109"  # Ben Hutchings
 )
-sha256sums=("55d2c6c025ebc27810c748d66325dd5bc601e8d32f8581d9e77673529bdacb2e"
+sha256sums=("b1a2562be56e42afb3f8489d4c2a7ac472ac23098f1ef1c1e40da601f54625eb"
             "SKIP"
-            "d2a794cfdb4f2979e6aec50e6a6ac3f9242a266df929a1daf923cc701cf88c67"
+            "7013d2a29f02ca7508c7d6264afafdc0c0ee38cf5eef350e7b7f34f1393f2518"
             "SKIP"
             "b3fd8b1c5bbd39a577afcccf6f1119fdf83f6d72119f4c0811801bdd51d1bc61")
