@@ -1,7 +1,7 @@
 pkgname=julia-git-gsl_jll-src
-pkgver=2.7.2+0
-_commit=83dc0093e007b4e7246fe07836c014efe86aef3f
-pkgrel=6
+pkgver=2.8.0+0
+_commit=f0537caa266d6f57299acffd1fb8ab0bbfac7cda
+pkgrel=1
 pkgdesc="GSL_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/GSL_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git gsl)
 source=("git+https://github.com/JuliaBinaryWrappers/GSL_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('336c47d048dfc764a01ea42134afe364510f880ab16112d1993dbde905645cce'
+sha256sums=('7baced37084dede3711c30a904debf265ec10016d13455aa662c2df6513b1e26'
             '022523e2c981a500fef82281fc489ef746afe3af347eab8b4db4b3171362d524')
 
 build() {
