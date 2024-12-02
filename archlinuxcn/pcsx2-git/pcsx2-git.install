@@ -1,0 +1,15 @@
+# For DEV9 netplay support
+post_install()
+{
+  setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' usr/bin/pcsx2-qt
+}
+
+post_upgrade()
+{
+  setcap 'CAP_NET_RAW+eip CAP_NET_ADMIN+eip' usr/bin/pcsx2-qt
+}
+
+pre_remove()
+{
+  setcap -r usr/bin/pcsx2-qt
+}
