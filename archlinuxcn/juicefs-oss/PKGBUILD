@@ -3,7 +3,7 @@
 
 pkgname=juicefs-oss
 _pkgname=juicefs
-pkgver=1.2.0
+pkgver=1.2.2
 _pkgver=$(echo $pkgver | sed -E 's/^([0-9\.]+)([^0-9].*)?$/\1-\2/' | sed -E 's/-$//')
 pkgrel=1
 pkgdesc="A distributed POSIX file system built on top of Redis and S3. (FOSS version)"
@@ -14,7 +14,7 @@ conflicts=('juicefs')
 depends=('glibc')
 makedepends=('go')
 source=("juicefs-$_pkgver.tar.gz::https://github.com/juicedata/juicefs/archive/refs/tags/v$_pkgver.tar.gz")
-sha256sums=('661cf04d83b06e676cbce7a33a37d742787b098c7703ed528b1456391b6017ec')
+sha256sums=('44aa8933887a237d5a69af84366d9cabe3eff025beabed19b57353fd941c2e45')
 
 prepare() {
   cd "$_pkgname-$_pkgver"
