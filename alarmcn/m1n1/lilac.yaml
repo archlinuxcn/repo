@@ -1,16 +1,13 @@
 maintainers:
   - github: yuyichao
 
-# pre_build_script: run_cmd(['sh', './get_pkg.sh', 'm1n1'])
-post_build_script: |
-  git_add_files('.')
-  git_commit()
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: manual
-    manual: 1.4.14
-  # - source: github
-  #   github: AsahiLinux/PKGBUILDs
-  #   path: m1n1
+  - source: github
+    github: AsahiLinux/m1n1
+    use_max_tag: true
   - source: manual
     manual: 1
