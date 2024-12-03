@@ -6,7 +6,7 @@
 
 pkgname=mullvad-browser-bin
 pkgver=14.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Privacy-focused web browser developed by Mullvad VPN and the Tor Project'
 arch=(x86_64)
 url=https://mullvad.net/en/browser
@@ -47,6 +47,7 @@ depends=(
   ttf-font
 )
 optdepends=(
+  'pipewire-pulse: Sound support when using PipeWire'
   'hunspell-en_US: Spell checking, American English'
   'libnotify: Notification integration'
   'networkmanager: Location detection via available WiFi networks'
