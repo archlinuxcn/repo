@@ -10,4 +10,4 @@ def pre_build():
     elif line.startswith('_asahirel='):
       line = f'_asahirel={rel}'
     print(line)
-  update_pkgver_and_pkgrel(f'{_ver}.asahi{_rel}')
+  update_pkgver_and_pkgrel(f'{ver}.asahi{rel}')
