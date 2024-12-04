@@ -1,16 +1,16 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=boxbuddy
 _app_id=io.github.dvlv.boxbuddyrs
-pkgver=2.4.1
+pkgver=2.5.0
 pkgrel=1
 pkgdesc="A Graphical Interface for Distrobox"
 arch=('x86_64')
-url="https://github.com/Dvlv/BoxBuddyRS"
+url="https://www.dvlv.co.uk/BoxBuddyRS"
 license=('MIT')
 depends=('distrobox' 'libadwaita')
 makedepends=('cargo')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('5d6012496eb2ea8541d3acd0c8528cad317f87e187359ac200421ab7291fb017')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/Dvlv/BoxBuddyRS/archive/refs/tags/$pkgver.tar.gz")
+sha256sums=('a7261b9d380d2249e6c0295aeb7df56a856fd06ebb76bcf479b773b91b156711')
 
 prepare() {
   cd "BoxBuddyRS-$pkgver"
@@ -45,10 +45,11 @@ package() {
   install -Dm644 "${_app_id}.desktop" -t "$pkgdir/usr/share/applications/"
   install -Dm644 "${_app_id}.gschema.xml" -t "$pkgdir/usr/share/glib-2.0/schemas/"
   install -Dm644 "${_app_id}.metainfo.xml" -t "$pkgdir/usr/share/metainfo/"
-  install -Dm644 "icons/${_app_id}.svg" -t \
+  install -Dm644 icons/*.svg -t \
+    "$pkgdir/usr/share/icons/$pkgname/"
+  install -d "$pkgdir/usr/share/icons/hicolor/scalable/apps"
+  ln -s "/usr/share/icons/$pkgname/icons/${_app_id}.svg" \
     "$pkgdir/usr/share/icons/hicolor/scalable/apps/"
-  install -Dm644 icons/build-alt-{symbolic,symbolic-light}.svg -t \
-    "$pkgdir/usr/share/icons/hicolor/symbolic/apps/"
 
   pushd po
   for lang in $(ls -d */); do
