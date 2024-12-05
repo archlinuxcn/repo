@@ -141,9 +141,23 @@ _build_nvidia_open=${_build_nvidia_open-}
 # Build a debug package with non-stripped vmlinux
 _build_debug=${_build_debug-}
 
+# Enable AUTOFDO_CLANG for the first compilation to create a kernel, which can be used for profiling
+# Workflow:
+# https://cachyos.org/blog/2411-kernel-autofdo/
+# 1. Compile Kernel with _autofdo=y and _build_debug=y
+# 2. Boot the kernel in QEMU or on your system, see Workload
+# 3. Profile the kernel and convert the profile, see Generating the Profile for AutoFDO
+# 4. Put the profile into the sourcedir
+# 5. Run kernel build again with the _autofdo_profile_name path to profile specified
+_autofdo=${_autofdo-}
+
+# Name for the AutoFDO profile
+_autofdo_profile_name=${_autofdo_profile_name-}
+
+
 # ATTENTION: Do not modify after this line
 _is_clang_kernel() {
-    [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_kcfi" ]
+    [[ "$_use_llvm_lto" = "thin" || "$_use_llvm_lto" = "full" ]] || [ -n "$_use_kcfi" ] || [ -n "$_autofdo" ]
     return $?
 }
 
@@ -157,7 +171,7 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=6.12
-_minor=1
+_minor=2
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -166,7 +180,7 @@ _stable=${_major}.${_minor}
 #_stablerc=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
-pkgdesc='Linux BORE + LTO + Cachy Sauce Kernel by CachyOS with other patches and improvements.'
+pkgdesc='Linux BORE + LTO + AutoFDO Cachy Sauce Kernel by CachyOS with other patches and improvements.'
 pkgrel=1
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
@@ -188,7 +202,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=565.57.01
+_nv_ver=565.77
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="open-gpu-kernel-modules-${_nv_ver}"
 source=(
@@ -223,8 +237,7 @@ fi
 # NVIDIA pre-build module support
 if [ -n "$_build_nvidia" ]; then
     source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
-             "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch"
-             "${_patchsource}/misc/nvidia/0006-nvidia-drm-Set-FOP_UNSIGNED_OFFSET-for-nv_drm_fops.f.patch")
+             "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch")
 fi
 
 if [ -n "$_build_nvidia_open" ]; then
@@ -233,8 +246,16 @@ if [ -n "$_build_nvidia_open" ]; then
              "${_patchsource}/misc/nvidia/0002-Do-not-error-on-unkown-CPU-Type-and-add-Zen5-support.patch"
              "${_patchsource}/misc/nvidia/0003-Add-IBT-Support.patch"
              "${_patchsource}/misc/nvidia/0004-silence-event-assert-until-570.patch"
-             "${_patchsource}/misc/nvidia/0005-nvkms-Sanitize-trim-ELD-product-name-strings.patch"
-             "${_patchsource}/misc/nvidia/0006-nvidia-drm-Set-FOP_UNSIGNED_OFFSET-for-nv_drm_fops.f.patch")
+             "${_patchsource}/misc/nvidia/0005-nvkms-Sanitize-trim-ELD-product-name-strings.patch")
+fi
+
+# Use generated AutoFDO Profile
+if [ -n "$_autofdo" ] && [ -n "$_autofdo_profile_name" ]; then
+    if [ -e "$_autofdo_profile_name" ]; then
+        source+=("$_autofdo_profile_name")
+    else
+        _die "Failed to find file ${_autofdo_profile_name}"
+    fi
 fi
 
 ## List of CachyOS schedulers
@@ -245,6 +266,10 @@ case "$_cpusched" in
         source+=("${_patchsource}/sched/0001-prjc-cachy.patch");;
     hardened) ## Hardened Patches
         source+=("${_patchsource}/misc/0001-hardened.patch");;
+    rt) ## EEVDF with RT patches
+        source+=("${_patchsource}/misc/0001-rt.patch");;
+    rt-bore) ## RT with BORE Scheduler
+        source+=("${_patchsource}/misc/0001-rt.patch");;
 esac
 
 export KBUILD_BUILD_HOST=cachyos
@@ -430,7 +455,11 @@ prepare() {
             -d DEFAULT_CUBIC \
             -e TCP_CONG_BBR \
             -e DEFAULT_BBR \
-            --set-str DEFAULT_TCP_CONG bbr
+            --set-str DEFAULT_TCP_CONG bbr \
+            -m NET_SCH_FQ_CODEL \
+            -e NET_SCH_FQ \
+            -d CONFIG_DEFAULT_FQ_CODEL \
+            -e CONFIG_DEFAULT_FQ
     fi
 
     ### Select THP
@@ -443,6 +472,17 @@ prepare() {
     esac
 
     echo "Selecting '$_hugepage' TRANSPARENT_HUGEPAGE config..."
+
+    # Enable Clang AutoFDO
+    # Add additonal check if Thin or Full LTO is enabled otherwise die
+    if [ -n "$_autofdo" ]; then
+        scripts/config -e AUTOFDO_CLANG
+    fi
+
+    if [ -n "$_autofdo" ] && [ -n "$_autofdo_profile_name" ]; then
+        echo "AutoFDO profile has been found..."
+        BUILD_FLAGS+=(CLANG_AUTOFDO_PROFILE="${srcdir}/${_autofdo_profile_name}")
+    fi
 
     echo "Enable USER_NS_UNPRIVILEGED"
     scripts/config -e USER_NS
@@ -507,8 +547,6 @@ prepare() {
 
         # Use fbdev and modeset as default
         patch -Np1 -i "${srcdir}/0001-Make-modeset-and-fbdev-default-enabled.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-        # Fix for 6.12
-        patch -Np2 -i "${srcdir}/0006-nvidia-drm-Set-FOP_UNSIGNED_OFFSET-for-nv_drm_fops.f.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 
     if [ -n "$_build_nvidia_open" ]; then
@@ -521,8 +559,6 @@ prepare() {
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0004-silence-event-assert-until-570.patch" -d "${srcdir}/${_nv_open_pkg}"
         # Fix for HDMI names
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0005-nvkms-Sanitize-trim-ELD-product-name-strings.patch" -d "${srcdir}/${_nv_open_pkg}"
-        # Add fix for 6.12 Display Open issue
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0006-nvidia-drm-Set-FOP_UNSIGNED_OFFSET-for-nv_drm_fops.f.patch" -d "${srcdir}/${_nv_open_pkg}"
     fi
 }
 
@@ -754,9 +790,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('de3f4dec2fc7e36711c68683d6564d0c3ce6fe728ffa6a629604e2fa9e489dbab45fd6676343f6e68bafbd202a3e814e82a1448b46844e34046b9f82f819b8f4'
-        'd5f647e8517b423cb3dec37b5b3a65c90c8dcedf36187fb5024a650dfb1817f6cde5f1b0a588a96c374e4b4e78dd7d534b6aa273ed28510e5c0900b96fc48049'
+b2sums=('3161f791e13156a97215b14ed9d0a18dfd69324e7fa516df2a9385678ba2a2cd67196aa9efd82f7d9f1cb2c91b8733a095ced66c491f3a80c8c70eec1dc703d8'
+        '8924e8e84d1a898fa14c8a14b5facc20fb44d5809d6eca45db9dd67ece7d233b9dfecd48181bc88392a227b63e757025e83a8709cace6fe55684c27b707ba701'
         'b1e964389424d43c398a76e7cee16a643ac027722b91fe59022afacb19956db5856b2808ca0dd484f6d0dfc170482982678d7a9a00779d98cd62d5105200a667'
-        '158349b76cd1a08fd1ca2eaa6cce1573fa39eab4641b69baaafbdf4cad1890377762bdd6c76a4731c4ddce8b98b4ed6fd302df02b93b59e17ebfa50265cedce7'
+        'd290e958f4870002d5ec6616fa45d9259277bbb7a92b0ff1b093d001bea45be5736f44ecfdeaa4d6fc40c4580ac954b41187b57a323c8b6e4c142f71c9d94724'
         'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
-        'a1bad436ffcaf36266949471ed025b889cf88fe7ecf8174ab73783f3f83630df90911e0b962386c964056b79ab0ec50babe0a3a81b83904216b0eec65f80eb2d')
+        '09e70082f6e1a5e969c545f123f3ecb74880f9b5ef4ad81a64ffd59a105d589fd9aa24699fd9088422c61b961eca647519a66e6893df120aa079e45fc7761702')
