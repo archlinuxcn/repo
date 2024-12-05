@@ -111,6 +111,18 @@
 #  43. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD)
 : "${_subarch:=""}"
 
+# Selects the x86-64 microarchitecture to compile for.
+# This value is only used by the GENERIC_CPU
+# subarchitecture and is required.
+# Can be either '1', '2', '3' or '4'
+# 
+# Set to '1' by default
+#
+# For more information see:
+# https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels
+: "${_subarch_microarch:="1"}"
+
+
 # Enable compilation with LLVM
 # Be warned, this is largely untested by me (JeremyStarTM). It *should* work,
 # but if it doesn't, write a comment and I'll fix it.
@@ -143,7 +155,7 @@ _src_clr=${_kernel_major}.${_clr}
 # Package information
 pkgbase=linux-clear
 pkgver=${_kernel_major}.${_kernel_minor}
-pkgrel=2
+pkgrel=3
 pkgdesc="Linux kernel with patches from Clear Linux which allow for higher performance."
 arch=("x86_64")
 url="https://git.staropensource.de/JeremyStarTM/aur-linux-clear"
@@ -309,9 +321,17 @@ update_defconfig() {
     patch -Np1 -i "$srcdir/kernel_compiler_patch-$_kernelcompilerpatch/more-ISA-levels-and-uarches-for-kernel-6.1.79+.patch"
     
     # Set subarch automatically
-    [[ -n "${_subarch}" ]] && yes "${_subarch}" | make ${BUILD_FLAGS[*]} oldconfig
-    # Ask for subarch
-    [[ -z "${_subarch}" ]] && make ${BUILD_FLAGS[*]} oldconfig
+    if [ -n "${_subarch}" ]; then
+        if [ "${_subarch}" == "41" ]; then
+            yes "${_subarch}
+${_subarch_microarch}" | make ${BUILD_FLAGS[*]} oldconfig
+        else
+            yes "${_subarch}" | make ${BUILD_FLAGS[*]} oldconfig
+        fi
+    else
+        # Ask for subarch
+        make ${BUILD_FLAGS[*]} oldconfig
+    fi
 }
 
 # Prepares the installation
