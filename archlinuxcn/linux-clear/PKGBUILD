@@ -35,6 +35,17 @@
 # Set to anything but null to activate.
 : "${_use_current:=""}"
 
+# Apply selected optimizations chosen by
+# the package maintainers to the config.
+#
+# Only takes effect if '_use_current'
+# is enabled. Keep disabled if you want
+# to reuse your existing kernel configuration
+# without any changes being applied to it.
+#
+# Set to anything but null to activate.
+: "${_optimize_defconfig:=""}"
+
 # Determines whether the kernel configuration should be
 # copied into the source tree before compilation starts.
 # 
@@ -98,7 +109,7 @@
 #  41. Generic-x86-64 (GENERIC_CPU)
 #  42. Intel-Native optimizations autodetected by the compiler (MNATIVE_INTEL)
 #  43. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD)
-_subarch=42
+: "${_subarch:=""}"
 
 # Enable compilation with LLVM
 # Be warned, this is largely untested by me (JeremyStarTM). It *should* work,
@@ -130,9 +141,9 @@ _src_linux=linux-${_kernel_major}
 _src_clr=${_kernel_major}.${_clr}
 
 # Package information
-pkgbase=linux-clear-x64-v3
+pkgbase=linux-clear
 pkgver=${_kernel_major}.${_kernel_minor}
-pkgrel=1
+pkgrel=2
 pkgdesc="Linux kernel with patches from Clear Linux which allow for higher performance."
 arch=("x86_64")
 url="https://git.staropensource.de/JeremyStarTM/aur-linux-clear"
@@ -174,6 +185,16 @@ apply_patches() {
         
         patch -Np1 -i "${srcdir}/cl-linux/${i}" || true
     done
+}
+
+# Allows user to modify the kernel config
+modify_defconfig() {
+    [[ -n "$_makemenuconfig" ]] && make ${BUILD_FLAGS[*]} menuconfig
+    [[ -n "$_makexconfig" ]] && make ${BUILD_FLAGS[*]} xconfig
+    [[ -n "$_makenconfig" ]] && make ${BUILD_FLAGS[*]} nconfig
+
+    # Don't crash if all three are false
+    true
 }
 
 # Copies the kernel config
@@ -291,15 +312,6 @@ update_defconfig() {
     [[ -n "${_subarch}" ]] && yes "${_subarch}" | make ${BUILD_FLAGS[*]} oldconfig
     # Ask for subarch
     [[ -z "${_subarch}" ]] && make ${BUILD_FLAGS[*]} oldconfig
-
-    # Open configuration editors
-    [[ -n "$_makemenuconfig" ]] && make ${BUILD_FLAGS[*]} menuconfig
-    [[ -n "$_makexconfig" ]] && make ${BUILD_FLAGS[*]} xconfig
-    [[ -n "$_makenconfig" ]] && make ${BUILD_FLAGS[*]} nconfig
-
-    # Save configuration
-    # shellcheck disable=SC2015
-    [[ -n "${_copyfinalconfig}" ]] && cp -Tf ./.config "${startdir}/kconfig-new" || true
 }
 
 # Prepares the installation
@@ -307,10 +319,10 @@ prepare() {
     cd "${_src_linux}" || exit 1
 
     apply_patches
-    
+
     [[ -n "${_use_current}" ]] && copy_defconfig
-    [[ -z "${_use_current}" ]] && update_defconfig
-    
+    [[ -n "${_optimize_defconfig}" ]] || [[ -z "${_use_current}" ]] && update_defconfig
+
     # Read and apply modprobed database
     # See https://aur.archlinux.org/packages/modprobed-db
     [[ -n "${_localmodcfg}" ]] &&
@@ -319,7 +331,14 @@ prepare() {
         else
             echo ":: No modprobed.db file was found at ${HOME}/.config, skipping"
         fi
-    
+
+    # Open configuration editors
+    modify_defconfig
+
+    # Save configuration
+    # shellcheck disable=SC2015
+    [[ -n "${_copyfinalconfig}" ]] && cp -Tf ./.config "${startdir}/kconfig-new" || true
+
     # Write kernel version
     make -s kernelrelease > version
 }
@@ -336,7 +355,7 @@ _package() {
     depends=("coreutils" "kmod" "initramfs")
     optdepends=("wireless-regdb: to set the correct wireless channels of your country"
                 "linux-firmware: firmware images needed for some devices")
-    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE)
+    provides=("KSMBD-MODULE" "VIRTUALBOX-GUEST-MODULES" "WIREGUARD-MODULE" "linux-clear-x64-v3" "linux-clear-x64-v4")
     install=linux.install
     
     cd "${_src_linux}" || exit 1
@@ -458,3 +477,4 @@ sha256sums=("b1a2562be56e42afb3f8489d4c2a7ac472ac23098f1ef1c1e40da601f54625eb"
             "7013d2a29f02ca7508c7d6264afafdc0c0ee38cf5eef350e7b7f34f1393f2518"
             "SKIP"
             "b3fd8b1c5bbd39a577afcccf6f1119fdf83f6d72119f4c0811801bdd51d1bc61")
+replaces=("linux-clear-x64-v3" "linux-clear-x64-v4")

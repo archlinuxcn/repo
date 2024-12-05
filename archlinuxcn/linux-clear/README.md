@@ -15,6 +15,7 @@ The PKGBUILD file supports customization via environment variables. Here's a lis
 - `_makenconfig`: Invokes `make nconfig` (ncurses-based nicer configuration menu) before compilation starts
 - `_makexconfig`: Invokes `make xconfig` (X11-based GUI configuration menu) before compilation starts
 - `_use_current`: Will use the configuration of the running kernel, if the running kernel is compiled with `IKCONFIG_PROC`
+- `_optimize_defconfig`: Applies package maintainer-picked configuration changes to your defconfig. Only takes effect with `_use_current` being enabled
 - `_copyfinalconfig`: Copies the final kernel configuration into the repository root as `kconfig-new` before compilation starts
 - `_localmodcfg`: Only compiles modules found in modprobed-db's database (which decreases compilation time and kernel size)
 - `_use_llvm_lto`: Compiles the kernel with LLVM instead of GCC. Should work, if not open an issue
