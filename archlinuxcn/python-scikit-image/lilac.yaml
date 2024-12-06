@@ -11,14 +11,13 @@ repo_depends:
   - python-imagecodecs
   - python-imageio
   - python-imread
-  - python-lazy-loader
   - python-pywavelets
   - python-tifffile
 update_on:
   - source: github
     github: scikit-image/scikit-image
     use_max_tag: true
-    include_regex: 'v(\d+.\d+.\d+)'
+    include_regex: v(\d+.\d+.\d+)
   - source: manual
     manual: 1
   - alias: python
