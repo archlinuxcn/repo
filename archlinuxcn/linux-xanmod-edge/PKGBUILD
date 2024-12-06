@@ -73,9 +73,9 @@ fi
 
 pkgbase=linux-xanmod-edge
 _major=6.12
-pkgver=${_major}.1
+pkgver=${_major}.2
 _branch=6.x
-xanmod=2
+xanmod=1
 _revision=
 _sf_branch=edge
 pkgrel=${xanmod}
@@ -117,7 +117,7 @@ done
 
 sha256sums=('b1a2562be56e42afb3f8489d4c2a7ac472ac23098f1ef1c1e40da601f54625eb'
             'SKIP'
-            '9ccdd5ccff9de04ddfd0d49d24f91b958d0ca198b6d4eb726399b16a12814944'
+            '1f1102f6b65e68fc9d21576faeb925490b657401b38ebd06bc5349a556117533'
             'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
