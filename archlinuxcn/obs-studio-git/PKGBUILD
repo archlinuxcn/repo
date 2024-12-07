@@ -7,7 +7,7 @@ pkgname=obs-studio-git
 _pkgname=${pkgname%-git}
 pkgver=31.0.0.rc1.r5.g10dc43b
 pkgrel=1
-epoch=3
+epoch=4
 pkgdesc="Free, open source software for live streaming and recording (with websocket support)"
 arch=("i686" "x86_64")
 url="https://obsproject.com/"
@@ -32,7 +32,7 @@ sha256sums=('SKIP'
 
 pkgver() {
 	cd "${_pkgname}/"
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/-rc/.rc/'
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/-rc/rc/'
 }
 
 prepare() {
