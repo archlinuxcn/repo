@@ -2,7 +2,7 @@
 # Contributor: Dan Johansen <strit@manjaro.org>
 
 pkgname=box64
-pkgver=0.3.0
+pkgver=0.3.2
 pkgrel=1
 pkgdesc='Linux Userspace x86_64 Emulator with a twist'
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -13,9 +13,8 @@ depends=('gcc-libs')
 makedepends=('git' 'cmake' 'python')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ptitSeb/${pkgname}/archive/v${pkgver}.tar.gz"
         "box64.install")
-sha256sums=('e334e793638f375a28829c01b089c6ba27d8c3f6094fcbc9360b56ad9c09d0b5'
+sha256sums=('8658b2c3840ae830ebb2b2673047d30a748139ec3afe178ca74a71adeddba63e'
             '7e94518dbd11121f150a51b64f4c0ec11f844a83f7b15205d28c1de63de699f2')
-
 build() {
     cd ${pkgname}-${pkgver}
     if [[ $CARCH == "aarch64" ]]; then 
