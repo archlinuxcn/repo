@@ -3,7 +3,7 @@
 pkgname=qdiskinfo
 _pkgname=QDiskInfo
 pkgver=0.3
-pkgrel=1
+pkgrel=2
 pkgdesc="CrystalDiskInfo alternative for Linux"
 arch=("x86_64")
 url="https://github.com/edisionnano/${_pkgname}"
@@ -17,7 +17,7 @@ depends=(
 )
 makedepends=("cmake")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=("f9829a488ff08395e14f953d41a85dac9c91714fdd34bc9a76a46fe761511209")
+sha256sums=('f9829a488ff08395e14f953d41a85dac9c91714fdd34bc9a76a46fe761511209')
 
 build() {
 	cmake -B build \
