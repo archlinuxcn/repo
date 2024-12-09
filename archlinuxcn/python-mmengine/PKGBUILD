@@ -22,8 +22,16 @@ makedepends=(
   python-setuptools
   python-wheel
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmengine/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('76bb9c6dd4d9755a7105410a1c2ca9771364c08f495058dac746a99053b2533acaf714d7246b9904140e1c9985aa1d97c201035d0a0b925e2fae7cb3ad1d3c2f')
+source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmengine/archive/refs/tags/v${pkgver}.tar.gz"
+        "https://github.com/open-mmlab/mmengine/pull/1610.patch"
+)
+sha512sums=('76bb9c6dd4d9755a7105410a1c2ca9771364c08f495058dac746a99053b2533acaf714d7246b9904140e1c9985aa1d97c201035d0a0b925e2fae7cb3ad1d3c2f'
+            'fbb36fdd3715f41ce5cefe4fbc8deaccf2a125d72d69acf5574fb09f0f5fadef7b874a52623bd38656c25577d0573e2ee31729e8217b5f9e4c5d1a83e6eb9719')
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  patch -p1 -i ${srcdir}/1610.patch
+}
 
 build() {
   cd "${_pkgname}-${pkgver}"
