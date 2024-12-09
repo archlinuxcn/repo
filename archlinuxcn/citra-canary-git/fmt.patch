@@ -1,0 +1,241 @@
+From c7818ef16fa364107f5023d55565e8c190d697d9 Mon Sep 17 00:00:00 2001
+From: kongfl888 K <kongfl888@outlook.com>
+Date: Thu, 1 Aug 2024 18:32:18 -0600
+Subject: [PATCH] externals: Update fmt from 10.2.1 to 11.0.2
+
+---
+ src/common/logging/formatter.h                    |  6 +++---
+ src/core/hle/service/cfg/cfg.cpp                  |  4 ++--
+ src/core/hle/service/ir/extra_hid.cpp             |  4 ++--
+ src/core/hle/service/ir/ir_user.cpp               |  4 ++--
+ src/core/hle/service/soc/soc_u.cpp                | 13 +++++--------
+ src/core/hle/service/soc/soc_u.h                  |  6 +++---
+ src/core/movie.cpp                                |  3 ++-
+ src/core/savestate.cpp                            |  4 ++--
+ src/video_core/renderer_software/sw_clipper.cpp   |  3 ++-
+ src/video_core/renderer_vulkan/vk_instance.cpp    |  4 ++--
+ src/video_core/renderer_vulkan/vk_shader_util.cpp |  3 ++-
+ 14 files changed, 34 insertions(+), 34 deletions(-)
+
+diff --git a/src/common/logging/formatter.h b/src/common/logging/formatter.h
+index ad6adb143..fa198de2f 100644
+--- a/src/common/logging/formatter.h
++++ b/src/common/logging/formatter.h
+@@ -1,4 +1,4 @@
+-// Copyright 2022 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+@@ -12,9 +12,9 @@
+ #if FMT_VERSION >= 80100
+ template <typename T>
+ struct fmt::formatter<T, std::enable_if_t<std::is_enum_v<T>, char>>
+-    : formatter<std::underlying_type_t<T>> {
++    : fmt::formatter<std::underlying_type_t<T>> {
+     template <typename FormatContext>
+-    auto format(const T& value, FormatContext& ctx) -> decltype(ctx.out()) {
++    auto format(const T& value, FormatContext& ctx) const -> decltype(ctx.out()) {
+         return fmt::formatter<std::underlying_type_t<T>>::format(
+             static_cast<std::underlying_type_t<T>>(value), ctx);
+     }
+diff --git a/src/core/hle/service/cfg/cfg.cpp b/src/core/hle/service/cfg/cfg.cpp
+index 35ddf3d1c..18b9ceae7 100644
+--- a/src/core/hle/service/cfg/cfg.cpp
++++ b/src/core/hle/service/cfg/cfg.cpp
+@@ -1,4 +1,4 @@
+-// Copyright 2014 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+@@ -9,7 +9,7 @@
+ #include <boost/serialization/unique_ptr.hpp>
+ #include <cryptopp/osrng.h>
+ #include <cryptopp/sha.h>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/archives.h"
+ #include "common/file_util.h"
+ #include "common/logging/log.h"
+diff --git a/src/core/hle/service/ir/extra_hid.cpp b/src/core/hle/service/ir/extra_hid.cpp
+index 7126facf6..9d594021f 100644
+--- a/src/core/hle/service/ir/extra_hid.cpp
++++ b/src/core/hle/service/ir/extra_hid.cpp
+@@ -1,8 +1,8 @@
+-// Copyright 2017 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/alignment.h"
+ #include "common/settings.h"
+ #include "core/core_timing.h"
+diff --git a/src/core/hle/service/ir/ir_user.cpp b/src/core/hle/service/ir/ir_user.cpp
+index f850fa348..cdf00ca61 100644
+--- a/src/core/hle/service/ir/ir_user.cpp
++++ b/src/core/hle/service/ir/ir_user.cpp
+@@ -1,4 +1,4 @@
+-// Copyright 2015 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+@@ -8,7 +8,7 @@
+ #include <boost/serialization/base_object.hpp>
+ #include <boost/serialization/shared_ptr.hpp>
+ #include <boost/serialization/unique_ptr.hpp>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/archives.h"
+ #include "common/swap.h"
+ #include "core/core.h"
+diff --git a/src/core/hle/service/soc/soc_u.cpp b/src/core/hle/service/soc/soc_u.cpp
+index 1ef35da26..139f66cd8 100644
+--- a/src/core/hle/service/soc/soc_u.cpp
++++ b/src/core/hle/service/soc/soc_u.cpp
+@@ -1,4 +1,4 @@
+-// Copyright 2014 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+@@ -2240,18 +2240,14 @@ std::optional<SOC_U::InterfaceInfo> SOC_
+     }
+ 
+     InterfaceInfo ret;
+-#ifdef _WIN32
+-    SOCKET sock_fd = -1;
+-#else
+-    int sock_fd = -1;
+-#endif
++    SocketHolder::SOCKET sock_fd = -1;
+     bool interface_found = false;
+     struct sockaddr_in s_in = {.sin_family = AF_INET, .sin_port = htons(53), .sin_addr = {}};
+     s_in.sin_addr.s_addr = inet_addr("8.8.8.8");
+     socklen_t s_info_len = sizeof(struct sockaddr_in);
+     sockaddr_in s_info;
+ 
+-    if ((sock_fd = ::socket(AF_INET, SOCK_STREAM, 0)) == -1) {
++    if ((sock_fd = ::socket(AF_INET, SOCK_STREAM, 0)) == static_cast<SocketHolder::SOCKET>(-1)) {
+         return std::nullopt;
+     }
+ 
+@@ -2269,7 +2265,7 @@ std::optional<SOC_U::InterfaceInfo> SOC_
+ 
+ #ifdef _WIN32
+     sock_fd = WSASocket(AF_INET, SOCK_DGRAM, 0, 0, 0, 0);
+-    if (sock_fd == SOCKET_ERROR) {
++    if (sock_fd == static_cast<SocketHolder::SOCKET>(SOCKET_ERROR)) {
+         return std::nullopt;
+     }
+ 
+diff --git a/src/core/hle/service/soc/soc_u.h b/src/core/hle/service/soc/soc_u.h
+index b63f290e4..962f219f1 100644
+--- a/src/core/hle/service/soc/soc_u.h
++++ b/src/core/hle/service/soc/soc_u.h
+@@ -1,4 +1,4 @@
+-// Copyright 2014 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+@@ -25,11 +25,11 @@ namespace Service::SOC {
+ struct SocketHolder {
+ #ifdef _WIN32
+     using SOCKET = unsigned long long;
+-    SOCKET socket_fd; ///< The socket descriptor
+ #else
+-    int socket_fd; ///< The socket descriptor
++    using SOCKET = int;
+ #endif // _WIN32
+ 
++    SOCKET socket_fd;     ///< The socket descriptor
+     bool blocking = true; ///< Whether the socket is blocking or not.
+     bool isGlobal = false;
+     bool shutdown_rd = false;
+diff --git a/src/core/movie.cpp b/src/core/movie.cpp
+index 372edb5bd..48f910337 100644
+--- a/src/core/movie.cpp
++++ b/src/core/movie.cpp
+@@ -1,4 +1,4 @@
+-// Copyright 2017 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+@@ -10,6 +10,7 @@
+ #include <boost/optional.hpp>
+ #include <cryptopp/hex.h>
+ #include <cryptopp/osrng.h>
++#include <fmt/ranges.h>
+ #include "common/archives.h"
+ #include "common/bit_field.h"
+ #include "common/file_util.h"
+diff --git a/src/core/savestate.cpp b/src/core/savestate.cpp
+index bb750d0c9..fd7090953 100644
+--- a/src/core/savestate.cpp
++++ b/src/core/savestate.cpp
+@@ -1,11 +1,11 @@
+-// Copyright 2020 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+ #include <chrono>
+ #include <sstream>
+ #include <cryptopp/hex.h>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/archives.h"
+ #include "common/file_util.h"
+ #include "common/logging/log.h"
+diff --git a/src/video_core/renderer_software/sw_clipper.cpp b/src/video_core/renderer_software/sw_clipper.cpp
+index 03a287a37..4ab184fbb 100644
+--- a/src/video_core/renderer_software/sw_clipper.cpp
++++ b/src/video_core/renderer_software/sw_clipper.cpp
+@@ -1,9 +1,10 @@
+-// Copyright 2023 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+ #include <array>
+ #include <cstddef>
++#include <tuple>
+ #include "video_core/pica/regs_texturing.h"
+ #include "video_core/renderer_software/sw_clipper.h"
+ 
+diff --git a/src/video_core/renderer_vulkan/vk_instance.cpp b/src/video_core/renderer_vulkan/vk_instance.cpp
+index 9f366307b..ed80be48c 100644
+--- a/src/video_core/renderer_vulkan/vk_instance.cpp
++++ b/src/video_core/renderer_vulkan/vk_instance.cpp
+@@ -1,10 +1,10 @@
+-// Copyright 2023 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
+ #include <span>
+ #include <boost/container/static_vector.hpp>
+-#include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/assert.h"
+ #include "common/settings.h"
+diff --git a/src/video_core/renderer_vulkan/vk_shader_util.cpp b/src/video_core/renderer_vulkan/vk_shader_util.cpp
+index 608ed3788..00b08043d 100644
+--- a/src/video_core/renderer_vulkan/vk_shader_util.cpp
++++ b/src/video_core/renderer_vulkan/vk_shader_util.cpp
+@@ -1,7 +1,8 @@
+-// Copyright 2023 Citra Emulator Project
++// Copyright Citra Emulator Project / Lime3DS Emulator Project
+ // Licensed under GPLv2 or any later version
+ // Refer to the license.txt file included.
+ 
++#include <memory>
+ #include <SPIRV/GlslangToSpv.h>
+ #include <glslang/Include/ResourceLimits.h>
+ #include <glslang/Public/ShaderLang.h>

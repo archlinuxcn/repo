@@ -9,14 +9,18 @@ pkgdesc="An experimental open-source Nintendo 3DS emulator/debugger"
 arch=('i686' 'x86_64')
 url="https://github.com/citra-emu/citra-canary/tree/master"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'fmt' 'dynarmic' 'openal' 'faad2' 'crypto++' 'soundtouch')
+depends=('boost-libs' 'shared-mime-info' 'ffmpeg' 'libusb' 'sdl2' 'qt6-multimedia' 'libxkbcommon-x11' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'dynarmic' 'openal' 'faad2' 'crypto++' 'soundtouch')
 makedepends=('git' 'rapidjson' 'cmake' 'python' 'clang' 'llvm' 'boost' 'qt6-tools' 'xbyak' 'cpp-jwt' 'qt6-wayland' 'desktop-file-utils' 'robin-map' 'glslang' 'spirv-headers' 'vulkan-memory-allocator' 'catch2' 'spirv-tools' 'cpp-httplib')
 provides=('citra')
 conflicts=('citra')
 source=("$_pkgname::git+https://github.com/rtiangha/citra-emu"
+fmt.patch
+openal.patch::https://github.com/Lime3DS/lime3ds-archive/commit/9ff1bcbae0c94b3a6766595e8abbf7be990aebb8.patch
 ext-lib.patch
 gc.patch)
 md5sums=('SKIP'
+         '8a1a8d42540b719063cba9eae9f33380'
+         '4c68456318ac01d74e51273c578b4fce'
          'cd9e6be75ae839618f747ea6d653f349'
          'f151510cd1fc233992710405cbf44323')
 options=('!debug' '!buildflags')
@@ -28,6 +32,8 @@ pkgver() {
 
 prepare() {
 	cd "$srcdir/$_pkgname"
+    patch -p1 -i ../fmt.patch
+    patch -p1 -i ../openal.patch
     patch -p1 -i ../ext-lib.patch
     patch -p1 -i ../gc.patch
 
@@ -60,7 +66,7 @@ build() {
 	export TRAVIS_REPO_SLUG=citra-emu/citra-canary
 	export TRAVIS_TAG=$(git describe --tags)
 
-    CXXFLAGS+=" -I/usr/include/libusb-1.0"
+    CXXFLAGS+=" -Wno-deprecated-declarations -I/usr/include/libusb-1.0"
 	mkdir -p build && cd build
 	cmake .. \
 	  -DCMAKE_INSTALL_PREFIX=/usr \
