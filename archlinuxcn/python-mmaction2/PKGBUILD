@@ -44,8 +44,5 @@ build() {
 package() {
   cd "${_pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
-  # delete unused .mim dir
-  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
-  rm -rfv "${pkgdir}${site_packages}/mmaction/.mim"
 }
 # vim:set ts=2 sw=2 et:
