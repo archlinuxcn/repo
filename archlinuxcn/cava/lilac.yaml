@@ -1,5 +1,7 @@
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['funilrys'])
+pre_build_script: |
+  aur_pre_build(maintainers=['funilrys'])
+  run_cmd(['updpkgsums'])
 post_build: aur_post_build
 update_on:
   - source: aur
@@ -29,7 +31,7 @@ update_on:
     strip_release: true
     provided: libsndio.so
   - source: manual
-    manual: 1.1
+    manual: 1.2
 
 maintainers:
   - github: roaldclark
