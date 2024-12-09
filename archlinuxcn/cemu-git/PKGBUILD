@@ -2,7 +2,7 @@
 _pkgname=cemu
 pkgname=$_pkgname-git
 pkgver=2.5.r0.gdd0af0a5
-pkgrel=2
+pkgrel=3
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://cemu.info/"
@@ -67,6 +67,8 @@ prepare() {
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
 	sed -i '/discord-rpc/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
+#[HEAVYSINK] Fix conflict with wechat
+    sed -i 's/fs::exists(portablePath/fs::is_directory(portablePath/' src/gui/CemuApp.cpp
 }
 
 build() {
