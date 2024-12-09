@@ -3,7 +3,7 @@
 # Contributor: Maciek Marciniak <mm2pl at kotmisia.pl>
 
 pkgname=obs-studio
-pkgver=30.2.3
+pkgver=31.0.0
 pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
@@ -23,7 +23,7 @@ optdepends=('libfdk-aac: FDK AAC codec support'
 source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz
         nv-codec-headers.tar.gz::https://github.com/FFmpeg/nv-codec-headers/releases/download/n12.1.14.0/nv-codec-headers-12.1.14.0.tar.gz)
 # XXX nv-codec-headers are kept back at version n12.1.14.0 due to OBS not supporting any newer version
-sha256sums=('1dddc0d042e64329f9dd7b540295d1a03af9b8fda5f0a165d81de8ef51e0373d'
+sha256sums=('23d45d8ffdf9e673aa0ef4ee7b8d030a63f21151c709b6e4657d20bc230db178'
             '62b30ab37e4e9be0d0c5b37b8fee4b094e38e570984d56e1135a6b6c2c164c9f')
 
 prepare() {
@@ -31,6 +31,7 @@ prepare() {
 }
 
 build() {
+  export CFLAGS+=" -Wno-error=deprecated-declarations"
   cmake -B build -S $pkgname-$pkgver-sources \
     -DFFnvcodec_INCLUDE_DIR="nv-codec-headers-12.1.14.0/include/" \
     -DENABLE_QSV11=OFF \
