@@ -1,6 +1,6 @@
 pkgname=julia-git-fontconfig_jll-src
-pkgver=2.13.96+0
-_commit=56f41ffaf42a49e5e5fd9e1a422cab7633fba957
+pkgver=2.15.0+0
+_commit=270f01e60f5a52c511bc7ba30d8ad71d49e2568f
 pkgrel=1
 pkgdesc="Fontconfig_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Fontconfig_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git fontconfig)
 source=("git+https://github.com/JuliaBinaryWrappers/Fontconfig_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('3a3b054b2729685ff326c1101850ce2d94f7dcc5cb8789ddab11a0932c368aa8'
+sha256sums=('92df86418b55d4c4dd57237870f0e6eb083e3c390276a777aab1dc4c7515e882'
             'd8caa3f40a86710ea517b7b6192dc3d2c5f5538bdae1b02cab0595d6f6c52457')
 
 build() {
