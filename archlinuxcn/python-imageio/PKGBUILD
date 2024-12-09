@@ -3,7 +3,7 @@
 pkgname="python-imageio"
 _pkgname="imageio"
 pkgver=2.36.1
-pkgrel=1
+pkgrel=2
 pkgdesc="a Python library that provides an easy interface to read and write a wide range of image data"
 arch=('any')
 _github="imageio/imageio"
@@ -28,8 +28,8 @@ package() {
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt"
 
   # remove utilities for downloading binary dependencies
-  rm $pkgdir/usr/bin/{imageio_download_bin,imageio_remove_bin}
-  rmdir $pkgdir/usr/bin
+  rm -f $pkgdir/usr/bin/{imageio_download_bin,imageio_remove_bin}
+  rmdir --ignore-fail-on-non-empty $pkgdir/usr/bin
 }
 
 # vim:set ts=2 sw=2 et:<Paste>
