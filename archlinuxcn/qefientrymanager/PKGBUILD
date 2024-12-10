@@ -9,7 +9,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/Inokinoki/${_srcname}"
 license=('GPL-3.0-or-later')
 depends=('qt6-base' 'qt6-wayland' 'efivar' 'hicolor-icon-theme')
-makedepends=('git' 'cmake')
+makedepends=('git' 'cmake' 'qt6-tools' 'clang')
 source=(
 	"git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/Inokinoki/qefivar.git"
