@@ -1,5 +1,18 @@
+From 56649e8e9025b8ddc330f9e06d04d2b7e32b5c82 Mon Sep 17 00:00:00 2001
+From: Roald Clark <roaldclark@gmail.com>
+Date: Tue, 10 Dec 2024 23:16:57 +0800
+Subject: [PATCH] Add 'headers' argument and simplify header handling
+
+- Add 'headers' argument to the setup() function in setup.py
+- Remove code for installing header files in virtual environments
+
+Signed-off-by: Roald Clark <roaldclark@gmail.com>
+---
+ setup.py | 18 +-----------------
+ 1 file changed, 1 insertion(+), 17 deletions(-)
+
 diff --git a/setup.py b/setup.py
-index 5f12c58..8758dcd 100755
+index b6a283c..8758dcd 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -149,6 +149,7 @@ if __name__ == "__main__":
@@ -24,10 +37,13 @@ index 5f12c58..8758dcd 100755
 -        else:
 -            headers_dir = pathlib.Path(sysconfig.get_paths()['include']) / "pygame_sdl2"
 -
--        headers_dir.mkdir(exist_ok=True)
+-        headers_dir.mkdir(parents=True, exist_ok=True)
 -
 -        for header in headers:
 -            srcpath = pathlib.Path(header)
 -            dstpath = headers_dir / srcpath.name
 -
 -            shutil.copy(srcpath, dstpath)
+-- 
+2.47.1
+

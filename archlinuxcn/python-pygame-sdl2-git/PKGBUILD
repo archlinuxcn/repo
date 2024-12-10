@@ -1,16 +1,18 @@
 # Maintainer: Patrick Northon <northon_patrick3@yahoo.ca>
 
-_pkgname=python-pygame-sdl2
-pkgname=${_pkgname}-git
-_dir=pygame_sdl2
+_name=pygame_sdl2
+_pkgname="python-${_name}"
+pkgname="${_pkgname}-git"
 pkgver=2.1.0.r466.99608a7
 pkgrel=1
 pkgdesc="SDL2-based implementation of the Pygame API"
 arch=('x86_64')
-url="https://github.com/renpy/$_dir"
+url="https://github.com/renpy/${_name}"
 license=('LGPL-2.1-or-later' 'Zlib')
 depends=(
     'glibc'
+    'libjpeg-turbo'
+    'libpng'
     'python'
     'sdl2'
     'sdl2_image'
@@ -20,34 +22,37 @@ depends=(
 makedepends=(
     'cython0'
     'git'
+    'python-build'
+    'python-installer'
     'python-setuptools'
+    'python-wheel'
 )
-provides=($_pkgname)
-conflicts=($_pkgname)
+provides=("${_pkgname}=${pkgver}")
+conflicts=("${_pkgname}")
 source=("git+${url}.git"
-        "setup.patch")
+        "0001-Add-headers-argument-and-simplify-header-handling.patch")
 sha256sums=('SKIP'
-            '6af94ba4424b0687de0af68c4e69733920d5948293b501cd51e9ffb2a2271da9')
+            'cfae1b9df49e065ffcf630ea0714e9c7628d433ea2464be4cb7ab1a8930613d4')
 
 pkgver() {
-    cd "$srcdir/$_dir"
+    cd "${srcdir}/${_name}"
     version="$(cat 'src/pygame_sdl2/version.py' | grep '^vernum = ' | sed 's/^vernum = //; s/(//; s/)//; s/, /./g')"
     echo "${version}.r$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-    cd "$srcdir/$_dir"
-    patch -Np1 -i ../setup.patch
+    cd "${srcdir}/${_name}"
+    patch -Np1 -i ../0001-Add-headers-argument-and-simplify-header-handling.patch
 }
 
 build() {
-    cd "$srcdir/$_dir"
-    python setup.py build
+    cd "${srcdir}/${_name}"
+    python -m build --wheel --no-isolation
 }
 
 package() {
-    cd "$srcdir/$_dir"
-    python setup.py install --root="$pkgdir" --optimize=1 --skip-build
-    install -Dm644 'COPYING.LGPL21' "$pkgdir/usr/share/licenses/$pkgname/COPYING.LGPL-2.1"
-    install -Dm644 'COPYING.ZLIB' "$pkgdir/usr/share/licenses/$pkgname/COPYING.Zlib"
+    cd "${srcdir}/${_name}"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+    install -Dm0644 'COPYING.LGPL21' "${pkgdir}/usr/share/licenses/${pkgname}/COPYING.LGPL-2.1"
+    install -Dm0644 'COPYING.ZLIB' "${pkgdir}/usr/share/licenses/${pkgname}/COPYING.Zlib"
 }
