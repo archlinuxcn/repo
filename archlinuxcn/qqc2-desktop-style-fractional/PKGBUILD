@@ -18,7 +18,7 @@ depends=('gcc-libs'
 	'qt6-base'
 	'qt6-declarative'
 	'sonnet')
-makedepends=('extra-cmake-modules' 'qt6-tools')
+makedepends=('extra-cmake-modules-git' 'qt6-tools')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("https://invent.kde.org/frameworks/${_pkgname}/-/archive/v${_pkgver}/${_pkgname}-v${_pkgver}.tar.gz")
