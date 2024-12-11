@@ -5,14 +5,14 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.0.7
+pkgver=4.0.8
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
 
-source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
-md5sums=('a2079c8e4a618aa9f8fe434116494bc3')
+source=("https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('7e4cf3aed921350f8a398b100c035542')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -55,14 +55,12 @@ backup=('etc/afp.conf'
         'etc/pam.d/netatalk')
 
 build() {
-  docbookver=`pacman -Q docbook-xsl | awk '{split($2,a,"-"); print a[1]}'`
   cd "${srcdir}/${pkgname}-${pkgver}"
   arch-meson . build \
     --localstatedir /var/lib \
     -Dwith-appletalk=true \
     -Dwith-bdb-version=5.3 \
     -Dwith-dbus-sysconf-path=/usr/share/dbus-1/system.d \
-    -Dwith-docbook-path=/usr/share/xml/docbook/xsl-stylesheets-${docbookver} \
     -Dwith-dtrace=false \
     -Dwith-init-hooks=false \
     -Dwith-lockfile-path=/run/netatalk.pid \
