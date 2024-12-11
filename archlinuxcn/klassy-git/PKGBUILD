@@ -40,12 +40,19 @@ makedepends=(git
              kiconthemes5
              kirigami2
              kwindowsystem5)
-source=("${_pkgname}::git+https://github.com/paulmcauley/klassy.git#branch=plasma6.0")
-sha256sums=('SKIP')
+source=("${_pkgname}::git+https://github.com/paulmcauley/klassy.git#branch=plasma6.2"
+        "project-version.patch")
+sha256sums=('SKIP'
+            '20d2997dcf7ca94fd294a4500111084d244040795a0083af932aa83e00e91688')
 
 pkgver () {
   cd "${_pkgname}"
   git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "${_pkgname}"
+  git apply "${srcdir}/project-version.patch"
 }
 
 build() {
