@@ -2,15 +2,17 @@ build_prefix: extra-x86_64
 pre_build_script: aur_pre_build(maintainers=['patlefort'])
 post_build: aur_post_build
 repo_depends:
-  - cython0
   - ffmpeg6.1
   - python-pygame-sdl2-git
+repo_makedepends:
+  - cython0
   - python-sphinx_rtd_dark_mode
 update_on:
   - source: aur
     aur: renpy
   - alias: python
   - source: manual
-    manual: 1
+    manual: 1.1
+
 maintainers:
   - github: roaldclark
