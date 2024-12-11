@@ -233,17 +233,21 @@ _build() {
   ulimit -n 4096
 
   local _variant=$1
-  if test "$_variant" = "generic"; then
-    export SURFER_COMPAT=true
-  else
-    export SURFER_COMPAT=false
-  fi
 
   # Run PGO Build
   msg2 "build zen browser: $_variant"
   (
     cd "$srcdir/desktop"
-    ZEN_RELEASE=1 LLVM_PROFDATA=llvm-profdata \
+
+    local _surfer_compat="$CARCH"
+    if test "$_variant" = "specific"; then
+      _surfer_compat="x86_64-v3"
+    fi
+
+    SURFER_COMPAT="$_surfer_compat" \
+    SURFER_PLATFORM=linux \
+    ZEN_RELEASE=1 \
+    LLVM_PROFDATA=llvm-profdata \
       dbus-run-session \
         xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
           pnpm surfer build --skip-patch-check
