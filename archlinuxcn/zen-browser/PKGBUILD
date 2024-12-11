@@ -147,7 +147,7 @@ prepare() {
   pnpm --silent install --frozen-lockfile
 
   msg2 "prepare surfer build environment"
-  pnpm surfer ci --brand alpha --display-version "$_zen_version"
+  pnpm surfer ci --brand beta --display-version "$_zen_version"
   # setup Firefox source
   install -Dvm644 "$srcdir/firefox-${_firefox_version}.source.tar.xz" -t "./.surfer/engine"
   pnpm surfer download > /dev/null
