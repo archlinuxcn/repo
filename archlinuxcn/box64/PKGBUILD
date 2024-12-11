@@ -3,9 +3,9 @@
 
 pkgname=box64
 pkgver=0.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux Userspace x86_64 Emulator with a twist'
-arch=('x86_64' 'aarch64' 'riscv64')
+arch=('x86_64' 'aarch64' 'riscv64' 'powerpc64le')
 url='https://github.com/ptitSeb/box64'
 license=('MIT')
 install="box64.install"
@@ -27,6 +27,11 @@ build() {
               -DLD80BITS=1 -DNOALIGN=1 \
               -DCMAKE_BUILD_TYPE=RelWithDebInfo \
               -DCMAKE_INSTALL_PREFIX=/usr
+    elif [[ $CARCH == "powerpc64le" ]]; then
+        cmake -B build -S . \
+              -DPPC64LE=1 \
+              -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+              -DCMAKE_INSTALL_PREFIX=/usr
     elif [[ $CARCH == "riscv64" ]]; then
         cmake -B build -S . \
               -DRV64=1 \
@@ -42,6 +47,8 @@ package() {
       make DESTDIR=${pkgdir} install
     elif [[ $CARCH == "x86_64" ]]; then
       install -Dm755 box64 -t "${pkgdir}/usr/bin/"
+    elif [[ $CARCH == "powerpc64le" ]]; then
+      make DESTDIR=${pkgdir} install
     elif [[ $CARCH == "riscv64" ]]; then
       make DESTDIR=${pkgdir} install
     fi
