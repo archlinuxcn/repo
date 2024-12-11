@@ -4,7 +4,6 @@
 _pkgname=qqc2-desktop-style
 pkgname="${_pkgname}-fractional"
 pkgver=6.8.0
-_pkgver=${pkgver/rc/-rc}
 pkgrel=2
 pkgdesc="A style for Qt Quick Controls 2 to make it follow your desktop theme (with Qt text rendering patch)"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -18,15 +17,21 @@ depends=('gcc-libs'
 	'qt6-base'
 	'qt6-declarative'
 	'sonnet')
-makedepends=('extra-cmake-modules-git' 'qt6-tools')
+makedepends=('extra-cmake-modules' 'qt6-tools')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-source=("https://invent.kde.org/frameworks/${_pkgname}/-/archive/v${_pkgver}/${_pkgname}-v${_pkgver}.tar.gz")
-sha256sums=('34f092c2fc258bb21326f9e752746fb7a826beba38345415124aa03e5b9198c2')
+source=("https://download.kde.org/stable/frameworks/${pkgver%.*}/${_pkgname}-${pkgver}.tar.xz"
+	"qt-text-rendering.patch::https://invent.kde.org/frameworks/${_pkgname}/-/merge_requests/429.patch")
+sha256sums=('e9692f00d79b963bdcae716caab964c2534750c85d7fe02fce7a908003eb4da3'
+            'abe73232f1f36f13f82959ddda888089b2d58cba5ccd801ad3d79707fe28be53')
+
+prepare() {
+	patch -d "${_pkgname}-${pkgver}" -p1 -i ../qt-text-rendering.patch
+}
 
 build() {
 	cmake -B build \
-		-S "${_pkgname}-v${_pkgver}" \
+		-S "${_pkgname}-${pkgver}" \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DBUILD_TESTING=OFF
@@ -36,5 +41,5 @@ build() {
 
 package() {
 	DESTDIR="${pkgdir}" cmake --install build
-	install -Dm644 ${_pkgname}-v${_pkgver}/LICENSES/* -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -Dm644 ${_pkgname}-${pkgver}/LICENSES/* -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 }

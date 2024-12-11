@@ -5,12 +5,10 @@ maintainers:
 pre_build_script: update_pkgver_and_pkgrel(_G.newver.replace('-rc', 'rc'))
 post_build_script: git_pkgbuild_commit()
 
-repo_makedepends:
-  - extra-cmake-modules-git
-
 update_on:
   - source: gitlab
     host: invent.kde.org
     gitlab: frameworks/qqc2-desktop-style
     use_max_tag: true
     prefix: v
+    exclude_regex: '.*rc.*
