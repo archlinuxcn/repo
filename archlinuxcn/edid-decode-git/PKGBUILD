@@ -2,8 +2,8 @@
 # Contributor: Jonathan Liu <net147@gmail.com>
 
 pkgname=edid-decode-git
-_gitname=edid-decode
-pkgver=r720.5332a3b
+_gitname=v4l-utils
+pkgver=1.28.0.r65.gc81300e1
 pkgrel=1
 pkgdesc="EDID decoder and conformance tester"
 url="https://git.linuxtv.org/edid-decode.git/"
@@ -12,20 +12,27 @@ license=('MIT')
 depends=('glibc' 'gcc-libs')
 makedepends=('git' 'meson')
 provides=('edid-decode')
-source=('git+https://git.linuxtv.org/edid-decode.git')
-sha256sums=('SKIP')
+source=('git+https://git.linuxtv.org/v4l-utils.git'
+        'install-tag.patch')
+sha256sums=('SKIP'
+            '97e0839e207467875011395e8ce51225c79bf1fba824f133c4bfa2a016a8aa07')
 
 pkgver() {
   cd "$_gitname"
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  git describe --long --tags | sed 's/v4l-utils-//g;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "$_gitname"
+  git apply "$srcdir/install-tag.patch"
 }
 
 build() {
-  arch-meson "$srcdir/$_gitname" "$srcdir/build"
-  meson compile -C "$srcdir/build"
+  arch-meson -Dbpf=disabled -Ddoxygen-doc=disabled "$srcdir/$_gitname" "$srcdir/build"
+  meson compile -C "$srcdir/build" edid-decode
 }
 
 package() {
-  meson install -C "$srcdir/build" --destdir "$pkgdir"
-  install -Dm644 "$srcdir/$_gitname/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  meson install -C "$srcdir/build" --destdir "$pkgdir" --tags edid-decode
+  install -Dm644 "$srcdir/$_gitname/utils/edid-decode/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
