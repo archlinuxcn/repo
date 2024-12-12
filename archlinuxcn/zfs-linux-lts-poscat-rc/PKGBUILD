@@ -1,0 +1,60 @@
+# Maintainer: Christian Heusel <christian@heusel.eu>
+# Contributor: Jan Houben <jan@nexttrex.de>
+# Contributor: Jesus Alvarez <jeezusjr at gmail dot com>
+#
+# ! WARNING !
+#
+# This packages is meant to build a kernel module, so these modules will only
+# work with the kernel package they target. In this case, the zfs-linux-lts
+# packages will only work with the default linux-lts package!
+#
+
+pkgbase="zfs-linux-lts-poscat"
+pkgname=("zfs-linux-lts-poscat" "zfs-linux-lts-poscat-headers")
+_kernelver=6.6.64-1
+_extramodules="${_kernelver}-lts"
+
+pkgver=2.2.7
+pkgrel=1
+makedepends=("linux-lts-headers=${_kernelver}")
+arch=("x86_64")
+url="https://openzfs.org/"
+source=("https://github.com/openzfs/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz")
+sha256sums=('b2b8e3bfabf2a6407a0132243726cb6762547a5bd095b1b1f37eaf2a9d8f7672')
+license=("CDDL-1.0")
+depends=("kmod" "zfs-utils" "linux-lts=${_kernelver}")
+
+build() {
+    cd "${srcdir}/zfs-${pkgver}"
+    ./autogen.sh
+    ./configure --prefix=/usr --sysconfdir=/etc --sbindir=/usr/bin --libdir=/usr/lib \
+                --datadir=/usr/share --includedir=/usr/include --with-udevdir=/usr/lib/udev \
+                --libexecdir=/usr/lib --with-config=kernel \
+                --with-linux=/usr/lib/modules/${_extramodules}/build \
+                --with-linux-obj=/usr/lib/modules/${_extramodules}/build
+    make
+}
+
+package_zfs-linux-lts-poscat() {
+    pkgdesc="Kernel modules for the Zettabyte File System."
+    install=zfs.install
+    provides=("zfs" "spl")
+    groups=("archzfs-linux-lts")
+    conflicts=("zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" 'zfs-linux-lts-git' 'zfs-linux-lts-rc' 'spl-linux-lts')
+    replaces=("spl-linux-lts")
+    cd "${srcdir}/zfs-${pkgver}"
+    make DESTDIR="${pkgdir}" INSTALL_MOD_PATH=${pkgdir}/usr INSTALL_MOD_STRIP=1 install
+    # Remove src dir
+    rm -r "${pkgdir}"/usr/src
+}
+
+package_zfs-linux-lts-poscat-headers() {
+    pkgdesc="Kernel headers for the Zettabyte File System."
+    provides=("zfs-headers" "spl-headers")
+    conflicts=("zfs-headers" "zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" "spl-headers")
+    cd "${srcdir}/zfs-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+    rm -r "${pkgdir}/lib"
+    # Remove reference to ${srcdir}
+    sed -i "s+${srcdir}++" ${pkgdir}/usr/src/zfs-*/${_extramodules}/Module.symvers
+}
