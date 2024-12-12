@@ -22,7 +22,7 @@ url="https://openzfs.org/"
 source=("https://github.com/openzfs/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz")
 sha256sums=('c92e02103ac5dd77bf01d7209eabdca55c7b3356aa747bb2357ec4222652a2a7')
 license=("CDDL-1.0")
-depends=("kmod" "zfs-utils=${pkgver}" "linux-lts=${_kernelver}")
+depends=("kmod" "zfs-utils" "linux-lts=${_kernelver}")
 
 build() {
     cd "${srcdir}/zfs-${pkgver}"
