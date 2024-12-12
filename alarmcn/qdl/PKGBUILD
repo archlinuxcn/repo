@@ -3,7 +3,7 @@
 # it under the terms of the CC0 1.0 License.
 
 pkgname=qdl
-pkgver=2.0
+pkgver=2.1
 pkgrel=1
 pkgdesc="Tool to communicate with Qualcomm System On a Chip bootroms to install or execute code"
 arch=(armv7h aarch64 i686 x86_64)
@@ -11,7 +11,7 @@ url='https://github.com/andersson/qdl'
 license=('BSD3')
 depends=(libxml2.so zlib xz libicui18n.so libicuuc.so libicudata.so libusb-1.0.so)
 source=("https://github.com/andersson/${pkgname}/archive/v${pkgver}.tar.gz")
-sha512sums=('46c18ba3b602c4df0ecede3c926e5a8ef3736adfa788a79b4406054840acb1efe1cd25e7d34ce681e7cda4f3ba66ebde8fc3367981bf1caa84ae5b74e8ef9bb5')
+sha512sums=('f1a23653271498efd442f6787b33d6142b3cb75db74bdb0600b05b3c584d9b1bad7b883cecff252d2df6b9871888b824a8d236833bce38f288d399c6ece6562c')
 
 build(){
   cd "${srcdir}/${pkgname}-${pkgver}"
