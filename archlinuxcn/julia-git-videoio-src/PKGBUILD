@@ -11,7 +11,7 @@ depends=(julia-git)
 source=("git+https://github.com/JuliaIO/VideoIO.jl.git#commit=$_commit"
         0001-Support-FFMPEG-6.patch)
 sha256sums=('58bf58967038631488c6a8e3f6d329eb90269d50d3fefd2bccdbef16c68f77ca'
-            '4eda28024aa57f4f52def0f90357a8738f1dc578f956105ec579532871c1e82c')
+            '854e8f35256b10aaad7e20223061476a169b767a3f13f3948023a75444d32eb8')
 
 prepare() {
   cd VideoIO.jl
