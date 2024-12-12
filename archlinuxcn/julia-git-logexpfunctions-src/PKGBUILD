@@ -1,6 +1,6 @@
 pkgname=julia-git-logexpfunctions-src
-pkgver=0.3.28
-_commit=289114f535827c612ce10c01b8dec9d3a55e4d15
+pkgver=0.3.29
+_commit=62b081dad466f3b74f3cf8fb7e51472b1ed7024a
 pkgrel=1
 pkgdesc="LogExpFunctions.jl"
 url="https://github.com/JuliaStats/LogExpFunctions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStats/LogExpFunctions.jl.git#commit=$_commit")
-sha256sums=('63ec8b40b9ea75f2ee3dc7c81db9a4c2d4de6f32e9520ab1d687b5ed3865e428')
+sha256sums=('26f4f023dc778c24d9c51c974bf62c2b4c7566673e718194123bfc2779e45968')
 
 package() {
   cd LogExpFunctions.jl
