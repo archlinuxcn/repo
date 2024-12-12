@@ -1,6 +1,6 @@
 pkgname=julia-git-openjpeg_jll-src
-pkgver=2.5.2+0
-_commit=84021c0a7720ca99011687ab68219c79fcb4110b
+pkgver=2.5.3+0
+_commit=5802770f592d59bfcfe2550285a930018fc3bddb
 pkgrel=1
 pkgdesc="OpenJpeg_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenJpeg_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git openjpeg2)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenJpeg_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('be744330bbc40300404c95a2eead12bc76eb809cddd05bf48674aaac243a7c5f'
+sha256sums=('7524a549ceec1ba1892b9dcaef80d43e58c00c501960dd1f3a9896c4995e055c'
             '2e3b20464bf8b7aa619775cb3f5aee64c112ce6d2ea0659a3a11eb13ff099c92')
 
 build() {
