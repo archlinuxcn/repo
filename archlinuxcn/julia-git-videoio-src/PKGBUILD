@@ -1,7 +1,7 @@
 pkgname=julia-git-videoio-src
-pkgver=1.1.0
-_commit=6f965b620b1c2760a6756ee44faa96a5ccbc3d43
-pkgrel=3
+pkgver=1.1.1
+_commit=37e4adb40384b694e8eafdd5d63f562de6f606f7
+pkgrel=1
 pkgdesc="VideoIO.jl"
 url="https://github.com/JuliaIO/VideoIO.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/VideoIO.jl.git#commit=$_commit"
         0001-Support-FFMPEG-6.patch)
-sha256sums=('58bf58967038631488c6a8e3f6d329eb90269d50d3fefd2bccdbef16c68f77ca'
+sha256sums=('2823ac40c40fab907fdff728a26b042c941d69d34e4a28a71e2c61ed536eb237'
             '854e8f35256b10aaad7e20223061476a169b767a3f13f3948023a75444d32eb8')
 
 prepare() {
