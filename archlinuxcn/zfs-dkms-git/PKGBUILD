@@ -18,19 +18,14 @@ arch=('any')
 url="https://zfsonlinux.org/"
 license=('CDDL-1.0')
 groups=('zfs-git')
-depends=('dkms')
+depends=('zfs-utils-git' 'dkms' 'perl')
 makedepends=('git')
-provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}")
-# ambiguous, provided for backwards compat, pls don't use
-provides+=('zfs')
-provides+=("zfs-dkms=${pkgver}")
+provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}" "zfs" "zfs-dkms")
 conflicts=('zfs-dkms')
 source=("git+https://github.com/openzfs/zfs.git"
 	"0001-only-build-the-module-in-dkms.conf.patch")
 sha256sums=('SKIP'
             '539f325e56443554f9b87baff33948b91a280ec1daadcb0c636b105252fcd0f5')
-b2sums=('SKIP'
-        'a8ab5da81d214e7801f0f8cdf77c076c714a3f17292df15ca35fcf7aef2c4d505348797e3b1da7590ea303ff488490ddba49e6f9e3f8a0bcc975894d51d97c2b')
 
 pkgver() {
 	cd zfs
@@ -62,7 +57,6 @@ build() {
 }
 
 package() {
-	depends=("zfs-utils-git=${epoch}:${pkgver}" 'dkms' 'perl')
 	cd zfs
 
 	dkmsdir="${pkgdir}/usr/src/zfs-${pkgver}"
