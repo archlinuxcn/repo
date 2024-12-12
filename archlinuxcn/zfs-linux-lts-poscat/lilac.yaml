@@ -6,9 +6,9 @@ pre_build_script: |
 
   for line in edit_file('PKGBUILD'):
     if line.startswith('_kernelver='):
-      line = f"_kernelver={}"
+      line = f"_kernelver={_G.newvers[1]}"
     elif line.startswith('pkgver='):
-      line = f"pkgver={}"
+      line = f"pkgver={_G.newvers[0]}"
     elif line.startswith('pkgrel='):
       if pkgver != _G.newvers[0]:
         line = f"pkgrel=1"
