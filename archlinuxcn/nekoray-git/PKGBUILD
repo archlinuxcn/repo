@@ -6,13 +6,14 @@ _pkgname=${pkgname%-git}
 pkgver=4.0.1.r0.gadef6cd
 pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-box)"
-arch=('x86_64')
+arch=('x86_64' 'aarch64' 'riscv64')
 url="https://matsuridayo.github.io"
 license=('GPL-3.0-or-later')
 makedepends=('cmake' 'git' 'go')
 depends=(
 	'qt6-base' 'qt6-svg' 'qt6-tools'
 	'protobuf' 'yaml-cpp' 'zxing-cpp'
+	'abseil-cpp'
 )
 optdepends=(
 	'sing-geoip: geoip data for NekoBox'
@@ -52,7 +53,15 @@ build() {
 	cmake -B build -DQT_VERSION_MAJOR=6 -DNKR_PACKAGE=ON
 	cmake --build build
 
-	GOOS=linux GOARCH=amd64 ./libs/build_go.sh
+	export GOARCH
+
+	case $CARCH in
+	x86_64) GOARCH=amd64 ;;
+	aarch64) GOARCH=arm64 ;;
+	riscv64) GOARCH=riscv64 ;;
+	esac
+
+	GOOS=linux ./libs/build_go.sh
 }
 
 package() {
@@ -61,7 +70,15 @@ package() {
 	install -Dm644 "${_pkgname}/res/public/nekobox.png" -t "${pkgdir}/usr/share/pixmaps/"
 
 	# Core
-	install -Dm755 "${_pkgname}/deployment/linux64/nekobox_core" -t "${pkgdir}/usr/lib/nekobox/"
+	local core_srcdir=linux
+
+	case $CARCH in
+	x86_64) core_srcdir+=64 ;;
+	aarch64) core_srcdir+=-arm64 ;;
+	riscv64) core_srcdir+=-riscv64 ;;
+	esac
+
+	install -Dm755 "${pkgname}/deployment/${core_srcdir}/nekobox_core" -t "${pkgdir}/usr/lib/nekobox/"
 
 	# Binary file
 	install -Dm755 "${_pkgname}/build/nekobox" -t "${pkgdir}/usr/lib/nekobox/"
