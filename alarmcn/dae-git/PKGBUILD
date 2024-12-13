@@ -39,10 +39,15 @@ prepare() {
 }
 
 build() {
-	cd "${_pkgname}/"
-	export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
 	export CFLAGS="-fno-stack-protector"
-	make VERSION="unstable-${pkgver}"
+	export CGO_ENABLED=1
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export BUILD_ARGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+
+	make VERSION="unstable-${pkgver}" -C "${_pkgname}"
 }
 
 package() {
