@@ -1,0 +1,27 @@
+maintainers:
+  - github: Integral-Tech
+    email: integral@archlinuxcn.org
+
+pre_build_script: |
+  update_pkgrel()
+  vcs_update()
+
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: MatsuriDayo/nekoray
+
+  - source: alpm
+    alpm: yaml-cpp
+    provided: libyaml-cpp.so
+    strip_release: true
+
+  - source: alpm
+    alpm: abseil-cpp
+    strip_release: true
+
+  - source: alpm
+    alpm: protobuf
+    provided: libprotobuf.so
+    strip_release: true
