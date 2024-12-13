@@ -1,3 +1,32 @@
+## GE-Proton9-21
+
+Upstream:
+
+- imported piper + PROTON_VOICE_FILES changes
+- imported misc proton game overrides
+- mono updated to 9.3.1
+- icu 64 and 32 bit changes imported
+- wine updated to latest bleeding edge
+- dxvk updated to latest git
+- dxvk-nvapi updated to latest upstream commit
+- vkd3d-proton updated to latest git
+- vkd3d switched from valve version to upstream wine version (same change was made upstream)
+
+Patch:
+
+- Backported wine bug fix patch 56653 for GetLogicalProcessorInformation, fixes edge case crash on some systems for a few games, notably baldurs gate 3 and divinity original sin 2 (thanks mx-moth)
+
+Protonfixes:
+
+- Add fix for dirt 3 outside of steam (thanks polluxau)
+- Remove no longer needed Disgaea 4 fix (thanks UsernamesAreNotMyThing)
+- Added fix for Teenage Mutant Ninja Turtles Shredders Revenge (thanks FranjeGueje)
+- Add fix for The Callisto Protocol (thanks FranjeGueje)
+- Remove redundant dinput8 overrides -- dinput8 is now default n,b in Proton Bleeding Edge (thanks Blisto91)
+- Add fix Bright Memory (thanks loathingKernel)
+- Disable Esync and Fsync for Supreme Commander (thanks UsernamesAreNotMyThing)
+- Added protonfix for SteamDeck=1 for Dauntless on steam
+
 ## GE-Proton9-20
 
 Hotfix:
