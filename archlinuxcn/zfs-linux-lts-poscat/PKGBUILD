@@ -7,7 +7,10 @@ _extramodules="${_kernelver}-lts"
 
 pkgver=2.2.7
 pkgrel=1
-makedepends=("linux-lts-headers=${_kernelver}")
+makedepends=(
+  "linux-lts-headers=${_kernelver}"
+  "libunwind"
+)
 arch=("x86_64")
 url="https://openzfs.org/"
 source=(
@@ -78,7 +81,7 @@ package_zfs-utils-poscat() {
     rm -rv "${pkgdir}"/usr/share/initramfs-tools
     ## fedora specific
     rm -rv "${pkgdir}"/usr/lib/dracut
-    ## useless scripts
+    ## test scripts
     rm -rv "${pkgdir}"/usr/share/zfs/{*.sh,runfiles,test-runner,zfs-tests}
 }
 
@@ -98,6 +101,7 @@ package_zfs-linux-lts-poscat-headers() {
     pkgdesc="ZFS kernel headers"
     provides=("zfs-headers" "spl-headers")
     conflicts=("zfs-headers" "zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" "spl-headers")
+    depends+=("libaio")
 
     cd "${srcdir}/zfs-${pkgver}"
     make DESTDIR="${pkgdir}" install
