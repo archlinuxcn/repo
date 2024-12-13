@@ -22,9 +22,6 @@ pre_build_script: |
 post_build_script: |
   git_pkgbuild_commit()
 
-repo_depends:
-  - zfs-utils
-
 update_on:
   - source: github
     github: openzfs/zfs
