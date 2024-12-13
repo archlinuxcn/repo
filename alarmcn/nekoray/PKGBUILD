@@ -31,7 +31,7 @@ sha512sums=('711e677fcb925367959b073d1287a721c253db4213fdf3e77c0d7d7042e47d4809e
             'f99795f5f82fca74bbc36569d3595bc141c3fef00a0c6076585da683f0a5144dbfdbbe4525cf82576e9010262f74f462ae40f5a7b95dafc01033763a9b1711bd')
 
 prepare() {
-	cd "${_pkgname}/"
+	cd "${pkgname}/"
 
 	git submodule init
 	git config submodule.3rdparty/QHotkey.url "${srcdir}/QHotkey"
