@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=('x86_64' 'aarch64')
 url="https://github.com/daeuniverse/${pkgname}"
-license=('AGPL')
+license=('AGPL-3.0-or-later')
 depends=(
 	'glibc'
 	'v2ray-geoip'
@@ -15,11 +15,17 @@ depends=(
 makedepends=('clang' 'go')
 backup=("etc/${pkgname}/config.${pkgname}")
 source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${pkgname}-full-src.zip")
+install="${pkgname}.install"
 sha256sums=('11b5ed23b04c8fe126d9fbba67c7ea4cb5d468d833166113621297d5fef0640d')
 
 build() {
-	export GOFLAGS="-buildmode=pie -trimpath -modcacherw"
 	export CFLAGS="-fno-stack-protector"
+	export CGO_ENABLED=1
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export BUILD_ARGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 	make VERSION="${pkgver}"
 }
 
