@@ -9,7 +9,7 @@ pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://matsuridayo.github.io"
 license=('GPL-3.0-or-later')
-makedepends=('cmake' 'git' 'ninja' 'go')
+makedepends=('cmake' 'git' 'go')
 depends=(
 	'qt6-base' 'qt6-svg' 'qt6-tools'
 	'protobuf' 'yaml-cpp' 'zxing-cpp'
@@ -21,25 +21,30 @@ optdepends=(
 )
 source=(
 	"git+https://github.com/MatsuriDayo/${pkgname}.git#tag=${_pkgver}"
+	"git+https://github.com/Skycoder42/QHotkey.git"
 	"nekobox.sh"
 	"nekobox.desktop"
 )
 sha512sums=('711e677fcb925367959b073d1287a721c253db4213fdf3e77c0d7d7042e47d4809ec7549f0e446ac5e9f1e73da68642bf09dd7c3dbea672443d89413ebbfb688'
+            'SKIP'
             '3a65300520462bd6a5667c50b7db1ccbf7107b9d5c65959d00451a68cdd77d9e13288da03ccb0d712cd4fb076cdfb3c635490d6148268f920cde7ba11b7237a9'
             'f99795f5f82fca74bbc36569d3595bc141c3fef00a0c6076585da683f0a5144dbfdbbe4525cf82576e9010262f74f462ae40f5a7b95dafc01033763a9b1711bd')
 
+prepare() {
+	cd "${_pkgname}/"
+
+	git submodule init
+	git config submodule.3rdparty/QHotkey.url "${srcdir}/QHotkey"
+	git -c protocol.file.allow=always submodule update
+
+	./libs/get_source.sh
+}
+
 build() {
 	cd "${pkgname}/"
-	git submodule init
-	git submodule update
-	bash libs/get_source.sh
 
-	mkdir build
-	cd build
-	cmake -GNinja -DQT_VERSION_MAJOR=6 -DNKR_PACKAGE=ON ..
-	ninja
-
-	cd ..
+	cmake -B build -DQT_VERSION_MAJOR=6 -DNKR_PACKAGE=ON
+	cmake --build build
 
 	export GOARCH
 
@@ -53,8 +58,6 @@ build() {
 }
 
 package() {
-	install -dm755 "${pkgdir}/usr/bin/"
-
 	# Assets
 	install -Dm644 nekobox.desktop -t "${pkgdir}/usr/share/applications/"
 	install -Dm644 "${pkgname}/res/public/nekobox.png" -t "${pkgdir}/usr/share/pixmaps/"
