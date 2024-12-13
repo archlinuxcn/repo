@@ -59,7 +59,7 @@ build() {
 
 package_zfs-utils-poscat() {
     pkgdesc='ZFS userspace tools'
-    provides=('zfs-utils')
+    provides=('zfs-utils' 'zfs-utils=2.2.7')
     conflicts=('zfs-utils')
     depends+=('libunwind')
     optdepends=('python: for arcstat/arc_summary/dbufstat')
