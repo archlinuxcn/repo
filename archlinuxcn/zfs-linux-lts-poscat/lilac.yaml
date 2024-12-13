@@ -13,7 +13,7 @@ pre_build_script: |
       if pkgver != _G.newvers[0]:
         line = f"pkgrel=1"
       else:
-        line = f"pkgrel={_next_pkgrel(pkgrel)}"
+        line = f"pkgrel={pkgrel + 1}"
 
     print(line)
 
