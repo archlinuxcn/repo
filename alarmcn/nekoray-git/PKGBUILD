@@ -78,7 +78,7 @@ package() {
 	riscv64) core_srcdir+=-riscv64 ;;
 	esac
 
-	install -Dm755 "${pkgname}/deployment/${core_srcdir}/nekobox_core" -t "${pkgdir}/usr/lib/nekobox/"
+	install -Dm755 "${_pkgname}/deployment/${core_srcdir}/nekobox_core" -t "${pkgdir}/usr/lib/nekobox/"
 
 	# Binary file
 	install -Dm755 "${_pkgname}/build/nekobox" -t "${pkgdir}/usr/lib/nekobox/"
