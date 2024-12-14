@@ -1,5 +1,4 @@
 #!/bin/bash
-shopt -s nullglob
 
 true || source /usr/lib/initcpio/functions
 true || source /usr/lib/initcpio/install/systemd
@@ -24,8 +23,6 @@ build() {
   {
     copied_files=(
       /etc/hostid
-      /etc/zfs/zpool.cache # not needed, still include it for compatibility
-      /etc/modprobe.d/{*spl*,*zfs*}.conf
     )
 
     for f in "${copied_files[@]}"; do
