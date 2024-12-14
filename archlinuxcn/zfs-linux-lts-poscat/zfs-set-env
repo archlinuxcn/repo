@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/usr/bin/sh
 # shellcheck shell=ash
+set -e
 
 CMDLINE=${DEBUG_CMDLINE:-/proc/cmdline}
 
@@ -13,23 +14,21 @@ log "mode: $mode"
 
 case $mode in
   import_all)
-    if line=$(zpool list -Ho bootfs | grep -m1 -vFx -); then
+    if dSet=$(zpool list -Ho bootfs | grep -m1 -vFx -); then
       :
     else
       log "no pool with bootfs property found" 2
       exit 1
     fi
-    dSet=$(echo "$line" | tr -d '\n')
     ;;
   import)
     pool=$(parse-cmdline -v command=pool "$CMDLINE")
-    if line=$(zpool list -Ho bootfs "$pool" | grep -m1 -vFx -); then
+    if dSet=$(zpool list -Ho bootfs "$pool" | grep -m1 -vFx -); then
       :
     else
       log "no bootfs property found for pool $pool" 2
       exit 1
     fi
-    dSet=$(echo "$line" | tr -d '\n')
     ;;
   dataset)
     dSet=$(parse-cmdline -v command=dataset "$CMDLINE")

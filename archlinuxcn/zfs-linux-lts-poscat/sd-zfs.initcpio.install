@@ -17,9 +17,7 @@ build() {
   map add_binary \
     mount.zfs \
     zfs \
-    zpool \
-    /lib/udev/vdev_id \
-    /lib/udev/zvol_id
+    zpool
 
   add_systemd_unit "systemd-udev-settle.service"
 
@@ -35,17 +33,24 @@ build() {
     done
 
 	  # Include hostid when it's not written to file
-	  if [[ ! -f /etc/hostid ]]; then
-	  	AA="$(hostid | cut -b 1,2)"
-	  	BB="$(hostid | cut -b 3,4)"
-	  	CC="$(hostid | cut -b 5,6)"
-	  	DD="$(hostid | cut -b 7,8)"
-	  	printf "\x${DD}\x${CC}\x${BB}\x${AA}" > "${BUILDROOT}/etc/hostid"
-	  fi
+    if [[ ! -f /etc/hostid ]]; then
+      AA="$(hostid | cut -b 1,2)"
+      BB="$(hostid | cut -b 3,4)"
+      CC="$(hostid | cut -b 5,6)"
+      DD="$(hostid | cut -b 7,8)"
+      printf "\x${DD}\x${CC}\x${BB}\x${AA}" > "${BUILDROOT}/etc/hostid"
+    fi
   }
+
+  add_binary /usr/lib/systemd/system-generators/systemd-debug-generator
 
   # generator and its dependencies
   add_binary /usr/lib/zfs/initcpio/zfs-root-generator /usr/lib/systemd/system-generators/
   add_binary /usr/lib/zfs/initcpio/zfs-set-env /usr/bin/
   add_binary /usr/lib/zfs/initcpio/parse-cmdline /usr/bin/
+
+  add_binary /usr/lib/initcpio/busybox /usr/bin/
+  for applet in $(/usr/lib/initcpio/busybox --list); do
+    add_symlink "/usr/bin/$applet" busybox
+  done
 }

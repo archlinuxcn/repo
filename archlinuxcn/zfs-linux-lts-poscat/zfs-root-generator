@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 # shellcheck shell=ash
 # cmdline format:
 #
@@ -8,6 +8,7 @@
 #    root=zfs:pool
 # import all pools and use the first one with a bootfs property:
 #    root=zfs
+set -e
 
 # usage: klog "message" [level]
 klog() {
@@ -27,7 +28,7 @@ write_sysroot_override_unit() {
     echo "[Mount]"
     echo "PassEnvironment=ROOT_DATASET"
     echo "Type=zfs"
-    echo "What=${ROOT_DATASET}"
+    echo 'What=${ROOT_DATASET}'
   } > "$GENERATOR_DIR"/sysroot.mount.d/zfs-override.conf
 }
 
@@ -37,7 +38,6 @@ write_set_env_unit() {
     echo "[Unit]"
     echo "DefaultDependencies=no"
     echo "Before=sysroot.mount"
-    echo "Requires=$1"
     echo
     echo "[Service]"
     echo "Type=oneshot"
@@ -49,6 +49,7 @@ write_set_env_unit() {
 enable_unit() {
   local unit="$1"
   klog "enabling $unit"
+  mkdir -p "$GENERATOR_DIR"/initrd-root-device.target.wants/
   ln -fs "$GENERATOR_DIR"/"$unit" "$GENERATOR_DIR"/initrd-root-device.target.wants/
 }
 
@@ -66,7 +67,7 @@ case $mode in
   import_all)
     write_sysroot_override_unit
 
-    write_set_env_unit zfs-import-all.service
+    write_set_env_unit
     enable_unit zfs-set-env.service
 
     klog "generating zfs-import-all.service"
@@ -87,7 +88,7 @@ case $mode in
   import|dataset)
     write_sysroot_override_unit
 
-    write_set_env_unit zfs-import-root-pool.service
+    write_set_env_unit
     enable_unit zfs-set-env.service
 
     pool=$(parse-cmdline -v command=pool "$CMDLINE")
