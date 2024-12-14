@@ -54,3 +54,22 @@ build() {
     add_symlink "/usr/bin/$applet" busybox
   done
 }
+
+help() {
+  cat << EOF
+This hook adds ZFS support for systemd-based initrd.
+It has a hard dependency on the systemd hook. Since it's implemented
+using shell scripts, it still requires busybox and will copy it to
+the initrd if you don't have the base hook.
+
+To use this hook, simply add it to your HOOKS array in mkinitcpio.conf.
+You'll also need to change the kernel command line. The supported cmdline
+formats are:
+  1. root=zfs, which imports all pools in initrd, searches for the
+     first pool with the bootfs property set, and then mounts bootfs as root.
+  2. root=zfs:poolname, which imports only the specified pool and then mounts
+     the pool's bootfs as root.
+  3. root=zfs:poolname/dataset, which imports only the specified pool and then
+     mounts the specified dataset as root.
+EOF
+}

@@ -29,6 +29,7 @@ write_sysroot_override_unit() {
     echo "PassEnvironment=ROOT_DATASET"
     echo "Type=zfs"
     echo 'What=${ROOT_DATASET}'
+    echo 'Options=zfsutil'
   } > "$GENERATOR_DIR"/sysroot.mount.d/zfs-override.conf
 }
 
@@ -36,6 +37,7 @@ write_set_env_unit() {
   klog "generating zfs-set-env.service"
   {
     echo "[Unit]"
+    echo "Description=Set systemd environment variables for ZFS sysroot.mount unit"
     echo "DefaultDependencies=no"
     echo "Before=sysroot.mount"
     echo
@@ -73,6 +75,7 @@ case $mode in
     klog "generating zfs-import-all.service"
     {
       echo "[Unit]"
+      echo "Description=Import all ZFS pools"
       echo "DefaultDependencies=no"
       echo "Wants=systemd-udev-settle.service"
       echo "After=systemd-udev-settle.service cryptsetup.target"
@@ -95,6 +98,7 @@ case $mode in
     klog "generating zfs-import-root-pool.service for pool $pool"
     {
       echo "[Unit]"
+      echo "Description=Import ZFS pool $pool for rootfs"
       echo "DefaultDependencies=no"
       echo "Requires=systemd-udev-settle.service"
       echo "After=systemd-udev-settle.service cryptsetup.target"
