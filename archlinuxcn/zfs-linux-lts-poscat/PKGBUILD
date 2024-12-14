@@ -14,17 +14,28 @@ makedepends=(
 arch=("x86_64")
 url="https://openzfs.org/"
 source=(
+  # source
   "https://github.com/openzfs/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"
+  # patches
+  'fix-bash-completions.patch'
+  # mkinitcpio hooks & utils
   'zfs.initcpio.install'
   'zfs.initcpio.hook'
   'zfs.initcpio.zfsencryptssh.install'
-  'fix-bash-completions.patch'
+  'sd-zfs.initcpio.install'
+  'parse-cmdline'
+  'zfs-set-env'
+  'zfs-root-generator'
 )
 sha256sums=('b2b8e3bfabf2a6407a0132243726cb6762547a5bd095b1b1f37eaf2a9d8f7672'
+            'b9fa6a42f7426654fc04697b45ad1fe0fb09ff29ea76cb97ac7d09ac03de1797'
             '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
             '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
             'ac9ed396465e26fa6896762c52a93eb7aaf8af6d7b2c69bd826d219ff821b2c9'
-            'b9fa6a42f7426654fc04697b45ad1fe0fb09ff29ea76cb97ac7d09ac03de1797')
+            'a7f4a033237be38d48d772a39730c00393215be6e7c24f8487d76458e9221d5e'
+            '61b368e73f72e548c76128f5d660366fc4d6729c76fc0a7c9b1973992edc8139'
+            'b2e6eb4f43b8b93212270b0c567f22105f6c4b05bf390a7b8d1b741f8dcd1783'
+            '7e993c7d2d9909199ce19dc3c42cbdb6390a027c6b1a75782d703f8e3f985ee0')
 license=("CDDL-1.0")
 depends=("kmod" "linux-lts=${_kernelver}")
 
@@ -60,7 +71,7 @@ build() {
 package_zfs-utils-poscat() {
     pkgdesc='ZFS userspace tools'
     provides=('zfs-utils' "zfs-utils=${pkgver}")
-    conflicts=('zfs-utils')
+    conflicts=('zfs-utils' 'mkinitcpio-sd-zfs')
     depends+=('libunwind')
     optdepends=('python: for arcstat/arc_summary/dbufstat')
 
@@ -72,6 +83,9 @@ package_zfs-utils-poscat() {
     install -Dvm644 "${srcdir}"/zfs.initcpio.hook "${pkgdir}"/usr/lib/initcpio/hooks/zfs
     install -Dvm644 "${srcdir}"/zfs.initcpio.install "${pkgdir}"/usr/lib/initcpio/install/zfs
     install -Dvm644 "${srcdir}"/zfs.initcpio.zfsencryptssh.install "${pkgdir}"/usr/lib/initcpio/install/zfsencryptssh
+    install -Dvm644 "${srcdir}"/sd-zfs.initcpio.install "${pkgdir}"/usr/lib/initcpio/install/sd-zfs
+
+    install -Dvm755 -t "${pkgdir}"/usr/lib/zfs/initcpio/ "${srcdir}"/{parse-cmdline,zfs-set-env,zfs-root-generator}
 
     # cleanup
     ## empty files

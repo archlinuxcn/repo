@@ -1,0 +1,51 @@
+#!/bin/bash
+shopt -s nullglob
+
+true || source /usr/lib/initcpio/functions
+true || source /usr/lib/initcpio/install/systemd
+
+build() {
+  map add_module \
+    zfs \
+    spl
+
+  map add_file \
+    /usr/lib/udev/rules.d/60-zvol.rules \
+    /usr/lib/udev/rules.d/69-vdev.rules \
+    /usr/lib/udev/rules.d/90-zfs.rules
+
+  map add_binary \
+    mount.zfs \
+    zfs \
+    zpool \
+    /lib/udev/vdev_id \
+    /lib/udev/zvol_id
+
+  add_systemd_unit "systemd-udev-settle.service"
+
+  {
+    copied_files=(
+      /etc/hostid
+      /etc/zfs/zpool.cache # not needed, still include it for compatibility
+      /etc/modprobe.d/{*spl*,*zfs*}.conf
+    )
+
+    for f in "${copied_files[@]}"; do
+      add_file "$f"
+    done
+
+	  # Include hostid when it's not written to file
+	  if [[ ! -f /etc/hostid ]]; then
+	  	AA="$(hostid | cut -b 1,2)"
+	  	BB="$(hostid | cut -b 3,4)"
+	  	CC="$(hostid | cut -b 5,6)"
+	  	DD="$(hostid | cut -b 7,8)"
+	  	printf "\x${DD}\x${CC}\x${BB}\x${AA}" > "${BUILDROOT}/etc/hostid"
+	  fi
+  }
+
+  # generator and its dependencies
+  add_binary /usr/lib/zfs/initcpio/zfs-root-generator /usr/lib/systemd/system-generators/
+  add_binary /usr/lib/zfs/initcpio/zfs-set-env /usr/bin/
+  add_binary /usr/lib/zfs/initcpio/parse-cmdline /usr/bin/
+}
