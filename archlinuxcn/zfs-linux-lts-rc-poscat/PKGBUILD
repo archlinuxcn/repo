@@ -43,12 +43,12 @@ license=("CDDL-1.0")
 depends=("kmod" "linux-lts=${_kernelver}")
 
 prepare() {
-  cd "${srcdir}/zfs-${pkgver}"
+  cd "${srcdir}/zfs-${_fullver}"
   patch -N -p0 -i "${srcdir}/fix-bash-completions.patch" || true
 }
 
 build() {
-    cd "${srcdir}/zfs-${pkgver}"
+    cd "${srcdir}/zfs-${_fullver}"
     ./autogen.sh
     ./configure \
       --prefix=/usr \
@@ -78,7 +78,7 @@ package_zfs-utils-poscat() {
     depends+=('libunwind')
     optdepends=('python: for arcstat/arc_summary/dbufstat')
 
-    cd "${srcdir}/zfs-${pkgver}"
+    cd "${srcdir}/zfs-${_fullver}"
     make DESTDIR="${pkgdir}" install
     rm -rv "${pkgdir}"/lib
     rm -rv "${pkgdir}"/usr/src
@@ -112,7 +112,7 @@ package_zfs-linux-lts-rc-poscat() {
     replaces=("spl-linux-lts")
     depends+=("zfs-utils=${pkgver}")
 
-    cd "${srcdir}/zfs-${pkgver}/module"
+    cd "${srcdir}/zfs-${_fullver}/module"
     make DESTDIR="${pkgdir}" INSTALL_MOD_PATH=${pkgdir}/usr INSTALL_MOD_STRIP=1 modules_install
 }
 
@@ -122,7 +122,7 @@ package_zfs-linux-lts-rc-poscat-headers() {
     conflicts=("zfs-headers" "zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" "spl-headers")
     depends+=("libaio")
 
-    cd "${srcdir}/zfs-${pkgver}"
+    cd "${srcdir}/zfs-${_fullver}"
     make DESTDIR="${pkgdir}" install
     rm -rv "${pkgdir}/lib"
     rm -rv "${pkgdir}/etc"
