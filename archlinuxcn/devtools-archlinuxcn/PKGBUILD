@@ -5,8 +5,8 @@
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 epoch=1
-pkgver=1.2.1
-pkgrel=2
+pkgver=1.3.0
+pkgrel=1
 _tag=$pkgver-archlinuxcn1
 _upstream_pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
@@ -24,7 +24,9 @@ depends=(
   expac
   fakeroot
   findutils
+  glow
   grep
+  gum
   jq
   openssh
   parallel
@@ -53,7 +55,7 @@ provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
 source=("$pkgname::git+https://github.com/archlinuxcn/devtools.git#tag=$_tag"
         "ssh_allowed_signers")
-b2sums=('07c725a8b12c1327c088c37d9f5e1a76cab05daac536ca0dada7ca86a23cf41b23c863cfa2f62a395d9a19d73624258a095b97e6fadf25a2c53083884fb75262'
+b2sums=('5480664e50ddaeb8806949be00fd5c657914cd01a5b630707f4a52b4f61ece264fb00381176d14711fcee0cb305c1ecc9b4ebb26b1c5902fd2c95dc34b9ee911'
         '6c9fab6619bcc3ab0d1bf0944a6dc53296caa1a2dccb0cf833957c5820f3f47bae44d26ed85edf294b4efffb18b59773cfb7f89ea961c582556b4a28ee1f9d0c')
 
 # XXX: move to verify() when devtools supports it
