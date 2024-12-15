@@ -18,11 +18,8 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/${pkgname}/releases/download/v${pkg
 sha512sums=('0653265c943e81cee71ca5cd74ccb2f1db11ce6d90fb0a90f09c731249a1a68805ed172a5a93712ab393dd263a5b43da35b9ff5498c702af8e82f83c11cc762a')
 
 build() {
-	mkdir -p build
-	cd build
-
-	cmake "../${pkgname}" \
-		-DCMAKE_BUILD_TYPE=MinSizeRel \
+	cmake -B build -S "${pkgname}" \
+		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DCMAKE_FIND_PACKAGE_RESOLVE_SYMLINKS=ON \
@@ -46,12 +43,10 @@ build() {
 		-DBUILD_WEBSEARCH=ON \
 		-DBUILD_WIDGETSBOXMODEL=ON
 
-	make
+	cmake --build build
 }
 
 package() {
-	cd build
-
-	make DESTDIR="${pkgdir}/" install
-	install -Dm644 "../${pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
