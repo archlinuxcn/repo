@@ -29,7 +29,7 @@ build() {
 }
 
 package() {
-	DESTDIR="${pkgdir}" cmake --build build
+	DESTDIR="${pkgdir}" cmake --install build
 
 	cd agriggio-art-*
 	install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
