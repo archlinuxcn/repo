@@ -5,8 +5,8 @@ pkgname=("zfs-utils-poscat" "zfs-linux-lts-rc-poscat" "zfs-linux-lts-rc-poscat-h
 _kernelver=6.6.65-1
 _extramodules="${_kernelver}-lts"
 
-pkgver=2.2.7
-_fullver=2.2.7
+pkgver=2.3.0rc4
+_fullver=2.3.0-rc4
 pkgrel=1
 makedepends=(
   "linux-lts-headers=${_kernelver}"
@@ -29,7 +29,7 @@ source=(
   'zfs-root-generator'
   'zfs.shutdown'
 )
-sha256sums=('b2b8e3bfabf2a6407a0132243726cb6762547a5bd095b1b1f37eaf2a9d8f7672'
+sha256sums=('238d7e89c2d3b2dadfdb1e1095bc2f4ec6a24a3521703e992674961e4205f4dd'
             'b9fa6a42f7426654fc04697b45ad1fe0fb09ff29ea76cb97ac7d09ac03de1797'
             '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
             '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
