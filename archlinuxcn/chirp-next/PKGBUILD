@@ -7,12 +7,13 @@
 
 pkgname=chirp-next
 pkgver=20241213
-pkgrel=1
+pkgrel=2
 pkgdesc="GUI tool for programming ham radios, built from chirp-next"
 arch=('any')
 url="https://chirpmyradio.com/projects/chirp/wiki/Home"
 license=('GPL-3.0-or-later')
-depends=('python-six' 'python-pyserial' 'python-future' 'python-requests' 'python-suds' 'python-yattag' 'python-wxpython')
+depends=('python-six' 'python-pyserial' 'python-future' 'python-requests'
+         'python-suds' 'python-yattag' 'python-wxpython' 'python-lark-parser')
 optdepends=('hamradio-menus: XDG menus for ham radio software')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
 options=(!emptydirs)
