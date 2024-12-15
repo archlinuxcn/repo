@@ -1,1 +1,3 @@
-../zfs-linux-lts-poscat/zfs.shutdown
+#!/usr/bin/sh
+
+exec zpool export -a
