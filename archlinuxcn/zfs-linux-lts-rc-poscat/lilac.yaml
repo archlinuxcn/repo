@@ -8,7 +8,7 @@ pre_build_script: |
     if line.startswith('_kernelver='):
       line = f"_kernelver={_G.newvers[1]}"
     elif line.startswith('_fullver='):
-      line = f"pkgver+{_G.newvers[0]}"
+      line = f"_fullver={_G.newvers[0]}"
     elif line.startswith('pkgver='):
       line = f"pkgver={_G.newvers[0].replace('-', '')}"
     elif line.startswith('pkgrel='):
