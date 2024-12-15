@@ -8,28 +8,24 @@ pkgver=0.26.10.r0.g3886a14
 pkgrel=2
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
-url="https://github.com/albertlauncher"
+url="https://github.com/${_pkgname}launcher"
 license=('LicenseRef-Albert')
 depends=('hicolor-icon-theme' 'qt6-5compat' 'qt6-declarative' 'qt6-scxml' 'qt6-shadertools' 'qt6-svg')
 makedepends=('cmake' 'git' 'libqalculate' 'pybind11' 'python' 'qt6-tools')
 optdepends=('ddgr: duckduckgo search plugin'
 	'libarchive: documentation plugin'
-	'libqalculate: calculator plugin'
-	'python: python extension'
-	'python-docker: docker plugin'
-	'python-googletrans: google translate plugin'
-	'python-pylatexenc: TeX plugin'
-	'python-urllib3: python web plugins'
-	'python-virtualbox: virtualbox plugin')
+	'libqalculate: calculator plugin')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-source=("mirrors/${_pkgname}::git+${url}/${_pkgname}.git"
-	"mirrors/plugins::git+${url}/plugins.git"
-	"mirrors/python::git+${url}/python.git"
-	"mirrors/pybind11::git+https://github.com/pybind/pybind11.git"
-	"mirrors/qhotkey::git+https://github.com/Skycoder42/QHotkey.git"
-	"mirrors/qnotification::git+https://github.com/QtCommunity/QNotification.git")
+source=("git+${url}/${_pkgname}.git"
+	"git+${url}/plugins.git"
+	"git+${url}/i18n.git"
+	"git+${url}/python.git"
+	"git+https://github.com/pybind/pybind11.git"
+	"git+https://github.com/Skycoder42/QHotkey.git"
+	"git+https://github.com/QtCommunity/QNotification.git")
 sha512sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -42,30 +38,24 @@ pkgver() {
 }
 
 prepare() {
-	mkdir -p build
-
 	cd "${_pkgname}/"
 	git submodule init
-
 	git config submodule.plugins.url "${srcdir}/plugins/"
-	git -c protocol.file.allow=always submodule update plugins
+	git config submodule.i18n.url "${srcdir}/i18n/"
+	git config submodule.lib/QHotkey.url "${srcdir}/QHotkey/"
+	git config submodule.lib/QNotification.url "${srcdir}/QNotification/"
 
-	git config submodule.lib/QHotkey.url "${srcdir}/qhotkey/"
-	git config submodule.lib/QNotification.url "${srcdir}/qnotification/"
-	git -c protocol.file.allow=always submodule update lib/{QHotkey,QNotification}
-
-	cd plugins/
+	cd plugins
 	git submodule init
 	git config submodule.python/plugins.url "${srcdir}/python/"
 	git config submodule.python/pybind11.url "${srcdir}/pybind11/"
-	git -c protocol.file.allow=always submodule update python/{plugins,pybind11}
+
+	git -c protocol.file.allow=always submodule update
 }
 
 build() {
-	cd build
-
-	cmake "../${_pkgname}" \
-		-DCMAKE_BUILD_TYPE=MinSizeRel \
+	cmake -B build -S "${_pkgname}" \
+		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DCMAKE_FIND_PACKAGE_RESOLVE_SYMLINKS=ON \
@@ -89,12 +79,10 @@ build() {
 		-DBUILD_WEBSEARCH=ON \
 		-DBUILD_WIDGETSBOXMODEL=ON
 
-	make
+	cmake --build build
 }
 
 package() {
-	cd build
-
-	make DESTDIR="${pkgdir}/" install
-	install -Dm644 "${srcdir}/${_pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
