@@ -6,6 +6,7 @@ _kernelver=6.6.65-1
 _extramodules="${_kernelver}-lts"
 
 pkgver=2.2.7
+_fullver=2.2.7
 pkgrel=1
 makedepends=(
   "linux-lts-headers=${_kernelver}"
@@ -15,7 +16,7 @@ arch=("x86_64")
 url="https://openzfs.org/"
 source=(
   # source
-  "https://github.com/openzfs/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"
+  "https://github.com/openzfs/zfs/releases/download/zfs-${_fullver}/zfs-${_fullver}.tar.gz"
   # patches
   'fix-bash-completions.patch'
   # mkinitcpio hooks & utils
