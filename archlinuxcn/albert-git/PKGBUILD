@@ -44,12 +44,12 @@ prepare() {
 	git config submodule.i18n.url "${srcdir}/i18n/"
 	git config submodule.lib/QHotkey.url "${srcdir}/QHotkey/"
 	git config submodule.lib/QNotification.url "${srcdir}/QNotification/"
+	git -c protocol.file.allow=always submodule update
 
 	cd plugins
 	git submodule init
 	git config submodule.python/plugins.url "${srcdir}/python/"
 	git config submodule.python/pybind11.url "${srcdir}/pybind11/"
-
 	git -c protocol.file.allow=always submodule update
 }
 
