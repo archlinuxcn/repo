@@ -1,7 +1,7 @@
 shopt -s extglob
 
 pkgbase="zfs-linux-lts-rc-poscat"
-pkgname=("zfs-utils-poscat" "zfs-linux-lts-rc-poscat" "zfs-linux-lts-rc-poscat-headers")
+pkgname=("zfs-utils-rc-poscat" "zfs-linux-lts-rc-poscat" "zfs-linux-lts-rc-poscat-headers")
 _kernelver=6.6.65-1
 _extramodules="${_kernelver}-lts"
 
@@ -71,7 +71,7 @@ build() {
     make
 }
 
-package_zfs-utils-poscat() {
+package_zfs-utils-rc-poscat() {
     pkgdesc='ZFS userspace tools'
     provides=('zfs-utils' "zfs-utils=${pkgver}")
     conflicts=('zfs-utils' 'zfs-utils-poscat' 'mkinitcpio-sd-zfs')
