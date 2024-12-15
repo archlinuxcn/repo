@@ -35,7 +35,7 @@ sha256sums=('b2b8e3bfabf2a6407a0132243726cb6762547a5bd095b1b1f37eaf2a9d8f7672'
             '351956599d494e741b037f93e738bdad8025f48f27e2f7889bcf65c9825ed7bc'
             '61b368e73f72e548c76128f5d660366fc4d6729c76fc0a7c9b1973992edc8139'
             'd664c36e6015c8852565832fa380416e6ba69114248520f5b4f305f6bc008933'
-            'd06c0a12838cbd874ccba395229c80756e25cc45d7df9556b268936c56308a8d')
+            '59b74f90057388c256043312bd9749fd117cb9ef7434794bb1d454e2ea4387bd')
 license=("CDDL-1.0")
 depends=("kmod" "linux-lts=${_kernelver}")
 
@@ -95,6 +95,7 @@ package_zfs-utils-poscat() {
     rm -rv "${pkgdir}"/usr/share/initramfs-tools
     ## fedora specific
     rm -rv "${pkgdir}"/usr/lib/dracut
+    rm -rf "${pkgdir}"/usr/share/man/man7/dracut.zfs.7.gz
     ## test scripts
     rm -rv "${pkgdir}"/usr/share/zfs/{*.sh,runfiles,test-runner,zfs-tests}
 }

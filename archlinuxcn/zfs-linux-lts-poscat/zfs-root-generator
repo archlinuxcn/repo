@@ -84,7 +84,7 @@ case $mode in
       echo "[Service]"
       echo "Type=oneshot"
       echo "RemainAfterExit=yes"
-      echo "ExecStart=/usr/bin/zpool import -aN"
+      echo "ExecStart=/usr/bin/zpool import -o cachefile=none -aN"
     } > "$GENERATOR_DIR"/zfs-import-all.service
     enable_unit zfs-import-all.service
     ;;
@@ -107,7 +107,7 @@ case $mode in
       echo "[Service]"
       echo "Type=oneshot"
       echo "RemainAfterExit=yes"
-      echo "ExecStart=/usr/bin/zpool import -N \"$pool\""
+      echo "ExecStart=/usr/bin/zpool import -o cachefile=none -N \"$pool\""
     } > "$GENERATOR_DIR"/zfs-import-root-pool.service
     enable_unit zfs-import-root-pool.service
     ;;
