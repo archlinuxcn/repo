@@ -67,7 +67,7 @@ _cc_harder=${_cc_harder-y}
 _per_gov=${_per_gov-}
 
 ### Enable TCP_CONG_BBR3
-_tcp_bbr3=${_tcp_bbr3-y}
+_tcp_bbr3=${_tcp_bbr3-}
 
 ### Running with a 1000HZ, 750Hz, 625Hz, 600 Hz, 500Hz, 300Hz, 250Hz and 100Hz tick rate
 _HZ_ticks=${_HZ_ticks-1000}
@@ -173,7 +173,7 @@ pkgbase="linux-$_pkgsuffix"
 _major=6.13
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc2
+_rcver=rc3
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -231,7 +231,7 @@ fi
 # ZFS support
 if [ -n "$_build_zfs" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=6206603bf663aaa91f36f69a81c739314685d577")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=e65f69e41f4a276d7d0d1800a2878308a0ba84a6")
 fi
 
 # NVIDIA pre-build module support
@@ -800,9 +800,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('58c0a37b87c906c4c151a714ad69fdb019a64efcceb7eec52335270e592d1db031eb371086405efb19d9a18ab06c722c98d936669183900d5c2785de6e4caa2c'
-        'ec86c7024cf1b209c217d10d0f3db0052871308177d4e56922bf1629cecee2a5dfef3c456cec55d566afcfd915e631fba9b26fa2ebacf829f000944060c41210'
+b2sums=('a9ad3a0f4cc2ba90aee8dd6ede859de98b3e13e12bfb7365b152645690b94de8da627549d05ebddb4d37c5a6dcbc7256aeb64d2ac7f3fa24000e44a8dfc71a24'
+        'e55a247f961369d8855c05e251c85a7e722a21ff5620c1de7ba4adb6699818e45e0c4e2d69191d3f97c89b6ce7ef7db25568161ab64b8940b5e1ac953e29aeaf'
         '390c7b80608e9017f752b18660cc18ad1ec69f0aab41a2edfcfc26621dcccf5c7051c9d233d9bdf1df63d5f1589549ee0ba3a30e43148509d27dafa9102c19ab'
-        'd4e154bf7dcdf18ef986a745807cfb8437dc11ec5af399c0b355d29fb5500f8e403d582e95183fa564a3ffa0daece78af935999086406d7851b79fcf20ce70fd'
+        '033da24c15d59cf3978f41df14491fc5a31942376bc73219150f0d4e6f3570a4f0aa4fb6c5997eb365dc6b3863f7b8e3bc5c6dab4b46841b01e3454f61f42e2a'
         'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
-        'f3130163ed00c1f21e97274b52764346e4a49a25ddc338d57d8ac63d8214e73b7f269b8071f33ac202eab9c66c7775e812214a4d5cd26130833ae7c06d953409')
+        'f65e3b2f330f8bca25aa8098bdbb3b7bb5bab989e8cdd08f9212b6ae4ded5e36193e1086d1949ae982253fb6f337a31f159cf075fc908327755c7d65631fccb1')
