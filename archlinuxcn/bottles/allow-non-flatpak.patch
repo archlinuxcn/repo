@@ -1,0 +1,64 @@
+--- Bottles-51.17-orig/bottles/frontend/windows/main_window.py	2024-12-16 15:51:36.698984715 +0100
++++ Bottles-51.17/bottles/frontend/windows/main_window.py	2024-12-16 15:52:53.643256360 +0100
+@@ -99,34 +99,34 @@
+             manager = Adw.StyleManager.get_default()
+             manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+ 
+-        # Be VERY explicit that non-sandboxed environments are unsupported
+-        if not Xdp.Portal.running_under_sandbox():
++        # # Be VERY explicit that non-sandboxed environments are unsupported
++        # if not Xdp.Portal.running_under_sandbox():
+ 
+-            def response(dialog, response, *args):
+-                if response == "close":
+-                    quit(1)
+-
+-            body = _(
+-                "Bottles is only supported within a sandboxed environment. Official sources of Bottles are available at"
+-            )
+-            download_url = "usebottles.com/download"
+-
+-            error_dialog = Adw.AlertDialog.new(
+-                _("Unsupported Environment"),
+-                f"{body} <a href='https://{download_url}' title='https://{download_url}'>{download_url}.</a>",
+-            )
+-
+-            error_dialog.add_response("close", _("Close"))
+-            error_dialog.set_body_use_markup(True)
+-            error_dialog.connect("response", response)
+-            error_dialog.present(self)
+-            logging.error(
+-                _(
+-                    "Bottles is only supported within a sandboxed format. Official sources of Bottles are available at:"
+-                )
+-            )
+-            logging.error("https://usebottles.com/download/")
+-            return
++        #     def response(dialog, response, *args):
++        #         if response == "close":
++        #             quit(1)
++
++        #     body = _(
++        #         "Bottles is only supported within a sandboxed environment. Official sources of Bottles are available at"
++        #     )
++        #     download_url = "usebottles.com/download"
++
++        #     error_dialog = Adw.AlertDialog.new(
++        #         _("Unsupported Environment"),
++        #         f"{body} <a href='https://{download_url}' title='https://{download_url}'>{download_url}.</a>",
++        #     )
++
++        #     error_dialog.add_response("close", _("Close"))
++        #     error_dialog.set_body_use_markup(True)
++        #     error_dialog.connect("response", response)
++        #     error_dialog.present(self)
++        #     logging.error(
++        #         _(
++        #             "Bottles is only supported within a sandboxed format. Official sources of Bottles are available at:"
++        #         )
++        #     )
++        #     logging.error("https://usebottles.com/download/")
++        #     return
+ 
+         # Loading view
+         self.page_loading = LoadingView()

@@ -1,0 +1,15 @@
+--- Bottles-51.17-orig/bottles/frontend/meson.build	2024-12-16 15:51:36.698984715 +0100
++++ Bottles-51.17/bottles/frontend/meson.build	2024-12-16 15:52:01.939748363 +0100
+@@ -25,9 +25,9 @@
+ 
+ fs = import('fs')
+ 
+-if not fs.is_file('/' + '.flatpak-info')
+-  error('file does not exist')
+-endif
++#if not fs.is_file('/' + '.flatpak-info')
++#  error('file does not exist')
++#endif
+ 
+ bottles_sources = [
+   '__init__.py',
