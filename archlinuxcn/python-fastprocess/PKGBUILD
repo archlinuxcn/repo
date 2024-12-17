@@ -8,8 +8,12 @@ pkgdesc='A fast subprocess library'
 arch=('any')
 url='https://github.com/dstathis/fastprocess'
 license=('LGPL-3.0-or-later')
+depends=(
+  python
+)
 makedepends=(
   python-build
+  python-hatchling
   python-installer
   python-setuptools
   python-wheel
