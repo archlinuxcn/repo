@@ -2,28 +2,30 @@
 # Maintainer: moetayuko <loli at yuko dot moe>
 # Contributor: FabioLolix
 # Contributor: éclairevoyant
+# Contributor: alba4k <blaskoazzolaaaron@gmail.com>
 # Contributor: ThatOneCalculator <kainoa at t1c dot dev>
 # Contributor: Aleksana QwQ <me@aleksana.moe>
 # Contributor: lilydjwg <lilydjwg@gmail.com>
 
 _pkgname=hyprland
 pkgname=$_pkgname-hidpi-xprop-git
-pkgver=0.45.0.r110.de3ad245
+pkgver=0.46.0.r5.e2c78c00
 pkgrel=1
-pkgdesc="Hyprland is an independent, highly customizable, dynamic tiling Wayland compositor that doesn't sacrifice on its looks."
+pkgdesc="Hyprland is an independent, highly customizable, dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/hyprwm/Hyprland"
-license=('BSD-3-Clause')
-depends=("hyprgraphics-git"
+license=(BSD-3-Clause)
+depends=(
   aquamarine-git
   cairo
   gcc-libs
   glib2
   glibc
   glslang
-  hyprutils-git
   hyprcursor-git
+  hyprgraphics-git
   hyprlang-git
+  hyprutils-git
   libdisplay-info
   libdrm
   libglvnd
@@ -41,6 +43,7 @@ depends=("hyprgraphics-git"
   pango
   pixman
   polkit
+  re2
   seatd
   systemd-libs
   tomlplusplus
@@ -68,6 +71,7 @@ optdepends=(
   'cmake: to build and install plugins using hyprpm'
   'cpio: to build and install plugins using hyprpm'
   'meson: to build and install plugins using hyprpm'
+  'uwsm: the recommended way to start Hyprland'
 )
 provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
@@ -109,25 +113,22 @@ pkgver() {
 build() {
   cd Hyprland
 
-  mkdir -p build && cd build
-  cmake -G Ninja -DCMAKE_BUILD_TYPE=None -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr ..
-  cmake --build .
+  cmake -G Ninja -B build -S . \
+        -DCMAKE_BUILD_TYPE='None' \
+        -DCMAKE_INSTALL_PREFIX='/usr'
+  cmake --build build
 }
 
 package() {
   cd Hyprland
-  DESTDIR="$pkgdir" cmake --install build
-  pushd "$pkgdir/usr/bin"
-  ln -sf Hyprland hyprland
-  popd
+
+  DESTDIR="${pkgdir}" cmake --install build
+
   # Avoid conflict w/ extra/xdg-desktop-portal-hyprland
   rm -rf "$pkgdir/usr/share/xdg-desktop-portal"
-  for cmd in hyprctl hyprpm; do
-    install -Dm0644 "$cmd/$cmd.bash" "$pkgdir/usr/share/bash-completion/completions/$cmd"
-    install -Dm0644 "$cmd/$cmd.zsh" "$pkgdir/usr/share/zsh/site-functions/_$cmd"
-    install -Dm0644 -t "$pkgdir/usr/share/fish/vendor_completions.d/" "$cmd/$cmd.fish"
-  done
-  install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
+
+  # license
+  install -Dm0644 -t "$pkgdir/usr/share/licenses/${pkgname}" LICENSE
   install -Dm0644 subprojects/udis86/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE-udis86"
 }
 # vi: et ts=2 sw=2
