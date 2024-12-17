@@ -2,7 +2,7 @@
 
 pkgbase=rime-lmdg
 pkgname=("${pkgbase}-config")
-pkgver=2
+pkgver=2n3
 pkgrel=1
 pkgdesc='Rime 全局带声调词库，最全带读音单字表词典'
 arch=(any)
@@ -13,12 +13,11 @@ sha256sums=('3248db66344b91bc175da4306cb27926abff4aad74b59a8ea20ad85ed6676e10'
             '2b6c5c42901ef96c37ebec5ca65ca2e795e7430452deb4b872a00287414d3772')
 optdepends=('librime: Rime Input Method Engine')
 
-_variants=(n3m1)
+_variants=(m1)
 for _variant in "${_variants[@]}"; do
   pkgname+=("${pkgbase}-${_variant}")
 
-  _n=${_variant%m*}
-  source+=("https://github.com/amzxyz/RIME-LMDG/releases/download/v${pkgver}${_n}/amz-v${pkgver}${_variant}-zh-hans.gram")
+  source+=("https://github.com/amzxyz/RIME-LMDG/releases/download/v${pkgver}/amz-v${pkgver}${_variant}-zh-hans.gram")
 
   eval 'package_rime-lmdg-'"${_variant}"'() {
     provides=("'${pkgbase}=${pkgver}'")
