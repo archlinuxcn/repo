@@ -101,7 +101,7 @@ package_zfs-utils-rc-poscat() {
     rm -rv "${pkgdir}"/etc/default
     ## fedora specific
     rm -rv "${pkgdir}"/usr/lib/dracut
-    rm -rv "${pkgdir}"/usr/share/man/man7/dracut.zfs.7.gz
+    rm -rv "${pkgdir}"/usr/share/man/man7/dracut.zfs.7
     ## test scripts
     rm -rv "${pkgdir}"/usr/share/zfs/{*.sh,runfiles,test-runner,zfs-tests}
 }
