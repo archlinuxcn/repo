@@ -12,8 +12,12 @@ makedepends=("git")
 conflicts=("onedrivegui")
 provides=("onedrivegui")
 arch=("any")
-source=("git+${url}.git")
-sha256sums=('SKIP')
+source=(
+	"git+${url}.git"
+	"https://raw.githubusercontent.com/Integral-Tech/${_pkgname}/refs/heads/fix-desktop-file/src/resources/${_pkgname}.desktop"
+)
+sha256sums=('SKIP'
+            'be3f3fce1ad2ce786057283a06f98b3e93d1fd29c21aaf2bd543530c9dc0250d')
 
 pkgver(){
     cd "${_pkgname}/"
@@ -21,14 +25,13 @@ pkgver(){
 }
 
 package(){
-    cd "${_pkgname}/"
+    install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 
-    install -d "${pkgdir}/usr/lib/${_pkgname}/"
+    cd "${_pkgname}/src/"
+    install -Dm755 "${_pkgname}.py" -t "${pkgdir}/usr/lib/${_pkgname}/"
+    install -Dm644 "resources/images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"
+    cp -r {resources,ui} "${pkgdir}/usr/lib/${_pkgname}/"
+
     install -d "${pkgdir}/usr/bin/"
-    cp -r src/{resources,ui} "${pkgdir}/usr/lib/${_pkgname}/"
-
-    install -Dm644 "src/resources/images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"
-    install -Dm644 "${srcdir}/${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-    install -Dm755 "src/${_pkgname}.py" -t "${pkgdir}/usr/lib/${_pkgname}/"
-    ln -sf "/usr/lib/${_pkgname}/${_pkgname}.py" "${pkgdir}/usr/bin/onedrivegui"
+    ln -sf "/usr/lib/${_pkgname}/${_pkgname}.py" "${pkgdir}/usr/bin/${_pkgname}"
 }
