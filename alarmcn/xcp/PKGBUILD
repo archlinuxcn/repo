@@ -3,8 +3,8 @@
 # Contributor: Árni Dagur <arnidg@protonmail.ch>
 
 pkgname=xcp
-pkgver=0.22.0
-pkgrel=2
+pkgver=0.23.0
+pkgrel=1
 pkgdesc="An extended 'cp'"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/tarka/${pkgname}"
@@ -12,7 +12,7 @@ license=('GPL-3.0-only')
 depends=('gcc-libs')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('46c9632362b135d40dab97de459930d40fc12f98869a5d1489fdfc1ceda8c559')
+sha256sums=('386815c98475defc5b3823ea6c7a08ba661036364581a82865d9f8672968d40a')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
