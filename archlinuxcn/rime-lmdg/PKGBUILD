@@ -4,7 +4,7 @@ pkgbase=rime-lmdg
 pkgname=("${pkgbase}-config")
 pkgver=2n3
 pkgrel=2
-pkgdesc='Rime 全局带声调词库，最全带读音单字表词典'
+pkgdesc='RIME-LMDG万象语言模型，基于32GB超大规模语料的RIME中文语言模型'
 arch=(any)
 url="https://github.com/amzxyz/RIME-LMDG"
 source=("lmdg.yaml")
@@ -21,6 +21,7 @@ for _variant in "${_variants[@]}"; do
 
   eval 'package_rime-lmdg-'"${_variant}"'() {
     provides=("'${pkgbase}=${pkgver}'")
+    pkgdesc="RIME-LMDG万象语言模型（3-gram/'"${_variants#m}"'00M）"
     optdepends+=("'${pkgbase}'-config: default patch configurations")
     install -Dm664 "${srcdir}"/*'"${_variant}"'-zh-hans.gram -t "${pkgdir}"/usr/share/rime-data/
   }'
@@ -28,5 +29,6 @@ done
 
 package_rime-lmdg-config() {
   depends=("${pkgbase}")
+  pkgdesc='RIME-LMDG万象语言模型（默认配置)'
   install -Dm664 "${srcdir}"/*.yaml -t "${pkgdir}"/usr/share/rime-data/
 }
