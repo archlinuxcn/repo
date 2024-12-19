@@ -3,7 +3,7 @@ options=(!strip)  # Don't strip libs because there aren't any
 
 pkgname=hydrus
 _pkgname=hydrus
-pkgver=601
+pkgver=603
 pkgrel=1
 pkgdesc="Danbooru-like image tagging and searching system for the desktop"
 arch=(any)
@@ -39,7 +39,7 @@ optdepends=('ffmpeg: show duration and other information on video thumbnails'
             # 'speedcopy: may speed up file transfers'
             'swftools: to display SWF thumbnails')
 conflicts=(hydrus-docs-dummy)
-source=("${_pkgname}::git+https://github.com/hydrusnetwork/${_pkgname}.git#commit=dfae7f1a8a0b7a4a33344dc5278f6d5e741e0456"
+source=("${_pkgname}::git+https://github.com/hydrusnetwork/${_pkgname}.git#commit=6bf5fdf9f9c5873c91e2ff1f462df2c1fc2a481c"
         paths-in-opt.patch
         hydrus-client
         hydrus-server
@@ -52,7 +52,14 @@ sha256sums=('SKIP'
 
 prepare() {
   cd "${srcdir}/${_pkgname}"
+
+  # Split paths between /opt/hydrus (files owned by package manager) and
+  # ~/.local/share/hydrus (files owned by user), instead of having everything in
+  # the current directory
   patch -Np1 < ../paths-in-opt.patch
+
+  # Compensate for this in qss files
+  find static -type f -iname '*.qss' -exec sed -i 's|url("static/|url("/opt/hydrus/static/|g' {} +
 }
 
 build() {
