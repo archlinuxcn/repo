@@ -3,7 +3,7 @@
 
 _pkgname=pikaur
 pkgname="${_pkgname}"
-pkgver=1.31
+pkgver=1.32
 pkgrel=1
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
@@ -12,7 +12,7 @@ license=('GPL-3.0-only')
 source=(
 	"$pkgname-$pkgver.tar.gz"::${url}/archive/"$pkgver".tar.gz
 )
-b2sums=('a89d8ae56f3f4896dbb3c91aa29fa1841ec98b82351129775c93cc81e4a71edcbbf3934d6b7f8d5f6526d62af108cb0167696f2782de9f9611c2929115b4614f')
+b2sums=('fd75388787383d783e60197981b1c7e1ba024a29a95a7378bb60f4a60e5ef31edf6e892d2d3e20701072054fff6daf0a5b1ce71150c929d525bf1c41b8767de5')
 depends=(
 	'pyalpm'
 	'git'
