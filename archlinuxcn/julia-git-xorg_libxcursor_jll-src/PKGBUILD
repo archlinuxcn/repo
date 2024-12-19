@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_libxcursor_jll-src
-pkgver=1.2.0+4
-_commit=59a00cd4e3b0e6ee290349d06126e0a162d577db
-pkgrel=3
+pkgver=1.2.3+0
+_commit=cfa0fa24ce6868d7c9ad800167e6ce82fb7055c6
+pkgrel=1
 pkgdesc="Xorg_libXcursor_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXcursor_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxcursor)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXcursor_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('4500d6e865d9386b4f9e3b8717106875616a7e9be1d9d6eb1db622458edf2cd9'
             '4a680828941df639ee7b14be6e5f3a2c00e63a3cb6dd6dd49f5b680b5b0ee9e1')
 
 build() {
