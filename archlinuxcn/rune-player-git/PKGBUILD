@@ -28,19 +28,29 @@ depends=(
     'libdbusmenu-glib'
     'libepoxy'
     'libnotify'
+    'openssl'
     'pango'
     'zlib'
 )
 makedepends=(
-    'flutter-intellij-patch'
-    'flutter-target-linux'
-    'flutter-tool'
+    # These dependencies may face outdated updates or build errors
+    # It is recommended to use fvm as an alternative
+    #
+    #'flutter-intellij-patch'
+    #'flutter-target-linux'
+    #'flutter-tool'
     'git'
     'patchelf'
     'protobuf'
     'protoc-gen-dart'
     'protoc-gen-prost'
     'rustup'
+)
+makedepends+=(
+    'clang'
+    'cmake'
+    'fvm'
+    'ninja'
 )
 provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
@@ -59,16 +69,29 @@ pkgver() {
 
 prepare() {
     cd "${srcdir}/${_pkgname}"
-    flutter pub get
+
+    export FVM_CACHE_PATH="${SRCDEST}/fvm-cache"
+
+    sed -i '$a\' .gitignore
+    echo ".fvm/" >> .gitignore
+
+    fvm install stable
+    fvm use stable
+
+    fvm flutter --no-version-check config --no-analytics
+    fvm flutter --no-version-check pub get
 }
 
 build() {
     cd "${srcdir}/${_pkgname}"
+
     export LDFLAGS="${LDFLAGS} -Wl,--no-as-needed"
+    export FVM_CACHE_PATH="${SRCDEST}/fvm-cache"
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
-    flutter pub run rinf message
-    flutter build linux --no-pub --release --verbose
+
+    fvm flutter --no-version-check pub run rinf message
+    fvm flutter --no-version-check build linux --no-pub --release --verbose
 }
 
 package() {
