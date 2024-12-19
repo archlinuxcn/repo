@@ -29,9 +29,19 @@ pkgver() {
 	git describe --long --tags --match="v[0-9]*" --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
+prepare() {
+	cd "${_pkgname}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
 build() {
 	cd "${_pkgname}/"
-	YAZI_GEN_COMPLETIONS=true cargo build --release
+	YAZI_GEN_COMPLETIONS=true cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${_pkgname}/"
+	cargo test --frozen --all-features
 }
 
 package() {
