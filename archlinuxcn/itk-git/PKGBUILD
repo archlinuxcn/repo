@@ -62,6 +62,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DCMAKE_SKIP_RPATH=ON
+    -DDO_NOT_BUILD_ITK_TEST_DRIVER=ON
     -DITK_BUILD_DEFAULT_MODULES=ON
     -DITK_LEGACY_REMOVE=ON
     -DITK_USE_MKL=ON
@@ -103,7 +104,6 @@ build() {
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON
     -DModule_MorphologicalContourInterpolation=ON
-    -DPY_SITE_PACKAGES_PATH=/usr/lib/python$(get_pyver)/site-packages
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
