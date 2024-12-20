@@ -1,8 +1,8 @@
 # Maintainer: Coelacanthus <uwu@coelacanthus.name>
 
 pkgname=uptime-kuma
-pkgver=1.23.15
-pkgrel=2
+pkgver=1.23.16
+pkgrel=1
 pkgdesc="A free and open source uptime monitoring solution"
 arch=('x86_64')
 url="https://github.com/louislam/uptime-kuma"
@@ -24,7 +24,7 @@ source=(
     "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
     "uptime-kuma.service"
 )
-b2sums=('37bac888edb4182c27e117ad96ce19a1878487770ac8fcbb981e78babacb8083c964ef194e4360741fda3c7b9991fe52561c9abd8a8f94d4599390a94406891c'
+b2sums=('7ba8eeabe61dfb2aea46c3b9ed53c97adaed36f00ae8ecd3329cab5db205790cbac97ed3fa728d3fdb9630479dff910c370c8cbd9eb4f4a676bb6533ada5ad27'
         '4a0d02dc226a6d80400d16300f672e7fcf50bdb112e2629e1f1c8177cac499e2ca23f0e3fee4c314f50610b2daea3a98a839c04cd960aaba94765399ffd1b30a')
 
 build() {
