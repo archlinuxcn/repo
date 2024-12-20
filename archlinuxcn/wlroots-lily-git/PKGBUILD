@@ -3,17 +3,18 @@
 # Contributor: Maxim Baz <$pkgname at maximbaz dot com>
 # Contributor: Omar Pakker
 pkgname=wlroots-lily-git
-pkgver=0.17.0.20231207.070459
-pkgrel=1
+pkgver=0.18.2.20241219.081711
+pkgrel=2
 license=('MIT')
-pkgdesc='Modular Wayland compositor library (git version, with patches)'
+pkgdesc='Modular Wayland compositor library (with patches)'
 url='https://gitlab.freedesktop.org/lilydjwg/wlroots'
 arch=('x86_64')
 depends=(
     'libdisplay-info.so'
-    'libliftoff.so'
     'libglvnd'
     'libinput'
+    'liblcms2.so'
+    'libliftoff.so'
     'libpixman-1.so'
     'libseat.so'
     'libudev.so'
@@ -26,8 +27,7 @@ depends=(
     'xcb-util-errors'
     'xcb-util-renderutil'
     'xcb-util-wm'
-
-    'xorg-xwayland')
+)
 makedepends=(
     'git'
     'glslang'
@@ -39,21 +39,16 @@ makedepends=(
     'xorg-xwayland'
 )
 optdepends=(
-    'xorg-xwayland-lily: HiDPI support, see https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733'
+    'xorg-xwayland: Xwayland support'
+    'xorg-xwayland-lily: HiDPI Xwayland support, see https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733'
 )
 provides=(
-    'libwlroots.so'
-    "wlroots=${pkgver%%.r*}"
+    "libwlroots-$(echo "${pkgver}" | grep -o '^[0-9]\+\.[0-9]\+').so"
+    "wlroots=$pkgver}"
 )
-conflicts=(wlroots wlroots-git)
-options=(
-    'debug'
-)
-source=("${pkgname}::git+https://gitlab.freedesktop.org/lilydjwg/wlroots.git#branch=lilydjwg")
-sha512sums=('SKIP')
 
 pkgver() {
-  cd "${pkgname}"
+  cd "${startdir}/wlroots-lily"
   (
      set -o pipefail
      version=$(grep -zoP "project\([^)]*\)" meson.build | xargs --null echo | grep -oP "^\sversion:\s'\K[^-']*")
@@ -65,11 +60,12 @@ build() {
     arch-meson \
       -Dwerror=false \
       -Dexamples=false \
-      "${pkgname}" build
+      -Dcolor-management=enabled \
+      "${startdir}/wlroots-lily" build
     ninja -C build
 }
 
 package() {
     DESTDIR="$pkgdir" ninja -C build install
-    install -Dm644 "${pkgname}/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+    install -Dm644 "${startdir}/wlroots-lily/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
