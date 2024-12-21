@@ -2,7 +2,7 @@
 # Contributor: Antoine Viallon <antoine+aur@lesviallon.fr>
 
 pkgname=video2x
-pkgver=6.2.0
+pkgver=6.3.0
 pkgrel=1
 epoch=1
 pkgdesc="Machine learning video/GIF/image upscaling"
@@ -21,7 +21,7 @@ source=(
 	"git+https://github.com/k4yt3x/${pkgname}.git#tag=${pkgver}"
 	"git+https://github.com/k4yt3x/libreal-esrgan-ncnn-vulkan.git"
 )
-sha256sums=('45dfc31080ad1444ddaaa4f7fc730386fbd22b14e94788d2e9ca30174ef49554'
+sha256sums=('d19db855cb43f9ec0f2d2f647d2169bb6733b741b5d4db37638304a27ab3afb9'
             'SKIP')
 
 prepare() {
