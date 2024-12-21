@@ -1,0 +1,33 @@
+# Maintainer: bgme <i@bgme.me>
+# Contributor: gilcu3
+# Contributor: Y7n05h <Y7n05h@y7n05h.dev>
+
+pkgname=ecapture
+pkgver=0.9.1
+pkgrel=1
+pkgdesc="capture SSL/TLS text content without CA cert using eBPF"
+arch=("x86_64" "aarch64")
+url="https://github.com/gojue/ecapture"
+license=("Apache-2.0")
+depends=("glibc")
+makedepends=("clang" "go" "git" "bpf" "linux-headers" "libelf" "llvm" "pkgconf")
+source=("${pkgname}::git+${url}#tag=v${pkgver}")
+sha256sums=('82646325c4553288d6ecc74ccc4463a890289f793220fa4acba3ac5747100308')
+
+build() {
+    cd "${srcdir}/${pkgname}"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOPATH="${srcdir}"
+    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+    make
+}
+
+package() {
+    cd "${srcdir}/${pkgname}"
+    install -Dm755 "bin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+    install -Dm644 "README.md" "README_CN.md" "README_JA.md" -t "${pkgdir}/usr/share/doc/${pkgname}"
+    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
