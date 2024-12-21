@@ -3,7 +3,7 @@
 # Contributor: Thiago Almeida <thiagoalmeidasa@gmail.com>
 
 pkgname=commitlint
-pkgver=19.6.0
+pkgver=19.6.1
 pkgrel=1
 pkgdesc="Lint commit messages"
 arch=(any)
@@ -14,7 +14,7 @@ makedepends=(npm)
 optdepends=('commitlint-config-conventional: config enforcing conventional commits')
 source=("https://registry.npmjs.org/$pkgname/-/$pkgname-$pkgver.tgz")
 noextract=("$pkgname-$pkgver.tgz")
-sha256sums=('7f542617b63a1465506b25063a817956b661596c7d592cd62c5547c87ed743f5')
+sha256sums=('b2a8ce62393c1994c64cfd37334af209a14b1e00b6ef85e1d07413b4dc3576b2')
 
 package() {
   npm install -g \
