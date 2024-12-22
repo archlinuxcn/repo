@@ -4,7 +4,7 @@
 _name='flake8-polyfill'
 pkgname="python-${_name}"
 pkgver=1.0.2.r18.gb98e6f4
-pkgrel=2
+pkgrel=3
 pkgdesc="Polyfill package for Flake8 plugins"
 url="https://github.com/PyCQA/${_name}"
 depends=('flake8')
