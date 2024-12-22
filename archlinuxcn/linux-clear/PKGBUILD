@@ -143,7 +143,7 @@
 
 # Kernel version
 _kernel_major=6.12
-_kernel_minor=4
+_kernel_minor=6
 # Clear Linux patches version
 _clr=4-1518
 # kernel_compiler_patch version
@@ -197,6 +197,11 @@ apply_patches() {
         
         patch -Np1 -i "${srcdir}/cl-linux/${i}" || true
     done
+
+    # Patch with kernel_compiler_patch patches.
+    # Do this before any defconfig invocations so we
+    # have all of the extra selectable uarches ready and selectable
+    patch -Np1 -i "$srcdir/kernel_compiler_patch-$_kernelcompilerpatch/more-ISA-levels-and-uarches-for-kernel-6.1.79+.patch"
 }
 
 # Allows user to modify the kernel config
@@ -314,11 +319,6 @@ update_defconfig() {
     # Run olddefconfig
     make ${BUILD_FLAGS[*]} olddefconfig
     diff -u $srcdir/cl-linux/config .config || :
-
-    # Patch with kernel_compiler_patch patches
-    # This must be executed after olddefconfig
-    # to allow for the next section to run.
-    patch -Np1 -i "$srcdir/kernel_compiler_patch-$_kernelcompilerpatch/more-ISA-levels-and-uarches-for-kernel-6.1.79+.patch"
     
     # Set subarch automatically
     if [ -n "${_subarch}" ]; then
@@ -494,7 +494,7 @@ validpgpkeys=(
 )
 sha256sums=("b1a2562be56e42afb3f8489d4c2a7ac472ac23098f1ef1c1e40da601f54625eb"
             "SKIP"
-            "ba790766fca3eadade5cf74f0c181a8e42a77556f71d9af4b2bd4a53c8b98641"
+            "dd7c856f12d3e10f09743c1d3db35f91879d92890c9fb176405783c9c7cb0c54"
             "SKIP"
             "b3fd8b1c5bbd39a577afcccf6f1119fdf83f6d72119f4c0811801bdd51d1bc61")
 replaces=("linux-clear-x64-v3" "linux-clear-x64-v4")
