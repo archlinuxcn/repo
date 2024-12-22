@@ -9,14 +9,8 @@ pkgdesc="Machine learning video/GIF/image upscaling"
 url="https://${pkgname}.org"
 arch=('x86_64' 'aarch64' 'riscv64')
 license=("AGPL-3.0-or-later")
-depends=('ffmpeg' 'ncnn' 'vulkan-driver' 'spdlog' 'opencv')
-makedepends=('git' 'cmake' 'vulkan-headers' 'boost')
-optdepends=(
-	"waifu2x-ncnn-vulkan: for anime/cartoon upscaling and JPEG denoising - fast"
-	"realsr-ncnn-vulkan: real photos upscaling and denoising - slow"
-	"srmd-ncnn-vulkan: general purpose upscaling and image restoration"
-	"waifu2x-converter-cpp: C++ implemenation of waifu2x working on all platforms"
-)
+depends=('ffmpeg' 'ncnn' 'vulkan-driver' 'spdlog' 'boost-libs')
+makedepends=('git' 'cmake' 'vulkan-headers' 'boost' 'openmp')
 source=(
 	"git+https://github.com/k4yt3x/${pkgname}.git#tag=${pkgver}"
 	"git+https://github.com/k4yt3x/libreal-esrgan-ncnn-vulkan.git"
@@ -32,7 +26,7 @@ prepare() {
 }
 
 build() {
-	cmake -B build -S "${pkgname}" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+	cmake -B build -S "${pkgname}" -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr
 	cmake --build build
 }
 
