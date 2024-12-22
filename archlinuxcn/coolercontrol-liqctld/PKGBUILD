@@ -3,7 +3,7 @@
 
 pkgname=coolercontrol-liqctld
 pkgver=1.4.5
-pkgrel=1
+pkgrel=2
 pkgdesc="liquidctl daemon for CoolerControl"
 arch=('x86_64')
 url="https://gitlab.com/coolercontrol/coolercontrol"
