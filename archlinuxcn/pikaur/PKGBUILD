@@ -4,7 +4,7 @@
 _pkgname=pikaur
 pkgname="${_pkgname}"
 pkgver=1.32
-pkgrel=1
+pkgrel=2
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
 url="https://github.com/actionless/pikaur"
