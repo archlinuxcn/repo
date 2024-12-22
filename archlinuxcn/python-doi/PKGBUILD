@@ -4,7 +4,7 @@
 pkgname=python-doi
 _name=${pkgname}
 pkgver=0.2.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Python package to work with Document Object Identifier (doi)."
 arch=('any')
 url="https://pypi.org/project/python-doi"
