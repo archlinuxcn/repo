@@ -18,7 +18,7 @@ depends=(
   libxml2
   openjpeg2
   openssl
-  poppler
+  # poppler
   python
   util-linux-libs
   vtk
@@ -41,11 +41,8 @@ makedepends=(
   git
   gl2ps
   glew
-  glew
   gnuplot
   graphviz
-  graphviz
-  hdf5
   hdf5
   jsoncpp
   libarchive
@@ -55,18 +52,16 @@ makedepends=(
   lz4
   mariadb-libs
   netcdf
-  netcdf
+  nlohmann-json
   opencascade
   openimagedenoise
   openmpi
-  openmpi
   openvdb
-  openvr
   openxr
+  openvr
   ospray
   pdal
   postgresql-libs
-  proj
   proj
   python-mpi4py
   qt5-base
@@ -114,7 +109,7 @@ build() {
     -DGDCM_USE_SYSTEM_LIBXML2:BOOL=ON \
     -DGDCM_USE_SYSTEM_OPENJPEG:BOOL=ON \
     -DGDCM_USE_SYSTEM_OPENSSL:BOOL=ON \
-    -DGDCM_USE_SYSTEM_POPPLER:BOOL=ON \
+    -DGDCM_USE_SYSTEM_POPPLER:BOOL=OFF \
     -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
     -DGDCM_USE_VTK:BOOL=ON \
