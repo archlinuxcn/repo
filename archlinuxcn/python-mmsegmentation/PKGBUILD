@@ -30,6 +30,10 @@ makedepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmsegmentation/archive/v${pkgver}.tar.gz")
 sha512sums=('5a026fbd90a0b2632340aee611b439f116a5875fb3b7f86fb1612a6deea5bfcdda9bbb58e053c825cbe8338470bb773e6b8839ea03e518aa117a80941b0266c0')
 
+prepare() {
+sed -i "s/version=get_version()/version='$pkgver'/" "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+}
+
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
