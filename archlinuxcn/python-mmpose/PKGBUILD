@@ -40,6 +40,10 @@ optdepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/open-mmlab/mmpose/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('5ee586addcce42f6a47ae581828922da92014457d909e2af3c6795ccbf0e26abc20c98915b0955752b71dc32a3ae7efaf1a17f33d3780dda2bdaf3a9cf373013')
 
+prepare() {
+  sed -i "s/version=get_version()/version='$pkgver'/" "${srcdir}/${_pkgname}-${pkgver}/setup.py"
+}
+
 build() {
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
