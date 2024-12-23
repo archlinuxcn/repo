@@ -25,19 +25,22 @@ depends=(
   tk
 )
 makedepends=(
+  python-build
+  python-installer
   python-setuptools
+  python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/camelot-dev/camelot/archive/v${pkgver}.tar.gz")
 sha512sums=('5b34a915979a9b5661a5254e6d0be2198d35530b9bc012b880391f27c0b443e5a9ab68723c2583f66873ffb6ff36a78ac953dedb394d08f08765c72aa95c7054')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
