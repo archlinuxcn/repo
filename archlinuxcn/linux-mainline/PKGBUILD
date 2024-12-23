@@ -6,8 +6,8 @@
 
 pkgbase=linux-mainline
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v6.13-rc3
-pkgver=6.13rc3
+_tag=v6.13-rc4
+pkgver=6.13rc4
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)
@@ -46,7 +46,7 @@ validpgpkeys=(
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
-sha256sums=('7c28f4cd3cb590ace08aef74fbff392a67ddf4651378d43560fb4202b9f4a286'
+sha256sums=('f25fa7b05c27116de1a7d5349176cee4318b5672b794ac21b657cceee3ed8dbd'
             '01b93dbc25330f56e18dd883762d24bd6e50a8c2575c7211c5e4f1824b1dcbd4')
 
 export KBUILD_BUILD_HOST=archlinux
