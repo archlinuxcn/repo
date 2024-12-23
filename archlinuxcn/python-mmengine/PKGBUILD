@@ -31,6 +31,7 @@ sha512sums=('76bb9c6dd4d9755a7105410a1c2ca9771364c08f495058dac746a99053b2533acaf
 prepare() {
   cd "${_pkgname}-${pkgver}"
   patch -p1 -i ${srcdir}/1610.patch
+  sed -i "s/version=get_version()/version='$pkgver'/" setup.py
 }
 
 build() {
