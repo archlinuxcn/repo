@@ -11,6 +11,8 @@ arch=('x86_64' 'aarch64' 'riscv64')
 license=('ISC')
 depends=('video2x-git' 'qt6-base' 'spdlog')
 makedepends=('git' 'cmake' 'qt6-tools')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
 source=("git+https://github.com/k4yt3x/${_pkgname}.git")
 sha256sums=('SKIP')
 
