@@ -1,14 +1,14 @@
 _name=CodeEditor
 pkgname=mediawiki-codeeditor
-pkgver=20240704
+pkgver=20241223
 pkgrel=1
 pkgdesc="MediaWiki extension that provides a syntax-highlighting code editor for site & user JS, CSS and Lua pages, integrating with advanced edit toolbar"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:CodeEditor"
 license=(''GPL' 'BSD-3-Clause'')
-depends=('mediawiki>=1.42' 'mediawiki<1.43')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/CodeEditor-REL1_42-5499347.tar.gz")
-sha256sums=('b34aa33bb9f31ae95dc5f73be4c2edf9aa5c58d66b9085796cbe8a42e881413c')
+depends=('mediawiki>=1.43' 'mediawiki<1.44')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/CodeEditor-REL1_43-5bf3e77.tar.gz")
+sha256sums=('d786fae5cb6571980e6942dd08fb796bfba171884cd2e5605db1dbecfd909821')
 
 build() {
   true
