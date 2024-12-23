@@ -1,0 +1,47 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+
+pkgname=video2x-git
+_pkgname=${pkgname%-git}
+pkgver=6.3.1
+pkgrel=1
+pkgdesc="Machine learning video/GIF/image upscaling"
+url="https://${_pkgname}.org"
+arch=('x86_64' 'aarch64' 'riscv64')
+license=("AGPL-3.0-only")
+depends=('ffmpeg' 'ncnn' 'vulkan-driver' 'spdlog' 'boost-libs')
+makedepends=('git' 'cmake' 'vulkan-headers' 'boost' 'openmp')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=(
+	"git+https://github.com/k4yt3x/${_pkgname}.git"
+	"git+https://github.com/k4yt3x/libreal-esrgan-ncnn-vulkan.git"
+	"git+https://github.com/k4yt3x/librealcugan-ncnn-vulkan.git"
+	"git+https://github.com/k4yt3x/librife-ncnn-vulkan.git"
+)
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	git rm third_party/{ncnn,spdlog,boost}
+
+	git submodule init
+	git config submodule.third_party/libreal_esrgan_ncnn_vulkan.url "${srcdir}/libreal-esrgan-ncnn-vulkan"
+	git config submodule.third_party/librealcugan_ncnn_vulkan.url "${srcdir}/librealcugan-ncnn-vulkan"
+	git config submodule.third_party/librife_ncnn_vulkan.url "${srcdir}/librife-ncnn-vulkan"
+	git -c protocol.file.allow=always submodule update
+}
+
+build() {
+	cmake -B build -S "${_pkgname}" -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
