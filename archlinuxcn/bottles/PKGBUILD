@@ -4,7 +4,7 @@
 pkgname=bottles
 _pkgname=Bottles
 pkgver=51.17
-pkgrel=2
+pkgrel=3
 epoch=2
 pkgdesc='Easily manage wine and proton prefix'
 arch=(any)
