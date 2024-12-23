@@ -34,7 +34,7 @@ prepare() {
   sed -i '/#include "config.h"/d' src/pdftopng/pdftopng.cpp
   sed -i 's#^poppler_dir = .*$#poppler_dir = "/usr/include/poppler"#g' setup.py
   sed -i 's#lib/poppler/build#/usr/lib#g' setup.py
-  sed -i 's#flags = \["-std=c++14", "-std=c++11"\]#flags = \["-std=c++17", "-std=c++14", "-std=c++11"\]#' setup.py
+  sed -i 's#flags = \["-std=c++14", "-std=c++11"\]#flags = \["-std=c++20", "-std=c++17", "-std=c++14", "-std=c++11"\]#' setup.py
   # poppler in ArchLinux contains no such file
   # we download it from poppler upstream and copy it to here
   cp "$srcdir"/numberofcharacters.h src/pdftopng
