@@ -33,10 +33,20 @@ pkgver() {
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
+prepare() {
+	cd "${_pkgname}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
 build() {
 	cd "${_pkgname}/"
-	cargo build --release --locked --all-features
+	cargo build --frozen --release --all-features
 	cargo xtask generate-manpage
+}
+
+check() {
+	cd "${_pkgname}/"
+	cargo test --frozen --all-features
 }
 
 package() {
