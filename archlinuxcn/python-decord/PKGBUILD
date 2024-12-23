@@ -9,7 +9,7 @@ arch=('x86_64')
 url='https://github.com/dmlc/decord'
 license=('Apache-2.0')
 depends=(
-  ffmpeg
+  ffmpeg6.1
   glibc
   gcc-libs
   python-numpy
@@ -48,7 +48,8 @@ build() {
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
-    -DFFMPEG_DIR=/usr \
+    -DFFMPEG_INCLUDE_DIR=/usr/include/ffmpeg6.1 \
+    -DFFMPEG_LIBRARIES="/usr/lib/ffmpeg6.1/libavformat.so;/usr/lib/ffmpeg6.1/libavfilter.so;/usr/lib/ffmpeg6.1/libavcodec.so;/usr/lib/ffmpeg6.1/libavutil.so;/usr/lib/ffmpeg6.1/libavdevice.so;/usr/lib/ffmpeg6.1/libswresample.so" \
     -DUSE_CUDA=OFF \
     -S "${srcdir}/${_pkgname}-${pkgver}"
   make -C "${srcdir}/${_pkgname}-${pkgver}/build" VERBOSE=1
@@ -61,7 +62,8 @@ build() {
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH=ON \
-    -DFFMPEG_DIR=/usr \
+    -DFFMPEG_INCLUDE_DIR=/usr/include/ffmpeg6.1 \
+    -DFFMPEG_LIBRARIES="/usr/lib/ffmpeg6.1/libavformat.so;/usr/lib/ffmpeg6.1/libavfilter.so;/usr/lib/ffmpeg6.1/libavcodec.so;/usr/lib/ffmpeg6.1/libavutil.so;/usr/lib/ffmpeg6.1/libavdevice.so;/usr/lib/ffmpeg6.1/libswresample.so" \
     -DUSE_CUDA=ON \
     -S "${srcdir}/${_pkgname}-cuda-${pkgver}"
   make -C "${srcdir}/${_pkgname}-cuda-${pkgver}/build" VERBOSE=1
