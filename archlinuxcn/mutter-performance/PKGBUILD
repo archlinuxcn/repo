@@ -20,8 +20,8 @@ _merge_requests_to_use=('1441' '3751')
 _pkgname=mutter
 pkgname=mutter-performance
 epoch=1
-pkgver=47.1.r2.g74cf8ac0f
-pkgrel=2
+pkgver=47.3
+pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64 aarch64)
@@ -97,18 +97,18 @@ makedepends=(
   xorg-server
   xorg-server-xvfb
 )
-_commit=74cf8ac0f070c52c63fa1613b7ea68124ce52557  # tags/47.1^2
+_commit=a5e1f011268ca128d1d3d1f3d4b15b760459ad4a  # tags/47.3^0
 source=("git+$url.git#commit=$_commit"
         "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
         'mr1441.patch'
         'mr3751.patch')
-sha256sums=('6ba3d155e5b3d949cee82c2b5b6711b6f5be37b78c6614c8099368bc57c4a6bf'
+sha256sums=('a27bfdfc513bf1fa0b5feb7616b8898fc478d4149137e488c42121d176e4d0a4'
             'ba56c003c1c16f1f8e411f6d5213878bcf059d4d39ece100fc414228a1bf22d5'
-            'e045bcfbf78b56327970667f6b285da004259af3012b2cfd7832bcf7c19b04e6'
+            'a32ff6ea20af04e62e40232644518e64d4d20c1c68bbcdfb16e6062540f80e6b'
             '67943a22cb75df955fc475e5ae101984d87e4a1f51d56be5f50696cc3355a3c4')
-b2sums=('b753b64fcb62d2fa7db374414671992f4100d201bcf4bb5472e479d1765e8a7e88dc6ae99517bf542c67f37172c3301707ae0e17f30b5c0a8b899bcec6afb671'
+b2sums=('65ad1b7cbb3261bbb044d31666cafa075599fadf8afd6f772a65faed73fd0b4c1d3d95e44e63efce62255b89bdf69542f15d2ea06cf3908d1b824467f6458abb'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
-        '6fb581581d0fe819ff75ac330e2c3a2b316eb5aea5bdf5719bd906d0506c6327b1b09f4925f0f5557b128a5218de684458b589d8a7e30b22c03f18c5c28aaf42'
+        '031f3b4eedab7da3f92958dffd52725d083b90b93ab18b5c542534319b20f422abac5bdc8e1c444262f4a7b6041a8e5502e2c54f296b1529d51999f36b55da15'
         'e13742a68cd831827e88ddf1801caca39fa9c77dd8c08a851bc87914f2961119fc1a7643628fc63cad8dedf03533148539a242cca23313c250bd65867ea84d8d')
 
 pkgver() {
