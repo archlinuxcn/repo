@@ -6,19 +6,18 @@
 _pkgname=xpadneo
 _dkmsname=hid-${_pkgname}
 pkgname=${_pkgname}-dkms
-pkgver=0.9.6
+pkgver=0.9.7
 _pkgver=v${pkgver}
-pkgrel=2
+pkgrel=1
 pkgdesc="Advanced Linux Driver for Xbox One Wireless Gamepad"
 arch=(any)
 url='https://github.com/atar-axis/xpadneo'
 license=(GPL-3.0-or-later)
 depends=('dkms' 'bluez' 'bluez-utils')
 source=("${_pkgname}-${_pkgver}.tar.gz::${url}/archive/${_pkgver}.tar.gz"
-        01-drop-etc-files.patch 02-kernel-6-12.patch)
-b2sums=('22a85732de2894d310e0994c101ed62b7358f1b6b8ba5b389fc273bfd48a1ce619ebc04f3699818290f61833234d4c444fff25ea852d9dcf420b99ab28687a03'
-        '480c0301dc0140168d85e5f578dfcaac3a9fa664a99b1c85ca76eefe5fc571a2ee956b4350c4cebd8e89241538a3edde044e8cc6f5b634aa69fd1c02e0c5afdc'
-        'b4336e7811b29f645ba996d8241e868196c0cca762a439c52c25f2da2abb6eb99a921c33521826ea6102409edba009bb09d97c110adfdff1f9f7ebdd3e076e55')
+        01-drop-etc-files.patch)
+b2sums=('6715e684d046ad3162db65196896d23f0c70046d02adbf5886d849818120fb731acb86da0a9e18e54b56b31220911ea25c296f1b8473eb0f0fca4fe96b98712b'
+        'a11c9f312a1355407b749766640ad8097a9608c11ae521b1a32f0a9c7c02d39fabca22960528f5e06926b1a7690679cba83f07e9c8f033745119b89732b0fe6b')
 
 prepare() {
     cd "${_pkgname}-${pkgver}/${_dkmsname}"
@@ -27,10 +26,6 @@ prepare() {
     # /etc. In Arch, it makes more sense to create these files in /usr/lib
     # and let pacman take care of them.
     patch -p1 -i "${srcdir}/01-drop-etc-files.patch"
-
-    # Fix for Linux kernel 6.12 (https://github.com/atar-axis/xpadneo/issues/498)
-    # Thanks Kudlaty for the heads-up.
-    patch -p2 -i "${srcdir}/02-kernel-6-12.patch"
 
     # Set the current version in DKMS config file.
     sed "s/@DO_NOT_CHANGE@/${_pkgver}/" dkms.conf.in > dkms.conf
