@@ -9,8 +9,9 @@ _opt_BUILD_PY=1
 # 0 for download vcpkg, set _opt_VCPKG_COMMIT_ID
 # 1 for system vcpkg, ignore _opt_VCPKG_COMMIT_ID
 _opt_SYS_VCPKG=0
-#_opt_VCPKG_COMMIT_ID='#commit=14e7bb4ae24616ec54ff6b2f6ef4e8659434ea44'
-_opt_VCPKG_COMMIT_ID=''
+_opt_VCPKG_COMMIT_ID='#commit=b2cb0da531c2f1f740045bfe7c4dac59f0b2b69c'
+#_opt_VCPKG_COMMIT_ID='#branch=2023.10.19'
+#_opt_VCPKG_COMMIT_ID=''
 
 # 0 for package flutter, version checked
 # 1 for system flutter, version warned
@@ -19,7 +20,7 @@ _opt_SYS_FLUTTER=0
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.3.2'
+_pkgver='1.3.6'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -27,7 +28,8 @@ arch=('x86_64')
 url='https://rustdesk.com/'
 _giturl='https://github.com/rustdesk/rustdesk'
 license=('AGPL-3.0-only')
-_dpr=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libvdpau' 'libappindicator-gtk3' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire') # from res/PKGBUILD/depends
+_dpr=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libappindicator-gtk3' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire') # from res/PKGBUILD/depends
+#_dpr=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libvdpau' 'libappindicator-gtk3' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire') # from res/PKGBUILD/depends
 depends=("${_dpr[@]}" 'pulse-native-provider' 'gst-plugins-base-libs')
 depends+=('hicolor-icon-theme' 'xdg-utils')
 depends+=('xdg-user-dirs')
@@ -36,10 +38,15 @@ _mdp=('unzip' 'git' 'cmake' 'gcc' 'curl' 'wget' 'yasm' 'nasm' 'zip' 'make' 'pkg-
 makedepends=("${_mdp[@]}" 'rust' 'python' 'python-yaml' 'python-toml')
 makedepends+=('ninja') # vcpkg build can use the latest ninja
 options=('!makeflags' '!lto')
+_patches=(
+  '0000-disable-update-check@rustdesk.patch'
+  '0001-extended_text-drop-version-for-flutter.3.22.3@rustdesk.patch' # https://github.com/rustdesk/rustdesk/blob/master/.github/workflows/bridge.yml#L77
+)
 install="${pkgname}.install"
 _srcdir="${pkgname}-${_pkgver}"
 source=(
   "${_srcdir}.tar.gz::https://github.com/rustdesk/rustdesk/archive/refs/tags/${_pkgver}.tar.gz"
+  "${_patches[@]}"
 )
 _vcs=(
 )
@@ -52,7 +59,7 @@ else
 fi
 source+=("${_vcs[@]}")
   if [ "${_opt_SYS_FLUTTER}" -eq 0 ]; then
-    _FLUVER='3.19.6'
+    _FLUVER='3.19.6' # https://docs.flutter.dev/release/archive
     source+=(
       "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${_FLUVER}-stable.tar.xz"
     )
@@ -60,26 +67,39 @@ source+=("${_vcs[@]}")
     makedepends+=('flutter')
   fi
   if :; then
-    _FRBVER='1.80.0'
+    _FRBVER='1.80.1'
+    _srcdirfrb="flutter_rust_bridge-${_FRBVER}"
     source+=(
-      "flutter_rust_bridge-${_FRBVER}.tar.gz::https://github.com/fzyzcjy/flutter_rust_bridge/archive/refs/tags/v${_FRBVER}.tar.gz"
+      "${_srcdirfrb}.tar.gz::https://github.com/fzyzcjy/flutter_rust_bridge/archive/refs/tags/v${_FRBVER}.tar.gz"
     )
   fi
 if ! :; then
   _srcdir="${_pkgname}"
   source[0]="git+${_giturl}#tag=${_pkgver}"
 fi
-md5sums=('5801689428f121994a3fa0b7763dfc1c'
-         'SKIP'
+md5sums=('d6a9f5ccce460c08f245696639158bed'
+         '6acc4b5b14befec55ef84006b60c7ff5'
+         '9b997c2eb989a044704fd7c1d2152d02'
+         'd910c998433bea79e2b3004ac7bc4cda'
          '74dc171bf2cfc1ada56b6e284adabca8'
-         'a63659fb966758db9fe95e5aae89757a')
-sha256sums=('90d4fc82c4578c7641d0b0cf96bff99d64e904b864bb5d0ddf55d4a6afe95325'
-            'SKIP'
+         'cc8e5418ff0c163228aabbe385ba2596')
+sha256sums=('2a8588123e1bc3ffb661dde90c494cab8ba5231ead61d5e17525b764ff9669d0'
+            '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
+            '17ad644a9987ad2dc8ddaf68e62e026c1825b3ecae46254ea98d985c5d5df582'
+            '1beaad3e3fb9e70dcbcd98f73d356773eea82ab87e23403642d29483e7760ce5'
             'db6742a20626d0d2a089eb41ad61b9b2138b996679911e9c8268c1f896191f97'
-            'b3a05ffca1f57afa48bd006d732969146dafa164c71390070623ba569977f9d3')
+            '5c1494e79024de228a9f383c8e52e45b042cd0cf24f4b0f47ee4d5448938b336')
 _vcs=("${_vcs[@]%%::*}")
 _vcs=("${_vcs[@]##*/}")
 noextract=("${_vcs[@]}")
+
+# updpkgsums doesn't detect vcpkg git correctly
+for _fk in "${!source[@]}"; do
+  if [ "${source[${_fk}]#git}" != "${source[${_fk}]}" ]; then
+    md5sums["${_fk}"]='SKIP'
+    sha256sums["${_fk}"]='SKIP'
+  fi
+done
 
 _vcpkg=(libvpx libyuv opus aom)
 
@@ -105,7 +125,7 @@ _prepare_vc() {
     local _pyvcc="
 import yaml
 import io
-with open('rustdesk/.github/workflows/flutter-build.yml', 'r') as stream:
+with open('${_srcdir}/.github/workflows/flutter-build.yml', 'r') as stream:
     data_loaded = yaml.safe_load(stream)
 #print(data_loaded.get('env').keys())
 print(data_loaded.get('env').get('VCPKG_COMMIT_ID'))
@@ -150,7 +170,8 @@ _flutter_check() {
     local _pyfv="
 import yaml
 import io
-with open('.github/workflows/flutter-build.yml', 'r') as stream:
+#with open('.github/workflows/flutter-build.yml', 'r') as stream:
+with open('.github/workflows/bridge.yml', 'r') as stream:
     data_loaded = yaml.safe_load(stream)
 #print(data_loaded.get('env').keys())
 print(data_loaded.get('env').get('FLUTTER_VERSION'))
@@ -168,8 +189,8 @@ print(data_loaded.get('env').get('FLUTTER_VERSION'))
         _FLUTTER_VERSION="${_FLUVER}"
       else
         printf 'Flutter version has changed to %s\n' "${_FLUTTER_VERSION}"
-        set +u
-        false
+        #set +u
+        #false
       fi
     fi
     set +u; msg2 "FLUTTER_VERSION=${_FLUTTER_VERSION}"; set -u
@@ -179,6 +200,14 @@ import toml
 new_toml_string = toml.load('Cargo.toml')
 #print(new_toml_string.keys())
 print(new_toml_string.get('dependencies').get('flutter_rust_bridge').get('version'))
+"
+    local _pyfrb="
+import yaml
+import io
+with open('.github/workflows/bridge.yml', 'r') as stream:
+    data_loaded = yaml.safe_load(stream)
+#print(data_loaded.get('env').keys())
+print(data_loaded.get('env').get('FLUTTER_RUST_BRIDGE_VERSION'))
 "
     _flutter_rust_bridge="$(python -c "${_pyfrb}")"
     _flutter_rust_bridge="${_flutter_rust_bridge#=}"
@@ -236,6 +265,35 @@ prepare() {
   cd "${_srcdir}"
   _flutter_check
   _mod_py
+
+  local _pt _ptf=() _pts=() _ptd
+  for _pt in "${_patches[@]}"; do
+    set +u; msg2 "Patch ${_pt}"; set -u
+    _ptd=()
+    if [[ "${_pt}" =~ ^[^@]+@([^.]+).patch$ ]]; then
+      case "${BASH_REMATCH[1]}" in
+      'rustdesk') _ptd=(-d "${srcdir}/${_srcdir}");;
+      'flutter_rust_bridge') _ptd=(-d "${srcdir}/${_srcdirfrb}");;
+      *) _ptd=(-d "${srcdir}/${BASH_REMATCH[1]}");;
+      esac
+    fi
+    if patch "${_ptd[@]}" -Nup1 -i "${srcdir}/${_pt}"; then
+      _pts+=("${_pt}")
+    else
+      _ptf+=("${_pt}")
+    fi
+  done
+  if [ "${#_ptf[@]}" -gt 0 ]; then
+     if [ "${#_pts[@]}" -gt 0 ]; then
+       printf 'Patch success %s\n' "${_pts[@]}"
+       printf 'Warning: Some old patches may need to be removed even if they are successful\n'
+     fi
+     printf 'Patch failed %s\n' "${_ptf[@]}"
+     set +x
+     false
+  fi
+  #cd '..'; cp -pr "${_srcdir}" 'a'; ln -s "${_srcdir}" 'b'; cp -pr "${_srcdirfrb}" 'fa'; ln -s "${_srcdirfrb}" 'fb'; false
+  #diff -pNaru5 'a' 'b' > "0000-$RANDOM@domain.patch"
   set +u
 }
 
@@ -246,13 +304,16 @@ build() {
     vcpkg/bootstrap-vcpkg.sh
   fi
   export VCPKG_ROOT="${PWD}/vcpkg"
-  nice vcpkg/vcpkg install "${_vcpkg[@]}"
+  nice vcpkg/vcpkg install --x-install-root="$VCPKG_ROOT/installed" "${_vcpkg[@]}"
 
   cd "${_srcdir}"
     set +u; msg2 'Build rustdesk Flutter'; set -u
     set -x
     export CPATH="$(clang -v 2>&1 | grep "Selected GCC installation: " | cut -d' ' -f4-)/include"
-    export PATH="${srcdir}/flutter/bin:$PATH"
+    local _oldpath="${PATH}"
+    export CARGO_INCREMENTAL=0
+    export PATH="${srcdir}/flutter/bin:${_oldpath}"
+    flutter doctor -v
     dart pub global activate ffigen --version 5.0.1
     pushd "${srcdir}/flutter_rust_bridge/frb_codegen"; nice cargo install --path . ; popd
     pushd flutter ; flutter clean; flutter pub get ; popd
@@ -261,7 +322,7 @@ build() {
     if [ "${_opt_BUILD_PY}" -ne 0 ]; then
       nice ./build.py --flutter
     else
-      git checkout src/ui/common.tis
+      #git checkout src/ui/common.tis
       nice cargo build --features flutter --lib --release
       pushd flutter
       nice flutter build linux --release
