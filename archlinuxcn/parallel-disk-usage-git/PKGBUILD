@@ -27,7 +27,7 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	cargo build --bin "${_pkgname}" --frozen --release --all-features
+	cargo build --bin pdu --frozen --release --all-features
 }
 
 check() {
