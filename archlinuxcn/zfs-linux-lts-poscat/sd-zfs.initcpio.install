@@ -4,6 +4,12 @@ true || source /usr/lib/initcpio/functions
 true || source /usr/lib/initcpio/install/systemd
 
 build() {
+  # busybox
+  add_binary /usr/lib/initcpio/busybox /usr/bin/
+  for applet in $(/usr/lib/initcpio/busybox --list); do
+    add_symlink "/usr/bin/$applet" busybox
+  done
+
   map add_module \
     zfs \
     spl
@@ -45,11 +51,6 @@ build() {
   add_binary /usr/lib/zfs/initcpio/zfs-root-generator /usr/lib/systemd/system-generators/
   add_binary /usr/lib/zfs/initcpio/zfs-set-env /usr/bin/
   add_binary /usr/lib/zfs/initcpio/parse-cmdline /usr/bin/
-
-  add_binary /usr/lib/initcpio/busybox /usr/bin/
-  for applet in $(/usr/lib/initcpio/busybox --list); do
-    add_symlink "/usr/bin/$applet" busybox
-  done
 }
 
 help() {
