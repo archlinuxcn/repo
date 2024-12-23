@@ -2,7 +2,8 @@
 
 _pkgname=python-crc32c
 pkgname=python-google-crc32c
-pkgver=1.6.0.dev1
+epoch=1
+pkgver=1.6.0
 pkgrel=1
 pkgdesc='Python wrapping for google-crc32c'
 arch=('x86_64')
@@ -21,7 +22,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/googleapis/python-crc32c/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('8267b8dd291cf3a33a0713a337ccb2166351c1e2866d6772e9ab7e5eed465e2f94ae362e2769321120e1d3e52315b97ed3ca147cc440bfc44093386a473e941c')
+sha512sums=('f3ee87de4a6391f99a3fd96a43e96740f84d2f4e9c2af0171d0ac7d59f8a5895f42d1f847844bf807ddd579001a393e04181469d9074fcedcd7a8292e0c9f653')
 
 build() {
   cd "${_pkgname}-${pkgver}"
