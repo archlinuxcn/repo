@@ -1,0 +1,13 @@
+[Unit]
+Description=dufs with config %i
+Wants=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=dufs
+Group=dufs
+ExecStart=/usr/bin/dufs --config /etc/dufs/%i.yaml
+
+[Install]
+WantedBy=multi-user.target

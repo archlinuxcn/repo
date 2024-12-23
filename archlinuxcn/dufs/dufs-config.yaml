@@ -1,0 +1,28 @@
+serve-path: "."
+bind: 0.0.0.0 # Or bind as UNIX socket like /run/dufs/dufs.socket
+port: 5000
+# path-prefix: /dufs
+hidden:
+  - tmp
+  - "*.log"
+  - "*.lock"
+# auth:
+#   - admin:admin@/:rw
+#   - user:pass@/src:rw,/share
+#   - "@/" # According to the YAML spec, quoting is required.
+allow-all: false
+allow-upload: true
+allow-delete: true
+allow-search: true
+allow-symlink: false
+allow-archive: true
+enable-cors: false
+render-index: true
+render-try-index: true
+render-spa: false
+# assets: ./assets/
+# log-format: '$remote_addr "$request" $status $http_user_agent'
+# log-file: /var/log/dufs/dufs.log
+# compress: low
+# tls-cert: tests/data/cert.pem
+# tls-key: tests/data/key_pkcs1.pem
