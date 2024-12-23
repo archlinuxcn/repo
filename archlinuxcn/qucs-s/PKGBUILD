@@ -1,9 +1,9 @@
-# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
 # Contributor: Zes4Null <rjw1248[at]hotmail[dot]com>
 # Contributor: Philip <philip1731 protonmail ch>
 
 pkgname=qucs-s
-pkgver=24.3.1
+pkgver=24.4.1
 pkgrel=1
 pkgdesc="A spin-off of Qucs that supports other free SPICE circuit simulators like ngspice with the same Qucs GUI"
 arch=('x86_64' 'i686')
@@ -15,6 +15,7 @@ depends=(
     'sh'
     'qt6-base'
     'qt6-svg'
+    'qt6-charts'
     'ngspice'
     'python'
     'python-numpy'
@@ -36,7 +37,7 @@ optdepends=(
     'octave: high-level language for post-simulation data processing'
 )
 source=(https://github.com/ra3xdh/qucs_s/releases/download/$pkgver/$pkgname-$pkgver.tar.gz)
-b2sums=('894ee8425ecc66214747443786649c47e60da4db4cf1f597075a68196ed5b04583e1c3275dfdb645cc06962c62d3a23f5e45ec49e537e6f9a33061a8c6468a2b')
+b2sums=('aeb2b3613f8ea2aeaeabfe3aa18fc0aca70bd7acecd862aac81cbc53e5c5ef671db7c76ebcaaf9ec4e15a2d1bf2fbc373f18d96e67fd228e683a412b87102f5d')
 
 build() {
     cmake -S "$pkgname-$pkgver" -B build \

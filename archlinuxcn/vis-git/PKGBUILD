@@ -1,0 +1,55 @@
+# Maintainer: Christian Hesse <mail@eworm.de>
+
+pkgname=vis-git
+pkgver=0.9.r260.gf840bca
+pkgrel=1
+pkgdesc='modern, legacy free, simple yet efficient vim-like editor'
+arch=('x86_64')
+url='https://github.com/martanne/vis#vis-a-vim-like-text-editor'
+depends=('acl' 'libacl.so' 'bash' 'ncurses' 'libncursesw.so' 'libtermkey'
+         'libtermkey.so' 'lua' 'tre' 'file')
+optdepends=('wl-clipboard: wayland clipboard support'
+            'xclip: X11 clipboard support'
+            'xsel: X11 clipboard support'
+            'lua-lpeg: syntax highlighting')
+makedepends=('git')
+checkdepends=('vim' 'lua-lpeg')
+license=('custom:ISC')
+backup=('etc/vis/visrc.lua')
+source=("git+https://github.com/martanne/vis.git")
+sha256sums=('SKIP')
+
+provides=('vis')
+conflicts=('vis')
+
+
+pkgver () {
+  cd vis/
+
+  git describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cd vis/
+
+  ./configure \
+    --prefix=/usr
+
+  make
+}
+
+check() {
+  cd vis/
+
+  make -C test/
+}
+
+package() {
+  cd vis/
+
+  make DESTDIR="${pkgdir}" install
+
+  install -D -m0644 lua/visrc.lua "${pkgdir}"/etc/vis/visrc.lua
+
+  install -D -m0644 'LICENSE' "${pkgdir}/usr/share/licenses/vis/LICENSE"
+}

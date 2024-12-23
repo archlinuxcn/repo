@@ -2,9 +2,8 @@
 
 pkgname=opensnitch-ebpf-module
 _pkgname=opensnitch
-pkgver=1.6.5
-_pkgver=1.6.5
-pkgrel=3
+pkgver=1.6.6
+pkgrel=1
 pkgdesc="eBPF process monitor module for opensnitch"
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/evilsocket/opensnitch"
@@ -12,12 +11,12 @@ license=('GPL-3.0-or-later')
 makedepends=('bc' 'clang' 'libelf' 'linux-headers' 'llvm')
 checkdepends=('llvm')
 depends=('opensnitch')
-source=("${_pkgname}-${_pkgver}.tar.gz::${url}/archive/v${_pkgver}.tar.gz")
-sha256sums=('5ebbd5c40c6efcfee8656c50e8b1523078f2633d93bab0dd1d529b1aa2ff36e8')
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('7e2a5dbf32418e6b59ff77ff159166984fc52114a2abda32ad9ce9dcdffd1350')
 options=('!strip') # we're stripping with llvm-strip
 
 build() {
-	cd "${srcdir}/${_pkgname}-${_pkgver}/ebpf_prog"
+	cd "${srcdir}/${_pkgname}-${pkgver}/ebpf_prog"
 	KDIR="/usr/src/linux"
 
 	# we set -fno-stack-protector here to work around a clang regression
@@ -33,7 +32,7 @@ check() {
 	)
 
 	SECTIONS=$(llvm-readelf \
-		"${srcdir}/${_pkgname}-${_pkgver}/ebpf_prog/opensnitch.o" \
+		"${srcdir}/${_pkgname}-${pkgver}/ebpf_prog/opensnitch.o" \
 		--section-headers)
 
 	for section in "${REQUIRED_SECTIONS[@]}"; do
@@ -45,6 +44,6 @@ check() {
 }
 
 package() {
-	install -Dm644 "${srcdir}/${_pkgname}-${_pkgver}/ebpf_prog/opensnitch"*".o" -t \
+	install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/ebpf_prog/opensnitch"*".o" -t \
 		"${pkgdir}/usr/lib/opensnitchd/ebpf"
 }

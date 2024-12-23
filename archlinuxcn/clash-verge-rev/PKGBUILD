@@ -3,17 +3,17 @@
 
 pkgname=clash-verge-rev
 _pkgname=${pkgname%-rev}
-pkgver=1.7.7
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://github.com/${pkgname}/${pkgname}"
 license=('GPL-3.0-or-later')
-depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator')
+depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator')
 conflicts=("${pkgname}-bin" "${pkgname}-alpha" "${pkgname}-alpha-bin" "${pkgname}-git" "${_pkgname}" "${_pkgname}-bin")
 makedepends=('nodejs' 'pnpm' 'cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('22d915d2946ad327236769aa95594060dfd8f0e53d3e6d7c6a567512a2152ac80797afa45104a0b7f200abe37bba7629567fa4d0d247324c154e009fe76231d4')
+sha512sums=('31754525d0935cd37815a11d7ac75fd1a575c480c17ce8ff3c4e675ca56fb60a0024b190273919793ed73998166dff509290a2794b5c4cfb4efd78505a57e68d')
 options=('!lto')
 
 prepare() {
@@ -29,6 +29,7 @@ build() {
 
 package() {
 	cd "${pkgname}-${pkgver}/"
-	tar -xpf src-tauri/target/release/bundle/deb/${_pkgname}_${pkgver}_*/data.tar.gz -C "${pkgdir}"
+
+	tar -xpf src-tauri/target/release/bundle/deb/Clash\ Verge_${pkgver}_*/data.tar.gz -C "${pkgdir}"
 	chown -R root:root ${pkgdir}
 }

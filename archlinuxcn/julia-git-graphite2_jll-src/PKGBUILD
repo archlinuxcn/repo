@@ -1,7 +1,7 @@
 pkgname=julia-git-graphite2_jll-src
-pkgver=1.3.14+0
-_commit=3b08421c6201219f26c6bbe410a2b64dd7a92634
-pkgrel=2
+pkgver=1.3.14+1
+_commit=4323eef68d71ae2b6f401599661ea84d22aa4194
+pkgrel=1
 pkgdesc="Graphite2_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Graphite2_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git graphite)
 source=("git+https://github.com/JuliaBinaryWrappers/Graphite2_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('4c359cd417ab0a18891945615e5f3193d42951c55e5856bc46d0fe939cb9ce7d'
             'bd75a99f40fa9be4a825facd3ea615a2370162965ab504bf074ae586c7bb9931')
 
 build() {

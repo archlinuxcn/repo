@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_libxi_jll-src
-pkgver=1.7.10+4
-_commit=083fe1fa320a34af7a5a7c8b0512cd098f8d4b14
-pkgrel=3
+pkgver=1.8.2+0
+_commit=7017ec4ba9e3ca38e49710cce38e15c011cbc3aa
+pkgrel=1
 pkgdesc="Xorg_libXi_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXi_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxi)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXi_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('3897e461d79e293653ded11e4e5e01e60973f0ccd5ef9a7685ec76b5c423e4a1'
             '9e8b8269864cc93e095e9d526b308ad048dbdf68c6f3248f86dcac1ba881295c')
 
 build() {

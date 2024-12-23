@@ -1,8 +1,9 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 _pkgname=girder-client
+_name=girder_client
 pkgname=python-girder-client
-pkgver=3.2.3
+pkgver=3.2.6
 pkgrel=2
 pkgdesc='Python client for interacting with Girder servers'
 arch=('any')
@@ -21,16 +22,16 @@ makedepends=(
   python-setuptools-scm
   python-wheel
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('0d44255839aef3b6441a3c294c7411205d1dd97cac8c0ae14f1eba48a8f3f4d3f065cc7f94eca2b0a1e7552788ce15696a08b032c6f8bbf024ba89f1be7e27cb')
+source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_name}-${pkgver}.tar.gz")
+sha512sums=('fcd24fa25e9ebdd240ef89d940dc3d09ed1a46b79cadaa7b72b7af1d1df7a7e62faba7763a8088dd419801581d39a4bf654163b77b749f3afa0d28028ba99f2d')
 
 build() {
-  cd "${_pkgname}-${pkgver}"
+  cd "${_name}-${pkgver}"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "${_pkgname}-${pkgver}"
+  cd "${_name}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:

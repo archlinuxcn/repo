@@ -1,11 +1,11 @@
 # Maintainer: Kirill Fries-Raevskiy <exocarnivore@gmail.com>
 _pkgbase="bpftune"
 pkgname="$_pkgbase-git"
-pkgver=r531.7932cdb
+pkgver=r602.39dbe54
 pkgrel=1
 pkgdesc="BPF/tracing tools for auto-tuning Linux"
 arch=("x86_64")
-url="https://github.com/oracle-samples/bpftune"
+url="https://github.com/oracle/bpftune"
 license=('GPLv2 WITH Linux-syscall-note')
 #groups=()
 depends=("libbpf" "libnl" "libcap")
@@ -27,18 +27,16 @@ pkgver() {
 
 prepare() {
 	cd "$srcdir/$_pkgbase"
-	sed -i 's/\/lib64/\/lib/' include/bpftune/libbpftune.h
-	sed -i 's/\/lib64/\/lib/g' src/Makefile
 	sed -i 's/\/sbin/\/bin/g' src/Makefile
 	sed -i 's/\/sbin/\/bin/g' src/bpftune.service
 }
 
 build() {
 	cd "$srcdir/$_pkgbase"
-	CC=clang make
+	CC=clang make libdir=lib
 }
 
 package() {
 	cd "$srcdir/$_pkgbase"
-	CC=clang make DESTDIR="$pkgdir" install
+	CC=clang make DESTDIR="$pkgdir" libdir=lib install
 }

@@ -1,8 +1,8 @@
 # Maintainer: Carl Smedstad <carsme@archlinux.org>
 
 pkgname=deptry
-pkgver=0.20.0
-pkgrel=1
+pkgver=0.21.2
+pkgrel=2
 pkgdesc="Find unused, missing and transitive dependencies in a Python project"
 arch=(x86_64)
 url="https://github.com/fpgmaas/deptry"
@@ -12,6 +12,8 @@ depends=(
   glibc
   python
   python-click
+  python-packaging
+  python-requirements-parser
 )
 makedepends=(
   git
@@ -25,7 +27,7 @@ checkdepends=(
   python-pytest-xdist
 )
 source=("$pkgname::git+$url.git#tag=$pkgver")
-sha256sums=('70bd65b1d7c06c3c8c313f5e96d73b8e949e62172f4d1797123ddcb930b01159')
+sha256sums=('d9ada26276355a6eca8349e8b654a387153a207730a3a41b45258b4045f1ca26')
 
 prepare() {
   cd $pkgname
@@ -54,8 +56,7 @@ check() {
   local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
   export PYTHONPATH="$PWD/tmp_install/$site_packages"
   # Deselect test failing with AssertionError, only in a chroot - not sure why.
-  pytest tests/ \
-    --deselect tests/unit/violations/dep003_transitive/test_finder.py::test_simple
+  pytest tests/
 }
 
 package() {

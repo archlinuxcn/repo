@@ -1,6 +1,6 @@
 pkgname=julia-git-timeroutputs-src
-pkgver=0.5.24
-_commit=ada4b6c3768cbeeba6e80b304dba47b79e2a6abf
+pkgver=0.5.26
+_commit=359467c093dbe9f2a6e2007d614b5f5c3dcb726a
 pkgrel=1
 pkgdesc="TimerOutputs.jl"
 url="https://github.com/KristofferC/TimerOutputs.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/KristofferC/TimerOutputs.jl.git#commit=$_commit")
-sha256sums=('4f39d61d1f3ad4d7aaf47d291a43652327c1b71b07d2b7ffdd3114f9f6d92efd')
+sha256sums=('48e93f25e09547abe9aca26ee8b8a40f11000c975a9372f76a73bc06b47e1fc3')
 
 package() {
   cd TimerOutputs.jl

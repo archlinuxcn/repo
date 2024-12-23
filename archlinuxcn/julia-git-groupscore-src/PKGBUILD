@@ -1,6 +1,6 @@
 pkgname=julia-git-groupscore-src
-pkgver=0.5.0
-_commit=ad9335f937fddc0f2004e43d0811b9caaa128081
+pkgver=0.5.2
+_commit=79486a540936993c3744b84607f8ea38456ddf99
 pkgrel=1
 pkgdesc="GroupsCore.jl"
 url="https://github.com/kalmarek/GroupsCore.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/kalmarek/GroupsCore.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('b3614f51af8123e6aee4ac08d33e298e419b28e9ed84ce982a54e66630ef0b11')
 
 package() {
   cd GroupsCore.jl

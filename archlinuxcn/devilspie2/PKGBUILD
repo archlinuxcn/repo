@@ -1,13 +1,13 @@
 pkgname=devilspie2
-pkgver=0.44
-pkgrel=3
+pkgver=0.45
+pkgrel=1
 pkgdesc="A window matching utility, allowing the user to perform scripted actions on windows as they are created."
 arch=('i686' 'x86_64')
-url="http://www.nongnu.org/$pkgname/"
-license=('GPL3')
+url="https://www.nongnu.org/$pkgname/"
+license=('GPL-3.0-or-later')
 depends=('lua>=5.1' 'gtk3' 'libwnck3')
-source=("http://download.savannah.nongnu.org/releases/$pkgname/$pkgname-$pkgver.tar.xz"{,.sig})
-sha256sums=('0a9f1eadd2b22a318163e4180065d495221ba1a43ad2021ea6866cd118042640'
+source=("https://download.savannah.nongnu.org/releases/$pkgname/${pkgname}_$pkgver-src.tar.gz"{,.asc})
+sha256sums=('6cc55a68ccfd8bb5620f4cd7c9913ef29aba8a9e96648497c5b448fdb97cb034'
             'SKIP')
 validpgpkeys=('A523530DD1E9FDDFAD3D5FCAA9B57A926EF302F5') # Darren Salt <devspam@moreofthesa.me.uk>
 

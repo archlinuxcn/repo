@@ -1,3 +1,148 @@
+## GE-Proton9-21
+
+Upstream:
+
+- imported piper + PROTON_VOICE_FILES changes
+- imported misc proton game overrides
+- mono updated to 9.3.1
+- icu 64 and 32 bit changes imported
+- wine updated to latest bleeding edge
+- dxvk updated to latest git
+- dxvk-nvapi updated to latest upstream commit
+- vkd3d-proton updated to latest git
+- vkd3d switched from valve version to upstream wine version (same change was made upstream)
+
+Patch:
+
+- Backported wine bug fix patch 56653 for GetLogicalProcessorInformation, fixes edge case crash on some systems for a few games, notably baldurs gate 3 and divinity original sin 2 (thanks mx-moth)
+
+Protonfixes:
+
+- Add fix for dirt 3 outside of steam (thanks polluxau)
+- Remove no longer needed Disgaea 4 fix (thanks UsernamesAreNotMyThing)
+- Added fix for Teenage Mutant Ninja Turtles Shredders Revenge (thanks FranjeGueje)
+- Add fix for The Callisto Protocol (thanks FranjeGueje)
+- Remove redundant dinput8 overrides -- dinput8 is now default n,b in Proton Bleeding Edge (thanks Blisto91)
+- Add fix Bright Memory (thanks loathingKernel)
+- Disable Esync and Fsync for Supreme Commander (thanks UsernamesAreNotMyThing)
+- Added protonfix for SteamDeck=1 for Dauntless on steam
+
+## GE-Proton9-20
+
+Hotfix:
+- Revert DRI_PRIME auto-setting (broke too many non-standard setups)
+- DXVK updated with dxvk.hideIntegratedGraphics = True for Diablo IV (doitsujin/dxvk@125f0ac) to resolve the grey screen issue on systems with AMD iGPU + dGPU.
+
+
+## GE-Proton9-19
+
+- bump wine to latest bleeding edge
+- bump dxvk to latest git
+- bump vkd3d-proton to latest git (contains additional MH Wilds fix)
+- bump dxvk-nvapi to latest git
+- import upstream lsteamclient changes
+- import upstream vrclient changes
+- add xdefiant patch (thanks tperalta82)
+- auto-apply DRI_PRIME=1 when more than one gpu is detected. This allows Diablo IV to get passed the grey screen on igpu+dgpu systems.
+- add protonfixes for silent hill 3 video playback
+- add protonfixes for Horizon Zero Dawn Remastered internet connection (thanks UsernamesAreNotMyThing)
+
+## GE-Proton9-18
+
+Hotfix:
+- Add missing proton script python uuid import (which broke prefix creation)
+
+
+## GE-Prooton-17
+
+Proton:
+- wine updated to latest bleeding edge
+- dxvk updated to latest git
+- vkd3d-proton updated to latest git
+- dxvk-nvapi updated to latest git
+- ICU building + linking imported from upstream
+- misc proton script fixes imported from upstream
+
+Protonfixes:
+- Audio fix for Mini Ninjas (thanks UsernamesAreNotMyThing)
+- Fix typo'd mod support for ES: Oblivion (thanks MaxBosse)
+- Disable esync/fsync in Disgaea 4 to prevent crash (thanks UsernamesAreNotMyThing)
+
+Nothing major here, just a refresh of various parts that need updates from git, mostly to add new video playback fixes from upstream proton.
+
+## GE-Proton9-16
+
+Proton:
+
+- import upstream makefile changes
+- import upstream proton changes
+- import upstream steam_helper changes
+- import upstream vkd3d-shader changes
+- update wine to latest bleeding edge
+- updated dxvk to latest git
+- update vkd3d-proton to latest git
+- update dxvk-nvapi to e4bad70
+
+Protonfixes:
+
+- fixed issue with game_titles not being pulled correctly for UMU
+- game_titles are now looked up as part of included umu-database csv instead of trying to send online website api call
+- games run with UMU will now have /mnt,/run/media,/media/, and the user's home folder added as drives u:,v:,w:,x: respectively inside the prefix if they are not empty. This is to allow users to install or import games outside of the prefix more conveniently. A typical scenario for this would be if you have your games pre-installed on a different mounted drive, or somewhere else in your home folder outside of the prefix and you want to add them without reinstalling the game, OR if you want to install the game to one of those mounts instead of the C:\ drive inside the wine prefix. With steam, users don't really have to worry about this because steam handles the drive mounts and the install locations, however we found that outside of steam users were trying to use the Z: drive (which is symlinked to root (/)) -- which is of course containerized and read only, and therefore also unable to provide a proper drive size, resulting in users being told they don't have enough space. With the new drives added into the prefix it should fix this, allowing users to access their mount locations or existing game folders for installation or importing via the new drives instead of Z:.
+- Mod support for various bethesda games has been added (Thanks Root-Core). If a mod executable is found for bethesda games it will launch the mod executable instead of the original:
+ mapping = {
+ '22380': ('FalloutNV.exe', 'nvse_loader.exe'), # Fallout New Vegas
+ '22370': ('FalloutLauncher.exe', 'fose_loader.exe'), # Fallout 3
+ '377160': ('Fallout4Launcher.exe', 'f4se_loader.exe'), # Fallout 4
+ '22330': ('OblivionLauncher.exe', 'obse_loader.exe'), # Oblivion
+ '72850': ('SkyrimLauncher.exe', 'skse_loader.exe'), # Skyrim
+ '489830': ('SkyrimSELauncher.exe', 'skse64_loader.exe'), # Skyrim SE
+ '1716740': ('Starfield.exe', 'sfse_loader.exe') # Starfield
+ }.get(game_id, ('', ''))
+- protonfix added for metal gear solid 2 (thanks FranjeGueje)
+- protonfix for Kindom Hearts HD Remix added for steam version (already existed for egs version) (thanks Internetbestfriend)
+- protonfix added for Gothic Playable Teaser (thanks Root-Core)
+- Star Citizen protonfix updated (no longer requires EAC workaround)
+
+
+## GE-Proton9-15
+
+Hotfix build:
+
+Proton:
+
+- Updated wine to latest bleeding edge -- fixes regression in video playback from 9-14
+- Updated dxvk to latest git -- fixes regression which causes black textures and stuttering on NVIDIA cards.
+- Updated vkd3d-proton to latest git
+- import upstream changes for lsteamclient
+- update xalia to 0.4.4
+
+Protonfixes:
+
+- Remove deprecated workaround for Total War Rome 2
+
+
+## GE-Proton9-14
+
+Proton:
+
+- Update wine to latest bleeding edge
+- Update dxvk to latest git
+- Update vkd3d-proton to latest git
+- Update dxvk-nvapi to latest git
+- Import upstream proton changes
+- Update mono to 9.3.0
+- Rebase wine-staging
+
+Protonfixes:
+
+- Added god of war ragnarok SteamDeck=1 workaround (thanks UserNamesAreNotMyThing)
+- Added Star Citizen libcuda nvidia fix (thanks ProjectSynchro)
+- Added fix for Plain Site (thanks iodream)
+- Added fix for Worms: Blast (thanks iodream)
+- Remove deprecated Sleeping Dogs: DE fix
+- winetricks now built from source
+- Elden Ring fix updated (thanks UserNamesAreNotMyThing)
+
 ## GE-Proton9-13
 
 Hotfix:

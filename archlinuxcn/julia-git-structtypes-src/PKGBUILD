@@ -1,7 +1,7 @@
 pkgname=julia-git-structtypes-src
-pkgver=1.10.0
-_commit=73188806a6ddc1795f010f4279eb418c487f6b5d
-pkgrel=2
+pkgver=1.11.0
+_commit=47c4691d9b5f72455566658a50d950bfb1522a75
+pkgrel=1
 pkgdesc="StructTypes.jl"
 url="https://github.com/JuliaData/StructTypes.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/StructTypes.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('4bc84384b7a247bd899ba748d478b92563b2793e9d0c5448d11362ebd648797a')
 
 package() {
   cd StructTypes.jl

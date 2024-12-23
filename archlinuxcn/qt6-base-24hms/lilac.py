@@ -20,7 +20,7 @@ def pre_build():
   in_build_qt6_base = False
   checks = ''
   variant = '-24hms'
-  variant_sha256 = '97ab390edb9b8f452f42138f9dfb2184e5a2bf0a2dddd02c3b6afbc448bd6997'
+  variant_sha256 = '0c845268bde9718fbd76ad759b8a51352a5fddd30dbd76aaa7d4dbf5ea010151'
   variant_desc = '24-hour HH:mm:ss notation'
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgrel='):
@@ -72,6 +72,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       checks = checks + '8'
     elif in_prepare and line.startswith('}'):
       line = f'''
+  cd $_pkgfn
   patch -p1 -i ../oldherl{variant}.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."

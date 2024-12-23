@@ -2,7 +2,7 @@
 
 _pkgname=MONAILabel
 pkgname=monailabel
-pkgver=0.8.3
+pkgver=0.8.5
 pkgrel=1
 epoch=1
 pkgdesc='An intelligent open source image labeling and learning tool'
@@ -72,7 +72,7 @@ optdepends=(
 )
 install="${pkgname}.install"
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/Project-MONAI/MONAILabel/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('5e281895a80fc4dfa946f83bae02a2d106aff1d728904f9bae9c0f7b2b652667e4da5516ae36eb0a4e87e6af0368610a788f0437342f0214abe3affce3288678')
+sha512sums=('793543666e16fe68e259bb04f9419e27fe0899fcf40091106e4ee2371cfb7bab329e7a472b9672a73fbfe10fe819ed22de3251c323ec1b2d8eb3efffad1b148c')
 
 build() {
   cd "${_pkgname}-${pkgver}"

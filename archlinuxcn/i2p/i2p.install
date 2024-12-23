@@ -1,9 +1,0 @@
-post_install() {
-  echo "==> I2P Router webui can be accessed at"
-  echo "==> http://127.0.0.1:7657/config.jsp"
-}
-
-post_remove() {
-  rm -rf /opt/i2p/{lib*.so*,.tmp,.cache}
-  echo "==> Router configuration is saved in /opt/i2p/.i2p"
-}

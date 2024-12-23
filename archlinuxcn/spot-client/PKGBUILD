@@ -4,8 +4,8 @@
 
 _projectname='spot'
 pkgname="$_projectname-client"
-pkgver='0.4.1'
-pkgrel='1'
+pkgver=0.5.0
+pkgrel=1
 pkgdesc='Gtk/Rust native Spotify client'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/xou816/$_projectname"
@@ -17,7 +17,7 @@ checkdepends=('appstream-glib')
 options=('!lto') # Build breaks with LTO enabled
 source=("https://github.com/xou816/$_projectname/archive/$pkgver/$_projectname-$pkgver.tar.gz"
 	'disable-clippy.patch')
-sha512sums=('05ee8ce9277230a0f6c25411b41788a508551a61cd436bdd6bb0d8245030b0523232c0e30c7d2f98977382e687ec0f502cb6eb9b95a7dbaae97042ec596f407e'
+sha512sums=('a2acbc2666c3acea86562227b490373bdeff67831bef7275b47e759db366cacbeb2411578f56be824cca6cd72c833e5830db89c203af1c8165e06927eabcf3ec'
             '4e38fff2a5867c46749959ceb0fb16372f12c8f8038b6a33d43e126e741f43e524e1499bb9b514e56b036097aaa0ac5dd149823c2c9eba277ab0ea4f58d5fb55')
 validpgpkeys=() # Waiting for https://github.com/xou816/spot/issues/283
 

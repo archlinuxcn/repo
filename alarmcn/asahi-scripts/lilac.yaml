@@ -1,16 +1,13 @@
 maintainers:
   - github: yuyichao
 
-# pre_build_script: run_cmd(['sh', './get_pkg.sh', 'asahi-scripts'])
-post_build_script: |
-  git_add_files('.')
-  git_commit()
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: manual
-    manual: 20240623
-  # - source: github
-  #   github: AsahiLinux/PKGBUILDs
-  #   path: asahi-scripts
+  - source: github
+    github: AsahiLinux/asahi-scripts
+    use_max_tag: true
   - source: manual
     manual: 1

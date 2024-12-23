@@ -1,0 +1,30 @@
+# Maintainer: alba4k <blaskoazzolaaaron@gmail.com>
+
+pkgname=hyprgraphics-git
+_pkgname="${pkgname%-git}"
+pkgver=0.1.1.r3.g6dea3fb
+pkgrel=1
+pkgdesc="Hyprland graphics / resource utilities"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('BSD-3-Clause')
+depends=('pixman' 'cairo' 'hyprutils-git' 'libjpeg' 'libwebp' 'libjxl' 'file')
+makedepends=('git' 'cmake')
+source=("git+${url}.git")
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+sha256sums=('SKIP')
+
+pkgver() {
+	git -C "${_pkgname}" describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cmake -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr -S "${_pkgname}/" -B build
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

@@ -12,7 +12,6 @@ update_on_build:
   - pkgbase: ruby-reverse_markdown
   - pkgbase: ruby-e2mmap
   - pkgbase: ruby-backport
-  - pkgbase: ruby-rbs
 
 update_on:
   - source: aur
@@ -25,9 +24,9 @@ update_on:
     alpm: ruby-e2mmap
   - alias: alpm-lilac
     alpm: ruby-backport
-  - alias: alpm-lilac
+  - source: alpm
     alpm: ruby-rbs
 
 maintainers:
   - github: CoelacanthusHex
-    email: CoelacanthusHex@gmail.com
+    email: coelacanthus@archlinuxcn.org

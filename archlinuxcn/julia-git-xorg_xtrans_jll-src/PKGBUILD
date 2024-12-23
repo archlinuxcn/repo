@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_xtrans_jll-src
-pkgver=1.5.0+0
-_commit=6feed2daef5e72d5d7563768a985b826430f7fe5
-pkgrel=2
+pkgver=1.5.0+1
+_commit=7f9831e7f2f31211c289b6ee11ce71ed23cb6de9
+pkgrel=1
 pkgdesc="Xorg_xtrans_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_xtrans_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_xtrans_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('dcb57bb5100163869e79e402f7ff61fbd599bbe582d90c213ba30cc9d0e609ae'
             'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
 
 build() {

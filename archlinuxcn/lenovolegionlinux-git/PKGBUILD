@@ -5,8 +5,8 @@
 
 _pkgname=lenovolegionlinux
 pkgname=${_pkgname}-git
-pkgver=r834.714cd25
-pkgrel=1
+pkgver=r860.c1e9b55
+pkgrel=2
 pkgdesc="LenovoLegionLinux (LLL) brings additional drivers and tools for Lenovo Legion series laptops to Linux. PLEASE READ THE REPO BEFORE INSTALL THIS PACKAGE!!!"
 arch=("x86_64")
 url="https://github.com/johnfanv2/LenovoLegionLinux"
@@ -46,8 +46,9 @@ pkgver() {
 
 prepare() {
   cd "${_pkgname}"
-  pkgver_commit=$(echo $pkgver | cut -c 6-)
-  git checkout $pkgver_commit
+  # Use latest commit instead
+  #pkgver_commit=$(echo $pkgver | cut -c 6-)
+  #git checkout $pkgver_commit
   sed -i "s/version = _VERSION/version = 1.0.0/g" "${srcdir}/${_pkgname}/python/legion_linux/setup.cfg"
 }
 

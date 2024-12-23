@@ -1,7 +1,7 @@
 pkgname=julia-git-conjugategradients-src
-pkgver=0.1.0
-_commit=49dc2a91d87982b3a0f9ab9efa7593a56524c508
-pkgrel=2
+pkgver=0.1.1
+_commit=89d61749ae105b37b9f0eaead894c2824f41f264
+pkgrel=1
 pkgdesc="ConjugateGradients.jl"
 url="https://github.com/mcovalt/ConjugateGradients.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/mcovalt/ConjugateGradients.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('54b929c3fb5a63d29c60d222680c0d798e08ec6e1bb71424c37cf5c54d698984')
 
 package() {
   cd ConjugateGradients.jl

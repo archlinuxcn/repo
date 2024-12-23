@@ -1,11 +1,12 @@
-# Maintainer: Devin Lin <devin@kde.org>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Devin Lin <devin@kde.org>
 
 pkgname=plasma-mobile
-pkgver=6.1.4
-pkgrel=1
+pkgver=6.2.4
+pkgrel=3
 pkgdesc="Plasma Mobile shell components."
 arch=('x86_64' 'i686' 'i486' 'pentium4' 'arm' 'armv6h' 'armv7h' 'aarch64')
-url="https://invent.kde.org/plasma/plasma-mobile"
+url="https://invent.kde.org/plasma/${pkgname}"
 license=('LGPL-2.0-or-later')
 depends=(
 	'plasma-nm'
@@ -27,19 +28,13 @@ optdepends=(
 )
 makedepends=('cmake' 'extra-cmake-modules')
 source=("https://download.kde.org/stable/plasma/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('949b05d41c05a5a74e4b7aaaa05060fc1e4069b38f4fcec06c29cbcbf92330d2')
-
-prepare() {
-	mkdir -p build
-}
+sha256sums=('ed198ecc902bdcec3d66bf1e3d60421450ec3f5dea74b1395aa6a27d1eeea0af')
 
 build() {
 	cmake -B build -S "${pkgname}-${pkgver}" \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_INSTALL_LIBDIR=/usr/lib \
-		-DCMAKE_INSTALL_LIBEXECDIR=lib \
-		-DBUILD_TESTING=OFF
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX=/usr
+
 	cmake --build build
 }
 

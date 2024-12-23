@@ -1,7 +1,7 @@
 pkgname=julia-git-gperf_jll-src
-pkgver=3.1.1+0
-_commit=9359ff465788fc27facd9f1462fdbf54dc5effc7
-pkgrel=2
+pkgver=3.1.1+1
+_commit=4a8226ab5dde67764031e549d3b5b60a3682701d
+pkgrel=1
 pkgdesc="gperf_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/gperf_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git gperf)
 source=("git+https://github.com/JuliaBinaryWrappers/gperf_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('a354c5770a0eaf92ab15538d4a5717c82e8ba612aa8dad1d4d20a52688104633'
             'cabec567b27e44e1c3f892fbd3a9eaa2644452fb380dbd0150900d23d7565c22')
 
 build() {

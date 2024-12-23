@@ -1,11 +1,17 @@
 maintainers:
   - github: Integral-Tech
+    email: integral@archlinuxcn.org
 
 pre_build_script: |
   update_pkgrel()
   vcs_update()
 
 post_build_script: git_pkgbuild_commit()
+
+repo_depends:
+  - hyprlang-git
+  - hyprutils-git
+  - hyprwayland-scanner-git
 
 update_on:
   - source: github

@@ -1,6 +1,6 @@
 pkgname=julia-git-fastalmostbandedmatrices-src
-pkgver=0.1.3
-_commit=b93f8a785eafc4c9147b81687ed25d298b6093e2
+pkgver=0.1.4
+_commit=b8470033d3197bbe36a52a65860e58530c8a0c97
 pkgrel=1
 pkgdesc="FastAlmostBandedMatrices.jl"
 url="https://github.com/avik-pal/FastAlmostBandedMatrices.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/avik-pal/FastAlmostBandedMatrices.jl.git#commit=$_commit")
-sha256sums=('20d745e924dee5ab4874b3f9efbe752450993e343020aee04cd33415f0017fe5')
+sha256sums=('adcbc8d7534c616b8a0caeb95e32ac895efe709629edaedacad1107e42d33472')
 
 package() {
   cd FastAlmostBandedMatrices.jl

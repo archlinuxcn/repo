@@ -1,28 +1,40 @@
 # Maintainer: Roald Clark <roaldclark@gmail.com>
-# Maintainer: goetzc
-# Maintainer: James P. Harvey <jamespharvey20 at gmail dot com>
-# Maintainer: Vyacheslav Konovalov <🦀vk@protonmail.com>
+# Contributor: goetzc
+# Contributor: James P. Harvey <jamespharvey20 at gmail dot com>
+# Contributor: Vyacheslav Konovalov <🦀vk@protonmail.com>
 
-pkgname=python-spotipy
+_name=spotipy
+pkgname="python-${_name}"
 pkgver=2.24.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A light weight Python library for the Spotify Web API'
 arch=('any')
-url='https://github.com/spotipy-dev/spotipy'
+url="https://github.com/${_name}-dev/${_name}"
 license=('MIT')
-depends=('python' 'python-redis' 'python-requests' 'python-six' 'python-urllib3')
-makedepends=('python-setuptools')
-conflicts=("$pkgname-git")
-source=("$pkgname-$pkgver.tar.gz::https://github.com/spotipy-dev/spotipy/archive/$pkgver.tar.gz")
+depends=(
+    'python'
+    'python-redis'
+    'python-requests'
+    'python-urllib3'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-wheel'
+)
+optdepends=('python-pymemcache')
+conflicts=("${pkgname}-git")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
 sha256sums=('f3dfd2f891f76923847f052c65ec689cd7482ab1e3200aebeffa39661c51d137')
 
 build() {
-    cd "spotipy-$pkgver"
-    python setup.py build
+    cd "${srcdir}/${_name}-${pkgver}"
+    python -m build --wheel --no-isolation
 }
 
 package() {
-    cd "spotipy-$pkgver"
-    python setup.py install --root="$pkgdir" --skip-build --optimize=1
-    install -Dm644 LICENSE.md -t "$pkgdir/usr/share/licenses/$pkgname"
+    cd "${srcdir}/${_name}-${pkgver}"
+    install -Dm0644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }

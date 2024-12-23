@@ -2393,3 +2393,88 @@ Fri Sep 13 00:56:28 2024 +0200
     *  2024-09-06 ff3ffaf actionless fix(pikatypes: InstallInfo, install_info_fetcher: mark_dependant: required_by): use set() instead of list() (fixes: #496)
     *  2024-09-05 3f6fff2 Bundy01 chore(locale): update es.po, fr.po (#839)
     *  2024-09-05 327f8bb actionless fix(print_dept: pformat_sysupgrade): translate `required by` and `optional for` (re: #839)
+
+
+Thu Sep 19 20:54:03 2024 +0200
+-------------------------------------------------
+1.29            Release 1.29
+    
+    Notable changes:
+    *  2024-09-18 00f6846 actionless fix(pikspect): update templates for pacman questions about package conflicts
+    *  2024-09-18 c25d9cb actionless feat(updates, install_info_fetcher, print_dept): show warning if dev's package stable release have newer version (fixes: #666)
+    *  2024-09-16 573b75f actionless fix(pikaur-static: pypyalpm: Package: compute_requiredby, compute_optionalfor): sort results
+    *  2024-09-16 61fdb66 actionless chore(pikaur-static: pycman): sync with upstream (pacman 7.0/libalpm 15/pyalpm 0.10.6)
+
+
+Thu Sep 19 22:31:43 2024 +0200
+-------------------------------------------------
+1.29.1          Hotfix Release 1.29.1
+    
+    Notable Changes:
+    *  2024-09-19 2ecc4c2 actionless fix(search_cli): handle when pkg.desc is None
+    
+    Other Changes:
+    *  2024-09-19 12125dc actionless fix(progressbar): make it look nice for both cases when number of `values > term width` and `<`
+
+
+Tue Oct 1 23:29:16 2024 +0200
+-------------------------------------------------
+1.30            Release 1.30
+    
+    Notable Changes:
+    *  2024-10-01 e41ff77 actionless doc(readme): mention pikaur-static ⚡
+    *  2024-10-01 1476fcd actionless chore(argparse_extras): sync with upstream (3.12.7) argparse (fixes: #845)
+    *  2024-09-28 6d78019 actionless feat(build: set_build_package_path): if `*-debug` package was built, copy it to pikaur ./pkgs/ cache dir
+    *  2024-09-21 e8727d5 Bundy01 chore(locale): update es.po and fr.po (#842)
+
+
+Wed Oct 2 04:16:14 2024 +0200
+-------------------------------------------------
+1.30.1          Hotfix Release 1.30.1
+    
+    *  2024-10-02 12c34dd actionless refactor(install_cli, install_info_fetcher): common handling of both manually_excluded_package_names and --ignore args
+    *  2024-10-02 3e995a9 actionless fix(install_info_fetcher: print_excluded_pkgs): don't print twice
+    *  2024-10-02 dadda7b actionless fix(aur_deps: install_info_fetcher: get_aur_deps_info): handle the case when --ignore'd pkg is not a pkg itself but a dependency of that package which is going to be installed/updated
+    *  2024-10-01 ca6a347 actionless doc(readme): mention -X flag in the readme
+
+
+Wed Oct 2 19:13:25 2024 +0200
+-------------------------------------------------
+1.30.2          Hotfix Release 1.30.2
+    
+    Notable changes:
+    *  2024-10-02 b49d07d actionless fix(args): handling `--` separator in python 3.12.7+ (fixes: #846)
+
+
+Thu Dec 12 01:01:54 2024 +0100
+-------------------------------------------------
+1.30.3          Hotfix Release 1.30.3
+    
+    Notable changes:
+    *  2024-12-12 4e1e808 actionless fix(install_cli: _find_extra_aur_build_deps): add missing .runtimedeps to left side of comparison (fixes: #853, #854)
+
+
+Tue Dec 17 12:46:41 2024 +0100
+-------------------------------------------------
+1.31            Release 1.31
+    
+    Notable changes:
+    *  2024-12-17 d833d2e actionless fix(pikaur-static: pypyalpm: Package): convert size and isize to int (re: #857)
+    *  2024-12-17 0b0bac4 actionless fix(pikaur-static: pypyalpm: _get_repo_dict_remote): backport get_pkg_id() key-generator from pikaur mainline (re: #857)
+    *  2024-12-17 c1fc182 actionless fix(pikaur-static: pypyalpm: get_repo_dict): backport get_pkg_id() key-generator from pikaur mainline (re: #857)
+    *  2024-12-17 3e71191 actionless chore(argparse_extras): sync with upstream (3.13.1) argparse (fixes: #857)
+    *  2024-12-17 8f18e88 actionless feat(pikaur-static: pacman-fallback): add support for --verbose/--pikaur-debug
+    *  2024-12-17 9eab8d9 actionless chore(alpm): add -debug ones to list of official repo names
+    *  2024-12-12 e3e0131 actionless feat(pikasay): add --mascot cli flag and cat mascot
+
+
+Thu Dec 19 19:23:52 2024 +0100
+-------------------------------------------------
+1.32            Release 1.32
+    
+    Notables changes:
+    *  2024-12-19 3577424 actionless chore(config, readme): deprecate DynamicUsers (fixes: #856)
+    *  2024-12-19 51e22fd actionless fix(config): write errors and warnings to stderr
+    *  2024-12-19 01e5ee4 actionless chore(config: decoration): 💥
+    *  2024-12-18 49dc6e4 Bundy01 chore(locale): update es.po and fr.po (#858)
+    *  2024-12-17 233f922 actionless fix(pikaur-static: make): unbuffered python

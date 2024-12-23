@@ -1,13 +1,13 @@
 pkgname=libbitshuffle
-pkgver=0.5.1
-pkgrel=2
+pkgver=0.5.2
+pkgrel=1
 pkgdesc="Filter for improving compression of typed binary data"
 arch=('aarch64' 'armv7h' 'x86_64')
 url="https://github.com/kiyo-masui/bitshuffle"
 license=('custom:MIT')
 depends=('libzstd.so' 'lz4')
 source=("https://github.com/kiyo-masui/bitshuffle/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('2631aaa5d4c24e51415c7b1827d4f9dcf505ad8db03738210da9ce6dab8f5870')
+sha256sums=('b6d9369cab661c1253892e4755021fe6c3a29eee93a1764f0bb161015c4b7649')
 
 build() {
   cd bitshuffle-${pkgver}

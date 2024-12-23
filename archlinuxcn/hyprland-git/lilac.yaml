@@ -1,5 +1,6 @@
 maintainers:
   - github: Integral-Tech
+    email: integral@archlinuxcn.org
 
 pre_build_script: |
   update_pkgrel()
@@ -8,8 +9,9 @@ pre_build_script: |
 post_build_script: git_pkgbuild_commit()
 
 repo_depends:
-  - hyprutils-git
   - aquamarine-git
+  - hyprcursor-git
+  - hyprgraphics-git
 
 repo_makedepends:
   - hyprwayland-scanner-git
@@ -17,14 +19,6 @@ repo_makedepends:
 update_on:
   - source: github
     github: hyprwm/Hyprland
-
-  - source: alpm
-    alpm: hyprlang
-    provided: libhyprlang.so
-
-  - source: alpm
-    alpm: hyprcursor
-    provided: libhyprcursor.so
 
   - source: alpm
     alpm: libdisplay-info

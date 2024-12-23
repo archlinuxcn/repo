@@ -2,7 +2,7 @@
 
 pkgname=python-nilearn
 _pkgname=nilearn
-pkgver=0.10.4
+pkgver=0.11.0
 pkgrel=2
 pkgdesc='Machine learning for NeuroImaging in Python'
 arch=('any')
@@ -34,7 +34,7 @@ makedepends=(
   python-hatch-vcs
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('8945e0d96ba58dae32b742d4a9136cd7751f3ba60cad8467705233b845c247c635d84ae7cb64d2b29000890345c6a19e36c07f34b0ec46a3a71ba0db01bf1004')
+sha512sums=('030f83663247d757d52fad70a521be0b441423ef08417eff37fa22df04f448528dd469b35f3b1054e203eaf401485031b2b405620787bf42322a89f79adb57a6')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"

@@ -1,7 +1,7 @@
 pkgname=julia-git-githubactions-src
-pkgver=0.1.7
-_commit=e988cc204e34bf1b12b28c3f1f00e5ae347af30f
-pkgrel=2
+pkgver=0.1.8
+_commit=7b02fcd719fc5e6bfa7c512180d87e76a19c1d2a
+pkgrel=1
 pkgdesc="GitHubActions.jl"
 url="https://github.com/julia-actions/GitHubActions.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/julia-actions/GitHubActions.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('a6be36be7084835e951cf1e9cd2c6a4e69705e2107617ee95c7324a2fce83140')
 
 package() {
   cd GitHubActions.jl

@@ -23,9 +23,9 @@ def pre_build():
             line = 'AOT="YES"'
             checks = checks + '4'
 
-        if line.startswith('XWIDGETS='):
-            line = 'XWIDGETS="YES"'
-            checks = checks + '5'
+        #if line.startswith('XWIDGETS='):
+        #    line = 'XWIDGETS="YES"'
+        #    checks = checks + '5'
 
         # enable tree-sitter, request from #3094
         if line.startswith('SITTER='):
@@ -39,9 +39,12 @@ def pre_build():
         #if line.startswith('source='):
         #    line = 'source=("emacs-git::git+https://github.com/emacs-mirror/emacs.git")'
         #    checks = checks + '3'
+        if '../configure' in line:
+            line = f'{line}\n  make bootstrap'
+
 
         print(line)
 
     # make sure PKGBUILD is modified
-    if len(checks) != 5:
+    if len(checks) != 4:
         raise ValueError('PKGBUILD editing not completed. checks=' + checks)

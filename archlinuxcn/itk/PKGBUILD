@@ -2,7 +2,7 @@
 
 _pkgname=ITK
 pkgname=(itk python-itk)
-pkgver=5.4.0
+pkgver=5.4.1
 pkgrel=2
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
 arch=('x86_64')
@@ -36,7 +36,7 @@ makedepends=(
 options=(!emptydirs !lto)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('3a98ececf258aac545f094dd3e97918c93cc82bc623ddf793c4bf0162ab06c83fbfd4d08130bdec6e617bda85dd17225488bc1394bc91b17f1232126a5d990db')
+sha512sums=('3b5ee32e75b6c13e94e97344affb085da459bd7157cc9dbd42cf9d156fb6d406cb047238309770a4aec6c02360e6660108988279f360994cc237f754ff058c42')
 
 get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
@@ -60,6 +60,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DCMAKE_SKIP_RPATH=ON
+    -DDO_NOT_BUILD_ITK_TEST_DRIVER=ON
     -DITK_BUILD_DEFAULT_MODULES=ON
     -DITK_LEGACY_REMOVE=ON
     -DITK_USE_MKL=ON
@@ -100,13 +101,12 @@ build() {
     -DITK_WRAP_unsigned_long_long=ON
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON
-    -DModule_GenericLabelInterpolator=ON \
-    -DModule_ITKIODCMTK=ON \
-    -DModule_ITKIOTransformMINC=ON \
-    -DModule_ITKReview=ON \
+    -DModule_GenericLabelInterpolator=ON
+    -DModule_ITKIODCMTK=ON
+    -DModule_ITKIOTransformMINC=ON
+    -DModule_ITKReview=ON
     -DModule_MorphologicalContourInterpolation=ON
-    -DModule_SimpleITKFilters=ON \
-    -DPY_SITE_PACKAGES_PATH=/usr/lib/python$(get_pyver)/site-packages
+    -DModule_SimpleITKFilters=ON
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}-${pkgver}" \

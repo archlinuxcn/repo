@@ -1,6 +1,6 @@
 pkgname=julia-git-microsoftmpi_jll-src
-pkgver=10.1.4+2
-_commit=5bf35f209d221855bf5054fade256c84f8e24cd1
+pkgver=10.1.4+3
+_commit=a32b2b659776750009a52da179ad6a2c03647f05
 pkgrel=1
 pkgdesc="MicrosoftMPI_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/MicrosoftMPI_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaBinaryWrappers/MicrosoftMPI_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('ddbc7834058e94373ae9c80fbb0783f47efb4325911eda7e2bf4cf734f11f34a'
             'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
 
 build() {

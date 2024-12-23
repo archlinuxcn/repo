@@ -1,6 +1,6 @@
 pkgname=julia-git-arnoldimethod-src
-pkgver=0.3.5
-_commit=b2408a9b6cb82ebd8d0663856f2c2d510adde6b7
+pkgver=0.4.0
+_commit=b3d70c70ee0d1aff2f98d69e46e1191f768953df
 pkgrel=1
 pkgdesc="ArnoldiMethod.jl"
 url="https://github.com/JuliaLinearAlgebra/ArnoldiMethod.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/ArnoldiMethod.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('b130d0c2ecaeafe4d6c3bb97b7f5523c916045c235c8d8262f46b87b632ed23a')
 
 package() {
   cd ArnoldiMethod.jl

@@ -1,39 +1,40 @@
-# Maintainer: Eikano <lcuoin@gmail.com>
-
 _pkgname="tsukimi"
 pkgname="${_pkgname}-git"
-pkgver=0.12.0.r478.gbabf55c
+pkgver=0.17.3.r985.g12feff
 pkgrel=1
 pkgdesc='A simple third-party Emby client'
 arch=('x86_64')
 url="https://github.com/tsukinaha/tsukimi"
 license=('GPL-3.0-or-later')
-provides=('tsukimi' 'tsukimi-git')
+provides=('tsukimi')
 conflicts=('tsukimi')
-depends=('mpv'
+depends=(
+	'mpv'
 	'ffmpeg'
 	'libadwaita'
 	'gstreamer'
-	'gtk4')
+	'gtk4'
+)
 makedepends=(
 	'git'
-	'cargo')
-source=(
-	tsukimi::git+https://github.com/tsukinaha/tsukimi.git
-	tsukimi.desktop
-	tsukimi.png
+	'cargo'
 )
-sha256sums=('SKIP'
-	'd12dc777bbb05ed92d75f8d36e453b651e12596ead6e297386419a24d051a0a3'
-	'04a712d60bbf5cc8873af24fb8ff76b47f27ef77ba45c7901fb7d3cd26dd6893')
+source=(
+	git+https://github.com/tsukinaha/tsukimi.git
+)
+sha256sums=(
+	'SKIP'
+)
 
 pkgver() {
 	cd "${_pkgname}"
-	echo $(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).r$(git rev-list --count HEAD).g$(git describe --always)
+	echo $(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).r$(git rev-list --count HEAD).g$(git describe --long --tags --abbrev=7 | tail -c 7)
 }
 
 prepare() {
 	cd "${srcdir}/${_pkgname}"
+	git remote update
+	git submodule update --init --recursive
 	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
@@ -46,12 +47,12 @@ build() {
 
 package() {
 	cd "${_pkgname}"
-	export RUSTUP_TOOLCHAIN=stable
-	install -Dm0755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
-	install -Dm 644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "moe.tsuna.tsukimi.gschema.xml"
-	install -Dm 644 -t "${pkgdir}/usr/share/applications/" "${srcdir}/tsukimi.desktop"
-	install -Dm 644 -t "${pkgdir}/usr/share/pixmaps/" "${srcdir}/tsukimi.png"
 
-	# install i18n files
+	install -Dm755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
+	install -Dm644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "resources/moe.tsuna.tsukimi.gschema.xml"
+	install -Dm644 -t "${pkgdir}/usr/share/pixmaps/" "resources/icons/tsukimi.png"
+
+	install -Dm644 "resources/moe.tsuna.tsukimi.desktop.in" "${pkgdir}/usr/share/applications/moe.tsuna.tsukimi.desktop"
+
 	cp -r "i18n/locale" "${pkgdir}/usr/share/locale"
 }

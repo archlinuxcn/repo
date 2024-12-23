@@ -1,5 +1,7 @@
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['alerque'])
+pre_build_script: |
+  aur_pre_build(maintainers=['alerque'])
+  add_makedepends(['python-syrupy'])
 post_build: aur_post_build
 repo_depends:
   - python-cffsubr
@@ -10,5 +12,8 @@ update_on:
   - source: aur
     aur: python-ufo2ft
   - alias: python
+  - source: manual
+    manual: 1
+
 maintainers:
   - github: roaldclark

@@ -1,7 +1,7 @@
 pkgname=julia-git-hypothesistests-src
-pkgver=0.11.0
-_commit=932eaac50386b911989c98360b2fb6ac9d91629c
-pkgrel=2
+pkgver=0.11.3
+_commit=1cbeccd8e31bc26f6d0f44301243b23eba558b05
+pkgrel=1
 pkgdesc="HypothesisTests.jl"
 url="https://github.com/JuliaStats/HypothesisTests.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStats/HypothesisTests.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('2e4f2863ed4d738527b6f50c02ac6ef74406505ef8fef28044be05ab5c0c4d42')
 
 package() {
   cd HypothesisTests.jl

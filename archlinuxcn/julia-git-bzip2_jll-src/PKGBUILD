@@ -1,6 +1,6 @@
 pkgname=julia-git-bzip2_jll-src
-pkgver=1.0.8+1
-_commit=21fd5ec51daa900914322d1038a8918e06ded086
+pkgver=1.0.8+2
+_commit=5dd3cd639ef482e1e273cdff166e480eeed07e24
 pkgrel=1
 pkgdesc="Bzip2_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Bzip2_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git bzip2)
 source=("git+https://github.com/JuliaBinaryWrappers/Bzip2_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('3cbcf8ccc1fcb05671e040f0194fe392285a1ce1a9f59d37de9be77c584c6c1b'
             '121100faf7eb962f3633d012c503f000b9b3c8db26a8778ddda1a0cdbdf2153f')
 
 build() {

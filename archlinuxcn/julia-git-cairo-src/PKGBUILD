@@ -1,6 +1,6 @@
 pkgname=julia-git-cairo-src
-pkgver=1.1.0
-_commit=3763f74cd408837ed02003ce76289f1761e9959c
+pkgver=1.1.1
+_commit=d4eca6b8e02f03c42641b402ab9508c58ffc7a35
 pkgrel=1
 pkgdesc="Cairo.jl"
 url="https://github.com/JuliaGraphics/Cairo.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphics/Cairo.jl.git#commit=$_commit")
-sha256sums=('7efbf5b1003100053d6430d9775b794b62f1c7a39cf5716aa5714b2b034ec05a')
+sha256sums=('a4564476fa1c7298696ca1a5fb29937b19be525413c7a86ab558c44dd9bb229f')
 
 package() {
   cd Cairo.jl

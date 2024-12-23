@@ -1,6 +1,6 @@
 pkgname=julia-git-x265_jll-src
-pkgver=3.6.0+0
-_commit=67bdd0369102ffda8bec308dce7a97691768f1b4
+pkgver=4.0.0+0
+_commit=63d80b3d42ec2e4d16e523462866b3de9f75a17f
 pkgrel=1
 pkgdesc="x265_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/x265_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git x265)
 source=("git+https://github.com/JuliaBinaryWrappers/x265_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('7c65de3719dc39982e40f4c4ff4acb15d95432faa1cc0155e56b5521fa2e969a'
+sha256sums=('9bfee7a1e254e554dc165b113d974ca839475510497c8080bb8c93f79eb9fd9d'
             '780e91f449b35a644e75756118fc40bbf42b09699ccd1b8a8600c79cf1a0aef7')
 
 build() {

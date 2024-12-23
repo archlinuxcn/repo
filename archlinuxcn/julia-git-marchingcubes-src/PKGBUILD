@@ -1,6 +1,6 @@
 pkgname=julia-git-marchingcubes-src
-pkgver=0.1.9
-_commit=c970742d09cbe89dcd49eabfbb315ae10958a2dd
+pkgver=0.1.10
+_commit=c1825012d13daf47541333b24d245f23236de230
 pkgrel=1
 pkgdesc="MarchingCubes.jl"
 url="https://github.com/JuliaGeometry/MarchingCubes.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeometry/MarchingCubes.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('f5e3292f24577a33af94af70f9259f745a2a7447347c23fdf89cfb1eec44c0ac')
 
 package() {
   cd MarchingCubes.jl

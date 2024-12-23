@@ -4,7 +4,7 @@
 _pyname=cu2qu
 pkgname=python-$_pyname
 pkgver=1.6.7.post2
-pkgrel=3
+pkgrel=4
 pkgdesc='Cubic-to-quadratic bezier curve conversion'
 arch=(any)
 url="https://github.com/googlefonts/$_pyname"

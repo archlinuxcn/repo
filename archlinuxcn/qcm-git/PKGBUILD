@@ -1,84 +1,56 @@
-# Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Kimiblock Zhou <pn3535 at icloud dot com>
 
 pkgname=qcm-git
 _pkgname=${pkgname%-git}
-pkgver=1.0.5.r0.g06a01ba
-pkgrel=1
+pkgver=1.1.2.r92.g6ab22cf
+pkgrel=2
 pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
 url="https://github.com/hypengw/Qcm"
 license=('GPL-2.0-or-later')
 depends=(
 	'qt6-base'
+	'qt6-quick3d'
 	'hicolor-icon-theme'
 	'curl'
 	'openssl'
-	'qt6-tools'
-	'qt6-declarative'
-	'qt6-shadertools'
-	'gcc-libs'
-	'glibc'
 	'dbus'
-	'libnghttp2'
-	'libidn2'
-	'krb5'
-	'zstd'
-	'zlib'
-	'qt6-wayland'
-	'libx11'
-	'libxkbcommon'
-	'libpng'
-	'freetype2'
-	'icu'
-	'pcre2'
-	'gnutls'
-	'graphite'
-	'lz4'
-	'libgpg-error'
 	'ffmpeg'
-	'fmt')
+	'fmt'
+	'cubeb-git')
 makedepends=(
 	'git'
 	'cmake'
-	'extra-cmake-modules'
-	'ninja')
+	'ninja'
+	'asio'
+	'pegtl'
+	'nlohmann-json'
+	'ctre')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd Qcm
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 prepare() {
-	cd Qcm
-
-	if [ -d qml_material ]; then
-		echo "Deleting ${srcdir}/Qcm/qml_material..."
-		rm -rf build
-	fi
-
-	git submodule update --init
-	mkdir -p build
+	git -C Qcm submodule update --init --recursive
 }
 
 build() {
-	cd Qcm/build
-	echo "Starting Build..."
-	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release
-	ninja
+	cmake -B build \
+		-S Qcm \
+		-GNinja \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX=/usr
+
+	cmake --build build
 }
 
 package() {
-	echo "Copying files..."
-	cd Qcm
-
-	local APP_ID=io.github.hypengw.Qcm
-	install -Dm644 "app/assets/Qcm.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${APP_ID}.svg"
-	install -Dm644 "app/assets/Qcm.desktop" "${pkgdir}/usr/share/applications/${APP_ID}.desktop"
-	install -Dm755 "build/app/Qcm" -t "${pkgdir}/usr/bin/"
-	install -Dm755 build/{qcm_interface/libqcm_interface,asio_helper/libqcm_asio}.so -t "${pkgdir}/usr/lib/"
-	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 Qcm/LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

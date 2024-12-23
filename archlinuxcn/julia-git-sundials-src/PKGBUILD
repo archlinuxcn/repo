@@ -1,6 +1,6 @@
 pkgname=julia-git-sundials-src
-pkgver=4.25.0
-_commit=d7e83c086d40e1b5b7ce470cccfea5dfd5586ec3
+pkgver=4.26.1
+_commit=cdde5c9cba3671ddd5f223c58b0949963e43431e
 pkgrel=1
 pkgdesc="Sundials.jl"
 url="https://github.com/SciML/Sundials.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/Sundials.jl.git#commit=$_commit"
         0001-Remove-use-of-deprecated-function-that-is-removed-in.patch)
-sha256sums=('7267ef72d1a0eadbed437b11ca51185cb192c2681076f7d9afb304db892919bd'
+sha256sums=('7574392b46b4dca497d71f2bf18dc4a64e936a1abeca899baf26a5724a75fe4f'
             'bdb83ea58f4d929161078daf40d7cf2181788023129b1f9b9722613475f49980')
 
 prepare() {

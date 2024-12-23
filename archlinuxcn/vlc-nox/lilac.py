@@ -9,7 +9,7 @@ from pathlib import Path
 def pre_build():
     aur_pre_build()
     for line in edit_file("PKGBUILD"):
-        if line.startswith("replaces="):
+        if "replaces=" in line:
             continue
         print(line)
 

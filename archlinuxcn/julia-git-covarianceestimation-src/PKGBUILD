@@ -1,7 +1,7 @@
 pkgname=julia-git-covarianceestimation-src
-pkgver=0.2.12
-_commit=a9ab2209ecfeaa65ae056af9062e30f09d7c352c
-pkgrel=2
+pkgver=0.2.13
+_commit=3bcab66550354b56189f453fb1d1207060ccea31
+pkgrel=1
 pkgdesc="CovarianceEstimation.jl"
 url="https://github.com/mateuszbaran/CovarianceEstimation.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/mateuszbaran/CovarianceEstimation.jl.git#commit=$_commit")
-sha256sums=('ff1d7e4722bd05ff8d9d8ecf4c2ef00dc7550aee493a5d70c531125c2989e8c0')
+sha256sums=('f09ca881a8400d3e76df5b731800f350cbc33d856a0f7cd227c466961d795bcd')
 
 package() {
   cd CovarianceEstimation.jl

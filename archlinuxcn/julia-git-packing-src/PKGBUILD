@@ -1,7 +1,7 @@
 pkgname=julia-git-packing-src
-pkgver=0.5.0
-_commit=5153ec3e4fc446a56280ddabf2cc320e850d9322
-pkgrel=2
+pkgver=0.5.1
+_commit=8644c988d43673795f4b6c48dd1c9deda62eed3c
+pkgrel=1
 pkgdesc="Packing.jl"
 url="https://github.com/JuliaGeometry/Packing.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeometry/Packing.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('f43815d19ca7a8c4579c95d4b322ff604f7a183b9414a37519a7776ddc28e09e')
 
 package() {
   cd Packing.jl

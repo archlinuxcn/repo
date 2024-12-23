@@ -1,7 +1,7 @@
 pkgname=julia-git-glpk_jll-src
-pkgver=5.0.1+0
-_commit=f74660f0ced50ec816bb28b9966ce09c27115500
-pkgrel=3
+pkgver=5.0.1+1
+_commit=a581e5abb843deca35fee06ffa681a3bb510ed40
+pkgrel=1
 pkgdesc="GLPK_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/GLPK_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git glpk)
 source=("git+https://github.com/JuliaBinaryWrappers/GLPK_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('ee08073accd6ada1049f30bdc3738e05c7ee0683ebc2e640ae3758a56f387da4'
             '54aa94e8d10b1a19306353a5e838116e2efcdbfdc37dacbe01c4d71502b12396')
 
 build() {

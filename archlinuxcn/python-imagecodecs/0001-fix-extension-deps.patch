@@ -1,17 +1,18 @@
-From 34d1a82f1b6d9b758c0c74d4057b60f744ef2e9a Mon Sep 17 00:00:00 2001
+From 44d7b2ee6148079d1b8c27e6ba02007c31dd14c7 Mon Sep 17 00:00:00 2001
 From: Butui Hu <hot123tea123@gmail.com>
-Date: Mon, 3 Jun 2024 13:09:03 +0800
+Date: Sun, 22 Sep 2024 16:12:40 +0800
 Subject: [PATCH] fix extension deps
 
+Signed-off-by: Butui Hu <hot123tea123@gmail.com>
 ---
- setup.py | 52 ++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 44 insertions(+), 8 deletions(-)
+ setup.py | 54 +++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 45 insertions(+), 9 deletions(-)
 
 diff --git a/setup.py b/setup.py
-index 0c9da6a..37cf5d4 100644
+index f0e4f7a..3a2eb9e 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -270,25 +270,61 @@ def customize_build_default(EXTENSIONS, OPTIONS):
+@@ -274,25 +274,61 @@ def customize_build_default(EXTENSIONS, OPTIONS):
      # EXTENSIONS['jpeg8']['sources'] = []  # requires libjpeg-turbo v3
  
      # these extensions are required by core dependent libraries
@@ -38,8 +39,9 @@ index 0c9da6a..37cf5d4 100644
 +        'imcd',
 +        # 'jetraw',
          'jpeg2k',
-         'jpeg8',
+-        'jpeg8',
 -        # 'jpegxl',  # requires v0.10
++        # 'jpeg8',
 +        'jpegls',
 +        'jpegsof3',
 +        'jpegxl',
@@ -82,5 +84,5 @@ index 0c9da6a..37cf5d4 100644
          if name not in keep:
              del EXTENSIONS[name]
 -- 
-2.45.2
+2.46.1
 

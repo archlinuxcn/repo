@@ -1,7 +1,7 @@
 pkgname=julia-git-eliminategraphs-src
-pkgver=0.2.0
-_commit=99aa85aa7c629de245d58386c2157bb44ba85f2d
-pkgrel=2
+pkgver=0.2.1
+_commit=0341ff1a75974a628153e8a4861c5d9448a57287
+pkgrel=1
 pkgdesc="EliminateGraphs.jl"
 url="https://github.com/GiggleLiu/EliminateGraphs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/GiggleLiu/EliminateGraphs.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('b57edce8cf3d48e11172ab2b83b8fec147df1f592e7a49d345ee12c6f1b74b4e')
 
 package() {
   cd EliminateGraphs.jl

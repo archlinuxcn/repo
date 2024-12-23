@@ -1,0 +1,31 @@
+From ad1bc987cb0cb093ec81bdda1fb45af45faa2994 Mon Sep 17 00:00:00 2001
+From: Carl Lei <me@xecycle.info>
+Date: Sun, 3 Nov 2024 13:12:20 +0800
+Subject: [PATCH] inhibit hex check
+
+---
+ gtk/gtkimcontextsimple.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/gtk/gtkimcontextsimple.c b/gtk/gtkimcontextsimple.c
+index ccf9687ba6..10ada47156 100644
+--- a/gtk/gtkimcontextsimple.c
++++ b/gtk/gtkimcontextsimple.c
+@@ -766,12 +766,8 @@ gtk_im_context_simple_filter_keypress (GtkIMContext *context,
+     have_hex_mods = TRUE;
+   else
+     have_hex_mods = (event->state & (hex_mod_mask)) == hex_mod_mask;
+-  is_hex_start = event->keyval == GDK_KEY_U;
+-  is_hex_end = (event->keyval == GDK_KEY_space ||
+-                event->keyval == GDK_KEY_KP_Space ||
+-                event->keyval == GDK_KEY_Return ||
+-                event->keyval == GDK_KEY_ISO_Enter ||
+-                event->keyval == GDK_KEY_KP_Enter);
++  is_hex_start = FALSE;
++  is_hex_end = FALSE;
+   is_backspace = event->keyval == GDK_KEY_BackSpace;
+   is_escape = event->keyval == GDK_KEY_Escape;
+   hex_keyval = canonical_hex_keyval (event);
+-- 
+2.47.0
+

@@ -2,13 +2,14 @@
 
 pkgname=debspawn
 pkgver=0.6.4
-pkgrel=3
+pkgrel=5
 pkgdesc='Debspawn is a tool to build Debian packages in an isolated environment, using systemd-nspawn containers'
 arch=('any')
 url="https://github.com/lkhq/debspawn"
 license=('LGPL-3.0-only')
 depends=(
   'debootstrap'
+  'dpkg'
   'python'
   'python-tomlkit'
   'zstd'

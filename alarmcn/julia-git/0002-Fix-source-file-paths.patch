@@ -1,7 +1,7 @@
-From f34b808538691d35e583233afd3f18a365aa5b09 Mon Sep 17 00:00:00 2001
+From 3c6c4652b99a863e60f241bdce0e78feca6428fa Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
-Subject: [PATCH 2/8] Fix source file paths
+Subject: [PATCH 2/7] Fix source file paths
 
 ---
  base/sysimg.jl              |  7 +++++++
@@ -11,10 +11,10 @@ Subject: [PATCH 2/8] Fix source file paths
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 966ed76751..3eab0924f2 100644
+index 476b9715b7..ee5553f9d8 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
-@@ -118,6 +118,13 @@ let
+@@ -124,6 +124,13 @@ let
  
          print_time("Stdlibs total", tot_time_stdlib)
      end

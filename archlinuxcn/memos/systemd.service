@@ -1,0 +1,18 @@
+[Unit]
+Description=memos service
+Documentation=https://usememos.com/
+After=network.target
+
+[Service]
+Type=simple
+User=memos
+Group=memos
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/memos
+EnvironmentFile=-/etc/memos.conf
+WorkingDirectory=/var/lib/memos
+ReadWritePaths=/var/lib/memos
+
+[Install]
+WantedBy=multi-user.target

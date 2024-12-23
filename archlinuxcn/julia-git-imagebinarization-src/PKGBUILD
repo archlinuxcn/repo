@@ -1,7 +1,7 @@
 pkgname=julia-git-imagebinarization-src
-pkgver=0.3.0
-_commit=a31147a49461188faa30738b64dfd39849a910e7
-pkgrel=2
+pkgver=0.3.1
+_commit=6d6ff2f287710abbcfb96fc6575e22480237f657
+pkgrel=1
 pkgdesc="ImageBinarization.jl"
 url="https://github.com/JuliaImages/ImageBinarization.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaImages/ImageBinarization.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('2af55ed0b2ff5a85986d42524f9b901ac35ede8f18b2c1f37142c8a8d16d3e56')
 
 package() {
   cd ImageBinarization.jl

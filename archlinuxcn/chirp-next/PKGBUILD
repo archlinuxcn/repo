@@ -1,17 +1,19 @@
+# Maintainer: WT5A <K5TRP[at]onlyhams[dot]ca>
+# Maintainer: Helmut Stult <hst[at]e-mail[dot]de>
 # Thanks to the maintainer(s) of chirp-daily
-# Maintainer: WT5A <K5TRP@onlyhams.ca>
 # Contributor: 0b100100 <0b100100 at protonmail dot ch>
 # Contributor: Ashley Roll (ash@digitalnemesis.com)
 # Contributor: Erez Raviv (erezraviv@gmail.com)
 
 pkgname=chirp-next
-pkgver=20240905
+pkgver=20241220
 pkgrel=1
-pkgdesc="GUI tool for programming ham radios, built from daily build"
+pkgdesc="GUI tool for programming ham radios, built from chirp-next"
 arch=('any')
 url="https://chirpmyradio.com/projects/chirp/wiki/Home"
 license=('GPL-3.0-or-later')
-depends=('python-six' 'python-pyserial' 'python-future' 'python-requests' 'python-suds' 'python-yattag' 'python-wxpython')
+depends=('python-six' 'python-pyserial' 'python-future' 'python-requests'
+         'python-suds' 'python-yattag' 'python-wxpython' 'python-lark-parser')
 optdepends=('hamradio-menus: XDG menus for ham radio software')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
 options=(!emptydirs)
@@ -20,7 +22,7 @@ provides=(chirp)
 install=$pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::https://archive.chirpmyradio.com/chirp_next/next-${pkgver}/chirp-${pkgver}.tar.gz")
 # Checksums: https://archive.chirpmyradio.com/chirp_next/next-$pkgver/SHA1SUM
-sha1sums=('caf8467a48e128083b774d04ffcbc07be7b65175')
+sha1sums=('4445bad7e5e30adc96cc546542efc63e52018380')
 
 build() {
     cd "chirp-${pkgver}"

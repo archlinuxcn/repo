@@ -1,6 +1,6 @@
 pkgname=julia-git-csv-src
-pkgver=0.10.14
-_commit=3d61294d76ae021781b518a6e9116a586cbea921
+pkgver=0.10.15
+_commit=41a68753140e0742b00d21dc175cb60cde796633
 pkgrel=1
 pkgdesc="CSV.jl"
 url="https://github.com/JuliaData/CSV.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/CSV.jl.git#commit=$_commit")
-sha256sums=('415224b55a96bbe28b8a37ab97dcd12fbda8a3ecab278d1a1608fce95e37e619')
+sha256sums=('cde74ea63e7e1d460a10d915c98c4184c683fe788d29268bcd367819e874cd9d')
 
 package() {
   cd CSV.jl

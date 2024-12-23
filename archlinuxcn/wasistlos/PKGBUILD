@@ -1,0 +1,39 @@
+# Maintainer: Mattia Borda <mattiagiovanni.borda@icloud.com>
+# Contributor: Enes Hecan <nshecan@gmail.com>
+
+pkgname=wasistlos
+_srcname=WasIstLos
+pkgver=1.7.0
+pkgrel=2
+pkgdesc="An unofficial WhatsApp desktop application for linux"
+url="https://github.com/xeco23/${_srcname}"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+license=('GPL-3.0-or-later')
+depends=(
+	'gtkmm3'
+	'webkit2gtk'
+	'libayatana-appindicator'
+	'libcanberra'
+	'gst-plugins-base'
+	'gst-plugins-good'
+	'gst-plugins-bad'
+	'gst-libav'
+)
+makedepends=('cmake')
+optdepends=('hunspell-en_us: spell-checking')
+conflicts=('whatsapp-for-linux')
+provides=('whatsapp-for-linux')
+replaces=('whatsapp-for-linux')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('729955f6fc3389376e3e81bb9cd561bf5e0bbf47ff3e69d94c35d1fd4745f9fa')
+
+build() {
+	cd "${_srcname}-${pkgver}/"
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
+	cmake --build .
+}
+
+package() {
+	cd "${_srcname}-${pkgver}/"
+	DESTDIR="${pkgdir}" cmake --install .
+}

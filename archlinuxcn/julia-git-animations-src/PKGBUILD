@@ -1,7 +1,7 @@
 pkgname=julia-git-animations-src
-pkgver=0.4.1
-_commit=ece47eba5b098bb355c80924a9ae65f9cfbe3617
-pkgrel=2
+pkgver=0.4.2
+_commit=3af2c5ed05e34296af3d9e93d57c2cbecc827437
+pkgrel=1
 pkgdesc="Animations.jl"
 url="https://github.com/jkrumbiegel/Animations.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jkrumbiegel/Animations.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('5a7fd39f5c268792ebbe5ae3aaf0e03539d97ab52937186ab65882ef358a55ac')
 
 package() {
   cd Animations.jl

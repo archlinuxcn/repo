@@ -1,6 +1,6 @@
 pkgname=julia-git-libevent_jll-src
-pkgver=2.1.13+1
-_commit=8f949652a623dc827e3517c26af5c37de8f58157
+pkgver=2.1.14+0
+_commit=cd3e2df4080cfac26d36e34ff81c4b7556cec2d0
 pkgrel=1
 pkgdesc="libevent_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libevent_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libevent)
 source=("git+https://github.com/JuliaBinaryWrappers/libevent_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('19fff0c488b53c0c7d29da02ec1383a5ff43fc94a8a3e6417d0d7bf048b49688'
             'fc8913bbb0d5a5894d0f1614a8302855723c4edb80041684fb9178d5d975d364')
 
 build() {

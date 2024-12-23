@@ -1,30 +1,26 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 
 pkgname=mission-center
-pkgver=0.5.2
+pkgver=0.6.2
 _pkgver=$(sed 's/\./-/3' <<<${pkgver})
 pkgrel=1
 pkgdesc="Monitor your CPU, Memory, Disk, Network and GPU usage"
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url="https://gitlab.com/mission-center-devs/${pkgname}"
 license=('GPL-3.0-or-later')
 depends=('dmidecode' 'libadwaita' 'nvtop')
 makedepends=('blueprint-compiler' 'cargo' 'meson')
 checkdepends=('appstream-glib')
-options=('!lto')
 source=("${url}/-/archive/v${_pkgver}/${pkgname}-v${_pkgver}.tar.gz")
-sha256sums=('801a1468ee50281ab42a51281e2f80699480f9c0220f976619ae2f7aa21df85a')
+sha256sums=('a327a3ec7525f56b7ddbb9f69a502ace84f0cc53af19d99e22e92e3e88cb55ee')
+options=('!lto')
 
 prepare() {
 	cd "${pkgname}-v${_pkgver}/"
-	export CARGO_HOME="$srcdir/cargo-home"
-	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
-	export CARGO_HOME="${srcdir}/cargo-home"
-	export RUSTUP_TOOLCHAIN=stable
 	arch-meson "${pkgname}-v${_pkgver}" build
 	meson compile -C build
 }

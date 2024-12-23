@@ -1,0 +1,13 @@
+maintainers:
+- github: everyx
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+- source: github
+  github: zen-browser/desktop
+  use_latest_release: true
+
+time_limit_hours: 2

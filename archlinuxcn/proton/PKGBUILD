@@ -1,14 +1,14 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton
-_srctag=9.0-2e
+_srctag=9.0-3e
 _commit=
-pkgver=9.0.2.5
+pkgver=9.0.3.5
 _geckover=2.47.4
-_monover=9.1.0
+_monover=9.2.0
 _xaliaver=0.4.2
-pkgrel=1
-epoch=1
+pkgrel=2
+epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
 arch=(x86_64 x86_64_v3)
@@ -39,9 +39,9 @@ depends+=(
   wayland          lib32-wayland
 )
 
-makedepends=("autoconf" "bison" "flex" "mingw-w64-gcc" "perl" "python-pip" "python-virtualenv"
+makedepends=(autoconf bison perl flex mingw-w64-gcc
   git wget rsync unzip mingw-w64-tools lld nasm
-  meson cmake fontforge  python-pefile glib2-devel
+  meson cmake fontforge afdko python-pefile glib2-devel
   glslang vulkan-headers
   clang
   giflib                lib32-giflib
@@ -131,14 +131,6 @@ EOF
 }
 
 prepare() {
-[ -d build_venv ] && rm -rf build_venv
-
-virtualenv --app-data "$srcdir"/build_venv/cache --no-wheel build_venv
-
-source build_venv/bin/activate
-
-pip install --no-cache-dir afdko
-
 
     # Provide wrappers to compiler tools
     rm -rf wrappers && mkdir wrappers
@@ -259,13 +251,13 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('b07873bb05f0ceb5b235cb631b06bd429589c90f7f0db33ada4bcc202f717e91'
+sha256sums=('3eda5843a8fa2ff72beed26c57574092eec469953ad4f17a51bd8a9f04949719'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
-            '601169d0203b291fbfd946b356a9538855e01de22abd470ded73baf312c88767'
+            '59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757'
             '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            '533350e650d363299cb0059eb915c445b751407d06df838829634c2034645622'
-            '293c9777170858d41c5cbf3fa24671f98fdb27d1ebbe88e2e44b6d0fd0abd952'
-            '0e17de26cb8ada427b5b5721d87d0229b11a794a738331e1eb66320e8ede7d8e'
-            'eec6e45bc03fd07e5ba26602cd039752c2d27d297930ae3adad05b0426cc3ba0'
-            'fadaf0a4c364c18b13f0337b6bb5d13df41ad8709603c09add86d752665d2b08')
+            'd5bc7871247ce9fddefb03813b70853a79e7b340a1dbfbb2213bd8b93b5a4e62'
+            '0d5f2cc441b04928773a8dc0424cf9898e6ba4feda296566cbcf125d103a8d14'
+            'b6c3f47f6ef3055a74b838c0d372271925c607d2477eee75eda9646a18f33e7a'
+            '2912d7b587cd309cb5f063bea03bf109c7225fdcb54d7ed72c7c064007f72f48'
+            '239e4d8d462cbb0da223caa6f52d5987a5b2f4c6d7b5ddb274229f654a07b295')

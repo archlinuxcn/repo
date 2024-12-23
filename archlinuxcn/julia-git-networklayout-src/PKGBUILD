@@ -1,7 +1,7 @@
 pkgname=julia-git-networklayout-src
-pkgver=0.4.6
-_commit=6574223d3c915c82695761a7c1318779f498f155
-pkgrel=2
+pkgver=0.4.7
+_commit=2af29c92a46d567b1e73427d8d4cae9e4c5a76ac
+pkgrel=1
 pkgdesc="NetworkLayout.jl"
 url="https://github.com/JuliaGraphs/NetworkLayout.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphs/NetworkLayout.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('c9a9e9c4d2e6f3bd3e4cc41312d9bcff3202725ecff7bd8d0c010847201d6c3d')
 
 package() {
   cd NetworkLayout.jl

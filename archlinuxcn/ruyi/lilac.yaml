@@ -10,12 +10,11 @@ post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()
 
-repo_depends:
-  - python-xingque
-
 update_on:
   - source: github
     github: ruyisdk/ruyi
     use_latest_release: true
     include_prereleases: false
     prefix:
+  - source: manual
+    manual: 1

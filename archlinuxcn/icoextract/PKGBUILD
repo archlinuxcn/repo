@@ -2,7 +2,7 @@
 
 pkgname=icoextract
 pkgver=0.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Icon extractor for Windows PE files (.exe/.dll) with optional thumbnailer functionality'
 arch=('any')
 url='https://github.com/jlu5/icoextract'

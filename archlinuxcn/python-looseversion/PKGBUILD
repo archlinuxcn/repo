@@ -1,0 +1,33 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor:  Liam Timms <timms5000@gmail.com>
+# Contributor: mark.blakeney at bullet-systems dot net
+
+pkgname=python-looseversion
+_pkgname=${pkgname#python-}
+pkgver=1.3.0
+pkgrel=6
+pkgdesc="Version numbering for anarchists and software realists"
+arch=('any')
+url="https://github.com/effigies/${_pkgname}"
+license=('PSF-2.0')
+depends=('python')
+makedepends=('python-build' 'python-hatchling' 'python-installer' 'python-wheel')
+checkdepends=('python-pytest')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('862cb6c1649de54237a6a72c154252141a626ed83f826a9ae833c643ff9d5a1b')
+
+build() {
+	cd "${_pkgname}-${pkgver}"
+	python -m build --wheel --no-isolation
+}
+
+check() {
+	cd "${_pkgname}-${pkgver}"
+	PYTHONPATH=src pytest -v tests.py
+}
+
+package() {
+	cd "${_pkgname}-${pkgver}"
+	python -m installer --destdir="${pkgdir}" dist/*.whl
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/${pkgname}/"
+}

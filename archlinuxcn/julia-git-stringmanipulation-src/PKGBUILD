@@ -1,7 +1,7 @@
 pkgname=julia-git-stringmanipulation-src
-pkgver=0.3.4
-_commit=30fa3f5a478c9d614e5d5de86a3c23baebe0cb19
-pkgrel=3
+pkgver=0.4.0
+_commit=f7e98e0e4f461a59569876477516581e5b80d270
+pkgrel=1
 pkgdesc="StringManipulation.jl"
 url="https://github.com/ronisbr/StringManipulation.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/ronisbr/StringManipulation.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('bf5492f40b96a410097e70bcdd14423115ba27239045032d96d66a088f305e9e')
 
 package() {
   cd StringManipulation.jl

@@ -1,15 +1,15 @@
-# Maintainer: João Figueiredo <jf.mundox@gmail.com>
+# Maintainer: João Figueiredo <islandc0der@chaotic.cx>
 # Contributor: Jan de Groot <jan@archlinux.org>
 
 pkgname=gconf
 pkgver=3.2.6+11+g07808097
-pkgrel=11
+pkgrel=12
 pkgdesc="An obsolete configuration database system"
 url="https://projects-old.gnome.org/gconf/"
 arch=($CARCH)
 license=(LGPL)
 depends=(libxml2 polkit libldap dbus-glib python)
-makedepends=(git intltool gtk-doc gobject-introspection gnome-common)
+makedepends=(git intltool gtk-doc gobject-introspection gnome-common glib2-devel)
 install=gconf.install
 _commit=0780809731c8ab1c364202b1900d3df106b28626 # The latest and last commit, dug out from deep within the waves of time...
 source=("git+https://gitlab.gnome.org/Archive/gconf.git#commit=$_commit"

@@ -5,62 +5,74 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=3.2.8
+pkgver=4.0.8
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
-license=('GPL2')
+license=('GPL-2.0-or-later')
 
-source=(https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz)
-md5sums=('7abc1398211d185d199c7ea6739bf0db')
+source=("https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('7e4cf3aed921350f8a398b100c035542')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
+makedepends=('docbook-xsl'
+             'meson'
+             'unicode-character-database')
+
 depends=('acl'
-         'avahi>=0.6'
-         'cracklib'
-         'db'
-         'dbus-glib'
+         'bash'
+         'db5.3'
+         'glib2'
+         'glibc'
          'libevent'
+         'libldap'
          'libgcrypt'
+         'libxcrypt'
          'pam'
          'perl'
          'perl-net-dbus')
 
-optdepends=('libwrap: TCP wrapper support'
-            'mariadb-libs: MySQL CNID backend support'
+optdepends=('localsearch: AFP Spotlight support'
             'talloc: AFP Spotlight support'
-            'tracker3: AFP Spotlight support')
+            'tinysparql: AFP Spotlight support'
+            'avahi>=0.6: Automatic service discovery support'
+            'krb5: Kerberos user authentication support'
+            'mariadb-libs: MySQL CNID backend support'
+            'libcups: Network printer queues support'
+            'libtirpc: Quota support'
+            'rpcsvc-proto: Quota support'
+            'libwrap: TCP wrappers support'
+            'cracklib: Weak password detection')
 
 conflicts=('netatalk-ddp'
            'netatalk2')
 
 backup=('etc/afp.conf'
+        'etc/atalkd.conf'
         'etc/extmap.conf'
+        'etc/papd.conf'
         'etc/pam.d/netatalk')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  ./bootstrap
-  ./configure \
-    --enable-pgp-uam \
-    --localstatedir=/var/lib \
-    --prefix=/usr \
-    --runstatedir=/run \
-    --sbindir=/usr/bin \
-    --sysconfdir=/etc \
-    --with-acls=yes \
-    --with-cracklib \
-    --with-dbus-sysconf-dir=/usr/share/dbus-1/system.d \
-    --with-init-style=systemd \
-    --with-lockfile=/run/netatalk.pid \
-    --with-pam-confdir=/etc/pam.d \
-    --with-tracker-pkgconfig-version=3.0
-  make
+  arch-meson . build \
+    --localstatedir /var/lib \
+    -Dwith-appletalk=true \
+    -Dwith-bdb-version=5.3 \
+    -Dwith-dbus-sysconf-path=/usr/share/dbus-1/system.d \
+    -Dwith-dtrace=false \
+    -Dwith-init-hooks=false \
+    -Dwith-lockfile-path=/run/netatalk.pid \
+    -Dwith-manual=man_only \
+    -Dwith-overwrite=true \
+    -Dwith-readmes=false \
+    -Dwith-spooldir=/var/spool/netatalk
+  meson compile -C build
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" install
+  meson install -C build --destdir "${pkgdir}"
 }
 

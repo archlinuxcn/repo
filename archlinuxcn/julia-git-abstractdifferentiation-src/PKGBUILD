@@ -1,7 +1,7 @@
 pkgname=julia-git-abstractdifferentiation-src
-pkgver=0.5.3
-_commit=8adb20e673d8c9639f9138d0d90ff3a22a2e9360
-pkgrel=2
+pkgver=0.6.2
+_commit=462225bc7527b921505f827f8c882cf970eead69
+pkgrel=1
 pkgdesc="AbstractDifferentiation.jl"
 url="https://github.com/JuliaDiff/AbstractDifferentiation.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDiff/AbstractDifferentiation.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('6e35e859da2b09427d5c6bd1fbebb1b434460e6bd3c31bbe7f2f6856a3016818')
 
 package() {
   cd AbstractDifferentiation.jl

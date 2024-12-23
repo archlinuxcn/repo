@@ -2,21 +2,20 @@
 # Ex-Maintainer: Celestial Walrus <aur@celestial.cf>
 
 pkgname=cava
-pkgver=0.10.2
-pkgrel=4
+pkgver=0.10.3
+pkgrel=2
 pkgdesc='Console-based Audio Visualizer for Alsa'
-arch=('any')
+arch=('x86_64')
 url='https://github.com/karlstav/cava'
 license=('MIT')
 depends=('fftw' 'alsa-lib' 'ncurses' 'iniparser' 'sndio' 'portaudio')
 optdepends=('pulseaudio' 'pipewire')
 makedepends=('sndio' 'portaudio' 'libpulse' 'm4' 'automake' 'autoconf' 'libpipewire')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/karlstav/cava/archive/${pkgver}.tar.gz")
-sha512sums=('c28ef5a89668b8f90a3b4cbf71b208dd067268d5ed9eca35ff3881bfab0fd7bf72efe2164f29af47ca7972637d8f1d6a86ff2b2e0c9c9221a1856d8dfa960065')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/karlstav/cava/releases/download/0.10.3/${pkgname}-${pkgver}.tar.gz")
+sha512sums=('15fa550da266d3d4b917da0e6b5611bd7b82e5d30d15e3d728b0e3d5a92387787156e3e32f632f68b9c5e217a023bc2b3ca4ffd48ac6e03be1519ec2b504b13a')
 
 build() {
   cd ${pkgname}-${pkgver}
-  ./autogen.sh
   ./configure --prefix=/usr
   make
 }

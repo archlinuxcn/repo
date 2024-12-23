@@ -1,43 +1,30 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=m1n1
-pkgver=1.4.14
-pkgrel=2
+pkgver=1.4.17
+pkgrel=1
 pkgdesc='Asahi Linux bootloader'
-_artwork_commit_id=35626c31f5c5a8a884aaff93f864795026495742
-_m1n1_commit_id=v${pkgver}
-_artwork_srcname=artwork-${_artwork_commit_id}
-_m1n1_srcname=m1n1-${_m1n1_commit_id##v}
 arch=('aarch64')
 url='http://asahilinux.org'
 license=('MIT')
-makedepends=( imagemagick )
+makedepends=(git imagemagick)
 source=(
-  "artwork-${_artwork_commit_id}.tar.gz::https://github.com/AsahiLinux/artwork/archive/${_artwork_commit_id}.tar.gz"
-  "m1n1-${_m1n1_commit_id}.tar.gz::https://github.com/AsahiLinux/m1n1/archive/${_m1n1_commit_id}.tar.gz"
+  "git+https://github.com/AsahiLinux/m1n1#tag=v${pkgver}"
 )
-sha256sums=('ffa129b5cae8debd4ffd97f7f1ac7f571c7ba4679793cd138918c2ae76a7103d'
-            '61871dd2d26531b4e07f9b3db0516b580f836c35e162de4799b4e556e8698119')
-b2sums=('26e9668f7c7393fec24b53b184ea0eabed4f46479c1aab26728d01c179091683cc4387ff83796bdcbb289376236faf9f651197b9fbba51e52540e58ebdc8bcc5'
-        '9551175345947abd0890943795893fb4b9b88cbf6d262305e1a0ec56531493411930cbda6f649f7bbea90239640ccd95b96b4a310cc12bc74944983ddf5e7b97')
+sha256sums=('d5a860595d2217976b84205541330701a0b78b5190342d7629d7d4324466544e')
+b2sums=('3e44289c68d0a3a7981996a9bce7484c08ff2f671ba015f6b3a5405261d7c5a00beb072fa35cc782ce51260cf3d587243c1499079bc0f1a05728a1157cd6e667')
 
 prepare() {
-  rm -rf "${srcdir}/$_m1n1_srcname"/artwork
-  cp -r "${srcdir}/$_artwork_srcname" "${srcdir}/$_m1n1_srcname"/artwork
+  cd m1n1
+  git submodule update --init --recursive
 }
 
 build() {
-  cd "${srcdir}/$_m1n1_srcname"
+  cd m1n1
   make ARCH= RELEASE=1 -j1
 }
 
 package() {
-  cd "${srcdir}"
-
-  tgtdir="$pkgdir/usr/lib/asahi-boot"
-
-  install -Dt "$tgtdir" -m644 "${_m1n1_srcname}/build/m1n1.bin"
-
-  install -Dm644 "$srcdir/$_m1n1_srcname/LICENSE" \
-    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dt "$pkgdir/usr/lib/asahi-boot" -m644 "m1n1/build/m1n1.bin"
+  install -Dm644 m1n1/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

@@ -6,7 +6,7 @@
 
 pkgname=kubectl-bin
 pkgdesc="Kubernetes.io kubectl binary"
-pkgver=1.31.0 # renovate: datasource=github-tags depName=kubernetes/kubernetes
+pkgver=1.31.3 # renovate: datasource=github-tags depName=kubernetes/kubernetes
 pkgrel=1
 arch=('x86_64' 'armv7l' 'armv7h' 'aarch64')
 url="http://kubernetes.io"
@@ -15,7 +15,7 @@ depends=()
 conflicts=('kubectl')
 provides=('kubectl')
 source=()
-b2sums=('427d4182555c42fe0a5114467d021117a9dd6a6044930fcd1b5785443b3af45d2bc70349c76beec429a354888b9032aea6b3166f7fc2a58da9586ef22a4c083a')
+b2sums=('86592fbabe3d37436f9cd2d6ab9e31ce4183329258f57455f2436347bc3f15391953c2e97292585e9e4149cf5bb677beeb29b3b0a1ab94a20075c38e6dfaf13f')
 
 # if CARCH is not set default to x86_64
 # https://stackoverflow.com/a/11362364/11164973
@@ -30,7 +30,7 @@ case "$CARCH" in
     ;;
 esac
 
-source+=(${pkgname}-${pkgver}-${_pkgarch}::"https://storage.googleapis.com/kubernetes-release/release/v${pkgver}/bin/linux/${_pkgarch}/kubectl")
+source+=(${pkgname}-${pkgver}-${_pkgarch}::"https://dl.k8s.io/release/v${pkgver}/bin/linux/${_pkgarch}/kubectl")
 
 package() {
   # Kubectl Binary

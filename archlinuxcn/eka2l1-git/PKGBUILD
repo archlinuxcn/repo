@@ -2,7 +2,7 @@
 _pkgname=eka2l1
 pkgname="${_pkgname}-git"
 pkgver=5852.e67f84dc6
-pkgrel=1
+pkgrel=2
 pkgdesc="Experimental Symbian OS emulator (GIT version)"
 arch=('x86_64')
 url="https://github.com/EKA2L1/EKA2L1"
@@ -29,6 +29,7 @@ depends=(
 install="eka2l1-git.install"
 provides=('eka2l1')
 conflicts=('eka2l1')
+options=('!lto')
 source=(
 	"${_pkgname}-git::git+https://github.com/EKA2L1/EKA2L1.git"
   "eka2l1_qt"
@@ -45,24 +46,13 @@ prepare() {
 	cd "${srcdir}/${_pkgname}-git"
 	git submodule update --recursive --init
     sed -i 's/-Werror//g' src/external/mbedtls/CMakeLists.txt
-    sed -i '1 i #include <cstdint>' src/external/RectangleBinPack/MaxRectsBinPack.cpp
-    sed -i '1 i #include <cstdint>' src/external/lunasvg/source/property.h
-    sed -i '1 i #include <cstdint>' src/external/lunasvg/include/lunasvg.h
-    sed -i '1 i #include <cstdint>' src/emu/common/include/common/types.h
-    sed -i '1 i #include <cstdint>' src/emu/common/include/common/watcher.h
-    sed -i '1 i #include <cstdint>' src/emu/common/include/common/path.h
-    sed -i '1 i #include <cstdint>' src/emu/utils/include/utils/uchar.h 
-    sed -i '1 i #include <cstdint>' src/emu/scripting/include/scripting/server.h 
-    sed -i '1 i #include <cstdint>' src/emu/scripting/include/scripting/session.h 
-    sed -i '1 i #include <cstdint>' src/emu/scripting/include/scripting/thread.h 
-    sed -i '1 i #include <cstdint>' src/emu/scripting/include/scripting/process.h 
-    sed -i '1 i #include <cstdint>' src/emu/services/include/services/bluetooth/btmidman.h 
-    sed -i '1 i #include <cstdint>' src/emu/j2me/include/j2me/applist.h 
+    sed -i '/#include <cstdint>/a #include <algorithm>' src/emu/common/include/common/pystr.h 
 }
 
 build() {
 	cd "${srcdir}/${_pkgname}-git"
 
+    export CFLAGS+=" -Wno-incompatible-pointer-types -Wno-int-conversion"
     cmake -B build -DCMAKE_BUILD_TYPE=Release -DEKA2L1_NO_TERMINAL=ON -DEKA2L1_ENABLE_UNEXPECTED_EXCEPTION_HANDLER=ON -DEKA2L1_BUILD_VULKAN_BACKEND=OFF -DEKA2L1_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=/opt/eka2l1 .
 
     cd build

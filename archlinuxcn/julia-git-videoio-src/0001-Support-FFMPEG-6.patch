@@ -1,36 +1,15 @@
-From 583c26f4146dbfcbc4ad8546638c6d299681ec1d Mon Sep 17 00:00:00 2001
+From 866279f9d0cd9e113f0d7b2df9734de21c5a6b26 Mon Sep 17 00:00:00 2001
 From: theogf <theo.galyfajou@gmail.com>
 Date: Sat, 17 Feb 2024 13:25:55 +0100
 Subject: [PATCH] Support FFMPEG 6
 
 ---
- .github/workflows/CI.yml |     6 +
- Project.toml             |     4 +-
- gen/Project.toml         |     5 +-
- gen/generate.jl          |     5 +-
- gen/generate.toml        |     3 +-
- lib/libffmpeg.jl         | 12746 ++++++++++++++++++++-----------------
- src/VideoIO.jl           |     1 -
- src/avio.jl              |     8 +-
- 8 files changed, 6868 insertions(+), 5910 deletions(-)
+ Project.toml     |     4 +-
+ lib/libffmpeg.jl | 12746 ++++++++++++++++++++++++---------------------
+ src/VideoIO.jl   |     1 -
+ src/avio.jl      |     8 +-
+ 4 files changed, 6855 insertions(+), 5904 deletions(-)
 
-diff --git a/.github/workflows/CI.yml b/.github/workflows/CI.yml
-index 1646219..ca1cbb0 100644
---- a/.github/workflows/CI.yml
-+++ b/.github/workflows/CI.yml
-@@ -52,6 +52,12 @@ jobs:
-         with:
-           version: ${{ matrix.julia-version }}
-       - uses: julia-actions/cache@v1
-+      - name: Configure new FFMPEG version environment
-+        shell: julia --project="." --color=yes {0}
-+        run: |
-+          using Pkg
-+          Pkg.add(PackageSpec(url="https://github.com/theogf/FFMPEG.jl", rev="tgf/update-FFMPEG"))
-+          Pkg.instantiate()
-       - uses: julia-actions/julia-runtest@v1
-       - uses: julia-actions/julia-processcoverage@v1
-       - uses: codecov/codecov-action@v4
 diff --git a/Project.toml b/Project.toml
 index 618e033..8ab29d7 100644
 --- a/Project.toml
@@ -46,57 +25,6 @@ index 618e033..8ab29d7 100644
  FileIO = "1.6"
  Glob = "1.2"
  ImageCore = "0.8, 0.9, 0.10"
-diff --git a/gen/Project.toml b/gen/Project.toml
-index c913423..8fa3ef8 100644
---- a/gen/Project.toml
-+++ b/gen/Project.toml
-@@ -1,8 +1,9 @@
- [deps]
- Clang = "40e3b903-d033-50b4-a0cc-940c62c95e31"
--FFMPEG = "c87230d0-a227-11e9-1b43-d7ebe4e7570a"
-+FFMPEG_jll = "b22a6f82-2f65-5046-a5b2-351ab43fb4e5"
- Match = "7eb4fadd-790c-5f42-8a69-bfa0b872bfbf"
- Vulkan_Headers_jll = "8d446b21-f3ad-5576-a034-752265b9b6f9"
- 
- [compat]
--Clang = "0.14.0"
-+Clang = "0.14, 0.15, 0.16, 0.17"
-+FFMPEG_jll = "0.6.1"
-diff --git a/gen/generate.jl b/gen/generate.jl
-index 71a84b2..543de66 100644
---- a/gen/generate.jl
-+++ b/gen/generate.jl
-@@ -1,6 +1,5 @@
- using Clang.Generators
--using FFMPEG
--using FFMPEG.FFMPEG_jll
-+using FFMPEG_jll
- using Vulkan_Headers_jll
- using LibGit2
- include("rewriter.jl")
-@@ -9,7 +8,7 @@ cd(@__DIR__)
- 
- # Ideally I could have loaded all headers, but it turns out to be too hard
- 
--include_dir = joinpath(FFMPEG.FFMPEG_jll.artifact_dir, "include") |> normpath
-+include_dir = joinpath(FFMPEG_jll.artifact_dir, "include") |> normpath
- 
- vulkan_dir = joinpath(Vulkan_Headers_jll.artifact_dir, "include") |> normpath
- 
-diff --git a/gen/generate.toml b/gen/generate.toml
-index 5fabd0b..05a1df0 100644
---- a/gen/generate.toml
-+++ b/gen/generate.toml
-@@ -23,7 +23,8 @@ printer_blacklist = [
-     "AVPROBE_SCORE_MAX",
-     "Picture",
-     "AV_BPRINT_SIZE_UNLIMITED",
--    "FF_CEIL_RSHIFT"
-+    "FF_CEIL_RSHIFT",
-+    "AV_CHANNEL_LAYOUT_.*"
- ]
- extract_c_comment_style = "doxygen"
- [codegen]
 diff --git a/lib/libffmpeg.jl b/lib/libffmpeg.jl
 index e3007ce..30a5a8e 100644
 --- a/lib/libffmpeg.jl
@@ -19103,5 +19031,5 @@ index 9287cad..a2cfa8c 100644
      return last_returned_pts * time_base
  end
 -- 
-2.44.0
+2.46.0
 

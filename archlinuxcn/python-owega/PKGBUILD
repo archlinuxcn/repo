@@ -2,9 +2,9 @@
 
 _name=owega
 pkgname="python-$_name"
-pkgver=5.14.0
-pkgrel=1
-pkgdesc="TUI / CLI interface for conversing with GPT models (from OpenAI)"
+pkgver=5.19.0
+pkgrel=2
+pkgdesc="TUI / CLI interface for conversing with GPT models (from OpenAI and +)"
 arch=('any')
 url="https://pypi.org/project/owega/"
 license=('custom:DGPL-1.0')
@@ -27,14 +27,18 @@ optdepends=(
     'python-tiktoken: better token estimation'
 )
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz")
-b2sums=('22007b2ac340b327b8f5516f62d21f755f1c5e632e65c0d8582cecf0deb2037ba3f3a17d8bd759836bea5330ad261a0856ecaacb05aa9e8fb76f325195d7383c')
+b2sums=('e0160875b2add87a0caf7bec0fc04f79882b4ffc3fd33a3700dff45b144faf63366802cd23b3673c2586479209fc362a486d3452193e47036c0a71f6dd68ae33')
 
 build() {
     cd "$srcdir/$_name-$pkgver"
+	export PYTHONDONTWRITEBYTECODE=
+	export PYTHONPYCACHEPREFIX=
     python setup.py build
 }
 
 package() {
     cd "$srcdir/$_name-$pkgver"
+	export PYTHONDONTWRITEBYTECODE=
+	export PYTHONPYCACHEPREFIX=
     python setup.py install --root="$pkgdir" --optimize=1 --skip-build
 }

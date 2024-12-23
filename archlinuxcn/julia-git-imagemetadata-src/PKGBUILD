@@ -1,7 +1,7 @@
 pkgname=julia-git-imagemetadata-src
-pkgver=0.9.9
-_commit=b98328482d15846f1095032c06d303736e39fae0
-pkgrel=2
+pkgver=0.9.10
+_commit=87b68297b0f864713dd8e9242e0ce3ac295fdaba
+pkgrel=1
 pkgdesc="ImageMetadata.jl"
 url="https://github.com/JuliaImages/ImageMetadata.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaImages/ImageMetadata.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('b270a60b803d1ce585d8e9b34fa131d80f6aba9c4c815ed0a7351c95105a7eff')
 
 package() {
   cd ImageMetadata.jl

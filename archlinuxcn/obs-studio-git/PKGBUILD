@@ -5,17 +5,17 @@
 
 pkgname=obs-studio-git
 _pkgname=${pkgname%-git}
-pkgver=30.2.2.r236.gf036b0d
-pkgrel=1
-epoch=2
-pkgdesc="Free, open source software for live streaming and recording"
+pkgver=31.0.0.r9.ga0e4e37
+pkgrel=2
+epoch=4
+pkgdesc="Free, open source software for live streaming and recording (with websocket support)"
 arch=("i686" "x86_64")
 url="https://obsproject.com/"
 license=("GPL-2.0-or-later")
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
 	'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
-	'libdatachannel' 'qrcodegencpp-cmake')
-makedepends=('git' 'cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'ffnvcodec-headers' 'uthash' 'nlohmann-json' 'ffnvcodec-headers' 'asio' 'websocketpp')
+	'libdatachannel')
+makedepends=('git' 'cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'ffnvcodec-headers' 'uthash' 'nlohmann-json' 'ffnvcodec-headers' 'asio' 'websocketpp' 'qrcodegencpp-cmake')
 optdepends=('libfdk-aac: FDK AAC codec support'
 	'libva-intel-driver: hardware encoding'
 	'libva-mesa-driver: hardware encoding'
@@ -26,28 +26,19 @@ optdepends=('libfdk-aac: FDK AAC codec support'
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/obsproject/${_pkgname}.git"
-	"git+https://github.com/obsproject/obs-browser.git"
-	"git+https://github.com/obsproject/obs-websocket.git"
-	"fix_python_binary_loading.patch"
-	"ignore_unused_submodules.patch")
+	"git+https://github.com/obsproject/obs-websocket.git")
 sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'bdfbd062f080bc925588aec1989bb1df34bf779cc2fc08ac27236679cf612abd'
-            'a6927bfd75984197913a348e7f9b6ef06026f653e38cdf9dbad0f508912aa793')
+            'SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/-rc/.rc/'
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/-rc/rc/'
 }
 
 prepare() {
 	cd "${_pkgname}/"
-	patch -Np1 <"${srcdir}/fix_python_binary_loading.patch"
-	patch -Np1 <"${srcdir}/ignore_unused_submodules.patch"
 
 	git submodule init
-	git config submodule.plugins/obs-browser.url "${srcdir}/obs-browser/"
 	git config submodule.plugins/obs-websocket.url "${srcdir}/obs-websocket/"
 	git -c protocol.file.allow=always submodule update
 }
@@ -55,7 +46,7 @@ prepare() {
 build() {
 	cmake -B build -S "${_pkgname}/" \
 		-DCMAKE_INSTALL_PREFIX="/usr" \
-		-DENABLE_BROWSER=ON \
+		-DENABLE_BROWSER=OFF \
 		-DENABLE_WEBSOCKET=ON \
 		-DENABLE_VST=ON \
 		-DENABLE_VLC=OFF \
@@ -65,6 +56,7 @@ build() {
 		-DENABLE_LIBFDK=ON \
 		-DENABLE_WEBRTC=ON \
 		-DCALM_DEPRECATION=ON \
+		-DOBS_COMPILE_DEPRECATION_AS_WARNING=ON \
 		-Wno-dev
 
 	cmake --build build

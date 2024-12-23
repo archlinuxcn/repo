@@ -3,32 +3,23 @@
 # Contributor: Manuel Schneider  <manuelschneid3r at googles mail>
 
 pkgname=albert
-pkgver=0.26.3
-pkgrel=2
+pkgver=0.26.10
+pkgrel=3
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
-url="https://github.com/albertlauncher"
+url="https://github.com/${pkgname}launcher"
 license=('LicenseRef-Albert')
 depends=('hicolor-icon-theme' 'qt6-5compat' 'qt6-declarative' 'qt6-scxml' 'qt6-shadertools' 'qt6-svg')
 makedepends=('cmake' 'git' 'libqalculate' 'pybind11' 'python' 'qt6-tools')
 optdepends=('ddgr: duckduckgo search plugin'
 	'libarchive: documentation plugin'
-	'libqalculate: calculator plugin'
-	'python: python extension'
-	'python-docker: docker plugin'
-	'python-googletrans: google translate plugin'
-	'python-pylatexenc: TeX plugin'
-	'python-urllib3: python web plugins'
-	'python-virtualbox: virtualbox plugin')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/albertlauncher/${pkgname}/releases/download/v${pkgver}/v${pkgver}.tar.gz")
-sha512sums=('f3367226a78937607aa2feb9bf0ff3cb453d5213d141af501f858b8d7f57dc81024a261ba5feaf52219a03718895cc3551eeab337163fb07c0339ada7c0b0519')
+	'libqalculate: calculator plugin')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/${pkgname}/releases/download/v${pkgver}/v${pkgver}.tar.gz")
+sha512sums=('0653265c943e81cee71ca5cd74ccb2f1db11ce6d90fb0a90f09c731249a1a68805ed172a5a93712ab393dd263a5b43da35b9ff5498c702af8e82f83c11cc762a')
 
 build() {
-	mkdir -p build
-	cd build
-
-	cmake "../${pkgname}" \
-		-DCMAKE_BUILD_TYPE=MinSizeRel \
+	cmake -B build -S "${pkgname}" \
+		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DCMAKE_FIND_PACKAGE_RESOLVE_SYMLINKS=ON \
@@ -52,12 +43,10 @@ build() {
 		-DBUILD_WEBSEARCH=ON \
 		-DBUILD_WIDGETSBOXMODEL=ON
 
-	make
+	cmake --build build
 }
 
 package() {
-	cd build
-
-	make DESTDIR="${pkgdir}/" install
-	install -Dm644 "../${pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${pkgname}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

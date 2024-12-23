@@ -2,7 +2,7 @@
 
 pkgname=gdb-multiarch
 _pkgname=${pkgname%-multiarch}
-pkgver=15.1
+pkgver=15.2
 pkgrel=1
 pkgdesc="The GNU Debugger for all gdb supported architectures (i386/arm/mips...)"
 arch=("i686" "x86_64" "aarch64")
@@ -13,7 +13,7 @@ makedepends=("texinfo" "python" "guile" "ncurses" "expat" "xz" "mpfr"
 depends=("ncurses" "libncursesw.so" "expat" "xz" "mpfr" "source-highlight" "gdb-common=${pkgver}"
 	"readline" "libreadline.so" "guile" "python" "libelf")
 source=(https://ftp.gnu.org/gnu/${_pkgname}/${_pkgname}-${pkgver}.tar.xz{,.sig})
-sha256sums=('38254eacd4572134bca9c5a5aa4d4ca564cbbd30c369d881f733fb6b903354f2'
+sha256sums=('83350ccd35b5b5a0cba6b334c41294ea968158c573940904f00b92f76345314d'
             'SKIP')
 
 validpgpkeys=("F40ADB902B24264AA42E50BF92EDB04BFF325CF3") # Joel Brobecker <brobecker@adacore.com>

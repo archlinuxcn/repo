@@ -1,7 +1,7 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=showmethekey
-pkgver=1.13.1
-pkgrel=4
+pkgver=1.17.0
+pkgrel=1
 pkgdesc="A screenkey alternative that works under Wayland via libinput."
 arch=("x86_64" "i686" "aarch64" "armv7h" "armv6h")
 url="https://showmethekey.alynx.one/"
@@ -9,7 +9,7 @@ license=("Apache")
 depends=("libevdev" "udev" "libinput" "glib2" "gtk4" "libadwaita" "json-glib" "cairo" "pango" "libxkbcommon" "polkit")
 makedepends=("meson" "glib2-devel")
 source=("https://github.com/AlynxZhou/${pkgname}/archive/v${pkgver}.tar.gz")
-sha512sums=('4d15c257078c2b941197a968b9b81784f0603a70b0feba7b77e12b5c6eb75655a6c14fa857a6d4cd33ef657d3630d94be4a5d672331d2edbbda7923c76b87bf1')
+sha512sums=('91457f24a878b25b7067ddb44860dcbbf6b17137a76ba9a0967d6a63e869cf770d0465760e9116345e62f23cef403720d495c6d9475cf93c00d991a736017d96')
 
 prepare() {
   cd "${pkgname}-${pkgver}"

@@ -16,11 +16,18 @@ def pre_build():
       line = 'arch=(aarch64 x86_64)'
     if line.startswith('pkgname='):
       line = 'pkgname=gperftools-dynamic-tls'
+    if line.startswith('prepare()'):
+      print(f"_{line}")
+      continue
+    if line.startswith('check()'):
+      print(f"_{line}")
+      continue
     if line.startswith('build()'):
       print("""prepare() {
-  cd gperftools-$pkgver
+  (cd gperftools
   find -type f -exec sed -i -e 's/ABSL_ATTRIBUTE_INITIAL_EXEC//g' {} \;
-  find -type f -exec sed -i -e 's/__attribute__ *( *( *tls_model *( *"initial-exec" *) *) *)//g' {} \;
+  find -type f -exec sed -i -e 's/__attribute__ *( *( *tls_model *( *"initial-exec" *) *) *)//g' {} \;)
+  _prepare
 }
 """)
     if line.startswith('package()'):

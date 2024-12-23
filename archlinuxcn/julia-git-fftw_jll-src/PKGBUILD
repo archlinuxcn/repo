@@ -1,7 +1,7 @@
 pkgname=julia-git-fftw_jll-src
-pkgver=3.3.10+0
-_commit=e49012c1b055d7e3ca755daa6280aca0c2d6e11c
-pkgrel=5
+pkgver=3.3.10+1
+_commit=c8ef7e641e1a65eb9bcdeaa29a1174c30b237069
+pkgrel=1
 pkgdesc="FFTW_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/FFTW_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git fftw)
 source=("git+https://github.com/JuliaBinaryWrappers/FFTW_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('bc05728bdad51f536883f4b66707605a5215f22fb7c1f053f76abef1ad806361'
             '6aa38be8cb6cee86fbc34021fc16cb06f5f5965e04dcb6fad19240d71818c088')
 
 build() {

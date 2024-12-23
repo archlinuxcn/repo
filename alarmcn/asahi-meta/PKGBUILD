@@ -1,8 +1,9 @@
-# Maintainer: Hector Martin <marcan@marcan.st>
+# Maintainer: Jos Dehaes <jos.dehaes@gmail.com>
+# Maintainer: Matthias Kurz <m.kurz@irregular.at>
 
 pkgname=asahi-meta
-pkgver=4
-pkgrel=1
+pkgver=5
+pkgrel=2
 pkgdesc='Asahi Linux core support meta package'
 url='https://www.asahilinux.org'
 arch=('any')
@@ -11,8 +12,8 @@ license=('MIT')
 package() {
   # Put depends in package() to avoid unecessary build dependencies
   depends=(
-    'linux-asahi' 'uboot-asahi' 'm1n1' 'asahi-scripts' 'asahilinux-keyring' 'asahi-fwextract'
-    'alsa-ucm-conf-asahi' 'asahi-configs'
+    'linux-asahi' 'uboot-asahi' 'm1n1' 'asahi-scripts' 'asahi-alarm-keyring' 'asahi-fwextract'
+    'alsa-ucm-conf-asahi' 'asahi-configs' 'tiny-dfr'
   )
 }
 

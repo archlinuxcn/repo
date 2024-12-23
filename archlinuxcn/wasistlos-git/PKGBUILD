@@ -1,0 +1,45 @@
+# Maintainer: Mattia Borda <mattiagiovanni.borda@icloud.com>
+# Contributor: Enes Hecan <nshecan@gmail.com>
+
+pkgname=wasistlos-git
+_pkgname=${pkgname%-git}
+_srcname=WasIstLos
+pkgver=1.7.0.r7.ga2d3732
+pkgrel=2
+pkgdesc="An unofficial WhatsApp desktop application for linux"
+url="https://github.com/xeco23/${_srcname}"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+license=('GPL-3.0-or-later')
+depends=(
+	'gtkmm3'
+	'webkit2gtk'
+	'libayatana-appindicator'
+	'libcanberra'
+	'gst-plugins-base'
+	'gst-plugins-good'
+	'gst-plugins-bad'
+	'gst-libav'
+)
+makedepends=('cmake' 'git')
+optdepends=('hunspell-en_us: spell-checking')
+conflicts=("${_pkgname}" "whatsapp-for-linux")
+provides=("${_pkgname}" "whatsapp-for-linux")
+replaces=('whatsapp-for-linux')
+source=("${_pkgname}::git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+build() {
+	cd "${_pkgname}/"
+	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
+	cmake --build .
+}
+
+package() {
+	cd "${_pkgname}/"
+	DESTDIR="${pkgdir}" cmake --install .
+}

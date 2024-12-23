@@ -1,0 +1,35 @@
+[Unit]
+Description=Lightweight UPnP IGD daemon
+Documentation=man:miniupnpd(8)
+After=network.target network-online.target nftables.service
+Wants=network-online.target
+
+[Service]
+Type=exec
+StateDirectory=miniupnpd
+
+ExecStartPre=/etc/miniupnpd/nft_init.sh
+ExecStart=/usr/bin/miniupnpd -f /etc/miniupnpd/miniupnpd.conf
+ExecStopPost=/etc/miniupnpd/nft_flush.sh
+
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+ProtectKernelTunables=true
+ProtectProc=invisible
+ProtectHostname=true
+RestrictNamespaces=true
+SystemCallArchitectures=native
+ProtectClock=true
+ProtectKernelLogs=true
+MemoryDenyWriteExecute=true
+RestrictRealtime=true
+LockPersonality=true
+CapabilityBoundingSet=CAP_NET_BROADCAST CAP_NET_ADMIN CAP_NET_RAW CAP_SETPCAP
+SystemCallFilter=~@clock @cpu-emulation @debug @module @mount @obsolete @raw-io @reboot @resources @swap
+
+[Install]
+WantedBy=multi-user.target

@@ -9,7 +9,8 @@ repo_depends:
 update_on:
   - source: github
     github: googleapis/python-crc32c
-    use_latest_release: true
+    use_max_tag: true
+    include_regex: 'v(\d+.\d+.\d+)'
   - source: manual
     manual: 1
   - alias: python

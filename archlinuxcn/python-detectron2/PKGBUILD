@@ -4,7 +4,7 @@ _CUDA_ARCH_LIST="6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.6;8.9;9.0;9.0+PTX"
 pkgname=(python-detectron2 python-detectron2-cuda)
 _pkgname=detectron2
 pkgver=0.6
-pkgrel=10
+pkgrel=11
 pkgdesc="FAIR's next-generation platform for object detection and segmentation"
 arch=('x86_64')
 url='https://github.com/facebookresearch/detectron2'
@@ -13,7 +13,6 @@ depends=(
   gcc-libs
   glibc
   python-cloudpickle
-  python-future
   python-fvcore
   python-hydra-core
   python-iopath
@@ -55,12 +54,12 @@ prepare() {
 
 build() {
   cd "${srcdir}/python-${_pkgname}-${pkgver}"
-  python -m build --wheel --no-isolation
+  python -m build --wheel --no-isolation -x
 
   cd "${srcdir}/python-${_pkgname}-cuda-${pkgver}"
   TORCH_CUDA_ARCH_LIST=${_CUDA_ARCH_LIST} \
   FORCE_CUDA=1 \
-  python -m build --wheel --no-isolation
+  python -m build --wheel --no-isolation -x
 }
 
 package_python-detectron2() {

@@ -3,17 +3,17 @@
 pkgname=kiview
 _pkgname=Kiview
 pkgver=1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Quick files preview for dolphin"
 arch=('x86_64')
-url="https://github.com/Nyre221/Kiview"
+url="https://invent.kde.org/danagost/Kiview"
 license=('GPL-3.0-only')
 depends=('kcoreaddons' 'ki18n' 'kirigami' 'qt6-multimedia' 'qt6-webengine')
 makedepends=('cmake' 'extra-cmake-modules')
-source=("https://github.com/Nyre221/Kiview/archive/refs/tags/v${pkgver}.tar.gz")
+source=("https://invent.kde.org/danagost/$_pkgname/-/archive/v$pkgver/$_pkgname-v$pkgver.tar.gz")
 
 build () {
-    cmake -B build -S "$_pkgname-$pkgver"
+    cmake -B build -S "$_pkgname-v$pkgver"
     cmake --build build
 }
 
@@ -21,4 +21,4 @@ package() {
     DESTDIR="$pkgdir" cmake --install build
 }
 
-sha256sums=('e068dd8a7fe18222ad70b677414f9a6ab0fe5f338eb2dbcd6119e68675071e8a')
+sha256sums=('49fd5249e8f89c926b956612e368c1aba3a51e1084658ade7c53bcd2dfc8d87b')

@@ -4,8 +4,8 @@
 # Contributor: carstene1ns <arch carsten-teibes.de>
 
 pkgname=mbedtls2-cmac
-pkgver=2.28.8
-pkgrel=4
+pkgver=2.28.9
+pkgrel=1
 pkgdesc='An open source, portable, easy to use, readable and flexible TLS library'
 arch=(x86_64)
 url=https://tls.mbed.org
@@ -23,9 +23,9 @@ provides=(
   libmbedtls.so
   libmbedx509.so
 )
-_tag=19cd99c38606b827bafa99bc9b790e78476a4b95
+_tag=b102d44b8500344336ddb5fdc6333aab18a99a34
 source=(git+https://github.com/ARMmbed/mbedtls.git#tag=${_tag})
-b2sums=(SKIP)
+b2sums=('607ea3600ee6466a85919c6e6b6c66120fe8dd6033983e4cd782884fcf1178a587cd8556c78239718cc23686ed64f8349f4ff45d23510d90ae8d6837a05b83bd')
 
 pkgver() {
   cd mbedtls

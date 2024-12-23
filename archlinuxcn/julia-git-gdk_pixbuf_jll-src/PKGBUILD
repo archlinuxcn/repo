@@ -1,6 +1,6 @@
 pkgname=julia-git-gdk_pixbuf_jll-src
-pkgver=2.42.10+0
-_commit=700c888463efba2d0fc3be193127ed22cb657fec
+pkgver=2.42.12+0
+_commit=129cc4df9926d1a994126f90c7415c91457706b2
 pkgrel=1
 pkgdesc="gdk_pixbuf_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/gdk_pixbuf_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git gdk-pixbuf2)
 source=("git+https://github.com/JuliaBinaryWrappers/gdk_pixbuf_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('dfb03b2a7d7920a56ddc302e0423316032d9cbd23661235a9814a692f326d2ef'
             '4c1bdd237762b46c288b003afb6b044d03c2953fcc4061fd23c9cc665cc7255d')
 
 build() {

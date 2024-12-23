@@ -1,13 +1,13 @@
-# Maintainer: hekel <hekel(at)vivaldi(dot)net>
+# Maintainer: hekel <hekel at vivaldi dot net>
 
 pkgname=kwin-effects-burn-my-windows-git
 _pkgname=Burn-My-Windows-git
-pkgver=r1488.2c57dc4
+pkgver=44.r17.g5b6ccdc
 pkgrel=1
 pkgdesc="Disintegrate your windows with style."
 arch=('any')
 url="https://github.com/Schneegans/Burn-My-Windows"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('kwin')
 makedepends=('git')
 provides=("${pkgname%-git}")
@@ -16,19 +16,22 @@ source=("$_pkgname::git+$url.git")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd ${srcdir}/${_pkgname}
+  cd "$_pkgname"
   ( set -o pipefail
-    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    git describe --long --tags --abbrev=7 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
   )
 }
 
 build() {
-  cd "${srcdir}/${_pkgname}/kwin"
+  cd "$_pkgname/kwin"
   sh build.sh
 }
 
 package() {
-  mkdir -p "${pkgdir}/usr/share/kwin/effects/"
-  cp -r "${srcdir}/${_pkgname}/kwin/_build/." "${pkgdir}/usr/share/kwin/effects/"
+  cd "$_pkgname"
+  install -dm0755 "$pkgdir/usr/share/kwin/effects"
+  tar -xf "$srcdir/$_pkgname/kwin/burn_my_windows_kwin6.tar.gz" -C "$pkgdir/usr/share/kwin/effects"
+
+  install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
 }

@@ -1,18 +1,19 @@
-# Maintainer: Pig Fang <g-plane@hotmail.com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Pig Fang <g-plane@hotmail.com>
 
 pkgname=yazi-git
 _pkgname=yazi
-pkgver=0.3.3.r7.gbc68d1e
-pkgrel=1
+pkgver=0.4.2.r2.g5bd71bf
+pkgrel=2
 pkgdesc="Blazing fast terminal file manager written in Rust, based on async I/O."
-url="https://github.com/sxyazi/yazi"
+url="https://github.com/sxyazi/${_pkgname}"
 arch=("x86_64" "aarch64" "riscv64")
 license=("MIT")
 optdepends=(
 	'ttf-nerd-fonts-symbols: for full display of icons'
 	'jq: for JSON preview'
 	'unarchiver: for archive preview'
-	'ffmpegthumbnailer: for video thumbnails'
+	'ffmpeg: for video thumbnails'
 	'fd: for file searching'
 	'ripgrep: for file content searching'
 	'fzf: for directory jumping'
@@ -29,21 +30,31 @@ pkgver() {
 	git describe --long --tags --match="v[0-9]*" --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
+prepare() {
+	cd "${_pkgname}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
 build() {
 	cd "${_pkgname}/"
-	YAZI_GEN_COMPLETIONS=true cargo build --release
+	YAZI_GEN_COMPLETIONS=true cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${_pkgname}/"
+	cargo test --frozen --all-features
 }
 
 package() {
 	cd "${_pkgname}/"
 	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm755 target/release/{${_pkgname},ya} -t "${pkgdir}/usr/bin/"
-	install -Dm644 "assets/yazi.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "assets/${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	local r
 	for r in 16 24 32 48 64 128 256; do
 		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/"
-		convert assets/logo.png -resize "${r}x${r}" "$pkgdir/usr/share/icons/hicolor/${r}x${r}/apps/yazi.png"
+		magick assets/logo.png -resize "${r}x${r}" "$pkgdir/usr/share/icons/hicolor/${r}x${r}/apps/${_pkgname}.png"
 	done
 
 	cd "${_pkgname}-boot/completions"

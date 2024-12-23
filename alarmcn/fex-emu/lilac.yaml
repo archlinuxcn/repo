@@ -1,0 +1,14 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('FEX-'))
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: FEX-Emu/FEX
+    use_max_tag: true
+    include_regex: FEX-\d*
+  - source: manual
+    manual: 1

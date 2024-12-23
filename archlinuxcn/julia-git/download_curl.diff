@@ -1,0 +1,12 @@
+--- src/Curl/Multi.jl   2024-09-09 06:08:24.000000000 -0400
++++ src/Curl/Multi.jl   2024-11-12 23:24:38.154413731 -0500
+@@ -162,6 +162,9 @@
+             return -1
+         end
+         multi = unsafe_pointer_to_objref(multi_p)::Multi
++        if multi.handle == C_NULL
++            return 0
++        end
+         if watcher_p != C_NULL
+             old_watcher = unsafe_pointer_to_objref(watcher_p)::FDWatcher
+             @check curl_multi_assign(multi.handle, sock, C_NULL)

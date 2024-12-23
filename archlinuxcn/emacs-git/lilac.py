@@ -13,8 +13,8 @@ def pre_build():
         if '="YES"' in line:
             line = line.replace('="YES"', '=')
 
-        if line.startswith('XWIDGETS='):
-            line = 'XWIDGETS="YES"'
+        #if line.startswith('XWIDGETS='):
+        #    line = 'XWIDGETS="YES"'
 
         if line.startswith('SITTER='):
             line = 'SITTER="YES"'

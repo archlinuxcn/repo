@@ -1,6 +1,6 @@
 pkgname=julia-git-plotthemes-src
-pkgver=3.2.0
-_commit=6f1c8dcd16be82cd96abd14c94e9a198523a8f6b
+pkgver=3.3.0
+_commit=c30b6b5807cad0aff6107dea2478f5565c82a9b6
 pkgrel=1
 pkgdesc="PlotThemes.jl"
 url="https://github.com/JuliaPlots/PlotThemes.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPlots/PlotThemes.jl.git#commit=$_commit")
-sha256sums=('6d11f2a0d11f4c430ea8d45c617a015a3062034e391e630fc72d82fa7a89f339')
+sha256sums=('241daec6edcc5da5ab7f8dd5b61a85db9c82f5c620fab57f2ba88ba10fb9fd40')
 
 package() {
   cd PlotThemes.jl

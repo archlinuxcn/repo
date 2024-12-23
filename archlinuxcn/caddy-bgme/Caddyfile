@@ -1,0 +1,40 @@
+# The Caddyfile is an easy way to configure your Caddy web server.
+#
+# https://caddyserver.com/docs/caddyfile
+#
+# The configuration below serves a welcome page over HTTP on port 80.
+# To use your own domain name (with automatic HTTPS), first make
+# sure your domain's A/AAAA DNS records are properly pointed to
+# this machine's public IP, then replace the line below with your
+# domain name.
+#
+# https://caddyserver.com/docs/caddyfile/concepts#addresses
+
+{
+	# Restrict the admin interface to a local unix file socket whose directory
+	# is restricted to caddy:caddy. By default the TCP socket allows arbitrary
+	# modification for any process and user that has access to the local
+	# interface. If admin over TCP is turned on one should make sure
+	# implications are well understood.
+	admin "unix//run/caddy/admin.socket"
+}
+
+http:// {
+	# Set this path to your site's directory.
+	root * /usr/share/caddy
+
+	# Enable the static file server.
+	file_server
+
+	# Another common task is to set up a reverse proxy:
+	# reverse_proxy localhost:8080
+
+	# Or serve a PHP site through php-fpm:
+	# php_fastcgi localhost:9000
+
+	# Refer to the directive documentation for more options.
+	# https://caddyserver.com/docs/caddyfile/directives
+}
+
+# Import additional caddy config files in /etc/caddy/conf.d/
+import /etc/caddy/conf.d/*

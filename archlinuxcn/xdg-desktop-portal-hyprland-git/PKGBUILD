@@ -3,22 +3,24 @@
 
 pkgname=xdg-desktop-portal-hyprland-git
 _pkgname="${pkgname%-git}"
-pkgver=1.3.3.r13.ge695669
+pkgver=1.3.9.r1.gd7f18dd
 pkgrel=1
 epoch=1
 pkgdesc="xdg-desktop-portal backend for hyprland"
 url="https://github.com/hyprwm/${_pkgname}"
 arch=('x86_64')
-license=('MIT')
-depends=('hyprlang'
-	'libinih'
+license=('BSD-3-Clause')
+depends=('libinih'
 	'pipewire'
 	'qt6-base'
 	'qt6-wayland'
 	'sdbus-cpp'
 	'util-linux-libs'
 	'wlroots'
-	'xdg-desktop-portal')
+	'xdg-desktop-portal'
+	'hyprlang-git'
+	'hyprutils-git'
+	'hyprwayland-scanner-git')
 makedepends=('git'
 	'cmake'
 	'wayland'
@@ -29,7 +31,7 @@ provides=("${_pkgname}" "xdg-desktop-portal-impl" "xdg-desktop-portal-wlr")
 conflicts=("${_pkgname}" "xdg-desktop-portal-wlr")
 source=("git+${url}.git"
 	"git+https://github.com/hyprwm/hyprland-protocols.git"
-	"hyprland-portals.conf") # TODO move this to hyprland where it belongs
+	"hyprland-portals.conf")
 sha256sums=('SKIP'
             'SKIP'
             '20bc215211f16a361086d59fa051df7337d95f91c695a29d8c5d23d40407fad5')
@@ -40,14 +42,16 @@ pkgver() {
 }
 
 prepare() {
-	cd "${_pkgname}/subprojects/"
-	rm -rf hyprland-protocols sdbus-cpp
-	ln -sfT "${srcdir}/hyprland-protocols/" hyprland-protocols
+	cd "${_pkgname}/"
+
+	git rm subprojects/sdbus-cpp # Use sdbus-cpp from [extra]
+	git submodule init
+	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
+	git -c protocol.file.allow=always submodule update
 }
 
 build() {
-	cd "${_pkgname}/"
-	cmake -B build \
+	cmake -B build -S "${_pkgname}" \
 		-D CMAKE_INSTALL_PREFIX=/usr \
 		-D CMAKE_INSTALL_LIBEXECDIR=/usr/lib \
 		-D CMAKE_BUILD_TYPE=Release
@@ -56,8 +60,7 @@ build() {
 }
 
 package() {
-	cd "${_pkgname}/"
 	DESTDIR="${pkgdir}" cmake --install build
 	install -Dm644 "${srcdir}/hyprland-portals.conf" -t "${pkgdir}/usr/share/xdg-desktop-portal/"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

@@ -2,7 +2,7 @@
 
 pkgname=simplescreenrecorder-git
 _pkgname=${pkgname%-git}
-pkgver=0.4.4.r16.g4e3ba13
+pkgver=0.4.4.r28.g4f4a57a
 pkgrel=1
 pkgdesc="A simple but powerful recording tool for X11, OpenGL and V4L2. (Git version)"
 arch=("x86_64")
@@ -11,7 +11,7 @@ license=("GPL-3.0-or-later")
 depends=("qt5-base" "qt5-x11extras"
 	"ffmpeg" "alsa-lib" "libpulse" "jack" "libgl" "glu" "v4l-utils"
 	"libx11" "libxext" "libxfixes" "libxi" "libxinerama"
-	"desktop-file-utils" "gtk-update-icon-cache")
+	"desktop-file-utils" "gtk-update-icon-cache" "pipewire")
 optdepends=("lib32-simplescreenrecorder-git: OpenGL recording of 32-bit applications")
 makedepends=("git" "cmake" "qt5-tools")
 source=("git+https://github.com/MaartenBaert/ssr.git")

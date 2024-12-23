@@ -1,0 +1,33 @@
+# Maintainer: Mateen Ulhaq <mulhaq2005+aur at gmail dot com>
+
+_pkgname=arxiv.py
+pkgname=python-arxiv
+pkgver=2.1.3
+pkgrel=2
+pkgdesc="Python wrapper for the arXiv API: https://info.arxiv.org/help/api/"
+arch=('any')
+url="https://github.com/lukasschwab/${_pkgname}"
+license=('MIT')
+depends=(
+    'python'
+    'python-feedparser'
+    'python-requests'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+)
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('df4b1443f8309a7f2c118bea0c7a52d38f29ece4f08b172f5e17b5bbdcd6a335')
+
+build() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    install -Dm0644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+}

@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_xkbcomp_jll-src
-pkgver=1.4.6+0
-_commit=c8a7f8e8f7ba336fd3402856ed0a9e66a450797e
-pkgrel=2
+pkgver=1.4.6+1
+_commit=d4bcc43fa5ecfb4b94b1f1c0a31eb84e14b815de
+pkgrel=1
 pkgdesc="Xorg_xkbcomp_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_xkbcomp_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git xorg-xkbcomp)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_xkbcomp_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('48b5406ea961940e82dee0e7a166d3bceff94a003313a4d29af7c3b597e0cd23'
             'c96bd4b82f145e7f9819b984a71f626dd190710795548ff7ea27e13a599c6de9')
 
 build() {

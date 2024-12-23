@@ -1,7 +1,7 @@
 pkgname=julia-git-integralarrays-src
-pkgver=0.1.5
-_commit=d6dfd994f2c0d4aef677d3bddd69b9142bf45008
-pkgrel=2
+pkgver=0.1.6
+_commit=33decc4994cb72a7b9629c74ac8ce1a49611aa14
+pkgrel=1
 pkgdesc="IntegralArrays.jl"
 url="https://github.com/JuliaImages/IntegralArrays.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaImages/IntegralArrays.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('0c2902d453c465e6484dcffb3f94d6c453dd090710715142380dc59f8d1b0377')
 
 package() {
   cd IntegralArrays.jl

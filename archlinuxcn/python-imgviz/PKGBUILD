@@ -2,7 +2,7 @@
 
 _pkgname=imgviz
 pkgname=python-imgviz
-pkgver=1.7.5
+pkgver=1.7.6
 pkgrel=2
 pkgdesc='Image Visualization Tools (object detection, semantic and instance segmentation)'
 arch=('any')
@@ -15,27 +15,26 @@ depends=(
   python-yaml
 )
 makedepends=(
+  python-build
+  python-hatch-fancy-pypi-readme
+  python-hatch-vcs
+  python-hatchling
+  python-installer
   python-setuptools
-)
-checkdepends=(
-  python-pytest
+  python-wheel
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/imgviz/archive/v${pkgver}.tar.gz")
-sha512sums=('903e490b355cd5a5213f84085e9881a116f3aed5cf2a780f5b1079806958b3ece5d8513bb75528217d8990d714193406b988fac599aa89267874829c302b3fa3')
+sha512sums=('175a861905511031a3e3474777e2b94f1570eae0f5f29c0f75275af3630f18f18d18332c8092df81da81e0b5a9223efb3e9b1cd7f0ef46136228dde7cd0cfdd4')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
-}
-
-check() {
-  cd "${_pkgname}-${pkgver}"
-  PYTHONPATH="${PWD}/build/lib" pytest -v
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:

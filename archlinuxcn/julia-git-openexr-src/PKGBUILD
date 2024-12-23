@@ -1,7 +1,7 @@
 pkgname=julia-git-openexr-src
-pkgver=0.3.2
-_commit=84282940127daaf0535f5da95454e1d1601183f0
-pkgrel=2
+pkgver=0.3.3
+_commit=e53c3488a7971f95f69d99bb4b9b925815c8b859
+pkgrel=1
 pkgdesc="OpenEXR.jl"
 url="https://github.com/twadleigh/OpenEXR.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/twadleigh/OpenEXR.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('1109e4fe88b43ca5c786c24a1359191fc08b52f81e24182c2eede174898018ac')
 
 package() {
   cd OpenEXR.jl
