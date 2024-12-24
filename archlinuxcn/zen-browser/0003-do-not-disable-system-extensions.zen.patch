@@ -1,3 +1,13 @@
+From 9151fb64184efae829f0acf4c6dd1a632dff3b65 Mon Sep 17 00:00:00 2001
+From: everyx <lunt.luo@gmail.com>
+Date: Tue, 24 Dec 2024 13:43:04 +0800
+Subject: [PATCH 3/3] donnot disable system extensions
+
+---
+ ...ble-extensions-in-system-directories.patch | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 src/browser/app/profile/Don-t-auto-disable-extensions-in-system-directories.patch
+
 diff --git a/src/browser/app/profile/Don-t-auto-disable-extensions-in-system-directories.patch b/src/browser/app/profile/Don-t-auto-disable-extensions-in-system-directories.patch
 new file mode 100644
 index 0000000..544fe6f
@@ -25,3 +35,6 @@ index 0000000..544fe6f
 + // Scopes to scan for changes at startup.
 + pref("extensions.startupScanScopes", 0);
 + 
+-- 
+2.47.1
+
