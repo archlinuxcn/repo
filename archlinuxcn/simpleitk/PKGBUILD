@@ -3,7 +3,7 @@
 _pkgname=SimpleITK
 pkgname=(simpleitk python-simpleitk)
 pkgver=2.4.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A layer built on top of the Insight Toolkit (ITK), intended to simplify and facilitate ITK's use in rapid prototyping, education and interpreted languages."
 arch=('x86_64')
 url='http://www.simpleitk.org'
@@ -28,7 +28,7 @@ makedepends=(
   swig
 )
 source=("${_pkgname}::git+https://github.com/SimpleITK/SimpleITK.git#tag=v${pkgver}")
-sha512sums=('b4f56eb2bbcd03b1c866eaa60fe392873de3c609a0250dead648e548b16c8d6674a1dc8c1f1ebd565bdf074e2c3a8cf6b6c98da12a937f9ba57f20eca579464d')
+sha512sums=('74d7032e57dcfcbeee270969a86572356f4901b7b71968d082c782e6115ae1806776703b8374251dcda611ec20bcaf6676040815c3d9ae6373b05bb5502c411e')
 
 build() {
   cmake \
