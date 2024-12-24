@@ -21,7 +21,7 @@ depends=(
   # poppler
   python
   util-linux-libs
-  vtk
+  # vtk
   zlib
 )
 makedepends=(
@@ -112,7 +112,7 @@ build() {
     -DGDCM_USE_SYSTEM_POPPLER:BOOL=OFF \
     -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
-    -DGDCM_USE_VTK:BOOL=ON \
+    -DGDCM_USE_VTK:BOOL=OFF \
     -DGDCM_VTK_INSTALL_PYTHONMODULE_DIR=lib/${python_version}/site-packages \
     -DGDCM_WRAP_PYTHON:BOOL=ON \
     -DVTKGDCM_WRAP_PYTHON:BOOL=ON
