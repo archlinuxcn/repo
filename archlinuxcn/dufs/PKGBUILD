@@ -27,11 +27,17 @@ b2sums=('a35eeb62e3aa4404a7ed5d2ffc2db12bb9f039d7e097fd7b9bc9c8b3aff592026b5b7a3
         '1e52a77fd3cb1a8734a73b70e680cfccf6648174e8fbced30e4494b78b155a36923d28e29a301fc3b480838dd4c7ad0944bb078af59541cafac2a6a98fd09b47')
 
 prepare() {
+  export RUSTUP_TOOLCHAIN=stable
+
   cd "${srcdir}/${pkgname}-${pkgver}"
+
   cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+
   cd "${srcdir}/${pkgname}-${pkgver}"
 
   cargo build --frozen --release --all-features
