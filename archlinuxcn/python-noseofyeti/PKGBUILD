@@ -3,7 +3,7 @@
 
 _name=nose-of-yeti
 pkgname=python-noseofyeti
-pkgver=2.4.8
+pkgver=2.4.9
 pkgrel=1
 pkgdesc="A custom pyton codec that provides an RSpec style dsl for python"
 arch=('any')
@@ -23,7 +23,7 @@ makedepends=(
 #    'python-pytest-helpers-namespace'
 #)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/release-${pkgver}.tar.gz")
-sha256sums=('f58afa46db5a830ec6a4cea4f3991e116b2453209283ca542db80e4adbcdcc08')
+sha256sums=('687f9bd446bf4c027fac7e7ec0f02c26312b7d976802f30cefebb23840243d08')
 
 prepare() {
     cd "${srcdir}/${_name}-release-${pkgver}"
