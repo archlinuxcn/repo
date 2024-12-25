@@ -33,8 +33,7 @@ sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
-	semver="$(head -1 NEWS | sed 's! !!g;s!-!!g')"
-	echo "${semver}.r$(git rev-list --count master).$(git rev-parse --short HEAD)"
+	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
