@@ -62,8 +62,10 @@ backup=(
     'etc/apparmor/parser.conf'
     'etc/apparmor/severity.db'
 )
-source=("git+${url}.git")
-sha256sums=('SKIP')
+source=("git+${url}.git"
+        "fix-tests-python-3-13.patch")
+sha256sums=('SKIP'
+            '7ff51782df96bc00417ecec6be33237cdededd923a865422c2b0169638e1f4f4')
 validpgpkeys=('3ECDCBA5FB34D254961CC53F6689E64E3D3664BB') # AppArmor Development Team (AppArmor signing key) <apparmor@lists.ubuntu.com>
 
 _core_perl="/usr/bin/core_perl"
@@ -76,6 +78,9 @@ pkgver() {
 
 prepare() {
     cd "${srcdir}/${_pkgname}"
+
+    # Fix tests with python 3.13
+    patch -Np1 -i ../fix-tests-python-3-13.patch
 
     cd libraries/libapparmor
     autoreconf --force --install --verbose # -fiv
@@ -100,10 +105,10 @@ build() {
     (
         cd libraries/libapparmor/
         ./configure "${configure_options[@]}"
-        make
+        make -j $(nproc)
     )
-    make -C parser
-    make -C binutils
+    make -C parser -j $(nproc)
+    make -C binutils -j $(nproc)
     make -C utils
     make -C changehat/pam_apparmor
     make -C changehat/mod_apparmor
@@ -121,27 +126,33 @@ check() {
     cd "../${_pkgname}-test"
 
     echo "INFO: Running check libraries/libapparmor"
+    make -C libraries/libapparmor --touch
     make -C libraries/libapparmor check
 
     echo "INFO: Running check parser"
+    make -C parser --touch
+    make -C parser -j $(nproc) tst_binaries
     make -C parser check
 
     echo "INFO: Running check binutils"
     make -C binutils check
 
     echo "INFO: Running check utils"
+    make -C utils --touch
     make -C parser/tst gen_dbus
     make -C parser/tst gen_xtrans
     make -C utils check
     make -C utils/test coverage-regression
 
     echo "INFO: Running check mod_apparmor"
+    make -C changehat/mod_apparmor --touch
     make -C changehat/mod_apparmor check
 
     echo "INFO: Running check profiles"
+    make -C profiles --touch
     make -C profiles check-parser
-    #make -C profiles check-abstractions.d
-    #make -C profiles check-local
+    make -C profiles check-abstractions.d
+    make -C profiles check-local
 }
 
 package() {
