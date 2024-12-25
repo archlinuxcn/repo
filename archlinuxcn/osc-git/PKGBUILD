@@ -19,7 +19,7 @@ arch=('any')
 url="https://github.com/openSUSE/${_pkgname}"
 license=('GPL-2.0-or-later')
 depends=('python' 'python-cryptography' 'python-ruamel-yaml' 'python-urllib3' 'python-zstandard' 'diffstat')
-makedepends=("git" "python-pip" "python-setuptools" "python-sphinx")
+makedepends=('git' 'python-setuptools')
 optdepends=('obs-build: required to run local builds'
 	'obs-service-format_spec_file: for running the format_spec_file source service'
 	'obs-service-download_files: for running the download_files source service'
