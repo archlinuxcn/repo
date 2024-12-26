@@ -15,11 +15,15 @@ depends=(
   eigen
   expat
   fftw
-  #gdcm
+  gcc-libs
+  gdcm
   hdf5
   intel-oneapi-mkl
+  libjpeg-turbo
   libpng
   libtiff
+  vxl
+  zlib
 )
 makedepends=(
   castxml
@@ -79,8 +83,8 @@ build() {
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
     -DITK_USE_SYSTEM_SWIG=ON
-    -DITK_USE_SYSTEM_TIFF=OFF
-    -DITK_USE_SYSTEM_VXL=OFF
+    -DITK_USE_SYSTEM_TIFF=ON
+    -DITK_USE_SYSTEM_VXL=ON
     -DITK_USE_SYSTEM_ZLIB=ON
     -DITK_WRAP_IMAGE_DIMS="2;3;4"
     -DITK_WRAP_PYTHON=ON
