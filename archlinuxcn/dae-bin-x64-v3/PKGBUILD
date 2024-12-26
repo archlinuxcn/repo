@@ -17,9 +17,13 @@ depends=(
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 backup=("etc/${_pkgname}/config.${_pkgname}")
-source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip")
+source=(
+	"${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip"
+	"https://raw.githubusercontent.com/daeuniverse/${_pkgname}/refs/tags/v${pkgver}/install/empty.${_pkgname}"
+)
 install="${pkgname}.install"
-sha256sums=('5242ddddfe1d394266bd3b04c323cbb1a55024d0650c4c92a2e103221b6f5b37')
+sha256sums=('5242ddddfe1d394266bd3b04c323cbb1a55024d0650c4c92a2e103221b6f5b37'
+            '8c3b3e962bc1288394e54122e5da8d4d54994d17af2fd290331c464dc6b75c86')
 
 package() {
 	# Install binary
@@ -33,4 +37,7 @@ package() {
 
 	# Install exmaple config
 	install -vDm644 "example.${_pkgname}" -t "${pkgdir}/etc/${_pkgname}/"
+
+	# Install empty config
+	install -vDm640 "empty.${_pkgname}" "${pkgdir}/etc/${_pkgname}/config.${_pkgname}"
 }
