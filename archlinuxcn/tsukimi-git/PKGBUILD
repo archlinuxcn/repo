@@ -25,6 +25,7 @@ source=(
 sha256sums=(
 	'SKIP'
 )
+options=(!lto)
 
 pkgver() {
 	cd "${_pkgname}"
@@ -40,7 +41,7 @@ prepare() {
 
 build() {
 	cd "${srcdir}/${_pkgname}"
-	export RUSTUP_TOOLCHAIN=nightly
+	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 	cargo build --frozen --release
 }
