@@ -9,8 +9,8 @@ arch=('x86_64')
 url='https://www.itk.org'
 license=('Apache-2.0')
 depends=(
-  double-conversion
   dcmtk
+  double-conversion
   eigen
   expat
   fftw
@@ -22,6 +22,7 @@ depends=(
   libjpeg-turbo
   libpng
   libtiff.so
+  vxl
   zlib
 )
 makedepends=(
@@ -29,11 +30,12 @@ makedepends=(
   cmake
   gcc13
   git
-  gtest
+#  gtest
+  python
   subversion
   swig
 )
-options=(!emptydirs !lto)
+options=(!emptydirs)
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/InsightSoftwareConsortium/ITK/archive/refs/tags/v${pkgver}.tar.gz"
 )
 sha512sums=('3b5ee32e75b6c13e94e97344affb085da459bd7157cc9dbd42cf9d156fb6d406cb047238309770a4aec6c02360e6660108988279f360994cc237f754ff058c42')
@@ -78,7 +80,7 @@ build() {
     -DITK_USE_SYSTEM_PNG=ON
     -DITK_USE_SYSTEM_SWIG=ON
     -DITK_USE_SYSTEM_TIFF=ON
-    -DITK_USE_SYSTEM_VXL=OFF
+    -DITK_USE_SYSTEM_VXL=ON
     -DITK_USE_SYSTEM_ZLIB=ON
     -DITK_WRAP_IMAGE_DIMS="2;3;4"
     -DITK_WRAP_PYTHON=ON
