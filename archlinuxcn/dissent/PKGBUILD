@@ -1,7 +1,7 @@
 # Maintainer: txtsd <aur.archlinux@ihavea.quest>
 
 pkgname=dissent
-pkgver=0.0.30
+pkgver=0.0.31
 _pkgver=$(sed 's/\./-/3' <<<${pkgver})
 pkgrel=1
 pkgdesc="Discord client written in go and gtk4"
@@ -16,7 +16,7 @@ source=(
 	"${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz"
 	"https://github.com/diamondburned/dissent/pull/336.patch"
 )
-sha256sums=('63994e46b01e135c36902b67a8495eef71d4a4b09204c712629edadfc8398dc6'
+sha256sums=('0e7ce9abfa6f8fb4c2c88a78ec18a84403d706ef08ceec955d173223835cb17d'
             'b27f56151ae919aba2e88c4676b5f1ff1300fe3c4eb084c61dd5fe6793ff6c80')
 
 prepare() {
