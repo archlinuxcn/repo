@@ -17,11 +17,12 @@ depends=(
   fftw
   gcc-libs
   gdcm
+  glibc
   hdf5
   intel-oneapi-mkl
   libjpeg-turbo
   libpng
-  libtiff
+  libtiff.so
   vxl
   zlib
 )
@@ -30,7 +31,7 @@ makedepends=(
   cmake
   gcc13
   git
-#  gtest
+  # gtest
   python
   subversion
   swig
@@ -76,7 +77,7 @@ build() {
     -DITK_USE_SYSTEM_EIGEN=ON
     -DITK_USE_SYSTEM_EXPAT=ON
     -DITK_USE_SYSTEM_FFTW=ON
-    -DITK_USE_SYSTEM_GDCM=OFF
+    -DITK_USE_SYSTEM_GDCM=ON
     -DITK_USE_SYSTEM_GOOGLETEST=OFF
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
@@ -107,7 +108,12 @@ build() {
     -DITK_WRAP_unsigned_long_long=ON
     -DITK_WRAP_unsigned_short=ON
     -DITK_WRAP_vector_double=ON
+    -DModule_GenericLabelInterpolator=ON
+    -DModule_ITKIODCMTK=ON
+    -DModule_ITKIOTransformMINC=ON
+    -DModule_ITKReview=ON
     -DModule_MorphologicalContourInterpolation=ON
+    # -DModule_SimpleITKFilters=ON
 )
 
   cmake -B "build" -S "${srcdir}/${_pkgname}" \
