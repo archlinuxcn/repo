@@ -1,5 +1,6 @@
-# Maintainer: FabioLolix
-# Maintainer: éclairevoyant
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: FabioLolix
+# Contributor: éclairevoyant
 # Contributor: ThatOneCalculator <kainoa at t1c dot dev>
 
 pkgname=hyprland-git
@@ -54,7 +55,9 @@ makedepends=(
 	meson
 	wayland-protocols
 	xorgproto
-	hyprwayland-scanner-git)
+	hyprwayland-scanner-git
+	glaze
+)
 provides=("hyprland=${pkgver%%.r*}")
 conflicts=(hyprland)
 replaces=(hyprland-nvidia-git)
