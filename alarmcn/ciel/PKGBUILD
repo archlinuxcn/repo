@@ -1,7 +1,7 @@
 # Maintainer: Kaiyang Wu <origincode@aosc.io>
 pkgname=ciel
 _pkgname=${pkgname}-rs
-pkgver=3.6.1
+pkgver=3.6.2
 pkgrel=1
 pkgdesc="A tool for controlling multi-layer file systems and containers."
 arch=('i686' 'x86_64' 'aarch64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('systemd' 'dbus' 'openssl' 'libssh2' 'libgit2' 'xz' 'squashfs-tools' 'glibc' 'systemd-libs')
 makedepends=('rust' 'make' 'gcc')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AOSC-Dev/${_pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('3afea352921f849289d516cdac0532de05065df5e48eaa2b27a1a761ccdb62b9')
+sha256sums=('57af9300ed7be0841a2379ab29c4053386ec354ce7a03cb9328e32ab0f67febb')
 conflicts=('ciel-git')
 
 prepare() {
@@ -24,7 +24,7 @@ build() {
     cd ${_pkgname}-${pkgver}
     export LIBSSH2_SYS_USE_PKG_CONFIG=1
     CFLAGS+=' -ffat-lto-objects'
-    cargo build --release --frozen --all-features --target-dir=target
+    cargo build --workspace --release --frozen --all-features --target-dir=target
 }
 
 check() {
