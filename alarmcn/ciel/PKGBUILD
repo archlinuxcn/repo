@@ -1,7 +1,7 @@
 # Maintainer: Kaiyang Wu <origincode@aosc.io>
 pkgname=ciel
 _pkgname=${pkgname}-rs
-pkgver=3.6.0
+pkgver=3.6.1
 pkgrel=1
 pkgdesc="A tool for controlling multi-layer file systems and containers."
 arch=('i686' 'x86_64' 'aarch64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('systemd' 'dbus' 'openssl' 'libssh2' 'libgit2' 'xz' 'squashfs-tools' 'glibc' 'systemd-libs')
 makedepends=('rust' 'make' 'gcc')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AOSC-Dev/${_pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('459c2c073c7b2ff89dfdf76e1fe4dedacc2c9d832a490d0001f5389bb528679b')
+sha256sums=('3afea352921f849289d516cdac0532de05065df5e48eaa2b27a1a761ccdb62b9')
 conflicts=('ciel-git')
 
 prepare() {
@@ -35,10 +35,7 @@ check() {
 
 package() {
     cd ${_pkgname}-${pkgver}
-    install -Dm755 target/release/${_pkgname} -t "${pkgdir}/usr/bin"
-
-    # Rename the binary
-    mv -v "${pkgdir}/usr/bin/ciel-rs" "${pkgdir}/usr/bin/ciel"
+    install -Dm755 target/release/${pkgname} -t "${pkgdir}/usr/bin"
 
     # Install assets
     PREFIX="${pkgdir}/usr/" ./install-assets.sh
