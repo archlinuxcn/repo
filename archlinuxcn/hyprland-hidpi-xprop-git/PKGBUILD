@@ -9,8 +9,8 @@
 
 _pkgname=hyprland
 pkgname=$_pkgname-hidpi-xprop-git
-pkgver=0.46.0.r34.e75e2cda
-pkgrel=1
+pkgver=0.46.0.r40.c600e1aa
+pkgrel=3
 pkgdesc="Hyprland is an independent, highly customizable, dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/hyprwm/Hyprland"
@@ -62,9 +62,11 @@ depends=(
 makedepends=(
   cmake
   git
+  glaze
   hyprwayland-scanner-git
-  meson
-  ninja
+  #patch
+  #pkgconf
+  python
   xorgproto
 )
 optdepends=(
@@ -113,10 +115,8 @@ pkgver() {
 build() {
   cd Hyprland
 
-  cmake -G Ninja -B build -S . \
-        -DCMAKE_BUILD_TYPE='None' \
-        -DCMAKE_INSTALL_PREFIX='/usr'
-  cmake --build build
+  cmake --no-warn-unused-cli -DCMAKE_INSTALL_PREFIX=/usr -S . -B ./build
+  cmake --build ./build --target all
 }
 
 package() {
@@ -127,7 +127,7 @@ package() {
   # Avoid conflict w/ extra/xdg-desktop-portal-hyprland
   rm -rf "$pkgdir/usr/share/xdg-desktop-portal"
 
-  # license
+  # licenses
   install -Dm0644 -t "$pkgdir/usr/share/licenses/${pkgname}" LICENSE
   install -Dm0644 subprojects/udis86/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE-udis86"
 }
