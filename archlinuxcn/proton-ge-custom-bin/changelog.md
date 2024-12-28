@@ -1,3 +1,49 @@
+## GE-Proton9-22
+
+Upstream:
+
+- wine updated to latest bleeding edge
+- dxvk updated to latest git
+- vkd3d-proton updated to latest git
+- dxvk-nvapi updated to latest upstream proton
+- Disable nvapi for Assassin's Creed Syndicate.
+- Disable nvapi for Simulakros and Simulakros Demo.
+- Enable Xalia for games 0.4.5 is expected to fix.
+- Update Xalia to 0.4.5.
+
+UMU-Protonfixes:
+
+- Add fix for Identity V
+- Add fix for Ghostrunner 2
+- Remove DXVK_NVAPI_GPU_ARCH workaround for Indiana Jones and the Great Circle
+- Remove disabling NVAPI for Assassin's Creed: Syndicate -- fixed upstream
+- Automatically install Ubisoft Connect for multiple old Ubisoft games that still ship the uPlay installer
+- Add Kao the kangaroo
+- Add Redout: Enhanced Edition
+- Add fix for Bus Simulator 21 Next Stop
+- Create fix for Hell Yeah!
+- Add Dungeon Siege 1 and 2 Multiplayer fixes
+- Add all missing GOG versions of the BioShock titles and link them to steam fixes
+- Remove -nointro for BioShock 2 Remastered and add all missing BioShock titles
+- Delete Final Fantasy VII fixes
+- Remove Crysis (17300) fixes
+- Remove exe redirect
+- Remove exe redirect for FF9
+- Create fix for From Dust (33460)
+
+UMU-Database:
+
+- Add Ghostrunner 2 (EGS)
+- Add Identity V
+- Added Ys I and II Chronicles+ to the database
+- Add Kao the kangaroo (2022)
+- Added fallout new vegas
+- Add Redout: Enhanced Edition
+- Add Bus Simulator 21 Next Stop (EGS)
+- Add Dungeon Siege 1 and 2 titles
+- Add BioShock 1 + 2 titles
+
+
 ## GE-Proton9-21
 
 Upstream:
