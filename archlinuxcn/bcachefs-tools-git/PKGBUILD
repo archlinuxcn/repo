@@ -75,9 +75,8 @@ package() {
 	rm -rf "${pkgdir}/etc/"
 
 	# package completions
-	install -dm755 ${pkgdir}/usr/share/{bash-completion/completions,fish/vendor_completions.d,zsh/site-functions}
 	cd "${pkgdir}/usr/bin/"
-	./bcachefs completions bash >"${pkgdir}/usr/share/bash-completion/completions/bcachefs"
-	./bcachefs completions fish >"${pkgdir}/usr/share/fish/vendor_completions.d/bcachefs.fish"
-	./bcachefs completions zsh >"${pkgdir}/usr/share/zsh/site-functions/_bcachefs"
+	./bcachefs completions bash | install -Dm644 /dev/stdin "${pkgdir}/usr/share/bash-completion/completions/bcachefs"
+	./bcachefs completions fish | install -Dm644 /dev/stdin "${pkgdir}/usr/share/fish/vendor_completions.d/bcachefs.fish"
+	./bcachefs completions zsh | install -Dm644 /dev/stdin "${pkgdir}/usr/share/zsh/site-functions/_bcachefs"
 }
