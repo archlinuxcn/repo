@@ -63,8 +63,4 @@ package() {
     sed -e "s|${pkgdir}/usr/data|/usr/share/astrometry/data|" -e 's|#inparallel|inparallel|' -i ${pkgdir}/etc/astrometry.cfg
     # remove useless file
     rm ${pkgdir}/usr/share/doc/astrometry/report.txt
-    # those executables are included in cfitsio package
-    rm ${pkgdir}/usr/bin/fitscopy
-    rm ${pkgdir}/usr/bin/imcopy
-    rm ${pkgdir}/usr/bin/fitsverify
 }
