@@ -2,7 +2,7 @@
 # Contributor: Michael Bolden Jnr / SM9(); <me@sm9.dev>
 
 pkgname=glaze
-pkgver=4.2.2
+pkgver=4.2.3
 pkgrel=1
 pkgdesc="An Extremely fast, In-Memory JSON and Interface Library for Modern C++"
 arch=('any')
@@ -10,7 +10,7 @@ url="https://github.com/stephenberry/${pkgname}"
 license=('MIT')
 makedepends=('git' 'cmake')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('965e32de67e60d185402e8cfe684c6d40c1f018a4fa5e781b11b0cac0817edb9')
+sha256sums=('cfe439b211dcca62649e92d3e8b404477b02df07522bde843e98ce25ff5bf824')
 
 build() {
 	cmake -B build \
