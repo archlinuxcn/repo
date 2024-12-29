@@ -9,11 +9,6 @@ pkgdesc="A Linux lightweight and high-performance transparent proxy solution bas
 arch=('x86_64')
 url="https://github.com/daeuniverse/${_pkgname}"
 license=('AGPL-3.0-or-later')
-depends=(
-	'glibc'
-	'v2ray-geoip'
-	'v2ray-domain-list-community'
-)
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 backup=("etc/${_pkgname}/config.${_pkgname}")
