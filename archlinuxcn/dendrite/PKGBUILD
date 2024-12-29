@@ -3,9 +3,9 @@
 
 pkgname="dendrite"
 pkgver=0.14.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A second-generation Matrix homeserver written in Go"
-url="https://matrix-org.github.io/dendrite/"
+url="https://element-hq.github.io/dendrite/"
 license=("Apache")
 arch=("x86_64" "i686" "armv6h" "armv7h" "aarch64")
 # https://github.com/quic-go/quic-go/wiki/quic-go-and-Go-versions
