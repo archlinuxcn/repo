@@ -13,12 +13,8 @@ provides=("${_pkgname}" "gtkcord4")
 conflicts=("${_pkgname}" "gtkcord4")
 replaces=("gtkcord4-git")
 makedepends=('git' 'go')
-source=(
-	"git+${url}.git"
-	"https://github.com/diamondburned/dissent/pull/336.patch"
-)
-sha256sums=('SKIP'
-            'b27f56151ae919aba2e88c4676b5f1ff1300fe3c4eb084c61dd5fe6793ff6c80')
+source=("git+${url}.git")
+sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -26,11 +22,7 @@ pkgver() {
 }
 
 prepare() {
-	cd "${_pkgname}/"
-	mkdir -p build
-
-	# Apply patch to update libspelling go mods
-	patch -p1 -i ../336.patch
+	mkdir -p "${_pkgname}/build/"
 }
 
 build() {
