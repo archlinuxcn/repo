@@ -1,6 +1,6 @@
 pkgname=julia-git-lzo_jll-src
-pkgver=2.10.2+1
-_commit=4c860d2403b0268831ec0fb5bb9e1a34c6a6fad6
+pkgver=2.10.2+2
+_commit=8d148f726bbdb0bdc414d4964389dd23456d4320
 pkgrel=1
 pkgdesc="LZO_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LZO_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git lzo)
 source=("git+https://github.com/JuliaBinaryWrappers/LZO_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('dc5f2f7d33fdba991616ab7d7beca4aec6400d35c3db677f8bee2706d6e6722f'
+sha256sums=('e4d749a27a0de795f412ae696568617afc09a64971efee8f4da57d1351585547'
             'e0de3ff41367ed2c2df4b8e7c1de70610a313f0a6b75ce216dd1238d236cd4ac')
 
 build() {
