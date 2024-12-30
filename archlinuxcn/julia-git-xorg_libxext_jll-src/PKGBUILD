@@ -1,6 +1,6 @@
 pkgname=julia-git-xorg_libxext_jll-src
-pkgver=1.3.6+1
-_commit=34fce63c6d869bc8ba1f5012c4fed67d8de034b4
+pkgver=1.3.6+2
+_commit=9c7500da437751334bde11639947acba9eedc8d8
 pkgrel=1
 pkgdesc="Xorg_libXext_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXext_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxext)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXext_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('b82a6723eb857d6e77fa14b0929181470e487218224e7dd6eda5f57e40d54274'
+sha256sums=('3dc2de5d44dc3014a05160f7ba9ec2202982d061e6876485e295e8783bb1a0e0'
             '371749dd58f5f931ec8860b796750c1135a5f4fe7e325ac2347ec83de0cfc939')
 
 build() {
