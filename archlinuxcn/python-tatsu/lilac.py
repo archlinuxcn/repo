@@ -8,6 +8,7 @@ def pre_build():
       'python-rich',
     ],
     pep517 = True,
+    license = 'BSD-4-Clause'
   )
 
 def post_build():
