@@ -1,0 +1,33 @@
+_name=TatSu
+pkgname=python-tatsu
+pkgver=5.12.2
+pkgrel=2
+pkgdesc="TatSu takes a grammar in a variation of EBNF as input, and outputs a memoizing PEG/Packrat parser in Python."
+arch=(any)
+url="https://github.com/neogeny/TatSu"
+license=(BSD-4-Clause)
+depends=('python' 'python-setuptools')
+makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel')
+optdepends=('python-colorama' 'python-rich')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/tatsu-5.12.2.tar.gz")
+sha256sums=('5894dc7ddba9a1886a95ff2f06cef1be2b3d3a37c776eba8177ef4dcd80ccb03')
+
+build() {
+  cd "$srcdir/tatsu-5.12.2"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "$srcdir/tatsu-5.12.2"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  # make sure we don't install any world-writable or root-readable-only files
+  # we shouldn't need to fix ownership as we extract tarballs as a non-root user
+  # https://github.com/pypa/setuptools/issues/1328
+  # https://github.com/LonamiWebs/Telethon/issues/1605
+  chmod u=rwX,go=rX -R "$pkgdir"
+  # make sure we don't install annoying files
+  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  rm -rf "$pkgdir/$_site_packages/tests/"
+}
+
