@@ -1,7 +1,9 @@
 maintainers:
   - github: lilydjwg
 
-pre_build_script: aur_pre_build(maintainers=['wzyboy'])
+pre_build_script: |
+  aur_pre_build(maintainers=['wzyboy'])
+  add_makedepends(['npm'])
 
 post_build: aur_post_build
 
