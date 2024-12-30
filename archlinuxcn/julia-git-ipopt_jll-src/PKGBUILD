@@ -1,6 +1,6 @@
 pkgname=julia-git-ipopt_jll-src
-pkgver=300.1400.1600+0
-_commit=8d1578918a9da0ad2ede7cc0f06ac5e2002fbbed
+pkgver=300.1400.1700+0
+_commit=ce06a4f2ecf02d5160af26fc081f9722e1bd6816
 pkgrel=1
 pkgdesc="Ipopt_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Ipopt_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git coin-or-ipopt)
 source=("git+https://github.com/JuliaBinaryWrappers/Ipopt_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('3ee4f9e636651a173db1bdbd98e035bab921e2e16468ac70ccfaf95df42fefa8'
+sha256sums=('02d04ab010bc8d42e99482dad28d6c75a4137b8c5fd45ebd2b58a9df495cd798'
             'e10aa4bc590d30d86beb5534c7ba2481d07673d2aba11ed050ebba0598b0cb3b')
 
 build() {
