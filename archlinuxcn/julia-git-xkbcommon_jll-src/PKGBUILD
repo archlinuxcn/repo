@@ -1,7 +1,7 @@
 pkgname=julia-git-xkbcommon_jll-src
-pkgver=1.4.1+1
-_commit=7a4ab544a72dc3743c1e88fdb651c3dd4901a018
-pkgrel=2
+pkgver=1.4.1+2
+_commit=a163ffd234c15416a3598975965c76cd5f9ef6cc
+pkgrel=1
 pkgdesc="xkbcommon_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/xkbcommon_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxkbcommon libxkbcommon-x11)
 source=("git+https://github.com/JuliaBinaryWrappers/xkbcommon_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('ea5400932ace9ae0f933bf97c30b8eda6288b248e85f5a320012b76c7f8016ac'
             '224845efe9ce83cc78acbf6c950e7b09b222c81370cd19d68e430a48c62479cf')
 
 build() {
