@@ -1,6 +1,6 @@
 pkgname=julia-git-zstd_jll-src
-pkgver=1.5.6+1
-_commit=8c76b11ca2a69df133a58c9e8de0864e9d8bd83f
+pkgver=1.5.6+2
+_commit=fe726133ca787812021cac44f6e93024b969779e
 pkgrel=1
 pkgdesc="Zstd_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Zstd_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git zstd)
 source=("git+https://github.com/JuliaBinaryWrappers/Zstd_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('6239e354bc7911f32f6d6669fc9752c04fce3412ae58b57380c238fb38f856e9'
+sha256sums=('989927a063c18ba294dc41bc1915fba322008b79e3a1947aa9b968469bdd5bc3'
             'e3fdd25dcc201a0c83d11cd3fee6904f8c5033434fcd57f341c4a46f5a4605e1')
 
 build() {
