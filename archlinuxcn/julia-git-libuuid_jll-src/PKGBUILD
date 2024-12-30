@@ -1,6 +1,6 @@
 pkgname=julia-git-libuuid_jll-src
-pkgver=2.40.2+0
-_commit=5478f866de7a2fe6f188d93e520270bf19d52a99
+pkgver=2.40.2+1
+_commit=f8322b5830c5079b029eda35c4390b0810927412
 pkgrel=1
 pkgdesc="Libuuid_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Libuuid_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git util-linux-libs)
 source=("git+https://github.com/JuliaBinaryWrappers/Libuuid_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('3d554bb1ff43a3d10ca26d42b25e7a381762899950f57d66ca5c079d0a910013'
+sha256sums=('3b3409efa9b2e82d3dbf3186316ba5e9159e7bea0326b57910d8feec14c61621'
             'c71c9f1ccdc7ff0580e45b9831f2ab88195f66f2df89e59363621a79c4fa2137')
 
 build() {
