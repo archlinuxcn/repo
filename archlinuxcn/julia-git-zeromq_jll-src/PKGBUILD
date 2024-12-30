@@ -1,6 +1,6 @@
 pkgname=julia-git-zeromq_jll-src
-pkgver=4.3.5+1
-_commit=5d116190ace17bfab0f223d133ba60435817f253
+pkgver=4.3.5+2
+_commit=10dc8bb037e91f3d02759bfe118586527de6085a
 pkgrel=1
 pkgdesc="ZeroMQ_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/ZeroMQ_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git zeromq)
 source=("git+https://github.com/JuliaBinaryWrappers/ZeroMQ_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('75c9a7ba6491b432d02bdfc4de3e1b6381ac5f1ccfb912cfaabd4533e0544039'
+sha256sums=('cde367f814875a1f483671dd38128f1fc8de79d8c6f85e8f512a16f550c002d9'
             '3833c1f7592f290cbc03f6895239241fa2e7eaa63e1f883af29a912773fc5193')
 
 build() {
