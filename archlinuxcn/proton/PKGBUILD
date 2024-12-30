@@ -1,13 +1,13 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton
-_srctag=9.0-3e
+_srctag=9.0-4c
 _commit=
-pkgver=9.0.3.5
+pkgver=9.0.4.3
 _geckover=2.47.4
-_monover=9.2.0
-_xaliaver=0.4.2
-pkgrel=2
+_monover=9.3.1
+_xaliaver=0.4.4
+pkgrel=1
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -40,7 +40,7 @@ depends+=(
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
-  git wget rsync unzip mingw-w64-tools lld nasm
+  wget rsync unzip mingw-w64-tools lld nasm
   meson cmake fontforge afdko python-pefile glib2-devel
   glslang vulkan-headers
   clang
@@ -63,6 +63,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   rust                  lib32-rust-libs
   libgphoto2
   opencl-headers
+  git
 )
 
 optdepends=(
@@ -251,13 +252,13 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('3eda5843a8fa2ff72beed26c57574092eec469953ad4f17a51bd8a9f04949719'
+sha256sums=('113d10554f6356146df6cf5f21bdabd7b6accda4ffee9df8cad6827b3918517f'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
-            '59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757'
-            '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            'd5bc7871247ce9fddefb03813b70853a79e7b340a1dbfbb2213bd8b93b5a4e62'
-            '0d5f2cc441b04928773a8dc0424cf9898e6ba4feda296566cbcf125d103a8d14'
-            'b6c3f47f6ef3055a74b838c0d372271925c607d2477eee75eda9646a18f33e7a'
-            '2912d7b587cd309cb5f063bea03bf109c7225fdcb54d7ed72c7c064007f72f48'
-            '239e4d8d462cbb0da223caa6f52d5987a5b2f4c6d7b5ddb274229f654a07b295')
+            '32eff652b96390f04fb52ee695fc3a6d197b1bb616ed2df7e25119fe5700c950'
+            'a5cfd3090ebf7fb694bce573ef87b300b86f61204987ecbd068a2fe5079b7e6e'
+            '753a8c7bc952d2e87da0b3d533971b6401929b7febe2aab4c500801ecf026b65'
+            'b2c605d2798d445490e52c2676eef80cf0dae565a025d9f1b1314d2358d06c52'
+            '179b8a3940120418fc51c581c78f0ed6ffd65d6f22e949126587e925c9838e4b'
+            'f60b5d4879bfed8cecfcc198be59a693c845e479bb08d13298cdec66bf8ac7ba'
+            'ff26daa03621c0fc79e7e7ab49b866adcdf798af583c1c268edfafef3e6b0453')
