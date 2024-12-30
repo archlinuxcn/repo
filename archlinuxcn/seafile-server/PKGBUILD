@@ -24,11 +24,13 @@ source=(
   "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver-server.tar.gz"
   0001-Fix-controller-path-and-migrate-old-pids-directory.patch
   0002-Fix-seafile-admin.patch
+  0003-Fix-error-for-notification-server.patch
   'seafile-server@.service'
 )
 sha256sums=('ed625a0dc58480483ab90bfd0b0ec9973b9710168990ce0dfd2da85de2e65622'
-            'b11beef85a7995d2484be19093aefd34a8e7513839f3d466963b44d02640c66d'
-            '02b88de2e35c7e2e5551952249c5842d994cc827090e7eb7fcc839ba24d7fd20'
+            '9bda93fbb380f2bca626ecf0c8a85a50db0d52bf0a2ea128ca0a6e75766446d8'
+            '1f74be846471e75bc280e83095339cf22bd789283e221c82765b6109566badb1'
+            'e806cd5c11a581623c6df88b26ff90b3fac9f4ab46e8427cadf6db57f4124065'
             '347982254a025ce86cd53fbb6bf505320638bf69736d65a96d17f74551139072')
 
 prepare() {

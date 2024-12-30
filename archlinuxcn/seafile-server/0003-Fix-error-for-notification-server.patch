@@ -1,0 +1,48 @@
+From d70a7e169ba935182b15395a4cbc574e5430b286 Mon Sep 17 00:00:00 2001
+From: feiniks <36756310+feiniks@users.noreply.github.com>
+Date: Thu, 19 Dec 2024 12:32:37 +0800
+Subject: [PATCH 3/3] Fix error for notification server
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Co-authored-by: 杨赫然 <heran.yang@seafile.com>
+---
+ notification-server/server.go | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/notification-server/server.go b/notification-server/server.go
+index c6af3f8..cf6a6fe 100644
+--- a/notification-server/server.go
++++ b/notification-server/server.go
+@@ -10,8 +10,8 @@ import (
+ 	"os"
+ 	"os/signal"
+ 	"path/filepath"
+-	"strings"
+ 	"strconv"
++	"strings"
+ 	"syscall"
+ 	"time"
+ 
+@@ -46,7 +46,7 @@ func init() {
+ }
+ 
+ func loadNotifConfig() {
+-	host := os.Getenv("NOTIFICATION_SERVER_HOST")
++	host = os.Getenv("NOTIFICATION_SERVER_HOST")
+ 	if host == "" {
+ 		host = "0.0.0.0"
+ 	}
+@@ -55,7 +55,7 @@ func loadNotifConfig() {
+ 	if os.Getenv("NOTIFICATION_SERVER_PORT") != "" {
+ 		i, err := strconv.Atoi(os.Getenv("NOTIFICATION_SERVER_PORT"))
+ 		if err == nil {
+-			port = i
++			port = uint32(i)
+ 		}
+ 	}
+ 
+-- 
+2.46.0
+
