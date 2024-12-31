@@ -20,7 +20,8 @@ makedepends=(${_target}-binutils
              libisl
              libmpc
              libxcrypt
-             zstd)
+             zstd
+             git)
 if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
   _git_ref="commit=${BASH_REMATCH[1]}"
 else
