@@ -3,26 +3,33 @@
 # Contributor: Y7n05h <Y7n05h@y7n05h.dev>
 
 pkgname=ecapture
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="capture SSL/TLS text content without CA cert using eBPF"
 arch=("x86_64" "aarch64")
 url="https://github.com/gojue/ecapture"
 license=("Apache-2.0")
+provides=("ecapture")
+conflicts=("ecapture-bin")
+source=("${pkgname}::git+${url}#tag=v${pkgver}"
+        "0001-fix-build.patch")
+sha256sums=('5a7cf93659de8fd635989948e85fbdc197beab3c6fe47e976f315dc549a1cca6'
+            'bae6b6241a140bc0521cbf8760572f222c3113918561e3120eb9dd2c7a3f5c94')
+
+_linux_package_name=linux
 depends=("glibc")
-makedepends=("clang" "go" "git" "bpf" "linux-headers" "libelf" "llvm" "pkgconf")
-source=("${pkgname}::git+${url}#tag=v${pkgver}")
-sha256sums=('82646325c4553288d6ecc74ccc4463a890289f793220fa4acba3ac5747100308')
+makedepends=("clang" "go" "git" "bpf" "${_linux_package_name}" "${_linux_package_name}-headers" "libelf" "llvm" "pkgconf")
+
+prepare() {
+    cd "${srcdir}/${pkgname}"
+    git apply "${srcdir}/0001-fix-build.patch"
+}
 
 build() {
     cd "${srcdir}/${pkgname}"
-    export CGO_CPPFLAGS="${CPPFLAGS}"
-    export CGO_CFLAGS="${CFLAGS}"
-    export CGO_CXXFLAGS="${CXXFLAGS}"
-    export CGO_LDFLAGS="${LDFLAGS}"
-    export GOPATH="${srcdir}"
-    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
-    make
+    UNAME_R=$(cat "/usr/src/${_linux_package_name}/version")
+    HOST_VERSION_SHORT=$(echo "${UNAME_R}" | cut -d'-' -f 1)
+    make "UNAME_R=${UNAME_R}" "HOST_VERSION_SHORT=${HOST_VERSION_SHORT}"
 }
 
 package() {
