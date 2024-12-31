@@ -3,7 +3,7 @@
 pkgname=beanquery
 pkgdesc='A customizable light-weight SQL query tool that works on tabular data, including Beancount'
 pkgver=0.1.0
-pkgrel=3
+pkgrel=4
 arch=("any")
 url="https://github.com/beancount/beanquery"
 license=('GPL')
@@ -23,4 +23,5 @@ build() {
 package() {
   cd "${pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
+  rm -r ${pkgdir}/usr/lib/python3*/site-packages/docs
 }
