@@ -36,24 +36,24 @@ import (
 
 	// naive proxy
 	_ "github.com/caddyserver/forwardproxy"
-	
+
 	// ip sources
+	_ "github.com/WeidiDeng/caddy-cloudflare-ip"
+	_ "github.com/digilolnet/caddy-bunny-ip"
 	_ "github.com/fvbommel/caddy-combine-ip-ranges"
 	_ "github.com/fvbommel/caddy-dns-ip-range"
-	_ "github.com/WeidiDeng/caddy-cloudflare-ip"
 	_ "github.com/xcaddyplugins/caddy-trusted-cloudfront"
-	_ "github.com/digilolnet/caddy-bunny-ip"
-	
+
 	// match
-	_ "github.com/tuzzmaniandevil/caddy-dynamic-clientip"
 	_ "github.com/lanrat/caddy-dynamic-remoteip"
+	_ "github.com/tuzzmaniandevil/caddy-dynamic-clientip"
 
 	// WAF
 	_ "github.com/corazawaf/coraza-caddy"
 
 	// cache
 	_ "github.com/caddyserver/cache-handler"
-	_ "github.com/sillygod/cdp-cache"
+	_ "github.com/darkweak/storages/nuts/caddy"
 
 	// dns.providers
 	_ "github.com/caddy-dns/cloudflare"
@@ -72,9 +72,6 @@ import (
 
 	// response handler
 	_ "github.com/caddyserver/replace-response"
-
-	// webdav
-	_ "github.com/mholt/caddy-webdav"
 
 	// cli
 	_ "github.com/abiosoft/caddy-json-schema"
