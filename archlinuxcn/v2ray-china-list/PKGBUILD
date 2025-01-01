@@ -2,7 +2,7 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=v2ray-china-list
-pkgver=20241231003547
+pkgver=20250101004017
 pkgrel=1
 pkgdesc="V2Ray deployment of felixonmars/dnsmasq-china-list project"
 arch=('any')
@@ -10,7 +10,7 @@ url="https://github.com/dctxmei/v2ray-china-list"
 license=('GPL3')
 makedepends=('go')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('b7cd9e23d84894e46d0c8077a2f9eaee0f9fdd9a263e277a14b110437e9822e6')
+sha256sums=('a31cf3246e961dd9f3342b7ae8f6d2563fc15723cfb0d2690f6cccf777fb8295')
 
 build() {
     cd "${srcdir}"/"${pkgname}-${pkgver}"/
