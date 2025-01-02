@@ -1,6 +1,6 @@
 pkgname=julia-git-libtiff_jll-src
-pkgver=4.7.0+0
-_commit=b8676347d05f2e5851f6d0471eec1b247949ea84
+pkgver=4.7.1+0
+_commit=ba26208ac7d056b254a7c3b8319b32866966836c
 pkgrel=1
 pkgdesc="Libtiff_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Libtiff_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libtiff)
 source=("git+https://github.com/JuliaBinaryWrappers/Libtiff_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('050c82ad644b0c253ab33cbed29e231c314cc72740cb0922bfd2add4c6e3d909'
+sha256sums=('e1c45869e25da66abdb600ebcf9b422ef26e6c37ce76fe2fa9074f961e1730ea'
             '731c2650504769e16225d4c6fa46de64701781211261b7c45dddb100439fa090')
 
 build() {
