@@ -1,6 +1,6 @@
 pkgname=julia-git-xz_jll-src
-pkgver=5.6.3+1
-_commit=5737f7fd4260b2428ff5fdcfb6fd3f3671753275
+pkgver=5.6.4+0
+_commit=de2f4d115a38d4ea1d510a7b352701dc48fc95ff
 pkgrel=1
 pkgdesc="XZ_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/XZ_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git xz)
 source=("git+https://github.com/JuliaBinaryWrappers/XZ_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('10cacf45614c365aa3f40d4c42d1eddbda89fb9a6bcfaf515ad982e13167d2c2'
+sha256sums=('e2c4c4dd79c5d8589f77a059e2eeb80239aca2865cc7c882b2de7ecf24be2538'
             '86dd9a34b738d3a9fee6b08ba59ef1c6d036b3f5845d114dd82d0f3622e33711')
 
 build() {
