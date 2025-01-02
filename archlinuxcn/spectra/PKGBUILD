@@ -4,23 +4,35 @@ pkgname=spectra
 pkgver=1.0.1
 pkgrel=4
 pkgdesc="A header-only C++ library for large scale eigenvalue problems"
-license=('MPL2')
+license=('MPL-2.0')
 arch=('any')
 url='https://spectralib.org'
 makedepends=(
+  clang
   cmake
   eigen
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/yixuan/spectra/archive/v${pkgver}.tar.gz")
 sha512sums=('575f90d2ab9c3cbdd4bbfe1abce35a262e319dac8689420859811a169cbfd8f617c80bfcd430aa8a5383c96f338155870a0ad7ac0d5db855c1e822c2d19837b5')
 
+build() {
+  cmake \
+    -B "build" \
+    -DBUILD_EXAMPLES=OFF \
+    -DBUILD_TESTS=ON \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_DATADIR=/usr/lib \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -S "${srcdir}/${pkgname}-${pkgver}"
+  make -C build
+}
+
+check() {
+  cd build
+  ctest --verbose
+}
+
 package() {
-  cd "${pkgname}-${pkgver}"
-  cmake -DCMAKE_INSTALL_PREFIX=/usr .
-  make install DESTDIR="${pkgdir}"
-  mkdir -p "${pkgdir}/usr/lib/cmake"
-  mv -v "${pkgdir}/usr/share/spectra/cmake" "${pkgdir}/usr/lib/cmake/${pkgname}"
-  rm -rfv "${pkgdir}/usr/share/spectra"
+  make -C build install DESTDIR="${pkgdir}"
 }
 # vim:set ts=2 sw=2 et:
-
