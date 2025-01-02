@@ -2,7 +2,10 @@ maintainers:
   - github: yingziwu
     email: i@bgme.me
 
-build_prefix: archlinuxcn-x86_64
+repo_depends:
+  - nvm
+
+build_prefix: extra-x86_64
 
 pre_build_script: aur_pre_build(maintainers=['xiota'])
 post_build: aur_post_build
@@ -13,4 +16,4 @@ update_on:
   - source: aur
     aur: rstudio-desktop
   - source: manual
-    manual: 0
+    manual: 0.1
