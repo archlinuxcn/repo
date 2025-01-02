@@ -1,6 +1,6 @@
 pkgname=julia-git-lerc_jll-src
-pkgver=4.0.0+2
-_commit=4bb1d225147834f09faa6903c7c18ae546899d3a
+pkgver=4.0.1+0
+_commit=4ce70d079466ee973ee9d37ef3ff44f31caac8c7
 pkgrel=1
 pkgdesc="LERC_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LERC_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git lerc)
 source=("git+https://github.com/JuliaBinaryWrappers/LERC_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('e6e09521ba23c7700ebef25b2737c1fc3d047b252c3b76bf064a8267dc075130'
+sha256sums=('41e4d23de76d942e5b951a5544ee907edcf5656df40d8824b2b223eaa8b4a423'
             '06fe3efff7186add1b80b381b894e25ac1621b9234a4ba30540443c7c1901b09')
 
 build() {
