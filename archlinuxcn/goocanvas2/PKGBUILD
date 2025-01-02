@@ -1,8 +1,5 @@
 # Maintainer:
 # Contributor: LightDot <lightdot -a-t- g m a i l>
-# Contributor: Balló György <ballogyor+arch at gmail dot com>
-# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
-# Contributor: William Rea <sillywilly@gmail.com>
 
 ## links
 # https://wiki.gnome.org/Projects/GooCanvas
@@ -11,7 +8,7 @@
 _pkgname="goocanvas"
 pkgname="${_pkgname}2"
 pkgver=2.0.4
-pkgrel=11
+pkgrel=12
 pkgdesc="A cairo canvas widget for GTK+, legacy version"
 url="https://gitlab.gnome.org/GNOME/goocanvas"
 license=('LGPL-2.1-or-later')
@@ -25,8 +22,6 @@ makedepends=(
   'gobject-introspection'
   'python-gobject'
 )
-
-provides=("$_pkgname=$pkgver")
 
 _pkgsrc="$_pkgname-$pkgver"
 _pkgext="tar.xz"
