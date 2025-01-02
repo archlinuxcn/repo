@@ -3,7 +3,7 @@
 
 _name=Flake8-pyproject
 pkgname=python-flake8-pyproject
-pkgver=1.2.2
+pkgver=1.2.3
 pkgrel=1
 pkgdesc="Flake8 plug-in loading the configuration from pyproject.toml"
 arch=('any')
@@ -24,7 +24,7 @@ checkdepends=(
     'python-pytest-cov'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('1a2181ff7f92f047c38cc0b1085b30f4ec014a200150a5bba1f88be8030ac42f')
+sha256sums=('8f065721c53c1fe22d423d82db99eef6559b463a8701aa03b03668d43abfc851')
 
 build() {
     cd "${srcdir}/${_name}-${pkgver}"
