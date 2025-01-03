@@ -1,25 +1,29 @@
-# Maintainer: Max Bruckner (FSMaxB)
+# Maintainer: envolution
+# Contributor: Max Bruckner (FSMaxB)
+# shellcheck shell=bash disable=SC2034,SC2154
 pkgname=mecab-ipadic
 pkgver=2.7.0_20070801
-pkgrel=3
-pkgdesc="IPA dictionary for mecab."
+pkgrel=4
+pkgdesc="IPA dictionary for mecab"
 arch=('any')
 url="https://taku910.github.io/mecab"
 depends=('mecab')
-replaces=('mecab-ipadic-utf8')
-license=('custom')
-source=("$pkgname-${pkgver/_/-}.tar.gz::https://drive.google.com/uc?id=0B4y35FiV1wh7MWVlSDBCSXZMTXM&export=download")
-sha512sums=('35ea662cb62f1967849f7ed5781bd6dafef0fe20d63e88d9a0057666e57ed23d5a0e6fb8d0701a0cc4da43a1050c1b02463bb862decc71c36b7fc2acdc158d86')
+license=(GPL-2.0-only)
+#source=("$pkgname-${pkgver/_/-}.tar.gz::https://drive.google.com/uc?id=0B4y35FiV1wh7MWVlSDBCSXZMTXM&export=download")
+_tag="2fd29256c6d5e1b10211cac838069ee9ede8c77a"
+source=("$pkgname::git+https://github.com/taku910/mecab.git#tag=${_tag}")
+md5sums=('5e33399fd830b3c3f66cd4b5c366c989')
 
 build() {
-	cd "$pkgname-${pkgver/_/-}"
-	./configure --prefix=/usr --with-charset=utf-8
-	# change hardcoded mecab installation path
-	sed -i 's!libexec/mecab!lib/mecab!g' config.status
-	make
+  cd "$pkgname/$pkgname"
+  ./configure --prefix=/usr --with-charset=utf-8
+  # change hardcoded mecab installation path
+  sed -i 's!libexec/mecab!lib/mecab!g' config.status
+  make
 }
 
 package() {
-	cd "$pkgname-${pkgver/_/-}"
-	make DESTDIR="$pkgdir/" install
+  cd "$pkgname/$pkgname"
+  make DESTDIR="$pkgdir/" install
 }
+# vim:set ts=2 sw=2 et:
