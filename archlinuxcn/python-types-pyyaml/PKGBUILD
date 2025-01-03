@@ -1,24 +1,26 @@
 # Maintainer: Martin Diehl <aur@martin-diehl.net>
 # Contributor: Achmad Fathoni<fathoni.id(at)gmail.com>
+
 pkgname=python-types-pyyaml
-_pkgname=types-PyYAML
-pkgver=6.0.12.20240808
-pkgrel=2
-pkgdesc="Typing stubs for PyYAML"
-arch=('any')
-url="https://pypi.org/project/${_pkgname}"
-license=(Apache)
-makedepends=(python-build python-installer python-wheel python-setuptools)
-depends=(python)
-source=(https://files.pythonhosted.org/packages/source/${_pkgname::1}/$_pkgname/$_pkgname-$pkgver.tar.gz)
-sha256sums=('b8f76ddbd7f65440a8bda5526a9607e4c7a322dc2f8e1a8c405644f9a6f4b9af')
+pkgver=6.0.12.20241230
+pkgrel=1
+pkgdesc='Typing stubs for PyYAML'
+arch=(any)
+url='https://pypi.org/project/types-PyYAML'
+license=('Apache-2.0')
+depends=('python')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+_name=${pkgname#python-}
+__name=${_name//-/_}
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${__name}/${__name}-$pkgver.tar.gz")
+sha512sums=('f17466dbc0ce078048d908998265e962f6a640be6882f82cbed66579373bb08ab936028c16189610cf8df46d802d2e89eb3ee850765fc7b8f5c2296b34dfb2eb')
 
 build() {
-    cd ${srcdir}/${_pkgname}-${pkgver}
+    cd ${__name}-${pkgver}
     python -m build --wheel --no-isolation
 }
 
 package() {
-    cd ${srcdir}/${_pkgname}-${pkgver}
-    python -m installer --destdir="$pkgdir" dist/*.whl
+    cd ${__name}-${pkgver}
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }
