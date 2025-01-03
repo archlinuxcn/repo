@@ -5,8 +5,8 @@
 
 _name=spotipy
 pkgname="python-${_name}"
-pkgver=2.24.0
-pkgrel=3
+pkgver=2.25.0
+pkgrel=1
 pkgdesc='A light weight Python library for the Spotify Web API'
 arch=('any')
 url="https://github.com/${_name}-dev/${_name}"
@@ -26,7 +26,7 @@ makedepends=(
 optdepends=('python-pymemcache')
 conflicts=("${pkgname}-git")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('f3dfd2f891f76923847f052c65ec689cd7482ab1e3200aebeffa39661c51d137')
+sha256sums=('c0d10b7e46a491d49970bddde36dcdd3d60c4fa0232e3a6f9366d8682678d464')
 
 build() {
     cd "${srcdir}/${_name}-${pkgver}"
