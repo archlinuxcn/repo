@@ -7,5 +7,5 @@ post_build: git_pkgbuild_commit
 
 update_on:
   - source: cmd
-    cmd: API='https://papermc.io/api/v2/projects/paper' && VER="$(curl -s $API | jq -r '.versions[-1]')" 
+    cmd: API='https://api.papermc.io/v2/projects/paper' && VER="$(curl -s $API | jq -r '.versions[-1]')"
         && echo "$VER+b$(curl -s $API/versions/$VER | jq -r '.builds[-1]')"
