@@ -1,4 +1,4 @@
-From 06f727adffc9ce7cf9bfcdb6cdb9af96f6659184 Mon Sep 17 00:00:00 2001
+From c15f2a358352c3d748f08283a3728ac387658ab7 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
 Subject: [PATCH 5/7] Support loading extensions from STDLIB
@@ -8,7 +8,7 @@ Subject: [PATCH 5/7] Support loading extensions from STDLIB
  1 file changed, 55 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index 2765c6ea3e..ca93b9061d 100644
+index 024c4ceb35..00a7b8f39b 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
 @@ -1123,6 +1123,14 @@ end
@@ -60,7 +60,7 @@ index 2765c6ea3e..ca93b9061d 100644
      path, project_file = entry_point_and_project_file(dir, pkg.name)
      if project_file === nothing
          pkg.uuid === nothing || return nothing
-@@ -1466,11 +1501,31 @@ const EXT_PRIMED = Dict{PkgId,Vector{PkgId}}() # Extension -> Parent + Triggers
+@@ -1467,11 +1502,31 @@ const EXT_PRIMED = Dict{PkgId,Vector{PkgId}}() # Extension -> Parent + Triggers
  const EXT_DORMITORY = Dict{PkgId,Vector{ExtensionId}}() # Trigger -> Extensions that can be triggered by it
  const EXT_DORMITORY_FAILED = ExtensionId[]
  
