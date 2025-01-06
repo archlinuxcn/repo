@@ -16,7 +16,7 @@ optdepends=("tar: needed in order to create world backups"
 conflicts=('papermc-git')
 backup=('etc/conf.d/papermc')
 install="${pkgname}.install"
-source=("papermc.${pkgver}.jar"::"https://papermc.io/api/v2/projects/paper/versions/${pkgver%%+*}/builds/${pkgver##*b}/downloads/paper-${pkgver%%+*}-${pkgver##*b}.jar"
+source=("papermc.${pkgver}.jar"::"https://api.papermc.io/v2/projects/paper/versions/${pkgver%%+*}/builds/${pkgver##*b}/downloads/paper-${pkgver%%+*}-${pkgver##*b}.jar"
 	"LICENSE_${pkgver}.md"::"https://raw.githubusercontent.com/PaperMC/Paper/${_license_commit}/LICENSE.md"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 noextract=("papermc.${pkgver}.jar")
