@@ -2,7 +2,7 @@
 
 _pkgname=safetensors
 pkgname=python-safetensors
-pkgver=0.5.0
+pkgver=0.5.1
 pkgrel=1
 epoch=1
 pkgdesc='Simple, safe way to store and distribute tensors'
@@ -29,7 +29,7 @@ optdepends=(
   python-huggingface-hub
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/safetensors/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('2da4184024a42645ddc9403dbe16fee4780c23c73cd9d6c5f5d50deb76f2b1b0647fcac66040cc68f07b2250e6c2194426d810161a2ef3c28fb541ef6174a444')
+sha512sums=('c20152d644efd39db938dd4ca210607ec8d75bfd9de5377c3adc1f3d7fd64dc52ba4d546163f520b03eef47f3379857eb46dd4c404e358e9c1f71dad2f5404a3')
 
 build() {
   cd "${_pkgname}-${pkgver}/bindings/python"
