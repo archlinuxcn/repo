@@ -7,8 +7,8 @@
 # Contributor : Patrick McCarty  <pnorcks at gmail dot com>
 
 pkgname=osc
-pkgver=1.10.1
-pkgrel=2
+pkgver=1.11.0
+pkgrel=1
 pkgdesc="Command line client for the openSUSE Build Service"
 arch=('any')
 url="https://github.com/openSUSE/${pkgname}"
@@ -23,7 +23,7 @@ optdepends=('obs-build: required to run local builds'
 	'python-distro: Linux OS platform information API'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('20ee481f7ed9b3355cbdee5f590819b491e9c08992f3f7da0d96ca4495bc68db')
+sha256sums=('0380e5e0e3e8e281614e61ce8291eafe2c637b4679b0ff8ffcaee564f2069afb')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
