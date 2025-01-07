@@ -36,6 +36,7 @@ repo_depends:
   - julia-git-intelopenmp_jll-src
   - julia-git-mkl_jll-src
   - julia-git-pardiso-src
+  - julia-git-pycall-src
   - julia-git-symengine_jll-src
 
 update_on_build:
@@ -43,6 +44,7 @@ update_on_build:
   - pkgbase: julia-git-intelopenmp_jll-src
   - pkgbase: julia-git-mkl_jll-src
   - pkgbase: julia-git-pardiso-src
+  - pkgbase: julia-git-pycall-src
   - pkgbase: julia-git-symengine_jll-src
 
 update_on:
@@ -1211,8 +1213,6 @@ update_on:
     alpm: julia-git-prrte_jll-src
   - alias: alpm-lilac
     alpm: julia-git-ptrarrays-src
-  - alias: alpm-lilac
-    alpm: julia-git-pycall-src
   - alias: alpm-lilac
     alpm: julia-git-pyplot-src
   - alias: alpm-lilac
