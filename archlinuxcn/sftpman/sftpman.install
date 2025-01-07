@@ -1,3 +1,7 @@
+# We only ever create this directory and never remove it,
+# because it's not just this package that potentially needs it.
+#
+# Both sftpman and sftpman-iced (as well as the old Python-based sftpman software) may be using it.
 _ensure_mount_path() {
 	mkdir -p -m 775 /mnt/sshfs
 	chown :users /mnt/sshfs
@@ -26,15 +30,4 @@ post_upgrade() {
 		echo -e "\t"'for f in $(ls ~/.config/sftpman/mounts/*.js); do n=$(echo $f | sed 's/.js$/.json/'); mv $f $n; done;';
 		echo "======================"
     fi
-}
-
-pre_remove() {
-	echo "Unmounting any sftpman-mounted filesystems.."
-	# The sleep.d script knows how to unmount sftpman filesystems for all users.
-	# It's usually used during suspend/hibernate.
-	/etc/pm/sleep.d/49-sftpman suspend
-}
-
-post_remove() {
-	rmdir --ignore-fail-on-non-empty /mnt/sshfs
 }
