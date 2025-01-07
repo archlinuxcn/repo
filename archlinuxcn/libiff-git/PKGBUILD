@@ -28,7 +28,7 @@ prepare() {
 build() {
 	cd "${_pkgname}/"
 	./configure --prefix=/usr
-	make
+	make -j1 # help2man doesn't support parallel build
 }
 
 package() {
