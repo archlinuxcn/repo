@@ -35,14 +35,11 @@ update_on:
     alpm: libssh2
     provided: libssh2.so
   - source: alpm
-    alpm: mbedtls2
-    provided: libmbedcrypto.so
+    alpm: openssl
+    provided: libcrypto.so
   - source: alpm
-    alpm: mbedtls2
-    provided: libmbedtls.so
-  - source: alpm
-    alpm: mbedtls2
-    provided: libmbedx509.so
+    alpm: openssl
+    provided: libssl.so
   - source: alpmfiles
     pkgname: suitesparse
     strip_dir: true

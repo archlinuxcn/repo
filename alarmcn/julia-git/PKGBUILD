@@ -38,11 +38,10 @@ pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-_soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
-              libmbedcrypto.so libmbedtls.so libmbedx509.so)
+_soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so libcrypto.so libssl.so)
 depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
               openspecfun libutf8proc libblastrampoline
-              mbedtls2 zlib p7zip libnghttp2 ca-certificates-utils lld
+              openssl zlib p7zip libnghttp2 ca-certificates-utils lld
               blas-openblas)
 case "$CARCH" in
   x86_64)
@@ -489,11 +488,6 @@ package-julia-in() {
     echo "}"
   ) > "${startdir}/install.pkg"
   true && install=install.pkg
-
-  # Make sure we use mbedtls2 version
-  ln -sf /usr/lib/libmbedcrypto.so.7 "${pkgdir}/usr/lib/julia/libmbedcrypto.so"
-  ln -sf /usr/lib/libmbedtls.so.14 "${pkgdir}/usr/lib/julia/libmbedtls.so"
-  ln -sf /usr/lib/libmbedx509.so.1 "${pkgdir}/usr/lib/julia/libmbedx509.so"
 
   # Manually filling in the soname dependencies since makepkg doesn't recognize the symlink
   # julia uses to specify the soname
