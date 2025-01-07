@@ -1,6 +1,6 @@
 pkgname=julia-git-cgcoefficient-src
-pkgver=0.2.11
-_commit=c8891b75b990b34f47fa280e678ed270ab2bad5e
+pkgver=0.3.1
+_commit=0d5e6497c356e3dc451be5577e84bc33c3523e4d
 pkgrel=1
 pkgdesc="CGcoefficient.jl"
 url="https://github.com/0382/CGcoefficient.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/0382/CGcoefficient.jl.git#commit=$_commit")
-sha256sums=('304351168979203f2376fb05534a642c24081bdced86926d0950002751f9e44b')
+sha256sums=('819c68dd1274e5fa8155401669279936c85cfc6a011a6560fd2dcbc43fad91fb')
 
 package() {
   cd CGcoefficient.jl
