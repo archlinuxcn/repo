@@ -1,7 +1,7 @@
 # Maintainer: Kaiyang Wu <origincode@aosc.io>
 pkgname=ciel
 _pkgname=${pkgname}-rs
-pkgver=3.8.8
+pkgver=3.9.1
 pkgrel=1
 pkgdesc="A tool for controlling multi-layer file systems and containers."
 arch=('i686' 'x86_64' 'aarch64')
@@ -24,7 +24,7 @@ build() {
     cd ${_pkgname}-${pkgver}
     export LIBSSH2_SYS_USE_PKG_CONFIG=1
     CFLAGS+=' -ffat-lto-objects'
-    cargo build --workspace --release --frozen --all-features --target-dir=target
+    cargo build --release --frozen --all-features --target-dir=target
 }
 
 check() {
@@ -35,7 +35,10 @@ check() {
 
 package() {
     cd ${_pkgname}-${pkgver}
-    install -Dm755 target/release/${pkgname} -t "${pkgdir}/usr/bin"
+    install -Dm755 target/release/${_pkgname} -t "${pkgdir}/usr/bin"
+
+    # Rename the binary
+    mv "${pkgdir}/usr/bin/${_pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 
     # Install assets
     PREFIX="${pkgdir}/usr/" ./install-assets.sh
