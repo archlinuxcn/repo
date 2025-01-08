@@ -24,13 +24,11 @@ source=(
   "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver-server.tar.gz"
   0001-Fix-controller-path-and-migrate-old-pids-directory.patch
   0002-Fix-seafile-admin.patch
-  0003-Fix-error-for-notification-server.patch
   'seafile-server@.service'
 )
 sha256sums=('d85023cee5b2e9b93b8889c67a38768f083977a6ec224add6f4eccbacdb232ba'
             '9bda93fbb380f2bca626ecf0c8a85a50db0d52bf0a2ea128ca0a6e75766446d8'
             '1f74be846471e75bc280e83095339cf22bd789283e221c82765b6109566badb1'
-            'e806cd5c11a581623c6df88b26ff90b3fac9f4ab46e8427cadf6db57f4124065'
             '347982254a025ce86cd53fbb6bf505320638bf69736d65a96d17f74551139072')
 
 prepare() {
@@ -42,7 +40,6 @@ prepare() {
   sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./lib/libseafile.pc.in"
   patch -Np1 --no-backup-if-mismatch < ../0001-Fix-controller-path-and-migrate-old-pids-directory.patch
   patch -Np1 --no-backup-if-mismatch < ../0002-Fix-seafile-admin.patch
-  patch -Np1 --no-backup-if-mismatch < ../0003-Fix-error-for-notification-server.patch
 }
 
 build() {
