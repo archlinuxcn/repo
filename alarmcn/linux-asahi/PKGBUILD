@@ -3,20 +3,20 @@
 
 buildarch=8
 
-_rcver=6.9.12
-#_rcrel=3
-_asahirel=1
+pkgver=6.9.12.asahi1
 pkgrel=4
 
-_m1n1_version=1.4.14
+[[ $pkgver =~ ([.0-9]+)\.asahi([0-9]+) ]]
+_rcver=${BASH_REMATCH[1]}
+_asahirel=${BASH_REMATCH[2]}
+
+_m1n1_version=1.4.17
 
 pkgbase=linux-asahi
-#_commit_id=asahi-${_nextver}-${_asahirel}
 _commit_id=asahi-${_rcver}${_rcrel+-rc}${_rcrel}-${_asahirel}
 _srcname=linux-${_commit_id}
 _kernelname=${pkgbase#linux}
 _desc="AArch64 Apple Silicon (M1 development kernel)"
-pkgver="${_rcver}${_rcrel:+rc}${_rcrel}.asahi${_asahirel}"
 arch=('aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -67,6 +67,7 @@ prepare() {
   make olddefconfig prepare O=$PWD/build/base
   diff -u ../config build/base/.config || :
   make -s kernelrelease O=$PWD/build/base > build/base/version
+  cp build/base/.config ../config
 
   echo "Prepared $pkgbase version $(<build/base/version)"
 }
@@ -212,5 +213,3 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-
-# vim:set ts=8 sts=2 sw=2 et:
