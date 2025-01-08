@@ -9,6 +9,7 @@ pkgdesc="Parser library built on top of libiff, for ILBM: IFF Interleaved BitMap
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/svanderburg/${_pkgname}"
 license=('MIT')
+depends=('libiff-git')
 makedepends=('help2man' 'git')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
