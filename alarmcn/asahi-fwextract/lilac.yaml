@@ -1,10 +1,9 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: run_cmd(['bash', './get_pkg.sh', 'asahi-fwextract'])
-post_build_script: |
-  git_add_files('.')
-  git_commit()
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build: git_pkgbuild_commit
 
 repo_depends:
   - asahi-scripts
@@ -12,8 +11,8 @@ repo_depends:
 
 update_on:
   - source: github
-    github: AsahiLinux/PKGBUILDs
-    path: asahi-fwextract
+    github: AsahiLinux/asahi-installer
+    use_max_tag: true
   - source: manual
-    manual: 3
+    manual: 1
   - alias: python
