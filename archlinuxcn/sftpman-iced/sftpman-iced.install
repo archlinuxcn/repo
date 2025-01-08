@@ -1,0 +1,12 @@
+# We only ever create this directory and never remove it,
+# because it's not just this package that potentially needs it.
+#
+# Both sftpman and sftpman-iced (as well as the old Python-based sftpman software) may be using it.
+_ensure_mount_path() {
+	mkdir -p -m 775 /mnt/sshfs
+	chown :users /mnt/sshfs
+}
+
+post_install() {
+	_ensure_mount_path
+}
