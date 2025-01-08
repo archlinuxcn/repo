@@ -15,7 +15,7 @@ repo_depends:
 update_on:
   - source: regex
     url: https://archlinuxarm.org/packages/armv7h/gcc
-    regex: 'gcc *([0-9.]+)'
+    regex: 'gcc *([^-]+)-'
   - source: alpm
     alpm: libisl
     provided: libisl.so
