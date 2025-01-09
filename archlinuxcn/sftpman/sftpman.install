@@ -1,33 +1,20 @@
-# We only ever create this directory and never remove it,
-# because it's not just this package that potentially needs it.
-#
-# Both sftpman and sftpman-iced (as well as the old Python-based sftpman software) may be using it.
-_ensure_mount_path() {
-	mkdir -p -m 775 /mnt/sshfs
-	chown :users /mnt/sshfs
-}
+RED='\033[31m'
+RESET='\033[0m'
 
 post_install() {
-	_ensure_mount_path
-
-	# Let's see if everything is OK now..
-	# This may not be very accurate, because it runs as root,
-	# but it may still catch some potential problems.
-	output=$(sftpman preflight_check 2>&1)
-	if [ ! "$?" = "0" ]; then
-		echo -e "sftpman preflight_check results:\n"
-		echo "$output"
-	fi
+    echo
+    echo -e "${RED}::${RESET} PLEASE MAKE SURE YOU KNOW WHAT YOU ARE ABOUT TO DO"
+    echo -e "${RED}::${RESET}"
+    echo -e "${RED}::${RESET} Please ensure that the /mnt/sshfs directory exists and is writable"
+    echo -e "${RED}::${RESET} e.g. \`mkdir -m 0775 -p -v /mnt/sshfs && chown -v :users /mnt/sshfs\` (use sudo if needed)"
+    echo -e "${RED}::${RESET} (You can also use :wheel instead of :users)"
+    echo -e "${RED}::${RESET} Finally, please run \`sftpman preflight_check\` (no sudo required)"
+    echo -e "${RED}::${RESET}"
+    echo -e "${RED}::${RESET} For more information, please visit:"
+    echo -e "${RED}::${RESET} https://github.com/spantaleev/sftpman-rs"
+    echo
 }
 
 post_upgrade() {
-	post_install $1
-
-    if [[ "$2" =~ ^1:0\. ]]; then
-		echo "======================"
-		echo "NOTE: since sftpman=1.0, config files are stored as .json files, not as .js!";
-		echo -e "\nYou must relocate your config files:";
-		echo -e "\t"'for f in $(ls ~/.config/sftpman/mounts/*.js); do n=$(echo $f | sed 's/.js$/.json/'); mv $f $n; done;';
-		echo "======================"
-    fi
+    post_install
 }

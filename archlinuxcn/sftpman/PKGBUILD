@@ -1,46 +1,57 @@
-# Maintainer: Slavi Pantaleev <slavi at devture.com>
+# Maintainer: Roald Clark <roaldclark at gmail.com>
+# Contributor: Slavi Pantaleev <slavi at devture.com>
 
+_name=sftpman-rs
 pkgname=sftpman
-epoch=1
-pkgver=2.0.2
-pkgrel=0
-pkgdesc='A CLI application for managing and mounting sshfs (SFTP) filesystems'
-url='https://github.com/spantaleev/sftpman-rs'
-license=("AGPL-3.0-or-later")
-makedepends=('git' 'cargo')
-depends=('sshfs')
+pkgver=2.0.1
+pkgrel=1
+pkgdesc="A CLI application for managing and mounting sshfs (SFTP) filesystems"
+arch=('x86_64' 'aarch64')
+url="https://github.com/spantaleev/${_name}"
+license=('AGPL-3.0-or-later')
+depends=(
+    'fuse3'
+    'gcc-libs'
+    'glibc'
+    'sshfs'
+)
+makedepends=(
+    'cargo'
+    'git'
+)
 optdepends=('sftpman-iced: GUI frontend for sftpman v2+')
 conflicts=('sftpman-python')
 replaces=('sftpman-python')
-arch=('any')
-install=$pkgname.install
-source=("git+https://github.com/spantaleev/sftpman-rs.git#tag=v$pkgver")
-b2sums=('SKIP')
+install="${pkgname}.install"
+source=("git+${url}.git#tag=v$pkgver"
+        "0001-Replace-fusermount-with-fusermount3.patch")
+b2sums=('be0e8b23eca1c99c6e34eaf132ceb79a19c7d5d97d05d20260002dafa8033bc293c9515162617f479e2b14dabaa90f57a15f10227f2e7fb5744d7b7629258dc7'
+        '37aae5ab7f64d0f997b5e441287062d6758e7f4e29a02691118724d7fcd90d8b22f405f17f57b8e54217c0a43106047d354928892f4c316d49a71b4517797a11')
 
 prepare() {
-	cd "$srcdir/sftpman-rs"
-	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+    cd "$srcdir/${_name}"
+    patch -Np1 -i ../0001-Replace-fusermount-with-fusermount3.patch
+
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
-	cd "$srcdir/sftpman-rs"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
-	cargo build --frozen --release
+    cd "$srcdir/${_name}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --release --frozen --all-features
 }
 
 check() {
-	cd "$srcdir/sftpman-rs"
-	export RUSTUP_TOOLCHAIN=stable
-	cargo test --frozen --all-features
+    cd "$srcdir/${_name}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test --frozen --all-features
 }
 
 package() {
-	cd "$srcdir/sftpman-rs"
-
-	install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$pkgname"
-
-	install -Dm 644 etc/bash_completion.d/sftpman "$pkgdir/usr/share/bash-completion/completions/sftpman"
-	install -Dm 644 etc/fish-completions/sftpman.fish "$pkgdir/usr/share/fish/completions/sftpman.fish"
+    cd "$srcdir/${_name}"
+    install -Dm0755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+    install -Dm0644 etc/bash_completion.d/sftpman -t "${pkgdir}/usr/share/bash-completion/completions/"
+    install -Dm0644 etc/fish-completions/sftpman.fish -t "${pkgdir}/usr/share/fish/completions/"
 }
