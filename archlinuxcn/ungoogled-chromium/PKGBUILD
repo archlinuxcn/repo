@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=131.0.6778.204
+pkgver=131.0.6778.264
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=131.0.6778.204-1
+_uc_ver=131.0.6778.264-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -50,8 +50,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         unbundle-add-enable_freetype.patch
         unbundle-icu-target.patch
         const-atomicstring-conversion.patch)
-sha256sums=('c03b6d9c10a2b2db4b1d2cef0657e85ad2e2d836f029655106cebd9a140692e6'
-            '2f8baf8c59d2b4fd4e9f27ef60def43478d9a7abc863b4ee85ac275c82247812'
+sha256sums=('7e02c65865a3095180d60838d2d7a912873d8d4f582c27c2afb9ef876152f2a5'
+            '3f801dc8357f5c2d5480b5f6957999fa364173e7fb02e5fea960c5cfce70fff8'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'b3de01b7df227478687d7517f61a777450dca765756002c80c4915f271e2d961'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
