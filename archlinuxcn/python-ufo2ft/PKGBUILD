@@ -14,10 +14,15 @@ depends=(
     'python'
     'python-booleanoperations'
     'python-cffsubr'
+    'python-compreffor'
     'python-defcon'
+    'python-fontmath'
     'python-fonttools'
     'python-fs' # for fonttools[ufo]
     'python-lxml' # for fonttools[lxml]
+    'python-skia-pathops'
+    'python-typing_extensions'
+    'python-ufolib2'
 )
 makedepends=(
     'git'
@@ -29,25 +34,10 @@ makedepends=(
     'python-wheel'
 )
 checkdepends=(
-    'python-compreffor'
-    'python-fontmath'
     'python-pytest'
-    'python-skia-pathops'
-    'python-ufolib2'
 )
-optdepends=(
-    'python-compreffor'
-    'python-skia-pathops'
-)
-source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}"
-        "python-ufo2ft-331-fix-tests.patch")
-sha256sums=('72141c7755ae050b354a38b415d0cf3ebfb3828f3f963469549ec2ce3bffc028'
-            '5665c499d39be6c19298d6bcd6d093367e185a1d27f5b4b76117432778672709')
-
-prepare() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    patch -Np1 -i ../python-ufo2ft-331-fix-tests.patch
-}
+source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}")
+sha256sums=('72141c7755ae050b354a38b415d0cf3ebfb3828f3f963469549ec2ce3bffc028')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
