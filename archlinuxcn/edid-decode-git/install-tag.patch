@@ -1,12 +1,8 @@
-diff --git a/utils/edid-decode/meson.build b/utils/edid-decode/meson.build
-index c2ddd958..0693b860 100644
 --- a/utils/edid-decode/meson.build
 +++ b/utils/edid-decode/meson.build
-@@ -23,6 +23,7 @@ edid_decode = executable(
+@@ -23,4 +23,5 @@ edid_decode = executable(
  	edid_decode_sources,
  	cpp_args: edid_decode_args,
  	install: true,
 + 	install_tag: 'edid-decode',
  )
- 
- man_pages += [[ meson.current_source_dir(), 'edid-decode', 1 ]]
