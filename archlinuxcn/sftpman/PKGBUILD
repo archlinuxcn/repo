@@ -1,0 +1,60 @@
+# Maintainer: Roald Clark <roaldclark at gmail.com>
+# Contributor: Slavi Pantaleev <slavi at devture.com>
+
+_name=sftpman-rs
+pkgname=sftpman
+pkgver=2.0.1
+pkgrel=1
+pkgdesc="A CLI application for managing and mounting sshfs (SFTP) filesystems"
+arch=('x86_64' 'aarch64')
+url="https://github.com/spantaleev/${_name}"
+license=('AGPL-3.0-or-later')
+depends=(
+    'fuse3'
+    'gcc-libs'
+    'glibc'
+    'sshfs'
+)
+makedepends=(
+    'cargo'
+    'git'
+)
+optdepends=('sftpman-iced: GUI frontend for sftpman v2+')
+conflicts=('sftpman-python')
+replaces=('sftpman-python')
+install="${pkgname}.install"
+source=("git+${url}.git#tag=v$pkgver"
+        "0001-Replace-fusermount-with-fusermount3.patch"
+        "0002-Add-mount-options-to-sshfs-command.patch")
+b2sums=('943879aeb18d85d3d662a6cd586b6074e175a4cfa9fdf35ea5bd0d1f710e781f56fd6083db405273b0e76835f4c5ed2f91128413616e9c22a4940e8e26f5f3fb'
+        'fb2bf5d4decb785ab134b14bc8e1a6d8c94528fc05efe2a53ad00d3d9d986810a9b5c25ea939355b935810fba0a451dabf03f1f5d96a952c799e2475cde847a0'
+        '7a9d58da6791b8e87c8b3351f3cd1958c8b8e7c533212fa29c02d4d7049bdc829ff330c051a5772e22180f50076b19d9bec0d09e705569a13a101db916b19ca5')
+
+prepare() {
+    cd "$srcdir/${_name}"
+    patch -Np1 -i ../0001-Replace-fusermount-with-fusermount3.patch
+    patch -Np1 -i ../0002-Add-mount-options-to-sshfs-command.patch
+
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+    cd "$srcdir/${_name}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --release --frozen --all-features
+}
+
+check() {
+    cd "$srcdir/${_name}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test --frozen --all-features
+}
+
+package() {
+    cd "$srcdir/${_name}"
+    install -Dm0755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+    install -Dm0644 etc/bash_completion.d/sftpman -t "${pkgdir}/usr/share/bash-completion/completions/"
+    install -Dm0644 etc/fish-completions/sftpman.fish -t "${pkgdir}/usr/share/fish/completions/"
+}

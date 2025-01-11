@@ -1,0 +1,29 @@
+From 8a5298f3605a531d92cda70dfd875eb752fde816 Mon Sep 17 00:00:00 2001
+From: Roald Clark <roaldclark@gmail.com>
+Date: Sat, 11 Jan 2025 04:44:59 +0800
+Subject: [PATCH 2/2] Add mount options to sshfs command
+
+Signed-off-by: Roald Clark <roaldclark@gmail.com>
+---
+ src/model/filesystem_mount_definition.rs | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/model/filesystem_mount_definition.rs b/src/model/filesystem_mount_definition.rs
+index 580a5c9..998dd8d 100644
+--- a/src/model/filesystem_mount_definition.rs
++++ b/src/model/filesystem_mount_definition.rs
+@@ -204,6 +204,11 @@ impl FilesystemMountDefinition {
+ 
+         let mut cmd_sshfs = Command::new("sshfs");
+         cmd_sshfs
++            // Add each mount option to the sshfs command,
++            // prefixing it with the "-o" flag.
++            // If `mount_options` is empty, no options are added.
++            .args(self.mount_options.iter().flat_map(|opt| ["-o", opt]))
++            // Add the ssh command with specific formatting to the sshfs options.
+             .arg("-o")
+             .arg(format!("ssh_command={0}", command_to_string(&cmd_ssh)))
+             .arg(format!(
+-- 
+2.47.1
+
