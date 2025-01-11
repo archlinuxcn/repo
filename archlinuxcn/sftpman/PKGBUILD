@@ -3,7 +3,7 @@
 
 _name=sftpman-rs
 pkgname=sftpman
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="A CLI application for managing and mounting sshfs (SFTP) filesystems"
 arch=('x86_64' 'aarch64')
@@ -26,7 +26,7 @@ install="${pkgname}.install"
 source=("git+${url}.git#tag=v$pkgver"
         "0001-Replace-fusermount-with-fusermount3.patch"
         "0002-Add-mount-options-to-sshfs-command.patch")
-b2sums=('943879aeb18d85d3d662a6cd586b6074e175a4cfa9fdf35ea5bd0d1f710e781f56fd6083db405273b0e76835f4c5ed2f91128413616e9c22a4940e8e26f5f3fb'
+b2sums=('be0e8b23eca1c99c6e34eaf132ceb79a19c7d5d97d05d20260002dafa8033bc293c9515162617f479e2b14dabaa90f57a15f10227f2e7fb5744d7b7629258dc7'
         'fb2bf5d4decb785ab134b14bc8e1a6d8c94528fc05efe2a53ad00d3d9d986810a9b5c25ea939355b935810fba0a451dabf03f1f5d96a952c799e2475cde847a0'
         '7a9d58da6791b8e87c8b3351f3cd1958c8b8e7c533212fa29c02d4d7049bdc829ff330c051a5772e22180f50076b19d9bec0d09e705569a13a101db916b19ca5')
 
