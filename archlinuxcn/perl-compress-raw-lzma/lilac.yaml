@@ -2,12 +2,9 @@ maintainers:
   - github: Xeonacid
     email: xeonacid@archlinuxcn.org
 
-build_prefix: archlinuxcn-x86_64
-
-pre_build_script: aur_pre_build(maintainers=['jkhsjdhjs'])
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: perl-compress-raw-lzma
+  - source: cpan
+    cpan: Compress-Raw-Lzma
   - alias: perl
