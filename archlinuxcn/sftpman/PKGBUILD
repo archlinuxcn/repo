@@ -24,16 +24,13 @@ conflicts=('sftpman-python')
 replaces=('sftpman-python')
 install="${pkgname}.install"
 source=("git+${url}.git#tag=v$pkgver"
-        "0001-Replace-fusermount-with-fusermount3.patch"
-        "0002-Add-mount-options-to-sshfs-command.patch")
+        "0001-Replace-fusermount-with-fusermount3.patch")
 b2sums=('be0e8b23eca1c99c6e34eaf132ceb79a19c7d5d97d05d20260002dafa8033bc293c9515162617f479e2b14dabaa90f57a15f10227f2e7fb5744d7b7629258dc7'
-        'fb2bf5d4decb785ab134b14bc8e1a6d8c94528fc05efe2a53ad00d3d9d986810a9b5c25ea939355b935810fba0a451dabf03f1f5d96a952c799e2475cde847a0'
-        '7a9d58da6791b8e87c8b3351f3cd1958c8b8e7c533212fa29c02d4d7049bdc829ff330c051a5772e22180f50076b19d9bec0d09e705569a13a101db916b19ca5')
+        'fb2bf5d4decb785ab134b14bc8e1a6d8c94528fc05efe2a53ad00d3d9d986810a9b5c25ea939355b935810fba0a451dabf03f1f5d96a952c799e2475cde847a0')
 
 prepare() {
     cd "$srcdir/${_name}"
     patch -Np1 -i ../0001-Replace-fusermount-with-fusermount3.patch
-    patch -Np1 -i ../0002-Add-mount-options-to-sshfs-command.patch
 
     export RUSTUP_TOOLCHAIN=stable
     cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
