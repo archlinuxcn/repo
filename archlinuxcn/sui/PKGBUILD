@@ -7,8 +7,8 @@ pkgdesc='Sui, a next-generation smart contract platform with high throughput, lo
 url='https://sui.io'
 arch=(x86_64)
 license=(Apache-2.0)
-depends=(rust openssl libldap krb5 e2fsprogs keyutils libsasl postgresql-libs)
-makedepends=(git curl cargo cmake clang)
+depends=(glibc gcc-libs)
+makedepends=(git cargo clang)
 source=(git+https://github.com/MystenLabs/$pkgname#tag=mainnet-v$pkgver)
 sha512sums=('cf7af8525e80f433dd5c073b6ee4b10ea4097acddf2365ba50647a5f29567fae9f4ce60a628c283e2dd558159a05db83c425b6f4a63dc44eec293bfd2a6885f5')
 # https://github.com/briansmith/ring/issues/1444
