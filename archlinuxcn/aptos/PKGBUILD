@@ -1,0 +1,39 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+pkgname=aptos
+pkgver=5.1.0
+pkgrel=1
+pkgdesc='Aptos is a layer 1 blockchain built to support the widespread use of blockchain through better technology and user experience.'
+url='https://aptos.dev'
+arch=(x86_64)
+license=(Apache-2.0)
+depends=(gcc-libs glibc libelf libssl.so libcrypto.so systemd-libs)
+makedepends=(git cargo clang)
+source=(git+https://github.com/aptos-labs/aptos-core#tag=aptos-cli-v$pkgver)
+sha512sums=('4853ac004dea382bdd65a123e8f5f6fed061ba0a7adf08cc830e05344f6c9f6ecf7162ac82f67ebc78ea94bad43dafd9ba76ad9529159ae942a3619e75d0a1e1')
+# undefined reference to `git_repository_open'
+options=(!lto)
+
+prepare() {
+  cd aptos-core
+  export RUSTUP_TOOLCHAIN=stable
+
+  # Fix `time` compile error
+  cargo update -p time
+
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd aptos-core
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  # https://github.com/aptos-labs/aptos-core/issues/10293
+  export RUSTFLAGS="--cfg tokio_unstable"
+  cargo build --frozen --release -p aptos
+}
+
+package() {
+  cd aptos-core
+  install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$pkgname"
+}

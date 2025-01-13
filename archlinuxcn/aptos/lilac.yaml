@@ -1,0 +1,13 @@
+maintainers:
+  - github: Xeonacid
+    email: xeonacid@archlinuxcn.org
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: aptos-labs/aptos-core
+    include_regex: 'aptos-cli-v(\d+.\d+.\d+)'
+    prefix: 'aptos-cli-v'
