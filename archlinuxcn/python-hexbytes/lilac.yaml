@@ -1,0 +1,11 @@
+maintainers:
+  - github: Xeonacid
+    email: xeonacid@archlinuxcn.org
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: ethereum/hexbytes
+    prefix: v
+  - alias: python
