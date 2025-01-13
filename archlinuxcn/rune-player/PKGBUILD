@@ -2,8 +2,8 @@
 
 _name=rune
 pkgname=rune-player
-pkgver=1.0.0
-pkgrel=2
+pkgver=1.1.0
+pkgrel=1
 pkgdesc="The player that blends classic design with modern technology"
 arch=('x86_64')
 url="https://github.com/Losses/${_name}"
@@ -50,7 +50,7 @@ source=(
     "${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
     "${_name}.desktop"
 )
-sha256sums=('6664ba3e0b15f0e69eaa2741a8870154c630511769d5217d6d71e146db288ff5'
+sha256sums=('c6c6a288b70338b4ba2c11ad6cf7c84ec42d97ecb8b63796111de3fa2b20f88c'
             '8c680492966831e2da2968007f2d5d3dbfbf72fdab670592689ac42f37af2121')
 
 prepare() {
