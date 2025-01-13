@@ -1,0 +1,37 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=coincurve
+pkgname=python-${_name}
+pkgver=20.0.0
+pkgrel=1
+pkgdesc="Cross-platform Python bindings for libsecp256k1"
+arch=(x86_64)
+url="https://github.com/ofek/${_name}"
+license=(Apache-2.0 MIT)
+depends=(glibc python python-asn1crypto python-cffi)
+makedepends=(python-build python-installer python-setuptools python-wheel python-hatchling python-scikit-build-core)
+checkdepends=(python-pytest python-pytest-benchmark)
+source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+sha512sums=('f956502eb5614be62579b1eeec356e286bdd74c93699f8d21698f5f510d00dbde89258baab92e9bb917c9c2f51898fc0d0dc66a2e98dc54b6996e0262b055d3b')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+check(){
+  cd $_name-$pkgver
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  test-env/bin/python -m pytest -vv tests/
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm 644 LICENSE-MIT -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm 644 LICENSE-APACHE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -dm 755 "$pkgdir/usr/share/doc/$pkgname"
+  cp -r docs "$pkgdir/usr/share/doc/$pkgname"
+  install -Dm 644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}
