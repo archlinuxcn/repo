@@ -1,0 +1,8 @@
+post_install() {
+    echo "Add yourself to the solana group to be able to install"
+    echo "dependencies when using cargo-build-bpf"
+}
+
+post_remove() {
+    rm -rf /usr/lib/solana
+}
