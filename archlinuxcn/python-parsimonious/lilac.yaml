@@ -1,0 +1,11 @@
+maintainers:
+  - github: Xeonacid
+    email: xeonacid@archlinuxcn.org
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: erikrose/parsimonious
+    use_max_tag: true
+  - alias: python
