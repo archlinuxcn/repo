@@ -1,0 +1,12 @@
+maintainers:
+  - github: Xeonacid
+    email: xeonacid@archlinuxcn.org
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: pypi
+    pypi: pyunormalize
+  - alias: python
