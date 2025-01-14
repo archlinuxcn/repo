@@ -1,0 +1,27 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=py-evm
+pkgname=python-${_name}
+pkgver=0.10.1b2
+pkgrel=1
+pkgdesc="A Python implementation of the Ethereum Virtual Machine"
+arch=(any)
+url="https://github.com/ethereum/${_name}"
+license=(MIT)
+depends=(python python-cached-property python-eth-bloom python-eth-hash python-eth-keys python-eth-typing python-eth-utils python-lru-dict python-py_ecc python-rlp python-trie python-ckzg python-toolz python-pycryptodome)
+makedepends=(git python-build python-installer python-setuptools python-wheel)
+# hyphen in git tag, hard to automated upgrade
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/${_name//-/_}/${_name//-/_}-$pkgver.tar.gz)
+sha512sums=('5d4d74c2639c99e915d452535418d13b34b4b3be15a52e2906d2fce653a6d40266f89cad22cf84be3b381ac7a22161e2b0ddcb9ce240f84529841d33a6495d4c')
+
+build() {
+  cd ${_name//-/_}-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd ${_name//-/_}-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}
