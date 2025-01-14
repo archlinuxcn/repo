@@ -1,0 +1,13 @@
+maintainers:
+  - github: Xeonacid
+    email: xeonacid@archlinuxcn.org
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: coral-xyz/anchor
+    use_max_tag: true
+    prefix: v
