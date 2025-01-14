@@ -7,6 +7,7 @@ post_build: git_pkgbuild_commit
 update_on:
   - source: github
     github: ofek/coincurve
+    use_max_tag: true
     include_regex: 'v(\d+.\d+.\d+)'
     prefix: v
   - alias: python

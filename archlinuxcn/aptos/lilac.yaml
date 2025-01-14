@@ -9,5 +9,6 @@ post_build_script: |
 update_on:
   - source: github
     github: aptos-labs/aptos-core
+    use_max_tag: true
     include_regex: 'aptos-cli-v(\d+.\d+.\d+)'
     prefix: 'aptos-cli-v'
