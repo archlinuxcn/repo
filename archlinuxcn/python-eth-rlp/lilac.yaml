@@ -7,6 +7,8 @@ repo_depends:
   - python-hexbytes
   - python-rlp
 
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
 post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()
