@@ -2,8 +2,8 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=(llvm-julia-git llvm-libs-julia-git)
-pkgver=18.1.8
-pkgrel=2
+pkgver=19.1.6
+pkgrel=1
 _archcn_rel=0
 _archcn_commit=
 _versioned_llvm=
@@ -23,7 +23,7 @@ else
   source=(https://github.com/yuyichao/llvm-project/archive/refs/tags/archcn-$pkgver-$_archcn_rel.tar.gz)
   repodir=llvm-project-archcn-$pkgver-$_archcn_rel
 fi
-sha256sums=('44d91290a3e3ab15b6d6830443326b4f810ecc6562a9f69dc8e0d75baad010fb')
+sha256sums=('30ad0710b5c4b7b80af529b9fa3fe7a25cbe537e6b7eedebceec65eab0f49944')
 
 if [[ -z $_versioned_llvm ]]; then
   _llvm_prefix=/usr
