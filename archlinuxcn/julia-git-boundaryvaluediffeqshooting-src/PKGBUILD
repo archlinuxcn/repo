@@ -1,7 +1,7 @@
 pkgname=julia-git-boundaryvaluediffeqshooting-src
-pkgver=1.2.0
-_commit=8c7afbde0bc0a46d6325adfd6feceb260cd886bb
-pkgrel=2
+pkgver=1.3.0
+_commit=470f2b31876efc435675ed99ea8ee69b2ea40c0c
+pkgrel=1
 pkgdesc="BoundaryValueDiffEqShooting.jl"
 url="https://github.com/SciML/BoundaryValueDiffEq.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/BoundaryValueDiffEq.jl.git#commit=$_commit")
-sha256sums=('203ed3fd557a35ab2b8f562d37af06fbe1bf1b873b19a973f271c37b436cdda4')
+sha256sums=('dccbc81b1b2e7f708034e95de3624d63b5cf0e78618ef65de5944cb187b75dd8')
 
 package() {
   cd BoundaryValueDiffEq.jl/lib/BoundaryValueDiffEqShooting
