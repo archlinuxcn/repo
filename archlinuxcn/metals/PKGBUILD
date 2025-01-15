@@ -1,11 +1,6 @@
-# This is an example PKGBUILD file. Use this as a start to creating your own,
-# and remove these comments. For more information, see 'man PKGBUILD'.
-# NOTE: Please fill out the license field for your package! If it is unknown,
-# then please put 'unknown'.
-
 # Maintainer: David Strawn <isomarcte a__t gmail d__o__t c__o__m>
 pkgname='metals'
-pkgver='1.4.1'
+pkgver='1.4.2'
 pkgrel=1
 epoch=
 pkgdesc='Language Server For Scala'
@@ -26,53 +21,53 @@ install=
 changelog=
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/scalameta/$pkgname/archive/v$pkgver.tar.gz" 'metals-client.sh' 'metals-emacs.sh' 'metals-vim.sh' 'metals-vscode.sh' 'metals-sublime.sh' 'version-fix.patch' 'JREMajorVersion.java')
 noextract=()
-md5sums=('7928cc95e4b65a388dff99ee7336d84c'
+md5sums=('755c0146ccfd37e6ff50966bb30ea629'
          'af44c1849b0dcfed177bd6fae1d30413'
          'ad97e9262c7b22dd71b017a6402f612a'
          '000bd73ebc3ea46b23e2c418ef97f4c7'
          '83b5669127510100d6e7ab4094877a6e'
          '38c34ab96f6cf637f7be9f72b7400983'
-         '2bd41cf49dba61dead449e79eb532fb7'
+         'aa3a34d1929163dfcff64e80dfdd1885'
          '8ddf6b592e6167de2df073016a9b042d')
-sha1sums=('c460d355585980db4a464d3f3e4110973366de5e'
+sha1sums=('c02aab35916d7779c14212790c0a2f07a60ca12c'
           '8989fcd5e0d6f25976fc2646d7542d0ed2f04f28'
           'b498568936dcfd03a06d7b41f76bbb7fffbc3bdf'
           '3882901e88f4a85f85d67dcda53f83c89d4563c6'
           'f2d0e8aa2744697d4dad0a7c10f835fe5814524b'
           'b2577ac4ee93e3a611558294378c185227ed8321'
-          '13ef372f9410f5cbec68755c4beead04d0b29922'
+          '4205cdd007200c5c9d150b8338dba9235a0a99be'
           '1f659a83c4403c038bb33026fc69a73c4ac4d76d')
-sha224sums=('cee21932acf34e6e0d44d9d566b262f4c7a03ffe6c904e3a439c6e4b'
+sha224sums=('58efe9519f9dc17253b75bb8d3d75f6ee7a1b6889c7093473e215fad'
             '77db230a65c8b75858ce6f4f52a3ae709072004ae5a0fc3d1072e415'
             '43d2f6b0b4b7ef539f5109b1127dcd88828f2f8ae0b9c052899af1c9'
             'a99d9457fd6cf582b349e56e5e8e9cece30e33ff6866c5969f090f5e'
             '6ffcb9ee870dd260f90e333082e90b9b30212f1f21dd3d3a0048a67e'
             'fff5cbeed72e44f9159872f59a0ca0a19fc81a8ed943500373e9108e'
-            'a97fe1b273d84f12eaa3edeeb00c5e1d320bd99a5eb71ab56ddc6361'
+            '8f54517a3c53fd251ca94b6871423ff0c47f4738914503bfe873eade'
             'd48db6d9e58e19bbd7715aef204c04d01953479e9d5ca7aba94b8f36')
-sha256sums=('6c2e091409af7ed2e987378a60ffdb9f8f9f268febb1f3b33f44e78b94e9d4a4'
+sha256sums=('76b3ac45b203cdb9da254f53f0c3b53d6dfc1d7cce991d1d9280618fe2cea1b7'
             '3d533b5191154ed9d8dbcc27a286f8da6a0e6031bca0e6d6fc0987f9fe6484c0'
             'b3579e68cee7f23f6f6a12fe0bc6396f1722434d23ce3c58e7c9fac2233cd1d3'
             'e9bbc61ec99dc0893560a12a8a0f56c9f27016895e177a164019ab9174fe94e2'
             'c2213c8d4a1a0fe5bb12d5bcde53ab04d9b0aa08ddcabd60de938a8d480e49d5'
             'fb42157046a11089fa69e0120ae83ff3bc354709e2add4644fe3fc60aa80c984'
-            '82123d366b58d9671df1e942839e41aad4739904dd76c28e9494ed4f96523ca2'
+            'b828f15a38ba489373d47954cedadf5b4926c90b3d158fe84c85e5cc5bd4b49e'
             '9b5fcbcd9628d2c003d48d8e5dbbc3cb1de8dd4fa4c272cafed4f1d027e67bdb')
-sha384sums=('ad54e3df47372b9887283caf5aaf0ac222934a943b5da066e307e49925fa84dac3151bbafc1a517d25a6085cfa0e2d45'
+sha384sums=('09f062d39e4362be5bebd34e761c83883dbc611db768936f8291b089f66869ec8537886841b0a47e056dec9bc429c8df'
             'd2bdfdbba7f0aa0e6589b43aaffd0c7b1fc5c7231767e30c4680fa9a2e5166ed94e4bdfe6e4465613f739854660ebecb'
             '762dd7c73e994b74ebeb5c975ca0b53ddf4cbf181664d465bd9c543798333dcc4939c360a4b5b8b1b162810ea363d288'
             '6bee0d21d0fcf3d8f5ee14545be63fb2bbababb0665020540daafc708939bbc539ab940cfe122b2281156bc78d401768'
             '26859b59a04e38a5e7d02e188643765d06b893385232895f5b1435fb3d4fa4d676e8d43bbc80360f9ee7a2ee01e64d2c'
             '8b9204ce4a60890eb94f0fe673504a9a10c583b9814e844da14b8d1313db7f8cf7d5f9a7b8db0bbd25fb2f9263e434b7'
-            '66e6d1249abd6867e22a11415f78f5db39c014022974e3fdcf60001ec12896458d0601f553e5a28692390cafba16c431'
+            'a82d32d27ea72b27ea0ab3cbb841556f02a27fb0bb397287e580352d910e37eef45c9fba9a5ccfc7274bc41d2dfd3e7f'
             '021c3837df318b14a5b4547717b4b19436a07edf61d735ce05d2fe57f23ca2d1c9787c8b86a08f43547b6d92f935476c')
-sha512sums=('9af15b30e7464d127ad01690b32c0557dada33ae3336c2e78d096ac3c04f772dcedb6a81f805e39b218182b3e766c4c373645d3e7aee40ebd6e9812aa7bc78aa'
+sha512sums=('1bcb74332bffa4d04eb63208893478f7254e8e52e2d65af8f38db3fdfec8ae76590d042ce666d3fd2d80253d5244e88b4a241a96b2b2b113f3427e60a7cadaf1'
             'd0539dfd53e95bea29cb92d634dd2df259d9db8ad568c6ec368ddaeaf53e1f6b946218820bd2aa0e4726a21225e863dc55b2ddd8a0ee12fc1426fdd34feb856a'
             'bd26818e43627c4e20aa931663b4623e45ade0930a29952d6508fa6e1302f5140afed7f57a796c12da3e9ae256ff7c0b3eb2e5075b00ceda9d2e4ddc22e89205'
             '16d01a820f1ed93ae46194d3d77187adf6fd4e9764fcf99554430e3e2f2af4cc2b6f7918f595febd3c5e6a380bbfb930bb47a3dd2ba93c60b2ca1f874f264fee'
             '722770a6c30ccf75c73ae9be19655cdff00561c62bf15b619dfa618cdd636e97aaf5a6aca1297add4e6a54274cd49e81781d98a59986526d0077a6c64855562d'
             '9f32d0ead26fad866f52209c0f6dabdaa3481bafd6121134b2fde6e95a80b5d2757c17ca6f1804b6e060b839efa9a9f7d342d48ad8d22b767e13c585e209045b'
-            '79715ee1ac184923d04369747cac4b7008f9862d1b0f379b8e0eef27d907a1b3c594f76732644f368ec7d0877d941739f80aeb83578a5cb0598d0c286ba8c585'
+            '7eb6c330c55b63082ef939e7a2f8a96bfb90e01aba52a7809f9675b4494a4c250fc7f939e3918a5b6ecb04b0d44863b8c73d4d1b77ae27bca1991baff0aa5ef2'
             '7e9f198f0141cf750cb67ac0b350fb0fa2c204f5a8a271e475b2699ecf0f46cf20219cea3fd12bb5edeb8fb08159069d03afc1dd6626703e8eeddee9b365d191')
 validpgpkeys=()
 install=metals.install
