@@ -1,7 +1,7 @@
 pkgname=julia-git-atomix-src
-pkgver=0.1.0
-_commit=3cef91e976203437f70f5d551c83e9a0a716e62d
-pkgrel=2
+pkgver=1.0.1
+_commit=37c8b0da893e9d51e2872f9a9419d8124c28a438
+pkgrel=1
 pkgdesc="Atomix.jl"
 url="https://github.com/JuliaConcurrent/Atomix.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaConcurrent/Atomix.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('9451ad8ba93b64d28d35b07bae0b42e39a80ff52a2d40494bbc303fd2768119b')
 
 package() {
   cd Atomix.jl
