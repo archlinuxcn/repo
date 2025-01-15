@@ -8,6 +8,8 @@ repo_depends:
   - llvm-julia-git
   - llvm-julia-git: llvm-libs-julia-git
 
+update_on_build:
+  - pkgbase: llvm-julia-git
 update_on:
   - source: github
     github: EnzymeAD/Enzyme
