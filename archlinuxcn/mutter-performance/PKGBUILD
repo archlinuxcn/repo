@@ -20,7 +20,7 @@ _merge_requests_to_use=('1441' '3751')
 _pkgname=mutter
 pkgname=mutter-performance
 epoch=1
-pkgver=47.3
+pkgver=47.4
 pkgrel=1
 pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
 url="https://gitlab.gnome.org/GNOME/mutter"
@@ -97,18 +97,18 @@ makedepends=(
   xorg-server
   xorg-server-xvfb
 )
-_commit=a5e1f011268ca128d1d3d1f3d4b15b760459ad4a  # tags/47.3^0
+_commit=96e62be1022a45b7012d5a97b667b28dad13f74b  # tags/47.4^0
 source=("git+$url.git#commit=$_commit"
         "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
         'mr1441.patch'
         'mr3751.patch')
-sha256sums=('a27bfdfc513bf1fa0b5feb7616b8898fc478d4149137e488c42121d176e4d0a4'
+sha256sums=('f589bdd2b7c4f7eb80d723b0f1e05080ec9c0e17e384918d582a0218588152aa'
             'ba56c003c1c16f1f8e411f6d5213878bcf059d4d39ece100fc414228a1bf22d5'
-            'a32ff6ea20af04e62e40232644518e64d4d20c1c68bbcdfb16e6062540f80e6b'
+            '004a890489aa05df6bd4193b4b22415fa58d117ebeee671d57a1183c392a7dd8'
             '67943a22cb75df955fc475e5ae101984d87e4a1f51d56be5f50696cc3355a3c4')
-b2sums=('65ad1b7cbb3261bbb044d31666cafa075599fadf8afd6f772a65faed73fd0b4c1d3d95e44e63efce62255b89bdf69542f15d2ea06cf3908d1b824467f6458abb'
+b2sums=('24b61029ec913919a9a9d9a929048207e34defa433b1088aa7737efbc267dbd954197500828101e84dc5681ad95f8201f2605675d6aaf6e7e3454f1f24fa78f6'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
-        '031f3b4eedab7da3f92958dffd52725d083b90b93ab18b5c542534319b20f422abac5bdc8e1c444262f4a7b6041a8e5502e2c54f296b1529d51999f36b55da15'
+        '5a1c560bf4c671cdc17cee5e37f55337b19254598dca5fb95bc30809fef2504e40cb3350e5ad226bea5feb46b3fbc6683e9e6f212826a5ba549ba1237a34b40b'
         'e13742a68cd831827e88ddf1801caca39fa9c77dd8c08a851bc87914f2961119fc1a7643628fc63cad8dedf03533148539a242cca23313c250bd65867ea84d8d')
 
 pkgver() {
