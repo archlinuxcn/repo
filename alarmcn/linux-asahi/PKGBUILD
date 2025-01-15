@@ -3,7 +3,7 @@
 
 buildarch=8
 
-pkgver=6.12.8.asahi2
+pkgver=6.12.9.asahi1
 pkgrel=1
 
 [[ $pkgver =~ ([.0-9]+)\.asahi([0-9]+) ]]
@@ -29,9 +29,9 @@ source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
 )
-sha256sums=('026e5352d2071569b02601c47c6baa6584ab86095d9da2ecd6c4f1db7187ae44'
+sha256sums=('74fe5346c0fa29db2661f66272dd048b2026a758ad3476b971d7f6a5cb0f4664'
             'c919489632ec77a59fbb6bb210940fceb2cac30e3ab80566915a581d2f8159fb')
-b2sums=('6b207de7e497244ca7ac02e8ddf4bc959c49d6296ba7827bd0778672706b4144c0d1bfbddf19f71034a6ad57880aeb738d7255c8316f64c472c2dd204c6f320c'
+b2sums=('bb1c5d31e68df397525e052b59bd855b7b0f510f139d4b852dbe39cf904257fc5812d9c5e1ebc0e66de5affda253bb93fefcbff302d39129a8dd9a4d8cdc28e1'
         '2fcdbba91b905a19d1a27fd268b7f04e1ee7f8f41e9a9a0975611f00a2820120c90b02235d49255362512f4ffe7aa9f28e24856cc575ffe6a7fa54f397f90f1c')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
