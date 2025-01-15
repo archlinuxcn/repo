@@ -1,6 +1,6 @@
 pkgname=julia-git-extents-src
-pkgver=0.1.4
-_commit=6b645396fc6dd238df75aa8f4993e0e024787798
+pkgver=0.1.5
+_commit=ced3c5fa4c1761e6138e661a74acc6c8a72c5f9f
 pkgrel=1
 pkgdesc="Extents.jl"
 url="https://github.com/rafaqz/Extents.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/rafaqz/Extents.jl.git#commit=$_commit")
-sha256sums=('428c4edba0c22cdd38de3c572df595559226c86393ac2d11909da3604eb5742b')
+sha256sums=('4b14acf0611853bf79327d6ea95ec8c38b35c25fdfdf3d9f8498855b045a5a59')
 
 package() {
   cd Extents.jl
