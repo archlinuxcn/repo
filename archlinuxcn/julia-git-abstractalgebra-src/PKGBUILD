@@ -1,6 +1,6 @@
 pkgname=julia-git-abstractalgebra-src
-pkgver=0.43.12
-_commit=7a473f41402e849b7445ca26aec02514a65f21f3
+pkgver=0.44.2
+_commit=e5916d30ae69aa880607319144a1aec162659f9f
 pkgrel=1
 pkgdesc="AbstractAlgebra.jl"
 url="https://github.com/Nemocas/AbstractAlgebra.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Nemocas/AbstractAlgebra.jl.git#commit=$_commit")
-sha256sums=('dde9bbd7ca956afad734f548a54660038d9070f26084bba8fe213357d6d6f2d8')
+sha256sums=('29b5006f30ae840f654d2a47cfb84da339755cb9cc4458749106cbf184163d1e')
 
 package() {
   cd AbstractAlgebra.jl
