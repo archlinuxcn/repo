@@ -1,0 +1,12 @@
+maintainers:
+  - github: Xeonacid
+    email: xeonacid@archlinuxcn.org
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: tkem/uritools
+    use_max_tag: true
+    prefix: v
+  - alias: python
