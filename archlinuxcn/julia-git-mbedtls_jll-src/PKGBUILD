@@ -11,7 +11,7 @@ depends=(julia-git mbedtls2)
 source=("git+https://github.com/JuliaBinaryWrappers/MbedTLS_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('afc9a0fc4f3a2ac37f6f94b4d8019ac0fbb7cf7c7c173192aff4669e20c1ac21'
-            '5f828a94cd064ab57c0c1413141347da760a3446129d9734a7b139957e8bae16')
+            '83fbc265915b8984ade50e3beb964e9f52d617cd98a0df33ae9c93308982e021')
 
 build() {
   cd MbedTLS_jll.jl
