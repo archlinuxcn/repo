@@ -33,6 +33,7 @@ repo_depends:
   - spral
   - libisoband
 
+  - julia-git-clang_jll-src
   - julia-git-enzyme_jll-src
   - julia-git-intelopenmp_jll-src
   - julia-git-llvmextra_jll-src
@@ -43,6 +44,7 @@ repo_depends:
 
 update_on_build:
   - pkgbase: julia-git
+  - pkgbase: julia-git-clang_jll-src
   - pkgbase: julia-git-enzyme_jll-src
   - pkgbase: julia-git-intelopenmp_jll-src
   - pkgbase: julia-git-llvmextra_jll-src
@@ -229,8 +231,6 @@ update_on:
     alpm: julia-git-circulararrays-src
   - alias: alpm-lilac
     alpm: julia-git-clang-src
-  - alias: alpm-lilac
-    alpm: julia-git-clang_jll-src
   - alias: alpm-lilac
     alpm: julia-git-codecbase-src
   - alias: alpm-lilac
