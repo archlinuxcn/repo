@@ -15,7 +15,7 @@ pkgver=9.0.1.sdk102
 _runtimever=9.0.1
 _sdkver=9.0.102
 _short_ver=9.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://www.microsoft.com/net/core'
 license=('MIT')
@@ -88,7 +88,6 @@ package_dotnet-sdk-bin() {
     'aspnet-runtime-bin'
     'aspnet-targeting-pack-bin'
   )
-  optdepends=('aspnet-targeting-pack-bin: Build ASP.NET Core applications')
   provides=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-${_short_ver}=${pkgver}")
   conflicts=("dotnet-sdk-bin" "dotnet-sdk=${pkgver}" "dotnet-sdk-${_short_ver}")
 
