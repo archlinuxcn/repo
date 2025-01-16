@@ -1,6 +1,6 @@
 pkgname=julia-git-dierckx_jll-src
-pkgver=0.1.1+0
-_commit=13f01a82b47683c4929b7dd0bce5a6f24673a3e4
+pkgver=0.2.0+0
+_commit=f577261ba21461b62a8a2b7585a01c1e194b50e6
 pkgrel=1
 pkgdesc="Dierckx_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Dierckx_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libddierckx)
 source=("git+https://github.com/JuliaBinaryWrappers/Dierckx_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('64d52b882266432a6ebce19b3eae8cd85da83e68790553b655876dcf9062d057'
+sha256sums=('313679516f3d83783637c8f459ecbe29d58f038055bb8160bb1bac3ee0c7f8dc'
             '076d76ed60a2e51442214e93fdb7dfa99b52b42537d297b75cbc9ef7530870b8')
 
 build() {
