@@ -1,14 +1,13 @@
-From 0e1655e4e873e3df354a3c49d40cacb3bb79f223 Mon Sep 17 00:00:00 2001
+From aa708d5bffd03f4bdbe30c7556f62eb894e85c16 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Thu, 2 Jan 2025 11:22:41 -0600
+Date: Thu, 16 Jan 2025 19:42:04 -0500
 Subject: [PATCH] Hack to enable aarch64 build
 
 ---
  app/assets/application.ini  | 2 +-
- app/build.sh                | 6 ++++--
- app/scripts/dir_build       | 2 +-
- app/scripts/fetch_xulrunner | 9 +++++++--
- 4 files changed, 13 insertions(+), 6 deletions(-)
+ app/build.sh                | 4 ++--
+ app/scripts/fetch_xulrunner | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/app/assets/application.ini b/app/assets/application.ini
 index 83e22d9d4..d347abb69 100644
@@ -24,10 +23,10 @@ index 83e22d9d4..d347abb69 100644
  
  [XRE]
 diff --git a/app/build.sh b/app/build.sh
-index 6ab6bd657..0c0ebecea 100755
+index 0659aa62a..086d30134 100755
 --- a/app/build.sh
 +++ b/app/build.sh
-@@ -873,10 +873,11 @@ fi
+@@ -863,9 +863,9 @@ fi
  if [ $BUILD_LINUX == 1 ]; then
  	# Skip 32-bit build in tests
  	if [[ "${ZOTERO_TEST:-}" = "1" ]] || [[ "${SKIP_32:-}" = "1" ]]; then
@@ -37,36 +36,13 @@ index 6ab6bd657..0c0ebecea 100755
 -		archs="i686 x86_64"
 +		archs="i686 x86_64 aarch64"
  	fi
-+	cp "$CALLDIR/update-packaging/removed-files_linux-x86_64" "$CALLDIR/update-packaging/removed-files_linux-aarch64"
  	
  	for arch in $archs; do
- 		runtime_path="${LINUX_RUNTIME_PATH_PREFIX}${arch}"
-@@ -911,6 +912,7 @@ if [ $BUILD_LINUX == 1 ]; then
- 		cp -RH "$CALLDIR/modules/zotero-libreoffice-integration/install" "$APPDIR/integration/libreoffice"
- 		
- 		# Copy icons
-+		mkdir -p "$APPDIR/icons/"
- 		cp "$CALLDIR/linux/icons/icon32.png" "$APPDIR/icons/"
- 		cp "$CALLDIR/linux/icons/icon64.png" "$APPDIR/icons/"
- 		cp "$CALLDIR/linux/icons/icon128.png" "$APPDIR/icons/"
-diff --git a/app/scripts/dir_build b/app/scripts/dir_build
-index 0dac8807c..8b78dc071 100755
---- a/app/scripts/dir_build
-+++ b/app/scripts/dir_build
-@@ -56,7 +56,7 @@ if [[ -z $PLATFORM ]]; then
- 		PLATFORM="l"
- 		
- 		# If platform not given explicitly, skip 32-bit build if 64-bit system
--		if [ "$(arch)" = "x86_64" ]; then
-+		if [ "$(uname -m)" = "x86_64" ] || [ "$(uname -m)" = "aarch64" ]; then
- 			export SKIP_32=1
- 		fi
- 	elif [ "`uname -o 2> /dev/null`" = "Cygwin" ]; then
 diff --git a/app/scripts/fetch_xulrunner b/app/scripts/fetch_xulrunner
-index ee942703a..40fd53ec9 100755
+index cbebf96e8..b29ae3a66 100755
 --- a/app/scripts/fetch_xulrunner
 +++ b/app/scripts/fetch_xulrunner
-@@ -604,9 +604,9 @@ if [ $BUILD_LINUX == 1 ]; then
+@@ -561,9 +561,9 @@ if [ $BUILD_LINUX == 1 ]; then
  
  	# Include 32-bit build if not in CI
  	if [[ "${CI:-}" = "1" ]] || [[ "${SKIP_32:-}" = "1" ]]; then
@@ -78,18 +54,6 @@ index ee942703a..40fd53ec9 100755
  	fi
  	for arch in $arches; do
  		xdir="firefox-$arch"
-@@ -616,6 +616,11 @@ if [ $BUILD_LINUX == 1 ]; then
- 		if [ -e "$archived_file" ]; then
- 			echo "Using $archived_file"
- 			cp "$archived_file" "firefox-$GECKO_VERSION.tar.bz2"
-+		elif [ $arch = aarch64 ]; then
-+			curl -O https://ftp.mozilla.org/pub/firefox/nightly/2024/06/2024-06-09-20-51-51-mozilla-central/firefox-128.0a1.en-US.linux-aarch64.tar.bz2
-+			# Store local copy of unmodified app
-+			mv "firefox-128.0a1.en-US.linux-aarch64.tar.bz2" "firefox-$GECKO_VERSION.tar.bz2"
-+			cp "firefox-$GECKO_VERSION.tar.bz2" "$archived_file"
- 		else
- 			curl -O "$DOWNLOAD_URL/linux-$arch/en-US/firefox-$GECKO_VERSION.tar.bz2"
- 			# Store local copy of unmodified app
 -- 
-2.46.0
+2.47.1
 
