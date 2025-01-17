@@ -26,7 +26,10 @@ function pkg_info(srcdir, pkg, d)
     if extensions isa Dict{String,Any}
         for (k, v) in extensions
             extsrc = joinpath(srcdir, "ext", "$(k).jl")
-            isfile(extsrc) || continue
+            if !isfile(extsrc)
+                extsrc = joinpath(srcdir, "ext", k, "$(k).jl")
+                isfile(extsrc) || continue
+            end
             sources[k] = extsrc
         end
     end
