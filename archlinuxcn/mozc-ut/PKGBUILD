@@ -17,8 +17,8 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname='mozc-ut'
-pkgver=2.30.5618.102.20241010
-pkgrel=2
+pkgver=2.31.5712.102.20250117
+pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
 url='https://github.com/google/mozc'
@@ -28,10 +28,10 @@ makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=2.30.5618.102')
+provides=('mozc=2.31.5712.102')
 conflicts=('mozc')
 options=(!distcc !ccache)
-source=('git+https://github.com/google/mozc.git#commit=1d74ac4a0f569aaa99838df861997f3e882add3c'
+source=('git+https://github.com/google/mozc.git#commit=58ebfadae04bc46c46e70edc9662347a29d8b7bc'
         'git+https://github.com/abseil/abseil-cpp.git#commit=4447c7562e3bc702ade25105912dce503f0c4010'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=b514bdc898e2951020cbdca1304b75f5950d1f59'
@@ -39,18 +39,18 @@ source=('git+https://github.com/google/mozc.git#commit=1d74ac4a0f569aaa99838df86
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
         'git+https://github.com/protocolbuffers/protobuf.git#commit=7cc670c1809e704ebeba90fb430d50e009f36727'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d'
-        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=35dfcca5c8657f2bf78bc000baa349c322ecb771'
-        'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=50fee0397b87fe508f9edd45bac56f5290d8ce66'
-        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=b2112277d0d479b9218f42772356da3601b3e8cf'
-        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=773cc08e71c4daa3c06fc577853f715a2bb4d9aa'
-        'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=b7035b88db25ad1a933f05a33f193711c6c3b2db'
-        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=b61a5af7992d6fcdc82fa08b67b1c9771bbc4449'
-        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=4525819546a26fc994d7ca4a2e883fde14bf908c'
-        'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=7300f19e6a3f27334ed7af64589de8782549a13f'
-        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=a754f1fff5fded62cc066aa6be0ab0169059a144'
-        'https://dumps.wikimedia.org/jawiki/20241001/jawiki-20241001-all-titles-in-ns0.gz')
-noextract=('jawiki-20241001-all-titles-in-ns0.gz')
-sha256sums=('6510cf464223d46042d446652a4f7e4bafc3be89ca5aa3990223d73a0df70089'
+        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=c0a210388ce78ee7ebfa918810d8224e717a693e'
+        'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=bf26bcbb1846f2e9cf35cbfcafcc91c015a1fb22'
+        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=520fbc99080bd2b3111440c23ca0e2edaa4c76c5'
+        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=342b9b00c1cc58c9c124b9d7551fdac9a71ee56b'
+        'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=e33ac4ce808fa4253c6c97bf5178e229a4bfb50f'
+        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=5221f96d59b797e915845a4a51b2e8a8543b47e1'
+        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=9789d69e28b7ee7176c9ea0a5826317cfdac75a5'
+        'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=c52cdb15e0a014c96050ce1bd02932f50706a3f0'
+        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=3eb0a18fe59f9d60a558585f3f9734c66665cf9b'
+        'https://dumps.wikimedia.org/jawiki/20250101/jawiki-20250101-pages-articles-multistream-index.txt.bz2')
+noextract=('jawiki-20250101-pages-articles-multistream-index.txt.bz2')
+sha256sums=('62df60053b087f4636f1c60bf4fca42abe95f77a2d73274ad9a0f29c891661af'
             'e131bbdd4e207d6cc2930bca9db82d6da9e347175c1125d9d1f2e09a36652278'
             '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
             'c081295f2c22705e07fc430e152a30b36f949a179075d47d3e12ff3109d43c6a'
@@ -58,16 +58,16 @@ sha256sums=('6510cf464223d46042d446652a4f7e4bafc3be89ca5aa3990223d73a0df70089'
             '10a13d356071f2b0c2b6dcab1d841fae451f6a2020ee9b901533533fc7ac3008'
             '578ead09a4a3fbf2f70b6af56e0b385ca136c79a4f4a62c777cb13e7a6f733f5'
             'abb86ac4d546c98d7d9a10fdeb1059d6e3395e892d5397fb03179361f37c98fe'
-            '11759b412db8382c4ae956c45202951575edcede10bfac3a7bb16dbb012da8de'
-            '1e7a58fcac2599be29b0ced9cb0bb8210703c1a568e06038d2779106a100a33a'
-            '86e95d1aba4b2ab5ec67f7b2d59d14fd1d20ecf08ef4e12f7c20e122ee61d2b1'
-            '3657173dde6497e2e36d40ee1d5abcf4ff040209d59be705cbf744def301b73e'
-            'b348668059cc75744b4eb82fb8ae1c0cc72a4dc6d24c430db652db0090149534'
-            'abe8b91049a651aeaa94412756cbbbf2012ac88136816d9ad5d0967ae4d60879'
-            'b20c240b9a76d92afe0da3f5bddcf1dd09dd1ad8b273523806127669a8c469fd'
-            '5afa03b188822e5e056dc7517e838935f5c5547f8cb2adee4c60059805850b97'
-            'd58121b2b1166d7349e95e331571111282b524003b5ee3e53db9cd5150ba439f'
-            '3ac4b5d6ab988f3da2e1828ef7f09c60a00f768c69a17f440070db82986b68cd')
+            'a386071ea217c6f808e853f90beae68e921c2401cbdd3f5bc8d4e35d8e537f43'
+            '81ed16f6b59f64e08482ea7ab676913584d95ecac00255e981374f02df2188e9'
+            '4f3c4b53da5b3fa673bd7bec916b6717a63bafb9fe80991e69a28cab2f7dcb47'
+            '840cf0f50ca8d1f6ce1cbaa255e3158eedeafb06e25317c2962f85d6272a0bc9'
+            '2bb007c54db6bb70d1771bffaeb05217c0e768cb176b9343ec0a25e9756d9f67'
+            '5d4a776a92adb181558bf3ec5012fb30dee00a782e74e2dd60e7c6a3eec4f7cd'
+            '6d79ee654bf3a22d66214495aa62f0223cb28b5bdc61bf9500ca54e279fa9bce'
+            'd3b1dd5a6419f6f9217d209f8aad6ce853077fbfeaaf73768503efc888f662b8'
+            '598c69bf9aaccf29562d7983c649aca6aef14018eb88481a33362958b692fbe4'
+            '3cb690b2faf073d0e5c5c158ebc4757a6d794071926b775871d9ee8eb4060bb8')
 
 prepare() {
     cd mozc/src
@@ -82,15 +82,15 @@ prepare() {
     git config submodule.src/third_party/wil.url "${srcdir}/wil"
     git -c protocol.file.allow=always submodule update
 
-    cd "${srcdir}"/merge-ut-dictionaries/src/
+    cd "${srcdir}"/merge-ut-dictionaries/src/merge/
+
+    # Use a dated snapshot for the jawiki dump data
+    sed -i -e '65,69d' merge_dictionaries.py
+    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20250101|g" merge_dictionaries.py
 
     # Use our local copy of the Mozc repo
-    sed -i -e "s|https://raw.githubusercontent.com/google/mozc/master/src|file://${srcdir}/mozc/src|" remove_duplicate_ut_entries.py
-
-    # Use a dated snapshot for the JAWiki dump data
-    sed -i -e '/wget/d' count_word_hits.py
-    sed -i -e "s|file_name = \"jawiki-|file_name = \"${srcdir}/jawiki-|g" count_word_hits.py
-    sed -i -e 's|jawiki-[a-z0-9]\{6,8\}|jawiki-20241001|g' count_word_hits.py apply_word_hits.py
+    sed -i -e "17s|'https://raw.githubusercontent.com/'.*$|'file://${srcdir}/mozc/src/data/dictionary_oss/id.def'|" merge_dictionaries.py
+    sed -i -e '18d' merge_dictionaries.py
 
     # Compile the UT dictionary
     printf '\nCompiling the UT dictionary...\n\n'
@@ -99,13 +99,11 @@ prepare() {
 
     for dict in "${ENABLED_DICTIONARIES[@]}"
     do
-        tar -xf "${srcdir}"/mozcdic-ut-${dict}/mozcdic-ut-${dict}.txt.tar.bz2
-        cat mozcdic-ut-${dict}.txt >> mozcdic-ut.txt
+        bzip2 -dfk "${srcdir}"/mozcdic-ut-${dict}/mozcdic-ut-${dict}.txt.bz2
+        cat "${srcdir}"/mozcdic-ut-${dict}/mozcdic-ut-${dict}.txt >> mozcdic-ut.txt
     done
 
-    python remove_duplicate_ut_entries.py mozcdic-ut.txt
-    python count_word_hits.py
-    python apply_word_hits.py mozcdic-ut.txt
+    python merge_dictionaries.py mozcdic-ut.txt
 
     # Append the UT dictionary
     cat mozcdic-ut.txt >> "${srcdir}"/mozc/src/data/dictionary_oss/dictionary00.txt
@@ -118,7 +116,7 @@ build() {
     unset ANDROID_HOME
     export JAVA_HOME='/usr/lib/jvm/java-21-openjdk/'
 
-    bazel build server:mozc_server gui/tool:mozc_tool --config oss_linux --compilation_mode opt --copt='-Wno-maybe-uninitialized' --host_copt='-Wno-maybe-uninitialized'
+    bazel build server:mozc_server gui/tool:mozc_tool --config oss_linux --compilation_mode opt
 }
 
 package() {
