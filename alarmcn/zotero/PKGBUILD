@@ -25,7 +25,7 @@ source=("zotero.desktop"
         "zotero-libreoffice-integration::git+https://github.com/zotero/zotero-libreoffice-integration.git"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
         "disable-updater.patch"
-        0001-Hack-to-enable-aarch64-build.patch)
+        0001-A-more-generic-way-to-specify-the-archs-to-build.patch)
 noextract=(firefox-128.0a1.en-US.linux-aarch64.tar.bz2)
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
             '6ef76929cb6db1ffef92e99935dfaac700beb3a49f6a72cd173cb53167e6441f'
@@ -43,7 +43,7 @@ sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
             'SKIP'
             'SKIP'
             'dc1894ac2e1520c3dae8e9cd5e09608f4bb3298bdede2891a77118187edffa9d'
-            '30c3bd98e54339b9a5706191b07067510e997b683e69d0ad8f13c99539df348e')
+            '181a2ee9bd6ecdf7078a3a5f399b1720824dc6d2bbc7b520e314fd294f6345c2')
 
 prepare() {
   cd "$srcdir/zotero-client"
@@ -64,9 +64,10 @@ prepare() {
     cp "$srcdir/firefox-128.0a1.en-US.linux-aarch64.tar.bz2" \
        app/xulrunner/firefox-$GECKO_VERSION_LINUX-aarch64.tar.bz2
   )
+  sed -i -e 's/MinVersion=.*/&a0/' app/assets/application.ini
 
   patch -N -p1 < "$srcdir/disable-updater.patch"
-  patch -N -p1 < "$srcdir/0001-Hack-to-enable-aarch64-build.patch"
+  patch -N -p1 < "$srcdir/0001-A-more-generic-way-to-specify-the-archs-to-build.patch"
 
   npm i --legacy-peer-deps
 
@@ -105,7 +106,7 @@ prepare() {
 build() {
   cd "$srcdir/zotero-client"
   NODE_OPTIONS=--openssl-legacy-provider npm run build
-  app/scripts/dir_build -q
+  app/scripts/dir_build -q -a 'x86_64 aarch64'
 }
 
 package() {
