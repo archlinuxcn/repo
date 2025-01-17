@@ -2,7 +2,7 @@
 # Contributor: Cody Schafer <dev@codyps.com>
 
 pkgname=grpcurl
-pkgver=1.9.1
+pkgver=1.9.2
 pkgrel=1
 pkgdesc="Like cURL, but for gRPC: Command-line tool for interacting with gRPC servers"
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('glibc')
 makedepends=('go')
 conflicts=("${pkgname}-bin" "${pkgname}-git")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-b2sums=('b9ebf4c5d531172cb5cf40d07551cb3540add1dffe8b0d185fd1d1f4fcfe1ec7264a1d02e896fa6c6618e569f1bb2d888ff9de82763e18e13001e258cbb75282')
+b2sums=('19916bc36443af60c8d079343ca3aeb1b000afb97e2b13e4beec59ad3dd12356820da456841533e934b4bb78f29235144c54b3cf35372bed73047bef284d3f5f')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
