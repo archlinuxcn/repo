@@ -1,0 +1,15 @@
+diff --git a/pxr/pxrConfig.cmake.in b/pxr/pxrConfig.cmake.in
+index 67417d0f5..350f9a6ba 100644
+--- a/pxr/pxrConfig.cmake.in
++++ b/pxr/pxrConfig.cmake.in
+@@ -62,6 +62,10 @@ if(@PXR_ENABLE_MATERIALX_SUPPORT@)
+     find_dependency(MaterialX)
+ endif()
+ 
++if(@PXR_ENABLE_GL_SUPPORT@)
++    find_dependency(OpenGL)
++endif()
++
+ # Similar to MaterialX above, we are using Imath's cmake package config, so set
+ # the Imath_DIR accordingly to find the associated import targets which were
+ # used for this USD build. 
