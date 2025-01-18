@@ -98,6 +98,7 @@ makedepends=(
   'llvm'
   'mesa'
   'ninja'
+  'sse2neon'
   'subversion'
   'wayland-protocols'
 )
@@ -139,6 +140,8 @@ prepare() {
   git -C release/datafiles/assets remote add network-origin https://projects.blender.org/blender/blender-assets
   git -C release/datafiles/assets lfs fetch network-origin
   git -C release/datafiles/assets lfs checkout
+
+  sed -i -e 's|"core/include"|"_core/include"|g' CMakeLists.txt
 
   # fix draco
   patch -p1 -i "$srcdir"/force-draco1.patch
