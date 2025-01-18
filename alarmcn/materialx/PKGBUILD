@@ -4,9 +4,9 @@
 
 pkgname=materialx
 pkgver=1.38.10
-pkgrel=6
+pkgrel=7
 pkgdesc="Open standard for representing rich material and look-development content in computer graphics"
-arch=(aarch64)
+arch=(aarch64 x86_64)
 url="https://materialx.org/"
 license=('Apache')
 depends=('glibc' 'gcc-libs' 'glfw' 'libglvnd' 'libx11' 'libxt' 'python'
@@ -39,7 +39,7 @@ prepare() {
 }
 
 build() {
-  cmake -S MaterialX-${pkgver} -B build -G Ninja \
+  cmake -DNANOGUI_NATIVE_FLAGS=-march=armv8-a -S MaterialX-${pkgver} -B build -G Ninja \
   	-DCMAKE_INSTALL_PREFIX=/usr \
   	-DCMAKE_SKIP_INSTALL_RPATH=ON \
   	-DCMAKE_SKIP_RPATH=ON \
@@ -47,8 +47,7 @@ build() {
   	-DMATERIALX_BUILD_SHARED_LIBS=ON \
   	-DMATERIALX_BUILD_PYTHON=ON \
   	-DMATERIALX_BUILD_VIEWER=ON \
-  	-DMATERIALX_BUILD_GRAPH_EDITOR=ON \
-  	-DNANOGUI_NATIVE_FLAGS="-march=armv8-a"
+  	-DMATERIALX_BUILD_GRAPH_EDITOR=ON
 
   cmake --build build
 }
