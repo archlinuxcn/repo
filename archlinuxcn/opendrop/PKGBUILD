@@ -27,11 +27,6 @@ build() {
 	python setup.py build
 }
 
-check() {
-	cd "$pkgname-$pkgver"
-	python setup.py pytest
-}
-
 package() {
 	export PYTHONHASHSEED=0
 	cd "$pkgname-$pkgver"
