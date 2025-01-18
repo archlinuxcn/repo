@@ -57,6 +57,9 @@ prepare() {
 	if [ -d 'build/' ]; then rm -rf 'build/'; fi
 	mkdir 'build/'
 
+    # Use correct renamed minizip-ng compat header files (based on https://github.com/dolphin-emu/dolphin/pull/13273)
+	patch --forward -p1 < "$srcdir/fix-minizip-ng-compat-headers.diff"
+
 	# Fix minizip-ng check for Arch (see https://github.com/dolphin-emu/dolphin/pull/12910#issuecomment-2249001387)
 	patch --forward -p1 < "$srcdir/minizip-ng.diff"
 
