@@ -40,6 +40,7 @@ source=(
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
     "$pkgbase-zlib-ng::git+https://github.com/zlib-ng/zlib-ng.git"
+    "fix-minizip-ng-compat-headers.diff"
     "minizip-ng.diff"
 )
 b2sums=('SKIP'
@@ -48,6 +49,7 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
+        '58628e2784eaad3bd8d7318412e4f316801172a9cdf4c91ea106177d9466fcad3b11f20c6ab1570a730a7ffd84913ced5c356ae3dbc073d6b948786c67320fc7'
         'c9d32ab3e6f4c7fb56ce68d9a68d3a25c6abcaeea4d59e136e98c4f0553bb1b72e34b63dc602917bf9ac89d7ad14514cf27adad0d9b2bf8cbc3b744effaf50ea')
 
 _sourcedirectory="$pkgbase"
