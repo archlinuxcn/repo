@@ -4,9 +4,9 @@
 
 pkgname=embree
 pkgver=4.3.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Collection of high-performance ray tracing kernels"
-arch=('aarch64')
+arch=(aarch64 x86_64)
 url="https://embree.github.io/"
 license=('Apache')
 depends=('gcc-libs' 'glibc' 'intel-tbb')
