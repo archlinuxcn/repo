@@ -1,3 +1,30 @@
+## GE-Proton9-23
+
+Upstream:
+
+- update wine to bleeding-edge (fixes battle.net broken updates)
+- update dxvk to latest git
+- update vkd3d-proton to latest git
+- update dxvk-nvapi to latest git
+- update vkd3d to latest git
+- import upstream proton game fixes
+
+Patches:
+- proton: preserve drive letter for different mount points #129 (thanks loathingKernel)
+- wine: add fix for Vanguard: Saga of Heroes (thanks loisgomez) -- triggered with SteamGameId=218210
+
+Protonfixes:
+
+- Add Project Torque (https://github.com/Open-Wine-Components/umu-protonfixes/commit/2f969d8aeea17c979cc8b3dbab1e7f47da7dfb61)- Add fix for Middle-earth: Shadow of War (GOG) (https://github.com/Open-Wine-Components/umu-protonfixes/pull/209[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/61cf7698df8ffee04746c1cd20487f58228ad4da)
+- Add launcher skip for X-Blades (https://github.com/Open-Wine-Components/umu-protonfixes/pull/206[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/4d7215c95093f4910c77174d80cfdd9224c07813)
+- Add directplay for Total Annihilation (https://github.com/Open-Wine-Components/umu-protonfixes/pull/196[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/2abbeb508355d1739f9b83bf7178609e8ade1885)
+- Add fix for Sifu (EGS) (https://github.com/Open-Wine-Components/umu-protonfixes/pull/195[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/d8933250dabc07b5457ed4de9b222a07e7611a3f)
+- Add fix for [REDACTED] (EGS) (https://github.com/Open-Wine-Components/umu-protonfixes/pull/194[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/48fcb33edd2910572e990dc6c75b52b7a8c1f0ce)
+- Add fix for Super Meat Boy(EGS) (https://github.com/Open-Wine-Components/umu-protonfixes/pull/193[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/fa14101a449b10ca076989dfa16307433ce5a4d1)
+- Add fix for BioShock Remastered and BioShock 2 Remastered (EGS) (https://github.com/Open-Wine-Components/umu-protonfixes/pull/192[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/9982ec315339059634ba3f6283a7ba4d4bd8a71f)
+- Add DirectPlay to SpellForce 1 and 2 titles for Multiplayer (https://github.com/Open-Wine-Components/umu-protonfixes/pull/190[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/4eef22e273008d65111c22db849dcd9b74414b7e)
+
+
 ## GE-Proton9-22
 
 Upstream:
