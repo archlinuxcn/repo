@@ -4,13 +4,13 @@
 
 pkgname=ispc
 pkgver=1.25.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Compiler for high-performance SIMD programming on the CPU"
-arch=(aarch64)
+arch=(aarch64 x86_64)
 url="https://ispc.github.io/"
 license=(BSD-3-Clause)
 depends=(clang gcc-libs glibc llvm-libs spirv-llvm-translator onetbb)
-makedepends=(cmake git level-zero-headers level-zero-loader llvm openmp python vc-intrinsics)
+makedepends=(cmake git level-zero-headers level-zero-loader  llvm openmp python vc-intrinsics)
 _checkdepends=(intel-compute-runtime)
 optdepends=(
     'intel-compute-runtime: GPU support'
@@ -43,12 +43,11 @@ prepare() {
 }
 
 build() {
-  local cmake_options=(
+  local cmake_options=( -D ISPC_INCLUDE_XE_EXAMPLES=OFF
     -B build
     -D CMAKE_BUILD_TYPE=Release  # None not allowed :(
     -D CMAKE_INSTALL_PREFIX=/usr
     -D ISPC_INCLUDE_EXAMPLES=OFF
-    -D ISPC_INCLUDE_XE_EXAMPLES=OFF
     -D ISPC_OPAQUE_PTR_MODE=OFF  # suggested in https://github.com/ispc/ispc/issues/2427
     -D ISPC_STATIC_LINK=OFF
     -D XE_ENABLED=ON
