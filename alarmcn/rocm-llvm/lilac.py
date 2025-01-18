@@ -9,7 +9,7 @@ g = SimpleNamespace()
 patch_str = """
 source+=(https://github.com/llvm/llvm-project/commit/078c18de832328f743fb6e8dce728a030c81dc0d.patch)
 prepare() {
-  cd llvm-project
+  cd rocm-llvm
 
   patch -Np1 --no-backup-if-mismatch < "../078c18de832328f743fb6e8dce728a030c81dc0d.patch"
 }
