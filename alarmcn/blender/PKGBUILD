@@ -65,6 +65,7 @@ depends=(
   'openal'
   'opencolorio'
   'openexr'
+  'openimagedenoise'
   'openimageio'
   'openjpeg2'
   'openpgl'
@@ -107,6 +108,7 @@ source=("git+https://projects.blender.org/blender/blender.git#tag=v$pkgver"
         "git+https://projects.blender.org/blender/blender-assets#tag=v$pkgver"
         https://developer.download.nvidia.com/redist/optix/v8.0/OptiX-8.0-Include.zip
         https://projects.blender.org/blender/blender/commit/d9f38fca5ffe29136cd6f390e318ad8455864582.patch
+        https://projects.blender.org/blender/blender/commit/f60f2b769b1d43d253d470c99f8555e90cb45fd9.patch
         force-draco1.patch
         force-draco2.patch
         blender-4.11-mantaflow-python-3.12.patch
@@ -117,6 +119,7 @@ sha512sums=('c19e26326cebd8afe4f8c6ca2bbeed15092c53a0bfceec5b6ac226fe2ebd48e7018
             '88be713847bca183f78efd5dccb049e1d40e366b48bfdfb5ef781832f235dedaae84a109b04ce3c2b7d379c38e49daa340e8cd1f1a87e2ee4929e489b5d10dc3'
             '5502d9df847de12badc702c0444bd4f1f7620460b2235026df2c3133da1e04c148af0f1fc7f345e9a0c009c32f905f66c8d427743445e8864d3a797cdce6a483'
             '69eb94cb77e7be10bf95f34edf753f038417077df45e15f2e27171d6cdea258e3a90dcca278b84118fe2e3f710a3011527769cff595127dae324a7aeb92056e6'
+            'bfc9793d1fd1581dd552da1de3314e3c10bbb821ea43c092a4e33931f1844639be1a8ce2a4f2a559e4b4ba07c738ce674b3ae77fe98f5f47bcc976f88eaa43b8'
             '96098190ac8d7665047fa1d08a116740cee6669e84780876ea06afd7e505bbcb17820533c2f666a368fb2e2b45dc1ab9cc2d08684649a283fde5b3eb66a8a93b'
             'a3cc13d7fedc4421e9edfa37a29c237c55c74ca29f05d72480369d6bcde4a276f061de0398962d0529decffe69ff3e797b4b2d38e43d7cf73b9d72d1a9d01236'
             '59044954880ce94d7a1da78ccd03e61a9d23382281b2221ca5c9c7eec9caeecf810d10ee07940d5843b7540fa81c00df5a26e8076605410116815e73c60ab9b9'
@@ -152,7 +155,8 @@ prepare() {
   patch -p1 -i "$srcdir"/hiprt-lib-path.patch
 
   # Python 3.13 support
-  # patch -p1 -i "$srcdir"/d9f38fca5ffe29136cd6f390e318ad8455864582.patch
+  patch -p1 -i "$srcdir"/d9f38fca5ffe29136cd6f390e318ad8455864582.patch
+  patch -p1 -i "$srcdir"/f60f2b769b1d43d253d470c99f8555e90cb45fd9.patch
 }
 
 _get_pyver() {

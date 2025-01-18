@@ -3,15 +3,20 @@
 maintainers:
   - github: yuyichao
 
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
 time_limit_hours: 3
 
 repo_depends:
   - embree
   - materialx
+  - openimagedenoise
   - usd
 
 update_on:
+  - source: github
+    github: blender/blender
+    use_max_tag: true
+  - alias: python
   - source: manual
-    manual: 4.3.2
-  - source: manual
-    manual: 1
+    manual: 2
