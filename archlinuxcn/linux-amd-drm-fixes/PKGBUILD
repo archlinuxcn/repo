@@ -25,7 +25,7 @@ makedepends=(
 _srcname=linux-amd-drm-fixes
 source=(
   "$_srcname::git+https://gitlab.freedesktop.org/agd5f/linux#tag=$_tag"
-  config::https://raw.githubusercontent.com/archlinux/svntogit-packages/packages/linux/trunk/config         # the main kernel config file
+  config::https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/raw/main/config         # the main kernel config file
 )
 sha256sums=('4c8d7d6711d0255cca652e0f974edb876747558627b3bb21ce75c33746ab04d8'
             '6b337a9d3cfdc00005589a80b8d36fa500f6a92ed21565a3aceec48d7202a7da')
