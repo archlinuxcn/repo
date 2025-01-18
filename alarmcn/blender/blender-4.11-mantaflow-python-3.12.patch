@@ -1,0 +1,14 @@
+diff --git a/extern/mantaflow/helper/pwrapper/registry.cpp b/extern/mantaflow/helper/pwrapper/registry.cpp
+index b4206a41dea..bd83eb28116 100644
+--- a/extern/mantaflow/helper/pwrapper/registry.cpp
++++ b/extern/mantaflow/helper/pwrapper/registry.cpp
+@@ -576,7 +576,8 @@ void WrapperRegistry::construct(const string &scriptname, const vector<string> &
+   registerDummyTypes();
+ 
+   // work around for certain gcc versions, cast to char*
+-  PyImport_AppendInittab((char *)gDefaultModuleName.c_str(), PyInit_manta_main);
++  if (!Py_IsInitialized())
++      PyImport_AppendInittab((char *)gDefaultModuleName.c_str(), PyInit_manta_main);
+ }
+ 
+ inline PyObject *castPy(PyTypeObject *p)
