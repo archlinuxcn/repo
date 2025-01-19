@@ -23,6 +23,14 @@ pkgver() {
   git describe --tag | sed -e 's/^[^0-9]*//' -e 's/_/./g' -e 's/-/.r/' -e 's/-/./g'
 }
 
+prepare() {
+  cd auctex
+  version=$(grep "^;; Version:" auctex.el |
+              sed -nre 's/;; Version: ([0-9]+.[0-9]+.[0-9]+)/\1/p;q')
+  sed -i -e "s/(defconst AUCTeX-version .*/(defconst AUCTeX-version \"$version\"/" \
+      auctex.el
+}
+
 build() {
   cd auctex
   make
