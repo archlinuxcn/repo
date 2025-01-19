@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=131.0.6778.264
-pkgrel=1
+pkgver=132.0.6834.83
+pkgrel=2
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=131.0.6778.264-1
+_uc_ver=132.0.6834.83-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -46,12 +46,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-enable-linux-unstable-deb-target.patch
         0001-ozone-wayland-implement-text_input_manager_v3.patch
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
-        0001-vaapi-flag-ozone-wayland.patch
-        unbundle-add-enable_freetype.patch
-        unbundle-icu-target.patch
-        const-atomicstring-conversion.patch)
-sha256sums=('7e02c65865a3095180d60838d2d7a912873d8d4f582c27c2afb9ef876152f2a5'
-            '3f801dc8357f5c2d5480b5f6957999fa364173e7fb02e5fea960c5cfce70fff8'
+        0001-vaapi-flag-ozone-wayland.patch)
+sha256sums=('f98315eacbf3be106feca37f8243d8c4092d4fd832c918aa36dc229eb6ab39e0'
+            '408911812d09614fe5c47760eab96c16f7624b2885e6b735ccca31af746a7586'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'b3de01b7df227478687d7517f61a777450dca765756002c80c4915f271e2d961'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
@@ -60,10 +57,7 @@ sha256sums=('7e02c65865a3095180d60838d2d7a912873d8d4f582c27c2afb9ef876152f2a5'
             '2a44756404e13c97d000cc0d859604d6848163998ea2f838b3b9bb2c840967e3'
             'd9974ddb50777be428fd0fa1e01ffe4b587065ba6adefea33678e1b3e25d1285'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
-            '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
-            'f6e05adc80bd2f22b766d41a91739276c62201e47272c561f18a099c4a809e37'
-            '67de7744b92cbfa6fcbf43a71ba531eb5a7b00381d96703d8dc3dfdadaebf67d'
-            'ac0c9e366ca6afe0839f9ecb6bc42614747349da0c3dc46408e5053dcb7ada76')
+            '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec')
 
 if (( _manual_clone )); then
   source[0]=fetch-chromium-release
@@ -84,7 +78,6 @@ declare -gA _system_libs=(
   #[jsoncpp]=jsoncpp  # needs libstdc++
   #[libaom]=aom
   #[libavif]=libavif  # needs -DAVIF_ENABLE_EXPERIMENTAL_GAIN_MAP=ON
-  [libdrm]=
   [libjpeg]=libjpeg-turbo
   [libpng]=libpng
   #[libvpx]=libvpx
@@ -125,11 +118,6 @@ prepare() {
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
   # Upstream fixes
-  patch -Np1 -i ../unbundle-add-enable_freetype.patch
-
-  # Fixes from Gentoo
-  patch -Np1 -i ../unbundle-icu-target.patch
-  patch -Np1 -i ../const-atomicstring-conversion.patch
 
   # Allow libclang_rt.builtins from compiler-rt >= 16 to be used
   patch -Np1 -i ../compiler-rt-adjust-paths.patch
@@ -138,11 +126,6 @@ prepare() {
   patch -Np1 -i ../increase-fortify-level.patch
 
   # Fixes for building with libstdc++ instead of libc++
-
-  # test deps are broken for ui/lens with system ICU
-  # "//third_party/icu:icuuc_public" (taken from Gentoo ebuild)
-  sed -i '/source_set("unit_tests") {/,/}/d' chrome/browser/ui/lens/BUILD.gn
-  sed -i '/lens:unit_tests/d' chrome/test/BUILD.gn components/BUILD.gn
 
   if (( !_system_clang )); then
     # Use prebuilt rust as system rust cannot be used due to the error:
@@ -242,7 +225,7 @@ build() {
       'clang_base_path="/usr"'
       'clang_use_chrome_plugins=false'
       "clang_version=\"$_clang_version\""
-      'chrome_pgo_phase=0' # needs newer clang to read the bundled PGO profile
+      #'chrome_pgo_phase=0' # needs newer clang to read the bundled PGO profile
     )
 
     # Allow the use of nightly features with stable Rust compiler
