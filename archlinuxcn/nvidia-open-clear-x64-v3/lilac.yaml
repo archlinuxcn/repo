@@ -1,0 +1,15 @@
+build_prefix: extra-x86_64
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
+repo_makedepends:
+  - linux-clear: linux-clear-x64-v3-headers
+update_on:
+  - source: alpm
+    alpm: nvidia-utils
+    repo: extra
+    strip_release: true
+  - source: cmd
+    cmd: LANG=C pacman --dbpath ~/.lilac/pacmandb -Si linux-clear-x64-v3 | awk '$1 == "Version" { print $3 }'
+
+maintainers:
+  - github: roaldclark
