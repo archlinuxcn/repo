@@ -1,6 +1,6 @@
 pkgname=julia-git-polyhedra-src
-pkgver=0.8.0
-_commit=3f8c92022f89bea68d71f7b18e45627d31ea587a
+pkgver=0.8.1
+_commit=d38979cf82dcc818a2391fb3775cc8782c990c85
 pkgrel=1
 pkgdesc="Polyhedra.jl"
 url="https://github.com/JuliaPolyhedra/Polyhedra.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPolyhedra/Polyhedra.jl.git#commit=$_commit")
-sha256sums=('d51a1049633ff2e26d139e73c0716832c793491c4f84ceaf6159bc1411590e8c')
+sha256sums=('1b320cdc52c76cb41edd531c40edcebf274d6252cdb80d351299bb0ac99cef15')
 
 package() {
   cd Polyhedra.jl
