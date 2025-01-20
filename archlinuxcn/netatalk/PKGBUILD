@@ -5,14 +5,19 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.0.8
+pkgver=4.1.0
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
 
-source=("https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('7e4cf3aed921350f8a398b100c035542')
+source=(
+  "https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz"
+  'bdb.patch'
+)
+
+md5sums=('b1f4ac9cdbaacf738123070fcd8bb17a'
+         'df0445e8149a7dfa3b12979d6be78a27')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -54,6 +59,11 @@ backup=('etc/afp.conf'
         'etc/papd.conf'
         'etc/pam.d/netatalk')
 
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -p1 < "${srcdir}/bdb.patch" 
+}
+
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   arch-meson . build \
@@ -63,7 +73,7 @@ build() {
     -Dwith-dbus-sysconf-path=/usr/share/dbus-1/system.d \
     -Dwith-dtrace=false \
     -Dwith-init-hooks=false \
-    -Dwith-lockfile-path=/run/netatalk.pid \
+    -Dwith-lockfile-path=/run \
     -Dwith-manual=man_only \
     -Dwith-overwrite=true \
     -Dwith-readmes=false \
