@@ -3,6 +3,8 @@
 import re
 
 from lilaclib import edit_file
+from lilaclib import update_pkgver_and_pkgrel
+from lilaclib import git_pkgbuild_commit
 
 
 def pre_build():
