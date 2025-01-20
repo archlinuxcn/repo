@@ -11,7 +11,8 @@ repo_depends:
   - electron33-bin
 
 update_on:
-  - source: manual
-    manual: 4.3.0
+  - source: httpheader
+    url: https://www.notion.so/desktop/windows/download
+    regex: %20(\d+\.\d+\.\d+)\.exe
   - source: manual
     manual: 1
