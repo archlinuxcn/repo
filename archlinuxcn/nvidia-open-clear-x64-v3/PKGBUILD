@@ -3,7 +3,7 @@
 # Contributor: Peter Jung <ptr1337@archlinux.org>
 
 pkgname=nvidia-open-clear-x64-v3
-pkgver=565.57.01
+pkgver=565.77
 pkgrel=1
 pkgdesc="NVIDIA open kernel modules for linux-clear-x64-v3"
 arch=('x86_64')
@@ -28,7 +28,7 @@ build() {
 }
 
 package() {
-    depends+=('linux-clear-x64-v3')
+    depends+=("linux-clear-x64-v3=6.12.1-1")
 
     _kernver=$(</usr/src/linux-clear-x64-v3/version)
 
