@@ -2,7 +2,7 @@ build_prefix: extra-x86_64
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 repo_makedepends:
-  - linux-clear-x64-v3-headers
+  - linux-clear-x64-v3: linux-clear-x64-v3-headers
 update_on:
   - source: alpm
     alpm: nvidia-utils
