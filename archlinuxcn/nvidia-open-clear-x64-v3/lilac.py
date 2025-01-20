@@ -12,7 +12,7 @@ def pre_build():
         r'''^(\s*depends\+=.*?)['"]?linux-clear-x64-v3[^'") ]*['"]?'''
     )
     kernel = _G.newvers[1]
-    update_pkgver_and_pkgrel(_G.newver)
+    update_pkgver_and_pkgrel(_G.newver, updpkgsums=False)
     for line in edit_file('PKGBUILD'):
         m = depends_clear_re.match(line)
         if m:
