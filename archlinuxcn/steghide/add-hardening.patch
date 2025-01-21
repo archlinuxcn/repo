@@ -1,0 +1,16 @@
+Description: add gcc flags to improve hardening
+Author: Giovani Augusto Ferreira <giovani@debian.org>
+Last-Update: 2019-12-26
+
+--- steghide-0.5.1.orig/src/Makefile.am
++++ steghide-0.5.1/src/Makefile.am
+@@ -1,7 +1,7 @@
+ if USE_INTLDIR
+-AM_CPPFLAGS = -I../intl -DLOCALEDIR=\"$(localedir)\"
++AM_CPPFLAGS = -g -fstack-protector-strong -Wformat -Werror=format-security -I../intl -DLOCALEDIR=\"$(localedir)\"
+ else
+-AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
++AM_CPPFLAGS = -g -fstack-protector-strong -Wformat -Werror=format-security -DLOCALEDIR=\"$(localedir)\"
+ endif
+ bin_PROGRAMS = steghide
+ noinst_HEADERS = \

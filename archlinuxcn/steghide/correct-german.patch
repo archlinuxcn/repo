@@ -1,0 +1,32 @@
+Description: fix a typo in for German traslation.
+Author: Ola Lundqvist <opal@debian.org>
+Last-Update: 2005-10-08
+--- steghide-0.5.1.orig/po/de.po
++++ steghide-0.5.1/po/de.po
+@@ -130,7 +130,7 @@
+ #: src/Arguments.cc:387
+ #, c-format
+ msgid "\"%s\" is not a valid compression level."
+-msgstr "\"%s\" is keine gültige Kompressionsstufe."
++msgstr "\"%s\" ist keine gültige Kompressionsstufe."
+ 
+ #: src/Arguments.cc:422
+ msgid "the file name embedding argument can be used only once."
+@@ -366,7 +366,7 @@
+ #: src/BitString.cc:299 src/BitString.cc:347 src/MCryptPP.cc:322
+ #: src/MHashKeyGen.cc:115
+ msgid "could not allocate memory."
+-msgstr "Es konnte nicht genügend Speicher alloziiert werden."
++msgstr "Es konnte nicht genügend Speicher alloziert werden."
+ 
+ #: src/BitString.cc:303
+ #, c-format
+@@ -919,7 +919,7 @@
+ " -sf, --stegofile        Stegodatei auswählen\n"
+ "   -sf <dateiname>       Ergebnis in <dateiname> statt in Trägerdatei "
+ "schreiben\n"
+-" -e, --encryption        Verschlüsselungsparamter auswählen\n"
++" -e, --encryption        Verschlüsselungsparameter auswählen\n"
+ "   -e <a>[<m>]|<m>[<a>]  Verschlüsselungsalgorithmus und/oder -modus "
+ "auswählen\n"
+ "   -e none               Daten vor Einbettung nicht verschlüsseln\n"

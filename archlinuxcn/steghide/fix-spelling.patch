@@ -1,0 +1,1431 @@
+Description: Fix few typos in some files.
+Author: Giovani Augusto Ferreira <giovani@riseup.net>
+Last-Update: 2016-11-21
+
+--- steghide-0.5.1.orig/doc/steghide.1
++++ steghide-0.5.1/doc/steghide.1
+@@ -24,7 +24,7 @@ data.
+ Steghide uses a graph-theoretic approach to steganography. You do not need
+ to know anything about graph theory to use steghide and you can safely skip the rest of this paragraph if you are 
+ not interested in the technical details. The embedding algorithm roughly works as follows: At first, the secret data
+-is compressed and encrypted. Then a sequence of postions of pixels in the cover file
++is compressed and encrypted. Then a sequence of positions of pixels in the cover file
+ is created based on a pseudo-random number generator initialized with the
+ passphrase (the secret data will be embedded in the pixels at these positions). Of these positions
+ those that do not need to be changed (because they already contain the correct
+@@ -173,7 +173,7 @@ process.
+ 
+ .TP
+ .B "-q, --quiet"
+-Supress information messages.
++Suppress information messages.
+ 
+ .TP
+ .B "-f, --force"
+@@ -230,7 +230,7 @@ yes you have to supply a passphrase. Ste
+ with that passphrase and - if it succeeds - print some information about it.
+ 
+ .SH RETURN VALUE
+-Steghide returns 0 on success and 1 if a failure occured and it had to terminate
++Steghide returns 0 on success and 1 if a failure occurred and it had to terminate
+ before completion of the requested operation. Warnings do not have an effect
+ on the return value.
+ 
+--- steghide-0.5.1.orig/po/de.po
++++ steghide-0.5.1/po/de.po
+@@ -36,7 +36,7 @@ msgstr ""
+ 
+ #: src/Arguments.cc:138
+ #, c-format
+-msgid "you have to suppy a filename to the \"%s\" command."
++msgid "you have to supply a filename to the \"%s\" command."
+ msgstr "Das Kommando \"%s\" benötigt einen Dateinamen."
+ 
+ #: src/Arguments.cc:159 src/Arguments.cc:166 src/Arguments.cc:173
+@@ -258,7 +258,7 @@ msgstr "Zusicherung fehlgeschlagen in %s
+ 
+ #: src/AuFile.cc:94
+ #, c-format
+-msgid "the au file on standard input uses the unkown encoding %d."
++msgid "the au file on standard input uses the unknown encoding %d."
+ msgstr ""
+ "Die au-Datei von der Standardeingabe verwendet die unbekannte Kodierung %d."
+ 
+@@ -269,7 +269,7 @@ msgstr "Die au-Datei \"%s\" verwendet di
+ 
+ #: src/AuFile.cc:107
+ #, c-format
+-msgid "an error occured while reading the au headers from the file \"%s\"."
++msgid "an error occurred while reading the au headers from the file \"%s\"."
+ msgstr ""
+ "Beim Lesen der au-Header aus der Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+@@ -279,7 +279,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "Die au-Header aus der Datei \"%s\" sind unvollständig."
+ 
+ #: src/AuFile.cc:119
+-msgid "an error occured while reading the au headers from standard input."
++msgid "an error occurred while reading the au headers from standard input."
+ msgstr ""
+ "Beim Lesen der au-Header von der Standardeingabe ist ein Fehler aufgetreten."
+ 
+@@ -289,12 +289,12 @@ msgstr "Die au-Header von der Standardei
+ 
+ #: src/AuFile.cc:165
+ #, c-format
+-msgid "an error occured while writing the au headers to the file \"%s\"."
++msgid "an error occurred while writing the au headers to the file \"%s\"."
+ msgstr ""
+ "Beim Schreiben der au-Header in die Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+ #: src/AuFile.cc:171
+-msgid "an error occured while writing the au headers to standard output."
++msgid "an error occurred while writing the au headers to standard output."
+ msgstr ""
+ "Beim Schreiben der au-Header auf die Standardausgabe ist ein Fehler "
+ "aufgetreten."
+@@ -313,7 +313,7 @@ msgstr "Format"
+ 
+ #: src/AudioData.h:94 src/WavFile.cc:249
+ #, c-format
+-msgid "an error occured while reading the audio data from the file \"%s\"."
++msgid "an error occurred while reading the audio data from the file \"%s\"."
+ msgstr ""
+ "Beim Lesen der Audiodaten aus der Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+@@ -323,7 +323,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "Die Audiodaten aus der Datei \"%s\" sind unvollständig."
+ 
+ #: src/AudioData.h:106 src/WavFile.cc:257
+-msgid "an error occured while reading the audio data from standard input."
++msgid "an error occurred while reading the audio data from standard input."
+ msgstr ""
+ "Beim Lesen der Audiodaten von der Standardeingabe ist ein Fehler aufgetreten."
+ 
+@@ -333,12 +333,12 @@ msgstr "Die Audiodaten von der Standarde
+ 
+ #: src/AudioData.h:134 src/WavFile.cc:302
+ #, c-format
+-msgid "an error occured while writing the audio data to the file \"%s\"."
++msgid "an error occurred while writing the audio data to the file \"%s\"."
+ msgstr ""
+ "Beim Schreiben der Audiodaten in die Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+ #: src/AudioData.h:140 src/WavFile.cc:306
+-msgid "an error occured while writing the audio data to standard output."
++msgid "an error occurred while writing the audio data to standard output."
+ msgstr ""
+ "Beim Schreiben der Audiodaten auf die Standardausgabe ist ein Fehler "
+ "aufgetreten."
+@@ -411,7 +411,7 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:439
+ #, c-format
+-msgid "an error occured while reading the bmp headers from the file \"%s\"."
++msgid "an error occurred while reading the bmp headers from the file \"%s\"."
+ msgstr ""
+ "Beim Lesen der bmp-Header aus der Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+@@ -421,7 +421,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "Die bmp-Header aus der Datei \"%s\" sind unvollständig."
+ 
+ #: src/BmpFile.cc:447
+-msgid "an error occured while reading the bmp headers from standard input."
++msgid "an error occurred while reading the bmp headers from standard input."
+ msgstr ""
+ "Beim Lesen der bmp-Header von der Standardeingabe ist ein Fehler aufgetreten."
+ 
+@@ -493,12 +493,12 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:669
+ #, c-format
+-msgid "an error occured while writing the bmp headers to the file \"%s\"."
++msgid "an error occurred while writing the bmp headers to the file \"%s\"."
+ msgstr ""
+ "Beim Schreiben der bmp-Header in die Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+ #: src/BmpFile.cc:673
+-msgid "an error occured while writing the bmp headers to standard output."
++msgid "an error occurred while writing the bmp headers to standard output."
+ msgstr ""
+ "Beim Schreiben der bmp-Header auf die Standardausgabe ist ein Fehler "
+ "aufgetreten."
+@@ -512,7 +512,7 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:790
+ #, c-format
+-msgid "an error occured while reading the bmp data from the file \"%s\"."
++msgid "an error occurred while reading the bmp data from the file \"%s\"."
+ msgstr ""
+ "Beim Lesen der Bilddaten aus der Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+@@ -522,7 +522,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "Die Bilddaten aus der Datei \"%s\" sind unvollständig."
+ 
+ #: src/BmpFile.cc:798
+-msgid "an error occured while reading the bmp data from standard input."
++msgid "an error occurred while reading the bmp data from standard input."
+ msgstr ""
+ "Beim Lesen der Bilddaten von der Standardeingabe ist ein Fehler aufgetreten."
+ 
+@@ -532,12 +532,12 @@ msgstr "Die bmp-Daten von der Standardei
+ 
+ #: src/BmpFile.cc:840
+ #, c-format
+-msgid "an error occured while writing the bitmap data to the file \"%s\"."
++msgid "an error occurred while writing the bitmap data to the file \"%s\"."
+ msgstr ""
+ "Beim Schreiben der Bilddaten in die Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+ #: src/BmpFile.cc:844
+-msgid "an error occured while writing the bitmap data to standard output."
++msgid "an error occurred while writing the bitmap data to standard output."
+ msgstr ""
+ "Beim Schreiben der Bilddaten auf die Standardausgabe ist ein Fehler "
+ "aufgetreten."
+@@ -967,7 +967,7 @@ msgstr "Die Attribute des Terminals konn
+ 
+ #: src/WavFile.cc:346
+ #, c-format
+-msgid "an error occured while reading the wav headers from the file \"%s\"."
++msgid "an error occurred while reading the wav headers from the file \"%s\"."
+ msgstr ""
+ "Beim Lesen der wav-Header aus der Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+@@ -977,7 +977,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "Die wav-Header aus der Datei \"%s\" sind unvollständig."
+ 
+ #: src/WavFile.cc:358
+-msgid "an error occured while reading the wav headers from standard input."
++msgid "an error occurred while reading the wav headers from standard input."
+ msgstr ""
+ "Beim Lesen der wav-Header von der Standardeingabe ist ein Fehler aufgetreten."
+ 
+@@ -987,12 +987,12 @@ msgstr "Die wav-Header von der Standarde
+ 
+ #: src/WavFile.cc:394
+ #, c-format
+-msgid "an error occured while writing the wav headers to the file \"%s\"."
++msgid "an error occurred while writing the wav headers to the file \"%s\"."
+ msgstr ""
+ "Beim Schreiben der wav-Header in die Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+ #: src/WavFile.cc:400
+-msgid "an error occured while writing the wav headers to standard output."
++msgid "an error occurred while writing the wav headers to standard output."
+ msgstr ""
+ "Beim Schreiben der wav-Header auf die Standardausgabe ist ein Fehler "
+ "aufgetreten."
+@@ -1049,21 +1049,21 @@ msgid "premature end of file \"%s\"."
+ msgstr "Die Datei \"%s\" ist unvollständig."
+ 
+ #: src/error.cc:66
+-msgid "an error occured while reading data from standard input."
++msgid "an error occurred while reading data from standard input."
+ msgstr "Beim Lesen von der Standardeingabe ist ein Fehler aufgetreten."
+ 
+ #: src/error.cc:70
+ #, c-format
+-msgid "an error occured while reading data from the file \"%s\"."
++msgid "an error occurred while reading data from the file \"%s\"."
+ msgstr "Beim Lesen aus der Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+ #: src/error.cc:93
+-msgid "an error occured while writing data to standard output."
++msgid "an error occurred while writing data to standard output."
+ msgstr "Beim Schreiben auf die Standardausgabe ist ein Fehler aufgetreten."
+ 
+ #: src/error.cc:97
+ #, c-format
+-msgid "an error occured while writing data to the file \"%s\"."
++msgid "an error occurred while writing data to the file \"%s\"."
+ msgstr "Beim Schreiben in die Datei \"%s\" ist ein Fehler aufgetreten."
+ 
+ #: src/error.cc:119
+--- steghide-0.5.1.orig/po/es.po
++++ steghide-0.5.1/po/es.po
+@@ -33,7 +33,7 @@ msgstr ""
+ 
+ #: src/Arguments.cc:138
+ #, c-format
+-msgid "you have to suppy a filename to the \"%s\" command."
++msgid "you have to supply a filename to the \"%s\" command."
+ msgstr "hay que agregarle un nombre de archivo al comando \"%s\"."
+ 
+ #: src/Arguments.cc:159 src/Arguments.cc:166 src/Arguments.cc:173
+@@ -245,7 +245,7 @@ msgstr "falló la aserción en %s y línea
+ 
+ #: src/AuFile.cc:94
+ #, c-format
+-msgid "the au file on standard input uses the unkown encoding %d."
++msgid "the au file on standard input uses the unknown encoding %d."
+ msgstr "el archivo au de la entrada estandar usa el código desconocido %d."
+ 
+ #: src/AuFile.cc:97
+@@ -255,7 +255,7 @@ msgstr "el archivo \"%s\" usa el código
+ 
+ #: src/AuFile.cc:107
+ #, c-format
+-msgid "an error occured while reading the au headers from the file \"%s\"."
++msgid "an error occurred while reading the au headers from the file \"%s\"."
+ msgstr "ocurrió un error mientras leía la cabecera au desde el archivo \"%s\"."
+ 
+ #: src/AuFile.cc:113
+@@ -264,7 +264,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "final prematuro de archivo \"%s\" mientras leía cabecera au. "
+ 
+ #: src/AuFile.cc:119
+-msgid "an error occured while reading the au headers from standard input."
++msgid "an error occurred while reading the au headers from standard input."
+ msgstr ""
+ "ocurrió un error mientras leía la cabecera au desde la entrada estandar."
+ 
+@@ -275,11 +275,11 @@ msgstr ""
+ 
+ #: src/AuFile.cc:165
+ #, c-format
+-msgid "an error occured while writing the au headers to the file \"%s\"."
++msgid "an error occurred while writing the au headers to the file \"%s\"."
+ msgstr "ocurrió un error mientras grababa la cabecera au en el archivo \"%s\"."
+ 
+ #: src/AuFile.cc:171
+-msgid "an error occured while writing the au headers to standard output."
++msgid "an error occurred while writing the au headers to standard output."
+ msgstr ""
+ "ocurrió un error mientras escribia la cabecera au en la salida estandar."
+ 
+@@ -297,7 +297,7 @@ msgstr "formato"
+ 
+ #: src/AudioData.h:94 src/WavFile.cc:249
+ #, c-format
+-msgid "an error occured while reading the audio data from the file \"%s\"."
++msgid "an error occurred while reading the audio data from the file \"%s\"."
+ msgstr "ocurrió un error mientras leía los datos de audio del archivo \"%s\"."
+ 
+ #: src/AudioData.h:100 src/WavFile.cc:253
+@@ -306,7 +306,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "final prematuro del archivo \"%s\" mientras leía datos de audio."
+ 
+ #: src/AudioData.h:106 src/WavFile.cc:257
+-msgid "an error occured while reading the audio data from standard input."
++msgid "an error occurred while reading the audio data from standard input."
+ msgstr ""
+ "ocurrió un error mientras leía los datos de audio desde la entrada estandar. "
+ 
+@@ -317,12 +317,12 @@ msgstr ""
+ 
+ #: src/AudioData.h:134 src/WavFile.cc:302
+ #, c-format
+-msgid "an error occured while writing the audio data to the file \"%s\"."
++msgid "an error occurred while writing the audio data to the file \"%s\"."
+ msgstr ""
+ "ocurrió un error mientras grababa los datos de audio en el archivo \"%s\"."
+ 
+ #: src/AudioData.h:140 src/WavFile.cc:306
+-msgid "an error occured while writing the audio data to standard output."
++msgid "an error occurred while writing the audio data to standard output."
+ msgstr ""
+ "ocurrió un error mientras escribia los datos de audio en la salida estandar."
+ 
+@@ -389,7 +389,7 @@ msgstr "el archivo bmp  \"%s\" tiene un
+ 
+ #: src/BmpFile.cc:439
+ #, c-format
+-msgid "an error occured while reading the bmp headers from the file \"%s\"."
++msgid "an error occurred while reading the bmp headers from the file \"%s\"."
+ msgstr "ocurrió un error mientras leía la cabecera bmp del archivo \"%s\"."
+ 
+ #: src/BmpFile.cc:443
+@@ -398,7 +398,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "final prematuro d/archivo \"%s\" mientras leía la cabecera bmp."
+ 
+ #: src/BmpFile.cc:447
+-msgid "an error occured while reading the bmp headers from standard input."
++msgid "an error occurred while reading the bmp headers from standard input."
+ msgstr "ocurrió un error mientras leía cabecera bmp de la entrada estandar."
+ 
+ #: src/BmpFile.cc:451
+@@ -467,11 +467,11 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:669
+ #, c-format
+-msgid "an error occured while writing the bmp headers to the file \"%s\"."
++msgid "an error occurred while writing the bmp headers to the file \"%s\"."
+ msgstr "ocurrió un error mientras escribia cabecera bmp en archivo \"%s\"."
+ 
+ #: src/BmpFile.cc:673
+-msgid "an error occured while writing the bmp headers to standard output."
++msgid "an error occurred while writing the bmp headers to standard output."
+ msgstr ""
+ "ocurrió un error mientras escribia la cabecera bmp en la salida estandar."
+ 
+@@ -482,7 +482,7 @@ msgstr "datos bmp pueden ser inservibles
+ 
+ #: src/BmpFile.cc:790
+ #, c-format
+-msgid "an error occured while reading the bmp data from the file \"%s\"."
++msgid "an error occurred while reading the bmp data from the file \"%s\"."
+ msgstr "ocurrió un error mientras leía datos bmp del archivo \"%s\"."
+ 
+ #: src/BmpFile.cc:794
+@@ -491,7 +491,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "final prematuro de archivo \"%s\" mientras leía datos bmp."
+ 
+ #: src/BmpFile.cc:798
+-msgid "an error occured while reading the bmp data from standard input."
++msgid "an error occurred while reading the bmp data from standard input."
+ msgstr "ocurrió un error mientras leía datos bmp desde entrada estandar."
+ 
+ #: src/BmpFile.cc:802
+@@ -500,12 +500,12 @@ msgstr "final prematuro d/datos bmp desd
+ 
+ #: src/BmpFile.cc:840
+ #, c-format
+-msgid "an error occured while writing the bitmap data to the file \"%s\"."
++msgid "an error occurred while writing the bitmap data to the file \"%s\"."
+ msgstr ""
+ "ocurrió un error mientras grababa datos d/mapa d/bits e/archivo \"%s\"."
+ 
+ #: src/BmpFile.cc:844
+-msgid "an error occured while writing the bitmap data to standard output."
++msgid "an error occurred while writing the bitmap data to standard output."
+ msgstr ""
+ "ocurrió un error mientras escribia datos d/mapa d/bits e/salida estandar."
+ 
+@@ -928,7 +928,7 @@ msgstr "no pude configurar atributos del
+ 
+ #: src/WavFile.cc:346
+ #, c-format
+-msgid "an error occured while reading the wav headers from the file \"%s\"."
++msgid "an error occurred while reading the wav headers from the file \"%s\"."
+ msgstr ""
+ "ocurrió un error mientras leia las cabeceras wav desde el archivo \"%s\"."
+ 
+@@ -938,7 +938,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "final prematuro de archivo \"%s\" mientras leia las cabeceras wav."
+ 
+ #: src/WavFile.cc:358
+-msgid "an error occured while reading the wav headers from standard input."
++msgid "an error occurred while reading the wav headers from standard input."
+ msgstr ""
+ "ocurrió un error mientras leia las cabeceras wav desde la entrada estandar."
+ 
+@@ -950,13 +950,13 @@ msgstr ""
+ 
+ #: src/WavFile.cc:394
+ #, c-format
+-msgid "an error occured while writing the wav headers to the file \"%s\"."
++msgid "an error occurred while writing the wav headers to the file \"%s\"."
+ msgstr ""
+ "ocurrió un error mientras se escribian las cabeceras wav en el archivo \"%s"
+ "\"."
+ 
+ #: src/WavFile.cc:400
+-msgid "an error occured while writing the wav headers to standard output."
++msgid "an error occurred while writing the wav headers to standard output."
+ msgstr ""
+ "ocurrió un error mientras se escribian las cabeceras wav en la salida "
+ "estandar"
+@@ -1011,21 +1011,21 @@ msgid "premature end of file \"%s\"."
+ msgstr "final prematuro del archivo \"%s\"."
+ 
+ #: src/error.cc:66
+-msgid "an error occured while reading data from standard input."
++msgid "an error occurred while reading data from standard input."
+ msgstr "ocurrió un error mientras leia información desde entrada estandar."
+ 
+ #: src/error.cc:70
+ #, c-format
+-msgid "an error occured while reading data from the file \"%s\"."
++msgid "an error occurred while reading data from the file \"%s\"."
+ msgstr "ocurrió un error mientras leia información desde archivo \"%s\"."
+ 
+ #: src/error.cc:93
+-msgid "an error occured while writing data to standard output."
++msgid "an error occurred while writing data to standard output."
+ msgstr "ocurrió un error mientras escribia información en entrada estandar."
+ 
+ #: src/error.cc:97
+ #, c-format
+-msgid "an error occured while writing data to the file \"%s\"."
++msgid "an error occurred while writing data to the file \"%s\"."
+ msgstr "ocurrió un error mientras escribia información en archivo \"%s\"."
+ 
+ #: src/error.cc:119
+--- steghide-0.5.1.orig/po/fr.po
++++ steghide-0.5.1/po/fr.po
+@@ -37,7 +37,7 @@ msgstr ""
+ 
+ #: src/Arguments.cc:138
+ #, c-format
+-msgid "you have to suppy a filename to the \"%s\" command."
++msgid "you have to supply a filename to the \"%s\" command."
+ msgstr "vous devez fournir un nom de fichier à la commande \"%s\"."
+ 
+ #: src/Arguments.cc:159 src/Arguments.cc:166 src/Arguments.cc:173
+@@ -256,7 +256,7 @@ msgstr "Une assertion erronée a été trou
+ 
+ #: src/AuFile.cc:94
+ #, c-format
+-msgid "the au file on standard input uses the unkown encoding %d."
++msgid "the au file on standard input uses the unknown encoding %d."
+ msgstr ""
+ "le fichier wav à partir de l'entrée standard utilise l'encodage %d inconnu."
+ 
+@@ -267,7 +267,7 @@ msgstr "le fichier au \"%s\" utilise l'e
+ 
+ #: src/AuFile.cc:107
+ #, c-format
+-msgid "an error occured while reading the au headers from the file \"%s\"."
++msgid "an error occurred while reading the au headers from the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture de l'entête au à partir du fichier "
+ "\"%s\"."
+@@ -278,7 +278,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "fin innattendue du fichier  \"%s\" lors de la lecture des entetes au."
+ 
+ #: src/AuFile.cc:119
+-msgid "an error occured while reading the au headers from standard input."
++msgid "an error occurred while reading the au headers from standard input."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture de l'entete au à partir de l'entrée "
+ "standard."
+@@ -291,13 +291,13 @@ msgstr ""
+ 
+ #: src/AuFile.cc:165
+ #, c-format
+-msgid "an error occured while writing the au headers to the file \"%s\"."
++msgid "an error occurred while writing the au headers to the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture de l'entête au vers le fichier \"%s"
+ "\"."
+ 
+ #: src/AuFile.cc:171
+-msgid "an error occured while writing the au headers to standard output."
++msgid "an error occurred while writing the au headers to standard output."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture de l'entête au vers la sortie "
+ "standard."
+@@ -316,7 +316,7 @@ msgstr "format"
+ 
+ #: src/AudioData.h:94 src/WavFile.cc:249
+ #, c-format
+-msgid "an error occured while reading the audio data from the file \"%s\"."
++msgid "an error occurred while reading the audio data from the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture des données audio à partir du "
+ "fichier \"%s\"."
+@@ -328,7 +328,7 @@ msgstr ""
+ "fin innattendue du fichier \"%s\" lors de la lecture des données audio."
+ 
+ #: src/AudioData.h:106 src/WavFile.cc:257
+-msgid "an error occured while reading the audio data from standard input."
++msgid "an error occurred while reading the audio data from standard input."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture des données audio à partir de "
+ "l'entrée standard."
+@@ -341,13 +341,13 @@ msgstr ""
+ 
+ #: src/AudioData.h:134 src/WavFile.cc:302
+ #, c-format
+-msgid "an error occured while writing the audio data to the file \"%s\"."
++msgid "an error occurred while writing the audio data to the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture des données audio vers le fichier \"%"
+ "s\"."
+ 
+ #: src/AudioData.h:140 src/WavFile.cc:306
+-msgid "an error occured while writing the audio data to standard output."
++msgid "an error occurred while writing the audio data to standard output."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture des données audio vers la sortie "
+ "standard."
+@@ -415,7 +415,7 @@ msgstr "le fichier \"%s\" a un format qu
+ 
+ #: src/BmpFile.cc:439
+ #, c-format
+-msgid "an error occured while reading the bmp headers from the file \"%s\"."
++msgid "an error occurred while reading the bmp headers from the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture de l'entête bmp du fichier \"%s\"."
+ 
+@@ -425,7 +425,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "fin innattendue du fichier \"%s\" lors de la lecture des entetes bmp."
+ 
+ #: src/BmpFile.cc:447
+-msgid "an error occured while reading the bmp headers from standard input."
++msgid "an error occurred while reading the bmp headers from standard input."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture de l'entête bmp à partir de l'entrée "
+ "standard."
+@@ -499,13 +499,13 @@ msgstr "le fichier \"%s\" a un format qu
+ 
+ #: src/BmpFile.cc:669
+ #, c-format
+-msgid "an error occured while writing the bmp headers to the file \"%s\"."
++msgid "an error occurred while writing the bmp headers to the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture de l'entête bmp vers le fichier \"%s"
+ "\"."
+ 
+ #: src/BmpFile.cc:673
+-msgid "an error occured while writing the bmp headers to standard output."
++msgid "an error occurred while writing the bmp headers to standard output."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture de l'entête bmp vers la sortie "
+ "standard."
+@@ -519,7 +519,7 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:790
+ #, c-format
+-msgid "an error occured while reading the bmp data from the file \"%s\"."
++msgid "an error occurred while reading the bmp data from the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture des données bitmap du fichier \"%s\"."
+ 
+@@ -529,7 +529,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "fin innattendue du fichier \"%s\" lors de la lecture des données bmp."
+ 
+ #: src/BmpFile.cc:798
+-msgid "an error occured while reading the bmp data from standard input."
++msgid "an error occurred while reading the bmp data from standard input."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture des données bitmap à partir de "
+ "l'entrée standard."
+@@ -540,13 +540,13 @@ msgstr "fin innatendue des données bmp à
+ 
+ #: src/BmpFile.cc:840
+ #, c-format
+-msgid "an error occured while writing the bitmap data to the file \"%s\"."
++msgid "an error occurred while writing the bitmap data to the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture des données bitmap vers le fichier "
+ "\"%s\"."
+ 
+ #: src/BmpFile.cc:844
+-msgid "an error occured while writing the bitmap data to standard output."
++msgid "an error occurred while writing the bitmap data to standard output."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture des données bitmap vers la sortie "
+ "standard."
+@@ -977,7 +977,7 @@ msgstr "n'a pas pu fixer les propriétés
+ 
+ #: src/WavFile.cc:346
+ #, c-format
+-msgid "an error occured while reading the wav headers from the file \"%s\"."
++msgid "an error occurred while reading the wav headers from the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture de l'entête wav à partir du fichier "
+ "\"%s\"."
+@@ -988,7 +988,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "fin innatendue du fichier \"%s\" lors de la lecture des entetes wav."
+ 
+ #: src/WavFile.cc:358
+-msgid "an error occured while reading the wav headers from standard input."
++msgid "an error occurred while reading the wav headers from standard input."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture de l'entete wav à partir de l'entrée "
+ "standard."
+@@ -1001,13 +1001,13 @@ msgstr ""
+ 
+ #: src/WavFile.cc:394
+ #, c-format
+-msgid "an error occured while writing the wav headers to the file \"%s\"."
++msgid "an error occurred while writing the wav headers to the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture de l'entête wav vers le fichier \"%s"
+ "\"."
+ 
+ #: src/WavFile.cc:400
+-msgid "an error occured while writing the wav headers to standard output."
++msgid "an error occurred while writing the wav headers to standard output."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture de l'entête wav vers la sortie "
+ "standard."
+@@ -1063,26 +1063,26 @@ msgid "premature end of file \"%s\"."
+ msgstr "fin innattendue du fichier \"%s\"."
+ 
+ #: src/error.cc:66
+-msgid "an error occured while reading data from standard input."
++msgid "an error occurred while reading data from standard input."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture des données à partir de l'entrée "
+ "standard."
+ 
+ #: src/error.cc:70
+ #, c-format
+-msgid "an error occured while reading data from the file \"%s\"."
++msgid "an error occurred while reading data from the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de la lecture des données à partir du fichier \"%s"
+ "\"."
+ 
+ #: src/error.cc:93
+-msgid "an error occured while writing data to standard output."
++msgid "an error occurred while writing data to standard output."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture des données vers la sortie standard."
+ 
+ #: src/error.cc:97
+ #, c-format
+-msgid "an error occured while writing data to the file \"%s\"."
++msgid "an error occurred while writing data to the file \"%s\"."
+ msgstr ""
+ "une erreur a eu lieu lors de l'écriture des données vers le fichier \"%s\"."
+ 
+@@ -1319,20 +1319,20 @@ msgstr "terminal inconnu. Vous devez app
+ #~ "a rencontré un code marqueur 0x%x inconnu dans le fichier jpeg \"%s\" "
+ #~ "lors de la lecture scan."
+ 
+-#~ msgid "an error occured while reading the file \"%s\"."
++#~ msgid "an error occurred while reading the file \"%s\"."
+ #~ msgstr "une erreur a eu lieu lors de la lecture du fichier \"%s\"."
+ 
+-#~ msgid "an error occured while reading the plain data from standard input."
++#~ msgid "an error occurred while reading the plain data from standard input."
+ #~ msgstr ""
+ #~ "une erreur a eu lieu lors de la lecture des données à cacher à partir de "
+ #~ "l'entrée standard."
+ 
+-#~ msgid "an error occured while writing the plain data to standard output."
++#~ msgid "an error occurred while writing the plain data to standard output."
+ #~ msgstr ""
+ #~ "une erreur a eu lieu lors de l'écriture des données cachées vers la "
+ #~ "sortie standard."
+ 
+-#~ msgid "an error occured while writing to the file \"%s\"."
++#~ msgid "an error occurred while writing to the file \"%s\"."
+ #~ msgstr "une erreur a eu lieu lors de l'écriture vers le fichier \"%s\"."
+ 
+ #~ msgid "could not create plain file \"%s\"."
+--- steghide-0.5.1.orig/po/ro.po
++++ steghide-0.5.1/po/ro.po
+@@ -34,7 +34,7 @@ msgstr ""
+ 
+ #: src/Arguments.cc:138
+ #, c-format
+-msgid "you have to suppy a filename to the \"%s\" command."
++msgid "you have to supply a filename to the \"%s\" command."
+ msgstr "trebuie sa precizati un nume de fisier acestei comenzi \"%s\"."
+ 
+ #: src/Arguments.cc:159 src/Arguments.cc:166 src/Arguments.cc:173
+@@ -257,7 +257,7 @@ msgstr "declaratii nereusite in %s la li
+ 
+ #: src/AuFile.cc:94
+ #, c-format
+-msgid "the au file on standard input uses the unkown encoding %d."
++msgid "the au file on standard input uses the unknown encoding %d."
+ msgstr "fisierul au de la intrarea standard foloseste un codec necunoscut %d."
+ 
+ #: src/AuFile.cc:97
+@@ -267,7 +267,7 @@ msgstr "fisierul au \"%s\" foloseste un
+ 
+ #: src/AuFile.cc:107
+ #, c-format
+-msgid "an error occured while reading the au headers from the file \"%s\"."
++msgid "an error occurred while reading the au headers from the file \"%s\"."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citeau header-ele au din \"%s\"."
+ 
+@@ -277,7 +277,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "terminare prematura a \"%s\" in timpul citirii header-elor au."
+ 
+ #: src/AuFile.cc:119
+-msgid "an error occured while reading the au headers from standard input."
++msgid "an error occurred while reading the au headers from standard input."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citeau header-ele au de la intrarea "
+ "standard."
+@@ -290,12 +290,12 @@ msgstr ""
+ 
+ #: src/AuFile.cc:165
+ #, c-format
+-msgid "an error occured while writing the au headers to the file \"%s\"."
++msgid "an error occurred while writing the au headers to the file \"%s\"."
+ msgstr ""
+ "o eroare a fost generata in timp ce se scria header-ul au in fisierul \"%s\"."
+ 
+ #: src/AuFile.cc:171
+-msgid "an error occured while writing the au headers to standard output."
++msgid "an error occurred while writing the au headers to standard output."
+ msgstr ""
+ "o eroare a fost generata in timp ce se scriau header-ele au la iesirea "
+ "standard."
+@@ -314,7 +314,7 @@ msgstr "format"
+ 
+ #: src/AudioData.h:94 src/WavFile.cc:249
+ #, c-format
+-msgid "an error occured while reading the audio data from the file \"%s\"."
++msgid "an error occurred while reading the audio data from the file \"%s\"."
+ msgstr "o eroare a fost generata in timp ce se citeau datele audio din \"%s\"."
+ 
+ #: src/AudioData.h:100 src/WavFile.cc:253
+@@ -323,7 +323,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "terminare prematura a \"%s\" in timpul citirii datelor audio."
+ 
+ #: src/AudioData.h:106 src/WavFile.cc:257
+-msgid "an error occured while reading the audio data from standard input."
++msgid "an error occurred while reading the audio data from standard input."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citeau datele audio de la intrarea "
+ "standard."
+@@ -336,12 +336,12 @@ msgstr ""
+ 
+ #: src/AudioData.h:134 src/WavFile.cc:302
+ #, c-format
+-msgid "an error occured while writing the audio data to the file \"%s\"."
++msgid "an error occurred while writing the audio data to the file \"%s\"."
+ msgstr ""
+ "o eroare a fost generata in timp ce se scria datele audio in fisierul \"%s\"."
+ 
+ #: src/AudioData.h:140 src/WavFile.cc:306
+-msgid "an error occured while writing the audio data to standard output."
++msgid "an error occurred while writing the audio data to standard output."
+ msgstr ""
+ "o eroare a fost generata in timpul scrierii datelor audio la iesirea "
+ "standard."
+@@ -414,7 +414,7 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:439
+ #, c-format
+-msgid "an error occured while reading the bmp headers from the file \"%s\"."
++msgid "an error occurred while reading the bmp headers from the file \"%s\"."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citeau header-ele bmp din \"%s\"."
+ 
+@@ -424,7 +424,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "terminare prematura a \"%s\" in timpul citirii header-elor bmp."
+ 
+ #: src/BmpFile.cc:447
+-msgid "an error occured while reading the bmp headers from standard input."
++msgid "an error occurred while reading the bmp headers from standard input."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citeau header-ele bmp de la intrarea "
+ "standard."
+@@ -496,12 +496,12 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:669
+ #, c-format
+-msgid "an error occured while writing the bmp headers to the file \"%s\"."
++msgid "an error occurred while writing the bmp headers to the file \"%s\"."
+ msgstr ""
+ "o eroare a fost generata in timpul scrierii header-elor bitmap in \"%s\"."
+ 
+ #: src/BmpFile.cc:673
+-msgid "an error occured while writing the bmp headers to standard output."
++msgid "an error occurred while writing the bmp headers to standard output."
+ msgstr ""
+ "ao eroare a fost generata in timpul scrierii header-elor bitmap la iesirea "
+ "standard."
+@@ -513,7 +513,7 @@ msgstr "posibil date bmp corupte (byte-u
+ 
+ #: src/BmpFile.cc:790
+ #, c-format
+-msgid "an error occured while reading the bmp data from the file \"%s\"."
++msgid "an error occurred while reading the bmp data from the file \"%s\"."
+ msgstr "o eroare a fost generata in timp ce se citeau datele bmp din \"%s\"."
+ 
+ #: src/BmpFile.cc:794
+@@ -522,7 +522,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "terminare prematura a \"%s\" in timpul citirii datelor bmp."
+ 
+ #: src/BmpFile.cc:798
+-msgid "an error occured while reading the bmp data from standard input."
++msgid "an error occurred while reading the bmp data from standard input."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citeau datele bmp de la intrarea "
+ "standard."
+@@ -533,13 +533,13 @@ msgstr "terminare prematura a datelor bm
+ 
+ #: src/BmpFile.cc:840
+ #, c-format
+-msgid "an error occured while writing the bitmap data to the file \"%s\"."
++msgid "an error occurred while writing the bitmap data to the file \"%s\"."
+ msgstr ""
+ "o eroare a fost generata in timpul scrierii datelor bitmap in fisierul \"%s"
+ "\"."
+ 
+ #: src/BmpFile.cc:844
+-msgid "an error occured while writing the bitmap data to standard output."
++msgid "an error occurred while writing the bitmap data to standard output."
+ msgstr ""
+ "o eroare a fost generata in timpul scrierii datelor bitmap la iesirea "
+ "standard."
+@@ -970,7 +970,7 @@ msgstr "nu am putut seta atributele term
+ 
+ #: src/WavFile.cc:346
+ #, c-format
+-msgid "an error occured while reading the wav headers from the file \"%s\"."
++msgid "an error occurred while reading the wav headers from the file \"%s\"."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citeau header-ele wav din fisierul \"%"
+ "s\"."
+@@ -981,7 +981,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr "terminare prematura a \"%s\" in timpul citirii header-elor wav."
+ 
+ #: src/WavFile.cc:358
+-msgid "an error occured while reading the wav headers from standard input."
++msgid "an error occurred while reading the wav headers from standard input."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citeau header-ele wav de la intrarea "
+ "standard."
+@@ -994,11 +994,11 @@ msgstr ""
+ 
+ #: src/WavFile.cc:394
+ #, c-format
+-msgid "an error occured while writing the wav headers to the file \"%s\"."
++msgid "an error occurred while writing the wav headers to the file \"%s\"."
+ msgstr "o eroare a fost generata in timpul scrierii header-elor wav in \"%s\"."
+ 
+ #: src/WavFile.cc:400
+-msgid "an error occured while writing the wav headers to standard output."
++msgid "an error occurred while writing the wav headers to standard output."
+ msgstr ""
+ "o eroare a fost generata in timpul scrierii header-elor wav la iesirea "
+ "standard."
+@@ -1055,22 +1055,22 @@ msgid "premature end of file \"%s\"."
+ msgstr "terminare prematura a \"%s\"."
+ 
+ #: src/error.cc:66
+-msgid "an error occured while reading data from standard input."
++msgid "an error occurred while reading data from standard input."
+ msgstr ""
+ "o eroare a fost generata in timp ce se citea date de la intrarea standard."
+ 
+ #: src/error.cc:70
+ #, c-format
+-msgid "an error occured while reading data from the file \"%s\"."
++msgid "an error occurred while reading data from the file \"%s\"."
+ msgstr "o eroare a fost generata in timp ce se citea date din fisierul \"%s\"."
+ 
+ #: src/error.cc:93
+-msgid "an error occured while writing data to standard output."
++msgid "an error occurred while writing data to standard output."
+ msgstr "o eroare a fost generata in timp ce se scria date la iesirea standard."
+ 
+ #: src/error.cc:97
+ #, c-format
+-msgid "an error occured while writing data to the file \"%s\"."
++msgid "an error occurred while writing data to the file \"%s\"."
+ msgstr "o eroare a fost generata in timp ce se scria fisierul \"%s\"."
+ 
+ #: src/error.cc:119
+--- steghide-0.5.1.orig/po/steghide.pot
++++ steghide-0.5.1/po/steghide.pot
+@@ -32,7 +32,7 @@ msgstr ""
+ 
+ #: src/Arguments.cc:138
+ #, c-format
+-msgid "you have to suppy a filename to the \"%s\" command."
++msgid "you have to supply a filename to the \"%s\" command."
+ msgstr ""
+ 
+ #: src/Arguments.cc:159 src/Arguments.cc:166 src/Arguments.cc:173
+@@ -232,7 +232,7 @@ msgstr ""
+ 
+ #: src/AuFile.cc:94
+ #, c-format
+-msgid "the au file on standard input uses the unkown encoding %d."
++msgid "the au file on standard input uses the unknown encoding %d."
+ msgstr ""
+ 
+ #: src/AuFile.cc:97
+@@ -242,7 +242,7 @@ msgstr ""
+ 
+ #: src/AuFile.cc:107
+ #, c-format
+-msgid "an error occured while reading the au headers from the file \"%s\"."
++msgid "an error occurred while reading the au headers from the file \"%s\"."
+ msgstr ""
+ 
+ #: src/AuFile.cc:113
+@@ -251,7 +251,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr ""
+ 
+ #: src/AuFile.cc:119
+-msgid "an error occured while reading the au headers from standard input."
++msgid "an error occurred while reading the au headers from standard input."
+ msgstr ""
+ 
+ #: src/AuFile.cc:125
+@@ -260,11 +260,11 @@ msgstr ""
+ 
+ #: src/AuFile.cc:165
+ #, c-format
+-msgid "an error occured while writing the au headers to the file \"%s\"."
++msgid "an error occurred while writing the au headers to the file \"%s\"."
+ msgstr ""
+ 
+ #: src/AuFile.cc:171
+-msgid "an error occured while writing the au headers to standard output."
++msgid "an error occurred while writing the au headers to standard output."
+ msgstr ""
+ 
+ #: src/AuFile.cc:188
+@@ -281,7 +281,7 @@ msgstr ""
+ 
+ #: src/AudioData.h:94 src/WavFile.cc:249
+ #, c-format
+-msgid "an error occured while reading the audio data from the file \"%s\"."
++msgid "an error occurred while reading the audio data from the file \"%s\"."
+ msgstr ""
+ 
+ #: src/AudioData.h:100 src/WavFile.cc:253
+@@ -290,7 +290,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr ""
+ 
+ #: src/AudioData.h:106 src/WavFile.cc:257
+-msgid "an error occured while reading the audio data from standard input."
++msgid "an error occurred while reading the audio data from standard input."
+ msgstr ""
+ 
+ #: src/AudioData.h:112 src/WavFile.cc:261
+@@ -299,11 +299,11 @@ msgstr ""
+ 
+ #: src/AudioData.h:134 src/WavFile.cc:302
+ #, c-format
+-msgid "an error occured while writing the audio data to the file \"%s\"."
++msgid "an error occurred while writing the audio data to the file \"%s\"."
+ msgstr ""
+ 
+ #: src/AudioData.h:140 src/WavFile.cc:306
+-msgid "an error occured while writing the audio data to standard output."
++msgid "an error occurred while writing the audio data to standard output."
+ msgstr ""
+ 
+ #: src/BinaryIO.cc:67
+@@ -367,7 +367,7 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:439
+ #, c-format
+-msgid "an error occured while reading the bmp headers from the file \"%s\"."
++msgid "an error occurred while reading the bmp headers from the file \"%s\"."
+ msgstr ""
+ 
+ #: src/BmpFile.cc:443
+@@ -376,7 +376,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr ""
+ 
+ #: src/BmpFile.cc:447
+-msgid "an error occured while reading the bmp headers from standard input."
++msgid "an error occurred while reading the bmp headers from standard input."
+ msgstr ""
+ 
+ #: src/BmpFile.cc:451
+@@ -433,11 +433,11 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:669
+ #, c-format
+-msgid "an error occured while writing the bmp headers to the file \"%s\"."
++msgid "an error occurred while writing the bmp headers to the file \"%s\"."
+ msgstr ""
+ 
+ #: src/BmpFile.cc:673
+-msgid "an error occured while writing the bmp headers to standard output."
++msgid "an error occurred while writing the bmp headers to standard output."
+ msgstr ""
+ 
+ #: src/BmpFile.cc:776
+@@ -447,7 +447,7 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:790
+ #, c-format
+-msgid "an error occured while reading the bmp data from the file \"%s\"."
++msgid "an error occurred while reading the bmp data from the file \"%s\"."
+ msgstr ""
+ 
+ #: src/BmpFile.cc:794
+@@ -456,7 +456,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr ""
+ 
+ #: src/BmpFile.cc:798
+-msgid "an error occured while reading the bmp data from standard input."
++msgid "an error occurred while reading the bmp data from standard input."
+ msgstr ""
+ 
+ #: src/BmpFile.cc:802
+@@ -465,11 +465,11 @@ msgstr ""
+ 
+ #: src/BmpFile.cc:840
+ #, c-format
+-msgid "an error occured while writing the bitmap data to the file \"%s\"."
++msgid "an error occurred while writing the bitmap data to the file \"%s\"."
+ msgstr ""
+ 
+ #: src/BmpFile.cc:844
+-msgid "an error occured while writing the bitmap data to standard output."
++msgid "an error occurred while writing the bitmap data to standard output."
+ msgstr ""
+ 
+ #: src/CvrStgFile.cc:212
+@@ -812,7 +812,7 @@ msgstr ""
+ 
+ #: src/WavFile.cc:346
+ #, c-format
+-msgid "an error occured while reading the wav headers from the file \"%s\"."
++msgid "an error occurred while reading the wav headers from the file \"%s\"."
+ msgstr ""
+ 
+ #: src/WavFile.cc:352
+@@ -821,7 +821,7 @@ msgid "premature end of file \"%s\" whil
+ msgstr ""
+ 
+ #: src/WavFile.cc:358
+-msgid "an error occured while reading the wav headers from standard input."
++msgid "an error occurred while reading the wav headers from standard input."
+ msgstr ""
+ 
+ #: src/WavFile.cc:364
+@@ -830,11 +830,11 @@ msgstr ""
+ 
+ #: src/WavFile.cc:394
+ #, c-format
+-msgid "an error occured while writing the wav headers to the file \"%s\"."
++msgid "an error occurred while writing the wav headers to the file \"%s\"."
+ msgstr ""
+ 
+ #: src/WavFile.cc:400
+-msgid "an error occured while writing the wav headers to standard output."
++msgid "an error occurred while writing the wav headers to standard output."
+ msgstr ""
+ 
+ #: src/WavFormatChunk.cc:31
+@@ -883,21 +883,21 @@ msgid "premature end of file \"%s\"."
+ msgstr ""
+ 
+ #: src/error.cc:66
+-msgid "an error occured while reading data from standard input."
++msgid "an error occurred while reading data from standard input."
+ msgstr ""
+ 
+ #: src/error.cc:70
+ #, c-format
+-msgid "an error occured while reading data from the file \"%s\"."
++msgid "an error occurred while reading data from the file \"%s\"."
+ msgstr ""
+ 
+ #: src/error.cc:93
+-msgid "an error occured while writing data to standard output."
++msgid "an error occurred while writing data to standard output."
+ msgstr ""
+ 
+ #: src/error.cc:97
+ #, c-format
+-msgid "an error occured while writing data to the file \"%s\"."
++msgid "an error occurred while writing data to the file \"%s\"."
+ msgstr ""
+ 
+ #: src/error.cc:119
+--- steghide-0.5.1.orig/src/Arguments.cc
++++ steghide-0.5.1/src/Arguments.cc
+@@ -137,7 +137,7 @@ void Arguments::parse_Command (ArgIt& cu
+ 		++curarg ;
+ 
+ 		if (curarg == TheArguments.end()) {
+-			throw ArgError (_("you have to suppy a filename to the \"%s\" command."), CommandString.c_str()) ;
++			throw ArgError (_("you have to supply a filename to the \"%s\" command."), CommandString.c_str()) ;
+ 		}
+ 		else {
+ 			parse_Passphrase (curarg) ; // try: maybe -p is first argument
+--- steghide-0.5.1.orig/src/AuFile.cc
++++ steghide-0.5.1/src/AuFile.cc
+@@ -91,7 +91,7 @@ void AuFile::read (BinaryIO *io)
+ 
+ 			default:
+ 			if (getBinIO()->is_std()) {
+-				throw NotImplementedError (_("the au file on standard input uses the unkown encoding %d."), encoding) ;
++				throw NotImplementedError (_("the au file on standard input uses the unknown encoding %d."), encoding) ;
+ 			}
+ 			else {
+ 				throw NotImplementedError (_("the au file \"%s\" uses the unknown encoding %d."), getBinIO()->getName().c_str(), encoding) ;
+@@ -104,7 +104,7 @@ void AuFile::read (BinaryIO *io)
+ 		switch (e.getType()) {
+ 			case BinaryInputError::FILE_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while reading the au headers from the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while reading the au headers from the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 				break ;
+ 			}
+ 
+@@ -116,7 +116,7 @@ void AuFile::read (BinaryIO *io)
+ 
+ 			case BinaryInputError::STDIN_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while reading the au headers from standard input.")) ;
++				throw SteghideError (_("an error occurred while reading the au headers from standard input.")) ;
+ 				break ;
+ 			}
+ 
+@@ -162,13 +162,13 @@ void AuFile::write ()
+ 		switch (e.getType()) {
+ 			case BinaryOutputError::FILE_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while writing the au headers to the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while writing the au headers to the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 				break ;
+ 			}
+ 
+ 			case BinaryOutputError::STDOUT_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while writing the au headers to standard output.")) ;
++				throw SteghideError (_("an error occurred while writing the au headers to standard output.")) ;
+ 				break ;
+ 			}
+ 		}
+--- steghide-0.5.1.orig/src/AudioData.h
++++ steghide-0.5.1/src/AudioData.h
+@@ -91,7 +91,7 @@ void AudioDataImpl<Type,ValueType,Sample
+ 		switch (e.getType()) {
+ 			case BinaryInputError::FILE_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while reading the audio data from the file \"%s\"."), io->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while reading the audio data from the file \"%s\"."), io->getName().c_str()) ;
+ 				break ;
+ 			}
+ 
+@@ -103,7 +103,7 @@ void AudioDataImpl<Type,ValueType,Sample
+ 
+ 			case BinaryInputError::STDIN_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while reading the audio data from standard input.")) ;
++				throw SteghideError (_("an error occurred while reading the audio data from standard input.")) ;
+ 				break ;
+ 			}
+ 
+@@ -131,13 +131,13 @@ void AudioDataImpl<Type,ValueType,Sample
+ 		switch (e.getType()) {
+ 			case BinaryOutputError::FILE_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while writing the audio data to the file \"%s\"."), io->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while writing the audio data to the file \"%s\"."), io->getName().c_str()) ;
+ 				break ;
+ 			}
+ 
+ 			case BinaryOutputError::STDOUT_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while writing the audio data to standard output.")) ;
++				throw SteghideError (_("an error occurred while writing the audio data to standard output.")) ;
+ 				break ;
+ 			}
+ 		}
+--- steghide-0.5.1.orig/src/BmpFile.cc
++++ steghide-0.5.1/src/BmpFile.cc
+@@ -436,7 +436,7 @@ void BmpFile::readheaders ()
+ 	catch (BinaryInputError e) {
+ 		switch (e.getType()) {
+ 			case BinaryInputError::FILE_ERR: {
+-				throw SteghideError (_("an error occured while reading the bmp headers from the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while reading the bmp headers from the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 			break ; }
+ 
+ 			case BinaryInputError::FILE_EOF: {
+@@ -444,7 +444,7 @@ void BmpFile::readheaders ()
+ 			break ; }
+ 
+ 			case BinaryInputError::STDIN_ERR: {
+-				throw SteghideError (_("an error occured while reading the bmp headers from standard input.")) ;
++				throw SteghideError (_("an error occurred while reading the bmp headers from standard input.")) ;
+ 			break ; }
+ 
+ 			case BinaryInputError::STDIN_EOF: {
+@@ -666,11 +666,11 @@ void BmpFile::writeheaders ()
+ 	catch (BinaryOutputError e) {
+ 		switch (e.getType()) {
+ 			case BinaryOutputError::FILE_ERR: {
+-				throw SteghideError (_("an error occured while writing the bmp headers to the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while writing the bmp headers to the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 			break ; }
+ 
+ 			case BinaryOutputError::STDOUT_ERR: {
+-				throw SteghideError (_("an error occured while writing the bmp headers to standard output.")) ;
++				throw SteghideError (_("an error occurred while writing the bmp headers to standard output.")) ;
+ 			break ; }
+ 		}
+ 	}
+@@ -787,7 +787,7 @@ void BmpFile::readdata ()
+ 	catch (BinaryInputError e) {
+ 		switch (e.getType()) {
+ 			case BinaryInputError::FILE_ERR: {
+-				throw SteghideError (_("an error occured while reading the bmp data from the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while reading the bmp data from the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 			break ; }
+ 
+ 			case BinaryInputError::FILE_EOF: {
+@@ -795,7 +795,7 @@ void BmpFile::readdata ()
+ 			break ; }
+ 
+ 			case BinaryInputError::STDIN_ERR: {
+-				throw SteghideError (_("an error occured while reading the bmp data from standard input.")) ;
++				throw SteghideError (_("an error occurred while reading the bmp data from standard input.")) ;
+ 			break ; }
+ 
+ 			case BinaryInputError::STDIN_EOF: {
+@@ -837,11 +837,11 @@ void BmpFile::writedata ()
+ 	catch (BinaryOutputError e) {
+ 		switch (e.getType()) {
+ 			case BinaryOutputError::FILE_ERR: {
+-				throw SteghideError (_("an error occured while writing the bitmap data to the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while writing the bitmap data to the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 			break ; }
+ 
+ 			case BinaryOutputError::STDOUT_ERR: {
+-				throw SteghideError (_("an error occured while writing the bitmap data to standard output.")) ;
++				throw SteghideError (_("an error occurred while writing the bitmap data to standard output.")) ;
+ 			break ; }
+ 		}
+ 	}
+--- steghide-0.5.1.orig/src/WavFile.cc
++++ steghide-0.5.1/src/WavFile.cc
+@@ -246,7 +246,7 @@ void WavFile::readdata (void)
+ 	catch (BinaryInputError e) {
+ 		switch (e.getType()) {
+ 			case BinaryInputError::FILE_ERR: {
+-				throw SteghideError (_("an error occured while reading the audio data from the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while reading the audio data from the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 			break ; }
+ 
+ 			case BinaryInputError::FILE_EOF: {
+@@ -254,7 +254,7 @@ void WavFile::readdata (void)
+ 			break ; }
+ 
+ 			case BinaryInputError::STDIN_ERR: {
+-				throw SteghideError (_("an error occured while reading the audio data from standard input.")) ;
++				throw SteghideError (_("an error occurred while reading the audio data from standard input.")) ;
+ 			break ; }
+ 
+ 			case BinaryInputError::STDIN_EOF: {
+@@ -299,11 +299,11 @@ void WavFile::writedata (void)
+ 	catch (BinaryOutputError e) {
+ 		switch (e.getType()) {
+ 			case BinaryOutputError::FILE_ERR: {
+-				throw SteghideError (_("an error occured while writing the audio data to the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while writing the audio data to the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 			break ; }
+ 
+ 			case BinaryOutputError::STDOUT_ERR: {
+-				throw SteghideError (_("an error occured while writing the audio data to standard output.")) ;
++				throw SteghideError (_("an error occurred while writing the audio data to standard output.")) ;
+ 			break ; }
+ 		}
+ 	}
+@@ -343,7 +343,7 @@ void WavFile::readheaders ()
+ 		switch (e.getType()) {
+ 			case BinaryInputError::FILE_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while reading the wav headers from the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while reading the wav headers from the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 				break ;
+ 			}
+ 
+@@ -355,7 +355,7 @@ void WavFile::readheaders ()
+ 
+ 			case BinaryInputError::STDIN_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while reading the wav headers from standard input.")) ;
++				throw SteghideError (_("an error occurred while reading the wav headers from standard input.")) ;
+ 				break ;
+ 			}
+ 
+@@ -391,13 +391,13 @@ void WavFile::writeheaders ()
+ 		switch (e.getType()) {
+ 			case BinaryOutputError::FILE_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while writing the wav headers to the file \"%s\"."), getBinIO()->getName().c_str()) ;
++				throw SteghideError (_("an error occurred while writing the wav headers to the file \"%s\"."), getBinIO()->getName().c_str()) ;
+ 				break ;
+ 			}
+ 
+ 			case BinaryOutputError::STDOUT_ERR:
+ 			{
+-				throw SteghideError (_("an error occured while writing the wav headers to standard output.")) ;
++				throw SteghideError (_("an error occurred while writing the wav headers to standard output.")) ;
+ 				break ;
+ 			}
+ 		}
+--- steghide-0.5.1.orig/src/error.cc
++++ steghide-0.5.1/src/error.cc
+@@ -63,11 +63,11 @@ BinaryInputError::BinaryInputError (std:
+ 	}
+ 	else {
+ 		if (fn == "") {
+-			setMessage(_("an error occured while reading data from standard input.")) ;
++			setMessage(_("an error occurred while reading data from standard input.")) ;
+ 			setType (STDIN_ERR) ;
+ 		}
+ 		else {
+-			setMessage(compose (_("an error occured while reading data from the file \"%s\"."), fn.c_str())) ;
++			setMessage(compose (_("an error occurred while reading data from the file \"%s\"."), fn.c_str())) ;
+ 			setType (FILE_ERR) ;
+ 		}
+ 	}
+@@ -90,11 +90,11 @@ BinaryOutputError::BinaryOutputError (st
+ 	: SteghideError()
+ {
+ 	if (fn == "") {
+-		setMessage(_("an error occured while writing data to standard output.")) ;
++		setMessage(_("an error occurred while writing data to standard output.")) ;
+ 		setType(STDOUT_ERR) ;
+ 	}
+ 	else {
+-		setMessage(compose (_("an error occured while writing data to the file \"%s\"."), fn.c_str())) ;
++		setMessage(compose (_("an error occurred while writing data to the file \"%s\"."), fn.c_str())) ;
+ 		setType(FILE_ERR) ;
+ 	}
+ }
+--- steghide-0.5.1.orig/tests/STSupport.pm
++++ steghide-0.5.1/tests/STSupport.pm
+@@ -72,14 +72,14 @@ sub startCategory {
+ 
+ #
+ #
+-# return value: 1 if an error occured, 0 if everything was ok
++# return value: 1 if an error occurred, 0 if everything was ok
+ sub endCategory {
+ 	$curcategory = "" ;
+ 	print "\n" ;
+ 	if ($catstatus) { # no error
+ 		return 0 ;
+ 	}
+-	else { # an error occured
++	else { # an error occurred
+ 		return 1 ;
+ 	}
+ }
+--- steghide-0.5.1.orig/tests/SelectorTest.cc
++++ steghide-0.5.1/tests/SelectorTest.cc
+@@ -64,20 +64,20 @@ void SelectorTest::testIsIdentityPermuta
+ 
+ bool SelectorTest::genericTestIsPermutation (Selector* s)
+ {
+-	std::vector<bool> hasoccured (s->getRange()) ; // all set to false
++	std::vector<bool> hasoccurred (s->getRange()) ; // all set to false
+ 
+ 	bool range_ok = true ;
+ 	bool inj = true ;
+ 	for (UWORD32 i = 0 ; i < s->getRange() ; i++) {
+ 		UWORD32 value = (*s)[i] ;
+ 		range_ok = (value < s->getRange()) && range_ok ;
+-		inj = !hasoccured[value] && inj ;
+-		hasoccured[value] = true ;
++		inj = !hasoccurred[value] && inj ;
++		hasoccurred[value] = true ;
+ 	}
+ 
+ 	bool surj = true ;
+ 	for (UWORD32 i = 0 ; i < s->getRange() ; i++) {
+-		surj = hasoccured[i] && surj ;
++		surj = hasoccurred[i] && surj ;
+ 	}
+ 
+ 	return range_ok && inj && surj ;
+--- steghide-0.5.1.orig/tests/systemtests.pl
++++ steghide-0.5.1/tests/systemtests.pl
+@@ -7,7 +7,7 @@ print "-------------------------\n\n" ;
+ print "Running System Tests.....\n\n" ;
+ print "-------------------------\n\n" ;
+ 
+-$exitvalue = 0 ; # 0 -> everything ok, 1 -> an error occured
++$exitvalue = 0 ; # 0 -> everything ok, 1 -> an error occurred
+ while (<st*.pl>) {
+ 	# pass command line args to st_*.pl scripts
+ 	if (system "./$_ @ARGV") {

@@ -1,0 +1,187 @@
+Description: consolidated patches from diff.gz
+This is a patch consolidation of old diff.gz patching system and the
+patches that came shipped with the source package.
+Index: steghide-0.5.1/src/Arguments.cc
+===================================================================
+--- steghide-0.5.1.orig/src/Arguments.cc
++++ steghide-0.5.1/src/Arguments.cc
+@@ -28,6 +28,8 @@
+ #include "error.h"
+ #include "msg.h"
+ 
++float Arguments::Default_Goal = 100.0 ;
++
+ // the global Arguments object
+ Arguments Args ;
+ 
+Index: steghide-0.5.1/src/Arguments.h
+===================================================================
+--- steghide-0.5.1.orig/src/Arguments.h
++++ steghide-0.5.1/src/Arguments.h
+@@ -100,7 +100,7 @@ class Arguments {
+ 	static const VERBOSITY	Default_Verbosity = NORMAL ;
+ 	static const unsigned long	Default_Radius = 0 ; // there is no default radius for all file formats
+ 	static const unsigned int	Max_Algorithm = 3 ;
+-	static const float		Default_Goal = 100.0 ;
++	static float			Default_Goal ;
+ 	static const DEBUGCOMMAND	Default_DebugCommand = NONE ;
+ 	static const bool		Default_Check = false ;
+ 	static const unsigned int	Default_DebugLevel = 0 ;
+Index: steghide-0.5.1/src/AuData.h
+===================================================================
+--- steghide-0.5.1.orig/src/AuData.h
++++ steghide-0.5.1/src/AuData.h
+@@ -26,22 +26,22 @@
+ 
+ // AuMuLawAudioData
+ typedef AudioDataImpl<AuMuLaw,BYTE> AuMuLawAudioData ;
+-inline BYTE AuMuLawAudioData::readValue (BinaryIO* io) const { return (io->read8()) ; }
+-inline void AuMuLawAudioData::writeValue (BinaryIO* io, BYTE v) const { io->write8(v) ; }
++template <> inline BYTE AuMuLawAudioData::readValue (BinaryIO* io) const { return (io->read8()) ; }
++template <> inline void AuMuLawAudioData::writeValue (BinaryIO* io, BYTE v) const { io->write8(v) ; }
+ 
+ // AuPCM8AudioData
+ typedef AudioDataImpl<AuPCM8,SBYTE> AuPCM8AudioData ;
+-inline SBYTE AuPCM8AudioData::readValue (BinaryIO* io) const { return ((SBYTE) io->read8()) ; }
+-inline void AuPCM8AudioData::writeValue (BinaryIO* io, SBYTE v) const { io->write8((BYTE) v) ; }
++template <> inline SBYTE AuPCM8AudioData::readValue (BinaryIO* io) const { return ((SBYTE) io->read8()) ; }
++template <> inline void AuPCM8AudioData::writeValue (BinaryIO* io, SBYTE v) const { io->write8((BYTE) v) ; }
+ 
+ // AuPCM16AudioData
+ typedef AudioDataImpl<AuPCM16,SWORD16> AuPCM16AudioData ;
+-inline SWORD16 AuPCM16AudioData::readValue (BinaryIO* io) const { return ((SWORD16) io->read16_be()) ; }
+-inline void AuPCM16AudioData::writeValue (BinaryIO* io, SWORD16 v) const { io->write16_be((UWORD16) v) ; }
++template <> inline SWORD16 AuPCM16AudioData::readValue (BinaryIO* io) const { return ((SWORD16) io->read16_be()) ; }
++template <> inline void AuPCM16AudioData::writeValue (BinaryIO* io, SWORD16 v) const { io->write16_be((UWORD16) v) ; }
+ 
+ // AuPCM32AudioData
+ typedef AudioDataImpl<AuPCM32,SWORD32> AuPCM32AudioData ;
+-inline SWORD32 AuPCM32AudioData::readValue (BinaryIO* io) const { return ((SWORD32) io->read32_be()) ; }
+-inline void AuPCM32AudioData::writeValue (BinaryIO* io, SWORD32 v) const { io->write32_be((UWORD32) v) ; }
++template <> inline SWORD32 AuPCM32AudioData::readValue (BinaryIO* io) const { return ((SWORD32) io->read32_be()) ; }
++template <> inline void AuPCM32AudioData::writeValue (BinaryIO* io, SWORD32 v) const { io->write32_be((UWORD32) v) ; }
+ 
+ #endif // ndef SH_AUDATA_H
+Index: steghide-0.5.1/src/AuSampleValues.cc
+===================================================================
+--- steghide-0.5.1.orig/src/AuSampleValues.cc
++++ steghide-0.5.1/src/AuSampleValues.cc
+@@ -21,17 +21,17 @@
+ #include "AuSampleValues.h"
+ 
+ // AuMuLawSampleValue
+-const BYTE AuMuLawSampleValue::MinValue = 0 ;
+-const BYTE AuMuLawSampleValue::MaxValue = BYTE_MAX ;
++template <> const BYTE AuMuLawSampleValue::MinValue = 0 ;
++template <> const BYTE AuMuLawSampleValue::MaxValue = BYTE_MAX ;
+ 
+ // AuPCM8SampleValue
+-const SBYTE AuPCM8SampleValue::MinValue = SBYTE_MIN ;
+-const SBYTE AuPCM8SampleValue::MaxValue = SBYTE_MAX ;
++template <> const SBYTE AuPCM8SampleValue::MinValue = SBYTE_MIN ;
++template <> const SBYTE AuPCM8SampleValue::MaxValue = SBYTE_MAX ;
+ 
+ // AuPCM16SampleValue
+-const SWORD16 AuPCM16SampleValue::MinValue = SWORD16_MIN ;
+-const SWORD16 AuPCM16SampleValue::MaxValue = SWORD16_MAX ;
++template <> const SWORD16 AuPCM16SampleValue::MinValue = SWORD16_MIN ;
++template <> const SWORD16 AuPCM16SampleValue::MaxValue = SWORD16_MAX ;
+ 
+ // AuPCM32SampleValue
+-const SWORD32 AuPCM32SampleValue::MinValue = SWORD32_MIN ;
+-const SWORD32 AuPCM32SampleValue::MaxValue = SWORD32_MAX ;
++template <> const SWORD32 AuPCM32SampleValue::MinValue = SWORD32_MIN ;
++template <> const SWORD32 AuPCM32SampleValue::MaxValue = SWORD32_MAX ;
+Index: steghide-0.5.1/src/EmbData.cc
+===================================================================
+--- steghide-0.5.1.orig/src/EmbData.cc
++++ steghide-0.5.1/src/EmbData.cc
+@@ -26,6 +26,7 @@
+ #include "MCryptPP.h"
+ #include "MHashPP.h"
+ #include "common.h"
++#include "config.h"
+ 
+ EmbData::EmbData (MODE m, std::string pp, std::string fn)
+ 	: Mode(m), Passphrase(pp), FileName(fn)
+Index: steghide-0.5.1/src/Graph.cc
+===================================================================
+--- steghide-0.5.1.orig/src/Graph.cc
++++ steghide-0.5.1/src/Graph.cc
+@@ -33,6 +33,8 @@
+ #include "msg.h"
+ #include "wrapper_hash_set.h"
+ 
++#include <climits>
++
+ Graph::Graph (CvrStgFile *cvr, const BitString& emb, Selector& sel)
+ {
+ 	Globs.TheGraph = this ;
+Index: steghide-0.5.1/src/MHashPP.cc
+===================================================================
+--- steghide-0.5.1.orig/src/MHashPP.cc
++++ steghide-0.5.1/src/MHashPP.cc
+@@ -120,7 +120,7 @@ std::string MHashPP::getAlgorithmName ()
+ 
+ std::string MHashPP::getAlgorithmName (hashid id)
+ {
+-	char *name = mhash_get_hash_name (id) ;
++	char *name = (char *) mhash_get_hash_name (id) ;
+ 	std::string retval ;
+ 	if (name == NULL) {
+ 		retval = std::string ("<algorithm not found>") ;
+Index: steghide-0.5.1/src/ProgressOutput.cc
+===================================================================
+--- steghide-0.5.1.orig/src/ProgressOutput.cc
++++ steghide-0.5.1/src/ProgressOutput.cc
+@@ -23,6 +23,8 @@
+ #include "ProgressOutput.h"
+ #include "common.h"
+ 
++float ProgressOutput::NoAvgWeight = -1.0 ;
++
+ ProgressOutput::ProgressOutput ()
+ 	: Message("__nomessage__")
+ {
+Index: steghide-0.5.1/src/ProgressOutput.h
+===================================================================
+--- steghide-0.5.1.orig/src/ProgressOutput.h
++++ steghide-0.5.1/src/ProgressOutput.h
+@@ -62,9 +62,9 @@ class ProgressOutput {
+ 	 * \param rate the rate of matched vertices
+ 	 * \param avgweight the average edge weight (is not printed if not given)
+ 	 **/
+-	void done (float rate, float avgweight = NoAvgWeight) const ;
++	void done (float rate, float avgweight = 1.0) const ;
+ 
+-	static const float NoAvgWeight = -1.0 ;
++	static float NoAvgWeight ;
+ 
+ 	protected:
+ 	std::string vcompose (const char *msgfmt, va_list ap) const ;
+Index: steghide-0.5.1/src/wrapper_hash_map.h
+===================================================================
+--- steghide-0.5.1.orig/src/wrapper_hash_map.h
++++ steghide-0.5.1/src/wrapper_hash_map.h
+@@ -29,7 +29,7 @@
+     namespace sgi { using ::hash ; using ::hash_map ; } ;
+ # else
+ #  include <ext/hash_map>
+-#  if __GNUC_MINOR__ == 0
++#  if __GNUC__ == 3 &&  __GNUC_MINOR__ == 0
+     namespace sgi = std ;			// GCC 3.0
+ #  else
+     namespace sgi = __gnu_cxx ;	// GCC 3.1 and later
+Index: steghide-0.5.1/src/wrapper_hash_set.h
+===================================================================
+--- steghide-0.5.1.orig/src/wrapper_hash_set.h
++++ steghide-0.5.1/src/wrapper_hash_set.h
+@@ -30,7 +30,7 @@
+     namespace sgi { using ::hash ; using ::hash_set ; } ;
+ # else
+ #  include <ext/hash_set>
+-#  if __GNUC_MINOR__ == 0
++#  if __GNUC__ == 3 && __GNUC_MINOR__ == 0
+     namespace sgi = std ;			// GCC 3.0
+ #  else
+     namespace sgi = ::__gnu_cxx ;	// GCC 3.1 and later

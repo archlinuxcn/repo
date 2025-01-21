@@ -1,0 +1,54 @@
+# Maintainer: Marco Pompili [ marcs (dot) pompili (at) gmail (dot) com ]
+# Contributor: Lukas Fleischer <lfleischer@archlinux.org>
+# Contributor: Tom Newsom <Jeepster@gmx.co.uk>
+# Contributor: Jason Chu <jason@archlinux.org>
+# Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
+
+pkgname=steghide
+pkgver=0.5.1
+pkgrel=11
+pkgdesc='Embeds a message in a file by replacing some of the least significant bits'
+arch=('x86_64')
+url='http://steghide.sourceforge.net'
+license=('GPL')
+depends=('libmcrypt' 'gcc-libs' 'mhash' 'libjpeg' 'zlib')
+source=("steghide-${pkgver}.tar.gz::https://sourceforge.net/projects/steghide/files/steghide/${pkgver}/steghide-${pkgver}.tar.gz/download"
+        buildsystem.patch
+        include-climits.patch
+        add-hardening.patch
+        fix-spelling.patch
+        consolidated-gcc-patches.patch
+        correct-german.patch)
+sha256sums=('78069b7cfe9d1f5348ae43f918f06f91d783c2b3ff25af021e6a312cf541b47b'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  msg2 "Applying fixes patches"
+  patch -p1 < ../buildsystem.patch
+  patch -p1 -i ../include-climits.patch
+
+  msg2 "Apply patches from Debian"
+  patch -Np1 -i ../add-hardening.patch
+  patch -Np1 -i ../fix-spelling.patch
+  patch -Np1 -i ../consolidated-gcc-patches.patch
+  patch -Np1 -i ../correct-german.patch
+
+  # touch files needed by GNU Autotools
+  touch NEWS AUTHORS ChangeLog
+  
+  ./configure --prefix=/usr --mandir=/usr/share/man
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}
