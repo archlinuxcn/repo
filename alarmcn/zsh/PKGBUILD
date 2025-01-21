@@ -1,0 +1,139 @@
+# Maintainer: Pierre Schmitz <pierre@archlinux.de>
+
+pkgbase=zsh
+pkgname=('zsh' 'zsh-doc')
+pkgver=5.9
+pkgrel=5
+arch=('x86_64')
+url='https://www.zsh.org/'
+license=('custom')
+makedepends=('pcre2' 'libcap' 'gdbm' 'yodl')
+source=("https://www.zsh.org/pub/zsh-${pkgver}"{,-doc}".tar.xz"{,.asc}
+        '0001-50629-do-not-use-egrep-in-tests.patch'
+        '0001-50641-use-int-main.patch'
+        '0002-50325-fix-autocompletion.patch'
+        '0003-51862-support-texinfo-7-0.patch'
+        '0004-pcre2.patch'
+        '0005-52383-avoid-incompatible-pointer-types.patch'
+        'zprofile')
+sha512sums=('d9138b7f379ad942a5f46819d2dd52d31f3a1129f2a0d1b53d4c5cd43c318b60396da6d37c57c477b8e958fb750209aca0ae93f8c9dd42ac958de006a0ff067e'
+            'SKIP'
+            '5cc6abcdcfb4f5ad7bc4a31364ca49dfd87ae03e0082d89cc2ba1f00570f6757266ee60894ad31b562408de91494c22f177b414b03cb78c31d92328686be9860'
+            'SKIP'
+            'af6a905e83807efb614a585ac1876e0a9cc8b745911b43915b06aab46757a6df6dfc64a7a60b53cc7e62e528c04aa7460e660a1de6720476030dd746af76c6e3'
+            'c237c5a282b829fd154931c4df8e8b32514695cdde5d3b3a1ae8381169c853c11138bb8dad319bfc54fe79d8446a52cc3deaf50801b7dc323c357d7988ebc1a2'
+            'fa01836f40602e158fa5e802e8f2548af751c806c87a54e1761196497b2c35a68c6f8a195a5aac22c3c27e59b80b2f50bf590f124afe3ed4a9289b00033aff1f'
+            '891577e8c3a5beb236a7044a0960a014d8a7149ce5dba7715f07b1e4d2db475f4aab7bb6cfeadaaeffe37fb889836f368467882fba1a5ac23076548185432d51'
+            '2b6fd1d077244023591e7e2995797e90b2cda7f9c8b3978521c0b77ef1c363f175b6ebb48730deb7171c695cba23c9455d71c3ddc5a55da91832274121587af5'
+            '984c804bfa4c7c9b1ddba9f18bbd29846bf6f2b3171f39bb775c11c8b1c7b5ad2c68d2922a59265c58f6e83016d6d440d64862c529d82f90cad308fd2af757ce'
+            'b287e00d8de4dc4cfb1c52bb2aef1d4b191de3512baad4c91dc81e78ddc3e5bb07297f43924b022ac44ff401a348d8a9fa366e19ddc8ea1ea72df311f5ed0034')
+validpgpkeys=('F7B2754C7DE2830914661F0EA71D9A9D4BDB27B3'
+              'E96646BE08C0AF0AA0F90788A5FEEE3AC7937444'
+              '7CA7ECAAF06216B90F894146ACF8146CAE8CBBC4')
+
+prepare() {
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+
+  # 50629: do not use egrep in tests
+  # 50641: use 'int main()' in test C-codes in configure
+  patch -Np1 < ../0001-50629-do-not-use-egrep-in-tests.patch
+  patch -Np1 < ../0001-50641-use-int-main.patch
+
+  # 50325: revert 38150 and fix in calling function cfp_matcher_range() instead
+  patch -Np1 < ../0002-50325-fix-autocompletion.patch
+
+  # 51862: support texinfo-7.0
+  patch -Np1 < ../0003-51862-support-texinfo-7-0.patch
+
+  # prepare for pcre2
+  # 50658 + test: Enable to switch between C/UTF-8 locales in PCRE
+  # 51723: migrate pcre module to pcre2
+  # 51877: do not build pcre module if pcre2-config is not found
+  patch -Np1 < ../0004-pcre2.patch
+
+  # 52394: Avoid incompatible pointer types in terminfo global variable checks
+  patch -Np1 < ../0005-52383-avoid-incompatible-pointer-types.patch
+
+  # Set correct keymap path
+  sed -i 's#/usr/share/keymaps#/usr/share/kbd/keymaps#g' Completion/Unix/Command/_loadkeys
+
+  # Fix usb.ids path
+  sed -i 's#/usr/share/misc/usb.ids#/usr/share/hwdata/usb.ids#g' Completion/Linux/Command/_lsusb
+
+  # Remove unneeded and conflicting completion scripts
+  for _fpath in AIX BSD Cygwin Darwin Debian Mandriva openSUSE Redhat Solaris; do
+    rm -rf Completion/$_fpath
+    sed "s#\s*Completion/$_fpath/\*/\*##g" -i Src/Zle/complete.mdd
+  done
+  rm Completion/Linux/Command/_pkgtool
+
+  # force generation of documentation with correct paths
+  rm Doc/version.yo
+
+  # regenerate configure script
+  autoreconf -fi
+}
+
+build() {
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+
+  ./configure \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/zsh \
+    --htmldir=/usr/share/doc/zsh/html \
+    --enable-etcdir=/etc/zsh \
+    --enable-zshenv=/etc/zsh/zshenv \
+    --enable-zlogin=/etc/zsh/zlogin \
+    --enable-zlogout=/etc/zsh/zlogout \
+    --enable-zprofile=/etc/zsh/zprofile \
+    --enable-zshrc=/etc/zsh/zshrc \
+    --enable-maildir-support \
+    --with-term-lib='ncursesw' \
+    --enable-multibyte \
+    --enable-function-subdirs \
+    --enable-fndir=/usr/share/zsh/functions \
+    --enable-scriptdir=/usr/share/zsh/scripts \
+    --with-tcsetpgrp \
+    --enable-pcre \
+    --enable-gdbm \
+    --enable-cap \
+    --enable-zsh-secure-free
+  make
+}
+
+check() {
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  HOME="${srcdir}" make check
+}
+
+package_zsh() {
+  pkgdesc='A very advanced and programmable command interpreter (shell) for UNIX'
+  depends=('pcre2' 'libcap' 'gdbm')
+  optdepends=(
+    "grml-zsh-config: grml's zsh setup"
+    'zsh-autosuggestions: Fish-like autosuggestions for zsh'
+    'zsh-completions: Additional completion definitions for Zsh'
+    'zsh-doc: Info, HTML and PDF format of the ZSH documentation'
+    'zsh-history-substring-search: ZSH port of Fish history search (up arrow)'
+    'zsh-lovers: A collection of tips, tricks and examples for the Z shell.'
+    'zsh-syntax-highlighting: Fish shell like syntax highlighting for Zsh'
+    'zshdb: A debugger for zsh scripts')
+  backup=('etc/zsh/zprofile')
+  install=zsh.install
+
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+
+  make DESTDIR="${pkgdir}/" install
+  install -D -m0644 "${srcdir}/zprofile" "${pkgdir}/etc/zsh/zprofile"
+  install -D -m0644 LICENCE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_zsh-doc() {
+  pkgdesc='Info, HTML and PDF format of the ZSH documentation'
+
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+
+  make DESTDIR="${pkgdir}/" install.info install.html
+  install -D -m0644 Doc/zsh.pdf "${pkgdir}/usr/share/doc/zsh/zsh.pdf"
+  install -D -m0644 LICENCE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
