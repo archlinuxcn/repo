@@ -19,8 +19,6 @@ build() {
     -W no-dev
     -D CMAKE_BUILD_TYPE=None
     -D CMAKE_INSTALL_PREFIX=/usr
-    -D BKCRACK_BUILD_DOC=ON
-    -D BKCRACK_BUILD_TESTING=ON
   )
   cmake "${cmake_options[@]}"
   cmake --build build
