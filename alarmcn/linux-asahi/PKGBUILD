@@ -28,6 +28,7 @@ options=('!strip')
 source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
+  enable-mic.patch
 )
 sha256sums=('86d1742a6e05852f190abb74466a76982af5a59e15b8b273fed8686d46deb7d1'
             'c919489632ec77a59fbb6bb210940fceb2cac30e3ab80566915a581d2f8159fb')
