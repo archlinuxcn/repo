@@ -1,0 +1,71 @@
+From a8f1af8df7241f977ff4c85b9ef9e0988c4aadf6 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 21 Jan 2025 11:42:47 -0500
+Subject: [PATCH 4/4] Fix for renamed/removed passes in LLVM 19
+
+Ref: https://github.com/llvm/llvm-project/commit/e390c229a438ed1eb3396df8fbeeda89c49474e6
+Ref: https://github.com/llvm/llvm-project/commit/ac3bd2bd530127786741bd9f164d66a3c3f40961
+---
+ src/newpm.jl | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/src/newpm.jl b/src/newpm.jl
+index f95304eb..22ffe391 100644
+--- a/src/newpm.jl
++++ b/src/newpm.jl
+@@ -582,7 +582,11 @@ Base.string(options::CoroSplitPassOptions) =
+ @function_pass "view-post-dom" PostDomViewer
+ @function_pass "view-post-dom-only" PostDomOnlyViewer
+ @function_pass "fix-irreducible" FixIrreduciblePass
+-@function_pass "flattencfg" FlattenCFGPass
++@static if LLVM.version() < v"19"
++    @function_pass "flattencfg" FlattenCFGPass
++else
++    @function_pass "flatten-cfg" FlattenCFGPass
++end
+ @function_pass "make-guards-explicit" MakeGuardsExplicitPass
+ @function_pass "gvn-hoist" GVNHoistPass
+ @function_pass "gvn-sink" GVNSinkPass
+@@ -599,7 +603,11 @@ Base.string(options::CoroSplitPassOptions) =
+ @function_pass "lint" LintPass
+ @function_pass "inject-tli-mappings" InjectTLIMappings
+ @function_pass "instnamer" InstructionNamerPass
+-@function_pass "loweratomic" LowerAtomicPass
++@static if LLVM.version() < v"19"
++    @function_pass "loweratomic" LowerAtomicPass
++else
++    @function_pass "lower-atomic" LowerAtomicPass
++end
+ @function_pass "lower-expect" LowerExpectIntrinsicPass
+ @function_pass "lower-guard-intrinsic" LowerGuardIntrinsicPass
+ @function_pass "lower-constant-intrinsics" LowerConstantIntrinsicsPass
+@@ -608,8 +616,13 @@ Base.string(options::CoroSplitPassOptions) =
+ @function_pass "load-store-vectorizer" LoadStoreVectorizerPass
+ @function_pass "loop-simplify" LoopSimplifyPass
+ @function_pass "loop-sink" LoopSinkPass
+-@function_pass "lowerinvoke" LowerInvokePass
+-@function_pass "lowerswitch" LowerSwitchPass
++@static if LLVM.version() < v"19"
++    @function_pass "lowerinvoke" LowerInvokePass
++    @function_pass "lowerswitch" LowerSwitchPass
++else
++    @function_pass "lower-invoke" LowerInvokePass
++    @function_pass "lower-switch" LowerSwitchPass
++end
+ @function_pass "mem2reg" PromotePass
+ @function_pass "memcpyopt" MemCpyOptPass
+ @function_pass "mergeicmps" MergeICmpsPass
+@@ -863,7 +876,9 @@ Base.string(options::StackLifetimePrinterPassOptions) =
+ @loop_pass "loop-predication" LoopPredicationPass
+ @loop_pass "guard-widening" GuardWideningPass
+ @loop_pass "loop-bound-split" LoopBoundSplitPass
+-@loop_pass "loop-reroll" LoopRerollPass
++@static if LLVM.version() < v"19"
++    @loop_pass "loop-reroll" LoopRerollPass
++end
+ @loop_pass "loop-versioning-licm" LoopVersioningLICMPass
+ 
+ Base.@kwdef struct SimpleLoopUnswitchPassOptions
+-- 
+2.47.1
+
