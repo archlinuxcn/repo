@@ -10,6 +10,9 @@ def pre_build():
   g.files = download_official_pkgbuild('7zip')
 
   for line in edit_file('PKGBUILD'):
+    # Do not replace for now since the build server package db isn't updated yet
+    if line.startswith('replace='):
+      line = '_' + line
     if line.startswith('arch='):
       line = 'arch=(aarch64 x86_64)'
     print(line)
