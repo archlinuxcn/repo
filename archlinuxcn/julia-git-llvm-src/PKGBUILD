@@ -8,8 +8,18 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit")
+source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit"
+        0001-Generate-julia-wrappers-for-LLVM19.patch
+        0002-Update-LLVM-version-check.patch
+        0003-Remove-unavailable-constant-expression-functions-on-.patch)
 sha256sums=('c0091f6ff13814e693de92c0038ddb2d0d53c4cffd88f8b6b61ce99e3d8b08c1')
+
+prepare() {
+  cd LLVM.jl
+  patch -Np1 --no-backup-if-mismatch < ../0001-Generate-julia-wrappers-for-LLVM19.patch
+  patch -Np1 --no-backup-if-mismatch < ../0002-Update-LLVM-version-check.patch
+  patch -Np1 --no-backup-if-mismatch < ../0003-Remove-unavailable-constant-expression-functions-on-.patch
+}
 
 package() {
   cd LLVM.jl

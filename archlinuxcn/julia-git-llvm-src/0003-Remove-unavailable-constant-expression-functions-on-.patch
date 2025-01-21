@@ -1,0 +1,102 @@
+From baaf7f5a2e54f2ad77c08c9b996b7e943f4adb43 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 21 Jan 2025 09:59:47 -0500
+Subject: [PATCH 3/3] Remove unavailable constant expression functions on LLVM
+ 19
+
+---
+ src/core/value/constant.jl | 28 +++++++++++++++++-----------
+ test/core_tests.jl         | 16 ++++++++++------
+ 2 files changed, 27 insertions(+), 17 deletions(-)
+
+diff --git a/src/core/value/constant.jl b/src/core/value/constant.jl
+index deac6401..4a89cd6c 100644
+--- a/src/core/value/constant.jl
++++ b/src/core/value/constant.jl
+@@ -527,8 +527,8 @@ export ConstantExpr,
+ 
+        const_neg, const_nswneg, const_nuwneg, const_not, const_add,
+        const_nswadd, const_nuwadd, const_sub, const_nswsub, const_nuwsub, const_mul,
+-       const_nswmul, const_nuwmul, const_xor, const_icmp, const_fcmp,
+-       const_shl, const_gep, const_inbounds_gep, const_trunc,
++       const_nswmul, const_nuwmul, const_xor,
++       const_gep, const_inbounds_gep, const_trunc,
+        const_ptrtoint, const_inttoptr, const_bitcast,
+        const_addrspacecast, const_truncorbitcast,
+        const_pointercast, const_shufflevector
+@@ -590,15 +590,6 @@ const_nuwmul(lhs::Constant, rhs::Constant) =
+ const_xor(lhs::Constant, rhs::Constant) =
+     Value(API.LLVMConstXor(lhs, rhs))
+ 
+-const_icmp(Predicate::API.LLVMIntPredicate, lhs::Constant, rhs::Constant) =
+-    Value(API.LLVMConstICmp(Predicate, lhs, rhs))
+-
+-const_fcmp(Predicate::API.LLVMRealPredicate, lhs::Constant, rhs::Constant) =
+-    Value(API.LLVMConstFCmp(Predicate, lhs, rhs))
+-
+-const_shl(lhs::Constant, rhs::Constant) =
+-    Value(API.LLVMConstShl(lhs, rhs))
+-
+ function const_gep(Ty::LLVMType, val::Constant, Indices::Vector{<:Constant})
+     Value(API.LLVMConstGEP2(Ty, val, Indices, length(Indices)))
+ end
+@@ -743,6 +734,21 @@ const_sextorbitcast(val::Constant, ToType::LLVMType) =
+ 
+ end
+ 
++if version() < v"19"
++
++export const_icmp, const_fcmp, const_shl
++
++const_icmp(Predicate::API.LLVMIntPredicate, lhs::Constant, rhs::Constant) =
++    Value(API.LLVMConstICmp(Predicate, lhs, rhs))
++
++const_fcmp(Predicate::API.LLVMRealPredicate, lhs::Constant, rhs::Constant) =
++    Value(API.LLVMConstFCmp(Predicate, lhs, rhs))
++
++const_shl(lhs::Constant, rhs::Constant) =
++    Value(API.LLVMConstShl(lhs, rhs))
++
++end
++
+ # TODO: alignof, sizeof, block_address
+ 
+ 
+diff --git a/test/core_tests.jl b/test/core_tests.jl
+index 002bf619..24b7ed8c 100644
+--- a/test/core_tests.jl
++++ b/test/core_tests.jl
+@@ -615,11 +615,13 @@ end
+         ce = const_xor(val, other_val)::LLVM.Constant
+         @check_ir ce "i32 40"
+ 
+-        ce = const_icmp(LLVM.API.LLVMIntUGT, val, other_val)::LLVM.Constant
+-        @check_ir ce "i1 true"
++        if LLVM.version() < v"19"
++            ce = const_icmp(LLVM.API.LLVMIntUGT, val, other_val)::LLVM.Constant
++            @check_ir ce "i1 true"
+ 
+-        ce = const_shl(val, other_val)::LLVM.Constant
+-        @check_ir ce "i32 168"
++            ce = const_shl(val, other_val)::LLVM.Constant
++            @check_ir ce "i32 168"
++        end
+ 
+         for f in [const_trunc, const_truncorbitcast]
+             ce = const_trunc(val, LLVM.Int16Type())::LLVM.Constant
+@@ -684,8 +686,10 @@ end
+         val = LLVM.ConstantFP(Float32(42.); )
+ 
+         other_val = LLVM.ConstantFP(Float32(2.))
+-        ce = const_fcmp(LLVM.API.LLVMRealUGT, val, other_val)::LLVM.Constant
+-        @check_ir ce "i1 true"
++        if LLVM.version() < v"19"
++            ce = const_fcmp(LLVM.API.LLVMRealUGT, val, other_val)::LLVM.Constant
++            @check_ir ce "i1 true"
++        end
+ 
+         if LLVM.version() < v"15"
+             other_val = LLVM.ConstantFP(Float32(2.))
+-- 
+2.47.1
+

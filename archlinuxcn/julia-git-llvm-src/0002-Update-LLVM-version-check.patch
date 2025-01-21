@@ -1,0 +1,29 @@
+From da34b1f58c598ffd284ec2f1eb77ba57ca4e5870 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 21 Jan 2025 09:59:06 -0500
+Subject: [PATCH 2/3] Update LLVM version check
+
+---
+ src/LLVM.jl | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/LLVM.jl b/src/LLVM.jl
+index 72a9ec2e..4ac844e4 100644
+--- a/src/LLVM.jl
++++ b/src/LLVM.jl
+@@ -39,9 +39,9 @@ let
+     if version().major < 15
+         error("LLVM.jl only supports LLVM 15 and later.")
+     end
+-    dir = if version().major > 18
+-        @warn "LLVM.jl has not been tested with LLVM versions newer than 18."
+-        joinpath(@__DIR__, "..", "lib", "18")
++    dir = if version().major > 19
++        @warn "LLVM.jl has not been tested with LLVM versions newer than 19."
++        joinpath(@__DIR__, "..", "lib", "19")
+     else
+         joinpath(@__DIR__, "..", "lib", string(version().major))
+     end
+-- 
+2.47.1
+
