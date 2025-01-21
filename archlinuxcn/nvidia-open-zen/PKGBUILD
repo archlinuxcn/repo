@@ -19,7 +19,7 @@ makedepends=(
     "${_lkname}-headers"
     "nvidia-open-dkms=${pkgver}"
 )
-provides=("NVIDIA-MODULE=${pkgver}")
+provides=("nvidia-open=${pkgver}")
 conflicts=('nvidia-open-dkms')
 options=('!strip')
 
