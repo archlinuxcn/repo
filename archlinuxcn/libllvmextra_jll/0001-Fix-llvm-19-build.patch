@@ -1,0 +1,25 @@
+From c66617b93d18af86d283f154d90de0031bda684b Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 21 Jan 2025 08:53:19 -0500
+Subject: [PATCH 1/2] Fix llvm-19 build
+
+Explicitly include Module.h for wrap and unwrap functions.
+---
+ deps/LLVMExtra/lib/NewPM.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/deps/LLVMExtra/lib/NewPM.cpp b/deps/LLVMExtra/lib/NewPM.cpp
+index 2b765698..ccd65adb 100644
+--- a/deps/LLVMExtra/lib/NewPM.cpp
++++ b/deps/LLVMExtra/lib/NewPM.cpp
+@@ -1,6 +1,7 @@
+ #include "LLVMExtra.h"
+ 
+ #include <llvm/Analysis/AliasAnalysis.h>
++#include <llvm/IR/Module.h>
+ #include <llvm/IR/Verifier.h>
+ #include <llvm/Passes/PassBuilder.h>
+ #include <llvm/Passes/StandardInstrumentations.h>
+-- 
+2.47.1
+
