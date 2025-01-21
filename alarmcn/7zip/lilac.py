@@ -11,7 +11,7 @@ def pre_build():
 
   for line in edit_file('PKGBUILD'):
     # Do not replace for now since the build server package db isn't updated yet
-    if line.startswith('replace='):
+    if line.startswith('replaces='):
       line = '_' + line
     if line.startswith('arch='):
       line = 'arch=(aarch64 x86_64)'
