@@ -10,7 +10,7 @@ url="https://github.com/MatthiasValvekens/${_name}"
 license=(MIT)
 depends=(python python-asn1crypto python-oscrypto python-cryptography python-uritools python-requests python-aiohttp)
 makedepends=(python-build python-installer python-setuptools python-wheel)
-checkdepends=(python-pytest python-freezegun)
+checkdepends=(python-pytest python-freezegun python-pytest-asyncio)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
 sha512sums=('7362fceb3d65e03d95e58105888ba206e3c78f8352a13604356c7daa063e45e98592d8fba94c558c0c8d7cd27dbb8366540cfa2a436908e2285a61e450850a0c')
 
