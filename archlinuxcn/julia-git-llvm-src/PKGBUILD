@@ -8,24 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit"
-        0001-Generate-julia-wrappers-for-LLVM19.patch
-        0002-Update-LLVM-version-check.patch
-        0003-Remove-unavailable-constant-expression-functions-on-.patch
-        0004-Fix-for-renamed-removed-passes-in-LLVM-19.patch)
-sha256sums=('c0091f6ff13814e693de92c0038ddb2d0d53c4cffd88f8b6b61ce99e3d8b08c1'
-            'ad8fc8b9b290d7ebb4d7362a07704e1b4e402fdea6bdd4dcf13c6267fd59a04b'
-            'f6b2a3b92fe62c280ab0a66ecb3853bd93fca7abcc65190649cdda0f9b979c23'
-            '8c75b297965d3bfdf74dd0485bf36f9a4ac82b6e048efc661fc0e916108674a3'
-            'f8ad774d668c47f4296bc968e09e79f5d098b45e9bb4a1feea8d0f9ff3cceeb9')
-
-prepare() {
-  cd LLVM.jl
-  patch -Np1 --no-backup-if-mismatch < ../0001-Generate-julia-wrappers-for-LLVM19.patch
-  patch -Np1 --no-backup-if-mismatch < ../0002-Update-LLVM-version-check.patch
-  patch -Np1 --no-backup-if-mismatch < ../0003-Remove-unavailable-constant-expression-functions-on-.patch
-  patch -Np1 --no-backup-if-mismatch < ../0004-Fix-for-renamed-removed-passes-in-LLVM-19.patch
-}
+source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit")
+sha256sums=('c0091f6ff13814e693de92c0038ddb2d0d53c4cffd88f8b6b61ce99e3d8b08c1')
 
 package() {
   cd LLVM.jl
