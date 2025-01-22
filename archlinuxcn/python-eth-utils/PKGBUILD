@@ -2,8 +2,8 @@
 
 _name=eth-utils
 pkgname=python-${_name}
-pkgver=5.1.0
-pkgrel=3
+pkgver=5.2.0
+pkgrel=1
 pkgdesc="Utility functions for working with ethereum related codebases."
 arch=(any)
 url="https://github.com/ethereum/${_name}"
@@ -12,7 +12,7 @@ depends=(python python-eth-hash python-eth-typing python-cytoolz)
 makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx python-sphinx_rtd_theme)
 checkdepends=(python-pytest mypy python-hypothesis)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('78bf14124150bb0da5cca17680cc67998bc1738eebc73941fc12f2d932845c377989e872bafb076f7f9bac806e27b0dd6d000dc21fa24c3d8e710157f0ec7d6e')
+sha512sums=('312e0b5b5b51df74b0a26220008c98b5c19e77e56228a29ad84b80f8c0ad1bb38feb41d185f6393a2c76df69a8e0f3e7bca9cfc1ae97e0675f6aa8bb2cd74fdf')
 
 build() {
   cd $_name-$pkgver
