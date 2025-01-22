@@ -1,7 +1,7 @@
 pkgname=julia-git-almostblockdiagonals-src
 pkgver=0.1.10
 _commit=324b095bb330568ec02cad4d32224a478b5d4876
-pkgrel=1
+pkgrel=2
 pkgdesc="AlmostBlockDiagonals.jl"
 url="https://github.com/ErikQQY/AlmostBlockDiagonals.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/ErikQQY/AlmostBlockDiagonals.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('95de15cbf418a622dfb3bb66bee1f9718a3d400c7451af0cc9f03fae744d70ef')
 
 package() {
   cd AlmostBlockDiagonals.jl
