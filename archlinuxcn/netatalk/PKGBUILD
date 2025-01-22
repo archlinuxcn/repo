@@ -5,19 +5,15 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.1.0
+pkgver=4.1.1
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
 
-source=(
-  "https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz"
-  'bdb.patch'
-)
+source=("https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz")
 
-md5sums=('b1f4ac9cdbaacf738123070fcd8bb17a'
-         'df0445e8149a7dfa3b12979d6be78a27')
+md5sums=('7f0ec433623144a8f3a6559c1004d13e')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -58,11 +54,6 @@ backup=('etc/afp.conf'
         'etc/extmap.conf'
         'etc/papd.conf'
         'etc/pam.d/netatalk')
-
-prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -p1 < "${srcdir}/bdb.patch" 
-}
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
