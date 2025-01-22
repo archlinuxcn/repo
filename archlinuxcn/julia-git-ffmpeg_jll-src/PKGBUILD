@@ -1,6 +1,6 @@
 pkgname=julia-git-ffmpeg_jll-src
-pkgver=6.1.2+0
-_commit=626782fc0586f6da744093f1031429d28817dfb4
+pkgver=7.1.0+0
+_commit=fc2dcb29b1cb6bafba2fe384aea960f03c65a0af
 pkgrel=1
 pkgdesc="FFMPEG_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/FFMPEG_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git ffmpeg)
 source=("git+https://github.com/JuliaBinaryWrappers/FFMPEG_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('405cd8d54a07a9d544ca973ef586cecd6ce7e55fac4ac605872f3d2621696f2c'
+sha256sums=('9f8fa83bb27efe1496c8316c347bd2e5f11df95851072c154134292806956772'
             'ed000cbc5ca7134e0fa79e8c3433125d92c534df953752041f16430e49c9c0a8')
 
 build() {
