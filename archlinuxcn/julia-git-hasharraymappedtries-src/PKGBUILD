@@ -1,0 +1,18 @@
+pkgname=julia-git-hasharraymappedtries-src
+pkgver=0.2.0
+_commit=e3d6629d558fb71aa813dd52a50d71b7cc7a31f2
+pkgrel=1
+pkgdesc="HashArrayMappedTries.jl"
+url="https://github.com/vchuravy/HashArrayMappedTries.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/vchuravy/HashArrayMappedTries.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd HashArrayMappedTries.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh HashArrayMappedTries "${pkgdir}" "${pkgname}" julia-git
+}
