@@ -1,0 +1,73 @@
+From 38ad9c78cd3058bf95091bf058a0b5c3e09263e5 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Fri, 17 Jan 2025 16:51:05 +0200
+Subject: [PATCH 6/6] build: Stop forcing `-mno-avx` for 32bit libraries
+
+Instead set `-mpreferred-stack-boundary=2` for dxvk/dxvk-nvapi/vkd3d-proton
+as per https://github.com/wine-mirror/wine/commit/4b458775bb8c9492ac859cfd167c5f54f245dec1
+
+Also set `-prefer-avx128` for the same libraries on 64bit
+to stop depending on `mtune=generic`
+---
+ Makefile.in         | 8 +++++++-
+ make/rules-meson.mk | 4 ++--
+ 2 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 97103d15..768ff1b8 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -59,7 +59,7 @@ OPTIMIZE_FLAGS := $(CFLAGS) -mfpmath=sse
+ SANITY_FLAGS   := -fwrapv -fno-strict-aliasing
+ DEBUG_FLAGS    := -ggdb -ffunction-sections -fdata-sections -fno-omit-frame-pointer
+ COMMON_FLAGS    = -s $(OPTIMIZE_FLAGS) $(SANITY_FLAGS) -ffile-prefix-map=$(CCACHE_BASEDIR)=.
+-COMMON_FLAGS32 := -mstackrealign -mno-avx
++COMMON_FLAGS32 := -mstackrealign
+ COMMON_FLAGS64 := -mcmodel=small
+ CARGO_BUILD_ARGS += --release
+ 
+@@ -509,6 +509,8 @@ DXVK_MESON_ARGS32 = --bindir=$(DXVK_DST32)/lib/wine/dxvk
+ DXVK_MESON_ARGS64 = --bindir=$(DXVK_DST64)/lib64/wine/dxvk
+ DXVK_DEPENDS = glslang
+ 
++DXVK_FLAGS64 = -mprefer-avx128
++DXVK_FLAGS32 = -mprefer-avx128 -mpreferred-stack-boundary=2
+ DXVK_CPPFLAGS = -msse -msse2
+ DXVK_LDFLAGS = -static -static-libgcc -static-libstdc++
+ 
+@@ -539,6 +541,8 @@ $(OBJ)/.dxvk-post-build32:
+ DXVK_NVAPI_MESON_ARGS32 = --bindir=$(DXVK_NVAPI_DST32)/lib/wine/nvapi
+ DXVK_NVAPI_MESON_ARGS64 = --bindir=$(DXVK_NVAPI_DST64)/lib64/wine/nvapi
+ 
++DXVK_NVAPI_FLAGS64 = -mprefer-avx128
++DXVK_NVAPI_FLAGS32 = -mprefer-avx128 -mpreferred-stack-boundary=2
+ DXVK_NVAPI_CPPFLAGS = -msse -msse2
+ DXVK_NVAPI_LDFLAGS = -static -static-libgcc -static-libstdc++
+ 
+@@ -624,6 +628,8 @@ ifneq ($(UNSTRIPPED_BUILD),)
+ 	VKD3D_PROTON_MESON_ARGS = -Denable_trace=true
+ endif
+ 
++VKD3D_PROTON_FLAGS64 = -mprefer-avx128
++VKD3D_PROTON_FLAGS32 = -mprefer-avx128 -mpreferred-stack-boundary=2
+ VKD3D_PROTON_CPPFLAGS = -msse -msse2
+ VKD3D_PROTON_LDFLAGS = -static -static-libgcc -static-libstdc++
+ 
+diff --git a/make/rules-meson.mk b/make/rules-meson.mk
+index 93860875..7c4ffe10 100644
+--- a/make/rules-meson.mk
++++ b/make/rules-meson.mk
+@@ -23,8 +23,8 @@ pkgconfig = '$$$$PKG_CONFIG'
+ 
+ [properties]
+ needs_exe_wrapper = true
+-c_args = [$$(call list-quote,$$($(2)_INCFLAGS$(3)) $$($(2)_CPPFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3)))]
+-cpp_args = [$$(call list-quote,$$($(2)_INCFLAGS$(3)) $$($(2)_CPPFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3)) -std=c++17)]
++c_args = [$$(call list-quote,$$($(2)_INCFLAGS$(3)) $$($(2)_CPPFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3)) $$($(2)_FLAGS$(3)))]
++cpp_args = [$$(call list-quote,$$($(2)_INCFLAGS$(3)) $$($(2)_CPPFLAGS) $$(COMMON_FLAGS) $$(COMMON_FLAGS$(3)) $$($(2)_FLAGS$(3)) -std=c++17)]
+ link_args = [$$(call list-quote,$$($(2)_LIBFLAGS$(3)) $$($(2)_LDFLAGS$(3)) $$($(2)_LDFLAGS) $$(CROSSLDFLAGS))]
+ pkg_config_libdir = '$$$$CROSSPKG_CONFIG_LIBDIR'
+ 
+-- 
+2.48.1
+

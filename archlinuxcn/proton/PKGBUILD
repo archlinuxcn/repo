@@ -7,7 +7,7 @@ pkgver=9.0.4.3
 _geckover=2.47.4
 _monover=9.3.1
 _xaliaver=0.4.4
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
 url="https://github.com/ValveSoftware/Proton"
@@ -93,6 +93,7 @@ source=(
     0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     0004-AUR-Strip-binaries-early.patch
     0005-AUR-Fix-hwnd-redefinition.patch
+    0006-build-Stop-forcing-mno-avx-for-32bit-libraries.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -165,6 +166,7 @@ prepare() {
     patch -p1 -i "$srcdir"/0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     patch -p1 -i "$srcdir"/0004-AUR-Strip-binaries-early.patch
     patch -p1 -i "$srcdir"/0005-AUR-Fix-hwnd-redefinition.patch
+    patch -p1 -i "$srcdir"/0006-build-Stop-forcing-mno-avx-for-32bit-libraries.patch
 }
 
 build() {
@@ -181,18 +183,12 @@ build() {
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
     local march="${flags["-march"]:-nocona}"
-    local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
 
     CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     RUSTFLAGS="-C opt-level=3 -C target-cpu=$march"
     LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-
-    # AVX is "hard" disabled for 32bit in any case.
-    # AVX/AVX2 for 64bit is disabled below.
-    # Seems unnecessery for 64bit if -mtune=generic is used
-    #CFLAGS+=" -mno-avx2 -mno-avx"
-    #CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
@@ -257,8 +253,9 @@ sha256sums=('113d10554f6356146df6cf5f21bdabd7b6accda4ffee9df8cad6827b3918517f'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
             '32eff652b96390f04fb52ee695fc3a6d197b1bb616ed2df7e25119fe5700c950'
             'a5cfd3090ebf7fb694bce573ef87b300b86f61204987ecbd068a2fe5079b7e6e'
-            '753a8c7bc952d2e87da0b3d533971b6401929b7febe2aab4c500801ecf026b65'
-            'b2c605d2798d445490e52c2676eef80cf0dae565a025d9f1b1314d2358d06c52'
-            '179b8a3940120418fc51c581c78f0ed6ffd65d6f22e949126587e925c9838e4b'
-            'f60b5d4879bfed8cecfcc198be59a693c845e479bb08d13298cdec66bf8ac7ba'
-            'ff26daa03621c0fc79e7e7ab49b866adcdf798af583c1c268edfafef3e6b0453')
+            '2761c978f9fd1e484ce7c27f5f610b9403b09dbd68d40036ac05f1488de3b8ec'
+            '0f57d36f50e1c850f1d63e25511321f496859b19a1de57d6c57f72ecbaa8da79'
+            'dec234d24eba9d69ffc50a14811434b4dab9dc84fe71a7d31d70353e4db30d97'
+            'f9d300475f42af68faf91f627171c1ca9d985ec80678eb6f2224c90a8099d2cf'
+            'cf5c20708bbc1ca9a1a28ad6e5b138fe631b3bc4d700c0fe20d27b76f43929e4'
+            'ad50ed5779b1635c2215ca9fd4cf469ff273a148e291be5cc09770513903ebb1')
