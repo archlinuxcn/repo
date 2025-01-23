@@ -1,8 +1,8 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=2.5.2.r14.g7f9b330
-pkgrel=2
+pkgver=2.5.2.r28.g0a3cc1d
+pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
 url=https://chatterino.com
@@ -21,7 +21,7 @@ source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/pajlada/signals"
         "git+https://github.com/pajlada/serialize"
         "git+https://github.com/Tencent/rapidjson"
-        "git+https://github.com/zaphoyd/websocketpp"
+        "git+https://github.com/Chatterino/websocketpp"
         "git+https://github.com/Neargye/magic_enum"
         "git+https://github.com/mackron/miniaudio"
         "git+https://github.com/lua/lua"
@@ -51,6 +51,10 @@ pkgver() {
 
 prepare () {
     cd "$srcdir/$_pkgname"
+    # Disable updating of unused submodules
+    git config submodule.lib/googletest.update "none"
+    git config submodule.lib/WinToast.update "none"
+    git config submodule.lib/qtkeychain.update "none"
     git submodule init
     git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
     git config submodule.lib/libcommuni.url "$srcdir/libcommuni"
