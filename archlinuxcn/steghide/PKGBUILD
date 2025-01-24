@@ -6,11 +6,11 @@
 
 pkgname=steghide
 pkgver=0.5.1
-pkgrel=12
+pkgrel=13
 pkgdesc='Embeds a message in a file by replacing some of the least significant bits'
 arch=('x86_64')
 url='http://steghide.sourceforge.net'
-license=('GPL')
+license=('GPL-2.0-or-later')
 depends=('libmcrypt' 'gcc-libs' 'mhash' 'libjpeg' 'zlib')
 source=("steghide-${pkgver}.tar.gz::https://sourceforge.net/projects/steghide/files/steghide/${pkgver}/steghide-${pkgver}.tar.gz/download"
         buildsystem.patch
