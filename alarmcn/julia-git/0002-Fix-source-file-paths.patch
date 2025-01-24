@@ -1,7 +1,7 @@
-From 67ae3a341abdca24cd01cffa545de6a96a0c40d6 Mon Sep 17 00:00:00 2001
+From 6c79bf60972c4192d56dcf5ed3c6274d38c59326 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
-Subject: [PATCH 2/7] Fix source file paths
+Subject: [PATCH 2/8] Fix source file paths
 
 ---
  base/sysimg.jl              |  7 +++++++
@@ -29,10 +29,10 @@ index 42f54a849f..e270adcca9 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index 7dab313cf4..ee658b414f 100644
+index c96c318ec0..76d9deeede 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
-@@ -55,7 +55,7 @@ A string containing the full path to the directory containing the `stdlib` packa
+@@ -56,7 +56,7 @@ A string containing the full path to the directory containing the `stdlib` packa
  global STDLIB::String = "$BINDIR/../share/julia/stdlib/v$(VERSION.major).$(VERSION.minor)" # for bootstrap
  # In case STDLIB change after julia is built, the variable below can be used
  # to update cached method locations to updated ones.
@@ -90,5 +90,5 @@ index 0f24d96393..bd185e0342 100644
                                                jl_string_len(filename));
      fl_gc_handle(fl_ctx, &fl_filename);
 -- 
-2.46.0
+2.48.1
 

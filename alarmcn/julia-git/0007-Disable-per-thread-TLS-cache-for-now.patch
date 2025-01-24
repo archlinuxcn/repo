@@ -1,7 +1,7 @@
-From ddc083c324ec2ad823605d5aad02258fa1710d2a Mon Sep 17 00:00:00 2001
+From 77dc67181dcc89b1073d4b0316397d4358745d0c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 30 Aug 2024 13:34:31 -0400
-Subject: [PATCH 7/7] Disable per-thread TLS cache for now
+Subject: [PATCH 7/8] Disable per-thread TLS cache for now
 
 The patch to libunwind that enables this is breaking.
 (It breaks other programs that assumes a signal-safe cache.)
@@ -10,7 +10,7 @@ The patch to libunwind that enables this is breaking.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/threading.c b/src/threading.c
-index ac9cc276d6..d3dce81994 100644
+index 77956786af..818f35a057 100644
 --- a/src/threading.c
 +++ b/src/threading.c
 @@ -397,7 +397,7 @@ jl_ptls_t jl_init_threadtls(int16_t tid)
@@ -23,5 +23,5 @@ index ac9cc276d6..d3dce81994 100644
  
      return ptls;
 -- 
-2.46.0
+2.48.1
 
