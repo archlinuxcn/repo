@@ -1,6 +1,6 @@
 pkgname=apache-tools
-pkgver=2.4.62
-pkgrel=2
+pkgver=2.4.63
+pkgrel=1
 pkgdesc="Useful Apache tools - htdigest, htpasswd, ab (Apache Benchmark), htdbm"
 arch=("i686" "x86_64" "armv6h" "armv7h" "aarch64")
 url="http://httpd.apache.org/"
@@ -10,7 +10,7 @@ makedepends=("apr-util" "db")
 conflicts=(apache)
 source=("https://downloads.apache.org/httpd/httpd-$pkgver.tar.bz2"
         "$pkgname-Makefile.patch")
-sha256sums=('674188e7bf44ced82da8db522da946849e22080d73d16c93f7f4df89e25729ec'
+sha256sums=('88fc236ab99b2864b248de7d49a008ec2afd7551e64dce8b95f58f32f94c46ab'
             '2dc48d34773b0c873d10e3542f77a4f7b50d5fb9bd8c52e3bb28b76ff9587f3f')
 
 prepare() {
