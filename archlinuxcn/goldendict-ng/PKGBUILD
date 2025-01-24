@@ -35,15 +35,14 @@ makedepends=(
 conflicts=('goldendict' 'goldendict-git' 'goldendict-svn' 'goldendict-git-opt')
 provides=('goldendict')
 replaces=('goldendict-svn' 'goldendict-git-opt' 'goldendict-webengine-git')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-Release.ca9dd133.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-Release.9caa1683.tar.gz")
 sha256sums=('f5927e50d3b0674587feb6faaadd98777cb3309e133564a80bf72fa9bd2da372')
 
 build() {
-	cmake -B build -S "${pkgname}-${pkgver}-Release.ca9dd133" -G Ninja \
+	cmake -B build -S "${pkgname}-${pkgver}-Release.9caa1683" -G Ninja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DUSE_SYSTEM_FMT=ON \
-		-DUSE_SYSTEM_TOML=ON \
-		-DWITH_FFMPEG_PLAYER=OFF # Temporarily turn off ffmpeg
+		-DUSE_SYSTEM_TOML=ON
 
 	cmake --build build
 }
