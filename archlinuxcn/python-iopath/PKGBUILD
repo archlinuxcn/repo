@@ -2,8 +2,8 @@
 
 _pkgname=iopath
 pkgname=python-iopath
-pkgver=0.1.9
-pkgrel=6
+pkgver=0.1.10
+pkgrel=1
 pkgdesc='A python library that provides common I/O interface across different storage backends'
 arch=('any')
 license=('MIT')
@@ -16,7 +16,7 @@ makedepends=(
   python-setuptools
 )
 source=(${pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/iopath/archive/refs/tags/v${pkgver}.tar.gz)
-sha256sums=('3f17a6558fa62fdc2ab1ecdf7c106576167fb8bb19f1612289fd88467535ad7a')
+sha256sums=('3d750072f28d6ba8b803c21b3004e5ce76423988b864725ae155846f461b7138')
 
 build() {
   cd "${_pkgname}-${pkgver}"
