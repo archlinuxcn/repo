@@ -1,6 +1,6 @@
 pkgname=julia-git-permutations-src
-pkgver=0.4.22
-_commit=a8f96d456d97145889b99003bc11e503cc755f6e
+pkgver=0.4.23
+_commit=453f46795f81c645429e0ff69f6ff60e92a0812a
 pkgrel=1
 pkgdesc="Permutations.jl"
 url="https://github.com/scheinerman/Permutations.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/scheinerman/Permutations.jl.git#commit=$_commit")
-sha256sums=('dc7f2f424d68b6af6bed8de13b17402d08737db4950ac55d5618cf6fca8cf4bd')
+sha256sums=('0d339039b0c39a7d4462cac1667fdaa31c134b7b205f626c34f754319af38e54')
 
 package() {
   cd Permutations.jl
