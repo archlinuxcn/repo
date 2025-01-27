@@ -1,6 +1,6 @@
 pkgname=julia-git-sparsematrixcolorings-src
-pkgver=0.4.11
-_commit=cc7e292f13cd0643362f87ec0416a8deea39139a
+pkgver=0.4.12
+_commit=0794c68d0c32e6886519a5827e1c0ac0282777cf
 pkgrel=1
 pkgdesc="SparseMatrixColorings.jl"
 url="https://github.com/gdalle/SparseMatrixColorings.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/gdalle/SparseMatrixColorings.jl.git#commit=$_commit")
-sha256sums=('1f80a58e58efd2e90f8de57e15f1b2ee8803310a8048138da89747aae3f2c647')
+sha256sums=('0190a747b98342abccb052b2816770b2b7d6d2c6dad293f8e4f9e08b0628df1f')
 
 package() {
   cd SparseMatrixColorings.jl
