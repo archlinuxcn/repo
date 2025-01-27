@@ -1,6 +1,6 @@
 pkgname=julia-git-opencl-src
-pkgver=0.10.1
-_commit=b2cac9b8881d1c2f4be0df2d5b54cd0766cd273f
+pkgver=0.10.2
+_commit=9641869644e96a1018029742922671910722a6bd
 pkgrel=1
 pkgdesc="OpenCL.jl"
 url="https://github.com/JuliaGPU/OpenCL.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGPU/OpenCL.jl.git#commit=$_commit")
-sha256sums=('34bc5361ca166e1546574438f0cb17911e97e3e6be32c8f7ff0303fce080b04f')
+sha256sums=('99085a5aaa8a9cec66e1de5f0b54495ade7e38102fbe89def10cb7fae442239d')
 
 package() {
   cd OpenCL.jl
