@@ -7,7 +7,7 @@ pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
 _electron=electron32
 pkgver=1.96.4
-pkgrel=1
+pkgrel=2
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
 license=('MIT')
@@ -40,13 +40,15 @@ case "$CARCH" in
     _vscode_arch=x64
     _electron_arch=x64
     ;;
-  armv7h)
-    _vscode_arch=arm
-    _electron_arch=armv7l
-    ;;
+
   aarch64)
     _vscode_arch=arm64
     _electron_arch=arm64
+    ;;
+
+  armv7h)
+    _vscode_arch=arm
+    _electron_arch=armv7l
     ;;
   riscv64)
     _vscode_arch=riscv64
