@@ -1,6 +1,6 @@
 pkgname=julia-git-measurements-src
-pkgver=2.11.0
-_commit=79d4b92fcacccb8c0ea9805336773f1b6a7bf1c6
+pkgver=2.12.0
+_commit=f9fa1c37108942fc6f793304746893d6a7985366
 pkgrel=1
 pkgdesc="Measurements.jl"
 url="https://github.com/JuliaPhysics/Measurements.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPhysics/Measurements.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('263e746b72fc9a5c149beaf6edfe0984ce73223b1e05d122fa832b867bf159ea')
 
 package() {
   cd Measurements.jl
