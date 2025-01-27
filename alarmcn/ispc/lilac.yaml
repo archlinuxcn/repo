@@ -7,5 +7,9 @@ update_on:
   # Note that we need to get the official package and not the archlinux arm package
   - source: archpkg
     archpkg: ispc
+  - source: alpm
+    from_pattern: ^(\d+)\..*
+    to_pattern: \1
+    alpm: clang
   - source: manual
     manual: 1
