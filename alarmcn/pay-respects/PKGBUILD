@@ -22,7 +22,7 @@ prepare() {
 build() {
 	cd "${pkgname}/"
 	export _DEF_PR_LIB="/usr/lib/${pkgname}/"
-	cargo build --frozen --release --all-features
+	cargo build --frozen --release --all-features --workspace
 }
 
 package() {
