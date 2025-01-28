@@ -3,8 +3,8 @@
 
 _pkgname=affine
 pkgname=python-affine
-pkgver=2.4.0
-pkgrel=4
+pkgver=3.0a1
+pkgrel=1
 pkgdesc="Python package for matrices describing affine transformation of the plane"
 arch=('any')
 url='https://github.com/rasterio/affine'
@@ -19,7 +19,7 @@ depends=(
   python
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/rasterio/affine/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('0fbd7ac01b7401a8e9f3959bf9f0961999a9276995ae1dc25d4789d3d3eaad4cfdcb02c43bdd30abd31d8059288a459ce067ca35d2754cb119668256062377b0')
+sha512sums=('6729a371bca7031aa6afebf53e87ee7e9e06900df5df75792722f6cd8d08ad9689822761122a5691d1e23560db894c7da024fb7d667f522729b738fe9510dfff')
 
 build() {
   cd "${_pkgname}-${pkgver}"
