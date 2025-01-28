@@ -2,8 +2,8 @@
 
 _pkgname=slicerio
 pkgname=python-slicerio
-pkgver=1.1.1
-pkgrel=2
+pkgver=1.1.2
+pkgrel=1
 pkgdesc='Utilities for reading and writing files created by 3D Slicer'
 arch=('any')
 url='https://github.com/lassoan/slicerio'
@@ -22,7 +22,7 @@ makedepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
         "https://github.com/lassoan/slicerio/raw/main/LICENSE"
 )
-sha512sums=('ca1e89519b1f88ec5271d9291dc5ea1c3b9ac67b2426ef74c904ced70ff3d801e1bb1a2da91ed271ffd0bc22fe2c3c3877cc81a09ddb3b95c42e9c9e8d047e15'
+sha512sums=('7610f13ab9c86bd7b28db56c464377e493f501a8244f01d1ae0a1cef2a0c72c44e83559d62e181fd95c6baf97876e893d870d86072a6845ad0ed5af9fcafff98'
             '48efe087bec3e6682a5331ebf9131e78982a1f7371c87c4cb53182beeb86b550b80e8b261e1443f3bb961f7d816faa0c357b4241b173b365a7cf9196b01c6dd4')
 
 build() {
