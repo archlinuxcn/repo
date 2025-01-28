@@ -5,12 +5,12 @@ pkgver='2.19.0.20250107'
 _name=${pkgname#python-}
 _name="${_name//-/_}"
 _src_folder="${_name}-${pkgver}"
-pkgrel=1
+pkgrel=2
 pkgdesc='Typing stubs for Pygments'
 url="https://github.com/python/typeshed"
 depends=('python')
 makedepends=(
-    'python-build' 'python-installer' 'python-wheel' 'python-setuptools'
+    'python-build' 'python-installer' 'python-setuptools'
 )
 license=('Apache-2.0')
 arch=('any')
