@@ -62,8 +62,7 @@ backup=(
     'etc/apparmor/parser.conf'
     'etc/apparmor/severity.db'
 )
-source=("git+${url}.git"
-        "fix-tests-python-3-13.patch")
+source=("git+${url}.git")
 sha256sums=('SKIP'
             '7ff51782df96bc00417ecec6be33237cdededd923a865422c2b0169638e1f4f4')
 validpgpkeys=('3ECDCBA5FB34D254961CC53F6689E64E3D3664BB') # AppArmor Development Team (AppArmor signing key) <apparmor@lists.ubuntu.com>
@@ -78,9 +77,6 @@ pkgver() {
 
 prepare() {
     cd "${srcdir}/${_pkgname}"
-
-    # Fix tests with python 3.13
-    patch -Np1 -i ../fix-tests-python-3-13.patch
 
     cd libraries/libapparmor
     autoreconf --force --install --verbose # -fiv
