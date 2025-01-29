@@ -6,11 +6,11 @@
 # NOTE: to comply with semantic versioning (https://semver.org/) version string X.Y.0-letter is used
 #
 
-_pkgver="1_9f"
+_pkgver="2_0a"
 
 pkgname="vasm"
-pkgver="1.9.0_f"
-pkgrel=1
+pkgver="2.0a"
+pkgrel=0
 pkgdesc="Portable and retargetable 6502 6800 6809 arm c16x jagrisc m68k pdp11 ppc qnice test tr3200 vidcore x86 z80 assembler."
 arch=('i686' 'x86_64')
 url="http://sun.hasenbraten.de/vasm/"
@@ -20,12 +20,12 @@ depends=()
 #source=(http://sun.hasenbraten.de/vasm/release/vasm.tar.gz) # latest unversioned source url
 #source=(http://server.owl.de/~frank/tags/${pkgname}${_pkgver}.tar.gz)
 source=(http://phoenix.owl.de/tags/${pkgname}${_pkgver}.tar.gz)
-sha256sums=('a09d4ff3b5ec50bb7538fb97b9539141376580b590586463569783c36438ebe8')
+sha256sums=('413181dae18f7d566c4aeee669039ea20083817c412a402eed5ec8490f7b9d76')
 
 
 # TODO: dynamic lists based on dirs below vasm/cpus, vasm/syntax, vasm/output_*.c/.h
 #CPU_LIST="6502 6800 6809 arm c16x jagrisc m68k pdp11 ppc qnice test tr3200 vidcore x86 z80"
-CPU_LIST="6502 6800 6809 arm c16x jagrisc m68k pdp11 ppc qnice test tr3200 vidcore x86 z80"
+CPU_LIST="6502 6800 6809 arm c16x hans jagrisc m68k pdp11 ppc qnice test tr3200 unsp vidcore x86 z80"
 SYNTAX_LIST="std madmac mot oldstyle" # test
 OUTPUT_LIST="aout bin cdef elf errors hunk ihex srec test tos vobj xfile"
 
