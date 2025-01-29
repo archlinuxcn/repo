@@ -6,7 +6,7 @@
 
 pkgname=kubectl-bin
 pkgdesc="Kubernetes.io kubectl binary"
-pkgver=1.31.3 # renovate: datasource=github-tags depName=kubernetes/kubernetes
+pkgver=1.31.4 # renovate: datasource=github-tags depName=kubernetes/kubernetes
 pkgrel=1
 arch=('x86_64' 'armv7l' 'armv7h' 'aarch64')
 url="http://kubernetes.io"
@@ -15,7 +15,7 @@ depends=()
 conflicts=('kubectl')
 provides=('kubectl')
 source=()
-b2sums=('86592fbabe3d37436f9cd2d6ab9e31ce4183329258f57455f2436347bc3f15391953c2e97292585e9e4149cf5bb677beeb29b3b0a1ab94a20075c38e6dfaf13f')
+b2sums=('b07542a41fae4df1a51ce0b185f74f3f53a21d5b629f230bd37acb3ef781b48d1ef5d6f90b1ad36296b163e894dd372eea8d0962b1ee3c9bc9e3bca120c4043c')
 
 # if CARCH is not set default to x86_64
 # https://stackoverflow.com/a/11362364/11164973
