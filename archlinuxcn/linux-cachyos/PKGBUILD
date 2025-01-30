@@ -194,7 +194,7 @@ _stable=${_major}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + LTO + AutoFDO Cachy Sauce Kernel by CachyOS with other patches and improvements.'
-pkgrel=1
+pkgrel=2
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -215,7 +215,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=565.77
+_nv_ver=570.86.16
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="open-gpu-kernel-modules-${_nv_ver}"
 source=(
@@ -250,24 +250,13 @@ fi
 # NVIDIA pre-build module support
 if [ "$_build_nvidia" = "yes" ]; then
     source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
-             "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch"
-             "${_patchsource}/misc/nvidia/0008-Kbuild-Use-absolute-paths-for-symbolic-links.patch"
-             "${_patchsource}/misc/nvidia/0009-FROM-AOSC-Use-linux-aperture.c-for-removing-conflict.patch"
-             "${_patchsource}/misc/nvidia/0010-FROM-AOSC-TTM-fbdev-emulation-for-Linux-6.13.patch")
+             "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch")
 fi
 
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("nvidia-open-${_nv_ver}.tar.gz::https://github.com/NVIDIA/open-gpu-kernel-modules/archive/refs/tags/${_nv_ver}.tar.gz"
              "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch"
-             "${_patchsource}/misc/nvidia/0002-Do-not-error-on-unkown-CPU-Type-and-add-Zen5-support.patch"
-             "${_patchsource}/misc/nvidia/0003-Add-IBT-Support.patch"
-             "${_patchsource}/misc/nvidia/0004-silence-event-assert-until-570.patch"
-             "${_patchsource}/misc/nvidia/0005-nvkms-Sanitize-trim-ELD-product-name-strings.patch"
-             "${_patchsource}/misc/nvidia/0006-crypto-Add-fix-for-6.13-Module-compilation.patch"
-             "${_patchsource}/misc/nvidia/0007-nvidia-nv-Convert-symbol-namespace-to-string-literal.patch"
-             "${_patchsource}/misc/nvidia/0008-Kbuild-Use-absolute-paths-for-symbolic-links.patch"
-             "${_patchsource}/misc/nvidia/0009-FROM-AOSC-Use-linux-aperture.c-for-removing-conflict.patch"
-             "${_patchsource}/misc/nvidia/0010-FROM-AOSC-TTM-fbdev-emulation-for-Linux-6.13.patch")
+             "${_patchsource}/misc/nvidia/0003-Add-IBT-Support.patch")
 fi
 
 # Use generated AutoFDO Profile
@@ -570,48 +559,13 @@ prepare() {
 
         # Use fbdev and modeset as default
         patch -Np1 -i "${srcdir}/0001-Make-modeset-and-fbdev-default-enabled.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/747
-        patch -Np2 -i "${srcdir}/0008-Kbuild-Use-absolute-paths-for-symbolic-links.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-
-        # Fixes fbdev on 6.13+
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/749
-        # https://gist.github.com/xtexChooser/da92d9df902788b75f746f348552ae80
-        patch -Np2 -i "${srcdir}/0009-FROM-AOSC-Use-linux-aperture.c-for-removing-conflict.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-        patch -Np2 -i "${srcdir}/0010-FROM-AOSC-TTM-fbdev-emulation-for-Linux-6.13.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 
     if [ "$_build_nvidia_open" = "yes" ]; then
         # Use fbdev and modeset as default
         patch -Np1 -i "${srcdir}/0001-Make-modeset-and-fbdev-default-enabled.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
-
-        # Fix for Zen5 error print in dmesg
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0002-Do-not-error-on-unkown-CPU-Type-and-add-Zen5-support.patch" -d "${srcdir}/${_nv_open_pkg}"
-
         # Fix for https://bugs.archlinux.org/task/74886
         patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0003-Add-IBT-Support.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # Fix for CS2 dmesg spam
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0004-silence-event-assert-until-570.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # Fix for HDMI names
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0005-nvkms-Sanitize-trim-ELD-product-name-strings.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # Fix build errors on 6.13+
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/746
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0006-crypto-Add-fix-for-6.13-Module-compilation.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/751
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0007-nvidia-nv-Convert-symbol-namespace-to-string-literal.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/747
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0008-Kbuild-Use-absolute-paths-for-symbolic-links.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # Fixes fbdev on 6.13+
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/749
-        # https://gist.github.com/xtexChooser/da92d9df902788b75f746f348552ae80
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0009-FROM-AOSC-Use-linux-aperture.c-for-removing-conflict.patch" -d "${srcdir}/${_nv_open_pkg}"
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0010-FROM-AOSC-TTM-fbdev-emulation-for-Linux-6.13.patch" -d "${srcdir}/${_nv_open_pkg}"
     fi
 }
 
@@ -848,7 +802,7 @@ for _p in "${pkgname[@]}"; do
 done
 
 b2sums=('9f617ecb3f2393b57ba03c654fea62a7213f24c835989f333a1ef29492af551bfa7d9ad786d5ef1484854adc77c7c6af38fb09a72d994d305695f512c325e77f'
-        'e14bfa4e92fe8b49a01173263af1318d12c04d4963f4bd0352008c32d536663d6f014b171bd4f6cf777bcc10d46d353a5d3fea0f9865bb5ef92fb9972e4c9024'
+        'a0e5c4aeb9f2b7dbff9a907a85f21187108f417301963c7bf7af082d768dfc8495c3fb4eb6c3f61f32289f652a54e89b448c189ef997ca60159b238f34c727a2'
         '390c7b80608e9017f752b18660cc18ad1ec69f0aab41a2edfcfc26621dcccf5c7051c9d233d9bdf1df63d5f1589549ee0ba3a30e43148509d27dafa9102c19ab'
         '31a981030bfab628f50a73242c48c6beb92fe265df8365af4b77afa43931846678856f46b71cfca861b941f798a6978382ed6fd5f835f5bbd1e4e11f5ec34e20'
         'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
