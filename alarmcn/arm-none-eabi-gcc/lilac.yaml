@@ -1,0 +1,24 @@
+maintainers:
+  - github: yuyichao
+
+build_prefix: archlinuxcn-aarch64 # for arm-none-eabi-newlib
+
+post_build: git_pkgbuild_commit
+
+time_limit_hours: 2
+
+repo_depends:
+  - arm-none-eabi-binutils
+
+update_on:
+  # Note that we need to get the official package and not the archlinux arm package
+  - source: archpkg
+    archpkg: arm-none-eabi-gcc
+  - source: alpm
+    alpm: libisl
+    provided: libisl.so
+  - source: alpm
+    alpm: zstd
+    provided: libzstd.so
+  - source: manual
+    manual: 1

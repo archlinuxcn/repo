@@ -1,0 +1,17 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+time_limit_hours: 2
+
+repo_depends:
+  - arm-none-eabi-binutils
+  - arm-none-eabi-gcc
+
+update_on:
+  # Note that we need to get the official package and not the archlinux arm package
+  - source: archpkg
+    archpkg: arm-none-eabi-newlib
+  - source: manual
+    manual: 1
