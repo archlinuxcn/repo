@@ -1,0 +1,74 @@
+#
+
+_target="x86_64-linux-gnu"
+pkgname=${_target}-binutils
+pkgver=2.43
+pkgrel=1
+pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
+arch=(aarch64 armv7h i686 x86_64)
+url='https://www.gnu.org/software/binutils/'
+license=(GPL-2.0-or-later GPL-3.0-or-later LGPL-2.0-or-later LGPL-3.0-or-later GFDL-1.3 FSFAP)
+depends=(glibc zlib elfutils)
+makedepends=(git)
+options=(staticlibs !distcc !ccache)
+if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
+  _git_ref="commit=${BASH_REMATCH[1]}"
+else
+  _git_ref="tag=binutils-${pkgver//./_}"
+fi
+source=("git+https://sourceware.org/git/binutils-gdb.git#${_git_ref}")
+sha256sums=('ce1bfbcefa6413e42d80fcd92966e78a7b53c0039d44a5220b6727957017643c')
+
+prepare() {
+  mkdir -p binutils-build
+
+  cd binutils-gdb
+
+  # Turn off development mode (-Werror, gas run-time checks, date in sonames)
+  sed -i '/^development=/s/true/false/' bfd/development.sh
+
+  # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+}
+
+build() {
+  cd binutils-build
+
+  "$srcdir/binutils-gdb/configure" \
+      --prefix=/usr \
+      --program-prefix=${_target}- \
+      --with-lib-path=/usr/lib/binutils/${_target} \
+      --with-local-prefix=/usr/lib/${_target} \
+      --with-sysroot=/usr/${_target} \
+      --enable-deterministic-archives \
+      --enable-gold \
+      --enable-ld=default \
+      --enable-lto \
+      --enable-plugins \
+      --enable-relro \
+      --disable-shared \
+      --enable-threads \
+      --disable-gdb \
+      --disable-werror \
+      --with-debuginfod \
+      --with-pic \
+      --with-system-zlib \
+      --disable-sim \
+      --target=${_target} \
+      --host=${CHOST} \
+      --build=${CHOST}
+
+  make configure-host
+  make tooldir=/usr
+}
+
+package() {
+  cd binutils-build
+  make DESTDIR="$pkgdir" install
+
+  # Remove unwanted files
+  rm -rf "$pkgdir/usr/share"
+  rm -rf "$pkgdir/usr/include"
+  rm -rf "$pkgdir/usr/lib"
+  rm -f "$pkgdir/usr/bin/"{ar,as,ld,nm,objdump,ranlib,readelf,strip,objcopy}
+}

@@ -1,0 +1,12 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.split('-')[0])
+post_build: git_pkgbuild_commit
+
+update_on:
+  # Sync with the official package version
+  - source: archpkg
+    archpkg: binutils
+  - source: manual
+    manual: 1
