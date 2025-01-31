@@ -8,6 +8,7 @@ def pre_build():
       'python-rich',
     ],
     pep517 = True,
+    conflicts = ['python-tatsu'],
     license = 'BSD-4-Clause'
   )
 
