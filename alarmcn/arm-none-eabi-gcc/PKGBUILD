@@ -4,10 +4,10 @@
 _target=arm-none-eabi
 pkgname=$_target-gcc
 pkgver=14.2.0
-pkgrel=0
+pkgrel=1
 #_snapshot=8-20180427
 pkgdesc='The GNU Compiler Collection - cross compiler for ARM EABI (bare-metal) target'
-arch=(x86_64)
+arch=(aarch64 x86_64)
 url='https://gcc.gnu.org/'
 license=(GPL LGPL FDL)
 depends=($_target-binutils zlib libmpc libisl zstd)
