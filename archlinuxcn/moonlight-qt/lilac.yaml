@@ -1,4 +1,4 @@
-build_prefix: extra-x86_64
+build_prefix: multilib
 pre_build_script: aur_pre_build(maintainers=['LibertyGM'])
 post_build: aur_post_build
 update_on:
@@ -24,5 +24,6 @@ update_on:
     provided: libva.so
   - source: manual
     manual: 1.0.3
+
 maintainers:
   - github: roaldclark
