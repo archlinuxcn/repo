@@ -1,9 +1,12 @@
-build_prefix: multilib
-pre_build_script: aur_pre_build(maintainers=['LibertyGM'])
-post_build: aur_post_build
+build_prefix: extra-x86_64
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
 update_on:
-  - source: aur
-    aur: moonlight-qt
+  - source: github
+    github: moonlight-stream/moonlight-qt
+    use_latest_release: true
+    include_regex: '^v\d+\.\d+\.\d+$'
+    prefix: 'v'
   - alias: libssl
   - alias: libcrypto
   - source: alpm
