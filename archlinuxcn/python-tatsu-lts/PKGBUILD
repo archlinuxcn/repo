@@ -1,7 +1,7 @@
 _name=TatSu-LTS
 pkgname=python-tatsu-lts
 pkgver=5.13.1
-pkgrel=3
+pkgrel=4
 pkgdesc="TatSu takes a grammar in a variation of EBNF as input, and outputs a memoizing PEG/Packrat parser in Python."
 arch=(any)
 url="https://github.com/dnicolodi/TatSu-LTS"
@@ -9,6 +9,7 @@ license=(BSD-4-Clause)
 depends=('python' 'python-setuptools')
 makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel')
 optdepends=('python-colorama' 'python-rich')
+conflicts=('python-tatsu')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/tatsu_lts-5.13.1.tar.gz")
 sha256sums=('b9f0d38bf820d92077b5722bad26f68020c8e4ee663f7e35d4a0d95e4ebc5623')
 
