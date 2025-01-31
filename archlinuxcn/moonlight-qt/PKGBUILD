@@ -1,30 +1,42 @@
-# Maintainer: Konstantin Liberty <jon9097 at gmail dot com>
-# Maintainer: Cedric Girard <cgirard [dot] archlinux [at] valinor [dot] fr>
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Contributor: Konstantin Liberty <jon9097 at gmail dot com>
+# Contributor: Cedric Girard <cgirard [dot] archlinux [at] valinor [dot] fr>
 # Contributor: Michael Herzberg <{firstname}@{firstinitial}{lastname}.de>
 
 pkgname=moonlight-qt
 pkgver=6.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc='GameStream client for PCs (Windows, Mac, and Linux)'
 arch=('x86_64')
+url="https://github.com/moonlight-stream/moonlight-qt"
 license=('GPL-3.0-or-later')
-url='https://moonlight-stream.org'
-depends=('qt6-base' 'qt6-declarative' 'qt6-svg' 'ffmpeg' 'sdl2_ttf' 'sdl2-compat' 'lib32-sdl2-compat')
-optdepends=('libva-intel-driver: hardware acceleration for Intel GPUs GMA 4500 (2008) up to Coffee Lake (2017)'
-            'intel-media-driver: hardware acceleration for Intel GPUs starting from Broadwell (2014) and newer (e.g. Intel Arc)')
-source=("https://github.com/moonlight-stream/${pkgname}/releases/download/v${pkgver}/MoonlightSrc-${pkgver}.tar.gz")
-sha512sums=('390fe3f686c86a52dd0ff4b67e8e8beb6edcb175ddf92bc5de11d92ffdaf0b6a8d76be781c483b685626c705e63f07e156506112923c848a4a798ba703254829')
+depends=(
+    'ffmpeg'
+    'qt6-base'
+    'qt6-declarative'
+    'qt6-svg'
+    'sdl2-compat'
+    'sdl2_ttf'
+)
+optdepends=(
+    'intel-media-driver: hardware acceleration for Intel GPUs starting from Broadwell (2014) and newer (e.g. Intel Arc)'
+    'libva-intel-driver: hardware acceleration for Intel GPUs GMA 4500 (2008) up to Coffee Lake (2017)'
+    'libva-mesa-driver: hardware acceleration for AMD and other GPUs'
+    'libva-nvidia-driver: hardware acceleration for NVIDIA GPUs with NVDEC via VA-API'
+)
+source=("${url}/releases/download/v${pkgver}/MoonlightSrc-${pkgver}.tar.gz")
+b2sums=('59c84c65555d261e977443eac826147e16c5d55a7a5fc0445e2c0bc7e7bab876bba1cde511923b241d405198120f3bd3db56f6a5092613a1c248f3de5d1412d6')
 
 prepare() {
-  sed -i '14i#include <string.h>' $srcdir/app/masterhook_internal.c
-  sed -i '1a#include <cstring>' $srcdir/app/streaming/streamutils.cpp
-  qmake6 PREFIX="$pkgdir/usr" moonlight-qt.pro
+    sed -i '14i#include <string.h>' "${srcdir}/app/masterhook_internal.c"
+    sed -i '1a#include <cstring>' "${srcdir}/app/streaming/streamutils.cpp"
+    qmake6 PREFIX="${pkgdir}/usr" moonlight-qt.pro
 }
 
 build() {
-  make release
+    make release
 }
 
 package() {
-  make install
+    make install
 }
