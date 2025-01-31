@@ -8,5 +8,19 @@ update_on:
   # Sync with the official package version
   - source: archpkg
     archpkg: binutils
+  - source: alpm
+    alpm: zlib
+    provided: libz.so
+  - source: alpm
+    alpm: zstd
+    provided: libzstd.so
+  - source: alpmfiles
+    pkgname: jansson
+    strip_dir: true
+    filename: libjansson.so.\d+
+  - source: alpmfiles
+    pkgname: libelf
+    strip_dir: true
+    filename: libdebuginfod.so.\d+
   - source: manual
     manual: 1

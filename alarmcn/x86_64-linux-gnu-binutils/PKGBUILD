@@ -8,7 +8,7 @@ pkgdesc="A set of programs to assemble and manipulate binary and object files ($
 arch=(aarch64 armv7h i686 x86_64)
 url='https://www.gnu.org/software/binutils/'
 license=(GPL-2.0-or-later GPL-3.0-or-later LGPL-2.0-or-later LGPL-3.0-or-later GFDL-1.3 FSFAP)
-depends=(glibc zlib elfutils)
+depends=(glibc jansson libelf zlib zstd)
 makedepends=(git)
 options=(staticlibs !distcc !ccache)
 if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
@@ -40,9 +40,14 @@ build() {
       --with-lib-path=/usr/lib/binutils/${_target} \
       --with-local-prefix=/usr/lib/${_target} \
       --with-sysroot=/usr/${_target} \
+      --enable-cet \
+      --enable-colored-disassembly \
+      --enable-default-execstack=no \
       --enable-deterministic-archives \
       --enable-gold \
+      --enable-jansson \
       --enable-ld=default \
+      --enable-new-dtags \
       --enable-lto \
       --enable-plugins \
       --enable-relro \
