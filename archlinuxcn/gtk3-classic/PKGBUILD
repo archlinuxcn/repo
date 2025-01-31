@@ -78,18 +78,18 @@ makedepends=(
 install=gtk3.install
 source=(
   "${pkgname}-${_tagname}.tar.gz::${url}/archive/refs/tags/${_tagname}.tar.gz"
-  "https://download.gnome.org/sources/gtk+/${_gtkver%.*}/gtk+-${_gtkver}.tar.xz"
+  "https://gitlab.gnome.org/GNOME/gtk/-/archive/${_gtkver}/gtk-${_gtkver}.tar.gz"
   gtk-query-immodules-3.0.hook
   settings.ini
 )
 sha256sums=('e6ecceae848537122bec384d3eceac3ca28b3d5a403e302b18c2ef404c828002'
-            '7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7'
+            'ab197f76719fc875067671247533f8e5bd2bc090568ec17317de410d06397b7f'
             'a0319b6795410f06d38de1e8695a9bf9636ff2169f40701671580e60a108e229'
             '3c7d08538b04692b112d6850935aecd177b10c142df17bbc64a4f83ecb6c7a53')
 
 prepare() {
   local _src="${srcdir}/${pkgname}-${_tagname}"
-  local gtk_src="${srcdir}/gtk+-${_gtkver}"
+  local gtk_src="${srcdir}/gtk-${_gtkver}"
 
   cd "${gtk_src}"
   QUILT_PATCHES="${_src}" quilt push -av
@@ -110,7 +110,7 @@ build() {
   )
 
   CFLAGS+=" -DG_DISABLE_CAST_CHECKS"
-  arch-meson "${srcdir}/gtk+-${_gtkver}" build "${meson_options[@]}"
+  arch-meson "${srcdir}/gtk-${_gtkver}" build "${meson_options[@]}"
   meson compile -C build
 }
 
