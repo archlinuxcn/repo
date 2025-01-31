@@ -2,7 +2,7 @@
 # Contributor: Jeff Dickey <releases at mise dot jdx dot dev>
 
 pkgname=mise
-pkgver=2025.1.16
+pkgver=2025.1.17
 pkgrel=1
 pkgdesc="The front-end to your dev env"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -14,7 +14,7 @@ optdepends=('usage: completion support')
 conflicts=('rtx' 'rtx-bin')
 replaces=('rtx')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('2189375724bab09fa721ce0b4afc78e2cc2de811cd134e439b426166f212acf5')
+sha256sums=('82539d96cfd88edd8f05f997ad410c075f03a9406f479c0290dca7fc09626bc1')
 options=('!lto')
 
 prepare() {
