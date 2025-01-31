@@ -3,10 +3,10 @@
 _target=arm-none-eabi
 pkgname=$_target-newlib
 pkgver=4.4.0.20231231
-pkgrel=1
+pkgrel=2
 _upstream_ver=$pkgver
 pkgdesc='A C standard library implementation intended for use on embedded systems (ARM bare metal)'
-arch=(any)
+arch=(aarch64 x86_64)
 url='https://www.sourceware.org/newlib/'
 license=(BSD)
 makedepends=($_target-gcc)
