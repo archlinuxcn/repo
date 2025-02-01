@@ -2,10 +2,7 @@ maintainers:
   - github: Xeonacid
     email: xeonacid@archlinuxcn.org
 
-repo_depends:
-  - python-eth-typing
-  - python-eth-keys
-  - python-eth-utils
+build_prefix: archlinuxcn-x86_64
 
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 
