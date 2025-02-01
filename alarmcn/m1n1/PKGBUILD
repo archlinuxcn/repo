@@ -1,7 +1,7 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=m1n1
-pkgver=1.4.20
+pkgver=1.4.21
 pkgrel=1
 pkgdesc='Asahi Linux bootloader'
 arch=('aarch64')
@@ -11,8 +11,8 @@ makedepends=(git imagemagick)
 source=(
   "git+https://github.com/AsahiLinux/m1n1#tag=v${pkgver}"
 )
-sha256sums=('4be293c78f39f804ee977f8c528b1807549929762d45f91c46ab280e5a8b82cd')
-b2sums=('6facbb2501d8fb8f7a0773213b37fca7f7183b36c361b373d7b6959982138082ef65c72c4ae6c277a33214c16dbd165d2eb252c92b62492a4731cabe2c6e766d')
+sha256sums=('a50191d2b5fc4dbb62ca8a28d61bd8766df97fb8d91ad9bd5e202039786a8f74')
+b2sums=('d1777924f087247ff7ce564304f080731b1497c1cc78dae6a3c46c9ba7976079b69339ee4fe8e51ec7a1877fe97ccd445f2ef208204c32640f2ecfd2adabad4e')
 
 prepare() {
   cd m1n1
