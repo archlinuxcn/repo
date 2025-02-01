@@ -1,0 +1,22 @@
+
+## arg 1:  the new package version
+post_install() {
+  cat <<EOF
+
+-----------------------------------------------------------------------------
+
+oama version 0.16
+
+See release notes at: https://github.com/pdobsan/oama/releases/tag/0.16
+
+-----------------------------------------------------------------------------
+
+EOF
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+	post_install
+}
+
