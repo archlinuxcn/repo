@@ -1,8 +1,8 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 # Contributor: João Freitas <joaj.freitas@gmail.com>
 pkgname=numbat
-pkgver=1.15.0
-pkgrel=2
+pkgver=1.16.0
+pkgrel=1
 pkgdesc="A statically typed programming language for scientific computations with first class support for physical dimensions and units"
 arch=('x86_64')
 url="https://github.com/sharkdp/numbat"
@@ -10,7 +10,7 @@ license=('MIT' 'Apache-2.0')
 makedepends=(cargo)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/sharkdp/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
 options=(!lto)
-sha256sums=('abf7a79db4c8eb0e6ddd7a67efafcaf7b9d8c109ad255c21207be2bb54a12ba2')
+sha256sums=('33f3744a31f62f7ebd985c6b3ec3c6a6d6f897527e8db5bc2de48dd299a63cdd')
 
 prepare() {
     cd $pkgname-$pkgver
