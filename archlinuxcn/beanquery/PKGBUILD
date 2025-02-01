@@ -3,7 +3,7 @@
 pkgname=beanquery
 pkgdesc='A customizable light-weight SQL query tool that works on tabular data, including Beancount'
 pkgver=0.1.0
-pkgrel=5
+pkgrel=6
 arch=("any")
 url="https://github.com/beancount/beanquery"
 license=('GPL')
@@ -12,7 +12,11 @@ b2sums=('740590b554b484b73fabfdacd60e9d17e64628230d9949b131645b53adda5c3050739f9
 # NOTE: The Python package technically does not require beancount 3.x but it
 # provides /usr/bin/bean-query which conflicts with beancount 2.x and so we
 # require beancount 3.x here.
-depends=("python" "beancount>=3" "python-click" "python-tatsu-lts")
+# NOTE: The Python package requires 'tatsu >= 5.7.4, < 5.8.0', and the only
+# version meets the requirement is 5.7.4 released in 2022. You can build it
+# with this PKGBUILD:
+# https://gist.github.com/wzyboy/a5acef9bc8e9bfd74f07696b21551c65
+depends=("python" "beancount>=3" "python-click" "python-tatsu=5.7.4")
 makedepends=("python-build" "python-installer" "python-wheel" "python-setuptools")
 
 build() {
