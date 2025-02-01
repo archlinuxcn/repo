@@ -7,7 +7,8 @@ time_limit_hours: 4
 
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
-  - source: archpkg
-    archpkg: rocm-llvm
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: rocm-llvm
   - source: manual
     manual: 2

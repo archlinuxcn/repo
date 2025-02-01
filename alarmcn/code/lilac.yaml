@@ -10,7 +10,8 @@ repo_depends:
 
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
-  - source: archpkg
-    archpkg: code
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: code
   - source: manual
     manual: 1

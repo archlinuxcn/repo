@@ -12,8 +12,9 @@ repo_depends:
 
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
-  - source: archpkg
-    archpkg: arm-none-eabi-gcc
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: arm-none-eabi-gcc
   - source: alpm
     alpm: libisl
     provided: libisl.so

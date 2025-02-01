@@ -8,7 +8,8 @@ repo_depends:
 
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
-  - source: archpkg
-    archpkg: embree
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: embree
   - source: manual
     manual: 1

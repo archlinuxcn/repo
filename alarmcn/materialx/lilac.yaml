@@ -5,8 +5,9 @@ post_build: git_pkgbuild_commit
 
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
-  - source: archpkg
-    archpkg: materialx
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: materialx
   - alias: python
   - source: manual
     manual: 1
