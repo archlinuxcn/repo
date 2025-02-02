@@ -5,17 +5,14 @@
 pkgname=python-pep8-naming
 _name=${pkgname#python-}
 pkgver=0.14.1
-pkgrel=1
+pkgrel=2
 pkgdesc="This module provides a name plugin for flake8, the Python code checker"
 arch=(any)
 url="https://github.com/PyCQA/pep8-naming"
 license=('MIT')
 depends=('python')
 provides=('flake-pep8-naming')
-makedepends=("python-setuptools"
-  python-build
-  python-installer
-)
+makedepends=("python-build" "python-installer" "python-setuptools" "python-wheel")
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/${pkgver}.tar.gz")
 b2sums=('1ecf577041ff53204e9cda8e09723a1ad86d8a1715153cd18a7cefe6554435921ec6738f2caa1397e56a1c57c1a14277fe478f623b4a830ad001e5d8de16112a')
 
