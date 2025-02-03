@@ -1,0 +1,14 @@
+--- selenium-4.28.1/Cargo.toml	2000-01-01 05:30:00.000000000 +0530
++++ selenium-4.28.1.new/Cargo.toml	2025-02-01 20:30:48.975164929 +0530
+@@ -54,3 +54,10 @@
+ [profile.dev]
+ debug = true             # Full debug info
+ split-debuginfo = 'off'  # Debug info in the final artifact
++
++[dependencies.pyo3]
++version = "0.23.4"
++
++[features]
++extension-module = ["pyo3/extension-module"]
++default = ["extension-module"]
+

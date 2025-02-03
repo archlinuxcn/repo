@@ -1,5 +1,6 @@
 # Maintainer: txtsd <aur.archlinux@ihavea.quest>
 # Maintainer: Carl Smedstad <carsme@archlinux.org>
+# Contributor: kbipinkumar <kbipinkumar@pm.me>
 # Contributor: bpierre <benoit.pierre@gmail.com>
 # Contributor: Anton Kudelin <kudelin at proton dot me>
 # Contributor: Jelle van der Waa <jelle@vdwaa.nl>
@@ -7,7 +8,7 @@
 
 pkgname=python-selenium
 _pkgname="${pkgname#python-}"
-pkgver=4.28.0
+pkgver=4.28.1
 pkgrel=1
 pkgdesc="Python language bindings for Selenium WebDriver"
 arch=(x86_64)
@@ -34,13 +35,23 @@ makedepends=(
   python-wheel
 )
 options=(!lto)
-source=("https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha256sums=('a9fae6eef48d470a1b0c6e45185d96f0dafb025e8da4b346cc41e4da3ac54fa0')
+source=(
+  "https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz"
+  pyo3.patch
+  cargo.patch
+)
+sha256sums=('0072d08670d7ec32db901bd0107695a330cecac9f196e3afb3fa8163026e022a'
+            '41da6ac9e2e6c23a396e091b8dbac4ba8af738956ac23be43f573c7f1bed24ae'
+            'e119e188b826e5fecdf4fdd2fea814318dc7fd9564347f055825befbd9d2542f')
 
 _archive="${_pkgname}-${pkgver}"
 
 prepare() {
   cd "${_archive}"
+
+  # fixes for build failures mentioned in upstream repo (https://github.com/SeleniumHQ/selenium/pull/15128#issuecomment-2609736932)
+  patch -Np1 -i ../pyo3.patch
+  patch -Np1 -i ../cargo.patch
 
   # Ensure `selenium.webdriver.common.fedcm` gets packaged
   touch ./selenium/webdriver/common/fedcm/__init__.py

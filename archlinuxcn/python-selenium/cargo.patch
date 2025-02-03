@@ -1,0 +1,149 @@
+--- selenium-4.28.1/Cargo.lock	2000-01-01 05:30:00.000000000 +0530
++++ selenium-4.28.1.new/Cargo.lock	2025-02-01 20:35:36.236843520 +0530
+@@ -1178,6 +1178,12 @@
+ ]
+
+ [[package]]
++name = "indoc"
++version = "2.0.5"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "b248f5224d1d606005e02c97f5aa4e88eeb230488bcc03bc9ca4d7991399f2b5"
++
++[[package]]
+ name = "infer"
+ version = "0.8.1"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -1322,6 +1328,15 @@
+ checksum = "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
+
+ [[package]]
++name = "memoffset"
++version = "0.9.1"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "488016bfae457b036d996092f6cb448677611ce4449e970ceaf42695203f218a"
++dependencies = [
++ "autocfg",
++]
++
++[[package]]
+ name = "mime"
+ version = "0.3.17"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -1438,6 +1453,12 @@
+ checksum = "d231b230927b5e4ad203db57bbcbee2802f6bce620b1e4a9024a07d94e2907ec"
+
+ [[package]]
++name = "portable-atomic"
++version = "1.10.0"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "280dc24453071f1b63954171985a0b0d30058d287960968b9b2aca264c8d4ee6"
++
++[[package]]
+ name = "powerfmt"
+ version = "0.2.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -1486,6 +1507,69 @@
+ ]
+
+ [[package]]
++name = "pyo3"
++version = "0.23.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "57fe09249128b3173d092de9523eaa75136bf7ba85e0d69eca241c7939c933cc"
++dependencies = [
++ "cfg-if",
++ "indoc",
++ "libc",
++ "memoffset",
++ "once_cell",
++ "portable-atomic",
++ "pyo3-build-config",
++ "pyo3-ffi",
++ "pyo3-macros",
++ "unindent",
++]
++
++[[package]]
++name = "pyo3-build-config"
++version = "0.23.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "1cd3927b5a78757a0d71aa9dff669f903b1eb64b54142a9bd9f757f8fde65fd7"
++dependencies = [
++ "once_cell",
++ "target-lexicon",
++]
++
++[[package]]
++name = "pyo3-ffi"
++version = "0.23.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "dab6bb2102bd8f991e7749f130a70d05dd557613e39ed2deeee8e9ca0c4d548d"
++dependencies = [
++ "libc",
++ "pyo3-build-config",
++]
++
++[[package]]
++name = "pyo3-macros"
++version = "0.23.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "91871864b353fd5ffcb3f91f2f703a22a9797c91b9ab497b1acac7b07ae509c7"
++dependencies = [
++ "proc-macro2",
++ "pyo3-macros-backend",
++ "quote",
++ "syn",
++]
++
++[[package]]
++name = "pyo3-macros-backend"
++version = "0.23.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "43abc3b80bc20f3facd86cd3c60beed58c3e2aa26213f3cda368de39c60a27e4"
++dependencies = [
++ "heck",
++ "proc-macro2",
++ "pyo3-build-config",
++ "quote",
++ "syn",
++]
++
++[[package]]
+ name = "quinn"
+ version = "0.11.3"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -1844,6 +1928,7 @@
+  "infer 0.16.0",
+  "is_executable",
+  "log",
++ "pyo3",
+  "regex",
+  "reqwest",
+  "rstest",
+@@ -2093,6 +2178,12 @@
+ ]
+
+ [[package]]
++name = "target-lexicon"
++version = "0.12.16"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "61c41af27dd6d1e27b1b16b489db798443478cef1f06a660c96db617ba5de3b1"
++
++[[package]]
+ name = "tempfile"
+ version = "3.14.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+@@ -2343,6 +2434,12 @@
+ checksum = "e91b56cd4cadaeb79bbf1a5645f6b4f8dc5bde8834ad5894a8db35fda9efa1fe"
+
+ [[package]]
++name = "unindent"
++version = "0.2.3"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "c7de7d73e1754487cb58364ee906a499937a0dfabd86bcb980fa99ec8c8fa2ce"
++
++[[package]]
+ name = "untrusted"
+ version = "0.9.0"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+
