@@ -1,6 +1,6 @@
 pkgname=julia-git-mutablearithmetics-src
-pkgver=1.6.2
-_commit=14151638027e30f0656ec0445dbc7eaac0646ab7
+pkgver=1.6.3
+_commit=938b912a7b2ac9f859f4128f8cb28917304215bf
 pkgrel=1
 pkgdesc="MutableArithmetics.jl"
 url="https://github.com/jump-dev/MutableArithmetics.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/MutableArithmetics.jl.git#commit=$_commit")
-sha256sums=('40a05b04d5883b1cad8a33b6823c2591b7cab75a80ea93a5302ade0ce04d757c')
+sha256sums=('d4ae432e42a8d8a75344fda5548a89dbee71454cfaa4ee013dd6908500ad2e72')
 
 package() {
   cd MutableArithmetics.jl
