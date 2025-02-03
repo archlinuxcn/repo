@@ -2,8 +2,8 @@
 # Maintainer: Matthias Kurz <m.kurz@irregular.at>
 
 pkgname=asahi-bless
-pkgver=0.4.1
-pkgrel=2
+pkgver=0.4.2
+pkgrel=1
 pkgdesc='Tool to select active boot partition on ARM Macs'
 arch=('aarch64')
 url="https://crates.io/crates/$pkgname"
@@ -12,7 +12,7 @@ license=('MIT')
 source=(
   "asahi-bless-${pkgver}.tar.gz::https://crates.io/api/v1/crates/asahi-bless/${pkgver}/download"
 )
-sha256sums=('39ed2e55d8e74c93c06fabd674b61e09555c6d341910b8553a5dac1a0d8ec6d1')
+sha256sums=('1b1f6905316fcd1ec30e2ded7bf1ba1a8ba092f9d13bdf65fc98a5e528353112')
 
 build() {
   cd "${srcdir}/$pkgname-${pkgver}"
