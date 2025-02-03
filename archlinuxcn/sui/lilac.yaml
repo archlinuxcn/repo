@@ -11,7 +11,7 @@ post_build_script: |
 update_on:
   - source: github
     github: MystenLabs/sui
-    use_max_tag: true
+    use_latest_release: true
     include_regex: 'mainnet-v(\d+.\d+.\d+)'
     from_pattern: 'mainnet-v(\d+.\d+.\d+)'
     to_pattern: '\1'

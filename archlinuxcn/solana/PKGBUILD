@@ -4,7 +4,7 @@
 
 pkgname=solana  
 epoch=1
-pkgver=2.0.24
+pkgver=2.1.11
 # https://github.com/anza-xyz/agave/blob/$pkgver/scripts/spl-token-cli-version.sh
 _splTokenCliVersion=4.1.1
 pkgrel=1
@@ -12,7 +12,7 @@ pkgdesc="A fast, secure, and censorship resistant blockchain."
 url="https://www.solana.com"
 arch=(x86_64)
 license=(Apache-2.0)
-depends=(bash cargo gcc-libs glibc systemd-libs)
+depends=(bash bzip2 cargo gcc-libs glibc systemd-libs)
 makedepends=(git protobuf clang llvm)
 provides=(spl-token)
 source=(git+https://github.com/anza-xyz/agave.git#tag=v$pkgver
@@ -20,13 +20,52 @@ source=(git+https://github.com/anza-xyz/agave.git#tag=v$pkgver
         $pkgname.sysusers
         $pkgname.tmpfiles
         $pkgname-sbf_sdk-path.patch)
-sha256sums=('4879f9db4009e1604dbac6b94580baf26676274a7e34bd8f2127d1148badc0cf'
+sha256sums=('3cba94dee271e1c2590f1705226d3f6b6aa16792a5b6af04a766c621c8f24948'
             'd0d7c7e98b42a6613d4ba1ddc8ec7650434793bab5925bf565de6cf3ba6093a1'
             'bf7e015436e3d15e70fc67f323bbd04163f79a4de7d06a254a5409bd031227b0'
             'a0f9ee2a24ab97da977eed1dd68a92165c2f2e6d5467462fe83c762031f4e02b'
             'ca9915c38949bd275192f0a1761aafc238612e13096c4d227b5a9fc531509eee')
 install=$pkgname.install
 options=(!lto)
+
+# https://github.com/anza-xyz/agave/blob/v$pkgver/scripts/cargo-install-all.sh
+_BINS=(
+  solana
+  solana-faucet
+  solana-genesis
+  solana-gossip
+  agave-install
+  solana-keygen
+  solana-log-analyzer
+  solana-net-shaper
+  agave-validator
+  rbpf-cli
+  cargo-build-sbf
+  cargo-test-sbf
+  agave-install-init
+  solana-stake-accounts
+  solana-test-validator
+  solana-tokens
+  agave-watchtower
+)
+
+_DCOU_BINS=(
+  agave-ledger-tool
+  solana-bench-tps
+  solana-dos
+)
+
+# https://github.com/anza-xyz/agave/blob/v$pkgver/scripts/dcou-tainted-packages.sh
+_dcou_tainted_packages=(
+  solana-accounts-bench
+  solana-banking-bench
+  agave-ledger-tool
+  solana-bench-tps
+  agave-store-tool
+  agave-store-histogram
+  agave-accounts-hash-cache-tool
+  solana-dos
+)
 
 prepare() {
   export RUSTUP_TOOLCHAIN=stable
@@ -42,36 +81,24 @@ build() {
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
   cd $srcdir/agave
-  # https://github.com/anza-xyz/agave/blob/v$pkgver/scripts/cargo-install-all.sh
-  BINS=(
-    solana
-    solana-bench-tps
-    solana-faucet
-    solana-gossip
-    agave-install
-    solana-keygen
-    agave-ledger-tool
-    solana-log-analyzer
-    solana-net-shaper
-    agave-validator
-    rbpf-cli
-    cargo-build-bpf
-    cargo-build-sbf
-    cargo-test-bpf
-    cargo-test-sbf
-    solana-dos
-    agave-install-init
-    solana-stake-accounts
-    solana-test-validator
-    solana-tokens
-    agave-watchtower
-    solana-genesis
-  )
-  binargs=()
-  for bin in "${BINS[@]}"; do
+
+  local binargs=()
+  for bin in "${_BINS[@]}"; do
     binargs+=(--bin "$bin")
   done
-  cargo build --frozen --release "${binargs[@]}"
+
+  local excludeArgs=()
+  for package in "${_dcou_tainted_packages[@]}"; do
+    excludeArgs+=(--exclude "$package")
+  done
+
+  local dcouBinArgs=()
+  for bin in "${_DCOU_BINS[@]}"; do
+    dcouBinArgs+=(--bin "$bin")
+  done
+
+  cargo build --frozen --release "${binargs[@]}" --workspace "${excludeArgs[@]}"
+  cargo build --frozen --release "${dcouBinArgs[@]}"
   cargo build --frozen --release --manifest-path programs/bpf_loader/gen-syscall-list/Cargo.toml
   cargo run --frozen --release --bin gen-headers
 
@@ -81,33 +108,13 @@ build() {
 
 package() {
   cd $srcdir/agave
-  BINS=(
-    solana
-    solana-bench-tps
-    solana-faucet
-    solana-gossip
-    agave-install
-    solana-keygen
-    agave-ledger-tool
-    solana-log-analyzer
-    solana-net-shaper
-    agave-validator
-    rbpf-cli
-    cargo-build-bpf
-    cargo-build-sbf
-    cargo-test-bpf
-    cargo-test-sbf
-    solana-dos
-    agave-install-init
-    solana-stake-accounts
-    solana-test-validator
-    solana-tokens
-    agave-watchtower
-    solana-genesis
-  )
-  for bin in "${BINS[@]}"; do
+  for bin in "${_BINS[@]}"; do
     install -Dm755 target/release/$bin -t $pkgdir/usr/bin
   done
+  for bin in "${_DCOU_BINS[@]}"; do
+    install -Dm755 target/release/$bin -t $pkgdir/usr/bin
+  done
+
   install -dm755 $pkgdir/usr/lib/$pkgname/sdk
   cp -a sdk/sbf $pkgdir/usr/lib/$pkgname/sdk
   install -dm755 $pkgdir/usr/lib/$pkgname/deps
