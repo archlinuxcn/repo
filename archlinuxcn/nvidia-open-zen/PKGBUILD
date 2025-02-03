@@ -5,8 +5,8 @@
 _kernel=zen
 _lkname="linux-${_kernel}"
 pkgname="nvidia-open-${_kernel}"
-pkgver=565.77
-pkgrel=2
+pkgver=570.86.16
+pkgrel=1
 pkgdesc="NVIDIA open kernel modules for ${_lkname}"
 arch=('x86_64')
 url="https://github.com/NVIDIA/open-gpu-kernel-modules"
@@ -30,7 +30,7 @@ build() {
 }
 
 package() {
-    depends+=("${_lkname}=6.12.10.zen1-1")
+    depends+=("${_lkname}=6.13.1.zen1-1")
 
     _kernver=$(</usr/src/${_lkname}/version)
 
