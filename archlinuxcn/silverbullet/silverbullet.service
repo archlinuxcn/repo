@@ -4,7 +4,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-ExecStart=/usr/bin/deno run --allow-all --unstable /usr/lib/silverbullet/silverbullet.js --hostname ${HOST} --port ${PORT} /var/lib/silverbullet
+ExecStart=/usr/bin/deno run --allow-all --unstable-kv --unstable-worker-options /usr/lib/silverbullet/silverbullet.js --hostname ${HOST} --port ${PORT} /var/lib/silverbullet
 StateDirectory=silverbullet
 CacheDirectory=silverbullet
 Environment=DENO_DIR=/var/cache/silverbullet
