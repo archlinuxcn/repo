@@ -2,7 +2,7 @@
 
 pkgbase=zen-browser
 pkgname=("$pkgbase")
-pkgver=1.7.2b
+pkgver=1.7.4b
 _zen_version=${pkgver//_/-}
 _firefox_version=134.0.2
 pkgrel=1
@@ -81,11 +81,11 @@ source=("git+$_repo.git#tag=$_zen_version"
         0002-download-lang-packs-withou-git-clone.zen.patch
         0003-do-not-disable-system-extensions.zen.patch
         0004-fix-package-json.zen.patch)
-sha256sums=('844e23d72e6f947c10a88b2b8927b291b137c6bf6b49c7b8d3ac5021f13c0905'
+sha256sums=('26349a4a627a5b997fa1a4981669f9e76acad932f0f9e1bd580d97962604f8dc'
             'SKIP'
             '6c6eb7ff13fa689c5cace23a28533361d1ca29158329b6f1c2f2d1c91c53dd27'
-            'dfb0cef0eae73f1884c3ecde3c042136d8ad39172b5018d899cc39f8ebf611d0'
-            '94bdb13cfa148f5054e8c17fba9b46326348b35a28904243e6520309d77fb3bb'
+            '11f920c7969bd01caa3b74b3742e6746bef99c37cb22026749c634f1876b5070'
+            'a508b9ac4e942c12427b5eb553fa3bdc01eb825cbeecdb15e29e0db86acc890b'
             '36bff2af04da55da0cc71f960d921889ccf21c11fcd8343087c144dfcc50f10a'
             '803c3f456abfc1acd963b594cf684aed2453534e7ab951abc38efa0351b648a1')
 noextract=("firefox-${_firefox_version}.source.tar.xz")
@@ -134,7 +134,7 @@ prepare() {
 
   msg2 "prepare dependencies"
   pnpm config set store-dir "$srcdir"/pnpm-store
-  pnpm install --frozen-lockfile
+  pnpm install
 
   msg2 "prepare surfer build environment"
   pnpm surfer ci --brand release --display-version "$_zen_version"
@@ -233,7 +233,7 @@ build() {
   msg2 "build zen browser"
   (
     cd "$srcdir/desktop"
-  
+
     # The .so dependencies of clang-plguin are packaged into libclang-cpp.so in Arch Linux
     # so we need this patch
     sed -i 's/clangASTMatchers/clang-cpp/g' ./engine/build/clang-plugin/moz.build

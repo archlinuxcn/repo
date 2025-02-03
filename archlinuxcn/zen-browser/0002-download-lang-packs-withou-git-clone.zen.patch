@@ -1,17 +1,39 @@
-From e0581daf3013acfcc2d14e375cf7bc6734f11a9f Mon Sep 17 00:00:00 2001
-From: everyx <lunt.luo@gmail.com>
-Date: Tue, 24 Dec 2024 13:42:16 +0800
-Subject: [PATCH 2/3] download lang packs withou git clone
-
----
- scripts/download-language-packs.sh | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
+diff --git a/AppDir/zen.desktop b/AppDir/zen.desktop
+index 9480304..af2aa4f 100644
+--- a/AppDir/zen.desktop
++++ b/AppDir/zen.desktop
+@@ -1,8 +1,8 @@
+ [Desktop Entry]
+ Name=Zen Browser
+ Comment=Experience tranquillity while browsing the web without people tracking you!
+-Exec=zen %u
+-Icon=zen
++Exec=/usr/lib/zen-browser/zen %u
++Icon=zen-browser
+ Type=Application
+ MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;application/x-xpinstall;application/pdf;application/json;
+ StartupWMClass=zen
+@@ -15,12 +15,12 @@ Actions=new-window;new-private-window;profilemanager;
+ 
+ [Desktop Action new-window]
+ Name=Open a New Window
+-Exec=zen %u
++Exec=/usr/lib/zen-browser/zen %u
+ 
+ [Desktop Action new-private-window]
+ Name=Open a New Private Window
+-Exec=zen --private-window %u
++Exec=/usr/lib/zen-browser/zen --private-window %u
+ 
+ [Desktop Action profilemanager]
+ Name=Open the Profile Manager
+-Exec=zen --ProfileManager %u
++Exec=/usr/lib/zen-browser/zen --ProfileManager %u
 diff --git a/scripts/download-language-packs.sh b/scripts/download-language-packs.sh
-index adff097..4d1e065 100644
+index 11f4725..f0e7455 100644
 --- a/scripts/download-language-packs.sh
 +++ b/scripts/download-language-packs.sh
-@@ -2,14 +2,14 @@ set -ex
+@@ -2,19 +2,19 @@ set -ex
  
  CURRENT_DIR=$(pwd)
  
@@ -22,15 +44,20 @@ index adff097..4d1e065 100644
  
  cd $CURRENT_DIR
  
+ LAST_FIREFOX_L10N_COMMIT=$(cat ./firefox-cache/l10n-last-commit-hash)
+ 
 -cd ./l10n
+-# clone only from LAST_FIREFOX_L10N_COMMIT
 -git clone https://github.com/mozilla-l10n/firefox-l10n
+-cd firefox-l10n
+-git checkout $LAST_FIREFOX_L10N_COMMIT
 -cd $CURRENT_DIR
 +# cd ./l10n
++# # clone only from LAST_FIREFOX_L10N_COMMIT
 +# git clone https://github.com/mozilla-l10n/firefox-l10n
++# cd firefox-l10n
++# git checkout $LAST_FIREFOX_L10N_COMMIT
 +# cd $CURRENT_DIR
  
  update_language() {
    langId=$1
--- 
-2.47.1
-
