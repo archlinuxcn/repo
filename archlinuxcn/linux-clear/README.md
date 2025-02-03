@@ -22,7 +22,7 @@ The PKGBUILD file supports customization via environment variables. Here's a lis
 - `_subarch`: Specifies the subarchitecture to compile for (see the [PKGBUILD file](https://git.staropensource.de/JeremyStarTM/aur-linux-clear/src/branch/develop/PKGBUILD) for a list of all subarches). Default is `41` (Generic x86-64), which is compatible with all amd64 processors. Must be a number
 - `_subarch_microarch`: Specifies the microarchitecture to compile for. Only applies to and is required by the `GENERIC_CPU` subarch. Must be a number between `1` and `4` ([click for more information](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels))
 - `_debug`: Force enables debug options when set to `y`, force disables debug options when set to `n` or uses the config defaults when unset
-- `_show_compile`: Enables verbose-er compilation output and displays all executing `make` targets
+- `_show_compile`: Enables verbose-er compilation output and displays all executing `make` targets. Enabled by default, unset for 'pv' output
 
 All of these variables just need to be set for them to apply, except for `_subarch` and `_debug`. See their descriptions for more information.
 
