@@ -1,7 +1,7 @@
 # Maintainer: Paul <pb.orzel@proton.me>
 
 pkgname=amdgpu_top
-pkgver=0.10.1
+pkgver=0.10.2
 pkgrel=1
 pkgdesc="Tool that shows AMD GPU utilization"
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
@@ -10,7 +10,7 @@ license=("MIT")
 depends=("libdrm")
 makedepends=("cargo")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('99f76632866694f2fa24f2b6e7b687d34b901fdcba28762cccd8f0a876c11765')
+sha256sums=('d11f262559a56826c8f6e71f2f5a4dda96383bb29f1070d4ab40c65b6a53a5bd')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
