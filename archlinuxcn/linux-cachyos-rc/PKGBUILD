@@ -9,7 +9,7 @@
 # Set these variables to ANYTHING that is not null or choose proper variable to enable them
 
 ### Selecting CachyOS config
-_cachy_config=${_cachy_config-y}
+: "${_cachy_config:=yes}"
 
 ### Selecting the CPU scheduler
 # ATTENTION - only one of the following values can be selected:
@@ -20,25 +20,25 @@ _cachy_config=${_cachy_config-y}
 # 'eevdf' - select 'EEVDF Scheduler'
 # 'rt' - select EEVDF, but includes a series of realtime patches
 # 'rt-bore' - select Burst-Oriented Response Enhancer, but includes a series of realtime patches
-_cpusched=${_cpusched-cachyos}
+: "${_cpusched:=cachyos}"
 
 ### Tweak kernel options prior to a build via nconfig
-_makenconfig=${_makenconfig-}
+: "${_makenconfig:=no}"
 
 ### Tweak kernel options prior to a build via menuconfig
-_makemenuconfig=${_makemenuconfig-}
+: "${_makemenuconfig:=no}"
 
 ### Tweak kernel options prior to a build via xconfig
-_makexconfig=${_makexconfig-}
+: "${_makexconfig:=no}"
 
 ### Tweak kernel options prior to a build via gconfig
-_makegconfig=${_makegconfig-}
+: "${_makegconfig:=no}"
 
 # NUMA is optimized for multi-socket motherboards.
 # A single multi-core CPU actually runs slower with NUMA enabled.
 # See, https://bugs.archlinux.org/task/31187
 # It seems that in 2023 this is not really a huge regression anymore
-_NUMAdisable=${_NUMAdisable-}
+: "${_NUMAdisable:=no}"
 
 # Compile ONLY used modules to VASTLYreduce the number of modules built
 # and the build time.
@@ -48,36 +48,36 @@ _NUMAdisable=${_NUMAdisable-}
 # This PKGBUILD read the database kept if it exists
 #
 # More at this wiki page ---> https://wiki.archlinux.org/index.php/Modprobed-db
-_localmodcfg=${_localmodcfg-}
+: "${_localmodcfg:=no}"
 
 # Path to the list of used modules
-_localmodcfg_path=${_localmodcfg_path-"$HOME/.config/modprobed.db"}
+: "${_localmodcfg_path:="$HOME/.config/modprobed.db"}"
 
 # Use the current kernel's .config file
 # Enabling this option will use the .config of the RUNNING kernel rather than
 # the ARCH defaults. Useful when the package gets updated and you already went
 # through the trouble of customizing your config options.  NOT recommended when
 # a new kernel is released, but again, convenient for package bumps.
-_use_current=${_use_current-}
+: "${_use_current:=no}"
 
 ### Enable KBUILD_CFLAGS -O3
-_cc_harder=${_cc_harder-y}
+: "${_cc_harder:=yes}"
 
 ### Set performance governor as default
-_per_gov=${_per_gov-}
+: "${_per_gov:=no}"
 
 ### Enable TCP_CONG_BBR3
-_tcp_bbr3=${_tcp_bbr3-}
+: "${_tcp_bbr3:=no}"
 
-### Running with a 1000HZ, 750Hz, 625Hz, 600 Hz, 500Hz, 300Hz, 250Hz and 100Hz tick rate
-_HZ_ticks=${_HZ_ticks-1000}
+### Running with a 1000HZ, 750Hz, 600 Hz, 500Hz, 300Hz, 250Hz and 100Hz tick rate
+: "${_HZ_ticks:=1000}"
 
 ## Choose between perodic, idle or full
 ### Full tickless can give higher performances in various cases but, depending on hardware, lower consistency.
-_tickrate=${_tickrate-full}
+: "${_tickrate:=full}"
 
 ## Choose between full(low-latency), lazy, voluntary or none
-_preempt=${_preempt-full}
+: "${_preempt:=full}"
 
 ### Transparent Hugepages
 # ATTENTION - one of two predefined values should be selected!
@@ -85,7 +85,7 @@ _preempt=${_preempt-full}
 # 'madvise' - madvise, prevent applications from allocating more memory resources than necessary
 # More infos here:
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/performance_tuning_guide/sect-red_hat_enterprise_linux-performance_tuning_guide-configuring_transparent_huge_pages
-_hugepage=${_hugepage-always}
+: "${_hugepage:=always}"
 
 # CPU compiler optimizations - Defaults to prompt at kernel config if left empty
 # AMD CPUs : "k8" "k8sse3" "k10" "barcelona" "bobcat" "jaguar" "bulldozer" "piledriver" "steamroller" "excavator" "zen" "zen2" "zen3" "zen4"
@@ -95,64 +95,64 @@ _hugepage=${_hugepage-always}
 # - "native_intel" (use compiler autodetection and will prompt for P6_NOPS - Selecting your arch manually in the list above is recommended instead of this option)
 # - "generic" (kernel's default - to share the package between machines with different CPU µarch as long as they are x86-64)
 #
-_processor_opt=${_processor_opt-}
+: "${_processor_opt:=}"
 
 # This does automatically detect your supported CPU and optimizes for it
-_use_auto_optimization=${_use_auto_optimization-y}
+: "${_use_auto_optimization:=yes}"
 
 # Clang LTO mode, only available with the "llvm" compiler - options are "none", "full" or "thin".
 # ATTENTION - one of three predefined values should be selected!
 # "full: uses 1 thread for Linking, slow and uses more memory, theoretically with the highest performance gains."
 # "thin: uses multiple threads, faster and uses less memory, may have a lower runtime performance than Full."
 # "none: disable LTO
-_use_llvm_lto=${_use_llvm_lto-thin}
+: "${_use_llvm_lto:=thin}"
 
 # Use suffix -lto only when requested by the user
-# y - enable -lto suffix
-# n - disable -lto suffix
+# yes - enable -lto suffix
+# no - disable -lto suffix
 # https://github.com/CachyOS/linux-cachyos/issues/36
-_use_lto_suffix=${_use_lto_suffix-}
+: "${_use_lto_suffix:=no}"
 
 # Use suffix -gcc when requested by the user
 # Enabled by default to show the difference between LTO kernels and GCC kernels
-_use_gcc_suffix=${_use_gcc_suffix-y}
+: "${_use_gcc_suffix:=yes}"
 
 # KCFI is a proposed forward-edge control-flow integrity scheme for
 # Clang, which is more suitable for kernel use than the existing CFI
 # scheme used by CONFIG_CFI_CLANG. kCFI doesn't require LTO, doesn't
 # alter function references to point to a jump table, and won't break
 # function address equality.
-_use_kcfi=${_use_kcfi-}
+: "${_use_kcfi:=no}"
 
 # Build the zfs module in to the kernel
 # WARNING: The ZFS module doesn't build with selected RT sched due to licensing issues.
 # If you use ZFS, refrain from building the RT kernel
-_build_zfs=${_build_zfs-}
+: "${_build_zfs:=no}"
 
 # Builds the nvidia module and package it into a own base
 # This does replace the requirement of nvidia-dkms
-_build_nvidia=${_build_nvidia-}
+: "${_build_nvidia:=no}"
 
 # Builds the open nvidia module and package it into a own base
 # This does replace the requirement of nvidia-open-dkms
 # Use this only if you have Turing+ GPU
-_build_nvidia_open=${_build_nvidia_open-}
+: "${_build_nvidia_open:=no}"
 
 # Build a debug package with non-stripped vmlinux
-_build_debug=${_build_debug-}
+: "${_build_debug:=no}"
 
 # Enable AUTOFDO_CLANG for the first compilation to create a kernel, which can be used for profiling
 # Workflow:
 # https://cachyos.org/blog/2411-kernel-autofdo/
-# 1. Compile Kernel with _autofdo=y and _build_debug=y
+# 1. Compile Kernel with _autofdo=yes and _build_debug=yes
 # 2. Boot the kernel in QEMU or on your system, see Workload
 # 3. Profile the kernel and convert the profile, see Generating the Profile for AutoFDO
 # 4. Put the profile into the sourcedir
 # 5. Run kernel build again with the _autofdo_profile_name path to profile specified
-_autofdo=${_autofdo-}
+: "${_autofdo:=no}"
 
 # Name for the AutoFDO profile
-_autofdo_profile_name=${_autofdo_profile_name-}
+: "${_autofdo_profile_name:=}"
 
 # Propeller should be applied, after the kernel is optimized with AutoFDO
 # Workflow:
@@ -162,10 +162,10 @@ _autofdo_profile_name=${_autofdo_profile_name-}
 # create_llvm_prof --binary=/usr/src/debug/linux-cachyos-rc/vmlinux --profile=propeller.data --format=propeller --propeller_output_module_name --out=propeller_cc_profile.txt --propeller_symorder=propeller_ld_profile.txt
 # 4. Place the propeller_cc_profile.txt and propeller_ld_profile.txt into the srcdir
 # 5. Enable _propeller_prefix
-_propeller=${_propeller-}
+: "${_propeller:=no}"
 
 # Enable this after the profiles have been generated
-_propeller_profiles=${_propeller_profiles-}
+: "${_propeller_profiles:=no}"
 
 # ATTENTION: Do not modify after this line
 _is_lto_kernel() {
@@ -173,19 +173,19 @@ _is_lto_kernel() {
     return $?
 }
 
-if _is_lto_kernel && [ "$_use_lto_suffix" = "y"  ]; then
+if _is_lto_kernel && [ "$_use_lto_suffix" = "yes" ]; then
     _pkgsuffix="cachyos-rc-lto"
-elif ! _is_lto_kernel && [ "$_use_gcc_suffix" = "y" ]; then
+elif ! _is_lto_kernel && [ "$_use_gcc_suffix" = "yes" ]; then
     _pkgsuffix="cachyos-rc-gcc"
 else
     _pkgsuffix="cachyos-rc"
 fi
 
 pkgbase="linux-$_pkgsuffix"
-_major=6.13
+_major=6.14
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc7
+_rcver=rc1
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -214,7 +214,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=565.77
+_nv_ver=570.86.16
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="open-gpu-kernel-modules-${_nv_ver}"
 source=(
@@ -241,36 +241,27 @@ if [[ "$_cpusched" = "rt" || "$_cpusched" = "rt-bore" ]]; then
 fi
 
 # ZFS support
-if [ -n "$_build_zfs" ]; then
+if [ "$_build_zfs" = "yes" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=e65f69e41f4a276d7d0d1800a2878308a0ba84a6")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=e1475d122dca2d18ea3a4d58587640ba5505d3a8")
 fi
 
 # NVIDIA pre-build module support
-if [ -n "$_build_nvidia" ]; then
+if [ "$_build_nvidia" = "yes" ]; then
     source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
-             "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch"
-             "${_patchsource}/misc/nvidia/0008-Kbuild-Use-absolute-paths-for-symbolic-links.patch"
-             "${_patchsource}/misc/nvidia/0009-FROM-AOSC-Use-linux-aperture.c-for-removing-conflict.patch"
-             "${_patchsource}/misc/nvidia/0010-FROM-AOSC-TTM-fbdev-emulation-for-Linux-6.13.patch")
+             "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
+             "${_patchsource}/misc/nvidia/0003-drm-Remove-driver-data-from-struct-drm_driver.patch")
 fi
 
-if [ -n "$_build_nvidia_open" ]; then
+if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("nvidia-open-${_nv_ver}.tar.gz::https://github.com/NVIDIA/open-gpu-kernel-modules/archive/refs/tags/${_nv_ver}.tar.gz"
-             "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch"
-             "${_patchsource}/misc/nvidia/0002-Do-not-error-on-unkown-CPU-Type-and-add-Zen5-support.patch"
-             "${_patchsource}/misc/nvidia/0003-Add-IBT-Support.patch"
-             "${_patchsource}/misc/nvidia/0004-silence-event-assert-until-570.patch"
-             "${_patchsource}/misc/nvidia/0005-nvkms-Sanitize-trim-ELD-product-name-strings.patch"
-             "${_patchsource}/misc/nvidia/0006-crypto-Add-fix-for-6.13-Module-compilation.patch"
-             "${_patchsource}/misc/nvidia/0007-nvidia-nv-Convert-symbol-namespace-to-string-literal.patch"
-             "${_patchsource}/misc/nvidia/0008-Kbuild-Use-absolute-paths-for-symbolic-links.patch"
-             "${_patchsource}/misc/nvidia/0009-FROM-AOSC-Use-linux-aperture.c-for-removing-conflict.patch"
-             "${_patchsource}/misc/nvidia/0010-FROM-AOSC-TTM-fbdev-emulation-for-Linux-6.13.patch")
+             "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
+             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
+             "${_patchsource}/misc/nvidia/0003-drm-Remove-driver-data-from-struct-drm_driver.patch")
 fi
 
 # Use generated AutoFDO Profile
-if [ -n "$_autofdo" ] && [ -n "$_autofdo_profile_name" ]; then
+if [ "$_autofdo" = "yes" ] && [ -n "$_autofdo_profile_name" ]; then
     if [ -e "$_autofdo_profile_name" ]; then
         source+=("$_autofdo_profile_name")
     else
@@ -279,7 +270,7 @@ if [ -n "$_autofdo" ] && [ -n "$_autofdo_profile_name" ]; then
 fi
 
 # Use generated Propeller Profile
-if [ -n "$_propeller" ] && [ -n "$_propeller_profiles" ]; then
+if [ "$_propeller" = "yes" ] && [ "$_propeller_profiles" = "yes" ]; then
     source+=(propeller_cc_profile.txt
              propeller_ld_profile.txt)
 fi
@@ -338,25 +329,23 @@ prepare() {
     fi
 
     ### Use autooptimization
-    if [ -n "$_use_auto_optimization" ]; then
+    if [ "$_use_auto_optimization" = "yes" ]; then
         "${srcdir}"/auto-cpu-optimization.sh
     fi
 
     ### Selecting CachyOS config
-    if [ -n "$_cachy_config" ]; then
+    if [ "$_cachy_config" = "yes" ]; then
         echo "Enabling CachyOS config..."
         scripts/config -e CACHY
     fi
 
     ### Selecting the CPU scheduler
-    [ -z "$_cpusched" ] && _die "The value is empty. Choose the correct one again."
-
     case "$_cpusched" in
         cachyos|bore|hardened) scripts/config -e SCHED_BORE;;
         bmq) scripts/config -e SCHED_ALT -e SCHED_BMQ;;
         eevdf) ;;
-        rt) scripts/config -d PREEMPT -e PREEMPT_RT;;
-        rt-bore) scripts/config -e SCHED_BORE -d PREEMPT -e PREEMPT_RT;;
+        rt) scripts/config -e PREEMPT_RT;;
+        rt-bore) scripts/config -e SCHED_BORE -e PREEMPT_RT;;
         *) _die "The value $_cpusched is invalid. Choose the correct one again.";;
     esac
 
@@ -365,17 +354,15 @@ prepare() {
     ### Enable KCFI
     ### Broken with NVIDIA Driver
     ### Needs to be reported
-    if [ -n "$_use_kcfi" ]; then
+    if [ "$_use_kcfi" = "yes" ]; then
         echo "Enabling kCFI"
         scripts/config -e ARCH_SUPPORTS_CFI_CLANG -e CFI_CLANG -e CFI_AUTO_DEFAULT
     fi
 
     ### Select LLVM level
-    [ -z "$_use_llvm_lto" ] && _die "The value is empty. Choose the correct one again."
-
     case "$_use_llvm_lto" in
-        thin) scripts/config -e LTO -e LTO_CLANG -e ARCH_SUPPORTS_LTO_CLANG -e ARCH_SUPPORTS_LTO_CLANG_THIN -d LTO_NONE -e HAS_LTO_CLANG -d LTO_CLANG_FULL -e LTO_CLANG_THIN -e HAVE_GCC_PLUGINS;;
-        full) scripts/config -e LTO -e LTO_CLANG -e ARCH_SUPPORTS_LTO_CLANG -e ARCH_SUPPORTS_LTO_CLANG_THIN -d LTO_NONE -e HAS_LTO_CLANG -e LTO_CLANG_FULL -d LTO_CLANG_THIN -e HAVE_GCC_PLUGINS;;
+        thin) scripts/config -e LTO_CLANG_THIN;;
+        full) scripts/config -e LTO_CLANG_FULL;;
         none) scripts/config -e LTO_NONE;;
         *) _die "The value '$_use_llvm_lto' is invalid. Choose the correct one again.";;
     esac
@@ -383,10 +370,8 @@ prepare() {
     echo "Selecting '$_use_llvm_lto' LLVM level..."
 
     ### Select tick rate
-    [ -z "$_HZ_ticks" ] && _die "The value is empty. Choose the correct one again."
-
     case "$_HZ_ticks" in
-        100|250|500|600|625|750|1000)
+        100|250|500|600|750|1000)
             scripts/config -d HZ_300 -e "HZ_${_HZ_ticks}" --set-val HZ "${_HZ_ticks}";;
         300)
             scripts/config -e HZ_300 --set-val HZ 300;;
@@ -397,7 +382,7 @@ prepare() {
     echo "Setting tick rate to ${_HZ_ticks}Hz..."
 
     ### Disable NUMA
-    if [ -n "$_NUMAdisable" ]; then
+    if [ "$_NUMAdisable" = "yes" ]; then
         echo "Disabling NUMA from kernel config..."
         scripts/config -d NUMA \
             -d AMD_NUMA \
@@ -415,15 +400,13 @@ prepare() {
     fi
 
     ### Select performance governor
-    if [ -n "$_per_gov" ]; then
+    if [ "$_per_gov" = "yes" ]; then
         echo "Setting performance governor..."
         scripts/config -d CPU_FREQ_DEFAULT_GOV_SCHEDUTIL \
             -e CPU_FREQ_DEFAULT_GOV_PERFORMANCE
     fi
 
     ### Select tick type
-    [ -z "$_tickrate" ] && _die "The value is empty. Choose the correct one again."
-
     case "$_tickrate" in
         perodic) scripts/config -d NO_HZ_IDLE -d NO_HZ_FULL -d NO_HZ -d NO_HZ_COMMON -e HZ_PERIODIC;;
         idle) scripts/config -d HZ_PERIODIC -d NO_HZ_FULL -e NO_HZ_IDLE  -e NO_HZ -e NO_HZ_COMMON;;
@@ -437,13 +420,11 @@ prepare() {
 
     # We should not set up the PREEMPT for RT kernels
     if [[ "$_cpusched" != "rt" || "$_cpusched" != "rt-bore" ]]; then
-        [ -z "$_preempt" ] && _die "The value is empty. Choose the correct one again."
-
         case "$_preempt" in
             full) scripts/config -e PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -d PREEMPT_NONE;;
             lazy) scripts/config -e PREEMPT_DYNAMIC -d PREEMPT -d PREEMPT_VOLUNTARY -e PREEMPT_LAZY -d PREEMPT_NONE;;
-            voluntary) scripts/config -d PREEMPT_DYNAMIC -e PREEMPT_VOLUNTARY_BUILD -d PREEMPT -e PREEMPT_VOLUNTARY -d PREEMPT_LAZY -d PREEMPT_NONE;;
-            none) scripts/config -d PREEMPT_DYNAMIC -e PREEMPT_NONE_BUILD -d PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -e PREEMPT_NONE;;
+            voluntary) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -e PREEMPT_VOLUNTARY -d PREEMPT_LAZY -d PREEMPT_NONE;;
+            none) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -e PREEMPT_NONE;;
             *) _die "The value '$_preempt' is invalid. Choose the correct one again.";;
         esac
 
@@ -451,7 +432,7 @@ prepare() {
     fi
 
     ### Enable O3
-    if [ -n "$_cc_harder" ] && [ -z "$_cc_size" ]; then
+    if [ "$_cc_harder" = "yes" ]; then
         echo "Enabling KBUILD_CFLAGS -O3..."
         scripts/config -d CC_OPTIMIZE_FOR_PERFORMANCE \
             -e CC_OPTIMIZE_FOR_PERFORMANCE_O3
@@ -474,7 +455,7 @@ prepare() {
     fi
 
     ### Enable bbr3
-    if [ -n "$_tcp_bbr3" ]; then
+    if [ "$_tcp_bbr3" = "yes" ]; then
         echo "Disabling TCP_CONG_CUBIC..."
         scripts/config -m TCP_CONG_CUBIC \
             -d DEFAULT_CUBIC \
@@ -488,8 +469,6 @@ prepare() {
     fi
 
     ### Select THP
-    [ -z "$_hugepage" ] && _die "The value is empty. Choose the correct one again."
-
     case "$_hugepage" in
         always) scripts/config -d TRANSPARENT_HUGEPAGE_MADVISE -e TRANSPARENT_HUGEPAGE_ALWAYS;;
         madvise) scripts/config -d TRANSPARENT_HUGEPAGE_ALWAYS -e TRANSPARENT_HUGEPAGE_MADVISE;;
@@ -500,20 +479,21 @@ prepare() {
 
     # Enable Clang AutoFDO
     # Add additonal check if Thin or Full LTO is enabled otherwise die
-    if [ -n "$_autofdo" ]; then
+    if [ "$_autofdo" = "yes" ]; then
         scripts/config -e AUTOFDO_CLANG
     fi
 
-    if [ -n "$_autofdo" ] && [ -n "$_autofdo_profile_name" ]; then
+    if [ "$_autofdo" = "yes" ] && [ -n "$_autofdo_profile_name" ]; then
         echo "AutoFDO profile has been found..."
         BUILD_FLAGS+=(CLANG_AUTOFDO_PROFILE="${srcdir}/${_autofdo_profile_name}")
     fi
 
     # Propeller Optimization
-    if [ -n "$_propeller" ]; then
+    if [ "$_propeller" = "yes" ]; then
         scripts/config -e PROPELLER_CLANG
     fi
-    if [ -n "$_propeller" ] && [ -n "$_propeller_profiles" ]; then
+
+    if [ "$_propeller" = "yes" ] && [ "$_propeller_profiles" = "yes" ]; then
         echo "Propeller profile has been found..."
         BUILD_FLAGS+=(CLANG_PROPELLER_PROFILE_PREFIX="${srcdir}/propeller")
     fi
@@ -523,7 +503,7 @@ prepare() {
 
     ### Optionally use running kernel's config
     # code originally by nous; http://aur.archlinux.org/packages.php?ID=40191
-    if [ -n "$_use_current" ]; then
+    if [ "$_use_current" = "yes" ]; then
         if [[ -s /proc/config.gz ]]; then
             echo "Extracting config from /proc/config.gz..."
             # modprobe configs
@@ -536,10 +516,9 @@ prepare() {
         fi
     fi
 
-
     ### Optionally load needed modules for the make localmodconfig
     # See https://aur.archlinux.org/packages/modprobed-db
-    if [ -n "$_localmodcfg" ]; then
+    if [ "$_localmodcfg" = "yes" ]; then
         if [ -e "$_localmodcfg_path" ]; then
             echo "Running Steven Rostedt's make localmodconfig now"
             make "${BUILD_FLAGS[@]}" LSMOD="${_localmodcfg_path}" localmodconfig
@@ -559,70 +538,37 @@ prepare() {
     echo "Prepared $pkgbase version $(<version)"
 
     ### Running make nconfig
-    [[ -z "$_makenconfig" ]] ||  make "${BUILD_FLAGS[@]}" nconfig
+    [ "$_makenconfig" = "yes" ] && make "${BUILD_FLAGS[@]}" nconfig
 
     ### Running make menuconfig
-    [[ -z "$_makemenuconfig" ]] ||  make "${BUILD_FLAGS[@]}" menuconfig
+    [ "$_makemenuconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" menuconfig
 
     ### Running make xconfig
-    [[ -z "$_makexconfig" ]] ||  make "${BUILD_FLAGS[@]}" xconfig
+    [ "$_makexconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" xconfig
 
     ### Running make gconfig
-    [[ -z "$_makegconfig" ]] ||  make "${BUILD_FLAGS[@]}" gconfig
+    [ "$_makegconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" gconfig
 
     ### Save configuration for later reuse
     echo "Save configuration for later reuse..."
     local basedir="$(dirname "$(readlink "${srcdir}/config")")"
     cat .config > "${basedir}/config-${pkgver}-${pkgrel}${pkgbase#linux}"
 
-    if [ -n "$_build_nvidia" ]; then
+    if [ "$_build_nvidia" = "yes" ]; then
         cd "${srcdir}"
         sh "${_nv_pkg}.run" --extract-only
 
         # Use fbdev and modeset as default
-        patch -Np1 -i "${srcdir}/0001-Make-modeset-and-fbdev-default-enabled.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/747
-        patch -Np2 -i "${srcdir}/0008-Kbuild-Use-absolute-paths-for-symbolic-links.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-
-        # Fixes fbdev on 6.13+
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/749
-        # https://gist.github.com/xtexChooser/da92d9df902788b75f746f348552ae80
-        patch -Np2 -i "${srcdir}/0009-FROM-AOSC-Use-linux-aperture.c-for-removing-conflict.patch" -d "${srcdir}/${_nv_pkg}/kernel"
-        patch -Np2 -i "${srcdir}/0010-FROM-AOSC-TTM-fbdev-emulation-for-Linux-6.13.patch" -d "${srcdir}/${_nv_pkg}/kernel"
+        patch -Np1 -i "${srcdir}/0001-Enable-atomic-kernel-modesetting-by-default.patch" -d "${srcdir}/${_nv_pkg}/kernel"
+        patch -Np2 -i "${srcdir}/0003-drm-Remove-driver-data-from-struct-drm_driver.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 
-    if [ -n "$_build_nvidia_open" ]; then
+    if [ "$_build_nvidia_open" = "yes" ]; then
         # Use fbdev and modeset as default
-        patch -Np1 -i "${srcdir}/0001-Make-modeset-and-fbdev-default-enabled.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
-
-        # Fix for Zen5 error print in dmesg
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0002-Do-not-error-on-unkown-CPU-Type-and-add-Zen5-support.patch" -d "${srcdir}/${_nv_open_pkg}"
-
+        patch -Np1 -i "${srcdir}/0001-Enable-atomic-kernel-modesetting-by-default.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
         # Fix for https://bugs.archlinux.org/task/74886
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0003-Add-IBT-Support.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # Fix for CS2 dmesg spam
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0004-silence-event-assert-until-570.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # Fix for HDMI names
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0005-nvkms-Sanitize-trim-ELD-product-name-strings.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # Fix build errors on 6.13+
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/746
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0006-crypto-Add-fix-for-6.13-Module-compilation.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/751
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0007-nvidia-nv-Convert-symbol-namespace-to-string-literal.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/747
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0008-Kbuild-Use-absolute-paths-for-symbolic-links.patch" -d "${srcdir}/${_nv_open_pkg}"
-
-        # Fixes fbdev on 6.13+
-        # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/749
-        # https://gist.github.com/xtexChooser/da92d9df902788b75f746f348552ae80
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0009-FROM-AOSC-Use-linux-aperture.c-for-removing-conflict.patch" -d "${srcdir}/${_nv_open_pkg}"
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0010-FROM-AOSC-TTM-fbdev-emulation-for-Linux-6.13.patch" -d "${srcdir}/${_nv_open_pkg}"
+        patch -Np1 -i "${srcdir}/0002-Add-IBT-support.patch" -d "${srcdir}/${_nv_open_pkg}"
+        patch -Np1 -i "${srcdir}/0003-drm-Remove-driver-data-from-struct-drm_driver.patch" -d "${srcdir}/${_nv_open_pkg}"
     fi
 }
 
@@ -637,20 +583,20 @@ build() {
        SYSSRC="${srcdir}/${_srcname}"
        SYSOUT="${srcdir}/${_srcname}"
     )
-    if [ -n "$_build_nvidia" ]; then
+    if [ "$_build_nvidia" = "yes" ]; then
         MODULE_FLAGS+=(NV_EXCLUDE_BUILD_MODULES='__EXCLUDE_MODULES')
         cd "${srcdir}/${_nv_pkg}/kernel"
         make "${BUILD_FLAGS[@]}" "${MODULE_FLAGS[@]}" -j"$(nproc)" modules
 
     fi
 
-    if [ -n "$_build_nvidia_open" ]; then
+    if [ "$_build_nvidia_open" = "yes" ]; then
         cd "${srcdir}/${_nv_open_pkg}"
         MODULE_FLAGS+=(IGNORE_CC_MISMATCH=yes)
         CFLAGS= CXXFLAGS= LDFLAGS= make "${BUILD_FLAGS[@]}" "${MODULE_FLAGS[@]}" -j"$(nproc)" modules
     fi
 
-    if [ -n "$_build_zfs" ]; then
+    if [ "$_build_zfs" = "yes" ]; then
         cd ${srcdir}/"zfs"
 
         local CONFIGURE_FLAGS=()
@@ -846,11 +792,11 @@ _package-nvidia-open(){
 }
 
 pkgname=("$pkgbase")
-[ -n "$_build_debug" ] && pkgname+=("$pkgbase-dbg")
+[ "$_build_debug" = "yes" ] && pkgname+=("$pkgbase-dbg")
 pkgname+=("$pkgbase-headers")
-[ -n "$_build_zfs" ] && pkgname+=("$pkgbase-zfs")
-[ -n "$_build_nvidia" ] && pkgname+=("$pkgbase-nvidia")
-[ -n "$_build_nvidia_open" ] && pkgname+=("$pkgbase-nvidia-open")
+[ "$_build_zfs" = "yes" ] && pkgname+=("$pkgbase-zfs")
+[ "$_build_nvidia" = "yes" ] && pkgname+=("$pkgbase-nvidia")
+[ "$_build_nvidia_open" = "yes" ] && pkgname+=("$pkgbase-nvidia-open")
 for _p in "${pkgname[@]}"; do
     eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
@@ -858,9 +804,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('ce975f0916407a2c5c1661ae704d453559e01e3dcb0faaed98c717b1b676617f31beaedde16a6e784ea0b81d88483cd8da85c8f48a4f2ba455dfb0cc1fdca530'
-        '9f099de709e971acfb9463ac96810a0ddfbd669dd8af891c7301e9ae463130a0ece65ce0c6ec35af62fcb4ed921e15870ec9db29f74b7f9d9017ff268b43d2d5'
+b2sums=('aeedf103a3076bacaa8b5d38bf06fa048fc8265dd2bea551e9266155086f638ded2171800ee10bfeaf9aa4b28391db5b55162889e6a4a709186af2255ac5dca1'
+        'ec19fe8af88003383ab733a7780ab29291b51a9d59f9c7c1a414154dfb759fa0d3e701f1e345b8c6b428be8eb916fa9bd673be38f0aeca9e26a65a1b5d6d852b'
         '390c7b80608e9017f752b18660cc18ad1ec69f0aab41a2edfcfc26621dcccf5c7051c9d233d9bdf1df63d5f1589549ee0ba3a30e43148509d27dafa9102c19ab'
-        '25a7fe2fb073cf425c5f478b33219dcd5afd354663e42bbccb8e3a19afa99951c1997816a4d635915dfce8e0eeb0f6d7a0a9ae1f11db1c1f9b5e9aea7cc1262d'
+        'a966a7d905e3e7a90503be237330c417ce2790e94800691139fe60501b6973563354843ca6cf56122d51ab3877d7231aebc58c62a5c4a27a82af626411615c00'
         'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
-        'd376480bcb5c468b431be29e252fbf25b350d2742d24e9e41fb113bb4ccc33045566d5ff76005ba167ca58bebde211e93a918c7a7c88da86fb29a28c273a30da')
+        'b8b3feb90888363c4eab359db05e120572d3ac25c18eb27fef5714d609c7cb895243d45585a150438fec0a2d595931b10966322cd956818dbd3a9b3ef412d1e8')
