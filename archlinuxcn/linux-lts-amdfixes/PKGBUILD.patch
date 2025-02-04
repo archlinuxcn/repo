@@ -1,17 +1,8 @@
 diff --git a/PKGBUILD b/PKGBUILD
-index bbebd5b..8455296 100644
+index bbebd5b..e3d67be 100644
 --- a/PKGBUILD
 +++ b/PKGBUILD
-@@ -4,6 +4,8 @@ pkgbase=linux-lts
- pkgver=6.12.12
- pkgrel=1
- pkgdesc='LTS Linux'
-+provides=('linux-lts' "linux-lts=${pkgver}")
-+conflicts=('linux-lts')
- url='https://www.kernel.org'
- arch=(x86_64)
- makedepends=(
-@@ -55,15 +57,19 @@ b2sums=('e32d607f2732c5ad719aa2f31c7f42f6243d7e9d52447dc923563d2982a68a3bed836ac
+@@ -55,15 +55,19 @@ b2sums=('e32d607f2732c5ad719aa2f31c7f42f6243d7e9d52447dc923563d2982a68a3bed836ac
          '410dc8911051905c5c01b47890eeff817fc180434372864cfa9ee0d77e0ff43571b9fcc3c193d562c4dcd49511edf7c6c01dde12dd0778845d1868dc435531ea'
          'c3bc7e3ea2b943c2dcd5d2169eae63e90436963eb547c2301a3449169cdc8da13500c88acbfb4cc033ab78aa72950cf88e9fce00bc86d7a0af68b649761c2829')
  export KBUILD_BUILD_HOST=archlinux
@@ -32,6 +23,22 @@ index bbebd5b..8455296 100644
  
    local src
    for src in "${source[@]}"; do
+@@ -96,6 +100,7 @@ build() {
+ 
+ _package() {
+   pkgdesc="The $pkgdesc kernel and modules"
++  conflicts=('linux-lts')
+   license=(
+     'Apache-2.0 OR MIT'
+ 
+@@ -155,6 +160,7 @@ _package() {
+     VIRTUALBOX-GUEST-MODULES
+     WIREGUARD-MODULE
+   )
++  provides+=('linux-lts' "linux-lts=${pkgver}")
+   replaces=(
+     wireguard-lts
+   )
 @@ -168,7 +174,7 @@ _package() {
    install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
  
@@ -41,3 +48,21 @@ index bbebd5b..8455296 100644
  
    echo "Installing modules..."
    ZSTD_CLEVEL=19 make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+@@ -185,6 +191,8 @@ _package() {
+ 
+ _package-headers() {
+   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
++  provides=('linux-lts-headers' "linux-lts-headers=${pkgver}")
++  conflicts=('linux-lts-headers')
+   license=(
+     BSD-3-Clause
+     'BSD-3-Clause OR GPL-2.0-only'
+@@ -325,6 +333,8 @@ _package-headers() {
+ 
+ _package-docs() {
+   pkgdesc="Documentation for the $pkgdesc kernel"
++  provides=('linux-lts-docs' "linux-lts-docs=${pkgver}")
++  conflicts=('linux-lts-docs')
+   license=(
+     BSD-3-Clause
+ 
