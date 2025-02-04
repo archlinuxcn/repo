@@ -8,12 +8,13 @@ pkgrel=1
 pkgdesc="SeaDrive daemon with FUSE interface"
 arch=('aarch64' 'armv7h' 'x86_64')
 url="https://github.com/haiwen/seadrive-fuse"
-license=('GPL3')
-_daemon_depends=(openssl libuuid.so sqlite libevent zlib libcurl.so fuse2 libsearpc
-                 libgobject-2.0.so libglib-2.0.so jansson libwebsockets.so)
+license=('GPL-3.0-only')
+_daemon_depends=(libcrypto.so libuuid.so libsqlite3.so libevent libz.so libcurl.so
+                 fuse2 libsearpc libgobject-2.0.so libglib-2.0.so
+                 jansson libwebsockets.so libargon2.so)
 makedepends=(git intltool python "${_daemon_depends[@]}")
 source=("git+https://github.com/haiwen/seadrive-fuse#tag=v${pkgver}")
-sha256sums=('3c1a04602f3448445a47be2586f2e9d568d42985eecd6b69cf6b9590a701eb22')
+sha256sums=('ec6c19e881e454fcb1ad3e05a958a58fc94515472863ac604bd18f6c870f845a')
 
 build() {
   cd seadrive-fuse
