@@ -2,7 +2,7 @@
 
 _pkgname=albumentations
 pkgname=python-albumentations
-pkgver=2.0.2
+pkgver=2.0.3
 pkgrel=1
 pkgdesc='Fast image augmentation library and easy to use wrapper around other libraries'
 arch=('any')
@@ -29,7 +29,7 @@ optdepends=(
   "python-torchvision: for transforms from torchvision"
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/albumentations-team/albumentations/archive/${pkgver}.tar.gz")
-sha512sums=('e12ab76a00f6ffd31ad70453db17c449790d5138290918bd615e1a378c4f34c3e3b41e29098550dfe45c97e499fffb40d724cccbc2d0a90c6c4991607e7a2a1a')
+sha512sums=('02f3e6ec50f1f93d3bc1b1703a5e158a5ff76181738c1c367754f6631ca27dc5cb96e32415d39b27e010150277c0b777863060b85232cd5fbffd9c33a5a3cac9')
 
 build() {
   cd "${_pkgname}-${pkgver}"
