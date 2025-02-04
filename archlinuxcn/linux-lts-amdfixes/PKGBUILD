@@ -2,9 +2,10 @@
 
 pkgbase=linux-lts
 pkgver=6.12.12
-pkgrel=1
+pkgrel=2
 pkgdesc='LTS Linux'
 provides=('linux-lts' "linux-lts=${pkgver}")
+conflicts=('linux-lts')
 url='https://www.kernel.org'
 arch=(x86_64)
 makedepends=(
@@ -68,7 +69,7 @@ prepare() {
 
   echo "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
-  echo "${pkgbase#linux}" > localversion.20-pkgname
+  echo "-lts" > localversion.20-pkgname
 
   local src
   for src in "${source[@]}"; do
@@ -173,7 +174,7 @@ _package() {
   install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
-  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
+  echo "linux-lts" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
   ZSTD_CLEVEL=19 make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
