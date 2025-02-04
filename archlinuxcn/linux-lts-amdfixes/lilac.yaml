@@ -1,0 +1,14 @@
+maintainers:
+  - github: poscat0x04
+
+pre_build_script: |
+  _G.files = download_official_pkgbuild('linux-lts')
+  run_protected(['patch', '-p1', '-l', '-i', 'PKGBUILD.patch'])
+
+post_build_script: |
+  git_add_files(_G.files)
+  git_commit()
+
+update_on:
+  - source: alpm
+    alpm: linux-lts

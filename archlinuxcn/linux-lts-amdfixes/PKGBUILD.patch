@@ -1,0 +1,56 @@
+diff --git a/0004-amdgpu-fix-edp-brightness-control-on-HP-laptops.patch b/0004-amdgpu-fix-edp-brightness-control-on-HP-laptops.patch
+new file mode 100644
+index 0000000..03ae5e9
+--- /dev/null
++++ b/0004-amdgpu-fix-edp-brightness-control-on-HP-laptops.patch
+@@ -0,0 +1,25 @@
++From 22c06151a9160810a3940794e6fd094f0864af51 Mon Sep 17 00:00:00 2001
++From: poscat <poscat0x04@outlook.com>
++Date: Mon, 3 Feb 2025 23:52:31 +0800
++Subject: [PATCH] amdgpu: fix edp brightness control on HP laptops
++
++---
++ drivers/gpu/drm/amd/display/dc/dcn31/dcn31_panel_cntl.c | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/drivers/gpu/drm/amd/display/dc/dcn31/dcn31_panel_cntl.c b/drivers/gpu/drm/amd/display/dc/dcn31/dcn31_panel_cntl.c
++index 573898984726..553bbcad028f 100644
++--- a/drivers/gpu/drm/amd/display/dc/dcn31/dcn31_panel_cntl.c
+++++ b/drivers/gpu/drm/amd/display/dc/dcn31/dcn31_panel_cntl.c
++@@ -187,7 +187,7 @@ void dcn31_panel_cntl_construct(
++ 		break;
++ 	}
++ 
++-	if (dcn31_panel_cntl->base.ctx->dc->config.support_edp0_on_dp1)
+++	if (true)
++ 		//If supported, power sequencer mapping shall follow the DIG instance
++ 		dcn31_panel_cntl->base.pwrseq_inst = pwrseq_inst;
++ 	else
++-- 
++2.48.1
++
+diff --git a/PKGBUILD b/PKGBUILD
+index bbebd5b..eb53527 100644
+--- a/PKGBUILD
++++ b/PKGBUILD
+@@ -4,6 +4,7 @@ pkgbase=linux-lts
+ pkgver=6.12.12
+ pkgrel=1
+ pkgdesc='LTS Linux'
++provides=('linux-lts' "linux-lts=${pkgver}")
+ url='https://www.kernel.org'
+ arch=(x86_64)
+ makedepends=(
+@@ -55,8 +56,12 @@ b2sums=('e32d607f2732c5ad719aa2f31c7f42f6243d7e9d52447dc923563d2982a68a3bed836ac
+         '410dc8911051905c5c01b47890eeff817fc180434372864cfa9ee0d77e0ff43571b9fcc3c193d562c4dcd49511edf7c6c01dde12dd0778845d1868dc435531ea'
+         'c3bc7e3ea2b943c2dcd5d2169eae63e90436963eb547c2301a3449169cdc8da13500c88acbfb4cc033ab78aa72950cf88e9fce00bc86d7a0af68b649761c2829')
+ export KBUILD_BUILD_HOST=archlinux
++pkgbase=linux-lts-amdfixes
+ export KBUILD_BUILD_USER=$pkgbase
+ export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
++source+=(0004-amdgpu-fix-edp-brightness-control-on-HP-laptops.patch)
++sha256sums+=('13464deccb3d30ff4d2b731f6110befc3a794fcf538fa4313720c8f8c93c9d3b')
++b2sums+=('2fb944d6a277806fa113f86566b5b28814e2f43b85b52fbd791cdcce76a22e7aae3e143cbabb17b096b9e39fa9f36aa9b014224b871b4e0a8c2e4e8aa90cb9b5')
+ 
+ prepare() {
+   cd $_srcname
