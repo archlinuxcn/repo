@@ -2,10 +2,8 @@
 
 pkgbase=linux-lts
 pkgver=6.12.12
-pkgrel=2
+pkgrel=3
 pkgdesc='LTS Linux'
-provides=('linux-lts' "linux-lts=${pkgver}")
-conflicts=('linux-lts')
 url='https://www.kernel.org'
 arch=(x86_64)
 makedepends=(
@@ -102,6 +100,7 @@ build() {
 
 _package() {
   pkgdesc="The $pkgdesc kernel and modules"
+  conflicts=('linux-lts')
   license=(
     'Apache-2.0 OR MIT'
 
@@ -161,6 +160,7 @@ _package() {
     VIRTUALBOX-GUEST-MODULES
     WIREGUARD-MODULE
   )
+  provides+=('linux-lts' "linux-lts=${pkgver}")
   replaces=(
     wireguard-lts
   )
@@ -191,6 +191,8 @@ _package() {
 
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
+  provides=('linux-lts-headers' "linux-lts-headers=${pkgver}")
+  conflicts=('linux-lts-headers')
   license=(
     BSD-3-Clause
     'BSD-3-Clause OR GPL-2.0-only'
@@ -331,6 +333,8 @@ _package-headers() {
 
 _package-docs() {
   pkgdesc="Documentation for the $pkgdesc kernel"
+  provides=('linux-lts-docs' "linux-lts-docs=${pkgver}")
+  conflicts=('linux-lts-docs')
   license=(
     BSD-3-Clause
 
