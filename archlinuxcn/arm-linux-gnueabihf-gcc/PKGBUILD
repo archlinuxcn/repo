@@ -162,9 +162,9 @@ package_gcc() {
   make -C gcc DESTDIR="${pkgdir}" install-mkheaders
 
   make -C lto-plugin DESTDIR="${pkgdir}" install
-  # install -dm755 "${pkgdir}"/usr/lib/bfd-plugins/
-  # ln -s /usr/lib/gcc/$_target/${_gccver}/liblto_plugin.so \
-    #    "${pkgdir}"/usr/lib/bfd-plugins/
+  install -dm755 "${pkgdir}"/usr/${_target}/lib/bfd-plugins/
+  ln -s /usr/lib/gcc/$_target/${_gccver}/liblto_plugin.so \
+     "${pkgdir}"/usr/${_target}/lib/bfd-plugins/
 
   make -C $_target/libgomp DESTDIR="${pkgdir}" \
        install-nodist_toolexeclibHEADERS install-nodist_libsubincludeHEADERS
