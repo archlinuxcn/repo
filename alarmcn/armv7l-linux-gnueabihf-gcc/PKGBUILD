@@ -7,7 +7,7 @@
 _target="armv7l-linux-gnueabihf"
 pkgbase="${_target}-gcc"
 _pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
-pkgver=14.1.1+r1+g43b730b9134
+pkgver=14.2.1+r730+gc061ad5a36ba
 _gccver=${pkgver%%+*}
 _majorver=${_gccver%%.*}
 pkgrel=1
@@ -30,7 +30,7 @@ fi
 options=(!emptydirs !distcc debug)
 source=("git+https://gcc.gnu.org/git/gcc.git#${_git_ref}"
         gcc-ada-repro.patch)
-sha256sums=('51024affcbc17f4ba5528ad9aad112a9b4d367d796a44b0bc59e3403a4c82ddd'
+sha256sums=('b85f812c76b339a69a17e6e4ad04b03d2c6ed6bc4c632ac1d30d87cd9b382d8b'
             '1773f5137f08ac1f48f0f7297e324d5d868d55201c03068670ee4602babdef2f')
 
 _libdir="usr/lib/gcc/${_target}/${_gccver}"
