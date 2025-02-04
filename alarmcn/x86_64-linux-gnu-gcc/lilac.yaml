@@ -1,0 +1,26 @@
+maintainers:
+  - github: yuyichao
+
+build_prefix: archlinuxcn-aarch64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
+time_limit_hours: 3
+
+repo_depends:
+  - x86_64-linux-gnu-linux-api-headers
+  - x86_64-linux-gnu-binutils
+
+update_on:
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: gcc
+    strip_release: true
+  - source: alpm
+    alpm: libisl
+    provided: libisl.so
+  - source: alpm
+    alpm: zstd
+    provided: libzstd.so
+  - source: manual
+    manual: 1

@@ -1,0 +1,149 @@
+#
+
+_target="x86_64-linux-gnu"
+pkgname=${_target}-glibc
+pkgver=2.40
+pkgrel=0
+pkgdesc="GNU C Library (${_target})"
+arch=('any')
+url="https://www.gnu.org/software/libc/"
+license=(GPL-2.0-or-later LGPL-2.1-or-later)
+depends=("${_target}-linux-api-headers>=4.17.11-1")
+makedepends=("${_target}-gcc-stage2>=9.1.0" "${_target}-binutils" gperf git python)
+provides=("${_target}-glibc-headers=${pkgver}")
+conflicts=("${_target}-glibc-headers")
+replaces=("${_target}-glibc-headers")
+options=(!buildflags !strip staticlibs)
+if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
+  _git_ref="commit=${BASH_REMATCH[1]}"
+else
+  _git_ref="tag=glibc-${pkgver}"
+fi
+source=("git+https://sourceware.org/git/glibc.git#${_git_ref}"
+        sdt.h sdt-config.h)
+sha256sums=('ea18167f9d9271124d56c5628fa33298499b2f7df9dc0a6a922a6872290df4bd'
+            '774061aff612a377714a509918a9e0e0aafce708b87d2d7e06b1bd1f6542fe70'
+            'cdc234959c6fdb43f000d3bb7d1080b0103f4080f5e67bcfe8ae1aaf477812f0')
+
+prepare() {
+  rm -rf glibc-build
+  rm -rf lib32-glibc-build
+  mkdir glibc-build
+  mkdir lib32-glibc-build
+
+  cd glibc
+
+  local i
+  for i in ${source[@]}; do
+    case ${i%::*} in
+      *.patch)
+        echo "Applying ${i}"
+        patch -p1 -i "$srcdir/${i}"
+        ;;
+    esac
+  done
+}
+
+build() {
+  local _configure_flags=(
+    --target=${_target}
+    --build=${CHOST}
+    --prefix=/
+    --with-headers=/usr/${_target}/include
+    --enable-add-ons
+    --enable-bind-now
+    --enable-lock-elision
+    --enable-stack-protector=strong
+    --enable-stackguard-randomization
+    --enable-crypt
+    --enable-obsolete-rpc
+    --enable-kernel=4.4
+    --enable-multi-arch
+    --enable-systemtap
+    --disable-profile
+    --disable-werror
+  )
+
+  # remove fortify for building libraries
+  CPPFLAGS=${CPPFLAGS/-D_FORTIFY_SOURCE=2/}
+
+  CFLAGS="${CFLAGS/-fno-plt/} -O2"
+  CXXFLAGS="${CXXFLAGS/-fno-plt/} -O2"
+  LDFLAGS="${LDFLAGS/,-z,now/}"
+
+  export BUILD_CC=gcc
+  export AR=${_target}-ar
+  export RANLIB=${_target}-ranlib
+
+  (
+    cd glibc-build
+
+    echo "slibdir=/lib" >> configparms
+    echo "rtlddir=/lib" >> configparms
+    echo "sbindir=/bin" >> configparms
+    echo "rootsbindir=/bin" >> configparms
+
+    export CC=${_target}-gcc
+    export CXX=${_target}-g++
+
+    "$srcdir/glibc/configure" \
+      ${_configure_flags[@]} \
+      --host=${_target} \
+      --libdir=/lib \
+      --libexecdir=/lib
+
+    echo "build-programs=no" >> configparms
+    make
+  )
+
+  (
+    cd lib32-glibc-build
+
+    echo "slibdir=/lib32" >> configparms
+    echo "rtlddir=/lib32" >> configparms
+    echo "sbindir=/bin" >> configparms
+    echo "rootsbindir=/bin" >> configparms
+
+    export CC="${_target}-gcc -m32 -mstackrealign"
+    export CXX="${_target}-g++ -m32 -mstackrealign"
+
+    "$srcdir/glibc/configure" \
+      ${_configure_flags[@]} \
+      --host=i686-linux-gnu \
+      --libdir=/lib32 \
+      --libexecdir=/lib32
+
+    echo "build-programs=no" >> configparms
+    make
+  )
+}
+
+package() {
+
+  (
+    cd lib32-glibc-build
+    make install_root="$pkgdir/usr/$_target" install
+  )
+  (
+    cd glibc-build
+    make install_root="$pkgdir/usr/$_target" install
+  )
+
+  mkdir -p "$pkgdir/usr/$_target/usr/i386-linux-gnu"
+  ln -s ../lib32 "$pkgdir/usr/$_target/usr/lib32"
+  ln -s ../../lib32 "$pkgdir/usr/$_target/usr/i386-linux-gnu/lib32"
+  ln -s ../../lib32 "$pkgdir/usr/$_target/usr/i386-linux-gnu/lib"
+  ln -s ../{include,lib} "$pkgdir/usr/$_target/usr"
+
+  # Provide tracing probes to libstdc++ for exceptions, possibly for other
+  # libraries too. Useful for gdb's catch command.
+  install -Dm644 "$srcdir/sdt.h" "$pkgdir/usr/$_target/include/sys/sdt.h"
+  install -Dm644 "$srcdir/sdt-config.h" "$pkgdir/usr/$_target/include/sys/sdt-config.h"
+
+  # Remove unneeded for compilation files
+  rm -rf "$pkgdir/usr/$_target/"{bin,sbin,etc,share,var}
+
+  for f in "${pkgdir}"/usr/${_target}/{lib,lib32}/libc.so; do
+    sed -i "$f" -e "s://*lib/l:l:g"
+  done
+}

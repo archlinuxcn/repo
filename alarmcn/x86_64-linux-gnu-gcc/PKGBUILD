@@ -1,0 +1,244 @@
+# Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
+# Contributor: toha257 <toha257@gmail.com>
+# Contributor: Allan McRae <allan@archlinux.org>
+# Contributor: Kevin Mihelich <kevin@archlinuxarm.org>
+# Maintainer: Tavian Barnes <tavianator@tavianator.com>
+
+_target="x86_64-linux-gnu"
+pkgbase="${_target}-gcc"
+_pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
+pkgver=14.1.1+r1+g43b730b9134
+_gccver=${pkgver%%+*}
+_majorver=${_gccver%%.*}
+pkgrel=0
+pkgdesc="The GNU Compiler Collection (${_target})"
+arch=(armv7h aarch64 i686 x86_64)
+license=(GPL LGPL FDL custom)
+url='https://gcc.gnu.org'
+makedepends=(${_target}-binutils
+             ${_target}-glibc
+             libisl
+             libmpc
+             libxcrypt
+             zstd
+             git)
+if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
+  _git_ref="commit=${BASH_REMATCH[1]}"
+else
+  _git_ref="tag=releases/gcc-${pkgver}"
+fi
+options=(!emptydirs !distcc debug)
+source=("git+https://gcc.gnu.org/git/gcc.git#${_git_ref}"
+        gcc-ada-repro.patch)
+sha256sums=('51024affcbc17f4ba5528ad9aad112a9b4d367d796a44b0bc59e3403a4c82ddd'
+            '1773f5137f08ac1f48f0f7297e324d5d868d55201c03068670ee4602babdef2f')
+
+_libdir="usr/lib/gcc/${_target}/${_gccver}"
+
+prepare() {
+  cd gcc
+
+  # Do not run fixincludes
+  sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
+  # hack! - some configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" {libiberty,gcc}/configure
+
+  echo "MULTILIB_OSDIRNAMES=m32=../lib32 m64=../lib" >> gcc/config/i386/t-linux64
+
+  # Reproducible gcc-ada
+  patch -Np0 < "$srcdir/gcc-ada-repro.patch"
+
+  mkdir -p "$srcdir/gcc-build"
+}
+
+build() {
+  cd gcc-build
+
+  CFLAGS=${CFLAGS/-Werror=format-security/}
+  CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
+  ASMFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export ASMFLAGS
+
+  "$srcdir/gcc/configure" \
+    --prefix=/usr \
+    --program-prefix=${_target}- \
+    --with-local-prefix=/usr/${_target} \
+    --with-sysroot=/usr/${_target} \
+    --with-build-sysroot=/usr/${_target} \
+    --with-as=/usr/bin/${_target}-as \
+    --with-ld=/usr/bin/${_target}-ld \
+    --libdir=/usr/lib \
+    --libexecdir=/usr/lib \
+    --disable-nls \
+    --enable-languages=c,c++,fortran,lto,objc,obj-c++ \
+    --with-system-isl \
+    --with-bugurl=https://github.com/archlinuxcn/repo/issues \
+    --with-linker-hash-style=gnu \
+    --with-system-zlib \
+    --enable-__cxa_atexit \
+    --enable-cet=auto \
+    --enable-checking=release \
+    --enable-clocale=gnu \
+    --enable-default-pie \
+    --enable-default-ssp \
+    --enable-gnu-indirect-function \
+    --enable-gnu-unique-object \
+    --enable-install-libiberty \
+    --enable-libstdcxx-backtrace \
+    --enable-link-serialization=1 \
+    --enable-linker-build-id \
+    --enable-lto \
+    --enable-multilib \
+    --enable-plugin \
+    --enable-shared \
+    --enable-threads=posix \
+    --disable-libssp \
+    --disable-libstdcxx-pch \
+    --disable-libunwind-exceptions \
+    --disable-werror \
+    --target=${_target} \
+    --host=${CHOST} \
+    --build=${CHOST} \
+    --enable-interwork \
+    --enable-addons \
+    --with-arch=x86-64
+
+  # Fills up /tmp on build machine otherwise...
+  make -j1
+}
+
+package_gcc-libs() {
+  pkgdesc="Runtime libraries shipped by GCC (${_target})"
+  depends=("${_target}-glibc>=2.27")
+  options=(!emptydirs !strip)
+
+  cd gcc-build
+
+  make -C ${_target}/libgcc DESTDIR="${pkgdir}" install-shared
+  rm "${pkgdir}/${_libdir}/libgcc_eh.a"
+
+  for lib in libatomic \
+               libgfortran \
+               libgomp \
+               libitm \
+               libquadmath \
+               libsanitizer/{a,l,ub}san \
+               libstdc++-v3/src \
+               libvtv; do
+    make -C $_target/$lib DESTDIR="${pkgdir}" install-toolexeclibLTLIBRARIES
+    make -C $_target/32/$lib DESTDIR="${pkgdir}" install-toolexeclibLTLIBRARIES
+  done
+
+  make -C $_target/libobjc DESTDIR="${pkgdir}" install-libs
+  make -C $_target/32/libobjc DESTDIR="${pkgdir}" install-libs
+
+  # Install Runtime Library Exception
+  install -Dm644 "$srcdir/gcc/COPYING.RUNTIME" \
+          "$pkgdir/usr/share/licenses/${pkgname}/RUNTIME.LIBRARY.EXCEPTION"
+}
+
+package_gcc() {
+  pkgdesc="The GNU Compiler Collection - C and C++ frontends (${_target})"
+  depends=("${_target}-gcc-libs=$pkgver-$pkgrel"
+           "${_target}-binutils>=2.28" zlib libmpc libzstd.so libisl.so)
+  conflicts=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
+  replaces=("${_target}-gcc-stage1" "${_target}-gcc-stage2")
+  provides=("${_target}-gcc-stage1=${pkgver}" "${_target}-gcc-stage2=${pkgver}")
+  options=(!emptydirs staticlibs debug)
+
+  cd gcc-build
+
+  make -C gcc DESTDIR="${pkgdir}" install-driver install-cpp install-gcc-ar \
+       c++.install-common install-headers install-plugin install-lto-wrapper
+
+  # install -m755 -t "$pkgdir/usr/bin/" gcc/gcov{,-tool}
+  install -m755 -t "$pkgdir/${_libdir}/" gcc/{cc1,cc1plus,collect2,lto1}
+
+  make -C $_target/libgcc DESTDIR="${pkgdir}" install
+  make -C $_target/32/libgcc DESTDIR="${pkgdir}" install
+  rm "${pkgdir}"/usr/${_target}/lib{,32}/libgcc_s.so*
+
+  make -C $_target/libstdc++-v3/src DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/include DESTDIR="${pkgdir}" install
+  make -C $_target/libstdc++-v3/libsupc++ DESTDIR="${pkgdir}" install
+  make -C $_target/32/libstdc++-v3/src DESTDIR="${pkgdir}" install
+  make -C $_target/32/libstdc++-v3/include DESTDIR="${pkgdir}" install
+  make -C $_target/32/libstdc++-v3/libsupc++ DESTDIR="${pkgdir}" install
+
+  rm "${pkgdir}"/usr/${_target}/lib{,32}/libstdc++.so*
+
+  make DESTDIR="${pkgdir}" install-fixincludes
+  make -C gcc DESTDIR="${pkgdir}" install-mkheaders
+
+  make -C lto-plugin DESTDIR="${pkgdir}" install
+  install -dm755 "${pkgdir}"/usr/${_target}/lib/bfd-plugins/
+  ln -s /usr/lib/gcc/$_target/${_gccver}/liblto_plugin.so \
+     "${pkgdir}"/usr/${_target}/lib/bfd-plugins/
+
+  make -C $_target/libgomp DESTDIR="${pkgdir}" \
+       install-nodist_{libsubinclude,toolexeclib}HEADERS
+  make -C $_target/libitm DESTDIR="${pkgdir}" install-nodist_toolexeclibHEADERS
+  make -C $_target/libquadmath DESTDIR="${pkgdir}" \
+       install-nodist_libsubincludeHEADERS
+  make -C $_target/libsanitizer DESTDIR="${pkgdir}" \
+       install-nodist_{saninclude,toolexeclib}HEADERS
+  make -C $_target/libsanitizer/asan DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
+  make -C $_target/libsanitizer/tsan DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
+  make -C $_target/libsanitizer/lsan DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
+  make -C $_target/32/libgomp DESTDIR="${pkgdir}" \
+       install-nodist_{libsubinclude,toolexeclib}HEADERS
+  make -C $_target/32/libitm DESTDIR="${pkgdir}" install-nodist_toolexeclibHEADERS
+  make -C $_target/32/libsanitizer DESTDIR="${pkgdir}" \
+       install-nodist_{saninclude,toolexeclib}HEADERS
+  make -C $_target/32/libsanitizer/asan DESTDIR="${pkgdir}" \
+       install-nodist_toolexeclibHEADERS
+
+  make -C libiberty DESTDIR="${pkgdir}" install
+  mkdir -p "${pkgdir}"/usr/${_target}/include
+  mv "${pkgdir}"/usr/include/libiberty "${pkgdir}"/usr/${_target}/include
+  # install PIC version of libiberty
+  install -m644 "${srcdir}"/gcc-build/libiberty/pic/libiberty.a \
+          "${pkgdir}"/usr/${_target}/lib
+
+  make -C libcpp DESTDIR="${pkgdir}" install
+  rm "$pkgdir"/usr/lib/libiberty.a
+}
+
+package_gcc-fortran() {
+  pkgdesc="Fortran front-end for GCC (${_target})"
+  depends=("${_target}-gcc=$pkgver-$pkgrel" libisl.so)
+
+  cd gcc-build
+  make -C $_target/libgfortran DESTDIR="$pkgdir" \
+       install-cafexeclibLTLIBRARIES \
+       install-{toolexeclibDATA,nodist_fincludeHEADERS,gfor_cHEADERS}
+  make -C $_target/32/libgfortran DESTDIR="$pkgdir" \
+       install-cafexeclibLTLIBRARIES \
+       install-{toolexeclibDATA,nodist_fincludeHEADERS,gfor_cHEADERS}
+  make -C $_target/libgomp DESTDIR="$pkgdir" install-nodist_fincludeHEADERS
+  make -C gcc DESTDIR="$pkgdir" fortran.install-common
+
+  install -Dm755 gcc/f951 $pkgdir/${_libdir}/f951
+}
+
+package_gcc-objc() {
+  pkgdesc="Objective-C front-end for GCC (${_target})"
+  depends=("${_target}-gcc=$pkgver-$pkgrel" libisl.so)
+
+  cd gcc-build
+  make DESTDIR="$pkgdir" -C $_target/libobjc install-headers
+  install -dm755 "$pkgdir"/${_libdir}
+  install -m755 gcc/cc1obj{,plus} "$pkgdir"/${_libdir}/
+}
+
+pkgname=()
+for pkg in "${_pkgname[@]}"; do
+  pkgname=("${pkgname[@]}" "${_target}-${pkg}")
+  eval "package_${_target}-${pkg}() {
+    package_${pkg}
+}"
+done
