@@ -30,18 +30,19 @@ index 0000000..03ae5e9
 +2.48.1
 +
 diff --git a/PKGBUILD b/PKGBUILD
-index bbebd5b..eb53527 100644
+index bbebd5b..8455296 100644
 --- a/PKGBUILD
 +++ b/PKGBUILD
-@@ -4,6 +4,7 @@ pkgbase=linux-lts
+@@ -4,6 +4,8 @@ pkgbase=linux-lts
  pkgver=6.12.12
  pkgrel=1
  pkgdesc='LTS Linux'
 +provides=('linux-lts' "linux-lts=${pkgver}")
++conflicts=('linux-lts')
  url='https://www.kernel.org'
  arch=(x86_64)
  makedepends=(
-@@ -55,8 +56,12 @@ b2sums=('e32d607f2732c5ad719aa2f31c7f42f6243d7e9d52447dc923563d2982a68a3bed836ac
+@@ -55,15 +57,19 @@ b2sums=('e32d607f2732c5ad719aa2f31c7f42f6243d7e9d52447dc923563d2982a68a3bed836ac
          '410dc8911051905c5c01b47890eeff817fc180434372864cfa9ee0d77e0ff43571b9fcc3c193d562c4dcd49511edf7c6c01dde12dd0778845d1868dc435531ea'
          'c3bc7e3ea2b943c2dcd5d2169eae63e90436963eb547c2301a3449169cdc8da13500c88acbfb4cc033ab78aa72950cf88e9fce00bc86d7a0af68b649761c2829')
  export KBUILD_BUILD_HOST=archlinux
@@ -54,3 +55,20 @@ index bbebd5b..eb53527 100644
  
  prepare() {
    cd $_srcname
+ 
+   echo "Setting version..."
+   echo "-$pkgrel" > localversion.10-pkgrel
+-  echo "${pkgbase#linux}" > localversion.20-pkgname
++  echo "-lts" > localversion.20-pkgname
+ 
+   local src
+   for src in "${source[@]}"; do
+@@ -168,7 +174,7 @@ _package() {
+   install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+ 
+   # Used by mkinitcpio to name the kernel
+-  echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
++  echo "linux-lts" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
+ 
+   echo "Installing modules..."
+   ZSTD_CLEVEL=19 make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
