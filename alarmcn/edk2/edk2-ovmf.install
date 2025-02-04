@@ -1,0 +1,10 @@
+post_upgrade() {
+  if (( $(vercmp "$2" '202408-2') < 0 )); then
+    cat <<END
+
+>>> The CSM support has been removed upstream in version 202402.
+    The 2MB firmware files have been removed in favor of the 4MB ones as the new default.
+    Virtual machine setups may need to be adapted!
+END
+  fi
+}
