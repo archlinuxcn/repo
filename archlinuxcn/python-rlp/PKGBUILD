@@ -2,8 +2,8 @@
 
 _name=rlp
 pkgname=python-${_name}
-pkgver=4.0.1
-pkgrel=2
+pkgver=4.1.0
+pkgrel=1
 pkgdesc="The python RLP serialization library"
 arch=(any)
 url="https://github.com/ethereum/pyrlp"
@@ -13,7 +13,7 @@ makedepends=(python-build python-installer python-setuptools python-wheel python
 checkdepends=(python-pytest python-hypothesis)
 optdepends=('python-rusty-rlp: improve pyrlp performance with a rust based')
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('6b022e0675ecfc33deed108851c1f83c9b34152a2cbaf7bf8d69d044ec42b83b5cc5287f0f289086379c568c0ae7fe75c19e0b88bcdb7adca9f032fbf1c6ef57')
+sha512sums=('b664c5fa6364d0e76f40d309fd0a45bae4c3609f1b0f29281c7cf662f901c2d1ad2d3bc4d25ff10290fc6e2333bb97896ee2c3eec543ab388a47b3e1f605f069')
 
 build() {
   cd pyrlp-$pkgver
