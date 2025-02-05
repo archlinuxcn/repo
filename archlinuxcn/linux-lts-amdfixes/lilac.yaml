@@ -4,6 +4,10 @@ maintainers:
 pre_build_script: |
   _G.files = download_official_pkgbuild('linux-lts')
   run_protected(['patch', '-p1', '-l', '-i', 'PKGBUILD.patch'])
+  for line in edit_file('PKGBUILD'):
+    if line.startswith("upstream_pkgrel="):
+      line = f"upstream_pkgrel={_G.newvers[0].split('-')[1]}"
+    print(line)
 
 post_build_script: |
   git_add_files(_G.files)
