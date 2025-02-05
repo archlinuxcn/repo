@@ -3,12 +3,12 @@
 maintainers:
   - github: yuyichao
 
-build_prefix: extra-x86_64
-
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - source: vcs
+  - source: git
+    git: git://git.sv.gnu.org/auctex.git
+    use_commit: true
   - source: manual
     manual: 1
