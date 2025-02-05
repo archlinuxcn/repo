@@ -2,8 +2,8 @@
 
 _name=eth-rlp
 pkgname=python-${_name}
-pkgver=2.1.0
-pkgrel=2
+pkgver=2.2.0
+pkgrel=1
 pkgdesc="RLP definitions for common Ethereum objects in Python"
 arch=(any)
 url="https://github.com/ethereum/${_name}"
@@ -12,7 +12,7 @@ depends=(python python-eth-utils python-hexbytes python-rlp)
 makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx python-sphinx_rtd_theme)
 checkdepends=(python-pytest)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('c55490aadc80d5b5aba6f53c7230ba5caaae94ed0850f0be59d39589e1df3c97085a65d967601c7f99d03910b8f8b526d2aebf4966e10d50cfe2a559d37aa066')
+sha512sums=('d89ba91e8345fdd30f72d70a0e3abd018c7abe1d8e7655f43ee858b2ab274079bc3dca5a9f9f9079b3df9b19b25d2a0987751e65b7a6dd83ea4407f47d2e5285')
 
 build() {
   cd $_name-$pkgver
