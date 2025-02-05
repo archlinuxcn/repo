@@ -5,10 +5,10 @@ post_build: git_pkgbuild_commit
 
 repo_depends:
   - x86_64-linux-gnu-gcc
+  - x86_64-linux-gnu-gcc: x86_64-linux-gnu-gcc-libs
   - arm-none-eabi-gcc
 
 update_on:
-  # Note that we need to get the official package and not the archlinux arm package
   - source: alpm
     dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
     alpm: edk2
