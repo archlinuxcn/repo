@@ -1,0 +1,40 @@
+From: Michael Tokarev <mjt@tls.msk.ru>
+Subject: build most modules statically (hack)
+
+This hack makes the build procedure to build most modules statically,
+except block and gui modules which goes into their own packages.
+The rest are built into the executables directly in order to make
+qemu-system-common package (where all other modules goes) to be
+more-or-less version-independent.
+
+There's little reason to build these as modules or to ship them in
+separate packages.
+
+diff --git a/meson.build b/meson.build
+index e3386196ba..a28f7d10f1 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1587,13 +1587,19 @@ softmmu_mods = []
+ foreach d, list : modules
+   foreach m, module_ss : list
+     if enable_modules and targetos != 'windows'
+-      module_ss = module_ss.apply(config_all, strict: false)
+-      sl = static_library(d + '-' + m, [genh, module_ss.sources()],
+-                          dependencies: [modulecommon, module_ss.dependencies()], pic: true)
++      module_dn = module_ss.apply(config_all, strict: false)
++      sl = static_library(d + '-' + m, [genh, module_dn.sources()],
++                          dependencies: [modulecommon, module_dn.dependencies()], pic: true)
+       if d == 'block'
+         block_mods += sl
+       else
+-        softmmu_mods += sl
++        # we only build 2 non-block modules as modules: it is the gui part
++        if d + '-' + m in [ 'ui-gtk', 'ui-sdl', 'audio-pa' ]
++          softmmu_mods += sl
++        else
++          warning('Compiling module statically: ' + d + '-' + m)
++          softmmu_ss.add_all(module_ss)
++        endif
+       endif
+     else
+       if d == 'block'

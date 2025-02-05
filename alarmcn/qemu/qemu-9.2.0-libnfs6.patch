@@ -1,0 +1,101 @@
+diff -Nurp qemu-9.2.0/block/nfs.c qemu-9.2.0-libnfs6/block/nfs.c
+--- qemu-9.2.0/block/nfs.c	2024-12-11 00:46:36.000000000 +0100
++++ qemu-9.2.0-libnfs6/block/nfs.c	2025-01-19 15:03:24.936846650 +0100
+@@ -70,7 +70,9 @@ typedef struct NFSRPC {
+     BlockDriverState *bs;
+     int ret;
+     int complete;
++#ifndef LIBNFS_API_V2
+     QEMUIOVector *iov;
++#endif
+     struct stat *st;
+     Coroutine *co;
+     NFSClient *client;
+@@ -246,6 +248,7 @@ nfs_co_generic_cb(int ret, struct nfs_co
+     NFSRPC *task = private_data;
+     task->ret = ret;
+     assert(!task->st);
++#ifndef LIBNFS_API_V2
+     if (task->ret > 0 && task->iov) {
+         if (task->ret <= task->iov->size) {
+             qemu_iovec_from_buf(task->iov, 0, data, task->ret);
+@@ -253,6 +256,7 @@ nfs_co_generic_cb(int ret, struct nfs_co
+             task->ret = -EIO;
+         }
+     }
++#endif
+     if (task->ret < 0) {
+         error_report("NFS Error: %s", nfs_get_error(nfs));
+     }
+@@ -266,15 +270,43 @@ static int coroutine_fn nfs_co_preadv(Bl
+ {
+     NFSClient *client = bs->opaque;
+     NFSRPC task;
++#ifdef LIBNFS_API_V2
++    char *buf = NULL;
++    bool my_buffer = false;
++#endif
+ 
+     nfs_co_init_task(bs, &task);
++
++#ifdef LIBNFS_API_V2
++    if (iov->niov != 1) {
++        buf = g_try_malloc(bytes);
++        if (bytes && buf == NULL) {
++            return -ENOMEM;
++        }
++        my_buffer = true;
++    } else {
++        buf = iov->iov[0].iov_base;
++    }
++#else
+     task.iov = iov;
++#endif
+ 
+     WITH_QEMU_LOCK_GUARD(&client->mutex) {
++#ifdef LIBNFS_API_V2
++        if (nfs_pread_async(client->context, client->fh,
++                            buf, bytes, offset,
++                            nfs_co_generic_cb, &task) != 0) {
++            if (my_buffer) {
++                g_free(buf);
++            }
++            return -ENOMEM;
++        }
++#else
+         if (nfs_pread_async(client->context, client->fh,
+                             offset, bytes, nfs_co_generic_cb, &task) != 0) {
+             return -ENOMEM;
+         }
++#endif
+ 
+         nfs_set_events(client);
+     }
+@@ -282,6 +314,15 @@ static int coroutine_fn nfs_co_preadv(Bl
+         qemu_coroutine_yield();
+     }
+ 
++#ifdef LIBNFS_API_V2
++    if (task.ret > 0) {
++        qemu_iovec_from_buf(iov, 0, buf, task.ret);
++    }
++    if (my_buffer) {
++        g_free(buf);
++    }
++#endif
++
+     if (task.ret < 0) {
+         return task.ret;
+     }
+@@ -318,7 +359,11 @@ static int coroutine_fn nfs_co_pwritev(B
+ 
+     WITH_QEMU_LOCK_GUARD(&client->mutex) {
+         if (nfs_pwrite_async(client->context, client->fh,
++#ifdef LIBNFS_API_V2
++                             buf, bytes, offset,
++#else
+                              offset, bytes, buf,
++#endif
+                              nfs_co_generic_cb, &task) != 0) {
+             if (my_buffer) {
+                 g_free(buf);

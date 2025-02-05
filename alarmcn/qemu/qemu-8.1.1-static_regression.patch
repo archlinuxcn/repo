@@ -1,0 +1,13 @@
+diff --git a/linux-user/elfload.c b/linux-user/elfload.c
+index 7c95098e3e..d52d47c5c3 100644
+--- a/linux-user/elfload.c
++++ b/linux-user/elfload.c
+@@ -3327,7 +3327,7 @@ static void load_elf_image(const char *image_name, int image_fd,
+     info->start_data = -1;
+     info->end_data = 0;
+     /* Usual start for brk is after all sections of the main executable. */
+-    info->brk = TARGET_PAGE_ALIGN(hiaddr + load_bias);
++    info->brk = TARGET_PAGE_ALIGN(hiaddr);
+     info->elf_flags = ehdr->e_flags;
+ 
+     prot_exec = PROT_EXEC;
