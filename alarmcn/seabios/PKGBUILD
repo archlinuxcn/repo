@@ -4,9 +4,9 @@
 pkgbase=seabios
 pkgname=(seabios seabios-docs)
 pkgver=1.16.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Open-source legacy BIOS implementation"
-arch=(any)
+arch=(aarch64) # Avoid conflicting with the official package in the x86 repo
 url="https://www.seabios.org/SeaBIOS"
 license=(
   'CPL-1.0 OR LGPL-2.0-only'
@@ -15,7 +15,8 @@ license=(
   LGPL-2.0-only
   LGPL-3.0-only
 )
-makedepends=(acpica python)
+makedepends_aarch64=(x86_64-linux-gnu-gcc)
+makedepends=(acpica inetutils python)
 options=(!makeflags !strip)
 source=(
   seabios-$pkgver.tar.gz::https://github.com/coreboot/seabios/archive/rel-$pkgver.tar.gz
@@ -74,14 +75,14 @@ _build_bios() {
 
   echo "Building target with config $config, output_name $output_name, binary_name $binary_name and build_target $build_target..."
 
-  make clean distclean -C $pkgbase-rel-$pkgver
+  make CROSS_PREFIX=x86_64-linux-gnu- clean distclean -C $pkgbase-rel-$pkgver
 
   cp -v $config $pkgbase-rel-$pkgver/.config
   # NOTE: refer to $pkgbase-rel-$pkgver/src/config.h for explanation of debug levels
   echo "CONFIG_DEBUG_LEVEL=$_debug_level" >> $pkgbase-rel-$pkgver/.config
-  make oldnoconfig V=1 -C $pkgbase-rel-$pkgver
+  make CROSS_PREFIX=x86_64-linux-gnu- oldnoconfig V=1 -C $pkgbase-rel-$pkgver
 
-  make -C $pkgbase-rel-$pkgver V=1 EXTRAVERSION=-$pkgrel PYTHON=python3 $build_target
+  make CROSS_PREFIX=x86_64-linux-gnu- -C $pkgbase-rel-$pkgver V=1 EXTRAVERSION=-$pkgrel PYTHON=python3 $build_target
 
   cp $pkgbase-rel-$pkgver/out/$output_name output/$binary_name
 }
