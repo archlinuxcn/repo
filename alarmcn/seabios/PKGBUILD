@@ -1,0 +1,132 @@
+# Maintainer: David Runge <dvzrv@archlinux.org>
+# Contributor: Tobias Powalowski <tpowa@archlinux.org>
+
+pkgbase=seabios
+pkgname=(seabios seabios-docs)
+pkgver=1.16.3
+pkgrel=1
+pkgdesc="Open-source legacy BIOS implementation"
+arch=(any)
+url="https://www.seabios.org/SeaBIOS"
+license=(
+  'CPL-1.0 OR LGPL-2.0-only'
+  GPL-2.0-only
+  GPL-2.0-or-later
+  LGPL-2.0-only
+  LGPL-3.0-only
+)
+makedepends=(acpica python)
+options=(!makeflags !strip)
+source=(
+  seabios-$pkgver.tar.gz::https://github.com/coreboot/seabios/archive/rel-$pkgver.tar.gz
+  config.coreboot
+  config.csm
+  config.seabios-128k
+  config.seabios-256k
+  config.seabios-microvm
+  config.vga-ati
+  config.vga-bochs-display
+  config.vga-cirrus
+  config.vga-isavga
+  config.vga-qxl
+  config.vga-ramfb
+  config.vga-stdvga
+  config.vga-virtio
+  config.vga-vmware
+)
+sha512sums=('5e6a930c694f5b88e982a56af9b9269f74823ef1641d173f42128687ec31da8772f7679e51466e6483c19b0a5ebd4475a543c026ff6c768db2979ce83b316cc4'
+            'dc77f693e2426a8a9b084f22d607d9bf6dfd0776cb86373a55d6e02f154f546b6fd616bb981783e914be51eb843311652a90b111fb573e32b3a8207d66aea218'
+            'a2238723fbbb96184bb52b018633701aeb929bfae43f50659258dee854acaf4f1bdf2c201c65fb46d2712372d11ab345eac1c41068f82d6dcbef91ef9d1d39cd'
+            '91719d73daf931a8f1d4efd06db4d581779875cadbb0458dd2bad8548d07f990ec37fabf590684fb4e9b64579125adb21d11f7a9187fcb0dfdad50764ca47cd6'
+            'ea75c9af8ee06a74ed048925c6dd2544f8a272c5e663fc0bc9134769b199d0637ac8caea25e8d691d56fef938cca17f790549b73c1e85dd4b1ac2e033f03377f'
+            '2b4093254f11898c5bb58e5b8e7ecf5d03f1a1d87ac747f5bdfde2ebfe34cc7b8f461ef350e518fe7e7f97687f1a77d27f7570aed5bae38c1801931948c5e52f'
+            '0ba37f068e8a6e15cdfcbb38215983da3aed0bf54bee508681a2e642952ed6d402be6ef15f78a3272129ee45d374742e1b31e997b0e4c03fcdb84f75610b6d7c'
+            'c395975320ec9e4eabf0ef60c25122e141de0607c161e9c0ec507916297b5fc6bbf7874a1fd8c3d73ec82fb9d00b5ff8a60344cabd11c404f3de0b7b3f4ed6bf'
+            'e9ef2d6bec9419e69bc90adf1a4bb7c174284cd722e53903deea0411f88074cc247069116e03e124715072ec82f153cf6014168febba41369a2569983d3265b6'
+            'aada61232f4834c1e9bec921b1e1365ce5ecb4adf42c659f34cdf051efb56f0ec2e62f0ccf66bb25d9bb0b8601e2df49b712265f19185068d45353c3aacf1cd9'
+            '9ebcb6702cf28685daf1821be26bab8ddc791ef2c118217c984c03c5fb77c8b9691c0fa6931367a63b8d97d67c973cd4b620fe9ca9c76da51a9b2ab3b4b5653b'
+            '00bffe38865d210c2d3473e6a6913eda51235b89c03d2c35e04b606e19f1881857ac5cfed77bd127c1fe377065fdb435342111d311d7b48ce1d21b7b863e3bf3'
+            '4a1b7fcc729d78dc8fd4e73d1cb6258ed9d49f8a91e6e00cc184e07c89a304f8d38ef5446d1c4ba5e8e929c82693d82c21526e42992ad6e1a008f39bb7c90448'
+            '4d627be11d79f0b8bd814a49e608826375aba6b59a0189dcba9afe24a181347b92e6ab18e0d9199e2f7a78f8fb02f03dad84c63fbbc2ffe9af76777ef28c5f8a'
+            '2a82f75ca6dbf48546ffa5a756136dd7085855d9411c3b37a74cc53281027b4916cf628dba784bcad915682d94705b5f8116f7a1b7ec6a99d9b2fb3fffba01c0')
+b2sums=('8eb6e1ee1d4de71104d9d94463e3bf694a2b3a367d64165bddedbb7dd0580be44b797e6e5f1b8a4b944aa29a0eb79a801979f3f8b132f5ef95ebf92fe49a0af5'
+        '9c581d4f109e23daec6933506d8e857d9f1075295e9a898dee09bcf621509bf016f542d77c36b1dd7a2b17394158999d3d18a628dfcf3c834a146d78329b8e53'
+        '66f9593b5d5d9ef60836bdcf43a3fcc52e7797bd131653b526d3d6b07e77273590e83284fac256164348aa956600d0f493c1ab75f8b65587822b6496be135639'
+        '415a160c17f578aaff2a0ee33240a98e1d8df2e8c6e9ae9c17b8455de06661d7a5491538b201cf066c0a5649171c1e6423cf97cbb5489a3a82a0ab327243868c'
+        'e337c939980af63583737b4e6a0ed574663f5bd965256efd88d926fca01b10ff24fb257296a86cedf1a9c0d75502789a7df91402ed9556b4cd627c7f7c9bff6d'
+        'd24c4c3297d7767e35a294b21354bcf3fb9f4f6c5d2295579f27a036088680f7e4092f5786849972ca00d0f7ffbcee27b270e93e736e1366508b6e023e217ab4'
+        '0a7b2643523d4d23bed629991b428fbbe9dd65d5b98ecb62e4800d8e77d40405dc717ade9e51d55f81f44b794c80f7acda6da5fadd87dfe956e996bcc5cbcbce'
+        '4e99c3875e4fe58035a4bcd004e4929ca0f1aefaaf1bf0f5dbd199370bebfce7821e0e3d0c9f3e8e88cd0ddd9d6d1e9cf62230d8d470b1da0ed67738aecabe1d'
+        '24b655e5d66a4f7305afa4d7e92a4323279959e72d905aeeb15e3fe45e049609f625c7d6469b7d4bd387a83ac93c2f146b7857d80ce1d20febd001af50cb5a0e'
+        'dd3d8d0f86caa610c5f3833c4b17f7248dbe8ffff3f87a90ff42ead66a044a2d2a0a8330cfd9689379b8a2aa3797b258adddd9fee0978d2915ca02141c37ea14'
+        'f627711caa7dfbb236b4e9e83104d3d5c7d07a0c5e586f8ab73c4f09daa63bf96a0b976c2648b83e22a11a17dee1412fbbb55cc98fd7c99a5d8568e99df52d57'
+        'fab17d0633b082f6dd0749e214d5faba876effc192dab25eb2ec002dcdd4b30436c3d12cfe8d53766730bbd2be62e440989330e9de877c241ad1c28a6039d476'
+        '7c10706c7d261f64e181d85c268375aa3b6b362bf3e5f1f391c52a6a3644a498a44c9627f60b6c47893c4fad24cc4667e816ab98e6bdcdb97b7d8f7463a8bf10'
+        '98237322784b56cdff2c7d7298a419b18ab77031dfad9da743af73c3073a5b766be3940694a320c82ffda65c8a48e028eccd974d37ccd44f9ba0720b5787b53e'
+        '8ab374ee7b0ad5cd8f732ccc4983f2251a8ba4843bab358cb3e84e12a572e4e348094e762ecfaa94f704ad05d718bfebd34048b1db3076dae2309d7963794437')
+_debug_level=0
+
+_build_bios() {
+  local config=$1
+  local output_name=$2
+  local binary_name=$3
+  local build_target=$4
+
+  echo "Building target with config $config, output_name $output_name, binary_name $binary_name and build_target $build_target..."
+
+  make clean distclean -C $pkgbase-rel-$pkgver
+
+  cp -v $config $pkgbase-rel-$pkgver/.config
+  # NOTE: refer to $pkgbase-rel-$pkgver/src/config.h for explanation of debug levels
+  echo "CONFIG_DEBUG_LEVEL=$_debug_level" >> $pkgbase-rel-$pkgver/.config
+  make oldnoconfig V=1 -C $pkgbase-rel-$pkgver
+
+  make -C $pkgbase-rel-$pkgver V=1 EXTRAVERSION=-$pkgrel PYTHON=python3 $build_target
+
+  cp $pkgbase-rel-$pkgver/out/$output_name output/$binary_name
+}
+
+prepare() {
+  mkdir -vp output
+  echo "Arch Linux $pkgver-$pkgrel" > $pkgbase-rel-$pkgver/.version
+}
+
+build() {
+  local -A _build_args=(
+    [config.coreboot]="bios.bin.elf bios-coreboot.bin"
+    [config.csm]="Csm16.bin bios-csm.bin"
+    [config.seabios-128k]="bios.bin bios.bin"
+    [config.seabios-256k]="bios.bin bios-256k.bin"
+    [config.seabios-microvm]="bios.bin bios-microvm.bin"
+    [config.vga-ati]="vgabios.bin vgabios-ati.bin out/vgabios.bin"
+    [config.vga-bochs-display]="vgabios.bin vgabios-bochs-display.bin out/vgabios.bin"
+    [config.vga-cirrus]="vgabios.bin vgabios-cirrus.bin out/vgabios.bin"
+    [config.vga-isavga]="vgabios.bin vgabios-isavga.bin out/vgabios.bin"
+    [config.vga-qxl]="vgabios.bin vgabios-qxl.bin out/vgabios.bin"
+    [config.vga-ramfb]="vgabios.bin vgabios-ramfb.bin out/vgabios.bin"
+    [config.vga-stdvga]="vgabios.bin vgabios-stdvga.bin out/vgabios.bin"
+    [config.vga-virtio]="vgabios.bin vgabios-virtio.bin out/vgabios.bin"
+    [config.vga-vmware]="vgabios.bin vgabios-vmware.bin out/vgabios.bin"
+  )
+  local _config _config_array
+
+  for _config in "${source[@]}"; do
+    if [[ $_config == config.* ]]; then
+      read -ra _config_array <<< "${_build_args[$_config]}"
+      _build_bios $_config "${_config_array[@]}"
+    fi
+  done
+}
+
+package_seabios() {
+  optdepends=('seabios-docs: for documentation')
+
+  install -vDm 644 output/*.bin -t "$pkgdir/usr/share/qemu/"
+  install -vDm 644 $pkgbase-rel-$pkgver/README -t "$pkgdir/usr/share/doc/$pkgbase/"
+}
+
+package_seabios-docs() {
+  pkgdesc+=" - documentation"
+
+  install -vDm 644 $pkgbase-rel-$pkgver/docs/*.md -t "$pkgdir/usr/share/doc/$pkgbase/"
+}
