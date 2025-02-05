@@ -1,14 +1,14 @@
 maintainers:
   - github: yuyichao
 
+build_prefix: archlinuxcn-aarch64
+
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
 repo_depends:
   - x86_64-linux-gnu-linux-api-headers
   - x86_64-linux-gnu-binutils
-  - x86_64-linux-gnu-gcc
-  - x86_64-linux-gnu-gcc: x86_64-linux-gnu-gcc-libs
 
 update_on:
   - source: alpm
@@ -16,4 +16,4 @@ update_on:
     alpm: glibc
     strip_release: true
   - source: manual
-    manual: 2
+    manual: 1
