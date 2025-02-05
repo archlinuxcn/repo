@@ -5,7 +5,7 @@ post_build_script: |
   git_pkgbuild_commit()
 
 update_on:
-  - source: github
+  - source: httpheader
+    url: https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram
     github: amzxyz/RIME-LMDG
-    use_latest_release: true
-    exclude_regex: dict-.*
+    header: date

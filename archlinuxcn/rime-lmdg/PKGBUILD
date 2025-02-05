@@ -1,17 +1,16 @@
-# Maintainer: ZeekoZhu <vaezt@outlook.com>
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgbase=rime-lmdg
 pkgname=("${pkgbase}"
          "${pkgbase}-config")
-_release_tag=LTS
-pkgver=lts
-pkgrel=6
+pkgver=lts.1738710176
+pkgrel=1
 epoch=1
 pkgdesc='万象语言模型，基于32GB超大规模语料的RIME中文语言模型'
 arch=(any)
 url="https://github.com/amzxyz/RIME-LMDG"
 source=("lmdg.yaml"
-        "wanxiang-zh-hans.gram::${url}/releases/download/${_release_tag}/wanxiang-lts-zh-hans.gram")
+        "wanxiang-zh-hans.gram::${url}/releases/download/LTS/wanxiang-lts-zh-hans.gram")
 license=('CC-BY-4.0')
 sha256sums=('93b605fd11281ae248eed0648629ee23312fc56edd0911aa855bdee7b0c294c4'
             '6f9717fa68fcd25ce4375b091b44d9a4e34bca1b9db9f0295338a1b1c802368b')
