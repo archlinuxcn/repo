@@ -1,3 +1,20 @@
+Mullvad Browser 14.0.5 - February 04 2025
+ * All Platforms
+   * Updated Firefox to 128.7.0esr
+   * Updated Mullvad Browser Extension to 0.9.4
+   * Updated uBlock Origin to 1.62.0
+   * Bug 390: Rebase Mullvad Browser release onto Firefox 128.7.0esr [mullvad-browser]
+   * Bug 41065: navigator.storage "best effort" + "persistent" leak partitionSize/totalSpace entropy [tor-browser]
+   * Bug 43386: Extension requests expose Firefox's minor version and custom app name [tor-browser]
+   * Bug 43451: Backport security fixes from Firefox 135 [tor-browser]
+ * Linux
+   * Bug 43236: High refresh rate detectable by websites when Wayland (MOZ_ENABLE_WAYLAND=1) is used [tor-browser]
+ * Build System
+   * All Platforms
+     * Bug 41324: Improve build signing ergonomics [tor-browser-build]
+     * Bug 41343: Add signing step to clean some files such as test artifacts [tor-browser-build]
+     * Bug 41350: Increase timeout in rcodesign-notary-submit [tor-browser-build]
+
 Mullvad Browser 14.0.4 - January 07 2025
  * All Platforms
    * Updated Firefox to 128.6.0esr
