@@ -7,10 +7,8 @@ from lilaclib import *
 g = SimpleNamespace()
 
 def pre_build():
-  g.files = download_official_pkgbuild('edk2')
+  g.files = download_official_pkgbuild('edk2-ovmf')
 
-  in_build = False
-  patched = False
   for line in edit_file('PKGBUILD'):
     if line.strip().startswith('make -C BaseTools'):
       print("""
