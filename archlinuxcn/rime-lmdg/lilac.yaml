@@ -8,5 +8,6 @@ update_on:
   - source: httpheader
     url: https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram
     github: amzxyz/RIME-LMDG
-    header: date
+    header: last-modified
+    follow_redirects: true
     regex: .*
