@@ -1,0 +1,53 @@
+From 4251a5c5fe7723c5dc068839debd76a5148953b2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?J=C3=A9r=C3=B4me=20Poulin?= <jeromepoulin@gmail.com>
+Date: Sun, 29 Dec 2024 19:48:20 -0500
+Subject: [PATCH] [module] MODULE_IMPORT_NS now requires a string literal in
+ 6.13
+
+This is supported since kernel v5.10, no #if version required.
+
+Fixes: #1155
+References: 33def8498fdde180023444b08e12b72a9efed41d
+---
+ AUTHORS          | 3 ++-
+ module/dkms.conf | 2 +-
+ module/kvmfr.c   | 4 ++--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/AUTHORS b/AUTHORS
+index f1e205abb..1535e2dac 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -70,4 +70,5 @@ Zenithal <i@zenithal.me> (ZenithalHourlyRate)
+ Kamplom <6284968128@protonmail.ch> (kamplom)
+ Jacob McNamee <jacob@jacobmcnamee.com> (jacobmcnamee)
+ Marco Antonio J. Costa <marco.antonio.costa@gmail.com> (majcosta)
+-rs189 <35667100+rs189@users.noreply.github.com> (rs189)
+\ No newline at end of file
++rs189 <35667100+rs189@users.noreply.github.com> (rs189)
++Jérôme Poulin <jeromepoulin@gmail.com> (ticpu)
+diff --git a/module/dkms.conf b/module/dkms.conf
+index 332123e6a..8b66eda2a 100644
+--- a/module/dkms.conf
++++ b/module/dkms.conf
+@@ -1,5 +1,5 @@
+ PACKAGE_NAME="kvmfr"
+-PACKAGE_VERSION="0.0.11"
++PACKAGE_VERSION="0.0.12"
+ BUILT_MODULE_NAME[0]="${PACKAGE_NAME}"
+ MAKE[0]="make KDIR=${kernel_source_dir}"
+ CLEAN="make KDIR=${kernel_source_dir} clean"
+diff --git a/module/kvmfr.c b/module/kvmfr.c
+index 621490390..2940c8967 100644
+--- a/module/kvmfr.c
++++ b/module/kvmfr.c
+@@ -654,7 +654,7 @@ MODULE_DEVICE_TABLE(pci, kvmfr_pci_ids);
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Geoffrey McRae <geoff@hostfission.com>");
+ MODULE_AUTHOR("Guanzhong Chen <quantum2048@gmail.com>");
+-MODULE_VERSION("0.0.9");
++MODULE_VERSION("0.0.12");
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(5,16,0)
+-MODULE_IMPORT_NS(DMA_BUF);
++MODULE_IMPORT_NS("DMA_BUF");
+ #endif
