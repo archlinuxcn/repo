@@ -26,9 +26,9 @@ pkgname=(
   qemu-{base,desktop,emulators-full,full}
 )
 pkgver=9.2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A generic and open source machine emulator and virtualizer"
-arch=(x86_64)
+arch=(aarch64 x86_64)
 url="https://www.qemu.org/"
 license=(
   BSD-2-Clause
@@ -609,7 +609,6 @@ package_qemu-common() {
     _pick qemu-vhost-user-gpu usr/lib/qemu/vhost-user-gpu
     _pick qemu-vhost-user-gpu usr/share/qemu/vhost-user/50-qemu-gpu.json
 
-    _pick qemu-vmsr-helper usr/bin/qemu-vmsr-helper
   )
 }
 
@@ -1165,6 +1164,8 @@ package_qemu-vhost-user-gpu() {
 }
 
 package_qemu-vmsr-helper() {
+  pkgdesc="QEMU persistent reservation utility"
+  return
   pkgdesc="QEMU persistent reservation utility"
   depends=(gcc-libs glib2 libglib-2.0.so libgmodule-2.0.so glibc gnutls libcap-ng libcap-ng.so liburing liburing.so numactl libnuma.so pam libpam.so qemu-common=$pkgver-$pkgrel)
   mv -v $pkgname/* "$pkgdir"
