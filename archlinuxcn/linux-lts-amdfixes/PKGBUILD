@@ -2,7 +2,7 @@
 
 pkgbase=linux-lts
 pkgver=6.12.12
-pkgrel=3
+pkgrel=4
 pkgdesc='LTS Linux'
 url='https://www.kernel.org'
 arch=(x86_64)
@@ -58,6 +58,7 @@ export KBUILD_BUILD_HOST=archlinux
 pkgbase=linux-lts-amdfixes
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
+upstream_pkgrel=1
 source+=(0004-amdgpu-fix-edp-brightness-control-on-HP-laptops.patch)
 sha256sums+=('13464deccb3d30ff4d2b731f6110befc3a794fcf538fa4313720c8f8c93c9d3b')
 b2sums+=('2fb944d6a277806fa113f86566b5b28814e2f43b85b52fbd791cdcce76a22e7aae3e143cbabb17b096b9e39fa9f36aa9b014224b871b4e0a8c2e4e8aa90cb9b5')
@@ -66,7 +67,7 @@ prepare() {
   cd $_srcname
 
   echo "Setting version..."
-  echo "-$pkgrel" > localversion.10-pkgrel
+  echo "-$upstream_pkgrel" > localversion.10-pkgrel
   echo "-lts" > localversion.20-pkgname
 
   local src
@@ -160,7 +161,7 @@ _package() {
     VIRTUALBOX-GUEST-MODULES
     WIREGUARD-MODULE
   )
-  provides+=('linux-lts' "linux-lts=${pkgver}")
+  provides+=('linux-lts' "linux-lts=${pkgver}-${upstream_pkgrel}")
   replaces=(
     wireguard-lts
   )
@@ -191,7 +192,7 @@ _package() {
 
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
-  provides=('linux-lts-headers' "linux-lts-headers=${pkgver}")
+  provides=('linux-lts-headers' "linux-lts-headers=${pkgver}-${upstream_pkgrel}")
   conflicts=('linux-lts-headers')
   license=(
     BSD-3-Clause
@@ -333,7 +334,7 @@ _package-headers() {
 
 _package-docs() {
   pkgdesc="Documentation for the $pkgdesc kernel"
-  provides=('linux-lts-docs' "linux-lts-docs=${pkgver}")
+  provides=('linux-lts-docs' "linux-lts-docs=${pkgver}-${upstream_pkgrel}")
   conflicts=('linux-lts-docs')
   license=(
     BSD-3-Clause
