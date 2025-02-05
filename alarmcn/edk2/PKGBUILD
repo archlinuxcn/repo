@@ -4,7 +4,7 @@
 pkgbase=edk2
 pkgname=(edk2-arm edk2-aarch64 edk2-shell edk2-ovmf)
 pkgver=202411
-pkgrel=1
+pkgrel=2
 pkgdesc="Modern, feature-rich firmware development environment for the UEFI specifications"
 arch=(aarch64) # Avoid conflicting with the official package in the x86 repo
 url="https://github.com/tianocore/edk2"
@@ -114,7 +114,7 @@ b2sums=('fb2977af32fd2f33bfc661cb6c4b28a7f5d390c498122b26920cf18d1c3c0f29f19c618
         '0c1e145109de9a25339633b563e47f6c09ea314f636023d09a58559a499dd0bd283a45e050fc99fe34c4d712bd00a035064fa8406734d57029c67b9adb4b11ce')
 _arch_list=(ARM AARCH64 IA32 X64)
 _build_type=RELEASE
-_build_plugin=GCC
+_build_plugin=GCC5
 
 prepare() {
   local submodule
@@ -197,11 +197,23 @@ build() {
   )
 
   cd $pkgbase
-  # GCC_BIN is used to specify the prefix for both IA32 and X64
+  export GCC5_IA32_PREFIX="x86_64-linux-gnu-"
+  export GCC5_X64_PREFIX="x86_64-linux-gnu-"
+  export GCC5_AARCH64_PREFIX="aarch64-linux-gnu-"
+  export GCC5_ARM_PREFIX="arm-none-eabi-"
+  echo "Building base tools (AARCH64)"
+  ARCH=AARCH64 make -C BaseTools
+  echo "Building base tools (ARM)"
+  ARCH=ARM make -C BaseTools
+  echo "Building base tools"
+
   export GCC_BIN="x86_64-linux-gnu-"
   export GCC_AARCH64_PREFIX=""
   export GCC_ARM_PREFIX="arm-none-eabi-"
-  echo "Building base tools"
+  export GCC5_BIN="x86_64-linux-gnu-"
+  export GCC5_AARCH64_PREFIX=""
+  export GCC5_ARM_PREFIX="arm-none-eabi-"
+
   make -C BaseTools
   # expose build tooling in PATH
   . edksetup.sh
