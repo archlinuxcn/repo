@@ -8,6 +8,7 @@ repo_depends:
   - x86_64-linux-gnu-linux-api-headers
   - x86_64-linux-gnu-binutils
   - x86_64-linux-gnu-gcc
+  - x86_64-linux-gnu-gcc: x86_64-linux-gnu-gcc-libs
 
 update_on:
   - source: alpm
@@ -15,4 +16,4 @@ update_on:
     alpm: glibc
     strip_release: true
   - source: manual
-    manual: 1
+    manual: 2
