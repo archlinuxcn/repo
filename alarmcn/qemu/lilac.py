@@ -16,6 +16,9 @@ def pre_build():
       print('  pkgdesc="QEMU persistent reservation utility"')
       print('  return')
       continue
+    elif line.strip().startswith('_pick qemu-vmsr-helper'):
+      # This is x86 only, skip
+      continue
     elif line.startswith('arch='):
       line = 'arch=(aarch64 x86_64)'
     print(line)
