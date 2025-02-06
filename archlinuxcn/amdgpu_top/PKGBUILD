@@ -1,4 +1,5 @@
-# Maintainer: Paul <pb.orzel@proton.me>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Paul <pb.orzel@proton.me>
 
 pkgname=amdgpu_top
 pkgver=0.10.3
@@ -14,21 +15,22 @@ sha256sums=('b74065ea89fb35a572dddccc22b71e81b7cb1e76b83027704814595e4fcdc6e4')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${pkgname}-${pkgver}/"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
-	cargo build --frozen --release
+	cargo build --frozen --release --all-features
 }
 
 package() {
 	cd "${pkgname}-${pkgver}/"
-	install -Dm755 target/release/amdgpu_top -t "${pkgdir}/usr/bin/"
-	install -Dm644 assets/amdgpu_top.desktop -t "${pkgdir}/usr/share/applications/desktop/"
+	install -Dm755 "target/release/${_pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 assets/${_pkgname}{,-tui}.desktop -t "${pkgdir}/usr/share/applications/desktop/"
+
+	install -d "${pkgdir}/usr/share/doc/${_pkgname}/"
+	cp -r docs/* "${pkgdir}/usr/share/doc/${_pkgname}/"
+
+	install -Dm644 "docs/${_pkgname}.1" -t "${pkgdir}/usr/share/man/man1/"
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
