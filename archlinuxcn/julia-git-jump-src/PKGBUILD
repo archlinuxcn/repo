@@ -1,6 +1,6 @@
 pkgname=julia-git-jump-src
-pkgver=1.23.6
-_commit=7b4365706ec3b8d7b4fe0616881574e34db9955c
+pkgver=1.24.0
+_commit=5d28e63e0f80651c8448ad5d50c891b5251a187a
 pkgrel=1
 pkgdesc="JuMP.jl"
 url="https://github.com/jump-dev/JuMP.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/JuMP.jl.git#commit=$_commit")
-sha256sums=('654430f9915fe964ced21cb6b0316c2bb0cb34f99794ee6eb729339871ce125a')
+sha256sums=('c964a344d35ae9ebf5dd4aae141312bf9e7763493ea4dd6305578cfa4bac255b')
 
 package() {
   cd JuMP.jl
