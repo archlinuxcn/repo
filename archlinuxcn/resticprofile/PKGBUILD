@@ -3,7 +3,7 @@
 # Contributor: Kyle Brennan <kyle@metalspork.xyz>
 
 pkgname=resticprofile
-pkgver=0.29.0
+pkgver=0.29.1
 pkgrel=1
 pkgdesc="Configuration profiles manager and scheduler for restic backup"
 arch=("x86_64" "aarch64")
@@ -13,7 +13,7 @@ depends=("glibc" "restic")
 makedepends=("go" "git")
 options=(!lto)
 source=("git+https://github.com/creativeprojects/resticprofile.git#tag=v$pkgver")
-sha256sums=('b92ff546f2a261b39b241c4bf17edec7a2f5b9d15e7c59919f2ea9eb38ea6ba5')
+sha256sums=('a2d8609552487a05cfc2455acc96c1e97d0ce52b01de7a6dcece027f6716f0d2')
 
 build() {
     cd resticprofile
