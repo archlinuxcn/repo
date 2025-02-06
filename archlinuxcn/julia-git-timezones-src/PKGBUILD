@@ -1,6 +1,6 @@
 pkgname=julia-git-timezones-src
-pkgver=1.20.0
-_commit=7021e4e3616f473166a7bbbf7a2210043f33ce17
+pkgver=1.21.1
+_commit=aae087d9656340c9306dcb13b3183ff74d6c07d1
 pkgrel=1
 pkgdesc="TimeZones.jl"
 url="https://github.com/JuliaTime/TimeZones.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaTime/TimeZones.jl.git#commit=$_commit")
-sha256sums=('0423ccdbfadeff223a47f65c897b418506585b91b47bec4f1620c8e147c8ec3c')
+sha256sums=('a192753c01a3e2d39b223a039357a2b3063a0f7b8acaa733c28cbec6fe09aa49')
 
 package() {
   cd TimeZones.jl
