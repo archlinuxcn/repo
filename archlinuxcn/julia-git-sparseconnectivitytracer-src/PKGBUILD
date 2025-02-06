@@ -1,6 +1,6 @@
 pkgname=julia-git-sparseconnectivitytracer-src
-pkgver=0.6.10
-_commit=175f5328e2c7412c405f70ed1e9769c298ea80a9
+pkgver=0.6.11
+_commit=97739154d8188c2a3eaa23a9ce2a55a8c0d54e0b
 pkgrel=1
 pkgdesc="SparseConnectivityTracer.jl"
 url="https://github.com/adrhill/SparseConnectivityTracer.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/adrhill/SparseConnectivityTracer.jl.git#commit=$_commit")
-sha256sums=('d0a372fc5431ea902ff4caac3a4f4f89316f1acd6b3f99ed8828f1cb02c7a3dc')
+sha256sums=('fb05b6d034bf3d6a913a8b19fdbc254fda6714de093cc0fa86cdb1ecf35d79c1')
 
 package() {
   cd SparseConnectivityTracer.jl
