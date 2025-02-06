@@ -1,6 +1,6 @@
 pkgname=julia-git-quadgk-src
-pkgver=2.11.1
-_commit=e88be902668c575116666c3c043d31298cf5d23e
+pkgver=2.11.2
+_commit=89a3b8fbeb8f6861617e39e510647bd8111dc584
 pkgrel=1
 pkgdesc="QuadGK.jl"
 url="https://github.com/JuliaMath/QuadGK.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/QuadGK.jl.git#commit=$_commit")
-sha256sums=('72c1ab9da9ae55cd91994ecf7ef332862da11ff3d992e5203cc12737b0ab5c72')
+sha256sums=('a48e77e56b5a6e5e55f5b4cd1b27b7300ef5a9292844a985590e6d37c67dfa27')
 
 package() {
   cd QuadGK.jl
