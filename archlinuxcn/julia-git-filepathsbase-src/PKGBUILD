@@ -1,6 +1,6 @@
 pkgname=julia-git-filepathsbase-src
-pkgver=0.9.22
-_commit=751446bbc7b63685ae7d5d69f0c23d0e0bff0d3a
+pkgver=0.9.23
+_commit=2dd3e8dce582e7dfba99259e960b2da920e06c94
 pkgrel=1
 pkgdesc="FilePathsBase.jl"
 url="https://github.com/rofinn/FilePathsBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/rofinn/FilePathsBase.jl.git#commit=$_commit")
-sha256sums=('2d54f84e6ba2283e0ad4ff2c20ebfa779bc2390c33b834fe42ca42ece307fbc7')
+sha256sums=('12eed4f396601db8c259d3dc9c42a27840ed4dd68426cbe4ea049d5b1b2c14ea')
 
 package() {
   cd FilePathsBase.jl
