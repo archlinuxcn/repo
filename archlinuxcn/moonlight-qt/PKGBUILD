@@ -24,6 +24,7 @@ optdepends=(
     'libva-mesa-driver: hardware acceleration for AMD and other GPUs'
     'libva-nvidia-driver: hardware acceleration for NVIDIA GPUs with NVDEC via VA-API'
 )
+install="${pkgname}.install"
 source=("${url}/releases/download/v${pkgver}/MoonlightSrc-${pkgver}.tar.gz")
 b2sums=('59c84c65555d261e977443eac826147e16c5d55a7a5fc0445e2c0bc7e7bab876bba1cde511923b241d405198120f3bd3db56f6a5092613a1c248f3de5d1412d6')
 

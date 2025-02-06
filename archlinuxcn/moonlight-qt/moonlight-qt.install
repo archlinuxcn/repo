@@ -1,0 +1,9 @@
+post_install() {
+    echo
+    echo "NOTE: At least in version 6.1.0, Moonlight will run on Xwayland unless the SDL_VIDEODRIVER=wayland environment variable is set in a Wayland session"
+    echo
+}
+
+post_upgrade() {
+    post_install
+}
