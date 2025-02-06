@@ -2,7 +2,7 @@
 # Contributor: JP-Ellis <josh@jpellis.me>
 
 pkgname='python-habanero'
-pkgver='2.0.0'
+pkgver='2.2.0'
 pkgrel=3
 _name=${pkgname#python-}
 _name="${_name//-/_}"
@@ -23,6 +23,7 @@ makedepends=(
   'python-hatchling'
 )
 checkdepends=(
+  # Only needed to test integration of the optdep, uncomment this if using
   'python-pytest'
   'python-pytest-cov'
   'python-pytest-recording'
@@ -33,17 +34,8 @@ optdepends=(
 license=('MIT')
 arch=('any')
 _patchUrl="${url/github.com/patch-diff.githubusercontent.com\/raw}"
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz"
-    "${pkgname}-PR199.patch::${_patchUrl}/pull/199.patch"
-)
-sha256sums=('346561bdac9c985b0b2b1309559eec826a03fc77382030a1e9ddd861e5684e5f'
-            '12badd7d4b7cf52474f7505349b60bc62055d165277767abdbd35c2da77bd1f1')
-
-prepare() {
-  cd "${srcdir}/${_src_folder}"
-  patch -p1 < "../${pkgname}-PR199.patch"
-}
-
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('18c5c3b59b8db1887811da6de8bd976ac4077d61a25a058f3a67044e8bcab8eb')
 
 build() {
     cd "${srcdir}/${_src_folder}"
