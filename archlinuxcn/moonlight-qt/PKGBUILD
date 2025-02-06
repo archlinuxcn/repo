@@ -28,9 +28,7 @@ source=("${url}/releases/download/v${pkgver}/MoonlightSrc-${pkgver}.tar.gz")
 b2sums=('59c84c65555d261e977443eac826147e16c5d55a7a5fc0445e2c0bc7e7bab876bba1cde511923b241d405198120f3bd3db56f6a5092613a1c248f3de5d1412d6')
 
 prepare() {
-    sed -i '14i#include <string.h>' "${srcdir}/app/masterhook_internal.c"
-    sed -i '1a#include <cstring>' "${srcdir}/app/streaming/streamutils.cpp"
-    qmake6 PREFIX="${pkgdir}/usr" moonlight-qt.pro
+    qmake6 moonlight-qt.pro PREFIX="${pkgdir}/usr"
 }
 
 build() {
