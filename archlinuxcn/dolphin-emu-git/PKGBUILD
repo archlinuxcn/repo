@@ -9,7 +9,7 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2412.r162.g015c2e77098
+pkgver=2412.r258.g6ee08fb9db
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -40,7 +40,6 @@ source=(
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
     "$pkgbase-zlib-ng::git+https://github.com/zlib-ng/zlib-ng.git"
-    "fix-minizip-ng-compat-headers.diff"
     "minizip-ng.diff"
 )
 b2sums=('SKIP'
@@ -49,8 +48,7 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
-        '58628e2784eaad3bd8d7318412e4f316801172a9cdf4c91ea106177d9466fcad3b11f20c6ab1570a730a7ffd84913ced5c356ae3dbc073d6b948786c67320fc7'
-        '884ad159e9934ddb92a585e9bf335aa87a5e8a6d19f21c7e302cacac32d638fbbea4d72863455062e861a045e2217c464bde7503b6d96676adc0d38f2957a2ab')
+        'c9d32ab3e6f4c7fb56ce68d9a68d3a25c6abcaeea4d59e136e98c4f0553bb1b72e34b63dc602917bf9ac89d7ad14514cf27adad0d9b2bf8cbc3b744effaf50ea')
 
 _sourcedirectory="$pkgbase"
 
@@ -58,9 +56,6 @@ prepare() {
 	cd "$srcdir/$_sourcedirectory/"
 	if [ -d 'build/' ]; then rm -rf 'build/'; fi
 	mkdir 'build/'
-
-    # Use correct renamed minizip-ng compat header files (based on https://github.com/dolphin-emu/dolphin/pull/13273)
-	patch --forward -p1 < "$srcdir/fix-minizip-ng-compat-headers.diff"
 
 	# Fix minizip-ng check for Arch (see https://github.com/dolphin-emu/dolphin/pull/12910#issuecomment-2249001387)
 	patch --forward -p1 < "$srcdir/minizip-ng.diff"
