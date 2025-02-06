@@ -5,7 +5,7 @@
 _kernel=clear
 _lkname="linux-${_kernel}"
 pkgname="nvidia-open-${_kernel}"
-pkgver=565.77
+pkgver=570.86.16
 pkgrel=1
 pkgdesc="NVIDIA open kernel modules for ${_lkname}"
 arch=('x86_64')
@@ -30,7 +30,7 @@ build() {
 }
 
 package() {
-    depends+=("${_lkname}")
+    depends+=("${_lkname}=6.12.12-2")
 
     _kernver=$(</usr/src/${_lkname}/version)
 
