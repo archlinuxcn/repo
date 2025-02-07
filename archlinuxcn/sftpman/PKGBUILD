@@ -3,7 +3,7 @@
 
 _name=sftpman-rs
 pkgname=sftpman
-pkgver=2.0.3
+pkgver=2.0.4
 pkgrel=1
 pkgdesc="A CLI application for managing and mounting sshfs (SFTP) filesystems"
 arch=('x86_64' 'aarch64')
@@ -25,7 +25,7 @@ replaces=('sftpman-python')
 install="${pkgname}.install"
 source=("git+${url}.git#tag=v$pkgver"
         "0001-Replace-fusermount-with-fusermount3.patch")
-b2sums=('ed609c223d1b1bbd589bb3964197ef841043da68969ac8a8c068a338c1bec1fd525da3af1d1a439aad24c09545d3e72071f02a40266698aebbd075a06ae26b92'
+b2sums=('9a38cd71099c9fbb33d056cfce6d835f7a9eec24a7118f15f09f70df46608c7f310e494a5f9e2881db33e5ee486ae5acae9ec7941d0c3ad128e040f525252dd9'
         'fb2bf5d4decb785ab134b14bc8e1a6d8c94528fc05efe2a53ad00d3d9d986810a9b5c25ea939355b935810fba0a451dabf03f1f5d96a952c799e2475cde847a0')
 
 prepare() {
