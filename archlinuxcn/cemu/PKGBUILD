@@ -1,7 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 pkgname=cemu
 pkgver=2.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://cemu.info/"
@@ -48,7 +48,7 @@ source=(
 	"$pkgname::git+https://github.com/cemu-project/Cemu#tag=v${pkgver}"
 	'imgui::git+https://github.com/ocornut/imgui.git'
 )
-b2sums=('SKIP'
+b2sums=('6b0e53984a1df880d3e81d5b10f84425b4325c8cb4d68a79b812bfec5605be6554d6f0f7f812aa667350f2cfff55648229f41a9ffcb2c3ca50f711067399a477'
         'SKIP')
 
 prepare() {
