@@ -42,7 +42,7 @@ prepare() {
     sed -i 's/AV_OPT_TYPE_CHANNEL_LAYOUT/AV_OPT_TYPE_CHLAYOUT/g' src/core/dumping/ffmpeg_backend.cpp 
     sed -i 's/AV_OPT_TYPE_CHANNEL_LAYOUT/AV_OPT_TYPE_CHLAYOUT/g' src/citra_qt/dumping/option_set_dialog.cpp
     sed -i 's/auto format(const T& value, FormatContext& ctx)/ auto format(const T& value, FormatContext& ctx) const/g' src/common/logging/log.h
-    sed -i 's/boost::asio::io_service/boost::asio::io_context' src/input_common/udp/client.cpp
+    sed -i 's/boost::asio::io_service/boost::asio::io_context/g' src/input_common/udp/client.cpp
 
 
     git submodule update --init --remote externals/nihstro
