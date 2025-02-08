@@ -73,6 +73,9 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
     elif in_prepare and line.startswith('}'):
       line = f'''
   cd $SRCDEST/src
+  pwd
+  ls -l
+  ls -l ..
   cd $_pkgfn
   patch -p1 -i ../oldherl{variant}.patch
   cd util/locale_database
