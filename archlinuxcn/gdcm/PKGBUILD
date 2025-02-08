@@ -21,7 +21,7 @@ depends=(
   poppler
   python
   util-linux-libs
-  vtk
+#  vtk
   zlib
 )
 makedepends=(
@@ -89,7 +89,7 @@ sha512sums=('2fe28444cee171a536d63f26c1ad7308a03b946e79dc8b7d648b5c7e6f4a8f52c0c
 
 prepare() {
   cd ${_pkgname}-${pkgver}
-  patch -p1 -i ${srcdir}/0001-fix-building-with-VTK.patch
+#  patch -p1 -i ${srcdir}/0001-fix-building-with-VTK.patch
   patch -p1 -i ${srcdir}/0002-fix-building-cmakelists.patch
 }
 
@@ -121,7 +121,7 @@ build() {
     -DGDCM_USE_SYSTEM_POPPLER:BOOL=ON \
     -DGDCM_USE_SYSTEM_UUID:BOOL=ON \
     -DGDCM_USE_SYSTEM_ZLIB:BOOL=ON \
-    -DGDCM_USE_VTK:BOOL=ON \
+    -DGDCM_USE_VTK:BOOL=OFF \
     -DGDCM_VTK_INSTALL_PYTHONMODULE_DIR=lib/${python_version}/site-packages \
     -DGDCM_WRAP_PYTHON:BOOL=ON \
     -DVTKGDCM_WRAP_PYTHON:BOOL=ON
