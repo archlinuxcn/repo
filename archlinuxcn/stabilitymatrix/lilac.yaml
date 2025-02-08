@@ -8,19 +8,6 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 
 post_build: git_pkgbuild_commit
 
-repo_depends:
-  - dotnet-core-bin: dotnet-runtime-bin
-  - dotnet-core-bin: dotnet-host-bin
-
-repo_makedepends:
-  - dotnet-core-bin: dotnet-runtime-bin
-  - dotnet-core-bin: dotnet-host-bin
-  - dotnet-core-bin: dotnet-targeting-pack-bin
-  - dotnet-core-bin: netstandard-targeting-pack-bin
-  - dotnet-core-bin: aspnet-runtime-bin
-  - dotnet-core-bin: aspnet-targeting-pack-bin
-  - dotnet-core-bin: dotnet-sdk-bin
-
 update_on:
   - source: github
     github: LykosAI/StabilityMatrix
