@@ -1,63 +1,24 @@
-diff --git a/AppDir/zen.desktop b/AppDir/zen.desktop
-index 9480304..af2aa4f 100644
---- a/AppDir/zen.desktop
-+++ b/AppDir/zen.desktop
-@@ -1,8 +1,8 @@
- [Desktop Entry]
- Name=Zen Browser
- Comment=Experience tranquillity while browsing the web without people tracking you!
--Exec=zen %u
--Icon=zen
-+Exec=/usr/lib/zen-browser/zen %u
-+Icon=zen-browser
- Type=Application
- MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;application/x-xpinstall;application/pdf;application/json;
- StartupWMClass=zen
-@@ -15,12 +15,12 @@ Actions=new-window;new-private-window;profilemanager;
- 
- [Desktop Action new-window]
- Name=Open a New Window
--Exec=zen %u
-+Exec=/usr/lib/zen-browser/zen %u
- 
- [Desktop Action new-private-window]
- Name=Open a New Private Window
--Exec=zen --private-window %u
-+Exec=/usr/lib/zen-browser/zen --private-window %u
- 
- [Desktop Action profilemanager]
- Name=Open the Profile Manager
--Exec=zen --ProfileManager %u
-+Exec=/usr/lib/zen-browser/zen --ProfileManager %u
 diff --git a/scripts/download-language-packs.sh b/scripts/download-language-packs.sh
-index 11f4725..f0e7455 100644
+index 4363c6f..b3e824c 100644
 --- a/scripts/download-language-packs.sh
 +++ b/scripts/download-language-packs.sh
-@@ -2,19 +2,19 @@ set -ex
+@@ -2,19 +2,6 @@ set -ex
  
  CURRENT_DIR=$(pwd)
  
 -git config --global init.defaultBranch main
 -git config --global fetch.prune true
-+# git config --global init.defaultBranch main
-+# git config --global fetch.prune true
- 
- cd $CURRENT_DIR
- 
- LAST_FIREFOX_L10N_COMMIT=$(cat ./firefox-cache/l10n-last-commit-hash)
- 
+-
+-cd $CURRENT_DIR
+-
+-LAST_FIREFOX_L10N_COMMIT=$(cat ./firefox-cache/l10n-last-commit-hash)
+-
 -cd ./l10n
+-rm -rf firefox-l10n
 -# clone only from LAST_FIREFOX_L10N_COMMIT
 -git clone https://github.com/mozilla-l10n/firefox-l10n
 -cd firefox-l10n
 -git checkout $LAST_FIREFOX_L10N_COMMIT
--cd $CURRENT_DIR
-+# cd ./l10n
-+# # clone only from LAST_FIREFOX_L10N_COMMIT
-+# git clone https://github.com/mozilla-l10n/firefox-l10n
-+# cd firefox-l10n
-+# git checkout $LAST_FIREFOX_L10N_COMMIT
-+# cd $CURRENT_DIR
+ cd $CURRENT_DIR
  
  update_language() {
-   langId=$1
