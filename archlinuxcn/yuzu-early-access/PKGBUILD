@@ -4,7 +4,7 @@ _pkgname=yuzu
 pkgname=$_pkgname-early-access
 epoch=2
 pkgver=4176
-pkgrel=11
+pkgrel=12
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
@@ -74,6 +74,7 @@ prepare() {
   sed -i -e '/yuzu %f/a StartupWMClass=yuzu' dist/yuzu.desktop
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
+  sed -i -e 's/boost::asio::io_service/boost::asio::io_context/g' src/input_common/drivers/udp_client.cpp
 
   perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n        -msse4.1/igs' src/video_core/CMakeLists.txt
 }
