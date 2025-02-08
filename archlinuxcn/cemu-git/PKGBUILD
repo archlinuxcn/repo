@@ -1,7 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=cemu
 pkgname=$_pkgname-git
-pkgver=2.5.r21.gec2d7c08
+pkgver=2.6.r0.ga6fb0a48
 pkgrel=1
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
@@ -9,14 +9,13 @@ url="https://cemu.info/"
 license=('MPL2')
 depends=(
 	'discord-rpc'
-	'gcc-libs'
-	'glibc'
 	'glslang>=14'
 	'hicolor-icon-theme'
 	'libx11'
 	'pugixml'
 	'sdl2'
 	'wxwidgets-gtk3>=3.2'
+    'llvm-libs'
 )
 makedepends=(
     'bluez-libs'
@@ -44,6 +43,7 @@ makedepends=(
 	'zarchive>=0.1.2'
 	'zlib'
 	'zstd'
+    'clang'
 )
 provides=("$_pkgname")
 conflicts=("$_pkgname")
@@ -67,16 +67,22 @@ prepare() {
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
 	sed -i '/discord-rpc/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
-#[HEAVYSINK] Fix conflict with wechat
-    sed -i 's/fs::exists(portablePath/fs::is_directory(portablePath/' src/gui/CemuApp.cpp
+    # https://github.com/cemu-project/Cemu/pull/1436
+	sed -i '/set/s/"glslang"/"glslang::glslang"/' src/Cafe/CMakeLists.txt
+	# https://github.com/cemu-project/Cemu/pull/1474
+	sed -i 's/fmt::format("{}", v)/fmt::format("{}", fmt::underlying(v))/' src/Cafe/GameProfile/GameProfile.cpp
 }
 
 build() {
 	cmake -S $_pkgname -B build \
+        -DALLOW_PORTABLE=OFF \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_C_FLAGS_RELEASE="-DNDEBUG" \
 		-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG" \
 		-DENABLE_VCPKG=OFF \
+		-DCMAKE_C_COMPILER=clang \
+		-DCMAKE_CXX_COMPILER=clang++ \
+		-DCMAKE_CXX_FLAGS="$CXXFLAGS -w" \
 		-Wno-dev
 	cmake --build build
 }
