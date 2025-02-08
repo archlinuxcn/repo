@@ -7,13 +7,15 @@ maintainers:
 build_prefix: extra-x86_64
 
 repo_depends:
-  - fmt10
+  - cubeb-git
+  - discord-rpc-git
 
-pre_build_script: aur_pre_build(maintainers=['kescherAUR'])
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur:
+  - source: github
+    github: cemu-project/Cemu
+    use_max_tag: true
   - alias: boost
