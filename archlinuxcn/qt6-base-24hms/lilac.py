@@ -72,8 +72,6 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       checks = checks + '8'
     elif in_prepare and line.startswith('}'):
       line = f'''
-  cd $SRCDEST/src
-  cd $_pkgfn
   patch -p1 -i ../oldherl{variant}.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
