@@ -5,14 +5,13 @@
 
 pkgname=cython0
 pkgver=0.29.37.1
-pkgrel=2
+pkgrel=3
 pkgdesc='C-Extensions for Python (legacy version)'
 arch=(x86_64)
 url='https://cython.org'
-license=(APACHE)
+license=(Apache-2.0)
 depends=(python)
 conflicts=(cython)
-provides=(cython)
 makedepends=(python python-build python-installer python-setuptools python-wheel)
 source=(
   "https://github.com/cython/cython/archive/$pkgver/$pkgname-$pkgver.tar.gz"
