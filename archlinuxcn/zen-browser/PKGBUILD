@@ -2,10 +2,10 @@
 
 pkgbase=zen-browser
 pkgname=("$pkgbase")
-pkgver=1.7.4b
+pkgver=1.7.6b
 _zen_version=${pkgver//_/-}
-_firefox_version=134.0.2
-pkgrel=2
+_firefox_version=135.0
+pkgrel=1
 pkgdesc='Experience tranquillity while browsing the web without people tracking you'
 url='https://zen-browser.app/'
 arch=('x86_64')
@@ -81,9 +81,9 @@ source=("git+$_repo.git#tag=$_zen_version"
         0002-download-lang-packs-withou-git-clone.zen.patch
         0003-do-not-disable-system-extensions.zen.patch
         0004-fix-package-json.zen.patch)
-sha256sums=('26349a4a627a5b997fa1a4981669f9e76acad932f0f9e1bd580d97962604f8dc'
+sha256sums=('1ac5b1629b8838b4a24e7e1d367483fcffcb04c64dcdfa446501272bd9582ca4'
             'SKIP'
-            '6c6eb7ff13fa689c5cace23a28533361d1ca29158329b6f1c2f2d1c91c53dd27'
+            '827e12a962ef47511089af4498f65ebf42fa57ca31db790bfd7e9a820d16b960'
             '11f920c7969bd01caa3b74b3742e6746bef99c37cb22026749c634f1876b5070'
             '8479077f2aca6cc93333254469b2d257ee9d2d59f3d674944a26aafb402e37f4'
             '36bff2af04da55da0cc71f960d921889ccf21c11fcd8343087c144dfcc50f10a'
