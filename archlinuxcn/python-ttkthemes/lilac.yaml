@@ -3,7 +3,7 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 update_on:
   - source: pypi
-    pypi: python-ttkthemes
+    pypi: ttkthemes
   - alias: python
   - source: manual
     manual: 1
