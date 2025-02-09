@@ -4,12 +4,12 @@
 
 pkgname=gconf
 pkgver=3.2.6+11+g07808097
-pkgrel=13
+pkgrel=14
 pkgdesc="An obsolete configuration database system"
 url="https://gitlab.gnome.org/Archive/gconf"
 arch=($CARCH)
 license=(LGPL)
-depends=(libxml2 polkit libldap dbus-glib python)
+depends=(libxml2 polkit libldap dbus-glib)
 makedepends=(git intltool gtk-doc gobject-introspection gnome-common glib2-devel)
 install=gconf.install
 _commit=0780809731c8ab1c364202b1900d3df106b28626 # The latest and last commit, dug out from deep within the waves of time...
