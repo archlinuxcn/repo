@@ -1,3 +1,62 @@
+## GE-Proton9-24
+
+Proton:
+- Added patch that adds PROTON_PREFER_SDL option. If `PROTON_PREFER_SDL=1` is set proton will not prefer hidraw and instead will expose both sdl and hidraw. it can fix input in a few games when not using steam input
+- Added patch that adds PROTON_NO_WM_DECORATION (and WINE_NO_WM_DECORATION) option. If `PROTON_NO_WM_DECORATION=1` is set, it sets `WINE_NO_WM_DECORATION=1` which will disable window decorations. This can fix an issue where if clicking on a window border in some games in borderless window mode it would click through the border straight to the desktop. By disabling the window decorations it removes the pixel offset caused by them, which is what causes the mouse click confusion.
+- Removed previously disabled nvidia latency reflex patches as they have now all been merged with the exception of the winevulkan patches. Winevulkan patches are now applied -- nvidia latency reflex should now work where available.
+- updated wine to latest bleeding edge
+- updated dxvk to latest git
+- updated vkd3d-proton to latest git
+- updated vkd3d to latest upstream
+- updated dxvk-nvapi to latest upstream
+- import steamclient changes from upstream
+- import vrclient changes from upstream
+- import proton changes from upstream
+- fixed configure script issue with autodetection of podman or docker not working, --container-engine option no longer needs specifying during building
+- ccache enabled by default in configure script, --enable-ccache option no longer needs specifying during building
+
+umu-protonfixes:
+- Add functionality to symlink save data from another game's prefix, a few games would benefit from this (Thanks UsernamesAreNotMyThing):
+```
+How this works
+
+    Reads Steam's steamapps/libraryfolders.vdf file to find locations of known library folders.
+    Iterates through each of the library folders to determine if it can find a compatdata/(APPID) folder in it.
+    If it finds one, it will create a symlink in the current game's prefix to point to the location in the found prefix, at the location the game expects to find the save data folder for the other game.
+
+Games impacted
+
+    Final Fantasy VII Rebirth: Has bonus content (or something, I don't know what) for players with save data from FF7 Remake Intergrade, which would be found in the documents folder.
+    Horizon Zero Dawn Remastered: Allows playing saves from the original Complete Edition, which are stored in the documents folder.
+    Metaphor ReFantazio: Allows continuing from saves made in its demo, which uses a different ID and thus a different prefix.
+    Utawarerumono (Utawarerumono: Prelude to the Fallen and Utawarerumono: Mask of Truth)
+
+How to use the Function inside a protonfix:
+
+def import_saves_folder(from_appid: int, relative_path: str)
+
+Parameters:
+
+    from_appid: The Steam app id for the game whose save data is desired in the prefix for the game you're trying to play.
+    relative_path: The location in the drive_c/users/steamuser folder where the game expects the save data for the other game to be. You can find this by looking up the game on [PC Gaming Wiki](https://pcgamingwiki.com/).
+    This function will have to be used in the fix scripts for each of the games that need it.
+```
+
+- [Add CPU limit for Hard Truck Apocalypse: Rise of Clans (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/5c1758e6185fcd7a9a40a7201f964ff8207423d2)https://github.com/Open-Wine-Components/umu-protonfixes/pull/224[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/5c1758e6185fcd7a9a40a7201f964ff8207423d2)
+- [Add fix for CastleMiner Z (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/f1af20fbf51d87d7fdc9fcf200d1dcbfd3d70f5c)https://github.com/Open-Wine-Components/umu-protonfixes/pull/223[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/f1af20fbf51d87d7fdc9fcf200d1dcbfd3d70f5c)
+- [Remove -showlinkingqr fix for HZD Remastered](https://github.com/Open-Wine-Components/umu-protonfixes/commit/c3a47b9b677483101825ddb00a3b7e73e348b774)
+- [install d3dcompiler for metro last light redux on egs](https://github.com/Open-Wine-Components/umu-protonfixes/commit/6e89450e7429e32225954a0fbad706b01d17c092)
+- [Add fix for Angelic Chaos: RE-BOOT! (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/5b5bef84519ad95327941ed099a12b98ad50bb24)https://github.com/Open-Wine-Components/umu-protonfixes/pull/222[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/5b5bef84519ad95327941ed099a12b98ad50bb24)
+- [install d3dcompiler_47 for metro 2033 redux](https://github.com/Open-Wine-Components/umu-protonfixes/commit/697ae5ffac1fd92cf9db34da6157370388fcee0e)
+- [Remove God of War Ragnarok fix (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/af264b04bf3d4f17480c46242de52ff8928de789)https://github.com/Open-Wine-Components/umu-protonfixes/pull/221[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/af264b04bf3d4f17480c46242de52ff8928de789)
+- [Add save detection fix for HZD Remastered](https://github.com/Open-Wine-Components/umu-protonfixes/commit/dc4fd0623667546c1e2c7ca2ec70f7106ba1d961)
+- [add dll overrides for dino crisis (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/7b8c2bb7ca5201002de16d8a077534d1fc080e30)https://github.com/Open-Wine-Components/umu-protonfixes/pull/219[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/7b8c2bb7ca5201002de16d8a077534d1fc080e30)
+- [Add save detection fix for FF7 Rebirth](https://github.com/Open-Wine-Components/umu-protonfixes/commit/45dccddc64537cd1da93d8f1a1f331588aa49af2)
+- [Add save import functionality](https://github.com/Open-Wine-Components/umu-protonfixes/commit/384d447032f0674a81a90d9e1e48485f39c3dd49)
+- [Install vcrun2022 for all Epic titles by default (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/8076f762d560fadf17e9e0ec74f2f4b1a0c193cc)https://github.com/Open-Wine-Components/umu-protonfixes/pull/216[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/8076f762d560fadf17e9e0ec74f2f4b1a0c193cc)
+- [Update Middle-earth: Shadow of War (GOG/Steam) (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/0cae93d34f1ae29443bae0c1ef83269d4892d07c)https://github.com/Open-Wine-Components/umu-protonfixes/pull/213[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/0cae93d34f1ae29443bae0c1ef83269d4892d07c)
+- [Add Are You Smarter Than A 5th Grader (EGS) (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/422c776cce405184c88cafcc9b93e57addac3a3d)https://github.com/Open-Wine-Components/umu-protonfixes/pull/214[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/422c776cce405184c88cafcc9b93e57addac3a3d)
+
 ## GE-Proton9-23
 
 Upstream:
