@@ -1,9 +1,10 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 # Maintainer: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 # Contributor: George Rawlinson <george@rawlinson.net.nz>
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.36.0
+pkgver=1.36.2
 pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
@@ -23,11 +24,17 @@ depends=(
     'libarchive'
     'glibc' 'gcc-libs' 'bash'
     'libxrandr'
+    'fontconfig'
 )
 makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime')
 optdepends=(
     'imhex-patterns-git: ImHex base patterns'
     'dotnet-runtime'
+    'lz4: decompress plugin'
+    'zlib: decompress plugin'
+    'bzip2: decompress plugin'
+    'xz: decompress plugin'
+    'zstd: decompress plugin'
 )
 source=(
     "$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
@@ -43,9 +50,11 @@ source=(
     "lunasvg::git+https://github.com/WerWolv/lunasvg"
     "edlib::git+https://github.com/Martinsos/edlib"
     "throwing_ptr::git+https://github.com/rockdreamer/throwing_ptr"
+    "plutovg::git+https://github.com/sammycage/plutovg"
     "ImHex-Patterns::git+https://github.com/WerWolv/ImHex-Patterns.git"
 )
-b2sums=('736afb86e9fa6e51985155398702f11472b531a2579d56c9ec2a96ae293c594532bedde64eef4dece79b02d551745e9159902d27211573b47543868e5b082baa'
+b2sums=('dc1617823fcd1deb348c756a451fbdc9ffa2b64369fe2d135d0da0c40eaa39a68a3d7980d2926160d5d721f80dab515675a7a11e9d970c0ad56f20629b069633'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -81,10 +90,14 @@ prepare() {
             git -c protocol.file.allow=always submodule update external/"$name"
         done
     popd
+    pushd lib/third_party/lunasvg
+      git submodule init
+      git submodule set-url plutovg "$srcdir/plutovg"
+      git -c protocol.file.allow=always submodule update plutovg
+    popd
     for name in fmt yara/yara; do
         git config --remove-section submodule.lib/third_party/"$name"
     done
-
 }
 
 build() {
