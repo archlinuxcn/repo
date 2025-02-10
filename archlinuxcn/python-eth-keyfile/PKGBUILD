@@ -2,8 +2,8 @@
 
 _name=eth-keyfile
 pkgname=python-${_name}
-pkgver=0.9.0
-pkgrel=2
+pkgver=0.9.1
+pkgrel=1
 pkgdesc="Tools for handling the encrypted keyfile format used to store private keys."
 arch=(any)
 url="https://github.com/ethereum/${_name}"
@@ -13,7 +13,7 @@ makedepends=(git python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 source=(git+$url.git#tag=v$pkgver
         git+https://github.com/ethereum/tests.git)
-sha512sums=('ae36f2b93a9223579fa6f1a23113b5db531a25e6bb9bc9eeb5b89ed02f755d367763b3ed4e2f8401f1c151d2bb447af3d99163d248ac455683965af3bb25a465'
+sha512sums=('8e3d89ac5576113e189a01cd09975d7e3b0bcb4ab171eca34e2bd305633ced6f1aaf9c090e6491d8a86f541b0b61e73ddcf6aaec9fae02a0ffe28209ade61658'
             'SKIP')
 
 prepare() {
