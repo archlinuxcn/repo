@@ -46,7 +46,6 @@ makedepends=(git
              clang
              diffutils
              imake
-             jack
              lld
              llvm
              mesa
@@ -129,8 +128,6 @@ prepare() {
   # Apply patches
   msg2 "apply patches"
   git apply -3 "$srcdir"/*.zen.patch
-  # use the --enable-jack option to keep in sync with the official repository of Firefox
-  sed -i 's/--enable-pulseaudio/--enable-jack/g' "$srcdir"/desktop/configs/linux/mozconfig
 
   msg2 "prepare dependencies"
   pnpm config set store-dir "$srcdir"/pnpm-store
