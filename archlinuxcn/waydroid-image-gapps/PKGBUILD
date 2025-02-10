@@ -3,17 +3,17 @@
 # Contributer: Danct12 <danct12@disroot.org>
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
-_pkgver_images_system="18.1-20250118"
-_pkgver_images_vendor="18.1-20250118"
+_pkgver_images_system="18.1-20250208"
+_pkgver_images_vendor="18.1-20250208"
 
-_pkgver_images_system_x86="18.1-20250118"
-_pkgver_images_vendor_x86="18.1-20250118"
+_pkgver_images_system_x86="18.1-20250208"
+_pkgver_images_vendor_x86="18.1-20250208"
 
-_pkgver_images_system_arm64="18.1-20250118"
-_pkgver_images_vendor_arm64="18.1-20250118"
+_pkgver_images_system_arm64="18.1-20250201"
+_pkgver_images_vendor_arm64="18.1-20250208"
 
-_pkgver_images_system_arm="18.1-20250118"
-_pkgver_images_vendor_arm="18.1-20250118"
+_pkgver_images_system_arm="18.1-20250208"
+_pkgver_images_vendor_arm="18.1-20250208"
 
 pkgname=waydroid-image-gapps
 pkgver="${_pkgver_images_system//-/_}"
@@ -47,11 +47,11 @@ package() {
   mv "$srcdir/vendor.img" "$pkgdir/usr/share/waydroid-extra/images"
 }
 
-sha256sums_x86_64=('8afc4ff8286503af74c76b318fc9254c337d98a2a9ca8c56a74567c68827a86d'
-                   '63220667294d179bf154980d194f14cac6b94a01b3b6dcc9274336fe9854a008')
-sha256sums_i686=('c00d643b58209be1a503c6b1509323811920ad1dbf4b297583ec13f20be53f77'
-                 'e8338d602ef1464e7408d99160169b4f3f7b2cec4f4bc587045a3c02617a40c5')
-sha256sums_armv7h=('f18972a554286838dc2060e09945f16230d3739bf85e743e015cbc01161f9a60'
-                   'bc9770e4d554e046c42c35b17b8e0e39fc696c18f5b78e55e8fa4d4e6de772ff')
-sha256sums_aarch64=('28cfd6a12f2dc96d47fc5bf33a7aa07f33a6620e2368e2e4b5310bf18f94d233'
-                    '5dca8005d21b47f39df438f5df853d80b783d70e7236044769e7598bbf783dcb')
+sha256sums_x86_64=('63f74d73453a12a242c3302ee72ef66f61dd0eed98de2154c76e531591b65d7b'
+                   'eb5d175447c5260e736f9f833ac031691d508161192895e6341b4c1e6f1da496')
+sha256sums_i686=('00883ba7257d4fd40e5e62e8ae8fad8c990c420b78205351617420153ece5224'
+                 'ba10ff5372cd85ef67a3dbcdf388058f316e56471ef34cd3a3ef00093b87b033')
+sha256sums_armv7h=('8de9f6fe191ffb874c1e20bd328ae382e96252f3636f120a4fba70fba9e388e9'
+                   'ede1a5171aa0e13a46b80f78a1f2e5ae3f078246a85e0c79ec74e725db7de81f')
+sha256sums_aarch64=('88eb67d7dc9cf9dc3a2d1c02bc060dc86e3de0fb718928b2bd6055c26567f50b'
+                    'a755f7a46ff96f86660dcaf993665dd75f35b8ec05dd40f4817ffd8fee7cba06')
