@@ -1,7 +1,7 @@
 pkgname=julia-git-qt6shadertools_jll-src
-pkgver=6.7.1+1
-_commit=8936a8e75ce8fe9a473e8ef8351f9f6311b872af
-pkgrel=2
+pkgver=6.8.2+1
+_commit=510f355aa601a792a3d4d2167f9904571ca180bb
+pkgrel=1
 pkgdesc="Qt6ShaderTools_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Qt6ShaderTools_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git qt6-shadertools)
 source=("git+https://github.com/JuliaBinaryWrappers/Qt6ShaderTools_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('bc6ff2b7190660cfd00f6c98646b906b826862d6cc28d439febe22229fb5b0f8'
+sha256sums=('785348d868c24c9b600a5218d375d0f48e249d50330a60fadc30c6a60f2c595d'
             '5ad09cedfea4d433119d92ddf8debd667cdf6f4498208745a808fd37914660a0')
 
 build() {
