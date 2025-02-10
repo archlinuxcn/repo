@@ -1,6 +1,6 @@
 pkgname=julia-git-concurrentutilities-src
-pkgver=2.4.3
-_commit=a01385ca0e04dd0dba663f7d23e8aa1316e8a0aa
+pkgver=2.5.0
+_commit=fde04a11e78469d1ab6b5b4f1e74faf80bb50f3d
 pkgrel=1
 pkgdesc="ConcurrentUtilities.jl"
 url="https://github.com/JuliaServices/ConcurrentUtilities.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaServices/ConcurrentUtilities.jl.git#commit=$_commit")
-sha256sums=('9d8b3af53ed0e86f98475c0cf2a4fed37366ed15b8932dce2c289f89c89355e7')
+sha256sums=('bd2521613b1eddde5d80027a24cd568250d8e6a4a8a2f0befb7377623aaf99cb')
 
 package() {
   cd ConcurrentUtilities.jl
