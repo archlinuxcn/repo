@@ -1,3 +1,9 @@
+## GE-Proton9-25
+HOTFIX:
+
+- update Dragon Age Inquisition xinput patch introduced in GE-Proton9-11 to fix a regression that caused performance issue in Black Desert Online and possibly other games: [doitsujin/dxvk#4676](https://github.com/doitsujin/dxvk/issues/4676) (thanks loathingKernel and Blisto)
+
+
 ## GE-Proton9-24
 
 Proton:
