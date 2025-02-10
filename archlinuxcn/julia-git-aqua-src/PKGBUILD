@@ -1,6 +1,6 @@
 pkgname=julia-git-aqua-src
-pkgver=0.8.10
-_commit=0fc405b2440ba86b5051bb048ce5bd0cacaed239
+pkgver=0.8.11
+_commit=6ed945762595e3b6258b6aaa02424e9c30a9d4e9
 pkgrel=1
 pkgdesc="Aqua.jl"
 url="https://github.com/JuliaTesting/Aqua.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaTesting/Aqua.jl.git#commit=$_commit")
-sha256sums=('1016654c4c0c98d662c17533db6a85bebf361f3e3d1cc63465288d02d8f3e04d')
+sha256sums=('9e40399d16133c33cf7109534e0b235a697be78bba5fd8e0a23c909b305db7d7')
 
 package() {
   cd Aqua.jl
