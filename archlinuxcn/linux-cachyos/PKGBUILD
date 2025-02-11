@@ -25,20 +25,8 @@
 ### Tweak kernel options prior to a build via nconfig
 : "${_makenconfig:=no}"
 
-### Tweak kernel options prior to a build via menuconfig
-: "${_makemenuconfig:=no}"
-
 ### Tweak kernel options prior to a build via xconfig
 : "${_makexconfig:=no}"
-
-### Tweak kernel options prior to a build via gconfig
-: "${_makegconfig:=no}"
-
-# NUMA is optimized for multi-socket motherboards.
-# A single multi-core CPU actually runs slower with NUMA enabled.
-# See, https://bugs.archlinux.org/task/31187
-# It seems that in 2023 this is not really a huge regression anymore
-: "${_NUMAdisable:=no}"
 
 # Compile ONLY used modules to VASTLYreduce the number of modules built
 # and the build time.
@@ -184,7 +172,7 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=6.13
-_minor=1
+_minor=2
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -380,24 +368,6 @@ prepare() {
 
     echo "Setting tick rate to ${_HZ_ticks}Hz..."
 
-    ### Disable NUMA
-    if [ "$_NUMAdisable" = "yes" ]; then
-        echo "Disabling NUMA from kernel config..."
-        scripts/config -d NUMA \
-            -d AMD_NUMA \
-            -d X86_64_ACPI_NUMA \
-            -d NODES_SPAN_OTHER_NODES \
-            -d NUMA_EMU \
-            -d USE_PERCPU_NUMA_NODE_ID \
-            -d ACPI_NUMA \
-            -d ARCH_SUPPORTS_NUMA_BALANCING \
-            -d NODES_SHIFT \
-            -u NODES_SHIFT \
-            -d NEED_MULTIPLE_NODES \
-            -d NUMA_BALANCING \
-            -d NUMA_BALANCING_DEFAULT_ENABLED
-    fi
-
     ### Select performance governor
     if [ "$_per_gov" = "yes" ]; then
         echo "Setting performance governor..."
@@ -539,14 +509,8 @@ prepare() {
     ### Running make nconfig
     [ "$_makenconfig" = "yes" ] && make "${BUILD_FLAGS[@]}" nconfig
 
-    ### Running make menuconfig
-    [ "$_makemenuconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" menuconfig
-
     ### Running make xconfig
     [ "$_makexconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" xconfig
-
-    ### Running make gconfig
-    [ "$_makegconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" gconfig
 
     ### Save configuration for later reuse
     echo "Save configuration for later reuse..."
@@ -617,7 +581,7 @@ _package() {
                 'linux-firmware: firmware images needed for some devices'
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
                 'scx-scheds: to use sched-ext schedulers')
-    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN NTSYNC-MODULE)
+    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN NTSYNC-MODULE VHBA-MODULE)
 
     cd "$_srcname"
 
@@ -801,9 +765,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('995981373f283f606a35ce4f5add4a44c9baa4dbf4caefbedc9037d1c736efbb9af43a48787d8a8515aaef59926962a076a87f0504d8733956f321c8bb241cfc'
+b2sums=('9434dbcb828d49d0b7b68c3ff6651ed227327e8e9a760200fbea91aa37e7949438d253f1a4586da4f72ac1069484e9720b8c8ac3f995d597b33f272065763336'
         'e91e4a6548289040d764ebd450c5449ff2896945276a0895ed9819bde4e1cbc8315e44b53fbe289c10e8bc199c17e0c731f5f6e261021829095b1d85323728bc'
         '390c7b80608e9017f752b18660cc18ad1ec69f0aab41a2edfcfc26621dcccf5c7051c9d233d9bdf1df63d5f1589549ee0ba3a30e43148509d27dafa9102c19ab'
-        'f8bc2690854b156e2609e23e7b81bafcb6b4609b9288b64866d8d8fde230a2aaeb5482bb2b6c2c6236ecd731f004ca944e0fc10119e75a32b60e7bd098a23705'
+        'c0b2e2fc8ff4cecf858087c7bde8669bfbfad2d3492e70b6f2c31cae36dd066c4f7a8a22258592aceb00a52ac7d0b437dcdd0d30b8003882c6e090292d2cae9f'
         'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
         '3ae7a58a83c5f36d02a7b5822628fea9a5513ec41e66966678fe17ef9a96af9356b21da4cf5e492188af19747b142e532fe79582062132901e3b8cc80bc5cdd3')
