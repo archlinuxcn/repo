@@ -1,24 +1,33 @@
-# Maintainer: Fabio 'Lolix' Loli <fabio.loli@disroot.org> -> https://github.com/FabioLolix
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Contributor: Fabio 'Lolix' Loli <fabio.loli@disroot.org> -> https://github.com/FabioLolix
 
 pkgname=python-steamgriddb
 pkgver=1.0.5
 pkgrel=4
 pkgdesc="Python API wrapper for SteamGridDB.com"
-arch=(any)
-url="https://github.com/ZebcoWeb/python-steamgriddb"
-license=(MIT)
-depends=(python python-requests)
-makedepends=(python-setuptools)
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ZebcoWeb/python-steamgriddb/archive/refs/tags/v${pkgver}.tar.gz")
+arch=('any')
+url="https://github.com/ZebcoWeb/${pkgname}"
+license=('MIT')
+depends=(
+    'python'
+    'python-requests'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-wheel'
+)
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('7acb542b926ac2878040302043c8ad44aae0c3de6a9b95ed295500171119f328')
 
 build() {
-  cd "${pkgname}-${pkgver}"
-  python setup.py build
+    cd "${pkgname}-${pkgver}"
+    python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "${pkgname}-${pkgver}"
-  python setup.py install --skip-build --optimize=1 --prefix=/usr --root="${pkgdir}"
-  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    cd "${pkgname}-${pkgver}"
+    install -Dm0644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }
