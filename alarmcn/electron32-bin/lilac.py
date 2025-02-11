@@ -6,7 +6,7 @@ def pre_build():
   pkgver, pkgrel = get_pkgver_and_pkgrel()
   newver = _G.newver.lstrip('v')
   if newver == pkgver:
-    pkgrel = str(int(pkgver) + 1)
+    pkgrel = str(int(pkgrel) + 1)
   else:
     pkgrel = '1'
   major, subver = newver.split('.', 1)
