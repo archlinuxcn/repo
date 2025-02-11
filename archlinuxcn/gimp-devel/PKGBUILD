@@ -3,7 +3,7 @@
 
 pkgname=gimp-devel
 _pkgname=${pkgname%-devel}
-pkgver=3.0.0rc2
+pkgver=3.0.0rc3
 _pkgver=${pkgver/rc/-RC}
 _majorver=$(cut -d '.' -f 1-2 <<<${pkgver})
 pkgrel=1
@@ -44,7 +44,7 @@ source=(
 	"https://download.gimp.org/gimp/v${_majorver}/${_pkgname}-${_pkgver}.tar.xz"
 	"linux.gpl"
 )
-sha256sums=('f4d2f96df180ce5543f8b2b35707b9bf11459f00f726ca73da2f406d686d9db7'
+sha256sums=('61fb527cf22d093a3f3501884796ababd3c30dd7f0e354dbdc041bef0f7e38ec'
             '1003bbf5fc292d0d63be44562f46506f7b2ca5729770da9d38d3bb2e8a2f36b3')
 
 build() {
