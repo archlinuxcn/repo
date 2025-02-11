@@ -25,20 +25,8 @@
 ### Tweak kernel options prior to a build via nconfig
 : "${_makenconfig:=no}"
 
-### Tweak kernel options prior to a build via menuconfig
-: "${_makemenuconfig:=no}"
-
 ### Tweak kernel options prior to a build via xconfig
 : "${_makexconfig:=no}"
-
-### Tweak kernel options prior to a build via gconfig
-: "${_makegconfig:=no}"
-
-# NUMA is optimized for multi-socket motherboards.
-# A single multi-core CPU actually runs slower with NUMA enabled.
-# See, https://bugs.archlinux.org/task/31187
-# It seems that in 2023 this is not really a huge regression anymore
-: "${_NUMAdisable:=no}"
 
 # Compile ONLY used modules to VASTLYreduce the number of modules built
 # and the build time.
@@ -185,7 +173,7 @@ pkgbase="linux-$_pkgsuffix"
 _major=6.14
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc1
+_rcver=rc2
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -381,24 +369,6 @@ prepare() {
 
     echo "Setting tick rate to ${_HZ_ticks}Hz..."
 
-    ### Disable NUMA
-    if [ "$_NUMAdisable" = "yes" ]; then
-        echo "Disabling NUMA from kernel config..."
-        scripts/config -d NUMA \
-            -d AMD_NUMA \
-            -d X86_64_ACPI_NUMA \
-            -d NODES_SPAN_OTHER_NODES \
-            -d NUMA_EMU \
-            -d USE_PERCPU_NUMA_NODE_ID \
-            -d ACPI_NUMA \
-            -d ARCH_SUPPORTS_NUMA_BALANCING \
-            -d NODES_SHIFT \
-            -u NODES_SHIFT \
-            -d NEED_MULTIPLE_NODES \
-            -d NUMA_BALANCING \
-            -d NUMA_BALANCING_DEFAULT_ENABLED
-    fi
-
     ### Select performance governor
     if [ "$_per_gov" = "yes" ]; then
         echo "Setting performance governor..."
@@ -540,14 +510,8 @@ prepare() {
     ### Running make nconfig
     [ "$_makenconfig" = "yes" ] && make "${BUILD_FLAGS[@]}" nconfig
 
-    ### Running make menuconfig
-    [ "$_makemenuconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" menuconfig
-
     ### Running make xconfig
     [ "$_makexconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" xconfig
-
-    ### Running make gconfig
-    [ "$_makegconfig" = "yes" ] &&  make "${BUILD_FLAGS[@]}" gconfig
 
     ### Save configuration for later reuse
     echo "Save configuration for later reuse..."
@@ -620,7 +584,7 @@ _package() {
                 'linux-firmware: firmware images needed for some devices'
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
                 'scx-scheds: to use sched-ext schedulers')
-    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN NTSYNC-MODULE)
+    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE NTSYNC-MODULE VHBA-MODULE)
 
     cd "$_srcname"
 
@@ -804,9 +768,9 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('aeedf103a3076bacaa8b5d38bf06fa048fc8265dd2bea551e9266155086f638ded2171800ee10bfeaf9aa4b28391db5b55162889e6a4a709186af2255ac5dca1'
-        'ec19fe8af88003383ab733a7780ab29291b51a9d59f9c7c1a414154dfb759fa0d3e701f1e345b8c6b428be8eb916fa9bd673be38f0aeca9e26a65a1b5d6d852b'
+b2sums=('0241ecc131ac1322bb66dd14424c19a1c54f17d07aab228589d9294cddf07dce02cef5efb733a0e8fc06c89e9494a00ae64ae453057aa000bfbcf431084a6896'
+        '985d270e7b6aadacccf463d3d2b0c95b9868f05b2eeb32ba9a14bd86101b12631c194f4bc8a302fc40266d1f4b6030692c74436e1ebee03b0accffbe1fa78fd7'
         '390c7b80608e9017f752b18660cc18ad1ec69f0aab41a2edfcfc26621dcccf5c7051c9d233d9bdf1df63d5f1589549ee0ba3a30e43148509d27dafa9102c19ab'
-        'a966a7d905e3e7a90503be237330c417ce2790e94800691139fe60501b6973563354843ca6cf56122d51ab3877d7231aebc58c62a5c4a27a82af626411615c00'
+        'd4b72da02dfc19bb8ab1bbde49cc0b8e11017590ec957ca41cddc3e8ef723933185ab3e715b231900b2fca19af4be8fbe59f07b72ebbfa3733dfe9bb96e28c91'
         'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
         'b8b3feb90888363c4eab359db05e120572d3ac25c18eb27fef5714d609c7cb895243d45585a150438fec0a2d595931b10966322cd956818dbd3a9b3ef412d1e8')
