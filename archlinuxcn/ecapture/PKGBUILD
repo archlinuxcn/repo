@@ -14,13 +14,12 @@ conflicts=("ecapture-bin")
 source=("${pkgname}::git+${url}#tag=v${pkgver}")
 sha256sums=('66d306d20326b32854d883f91339408631709e1677d37305f1112556474bb913')
 
-_linux_package_name=linux
 depends=("glibc")
-makedepends=("clang" "go" "git" "bpf" "${_linux_package_name}" "${_linux_package_name}-headers" "libelf" "llvm" "pkgconf")
+makedepends=("clang" "go" "git" "bpf" "linux" "linux-headers" "libelf" "llvm" "pkgconf")
 
 build() {
     cd "${srcdir}/${pkgname}"
-    UNAME_R=$(cat "/usr/src/${_linux_package_name}/version")
+    UNAME_R=$(cat "/usr/src/linux/version")
     HOST_VERSION_SHORT=$(echo "${UNAME_R}" | cut -d'-' -f 1)
     make "UNAME_R=${UNAME_R}" "HOST_VERSION_SHORT=${HOST_VERSION_SHORT}"
 }
