@@ -3,7 +3,7 @@
 _pkgname=hf_transfer
 pkgname=python-hf-transfer
 pkgver=0.1.9
-pkgrel=1
+pkgrel=2
 pkgdesc='Speed up file transfers with the Hugging Face Hub'
 arch=('x86_64')
 url='https://github.com/huggingface/hf_transfer'
@@ -21,7 +21,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/hf_transfer/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('b6e107ab12bb389fef5c0701b96c839b6014b1e0250e78eebe8e1e02dc5aaeaa70a01d34678a222e0271cfc21ffd703143420877e53662f85ec2d2edfbf20885')
+sha512sums=('074801626fdf7bf9c83451f6d7567ef3f9cebc390ccf4724f1f3fdbb1d5f56e49d179ef7baecbd53d89b317c13ac6df7459ee47cb9a9f18aa23f52fbfba36a84')
 
 build() {
   cd "${_pkgname}-${pkgver}"
