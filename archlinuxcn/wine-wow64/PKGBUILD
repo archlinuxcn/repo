@@ -9,7 +9,7 @@
 pkgname="wine-wow64"
 pkgver=10.1
 _pkgver="${pkgver/rc/-rc}"
-pkgrel=1
+pkgrel=2
 pkgdesc="A compatibility layer for running Windows programs"
 url="https://www.winehq.org"
 license=('LGPL-2.1-or-later')
@@ -73,7 +73,7 @@ backup=("usr/lib/binfmt.d/wine.conf")
 options=(staticlibs !lto)
 
 source=(
-  "https://dl.winehq.org/wine/source/10.x/wine-$_pkgver.tar.xz"
+  "https://dl.winehq.org/wine/source/${pkgver%%.*}.$([ "${pkgver#*.}" = "0" ] && printf '0' || printf 'x')/wine-$_pkgver.tar.xz"
   "30-win32-aliases.conf"
   "wine-binfmt.conf"
 )
