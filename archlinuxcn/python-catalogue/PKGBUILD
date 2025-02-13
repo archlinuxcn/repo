@@ -6,9 +6,9 @@ _pkgname=catalogue
 pkgname="python-${_pkgname}"
 pkgver=2.0.10
 pkgrel=3
-pkgdesc='Super lightweight function registries for your library'
-arch=(any)
-url='https://github.com/explosion/catalogue'
+pkgdesc="Super lightweight function registries for your library"
+arch=('any')
+url="https://github.com/explosion/${_pkgname}"
 license=('MIT')
 depends=(
     'python'
@@ -16,19 +16,23 @@ depends=(
     'python-typing_extensions'
     'python-zipp'
 )
-makedepends=('python-setuptools')
-#source=("https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-wheel'
+)
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 b2sums=('961d654fff1cb56d0d1f9327aeead81f2f10fdbe95266a607ce2c9e42b747d71db14d21b3e387bb59fe50d9d05ead0ece4a2c83b8e1343417f02a11694126ac1')
 
 build() {
     cd "${_pkgname}-${pkgver}"
-    python setup.py build
+    python -m build --wheel --no-isolation
 }
 
 package() {
     cd "${_pkgname}-${pkgver}"
-    python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
-    install -Dvm644 'README.md' -t "${pkgdir}/usr/share/doc/${pkgname}"
-    install -Dvm644 'LICENSE' -t "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -Dvm0644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+    install -Dvm0644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }
