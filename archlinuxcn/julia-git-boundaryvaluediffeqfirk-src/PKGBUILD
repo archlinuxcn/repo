@@ -1,6 +1,6 @@
 pkgname=julia-git-boundaryvaluediffeqfirk-src
-pkgver=1.4.0
-_commit=c5a4c28ecdbaaa711a30ea295f89032eaa1e8f65
+pkgver=1.5.0
+_commit=1abfe62e4da27a72f08ba402c8ef488a46adf6ff
 pkgrel=1
 pkgdesc="BoundaryValueDiffEqFIRK.jl"
 url="https://github.com/SciML/BoundaryValueDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/BoundaryValueDiffEq.jl.git#commit=$_commit")
-sha256sums=('264b8eea4da3e69ed31bfb34ca6d0fd4d25ab13c5bddce615a42ef3b4db16f20')
+sha256sums=('f68ddd689e6467b7a0e563799da3a961021da7b66a6d19ea3e3ee7701f6ad544')
 
 package() {
   cd BoundaryValueDiffEq.jl/lib/BoundaryValueDiffEqFIRK
