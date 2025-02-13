@@ -1,6 +1,6 @@
 pkgname=julia-git-boundaryvaluediffeqcore-src
-pkgver=1.6.0
-_commit=22664fc1e88f009c95cfc810ee0ce4522d160683
+pkgver=1.7.0
+_commit=e0a9c26b15b32cbd9d7320dd8875fe80affa1980
 pkgrel=1
 pkgdesc="BoundaryValueDiffEqCore.jl"
 url="https://github.com/SciML/BoundaryValueDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/BoundaryValueDiffEq.jl.git#commit=$_commit")
-sha256sums=('58b028628b08ab804eabb28a66545e8979fa4f54a2327c96ae11b2c0159328fe')
+sha256sums=('a9a62ec90c665d220e2fe17ee40ec7a3ad16680b8c0a26cb07191cdd7f541669')
 
 package() {
   cd BoundaryValueDiffEq.jl/lib/BoundaryValueDiffEqCore
