@@ -1,6 +1,6 @@
 pkgname=julia-git-nemo-src
-pkgver=0.48.2
-_commit=b1cd279088ca43af94c217eb04690e814a448c4e
+pkgver=0.48.4
+_commit=edf284fbf67226cbef494af43d0ea92f028848fb
 pkgrel=1
 pkgdesc="Nemo.jl"
 url="https://github.com/Nemocas/Nemo.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Nemocas/Nemo.jl.git#commit=$_commit")
-sha256sums=('8ff03a2b0fd547bb9c50269c4753d43308265abcb9d92da2bffb3ed5bc552f2e')
+sha256sums=('23a023175101237a9b313af245846ddc32c512de9d38c5949871a2e161fcbac8')
 
 package() {
   cd Nemo.jl
