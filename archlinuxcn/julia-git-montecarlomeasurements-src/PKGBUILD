@@ -1,6 +1,6 @@
 pkgname=julia-git-montecarlomeasurements-src
-pkgver=1.4.3
-_commit=7bd0fdca4c7350acb4e97da05591350a2a8ef251
+pkgver=1.4.5
+_commit=3fe954a2e1b908c2ac506246a4264251aba26916
 pkgrel=1
 pkgdesc="MonteCarloMeasurements.jl"
 url="https://github.com/baggepinnen/MonteCarloMeasurements.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/baggepinnen/MonteCarloMeasurements.jl.git#commit=$_commit")
-sha256sums=('266ccd90782dc2f67af810e7d474b69db5fff24f3270f46a7f7476ff3df00ed8')
+sha256sums=('6b6cb25cc66896d839b12b6d1f70331fb58bbd8239ea6beb32748e1456d6d4d6')
 
 package() {
   cd MonteCarloMeasurements.jl
