@@ -1,0 +1,37 @@
+# Maintainer: xiretza <xiretza+aur@xiretza.xyz>
+# Contributor: Falk Alexander Seidl <fa@terminal.run>
+
+pkgname=fractal-git
+_gitname=fractal
+epoch=1
+pkgver=6.r150.g462b5cd5
+pkgrel=1
+pkgdesc="Matrix messaging app for GNOME written in Rust"
+arch=('i686' 'x86_64')
+license=('GPL-3.0-only')
+url="https://gitlab.gnome.org/GNOME/fractal"
+depends=('gtk4' 'gtksourceview5' 'gst-plugins-base-libs' 'gst-editing-services'
+         'libadwaita>=1:1.5alpha' 'pipewire' 'libshumate' 'org.freedesktop.secrets'
+         'xdg-desktop-portal')
+conflicts=('fractal')
+provides=("fractal=$pkgver" 'fractal-next')
+makedepends=('rust' 'git' 'meson' 'clang')
+options=('!lto')
+source=("git+https://gitlab.gnome.org/GNOME/fractal.git")
+md5sums=('SKIP')
+
+pkgver() {
+	cd "$_gitname"
+	git describe --tags | sed -r 's/\.([a-z])/\1/;s/[^-]*-g/r&/;s/-/./g'
+}
+
+build() {
+	cd "${srcdir}/${_gitname}/"
+	arch-meson . _build
+	ninja -C _build
+}
+
+package() {
+	cd "${srcdir}/${_gitname}/"
+	DESTDIR="${pkgdir}" ninja -C _build install
+}
