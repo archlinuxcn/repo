@@ -260,6 +260,11 @@ EOF
     echo > "$f"
   done
   _patch_suitesparse
+  # Try disabling threading when generating precompilations
+  # The module initialization code seems to have some bug that is triggered
+  # reliably on aarch64 on the build machine.
+  sed -i -e 's/debug_output = devnull/debug_output = stdout/' \
+      -e 's/cpu-target=native/cpu-target=native -t1,0/' contrib/generate_precompile.jl
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
   sed -i -e 's/\(symlink_system_library,CSL,libquadmath,[0-9]*\))/\1,ALLOW_FAILURE)/g' base/Makefile
 }
