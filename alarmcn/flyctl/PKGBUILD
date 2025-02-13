@@ -2,7 +2,7 @@
 # Contributor: Trevor Mosey <trevor dot mosey at gmail dot com>
 
 pkgname=flyctl
-pkgver=0.3.79
+pkgver=0.3.80
 pkgrel=1
 pkgdesc="Command line tools for fly.io services"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ url="https://github.com/superfly/${pkgname}"
 license=("Apache-2.0")
 makedepends=('go')
 source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('03170018ce2101e337d7c8f258ef7dcbbfdd43a4791f388301e8fc7e27c31948')
+sha256sums=('f8e440a0e79145f9b490ddaea4a54489181fd3ff37fb9aec498c08c5c3d528c8')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
