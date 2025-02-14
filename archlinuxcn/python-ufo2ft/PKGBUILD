@@ -4,7 +4,7 @@
 
 _name=ufo2ft
 pkgname="python-${_name}"
-pkgver=3.4.1
+pkgver=3.4.2
 pkgrel=1
 pkgdesc="A bridge from UFOs to FontTools objects"
 arch=('any')
@@ -37,7 +37,7 @@ checkdepends=(
     'python-pytest'
 )
 source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}")
-sha256sums=('28772c6b33eba580768a1171a7640a63d102afffb7d530ce6c189ed5e9e3a60e')
+sha256sums=('092c5f94852663c8129133c0b13994ae1e4928c38598b3b1f4a2c3a2d41adbfa')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
