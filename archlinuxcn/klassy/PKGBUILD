@@ -40,12 +40,15 @@ makedepends=(extra-cmake-modules
              kirigami2
              kwindowsystem5)
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+        "plasma6.3.patch::${url}/pull/178.patch"
         "project-version.patch")
 sha256sums=('658c183b182fd86316e3a055f51d31e77a77a283be641908b6d4469a5ce9d035'
+            '9f7dae4474a779a54db4660207eff5e6f4b501fd8f4dff2004d345ccc0290067'
             '20d2997dcf7ca94fd294a4500111084d244040795a0083af932aa83e00e91688')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
+  patch -Np1 < "${srcdir}/plasma6.3.patch"
   patch -Np1 < "${srcdir}/project-version.patch"
 }
 
