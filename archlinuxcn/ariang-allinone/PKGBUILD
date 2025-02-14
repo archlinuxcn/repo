@@ -1,7 +1,7 @@
 # Maintainer: Dct Mei <dctxmei@yandex.com>
 
 pkgname=ariang-allinone
-pkgver=1.3.8
+pkgver=1.3.10
 pkgrel=1
 pkgdesc="A modern web frontend making aria2 easier to use (all-in-one version)"
 arch=('any')
@@ -12,7 +12,7 @@ makedepends=('nodejs')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
         "${pkgname}.desktop"
         "${pkgname}.sh")
-b2sums=('9ed231352e7bed9eb9b1b62bac08b3c098df68f03630bc8fd072b996626feda9dbc7a9ba021ad6fe74c74ff94c698caa77be6568c667bd9c511a7776c69b1568'
+b2sums=('45d92e0c3eea1e01d82d322667f535dd25ed4eee65905702107449ab00596e5ec175c7454e0621acefc6f59d5ebac46b4bc774562277002745acc43ed79f0ae6'
         '75f9cd947d78ff94a20104cc2d138d82fdb47d8ba994292b27bf88f5e9a5204e989af39a738821bd4dfb500b63e45103cf70ddddc7523e3175b53652241c4701'
         '8585359a12bf26f10923a073fc2b7cb4bcef95ee46c67664356819d959bfbb2f4b8279fd57664e44d569077ff63a4da298b3a36276a423af0c3e8a1e3641133a')
 
