@@ -6,7 +6,7 @@ pkgname=code
 pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
 _electron=electron32
-pkgver=1.97.0
+pkgver=1.97.2
 pkgrel=1
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
@@ -22,7 +22,7 @@ source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
         'code.sh'
         'product_json.diff'
         'clipath.patch')
-sha512sums=('ac5e8fe0d9026e551cb839bfa4b449b6528e7237d6f48a1292f39c95d1311d471eeea95555402b1a3a40994525c7bc79c5fdc4173c6443dbf0888e47a2d2bee9'
+sha512sums=('25edb1985d3633f3b71a66e3f534d88ca20fd74aee43602d698307ef5e64cc8db770a5e02cf50078befefbf3208a1ef30e0242dc847d98c96ad5cf72b5ff8b1c'
             '793f9ff6306e3992ac89802d98110cba288ea1181a901467333293b7d76182ef9792c2a39ff49d9347a18a174b1f42bc58862091dff583f4146c2704eea28033'
             'd2b3683085d98744ba4f7d8cb33fa38620b59220797917c3858cac6a0bf7962c2b7e293785a237f178e527384cc04bc19fe71d75f04fbf06be881263d4aa2b35'
             'b1aa0d7c5b3e3e8ba1172822d75ea38e90efc431b270e0b4ca9e45bf9c0be0f60922c8618969ef071b5b6dbd9ac9f030294f1bf49bcc28c187b46d113dca63a7'
