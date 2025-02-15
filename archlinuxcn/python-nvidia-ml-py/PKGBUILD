@@ -2,6 +2,7 @@
 
 pkgname=python-nvidia-ml-py
 _name=nvidia-ml-py
+_pkgname=nvidia_ml_py
 pkgver=12.560.30
 pkgrel=2
 pkgdesc='Python Bindings for the NVIDIA Management Library'
@@ -19,18 +20,18 @@ makedepends=(
   python-wheel
 )
 source=(
-  "${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz"
+  "${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz"
 )
 sha512sums=('7d976bbfe187035865c0cff309cedf10299ff532ec0b4c9f30182160e0feb7ae4c18fe09c5788e2f12efc45f0c4de251480d7a305bdc0fe24989a8b3a61a12a7')
 
 build() {
-  cd "${srcdir}/${_name}-${pkgver}"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "${srcdir}/${_name}-${pkgver}"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
-  install -D -m644 "${srcdir}/${_name}-${pkgver}/README.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -D -m644 "${srcdir}/${_pkgname}-${pkgver}/README.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 # vim:set ts=2 sw=2 et:
