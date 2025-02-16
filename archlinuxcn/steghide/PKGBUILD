@@ -6,7 +6,7 @@
 
 pkgname=steghide
 pkgver=0.5.1
-pkgrel=13
+pkgrel=14
 pkgdesc='Embeds a message in a file by replacing some of the least significant bits'
 arch=('x86_64')
 url='http://steghide.sourceforge.net'
@@ -20,12 +20,12 @@ source=("steghide-${pkgver}.tar.gz::https://sourceforge.net/projects/steghide/fi
         consolidated-gcc-patches.patch
         correct-german.patch)
 sha256sums=('78069b7cfe9d1f5348ae43f918f06f91d783c2b3ff25af021e6a312cf541b47b'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+            '52b050ad027dc0720e2d73ce90fcc0e8fa1a857c70b0650e0bffe1c717dd0e85'
+            'c1489d23a91b29d6eb74dfb167b7454957e9ae1058b0485fe053d0b7279bf728'
+            'd50d86ac299b2731ac25bd493eaaa0aa7bb74e2c3d3461edbd65ecd0749b6e27'
+            '865649cfef281277365c5b4fabed919fec83950db7ebcad9a88b698a97e3deb9'
+            '9e52fb5fafd56a2a81bdfbb7af54cffd9eead01de26ed0d6f0b35e98257a89ac'
+            'c80b922d66d068f5aa4ebc52fff5afa238be81e4c6eb72d5001d0bbce7dbbc46')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
