@@ -3,8 +3,8 @@
 # Contributor: Y7n05h <Y7n05h@y7n05h.dev>
 
 pkgname=ecapture
-pkgver=0.9.3
-pkgrel=6
+pkgver=0.9.4
+pkgrel=1
 pkgdesc="capture SSL/TLS text content without CA cert using eBPF"
 arch=("x86_64" "aarch64")
 url="https://github.com/gojue/ecapture"
@@ -12,7 +12,7 @@ license=("Apache-2.0")
 provides=("ecapture")
 conflicts=("ecapture-bin")
 source=("${pkgname}::git+${url}#tag=v${pkgver}")
-sha256sums=('66d306d20326b32854d883f91339408631709e1677d37305f1112556474bb913')
+sha256sums=('7902ac7845f757813d204c7b86750b4214fa4de752372f155a598207e6df8f4f')
 
 depends=("glibc")
 makedepends=("clang" "go" "git" "bpf" "linux" "linux-headers" "libelf" "llvm" "pkgconf")
