@@ -22,7 +22,7 @@ depends=(
 	'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so' 'libgl'
 	'libspng.so' 'libswscale.so'
 	'libusb-1.0.so' 'libx11' 'libxi' 'libxrandr' 'lz4' 'lzo' 'mbedtls2'
-	'pugixml' 'sdl2' 'sfml' 'speexdsp' 'xz' 'zstd' 'fmt'
+	'pugixml' 'sdl2' 'speexdsp' 'xz' 'zstd' 'fmt'
 	# Addition dependencies to replace vendored deps
 	'cubeb' 'libxxhash.so' 'vulkan-memory-allocator' 'minizip-ng' 
 )
@@ -94,6 +94,7 @@ build() {
 	# CMAKE_SKIP_RPATH - do not add run time path information (the package in the repos does it, presumably because of reproducible builds)
 	# USE_SYSTEM_LIBS - we want to use system libs where possible
 	# USE_SYSTEM_LIBMGBA - the current version of mgba in the repos is not compatible with Dolphin
+	# USE_SYSTEM_SFML - the current version of SFML in the repos is not compatible with Dolphin
 	cmake -S '.' -B 'build/' -G Ninja \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_SKIP_RPATH=ON \
@@ -102,6 +103,7 @@ build() {
 		-DENABLE_AUTOUPDATE=OFF \
 		-DUSE_SYSTEM_LIBS=ON \
 		-DUSE_SYSTEM_LIBMGBA=OFF \
+        -DUSE_SYSTEM_SFML=OFF \
 		-Wno-dev
 	cmake --build 'build/'
 }
