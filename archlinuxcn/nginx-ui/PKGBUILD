@@ -3,7 +3,7 @@
 pkgname="nginx-ui"
 pkgver=2.0.0_rc.2
 _pkgver=${pkgver//_/-}
-pkgrel=1
+pkgrel=2
 pkgdesc="Yet another WebUI for Nginx"
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
 url="https://github.com/0xJacky/${pkgname}"
@@ -35,7 +35,7 @@ build() {
         -ldflags="${ldflags}" \
         -o "${pkgname}" \
         ./main.go
-
+    
     sed -E \
         -e "s|^(ExecStart=).+|\1/usr/bin/${pkgname} --config /etc/${pkgname}/config.ini|g" \
         -e "s|^(Documentation=).+|\1https://nginxui.com|g" \
