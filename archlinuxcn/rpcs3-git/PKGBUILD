@@ -2,18 +2,20 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.34.r17474.7fcd747819
+pkgver=0.0.34.r17489.a29ecaf1d3
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
-arch=(x86_64)
+arch=(x86_64 aarch64)
 url=https://github.com/RPCS3/rpcs3
-license=(GPL2)
+license=(GPL-2.0-only)
 depends=(
   alsa-lib
   glew
   glu
-  libavcodec.so
-  libavutil.so
+  # Use bundled FFMPEG for now since we use FFMPEG 5.1.2
+  #libavcodec.so
+  #libavutil.so
+  #libswscale.so
   libevdev
   libgl
   libice
@@ -21,7 +23,6 @@ depends=(
   libpng
   libpulse
   libsm
-  libswscale.so
   libx11
   libxext
   openal
@@ -34,28 +35,30 @@ depends=(
   zlib
   curl
   pugixml
-# newer system flatbuffers is incompatible with the version RPCS3 depends on
-# flatbuffers
+  flatbuffers
+  llvm
+)
+optdepends=(
+  vulkan-validation-layers
+  rpcs3-udev
 )
 makedepends=(
   cmake
   git
   libglvnd
   python
-  vulkan-validation-layers
-  # clang is required because audio is broken with latest gcc
+  # clang+lld is required because audio is broken with latest gcc
   clang
+  lld
 )
 provides=(rpcs3)
 conflicts=(rpcs3)
-options=(!emptydirs !lto)
+options=(!emptydirs !lto !strip)
 source=(
   git+https://github.com/RPCS3/rpcs3.git
-  llvm::git+https://github.com/llvm/llvm-project.git
   git+https://github.com/KhronosGroup/glslang.git
 )
 sha256sums=(
-  SKIP
   SKIP
   SKIP
 )
@@ -71,15 +74,12 @@ pkgver() {
 
 prepare() {
   cd rpcs3
-
-  sed -i 's/av.video.context->frame_number/av.video.context->frame_num/g' rpcs3/util/media_utils.cpp
-
-  git submodule init 3rdparty/glslang/glslang 3rdparty/llvm/llvm
+  
+  git submodule init 3rdparty/glslang/glslang
   git config submodule.3rdparty/glslang.url ../glslang
-  git config submodule.3rdparty/llvm/llvm.url ../llvm
   
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
-    awk '!/ffmpeg/ && !/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/pugixml/ '))
+    awk '!/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/pugixml/ && !/SDL/ && !/flatbuffers/ '))
 
   # We need to convert from a relative folder path to a https://github.com path
   for ((i=0;i<${#SUBMODULES[@]};i+=2))
@@ -97,7 +97,7 @@ prepare() {
     git -c protocol.file.allow=always submodule update --init --filter=tree:0 $path
   done
   
-  git -c protocol.file.allow=always submodule update 3rdparty/glslang/glslang 3rdparty/llvm/llvm
+  git -c protocol.file.allow=always submodule update 3rdparty/glslang/glslang
 }
 
 build() {
@@ -110,20 +110,25 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
     -DUSE_NATIVE_INSTRUCTIONS=OFF \
-    -DUSE_SYSTEM_FFMPEG=ON \
+    -DUSE_SYSTEM_FFMPEG=OFF \
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=ON \
-    -DUSE_SYSTEM_FLATBUFFERS=OFF \
+    -DUSE_SYSTEM_FLATBUFFERS=ON \
     -DUSE_SYSTEM_PUGIXML=ON \
-    -DBUILD_LLVM=ON \
-    -DUSE_SYSTEM_WOLFSSL=OFF
+    -DUSE_SDL=ON \
+    -DUSE_SYSTEM_SDL=ON \
+    -DBUILD_LLVM=OFF \
+    -DUSE_SYSTEM_WOLFSSL=OFF \
+    -DCMAKE_LINKER=lld \
+    -DCMAKE_SHARED_LINKER_FLAGS="-fuse-ld=lld" \
+    -DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld"
   
-  make -C build
+  cmake --build build
 }
 
 package() {
-  make DESTDIR="${pkgdir}" -C build install
+  DESTDIR="${pkgdir}" cmake --install build
 }
 
 # vim: ts=2 sw=2 et:
