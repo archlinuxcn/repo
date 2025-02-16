@@ -1,17 +1,18 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgname=townsemu-git
-pkgver=3212.cfc80b8
+pkgver=3235.707e1ae6
 pkgrel=1
 pkgdesc="An emulator of legendary Fujitsu FM TOWNS computer"
 arch=('i686' 'x86_64')
 url="https://github.com/captainys/TOWNSEMU"
 license=('GPL')
-depends=('alsa-lib' 'glu' 'llvm-libs')
-makedepends=('git' 'cmake' 'clang')
+depends=('alsa-lib' 'glu' 'gcc13-libs')
+makedepends=('git' 'cmake' 'gcc13')
 provides=('townsemu')
 conflicts=('townsemu')
 source=("git+https://github.com/captainys/TOWNSEMU")
+options=('!buildflags')
 md5sums=('SKIP')
 
 pkgver() {
@@ -24,32 +25,34 @@ prepare() {
   mkdir -p build
   mkdir -p build_gui
   cd gui/src
+  #sed -i 's/set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} -Wno-unused-variable)/set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} -Wno-unused-variable -Wno-error=incompatible-pointer-types)/' CMakeLists.txt
   git clone https://github.com/captainys/public.git
   cd ..
   cd ..
-  sed -i '1i #include <cstdio>' src/cmdutil/wav2snd.cpp
-  sed -i '1i #include <cstdlib>' src/cmdutil/wav2snd.cpp
-  sed -i '1i #include <cstdint>' src/ym2612/ym2612.h 
-  sed -i '1i #include <cstdint>' src/externals/d77/d77.cpp 
-  sed -i '1i #include <cstdint>' src/osdependent/filesys/filesys.h
-  sed -i '1i #include <cstdint>' src/device/device.h
-  sed -i '1i #include <cstdint>' src/rf5c68/rf5c68.h
-  sed -i '1i #include <cstdio>' gui/src/public/src/yssimplesound/sample_fssimplewindow/main.cpp
-  sed -i '1i #include <cstdlib>' gui/src/public/src/yssimplesound/sample_fssimplewindow/main.cpp
-  sed -i '1i #include <cstdio>' gui/src/public/src/yssimplesound/sample/main.cpp
-  sed -i '1i #include <cstdlib>' gui/src/public/src/yssimplesound/sample/main.cpp
+  #sed -i '1i #include <cstdio>' src/cmdutil/wav2snd.cpp
+  #sed -i '1i #include <cstdlib>' src/cmdutil/wav2snd.cpp
+  #sed -i '1i #include <cstdint>' src/ym2612/ym2612.h 
+  #sed -i '1i #include <cstdint>' src/externals/d77/d77.cpp 
+  #sed -i '1i #include <cstdint>' src/osdependent/filesys/filesys.h
+  #sed -i '1i #include <cstdint>' src/device/device.h
+  #sed -i '1i #include <cstdint>' src/rf5c68/rf5c68.h
+  #sed -i '1i #include <cstdio>' gui/src/public/src/yssimplesound/sample_fssimplewindow/main.cpp
+  #sed -i '1i #include <cstdlib>' gui/src/public/src/yssimplesound/sample_fssimplewindow/main.cpp
+  #sed -i '1i #include <cstdio>' gui/src/public/src/yssimplesound/sample/main.cpp
+  #sed -i '1i #include <cstdlib>' gui/src/public/src/yssimplesound/sample/main.cpp
 }
 
 build() {
-  export CC=/usr/bin/clang
-  export CXX=/usr/bin/clang++
-
   cd TOWNSEMU/build
-  cmake ../src -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-  make
+  export CC=/usr/bin/gcc-13
+  export CXX=/usr/bin/g++-13
+  cmake ../src -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build . --config Release -j1
   cd ../build_gui
   cmake ../gui/src -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-  cmake --build main_gui
+  #sed -i -e "s|char *vertexShaderProgramLinear|const* char const *vertexShaderProgramLinear|g" ${srcdir}/TOWNSEMU/gui/src/public/src/ysgl/src/ysglslutil.c
+  #sed -i -e "s|char *fragmentShaderProgramLinear|const* char const *fragmentShaderProgramLinear|g" ${srcdir}/TOWNSEMU/gui/src/public/src/ysgl/src/ysglslutil.c
+  VERBOSE=1 cmake --build main_gui -j1
 }
 
 package() {
