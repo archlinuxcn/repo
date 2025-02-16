@@ -1,0 +1,14 @@
+maintainers:
+  - github: yingziwu
+    email: i@bgme.me
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: ruffle-rs/ruffle
+  - source: manual
+    manual: 0

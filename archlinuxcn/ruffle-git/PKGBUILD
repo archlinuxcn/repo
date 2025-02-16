@@ -1,0 +1,46 @@
+# Maintainer: BGME <i@bgme.me>
+
+_pkgname="ruffle"
+pkgname="ruffle-git"
+pkgver="r13909.a4eecae"
+pkgrel=1
+pkgdesc="A Flash Player emulator written in Rust."
+url="https://github.com/ruffle-rs/ruffle"
+license=("MIT" "Apache-2.0")
+source=("git+https://github.com/ruffle-rs/ruffle.git#branch=master")
+sha512sums=('SKIP')
+arch=("x86_64")
+depends=("alsa-lib" "libxcb" "gtk3" "systemd-libs"
+        "glibc" "gcc-libs" "hicolor-icon-theme")
+makedepends=("git" "cargo" "jre-openjdk-headless" "cmake" "gcc")
+conflicts=("ruffle-nightly-bin")
+provides=("ruffle")
+options=("!lto")
+
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+prepare() {
+    cd "${srcdir}/${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+    cd "${srcdir}/${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --package ruffle_desktop --frozen --release
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}"
+    install -Dm 755 "target/release/ruffle_desktop" "${pkgdir}/usr/bin/ruffle"
+    install -Dm 644 "README.md" "${pkgdir}/usr/share/doc/${_pkgname}/README.md"
+    install -Dm 644 "LICENSE.md" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE.md"
+    install -Dm 644 -t "${pkgdir}/usr/share/applications/" "desktop/packages/linux/rs.ruffle.Ruffle.desktop"
+    install -Dm 644 -t "${pkgdir}/usr/share/metainfo/" "desktop/packages/linux/rs.ruffle.Ruffle.metainfo.xml"
+    install -Dm 644 -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/" "desktop/packages/linux/rs.ruffle.Ruffle.svg"
+}
