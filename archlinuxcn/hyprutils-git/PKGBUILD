@@ -12,7 +12,7 @@ depends=('pixman')
 makedepends=('git' 'cmake')
 source=("git+${url}.git")
 conflicts=("${_pkgname}")
-provides=("${_pkgname}")
+provides=("${_pkgname}" "lib${_pkgname}.so")
 sha256sums=('SKIP')
 
 pkgver() {
