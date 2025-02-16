@@ -47,13 +47,15 @@ source=(
     "HashLibPlus::git+https://github.com/WerWolv/HashLibPlus"
     "jthread::git+https://github.com/josuttis/jthread"
     "cli11::git+https://github.com/CLIUtils/CLI11"
-    "lunasvg::git+https://github.com/WerWolv/lunasvg"
+    "lunasvg::git+https://github.com/sammycage/lunasvg"
     "edlib::git+https://github.com/Martinsos/edlib"
     "throwing_ptr::git+https://github.com/rockdreamer/throwing_ptr"
     "plutovg::git+https://github.com/sammycage/plutovg"
     "ImHex-Patterns::git+https://github.com/WerWolv/ImHex-Patterns.git"
+    "disassembler::git+https://github.com/WerWolv/Disassembler.git"
 )
 b2sums=('dc1617823fcd1deb348c756a451fbdc9ffa2b64369fe2d135d0da0c40eaa39a68a3d7980d2926160d5d721f80dab515675a7a11e9d970c0ad56f20629b069633'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -73,7 +75,7 @@ prepare() {
     cd "$pkgname"
 
     git submodule init
-    for name in libromfs pattern_language libwolv; do
+    for name in libromfs pattern_language libwolv disassembler; do
         git submodule set-url lib/external/"$name" "$srcdir/$name"
         git -c protocol.file.allow=always submodule update lib/external/$name
     done
