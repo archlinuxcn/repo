@@ -1,25 +1,19 @@
 #!/bin/sh
 
 post_install() {
-  echo ":: You need to initialize the MariaDB data directory prior to starting"
-  echo "   the service. This can be done with mysql_install_db command, e.g.:"
-  echo "   mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql"
+	cat <<-EOM
+	:: You need to initialize the MariaDB data directory prior to starting
+	   the service. This can be done with mariadb-install-db command, e.g.:
+	     # mariadb-install-db --user=mysql --basedir=/usr --datadir=/var/lib/mysql
+	EOM
 }
 
 post_upgrade() {
   # show for feature release: 10.1 -> 10.2 -> 10.3 -> ...
   if [ $(vercmp "${1%.*-*}" "${2%.*-*}") -ne 0 ]; then 
-    echo ":: MariaDB was updated to a new feature release. To update the data run:"
-    echo "   systemctl restart mariadb.service && mariadb-upgrade -u root -p"
+	cat <<-EOM
+	:: MariaDB was updated to a new feature release. To update the data run:
+	     # systemctl restart mariadb.service && mariadb-upgrade -u root -p
+	EOM
   fi
-
-  # return if old package version greater 10.4...
-  (( $(vercmp $2 '10.4') > 0 )) && return
-
-  # upgrade from pre-10.4...
-  echo ":: MariaDB configuration layout changed."
-  echo "   -> The main configuration file now is: /etc/my.cnf"
-  echo "   -> Instantiated services (mariadb@foo.service) do not longer read their"
-  echo "      own configuration file but use group suffix (configuration block"
-  echo "      '[mysqld.foo]') in main configuration file."
 }
