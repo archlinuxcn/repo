@@ -3,7 +3,7 @@
 # Contributor: Kevin Piche <kevin@archlinux.org>
 
 pkgname=bochs
-pkgver=2.8
+pkgver=3.0
 pkgrel=1
 pkgdesc="A portable x86 PC emulation software package, including GUI debugger"
 arch=('x86_64' 'pentium4' 'i686' 'i486')
@@ -11,7 +11,7 @@ url="http://bochs.sourceforge.net/"
 license=('LGPL-2.1-or-later')
 depends=('libxrandr' 'libxpm' 'gtk2')
 source=("https://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('a85b13aff7d8411f7a9f356ba6c33b5f5dc1fbb107eb5018cc23a62639da0059')
+sha256sums=('cb6f542b51f35a2cc9206b2a980db5602b7cd1b7cf2e4ed4f116acd5507781aa')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
