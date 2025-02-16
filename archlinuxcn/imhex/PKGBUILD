@@ -28,7 +28,6 @@ depends=(
 )
 makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime')
 optdepends=(
-    'imhex-patterns-git: ImHex base patterns'
     'dotnet-runtime'
     'lz4: decompress plugin'
     'zlib: decompress plugin'
@@ -36,6 +35,7 @@ optdepends=(
     'xz: decompress plugin'
     'zstd: decompress plugin'
 )
+replaces=('imhex-patterns-git')
 source=(
     "$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
     "nativefiledialog::git+https://github.com/btzy/nativefiledialog-extended.git"
