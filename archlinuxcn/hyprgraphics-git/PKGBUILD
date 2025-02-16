@@ -12,7 +12,7 @@ license=('BSD-3-Clause')
 depends=('pixman' 'cairo' 'hyprutils-git' 'libjpeg' 'libwebp' 'libjxl' 'libspng')
 makedepends=('git' 'cmake')
 source=("git+${url}.git")
-provides=("${_pkgname}")
+provides=("${_pkgname}" "lib${_pkgname}.so")
 conflicts=("${_pkgname}")
 sha256sums=('SKIP')
 
