@@ -6,7 +6,7 @@ pkgname=(
   asusctl
   rog-control-center
 )
-pkgver=6.1.4
+pkgver=6.1.5
 pkgrel=0.1
 pkgdesc="A control daemon, tools, and a collection of crates for interacting with ASUS ROG laptops"
 arch=('x86_64')
@@ -26,7 +26,7 @@ makedepends=(
   systemd
 )
 source=("git+https://gitlab.com/asus-linux/asusctl.git#tag=$pkgver")
-b2sums=('eb6b2d473c1f85b2ce3edcab24a3b5e490e071480ba5a4be8a8126fb2f1ab585030ef13de3d7998208545d1ff319094940a937b15d2d9484dde6ac7aa636e17d')
+b2sums=('f220507deac1563261be6ab94008b7aa5f546c6c51b0eec3168343c0bd4df731dbf4564bdeef4b936add0c2949b3880fa4117d17f039502cf84e3d741ef6b125')
 
 prepare() {
   cd "${pkgbase}"
@@ -96,6 +96,8 @@ package_asusctl() {
 package_rog-control-center() {
   depends=(
     asusctl
+    fontconfig
+    freetype2
     gcc-libs
     glibc
     hicolor-icon-theme
