@@ -10,10 +10,10 @@ license=("MIT" "Apache-2.0")
 source=("git+https://github.com/ruffle-rs/ruffle.git#branch=master")
 sha512sums=('SKIP')
 arch=("x86_64")
-depends=("alsa-lib" "libxcb" "gtk3" "systemd-libs"
+depends=("zlib" "alsa-lib" "libxcb" "gtk3" "systemd-libs"
         "glibc" "gcc-libs" "hicolor-icon-theme")
-makedepends=("git" "cargo" "jre-openjdk-headless" "cmake" "gcc")
-conflicts=("ruffle-nightly-bin")
+makedepends=("git" "cargo" "java-runtime-headless" "cmake" "gcc")
+conflicts=("ruffle")
 provides=("ruffle")
 options=("!lto")
 
