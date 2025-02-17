@@ -1,7 +1,7 @@
 pkgname=julia-git-hdf5_jll-src
-pkgver=1.14.3+3
-_commit=134ef1bd411999a1171fa5ec5c0706e7228fedea
-pkgrel=3
+pkgver=1.14.5+0
+_commit=3f7b3cd85e9bd796307d709961bcf2c8b626dde1
+pkgrel=1
 pkgdesc="HDF5_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/HDF5_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git hdf5)
 source=("git+https://github.com/JuliaBinaryWrappers/HDF5_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('d9d295d6adf526796b647f58ab313618ca19536bb897b898b08cb61b3bcd6723'
+sha256sums=('10faf267bf9b7f1c17281d7aab93e89a96cd6ebbc2e2592029200b55b71d276c'
             'ef914255c3d82b8a99b199d49247aa99e86286a9491688d1ae1267825eb71640')
 
 build() {
