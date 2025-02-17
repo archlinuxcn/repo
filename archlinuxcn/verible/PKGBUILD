@@ -1,11 +1,11 @@
 # Maintainer: poscat
 
-_gittag="v0.0-3933-g0e3fe53a"
+_gittag="v0.0-3946-g851d3ff4"
 _tardir="verible-${_gittag/v/}"
 
 pkgname=verible
 pkgver="$(echo ${_gittag} | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//g')"
-pkgrel=3
+pkgrel=2
 pkgdesc="Suite of SystemVerilog developer tools. Including a style-linter, indexer, formatter, and language server"
 arch=('x86_64' 'aarch64')
 url='https://github.com/chipsalliance/verible'
@@ -17,7 +17,7 @@ conflicts=('verible-git' 'verible-bin')
 source=(
   "verible-${pkgver}.tar.gz::https://github.com/chipsalliance/verible/archive/refs/tags/${_gittag}.tar.gz"
 )
-sha256sums=('36d71c2717814e432fb594ffcb82008542504e7e2b61a1f313ddaeca0463e070')
+sha256sums=('1454b8df8a978c11139b800b229b498c02bb22f8f2b97a21022b2a6f099604af')
 
 build() {
   cd "${srcdir:?}/${_tardir}" || (
