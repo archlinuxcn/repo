@@ -1,7 +1,7 @@
 # Maintainer: Ilaï Deutel <PlMWPh1WSmypRv0JQljz> (echo ... | tr 'A-Za-z' 'l-za-kL-ZA-K' | base64 -d)
 
 pkgname=scc
-pkgver=3.4.0
+pkgver=3.5.0
 pkgrel=1
 pkgdesc='Sloc, Cloc and Code: a very fast accurate code counter with complexity calculations and COCOMO estimates written in pure Go'
 arch=('x86_64' 'i386')
@@ -10,7 +10,7 @@ license=('MIT' 'Unlicense')
 depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver::https://github.com/boyter/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('bdedb6f32d1c3d73ac7e55780021c742bc8ed32f6fb878ee3e419f9acc76bdaa')
+sha256sums=('161f5d9bb359c6440114b7d2e0f98d588c02aa66fbe474d7660b244687fefb70')
 
 prepare(){
   cd "$pkgname-$pkgver"
