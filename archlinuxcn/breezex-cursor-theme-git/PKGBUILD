@@ -1,0 +1,46 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Contributor: Frikilinux <frikilinux@gmail.com>
+
+_pkgname=breezex-cursor-theme
+pkgname=${_pkgname}-git
+pkgver=2.0.1
+pkgrel=1
+pkgdesc="Extended KDE cursor, Highly inspired on KDE Breeze"
+arch=('any')
+url="https://github.com/ful1e5/BreezeX_Cursor"
+license=('GPL-3.0-or-later')
+depends=()
+makedepends=(
+    'git'
+    'npm'
+    'python-clickgen'
+    'yarn'
+    'zip'
+)
+provides=("${_pkgname}=${pkgver}")
+conflicts=("${_pkgname}")
+source=("${_pkgname}::git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
+    version=$(git describe --tags --abbrev=0 | sed 's/^v//')
+    [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
+    printf "%s.%s" "${version}" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)"
+}
+
+build() {
+    cd "${srcdir}/${_pkgname}"
+    yarn install --frozen-lockfile
+    yarn render
+    yarn build
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}"
+    cd themes
+    install -dv "${pkgdir}/usr/share/icons/"
+    cp -rv BreezeX-{Black,Dark,Light} "${pkgdir}/usr/share/icons/"
+    find ${pkgdir} -type f -exec chmod 0644 {} \;
+    find ${pkgdir} -type d -exec chmod 0755 {} \;
+}
