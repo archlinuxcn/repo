@@ -1,7 +1,7 @@
 pkgname=julia-git-onetbb_jll-src
-pkgver=2021.12.0+0
-_commit=b8a9637b5bfac1709a64d9fbda78a4a835fd3c3a
-pkgrel=2
+pkgver=2022.0.0+0
+_commit=ac45c69c09825b89177a0c06b7879c1bbc399f59
+pkgrel=1
 pkgdesc="oneTBB_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/oneTBB_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git onetbb)
 source=("git+https://github.com/JuliaBinaryWrappers/oneTBB_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('cf561522c3997a1e3ae0a93635ce7014a0777d8a6e400b525ce7f11085e74a09'
+sha256sums=('eae4f44c37003ff7ef1fe34662802b667bde88ecfdeb68e12cc46de29222abbd'
             'fc39d996dd2014facb9e3f19056a5ae2df6ed066415d9b8fa99b39f226a33556')
 
 build() {
