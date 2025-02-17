@@ -1,12 +1,13 @@
 --- a/packages/flutter_tools/lib/src/doctor.dart
 +++ b/packages/flutter_tools/lib/src/doctor.dart
-@@ -621,14 +621,6 @@
+@@ -694,15 +694,6 @@
          '$flutterBinDir to your path.',
        );
      }
 -    final String resolvedFlutterPath = flutterBin.resolveSymbolicLinksSync();
 -    if (!_filePathContainsDirPath(flutterRoot, resolvedFlutterPath)) {
--      final String hint = 'Warning: `$binary` on your path resolves to '
+-      final String hint =
+-          'Warning: `$binary` on your path resolves to '
 -          '$resolvedFlutterPath, which is not inside your current Flutter '
 -          'SDK checkout at $flutterRoot. Consider adding $flutterBinDir to '
 -          'the front of your path.';

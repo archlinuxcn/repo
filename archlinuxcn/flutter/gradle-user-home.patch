@@ -19,14 +19,16 @@
  import 'dart:math';
 
  import 'package:crypto/crypto.dart';
-@@ -361,6 +362,10 @@
-       "Running Gradle task '$assembleTask'...",
-     );
-
-+
+@@ -276,6 +276,12 @@
+     int? maxRetries,
+     _OutputParser? outputParser,
+   }) async {
 +    final gradleUserHome = io.Platform.environment['GRADLE_USER_HOME'] ??
 +        io.Platform.environment['HOME']! + '/.gradle';
-+    command.add('--project-cache-dir=$gradleUserHome/flutter/.gradle');
-     if (_logger.isVerbose) {
-       command.add('--full-stacktrace');
-       command.add('--info');
++    options = [
++      '--project-cache-dir=$gradleUserHome/flutter/.gradle',
++      ...options,
++    ];
+     final bool usesAndroidX = isAppUsingAndroidX(project.android.hostAppGradleRoot);
+     if (usesAndroidX) {
+       _analytics.send(Event.flutterBuildInfo(label: 'app-using-android-x', buildType: 'gradle'));

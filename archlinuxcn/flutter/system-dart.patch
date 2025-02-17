@@ -1,19 +1,16 @@
 --- ./packages/flutter_tools/bin/tool_backend.dart.orig
 +++ ./packages/flutter_tools/bin/tool_backend.dart
-@@ -69,12 +69,9 @@
+@@ -73,9 +73,9 @@
      exit(1);
    }
    final String flutterExecutable = pathJoin(<String>[
 -    flutterRoot,
 +    '/usr',
      'bin',
--    if (Platform.isWindows)
--      'flutter.bat'
--    else
--      'flutter',
+-    if (Platform.isWindows) 'flutter.bat' else 'flutter',
 +    'flutter',
    ]);
-   final String bundlePlatform = targetPlatform.startsWith('windows') ? 'windows' : targetPlatform;
+   final String bundlePlatform = targetPlatform;
    final String target = '${buildMode}_bundle_${bundlePlatform}_assets';
 --- ./packages/flutter_tools/bin/tool_backend.sh.orig
 +++ ./packages/flutter_tools/bin/tool_backend.sh
@@ -48,7 +45,7 @@
  import 'package:file/memory.dart';
  import 'package:meta/meta.dart';
  import 'package:process/process.dart';
-@@ -1176,50 +1176,7 @@
+@@ -1465,58 +1465,7 @@
    }
 
    String _getDartSdkPath() {
@@ -58,16 +55,24 @@
 -    }
 -
 -    // If we couldn't find a built dart sdk, let's look for a prebuilt one.
--    final String prebuiltPath = _fileSystem.path.join(_getFlutterPrebuiltsPath(), _getPrebuiltTarget(), 'dart-sdk');
+-    final String prebuiltPath = _fileSystem.path.join(
+-      _getFlutterPrebuiltsPath(),
+-      _getPrebuiltTarget(),
+-      'dart-sdk',
+-    );
 -    if (_fileSystem.isDirectorySync(prebuiltPath)) {
 -      return prebuiltPath;
 -    }
 -
--    throw ToolExit('Unable to find a built dart sdk at: "$builtPath" or a prebuilt dart sdk at: "$prebuiltPath"');
+-    throwToolExit(
+-      'Unable to find a built dart sdk at: "$builtPath" or a prebuilt dart sdk at: "$prebuiltPath"',
+-    );
 -  }
 -
 -  String _getFlutterPrebuiltsPath() {
--    final String engineSrcPath = _fileSystem.path.dirname(_fileSystem.path.dirname(_hostEngineOutPath));
+-    final String engineSrcPath = _fileSystem.path.dirname(
+-      _fileSystem.path.dirname(_hostEngineOutPath),
+-    );
 -    return _fileSystem.path.join(engineSrcPath, 'flutter', 'prebuilts');
 -  }
 -
@@ -182,12 +187,12 @@
 
  import 'package:file/file.dart';
  import 'package:package_config/package_config.dart';
-@@ -26,7 +27,7 @@
-   }
+@@ -27,7 +27,7 @@
    // Either reading the file or parsing the version could fail on a corrupt Dart SDK.
    // let it crash so it shows up in crash logging.
--  final File versionFile = fileSystem.file(fileSystem.path.join(flutterRoot, 'bin', 'cache', 'dart-sdk', 'version'));
-+  final File versionFile = fileSystem.file(io.Platform.environment['DART_ROOT'] ?? '/opt/dart-sdk');
+   final File versionFile = fileSystem.file(
+-    fileSystem.path.join(flutterRoot, 'bin', 'cache', 'dart-sdk', 'version'),
++    (io.Platform.environment['DART_ROOT'] ?? '/opt/dart-sdk') + '/version',
+   );
    if (!versionFile.existsSync() && _inUnitTest()) {
      return LanguageVersion(2, 12);
-   }

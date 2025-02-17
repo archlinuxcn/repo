@@ -1,6 +1,6 @@
 --- a/packages/flutter_tools/lib/src/cache.dart
 +++ b/packages/flutter_tools/lib/src/cache.dart
-@@ -926,26 +926,6 @@
+@@ -1010,31 +1010,6 @@
    }
  
    Future<bool> checkForArtifacts(String? engineVersion) async {
@@ -9,7 +9,10 @@
 -
 -    bool exists = false;
 -    for (final String pkgName in getPackageDirs()) {
--      exists = await cache.doesRemoteExist('Checking package $pkgName is available...', Uri.parse('$url$pkgName.zip'));
+-      exists = await cache.doesRemoteExist(
+-        'Checking package $pkgName is available...',
+-        Uri.parse('$url$pkgName.zip'),
+-      );
 -      if (!exists) {
 -        return false;
 -      }
@@ -18,8 +21,10 @@
 -    for (final List<String> toolsDir in getBinaryDirs()) {
 -      final String cacheDir = toolsDir[0];
 -      final String urlPath = toolsDir[1];
--      exists = await cache.doesRemoteExist('Checking $cacheDir tools are available...',
--          Uri.parse(url + urlPath));
+-      exists = await cache.doesRemoteExist(
+-        'Checking $cacheDir tools are available...',
+-        Uri.parse(url + urlPath),
+-      );
 -      if (!exists) {
 -        return false;
 -      }

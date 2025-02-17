@@ -54,12 +54,36 @@
    }
  
    void ensureVersionFile();
-@@ -301,43 +293,7 @@
+@@ -563,10 +547,6 @@
+   required String flutterRoot,
+   required String frameworkVersion,
+ }) {
+-  final File legacyVersionFile = fs.file(fs.path.join(flutterRoot, 'version'));
+-  if (!legacyVersionFile.existsSync()) {
+-    legacyVersionFile.writeAsStringSync(frameworkVersion);
+-  }
+ }
+ 
+ /// Checks if the provided [version] is tracking a standard remote.
+ /// Runs [command] in the root of the Flutter installation and returns the
+@@ -880,7 +762,7 @@
+   if (revision == null) {
+     return '';
+   }
+-  return revision.length > 10 ? revision.substring(0, 10) : revision;
++  return revision.length > 12 ? revision.substring(0, 12) : revision;
+ }
+ 
+ /// Version of Flutter SDK parsed from Git.
+@@ -273,44 +273,7 @@
    /// Returns null if the cached version is out-of-date or missing, and we are
    /// unable to reach the server to get the latest version.
    Future<DateTime?> _getLatestAvailableFlutterDate() async {
 -    globals.cache.checkLockAcquired();
--    final VersionCheckStamp versionCheckStamp = await VersionCheckStamp.load(globals.cache, globals.logger);
+-    final VersionCheckStamp versionCheckStamp = await VersionCheckStamp.load(
+-      globals.cache,
+-      globals.logger,
+-    );
 -
 -    final DateTime now = _clock.now();
 -    if (versionCheckStamp.lastTimeVersionWasChecked != null) {
@@ -90,16 +114,14 @@
 -      globals.printTrace('Failed to check Flutter version in the remote repository: $error');
 -      // Still update the timestamp to avoid us hitting the server on every single
 -      // command if for some reason we cannot connect (eg. we may be offline).
--      await versionCheckStamp.store(
--        newTimeVersionWasChecked: now,
--      );
+-      await versionCheckStamp.store(newTimeVersionWasChecked: now);
 -      return null;
 -    }
 +    return null;
    }
  
    /// The date of the latest framework commit in the remote repository.
-@@ -421,32 +377,13 @@
+@@ -396,30 +359,13 @@
    bool lenient = false,
    required String? workingDirectory,
  }) {
@@ -113,16 +135,14 @@
 -  try {
 -    // Don't plumb 'lenient' through directly so that we can print an error
 -    // if something goes wrong.
--    return _runSync(
--      args,
--      lenient: false,
--      workingDirectory: workingDirectory,
--    );
+-    return _runSync(args, lenient: false, workingDirectory: workingDirectory);
 -  } on VersionCheckError catch (e) {
 -    if (lenient) {
 -      final DateTime dummyDate = DateTime.fromMillisecondsSinceEpoch(0);
--      globals.printError('Failed to find the latest git commit date: $e\n'
--        'Returning $dummyDate instead.');
+-      globals.printError(
+-        'Failed to find the latest git commit date: $e\n'
+-        'Returning $dummyDate instead.',
+-      );
 -      // Return something that DateTime.parse() can parse.
 -      return dummyDate.toString();
 -    } else {
@@ -139,68 +159,65 @@
  }
  
  class _FlutterVersionFromFile extends FlutterVersion {
-@@ -472,11 +472,6 @@
+@@ -505,9 +451,7 @@
+   final String devToolsVersion;
  
    @override
-   void ensureVersionFile() {
--    _ensureLegacyVersionFile(
--      fs: fs,
--      flutterRoot: flutterRoot,
--      frameworkVersion: frameworkVersion,
--    );
-   }
+-  void ensureVersionFile() {
+-    _ensureLegacyVersionFile(fs: fs, flutterRoot: flutterRoot, frameworkVersion: frameworkVersion);
+-  }
++  void ensureVersionFile() {}
  }
  
-@@ -544,17 +539,6 @@
+ class _FlutterVersionGit extends FlutterVersion {
+@@ -578,22 +522,7 @@
+   }
  
    @override
-   void ensureVersionFile() {
--    _ensureLegacyVersionFile(
--      fs: fs,
--      flutterRoot: flutterRoot,
--      frameworkVersion: frameworkVersion,
--    );
+-  void ensureVersionFile() {
+-    _ensureLegacyVersionFile(fs: fs, flutterRoot: flutterRoot, frameworkVersion: frameworkVersion);
 -
 -    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
 -    final File newVersionFile = FlutterVersion.getVersionFile(fs, flutterRoot);
 -    if (!newVersionFile.existsSync()) {
 -      newVersionFile.writeAsStringSync(encoder.convert(toJson()));
 -    }
-   }
- }
- 
-@@ -563,10 +547,6 @@
-   required String flutterRoot,
-   required String frameworkVersion,
- }) {
--  final File legacyVersionFile = fs.file(fs.path.join(flutterRoot, 'version'));
--  if (!legacyVersionFile.existsSync()) {
--    legacyVersionFile.writeAsStringSync(frameworkVersion);
 -  }
+-}
+-
+-void _ensureLegacyVersionFile({
+-  required FileSystem fs,
+-  required String flutterRoot,
+-  required String frameworkVersion,
+-}) {
++  void ensureVersionFile() {}
  }
  
  /// Checks if the provided [version] is tracking a standard remote.
-@@ -639,49 +566,7 @@
+@@ -620,52 +549,7 @@
    ///
    /// Returns [VersionCheckError] if the tracking remote is not standard.
-   VersionCheckError? run(){
+   VersionCheckError? run() {
 -    final String? flutterGit = platform.environment['FLUTTER_GIT_URL'];
 -    final String? repositoryUrl = version.repositoryUrl;
 -
 -    if (repositoryUrl == null) {
 -      return VersionCheckError(
 -        'The tool could not determine the remote upstream which is being '
--        'tracked by the SDK.'
+-        'tracked by the SDK.',
 -      );
 -    }
 -
 -    // Strip `.git` suffix before comparing the remotes
--    final List<String> sanitizedStandardRemotes = <String>[
--      // If `FLUTTER_GIT_URL` is set, use that as standard remote.
--      if (flutterGit != null) flutterGit
--      // Else use the predefined standard remotes.
--      else ..._standardRemotes,
--    ].map((String remote) => stripDotGit(remote)).toList();
+-    final List<String> sanitizedStandardRemotes =
+-        <String>[
+-          // If `FLUTTER_GIT_URL` is set, use that as standard remote.
+-          if (flutterGit != null)
+-            flutterGit
+-          // Else use the predefined standard remotes.
+-          else
+-            ..._standardRemotes,
+-        ].map((String remote) => stripDotGit(remote)).toList();
 -
 -    final String sanitizedRepositoryUrl = stripDotGit(repositoryUrl);
 -
@@ -215,7 +232,7 @@
 -          'Either remove "FLUTTER_GIT_URL" from the environment or set it to '
 -          '"$repositoryUrl". '
 -          'If this is intentional, it is recommended to use "git" directly to '
--          'manage the SDK.'
+-          'manage the SDK.',
 -        );
 -      }
 -      // If `FLUTTER_GIT_URL` is unset, inform to set the environment variable.
@@ -224,50 +241,46 @@
 -        'Set the environment variable "FLUTTER_GIT_URL" to '
 -        '"$repositoryUrl". '
 -        'If this is intentional, it is recommended to use "git" directly to '
--        'manage the SDK.'
+-        'manage the SDK.',
 -      );
 -    }
 +    // the worse shit any code says about us, the worse for that code.
      return null;
    }
  
-@@ -853,10 +738,7 @@
+@@ -832,7 +716,7 @@
  }
  
  String _runGit(String command, ProcessUtils processUtils, String? workingDirectory) {
--  return processUtils.runSync(
--    command.split(' '),
--    workingDirectory: workingDirectory,
--  ).stdout.trim();
+-  return processUtils.runSync(command.split(' '), workingDirectory: workingDirectory).stdout.trim();
 +  return '';
  }
  
  /// Runs [command] in the root of the Flutter installation and returns the
-@@ -880,7 +762,7 @@
-   if (revision == null) {
-     return '';
-   }
--  return revision.length > 10 ? revision.substring(0, 10) : revision;
-+  return revision.length > 12 ? revision.substring(0, 12) : revision;
- }
- 
- /// Version of Flutter SDK parsed from Git.
-@@ -941,42 +823,10 @@
+@@ -920,46 +804,10 @@
      bool fetchTags = false,
-     String gitRef = 'HEAD'
+     String gitRef = 'HEAD',
    }) {
 -    if (fetchTags) {
--      final String channel = _runGit('git symbolic-ref --short HEAD', processUtils, workingDirectory);
+-      final String channel = _runGit(
+-        'git symbolic-ref --short HEAD',
+-        processUtils,
+-        workingDirectory,
+-      );
 -      if (!kDevelopmentChannels.contains(channel) && kOfficialChannels.contains(channel)) {
 -        globals.printTrace('Skipping request to fetchTags - on well known channel $channel.');
 -      } else {
--        final String flutterGit = platform.environment['FLUTTER_GIT_URL'] ?? 'https://github.com/flutter/flutter.git';
+-        final String flutterGit =
+-            platform.environment['FLUTTER_GIT_URL'] ?? 'https://github.com/flutter/flutter.git';
 -        _runGit('git fetch $flutterGit --tags -f', processUtils, workingDirectory);
 -      }
 -    }
 -    // find all tags attached to the given [gitRef]
 -    final List<String> tags = _runGit(
--      'git tag --points-at $gitRef', processUtils, workingDirectory).trim().split('\n');
+-      'git tag --points-at $gitRef',
+-      processUtils,
+-      workingDirectory,
+-    ).trim().split('\n');
 -
 -    // Check first for a stable tag
 -    final RegExp stableTagPattern = RegExp(r'^\d+\.\d+\.\d+$');
@@ -287,12 +300,9 @@
      // If we're not currently on a tag, use git describe to find the most
      // recent tag and number of commits past.
      return parse(
--      _runGit(
--        'git describe --match *.*.* --long --tags $gitRef',
--        processUtils,
--        workingDirectory,
--      )
-+      globals.fs.file(globals.fs.path.join(Cache.flutterRoot!, 'version')).readAsStringSync()
+-      _runGit('git describe --match *.*.* --long --tags $gitRef', processUtils, workingDirectory),
++      globals.fs.file(globals.fs.path.join(Cache.flutterRoot!, 'version')).readAsStringSync(),
      );
    }
  
+
