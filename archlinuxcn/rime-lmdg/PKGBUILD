@@ -3,7 +3,7 @@
 pkgbase=rime-lmdg
 pkgname=("${pkgbase}"
          "${pkgbase}-config")
-pkgver=lts.1738948299
+pkgver=lts.1739759222
 pkgrel=1
 epoch=1
 pkgdesc='万象语言模型，基于32GB超大规模语料的RIME中文语言模型'
@@ -13,7 +13,7 @@ source=("lmdg.yaml"
         "wanxiang-zh-hans.gram::${url}/releases/download/LTS/wanxiang-lts-zh-hans.gram")
 license=('CC-BY-4.0')
 sha256sums=('93b605fd11281ae248eed0648629ee23312fc56edd0911aa855bdee7b0c294c4'
-            '8d5d265e6f7988aaff888c319db5c0baf303dd466f4dc35dfad26d9d7d9621d0')
+            '3523f73370bf63e98bb398cb98e4eb6611f8b9cb9f1f0d9b5cbb5a2c651a263b')
 
 package_rime-lmdg() {
   provides=("${pkgbase}=${pkgver}")
