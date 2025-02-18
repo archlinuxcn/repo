@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 pkgname=goofcord-bin
 _pkgname=GoofCord
-pkgver=1.8.3
+pkgver=1.8.4
 _electronversion=34
 pkgrel=1
 pkgdesc="Take control of your Discord experience with GoofCord – the highly configurable and privacy first discord client.(Prebuilt version.Use system-wide electron)"
@@ -17,18 +17,18 @@ provides=("${pkgname%-bin}=${pkgver}")
 depends=(
     "electron${_electronversion}"
 )
-source_aarch64=("${pkgname%-bin}-${pkgver}-aarch64.rpm::${url}/releases/download/v${pkgver}/${_pkgname}-${pkgver}-linux-aarch64.rpm")
-source_armv7h=("${pkgname%-bin}-${pkgver}-armv7h.rpm::${url}/releases/download/v${pkgver}/${_pkgname}-${pkgver}-linux-armv7l.rpm")
-source_x86_64=("${pkgname%-bin}-${pkgver}-x86_64.rpm::${url}/releases/download/v${pkgver}/${_pkgname}-${pkgver}-linux-x86_64.rpm")
 source=(
     "LICENSE-${pkgver}::https://raw.githubusercontent.com/Milkshiift/GoofCord/v${pkgver}/LICENSE"
     "${pkgname%-bin}.sh"
 )
+source_aarch64=("${pkgname%-bin}-${pkgver}-aarch64.rpm::${url}/releases/download/v${pkgver}/${_pkgname}-${pkgver}-linux-aarch64.rpm")
+source_armv7h=("${pkgname%-bin}-${pkgver}-armv7h.rpm::${url}/releases/download/v${pkgver}/${_pkgname}-${pkgver}-linux-armv7l.rpm")
+source_x86_64=("${pkgname%-bin}-${pkgver}-x86_64.rpm::${url}/releases/download/v${pkgver}/${_pkgname}-${pkgver}-linux-x86_64.rpm")
 sha256sums=('4e7f66aa93929feee2db20f14f871e7ddcc69236b0ecfb79a19ade9b859daf51'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
-sha256sums_aarch64=('e450ba26936b1fa8211e3c9107fee8ab860f75142b63fb358283ba45de2ea1a8')
-sha256sums_armv7h=('cd5cd10fd514aca9518dc8997c7f0d6d7ee88da8dae5991e360f8898de8babeb')
-sha256sums_x86_64=('2950d28f0d6c892b82a8b6d12b0286a8902d98be9b9a18bde195d9a4253fb952')
+sha256sums_aarch64=('5397f8ffa6ac5047b6bf635feba6bb1b38d22991960cee29d5fecf445e48a714')
+sha256sums_armv7h=('784540eb0f0f772dfffb7e6ef1dd5e5eb2113ea1b09e0b108c62575805f85318')
+sha256sums_x86_64=('fede7425d696746ab4f70a0aa3e989f52bcce37311d3687b0350956316b300ae')
 prepare() {
     sed -e "
         s/@electronversion@/${_electronversion}/g
