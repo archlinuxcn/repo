@@ -1,4 +1,8 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
+# Contributor: Thomas Roos <mail [at] thomasroos.nl>
+# Contributor: Liam Timms <timms5000@gmail.com>
+# Contributor: wedjat <wedjat@protonmail.com>
+# Contributor: Masoud <mpoloton@gmail.com>
 
 pkgname=python-nibabel
 _pkgname=nibabel
@@ -24,7 +28,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/nipy/nibabel/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('1c1958345572d26c6015f21af69b63715e1b833408c2beb61ccf0372eb0e6133d9e49d59a9af6b40d18028eb49a0d93d7aa9dabed41cd255604576b4390b10cd')
+sha512sums=('b06db6273947d1024380049b3353eabf086271ce7990dad937aac39057795cdf294bab5bc6b4fb2b23406278ff0287c8cfc10ea77d209c4292f34acbba08cd3e')
 
 build() {
   cd "${_pkgname}-${pkgver}"
