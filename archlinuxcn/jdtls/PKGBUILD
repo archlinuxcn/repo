@@ -2,12 +2,12 @@
 
 pkgname=jdtls
 pkgver=1.44.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Eclipse Java language server"
 arch=(any)
 url="https://github.com/eclipse/eclipse.jdt.ls"
 license=('EPL-2.0')
-depends=('java-runtime>=17')
+depends=('java-runtime>=21')
 optdepends=('python: for the official launcher script')
 makedepends=()
 source=("https://download.eclipse.org/jdtls/milestones/1.44.0/jdt-language-server-1.44.0-202501221502.tar.gz")
