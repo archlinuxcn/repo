@@ -8,7 +8,7 @@
 _pkgname="sunshine"
 pkgname="$_pkgname"
 pkgver=2025.122.141614
-pkgrel=2
+pkgrel=3
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
@@ -19,10 +19,10 @@ depends=(
   'libcap'
   'libdrm'
   'libevdev'
+  'libminiupnpc.so' # miniupnpc
   'libnotify'
   'libpulse'
   'libva'
-  'miniupnpc'
   'numactl'
   'openssl'
   'opus'
@@ -142,8 +142,9 @@ prepare() {
       echo
     done
   }
-  _prepare_sunshine
-  _prepare_moonlight_common_c
+
+  _run_if_exists _prepare_sunshine
+  _run_if_exists _prepare_moonlight_common_c
 }
 
 build() (
@@ -201,4 +202,10 @@ package() {
   )
 
   DESTDIR="$pkgdir" cmake --install build
+}
+
+_run_if_exists() {
+  if declare -F "$1" > /dev/null; then
+    eval "$1"
+  fi
 }
