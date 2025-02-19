@@ -1,7 +1,7 @@
 # Maintainer: Yufan You <ouuansteve at gmail>
 
 pkgname=yutto
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 pkgdesc='一个可爱且任性的 B 站视频下载器'
 arch=('any')
@@ -20,7 +20,7 @@ depends=(
 )
 makedepends=(python-build python-installer python-wheel python-hatchling)
 source=("https://pypi.io/packages/source/${pkgname:0:1}/$pkgname/$pkgname-$pkgver.tar.gz")
-sha256sums=('daf166209028a3ff34e2682fa64e4e4cd61e38047ca77cc597b3a5fe62503f8c')
+sha256sums=('c420ddf217aafe0a0f073bdf2a4cd5eccc7e982d52b23038c9ae50268373d579')
 
 build() {
     cd "$pkgname-$pkgver"
