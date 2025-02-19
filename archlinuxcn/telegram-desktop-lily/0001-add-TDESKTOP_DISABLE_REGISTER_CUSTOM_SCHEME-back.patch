@@ -43,9 +43,9 @@ index 28f495897..623558c6b 100644
  		Ui::Toast::Show("Forced custom scheme register.");
  	});
 +#endif // !TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
- 
- 	auto audioFilters = u"Audio files (*.wav *.mp3);;"_q + FileDialog::AllFilesFilter();
- 	auto audioKeys = {
+	codes.emplace(u"numberbuttons"_q, [](SessionController *window) {$                                                                     
+		using namespace base::options;$                                                                                                
+		auto &option = lookup<bool>(kOptionFastButtonsMode);$                                                                          
 diff --git a/Telegram/cmake/telegram_options.cmake b/Telegram/cmake/telegram_options.cmake
 index 18fa73671..0b5cce634 100644
 --- a/Telegram/cmake/telegram_options.cmake
