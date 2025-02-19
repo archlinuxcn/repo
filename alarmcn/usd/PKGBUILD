@@ -7,7 +7,7 @@
 pkgname='usd'
 pkgbase=usd
 pkgver=25.02
-pkgrel=2
+pkgrel=3
 arch=(aarch64 x86_64)
 url='https://openusd.org'
 pkgdesc='3D VFX pipeline interchange file format'
@@ -15,6 +15,7 @@ license=(Apache-2.0)
 depends=(alembic # libAlembic.so
          draco # libdraco.so
          embree # libembree4.so
+         fmt
          glew
          imath # libImath-3_1.so
          jemalloc libjemalloc.so
@@ -35,7 +36,7 @@ depends=(alembic # libAlembic.so
          python-jinja
          python-numpy
          python-opengl)
-makedepends=(cmake help2man boost git)
+makedepends=(cmake help2man boost git fmt)
 source=("git+https://github.com/PixarAnimationStudios/OpenUSD.git#tag=v$pkgver"
         https://openusd.org/images/USDLogoUnsized.svg
         usd-3392.patch::https://patch-diff.githubusercontent.com/raw/PixarAnimationStudios/OpenUSD/pull/3392.patch
