@@ -1,0 +1,20 @@
+post_install() {
+  systemctl stop key-mapper || true
+  systemctl disable key-mapper || true
+
+  # systemctl enable input-remapper
+  # systemctl start input-remapper
+}
+
+post_upgrade() {
+  if [ -d "/run/systemd/system/" ] && systemctl is-active --quiet key-mapper
+  then
+    systemctl stop key-mapper || true
+    systemctl disable key-mapper || true
+    systemctl restart input-remapper
+  fi
+}
+
+post_remove() {
+  systemctl disable input-remapper || true
+}
