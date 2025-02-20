@@ -13,7 +13,6 @@ update_on:
     from_pattern: ^(\d+\.\d+\.\d+)\..*
     to_pattern: \1
     alpm: qt6-base
-    repo: extra
     strip_release: true
   - alias: protobuf
   - source: alpm
@@ -24,3 +23,6 @@ update_on:
     provided: libvpx.so
   - alias: libssl
   - alias: libcrypto
+  - source: alpm
+    alpm: openh264
+    provided: libopenh264.so
