@@ -1,0 +1,11 @@
+maintainers:
+  - github: Xeonacid
+    email: xeonacid@archlinuxcn.org
+
+pre_build_script: aur_pre_build(maintainers=['alecmev', 'rnestler'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: asdf-vm
