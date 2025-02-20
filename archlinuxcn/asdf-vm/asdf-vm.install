@@ -1,0 +1,17 @@
+post_install() {
+  cat <<EOF
+
+Follow the official instructions [0] to make asdf-vm work, see the sections
+titled "YOUR_SHELL & Pacman".
+
+[0] https://asdf-vm.com/guide/getting-started.html#_2-configure-asdf
+
+EOF
+}
+
+post_upgrade() {
+  cat <<EOF
+You'll need to update your shell configuration. See https://asdf-vm.com/guide/upgrading-to-v0-16#_3-add-asdf-data-dir-shims-to-the-front-of-your-path.
+You may need to reshim the binstubs after upgrading by running 'asdf reshim'.
+EOF
+}
