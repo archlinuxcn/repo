@@ -1,6 +1,6 @@
 pkgname=julia-git-bonito-src
-pkgver=4.0.1
-_commit=c36f481a725828a5ce91918cba84d01fa3671714
+pkgver=4.0.3
+_commit=2639ac58f576066e321a71c0d22ab3d0640f2bcf
 pkgrel=1
 pkgdesc="Bonito.jl"
 url="https://github.com/SimonDanisch/Bonito.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SimonDanisch/Bonito.jl.git#commit=$_commit")
-sha256sums=('c275b4f2e9ce40c37b1b0510501766b5f856ca7a905e2d27d1354743822f15c8')
+sha256sums=('bfd7c0fb6ac02ff92bed9e5657a65b18ff9e0af2d4bc811a9cec19dfa7fe1ebd')
 
 package() {
   cd Bonito.jl
