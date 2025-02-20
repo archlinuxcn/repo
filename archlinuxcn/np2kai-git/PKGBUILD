@@ -1,8 +1,8 @@
 # Maintainer: Gustavo Alvarez Lopez <sl1pkn07@gmail.com>
 
 pkgname=np2kai-git
-pkgver=1070.701092a
-pkgrel=2
+pkgver=1076.da21965
+pkgrel=1
 pkgdesc="Neko Project II Kai, a PC-9801 emulator. (GIT version)"
 arch=('x86_64')
 url='http://domisan.sakura.ne.jp/article/np2kai/np2kai.html'
@@ -10,10 +10,12 @@ license=('MIT')
 depends=('gtk2'
          'sdl2_mixer'
          'sdl2_ttf'
+         'gcc13-libs'
          )
 makedepends=('git'
              'cmake'
              'nasm'
+             'gcc13'
              )
 conflicts=('np2kai')
 provides=('np2kai')
@@ -39,7 +41,10 @@ prepare() {
 
 build() {
   cd NP2kai
-  export CFLAGS+=" -Wno-incompatible-function-pointer-types -Wno-int-conversion -Wno-incompatible-pointer-types -Wno-implicit-int"
+  export GIT_EXECUTABLE="/usr/bin/git"
+  export NP2KAI_VERSION=${pkgver}
+  export CC=gcc-13
+  export CXX=g++-13
   cmake -S . -B build \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
@@ -56,7 +61,8 @@ build() {
     -DUSE_ASYNCCPU=ON \
     -DUSE_VST3SDK=OFF
 
-  cmake --build build
+  cd build
+  make
 }
 
 package() {
