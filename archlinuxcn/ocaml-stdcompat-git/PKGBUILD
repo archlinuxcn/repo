@@ -1,7 +1,7 @@
 # Maintainer: Manuel Wiesinger <m {you know what belongs here} mmap {and here} at>
 
 _ocamlname=ocaml-stdcompat
-pkgname=ocaml-$_ocamlname-git
+pkgname=$_ocamlname-git
 pkgver=20.git20240529
 pkgrel=1
 pkgdesc="Compatibility module for OCaml standard library"
@@ -24,13 +24,6 @@ prepare() {
     patch -p1 < ../ocaml53.patch
 }
 
-#pkgver() {
-#    cd "${srcdir}/${_ocamlname}"
-#    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//;s/_/./g'
-#}
-
-OCAMLFIND_DESTDIR="${pkgdir}$(ocamlfind printconf destdir)"
-
 check() {
     cd "${srcdir}/${_ocamlname}"
     make test
@@ -50,6 +43,7 @@ build() {
 package() {
     cd "${srcdir}/${_ocamlname}"
 
+    local OCAMLFIND_DESTDIR="${pkgdir}$(ocamlfind printconf destdir)"
     env DESTDIR="${pkgdir}" \
     OCAMLFIND_DESTDIR="$OCAMLFIND_DESTDIR" \
     make install
