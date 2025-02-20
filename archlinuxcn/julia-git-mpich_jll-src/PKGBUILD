@@ -1,6 +1,6 @@
 pkgname=julia-git-mpich_jll-src
-pkgver=4.2.3+0
-_commit=35bf372c9f188358c3c6f4b924f3ac5f9db88395
+pkgver=4.3.0+0
+_commit=a5e38a64d8aa61cc89b1f5f5d96c25eae68fa25c
 pkgrel=1
 pkgdesc="MPICH_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/MPICH_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git mpich)
 source=("git+https://github.com/JuliaBinaryWrappers/MPICH_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('8741401687884cf5b8fad09e47fa6465acabf2b8745b94da9e1d4321a8e2c172'
+sha256sums=('1fb5595c796bdf4a2c90c3d336178cc8679b3eff06d2fcc8e1e824213574acc6'
             '8599c2836892967f70e7b4f07b8da4cb294808c11e83e1ef41573ad68c51eebf')
 
 build() {
