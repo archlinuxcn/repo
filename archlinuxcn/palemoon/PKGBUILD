@@ -7,9 +7,9 @@
 pkgname=palemoon
 _repo=Pale-Moon
 epoch=1
-pkgver=33.6.0
+pkgver=33.6.0.1
 # Commit ID can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/tags
-_commit=d6d06ae9cb
+_commit=7cea88bf2a
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
@@ -23,10 +23,10 @@ source=(git+"https://repo.palemoon.org/MoonchildProductions/${_repo}?signed#comm
         git+"https://repo.palemoon.org/MoonchildProductions/UXP"
         mozconfig.in)
 validpgpkeys=('3DAD8CD107197488D2A2A0BD40481E7B8FCF9CEC')
-sha1sums=('2889a4e14c9a73e81ec9846373dbe6f96c4da61c'
+sha1sums=('ee2ec6d5ee41b92247c1783ea2e182a4af118892'
           'SKIP'
           '999bbd13d2149a392d620901caf61ffeaf3f86b9')
-sha256sums=('adb7fb056adc5734cf8f73839bc9d7cd0897192d518bab723e785dfb316beaf3'
+sha256sums=('17b231a1e3dcbd43dd44e9bae01344a0e6ed99383317e8f9feb8187cb3f287ba'
             'SKIP'
             '6fa73d13a3dc5dd5bb984bf2a37e2074ca256df7988f72289fb649a704405bc5')
 
