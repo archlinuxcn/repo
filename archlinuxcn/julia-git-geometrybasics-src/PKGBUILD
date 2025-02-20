@@ -1,6 +1,6 @@
 pkgname=julia-git-geometrybasics-src
-pkgver=0.5.2
-_commit=a84b1680ae3a8236c0b192accdf4b632983f8f77
+pkgver=0.5.5
+_commit=e60d3151b5599a5d919739b92ab0ed441e8bcf7c
 pkgrel=1
 pkgdesc="GeometryBasics.jl"
 url="https://github.com/JuliaGeometry/GeometryBasics.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeometry/GeometryBasics.jl.git#commit=$_commit")
-sha256sums=('55944ea13856335aa8b06fdf1642ca4d79a8771f5bfc0a02ab08215cbdbd97c1')
+sha256sums=('58d536c414c6119fbd38dcd8aff8cddcf1ae6ee0687747660abfffac955b2da8')
 
 package() {
   cd GeometryBasics.jl
