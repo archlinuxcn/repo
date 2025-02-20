@@ -8,7 +8,8 @@ pkgrel=1
 pkgdesc="Configuration profiles manager and scheduler for restic backup"
 arch=("x86_64" "aarch64")
 url="https://github.com/creativeprojects/resticprofile"
-license=("GPL3")
+# https://github.com/creativeprojects/resticprofile/blob/v0.29.1/.goreleaser.yml#L205
+license=("GPL-3.0-only")
 depends=("glibc" "restic")
 makedepends=("go" "git")
 options=(!lto)
