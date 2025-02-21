@@ -8,7 +8,7 @@
 _pkgname="sunshine"
 pkgname="$_pkgname"
 pkgver=2025.122.141614
-pkgrel=3
+pkgrel=4
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
@@ -19,6 +19,7 @@ depends=(
   'libcap'
   'libdrm'
   'libevdev'
+  'libicuuc.so' # icu
   'libminiupnpc.so' # miniupnpc
   'libnotify'
   'libpulse'
