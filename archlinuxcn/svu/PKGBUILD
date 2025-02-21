@@ -2,7 +2,7 @@
 # Contributor: ml <>
 
 pkgname=svu
-pkgver=3.0.0
+pkgver=3.1.0
 pkgrel=1
 pkgdesc='Semantic Version Util'
 arch=(i686 x86_64 armv7h armv6h aarch64 riscv64)
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('git')
 makedepends=('go')
 source=("$url/archive/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('ff67b33f4e63fbad5be9183c6e5018e9dee7758f5a952ceee6724036d3776499')
+sha256sums=('21ba12f979623f8e72cf0139337d49733ef084298b39a81287d02680f54d50a9')
 _go_flags=(-ldflags "-linkmode=external -X main.version=v$pkgver")
 
 build() {
