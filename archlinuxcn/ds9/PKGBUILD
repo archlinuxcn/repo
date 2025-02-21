@@ -9,7 +9,7 @@ arch=('x86_64')
 license=('GPL3')
 depends=(libx11 zlib libxslt libxml2 libxft tcl tk)
 options=(!strip !lto)
-makedepends=(git gcc make automake autoconf zip)
+makedepends=(git gcc make automake autoconf zip xml2-config-compat)
 conflicts=('ds9' 'ds9-bin')
 source=("$pkgname::git+https://github.com/SAOImageDS9/SAOImageDS9.git#tag=v$pkgver"
         "ds9.desktop"
@@ -17,16 +17,6 @@ source=("$pkgname::git+https://github.com/SAOImageDS9/SAOImageDS9.git#tag=v$pkgv
 sha256sums=('SKIP'
          'cf41109f31b9be057ab04a96613a59a87fb6cb3ed405fa93545f6bfd8fd98975'
          )
-
-prepare() {
-    cd ${srcdir}/${pkgname}
-    mkdir compat
-    cat << EOF >> compat/xml2-config
-#!/bin/bash
-exec pkg-config libxml-2.0 $@
-EOF
-    chmod a+x compat/xml2-config
-}
 
 build() {
     cd ${srcdir}/${pkgname}
