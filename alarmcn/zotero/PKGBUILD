@@ -11,7 +11,7 @@ depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch')
 source=("zotero.desktop"
         "https://ftp.mozilla.org/pub/firefox/nightly/2024/06/2024-06-09-20-51-51-mozilla-central/firefox-128.0a1.en-US.linux-aarch64.tar.bz2"
-        "zotero-client::git+https://github.com/zotero/zotero.git#commit=9f83790"
+        "zotero-client::git+https://github.com/zotero/zotero.git#tag=${pkgver}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
         "zotero-styles::git+https://github.com/zotero/bundled-styles.git"
         "zotero-pdf-worker::git+https://github.com/zotero/pdf-worker.git"
@@ -47,11 +47,6 @@ sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
 
 prepare() {
   cd "$srcdir/zotero-client"
-
-  if [[ $pkgver != 7.0.11 ]]; then
-    echo "Package update requires manual intervention" >&2
-    return 1
-  fi
 
   # Lie about the version for now since we need fx128 to use the nightly build
   echo "$pkgver.SOURCE" > version
