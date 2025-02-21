@@ -1,0 +1,27 @@
+diff -ura mylibrary-3.2.orig/CMakeLists.txt mylibrary-3.2.new/CMakeLists.txt
+--- mylibrary-3.2.orig/CMakeLists.txt	2025-02-19 14:44:12.000000000 +0400
++++ mylibrary-3.2.new/CMakeLists.txt	2025-02-21 14:03:38.146537384 +0400
+@@ -15,6 +15,7 @@
+ pkg_check_modules(GTKMM REQUIRED IMPORTED_TARGET gtkmm-4.0)
+ pkg_check_modules(POPPLER REQUIRED IMPORTED_TARGET poppler-cpp)
+ pkg_check_modules(ICU REQUIRED IMPORTED_TARGET icu-i18n)
++pkg_check_modules(ICUUC REQUIRED IMPORTED_TARGET icu-uc)
+ pkg_check_modules(LIBARCHIVE REQUIRED IMPORTED_TARGET libarchive)
+ pkg_check_modules(Gcrypt REQUIRED IMPORTED_TARGET libgcrypt)
+ pkg_check_modules(GPG-ERROR REQUIRED IMPORTED_TARGET gpg-error)
+@@ -47,6 +48,7 @@
+                                      PRIVATE PkgConfig::GTKMM
+                                      PRIVATE PkgConfig::POPPLER
+                                      PRIVATE PkgConfig::ICU
++                                     PRIVATE PkgConfig::ICUUC
+                                      PRIVATE PkgConfig::LIBARCHIVE
+                                      PRIVATE PkgConfig::Gcrypt
+                                      PRIVATE PkgConfig::GPG-ERROR)
+@@ -54,6 +56,7 @@
+ target_link_libraries(mylibrary PRIVATE PkgConfig::GTKMM
+                                 PRIVATE PkgConfig::POPPLER
+                                 PRIVATE PkgConfig::ICU
++                                PRIVATE PkgConfig::ICUUC
+                                 PRIVATE PkgConfig::LIBARCHIVE
+                                 PRIVATE ${DJVU}
+                                 PRIVATE PkgConfig::Gcrypt
