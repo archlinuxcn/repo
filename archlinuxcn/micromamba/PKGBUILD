@@ -6,7 +6,7 @@ pkgdesc="C++ tiny version of mamba, the fast conda package installer"
 arch=('aarch64' 'armv7h' 'i686' 'x86_64')
 url="https://github.com/mamba-org/mamba"
 license=('MIT')
-depends=('libarchive.so' 'libcurl.so' 'libsolv' 'libfmt.so' 'libsimdjson.so'
+depends=('libarchive.so' 'libcurl.so' 'libsolv' 'libfmt.so' 'simdjson'
          'libspdlog.so' 'libyaml-cpp.so' 'libreproc.so' 'libreproc++.so')
 makedepends=('gtest' 'termcolor' 'cmake' 'cli11' 'nlohmann-json'
              'ghc-filesystem' 'tl-expected' 'python')

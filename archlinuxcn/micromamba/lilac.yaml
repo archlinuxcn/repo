@@ -43,8 +43,9 @@ update_on:
   - source: alpm
     alpm: fmt
     provided: libfmt.so
-  - alias: alpm-lilac
-    alpm: simdjson
-    provided: libsimdjson.so
+  - source: alpmfiles
+    pkgname: simdjson
+    strip_dir: true
+    filename: 'libsimdjson.so.\d+'
   - source: manual
     manual: 1
