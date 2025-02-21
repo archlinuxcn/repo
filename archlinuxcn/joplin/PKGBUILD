@@ -1,7 +1,7 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.1.22
+pkgver=3.2.12
 groups=('joplin')
 pkgrel=1
 _electronVersion=33
@@ -19,7 +19,7 @@ source=(
 sha256sums=(
     'SKIP'
     'SKIP'
-    '8f9275a6fd28d80300daaec90db427a3a82d10df61f78163567e158ef3933ce5'
+    '4b292df1b1e5042f671c58ccb3241296064c8e96a1c32d647bc38f7c54311904'
 )
 
 _setup_env() {
@@ -48,6 +48,7 @@ build() {
     rm -r packages/{app-mobile,app-clipper,server,doc-builder}
     # Fix: Build error due to removal of app-mobile
     sed -i '/app-mobile\/commands/d' packages/tools/gulp/tasks/buildScriptIndexes.js
+    sed -i '/app-mobile\/components/d' packages/tools/gulp/tasks/buildScriptIndexes.js
 
     corepack install
     npx yarn install
