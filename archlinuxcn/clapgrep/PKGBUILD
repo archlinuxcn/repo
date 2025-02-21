@@ -7,22 +7,20 @@ pkgdesc="One app to search through all your files"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/luleyleo/${pkgname}"
 license=('GPL-3.0-or-later')
-depends=('gtk4' 'libadwaita')
-makedepends=('just' 'cargo' 'blueprint-compiler')
+depends=('gtk4' 'libadwaita' 'gtksourceview5')
+makedepends=('meson' 'cargo' 'blueprint-compiler')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('1a0ca6e3c939956fa634c95b442d690137c1ad1e1b76fdcfdbf45f4b6a3a2603')
 
 build() {
-	cd "${pkgname}-${pkgver}/"
-	just release=true build
+	arch-meson "${pkgname}-${pkgver}/" build
+	meson compile -C build
 }
 
 check() {
-	cd "${pkgname}-${pkgver}/"
-	just release=true check
+	meson test -C build --print-errorlogs
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/"
-	just release=true rootdir="${pkgdir}" install
+	meson install -C build --destdir "${pkgdir}"
 }
