@@ -9,9 +9,9 @@
 # anki -> git rev-parse --short=8 $pkgver
 # ftl -> git submodule
 declare -gA _tags=(
- [ftl_core]="e1545f7f0ddeb617eeb1ca86e82862e552843578"
- [ftl_desktop]="e0f9724f75f6248f4e74558b25c3182d4f348bce"
- [anki]="8e5efc59"
+ [ftl_core]="0fe0162f4a18e8ef2fbac1d9a33af8e38cf7260e"
+ [ftl_desktop]="17216b03db7249600542e388bd4ea124478400e5"
+ [anki]="0d6788d5"
 )
 declare -gA _caches=(
     [yarn]="yarn-cache"
@@ -19,8 +19,8 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=24.11
-pkgrel=4
+pkgver=25.02
+pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
@@ -76,9 +76,10 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
         "strip-type-checking-deps.patch"
         "strip-python-pip-system-certs.patch"
 )
-sha256sums=(4c9b5d272240b76fa052760071c89d0eca5202dfd678a9464505ab99b121c868
-            65ea76e3e876dcf1feb9882f36ff0a1d86b9a1369fef5915eb17a5f26fd7c6fe
-            a0893a459a4c5fc3a8235d9b19d5f6ce868070aa12b604e2cc523e3db4224c09
+
+sha256sums=(dc6dfc859c871d360e17aa955478a9547ef90ce77192f9b48f6408936f361191
+            da57df3665ee094aa7d3566cd45a126f95b6cffef662a4c6f1959ea9e5b3f135
+            041684b0e23d041d4f7a0c21785371e3344c6b67824b1683318e3e70f08523bc
             cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff
             9858fefa254812980d252b29fc6f32bd19bb83ee7e5a96d72c707626ed5193a7
             198bc2ec14439e3ba41a03c4823f07df4b0c559c1dcbdaf678416ed12a720c2e
@@ -88,6 +89,7 @@ sha256sums=(4c9b5d272240b76fa052760071c89d0eca5202dfd678a9464505ab99b121c868
 prepare() {
     cd "$pkgname-$pkgver"
 
+    # program patches
     patch -p1 < "$srcdir/no-update.patch"
     patch -p1 < "$srcdir/strip-formatter-deps.patch"
     patch -p1 < "$srcdir/strip-type-checking-deps.patch"
@@ -110,6 +112,12 @@ prepare() {
     export CARGO_HOME="$srcdir/${_caches[cargo]}"       # do not litter in ~
     cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 
+
+    # Remove any corepack references to build with normal system yarn
+    rm -f yarn.lock
+    sed -i 's/"type": "module",/"type": "module"/' package.json
+    sed -i '/packageManager/d' package.json
+    sed -i 's/"corepack enable yarn"/"true"/' ./build/ninja_gen/src/node.rs
 
     # fetch node packages already in prepare()
     export YARN_CACHE_FOLDER="$srcdir/${_caches[yarn]}" # do not litter in ~
@@ -138,7 +146,7 @@ build() {
     export RELEASE=2	        # anki-internal variable for optimization
     				# set to "1" for faster but less optimized build
     export OFFLINE_BUILD=1 # do not download anything, disables git checks
-    # if you want to use your linker of choice, comment out the following lines and disbale the mold line
+    # if you want to use your linker of choice, comment out the following lines and disable the mold line
     # This appears to create issues for memory-constrained (<= 8GB) systems
     # use fat LTO objects, allows for LTO, needed for rust crate "ring"
     # See https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20 and https://github.com/briansmith/ring/issues/1444
