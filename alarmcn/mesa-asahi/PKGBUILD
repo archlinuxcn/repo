@@ -20,10 +20,10 @@ pkgname=(
   vulkan-freedreno-asahi
   vulkan-asahi
 )
-_asahiver=20241211
+_asahiver=20250221
 _commit=asahi-$_asahiver
-pkgver=25.0.0_pre20241211
-pkgrel=2
+pkgver=25.1.0_pre20250221
+pkgrel=1
 arch=(aarch64 x86_64)
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
@@ -121,7 +121,7 @@ for _crate in "${!_crates[@]}"; do
   )
 done
 
-sha256sums=('b92a8a2bf034fd29aa1f619eda241e874be1a4cbd3db0bafaba534eef6674145'
+sha256sums=('3d8c4ca48b8cc420059968badc45141d68af762f57cac5bdb56a6af6d7ed9369'
             'ed646292ffc8188ef8ea4d1e0e0150fb15a5c2e12ad9b8fc191ae7a8a7f3c4b9'
             'a941429fea7e08bedec25e4f6785b6ffaacc6b755da98df5ef3e7dcf4a124c4f'
             '168fb715dda47215e360912c096649d23d58bf392ac62f73919e831745e40f26'
@@ -137,7 +137,7 @@ sha256sums=('b92a8a2bf034fd29aa1f619eda241e874be1a4cbd3db0bafaba534eef6674145'
             '3c93a82e8d145725dcbaf44e5ea887c8a869efdcc28706df2d08c69e17077183'
             '692fcb63b64b1758029e0a96ee63e049ce8c5948587f2f7208df04625e5f6b56'
             '901fa70d88b9d6c98022e23b4136f9f3e54e4662c3bc1bd1d84a42a9a0f0c1e9')
-b2sums=('30f360f7bce2da70eb2c43a3580bdc850547f7704ef11e7df97dd2db8f76122d98de9aed66d70085d9b61364c25d73bae4a07f6e0d50b252c9aaf9da5dc11f76'
+b2sums=('b5462c8f3a2a269bfaa25bc3d5c639ae0a612407e04a5c90a34b39a1ef88d4a79fcc9b61cfc264b0b328e96ae17c5b88a32e1dd0e6b824054854cc172a4689d7'
         'a6d47c903be6094423d89b8ec3ca899d0a84df6dbd6e76632bb6c9b9f40ad9c216f8fa400310753d392f85072756b43ac3892e0a2c4d55f87ab6463002554823'
         '9c34f1ab14ad5ae124882513e0f14b1d731d06a43203bdc37fa3b202dd3ce93dbe8ebb554d01bab475689fe6ffd3ec0cbc0d5365c9b984cb83fb34ea3e9e732e'
         'fac5cf6339dc3c0a40b100035a5c874cc7b2efeafeb31c51488d25156e392dc9db86a497e76eead351d2126f69d060422faa9c55d73407a0de9f5be18d234123'
