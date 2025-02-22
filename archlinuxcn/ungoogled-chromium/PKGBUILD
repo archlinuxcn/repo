@@ -10,7 +10,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=133.0.6943.126
-pkgrel=1
+pkgrel=2
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
