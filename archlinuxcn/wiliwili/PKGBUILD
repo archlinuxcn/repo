@@ -4,7 +4,7 @@
 # This PKGBUILD is base on the AUR repo wiliwili-git, by yuioto <yuiotochan@outlook.com>
 
 pkgname=wiliwili
-pkgver=1.5.0
+pkgver=1.5.1
 pkgrel=1
 pkgdesc='专为手柄控制设计的第三方跨平台B站客户端'
 arch=('x86_64' 'aarch64')
@@ -13,7 +13,7 @@ license=('GPL-3.0-or-later')
 depends=('curl' 'dbus' 'gcc-libs' 'glibc' 'hicolor-icon-theme' 'libwebp' 'mpv' 'opencc' 'openssl' 'pystring' 'tinyxml2' 'zlib')
 makedepends=('cmake' 'git' 'libxi' 'libxinerama' 'ninja' 'python' 'wayland-protocols')
 source=("${pkgname}"::"git+${url}.git#tag=v${pkgver}")
-b2sums=('0f667955b33cb082d49d2844eb3949ff1c57f5fb8e7cc52d0ff84e59052e95bc8514678200970a1c3d3ac47bc6acec6cb4e518dc97681d342aff855da16790ab')
+b2sums=('3cad9d65f4db60e5220f315c97d5d3e81f537b7a4033aef5a2e3664cff455e9745dfc842b50a108cf738a5ec0b2538c275d36b281b014a4045d455aecf0be25c')
 
 prepare() {
   git -C "${srcdir}/${pkgname}" submodule update --init --recursive
