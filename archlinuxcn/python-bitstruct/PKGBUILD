@@ -2,8 +2,8 @@
 
 _name=bitstruct
 pkgname=python-${_name}
-pkgver=8.19.0
-pkgrel=3
+pkgver=8.20.0
+pkgrel=1
 pkgdesc="Python bit pack/unpack package."
 arch=(x86_64)
 url="https://github.com/eerimoq/${_name}"
@@ -12,7 +12,7 @@ depends=(glibc python)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
-sha512sums=('9a3f7068664d70b86db1da4df4d3e650b774e89d69d71d9e6d73cc26ff98d5e606618301fa817ca5021d77a16b75c7b4c4f5d386a6b346104786de50ce9b02aa')
+sha512sums=('6540b417213ade354e139318042c8357ed0cbc4ed1f68ae4b493dd1b716b4c8efcc232901bb731b63ef9eaedc4e7315ecb9915efcbfc466a04e559486815e5a6')
 
 build() {
   cd $_name-$pkgver
