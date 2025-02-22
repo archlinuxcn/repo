@@ -3,14 +3,14 @@
 
 pkgname=restbase-git
 _pkgname=restbase
-pkgver=v1.1.4.r188.g81218db0
+pkgver=v1.1.4.r200.gf75ee582
 pkgrel=1
 pkgdesc="A a caching / storing API proxy backing the Wikimedia REST API"
 arch=('any')
 url="https://www.mediawiki.org/wiki/RESTBase"
 license=('Apache')
 depends=('nodejs')
-makedepends=('git' 'npm')
+makedepends=('git' 'npm' 'node-gyp' 'python' 'sqlite3')
 optdepends=(
     'mediawiki: MediaWiki engine'
 )
@@ -36,7 +36,7 @@ pkgver() {
 }
 build() { 
     cd $srcdir/restbase
-    npm install
+    npm install --omit=dev --no-audit --no-fund --loglevel=error 
     find "$pkgdir" -name package.json -print0 | xargs -r -0 sed -i '/_where/d'
 }
 package() {
