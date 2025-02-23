@@ -1,0 +1,10 @@
+maintainers:
+  - github: poscat0x04
+
+pre_build_script: |
+  aur_pre_build(maintainers=['zulip-desktop-electron'])
+post_build_script: |
+  aur_post_build()
+
+update_on:
+  - source: aur
