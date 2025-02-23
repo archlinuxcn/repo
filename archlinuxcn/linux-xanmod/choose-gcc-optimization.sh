@@ -25,38 +25,37 @@ cat << EOF
    12) AMD Family 17h (Zen 2)
    13) AMD Family 19h (Zen 3)
    14) AMD Family 19h (Zen 4)
-   15) Intel P4 / older Netburst based Xeon
-   16) Intel Core 2 and newer Core 2 Xeons (Xeon 51xx and 53xx)
-   17) Intel Atom
-   18) Intel 1st Gen Core i3/i5/i7-family (Nehalem)
-   19) Intel 1.5 Gen Core i3/i5/i7-family (Westmere)
-   20) Intel Silvermont
-   21) Intel Goldmont (Apollo Lake and Denverton)
-   22) Intel Goldmont Plus (Gemini Lake)
-   23) Intel 2nd Gen Core i3/i5/i7-family (Sandybridge)
-   24) Intel 3rd Gen Core i3/i5/i7-family (Ivybridge)
-   25) Intel 4th Gen Core i3/i5/i7-family (Haswell)
-   26) Intel 5th Gen Core i3/i5/i7-family (Broadwell)
-   27) Intel 6th Gen Core i3/i5/i7-family (Skylake)
-   28) Intel 6th Gen Core i7/i9-family (Skylake X)
-   29) Intel 8th Gen Core i3/i5/i7-family (Cannon Lake)
-   30) Intel 8th Gen Core i7/i9-family (Ice Lake)
-   31) Xeon processors in the Cascade Lake family
-   32) Intel Xeon (Cooper Lake)
-   33) Intel 3rd Gen 10nm++ i3/i5/i7/i9-family (Tiger Lake)
-   34) Intel Sapphire Rapids
-   35) Intel Rocket Lake
-   36) Intel Alder Lake
-
-   91) Generic-x86-64-v1 (LEGACY < 2003. Not supported by XanMod project)
-   92) Generic-x86-64-v2 (Nehalem and newer)
-   93) Generic-x86-64-v3 (Haswell and newer)
-   94) Generic-x86-64-v4 (AVX512 CPUs)
+   15) AMD Family 19h (Zen 5)
+   20) Intel P4 / older Netburst based Xeon
+   21) Intel Core 2 and newer Core 2 Xeons (Xeon 51xx and 53xx)
+   22) Intel Atom
+   23) Intel 1st Gen Core i3/i5/i7-family (Nehalem)
+   24) Intel 1.5 Gen Core i3/i5/i7-family (Westmere)
+   25) Intel Silvermont
+   26) Intel Goldmont (Apollo Lake and Denverton)
+   27) Intel Goldmont Plus (Gemini Lake)
+   28) Intel 2nd Gen Core i3/i5/i7-family (Sandybridge)
+   29) Intel 3rd Gen Core i3/i5/i7-family (Ivybridge)
+   30) Intel 4th Gen Core i3/i5/i7-family (Haswell)
+   31) Intel 5th Gen Core i3/i5/i7-family (Broadwell)
+   32) Intel 6th Gen Core i3/i5/i7-family (Skylake)
+   33) Intel 6th Gen Core i7/i9-family (Skylake X)
+   34) Intel 8th Gen Core i3/i5/i7-family (Cannon Lake)
+   35) Intel 8th Gen Core i7/i9-family (Ice Lake)
+   36) Xeon processors in the Cascade Lake family
+   37) Intel Xeon (Cooper Lake)
+   38) Intel 3rd Gen 10nm++ i3/i5/i7/i9-family (Tiger Lake)
+   39) Intel Sapphire Rapids
+   40) Intel Rocket Lake
+   41) Intel Alder Lake
+   42) Intel Raptor Lake
+   43) Intel Meteor Lake
+   44) Intel Emerald Rapids
 
    98) Intel-Native optimizations autodetected by GCC
    99) AMD-Native optimizations autodetected by GCC
 
-    0) Generic x64-v2 (default)
+    0) Generic x64 (default)
     
 EOF
 
@@ -78,35 +77,35 @@ case $answer in
     12) Microarchitecture=CONFIG_MZEN2 ;;
     13) Microarchitecture=CONFIG_MZEN3 ;;
     14) Microarchitecture=CONFIG_MZEN4 ;;
-    15) Microarchitecture=CONFIG_MPSC ;;
-    16) Microarchitecture=CONFIG_MCORE2 ;;
-    17) Microarchitecture=CONFIG_MATOM ;;
-    18) Microarchitecture=CONFIG_MNEHALEM ;;
-    19) Microarchitecture=CONFIG_MWESTMERE ;;
-    20) Microarchitecture=CONFIG_MSILVERMONT ;;
-    21) Microarchitecture=CONFIG_MGOLDMONT ;;
-    22) Microarchitecture=CONFIG_MGOLDMONTPLUS ;;
-    23) Microarchitecture=CONFIG_MSANDYBRIDGE ;;
-    24) Microarchitecture=CONFIG_MIVYBRIDGE ;;
-    25) Microarchitecture=CONFIG_MHASWELL ;;
-    26) Microarchitecture=CONFIG_MBROADWELL ;;
-    27) Microarchitecture=CONFIG_MSKYLAKE ;;
-    28) Microarchitecture=CONFIG_MSKYLAKEX ;;
-    29) Microarchitecture=CONFIG_MCANNONLAKE ;;
-    30) Microarchitecture=CONFIG_MICELAKE ;;
-    31) Microarchitecture=CONFIG_MCASCADELAKE ;;
-    32) Microarchitecture=CONFIG_MCOOPERLAKE ;;
-    33) Microarchitecture=CONFIG_MTIGERLAKE ;;
-    34) Microarchitecture=CONFIG_MSAPPHIRERAPIDS ;;
-    35) Microarchitecture=CONFIG_MROCKETLAKE ;;
-    36) Microarchitecture=CONFIG_MALDERLAKE ;;
-    91) Microarchitecture=CONFIG_GENERIC_CPU ;;
-    92) Microarchitecture=CONFIG_GENERIC_CPU2 ;;
-    93) Microarchitecture=CONFIG_GENERIC_CPU3 ;;
-    94) Microarchitecture=CONFIG_GENERIC_CPU4 ;;
+    15) Microarchitecture=CONFIG_MZEN5 ;;
+    20) Microarchitecture=CONFIG_MPSC ;;
+    21) Microarchitecture=CONFIG_MCORE2 ;;
+    22) Microarchitecture=CONFIG_MATOM ;;
+    23) Microarchitecture=CONFIG_MNEHALEM ;;
+    24) Microarchitecture=CONFIG_MWESTMERE ;;
+    25) Microarchitecture=CONFIG_MSILVERMONT ;;
+    26) Microarchitecture=CONFIG_MGOLDMONT ;;
+    27) Microarchitecture=CONFIG_MGOLDMONTPLUS ;;
+    28) Microarchitecture=CONFIG_MSANDYBRIDGE ;;
+    29) Microarchitecture=CONFIG_MIVYBRIDGE ;;
+    30) Microarchitecture=CONFIG_MHASWELL ;;
+    31) Microarchitecture=CONFIG_MBROADWELL ;;
+    32) Microarchitecture=CONFIG_MSKYLAKE ;;
+    33) Microarchitecture=CONFIG_MSKYLAKEX ;;
+    34) Microarchitecture=CONFIG_MCANNONLAKE ;;
+    35) Microarchitecture=CONFIG_MICELAKE ;;
+    36) Microarchitecture=CONFIG_MCASCADELAKE ;;
+    37) Microarchitecture=CONFIG_MCOOPERLAKE ;;
+    38) Microarchitecture=CONFIG_MTIGERLAKE ;;
+    39) Microarchitecture=CONFIG_MSAPPHIRERAPIDS ;;
+    40) Microarchitecture=CONFIG_MROCKETLAKE ;;
+    41) Microarchitecture=CONFIG_MALDERLAKE ;;
+    42) Microarchitecture=CONFIG_MRAPTORLAKE ;;
+    43) Microarchitecture=CONFIG_MMETEORLAKE ;;
+    44) Microarchitecture=CONFIG_MEMERALDRAPIDS ;;
     98) Microarchitecture=CONFIG_MNATIVE_INTEL ;;
     99) Microarchitecture=CONFIG_MNATIVE_AMD ;;
-     *) default=CONFIG_GENERIC_CPU2 ;;
+     *) default=CONFIG_GENERIC_CPU ;;
 esac
 
 warning "According to PKGBUILD variable _microarchitecture, your choice is $answer"
@@ -115,14 +114,10 @@ sleep 5
 
 _defaultmicro=$(grep ^CONFIG_LOCALVERSION .config)
 if [ -z "${default}" ]; then
-    _localversion=$(echo ${Microarchitecture,,} | sed -e 's/config_m/-/g' -e 's/config_generic_cpu/-x64v/g')
+    _localversion=$(echo ${Microarchitecture,,} | sed -e 's/config_m/-/g')
     sed -e "s|^$_defaultmicro|CONFIG_LOCALVERSION=\"$_localversion\"|g" -i .config
+    sed -e 's|^CONFIG_GENERIC_CPU=y|# CONFIG_GENERIC_CPU is not set|g' -i .config
+    sed -e "s|^# $Microarchitecture is not set|$Microarchitecture=y|g" -i .config
 fi
-
-sed -e 's|^CONFIG_GENERIC_CPU=y|# CONFIG_GENERIC_CPU is not set|g' -i .config
-sed -e 's|^CONFIG_GENERIC_CPU2=y|# CONFIG_GENERIC_CPU2 is not set|g' -i .config
-sed -e 's|^CONFIG_GENERIC_CPU3=y|# CONFIG_GENERIC_CPU3 is not set|g' -i .config
-sed -e 's|^CONFIG_GENERIC_CPU4=y|# CONFIG_GENERIC_CPU4 is not set|g' -i .config
-sed -e "s|^# $Microarchitecture is not set|$Microarchitecture=y|g" -i .config
 
 echo
