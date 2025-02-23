@@ -29,7 +29,7 @@ All of these variables just need to be set for them to apply, except for `_subar
 ## GPG errors
 If makepkg complains about invalid PGP keys, try running this command:
 ```bash
-gpg --locate-keys torvalds@kernel.org gregkh@kernel.org sashal@kernel.org benhh@debian.org
+gpg --locate-keys torvalds@kernel.org gregkh@kernel.org sashal@kernel.org benh@debian.org
 ```
 This command only needs to be executed once.
 
