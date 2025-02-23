@@ -43,9 +43,9 @@ fi
 # Possible values: config_x86-64-v1 / config_x86-64-v2 (default) / config_x86-64-v3
 # This will be overwritten by selecting any option in microarchitecture script
 # Source files: https://gitlab.com/xanmod/linux/-/tree/6.12/CONFIGS/xanmod/gcc?ref_type=heads
-if [ -z ${_config+x} ]; then
-  _config=config_x86-64-v2
-fi
+#if [ -z ${_config+x} ]; then
+  _config=config
+#fi
 
 # Compress modules with ZSTD (to save disk space)
 if [ -z ${_compress_modules+x} ]; then
@@ -72,13 +72,13 @@ fi
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
 pkgbase=linux-xanmod-anbox
-_major=6.12
-pkgver=${_major}.15
+_major=6.13
+pkgver=${_major}.4
 _branch=6.x
 xanmod=1
 _revision=
 _sf_branch=main
-pkgrel=${xanmod}
+pkgrel=2
 pkgdesc='Linux Xanmod with ashmem and binder enabled for Anbox - Stable Mainline [MAIN]'
 url="http://www.xanmod.org/"
 arch=(x86_64)
@@ -115,10 +115,10 @@ for _patch in ${_patches[@]}; do
     source+=("${_patch}::https://raw.githubusercontent.com/archlinux/svntogit-packages/${_commit}/trunk/${_patch}")
 done
 
-sha256sums=('b1a2562be56e42afb3f8489d4c2a7ac472ac23098f1ef1c1e40da601f54625eb'
+sha256sums=('e79dcc6eb86695c6babfb07c2861912b635d5075c6cd1cd0567d1ea155f80d6e'
             'SKIP'
-            '2d69ffc2856dccf3ba069d7f0375700524deff55a9bc98cd2c637dc9b11b8a02'
-            'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f')
+            'd8ccb0e826ec74ebc9e010209ee625f5952c7c71a43cd09cdd2a3555e4451b91'
+            '252688b672d7a6982c28120a9509d63d8dda230e3a21bafd1177819ca161c88f')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
 export KBUILD_BUILD_USER=${KBUILD_BUILD_USER:-makepkg}
@@ -146,7 +146,7 @@ prepare() {
   done
 
   # Applying configuration
-  cp -vf CONFIGS/xanmod/gcc/${_config} .config
+  cp -vf CONFIGS/x86_64/${_config} .config
   # enable LTO_CLANG_THIN
   if [ "${_compiler}" = "clang" ]; then
     scripts/config --disable LTO_CLANG_FULL
