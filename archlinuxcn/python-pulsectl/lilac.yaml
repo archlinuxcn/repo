@@ -1,13 +1,15 @@
 maintainers:
 - github: axionl
+  email: i@axionl.me
 
-build_prefix: extra-x86_64
+pre_build_script: update_package_and_pkgrel(_G.newver)
+
+post_build_script: git_pkgbuild_commit()
 
 update_on:
-  - source: aur
-    aur: python-pulsectl
+  - source: github
+    github: mk-fg/python-pulse-control
+    use_latest_tag: true
+  - source: manual
+    manual: 2
   - alias: python
-
-pre_build_script: aur_pre_build(maintainers='yochananmarqos')
-
-post_build: aur_post_build
