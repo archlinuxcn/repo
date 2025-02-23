@@ -51,7 +51,7 @@ package() {
 
 	install -Dm755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
 	install -Dm644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "resources/moe.tsuna.tsukimi.gschema.xml"
-	install -Dm644 -t "${pkgdir}/usr/share/pixmaps/" "resources/icons/tsukimi.png"
+	install -Dm644 -t "${pkgdir}/usr/share/pixmaps/" "resources/icons/moe.tsuna.tsukimi.png"
 
 	install -Dm644 "resources/moe.tsuna.tsukimi.desktop.in" "${pkgdir}/usr/share/applications/moe.tsuna.tsukimi.desktop"
 
