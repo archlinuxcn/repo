@@ -6,16 +6,19 @@
 _pkgname=wine
 pkgname=wine-for-wechat
 pkgver=10.2
-pkgrel=1
+pkgrel=2
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbasever"
         30-win32-aliases.conf
-        wine-binfmt.conf wine-wechat.patch)
+        wine-binfmt.conf
+        fix-ptr-access.patch::https://gitlab.winehq.org/wine/wine/-/commit/05315ce3da4d6f04232611fb5dd6ffbd77f87ce7.patch
+        wine-wechat.patch)
 sha512sums=('2664d57860cd74706556bcf7e6ec48b4a7c49d8f22ed791bfc43caa50d43733a5a28c68a9d89842b9cce7b403d68dd21b9e328efc3349229cdeaf1f31188b51e'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
+            '547a1a31fcfa421e982da6032cdf398e5814d6f35c0670029d69853b89bde6dddfe47c514c2c5ff59d1d0f673c9a9df9adce88d199305f8ed2143ae8d65e2057'
             '646dfd6ec62fb9ddbfb27aac0ac80d87926fbc3360bb53cca942622e95d1ec380f0b5efdfd45bbe1cdce72661b7b36b15ffb7874b1b4269e3bd56a14ec0d2166')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
@@ -94,6 +97,12 @@ install=wine.install
 provides=(wine=$pkgver)
 conflicts=(wine)
 
+prepare() {
+  cd wine
+  # Fix for https://bugs.winehq.org/show_bug.cgi?id=57854
+  patch -Np1 -i "$srcdir"/fix-ptr-access.patch
+  patch -p1 < "$srcdir"/wine-wechat.patch
+}
 build() {
 
   # Doesn't compile without remove these flags as of 4.10
@@ -104,7 +113,7 @@ build() {
   export CROSSCXXFLAGS="-O2 -pipe -g"
   export CROSSLDFLAGS="-Wl,-O1"
 
-  msg2 "Building Wine-64..."
+  echo "Building Wine-64..."
   mkdir "$_pkgname-64-build"
   cd "$_pkgname-64-build"
   ../$_pkgname/configure \
@@ -117,10 +126,27 @@ build() {
     --enable-archs=x86_64,i386
 
   make
+
+  
+
+  
+
+  
+
+  
+  
+  
+  
+
+  
 }
 
 package() {
-  msg2 "Packaging Wine-64..."
+  
+  
+  
+
+  echo "Packaging Wine-64..."
   cd "$srcdir/$_pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
