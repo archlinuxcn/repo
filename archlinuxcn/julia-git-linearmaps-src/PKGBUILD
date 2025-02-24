@@ -1,6 +1,6 @@
 pkgname=julia-git-linearmaps-src
-pkgver=3.11.3
-_commit=8c1e9b9a1ebcbc029457416ad3ea94131e3a4150
+pkgver=3.11.4
+_commit=7a3190eb60be7a32d794bcee22255381f7565958
 pkgrel=1
 pkgdesc="LinearMaps.jl"
 url="https://github.com/JuliaLinearAlgebra/LinearMaps.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/LinearMaps.jl.git#commit=$_commit")
-sha256sums=('fee16468d357bb7affc5c2d3a1e390f63abcfc689f20a54d6a45b4bd17105d94')
+sha256sums=('e0127dd0a0f25a72f5ead28baa5b69279cb22a131d216028d970a4f5edca8d50')
 
 package() {
   cd LinearMaps.jl
