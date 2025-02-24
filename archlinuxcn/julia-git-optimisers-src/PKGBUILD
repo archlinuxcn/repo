@@ -1,6 +1,6 @@
 pkgname=julia-git-optimisers-src
-pkgver=0.4.4
-_commit=91569f63a8f75520a6b60293c9c013f921ae0ee3
+pkgver=0.4.5
+_commit=b75f9e12a0ffe05a97624f6863f02f63a4731611
 pkgrel=1
 pkgdesc="Optimisers.jl"
 url="https://github.com/FluxML/Optimisers.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FluxML/Optimisers.jl.git#commit=$_commit")
-sha256sums=('4ede7ac6d58026d8f28b27ce3a428a8390ccea3b0bb4be8f8bc41b6ab02549b8')
+sha256sums=('d420cddd626965431d2c253cb6388073e786fb6fc1fb1d77ca1bb24714b164d4')
 
 package() {
   cd Optimisers.jl
