@@ -1,0 +1,27 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+
+pkgname=krita-sai2-like-preset
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="SAI2-like workspace and simplified basic brush tag presets for Krita"
+arch=('any')
+url=""
+license=('Unlicense')
+install="${pkgname}.install"
+source=(
+    "SAI2-like.kws"
+    "SAI2-like.tag"
+)
+sha256sums=('e91c56807707a7b80b5a0292413a93c399a2aaecd61dd35f37d41b1e49379fa2'
+            'edf7a449b67c450f54d415217734ecd41f0f03f43fefbf1ce990cd38f61e5def')
+
+package() {
+    depends+=(
+        'krita'
+        'python-pyqt5'
+    )
+
+    cd "${srcdir}"
+    install -Dm0644 SAI2-like.kws -t "${pkgdir}/usr/share/krita/workspaces/"
+    install -Dm0644 SAI2-like.tag -t "${pkgdir}/usr/share/krita/paintoppresets/"
+}
