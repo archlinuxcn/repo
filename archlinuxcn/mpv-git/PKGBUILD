@@ -55,10 +55,6 @@ depends=(
     'wayland'
     'zimg'
     'zlib'
-
-    # for development
-    'ffnvcodec-headers'
-    'wayland-protocols'
 )
 makedepends=(
     'git'
@@ -66,6 +62,10 @@ makedepends=(
     'openal'
     'python-docutils'
     'vulkan-headers'
+    
+    # for development
+    'ffnvcodec-headers'
+    'wayland-protocols'
 )
 optdepends=(
     'nvidia-utils: for hardware accelerated video decoding with CUDA'
