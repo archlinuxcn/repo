@@ -10,21 +10,23 @@ pkgdesc='专为手柄控制设计的第三方跨平台B站客户端'
 arch=('x86_64' 'aarch64')
 url='https://github.com/xfangfang/wiliwili'
 license=('GPL-3.0-or-later')
-depends=('curl' 'dbus' 'gcc-libs' 'glibc' 'hicolor-icon-theme' 'libwebp' 'mpv' 'opencc' 'openssl' 'pystring' 'tinyxml2' 'zlib')
+depends=('curl' 'dbus' 'gcc-libs' 'glibc' 'hicolor-icon-theme' 'libwebp' 'mpv' 'opencc' 'openssl' 'pystring' 'qrcodegencpp-cmake' 'tinyxml2' 'zlib')
 makedepends=('cmake' 'git' 'libxi' 'libxinerama' 'ninja' 'python' 'wayland-protocols')
 source=("${pkgname}"::"git+${url}.git#tag=v${pkgver}")
 b2sums=('3cad9d65f4db60e5220f315c97d5d3e81f537b7a4033aef5a2e3664cff455e9745dfc842b50a108cf738a5ec0b2538c275d36b281b014a4045d455aecf0be25c')
 
 prepare() {
+  git -C "${srcdir}/${pkgname}" rm library/{OpenCC,QR-Code-generator,pystring}
   git -C "${srcdir}/${pkgname}" submodule update --init --recursive
 
   cmake \
     -B "${srcdir}/build" \
-    -D CMAKE_BUILD_TYPE=Release \
-    -D CMAKE_INSTALL_PREFIX='/usr' \
+    -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+    -D CMAKE_INSTALL_PREFIX=/usr \
     -D INSTALL=ON \
     -D PLATFORM_DESKTOP=ON \
     -D USE_SYSTEM_CURL=ON \
+    -D USE_SYSTEM_QRCODEGEN=ON \
     -D USE_SYSTEM_PYSTRING=ON \
     -D USE_SYSTEM_OPENCC=ON \
     -D USE_SYSTEM_TINYXML2=ON \
