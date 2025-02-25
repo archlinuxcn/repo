@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 # Contributor: Xiaozhu1337 <nihaoaheheda@gmail.com>
 pkgname=siyuan
-pkgver=3.1.22
+pkgver=3.1.23
 _electronversion=33
 _nodeversion=20
 pkgrel=1
@@ -33,7 +33,7 @@ source=(
     "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
     "${pkgname}.sh"
 )
-sha256sums=('024725c20cdc41fdf03181fc4bb53669db745f4eb75d575d9614188a224a56d2'
+sha256sums=('ccb92eefdaf4f1294496f66a3d525ddf2bf8a1c08844f5a59a5b1d88a3edf875'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 _ensure_local_nvm() {
     local NVM_DIR="${srcdir}/.nvm"
@@ -42,16 +42,16 @@ _ensure_local_nvm() {
     nvm use "${_nodeversion}"
 }
 prepare() {
-    sed -e "
+    sed -i -e "
         s/@electronversion@/${_electronversion}/g
         s/@appname@/${pkgname}/g
         s/@runname@/app/g
         s/@cfgdirname@/SiYuan-Electron/g
         s/@options@/env ELECTRON_OZONE_PLATFORM_HINT=auto/g
-    " -i "${srcdir}/${pkgname}.sh"
+    " "${srcdir}/${pkgname}.sh"
     _ensure_local_nvm
     gendesk -q -f -n --pkgname="${pkgname}" --pkgdesc="${pkgdesc}" --categories="Office" --name="${pkgname}" --exec="${pkgname} %U"
-    sed "2i\Name[zh_CN]=思源笔记" -i "${srcdir}/${pkgname}.desktop"
+    sed -i "2i\Name[zh_CN]=思源笔记" "${srcdir}/${pkgname}.desktop"
     cd "${srcdir}/${pkgname}-${pkgver}/app"
     export CGO_ENABLED=1
     export GO111MODULE=on
@@ -60,7 +60,6 @@ prepare() {
     export GOMODCACHE="${srcdir}/go/pkg/mod"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
-    electronDist="/usr/lib/electron${_electronversion}"
     HOME="${srcdir}/.electron-gyp"
     {
         echo -e '\n'
@@ -87,6 +86,7 @@ build() {
     cd "${srcdir}/${pkgname}-${pkgver}/kernel"
     go build --tags fts5 -o "../app/kernel-linux/SiYuan-Kernel" -v -ldflags "-s -w -X github.com/siyuan-note/siyuan/kernel/util.Mode=prod"
     cd "${srcdir}/${pkgname}-${pkgver}/app"
+    local electronDist="/usr/lib/electron${_electronversion}"
     case "${CARCH}" in
         aarch64)
             _CFG_FILE=electron-builder-linux-arm64.yml
