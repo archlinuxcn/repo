@@ -1,8 +1,8 @@
 # Maintainer: tarball <bootctl@gmail.com>
 
 pkgname=silverbullet
-pkgver=0.10.1
-pkgrel=2
+pkgver=0.10.4
+pkgrel=1
 pkgdesc='Clean Markdown-based writing/note taking application'
 arch=(any)
 url='https://github.com/silverbulletmd/silverbullet'
@@ -13,7 +13,7 @@ source=(
   "$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz"
   "$pkgname.service"
 )
-sha256sums=('5dcae3b959a26d9d4a0764ec28233fc9937e882c4c3f1f6055dfadaa67b44ed9'
+sha256sums=('1976d92d75e3dcd608ad4e515372def9332c3f8868abc7d494232ae04905909a'
             '14263a2804798f3710bc7733d4508349ac55e018457b98d3cf72ae50952fe6fa')
 
 build() {
@@ -22,11 +22,10 @@ build() {
   deno task bundle
 }
 
-# TODO: tests stopped working after 0.10.1 was released
-#check() {
-#  cd "$pkgname-$pkgver"
-#  deno task test
-#}
+check() {
+  cd "$pkgname-$pkgver"
+  deno task test
+}
 
 package() {
   install -dm755 "$pkgdir/etc/default"
