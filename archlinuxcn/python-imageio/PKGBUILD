@@ -3,13 +3,13 @@
 pkgname="python-imageio"
 _pkgname="imageio"
 pkgver=2.37.0
-pkgrel=1
+pkgrel=2
 pkgdesc="a Python library that provides an easy interface to read and write a wide range of image data"
 arch=('any')
 _github="imageio/imageio"
 _pypiname="imageio"
 url="https://github.com/imageio/imageio"
-license=('BSD')
+license=('BSD-2-Clause')
 depends=('python-numpy' 'python-pillow')
 optdepends=('python-imageio-ffmpeg' 'python-av' 'freeimage' 'python-astropy' 'python-simpleitk' 'python-tifffile')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
