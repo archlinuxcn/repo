@@ -1,47 +1,55 @@
-# Maintainer: Tércio Martins <echo dGVyY2lvd2VuZGVsQGdtYWlsLmNvbQo= | base64 -d>
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Contributor: Tércio Martins <echo dGVyY2lvd2VuZGVsQGdtYWlsLmNvbQo= | base64 -d>
 
 _pkgname=BeeRef
-pkgname=${_pkgname,,}
+pkgname="${_pkgname,,}"
 pkgver=0.3.3
 pkgrel=1
-pkgdesc="Reference Image Viewer"
+pkgdesc="A simple reference image viewer"
 arch=('any')
-url="https://beeref.org/"
-_url_github="https://github.com/rbreu/${pkgname}"
+url="https://github.com/rbreu/${pkgname}"
 license=('GPL-3.0-or-later')
-depends=('hicolor-icon-theme' 'python-exif' 'python-pyqt6' 'python-rectangle-packer')
-makedepends=('python-setuptools')
-source=("${pkgname}-${pkgver}.tar.gz::${_url_github}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('2279c9647bcd195494f24b62cc891727b120dd9613d6fb09037d75013357d56e97a1ba47b921b9327022085d2431fa9d9b1ff1c39a15b8f27dc6f45f8534649a')
+depends=(
+    'hicolor-icon-theme'
+    'python'
+    'python-exif'
+    'python-lxml'
+    'python-plum'
+    'python-pyqt6'
+    'python-rectangle-packer'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-wheel'
+)
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
+        "0001-fix-set-desktop-file-name-for-wayland-icon.patch")
+b2sums=('2279c9647bcd195494f24b62cc891727b120dd9613d6fb09037d75013357d56e97a1ba47b921b9327022085d2431fa9d9b1ff1c39a15b8f27dc6f45f8534649a'
+        'dfccd5b03395caba9e1e022def1bc927aa6a0173a24ac0ad854a747a13315e1e830c77a10151805e88ff42e429ad4ab2de03af579528271f4d595b4f6436ae1c')
 
-_xdg_desktop_name=org.${pkgname}.${_pkgname}
+_xdg_desktop_name="org.${pkgname}.${_pkgname}"
 
 prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    patch -Np1 -i ../0001-fix-set-desktop-file-name-for-wayland-icon.patch
 
-  sed -i "s/Comment=.*/Comment=Reference Image Viewer/" ${pkgname}.desktop
-  sed -i "s/Exec=.*/Exec=${pkgname}/" ${pkgname}.desktop
-  sed -i "s/Icon=.*/Icon=${_xdg_desktop_name}/" ${pkgname}.desktop
+    sed -i "s/Exec=.*/Exec=${pkgname}/" "${pkgname}.desktop"
+    sed -i "s/Icon=.*/Icon=${_xdg_desktop_name}/" "${pkgname}.desktop"
 }
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  python setup.py build
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 
-  install -Dm 644 beeref.desktop \
-                  "${pkgdir}/usr/share/applications/${_xdg_desktop_name}.desktop"
-
-  install -Dm 644 ${_xdg_desktop_name}.appdata.xml \
-                  "${pkgdir}/usr/share/metainfo/${_xdg_desktop_name}.appdata.xml"
-
-  install -Dm 644 "${pkgname}/assets/logo.svg" \
-                  "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${_xdg_desktop_name}.svg"
-
-  install -Dm 644 "${pkgname}/assets/logo.png" \
-                  "${pkgdir}/usr/share/icons/hicolor/400x400/apps/${_xdg_desktop_name}.png"
+    install -Dm0644 beeref.desktop "${pkgdir}/usr/share/applications/${_xdg_desktop_name}.desktop"
+    install -Dm0644 "${pkgname}/assets/logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${_xdg_desktop_name}.svg"
+    install -Dm0644 "${pkgname}/assets/logo.png" "${pkgdir}/usr/share/icons/hicolor/400x400/apps/${_xdg_desktop_name}.png"
+    install -Dm0644 "${_xdg_desktop_name}.appdata.xml" -t "${pkgdir}/usr/share/metainfo/"
 }
