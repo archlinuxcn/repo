@@ -5,7 +5,7 @@
 
 pkgname=kwin-heddxh
 _pkgname=kwin
-pkgver=6.3.1
+pkgver=6.3.2.1
 _dirver=$(echo $pkgver | cut -d. -f1-3)
 pkgrel=1
 pkgdesc='An easy to use, but flexible, composited Window Manager. With patches from heddxh'
@@ -87,7 +87,7 @@ optdepends=('maliit-keyboard: virtual keyboard for kwin-wayland')
 source=(https://download.kde.org/stable/plasma/$_dirver/$_pkgname-$pkgver.tar.xz{,.sig}
 	0001-feature-allow-disable-hardcoded-touchpad-gestures.patch)
 install=$_pkgname.install
-sha256sums=('9a50ba0eaa6209783bdefbb668e57d0cbdfa71ce8ebfbd17fe446db6d773f242'
+sha256sums=('e6123eda2b1fd9f65b36061fdacf96234068d1e24fa7a3352288f4d51b2fc4c2'
             'SKIP'
             'c821314c83316a1f80b32eddf5095692b433ec91c0767796692f4de2e497ee2c')
 validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
