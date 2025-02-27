@@ -3,7 +3,7 @@
 pkgname=koodo-reader-bin
 _pkgname=Koodo-Reader
 _pkgname2=koodo-reader
-pkgver=1.7.4
+pkgver=1.8.2
 pkgrel=1
 pkgdesc="A modern ebook manager and reader with sync and backup capacities"
 arch=("x86_64")
@@ -13,7 +13,7 @@ depends=('gtk3' 'libnotify' 'nss' 'libxss' 'libxtst' 'xdg-utils' 'python-atspi' 
 provides=("koodo-reader")
 source=("$pkgname-$pkgver.deb::https://github.com/koodo-reader/${_pkgname2}/releases/download/v$pkgver/${_pkgname}-$pkgver-amd64.deb"
         "${_pkgname2}.desktop")
-sha256sums=('3ab003f45d97610481dba686cb1e17ad30e2dfa1e814c55d6094a1054e23cf4a'
+sha256sums=('79785e45a35808fb21029bb6a2cfa849261fc3f4e745846c6bf5c1059ead10e6'
             '9fd70a6316a1fd9369bd1c1c0b1b6583da0eed85502804deea2042b4a38aaa0e')
 
 prepare() {
