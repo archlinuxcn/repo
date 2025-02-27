@@ -4,8 +4,8 @@
 _module="markdownify"
 _pkgname="python-$_module"
 pkgname="$_pkgname"
-pkgver=0.14.1
-pkgrel=2
+pkgver=1.0.0
+pkgrel=1
 pkgdesc="Convert HTML to Markdown"
 url="https://github.com/matthewwithanm/python-markdownify"
 license=('MIT')
@@ -25,16 +25,12 @@ makedepends=(
 
 _pkgsrc="$_module-$pkgver"
 _pkgext="tar.gz"
-source=(
-  "$_pkgsrc.$_pkgext"::"https://pypi.io/packages/source/${_module::1}/$_module/$_module-$pkgver.$_pkgext"
-)
-sha256sums=(
-  'a62a7a216947ed0b8dafb95b99b2ef4a0edd1e18d5653c656f68f03db2bfb2f1'
-)
+source=("$_pkgsrc.$_pkgext"::"https://pypi.io/packages/source/${_module::1}/$_module/$_module-$pkgver.$_pkgext")
+sha256sums=('8e58d7bd7336cffe4168e5ceac22d78656b1121994bd65d1021cc1ac61a628d6')
 
 build() {
   cd "$_pkgsrc"
-  python -m build --wheel --no-isolation
+  python -m build --wheel --no-isolation --skip-dependency-check
 }
 
 package() {
