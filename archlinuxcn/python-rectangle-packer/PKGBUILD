@@ -1,0 +1,43 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Contributor: Michael Bromilow <dev at mail subdomain of bromilow dot uk>
+# Contributor: Tércio Martins <echo dGVyY2lvd2VuZGVsQGdtYWlsLmNvbQo= | base64 -d>
+
+_pkgname=rectangle-packer
+pkgname="python-${_pkgname}"
+pkgver=2.0.2
+pkgrel=0
+pkgdesc="Pack a set of rectangles into a bounding box with minimum area"
+arch=('x86_64')
+url="https://github.com/Penlect/${_pkgname}"
+license=('MIT')
+depends=(
+    'glibc'
+    'python'
+)
+makedepends=(
+    'cython'
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-wheel'
+)
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
+        "diff-2.0.2-to-20241026.patch")
+b2sums=('db4cdff1a98fc226de518457f8768fddc68b7ce81a3bc91fcce83243eb7c56fd63e55df21bc5785b212898a86996331aa4ad698e19ceb93967c21aaa74029602'
+        'aeaede0b5a810b5423a56baa89de19023e9cb5306d56775a0b8e3c9a148de5206fdbaec7752a0e4ed96cf1656c0b4683a2dcb4e5660ae3edff30f6cafd309fd7')
+
+prepare() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    patch -Np1 -i ../diff-2.0.2-to-20241026.patch
+}
+
+build() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    install -Dm0644 "LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+}
