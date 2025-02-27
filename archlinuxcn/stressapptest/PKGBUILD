@@ -1,0 +1,26 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Ben Song <bensongsyz@gmail.com>
+# Contributor: kfgz <kfgz at interia dot pl>
+# Contributor: Philipp 'TamCore' B. <philipp at tamcore dot eu>
+
+pkgname=stressapptest
+pkgver=1.0.11
+pkgrel=1
+pkgdesc="Stressful Application Test (or stressapptest, its unix name)"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/${pkgname}/${pkgname}"
+license=('Apache-2.0')
+depends=('gcc-libs' 'libaio')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('91b6eefe49718a8c7c4de6e2bd81144db7b5612aeadb24e00e142d54fe9281cf')
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	make DESTDIR="${pkgdir}" install
+}
