@@ -6,18 +6,17 @@
 # https://github.com/rstudio/rstudio
 
 ## options
-: ${_nodeversion:=22}
+: ${_nodeversion:=23}
 : ${_pandocver:=current}
-: ${_sociver:=4.0.3}
+: ${_soci_version:=4.0.3}
 : ${_quarto_branch:=release/rstudio-cranberry-hibiscus}
 : ${_quarto:=false}
 
-: ${_commit:=cf37a3e5488c937207f992226d255be71f5e3f41} # 2024.12.0.467
+: ${_commit:=c5bcd0ec4fb959b2a9fcd656f12eb62092f0617e}
 
-## basic info
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2024.12.0.467
+pkgver=2024.12.1.563
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
@@ -25,10 +24,14 @@ license=('AGPL-3.0-only')
 arch=('x86_64')
 
 depends=(
-  'boost-libs'
   'dbus'
   'hicolor-icon-theme'
   'hunspell-en_US'
+  'libboost_chrono.so'          # boost-libs
+  'libboost_filesystem.so'      # boost-libs
+  'libboost_iostreams.so'       # boost-libs
+  'libboost_program_options.so' # boost-libs
+  'libboost_thread.so'          # boost-libs
   'libcups'
   'mathjax2'
   'nspr'
@@ -41,7 +44,7 @@ makedepends=(
   'boost'
   'cmake'
   'git'
-  'jdk11-openjdk'
+  'java-environment'
   'libcups'
   'ninja'
   'nvm' # AUR
@@ -61,9 +64,7 @@ optdepends=(
 )
 
 if [[ "${_quarto::1}" == "t" ]]; then
-  makedepends+=(
-    'quarto' # AUR
-  )
+  makedepends+=('quarto') # AUR
 fi
 
 provides=("$_pkgname")
@@ -71,18 +72,54 @@ conflicts=("$_pkgname")
 
 options=('!emptydirs' '!debug')
 
-_pkgsrc="rstudio-$_commit"
-_pkgext="tar.gz"
-source=(
-  "rstudio-$pkgver-${_commit::7}.$_pkgext"::"https://github.com/rstudio/rstudio/archive/$_commit.$_pkgext"
-  "quarto"::"git+https://github.com/quarto-dev/quarto.git#branch=${_quarto_branch}"
-  "soci-$_sociver.tar.gz"::"https://github.com/SOCI/soci/archive/refs/tags/v${_sociver}.tar.gz"
-)
-sha256sums=(
-  'b43ab0a3a37a4efe6ff090be110762f763e2606ccf9b64f2ca0df52e0737ec3e'
-  'SKIP'
-  '4b1ff9c8545c5d802fbe06ee6cd2886630e5c03bf740e269bb625b45cf934928'
-)
+_source_main() {
+  _pkgsrc="rstudio-$_commit"
+  local _pkgext="tar.gz"
+  source=(
+    "rstudio-$pkgver-${_commit::7}.$_pkgext"::"https://github.com/rstudio/rstudio/archive/$_commit.$_pkgext"
+    "quarto"::"git+https://github.com/quarto-dev/quarto.git#branch=${_quarto_branch}"
+  )
+  sha256sums=(
+    'SKIP'
+    'SKIP'
+  )
+}
+
+_source_soci() {
+  local _pkgext_soci="tar.gz"
+  source+=("soci-$_soci_version.$_pkgext_soci"::"https://github.com/SOCI/soci/archive/refs/tags/v$_soci_version.$_pkgext_soci")
+  sha256sums+=('4b1ff9c8545c5d802fbe06ee6cd2886630e5c03bf740e269bb625b45cf934928')
+
+  _build_soci() (
+    echo "Building SOCI..."
+    local _opts_soci=(
+      -B "soci-$_soci_version/build"
+      -S "soci-$_soci_version"
+      -G Ninja
+      -DCMAKE_BUILD_TYPE=None
+      -DCMAKE_INSTALL_PREFIX='/usr'
+      -DSOCI_TESTS=OFF
+      -DSOCI_CXX11=ON
+      -DSOCI_EMPTY=OFF
+      -DWITH_BOOST=ON
+      -DWITH_POSTGRESQL=ON
+      -DWITH_SQLITE3=ON
+      -DWITH_DB2=OFF
+      -DWITH_MYSQL=OFF
+      -DWITH_ORACLE=OFF
+      -DWITH_FIREBIRD=OFF
+      -DWITH_ODBC=OFF
+      -DBUILD_SHARED_LIBS=OFF
+      -Wno-dev
+    )
+
+    cmake "${_opts_soci[@]}"
+    cmake --build "soci-$_soci_version/build"
+  )
+}
+
+_source_main
+_source_soci
 
 _nvm_env() {
   export HOME="$SRCDEST/node-home"
@@ -103,7 +140,7 @@ prepare() (
 
   cd "$_pkgsrc"
   # Do not use outdated version name of pandoc
-  sed -E -e '/PANDOC_VERSION/s/2.[0-9]+/current/' -i "cmake/globals.cmake"
+  sed -E -e '/PANDOC_VERSION/s/"[0-9\.]+"/"'${_pandocver}'"/' -i "cmake/globals.cmake"
 
   # Suppress _FORTIFY_SOURCE mismatch warnings
   sed -i 's/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=3/' "src/cpp/CMakeLists.txt"
@@ -140,10 +177,6 @@ prepare() (
   sed -E 's&(STRINGS) "/etc/os-release" (OS_RELEASE)&\1 "/usr/lib/os-release" \2&' \
     -i cmake/modules/OsRelease.cmake
 
-  # fix boost 1.86 incompatibility
-  sed -E -e 's&return afterResponse_;&return (bool)afterResponse_;&' \
-    -i src/cpp/core/json/JsonRpc.cpp
-
   cd "$srcdir/$_pkgsrc/dependencies/common"
   install -d pandoc/${_pandocver}
 
@@ -156,42 +189,17 @@ prepare() (
   ln -sfT /usr/share/myspell/dicts dictionaries
   ln -sfT /usr/share/mathjax2 mathjax-27
 
-  # Bundled SOCI libs
-  ln -sfT "${srcdir}/soci-${_sociver}" "soci-${_sociver}"
+  # Bundled libs
+  ln -sfT "$srcdir/soci-$_soci_version" "soci-$_soci_version"
 
   # Panmirror is picked up now from Quarto repo
-  ln -sfT "${srcdir}/quarto" "$srcdir/$_pkgsrc/src/gwt/lib/quarto"
+  ln -sfT "$srcdir/quarto" "$srcdir/$_pkgsrc/src/gwt/lib/quarto"
 )
-
-_build_soci() {
-  echo "Building SOCI libs..."
-
-  local _opts_soci=(
-    -B "soci-${_sociver}/build"
-    -S "soci-${_sociver}"
-    -G Ninja
-    -DCMAKE_BUILD_TYPE=None
-    -DCMAKE_INSTALL_PREFIX='/usr'
-    -DSOCI_TESTS=OFF
-    -DSOCI_CXX11=ON
-    -DSOCI_EMPTY=OFF
-    -DWITH_BOOST=ON
-    -DWITH_POSTGRESQL=ON
-    -DWITH_SQLITE3=ON
-    -DWITH_DB2=OFF
-    -DWITH_MYSQL=OFF
-    -DWITH_ORACLE=OFF
-    -DWITH_FIREBIRD=OFF
-    -DWITH_ODBC=OFF
-    -Wno-dev
-  )
-
-  cmake "${_opts_soci[@]}"
-  cmake --build "soci-${_sociver}/build"
-}
 
 build() (
   _nvm_env
+  _run_if_exists _build_soci
+
   # Quarto set up
   if (pacman -Q quarto > /dev/null 2> /dev/null); then
     _quarto="ON"
@@ -208,13 +216,9 @@ build() (
     ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/bin/tools/pandoc
   fi
 
-  _build_soci
-
-  export LDFLAGS+=" -L$srcdir/$_pkgsrc/dependencies/soci-${_sociver}/build/lib"
-
   cd "${srcdir}"
   echo "Downloading and installing R packages..."
-  export R_LIBS_USER="${srcdir}/${_srcname}/dependencies/R"
+  export R_LIBS_USER="$srcdir/$_pkgsrc/dependencies/R"
   _JOBS="$(grep -oP -- "-j\s*\K[0-9]+" <<< "${MAKEFLAGS}")" || _JOBS="1"
   mkdir -p "${R_LIBS_USER}"
   local RPACKAGES=(
@@ -231,7 +235,6 @@ build() (
     Rscript -e "$RINSTALLCMD"
   done
 
-  export PATH="/usr/lib/jvm/java-11-openjdk/jre/bin/:${PATH}"
   export RSTUDIO_TOOLS_ROOT="$srcdir/$_pkgsrc/dependencies"
   export RSTUDIO_NODE_PATH=/usr/
   export RSTUDIO_VERSION_MAJOR=$(cut -d'.' -f1 <<< "$pkgver")
@@ -265,9 +268,11 @@ build() (
     -DRSTUDIO_NODE_VERSION="Current"
     -DRSTUDIO_INSTALLED_NODE_VERSION="Current"
     -DQUARTO_ENABLED=${_quarto}
+    -DRSTUDIO_UNIT_TESTS_ENABLED=OFF
     -DBUILD_TESTING=OFF
     -Wno-dev
   )
+
   cmake "${_opts_rstudio[@]}"
   cmake --build build
 )
@@ -281,13 +286,17 @@ package() {
 # See following script for potentially useful flags.
 # https://github.com/ozankiratli/dotfiles/blob/master/.config/sway/scripts/rstudio-wayland
 
-: \${XDG_CONFIG_HOME:=\$HOME/.config}
+#!/usr/bin/bash
 
-flags_file="\$XDG_CONFIG_HOME/rstudio-flags.conf"
+name=rstudio
+flags_file="\${XDG_CONFIG_HOME:-\$HOME/.config}/\${name}-flags.conf"
+fallback_file="\${XDG_CONFIG_HOME:-\$HOME/.config}/electron-flags.conf"
 
 lines=()
 if [[ -f "\${flags_file}" ]]; then
   mapfile -t lines < "\${flags_file}"
+elif [[ -f "\${fallback_file}" ]]; then
+  mapfile -t lines < "\${fallback_file}"
 fi
 
 flags=()
@@ -304,4 +313,10 @@ export ELECTRON_FORCE_IS_PACKAGED
 
 exec /usr/lib/rstudio/rstudio "\${flags[@]}" "\$@"
 END
+}
+
+_run_if_exists() {
+  if declare -F "$1" > /dev/null; then
+    eval "$1"
+  fi
 }
