@@ -6,8 +6,8 @@
 _name=types-requests
 _pyname="${_name//-/_}"
 pkgname="python-${_name}"
-pkgver=2.32.0.20241016
-pkgrel=2
+pkgver=2.32.0.20250301
+pkgrel=1
 pkgdesc="Typing stubs for requests"
 arch=('any')
 url="https://pypi.org/project/types-requests/"
@@ -20,7 +20,7 @@ makedepends=(
     'python-wheel'
 )
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pyname}-${pkgver}.tar.gz")
-sha256sums=('0d9cad2f27515d0e3e3da7134a1b6f28fb97129d86b867f24d9c726452634d95')
+sha256sums=('3d909dc4eaab159c0d964ebe8bfa326a7afb4578d8706408d417e17d61b0c500')
 
 build() {
     cd "${srcdir}/${_pyname}-${pkgver}"
