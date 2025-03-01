@@ -1,8 +1,8 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=vyper
-pkgver=0.4.0
-pkgrel=2
+pkgver=0.4.1
+pkgrel=1
 pkgdesc="Pythonic Smart Contract Language for the EVM"
 arch=(any)
 url="https://github.com/vyperlang/$pkgname"
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(python python-cbor2 python-asttokens python-pycryptodome python-lark-parser python-packaging python-importlib-metadata)
 makedepends=(git python-build python-installer python-setuptools python-wheel python-pytest-runner python-setuptools-scm python-sphinx python-sphinx-copybutton)
 source=(git+https://github.com/vyperlang/vyper.git#tag=v$pkgver)
-sha512sums=('3ad87fcf32d27b78d48dc6748d6efdf790960ff5f183005d58cdb36e87fb53cb4f76ee8e2a7571a1c2b51add52a8ddbd865386fc71c7760f7ea9caf061e8c761')
+sha512sums=('1a1576453e8af67e4f860e1c3c4a4fc89fd9bb0243843b258bcb43b802fa6f028471486ca0b74de32444b2f0d3728ff0cc6b23b8e91fd66c6a5abc44d996289c')
 
 prepare() {
   cd $pkgname
