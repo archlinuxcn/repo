@@ -1,8 +1,10 @@
-# Maintainer: Yvaniak <ewen at philippot dot biz>
+# Maintainer: Roald Clark <roaldclark at gmail dot com>
+# Contributor: Yvaniak <ewen at philippot dot biz>
 # Contributor: Achmad Fathoni <fathno dot id at gmail dot com>
 # Contributor: Yigit Sever <yigit at yigitsever dot com>
 
 _name=types-requests
+_pyname="${_name//-/_}"
 pkgname="python-${_name}"
 pkgver=2.32.0.20241016
 pkgrel=2
@@ -17,15 +19,15 @@ makedepends=(
     'python-setuptools'
     'python-wheel'
 )
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pyname}-${pkgver}.tar.gz")
 sha256sums=('0d9cad2f27515d0e3e3da7134a1b6f28fb97129d86b867f24d9c726452634d95')
 
 build() {
-    cd "${srcdir}/${_name}-${pkgver}"
+    cd "${srcdir}/${_pyname}-${pkgver}"
     python -m build --wheel --no-isolation
 }
 
 package() {
-    cd "${srcdir}/${_name}-${pkgver}"
+    cd "${srcdir}/${_pyname}-${pkgver}"
     python -m installer --destdir="${pkgdir}" dist/*.whl
 }
