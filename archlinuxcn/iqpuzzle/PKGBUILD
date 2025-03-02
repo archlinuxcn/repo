@@ -1,6 +1,6 @@
 # Maintainer: Thorsten Roth <elthoro@gmx.de>
 pkgname=iqpuzzle
-pkgver=1.4.1
+pkgver=1.4.2
 pkgrel=1
 pkgdesc='IQ challenging pentomino puzzle.'
 arch=('i686' 'x86_64')
@@ -9,7 +9,7 @@ license=('GPL-3.0-or-later')
 makedepends=('cmake' 'qt6-tools')
 depends=('qt6-base' 'hicolor-icon-theme')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ElTh0r0/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('3f42f30107bb07d43e3662d397f0603455247df1827158b94743cc9cce3ba280')
+sha256sums=('fbd62be66e6c1c0d3d5a70e9bd93abd51faf5a6c9dd851331ea8be1de4111bcf')
 
 build() {
     cmake -B build-cmake -S "${pkgname}-${pkgver}" \
