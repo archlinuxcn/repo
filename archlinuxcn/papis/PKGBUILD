@@ -86,8 +86,6 @@ b2sums=('a9f032a6e4159fd18d8b2bfaa5dfb46a53554691c334be7fe0d57e7c91ed52161f22f1d
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
-    patch -Np1 -i ../papis-014-fix-tests.patch
-
     python -m build --wheel --no-isolation
     python -m installer --destdir=tmp_test_install dist/*.whl
     local site_packages=$(python -c 'import site; print(site.getsitepackages()[0])')
