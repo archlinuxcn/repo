@@ -4,13 +4,11 @@ build_prefix: extra-x86_64
 time_limit_hours: 4
 repo_depends:
   - dcmtk
-  - gdcm
-  # - vxl
 update_on:
   - source: github
     github: InsightSoftwareConsortium/ITK
     use_max_tag: true
-    include_regex: 'v(\d+\.\d+\.\d+)'
+    include_regex: v(\d+\.\d+\.\d+)
   - source: manual
     manual: 9
   - alias: python
