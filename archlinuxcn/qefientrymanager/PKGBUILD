@@ -35,11 +35,7 @@ build() {
 
 package() {
 	cd "${_srcname}/"
-
 	DESTDIR="${pkgdir}" cmake --install build
-
-	# License
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 
 	# Documentation
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"
