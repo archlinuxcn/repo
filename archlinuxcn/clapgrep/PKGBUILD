@@ -22,5 +22,6 @@ check() {
 }
 
 package() {
+	export CARGO_HOME="${srcdir}/cargo"
 	meson install -C build --destdir "${pkgdir}"
 }
