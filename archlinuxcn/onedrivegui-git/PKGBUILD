@@ -14,14 +14,19 @@ provides=("onedrivegui")
 arch=("any")
 source=(
 	"git+${url}.git"
-	"https://raw.githubusercontent.com/Integral-Tech/${_pkgname}/refs/heads/fix-desktop-file/src/resources/${_pkgname}.desktop"
+	"${_pkgname}-desktop-file.patch::${url}/pull/215.patch"
 )
 sha256sums=('SKIP'
-            '9c5b7a573f2171be192286ba6633f7ff824a4118f0a7f57e6ba778484edcbe31')
+            '213640add88486963daaa4d8d751fdf7fde81d8d2d1adc286c8a8ed104d8f53e')
 
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --tags --long | sed 's/v//;s/-/.r/;s/-/./g'
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	patch -p1 -i "../${_pkgname}-desktop-file.patch"
 }
 
 package() {
