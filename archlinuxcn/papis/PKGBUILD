@@ -3,7 +3,7 @@
 # Contributor: Stefan Gehr <stefan@gehr.xyz>
 
 pkgname=papis
-pkgver=0.14
+pkgver=0.14.1
 pkgrel=1
 pkgdesc="Command-line document and bibliography manager"
 arch=('any')
@@ -80,7 +80,7 @@ optdepends=(
     'python-sphinx: for papis.sphinx_ext (used by some plugins)'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-b2sums=('a9f032a6e4159fd18d8b2bfaa5dfb46a53554691c334be7fe0d57e7c91ed52161f22f1d74568ef780c667e9cba48971f12add44363f3d072877d321fff5ca85a')
+b2sums=('544802d79aa2cb1441faf8ec524ae3bee2084786a8420cfccbb9af850d0d31b21b9ca64e7063195f6cd04c45ed1c40ba6d087094defcdaec067f61a6239debbe')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
