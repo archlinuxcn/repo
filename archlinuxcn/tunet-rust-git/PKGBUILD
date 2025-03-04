@@ -25,17 +25,17 @@ pkgver() {
 }
 
 prepare() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${_pkgname}/"
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${_pkgname}/"
 	cargo build --frozen --release --all-features --workspace --exclude native
 }
 
 check() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${_pkgname}/"
 	cargo test --frozen --all-features --workspace --exclude native
 }
 
