@@ -10,7 +10,7 @@ epoch=1
 pkgdesc="High-level C binding for ZeroMQ"
 arch=('i686' 'x86_64' 'aarch64')
 depends=('zeromq' 'curl' 'lz4' 'systemd-libs' 'util-linux-libs')
-makedepends=('git' 'pkg-config')
+makedepends=('git')
 url="https://github.com/zeromq/${_pkgname}"
 license=('MPL-2.0')
 source=("git+${url}")
@@ -53,9 +53,6 @@ build() {
 
 package() {
   cd "${_pkgname}/"
-
-  msg2 'Installing license...'
-  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/czmq"
 
   msg2 'Installing...'
   make DESTDIR="${pkgdir}" install
