@@ -30,12 +30,13 @@ prepare() {
 }
 
 package() {
-	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-
 	cd "${_pkgname}/src/"
 	install -Dm755 "${_pkgname}.py" -t "${pkgdir}/usr/lib/${_pkgname}/"
-	install -Dm644 "resources/images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"
 	cp -r {resources,ui} "${pkgdir}/usr/lib/${_pkgname}/"
+
+	cd resources
+	install -Dm644 "images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"
+	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	install -d "${pkgdir}/usr/bin/"
 	ln -sf "/usr/lib/${_pkgname}/${_pkgname}.py" "${pkgdir}/usr/bin/${_pkgname}"
