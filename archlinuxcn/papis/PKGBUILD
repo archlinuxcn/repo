@@ -79,10 +79,8 @@ optdepends=(
     'python-sphinx-click: for papis.sphinx_ext (used by some plugins)'
     'python-sphinx: for papis.sphinx_ext (used by some plugins)'
 )
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
-        "papis-014-fix-tests.patch")
-b2sums=('a9f032a6e4159fd18d8b2bfaa5dfb46a53554691c334be7fe0d57e7c91ed52161f22f1d74568ef780c667e9cba48971f12add44363f3d072877d321fff5ca85a'
-        'e5d54a0c766e8f9fa7d014483e089701202f93530aec0a8d67732688790e395d4b1aab85fe18f7ebc6a97a3ab3a7da9724a0a6315685da3bc8a3450b80d0b973')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+b2sums=('a9f032a6e4159fd18d8b2bfaa5dfb46a53554691c334be7fe0d57e7c91ed52161f22f1d74568ef780c667e9cba48971f12add44363f3d072877d321fff5ca85a')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
