@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 # Contributor: Xiaozhu1337 <nihaoaheheda@gmail.com>
 pkgname=siyuan
-pkgver=3.1.23
+pkgver=3.1.24
 _electronversion=33
 _nodeversion=20
 pkgrel=1
@@ -33,7 +33,7 @@ source=(
     "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
     "${pkgname}.sh"
 )
-sha256sums=('ccb92eefdaf4f1294496f66a3d525ddf2bf8a1c08844f5a59a5b1d88a3edf875'
+sha256sums=('c404e26d06439117fd441beafcc041d4beee097a8750b96162c8ac687d0e0ab0'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 _ensure_local_nvm() {
     local NVM_DIR="${srcdir}/.nvm"
@@ -77,7 +77,10 @@ prepare() {
         } >> .npmrc
         go env -w GOPROXY=https://goproxy.cn,direct
     fi
-    sed -i "/build:mobile/d;s/\"electron\": \"\([^\"]*\)\"/\"electron\": \"${SYSTEM_ELECTRON_VERSION}\"/g" package.json
+    sed -i -e "
+        /build:mobile/d
+        s/\"electron\": \"\([^\"]*\)\"/\"electron\": \"${SYSTEM_ELECTRON_VERSION}\"/g
+    " package.json
     NODE_ENV=development    pnpm install --no-frozen-lockfile
 }
 build() {
