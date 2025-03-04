@@ -1,5 +1,6 @@
-# Maintainer: Caleb Maclennan <caleb@alerque.com>
-# Maintainer: José Miguel Sarasola <jmsaraur@gmail.com>
+# Maintainer: brave <aur-release@brave.com>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
+# Contributor: José Miguel Sarasola <jmsaraur@gmail.com>
 # Contributor: Như Bảo Trương <28810481+nhubaotruong@users.noreply.github.com>
 # Contributor: Andrés Rodríguez <hello@andres.codes>
 # Contributor: Jacob Mischka <jacob@mischka.me>
@@ -8,11 +9,8 @@
 # Contributor: now-im <now im 627 @ gmail . com>
 # Contributor: Giusy Digital <kurmikon at libero dot it>
 
-# Version notes:
-# `curl https://brave-browser-downloads.s3.brave.com/latest/release.version`
-
 pkgname=brave-bin
-pkgver=1.75.178
+pkgver=1.75.181
 pkgrel=1
 epoch=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
@@ -37,8 +35,8 @@ source_aarch64=(${pkgname}-${pkgver}-aarch64.zip::https://github.com/brave/brave
 noextract=(${pkgname}-${pkgver}-x86_64.zip ${pkgname}-${pkgver}-aarch64.zip)
 sha256sums=('75a87dd17b42fcc6f27adfd16c82bed1c08e9251b07d2012f8d49f7412fa1d00'
             'c07276b69c7304981525ecb022f92daf7ae125a4fb05ac3442157b50826e257a')
-sha256sums_x86_64=('7b6f8db53ffcb179553b8b3cbd660cd4d5ce46d619e50577395a97512e8039fe')
-sha256sums_aarch64=('adf7d949e380f1339cfe7d0cd461a5501fd2ff84e3e641ed253f1df542081989')
+sha256sums_x86_64=('22e7cbcdacecf70af199cbd65dff43f062ebab130fcc513b19fe1ca1bd411d32')
+sha256sums_aarch64=('4dd87408b6090688157ec5e972b6a36f0fcfcb90b88cd8a0e160182fdb66a1c0')
 
 prepare() {
 	mkdir -p brave
