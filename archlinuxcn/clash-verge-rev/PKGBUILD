@@ -18,7 +18,9 @@ options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	pnpm install
+	sed -i '/createUpdaterArtifacts/s/true/false/' src-tauri/tauri.conf.json
+
+	pnpm i
 	pnpm check
 }
 
