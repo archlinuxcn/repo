@@ -4,10 +4,10 @@
 
 pkgname=solana  
 epoch=1
-pkgver=2.1.11
+pkgver=2.1.15
 # https://github.com/anza-xyz/agave/blob/$pkgver/scripts/spl-token-cli-version.sh
 _splTokenCliVersion=4.1.1
-pkgrel=2
+pkgrel=1
 pkgdesc="A fast, secure, and censorship resistant blockchain."
 url="https://www.solana.com"
 arch=(x86_64)
@@ -20,7 +20,7 @@ source=(git+https://github.com/anza-xyz/agave.git#tag=v$pkgver
         $pkgname.sysusers
         $pkgname.tmpfiles
         $pkgname-sbf_sdk-path.patch)
-sha256sums=('3cba94dee271e1c2590f1705226d3f6b6aa16792a5b6af04a766c621c8f24948'
+sha256sums=('385214fe1145b07ea5f3d262f41bf62d1a1476a6ac6ca866d770aab151cf0e23'
             'd0d7c7e98b42a6613d4ba1ddc8ec7650434793bab5925bf565de6cf3ba6093a1'
             'bf7e015436e3d15e70fc67f323bbd04163f79a4de7d06a254a5409bd031227b0'
             'a0f9ee2a24ab97da977eed1dd68a92165c2f2e6d5467462fe83c762031f4e02b'
