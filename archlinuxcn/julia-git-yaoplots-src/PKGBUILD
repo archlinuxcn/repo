@@ -1,7 +1,7 @@
 pkgname=julia-git-yaoplots-src
-pkgver=0.9.3
-_commit=9a2fcb9383b6e3adadddb8de74167fa4915a8467
-pkgrel=2
+pkgver=0.9.4
+_commit=aa1007d7a119d5c2383c0a88d7647c9a88cc43f4
+pkgrel=1
 pkgdesc="YaoPlots.jl"
 url="https://github.com/QuantumBFS/Yao.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumBFS/Yao.jl.git#commit=$_commit")
-sha256sums=('cf7e927833c02023ec3fde7710c7c5a49df864daee91aaa88f6c6ebdf2d103c0')
+sha256sums=('838603d469066ad2ed96c1c63c350c032595523d40a8b04833d605e4162cd0bf')
 
 package() {
   cd Yao.jl/lib/YaoPlots
