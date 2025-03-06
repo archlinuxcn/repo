@@ -1,0 +1,16 @@
+[Unit]
+Description=Markdown note taking application (per-user service)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+ExecStart=/usr/bin/silverbullet
+Environment=DOCS=%h/.local/share/silverbullet
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+# vim: ft=systemd
