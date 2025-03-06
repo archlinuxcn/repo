@@ -1,6 +1,6 @@
 pkgname=julia-git-differentiationinterface-src
-pkgver=0.6.42
-_commit=1df562180bdcc3e91c885aa5f4162a0be2ced850
+pkgver=0.6.43
+_commit=e541190e8e0a3193897fdc3fa42ae7ddf68e59bb
 pkgrel=1
 pkgdesc="DifferentiationInterface.jl"
 url="https://github.com/gdalle/DifferentiationInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/gdalle/DifferentiationInterface.jl.git#commit=$_commit")
-sha256sums=('812fbcef4642d6fc1dd55839cd4a3566065e8d8864b0ecd76ec40d9b39440aa1')
+sha256sums=('00431c6d01bc5d5dc48895557b4b7581261877a17bedac37ca09d4bbe8467712')
 
 package() {
   cd DifferentiationInterface.jl/DifferentiationInterface
