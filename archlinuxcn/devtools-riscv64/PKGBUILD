@@ -2,7 +2,7 @@
 
 pkgname=devtools-riscv64
 epoch=1
-pkgver=1.3.0+patch1
+pkgver=1.3.2+patch1
 pkgrel=1
 pkgdesc='Tools for Arch Linux RISC-V package maintainers'
 arch=('x86_64' 'riscv64')
@@ -32,6 +32,11 @@ package() {
   install -Dm644 riscv64.conf -t "$pkgdir"/usr/share/devtools/makepkg.conf.d
   patch /usr/share/devtools/pacman.conf.d/extra.conf -i pacman-extra-riscv64.patch -o extra-riscv64.conf
   install -Dm644 extra-riscv64.conf -t "$pkgdir"/usr/share/devtools/pacman.conf.d
+
+  install -dm755 "$pkgdir"/usr/share/devtools/makepkg.conf.d/riscv64.conf.d
+  for conf in fortran.conf rust.conf; do
+    ln -s '../conf.d/'$conf "$pkgdir"/usr/share/devtools/makepkg.conf.d/riscv64.conf.d/$conf
+  done
 
   if [[ ! "$CARCH" =~ riscv ]]; then
     install -dm755 "$pkgdir"/usr/share/devtools/setarch-aliases.d
