@@ -4,8 +4,8 @@
 # Contributor: aspen <aspen@aspenuwu.me>
 pkgname=zulip-desktop-electron
 pkgver=5.11.1
-pkgrel=1
-_electronversion=32
+pkgrel=2
+_electronversion=34
 pkgdesc="Real-time team chat based on the email threading model"
 arch=('x86_64')
 url="https://zulip.com"
@@ -14,12 +14,21 @@ depends=("electron$_electronversion" 'libxkbfile' 'libxss')
 makedepends=('nodejs>=12.10.0' 'npm')
 provides=("${pkgname%-*}")
 conflicts=("${pkgname%-*}")
-source=("${pkgname%-*}-$pkgver.tar.gz::https://github.com/zulip/zulip-desktop/archive/v$pkgver.tar.gz"
-        "${pkgname%-*}.desktop"
-        "${pkgname%-*}.sh.in")
-sha256sums=('45af710aec1b4a7287b10d668da2edf05b03e4467f32df90c6eeef753f8f6888'
-            '8f3440dc9195c6763de16f8b13409a5c130bdf417015e7e27bb64fdb227f4f10'
-            '70ed0f08158c6ea8ef99dbbe360861e2c63911c2fadc74c0154bd6567abc8979')
+source=(
+  "${pkgname%-*}-$pkgver.tar.gz::https://github.com/zulip/zulip-desktop/archive/v$pkgver.tar.gz"
+  '0.patch'
+  "${pkgname%-*}.desktop"
+  "${pkgname%-*}.sh.in")
+sha256sums=(
+  '45af710aec1b4a7287b10d668da2edf05b03e4467f32df90c6eeef753f8f6888'
+  'fd2419ffafb894c1ec8c850bd93c2a3541221294426997d2a79920512d04741f'
+  '8f3440dc9195c6763de16f8b13409a5c130bdf417015e7e27bb64fdb227f4f10'
+  '70ed0f08158c6ea8ef99dbbe360861e2c63911c2fadc74c0154bd6567abc8979')
+
+prepare() {
+  cd "${pkgname%-*}-$pkgver"
+  patch -Np0 -i "$srcdir/0.patch"
+}
 
 build() {
   cd "${pkgname%-*}-$pkgver"
@@ -33,7 +42,7 @@ build() {
 
 package() {
   cd "${pkgname%-*}-$pkgver"
-  sed "s/@@VERSION@@/$_electronversion/" "$srcdir/${pkgname%-*}.sh.in" > "${pkgname%-*}.sh"
+  sed "s/@@VERSION@@/$_electronversion/" "$srcdir/${pkgname%-*}.sh.in" >"${pkgname%-*}.sh"
   install -Dm644 dist/linux-unpacked/resources/app.asar -t "$pkgdir/usr/lib/${pkgname%-*}/resources/"
   install -Dm755 "${pkgname%-*}.sh" "$pkgdir/usr/bin/zulip"
   install -Dm644 "$srcdir/${pkgname%-*}.desktop" -t "$pkgdir/usr/share/applications/"
