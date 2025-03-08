@@ -1,0 +1,61 @@
+# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+
+pkgname=lemmy-ui
+pkgver=0.19.8
+pkgrel=2
+pkgdesc='The official web app for lemmy'
+arch=('any')
+url='https://github.com/LemmyNet/lemmy-ui'
+license=('AGPL-3.0-or-later')
+depends=('nodejs' 'lemmy')
+makedepends=('git' 'pnpm' 'python')
+backup=('etc/lemmy/lemmy-ui.env')
+_commit='61a827a1cca8883dd422b3e4dbe305b0645d99f1'
+source=(
+  "git+https://github.com/LemmyNet/lemmy-ui#tag=${pkgver}"
+  'git+https://github.com/LemmyNet/lemmy-translations.git'
+  'systemd.service'
+  'tmpfiles.conf'
+  'config.env'
+)
+sha256sums=('cfa756053fd97d36d84e0b1daee13d1c1a1ef0c8d82889fff9844ea2fc42449f'
+            'SKIP'
+            'b453ea4670940780bbf01a8f424b96b6e48bf3827cf8bb076bb5070c80103ff1'
+            '8cbb921e03d7d558a242470f09dd76181542a349269338724488a6d26b87e095'
+            '37249c35f7596fa16a15545dc087862bbb8073eb4f412905b3b7fa19fc5dce15')
+
+pkgver() {
+  cd "$pkgname"
+  git describe --tags | sed 's/^v//'
+}
+
+prepare() {
+	cd "$pkgname"
+
+  # setup submodules
+  git submodule init
+  git config submodule.lemmy-translations.url ../lemmy-translations
+  git -c protocol.file.allow=always submodule update
+
+  # set UI version
+  sed -i "s/unknown version/$pkgver/" src/shared/version.ts
+}
+
+build() {
+	cd "$pkgname"
+
+  pnpm install
+  pnpm build:prod
+}
+
+package() {
+  # systemd integration
+  install -vDm644 config.env "$pkgdir/etc/lemmy/$pkgname.env"
+  install -vDm644 systemd.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
+  install -vDm644 tmpfiles.conf "$pkgdir/usr/lib/tmpfiles.d/$pkgname.conf"
+
+	cd "$pkgname"
+
+  install -vd "$pkgdir/usr/share/$pkgname"
+  cp -R dist node_modules "$pkgdir/usr/share/$pkgname"
+}
