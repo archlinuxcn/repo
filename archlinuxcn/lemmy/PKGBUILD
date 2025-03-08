@@ -6,7 +6,7 @@ pkgrel=2
 pkgdesc='A link aggregator for the fediverse'
 arch=('x86_64')
 url='https://join-lemmy.org'
-license=('AGPL3')
+license=('AGPL-3.0-or-later')
 depends=(
   'gcc-libs'
   'openssl'
@@ -15,16 +15,15 @@ depends=(
   'ffmpeg'
   'perl-image-exiftool'
 )
-makedepends=('git' 'rust' 'protobuf')
+makedepends=('git' 'cargo' 'protobuf')
 optdepends=(
   'lemmy-ui: for the web app'
   'pict-rs: for image hosting backend'
 )
 backup=('etc/lemmy/lemmy.hjson')
 options=('!lto')
-_commit='7d5669e8d3cbb2764f323d59067c15a3ad9f4176'
 source=(
-  "$pkgname::git+https://github.com/LemmyNet/lemmy.git#commit=$_commit"
+  "git+https://github.com/LemmyNet/lemmy.git#tag=${pkgver}"
   'git+https://github.com/LemmyNet/lemmy-translations.git'
   'systemd.service'
   'sysusers.conf'
