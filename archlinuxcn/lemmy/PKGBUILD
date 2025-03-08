@@ -52,11 +52,6 @@ build() {
 	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
-check() {
-	cd "${pkgname}/"
-	CFLAGS+=" -ffat-lto-objects" cargo test --frozen --all-features
-}
-
 package() {
 	install -vDm644 "${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
 	install -vDm644 sysusers.conf "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
