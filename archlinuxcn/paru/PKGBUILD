@@ -9,22 +9,27 @@ backup=("etc/paru.conf")
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 license=('GPL-3.0-or-later')
 makedepends=('cargo')
-depends=('pacman>=7' 'git')
-optdepends=('asp: downloading repo pkgbuilds' 'bat: colored pkgbuild printing')
+depends=('git' 'pacman' 'libalpm.so>=14')
+optdepends=('bat: colored pkgbuild printing' 'devtools: build in chroot and downloading pkgbuilds')
 sha256sums=('b9c67f1390caacc949c2eb2a254e8cf37778f382c3c6b8d057fa6feb6eaeb0f9')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's|host: ||p')"
+}
 
 build () {
   cd "$srcdir/$pkgname-$pkgver"
 
-  if pacman -T pacman-git > /dev/null || pacman -T 'pacman>6.0.0alpha' > /dev/null; then
+  if pacman -T pacman-git > /dev/null; then
     _features+="git,"
   fi
 
-  if [[ $(rustc -V) == *"nightly"* ]]; then
-    _features+="backtrace,"
+  if [[ $CARCH != x86_64 ]]; then
+    export CARGO_PROFILE_RELEASE_LTO=off
   fi
 
-  cargo build --locked --features "${_features:-}" --release --target-dir target
+  cargo build --frozen --features "${_features:-}" --release --target-dir target
   ./scripts/mkmo locale/
 }
 
