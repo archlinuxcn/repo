@@ -4,7 +4,7 @@
 _module="markdownify"
 _pkgname="python-$_module"
 pkgname="$_pkgname"
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Convert HTML to Markdown"
 url="https://github.com/matthewwithanm/python-markdownify"
@@ -26,7 +26,7 @@ makedepends=(
 _pkgsrc="$_module-$pkgver"
 _pkgext="tar.gz"
 source=("$_pkgsrc.$_pkgext"::"https://pypi.io/packages/source/${_module::1}/$_module/$_module-$pkgver.$_pkgext")
-sha256sums=('8e58d7bd7336cffe4168e5ceac22d78656b1121994bd65d1021cc1ac61a628d6')
+sha256sums=('449c0bbbf1401c5112379619524f33b63490a8fa479456d41de9dc9e37560ebd')
 
 build() {
   cd "$_pkgsrc"
