@@ -2,8 +2,8 @@
 
 _name=coincurve
 pkgname=python-${_name}
-pkgver=20.0.0
-pkgrel=3
+pkgver=21.0.0
+pkgrel=1
 pkgdesc="Cross-platform Python bindings for libsecp256k1"
 arch=(x86_64)
 url="https://github.com/ofek/${_name}"
@@ -12,7 +12,7 @@ depends=(glibc python python-asn1crypto python-cffi)
 makedepends=(python-build python-installer python-setuptools python-wheel python-hatchling python-scikit-build-core)
 checkdepends=(python-pytest python-pytest-benchmark)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('f956502eb5614be62579b1eeec356e286bdd74c93699f8d21698f5f510d00dbde89258baab92e9bb917c9c2f51898fc0d0dc66a2e98dc54b6996e0262b055d3b')
+sha512sums=('6ceb185eb57ae9bdd6bd989b9c99cc63e6c371c173134fc77b9a76b0955315607d635ff935dd177a958e56a572cf9f33f68126d5c2bb55e313cf4d717c8c6d6b')
 
 build() {
   cd $_name-$pkgver
