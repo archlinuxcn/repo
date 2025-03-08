@@ -13,7 +13,7 @@ backup=("etc/lemmy/${pkgname}.env")
 source=(
 	"git+https://github.com/LemmyNet/${pkgname}#tag=${pkgver}"
 	'git+https://github.com/LemmyNet/lemmy-translations.git'
-	'systemd.service'
+	"${pkgname}.service"
 	'tmpfiles.conf'
 	'config.env'
 )
@@ -43,8 +43,8 @@ build() {
 
 package() {
 	# systemd integration
+	install -vDm644 "${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
 	install -vDm644 config.env "${pkgdir}/etc/lemmy/${pkgname}.env"
-	install -vDm644 systemd.service "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
 	install -vDm644 tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
 
 	install -vd "${pkgdir}/usr/share/${pkgname}/"
