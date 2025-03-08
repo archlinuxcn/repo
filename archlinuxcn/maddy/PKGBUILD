@@ -42,7 +42,7 @@ build() {
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-  go build -ldflags "-extldflags ${LDFLAGS} -s -w -X github.com/foxcpp/maddy.Version=${pkgver}" -x -o build ./cmd/...
+  go build -ldflags "-extldflags '${LDFLAGS}' -s -w -X github.com/foxcpp/maddy.Version=${pkgver}" -x -o build ./cmd/...
 }
 
 check() {
