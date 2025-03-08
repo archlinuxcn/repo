@@ -9,6 +9,9 @@ update_on:
     alpm: opencv
     repo: extra
     strip_release: true
+  - source: alpmfiles
+    pkgname: quazip-qt6
+    filename: 'usr/lib/libquazip1-qt6\.so\.(\d+\.\d+)'
 
 build_prefix: extra-x86_64
 
