@@ -1,72 +1,66 @@
-# Maintainer: George Rawlinson <grawlinson@archlinux.org>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=lemmy
 pkgver=0.19.8
 pkgrel=2
-pkgdesc='A link aggregator for the fediverse'
-arch=('x86_64')
-url='https://join-lemmy.org'
+pkgdesc="A link aggregator for the fediverse"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://join-${pkgname}.org"
 license=('AGPL-3.0-or-later')
 depends=(
-  'gcc-libs'
-  'openssl'
-  'postgresql-libs'
-  'imagemagick'
-  'ffmpeg'
-  'perl-image-exiftool'
+	'gcc-libs'
+	'openssl'
+	'postgresql-libs'
+	'imagemagick'
+	'ffmpeg'
+	'perl-image-exiftool'
 )
 makedepends=('git' 'cargo' 'protobuf')
 optdepends=(
-  'lemmy-ui: for the web app'
-  'pict-rs: for image hosting backend'
+	'lemmy-ui: for the web app'
+	'pict-rs: for image hosting backend'
 )
-backup=('etc/lemmy/lemmy.hjson')
+backup=("etc/${pkgname}/${pkgname}.hjson")
 options=('!lto')
 source=(
-  "git+https://github.com/LemmyNet/lemmy.git#tag=${pkgver}"
-  'git+https://github.com/LemmyNet/lemmy-translations.git'
-  'systemd.service'
-  'sysusers.conf'
-  'tmpfiles.conf'
+	"git+https://github.com/LemmyNet/${pkgname}.git#tag=${pkgver}"
+	"git+https://github.com/LemmyNet/${pkgname}-translations.git"
+	'systemd.service'
+	'sysusers.conf'
+	'tmpfiles.conf'
 )
-b2sums=('SKIP'
-        'SKIP'
-        'cb348364c053a525b55c026af5046ca7cd029dc6a890fa2621578e03e12462c85c31e268977d1e40fdd0945e8ea9b1355bc40fc03741a3792a07a7a814efd750'
-        'f736c1415e98be9f69451d49fca3c7804dd05ef1b3d7537b787dbd004094662346605911377bf63260d3fa90eeed2a075e3b890b5496995a3f9e4a99792d8389'
-        'f57297e6a82193b192dfee8d506751375a2487bbf644d15a7deaa019891dd53fcb5e1268c09ae805605cd68097ee006e62887dce2564beb7a2736b7769217650')
-
-pkgver() {
-  cd "$pkgname"
-  git describe --tags | sed 's/^v//'
-}
+sha256sums=('9c387eddecb1edd8a63c5c79a3568ad47f255f2c831658e1fbc553574a84418d'
+            'SKIP'
+            'dd0a63a4149a456dc53d613d30f0a25bbbaf7e634b0cd74c3a3a3e4d25140c21'
+            '0728494d597534462d9d685b0f9c9efb1d30b0af48f884a8bca7ad9a299b3c67'
+            'fd87872099956ec495b7d0e598dc66f0e7e051b7d26a22e8ac59f910ed4ebc29')
 
 prepare() {
-  cd "$pkgname"
+	cd "${pkgname}/"
 
-  # setup submodules
-  git submodule init
-  git config submodule.crates/utils/translations.url ../lemmy-translations
-  git -c protocol.file.allow=always submodule update
+	# setup submodules
+	git submodule init
+	git config submodule.crates/utils/translations.url "${srcdir}/${pkgname}-translations"
+	git -c protocol.file.allow=always submodule update
 
-  # download dependencies
-  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	# download dependencies
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
-  cd "$pkgname"
+	cd "${pkgname}/"
 
-  cargo build --frozen --release
+	cargo build --frozen --release
 }
 
 package() {
-  # systemd integration
-  install -vDm644 systemd.service "$pkgdir/usr/lib/systemd/system/lemmy.service"
-  install -vDm644 sysusers.conf "$pkgdir/usr/lib/sysusers.d/lemmy.conf"
-  install -vDm644 tmpfiles.conf "$pkgdir/usr/lib/tmpfiles.d/lemmy.conf"
-  install -vDm644 "$pkgname/config/config.hjson" "$pkgdir/etc/lemmy/lemmy.hjson"
+	# systemd integration
+	install -vDm644 systemd.service "$pkgdir/usr/lib/systemd/system/${pkgname}.service"
+	install -vDm644 sysusers.conf "$pkgdir/usr/lib/sysusers.d/${pkgname}.conf"
+	install -vDm644 tmpfiles.conf "$pkgdir/usr/lib/tmpfiles.d/${pkgname}.conf"
 
-  cd "$pkgname"
-
-  # binary
-  install -vDm755 -t "$pkgdir/usr/bin" target/release/lemmy_server
+	cd "${pkgname}/"
+	install -vDm644 "config/config.hjson" "${pkgdir}/etc/${pkgname}/${pkgname}.hjson"
+	install -vDm755 "target/release/${pkgname}_server" -t "${pkgdir}/usr/bin/"
 }
