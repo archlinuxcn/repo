@@ -1,9 +1,11 @@
 pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver.replace('-', '_'))
   for line in edit_file('PKGBUILD'):
     if line.startswith('_tagname='):
       line = f"_tagname={_G.newver}"
+    elif line.stratswith('_gtkver=')
+      line = f"_gtkver={_G.newver.split('-')[0]}"
     print(line)
-  update_pkgver_and_pkgrel(_G.newver.replace('-', '_'))
 
 post_build_script: |
   git_pkgbuild_commit()
