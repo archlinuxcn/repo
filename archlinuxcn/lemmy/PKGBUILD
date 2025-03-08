@@ -22,11 +22,10 @@ optdepends=(
 	'pict-rs: for image hosting backend'
 )
 backup=("etc/${pkgname}/${pkgname}.hjson")
-options=('!lto')
 source=(
 	"git+https://github.com/LemmyNet/${pkgname}.git#tag=${pkgver}"
 	"git+https://github.com/LemmyNet/${pkgname}-translations.git"
-	'systemd.service'
+	"${pkgname}.service"
 	'sysusers.conf'
 	'tmpfiles.conf'
 )
@@ -45,20 +44,23 @@ prepare() {
 	git -c protocol.file.allow=always submodule update
 
 	# download dependencies
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${pkgname}/"
+	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
+}
 
-	cargo build --frozen --release
+check() {
+	cd "${pkgname}/"
+	CFLAGS+=" -ffat-lto-objects" cargo test --frozen --all-features
 }
 
 package() {
-	# systemd integration
-	install -vDm644 systemd.service "$pkgdir/usr/lib/systemd/system/${pkgname}.service"
-	install -vDm644 sysusers.conf "$pkgdir/usr/lib/sysusers.d/${pkgname}.conf"
-	install -vDm644 tmpfiles.conf "$pkgdir/usr/lib/tmpfiles.d/${pkgname}.conf"
+	install -vDm644 "${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+	install -vDm644 sysusers.conf "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
+	install -vDm644 tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
 
 	cd "${pkgname}/"
 	install -vDm644 "config/config.hjson" "${pkgdir}/etc/${pkgname}/${pkgname}.hjson"
