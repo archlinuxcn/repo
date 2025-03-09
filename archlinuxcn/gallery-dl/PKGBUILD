@@ -2,7 +2,7 @@
 # Contributor: LLL2yu <lll2yu@protonmail.com>
 
 pkgname=gallery-dl
-pkgver=1.29.0
+pkgver=1.29.1
 pkgrel=1
 pkgdesc='Command-line program to download image-galleries and collections from several image hosting sites'
 arch=(any)
@@ -23,7 +23,7 @@ optdepends=('ffmpeg: Pixiv Ugoira conversion'
             'python-psycopg: PostgreSQL support')
 source=(git+"${url}".git#tag=v"${pkgver}"?signed)
 validpgpkeys=(3E09F5908333DD83DBDCE7375680CA389D365A88) #Mike Fährmann
-sha512sums=('4aff63c1feb9d904c6d47b13bbf9e2ca5f6e3b766df188e0c898d1cdebf957650f450e5689b18d6fe65c86a53683263ee3ec8798ec251f81a5177be3cd4b24d1')
+sha512sums=('b48d5eb6dc74b4a127daafd7e8ab81f0261777cddf99882314b5d1c60d439d7b6a865565d9070dc0fa439de2758f1db5227678c10696a8d12400273a60cf67d5')
 
 prepare() {
     # Clean out old wheels etc.
