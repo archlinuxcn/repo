@@ -6,7 +6,7 @@
 
 pkgname=ffmpeg-lily
 pkgver=7.1
-pkgrel=6
+pkgrel=7
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video (with AMD HEVC VAAPI alignment patch)'
 arch=(x86_64)
@@ -125,11 +125,13 @@ source=(
   git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
   add-av_stream_get_first_dts-for-chromium.patch
   fix_build_with_texinfo-7.2.patch
+  fix_build_with_svt-av1-3.0.patch
   0001-AMD-VAAPI-H265-encode-dimemsion-fix.patch
 )
 b2sums=('c7ec6b1db61608195117b79f3f0c8f6323c3abeb39721359da0f10e7d739da8301e04ff5fa83c022f86fc760f66e00066f9a50d97b771f797ccc679f9d912c40'
         '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de'
         '7b33e9527322604532f2b26b5c78680c54d7e50c07ff6acaddd4d17e031724ae91474f46cb034d9d02fb0cf370d6477e1d4f5b04c4dddab5e8b319f03c0fc9b9'
+        'a71d0c0092ae64b9cef38efb4a585b415e74842a173796b63778cd2c570c3216179c5ac59346d51388cc874cc37a32adb93f038ab26747d8e3fc0c984ce116ff'
         b520886c53d3a1ad2e3eb482058dd38e04df298b89f199c3cc23d498bd9d27d28fa4fffba6262319ec3e2dd7c940a3bc8de701871fc5f200cd4793ffedb76210)
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
@@ -143,6 +145,9 @@ prepare() {
 
   patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
 
+  # Fix for svt-av1
+  # Taken from https://github.com/FFmpeg/FFmpeg/commit/d1ed5c06e3edc5f2b5f3664c80121fa55b0baa95.patch
+  patch -Np1 -i ../fix_build_with_svt-av1-3.0.patch
   # VAAPI HEVC encode alignment fix
   git cherry-pick -n bcfbf2bac8f9eeeedc407b40596f5c7aaa0d5b47
   git cherry-pick -n d0facac679faf45d3356dff2e2cb382580d7a521
