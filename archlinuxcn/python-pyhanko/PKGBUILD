@@ -2,8 +2,8 @@
 
 _name=pyhanko
 pkgname=python-${_name}
-pkgver=0.25.3
-pkgrel=2
+pkgver=0.26.0
+pkgrel=1
 pkgdesc="sign and stamp PDF files"
 arch=(any)
 url="https://github.com/MatthiasValvekens/${_name}"
@@ -12,7 +12,7 @@ depends=(python python-asn1crypto python-qrcode python-tzlocal python-pyhanko-ce
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-requests-mock certomancer python-freezegun python-pytest-asyncio python-defusedxml python-certomancer-csc-dummy python-pytest-aiohttp)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('b31cbc31b7131f1a59c8a96757908056f0dcbfaf1618197ed91ecc160b3e2b2641ad47b476f852e4c8f2a151e19c99033ad9884e70f72ae0b440fcfd4733a694')
+sha512sums=('fb154d3f5ae4aba42a08b6646445dca9c3b73be7edbe00dc4192baf34c1d1d7f79cfb975af59e75a5ea8e23e431c7610243339afb663c3a548918c9a76600029')
 
 build() {
   cd pyHanko-$pkgver
