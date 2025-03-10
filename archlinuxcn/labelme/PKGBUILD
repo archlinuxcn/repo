@@ -23,6 +23,8 @@ depends=(
 makedepends=(
   python-build
   python-hatchling
+  python-hatch-fancy-pypi-readme
+  python-hatch-vcs
   python-installer
   python-setuptools
   python-wheel
@@ -39,6 +41,7 @@ sha512sums=('8f412c69ea6dad478b7c752d3ac1dd10d3f45d92b2fe0040b23b7b3662586177ad7
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
   python -m build --wheel --no-isolation
 }
 
