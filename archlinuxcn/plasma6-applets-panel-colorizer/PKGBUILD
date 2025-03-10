@@ -2,7 +2,7 @@
 _gitname=plasma-panel-colorizer
 pkgname=plasma6-applets-panel-colorizer
 pkgver=2.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Latte-Dock and WM status bar customization features for the default Plasma panels"
 arch=('any')
 url="https://github.com/luisbocanegra/$_gitname"
@@ -24,4 +24,5 @@ package() {
   cd "${srcdir}/${_gitname}-$pkgver"
   DESTDIR="$pkgdir" cmake --install build
   chmod 755 "$pkgdir/usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer/contents/ui/tools/list_presets.sh"
+  chmod 755 "$pkgdir/usr/share/plasma/plasmoids/luisbocanegra.panel.colorizer/contents/ui/tools/gdbus_get_signal.sh"
 }
