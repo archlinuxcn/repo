@@ -1,7 +1,7 @@
 pkgname=julia-git-spirv_llvm_translator_unified_jll-src
-pkgver=0.7.0+0
-_commit=8f06b9bfceed5b435c3936128e5b8c0273ec18e2
-pkgrel=2
+pkgver=0.7.1+0
+_commit=58df79a0d57c65a630a9d5122d6323f452e7f0c7
+pkgrel=1
 pkgdesc="SPIRV_LLVM_Translator_unified_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/SPIRV_LLVM_Translator_unified_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git spirv-llvm-translator)
 source=("git+https://github.com/JuliaBinaryWrappers/SPIRV_LLVM_Translator_unified_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('147a43ec64c54feb4963c0590fb5e5a7ddf38c81f4572e4bccb68558e0e897dc'
+sha256sums=('8b957fa960b68f6ea7b73cc8ab9dc1a20f8768003a7b1717e7c2202de38faf47'
             'eeafe797c42bf5947c981a24d5d10cc034dfaee2ae2544fa672022288d994228')
 
 build() {
