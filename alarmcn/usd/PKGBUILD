@@ -6,8 +6,8 @@
 
 pkgname='usd'
 pkgbase=usd
-pkgver=25.02
-pkgrel=3
+pkgver=25.02.a
+pkgrel=1
 arch=(aarch64 x86_64)
 url='https://openusd.org'
 pkgdesc='3D VFX pipeline interchange file format'
@@ -37,14 +37,14 @@ depends=(alembic # libAlembic.so
          python-numpy
          python-opengl)
 makedepends=(cmake help2man boost git fmt)
-source=("git+https://github.com/PixarAnimationStudios/OpenUSD.git#tag=v$pkgver"
+source=("git+https://github.com/PixarAnimationStudios/OpenUSD.git#tag=v${pkgver//.a/a}"
         https://openusd.org/images/USDLogoUnsized.svg
         usd-3392.patch::https://patch-diff.githubusercontent.com/raw/PixarAnimationStudios/OpenUSD/pull/3392.patch
         usd-embree42.patch::https://patch-diff.githubusercontent.com/raw/PixarAnimationStudios/OpenUSD/pull/2266.patch
         cmake-find-dependency.patch::https://patch-diff.githubusercontent.com/raw/PixarAnimationStudios/OpenUSD/pull/3205.patch
         usd-find-dependency-OpenGL.patch
         "org.openusd.usdview.desktop")
-sha256sums=('b043e1648740427184d48309fb5c5f75b1bb4de265e029faa191832d7ead8d78'
+sha256sums=('1dc5662c2b744e79dc95e4238226088670a1cfae9816d3e0b8bb83c232a1f2ee'
             '529dea685836be7de95800d9688db4e1df6a8a3f341130069abdd2b5b1572128'
             '5bcfb527940b957f5c7831c8b626f9c018b575a730fc2967dd869e678492fa42'
             '4f5e6d3a4346d2ff67cca42d89e14850d57b0c475a52004f1af297a699e4a891'
