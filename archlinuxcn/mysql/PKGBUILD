@@ -6,8 +6,8 @@
 
 pkgname=('mysql' 'libmysqlclient' 'mysql-clients')
 pkgbase=mysql
-pkgver=9.0.1
-pkgrel=3
+pkgver=9.2.0
+pkgrel=1
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
 makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'systemd-libs' 'libaio'
@@ -15,14 +15,14 @@ makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'systemd-libs' 'libaio'
              'libfido2' 're2' 'rapidjson')
 license=('GPL-2.0-only')
 url="https://www.mysql.com/products/community/"
-source=("https://cdn.mysql.com/Downloads/MySQL-9.0/${pkgbase}-${pkgver}.tar.gz"{,.asc}
+source=("https://cdn.mysql.com/Downloads/MySQL-9.2/${pkgbase}-${pkgver}.tar.gz"{,.asc}
         "my-default.cnf"
         "mysql-ld.so.conf"
         "mysql.sysconfig"
         "mysqld_service.patch"
         "systemd-tmpfiles.patch"
         "systemd-sysusers.conf")
-sha256sums=('18fa65f1ea6aea71e418fe0548552d9a28de68e2b8bc3ba9536599eb459a6606'
+sha256sums=('a39d11fdf6cf8d1b03b708d537a9132de4b99a9eb4d610293937f0687cd37a12'
             'SKIP'
             'edd5ffa5a982e47c5fcda5751b79690c38a5a57e32616df27631c51c2dfd5760'
             'e1c23fa0971a13d998f2790379b68c475438d05b6d6f2691b99051dbf497567f'
@@ -167,7 +167,7 @@ package_mysql(){
   rm "${pkgdir}/usr/lib/libmysqlclient.a"
   rm "${pkgdir}/usr/lib/libmysqlclient.so"
   rm "${pkgdir}/usr/lib/libmysqlclient.so.24"
-  rm "${pkgdir}/usr/lib/libmysqlclient.so.24.1.1"
+  rm "${pkgdir}/usr/lib/libmysqlclient.so.24.1.0"
   rm "${pkgdir}/usr/lib/libmysqlservices.a"
   rm "${pkgdir}/usr/lib/pkgconfig/mysqlclient.pc"
   rmdir "${pkgdir}/usr/lib/pkgconfig"
