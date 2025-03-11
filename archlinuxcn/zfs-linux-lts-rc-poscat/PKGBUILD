@@ -5,9 +5,9 @@ pkgname=("zfs-utils-rc-poscat" "zfs-linux-lts-rc-poscat" "zfs-linux-lts-rc-posca
 _kernelver=6.12.18-1
 _extramodules="${_kernelver}-lts"
 
-pkgver=2.3.0
-_fullver=2.3.0
-pkgrel=8
+pkgver=2.3.1
+_fullver=2.3.1
+pkgrel=1
 makedepends=(
   "linux-lts-headers=${_kernelver}"
   "libunwind"
@@ -29,7 +29,7 @@ source=(
   'zfs-root-generator'
   'zfs.shutdown'
 )
-sha256sums=('6e8787eab55f24c6b9c317f3fe9b0da9a665eb34c31df88ff368d9a92e9356a6'
+sha256sums=('053233799386920bdc636e22d0e19a8c2c3e642e8bd847ff87e108f8bb1f9006'
             'b9fa6a42f7426654fc04697b45ad1fe0fb09ff29ea76cb97ac7d09ac03de1797'
             '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
             '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
