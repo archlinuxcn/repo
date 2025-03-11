@@ -1,7 +1,7 @@
 # Maintainer: everyx <lunt.luo#gmail.com>
 
 pkgname=sing-box
-pkgver=1.11.4
+pkgver=1.11.5
 pkgrel=1
 
 pkgdesc='The universal proxy platform.'
@@ -13,7 +13,7 @@ makedepends=('go')
 
 source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz"
         "sing-box.rules")
-sha256sums=('633e40e2a64937069ada9d8d96dec1a5d735095d44eb3cbea105ee05f4616fc6'
+sha256sums=('ac95287a65ae9297aa0b9f25934ead8468bf7ef3f9045e483659ddc400e758a1'
             '1365536e1875043b969e2e18d7313ab7c6f7f9f63387f25506bb04362b44f206')
 
 conflicts=("$pkgname-git" "$pkgname-beta")
