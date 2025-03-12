@@ -1,3 +1,32 @@
+## GE-Proton9-26
+
+Upstream:
+- wine updated to latest bleeding edge
+- dxvk updated to latest git
+- vkd3d-proton updated to latest git
+- vkd3d updated to latest upstream tag
+- dxvk-nvapi updated to latest upstream tag
+- latest game-specific fixes imported from upstream proton
+
+New patches:
+- Microsoft Flight Simulator 2024 SU1 needs WerRegisterCustomMetadata -- thanks fxtentacle
+- taskschd patches backported from upstream wine, allows NCSoft Purple launcher to work (sadly the games still dont work due to anticheat)
+- GetDpiAwarenessContextForProcess patches added for GTA V Enhanced
+- webview2 patches added from upstream wine, allows webview2 installer for Vermintide2 to complete instead of crashing out.
+- Hid multi TLC and Fanatec wheel-bases hidraw white-list added -- thanks gotzi
+
+Protonfixes:
+- Fix account ID determination to allow proper importing of demo save files
+- fix: write the game_title file in the prefix.
+- [Add fix for PowerWash Adventure (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/82852f8c380e049381ff838b517034fb8cdf619b)https://github.com/Open-Wine-Components/umu-protonfixes/pull/251[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/82852f8c380e049381ff838b517034fb8cdf619b)
+- Yuzusoft Game fixes (Yet Again)
+- Add fix for UberSolder (ZP, Steam)
+- Handle PermissionError in check_internet
+- Add save import fix for Cardfight Vanguard Dear Days 2
+- [Install](https://github.com/Open-Wine-Components/umu-protonfixes/commit/a9239c37f2e242fa2d921e3872cb06fdd4dba27b) [d3dcompiler_47](https://github.com/Open-Wine-Components/umu-protonfixes/commit/a9239c37f2e242fa2d921e3872cb06fdd4dba27b) [for LEGO® Pirates of the Caribbean (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/a9239c37f2e242fa2d921e3872cb06fdd4dba27b)https://github.com/Open-Wine-Components/umu-protonfixes/pull/249[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/a9239c37f2e242fa2d921e3872cb06fdd4dba27b)
+- [Add fix for Deus Ex: Invisible War (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/2fed74f9c9de123d31be065811ee9ec8efafa7e8)https://github.com/Open-Wine-Components/umu-protonfixes/pull/248[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/2fed74f9c9de123d31be065811ee9ec8efafa7e8)
+- [new file: gamefixes-steam/2552410.py (](https://github.com/Open-Wine-Components/umu-protonfixes/commit/c363db52b2770ddbda4f73d352bcf2a9d19d2a03)https://github.com/Open-Wine-Components/umu-protonfixes/pull/246[)](https://github.com/Open-Wine-Components/umu-protonfixes/commit/c363db52b2770ddbda4f73d352bcf2a9d19d2a03)
+
 ## GE-Proton9-25
 HOTFIX:
 
