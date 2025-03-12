@@ -1,19 +1,39 @@
 # Maintainer: taotieren <admin@taotieren.com>
 
 pkgname=asciidoctor-web-pdf-git
-pkgver=1.0.0.alpha.16.r5.gc613be3
-pkgrel=1
+pkgver=1.0.0.alpha.16.r8.g3fe542a
+pkgrel=9
 pkgdesc="A PDF converter for AsciiDoc based on web technologies. It allows complex layouts to be defined with CSS and JavaScript, while writing the content in AsciiDoc."
-arch=('any')
+arch=($CARCH)
 url="https://github.com/Mogztter/asciidoctor-web-pdf"
 license=('MIT')
-provides=(${pkgname})
-conflicts=(${pkgname}  ${pkgname%-git} asciidoctor-pdf)
+provides=(${pkgname%-git} asciidoctor-pdf)
+conflicts=(${pkgname%-git} asciidoctor-pdf)
 #replaces=(${pkgname})
-depends=(npm poppler ghostscript)
-makedepends=()
+depends=(
+    sh
+    cairo
+    dbus
+    expat
+    gcc-libs
+    glib2
+    glibc
+    libcups
+    libx11
+    libxcb
+    libxext
+    nodejs
+    nspr
+    nss
+)
+makedepends=(
+    git
+    npm
+    poppler
+    ghostscript
+)
 backup=()
-options=('!strip')
+options=()
 install=
 source=("${pkgname%-git}::git+${url}.git")
 sha256sums=('SKIP')
@@ -21,11 +41,16 @@ noextract=()
 
 pkgver() {
     cd "${srcdir}/${pkgname%-git}"
-    git describe --long --tags | sed 's/^v//g;s/\([^-]*-g\)/r\1/;s/-/./g'
+    (
+        set -o pipefail
+        git describe --long --tag --abbrev=7 2>/dev/null | sed 's/^[vV]//g;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+            printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+    )
 }
 
 package() {
-    npm install -g --prefix "${pkgdir}/usr" "${srcdir}/${pkgname%-git}"
+    cd "${srcdir}/${pkgname%-git}"
+    npm install -g --prefix "${pkgdir}/usr" $(npm pack)
 
     # Non-deterministic race in npm gives 777 permissions to random directories.
     # See https://github.com/npm/cli/issues/1103 for details.
@@ -34,4 +59,6 @@ package() {
     # npm gives ownership of ALL FILES to build user
     # https://bugs.archlinux.org/task/63396
     chown -R root:root "${pkgdir}"
+
+    install -Dm0644 "${srcdir}/${pkgname%-git}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
