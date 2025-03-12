@@ -1,6 +1,8 @@
 # Maintainer: tarball <bootctl@gmail.com>
 # Contributor: Mark Wagie <mark.wagie@proton.me>
 #
+# Please don't report bugs upstream! Use AUR comments.
+#
 # Fetching the signing key:
 #     https://mullvad.net/en/help/verifying-mullvad-browser-signature
 # If you can't open the page, here's the important line:
@@ -8,7 +10,7 @@
 
 pkgname=mullvad-browser-bin
 pkgver=14.0.7
-pkgrel=1
+pkgrel=2
 pkgdesc='Privacy-focused web browser developed by Mullvad VPN and the Tor Project'
 arch=(x86_64)
 url=https://mullvad.net/en/browser
@@ -98,6 +100,10 @@ package() {
   # copy files from archive
   install -dvm755 "$pkgdir/opt/$pkg/"
   cp --archive --verbose Browser/. "$pkgdir/opt/$pkg/"
+
+  # fix "open file" dialog crash
+  sed -i 's|<dir prefix="cwd">fonts</dir>|<dir>/opt/mullvad-browser/fonts</dir>|' \
+    "$pkgdir/opt/$pkg/fontconfig/fonts.conf"
 
   # create profiles in ~
   install -Dvm644 /dev/null "$pkgdir/opt/$pkg/system-install"
