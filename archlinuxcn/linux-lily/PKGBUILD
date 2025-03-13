@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-lily
-pkgver=6.9.3
+pkgver=6.13.6
 pkgrel=1
 pkgdesc='Linux-lily'
 url="https://www.kernel.org/"
@@ -15,6 +15,9 @@ makedepends=(
   pahole
   perl
   python
+  rust
+  rust-bindgen
+  rust-src
   tar
   xz
   parallel
@@ -26,9 +29,12 @@ makedepends=(
   # python-yaml
   # texlive-latexextra
 )
-options=('strip' 'debug')
-STRIP_BINARIES=-S
+options=(
+  !debug
+  !strip
+)
 _srcname=archlinux-linux
+_srctag=v${pkgver%.*}-${pkgver##*.}
 source=(
   # https://cdn.kernel.org/pub/linux/kernel/v${pkgver%%.*}.x/${_srcname}.tar.{xz,sign}
   # $url/releases/download/$_srctag/linux-$_srctag.patch.zst{,.sig}
@@ -83,16 +89,16 @@ build() {
 }
 
 _package() {
-  options=('strip' 'debug')
-  pkgdesc="The $pkgdesc kernel and modules (cjktty, android binder, default bbr, pmadv_ksm)"
+  pkgdesc="The $pkgdesc kernel and modules (cjktty, default bbr, pmadv_ksm, drm panic)"
   depends=(
     coreutils
     initramfs
     kmod
   )
   optdepends=(
-    'wireless-regdb: to set the correct wireless channels of your country'
     'linux-firmware: firmware images needed for some devices'
+    'scx-scheds: to use sched-ext schedulers'
+    'wireless-regdb: to set the correct wireless channels of your country'
   )
   provides=(
     KSMBD-MODULE
@@ -106,8 +112,7 @@ _package() {
   )
 
   cd $_srcname
-  local kernver="$(<version)"
-  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
+  local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
 
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
@@ -118,33 +123,14 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" DEPMOD=/bin/true modules_install
+  ZSTD_CLEVEL=19 make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+    DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build link
   rm "$modulesdir"/build
-
-  msg2 "Generating debug symbol files..."
-  export dbgdir="$pkgdir-debug/usr/lib/debug"
-
-  # temp vmlinux instance
-  local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
-  install -Dt "$builddir" -m644 vmlinux
-
-  mkdir -p "$dbgdir"
-  pushd "$pkgdir"
-  find . \( -name '*.ko' -o -name vmlinux \) -print0 | parallel -j$(nproc) -0 $startdir/kostrip
-  popd
-  rm "$builddir"/vmlinux
-
-  msg2 "Compressing modules..."
-  find "${pkgdir}" -name '*.ko' -print0 | parallel -j$(nproc) -0 xz
-
-  msg2 "Running depmod..."
-  depmod -b "$pkgdir/usr" -E Module.symvers -e "$kernver"
 }
 
 _package-headers() {
-  options=('strip' '!debug')
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
   depends=(pahole)
 
@@ -157,6 +143,7 @@ _package-headers() {
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
   install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
   cp -t "$builddir" -a scripts
+  ln -srt "$builddir" "$builddir/scripts/gdb/vmlinux-gdb.py"
 
   # required when STACK_VALIDATION is enabled
   install -Dt "$builddir/tools/objtool" tools/objtool/objtool
