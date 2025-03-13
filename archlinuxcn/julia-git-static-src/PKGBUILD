@@ -1,6 +1,6 @@
 pkgname=julia-git-static-src
-pkgver=1.1.1
-_commit=9af1b3faf49ddd7b449de98e764971760864c0dc
+pkgver=1.2.0
+_commit=b43a2be3813c57ca8414b83d46a43008ccdd72ac
 pkgrel=1
 pkgdesc="Static.jl"
 url="https://github.com/SciML/Static.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/Static.jl.git#commit=$_commit")
-sha256sums=('acfc2d1756b153c4d57bbca382d8a94b526b1f813fe7ed41bbd1a570d9812d38')
+sha256sums=('738cad9a1e4143f7e01d5b8af73967a57c926acaebfa33233c7b9adc5a1bc143')
 
 package() {
   cd Static.jl
