@@ -7,9 +7,8 @@ pkgdesc='A colorful design icon theme for linux desktops'
 arch=('any')
 url='https://github.com/vinceliuice/Qogir-icon-theme'
 license=('GPL-3.0-or-later')
-depends=('gtk-update-icon-cache')
 makedepends=('git')
-optdepends=()
+options=('!strip' '!debug')
 provides=('qogir-icon-theme')
 conflicts=('qogir-icon-theme')
 source=('git+https://github.com/vinceliuice/Qogir-icon-theme')
@@ -23,5 +22,7 @@ pkgver() {
 package() {
   cd Qogir-icon-theme
   mkdir -p "${pkgdir}/usr/share/icons"
+  install -dm755 "${pkgdir}/"usr/share/icons
+  sed -i '/gtk-update-icon-cache/d' install.sh
   ./install.sh -d "${pkgdir}/usr/share/icons"
 }
