@@ -33,6 +33,7 @@ build() {
 	_package_service
 
 	cd "../${pkgname}-${pkgver}/"
+	install -d ./src-tauri/sidecar/
 	ln -s /usr/bin/clash-meta "./src-tauri/sidecar/verge-mihomo-${CARCH}-unknown-linux-gnu"
 	ln -s /usr/bin/clash-meta "./src-tauri/sidecar/verge-mihomo-alpha-${CARCH}-unknown-linux-gnu"
 	NODE_OPTIONS="--max_old_space_size=4096" pnpm build -b deb
