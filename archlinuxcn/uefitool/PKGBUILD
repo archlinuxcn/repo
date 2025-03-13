@@ -4,7 +4,7 @@
 
 pkgname=uefitool
 _pkgname=UEFITool
-pkgver=A69
+pkgver=A70
 pkgrel=1
 epoch=2
 pkgdesc="UEFI firmware image viewer and editor and utilities"
@@ -17,7 +17,7 @@ provides=('uefipatch')
 conflicts=('uefipatch')
 replaces=('uefipatch')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('3ed16ba1d887ac0dac12be02123929f269ded8ceabe9210a63cfc3a34ffa0328')
+sha256sums=('30da5061314d5c408c93d8f630408bca5ac28833c2ed4a4ef102517286e15625')
 
 build() {
 	cmake -B build -S "${_pkgname}-${pkgver}" -DCMAKE_INSTALL_PREFIX=/usr
