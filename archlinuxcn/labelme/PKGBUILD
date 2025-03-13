@@ -29,8 +29,11 @@ makedepends=(
   python-installer
   python-wheel
 )
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/labelme/archive/v${pkgver}.tar.gz")
-sha512sums=('111874cd11988716b5535170e72a1282528b1a3be48453d403b8db73fb773e9e7c93ad14ef38dc7a2b5a0185d7c4a45c7585a3daff060e99ee4ec14e31278e24')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/labelme/archive/v${pkgver}.tar.gz"
+        "labelme.desktop::https://github.com/wkentaro/labelme/raw/refs/tags/v5.6.1/labelme.desktop"
+)
+sha512sums=('111874cd11988716b5535170e72a1282528b1a3be48453d403b8db73fb773e9e7c93ad14ef38dc7a2b5a0185d7c4a45c7585a3daff060e99ee4ec14e31278e24'
+            '4dfe6a42ed28560e4cc557feead644d2623c0c4a364e2f244d40f670069ed9d64f89017d5425c8cf9db38b6c54bdbb414d863d772200ca8eb5061f56eb7555b1')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -42,5 +45,6 @@ package() {
   cd "${pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "labelme/icons/icon.png" "${pkgdir}/usr/share/pixmaps/labelme.png"
+  install -Dm644 "${srcdir}/labelme.desktop" -t "${pkgdir}/usr/share/applications"
 }
 # vim:set ts=2 sw=2 et:
