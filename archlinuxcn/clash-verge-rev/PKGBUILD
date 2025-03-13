@@ -26,7 +26,7 @@ prepare() {
 	sed -i '/createUpdaterArtifacts/s/true/false/' src-tauri/tauri.conf.json
 	pnpm i
 
-	cd "${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
+	cd "../${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
 	patch -p1 -R -i ../regression-commit.patch
 }
 
