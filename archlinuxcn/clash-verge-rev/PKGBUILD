@@ -9,11 +9,13 @@ pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://github.com/${pkgname}/${pkgname}"
 license=('GPL-3.0-or-later')
-depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator')
+depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'clash-meta')
 conflicts=("${pkgname}-bin" "${pkgname}-alpha" "${pkgname}-alpha-bin" "${pkgname}-git" "${_pkgname}" "${_pkgname}-bin")
-makedepends=('nodejs' 'pnpm' 'cargo')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('928ce73808399edd9781cf23d2a04740245d90ef51f7c93ffcbd6b931abccafc64412c2b786f99ed395f5e813de221ae6548c407097e0010e402b7dd652c0b61')
+makedepends=('pnpm' 'cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+	"https://github.com/${pkgname}/${_pkgname}-service/archive/refs/tags/${CARCH}-unknown-linux-gnu.tar.gz")
+sha512sums=('928ce73808399edd9781cf23d2a04740245d90ef51f7c93ffcbd6b931abccafc64412c2b786f99ed395f5e813de221ae6548c407097e0010e402b7dd652c0b61'
+            'c713a38b3db3260afd90255ef68fb790f4596be5ceaf47f43dfa86d9464861e541c50b521a8dc9d1a2895784d51b506f8af81bb54fbeb3ae114c8bc5b97d0fcb')
 options=('!lto')
 
 prepare() {
@@ -21,17 +23,45 @@ prepare() {
 	sed -i '/createUpdaterArtifacts/s/true/false/' src-tauri/tauri.conf.json
 
 	pnpm i
-	pnpm check
 }
 
 build() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
+	_prepare_service
+	_build_service
+	_check_service
+	_package_service
+
+	cd "../${pkgname}-${pkgver}/"
+	ln -s /usr/bin/clash-meta "./src-tauri/sidecar/verge-mihomo-${CARCH}-unknown-linux-gnu"
+	ln -s /usr/bin/clash-meta "./src-tauri/sidecar/verge-mihomo-alpha-${CARCH}-unknown-linux-gnu"
 	NODE_OPTIONS="--max_old_space_size=4096" pnpm build -b deb
 }
 
 package() {
 	cd "${pkgname}-${pkgver}/"
-
 	tar -xpf src-tauri/target/release/bundle/deb/Clash\ Verge_${pkgver}_*/data.tar.gz -C "${pkgdir}"
-	chown -R root:root ${pkgdir}
+}
+
+_prepare_service() {
+	echo "==> Starting ${FUNCNAME[0]}()..."
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+_build_service() {
+	echo "==> Starting ${FUNCNAME[0]}()..."
+	cargo build --frozen --release --all-features
+}
+
+_check_service() {
+	echo "==> Starting ${FUNCNAME[0]}()..."
+	cargo test --frozen --all-features
+}
+
+_package_service() {
+	echo "==> Starting ${FUNCNAME[0]}()..."
+
+	for bin in {${_pkgname},{,un}install}-service; do
+		install -vDm755 "./target/release/${bin}" "../${pkgname}-${pkgver}/src-tauri/resources/${bin}-${CARCH}-unknown-linux-gnu"
+	done
 }
