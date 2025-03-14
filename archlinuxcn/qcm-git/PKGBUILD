@@ -54,6 +54,8 @@ prepare() {
 	git config submodule.qml_material.url "${srcdir}/QmlMaterial"
 	git config submodule.service/jellyfin.url "${srcdir}/qcm-jellyfin-plugin"
 	git -c protocol.file.allow=always submodule update
+
+	sed -i '/add_subdirectory(KDSingleApplication EXCLUDE_FROM_ALL)/d' third_party/CMakeLists.txt
 }
 
 build() {
