@@ -28,15 +28,34 @@ makedepends=(
 	'ctre')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("git+${url}.git")
-sha256sums=('SKIP')
+source=(
+	"git+${url}.git"
+	"git+https://github.com/effolkronium/random.git"
+	"git+https://github.com/TartanLlama/expected.git"
+	"git+https://github.com/KDAB/KDSingleApplication.git"
+	"git+https://github.com/hypengw/QmlMaterial.git"
+	"git+https://github.com/hypengw/qcm-jellyfin-plugin.git"
+)
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 prepare() {
-	git -C Qcm submodule update --init --recursive
+	cd Qcm
+	git submodule init
+	git config submodule.third_party/random.url "${srcdir}/random"
+	git config submodule.third_party/expected.url "${srcdir}/expected"
+	git config submodule.third_party/KDSingleApplication.url "${srcdir}/KDSingleApplication"
+	git config submodule.qml_material.url "${srcdir}/QmlMaterial"
+	git config submodule.service/jellyfin.url "${srcdir}/qcm-jellyfin-plugin"
+	git -c protocol.file.allow=always submodule update
 }
 
 build() {
