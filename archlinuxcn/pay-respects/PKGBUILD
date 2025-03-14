@@ -2,7 +2,7 @@
 # Contributor: iff <iff@ik.me>
 
 pkgname=pay-respects
-pkgver=0.6.13
+pkgver=0.6.14
 pkgrel=1
 pkgdesc="Terminal command suggestion, alternative to thefuck written in Rust with AI support"
 arch=('x86_64' 'aarch64')
@@ -12,7 +12,7 @@ makedepends=('cargo')
 optdepends=('curl: for fetching AI suggestions')
 replaces=('pay_respects')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('bcbd9874313e7c0ed6652e164694d2c2a327a710e8b48455ba17514b43323646')
+sha256sums=('b18c91796cc7903a9fb01669467eb15c219dedfbfd7ae8805229e50409c2273b')
 
 prepare() {
 	cd "${pkgname}/"
