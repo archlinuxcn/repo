@@ -18,26 +18,25 @@ depends=(
 	'dbus'
 	'ffmpeg'
 	'fmt'
-	'cubeb-git')
+	'cubeb-git'
+	'kdsingleapplication')
 makedepends=(
 	'git'
 	'cmake'
 	'asio'
 	'pegtl'
 	'nlohmann-json'
-	'ctre')
+	'ctre'
+	'tl-expected')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=(
 	"git+${url}.git"
 	"git+https://github.com/effolkronium/random.git"
-	"git+https://github.com/TartanLlama/expected.git"
-	"git+https://github.com/KDAB/KDSingleApplication.git"
 	"git+https://github.com/hypengw/QmlMaterial.git"
 	"git+https://github.com/hypengw/qcm-jellyfin-plugin.git"
 )
 sha256sums=('SKIP'
-            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -49,10 +48,10 @@ pkgver() {
 
 prepare() {
 	cd Qcm
+	git rm third_party/{expected,KDSingleApplication}
+
 	git submodule init
 	git config submodule.third_party/random.url "${srcdir}/random"
-	git config submodule.third_party/expected.url "${srcdir}/expected"
-	git config submodule.third_party/KDSingleApplication.url "${srcdir}/KDSingleApplication"
 	git config submodule.qml_material.url "${srcdir}/QmlMaterial"
 	git config submodule.service/jellyfin.url "${srcdir}/qcm-jellyfin-plugin"
 	git -c protocol.file.allow=always submodule update
