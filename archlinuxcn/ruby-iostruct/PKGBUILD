@@ -2,8 +2,8 @@
 
 _name=iostruct
 pkgname=ruby-${_name}
-pkgver=0.4.0
-pkgrel=2
+pkgver=0.5.0
+pkgrel=1
 pkgdesc="A Struct that can read/write itself from/to IO-like objects"
 arch=(any)
 url="https://github.com/zed-0xff/${_name}"
@@ -11,7 +11,7 @@ license=(MIT)
 depends=(ruby)
 makedepends=(git)
 source=("git+$url.git#tag=v$pkgver")
-sha256sums=('53ad352d8994c0cc805140d11d04626af5f29a21b50f2a3e83f158cc555ea8e0')
+sha256sums=('16dc788afcfa77b22d9c1c53eecfb581249a72c43bbb04fb60b2e98085170cc5')
 
 prepare() {
   cd "${_name}"
