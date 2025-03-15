@@ -2,8 +2,8 @@
 
 pkgname=calcmysky-qt6
 _pkgname=CalcMySky
-pkgver=0.3.3
-pkgrel=5
+pkgver=0.3.4
+pkgrel=1
 pkgdesc='Simulates scattering of light by the atmosphere to render daytime and twilight skies'
 arch=('x86_64')
 url='https://10110111.github.io/CalcMySky/'
@@ -13,7 +13,7 @@ makedepends=('cmake' 'git' 'gcc' 'eigen' 'glm')
 #provides=('')
 conflicts=('calcmysky-qt5')
 source=("git+https://github.com/10110111/CalcMySky.git#tag=v$pkgver")
-md5sums=('c46bfd2b52f03520ca9ee07aeec3a8a9')
+md5sums=('b80a3f4e1b86268a4f76638ed4ce6522')
 
 prepare() {
 	mkdir -p build
