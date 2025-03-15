@@ -3,7 +3,7 @@
 _name=KDDockWidgets
 pkgname=kddockwidgets-qt6
 pkgver=2.2.1
-pkgrel=3
+pkgrel=4
 pkgdesc="KDAB's Dock Widget Framework for Qt 6"
 arch=('x86_64')
 url="https://github.com/KDAB/KDDockWidgets"
@@ -15,7 +15,6 @@ b2sums=('c22c5a5f0dafa69f66c14622ab5bb2666e1a1b91b6d60d6d6b4bbf9bc6f5e64238fa6bf
 
 build() {
     cd $_name-$pkgver
-    sed -i 's|core/DropIndicatorOverlay.h|kddockwidgets/core/DropIndicatorOverlay.h|g' src/core/indicators/NullDropIndicatorOverlay.h
     # -DKDDockWidgets_NO_SPDLOG=true is needed until KDDockWidgets can be built with fmt 11
     cmake -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_INSTALL_PREFIX=/usr \
