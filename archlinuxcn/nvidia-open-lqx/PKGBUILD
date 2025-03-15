@@ -5,7 +5,7 @@
 _kernel=lqx
 _lkname="linux-${_kernel}"
 pkgname="nvidia-open-${_kernel}"
-pkgver=570.86.16
+pkgver=570.124.04
 pkgrel=1
 pkgdesc="NVIDIA open kernel modules for ${_lkname}"
 arch=('x86_64')
@@ -30,7 +30,7 @@ build() {
 }
 
 package() {
-    depends+=("${_lkname}")
+    depends+=("${_lkname}=6.13.7.lqx1-1")
 
     _kernver=$(</usr/src/${_lkname}/version)
 
