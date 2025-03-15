@@ -1,7 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.8.25.r0.g046d127f31
+pkgver=0.8.34.r1.gfac9ae83c7
 pkgrel=1
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
@@ -12,12 +12,11 @@ depends=(
 	'glibc'
 	'glslang'
 	'hicolor-icon-theme'
-	'cpp-httplib'
 	'sdl2'
 )
 makedepends=(
 	'cmake'
-	'dtc'
+	'curl'
 	'git'
 	'glib2'
 	'glu'
@@ -28,7 +27,6 @@ makedepends=(
 	'libslirp'
 	'meson'
 	'nlohmann-json'
-	'openssl'
 	'python-yaml'
 	'tomlplusplus>=3.1'
 	'vulkan-headers'
@@ -39,14 +37,8 @@ makedepends=(
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 install=$_pkgname.install
-source=(
-	"$_pkgname::git+https://github.com/xemu-project/xemu.git"
-	'use-system-libs.patch'
-)
-b2sums=(
-	'SKIP'
-	'917b9eddb0e3d783ff228dfa97a6a0a5662c4451c69d9723938a8a26e83efa127943f6292bb65c18ebdfc05d282b01ae036771ac8f7f3b92e20a524f317fedf1'
-)
+source=("$_pkgname::git+https://github.com/xemu-project/xemu.git")
+b2sums=('SKIP')
 
 pkgver() {
 	cd $_pkgname
@@ -55,16 +47,22 @@ pkgver() {
 
 prepare() {
 	cd $_pkgname
+	echo method=cmake | tee -a subprojects/{SPIRV-Reflect,VulkanMemoryAllocator,glslang,nv2a_vsh_cpu,volk}.wrap
+	meson subprojects download
 	mkdir -p ../build
-	patch -Np1 < ../use-system-libs.patch
 	python scripts/gen-license.py > XEMU_LICENSE
+	# fix bug with cmake subprojects
+	sed -i '/CPU_CFLAGS="-m64"/d' configure
 }
 
 build() {
 	cd build
 	../$_pkgname/configure \
 		--audio-drv-list="sdl" \
+		--disable-docs \
+		--disable-download \
 		--disable-werror \
+		--enable-pie \
 		--extra-cflags="-DXBOX=1" \
 		--ninja="$NINJA" \
 		--target-list="i386-softmmu" \
@@ -74,6 +72,7 @@ build() {
 
 package() {
 	depends+=(
+		'libcurl.so'
 		'libepoxy.so'
 		'libgdk-3.so'
 		'libglib-2.0.so'
