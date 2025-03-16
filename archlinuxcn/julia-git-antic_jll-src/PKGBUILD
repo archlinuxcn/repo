@@ -1,7 +1,7 @@
 pkgname=julia-git-antic_jll-src
 pkgver=0.201.500+0
 _commit=42d8ed451cf83e44ab4d54d52e9e41df2994294d
-pkgrel=3
+pkgrel=4
 pkgdesc="Antic_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Antic_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git flint)
 source=("git+https://github.com/JuliaBinaryWrappers/Antic_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('5e569326725c01eda7a4ea76529b84acf1ddefad344989c1bc8a751dda8bb252'
             '9fe19e57d28e81d0e22373f1db22a20bf27fe4f88bf7be7ce7531e693e9c05a8')
 
 build() {
