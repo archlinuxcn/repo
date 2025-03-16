@@ -40,15 +40,21 @@ export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
+_rust_ver=1.85.0
+
+_set_cargo_path() {
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+}
+
 prepare() {
   cd $_srcname
 
-  rustup install 1.80.0
+  rustup install ${_rust_ver}
   rustup component add rust-src
   _path=$PATH
-  PATH="$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$_path"
-  cargo install --locked --version 0.65.1 bindgen-cli
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  PATH="$HOME/.rustup/toolchains/${1.80.0}-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  cargo install --locked --version 0.71.1 bindgen-cli
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${1.80.0}-$(uname -m)-unknown-linux-gnu/bin:$_path"
 
   echo "Setting version..."
   echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
@@ -76,7 +82,7 @@ prepare() {
 }
 
 build() {
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+  _set_cargo_path
 
   cd $_srcname
   echo "Building base..."
@@ -84,7 +90,7 @@ build() {
 }
 
 _package_kernel() {
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+  _set_cargo_path
 
   pkgdesc="The $pkgdesc kernel and modules"
   depends=(coreutils kmod initramfs $2 "m1n1>=$_m1n1_version")
