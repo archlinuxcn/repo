@@ -6,10 +6,12 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['Rubo'])
+pre_build: update_pkgver_and_pkgrel
 
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: 
+  - source: github
+    github: https://github.com/KDAB/KDDockWidgets
+    use_max_tag: True
+    prefix: v
