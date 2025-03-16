@@ -1,7 +1,7 @@
 pkgname=julia-git-calcium_jll-src
 pkgver=0.401.100+0
 _commit=eb4bde9fc123970418e6b6fdbc48fd018ee9e16e
-pkgrel=3
+pkgrel=4
 pkgdesc="Calcium_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Calcium_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git flint)
 source=("git+https://github.com/JuliaBinaryWrappers/Calcium_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('3db86322c00be7f309bfc495e920829a00ddc728448e0c33ef76c0502d5cc011'
             'b6021fe9a00a3d9b7f38f8a23e4a90b3f528d5f376b5c25f4a43a1be5aaa5b7f')
 
 build() {
