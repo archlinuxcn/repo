@@ -32,13 +32,13 @@ depends=(
     soundtouch
     wayland
     xcb-util-cursor
+    kddockwidgets-qt6
 )
 makedepends=(
     7zip
     clang
     cmake
     extra-cmake-modules
-    kddockwidgets-qt6
     git
     libpipewire
     libpulse
