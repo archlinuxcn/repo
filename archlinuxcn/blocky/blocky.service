@@ -1,0 +1,14 @@
+## Credit to erkexzcx
+
+[Unit]
+Description=Blocky service
+After=network-online.target
+
+[Service]
+User=blocky
+ExecStart=/usr/bin/blocky --config /etc/blocky.yml
+Restart=on-failure
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=network-online.target
