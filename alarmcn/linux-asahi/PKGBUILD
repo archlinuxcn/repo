@@ -52,9 +52,9 @@ prepare() {
   rustup install ${_rust_ver}
   rustup component add rust-src
   _path=$PATH
-  PATH="$HOME/.rustup/toolchains/${1.80.0}-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  PATH="$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$_path"
   cargo install --locked --version 0.71.1 bindgen-cli
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${1.80.0}-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$_path"
 
   echo "Setting version..."
   echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
