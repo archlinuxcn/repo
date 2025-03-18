@@ -8,7 +8,7 @@
 _pkgname=ffmpeg
 pkgname=${_pkgname}6.1
 pkgver=6.1.2
-pkgrel=2
+pkgrel=3
 pkgdesc='Complete solution to record, convert and stream audio and video (legacy v6.1)'
 arch=(x86_64)
 url=https://ffmpeg.org
@@ -104,8 +104,8 @@ optdepends=(
 )
 _tag=b1a4534186ca51b0457579fc05a5739eb2cc45cd
 source=(
-  git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}
-  add-av_stream_get_first_dts-for-chromium.patch
+  "git+https://git.ffmpeg.org/ffmpeg.git#tag=${_tag}"
+  'add-av_stream_get_first_dts-for-chromium.patch'
 )
 b2sums=('3b34bb1ff8f909d95c554fa40275f7dda0bb4e922480ae0bb990a7c33c250ca36109cb5ad0dafb6fa028dd5ff66f7c5d028a1eedc2ce81e1507527db2a7b41ff'
         '555274228e09a233d92beb365d413ff5c718a782008075552cafb2130a3783cf976b51dfe4513c15777fb6e8397a34122d475080f2c4483e8feea5c0d878e6de')
@@ -117,7 +117,7 @@ prepare() {
   git cherry-pick -n effadce6c756247ea8bae32dc13bb3e6f464f0eb
   # FS#77813: fix playing ogg files with mplayer
   git cherry-pick -n cbcc817353a019da4332ad43deb7bbc4e695d02a
-  patch -Np1 -i ../add-av_stream_get_first_dts-for-chromium.patch # https://crbug.com/1251779
+  patch -Np1 -i '../add-av_stream_get_first_dts-for-chromium.patch' # https://crbug.com/1251779
   # use non-deprecated nvenc GUID for conftest
   git cherry-pick -n 03823ac0c6a38bd6ba972539e3203a592579792f
   # Fix VDPAU vo
@@ -131,6 +131,8 @@ prepare() {
   git cherry-pick -n 06c2a2c425f22e7dba5cad909737a631cc676e3f
   git cherry-pick -n 9d675bb60d2542631f37613aa92b7e1144bbeaa1
   git cherry-pick -n 43b417d516b0fabbec1f02120d948f636b8a018e
+  # Fix svt-av1
+  git cherry-pick -n d1ed5c06e3edc5f2b5f3664c80121fa55b0baa95
 }
 
 pkgver() {
