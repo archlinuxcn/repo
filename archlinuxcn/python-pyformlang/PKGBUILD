@@ -2,8 +2,8 @@
 
 _name=pyformlang
 pkgname=python-${_name}
-pkgver=1.0.10
-pkgrel=2
+pkgver=1.0.11
+pkgrel=1
 pkgdesc="A python library to manipulate formal languages and various automata"
 arch=(any)
 url="https://pypi.org/project/pyformlang/"
@@ -11,7 +11,7 @@ license=(MIT)
 depends=(python python-networkx python-numpy python-pydot)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
-sha512sums=('14492adf15b616957c9edf060507d8ac51233078f5ab0a290c95fcdb9ba93482dc2f73f928402ec154f9114b97e44c27166a671acc0ba6cd342a8a1af8007298')
+sha512sums=('5d979ae9e62de9840f90126bda8a5fe4ff64147a135d3bf0f280b77e92b63d430355ee3e524fa5acaa51843d86bf7d0df25c57b7535fdb7233aeb1af33bde6eb')
 
 build() {
   cd $_name-$pkgver
