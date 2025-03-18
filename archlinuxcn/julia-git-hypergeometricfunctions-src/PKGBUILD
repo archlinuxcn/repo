@@ -1,6 +1,6 @@
 pkgname=julia-git-hypergeometricfunctions-src
-pkgver=0.3.27
-_commit=21d93c797bff7edb3b13b5a6e0b704ba82a46431
+pkgver=0.3.28
+_commit=7d67f21d03358720016461971bf6da4b42620f1a
 pkgrel=1
 pkgdesc="HypergeometricFunctions.jl"
 url="https://github.com/JuliaMath/HypergeometricFunctions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/HypergeometricFunctions.jl.git#commit=$_commit")
-sha256sums=('e352fd251d795dca8d91e282f717bf1388da444119abf68cb58414847a82117a')
+sha256sums=('7821c6318713bce06c47d29ace619ab52c273b3a83f54890c5ce9d80e0100140')
 
 package() {
   cd HypergeometricFunctions.jl

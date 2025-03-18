@@ -8,11 +8,10 @@
 ## options
 : ${_install_path:=usr/lib}
 
-# basic info
 _pkgname="localsend"
 pkgname="$_pkgname"
 pkgver=1.17.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
 license=('MIT')
@@ -44,8 +43,10 @@ prepare() {
   sed -E 's&^(channel) = .*$&\1 = "stable"&' -i "$_pkgsrc/app/rust-toolchain.toml"
 }
 
-build() {
+build() (
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
+
+  export CXXFLAGS+=' -Wno-error=deprecated-declarations'
 
   cd "$_pkgsrc/app"
   fvm install
@@ -54,7 +55,7 @@ build() {
   #fvm flutter pub upgrade --major-versions
   fvm flutter --no-version-check pub get
   fvm flutter build linux --no-pub --release
-}
+)
 
 package() {
   cd "$_pkgsrc/app/build/linux/x64/release/bundle"
