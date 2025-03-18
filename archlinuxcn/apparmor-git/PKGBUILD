@@ -46,15 +46,17 @@ checkdepends=(
 optdepends=(
     'apparmor.d: full set of AppArmor profiles'
     'perl: for perl bindings'
+    'ruby: for ruby bindings'
+    'python-gobject: for aa-notify' # import gi
     'python-notify2: for aa-notify'
     'python-psutil: for aa-notify'
-    'ruby: for ruby bindings'
+    'tk: for aa-notify'
 )
-conflicts=("$_pkgname")
 provides=(
     "${_pkgname}=${pkgver}"
     'libapparmor.so'
 )
+conflicts=("$_pkgname")
 backup=(
     'etc/apparmor/easyprof.conf'
     'etc/apparmor/logprof.conf'
@@ -62,6 +64,7 @@ backup=(
     'etc/apparmor/parser.conf'
     'etc/apparmor/severity.db'
 )
+install="${_pkgname}.install"
 source=("git+${url}.git")
 sha256sums=('SKIP')
 validpgpkeys=('3ECDCBA5FB34D254961CC53F6689E64E3D3664BB') # AppArmor Development Team (AppArmor signing key) <apparmor@lists.ubuntu.com>
