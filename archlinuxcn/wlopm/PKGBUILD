@@ -3,7 +3,7 @@
 
 pkgname=wlopm
 pkgver=1.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Wayland output power management.'
 arch=('x86_64')
 url='https://sr.ht/~leon_plickat/wlopm'
