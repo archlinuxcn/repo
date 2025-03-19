@@ -1,17 +1,17 @@
-From 7b132a44bdd5f7945e74b4adfec00ff69ae79666 Mon Sep 17 00:00:00 2001
+From 2428e250bf81e607f1277f10599bddd95c3fdb26 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 30 Dec 2022 16:15:59 -0500
 Subject: [PATCH 4/7] Revert to hard code system lib path
 
 ---
- .../src/CompilerSupportLibraries_jll.jl       | 50 ++++++-------------
- 1 file changed, 14 insertions(+), 36 deletions(-)
+ .../src/CompilerSupportLibraries_jll.jl       | 52 ++++++-------------
+ 1 file changed, 15 insertions(+), 37 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-index e386a6e19d..c10c248d34 100644
+index b32a229d65..813c7127ef 100644
 --- a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 +++ b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-@@ -11,10 +11,6 @@ export libgfortran, libstdcxx, libgomp, libatomic, libgcc_s
+@@ -13,10 +13,6 @@ const PATH_list = String[]
  const LIBPATH = Ref("")
  const LIBPATH_list = String[]
  artifact_dir::String = ""
@@ -22,10 +22,13 @@ index e386a6e19d..c10c248d34 100644
  
  if Sys.iswindows()
      const _libatomic_path = BundledLazyLibraryPath("libatomic-1.dll")
-@@ -42,34 +38,26 @@ elseif Sys.isapple()
+@@ -44,36 +40,28 @@ elseif Sys.isapple()
      const _libssp_path = BundledLazyLibraryPath("libssp.0.dylib")
  else
-     if !Sys.isfreebsd()
+     if Sys.isfreebsd()
+-        const _libatomic_path = BundledLazyLibraryPath("libatomic.so.3")
++        const libatomic_path = "libatomic.so.3"
+     else
 -        const _libatomic_path = BundledLazyLibraryPath("libatomic.so.1")
 +        const libatomic_path = "libatomic.so.1"
      end
@@ -71,7 +74,7 @@ index e386a6e19d..c10c248d34 100644
  end
  
  # Conform to LazyJLLWrappers API
-@@ -91,19 +79,9 @@ end
+@@ -95,19 +83,9 @@ end
  is_available() = true
  
  function __init__()
