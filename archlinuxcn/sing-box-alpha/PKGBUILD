@@ -8,7 +8,7 @@ pkgrel=1
 epoch=1
 
 pkgdesc='The universal proxy platform.'
-arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
+arch=('x86_64' 'aarch64')
 url='https://sing-box.sagernet.org/'
 license=('custom:GPL-3.0-or-later WITH name use or association addition')
 
@@ -21,9 +21,6 @@ sha256sums=('05b7d41ab4a37f4a4fd6514e08d49684dc8708700e8414f8df0a6626f32a3bf5'
 
 provides=("$_pkgname")
 conflicts=("$_pkgname")
-
-optdepends=('sing-geosite: sing-geosite database (deprecated)'
-            'sing-geoip: sing-geoip database (deprecated)')
 
 backup=("etc/$_pkgname/config.json")
 
