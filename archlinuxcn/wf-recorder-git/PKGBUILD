@@ -1,0 +1,60 @@
+# Maintainer: Hoream <hoream@qq.com>
+# Contributor: Brett Cornwall <ainola@archlinux.org>
+# Contributor: Lennard Hofmann
+
+_pkgname=wf-recorder
+pkgname=wf-recorder-git
+pkgver=r223.779a618
+pkgrel=1
+pkgdesc="Screen recorder for wlroots-based compositors such as sway"
+arch=("x86_64")
+url="https://github.com/ammen99/wf-recorder"
+license=('MIT')
+depends=(
+	'libavcodec.so'
+	'libavdevice.so'
+	'libavfilter.so'
+	'libavformat.so'
+	'libavutil.so'
+	'libpulse.so'
+	'libpulse-simple.so'
+	'libswresample.so'
+	'libwayland-client.so'
+)
+makedepends=(
+    'git'
+	'meson'
+	'wayland-protocols'
+)
+optdepends=(
+	'slurp: Select a region to record'
+)
+source=("${_pkgname}::git+https://github.com/ammen99/${_pkgname}.git")
+sha256sums=('SKIP')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+
+
+pkgver() {
+  cd "${srcdir}/${_pkgname}"
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+build() {
+	meson "$_pkgname" build \
+		-Dpulse=enabled \
+		--prefix=/usr \
+		--buildtype=plain
+	ninja -C build
+}
+
+package() {
+	DESTDIR="$pkgdir/" ninja -C build install
+	cd "$_pkgname"
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$_pkgname"
+	install -Dm644 README.md -t "$pkgdir/usr/share/doc/$_pkgname"
+}
+
