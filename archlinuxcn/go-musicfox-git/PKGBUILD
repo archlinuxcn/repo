@@ -1,0 +1,33 @@
+# Maintainer: Hoream <hoream@qq.com>
+_pkgname="go-musicfox"
+pkgname="${_pkgname}-git"
+pkgver=4.6.0.r22.g0012d41
+pkgrel=1
+pkgdesc='Command-line Netease Cloud Music written in Go (git version).'
+url='https://github.com/anhoder/go-musicfox'
+license=('MIT')
+arch=('x86_64' 'aarch64')
+provides=('musicfox' 'go-musicfox')
+conflicts=('go-musicfox-bin' 'musicfox' 'go-musicfox')
+depends=('flac' 'alsa-lib')
+makedepends=('go' 'git')
+source=(${_pkgname}::git+https://github.com/go-musicfox/go-musicfox)
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$srcdir/$_pkgname"
+    git describe --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
+}
+
+build(){
+ 	cd "${srcdir}/${_pkgname}"
+    go mod download
+    make
+}
+
+package() {
+	install -d "${pkgdir}/usr/bin"
+	install -d "${pkgdir}/usr/share/licenses/${pkgname}"
+	install -Dm755 "${srcdir}/${_pkgname}/bin/musicfox" "${pkgdir}/usr/bin/musicfox"
+	install -Dm644 "${srcdir}/${_pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}"
+}
