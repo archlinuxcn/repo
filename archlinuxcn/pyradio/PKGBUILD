@@ -3,8 +3,8 @@
 # Contributor: aksr <aksr at t-com dot me>
 
 pkgname=pyradio
-pkgver=0.9.3.11.7
-pkgrel=1
+pkgver=0.9.3.11.8
+pkgrel=2
 pkgdesc="Internet radio player for the command line"
 arch=('any')
 url="https://github.com/coderholic/pyradio"
@@ -13,7 +13,7 @@ depends=("python" "python-dateutil" "python-dnspython" "python-netifaces" "pytho
 optdepends=('mplayer: as backend' 'mpv: as backend' 'vlc: as backend' 'mkvtoolnix-cli: fix mplayer recordings, add chapters to recordings')
 makedepends=('python-pip' 'python-setuptools' 'python-build' 'python-installer' 'python-wheel')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/coderholic/$pkgname/archive/$pkgver.tar.gz")
-sha256sums=('ee6ec2d69e8559bd64d7d403aa2c8f532bfa199ecc4eb99ff25b9a65b9d2d504')
+sha256sums=('ebdda09380fa84b2523120ed60c1873a7752300b5f27aafb8abde500ab823776')
 
 prepare() {
   cd $pkgname-$pkgver
@@ -32,7 +32,7 @@ package() {
   cd $pkgname-$pkgver
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/pyradio/LICENSE"
   install -Dm644 ./docs/*{html,md} -t "$pkgdir/usr/share/doc/pyradio"
-  install -Dm644 ./docs/pyradio{,_rb,_server,_rec}.1 -t "$pkgdir/usr/share/man/man1"
+  install -Dm644 ./docs/pyradio{,_rb,_server,_rec,_buf}.1 -t "$pkgdir/usr/share/man/man1"
   install -Dm644 devel/pyradio.desktop -t "$pkgdir/usr/share/applications"
   install -Dm644 devel/pyradio.png -t "$pkgdir/usr/share/icons"
   python -m installer --destdir="$pkgdir" dist/*.whl
