@@ -3,17 +3,17 @@
 # Contributor: Antonio Rojas <arojas@archlinux.org>
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
-pkgname=kwin-heddxh
+pkgname=kwin-without-gestures
 _pkgname=kwin
 pkgver=6.3.3
 _dirver=$(echo $pkgver | cut -d. -f1-3)
 pkgrel=1
-pkgdesc='An easy to use, but flexible, composited Window Manager. With patches from heddxh'
+pkgdesc='An easy to use, but flexible, composited Window Manager. Patched to get red of hardcoded touchpad gestures'
 arch=(x86_64)
 url='https://kde.org/plasma-desktop/'
 license=(LGPL-2.0-or-later)
-provides=("$_pkgname=$pkgver")
-conflicts=('kwin')
+provides=("$_pkgname=$pkgver" 'kwin-heddxh')
+conflicts=('kwin' 'kwin-heddxh')
 depends=(breeze
          gcc-libs
          glibc
@@ -93,6 +93,7 @@ sha256sums=('b727fb91646b2ebba434af83d05e041127b8aee4de31eacc1cacf90405c8b62f'
 validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
               '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'  # Bhushan Shah <bshah@kde.org>
               'D07BD8662C56CB291B316EB2F5675605C74E02CF'  # David Edmundson <davidedmundson@kde.org>
+              '90A968ACA84537CC27B99EAF2C8DF587A6D4AAC1'  # Nicolas Fella <nicolas.fella@kde.org>
               '1FA881591C26B276D7A5518EEAAF29B42A678C20') # Marco Martin <notmart@gmail.com>
 
 prepare() {
