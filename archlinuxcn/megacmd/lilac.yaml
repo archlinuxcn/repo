@@ -1,9 +1,11 @@
 maintainers:
 - github: lilydjwg
 update_on:
-- source: aur
-  aur: megacmd
+- source: github
+  github: meganz/MEGAcmd
+  use_latest_tag: true
+  query: Linux
 - alias: icu
 pre_build_script: |
-  aur_pre_build(maintainers=['ChrisLane'])
-post_build: aur_post_build
+  git_pkgbuild_commit(_G.newver)
+post_build_script: git_pkgbuild_commit
