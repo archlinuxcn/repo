@@ -6,7 +6,7 @@
 pkgname='evdi-dkms'
 pkgver=1.14.8
 _pkgver=$pkgver
-pkgrel=1
+pkgrel=2
 pkgdesc='kernel module that enables management of multiple screens, primarily for DisplayLink USB VGA DVI HDMI DisplayPort video'
 arch=('x86_64')
 url='https://github.com/DisplayLink/evdi'
@@ -19,7 +19,7 @@ _srcdir="evdi"
 source=(
   "git+https://github.com/DisplayLink/evdi#tag=v${pkgver}"
 )
-sha256sums=('SKIP')
+sha256sums=('916b9fceda5ab61bf1bdfeee082078ac143d825c4ce14b49e81e65588c52fd9d')
 
 build() {
   cd "${_srcdir}"
