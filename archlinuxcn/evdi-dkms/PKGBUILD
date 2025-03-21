@@ -11,9 +11,8 @@ pkgdesc='kernel module that enables management of multiple screens, primarily fo
 arch=('x86_64')
 url='https://github.com/DisplayLink/evdi'
 license=('GPL-2.0-only AND LGPL-2.1-only AND MIT')
-depends=('dkms')
-makedepends=('git' 'libdrm')
-#makedepends+=('linux-headers')
+depends=('dkms' 'libdrm')
+makedepends=('git')
 provides=("evdi=${_pkgver}")
 conflicts=('evdi' 'evdi-git')
 _srcdir="evdi"
@@ -26,37 +25,12 @@ build() {
   cd "${_srcdir}"
   CFLAGS="${CFLAGS/-fno-plt/}"
   CFLAGS="${CFLAGS/-fexceptions/}"
-  # DKMS builds are hard to debug. We can build it here to debug the errors.
-  #make -j1 -C 'module'
   make -j1 -C 'library'
 }
 
 package() {
   cd "${_srcdir}"
   make -C 'library' -j1 install DESTDIR="${pkgdir}" PREFIX='/usr'
-
-if ! :; then
-  pushd "${pkgdir}/usr/lib/" > /dev/null
-  local _libase
-  local _libs=(*.so.*)
-  if [ "${#_libs[@]}" -eq 2 ]; then
-    _libs="${_libs[1]}"
-    for _libase in *.so*; do
-      if [ "${_libase}" != "${_libs}" ]; then
-        ln -sf "${_libs}" "${_libase}"
-      fi
-    done
-  elif [ "${#_libs[@]}" -eq 1 ]; then
-    _libs="${_libs[0]}"
-    _libase="${_libs%.so*}.so"
-    ln -sf "${_libs}" "${_libase}"
-    ln -sf "${_libs}" "${_libase}.0" # bad soname
-  else
-    echo 'Unhandled libs'
-    false
-  fi
-  popd > /dev/null
-fi
 
   local _DKMS="${pkgdir}/usr/src/evdi-${_pkgver}"
   #install -Dpm644 module/* -t "${_DKMS}/"
