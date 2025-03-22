@@ -4,7 +4,7 @@
 
 pkgname=minecraft-launcher
 pkgver=2.1.3
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Official Minecraft Launcher"
 arch=('x86_64')
@@ -12,7 +12,8 @@ url="https://mojang.com/"
 license=('custom')
 depends=('gtk3' 'gcc-libs' 'zlib' 'libgpg-error')
 optdepends=('flite: narrator support'
-            'org.freedesktop.secrets: persistent login support')
+            'org.freedesktop.secrets: persistent login support'
+            'orca: screen reader support')
 conflicts=('minecraft-launcher-beta')
 provides=('minecraft-launcher-beta')
 source=("https://launcher.mojang.com/download/Minecraft.tar.gz"
