@@ -3,7 +3,7 @@
 pkgname=linux-apfs-rw-dkms
 _pkgname=${pkgname%-dkms}
 epoch=1
-pkgver=0.3.12
+pkgver=0.3.13
 pkgrel=1
 pkgdesc="Experimental APFS kernel module with Write support (DKMS)"
 arch=('any')
@@ -13,7 +13,7 @@ depends=('dkms')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('b66a2213c69279d2fc08ce21f16868a1c416f7dd5af4c33d7e41c6b1f1c9e4ae')
+sha256sums=('1272c0441c6810cb7096038ed8990daa05c317175b1d2bbfd6780784eb71aebb')
 
 package() {
 	local dkms_dir="${pkgdir}/usr/src/${_pkgname}-${pkgver}/"
