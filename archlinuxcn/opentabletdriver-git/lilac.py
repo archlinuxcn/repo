@@ -8,5 +8,5 @@ def pre_build():
         if line.startswith('license='):
             line = "license=('LGPL-3.0-or-later')"
         elif line.startswith('makedepends='):
-            line = line.replace("'dotnet-sdk'", "")
+            line = line.replace('dotnet-sdk', 'dotnet-sdk-8.0')
         print(line)
