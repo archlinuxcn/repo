@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-imgpaste
-pkgver=2.46.6
-pkgrel=2
+pkgver=2.48.0
+pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -109,7 +109,7 @@ source=(
   EnlargeObjectSize.patch
   PasteBoardGtk.patch
 )
-sha256sums=('f2b31de693220ba9bab76ce6ddfe5b0bfab2515cb2b0a70f3c54d4050766c32b'
+sha256sums=('94904a55cf12d44a4e36ceadafff02d46da73d76be9b4769f34cbfdf0eebf88e'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
             '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
@@ -128,17 +128,19 @@ prepare() {
 
 build() {
   local cmake_options=(
-    -DPORT=GTK
-    -DCMAKE_BUILD_TYPE=Release
-    -DCMAKE_INSTALL_PREFIX=/usr
-    -DCMAKE_INSTALL_LIBDIR=lib
-    -DCMAKE_INSTALL_LIBEXECDIR=lib
-    -DCMAKE_SKIP_RPATH=ON
-    -DUSE_GTK4=OFF
-    -DUSE_LIBBACKTRACE=OFF
-    -DUSE_SOUP2=ON
-    -DENABLE_DOCUMENTATION=ON
-    -DENABLE_MINIBROWSER=ON
+    -D CMAKE_BUILD_TYPE=Release
+    -D CMAKE_INSTALL_LIBDIR=lib
+    -D CMAKE_INSTALL_LIBEXECDIR=lib
+    -D CMAKE_INSTALL_PREFIX=/usr
+    -D CMAKE_SKIP_RPATH=ON
+    -D ENABLE_DOCUMENTATION=ON
+    -D ENABLE_MINIBROWSER=ON
+    -D ENABLE_SPEECH_SYNTHESIS=OFF
+    -D PORT=GTK
+    -D USE_FLITE=OFF
+    -D USE_GTK4=OFF
+    -D USE_LIBBACKTRACE=OFF
+    -D USE_SOUP2=ON
   )
 
   # Upstream prefers Clang
