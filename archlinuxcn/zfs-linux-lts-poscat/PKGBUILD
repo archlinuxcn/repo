@@ -3,12 +3,12 @@ shopt -s extglob
 
 pkgbase="zfs-linux-lts-poscat"
 pkgname=("zfs-utils-poscat" "zfs-linux-lts-poscat" "zfs-linux-lts-poscat-headers")
-_kernelver=6.12.19-1
+_kernelver=6.12.20-1
 _extramodules="${_kernelver}-lts"
 _sd_zfs_commit="dece62d"
 
 pkgver=2.3.1
-pkgrel=4
+pkgrel=5
 makedepends=(
   "linux-lts-headers=${_kernelver}"
   "libunwind"
@@ -26,10 +26,10 @@ source=(
   'zfs.initcpio.zfsencryptssh.install'
 )
 sha256sums=('053233799386920bdc636e22d0e19a8c2c3e642e8bd847ff87e108f8bb1f9006'
-  '3dcc79915e41c5326135f2c3a8787fd2abfc2fc50c349327ef41222440ba2c4a'
-  '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
-  '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
-  'ac9ed396465e26fa6896762c52a93eb7aaf8af6d7b2c69bd826d219ff821b2c9')
+            '3dcc79915e41c5326135f2c3a8787fd2abfc2fc50c349327ef41222440ba2c4a'
+            '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
+            '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
+            'ac9ed396465e26fa6896762c52a93eb7aaf8af6d7b2c69bd826d219ff821b2c9')
 license=("CDDL-1.0")
 depends=("kmod" "linux-lts=${_kernelver}")
 
