@@ -10,7 +10,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/Mahdi-zarei/${pkgname}"
 license=('GPL-3.0-or-later')
 makedepends=('cmake' 'go' 'qt6-tools')
-depends=('qt6-base' 'qt6-svg' 'protobuf' 'yaml-cpp' 'zxing-cpp' 'abseil-cpp' 'cpr')
+depends=('qt6-base' 'protobuf' 'yaml-cpp' 'zxing-cpp' 'abseil-cpp' 'cpr')
 optdepends=(
 	'sing-geoip-db: geoip database for NekoBox'
 	'sing-geosite-db: geosite database for NekoBox'
@@ -18,7 +18,7 @@ optdepends=(
 source=(
 	"${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${_pkgver}.tar.gz"
 	${pkgname}.{sh,desktop}
-	"fix-geoasset.patch::https://github.com/Mahdi-zarei/nekoray/pull/320.patch"
+	"fix-geoasset.patch::${url}/pull/320.patch"
 )
 install="${pkgname}.install"
 sha512sums=('ced86c324cff4a235ee4a386c6892e1814b231f9a70dbb10b51abbe646e3c3476614fc4407d8316ed37675383aca5d7fe327759142f52bf56d2c181aec816d1c'
