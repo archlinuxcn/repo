@@ -5,6 +5,7 @@ pkgbase="zfs-linux-lts-poscat"
 pkgname=("zfs-utils-poscat" "zfs-linux-lts-poscat" "zfs-linux-lts-poscat-headers")
 _kernelver=6.12.19-1
 _extramodules="${_kernelver}-lts"
+_sd_zfs_commit="dece62d"
 
 pkgver=2.3.1
 pkgrel=4
@@ -17,35 +18,24 @@ url="https://openzfs.org/"
 source=(
   # source
   "https://github.com/openzfs/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"
-  # patches
-  # mkinitcpio hooks & utils
+  # mkinitcpio-sd-zfs
+  "mkinitcpio-sd-zfs.tar.gz::https://github.com/poscat0x04/mkinitcpio-sd-zfs/archive/${_sd_zfs_commit}.tar.gz"
+  # legacy mkinitcpio hooks
   'zfs.initcpio.install'
   'zfs.initcpio.hook'
   'zfs.initcpio.zfsencryptssh.install'
-  'sd-zfs.initcpio.install'
-  'parse-cmdline'
-  'zfs-set-env'
-  'zfs-root-generator'
-  'zfs.shutdown'
-  'zfs-shutdown.initcpio.install'
-  'zfs-shutdown.conf'
 )
 sha256sums=('053233799386920bdc636e22d0e19a8c2c3e642e8bd847ff87e108f8bb1f9006'
-            '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
-            '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
-            'ac9ed396465e26fa6896762c52a93eb7aaf8af6d7b2c69bd826d219ff821b2c9'
-            '1e9398335eaca83e6002ab864c279ca58114ff6c5cfc983445f6c9b641ce97e7'
-            '61b368e73f72e548c76128f5d660366fc4d6729c76fc0a7c9b1973992edc8139'
-            'd664c36e6015c8852565832fa380416e6ba69114248520f5b4f305f6bc008933'
-            '59b74f90057388c256043312bd9749fd117cb9ef7434794bb1d454e2ea4387bd'
-            '8845de626b461bcdd88c4add1ffebc3b156b86a4ac0f464f5a845550af80b05c'
-            'e38760de4a4ee337cc40e9d7ecfa5fa5abd3594cf22a55238281cef79dba2430'
-            'fe9c0dc3059645c693fd83313720c3c5ad2bcc84480b917e90a299617a064176')
+  '3dcc79915e41c5326135f2c3a8787fd2abfc2fc50c349327ef41222440ba2c4a'
+  '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
+  '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
+  'ac9ed396465e26fa6896762c52a93eb7aaf8af6d7b2c69bd826d219ff821b2c9')
 license=("CDDL-1.0")
 depends=("kmod" "linux-lts=${_kernelver}")
 
 prepare() {
-  cd "${srcdir}/zfs-${pkgver}"
+  cd "$srcdir"
+  mv mkinitcpio-sd-zfs-* sd-zfs
 }
 
 build() {
@@ -92,21 +82,22 @@ package_zfs-utils-poscat() {
     "$srcdir"/zfs.initcpio.install "$pkgdir"/usr/lib/initcpio/install/zfs
   install -Dvm644 \
     "$srcdir"/zfs.initcpio.zfsencryptssh.install "$pkgdir"/usr/lib/initcpio/install/zfsencryptssh
+
   install -Dvm644 \
-    "$srcdir"/sd-zfs.initcpio.install "$pkgdir"/usr/lib/initcpio/install/sd-zfs
+    "$srcdir"/sd-zfs/sd-zfs.initcpio.install "$pkgdir"/usr/lib/initcpio/install/sd-zfs
   install -Dvm644 \
-    "$srcdir"/zfs-shutdown.initcpio.install "$pkgdir"/usr/lib/initcpio/install/zfs-shutdown
+    "$srcdir"/sd-zfs/zfs-shutdown.initcpio.install "$pkgdir"/usr/lib/initcpio/install/zfs-shutdown
 
   install -Dvm755 \
     -t "$pkgdir"/usr/lib/zfs/initcpio/ \
-    "$srcdir"/{parse-cmdline,zfs-set-env,zfs-root-generator}
+    "$srcdir"/sd-zfs/{parse-cmdline,zfs-set-env,zfs-root-generator}
   install -Dvm755 \
     -t "$pkgdir"/usr/lib/systemd/system-shutdown/ \
-    "$srcdir"/zfs.shutdown
+    "$srcdir"/sd-zfs/zfs.shutdown
 
   install -Dvm644 \
     -t "$pkgdir"/usr/lib/systemd/system/mkinitcpio-generate-shutdown-ramfs.service.d/ \
-    "$srcdir"/zfs-shutdown.conf
+    "$srcdir"/sd-zfs/zfs-shutdown.conf
 
   # cleanup
   ## empty files
