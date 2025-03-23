@@ -3,18 +3,20 @@
 
 pkgname=android-apktool
 pkgver=2.11.1
-pkgrel=1
+pkgrel=2
+_jdkver=21
 pkgdesc="a tool for reengineering Android apk files"
 arch=('any')
 url="https://github.com/iBotPeaches/Apktool"
 license=('Apache-2.0')
 depends=('java-runtime')
-makedepends=('java-environment' 'gradle')
+makedepends=("java-environment=${_jdkver}" 'gradle')
 source=("${pkgname}-${pkgver}.tar.gz"::"https://github.com/iBotPeaches/Apktool/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('1c1ac3add61c5d9043b5efdb228fbd2be7c3bd329bb6ed82228eedacef90bcb9')
 
 build() {
   cd "Apktool-${pkgver}"
+  export JAVA_HOME="/usr/lib/jvm/java-${_jdkver}-openjdk"
   gradle build --no-daemon shadowJar proguard
 }
 
