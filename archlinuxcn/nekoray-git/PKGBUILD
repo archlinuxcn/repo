@@ -52,7 +52,13 @@ build() {
 
 	cd core/server
 	VERSION_SINGBOX=$(go list -m -f '{{.Version}}' github.com/sagernet/sing-box)
-	go build -v -o ../../build/ -buildmode=pie -trimpath -ldflags "-linkmode=external -w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}'" -mod=readonly -modcacherw -tags "with_clash_api,with_gvisor,with_quic,with_wireguard,with_utls,with_ech,with_dhcp"
+	go build -o ../../build/ \
+		-buildmode=pie \
+		-trimpath \
+		-ldflags "-linkmode=external -w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}'" \
+		-mod=readonly \
+		-modcacherw \
+		-tags "with_clash_api,with_gvisor,with_quic,with_wireguard,with_utls,with_ech,with_dhcp"
 }
 
 package() {
