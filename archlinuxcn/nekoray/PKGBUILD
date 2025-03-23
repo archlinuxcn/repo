@@ -39,15 +39,14 @@ build() {
 
 	cmake --build build
 
-	export GOARCH
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
 
-	case $CARCH in
-	x86_64) GOARCH=amd64 ;;
-	aarch64) GOARCH=arm64 ;;
-	riscv64) GOARCH=riscv64 ;;
-	esac
-
-	GOOS=linux ./script/build_go.sh
+	cd core/server
+	VERSION_SINGBOX=$(go list -m -f '{{.Version}}' github.com/sagernet/sing-box)
+	go build -v -o ../../build/ -buildmode=pie -trimpath -ldflags "-linkmode=external -w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}'" -mod=readonly -modcacherw -tags "with_clash_api,with_gvisor,with_quic,with_wireguard,with_utls,with_ech,with_dhcp"
 }
 
 package() {
@@ -56,18 +55,5 @@ package() {
 
 	cd "${pkgname}-${pkgver}/"
 	install -Dm644 "res/public/nekobox.png" -t "${pkgdir}/usr/share/pixmaps/"
-
-	# Core
-	local core_srcdir=linux
-
-	case $CARCH in
-	x86_64) core_srcdir+=64 ;;
-	aarch64) core_srcdir+=-arm64 ;;
-	riscv64) core_srcdir+=-riscv64 ;;
-	esac
-
-	install -Dm755 "deployment/${core_srcdir}/nekobox_core" -t "${pkgdir}/usr/lib/${pkgname}/"
-
-	# Binary file
-	install -Dm755 "build/${pkgname}" -t "${pkgdir}/usr/lib/${pkgname}/"
+	install -Dm755 build/{${pkgname},nekobox_core} -t "${pkgdir}/usr/lib/${pkgname}/"
 }
