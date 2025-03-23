@@ -1,7 +1,7 @@
 # Maintainer: aulonsal <seraur at aulonsal dot com>
 
 pkgname=f2
-pkgver=2.0.3
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="A cross-platform command-line tool for batch renaming files and directories quickly and safely"
 arch=('x86_64' 'aarch64')
@@ -16,7 +16,7 @@ makedepends=(
 )
 conflicts=("${pkgname}-bin")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-b2sums=('f6e73d541b5e4894e1755c7069b118d537c1d10cad3ccc1dddb9a4f46b9e1e53e2f0aabcd14f37f92722df03d173a911c1596a2965727e2631933619751af768')
+b2sums=('61f13876424dc9ef5ce6fc3f6bf866007aaa64a839f69b5a2f2d487d6d5d30d06aad0990ef55ab53d85ea4fbf32d406a84faa272411f82c438ce0d7e5a52f419')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
