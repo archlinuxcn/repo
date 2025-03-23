@@ -3,7 +3,7 @@
 
 _name=sftpman-rs
 pkgname=sftpman
-pkgver=2.0.6
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="A CLI application for managing and mounting sshfs (SFTP) filesystems"
 arch=('x86_64' 'aarch64')
@@ -24,7 +24,7 @@ conflicts=('sftpman-python')
 replaces=('sftpman-python')
 install="${pkgname}.install"
 source=("git+${url}.git#tag=v${pkgver}")
-b2sums=('1f71be899abdd88a70735595a5cc752498a686826d6eea44b4e049d007f45a453341eedb545f683f5104e53c33a9e2f2054d96b3b2a04299723b7932085aa735')
+b2sums=('a4082b2188677ea5f590a3ae8fb6dda70169be5dab59534db986c666884b5963bfb93bd23fbfb6a4a84200b7167d0f1472b8f98ca7031af9f862014eb536d0e6')
 
 prepare() {
     cd "$srcdir/${_name}"
