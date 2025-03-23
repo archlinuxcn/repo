@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec /usr/lib/nekoray/nekoray "$@"
+exec /usr/lib/nekoray/nekoray -appdata "$@"
