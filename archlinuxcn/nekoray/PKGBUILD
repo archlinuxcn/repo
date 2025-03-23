@@ -16,16 +16,22 @@ depends=(
 	'abseil-cpp' 'cpr'
 )
 optdepends=(
-	'sing-geoip: geoip data for NekoBox'
-	'sing-geosite: geosite data for NekoBox'
+	'sing-geoip-db: geoip database for NekoBox'
+	'sing-geosite-db: geosite database for NekoBox'
 )
 source=(
 	"git+${url}.git#tag=${_pkgver}"
 	${pkgname}.{sh,desktop}
+	"fix-geoasset.patch::https://github.com/Mahdi-zarei/nekoray/pull/320.patch"
 )
 sha512sums=('21ec6d5d5311bae60f657dfb472294c3cf1f3afb0529db0c13c43d1b521908a070f31cb2adbd8d0b39b53bbb6bff2bbfe023a099d9d619899580ed2a6de2828a'
             'b377f7e8c859ee0b5bc05f89e2dc6c0b8535e740e089e9afe5e5f145c38a05fccbbddfcb6eb8ced9a7478e4d9ccc3cbd3ffb6843c128189c75599c40c87737e8'
-            'b0cfd99d7fd038d660af275a5f2fc7f9ebfe63d6751edd6eea66a8c5350f314b6dbc9eddaa5aaed134e97087290630d369b1bdf4ad59d12868c780103b33dbed')
+            'b0cfd99d7fd038d660af275a5f2fc7f9ebfe63d6751edd6eea66a8c5350f314b6dbc9eddaa5aaed134e97087290630d369b1bdf4ad59d12868c780103b33dbed'
+            'ca2f1cc68f20c1a0a18bf6ee94835b78a70b4f13fd48a3913e90dacc74f5b6a33db18486082ed9f962f9952009bfaf9257a3055c2ebfea5cce21ba53829718fd')
+
+prepare() {
+	patch -d "${pkgname}" -p1 -i ../fix-geoasset.patch
+}
 
 build() {
 	cd "${pkgname}/"
