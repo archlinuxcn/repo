@@ -79,6 +79,7 @@ package_zfs-utils-rc-poscat() {
   conflicts=('zfs-utils' 'zfs-utils-poscat' 'mkinitcpio-sd-zfs')
   depends+=('libunwind')
   optdepends=('python: for arcstat/arc_summary/dbufstat')
+  backup=('etc/zfs/zed.d/zed.rc')
 
   cd "${srcdir}/zfs-${_fullver}"
   make DESTDIR="$pkgdir" install
