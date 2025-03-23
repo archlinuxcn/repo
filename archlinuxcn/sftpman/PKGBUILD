@@ -23,15 +23,11 @@ optdepends=('sftpman-iced: GUI frontend for sftpman v2+')
 conflicts=('sftpman-python')
 replaces=('sftpman-python')
 install="${pkgname}.install"
-source=("git+${url}.git#tag=v$pkgver"
-        "0001-Replace-fusermount-with-fusermount3.patch")
-b2sums=('1f71be899abdd88a70735595a5cc752498a686826d6eea44b4e049d007f45a453341eedb545f683f5104e53c33a9e2f2054d96b3b2a04299723b7932085aa735'
-        'fb2bf5d4decb785ab134b14bc8e1a6d8c94528fc05efe2a53ad00d3d9d986810a9b5c25ea939355b935810fba0a451dabf03f1f5d96a952c799e2475cde847a0')
+source=("git+${url}.git#tag=v${pkgver}")
+b2sums=('1f71be899abdd88a70735595a5cc752498a686826d6eea44b4e049d007f45a453341eedb545f683f5104e53c33a9e2f2054d96b3b2a04299723b7932085aa735')
 
 prepare() {
     cd "$srcdir/${_name}"
-    patch -Np1 -i ../0001-Replace-fusermount-with-fusermount3.patch
-
     export RUSTUP_TOOLCHAIN=stable
     cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
