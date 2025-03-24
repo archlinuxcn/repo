@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=clapgrep
-pkgver=25.02
+pkgver=25.03
 pkgrel=1
 pkgdesc="One app to search through all your files"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -13,7 +13,7 @@ source=(
 	"${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 	"fix-archlinux-build.patch::${url}/pull/83.patch"
 )
-sha256sums=('a05d3ac660ee9e38e091b9a7af3dad2a80e08dc7fa19a6570d7fc75464c4854b'
+sha256sums=('15e559c3a3cf250350e64c13a14b3808128880449d12e37b4dd28c21e9796cda'
             '064e7be0c3baf4005936ada2af0bfa4df7f2c24156ff7b374ac42f449c6d5db1')
 
 prepare() {
