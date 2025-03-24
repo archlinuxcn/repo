@@ -3,7 +3,7 @@
 
 pkgname=box64
 pkgver=0.3.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Linux Userspace x86_64 Emulator with a twist'
 arch=('x86_64' 'aarch64' 'riscv64' 'powerpc64le')
 url='https://github.com/ptitSeb/box64'
@@ -19,7 +19,7 @@ sha256sums=('081224cd27f5fa67fe4e9034ebbe0076e1da51b0f11bf84b67494752c7090d72'
 build() {
     cd ${pkgname}-${pkgver}
     if [[ $CARCH == "aarch64" ]]; then
-        name="$(lscpu | grep Model)"
+        name="$(LC_ALL=C lscpu | grep Model)"
         exargs=""
         if [ -n "$(echo $name | grep RK3588)" ]; then
               exargs="-DRK3588=1"
