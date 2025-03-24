@@ -13,6 +13,6 @@ repo_depends:
 update_on:
   - source: github
     github: clash-verge-rev/clash-verge-rev
-    use_latest_release: true
+    use_max_tag: true
     prefix: v
-    exclude_regex: '.*updater.*'
+    include_regex: '^v\d+\.\d+\.\d+$'
