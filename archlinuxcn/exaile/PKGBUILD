@@ -12,7 +12,7 @@ pkgrel=1
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
 url="https://www.exaile.org/"
-license=('GPL2')
+license=('GPL-2.0-only')
 depends=('python>=3.8'
 	'python-bsddb'
 	'gtk3>=3.24.0'
@@ -22,9 +22,11 @@ depends=('python>=3.8'
 	'python-mutagen>=1.44.0'
 	'python-dbus'
 	'python-cairo'
+    'libgirepository'
+    'gvfs'
 	'python-gobject>=3.24.0')
 makedepends=('pygobject-devel>=3.24.0' 'help2man' git)
-checkdepends=('python-pytest')
+checkdepends=('python-pytest' 'python-sunau' 'python-pipes')
 optdepends=('udisks2: device detection'
 	'python-discid: CD info'
 	'python-musicbrainzngs: CD info / Musicbrainz covers'
