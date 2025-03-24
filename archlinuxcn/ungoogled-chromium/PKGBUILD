@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=134.0.6998.117
+pkgver=134.0.6998.165
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=134.0.6998.117-1
+_uc_ver=134.0.6998.165-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -49,8 +49,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-vaapi-flag-ozone-wayland.patch
         skia-only-call-format_message-when-needed.patch
         webrtc-fix-build-with-pipewire-1.4.patch)
-sha256sums=('f7bd8c47115dfc539380af85193fddc75782dfbd4ac9de1332566b5816006d1b'
-            '88992a6ba123b8ee464d8c4e47160dce508b83bafba6bb21c96a127543316e99'
+sha256sums=('dd6a8d05771dc4879a8a74779e54fff0313ef1345be721167a594dd7bfe4c239'
+            'b583f62da9e79722fb5be6044e00ab0bc79adc06c308d994b0c818b912205994'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'b3de01b7df227478687d7517f61a777450dca765756002c80c4915f271e2d961'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
