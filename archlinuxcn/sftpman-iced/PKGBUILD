@@ -3,7 +3,7 @@
 
 _name=sftpman-iced-rs
 pkgname=sftpman-iced
-pkgver=2.0.8
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="A GUI frontend to sftpman (an application for managing and mounting sshfs (SFTP) filesystems)"
 arch=('x86_64' 'aarch64')
@@ -29,7 +29,7 @@ optdepends=(
 replaces=('sftpman-gtk')
 install="${pkgname}.install"
 source=("git+${url}.git#tag=v${pkgver}")
-b2sums=('38a1b81e7354bf71da92032ece7f471648721b618dc363c26d15e61f04a4040ffe8213ac7d1627da4d1d75c1aceb880db64c8fa4f9c0775a4066a9d000997b05')
+b2sums=('09018bac8466d6aff6c6c68ce986ba90887111ce85b6c013640fcce519790cd4307375248be0560affb6a4354143867d25b635644a890e5fc8f7bb217780dd20')
 
 prepare() {
     cd "${srcdir}/${_name}"
