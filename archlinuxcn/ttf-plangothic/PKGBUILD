@@ -1,9 +1,9 @@
 # Maintainer: Coelacanthus <uwu@coelacanthus.name>
 
 pkgbase=ttf-plangothic
-pkgname=(ttf-plangothic otf-plangothic)
+pkgname=(ttf-plangothic otf-plangothic ttc-plangothic)
 epoch=2
-pkgver=1.9.5769
+pkgver=2.9.5771
 pkgrel=1
 pkgdesc='A project based on SourceHan to expand and supplement characters, and its ultimate goal is to complete the entire Unicode as much as possible.'
 url='https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic'
@@ -11,17 +11,19 @@ arch=('any')
 license=('OFL-1.1')
 replaces=('ttf-plangothic-mob')
 source=(
-    $pkgbase-$pkgver-PlangothicP1-Regular.otf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP1-Regular.fallback.otf
-    $pkgbase-$pkgver-PlangothicP1-Regular.ttf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP1-Regular.fallback.ttf
+    $pkgbase-$pkgver-PlangothicP1-Regular.otf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP1-Regular.otf
+    $pkgbase-$pkgver-PlangothicP1-Regular.ttf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP1-Regular.ttf
     $pkgbase-$pkgver-PlangothicP2-Regular.otf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP2-Regular.otf
     $pkgbase-$pkgver-PlangothicP2-Regular.ttf::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/PlangothicP2-Regular.ttf
-    $pkgbase-$pkgver-LICENSE::https://raw.githubusercontent.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/V$pkgver/LICENSE
+    $pkgbase-$pkgver-Plangothic.ttc::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/releases/download/V$pkgver/Plangothic.ttc
+    $pkgbase-$pkgver-LICENSE::https://raw.githubusercontent.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic/V$pkgver/LICENSE.txt
 )
-b2sums=('2898d275fe536fb9d2fe0e8b7db94a9c34826a8e980da7131c64f1aebbeb0fa92d0902e1f2accd10edea08d7bff9f374308789072c153b043e8e642d5d98fd55'
-        'e17856bd5cd263bd369cb4094d2c4180e9293b9d641f0f3d55b5ac0540bf2e72db8b9bbc2f3e32a5a2585a79b4268541abd7a5fd5a709efbc4504c458c94a176'
-        'c424b13b7827c1118ab2f53f3643e0236dc191ccdd8da8f36698cb6f440b07d47f6250735071ca1fe6ea1b9eb915118d7dcf290b560f6736e8280a13e9b9c388'
-        '3cee167d9923f59593de0701746af7199347ec91a607333bf4b6f8c98b30a350fe7a8b4c075579c7853e93a4161453211fec96f37a66d14ac59cc89e009b02bb'
-        'c685b6f4f9c6c9042c12834df568f835155387d32a41b30ae524fa28acd569245a01c02e6c9ba7ef5012eca88536155236bbf36cf243e6d658a33d11bc7552ae')
+b2sums=('58fc087b8ea9d1502a8e7c946d0b35eb90d44be840200c6aead2710926d00631ef5c04bb493be6e753093da047b69568967cafd8d46cc6759804bd5b60a8b93e'
+        '144da5b163455247d30ed0a2cbd27dcb448182f12591b5b581e951b3584f10824b4ba22f8d7640f762765b656d76750bcc7abd052680c041bdf93e6fcfd0da3b'
+        '13782f362ca82b33126e1e61c87f860a9fb8df4dc649f4cfb9d0a36eb1da7130de1408e12400b04b483702ef53becf8584669a5610222009d73ee507c05b8e70'
+        '5329c860eb94f9ecd69c0e0c46d439f2d396064cfb5cac0907ac737b1dc43aa78d24a338246b791eab3f2a94e68cd34c61f3b3aa20f56289a05133dc81a94250'
+        'fce92d37592a2bd1c75f3c03a8e42317440acd5d4d8c4bded49f7a0836aac853b0d198af23e83a2b7edd3788de8e08326cb2b4f3457888a073b86e06c9ded07c'
+        'e3b7def662ec2412a460be8aebf5da2c2e57955d30438a7222c800c5ef6f5dce32cf510ea3f57f3435d93758725c172ea4e7e28d91f17ef049b45d4a428f88d9')
 
 package_otf-plangothic() {
     install -Dm755 -d "$pkgdir/usr/share/fonts/OTF/Plangothic"
@@ -33,6 +35,12 @@ package_ttf-plangothic() {
     install -Dm755 -d "$pkgdir/usr/share/fonts/TTF/Plangothic"
     install -Dm644 "$pkgbase-$pkgver-PlangothicP1-Regular.ttf" "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP1-Regular.ttf"
     install -Dm644 "$pkgbase-$pkgver-PlangothicP2-Regular.ttf" "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP2-Regular.ttf"
+    install -Dm644 "$pkgbase-$pkgver-LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+package_ttc-plangothic() {
+    # It has GSUB so it should be a OpenType Collections with glyf outline.
+    install -Dm755 -d "$pkgdir/usr/share/fonts/OTF/Plangothic"
+    install -Dm644 "$pkgbase-$pkgver-Plangothic.ttc" "$pkgdir/usr/share/fonts/OTF/Plangothic/Plangothic.ttc"
     install -Dm644 "$pkgbase-$pkgver-LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 # vim: set ts=4 sw=4 et:
