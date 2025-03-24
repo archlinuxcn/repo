@@ -8,12 +8,12 @@
 
 pkgname=hfsprogs
 pkgver=540.1.linux3
-pkgrel=6
+pkgrel=7
 pkgdesc="User space utils for create and check Apple HFS/HFS+ filesystem"
 arch=("aarch64" "x86_64")
 depends=('openssl')
 makedepends=('libbsd')
-license=('custom:APSL')
+license=('APSL-2.0')
 url="http://www.opensource.apple.com/"
 _checksum='0435afc389b919027b69616ad1b05709'
 source=("https://src.fedoraproject.org/repo/pkgs/hfsplus-tools/diskdev_cmds-${pkgver}.tar.gz/${_checksum}/diskdev_cmds-${pkgver}.tar.gz"
