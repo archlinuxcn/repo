@@ -100,19 +100,17 @@ _variant=("MapleMono-CN-unhinted"
           "MapleMonoNormalNL-TTF-AutoHint"
           "MapleMonoNormalNL-TTF"
           "MapleMonoNormalNL-Variable"
-          "MapleMonoNormalNL-Woff2"
-          )
-
+          "MapleMonoNormalNL-Woff2")
 
 for _var in "${_variant[@]}"; do
-  _pkgname=${_var,,}
   if [[ "${_var}" == *"OTF"* ]]; then
-    _pkgname="otf-${_pkgname//-OTF/}"
+    _pkgname="otf-${_var//-OTF/}"
   elif [[ "${_var}" == *"Woff2"* ]]; then
-    _pkgname="woff2-${_pkgname//-Woff2/}"
+    _pkgname="woff2-${_var//-Woff2/}"
   else
-    _pkgname="ttf-${_pkgname//-TTF/}"
+    _pkgname="ttf-${_var//-TTF/}"
   fi
+  _pkgname=${_pkgname,,}
   pkgname+=("${_pkgname}")
 
   if [[ "${_var}" == "MapleMono-TTF" ]]; then
