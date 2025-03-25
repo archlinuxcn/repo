@@ -8,17 +8,9 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/luleyleo/${pkgname}"
 license=('GPL-3.0-or-later')
 depends=('gtk4' 'libadwaita' 'gtksourceview5' 'poppler-glib')
-makedepends=('git' 'meson' 'cargo' 'blueprint-compiler')
-source=(
-	"${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
-	"fix-archlinux-build.patch::${url}/pull/83.patch"
-)
-sha256sums=('15e559c3a3cf250350e64c13a14b3808128880449d12e37b4dd28c21e9796cda'
-            '064e7be0c3baf4005936ada2af0bfa4df7f2c24156ff7b374ac42f449c6d5db1')
-
-prepare() {
-	patch -d "${pkgname}-${pkgver}/" -p1 -i ../fix-archlinux-build.patch
-}
+makedepends=('meson' 'cargo' 'blueprint-compiler')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('15e559c3a3cf250350e64c13a14b3808128880449d12e37b4dd28c21e9796cda')
 
 build() {
 	arch-meson "${pkgname}-${pkgver}/" build
@@ -30,5 +22,5 @@ check() {
 }
 
 package() {
-	meson install -C build --destdir "${pkgdir}"
+	meson install -C build --no-rebuild --destdir "${pkgdir}"
 }
