@@ -9,7 +9,7 @@ arch=('x86_64')
 license=('GPL3')
 depends=(libx11 zlib libxslt libxml2 libxft tcl tk)
 options=(!strip !lto)
-makedepends=(git gcc make automake autoconf zip xml2-config-compat)
+makedepends=(git gcc make automake autoconf zip)
 conflicts=('ds9' 'ds9-bin')
 source=("$pkgname::git+https://github.com/SAOImageDS9/SAOImageDS9.git#tag=v$pkgver"
         "ds9.desktop"
@@ -20,7 +20,6 @@ sha256sums=('SKIP'
 
 build() {
     cd ${srcdir}/${pkgname}
-    export PATH=$PWD/compat:$PATH
     which xml2-config
     unix/configure
     # workaround for unsatisfying build order in upstream
