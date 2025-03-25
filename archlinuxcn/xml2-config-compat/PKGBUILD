@@ -9,7 +9,8 @@ sha256sums=('06db66874095c734cbea28236c4e7341f47dc08191bea60a4dba7f0562c5f16e')
 license=("MIT")
 
 package() {
-	install -D -m755 "${srcdir}/xml2-config" "${pkgdir}/usr/bin/xml2-config"
+    # Not needed anymore
+	#install -D -m755 "${srcdir}/xml2-config" "${pkgdir}/usr/bin/xml2-config"
 }
 
 
