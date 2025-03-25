@@ -26,7 +26,7 @@ depends=('python>=3.8'
     'gvfs'
 	'python-gobject>=3.24.0')
 makedepends=('pygobject-devel>=3.24.0' 'help2man' git)
-checkdepends=('python-pytest' 'python-sunau' 'python-pipes')
+checkdepends=('python-pytest')
 optdepends=('udisks2: device detection'
 	'python-discid: CD info'
 	'python-musicbrainzngs: CD info / Musicbrainz covers'
@@ -47,6 +47,11 @@ optdepends=('udisks2: device detection'
 source=("$pkgname::git+https://github.com/exaile/exaile.git#commit=a66b3129f06b1540565f80a6ede862bbc330f68e")
 #source=("$pkgname-$pkgver.tar.gz::https://github.com/exaile/exaile/archive/$pkgver.tar.gz")
 sha256sums=(SKIP)
+
+prepare() {
+    cd "$srcdir/$pkgname"
+    sed -i '/GIRepository/s/2.0/3.0/' xl/main.py
+}
 
 build() {
 	cd "$srcdir/$pkgname"
