@@ -123,8 +123,10 @@ for _var in "${_variant[@]}"; do
     _replaces="woff2-maple"
   elif [[ "${_var}" == "MapleMono-NF" ]]; then
     _replaces="ttf-maple-nerd"
-  elif [[ "${_var}" == "MapleMonoNormalNL-NF-CN" ]]; then
+  elif [[ "${_var}" == "MapleMono-NF-CN" ]]; then
     _replaces="ttf-maple-sc-nerd"
+  else
+    _replaces=""
   fi
 
   _filename="${_var}.zip"
