@@ -1,0 +1,147 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgbase="maple-font"
+
+pkgver="7.0"
+pkgrel="1"
+pkgdesc="Open source monospace font with round corner, ligatures and Nerd-Font for IDE and terminal. 带连字和控制台图标的圆角等宽字体，中英文宽度完美2:1。"
+url="https://github.com/subframe7536/maple-font"
+arch=("any")
+license=("OFL-1.1")
+makedepends=("unzip")
+
+pkgname=()
+source=()
+noextract=()
+sha256sums=('2f611ab05112f4462636d3acfc22b0aaa40dce4c40660a014fca8dd5d5a2a417'
+            'bd09190f5c1afe9cc0651f1bf64adf029182512f8046464dbe1a89fd91a99cbb'
+            'c7b66739b0e418c4789cfa4c6c17d17c4e8ce28d7dad9800a50786ebd3fa4d98'
+            '214047481216fffbd6c25ba679f156e3c79250b26663d7bc17d62685bb7f294d'
+            'e4fe360470e722fe19378ac3b4458509611cf8d7cf774a874f654e5b62619fe4'
+            '1e066422b115e73991841bc0238fee4fe9df5210da0f41fcd6ea535df24d85a0'
+            'e333ca7a35994b9d9b870d052c95faf6432bf246efe8fe65e5c43ca2b61c4f9a'
+            '5daedc4835ca6f2d1420b9b18fdeb16c3e998430f005e7bd97298ec7b14f9a81'
+            '1609689e46e7a618b09b11a3ed9d28cdf1ccc29263efef7a83a58cb4c7b7ac8a'
+            '1082df38343c0c98b24f08264e883070d973f98048766964fe69df159e0499ef'
+            '4bb95623e5ebecbc5d16f8e79e092dc79b9a8b111597174b50328c9859404429'
+            'd30285ff48548f8e5a0299c76e9d2342a3edc3c61c22cbc4f3c1c5a1bd14f27d'
+            '2540875764e40d3171a595e26cbabcfc43729fb28447902a4f9631e2d2ba796f'
+            'b7ba4ea3c62c7b0611df5001d89e0121953e256dd0a7bef412c6e9cb7f18d93b'
+            '4bd6bca97a5e6d83262664abf891bde39198bae7100b96db5117f78748f01f8d'
+            '8f633a90b4802d1cdd3a5f2fc8cb17fb8c2f1957150d8be56112ee5f55d88627'
+            '93e16c07195985e680cc915da5d2adaf83544e74ae7ba18d80d6bf53907a74f2'
+            '4d5fbaad9dcc35a6edfb59f7dd478494fdb370692d60860ea2cddd1785e541a3'
+            '543e1dd01754cd188051aa3db0624a21e2e40f7000ba17c9a0876bbdd24f3f4b'
+            '6db27170861aadfb6b8a704ef6b2c0a94cf78cba16ce4719faa64298b7a4a3c5'
+            'fba5a069475d0f62d262c6956a3a58370fb2a6e408dbbb2d8dcea13e742d1ebc'
+            '6db32a8cb1d123468c4daee9c4cbd153646c884f7b7b7a5abe426e31f55772d0'
+            '130ffb2b028f5a5b85b584430ffd21836ead40254a6022144cda829589dd55f2'
+            '3834d607ef674cc9a011aaa5bf5fc5ab8180061e3908b4c0d072961ccf46f40c'
+            'bce945c1bd1af7bc9d24f47b61e109aa79938caf69284d8eeaccc61902474a14'
+            'e4993f16a77ba4cb8382185a16f21e80f26a2b6d62309b8dfe726df72e6179b7'
+            'f4585b0e10671841705f6604d8611ecad788580e73ddbe152705114d6b167f79'
+            '48c9ed6745d546c74ba1c49df41b0ddff3919a4522f178134a27142ea106d29a'
+            '7e51c638cb9444d7a194bc342736c83cd2d735bec1ee0f185e5f0fa0dfd6aadd'
+            'fe08b00791f4150f0d4d8562ab3f3505e77eb96b8e2fd8a91fe08a4b5a77e2f5'
+            'bcbe9f47010fd8648e441ace1af120480f9fc63ad9c989a96cd7ae20ca55bd83'
+            '4bfefa8b67e3d5ef8a0314250239e018398e331f2de98ed99fce3cef3249257c'
+            '82cc942b289b579ab4965362d089f0aa4fd9384105fa91f56427fdb0c69d91cf'
+            '86dfccc1971cd91bc4cd9d66a6a08c91f53a27a383f05e15e25325aecba8d7f1'
+            'a46c6c2941523b987338f596d2b8181bc7e982e9e63e4b309d9f1af82e40f933'
+            '37e25251cf2b7aed928a57b68af1eedf6e73ce0ecc14a241cdb820520e28ad90'
+            '962ff13c01c9205b560c42b54edb50b8e8d9ece26a5e4f9d9dc1c5a70b21dc56'
+            'c4146265a5ecc06cbe0dc4f78769bc9c2c590632e0abfe5e5fa493e38f7a870d'
+            '8fc2e2f88fcd81d352c13018df561b0491537362177dfcaa427bff2957c178c5'
+            'f9ec5f3da9495e11d271502b71dc0b55d7b9261c4f032c7279b400136c81928b'
+            '09da34161208a7b73e388973ec3eba1bcc6c064d0968dabdbe7e86ba05098993'
+            'c5ba756616d8cac1c738a928532bb44efefafe30ea09ba3653a7f31e214fb79d'
+            '99075870b4ffdf49098cf1a6e23da9657ac9f04ba263b33f82c42e23e8b56370'
+            '590a7efec29083f40761e7853f993d20f3dc40928650b9660b2ac03943af7e69')
+_variant=("MapleMono-CN-unhinted"
+          "MapleMono-CN"
+          "MapleMono-NF-CN-unhinted"
+          "MapleMono-NF-CN"
+          "MapleMono-NF-unhinted"
+          "MapleMono-NF"
+          "MapleMono-OTF"
+          "MapleMono-TTF-AutoHint"
+          "MapleMono-TTF"
+          "MapleMono-Variable"
+          "MapleMono-Woff2"
+          "MapleMonoNL-CN-unhinted"
+          "MapleMonoNL-CN"
+          "MapleMonoNL-NF-CN-unhinted"
+          "MapleMonoNL-NF-CN"
+          "MapleMonoNL-NF-unhinted"
+          "MapleMonoNL-NF"
+          "MapleMonoNL-OTF"
+          "MapleMonoNL-TTF-AutoHint"
+          "MapleMonoNL-TTF"
+          "MapleMonoNL-Variable"
+          "MapleMonoNL-Woff2"
+          "MapleMonoNormal-CN-unhinted"
+          "MapleMonoNormal-CN"
+          "MapleMonoNormal-NF-CN-unhinted"
+          "MapleMonoNormal-NF-CN"
+          "MapleMonoNormal-NF-unhinted"
+          "MapleMonoNormal-NF"
+          "MapleMonoNormal-OTF"
+          "MapleMonoNormal-TTF-AutoHint"
+          "MapleMonoNormal-TTF"
+          "MapleMonoNormal-Variable"
+          "MapleMonoNormal-Woff2"
+          "MapleMonoNormalNL-CN-unhinted"
+          "MapleMonoNormalNL-CN"
+          "MapleMonoNormalNL-NF-CN-unhinted"
+          "MapleMonoNormalNL-NF-CN"
+          "MapleMonoNormalNL-NF-unhinted"
+          "MapleMonoNormalNL-NF"
+          "MapleMonoNormalNL-OTF"
+          "MapleMonoNormalNL-TTF-AutoHint"
+          "MapleMonoNormalNL-TTF"
+          "MapleMonoNormalNL-Variable"
+          "MapleMonoNormalNL-Woff2"
+          )
+
+
+for _var in "${_variant[@]}"; do
+  _pkgname=${_var,,}
+  if [[ "${_var}" == *"OTF"* ]]; then
+    _pkgname="otf-${_pkgname//-OTF/}"
+  elif [[ "${_var}" == *"Woff2"* ]]; then
+    _pkgname="woff2-${_pkgname//-Woff2/}"
+  else
+    _pkgname="ttf-${_pkgname//-TTF/}"
+  fi
+  pkgname+=("${_pkgname}")
+
+  if [[ "${_var}" == "MapleMono-TTF" ]]; then
+    _replaces="ttf-maple"
+  elif [[ "${_var}" == "MapleMonoNL-TTF-AutoHint" ]]; then
+    _replaces="ttf-maple-autohint"
+  elif [[ "${_var}" == "MapleMono-OTF" ]]; then
+    _replaces="otf-maple"
+  elif [[ "${_var}" == "MapleMono-Woff2" ]]; then
+    _replaces="woff2-maple"
+  elif [[ "${_var}" == "MapleMono-NF" ]]; then
+    _replaces="ttf-maple-nerd"
+  elif [[ "${_var}" == "MapleMonoNormalNL-NF-CN" ]]; then
+    _replaces="ttf-maple-sc-nerd"
+  fi
+
+  _filename="${_var}.zip"
+  noextract+=("${_filename}")
+  source+=("${url}/releases/download/v${pkgver}/${_filename}")
+
+  eval "package_${_pkgname}() {
+  replaces=(${_replaces})
+
+  unzip "${_filename}" -d \${pkgname}
+
+  install -d "\$pkgdir/usr/share/fonts/maple"
+  install -Dm644 -t "\$pkgdir/usr/share/fonts/maple" \${pkgname}/Maple*
+
+  install -d "\$pkgdir/usr/share/licenses/\${pkgname}"
+  install -Dm644 -t "\$pkgdir/usr/share/licenses/\${pkgname}" \${pkgname}/LICENSE.txt
+}"
+done
