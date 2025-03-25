@@ -1,0 +1,36 @@
+# Maintainer: Hoream <horeamxiao@archlinuxcn.org>
+# Contributor: Tony Lambiris <tony@libpcap.net>
+
+pkgname=nvtop-git
+pkgver=3.1.0.r110.g33cf468
+pkgrel=1
+pkgdesc="GPUs process monitoring for AMD, Intel and NVIDIA"
+arch=('x86_64' 'aarch64')
+url="https://github.com/Syllo/nvtop"
+license=('GPL3')
+depends=('ncurses' 'systemd-libs')
+makedepends=('cmake' 'libdrm' 'systemd' 'git')
+provides=('nvtop')
+conflicts=('nvtop')
+source=("${pkgname}::git+https://github.com/Syllo/nvtop.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${pkgname}"
+
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+}
+
+build() {
+  cd "${pkgname}"
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DNVIDIA_SUPPORT=ON -DAMDGPU_SUPPORT=ON .
+  make
+}
+
+package() {
+  cd "${pkgname}"
+
+  make DESTDIR="${pkgdir}/" install
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
