@@ -2,7 +2,7 @@
 # Contributor: FirstAirBender <noblechuk5[at]web[dot]de>
 
 pkgname=('conan')
-pkgver=2.13.0
+pkgver=2.14.0
 pkgrel=1
 pkgdesc="A distributed, open source, C/C++ package manager."
 arch=('any')
@@ -48,4 +48,4 @@ package() {
   install -m755 -d "${pkgdir}/usr/share/doc/conan"
   install -m644 contributors.txt "${pkgdir}/usr/share/doc/conan/"
 }
-md5sums=('6f8e2a646ce9c6e928b0e84e5fa79089')
+md5sums=('c35bb92dede3e759f832dd465ea6b503')
