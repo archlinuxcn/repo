@@ -1,8 +1,12 @@
---- Bottles-51.17-orig/bottles/frontend/meson.build	2024-12-16 15:51:36.698984715 +0100
-+++ Bottles-51.17/bottles/frontend/meson.build	2024-12-16 15:52:01.939748363 +0100
-@@ -25,9 +25,9 @@
+diff --unified --recursive --no-dereference Bottles-51.21-orig/bottles/frontend/meson.build Bottles-51.21/bottles/frontend/meson.build
+--- Bottles-51.21-orig/bottles/frontend/meson.build	2025-03-17 04:14:40.000000000 +0100
++++ Bottles-51.21/bottles/frontend/meson.build	2025-03-25 18:46:32.682909892 +0100
+@@ -23,11 +23,11 @@
+     configuration: conf
+ )
  
- fs = import('fs')
+-fs = import('fs')
++#fs = import('fs')
  
 -if not fs.is_file('/' + '.flatpak-info')
 -  error('file does not exist')
@@ -13,3 +17,68 @@
  
  bottles_sources = [
    '__init__.py',
+diff --unified --recursive --no-dereference Bottles-51.21-orig/bottles/frontend/windows/window.py Bottles-51.21/bottles/frontend/windows/window.py
+--- Bottles-51.21-orig/bottles/frontend/windows/window.py	2025-03-17 04:14:40.000000000 +0100
++++ Bottles-51.21/bottles/frontend/windows/window.py	2025-03-25 18:46:42.483301689 +0100
+@@ -97,34 +97,34 @@
+             manager = Adw.StyleManager.get_default()
+             manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+ 
+-        # Be VERY explicit that non-sandboxed environments are unsupported
+-        if not Xdp.Portal.running_under_sandbox():
++        # # Be VERY explicit that non-sandboxed environments are unsupported
++        # if not Xdp.Portal.running_under_sandbox():
+ 
+-            def response(dialog, response, *args):
+-                if response == "close":
+-                    quit(1)
+-
+-            body = _(
+-                "Bottles is only supported within a sandboxed environment. Official sources of Bottles are available at"
+-            )
+-            download_url = "usebottles.com/download"
+-
+-            error_dialog = Adw.AlertDialog.new(
+-                _("Unsupported Environment"),
+-                f"{body} <a href='https://{download_url}' title='https://{download_url}'>{download_url}.</a>",
+-            )
+-
+-            error_dialog.add_response("close", _("Close"))
+-            error_dialog.set_body_use_markup(True)
+-            error_dialog.connect("response", response)
+-            error_dialog.present(self)
+-            logging.error(
+-                _(
+-                    "Bottles is only supported within a sandboxed format. Official sources of Bottles are available at:"
+-                )
+-            )
+-            logging.error("https://usebottles.com/download/")
+-            return
++        #     def response(dialog, response, *args):
++        #         if response == "close":
++        #             quit(1)
++
++        #     body = _(
++        #         "Bottles is only supported within a sandboxed environment. Official sources of Bottles are available at"
++        #     )
++        #     download_url = "usebottles.com/download"
++
++        #     error_dialog = Adw.AlertDialog.new(
++        #         _("Unsupported Environment"),
++        #         f"{body} <a href='https://{download_url}' title='https://{download_url}'>{download_url}.</a>",
++        #     )
++
++        #     error_dialog.add_response("close", _("Close"))
++        #     error_dialog.set_body_use_markup(True)
++        #     error_dialog.connect("response", response)
++        #     error_dialog.present(self)
++        #     logging.error(
++        #         _(
++        #             "Bottles is only supported within a sandboxed format. Official sources of Bottles are available at:"
++        #         )
++        #     )
++        #     logging.error("https://usebottles.com/download/")
++        #     return
+ 
+         # Loading view
+         self.page_loading = LoadingView()

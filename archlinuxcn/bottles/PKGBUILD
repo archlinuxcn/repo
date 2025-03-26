@@ -3,8 +3,8 @@
 
 pkgname=bottles
 _pkgname=Bottles
-pkgver=51.17
-pkgrel=3
+pkgver=51.21
+pkgrel=1
 epoch=2
 pkgdesc='Easily manage wine and proton prefix'
 arch=(any)
@@ -55,23 +55,19 @@ makedepends=(
 )
 source=(
   "${_pkgname}-${pkgver}.tar.gz::https://github.com/bottlesdevs/Bottles/archive/refs/tags/${pkgver}.tar.gz"
-  allow-non-flatpak.patch
   disable-flatpak-check.patch
 )
 sha256sums=(
-  f0fdb62e2093206e46f9ceda94726927fc28436e253c89be3e0c248c975baf91
-  51e33e3227db9d42162df32bd6f77f318b34aac50192ded9c2399188efc636af
-  013a88ff60d66a011f3c2c0e4b8d01a25d24b2cca52695737f34d4fd09ac3010
+  3a5653464839d5dbe36d44eabb823d422421897325f3c7944cddc9475575869d
+  eec371407a6a8cc196330e68535e15a1332c31e38f47eb1891be1cf754d76802
 )
 
 prepare() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  patch --forward --directory="${srcdir}/${_pkgname}-${pkgver}" --strip=1 --input="${srcdir}/disable-flatpak-check.patch"
+  # cd "${srcdir}/${_pkgname}-${pkgver}"
   
-  # Disable check for the .flatpak-info file
-  patch -Np1 -i ../allow-non-flatpak.patch
-
-  # Fix warning about needed sandbox environment
-  patch -Np1 -i ../disable-flatpak-check.patch
+  # Fix warning about flatpak and sandbox environment
+  # patch -Np0 -i ../disable-flatpak-check.patch
 }
 
 build() {
