@@ -5,8 +5,8 @@
 # Contributor: damir <damir@archlinux.org>
 
 pkgname=amarok
-pkgver=3.0.0
-pkgrel=10
+pkgver=3.2.2
+pkgrel=1
 pkgdesc="The powerful music player for KDE"
 arch=("x86_64")
 url="http://${pkgname}.kde.org/"
@@ -26,9 +26,7 @@ optdepends=("libmtp: support for portable media devices"
 source=(
   "https://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz"
   )
-sha256sums=(
-  "14a87678305fad76a0a1daca555a6775ffa642e5ebbcccecd91f497093992c1c"
- )
+sha256sums=('fcde3c37d1f815ecc88930fe6d1ea4d4b0b1ed3b33fcd32df5542af874dd2ab0')
 
 build() {
   mkdir -p "${srcdir}/${pkgname}-${pkgver}/build"
