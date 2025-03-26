@@ -36,6 +36,7 @@ package() {
 	cd "${pkgname}-${_pkgver}/"
 	install -Dm755 "build/${pkgname}" -t "${pkgdir}/usr/bin/"
 	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	sed -i '/DBusActivatable=/d' "nix/so.libdb.${pkgname}.desktop"
 	install -Dm644 "nix/so.libdb.${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 	install -Dm644 "internal/icons/hicolor/scalable/apps/so.libdb.${pkgname}.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
 }
