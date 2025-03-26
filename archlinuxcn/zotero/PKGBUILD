@@ -1,7 +1,7 @@
 # Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=7.0.13
+pkgver=7.0.15
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686')
@@ -9,7 +9,7 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch')
-_tag=edc43d9a9e5ebcc522e9cb607065d9b056aff42a  # git rev-parse $pkgver
+_tag=bdd11c02849b94f4784a07307adcaaee2d692dd4  # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
@@ -27,7 +27,7 @@ source=("zotero.desktop"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            'cb2a616214da8252c042e8c9bf180886e994d04f64d22a1d22c47d2062eb4f81'
+            '1ce124ebca2d1a9156d49cde244e461eddcb0b5fded2266202e788187e5a4623'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -81,7 +81,7 @@ prepare() {
   cd "$srcdir/zotero-client/reader"
   git submodule init
   # Stupid hack because of dangling commit
-  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 7f547333ca551aff1b89414452df43ba60da07b0
+  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 67a1769bdaa0e89a6e239fcbaa5bf72b845223a0
   git config submodule.pdfjs/pdf.js.url "$srcdir/zotero-pdf-js"
   git config submodule.epubjs/epub.js.url "$srcdir/zotero-epub-js"
   git -c protocol.file.allow=always submodule update
