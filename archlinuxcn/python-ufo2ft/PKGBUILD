@@ -36,23 +36,23 @@ makedepends=(
 checkdepends=(
     'python-pytest'
 )
-source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}")
+source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
 sha256sums=('092c5f94852663c8129133c0b13994ae1e4928c38598b3b1f4a2c3a2d41adbfa')
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${srcdir}/${pkgname}"
     python -m build --wheel --no-isolation
 }
 
 check() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${srcdir}/${pkgname}"
     python -m venv --system-site-packages .venv
     .venv/bin/python -m installer dist/*.whl
     .venv/bin/python -m pytest -v tests
 }
 
 package() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${srcdir}/${pkgname}"
     install -Dm0644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
     python -m installer --destdir="${pkgdir}" dist/*.whl
 }
