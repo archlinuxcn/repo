@@ -1,7 +1,7 @@
 # Maintainer: HurricanePootis <hurricanepootis@protonmail.com>
 pkgname=imgbrd-grabber
 pkgver=7.13.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Very customizable imageboard/booru downloader with powerful filenaming features."
 arch=('x86_64')
 url="https://github.com/Bionus/imgbrd-grabber"
@@ -43,6 +43,8 @@ build() {
     cmake -S $pkgname/src -B build \
     -G Ninja \
     -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_C_FLAGS="$CFLAGS -DNDEBUG" \
+    -DCMAKE_CXX_FLAGS="$CXXFLAGS -DNDEBUG" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLEXBOR_BUILD_TESTS_CPP=0 \
     -Wno-dev
