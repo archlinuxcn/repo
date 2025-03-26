@@ -1,5 +1,5 @@
 pkgname=miniupnpd-nft-git
-pkgver=2.3.7.r56.g0ff36e5
+pkgver=2.3.7.r114.ge93c040
 pkgrel=1
 pkgdesc="Lightweight UPnP IGD daemon with nftables support"
 arch=('x86_64')
@@ -19,7 +19,7 @@ sha256sums=('SKIP'
 pkgver() {
   cd "miniupnp"
 
-  git describe --long --tags | sed 's/^miniupnpc_//;s/^miniupnpd_//;s/\([^-]*-g\)/r\1/;s/[_-]/./g'
+  git describe --long --tags --match 'miniupnpd_*' | sed 's/^miniupnpd_//;s/\([^-]*-g\)/r\1/;s/[_-]/./g'
 }
 
 build() {

@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck source=/dev/null
 
 true || source /usr/lib/initcpio/functions
 true || source /usr/lib/initcpio/install/systemd
@@ -35,13 +36,13 @@ build() {
       add_file "$f"
     done
 
-	  # Include hostid when it's not written to file
+    # Include hostid when it's not written to file
     if [[ ! -f /etc/hostid ]]; then
       AA="$(hostid | cut -b 1,2)"
       BB="$(hostid | cut -b 3,4)"
       CC="$(hostid | cut -b 5,6)"
       DD="$(hostid | cut -b 7,8)"
-      printf "\x${DD}\x${CC}\x${BB}\x${AA}" > "${BUILDROOT}/etc/hostid"
+      printf "\x${DD}\x${CC}\x${BB}\x${AA}" >"${BUILDROOT}/etc/hostid"
     fi
   }
 
@@ -54,7 +55,7 @@ build() {
 }
 
 help() {
-  cat << EOF
+  cat <<EOF
 This hook adds ZFS support for systemd-based initrd.
 It has a hard dependency on the systemd hook. Since it's implemented
 using shell scripts, it still requires busybox and will copy it to

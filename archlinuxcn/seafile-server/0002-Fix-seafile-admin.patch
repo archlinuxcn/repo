@@ -1,14 +1,14 @@
-From 0216b23f4e17a21f491ffb3bf10f8e2944d14422 Mon Sep 17 00:00:00 2001
+From 7ea8f9f9c15d15a2be5d41b8d24c2afc5ee37bfa Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 25 Feb 2023 14:09:12 -0500
 Subject: [PATCH 2/3] Fix seafile-admin
 
 ---
- tools/seafile-admin | 155 ++++++++++++++++++++++++++++++++------------
- 1 file changed, 113 insertions(+), 42 deletions(-)
+ tools/seafile-admin | 241 ++++++++++++++++++++++++++++----------------
+ 1 file changed, 156 insertions(+), 85 deletions(-)
 
 diff --git a/tools/seafile-admin b/tools/seafile-admin
-index b5e199e..164e98f 100755
+index b5e199e..cb91a4f 100755
 --- a/tools/seafile-admin
 +++ b/tools/seafile-admin
 @@ -5,16 +5,6 @@
@@ -45,6 +45,66 @@ index b5e199e..164e98f 100755
  
  ####################
  ### Common helper functions
+@@ -79,11 +72,11 @@ def highlight(content):
+ 
+ 
+ def info(msg):
+-    print msg
++    print(msg)
+ 
+ 
+ def error(msg):
+-    print 'Error: ' + msg
++    print('Error: ' + msg)
+     sys.exit(1)
+ 
+ 
+@@ -113,10 +106,10 @@ def ask_question(desc,
+ 
+     desc += '  '
+     while True:
+-        answer = raw_input(desc)
++        answer = input(desc)
+         if not answer:
+             if default:
+-                print ''
++                print('')
+                 return default
+             else:
+                 continue
+@@ -125,19 +118,19 @@ def ask_question(desc,
+ 
+         if yes_or_no:
+             if answer != 'yes' and answer != 'no':
+-                print '\nPlease answer yes or no\n'
++                print('\nPlease answer yes or no\n')
+                 continue
+             else:
+                 return answer == 'yes'
+         else:
+             if validate and not validate(answer):
+                 if invalidate_msg:
+-                    print '\n%s\n' % invalidate_msg
++                    print('\n%s\n' % invalidate_msg)
+                 else:
+-                    print '\n"%s" is not a valid %s\n' % (answer, key)
++                    print('\n"%s" is not a valid %s\n' % (answer, key))
+                 continue
+ 
+-        print ''
++        print('')
+         return answer
+ 
+ 
+@@ -220,7 +213,7 @@ def must_mkdir(path):
+     '''Create a directory, exit on failure'''
+     try:
+         os.mkdir(path)
+-    except OSError, e:
++    except OSError as e:
+         error('failed to create directory %s:%s' % (path, e))
+ 
+ ### END of Common helper functions
 @@ -281,6 +274,7 @@ def get_seahub_env():
      env['CCNET_CONF_DIR'] = conf[CONF_CCNET_DIR]
      env['SEAFILE_CONF_DIR'] = conf[CONF_SEAFILE_DIR]
@@ -53,6 +113,41 @@ index b5e199e..164e98f 100755
      return env
  
  
+@@ -299,8 +293,8 @@ Make sure you have read seafile server manual at
+ Press [ENTER] to continue
+ -----------------------------------------------------------------
+ ''' % SERVER_MANUAL_HTTP
+-    print welcome_msg
+-    raw_input()
++    print(welcome_msg)
++    input()
+ 
+ def get_server_ip_or_domain():
+     def validate(s):
+@@ -323,9 +317,9 @@ def get_ccnet_conf_dir():
+         question = 'It seems there already exists ccnet config files in %s, Do you want to use them?' % ccnet_conf_dir
+         yesno = ask_question(question, yes_or_no=True)
+         if not yesno:
+-            print highlight(
++            print(highlight(
+                 '\nRemove the directory %s first, and run the script again.\n'
+-                % ccnet_conf_dir)
++                % ccnet_conf_dir))
+             sys.exit(1)
+         else:
+             conf[CONF_CCNET_CONF_EXISTS] = True
+@@ -385,9 +379,9 @@ def get_seafile_data_dir():
+         question = 'It seems there already exists seafile data in %s, Do you want to use them?' % seafile_data_dir
+         yesno = ask_question(question, yes_or_no=True)
+         if not yesno:
+-            print highlight(
++            print(highlight(
+                 '\nRemove the directory %s first, and run the script again.\n'
+-                % seafile_data_dir)
++                % seafile_data_dir))
+             sys.exit(1)
+         else:
+             conf[CONF_SEAFILE_CONF_EXISTS] = True
 @@ -398,25 +392,38 @@ def get_seafile_data_dir():
  
  
@@ -134,6 +229,15 @@ index b5e199e..164e98f 100755
  def gen_seahub_secret_key():
      data = str(uuid.uuid4()) + str(uuid.uuid4())
      return data[:40]
+@@ -437,7 +470,7 @@ def create_seahub_settings_py():
+         with open(seahub_settings_py, 'w') as fp:
+             line = "SECRET_KEY = '%s'" % gen_seahub_secret_key()
+             fp.write(line)
+-    except Exception, e:
++    except Exception as e:
+         error('failed to create %s: %s' % (seahub_settings_py, e))
+ 
+ 
 @@ -457,6 +490,36 @@ def move_avatar():
      # make the the original avatars dir a symlink pointing to the outside dir
      os.symlink(outside_avatar_dir, seahub_avatar_dir)
@@ -179,10 +283,13 @@ index b5e199e..164e98f 100755
 -    # Set proper PYTHONPATH before run django syncdb command
 -    env = get_seahub_env()
 -
-     print
-     print
+-    print
+-    print
++    print()
++    print()
      info('Now initializing seahub database, please wait...')
-     print
+-    print
++    print()
  
 -    if run_argv(argv, cwd=seahub_dir, env=env) != 0:
 -        error('Seahub syncdb failed')
@@ -207,7 +314,7 @@ index b5e199e..164e98f 100755
      del django
  
  
-@@ -516,11 +576,11 @@ def check_python_dependencies(silent=False):
+@@ -516,18 +576,18 @@ def check_python_dependencies(silent=False):
          'six',
          'pytz',
          'rest_framework',
@@ -221,6 +328,23 @@ index b5e199e..164e98f 100755
          'openpyxl',
      ] # yapf: disable
      for pkg in pkgs:
+         check(pkg)
+     check('PIL', 'python imaging library(PIL)')
+ 
+-    print
++    print()
+ 
+ 
+ def config_ccnet_seafile():
+@@ -564,7 +624,7 @@ def config_ccnet_seafile():
+     info('------------------------------------------')
+     info('Press ENTER if the config is right, or anything else to re-config ')
+ 
+-    if raw_input() != '':
++    if input() != '':
+         config_ccnet_seafile()
+     else:
+         return
 @@ -625,9 +685,10 @@ def start_controller():
          '-F',
          conf[CONF_SEAFILE_CENTRAL_CONF_DIR],
@@ -285,7 +409,7 @@ index b5e199e..164e98f 100755
  
  
  def check_config(args):
-@@ -781,6 +845,7 @@ def setup_seafile(args):
+@@ -781,42 +845,50 @@ def setup_seafile(args):
      welcome()
      check_python_dependencies()
      conf[CONF_SEAFILE_CENTRAL_CONF_DIR] = os.path.join(cwd, 'conf')
@@ -293,7 +417,53 @@ index b5e199e..164e98f 100755
      config_ccnet_seafile()
      init_ccnet_seafile()
      init_seahub()
-@@ -812,11 +877,18 @@ def setup_seafile(args):
+ 
+-    print
+-    print '-----------------------------------------------------------------'
+-    print '-----------------------------------------------------------------'
+-    print 'Your seafile server configuration has been finished successfully.'
+-    print '-----------------------------------------------------------------'
+-    print '-----------------------------------------------------------------'
+-    print
+-    print 'To start/stop seafile server:'
+-    print
+-    print highlight('         $ cd %s' % cwd)
+-    print highlight('         $ %s { start | stop }' % SCRIPT_NAME)
+-    print
+-    print 'If you have any problem, refer to\n'
+-    print
+-    print ' Seafile server manual:      %s' % SERVER_MANUAL_HTTP
+-    print
+-    print ' Seafile discussion group:   %s' % SEAFILE_GOOGLE_GROUP
+-    print
+-    print ' Seafile website:            %s' % SEAFILE_WEBSITE
+-    print
+-    print 'for more information.'
+-    print
++    print()
++    print('-----------------------------------------------------------------')
++    print('-----------------------------------------------------------------')
++    print('Your seafile server configuration has been finished successfully.')
++    print('-----------------------------------------------------------------')
++    print('-----------------------------------------------------------------')
++    print()
++    print('To start/stop seafile server:')
++    print()
++    print(highlight('         $ cd %s' % cwd))
++    print(highlight('         $ %s { start | stop }' % SCRIPT_NAME))
++    print()
++    print('If you have any problem, refer to\n')
++    print()
++    print(' Seafile server manual:      %s' % SERVER_MANUAL_HTTP)
++    print()
++    print(' Seafile discussion group:   %s' % SEAFILE_GOOGLE_GROUP)
++    print()
++    print(' Seafile website:            %s' % SEAFILE_WEBSITE)
++    print()
++    print('for more information.')
++    print()
+ 
+ 
  def check_necessary_files():
      files = [
          os.path.join(cwd, 'conf', 'ccnet.conf'),

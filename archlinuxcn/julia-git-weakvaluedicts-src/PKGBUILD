@@ -1,0 +1,18 @@
+pkgname=julia-git-weakvaluedicts-src
+pkgver=0.1.0
+_commit=886e90ea65f195eefd24c31e5418620506ac38dc
+pkgrel=2
+pkgdesc="WeakValueDicts.jl"
+url="https://github.com/travigd/WeakValueDicts.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/travigd/WeakValueDicts.jl.git#commit=$_commit")
+sha256sums=('831431c27bc37bf0bf7dc5506bc7585faefdf9a61adbac4ef0e1c1c4592e32a5')
+
+package() {
+  cd WeakValueDicts.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh WeakValueDicts "${pkgdir}" "${pkgname}" julia-git
+}

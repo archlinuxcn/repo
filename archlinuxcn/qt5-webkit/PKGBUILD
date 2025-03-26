@@ -8,29 +8,29 @@ pkgname=qt5-webkit
 _pkgver=5.212.0-alpha4
 _basever=5.15.3
 pkgver=${_pkgver/-/}
-pkgrel=27
+pkgrel=28
 arch=(x86_64 aarch64)
 url="https://github.com/qtwebkit/qtwebkit"
-license=(LGPL2.1)
+license=(LGPL-2.1-only)
 pkgdesc="Classes for a WebKit2 based implementation and a new QML API"
 source=("https://github.com/qtwebkit/qtwebkit/releases/download/qtwebkit-$_pkgver/qtwebkit-${_pkgver}.tar.xz"
         "https://src.fedoraproject.org/rpms/qt5-qtwebkit/raw/rawhide/f/qtwebkit-cstdint.patch"
         "https://src.fedoraproject.org/rpms/qt5-qtwebkit/raw/rawhide/f/qtwebkit-fix-build-gcc14.patch"
          https://src.fedoraproject.org/rpms/qt5-qtwebkit/raw/rawhide/f/webkit-offlineasm-warnings-ruby27.patch
-        "qt5-webkit-icu75.patch::https://github.com/qtwebkit/qtwebkit/commit/756e1c8f23dc2720471298281c421c0076d02df8.patch"
-         icu68.patch
-         glib-2.68.patch
+         qt5-webkit-icu75.patch
+         qt5-webkit-icu76.patch
+         qt5-webkit-icu68.patch
+         qt5-webkit-glib-2.68.patch
          qt5-webkit-python-3.9.patch
          qt5-webkit-bison-3.7.patch
 
 )
 depends=(qt5-location qt5-sensors qt5-webchannel libwebp libxcomposite gst-plugins-base hyphen woff2
+         libicuuc.so libicui18n.so
 
          # namcap implicit depends
          glibc gcc-libs glib2 zlib libx11 sqlite gst-plugins-base-libs libjpeg-turbo icu libpng gstreamer libxml2
          qt5-base qt5-declarative)
-         # libxslt
-depends+=(libicuuc.so libicui18n.so)
 makedepends=(cmake ruby ruby-erb gperf python qt5-doc qt5-tools)
 optdepends=('gst-plugins-good: Webm codec support')
 options=(!lto)
@@ -39,6 +39,7 @@ sha256sums=('9ca126da9273664dd23a3ccd0c9bebceb7bb534bddd743db31caf6a5a6d4a9e6'
             'eea38db22078700887bf22b6a49bb628fd8444cdb2e506770c993df883d0e8fb'
             '8768433ff3f641b506962ed22cc596eaf57bf21b6d3402e0e73ad8c2afeaa502'
             'b4d1ba1e99e28fd8cb1ec82252373c870ede683869a9cd43c8e465fe09531bcb'
+            '2e360197a23c6274d7190113381ad497b2bba60bec5f627f987ad4113063c0d3'
             '0b40ed924f03ff6081af610bb0ee01560b7bd1fb68f8af02053304a01d4ccdf0'
             '4969dd03e482155e2490b50307dada81dda7bbc9e5398e3a53c20bc474f7c04e'
             '6e0cee08e4fa57b04752e80817f33562f48aa42608a3a620930b6040259b4932'
@@ -46,30 +47,33 @@ sha256sums=('9ca126da9273664dd23a3ccd0c9bebceb7bb534bddd743db31caf6a5a6d4a9e6'
 
 prepare() {
   cd "qtwebkit-${_pkgver}"
-  patch -p0 -i ../icu68.patch # Fix build with ICU 68.x
-  patch -p1 -i ../glib-2.68.patch # https://github.com/qtwebkit/qtwebkit/issues/1057
-  patch -p1 -i ../qt5-webkit-python-3.9.patch # Fix build with python 3.9
-  patch -p1 -i ../qt5-webkit-bison-3.7.patch # Fix build with bison 3.7
-  patch -p1 -i ../qtwebkit-cstdint.patch # gcc 11.1
+  patch -p0 -i ../qt5-webkit-icu68.patch         # Fix build with ICU 68.x
+  patch -p1 -i ../qt5-webkit-glib-2.68.patch     # https://github.com/qtwebkit/qtwebkit/issues/1057
+  patch -p1 -i ../qt5-webkit-python-3.9.patch    # Fix build with python 3.9
+  patch -p1 -i ../qt5-webkit-bison-3.7.patch     # Fix build with bison 3.7
+  patch -p1 -i ../qtwebkit-cstdint.patch         # GCC 11.1
   patch -p1 -i ../qtwebkit-fix-build-gcc14.patch # GCC 14.1
-  patch -p1 -i ../qt5-webkit-icu75.patch
-
-  #patch -Np1 -i ../qtwebkit-ruby3.2.patch
-  #echo "Done patch for Ruby 3.2"
+  patch -p1 -i ../qt5-webkit-icu75.patch         # Fix build with ICU 75
+  patch -p1 -i ../qt5-webkit-icu76.patch         # Fix build with ICU 76
 
   patch -Np1 -i ../webkit-offlineasm-warnings-ruby27.patch
   echo "Done patch for Ruby 3.2"
 }
 
 build() {
+  local _flags=(
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG"
+    -DPORT=Qt
+    -DUSE_LD_GOLD=OFF
+    -DENABLE_XSLT=OFF
+    -DENABLE_TOOLS=OFF
+  )
+
   cmake -B build -S "qtwebkit-${_pkgver}" -Wno-dev \
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG" \
-    -DPORT=Qt \
-    -DUSE_LD_GOLD=OFF \
-    -DENABLE_XSLT=OFF \
-    -DENABLE_TOOLS=OFF
+    "${_flags[@]}"
+
   cmake --build build
 
 # disabling XSLT to build https://github.com/qtwebkit/qtwebkit/issues/1097

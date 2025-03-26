@@ -1,0 +1,17 @@
+maintainers:
+  - github: Integral-Tech
+    email: integral@archlinuxcn.org
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
+
+repo_depends:
+  - video2x
+
+update_on:
+  - source: github
+    github: k4yt3x/video2x-qt6
+    use_latest_tag: true
+
+  - alias: spdlog
+  - alias: qt6-base

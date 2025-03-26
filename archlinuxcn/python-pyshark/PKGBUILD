@@ -1,0 +1,36 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=pyshark
+pkgname=python-${_name}
+pkgver=0.6
+pkgrel=2
+pkgdesc="Python wrapper for tshark, allowing python packet parsing using wireshark dissectors"
+arch=(any)
+url="https://github.com/KimiNewt/${_name}"
+license=(MIT)
+depends=(python python-lxml python-termcolor python-packaging python-appdirs wireshark-cli)
+makedepends=(python-build python-installer python-setuptools python-wheel)
+checkdepends=(python-pytest)
+optdepends=('python-ujson: Alternative json backend')
+source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+sha512sums=('13b114876e7891b67259bd9bf03ce97746ba5dfbd5df288c66d3b1ec5326cdec6e8dfb0c2df2ad3238f3ce509d89661b20bb1355b076ae1599156eb6d02c8158')
+
+build() {
+  cd $_name-$pkgver/src
+  python -m build --wheel --no-isolation
+}
+
+check(){
+  cd $_name-$pkgver
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer src/dist/*.whl
+  # live capture requires root
+  test-env/bin/python -m pytest -vv tests/ --ignore tests/capture/test_live_capture.py --ignore tests/capture/test_inmem_capture.py
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" src/dist/*.whl
+  install -Dm644 LICENSE.txt -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}

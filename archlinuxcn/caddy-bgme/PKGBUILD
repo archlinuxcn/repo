@@ -10,10 +10,10 @@
 
 pkgname=caddy-bgme
 _pkgname=caddy
-pkgver=2.8.4
-_gitcommit=v2.8.4
-_distcommit=2f024e8988f98bcfc4e2d9924139ae4914a24e9a
-pkgrel=9
+pkgver=2.9.1
+_gitcommit=v2.9.1
+_distcommit=1ae33b176567cc41823485fcd40a5901d77df66c
+pkgrel=10
 pkgdesc='Fast web server with automatic HTTPS'
 url='https://caddyserver.com'
 arch=('x86_64')
@@ -26,16 +26,16 @@ backup=('etc/caddy/Caddyfile')
 source=(
   caddy-git::"git+https://github.com/caddyserver/caddy#tag=${_gitcommit}"
   caddy-dist::"git+https://github.com/caddyserver/dist#commit=${_distcommit}"
-  forwardproxy::"git+https://github.com/klzgrad/forwardproxy.git"
+  forwardproxy::"git+https://github.com/klzgrad/forwardproxy.git#branch=naive"
   main.go
   caddy.sysusers
   caddy.tmpfiles
   Caddyfile
 )
-sha512sums=('20170f3bd5ce291af6b9506f364ecb43a853e546b06b3124554829c52504a1feed250500588c13ce824db73049e8a6a6bf5feb622547c4ad6d700439c6ef1319'
-            '1420146603d3a104c454323c3f579cfea46bf32d0ffae94739a547a4c5032170d6e0cec02b58f70e1e9f6488bd08e959fae072ff4848e3c718359d74e6aa6d9c'
+sha512sums=('3123d18c29df7c3dcd88dcbeb143a9fede424d385a2c48434d7ee11e6ceb40ab0764ed72ffab617e4661eef76236dcd2de5ee701432b12e9f1492b904d3850d4'
+            'f959f1486c170dad5f5efab80ca90c0e272b37e313cb47826b371854ae1937d98bdfc345fab8aac595c269bc617ed719aabdea0467d94ad88887d7449e902c09'
             'SKIP'
-            'c3f8800257362cb8b003bff9e1575a209b36f0387ff0055ed73dd1260748c6c459d15d584201042ec92e775d373ec526e6e3cfe8d3bc1f7ece5673901b94e453'
+            '9a91123bffa6a34da6981958dcb9bd962bbbbb03543b6727ec8b5f3e8bc122ef5792c2cddce693bbe8999ce5ff3aee98c6fb074b6db8c102b6ebe52ce91a7b6b'
             'c893d88fec89e37da6596030c8dce7103e7e575371e8542a24d2a0741e877358d85219f2d8ade9d6aa0f515efe1156a4badd9fef5f65f553a5b0c72330c4728f'
             '55ee8d3f8b14f9adddc7a1026addcea4f85b4bae4cd512fd4da2a5e8adaae4b6fd0f486d2e3847f75518f4710a897b4fca84e48ee15700b968bad762125c4742'
             '716da3f4edeb3561243aeaf5c32b01ff7a4ac810b6deba8364fb12a1f71b6a5278c34a97b289bcfdc48784679b942bf780f1f36d416a575791168c94b0d59fe0')

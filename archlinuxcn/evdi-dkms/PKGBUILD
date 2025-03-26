@@ -1,0 +1,41 @@
+# Maintainer: oldherl
+# Contributor: Chris Severance aur.severach aATt spamgourmet dott com
+# Contributor: ajs124
+
+# Tested on linux 6.13.6 with 03f0:0867 HP USB-C Universal Dock
+pkgname='evdi-dkms'
+pkgver=1.14.8
+_pkgver=$pkgver
+pkgrel=2
+pkgdesc='kernel module that enables management of multiple screens, primarily for DisplayLink USB VGA DVI HDMI DisplayPort video'
+arch=('x86_64')
+url='https://github.com/DisplayLink/evdi'
+license=('GPL-2.0-only AND LGPL-2.1-only AND MIT')
+depends=('dkms' 'libdrm')
+makedepends=('git')
+provides=("evdi=${_pkgver}")
+conflicts=('evdi' 'evdi-git')
+_srcdir="evdi"
+source=(
+  "git+https://github.com/DisplayLink/evdi#tag=v${pkgver}"
+)
+sha256sums=('916b9fceda5ab61bf1bdfeee082078ac143d825c4ce14b49e81e65588c52fd9d')
+
+build() {
+  cd "${_srcdir}"
+  CFLAGS="${CFLAGS/-fno-plt/}"
+  CFLAGS="${CFLAGS/-fexceptions/}"
+  make -j1 -C 'library'
+}
+
+package() {
+  cd "${_srcdir}"
+  make -C 'library' -j1 install DESTDIR="${pkgdir}" PREFIX='/usr'
+
+  local _DKMS="${pkgdir}/usr/src/evdi-${_pkgver}"
+  #install -Dpm644 module/* -t "${_DKMS}/"
+  install -d "${_DKMS}/"
+  cp -pr 'module/'* "${_DKMS}/"
+  make -j1 -C "${_DKMS}" clean
+  rm -f "${_DKMS}/evdi.mod"
+}

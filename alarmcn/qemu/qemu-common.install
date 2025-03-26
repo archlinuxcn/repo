@@ -1,0 +1,14 @@
+post_install() {
+  if [[ -d /run/udev ]]; then
+    local file files=(
+      /sys/devices/virtual/misc/vhost-net
+    )
+
+    # trigger change event when modules are already loaded
+    for file in "${files[@]}"; do
+      if [[ -d $file ]]; then
+        udevadm trigger --action=change "$file"
+      fi
+    done
+  fi
+}

@@ -1,31 +1,27 @@
-# Maintainer: ZeekoZhu <vaezt@outlook.com>
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgbase=rime-lmdg
-pkgname=("${pkgbase}-config")
-pkgver=3n2
+pkgname=("${pkgbase}"
+         "${pkgbase}-config")
+pkgver=lts.1742892297
 pkgrel=1
-pkgdesc='RIME-LMDG万象语言模型，基于32GB超大规模语料的RIME中文语言模型'
+epoch=1
+pkgdesc='万象语言模型，基于32GB超大规模语料的RIME中文语言模型'
 arch=(any)
 url="https://github.com/amzxyz/RIME-LMDG"
-source=("lmdg.yaml")
+source=("lmdg.yaml"
+        "wanxiang-zh-hans.gram::${url}/releases/download/LTS/wanxiang-lts-zh-hans.gram")
 license=('CC-BY-4.0')
-sha256sums=('3248db66344b91bc175da4306cb27926abff4aad74b59a8ea20ad85ed6676e10'
-            'f50506698265ea5fab415752dbab5d3f0f87815f9d7860a8f044a926348a845f')
-optdepends=('librime: Rime Input Method Engine')
+sha256sums=('93b605fd11281ae248eed0648629ee23312fc56edd0911aa855bdee7b0c294c4'
+            '48d89bee70e37d978085e591c2fd9116523b5ba19d607b466c4fba3cd397b960')
 
-_variants=(m1)
-for _variant in "${_variants[@]}"; do
-  pkgname+=("${pkgbase}-${_variant}")
-
-  source+=("https://github.com/amzxyz/RIME-LMDG/releases/download/v${pkgver}/amz-v${pkgver}${_variant}-zh-hans.gram")
-
-  eval 'package_rime-lmdg-'"${_variant}"'() {
-    provides=("'${pkgbase}=${pkgver}'")
-    pkgdesc="RIME-LMDG万象语言模型（3-gram/'"${_variants#m}"'00M）"
-    optdepends+=("'${pkgbase}'-config: default patch configurations")
-    install -Dm664 "${srcdir}"/*'"${_variant}"'-zh-hans.gram -t "${pkgdir}"/usr/share/rime-data/
-  }'
-done
+package_rime-lmdg() {
+  provides=("${pkgbase}=${pkgver}")
+  replaces=('rime-lmdg-m1')
+  optdepends=('librime: Rime Input Method Engine'
+              "${pkgbase}-config: default patch configurations")
+  install -Dm664 "${srcdir}"/wanxiang-zh-hans.gram -t "${pkgdir}"/usr/share/rime-data/
+}
 
 package_rime-lmdg-config() {
   depends=("${pkgbase}")

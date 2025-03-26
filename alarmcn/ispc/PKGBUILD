@@ -1,0 +1,73 @@
+# Maintainer: Lukas Jirkovsky <l.jirkovsky@gmail.com>
+# Maintainer: Bruno Pagani <archange@archlinux.org>
+# Maintainer: Torsten Keßler <tpkessler@archlinux.org>
+
+pkgname=ispc
+pkgver=1.25.3
+pkgrel=3
+pkgdesc="Compiler for high-performance SIMD programming on the CPU"
+arch=(aarch64 x86_64)
+url="https://ispc.github.io/"
+license=(BSD-3-Clause)
+depends=(clang gcc-libs glibc llvm-libs spirv-llvm-translator onetbb)
+makedepends=(cmake git level-zero-headers level-zero-loader  llvm openmp python vc-intrinsics)
+_checkdepends=(intel-compute-runtime)
+optdepends=(
+    'intel-compute-runtime: GPU support'
+    'level-zero-loader: GPU support'
+    'openmp: GPU support'
+)
+# NOTE: libispcrt_static.a is required by ospray during build time
+options=(staticlibs)
+source=(
+  git+https://github.com/$pkgname/$pkgname#tag=v$pkgver
+  $pkgname-benchmark::git+https://github.com/google/benchmark.git
+  $pkgname-googletest::git+https://github.com/google/googletest.git
+)
+sha256sums=('7f663afbba105013c7c859d46b1111ae25a2c7d349202994b3105ee59d7dc9a7'
+            'SKIP'
+            'SKIP')
+
+prepare() {
+  cd $pkgname
+  git submodule init
+  git config submodule.benchmarks/vendor/google/benchmark.url "$srcdir/$pkgname-benchmark"
+  git config submodule.ispcrt/tests/vendor/google/googletest.url "$srcdir/$pkgname-googletest"
+  git -c protocol.file.allow=always submodule update
+
+  git cherry-pick -n \
+    62426bf5a50a49b30a4eb0206e8a8d78ff0e7006 \
+    5422fc1f6e7caa74906e612f5803287be5bb915f \
+    17ee83fba824eaee79065256c49fbfc21f730d01 \
+    cb097ab5821c4219349b37a5c217e3df3d3987f1
+}
+
+build() {
+  local cmake_options=( -D ISPC_INCLUDE_XE_EXAMPLES=OFF
+    -B build
+    -D CMAKE_BUILD_TYPE=Release  # None not allowed :(
+    -D CMAKE_INSTALL_PREFIX=/usr
+    -D ISPC_INCLUDE_EXAMPLES=OFF
+    -D ISPC_OPAQUE_PTR_MODE=OFF  # suggested in https://github.com/ispc/ispc/issues/2427
+    -D ISPC_STATIC_LINK=OFF
+    -D XE_ENABLED=ON
+    -D XE_DEPS_DIR=/usr
+    -S $pkgname
+    -W no-dev
+  )
+
+  cmake "${cmake_options[@]}"
+  cmake --build build --verbose
+}
+
+_check() {
+  # https://github.com/ispc/ispc/issues/2427
+  # https://github.com/ispc/ispc/issues/2428
+  # https://github.com/ispc/ispc/issues/2429
+  make -C build check-all || echo "Tests failed"
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 $pkgname/LICENSE.txt -t "${pkgdir}"/usr/share/licenses/${pkgname}
+}

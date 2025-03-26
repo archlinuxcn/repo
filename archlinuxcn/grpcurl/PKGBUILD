@@ -1,42 +1,41 @@
-# Maintainer: Cody Schafer <dev@codyps.com>
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Contributor: Cody Schafer <dev@codyps.com>
 
 pkgname=grpcurl
-pkgver=1.9.1
+pkgver=1.9.3
 pkgrel=1
 pkgdesc="Like cURL, but for gRPC: Command-line tool for interacting with gRPC servers"
-arch=(x86_64)
-url="https://github.com/fullstorydev/grpcurl"
+arch=('x86_64')
+url="https://github.com/fullstorydev/${pkgname}"
 license=('MIT')
+depends=('glibc')
 makedepends=('go')
-source=(
-	"$pkgname-$pkgver.tar.gz::https://github.com/fullstorydev/grpcurl/archive/v$pkgver.tar.gz"
-)
-sha384sums=('eefb6ad6e1e797254ee4cd31bdd2775ba4aef464bee9b9ee9d5ea16a2cc0f431c5408b6600b53d5ab1c2376c13ae6695')
-# really, `grpcurl-bin` should be conflicting with us instead of the oposite
-conflicts=('grpcurl-bin')
+conflicts=("${pkgname}-bin" "${pkgname}-git")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+b2sums=('03bdd055f32c0f5a869cf40be9e7e553e15c57780a0a4e94e7cf08e344698afefcc4a04cf11ee1abd12c3d434e4b1d04f1d64114e8bb8f0b65afb10e7dbd356d')
 
 prepare() {
-	cd "$pkgname-$pkgver"
-	mkdir -p build
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    mkdir -p build
 }
 
 build() {
-	cd "$pkgname-$pkgver"
-	export CGO_CPPFLAGS="${CPPFLAGS}"
-	export CGO_CFLAGS="${CFLAGS}"
-	export CGO_CXXFLAGS="${CXXFLAGS}"
-	export CGO_LDFLAGS="${LDFLAGS}"
-	export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
-	go build -o build ./cmd/...
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+    go build -o build ./cmd/...
 }
 
 check() {
-	cd "$pkgname-$pkgver"
-	go test ./...
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    go test ./...
 }
 
 package() {
-	cd "$pkgname-$pkgver"
-	install -Dm755 build/grpcurl "${pkgdir}/usr/bin/grpcurl"
-	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    install -Dm0644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    install -Dm0755 "build/${pkgname}" -t "${pkgdir}/usr/bin/"
 }

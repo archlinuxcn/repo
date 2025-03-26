@@ -1,0 +1,56 @@
+From eeeb7af6ef1381ec97786bbfd5fe1012dab4ffdb Mon Sep 17 00:00:00 2001
+From: Tim Besard <tim.besard@gmail.com>
+Date: Thu, 5 Dec 2024 14:37:03 +0100
+Subject: [PATCH 1/2] Don't use platform-dependent types. (#272)
+
+---
+ lib/intrinsics/src/utils.jl | 24 ++++++++++--------------
+ 1 file changed, 10 insertions(+), 14 deletions(-)
+
+diff --git a/lib/intrinsics/src/utils.jl b/lib/intrinsics/src/utils.jl
+index 0c69b80..b6477ad 100644
+--- a/lib/intrinsics/src/utils.jl
++++ b/lib/intrinsics/src/utils.jl
+@@ -10,29 +10,25 @@ macro builtin_ccall(name, ret, argtypes, args...)
+     argtypes = argtypes.args
+ 
+     function mangle(T::Type)
+-        if T == Cint
++        if T == Int32
+             "i"
+-        elseif T == Cuint
++        elseif T == UInt32
+             "j"
+-        elseif T == Clong
++        elseif T == UInt64
+             "l"
+-        elseif T == Culong
++        elseif T == Int64
+             "m"
+-        elseif T == Clonglong
+-            "x"
+-        elseif T == Culonglong
+-            "y"
+-        elseif T == Cshort
++        elseif T == Int16
+             "s"
+-        elseif T == Cushort
++        elseif T == UInt16
+             "t"
+-        elseif T == Cchar
++        elseif T == Int8
+             "c"
+-        elseif T == Cuchar
++        elseif T == UInt8
+             "h"
+-        elseif T == Cfloat
++        elseif T == Float32
+             "f"
+-        elseif T == Cdouble
++        elseif T == Float64
+             "d"
+         elseif T <: LLVMPtr
+             elt, as = T.parameters
+-- 
+2.48.1
+

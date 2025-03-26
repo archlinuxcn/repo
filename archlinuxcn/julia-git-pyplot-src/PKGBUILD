@@ -1,6 +1,6 @@
 pkgname=julia-git-pyplot-src
-pkgver=2.11.5
-_commit=00119f87fa992e378a80405c93e180a446132556
+pkgver=2.11.6
+_commit=3c658d89511154c561b9a4c6a8326ef78f37dcf1
 pkgrel=1
 pkgdesc="PyPlot.jl"
 url="https://github.com/JuliaPy/PyPlot.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git python-matplotlib)
 source=("git+https://github.com/JuliaPy/PyPlot.jl.git#commit=$_commit")
-sha256sums=('d1144ce6718e29195a772f617eed3e107cb226390b1a180f1ed82d158f5f5cb5')
+sha256sums=('c87678eb1f784c95be0b1b2de129856a88cef9443cbbbb12ae99e2f3409e1cfd')
 
 package() {
   cd PyPlot.jl

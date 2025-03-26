@@ -7,9 +7,9 @@
 # https://github.com/wine-staging/wine-staging
 
 pkgname="wine-staging-wow64"
-pkgver=9.22
+pkgver=10.4
 _pkgver="${pkgver/rc/-rc}"
-pkgrel=2
+pkgrel=1
 pkgdesc="A compatibility layer for running Windows programs"
 url="https://www.winehq.org"
 license=('LGPL-2.1-or-later')
@@ -78,15 +78,15 @@ backup=("usr/lib/binfmt.d/wine.conf")
 options=(staticlibs !lto)
 
 source=(
-  "https://dl.winehq.org/wine/source/${pkgver::1}.x/wine-$_pkgver.tar.xz"
+  "https://dl.winehq.org/wine/source/${pkgver%%.*}.$([ "${pkgver#*.}" = "0" ] && printf '0' || printf 'x')/wine-$_pkgver.tar.xz"
   "30-win32-aliases.conf"
   "wine-binfmt.conf"
   "git+https://gitlab.winehq.org/wine/wine-staging.git#tag=v$pkgver"
 )
-b2sums=('14d75c25a317549528abefd2350790ce03b9c4088bc5f6f3bbfcc9b5b024bf0943526a1571fe1079e8fd39830e4f762960365dfdfe670db7577f4095f30131b4'
+b2sums=('f51bee9115f236d13be717f524bfb21d4aa3bd3bc4114d8fe9f106957e01f57e14bdd415e6cc494e6860244d43fd906d69e17055822954490ae6e7562e562e6c'
         '45db34fb35a679dc191b4119603eba37b8008326bd4f7d6bd422fbbb2a74b675bdbc9f0cc6995ed0c564cf088b7ecd9fbe2d06d42ff8a4464828f3c4f188075b'
         'e9de76a32493c601ab32bde28a2c8f8aded12978057159dd9bf35eefbf82f2389a4d5e30170218956101331cf3e7452ae82ad0db6aad623651b0cc2174a61588'
-        'b14a815c1853f39d1fada8350c6551b49f655c04ef1c64c92fc9e2ab4bdcef399e8bfb220e21bcd4ee9a097767d071f4023d8ab621370aa374f34593bf88f960')
+        '88c6d0a7988c5e4e41c84e95a5de992ef1165c70b6d0aeced876f18ceae04ed833ed13c1651e1f5656be559d0d323f17caad7079fd9788a739bfe0b879e875c8')
 
 prepare() {
   # apply wine-staging patchset
@@ -110,7 +110,6 @@ build() {
     --disable-tests \
     --prefix=/usr \
     --libdir=/usr/lib \
-    --with-wayland \
     --enable-archs=x86_64,i386
   make
 }

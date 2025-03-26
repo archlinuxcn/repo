@@ -1,0 +1,44 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+pkgname=stegseek
+pkgver=0.6
+pkgrel=2
+pkgdesc="⚡ Worlds fastest steghide cracker, chewing through millions of passwords per second ⚡"
+arch=(x86_64)
+url="https://github.com/RickdeJager/stegseek"
+license=(GPL-2.0-or-later)
+depends=(gcc-libs glibc libjpeg-turbo libmcrypt mhash zlib)
+makedepends=(cmake git)
+source=(git+$url.git#tag=v$pkgver)
+sha256sums=('79942dea6dad2db1d120412d685a8c2948312ee592c0be271ce0d2743035166f')
+
+build() {
+  local cmake_options=(
+    -B build
+    -S $pkgname
+    -W no-dev
+    -D CMAKE_BUILD_TYPE=None
+    -D CMAKE_INSTALL_PREFIX=/usr
+  )
+  cmake "${cmake_options[@]}"
+  cmake --build build
+}
+
+check() {
+  local excluded_tests=""
+  local ctest_flags=(
+    --test-dir build
+    # show the stdout and stderr when the test fails
+    --output-on-failure
+    # execute tests in parallel
+    --parallel $(nproc)
+    # exclude problematic tests
+    --exclude-regex "$excluded_tests"
+  )
+  ctest "${ctest_flags[@]}"
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 $pkgname/README.md -t "$pkgdir/usr/share/licenses/$pkgname"
+}

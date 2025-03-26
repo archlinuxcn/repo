@@ -1,0 +1,32 @@
+v1.7 (2023/10/21):
+- Introduce compatibility for users that have installed kernels other than the default linux kernel
+- Removed install script which was merely used to notify users about a breaking change that was introduced 5 years ago in v1.4
+  - removed ncurses dependency alongside with it
+
+v1.6 (2023/07/12):
+- ncurses is a runtime dependency because `tput` is used in the .install script
+- the config file is now listed in the `backup` PKGBUILD array to respect the user configuration on package upgrades
+
+v1.5 (2020/09/20):
+- rsync is no longer a dependency of this package.
+  - The previous version only stopped using it, without removing it as a dependency.
+
+v1.4 (2018/08/01):
+- Simplified package by dropping rsync dependency
+    - cp is now used in favor of rsync
+- Removed possibility to customize backup source directory (always backup /boot)
+
+v1.3 (2018/01/14):
+- The hook trigger has been modified to match that of 90-linux.hook
+- The hook names were changed in order to execute not too early/late
+  - In particular, execution order now plays nicely together with systemd-boot-pacman-hook AUR package
+
+v1.2 (2018/01/07):
+- The hook now also creates a backup after the package upgrade
+  The post hook is performed after the 90-linux.hook
+
+v1.1 (2018/01/05):
+- The location of the data to be backedup (and where to) can now be configured
+
+v1.0 (2017/12/31):
+- Initial release

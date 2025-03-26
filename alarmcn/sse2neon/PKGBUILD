@@ -1,0 +1,17 @@
+#
+
+pkgname=sse2neon
+pkgver=1.8.0
+pkgrel=1
+pkgdesc="A translator from Intel SSE intrinsics to Arm/Aarch64 NEON implementation"
+arch=(armv7h aarch64)
+url="https://github.com/DLTcollab/sse2neon"
+license=('MIT')
+makedepends=(git)
+source=("git+https://github.com/DLTcollab/sse2neon#tag=v${pkgver}")
+sha256sums=('cea7cd58167e64c4dacff72f235095ff0567d7fd2df4e3d9a77f58472f419c24')
+
+package() {
+  install -dDm755 "$pkgdir"/usr/include
+  cp sse2neon/sse2neon.h "$pkgdir"/usr/include/
+}

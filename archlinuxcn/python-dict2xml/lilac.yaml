@@ -4,11 +4,14 @@ pre_build_script: |
 post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()
+repo_makedepends:
+  - python-noseofyeti
 update_on:
   - source: pypi
     pypi: dict2xml
   - alias: python
   - source: manual
-    manual: 1.1
+    manual: 1.2
+
 maintainers:
   - github: roaldclark

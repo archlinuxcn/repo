@@ -1,19 +1,19 @@
 # Maintainer: zjuyk <ownbyzjuyk@gmail.com>
 
 pkgname=koodo-reader-bin
-_pkgname=Koodo.Reader
+_pkgname=Koodo-Reader
 _pkgname2=koodo-reader
-pkgver=1.7.2
+pkgver=1.8.8
 pkgrel=1
 pkgdesc="A modern ebook manager and reader with sync and backup capacities"
 arch=("x86_64")
-url="https://github.com/troyeguo/koodo-reader"
+url="https://github.com/koodo-reader/koodo-reader"
 license=('AGPL-3.0-only')
 depends=('gtk3' 'libnotify' 'nss' 'libxss' 'libxtst' 'xdg-utils' 'python-atspi' 'util-linux-libs' 'libappindicator-gtk3' 'libsecret')
 provides=("koodo-reader")
-source=("$pkgname-$pkgver.deb::https://github.com/troyeguo/${_pkgname2}/releases/download/v$pkgver/${_pkgname}-$pkgver-amd64.deb"
+source=("$pkgname-$pkgver.deb::https://github.com/koodo-reader/${_pkgname2}/releases/download/v$pkgver/${_pkgname}-$pkgver-amd64.deb"
         "${_pkgname2}.desktop")
-sha256sums=('465cdfc5b67b660e5da13bc7b881b61ac5d0b34b14f90ccf7fb01cac4bc5043f'
+sha256sums=('fd4c82d6ecc01457e6faee771167606ae074176cff1a20e7013effaa4d3dd4bd'
             '9fd70a6316a1fd9369bd1c1c0b1b6583da0eed85502804deea2042b4a38aaa0e')
 
 prepare() {

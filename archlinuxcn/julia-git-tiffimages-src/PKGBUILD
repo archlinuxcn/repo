@@ -1,6 +1,6 @@
 pkgname=julia-git-tiffimages-src
-pkgver=0.11.2
-_commit=8cd9370fb5b2e53854c6aaeb6b7c44f79b470709
+pkgver=0.11.3
+_commit=4ffd4426d45b9e8a4c4948e93a05256c80bd9da6
 pkgrel=1
 pkgdesc="TiffImages.jl"
 url="https://github.com/tlnagy/TiffImages.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/tlnagy/TiffImages.jl.git#commit=$_commit")
-sha256sums=('8d8e9d5a18ad506896673851022efa6996ce0ac0b34ef954dd5d4e5be7c0744a')
+sha256sums=('36fd55cfa50ed57e4fa8e1c329ab5884b7db4a4682797ae57eb09fa860b87123')
 
 package() {
   cd TiffImages.jl

@@ -1,0 +1,3 @@
+M1N1="/usr/lib/asahi-boot/m1n1.bin"
+U_BOOT="/usr/lib/asahi-boot/u-boot-nodtb.bin"
+DTBS=$(/bin/ls -d /lib/modules/*-ARCH | sort -rV | head -1)/dtbs/*.dtb

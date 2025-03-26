@@ -1,14 +1,14 @@
 _name=MobileFrontend
 pkgname=mediawiki-mobilefrontend
-pkgver=20240704
+pkgver=20241223
 pkgrel=1
 pkgdesc="MediaWiki extension that provides a mobile-friendly view"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:MobileFrontend"
 license=(''GPL'')
-depends=('mediawiki>=1.42' 'mediawiki<1.43')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/MobileFrontend-REL1_42-d111e42.tar.gz")
-sha256sums=('f7d55887ec5ca9277c1cd94c2ea91e019deb02e45d6a5d9b6e00f6168849a4d7')
+depends=('mediawiki>=1.43' 'mediawiki<1.44')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/MobileFrontend-REL1_43-a44f280.tar.gz")
+sha256sums=('42bb7a82849c0bc92ae97186c75cac01cc35116c21cde8dca12e706b443293d9')
 
 build() {
   true

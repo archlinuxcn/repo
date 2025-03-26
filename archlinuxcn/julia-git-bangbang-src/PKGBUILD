@@ -1,6 +1,6 @@
 pkgname=julia-git-bangbang-src
-pkgver=0.4.3
-_commit=7f61170ec6e4b883f5ece892225d61b9e7b04f8e
+pkgver=0.4.4
+_commit=2c0bb33401a9c2c1c0fa7ce541a3f08bcf35be00
 pkgrel=1
 pkgdesc="BangBang.jl"
 url="https://github.com/JuliaFolds2/BangBang.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaFolds2/BangBang.jl.git#commit=$_commit")
-sha256sums=('287cccaadc55fde921566a2d0b343b5d09ff99852d13bbeccdc34dc8c88afde9')
+sha256sums=('876d6ced71f118bcda5af6b50d7ac5849926e71f01f05403bfca48d934504c19')
 
 package() {
   cd BangBang.jl

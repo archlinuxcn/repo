@@ -10,5 +10,9 @@ update_on:
   - source: regex
     url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Enzyme_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: enzyme-julia
+    strip_dir: true
+    filename: LLVMEnzyme-\d+.so
   - source: manual
-    manual: 2
+    manual: 1

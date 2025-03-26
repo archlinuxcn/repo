@@ -2,19 +2,21 @@
 
 pkgname=mission-center-git
 _pkgname=${pkgname%-git}
-pkgver=0.6.2.r45.g881e0a9
+pkgver=0.6.2.r167.g70f9a53
 pkgrel=1
 pkgdesc="Monitor your CPU, Memory, Disk, Network and GPU usage"
 arch=('x86_64' 'aarch64')
-url="https://gitlab.com/mission-center-devs/${_pkgname}"
+url="https://gitlab.com/${_pkgname}-devs/${_pkgname}"
 license=('GPL-3.0-or-later')
-depends=('dmidecode' 'libadwaita')
-makedepends=('git' 'blueprint-compiler' 'cargo' 'meson')
+depends=('dmidecode' 'libadwaita' 'protobuf')
+makedepends=('git' 'blueprint-compiler' 'cargo' 'meson' 'cmake')
 checkdepends=('appstream-glib')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-source=("git+${url}.git")
-sha256sums=('SKIP')
+source=("git+${url}.git"
+	"git+https://gitlab.com/${_pkgname}-devs/gng.git")
+sha256sums=('SKIP'
+            'SKIP')
 options=('!lto')
 
 pkgver() {
@@ -24,6 +26,11 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+
+	git submodule init
+	git config submodule.subprojects/magpie.url "${srcdir}/gng"
+	git -c protocol.file.allow=always submodule update
+
 	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
 

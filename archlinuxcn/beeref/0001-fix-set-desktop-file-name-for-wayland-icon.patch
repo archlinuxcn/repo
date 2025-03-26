@@ -1,0 +1,27 @@
+From ca67f27f9115042f3e50ff0c23baa34801bdb9ca Mon Sep 17 00:00:00 2001
+From: Roald Clark <roaldclark@gmail.com>
+Date: Thu, 27 Feb 2025 18:31:52 +0800
+Subject: [PATCH] fix: set desktop file name for wayland icon
+
+- Add 'org.beeref.BeeRef' to app
+
+Signed-off-by: Roald Clark <roaldclark@gmail.com>
+---
+ beeref/__main__.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/beeref/__main__.py b/beeref/__main__.py
+index 919683d..76c4c11 100755
+--- a/beeref/__main__.py
++++ b/beeref/__main__.py
+@@ -112,6 +112,7 @@ def main():
+ 
+     os.environ["QT_DEBUG_PLUGINS"] = "1"
+     app = BeeRefApplication(sys.argv)
++    app.setDesktopFileName('org.beeref.BeeRef')
+     palette = create_palette_from_dict(constants.COLORS)
+     app.setPalette(palette)
+     bee = BeeRefMainWindow(app)  # NOQA:F841
+-- 
+2.48.1
+

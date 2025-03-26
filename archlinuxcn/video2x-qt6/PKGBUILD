@@ -1,0 +1,34 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+# Contributor: Antoine Viallon <antoine+aur@lesviallon.fr>
+
+pkgname=video2x-qt6
+pkgver=6.4.0
+pkgrel=2
+pkgdesc="The Qt6 GUI for Video2X"
+url="https://video2x.org"
+arch=('x86_64' 'aarch64' 'riscv64')
+license=('ISC')
+depends=('video2x' 'qt6-base' 'qt6-svg' 'spdlog')
+makedepends=('git' 'cmake' 'qt6-tools')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('6d89f9b23273939172abab89b914713048654734f53cd3f8a52ac9ee00999b23')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	rmdir third_party/{spdlog,video2x}
+}
+
+build() {
+	cmake -B build \
+		-S "${pkgname}-${pkgver}" \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DUSE_EXTERNAL_VIDEO2X=ON
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${pkgname}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

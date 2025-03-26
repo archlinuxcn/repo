@@ -1,6 +1,6 @@
 pkgname=julia-git-yaml-src
-pkgver=0.4.12
-_commit=73f14e6c57948e96b6edd835741cd6e9904228f7
+pkgver=0.4.13
+_commit=e22a17b9de0a90e595d9bea19bbc9c84c7a04507
 pkgrel=1
 pkgdesc="YAML.jl"
 url="https://github.com/JuliaData/YAML.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/YAML.jl.git#commit=$_commit")
-sha256sums=('e2c249af0b5e61140de0644fbd411748bc581048c0587c1c1e05fe592cc9b7d0')
+sha256sums=('e396600414242b68da3483633e50002508829fbacc75c3c5fd8fbc3fd475bc9f')
 
 package() {
   cd YAML.jl

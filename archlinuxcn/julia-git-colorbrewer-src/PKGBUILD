@@ -1,7 +1,7 @@
 pkgname=julia-git-colorbrewer-src
-pkgver=0.4.0
-_commit=7ce0e173cfb0e64bd502ad7bff0f87bbe4360acc
-pkgrel=2
+pkgver=0.4.1
+_commit=eb067b89d94cc99b1838e5a1ef2f3ac02ecc9c75
+pkgrel=1
 pkgdesc="ColorBrewer.jl"
 url="https://github.com/timothyrenner/ColorBrewer.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/timothyrenner/ColorBrewer.jl.git#commit=$_commit"
         Project.toml)
-sha256sums=('SKIP'
+sha256sums=('8b1afdd8d0482927f461f6138f6a4b46ba551095de31355bd5cd05c360505c72'
             '3279fb6e77709dd3e627859693ebcda633d64a6ae7ec75ffa89a9cb2faf06e97')
 
 prepare() {

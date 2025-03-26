@@ -1,19 +1,25 @@
 pkgname=julia-git-enzyme_jll-src
-pkgver=0.0.168+0
-_commit=f2310ec09696520e7c295b942ac037f6a95a18ab
-pkgrel=1
+pkgver=0.0.172+0
+_commit=3256235e6e6bec3e0d4ff8d0b6e5d089dcad05da
+pkgrel=3
 pkgdesc="Enzyme_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Enzyme_jll.jl.git"
-arch=('any')
+arch=(aarch64 armv7h x86_64)
 license=('MIT')
-makedepends=(git julia-pkg-scripts)
+makedepends=(git julia-pkg-scripts llvm)
 depends=(julia-git enzyme-julia)
 source=("git+https://github.com/JuliaBinaryWrappers/Enzyme_jll.jl.git#commit=$_commit"
-        jll.toml)
-sha256sums=('8e81161d3d7b09fd1844ccf8ce2d389f3230bc79e6d3b3478c2aaffd13c19ef4'
-            'da8def816e482ea94b902e27c62b0eb4ff2103f40b29ba27d401b13eef6360ed')
+        jll.toml.in)
+sha256sums=('45cdc350ed5992ad29298c143b4b52c708fbae886046eb751ac98f7e9cb18ea2'
+            '7fe88d60082a7d6de7f775f36bef4247c04be3c9bd3f3c923851ebcf5ef86a84')
 
 build() {
+  _llvm_ver=$(llvm-config --version)
+  [[ $_llvm_ver =~ ^([0-9]*).* ]]
+  llvm_maj_ver=${BASH_REMATCH[1]}
+
+  sed -e "s/@LLVM_VER@/${llvm_maj_ver}/g" jll.toml.in > jll.toml
+
   cd Enzyme_jll.jl
 
   julia /usr/lib/julia/julia-gen-jll.jl Enzyme_jll ../jll.toml

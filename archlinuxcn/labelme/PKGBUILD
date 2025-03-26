@@ -1,8 +1,8 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=labelme
-pkgver=5.5.0
-pkgrel=2
+pkgver=5.8.1
+pkgrel=1
 pkgdesc='Image Polygonal Annotation with Python (polygon, rectangle, circle, line, point and image-level flag annotation).'
 arch=('any')
 url='https://github.com/wkentaro/labelme'
@@ -10,34 +10,34 @@ license=('GPL-3.0-or-later')
 depends=(
   gdown
   python-imgviz
+  python-loguru
   python-matplotlib
   python-natsort
   python-numpy
   python-onnxruntime
+  python-osam
   python-pillow
-  python-qtpy
+  python-pyqt5
   python-scikit-image
-  python-termcolor
   python-yaml
 )
 makedepends=(
   python-build
+  python-hatchling
+  python-hatch-fancy-pypi-readme
+  python-hatch-vcs
   python-installer
-  python-setuptools
   python-wheel
 )
-optdepends=(
-  "pyside2: use PySide2"
-  "pyside6: use PySide6, might not work due to API changes"
-  "python-pyqt5: use PyQt5, recommend"
-  "python-pyqt6: use PyQt6, might not work due to API changes"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/labelme/archive/v${pkgver}.tar.gz"
+        "labelme.desktop::https://github.com/wkentaro/labelme/raw/refs/tags/v5.6.1/labelme.desktop"
 )
-install="${pkgname}.install"
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/labelme/archive/v${pkgver}.tar.gz")
-sha512sums=('b797e9e3602cadbd27dd731bee8f5e8bc61b09763a0a9670857592a466637622d0ab48fdecbeb0488a98631836db27c6c93505198a7150522c4c656dd9c3dff8')
+sha512sums=('49457bbfbbddf7579c8b6b893b0eb1d93d074ddf0de5bb8dafe17bb9b249b7b9ea647a775b079e234202cef8b2f5e5502bdc5889c2a3de78edc77ec553af2365'
+            '4dfe6a42ed28560e4cc557feead644d2623c0c4a364e2f244d40f670069ed9d64f89017d5425c8cf9db38b6c54bdbb414d863d772200ca8eb5061f56eb7555b1')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
   python -m build --wheel --no-isolation
 }
 
@@ -45,6 +45,6 @@ package() {
   cd "${pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 "labelme/icons/icon.png" "${pkgdir}/usr/share/pixmaps/labelme.png"
-  install -Dm644 "labelme.desktop" -t "${pkgdir}/usr/share/applications"
+  install -Dm644 "${srcdir}/labelme.desktop" -t "${pkgdir}/usr/share/applications"
 }
 # vim:set ts=2 sw=2 et:

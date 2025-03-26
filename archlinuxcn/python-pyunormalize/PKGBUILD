@@ -1,0 +1,28 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=pyunormalize
+pkgname=python-${_name}
+pkgver=16.0.0
+pkgrel=3
+pkgdesc="Unicode normalization forms (NFC, NFKC, NFD, NFKD). A library independent of the Python core Unicode database."
+arch=(any)
+url="https://github.com/mlodewijck/${_name}"
+license=('MIT AND Unicode-3.0')
+depends=(python)
+makedepends=(python-build python-installer python-setuptools python-wheel)
+# https://github.com/mlodewijck/pyunormalize/issues/7
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/${_name//-/_}/${_name//-/_}-$pkgver.tar.gz)
+sha512sums=('909156d3c6f3f0f82e90e3b991c619e5334083bc8d0c5b1e8e4851599a4ccb95d8822a3bf50997f97c5fe321336471f21c1ad69b61ba467c0ef398829b26978c')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 UNICODE-LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}

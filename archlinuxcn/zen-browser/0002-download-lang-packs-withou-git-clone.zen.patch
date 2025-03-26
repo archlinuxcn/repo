@@ -1,0 +1,24 @@
+diff --git a/scripts/download-language-packs.sh b/scripts/download-language-packs.sh
+index 4363c6f..b3e824c 100644
+--- a/scripts/download-language-packs.sh
++++ b/scripts/download-language-packs.sh
+@@ -2,19 +2,6 @@ set -ex
+ 
+ CURRENT_DIR=$(pwd)
+ 
+-git config --global init.defaultBranch main
+-git config --global fetch.prune true
+-
+-cd $CURRENT_DIR
+-
+-LAST_FIREFOX_L10N_COMMIT=$(cat ./firefox-cache/l10n-last-commit-hash)
+-
+-cd ./l10n
+-rm -rf firefox-l10n
+-# clone only from LAST_FIREFOX_L10N_COMMIT
+-git clone https://github.com/mozilla-l10n/firefox-l10n
+-cd firefox-l10n
+-git checkout $LAST_FIREFOX_L10N_COMMIT
+ cd $CURRENT_DIR
+ 
+ update_language() {

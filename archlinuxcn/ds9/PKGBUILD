@@ -2,7 +2,7 @@
 
 pkgname=ds9
 pkgver=8.6
-pkgrel=1
+pkgrel=3
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="https://sites.google.com/cfa.harvard.edu/saoimageds9"
 arch=('x86_64')
@@ -20,6 +20,7 @@ sha256sums=('SKIP'
 
 build() {
     cd ${srcdir}/${pkgname}
+    which xml2-config
     unix/configure
     # workaround for unsatisfying build order in upstream
     # "-j 1" doesn't work, need to change JOBS in Makefile

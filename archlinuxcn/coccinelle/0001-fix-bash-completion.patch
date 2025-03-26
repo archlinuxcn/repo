@@ -1,0 +1,11 @@
+diff --unified --recursive --text coccinelle-1.3.0.orig/scripts/spatch.bash_completion coccinelle-1.3.0/scripts/spatch.bash_completion
+--- coccinelle-1.3.0.orig/scripts/spatch.bash_completion	2024-11-12 13:52:48.000000000 +0100
++++ coccinelle-1.3.0/scripts/spatch.bash_completion	2024-12-10 18:00:17.382896450 +0100
+@@ -34,7 +34,6 @@
+         done
+ }
+ 
+-have spatch &&
+ _spatch()
+ {
+     local cur prev xspec

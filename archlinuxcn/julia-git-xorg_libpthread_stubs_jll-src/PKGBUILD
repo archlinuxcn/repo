@@ -1,6 +1,6 @@
 pkgname=julia-git-xorg_libpthread_stubs_jll-src
-pkgver=0.1.1+1
-_commit=0ff833e1fd1cfacad99ce680d8562fb3b061e776
+pkgver=0.1.2+0
+_commit=b0729d885f8238e008822c58b73a457d0e078738
 pkgrel=1
 pkgdesc="Xorg_libpthread_stubs_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libpthread_stubs_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libpthread_stubs_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('e2dbbd81a0b1baced7eef80d02b237cf069ee2e9dc7c20d1bddffbaa8dc331df'
+sha256sums=('29dabd2319988dec8e194c1d57caa6212b0a8c42e72f891652f72bd1b02bf63e'
             'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
 
 build() {

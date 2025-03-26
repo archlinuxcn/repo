@@ -1,0 +1,46 @@
+From dd82ff560c56b3b758998713acbc5b9299418aa6 Mon Sep 17 00:00:00 2001
+From: Christian Guinard <28689358+christiangnrd@users.noreply.github.com>
+Date: Mon, 16 Dec 2024 03:53:36 -0400
+Subject: [PATCH 2/2] Don't use platform-dependent types for `upsample` (#273)
+
+---
+ lib/intrinsics/src/integer.jl | 12 ++++++------
+ src/array.jl                  |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/lib/intrinsics/src/integer.jl b/lib/intrinsics/src/integer.jl
+index edbd4bb..7e36f02 100644
+--- a/lib/intrinsics/src/integer.jl
++++ b/lib/intrinsics/src/integer.jl
+@@ -45,9 +45,9 @@ end
+ 
+ # specifically typed
+ 
+-@device_function upsample(hi::Cchar, lo::Cuchar) = @builtin_ccall("upsample", Cshort, (Cchar, Cuchar), hi, lo)
+-upsample(hi::Cuchar, lo::Cuchar) = @builtin_ccall("upsample", Cushort, (Cuchar, Cuchar), hi, lo)
+-upsample(hi::Cshort, lo::Cushort) = @builtin_ccall("upsample", Cint, (Cshort, Cushort), hi, lo)
+-upsample(hi::Cushort, lo::Cushort) = @builtin_ccall("upsample", Cuint, (Cushort, Cushort), hi, lo)
+-upsample(hi::Cint, lo::Cuint) = @builtin_ccall("upsample", Clong, (Cint, Cuint), hi, lo)
+-upsample(hi::Cuint, lo::Cuint) = @builtin_ccall("upsample", Culong, (Cuint, Cuint), hi, lo)
++@device_function upsample(hi::Int8, lo::UInt8) = @builtin_ccall("upsample", Int16, (Int8, UInt8), hi, lo)
++@device_function upsample(hi::UInt8, lo::UInt8) = @builtin_ccall("upsample", UInt16, (UInt8, UInt8), hi, lo)
++@device_function upsample(hi::Int16, lo::UInt16) = @builtin_ccall("upsample", Int32, (Int16, UInt16), hi, lo)
++@device_function upsample(hi::UInt16, lo::UInt16) = @builtin_ccall("upsample", UInt32, (UInt16, UInt16), hi, lo)
++@device_function upsample(hi::Int32, lo::UInt32) = @builtin_ccall("upsample", Int64, (Int32, UInt32), hi, lo)
++@device_function upsample(hi::UInt32, lo::UInt32) = @builtin_ccall("upsample", UInt64, (UInt32, UInt32), hi, lo)
+diff --git a/src/array.jl b/src/array.jl
+index 7968d4d..6f8014d 100644
+--- a/src/array.jl
++++ b/src/array.jl
+@@ -268,7 +268,7 @@ Adapt.adapt_storage(::Type{<:CLArray{T, N}}, xs::AT) where {T, N, AT<:AbstractAr
+ ## resizing
+ 
+ """
+-  resize!(a::MtlVector, n::Integer)
++  resize!(a::CLVector, n::Integer)
+ 
+ Resize `a` to contain `n` elements. If `n` is smaller than the current collection length,
+ the first `n` elements will be retained. If `n` is larger, the new elements are not
+-- 
+2.48.1
+

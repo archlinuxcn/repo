@@ -3,26 +3,25 @@
 # Contributor: Y7n05h <Y7n05h@y7n05h.dev>
 
 pkgname=ecapture
-pkgver=0.9.1
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="capture SSL/TLS text content without CA cert using eBPF"
 arch=("x86_64" "aarch64")
 url="https://github.com/gojue/ecapture"
 license=("Apache-2.0")
-depends=("glibc")
-makedepends=("clang" "go" "git" "bpf" "linux-headers" "libelf" "llvm" "pkgconf")
+provides=("ecapture")
+conflicts=("ecapture-bin")
 source=("${pkgname}::git+${url}#tag=v${pkgver}")
-sha256sums=('82646325c4553288d6ecc74ccc4463a890289f793220fa4acba3ac5747100308')
+sha256sums=('d22ad081e8f7e9586d2f257ca6ba457b08a0b492479bbcc1c34ea098469d63be')
+
+depends=("glibc")
+makedepends=("clang" "go" "git" "bpf" "linux" "linux-headers" "libelf" "llvm" "pkgconf")
 
 build() {
     cd "${srcdir}/${pkgname}"
-    export CGO_CPPFLAGS="${CPPFLAGS}"
-    export CGO_CFLAGS="${CFLAGS}"
-    export CGO_CXXFLAGS="${CXXFLAGS}"
-    export CGO_LDFLAGS="${LDFLAGS}"
-    export GOPATH="${srcdir}"
-    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
-    make
+    UNAME_R=$(cat "/usr/src/linux/version")
+    HOST_VERSION_SHORT=$(echo "${UNAME_R}" | cut -d'-' -f 1)
+    make "UNAME_R=${UNAME_R}" "HOST_VERSION_SHORT=${HOST_VERSION_SHORT}"
 }
 
 package() {

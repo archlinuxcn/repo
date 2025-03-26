@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 pkgname=webgal-terre-bin
 _appname=WebGAL_Terre
-pkgver=4.5.10
+pkgver=4.5.12
 pkgrel=1
 pkgdesc="Galgame Editing. Redefined(Prebuilt version) / 视觉小说编辑，再进化"
 arch=(
@@ -35,13 +35,13 @@ source=(
 )
 sha256sums=('1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5'
             'd51d809af628cc8292bd430a4847adb4adefa9d4b0aee00a55a84ff9630e167c')
-sha256sums_aarch64=('479d081fec62a9155ab7a5fec3a02d801cf1d5027ffb7074babef972f4ab111a')
-sha256sums_x86_64=('5e8fd7e8081e08206461f37c10cc3fb926e0ec1e8a500c4d2e391dfecd0acd08')
-build() {
-    sed -e "
+sha256sums_aarch64=('f6e84d6cea84f9de7fe7c814cb774afd9765fffd78fc111f54d50624e0473a5c')
+sha256sums_x86_64=('e41cc7cb54031ad3b1898c99333c142ddb2e370c3201bade157ef1180b4e031b')
+prepare() {
+    sed -i -e "
         s/@appname@/${pkgname%-bin}/g
         s/@runname@/${_appname}/g
-    " -i "${srcdir}/${pkgname%-bin}.sh"
+    " "${srcdir}/${pkgname%-bin}.sh"
     gendesk -q -f -n --pkgname="${pkgname%-bin}" --pkgdesc="${pkgdesc}" --categories="Game" --name="${_appname//_/ }" --exec="${pkgname%-bin} --no-sandbox %U"
 }
 package() {

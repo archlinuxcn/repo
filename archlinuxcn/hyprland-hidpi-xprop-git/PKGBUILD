@@ -9,8 +9,8 @@
 
 _pkgname=hyprland
 pkgname=$_pkgname-hidpi-xprop-git
-pkgver=0.46.0.r27.5f7ad767
-pkgrel=1
+pkgver=0.48.0.r8.gf7ba86d1
+pkgrel=2
 pkgdesc="Hyprland is an independent, highly customizable, dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/hyprwm/Hyprland"
@@ -62,18 +62,21 @@ depends=(
 makedepends=(
   cmake
   git
+  glaze
   hyprwayland-scanner-git
-  meson
-  ninja
+  #patch
+  #pkgconf
+  python
   xorgproto
 )
 optdepends=(
   'cmake: to build and install plugins using hyprpm'
   'cpio: to build and install plugins using hyprpm'
   'meson: to build and install plugins using hyprpm'
+  'glaze: to build and install plugins using hyprpm'
   'uwsm: the recommended way to start Hyprland'
 )
-provides=("hyprland=${pkgver%%.r*}")
+provides=("hyprland=${pkgver%%.r*}" "wayland-compositor")
 conflicts=(hyprland)
 source=(
   "git+https://github.com/hyprwm/Hyprland.git"
@@ -88,6 +91,7 @@ b2sums=(
 options=(debug)
 
 pick_mr() {
+  cd "$srcdir/Hyprland"
   git pull origin pull/$1/head --no-ff --no-commit
 }
 
@@ -107,27 +111,27 @@ prepare() {
 }
 
 pkgver() {
-  git -C Hyprland describe --long --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g'
+	cd "$srcdir/Hyprland"
+  git describe --long --tags --abbrev=8 --exclude='*[a-zA-Z][a-zA-Z]*' \
+    | sed -E 's/^[^0-9]*//;s/([^-]*-g)/r\1/;s/-/./g'
 }
 
 build() {
-  cd Hyprland
+  cd "$srcdir/Hyprland"
 
-  cmake -G Ninja -B build -S . \
-        -DCMAKE_BUILD_TYPE='None' \
-        -DCMAKE_INSTALL_PREFIX='/usr'
-  cmake --build build
+  cmake --no-warn-unused-cli -DCMAKE_INSTALL_PREFIX=/usr -S . -B ./build
+  cmake --build ./build --target all
 }
 
 package() {
-  cd Hyprland
+  cd "$srcdir/Hyprland"
 
   DESTDIR="${pkgdir}" cmake --install build
 
   # Avoid conflict w/ extra/xdg-desktop-portal-hyprland
   rm -rf "$pkgdir/usr/share/xdg-desktop-portal"
 
-  # license
+  # licenses
   install -Dm0644 -t "$pkgdir/usr/share/licenses/${pkgname}" LICENSE
   install -Dm0644 subprojects/udis86/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE-udis86"
 }

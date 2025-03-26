@@ -4,8 +4,8 @@
 
 pkgname=albert-git
 _pkgname=${pkgname%-git}
-pkgver=0.26.10.r0.g3886a14
-pkgrel=4
+pkgver=0.27.5.r0.gc45e807
+pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
 url="https://github.com/${_pkgname}launcher"
@@ -22,7 +22,7 @@ source=("git+${url}/${_pkgname}.git"
 	"git+${url}/i18n.git"
 	"git+${url}/python.git"
 	"git+https://github.com/pybind/pybind11.git"
-	"git+https://github.com/Skycoder42/QHotkey.git"
+	"git+https://github.com/QtCommunity/QHotkey.git"
 	"git+https://github.com/QtCommunity/QNotification.git")
 sha512sums=('SKIP'
             'SKIP'

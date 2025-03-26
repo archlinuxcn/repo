@@ -1,7 +1,7 @@
-From 11224c2dd64e415abfb380422d6220a148c70285 Mon Sep 17 00:00:00 2001
+From 727ecc0ba2afd2b507fd65e1c36915cbb78858c2 Mon Sep 17 00:00:00 2001
 From: Stelios Tsampas <loathingkernel@gmail.com>
 Date: Thu, 28 Sep 2023 14:16:04 +0300
-Subject: [PATCH 5/5] AUR: Fix hwnd redefinition
+Subject: [PATCH 5/6] AUR: Fix hwnd redefinition
 
 ---
  steam_helper/steam.cpp          | 4 ++++
@@ -9,7 +9,7 @@ Subject: [PATCH 5/5] AUR: Fix hwnd redefinition
  2 files changed, 6 insertions(+)
 
 diff --git a/steam_helper/steam.cpp b/steam_helper/steam.cpp
-index f99596bc..5378e560 100644
+index a083915e..4d43e126 100644
 --- a/steam_helper/steam.cpp
 +++ b/steam_helper/steam.cpp
 @@ -34,11 +34,15 @@
@@ -44,5 +44,5 @@ index aa1573b9..06715afb 100644
  #undef min
  #undef max
 -- 
-2.47.0
+2.48.1
 

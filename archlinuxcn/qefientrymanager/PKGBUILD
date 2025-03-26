@@ -3,12 +3,12 @@
 pkgname=qefientrymanager
 _srcname=QEFIEntryManager
 pkgver=0.4.1
-pkgrel=1
+pkgrel=4
 pkgdesc="A userspace cross-platform EFI boot entry management GUI App based on Qt"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/Inokinoki/${_srcname}"
 license=('GPL-3.0-or-later')
-depends=('qt6-base' 'qt6-wayland' 'efivar' 'hicolor-icon-theme')
+depends=('qt6-base' 'qt6-wayland' 'efivar' 'hicolor-icon-theme' 'polkit')
 makedepends=('git' 'cmake' 'qt6-tools' 'clang')
 source=(
 	"git+${url}.git#tag=v${pkgver}"
@@ -35,11 +35,7 @@ build() {
 
 package() {
 	cd "${_srcname}/"
-
 	DESTDIR="${pkgdir}" cmake --install build
-
-	# License
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 
 	# Documentation
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"

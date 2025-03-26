@@ -1,21 +1,22 @@
-# Maintainer: dr460nf1r3 <dr460nf1r3 at garudalinux dot org>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: dr460nf1r3 <dr460nf1r3 at garudalinux dot org>
 
 pkgname=btrfs-assistant-git
 _pkgname=${pkgname%-git}
-pkgver=2.1.1.r8.gd205651
+pkgver=2.1.1.r9.g678b5d8
 pkgrel=1
 pkgdesc="An application for managing BTRFS subvolumes and Snapper snapshots"
 arch=('x86_64' 'aarch64')
 url="https://gitlab.com/${_pkgname}/${_pkgname}"
 license=('GPL-3.0-or-later')
-depends=('qt6-base' 'qt6-svg' 'ttf-font' 'polkit' 'util-linux' 'btrfs-progs' 'diffutils')
+depends=('qt6-base' 'qt6-svg' 'ttf-font' 'polkit' 'btrfs-progs' 'diffutils')
 optdepends=('snapper' 'btrfsmaintenance')
 makedepends=('git' 'cmake' 'qt6-tools')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 backup=("etc/${_pkgname}.conf")
 source=("git+${url}.git")
-md5sums=('SKIP')
+sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -23,12 +24,13 @@ pkgver() {
 }
 
 build() {
-	cd "${_pkgname}/"
-	cmake -B build -S . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
-	make -C build
+	cmake -B build -S "${_pkgname}/" -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=None
+	cmake --build build
 }
 
 package() {
-	cd "${_pkgname}/"
-	make -C build DESTDIR="${pkgdir}" install
+	DESTDIR="${pkgdir}" cmake --install build
+
+	# License
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

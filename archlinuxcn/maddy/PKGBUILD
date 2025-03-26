@@ -1,6 +1,6 @@
 # Maintainer: Ariel AxionL <i at axionl dot me>
 pkgname=maddy
-pkgver=0.7.1
+pkgver=0.8.1
 pkgrel=1
 pkgdesc='Composable all-in-one mail server'
 arch=('x86_64')
@@ -17,12 +17,12 @@ source=("https://github.com/foxcpp/maddy/releases/download/v${pkgver}/${pkgname}
     "maddy.service"
     "maddy@.service")
 
-b2sums=('4ab021a535a62d1f228587bf3cb0ea1bb986f6706fe27aede257743de48989530f61f36ebf5b6c8181d4745a5c6538c6ea686febbb1f9c610349db6642519796'
+b2sums=('2352bba0c3c247c41f05866fbc7dce069cdd59dae536afe2fedf1fadf4c5d2cac920ec337025923452fb5ddc5770d067c7cb1a727d09bf4ca8030f63f1e77a4a'
         'SKIP'
         '2e081425075312f12f3e0a82906016787b195426fa1bd7b664e3eef020407a10fa791ce6af8db30f86c72f0b2b4784c151e1d687c6705d110f965e0dd3d154ac'
         '44fa4cc5ccd034b939a5800ea3745652500457914470f93374bf4304cd19e5fd5e315b651d5647fa48d570f3880c8a609deddbbdf63a8c9d6432e79dd4e310a5'
-        'e7ee65ebc3e3e5578a65bb5abddd4668b1ca16948da64d1f2215b2ccdf0733897514f23b632d8e30e88f14139eb2bbbc3350abf4bb0c88fdf26b65f592163f54'
-        '8af5d78df25a4ba37c80207acb5c39335adc6427157d75dccdcf203c250434c2b01b0eb62ac6cbd806e0c9d13e3a855902720665253119b68e88707357451d0c')
+        '3e41339a743e37b2b7f531138360b3c9b47917af1a366deddce92147b2f729c4c6f7fea987c9d8b86e3a3c35a18f76d8e8d05a72df3cdd6dd76759b17ac006d3'
+        'a3a03913b7295e425e7d7d8f4134de517c73981205bc460e249e2bb4c760a40e984e3a82833967bb312cf6f44665646a966206fe1184bcfaefd4c08a8658cf1b')
 
 validpgpkeys=("3197BBD95137E682A59717B434BB2007081396F4")
 
@@ -42,7 +42,7 @@ build() {
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-  go build -ldflags "-extldflags ${LDFLAGS} -s -w -X github.com/foxcpp/maddy.Version=${pkgver}" -x -o build ./cmd/...
+  go build -ldflags "-extldflags '${LDFLAGS}' -s -w -X github.com/foxcpp/maddy.Version=${pkgver}" -x -o build ./cmd/...
 }
 
 check() {

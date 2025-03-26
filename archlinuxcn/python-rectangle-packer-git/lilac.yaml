@@ -1,0 +1,12 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['mbromilow'])
+post_build: aur_post_build
+update_on:
+  - source: github
+    github: Penlect/rectangle-packer
+  - source: aur
+    aur: python-rectangle-packer-git
+  - alias: python
+
+maintainers:
+  - github: roaldclark

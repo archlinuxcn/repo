@@ -6,6 +6,8 @@ update_on:
     github: telegramdesktop/tdesktop
     branch: dev
     use_latest_release: true
+  # - source: manual
+  #   manual: v5.12.1
   - source: alpm
     alpm: ffmpeg
     provided: libavcodec.so
@@ -13,7 +15,6 @@ update_on:
     from_pattern: ^(\d+\.\d+\.\d+)\..*
     to_pattern: \1
     alpm: qt6-base
-    repo: extra
     strip_release: true
   - alias: protobuf
   - source: alpm
@@ -24,3 +25,9 @@ update_on:
     provided: libvpx.so
   - alias: libssl
   - alias: libcrypto
+  - source: alpm
+    alpm: openh264
+    provided: libopenh264.so
+  - source: alpmfiles
+    pkgname: ada
+    filename: 'usr/lib/libada\.so\.(\d+)'

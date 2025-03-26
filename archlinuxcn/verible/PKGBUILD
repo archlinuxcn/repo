@@ -1,6 +1,6 @@
 # Maintainer: poscat
 
-_gittag="v0.0-3862-g936dfb1d"
+_gittag="v0.0-3946-g851d3ff4"
 _tardir="verible-${_gittag/v/}"
 
 pkgname=verible
@@ -17,7 +17,7 @@ conflicts=('verible-git' 'verible-bin')
 source=(
   "verible-${pkgver}.tar.gz::https://github.com/chipsalliance/verible/archive/refs/tags/${_gittag}.tar.gz"
 )
-sha256sums=('b8c697c4201cad869c72a2f7499e8f124f9bc233cc3746f28275b098df2ef8f2')
+sha256sums=('1454b8df8a978c11139b800b229b498c02bb22f8f2b97a21022b2a6f099604af')
 
 build() {
   cd "${srcdir:?}/${_tardir}" || (
@@ -43,5 +43,5 @@ package() {
     exit 1
   )
 
-  bazel run -c opt --//bazel:use_local_flex_bison //:install -- "${pkgdir:?}/usr/bin"
+  .github/bin/simple-install.sh "${pkgdir:?}/usr/bin"
 }

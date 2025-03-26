@@ -1,0 +1,48 @@
+# Maintainer: Hoream <hoream@qq.com>
+_pkgname="pacfiles"
+pkgname="${_pkgname}-git"
+pkgver=v0.2.5.r0.gff2f5b8
+pkgrel=1
+pkgdesc="A pacman -F alternative that runs blazingly fast"
+url="https://github.com/lilydjwg/pacfiles"
+license=("GPL-2.0-only")
+arch=('x86_64' 'aarch64')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+depends=('libarchive' 'glibc' 'gcc-libs' 'plocate' 'pacman')
+makedepends=("cargo" "git")
+source=(${_pkgname}::git+${url})
+sha256sums=('SKIP')
+
+prepare() {
+    cd "${srcdir}/${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+pkgver() {
+  cd "${srcdir}/${_pkgname}"
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+build(){
+ 	cd "${srcdir}/${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release --all-features
+}
+
+check() {
+    cd "${srcdir}/${_pkgname}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test --frozen --all-features
+}
+
+package() {
+    install -d "${pkgdir}/usr/bin"
+    install -Dm755 "${srcdir}/${_pkgname}/target/release/${_pkgname}" "${pkgdir}/usr/bin/${pkg_name}"
+    install -Dm644 "${srcdir}/${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

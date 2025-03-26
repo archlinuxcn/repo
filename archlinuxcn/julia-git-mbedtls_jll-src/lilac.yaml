@@ -1,0 +1,24 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - julia-git
+  - julia-pkg-scripts
+
+update_on:
+  - source: regex
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/MbedTLS_jll/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpm
+    alpm: mbedtls2
+    provided: libmbedcrypto.so
+  - source: alpm
+    alpm: mbedtls2
+    provided: libmbedtls.so
+  - source: alpm
+    alpm: mbedtls2
+    provided: libmbedx509.so
+  - source: manual
+    manual: 3

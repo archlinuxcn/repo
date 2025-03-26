@@ -1,0 +1,18 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+# For julia-pkg-scripts and various dependencies
+build_prefix: archlinuxcn-aarch64
+
+repo_depends:
+  - julia-git
+
+update_on:
+  - source: regex
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/PyCall/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - alias: python
+  - source: manual
+    manual: 1

@@ -9,6 +9,6 @@ def pre_build():
     aur_pre_build()
     for line in edit_file("PKGBUILD"):
         if line.startswith("_py="):
-            line = "_py=cp312"
+            line = "_py=cp313"
         print(line)
     run_cmd(["updpkgsums"])

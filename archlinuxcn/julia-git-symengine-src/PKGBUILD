@@ -1,7 +1,7 @@
 pkgname=julia-git-symengine-src
-pkgver=0.11.0
-_commit=a327565f07534197bd9e3add9a8686ddb46359bf
-pkgrel=2
+pkgver=0.12.0
+_commit=c9b6048481c3aa47c7088f08fabc24ee3f9f4c70
+pkgrel=1
 pkgdesc="SymEngine.jl"
 url="https://github.com/symengine/SymEngine.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/symengine/SymEngine.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('bf02af98945cd4b3307a7484bd977dacc4e710091ecea1e9accf64828c42718b')
 
 package() {
   cd SymEngine.jl

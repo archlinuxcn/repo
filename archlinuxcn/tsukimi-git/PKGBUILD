@@ -1,6 +1,6 @@
 _pkgname="tsukimi"
 pkgname="${_pkgname}-git"
-pkgver=0.17.3.r985.g12feff
+pkgver=0.20.0.r1190.gbab636
 pkgrel=1
 pkgdesc='A simple third-party Emby client'
 arch=('x86_64')
@@ -18,6 +18,7 @@ depends=(
 makedepends=(
 	'git'
 	'cargo'
+	'meson'
 )
 source=(
 	git+https://github.com/tsukinaha/tsukimi.git
@@ -25,34 +26,18 @@ source=(
 sha256sums=(
 	'SKIP'
 )
+options=(!lto)
 
 pkgver() {
 	cd "${_pkgname}"
 	echo $(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).r$(git rev-list --count HEAD).g$(git describe --long --tags --abbrev=7 | tail -c 7)
 }
 
-prepare() {
-	cd "${srcdir}/${_pkgname}"
-	git remote update
-	git submodule update --init --recursive
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
-}
-
 build() {
-	cd "${srcdir}/${_pkgname}"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
-	cargo build --frozen --release
+	arch-meson "${srcdir}/${_pkgname}" build
+	meson compile -C build
 }
 
 package() {
-	cd "${_pkgname}"
-
-	install -Dm755 -t "${pkgdir}/usr/bin/" "target/release/${_pkgname}"
-	install -Dm644 -t "${pkgdir}/usr/share/glib-2.0/schemas" "resources/moe.tsuna.tsukimi.gschema.xml"
-	install -Dm644 -t "${pkgdir}/usr/share/pixmaps/" "resources/icons/tsukimi.png"
-
-	install -Dm644 "resources/moe.tsuna.tsukimi.desktop.in" "${pkgdir}/usr/share/applications/moe.tsuna.tsukimi.desktop"
-
-	cp -r "i18n/locale" "${pkgdir}/usr/share/locale"
+	meson install -C build --destdir "$pkgdir"
 }

@@ -1,0 +1,59 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+pkgname=evmone
+pkgver=0.14.1
+pkgrel=1
+pkgdesc="Fast Ethereum Virtual Machine implementation"
+arch=(x86_64)
+url="https://github.com/ethereum/$pkgname"
+license=(Apache-2.0)
+depends=(gcc-libs glibc)
+makedepends=(cmake git)
+source=(git+$url.git#tag=v$pkgver
+        git+https://github.com/ethereum/evmc.git
+        git+https://github.com/ipsilon/evm-benchmarks.git)
+sha256sums=('3171cfd9684c882e04af7560cf9cb43e669c81a28074c0e519d7a851ee1ef0ab'
+            'SKIP'
+            'SKIP')
+
+prepare() {
+  cd $pkgname
+  git submodule init
+  git config submodule.evmc.url ../evmc
+  git config submodule.evm-benchmarks.url ../evm-benchmarks
+  git -c protocol.file.allow=always submodule update
+}
+
+build() {
+  local cmake_options=(
+    -B build
+    -S $pkgname
+    -W no-dev
+    -D CMAKE_BUILD_TYPE=None
+    -D CMAKE_INSTALL_PREFIX=/usr
+    -D EVMONE_TESTING=ON
+  )
+  cmake "${cmake_options[@]}"
+  cmake --build build
+}
+
+check() {
+  local excluded_tests=""
+  local ctest_flags=(
+    --test-dir build
+    # show the stdout and stderr when the test fails
+    --output-on-failure
+    # execute tests in parallel
+    --parallel $(nproc)
+    # exclude problematic tests
+    --exclude-regex "$excluded_tests"
+  )
+  ctest "${ctest_flags[@]}"
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  cd $pkgname
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+  cp -r docs "$pkgdir/usr/share/doc/$pkgname"
+}

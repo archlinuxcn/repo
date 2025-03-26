@@ -1,7 +1,7 @@
 pkgname=julia-git-openspecfun_jll-src
-pkgver=0.5.5+0
-_commit=dc7e309b6ae0f0937a44c20eac8dea7a10ed88f1
-pkgrel=5
+pkgver=0.5.6+0
+_commit=54854c1905af8ebdac136604140a20198b6b5ac2
+pkgrel=1
 pkgdesc="OpenSpecFun_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenSpecFun_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libopenspecfun.so)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenSpecFun_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('38cd427f9f0aecb50dd506c3ca46a3008dc48267817dfde62ed4b114f6d92e5d'
             'a828c1a9ee0c2c4f653115a108343b4b1b4223be785a7b9711ebb2360b1e9b88')
 
 build() {

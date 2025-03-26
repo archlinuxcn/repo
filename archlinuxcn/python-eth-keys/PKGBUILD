@@ -1,0 +1,35 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=eth-keys
+pkgname=python-${_name}
+pkgver=0.6.1
+pkgrel=1
+pkgdesc="Utility functions for working with ethereum related codebases."
+arch=(any)
+url="https://github.com/ethereum/${_name}"
+license=(MIT)
+depends=(python python-eth-utils python-eth-typing python-factory-boy)
+makedepends=(python-build python-installer python-setuptools python-wheel)
+checkdepends=(python-pytest python-asn1tools python-hypothesis python-pyasn1 python-coincurve)
+optdepends=('python-coincurve: for CoinCurveECCBackend support')
+source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+sha512sums=('ffaa48bca7df8115137afe6b7a050b185f44f1f30798b2ad9a3451cb48689835470111738bfa3c6bb27ec082a8e753910a5c6b5e511a866eaf9888b9839c9a0e')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+check(){
+  cd $_name-$pkgver
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  test-env/bin/python -m pytest -vv --showlocals tests/
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm 644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm 644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}

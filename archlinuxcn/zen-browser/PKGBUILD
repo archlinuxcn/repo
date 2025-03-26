@@ -1,10 +1,10 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgbase=zen-browser
-pkgname=()
-pkgver=1.0.2_b.3
+pkgname=("$pkgbase")
+pkgver=1.10.1b
 _zen_version=${pkgver//_/-}
-_firefox_version=133.0.3
+_firefox_version=136.0.2
 pkgrel=1
 pkgdesc='Experience tranquillity while browsing the web without people tracking you'
 url='https://zen-browser.app/'
@@ -46,12 +46,12 @@ makedepends=(git
              clang
              diffutils
              imake
-             jack
              lld
              llvm
              mesa
              nasm
-             nodejs
+             nodejs-lts-iron
+            #  pyenv
              python
              rust
              unzip
@@ -76,37 +76,20 @@ _repo='https://github.com/zen-browser/desktop'
 source=("git+$_repo.git#tag=$_zen_version"
         "git+https://github.com/mozilla-l10n/firefox-l10n"
         "https://archive.mozilla.org/pub/firefox/releases/${_firefox_version}/source/firefox-${_firefox_version}.source.tar.xz"
-        desktop.patch
-        download-language-packs.patch
-        do-not-auto-disable-extensions-in-system-directories.patch)
-sha256sums=('139972b3f636a71d69ba7b44dbf4411d1d1c1a4e9ecb58402e812a981412fdfa'
+        0001-fix-desktop.zen.patch
+        0002-download-lang-packs-withou-git-clone.zen.patch
+        0003-do-not-disable-system-extensions.zen.patch
+        0004-fix-package-json.zen.patch)
+sha256sums=('fc7911d2a5031439812aac26106728e39c7d1e58083a48b90a7c471ffbe14973'
             'SKIP'
-            'f134a5420200bb03ab460f9d2867507c0edb222ce73faf4064cdbea02a0aca1b'
-            'fb8a1373a1e9f1b8b1443f75368b647f370735e5b95da82bab106000ef71fa76'
-            'f2a917dea2c5cbd702da69c0c8648047f2f28ae77c5807350f4cb4d2dd5fe4fb'
-            '8c1dec4e17516ecc737cb4fd37a215a59a4a3dea49770290125973038d987e01')
+            '53187c9e84543f77836e557c2a29f95238b111e779154217df2ed9b50ddbf200'
+            '11f920c7969bd01caa3b74b3742e6746bef99c37cb22026749c634f1876b5070'
+            '8479077f2aca6cc93333254469b2d257ee9d2d59f3d674944a26aafb402e37f4'
+            '36bff2af04da55da0cc71f960d921889ccf21c11fcd8343087c144dfcc50f10a'
+            '803c3f456abfc1acd963b594cf684aed2453534e7ab951abc38efa0351b648a1')
 noextract=("firefox-${_firefox_version}.source.tar.xz")
 
-_zen_variant=(generic specific)
 _languages=(zh-CN zh-TW ja)
-
-for _variant in "${_zen_variant[@]}"; do
-  _pkgname=$pkgbase-$_variant
-  pkgname+=("$_pkgname")
-  
-  _pkgdesc="$pkgdesc"
-  if test "$_variant" = "specific"; then
-    _pkgdesc="${pkgdesc} (optimized for modern devices)"
-  fi
-
-  eval "package_$_pkgname() {
-  provides=('$pkgbase=$pkgver')
-  conflicts=('$pkgbase')
-  pkgdesc='$_pkgdesc'
-
-  _package_zen '$_variant'
-}"
-done
 
 for _lang in "${_languages[@]}"; do
   _pkgname=$pkgbase-i18n-${_lang,,}
@@ -122,6 +105,12 @@ for _lang in "${_languages[@]}"; do
 }"
 done
 
+_package_i18n() {
+  msg2 "install langpack $1"
+  install -Dvm644 \
+    "$srcdir/$_OBJ_DIR/dist/linux-$CARCH/xpi/zen-$_firefox_version.$1.langpack.xpi" \
+    "$pkgdir/usr/lib/$pkgbase/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
+}
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
@@ -138,26 +127,24 @@ prepare() {
 
   # Apply patches
   msg2 "apply patches"
-  git apply -3 "$srcdir"/*.patch
-  # use the --enable-jack option to keep in sync with the official repository of Firefox
-  sed -i 's/--enable-pulseaudio/--enable-jack/g' "$srcdir"/desktop/configs/linux/mozconfig
+  git apply -3 "$srcdir"/*.zen.patch
 
   msg2 "prepare dependencies"
   pnpm config set store-dir "$srcdir"/pnpm-store
-  pnpm --silent install --frozen-lockfile
+  pnpm install
 
   msg2 "prepare surfer build environment"
-  pnpm surfer ci --brand beta --display-version "$_zen_version"
+  pnpm surfer ci --brand release --display-version "$_zen_version"
   # setup Firefox source
   install -Dvm644 "$srcdir/firefox-${_firefox_version}.source.tar.xz" -t "./.surfer/engine"
-  pnpm surfer download > /dev/null
+  pnpm surfer download
   # Import patches into the firefox
-  pnpm surfer import > /dev/null
+  env SURFER_COMPAT="$CARCH" pnpm surfer import
 
   msg2 "prepare firefox l10n"
   rm -rf "$srcdir/desktop/l10n/firefox-l10n"
   cp -r "$srcdir/firefox-l10n" "$srcdir/desktop/l10n/"
-  sh scripts/download-language-packs.sh > /dev/null
+  sh scripts/download-language-packs.sh
 
   msg2 "prepare custom mozconfig"
   echo -n "$_google_api_key" >google-api-key
@@ -210,10 +197,10 @@ END
 }
 
 _mach() {
-  "$srcdir/desktop/engine/mach" "$@" > /dev/null
+  "$srcdir/desktop/engine/mach" "$@"
 }
 
-_build() {
+build() {
   export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=pip
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
   MOZ_BUILD_DATE="$(date -u${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH} +%Y%m%d%H%M%S)"
@@ -232,40 +219,45 @@ _build() {
   # LTO needs more open files
   ulimit -n 4096
 
-  local _variant=$1
+  # The Python version in the official repository is too high
+  # export PYENV_ROOT="$srcdir/.pyenv"
+  # export PATH="$PYENV_ROOT/bin:$PATH"
+  # export PYENV_VERSION=3.11
+  # pyenv install $PYENV_VERSION
+  # eval "$(pyenv init -)"
 
   # Run PGO Build
-  msg2 "build zen browser: $_variant"
+  msg2 "build zen browser"
   (
     cd "$srcdir/desktop"
 
-    local _surfer_compat="$CARCH"
-    if test "$_variant" = "specific"; then
-      _surfer_compat="x86_64-v3"
-    fi
+    # The .so dependencies of clang-plguin are packaged into libclang-cpp.so in Arch Linux
+    # so we need this patch
+    sed -i 's/clangASTMatchers/clang-cpp/g' ./engine/build/clang-plugin/moz.build
 
-    SURFER_COMPAT="$_surfer_compat" \
-    SURFER_PLATFORM=linux \
-    ZEN_RELEASE=1 \
-    LLVM_PROFDATA=llvm-profdata \
+    env \
+      SURFER_COMPAT="$CARCH" \
+      SURFER_PLATFORM=linux \
+      ZEN_RELEASE_BRANCH=release \
+      ZEN_RELEASE=1 \
+      LLVM_PROFDATA=llvm-profdata \
       dbus-run-session \
         xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
           pnpm surfer build --skip-patch-check
   )
 
   # Build langpacks
-  if test "$_variant" = "${_zen_variant[0]}"; then
-    msg2 "build langpacks: ${_languages[*]}"
-    echo $_firefox_version > "$srcdir/desktop/engine/browser/config/version.txt"
-    for _lang in "${_languages[@]}"; do
-      _mach build "merge-$_lang"
-      _mach build "langpack-$_lang"
-    done
-  fi
+  echo $_firefox_version > "$srcdir/desktop/engine/browser/config/version.txt"
+  for _lang in "${_languages[@]}"; do
+    msg2 "build langpack: ${_lang}"
+    _mach build "merge-$_lang"
+    _mach build "langpack-$_lang"
+  done
 }
 
-_package_zen() {
-  _build "$1"
+package_zen-browser() {
+  provides=("$pkgbase=$pkgver")
+  replace=("$pkgbase-generic" "$pkgbase-specific")
 
   # package variant
   msg2 "install to pkgdir"
@@ -344,11 +336,4 @@ END
 # ObjectPath=/org/mozilla/${pkgname//-/_}/SearchProvider
 # Version=2
 # END
-}
-
-_package_i18n() {
-  msg2 "install langpack $1"
-  install -Dvm644 \
-    "$srcdir/$_OBJ_DIR/dist/linux-$CARCH/xpi/zen-$_firefox_version.$1.langpack.xpi" \
-    "$pkgdir/usr/lib/$pkgbase/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
 }

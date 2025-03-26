@@ -11,5 +11,7 @@ update_on:
     use_latest_release: true
 
   - source: alpm
-    alpm: spdlog
-    provided: libspdlog.so
+    alpm: boost
+    strip_release: true
+
+  - alias: spdlog

@@ -6,14 +6,14 @@
 # Contributor: Erez Raviv (erezraviv@gmail.com)
 
 pkgname=chirp-next
-pkgver=20241220
+pkgver=20250321
 pkgrel=1
-pkgdesc="GUI tool for programming ham radios, built from chirp-next"
+pkgdesc="GUI tool for programming ham radios"
 arch=('any')
 url="https://chirpmyradio.com/projects/chirp/wiki/Home"
 license=('GPL-3.0-or-later')
-depends=('python-six' 'python-pyserial' 'python-future' 'python-requests'
-         'python-suds' 'python-yattag' 'python-wxpython' 'python-lark-parser')
+depends=('python-pyserial' 'python-requests' 'python-suds'
+         'python-yattag' 'python-wxpython' 'python-lark-parser')
 optdepends=('hamradio-menus: XDG menus for ham radio software')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
 options=(!emptydirs)
@@ -22,7 +22,7 @@ provides=(chirp)
 install=$pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::https://archive.chirpmyradio.com/chirp_next/next-${pkgver}/chirp-${pkgver}.tar.gz")
 # Checksums: https://archive.chirpmyradio.com/chirp_next/next-$pkgver/SHA1SUM
-sha1sums=('4445bad7e5e30adc96cc546542efc63e52018380')
+sha1sums=('796a17801e80021d558227381186faf188380749')
 
 build() {
     cd "chirp-${pkgver}"

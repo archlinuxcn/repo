@@ -1,0 +1,15 @@
+maintainers:
+  - github: yingziwu
+    email: i@bgme.me
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'), updpkgsums=True)
+post_build: git_pkgbuild_commit
+
+update_on:
+- source: github
+  github: gearnode/privatebin
+  use_latest_release: true
+- source: manual
+  manual: 0.1

@@ -1,0 +1,33 @@
+From 1c51700711915fe2a50079545c23f5320caa7fe3 Mon Sep 17 00:00:00 2001
+From: Matt Johnson <matt.johnson@epicgames.com>
+Date: Fri, 1 Nov 2024 15:57:59 -0400
+Subject: [PATCH] work: account for TBB task_group_base interface change in
+ 2022.0.0
+
+The m_wait_ctx member being used in a narrow band of oneTBB versions
+was removed in a refactor that went into the most recent release:
+https://github.com/oneapi-src/oneTBB/commit/1f52f5093ec7ce23829fe64ab82ac5541fea42ee
+
+This change accounts for the update in the new version of oneTBB and
+uses the newly added m_wait_vertex member to access the same context
+as before.
+---
+ pxr/base/work/dispatcher.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/pxr/base/work/dispatcher.cpp b/pxr/base/work/dispatcher.cpp
+index 8cc8dbbfcd..63482d87c1 100644
+--- a/pxr/base/work/dispatcher.cpp
++++ b/pxr/base/work/dispatcher.cpp
+@@ -33,7 +33,11 @@ WorkDispatcher::WorkDispatcher()
+ #if TBB_INTERFACE_VERSION_MAJOR >= 12
+ inline tbb::detail::d1::wait_context& 
+ WorkDispatcher::_TaskGroup::_GetInternalWaitContext() {
++#if TBB_INTERFACE_VERSION_MINOR >= 14
++    return m_wait_vertex.get_context();
++#else
+     return m_wait_ctx;
++#endif
+ }
+ #endif
+ 

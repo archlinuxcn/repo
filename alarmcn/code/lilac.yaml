@@ -1,0 +1,17 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+time_limit_hours: 3
+
+repo_depends:
+  - electron32-bin
+
+update_on:
+  # Note that we need to get the official package and not the archlinux arm package
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: code
+  - source: manual
+    manual: 1

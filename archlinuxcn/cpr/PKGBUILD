@@ -1,0 +1,39 @@
+# Maintainer: Integral <integral@member.fsf.org
+# Contributor: John A. Leuenhagen <john@zlima12.com>
+# Contributor: Horror Proton <107091537+horror-proton@users.noreply.github.com> -> https://github.com/horror-proton
+# Contributor: Fabio 'Lolix' Loli <fabio.loli@disroot.org> -> https://github.com/FabioLolix
+# Contributor: Mark Wagie <mark dot wagie at proton dot me>
+
+pkgname=cpr
+pkgver=1.11.2
+pkgrel=2
+pkgdesc="C++ Requests: Curl for People, a spiritual port of Python Requests."
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/lib${pkgname}/${pkgname}"
+license=('MIT')
+depends=('curl')
+makedepends=('cmake' 'gtest')
+provides=("lib${pkgname}.so")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('3795a3581109a9ba5e48fbb50f9efe3399a3ede22f2ab606b71059a615cd6084')
+
+build() {
+	cmake -B build -S "${pkgname}-${pkgver}" \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCPR_USE_SYSTEM_CURL=ON \
+		-DCPR_USE_SYSTEM_GTEST=ON \
+		-DCPR_BUILD_TESTS=ON \
+		-DBUILD_SHARED_LIBS=ON
+
+	cmake --build build
+}
+
+check() {
+	ctest --test-dir build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${pkgname}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

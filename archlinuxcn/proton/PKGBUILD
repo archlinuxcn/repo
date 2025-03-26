@@ -1,12 +1,12 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton
-_srctag=9.0-3e
+_srctag=9.0-4c
 _commit=
-pkgver=9.0.3.5
+pkgver=9.0.4.3
 _geckover=2.47.4
-_monover=9.2.0
-_xaliaver=0.4.2
+_monover=9.3.1
+_xaliaver=0.4.4
 pkgrel=2
 epoch=2
 pkgdesc="Compatibility tool for Steam Play based on Wine and additional components"
@@ -40,7 +40,7 @@ depends+=(
 )
 
 makedepends=(autoconf bison perl flex mingw-w64-gcc
-  git wget rsync unzip mingw-w64-tools lld nasm
+  wget rsync unzip mingw-w64-tools lld nasm
   meson cmake fontforge afdko python-pefile glib2-devel
   glslang vulkan-headers
   clang
@@ -63,6 +63,7 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   rust                  lib32-rust-libs
   libgphoto2
   opencl-headers
+  git
 )
 
 optdepends=(
@@ -92,6 +93,7 @@ source=(
     0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     0004-AUR-Strip-binaries-early.patch
     0005-AUR-Fix-hwnd-redefinition.patch
+    0006-build-Stop-forcing-mno-avx-for-32bit-libraries.patch
 )
 noextract=(
     wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
@@ -164,6 +166,7 @@ prepare() {
     patch -p1 -i "$srcdir"/0003-AUR-Copy-DLL-dependencies-of-32bit-libvkd3d-dlls-int.patch
     patch -p1 -i "$srcdir"/0004-AUR-Strip-binaries-early.patch
     patch -p1 -i "$srcdir"/0005-AUR-Fix-hwnd-redefinition.patch
+    patch -p1 -i "$srcdir"/0006-build-Stop-forcing-mno-avx-for-32bit-libraries.patch
 }
 
 build() {
@@ -180,18 +183,12 @@ build() {
     local -A flags
     for opt in "${split[@]}"; do flags["${opt%%=*}"]="${opt##*=}"; done
     local march="${flags["-march"]:-nocona}"
-    local mtune="generic" #"${flags["-mtune"]:-core-avx2}"
+    local mtune="${flags["-mtune"]:-core-avx2}"
 
     CFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     CXXFLAGS="-O3 -march=$march -mtune=$mtune -pipe -fno-semantic-interposition"
     RUSTFLAGS="-C opt-level=3 -C target-cpu=$march"
     LDFLAGS="-Wl,-O1,--sort-common,--as-needed"
-
-    # AVX is "hard" disabled for 32bit in any case.
-    # AVX/AVX2 for 64bit is disabled below.
-    # Seems unnecessery for 64bit if -mtune=generic is used
-    #CFLAGS+=" -mno-avx2 -mno-avx"
-    #CXXFLAGS+=" -mno-avx2 -mno-avx"
 
     export CFLAGS CXXFLAGS RUSTFLAGS LDFLAGS
 
@@ -251,13 +248,14 @@ package() {
         $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-sha256sums=('3eda5843a8fa2ff72beed26c57574092eec469953ad4f17a51bd8a9f04949719'
+sha256sums=('113d10554f6356146df6cf5f21bdabd7b6accda4ffee9df8cad6827b3918517f'
             '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
             'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
-            '59b35dfe525f32c581884b6c7865496e13b3cd200c5ed267c43fb4663e0cd757'
-            '50ce2cc85162343e62340b0ca7994ceba94592ab395fb99711e94e108e991f0c'
-            'd5bc7871247ce9fddefb03813b70853a79e7b340a1dbfbb2213bd8b93b5a4e62'
-            '0d5f2cc441b04928773a8dc0424cf9898e6ba4feda296566cbcf125d103a8d14'
-            'b6c3f47f6ef3055a74b838c0d372271925c607d2477eee75eda9646a18f33e7a'
-            '2912d7b587cd309cb5f063bea03bf109c7225fdcb54d7ed72c7c064007f72f48'
-            '239e4d8d462cbb0da223caa6f52d5987a5b2f4c6d7b5ddb274229f654a07b295')
+            '32eff652b96390f04fb52ee695fc3a6d197b1bb616ed2df7e25119fe5700c950'
+            'a5cfd3090ebf7fb694bce573ef87b300b86f61204987ecbd068a2fe5079b7e6e'
+            '2761c978f9fd1e484ce7c27f5f610b9403b09dbd68d40036ac05f1488de3b8ec'
+            '0f57d36f50e1c850f1d63e25511321f496859b19a1de57d6c57f72ecbaa8da79'
+            'dec234d24eba9d69ffc50a14811434b4dab9dc84fe71a7d31d70353e4db30d97'
+            'f9d300475f42af68faf91f627171c1ca9d985ec80678eb6f2224c90a8099d2cf'
+            'cf5c20708bbc1ca9a1a28ad6e5b138fe631b3bc4d700c0fe20d27b76f43929e4'
+            'ad50ed5779b1635c2215ca9fd4cf469ff273a148e291be5cc09770513903ebb1')

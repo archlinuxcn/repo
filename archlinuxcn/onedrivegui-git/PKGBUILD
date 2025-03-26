@@ -3,7 +3,7 @@
 pkgname=onedrivegui-git
 _pkgname=OneDriveGUI
 pkgver=1.1.1a.r0.gff7edf1
-pkgrel=2
+pkgrel=4
 pkgdesc="A simple GUI for OneDrive Linux client, with multi-account support."
 url="https://github.com/bpozdena/${_pkgname}"
 license=("GPL-3.0-or-later")
@@ -14,23 +14,29 @@ provides=("onedrivegui")
 arch=("any")
 source=(
 	"git+${url}.git"
-	"https://raw.githubusercontent.com/Integral-Tech/${_pkgname}/refs/heads/fix-desktop-file/src/resources/${_pkgname}.desktop"
+	"${_pkgname}-desktop-file.patch::${url}/pull/215.patch"
 )
 sha256sums=('SKIP'
-            '9c5b7a573f2171be192286ba6633f7ff824a4118f0a7f57e6ba778484edcbe31')
+            '213640add88486963daaa4d8d751fdf7fde81d8d2d1adc286c8a8ed104d8f53e')
 
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --tags --long | sed 's/v//;s/-/.r/;s/-/./g'
 }
 
-package() {
-	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+prepare() {
+	cd "${_pkgname}/"
+	patch -p1 -i "../${_pkgname}-desktop-file.patch"
+}
 
+package() {
 	cd "${_pkgname}/src/"
 	install -Dm755 "${_pkgname}.py" -t "${pkgdir}/usr/lib/${_pkgname}/"
-	install -Dm644 "resources/images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"
 	cp -r {resources,ui} "${pkgdir}/usr/lib/${_pkgname}/"
+
+	cd resources
+	install -Dm644 "images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"
+	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	install -d "${pkgdir}/usr/bin/"
 	ln -sf "/usr/lib/${_pkgname}/${_pkgname}.py" "${pkgdir}/usr/bin/${_pkgname}"

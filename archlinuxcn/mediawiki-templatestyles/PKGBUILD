@@ -1,14 +1,14 @@
 _name=TemplateStyles
 pkgname=mediawiki-templatestyles
-pkgver=20240704
+pkgver=20241223
 pkgrel=1
 pkgdesc="MediaWiki extension that allows for loading sanitized CSS stylesheets from a template"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:TemplateStyles"
 license=(''GPL'')
-depends=('mediawiki>=1.42' 'mediawiki<1.43')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/TemplateStyles-REL1_42-8139dc8.tar.gz")
-sha256sums=('eb000f51289e2501b07974de15c27208ec24255793d85c744a5085cd0f4ef447')
+depends=('mediawiki>=1.43' 'mediawiki<1.44')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/TemplateStyles-REL1_43-31a4bd2.tar.gz")
+sha256sums=('bc480856ea15b55dc9a03e3cfc3e0ea4a1ca20164aabf06b47258e7e40a4854e')
 
 build() {
   true

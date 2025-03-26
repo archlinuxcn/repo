@@ -1,16 +1,17 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=2.5.2.beta.1.r3.gfae3e7a
-pkgrel=2
+pkgver=2.5.3.r0.g3f3a31d
+pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('any')
 url=https://chatterino.com
 license=('MIT')
-depends=('qt6-base' 'qt6-tools' 'boost-libs' 'openssl' 'qt6-imageformats' 'qtkeychain-qt6' 'qt6-5compat' 'qt6-svg')
+depends=('qt6-base' 'qt6-tools' 'boost-libs' 'openssl' 'qt6-imageformats' 'qtkeychain-qt6' 'qt6-5compat' 'qt6-svg' 'libnotify')
 makedepends=('git' 'boost' 'cmake')
 optdepends=('streamlink: For piping streams to video players'
-            'pulseaudio: For audio output')
+            'pulseaudio: For audio output'
+            'qt6-wayland: For Wayland support')
 provides=('chatterino')
 conflicts=('chatterino')
 install=$pkgname.install
@@ -21,13 +22,15 @@ source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/pajlada/signals"
         "git+https://github.com/pajlada/serialize"
         "git+https://github.com/Tencent/rapidjson"
-        "git+https://github.com/zaphoyd/websocketpp"
+        "git+https://github.com/Chatterino/websocketpp"
         "git+https://github.com/Neargye/magic_enum"
         "git+https://github.com/mackron/miniaudio"
         "git+https://github.com/lua/lua"
+        "git+https://github.com/ThePhD/sol2"
         "git+https://github.com/martinmoene/expected-lite"
         "git+https://github.com/Chatterino/crash-handler")
 md5sums=('SKIP'
+         'SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
@@ -51,6 +54,10 @@ pkgver() {
 
 prepare () {
     cd "$srcdir/$_pkgname"
+    # Disable updating of unused submodules
+    git config submodule.lib/googletest.update "none"
+    git config submodule.lib/WinToast.update "none"
+    git config submodule.lib/qtkeychain.update "none"
     git submodule init
     git config submodule.cmake/sanitizers-cmake.url "$srcdir/sanitizers-cmake"
     git config submodule.lib/libcommuni.url "$srcdir/libcommuni"
@@ -61,6 +68,7 @@ prepare () {
     git config submodule.lib/websocketpp.url "$srcdir/websocketpp"
     git config submodule.lib/miniaudio.url "$srcdir/miniaudio"
     git config submodule.lib/magicenum.url "$srcdir/magicenum"
+    git config submodule.lib/sol2.url "$srcdir/sol2"
     git config submodule.lib/lua/src.url "$srcdir/lua"
     git config submodule.lib/expected-lite.url "$srcdir/expected-lite"
     git config submodule.tools/crash-handler.url "$srcdir/crash-handler"
@@ -79,9 +87,8 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DUSE_SYSTEM_QTKEYCHAIN=ON \
         -DUSE_PRECOMPILED_HEADERS=OFF \
-        -DBUILD_WITH_QT6=ON \
         -DCHATTERINO_UPDATER=OFF \
-        -DCHATTERINO_PLUGINS=ON \
+        -DSKIP_JSON_GENERATION=ON \
         "${flags[@]}" \
         ..
     cmake --build .

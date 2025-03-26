@@ -1,0 +1,18 @@
+pkgname=julia-git-sccnonlinearsolve-src
+pkgver=1.0.0
+_commit=bec0bf27aff68f079d42278a403baaeee7c95436
+pkgrel=2
+pkgdesc="SCCNonlinearSolve.jl"
+url="https://github.com/SciML/NonlinearSolve.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/NonlinearSolve.jl.git#commit=$_commit")
+sha256sums=('59248d34e6a8bde09153c6b1b08f04c8407b0126d36fc3c11ef2bac47af0bd6a')
+
+package() {
+  cd NonlinearSolve.jl/lib/SCCNonlinearSolve
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SCCNonlinearSolve "${pkgdir}" "${pkgname}" julia-git
+}

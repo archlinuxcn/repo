@@ -1,0 +1,26 @@
+# Maintainer: Jos Dehaes <jos.dehaes@gmail.com>
+# Maintainer: Matthias Kurz <m.kurz@irregular.at>
+
+pkgname=asahi-bless
+pkgver=0.4.2
+pkgrel=1
+pkgdesc='Tool to select active boot partition on ARM Macs'
+arch=('aarch64')
+url="https://crates.io/crates/$pkgname"
+depends=('rust' 'cargo')
+license=('MIT')
+source=(
+  "asahi-bless-${pkgver}.tar.gz::https://crates.io/api/v1/crates/asahi-bless/${pkgver}/download"
+)
+sha256sums=('1b1f6905316fcd1ec30e2ded7bf1ba1a8ba092f9d13bdf65fc98a5e528353112')
+
+build() {
+  cd "${srcdir}/$pkgname-${pkgver}"
+  cargo build --release --locked
+}
+
+package() {
+  cd "${srcdir}/$pkgname-${pkgver}"
+  cargo install --locked --path . --root "$pkgdir/usr"
+  rm "$pkgdir/usr/".crates*
+}

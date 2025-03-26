@@ -1,49 +1,58 @@
-# Maintainer: Caleb Maclennan <caleb@alerque.com>
-# Maintainer: Guillaume Horel <guillaume.horel@gmail.com>
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
+# Contributor: Guillaume Horel <guillaume.horel@gmail.com>
 
-pkgname=python-ufo2ft
-_pyname=${pkgname#python-}
-pkgver=3.2.8
+_name=ufo2ft
+pkgname="python-${_name}"
+pkgver=3.4.2
 pkgrel=1
-pkgdesc='A bridge from UFOs to FontTools objects'
-arch=(any)
-url="https://github.com/googlefonts/$_pyname"
-license=(MIT)
-_pydeps=(booleanoperations
-         cffsubr
-         cu2qu
-         lxml # for fonttools[lxml]
-         defcon
-         fonttools
-         fs) # for fonttools[ufo]
-depends=(python
-         "${_pydeps[@]/#/python-}")
-makedepends=(python-{build,installer,wheel}
-             python-setuptools-scm)
-checkdepends=(python-compreffor
-              python-fontmath
-              python-pytest
-              python-skia-pathops
-              python-ufolib2)
-optdepends=(python-compreffor
-            python-skia-pathops)
-_archive="$_pyname-$pkgver"
-source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz")
-sha256sums=('1d20fae856c2c59c80091abb6fca76ba2ce83b866a3c09f53bc045a22d7f3247')
+pkgdesc="A bridge from UFOs to FontTools objects"
+arch=('any')
+url="https://github.com/googlefonts/${_name}"
+license=('MIT')
+depends=(
+    'python'
+    'python-booleanoperations'
+    'python-cffsubr'
+    'python-compreffor'
+    'python-defcon'
+    'python-fontmath'
+    'python-fonttools'
+    'python-fs' # for fonttools[ufo]
+    'python-lxml' # for fonttools[lxml]
+    'python-skia-pathops'
+    'python-typing_extensions'
+    'python-ufolib2'
+)
+makedepends=(
+    'git'
+    'python-build'
+    'python-installer'
+    'python-setuptools'
+    'python-setuptools-scm'
+    'python-syrupy'
+    'python-wheel'
+)
+checkdepends=(
+    'python-pytest'
+)
+source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}")
+sha256sums=('092c5f94852663c8129133c0b13994ae1e4928c38598b3b1f4a2c3a2d41adbfa')
 
 build() {
-	cd "$_archive"
-	python -m build -wn
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python -m build --wheel --no-isolation
 }
 
 check() {
-	cd "$_archive"
-	export PYTHONPATH="$PWD/build/lib"
-        pytest tests
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python -m venv --system-site-packages .venv
+    .venv/bin/python -m installer dist/*.whl
+    .venv/bin/python -m pytest -v tests
 }
 
 package() {
-	cd "$_archive"
-	python -m installer -d "$pkgdir" dist/*.whl
-	install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname/" LICENSE
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    install -Dm0644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
 }

@@ -1,0 +1,37 @@
+# Maintainer: Gavin Luo <lunt.luo#gmail.com>
+# Contributor: Felix Bühler <account at buehler dot de>
+# Contributor: lvxnull <lvxnull at proton dot me>
+
+pkgname=(nautilus-open-any-terminal
+         caja-open-any-terminal)
+pkgbase="${pkgname[0]}"
+pkgver=0.6.0
+pkgrel=2
+pkgdesc="Context-menu entry for opening other terminal in nautilus"
+arch=('x86_64' 'aarch64')
+url="https://github.com/Stunkymonkey/nautilus-open-any-terminal"
+license=("GPL-3.0-or-later")
+makedepends=(make gettext)
+source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('96a1cf9ebd24b3a0b33c70c37f6ab39b11e6d11dc374c9199e54a0b1f19e163a')
+install='post.install'
+
+build() {
+  cd "${pkgbase}-${pkgver}"
+
+  make build
+}
+
+package_nautilus-open-any-terminal() {
+    depends=(python-nautilus)
+    cd "${pkgbase}-${pkgver}"
+
+    make DESTDIR="${pkgdir}" PREFIX="/usr" install-nautilus
+}
+
+package_caja-open-any-terminal() {
+    depends=(python-caja)
+    cd "${pkgbase}-${pkgver}"
+
+    make DESTDIR="${pkgdir}" PREFIX="/usr" install-caja
+}

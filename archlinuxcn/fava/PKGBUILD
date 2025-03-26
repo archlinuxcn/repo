@@ -2,18 +2,23 @@
 
 pkgname=fava
 pkgdesc='Web interface for beancount'
-pkgver=1.29
+pkgver=1.30
 pkgrel=2
 arch=('any')
 url='https://github.com/beancount/fava'
 license=('MIT')
-source=("https://files.pythonhosted.org/packages/py3/f/fava/fava-${pkgver}-py3-none-any.whl")
+source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/${pkgname}/${pkgname}-${pkgver}.tar.gz")
 noextract=("fava-${pkgver}-py3-none-any.whl")
-sha256sums=('4e2eff76580c2b6a5bed2a781afb19b31c25e7b52ca65679d2cab3a80bee795c')
-depends=('beancount<3' 'python-setuptools' 'python-click' 'python-markdown2' 'python-flask' 'python-flask-babel' 'python-cheroot' 'python-simplejson' 'python-watchfiles')
-makedepends=('python-pip')
+b2sums=('05eb4c68241aa3001bf77a98260e8ce8c772a9819681c0d1d8f9b03dfbb1e0deba541a06d141bf9f5c509607a887d3e4fc9bc0c6db0ec41d41f97bb359559e31')
+depends=('beancount' 'beanquery' 'beangulp' 'python-click' 'python-markdown2' 'python-flask' 'python-flask-babel' 'python-cheroot' 'python-ply' 'python-simplejson' 'python-watchfiles')
+makedepends=("npm" "python-build" "python-installer" "python-setuptools-scm" "python-wheel")
 
-package () {
-  PIP_CONFIG_FILE=/dev/null pip install --isolated --root="${pkgdir}" --ignore-installed --no-deps --no-warn-script-location fava-${pkgver}-py3-none-any.whl
-  python -O -m compileall "${pkgdir}/usr/lib/python3.*/site-packages/${pkgname}/"
+build() {
+  cd "${pkgname}-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }

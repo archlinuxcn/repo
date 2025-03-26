@@ -1,17 +1,18 @@
-# Maintainer: alba4k <blaskoazzolaaaron@gmail.com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: alba4k <blaskoazzolaaaron@gmail.com>
 
 pkgname=hyprgraphics-git
 _pkgname="${pkgname%-git}"
-pkgver=0.1.1.r3.g6dea3fb
-pkgrel=1
+pkgver=0.1.2.r2.g175c6b2
+pkgrel=2
 pkgdesc="Hyprland graphics / resource utilities"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/hyprwm/${_pkgname}"
 license=('BSD-3-Clause')
-depends=('pixman' 'cairo' 'hyprutils-git' 'libjpeg' 'libwebp' 'libjxl' 'file')
+depends=('pixman' 'cairo' 'hyprutils-git' 'libjpeg' 'libwebp' 'libjxl' 'libspng')
 makedepends=('git' 'cmake')
 source=("git+${url}.git")
-provides=("${_pkgname}")
+provides=("${_pkgname}" "lib${_pkgname}.so")
 conflicts=("${_pkgname}")
 sha256sums=('SKIP')
 

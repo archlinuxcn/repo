@@ -1,0 +1,81 @@
+#
+
+_target="x86_64-linux-gnu"
+pkgname=${_target}-binutils
+pkgver=2.44
+pkgrel=2
+pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
+arch=(aarch64 armv7h i686 x86_64)
+url='https://www.gnu.org/software/binutils/'
+license=(GPL-2.0-or-later GPL-3.0-or-later LGPL-2.0-or-later LGPL-3.0-or-later GFDL-1.3 FSFAP)
+depends=(glibc jansson libelf zlib zstd)
+makedepends=(git)
+options=(staticlibs !distcc !ccache)
+if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
+  _git_ref="commit=${BASH_REMATCH[1]}"
+else
+  _git_ref="tag=binutils-${pkgver//./_}"
+fi
+source=("git+https://sourceware.org/git/binutils-gdb.git#${_git_ref}")
+sha256sums=('8dd44ba88dd86a4dfb4de3fd3a83f1b3f797c97e7513225e8b92d8796ac25741')
+
+prepare() {
+  mkdir -p binutils-build
+
+  cd binutils-gdb
+
+  # Turn off development mode (-Werror, gas run-time checks, date in sonames)
+  sed -i '/^development=/s/true/false/' bfd/development.sh
+
+  # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+}
+
+build() {
+  cd binutils-build
+
+  "$srcdir/binutils-gdb/configure" \
+      --prefix=/usr \
+      --program-prefix=${_target}- \
+      --with-lib-path=/usr/lib/binutils/${_target} \
+      --with-local-prefix=/usr/lib/${_target} \
+      --with-sysroot=/usr/${_target} \
+      --enable-cet \
+      --enable-colored-disassembly \
+      --enable-default-execstack=no \
+      --enable-deterministic-archives \
+      --enable-gold \
+      --enable-jansson \
+      --enable-ld=default \
+      --enable-new-dtags \
+      --enable-lto \
+      --enable-plugins \
+      --enable-relro \
+      --disable-shared \
+      --enable-threads \
+      --disable-gdb \
+      --disable-werror \
+      --with-debuginfod \
+      --with-pic \
+      --with-system-zlib \
+      --disable-sim \
+      --target=${_target} \
+      --host=${CHOST} \
+      --build=${CHOST}
+
+  make configure-host
+  make tooldir=/usr
+}
+
+package() {
+  cd binutils-build
+  make DESTDIR="$pkgdir" install
+
+  # Remove unwanted files
+  rm -rf "$pkgdir/usr/etc"
+  rm -rf "$pkgdir/usr/share"
+  rm -rf "$pkgdir/usr/include"
+  rm -rf "$pkgdir/usr/lib"
+  rm -f "$pkgdir/usr/bin/"{ar,as,ld,nm,objdump,ranlib,readelf,strip,objcopy}
+  rm -f "$pkgdir/usr/bin/"gp-*
+}

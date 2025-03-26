@@ -8,7 +8,8 @@ time_limit_hours: 4
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
   # (which doesn't exist yet) in this case.
-  - source: archpkg
-    archpkg: deno
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: deno
   - source: manual
     manual: 1

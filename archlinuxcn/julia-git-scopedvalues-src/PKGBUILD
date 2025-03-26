@@ -1,0 +1,18 @@
+pkgname=julia-git-scopedvalues-src
+pkgver=1.3.0
+_commit=ed1d165f965efb235f08b27f38ea10576e765050
+pkgrel=2
+pkgdesc="ScopedValues.jl"
+url="https://github.com/vchuravy/ScopedValues.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/vchuravy/ScopedValues.jl.git#commit=$_commit")
+sha256sums=('6e9c886f77c190415f09a3da671b631d479a2688f8820ed094badd928efb16e3')
+
+package() {
+  cd ScopedValues.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ScopedValues "${pkgdir}" "${pkgname}" julia-git
+}

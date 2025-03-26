@@ -1,0 +1,70 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+pkgname=zsteg
+pkgver=0.2.13
+pkgrel=2
+pkgdesc="detect stegano-hidden data in PNG & BMP"
+arch=(any)
+url="https://github.com/zed-0xff/zsteg"
+license=(MIT)
+depends=(ruby ruby-zpng ruby-iostruct ruby-prime)
+makedepends=(git)
+provides=(ruby-${pkgname})
+source=("git+$url.git#tag=v$pkgver")
+sha256sums=('0761d70e6768377a9cc154ec6a4942e192a4c7dea58f7e358b070407bdf509d1')
+
+prepare() {
+  cd "${pkgname}"
+
+  # update gemspec/Gemfile to allow newer version of the dependencies
+  sed --in-place --regexp-extended 's|~>|>=|g' "${pkgname}.gemspec"
+}
+
+build() {
+  cd "${pkgname}"
+
+  local _gemdir="$(gem env gemdir)"
+
+  gem build "${pkgname}.gemspec"
+
+  gem install \
+    --local \
+    --verbose \
+    --ignore-dependencies \
+    --build-root "tmp_install" \
+    "${pkgname}-${pkgver}.gem"
+
+  # remove unrepreducible files
+  rm --force --recursive --verbose \
+    "tmp_install/${_gemdir}/cache/" \
+    "tmp_install/${_gemdir}/gems/${pkgname}-${pkgver}/vendor/" \
+    "tmp_install/${_gemdir}/doc/${pkgname}-${pkgver}/ri/ext/"
+
+  find "tmp_install/${_gemdir}/gems/" \
+    -type f \
+    \( \
+      -iname "*.o" -o \
+      -iname "*.c" -o \
+      -iname "*.so" -o \
+      -iname "*.time" -o \
+      -iname "gem.build_complete" -o \
+      -iname "Makefile" \
+    \) \
+    -delete
+
+  find "tmp_install/${_gemdir}/extensions/" \
+    -type f \
+    \( \
+      -iname "mkmf.log" -o \
+      -iname "gem_make.out" \
+    \) \
+    -delete
+}
+
+package() {
+  cd "${pkgname}"
+
+  cp --archive --verbose tmp_install/* "${pkgdir}"
+
+  install --verbose -D --mode=0644 README.md --target-directory "${pkgdir}/usr/share/doc/${pkgname}"
+}

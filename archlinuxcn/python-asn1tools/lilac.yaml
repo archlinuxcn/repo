@@ -1,0 +1,19 @@
+maintainers:
+  - github: Xeonacid
+    email: xeonacid@archlinuxcn.org
+
+repo_depends:
+  - python-bitstruct
+  - python-diskcache
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: eerimoq/asn1tools
+    use_max_tag: true
+    from_pattern: 'v?(\d+.\d+.\d+)'
+    to_pattern: '\1'
+  - alias: python

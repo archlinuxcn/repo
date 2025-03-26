@@ -7,9 +7,10 @@
 _target="armv7l-linux-gnueabihf"
 pkgbase="${_target}-gcc"
 _pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
-pkgver=12.1.0
-_majorver=${pkgver%%.*}
-pkgrel=3
+pkgver=14.2.1+r753+g1cd744a6828f
+_gccver=${pkgver%%+*}
+_majorver=${_gccver%%.*}
+pkgrel=1
 pkgdesc="The GNU Compiler Collection (${_target})"
 arch=(armv7h aarch64 i686 x86_64)
 license=(GPL LGPL FDL custom)
@@ -19,20 +20,22 @@ makedepends=(${_target}-binutils
              libisl
              libmpc
              libxcrypt
-             zstd)
+             zstd
+             git)
+if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
+  _git_ref="commit=${BASH_REMATCH[1]}"
+else
+  _git_ref="tag=releases/gcc-${pkgver}"
+fi
 options=(!emptydirs !distcc debug)
-# source=(https://sources.archlinux.org/other/gcc/gcc-${pkgver/+/-}.tar.xz)
-source=(https://sourceware.org/pub/gcc/releases/gcc-${pkgver}/gcc-${pkgver}.tar.xz
-        gcc-ada-repro.patch
-        844a5c8ca.patch::'https://gcc.gnu.org/git/?p=gcc.git;a=patch;h=844a5c8ca768dc0cc90c1a943756610832d686a8')
-sha256sums=('62fd634889f31c02b64af2c468f064b47ad1ca78411c45abe6ac4b5f8dd19c7b'
-            '1773f5137f08ac1f48f0f7297e324d5d868d55201c03068670ee4602babdef2f'
-            '6dc8d32e76bc6c7c1a24ae527062ec1b4f393c9f7e0e25f6ab4acc98f622a80f')
+source=("git+https://gcc.gnu.org/git/gcc.git#${_git_ref}"
+        gcc-ada-repro.patch)
+sha256sums=('33378643f1c72686181f9d3fcd09caf9b06815324467f5dc9b9a3ea41cfba4b4'
+            '1773f5137f08ac1f48f0f7297e324d5d868d55201c03068670ee4602babdef2f')
 
-_libdir="usr/lib/gcc/${_target}/${pkgver%%+*}"
+_libdir="usr/lib/gcc/${_target}/${_gccver}"
 
 prepare() {
-  [[ ! -d gcc ]] && ln -s gcc-${pkgver/+/-} gcc
   cd gcc
 
   # Do not run fixincludes
@@ -43,9 +46,6 @@ prepare() {
 
   # Reproducible gcc-ada
   patch -Np0 < "$srcdir/gcc-ada-repro.patch"
-
-  # tree-optimization/105562 - avoid uninit diagnostic with better FRE
-  patch -Np1 < "$srcdir/844a5c8ca.patch"
 
   mkdir -p "$srcdir/gcc-build"
 }
@@ -162,9 +162,9 @@ package_gcc() {
   make -C gcc DESTDIR="${pkgdir}" install-mkheaders
 
   make -C lto-plugin DESTDIR="${pkgdir}" install
-  # install -dm755 "${pkgdir}"/usr/lib/bfd-plugins/
-  # ln -s /usr/lib/gcc/$_target/${pkgver}/liblto_plugin.so \
-    #    "${pkgdir}"/usr/lib/bfd-plugins/
+  install -dm755 "${pkgdir}"/usr/${_target}/lib/bfd-plugins/
+  ln -s /usr/lib/gcc/$_target/${_gccver}/liblto_plugin.so \
+     "${pkgdir}"/usr/${_target}/lib/bfd-plugins/
 
   make -C $_target/libgomp DESTDIR="${pkgdir}" \
        install-nodist_toolexeclibHEADERS install-nodist_libsubincludeHEADERS

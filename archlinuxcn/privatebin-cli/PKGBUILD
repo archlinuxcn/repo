@@ -1,0 +1,81 @@
+# Maintainer: bgme <i@bgme.me>
+# Contributor: Julien Virey <julien.virey@gmail.com>
+
+pkgname=privatebin-cli
+_binname=privatebin
+_bindate=$(date --rfc-3339=date)
+pkgver=2.0.2
+pkgrel=4
+pkgdesc='A powerful CLI for creating and managing PrivateBin pastes with ease'
+arch=('x86_64' 'aarch64')
+url='https://github.com/gearnode/privatebin'
+license=('ISC')
+conflicts=("${pkgname}-bin")
+depends=("glibc")
+makedepends=('go' 'pandoc')
+install="${pkgname}.install"
+source=("${pkgname}-${pkgver}.tar.gz::$url/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('312544308f6727da210f568d387fd629231b6db8c9a58a3a8dfd2596a3d97513')
+
+prepare() {
+  cd "${srcdir}/${_binname}-${pkgver}"
+  export GOPATH="${srcdir}"
+  go mod download
+}
+
+build() {
+  cd "${srcdir}/${_binname}-${pkgver}"
+  export GOPATH="${srcdir}"
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+
+  go build \
+    -ldflags "-X 'main.version=$pkgver'
+        -X 'main.commit=$pkgrel'
+        -X 'main.date=$_bindate'" \
+    -o $_binname cmd/privatebin/main.go cmd/privatebin/cfg.go
+
+  # Man
+  install -d man
+  pandoc --standalone --to man -M footer=${pkgver} doc/privatebin.1.md -o man/privatebin.1
+  pandoc --standalone --to man -M footer=${pkgver} doc/privatebin-create.1.md -o man/privatebin-create.1
+  pandoc --standalone --to man -M footer=${pkgver} doc/privatebin-show.1.md -o man/privatebin-show.1
+  pandoc --standalone --to man -M footer=${pkgver} doc/privatebin.conf.5.md -o man/privatebin.conf.5
+
+  # Shell Completions
+  PB_CONFIG_PATH="${srcdir}/config.json"
+  cat << EOF > "${PB_CONFIG_PATH}"
+{
+    "bin": [
+        {
+            "name": "",
+            "host": "https://privatebin.net"
+        }
+    ]
+}
+EOF
+  install -d completions
+  go run cmd/privatebin/main.go cmd/privatebin/cfg.go completion -c "${PB_CONFIG_PATH}" bash > completions/bash
+  go run cmd/privatebin/main.go cmd/privatebin/cfg.go completion -c "${PB_CONFIG_PATH}" fish > completions/fish
+  go run cmd/privatebin/main.go cmd/privatebin/cfg.go completion -c "${PB_CONFIG_PATH}" zsh > completions/zsh
+}
+
+package() {
+  cd "${_binname}-${pkgver}"
+  install -Dm755 "${_binname}" "${pkgdir}/usr/bin/${_binname}"
+
+  install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+
+  install -Dm644 man/privatebin.1 -t "${pkgdir}/usr/share/man/man1/"
+  install -Dm644 man/privatebin-create.1 -t "${pkgdir}/usr/share/man/man1/"
+  install -Dm644 man/privatebin-show.1 -t "${pkgdir}/usr/share/man/man1/"
+  install -Dm644 man/privatebin.conf.5 -t "${pkgdir}/usr/share/man/man5/"
+
+  install -Dm644 completions/bash "${pkgdir}/usr/share/bash-completion/completions/${_binname}.bash"
+  install -Dm644 completions/fish "${pkgdir}/usr/share/fish/vendor_completions.d/${_binname}.fish"
+  install -Dm644 completions/zsh  "${pkgdir}/usr/share/zsh/site-functions/_${_binname}"
+}

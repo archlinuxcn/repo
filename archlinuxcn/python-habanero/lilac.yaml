@@ -1,9 +1,14 @@
 build_prefix: extra-x86_64
 pre_build_script: aur_pre_build(maintainers=['gesh'])
 post_build: aur_post_build
+repo_makedepends:
+  - python-pytest-recording
 update_on:
   - source: aur
     aur: python-habanero
   - alias: python
+  - source: manual
+    manual: 1
+
 maintainers:
   - github: roaldclark

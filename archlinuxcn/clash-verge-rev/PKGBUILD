@@ -3,33 +3,67 @@
 
 pkgname=clash-verge-rev
 _pkgname=${pkgname%-rev}
-pkgver=2.0.2
+pkgver=2.2.2
 pkgrel=1
 pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://github.com/${pkgname}/${pkgname}"
 license=('GPL-3.0-or-later')
-depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator')
-conflicts=("${pkgname}-bin" "${pkgname}-alpha" "${pkgname}-alpha-bin" "${pkgname}-git" "${_pkgname}" "${_pkgname}-bin")
-makedepends=('nodejs' 'pnpm' 'cargo')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('31754525d0935cd37815a11d7ac75fd1a575c480c17ce8ff3c4e675ca56fb60a0024b190273919793ed73998166dff509290a2794b5c4cfb4efd78505a57e68d')
+depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'clash-meta')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+makedepends=('pnpm' 'cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+	"${_pkgname}-service.tar.gz::https://github.com/${pkgname}/${_pkgname}-service/archive/refs/tags/${CARCH}-unknown-linux-gnu.tar.gz")
+sha512sums=('cab56682388d469894c13e797ae0de9ebed9aa1b04d5a1199eb7cc2434281f6692d52eeec34ad66012e65fbcef78e7873ee59c0c3f1dc5534881e1bacf0f1b4f'
+            '394d3fa0275ff706671c355c9e6496400b72fc71c70223ad8ca910356abc19623ba3343818a8a24d487994472b61def823af13e36a723786194f805e6143000a')
 options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	pnpm install
-	pnpm check
+	sed -i '/createUpdaterArtifacts/s/true/false/' src-tauri/tauri.conf.json
+	pnpm i
 }
 
 build() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
+	_prepare_service
+	_build_service
+	_check_service
+	_package_service
+
+	cd "../${pkgname}-${pkgver}/"
+	install -d ./src-tauri/sidecar/
+	ln -s /usr/bin/clash-meta "./src-tauri/sidecar/verge-mihomo-${CARCH}-unknown-linux-gnu"
+	ln -s /usr/bin/clash-meta "./src-tauri/sidecar/verge-mihomo-alpha-${CARCH}-unknown-linux-gnu"
+	install -vDm644 ./src/locales/* -t ./src-tauri/resources/locales/
 	NODE_OPTIONS="--max_old_space_size=4096" pnpm build -b deb
 }
 
 package() {
 	cd "${pkgname}-${pkgver}/"
-
 	tar -xpf src-tauri/target/release/bundle/deb/Clash\ Verge_${pkgver}_*/data.tar.gz -C "${pkgdir}"
-	chown -R root:root ${pkgdir}
+}
+
+_prepare_service() {
+	echo "==> Starting ${FUNCNAME[0]}()..."
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+_build_service() {
+	echo "==> Starting ${FUNCNAME[0]}()..."
+	cargo build --frozen --release --all-features
+}
+
+_check_service() {
+	echo "==> Starting ${FUNCNAME[0]}()..."
+	cargo test --frozen --all-features
+}
+
+_package_service() {
+	echo "==> Starting ${FUNCNAME[0]}()..."
+
+	for bin in {${_pkgname},{,un}install}-service; do
+		install -vDm755 "./target/release/${bin}" "../${pkgname}-${pkgver}/src-tauri/resources/${bin}-${CARCH}-unknown-linux-gnu"
+	done
 }

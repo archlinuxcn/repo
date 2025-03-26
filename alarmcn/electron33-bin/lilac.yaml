@@ -3,12 +3,12 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: aur_pre_build(maintainers=['yurikoles', 'zxp19821005'])
-
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: electron33-bin
+  - source: github
+    github: electron/electron
+    use_max_tag: true
+    include_regex: v33\.\d+\.\d+
   - source: manual
     manual: 1

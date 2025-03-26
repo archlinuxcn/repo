@@ -3,20 +3,20 @@
 
 buildarch=8
 
-_rcver=6.9.12
-#_rcrel=3
-_asahirel=1
-pkgrel=4
+pkgver=6.13.7.asahi4
+pkgrel=1
 
-_m1n1_version=1.4.14
+[[ $pkgver =~ ([.0-9]+)\.asahi([0-9]+) ]]
+_rcver=${BASH_REMATCH[1]}
+_asahirel=${BASH_REMATCH[2]}
+
+_m1n1_version=1.4.17
 
 pkgbase=linux-asahi
-#_commit_id=asahi-${_nextver}-${_asahirel}
 _commit_id=asahi-${_rcver}${_rcrel+-rc}${_rcrel}-${_asahirel}
 _srcname=linux-${_commit_id}
 _kernelname=${pkgbase#linux}
 _desc="AArch64 Apple Silicon (M1 development kernel)"
-pkgver="${_rcver}${_rcrel:+rc}${_rcrel}.asahi${_asahirel}"
 arch=('aarch64')
 url="http://www.kernel.org/"
 license=('GPL2')
@@ -28,24 +28,33 @@ options=('!strip')
 source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
+  enable-mic.patch
 )
-sha256sums=('9b97ea144b652c041ef1366e0391485c6cdbbf8a84842cbd35767df788a6ca66'
-            'c919489632ec77a59fbb6bb210940fceb2cac30e3ab80566915a581d2f8159fb')
-b2sums=('b514c5df2d92403e0df5033d0e072708cdf0b913b5346a418a3b39b9f3c38e1a7656baf90fbf3a9bb67582d63a9a8090f28f5ecf8b69daecffbe52832668e033'
-        '2fcdbba91b905a19d1a27fd268b7f04e1ee7f8f41e9a9a0975611f00a2820120c90b02235d49255362512f4ffe7aa9f28e24856cc575ffe6a7fa54f397f90f1c')
+sha256sums=('c61ab03212099e6d342fa15f685e763db0d62c01ea591f36b5b0c82bdf4e6516'
+            'c919489632ec77a59fbb6bb210940fceb2cac30e3ab80566915a581d2f8159fb'
+            '22d4e28e1e1ebe6a05e8d0d23641ee71a5f5cde06f375e72baa4d8e32b7a90fa')
+b2sums=('1eff2b72145e10e603df5004c2168b1b68ca846c7362f36dce6758aa7a6c16fbb55f55daacdd5be483b79f6f0a8340110670df00162925153586f9c8e01599b6'
+        '2fcdbba91b905a19d1a27fd268b7f04e1ee7f8f41e9a9a0975611f00a2820120c90b02235d49255362512f4ffe7aa9f28e24856cc575ffe6a7fa54f397f90f1c'
+        'bc29091b42d2e3a9ecd9386791c63664288135ad56a073d7ed4c45b50b75c01334ed8f72ef510c130bc0d4d7952e5955974b316efd05426ebe78c7ed042a47ac')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
+_rust_ver=1.85.0
+
+_set_cargo_path() {
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+}
+
 prepare() {
   cd $_srcname
 
-  rustup install 1.80.0
+  rustup install ${_rust_ver}
   rustup component add rust-src
   _path=$PATH
-  PATH="$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$_path"
-  cargo install --locked --version 0.65.1 bindgen-cli
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  PATH="$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$_path"
+  cargo install --locked --version 0.71.1 bindgen-cli
+  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$_path"
 
   echo "Setting version..."
   echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
@@ -67,12 +76,13 @@ prepare() {
   make olddefconfig prepare O=$PWD/build/base
   diff -u ../config build/base/.config || :
   make -s kernelrelease O=$PWD/build/base > build/base/version
+  cp build/base/.config ../config
 
   echo "Prepared $pkgbase version $(<build/base/version)"
 }
 
 build() {
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+  _set_cargo_path
 
   cd $_srcname
   echo "Building base..."
@@ -80,7 +90,7 @@ build() {
 }
 
 _package_kernel() {
-  PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/1.80.0-$(uname -m)-unknown-linux-gnu/bin:$PATH"
+  _set_cargo_path
 
   pkgdesc="The $pkgdesc kernel and modules"
   depends=(coreutils kmod initramfs $2 "m1n1>=$_m1n1_version")
@@ -212,5 +222,3 @@ for _p in "${pkgname[@]}"; do
     _package${_p#$pkgbase}
   }"
 done
-
-# vim:set ts=8 sts=2 sw=2 et:

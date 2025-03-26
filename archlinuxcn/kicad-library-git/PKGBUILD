@@ -1,13 +1,14 @@
 # Mainainer: edward-p <edward at edward-p dot xyz>
 # Mainainer: taotieren <admin@taotieren.com>
 
+_kicad_ver=9.0
 pkgname=kicad-library-git
-pkgver=9.0.0rc1.r4.gd18c37f07
+pkgver=9.0.20250325.085244.g6efa2ab05c
 pkgrel=1
 pkgdesc="KiCad symbol, footprint and template libraries"
 arch=('any')
 url="https://klc.kicad.org/"
-license=('CC-BY-SA 4.0')
+license=('CC-BY-SA-4.0')
 makedepends=('cmake' 'git')
 options=('!strip')
 source=("git+https://gitlab.com/kicad/libraries/kicad-footprints.git"
@@ -21,7 +22,7 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd kicad-footprints
-  git describe --long | sed 's/-rc/rc/;s/\([^-]*-g\)/r\1/;s/-/./g'
+  printf "${_kicad_ver}.%s.g%s" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)" "$(git log -1 --format='%h')"
 }
             
 build() {

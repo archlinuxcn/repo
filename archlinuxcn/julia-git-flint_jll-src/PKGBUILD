@@ -1,6 +1,6 @@
 pkgname=julia-git-flint_jll-src
-pkgver=300.100.301+0
-_commit=088f34ac88fba4820904196a3439b62d4f242826
+pkgver=300.200.0+0
+_commit=46a5c34d50bd5d875032290313fd89d648fa4956
 pkgrel=1
 pkgdesc="FLINT_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/FLINT_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git flint)
 source=("git+https://github.com/JuliaBinaryWrappers/FLINT_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('de72bc91db55be37c1616c658502cd179e80b8b780980ffdbfcb54f09ac5278f'
+sha256sums=('1a9a635580a389b5c1f9bb507075fe48d0eca3bf5e72cba4323016fd2291cf4e'
             'f0073359a4fbeac23e305a8b72738c0a7c7d35800180abd34add16260e228fc8')
 
 build() {

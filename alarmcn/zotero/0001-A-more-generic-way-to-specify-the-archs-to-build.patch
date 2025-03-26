@@ -1,0 +1,118 @@
+From 1e423491d196fccb746021b41390a6692d38fb2e Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 16 Jan 2025 20:29:34 -0500
+Subject: [PATCH] A more generic way to specify the archs to build
+
+---
+ app/build.sh                |  8 +++-----
+ app/scripts/dir_build       | 14 +++++++++++---
+ app/scripts/fetch_xulrunner | 10 ++++------
+ 3 files changed, 18 insertions(+), 14 deletions(-)
+
+diff --git a/app/build.sh b/app/build.sh
+index 0659aa62a..e73c7549a 100755
+--- a/app/build.sh
++++ b/app/build.sh
+@@ -862,13 +862,11 @@ fi
+ # Linux
+ if [ $BUILD_LINUX == 1 ]; then
+ 	# Skip 32-bit build in tests
+-	if [[ "${ZOTERO_TEST:-}" = "1" ]] || [[ "${SKIP_32:-}" = "1" ]]; then
+-		archs="x86_64"
+-	else
+-		archs="i686 x86_64"
++	if [[ "${ZOTERO_TEST:-}" = "1" ]]; then
++		ARCHS="x86_64"
+ 	fi
+ 	
+-	for arch in $archs; do
++	for arch in ${ARCHS:-i686 x86_64}; do
+ 		runtime_path="${LINUX_RUNTIME_PATH_PREFIX}${arch}"
+ 		
+ 		# Set up directory
+diff --git a/app/scripts/dir_build b/app/scripts/dir_build
+index 1bf90415c..eea4ee365 100755
+--- a/app/scripts/dir_build
++++ b/app/scripts/dir_build
+@@ -11,6 +11,8 @@ function usage {
+ Usage: $0 -p platforms
+ Options
+  -p PLATFORMS        Platforms to build (m=Mac, w=Windows, l=Linux)
++ -a ARCHS            Archs to build (win32 win-x64 win-arm64 i686 x86_64)
++                     Multiple archs can be specified as a space separated string.
+  -t                  add devtools
+  -q                  quick build (skip compression and other optional steps for faster restarts during development)
+ DONE
+@@ -19,8 +21,9 @@ DONE
+ 
+ DEVTOOLS=0
+ PLATFORM=""
++ARCHS=""
+ quick_build=0
+-while getopts "tp:q" opt; do
++while getopts "tp:qa:" opt; do
+ 	case $opt in
+ 		t)
+ 			DEVTOOLS=1
+@@ -39,6 +42,9 @@ while getopts "tp:q" opt; do
+ 				esac
+ 			done
+ 			;;
++		a)
++			ARCHS=${OPTARG}
++			;;
+ 		q)
+ 			quick_build=1
+ 			;;
+@@ -55,15 +61,17 @@ if [[ -z $PLATFORM ]]; then
+ 	elif [ "`uname`" = "Linux" ]; then
+ 		PLATFORM="l"
+ 		
+-		# If platform not given explicitly, skip 32-bit build if 64-bit system
++		# If platform not given explicitly, skip 32-bit build if 64-bit system by default
+ 		if [ "$(uname -m)" = "x86_64" ]; then
+-			export SKIP_32=1
++			ARCHS=${ARCHS:-x86_64}
+ 		fi
+ 	elif [ "`uname -o 2> /dev/null`" = "Cygwin" ]; then
+ 		PLATFORM="w"
+ 	fi
+ fi
+ 
++export ARCHS
++
+ CHANNEL="source"
+ 
+ PARAMS=""
+diff --git a/app/scripts/fetch_xulrunner b/app/scripts/fetch_xulrunner
+index cbebf96e8..80558d624 100755
+--- a/app/scripts/fetch_xulrunner
++++ b/app/scripts/fetch_xulrunner
+@@ -484,7 +484,7 @@ if [ $BUILD_WIN == 1 ]; then
+ 	GECKO_VERSION="$GECKO_VERSION_WIN"
+ 	DOWNLOAD_URL="https://ftp.mozilla.org/pub/firefox/releases/$GECKO_VERSION"
+ 	
+-	for arch in win32 win-x64 win-arm64; do
++	for arch in ${ARCHS:-win32 win-x64 win-arm64}; do
+ 		xdir=firefox-$arch
+ 		
+ 		rm -rf $xdir
+@@ -560,12 +560,10 @@ if [ $BUILD_LINUX == 1 ]; then
+ 
+ 
+ 	# Include 32-bit build if not in CI
+-	if [[ "${CI:-}" = "1" ]] || [[ "${SKIP_32:-}" = "1" ]]; then
+-		arches="x86_64"
+-	else
+-		arches="i686 x86_64"
++	if [[ "${CI:-}" = "1" ]]; then
++		ARCHS="x86_64"
+ 	fi
+-	for arch in $arches; do
++	for arch in ${ARCHS:-i686 x86_64}; do
+ 		xdir="firefox-$arch"
+ 		rm -rf $xdir
+ 		
+-- 
+2.47.1
+

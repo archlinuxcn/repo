@@ -1,6 +1,6 @@
 pkgname=julia-git-fftw-src
-pkgver=1.8.0
-_commit=ad2ca2b1e78f9a1b3db4928e9d85b31a7c519b99
+pkgver=1.8.1
+_commit=cefd8272f4c89bd8ee6a6c1e396768b98c063b5a
 pkgrel=1
 pkgdesc="FFTW.jl"
 url="https://github.com/JuliaMath/FFTW.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/FFTW.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('99277774818bd8187c7ce3f51177bff2d6ae2ea4aebdb717958317bc2a66f9f8')
 
 package() {
   cd FFTW.jl

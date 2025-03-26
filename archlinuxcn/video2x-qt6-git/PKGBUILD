@@ -3,13 +3,13 @@
 
 pkgname=video2x-qt6-git
 _pkgname=${pkgname%-git}
-pkgver=6.3.1.r6.g678ebb5
-pkgrel=2
+pkgver=6.4.0.r3.ga7d87f9
+pkgrel=1
 pkgdesc="The Qt6 GUI for Video2X"
 url="https://video2x.org"
 arch=('x86_64' 'aarch64' 'riscv64')
 license=('ISC')
-depends=('video2x-git' 'qt6-base' 'spdlog')
+depends=('video2x-git' 'qt6-base' 'qt6-svg' 'spdlog')
 makedepends=('git' 'cmake' 'qt6-tools')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")

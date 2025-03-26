@@ -1,0 +1,43 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Jisu-Woniu <jswn@jswn9945.xyz>
+
+pkgname=typstyle
+pkgver=0.13.1
+pkgrel=1
+pkgdesc="Beautiful and reliable typst code formatter"
+arch=('aarch64' 'armv7h' 'x86_64' 'riscv64')
+url="https://github.com/Enter-tainer/${pkgname}"
+license=('Apache-2.0')
+depends=('gcc-libs')
+makedepends=('cargo')
+optdepends=("typst: For typst compilation")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('da0126df70cf9d99c84449d1d372151cffaf4ea31804c0a527c83b1e4ff4b55b')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	cargo test --frozen --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -d "${pkgdir}/usr/share/doc/${pkgname}/"
+	cp -r docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
+
+	cd target/release
+	install -Dm755 "${pkgname}" -t "${pkgdir}/usr/bin/"
+	"./${pkgname}" completions bash | install -Dm644 /dev/stdin "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+	"./${pkgname}" completions zsh | install -Dm644 /dev/stdin "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
+	"./${pkgname}" completions fish | install -Dm644 /dev/stdin "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
+}

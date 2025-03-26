@@ -1,29 +1,33 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=asahi-scripts
-pkgver=20240822
+pkgver=20250130
 pkgrel=1
 pkgdesc='Asahi Linux maintenance scripts'
 arch=('any')
 url='http://asahilinux.org'
 license=('MIT')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${pkgname}/archive/refs/tags/${pkgver}.tar.gz"
+        update-m1n1)
 install=asahi-scripts.install
-sha256sums=('24023903c1341d6867d9a2baa494bbae90ca27b6cf64fa19218ef87d471304fc')
-b2sums=('945bd549a768beb86b69bbdeae088df7d687a534d7003e62574349e40fcb84f37306e96aade89d2fd45882add0d1b31e99b647f38debce4f6fb9185ec848d2a8')
-backup=(etc/m1n1.conf)
+sha256sums=('a76c64bb971c45454454cdc0668a3f9401f1771c730e78da78bd022c74616c87'
+            '7ef2863184996a52cb2a2f8ce4df6331916a3aefb3314d9aeae92f84c7b4bac0')
+b2sums=('43a76fe708712c380a6adee3a6cbe2f78b36e3b013ba157f4d2d0d55e2e92eed56231ec218bdfff50b27515458c5d9e4b9f4d83105d660a6c47c7aaf6878a9ee'
+        'b8417590b7fcb827cbb48201b27f124dd9edda5852f550de8884c85578a948441aace3e0d9828417ed9363491d388ab65ae94fec149526b826af013569518157')
+backup=(etc/m1n1.conf
+        etc/default/update-m1n1)
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  make PREFIX=/usr DESTDIR=${pkgdir} all
+  make PREFIX=/usr DESTDIR="${pkgdir}" all
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  make PREFIX=/usr DESTDIR=${pkgdir} install-arch
+  make PREFIX=/usr DESTDIR="${pkgdir}" install-arch
 
-  install -Dm644 "$srcdir/${pkgname}-${pkgver}/LICENSE" \
-    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir/update-m1n1" "$pkgdir/etc/default/update-m1n1"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

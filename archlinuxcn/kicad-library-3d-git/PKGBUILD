@@ -1,7 +1,8 @@
 # Mainainer: edward-p <edward at edward-p dot xyz>
 
+_kicad_ver=9.0
 pkgname=kicad-library-3d-git
-pkgver=8.0.7.r7.g90551c40
+pkgver=9.0.20250325.140747.g056b96c9
 pkgrel=1
 pkgdesc="Kicad 3D render model libraries"
 arch=('any')
@@ -16,7 +17,7 @@ sha256sums=('SKIP')
 
 pkgver() {
   cd kicad-packages3D
-  git describe --long | sed 's/-rc/rc/;s/\([^-]*-g\)/r\1/;s/-/./g'
+  printf "${_kicad_ver}.%s.g%s" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)" "$(git log -1 --format='%h')"
 }
         
 build() {

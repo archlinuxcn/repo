@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-~/.config}
+
+# Allow users to override command-line options
+if [[ -f $XDG_CONFIG_HOME/notion-flags.conf ]]; then
+    NOTION_USER_FLAGS="$(grep -v '^#' $XDG_CONFIG_HOME/notion-flags.conf)"
+fi
+
+cd /usr/lib/notion-app/ # somehow needed to find package.json
+
+# Launch
+exec electron@ELECTRON_VER@ /usr/lib/notion-app/app.asar $NOTION_USER_FLAGS "$@" # https://wiki.archlinux.org/title/Electron_package_guidelines#Using_the_system_electron

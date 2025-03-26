@@ -1,0 +1,14 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+time_limit_hours: 4
+
+update_on:
+  # Note that we need to get the official package and not the archlinux arm package
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: rocm-llvm
+  - source: manual
+    manual: 2

@@ -1,40 +1,56 @@
-# Maintainer:  JP-Ellis <josh@jpellis.me>
+# Maintainer: Gesh <gesh@gesh.uni.cx>
+# Contributor: JP-Ellis <josh@jpellis.me>
+
 pkgname='python-habanero'
-_module='habanero'
-_src_folder='habanero-1.2.6'
-pkgver='1.2.6'
-pkgrel=4
+pkgver='2.2.0'
+pkgrel=3
+_name=${pkgname#python-}
+_name="${_name//-/_}"
+_src_folder="${_name}-${pkgver}"
 pkgdesc="A low level client for Crossref's Search API"
 url="https://github.com/sckott/habanero"
 depends=(
   'python'
-  'python-requests'
+  'python-httpx'
+  'python-packaging'
+  'python-pyyaml'
   'python-tqdm'
+  'python-urllib3'
 )
 makedepends=(
   'python-build'
   'python-installer'
-  'python-wheel'
-  'python-setuptools'
-  'python-setuptools-scm'
+  'python-hatchling'
+)
+checkdepends=(
+  # Only needed to test integration of the optdep, uncomment this if using
+  'python-pytest'
+  'python-pytest-cov'
+  'python-pytest-recording'
 )
 optdepends=(
   'python-bibtexparser: attempt to fix misformatted bibtex'
 )
-license=('LicenseRef-MIT')
+license=('MIT')
 arch=('any')
-source=("https://files.pythonhosted.org/packages/3d/17/885ee33738a7ecb29d487ca42043378804d0c47945d24ee040cfaa35beeb/habanero-1.2.6.tar.gz")
-sha256sums=('b206d49f44f41c2289f0ad731f259a50d4376c747d8ecbb219a73874d45309d4')
+_patchUrl="${url/github.com/patch-diff.githubusercontent.com\/raw}"
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
+sha256sums=('18c5c3b59b8db1887811da6de8bd976ac4077d61a25a058f3a67044e8bcab8eb')
 
 build() {
     cd "${srcdir}/${_src_folder}"
     python -m build --wheel --no-isolation
 }
 
+check() {
+    cd "${srcdir}/${_src_folder}"
+    python -m pytest
+}
+
 package() {
     cd "${srcdir}/${_src_folder}"
     python -m installer --destdir="${pkgdir}" dist/*.whl
-    install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
+    install -Dm644 LICENSE.md -t "${pkgdir}"/usr/share/licenses/"${pkgname}"/
 }
 
 # vim:set ts=2 sw=2 et:

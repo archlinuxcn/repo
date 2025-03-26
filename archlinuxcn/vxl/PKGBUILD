@@ -2,7 +2,7 @@
 
 pkgname=vxl
 pkgver=3.5.0
-pkgrel=3
+pkgrel=4
 pkgdesc='A multi-platform collection of C++ software libraries for Computer Vision and Image Understanding'
 arch=('x86_64')
 url='https://github.com/vxl/vxl'
@@ -16,7 +16,10 @@ depends=(
   libtiff.so
   zlib
 )
-makedepends=('cmake')
+makedepends=(
+  cmake
+  gcc13
+)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vxl/vxl/archive/v${pkgver}.tar.gz")
 sha512sums=('0b33e12557315058e7786c2049af3b01f1208e50660ccbc45f4d9a4dba4eeadfa5e3125380d8781eed2a9abf1d153ffb71c416ed2d196ab4194f5b3722fe6f2b')
 
@@ -26,6 +29,8 @@ build() {
     -DBUILD_SHARED_LIBS=BOOL:ON \
     -DBUILD_TESTING:BOOL=OFF \
     -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_CXX_COMPILER=g++-13 \
+    -DCMAKE_C_COMPILER=gcc-13 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_INSTALL_RPATH:BOOL=ON \
     -DVXL_BUILD_CONTRIB:BOOL=ON \

@@ -1,20 +1,23 @@
 # Maintainer: Kaiyang Wu <origincode@aosc.io>
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 pkgname=ciel
 _pkgname=${pkgname}-rs
-pkgver=3.6.0
+pkgver=3.9.6
 pkgrel=1
 pkgdesc="A tool for controlling multi-layer file systems and containers."
 arch=('i686' 'x86_64' 'aarch64')
 url="https://github.com/AOSC-Dev/ciel-rs"
 license=('MIT')
-depends=('systemd' 'dbus' 'openssl' 'libssh2' 'libgit2' 'xz' 'squashfs-tools' 'glibc' 'systemd-libs')
+depends=('systemd' 'dbus' 'openssl' 'libssh2' 'libgit2' 'xz' 'squashfs-tools' 'glibc' 'systemd-libs' 'zlib' 'gcc-libs' 'bash')
 makedepends=('rust' 'make' 'gcc')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AOSC-Dev/${_pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('459c2c073c7b2ff89dfdf76e1fe4dedacc2c9d832a490d0001f5389bb528679b')
-conflicts=('ciel-git')
+sha256sums=('d5343f6f3cf8ddcfa86d8c566e24ddca556ecfe381373044da2a299029f199a4')
 
 prepare() {
     cd ${_pkgname}-${pkgver}
+
+    find . -type f -exec sed -i "s|libexec|lib/$pkgname|g" {} +
+
     export RUSTUP_TOOLCHAIN=stable
     cargo update
     cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
@@ -38,7 +41,7 @@ package() {
     install -Dm755 target/release/${_pkgname} -t "${pkgdir}/usr/bin"
 
     # Rename the binary
-    mv -v "${pkgdir}/usr/bin/ciel-rs" "${pkgdir}/usr/bin/ciel"
+    mv "${pkgdir}/usr/bin/${_pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 
     # Install assets
     PREFIX="${pkgdir}/usr/" ./install-assets.sh

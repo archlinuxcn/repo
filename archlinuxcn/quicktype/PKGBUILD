@@ -1,0 +1,22 @@
+# Maintainer: BGME <i@bgme.me>
+# Contributor: Davide Ferrero <bad.deid@gmail.com>
+
+pkgname=quicktype
+pkgver=23.0.171
+pkgrel=2
+pkgdesc="Generate types and converters from JSON, Schema, and GraphQL"
+arch=(any)
+url="https://github.com/glideapps/quicktype"
+license=(Apache-2.0)
+depends=(nodejs)
+makedepends=(npm)
+source=("https://registry.npmjs.org/${pkgname}/-/${pkgname}-${pkgver}.tgz")
+sha256sums=('f33e1c0371aa6d60b37405583be72b16a60d189117cce9b2f4c7d19ab24535f0')
+noextract=("${pkgname}-${pkgver}.tgz")
+
+package() {
+  npm install -g --prefix "${pkgdir}/usr" "${srcdir}/${pkgname}-${pkgver}.tgz"
+  install -Dm 644 "${pkgdir}/usr/lib/node_modules/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm 644 "${pkgdir}/usr/lib/node_modules/${pkgname}/README.md" "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+}
+

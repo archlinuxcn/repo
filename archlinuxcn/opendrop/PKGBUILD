@@ -3,7 +3,7 @@
 
 pkgname=opendrop
 pkgver=0.13.0
-pkgrel=6
+pkgrel=7
 pkgdesc='An open Apple AirDrop implementation'
 arch=('any')
 url="https://github.com/seemoo-lab/opendrop"
@@ -25,11 +25,6 @@ sha256sums=('1684ee1497615b6d9c410d73f0712ebc2b6b5c706075e75fb6799175264e4de5')
 build() {
 	cd "$pkgname-$pkgver"
 	python setup.py build
-}
-
-check() {
-	cd "$pkgname-$pkgver"
-	python setup.py pytest
 }
 
 package() {

@@ -1,0 +1,17 @@
+[Unit]
+Description=Open Web UI for LLMs
+After=network.target
+
+[Service]
+Type=simple
+User=open-webui
+Group=open-webui
+WorkingDirectory=/opt/open-webui
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/etc/open-webui.conf
+ExecStart=/bin/bash -c "cd /opt/open-webui/backend && source ./venv/bin/activate && bash start.sh"
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,34 @@
+From 47fc1ff8fe531613245a59a2d84182dc30b229a6 Mon Sep 17 00:00:00 2001
+From: Butui Hu <hot123tea123@gmail.com>
+Date: Fri, 3 Jan 2025 11:20:03 +0800
+Subject: [PATCH] fix inspect.getargspec issue
+
+---
+ chumpy/ch.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/chumpy/ch.py b/chumpy/ch.py
+index e903df9..c257055 100644
+--- a/chumpy/ch.py
++++ b/chumpy/ch.py
+@@ -1200,7 +1200,7 @@ def depends_on(*dependencies):
+             [deps.add(d) for d in dep]
+     
+     def _depends_on(func):
+-        want_out = 'out' in inspect.getargspec(func).args
++        want_out = 'out' in inspect.getfullargspec(func).args
+         
+         @wraps(func)
+         def with_caching(self, *args, **kwargs):
+@@ -1243,7 +1243,7 @@ class ChLambda(Ch):
+             self.args[argname].x = getattr(self, argname)
+     
+     def __init__(self, lmb, initial_args=None):
+-        args = {argname: ChHandle(x=Ch(idx)) for idx, argname in enumerate(inspect.getargspec(lmb)[0])}
++        args = {argname: ChHandle(x=Ch(idx)) for idx, argname in enumerate(inspect.getfullargspec(lmb)[0])}
+         if initial_args is not None:
+             for initial_arg in initial_args:
+                 if initial_arg in args:
+-- 
+2.47.1
+

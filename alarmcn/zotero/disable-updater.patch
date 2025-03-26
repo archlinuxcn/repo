@@ -1,0 +1,26 @@
+diff --git a/app/build.sh b/app/build.sh
+index d4046ac6b..0f29a0880 100755
+--- a/app/build.sh
++++ b/app/build.sh
+@@ -886,9 +886,6 @@ if [ $BUILD_LINUX == 1 ]; then
+ 		cp "$CALLDIR/linux/set_launcher_icon" "$APPDIR"
+ 		
+ 		# Use our own updater, because Mozilla's requires updates signed by Mozilla
+-		check_lfs_file "$CALLDIR/linux/updater.tar.xz"
+-		tar xf "$CALLDIR/linux/updater.tar.xz" --to-stdout updater-$arch > "$APPDIR/updater"
+-		chmod 755 "$APPDIR/updater"
+ 
+ 		# Copy app files
+ 		rsync -a "$base_dir/" "$APPDIR/"
+diff --git a/app/linux/mozconfig b/app/linux/mozconfig
+index 8e7fa5cf8..5e2720318 100644
+--- a/app/linux/mozconfig
++++ b/app/linux/mozconfig
+@@ -11,6 +11,7 @@ ac_add_options MOZ_ENABLE_JS_DUMP=1
+ ac_add_options MOZ_ENABLE_FORKSERVER=
+ ac_add_options MOZ_TELEMETRY_REPORTING=
+ ac_add_options MOZ_DATA_REPORTING=
++ac_add_options --disable-updater
+ ac_add_options --disable-tests
+ ac_add_options --disable-debug
+ ac_add_options --disable-debug-symbols

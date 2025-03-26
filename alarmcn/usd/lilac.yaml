@@ -1,0 +1,19 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+time_limit_hours: 2
+
+repo_depends:
+  - embree
+  - materialx
+
+update_on:
+  # Note that we need to get the official package and not the archlinux arm package
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: usd
+  - alias: python
+  - source: manual
+    manual: 1

@@ -1,0 +1,34 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=parsimonious
+pkgname=python-${_name}
+pkgver=0.10.0
+pkgrel=2
+pkgdesc="The fastest pure-Python PEG parser I can muster"
+arch=(any)
+url="https://github.com/erikrose/${_name}"
+license=(MIT)
+depends=(python python-regex)
+makedepends=(python-build python-installer python-setuptools python-wheel)
+checkdepends=(python-pytest)
+source=(${_name}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
+sha512sums=('77aff5a7cc6a8c37e9fd55c2efe1ce510033d44624ffab4c9932b1f044ab3875d7734fe0b24b9dc54e742ca0a0e005d1f4358305eab13f92202547f734cb63de')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+check(){
+  cd $_name-$pkgver
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  test-env/bin/python -m pytest -vv parsimonious/tests/
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 README.rst -t "$pkgdir/usr/share/doc/$pkgname"
+}

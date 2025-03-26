@@ -1,0 +1,35 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=xsdata
+pkgname=python-${_name}
+pkgver=24.12
+pkgrel=2
+pkgdesc="Naive XML & JSON Bindings for python"
+arch=(any)
+url="https://github.com/tefra/${_name}"
+license=(MIT)
+depends=(python python-typing_extensions python-click python-click-default-group python-docformatter python-jinja python-toposort ruff python-requests python-lxml)
+makedepends=(python-build python-installer python-setuptools python-wheel)
+checkdepends=(python-pytest python-pytest-benchmark)
+source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+sha512sums=('7e720eb21d9f3c241e71f1d680f3f6f2c470564ff805f8e60b7810a7dfd39f23f3bac3dc0456b428ebccdbf2144ae3c671a28791a68fda990d20cbc1f2bef3f2')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+check(){
+  cd $_name-$pkgver
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  test-env/bin/python -m pytest -vv tests
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+  cp -r docs "$pkgdir/usr/share/doc/$pkgname"
+}

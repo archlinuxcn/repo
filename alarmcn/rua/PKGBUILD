@@ -1,14 +1,14 @@
 # Maintainer: Vasili Novikov (replace "vvv" with "v" in email) vvvasya.novikov+cm3513git@gmail.com
 pkgname=rua
 pkgver=0.19.10
-pkgrel=1
+pkgrel=2
 pkgdesc='AUR helper in Rust providing control, review, patch application and safe build options'
 url='https://github.com/vn971/rua'
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vn971/rua/archive/v${pkgver}.tar.gz")
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 license=('GPL3')
 
-makedepends=('cargo' 'libseccomp')
+makedepends=('cargo' 'libseccomp' 'sed')
 depends=('bubblewrap' 'git' 'pacman' 'xz')
 optdepends=(
   'bubblewrap-suid: version of bubblewrap that works on linux-hardened kernel'
@@ -26,7 +26,7 @@ b2sums=(35634176f7d5939dd5ef5f013f8a1163bd2612fdaa4ecf477347a75a7ad790edfec04a56
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"
-  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build () {
@@ -50,5 +50,5 @@ package() {
 
   install -Dm0644 target/completions/rua.bash "${pkgdir}/usr/share/bash-completion/completions/rua.bash"
   install -Dm0644 target/completions/rua.fish "${pkgdir}/usr/share/fish/completions/rua.fish"
-  install -Dm0644 target/completions/_rua "${pkgdir}/usr/share/zsh/functions/Completion/Linux/_rua"
+  install -Dm0644 target/completions/_rua "${pkgdir}/usr/share/zsh/site-functions/_rua"
 }

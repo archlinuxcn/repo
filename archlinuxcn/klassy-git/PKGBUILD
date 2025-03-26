@@ -6,7 +6,7 @@ pkgbase="${_pkgname}-git"
 pkgname=("${_pkgname}-git"
          "${_pkgname}-qt5-git")
 pkgver=6.2.breeze6.2.1.r3.g58c6ad5c
-pkgrel=1
+pkgrel=2
 pkgdesc='Highly customizable binary Window Decoration, Application Style and Global Theme plugin for recent versions of the KDE Plasma desktop.'
 arch=(x86_64)
 url="https://github.com/paulmcauley/klassy"
@@ -40,9 +40,11 @@ makedepends=(git
              kiconthemes5
              kirigami2
              kwindowsystem5)
-source=("${_pkgname}::git+https://github.com/paulmcauley/klassy.git#branch=plasma6.2"
+source=("${_pkgname}::git+${url}.git#branch=plasma6.2"
+        "plasma6.3.patch::${url}/pull/178.patch"
         "project-version.patch")
 sha256sums=('SKIP'
+            '9f7dae4474a779a54db4660207eff5e6f4b501fd8f4dff2004d345ccc0290067'
             '20d2997dcf7ca94fd294a4500111084d244040795a0083af932aa83e00e91688')
 
 pkgver () {
@@ -52,6 +54,7 @@ pkgver () {
 
 prepare() {
   cd "${_pkgname}"
+  git apply "${srcdir}/plasma6.3.patch"
   git apply "${srcdir}/project-version.patch"
 }
 

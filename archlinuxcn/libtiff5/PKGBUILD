@@ -1,0 +1,60 @@
+# Maintainer: Astro Benzene <universebenzene at sina dot com>
+# Maintainer: TimeTrap <844177178 at qq dot com>
+# Maintainer: Levente Polyak <anthraxx at archlinux dot org>
+# Contributor: Eric Bélanger <eric at archlinux dot org>
+
+pkgname=libtiff5
+_pkgname=tiff
+pkgver=4.4.0
+pkgrel=2
+pkgdesc='Library for manipulation of TIFF images'
+arch=('x86_64' 'aarch64')
+url="http://www.simplesystems.org/libtiff"
+license=('custom')
+depends=('glibc'
+         'libwebp.so'
+         'libzstd.so'
+         'liblzma.so'
+         'lerc'
+         'jbigkit'
+         'libjpeg.so'
+         'libdeflate.so'
+         'libz.so')
+provides=(libtiff.so  libtiffxx.so)
+source=("https://download.osgeo.org/libtiff/tiff-${pkgver}.tar.gz"
+    # fix CVE-2022-2056 / CVE-2022-2057 / CVE-2022-2058: https://bugs.archlinux.org/task/75360
+    "${pkgname}-4.4.0-fpe_tiffcrop.patch::https://gitlab.com/libtiff/libtiff/-/commit/dd1bcc7abb26094e93636e85520f0d8f81ab0fab.patch"
+    # fix CVE-2022-34526: https://bugs.archlinux.org/task/75608
+    "${pkgname}-4.4.0-CVE-2022-34526.patch::https://gitlab.com/libtiff/libtiff/-/commit/275735d0354e39c0ac1dc3c0db2120d6f31d1990.patch")
+sha256sums=('917223b37538959aca3b790d2d73aa6e626b688e02dcda272aec24c2f498abed'
+            '31af0a4fe0435d060d8d64c2c9ccb21c0fefdba8e944ba677bcbd1512af89163'
+            '82b0a1ef7ceb03898d7d3e6ac5e9b0fea7276c3696915b187d910e71f9e13d38')
+
+prepare() {
+    cd ${_pkgname}-${pkgver}
+
+    # apply patch from the source array (should be a pacman feature)
+    local src
+    for src in "${source[@]}"; do
+        src="${src%%::*}"
+        src="${src##*/}"
+        [[ $src = *.patch ]] || continue
+        echo "Applying patch $src..."
+        patch -Np1 < "../$src"
+    done
+}
+
+build() {
+    cd ${_pkgname}-${pkgver}
+
+    ./configure \
+        --prefix='/usr'
+    make
+}
+
+package() {
+    cd ${_pkgname}-${pkgver}
+    make DESTDIR="${pkgdir}" install
+    rm -rf "${pkgdir}"/usr/{bin,include,lib/{pkgconfig,libtiff{,xx}.{a,so}},share}
+    install -Dm644 COPYRIGHT -t "${pkgdir}"/usr/share/licenses/${pkgname}
+}

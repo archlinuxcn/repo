@@ -1,0 +1,26 @@
+pkgname=julia-git-mbedtls_jll-src
+pkgver=2.28.6+2
+_commit=2583157f2f67b36b51d57782463786cab786410c
+pkgrel=1
+pkgdesc="MbedTLS_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/MbedTLS_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git mbedtls2)
+source=("git+https://github.com/JuliaBinaryWrappers/MbedTLS_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('f610ee69114e43ec12fe6d325bb132e5b0df03f3c0b1ff4500ecad29965cc161'
+            '83fbc265915b8984ade50e3beb964e9f52d617cd98a0df33ae9c93308982e021')
+
+build() {
+  cd MbedTLS_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl MbedTLS_jll ../jll.toml
+}
+
+package() {
+  cd MbedTLS_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MbedTLS_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,217 @@
+From a07a6b4d1da19bfc499db49641d74fb7c1a71e9b Mon Sep 17 00:00:00 2001
+From: "Benjamin A. Beasley" <code@musicinmybrain.net>
+Date: Sat, 11 Feb 2023 13:58:42 -0500
+Subject: [PATCH] Port to Embree 4.x
+
+---
+ cmake/modules/FindEmbree.cmake                   | 16 ++++++++--------
+ pxr/imaging/plugin/hdEmbree/context.h            |  2 +-
+ pxr/imaging/plugin/hdEmbree/mesh.cpp             |  2 +-
+ pxr/imaging/plugin/hdEmbree/mesh.h               |  4 ++--
+ pxr/imaging/plugin/hdEmbree/meshSamplers.h       |  4 ++--
+ pxr/imaging/plugin/hdEmbree/pch.h                |  6 +++---
+ pxr/imaging/plugin/hdEmbree/renderDelegate.h     |  2 +-
+ pxr/imaging/plugin/hdEmbree/renderParam.h        |  2 +-
+ pxr/imaging/plugin/hdEmbree/renderer.cpp         |  8 ++------
+ pxr/imaging/plugin/hdEmbree/renderer.h           |  4 ++--
+ .../plugin/hdEmbree/testenv/testHdEmbree.cpp     |  2 +-
+ 11 files changed, 24 insertions(+), 28 deletions(-)
+
+diff --git a/cmake/modules/FindEmbree.cmake b/cmake/modules/FindEmbree.cmake
+index cd52f6b7f5..7c3ecd7cd8 100644
+--- a/cmake/modules/FindEmbree.cmake
++++ b/cmake/modules/FindEmbree.cmake
+@@ -20,11 +20,11 @@
+ #=============================================================================
+ 
+ if (APPLE)
+-    set (EMBREE_LIB_NAME libembree3.dylib)
++    set (EMBREE_LIB_NAME libembree4.dylib)
+ elseif (UNIX)
+-    set (EMBREE_LIB_NAME libembree3.so)
++    set (EMBREE_LIB_NAME libembree4.so)
+ elseif (WIN32)
+-    set (EMBREE_LIB_NAME embree3.lib)
++    set (EMBREE_LIB_NAME embree4.lib)
+ endif()
+ 
+ find_library(EMBREE_LIBRARY
+@@ -39,7 +39,7 @@ find_library(EMBREE_LIBRARY
+ )
+ 
+ find_path(EMBREE_INCLUDE_DIR
+-    embree3/rtcore.h
++    embree4/rtcore.h
+ HINTS
+     "${EMBREE_LOCATION}/include"
+     "$ENV{EMBREE_LOCATION}/include"
+@@ -47,12 +47,12 @@ DOC
+     "Embree headers path"
+ )
+ 
+-if (EMBREE_INCLUDE_DIR AND EXISTS "${EMBREE_INCLUDE_DIR}/embree3/rtcore_version.h" )
+-    file(STRINGS "${EMBREE_INCLUDE_DIR}/embree3/rtcore_version.h" TMP REGEX "^#define RTC_VERSION_MAJOR.*$")
++if (EMBREE_INCLUDE_DIR AND EXISTS "${EMBREE_INCLUDE_DIR}/embree4/rtcore_version.h" )
++    file(STRINGS "${EMBREE_INCLUDE_DIR}/embree4/rtcore_version.h" TMP REGEX "^#define RTC_VERSION_MAJOR.*$")
+     string(REGEX MATCHALL "[0-9]+" MAJOR ${TMP})
+-    file(STRINGS "${EMBREE_INCLUDE_DIR}/embree3/rtcore_version.h" TMP REGEX "^#define RTC_VERSION_MINOR.*$")
++    file(STRINGS "${EMBREE_INCLUDE_DIR}/embree4/rtcore_version.h" TMP REGEX "^#define RTC_VERSION_MINOR.*$")
+     string(REGEX MATCHALL "[0-9]+" MINOR ${TMP})
+-    file(STRINGS "${EMBREE_INCLUDE_DIR}/embree3/rtcore_version.h" TMP REGEX "^#define RTC_VERSION_PATCH.*$")
++    file(STRINGS "${EMBREE_INCLUDE_DIR}/embree4/rtcore_version.h" TMP REGEX "^#define RTC_VERSION_PATCH.*$")
+     string(REGEX MATCHALL "[0-9]+" PATCH ${TMP})
+ 
+     set (EMBREE_VERSION ${MAJOR}.${MINOR}.${PATCH})
+diff --git a/pxr/imaging/plugin/hdEmbree/context.h b/pxr/imaging/plugin/hdEmbree/context.h
+index 4165adb1e6..af9cc4ef5b 100644
+--- a/pxr/imaging/plugin/hdEmbree/context.h
++++ b/pxr/imaging/plugin/hdEmbree/context.h
+@@ -14,7 +14,7 @@
+ #include "pxr/base/gf/matrix4f.h"
+ #include "pxr/base/vt/array.h"
+ 
+-#include <embree3/rtcore.h>
++#include <embree4/rtcore.h>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+diff --git a/pxr/imaging/plugin/hdEmbree/mesh.cpp b/pxr/imaging/plugin/hdEmbree/mesh.cpp
+index 195f83a633..d3cb949952 100644
+--- a/pxr/imaging/plugin/hdEmbree/mesh.cpp
++++ b/pxr/imaging/plugin/hdEmbree/mesh.cpp
+@@ -203,7 +203,7 @@ void HdEmbreeMesh::_EmbreeCullFaces(const RTCFilterFunctionNArguments* args)
+             default: break;
+         }
+         if (cull) {
+-            // This is how you reject a hit in embree3 instead of setting
++            // This is how you reject a hit in embree3/4 instead of setting
+             // geomId to invalid on the ray
+             args->valid[i] = 0;
+         }
+diff --git a/pxr/imaging/plugin/hdEmbree/mesh.h b/pxr/imaging/plugin/hdEmbree/mesh.h
+index bbb006302f..ef1ef07a98 100644
+--- a/pxr/imaging/plugin/hdEmbree/mesh.h
++++ b/pxr/imaging/plugin/hdEmbree/mesh.h
+@@ -15,8 +15,8 @@
+ 
+ #include "pxr/imaging/plugin/hdEmbree/meshSamplers.h"
+ 
+-#include <embree3/rtcore.h>
+-#include <embree3/rtcore_ray.h>
++#include <embree4/rtcore.h>
++#include <embree4/rtcore_ray.h>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+diff --git a/pxr/imaging/plugin/hdEmbree/meshSamplers.h b/pxr/imaging/plugin/hdEmbree/meshSamplers.h
+index c32c35fffa..3712a9e3ab 100644
+--- a/pxr/imaging/plugin/hdEmbree/meshSamplers.h
++++ b/pxr/imaging/plugin/hdEmbree/meshSamplers.h
+@@ -12,8 +12,8 @@
+ #include "pxr/imaging/hd/meshUtil.h"
+ #include "pxr/base/vt/types.h"
+ 
+-#include <embree3/rtcore.h>
+-#include <embree3/rtcore_geometry.h>
++#include <embree4/rtcore.h>
++#include <embree4/rtcore_geometry.h>
+ 
+ #include <bitset>
+ 
+diff --git a/pxr/imaging/plugin/hdEmbree/pch.h b/pxr/imaging/plugin/hdEmbree/pch.h
+index 0369fea3a1..2f9f19fa09 100644
+--- a/pxr/imaging/plugin/hdEmbree/pch.h
++++ b/pxr/imaging/plugin/hdEmbree/pch.h
+@@ -84,9 +84,9 @@
+ #undef toupper
+ #endif
+ #endif // PXR_PYTHON_SUPPORT_ENABLED && !PXR_USE_INTERNAL_BOOST_PYTHON
+-#include <embree3/rtcore.h>
+-#include <embree3/rtcore_geometry.h>
+-#include <embree3/rtcore_ray.h>
++#include <embree4/rtcore.h>
++#include <embree4/rtcore_geometry.h>
++#include <embree4/rtcore_ray.h>
+ #include <tbb/blocked_range.h>
+ #include <tbb/cache_aligned_allocator.h>
+ #include <tbb/concurrent_hash_map.h>
+diff --git a/pxr/imaging/plugin/hdEmbree/renderDelegate.h b/pxr/imaging/plugin/hdEmbree/renderDelegate.h
+index 1d8694daa6..72894b9080 100644
+--- a/pxr/imaging/plugin/hdEmbree/renderDelegate.h
++++ b/pxr/imaging/plugin/hdEmbree/renderDelegate.h
+@@ -14,7 +14,7 @@
+ #include "pxr/base/tf/staticTokens.h"
+ 
+ #include <mutex>
+-#include <embree3/rtcore.h>
++#include <embree4/rtcore.h>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+diff --git a/pxr/imaging/plugin/hdEmbree/renderParam.h b/pxr/imaging/plugin/hdEmbree/renderParam.h
+index 206a7458bc..354fed4faa 100644
+--- a/pxr/imaging/plugin/hdEmbree/renderParam.h
++++ b/pxr/imaging/plugin/hdEmbree/renderParam.h
+@@ -11,7 +11,7 @@
+ #include "pxr/imaging/hd/renderDelegate.h"
+ #include "pxr/imaging/hd/renderThread.h"
+ 
+-#include <embree3/rtcore.h>
++#include <embree4/rtcore.h>
+ 
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+diff --git a/pxr/imaging/plugin/hdEmbree/renderer.cpp b/pxr/imaging/plugin/hdEmbree/renderer.cpp
+index 88d5e79093..820238c373 100644
+--- a/pxr/imaging/plugin/hdEmbree/renderer.cpp
++++ b/pxr/imaging/plugin/hdEmbree/renderer.cpp
+@@ -667,9 +667,7 @@ HdEmbreeRenderer::_TraceRay(unsigned int x, unsigned int y,
+     rayHit.ray.flags = 0;
+     _PopulateRayHit(&rayHit, origin, dir, 0.0f);
+     {
+-      RTCIntersectContext context;
+-      rtcInitIntersectContext(&context);
+-      rtcIntersect1(_scene, &context, &rayHit);
++      rtcIntersect1(_scene, &rayHit);
+       //
+       // there is something odd about how this is used in Embree. Is it reversed
+       // here and then when it it used in
+@@ -1005,9 +1003,7 @@ HdEmbreeRenderer::_ComputeAmbientOcclusion(GfVec3f const& position,
+         shadow.flags = 0;
+         _PopulateRay(&shadow, position, shadowDir, 0.001f);
+         {
+-          RTCIntersectContext context;
+-          rtcInitIntersectContext(&context);
+-          rtcOccluded1(_scene,&context,&shadow);
++          rtcOccluded1(_scene,&shadow);
+         }
+ 
+         // Record this AO ray's contribution to the occlusion factor: a
+diff --git a/pxr/imaging/plugin/hdEmbree/renderer.h b/pxr/imaging/plugin/hdEmbree/renderer.h
+index 2da9880848..fc3e062dd8 100644
+--- a/pxr/imaging/plugin/hdEmbree/renderer.h
++++ b/pxr/imaging/plugin/hdEmbree/renderer.h
+@@ -15,8 +15,8 @@
+ #include "pxr/base/gf/matrix4d.h"
+ #include "pxr/base/gf/rect2i.h"
+ 
+-#include <embree3/rtcore.h>
+-#include <embree3/rtcore_ray.h>
++#include <embree4/rtcore.h>
++#include <embree4/rtcore_ray.h>
+ 
+ #include <random>
+ #include <atomic>
+diff --git a/pxr/imaging/plugin/hdEmbree/testenv/testHdEmbree.cpp b/pxr/imaging/plugin/hdEmbree/testenv/testHdEmbree.cpp
+index 02c2ca69f8..93705b2d28 100644
+--- a/pxr/imaging/plugin/hdEmbree/testenv/testHdEmbree.cpp
++++ b/pxr/imaging/plugin/hdEmbree/testenv/testHdEmbree.cpp
+@@ -23,7 +23,7 @@
+ 
+ #include "pxr/base/tf/errorMark.h"
+ 
+-#include <embree3/rtcore.h>
++#include <embree4/rtcore.h>
+ #include <iostream>
+ 
+ PXR_NAMESPACE_USING_DIRECTIVE

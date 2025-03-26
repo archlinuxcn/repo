@@ -1,26 +1,38 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 pkgname=spectra
-pkgver=1.0.1
-pkgrel=4
+pkgver=1.1.0
+pkgrel=1
 pkgdesc="A header-only C++ library for large scale eigenvalue problems"
-license=('MPL2')
+license=('MPL-2.0')
 arch=('any')
 url='https://spectralib.org'
 makedepends=(
+  clang
   cmake
   eigen
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/yixuan/spectra/archive/v${pkgver}.tar.gz")
-sha512sums=('575f90d2ab9c3cbdd4bbfe1abce35a262e319dac8689420859811a169cbfd8f617c80bfcd430aa8a5383c96f338155870a0ad7ac0d5db855c1e822c2d19837b5')
+sha512sums=('52f1f14a5a8baa9cf16d563b2bc05ad3c508fa2627c8b8a0ceb8e2b25118020e619dd2cafbc67755316d9d7efa24889699c09fdb3860e664f7a0448e546a8c93')
+
+build() {
+  cmake \
+    -B "build" \
+    -DBUILD_EXAMPLES=OFF \
+    -DBUILD_TESTS=ON \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_DATADIR=/usr/lib \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -S "${srcdir}/${pkgname}-${pkgver}"
+  make -C build
+}
+
+check() {
+  cd build
+  ctest --verbose
+}
 
 package() {
-  cd "${pkgname}-${pkgver}"
-  cmake -DCMAKE_INSTALL_PREFIX=/usr .
-  make install DESTDIR="${pkgdir}"
-  mkdir -p "${pkgdir}/usr/lib/cmake"
-  mv -v "${pkgdir}/usr/share/spectra/cmake" "${pkgdir}/usr/lib/cmake/${pkgname}"
-  rm -rfv "${pkgdir}/usr/share/spectra"
+  make -C build install DESTDIR="${pkgdir}"
 }
 # vim:set ts=2 sw=2 et:
-

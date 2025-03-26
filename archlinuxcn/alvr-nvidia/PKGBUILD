@@ -2,7 +2,7 @@
 
 pkgname=alvr-nvidia
 _pkgname=${pkgname%-nvidia}
-pkgver=20.11.1
+pkgver=20.13.0
 pkgrel=1
 pkgdesc="Experimental Linux version of ALVR. Stream VR games from your PC to your headset via Wi-Fi."
 arch=('x86_64')
@@ -15,7 +15,7 @@ conflicts=("${_pkgname}")
 source=("${_pkgname}"::"git+https://github.com/alvr-org/ALVR.git#tag=v$pkgver"
 		"git+https://github.com/ValveSoftware/openvr.git"
 )
-md5sums=('a32d15dc357bffb25dc52b9f4b800d7f'
+md5sums=('79249a6dd2c0d6060fc622362e829ec8'
          'SKIP')
 options=('!lto')
 

@@ -1,0 +1,15 @@
+post_install() {
+    echo "\
+_____________________________________________________________________
+|                                                                   |
+| The example config can be found in /etc/xdg/eww                   |
+|                                                                   |
+| For better experience, please write your own config.              |
+| WIKI: https://elkowar.github.io/eww/configuration.html            |
+|                                                                   |
+|___________________________________________________________________|"
+}
+
+post_upgrade() {
+	post_install
+}

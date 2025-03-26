@@ -1,10 +1,11 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 # Maintainer: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 # Contributor: George Rawlinson <george@rawlinson.net.nz>
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.35.4
-pkgrel=3
+pkgver=1.37.4
+pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
 license=('GPL-2.0-only')
@@ -23,12 +24,18 @@ depends=(
     'libarchive'
     'glibc' 'gcc-libs' 'bash'
     'libxrandr'
+    'fontconfig'
 )
 makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime')
 optdepends=(
-    'imhex-patterns-git: ImHex base patterns'
     'dotnet-runtime'
+    'lz4: decompress plugin'
+    'zlib: decompress plugin'
+    'bzip2: decompress plugin'
+    'xz: decompress plugin'
+    'zstd: decompress plugin'
 )
+replaces=('imhex-patterns-git')
 source=(
     "$pkgname::git+https://github.com/WerWolv/ImHex.git#tag=v$pkgver"
     "nativefiledialog::git+https://github.com/btzy/nativefiledialog-extended.git"
@@ -43,8 +50,14 @@ source=(
     "lunasvg::git+https://github.com/sammycage/lunasvg"
     "edlib::git+https://github.com/Martinsos/edlib"
     "throwing_ptr::git+https://github.com/rockdreamer/throwing_ptr"
+    "plutovg::git+https://github.com/sammycage/plutovg"
+    "ImHex-Patterns::git+https://github.com/WerWolv/ImHex-Patterns.git"
+    "disassembler::git+https://github.com/WerWolv/Disassembler.git"
 )
-b2sums=('6ced0ee6bec205a1dd032e599e8f9ad15da329fb1b926ef295bcdbd7f8963d8f8b7c14e50f3920b2a05177bd11f1bfbcde7b8e07aeea23ef530e074a5eb5afe9'
+b2sums=('d91e03eddae1a78a0679db066bccdc31fe4dd28975097d1299ea303987df8307e2bf239e21401d39b76e52d2ce4ef71581bd65639d8203978594c70ff27ee7ab'
+        'SKIP'
+        'SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -62,7 +75,7 @@ prepare() {
     cd "$pkgname"
 
     git submodule init
-    for name in libromfs pattern_language libwolv; do
+    for name in libromfs pattern_language libwolv disassembler; do
         git submodule set-url lib/external/"$name" "$srcdir/$name"
         git -c protocol.file.allow=always submodule update lib/external/$name
     done
@@ -79,10 +92,14 @@ prepare() {
             git -c protocol.file.allow=always submodule update external/"$name"
         done
     popd
+    pushd lib/third_party/lunasvg
+      git submodule init
+      git submodule set-url plutovg "$srcdir/plutovg"
+      git -c protocol.file.allow=always submodule update plutovg
+    popd
     for name in fmt yara/yara; do
         git config --remove-section submodule.lib/third_party/"$name"
     done
-
 }
 
 build() {

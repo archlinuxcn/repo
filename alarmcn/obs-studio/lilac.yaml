@@ -4,8 +4,9 @@ maintainers:
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
   # (which doesn't exist yet) in this case.
-  - source: archpkg
-    archpkg: obs-studio
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: obs-studio
   - source: alpm
     alpm: ffmpeg
     provided: libavcodec.so

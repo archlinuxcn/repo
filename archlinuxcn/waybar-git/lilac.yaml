@@ -15,14 +15,6 @@ update_on:
   - source: alpm
     alpm: libwireplumber
 
-  - source: alpm
-    alpm: spdlog
-    provided: libspdlog.so
-
-  - source: alpm
-    alpm: fmt
-    provided: libfmt.so
-
-  - source: alpm
-    alpm: jsoncpp
-    provided: libjsoncpp.so
+  - alias: jsoncpp
+  - alias: spdlog
+  - alias: fmt

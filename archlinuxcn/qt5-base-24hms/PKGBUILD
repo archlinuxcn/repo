@@ -6,7 +6,7 @@ _origpkgname=qt5-base
 pkgname=(qt5-base-24hms)
 _basever=5.15.16
 pkgver=5.15.16+kde+r130
-pkgrel=3.14
+pkgrel=4.14
 _commit=2529f7f0c2333d437089c775c9c30f624d1fd5bc
 arch=('x86_64')
 url='https://www.qt.io'
@@ -15,7 +15,7 @@ pkgdesc='A cross-platform application and UI framework. This package uses 24-hou
 depends=(libicui18n.so 'libjpeg-turbo' 'xcb-util-keysyms' 'xcb-util-renderutil' 'libgl' 'fontconfig' 'xdg-utils'
          'shared-mime-info' 'xcb-util-wm' 'libxrender' 'libxi' 'sqlite' 'xcb-util-image' 'mesa'
          'tslib' 'libinput' 'libxkbcommon-x11' 'libproxy' 'libcups' 'double-conversion' 'md4c')
-makedepends=('python2' 'libfbclient' 'mariadb-libs' 'unixodbc' 'postgresql-libs' 'alsa-lib' 'gst-plugins-base-libs'
+makedepends=('python2' 'mariadb-libs' 'unixodbc' 'postgresql-libs' 'alsa-lib' 'gst-plugins-base-libs'
              'gtk3' 'libpulse' 'cups' 'freetds' 'vulkan-headers' 'git')
 optdepends=('qt5-svg: to use SVG icon themes'
             'qt5-wayland: to run Qt applications in a Wayland session'
@@ -72,7 +72,7 @@ build() {
     -datadir /usr/share/qt \
     -sysconfdir /etc/xdg \
     -examplesdir /usr/share/doc/qt/examples \
-    -plugin-sql-{psql,mysql,sqlite,odbc,ibase} \
+    -plugin-sql-{psql,mysql,sqlite,odbc} \
     -system-sqlite \
     -openssl-linked \
     -nomake examples \

@@ -1,0 +1,34 @@
+# Maintainer: marco.rubin@protonmail.com
+
+_name=KDDockWidgets
+pkgname=kddockwidgets-qt6
+pkgver=2.2.2
+pkgrel=1
+pkgdesc="KDAB's Dock Widget Framework for Qt 6"
+arch=('x86_64')
+url="https://github.com/KDAB/KDDockWidgets"
+license=('GPL-2.0-only OR GPL-3.0-only')
+depends=(gcc-libs glibc 'fmt>=11' nlohmann-json 'qt6-base>=6.2.0' qt6-declarative)
+makedepends=('cmake>=3.15' 'qt6-tools>=6.6.2')
+source=("$url/archive/v$pkgver.tar.gz")
+b2sums=('06c839496e8085da9bb37e9aae24a1b615f9c255ca9c24a88e54e678b8fa1fbbbf74090363b04915a8acd2b168215d32a0d15573e66d7322dff895209e580404')
+
+build() {
+    cd $_name-$pkgver
+    # -DKDDockWidgets_NO_SPDLOG=true is needed until KDDockWidgets can be built with fmt 11
+
+    sed -i 's|core/DropIndicatorOverlay.h|kddockwidgets/core/DropIndicatorOverlay.h|g' src/core/indicators/ClassicDropIndicatorOverlay.h
+
+    cmake -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DKDDockWidgets_FRONTENDS='qtwidgets;qtquick' \
+          -DKDDockWidgets_NO_SPDLOG=true \
+          -DKDDockWidgets_QT6=true \
+          .
+    cmake --build .
+}
+
+package() {
+    cd $_name-$pkgver
+    DESTDIR="$pkgdir" cmake --install .
+}

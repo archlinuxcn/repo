@@ -1,0 +1,14 @@
+maintainers:
+  - github: yingziwu
+    email: i@bgme.me
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['superhansel'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: pacman-boot-backup-hook
+  - source: manual
+    manual: 0

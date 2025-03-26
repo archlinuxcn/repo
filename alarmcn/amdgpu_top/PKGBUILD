@@ -1,7 +1,8 @@
-# Maintainer: Paul <pb.orzel@proton.me>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Paul <pb.orzel@proton.me>
 
 pkgname=amdgpu_top
-pkgver=0.10.1
+pkgver=0.10.4
 pkgrel=1
 pkgdesc="Tool that shows AMD GPU utilization"
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
@@ -10,25 +11,26 @@ license=("MIT")
 depends=("libdrm")
 makedepends=("cargo")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('99f76632866694f2fa24f2b6e7b687d34b901fdcba28762cccd8f0a876c11765')
+sha256sums=('b371e8ef1f7f9352009321f5251dc395dbd870541b8153065b34d7c0603361ac')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${pkgname}-${pkgver}/"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
-	cargo build --frozen --release
+	cargo build --frozen --release --all-features
 }
 
 package() {
 	cd "${pkgname}-${pkgver}/"
-	install -Dm755 target/release/amdgpu_top -t "${pkgdir}/usr/bin/"
-	install -Dm644 assets/amdgpu_top.desktop -t "${pkgdir}/usr/share/applications/desktop/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 assets/${pkgname}{,-tui}.desktop -t "${pkgdir}/usr/share/applications/desktop/"
+
+	install -d "${pkgdir}/usr/share/doc/${pkgname}/"
+	cp -r docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
+
+	install -Dm644 "docs/${pkgname}.1" -t "${pkgdir}/usr/share/man/man1/"
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

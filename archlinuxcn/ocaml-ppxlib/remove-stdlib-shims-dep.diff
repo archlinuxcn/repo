@@ -1,0 +1,93 @@
+diff --git a/ast/dune b/ast/dune
+index 03b233fb..01f2dd15 100644
+--- a/ast/dune
++++ b/ast/dune
+@@ -5,7 +5,7 @@
+ (library
+  (name ppxlib_ast)
+  (public_name ppxlib.ast)
+- (libraries astlib stdlib-shims)
++ (libraries astlib)
+  (flags
+   (:standard -safe-string)
+   -w
+diff --git a/dune-project b/dune-project
+index 0db92bff..2bb6b3ab 100644
+--- a/dune-project
++++ b/dune-project
+@@ -21,7 +21,6 @@
+   (ppx_derivers (>= 1.0))
+   (sexplib0 (>= v0.12))
+   (sexplib0 (and :with-test (>= "v0.15"))) ; Printexc.register_printer in sexplib0 changed
+-  stdlib-shims
+   (ocamlfind :with-test)
+   (re (and :with-test (>= 1.9.0)))
+   (cinaps (and :with-test (>= v0.12.1)))
+diff --git a/metaquot_lifters/dune b/metaquot_lifters/dune
+index 17563c2e..0cd15393 100644
+--- a/metaquot_lifters/dune
++++ b/metaquot_lifters/dune
+@@ -3,4 +3,4 @@
+  (public_name ppxlib.metaquot_lifters)
+  (flags
+   (:standard -safe-string))
+- (libraries ppxlib ppxlib_traverse_builtins stdppx stdlib-shims))
++ (libraries ppxlib ppxlib_traverse_builtins stdppx))
+diff --git a/ppxlib.opam b/ppxlib.opam
+index 2c81c95d..1b3a129e 100644
+--- a/ppxlib.opam
++++ b/ppxlib.opam
+@@ -26,7 +26,6 @@ depends: [
+   "ppx_derivers" {>= "1.0"}
+   "sexplib0" {>= "v0.12"}
+   "sexplib0" {with-test & >= "v0.15"}
+-  "stdlib-shims"
+   "ocamlfind" {with-test}
+   "re" {with-test & >= "1.9.0"}
+   "cinaps" {with-test & >= "v0.12.1"}
+diff --git a/src/dune b/src/dune
+index 675d109a..6074cfc8 100644
+--- a/src/dune
++++ b/src/dune
+@@ -9,7 +9,6 @@
+   ppx_derivers
+   ppxlib_traverse_builtins
+   stdppx
+-  stdlib-shims
+   sexplib0
+   compiler-libs.common)
+  (flags
+diff --git a/src/gen/dune b/src/gen/dune
+index 0467c8ef..4426bf68 100644
+--- a/src/gen/dune
++++ b/src/gen/dune
+@@ -2,4 +2,4 @@
+  (names gen_ast_pattern gen_ast_builder)
+  (flags
+   (:standard -safe-string))
+- (libraries ppxlib_ast astlib ppxlib_traverse_builtins stdppx stdlib-shims))
++ (libraries ppxlib_ast astlib ppxlib_traverse_builtins stdppx))
+diff --git a/stdppx/dune b/stdppx/dune
+index 7f9ee528..17a82b30 100644
+--- a/stdppx/dune
++++ b/stdppx/dune
+@@ -1,6 +1,6 @@
+ (library
+  (name stdppx)
+  (public_name ppxlib.stdppx)
+- (libraries sexplib0 stdlib-shims)
++ (libraries sexplib0)
+  (flags
+   (:standard -safe-string)))
+diff --git a/traverse/dune b/traverse/dune
+index 323501ae..9236e3cf 100644
+--- a/traverse/dune
++++ b/traverse/dune
+@@ -4,6 +4,6 @@
+  (kind ppx_deriver)
+  (flags
+   (:standard -safe-string))
+- (libraries ppxlib ppxlib_ast ppxlib_traverse_builtins stdppx stdlib-shims)
++ (libraries ppxlib ppxlib_ast ppxlib_traverse_builtins stdppx)
+  (preprocess
+   (pps ppxlib_metaquot)))

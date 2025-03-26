@@ -1,0 +1,143 @@
+# Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
+# Contributor: acxz <akashpatel2008 at yahoo dot com>
+
+pkgbase=rocm-llvm
+pkgname=(rocm-llvm rocm-device-libs comgr)
+pkgver=6.3.3
+pkgrel=1
+arch=(aarch64)
+url='https://rocm.docs.amd.com/en/latest/reference/rocmcc.html'
+makedepends=('git' 'cmake' 'python' 'ninja' 'rocm-core' 'rocm-cmake' 'perl'
+             'gcc-libs' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses' 'libxml2' 'patchelf')
+source=("$pkgbase::git+https://github.com/ROCm/llvm-project#tag=rocm-$pkgver")
+sha256sums=('c64fd724503b9c10381f350eea38fadb622ea86067839d45cd0efc0058621153'
+            '589bd757a118ddc952d17efd65ea9e1c6cd96a92f3ad2938470c216435401091')
+options=(staticlibs !lto)
+
+
+source+=(https://github.com/llvm/llvm-project/commit/078c18de832328f743fb6e8dce728a030c81dc0d.patch)
+prepare() {
+  cd rocm-llvm
+
+  patch -Np1 --no-backup-if-mismatch < "../078c18de832328f743fb6e8dce728a030c81dc0d.patch"
+}
+
+build() {
+    # Build only minimal debug info to reduce size
+    CFLAGS+=' -g1'
+    CXXFLAGS+=' -g1'
+
+    local _rocm_exe_rpath='\$ORIGIN/../lib:\$ORIGIN/../../../lib'
+    local _rocm_lib_rpath='\$ORIGIN'
+    # Flags according to
+    # https://github.com/ROCm/ROCm/blob/87bc26e672e06294bd2a6a1b507ad5c9ae4cffba/tools/rocm-build/build_lightning.sh#L302
+    local cmake_args=(
+        -G Ninja
+        -B build
+        -S "$pkgbase/llvm"
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX="/opt/rocm/lib/llvm"
+        -D LLVM_HOST_TRIPLE=$CHOST
+        -D LLVM_ENABLE_PROJECTS='clang;lld;clang-tools-extra'
+        -D CLANG_ENABLE_AMDCLANG=ON
+        -D LLVM_ENABLE_RUNTIMES='compiler-rt;libunwind;libcxx;libcxxabi'
+        -D LIBCXX_ENABLE_STATIC=ON
+        -D LIBCXXABI_ENABLE_STATIC=ON
+        -D LLVM_TARGETS_TO_BUILD='AMDGPU;NVPTX;AArch64'
+        -D CLANG_DEFAULT_LINKER=lld
+        -D CLANG_DEFAULT_RTLIB=compiler-rt
+        -D CLANG_DEFAULT_UNWINDLIB=libgcc
+        -D LLVM_INSTALL_UTILS=ON
+        -D LLVM_ENABLE_BINDINGS=OFF
+        -D LLVM_LINK_LLVM_DYLIB=OFF
+        -D LLVM_BUILD_LLVM_DYLIB=OFF
+        -D LLVM_ENABLE_ASSERTIONS=ON
+        -D OCAMLFIND=NO
+        -D LLVM_ENABLE_OCAMLDOC=OFF
+        -D LLVM_INCLUDE_BENCHMARKS=OFF
+        -D LLVM_BUILD_TESTS=OFF
+        -D LLVM_INCLUDE_TESTS=OFF
+        -D CLANG_INCLUDE_TESTS=OFF
+        -D LLVM_BINUTILS_INCDIR=/usr/include
+        -D CMAKE_SKIP_BUILD_RPATH=TRUE
+        -D CMAKE_SKIP_INSTALL_RPATH=TRUE
+        -D CMAKE_EXE_LINKER_FLAGS="-Wl,--enable-new-dtags,--build-id=sha1,--rpath,$_rocm_exe_rpath"
+        -D CMAKE_SHARED_LINKER_FLAGS="-Wl,--enable-new-dtags,--build-id=sha1,--rpath,$_rocm_lib_rpath"
+        -D CLANG_LINK_FLANG_LEGACY=ON
+        -D CMAKE_CXX_STANDARD=17
+    )
+    cmake "${cmake_args[@]}"
+    # Bootstrapping libcxx, see
+    # https://github.com/ROCm/ROCm/blob/87bc26e672e06294bd2a6a1b507ad5c9ae4cffba/tools/rocm-build/build_lightning.sh#L352-L359
+    cmake --build build -- clang lld compiler-rt
+    cmake --build build -- runtimes cxx
+    cmake --build build
+    cmake --build build -- clang-tidy
+
+    local cmake_device_libs_args=(
+        -Wno-dev
+        -S "$pkgbase/amd/device-libs"
+        -B build-device-libs
+        -D CMAKE_BUILD_TYPE=None
+        -D CMAKE_INSTALL_PREFIX=/opt/rocm
+        -D CMAKE_PREFIX_PATH="$srcdir/build"
+    )
+    cmake "${cmake_device_libs_args[@]}"
+    cmake --build build-device-libs
+
+    local cmake_comgr_args=(
+        -Wno-dev
+        -S "$pkgbase/amd/comgr"
+        -B build-comgr
+        -D CMAKE_BUILD_TYPE=None
+        -D CMAKE_INSTALL_PREFIX=/opt/rocm
+        -D BUILD_TESTING=OFF
+        -D CMAKE_PREFIX_PATH="$srcdir/build;$srcdir/build-device-libs"
+    )
+    cmake "${cmake_comgr_args[@]}"
+    cmake --build build-comgr
+}
+
+package_rocm-llvm() {
+    pkgdesc='Radeon Open Compute - LLVM toolchain (llvm, clang, lld)'
+    license=('Apache-2.0 WITH LLVM-exception')
+    depends=('rocm-core' 'perl' 'gcc-libs' 'zlib' 'zstd' 'libffi' 'libedit'
+             'ncurses' 'libxml2')
+
+    DESTDIR="$pkgdir" cmake --install build
+
+    # Provide symlink to old LLVM location, pre ROCm 6.0.0
+    ln -s /opt/rocm/lib/llvm "$pkgdir/opt/rocm/llvm"
+
+    # https://bugs.archlinux.org/task/28479
+    install -d "$pkgdir/opt/rocm/lib/llvm/lib/bfd-plugins"
+    ln -s /opt/rocm/lib/llvm/lib/LLVMgold.so "$pkgdir/opt/rocm/lib/llvm/lib/bfd-plugins/LLVMgold.so"
+
+    cd "$pkgbase"
+    install -Dm644 llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/llvm-LICENSE"
+    install -Dm644 clang/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/clang-LICENSE"
+    install -Dm644 clang-tools-extra/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/clang-tools-extra-LICENSE"
+    install -Dm644 compiler-rt/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/compiler-rt-LICENSE"
+    install -Dm644 lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/lld-LICENSE"
+}
+
+package_rocm-device-libs() {
+    pkgdesc='AMD specific device-side language runtime libraries'
+    license=('NCSA')
+    depends=('rocm-core')
+
+    DESTDIR="$pkgdir" cmake --install build-device-libs
+    cd "$pkgbase/amd/device-libs"
+    install -Dm644 LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_comgr() {
+    pkgdesc='AMDGPU GPU Code Object Manager'
+    license=('NCSA')
+    depends=('glibc' 'gcc-libs' 'zstd' 'zlib' 'ncurses'
+             'rocm-core' 'rocm-llvm' 'rocm-device-libs')
+
+    DESTDIR="$pkgdir" cmake --install build-comgr
+    cd "$pkgbase/amd/comgr"
+    install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

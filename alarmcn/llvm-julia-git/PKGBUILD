@@ -2,28 +2,22 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=(llvm-julia-git llvm-libs-julia-git)
-pkgver=18.1.8
-pkgrel=1
-_archcn_rel=0
-_archcn_commit=
+pkgver=19.1.7
+pkgrel=2
+_archcn_rel=1
 _versioned_llvm=
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('cmake' 'ninja' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses'
              'libxml2' 'python-setuptools' 'python-psutil' 'python-sphinx'
-             'python-recommonmark' 'python-myst-parser' 'git')
+             'python-myst-parser' 'git')
 # Disable LTO for now since there seems to be some issue at least on aarch64
 # https://github.com/llvm/llvm-project/issues/57740
 options=('staticlibs' '!strip' '!lto')
-if [[ -z $_archcn_rel ]]; then
-  source=(https://github.com/yuyichao/llvm-project/archive/${_archcn_commit}.tar.gz)
-  repodir=llvm-project-${_archcn_commit}
-else
-  source=(https://github.com/yuyichao/llvm-project/archive/refs/tags/archcn-$pkgver-$_archcn_rel.tar.gz)
-  repodir=llvm-project-archcn-$pkgver-$_archcn_rel
-fi
-sha256sums=('44d91290a3e3ab15b6d6830443326b4f810ecc6562a9f69dc8e0d75baad010fb')
+source=(https://github.com/yuyichao/llvm-project/archive/refs/tags/archcn-$pkgver-$_archcn_rel.tar.gz)
+repodir=llvm-project-archcn-$pkgver-$_archcn_rel
+sha256sums=('297f8bf92536b886a607e20598fc4ed488cb5f67706e43fec9e3f987320a0137')
 
 if [[ -z $_versioned_llvm ]]; then
   _llvm_prefix=/usr

@@ -1,0 +1,37 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: twa022 <twa022 at gmail dot com>
+
+pkgname=libiff-git
+_pkgname=${pkgname%-git}
+pkgver=r83.b5f542a
+pkgrel=2
+pkgdesc="Parser for Electronic Arts' Interchange File Format (IFF)"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="https://github.com/svanderburg/${_pkgname}"
+license=('MIT')
+makedepends=('help2man' 'git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	printf "r%s.%s" $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	./bootstrap
+}
+
+build() {
+	cd "${_pkgname}/"
+	./configure --prefix=/usr
+	make -j1 # help2man doesn't support parallel build
+}
+
+package() {
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}" install
+}

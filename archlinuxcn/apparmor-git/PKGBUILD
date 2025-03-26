@@ -4,7 +4,7 @@
 
 pkgname=apparmor-git
 _pkgname=${pkgname%-git}
-pkgver=4.1.0.beta1.r341.g8e431eb
+pkgver=4.1.0.beta1.r689.gef2f6aa
 pkgrel=1
 pkgdesc="Mandatory Access Control (MAC) using Linux Security Module (LSM)"
 arch=('x86_64')
@@ -46,15 +46,17 @@ checkdepends=(
 optdepends=(
     'apparmor.d: full set of AppArmor profiles'
     'perl: for perl bindings'
+    'ruby: for ruby bindings'
+    'python-gobject: for aa-notify' # import gi
     'python-notify2: for aa-notify'
     'python-psutil: for aa-notify'
-    'ruby: for ruby bindings'
+    'tk: for aa-notify'
 )
-conflicts=("$_pkgname")
 provides=(
     "${_pkgname}=${pkgver}"
     'libapparmor.so'
 )
+conflicts=("$_pkgname")
 backup=(
     'etc/apparmor/easyprof.conf'
     'etc/apparmor/logprof.conf'
@@ -62,6 +64,7 @@ backup=(
     'etc/apparmor/parser.conf'
     'etc/apparmor/severity.db'
 )
+install="${_pkgname}.install"
 source=("git+${url}.git")
 sha256sums=('SKIP')
 validpgpkeys=('3ECDCBA5FB34D254961CC53F6689E64E3D3664BB') # AppArmor Development Team (AppArmor signing key) <apparmor@lists.ubuntu.com>
@@ -100,10 +103,10 @@ build() {
     (
         cd libraries/libapparmor/
         ./configure "${configure_options[@]}"
-        make
+        make -j $(nproc)
     )
-    make -C parser
-    make -C binutils
+    make -C parser -j $(nproc)
+    make -C binutils -j $(nproc)
     make -C utils
     make -C changehat/pam_apparmor
     make -C changehat/mod_apparmor
@@ -121,27 +124,33 @@ check() {
     cd "../${_pkgname}-test"
 
     echo "INFO: Running check libraries/libapparmor"
+    make -C libraries/libapparmor --touch
     make -C libraries/libapparmor check
 
     echo "INFO: Running check parser"
+    make -C parser --touch
+    make -C parser -j $(nproc) tst_binaries
     make -C parser check
 
     echo "INFO: Running check binutils"
     make -C binutils check
 
     echo "INFO: Running check utils"
+    make -C utils --touch
     make -C parser/tst gen_dbus
     make -C parser/tst gen_xtrans
     make -C utils check
     make -C utils/test coverage-regression
 
     echo "INFO: Running check mod_apparmor"
+    make -C changehat/mod_apparmor --touch
     make -C changehat/mod_apparmor check
 
     echo "INFO: Running check profiles"
+    make -C profiles --touch
     make -C profiles check-parser
-    #make -C profiles check-abstractions.d
-    #make -C profiles check-local
+    make -C profiles check-abstractions.d
+    make -C profiles check-local
 }
 
 package() {

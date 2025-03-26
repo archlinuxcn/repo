@@ -26,14 +26,13 @@ build() {
 
 package() {
 	cd "${pkgname}-${pkgver}/"
-	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
-
-	install -d ${pkgdir}/usr/share/{bash-completion/completions,fish/vendor_completions.d,zsh/site-functions}
-	"${pkgdir}/usr/bin/${pkgname}" completions --shell bash >"${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
-	"${pkgdir}/usr/bin/${pkgname}" completions --shell fish >"${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
-	"${pkgdir}/usr/bin/${pkgname}" completions --shell zsh >"${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
-
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -d "${pkgdir}/usr/share/doc/${pkgname}/"
 	cp docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
+
+	cd target/release
+	install -Dm755 "${pkgname}" -t "${pkgdir}/usr/bin/"
+	"./${pkgname}" completions --shell bash | install -Dm644 /dev/stdin "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+	"./${pkgname}" completions --shell fish | install -Dm644 /dev/stdin "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
+	"./${pkgname}" completions --shell zsh | install -Dm644 /dev/stdin "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
 }

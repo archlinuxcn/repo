@@ -1,15 +1,13 @@
 maintainers:
   - github: yuyichao
 
-post_build_script: |
-  git_add_files('.')
-  git_commit()
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: manual
-    manual: 1.1.0
-  # - source: github
-  #   github: AsahiLinux/PKGBUILDs
-  #   path: bankstown
+  - source: github
+    github: chadmed/bankstown
+    use_max_tag: true
   - source: manual
     manual: 1

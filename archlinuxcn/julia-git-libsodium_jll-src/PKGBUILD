@@ -1,6 +1,6 @@
 pkgname=julia-git-libsodium_jll-src
-pkgver=1.0.20+1
-_commit=e2290435e7b33bc50efd05fef3bd3aa2a4544e61
+pkgver=1.0.21+0
+_commit=2ed7145b283bfe1d4332a06f787946a765898c7c
 pkgrel=1
 pkgdesc="libsodium_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libsodium_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libsodium)
 source=("git+https://github.com/JuliaBinaryWrappers/libsodium_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('c957f1526f814f2a772058c65a9c9433e2c6fea482c4c3cec09e59b6028e632e'
+sha256sums=('b2ea8fe4af871e5d1aeb56283eddcfa616a38906048f8a3227d20cf1c5d40c51'
             'd6b4eee4cffe97ca41327fd8c3f922a9958186f2cf93de8cdeaadb57dbf11f44')
 
 build() {

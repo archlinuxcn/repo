@@ -1,0 +1,15 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - ispc
+
+update_on:
+  # Note that we need to get the official package and not the archlinux arm package
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: embree
+  - source: manual
+    manual: 1

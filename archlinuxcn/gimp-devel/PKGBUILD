@@ -1,18 +1,19 @@
-# Maintainer: twa022 <twa022 at gmail dot com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: twa022 <twa022 at gmail dot com>
 
 pkgname=gimp-devel
 _pkgname=${pkgname%-devel}
-pkgver=3.0.0rc1
+pkgver=3.0.0rc3
 _pkgver=${pkgver/rc/-RC}
 _majorver=$(cut -d '.' -f 1-2 <<<${pkgver})
-pkgrel=3
+pkgrel=1
 pkgdesc="GNU Image Manipulation Program (Development version)"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
-url="https://www.gimp.org/"
+url="https://www.${_pkgname}.org"
 license=('GPL-3.0-or-later')
 depends=("cfitsio" "desktop-file-utils" "enchant" "gtk3" "icu" "lcms2" "libgexiv2" "librsvg" "libwmf"
 	'libexif' 'libgudev' 'openjpeg2' 'poppler-glib' 'poppler-data' 'openexr' 'mypaint-brushes1'
-	'babl>=0.1.98' 'gegl>=0.4.48' 'cairo' 'python-gobject' 'appstream-glib' 'libxmu' 'graphviz')
+	'babl' 'gegl' 'cairo' 'python-gobject' 'appstream-glib' 'libxmu' 'graphviz' 'libiff' 'libilbm')
 makedepends=("appstream" "cmake" "glib-networking" "intltool" "libxslt"
 	'alsa-lib' 'curl' 'ghostscript' 'libxpm'
 	'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'libjxl'
@@ -38,24 +39,22 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
 	'lua51-lgi: LUA scripting support'
 	'cfitsio: FITS support')
 conflicts=("${_pkgname}")
-provides=("${_pkgname}=${pkgver}")
-source=("https://download.gimp.org/gimp/v${_majorver}/${_pkgname}-${_pkgver}.tar.xz"
-	'linux.gpl')
-sha256sums=('b3d0b264c5e38e789faaf3417003397f3240014c59c7f417f9ca3bd39c5ffb66'
+provides=("${_pkgname}")
+source=(
+	"https://download.gimp.org/gimp/v${_majorver}/${_pkgname}-${_pkgver}.tar.xz"
+	"linux.gpl"
+)
+sha256sums=('61fb527cf22d093a3f3501884796ababd3c30dd7f0e354dbdc041bef0f7e38ec'
             '1003bbf5fc292d0d63be44562f46506f7b2ca5729770da9d38d3bb2e8a2f36b3')
 
 build() {
-	local meson_options=(
-		-Dilbm=disabled
-	)
-
-	arch-meson "${_pkgname}-${_pkgver}/" build "${meson_options[@]}"
+	arch-meson "${_pkgname}-${_pkgver}/" build
 	meson compile -C build
 }
 
 package() {
 	meson install -C build --destdir "${pkgdir}"
-	install -Dm644 linux.gpl -t "${pkgdir}/usr/share/gimp/2.99/palettes/"
+	install -Dm644 linux.gpl -t "${pkgdir}/usr/share/gimp/3.0/palettes/"
 
 	# Fix wayland icon issue
 	sed -i "s/${_pkgname}-${_majorver}/${_pkgname}/g" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"

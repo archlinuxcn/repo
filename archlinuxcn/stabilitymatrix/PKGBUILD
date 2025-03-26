@@ -2,14 +2,14 @@
 # Please note that this is my first AUR package ever, let me know if I made any mistakes or you have any improvements.
 
 pkgname=stabilitymatrix
-pkgver=2.12.4
-pkgrel=2
+pkgver=2.13.4
+pkgrel=1
 pkgdesc='Multi-Platform Package Manager for Stable Diffusion'
 arch=('any')
 url='https://github.com/LykosAI/StabilityMatrix'
 license=('AGPL3')
-depends=('dotnet-runtime' 'libxcrypt-compat')
-makedepends=('dotnet-sdk' 'git')
+depends=('dotnet-runtime>=9.0' 'libxcrypt-compat')
+makedepends=('dotnet-sdk>=9.0' 'git')
 options=('!strip')
 source=(
     'zone.lykos.stabilitymatrix.png'
@@ -27,6 +27,7 @@ prepare() {
 
 build() {
     cd "$srcdir/StabilityMatrix"
+    sed -i 's/0.6.0/0.7.2/g' .config/dotnet-tools.json
     dotnet publish "./StabilityMatrix.Avalonia/StabilityMatrix.Avalonia.csproj" -o out -c Release -r linux-x64 -p:Version=$pkgver
 }
 

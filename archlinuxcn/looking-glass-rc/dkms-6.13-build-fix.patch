@@ -1,0 +1,23 @@
+From 9fed27c41355199e66c2b079bff946c07cbe8ff5 Mon Sep 17 00:00:00 2001
+From: merrkry <merrkry@tsubasa.moe>
+Date: Wed, 5 Feb 2025 18:37:50 +0100
+Subject: [PATCH] [fix] fix build on 6.13 kernel
+
+Ref: https://github.com/gnif/LookingGlass/pull/1149
+---
+ module/kvmfr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/module/kvmfr.c b/module/kvmfr.c
+index b5acd18d..d9119b8e 100644
+--- a/module/kvmfr.c
++++ b/module/kvmfr.c
+@@ -651,5 +651,5 @@ MODULE_AUTHOR("Geoffrey McRae <geoff@hostfission.com>");
+ MODULE_AUTHOR("Guanzhong Chen <quantum2048@gmail.com>");
+ MODULE_VERSION("0.0.9");
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(5,16,0)
+-MODULE_IMPORT_NS(DMA_BUF);
++MODULE_IMPORT_NS("DMA_BUF");
+ #endif
+--
+2.47.1

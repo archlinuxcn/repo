@@ -1,0 +1,87 @@
+From 64f338eada5d6c6a11af92993e611fb849f0f5fc Mon Sep 17 00:00:00 2001
+From: Javier Martinez Canillas <javierm@redhat.com>
+Date: Thu, 19 May 2022 14:40:07 +0200
+Subject: [PATCH] drivers/firmware: skip simpledrm if nvidia-drm.modeset=1 is
+ set
+
+The Nvidia proprietary driver has some bugs that leads to issues if used
+with the simpledrm driver. The most noticeable is that does not register
+an emulated fbdev device.
+
+It just relies on a fbdev to be registered by another driver, that could
+be that could be attached to the framebuffer console. On UEFI machines,
+this is the efifb driver.
+
+This means that disabling the efifb driver will cause virtual consoles to
+not be present in the system when using the Nvidia driver. Legacy BIOS is
+not affected just because fbcon is not used there, but instead vgacon.
+
+Unless a VGA mode is specified using the vga= kernel command line option,
+in that case the vesafb driver is used instead and its fbdev attached to
+the fbcon.
+
+This is a problem because with CONFIG_SYSFB_SIMPLEFB=y, the sysfb platform
+code attempts to register a "simple-framebuffer" platform device (that is
+matched against simpledrm) and only registers either an "efi-framebuffer"
+or "vesa-framebuffer" if this fails to be registered due the video modes
+not being compatible.
+
+The Nvidia driver relying on another driver to register the fbdev is quite
+fragile, since it can't really assume those will stick around. For example
+there are patches posted to remove the EFI and VESA platform devices once
+a real DRM or fbdev driver probes.
+
+But in any case, moving to a simpledrm + emulated fbdev only breaks this
+assumption and causes users to not have VT if the Nvidia driver is used.
+
+So to prevent this, let's add a workaround and make the sysfb to skip the
+"simple-framebuffer" registration when nvidia-drm.modeset=1 option is set.
+
+This is quite horrible, but honestly I can't think of any other approach.
+
+For this to work, the CONFIG_FB_EFI and CONFIG_FB_VESA config options must
+be enabled besides CONFIG_DRM_SIMPLEDRM.
+
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Cherry-picked-for: https://bugs.archlinux.org/task/73720
+Cherry-picked-for: https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/issues/94
+---
+ drivers/firmware/sysfb.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/sysfb.c b/drivers/firmware/sysfb.c
+index a3df782fa687b0..940d8f51434176 100644
+--- a/drivers/firmware/sysfb.c
++++ b/drivers/firmware/sysfb.c
+@@ -35,6 +35,22 @@
+ #include <linux/screen_info.h>
+ #include <linux/sysfb.h>
+ 
++static int skip_simpledrm;
++
++static int __init simpledrm_disable(char *opt)
++{
++	if (!opt)
++                return -EINVAL;
++
++	get_option(&opt, &skip_simpledrm);
++
++	if (skip_simpledrm)
++		pr_info("The simpledrm driver will not be probed\n");
++
++	return 0;
++}
++early_param("nvidia-drm.modeset", simpledrm_disable);
++
+ static struct platform_device *pd;
+ static DEFINE_MUTEX(disable_lock);
+ static bool disabled;
+@@ -145,7 +161,7 @@ static __init int sysfb_init(void)
+ 
+ 	/* try to create a simple-framebuffer device */
+ 	compatible = sysfb_parse_mode(si, &mode);
+-	if (compatible) {
++	if (compatible && !skip_simpledrm) {
+ 		pd = sysfb_create_simplefb(si, &mode, parent);
+ 		if (!IS_ERR(pd))
+ 			goto put_device;

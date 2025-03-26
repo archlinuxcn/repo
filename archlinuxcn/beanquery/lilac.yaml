@@ -1,0 +1,15 @@
+maintainers:
+  - github: lilydjwg
+
+pre_build_script: aur_pre_build(maintainers=['wzyboy'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - beancount
+  - python-tatsu574
+
+update_on:
+  - source: aur
+    aur: beanquery
+  - alias: python

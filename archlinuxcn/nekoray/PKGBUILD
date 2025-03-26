@@ -2,80 +2,64 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=nekoray
-pkgver=4.0.1
+pkgver=4.2.12
 _pkgver=${pkgver/.beta/-beta}
-pkgrel=2
+pkgrel=4
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-box)"
 arch=('x86_64' 'aarch64' 'riscv64')
-url="https://matsuridayo.github.io"
+url="https://github.com/Mahdi-zarei/${pkgname}"
 license=('GPL-3.0-or-later')
-makedepends=('cmake' 'git' 'go')
-depends=(
-	'qt6-base' 'qt6-svg' 'qt6-tools'
-	'protobuf' 'yaml-cpp' 'zxing-cpp'
-	'abseil-cpp'
-)
+makedepends=('cmake' 'go' 'qt6-tools')
+depends=('qt6-base' 'protobuf' 'yaml-cpp' 'zxing-cpp' 'abseil-cpp' 'cpr')
 optdepends=(
-	'sing-geoip: geoip data for NekoBox'
-	'sing-geosite: geosite data for NekoBox'
+	'sing-geoip-db: geoip database for NekoBox'
+	'sing-geosite-db: geosite database for NekoBox'
 )
 source=(
-	"git+https://github.com/MatsuriDayo/${pkgname}.git#tag=${_pkgver}"
-	"git+https://github.com/Skycoder42/QHotkey.git"
-	"nekobox.sh"
-	"nekobox.desktop"
+	"${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${_pkgver}.tar.gz"
+	${pkgname}.{sh,desktop}
+	"fix-geoasset.patch::${url}/pull/320.patch"
 )
-sha512sums=('711e677fcb925367959b073d1287a721c253db4213fdf3e77c0d7d7042e47d4809ec7549f0e446ac5e9f1e73da68642bf09dd7c3dbea672443d89413ebbfb688'
-            'SKIP'
-            '3a65300520462bd6a5667c50b7db1ccbf7107b9d5c65959d00451a68cdd77d9e13288da03ccb0d712cd4fb076cdfb3c635490d6148268f920cde7ba11b7237a9'
-            'f99795f5f82fca74bbc36569d3595bc141c3fef00a0c6076585da683f0a5144dbfdbbe4525cf82576e9010262f74f462ae40f5a7b95dafc01033763a9b1711bd')
+install="${pkgname}.install"
+sha512sums=('ced86c324cff4a235ee4a386c6892e1814b231f9a70dbb10b51abbe646e3c3476614fc4407d8316ed37675383aca5d7fe327759142f52bf56d2c181aec816d1c'
+            'b377f7e8c859ee0b5bc05f89e2dc6c0b8535e740e089e9afe5e5f145c38a05fccbbddfcb6eb8ced9a7478e4d9ccc3cbd3ffb6843c128189c75599c40c87737e8'
+            'b0cfd99d7fd038d660af275a5f2fc7f9ebfe63d6751edd6eea66a8c5350f314b6dbc9eddaa5aaed134e97087290630d369b1bdf4ad59d12868c780103b33dbed'
+            'ca2f1cc68f20c1a0a18bf6ee94835b78a70b4f13fd48a3913e90dacc74f5b6a33db18486082ed9f962f9952009bfaf9257a3055c2ebfea5cce21ba53829718fd')
 
 prepare() {
-	cd "${pkgname}/"
-
-	git submodule init
-	git config submodule.3rdparty/QHotkey.url "${srcdir}/QHotkey"
-	git -c protocol.file.allow=always submodule update
-
-	./libs/get_source.sh
+	patch -d "${pkgname}-${pkgver}/" -p1 -i ../fix-geoasset.patch
 }
 
 build() {
-	cd "${pkgname}/"
+	cd "${pkgname}-${pkgver}/"
 
-	cmake -B build -DQT_VERSION_MAJOR=6 -DNKR_PACKAGE=ON
+	cmake -B build \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX=/usr
+
 	cmake --build build
 
-	export GOARCH
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
 
-	case $CARCH in
-	x86_64) GOARCH=amd64 ;;
-	aarch64) GOARCH=arm64 ;;
-	riscv64) GOARCH=riscv64 ;;
-	esac
-
-	GOOS=linux ./libs/build_go.sh
+	cd core/server
+	VERSION_SINGBOX=$(go list -m -f '{{.Version}}' github.com/sagernet/sing-box)
+	go build -o ../../build/ \
+		-buildmode=pie \
+		-trimpath \
+		-ldflags "-linkmode=external -w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}'" \
+		-mod=readonly \
+		-modcacherw \
+		-tags "with_clash_api,with_gvisor,with_quic,with_wireguard,with_utls,with_ech,with_dhcp"
 }
 
 package() {
-	# Assets
-	install -Dm644 nekobox.desktop -t "${pkgdir}/usr/share/applications/"
-	install -Dm644 "${pkgname}/res/public/nekobox.png" -t "${pkgdir}/usr/share/pixmaps/"
+	install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm755 "${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
 
-	# Core
-	local core_srcdir=linux
-
-	case $CARCH in
-	x86_64) core_srcdir+=64 ;;
-	aarch64) core_srcdir+=-arm64 ;;
-	riscv64) core_srcdir+=-riscv64 ;;
-	esac
-
-	install -Dm755 "${pkgname}/deployment/${core_srcdir}/nekobox_core" -t "${pkgdir}/usr/lib/nekobox/"
-
-	# Binary file
-	install -Dm755 "${pkgname}/build/nekobox" -t "${pkgdir}/usr/lib/nekobox/"
-
-	# Launcher
-	install -Dm755 nekobox.sh "${pkgdir}/usr/bin/nekobox"
+	cd "${pkgname}-${pkgver}/"
+	install -Dm644 "res/public/nekobox.png" -t "${pkgdir}/usr/share/pixmaps/"
+	install -Dm755 build/{${pkgname},nekobox_core} -t "${pkgdir}/usr/lib/${pkgname}/"
 }

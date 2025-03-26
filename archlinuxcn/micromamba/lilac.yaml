@@ -5,7 +5,6 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('micromamba-'))
 post_build: git_pkgbuild_commit
 
 repo_depends:
-  - simdjson
   - reproc
   - termcolor
 
@@ -43,8 +42,9 @@ update_on:
   - source: alpm
     alpm: fmt
     provided: libfmt.so
-  - alias: alpm-lilac
-    alpm: simdjson
-    provided: libsimdjson.so
+  - source: alpmfiles
+    pkgname: simdjson
+    strip_dir: true
+    filename: 'libsimdjson.so.\d+'
   - source: manual
     manual: 1

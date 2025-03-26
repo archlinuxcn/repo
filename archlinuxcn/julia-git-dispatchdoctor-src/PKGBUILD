@@ -1,6 +1,6 @@
 pkgname=julia-git-dispatchdoctor-src
-pkgver=0.4.17
-_commit=b7f0830b8b581ca124ebc17dfb30554daf198131
+pkgver=0.4.19
+_commit=f30aac74678a48d3888554b6cad545561f955534
 pkgrel=1
 pkgdesc="DispatchDoctor.jl"
 url="https://github.com/MilesCranmer/DispatchDoctor.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/MilesCranmer/DispatchDoctor.jl.git#commit=$_commit")
-sha256sums=('f8100451e69a2cdb950825d48472108c3e9275f88d028149b0eb613396e8a4a1')
+sha256sums=('c0efe6686effc3853393620b96b851331bb341af40e5e8de32f9e6f7aecf075c')
 
 package() {
   cd DispatchDoctor.jl

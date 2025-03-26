@@ -17,6 +17,7 @@ _jlpackages=(
   Adapt
   AdaptivePredicates
   AliasTables
+  AlmostBlockDiagonals
   Alpine
   AmplNLWriter
   AndorSIF
@@ -44,7 +45,7 @@ _jlpackages=(
   Baselet
   BatchedRoutines
   BenchmarkTools
-  BetterExp
+  Bessels
   Bijections
   BitBasis
   BitFlags
@@ -66,9 +67,11 @@ _jlpackages=(
   BlossomV
   Bonito
   BoundaryValueDiffEq
+  BoundaryValueDiffEqAscher
   BoundaryValueDiffEqCore
   BoundaryValueDiffEqFIRK
   BoundaryValueDiffEqMIRK
+  BoundaryValueDiffEqMIRKN
   BoundaryValueDiffEqShooting
   BracketingNonlinearSolve
   Braket
@@ -226,7 +229,6 @@ _jlpackages=(
   FoldingTrees
   Fontconfig_jll
   Format
-  Formatting
   ForwardDiff
   FreeType
   FreeType2_jll
@@ -283,6 +285,7 @@ _jlpackages=(
   HYPRE_jll
   HalfIntegers
   HarfBuzz_jll
+  HashArrayMappedTries
   HiGHS
   HiGHS_jll
   Highlights
@@ -356,7 +359,6 @@ _jlpackages=(
   JuliaVariables
   JumpProcesses
   Juniper
-  Juno
   KLU
   KernelAbstractions
   KernelDensity
@@ -443,9 +445,9 @@ _jlpackages=(
   MatrixFactorizations
   MaybeInplace
   MbedTLS
+  MbedTLS_jll
   Measurements
   Measures
-  Media
   MetaGraphs
   MicroCollections
   MicroMamba
@@ -502,7 +504,6 @@ _jlpackages=(
   OpenJpeg_jll
   OpenMPI_jll
   OpenSSL
-  OpenSSL_jll
   OpenSpecFun_jll
   Optim
   Optimisers
@@ -636,16 +637,20 @@ _jlpackages=(
   RoundingEmulator
   Rsvg
   RuntimeGeneratedFunctions
+  SCCNonlinearSolve
   SIMD
   SIMDDualNumbers
   SIMDTypes
   SLEEFPirates
+  SPIRVIntrinsics
+  SPIRV_LLVM_Translator_unified_jll
   SPRAL_jll
   SciMLBase
   SciMLJacobianOperators
   SciMLNLSolve
   SciMLOperators
   SciMLStructures
+  ScopedValues
   Scratch
   SentinelArrays
   SetRounding
@@ -697,6 +702,7 @@ _jlpackages=(
   StringDistances
   StringEncodings
   StringManipulation
+  StringViews
   StructArrays
   StructIO
   StructTypes
@@ -764,6 +770,7 @@ _jlpackages=(
   Wayland_protocols_jll
   WeakKeyIdDicts
   WeakRefStrings
+  WeakValueDicts
   WebP
   WidgetsBase
   WidthLimitedIO
@@ -843,7 +850,7 @@ _jlpackages=(
   xkbcommon_jll
 ###=== }} JLPKG_JLNAME_LIST
 )
-pkgver=20241219.060207
+pkgver=20250317.051500
 pkgrel=1
 pkgdesc="Meta package for julia-git"
 arch=('any')

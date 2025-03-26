@@ -1,89 +1,121 @@
-# Maintainer: Juanma Hernandez <juanmah@gmail.com>
+# Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=6.0.37
-pkgrel=1
-_xpdf_ver=4.03
-pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
-arch=(aarch64)
-url="https://www.zotero.org/download"
-license=('AGPL3')
-makedepends=(git perl python curl wget zip unzip awk chromium rsync
-             cmake nodejs-lts-iron npm)
-depends=(dbus-glib gtk3 nss libxt poppler libfontconfig.so libpaper)
-install='zotero.install'
-source=("zotero-client::git+https://github.com/zotero/zotero#tag=$pkgver"
-        "git+https://github.com/zotero/zotero-build"
-        "git+https://github.com/yuyichao/zotero-standalone-build#branch=aarch64-hack"
-        "git+https://github.com/yuyichao/cross-xpdf#branch=aarch64"
-        "https://dl.xpdfreader.com/old/xpdf-${_xpdf_ver}.tar.gz"
-        zotero.desktop)
-sha256sums=('dd5e3dfce0330299967c7bdffe8533385c50b177e2e69f8af5ec62505281c5f9'
+pkgver=7.0.11
+pkgrel=3
+pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
+arch=('x86_64' 'i686' 'aarch64')
+url="https://github.com/zotero/zotero"
+license=('AGPL-3.0-or-later')
+depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
+makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch')
+source=("zotero.desktop"
+        "https://ftp.mozilla.org/pub/firefox/nightly/2024/06/2024-06-09-20-51-51-mozilla-central/firefox-128.0a1.en-US.linux-aarch64.tar.bz2"
+        "zotero-client::git+https://github.com/zotero/zotero.git#tag=${pkgver}"
+        "zotero-translators::git+https://github.com/zotero/translators.git"
+        "zotero-styles::git+https://github.com/zotero/bundled-styles.git"
+        "zotero-pdf-worker::git+https://github.com/zotero/pdf-worker.git"
+        "zotero-note-editor::git+https://github.com/zotero/note-editor.git"
+        "zotero-reader::git+https://github.com/zotero/reader.git"
+        "zotero-schema::git+https://github.com/zotero/zotero-schema.git"
+        "zotero-SingleFile::git+https://github.com/gildas-lormeau/SingleFile.git"
+        "zotero-utilities::git+https://github.com/zotero/utilities.git"
+        "zotero-translate::git+https://github.com/zotero/translate.git"
+        "zotero-csl::git+https://github.com/citation-style-language/locales.git"
+        "zotero-libreoffice-integration::git+https://github.com/zotero/zotero-libreoffice-integration.git"
+        "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
+        "disable-updater.patch"
+        0001-A-more-generic-way-to-specify-the-archs-to-build.patch)
+noextract=(firefox-128.0a1.en-US.linux-aarch64.tar.bz2)
+sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
+            '6ef76929cb6db1ffef92e99935dfaac700beb3a49f6a72cd173cb53167e6441f'
+            'def569fb936524d192e3939225e1619c374abd3bcd5226fa6100db36782f8ebb'
             'SKIP'
             'SKIP'
             'SKIP'
-            '0fe4274374c330feaadcebb7bd7700cb91203e153b26aa95952f02bf130be846'
-            'eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc')
-options=(!makeflags)
-
-_prepare_xpdf() {
-  cd xpdf-${_xpdf_ver}
-  mkdir -p build
-  sed -i "/^\s\sfixCommandLine(&argc,/a if(argc!=3 || argv[1][0]=='-' || argv[2][0]=='-') {fprintf(stderr,\"This is a custom xpdf pdfinfo build. Please use the original version!\\\\n%s\\\\n%s\\\\npdfinfo <PDF-file> <output-file>\\\\n\",xpdfVersion,xpdfCopyright); return 1;} else {freopen( argv[argc-1], \"w\", stdout); argc--;}" xpdf/pdfinfo.cc
-  cp ../cross-xpdf/pdftotext.cc xpdf/pdftotext.cc
-  cp ../cross-xpdf/GlobalParams.h xpdf/GlobalParams.h
-  cp ../cross-xpdf/GlobalParams.cc xpdf/GlobalParams.cc
-  cp ../cross-xpdf/gfile.h goo/gfile.h
-  cp ../cross-xpdf/gfile.cc goo/gfile.cc
-  cp ../cross-xpdf/cmake-config.txt cmake-config.txt
-}
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'dc1894ac2e1520c3dae8e9cd5e09608f4bb3298bdede2891a77118187edffa9d'
+            '181a2ee9bd6ecdf7078a3a5f399b1720824dc6d2bbc7b520e314fd294f6345c2')
 
 prepare() {
-  (_prepare_xpdf)
-  (cd zotero-client
-   git submodule update --init --recursive)
-  (cd zotero-build
-   git submodule update --init --recursive)
-  (cd zotero-standalone-build
-   git submodule update --init --recursive)
-}
+  cd "$srcdir/zotero-client"
 
-_build_xpdf() {
-  cd xpdf-${_xpdf_ver}/build
-  cmake .. -DCMAKE_CXX_FLAGS="-Os"
-  make
+  # Lie about the version for now since we need fx128 to use the nightly build
+  echo "$pkgver.SOURCE" > version
+
+  cp "app/update-packaging/removed-files_linux-x86_64" \
+     "app/update-packaging/removed-files_linux-aarch64"
+  (
+    mkdir -p app/xulrunner
+    . app/config.sh
+    cp "$srcdir/firefox-128.0a1.en-US.linux-aarch64.tar.bz2" \
+       app/xulrunner/firefox-$GECKO_VERSION_LINUX-aarch64.tar.bz2
+  )
+  sed -i -e 's/MinVersion=.*/&a0/' app/assets/application.ini
+
+  patch -N -p1 < "$srcdir/disable-updater.patch"
+  patch -N -p1 < "$srcdir/0001-A-more-generic-way-to-specify-the-archs-to-build.patch"
+
+  npm i --legacy-peer-deps
+
+  git submodule init
+  git config submodule.translators.url "$srcdir/zotero-translators"
+  git config submodule.styles.url "$srcdir/zotero-styles"
+  git config submodule.pdf-worker.url "$srcdir/zotero-pdf-worker"
+  git config submodule.note-editor.url "$srcdir/zotero-note-editor"
+  git config submodule.reader.url "$srcdir/zotero-reader"
+  git config submodule.resource/schema/global.url "$srcdir/zotero-schema"
+  git config submodule.resource/SingleFile.url "$srcdir/zotero-SingleFile"
+  git config submodule.chrome/content/zotero/xpcom/utilities.url "$srcdir/zotero-utilities"
+  git config submodule.chrome/content/zotero/xpcom/translate.url "$srcdir/zotero-translate"
+  git config submodule.chrome/content/zotero/locale/csl.url "$srcdir/zotero-csl"
+  git config submodule.app/modules/zotero-libreoffice-integration.url "$srcdir/zotero-libreoffice-integration"
+  git -c protocol.file.allow=always submodule update
+
+  cd "$srcdir/zotero-client/chrome/content/zotero/xpcom/utilities"
+  git config submodule.resource/schema/global.url "$srcdir/zotero-schema"
+  git -c protocol.file.allow=always submodule update
+
+  cd "$srcdir/zotero-client/chrome/content/zotero/xpcom/translate/modules/utilities"
+  git config submodule.resource/schema/global.url "$srcdir/zotero-schema"
+  git -c protocol.file.allow=always submodule update
+
+  cd "$srcdir/zotero-client/reader"
+  git submodule init
+  git config submodule.epubjs/epub.js.url "$srcdir/zotero-epub-js"
+  git -c protocol.file.allow=always submodule update
+
+  cd "$srcdir/zotero-client/pdf-worker"
+  git submodule init
+  git -c protocol.file.allow=always submodule update
 }
 
 build() {
-  (_build_xpdf)
-  (cd zotero-client
-
-   export NODE_OPTIONS=--openssl-legacy-provider
-
-   npm install --legacy-peer-deps
-   npm run build)
-  (cd zotero-standalone-build
-   ./fetch_xulrunner.sh -p l
-   ./fetch_pdftools
-   scripts/dir_build)
+  cd "$srcdir/zotero-client"
+  NODE_OPTIONS=--openssl-legacy-provider npm run build
+  app/scripts/dir_build -q -a 'x86_64 aarch64'
 }
 
 package() {
-  cd zotero-standalone-build
-
   install -dDm755 "$pkgdir"/usr/{bin,lib/zotero}
-  cp -a staging/Zotero_linux-aarch64/* "$pkgdir"/usr/lib/zotero
-  cp -a "${srcdir}/xpdf-${_xpdf_ver}/build/xpdf/"{pdfinfo,pdftotext} \
-     "$pkgdir"/usr/lib/zotero
-  ln -s /usr/lib/zotero/zotero "$pkgdir"/usr/bin/zotero
-  install -Dm644 "$srcdir"/zotero.desktop "$pkgdir"/usr/share/applications/zotero.desktop
+  cp -r "$srcdir/zotero-client/app/staging/Zotero_linux-$CARCH"/* "$pkgdir/usr/lib/zotero"
+  ln -s /usr/lib/zotero/zotero "$pkgdir/usr/bin/zotero"
+  install -Dm644 "$srcdir/zotero.desktop" "$pkgdir/usr/share/applications/zotero.desktop"
+
   # Copy zotero icons to a standard location
-  install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default16.png "$pkgdir"/usr/share/icons/hicolor/16x16/apps/zotero.png
-  install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default32.png "$pkgdir"/usr/share/icons/hicolor/32x32/apps/zotero.png
-  install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default48.png "$pkgdir"/usr/share/icons/hicolor/48x48/apps/zotero.png
-  install -Dm644 "$pkgdir"/usr/lib/zotero/chrome/icons/default/default256.png "$pkgdir"/usr/share/icons/hicolor/256x256/apps/zotero.png
-  # Disable APP update
-  sed -i '/pref("app.update.enabled", true);/c\pref("app.update.enabled", false);' "$pkgdir"/usr/lib/zotero/defaults/preferences/prefs.js
-  # No need to keep a shell around when launching Zotero
-  sed -i -r 's/^("\$CALLDIR\/zotero-bin" -app "\$CALLDIR\/application.ini" "\$@")/exec \1/' "$pkgdir"/usr/lib/zotero/zotero
+  install -Dm644 "$pkgdir/usr/lib/zotero/icons/icon32.png" "$pkgdir/usr/share/icons/hicolor/32x32/apps/zotero.png"
+  install -Dm644 "$pkgdir/usr/lib/zotero/icons/icon64.png" "$pkgdir/usr/share/icons/hicolor/64x64/apps/zotero.png"
+  install -Dm644 "$pkgdir/usr/lib/zotero/icons/icon128.png" "$pkgdir/usr/share/icons/hicolor/128x128/apps/zotero.png"
+  install -Dm644 "$pkgdir/usr/lib/zotero/icons/symbolic.svg" "$pkgdir/usr/share/icons/hicolor/symbolic/apps/zotero-symbolic.svg"
+
+  # Close shell when launching
+  sed -i -r 's:^("\$CALLDIR/zotero-bin" -app "\$CALLDIR/application.ini" "\$@"):exec \1:' "$pkgdir/usr/lib/zotero/zotero"
 }

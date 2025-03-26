@@ -1,0 +1,173 @@
+# Maintainer: Sven-Hendrik Haase <svenstaro@archlinux.org>
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
+# Contributor: loqs <bugs-archlinux@entropy-collector.net>
+# Contributor: Adrià Cabello <adro.cc79 at protonmail dot com>
+# Contributor: Started by https://github.com/qumaciel at https://github.com/PixarAnimationStudios/USD/issues/2000
+
+pkgname='usd'
+pkgbase=usd
+pkgver=25.02.a
+pkgrel=1
+arch=(aarch64 x86_64)
+url='https://openusd.org'
+pkgdesc='3D VFX pipeline interchange file format'
+license=(Apache-2.0)
+depends=(alembic # libAlembic.so
+         draco # libdraco.so
+         embree # libembree4.so
+         fmt
+         glew
+         imath # libImath-3_1.so
+         jemalloc libjemalloc.so
+         libglvnd libGL.so
+         libx11 # libX11.so
+         libxt
+         materialx # libMaterialXGenMsl.so libMaterialXRenderGlsl.so libMaterialXGenGlsl.so libMaterialXRender.so libMaterialXGenShader.so libMaterialXFormat.so libMaterialXCore.so
+         ninja
+         onetbb # libtbb.so
+         opencolorio # libOpenColorIO.so
+         openexr
+         openimageio # libOpenImageIO.so libOpenImageIO_Util.so
+         openshadinglanguage # liboslquery.so
+         opensubdiv # libosdCPU.so libosdGPU.so
+         openvdb # libopenvdb.so
+         pyside6
+         python
+         python-jinja
+         python-numpy
+         python-opengl)
+makedepends=(cmake help2man boost git fmt)
+source=("git+https://github.com/PixarAnimationStudios/OpenUSD.git#tag=v${pkgver//.a/a}"
+        https://openusd.org/images/USDLogoUnsized.svg
+        usd-3392.patch::https://patch-diff.githubusercontent.com/raw/PixarAnimationStudios/OpenUSD/pull/3392.patch
+        usd-embree42.patch::https://patch-diff.githubusercontent.com/raw/PixarAnimationStudios/OpenUSD/pull/2266.patch
+        cmake-find-dependency.patch::https://patch-diff.githubusercontent.com/raw/PixarAnimationStudios/OpenUSD/pull/3205.patch
+        usd-find-dependency-OpenGL.patch
+        "org.openusd.usdview.desktop")
+sha256sums=('1dc5662c2b744e79dc95e4238226088670a1cfae9816d3e0b8bb83c232a1f2ee'
+            '529dea685836be7de95800d9688db4e1df6a8a3f341130069abdd2b5b1572128'
+            '5bcfb527940b957f5c7831c8b626f9c018b575a730fc2967dd869e678492fa42'
+            '4f5e6d3a4346d2ff67cca42d89e14850d57b0c475a52004f1af297a699e4a891'
+            '112a2735309ba5d39e016c41e164e0e4a0ba5d11a967d462689a5f318649d63b'
+            '1cf9b9e4d902cecce278457af3092e8a180438388044939d3ab89e3a4520efc5'
+            '6b880a1dc44ee3286a19b3347f65be5337192d00bccd55fa549598db90a887da')
+replaces=('usd-extras')
+provides=('usd-extras')
+
+prepare() {
+  cd OpenUSD
+
+  _pyver=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+
+  patch -Np1 -i "$srcdir/usd-embree42.patch"
+  patch -Np1 -i "$srcdir/usd-3392.patch"
+  patch -Np1 -i "$srcdir/cmake-find-dependency.patch"
+  patch -Np1 -i "$srcdir/usd-find-dependency-OpenGL.patch"
+
+  # Change directories to standard
+  sed -i 's|plugin/usd|lib/usd/plugin|g' \
+        cmake/macros/{Private,Public}.cmake
+  sed -i 's|/python|/python'$_pyver'/site-packages|g' \
+        cmake/macros/Private.cmake
+  sed -i 's|lib/python/pxr|/usr/lib/python'$_pyver'/site-packages/pxr|' \
+        cmake/macros/{Private,Public}.cmake pxr/usdImaging/usdviewq/CMakeLists.txt
+
+  sed -i \
+    -e 's|/pxrConfig.cmake|/lib/cmake/pxr/pxrConfig.cmake|g' \
+    -e 's|${CMAKE_INSTALL_PREFIX}|${CMAKE_INSTALL_PREFIX}/lib/cmake/pxr|g' \
+    -e 's|"cmake"|"lib/cmake/pxr"|g' \
+        pxr/CMakeLists.txt
+  sed -i \
+    -e 's|${PXR_CMAKE_DIR}/cmake|${PXR_CMAKE_DIR}|g' \
+    -e 's|${PXR_CMAKE_DIR}/include|/usr/include|g' \
+    -e 's|EXACT COMPONENTS|COMPONENTS|g' \
+        pxr/pxrConfig.cmake.in
+
+  # Further drop shebangs line for some py files
+  sed -r -i '1{/^#!/d}' \
+        pxr/usd/sdr/shaderParserTestUtils.py \
+        pxr/usd/usdUtils/updateSchemaWithSdrNode.py \
+        pxr/usdImaging/usdviewq/usdviewApi.py
+
+  rm -r docs/doxygen/doxygen-awesome-css/
+}
+
+build() {
+  _CMAKE_FLAGS+=(
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_SKIP_INSTALL_RPATH=ON
+    -DCMAKE_SKIP_RPATH=ON
+
+#   -DPYSIDEUICBINARY=/usr/bin/uic #QT5
+    -DPYSIDEUICBINARY=/usr/lib/qt6/uic #QT6
+    -DPYSIDE_AVAILABLE=ON
+    -DPYTHON_EXECUTABLE=/usr/bin/python
+
+    -DPXR_INSTALL_LOCATION=/usr/lib/usd/plugin
+
+    -DPXR_BUILD_DOCUMENTATION=OFF
+    -DPXR_BUILD_EXAMPLES=OFF
+    -DPXR_BUILD_IMAGING=ON
+    -DPXR_BUILD_MONOLITHIC=ON
+    -DPXR_BUILD_TESTS=OFF
+    -DPXR_BUILD_TUTORIALS=OFF
+    -DPXR_BUILD_USD_IMAGING=ON
+    -DPXR_BUILD_USD_TOOLS=ON
+    -DPXR_BUILD_USDVIEW=ON
+
+    -DPXR_VALIDATE_GENERATED_CODE=OFF
+    -DPXR_INSTALL_LOCATION=/usr/lib/usd/plugin
+    -DPXR_MALLOC_LIBRARY=/usr/lib/libjemalloc.so
+
+    -DPXR_BUILD_ALEMBIC_PLUGIN=ON
+    -DPXR_BUILD_DRACO_PLUGIN=ON
+    -DPXR_BUILD_EMBREE_PLUGIN=ON
+    -DPXR_BUILD_OPENCOLORIO_PLUGIN=ON
+    -DPXR_BUILD_OPENIMAGEIO_PLUGIN=ON
+    -DPXR_BUILD_PRMAN_PLUGIN=OFF
+    -DPXR_ENABLE_MATERIALX_SUPPORT=ON
+    -DPXR_ENABLE_OPENVDB_SUPPORT=ON
+    -DPXR_ENABLE_HDF5_SUPPORT=ON
+    -DPXR_ENABLE_PTEX_SUPPORT=OFF
+    -DPXR_ENABLE_OSL_SUPPORT=ON
+    -DPXR_ENABLE_PYTHON_SUPPORT=ON)
+
+  cmake -S OpenUSD -B build -G Ninja "${_CMAKE_FLAGS[@]}"
+  cmake --build build
+}
+
+package() {
+  _pyver=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+
+  DESTDIR="$pkgdir" ninja -C build install
+
+  # Preload jemalloc in scripts to prevent python using glibc's malloc
+  for cmd in "$pkgdir/usr/bin/"*; do
+    sed -r -i '1 s|(#!)(.*python.*)|\1/usr/bin/env -S LD_PRELOAD=/usr/lib/libjemalloc.so \2|' "$cmd"
+  done
+
+  # Remove Google Roboto fonts
+  rm -r "$pkgdir"/usr/lib/python$_pyver/site-packages/pxr/Usdviewq/fonts
+
+  install -Dm644 "$srcdir/USDLogoUnsized.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/openusd.svg"
+  install -Dm755 "$srcdir/org.openusd.usdview.desktop" "$pkgdir/usr/share/applications/org.openusd.usdview.desktop"
+
+  # Man Generation
+  mkdir -p "$pkgdir/usr/share/man/man1"
+  for cmd in "$pkgdir/usr/bin/"*; do
+    LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$pkgdir/usr/lib/" \
+    PYTHONPATH="$pkgdir/$(python3 -c 'import site; print(site.getsitepackages()[0])')" \
+      help2man \
+      --no-info --no-discard-stderr --version-string="$pkgver" \
+      --output="$pkgdir/usr/share/man/man1/$(basename "$cmd").1" \
+      "$cmd"
+  done
+
+  sed -i 's|${PXR_CMAKE_DIR}/cmake|${PXR_CMAKE_DIR}|g' \
+        "$pkgdir/usr/lib/cmake/pxr/pxrConfig.cmake"
+  sed -i 's/_IMPORT_PREFIX ""/_IMPORT_PREFIX "\/usr"/' \
+        "$pkgdir/usr/lib/cmake/pxr/pxrTargets.cmake"
+
+  install -Dm644 -t "$pkgdir/usr/share/doc/usd" "$srcdir"/OpenUSD/{NOTICE.txt,README.md}
+  install -Dm644 -t "$pkgdir/usr/share/licenses/usd" "$srcdir/OpenUSD/LICENSE.txt"
+}

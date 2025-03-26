@@ -3,44 +3,36 @@
 ## options
 : ${_build_cuda=true} # nvenc
 
-: ${_commit=8b21db64fb8e8ffb9c24a412dbc66b7410699211}
+: ${_commit=64544e7960f5141f71438d72e5dedad81c03729c}
 
 _pkgname="sunshine"
 pkgname="$_pkgname"
-pkgver=0.23.1
-pkgrel=6
+pkgver=2025.122.141614
+pkgrel=4
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
 arch=('x86_64' 'aarch64')
 
 depends=(
-  'avahi'
-  'boost-libs'
-  'curl'
   'libayatana-appindicator'
   'libcap'
   'libdrm'
   'libevdev'
-  'libmfx'
+  'libicuuc.so' # icu
+  'libminiupnpc.so' # miniupnpc
   'libnotify'
   'libpulse'
   'libva'
-  'libvdpau'
-  'libx11'
-  'libxcb'
-  'libxfixes'
-  'libxrandr'
-  'libxtst'
-  'libminiupnpc.so' # miniupnpc
   'numactl'
   'openssl'
   'opus'
-  'udev'
+  'wayland'
 )
 makedepends=(
   'boost'
   'cmake'
+  'ffnvcodec-headers'
   'git'
   'ninja'
   'npm'
@@ -53,6 +45,7 @@ optdepends=(
 
 if [[ "${_build_cuda::1}" == "t" ]]; then
   makedepends+=('cuda')
+  checkdepends+=('nvidia-utils')
 fi
 
 install="sunshine.install"
@@ -60,17 +53,20 @@ install="sunshine.install"
 _source_main() {
   _pkgsrc="$_pkgname"
   source=("$_pkgsrc"::"git+$url.git#commit=$_commit")
-  sha256sums=('b9ac221ca53c86010d02d7144c289053e7055c537d7313a8ff3063ec59477e4d')
+  sha256sums=('SKIP')
 }
 
 _source_sunshine() {
-  source+=(
+  local _sources_add=(
     'eidheim.simple-web-server'::'git+https://gitlab.com/eidheim/Simple-Web-Server.git'
-    'ffmpeg.nv-codec-headers'::'git+https://github.com/FFmpeg/nv-codec-headers.git'
-    #'flathub.org.flatpak.builder.baseapp'::'git+https://github.com/flathub/org.flatpak.Builder.BaseApp.git'
+    #'ffmpeg.nv-codec-headers'::'git+https://github.com/FFmpeg/nv-codec-headers.git'
     #'flathub.shared-modules'::'git+https://github.com/flathub/shared-modules.git'
-    #'google.googletest'::'git+https://github.com/google/googletest.git'
+    #'flatpak.flatpak-builder-tools'::'git+https://github.com/flatpak/flatpak-builder-tools.git'
+    'games-on-whales.inputtino'::'git+https://github.com/games-on-whales/inputtino.git'
+    'google.googletest'::'git+https://github.com/google/googletest.git'
     'lizardbyte.build-deps'::'git+https://github.com/LizardByte/build-deps.git'
+    #'lizardbyte.doxyconfig'::'git+https://github.com/LizardByte/doxyconfig.git'
+    'lizardbyte.libdisplaydevice'::'git+https://github.com/LizardByte/libdisplaydevice.git'
     'lizardbyte.nvapi-open-source-sdk'::'git+https://github.com/LizardByte/nvapi-open-source-sdk.git'
     'lizardbyte.tray'::'git+https://github.com/LizardByte/tray.git'
     'lizardbyte.virtual-gamepad-emulation-client'::'git+https://github.com/LizardByte/Virtual-Gamepad-Emulation-Client.git'
@@ -80,60 +76,58 @@ _source_sunshine() {
     'wayland.wayland-protocols'::'git+https://gitlab.freedesktop.org/wayland/wayland-protocols.git'
     'wlroots.wlr-protocols'::'git+https://gitlab.freedesktop.org/wlroots/wlr-protocols.git'
   )
-  sha256sums+=(
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
+
+  local _p
+  for _p in ${_sources_add[@]}; do
+    source+=("$_p")
+    sha256sums+=('SKIP')
+  done
+
+  _prepare_sunshine() (
+    cd "$srcdir/$_pkgsrc"
+    local _submodules=(
+      'eidheim.simple-web-server'::'third-party/Simple-Web-Server'
+      #'ffmpeg.nv-codec-headers'::'third-party/nv-codec-headers'
+      #'flathub.shared-modules'::'packaging/linux/flatpak/deps/shared-modules'
+      #'flatpak.flatpak-builder-tools'::'packaging/linux/flatpak/deps/flatpak-builder-tools'
+      'games-on-whales.inputtino'::'third-party/inputtino'
+      'google.googletest'::'third-party/googletest'
+      'lizardbyte.build-deps'::'third-party/build-deps'
+      #'lizardbyte.doxyconfig'::'third-party/doxyconfig'
+      'lizardbyte.libdisplaydevice'::'third-party/libdisplaydevice'
+      'lizardbyte.nvapi-open-source-sdk'::'third-party/nvapi-open-source-sdk'
+      'lizardbyte.tray'::'third-party/tray'
+      'lizardbyte.virtual-gamepad-emulation-client'::'third-party/ViGEmClient'
+      'michaeltyson.tpcircularbuffer'::'third-party/TPCircularBuffer'
+      'moonlight-stream.moonlight-common-c'::'third-party/moonlight-common-c'
+      'sleepybishop.nanors'::'third-party/nanors'
+      'wayland.wayland-protocols'::'third-party/wayland-protocols'
+      'wlroots.wlr-protocols'::'third-party/wlr-protocols'
+    )
+    _submodule_update
   )
 }
 
 _source_moonlight_common_c() {
-  source+=(
+  local _sources_add=(
     'cgutman.enet'::'git+https://github.com/cgutman/enet.git'
   )
-  sha256sums+=(
-    'SKIP'
-  )
 
+  local _p
+  for _p in ${_sources_add[@]}; do
+    source+=("$_p")
+    sha256sums+=('SKIP')
+  done
+
+  _prepare_moonlight_common_c() (
+    cd "$srcdir/$_pkgsrc"
+    cd 'third-party/moonlight-common-c'
+    local _submodules=(
+      'cgutman.enet'::'enet'
+    )
+    _submodule_update
+  )
 }
-
-_prepare_sunshine() (
-  cd "$srcdir/$_pkgsrc"
-  local _submodules=(
-    'eidheim.simple-web-server'::'third-party/Simple-Web-Server'
-    'ffmpeg.nv-codec-headers'::'third-party/nv-codec-headers'
-    #'flathub.org.flatpak.builder.baseapp'::'packaging/linux/flatpak/deps/org.flatpak.Builder.BaseApp'
-    #'flathub.shared-modules'::'packaging/linux/flatpak/deps/shared-modules'
-    #'google.googletest'::'third-party/googletest'
-    'lizardbyte.build-deps'::'third-party/build-deps'
-    'lizardbyte.nvapi-open-source-sdk'::'third-party/nvapi-open-source-sdk'
-    'lizardbyte.tray'::'third-party/tray'
-    'lizardbyte.virtual-gamepad-emulation-client'::'third-party/ViGEmClient'
-    'michaeltyson.tpcircularbuffer'::'third-party/TPCircularBuffer'
-    'moonlight-stream.moonlight-common-c'::'third-party/moonlight-common-c'
-    'sleepybishop.nanors'::'third-party/nanors'
-    'wayland.wayland-protocols'::'third-party/wayland-protocols'
-    'wlroots.wlr-protocols'::'third-party/wlr-protocols'
-  )
-  _submodule_update
-)
-
-_prepare_moonlight_common_c() (
-  cd "$srcdir/$_pkgsrc"
-  cd 'third-party/moonlight-common-c'
-  local _submodules=(
-    'cgutman.enet'::'enet'
-  )
-  _submodule_update
-)
 
 _source_main
 _source_sunshine
@@ -149,41 +143,9 @@ prepare() {
       echo
     done
   }
-  _prepare_sunshine
-  _prepare_moonlight_common_c
 
-  # cherry-pick
-  sed -E \
-    -e '/#include <string>/s&$&\n\n#include <boost/core/noncopyable.hpp>&' \
-    -i "$_pkgsrc/src/platform/common.h"
-
-  git -C "$_pkgsrc" add .
-  git -c user.email="makepkg@example.com" -c user.name="makepkg" \
-    -C "$_pkgsrc" commit -m "prepare for cherry-pick"
-
-  local _cherrypick=(
-    a940cdb394055139ca6a964289f414da562452e3 # miniupnpc
-    45265fb10387d329dc813a0dd7778c5998b787cd # boost
-  )
-  for i in ${_cherrypick[@]}; do
-    git -C "$_pkgsrc" cherry-pick -n -m1 $i
-  done
-
-  # force features enabled
-  sed -E \
-    -e 's&(LIBCAP_FOUND) OFF&\1 ON&' \
-    -e 's&(LIBDRM_FOUND) OFF&\1 ON&' \
-    -e 's&(LIBVA_FOUND) OFF&\1 ON&' \
-    -e 's&(WAYLAND_FOUND) OFF&\1 ON&' \
-    -e 's&(X11_FOUND) OFF&\1 ON&' \
-    -i "$_pkgsrc/cmake/compile_definitions/linux.cmake"
-
-  # force cuda enabled
-  if [[ "${_build_cuda::1}" == "t" ]]; then
-    sed -E \
-      -e 's&(CUDA_FOUND) OFF&\1 ON&' \
-      -i "$_pkgsrc/cmake/compile_definitions/linux.cmake"
-  fi
+  _run_if_exists _prepare_sunshine
+  _run_if_exists _prepare_moonlight_common_c
 }
 
 build() (
@@ -206,19 +168,45 @@ build() (
     -DSUNSHINE_ASSETS_DIR="share/sunshine"
     -DSUNSHINE_EXECUTABLE_PATH='/usr/bin/sunshine'
     -DSUNSHINE_ENABLE_CUDA=ON
+    -DSUNSHINE_ENABLE_DRM=ON
+    -DSUNSHINE_ENABLE_TRAY=ON
+    -DSUNSHINE_ENABLE_VAAPI=ON
+    -DSUNSHINE_ENABLE_WAYLAND=ON
     -DSUNSHINE_ENABLE_X11=ON
-    -DBUILD_TESTS=OFF
+    -DBUILD_DOCS=OFF
     -Wno-dev
   )
 
-  pushd "$_pkgsrc"
-  npm install --force --no-audit --no-fund --cache "$srcdir/npm-cache"
-  popd
+  if [[ "${_build_cuda::1}" == "t" ]]; then
+    _cmake_options+=(-DCUDA_FAIL_ON_MISSING=ON)
+  else
+    _cmake_options+=(-DCUDA_FAIL_ON_MISSING=OFF)
+  fi
 
   cmake "${_cmake_options[@]}"
   cmake --build build
 )
 
+check() {
+  cd "build/tests"
+  ./test_sunshine || :
+}
+
 package() {
+  depends+=(
+    'avahi'
+    'libx11'
+    'libxcb'
+    'libxfixes'
+    'libxrandr'
+    'mesa' # libgbm
+  )
+
   DESTDIR="$pkgdir" cmake --install build
+}
+
+_run_if_exists() {
+  if declare -F "$1" > /dev/null; then
+    eval "$1"
+  fi
 }

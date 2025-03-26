@@ -1,7 +1,7 @@
 # Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=7.0.11
+pkgver=7.0.13
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686')
@@ -9,7 +9,7 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch')
-_tag=b735f87ada6badad32fdd4d628c63d5dc285b079  # git rev-parse $pkgver
+_tag=edc43d9a9e5ebcc522e9cb607065d9b056aff42a  # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
@@ -27,7 +27,7 @@ source=("zotero.desktop"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            'SKIP'
+            'cb2a616214da8252c042e8c9bf180886e994d04f64d22a1d22c47d2062eb4f81'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -56,6 +56,7 @@ prepare() {
   npm i --legacy-peer-deps
 
   git submodule init
+  git submodule deinit --force app/modules/zotero-word-for-mac-integration app/modules/zotero-word-for-windows-integration
   git config submodule.translators.url "$srcdir/zotero-translators"
   git config submodule.styles.url "$srcdir/zotero-styles"
   git config submodule.pdf-worker.url "$srcdir/zotero-pdf-worker"
@@ -79,12 +80,16 @@ prepare() {
 
   cd "$srcdir/zotero-client/reader"
   git submodule init
+  # Stupid hack because of dangling commit
+  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 7f547333ca551aff1b89414452df43ba60da07b0
   git config submodule.pdfjs/pdf.js.url "$srcdir/zotero-pdf-js"
   git config submodule.epubjs/epub.js.url "$srcdir/zotero-epub-js"
   git -c protocol.file.allow=always submodule update
 
   cd "$srcdir/zotero-client/pdf-worker"
   git submodule init
+  # Ditto
+  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 8ac2ccc54dab2049cd92096c3448d6fdfab436ac
   git config submodule.pdf.js.url "$srcdir/zotero-pdf-js"
   git -c protocol.file.allow=always submodule update
 }

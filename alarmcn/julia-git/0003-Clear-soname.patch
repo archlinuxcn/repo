@@ -1,4 +1,4 @@
-From 9a9f97eaeb952a17b7a3f8aef12dd0d64d14cf5c Mon Sep 17 00:00:00 2001
+From c055ed1273e9bf9e4b6fbe77f56fbdd38a454b18 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/7] Clear soname
@@ -6,51 +6,33 @@ Subject: [PATCH 3/7] Clear soname
 ---
  stdlib/LibGit2_jll/src/LibGit2_jll.jl         |  2 +-
  stdlib/LibSSH2_jll/src/LibSSH2_jll.jl         |  2 +-
- stdlib/MbedTLS_jll/src/MbedTLS_jll.jl         |  6 ++---
  stdlib/OpenLibm_jll/src/OpenLibm_jll.jl       |  2 +-
  stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl | 24 +++++++++----------
- 5 files changed, 18 insertions(+), 18 deletions(-)
+ 4 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
-index 15d303dfea..57aa44008b 100644
+index c69deb4a9d..bb3ca87368 100644
 --- a/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 +++ b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
-@@ -22,7 +22,7 @@ if Sys.iswindows()
+@@ -26,7 +26,7 @@ if Sys.iswindows()
  elseif Sys.isapple()
-     const libgit2 = "@rpath/libgit2.1.8.dylib"
+     const libgit2 = "@rpath/libgit2.1.9.dylib"
  else
--    const libgit2 = "libgit2.so.1.8"
+-    const libgit2 = "libgit2.so.1.9"
 +    const libgit2 = "libgit2.so"
  end
  
  function __init__()
 diff --git a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
-index 351cbe0e37..3e68a7f248 100644
+index e9392fe34a..6b9fa8cede 100644
 --- a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
 +++ b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
-@@ -22,7 +22,7 @@ if Sys.iswindows()
+@@ -26,7 +26,7 @@ if Sys.iswindows()
  elseif Sys.isapple()
      const libssh2 = "@rpath/libssh2.1.dylib"
  else
 -    const libssh2 = "libssh2.so.1"
 +    const libssh2 = "libssh2.so"
- end
- 
- function __init__()
-diff --git a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
-index 6367213e2c..47d878063c 100644
---- a/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
-+++ b/stdlib/MbedTLS_jll/src/MbedTLS_jll.jl
-@@ -30,9 +30,9 @@ elseif Sys.isapple()
-     const libmbedtls = "@rpath/libmbedtls.14.dylib"
-     const libmbedx509 = "@rpath/libmbedx509.1.dylib"
- else
--    const libmbedcrypto = "libmbedcrypto.so.7"
--    const libmbedtls = "libmbedtls.so.14"
--    const libmbedx509 = "libmbedx509.so.1"
-+    const libmbedcrypto = "libmbedcrypto.so"
-+    const libmbedtls = "libmbedtls.so"
-+    const libmbedx509 = "libmbedx509.so"
  end
  
  function __init__()
@@ -68,7 +50,7 @@ index 297cd25512..21d94be081 100644
  
  function __init__()
 diff --git a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
-index 9e03033c4e..d906f8ebe8 100644
+index b0699f132e..e64c86b908 100644
 --- a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 +++ b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 @@ -66,18 +66,18 @@ elseif Sys.isapple()
@@ -103,5 +85,5 @@ index 9e03033c4e..d906f8ebe8 100644
  
  function __init__()
 -- 
-2.46.0
+2.48.1
 

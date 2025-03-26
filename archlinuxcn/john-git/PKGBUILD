@@ -1,0 +1,146 @@
+# Maintainer: David Ryskalczyk <david.rysk at gmail.com>
+# Contributor: Vladimir Panteleev <arch-pkg at thecybershadow.net>
+# Contributor: Lex Black <autumn-wind at web dot de>
+# Contributor: Thorsten Töpper <atsutane-tu@freethoughts.de>
+# Contributor: Zezadas
+
+_pkgname=john
+pkgname=john-git
+pkgver=1.9.0.Jumbo.1.r1592.gff4c3b5cc
+pkgrel=1
+pkgdesc="fast password cracker (using the git repository of the jumbo patch)"
+arch=('i686' 'x86_64' "aarch64")
+url="http://www.openwall.com/$_pkgname/"
+license=('GPL2' 'custom')
+depends=('openssl' 'gmp' 'libpcap' 'openmpi' 'gcc-libs' 'opencl-icd-loader')
+makedepends=('git' 'libgsf' 'libxml2' 'nss' 'opencl-headers' 'pkg-config')
+optdepends=("perl: for executing some of the scripts at /usr/share/john"
+            "ruby: for executing some of the scripts at /usr/share/john"
+            "python: for executing some of the scripts at /usr/share/john"
+            "nss: to use mozilla2john"
+            "libgsf: to use office2john"
+            "libxml2: to use office2john"
+            "perl-compress-raw-lzma: to use 7z2john"
+            "python-scapy: to use oracle2john")
+provides=('john')
+conflicts=('john')
+backup=('etc/john/john.conf')
+options=('!strip')
+source=("$_pkgname::git+https://github.com/magnumripper/JohnTheRipper.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  ( set -o pipefail
+    git describe --long --tag 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+build() {
+  cd "$srcdir/$_pkgname/src"
+  #export PKG_CONFIG_PATH=/usr/lib/openssl-1.0/pkgconfig
+
+  local CFLAGS="${CFLAGS} -DCPU_FALLBACK"
+  local options=(
+    --prefix=/usr
+    --with-systemwide
+    --disable-native-tests
+    --enable-openmp
+    --enable-mpi
+    --enable-opencl
+    --enable-pkg-config
+    --enable-pcap
+  )
+
+  if [[ "${CARCH}" == "x86_64" ]]; then
+    ./configure "${options[@]}" CFLAGS="${CFLAGS/-DCPU_FALLBACK}"
+    make clean; make
+    mv ../run/john{,-non-avx}
+    ./configure "${options[@]}" CFLAGS="${CFLAGS} -mavx"
+    make clean; make
+    mv ../run/john{,-non-xop}
+    ./configure "${options[@]}" CFLAGS="${CFLAGS} -mxop"
+    make clean; make
+  elif [[ "${CARCH}" == "aarch64" ]]; then
+    ./configure "${options[@]}" CFLAGS="${CFLAGS/-DCPU_FALLBACK}"
+    make clean; make
+  elif [[ "${CARCH}" == "i686" ]]; then
+    ./configure "${options[@]}" CFLAGS="${CFLAGS}"
+    make clean; make
+    mv ../run/john{,-non-mmx}
+    ./configure "${options[@]}" CFLAGS="${CFLAGS} -mmmx"
+    make clean; make
+    mv ../run/john{,-non-sse}
+    ./configure "${options[@]}" CFLAGS="${CFLAGS} -msse2"
+    make clean; make
+    mv ../run/john{,-non-avx}
+    ./configure "${options[@]}" CFLAGS="${CFLAGS} -mavx"
+    make clean; make
+    mv ../run/john{,-non-xop}
+    ./configure "${options[@]}" CFLAGS="${CFLAGS} -mxop"
+    make clean; make
+  else
+    ./configure "${options[@]}" CFLAGS="${CFLAGS}"
+    make clean; make
+  fi
+    
+}
+
+package() {
+    cd ${srcdir}/$_pkgname/
+	
+	# config
+  install -Dm 644 run/john.conf -t "${pkgdir}/etc/john"
+  install -Dm 644 run/*.conf -t "${pkgdir}/usr/share/john"
+
+  # opencl
+  install -d "${pkgdir}/usr/share/john/opencl"
+  cp -r run/opencl/* "${pkgdir}/usr/share/john/opencl"
+  chmod -R o+r "${pkgdir}/usr/share/john/opencl"
+
+  # docs
+  install -d "${pkgdir}/usr/share/doc/john"
+  cp -rL doc/* "${pkgdir}/usr/share/doc/john"
+  rm "${pkgdir}/usr/share/doc/john/README"
+  install -Dm 644 README.md "${pkgdir}/usr/share/doc/${pkgname}"
+  install -Dm 644 doc/LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  chmod -R o+r "${pkgdir}"/usr/share/doc/john/*
+
+  # completion
+  install -Dm 644 run/john.bash_completion "${pkgdir}/usr/share/bash-completion/completions/john"
+  install -Dm 644 run/john.zsh_completion "${pkgdir}/usr/share/zsh/site-functions/_john"
+
+  # scripts
+  install -d "${pkgdir}/usr/bin" "${pkgdir}/usr/lib/john"
+  install -Dm 755 run/{*.py,*.pl,*.rb,*.lua,*.js,mailer,benchmark-unify} -t "${pkgdir}/usr/lib/john"
+  for ext in lua pl rb py; do
+    for script in run/*."${ext}"; do
+      ln -sf "/usr/lib/john/$(basename "${script}")" "${pkgdir}/usr/bin/$(basename "${script/.${ext}/}")"
+    done
+  done
+
+  # binaries
+  install -Dm 755 run/john -t "${pkgdir}/usr/bin"
+  install -Dm 755 run/john-non-* -t "${pkgdir}/usr/bin"||true
+  local john_bins=(bitlocker2john calc_stat cprepair dmg2john eapmd5tojohn genmkvpwd hccap2john \
+                   keepass2john mkvcalcproba putty2john racf2john raw2dyna SIPdump uaf2john \
+                   vncpcap2john wpapcap2john)
+  for bin in "${john_bins[@]}"; do
+    install -Dm 755 "run/${bin}" -t "${pkgdir}/usr/lib/john"
+    ln -sf "/usr/lib/john/${bin}" "${pkgdir}/usr/bin/${bin}"
+  done
+
+  # symlink john
+  for link in $(find run -maxdepth 1 -type l); do
+    ln -s john "${pkgdir}/usr/bin/$(basename "${link}")"
+    ln -s /usr/bin/john "${pkgdir}/usr/lib/john/$(basename "${link}")"
+  done
+
+  # data
+  install -Dm 644 run/*.chr run/*.lst run/dictionary* run/stats -t "${pkgdir}/usr/share/john"
+  install -Dm 644 run/rules/* -t "${pkgdir}/usr/share/john/rules"
+}
+
+# vim:set ts=2 sw=2 et:
+

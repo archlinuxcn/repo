@@ -1,0 +1,38 @@
+# Maintainer: Thomas Gläßle <t_glaessle@gmx.de>
+
+pkgname=tty-share
+pkgver=2.4.1
+pkgrel=1
+pkgdesc="Shares terminal session with no setup on remote end (browser)"
+arch=(aarch64 x86_64)
+url="https://github.com/elisescu/tty-share"
+license=('MIT')
+source=("git+https://github.com/elisescu/tty-share#tag=v${pkgver}")
+sha256sums=('aa156e2addb84708b469c60eaf15dae96016f60c4a71544ade191944986ab629')
+makedepends=('git' 'go')
+
+build() {
+  cd tty-share
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+
+  go build \
+      -mod=vendor \
+      -buildmode=pie \
+      -trimpath \
+      -ldflags "-linkmode=external -X main.version=${pkgver}" \
+      -mod=readonly \
+      -modcacherw \
+      -o tty-share .
+}
+
+package() {
+  cd tty-share
+
+  mkdir -p "$pkgdir/usr/bin" "$pkgdir/usr/share/licenses/$pkgname"
+  install -m755 tty-share "$pkgdir/usr/bin"
+  install -m644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

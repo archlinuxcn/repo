@@ -1,7 +1,7 @@
 # Maintainer: Nick Østergaard <oe.nick at gmail dot com>
 
 pkgname=kicad-git
-pkgver=9.0.0rc1.r27.g9c57d6c84f
+pkgver=9.99.0.r667.g6e2914b990
 pkgrel=1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('i686' 'x86_64')
@@ -48,6 +48,7 @@ build() {
   cmake .. -G Ninja\
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DKICAD_USE_CMAKE_FINDPROTOBUF=OFF \
     -DKICAD_USE_OCC=ON \
     -DKICAD_USE_EGL=ON \
     -DKICAD_SCRIPTING_WXPYTHON=ON \

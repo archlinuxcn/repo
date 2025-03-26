@@ -8,10 +8,10 @@
 # https://gitlab.archlinux.org/archlinux/packaging/packages/gtk3/-/blob/main/PKGBUILD
 
 pkgname=gtk3-classic
-_tagname=3.24.43-2
+_tagname=3.24.49
 _gtkver="${_tagname%-*}"
 pkgver="${_tagname/-/_}"
-pkgrel=2
+pkgrel=4
 pkgdesc="Patched GTK+3 that provides a more classic experience"
 url="https://github.com/lah7/gtk3-classic"
 arch=(x86_64)
@@ -78,18 +78,18 @@ makedepends=(
 install=gtk3.install
 source=(
   "${pkgname}-${_tagname}.tar.gz::${url}/archive/refs/tags/${_tagname}.tar.gz"
-  "https://download.gnome.org/sources/gtk+/${_gtkver%.*}/gtk+-${_gtkver}.tar.xz"
+  "https://gitlab.gnome.org/GNOME/gtk/-/archive/${_gtkver}/gtk-${_gtkver}.tar.gz"
   gtk-query-immodules-3.0.hook
   settings.ini
 )
-sha256sums=('e6ecceae848537122bec384d3eceac3ca28b3d5a403e302b18c2ef404c828002'
-            '7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7'
+sha256sums=('08504a31a57101ce134e67f551ae6ec7271e5ad09b6b884e6ccb84db6d41532e'
+            'a2958d82986c81794e953a3762335fa7c78948706d23cced421f7245ca544cbc'
             'a0319b6795410f06d38de1e8695a9bf9636ff2169f40701671580e60a108e229'
             '3c7d08538b04692b112d6850935aecd177b10c142df17bbc64a4f83ecb6c7a53')
 
 prepare() {
   local _src="${srcdir}/${pkgname}-${_tagname}"
-  local gtk_src="${srcdir}/gtk+-${_gtkver}"
+  local gtk_src="${srcdir}/gtk-${_gtkver}"
 
   cd "${gtk_src}"
   QUILT_PATCHES="${_src}" quilt push -av
@@ -110,7 +110,7 @@ build() {
   )
 
   CFLAGS+=" -DG_DISABLE_CAST_CHECKS"
-  arch-meson "${srcdir}/gtk+-${_gtkver}" build "${meson_options[@]}"
+  arch-meson "${srcdir}/gtk-${_gtkver}" build "${meson_options[@]}"
   meson compile -C build
 }
 

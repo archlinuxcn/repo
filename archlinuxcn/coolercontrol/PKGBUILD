@@ -3,33 +3,21 @@
 
 pkgname=coolercontrol
 _app_id="org.$pkgname.CoolerControl"
-pkgver=1.4.5
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="A program to monitor and control your cooling devices"
 arch=('x86_64')
 url="https://gitlab.com/coolercontrol/coolercontrol"
 license=('GPL-3.0-or-later')
 depends=(
+  'qt6-webengine'
   'gcc-libs'
   'glibc'
-  'gtk3'
   'hicolor-icon-theme'
-  'libappindicator-gtk3'
-  'webkit2gtk-4.1'
   'coolercontrold'
-  'coolercontrol-liqctld'
 )
 makedepends=(
-  'appmenu-gtk-module'
-  'cargo'
-  'gtk3'
-  'libappindicator-gtk3'
-  'librsvg'
-  'libvips'
-  'nodejs>=18'
-  'npm'
-  'openssl'
-  'webkit2gtk-4.1'
+  'cmake'
 )
 checkdepends=(
   'appstream-glib'
@@ -41,39 +29,28 @@ provides=(
 conflicts=(
   "$pkgname"
 )
-# lto is handled by cargo and can conflict with makepkg settings
-options=(
-  !lto
-)
 source=(
   "https://gitlab.com/coolercontrol/coolercontrol/-/archive/$pkgver/$pkgname-$pkgver.tar.gz"
 )
 sha256sums=(
-  '8e02963dfd6dbcb139ff2846742721f7a0e023a7ea353d93cb5cd66c40b08f3f'
+  '92f2577a6455c1faa3bd568776902e591ff71ed26ea547b22205b6b11ea76fd7'
 )
 
 build() {
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui"
-  npm ci
-  npm run build
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri"
-  export RUSTUP_TOOLCHAIN=stable
-  export CARGO_TARGET_DIR=target
-  cargo build --release --locked -F custom-protocol
+  cd "${srcdir}/$pkgname-$pkgver/coolercontrol"
+  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="/${pkgdir}/usr" 
+  make -C build -j8
 }
 
 check() {
   cd "${srcdir}/$pkgname-$pkgver"
   desktop-file-validate "packaging/metadata/$_app_id.desktop"
   appstream-util validate-relax "packaging/metadata/$_app_id.metainfo.xml"
-  # This UI check will fail in a docker environment without a graphical environment:
-  # cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri/target/release"
-  # ./coolercontrol --version
 }
 
 package() {
-  cd "${srcdir}/$pkgname-$pkgver/coolercontrol-ui/src-tauri"
-  install -Dm755 "target/release/coolercontrol" -t "$pkgdir/usr/bin"
+  cd "${srcdir}/$pkgname-$pkgver/coolercontrol"
+  make install
 
   cd "${srcdir}/$pkgname-$pkgver"
   # desktop metadata

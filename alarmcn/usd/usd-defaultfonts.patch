@@ -1,0 +1,16 @@
+diff --git a/pxr/usdImaging/usdviewq/CMakeLists.txt b/pxr/usdImaging/usdviewq/CMakeLists.txt
+index 63b172b00a..102f7cdf59 100644
+--- a/pxr/usdImaging/usdviewq/CMakeLists.txt
++++ b/pxr/usdImaging/usdviewq/CMakeLists.txt
+@@ -92,11 +92,6 @@ install(DIRECTORY
+     DESTINATION lib/python/pxr/Usdviewq
+ )
+
+-install(DIRECTORY
+-    fonts
+-    DESTINATION lib/python/pxr/Usdviewq
+-)
+-
+ pxr_test_scripts(
+     testenv/testUsdviewqSettings.py
+     testenv/testUsdviewqRootDataModel.py

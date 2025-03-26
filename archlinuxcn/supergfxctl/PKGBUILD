@@ -2,7 +2,7 @@
 # Contributor: Fabian Bornschein <fabiscafe-cat-mailbox-dog-com>
 
 pkgname=supergfxctl
-pkgver=5.2.4
+pkgver=5.2.7
 pkgrel=1
 pkgdesc="A utility for Linux graphics switching on Intel/AMD iGPU + nVidia dGPU laptops"
 arch=('x86_64')
@@ -12,9 +12,9 @@ depends=('gcc-libs' 'systemd')
 makedepends=('rust')
 provides=('supergfxctl')
 conflicts=('supergfxctl-git'
-           'optimus-manager')
+	'optimus-manager')
 source=("https://gitlab.com/asus-linux/supergfxctl/-/archive/$pkgver/supergfxctl-$pkgver.tar.gz")
-sha512sums=('a1b548650a85ed2c6d59b12afb41e853c634fbb33ebb16045dace369fdfb8e51581d59dae9bba3c1675c8c3835af21e61285dfa677944c84ddf8f0552314fd1e')
+sha512sums=('bd94646d289c9f3398e1bf2a189554ac60d4db2d4d2cefddc0b342e8a128d4682e20268e0b1f9b168441136ada0b6fadb097a5a35d1023a77528dbf0540de3af')
 options=(!debug)
 _gitdir=${pkgname%"-git"}
 
@@ -27,4 +27,3 @@ package() {
 	cd "$pkgname-$pkgver"
 	make DESTDIR="$pkgdir" install
 }
-

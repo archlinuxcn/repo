@@ -1,7 +1,7 @@
 pkgname=julia-git-simpleweightedgraphs-src
-pkgver=1.4.0
-_commit=a8da15db17b9b5767e9da444bd80954e834decd5
-pkgrel=2
+pkgver=1.5.0
+_commit=9962e89fe1bfbb312be13cbde48964b5d7258da4
+pkgrel=1
 pkgdesc="SimpleWeightedGraphs.jl"
 url="https://github.com/JuliaGraphs/SimpleWeightedGraphs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphs/SimpleWeightedGraphs.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('9a7d8e98b2d12271f06ce24f615fd6ee6f38ce126b8b0b0745f2e307e6575d7f')
 
 package() {
   cd SimpleWeightedGraphs.jl

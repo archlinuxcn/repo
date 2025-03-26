@@ -1,0 +1,16 @@
+maintainers:
+  - github: yingziwu
+    email: i@bgme.me
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['xiota'])
+post_build: aur_post_build
+
+time_limit_hours: 4
+
+update_on:
+  - source: aur
+    aur: rstudio-desktop
+  - source: manual
+    manual: 1.0

@@ -4,8 +4,8 @@
 
 pkgname=uefitool
 _pkgname=UEFITool
-pkgver=A68
-pkgrel=2
+pkgver=A70
+pkgrel=1
 epoch=2
 pkgdesc="UEFI firmware image viewer and editor and utilities"
 arch=('armv7h' 'aarch64' 'i686' 'x86_64')
@@ -17,20 +17,14 @@ provides=('uefipatch')
 conflicts=('uefipatch')
 replaces=('uefipatch')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('aa4bc52105ab83e5b094de9b54b31d52a30ae1c0f3f1ce7930088fc412efe900')
-
-prepare() {
-	mkdir -p "${_pkgname}-${pkgver}/build/"
-}
+sha256sums=('30da5061314d5c408c93d8f630408bca5ac28833c2ed4a4ef102517286e15625')
 
 build() {
-	cd "${_pkgname}-${pkgver}/build/"
-	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-	cmake --build .
+	cmake -B build -S "${_pkgname}-${pkgver}" -DCMAKE_INSTALL_PREFIX=/usr
+	cmake --build build
 }
 
 package() {
-	cd "${_pkgname}-${pkgver}/"
 	DESTDIR="${pkgdir}" cmake --install build
-	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "${_pkgname}-${pkgver}/LICENSE.md" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

@@ -8,6 +8,9 @@ pre_build_script: |
 
 post_build_script: git_pkgbuild_commit()
 
+repo_depends:
+  - cpr
+
 update_on:
   - source: github
     github: MatsuriDayo/nekoray
@@ -21,7 +24,5 @@ update_on:
     alpm: abseil-cpp
     strip_release: true
 
-  - source: alpm
-    alpm: protobuf
-    provided: libprotobuf.so
-    strip_release: true
+  - alias: protobuf
+  - alias: qt6-base

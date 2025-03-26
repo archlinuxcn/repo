@@ -3,8 +3,8 @@
 _name=pygame_sdl2
 _pkgname="python-${_name//_/-}"
 pkgname="${_pkgname}-git"
-pkgver=2.1.0.r469.87efd49
-pkgrel=11
+pkgver=2.1.0.r491.12a1053
+pkgrel=1
 pkgdesc="SDL2-based implementation of the Pygame API"
 arch=('x86_64')
 url="https://github.com/renpy/${_name}"
@@ -32,7 +32,7 @@ conflicts=("${_pkgname}")
 source=("git+${url}.git"
         "0001-Add-headers-argument-and-simplify-header-handling.patch")
 sha256sums=('SKIP'
-            'cfae1b9df49e065ffcf630ea0714e9c7628d433ea2464be4cb7ab1a8930613d4')
+            'b54245b34859a796eb3f2e8deeb6fce95b49db316ceb60959d1f1eecc960821e')
 
 pkgver() {
     cd "${srcdir}/${_name}"

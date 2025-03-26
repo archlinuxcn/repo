@@ -1,14 +1,10 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: run_cmd(['bash', './get_pkg.sh', 'asahi-meta'])
-post_build_script: |
-  git_add_files('.')
-  git_commit()
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: github
-    github: AsahiLinux/PKGBUILDs
-    path: asahi-meta
   - source: manual
-    manual: 1
+    manual: 5
+  - source: manual
+    manual: 2

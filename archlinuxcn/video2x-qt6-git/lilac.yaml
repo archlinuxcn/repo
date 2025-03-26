@@ -15,6 +15,5 @@ update_on:
   - source: github
     github: k4yt3x/video2x-qt6
 
-  - source: alpm
-    alpm: spdlog
-    provided: libspdlog.so
+  - alias: spdlog
+  - alias: qt6-base

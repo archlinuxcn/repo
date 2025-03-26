@@ -1,6 +1,6 @@
 pkgname=julia-git-libsixel_jll-src
-pkgver=1.10.3+1
-_commit=68e379318224ec45f8813017bb829d1c0f77b3e6
+pkgver=1.10.5+0
+_commit=e25d4f7156104b445f7ac21e5d991907c40116b2
 pkgrel=1
 pkgdesc="libsixel_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libsixel_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libsixel)
 source=("git+https://github.com/JuliaBinaryWrappers/libsixel_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('65ae1a55a4af2a62438e066988efdaf1bb984e9924bac5b446023c3e0f6dedc2'
+sha256sums=('0d650135127e79b60f72f74eed63462cc7c84936d9c338d4be8c60e052e40d44'
             'ed910a86e66b800e3f0942f0dd7b1619078a3663e43e342409b174642557852b')
 
 build() {

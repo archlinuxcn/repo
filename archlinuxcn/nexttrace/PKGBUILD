@@ -1,7 +1,7 @@
 # Maintainer: Coelacanthus <uwu@coelacanthus.name>
 
 pkgname=nexttrace
-pkgver=1.3.5
+pkgver=1.3.7
 pkgrel=1
 pkgdesc='An open source visual route tracking CLI tool'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('GPL-3.0-only')
 depends=('glibc')
 makedepends=('go' 'git')
 source=("git+https://github.com/nxtrace/Ntrace-V1.git#tag=v$pkgver")
-sha256sums=('9a962aa8a00c6fa0fef798d011641a1ecb281ebc3892b1732e6ce076b7861b51')
+sha256sums=('e5a4838da8eceb233bada3f8708e2a15778fd5456b2e1337d33c9c26be49f08d')
 
 build() {
   cd "Ntrace-V1"

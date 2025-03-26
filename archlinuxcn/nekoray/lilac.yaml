@@ -7,10 +7,13 @@ post_build_script: |
     git_pkgbuild_commit()
     update_aur_repo()
 
+repo_depends:
+  - cpr
+
 update_on:
   - source: github
-    github: MatsuriDayo/nekoray
-    use_latest_tag: true
+    github: Mahdi-zarei/nekoray
+    use_latest_release: true
 
   - source: alpm
     alpm: yaml-cpp
@@ -21,6 +24,5 @@ update_on:
     alpm: abseil-cpp
     strip_release: true
 
-  - source: alpm
-    alpm: protobuf
-    strip_release: true
+  - alias: protobuf
+  - alias: qt6-base

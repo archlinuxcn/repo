@@ -32,17 +32,16 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.12.0.DEV.1789.g083b24eaa4d
+pkgver=1.13.0.DEV.193.gd369c10c6fe
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
 license=('GPL')
-_soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so
-              libmbedcrypto.so libmbedtls.so libmbedx509.so)
+_soname_deps=(libcurl.so libgit2.so libopenlibm.so libssh2.so libcrypto.so libssl.so)
 depends_libs=(arpack fftw gmp libunwind mpfr pcre2 suitesparse
               openspecfun libutf8proc libblastrampoline
-              mbedtls2 zlib p7zip libnghttp2 ca-certificates-utils lld
+              openssl zlib 7zip libnghttp2 ca-certificates-utils lld
               blas-openblas)
 case "$CARCH" in
   x86_64)
@@ -67,7 +66,7 @@ _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
   0003-Clear-soname.patch
-  0004-Use-libc-for-libssp.patch
+  0004-Revert-to-hard-code-system-lib-path.patch
   0005-Support-loading-extensions-from-STDLIB.patch
   0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
   0007-Disable-per-thread-TLS-cache-for-now.patch
@@ -80,13 +79,13 @@ source=('git+https://github.com/JuliaLang/julia'
         download_curl.diff)
 sha512sums=('SKIP'
             'SKIP'
-            'bbc446fff179c22ef105ac2758bf6163551490a23df9ed0c5f01f01ad1fc85634c2fcc95978ff3a08c8b17580058b6167cee9f44d32f22f6291f433c95aff9f9'
-            'e877b72169138a228018258a3d9dc93223327ce7a5ab11b55ddb828ed3022a7852d30c7e7dcc2ac855cf7ce5c2e22c3e26187a09ee46384ee23ae388546d032c'
-            '04fda7a1c30c988ff018e4c60c1860a8299ddd43631f4246ee28812767a7f8796c2bbcddbd3c2d9c0c01129af549ec92e7865845cd6e9f3666f13c5ebc4a3adb'
-            'da6ad38f7de2ee380879940a0dbef89982f42ae69c5c7abfdc6265c6c334fbb2872bebbe6648f5bed214d63356cd25ffc2305cd7c69217264eaaa79575442e67'
-            '9ed605268b55eaffe2706db415f3bd7188c71513ba87f486ba72b184829d616d60928124ea90d632847225306c55a6f20ed6ab7bfc0447a560b370060bfb04ea'
-            '390927b87bdd49eebca8739c23a7a0477d20e3a9d743cc188067cafb3facaad045983b65fd857e9d1e10addacd88a37d08bb42bd565c455aa1793857cff001aa'
-            '778e0096a3f86e30d2944840157ece6706a9278b048b6db89bc43203f8548da7c3c9f589fc674db22f6905861411d930b108e60208d6ee19cd9631a3038d46ad'
+            'a060e496124e92a50cbfe187c0a46b8515b1d367aee48afbeeffff88d13fbe0f820342f18438d2fd08706086a6281b15153a3b0a17fbaba6abae7ebc9e88dc00'
+            '80774527d477c13802d05e878981517607f19f891f22492867e9a95195795bacf85fba84007ac1077394bf177f219529897e1773f483e80b8030344d972d1aaa'
+            '29467a59a4bbc7aa50fdc153c1d6ab9a853136c7d1fb7869b21c1e1355af6b04e001532f41f71726a5b04a47106ff901957cb7204d04eb32d0d8181ac4f88b94'
+            '01cc55fcb4f089aaf30729e45c58cd7851b7bfaeffe5a7e3c2214298f47f4eb8093da29bbd41e401221af454fd03d3ca1d90a6094cea6c9124057b5a44287858'
+            'b1c3fc89f31e95939c9bb97daa0bb112c2e10c0d140efb9b2001122c2709bc4efe7d4ec3bd86906009833ded24936eccaf516070912f1ec300ae6463df560d95'
+            'e57b5322a272e185399d7f54a7fd13e782ffae4b543a6a7b4dd041e999e398effb2436687552be879b59585edd9605694f094bca237c752c82d354f3f38e8151'
+            '1b30b86e01155e1cc846ef0b63951c74c12175bae511b4c755ca644a7b3d4c2b8b60144d83705798d29c222f150bea866b8616d1fbc56735f0705a1a4df967fd'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
             '5be40dcb72428885c06c8353019bd8fac0ea186a7536cf2bab2554d2724fb3d4a5b0b3f61727428e5cf7906f14a213f08dcb238b5bd10d408d86669e2c93ca78')
@@ -126,7 +125,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_SYSTEM_LIBSUITESPARSE=1
             USE_SYSTEM_LIBBLASTRAMPOLINE=1
             USE_SYSTEM_UTF8PROC=1
-            USE_SYSTEM_MBEDTLS=1
+            USE_SYSTEM_OPENSSL=1
             USE_SYSTEM_LIBSSH2=1
             USE_SYSTEM_NGHTTP2=1
             USE_SYSTEM_CURL=1
@@ -259,6 +258,11 @@ EOF
     echo > "$f"
   done
   _patch_suitesparse
+  # Try disabling threading when generating precompilations
+  # The module initialization code seems to have some bug that is triggered
+  # reliably on aarch64 on the build machine.
+  sed -i -e 's/debug_output = devnull/debug_output = stdout/' \
+      -e 's/cpu-target=native/cpu-target=native -t1,0/' contrib/generate_precompile.jl
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
   sed -i -e 's/\(symlink_system_library,CSL,libquadmath,[0-9]*\))/\1,ALLOW_FAILURE)/g' base/Makefile
 }
@@ -489,11 +493,6 @@ package-julia-in() {
     echo "}"
   ) > "${startdir}/install.pkg"
   true && install=install.pkg
-
-  # Make sure we use mbedtls2 version
-  ln -sf /usr/lib/libmbedcrypto.so.7 "${pkgdir}/usr/lib/julia/libmbedcrypto.so"
-  ln -sf /usr/lib/libmbedtls.so.14 "${pkgdir}/usr/lib/julia/libmbedtls.so"
-  ln -sf /usr/lib/libmbedx509.so.1 "${pkgdir}/usr/lib/julia/libmbedx509.so"
 
   # Manually filling in the soname dependencies since makepkg doesn't recognize the symlink
   # julia uses to specify the soname

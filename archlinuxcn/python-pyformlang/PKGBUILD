@@ -1,0 +1,26 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=pyformlang
+pkgname=python-${_name}
+pkgver=1.0.11
+pkgrel=1
+pkgdesc="A python library to manipulate formal languages and various automata"
+arch=(any)
+url="https://pypi.org/project/pyformlang/"
+license=(MIT)
+depends=(python python-networkx python-numpy python-pydot)
+makedepends=(python-build python-installer python-setuptools python-wheel)
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha512sums=('5d979ae9e62de9840f90126bda8a5fe4ff64147a135d3bf0f280b77e92b63d430355ee3e524fa5acaa51843d86bf7d0df25c57b7535fdb7233aeb1af33bde6eb')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}

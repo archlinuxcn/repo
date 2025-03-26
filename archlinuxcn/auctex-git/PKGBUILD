@@ -1,13 +1,13 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=auctex-git
-pkgver=14.0.8.r4.g492b7f4c
+pkgver=14.0.9.r21.g112517bb
 pkgrel=1
 epoch=1
 pkgdesc="TeX/LaTeX writing environment for Emacs - git checkout"
 arch=('any')
 url="http://savannah.gnu.org/projects/auctex"
-license=('GPL3')
+license=('GPL-3.0-or-later')
 depends=('texlive-core' 'emacs')
 makedepends=('git' 'texinfo' 'perl' 'texlive-latex' 'texlive-latexextra')
 optdepends=('texlive-latexextra: for preview-latex')
@@ -33,6 +33,20 @@ package() {
 
   find -type f \( -name '*.elc' -or -name '*.el' \) \
        -exec install -Dm644 {} "${pkgdir}/usr/share/emacs/site-lisp/auctex/"{} \;
+  # Do some clean up so that we are not poluting the load path...
+  # lpath.el is for installation only
+  rm "${pkgdir}/usr/share/emacs/site-lisp/auctex/lpath.el"
+  # And we don't need tests
+  rm -rf "${pkgdir}/usr/share/emacs/site-lisp/auctex/tests"
+  # Subdirectories in site-lisp are added to the load path recursively.
+  # This is not needed for auctex and in fact the generic names in styles/
+  # can break other modules.
+  # (e.g. it shadows emacs builtin color and url package with
+  #  something completely different and even breaks the loading of auctex itself...)
+  # We disable this behavior by adding .nosearch file to our subdirectories
+  for d in "${pkgdir}/usr/share/emacs/site-lisp/auctex"/*/; do
+    touch "${d}/.nosearch"
+  done
   install -dm755 "${pkgdir}/usr/share/info/"
   for f in doc/*.info; do
     install -m644 "$f" "${pkgdir}/usr/share/info/"

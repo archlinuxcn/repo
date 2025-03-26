@@ -1,4 +1,4 @@
-From 864631c9ee5e0c17c7240261dc904d3f419bdfdd Mon Sep 17 00:00:00 2001
+From e87e80f85f6dc1c1713614ecfed7d6895eb6fdf4 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 30 Aug 2024 13:34:31 -0400
 Subject: [PATCH 7/7] Disable per-thread TLS cache for now
@@ -10,10 +10,10 @@ The patch to libunwind that enables this is breaking.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/threading.c b/src/threading.c
-index 42174830d9..cdac9d5143 100644
+index 6b51efda9a..6e7c16ec83 100644
 --- a/src/threading.c
 +++ b/src/threading.c
-@@ -395,7 +395,7 @@ jl_ptls_t jl_init_threadtls(int16_t tid)
+@@ -401,7 +401,7 @@ jl_ptls_t jl_init_threadtls(int16_t tid)
  #if !defined(_OS_WINDOWS_) && !defined(JL_DISABLE_LIBUNWIND) && !defined(LLVMLIBUNWIND)
      // ensures libunwind TLS space for this thread is allocated eagerly
      // to make unwinding async-signal-safe even when using thread local caches.
@@ -23,5 +23,5 @@ index 42174830d9..cdac9d5143 100644
  
      return ptls;
 -- 
-2.46.0
+2.48.1
 

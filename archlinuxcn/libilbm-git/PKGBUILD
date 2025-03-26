@@ -1,0 +1,38 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: twa022 <twa022 at gmail dot com>
+
+pkgname=libilbm-git
+_pkgname=${pkgname%-git}
+pkgver=r75.586f582
+pkgrel=1
+pkgdesc="Parser library built on top of libiff, for ILBM: IFF Interleaved BitMap format"
+arch=('i686' 'x86_64' 'armv7h' 'aarch64')
+url="https://github.com/svanderburg/${_pkgname}"
+license=('MIT')
+depends=('libiff-git')
+makedepends=('help2man' 'git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	printf "r%s.%s" $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	./bootstrap
+}
+
+build() {
+	cd "${_pkgname}/"
+	./configure --prefix=/usr
+	make -j1 # help2man doesn't support parallel build
+}
+
+package() {
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}" install
+}

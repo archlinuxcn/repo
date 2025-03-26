@@ -5,8 +5,8 @@
 
 _pkgname=python-bidi
 pkgname=python-bidi
-pkgver=0.6.3
-pkgrel=2
+pkgver=0.6.6
+pkgrel=1
 pkgdesc='BIDI algorithm related functions'
 url='https://github.com/MeirKriheli/python-bidi'
 license=(GPL-3.0-or-later)
@@ -23,7 +23,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/MeirKriheli/python-bidi/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('f2df80f98a8dffcf510a42b13c24cdca5b9a298593c369961ef0400e5925f0e2e5cccc25f6e53e87b03a78ef8e7289f0a7afc8f00e27c52d723cf57bb24cc6a1')
+sha512sums=('4b11d6ff0db3cf22e8939cb583613174945a5d3eb7af9661ff44945c5d45e30caf75d1ffdece9ed8241f357c26b00b3a04f874f7f3991f6ef77801e1682d313e')
 
 build() {
   cd ${_pkgname}-${pkgver}

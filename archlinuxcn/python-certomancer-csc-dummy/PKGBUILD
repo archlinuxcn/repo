@@ -1,0 +1,26 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=certomancer-csc-dummy
+pkgname=python-${_name}
+pkgver=0.3.0
+pkgrel=2
+pkgdesc="A Certomancer-based demo CSC server for integration tests"
+arch=(any)
+url="https://github.com/MatthiasValvekens/${_name}"
+license=(MIT)
+depends=(python python-asn1crypto python-cryptography certomancer python-aiohttp python-pae)
+makedepends=(python-build python-installer python-setuptools python-wheel)
+source=(${_name}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
+sha512sums=('b61f37006c7f0b0614a763e6db2c0a2658e317643d376c83e2a072eb3ab76bf57e0c30ad25ec369dca2e9215ab17ede31f65d31f7382c7be444c8f625e9545ee')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+}

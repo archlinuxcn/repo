@@ -5,17 +5,17 @@
 # Contributor: Jon Nordby <jononor@gmail.com>
 
 pkgname=obs-build
-pkgver=20241114
+pkgver=20250321
 pkgrel=1
-license=(GPL)
-pkgdesc='OBS build script, can be used with OBS or stand alone'
-url=https://github.com/openSUSE/obs-build
-arch=(any)
-depends=(perl)
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openSUSE/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('74390500479c2372e3be85281dc48b52413299f102f742c82e69322c4d7da3b2')
+license=('GPL-2.0-or-later')
+pkgdesc="OBS build script, can be used with OBS or stand alone"
+url="https://github.com/openSUSE/${pkgname}"
+arch=('any')
+depends=('perl')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('586cd3e48c7112abbf5016994ec324170115ef98e851f8ec84fc095708e76420')
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" install
+	cd "${pkgname}-${pkgver}/"
+	make DESTDIR="${pkgdir}" install
 }

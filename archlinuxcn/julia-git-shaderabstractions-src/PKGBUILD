@@ -1,6 +1,6 @@
 pkgname=julia-git-shaderabstractions-src
-pkgver=0.4.1
-_commit=4d70d824f1b24154d1eae17a604ee3ef5c0a47d1
+pkgver=0.5.0
+_commit=6401f77507135a5d1569a7e15484612bd02bf567
 pkgrel=1
 pkgdesc="ShaderAbstractions.jl"
 url="https://github.com/SimonDanisch/ShaderAbstractions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SimonDanisch/ShaderAbstractions.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('81c13ce5ae966c7cd2e3c0a2fe1fc2858bd8c8cc26770df045920a80178fb627')
 
 package() {
   cd ShaderAbstractions.jl

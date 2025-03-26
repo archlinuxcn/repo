@@ -1,8 +1,8 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=speedtest
-pkgver=1.3.0
-pkgrel=2
+pkgver=1.4.0
+pkgrel=1
 pkgdesc="A graphical librespeed client written using gtk4 + libadwaita"
 arch=('any')
 url="https://github.com/Ketok4321/speedtest"
@@ -10,7 +10,7 @@ license=("GPL-3.0-or-later")
 depends=('gtk4' 'libadwaita' 'python-aiohttp' 'python-cairo' 'python-gobject')
 makedepends=('git' 'meson' 'blueprint-compiler')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha512sums=('75f0b2636676934b6df23ee1afd3f21a5b05d9377d768928121a850bbbba8873d6456ea5acd47b2ec7603e07b7281acec07e8a7fcc5a9c8fd4296bf826a05515')
+sha512sums=('2f30956fc69fd7b9725c8b988ec29ae50c8ea2c1f7d66a15d258fc09f86a82ad98edb5324cda744a59b930b2f95ace00f9abe2e8ffcfdb35f705a090ec28d630')
 
 prepare() {
 	cd "${pkgname}-${pkgver}"

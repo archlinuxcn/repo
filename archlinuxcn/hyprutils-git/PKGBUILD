@@ -2,7 +2,7 @@
 
 pkgname=hyprutils-git
 _pkgname="${pkgname%-git}"
-pkgver=0.3.0.r0.g5e45b1a
+pkgver=0.5.2.r0.gdd1f720
 pkgrel=1
 pkgdesc="Hyprland utilities library used across the ecosystem"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -12,7 +12,7 @@ depends=('pixman')
 makedepends=('git' 'cmake')
 source=("git+${url}.git")
 conflicts=("${_pkgname}")
-provides=("${_pkgname}")
+provides=("${_pkgname}" "lib${_pkgname}.so")
 sha256sums=('SKIP')
 
 pkgver() {

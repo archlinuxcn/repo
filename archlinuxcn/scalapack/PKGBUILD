@@ -2,8 +2,8 @@
 # Maintainer: Stefan Husmann <stefan-husmann@t-online.de>
 
 pkgname=scalapack
-pkgver=2.2.1
-pkgrel=3
+pkgver=2.2.2
+pkgrel=1
 arch=('aarch64' 'armv7h' 'i686' 'x86_64')
 pkgdesc="subset of scalable LAPACK routines redesigned for distributed memory MIMD parallel computers."
 url="http://www.netlib.org/scalapack/"
@@ -16,7 +16,7 @@ source=("git+https://github.com/Reference-ScaLAPACK/scalapack#tag=v${pkgver}"
         Makefile
         example1.f)
 options=(debug)
-sha256sums=('8c9717410a634a76fe7fbe4f2653382caa71123598693f65304ea9b79039fb45'
+sha256sums=('f3e2df1f4bf2f53f7bd330276e3cd0ae7939c079a088bae0dc784527b6e5707b'
             'a745c9f367d65e3c7611c126597a4681094b002552e47b621964d30a966aac7b'
             '5f7e81c1c76fc010677fd446bfc689c7f6af1a22a51093e8790e8a615159c541'
             'd9904ecb69f318c4782c0bd39ff2bff511af31960a2383a9d42d6620a266ea70')

@@ -3,7 +3,7 @@
 pkgname=caligula-git
 _pkgname=${pkgname%-git}
 pkgver=0.4.8.r11.g574f1f3
-pkgrel=1
+pkgrel=2
 pkgdesc="A user-friendly, lightweight TUI for disk imaging"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/ifd3f/${_pkgname}"
@@ -43,6 +43,5 @@ check() {
 package() {
 	cd "${_pkgname}/"
 	install -Dm755 "target/release/${_pkgname}" -t "$pkgdir/usr/bin/"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"
 }

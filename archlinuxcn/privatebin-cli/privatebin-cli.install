@@ -1,0 +1,19 @@
+post_install() {
+    echo
+    echo "You need to configure the privatebin instance to use."
+    echo "Read the manual: man privatebin.conf"
+    echo
+    echo "Or create a config for the default instance:"
+    echo "mkdir -p ~/.config/privatebin/"
+    echo 'cat << EOF > ~/.config/privatebin/config.json
+{
+    "bin": [
+        {
+            "name": "",
+            "host": "https://privatebin.net"
+        }
+    ]
+}
+EOF'
+    echo
+}

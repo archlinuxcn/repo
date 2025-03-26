@@ -1,0 +1,8 @@
+[solana]
+source = "github"
+github = "anza-xyz/agave"
+use_latest_release = true
+use_release_name = true
+include_regex = 'Release v(\d+.\d+.\d+)'
+from_pattern = 'Release v(\d+.\d+.\d+)'
+to_pattern = '\1'

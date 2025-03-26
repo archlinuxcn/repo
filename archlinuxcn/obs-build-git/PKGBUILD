@@ -1,21 +1,22 @@
+# Maintainer: Integral <integral@member.fsf.org>
 # Contributor: Johannes Dewender arch at JonnyJD dot net
 # Contributor: Eduardo Robles Elvira <edulix AT gmail DOT com>
 # Contributor: Jon Nordby <jononor@gmail.com>
 
 pkgname=obs-build-git
 _pkgname=${pkgname%-git}
-pkgver=20241114.r41.gb4ce84e
+pkgver=20250321.r10.gcf7bf72
 pkgrel=1
-pkgdesc="Building part of the OpenSUSE Build Service, osc-build - git version"
-url="http://build.opensuse.org"
+license=('GPL-2.0-or-later')
+pkgdesc="OBS build script, can be used with OBS or stand alone"
+url="https://github.com/openSUSE/${_pkgname}"
 arch=('any')
-license=("GPL-2.0-or-later")
-depends=('bash' 'perl' 'rpm-org' 'xz')
+depends=('perl')
 makedepends=('git')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("git+https://github.com/openSUSE/${_pkgname}.git")
-md5sums=('SKIP')
+source=("git+${url}.git")
+sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -24,5 +25,5 @@ pkgver() {
 
 package() {
 	cd "${_pkgname}/"
-	make install DESTDIR="${pkgdir}"
+	make DESTDIR="${pkgdir}" install
 }

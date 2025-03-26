@@ -1,6 +1,6 @@
 pkgname=julia-git-macrotools-src
-pkgver=0.5.13
-_commit=7547d12de4e423e6b737d5030457a4b57399f385
+pkgver=0.5.15
+_commit=db8ed6c7ca07c64ff4ecce2b476bde183b1b29ec
 pkgrel=1
 pkgdesc="MacroTools.jl"
 url="https://github.com/FluxML/MacroTools.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FluxML/MacroTools.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('1232178e87fb63a636cb96b4857b7d12cba2f81ae37ecc85200c56896d2f7e18')
 
 package() {
   cd MacroTools.jl

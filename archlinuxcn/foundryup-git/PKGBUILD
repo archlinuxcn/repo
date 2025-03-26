@@ -1,0 +1,30 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=foundry
+pkgname=foundryup-git
+pkgver=r4611.f747494
+pkgrel=1
+pkgdesc="Update or revert to a specific Foundry branch with ease"
+license=('MIT OR Apache-2.0')
+arch=(any)
+url=https://github.com/foundry-rs/foundry
+depends=(cargo bash)
+makedepends=(git)
+provides=(foundryup forge cast anvil chisel)
+conflicts=(foundryup)
+source=(git+$url.git)
+sha256sums=('SKIP')
+install='post.install'
+
+pkgver() {
+  cd "$_name"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+package() {
+  cd "$_name"
+  install -Dm755 foundryup/foundryup -t "$pkgdir/usr/bin"
+  install -Dm644 foundryup/README.md -t "$pkgdir/usr/share/doc/$pkgname"
+  install -Dm644 LICENSE-MIT -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 LICENSE-APACHE -t "$pkgdir/usr/share/licenses/$pkgname"
+}

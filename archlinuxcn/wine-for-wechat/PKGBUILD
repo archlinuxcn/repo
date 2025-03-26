@@ -5,16 +5,16 @@
 
 _pkgname=wine
 pkgname=wine-for-wechat
-pkgver=9.22
+pkgver=10.4
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
-source=(https://dl.winehq.org/wine/source/9.x/$_pkgname-$_pkgbasever.tar.xz{,.sign}
+source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbasever"
         30-win32-aliases.conf
-        wine-binfmt.conf wine-wechat.patch)
-sha512sums=('8b54aee952abd08969d3485ef12db9aabeea8627fdaf7a27cb3392477580f2b5882467cd15ba4670741b6b20cc48bb5e3585d44ee4fb95a013c513a3c04342e4'
-            'SKIP'
+        wine-binfmt.conf
+        wine-wechat.patch)
+sha512sums=('24f8c612b627f8aa4257b91f3fa1c51e8a4d8caf48df5d12e6f72b3477b708588fd53176da3856302d98ffcb5fefa01bcbfd650f5c811a0a20d2abf169c7e7c3'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
             '646dfd6ec62fb9ddbfb27aac0ac80d87926fbc3360bb53cca942622e95d1ec380f0b5efdfd45bbe1cdce72661b7b36b15ffb7874b1b4269e3bd56a14ec0d2166')
@@ -41,13 +41,13 @@ depends=(
   wayland
 )
 makedepends=(autoconf bison perl flex mingw-w64-gcc
+  git
   alsa-lib
   gnutls
   gst-plugins-base-libs
   libcups
   libgphoto2
   libpulse
-  libxcomposite
   libxcomposite
   libxinerama
   libxxf86vm
@@ -94,11 +94,16 @@ install=wine.install
 provides=(wine=$pkgver)
 conflicts=(wine)
 
-build() {
-  # Allow ccache to work
-  mv $_pkgname-$_pkgbasever $_pkgname
-  (cd $_pkgname && patch -p1 < ../wine-wechat.patch)
+prepare() {
+  # Get rid of old build dirs
+  rm -rf $_pkgname-{32,64}-build
+  mkdir $_pkgname-{32,64}-build
 
+  cd wine
+  patch -p1 < "$srcdir"/wine-wechat.patch
+}
+
+build() {
   # Doesn't compile without remove these flags as of 4.10
   export CFLAGS="$CFLAGS -ffat-lto-objects"
 
@@ -107,10 +112,9 @@ build() {
   export CROSSCXXFLAGS="-O2 -pipe -g"
   export CROSSLDFLAGS="-Wl,-O1"
 
-  msg2 "Building Wine-64..."
-  mkdir "$_pkgname-64-build"
-  cd "$_pkgname-64-build"
-  ../$_pkgname/configure \
+  echo "Building Wine-64..."
+  cd "$srcdir/$_pkgname-64-build"
+  ../wine/configure \
     --prefix=/usr \
     --libdir=/usr/lib \
     --with-x \
@@ -120,10 +124,21 @@ build() {
     --enable-archs=x86_64,i386
 
   make
+
+  
+  
+  
+  
+
+  
 }
 
 package() {
-  msg2 "Packaging Wine-64..."
+  
+  
+  
+
+  echo "Packaging Wine-64..."
   cd "$srcdir/$_pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \

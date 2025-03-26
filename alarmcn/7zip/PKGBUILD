@@ -1,0 +1,58 @@
+# Maintainer: Evangelos Foutras <foutrelis@archlinux.org>
+
+pkgname=7zip
+pkgver=24.09
+pkgrel=3
+pkgdesc="File archiver for extremely high compression"
+arch=(aarch64 x86_64)
+url="https://www.7-zip.org"
+license=('LGPL-2.1-or-later' 'BSD-3-Clause' 'LicenseRef-UnRAR')
+depends=('glibc' 'gcc-libs' 'sh')
+makedepends=('uasm')
+provides=('p7zip')
+conflicts=('p7zip')
+_replaces=('p7zip')
+source=(https://7-zip.org/a/7z${pkgver//./}-src.tar.xz)
+sha256sums=('49c05169f49572c1128453579af1632a952409ced028259381dac30726b6133a')
+
+build() {
+  local _platform_flags=()
+
+  case $CARCH in
+    x86_64)
+      _platform_flags=(PLATFORM=x64 IS_X64=1 MY_ASM=uasm USE_ASM=1)
+      ;;
+    i686)
+      _platform_flags=(PLATFORM=x86 IS_X86=1 MY_ASM=uasm USE_ASM=1)
+      ;;
+    aarch64)
+      _platform_flags=(PLATFORM=arm64 IS_ARM64=1 MY_ASM=uasm USE_ASM=1)
+      ;;
+  esac
+
+  for component in Bundles/{Alone,Alone7z,Format7zF,SFXCon} UI/Console; do
+    make -C CPP/7zip/$component -f ../../cmpl_gcc.mak "${_platform_flags[@]}" \
+      LFLAGS_STRIP= \
+      CC="cc $CPPFLAGS $CFLAGS $LDFLAGS" \
+      CXX="g++ $CPPFLAGS $CXXFLAGS $LDFLAGS"
+  done
+}
+
+package() {
+  install -Dt "$pkgdir/usr/lib/7zip" \
+    CPP/7zip/Bundles/Alone/b/g/7za \
+    CPP/7zip/Bundles/Alone7z/b/g/7zr \
+    CPP/7zip/Bundles/Format7zF/b/g/7z.so \
+    CPP/7zip/UI/Console/b/g/7z
+  install -D CPP/7zip/Bundles/SFXCon/b/g/7zCon "$pkgdir/usr/lib/7zip/7zCon.sfx"
+
+  mkdir -p "$pkgdir/usr/bin"
+  for _prog in 7za 7zr 7z; do
+    echo -e "#!/bin/sh\nexec /usr/lib/7zip/$_prog \"\$@\"" >"$pkgdir/usr/bin/$_prog"
+    chmod +x "$pkgdir/usr/bin/$_prog"
+  done
+
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" DOC/{,unRar}License.txt
+}
+
+# vim:set ts=2 sw=2 et:

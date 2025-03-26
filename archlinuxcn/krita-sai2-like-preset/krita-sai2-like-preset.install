@@ -1,0 +1,11 @@
+post_install() {
+    echo
+    echo "This package does not provide imitations of SAI2 (PaintTool SAI Ver.2) brushes."
+    echo "It offers a similar workspace and a basic brush tag preset."
+    echo "Please focus on improving your painting skills with a limited brush set."
+    echo
+}
+
+post_upgrade() {
+    post_install
+}

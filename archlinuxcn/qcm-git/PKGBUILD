@@ -3,7 +3,7 @@
 
 pkgname=qcm-git
 _pkgname=${pkgname%-git}
-pkgver=1.1.2.r92.g6ab22cf
+pkgver=1.1.2.r95.g6085d0c
 pkgrel=2
 pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
@@ -18,32 +18,50 @@ depends=(
 	'dbus'
 	'ffmpeg'
 	'fmt'
-	'cubeb-git')
+	'cubeb-git'
+	'kdsingleapplication')
 makedepends=(
 	'git'
 	'cmake'
-	'ninja'
 	'asio'
 	'pegtl'
 	'nlohmann-json'
-	'ctre')
+	'ctre'
+	'tl-expected')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("git+${url}.git")
-sha256sums=('SKIP')
+source=(
+	"git+${url}.git"
+	"git+https://github.com/effolkronium/random.git"
+	"git+https://github.com/hypengw/QmlMaterial.git"
+	"git+https://github.com/hypengw/qcm-jellyfin-plugin.git"
+)
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 prepare() {
-	git -C Qcm submodule update --init --recursive
+	cd Qcm
+	git rm third_party/{expected,KDSingleApplication}
+
+	git submodule init
+	git config submodule.third_party/random.url "${srcdir}/random"
+	git config submodule.qml_material.url "${srcdir}/QmlMaterial"
+	git config submodule.service/jellyfin.url "${srcdir}/qcm-jellyfin-plugin"
+	git -c protocol.file.allow=always submodule update
+
+	sed -i '/add_subdirectory(KDSingleApplication EXCLUDE_FROM_ALL)/d' third_party/CMakeLists.txt
+	sed -i 's|kdsingleapplication.h|kdsingleapplication-qt6/kdsingleapplication.h|' app/main.cpp
 }
 
 build() {
 	cmake -B build \
 		-S Qcm \
-		-GNinja \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr
 

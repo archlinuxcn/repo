@@ -1,0 +1,10 @@
+#!/bin/bash
+
+[[ "$1" != "pre" && "$1" != "post" ]] && exit 1
+[[ -f /etc/pacman-boot-backup.conf ]] && . /etc/pacman-boot-backup.conf
+
+BACKUP_PATH_DEST=${BACKUP_PATH_DEST:-/.bootbackup}/$1
+
+rm -rf "${BACKUP_PATH_DEST}"
+mkdir -p "${BACKUP_PATH_DEST}"
+cp -aT /boot "${BACKUP_PATH_DEST}"

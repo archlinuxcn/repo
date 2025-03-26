@@ -1,65 +1,44 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.7.134.r0.g79441500fe
+pkgver=0.8.41.r0.g9e58abc951
 pkgrel=1
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
 url="https://xemu.app/"
-license=('GPL2')
+license=('GPL-2.0-only')
 depends=(
-	'dtc'
 	'gcc-libs'
 	'glibc'
+	'glslang'
 	'hicolor-icon-theme'
-	'libhttplib.so'
 	'sdl2'
-	'zlib'
 )
 makedepends=(
 	'cmake'
+	'curl'
 	'git'
 	'glib2'
 	'glu'
 	'gtk3'
-	'keyutils'
 	'libepoxy'
 	'libpcap'
 	'libsamplerate'
 	'libslirp'
 	'meson'
 	'nlohmann-json'
-	'openssl'
-	'pixman'
 	'python-yaml'
 	'tomlplusplus>=3.1'
+	'vulkan-headers'
+	'vulkan-icd-loader'
 	'xxhash>=0.8'
+	'zlib'
 )
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 install=$_pkgname.install
-source=(
-	"$_pkgname::git+https://github.com/xemu-project/xemu.git"
-	"$_pkgname-imgui::git+https://github.com/xemu-project/imgui.git"
-	'berkeley-softfloat-3::git+https://gitlab.com/qemu-project/berkeley-softfloat-3.git'
-	'berkeley-testfloat-3::git+https://gitlab.com/qemu-project/berkeley-testfloat-3.git'
-	'genconfig::git+https://github.com/mborgerson/genconfig.git'
-	'implot::git+https://github.com/epezent/implot.git'
-	'keycodemapdb::git+https://gitlab.com/qemu-project/keycodemapdb.git'
-	'nv2a_vsh_cpu::git+https://github.com/abaire/nv2a_vsh_cpu.git'
-	'use-system-libs.patch'
-)
-b2sums=(
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'SKIP'
-	'ab5636092dd543c38b9756914100f15a44222d5e4a3160360a1d739725a65f95ea8a5c48e11358397c0a07bbbc04ed604fc86295d979209481b1e56c5c7b4dcf'
-)
+source=("$_pkgname::git+https://github.com/xemu-project/xemu.git")
+b2sums=('SKIP')
 
 pkgver() {
 	cd $_pkgname
@@ -68,44 +47,43 @@ pkgver() {
 
 prepare() {
 	cd $_pkgname
-	git config submodule.genconfig.url ../genconfig
-	git config submodule.hw/xbox/nv2a/thirdparty/nv2a_vsh_cpu.url ../nv2a_vsh_cpu
-	git config submodule.tests/fp/berkeley-softfloat-3.url ../berkeley-softfloat-3
-	git config submodule.tests/fp/berkeley-testfloat-3.url ../berkeley-testfloat-3
-	git config submodule.ui/keycodemapdb.url ../keycodemapdb
-	git config submodule.ui/thirdparty/imgui.url ../$_pkgname-imgui
-	git config submodule.ui/thirdparty/implot.url ../implot
-	git -c protocol.file.allow=always submodule update
+	echo method=cmake | tee -a subprojects/{SPIRV-Reflect,VulkanMemoryAllocator,glslang,nv2a_vsh_cpu,volk}.wrap
+	meson subprojects download
 	mkdir -p ../build
-	patch -Np1 < ../use-system-libs.patch
 	python scripts/gen-license.py > XEMU_LICENSE
+	# fix bug with cmake subprojects
+	sed -i '/CPU_CFLAGS="-m64"/d' configure
 }
 
 build() {
 	cd build
 	../$_pkgname/configure \
 		--audio-drv-list="sdl" \
-		--disable-debug-info \
+		--disable-docs \
+		--disable-download \
+		--disable-werror \
+		--enable-pie \
 		--extra-cflags="-DXBOX=1" \
 		--ninja="$NINJA" \
 		--target-list="i386-softmmu" \
-		--with-git-submodules=ignore
+		-Dbuildtype=plain
 	make qemu-system-i386
 }
 
 package() {
 	depends+=(
+		'libcurl.so'
 		'libepoxy.so'
 		'libgdk-3.so'
 		'libglib-2.0.so'
 		'libgobject-2.0.so'
 		'libgtk-3.so'
-		'libkeyutils.so'
 		'libpcap.so'
-		'libpixman-1.so'
 		'libsamplerate.so'
 		'libslirp.so'
 		'libtomlplusplus.so'
+		'libxxhash.so'
+		'libz.so'
 	)
 	cd $_pkgname
 	# shellcheck disable=SC2154

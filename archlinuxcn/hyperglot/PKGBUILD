@@ -1,8 +1,8 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=hyperglot
-pkgver=0.7.1
-pkgrel=2
+pkgver=0.7.2
+pkgrel=1
 pkgdesc='A database and tools for detecting language support in fonts'
 arch=(any)
 url="https://github.com/rosettatype/$pkgname"
@@ -18,7 +18,7 @@ makedepends=(python-{build,installer,wheel}
              python-setuptools)
 _archive="$pkgname-$pkgver"
 source=("$url/archive/$pkgver/$_archive.tar.gz")
-sha256sums=('57fdc1c71208cc9a0e4ff9dd626993345864a4e5b6aefed452ef54f8c4deca08')
+sha256sums=('3403d430d4944fd5ac388effc74503381b0ebb77878850b7224b6095f6e0d8b8')
 
 build() {
 	cd "$_archive"

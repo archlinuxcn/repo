@@ -4,7 +4,7 @@
 _name=mutf8
 pkgname=python-$_name
 pkgver=1.0.6
-pkgrel=6
+pkgrel=7
 pkgdesc='MUTF-8 encoder/decoder'
 arch=('x86_64')
 url="https://github.com/TkTech/$_name"

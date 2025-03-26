@@ -1,0 +1,39 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - lerc
+
+update_on:
+  - source: manual
+    manual: 4.4.0
+  - source: alpm
+    alpm: libwebp
+    provided: libwebp.so
+  - source: alpm
+    alpm: zstd
+    provided: libzstd.so
+  - source: alpm
+    alpm: xz
+    provided: liblzma.so
+  - source: alpmfiles
+    pkgname: jbigkit
+    strip_dir: true
+    filename: libjbig.so.\d+.*
+  - source: alpm
+    alpm: libjpeg-turbo
+    provided: libjpeg.so
+  - source: alpm
+    alpm: libdeflate
+    provided: libdeflate.so
+  - source: alpm
+    alpm: zlib
+    provided: libz.so
+  - source: manual
+    manual: 1

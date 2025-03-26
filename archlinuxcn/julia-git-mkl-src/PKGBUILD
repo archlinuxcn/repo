@@ -1,6 +1,6 @@
 pkgname=julia-git-mkl-src
-pkgver=0.7.0
-_commit=d756b68b7db212aa175b1732da2212f7d0dd3102
+pkgver=0.8.0
+_commit=4cce407553dfd1a203e056e44d004503761878f7
 pkgrel=1
 pkgdesc="MKL.jl"
 url="https://github.com/JuliaLinearAlgebra/MKL.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/MKL.jl.git#commit=$_commit")
-sha256sums=('3e195e11d531ca3457a8564000faf1ad910a962e5d8e238681a1295222ab78c6')
+sha256sums=('046795d253e3d8714153bf600b59f631ca4be99311583f4ede789bd789c36160')
 
 package() {
   cd MKL.jl

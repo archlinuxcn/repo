@@ -1,61 +1,52 @@
 # Maintainer: George Rawlinson <grawlinson@archlinux.org>
 
 pkgname=lemmy-ui
-pkgver=0.19.8
+pkgver=0.19.10
 pkgrel=1
-pkgdesc='The official web app for lemmy'
+pkgdesc="The official web app for lemmy"
 arch=('any')
-url='https://github.com/LemmyNet/lemmy-ui'
-license=('AGPL3')
+url="https://github.com/LemmyNet/${pkgname}"
+license=('AGPL-3.0-or-later')
 depends=('nodejs' 'lemmy')
 makedepends=('git' 'pnpm' 'python')
-backup=('etc/lemmy/lemmy-ui.env')
-_commit='61a827a1cca8883dd422b3e4dbe305b0645d99f1'
+backup=("etc/lemmy/${pkgname}.env")
 source=(
-  "$pkgname::git+https://github.com/LemmyNet/lemmy-ui#commit=$_commit"
-  'git+https://github.com/LemmyNet/lemmy-translations.git'
-  'systemd.service'
-  'tmpfiles.conf'
-  'config.env'
+	"git+https://github.com/LemmyNet/${pkgname}#tag=${pkgver}"
+	'git+https://github.com/LemmyNet/lemmy-translations.git'
+	"${pkgname}.service"
+	'tmpfiles.conf'
+	'config.env'
 )
-b2sums=('SKIP'
-        'SKIP'
-        '45a104b346e866fdefd84e581eb2b1bb8d8e0aef2193a4a7996fc3d6f0541edb3da0bca766af487efea9760a6c655a1577d3cc901dee54ad0a0fd73182476a04'
-        'ba5c683c5a71ceae18b009c7177def65de4311ecebed9d7d1e5d75e09aadb3d8b7ff2e5007d1eb23bdd3a2c389e581dc88c2131d492eaa8245269d75d63e07a7'
-        '2d498b293181523feecff185cb8592dd5af90ed482755232b5ef7dc143dca2de4808073315c7d638e051ab4513464b8c8440d69d2f345de67d220b7c1b0009c2')
-
-pkgver() {
-  cd "$pkgname"
-  git describe --tags | sed 's/^v//'
-}
+sha256sums=('1eacabf98313d0cecb1d184109b1eb6fe6eced05fd55f1cf81ee9e210bceb9c1'
+            'SKIP'
+            'b453ea4670940780bbf01a8f424b96b6e48bf3827cf8bb076bb5070c80103ff1'
+            '8cbb921e03d7d558a242470f09dd76181542a349269338724488a6d26b87e095'
+            '37249c35f7596fa16a15545dc087862bbb8073eb4f412905b3b7fa19fc5dce15')
 
 prepare() {
-	cd "$pkgname"
+	cd "${pkgname}/"
 
-  # setup submodules
-  git submodule init
-  git config submodule.lemmy-translations.url ../lemmy-translations
-  git -c protocol.file.allow=always submodule update
+	# setup submodules
+	git submodule init
+	git config submodule.lemmy-translations.url "${srcdir}/lemmy-translations"
+	git -c protocol.file.allow=always submodule update
 
-  # set UI version
-  sed -i "s/unknown version/$pkgver/" src/shared/version.ts
+	# set UI version
+	sed -i "s/unknown version/${pkgver}/" src/shared/version.ts
 }
 
 build() {
-	cd "$pkgname"
-
-  pnpm install
-  pnpm build:prod
+	cd "${pkgname}/"
+	pnpm install
+	pnpm build:prod
 }
 
 package() {
-  # systemd integration
-  install -vDm644 config.env "$pkgdir/etc/lemmy/$pkgname.env"
-  install -vDm644 systemd.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
-  install -vDm644 tmpfiles.conf "$pkgdir/usr/lib/tmpfiles.d/$pkgname.conf"
+	# systemd integration
+	install -vDm644 "${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+	install -vDm644 config.env "${pkgdir}/etc/lemmy/${pkgname}.env"
+	install -vDm644 tmpfiles.conf "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
 
-	cd "$pkgname"
-
-  install -vd "$pkgdir/usr/share/$pkgname"
-  cp -R dist node_modules "$pkgdir/usr/share/$pkgname"
+	install -vd "${pkgdir}/usr/share/${pkgname}/"
+	cp -r ${pkgname}/{dist,node_modules} "${pkgdir}/usr/share/${pkgname}/"
 }

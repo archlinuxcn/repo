@@ -22,13 +22,14 @@ The PKGBUILD file supports customization via environment variables. Here's a lis
 - `_subarch`: Specifies the subarchitecture to compile for (see the [PKGBUILD file](https://git.staropensource.de/JeremyStarTM/aur-linux-clear/src/branch/develop/PKGBUILD) for a list of all subarches). Default is `41` (Generic x86-64), which is compatible with all amd64 processors. Must be a number
 - `_subarch_microarch`: Specifies the microarchitecture to compile for. Only applies to and is required by the `GENERIC_CPU` subarch. Must be a number between `1` and `4` ([click for more information](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels))
 - `_debug`: Force enables debug options when set to `y`, force disables debug options when set to `n` or uses the config defaults when unset
+- `_show_compile`: Enables verbose-er compilation output and displays all executing `make` targets. Set to `y` by default, set to `n` for 'pv' output
 
 All of these variables just need to be set for them to apply, except for `_subarch` and `_debug`. See their descriptions for more information.
 
 ## GPG errors
 If makepkg complains about invalid PGP keys, try running this command:
 ```bash
-gpg --locate-keys torvalds@kernel.org gregkh@kernel.org sashal@kernel.org benhh@debian.org
+gpg --locate-keys torvalds@kernel.org gregkh@kernel.org sashal@kernel.org benh@debian.org
 ```
 This command only needs to be executed once.
 
@@ -36,9 +37,16 @@ This command only needs to be executed once.
 Please only submit issues if they aren't bug reports about the package or help requests.
 Please keep them on the AUR only. This prevents unnecessary signups.
 
+## Branches
+This repository (at least if you view it on [sos!git](https://git.staropensource.de/JeremyStarTM/aur-linux-clear))
+has two branches: `master` and `develop`. The `master` branch is the stable branch, where stable changes
+are introduced. The `develop` branch is (as you might have already guessed) the development branch.
+
+Please only submit PRs to the `develop` branch. Pull requests to the `master` branch will be rejected.
+
 ## License
-This package does not yet have a license as the original repository (before [me](https://git.staropensource.de/JeremyStarTM) becoming it's maintainer) did not have one yet.
-I have contacted [metak](https://aur.archlinux.org/account/metak) (the previous maintainer) to negotiate a license.
+The linux-clear package is licensed under the BSD Zero-Clause License.
+I ([JeremyStarTM](https://git.staropensource.de/JeremyStarTM)) negotiated it with [metak](https://aur.archlinux.org/account/metak) (the previous maintainer) and [yarost12](https://git.staropensource.de/yarost12) (co-maintainer).
 
 ## Build tool
-*If you want a dead simple way to compile this package, you can [try out my build tool](https://git.staropensource.de/JeremyStarTM/jstm-optimized). It includes a few no nonsense changes to the kernel configuration and allows you to configure the PKGBUILD in a simple manner to decrease build time. If you don't want that, using `makepkg` as-is works fine too.*
+~~*If you want a dead simple way to compile this package, you can [try out my build tool](https://git.staropensource.de/JeremyStarTM/jstm-optimized). It includes a few no nonsense changes to the kernel configuration and allows you to configure the PKGBUILD in a simple manner to decrease build time. If you don't want that, using `makepkg` as-is works fine too.*~~ Deprecated until rewrite.

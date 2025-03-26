@@ -3,8 +3,8 @@
 # Contributor: Astro Benzene <universebenzene at sina dot com>
 
 pkgname=astrometry.net
-pkgver=0.96
-pkgrel=3
+pkgver=0.97
+pkgrel=2
 pkgdesc="Automatic recognition of astronomical images. Compiled with -march=x86-64 -mtune=core2 for most modern x86-64 CPUs."
 arch=('x86_64')
 url="https://astrometry.net/"
@@ -20,7 +20,7 @@ backup=(etc/astrometry.cfg)
 install=astrometry.net.install
 source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz"
 )
-sha1sums=('d4c975fc45f83649aef7e23003ee7c8b70f8c35b')
+sha1sums=('a6cfa360cc2ecb4fdf550afd67ac3a5cc8e20c7a')
 
 prepare() {
     cd ${pkgname}-${pkgver}
@@ -61,8 +61,4 @@ package() {
     sed -e "s|${pkgdir}/usr/data|/usr/share/astrometry/data|" -e 's|#inparallel|inparallel|' -i ${pkgdir}/etc/astrometry.cfg
     # remove useless file
     rm ${pkgdir}/usr/share/doc/astrometry/report.txt
-    # those executables are included in cfitsio package
-    rm ${pkgdir}/usr/bin/fitscopy
-    rm ${pkgdir}/usr/bin/imcopy
-    rm ${pkgdir}/usr/bin/fitsverify
 }

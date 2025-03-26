@@ -1,0 +1,19 @@
+diff --git a/sdk/cargo-build-sbf/src/main.rs b/sdk/cargo-build-sbf/src/main.rs
+index 6d02499c..e7f7dde2 100644
+--- a/sdk/cargo-build-sbf/src/main.rs
++++ b/sdk/cargo-build-sbf/src/main.rs
+@@ -47,13 +47,7 @@ impl Default for Config<'_> {
+         Self {
+             cargo_args: vec![],
+             target_directory: None,
+-            sbf_sdk: env::current_exe()
+-                .expect("Unable to get current executable")
+-                .parent()
+-                .expect("Unable to get parent directory")
+-                .to_path_buf()
+-                .join("sdk")
+-                .join("sbf"),
++            sbf_sdk: Path::new("/usr/lib/solana/sdk/sbf").to_path_buf(),
+             sbf_out_dir: None,
+             platform_tools_version: "(unknown)",
+             dump: false,

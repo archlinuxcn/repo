@@ -1,0 +1,35 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=eth-hash
+pkgname=python-${_name}
+pkgver=0.7.0
+pkgrel=3
+pkgdesc="The Ethereum hashing function, keccak256, sometimes (erroneously) called sha256 or sha3"
+arch=(any)
+url="https://github.com/ethereum/${_name}"
+license=(MIT)
+depends=(python python-pycryptodome)
+makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx python-sphinx_rtd_theme)
+checkdepends=(python-pytest)
+source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
+sha512sums=('8e3821be3a646f4eb6d76b844693ac0db742b6361cd3a8641e3441bb04bd5bee7a96b09aa5cc2077bf868387bb8f5f8e3f56952cc11006eeb8c379bed9805add')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+  make -C docs man
+}
+
+check(){
+  cd $_name-$pkgver
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  test-env/bin/python -m pytest -vv --showlocals tests/backends/pycryptodome
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 docs/_build/man/eth_hash.1 -t "$pkgdir/usr/share/man/man1"
+  install -Dm 644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}

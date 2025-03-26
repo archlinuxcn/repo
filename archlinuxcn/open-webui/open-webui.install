@@ -1,0 +1,59 @@
+#!/bin/bash
+
+_appname="open-webui"
+_appuser="open-webui"
+_appprefix="/opt"
+_appdataprefix="/var/opt"
+_apphome="${_appprefix}/${_appname}"
+_appdata="${_appdataprefix}/${_appname}"
+
+pre_install() {
+    echo "Creaing user open-webui..."
+    getent passwd $_appuser >/dev/null || useradd -r -s /bin/false -d "$_apphome" "$_appuser"
+    echo "Cleaning up virtual environment for $_appname... if found"
+    rm -rf "${_apphome}/venv"
+}
+
+pre_upgrade() {
+    echo "Cleaning up virtual environment for $_appname..."
+    rm -rf "${_apphome}/venv"
+}
+
+_install() {
+    # Ensure appropriate permissions
+    chown -R "$_appuser:$_appuser" "${_apphome}" || return 1
+    chown -R "$_appuser:$_appuser" "${_appdata}" || return 1
+    chmod -R g+w "${_appdata}" || return 1
+
+    if [ ! -d "./venv" ]; then
+        echo "Setting up virtual environment for $_appname..."
+        su "$_appuser" -s /bin/bash -c "python3.12 -m venv ${_apphome}/backend/venv" || return 1
+    fi
+    echo "Updating python virtual environment..."
+    su "$_appuser" -s /bin/bash -c "cd ${_apphome}/backend && ./venv/bin/pip install -r requirements.txt" || return 1
+
+
+    # Install default config if needed
+    if [ ! -f "/etc/${_appname}.conf" ]; then
+        # Generate the secret key if needed
+        echo "Installing default config file..."
+        install -Dm644 "/usr/share/${_appname}/${_appname}.conf" "/etc/${_appname}.conf"
+
+        echo "Generating random WEBUI_SECRET_KEY..."
+        secret_key="$(head -c 12 /dev/random | base64)"
+        sed -i "s/{{GENERATED_KEY}}/${secret_key}/" "/etc/${_appname}.conf"
+    fi
+}
+
+post_install() {
+    _install || echo -e "\nERROR: Failed to install dependencies\n"
+}
+
+post_upgrade() {
+    _install || echo -e "\nERROR: Failed to install dependencies\n"
+}
+
+post_remove() {
+    echo "Cleaning up virtual environment for $_appname..."
+    rm -rf "${_apphome}/venv"
+}

@@ -1,6 +1,6 @@
 pkgname=julia-git-xorg_libxdmcp_jll-src
-pkgver=1.1.4+1
-_commit=f902222aa9a81178ab2bdb4a2959500d34f3ddcd
+pkgver=1.1.5+0
+_commit=a6f1f99c01447d782c9c1dbc0ba9ab78b5713f33
 pkgrel=1
 pkgdesc="Xorg_libXdmcp_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXdmcp_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxdmcp)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXdmcp_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('9b137b9f8930d0cec48e3d7264b8a67ec499153ed4c15f289a571920045f8e98'
+sha256sums=('0618ffbe5401337dd4cac1e0b9d4ef5e0b6d7ad9b85fd67680dcdde4b65229dc'
             '673fe7229117ecbf2fbd3f821c81d5f837eda8d91b86c062f6d34a57ba4409b6')
 
 build() {

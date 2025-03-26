@@ -6,31 +6,17 @@ time_limit_hours: 3
 
 update_on:
   - source: alpm
+    # Get the upstream LLVM version, we want to match this
     alpm: llvm
-    # Get the major version
-    from_pattern: ^(\d+)\..*
+    from_pattern: ^(\d+\.\d+\.\d+).*
     to_pattern: \1
-  - source: manual
-    # This is the expected upstream major version.
-    # we'll check in pre_build if this matches since manual update
-    # may be necessary when a major version update happens.
-    manual: 18
-  - source: manual
-    # This is the expected llvm-julia version.
-    # This may be different from the upstream version if we need to build llvm-julia
-    # as a older version.
-    manual: 18
   - source: github
-    # This may cause spurious update if julia releases a new version that isn't
-    # the major version we want. This shouldn't happen that often though
-    # so it should be fine. Otherwise we could use a custom script to get the versions
+    # This may cause spurious update when/if I tag a new release
+    # when no update is necessary.
+    # This shouldn't happen that often though so it should be fine.
     github: yuyichao/llvm-project
     use_latest_tag: true
     include_regex: 'archcn-[0-9.]+-\d+'
-  - source: manual
-    # The yuyichao/llvm-project commit to use
-    # '0' if we are using a release
-    manual: 0
   - source: manual
     manual: 1
   - alias: python

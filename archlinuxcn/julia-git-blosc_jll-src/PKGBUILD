@@ -1,6 +1,6 @@
 pkgname=julia-git-blosc_jll-src
-pkgver=1.21.6+0
-_commit=e19a3f3fee12592ff29ad2b29b2fd18901b486bb
+pkgver=1.21.7+0
+_commit=8519d6320ca049afe843e35b9868ffa8ef1ba53d
 pkgrel=1
 pkgdesc="Blosc_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Blosc_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git blosc)
 source=("git+https://github.com/JuliaBinaryWrappers/Blosc_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('616a6b695bcc7fcab038dd53dc184871e28f22a07f9291e9619e580ef659705f'
+sha256sums=('f026d65509d83a3b1a7a4d34f5135c67c4ee0b74b51785a59fc2221040a0e431'
             'a3a4c7639eeb044da4572a6f6ed985dbd307e5d4503f04922948e6fa64cf34de')
 
 build() {

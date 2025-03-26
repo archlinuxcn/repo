@@ -12,8 +12,10 @@ post_build_script: |
 update_on:
   - source: github
     github: XTLS/Xray-core
-    use_latest_tag: true
     prefix: v
+    use_latest_release: true
+    include_prereleases: false
 
 maintainers:
   - github: rocka
+    email: Rocka <rocka@archlinuxcn.org>

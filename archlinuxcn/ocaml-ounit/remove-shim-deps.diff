@@ -1,0 +1,48 @@
+diff --git a/ounit2-lwt.opam b/ounit2-lwt.opam
+index 8b1cb1c..9961bc2 100644
+--- a/ounit2-lwt.opam
++++ b/ounit2-lwt.opam
+@@ -13,7 +13,6 @@ depends: [
+   "dune" {>= "3.0"}
+   "ocaml" {>= "4.04.0"}
+   "lwt" {>= "2.5.2"}
+-  "seq"
+   "ounit2" {= version}
+   "odoc" {with-doc}
+ ]
+diff --git a/ounit2.opam b/ounit2.opam
+index 87cf5c8..65b5a38 100644
+--- a/ounit2.opam
++++ b/ounit2.opam
+@@ -16,8 +16,6 @@ depends: [
+   "dune" {>= "3.0"}
+   "ocaml" {>= "4.04.0"}
+   "base-unix"
+-  "seq"
+-  "stdlib-shims"
+   "odoc" {with-doc}
+ ]
+ build: [
+diff --git a/src/lib/ounit2/advanced/dune b/src/lib/ounit2/advanced/dune
+index 6792008..a687359 100644
+--- a/src/lib/ounit2/advanced/dune
++++ b/src/lib/ounit2/advanced/dune
+@@ -11,4 +11,4 @@
+  (name oUnitAdvanced)
+  (public_name ounit2.advanced)
+  (wrapped false)
+- (libraries unix seq stdlib-shims))
++ (libraries unix))
+diff --git a/src/lib/ounit2/dune b/src/lib/ounit2/dune
+index c37911d..4a8f657 100644
+--- a/src/lib/ounit2/dune
++++ b/src/lib/ounit2/dune
+@@ -2,7 +2,7 @@
+  (name oUnit)
+  (public_name ounit2)
+  (wrapped false)
+- (libraries unix seq ounit2.advanced))
++ (libraries unix ounit2.advanced))
+ 
+ (documentation
+  (package ounit2)

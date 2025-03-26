@@ -3,10 +3,10 @@
 
 pkgname=edid-decode-git
 _gitname=v4l-utils
-pkgver=1.28.0.r67.gf6270b7c
+pkgver=1.28.0.r119.g75e3f0e2
 pkgrel=1
 pkgdesc="EDID decoder and conformance tester"
-url="https://git.linuxtv.org/edid-decode.git/"
+url="https://git.linuxtv.org/v4l-utils.git/tree/utils/edid-decode"
 arch=('x86_64')
 license=('MIT')
 depends=('glibc' 'gcc-libs')
@@ -15,7 +15,7 @@ provides=('edid-decode')
 source=('git+https://git.linuxtv.org/v4l-utils.git'
         'install-tag.patch')
 sha256sums=('SKIP'
-            '77dd420d8247af7464814887afdb459551769189f112992c1fabc75153c6a70a')
+            '9fde9b36b083d2b475394aac8c58bba691331136a83bb23b1fa59672bec41c56')
 
 pkgver() {
   cd "$_gitname"
@@ -30,10 +30,13 @@ prepare() {
 build() {
   arch-meson \
     -Dbpf=disabled \
-    -Dqvidcap=disabled \
     -Ddoxygen-doc=disabled \
+    -Dqvidcap=disabled \
+    -Dv4l2-tracer=disabled \
     -Dqv4l2=disabled \
+    -Dgconv=disabled \
     -Djpeg=disabled \
+    -Dlibdvbv5=disabled \
     "$srcdir/$_gitname" "$srcdir/build"
   meson compile -C "$srcdir/build" edid-decode
 }

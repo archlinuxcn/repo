@@ -3,7 +3,7 @@
 _pkgname=horovod
 pkgname=python-horovod
 pkgver=0.28.1
-pkgrel=4
+pkgrel=5
 pkgdesc='Distributed training framework for TensorFlow, Keras, PyTorch, and Apache MXNet'
 arch=('x86_64')
 url='https://github.com/horovod/horovod'
@@ -15,29 +15,32 @@ depends=(
   glibc
   nccl
   openmpi
+  python
   python-cloudpickle
   python-h5py
   python-mpi4py
+  python-numpy
   python-psutil
   python-pycparser
-  python-pyaml
   python-scipy
   python-six
   python-tqdm
+  python-yaml
 )
 makedepends=(
   cmake
+  gcc13
   git
   python-build
   python-installer
   python-pytorch-cuda
   python-setuptools
-  python-tensorflow-cuda
+  # python-tensorflow-cuda
   python-wheel
 )
 optdepends=(
   'python-pytorch-cuda: pytorch framework'
-  'python-tensorflow-cuda: tensorflow framework'
+  # 'python-tensorflow-cuda: tensorflow framework'
 )
 source=("${_pkgname}-${pkgver}::git+https://github.com/horovod/horovod.git#tag=v${pkgver}"
         "0001-fix-building-with-torch-2.1.patch::https://github.com/horovod/horovod/pull/3998.patch"
@@ -70,9 +73,9 @@ build() {
   HOROVOD_WITH_GLOO=1 \
   HOROVOD_WITH_MPI=1 \
   HOROVOD_WITH_PYTORCH=1 \
-  HOROVOD_WITH_TENSORFLOW=1 \
-  CC=/opt/cuda/bin/gcc \
-  CXX=/opt/cuda/bin/g++ \
+  HOROVOD_WITH_TENSORFLOW=NO \
+  CC=gcc-13 \
+  CXX=g++-13 \
   python -m build --wheel --no-isolation
 }
 

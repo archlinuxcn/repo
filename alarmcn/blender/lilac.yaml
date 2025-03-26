@@ -1,0 +1,168 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build: git_pkgbuild_commit
+
+time_limit_hours: 3
+
+repo_depends:
+  - embree
+  - materialx
+  - openimagedenoise
+  - sse2neon
+  - usd
+
+update_on:
+  - source: github
+    github: blender/blender
+    use_max_tag: true
+  - alias: python
+  - alias: boost
+  - source: alpm
+    alpm: zlib
+    provided: libz.so
+  - source: alpm
+    alpm: zstd
+    provided: libzstd.so
+  - source: alpmfiles
+    pkgname: onetbb
+    strip_dir: true
+    filename: libtbb.so.\d+
+  - source: alpm
+    alpm: jemalloc
+    provided: libjemalloc.so
+  - source: alpmfiles
+    pkgname: libpng
+    strip_dir: true
+    filename: libpng\d+.so.\d+
+  - source: alpmfiles
+    pkgname: opensubdiv
+    strip_dir: true
+    filename: libosdCPU.so.\d+.*
+  - source: alpmfiles
+    pkgname: opensubdiv
+    strip_dir: true
+    filename: libosdGPU.so.\d+.*
+  - source: alpmfiles
+    pkgname: libspnav
+    strip_dir: true
+    filename: libspnav.so.\d+
+  - source: alpmfiles
+    pkgname: openxr
+    strip_dir: true
+    filename: libopenxr_loader.so.\d+
+  - source: alpm
+    alpm: libjpeg-turbo
+    provided: libjpeg.so
+  - source: alpmfiles
+    pkgname: openjpeg2
+    strip_dir: true
+    filename: libopenjp2.so.\d+
+  - source: alpm
+    alpm: libwebp
+    provided: libwebp.so
+  - source: alpmfiles
+    pkgname: openimageio
+    strip_dir: true
+    filename: libOpenImageIO.so.\d+.*
+  - source: alpmfiles
+    pkgname: openimageio
+    strip_dir: true
+    filename: libOpenImageIO_Util.so.\d+.*
+  - source: alpmfiles
+    pkgname: openshadinglanguage
+    strip_dir: true
+    filename: liboslcomp.so.\d+.*
+  - source: alpmfiles
+    pkgname: openshadinglanguage
+    strip_dir: true
+    filename: liboslexec.so.\d+.*
+  - source: alpmfiles
+    pkgname: openshadinglanguage
+    strip_dir: true
+    filename: liboslquery.so.\d+.*
+  - source: alpmfiles
+    pkgname: opencolorio
+    strip_dir: true
+    filename: libOpenColorIO.so.\d+.*
+  - source: alpmfiles
+    pkgname: pystring
+    strip_dir: true
+    filename: libpystring.so.\d+.*
+  - source: alpmfiles
+    pkgname: alembic
+    strip_dir: true
+    filename: libAlembic.so.\d+.*
+  - source: alpmfiles
+    pkgname: potrace
+    strip_dir: true
+    filename: libpotrace.so.\d+.*
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavdevice.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavformat.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libswscale.so
+  - source: alpm
+    alpm: libsndfile
+    provided: libsndfile.so
+  - source: alpm
+    alpm: openal
+    provided: libopenal.so
+  - source: alpmfiles
+    pkgname: openvdb
+    strip_dir: true
+    filename: libopenvdb.so.\d+.*
+  - source: alpmfiles
+    pkgname: openexr
+    strip_dir: true
+    filename: libIex-\d+_\d+.so.*
+  - source: alpmfiles
+    pkgname: openexr
+    strip_dir: true
+    filename: libOpenEXR-\d+_\d+.so.*
+  - source: alpmfiles
+    pkgname: imath
+    strip_dir: true
+    filename: libImath-\d+_\d+.so.*
+  - source: alpmfiles
+    pkgname: libharu
+    strip_dir: true
+    filename: libhpdf.so.\d+.*
+  - source: alpm
+    alpm: libepoxy
+    provided: libepoxy.so
+  - source: alpm
+    alpm: shaderc
+    provided: libshaderc_shared.so
+  - source: alpm
+    alpm: freetype2
+    provided: libfreetype.so
+  - source: alpm
+    alpm: fftw
+    provided: libfftw3f.so
+  - source: alpm
+    alpm: fftw
+    provided: libfftw3.so
+  - source: alpm
+    alpm: fftw
+    provided: libfftw3f_threads.so
+  - source: alpmfiles
+    pkgname: gmp
+    strip_dir: true
+    filename: libgmp.so.\d+
+  - source: manual
+    manual: 2

@@ -1,7 +1,7 @@
 # Maintainer: AsamK <asamk@gmx.de>
 
 pkgname=sequoia-octopus-librnp
-pkgver=1.10.0
+pkgver=1.11.0
 pkgrel=1
 pkgdesc='A Sequoia-based OpenPGP Backend for Thunderbird'
 url="https://gitlab.com/sequoia-pgp/${pkgname}"
@@ -18,7 +18,7 @@ makedepends=(
 )
 source=("$pkgname-$pkgver.tar.gz::https://gitlab.com/sequoia-pgp/${pkgname}/-/archive/v$pkgver/${pkgname}-v$pkgver.tar.gz"
         "${pkgname}.hook")
-sha256sums=('ba3ec47bd109814f70b14c32c4764777a4675617c11b7e03dbb473f05ba4df1a'
+sha256sums=('f559847705cc36272333da0de73cd527d1d28ed90b2d5d7a51246885c2d93ac6'
             'aa2bda370a1e9b4a880e275291caac486db65095c34d013561d6127777589709')
 options=(!lto) # FIXME: linker error
 install="${pkgname}.install"

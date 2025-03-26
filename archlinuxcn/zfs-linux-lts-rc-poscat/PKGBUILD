@@ -1,13 +1,15 @@
+# shellcheck shell=bash
 shopt -s extglob
 
 pkgbase="zfs-linux-lts-rc-poscat"
 pkgname=("zfs-utils-rc-poscat" "zfs-linux-lts-rc-poscat" "zfs-linux-lts-rc-poscat-headers")
-_kernelver=6.6.67-1
+_kernelver=6.12.20-1
 _extramodules="${_kernelver}-lts"
+_sd_zfs_commit="dece62d"
 
-pkgver=2.3.0rc4
-_fullver=2.3.0-rc4
-pkgrel=6
+pkgver=2.3.1
+_fullver=2.3.1
+pkgrel=5
 makedepends=(
   "linux-lts-headers=${_kernelver}"
   "libunwind"
@@ -17,118 +19,124 @@ url="https://openzfs.org/"
 source=(
   # source
   "https://github.com/openzfs/zfs/releases/download/zfs-${_fullver}/zfs-${_fullver}.tar.gz"
-  # patches
-  'fix-bash-completions.patch'
-  # mkinitcpio hooks & utils
+  # mkinitcpio-sd-zfs
+  "mkinitcpio-sd-zfs.tar.gz::https://github.com/poscat0x04/mkinitcpio-sd-zfs/archive/${_sd_zfs_commit}.tar.gz"
+  # legacy mkinitcpio hooks
   'zfs.initcpio.install'
   'zfs.initcpio.hook'
   'zfs.initcpio.zfsencryptssh.install'
-  'sd-zfs.initcpio.install'
-  'parse-cmdline'
-  'zfs-set-env'
-  'zfs-root-generator'
-  'zfs.shutdown'
 )
-sha256sums=('238d7e89c2d3b2dadfdb1e1095bc2f4ec6a24a3521703e992674961e4205f4dd'
-            'b9fa6a42f7426654fc04697b45ad1fe0fb09ff29ea76cb97ac7d09ac03de1797'
+sha256sums=('053233799386920bdc636e22d0e19a8c2c3e642e8bd847ff87e108f8bb1f9006'
+            '3dcc79915e41c5326135f2c3a8787fd2abfc2fc50c349327ef41222440ba2c4a'
             '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
             '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
-            'ac9ed396465e26fa6896762c52a93eb7aaf8af6d7b2c69bd826d219ff821b2c9'
-            '382fdb446b41801b663984d9398a393e3f3c320e2a45fda5c744a00550bd0041'
-            '61b368e73f72e548c76128f5d660366fc4d6729c76fc0a7c9b1973992edc8139'
-            'd664c36e6015c8852565832fa380416e6ba69114248520f5b4f305f6bc008933'
-            '59b74f90057388c256043312bd9749fd117cb9ef7434794bb1d454e2ea4387bd'
-            '9f7530172c82b9c14478d03056c7b2273e0d88054de45058365a272a203b0178')
+            'ac9ed396465e26fa6896762c52a93eb7aaf8af6d7b2c69bd826d219ff821b2c9')
 license=("CDDL-1.0")
 depends=("kmod" "linux-lts=${_kernelver}")
 
 prepare() {
-  cd "${srcdir}/zfs-${_fullver}"
-  patch -N -p0 -i "${srcdir}/fix-bash-completions.patch" || true
+  cd "$srcdir"
+  mv mkinitcpio-sd-zfs-* sd-zfs
 }
 
 build() {
-    cd "${srcdir}/zfs-${_fullver}"
-    ./autogen.sh
-    ./configure \
-      --prefix=/usr \
-      --sysconfdir=/etc \
-      --sbindir=/usr/bin \
-      --libdir=/usr/lib \
-      --datadir=/usr/share \
-      --localstatedir=/var \
-      --includedir=/usr/include \
-      --with-udevdir=/usr/lib/udev \
-      --with-mounthelperdir=/usr/bin \
-      --libexecdir=/usr/lib \
-      --with-config=all \
-      --with-linux=/usr/lib/modules/${_extramodules}/build \
-      --with-linux-obj=/usr/lib/modules/${_extramodules}/build \
-      --with-libunwind \
-      --with-python=3 \
-      --enable-pyzfs=no \
-      --enable-systemd \
-      --enable-sysvinit=no
-    make
+  cd "${srcdir}/zfs-${_fullver}"
+  ./autogen.sh
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --sbindir=/usr/bin \
+    --libdir=/usr/lib \
+    --datadir=/usr/share \
+    --localstatedir=/var \
+    --includedir=/usr/include \
+    --with-udevdir=/usr/lib/udev \
+    --with-mounthelperdir=/usr/bin \
+    --libexecdir=/usr/lib \
+    --with-config=all \
+    --with-linux=/usr/lib/modules/${_extramodules}/build \
+    --with-linux-obj=/usr/lib/modules/${_extramodules}/build \
+    --with-libunwind \
+    --with-python=3 \
+    --enable-pyzfs=no \
+    --enable-systemd \
+    --enable-sysvinit=no
+  make
 }
 
 package_zfs-utils-rc-poscat() {
-    pkgdesc='ZFS userspace tools'
-    provides=('zfs-utils' "zfs-utils=${pkgver}" 'zfs-utils-poscat')
-    conflicts=('zfs-utils' 'zfs-utils-poscat' 'mkinitcpio-sd-zfs')
-    depends+=('libunwind')
-    optdepends=('python: for arcstat/arc_summary/dbufstat')
+  pkgdesc='ZFS userspace tools'
+  provides=('zfs-utils' "zfs-utils=${pkgver}" 'zfs-utils-poscat')
+  conflicts=('zfs-utils' 'zfs-utils-poscat' 'mkinitcpio-sd-zfs')
+  depends+=('libunwind')
+  optdepends=('python: for arcstat/arc_summary/dbufstat')
+  backup=('etc/zfs/zed.d/zed.rc')
 
-    cd "${srcdir}/zfs-${_fullver}"
-    make DESTDIR="${pkgdir}" install
-    rm -rv "${pkgdir}"/lib
-    rm -rv "${pkgdir}"/usr/src
+  cd "${srcdir}/zfs-${_fullver}"
+  make DESTDIR="$pkgdir" install
+  rm -rv "$pkgdir"/lib
+  rm -rv "$pkgdir"/usr/src
 
-    install -Dvm644 "${srcdir}"/zfs.initcpio.hook "${pkgdir}"/usr/lib/initcpio/hooks/zfs
-    install -Dvm644 "${srcdir}"/zfs.initcpio.install "${pkgdir}"/usr/lib/initcpio/install/zfs
-    install -Dvm644 "${srcdir}"/zfs.initcpio.zfsencryptssh.install "${pkgdir}"/usr/lib/initcpio/install/zfsencryptssh
-    install -Dvm644 "${srcdir}"/sd-zfs.initcpio.install "${pkgdir}"/usr/lib/initcpio/install/sd-zfs
+  install -Dvm644 \
+    "$srcdir"/zfs.initcpio.hook "$pkgdir"/usr/lib/initcpio/hooks/zfs
+  install -Dvm644 \
+    "$srcdir"/zfs.initcpio.install "$pkgdir"/usr/lib/initcpio/install/zfs
+  install -Dvm644 \
+    "$srcdir"/zfs.initcpio.zfsencryptssh.install "$pkgdir"/usr/lib/initcpio/install/zfsencryptssh
 
-    install -Dvm755 -t "${pkgdir}"/usr/lib/zfs/initcpio/ "${srcdir}"/{parse-cmdline,zfs-set-env,zfs-root-generator}
-    install -Dvm755 -t "${pkgdir}"/usr/lib/systemd/system-shutdown/ "${srcdir}"/zfs.shutdown
+  install -Dvm644 \
+    "$srcdir"/sd-zfs/sd-zfs.initcpio.install "$pkgdir"/usr/lib/initcpio/install/sd-zfs
+  install -Dvm644 \
+    "$srcdir"/sd-zfs/zfs-shutdown.initcpio.install "$pkgdir"/usr/lib/initcpio/install/zfs-shutdown
 
-    # cleanup
-    ## empty files
-    rm -rv "${pkgdir}"/etc/sudoers.d
-    rm -rv "${pkgdir}"/usr/lib/modules-load.d
-    ## debian/ubuntu specific
-    rm -rv "${pkgdir}"/usr/share/initramfs-tools
-    rm -rv "${pkgdir}"/etc/default
-    ## fedora specific
-    rm -rv "${pkgdir}"/usr/lib/dracut
-    rm -rv "${pkgdir}"/usr/share/man/man7/dracut.zfs.7
-    ## test scripts
-    rm -rv "${pkgdir}"/usr/share/zfs/{*.sh,runfiles,test-runner,zfs-tests}
+  install -Dvm755 \
+    -t "$pkgdir"/usr/lib/zfs/initcpio/ \
+    "$srcdir"/sd-zfs/{parse-cmdline,zfs-set-env,zfs-root-generator}
+  install -Dvm755 \
+    -t "$pkgdir"/usr/lib/systemd/system-shutdown/ \
+    "$srcdir"/sd-zfs/zfs.shutdown
+
+  install -Dvm644 \
+    -t "$pkgdir"/usr/lib/systemd/system/mkinitcpio-generate-shutdown-ramfs.service.d/ \
+    "$srcdir"/sd-zfs/zfs-shutdown.conf
+
+  # cleanup
+  ## empty files
+  rm -rv "$pkgdir"/etc/sudoers.d
+  rm -rv "$pkgdir"/usr/lib/modules-load.d
+  ## debian/ubuntu specific
+  rm -rv "$pkgdir"/usr/share/initramfs-tools
+  rm -rv "$pkgdir"/etc/default
+  ## fedora specific
+  rm -rv "$pkgdir"/usr/lib/dracut
+  rm -rv "$pkgdir"/usr/share/man/man7/dracut.zfs.7
+  ## test scripts
+  rm -rv "$pkgdir"/usr/share/zfs/{*.sh,runfiles,test-runner,zfs-tests}
 }
 
 package_zfs-linux-lts-rc-poscat() {
-    pkgdesc="ZFS kernel modules"
-    install=zfs.install
-    provides=("zfs" "spl")
-    conflicts=("zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" 'zfs-linux-lts-git' 'zfs-linux-lts-poscat' 'zfs-linux-lts' 'spl-linux-lts')
-    replaces=("spl-linux-lts")
-    depends+=("zfs-utils=${pkgver}")
+  pkgdesc="ZFS kernel modules"
+  install=zfs.install
+  provides=("zfs" "spl")
+  conflicts=("zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" 'zfs-linux-lts-git' 'zfs-linux-lts-poscat' 'zfs-linux-lts' 'spl-linux-lts')
+  replaces=("spl-linux-lts")
+  depends+=("zfs-utils=${pkgver}")
 
-    cd "${srcdir}/zfs-${_fullver}/module"
-    make DESTDIR="${pkgdir}" INSTALL_MOD_PATH=${pkgdir}/usr INSTALL_MOD_STRIP=1 modules_install
+  cd "${srcdir}/zfs-${_fullver}/module"
+  make DESTDIR="$pkgdir" INSTALL_MOD_PATH="$pkgdir"/usr INSTALL_MOD_STRIP=1 modules_install
 }
 
 package_zfs-linux-lts-rc-poscat-headers() {
-    pkgdesc="ZFS kernel headers"
-    provides=("zfs-headers" "spl-headers")
-    conflicts=("zfs-headers" "zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" "spl-headers")
-    depends+=("libaio")
+  pkgdesc="ZFS kernel headers"
+  provides=("zfs-headers" "spl-headers")
+  conflicts=("zfs-headers" "zfs-dkms" "zfs-dkms-git" "zfs-dkms-rc" "spl-dkms" "spl-dkms-git" "spl-headers")
+  depends+=("libaio")
 
-    cd "${srcdir}/zfs-${_fullver}"
-    make DESTDIR="${pkgdir}" install
-    rm -rv "${pkgdir}/lib"
-    rm -rv "${pkgdir}/etc"
-    rm -rv "${pkgdir}"/usr/!(src)
-    # Remove reference to ${srcdir}
-    sed -i "s+${srcdir}++" ${pkgdir}/usr/src/zfs-*/${_extramodules}/Module.symvers
+  cd "${srcdir}/zfs-${_fullver}"
+  make DESTDIR="$pkgdir" install
+  rm -rv "${pkgdir}/lib"
+  rm -rv "${pkgdir}/etc"
+  rm -rv "$pkgdir"/usr/!(src)
+  # Remove reference to ${srcdir}
+  sed -i "s+${srcdir}++" "$pkgdir"/usr/src/zfs-*/${_extramodules}/Module.symvers
 }

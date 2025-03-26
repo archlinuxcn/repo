@@ -1,0 +1,28 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
+
+update_on:
+  # Sync with the official package version
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: binutils
+    strip_release: true
+  - source: alpm
+    alpm: zlib
+    provided: libz.so
+  - source: alpm
+    alpm: zstd
+    provided: libzstd.so
+  - source: alpmfiles
+    pkgname: jansson
+    strip_dir: true
+    filename: libjansson.so.\d+
+  - source: alpmfiles
+    pkgname: libelf
+    strip_dir: true
+    filename: libdebuginfod.so.\d+
+  - source: manual
+    manual: 1

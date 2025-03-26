@@ -2,7 +2,7 @@
 # Contributor: Mike Cuche <cuche AT mailbox.org>
 
 pkgname=dosbox-x
-pkgver=2024.12.04
+pkgver=2025.02.01
 pkgrel=1
 pkgdesc="x86 emulator with builtin DOS, with patches with more features"
 arch=(i686 x86_64 aarch64)
@@ -36,7 +36,7 @@ source=(
   "https://github.com/joncampbell123/dosbox-x/archive/dosbox-x-v$pkgver.tar.gz"
 )
 
-sha256sums=('f2bca4c2c8da69085c0eabfb60886b67e3ad55b21974d4e1c3c79a2d3756add3')
+sha256sums=('3a6fdfd659bb05db82bf2d850af806f666562cce9a37609fd33b59f7e4bd8fa4')
 
 prepare() {
   cd "dosbox-x-dosbox-x-v$pkgver"

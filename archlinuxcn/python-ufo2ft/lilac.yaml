@@ -1,19 +1,20 @@
 build_prefix: extra-x86_64
-pre_build_script: |
-  aur_pre_build(maintainers=['alerque'])
-  add_makedepends(['python-syrupy'])
-post_build: aur_post_build
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
 repo_depends:
   - python-cffsubr
+repo_makedepends:
   - python-compreffor
-  - python-cu2qu
   - python-skia-pathops
 update_on:
-  - source: aur
-    aur: python-ufo2ft
+  - source: github
+    github: googlefonts/ufo2ft
+    use_latest_release: true
+    include_regex: '^v\d+\.\d+\.\d+$'
+    prefix: 'v'
   - alias: python
   - source: manual
-    manual: 1
+    manual: 1.1
 
 maintainers:
   - github: roaldclark

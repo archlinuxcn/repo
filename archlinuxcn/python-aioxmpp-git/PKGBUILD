@@ -2,15 +2,15 @@
 
 _name=aioxmpp
 pkgname=python-aioxmpp-git
-pkgver=0.14.0a0.20240114
-pkgrel=2
+pkgver=0.14.0a0.20240501
+pkgrel=1
 pkgdesc="Pure-python XMPP library for asyncio"
 arch=(any)
-url="https://github.com/horazont/aioxmpp"
+url="https://codeberg.org/jssfr/aioxmpp"
 license=('LGPLv3+')
 depends=('python-aiosasl' 'python-aioopenssl' 'python-babel' 'python-dnspython' 'python-lxml' 'python-multidict' 'python-sortedcollections' 'python-pyopenssl' 'python-pyasn1' 'python-pyasn1-modules' 'python-tzlocal')
 makedepends=('python-setuptools' 'git')
-source=("git+https://github.com/horazont/aioxmpp.git")
+source=("git+https://codeberg.org/jssfr/aioxmpp.git")
 sha256sums=('SKIP')
 conflicts=('python-aioxmpp')
 provides=("python-aioxmpp=$pkgver")

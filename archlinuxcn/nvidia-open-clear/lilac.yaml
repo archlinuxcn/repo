@@ -1,0 +1,13 @@
+build_prefix: extra-x86_64
+repo_makedepends:
+  - linux-clear: linux-clear-headers
+update_on:
+  - source: alpm
+    alpm: nvidia-utils
+    repo: extra
+    strip_release: true
+  - source: cmd
+    cmd: LANG=C pacman --dbpath ~/.lilac/pacmandb -Si linux-clear | awk '$1 == "Version" { print $3 }'
+
+maintainers:
+  - github: roaldclark

@@ -1,8 +1,9 @@
-# Maintainer: txtsd <aur.archlinux@ihavea.quest>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: txtsd <aur.archlinux@ihavea.quest>
 
 pkgname=dissent-git
 _pkgname=${pkgname%-git}
-pkgver=0.0.30.r1.g7c629a4
+pkgver=0.0.32.r9.g7456662
 pkgrel=1
 pkgdesc="Discord client written in go and gtk4"
 arch=('x86_64' 'aarch64')
@@ -38,10 +39,8 @@ build() {
 }
 
 package() {
-	cd "${_pkgname}/build/"
-	install -Dm755 "${_pkgname}" -t "${pkgdir}/usr/bin/"
-
-	cd ..
+	cd "${_pkgname}/"
+	install -Dm755 "build/${_pkgname}" -t "${pkgdir}/usr/bin/"
 	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 	install -Dm644 "nix/so.libdb.${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
 	install -Dm644 "internal/icons/hicolor/scalable/apps/so.libdb.${_pkgname}.Devel.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"

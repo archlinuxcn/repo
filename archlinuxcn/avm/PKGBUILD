@@ -1,0 +1,39 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+pkgname=avm
+pkgver=0.31.0
+pkgrel=1
+pkgdesc='Anchor Version Manager (avm) is provided to manage multiple installations of the anchor-cli binary.'
+arch=(x86_64)
+url='https://www.anchor-lang.com'
+license=(Apache-2.0)
+depends=(cargo gcc-libs glibc)
+makedepends=(git)
+source=("git+https://github.com/coral-xyz/anchor.git#tag=v$pkgver")
+sha256sums=('1c0b2fb558cf074f1166a48b50cced26d307cf4dff9a7446fc32cb9d2a4a233d')
+options=(!lto)
+
+prepare() {
+    cd anchor
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+    cd anchor
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release -p $pkgname
+}
+
+check() {
+    cd anchor
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test --frozen -p $pkgname
+}
+
+package() {
+    cd anchor
+    install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$pkgname"
+    install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}

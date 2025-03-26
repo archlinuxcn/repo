@@ -4,8 +4,8 @@
 # Contributor: Vyacheslav Konovalov <echo dnlhY2hrb25vdmFsb3ZAZ21haWwuY29tCg== | base64 -d>
 
 pkgname=resp-app
-pkgver=2022.5
-pkgrel=4
+pkgver=2022.5.1
+pkgrel=1
 pkgdesc='RESP.app - Open source cross-platform Redis Desktop Manager GUI based on Qt 5'
 arch=('x86_64')
 url="https://resp.app"
@@ -24,9 +24,9 @@ depends=(
 	'python')
 makedepends=('git' 'gcc' 'make' 'cmake')
 provides=('redis-desktop-manager')
-source=("resp::git+https://github.com/uglide/RedisDesktopManager.git#tag=$pkgver"
+source=("resp::git+https://github.com/RedisInsight/RedisDesktopManager.git#tag=$pkgver"
 	'resp.desktop')
-sha256sums=('SKIP'
+sha256sums=('44fa29b5ff247fdb468b7fdc2b4a4d221d8c37fec6d1d4757f4b440880c22331'
             '02ec9ed57fbf08b254db8e1a9fa92476253dfe2505d687a5738ea1867a75d28b')
 
 prepare() {
