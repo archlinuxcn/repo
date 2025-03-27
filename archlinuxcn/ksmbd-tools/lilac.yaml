@@ -1,5 +1,5 @@
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['jpegxguy'])
+pre_build_script: aur_pre_build(maintainers=['kIERO'])
 post_build: aur_post_build
 update_on:
   - source: aur
@@ -8,6 +8,8 @@ update_on:
     alpm: libnl
     strip_release: true
     provided: libnl-3.so
+  - source: manual
+    manual: 1
 
 maintainers:
   - github: roaldclark
