@@ -1,13 +1,19 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=needrestart-git
-pkgver=3.8.r16.gca3c997
+pkgver=3.8.r43.g715366d
 pkgrel=1
 pkgdesc="Restart daemons after library updates."
 arch=('any')
 url="https://github.com/liske/needrestart"
 license=('GPL-2.0-or-later')
-depends=('perl-module-find' 'perl-term-readkey' 'perl-proc-processtable'
-         'perl-sort-naturally' 'perl-module-scandeps' 'perl-libintl-perl')
+depends=(
+  'perl-module-find'
+  'perl-term-readkey'
+  'perl-proc-processtable'
+  'perl-sort-naturally'
+  'perl-module-scandeps'
+  'perl-libintl-perl'
+)
 makedepends=('git')
 optdepends=('iucode-tool: for outdated Intel microcode detection')
 provides=("${pkgname%-git}")
@@ -19,7 +25,7 @@ sha256sums=('SKIP')
 
 pkgver() {
   cd "${pkgname%-git}"
-  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
