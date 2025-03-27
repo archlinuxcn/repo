@@ -4,7 +4,7 @@
 
 pkgname=ispc
 pkgver=1.25.3
-pkgrel=3
+pkgrel=4
 pkgdesc="Compiler for high-performance SIMD programming on the CPU"
 arch=(aarch64 x86_64)
 url="https://ispc.github.io/"
@@ -70,4 +70,7 @@ _check() {
 package() {
   DESTDIR="$pkgdir" cmake --install build
   install -Dm644 $pkgname/LICENSE.txt -t "${pkgdir}"/usr/share/licenses/${pkgname}
+  install -Dm644 $pkgname/contrib/ispc.vim -t "${pkgdir}"/usr/share/vim/vimfiles/syntax
+  mkdir -p "${pkgdir}"/usr/share/vim/vimfiles/ftdetect
+  echo "au BufRead,BufNewFile *.isph,*.ispc set filetype=ispc" > "${pkgdir}"/usr/share/vim/vimfiles/ftdetect/ispc.vim
 }
