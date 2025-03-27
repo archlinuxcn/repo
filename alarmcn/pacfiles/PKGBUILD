@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=pacfiles
-pkgver=0.2.5
+pkgver=0.2.6
 pkgrel=1
 pkgdesc="A pacman -F alternative that runs blazingly fast"
 url="https://github.com/lilydjwg/${pkgname}"
@@ -10,7 +10,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 depends=('libarchive' 'gcc-libs' 'plocate' 'pacman')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('6ed7589e7c2c4f54311e99612a391fed96f16a7bd8836d2b3caf6da53a953cc8')
+sha256sums=('80428b05c65cab13af4c12337b388e89515c34782fe2d864077ab3e6434fe62d')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
