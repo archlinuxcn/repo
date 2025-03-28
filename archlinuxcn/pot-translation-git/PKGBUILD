@@ -15,7 +15,6 @@ provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=("git+${url}.git")
 sha512sums=('SKIP')
-options=('!lto')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -36,12 +35,10 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	pnpm tauri build -b deb
+	CFLAGS+=" -ffat-lto-objects" pnpm tauri build -b deb
 }
 
 package() {
-	cd "${_pkgname}/"
 	_pkgver=$(sed 's/.\(r[0-9]\)/\-\1/' <<<${pkgver})
-	tar -xpf "src-tauri/target/release/bundle/deb/pot_${_pkgver}_amd64/data.tar.gz" -C "${pkgdir}"
-	chown -R root:root "${pkgdir}"
+	cp -a ${_pkgname}/src-tauri/target/release/bundle/deb/pot_${_pkgver}_*/data/* "${pkgdir}"
 }
