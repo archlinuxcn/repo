@@ -18,7 +18,6 @@ options=('!lto')
 
 prepare() {
 	cd "${_pkgname}-${_pkgver}/"
-	sed -i "s/\"version\".*/\"version\": \"${_pkgver}\"/g" "src-tauri/tauri.conf.json"
 	pnpm i
 }
 
@@ -28,7 +27,5 @@ build() {
 }
 
 package() {
-	cd "${_pkgname}-${_pkgver}/"
-	tar -xpf src-tauri/target/release/bundle/deb/pot_${_pkgver}_*/data.tar.gz -C "${pkgdir}"
-	chown -R root:root "${pkgdir}"
+	cp -a ${_pkgname}-${_pkgver}/src-tauri/target/release/bundle/deb/pot_${_pkgver}_*/data/* "${pkgdir}"
 }
