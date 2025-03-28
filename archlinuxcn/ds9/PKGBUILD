@@ -2,7 +2,7 @@
 
 pkgname=ds9
 pkgver=8.6
-pkgrel=3
+pkgrel=4
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="https://sites.google.com/cfa.harvard.edu/saoimageds9"
 arch=('x86_64')
@@ -14,9 +14,8 @@ conflicts=('ds9' 'ds9-bin')
 source=("$pkgname::git+https://github.com/SAOImageDS9/SAOImageDS9.git#tag=v$pkgver"
         "ds9.desktop"
         )
-sha256sums=('SKIP'
-         'cf41109f31b9be057ab04a96613a59a87fb6cb3ed405fa93545f6bfd8fd98975'
-         )
+sha256sums=('77a9a39fb6f3086caed7e9d7dd798d0370992ea6f86e23b26dd58159e16ceb4f'
+            'cf41109f31b9be057ab04a96613a59a87fb6cb3ed405fa93545f6bfd8fd98975')
 
 build() {
     cd ${srcdir}/${pkgname}
