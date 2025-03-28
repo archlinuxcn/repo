@@ -1,14 +1,15 @@
-# Maintainer: Thomas Weißschuh <thomas t-8ch de>
+# Maintainer: Thomas Weißschuh <aur t-8ch de>
 
 pkgname=needrestart
 url=https://github.com/liske/needrestart
 pkgdesc='Restart daemons after library updates.'
-pkgver=3.8
+pkgver=3.9
 pkgrel=1
-source=(
-	"needrestart-${pkgver}.tar.gz::https://github.com/liske/needrestart/archive/v${pkgver}.tar.gz"
+source=("needrestart-${pkgver}.tar.gz::https://github.com/liske/needrestart/archive/v${pkgver}.tar.gz"
 	'needrestart.hook'
 )
+sha256sums=('709f4ac9e87483fc7cb1887c5720f671e1f9a509ad92b99a5dc6bb3189592cda'
+            'e5c6696a281f5445a3b7e2b7d1055f9189a2c39d4940721aa0c2718780f15f63')
 arch=(any)
 license=('GPL-2.0-or-later')
 options=(!emptydirs)
@@ -44,6 +45,3 @@ package() {
 	install -Dm444 "${srcdir}/needrestart.hook" \
 		"${pkgdir}/usr/share/libalpm/hooks/needrestart.hook"
 }
-
-sha256sums=('42664e0b1b98fef1e5e849118b9985ac951516c4d5eb24a7da15d058da647c90'
-            'e5c6696a281f5445a3b7e2b7d1055f9189a2c39d4940721aa0c2718780f15f63')
