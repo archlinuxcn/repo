@@ -26,7 +26,6 @@ prepare() {
 
 build() {
 	cd "${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
-	export CFLAGS+=" -ffat-lto-objects"
 	_prepare_service
 	_build_service
 	_check_service
@@ -41,8 +40,7 @@ build() {
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/"
-	tar -xpf src-tauri/target/release/bundle/deb/Clash\ Verge_${pkgver}_*/data.tar.gz -C "${pkgdir}"
+	cp -a ${pkgname}-${pkgver}/src-tauri/target/release/bundle/deb/Clash\ Verge_${pkgver}_*/data/* "${pkgdir}"
 }
 
 _prepare_service() {

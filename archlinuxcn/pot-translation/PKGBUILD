@@ -14,11 +14,9 @@ depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxr
 makedepends=('nodejs' 'pnpm' 'cargo' 'dbus')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${_pkgver}.tar.gz")
 sha512sums=('fc0a24cc59b52b7ae1d4405986a8346793d9fd9577c395b39fdf92fbcc881dc94d8f080cfcf26f30d34746bb58616a4d5a2953e60659f0cf8043b7cf0d0936ff')
-options=('!lto')
 
 prepare() {
 	cd "${_pkgname}-${_pkgver}/"
-	sed -i "s/\"version\".*/\"version\": \"${_pkgver}\"/g" "src-tauri/tauri.conf.json"
 	pnpm i
 }
 
@@ -28,7 +26,5 @@ build() {
 }
 
 package() {
-	cd "${_pkgname}-${_pkgver}/"
-	tar -xpf src-tauri/target/release/bundle/deb/pot_${_pkgver}_*/data.tar.gz -C "${pkgdir}"
-	chown -R root:root "${pkgdir}"
+	cp -a ${_pkgname}-${_pkgver}/src-tauri/target/release/bundle/deb/pot_${_pkgver}_*/data/* "${pkgdir}"
 }
