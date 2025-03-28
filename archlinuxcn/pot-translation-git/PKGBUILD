@@ -35,7 +35,7 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	CFLAGS+=" -ffat-lto-objects" pnpm tauri build -b deb
+	pnpm tauri build -b deb
 }
 
 package() {
