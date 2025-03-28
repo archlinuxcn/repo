@@ -37,7 +37,7 @@ build() {
 	ln -s /usr/bin/clash-meta "./src-tauri/sidecar/verge-mihomo-${CARCH}-unknown-linux-gnu"
 	ln -s /usr/bin/clash-meta "./src-tauri/sidecar/verge-mihomo-alpha-${CARCH}-unknown-linux-gnu"
 	install -vDm644 ./src/locales/* -t ./src-tauri/resources/locales/
-	NODE_OPTIONS="--max_old_space_size=4096" pnpm build -b deb
+	pnpm build -b deb
 }
 
 package() {
