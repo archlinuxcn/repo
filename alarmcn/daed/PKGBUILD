@@ -3,13 +3,13 @@
 
 pkgname=daed
 pkgver=0.9.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A modern dashboard for dae, bundled with dae-wing (backend API server) and dae (core)."
 arch=('x86_64' 'aarch64')
 url="https://github.com/daeuniverse/${pkgname}"
 license=('AGPL-3.0-or-later AND MIT')
 depends=('v2ray-geoip' 'v2ray-domain-list-community')
-makedepends=('pnpm-bin' 'clang' 'go' 'nodejs')
+makedepends=("clang" "go" "nodejs" "pnpm")
 provides=('dae')
 conflicts=('dae')
 source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${pkgname}-full-src.zip")
