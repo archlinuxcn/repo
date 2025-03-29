@@ -1,7 +1,7 @@
 # Maintainer: Benjamin Valdez <b.valdez.0509+aur<at>gmail.com>
 # Contributor: Bruce Zhang <zttt183525594<at>gmail.com>
 pkgname=kwin-gestures
-pkgver=0.5.0
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="Custom touchpad gestures for Plasma 6"
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('GPL-3.0-only')
 depends=('kwin' 'yaml-cpp' 'kcmutils' 'gcc-libs' 'qt6-base' 'glibc' 'kcoreaddons' 'ki18n')
 makedepends=('extra-cmake-modules' 'cmake')
 source=("$pkgname-$pkgver.src.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('40867e3d2226ff0d126c78c59bd50b69a7a36ea9675c4347bc356c5299427d83')
+sha256sums=('582db7bb9d627ce4b917a13b8e528bc1e92a7606f51ed444848fc0c8e53575c7')
 
 build() {
   export CXXFLAGS+=" -DQT_NO_DEBUG_OUTPUT"
