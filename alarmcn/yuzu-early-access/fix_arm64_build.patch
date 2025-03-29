@@ -1,0 +1,31 @@
+diff --git a/src/core/arm/nce/interpreter_visitor.h b/src/core/arm/nce/interpreter_visitor.h
+index f90d876ab..353ee7d7f 100755
+--- a/src/core/arm/nce/interpreter_visitor.h
++++ b/src/core/arm/nce/interpreter_visitor.h
+@@ -6,8 +6,12 @@
+ 
+ #include <signal.h>
+ #include <unistd.h>
++#include <span>
+ 
+ #include "core/arm/nce/visitor_base.h"
++#include "common/common_types.h"
++#include "core/memory.h"
++#include "core/hle/kernel/k_thread.h"
+ 
+ namespace Core {
+ 
+diff --git a/src/core/arm/nce/patcher.h b/src/core/arm/nce/patcher.h
+index a44f385e2..73f6134f5 100755
+--- a/src/core/arm/nce/patcher.h
++++ b/src/core/arm/nce/patcher.h
+@@ -14,6 +14,9 @@
+ #include "core/hle/kernel/k_typed_address.h"
+ #include "core/hle/kernel/physical_memory.h"
+ 
++#include "core/hle/kernel/k_thread.h"
++#include "core/memory.h"
++
+ namespace Core::NCE {
+ 
+ enum class PatchMode : u32 {

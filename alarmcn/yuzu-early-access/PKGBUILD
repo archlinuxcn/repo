@@ -1,0 +1,122 @@
+# Maintainer: Brendan Szymanski <bscubed@pm.me>
+
+_pkgname=yuzu
+pkgname=$_pkgname-early-access
+epoch=2
+pkgver=4176
+pkgrel=9
+pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
+arch=('i686' 'x86_64' 'aarch64')
+url="https://yuzu-emu.org/"
+license=('GPL2')
+depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib' 'enet')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'vulkan-utility-libraries' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'perl' 'yasm' 'python-jsonschema' 'python-jinja' 'patch' 'oaknut-git')
+optdepends=('qt5-wayland: for Wayland support')
+provides=('yuzu')
+conflicts=('yuzu')
+source=("git+https://source.hodakov.me/hdkv/yuzu.git"
+  git+https://github.com/lioncash/dynarmic.git#commit=ba8192d
+  git+https://github.com/yuzu-mirror/sirit.git#commit=ab75463
+  git+https://github.com/yuzu-mirror/mbedtls.git#commit=8c88150
+  git+https://github.com/bylaws/libadrenotools.git#commit=5cd3f5c
+  git+https://github.com/lat9nq/tzdb_to_nx.git#commit=9792969
+  git+https://github.com/brofield/simpleini.git#commit=382ddbb
+  ffmpeg::git+https://github.com/FFmpeg/FFmpeg.git#commit=9c1294e
+  git+https://github.com/herumi/xbyak.git#commit=a1ac375
+  "tz-2024b.tar.gz::https://github.com/eggert/tz/archive/refs/tags/2024b.tar.gz"
+  0001-fix-fmt11.patch
+  0002-fix-mem.patch
+  fix_arm64_build.patch
+)
+options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
+sha256sums=('SKIP'
+  '94f4509ecc0fb09bc3623b016f8557b4becb493b0febdc6f5b3e6ed013f7d2e4'
+  'bf6bf30cfd0a456bd1efa2c0ce7657580658ac444d70c62acb831748a7b51074'
+  'cb7a77a138ff51e6f42c66efaea4fb9d6800ab83ff0d68985b7a1d2f17c8dc13'
+  'e3f5009a889152901e07269deb61a254061e07d45ccd583d52bc7ad29489bec9'
+  '1e22c795623ebbdb5223cdb37f37d3415b8eae24bf26f3409d481d2e8dc3352a'
+  '7f3093ae65cf462079e33599ccf8eba2369c25a4573229835a2481016104f9d8'
+  '6efb40bae04b4af99682e33bd4aee285d5b0ff6a7964c42a0cd4579f6ac942f7'
+  'c65c870a733fad6f9c78bec7d1720ae0aa3059d482f545b6fe6fe017e11cf623'
+  '557c41d8eb5c29387a9d496db87c4aeb4f2ac8a2b6d5f60e869a8cade26e679c'
+  '826576b7254cf8df058caef607af8ef996a18bbb4d0cbff12b12ee08e5c4ae6b'
+  'dfb01cd56f73bae21113e73328405b337b7c8643b17018eb757bad04d5a23538'
+  'SKIP')
+
+prepare() {
+  cd $srcdir/yuzu
+  patch --strip=1 --binary -i ../0001-fix-fmt11.patch
+  patch --strip=1 --binary -i ../0002-fix-mem.patch
+  patch --strip=1 --binary -i ../fix_arm64_build.patch
+
+  cd $srcdir
+  cp -rf ${srcdir}/tz-2024b/* "${srcdir}/tzdb_to_nx/externals/tz/tz/"
+  for pro in {sirit,libadrenotools,simpleini,mbedtls,dynarmic,xbyak}; do
+    if [ -d $srcdir/yuzu/externals/${pro} ]; then
+      cp -rf ${srcdir}/${pro}/* $srcdir/yuzu/externals/${pro}
+    else
+      cp -rf ${srcdir}/${pro} $srcdir/yuzu/externals/${pro}
+    fi
+  done
+  cp -rf tzdb_to_nx $srcdir/yuzu/externals/nx_tzdb/
+  cp -rf ffmpeg/* $srcdir/yuzu/externals/ffmpeg/ffmpeg
+
+  cd $srcdir/yuzu
+  find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror$/-W/g' {} +
+  find . -name "CMakeLists.txt" -exec sed -i 's/^.*-Werror=.*$/ /g' {} +
+  find . -name "CMakeLists.txt" -exec sed -i 's/-Werror/-W/g' {} +
+  sed -i -e 's/0.11 //g' CMakeLists.txt
+  sed -i -e '/-DBOOST_ASIO_DISABLE_CONCEPTS/d' CMakeLists.txt
+  sed -i -e 's/1.3.238/1.3.233/g' CMakeLists.txt
+  sed -i -e 's/xbyak 6/xbyak 7.0/g' CMakeLists.txt
+  sed -i -e 's/httplib 0.12/httplib/g' CMakeLists.txt
+  sed -i -e 's/--quiet //g' src/video_core/host_shaders/CMakeLists.txt
+  sed -i -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g' src/video_core/host_shaders/CMakeLists.txt
+  sed -i -e '1i #include <cstring>' src/video_core/textures/bcn.cpp
+  sed -i -e '/Name=yuzu/ s/$/ Early Access/' dist/yuzu.desktop
+  sed -i -e '/yuzu %f/a StartupWMClass=yuzu' dist/yuzu.desktop
+  sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
+  sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
+  sed -i -e 's/boost::asio::io_service/boost::asio::io_context/g' src/input_common/drivers/udp_client.cpp
+
+  perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n/igs' src/video_core/CMakeLists.txt
+}
+build() {
+  export CXXFLAGS+=' -Wno-switch'
+
+  local cmake_args=(
+    -GNinja
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+    -DTITLE_BAR_FORMAT_IDLE="yuzu Early Access $pkgver"
+    -DTITLE_BAR_FORMAT_RUNNING="yuzu Early Access $pkgver | {3}"
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_BUILD_TYPE=Release
+    -DYUZU_ENABLE_COMPATIBILITY_REPORTING=OFF
+    -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=OFF
+    -DYUZU_USE_QT_WEB_ENGINE=ON
+    -DUSE_DISCORD_PRESENCE=ON
+    -DENABLE_QT_TRANSLATION=ON
+    -DYUZU_USE_BUNDLED_FFMPEG=ON
+    -DYUZU_USE_BUNDLED_QT=OFF
+    -DYUZU_USE_EXTERNAL_SDL2=OFF
+    -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON
+    -DYUZU_CHECK_SUBMODULES=OFF
+    -DYUZU_USE_EXTERNAL_VULKAN_HEADERS=OFF
+    -DYUZU_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF
+    -DYUZU_USE_FASTER_LD=OFF
+    -DYUZU_USE_PRECOMPILED_HEADERS=OFF
+    -DYUZU_USE_QT_MULTIMEDIA=ON
+    -DYUZU_DOWNLOAD_TIME_ZONE_DATA=ON
+    -DYUZU_TESTS=OFF
+  )
+  install -d build
+  cmake -S yuzu -B build "${cmake_args[@]}"
+  ninja -C build
+}
+
+package() {
+  cd build
+  DESTDIR="$pkgdir" ninja install
+
+  rm -rf $pkgdir/usr/lib $pkgdir/usr/include
+}
