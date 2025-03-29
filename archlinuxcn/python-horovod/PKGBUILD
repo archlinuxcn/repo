@@ -42,7 +42,7 @@ optdepends=(
   'python-pytorch-cuda: pytorch framework'
   # 'python-tensorflow-cuda: tensorflow framework'
 )
-source=("${_pkgname}-${pkgver}::git+https://github.com/horovod/horovod.git#tag=v${pkgver}"
+source=("${_pkgname}::git+https://github.com/horovod/horovod.git#tag=v${pkgver}"
         "0001-fix-building-with-torch-2.1.patch::https://github.com/horovod/horovod/pull/3998.patch"
         "0002-fix-building-torch-extension-with-glog.patch"
         "https://github.com/horovod/horovod/pull/3957.patch"
@@ -53,7 +53,7 @@ sha512sums=('28deae90009eab98aa1066a884f9eb1620d7e793b5dcda6b4397df56b2b25cadd2a
             'd3f808a9b8cd887dfe4b117e6c715ad28b15083b59334001da565108c9764eaf8dda76c9ae9c507fcc06362effcc72f3d9c2fdb443db9d0c9c839073359db613')
 
 prepare() {
-  cd "${_pkgname}-${pkgver}"
+  cd "${_pkgname}"
   patch -p1 -i "${srcdir}/0001-fix-building-with-torch-2.1.patch"
   patch -p1 -i "${srcdir}/0002-fix-building-torch-extension-with-glog.patch"
   patch -p1 -i "${srcdir}/3957.patch"
@@ -61,7 +61,7 @@ prepare() {
 }
 
 build() {
-  cd "${_pkgname}-${pkgver}"
+  cd "${_pkgname}"
   # modify these environment variable as you need, see also https://github.com/horovod/horovod/blob/master/docs/install.rst
   HOROVOD_BUILD_CUDA_CC_LIST="60,61,62,70,72,75,80,86,89,90" \
   HOROVOD_CPU_OPERATIONS=GLOO \
@@ -80,7 +80,7 @@ build() {
 }
 
 package() {
-  cd "${_pkgname}-${pkgver}"
+  cd "${_pkgname}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
