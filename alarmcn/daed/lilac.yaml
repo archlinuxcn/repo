@@ -2,7 +2,9 @@ maintainers:
   - github: xiaohuirong
     email: horeamxiao@archlinuxcn.org
 
-pre_build: aur_pre_build
+pre_build_script: |
+  aur_pre_build()
+  add_makedepends(['nodejs'])
 post_build: aur_post_build
       
 update_on:
