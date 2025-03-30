@@ -3,7 +3,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers=['Terence','Saren','saltyming'])
+    aur_pre_build(maintainers=['Terence','glorious-yellow'])
     for line in edit_file('PKGBUILD'):
         if line.startswith('license='):
             line = "license=('GPL-2.0-or-later')"
