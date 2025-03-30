@@ -4,7 +4,7 @@
 
 pkgname=faudio
 pkgver=25.03
-pkgrel=1
+pkgrel=2
 pkgdesc="XAudio2 reimplementation"
 arch=(aarch64 x86_64)
 url="https://github.com/FNA-XNA/FAudio"
@@ -17,6 +17,7 @@ sha512sums=('ec1f37a73aa5ad57841e297d8ee730b8b161144bc0624e29e9ba7b86c6f2d8657b2
 build() {
   cmake -B build -S FAudio-$pkgver --fresh \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DBUILD_SDL3=ON
   cmake --build build
 }
