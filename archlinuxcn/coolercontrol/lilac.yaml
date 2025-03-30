@@ -1,5 +1,5 @@
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['caferen'])
+pre_build_script: aur_pre_build(maintainers=['caferen', 'codifryed'])
 post_build: aur_post_build
 repo_depends:
   - coolercontrol-liqctld
@@ -8,7 +8,7 @@ update_on:
   - source: aur
     aur: coolercontrol
   - source: manual
-    manual: 1.1
+    manual: 1.1.1
 
 maintainers:
   - github: roaldclark
