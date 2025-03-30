@@ -18,8 +18,7 @@ depends=(
 	'dbus'
 	'ffmpeg'
 	'fmt'
-	'cubeb-git'
-	'kdsingleapplication')
+	'cubeb-git')
 makedepends=(
 	'git'
 	'cmake'
@@ -35,8 +34,10 @@ source=(
 	"git+https://github.com/effolkronium/random.git"
 	"git+https://github.com/hypengw/QmlMaterial.git"
 	"git+https://github.com/hypengw/qcm-jellyfin-plugin.git"
+	"git+https://github.com/KDAB/KDSingleApplication.git"
 )
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP')
@@ -47,16 +48,14 @@ pkgver() {
 
 prepare() {
 	cd Qcm
-	git rm third_party/{expected,KDSingleApplication}
+	git rm third_party/expected
 
 	git submodule init
 	git config submodule.third_party/random.url "${srcdir}/random"
 	git config submodule.qml_material.url "${srcdir}/QmlMaterial"
 	git config submodule.service/jellyfin.url "${srcdir}/qcm-jellyfin-plugin"
+	git config submodule.third_party/KDSingleApplication.url "${srcdir}/KDSingleApplication"
 	git -c protocol.file.allow=always submodule update
-
-	sed -i '/add_subdirectory(KDSingleApplication EXCLUDE_FROM_ALL)/d' third_party/CMakeLists.txt
-	sed -i 's|kdsingleapplication.h|kdsingleapplication-qt6/kdsingleapplication.h|' app/main.cpp
 }
 
 build() {
