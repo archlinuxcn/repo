@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Mon, 17 Mar 2025 10:50:13 +0100
+Subject: [PATCH] Revert "onscreen/native: Account for all posted frames"
+
+This reverts commit 9fc5fdc953f96cd91ad54fce6c50964e7ce57815.
+
+It caused freezes for some users.
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3974
+---
+ src/backends/native/meta-onscreen-native.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/backends/native/meta-onscreen-native.c b/src/backends/native/meta-onscreen-native.c
+index bb7a2c4bd570..a8d7d7aa2681 100644
+--- a/src/backends/native/meta-onscreen-native.c
++++ b/src/backends/native/meta-onscreen-native.c
+@@ -1672,7 +1672,6 @@ maybe_post_next_frame (CoglOnscreen *onscreen)
+     {
+       kms_update = meta_frame_native_steal_kms_update (frame_native);
+       post_nonprimary_plane_update (onscreen_native, frame, kms_update);
+-      onscreen_native->posted_frame = clutter_frame_ref (frame);
+       return;
+     }
+ 
+@@ -2127,7 +2126,6 @@ meta_onscreen_native_finish_frame (CoglOnscreen *onscreen,
+     }
+ 
+   post_nonprimary_plane_update (onscreen_native, frame, kms_update);
+-  onscreen_native->posted_frame = clutter_frame_ref (frame);
+ 
+   clutter_frame_set_result (frame, CLUTTER_FRAME_RESULT_PENDING_PRESENTED);
+ }

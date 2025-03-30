@@ -1,0 +1,291 @@
+From 26bd6aa6a60c59b19f7ffc0fde0dada475dd3540 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Thu, 27 Mar 2025 09:36:53 +0100
+Subject: [PATCH 1/4] wayland: Cache sprite for current cursor shape
+
+meta_wayland_pointer_update_cursor_surface was always creating a new
+sprite for the cursor shape, which eventually results in allocating HW
+buffers and uploading the shape to them.
+
+Since meta_wayland_pointer_update_cursor_surface gets called every time
+the pointer moves, we don't want to repeat that work if the cursor shape
+hasn't changed. We cache the sprite in the MetaWaylandPointer struct for
+reuse next time, and clear the cached sprite when the cursor shape
+changes.
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3993
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3996
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4371>
+---
+ src/wayland/meta-wayland-pointer.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/src/wayland/meta-wayland-pointer.c b/src/wayland/meta-wayland-pointer.c
+index f8218669de..c17d8bc6c7 100644
+--- a/src/wayland/meta-wayland-pointer.c
++++ b/src/wayland/meta-wayland-pointer.c
+@@ -102,6 +102,7 @@ struct _MetaWaylandPointer
+   gulong cursor_surface_destroy_id;
+ 
+   MetaCursor cursor_shape;
++  MetaCursorSpriteXcursor *shape_sprite;
+ 
+   guint32 grab_button;
+   guint32 grab_serial;
+@@ -1165,11 +1166,14 @@ meta_wayland_pointer_update_cursor_surface (MetaWaylandPointer *pointer)
+         }
+       else if (pointer->cursor_shape != META_CURSOR_INVALID)
+         {
+-          MetaCursorSpriteXcursor *sprite;
++          if (!pointer->shape_sprite)
++            {
++              pointer->shape_sprite =
++                meta_cursor_sprite_xcursor_new (pointer->cursor_shape,
++                                                cursor_tracker);
++            }
+ 
+-          sprite = meta_cursor_sprite_xcursor_new (pointer->cursor_shape,
+-                                                   cursor_tracker);
+-          cursor_sprite = META_CURSOR_SPRITE (sprite);
++          cursor_sprite = g_object_ref (META_CURSOR_SPRITE (pointer->shape_sprite));
+         }
+ 
+       meta_cursor_tracker_set_window_cursor (cursor_tracker, cursor_sprite);
+@@ -1205,6 +1209,7 @@ meta_wayland_pointer_set_cursor_surface (MetaWaylandPointer *pointer,
+ 
+   pointer->cursor_surface = cursor_surface;
+   pointer->cursor_shape = META_CURSOR_INVALID;
++  g_clear_object (&pointer->shape_sprite);
+ 
+   if (prev_cursor_surface)
+     {
+@@ -1241,6 +1246,7 @@ meta_wayland_pointer_set_cursor_shape (MetaWaylandPointer *pointer,
+ 
+   pointer->cursor_surface = NULL;
+   pointer->cursor_shape = shape;
++  g_clear_object (&pointer->shape_sprite);
+ 
+   meta_wayland_pointer_update_cursor_surface (pointer);
+ }
+@@ -1535,6 +1541,8 @@ meta_wayland_pointer_finalize (GObject *object)
+ {
+   MetaWaylandPointer *pointer = META_WAYLAND_POINTER (object);
+ 
++  g_clear_object (&pointer->shape_sprite);
++
+   g_clear_pointer (&pointer->pointer_clients, g_hash_table_unref);
+ 
+   G_OBJECT_CLASS (meta_wayland_pointer_parent_class)->finalize (object);
+-- 
+GitLab
+
+
+From dd10fc1182afa2af1e40b849698b89b8385454a8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Thu, 27 Mar 2025 17:57:13 +0100
+Subject: [PATCH 2/4] wayland: Bail early if tablet tool cursor shape doesn't
+ change
+
+No need to call meta_wayland_tablet_tool_update_cursor_surface in that
+case.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4371>
+---
+ src/wayland/meta-wayland-tablet-tool.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/wayland/meta-wayland-tablet-tool.c b/src/wayland/meta-wayland-tablet-tool.c
+index 8306babf0c..2e9ce87977 100644
+--- a/src/wayland/meta-wayland-tablet-tool.c
++++ b/src/wayland/meta-wayland-tablet-tool.c
+@@ -201,6 +201,10 @@ meta_wayland_tablet_tool_set_cursor_shape (MetaWaylandTabletTool *tool,
+       meta_wayland_surface_update_outputs (tool->cursor_surface);
+       wl_list_remove (&tool->cursor_surface_destroy_listener.link);
+     }
++  else if (tool->cursor_shape == shape)
++    {
++      return;
++    }
+ 
+   tool->cursor_surface = NULL;
+   tool->cursor_shape = shape;
+-- 
+GitLab
+
+
+From 2f30fd99a7be3f23628432f4f2c836d60fedfdc2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Thu, 27 Mar 2025 17:47:44 +0100
+Subject: [PATCH 3/4] wayland: Cache sprite for current tablet tool cursor
+ shape
+
+meta_wayland_tablet_tool_update_cursor_surface was always creating a new
+sprite for the cursor shape, which may result in allocating HW buffers
+and uploading the shape to them.
+
+Since meta_wayland_tablet_tool_update_cursor_surface gets called every
+time the tablet tool moves, we don't want to repeat that work if the
+cursor shape hasn't changed. We cache the sprite in the
+MetaWaylandTabletTool struct for reuse next time, and clear the cached
+sprite when the cursor shape changes.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4371>
+---
+ src/wayland/meta-wayland-tablet-tool.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/src/wayland/meta-wayland-tablet-tool.c b/src/wayland/meta-wayland-tablet-tool.c
+index 2e9ce87977..2ec97df9e6 100644
+--- a/src/wayland/meta-wayland-tablet-tool.c
++++ b/src/wayland/meta-wayland-tablet-tool.c
+@@ -53,6 +53,7 @@ struct _MetaWaylandTabletTool
+   MetaCursorSpriteXcursor *default_sprite;
+ 
+   MetaCursor cursor_shape;
++  MetaCursorSpriteXcursor *shape_sprite;
+ 
+   MetaWaylandSurface *current;
+   guint32 pressed_buttons;
+@@ -138,11 +139,14 @@ meta_wayland_tablet_tool_update_cursor_surface (MetaWaylandTabletTool *tool)
+         }
+       else if (tool->cursor_shape != META_CURSOR_INVALID)
+         {
+-          MetaCursorSpriteXcursor *sprite;
+-
+-          sprite = meta_cursor_sprite_xcursor_new (tool->cursor_shape,
+-                                                   cursor_tracker);
+-          cursor_sprite = META_CURSOR_SPRITE (sprite);
++          if (!tool->shape_sprite)
++            {
++              tool->shape_sprite =
++                meta_cursor_sprite_xcursor_new (tool->cursor_shape,
++                                                cursor_tracker);
++            }
++
++          cursor_sprite = g_object_ref (META_CURSOR_SPRITE (tool->shape_sprite));
+         }
+     }
+   else if (tool->current_tablet)
+@@ -176,6 +180,7 @@ meta_wayland_tablet_tool_set_cursor_surface (MetaWaylandTabletTool *tool,
+ 
+   tool->cursor_surface = surface;
+   tool->cursor_shape = META_CURSOR_INVALID;
++  g_clear_object (&tool->shape_sprite);
+ 
+   if (tool->cursor_surface)
+     {
+@@ -208,6 +213,7 @@ meta_wayland_tablet_tool_set_cursor_shape (MetaWaylandTabletTool *tool,
+ 
+   tool->cursor_surface = NULL;
+   tool->cursor_shape = shape;
++  g_clear_object (&tool->shape_sprite);
+ 
+   meta_wayland_tablet_tool_update_cursor_surface (tool);
+ }
+@@ -472,6 +478,7 @@ meta_wayland_tablet_tool_free (MetaWaylandTabletTool *tool)
+     }
+ 
+   g_object_unref (tool->default_sprite);
++  g_object_unref (tool->shape_sprite);
+ 
+   g_free (tool);
+ }
+-- 
+GitLab
+
+
+From 16fc21bed0c5b0ba4aac93238692e4ebb61db61b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Fri, 28 Mar 2025 16:31:56 +0100
+Subject: [PATCH 4/4] wayland: Don't take & drop sprite reference in
+ _update_cursor_surface
+
+It's now pointless busy-work, since these functions never own the sprite
+object anymore.
+
+Suggested by Sebastian Wick.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4371>
+---
+ src/wayland/meta-wayland-pointer.c     |  8 +++-----
+ src/wayland/meta-wayland-tablet-tool.c | 13 ++++---------
+ 2 files changed, 7 insertions(+), 14 deletions(-)
+
+diff --git a/src/wayland/meta-wayland-pointer.c b/src/wayland/meta-wayland-pointer.c
+index c17d8bc6c7..a0d9acf5df 100644
+--- a/src/wayland/meta-wayland-pointer.c
++++ b/src/wayland/meta-wayland-pointer.c
+@@ -1153,16 +1153,14 @@ meta_wayland_pointer_update_cursor_surface (MetaWaylandPointer *pointer)
+ 
+   if (surface)
+     {
+-      g_autoptr (MetaCursorSprite) cursor_sprite = NULL;
++      MetaCursorSprite *cursor_sprite = NULL;
+ 
+       if (pointer->cursor_surface)
+         {
+           MetaWaylandCursorSurface *cursor_surface =
+             META_WAYLAND_CURSOR_SURFACE (pointer->cursor_surface->role);
+-          MetaCursorSprite *sprite;
+ 
+-          sprite = meta_wayland_cursor_surface_get_sprite (cursor_surface);
+-          cursor_sprite = g_object_ref (sprite);
++          cursor_sprite = meta_wayland_cursor_surface_get_sprite (cursor_surface);
+         }
+       else if (pointer->cursor_shape != META_CURSOR_INVALID)
+         {
+@@ -1173,7 +1171,7 @@ meta_wayland_pointer_update_cursor_surface (MetaWaylandPointer *pointer)
+                                                 cursor_tracker);
+             }
+ 
+-          cursor_sprite = g_object_ref (META_CURSOR_SPRITE (pointer->shape_sprite));
++          cursor_sprite = META_CURSOR_SPRITE (pointer->shape_sprite);
+         }
+ 
+       meta_cursor_tracker_set_window_cursor (cursor_tracker, cursor_sprite);
+diff --git a/src/wayland/meta-wayland-tablet-tool.c b/src/wayland/meta-wayland-tablet-tool.c
+index 2ec97df9e6..b6a684f2e4 100644
+--- a/src/wayland/meta-wayland-tablet-tool.c
++++ b/src/wayland/meta-wayland-tablet-tool.c
+@@ -120,7 +120,7 @@ meta_wayland_tablet_tool_update_cursor_surface (MetaWaylandTabletTool *tool)
+   MetaBackend *backend = backend_from_tool (tool);
+   MetaCursorTracker *cursor_tracker =
+     meta_backend_get_cursor_tracker (backend);
+-  g_autoptr (MetaCursorSprite) cursor_sprite = NULL;
++  MetaCursorSprite *cursor_sprite = NULL;
+ 
+   if (tool->cursor_renderer == NULL)
+     return;
+@@ -132,10 +132,8 @@ meta_wayland_tablet_tool_update_cursor_surface (MetaWaylandTabletTool *tool)
+         {
+           MetaWaylandCursorSurface *cursor_surface =
+             META_WAYLAND_CURSOR_SURFACE (tool->cursor_surface->role);
+-          MetaCursorSprite *sprite;
+ 
+-          sprite = meta_wayland_cursor_surface_get_sprite (cursor_surface);
+-          cursor_sprite = g_object_ref (sprite);
++          cursor_sprite = meta_wayland_cursor_surface_get_sprite (cursor_surface);
+         }
+       else if (tool->cursor_shape != META_CURSOR_INVALID)
+         {
+@@ -146,15 +144,12 @@ meta_wayland_tablet_tool_update_cursor_surface (MetaWaylandTabletTool *tool)
+                                                 cursor_tracker);
+             }
+ 
+-          cursor_sprite = g_object_ref (META_CURSOR_SPRITE (tool->shape_sprite));
++          cursor_sprite = META_CURSOR_SPRITE (tool->shape_sprite);
+         }
+     }
+   else if (tool->current_tablet)
+     {
+-      MetaCursorSprite *sprite;
+-
+-      sprite = META_CURSOR_SPRITE (tool->default_sprite);
+-      cursor_sprite = g_object_ref (sprite);
++      cursor_sprite = META_CURSOR_SPRITE (tool->default_sprite);
+     }
+ 
+   meta_cursor_renderer_set_cursor (tool->cursor_renderer, cursor_sprite);
+-- 
+GitLab
+

@@ -1,36 +1,23 @@
-# Patched package:
-# Maintainer: Térence Clastres <t.clastres@gmail.com>
-# Co-maintainer: Saren Arterius <saren@wtako.net>
-# Co-maintainer: Mingi Sung <sungmg@saltyming.net>
-
-# Official package:
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Maintainer: Fabian Bornschein <fabiscafe@archlinux.org>
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Michael Kanis <mkanis_at_gmx_dot_de>
 
-
-### PACKAGE OPTIONS
-## MERGE REQUESTS SELECTION
-# Merge Requests List: ('579' '1441' '3751')
-_merge_requests_to_use=('1441' '3751')
-
-
-### IMPORTANT: Do no edit below this line unless you know what you're doing!
-
-_pkgname=mutter
 pkgname=mutter-performance
+pkgver=48.0
 epoch=1
-pkgver=47.4
 pkgrel=1
-pkgdesc="A window manager for GNOME | Attempts to improve performances with non-upstreamed merge-requests and frequent stable branch resync"
+pkgdesc="Window manager and compositor for GNOME"
 url="https://gitlab.gnome.org/GNOME/mutter"
-arch=(x86_64 aarch64)
-license=('GPL-2.0-or-later')
+arch=(x86_64)
+license=(GPL-2.0-or-later)
 depends=(
   at-spi2-core
+  bash-completion
   cairo
   colord
   dconf
+  egl-wayland
   fontconfig
   fribidi
   gcc-libs
@@ -50,6 +37,7 @@ depends=(
   libdisplay-info
   libdrm
   libei
+  libgirepository
   libglvnd
   libgudev
   libice
@@ -78,148 +66,73 @@ depends=(
   pipewire
   pixman
   python
+  python-argcomplete
+  python-gobject
   startup-notification
   systemd-libs
   wayland
   xorg-xwayland
-
 )
 makedepends=(
-  egl-wayland
   gi-docgen
   git
   glib2-devel
   gobject-introspection
-  gtk3
   meson
+  python-docutils
   sysprof
   wayland-protocols
-  xorg-server
-  xorg-server-xvfb
 )
-_commit=96e62be1022a45b7012d5a97b667b28dad13f74b  # tags/47.4^0
-source=("git+$url.git#commit=$_commit"
-        "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
-        'mr1441.patch'
-        'mr3751.patch')
-sha256sums=('f589bdd2b7c4f7eb80d723b0f1e05080ec9c0e17e384918d582a0218588152aa'
-            'ba56c003c1c16f1f8e411f6d5213878bcf059d4d39ece100fc414228a1bf22d5'
-            '004a890489aa05df6bd4193b4b22415fa58d117ebeee671d57a1183c392a7dd8'
-            '67943a22cb75df955fc475e5ae101984d87e4a1f51d56be5f50696cc3355a3c4')
-b2sums=('24b61029ec913919a9a9d9a929048207e34defa433b1088aa7737efbc267dbd954197500828101e84dc5681ad95f8201f2605675d6aaf6e7e3454f1f24fa78f6'
+source=(
+  # Mutter tags use SSH signatures which makepkg doesn't understand
+  "git+$url.git#tag=${pkgver/[a-z]/.&}"
+  "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
+  0001-cursor-Unify-prepare_func-for-shape-cursors.patch
+  0002-kms-impl-device-Always-catch-pending-KMS-update-in-_.patch
+  0003-Revert-onscreen-native-Account-for-all-posted-frames.patch
+  4363.patch
+  4371.patch
+)
+b2sums=('2ab67447e212cd8a6491b1f6f0b25aa5663ac70642a9a0d9d77c387787e34e8cbc39951ccae5abf8d5bedc35adfba26aa85487406d50f5da4b5e17739c52c333'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
-        '5a1c560bf4c671cdc17cee5e37f55337b19254598dca5fb95bc30809fef2504e40cb3350e5ad226bea5feb46b3fbc6683e9e6f212826a5ba549ba1237a34b40b'
-        'e13742a68cd831827e88ddf1801caca39fa9c77dd8c08a851bc87914f2961119fc1a7643628fc63cad8dedf03533148539a242cca23313c250bd65867ea84d8d')
+        '1e7f977eb039bfa37ba0ef265e058d68246160f916c91779f8e0ca52954e4ada195036c5db0210ab18735b13907e2ff361d0c7f12948df86d6c6ccbb16cc6b66'
+        '3c05efe2f37f0547d28f55ea790413c844703ba045a7429ab7f67594b749aeef0429026ad44e9985fe70c146923f6e32ed5cbf3de476c19aae7de3a126583f47'
+        '6ba5b237afa2c9ce89c0980b8f4729810eac9ad49e754493978bdbc32942106bf4eba0c9065d770be4feec25c5b149e942c3b4c4d1d8c753eacc68b408fd0f39'
+        'ba0b914675ec944e951183c6502664645a6844d02703ce351f1cd58ae4d510a01563ed5e7482f9ba433e0c7a7be2d314d2913756062c49bd28a3aea646235162'
+        'e09d156107a45ca51d0c6144d891a78c609bfbb6cea76a53e8928712168102e05a033fb599a5faf81f8b5100c1c1882dc3e7b9d631bdf1388ec738cdad92c258')
 
 pkgver() {
-  cd $_pkgname
+  cd mutter
   git describe --tags --abbrev=9 | sed -r 's/\.([a-z])/\1/;s/([a-z])\./\1/;s/[^-]*-g/r&/;s/-/\./g'
 }
 
-pick_mr() {
-  for mr in "${_merge_requests_to_use[@]}"; do
-    if [ "$1" = "$mr" ]; then
-      if [ "$2" = "merge" ] || [ -z "$2" ]; then
-        msg2 "Downloading then Merging $1..."
-        curl -O "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/$mr.diff"
-        git apply "$mr.diff"
-      elif [ "$3" = "revert" ]; then
-        msg2 "Reverting $1..."
-        git revert "$2" --no-commit
-      elif [ "$3" = "patch" ]; then
-	if [ -e ../"$2" ]; then 
-          msg2 "Patching with $2..."
-          patch -Np1 -i ../"$2"
-        else
-          msg2 "Downloading $mr as $2 then patching..."
-          curl -O "https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/$mr.diff" -o "$2"
-          patch -Np1 -i "$2"
-        fi
-      else
-        msg2 "ERROR: wrong argument given: $2"
-      fi
-      break
-    fi
-  done
-}
-
 prepare() {
-  cd $_pkgname
+  cd mutter
 
-  git reset --hard
-  git cherry-pick --abort || true
-  git clean -fd
+  # Fix cursor scaling
+  # https://gitlab.gnome.org/GNOME/mutter/-/issues/3975
+  # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4345
+  git apply -3 ../0001-cursor-Unify-prepare_func-for-shape-cursors.patch
 
-  #git remote add vanvugt https://gitlab.gnome.org/vanvugt/mutter.git || true
-  #git remote add verdre https://gitlab.gnome.org/verdre/mutter.git || true
-  #git remote add 3v1no https://gitlab.gnome.org/3v1n0/mutter.git || true
-
-  #git fetch vanvugt
-  #git fetch verdre
-  #git fetch 3v1no
-
-  ### Merge Requests
-
-  # Merge Request Prototype
-  # Title:
-  # Author:
-  # URL:
-  # Type:
-  # Status:
-  # Comment:
-  # git cherry-pick -n first_commit^..last_commit
-  #
-  # Possible Type:
-  #   1. Improvement: Makes an already existing feature behave better, more efficiently/reliably.
-  #   2. Feature: Adds a new functionality.
-  #   3. Fix: Regression/bug fix only available in master (not backported).
-  #   4. Cleanup: Code styling improvement, function deprecation, rearrangement...
-  #
-  # Possible Status:
-  #   1. Needs rebase: Conflicts with master branch.
-  #   2. Needs review: Mutter maintainers needs to review the new/updated MR and provide feedback.
-  #   3. Needs changes: MR needs to be adjusted based on maintainers feedback.
-  #   4. Merged: MR approved and it changes commited to master.
-  #
-  # Generally, a MR status oscillate between 2 and 3 and then becomes 4.
-
-  # Title: backends: Do not reload keymap on new keyboard notifications
-  # Author: Carlos Garnacho <carlosg@gnome.org>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/579
-  # Type: 1
-  # Status: 4
-  # Comment: Was reverted: https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/833
-  #          If you use stenography software or play hardcore rhythm games like Lunatic Rave 2/osumania, use it.
-  pick_mr '579' ce86f90efbaa51522ba14c5b4cad933c2106de42 'revert'
-
-  # Title: wayland/text-input-v1: Implement basic text-input-v1 support
-  # Author: Alynx Zhou <alynx.zhou@gmail.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3751
-  # Type: 1
-  # Status: Not gonna be merged considering the maintainers' feedbacks.
-  # Comment: This commit makes input methods work in text-input-v1 only clients.
-  #          (mostly Chromium/Electron based apps with Ozone Wayland.)
-  pick_mr '3751' 'mr3751.patch' 'patch'
-
-  # Title: Draft: Dynamic triple/double buffering (v4)
-  # Author: Daniel van Vugt <daniel.van.vugt@canonical.com>
-  # URL:  https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/1441
-  # Type: 1
-  # Status: 2 & 3
-  # Comment: Helps GPU frequencies to scale up.
-  #          Included: !3961 !4015 !4027 !4057
-  pick_mr '1441' 'mr1441.patch' 'patch'
-
+  # Fix multi-monitor freezes
+  # https://gitlab.gnome.org/GNOME/mutter/-/issues/3974
+  # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4338
+  git apply -3 ../0002-kms-impl-device-Always-catch-pending-KMS-update-in-_.patch
+  git apply -3 ../0003-Revert-onscreen-native-Account-for-all-posted-frames.patch
+  
+  git apply -3 ../4363.patch
+  git apply -3 ../4371.patch
+  
+  # git revert -n cbdc3ae9f5fd42887c2ef154a566dccfd3dc6e1f
 }
 
 build() {
   local meson_options=(
+    -D docs=true
     -D egl_device=true
-    -D wayland_eglstream=true
     -D installed_tests=false
-    -D libdisplay_info=enabled
-    -D docs=false
     -D tests=disabled
+    -D wayland_eglstream=true
   )
 
   CFLAGS="${CFLAGS/-O2/-O3} -fno-semantic-interposition"
@@ -228,14 +141,26 @@ build() {
   # Inject gvdb
   export MESON_PACKAGE_CACHE_DIR="$srcdir"
 
-  arch-meson $_pkgname build "${meson_options[@]}"
+  arch-meson mutter build "${meson_options[@]}"
   meson compile -C build
 }
 
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+  done
+}
+
 package() {
-  provides=(mutter libmutter-15.so)
+  provides=(mutter libmutter-16.so)
   conflicts=(mutter)
   
 
   meson install -C build --destdir "$pkgdir"
 }
+
+# vim:set sw=2 sts=-1 et:

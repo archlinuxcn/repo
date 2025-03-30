@@ -1,0 +1,32 @@
+From 84f64415bd15b1189181a0c04605df6383d135b9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jexposit@redhat.com>
+Date: Tue, 25 Mar 2025 17:52:16 +0100
+Subject: [PATCH] native/drm-lease: Check that monitor is not NULL
+
+In is_connector_configured_for_lease(), the monitor obtained from the
+output can be NULL.
+
+Check that monitor is not NULL before using it.
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3943
+---
+ src/backends/native/meta-drm-lease.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/backends/native/meta-drm-lease.c b/src/backends/native/meta-drm-lease.c
+index 582f869b3bc..cd99a995584 100644
+--- a/src/backends/native/meta-drm-lease.c
++++ b/src/backends/native/meta-drm-lease.c
+@@ -198,6 +198,9 @@ is_connector_configured_for_lease (MetaKmsConnector *connector)
+     return FALSE;
+ 
+   monitor = meta_output_get_monitor (META_OUTPUT (output_kms));
++  if (!monitor)
++    return FALSE;
++
+   return meta_monitor_is_for_lease (monitor);
+ }
+ 
+-- 
+GitLab
+

@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Michel=20D=C3=A4nzer?= <mdaenzer@redhat.com>
+Date: Mon, 17 Mar 2025 11:00:11 +0100
+Subject: [PATCH] kms/impl-device: Always catch pending KMS update in
+ _schedule_process
+
+Not only if the deadline timer is enabled. With the next commit, it'll
+be semi-expected to happen even if the deadline timer is disabled.
+
+Still leave the warning though, as a reminder that we'd rather prevent
+this outside of the KMS thread.
+---
+ src/backends/native/meta-kms-impl-device.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/src/backends/native/meta-kms-impl-device.c b/src/backends/native/meta-kms-impl-device.c
+index 0135f22033fe..25cb1cbd5e1a 100644
+--- a/src/backends/native/meta-kms-impl-device.c
++++ b/src/backends/native/meta-kms-impl-device.c
+@@ -2081,25 +2081,24 @@ meta_kms_impl_device_schedule_process (MetaKmsImplDevice *impl_device,
+ 
+       if (ensure_deadline_timer_armed (impl_device, crtc_frame))
+         return;
+-
+-      if (crtc_frame->pending_update)
+-        {
+-          meta_kms_impl_device_do_process_update (impl_device, crtc_frame,
+-                                                  crtc_frame->crtc,
+-                                                  crtc_frame->pending_update,
+-                                                  META_KMS_UPDATE_FLAG_NONE);
+-        }
+     }
+-
+-  if (crtc_frame->pending_update)
++  else if (crtc_frame->pending_update)
+     {
+       MetaKmsImplDevicePrivate *priv =
+         meta_kms_impl_device_get_instance_private (impl_device);
+ 
+       g_warning_once ("crtc_frame->pending_update=%p, deadline_timer_state=%d",
+                       crtc_frame->pending_update, priv->deadline_timer_state);
+     }
+ 
++  if (crtc_frame->pending_update)
++    {
++      meta_kms_impl_device_do_process_update (impl_device, crtc_frame,
++                                              crtc_frame->crtc,
++                                              crtc_frame->pending_update,
++                                              META_KMS_UPDATE_FLAG_NONE);
++    }
++
+   meta_kms_device_set_needs_flush (meta_kms_crtc_get_device (crtc), crtc);
+ }
+ 

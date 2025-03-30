@@ -1,0 +1,296 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
+Date: Tue, 18 Mar 2025 22:58:37 +0100
+Subject: [PATCH] cursor: Unify prepare_func for shape cursors
+
+Move the root cursor prepare function into MetaCursorSpriteXcursor to
+become its default prepare function. This should solve two issues:
+
+- The root cursor prepare function was changed in f77d8e2a12a07ef6abe9
+  to solve an issue with fractional scales. The tool cursor prepare
+  function was missing this fix.
+- The cursors created via the shape protocol had no prepare function at
+  all, so were not getting scaled.
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3975
+---
+ src/backends/meta-cursor-sprite-xcursor.c | 57 ++++++++++++++++++++
+ src/core/display.c                        | 63 ++---------------------
+ src/wayland/meta-wayland-tablet-tool.c    | 39 --------------
+ 3 files changed, 60 insertions(+), 99 deletions(-)
+
+diff --git a/src/backends/meta-cursor-sprite-xcursor.c b/src/backends/meta-cursor-sprite-xcursor.c
+index a4b9cbb988ab..dc2580f65db9 100644
+--- a/src/backends/meta-cursor-sprite-xcursor.c
++++ b/src/backends/meta-cursor-sprite-xcursor.c
+@@ -24,6 +24,7 @@
+ #include "backends/meta-cursor.h"
+ #include "backends/meta-cursor-renderer.h"
+ #include "backends/meta-cursor-tracker-private.h"
++#include "backends/meta-logical-monitor.h"
+ #include "clutter/clutter.h"
+ #include "cogl/cogl.h"
+ #include "meta/prefs.h"
+@@ -510,22 +511,78 @@ meta_cursor_sprite_xcursor_new (MetaCursor         cursor,
+   return sprite_xcursor;
+ }
+ 
++static void
++xcursor_prepare_at (MetaCursorSpriteXcursor *sprite_xcursor,
++                    float                    best_scale,
++                    int                      x,
++                    int                      y,
++                    void                    *user_data)
++{
++  MetaCursorSprite *cursor_sprite = META_CURSOR_SPRITE (sprite_xcursor);
++  MetaCursorTracker *cursor_tracker =
++    meta_cursor_sprite_get_cursor_tracker (cursor_sprite);
++  MetaBackend *backend =
++    meta_cursor_tracker_get_backend (cursor_tracker);
++
++  if (meta_backend_is_stage_views_scaled (backend))
++    {
++      if (best_scale != 0.0f)
++        {
++          float ceiled_scale;
++          int cursor_width, cursor_height;
++
++          ceiled_scale = ceilf (best_scale);
++          meta_cursor_sprite_xcursor_set_theme_scale (sprite_xcursor,
++                                                      (int) ceiled_scale);
++
++          meta_cursor_sprite_realize_texture (cursor_sprite);
++          meta_cursor_sprite_xcursor_get_scaled_image_size (sprite_xcursor,
++                                                            &cursor_width,
++                                                            &cursor_height);
++          meta_cursor_sprite_set_viewport_dst_size (cursor_sprite,
++                                                    cursor_width,
++                                                    cursor_height);
++        }
++    }
++  else
++    {
++      MetaMonitorManager *monitor_manager =
++        meta_backend_get_monitor_manager (backend);
++      MetaLogicalMonitor *logical_monitor;
++
++      logical_monitor =
++        meta_monitor_manager_get_logical_monitor_at (monitor_manager, x, y);
++
++      /* Reload the cursor texture if the scale has changed. */
++      if (logical_monitor)
++        {
++          meta_cursor_sprite_xcursor_set_theme_scale (sprite_xcursor,
++                                                      (int) logical_monitor->scale);
++          meta_cursor_sprite_set_texture_scale (cursor_sprite, 1.0f);
++        }
++    }
++}
++
+ static void
+ meta_cursor_sprite_xcursor_finalize (GObject *object)
+ {
+   MetaCursorSpriteXcursor *sprite_xcursor = META_CURSOR_SPRITE_XCURSOR (object);
+ 
+   g_clear_pointer (&sprite_xcursor->xcursor_images,
+                    xcursor_images_destroy);
+ 
+   G_OBJECT_CLASS (meta_cursor_sprite_xcursor_parent_class)->finalize (object);
+ }
+ 
+ static void
+ meta_cursor_sprite_xcursor_init (MetaCursorSpriteXcursor *sprite_xcursor)
+ {
+   sprite_xcursor->theme_scale = 1;
+   sprite_xcursor->theme_dirty = TRUE;
++
++  meta_cursor_sprite_set_prepare_func (META_CURSOR_SPRITE (sprite_xcursor),
++                                       (MetaCursorPrepareFunc) xcursor_prepare_at,
++                                       NULL);
+ }
+ 
+ static void
+diff --git a/src/core/display.c b/src/core/display.c
+index ae66a0cfcb8e..2bdf5be44c2c 100644
+--- a/src/core/display.c
++++ b/src/core/display.c
+@@ -1681,76 +1681,19 @@ meta_display_notify_window_created (MetaDisplay  *display,
+   g_signal_emit (display, display_signals[WINDOW_CREATED], 0, window);
+ }
+ 
+-static void
+-root_cursor_prepare_at (MetaCursorSpriteXcursor *sprite_xcursor,
+-                        float                    best_scale,
+-                        int                      x,
+-                        int                      y,
+-                        MetaDisplay             *display)
+-{
+-  MetaCursorSprite *cursor_sprite = META_CURSOR_SPRITE (sprite_xcursor);
+-  MetaBackend *backend = backend_from_display (display);
+-
+-  if (meta_backend_is_stage_views_scaled (backend))
+-    {
+-      if (best_scale != 0.0f)
+-        {
+-          float ceiled_scale;
+-          int cursor_width, cursor_height;
+-
+-          ceiled_scale = ceilf (best_scale);
+-          meta_cursor_sprite_xcursor_set_theme_scale (sprite_xcursor,
+-                                                      (int) ceiled_scale);
+-
+-          meta_cursor_sprite_realize_texture (cursor_sprite);
+-          meta_cursor_sprite_xcursor_get_scaled_image_size (sprite_xcursor,
+-                                                            &cursor_width,
+-                                                            &cursor_height);
+-          meta_cursor_sprite_set_viewport_dst_size (cursor_sprite,
+-                                                    cursor_width,
+-                                                    cursor_height);
+-        }
+-    }
+-  else
+-    {
+-      MetaMonitorManager *monitor_manager =
+-        meta_backend_get_monitor_manager (backend);
+-      MetaLogicalMonitor *logical_monitor;
+-
+-      logical_monitor =
+-        meta_monitor_manager_get_logical_monitor_at (monitor_manager, x, y);
+-
+-      /* Reload the cursor texture if the scale has changed. */
+-      if (logical_monitor)
+-        {
+-          meta_cursor_sprite_xcursor_set_theme_scale (sprite_xcursor,
+-                                                      (int) logical_monitor->scale);
+-          meta_cursor_sprite_set_texture_scale (cursor_sprite, 1.0f);
+-        }
+-    }
+-}
+-
+-static void
+-manage_root_cursor_sprite_scale (MetaDisplay             *display,
+-                                 MetaCursorSpriteXcursor *sprite_xcursor)
+-{
+-  meta_cursor_sprite_set_prepare_func (META_CURSOR_SPRITE (sprite_xcursor),
+-                                       (MetaCursorPrepareFunc) root_cursor_prepare_at,
+-                                       display);
+-}
+-
+ void
+ meta_display_reload_cursor (MetaDisplay *display)
+ {
+   MetaCursor cursor = display->current_cursor;
+   MetaCursorSpriteXcursor *sprite_xcursor;
+   MetaBackend *backend = backend_from_display (display);
+   MetaCursorTracker *cursor_tracker = meta_backend_get_cursor_tracker (backend);
+ 
+   sprite_xcursor = meta_cursor_sprite_xcursor_new (cursor, cursor_tracker);
+ 
+-  if (meta_is_wayland_compositor ())
+-    manage_root_cursor_sprite_scale (display, sprite_xcursor);
++  if (!meta_is_wayland_compositor ())
++    meta_cursor_sprite_set_prepare_func (META_CURSOR_SPRITE (sprite_xcursor),
++                                         NULL, NULL);
+ 
+   meta_cursor_tracker_set_root_cursor (cursor_tracker,
+                                        META_CURSOR_SPRITE (sprite_xcursor));
+diff --git a/src/wayland/meta-wayland-tablet-tool.c b/src/wayland/meta-wayland-tablet-tool.c
+index 86523918ba34..8306babf0cf3 100644
+--- a/src/wayland/meta-wayland-tablet-tool.c
++++ b/src/wayland/meta-wayland-tablet-tool.c
+@@ -32,7 +32,6 @@
+ #include "wayland/meta-wayland-tablet.h"
+ #include "wayland/meta-wayland-tablet-seat.h"
+ #include "backends/meta-input-settings-private.h"
+-#include "backends/meta-logical-monitor.h"
+ 
+ #include "tablet-unstable-v2-server-protocol.h"
+ 
+@@ -425,87 +424,49 @@ tablet_tool_handle_cursor_surface_destroy (struct wl_listener *listener,
+   meta_wayland_tablet_tool_set_cursor_surface (tool, NULL);
+ }
+ 
+-static void
+-tool_cursor_prepare_at (MetaCursorSpriteXcursor *sprite_xcursor,
+-                        float                    best_scale,
+-                        int                      x,
+-                        int                      y,
+-                        MetaWaylandTabletTool   *tool)
+-{
+-  MetaBackend *backend = backend_from_tool (tool);
+-  MetaMonitorManager *monitor_manager =
+-    meta_backend_get_monitor_manager (backend);
+-  MetaLogicalMonitor *logical_monitor;
+-
+-  logical_monitor =
+-    meta_monitor_manager_get_logical_monitor_at (monitor_manager, x, y);
+-
+-  /* Reload the cursor texture if the scale has changed. */
+-  if (logical_monitor)
+-    {
+-      MetaCursorSprite *cursor_sprite = META_CURSOR_SPRITE (sprite_xcursor);
+-      float ceiled_scale;
+-
+-      ceiled_scale = ceilf (logical_monitor->scale);
+-      meta_cursor_sprite_xcursor_set_theme_scale (sprite_xcursor,
+-                                                  (int) ceiled_scale);
+-
+-      if (meta_backend_is_stage_views_scaled (backend))
+-        meta_cursor_sprite_set_texture_scale (cursor_sprite,
+-                                              1.0f / ceiled_scale);
+-      else
+-        meta_cursor_sprite_set_texture_scale (cursor_sprite, 1.0f);
+-    }
+-}
+-
+ MetaWaylandTabletTool *
+ meta_wayland_tablet_tool_new (MetaWaylandTabletSeat  *seat,
+                               ClutterInputDeviceTool *device_tool)
+ {
+   MetaWaylandCompositor *compositor =
+     meta_wayland_seat_get_compositor (seat->seat);
+   MetaContext *context = meta_wayland_compositor_get_context (compositor);
+   MetaBackend *backend = meta_context_get_backend (context);
+   MetaCursorTracker *cursor_tracker = meta_backend_get_cursor_tracker (backend);
+   MetaWaylandTabletTool *tool;
+ 
+   tool = g_new0 (MetaWaylandTabletTool, 1);
+   tool->seat = seat;
+   tool->device_tool = device_tool;
+   wl_list_init (&tool->resource_list);
+   wl_list_init (&tool->focus_resource_list);
+ 
+   tool->focus_surface_destroy_listener.notify = tablet_tool_handle_focus_surface_destroy;
+   tool->cursor_surface_destroy_listener.notify = tablet_tool_handle_cursor_surface_destroy;
+ 
+   tool->default_sprite = meta_cursor_sprite_xcursor_new (META_CURSOR_DEFAULT,
+                                                          cursor_tracker);
+-  meta_cursor_sprite_set_prepare_func (META_CURSOR_SPRITE (tool->default_sprite),
+-                                       (MetaCursorPrepareFunc) tool_cursor_prepare_at,
+-                                       tool);
+ 
+   return tool;
+ }
+ 
+ void
+ meta_wayland_tablet_tool_free (MetaWaylandTabletTool *tool)
+ {
+   struct wl_resource *resource, *next;
+ 
+   meta_wayland_tablet_tool_set_current_surface (tool, NULL);
+   meta_wayland_tablet_tool_set_focus (tool, NULL, NULL);
+   meta_wayland_tablet_tool_set_cursor_surface (tool, NULL);
+   g_clear_object (&tool->cursor_renderer);
+ 
+   wl_resource_for_each_safe (resource, next, &tool->resource_list)
+     {
+       zwp_tablet_tool_v2_send_removed (resource);
+       wl_list_remove (wl_resource_get_link (resource));
+       wl_list_init (wl_resource_get_link (resource));
+     }
+ 
+-  meta_cursor_sprite_set_prepare_func (META_CURSOR_SPRITE (tool->default_sprite),
+-                                       NULL, NULL);
+   g_object_unref (tool->default_sprite);
+ 
+   g_free (tool);
