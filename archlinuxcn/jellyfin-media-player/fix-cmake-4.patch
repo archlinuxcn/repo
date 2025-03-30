@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1817775..52b98a3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -41,7 +41,6 @@ endmacro()
+ set_policy(CMP0020 NEW)
+ set_policy(CMP0017 NEW)
+ set_policy(CMP0058 NEW)
+-set_policy(CMP0026 OLD)
+ set_policy(CMP0071 NEW)
+ set_policy(CMP0072 NEW)
+ set_policy(CMP0148 OLD)
+diff --git a/CMakeModules/utils.cmake b/CMakeModules/utils.cmake
+index 0b129e9..db83e26 100644
+--- a/CMakeModules/utils.cmake
++++ b/CMakeModules/utils.cmake
+@@ -17,20 +17,22 @@ function(copy_resources target)
+   
+   get_property(RESOURCE_LIST GLOBAL PROPERTY _${target}_RESOURCE_LIST)
+ 
+-  # we read the LOCATION from the target instead of using a generator
+-  # here since add_custom_command doesn't support generator expresessions
+-  # in the output field, and this is still cleaner than hardcoding the path
+-  # of the output binary.
+-  #  
+-  get_property(TARGET_LOC TARGET ${target} PROPERTY LOCATION)
+-  get_filename_component(TARGET_DIR ${TARGET_LOC} DIRECTORY)
+-  if(APPLE)
+-    set(TARGET_LOC ${TARGET_DIR}/..)
+-  else()
+-    set(TARGET_LOC ${TARGET_DIR})
+-  endif()
+-  
+   if(RESOURCE_LIST)
++    set_policy(CMP0026 OLD)
++
++    # we read the LOCATION from the target instead of using a generator
++    # here since add_custom_command doesn't support generator expresessions
++    # in the output field, and this is still cleaner than hardcoding the path
++    # of the output binary.
++    #
++    get_property(TARGET_LOC TARGET ${target} PROPERTY LOCATION)
++    get_filename_component(TARGET_DIR ${TARGET_LOC} DIRECTORY)
++    if(APPLE)
++      set(TARGET_LOC ${TARGET_DIR}/..)
++    else()
++      set(TARGET_LOC ${TARGET_DIR})
++    endif()
++
+     foreach(RF ${RESOURCE_LIST})
+       string(REPLACE "|" ";" PARTS "${RF}")
+       list(GET PARTS 0 SOURCE_FILE)
