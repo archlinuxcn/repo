@@ -10,7 +10,7 @@ arch=('i686' 'x86_64' 'aarch64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
 depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib' 'enet')
-makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'vulkan-utility-libraries' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'perl' 'yasm' 'python-jsonschema' 'python-jinja' 'patch' 'oaknut-git' 'mbedtls')
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'vulkan-utility-libraries' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'perl' 'yasm' 'python-jsonschema' 'python-jinja' 'patch' 'oaknut-git')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
@@ -78,6 +78,7 @@ prepare() {
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
   sed -i -e 's/boost::asio::io_service/boost::asio::io_context/g' src/input_common/drivers/udp_client.cpp
+  sed -i 's/cmake_minimum_required(VERSION [0-9]\+\.[0-9]\+)/cmake_minimum_required(VERSION 3.5)/' externals/mbedtls/CMakeLists.txt
 
   perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n/igs' src/video_core/CMakeLists.txt
 }
