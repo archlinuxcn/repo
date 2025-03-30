@@ -1,0 +1,10 @@
+maintainers:
+  - github: xiaohuirong
+    email: horeamxiao@archlinuxcn.org
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: merryhime/oaknut 
