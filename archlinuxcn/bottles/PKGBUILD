@@ -4,7 +4,7 @@
 pkgname=bottles
 _pkgname=Bottles
 pkgver=51.21
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc='Easily manage wine and proton prefix'
 arch=(any)
@@ -59,7 +59,7 @@ source=(
 )
 sha256sums=(
   3a5653464839d5dbe36d44eabb823d422421897325f3c7944cddc9475575869d
-  eec371407a6a8cc196330e68535e15a1332c31e38f47eb1891be1cf754d76802
+  012f00b6678ff20bb0a43c592c8f6b6af0d315053bf0473aa3f3b56c74845b73
 )
 
 prepare() {
