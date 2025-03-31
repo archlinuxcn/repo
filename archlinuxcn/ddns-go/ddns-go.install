@@ -1,0 +1,40 @@
+#/usr/bin/env bash
+
+_pkgname="ddns-go"
+all_off="$(tput sgr0)"
+bold="${all_off}$(tput bold)"
+blue="${bold}$(tput setaf 4)"
+yellow="${bold}$(tput setaf 3)"
+
+note() {
+    printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
+}
+
+post_install() {
+    if [[ $LANG == "zh_CN.UTF-8" ]]; then
+        note "从 6.0.1-1 开始，不再以 root 权限运行 $_pkgname ...
+          可以以普通用户启用 $_pkgname: 'systemctl enable --user --now $_pkgname.service'...
+          以普通用户运行时，配置文件为 '~/.config/$_pkgname/config.yml'...
+          也可以以非root的系统用户启用：'sudo systemctl enable --now $_pkgname.service'...
+          以系统用户运行时，配置文件为 '/etc/$_pkgname/config.yml'...
+          以系统用户运行时，如需额外的命令行参数，请编辑 '/etc/$_pkgname/$_pkgname.env'..."
+    else
+        note "Starting from 6.0.1-1, no longer run $_pkgname with root user ...
+          You can enable as current regular user to run $_pkgname: 'systemctl enable --user --now $_pkgname.service'...
+          When running with the regular users, the configuration file is '~/.config/$_pkgname/config.yml' ...
+          Or you can also enable as a non root system user: 'sudo systemctl enable --now $_pkgname.service' ...
+          When running with the system users, the configuration file is '/etc/$_pkgname/config.yml' ...
+          When running with the system users, if you want to set extra options, you can edit '/etc/$_pkgname/$_pkgname.env' ..."
+    fi
+}
+
+post_upgrade() {
+    post_install
+    if (( "$(vercmp $2 6.0.1-1)" < 0 )); then
+        if [[ $LANG == "zh_CN.UTF-8" ]]; then
+            note "$_pkgname 系统用户的配置文件已移动至 '/etc/$_pkgname/config.yml'..."
+        else
+            note "Configuration of $_pkgname system user moved to '/etc/$_pkgname/config.yml' ..."
+        fi
+    fi
+}
