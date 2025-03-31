@@ -21,15 +21,8 @@ makedepends=(
     'python-setuptools'
     'python-wheel'
 )
-source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
-        "diff-2.0.2-to-20241026.patch")
-b2sums=('db4cdff1a98fc226de518457f8768fddc68b7ce81a3bc91fcce83243eb7c56fd63e55df21bc5785b212898a86996331aa4ad698e19ceb93967c21aaa74029602'
-        'aeaede0b5a810b5423a56baa89de19023e9cb5306d56775a0b8e3c9a148de5206fdbaec7752a0e4ed96cf1656c0b4683a2dcb4e5660ae3edff30f6cafd309fd7')
-
-prepare() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
-    patch -Np1 -i ../diff-2.0.2-to-20241026.patch
-}
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+b2sums=('db4cdff1a98fc226de518457f8768fddc68b7ce81a3bc91fcce83243eb7c56fd63e55df21bc5785b212898a86996331aa4ad698e19ceb93967c21aaa74029602')
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
