@@ -1,0 +1,29 @@
+# Maintainer: system64 <system64fumo@protonmail.com>
+
+pkgname=syshud
+pkgver=2025.03.11
+pkgrel=2
+pkgdesc="Simple heads up display written in gtkmm 4"
+arch=('aarch64' 'x86_64')
+url="https://github.com/System64fumo/syshud"
+license=('WTFPL')
+groups=('sysshell')
+depends=("gtk4-layer-shell" "gtkmm-4.0" "libevdev" "wireplumber")
+source=("git+https://github.com/System64fumo/syshud")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${pkgname}"
+	git show -s --format=%cd --date=format:%Y.%m.%d $(git rev-parse HEAD)
+}
+
+build() {
+	cd "${pkgname}"
+	make PULSEAUDIO=$PULSEAUDIO
+}
+
+package() {
+	cd "${pkgname}"
+	make PREFIX=/usr DESTDIR="${pkgdir}" PULSEAUDIO=$PULSEAUDIO install
+}
+makedepends=("git")
