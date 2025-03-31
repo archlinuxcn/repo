@@ -5,7 +5,7 @@
 # Contributor: Jon Nordby <jononor@gmail.com>
 
 pkgname=obs-build
-pkgver=20250326
+pkgver=20250331
 pkgrel=1
 license=('GPL-2.0-or-later')
 pkgdesc="OBS build script, can be used with OBS or stand alone"
@@ -13,7 +13,7 @@ url="https://github.com/openSUSE/${pkgname}"
 arch=('any')
 depends=('perl')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('36f5d1ccc928e2d56ff4775e4cb0c21234f7a0f54b1ae14d558d5f3091efe4ad')
+sha256sums=('da7805a86d5188dde38e463c7b071ae26dcdb200e471d7bf15ef46087e9d5a27')
 
 package() {
 	cd "${pkgname}-${pkgver}/"
