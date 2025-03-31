@@ -1,0 +1,15 @@
+[Unit]
+Description = A simple, easy-to-use ddns service.
+Wants = network-online.target
+After = network-online.target
+
+[Service]
+User = ddns-go
+Group = ddns-go
+EnvironmentFile = -/etc/ddns-go/ddns-go.env
+ExecStart = /usr/bin/ddns-go -c /etc/ddns-go/config.yml $EXTRA_OPTS
+Restart = always
+RestartSec = 5
+
+[Install]
+WantedBy = multi-user.target
