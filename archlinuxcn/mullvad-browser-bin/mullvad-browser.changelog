@@ -1,3 +1,29 @@
+Mullvad Browser 14.0.9 - April 01 2025
+ * All Platforms
+   * Updated Firefox to 128.9.0esr
+   * Updated uBlock Origin to 1.63.2
+   * Bug 416: Rebase Mullvad Browser stable onto 128.9.0esr [mullvad-browser]
+   * Bug 43601: Backport security fixes from Firefox 137 [tor-browser]
+ * macOS + Linux
+   * Bug 404: Incorrect information in `about:rights` [mullvad-browser]
+ * Build System
+   * All Platforms
+     * Bug 41420: Update the changelog script for label updates [tor-browser-build]
+   * macOS + Linux
+     * Bug 41375: Backport Bug 41374+40799: Remove support for migrate_archs and migrate_langs in update_responses + Remove legacy locale iteration in update-responses and dmg2mar [tor-browser-build]
+     * Bug 41378: Backport Bug 41363: Make separate update_responses commit for each platform [tor-browser-build]
+     * Bug 41383: Add clairehurst to list of accepted firefox/geckoview signers [tor-browser-build]
+
+Mullvad Browser 14.0.8 - March 27 2025
+ * Windows
+   * Bug 404: Incorrect information in `about:rights` [mullvad-browser]
+   * Bug 43592: Backport security fixes from Firefox 128.8.1esr [tor-browser]
+ * Build System
+   * Windows
+     * Bug 41375: Backport Bug 41374+40799: Remove support for migrate_archs and migrate_langs in update_responses + Remove legacy locale iteration in update-responses and dmg2mar [tor-browser-build]
+     * Bug 41378: Backport Bug 41363: Make separate update_responses commit for each platform [tor-browser-build]
+     * Bug 41383: Add clairehurst to list of accepted firefox/geckoview signers [tor-browser-build]
+
 Mullvad Browser 14.0.7 - March 04 2025
  * All Platforms
    * Updated Firefox to 128.8.0esr
