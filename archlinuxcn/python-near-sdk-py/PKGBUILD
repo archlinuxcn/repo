@@ -1,0 +1,36 @@
+# Maintainer: Xeonacid <h.dwwwwww@gmail.com>
+
+_name=near-sdk-py
+pkgname=python-$_name
+pkgver=0.7.2
+pkgrel=1
+pkgdesc="A Pythonic interface for building NEAR smart contracts"
+arch=(any)
+url="https://github.com/r-near/$_name"
+license=(MIT)
+depends=(python)
+makedepends=(python-build python-installer python-wheel python-hatchling)
+checkdepends=(python-pytest)
+source=($_name-$pkgver.tar.gz::${url}/archive/v$pkgver.tar.gz)
+sha512sums=('1b4426c20e3a94a61f3fb0b5b5859dbad9b360c0e221477a4a3af5342cf5b22ede41bebb97ca73ebb6030cd8a8f023f03cc903024424e5b7adf07310a7422554')
+
+build() {
+  cd $_name-$pkgver
+  python -m build --wheel --no-isolation
+}
+
+check(){
+  cd $_name-$pkgver
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  test-env/bin/python -m pytest -vv tests/
+}
+
+package() {
+  cd $_name-$pkgver
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  # Newly added, uncomment on next upstream release
+  # install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+  cp -r docs "$pkgdir/usr/share/doc/$pkgname"
+}
