@@ -3,7 +3,7 @@
 # Contributor: Árni Dagur <arnidg@protonmail.ch>
 
 pkgname=xcp
-pkgver=0.23.1
+pkgver=0.24.0
 pkgrel=1
 pkgdesc="An extended 'cp'"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ license=('GPL-3.0-only')
 depends=('gcc-libs')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('90dac2c2e67389af2106db06f98dda44506f2658a8d4ed0065a1a2abdf8dbd21')
+sha256sums=('7dcafe78973bd0b00b16e8b92402c04e4850ea99ee573b980f83a8ae6701afe6')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
