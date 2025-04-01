@@ -10,13 +10,21 @@ license=('GPL-3.0-or-later')
 depends=(
     'krita'
     'python-pyqt5'
-    'python311' # Required to create a virtual environment (for server.py)
+    'python312' # Required to create a virtual environment (for server.py)
     'qt5-imageformats'
 )
-makedepends=('git')
-checkdepends=('openssl-1.1')
+makedepends=(
+    'git'
+    'git-lfs'
+)
+checkdepends=(
+    'openssl-1.1'
+)
+optdepends=(
+    'python311: server.py will use python3.11 to create a virtual environment if python3.12 is not available'
+)
 install=krita-ai-diffusion.install
-source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}"
+source=("${pkgname}::git+${url}.git#tag=v${pkgver}"
         "add-regex-to-requirements.patch")
 sha256sums=('9b1730cce23be9abcde207e6185936ed347a5bbb785519b62e3f476dbbdf536f'
             '3cdb6f448e78ae8bcfe4427d6a7b44a732b375366aa52dd4aaceb11f328edaf0')
@@ -24,24 +32,28 @@ sha256sums=('9b1730cce23be9abcde207e6185936ed347a5bbb785519b62e3f476dbbdf536f'
 prepare() {
     # The plugin itself will run inside Krita's embedded Python,
     # and only has access to the Python standard library and Qt5
-    cd "$srcdir/$pkgname-$pkgver"
+    cd "${srcdir}/${pkgname}"
     patch -Np1 -i ../add-regex-to-requirements.patch
     git submodule update --init --recursive
-    python3.11 -m venv .venv
+    git lfs install --local
+    git remote add network-origin "${url}.git"
+    git lfs fetch network-origin
+    git lfs checkout
+    python3.12 -m venv .venv
     source .venv/bin/activate
     pip install -r requirements.txt
 }
 
 build() {
-    cd "$srcdir/$pkgname-$pkgver"
+    cd "${srcdir}/${pkgname}"
     source .venv/bin/activate
     python scripts/package.py
 }
 
 check() {
-    cd "$srcdir/$pkgname-$pkgver"
+    cd "${srcdir}/${pkgname}"
     source .venv/bin/activate
-    if [[ $(vercmp "$pkgver" "1.21.0") -gt 0 ]]; then
+    if [[ $(vercmp "${pkgver}" "1.21.0") -gt 0 ]]; then
         python scripts/download_models.py --minimal scripts/downloads
     else
         python scripts/download_models.py --minimal scripts/docker/downloads
@@ -51,8 +63,8 @@ check() {
 }
 
 package() {
-    cd "$srcdir/$pkgname-$pkgver"/scripts/.package
-    install -d -m 755 "$pkgdir"/usr/share/krita/pykrita/
-    cp -r {ai_diffusion,ai_diffusion.desktop} "$pkgdir"/usr/share/krita/pykrita/
-    install -D -m 644 ai_diffusion/ai_diffusion.action -t "$pkgdir"/usr/share/krita/actions/
+    cd "${srcdir}/${pkgname}"/scripts/.package
+    install -d -m 755 "${pkgdir}"/usr/share/krita/pykrita/
+    cp -r {ai_diffusion,ai_diffusion.desktop} "${pkgdir}"/usr/share/krita/pykrita/
+    install -D -m 644 ai_diffusion/ai_diffusion.action -t "${pkgdir}"/usr/share/krita/actions/
 }
