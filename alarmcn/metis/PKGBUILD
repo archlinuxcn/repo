@@ -6,8 +6,8 @@
 # Contributor: abenson
 
 pkgname=metis
-pkgver=5.1.0.p12
-_pkgver=5.1.0-p12
+pkgver=5.1.0.p13
+_pkgver=5.1.0-p13
 pkgrel=1
 arch=(aarch64 x86_64)
 pkgdesc="A set of serial programs for partitioning graphs, partitioning finite element meshes, and producing fill reducing orderings for sparse matrices"
@@ -17,7 +17,7 @@ depends=(glibc)
 makedepends=(cmake)
 options=(docs)
 source=(https://bitbucket.org/petsc/pkg-metis/get/v$_pkgver.tar.bz2)
-sha256sums=('16ca6faf704863df9d892891f7eaf1a4a9b38beb02dec1f91f44bf9f98943fe7')
+sha256sums=('a696531699f690598c1983d95b064ead5532535e603f27166e29e5376d545ece')
 
 prepare() {
   mv petsc-pkg-metis-* $pkgname-$_pkgver
