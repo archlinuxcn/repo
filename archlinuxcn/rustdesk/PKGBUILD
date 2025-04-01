@@ -11,7 +11,7 @@ _opt_BUILD_PY=1
 # 0 for download vcpkg, set _opt_VCPKG_COMMIT_ID
 # 1 for system vcpkg, ignore _opt_VCPKG_COMMIT_ID
 _opt_SYS_VCPKG=0
-_opt_VCPKG_COMMIT_ID='#commit=6f29f12e82a8293156836ad81cc9bf5af41fe836'
+_opt_VCPKG_COMMIT_ID='#commit=20250113-6f29f12e82a8293156836ad81cc9bf5af41fe836'
 #_opt_VCPKG_COMMIT_ID='#branch=2023.10.19'
 #_opt_VCPKG_COMMIT_ID=''
 
@@ -24,10 +24,10 @@ true "${QUIET:=}" "${logpipe:=}"
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.3.8'
+_pkgver='1.3.9'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
-_pkgverhbb='7cf11f7b771e27ecbd14fd1dd0ced55a64f40eb5'
+_pkgverhbb='20250328-81b932b7bfa2ff8bc60189625fd6538db2fa9ea1'
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
 url='https://rustdesk.com/'
@@ -51,12 +51,13 @@ _patches=(
 )
 install="${pkgname}.install"
 _srcdir="${pkgname}-${_pkgver}"
-_srcdirhb="hbb_common-${_pkgverhbb}"
+_srcdirhb="hbb_common-${_pkgverhbb##*-}"
 source=(
   "${_srcdir}.tar.gz::${_giturl}/archive/refs/tags/${_pkgver}.tar.gz"
-  "${_srcdirhb}.tgz::${_giturlhbb}/archive/${_pkgverhbb}.tar.gz"
+  "hbb_common-${_pkgverhbb}.tgz::${_giturlhbb}/archive/${_pkgverhbb##*-}.tar.gz"
   "${_patches[@]}"
 )
+unset _pkgverhbb
 _vcs=(
 )
 _srcdirvc='vcpkg'
@@ -64,8 +65,8 @@ if [ "${_opt_SYS_VCPKG}" -ne 0 ]; then
   makedepends+=('vcpkg')
 else
   #source+=("git+https://github.com/microsoft/vcpkg${_opt_VCPKG_COMMIT_ID}")
-  _srcdirvc="vcpkg-${_opt_VCPKG_COMMIT_ID#*=}"
-  source+=("${_srcdirvc}.tgz::https://github.com/microsoft/vcpkg/archive/${_opt_VCPKG_COMMIT_ID#*=}.tar.gz")
+  _srcdirvc="vcpkg-${_opt_VCPKG_COMMIT_ID##*-}"
+  source+=("vcpkg-${_opt_VCPKG_COMMIT_ID##*=}.tgz::https://github.com/microsoft/vcpkg/archive/${_opt_VCPKG_COMMIT_ID##*-}.tar.gz")
   _vcs+=(
     # If your download gets renamed and replaced, vcpkg hash checked and found it to be the wrong one.
     # vcs sources are not hash checked. vcpkg doesn't use hash direct downloads like we do. vcpkg downloads with git and tars up, always with a different hash.
@@ -93,8 +94,8 @@ source+=("${_vcs[@]}")
     )
   fi
 ####
-md5sums=('00478b34af29266c5315c4a6a3f82e1d'
-         '2cac4c84e0a72bbec845404b6d8c74ca'
+md5sums=('d3930a82249bf80d5888d8fb4a9bc1cb'
+         '47eb1a7a6bb92a9907215c47cc92b37f'
          '6acc4b5b14befec55ef84006b60c7ff5'
          '9b997c2eb989a044704fd7c1d2152d02'
          'a77a4586f30f77de2eed63e160b3a051'
@@ -106,8 +107,8 @@ md5sums=('00478b34af29266c5315c4a6a3f82e1d'
          '557a08d88aa605ee6cf4156686ce4cc2'
          '74dc171bf2cfc1ada56b6e284adabca8'
          'cc8e5418ff0c163228aabbe385ba2596')
-sha256sums=('4bc8e783a4ed185952386c473918291b6a849feb19005b20ce8abe5f0dfeeed7'
-            '699bb89bc2ac4a13bf91c016775dd5066b6594e02605b2f8eff3fd67f01d51c9'
+sha256sums=('4b97cd6b59017babbd43170f4a5a95a6bbf6dec4e8d319d19c5cf11c0b65eee4'
+            '80af7f48735877f80cd55113425426fe012108ae28e761c28e3d6247f1431b04'
             '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
             '17ad644a9987ad2dc8ddaf68e62e026c1825b3ecae46254ea98d985c5d5df582'
             '82757ee1ab6b956a3c601f7db82e2d9ad80dbbcf2ba68c63059f0b529426ccd0'
@@ -136,6 +137,7 @@ for _fk in "${!source[@]}"; do
     sha256sums["${_fk}"]='SKIP'
   fi
 done
+unset _fk
 
 _vcpkg=(libvpx libyuv opus aom)
 
@@ -167,8 +169,8 @@ with open('${_srcdir}/.github/workflows/flutter-build.yml', 'r') as stream:
 print(data_loaded.get('env').get('VCPKG_COMMIT_ID'))
 "
     _vcc="$(python -c "${_pyvcc}")"
-    if [ "${_vcc}" != "${_opt_VCPKG_COMMIT_ID#*=}" ]; then
-      echo "Flag package out of date: _opt_VCPKG_COMMIT_ID must be changed to ${_vcc}"
+    if [ "${_vcc}" != "${_opt_VCPKG_COMMIT_ID##*-}" ]; then
+      echo "Flag package out of date: _opt_VCPKG_COMMIT_ID must be changed to (date)-${_vcc}"
       set +u
       false
     fi
@@ -372,7 +374,34 @@ build() {
     local _oldpath="${PATH}"
     export CARGO_INCREMENTAL=0
     export PATH="${srcdir}/flutter/bin:${_oldpath}"
-    flutter doctor -v
+    pushd "${PATH%%:*}"
+    if [ ! -s 'flutter-NVC' ]; then
+      mv 'flutter' 'flutter-NVC'
+      cat > 'flutter' << EOF
+#!/usr/bin/bash
+
+# https://github.com/flutter/flutter/issues/59533
+# Gets rid of all the unnecessary downloads
+
+echo '#flutter --no-version-check' "\$@"
+flutter-NVC --no-version-check "\$@"
+EOF
+      chmod 755 'flutter'
+    fi
+    if [ ! -s 'dart-NVC' ]; then
+      mv 'dart' 'dart-NVC'
+      cat > 'dart' << EOF
+#!/usr/bin/bash
+
+# dart doesn't do a version check. Let's reveal the commands.
+
+echo '#dart' "\$@"
+dart-NVC "\$@"
+EOF
+      chmod 755 'dart'
+    fi
+    popd
+    flutter doctor
     dart pub global activate ffigen --version 5.0.1
     pushd "${srcdir}/flutter_rust_bridge/frb_codegen"; nice cargo install --path . ; popd
     pushd flutter ; flutter clean; flutter pub get ; popd
