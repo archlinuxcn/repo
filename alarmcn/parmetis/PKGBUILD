@@ -2,8 +2,8 @@
 # Contributor: George Eleftheriou <eleftg>
 
 pkgname=parmetis
-pkgver=4.0.3.p9
-_pkgver=4.0.3-p9
+pkgver=4.0.3.p10
+_pkgver=4.0.3-p10
 _prefix=/usr
 pkgrel=1
 pkgdesc="A parallel graph partitioning library"
@@ -13,7 +13,7 @@ license=(custom)
 depends=(openmpi metis)
 makedepends=(cmake)
 source=(https://bitbucket.org/petsc/pkg-parmetis/get/v${_pkgver}.tar.gz)
-sha256sums=('612717e85992c984f09b0f5670be421bbb90a4c04145ab5b9a3358b92765d891')
+sha256sums=('fc5f8b3956b583e9c335dc9a52a4fa0d91077b9cd9923388fd1e2f64b30da182')
 
 prepare() {
   mv petsc-pkg-parmetis-* parmetis-$_pkgver
