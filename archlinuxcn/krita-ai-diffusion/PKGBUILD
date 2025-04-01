@@ -29,6 +29,10 @@ source=("${pkgname}::git+${url}.git#tag=v${pkgver}"
 sha256sums=('9b1730cce23be9abcde207e6185936ed347a5bbb785519b62e3f476dbbdf536f'
             '3cdb6f448e78ae8bcfe4427d6a7b44a732b375366aa52dd4aaceb11f328edaf0')
 
+# If `git lfs install` was run before, `makepkg` may error
+# Set this env var to resolve
+export GIT_LFS_SKIP_SMUDGE=1
+
 prepare() {
     # The plugin itself will run inside Krita's embedded Python,
     # and only has access to the Python standard library and Qt5
