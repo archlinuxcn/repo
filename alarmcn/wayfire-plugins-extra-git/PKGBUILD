@@ -1,0 +1,44 @@
+# Maintainer: Librewish <librewish@gmail.com>
+
+pkgname=wayfire-plugins-extra-git
+pkgver=r285.0004815
+pkgrel=5
+pkgdesc="3D wayland compositor extra plugins"
+arch=('any')
+url="https://github.com/WayfireWM/wayfire-plugins-extra"
+license=('MIT')
+depends=('wayfire-git' 'glibmm' 'iio-sensor-proxy' 'wayland-protocols' 'glm')
+makedepends=('git' 'meson' 'ninja' 'libdisplay-info' 'nlohmann-json' 'boost')
+optdepends=('wcm: GTK3-based configuration tool for the Wayfire compositor')
+provides=("${pkgname}" "wayfire-plugins-extra")
+conflicts=("wayfire-plugins-extra")
+replaces=()
+options=()
+source=('git+https://github.com/WayfireWM/wayfire-plugins-extra')
+sha256sums=('SKIP')
+install=wayfire-plugins-extra.install
+prepare() {
+  cd "$srcdir/wayfire-plugins-extra"
+  git submodule update --init --recursive
+}
+pkgver() {
+        cd "$srcdir/wayfire-plugins-extra"
+
+# Git, no tags available
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+
+}
+
+build() {
+  arch-meson wayfire-plugins-extra build \
+    -Denable_wayfire_shadows=true \
+    -Denable_focus_request=true \
+    -Denable_pixdecor=true \
+    -Denable_filters=true
+  ninja -C build
+}
+
+
+package() {
+        DESTDIR="$pkgdir/" ninja -C build install
+}
