@@ -1,16 +1,16 @@
 diff --git a/build.sbt b/build.sbt
-index e84f9ef8f8..3eaa28d3f2 100644
+index 3b3707f81cc..073967402cf 100644
 --- a/build.sbt
 +++ b/build.sbt
-@@ -36,10 +36,7 @@ ThisBuild / scalafixScalaBinaryVersion := scalaBinaryVersion.value
-
+@@ -41,10 +41,7 @@ ThisBuild / semanticdbVersion := V.semanticdb(scalaVersion.value)
+ 
  inThisBuild(
    List(
 -    version ~= { dynVer =>
--      if (isCI) dynVer
+-      if (isCI && !isTest) dynVer
 -      else localSnapshotVersion // only for local publishing
 -    },
-+    version := "1.4.2",
++    version := "1.5.2",
      scalaVersion := V.scala213,
      crossScalaVersions := List(V.scala213),
-     scalacOptions ++= List(
+     organization := "org.scalameta",
