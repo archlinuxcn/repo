@@ -3,8 +3,8 @@
 pkgbase="linux-pf"
 _suffix=""
 pkgname=(${pkgbase}${_suffix} ${pkgbase}-headers${_suffix})
-_rev=55068da31044d4ccd6e8c44cf41d89b5bb565187
-pkgver=6.13.pf6
+_rev=ba060e5d9d36877b00978bdcf3d5888443332083
+pkgver=6.14.pf1
 pkgrel=1
 pkgdesc="pf-kernel"
 arch=(x86_64)
@@ -15,7 +15,7 @@ options=(!debug !strip)
 source=(https://codeberg.org/pf-kernel/linux/archive/${_rev}.tar.gz
 		config)
 b2sums=(SKIP
-		'0f45992d80b8c5ce9c28545d069b68ca476742d325476e7c9bc6a26ff486776d31484544c72e0e68f75299cc5e89d1cfcf87faf09112628a12b125033eb49d46')
+		'6cd8cdef26ef4843751f218b6915c79250ba22ae16ce345b4038f65e2f3d0638dc37e690a2b35565de59f0c7c587d76c7d1f51743fa7e409ab3bcd91c5070a6e')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=${pkgbase}
@@ -54,10 +54,9 @@ _package() {
 	optdepends=('ksmbd-tools: userspace tools for the ksmbd kernel SMB server'
 				'linux-firmware: firmware images needed for some devices'
 				'scx-scheds: to use sched-ext schedulers'
-				'uksmd: userspace KSM helper daemon'
 				'v4l2loopback-utils: v4l2-loopback device utilities'
 				'wireless-regdb: to set the correct wireless channels of your country')
-	provides=(linux-pf KSMBD-MODULE NTFS3-MODULE UKSMD-BUILTIN V4L2LOOPBACK-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+	provides=(linux-pf KSMBD-MODULE NTFS3-MODULE NTSYNC-MODULE V4L2LOOPBACK-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
 	replaces=(virtualbox-guest-modules-arch wireguard-arch)
 
 	cd linux
@@ -122,6 +121,14 @@ _package-headers() {
 
 	echo "Installing Kconfig files..."
 	find . -name 'Kconfig*' -exec install -Dm644 {} "${builddir}/{}" \;
+
+	echo "Installing Rust files..."
+	install -Dt "${builddir}"/rust -m644 rust/*.rmeta
+	install -Dt "${builddir}"/rust rust/*.so
+
+	echo "Installing unstripped VDSO..."
+	make INSTALL_MOD_PATH="${pkgdir}"/usr vdso_install \
+		link=  # Suppress build-id symlinks
 
 	# remove unneeded architectures
 	local arch
