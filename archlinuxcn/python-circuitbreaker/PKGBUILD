@@ -2,7 +2,7 @@
 
 _pyname=circuitbreaker
 pkgname=python-${_pyname}
-pkgver=2.1.0
+pkgver=2.1.3
 pkgrel=1
 pkgdesc='Python implementation of the Circuit Breaker pattern'
 arch=('x86_64')
@@ -11,7 +11,7 @@ license=('BSD-3-Clause')
 makedepends=('python-setuptools')
 depends=('python')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('5eb2ba29c778d622a3d7aacd964f15e171d51221072bae7db06b376070591eb8')
+sha256sums=('0a89578d626a04e39e58c9ac28f181076ac8a88d71a4eca37b0f7a1bf7bf6755')
 
 build() {
   cd "${_pyname}-${pkgver}"
