@@ -49,7 +49,6 @@ source=("git+${url}/${_pkgname}.git"
 	"git+${url}/${_pkgname}-plugin-widgetsboxmodel-qss.git"
 	"git+${url}/${_pkgname}-plugin-widgetsboxmodel.git"
 	"git+${url}/python.git"
-	"submodule-rm-pybind11.patch::${url}/${_pkgname}-plugin-python/pull/1.patch"
 )
 sha512sums=('SKIP'
             'SKIP'
@@ -92,7 +91,6 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	patch -p1 -i ../submodule-rm-pybind11.patch
 
 	git submodule init
 	git config submodule.plugins.url "${srcdir}/plugins/"
@@ -128,11 +126,13 @@ prepare() {
 	git config submodule.plugins/widgetsboxmodel.url "${srcdir}/${_pkgname}-plugin-widgetsboxmodel/"
 	git -c protocol.file.allow=always submodule update
 
-	cd plugin/python/
+	cd plugins/python/
 	git rm pybind11
 	git submodule init
 	git config submodule.plugins.url "${srcdir}/python/"
 	git -c protocol.file.allow=always submodule update
+
+	sed -i 's/add_subdirectory(pybind11)/find_package(pybind11 REQUIRED)/' CMakeLists.txt
 }
 
 build() {
