@@ -2,14 +2,14 @@
 # shellcheck disable=SC2154
 # Author: Patrick Brisbin <pbrisbin@gmail.com>
 pkgname=downgrade
-pkgver=11.4.4
+pkgver=11.5.0
 pkgrel=1
 pkgdesc="Bash script for downgrading one or more packages to a version in your cache or the A.L.A."
 arch=('any')
 url="https://github.com/archlinux-downgrade/$pkgname"
 license=('GPL')
 backup=(etc/xdg/downgrade/downgrade.conf)
-source=("downgrade-v$pkgver.tar.gz::https://github.com/archlinux-downgrade/$pkgname/archive/v$pkgver.tar.gz")
+source=("https://github.com/archlinux-downgrade/$pkgname/releases/download/v$pkgver/downgrade-$pkgver.tar.gz")
 depends=('pacman-contrib' 'fzf') # pacsort
 optdepends=('sudo: for installation via sudo')
 
@@ -18,4 +18,4 @@ package() {
 
   make DESTDIR="$pkgdir" PREFIX=/usr install
 }
-md5sums=('0107411748ab87763a712b8d3989c5fe')
+md5sums=('96fb207e60c32980e3e6c315a7806195')
