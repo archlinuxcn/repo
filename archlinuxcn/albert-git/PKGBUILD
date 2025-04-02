@@ -18,19 +18,72 @@ optdepends=('ddgr: duckduckgo search plugin'
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}/${_pkgname}.git"
-	"git+${url}/plugins.git"
 	"git+${url}/i18n.git"
-	"git+${url}/python.git"
-	"git+https://github.com/pybind/pybind11.git"
 	"git+https://github.com/QtCommunity/QHotkey.git"
-	"git+https://github.com/QtCommunity/QNotification.git")
+	"git+https://github.com/QtCommunity/QNotification.git"
+	"git+${url}/${_pkgname}-plugin-applications.git"
+	"git+${url}/${_pkgname}-plugin-bluetooth.git"
+	"git+${url}/${_pkgname}-plugin-caffeine.git"
+	"git+${url}/${_pkgname}-plugin-calculator-qalculate.git"
+	"git+${url}/${_pkgname}-plugin-chromium.git"
+	"git+${url}/${_pkgname}-plugin-clipboard.git"
+	"git+${url}/${_pkgname}-plugin-contacts.git"
+	"git+${url}/${_pkgname}-plugin-datetime.git"
+	"git+${url}/${_pkgname}-plugin-debug.git"
+	"git+${url}/${_pkgname}-plugin-dictionary.git"
+	"git+${url}/${_pkgname}-plugin-docs.git"
+	"git+${url}/${_pkgname}-plugin-files.git"
+	"git+${url}/${_pkgname}-plugin-hash.git"
+	"git+${url}/${_pkgname}-plugin-menubar.git"
+	"git+${url}/${_pkgname}-plugin-mpris.git"
+	"git+${url}/${_pkgname}-plugin-path.git"
+	"git+${url}/${_pkgname}-plugin-python.git"
+	"git+${url}/${_pkgname}-plugin-snippets.git"
+	"git+${url}/${_pkgname}-plugin-ssh.git"
+	"git+${url}/${_pkgname}-plugin-system.git"
+	"git+${url}/${_pkgname}-plugin-timer.git"
+	"git+${url}/${_pkgname}-plugin-timezones.git"
+	"git+${url}/${_pkgname}-plugin-urlhandler.git"
+	"git+${url}/${_pkgname}-plugin-vpn.git"
+	"git+${url}/${_pkgname}-plugin-websearch.git"
+	"git+${url}/${_pkgname}-plugin-widgetsboxmodel-qss.git"
+	"git+${url}/${_pkgname}-plugin-widgetsboxmodel.git"
+	"git+${url}/python.git"
+	"submodule-rm-pybind11.patch::${url}/${_pkgname}-plugin-python/pull/1.patch"
+)
 sha512sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP')
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '6f23c29a464a17e9349888ec442a82898a4a635f714a2115e12098e1274fd062c764c9ffbe043b97f16f05001c037310336aebf8da4402ac20f0d01546642a45')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -39,17 +92,46 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+	patch -p1 -i ../submodule-rm-pybind11.patch
+
 	git submodule init
 	git config submodule.plugins.url "${srcdir}/plugins/"
 	git config submodule.i18n.url "${srcdir}/i18n/"
 	git config submodule.lib/QHotkey.url "${srcdir}/QHotkey/"
 	git config submodule.lib/QNotification.url "${srcdir}/QNotification/"
+	git config submodule.plugins/applications.url "${srcdir}/${_pkgname}-plugin-applications/"
+	git config submodule.plugins/bluetooth.url "${srcdir}/${_pkgname}-plugin-bluetooth/"
+	git config submodule.plugins/caffeine.url "${srcdir}/${_pkgname}-plugin-caffeine/"
+	git config submodule.plugins/calculator-qalculate.url "${srcdir}/${_pkgname}-plugin-calculator-qalculate/"
+	git config submodule.plugins/chromium.url "${srcdir}/${_pkgname}-plugin-chromium/"
+	git config submodule.plugins/clipboard.url "${srcdir}/${_pkgname}-plugin-clipboard/"
+	git config submodule.plugins/contacts.url "${srcdir}/${_pkgname}-plugin-contacts/"
+	git config submodule.plugins/datetime.url "${srcdir}/${_pkgname}-plugin-datetime/"
+	git config submodule.plugins/debug.url "${srcdir}/${_pkgname}-plugin-debug/"
+	git config submodule.plugins/dictionary.url "${srcdir}/${_pkgname}-plugin-dictionary/"
+	git config submodule.plugins/docs.url "${srcdir}/${_pkgname}-plugin-docs/"
+	git config submodule.plugins/files.url "${srcdir}/${_pkgname}-plugin-files/"
+	git config submodule.plugins/hash.url "${srcdir}/${_pkgname}-plugin-hash/"
+	git config submodule.plugins/menubar.url "${srcdir}/${_pkgname}-plugin-menubar/"
+	git config submodule.plugins/mpris.url "${srcdir}/${_pkgname}-plugin-mpris/"
+	git config submodule.plugins/path.url "${srcdir}/${_pkgname}-plugin-path/"
+	git config submodule.plugins/python.url "${srcdir}/${_pkgname}-plugin-python/"
+	git config submodule.plugins/snippets.url "${srcdir}/${_pkgname}-plugin-snippets/"
+	git config submodule.plugins/ssh.url "${srcdir}/${_pkgname}-plugin-ssh/"
+	git config submodule.plugins/system.url "${srcdir}/${_pkgname}-plugin-system/"
+	git config submodule.plugins/timer.url "${srcdir}/${_pkgname}-plugin-timer/"
+	git config submodule.plugins/timezones.url "${srcdir}/${_pkgname}-plugin-timezones/"
+	git config submodule.plugins/urlhandler.url "${srcdir}/${_pkgname}-plugin-urlhandler/"
+	git config submodule.plugins/vpn.url "${srcdir}/${_pkgname}-plugin-vpn/"
+	git config submodule.plugins/websearch.url "${srcdir}/${_pkgname}-plugin-websearch/"
+	git config submodule.plugins/widgetsboxmodel-qss.url "${srcdir}/${_pkgname}-plugin-widgetsboxmodel-qss/"
+	git config submodule.plugins/widgetsboxmodel.url "${srcdir}/${_pkgname}-plugin-widgetsboxmodel/"
 	git -c protocol.file.allow=always submodule update
 
-	cd plugins
+	cd plugin/python/
+	git rm pybind11
 	git submodule init
-	git config submodule.python/plugins.url "${srcdir}/python/"
-	git config submodule.python/pybind11.url "${srcdir}/pybind11/"
+	git config submodule.plugins.url "${srcdir}/python/"
 	git -c protocol.file.allow=always submodule update
 }
 
