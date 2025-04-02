@@ -17,8 +17,8 @@
 
 _extractedName="google-cloud-sdk"
 pkgname="google-cloud-cli"
-pkgver=516.0.0
-pkgrel=2
+pkgver=517.0.0
+pkgrel=1
 pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq."
 url="https://cloud.google.com/cli/"
 license=('Apache-2.0')
@@ -30,7 +30,7 @@ optdepends=(
 )
 options=('!strip' 'staticlibs' !zipman)
 
-# Python 3.13 is not officialy supported ye, force use of bundled 3.12
+# Python 3.13 is not officialy supported yet, force use of bundled 3.12
 export _force_budled_python=true
 
 # TODO:
@@ -49,7 +49,7 @@ conflicts=('google-cloud-sdk')
 provides=('google-cloud-sdk')
 replaces=('google-cloud-sdk')
 
-sha256sums=('64df55855a070370985c455cc8389cc57d865c37375953f8a72ee66a97adc714'
+sha256sums=('613bb06187a68074f9cae5cba4d2ea11bb9e813c215de57d948e0754d64685f5'
             '6e88b535c020b0f28c986fdb66918f8c07e4d337e813b77ec2068068f03457f8'
             'fdba342aecce102b85fd96f21205d7ee2f8043b4bb56cabf363375785e3d423c'
             'c19dbe916e6fd18d9b17b3309ee60c5d389035c5520822d2c14c045d8b853924')
