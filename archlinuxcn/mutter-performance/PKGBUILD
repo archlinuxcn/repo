@@ -6,7 +6,7 @@
 pkgname=mutter-performance
 pkgver=48.0
 epoch=1
-pkgrel=1
+pkgrel=3
 pkgdesc="Window manager and compositor for GNOME"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -90,16 +90,16 @@ source=(
   0001-cursor-Unify-prepare_func-for-shape-cursors.patch
   0002-kms-impl-device-Always-catch-pending-KMS-update-in-_.patch
   0003-Revert-onscreen-native-Account-for-all-posted-frames.patch
-  4363.patch
   4371.patch
+  4378.patch
 )
 b2sums=('2ab67447e212cd8a6491b1f6f0b25aa5663ac70642a9a0d9d77c387787e34e8cbc39951ccae5abf8d5bedc35adfba26aa85487406d50f5da4b5e17739c52c333'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
         '1e7f977eb039bfa37ba0ef265e058d68246160f916c91779f8e0ca52954e4ada195036c5db0210ab18735b13907e2ff361d0c7f12948df86d6c6ccbb16cc6b66'
         '3c05efe2f37f0547d28f55ea790413c844703ba045a7429ab7f67594b749aeef0429026ad44e9985fe70c146923f6e32ed5cbf3de476c19aae7de3a126583f47'
         '6ba5b237afa2c9ce89c0980b8f4729810eac9ad49e754493978bdbc32942106bf4eba0c9065d770be4feec25c5b149e942c3b4c4d1d8c753eacc68b408fd0f39'
-        'ba0b914675ec944e951183c6502664645a6844d02703ce351f1cd58ae4d510a01563ed5e7482f9ba433e0c7a7be2d314d2913756062c49bd28a3aea646235162'
-        'e09d156107a45ca51d0c6144d891a78c609bfbb6cea76a53e8928712168102e05a033fb599a5faf81f8b5100c1c1882dc3e7b9d631bdf1388ec738cdad92c258')
+        'e09d156107a45ca51d0c6144d891a78c609bfbb6cea76a53e8928712168102e05a033fb599a5faf81f8b5100c1c1882dc3e7b9d631bdf1388ec738cdad92c258'
+        '3559568c90559d8f8de62c93cee123c32e346f44fcf7f161e3acd2f5f465dfd191a44be189259df15bc01713d7a1b9f12edb56b97902f26078ab29b04a7538ee')
 
 pkgver() {
   cd mutter
@@ -119,11 +119,12 @@ prepare() {
   # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4338
   git apply -3 ../0002-kms-impl-device-Always-catch-pending-KMS-update-in-_.patch
   git apply -3 ../0003-Revert-onscreen-native-Account-for-all-posted-frames.patch
-  
-  git apply -3 ../4363.patch
+
+  # wayland: Cache sprite for current cursor shape
   git apply -3 ../4371.patch
   
-  # git revert -n cbdc3ae9f5fd42887c2ef154a566dccfd3dc6e1f
+  # Fix race hotplug race conditions in DRM lease manager
+  git apply -3 ../4378.patch
 }
 
 build() {

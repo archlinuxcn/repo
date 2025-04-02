@@ -1,0 +1,485 @@
+From e1271f5d546a890c78d8a29e84680adcb73750bc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
+Date: Mon, 31 Mar 2025 13:49:08 +0200
+Subject: [PATCH 1/5] drm-lease: Avoid copying list of connectors
+
+The copied list will be freed, and the copy will be returned, meaning we
+can just return the original list directly.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4378>
+---
+ src/backends/native/meta-drm-lease.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/src/backends/native/meta-drm-lease.c b/src/backends/native/meta-drm-lease.c
+index 582f869b3bc..9b9c6449a05 100644
+--- a/src/backends/native/meta-drm-lease.c
++++ b/src/backends/native/meta-drm-lease.c
+@@ -697,13 +697,6 @@ update_connectors (MetaDrmLeaseManager  *lease_manager,
+         }
+     }
+ 
+-  for (l = lease_manager->connectors; l; l = l->next)
+-    {
+-      kms_connector = l->data;
+-
+-      removed_connectors = g_list_append (removed_connectors, kms_connector);
+-    }
+-
+   g_hash_table_iter_init (&iter, lease_manager->leased_connectors);
+   while (g_hash_table_iter_next (&iter, (gpointer *)&kms_connector, NULL))
+     {
+@@ -713,7 +706,7 @@ update_connectors (MetaDrmLeaseManager  *lease_manager,
+         leases_to_revoke = g_list_append (leases_to_revoke, lease);
+     }
+ 
+-  g_list_free (g_steal_pointer (&lease_manager->connectors));
++  removed_connectors = g_steal_pointer (&lease_manager->connectors);
+   lease_manager->connectors = new_connectors;
+ 
+   g_clear_pointer (&lease_manager->leased_connectors, g_hash_table_unref);
+-- 
+GitLab
+
+
+From 3ae8a307ffe2580eff7b5dbaa2fab9ca697e51aa Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
+Date: Mon, 31 Mar 2025 13:50:17 +0200
+Subject: [PATCH 2/5] drm-lease: Connect MetaUdev::hotplug handler after other
+ handles
+
+When we receive a hotplug signal emission, we update the state of leased
+and leasable resources. Some of this state depends on the current state
+of any potential associated monitor (MetaOutput & MetaMonitor). In order
+to have an up to date association of MetaOutput's and MetaMonitor's, we
+must only update our own state after MetaMonitorManager has had a chance
+to. To achieve this, make sure the MetaUdev::hotplug signal handler is
+dispatched after MetaMonitorManager's handler by using
+g_signal_connect_after().
+
+Closes: https://gitlab.gnome.org/GNOME/mutter/-/issues/3943
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4378>
+---
+ src/backends/native/meta-drm-lease.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/src/backends/native/meta-drm-lease.c b/src/backends/native/meta-drm-lease.c
+index 9b9c6449a05..c6bd2d73804 100644
+--- a/src/backends/native/meta-drm-lease.c
++++ b/src/backends/native/meta-drm-lease.c
+@@ -871,10 +871,12 @@ meta_drm_lease_manager_constructed (GObject *object)
+   MetaMonitorManager *monitor_manager =
+     meta_backend_get_monitor_manager (backend);
+ 
++  /* Connect to MetaKms::resources-changed using G_CONNECT_AFTER to make sure
++   * MetaMonitorManager state is up to date. */
+   lease_manager->resources_changed_handler_id =
+-    g_signal_connect (kms, "resources-changed",
+-                      G_CALLBACK (on_resources_changed),
+-                      lease_manager);
++    g_signal_connect_after (kms, "resources-changed",
++                            G_CALLBACK (on_resources_changed),
++                            lease_manager);
+   lease_manager->lease_changed_handler_id =
+     g_signal_connect (kms, "lease-changed",
+                       G_CALLBACK (on_lease_changed),
+-- 
+GitLab
+
+
+From 2ae93f69eb7228b28519c823cb38b3640a1225e9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
+Date: Mon, 31 Mar 2025 13:56:13 +0200
+Subject: [PATCH 3/5] tests: Add drm lease test for non non-desktop hotplugs
+
+This tests that https://gitlab.gnome.org/GNOME/mutter/-/issues/3943
+doesn't reproduce by triggering hotplugs in a certain way.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4378>
+---
+ src/backends/meta-backend-private.h |   6 ++
+ src/backends/meta-backend.c         |   4 +-
+ src/tests/drm-lease-monitor-test.c  | 102 ++++++++++++++++++++++++++++
+ src/tests/meson.build               |   7 ++
+ 4 files changed, 117 insertions(+), 2 deletions(-)
+ create mode 100644 src/tests/drm-lease-monitor-test.c
+
+diff --git a/src/backends/meta-backend-private.h b/src/backends/meta-backend-private.h
+index 970acb8d75d..e80335c6bf8 100644
+--- a/src/backends/meta-backend-private.h
++++ b/src/backends/meta-backend-private.h
+@@ -261,6 +261,12 @@ void meta_backend_update_from_event (MetaBackend  *backend,
+ char * meta_backend_get_vendor_name (MetaBackend *backend,
+                                      const char  *pnp_id);
+ 
++META_EXPORT_TEST
++void meta_backend_pause (MetaBackend *backend);
++
++META_EXPORT_TEST
++void meta_backend_resume (MetaBackend *backend);
++
+ META_EXPORT_TEST
+ uint32_t meta_clutter_button_to_evdev (uint32_t clutter_button);
+ 
+diff --git a/src/backends/meta-backend.c b/src/backends/meta-backend.c
+index 27f837e573d..6956feb769b 100644
+--- a/src/backends/meta-backend.c
++++ b/src/backends/meta-backend.c
+@@ -975,7 +975,7 @@ meta_backend_class_init (MetaBackendClass *klass)
+ }
+ 
+ #ifdef HAVE_LOGIND
+-static void
++void
+ meta_backend_pause (MetaBackend *backend)
+ {
+   COGL_TRACE_BEGIN_SCOPED (MetaBackendPause,
+@@ -984,7 +984,7 @@ meta_backend_pause (MetaBackend *backend)
+   META_BACKEND_GET_CLASS (backend)->pause (backend);
+ }
+ 
+-static void
++void
+ meta_backend_resume (MetaBackend *backend)
+ {
+   COGL_TRACE_BEGIN_SCOPED (MetaBackendResume,
+diff --git a/src/tests/drm-lease-monitor-test.c b/src/tests/drm-lease-monitor-test.c
+new file mode 100644
+index 00000000000..c35bbc492ec
+--- /dev/null
++++ b/src/tests/drm-lease-monitor-test.c
+@@ -0,0 +1,102 @@
++/*
++ * Copyright (C) 2025 Red Hat, Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of the
++ * License, or (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "config.h"
++
++#include <glib.h>
++
++#include "backends/meta-monitor-config-manager.h"
++#include "backends/native/meta-backend-native.h"
++#include "backends/native/meta-kms.h"
++#include "backends/native/meta-kms-device.h"
++#include "meta-test/meta-context-test.h"
++#include "tests/drm-mock/drm-mock.h"
++#include "tests/meta-test-utils.h"
++
++static MetaContext *test_context;
++
++static void
++fake_udev_hotplug (void)
++{
++  MetaBackend *backend = meta_context_get_backend (test_context);
++  MetaUdev *udev = meta_backend_get_udev (backend);
++  g_autolist (GUdevDevice) devices = NULL;
++  g_autoptr (GError) error = NULL;
++  GList *l;
++
++  devices = meta_udev_list_drm_devices (udev,
++                                        META_UDEV_DEVICE_TYPE_CARD,
++                                        &error);
++  g_assert_no_error (error);
++  g_assert_nonnull (devices);
++
++  for (l = devices; l; l = l->next)
++    {
++      GUdevDevice *device = l->data;
++
++      g_signal_emit_by_name (udev, "hotplug", device);
++    }
++}
++
++static void
++disconnect_connector_filter (gpointer resource,
++                             gpointer user_data)
++{
++  drmModeConnector *drm_connector = resource;
++
++  drm_connector->connection = DRM_MODE_DISCONNECTED;
++}
++
++static void
++test_drm_lease_lease_suspend_resume (void)
++{
++  MetaBackend *backend = meta_context_get_backend (test_context);
++
++  meta_backend_pause (backend);
++  drm_mock_set_resource_filter (DRM_MOCK_CALL_FILTER_GET_CONNECTOR,
++                                disconnect_connector_filter, NULL);
++  fake_udev_hotplug ();
++  meta_backend_resume (backend);
++
++  drm_mock_unset_resource_filter (DRM_MOCK_CALL_FILTER_GET_CONNECTOR);
++  fake_udev_hotplug ();
++}
++
++static void
++init_tests (void)
++{
++  g_test_add_func ("/wayland/drm-lease/suspend-resume",
++                   test_drm_lease_lease_suspend_resume);
++}
++
++int
++main (int   argc,
++      char *argv[])
++{
++  g_autoptr (MetaContext) context = NULL;
++
++  context = meta_create_test_context (META_CONTEXT_TEST_TYPE_VKMS,
++                                      META_CONTEXT_TEST_FLAG_NO_X11);
++  g_assert_true (meta_context_configure (context, &argc, &argv, NULL));
++
++  test_context = context;
++
++  init_tests ();
++
++  return meta_context_test_run_tests (META_CONTEXT_TEST (context),
++                                      META_TEST_RUN_FLAG_CAN_SKIP);
++}
+diff --git a/src/tests/meson.build b/src/tests/meson.build
+index 1771494ef76..433f47f1d73 100644
+--- a/src/tests/meson.build
++++ b/src/tests/meson.build
+@@ -708,6 +708,13 @@ kms_test_cases = [
+       wayland_test_utils,
+     ],
+   },
++  {
++    'name': 'drm-lease-monitor',
++    'suite': 'backends/native',
++    'sources': [
++      'drm-lease-monitor-test.c',
++    ],
++  },
+ ]
+ 
+ privileged_test_cases += kms_test_cases
+-- 
+GitLab
+
+
+From 288168f7f73ee84208500fe5e6bda6e9cdbc3a39 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
+Date: Mon, 31 Mar 2025 14:55:45 +0200
+Subject: [PATCH 4/5] output: Add pause/resume signals
+
+These gets signalled when the logind session becomes inactive/active,
+e.g. VT switches.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4378>
+---
+ src/backends/meta-backend.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/src/backends/meta-backend.c b/src/backends/meta-backend.c
+index 6956feb769b..6b37c54ea7f 100644
+--- a/src/backends/meta-backend.c
++++ b/src/backends/meta-backend.c
+@@ -123,6 +123,8 @@ enum
+   LID_IS_CLOSED_CHANGED,
+   GPU_ADDED,
+   PREPARE_SHUTDOWN,
++  PAUSE,
++  RESUME,
+ 
+   N_SIGNALS
+ };
+@@ -972,6 +974,20 @@ meta_backend_class_init (MetaBackendClass *klass)
+                   0,
+                   NULL, NULL, NULL,
+                   G_TYPE_NONE, 0);
++  signals[PAUSE] =
++    g_signal_new ("pause",
++                  G_TYPE_FROM_CLASS (klass),
++                  G_SIGNAL_RUN_LAST,
++                  0,
++                  NULL, NULL, NULL,
++                  G_TYPE_NONE, 0);
++  signals[RESUME] =
++    g_signal_new ("resume",
++                  G_TYPE_FROM_CLASS (klass),
++                  G_SIGNAL_RUN_LAST,
++                  0,
++                  NULL, NULL, NULL,
++                  G_TYPE_NONE, 0);
+ }
+ 
+ #ifdef HAVE_LOGIND
+@@ -981,6 +997,7 @@ meta_backend_pause (MetaBackend *backend)
+   COGL_TRACE_BEGIN_SCOPED (MetaBackendPause,
+                            "Meta::Backend::pause()");
+ 
++  g_signal_emit (backend, signals[PAUSE], 0);
+   META_BACKEND_GET_CLASS (backend)->pause (backend);
+ }
+ 
+@@ -991,6 +1008,7 @@ meta_backend_resume (MetaBackend *backend)
+                            "Meta::Backend::resume()");
+ 
+   META_BACKEND_GET_CLASS (backend)->resume (backend);
++  g_signal_emit (backend, signals[RESUME], 0);
+ }
+ 
+ static void
+-- 
+GitLab
+
+
+From eec0f21e40e4319b24f16eb4f97c783b4f559a3e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jonas=20=C3=85dahl?= <jadahl@gmail.com>
+Date: Mon, 31 Mar 2025 15:02:23 +0200
+Subject: [PATCH 5/5] drm-lease: Treat connectors as unleasable when inactive
+
+When inactive (logind session no longer active, e.g. VT switched to
+another user, no longer DRM master) mutter stays dormant and doesn't
+try to reconfigure outputs on hotplug events, among other things. That
+means we also shouldn't keep leases active, or connectors leasible, when
+not active, since dependent state are not kept up to date.
+
+Address this by, treat all connectors as not leasable when inactive,
+which effectively means leases are revoked.
+
+This fixes a crash when monitors are hot plugged in a certain way when
+the session is inactive, which an added test case tests.
+
+Part-of: <https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4378>
+---
+ src/backends/native/meta-drm-lease.c | 32 ++++++++++++++++++++++++++++
+ src/tests/drm-lease-monitor-test.c   | 16 ++++++++++++++
+ 2 files changed, 48 insertions(+)
+
+diff --git a/src/backends/native/meta-drm-lease.c b/src/backends/native/meta-drm-lease.c
+index c6bd2d73804..b86f71a7b26 100644
+--- a/src/backends/native/meta-drm-lease.c
++++ b/src/backends/native/meta-drm-lease.c
+@@ -71,6 +71,8 @@ struct _MetaDrmLeaseManager
+   gulong resources_changed_handler_id;
+   gulong lease_changed_handler_id;
+   gulong monitors_changed_handler_id;
++  gulong backend_pause_handler_id;
++  gulong backend_resume_handler_id;
+ 
+   /* MetaKmsDevice *kms_device */
+   GList *devices;
+@@ -84,6 +86,8 @@ struct _MetaDrmLeaseManager
+    * Value: MetaDrmLease *lease
+    */
+   GHashTable *leased_connectors;
++
++  gboolean is_paused;
+ };
+ 
+ G_DEFINE_TYPE (MetaDrmLeaseManager, meta_drm_lease_manager, G_TYPE_OBJECT)
+@@ -665,6 +669,9 @@ update_connectors (MetaDrmLeaseManager  *lease_manager,
+   new_leased_connectors =
+     g_hash_table_new_similar (lease_manager->leased_connectors);
+ 
++  if (lease_manager->is_paused)
++    goto scanned_resources;
++
+   for (l = meta_kms_get_devices (kms); l; l = l->next)
+     {
+       MetaKmsDevice *kms_device = l->data;
+@@ -697,6 +704,8 @@ update_connectors (MetaDrmLeaseManager  *lease_manager,
+         }
+     }
+ 
++scanned_resources:
++
+   g_hash_table_iter_init (&iter, lease_manager->leased_connectors);
+   while (g_hash_table_iter_next (&iter, (gpointer *)&kms_connector, NULL))
+     {
+@@ -862,6 +871,21 @@ on_lease_changed (MetaKms             *kms,
+   update_leases (lease_manager);
+ }
+ 
++static void
++on_pause (MetaBackend         *backend,
++          MetaDrmLeaseManager *lease_manager)
++{
++  lease_manager->is_paused = TRUE;
++  update_resources (lease_manager);
++}
++
++static void
++on_resume (MetaBackend         *backend,
++           MetaDrmLeaseManager *lease_manager)
++{
++  lease_manager->is_paused = FALSE;
++}
++
+ static void
+ meta_drm_lease_manager_constructed (GObject *object)
+ {
+@@ -885,6 +909,10 @@ meta_drm_lease_manager_constructed (GObject *object)
+     g_signal_connect_swapped (monitor_manager, "monitors-changed-internal",
+                               G_CALLBACK (update_resources),
+                               lease_manager);
++  lease_manager->backend_pause_handler_id =
++    g_signal_connect (backend, "pause", G_CALLBACK (on_pause), lease_manager);
++  lease_manager->backend_resume_handler_id =
++    g_signal_connect (backend, "resume", G_CALLBACK (on_resume), lease_manager);
+ 
+   lease_manager->leases =
+     g_hash_table_new_full (NULL, NULL,
+@@ -944,6 +972,10 @@ meta_drm_lease_manager_dispose (GObject *object)
+   g_clear_signal_handler (&lease_manager->lease_changed_handler_id, kms);
+   g_clear_signal_handler (&lease_manager->monitors_changed_handler_id,
+                           monitor_manager);
++  g_clear_signal_handler (&lease_manager->backend_pause_handler_id,
++                          backend);
++  g_clear_signal_handler (&lease_manager->backend_resume_handler_id,
++                          backend);
+ 
+   g_list_free_full (g_steal_pointer (&lease_manager->devices), g_object_unref);
+   g_list_free_full (g_steal_pointer (&lease_manager->connectors),
+diff --git a/src/tests/drm-lease-monitor-test.c b/src/tests/drm-lease-monitor-test.c
+index c35bbc492ec..88bf10498b9 100644
+--- a/src/tests/drm-lease-monitor-test.c
++++ b/src/tests/drm-lease-monitor-test.c
+@@ -76,11 +76,27 @@ test_drm_lease_lease_suspend_resume (void)
+   fake_udev_hotplug ();
+ }
+ 
++static void
++test_drm_lease_lease_suspend_no_resume (void)
++{
++  MetaBackend *backend = meta_context_get_backend (test_context);
++
++  drm_mock_set_resource_filter (DRM_MOCK_CALL_FILTER_GET_CONNECTOR,
++                                disconnect_connector_filter, NULL);
++  fake_udev_hotplug ();
++  meta_backend_pause (backend);
++
++  drm_mock_unset_resource_filter (DRM_MOCK_CALL_FILTER_GET_CONNECTOR);
++  fake_udev_hotplug ();
++}
++
+ static void
+ init_tests (void)
+ {
+   g_test_add_func ("/wayland/drm-lease/suspend-resume",
+                    test_drm_lease_lease_suspend_resume);
++  g_test_add_func ("/wayland/drm-lease/suspend-no-resume",
++                   test_drm_lease_lease_suspend_no_resume);
+ }
+ 
+ int
+-- 
+GitLab
+
