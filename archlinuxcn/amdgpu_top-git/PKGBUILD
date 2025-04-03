@@ -28,7 +28,7 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	cargo build --frozen --release --all-features
+	cargo build --frozen --release --features package
 }
 
 package() {
