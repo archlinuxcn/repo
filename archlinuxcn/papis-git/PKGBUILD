@@ -4,7 +4,7 @@
 
 pkgname=papis-git
 _pkgname=papis
-pkgver=0.14.1.r14.gc9569067
+pkgver=0.14.1.r46.gc684129a
 pkgrel=1
 pkgdesc='Command-line document and bibliography manager'
 arch=('any')
@@ -14,6 +14,7 @@ depends=('python'
     'python-arxiv'
     'python-beautifulsoup4'
     'python-bibtexparser<2'
+    'python-citeproc-py'
     'python-click'
     'python-colorama'
     'python-doi'
@@ -64,6 +65,7 @@ makedepends=("git" "python-setuptools"
 
     'python-sphinx-click'
     'python-sphinx-design'
+    'python-sphinx_rtd_theme'
 )
 checkdepends=(
     # For pytest
@@ -80,7 +82,6 @@ checkdepends=(
     # For flake8
     'flake8'
     'python-flake8-bugbear'
-    'python-flake8-polyfill'
     'python-flake8-pyproject'
     'python-flake8-quotes'
     'python-pep8-naming'
@@ -88,10 +89,10 @@ checkdepends=(
     # For mypy
     'mypy'
     'python-types-beautifulsoup4'
+    'python-types-docutils'
     'python-types-pygments'
     'python-types-pyyaml'
     'python-types-requests'
-    'python-types-setuptools'
 )
 provides=('papis')
 conflicts=('papis')
