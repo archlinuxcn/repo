@@ -1,4 +1,5 @@
-# Maintainer: Julian <juliannfairfax@protonmail.com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Julian <juliannfairfax@protonmail.com>
 
 pkgname=flare
 pkgver=0.15.15
@@ -12,18 +13,20 @@ license=("AGPL-3.0-or-later")
 makedepends=("blueprint-compiler" "cargo" "meson")
 depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling")
 optdepends=("feedbackd: for vibrating notifications")
-source=("https://gitlab.com/schmiddi-on-mobile/${pkgname}/-/archive/${_pkgver}/${pkgname}-${_pkgver}.tar.gz")
+source=("${url}/-/archive/${_pkgver}/${pkgname}-${_pkgver}.tar.gz")
 sha256sums=('3c7636ade32cd8cc44d97781291df3ceadc09b3023d76c3e39cbcb4ccc8b9e2b')
 options=('!lto')
 
-prepare() {
-	cd "${pkgname}-${_pkgver}/"
-	arch-meson . build/
+build() {
+	arch-meson "${pkgname}-${_pkgver}" build
+	meson compile -C build
+}
+
+check() {
+	meson test -C build --print-errorlogs
 }
 
 package() {
-	cd "${pkgname}-${_pkgver}/"
-	DESTDIR="${pkgdir}" ninja -C build/ install
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+	meson install -C build --no-rebuild --destdir "${pkgdir}"
+	install -Dm644 ${pkgname}-${_pkgver}/doc/* -t "${pkgdir}/usr/share/doc/${pkgname}/"
 }
