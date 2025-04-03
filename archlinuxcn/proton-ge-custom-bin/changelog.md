@@ -1,3 +1,31 @@
+## GE-Proton9-27
+
+Proton:
+- updated wine to bleeding edge
+- updated dxvk to latest git
+- updated vkd3d to latest git
+- updated dxvk-nvapi to latest git
+- imported build updates from upstream
+- updated to latest steam runtime sdk
+- import proton updates from upstream (includes fix for spellforce not launching)
+- revert gstreamer envvar change that interferes with the proper gstreamer backport we carry (needed to fix ghost wayland window in some games)
+
+Patches:
+- remove now upstreamed microsoft flight sim 2024 patch
+- remove now upstreamed gta v enhanced patch
+
+Protonfixes:
+- fixes added for standalone and egs versions of withering wayves (thanks cybik)
+- ubisoft connect fixes added for ghostrecon wildlands and rainbow six siege
+- fix added for mojika - truth rears its ugly head (thanks superboo07)
+- added epic games registry entry fix for all epic games (thanks commandmc)
+- add fix for pkhex (thanks BlueInterlude)
+- add save imports fix for monster hunter wilds (thanks froz3n)
+- fix: handle issue when empty STORE value provided to umu
+- fix added for Elin (thanks UsernamesAreNotMyThing)
+- fix added for PowerWash Adventure (thanks sonik2kk)
+- fix added to shorten time taken for retrieving game_title in umu
+
 ## GE-Proton9-26
 
 Upstream:
