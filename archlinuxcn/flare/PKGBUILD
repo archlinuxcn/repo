@@ -15,11 +15,10 @@ depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling")
 optdepends=("feedbackd: for vibrating notifications")
 source=("${url}/-/archive/${_pkgver}/${pkgname}-${_pkgver}.tar.gz")
 sha256sums=('3c7636ade32cd8cc44d97781291df3ceadc09b3023d76c3e39cbcb4ccc8b9e2b')
-options=('!lto')
 
 build() {
 	arch-meson "${pkgname}-${_pkgver}" build
-	meson compile -C build
+	CFLAGS+=" -ffat-lto-objects" meson compile -C build
 }
 
 check() {
