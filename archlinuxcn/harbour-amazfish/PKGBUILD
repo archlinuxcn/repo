@@ -21,15 +21,21 @@ depends=(
 	'bluez-qt5'
 )
 makedepends=('git' 'qt5-tools')
-source=("${pkgname}-${pkgver}::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('2a2253b10b8bd5c147a71daf7f50ce33c6c1d2621453b9eb2e9331134865f664055159dd9b5c5d5190d3fd6f65874f515ac72d7ac5aeec10be1a4ea79e9614de')
+source=(
+	"git+${url}.git#tag=${pkgver}"
+	"git+https://github.com/piggz/qble.git"
+	"git+https://github.com/piggz/libwatchfish.git"
+)
+sha512sums=('d3b94e27d78b6b54bd7cd9f51a71ae2fd7be6d8669320dc68bb198329b1de73531d2b5313c3b8d6e35b8f13448af8790be9d3a52a20f22b04b6bba2730e6f1bd'
+            'SKIP'
+            'SKIP')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	rm -rf qble daemon/libwatchfish
-	git init
-	git submodule add https://github.com/piggz/qble.git qble
-	git submodule add https://github.com/piggz/libwatchfish.git daemon/libwatchfish
+	git submodule init
+	git config submodule.qble.url "${srcdir}/qble"
+	git config submodule.daemon/libwatchfish.url "${srcdir}/libwatchfish"
+	git -c protocol.file.allow=always submodule update
 }
 
 build() {
