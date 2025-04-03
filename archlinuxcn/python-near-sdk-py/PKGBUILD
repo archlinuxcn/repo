@@ -2,8 +2,8 @@
 
 _name=near-sdk-py
 pkgname=python-$_name
-pkgver=0.7.2
-pkgrel=2
+pkgver=0.7.3
+pkgrel=1
 pkgdesc="A Pythonic interface for building NEAR smart contracts"
 arch=(any)
 url="https://github.com/r-near/$_name"
@@ -12,7 +12,7 @@ depends=(python)
 makedepends=(python-build python-installer python-wheel python-hatchling)
 checkdepends=(python-pytest)
 source=($_name-$pkgver.tar.gz::${url}/archive/v$pkgver.tar.gz)
-sha512sums=('1b4426c20e3a94a61f3fb0b5b5859dbad9b360c0e221477a4a3af5342cf5b22ede41bebb97ca73ebb6030cd8a8f023f03cc903024424e5b7adf07310a7422554')
+sha512sums=('27766145617eb3dec3beb921d3126f456d8c68b5203a1eafaed229872d711f910855ab24885261e37cff8cb29e0dfe7a86d274da8f65f816dce6b2ad0d10da87')
 
 build() {
   cd $_name-$pkgver
