@@ -1,4 +1,5 @@
-# Maintainer: Julian <juliannfairfax@protonmail.com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Julian <juliannfairfax@protonmail.com>
 
 pkgname=flare-git
 _pkgname=${pkgname%-git}
@@ -22,14 +23,16 @@ pkgver() {
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
-prepare() {
-	cd "${_pkgname}/"
-	arch-meson . build/
+build() {
+	arch-meson "${_pkgname}" build
+	meson compile -C build
+}
+
+check() {
+	meson test -C build --print-errorlogs
 }
 
 package() {
-	cd "${_pkgname}/"
-	DESTDIR="${pkgdir}" ninja -C build/ install
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
-	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"
+	meson install -C build --no-rebuild --destdir "${pkgdir}"
+	install -Dm644 ${_pkgname}/doc/* -t "${pkgdir}/usr/share/doc/${_pkgname}/"
 }
