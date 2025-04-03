@@ -1,4 +1,5 @@
-# Maintainer: Ikosse <andrelofgren@hotmail.co.uk>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Ikosse <andrelofgren@hotmail.co.uk>
 
 pkgname=harbour-amazfish
 pkgver=2.5.0
@@ -22,7 +23,7 @@ depends=(
 	'mlite'
 	'libpulse'
 )
-makedepends=('git' 'cmake')
+makedepends=('git' 'qt5-tools' 'cmake')
 source=(
 	"git+${url}.git#tag=${pkgver}"
 	"git+https://github.com/piggz/qble.git"
