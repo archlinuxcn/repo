@@ -16,7 +16,6 @@ conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=("SKIP")
-options=(!lto)
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -25,7 +24,7 @@ pkgver() {
 
 build() {
 	arch-meson "${_pkgname}" build
-	meson compile -C build
+	CFLAGS+=" -ffat-lto-objects" meson compile -C build
 }
 
 check() {
