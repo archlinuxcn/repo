@@ -19,8 +19,10 @@ depends=(
 	'nemo-qml-plugin-dbus'
 	'kirigami2'
 	'bluez-qt5'
+	'mlite'
+	'libpulse'
 )
-makedepends=('git' 'qt5-tools')
+makedepends=('git' 'cmake')
 source=(
 	"git+${url}.git#tag=${pkgver}"
 	"git+https://github.com/piggz/qble.git"
@@ -31,7 +33,7 @@ sha512sums=('d3b94e27d78b6b54bd7cd9f51a71ae2fd7be6d8669320dc68bb198329b1de73531d
             'SKIP')
 
 prepare() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${pkgname}/"
 	git submodule init
 	git config submodule.qble.url "${srcdir}/qble"
 	git config submodule.daemon/libwatchfish.url "${srcdir}/libwatchfish"
@@ -39,12 +41,15 @@ prepare() {
 }
 
 build() {
-	cd "${pkgname}-${pkgver}/"
-	qmake FLAVOR=kirigami PREFIX=/usr .
-	make
+	cmake -B build \
+		-S "${pkgname}" \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D FLAVOR=silica
+
+	cmake --build build
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/"
-	make INSTALL_ROOT="${pkgdir}" install
+	DESTDIR="${pkgdir}" cmake --install build
 }
