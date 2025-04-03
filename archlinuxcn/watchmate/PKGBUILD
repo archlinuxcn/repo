@@ -13,7 +13,6 @@ depends=('glib2' 'bzip2' 'bluez' 'libadwaita' 'dbus' 'dconf' 'hicolor-icon-theme
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('640d9460a0dcef70fcdd235ba23196d0e0e8b5648040874162458599ae39fd8b')
-options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
@@ -22,7 +21,7 @@ prepare() {
 
 build() {
 	cd "${pkgname}-${pkgver}/"
-	cargo build --frozen --release --all-features
+	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
 package() {
