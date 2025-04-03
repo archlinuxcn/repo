@@ -2,7 +2,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=nekoray
-pkgver=4.3.1
+pkgver=4.3.2
 _pkgver=${pkgver/.beta/-beta}
 pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-box)"
@@ -21,7 +21,7 @@ source=(
 	"fix-geoasset.patch::${url}/pull/320.patch"
 )
 install="${pkgname}.install"
-sha512sums=('562ef3012912cfe16e5e74d4dd768e170ac795147f43084ba55cbb4aa5fadb78da1b261593dad90b27cc4d5689eb4eb0ad1f5674003091d61b6f9c64e69d8f41'
+sha512sums=('ce949c193e0e42c38c03c1087e09bb3742db7d8bc4bbad54eff6ca31a17148f106582fd0b7dd48c025a33e08c23492c252f91286ad898ab215405cfefa879e3a'
             'b377f7e8c859ee0b5bc05f89e2dc6c0b8535e740e089e9afe5e5f145c38a05fccbbddfcb6eb8ced9a7478e4d9ccc3cbd3ffb6843c128189c75599c40c87737e8'
             'b0cfd99d7fd038d660af275a5f2fc7f9ebfe63d6751edd6eea66a8c5350f314b6dbc9eddaa5aaed134e97087290630d369b1bdf4ad59d12868c780103b33dbed'
             'ca2f1cc68f20c1a0a18bf6ee94835b78a70b4f13fd48a3913e90dacc74f5b6a33db18486082ed9f962f9952009bfaf9257a3055c2ebfea5cce21ba53829718fd')
