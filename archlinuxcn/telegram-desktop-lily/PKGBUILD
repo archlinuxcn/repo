@@ -50,7 +50,7 @@ prepare() {
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0004-make-animated-avatar-follow-power-settings.patch
     patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0001-don-t-ask-which-program-to-use-when-opening-a-file-w.patch
     sed -i 's/QGenericUnixServices/QDesktopUnixServices/;s/qgenericunixservices_p/qdesktopunixservices_p/' \
-      ${srcdir}/tdesktop-5.12.3-full/Telegram/lib_base/base/platform/linux/base_linux_xdp_utilities.cpp
+      ${srcdir}/tdesktop-*-full/Telegram/lib_base/base/platform/linux/base_linux_xdp_utilities.cpp
 }
 
 build() {
