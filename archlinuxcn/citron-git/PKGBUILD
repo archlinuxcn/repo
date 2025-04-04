@@ -9,20 +9,20 @@ url=https://git.citron-emu.org/Citron/Citron
 license=(GPL-3.0-or-later)
 provides=('citron')
 conflicts=('citron')
-depends=('boost-libs' 'hicolor-icon-theme' 'sdl2' 'qt6-base' 'qt6-webengine' 'fmt' 'opus' 'lz4' 'openssl' 'zstd'
-  'cubeb' 'enet' 'discord-rpc' 'cpp-httplib' 'enet'
-  'dynarmic'
-)
+depends=('boost-libs' 'hicolor-icon-theme' 'sdl2' 'qt6-base' 'qt6-webengine' 'fmt' 'opus' 'lz4' 'openssl' 'zstd' 'cubeb' 'enet' 'discord-rpc' 'cpp-httplib' 'dynarmic')
 makedepends=('llvm' 'git' 'glslang' 'cmake'
-  'xbyak'
-  # 'mbedtls'
+  # 'xbyak' 'mbedtls'
+  # with xbyak we got the runtime err: terminate called after throwing an instance of 'Xbyak::Error' what():  bad size of register
   'qt6-tools' 'qt6-multimedia' 'libxkbcommon-x11' 'libzip' 'libfdk-aac' 'libinih'
-  'vulkan-memory-allocator' 'vulkan-utility-libraries' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'perl' 'yasm' 'python-jsonschema' 'python-jinja')
+  'vulkan-memory-allocator' 'vulkan-utility-libraries'
+  'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'clang' 'python' 'renderdoc'
+  'gamemode' 'perl' 'yasm' 'python-jsonschema' 'python-jinja')
 optdepends=('qt6-wayland: for Wayland support')
 source=(
   git+${url}.git
   git+https://github.com/yuzu-mirror/sirit.git#commit=ab75463
   git+https://github.com/yuzu-mirror/mbedtls.git#commit=8c88150
+  git+https://github.com/herumi/xbyak.git#commit=a1ac3750f9
   ffmpeg::git+https://github.com/FFmpeg/FFmpeg.git#commit=99e2af4e78
   git+https://github.com/brofield/simpleini.git#commit=6048871ea9
   "https://github.com/lat9nq/tzdb_to_nx/releases/download/221202/221202.zip"
@@ -31,6 +31,7 @@ noextract=('221202.zip')
 b2sums=('SKIP'
   '91e4cd03d67c930b6d751ca19cf6fbaaba86084412bd13b172186387ea27b461457a3e19bc0af315c807839e64f91c865298678af748e2d6e07df2abc85430ed'
   '6198d4eea1f6618d4bed5fc3e6103245d42080a1b7a327ae566c6cae609fde64819c8b67284ec6a79ad42afb1c07bb809411f9277ea3e03325ef1ddfa181c2d1'
+  '10564f981204fe52c4c737a5c98ff4431e156ea0936355ee999656b7564329531fe832dfbf742642c33fbb86ab95b2a082dcd9415ef91b9089e282f535f10057'
   'ebc933862e140d108fa13328f8c4a6a3dbdf2a2155fbe9318c950fea2a700d0e64a646dcc96e9b54a68c2f261b1b2b12587a7fe0fc2490566e370a76a1470fc2'
   'fae42bb13f180ab991f6bfc8a45ea3df08ced1d77db77f54cf5a222f93ea468bd6fc0d36d65f9f3739e9813d77dbae31931948dc9afa28e884c53b8128c13c94'
   '7bd0ff5ca80cf560344ae7edbfeb7c9466c096dc499a7348276cff5d30aa07464f7e2ea391ca9cedac0e21ba6f563169a8b38f2df729a230a0acfb1125ea1b66')
@@ -44,6 +45,7 @@ prepare() {
     sirit
     simpleini
     mbedtls
+    xbyak
   )
 
   for pro in ${submods[@]}; do
