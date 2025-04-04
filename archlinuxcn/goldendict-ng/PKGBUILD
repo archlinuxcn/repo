@@ -38,6 +38,7 @@ sha256sums=('5b3ecb662c44564b70f611f8e7e239c6642d5c66711134a1e210c310384251b5')
 build() {
 	cmake -B build \
 		-S "${pkgname}-${pkgver}-Release.${_commit_id}" \
+		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DUSE_SYSTEM_FMT=ON \
 		-DUSE_SYSTEM_TOML=ON
