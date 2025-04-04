@@ -33,7 +33,7 @@ sha512sums=('08707cea3c4477078930c43720233046fe2fb0582e292ab51946d9aaa31be46b9ff
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python -m build --wheel --no-isolation
+  python -m build --wheel --no-isolation -x
 }
 
 check() {
