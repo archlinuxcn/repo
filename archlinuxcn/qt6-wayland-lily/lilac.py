@@ -29,6 +29,9 @@ def edit_it():
   node = r.find(pattern='pkgver=$A')
   edits.append(node.replace(f'pkgver={pkgver}'))
 
+  node = r.find(pattern='_pkgfn=$A')
+  edits.append(node.replace('_pkgfn=qtwayland'))
+
   node = r.find(pattern='pkgdesc=$A')
   desc = node['A'].text().strip('\'"') + ', patched by lilydjwg'
   edits.append(node.replace(f'pkgdesc=\'{desc}\''))
