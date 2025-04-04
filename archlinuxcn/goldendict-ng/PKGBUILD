@@ -27,19 +27,17 @@ depends=(
 	'qt6-speech'
 	'qt6-5compat'
 )
-makedepends=(
-	'cmake'
-	'ninja'
-	'qt6-tools'
-)
+makedepends=('cmake' 'qt6-tools')
 conflicts=('goldendict' 'goldendict-git' 'goldendict-svn' 'goldendict-git-opt')
 provides=('goldendict')
 replaces=('goldendict-svn' 'goldendict-git-opt' 'goldendict-webengine-git')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-Release.e895b18c.tar.gz")
+_commit_id=2a2b0e16
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-Release.${_commit_id}.tar.gz")
 sha256sums=('c7d6acbcab6fb097231981d0748164c3e389295b8f02c1bbcd17c317d7f27659')
 
 build() {
-	cmake -B build -S "${pkgname}-${pkgver}-Release.e895b18c" -G Ninja \
+	cmake -B build \
+		-S "${pkgname}-${pkgver}-Release.${_commit_id}" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DUSE_SYSTEM_FMT=ON \
 		-DUSE_SYSTEM_TOML=ON
