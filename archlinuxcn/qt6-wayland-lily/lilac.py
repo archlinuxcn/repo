@@ -60,7 +60,7 @@ def edit_it():
   e = elems[-1].replace(''.join(f'\n%s{s}' % (' ' * indent) for s in sums) + ')')
   edits.append(e)
 
-  node = r.find(pattern='groups=($$$A)')
+  node = r.find(pattern='url=$A')
   e = node.replace('''%s
 provides=(qt6-wayland=$pkgver)
 conflicts=(qt6-wayland)''' % node.text())
