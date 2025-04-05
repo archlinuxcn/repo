@@ -3,7 +3,7 @@
 
 pkgname=coolercontrol
 _app_id="org.$pkgname.CoolerControl"
-pkgver=2.0.1
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="A program to monitor and control your cooling devices"
 arch=('x86_64')
@@ -33,7 +33,7 @@ source=(
   "https://gitlab.com/coolercontrol/coolercontrol/-/archive/$pkgver/$pkgname-$pkgver.tar.gz"
 )
 sha256sums=(
-  'ced4fb060785d3dcd6b3c58d825477e379f4d406c4b448d0bf2bcffcad33ae3b'
+  'f0850097914fb8892ee49c03c5cea55e78c8f3e6aa99b417fc86f44250b6bdbd'
 )
 
 build() {
@@ -58,6 +58,7 @@ package() {
   install -Dm644 "packaging/metadata/$_app_id.metainfo.xml" -t "$pkgdir/usr/share/metainfo/"
   install -Dm644 "packaging/metadata/$_app_id.png" -t "$pkgdir/usr/share/pixmaps/"
   install -Dm644 "packaging/metadata/$_app_id.svg" -t "$pkgdir/usr/share/icons/hicolor/scalable/apps/"
+  install -Dm644 "packaging/metadata/${_app_id}-symbolic.svg" -t "$pkgdir/usr/share/icons/hicolor/symbolic/apps/"
 
   install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
