@@ -1,7 +1,8 @@
 # Maintainer: username227 <gfrank227 [at] gmail [dot] com>
 _pkgname=Citron
+_xbyak_tag=7.24.2
 pkgname=${_pkgname,,}-git
-pkgver=0.6.1.canary.refresh.r14
+pkgver=0.6.1.canary.refresh.r15
 pkgrel=1
 pkgdesc="Nintendo Switch emulator forked from yuzu"
 arch=(x86_64)
@@ -9,30 +10,37 @@ url=https://git.citron-emu.org/Citron/Citron
 license=(GPL-3.0-or-later)
 provides=('citron')
 conflicts=('citron')
-depends=('boost-libs' 'hicolor-icon-theme' 'sdl2' 'qt6-base' 'qt6-webengine' 'fmt' 'opus' 'lz4' 'openssl' 'zstd' 'cubeb' 'enet' 'discord-rpc' 'cpp-httplib' 'dynarmic')
-makedepends=('llvm' 'git' 'glslang' 'cmake'
-  # 'xbyak' 'mbedtls'
-  # with xbyak we got the runtime err: terminate called after throwing an instance of 'Xbyak::Error' what():  bad size of register
+depends=('boost-libs' 'hicolor-icon-theme' 'sdl2' 'qt6-base' 'qt6-webengine' 'fmt' 'opus' 'lz4'
+  'openssl' 'zstd' 'cubeb' 'enet' 'discord-rpc' 'cpp-httplib' 'dynarmic' 'mbedtls2' 'ffmpeg'
+)
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'perl' 'clang'
   'qt6-tools' 'qt6-multimedia' 'libxkbcommon-x11' 'libzip' 'libfdk-aac' 'libinih'
-  'vulkan-memory-allocator' 'vulkan-utility-libraries'
-  'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'clang' 'python' 'renderdoc'
-  'gamemode' 'perl' 'yasm' 'python-jsonschema' 'python-jinja')
+  'vulkan-memory-allocator' 'vulkan-utility-libraries' 'vulkan-headers' 'spirv-headers'
+  'boost' 'nlohmann-json' 'robin-map' 'cpp-jwt' 'gamemode' 'python' 'renderdoc'
+
+  # 'xbyak'
+  # with xbyak we get the runtime err:
+  # terminate called after throwing an instance of 'Xbyak::Error' what():  bad size of register
+
+  # for documentation
+  # 'doxygen' 'python-jinja' 'python-jsonschema' 'graphviz'
+
+  # for testing
+  # 'catch2'
+)
 optdepends=('qt6-wayland: for Wayland support')
 source=(
   git+${url}.git
   git+https://github.com/yuzu-mirror/sirit.git#commit=ab75463
-  git+https://github.com/yuzu-mirror/mbedtls.git#commit=8c88150
-  git+https://github.com/herumi/xbyak.git#commit=a1ac3750f9
-  ffmpeg::git+https://github.com/FFmpeg/FFmpeg.git#commit=99e2af4e78
+  git+https://github.com/herumi/xbyak.git#tag=v${_xbyak_tag:-7.22}
+  # citron use  xbyak v6.68 by default, but v7.22 is okay
   git+https://github.com/brofield/simpleini.git#commit=6048871ea9
   "https://github.com/lat9nq/tzdb_to_nx/releases/download/221202/221202.zip"
 )
 noextract=('221202.zip')
 b2sums=('SKIP'
   '91e4cd03d67c930b6d751ca19cf6fbaaba86084412bd13b172186387ea27b461457a3e19bc0af315c807839e64f91c865298678af748e2d6e07df2abc85430ed'
-  '6198d4eea1f6618d4bed5fc3e6103245d42080a1b7a327ae566c6cae609fde64819c8b67284ec6a79ad42afb1c07bb809411f9277ea3e03325ef1ddfa181c2d1'
-  '10564f981204fe52c4c737a5c98ff4431e156ea0936355ee999656b7564329531fe832dfbf742642c33fbb86ab95b2a082dcd9415ef91b9089e282f535f10057'
-  'ebc933862e140d108fa13328f8c4a6a3dbdf2a2155fbe9318c950fea2a700d0e64a646dcc96e9b54a68c2f261b1b2b12587a7fe0fc2490566e370a76a1470fc2'
+  'c3cd6fdac08d04ff996a082d51b87c98a46a0c07b17cf1c9e794c4fbb284860e6355c7c4d7b41a66293d8181ec17a18dac772fac384a324b6e7e144540430ac5'
   'fae42bb13f180ab991f6bfc8a45ea3df08ced1d77db77f54cf5a222f93ea468bd6fc0d36d65f9f3739e9813d77dbae31931948dc9afa28e884c53b8128c13c94'
   '7bd0ff5ca80cf560344ae7edbfeb7c9466c096dc499a7348276cff5d30aa07464f7e2ea391ca9cedac0e21ba6f563169a8b38f2df729a230a0acfb1125ea1b66')
 pkgver() {
@@ -44,7 +52,6 @@ prepare() {
   local submods=(
     sirit
     simpleini
-    mbedtls
     xbyak
   )
 
@@ -56,7 +63,6 @@ prepare() {
     fi
   done
 
-  cp -rf ffmpeg/* $srcdir/$_pkgname/externals/ffmpeg/ffmpeg
   cd $srcdir/$_pkgname
   sed -i CMakeLists.txt \
     -e '/-DBOOST_ASIO_DISABLE_CONCEPTS/d' \
@@ -66,27 +72,41 @@ prepare() {
     -e 's|^add\_subdirectory(src)|add_subdirectory(externals)\n add_subdirectory(src)#|g'
   sed -i src/CMakeLists.txt \
     -e 's|-Werror=shadow$|-Wno-error=shadow|g' \
-    -e 's|-Werror=unused$|-Wno-error=unused|g'
-
+    -e 's|-Werror=unused$|-Wno-error=unused|g' \
+    -e 's|include_directories(.|include_directories(. /usr/include/mbedtls2|g' \
+    -e '/include_directories/a link_directories(/usr/lib/mbedtls2)'
+  sed -i src/${_pkgname,,}_cmd/CMakeLists.txt \
+    -e "/target_include_directories(${_pkgname,,}-cmd/a target_link_libraries(${_pkgname,,}-cmd PRIVATE mbedtls mbedcrypto)"
+  sed -i src/${_pkgname,,}/CMakeLists.txt \
+    -e "/target_sources(${_pkgname,,}/i target_link_libraries(${_pkgname,,} PRIVATE mbedtls mbedcrypto)"
   sed -i src/video_core/host_shaders/CMakeLists.txt \
     -e 's/--quiet //g' \
     -e 's#${SPIRV_HEADER_FILE} ${SOURCE_FILE}#${SPIRV_HEADER_FILE} ${SOURCE_FILE} 2>/dev/null#g'
   sed -i -e 's| (%2)||' src/${_pkgname,,}/aboutdialog.ui
   sed -i -e 's|io_service|io_context|g' src/input_common/drivers/udp_client.cpp src/tests/input_common/calibration_configuration_job.cpp
-  sed -i -e 's|u64|std::uint64_t|g' src/citron/discord_impl.h
+  sed -i -e 's|u64|std::uint64_t|g' src/${_pkgname,,}/discord_impl.h
   sed -i -e "s|https://github.com/lat9nq/tzdb_to_nx/releases/download/\${NX_TZDB_VERSION}|file://${srcdir}|g" externals/nx_tzdb/CMakeLists.txt
 
   perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n        -msse4.1/igs' src/video_core/CMakeLists.txt
-
   # see dynarmic 6.7.0 changelog
   sed -i src/core/arm/dynarmic/arm_dynarmic_{32,64}.cpp \
     -e '/fastmem_pointer/s/nullptr/std::nullopt/g' \
     -e 's|page_table->fastmem_arena;|(page_table->fastmem_arena != nullptr) ? std::optional<uintptr_t>{reinterpret_cast<uintptr_t>(page_table->fastmem_arena)} : std::nullopt;|g'
+
+  # this line causes crash, introduced in commit 54173384271
+  sed -i externals/xbyak/xbyak/xbyak.h \
+    -e '/if (!(type & T_ALLOW_DIFF_SIZE) && r1.isREG() && r2.isREG() && r1.getBit() != r2.getBit()) XBYAK_THROW(ERR_BAD_SIZE_OF_REGISTER)/d'
+  # system mbedtls
+  sed -i externals/CMakeLists.txt \
+    -e '/add_subdirectory(mbedtls)/c pkg_check_modules(MbedTLS REQUIRED IMPORTED_TARGET GLOBAL mbedtls mbedcrypto)' \
+    -e '/target_include_directories(mbedtls/d' \
+    -e '/^ *target_compile_options(mbedcrypto/,/)/ { s/^/#/ }'
 }
 
 build() {
   export CC=clang
   export CXX=clang++
+  export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/lib/mbedtls2/pkgconfig
 
   local cmake_args=(
     -GNinja
