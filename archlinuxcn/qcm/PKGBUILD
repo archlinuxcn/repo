@@ -1,4 +1,5 @@
-# Maintainer: Kimiblock Zhou <pn3535 at icloud dot com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Kimiblock Zhou <pn3535 at icloud dot com>
 
 pkgname=qcm
 pkgver=1.1.2
@@ -9,54 +10,58 @@ url="https://github.com/hypengw/Qcm"
 license=('GPL-2.0-or-later')
 depends=(
 	'qt6-base'
+	'qt6-quick3d'
 	'hicolor-icon-theme'
 	'curl'
 	'openssl'
-	'qt6-tools'
-	'qt6-declarative'
-	'qt6-shadertools'
-	'gcc-libs'
-	'glibc'
 	'dbus'
-	'libnghttp2'
-	'libidn2'
-	'krb5'
-	'zstd'
-	'zlib'
-	'qt6-wayland'
-	'libx11'
-	'libxkbcommon'
-	'libpng'
-	'freetype2'
-	'icu'
-	'pcre2'
-	'gnutls'
-	'graphite'
-	'lz4'
-	'libgpg-error'
-	'ffmpeg')
+	'ffmpeg'
+	'fmt'
+	'cubeb-git')
 makedepends=(
 	'git'
 	'cmake'
-	'extra-cmake-modules'
-	'ninja')
-source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('6d753b055606830d90063c30b684ebd63722f590e62de196b3a31e067e785a02')
+	'ninja'
+	'asio'
+	'pegtl'
+	'nlohmann-json'
+	'ctre'
+	'tl-expected')
+source=(
+	"git+${url}.git#tag=v${pkgver}"
+	"git+https://github.com/effolkronium/random.git"
+	"git+https://github.com/hypengw/QmlMaterial.git"
+	"git+https://github.com/hypengw/qcm-jellyfin-plugin.git"
+	"git+https://github.com/KDAB/KDSingleApplication.git"
+)
+sha256sums=('6d753b055606830d90063c30b684ebd63722f590e62de196b3a31e067e785a02'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 prepare() {
 	cd Qcm
-	git submodule update --init --recursive
-	mkdir build
+	git rm third_party/expected
+
+	git submodule init
+	git config submodule.third_party/random.url "${srcdir}/random"
+	git config submodule.qml_material.url "${srcdir}/QmlMaterial"
+	git config submodule.service/jellyfin.url "${srcdir}/qcm-jellyfin-plugin"
+	git config submodule.third_party/KDSingleApplication.url "${srcdir}/KDSingleApplication"
+	git -c protocol.file.allow=always submodule update
 }
 
 build() {
-	cd Qcm/build
-	cmake .. -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-	ninja
+	cmake -B build \
+		-S Qcm \
+		-G Ninja \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr
+
+	cmake --build build
 }
 
 package() {
-	cd Qcm
 	DESTDIR="${pkgdir}" cmake --install build
-	install -Dm644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
