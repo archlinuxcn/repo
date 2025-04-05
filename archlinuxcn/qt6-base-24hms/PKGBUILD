@@ -5,7 +5,7 @@
 pkgbase=qt6-base-24hms
 pkgname=(qt6-base-24hms)
 
-_pkgver=6.8.3
+_pkgver=6.9.0
 pkgver=${_pkgver/-/}
 pkgrel=1.4
 arch=(x86_64)
@@ -49,7 +49,6 @@ depends=(libicui18n.so brotli
          sqlite
          systemd-libs
          tslib
-         vulkan-headers
          xcb-util-cursor
          xcb-util-image
          xcb-util-keysyms
@@ -71,6 +70,7 @@ makedepends=(python alsa-lib
              ninja
              postgresql
              unixodbc
+             vulkan-headers
              xmlstarlet)
 optdepends=('freetds: MS SQL driver'
             'gdk-pixbuf2: GTK platform plugin'
@@ -88,30 +88,24 @@ conflicts=(qt6-base "qt6-3d>$pkgver" "qt6-5compat>$pkgver" "qt6-base>$pkgver" "q
 _pkgfn=qtbase
 source=(
       oldherl-24hms.patch
-      no-pua-fallback.patch
-      'https://build.archlinuxcn.org/~oldherl/files/cldr/44/core.zip'
+      'https://build.archlinuxcn.org/~oldherl/files/cldr/47/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       git+https://code.qt.io/qt/$_pkgfn#tag=v$_pkgver
         qt6-base-cflags.patch
         qt6-base-nostrip.patch)
 sha256sums=(
       '0c845268bde9718fbd76ad759b8a51352a5fddd30dbd76aaa7d4dbf5ea010151'
-      'b2cefcd7f1297dc4703dc5c541fb284d4979bbfed3376fa1ba525417be7492d0'
-      'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
+      'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      '4bc38a3f520493734c295986f6e384b05111b1455f94403b51a38053d191e5a9'
+      '4d6f3d6f7154aa96b479dbcb3d5487f7b02906695db78122d5bc19afcf6f741c'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-  cd $_pkgfn
-# Fix crashes
-  git cherry-pick -n 12d4bf1ab52748cb84894f50d437064b439e0b7d \
-                     2ef615228bba9a8eb282437bfb7472f925610e89 \
-                     a43c7e58046604796aa69974ea1c5d3e2648c755
 
+  cd $_pkgfn
   patch -p1 -i ../oldherl-24hms.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
