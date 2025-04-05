@@ -9,7 +9,7 @@ url="https://video2x.org"
 arch=('x86_64' 'aarch64' 'riscv64')
 license=('ISC')
 depends=('video2x' 'qt6-base' 'qt6-svg' 'spdlog')
-makedepends=('git' 'cmake' 'qt6-tools')
+makedepends=('git' 'cmake' 'qt6-tools' 'vulkan-headers')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('6d89f9b23273939172abab89b914713048654734f53cd3f8a52ac9ee00999b23')
 
