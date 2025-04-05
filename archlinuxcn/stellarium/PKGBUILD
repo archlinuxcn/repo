@@ -21,7 +21,7 @@ sha256sums=('2ecbc90f0bc7f1355e4d6497db2adc9119000d88eb18a3b4257ce249c4bea2f0'
 build() {
   cd ${pkgname}-${pkgver}
   # Have to use vendor indilib because it does not support indi>2.0 yet
-  cmake . -DENABLE_XLSX=1 -DCPM_USE_LOCAL_PACKAGES=yes -DCMAKE_INSTALL_PREFIX=/usr -DPREFER_SYSTEM_INDILIB=No
+  cmake . -DENABLE_XLSX=1 -DCPM_USE_LOCAL_PACKAGES=yes -DCMAKE_INSTALL_PREFIX=/usr -DPREFER_SYSTEM_INDILIB=No -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   make
 }
 
