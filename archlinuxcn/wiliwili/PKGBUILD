@@ -19,6 +19,10 @@ prepare() {
   git -C "${srcdir}/${pkgname}" rm library/{OpenCC,QR-Code-generator,pystring}
   git -C "${srcdir}/${pkgname}" submodule update --init --recursive
 
+  # Update borealis to the latest commit to temporarily fix a CMake version compatibility issue.
+  # Please delete this line after the new version is released.
+  git -C "${srcdir}/${pkgname}" submodule update --remote library/borealis
+
   cmake \
     -B "${srcdir}/build" \
     -D CMAKE_BUILD_TYPE=RelWithDebInfo \
