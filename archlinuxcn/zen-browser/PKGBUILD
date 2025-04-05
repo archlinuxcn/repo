@@ -276,7 +276,7 @@ package_zen-browser() {
   ln -srvf "$_appdir"/zen "$pkgdir"/usr/bin/zen
 
   msg2 "install distribution config files from Zen Browser"
-  install -Dvm644 "$srcdir"/desktop/AppDir/distribution/*.json -t "$_appdir/distribution"
+  install -Dvm644 "$srcdir"/desktop/build/AppDir/distribution/*.json -t "$_appdir/distribution"
 
   msg2 "install vendor.js"
   local _vendorjs="$_appdir/browser/defaults/preferences/vendor.js"
@@ -319,7 +319,7 @@ END
   install -Dvm644 "$srcdir"/desktop/docs/assets/zen-black.svg "$pkgdir/usr/share/icons/hicolor/symbolic/apps/$pkgbase-symbolic.svg"
 
   msg2 "install desktop file"
-  install -Dvm644 "$srcdir"/desktop/AppDir/*.desktop "$pkgdir/usr/share/applications/$pkgbase.desktop"
+  install -Dvm644 "$srcdir"/desktop/build/AppDir/*.desktop "$pkgdir/usr/share/applications/$pkgbase.desktop"
 
   msg2 "use system certificates"
   local _nssckbi="$_appdir/libnssckbi.so"
