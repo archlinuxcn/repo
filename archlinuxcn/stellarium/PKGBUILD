@@ -10,7 +10,7 @@ url="https://stellarium.org/"
 license=('GPL-2.0-or-later')
 depends=('libpng' 'libgl' 'freetype2' 'openssl' 'gpsd'
          'qt6-serialport' 'qt6-multimedia' 'qt6-positioning' 'qt6-charts' 'calcmysky-qt6'
-         "qt6-webengine" "qxlsx" "nlopt" "indi" "md4c")
+         "qt6-webengine" "qxlsx" "nlopt" "libindi" "md4c")
 makedepends=('cmake' 'mesa' 'qt6-tools')
 source=(https://github.com/Stellarium/stellarium/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz{,.asc}
 fix-qt69.patch
