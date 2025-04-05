@@ -54,16 +54,14 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
     elif line.startswith('source=('):
       line = line.replace('=(', f'''=(
       oldherl{variant}.patch
-      no-pua-fallback.patch
-      'https://build.archlinuxcn.org/~oldherl/files/cldr/44/core.zip'
+      'https://build.archlinuxcn.org/~oldherl/files/cldr/47/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       ''')
       checks = checks + '6'
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', f'''=(
       '{variant_sha256}'
-      'b2cefcd7f1297dc4703dc5c541fb284d4979bbfed3376fa1ba525417be7492d0'
-      'bd7f70adfe8a999cfa0f5d96145bf0a095b1a099024e4f451fa1afccf6e4aee6'
+      'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
       ''')
       checks = checks + '7'
