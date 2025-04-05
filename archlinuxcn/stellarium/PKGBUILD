@@ -3,25 +3,32 @@
 
 pkgname=stellarium
 pkgver=25.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
 url="https://stellarium.org/"
 license=('GPL-2.0-or-later')
 depends=('libpng' 'libgl' 'freetype2' 'openssl' 'gpsd'
          'qt6-serialport' 'qt6-multimedia' 'qt6-positioning' 'qt6-charts' 'calcmysky-qt6'
-         "qt6-webengine" "qxlsx" "nlopt")
+         "qt6-webengine" "qxlsx" "nlopt" "indi" "md4c")
 makedepends=('cmake' 'mesa' 'qt6-tools')
 source=(https://github.com/Stellarium/stellarium/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz{,.asc}
+fix-qt69.patch
+use-system-md4c.patch
 )
 validpgpkeys=('79151C2E6351E7278DA1A730BF38D4D02A328DFF') # Alexander Wolf <alex.v.wolf@gmail.com>
 sha256sums=('2ecbc90f0bc7f1355e4d6497db2adc9119000d88eb18a3b4257ce249c4bea2f0'
-            'SKIP')
+            'SKIP' 'SKIP' 'SKIP')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  patch -p1 < ../fix-qt69.patch
+  patch -p1 < ../use-system-md4c.patch
+}
 
 build() {
   cd ${pkgname}-${pkgver}
-  # Have to use vendor indilib because it does not support indi>2.0 yet
-  cmake . -DENABLE_XLSX=1 -DCPM_USE_LOCAL_PACKAGES=yes -DCMAKE_INSTALL_PREFIX=/usr -DPREFER_SYSTEM_INDILIB=No -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+  cmake . -DENABLE_XLSX=1 -DCPM_USE_LOCAL_PACKAGES=yes -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
