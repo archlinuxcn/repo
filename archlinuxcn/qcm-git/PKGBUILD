@@ -71,5 +71,4 @@ build() {
 
 package() {
 	DESTDIR="${pkgdir}" cmake --install build
-	install -Dm644 Qcm/LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
