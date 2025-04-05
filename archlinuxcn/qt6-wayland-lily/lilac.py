@@ -80,7 +80,7 @@ conflicts=(qt6-wayland)''' % node.text())
     node = r.find(kind='function_definition')
     e = node.replace(f'''prepare() {{
   cd $_pkgfn
-  {patch_code}
+{patch_code}\
 }}\n\n''' + node.text())
     edits.append(e)
 
