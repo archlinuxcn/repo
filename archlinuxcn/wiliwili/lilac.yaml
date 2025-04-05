@@ -15,5 +15,32 @@ update_on:
     github: xfangfang/wiliwili
     use_max_tag: true
     prefix: v
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+  - source: alpm
+    alpm: dbus
+    provided: libdbus-1.so
+  - source: alpm
+    alpm: fmt
+    provided: libfmt.so
+  - source: alpm
+    alpm: libwebp
+    provided: libwebp.so
+  - source: alpm
+    alpm: mpv
+    provided: libmpv.so
+  - source: alpm
+    alpm: opencc
+    provided: libopencc.so
+  - source: alpm
+    alpm: pystring
+    provided: libpystring.so
+  - source: alpm
+    alpm: qrcodegencpp-cmake
+    provided: libqrcodegencpp.so
+  - source: alpm
+    alpm: tinyxml2
+    provided: libtinyxml2.so
   - source: manual
-    manual: 2
+    manual: 3
