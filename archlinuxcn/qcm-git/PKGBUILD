@@ -22,6 +22,7 @@ depends=(
 makedepends=(
 	'git'
 	'cmake'
+	'ninja'
 	'asio'
 	'pegtl'
 	'nlohmann-json'
@@ -61,8 +62,9 @@ prepare() {
 build() {
 	cmake -B build \
 		-S Qcm \
-		-DCMAKE_BUILD_TYPE=None \
-		-DCMAKE_INSTALL_PREFIX=/usr
+		-G Ninja \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr
 
 	cmake --build build
 }
