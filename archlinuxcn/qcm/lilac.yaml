@@ -5,6 +5,12 @@ maintainers:
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
 
+repo_depends:
+  - cubeb-git
+
+repo_makedepends:
+  - ctre
+
 update_on:
   - source: github
     github: hypengw/Qcm
