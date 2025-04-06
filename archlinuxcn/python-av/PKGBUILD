@@ -10,9 +10,10 @@ pkgrel=1
 arch=('x86_64')
 license=('BSD-3-Clause')
 makedepends=(
-  cython
+  # cython
   python-build
   python-installer
+  python-pip
   python-setuptools
   python-wheel
 )
@@ -26,6 +27,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/PyAV-Org/PyAV/archive/v
 sha512sums=('4fcf61afecbf66d0cd6b8ae687a01076dc1fd758014fb10bb33db8057c50253a1e0780cbee33cb91da50f436267b3a3af109dd2db3f9735cce3ac85cba31d962')
 
 build() {
+  pip install --break-system-packages -U cython==3.1.0b1
   cd "${_pkgname}-${pkgver}"
   PKG_CONFIG_PATH="/usr/lib/ffmpeg6.1/pkgconfig/" \
   python -m build --wheel --no-isolation --skip-dependency-check
