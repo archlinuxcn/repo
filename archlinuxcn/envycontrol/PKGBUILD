@@ -3,8 +3,8 @@
 # Contributor: Victor Bayas <victorsbayas at gmail dot com>
 
 pkgname=envycontrol
-pkgver=3.5.1
-pkgrel=2
+pkgver=3.5.2
+pkgrel=1
 pkgdesc="CLI tool for Nvidia Optimus graphics mode switching on Linux"
 arch=('any')
 url="https://github.com/bayasdev/envycontrol"
@@ -13,7 +13,7 @@ depends=('python' 'xorg-xrandr')
 makedepends=('python-setuptools')
 conflicts=('optimus-manager')
 source=("${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('d1a1aa24521e084eea45c208bba5210fc5e8e27dae83406900e5f23ad43574d3ac37f4ef0eb80a7c5914260e9472d554d472b3d7348ebc61ed2c8019e98693b2')
+sha512sums=('ad42c61161e10d6c2922261589b9f27015888eed73268fb02da0aa2f319e3eaa69205f5dfbe2dfc5bea36116e1aecb0bd9d0939202387275043f05f47161aa9c')
 
 package() {
   cd "${srcdir}/envycontrol-${pkgver}/"
