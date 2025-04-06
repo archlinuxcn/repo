@@ -4,7 +4,7 @@
 
 pkgname=papis-git
 _pkgname=papis
-pkgver=0.14.1.r47.ge5eb024b
+pkgver=0.14.1.r48.g9cffc6e4
 pkgrel=1
 pkgdesc='Command-line document and bibliography manager'
 arch=('any')
@@ -14,7 +14,6 @@ depends=('python'
     'python-arxiv'
     'python-beautifulsoup4'
     'python-bibtexparser<2'
-    'python-citeproc-py'
     'python-click'
     'python-colorama'
     'python-doi'
@@ -48,6 +47,7 @@ optdepends=(
     # see https://github.com/papis/papis/issues/946
     # 'pdfjs: pdf reader in the web app'
     'python-chardet: improved encoding autodetection when scraping'
+    'python-citeproc-py: exporting to CSL'
     'python-jinja: jinja formatting'
     'python-whoosh: whoosh database backend'
     'python-markdownify: convert zenodo imports to markdown'
