@@ -29,7 +29,6 @@ sha512sums=('4fcf61afecbf66d0cd6b8ae687a01076dc1fd758014fb10bb33db8057c50253a1e0
 build() {
   pip install --break-system-packages -U cython==3.1.0b1
   cd "${_pkgname}-${pkgver}"
-  PKG_CONFIG_PATH="/usr/lib/ffmpeg6.1/pkgconfig/" \
   python -m build --wheel --no-isolation --skip-dependency-check
 }
 
