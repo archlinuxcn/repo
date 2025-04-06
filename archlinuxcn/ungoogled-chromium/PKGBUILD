@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=134.0.6998.165
+pkgver=135.0.7049.52
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=134.0.6998.165-1
+_uc_ver=135.0.7049.52-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -48,9 +48,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch
         skia-only-call-format_message-when-needed.patch
-        webrtc-fix-build-with-pipewire-1.4.patch)
-sha256sums=('dd6a8d05771dc4879a8a74779e54fff0313ef1345be721167a594dd7bfe4c239'
-            'b583f62da9e79722fb5be6044e00ab0bc79adc06c308d994b0c818b912205994'
+        webrtc-fix-build-with-pipewire-1.4.patch
+        add-more-CFI-suppressions-for-inline-PipeWire-functions.patch)
+sha256sums=('bc07d4b8f8377a218a2f5b5c5ae8276535650b2a524706d4959ed54322874950'
+            '5046e5bbf98d7c1b23152ff4e558d0b3419ab933f0ccc26e095ed384f09a716a'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'b3de01b7df227478687d7517f61a777450dca765756002c80c4915f271e2d961'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
@@ -61,7 +62,8 @@ sha256sums=('dd6a8d05771dc4879a8a74779e54fff0313ef1345be721167a594dd7bfe4c239'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
             '271c7a767005b09e212808cfef7261dca00ea28ba7b808f69c3b5b9f202511d1'
-            '74a2d428f7f09132c4a923e816a5a9333803f842003d650cd4a95a35e5457253')
+            '74a2d428f7f09132c4a923e816a5a9333803f842003d650cd4a95a35e5457253'
+            'd3dd9b4132c9748b824f3dcf730ec998c0087438db902bc358b3c391658bebf5')
 
 if (( _manual_clone )); then
   source[0]=fetch-chromium-release
@@ -124,6 +126,7 @@ prepare() {
   # Upstream fixes
   patch -Np1 -d third_party/webrtc <../webrtc-fix-build-with-pipewire-1.4.patch
   patch -Np1 -d third_party/skia <../skia-only-call-format_message-when-needed.patch
+  patch -Np1 -i ../add-more-CFI-suppressions-for-inline-PipeWire-functions.patch
 
   # Allow libclang_rt.builtins from compiler-rt >= 16 to be used
   patch -Np1 -i ../compiler-rt-adjust-paths.patch

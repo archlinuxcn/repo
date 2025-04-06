@@ -1,0 +1,41 @@
+From 0eebf40b9914bca8fe69bef8eea89522c1a5d4ce Mon Sep 17 00:00:00 2001
+From: Jan Grulich <grulja@gmail.com>
+Date: Tue, 1 Apr 2025 12:23:37 -0700
+Subject: [PATCH] Add more CFI suppressions for inline PipeWire functions
+
+There are now more inline functions with PipeWire 1.4, which are causing
+SIGILL as we hit CFI check.
+
+Bug: chromium:354776214
+Change-Id: I055dd7edcaf3ca190ec7b4cc576ebe97a2baf82f
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/6421030
+Reviewed-by: Peter Collingbourne <pcc@chromium.org>
+Reviewed-by: Alexander Cooper <alcooper@chromium.org>
+Commit-Queue: Jan Grulich <grulja@gmail.com>
+Cr-Commit-Position: refs/heads/main@{#1441109}
+---
+ tools/cfi/ignores.txt | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/tools/cfi/ignores.txt b/tools/cfi/ignores.txt
+index 9a1180e6031e..0a002bc6baf9 100644
+--- a/tools/cfi/ignores.txt
++++ b/tools/cfi/ignores.txt
+@@ -260,8 +260,16 @@ src:*third_party/crashpad/crashpad/snapshot/crashpad_info_client_options_test.cc
+ src:*third_party/skia/src/ports/SkFontHost_FreeType.cpp
+ 
+ # WebRTC / PipeWire
+-fun:*pw_registry_bind*
++fun:*pw_core_add_listener*
+ fun:*pw_core_get_registry*
++fun:*pw_core_sync*
++fun:*pw_node_add_listener*
++fun:*pw_node_enum_params*
++fun:*pw_loop_add_event*
++fun:*pw_loop_signal_event*
++fun:*pw_registry_add_listener*
++fun:*pw_registry_bind*
++fun:*spa_loop_utils*
+ 
+ ######### Function pointers cast to incorrect type signatures
+ 
