@@ -28,19 +28,22 @@ update_on:
     alpm: libwebp
     provided: libwebp.so
   - source: alpm
+    alpm: libwebp
+    provided: libwebpmux.so
+  - source: alpm
     alpm: mpv
     provided: libmpv.so
-  - source: alpm
-    alpm: opencc
-    provided: libopencc.so
-  - source: alpm
-    alpm: pystring
-    provided: libpystring.so
-  - source: alpm
-    alpm: qrcodegencpp-cmake
-    provided: libqrcodegencpp.so
-  - source: alpm
-    alpm: tinyxml2
-    provided: libtinyxml2.so
+  - source: alpmfiles
+    pkgname: opencc
+    filename: 'usr/lib/libopencc\\.so\\.([^.]+\.[^.]+)'
+  - source: alpmfiles
+    pkgname: pystring
+    filename: 'usr/lib/libpystring\\.so\\.([^.]+)'
+  - source: alpmfiles
+    pkgname: qrcodegencpp-cmake
+    filename: 'usr/lib/libqrcodegencpp\\.so\\.([^.]+)'
+  - source: alpmfiles
+    pkgname: tinyxml2
+    filename: 'usr/lib/libtinyxml2\\.so\\.([^.]+)'
   - source: manual
     manual: 3
