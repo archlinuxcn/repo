@@ -6,6 +6,6 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
 
 update_on:
-  - source: bitbucket
-    bitbucket: agriggio/art
-    use_sorted_tags: true
+  - source: github
+    github: artpixls/ART
+    use_latest_release: true
