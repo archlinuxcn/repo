@@ -2,7 +2,7 @@
 
 _name=eth-keys
 pkgname=python-${_name}
-pkgver=0.6.1
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="Utility functions for working with ethereum related codebases."
 arch=(any)
@@ -13,7 +13,7 @@ makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-asn1tools python-hypothesis python-pyasn1 python-coincurve)
 optdepends=('python-coincurve: for CoinCurveECCBackend support')
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('ffaa48bca7df8115137afe6b7a050b185f44f1f30798b2ad9a3451cb48689835470111738bfa3c6bb27ec082a8e753910a5c6b5e511a866eaf9888b9839c9a0e')
+sha512sums=('3dc48258c7b858347feba413aafd44e73a3a7c4e52b9093982363cd782fb2173dd9afe9b7ea63459d13835c5e57254f735f3624b87d6907c1e621eba5e372aa9')
 
 build() {
   cd $_name-$pkgver
