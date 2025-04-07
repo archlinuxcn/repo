@@ -15,7 +15,6 @@ optdepends=('perl-image-exiftool: metadata support for CR3 images'
 makedepends=('cmake' 'hicolor-icon-theme')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/artpixls/ART/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('76a2ad58d2b3a7738687ea7fd9edd3ed705e33aea2de49fd32c64fe898fc3326')
-options=('!lto')
 
 build() {
 	cmake -B build -S "ART-${pkgver}" \
@@ -31,8 +30,4 @@ build() {
 
 package() {
 	DESTDIR="${pkgdir}" cmake --install build
-
-	cd "ART-${pkgver}/"
-	install -Dm644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-	cp -r licenses/* "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
