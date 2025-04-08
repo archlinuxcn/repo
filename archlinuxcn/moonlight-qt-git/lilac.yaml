@@ -1,5 +1,7 @@
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['XenHat'])
+pre_build_script: |
+  aur_pre_build(maintainers=['XenHat'])
+  add_makedepends(['vulkan-headers'])
 post_build: aur_post_build
 update_on:
   - source: github
@@ -21,7 +23,7 @@ update_on:
     alpm: libva
     provided: libva.so
   - source: manual
-    manual: 1.1
+    manual: 1.1.1
 
 maintainers:
   - github: roaldclark
