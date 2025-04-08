@@ -30,7 +30,7 @@ build() {
   sed -i 's|^.*\(#define VIMRC_FILE.*"\) .*$|\1|' \
     src/feature.h
 
-  local vim_options='--without-x --disable-canberra --disable-gui --disable-xsmp'
+  local vim_options='--without-x --with-wayland=no --disable-canberra --disable-gui --disable-xsmp'
   local gvim_options='--enable-xsmp --enable-gui=gtk3'
 
   for name in vim gvim; do
