@@ -50,7 +50,6 @@ depends=(
   zlib
 )
 makedepends=(
-  cmake
   gcc13
   gendesk
   git
@@ -61,9 +60,11 @@ provides=(3dslicer=${pkgver})
 conflicts=(3dslicer)
 source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git"
         "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
+        "https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-linux-x86_64.tar.gz"
 )
 sha512sums=('SKIP'
-            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
+            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
+            '42395e20b10a8e9ef3e33014f9a4eed08d46ab952e02d2c1bbc8f6133eca0d7719fb75680f9bbff6552f20fcd1b73d86860f7f39388d631f98fb6f622b37cf04')
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
@@ -89,7 +90,10 @@ prepare() {
 build() {
   export CC=/usr/bin/gcc-13
   export CXX=/usr/bin/g++-13
-  cmake -B build -S "${srcdir}/${_pkgname}" \
+  # build with cmake 3.31.6, not working with cmake 4.0.0 yet
+  export PATH=${srcdir}/cmake-3.31.6-linux-x86_64/bin:${PATH}
+  cmake \
+    -B build -S "${srcdir}/${_pkgname}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -101,7 +105,6 @@ build() {
     -DSlicer_USE_SYSTEM_CTK=OFF \
     -DSlicer_USE_SYSTEM_CTKAPPLAUNCHER=OFF \
     -DSlicer_USE_SYSTEM_CTKAppLauncherLib=OFF \
-    -DSlicer_USE_SYSTEM_CTKResEdit=OFF \
     -DSlicer_USE_SYSTEM_DCMTK=ON \
     -DSlicer_USE_SYSTEM_ITK=OFF \
     -DSlicer_USE_SYSTEM_JsonCpp=OFF \
@@ -110,7 +113,6 @@ build() {
     -DSlicer_USE_SYSTEM_LibFFI=ON \
     -DSlicer_USE_SYSTEM_OpenSSL=ON \
     -DSlicer_USE_SYSTEM_PCRE=OFF \
-    -DSlicer_USE_SYSTEM_ParameterSerializer=OFF \
     -DSlicer_USE_SYSTEM_QT=ON \
     -DSlicer_USE_SYSTEM_RapidJSON=ON \
     -DSlicer_USE_SYSTEM_SimpleITK=OFF \
