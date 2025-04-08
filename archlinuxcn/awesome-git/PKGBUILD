@@ -1,3 +1,4 @@
+# Maintainer: Yauhen Kirylau <actionless DOT loveless PLUS aur AT gmail MF com>
 # Maintainer: Oleg Shparber <trollixx+aur@gmail.com>
 # Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
@@ -5,16 +6,14 @@
 # Contributor: xduugu
 # Contributor: Ronald van Haren <ronald.archlinux.org>
 # Contributor: Vesa Kaihlavirta
-# URL: https://github.com/trollixx/aur-packages
-# Upstream: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/awesome
 
 _pkgname=awesome
 pkgname=${_pkgname}-git
 pkgver=4.3.1683.g691e36425
-pkgrel=1
+pkgrel=2
 pkgdesc='Highly configurable framework window manager'
 arch=('i686' 'x86_64')
-url='http://awesome.naquadah.org/'
+url='https://awesomewm.org/'
 license=('GPL2')
 depends=('cairo' 'dbus' 'gdk-pixbuf2' 'libxdg-basedir' 'libxkbcommon-x11'
          'lua' 'lua-lgi' 'pango' 'startup-notification' 'xcb-util-cursor'
@@ -47,7 +46,8 @@ build() {
     -DSYSCONFDIR=/etc \
     -DLUA_INCLUDE_DIR=/usr/include/lua${_LUA_VER} \
     -DLUA_LIBRARY=/usr/lib/liblua.so.${_LUA_VER} \
-    -DLUA_EXECUTABLE=/usr/bin/lua${_LUA_VER}
+    -DLUA_EXECUTABLE=/usr/bin/lua${_LUA_VER} \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   make
 }
 
