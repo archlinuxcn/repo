@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 # Contributor: Xiaozhu1337 <nihaoaheheda@gmail.com>
 pkgname=siyuan
-pkgver=3.1.26
+pkgver=3.1.27
 _electronversion=34
 _nodeversion=20
 pkgrel=1
@@ -28,12 +28,13 @@ makedepends=(
     'npm'
     'go'
     'pnpm'
+    'git'
 )
 source=(
-    "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
+    "${pkgname}-${pkgver}::git+${_ghurl}#tag=v${pkgver}"
     "${pkgname}.sh"
 )
-sha256sums=('c23afb561a12489cbeb9f2bce65c65425e9cf4b44fb290b560d17e82a41758d5'
+sha256sums=('055decb072c480c6a6fc830dc877108bc942da1fa8d430e6120fe79083213226'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 _ensure_local_nvm() {
     local NVM_DIR="${srcdir}/.nvm"
@@ -98,7 +99,7 @@ build() {
             _CFG_FILE=electron-builder-linux.yml
             ;;
     esac
-    NODE_ENV=production pnpm -c exec "electron-builder --linux dir -c.electronDist=${electronDist} --config ${_CFG_FILE} "
+    NODE_ENV=production pnpm -c exec "electron-builder --linux dir -c.electronDist=${electronDist} --config=${_CFG_FILE} "
 }
 package() {
     install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
