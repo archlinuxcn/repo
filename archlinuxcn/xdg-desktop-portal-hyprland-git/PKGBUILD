@@ -10,7 +10,8 @@ pkgdesc="xdg-desktop-portal backend for hyprland"
 url="https://github.com/hyprwm/${_pkgname}"
 arch=('x86_64')
 license=('BSD-3-Clause')
-depends=('libinih'
+depends=(
+	'libinih'
 	'pipewire'
 	'qt6-base'
 	'qt6-wayland'
@@ -19,12 +20,15 @@ depends=('libinih'
 	'wlroots'
 	'xdg-desktop-portal'
 	'hyprlang-git'
-	'hyprutils-git'
-	'hyprwayland-scanner-git')
-makedepends=('git'
+	'hyprutils-git' 'libhyprutils.so'
+	'hyprwayland-scanner-git'
+)
+makedepends=(
+	'git'
 	'cmake'
 	'wayland'
-	'wayland-protocols')
+	'wayland-protocols'
+)
 optdepends=('grim: required for the screenshot portal to function'
 	'slurp: support for interactive mode for the screenshot portal')
 provides=("${_pkgname}" "xdg-desktop-portal-impl" "xdg-desktop-portal-wlr")
