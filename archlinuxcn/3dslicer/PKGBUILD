@@ -50,7 +50,6 @@ depends=(
   zlib
 )
 makedepends=(
-  cmake
   gcc13
   gendesk
   git
@@ -59,9 +58,11 @@ makedepends=(
 options=(!emptydirs !strip)
 source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
         "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
+        "https://github.com/Kitware/CMake/releases/download/v3.31.6/cmake-3.31.6-linux-x86_64.tar.gz"
 )
 sha512sums=('2dcf5422451c8935fcf2e652f5c2deb98d0a92230e14c20cf20b59844cc6f9a992f48e3016312dc659d38e53d05119cc608016c4799ccc8f7729391ab23ed636'
-            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
+            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
+            '42395e20b10a8e9ef3e33014f9a4eed08d46ab952e02d2c1bbc8f6133eca0d7719fb75680f9bbff6552f20fcd1b73d86860f7f39388d631f98fb6f622b37cf04')
 
 prepare() {
   # find sqlite with cmake's FindSQLite3
@@ -77,6 +78,8 @@ prepare() {
 build() {
   export CC=gcc-13
   export CXX=g++-13
+  # build with cmake 3.31.6, not working with cmake 4.0.0 yet
+  export PATH=${srcdir}/cmake-3.31.6-linux-x86_64/bin:${PATH}
   cmake -B build -S "${srcdir}/${_pkgname}" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
@@ -89,7 +92,6 @@ build() {
     -DSlicer_USE_SYSTEM_CTK=OFF \
     -DSlicer_USE_SYSTEM_CTKAPPLAUNCHER=OFF \
     -DSlicer_USE_SYSTEM_CTKAppLauncherLib=OFF \
-    -DSlicer_USE_SYSTEM_CTKResEdit=OFF \
     -DSlicer_USE_SYSTEM_DCMTK=OFF \
     -DSlicer_USE_SYSTEM_ITK=OFF \
     -DSlicer_USE_SYSTEM_JsonCpp=OFF \
@@ -98,7 +100,6 @@ build() {
     -DSlicer_USE_SYSTEM_LibFFI=ON \
     -DSlicer_USE_SYSTEM_OpenSSL=ON \
     -DSlicer_USE_SYSTEM_PCRE=OFF \
-    -DSlicer_USE_SYSTEM_ParameterSerializer=OFF \
     -DSlicer_USE_SYSTEM_QT=ON \
     -DSlicer_USE_SYSTEM_RapidJSON=ON \
     -DSlicer_USE_SYSTEM_SimpleITK=OFF \
