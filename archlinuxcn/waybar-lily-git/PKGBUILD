@@ -10,24 +10,27 @@ arch=('x86_64')
 url="https://github.com/lilydjwg/Waybar"
 license=('MIT')
 depends=(
+    'cairomm'
     'fmt'
+    'glibmm'
     'gtk-layer-shell'
+    'gtk3'
     'gtkmm3'
-    'libdate-tz.so'
+    'jsoncpp'
     'libdbusmenu-gtk3'
-    'libjsoncpp.so'
     'libnl'
     'libpulse'
     'libsigc++'
-    'libspdlog.so'
     'libxkbcommon'
+    'spdlog'
+    'systemd-libs'
     'wayland'
 )
 makedepends=(
     'catch2'
     'cmake'
     'meson'
-    'glib2-devel'
+    'glib2-devel' # gdbus-codegen
     'scdoc' # For generating manpages
     'wayland-protocols'
     'git'
@@ -64,6 +67,20 @@ build() {
 }
 
 package() {
+    depends+=(
+      'libcairomm-1.0.so'
+      'libglibmm-2.4.so'
+      'libgdkmm-3.0.so' 'libgtkmm-3.0.so'
+      'libjsoncpp.so'
+      'libnl-3.so' 'libnl-genl-3.so'
+      'libpulse.so'
+      'libsigc-2.0.so'
+      'libxkbregistry.so'
+      'libspdlog.so'
+      'libudev.so'
+      'libwayland-client.so'
+    )
+
     cd Waybar
     meson install -C build --destdir "$pkgdir"
     install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
