@@ -18,7 +18,8 @@ depends=(
 	'dbus'
 	'ffmpeg'
 	'fmt'
-	'cubeb-git')
+	'cubeb-git'
+	'kdsingleapplication')
 makedepends=(
 	'git'
 	'cmake'
@@ -30,33 +31,11 @@ makedepends=(
 	'tl-expected')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=(
-	"git+${url}.git"
-	"git+https://github.com/effolkronium/random.git"
-	"git+https://github.com/hypengw/QmlMaterial.git"
-	"git+https://github.com/hypengw/qcm-jellyfin-plugin.git"
-	"git+https://github.com/KDAB/KDSingleApplication.git"
-)
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+source=("git+${url}.git")
+sha256sums=('SKIP')
 
 pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
-}
-
-prepare() {
-	cd Qcm
-	git rm third_party/expected
-
-	git submodule init
-	git config submodule.third_party/random.url "${srcdir}/random"
-	git config submodule.qml_material.url "${srcdir}/QmlMaterial"
-	git config submodule.service/jellyfin.url "${srcdir}/qcm-jellyfin-plugin"
-	git config submodule.third_party/KDSingleApplication.url "${srcdir}/KDSingleApplication"
-	git -c protocol.file.allow=always submodule update
 }
 
 build() {
