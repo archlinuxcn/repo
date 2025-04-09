@@ -1,0 +1,134 @@
+# Maintainer: Sébastien TERRIER <ouinouin at ouinouin dot eu>
+pkgname=sudachi
+_xbyak_tag=7.22
+_pkgname=${pkgname}
+pkgver=1.0.15
+pkgrel=2
+pkgdesc="Nintendo Switch emulator forked from yuzu."
+arch=(x86_64)
+url=https://sudachi.emuplace.app
+license=(GPL-3.0-or-later)
+depends=('boost-libs' 'hicolor-icon-theme' 'sdl3' 'qt6-base' 'qt6-webengine' 'fmt' 'opus' 'lz4'
+  'openssl' 'zstd' 'cubeb' 'enet' 'discord-rpc' 'cpp-httplib' 'dynarmic' 'mbedtls2' 'ffmpeg'
+)
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'perl' 'clang' 'patch' 'unzip' 'dos2unix'
+  'qt6-tools' 'qt6-multimedia' 'libxkbcommon-x11' 'libzip' 'libfdk-aac' 'libinih'
+  'vulkan-memory-allocator' 'vulkan-utility-libraries' 'vulkan-headers' 'spirv-headers'
+  'boost' 'nlohmann-json' 'robin-map' 'cpp-jwt' 'gamemode' 'python' 'renderdoc'
+
+  # 'xbyak'
+  # with xbyak we get the runtime err:
+  # terminate called after throwing an instance of 'Xbyak::Error' what():  bad size of register
+
+  # for documentation
+  # 'doxygen' 'python-jinja' 'python-jsonschema' 'graphviz'
+
+  # for testing
+  # 'catch2'
+
+)
+optdepends=('qt6-wayland: for Wayland support')
+
+source=(${pkgname}-${pkgver}.zip::https://github.com/emuplace/sudachi.emuplace.app/releases/download/v${pkgver}/latest.zip
+  git+https://github.com/yuzu-mirror/sirit.git#commit=ab75463
+  git+https://github.com/herumi/xbyak.git#tag=v${_xbyak_tag:-7.22}
+  # xbyak first bad commit: 54173384271
+  git+https://github.com/brofield/simpleini.git#commit=6048871ea9
+  "https://github.com/lat9nq/tzdb_to_nx/releases/download/221202/221202.zip"
+  0001-fix-build-error-in-CMakeList.patch
+  0002-fix-fmt11-and-memory-errors.patch
+  0003-fix-for-ffmpeg7.patch
+  0004-fix-dynarmic6.7.0.patch
+  0005-fix-sdl3.patch
+  0006-fix-for-mbedtls2.patch
+  0007-add-general-optimize.patch
+)
+
+noextract=(${pkgname}-${pkgver}.zip
+  '221202.zip'
+)
+b2sums=('deacfbf286580efea76745c973b497eaa83a27b8157cb3af978e8911ad94f2d428c98c1160fd56d99762670a6fd8a618f562c49c6b69661c6ff7cce5a912feda'
+  '91e4cd03d67c930b6d751ca19cf6fbaaba86084412bd13b172186387ea27b461457a3e19bc0af315c807839e64f91c865298678af748e2d6e07df2abc85430ed'
+  '0541b74044b53c58f3427cc24a19bb04ae688f56d9467ab83bed9cf464418a4b055867f95832315aa1e77fea008401b638b100606bbf2ad2ef795875038b0bbe'
+  'fae42bb13f180ab991f6bfc8a45ea3df08ced1d77db77f54cf5a222f93ea468bd6fc0d36d65f9f3739e9813d77dbae31931948dc9afa28e884c53b8128c13c94'
+  '7bd0ff5ca80cf560344ae7edbfeb7c9466c096dc499a7348276cff5d30aa07464f7e2ea391ca9cedac0e21ba6f563169a8b38f2df729a230a0acfb1125ea1b66'
+  '3b2bd56f134e8567cc9acddaac96aa127dbc5c237e34c6f793ab3174ec5740911cfdd3e68348fff5297209efeadedd6bc3832005481e3d27d7c6e55602089529'
+  '65eff7488dc27f2b6e5b82567f8dc85b103cae644d6115df308c35316311c64eb9acc6e379b6951a3b8259abc1eeb3a201d959278ed5d04928ab0e533b1502f0'
+  '07a4561a39dcd71bba76b51085a225b985a1c9112d8bca75fc7057d1aca0796946110f8b492ce1914bf9a13ccaff1e2682ddf735ac2c4df266d2f6ec5cbd02d0'
+  '70fad80522592912d1825d997ace61ea4203ea3189e7b2f05f782c62f3361ce9fefcf9767150acd69912a92b8b7312bbeef811ac4183eea3cbf0d8417124e189'
+  '5756d3877a1d437a12a4f8f50a6f11d9b3bbcfeaa1ddda2c8c432a83affd0d0a3e470e7c4d5df5bc8059ed78cbaa944f61a7d990bc04350da57c7bcb29b569d0'
+  'e91258b8d8b2e10fde9fb2dcf9c0120f1f505192521c17081d50c626f6cd10ed5b9d7b5beec63b201c7b83c23f7f4f2032e4422b271fb47a33fdde9ebc013cc7'
+  '962aa39ef90a8cd8ee3c8823e77501d3ff5856e6ddc8278a39ce362a1fe3e13c483d781aaeeeadbf115f200bd8d3d3e6eb2ea156c5ed2cdf8e300cb4cbe55a10')
+
+prepare() {
+  install -d $srcdir/${pkgname}
+  unzip -q $srcdir/${pkgname}-${pkgver}.zip -d $srcdir/${pkgname}
+  local submods=(
+    sirit
+    simpleini
+    xbyak
+  )
+
+  for pro in ${submods[@]}; do
+    if [ -d $srcdir/$_pkgname/externals/${pro} ]; then
+      cp -rf ${srcdir}/${pro}/* $srcdir/$_pkgname/externals/${pro}
+    else
+      cp -rf ${srcdir}/${pro} $srcdir/$_pkgname/externals/${pro}
+    fi
+  done
+
+  cd $srcdir/${pkgname}/
+  # change line endings
+  find . -type f -print0 | xargs -0 -I{} dos2unix -k -q {}
+
+  for p in $srcdir/*.patch; do
+    patch -p1 -l <$p
+  done
+
+  sed -i externals/nx_tzdb/CMakeLists.txt \
+    -e "s|https://github.com/lat9nq/tzdb_to_nx/releases/download/\${NX_TZDB_VERSION}|file://${srcdir}|g"
+}
+build() {
+  export CC=clang
+  export CXX=clang++
+
+  local cmake_args=(
+    -GNinja
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+    -DTITLE_BAR_FORMAT_IDLE="$pkgname $pkgver"
+    -DTITLE_BAR_FORMAT_RUNNING="$pkgname $pkgver | {3}"
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_BUILD_TYPE=Release
+    -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=OFF
+    -DSUDACHI_USE_QT_WEB_ENGINE=ON
+    -DUSE_DISCORD_PRESENCE=ON
+    -DENABLE_QT_TRANSLATION=ON
+    -DSUDACHI_USE_BUNDLED_FFMPEG=OFF
+    -DSUDACHI_USE_BUNDLED_QT=OFF
+    -DENABLE_SDL3=ON
+    -DSUDACHI_USE_BUNDLED_SDL3=OFF
+    -DUSE_SDL3_FROM_EXTERNALS=OFF
+    -DSUDACHI_CHECK_SUBMODULES=OFF
+    -DSUDACHI_USE_EXTERNAL_VULKAN_HEADERS=OFF
+    -DSUDACHI_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF
+    -DSUDACHI_USE_FASTER_LD=OFF
+    -DSUDACHI_USE_PRECOMPILED_HEADERS=OFF
+    -DSUDACHI_USE_QT_MULTIMEDIA=ON
+    # download timezone data from our zip file.
+    -DSUDACHI_DOWNLOAD_TIME_ZONE_DATA=ON
+    -DSUDACHI_TESTS=OFF
+    -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DENABLE_QT6=ON
+  )
+  install -d build
+  cmake -S ${pkgname} -B build "${cmake_args[@]}"
+  ninja -C build
+
+}
+
+package() {
+  install -Dm644 $srcdir/${pkgname}/dist/72-${pkgname,,}-input.rules -t ${pkgdir}/usr/lib/udev/rules.d/
+  DESTDIR="$pkgdir/" ninja -C $srcdir/build install
+
+}
