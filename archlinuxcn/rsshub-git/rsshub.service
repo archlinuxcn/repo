@@ -7,7 +7,9 @@ User=rsshub
 Group=rsshub
 EnvironmentFile=/etc/rsshub/rsshub.conf
 Environment=NO_LOGFILES=true
-ExecStart=/usr/bin/node /opt/rsshub/lib/index.js
+Environment=NODE_ENV=production
+WorkingDirectory=/opt/rsshub
+ExecStart=/opt/rsshub/node_modules/.bin/tsx /opt/rsshub/lib/index.ts
 KillMode=mixed
 CapabilityBoundingSet=CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_BIND_SERVICE
