@@ -1,7 +1,7 @@
 # Maintainer: Javier Tia <javier dot tia at gmail dot com>
 
 pkgname=virtio-win
-_ver=0.1.266
+_ver=0.1.271
 # upstream version
 _pkgver=${_ver}-1
 # package version
@@ -18,7 +18,7 @@ changelog="${pkgname}.changelog"
 _url=https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio
 source=("${pkgname}-${_pkgver}.iso::${_url}/${pkgname}-${_pkgver}/${pkgname}.iso")
 noextract=("${pkgname}-${_pkgver}.iso")
-sha256sums=('57b0f6dc8dc92dc2ae8621f8b1bfbd8a873de9bedc788c4c4b305ea28acc77cd')
+sha256sums=('bbe6166ad86a490caefad438fef8aa494926cb0a1b37fa1212925cfd81656429')
 
 note() {
 	printf "${blue}==>${yellow} NOTE:${bold} $1${all_off}\n"
