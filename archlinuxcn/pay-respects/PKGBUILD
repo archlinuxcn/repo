@@ -21,15 +21,13 @@ prepare() {
 
 build() {
 	cd "${pkgname}/"
+	export CFLAGS+=" -ffat-lto-objects"
 	export _DEF_PR_LIB="/usr/lib/${pkgname}/"
 	cargo build --frozen --release --all-features --workspace
 }
 
 package() {
-	cd "${pkgname}/"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-
-	cd target/release
+	cd "${pkgname}/target/release"
 	install -Dm755 "${pkgname}" -t "${pkgdir}/usr/bin/"
 	install -Dm755 _${pkgname}-{module-100-runtime-rules,fallback-100-request-ai} -t "${pkgdir}/usr/lib/${pkgname}/"
 }
