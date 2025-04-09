@@ -23,7 +23,7 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	rmdir third_party/{spdlog,video2x}
+	git rm third_party/{spdlog,video2x}
 }
 
 build() {
