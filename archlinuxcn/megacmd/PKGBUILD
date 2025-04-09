@@ -2,8 +2,8 @@
 # Contributor: Stephanie Wilde-Hobbs <hi@stephanie.is>
 
 pkgname=megacmd
-pkgver=2.0.0
-pkgrel=2
+pkgver=2.1.1
+pkgrel=1
 pkgdesc="MEGA Command Line Interactive and Scriptable Application"
 url="https://github.com/meganz/MEGAcmd"
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('crypto++' 'sqlite' 'c-ares' 'libsodium' 'pcre' 'libuv' 'fuse2')
 makedepends=('cmake' 'git')
 source=("git+https://github.com/meganz/MEGAcmd.git#tag=${pkgver}_Linux"
         "git+https://github.com/meganz/sdk.git")
-sha512sums=('0cfc244dbf58dd754d3c7f55cf73b05ec3643b3d564bc67dc2bf36ab2c75ab91bf21fbd00f914c8a7d6af89fdd50a3e3cf1fff1a2aebe7ecc572c8a9f8343167'
+sha512sums=('c4bab48fc34da4117559ebd930a3bb42c8a48f6c80373092f7b497231ec91453d36cc8ecea4d0af8e819aa3e0c5e95adb3880b3f21caa7f3e2b69a98e5478b96'
             'SKIP')
 
 prepare() {
