@@ -8,7 +8,7 @@ pkgdesc="MEGA Command Line Interactive and Scriptable Application"
 url="https://github.com/meganz/MEGAcmd"
 arch=('x86_64')
 license=('custom')
-depends=('crypto++' 'sqlite' 'c-ares' 'libsodium' 'pcre' 'libuv')
+depends=('crypto++' 'sqlite' 'c-ares' 'libsodium' 'pcre' 'libuv' 'fuse2')
 makedepends=('cmake' 'git')
 source=("git+https://github.com/meganz/MEGAcmd.git#tag=${pkgver}_Linux"
         "git+https://github.com/meganz/sdk.git")
