@@ -95,10 +95,10 @@ properties:
           description: pkgbase to build on
         from_pattern:
           type: string
-          description: a regex to transform pkgbase's version
+          description: a regex to transform pkgbase's version. This requires database support to be enabled for lilac.
         to_pattern:
           type: string
-          description: a replacement string to transform pkgbase's version to
+          description: a replacement string to transform pkgbase's version to. This requires database support to be enabled for lilac.
       required:
         - pkgbase
     minItems: 0
