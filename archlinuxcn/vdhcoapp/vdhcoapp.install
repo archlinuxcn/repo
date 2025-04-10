@@ -1,0 +1,14 @@
+post_install() {
+  echo "vdhcoapp: system install"
+  vdhcoapp install --system
+}
+
+post_upgrade() {
+  echo "vdhcoapp: system install"
+  vdhcoapp install --system
+}
+
+pre_remove() {
+  echo "vdhcoapp: system uninstall"
+  vdhcoapp uninstall --system
+}
