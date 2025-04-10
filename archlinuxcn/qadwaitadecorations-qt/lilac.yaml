@@ -12,3 +12,9 @@ update_on:
     github: FedoraQt/QAdwaitaDecorations
     use_latest_release: true
   - alias: qt6-base
+
+repo_depends:
+  - qt5-wayland-decorations
+
+update_on_build:
+  - pkgbase: qt5-wayland-decorations
