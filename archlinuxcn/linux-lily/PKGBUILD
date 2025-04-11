@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-lily
-pkgver=6.13.6
+pkgver=6.14.2
 pkgrel=1
 pkgdesc='Linux-lily'
 url="https://www.kernel.org/"
@@ -20,7 +20,6 @@ makedepends=(
   rust-src
   tar
   xz
-  parallel
 
   # htmldocs
   # graphviz
@@ -102,6 +101,7 @@ _package() {
   )
   provides=(
     KSMBD-MODULE
+    NTSYNC-MODULE
     VIRTUALBOX-GUEST-MODULES
     WIREGUARD-MODULE
     UKSMD-BUILTIN
