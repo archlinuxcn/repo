@@ -1,3 +1,4 @@
+# Maintainer: Integral <integral@member.fsf.org>
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 
 pkgname=dae
@@ -14,9 +15,9 @@ depends=(
 )
 makedepends=('clang' 'go')
 backup=("etc/${pkgname}/config.${pkgname}")
-source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${pkgname}-full-src.zip")
+source=("${pkgname}-${pkgver}.tar.xz::${url}/releases/download/v${pkgver}/${pkgname}-full-src.tar.xz")
 install="${pkgname}.install"
-sha256sums=('505ac11f1d1616c15b9c64427a7fd679011797e80ed4313cb0e4745edc5f5aa9')
+sha256sums=('b508243012d41c238ec9c1586c614f760b2dcd5e3ebeb69b171089ee138dcdc5')
 
 build() {
 	export CFLAGS="-fno-stack-protector"
