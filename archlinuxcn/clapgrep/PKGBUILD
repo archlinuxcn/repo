@@ -1,8 +1,8 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=clapgrep
-pkgver=25.03
-pkgrel=2
+pkgver=25.04
+pkgrel=1
 pkgdesc="One app to search through all your files"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/luleyleo/${pkgname}"
@@ -10,7 +10,7 @@ license=('GPL-3.0-or-later')
 depends=('gtk4' 'libadwaita' 'gtksourceview5' 'poppler-glib')
 makedepends=('meson' 'cargo' 'blueprint-compiler')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('15e559c3a3cf250350e64c13a14b3808128880449d12e37b4dd28c21e9796cda')
+sha256sums=('0cd5bbbab4214d9dc2dabb245bbd88e5d9bc7fb9f6cb9364520fe167cdfbb773')
 
 build() {
 	arch-meson "${pkgname}-${pkgver}/" build
