@@ -2,7 +2,7 @@
 
 pkgbase=sing-geoip
 pkgname=(sing-geoip-db sing-geoip-rule-set)
-pkgver=20250312
+pkgver=20250412
 pkgrel=1
 pkgdesc="GeoIP Database and Rule Sets for sing-box"
 arch=(any)
@@ -14,11 +14,11 @@ source=("${pkgver}-geoip.db::$url/releases/download/$pkgver/geoip.db"
         "${pkgver}-geoip-cn.db::$url/releases/download/$pkgver/geoip-cn.db"
         "${pkgver}-geoip-cn.db.sha256sum::$url/releases/download/$pkgver/geoip-cn.db.sha256sum"
         "${pkgver}-rule-set.tar.gz::$url/archive/refs/heads/rule-set.tar.gz")
-sha256sums=('aa386889692ce57d34c84f514d0e99f9534b6ceda1bc3aa64e36e854ac8fe762'
-            'c5db06dd8b68ea6ac66db391e3d8d020cd22205cc1eafb272b2d6b61b7a784c0'
-            '72cbec92d08fa77dd875f65562a4b5d03036ad522ec5c0c4151a7d3a23f2358d'
-            '0392d66e88cfe11a1ed458acd2901d9334cb9e4d9a7f97a20da4150ce7c12d90'
-            'bf6d66113e63601ec94a35cf3b78817b9efdfee357ce456e5fe546609e883568')
+sha256sums=('05e6b1e0fde225b642881e404a97055a560507511e180673b90111e0363407b2'
+            'f8f7aab7574a1c48175bfa9f0da507ff2b620e7a78bdf4e96f06e71154470efb'
+            '165f5931657cf3de0aab437ad25a777398e8fd330c23c5cb720602064197b976'
+            'b6bd4073a7492701432a3883e26be0953c71d74ec13981e2849552e78b255ef2'
+            'c9f829754a9577a18e0f9bd9f9da7345284b60f052575f164a1efa34d451c6a5')
 
 prepare() {
   mv ${pkgver}-geoip.db geoip.db
