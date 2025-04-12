@@ -15,8 +15,7 @@ def pre_build():
             line = f'_schema_version={schema_version}'
         if line.startswith('_dict_version='):
             line = f'_dict_version={dict_version}'
+        print(line)
 
     pkgver = f'{schema_version}+{dict_version}'
-
-    print(f'newvers={_G.newvers}, pkgver={pkgver}')
     update_pkgver_and_pkgrel(pkgver)
