@@ -6,14 +6,14 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
+  - source: github
+    github: amzxyz/rime_wanxiang
+    use_max_tag: true
+    include_regex: "v[\\d.]+"
+    prefix: v
+
   - source: httpheader
     url: https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram
     header: last-modified
     follow_redirects: true
     regex: .*
-
-repo_depends:
-  - rime-wanxiang
-
-update_on_build:
-  - pkgbase: rime-wanxiang
