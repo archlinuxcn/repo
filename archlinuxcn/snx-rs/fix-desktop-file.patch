@@ -1,0 +1,15 @@
+diff '--color=auto' -ura snx-rs.orig/assets/snx-rs-gui.desktop snx-rs/assets/snx-rs-gui.desktop
+--- snx-rs.orig/assets/snx-rs-gui.desktop	2024-11-13 22:51:30.587642727 +0100
++++ snx-rs/assets/snx-rs-gui.desktop	2024-11-13 22:53:32.557277306 +0100
+@@ -3,8 +3,8 @@
+ GenericName=Checkpoint VPN client
+ Comment=Checkpoint VPN client
+ Categories=Network;VPN;
+-Exec=/opt/snx-rs/snx-rs-gui
+-Icon=network-vpn
++Exec=/usr/bin/snx-rs-gui
++Icon=snx-rs-gui
+ Keywords=network;vpn;
+-TryExec=/opt/snx-rs/snx-rs-gui
++TryExec=/usr/bin/snx-rs-gui
+ Type=Application

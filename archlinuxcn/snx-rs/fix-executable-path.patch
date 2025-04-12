@@ -1,0 +1,11 @@
+--- snx-rs.orig/assets/snx-rs.service	2023-12-28 14:56:30.627429350 +0100
++++ snx-rs/assets/snx-rs.service	2023-12-28 14:57:03.503294220 +0100
+@@ -5,7 +5,7 @@
+ 
+ [Service]
+ Type=simple
+-ExecStart=/opt/snx-rs/snx-rs -m command -l info
++ExecStart=snx-rs -m command -l info
+ 
+ [Install]
+ WantedBy=multi-user.target
