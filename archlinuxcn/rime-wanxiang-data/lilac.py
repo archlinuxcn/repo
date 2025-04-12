@@ -17,4 +17,6 @@ def pre_build():
             line = f'_dict_version={dict_version}'
 
     pkgver = f'{schema_version}+{dict_version}'
+
+    print(f'newvers={_G.newvers}, pkgver={pkgver}')
     update_pkgver_and_pkgrel(pkgver)
