@@ -4,11 +4,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['matthewq337'])
+pre_build_script: aur_pre_build(maintainers=['matthewq337', 'arojas'])
 post_build: aur_post_build
 
 update_on:
   - source: aur
     aur: snap-sync
   - source: manual
-    manual: 0
+    manual: 0.1
