@@ -1,0 +1,17 @@
+_0.5_1_changes() {
+  echo ":: snap-sync added a subvolume id to its snapper snapshots with v5.0."
+  echo "   Please checkout the migration guide to update your snapper snapshots:"
+  echo "   https://github.com/wesbarnett/snap-sync/releases/tag/0.5"
+}
+
+post_upgrade() {
+    local v upgrades=(
+      0.5-1
+    )
+
+    for v in "${upgrades[@]}"; do
+      if [[ $(vercmp "$v" "$2") -eq 1 ]]; then
+        "_${v//-/_}_changes"
+      fi
+    done
+}
