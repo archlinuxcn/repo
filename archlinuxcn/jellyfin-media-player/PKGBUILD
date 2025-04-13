@@ -2,7 +2,7 @@
 
 pkgname=jellyfin-media-player
 pkgver=1.12.0
-pkgrel=2
+pkgrel=3
 pkgdesc='Jellyfin Desktop Client'
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -13,7 +13,7 @@ source=("https://github.com/jellyfin/jellyfin-media-player/archive/refs/tags/v${
         "disable-update-check.patch"
         "fix-cmake-4.patch")
 sha256sums=('a90c8ced214f7f66f440bb690c64ac333e18bdfb5bc54d845ea5fc2d04f31ed5'
-            '23727ef8f727ac17af228f29aa5508230caac9d02f37d6c12908fcf50d4f382a'
+            '2aef728dfdef17f089186d1a2b604837678fa896b4c299dd710b6f37d290aba0'
             '7ff8a15d9e9a7bc9a75bc9f0ee730408827827f6f6d564686ac9f9ca26525342')
 
 prepare() {
@@ -33,6 +33,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX='/usr/' \
         -DCMAKE_SKIP_RPATH=1 \
         -DQTROOT=build/qt \
+        -DCHECK_FOR_UPDATES=OFF \
         -Wno-dev
     cmake --build build
 }
