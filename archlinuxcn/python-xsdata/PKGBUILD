@@ -2,8 +2,8 @@
 
 _name=xsdata
 pkgname=python-${_name}
-pkgver=24.12
-pkgrel=2
+pkgver=25.4
+pkgrel=1
 pkgdesc="Naive XML & JSON Bindings for python"
 arch=(any)
 url="https://github.com/tefra/${_name}"
@@ -12,7 +12,7 @@ depends=(python python-typing_extensions python-click python-click-default-group
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-pytest-benchmark)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('7e720eb21d9f3c241e71f1d680f3f6f2c470564ff805f8e60b7810a7dfd39f23f3bac3dc0456b428ebccdbf2144ae3c671a28791a68fda990d20cbc1f2bef3f2')
+sha512sums=('9820b0594c0b8eb65894348176498cc11d052c2d8d9505187bbcbb176a8804d2df95c0e19b8241aa09a76be24420d37054c024f6b850927d484a5861b7877d95')
 
 build() {
   cd $_name-$pkgver
