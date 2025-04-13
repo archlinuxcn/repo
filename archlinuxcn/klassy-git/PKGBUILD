@@ -9,7 +9,7 @@ pkgver=6.2.breeze6.2.1.r3.g58c6ad5c
 pkgrel=2
 pkgdesc='Highly customizable binary Window Decoration, Application Style and Global Theme plugin for recent versions of the KDE Plasma desktop.'
 arch=(x86_64)
-url="https://github.com/paulmcauley/klassy"
+url="https://invent.kde.org.com/paulm/klassy"
 license=('GPL-2.0-only AND GPL-3.0-only AND GPL-2.0-or-later AND LGPL-2.1-or-later AND MIT')
 replaces=(classik-git)
 depends=(breeze-icons
@@ -40,22 +40,17 @@ makedepends=(git
              kiconthemes5
              kirigami2
              kwindowsystem5)
-source=("${_pkgname}::git+${url}.git#branch=plasma6.2"
-        "plasma6.3.patch::${url}/pull/178.patch"
-        "project-version.patch")
-sha256sums=('SKIP'
-            '9f7dae4474a779a54db4660207eff5e6f4b501fd8f4dff2004d345ccc0290067'
-            '20d2997dcf7ca94fd294a4500111084d244040795a0083af932aa83e00e91688')
+source=("${_pkgname}::git+${url}.git#branch=master")
+sha256sums=('SKIP')
 
 pkgver () {
   cd "${_pkgname}"
-  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-}
-
-prepare() {
-  cd "${_pkgname}"
-  git apply "${srcdir}/plasma6.3.patch"
-  git apply "${srcdir}/project-version.patch"
+  # latest tag is not on master branch
+  #git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+  local _latest_tag=$(git tag -l --sort=-creatordate | head -n 1)
+  local _commit_cnt=$(git rev-list --count HEAD)
+  local _commit_hash=$(git rev-parse --short HEAD)
+  echo "${_latest_tag}.r${_commit_cnt}.g${_commit_hash}"
 }
 
 build() {

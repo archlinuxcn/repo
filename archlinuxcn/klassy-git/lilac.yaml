@@ -5,9 +5,10 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: github
-    github: paulmcauley/klassy
-    branch: plasma6.2
+  - source: gitlab
+    host: invent.kde.org
+    gitlab: paulm/klassy
+    branch: master
 
 maintainers:
   - github: rocka
