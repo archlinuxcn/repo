@@ -1,0 +1,14 @@
+maintainers:
+  - github: xiaohuirong
+    email: horeamxiao@archlinuxcn.org
+
+pre_build_script: |
+  aur_pre_build()
+  add_makedepends(['git'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: sysmenu
+  - source: github
+    github: System64fumo/sysmenu
