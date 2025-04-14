@@ -5,7 +5,7 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.1.2
+pkgver=4.2.0
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
@@ -13,11 +13,11 @@ license=('GPL-2.0-or-later')
 
 source=("https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz")
 
-md5sums=('5667b56da5ad5bf35b68312811fca61e')
+md5sums=('697771106e4582fa2f4bcaad2c240708')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
-makedepends=('docbook-xsl'
+makedepends=('cmark'
              'meson'
              'unicode-character-database')
 
@@ -26,6 +26,7 @@ depends=('acl'
          'db5.3'
          'glib2'
          'glibc'
+         'iniparser'
          'libevent'
          'libldap'
          'libgcrypt'
@@ -62,12 +63,11 @@ build() {
     -Dwith-appletalk=true \
     -Dwith-bdb-version=5.3 \
     -Dwith-dbus-sysconf-path=/usr/share/dbus-1/system.d \
+    -Dwith-docs=man \
     -Dwith-dtrace=false \
     -Dwith-init-hooks=false \
     -Dwith-lockfile-path=/run \
-    -Dwith-manual=man_only \
     -Dwith-overwrite=true \
-    -Dwith-readmes=false \
     -Dwith-spooldir=/var/spool/netatalk
   meson compile -C build
 }
