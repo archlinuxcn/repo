@@ -1,8 +1,8 @@
 # Maintainer: system64 <system64fumo@protonmail>
 
 pkgname=sysmenu
-pkgver=9.9.9
-pkgrel=9
+pkgver=2025.03.12
+pkgrel=1
 pkgdesc="A simple and efficient gtk4 program launcher"
 arch=('aarch64' 'x86_64')
 url="https://github.com/System64fumo/sysmenu"
@@ -24,3 +24,4 @@ package() {
 	cd "${pkgname}"
 	make PREFIX=/usr DESTDIR="${pkgdir}" install
 }
+makedepends=("git")
