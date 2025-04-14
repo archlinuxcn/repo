@@ -4,6 +4,7 @@ from email.utils import parsedate_to_datetime
 from zoneinfo import ZoneInfo
 from lilaclib import *
 
+
 def pre_build():
     schema_version = _G.newvers[0]
 
@@ -17,5 +18,5 @@ def pre_build():
             line = f'_dict_version={dict_version}'
         print(line)
 
-    pkgver = f'{schema_version}+{dict_version}'
+    pkgver = f'{schema_version}+r{dict_version}'
     update_pkgver_and_pkgrel(pkgver)
