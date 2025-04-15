@@ -1,7 +1,7 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 # Maintainer: Integral <integral at member dot fsf dot org>
 
-pkgname=dae-bin-x64-v3
+pkgname=dae-avx2-bin
 _pkgname=dae
 pkgver=1.0.0rc2
 pkgrel=1
@@ -11,6 +11,7 @@ url="https://github.com/daeuniverse/${_pkgname}"
 license=('AGPL-3.0-or-later')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
+replaces=('dae-bin-x64-v3')
 backup=("etc/${_pkgname}/config.${_pkgname}")
 source=(
 	"${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip"
