@@ -2,8 +2,8 @@
 
 _name=py_ecc
 pkgname=python-${_name}
-pkgver=7.0.1
-pkgrel=3
+pkgver=8.0.0
+pkgrel=1
 pkgdesc="Python implementation of ECC pairing and bn_128 and bls12_381 curve operations"
 arch=(any)
 url="https://github.com/ethereum/${_name}"
@@ -12,7 +12,7 @@ depends=(python python-eth-typing python-eth-utils)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('354e7d0275e8e3734318229f76f0755279f244e33ffa13abf6dfbe070a5488945ff7637db4cf52a00926db2e03ad3d6c924b1ba738b3dd442c56b331dfe5c709')
+sha512sums=('598cdd1cc4db19eefce6ba1edf9e47a883d49e995c43d5d6309b5d8f36c1e13f2b1bdcce876500dc0290c13334ff83ab4f58f8a4823d8a1fd94eed9067e690d0')
 
 build() {
   cd $_name-$pkgver
