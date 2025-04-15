@@ -1,0 +1,21 @@
+maintainers:
+- github: oldherl
+
+update_on:
+  - source: github
+    github: CelestiaProject/Celestia
+  - alias: qt6
+  - alias: fmt
+  - alias: icu
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: libjpeg-turbo
+    provided: libjpeg.so
+  - source: alpm
+    alpm: freetype2
+    provided: libfreetype.so
+  - source: manual
+    manual: 1
+
