@@ -1,15 +1,16 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
-pkgname=daed-bin-x64-v3
+pkgname=daed-avx2-bin
 _pkgname=daed
 pkgver=0.9.0
 pkgrel=1
-pkgdesc="A modern dashboard for dae, bundled with dae-wing (backend API server) and dae (core)."
+pkgdesc="A modern dashboard for dae, bundled with dae-wing (backend API server) and dae (core) (with AVX2 CPU optimizations)"
 url="https://daeuniverse.github.io/daed"
 arch=('x86_64')
 license=('AGPL-3.0-or-later AND MIT')
 provides=("${_pkgname}" "dae")
 conflicts=("${_pkgname}" "${_pkgname}-git" "dae")
+replaces=('daed-bin-x64-v3')
 source=("${pkgname}-${pkgver}.zip::https://github.com/daeuniverse/${_pkgname}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip"
        "${_pkgname}-${pkgver}-LICENSE::https://raw.githubusercontent.com/daeuniverse/daed/v${pkgver}/LICENSE")
 install="${pkgname}.install"
