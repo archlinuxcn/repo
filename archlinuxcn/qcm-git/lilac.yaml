@@ -10,6 +10,7 @@ post_build_script: git_pkgbuild_commit()
 
 repo_depends:
   - cubeb-git
+  - qcmbackend-git
 
 repo_makedepends:
   - ctre
@@ -24,3 +25,6 @@ update_on:
     alpm: ffmpeg
     provided: libavformat.so
     strip_release: true
+
+update_on_build:
+  - qcmbackend-git
