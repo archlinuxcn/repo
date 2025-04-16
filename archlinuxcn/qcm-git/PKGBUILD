@@ -23,6 +23,7 @@ depends=(
 	'kdsingleapplication')
 makedepends=(
 	'git'
+	'clang'
 	'cmake'
 	'ninja'
 	'asio'
@@ -45,7 +46,8 @@ build() {
 		-S Qcm \
 		-G Ninja \
 		-D CMAKE_BUILD_TYPE=None \
-		-D CMAKE_INSTALL_PREFIX=/usr
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_CXX_COMPILER=clang++ # Require clang 19+ to build
 
 	cmake --build build
 }
