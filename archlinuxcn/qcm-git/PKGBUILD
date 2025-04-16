@@ -36,14 +36,13 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+${url}.git")
 sha256sums=('SKIP')
+options=('!lto')
 
 pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 build() {
-	export CXXFLAGS+=" -ffat-lto-objects"
-
 	cmake -B build \
 		-S Qcm \
 		-G Ninja \
