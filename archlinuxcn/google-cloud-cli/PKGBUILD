@@ -17,7 +17,7 @@
 
 _extractedName="google-cloud-sdk"
 pkgname="google-cloud-cli"
-pkgver=517.0.0
+pkgver=518.0.0
 pkgrel=1
 pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq."
 url="https://cloud.google.com/cli/"
@@ -49,7 +49,7 @@ conflicts=('google-cloud-sdk')
 provides=('google-cloud-sdk')
 replaces=('google-cloud-sdk')
 
-sha256sums=('613bb06187a68074f9cae5cba4d2ea11bb9e813c215de57d948e0754d64685f5'
+sha256sums=('90c47f47842323ac47b2c1455ce5002eadab6c82bbc7f4e4441854d91efed691'
             '6e88b535c020b0f28c986fdb66918f8c07e4d337e813b77ec2068068f03457f8'
             'fdba342aecce102b85fd96f21205d7ee2f8043b4bb56cabf363375785e3d423c'
             'c19dbe916e6fd18d9b17b3309ee60c5d389035c5520822d2c14c045d8b853924')
