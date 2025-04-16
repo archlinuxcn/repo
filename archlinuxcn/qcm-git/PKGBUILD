@@ -42,6 +42,8 @@ pkgver() {
 }
 
 build() {
+	export CXXFLAGS+=" -ffat-lto-objects"
+
 	cmake -B build \
 		-S Qcm \
 		-G Ninja \
