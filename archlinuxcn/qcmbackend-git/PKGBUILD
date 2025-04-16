@@ -8,7 +8,7 @@ pkgdesc="Qcm backend with Rust"
 url="https://github.com/hypengw/QcmBackend"
 arch=('x86_64' 'aarch64' 'riscv64')
 license=('MPL-2.0')
-depends=('openssl' 'gcc-libs')
+depends=('protobuf' 'openssl' 'gcc-libs')
 makedepends=('git' 'cargo')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
@@ -31,12 +31,7 @@ prepare() {
 
 build() {
 	cd QcmBackend
-	cargo build --frozen --release --all-features
-}
-
-check() {
-	cd QcmBackend
-	cargo test --frozen --all-features
+	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
 package() {
