@@ -1,0 +1,30 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=qcm-ncm-plugin-git
+_pkgname=${pkgname%-git}
+pkgver=r7.677d339
+pkgrel=1
+pkgdesc="Netease Cloud Music plugin for Qcm"
+url="https://github.com/hypengw/${_pkgname}"
+arch=('any')
+license=('MIT')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	(
+		set -o pipefail
+		git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+			printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+	)
+}
+
+package() {
+	install -d "${pkgdir}/usr/share/QcmPlugin/${_pkgname}/"
+	cp -a "${_pkgname}/" "${pkgdir}/usr/share/QcmPlugin/"
+	rm -rf ${pkgdir}/usr/share/QcmPlugin/${_pkgname}/{.git,LICENSE}
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
