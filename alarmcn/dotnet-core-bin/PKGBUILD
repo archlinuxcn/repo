@@ -11,9 +11,9 @@ pkgname=(
   'dotnet-targeting-pack-bin'
   'aspnet-targeting-pack-bin'
  )
-pkgver=9.0.3.sdk202
-_runtimever=9.0.3
-_sdkver=9.0.202
+pkgver=9.0.4.sdk203
+_runtimever=9.0.4
+_sdkver=9.0.203
 _short_ver=9.0
 pkgrel=1
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -21,13 +21,13 @@ url='https://www.microsoft.com/net/core'
 license=('MIT')
 options=('staticlibs')
 source=('dotnet.sh')
-source_armv7h=('https://download.visualstudio.microsoft.com/download/pr/e41720b8-c635-4b25-bcb1-dcf307a917d6/fea66a31e0dec0411b3e123661f443fc/dotnet-sdk-9.0.202-linux-arm.tar.gz')
-source_aarch64=('https://download.visualstudio.microsoft.com/download/pr/52daf653-e6d8-4915-aea1-9c2e2be169a5/9f3e289918eb9054770b69c0b100bb8f/dotnet-sdk-9.0.202-linux-arm64.tar.gz')
-source_x86_64=('https://download.visualstudio.microsoft.com/download/pr/c2220b38-c512-4447-b564-a18048d14327/965cdfe500a937c2d28bc9d2db45cd1f/dotnet-sdk-9.0.202-linux-x64.tar.gz')
+source_armv7h=('https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.203/dotnet-sdk-9.0.203-linux-arm.tar.gz')
+source_aarch64=('https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.203/dotnet-sdk-9.0.203-linux-arm64.tar.gz')
+source_x86_64=('https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.203/dotnet-sdk-9.0.203-linux-x64.tar.gz')
 sha512sums=('768151c7179fb6a126b3de9cae01e363e8894f6fab384b1e2c5066c2adca4578638983b1b62aea10dd18045e6d6e8f8ea13280481134de94f004a118919b2c06')
-sha512sums_armv7h=('2e88683ee3894b72581ce3829efd2cc5214968f0782e17f504a79bc80ecc31efe9d5360303545e45537f992f5ac8c47aaec8eca5ea8a4efacde9742de6c8ffe0')
-sha512sums_aarch64=('6916fd37907c6563baebb5c9f82a6761d13d53a0442451bae73ad62a36a72744771017a2d3f665eecaa5c76f6a0036ddd503c2e195a8ea307973a292748b87d5')
-sha512sums_x86_64=('0eb52300023d9df6494aadfbd8380dddf84e2f217d444ad9fe880292afbf378be3700d7fbeca3136ec95962ba355e44abfc9f8a679cd0d08e68f85cb0320ce73')
+sha512sums_armv7h=('7b0969a09148ac8dddf1fdcd41948f163f17acccaa68787195d2935e0e69554fef423291d60579bfb94d676aca8fd498eec49f8555fe750f0e88eadf6317eb37')
+sha512sums_aarch64=('3070ecef0d6c550a80c3ca497598d09e9a97a264bfd72e86f7c568d2f39368bd7db837681d64d9ed187a8923915d964d02b02f5bc6a493910a18184f5321d233')
+sha512sums_x86_64=('67d62c3274aae593b61780db57f07ac85a50da82d04707fdaca66f25889a1cc01eaa95bce173247d1a9f566a92eb7ede71a7306b5af6a17ed84ee9525823ddd3')
 
 package_dotnet-host-bin() {
   pkgdesc='A generic driver for the .NET Core Command Line Interface (binary)'
