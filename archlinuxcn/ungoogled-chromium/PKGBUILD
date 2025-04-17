@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=135.0.7049.84
+pkgver=135.0.7049.95
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=135.0.7049.84-1
+_uc_ver=135.0.7049.95-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -50,8 +50,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         skia-only-call-format_message-when-needed.patch
         webrtc-fix-build-with-pipewire-1.4.patch
         add-more-CFI-suppressions-for-inline-PipeWire-functions.patch)
-sha256sums=('c1e8d9cd9913d3e91d08b212d8346b2da48e884e5b180d5cd783f0c0756a20f7'
-            '13d7c11a678ae1a729996d2f2906c079cca8e015ba28f2f62ff6ba26c89e165a'
+sha256sums=('60a4c97498a8e6d4095931f5cd8821defabcfb67a891e8a0390eae631fce9f5f'
+            'c9591dbbd899851c17c3a28847578e8c134412f9a7a6aa2e52e3e196e574f045'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'cc8a71a312e9314743c289b7b8fddcc80350a31445d335f726bb2e68edf916d1'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
