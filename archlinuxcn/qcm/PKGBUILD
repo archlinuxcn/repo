@@ -10,6 +10,7 @@ url="https://github.com/hypengw/Qcm"
 license=('GPL-2.0-or-later')
 depends=(
 	'qt6-base'
+	'qt6-declarative'
 	'qt6-quick3d'
 	'hicolor-icon-theme'
 	'curl'
@@ -26,7 +27,9 @@ makedepends=(
 	'pegtl'
 	'nlohmann-json'
 	'ctre'
-	'tl-expected')
+	'tl-expected'
+	'vulkan-headers'
+)
 source=(
 	"git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/effolkronium/random.git"
