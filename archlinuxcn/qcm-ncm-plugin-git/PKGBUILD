@@ -8,6 +8,7 @@ pkgdesc="Netease Cloud Music plugin for Qcm"
 url="https://github.com/hypengw/${_pkgname}"
 arch=('any')
 license=('MIT')
+makedepends=('git')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
