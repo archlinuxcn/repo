@@ -1,0 +1,24 @@
+# Maintainer: Dario Ostuni <dario.ostuni@gmail.com>
+# Maintainer: Fabio 'Lolix' Loli <fabio.loli@disroot.org>
+
+pkgname=python-vulkan
+pkgver=1.3.275.1
+pkgrel=1
+pkgdesc="The ultimate Python binding for Vulkan API"
+arch=('any')
+url="https://github.com/realitix/vulkan"
+license=('Apache-2.0')
+depends=('python' 'python-cffi' 'vulkan-icd-loader')
+makedepends=('python-build' 'python-wheel' 'python-installer' 'python-setuptools')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/realitix/vulkan/archive/${pkgver}.tar.gz")
+sha256sums=('857831168f8e166ebcd3512b7b5f04aa5c7234d9793b0ecd9d1d750ce56c0b26')
+
+build() {
+  cd "vulkan-${pkgver}"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "vulkan-${pkgver}"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+}
