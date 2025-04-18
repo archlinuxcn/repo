@@ -13,5 +13,5 @@ def pre_build():
             line = f'_modelver={_modelver}'
         print(line)
 
-    pkgver = f'{_pkgver.replace('-', '.')}_m{_modelver}'
+    pkgver = f'{_pkgver.replace("-", ".")}_m{_modelver}'
     update_pkgver_and_pkgrel(pkgver)
