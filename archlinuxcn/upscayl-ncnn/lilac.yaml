@@ -1,0 +1,13 @@
+maintainers:
+  - github: everyx
+
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: upscayl/upscayl-ncnn
+    use_latest_release: true
+
+  - source: regex
+    url: https://github.com/xinntao/Real-ESRGAN
+    regex: href=\"\S+/v(\d+[\.\d]+)/\S+\">Linux</a>
