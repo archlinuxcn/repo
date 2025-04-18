@@ -76,7 +76,6 @@ provides=(
 )
 conflicts=(
     'vulkan-mesa-layers'
-    'opencl-clover-mesa'
     'vulkan-intel'
     'vulkan-nouveau'
     'vulkan-radeon'
@@ -260,7 +259,6 @@ build () {
         -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,softpipe,llvmpipe,i915,iris,crocus,zink,d3d12
         -D gallium-extra-hud=true
         -D gallium-nine=true
-        -D gallium-opencl=disabled
         -D gallium-rusticl=${_rusticl}
         -D gallium-va=enabled
         -D gallium-vdpau=enabled
