@@ -34,12 +34,14 @@ pkgver() {
 }
 
 build() {
-	cd "${_pkgname}/"
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
-	cmake --build .
+	cmake -B build \
+		-S "${_pkgname}/" \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr
+
+	cmake --build build
 }
 
 package() {
-	cd "${_pkgname}/"
-	DESTDIR="${pkgdir}" cmake --install .
+	DESTDIR="${pkgdir}" cmake --install build
 }
