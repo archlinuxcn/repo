@@ -1,0 +1,38 @@
+# Maintainer: Fabio 'Lolix' Loli <fabio.loli@disroot.org> -> https://github.com/FabioLolix
+# Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
+
+pkgname=upscaler
+pkgver=1.4.1
+pkgrel=1
+pkgdesc="Upscale and enhance images"
+arch=('x86_64')
+url="https://gitlab.gnome.org/World/Upscaler"
+license=(GPL-3.0-only)
+depends=(libadwaita
+         python-gobject
+         python-pillow
+         python-vulkan
+         upscayl-ncnn
+         python
+         gtk4
+         pango
+         glib2)
+makedepends=(git
+             blueprint-compiler
+             meson)
+checkdepends=(appstream-glib)
+source=("git+https://gitlab.gnome.org/World/Upscaler.git#tag=${pkgver}")
+b2sums=('90a3759d0be372431a26dde6a80de9361c04e16008a109960138ad838f5c8c18fc1b74b4ce4a62347fc2ee009c1eaca4c9f268d746f21a29e7220c75ff4686bf')
+
+build() {
+  arch-meson Upscaler build
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs || :
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}

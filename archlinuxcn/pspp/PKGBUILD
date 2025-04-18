@@ -4,7 +4,7 @@
 
 pkgname=pspp
 pkgver=2.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Statistical analysis program. Free replacement for SPSS'
 arch=('x86_64')
 url='http://www.gnu.org/software/pspp'
@@ -16,6 +16,8 @@ depends=(
   spread-sheet-widget
 )
 makedepends=(
+  gcc13
+  glib2-devel
   python
 )
 optdepends=(
@@ -31,6 +33,8 @@ sha256sums=('8edbb0f09e8cf8010cad9e0559e0230d7fc5aae4721c756c350554df33024c00'
 validpgpkeys=('C2D1AB061656AAC54B5E975485199DE8C6648E90')
 build() {
   cd "${pkgname}-${pkgver}"
+  CC=gcc-13 \
+  CXX=g++-13 \
   ./configure \
     --prefix=/usr \
     --sysconfdir=/etc

@@ -3,7 +3,7 @@
 
 pkgname=qcm
 pkgver=1.2.0_qsql
-pkgrel=3
+pkgrel=4
 pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
 url="https://github.com/hypengw/Qcm"
@@ -18,7 +18,7 @@ depends=(
 	'dbus'
 	'ffmpeg'
 	'fmt'
-	'cubeb-git')
+	'cubeb')
 makedepends=(
 	'git'
 	'cmake'
