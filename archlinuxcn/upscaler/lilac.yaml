@@ -1,0 +1,15 @@
+maintainers:
+  - github: everyx
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: gitlab
+    gitlab: World/Upscaler
+    host: gitlab.gnome.org
+    use_max_tag: true
+
+repo_depends:
+  - python-vulkan
+  - upscayl-ncnn
