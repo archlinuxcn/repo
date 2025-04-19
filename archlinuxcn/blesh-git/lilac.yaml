@@ -1,0 +1,13 @@
+maintainers:
+  - github: cjc7373
+
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['akinomyoga'])
+post_build: aur_post_build
+
+update_on:
+  - source: github
+    github: akinomyoga/ble.sh
+    lilac_throttle: 3d
+  - source: aur
+    aur: blesh-git
