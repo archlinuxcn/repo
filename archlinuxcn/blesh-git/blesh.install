@@ -1,0 +1,10 @@
+# -*- mode: sh; mode: sh-bash; -*-
+post_install() {
+  printf '\033[0;1;36m==> To start using ble.sh, you can run \033[35m"source /usr/share/blesh/ble.sh"\n\033[0m'
+  printf '\033[1;36m==> To load ble.sh by default in interactive sessions reliably,\n\033[0m'
+  printf '\033[1;36m==> Add this line at the top of your .bashrc:\n\033[0m'
+  printf '\033[1;35m[[ $- == *i* ]] && source /usr/share/blesh/ble.sh --noattach\n\033[0m'
+  printf '\033[1;36m==> Add this line at the bottom of your .bashrc:\n\033[0m'
+  printf '\033[1;35m[[ ${BLE_VERSION-} ]] && ble-attach\n\033[0m'
+  printf '\033[1;36m==> Documentation available at: \033[33mhttps://github.com/akinomyoga/ble.sh/wiki\n\033[0m'
+}
