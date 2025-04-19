@@ -13,6 +13,12 @@ update_on:
     prefix: v
 
   - source: httpheader
+    url: https://github.com/amzxyz/RIME-LMDG/releases/download/dict-nightly/cn_dicts.zip
+    header: last-modified
+    follow_redirects: true
+    regex: .*
+
+  - source: httpheader
     url: https://github.com/amzxyz/RIME-LMDG/releases/download/LTS/wanxiang-lts-zh-hans.gram
     header: last-modified
     follow_redirects: true
