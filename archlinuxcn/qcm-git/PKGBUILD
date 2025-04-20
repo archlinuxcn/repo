@@ -25,6 +25,7 @@ depends=(
 )
 makedepends=(
 	'git'
+	'git-lfs'
 	'clang'
 	'cmake'
 	'ninja'
@@ -41,6 +42,10 @@ sha256sums=('SKIP')
 
 pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+}
+
+prepare() {
+	git lfs install
 }
 
 build() {
