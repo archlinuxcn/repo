@@ -1,7 +1,7 @@
 # Maintainer: Carlos Aznarán <caznaranl@uni.pe>
 _base=sentence-transformers
 pkgname=python-${_base}
-pkgver=4.0.2
+pkgver=4.1.0
 pkgrel=1
 pkgdesc="Multilingual text embeddings"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python-transformers python-tqdm python-pytorch python-scikit-learn
 makedepends=(python-build python-installer python-setuptools python-wheel)
 # checkdepends=(python-pytest)
 source=(${_base}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('cefd42d7e106f7f882ff7c6ee353a6d214b5553af457102688ffc58b921c37e50304236dbc5329bf44356d5c42f207e1897d3ef4656ff2af9b846425fe4ca5b4')
+sha512sums=('f888d17f8d14877c4f896de48f67bbc8c58052a320a0d4c2aa527540438ef8265c3a6cbb1f70b3910174ce70a9e6be5c7c575c4e14a4ebb743bdab6bfc25b05d')
 
 build() {
   cd ${_base}-${pkgver}
