@@ -1,0 +1,49 @@
+# Maintainer: bgme <i@bgme.me>
+
+pkgname=globalping-cli 
+pkgdesc="A simple CLI tool to run networking commands remotely from hundreds of globally distributed servers "
+pkgver=1.5.0
+pkgrel=1
+arch=("x86_64")
+url="https://github.com/jsdelivr/globalping-cli"
+license=("MPL-2.0")
+depends=("glibc")
+makedepends=("go")
+
+source=(
+    "${pkgname}-${pkgver}.tar.gz::https://github.com/jsdelivr/globalping-cli/archive/refs/tags/v${pkgver}.tar.gz"
+)
+sha256sums=('9f1ad85fc95df552317f7e4859e014525e8d0d8ae96e451cfe0962a6b0f54e63')
+
+provides=("globalping-cli")
+
+prepare(){
+    cd "${pkgname}-${pkgver}"
+    mkdir -p build/
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+    go build -o build .
+
+    cd build
+    for i in zsh bash fish; do
+        ./globalping-cli completion $i > "${pkgname}.${i}"
+    done
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    install -Dm 644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+
+    cd build
+    install -Dm 755 globalping-cli "${pkgdir}/usr/bin/globalping"
+    install -Dm 644 "${pkgname}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
+    install -Dm 644 "${pkgname}.bash" "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+    install -Dm 644 "${pkgname}.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d"
+}
