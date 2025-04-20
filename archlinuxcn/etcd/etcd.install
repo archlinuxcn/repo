@@ -1,0 +1,8 @@
+ETCD_DATA_DIR="/var/lib/etcd"
+
+pre_upgrade() {
+cat << EOF
+To upgrade an existing etcd deployment please read the docs located at:
+  https://etcd.io/docs/v3.5/upgrades/
+EOF
+}
