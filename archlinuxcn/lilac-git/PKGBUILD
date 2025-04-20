@@ -4,8 +4,8 @@
 
 _pkgname=lilac
 pkgname=$_pkgname-git
-pkgver=r1219.a95a3c6
-pkgrel=3
+pkgver=r1220.a9911d5
+pkgrel=1
 pkgdesc='The build bot for archlinuxcn'
 arch=(any)
 url='https://github.com/archlinuxcn/lilac'
@@ -13,7 +13,7 @@ license=(GPL-3.0-only)
 depends=(python git devtools nvchecker gnupg pid_children fakeroot bubblewrap pacman-contrib bash
          python-requests python-lxml python-yaml python-tomli-w pyalpm
          python-structlog python-prctl python-fluent.runtime)
-makedepends=(python-setuptools-scm python-psycopg2)
+makedepends=(python-setuptools-scm python-psycopg2 python-build python-installer)
 optdepends=(
   'smtp-forwarder: for sending error reports'
   'python-psycopg2: for recording build results in a database'
@@ -31,7 +31,7 @@ pkgver() {
 
 build() {
   cd $_pkgname
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 check() {
@@ -41,7 +41,7 @@ check() {
 
 package() {
   cd $_pkgname
-  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 config.toml.sample scripts/dbsetup.sql -t "$pkgdir"/usr/share/doc/lilac
   install -Dm755 scripts/cleanup-dblck "$pkgdir"/usr/bin/cleanup-dblck
   install -Dm644 scripts/cleanup-dblck.service "$pkgdir"/usr/lib/systemd/system/cleanup-dblck.service
