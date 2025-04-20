@@ -3,8 +3,8 @@
 pkgbase="linux-pf"
 _suffix=""
 pkgname=(${pkgbase}${_suffix} ${pkgbase}-headers${_suffix})
-_rev=bda7d00003ffdbec858ef8203d8d1d1978e1ce3c
-pkgver=6.14.pf2
+_rev=41f1c108503d5c9db016472c144228abccdd4321
+pkgver=6.14.pf3
 pkgrel=1
 pkgdesc="pf-kernel"
 arch=(x86_64)
@@ -15,7 +15,7 @@ options=(!debug !strip)
 source=(https://codeberg.org/pf-kernel/linux/archive/${_rev}.tar.gz
 		config)
 b2sums=(SKIP
-		'7f38b3ae5fcde6b68516c8e0acbd9b2340bcef433142ffc5420e11d63d842c4c1e1aee09badc47005d1f3cf944c213a4f2986c3ee46b0c24e35baa877b7c5ef2')
+		'093604b3458ba2a00bf39f857649619e3c69396b5669670073b8a15eb1adb25fe3f2fbaf98f1c0f7b15a04c5fc27e13f2f480bb74b1baa704cb55ea773611b00')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=${pkgbase}
@@ -56,7 +56,7 @@ _package() {
 				'scx-scheds: to use sched-ext schedulers'
 				'v4l2loopback-utils: v4l2-loopback device utilities'
 				'wireless-regdb: to set the correct wireless channels of your country')
-	provides=(linux-pf KSMBD-MODULE NTFS3-MODULE NTSYNC-MODULE V4L2LOOPBACK-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
+	provides=(linux-pf KSMBD-MODULE NTFS3-MODULE NTSYNC-MODULE OVPN-MODULE V4L2LOOPBACK-MODULE VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE)
 	replaces=(virtualbox-guest-modules-arch wireguard-arch)
 
 	cd linux
