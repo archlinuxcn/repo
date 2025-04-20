@@ -8,6 +8,8 @@ Type=simple
 User=dufs
 Group=dufs
 ExecStart=/usr/bin/dufs --config /etc/dufs/%i.yaml
+# Fix permissions of UNIX sockets
+ExecStartPost=/usr/bin/bash -c '/usr/bin/sleep 1; for file in /run/dufs/*; do if [ -S "$file" ]; then /usr/bin/chmod 0660 "$file"; fi; done'
 
 [Install]
 WantedBy=multi-user.target
