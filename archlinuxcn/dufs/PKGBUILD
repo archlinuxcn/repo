@@ -2,7 +2,7 @@
 
 pkgname='dufs'
 pkgver='0.43.0'
-pkgrel=2
+pkgrel=3
 pkgdesc='A distinctive utility file server that supports static serving, uploading, searching, accessing control, webdav...'
 arch=('x86_64')
 url='https://github.com/sigoden/dufs'
@@ -20,8 +20,8 @@ source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.
         "${pkgname}-config.yaml")
 
 b2sums=('a35eeb62e3aa4404a7ed5d2ffc2db12bb9f039d7e097fd7b9bc9c8b3aff592026b5b7a337da2596aa7ae5f2f73d5933938252c80d09c6b66c8177a7e429fbde6'
-        'feb7356eb197aaff9f4715e67110f8487e69eb942f50813cc172eb0465d87058867edc410307f5983ae7bf2ccfebb49c9da5bfc3de2cc880b1197c8d8d0ca260'
-        '29ca7c0b0768e339adfe9e20c1a9d9439444319ca420227e5b0e577cf69fd6e80f36eff79ab98ca0d9354aedb9d5503e468fa89251331e9480fd1465bbb8ea51'
+        '5929a74b6898709884df766c94e6a0c30d18e632aece2a36d57bc41f05c5a8d23da036a6a0773fb7c13df7f149c001abfaab647a09593b84e85cb13026eb11a2'
+        '004aaa2c669860830ee63ad413b4eec224863f30a2087fa1ea9079ab517576ad95609e6daddfeab7a2c2821290f081545d03ad31e5b27cb4e9e6cc37c9040284'
         '4a647e5365e8e4d101470960cd72317b29dae68cff2331031aeccfc8bf860e72662febbda6673ddde09944555847a3b4598b3f3389fc6e67bccf9d08ab8cca4e'
         '8eb56d81a056e9c177f84dc72485d6f4dfd29e8687229d12873b68d305f81cc3cf065dcbf69ff3f66bf87d399618f155facabfc0547c49f181d07f6ee6eb6d06'
         '1e52a77fd3cb1a8734a73b70e680cfccf6648174e8fbced30e4494b78b155a36923d28e29a301fc3b480838dd4c7ad0944bb078af59541cafac2a6a98fd09b47')
