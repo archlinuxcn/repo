@@ -10,5 +10,5 @@ repo_depends:
 
 update_on:
   - source: jq
-    url: https://sourceforge.net/projects/waydroid/best_release.json
-    filter: '.release.filename | split("/") | .[-1] | split("-") | .[1] + "_" + .[2]'
+    url: https://raw.githubusercontent.com/waydroid/OTA/refs/heads/master/system/lineage/waydroid_x86_64/VANILLA.json
+    filter: '.response[0].filename | split("-") | .[1] + "_" + .[2]'
