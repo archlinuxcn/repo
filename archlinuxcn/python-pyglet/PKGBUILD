@@ -7,7 +7,7 @@
 
 _pkgname=pyglet
 pkgname=python-pyglet
-pkgver=2.1.4
+pkgver=2.1.5
 pkgrel=1
 pkgdesc="A cross-platform windowing and multimedia library for Python"
 arch=('any')
@@ -27,7 +27,7 @@ optdepends=(
     'openal: live audio'
 )
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('28224576ac9cfc3dd24e8c7addd3f3dcebfe638bfc389478dc220252b50507fa')
+sha256sums=('83b8a24760fa28f5c557747eef345c4a804a0b8f562eb7bbee8effc632578d5e')
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
