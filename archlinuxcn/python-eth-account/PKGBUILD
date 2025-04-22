@@ -2,7 +2,7 @@
 
 _name=eth-account
 pkgname=python-${_name}
-pkgver=0.13.6
+pkgver=0.13.7
 pkgrel=1
 pkgdesc="Account abstraction library for web3.py"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python python-bitarray python-eth-abi python-eth-keyfile python-eth-key
 makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx python-sphinx_rtd_theme)
 checkdepends=(python-pytest python-hypothesis nodejs npm)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('a0db31ed86eb5b8f436ee8403f4762141c10ca0c2a53a7921baa4a66800224db4d30c17436ee17fdfef771ba5e3705cf63634c75d19ad07002086c375bdb4329')
+sha512sums=('53825e7fda79a7a5db5f560673af6b1d20920442854d51a471ee2356c414d39409bb14916daec3ec2caa562e899a3a694f860760face92099f56dacd7452e4c3')
 
 prepare() {
   cd $_name-$pkgver
