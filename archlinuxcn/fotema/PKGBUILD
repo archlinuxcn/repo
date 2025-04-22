@@ -1,12 +1,12 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=fotema
 pkgver=1.20.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Photo gallery for Linux"
 arch=('x86_64')
 url="https://github.com/blissd/fotema"
 license=('CC0-1.0 AND CC-BY-2.0 AND CC-BY-4.0 AND CC-BY-NC-SA-4.0 AND CC-BY-SA-4.0 AND GFDL-1.3-or-later AND GPL-3.0-or-later AND MIT')
-depends=(
+depends=("openmpi"
   'ffmpeg'
   'glycin'
   'libadwaita'
@@ -14,7 +14,6 @@ depends=(
   'libshumate'
   'onnxruntime'
   'opencv'
-  'openmpi'
 )
 makedepends=(
   'cargo'
