@@ -9,10 +9,10 @@
 pkgname=p7zip-natspec
 _pkgname=p7zip
 pkgver=17.05
-pkgrel=1
+pkgrel=2
 _upstream_pkgrel=5
 pkgdesc="Command-line file archiver with high compression ratio, based on libnatspec patch from ubuntu zip-i18n PPA (https://launchpad.net/~frol/+archive/zip-i18n)."
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url="https://github.com/p7zip-project/p7zip"
 license=('LGPL' 'custom:unRAR')
 depends=('gcc-libs' 'sh' 'libnatspec')
