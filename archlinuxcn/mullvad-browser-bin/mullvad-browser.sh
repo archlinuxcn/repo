@@ -13,7 +13,7 @@ fi
 unset SESSION_MANAGER
 
 # Set up custom bundled fonts. See fonts-conf(5).
-export FONTCONFIG_PATH="/opt/mullvad-browser/fontconfig"
+export FONTCONFIG_PATH="/opt/mullvad-browser/fonts"
 export FONTCONFIG_FILE="fonts.conf"
 
 # tor-browser-build#41017: Nvidia drivers create a shader cache by default in
