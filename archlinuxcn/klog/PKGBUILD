@@ -3,16 +3,17 @@
 # Contributor: Carsten Feuls <archlinux@carstenfeuls.de>
 
 pkgname=klog
-pkgver=2.3.4
+pkgver=2.4.0
 pkgrel=1
 pkgdesc='A multiplatform free hamradio logger'
 arch=('x86_64')
-url='https://www.klog.xyz'
+url="https://github.com/ea4k/${pkgname}"
 license=('GPL-3.0-only')
-makedepends=('qt5-tools' 'gendesk')
-depends=('qt5-base' 'qt5-charts' 'qt5-declarative' 'qt5-location' 'qt5-serialport' 'hamlib')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ea4k/${pkgname}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('c7ccbdcd2c11314c4ddda911a65be6f7430fbf58145d62e0604cefe7644f63f2')
+makedepends=('qt6-tools' 'gendesk')
+depends=('qt6-base' 'qt6-charts' 'qt6-declarative' 'qt6-location' 'qt6-serialport' 'hamlib')
+options=('!makeflags')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('16f45a60cc18b444a602ad0d970372b8b842486a4506da67bf1cea059cd7241c')
 
 prepare() {
   cd "${pkgname}-${pkgver}"
@@ -23,7 +24,7 @@ prepare() {
 build() {
   cd "${pkgname}-${pkgver}"
 
-  qmake-qt5 PREFIX=/usr KLog.pro
+  qmake6 PREFIX=/usr KLog.pro
   make
 }
 
