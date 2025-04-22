@@ -147,7 +147,7 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=6.12
-_minor=22
+_minor=24
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -157,7 +157,7 @@ _stable=${_major}.${_minor}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + Cachy Sauce Kernel by CachyOS with other patches and improvements - Long Term Service'
-pkgrel=1
+pkgrel=2
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -178,7 +178,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=570.133.07
+_nv_ver=570.144
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -213,13 +213,15 @@ fi
 # NVIDIA pre-build module support
 if [ "$_build_nvidia" = "yes" ]; then
     source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
-             "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch")
+             "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch")
 fi
 
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
-             "${_patchsource}/misc/nvidia/0001-Make-modeset-and-fbdev-default-enabled.patch"
-             "${_patchsource}/misc/nvidia/0003-Add-IBT-Support.patch")
+             "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
+             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
+             "${_patchsource}/misc/nvidia/0003-Kbuild-Convert-EXTRA_CFLAGS-to-ccflags-y.patch"
+             "${_patchsource}/misc/nvidia/0008-kbuild-Add-workaround-for-GCC-15-Compilation.patch")
 fi
 
 ## List of CachyOS schedulers
@@ -460,16 +462,14 @@ prepare() {
         sh "${_nv_pkg}.run" --extract-only
 
         # Use fbdev and modeset as default
-        patch -Np1 -i "${srcdir}/0001-Make-modeset-and-fbdev-default-enabled.patch" -d "${srcdir}/${_nv_pkg}/kernel"
+        patch -Np1 -i "${srcdir}/0001-Enable-atomic-kernel-modesetting-by-default.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 
     if [ "$_build_nvidia_open" = "yes" ]; then
-        # Use fbdev and modeset as default
-        patch -Np1 -i "${srcdir}/0001-Make-modeset-and-fbdev-default-enabled.patch" \
-            -d "${srcdir}/${_nv_open_pkg}/kernel-open"
-        # Fix for https://bugs.archlinux.org/task/74886
-        patch -Np1 --no-backup-if-mismatch -i "${srcdir}/0003-Add-IBT-Support.patch" \
-            -d "${srcdir}/${_nv_open_pkg}"
+        patch -Np1 -i "${srcdir}/0001-Enable-atomic-kernel-modesetting-by-default.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
+        patch -Np1 -i "${srcdir}/0002-Add-IBT-support.patch" -d "${srcdir}/${_nv_open_pkg}/"
+        patch -Np1 -i "${srcdir}/0003-Kbuild-Convert-EXTRA_CFLAGS-to-ccflags-y.patch" -d"${srcdir}/${_nv_open_pkg}"
+        patch -Np1 -i "${srcdir}/0008-kbuild-Add-workaround-for-GCC-15-Compilation.patch" -d "${srcdir}/${_nv_open_pkg}/"
     fi
 }
 
@@ -701,11 +701,13 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('ef8cf11bb96e67f63e00566c5c9be38dd7d4ae642504b16883701b2c4f07afd9b36b73fe22df6fbb95b44768b46611ff0fc8b66db4c5fb9d7b6acd25df77ff7c'
+b2sums=('82cd7f004337ab04c27dcf325c8733681998e20431f5d152d2c985c2832b5e24837763d43cc8640f64b7b4b9d89561abd0a59abc48b7b0177f642ab23fe41dcb'
         'fa3bbedc0804fcf4b9908bb6b8f13f45a63d9a6ec19978028449841cf7ca026053254a7fc53085dc7ffa24c6756301d37d3a1f9e167bb7f9eb5605d33749b0b2'
         '390c7b80608e9017f752b18660cc18ad1ec69f0aab41a2edfcfc26621dcccf5c7051c9d233d9bdf1df63d5f1589549ee0ba3a30e43148509d27dafa9102c19ab'
         'ca014c2570ef63f11e162a015293225e1e4103513cefe2f3c20e01444fe2d6b7cbc7c993b5d77db97c84142fb6cb6cc401df419b2d9de1610b5539832c013cd8'
-        'b78e9e8bd6f5dbfe4bf7121be502922454446f4ebb2201d40d3f0b1d5a0819b3eea255a49ab661d75e10b0ee296940db1b2ff2b3156aa0f98ec810a472d93290'
-        'cbd1e1370f84f39b9265d5c2c31c730741c31c16577779f65fccb4e92a9b36c62dbd95f4559a053072e990ebf1ce5cdd79657cdedced5cdd070b9af8257c81f4'
-        'c97069fd0a80d4cdb956d22ed52bd5c247570ec97506fb6aee1ab5004c40d978ab6b858f319dfd52559d240d40de3f80debec6b39bc8b2486cdd9f1c8bc09f20'
-        'eedbf8ebaa86e61b56e39cf05bad59cb283c3527c2e40253ea8228ed6ecc5629d5d7ad7ce721acda9641940180480dcc6b16099191ecebdc6a962c05b34ca0f2')
+        '9003530642f17f8ee61599716d7981fa8326c6b3c38aa84c4a9056894f3e1f06da211eb1383b84c9871a612e8e4081af8112584b185820b6c1aa446d2b5a7935'
+        '05a3cc4954a37897d08e93e8ea1726fc395a12cfb1509f09560bdcf0ae14ed4ca518fda566a618c92db0fb6573e3ed7d02172dd76a3b145982060e060525365b'
+        'bccb4169c43e556f10cddaf8f101cc0b29209f984b9f681f266602a359bc6b4765b48d192006decd23667bd2b899fad9c1fd5b742251014dacc7c077ea023e0f'
+        '8e812e90adcd4790e8a5a5563859e9c64e65424a504185e1a7d083bcc6a99560aea37c79ad9680af751da9f40e6bd60bb3e8a3bd431e0903afbd8eeba2c53ad3'
+        '248deb875901c285c837e98bdc4fc0b6e616df961cef49e2ce89d6d061cff67de6c891bfc86f54f8addf4e16acaf030365b3136278dd33275545a485c4bffb95'
+        '00394190f5d3d4e0ca993254de544120b65c006b307b8bdc8bd9060a01aedfae441e8081eff2eb98041bdce67fb5dd3ab160cfca0046f30a072f2e2d4557b240')
