@@ -2,8 +2,8 @@
 # Contributor: Davide Ferrero <bad.deid@gmail.com>
 
 pkgname=quicktype
-pkgver=23.0.171
-pkgrel=2
+pkgver=23.0.172
+pkgrel=1
 pkgdesc="Generate types and converters from JSON, Schema, and GraphQL"
 arch=(any)
 url="https://github.com/glideapps/quicktype"
@@ -11,7 +11,7 @@ license=(Apache-2.0)
 depends=(nodejs)
 makedepends=(npm)
 source=("https://registry.npmjs.org/${pkgname}/-/${pkgname}-${pkgver}.tgz")
-sha256sums=('f33e1c0371aa6d60b37405583be72b16a60d189117cce9b2f4c7d19ab24535f0')
+sha256sums=('b2f8b1a691db5abf3cfd8d0cd5c2d43b0e778fab53d25423b5211afce016cc1d')
 noextract=("${pkgname}-${pkgver}.tgz")
 
 package() {
