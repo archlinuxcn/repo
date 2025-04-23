@@ -4,9 +4,9 @@ pkgbase=rime-wanxiang-data
 pkgname=(rime-wanxiang-data
          rime-wanxiang-gram-zh-hans
          rime-wanxiang-dict-cn)
-_schema_version=6.5
+_schema_version=6.5.1
 _dict_version=20250422
-pkgver=6.5+r20250422
+pkgver=6.5.1+r20250422
 pkgrel=1
 epoch=1
 pkgdesc="万象词库"
@@ -18,7 +18,7 @@ source=("wanxiang-lts-zh-hans.${_dict_version}.gram::${url}/releases/download/LT
         "https://github.com/amzxyz/rime_wanxiang/archive/refs/tags/v${_schema_version}.tar.gz")
 sha256sums=('20f2ecb4d5ed29471ba9ff1aa34838a6d5604a0b9bddf1f8c64ef1c2998d7eec'
             'ea532a8c54523b77ece32b442b200ce79db34c95a332517abacf9e421a886a9a'
-            '77e2dd51dd76902740002db22bd655204447b02f0058af999630a6b45a458c2a')
+            '2b7d35e02040788f77904100111c9278444f7ab0b5a697aecedd24c7992aadf4')
 
 makedepends=("librime" "rime-prelude" "rime-essay" "sed")
 
