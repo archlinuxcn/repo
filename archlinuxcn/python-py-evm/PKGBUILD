@@ -2,7 +2,7 @@
 
 _name=py-evm
 pkgname=python-${_name}
-pkgver=0.12.0b1
+pkgver=0.12.0b2
 pkgrel=1
 pkgdesc="A Python implementation of the Ethereum Virtual Machine"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python python-cached-property python-eth-bloom python-eth-hash python-e
 makedepends=(python-build python-installer python-setuptools python-wheel)
 # hyphen in git tag, hard to automated upgrade
 source=(https://files.pythonhosted.org/packages/source/${_name::1}/${_name//-/_}/${_name//-/_}-$pkgver.tar.gz)
-sha512sums=('3d9ec5d619391677bc084baf26a107f481fb0064b8f9a987ab744b1e66171c3e5849bce7a07f6eefa69a6122d2e502c403f1a19e581a3ee024706cdfd963e69a')
+sha512sums=('e926e05d0a97d341a0dd710a961aaaf77eda1f3aa319eb2bfb13be7a670753127305ceee16ec3b9ee96d300994382b67816084fb2fc748de131c6a6d013f4280')
 
 build() {
   cd ${_name//-/_}-$pkgver
