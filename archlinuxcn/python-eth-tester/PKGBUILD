@@ -2,7 +2,7 @@
 
 _name=eth-tester
 pkgname=python-${_name}
-pkgver=0.12.1b1
+pkgver=0.13.0b1
 pkgrel=1
 pkgdesc="Tool suite for testing ethereum applications."
 arch=(any)
@@ -13,7 +13,7 @@ makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 # hyphen in git tag, hard to automated upgrade
 source=(https://files.pythonhosted.org/packages/source/${_name::1}/${_name//-/_}/${_name//-/_}-$pkgver.tar.gz)
-sha512sums=('fa739b4cc4d35a171c76998b3c084366f111f548edf09819bc23bdb2f4325972d585e1759ae983516649142abae49d78f6c2289abde1c3d82b93b419659fa7d9')
+sha512sums=('05bee3741cb903e257cc6f6604d104081aae3697a1a06ea0e77f55876f6f33ae1feb0d574412b9cdf25033b4d4d64a658c1dd82dfcaa9f94824b1c016fc94359')
 
 build() {
   cd ${_name//-/_}-$pkgver
