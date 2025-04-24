@@ -2,8 +2,8 @@
 pkgname=shef
 # renovate: datasource=github-releases depName=eduardoagarcia/shef
 pkgver=0.3.3
-pkgrel=1
-pkgdesc='directory and filename linter'
+pkgrel=2
+pkgdesc='CLI framework for cooking up dynamic shell recipes'
 arch=('x86_64')
 _repo_prefix='github.com/eduardoagarcia'
 _repo_name="${pkgname%-git}"
