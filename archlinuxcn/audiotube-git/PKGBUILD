@@ -40,12 +40,14 @@ pkgver() {
 }
 
 build() {
-	cd "${_pkgname}/"
-	cmake -DCMAKE_INSTALL_PREFIX=/usr -B build
-	make -C build
+	cmake -S "${_pkgname}" \
+		-B build \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_BUILD_TYPE=None
+
+	cmake --build build
 }
 
 package() {
-	cd "${_pkgname}/"
-	make -C build DESTDIR="${pkgdir}" PREFIX=/usr install
+	DESTDIR="${pkgdir}" cmake --install build
 }
