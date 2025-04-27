@@ -3,7 +3,7 @@
 
 pkgname=gallery-dl
 pkgver=1.29.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Command-line program to download image-galleries and collections from several image hosting sites'
 arch=(any)
 url=https://github.com/mikf/gallery-dl
@@ -43,4 +43,6 @@ check() {
 package() {
     cd ${pkgname}
     python -m installer --destdir="$pkgdir" dist/*.whl
+
+    install -Dm644 -t "${pkgdir}/usr/share/doc/${pkgname}" docs/{configuration.rst,formatting.md,gallery-dl-example.conf}
 }
