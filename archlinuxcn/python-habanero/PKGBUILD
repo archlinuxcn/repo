@@ -3,7 +3,7 @@
 
 pkgname='python-habanero'
 pkgver='2.2.0'
-pkgrel=3
+pkgrel=4
 _name=${pkgname#python-}
 _name="${_name//-/_}"
 _src_folder="${_name}-${pkgver}"
@@ -33,7 +33,6 @@ optdepends=(
 )
 license=('MIT')
 arch=('any')
-_patchUrl="${url/github.com/patch-diff.githubusercontent.com\/raw}"
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
 sha256sums=('18c5c3b59b8db1887811da6de8bd976ac4077d61a25a058f3a67044e8bcab8eb')
 
@@ -44,7 +43,9 @@ build() {
 
 check() {
     cd "${srcdir}/${_src_folder}"
-    python -m pytest
+
+    export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+    python -m pytest -p pytest_cov -p pytest_recording
 }
 
 package() {
