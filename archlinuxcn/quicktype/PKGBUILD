@@ -2,7 +2,7 @@
 # Contributor: Davide Ferrero <bad.deid@gmail.com>
 
 pkgname=quicktype
-pkgver=23.0.176
+pkgver=23.1.0
 pkgrel=1
 pkgdesc="Generate types and converters from JSON, Schema, and GraphQL"
 arch=(any)
@@ -11,7 +11,7 @@ license=(Apache-2.0)
 depends=(nodejs)
 makedepends=(npm)
 source=("https://registry.npmjs.org/${pkgname}/-/${pkgname}-${pkgver}.tgz")
-sha256sums=('f9b7852ceb20caacbb6777316fa79f0ebd47b5e8be1e62f45ffb424f02546c67')
+sha256sums=('9ae88335d255afbe40206a4b51bac998c966208aa51f8ba5d35f707769b74641')
 noextract=("${pkgname}-${pkgver}.tgz")
 
 package() {
