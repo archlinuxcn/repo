@@ -1,6 +1,6 @@
 # Maintainer: Thomas Jost <schnouki@schnouki.net>
 pkgname=kcc
-pkgver=7.3.3
+pkgver=7.4.1
 pkgrel=1
 pkgdesc="Kindle Comic Converter converts comic files or folders to ePub or Panel View MOBI"
 arch=(any)
@@ -12,6 +12,7 @@ depends=(
   'python-distro'
   'python-mozjpeg-lossless-optimization>=1.1.2'
   'python-natsort>=8.4.0'
+  'python-numpy'
   'python-pillow>=9.0.0'
   'python-psutil>=5.9.5'
   'python-raven>=6.0.0'
