@@ -5,8 +5,8 @@ pkgname=(rime-wanxiang-data
          rime-wanxiang-gram-zh-hans
          rime-wanxiang-dict-cn)
 _schema_version=6.6.2
-_dict_version=20250428
-pkgver=6.6.2+r20250428
+_dict_version=20250429
+pkgver=6.6.2+r20250429
 pkgrel=1
 epoch=1
 pkgdesc="万象词库"
@@ -16,8 +16,8 @@ url="https://github.com/amzxyz/RIME-LMDG"
 source=("wanxiang-lts-zh-hans.${_dict_version}.gram::${url}/releases/download/LTS/wanxiang-lts-zh-hans.gram"
         "cn_dicts.${_dict_version}.zip::${url}/releases/download/dict-nightly/cn_dicts.zip"
         "https://github.com/amzxyz/rime_wanxiang/archive/refs/tags/v${_schema_version}.tar.gz")
-sha256sums=('0de368de2a399fb307b62c11f0bc8887d4063e9392b9d3eb3b9e3477c37a4bab'
-            'f067b217a80bd5acc0ceb556366cd2f8ea2267166ed6d0ba82b2e388903a5f7a'
+sha256sums=('af1676f3e4e8d49cc5433662af3abee4c3ea6da72f1925c9164bc522a9edd39e'
+            'f9e5b70b1bebac8e382848dd5478c65fea40ac661b4fde864f486327bf826cd3'
             'eff14706024594c454d88533f9b122db86c0a3f9a4e6f445f8813e0ba1b76c56')
 
 makedepends=("librime" "rime-prelude" "rime-essay" "sed")
