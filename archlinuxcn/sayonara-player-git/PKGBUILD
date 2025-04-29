@@ -2,7 +2,7 @@
 # Contributor: Fixed Torres <aur_linuxero@outlook.com>
 
 pkgname=sayonara-player-git
-pkgver=1.11.0.beta1.r44.ge8df3d0d8
+pkgver=1.11.0.stable2.r0.gb39e7fabe
 pkgrel=1
 pkgdesc="Small, clear and fast audio player for Linux written in C++, supported by the Qt framework. It uses Gstreamer as audio backend."
 arch=(x86_64 i686 aarch64)
@@ -21,32 +21,28 @@ source=("git+https://gitlab.com/luciocarreras/sayonara-player.git")
 sha512sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/sayonara-player"
+  cd "sayonara-player"
   git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
-prepare() {
-  cd "${srcdir}/sayonara-player"
-  [[ -d build ]] || mkdir build
-}
-
 build() {
-  cd "${srcdir}/sayonara-player"
-  cmake -B build \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  local _flags=(
 
+  )
+
+  cmake -B build -S "sayonara-player" -Wno-dev \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    "${_flags[@]}"
 
   cmake --build build
 }
 
 check() {
-  cd "${srcdir}/sayonara-player"
   xvfb-run -s '-screen 0 1920x1080x24 -nolisten local' ctest --test-dir build --output-on-failure
 }
 
 package() {
-  cd "${srcdir}/sayonara-player"
-  DESTDIR="$pkgdir" cmake --install build
+  DESTDIR="${pkgdir}" cmake --install build
 }
 
