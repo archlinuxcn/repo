@@ -14,19 +14,12 @@ optdepends=(
 	"librespot: Recommended playback client"
 	"spotifyd: Recommended playback client"
 )
-source=(
-	"${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
-	"fix-qt6.9.patch::${url}/pull/284.patch"
-)
-sha256sums=('5782ff9cd854aa92b4ba49837d3ed4b5ada0427fd440e16866e9727abcd9df62'
-            'bba5d74be875f79a99ba833f0de84be746c0d313e04b4c2e4f52b86636640c6c')
-
-prepare() {
-	patch -p1 -d "${pkgname}-${pkgver}" -i ../fix-qt6.9.patch
-}
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('5782ff9cd854aa92b4ba49837d3ed4b5ada0427fd440e16866e9727abcd9df62')
 
 build() {
-	cmake -B build -S "${pkgname}-${pkgver}" \
+	cmake -B build \
+		-S "${pkgname}-${pkgver}" \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr
 
