@@ -1,0 +1,11 @@
+maintainers:
+  - github: cjc7373
+    email: cjc7373@archlinuxcn.org
+
+pre_build_script: aur_pre_build(maintainers=['iyanmv'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: plasma6-applets-resources-monitor
