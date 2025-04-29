@@ -7,14 +7,15 @@
 # Contributor: Aleksana QwQ <me@aleksana.moe>
 # Contributor: lilydjwg <lilydjwg@gmail.com>
 
-_pkgname=hyprland
-pkgname=$_pkgname-hidpi-xprop-git
-pkgver=0.48.0.r110.gf5c5cfa9
+_pkgname="hyprland"
+pkgname="$_pkgname-hidpi-xprop-git"
+pkgver=0.48.0.r112.g2118440
 pkgrel=1
 pkgdesc="Hyprland is an independent, highly customizable, dynamic tiling Wayland compositor that doesn't sacrifice on its looks"
 arch=("i686" "x86_64" "arm" "armv6h" "armv7h" "aarch64")
 url="https://github.com/hyprwm/Hyprland"
-license=(BSD-3-Clause)
+license=('BSD-3-Clause')
+
 depends=(
   aquamarine-git
   cairo
@@ -64,9 +65,10 @@ makedepends=(
   git
   glaze
   hyprwayland-scanner-git
+  ninja
   #patch
   #pkgconf
-  python
+  python # required by udis86
   xorgproto
 )
 optdepends=(
@@ -76,30 +78,33 @@ optdepends=(
   'glaze: to build and install plugins using hyprpm'
   'uwsm: the recommended way to start Hyprland'
 )
-provides=("hyprland=${pkgver%%.r*}" "wayland-compositor")
-conflicts=(hyprland)
+
+conflicts=("$_pkgname")
+provides=("$_pkgname=${pkgver%%.r*}" "wayland-compositor")
+
+_pkgsrc=$_pkgname
 source=(
-  "git+https://github.com/hyprwm/Hyprland.git"
+  "$_pkgsrc::git+$url.git"
+  "udis86::git+https://github.com/canihavesomecoffee/udis86.git"
   "git+https://github.com/hyprwm/hyprland-protocols.git"
-  "git+https://github.com/canihavesomecoffee/udis86.git"
 )
-b2sums=(
+sha256sums=(
   'SKIP'
   'SKIP'
   'SKIP'
 )
+
 options=(debug)
 
 pick_mr() {
-  cd "$srcdir/Hyprland"
   git pull origin pull/$1/head --no-ff --no-commit
 }
 
 prepare() {
-  cd Hyprland
+  cd "$_pkgsrc"
   git submodule init
-  git config submodule.subprojects/hyprland-protocols.url "$srcdir/hyprland-protocols"
   git config submodule.subprojects/udis86.url "$srcdir/udis86"
+  git config submodule.subprojects/hyprland-protocols.url "$srcdir/hyprland-protocols"
   git config submodule.subprojects/tracy.update none
   git -c protocol.file.allow=always submodule update
 
@@ -111,29 +116,29 @@ prepare() {
 }
 
 pkgver() {
-	cd "$srcdir/Hyprland"
-  git describe --long --tags --abbrev=8 --exclude='*[a-zA-Z][a-zA-Z]*' \
-    | sed -E 's/^[^0-9]*//;s/([^-]*-g)/r\1/;s/-/./g'
+  cd "$_pkgsrc"
+  git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd "$srcdir/Hyprland"
-
-  cmake --no-warn-unused-cli -DCMAKE_INSTALL_PREFIX=/usr -S . -B ./build
-  cmake --build ./build --target all
+  local cmake_options=(
+    -B build
+    -S "$_pkgsrc"
+    -G Ninja
+    -W no-dev
+    -D CMAKE_BUILD_TYPE=None
+    -D CMAKE_INSTALL_PREFIX=/usr
+  )
+  cmake "${cmake_options[@]}"
+  cmake --build build
 }
 
 package() {
-  cd "$srcdir/Hyprland"
-
-  DESTDIR="${pkgdir}" cmake --install build
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm0644 "$_pkgsrc/LICENSE" -t "$pkgdir/usr/share/licenses/${pkgname}/"
+  install -Dm0644 "$_pkgsrc/subprojects/udis86/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE-udis86"
 
   # Avoid conflict w/ extra/xdg-desktop-portal-hyprland
   rm -rf "$pkgdir/usr/share/xdg-desktop-portal"
-
-  # licenses
-  install -Dm0644 -t "$pkgdir/usr/share/licenses/${pkgname}" LICENSE
-  install -Dm0644 subprojects/udis86/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE-udis86"
 }
-# vi: et ts=2 sw=2
 replaces=("hyprland-nvidia-hidpi-git")
