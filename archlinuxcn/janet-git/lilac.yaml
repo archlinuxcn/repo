@@ -1,0 +1,9 @@
+maintainers:
+  - github: aimixsaka
+    email: aimixsaka@gmail.com
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: janet-lang/janet

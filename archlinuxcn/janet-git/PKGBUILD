@@ -1,0 +1,60 @@
+# Maintainer: GrayJack <gr41.j4ck@gmail.com>
+# Contributor: Thomas Jost <schnouki@schnouki.net>
+
+_pkgname=janet
+pkgname=janet-lang-git
+pkgver=1.38.0.r4579.f2eaa5de
+_jpm_commit=d93b7c2
+pkgrel=1
+pkgdesc="A dynamic Lisp dialect and bytecode vm"
+arch=('arm' 'armv6h' 'armv7h' 'i686' 'x86_64' 'aarch64')
+url="https://janet-lang.org/"
+license=('MIT')
+depends=('glibc')
+makedepends=('git')
+provides=('janet' 'jpm')
+conflicts=('janet-lang' 'janet-lang-bin')
+source=("git+https://github.com/janet-lang/janet.git"
+        "git+https://github.com/janet-lang/jpm"
+        "default-config.janet")
+sha256sums=('SKIP'
+            'SKIP'
+            '7e3dd5e06b793c2ee3c56402116a65b486b3b74372d30f603ca2b9516bd0c5de')
+options=('staticlibs' '!lto')
+
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
+    # Get the version number.
+    printf "$(grep 'JANET_VERSION '  src/conf/janetconf.h|head -n1|cut -d\" -f2|cut -d\- -f1).r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "${srcdir}"/${_pkgname}
+  CFLAGS+=" -fPIC"
+  LDFLAGS+=" -rdynamic"
+  make PREFIX="/usr" all build/janet.pc docs
+}
+
+check() {
+  make -k -C "$_pkgname" test
+}
+
+package() {
+  cd "${srcdir}"/${_pkgname}
+  make DESTDIR="${pkgdir}" PREFIX=/usr install
+
+  install -dm755 "${pkgdir}"/usr/share/janet
+  cp -a examples "${pkgdir}"/usr/share/janet
+
+  install -Dm644 build/doc.html "${pkgdir}"/usr/share/doc/janet/doc.html
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+
+  cd "${srcdir}"/jpm
+
+  install -Dm755 -t "${pkgdir}"/usr/bin jpm/jpm
+  install -Dm644 -t "${pkgdir}"/usr/lib/janet/jpm jpm/*.janet
+  install -Dm644 -t "${pkgdir}"/usr/share/man/man1 jpm.1
+  install -Dm644 -t "${pkgdir}"/usr/share/janet/jpm/configs configs/*
+
+  install -Dm644 -t "${pkgdir}"/usr/lib/janet/jpm "${srcdir}"/default-config.janet
+}
