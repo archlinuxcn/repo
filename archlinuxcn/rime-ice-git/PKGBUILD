@@ -19,6 +19,7 @@ pkgdesc="Rime 配置：雾凇拼音 | 长期维护的简体词库"
 arch=("any")
 url="https://github.com/iDvel/rime-ice"
 license=("GPL-3.0-or-later")
+install='post.install'
 
 depends=("lua" "librime")
 makedepends=("git" "rime-prelude" "sed")
@@ -51,9 +52,9 @@ _schemas=(
 build() {
   cd "${_pkgbase}"
 
-  # 
+  #
   # 生成各方案的默认配置文件，注释掉所有非当前方案
-  # 
+  #
   _suggestion_schemas=$(sed -n '/^schema_list:/,/^$/ {/^schema_list:/d; /^\s*#.*$/d; /^$/d; s/.*schema:\s*//g; s/\s*#.*//g; p }' _default.yaml)
 
   for _suggestion_schema_name in $_suggestion_schemas; do
@@ -72,9 +73,9 @@ build() {
     done
   done
 
-  # 
+  #
   # 编译语料库
-  # 
+  #
   _schemas_deps=()
   for _schema_name in "${_schemas[@]}"; do
     _deps=()
@@ -124,7 +125,7 @@ _install_schema_dicts() {
         }' "${_dict}.dict.yaml"
     )"
     install -Dm644 "${_dict}.dict.yaml" -t "$_install_base/";
-    
+
     # 处理 user_dict
     _user_dicts=()
     mapfile -t _user_dicts <<< "$(
@@ -220,9 +221,9 @@ _package_schema() {
   [ -f "./rime.lua" ] && install -Dm644 ./rime.lua -t "$_install_base/"
   find lua -type f -exec sh -c 'install -Dm644 "$1" -t '"$_install_base"'/$(dirname $1)' shell {} \;
 
-  # 
+  #
   # 处理词库
-  # 
+  #
   # 获取当前方案依赖的所有方案
   _schema_deps=()
   mapfile -t _schema_deps <<< "$(
@@ -299,7 +300,7 @@ package_rime-ice-double-pinyin-git() {
     ${_pkgbase}-double-pinyin-flypy
     ${_pkgbase}-double-pinyin-ziguang
   )
- 
+
   _package_schema double_pinyin
 }
 
