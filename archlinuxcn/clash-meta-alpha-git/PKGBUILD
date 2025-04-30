@@ -1,13 +1,13 @@
 # Maintainer: Roald Clark <roaldclark at gmail dot com>
 
-pkgname=clash-meta-alpha-git
 _pkgname=clash-meta
+pkgname="${_pkgname}-alpha-git"
 pkgver=2025042312.4ecb49b3
 pkgrel=2
 pkgdesc="Another Clash Kernel by MetaCubeX (git version)"
-arch=(x86_64)
+arch=('x86_64')
 url="https://github.com/MetaCubeX/mihomo"
-license=(GPL-3.0-or-later)
+license=('GPL-3.0-or-later')
 depends=(
     'clash-geoip'
     'glibc'
@@ -16,31 +16,48 @@ makedepends=(
     'git'
     'go'
 )
-provides=(clash-meta clash-meta-alpha)
-conflicts=(clash-meta clash-meta-alpha)
+provides=(
+    "${_pkgname}=${pkgver}"
+    "${_pkgname}-alpha=${pkgver}"
+)
+conflicts=(
+    "${_pkgname}"
+    "${_pkgname}-alpha"
+)
 backup=('etc/clash-meta/config.yaml')
-source=("$_pkgname::git+$url.git#branch=Alpha")
-sha256sums=('SKIP')
+source=("${_pkgname}::git+${url}.git#branch=Alpha"
+        "${_pkgname}.sysusers"
+        "${_pkgname}.tmpfiles")
+sha256sums=('SKIP'
+            'f9708634e34dd6ee878c85a5a93c5107befce354112253bab87d520b6be7b5f6'
+            '50737592c7bd743fe8f543924034718337477a203fa11ef4272cae496df3769c')
 
 pkgver() {
-    cd "$_pkgname"
+    cd "${srcdir}/${_pkgname}"
     TZ=UTC git log -1 --pretty=format:"%cd.%h" --date=format:"%Y%m%d%H"
 }
 
 prepare() {
-    cd "$_pkgname"
-    mv .github/mihomo.service "$_pkgname.service"
+    cd "${srcdir}/${_pkgname}"
+    mv .github/release/mihomo.service "${_pkgname}.service"
+    sed -i -e '/Description/s/mihomo/Clash-Meta/' \
+           -e "s/mihomo/${_pkgname}/g" \
+           -e "/^Type=simple/a User=${_pkgname}" \
+           -e "/^Type=simple/a Group=${_pkgname}" \
+           "${_pkgname}.service"
 }
 
 build() {
+    cd "${srcdir}/${_pkgname}"
+
     export CGO_CPPFLAGS="${CPPFLAGS}"
     export CGO_CFLAGS="${CFLAGS}"
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
     export CGO_ENABLED=1
-    cd "$_pkgname"
-    NAME=clash-meta
-    BUILDTIME=$(date -u --rfc-3339=seconds)
+
+    NAME="${_pkgname}"
+    BUILDTIME="$(date -u --rfc-3339=seconds)"
     LDFLAGS="-linkmode external -extldflags \"${LDFLAGS}\""
     OTHER_FLAGS="-X \"github.com/metacubex/mihomo/constant.Version=${pkgver}\" \
                  -X \"github.com/metacubex/mihomo/constant.BuildTime=${BUILDTIME}\""
@@ -49,30 +66,22 @@ build() {
         -buildmode=pie \
         -mod=readonly \
         -modcacherw \
-        -ldflags "$LDFLAGS $OTHER_FLAGS" \
+        -ldflags "${LDFLAGS} ${OTHER_FLAGS}" \
         -tags with_gvisor \
-        -o "$_pkgname-$pkgver"
-
-    echo "u $_pkgname - \"Clash-Meta Service\" - -"        >  "$_pkgname.sysusers"
-    echo "d /etc/$_pkgname     0755 $_pkgname $_pkgname -" >  "$_pkgname.tmpfiles"
-    echo "d /var/log/$_pkgname 0700 $_pkgname $_pkgname -" >> "$_pkgname.tmpfiles"
-    sed -i -e '/Description/s/mihomo/Clash-Meta/' \
-           -e "s/mihomo/$_pkgname/g"              \
-           -e "/^Type=simple/a User=$_pkgname"    \
-           -e "/^Type=simple/a Group=$_pkgname"   "$_pkgname.service"
+        -o "${_pkgname}-${pkgver}"
 }
 
 check() {
-    cd "$_pkgname"
+    cd "${srcdir}/${_pkgname}"
     go test ./...
 }
 
 package() {
-    cd "$_pkgname"
-    install -Dm755 "$_pkgname-$pkgver"     "$pkgdir/usr/bin/clash-meta"
-    install -Dm644 "$_pkgname.sysusers"    "$pkgdir/usr/lib/sysusers.d/$_pkgname.conf"
-    install -Dm644 "$_pkgname.tmpfiles"    "$pkgdir/usr/lib/tmpfiles.d/$_pkgname.conf"
-    install -Dm644 docs/config.yaml        "$pkgdir/etc/clash-meta/config.yaml"
-    install -Dm644 "$_pkgname.service"     "$pkgdir/usr/lib/systemd/system/$_pkgname.service"
-    ln -s /etc/clash/Country.mmdb          "$pkgdir/etc/$_pkgname/Country.mmdb"
+    cd "${srcdir}/${_pkgname}"
+    install -Dm0755 "${_pkgname}-${pkgver}" "${pkgdir}/usr/bin/clash-meta"
+    install -Dm0644 "../${_pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${_pkgname}.conf"
+    install -Dm0644 "../${_pkgname}.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/${_pkgname}.conf"
+    install -Dm0644 "${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+    install -Dm0644 docs/config.yaml -t "${pkgdir}/etc/clash-meta/"
+    ln -s /etc/clash/Country.mmdb "${pkgdir}/etc/${_pkgname}/Country.mmdb"
 }
