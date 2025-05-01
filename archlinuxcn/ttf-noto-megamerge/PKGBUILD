@@ -1,7 +1,7 @@
 # Maintainer: Rocket Aaron <i at rocka dot me>
 
 pkgname=ttf-noto-megamerge
-pkgver=2025.04.01
+pkgver=2025.05.01
 pkgrel=1
 pkgdesc='Single font covering all of the living and historical scripts in Noto'
 provides=(noto-fonts)
@@ -10,10 +10,10 @@ url='https://github.com/notofonts/notofonts.github.io/tree/main/megamerge'
 source=("https://github.com/notofonts/notofonts.github.io/raw/noto-monthly-release-$pkgver/megamerge/Noto"{Sans,Serif}{Historical,Living}"-Regular.ttf"
         "46-noto-megamerge.conf"
         "66-noto-megamerge.conf")
-sha256sums=('c798a09302f4fb9869f2b8065f8c596f0212dea587fef88f2941d68af0396e72'
-            'cd9724caac410c294efa80f91fdebde0afb084cd9576a69449e6833176e0074e'
-            '8d778c6f1b3d74fbd74f50a3bdeb6d9aa664d0f5b942c7500bb458aa2f68d23a'
-            '6294b5c881328a94d89a0845005d6b0bec1065d82b5017098486ac2bcf19cc75'
+sha256sums=('a2ffada0d447682ef27bfc1e92b995fcef5640fe6ad9f2d1640082abea3e8418'
+            '2dd6229eca686200c403c03e6974d2b806cbbeb66cc86312edad22134c135127'
+            'f37887a1551521e27da59bb66933ba62813911de667ebddf94d95a3b81671d82'
+            'ff776e4e929942e4bcd03733962722a62e6d2b2d05b47bab395f103d167583df'
             '59a91de3c01546d91803420528cff9739cfb5da218b133291573fb2e3bb0bd2b'
             '9711324b0dbbc11b81f7e87c72d1a574414663a6cafc3ffc511274c7a2ab51d7')
 
