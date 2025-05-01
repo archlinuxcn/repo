@@ -1,0 +1,121 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+# Contributor: Alfredo Ramos <alfredo.ramos@proton.me>
+# Contributor: Alison Watson <marrub@greyserv.net>
+# Contributor: Antonio Rojas <arojas@archlinux,org>
+# Contributor: Gustavo Alvarez <sl1pkn07@gmail.com>
+# Contributor: Bruno Pagani (a.k.a. ArchangeGabriel) <bruno.n.pagani at gmail dot com>
+# Contributor: Stefan Husmann <stefan-husmann@t-online.de>
+# Contributor: Corey Richardson <corey@octayn.net>
+
+_pkgname=krita
+pkgname="${_pkgname}-git"
+pkgver=5.3.0.20250430.195914
+pkgrel=1
+pkgdesc="A professional free and open source painting program (git version)"
+arch=('x86_64')
+url="https://invent.kde.org/graphics/${_pkgname}"
+license=('GPL-3.0-only')
+depends=(
+    'exiv2'
+    'ffmpeg'
+    'fftw'
+    'fontconfig'
+    'freetype2'
+    'fribidi'
+    'gcc-libs'
+    'giflib'
+    'glibc'
+    'gsl'
+    'harfbuzz'
+    'imath'
+    'kcompletion5'
+    'kconfig5'
+    'kcoreaddons5'
+    'kcrash5'
+    'kguiaddons5'
+    'ki18n5'
+    'kitemmodels5'
+    'kitemviews5'
+    'kwidgetsaddons5'
+    'kwindowsystem5'
+    'lcms2'
+    'libjpeg-turbo'
+    'libkdcraw5'
+    'libpng'
+    'libtiff'
+    'libunibreak'
+    'libwebp'
+    'libx11'
+    'mlt'
+    'opencolorio'
+    'openexr'
+    'openjpeg2'
+    'qt5-base'
+    'qt5-svg'
+    'qt5-x11extras'
+    'quazip-qt5'
+    'zlib'
+)
+makedepends=(
+    'boost'
+    'eigen'
+    'extra-cmake-modules'
+    'git'
+    'immer'
+    'kdoctools5'
+    'kseexpr'
+    'lager'
+    'libheif'
+    'libjxl'
+    'libmypaint'
+    'poppler-qt5'
+    'python-pyqt5'
+    'qt5-quickcontrols2'
+    'qt5-tools'
+    'sip'
+    'xsimd'
+    'zug'
+)
+optdepends=(
+    'kimageformats5: PSD support'
+    'krita-plugin-gmic: GMic plugin'
+    'kseexpr: SeExpr generator layer'
+    'libheif: HEIF filter'
+    'libjxl: JPEG-XL filter'
+    'libmypaint: support for MyPaint brushes'
+    'poppler-qt5: PDF filter'
+    'python-legacy-cgi: for the Python plugins'
+    'python-pyqt5: for the Python plugins'
+)
+provides=(
+    "${_pkgname}=${pkgver}"
+)
+conflicts=(
+    'calligra-krita'
+    'krita'
+    'krita-il10n'
+)
+source=("${_pkgname}::git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
+    version="$(git describe --tags --abbrev=0 | sed 's/^v//;s/-.*//')"
+    [[ "${version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 1
+    printf "%s.%s" "${version}" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)"
+}
+
+build() {
+    cd "${srcdir}/${_pkgname}"
+    cmake -S . -B build \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DBUILD_TESTING=OFF \
+        -DBUILD_KRITA_QT_DESIGNER_PLUGINS=ON
+    cmake --build build --clean-first
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}"
+    DESTDIR="${pkgdir}" cmake --install build
+}
