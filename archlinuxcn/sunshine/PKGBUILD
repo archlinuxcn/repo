@@ -8,7 +8,7 @@
 _pkgname="sunshine"
 pkgname="$_pkgname"
 pkgver=2025.122.141614
-pkgrel=4
+pkgrel=5
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
@@ -19,7 +19,7 @@ depends=(
   'libcap'
   'libdrm'
   'libevdev'
-  'libicuuc.so' # icu
+  'libicuuc.so'     # icu
   'libminiupnpc.so' # miniupnpc
   'libnotify'
   'libpulse'
@@ -33,6 +33,7 @@ makedepends=(
   'boost'
   'cmake'
   'ffnvcodec-headers'
+  'gcc13'
   'git'
   'ninja'
   'npm'
@@ -152,6 +153,9 @@ build() (
   export BRANCH="master"
   export BUILD_VERSION="${pkgver}"
   export COMMIT="$(git -C "$_pkgsrc" rev-parse HEAD)"
+
+  export CC=gcc-13
+  export CXX=g++-13
 
   export CFLAGS="${CFLAGS/-Werror=format-security/}"
   export CXXFLAGS="${CXXFLAGS/-Werror=format-security/}"
