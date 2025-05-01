@@ -6,7 +6,7 @@
 
 pkgname=python2
 pkgver=2.7.18
-pkgrel=12
+pkgrel=13
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('x86_64' 'aarch64')
@@ -105,6 +105,7 @@ prepare() {
 
 build() {
   cd "${srcdir}/Python-${pkgver}"
+  CFLAGS+=" -std=c17"
   CPPFLAGS+=" -I/usr/include/openssl-1.1"
   LDFLAGS+=" -L/usr/lib/openssl-1.1"
   export OPT="${CFLAGS}"
