@@ -1,7 +1,7 @@
 # Maintainer: Joe Baker < Joe at JoeBlakeB dot com >
 
 pkgname=ttf-twemoji
-pkgver=15.1.0
+pkgver=16.0.1
 pkgrel=1
 pkgdesc="Truetype builds of Twemoji; Twitter Color Emoji for everyone."
 url="https://github.com/jdecked/twemoji"
@@ -13,7 +13,7 @@ source=("https://github.com/JoeBlakeB/ttf-twemoji-aur/releases/download/${pkgver
         "75-twemoji.conf"
         "https://raw.githubusercontent.com/jdecked/twemoji/v${pkgver}/LICENSE-GRAPHICS"
         "LICENSE-BUILD::https://github.com/JoeBlakeB/ttf-twemoji-aur/blob/${pkgver}/LICENSE")
-sha256sums=('3c00c8b8d81ce5928fb4dd0ccf5d03f0f20f9f0e9b09617ac89ded53f04a21b4'
+sha256sums=('26f86e9ef5a37f6a115063f923a56071d7f0af16f193dfb13316f0b68f2b0493'
             'a77a7775557efc1c17781c0fc35a0f7ec5ccd58f233573f8875032fb8575680e'
             'SKIP'
             'SKIP')
