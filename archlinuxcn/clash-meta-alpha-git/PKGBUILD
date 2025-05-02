@@ -26,25 +26,17 @@ conflicts=(
 )
 backup=('etc/clash-meta/config.yaml')
 source=("${_pkgname}::git+${url}.git#branch=Alpha"
+        "${_pkgname}.service"
         "${_pkgname}.sysusers"
         "${_pkgname}.tmpfiles")
 sha256sums=('SKIP'
+            'ac0d47737076ac8a2fd3392e3aae197d44b1ff63dfe86ebe49aba8684f052634'
             'f9708634e34dd6ee878c85a5a93c5107befce354112253bab87d520b6be7b5f6'
             '50737592c7bd743fe8f543924034718337477a203fa11ef4272cae496df3769c')
 
 pkgver() {
     cd "${srcdir}/${_pkgname}"
     TZ=UTC git log -1 --pretty=format:"%cd.%h" --date=format:"%Y%m%d%H"
-}
-
-prepare() {
-    cd "${srcdir}/${_pkgname}"
-    mv .github/release/mihomo.service "${_pkgname}.service"
-    sed -i -e '/Description/s/mihomo/Clash-Meta/' \
-           -e "s/mihomo/${_pkgname}/g" \
-           -e "/^Type=simple/a User=${_pkgname}" \
-           -e "/^Type=simple/a Group=${_pkgname}" \
-           "${_pkgname}.service"
 }
 
 build() {
@@ -81,7 +73,7 @@ package() {
     install -Dm0755 "${_pkgname}-${pkgver}" "${pkgdir}/usr/bin/clash-meta"
     install -Dm0644 "../${_pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${_pkgname}.conf"
     install -Dm0644 "../${_pkgname}.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/${_pkgname}.conf"
-    install -Dm0644 "${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
+    install -Dm0644 "../${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
     install -Dm0644 docs/config.yaml -t "${pkgdir}/etc/clash-meta/"
     ln -s /etc/clash/Country.mmdb "${pkgdir}/etc/${_pkgname}/Country.mmdb"
 }
