@@ -1,0 +1,14 @@
+maintainers:
+  - github: SilverRainZ
+    email: Shengyu Zhang <la@archlinuxcn.org>
+
+pre_build_script: aur_pre_build(maintainers=['ARKye03-dev'])
+
+build_prefix: extra-x86_64
+
+update_on:
+  - source: github
+    github: Aylur/icon-browser
+    branch: main
+  - source: aur
+    aur: icon-browser-git
