@@ -4,7 +4,7 @@
 pkgname=bottles
 _pkgname=Bottles
 pkgver=51.21
-pkgrel=2
+pkgrel=3
 epoch=2
 pkgdesc='Easily manage wine and proton prefix'
 arch=(any)
@@ -13,6 +13,7 @@ license=(GPL-3.0-only)
 depends=(
   cabextract
   dconf
+  gamemode
   gtk4
   gtksourceview5
   hicolor-icon-theme
@@ -38,7 +39,6 @@ depends=(
   vkbasalt-cli
 )
 optdepends=(
-  gamemode
   gvfs 
   lib32-gamemode
   lib32-gnutls
