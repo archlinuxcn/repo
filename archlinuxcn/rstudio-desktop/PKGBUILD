@@ -17,7 +17,7 @@
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
 pkgver=2024.12.1.563
-pkgrel=2
+pkgrel=3
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
 license=('AGPL-3.0-only')
@@ -33,6 +33,7 @@ depends=(
   'libboost_program_options.so' # boost-libs
   'libboost_thread.so'          # boost-libs
   'libcups'
+  'libyaml-cpp.so' # yaml-cpp
   'mathjax2'
   'nspr'
   'nss'
@@ -47,9 +48,10 @@ makedepends=(
   'java-environment'
   'libcups'
   'ninja'
-  'nvm' # AUR
+  'nvm'
   'openssl'
   'pam'
+  'postgresql-libs'
   'python'
   'python-setuptools'
   'wget'
@@ -59,6 +61,7 @@ optdepends=(
   'git: for git support'
   'nodejs: for copilot support'
   'openssh-askpass: for a git ssh access'
+  'postgresql-libs: for postgresql'
   'quarto: for Quarto projects support'
   'subversion: for subversion support'
 )
@@ -197,6 +200,8 @@ prepare() (
 )
 
 build() (
+  export CMAKE_POLICY_VERSION_MINIMUM=3.5
+
   _nvm_env
   _run_if_exists _build_soci
 
@@ -263,8 +268,9 @@ build() (
     -G Ninja
     -DCMAKE_BUILD_TYPE=None
     -DRSTUDIO_TARGET=Electron
-    -DRSTUDIO_USE_SYSTEM_BOOST=YES
-    -DRSTUDIO_USE_SYSTEM_SOCI=NO
+    -DRSTUDIO_USE_SYSTEM_BOOST=ON
+    -DRSTUDIO_USE_SYSTEM_SOCI=OFF
+    -DRSTUDIO_USE_SYSTEM_YAML_CPP=ON
     -DRSTUDIO_NODE_VERSION="Current"
     -DRSTUDIO_INSTALLED_NODE_VERSION="Current"
     -DQUARTO_ENABLED=${_quarto}
@@ -285,8 +291,6 @@ package() {
 
 # See following script for potentially useful flags.
 # https://github.com/ozankiratli/dotfiles/blob/master/.config/sway/scripts/rstudio-wayland
-
-#!/usr/bin/bash
 
 name=rstudio
 flags_file="\${XDG_CONFIG_HOME:-\$HOME/.config}/\${name}-flags.conf"
