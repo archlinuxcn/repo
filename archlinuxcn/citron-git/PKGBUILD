@@ -2,11 +2,11 @@
 _pkgname=Citron
 _xbyak_tag=7.24.2
 pkgname=${_pkgname,,}-git
-pkgver=0.6.1.canary.refresh.r15
+pkgver=0.6.1.canary.refresh.r53
 pkgrel=1
 pkgdesc="Nintendo Switch emulator forked from yuzu"
 arch=(x86_64)
-url=https://git.citron-emu.org/Citron/Citron
+url=https://git.citron-emu.org/citron/emu
 license=(GPL-3.0-or-later)
 provides=('citron')
 conflicts=('citron')
@@ -30,7 +30,7 @@ makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'perl' 'clang'
 )
 optdepends=('qt6-wayland: for Wayland support')
 source=(
-  git+${url}.git
+  Citron::git+${url}.git
   git+https://github.com/yuzu-mirror/sirit.git#commit=ab75463
   git+https://github.com/herumi/xbyak.git#tag=v${_xbyak_tag:-7.22}
   # citron use  xbyak v6.68 by default, but v7.22 is okay
@@ -66,7 +66,7 @@ prepare() {
   cd $srcdir/$_pkgname
   sed -i CMakeLists.txt \
     -e '/-DBOOST_ASIO_DISABLE_CONCEPTS/d' \
-    -e 's/1.4.307/1.4.304/g' \
+    -e 's/1.4.313/1.4.309/g' \
     -e '/target_compile_options/d' \
     -e '/add_subdirectory(externals)/d' \
     -e 's|^add\_subdirectory(src)|add_subdirectory(externals)\n add_subdirectory(src)#|g'
@@ -101,6 +101,14 @@ prepare() {
     -e '/add_subdirectory(mbedtls)/c pkg_check_modules(MbedTLS REQUIRED IMPORTED_TARGET GLOBAL mbedtls mbedcrypto)' \
     -e '/target_include_directories(mbedtls/d' \
     -e '/^ *target_compile_options(mbedcrypto/,/)/ { s/^/#/ }'
+  # boost 1.88
+  sed -i src/core/debugger/debugger.cpp \
+    -e 's|#include *<boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g' \
+    -e 's/\bboost::process::async_pipe\b/boost::process::v1::async_pipe/g'
+  # no member named 'use_nce' in 'Settings::Values', so we just use false to replace this in a  || expression
+  sed -i src/citron/configuration/configure_system.cpp \
+    -e 's|setting->Id() == Settings::values.use_nce.Id()|false|g'
+
 }
 
 build() {
