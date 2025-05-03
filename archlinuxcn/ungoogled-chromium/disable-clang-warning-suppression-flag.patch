@@ -1,0 +1,14 @@
+diff --git a/build/config/compiler/BUILD.gn b/build/config/compiler/BUILD.gn
+index 2fc8d8234a1b..83a704e54628 100644
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -1718,7 +1718,8 @@ config("clang_revision") {
+ # To use a different file, or to use this functionality outside of chromium,
+ # set the `clang_warning_suppression_file` argument to point to the new file,
+ # e.g. by setting in the the project's .gn file.
+-config("clang_warning_suppression") {
++config("clang_warning_suppression") { }
++config("xclang_warning_suppression") {
+   # Some build configs use older versions of clang that don't support WSMs
+   if (!is_nacl && default_toolchain != "//build/toolchain/cros:target" &&
+       !llvm_android_mainline && is_clang &&
