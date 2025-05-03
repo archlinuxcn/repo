@@ -2,7 +2,7 @@ from lilaclib import *
 
 def pre_build():
   depends_lily_re = re.compile(
-    r'''^(depends=.*?)['"]?linux-lily[^'") ]*['"]?''')
+    r'''^(\s*depends=.*?)['"]?linux-lily[^'") ]*['"]?''')
 
   kernel = _G.newvers[1]
   update_pkgver_and_pkgrel(_G.newver)
