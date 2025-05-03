@@ -42,6 +42,7 @@ source=(${pkgname}-${pkgver}.zip::https://github.com/emuplace/sudachi.emuplace.a
   0005-fix-sdl3.patch
   0006-fix-for-mbedtls2.patch
   0007-add-general-optimize.patch
+  0008-fix-for-boost-1.88.0.patch
 )
 
 noextract=(${pkgname}-${pkgver}.zip
@@ -58,7 +59,8 @@ b2sums=('deacfbf286580efea76745c973b497eaa83a27b8157cb3af978e8911ad94f2d428c98c1
   '70fad80522592912d1825d997ace61ea4203ea3189e7b2f05f782c62f3361ce9fefcf9767150acd69912a92b8b7312bbeef811ac4183eea3cbf0d8417124e189'
   '5756d3877a1d437a12a4f8f50a6f11d9b3bbcfeaa1ddda2c8c432a83affd0d0a3e470e7c4d5df5bc8059ed78cbaa944f61a7d990bc04350da57c7bcb29b569d0'
   'e91258b8d8b2e10fde9fb2dcf9c0120f1f505192521c17081d50c626f6cd10ed5b9d7b5beec63b201c7b83c23f7f4f2032e4422b271fb47a33fdde9ebc013cc7'
-  '962aa39ef90a8cd8ee3c8823e77501d3ff5856e6ddc8278a39ce362a1fe3e13c483d781aaeeeadbf115f200bd8d3d3e6eb2ea156c5ed2cdf8e300cb4cbe55a10')
+  '962aa39ef90a8cd8ee3c8823e77501d3ff5856e6ddc8278a39ce362a1fe3e13c483d781aaeeeadbf115f200bd8d3d3e6eb2ea156c5ed2cdf8e300cb4cbe55a10'
+  '946fcb9ff52a8e1ffbfd5665e23860678a9d56d83cdbe651b00f8e631dce525ef697a2e41020fe55b99e0f81d6c72205f6b8f396db48fe6db2c78b15fea5ffb5')
 
 prepare() {
   install -d $srcdir/${pkgname}
