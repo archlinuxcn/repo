@@ -19,7 +19,6 @@ pkgdesc="Rime 配置：雾凇拼音 | 长期维护的简体词库"
 arch=("any")
 url="https://github.com/iDvel/rime-ice"
 license=("GPL-3.0-or-later")
-install='post.install'
 
 depends=("lua" "librime")
 makedepends=("git" "rime-prelude" "sed")
@@ -251,6 +250,7 @@ _package_schema() {
 package_rime-ice-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库'
   provides=(rime-ice)
+  install='post.install'
   conflicts=(
     rime-emoji
     # ${_pkgbase}
@@ -271,6 +271,7 @@ package_rime-ice-git() {
 package_rime-ice-pinyin-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 拼音方案'
   provides=(rime-ice-pinyin)
+  install='post.install'
   conflicts=(
     rime-emoji
     ${_pkgbase}
@@ -289,6 +290,7 @@ package_rime-ice-pinyin-git() {
 package_rime-ice-double-pinyin-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 自然码双拼'
   provides=(rime-ice-double-pinyin)
+  install='post.install'
   conflicts=(
     rime-emoji
     ${_pkgbase}
@@ -307,6 +309,7 @@ package_rime-ice-double-pinyin-git() {
 package_rime-ice-double-pinyin-abc-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 智能ABC双拼'
   provides=(rime-ice-double-pinyin-abc)
+  install='post.install'
   conflicts=(
     rime-emoji
     ${_pkgbase}
@@ -325,6 +328,7 @@ package_rime-ice-double-pinyin-abc-git() {
 package_rime-ice-double-pinyin-mspy-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 微软双拼'
   provides=(rime-ice-double-pinyin-mspy)
+  install='post.install'
   conflicts=(
     rime-emoji
     ${_pkgbase}
@@ -343,6 +347,7 @@ package_rime-ice-double-pinyin-mspy-git() {
 package_rime-ice-double-pinyin-sogou-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 搜狗双拼'
   provides=(rime-ice-double-pinyin-sogou)
+  install='post.install'
   conflicts=(
     rime-emoji
     ${_pkgbase}
@@ -361,6 +366,7 @@ package_rime-ice-double-pinyin-sogou-git() {
 package_rime-ice-double-pinyin-flypy-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 小鹤双拼'
   provides=(rime-ice-double-pinyin-flypy)
+  install='post.install'
   conflicts=(
     rime-emoji
     ${_pkgbase}
@@ -379,6 +385,7 @@ package_rime-ice-double-pinyin-flypy-git() {
 package_rime-ice-double-pinyin-ziguang-git() {
   pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 紫光双拼'
   provides=(rime-ice-double-pinyin-ziguang)
+  install='post.install'
   conflicts=(
     rime-emoji
     ${_pkgbase}
