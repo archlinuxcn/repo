@@ -2,8 +2,8 @@
 
 _name=uritools
 pkgname=python-$_name
-pkgver=4.0.3
-pkgrel=3
+pkgver=5.0.0
+pkgrel=1
 pkgdesc="URI parsing, classification and composition"
 arch=(any)
 url="https://github.com/tkem/$_name"
@@ -12,12 +12,12 @@ depends=(python)
 makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx)
 checkdepends=(python-pytest)
 source=($pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz)
-sha512sums=('cf075e60544a4638dbb648062b4d9fc879ccd0a609dc353fb3b73defc42ab38bf03d8baca47e7d3128c0f4ff58352854f39674fa5aa3a57cc121e021d3e0bd47')
+sha512sums=('6d73a5b0e4fadad62797b7644ace613add5e8957d715ddb3c64062b7b981177daefd6f3693588679b4f575b96b3f42c3bd8cccbc01f8573b823dd2d8d349547b')
 
 build() {
   cd $_name-$pkgver
   python -m build --wheel --no-isolation
-  make -C docs man
+  sphinx-build -b man docs/ docs/_build/man/
 }
 
 check(){
