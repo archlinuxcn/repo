@@ -24,7 +24,7 @@ conflicts=("$_pkgname")
 
 backup=("etc/$_pkgname/config.json")
 
-_tags=with_gvisor,with_quic,with_wireguard,with_utls,with_reality_server,with_clash_api,with_acme,with_dhcp,with_tailscale
+_tags=with_gvisor,with_quic,with_wireguard,with_utls,with_clash_api,with_acme,with_dhcp,with_tailscale
 build(){
     cd "$_pkgname-$_pkgver"
 
