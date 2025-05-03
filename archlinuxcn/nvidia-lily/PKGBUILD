@@ -28,6 +28,7 @@ package() {
     _kernver=$(</usr/src/linux-lily/version)
 
     install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/extramodules" -m644 /var/lib/dkms/nvidia/${pkgver}/${_kernver}/${CARCH}/module/*.ko.zst
+    rm -rf "${pkgdir}/usr/src/debug"
 
     install -Dm644 /usr/share/licenses/nvidia-dkms/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }

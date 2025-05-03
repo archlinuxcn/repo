@@ -79,6 +79,7 @@ package_rust-nightly() {
 
   mv "$pkgdir"/usr/libexec/* "$pkgdir"/usr/lib/
   rm -r "$pkgdir"/usr/libexec
+  rm -rf "${pkgdir}/usr/src/debug"
 
   rm -r "$pkgdir/usr/share/doc"
   cd "$pkgdir"/usr/lib
