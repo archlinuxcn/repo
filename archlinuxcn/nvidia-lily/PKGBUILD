@@ -5,7 +5,7 @@
 
 pkgname=nvidia-lily
 pkgver=570.144
-pkgrel=1
+pkgrel=2
 pkgdesc="NVIDIA kernel modules for linux-lily"
 arch=('x86_64')
 url="https://www.nvidia.com/"
@@ -16,23 +16,19 @@ options=('!strip')
 conflicts=('nvidia-dkms')
 # or updpkgsums will fail
 source=(dummy)
-sha512sums=(cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e)
+sha512sums=('cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e')
 
 build() {
-    _kernver=$(</usr/src/linux-lily/version)
-
-    fakeroot dkms build --dkmstree "${srcdir}" -m nvidia/${pkgver} -k ${_kernver}
+    true
 }
 
 package() {
-    depends=("linux-lily=6.14.2-2" "nvidia-utils=${pkgver}" 'libglvnd')
+    depends=("linux-lily=6.14.4-1" "nvidia-utils=${pkgver}" 'libglvnd')
 
     _kernver=$(</usr/src/linux-lily/version)
 
-    install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/extramodules" -m644 nvidia/${pkgver}/${_kernver}/${CARCH}/module/*.ko
-
-    # compress each module individually
-    find "$pkgdir" -name '*.ko' -exec zstd --rm -19 {} +
+    install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/extramodules" -m644 /var/lib/dkms/nvidia/${pkgver}/${_kernver}/${CARCH}/module/*.ko.zst
+    rm -rf "${pkgdir}/usr/src/debug"
 
     install -Dm644 /usr/share/licenses/nvidia-dkms/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
