@@ -1,6 +1,6 @@
 #Maintainer: Yury Bobylev <bobilev_yury@mail.ru>
 pkgname="mylibrary"
-pkgver="4.0"
+pkgver="4.0.1"
 pkgrel="1"
 pkgdesc="Home librarian"
 arch=('x86_64')
@@ -10,7 +10,7 @@ url="https://github.com/ProfessorNavigator/mylibrary"
 license=('GPL-3.0-only')
 makedepends=('cmake' 'pkgconf' 'gcc' 'doxygen' 'texlive-latex' 'texlive-latexrecommended' 'texlive-latexextra' 'texlive-plaingeneric' 'texlive-fontsrecommended' 'texlive-fontutils')
 depends=('gtkmm-4.0' 'icu' 'libgcrypt' 'poppler' 'djvulibre' 'libarchive')
-sha256sums=('be8b8f91e8950f44ba75880ae753886fe18be3f071e68316ac043520f052db07')
+sha256sums=('3398aad4fc6ce52131795d4b55330ffb96db307a1bdcb6ad68647d3c51dc70c1')
 
 build() {   
    local cmake_options=(
