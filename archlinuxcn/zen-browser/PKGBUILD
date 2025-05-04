@@ -2,7 +2,7 @@
 
 pkgbase=zen-browser
 pkgname=("$pkgbase")
-pkgver=1.12b
+pkgver=1.12.1b
 _zen_version=${pkgver//_/-}
 _firefox_version=138.0.1
 pkgrel=1
@@ -78,7 +78,7 @@ source=("git+$_repo.git#tag=$_zen_version"
         0001-fix-desktop.zen.patch
         0003-do-not-disable-system-extensions.zen.patch
         0004-fix-package-json.zen.patch)
-sha256sums=('58e88fc851f2a51b6a0fd536a548a87d55eed96b6b497370ba1faa6e5cec8ed1'
+sha256sums=('30b7d4f884af50cbec5dbc9b5263c89902badaadf6b5676b44ff6bd9c8c8541d'
             '9894b96203876f847637af20f961cd4494ff1f2d85e4c096a7f358f54d9ecb2b'
             'f55ed69dc6f90f898f91d24966b203cb7fb10211ce62405e3ccb8b3069014990'
             '36bff2af04da55da0cc71f960d921889ccf21c11fcd8343087c144dfcc50f10a'
