@@ -6,7 +6,7 @@
 # Contributor: Bart Ribbers <bribbers at disroot dot org>
 
 pkgname=waydroid-image-beta
-pkgver=18.1_20250503
+pkgver=20_20250503
 _pkgver=${pkgver/_/-}
 pkgrel=1
 pkgdesc="LineageOS-based Android images for Waydroid (Beta version)"
@@ -17,8 +17,8 @@ depends=('waydroid')
 _srcprefix="https://sourceforge.net/projects/waydroid/files/images"
 source=("${_srcprefix}/system/lineage/waydroid_x86_64/lineage-${_pkgver}-VANILLA-waydroid_x86_64-system.zip"
 	"${_srcprefix}/vendor/waydroid_x86_64/lineage-${_pkgver}-MAINLINE-waydroid_x86_64-vendor.zip")
-sha256sums=('c24aa04e6cb5ff6f31a161b5b5944cf768814ca82181dc5e71b4acf1cefd613e'
-            '90bdbe8a5b8df48351b9bb6aa930c3b49fe8f91df284548223f2803c7f9a6801')
+sha256sums=('60e2bbb7b821132b4518c9fa22581845742e09edd858831465e91a8a6b9c4087'
+            'e5331c517553873620b547e02fd972df40cf060ddad37856fa15f22442ae87f3')
 
 package() {
 	install -Dm644 {system,vendor}.img -t "${pkgdir}/usr/share/waydroid-extra/images/"
