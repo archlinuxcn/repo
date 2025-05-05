@@ -10,7 +10,7 @@
 _pkgname="sunshine"
 pkgname="$_pkgname"
 pkgver=2025.122.141614
-pkgrel=6
+pkgrel=7
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
@@ -149,6 +149,46 @@ prepare() {
 
   _run_if_exists _prepare_sunshine
   _run_if_exists _prepare_moonlight_common_c
+
+  #include <boost/process.hpp>
+
+  #sed -E 's&(#include <boost/process.hpp>)&\1\n#include "'"${srcdir}"'/boost_process_v1.hpp"&' \
+  #  -i "$_pkgsrc"/src/platform/common.h
+
+  sed -E 's&<boost/process.hpp>&"'"${srcdir}"'/boost_process_v1.hpp"&' \
+    -i "$_pkgsrc"/src/platform/common.h
+
+  sed -E 's&(namespace bp = boost::process);&\1::v1;&' \
+    -i "$_pkgsrc"/src/platform/linux/misc.cpp
+
+  sed -E 's&<boost/process/v1.hpp>&"'"${srcdir}"'/boost_process_v1.hpp"&' \
+    -i "$_pkgsrc"/src/platform/linux/misc.cpp \
+    "$_pkgsrc"/src/process.h
+
+  install -Dm644 /dev/stdin "boost_process_v1.hpp" << END
+#ifndef BOOST_PROCESS_V1_HPP
+#define BOOST_PROCESS_V1_HPP
+#include <boost/process/v1/args.hpp>
+#include <boost/process/v1/async.hpp>
+#include <boost/process/v1/async_system.hpp>
+#include <boost/process/v1/group.hpp>
+#include <boost/process/v1/child.hpp>
+#include <boost/process/v1/cmd.hpp>
+#include <boost/process/v1/env.hpp>
+#include <boost/process/v1/environment.hpp>
+#include <boost/process/v1/error.hpp>
+#include <boost/process/v1/exe.hpp>
+#include <boost/process/v1/group.hpp>
+#include <boost/process/v1/handles.hpp>
+#include <boost/process/v1/io.hpp>
+#include <boost/process/v1/pipe.hpp>
+#include <boost/process/v1/shell.hpp>
+#include <boost/process/v1/search_path.hpp>
+#include <boost/process/v1/spawn.hpp>
+#include <boost/process/v1/system.hpp>
+#include <boost/process/v1/start_dir.hpp>
+#endif //BOOST_PROCESS_V1_HPP
+END
 }
 
 build() (
