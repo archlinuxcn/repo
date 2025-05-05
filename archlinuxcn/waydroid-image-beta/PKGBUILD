@@ -1,0 +1,25 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: enamulhasanabid <enamulhabid at gmail dot com>
+# Contributor: éclairevoyant
+# Contributor: dangerdev <dangerdev at disroot dot org>
+# Contributor: Danct12 <danct12 at disroot dot org>
+# Contributor: Bart Ribbers <bribbers at disroot dot org>
+
+pkgname=waydroid-image-beta
+pkgver=18.1_20250503
+_pkgver=${pkgver/_/-}
+pkgrel=1
+pkgdesc="LineageOS-based Android images for Waydroid (Beta version)"
+arch=('x86_64')
+url="https://waydro.id"
+license=('Apache-2.0')
+depends=('waydroid')
+_srcprefix="https://sourceforge.net/projects/waydroid/files/images"
+source=("${_srcprefix}/system/lineage/waydroid_x86_64/lineage-${_pkgver}-VANILLA-waydroid_x86_64-system.zip"
+	"${_srcprefix}/vendor/waydroid_x86_64/lineage-${_pkgver}-MAINLINE-waydroid_x86_64-vendor.zip")
+sha256sums=('c24aa04e6cb5ff6f31a161b5b5944cf768814ca82181dc5e71b4acf1cefd613e'
+            '90bdbe8a5b8df48351b9bb6aa930c3b49fe8f91df284548223f2803c7f9a6801')
+
+package() {
+	install -Dm644 {system,vendor}.img -t "${pkgdir}/usr/share/waydroid-extra/images/"
+}
