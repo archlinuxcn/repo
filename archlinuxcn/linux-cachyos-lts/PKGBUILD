@@ -147,7 +147,7 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=6.12
-_minor=25
+_minor=26
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -213,7 +213,8 @@ fi
 # NVIDIA pre-build module support
 if [ "$_build_nvidia" = "yes" ]; then
     source+=("https://us.download.nvidia.com/XFree86/Linux-x86_64/${_nv_ver}/${_nv_pkg}.run"
-             "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch")
+             "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
+             "${_patchsource}/misc/nvidia/0002-CFLAGS-Set-std-gnu17-for-all-compilation-flags.patch")
 fi
 
 if [ "$_build_nvidia_open" = "yes" ]; then
@@ -463,6 +464,8 @@ prepare() {
 
         # Use fbdev and modeset as default
         patch -Np1 -i "${srcdir}/0001-Enable-atomic-kernel-modesetting-by-default.patch" -d "${srcdir}/${_nv_pkg}/kernel"
+        # GCC 15
+        patch -Np1 -i "${srcdir}/0002-CFLAGS-Set-std-gnu17-for-all-compilation-flags.patch" -d "${srcdir}/${_nv_pkg}/kernel"
     fi
 
     if [ "$_build_nvidia_open" = "yes" ]; then
@@ -701,7 +704,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('f647cc49328383876e04871a05b1b7dba761c8535f6b72851634d08d839954959276b22cb87d8c22d3ba5141ad08c19b68f28f8027d58cd501c962bb43e7e7ad'
+b2sums=('3f4382766952a1aea7d3cd5b733b450147d46d92be8338b017f3b8170bb9b2edb377f00f6a11b9be770ce73085eefbe5af8b5e7b7de1cf241ef1f021a41842f3'
         'fa3bbedc0804fcf4b9908bb6b8f13f45a63d9a6ec19978028449841cf7ca026053254a7fc53085dc7ffa24c6756301d37d3a1f9e167bb7f9eb5605d33749b0b2'
         '390c7b80608e9017f752b18660cc18ad1ec69f0aab41a2edfcfc26621dcccf5c7051c9d233d9bdf1df63d5f1589549ee0ba3a30e43148509d27dafa9102c19ab'
         'ca014c2570ef63f11e162a015293225e1e4103513cefe2f3c20e01444fe2d6b7cbc7c993b5d77db97c84142fb6cb6cc401df419b2d9de1610b5539832c013cd8'
@@ -709,5 +712,5 @@ b2sums=('f647cc49328383876e04871a05b1b7dba761c8535f6b72851634d08d839954959276b22
         '05a3cc4954a37897d08e93e8ea1726fc395a12cfb1509f09560bdcf0ae14ed4ca518fda566a618c92db0fb6573e3ed7d02172dd76a3b145982060e060525365b'
         'bccb4169c43e556f10cddaf8f101cc0b29209f984b9f681f266602a359bc6b4765b48d192006decd23667bd2b899fad9c1fd5b742251014dacc7c077ea023e0f'
         '8e812e90adcd4790e8a5a5563859e9c64e65424a504185e1a7d083bcc6a99560aea37c79ad9680af751da9f40e6bd60bb3e8a3bd431e0903afbd8eeba2c53ad3'
-        '248deb875901c285c837e98bdc4fc0b6e616df961cef49e2ce89d6d061cff67de6c891bfc86f54f8addf4e16acaf030365b3136278dd33275545a485c4bffb95'
+        '5c57770c4249c2e043c2689325d58aef79327517cf73ec1e7bada9db929555d2e5695c3f79eef3c8ed29c8c088f2047c7ce3d9e6ecbcd6a5230942b82e011f42'
         '00394190f5d3d4e0ca993254de544120b65c006b307b8bdc8bd9060a01aedfae441e8081eff2eb98041bdce67fb5dd3ab160cfca0046f30a072f2e2d4557b240')
