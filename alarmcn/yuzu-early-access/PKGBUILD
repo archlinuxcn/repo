@@ -79,7 +79,7 @@ prepare() {
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
   sed -i -e 's/boost::asio::io_service/boost::asio::io_context/g' src/input_common/drivers/udp_client.cpp
   sed -i 's/cmake_minimum_required(VERSION [0-9]\+\.[0-9]\+)/cmake_minimum_required(VERSION 3.5)/' externals/mbedtls/CMakeLists.txt
-  sed -i 's|<boost/process/async_pipe.hpp>|<boost/process/v1/async_pipe.hpp>|g' src/yuzu/src/core/debugger/debugger.cpp
+  sed -i 's|<boost/process/async_pipe.hpp>|<boost/process/v1/async_pipe.hpp>|g' src/core/debugger/debugger.cpp
 
   perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n/igs' src/video_core/CMakeLists.txt
 }
