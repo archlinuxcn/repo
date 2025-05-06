@@ -4,16 +4,16 @@
 ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
-pkgver=11.7.2
-pkgrel=3
+pkgver=11.7.3
+pkgrel=1
 _pkgfixver=$pkgver
-_pkgfixvercli=11.7.1
+_pkgfixvercli=11.7.3
+_pkgrelcli=1
 
-
-_commit='71ced277e5931ccea2433ece291430481a2694ee'
-_commitcli='e1133adcebb3a5e740422abb0c38ce40eb591fb7'
-sha256sums=('ca2995fd9605bf9841cfcf8c6e642932e7fe5016c42eeea21ead6bd2a6d97226'
-            'a70bcad07b081dd23faacc281a6d7ad6e4dc59f2055c3c590671a75436f6d456')
+_commit='06c846c0310030ee45870b190359553b1c105f77'
+_commitcli='27cc40525a5820177a9d77028d9e481a500d61ee'
+sha256sums=('735d724d0cd4fa49caadec17fa2d73b81d957f2a9cf24609493fb00e0bc30eb1'
+            '2b8275fc1a428b4eb147228c85ce59486537d807d97fa6f86f3c568ff1a62ad4')
 
 pkgdesc="A Gtk frontend, Package Manager based on libalpm with AUR and Appstream support"
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -26,11 +26,11 @@ optdepends=('polkit-gnome: needed for authentification in Cinnamon, Gnome'
             'lxsession: needed for authentification in Xfce, LXDE etc.')
 makedepends=('gettext' 'itstool' 'vala' 'meson' 'ninja' 'gobject-introspection' 'xorgproto' 'asciidoc' 'git' 'systemd')
 conflicts=('pamac' 'pamac-tray-appindicator' 'pamac-cli')
-provides=("pamac=$_pkgfixver-$pkgrel" "pamac-cli=$_pkgfixvercli-$pkgrel")
+provides=("pamac=$_pkgfixver-$pkgrel" "pamac-cli=$_pkgfixvercli-$_pkgrelcli")
 options=(!emptydirs !strip)
 install=pamac.install
 source=("pamac-$_pkgfixver-$pkgrel.zip::$url/archive/$_commit.zip"
-        "pamac-cli-$_pkgfixvercli-$pkgrel.zip::$urlcli/archive/$_commitcli.zip")
+        "pamac-cli-$_pkgfixvercli-$_pkgrelcli.zip::$urlcli/archive/$_commitcli.zip")
 
 define_meson=''
 if [ "${ENABLE_FAKE_GNOME_SOFTWARE}" = 1 ]; then
@@ -47,7 +47,7 @@ prepare() {
   sed -i -e "s|\"$_pkgfixver\"|\"$pkgver-$pkgrel\"|g" src/version.vala
   cd "${srcdir}/${_srcdircli}"
   # adjust version string
-  sed -i -e "s|\"$_pkgfixvercli\"|\"$_pkgfixvercli-$_pkgrelcli\"|g" src/version.vala
+  sed -i -e "s|\"$_pkgfixvercli\"|\"$_pkgfixvercli-$__pkgrelcli\"|g" src/version.vala
 }
 
 build() {
