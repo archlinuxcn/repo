@@ -25,18 +25,19 @@ conflicts=(
     "${_pkgname}-alpha"
 )
 backup=('etc/clash-meta/config.yaml')
+install="${_pkgname}.install"
 source=("${_pkgname}::git+${url}.git#branch=Alpha"
         "${_pkgname}.service"
         "${_pkgname}.sysusers"
         "${_pkgname}.tmpfiles")
 sha256sums=('SKIP'
-            'ac0d47737076ac8a2fd3392e3aae197d44b1ff63dfe86ebe49aba8684f052634'
+            '7fcbbcf5c00cfadcebcff74cce954ec5d764c83ae123b913aab537f4073627ba'
             'f9708634e34dd6ee878c85a5a93c5107befce354112253bab87d520b6be7b5f6'
             '50737592c7bd743fe8f543924034718337477a203fa11ef4272cae496df3769c')
 
 pkgver() {
     cd "${srcdir}/${_pkgname}"
-    TZ=UTC git log -1 --pretty=format:"%cd.%h" --date=format:"%Y%m%d%H"
+    printf "%s" "$(TZ=UTC git log -1 --pretty='%cd' --date=format-local:%Y%m%d.%H%M%S)"
 }
 
 build() {
