@@ -3,7 +3,7 @@
 # Contributor: rayanamukami <matthewchoi_123 at hotmail.com>
 
 pkgname=oneko
-pkgrel=5
+pkgrel=6
 pkgver=1.2.5
 _pkgver="1.2.sakura.5"
 pkgdesc="A cat that chases around your cursor"
@@ -15,13 +15,16 @@ makedepends=('imake' 'make' 'desktop-file-utils')
 source=(
     "http://www.daidouji.com/$pkgname/distfiles/$pkgname-$_pkgver.tar.gz"
     "gcc2024.patch"
+    "gcc2025.patch"
 )
 md5sums=('456b318fa6e61431bf4f0a42b110014a'
-         'f6ebbd81cab895f8909fbd26832cfba7')
+         'f6ebbd81cab895f8909fbd26832cfba7'
+         '145b0a52bd79f29fa965f57e4092e0b9')
 
 prepare() {
     cd "$srcdir/$pkgname-$_pkgver/"
     patch -Np1 -i ../gcc2024.patch
+    patch -Np1 -i ../gcc2025.patch
 }
 
 build() {
