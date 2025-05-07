@@ -19,7 +19,7 @@
 _extractedName="google-cloud-sdk"
 pkgname="google-cloud-cli"
 pkgver=521.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq."
 url="https://cloud.google.com/cli/"
 license=('Apache-2.0')
@@ -92,7 +92,7 @@ package() {
 
   find $pkgdir -name '__pycache__' -type d -exec rm -rf {} +
 
-  install -D -m 0755 "${srcdir}/${source[1]}" \
+  install -D -m 0755 "${srcdir}/${source[0]}" \
     "${pkgdir}/etc/profile.d/google-cloud-cli.sh"
 
   if [ "$_force_budled_python" = true ]; then
