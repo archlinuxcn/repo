@@ -18,7 +18,7 @@ optdepends=(
 	'ripgrep: for file content searching'
 	'fzf: for directory jumping'
 	'zoxide: for directory jumping')
-makedepends=("git" "cargo" "imagemagick")
+makedepends=("git" "cargo" "imagemagick" "gcc14")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
@@ -37,6 +37,9 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
+
+	# Use GCC 14 temporarily as it won't build successfully with GCC 15
+	export CC=gcc-14
 	YAZI_GEN_COMPLETIONS=true cargo build --frozen --release --all-features
 }
 
