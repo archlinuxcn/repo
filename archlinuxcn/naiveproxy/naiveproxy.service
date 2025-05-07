@@ -7,7 +7,8 @@ Type=simple
 User=naiveproxy
 Restart=on-failure
 RestartSec=5s
-ExecStart=/usr/bin/naiveproxy /etc/naiveproxy/config.json
+LoadCredential=config.json:/etc/naiveproxy/config.json
+ExecStart=/usr/bin/naiveproxy "${CREDENTIALS_DIRECTORY}/config.json"
 # Proc filesystem
 ProcSubset=pid
 ProtectProc=invisible
