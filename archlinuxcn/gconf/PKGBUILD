@@ -4,7 +4,7 @@
 
 pkgname=gconf
 pkgver=3.2.6+11+g07808097
-pkgrel=15
+pkgrel=16
 pkgdesc="An obsolete configuration database system"
 url="https://gitlab.gnome.org/Archive/gconf"
 arch=($CARCH)
@@ -34,8 +34,14 @@ prepare() {
   patch -Np1 -i ../01_xml-gettext-domain.patch
 
   # TODO: Mega hack, needs a proper fix!
-  mkdir m4
-  cp /usr/share/gettext/m4/nls.m4 m4/nls.m4
+  mkdir -p m4
+  if [ -f /usr/share/aclocal/nls.m4 ]; then
+    cp /usr/share/aclocal/nls.m4 m4/
+  elif [ -f /usr/share/gettext/m4/nls.m4 ]; then
+    cp /usr/share/gettext/m4/nls.m4 m4/
+  else
+    echo "ERROR: Could not find nls.m4. The build will likely fail."
+  fi
 
   NOCONFIGURE=1 ./autogen.sh
 }
