@@ -12,6 +12,7 @@ pkgname=(
   qemu-guest-agent
   qemu-hw-display-{qxl,virtio-{gpu{,-{gl,pci,pci-gl}},vga{,-gl}}}
   qemu-hw-s390x-virtio-gpu-ccw
+  qemu-hw-uefi-vars
   qemu-hw-usb-{host,redirect,smartcard}
   qemu-img
   qemu-pr-helper
@@ -25,7 +26,7 @@ pkgname=(
   qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-pkgver=9.2.3
+pkgver=10.0.0
 pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
@@ -134,7 +135,7 @@ source=(
   $pkgbase-8.1.1-static_regression.patch
   $pkgbase-9.2.2-libnfs6.patch
 )
-sha512sums=('941a4337a115c65de2fca042932efb31886114f4300226fcf55f04c2c5471bd2b5ce220c4b17e01c3679bd55ba08a1aa7ce399de15e3e5f28c17da52030b139e'
+sha512sums=('2215458ed8be3ab0b0032fe2a96e79183f5fc2da323d927018412ea3d980b022a07ba87d4f446229eaaa7d1b19a577d438dbcaa3af3bd537c7720b56734a2d8b'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
@@ -143,7 +144,7 @@ sha512sums=('941a4337a115c65de2fca042932efb31886114f4300226fcf55f04c2c5471bd2b5c
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839'
             'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12'
             '7949b1435ed979836c59149b4b06b80fe14fa89ef12d1e027860df392e2ffdaf4a0f881021f80b4ee56e8657068bf7f2c6415c9891f34c32228b9d35e9359c8f')
-b2sums=('cdc7300288d2efc50262c605707caab64638fbf1d7528576a0bce71efc1403ccd6aa647a984c84a5ab8ebca28ea9ee7cd8682b4098ca2e63a2f76d2de577c181'
+b2sums=('3408c7b2a38ace7f0b2e0912411a26cab96cb23bcb03d7095f7b081cb88db55f36b004ff6458281d73190b9cc9006da85dde2a0b4b068c80662a8de205c29fda'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
@@ -245,6 +246,7 @@ _qemu_base_optdepends=(
   'qemu-hw-display-virtio-gpu-gl: for the virtio-gpu-gl display device'
   'qemu-hw-display-virtio-gpu-pci: for the virtio-gpu-pci display device'
   'qemu-hw-display-virtio-gpu-pci-gl: for the virtio-gpu-pci-gl display device'
+  'qemu-hw-uefi-vars: for UEFI variable support'
   'qemu-hw-usb-host: for host USB support'
   'qemu-hw-usb-redirect: for USB redirect support'
   'qemu-hw-usb-smartcard: for USB smartcard support'
@@ -490,6 +492,8 @@ package_qemu-common() {
     _pick qemu-hw-usb-redirect usr/lib/qemu/hw-usb-redirect.so
     _pick qemu-hw-usb-smartcard usr/lib/qemu/hw-usb-smartcard.so
 
+    _pick qemu-hw-uefi-vars usr/lib/qemu/hw-uefi-vars.so
+
     _pick qemu-img usr/bin/qemu-{img,io,nbd,storage-daemon}
     _pick qemu-img usr/share/man/man1/qemu-{img,storage-daemon}.1*
     _pick qemu-img usr/share/man/man7/qemu-storage-daemon-qmp-ref.7*
@@ -511,7 +515,7 @@ package_qemu-common() {
     _pick qemu-system-arm usr/bin/qemu-system-arm
     _pick qemu-system-arm usr/share/man/man1/qemu-system-arm.1*
 
-    _pick qemu-system-arm-firmware usr/share/qemu/npcm7xx_bootrom.bin
+    _pick qemu-system-arm-firmware usr/share/qemu/npcm{7,8}xx_bootrom.bin
 
     _pick qemu-system-avr usr/bin/qemu-system-avr
     _pick qemu-system-avr usr/share/man/man1/qemu-system-avr.1*
@@ -544,6 +548,7 @@ package_qemu-common() {
     _pick qemu-system-ppc-firmware usr/share/qemu/{bamboo,canyonlands}.dtb
     # NOTE: needs to be replaced by openbios
     _pick qemu-system-ppc-firmware usr/share/qemu/openbios-ppc
+    _pick qemu-system-ppc-firmware usr/share/qemu/pnv-pnor.bin
     _pick qemu-system-ppc-firmware usr/share/qemu/qemu_vga.ndrv
     _pick qemu-system-ppc-firmware usr/share/qemu/skiboot.lid
     # NOTE: needs to be replaced by slof
@@ -578,7 +583,6 @@ package_qemu-common() {
     _pick qemu-system-tricore usr/share/man/man1/qemu-system-tricore.1*
 
     _pick qemu-system-x86 usr/bin/qemu-system-{i386,x86_64}
-    _pick qemu-system-x86 usr/lib/qemu/accel-tcg-{i386,x86_64}.so
     _pick qemu-system-x86 usr/share/man/man1/qemu-system-{i386,x86_64}.1*
 
     _pick qemu-system-x86-firmware usr/share/qemu/{kvmvapic,linuxboot,multiboot{,_dma},pvh}.bin
@@ -1001,6 +1005,13 @@ package_qemu-system-xtensa() {
   _install_licenses
 }
 
+package_qemu-hw-uefi-vars() {
+  pkgdesc="QEMU UEFI vars handling"
+  depends=(gcc-libs glibc gnutls qemu-common=$pkgver-$pkgrel)
+  mv -v $pkgname/* "$pkgdir"
+  _install_licenses
+}
+
 package_qemu-hw-usb-host() {
   pkgdesc="QEMU USB host device"
   depends=(glibc libusb libusb-1.0.so qemu-common=$pkgver-$pkgrel)
@@ -1196,6 +1207,7 @@ package_qemu-desktop() {
     qemu-chardev-spice=$pkgver-$pkgrel
     qemu-hw-display-{qxl,virtio-gpu{,-{gl,pci,pci-gl}}}=$pkgver-$pkgrel
     qemu-hw-display-virtio-vga{,-gl}=$pkgver-$pkgrel
+    qemu-hw-uefi-vars=$pkgver-$pkgrel
     qemu-hw-usb-{host,redirect,smartcard}=$pkgver-$pkgrel
     qemu-ui-{curses,dbus,egl-headless,gtk,opengl,sdl,spice-{app,core}}=$pkgver-$pkgrel
     qemu-vhost-user-gpu=$pkgver-$pkgrel
