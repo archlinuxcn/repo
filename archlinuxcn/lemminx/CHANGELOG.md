@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.31.0](https://github.com/eclipse-lemminx/lemminx/milestone/48?closed=1) (May 8, 2025)
+
+### Enhancements
+ * Show hex colours when `#` is missing. See [#1738](https://github.com/eclipse-lemminx/lemminx/pull/1738).
+
 ## [0.30.1](https://github.com/eclipse-lemminx/lemminx/milestone/47?closed=1) (April 9, 2025)
 
 ### Bug Fixes
