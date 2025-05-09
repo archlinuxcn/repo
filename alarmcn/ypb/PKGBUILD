@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@archlinuxcn.org>
 
 pkgname=ypb
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="Yet another PasteBin"
 url="https://github.com/st0nie/${pkgname}"
@@ -9,7 +9,7 @@ license=('AGPL-3.0-or-later')
 arch=('x86_64' 'aarch64' 'riscv64')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.zip")
-sha256sums=('45096ef4c98af423f75a60c7f9227392abd574c9519cac0746cd63223e9b4281')
+sha256sums=('b5f6bf1c5b7249d2a62dd401d71c586068309ac0a8f8afff9a1e9abe4f5ef6fd')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
