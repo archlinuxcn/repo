@@ -7,8 +7,8 @@ _gemname=reverse_markdown
 ################################################################################
 
 pkgname="ruby-${_gemname}"
-pkgver=2.1.1
-pkgrel=4
+pkgver=3.0.0
+pkgrel=1
 pkgdesc="Ruby gem to convert html into markdown"
 arch=("any")
 url="https://github.com/xijo/${_gemname}"
@@ -18,7 +18,7 @@ makedepends=("rubygems")
 source=("${url}/archive/refs/tags/v${pkgver}.tar.gz"
         "0001-gemspec.patch")
 options=(!emptydirs)
-sha256sums=('7e5befcf8f2d155302a08ed45a11341e7c3930a6596a40e99ecec77cce855a20'
+sha256sums=('eb235f2339b65c986bee645cf806ef991f897e1b26dbdd60ed5f31e5d9ce12e7'
             'f40289fd12c3a65b31a9eadd19258204f60556b8841decde918afabc6b361b5b')
 
 ################################################################################
