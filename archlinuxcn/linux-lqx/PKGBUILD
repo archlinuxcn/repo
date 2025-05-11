@@ -58,7 +58,7 @@ _lqxpatchrel=8
 _lqxpatchver=${_lqxpatchname}-${_major}-${_lqxpatchrel}
 pkgbase=linux-lqx
 pkgver=6.14.6.lqx1
-pkgrel=1
+pkgrel=3
 pkgdesc='Linux Liquorix'
 url='https://liquorix.net/'
 arch=(x86_64)
@@ -72,6 +72,9 @@ makedepends=(
   pahole
   perl
   python
+  rust
+  rust-src
+  rust-bindgen
   tar
   xz
   zstd
