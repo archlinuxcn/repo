@@ -35,15 +35,17 @@ build() {
 }
 
 package_phonon-qt5-mpv-git() {
-  pkgdesc+=' for Qt5'
+  pkgdesc+=' for Qt5 (Git Version)'
   depends+=(qt5-base phonon-qt5)
-  provides=(phonon-qt5-backend)
+  provides=(phonon-qt5-backend phonon-qt5-mpv)
+  conflicts=(phonon-qt5-mpv)
   DESTDIR="$pkgdir" cmake --install build5
 }
 
 package_phonon-qt6-mpv-git() {
-  pkgdesc+=' for Qt6'
+  pkgdesc+=' for Qt6 (Git Version)'
   depends+=(qt6-base phonon-qt6)
-  provides=(phonon-qt6-backend)
+  provides=(phonon-qt6-backend phonon-qt6-mpv)
+  conflicts=(phonon-qt6-mpv)
   DESTDIR="$pkgdir" cmake --install build6
 }
