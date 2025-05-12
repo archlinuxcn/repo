@@ -3,7 +3,7 @@
 
 pkgname=zed-git
 _pkgname=${pkgname%-git}
-pkgver=0.186.7.r184.g196586e
+pkgver=0.186.7.r201.g98a18e0
 pkgrel=1
 pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
 arch=(x86_64)
@@ -32,6 +32,7 @@ depends=(alsa-lib libasound.so
          zlib libz.so
          zstd libzstd.so)
 makedepends=(cargo
+             cargo-about
              clang
              cmake
              git
