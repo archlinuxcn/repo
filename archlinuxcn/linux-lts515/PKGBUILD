@@ -2,14 +2,14 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-lts515
-pkgver=5.15.180
-pkgrel=1
+pkgver=5.15.182
+pkgrel=2
 pkgdesc='LTS Linux 5.15.x'
 url="https://www.kernel.org/"
 arch=(x86_64 pentium4 i686 i486)
 license=('GPL-2.0-only')
 makedepends=(
-  bc libelf pahole cpio perl tar xz python
+  bc libelf pahole cpio perl tar xz python gcc14
 )
 options=('!strip')
 _srcname=linux-$pkgver
@@ -27,7 +27,7 @@ validpgpkeys=(
   '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
 )
 # https://www.kernel.org/pub/linux/kernel/v5.x/sha256sums.asc
-sha256sums=('f51f68b8bbe60aca5e1ff3781f7e5d2ca6a31dd299c8446c39bf880bfff1cd39'
+sha256sums=('b6abfa53315a04e459070b927c58beb41f085433117d58756504d68b67f6a31e'
             'SKIP'
             'a19183d83f103d2f312cc7f01059a63fcac5087fcad4dbe603c505392dbfd98a'
             '3b5cfc9ca9cf778ea2c4b619b933cda26519969df2d764b5a687f63cf59974cd'
@@ -69,7 +69,7 @@ prepare() {
 build() {
   cd $_srcname
 # breaks brilliantly, disabled htmldocs
-  make all
+  make CC=gcc-14 all
 }
 
 _package() {
@@ -228,9 +228,9 @@ if [ "${CARCH}" = "i486" -o  "${CARCH}" = "i686" -o "${CARCH}" = "pentium4" ]; t
   # fail if upstream's .config changes
   for ((i=0; i<${#sha256sums[@]}; i++)); do
     if [ "${sha256sums[${i}]}" = 'a19183d83f103d2f312cc7f01059a63fcac5087fcad4dbe603c505392dbfd98a' ]; then
-      sha256sums_pentium4=('da4ef6a5fc388f5e971998a61097c65a891d9c1e8fbdc705f33edca441b32a99')
-      sha256sums_i686=('3ed5ac9af0f46a7a63969160083ba66be965004ab1ca93ff19da14275e0f95b5')
-      sha256sums_i486=('ec1e42e243d7e14232a1d8a7b87ecaae11f28d632a94fe1edc50a89a9ecb2177')
+      sha256sums_pentium4=('d0c2ca2ab6c262cd7e905b9d44bd6b61b72028f2d2cc398d41bbd94e7dc85b57')
+      sha256sums_i686=('ee072f28326047cdd256b19afe88daa04611ca2501fd47b6bd36ba216df8683b')
+      sha256sums_i486=('a7fa2f7e421ed264457974a0a0e18c22b6762d2f04aafe29bb528dd4f7807887')
     fi
   done
 
