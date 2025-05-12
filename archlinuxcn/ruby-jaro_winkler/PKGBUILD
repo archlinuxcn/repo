@@ -1,9 +1,10 @@
 # Maintainer: Mario Finelli <mario at finel dot li>
 
+_commit=13c427010b8065c11f6ea917195b99502d4d8f67 # no tag for v1.6.1
 _gemname=jaro_winkler
 pkgname=ruby-${_gemname}
-pkgver=1.6.0
-pkgrel=2
+pkgver=1.6.1
+pkgrel=1
 pkgdesc="Ruby & C implementation of Jaro-Winkler distance algorithm"
 arch=(i686 x86_64)
 depends=(ruby)
@@ -12,11 +13,11 @@ checkdepends=(ruby-rake ruby-rake-compiler ruby-minitest)
 url=https://github.com/tonytonyjan/jaro_winkler
 license=(MIT)
 options=(!emptydirs)
-source=(https://github.com/tonytonyjan/jaro_winkler/archive/v$pkgver/$_gemname-$pkgver.tar.gz)
-sha256sums=('4dca085137bcdcef2c0ecb835638fbc445cc4606d093a9e52a616a4957f514eb')
+source=(https://github.com/tonytonyjan/jaro_winkler/archive/$_commit/$_gemname-$pkgver.tar.gz)
+sha256sums=('c9047bd6b4fbaf80aca29b922daf4d952519a07544fb7b18b07a44b7ff0fe505')
 
 build() {
-  cd ${_gemname}-${pkgver}
+  cd ${_gemname}-${_commit}
   local _gemdir="$(gem env gemdir)"
 
   gem build "${_gemname}.gemspec"
@@ -58,13 +59,13 @@ build() {
 }
 
 check() {
-  cd ${_gemname}-${pkgver}
+  cd ${_gemname}-${_commit}
   local _gemdir="$(gem env gemdir)"
   GEM_HOME="tmp_install/${_gemdir}" rake
 }
 
 package() {
-  cd ${_gemname}-${pkgver}
+  cd ${_gemname}-${_commit}
 
   cp --archive --verbose tmp_install/* "${pkgdir}"
 
