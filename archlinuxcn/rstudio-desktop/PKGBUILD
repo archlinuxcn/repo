@@ -12,12 +12,14 @@
 : ${_quarto_branch:=release/rstudio-cranberry-hibiscus}
 : ${_quarto:=false}
 
-: ${_commit:=c5bcd0ec4fb959b2a9fcd656f12eb62092f0617e}
+: ${_copilot_version:=1.300.0}
+
+: ${_commit:=f0b76cc00df96fe7f0ee687d4bed0423bc3de1f8}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2024.12.1.563
-pkgrel=4
+pkgver=2025.05.0.496
+pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
 license=('AGPL-3.0-only')
@@ -121,8 +123,14 @@ _source_soci() {
   )
 }
 
+_source_copilot() {
+  source+=("https://github.com/github/copilot-language-server-release/releases/download/${_copilot_version}/copilot-language-server-linux-x64-${_copilot_version}.zip")
+  sha256sums+=('SKIP')
+}
+
 _source_main
 _source_soci
+_source_copilot
 
 _nvm_env() {
   export HOME="$SRCDEST/node-home"
@@ -158,11 +166,6 @@ prepare() (
   sed -E -e 's&^external-node-path=.*$&external-node-path=/usr/bin/node&' \
     -i src/cpp/conf/rsession-dev.conf
 
-  sed -E -e 's&DIRECTORY "\$\{RSTUDIO_DEPENDENCIES_DIR\}/common/node/\$\{RSTUDIO_INSTALLED_NODE_VERSION\}-patched/"&DIRECTORY "/usr"&' \
-    -e 's&(# install node)&\1\nif(FALSE)&' \
-    -e 's&(# install quarto)&endif()\n\1&' \
-    -i src/cpp/session/CMakeLists.txt
-
   sed -E -e 's&"\S+/common/node/\S+"&"/usr"&' \
     -i src/cpp/session/SessionOptions.cpp
 
@@ -176,23 +179,22 @@ prepare() (
     -e 's&set\(RSTUDIO_NODE_VERSION "[0-9\.]+"\)&set(RSTUDIO_NODE_VERSION "Current")&' \
     -i src/node/CMakeNodeTools.txt
 
+  # needed for system yaml-cpp
+  sed '/add_subdirectory(src)/i find_package(yaml-cpp REQUIRED)' -i CMakeLists.txt
+
   # fix os-release path
   sed -E 's&(STRINGS) "/etc/os-release" (OS_RELEASE)&\1 "/usr/lib/os-release" \2&' \
     -i cmake/modules/OsRelease.cmake
 
-  cd "$srcdir/$_pkgsrc/dependencies/common"
+  # bundled deps
+  cd "$srcdir/$_pkgsrc/dependencies"
   install -d pandoc/${_pandocver}
-
-  ln -sfT /usr/share/myspell/dicts dictionaries
-  ln -sfT /usr/share/mathjax2 mathjax-27
   ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
 
-  # Fix links for src/cpp/session/CMakeLists.txt
-  cd "$srcdir/$_pkgsrc/dependencies"
   ln -sfT /usr/share/myspell/dicts dictionaries
   ln -sfT /usr/share/mathjax2 mathjax-27
 
-  # Bundled libs
+  install -Dm755 "$srcdir/copilot-language-server" -t "copilot-language-server"
   ln -sfT "$srcdir/soci-$_soci_version" "soci-$_soci_version"
 
   # Panmirror is picked up now from Quarto repo
@@ -272,7 +274,6 @@ build() (
     -DRSTUDIO_USE_SYSTEM_SOCI=OFF
     -DRSTUDIO_USE_SYSTEM_YAML_CPP=ON
     -DRSTUDIO_NODE_VERSION="Current"
-    -DRSTUDIO_INSTALLED_NODE_VERSION="Current"
     -DQUARTO_ENABLED=${_quarto}
     -DRSTUDIO_UNIT_TESTS_ENABLED=OFF
     -DBUILD_TESTING=OFF
