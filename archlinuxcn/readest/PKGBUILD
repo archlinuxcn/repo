@@ -4,7 +4,7 @@
 
 _name=Readest
 pkgname="${_name,,}"
-pkgver=0.9.40
+pkgver=0.9.41
 pkgrel=1
 pkgdesc="An open-source ebook reader designed for immersive and deep reading experiences"
 arch=('x86_64')
@@ -41,7 +41,7 @@ conflicts=(
 )
 options=('!lto') # Disable Link Time Optimization. Otherwise build fails with some 'cc' linking error.
 source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
-sha256sums=('d933e54d53cc63654ad2fb19a6c4357ae8889401a57b8fc153d27a8fadec9d7a')
+sha256sums=('6676b0e9284288160f8484637b1c91ebdc63e6c7df79114f8324ac538acf31ec')
 
 prepare() {
     cd "${srcdir}/${pkgname}"
