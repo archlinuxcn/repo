@@ -1,7 +1,7 @@
 # Maintainer: Roald Clark <roaldclark@gmail.com>
 
 pkgname=protoc-gen-dart
-pkgver=22.0.1
+pkgver=22.1.0
 pkgrel=1
 pkgdesc="Protobuf plugin for generating Dart code"
 arch=('x86_64')
@@ -11,7 +11,7 @@ depends=('glibc')
 makedepends=('dart')
 options=('!strip')
 source=("https://github.com/google/protobuf.dart/archive/protoc_plugin-v${pkgver}.tar.gz")
-sha256sums=('d41261fc65a396c35ff1ebece519895cd5e528a5629d9fd373b1c1d7a7d2936d')
+sha256sums=('55240bfd826938ab5d40354407ca8bb0ece9f6359cb5e57184089166a466c5c3')
 
 prepare() {
     cd "${srcdir}/protobuf.dart-protoc_plugin-v${pkgver}/protoc_plugin"
