@@ -1,7 +1,7 @@
 # Maintainer: weilinfox <sakurakaze.fox at gmail.com>
 
 pkgname=ruyi
-pkgver=0.32.0
+pkgver=0.33.0
 pkgrel=1
 pkgdesc="RuyiSDK Package Manager"
 arch=(any)
@@ -46,7 +46,7 @@ source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/ruyisdk/ruyi/archive/refs/tags/${pkgver}.tar.gz"
   "config.toml"
 )
-sha512sums=('5e0ba9602737ed38a5920d4bacfb060b50640059d8071b482485acbd9244c56b628355fa8b2e6bc724f8d9b4bcb59b4be0605067d8ec2b94630112f96b97bfe9'
+sha512sums=('a1cd9ad2739c1482f94e2df038d8debea9479448a479e37a8e8c7dc464b90434634ae38146d3a331aa0f53422b7aefe4f0bd48f7c92de8089ba2b26588d24a11'
             '03b9a18c495c37203e5c56518e1ab94118b3bf99e83c99924f3eeca7be64ac3b03d744c105ac99ab703c40e570195a7ed39785e5beef5f619bdf868bd6add6f6')
 provides=(python-ruyi)
 
