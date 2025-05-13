@@ -1,9 +1,9 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 # Contributor: Xiaozhu1337 <nihaoaheheda@gmail.com>
 pkgname=siyuan
-pkgver=3.1.28
-_electronversion=34
-_nodeversion=20
+pkgver=3.1.29
+_electronversion=35
+_nodeversion=22
 pkgrel=1
 pkgdesc="A privacy-first, self-hosted, fully open source personal knowledge management software, written in typescript and golang.(Use system-wide electron)"
 arch=(
@@ -34,7 +34,7 @@ source=(
     "${pkgname}-${pkgver}::git+${_ghurl}#tag=v${pkgver}"
     "${pkgname}.sh"
 )
-sha256sums=('d5292b2bf03617ecf27beb8887189dd108939caf1e04ca1d7368f332b89f03f7'
+sha256sums=('d2a49b982071c4daa70740a678a2e0ba7454e9b425b3eea8adaf11945c757a0c'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 _ensure_local_nvm() {
     local NVM_DIR="${srcdir}/.nvm"
@@ -43,6 +43,7 @@ _ensure_local_nvm() {
     nvm use "${_nodeversion}"
 }
 prepare() {
+    cd "${srcdir}/${pkgname}-${pkgver}/app"
     sed -i -e "
         s/@electronversion@/${_electronversion}/g
         s/@appname@/${pkgname}/g
@@ -52,8 +53,7 @@ prepare() {
     " "${srcdir}/${pkgname}.sh"
     _ensure_local_nvm
     gendesk -q -f -n --pkgname="${pkgname}" --pkgdesc="${pkgdesc}" --categories="Office" --name="${pkgname}" --exec="${pkgname} %U"
-    sed -i "2i\Name[zh_CN]=思源笔记" "${srcdir}/${pkgname}.desktop"
-    cd "${srcdir}/${pkgname}-${pkgver}/app"
+    sed -i "2i\Name[zh_CN]=思源笔记" "${srcdir}/${pkgname}-${pkgver}/app/${pkgname}.desktop"
     export CGO_ENABLED=1
     export GO111MODULE=on
     export GOOS=linux
@@ -106,5 +106,5 @@ package() {
     install -Dm644 "${srcdir}/${pkgname}-${pkgver}/app/build/linux-"*/resources/pandoc.zip -t "${pkgdir}/usr/lib/${pkgname}"
     cp -Pr --no-preserve=ownership "${srcdir}/${pkgname}-${pkgver}/app/build/linux-"*/resources/{app,appearance,changelogs,guide,kernel,stage} "${pkgdir}/usr/lib/${pkgname}"
     install -Dm644 "${srcdir}/${pkgname}-${pkgver}/app/src/assets/icon.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-    install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}/app/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
 }
