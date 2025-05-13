@@ -2,8 +2,8 @@
 # Contributor: Edgar Luque <git@edgarluque.com>
 
 pkgname=ddnet
-pkgver=19.1
-pkgrel=5
+pkgver=19.2
+pkgrel=1
 pkgdesc="A Teeworlds modification with a unique cooperative gameplay."
 arch=('x86_64')
 url="https://ddnet.org"
@@ -15,12 +15,10 @@ optdepends=('ddnet-maps-git: All the maps used on the official DDNet Servers.'
             'discord-game-sdk: Enable rich presence in Discord desktop client.')
 backup=('usr/share/ddnet/data/autoexec_server.cfg')
 source=("https://github.com/ddnet/ddnet/archive/$pkgver/$pkgname-$pkgver.tar.gz"
-        "$pkgname-9978.patch::https://github.com/ddnet/ddnet/pull/9978.patch"
         "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf"
         # Licenses extracted from license.txt
         "Zlib.txt" "OFL-1.1.txt" "Bitstream-Vera.txt" "Arev.txt")
-sha256sums=('c4e9c7f9046e4e09c337e4eecafca8b8ac1dd3db31061c6f28ed9eb35834b169'
-            'ad9dfe9c8f27f2b96f67a1dc6268c5fc22001f0214262d82ddc59eaa46cd4434'
+sha256sums=('3641102d62cf12f74c1038d823a39d37b7d67ad5f9536d24a721304af46a2384'
             '9377a9d7c87abae166c8fa98cd79a61c74482f80f80bc930ae043349e9a84965'
             '70034f237270b38bf312238a26cfd322e212ca5714bfea4ae91e80c639ce8738'
             '043452f4de3c86d903973009bb3e59b3492a6669b86d0b1410e59a1476a87369'
@@ -28,11 +26,6 @@ sha256sums=('c4e9c7f9046e4e09c337e4eecafca8b8ac1dd3db31061c6f28ed9eb35834b169'
             'cc97348511b4e9bf6e2f0ee6fbc329fb001e6f1049401026cf212d091390d900'
             'da8e7278deea5296b56374fd048f8bc975be069a526d0119c9d32aa555558b4c'
             '8acb2a0b769d9e0b3ae9f35c12110189c82790af3254419f86c46105bca70075')
-
-prepare() {
-    cd $pkgname-$pkgver
-    patch -p1 -i ../$pkgname-9978.patch
-}
 
 build() {
     mkdir -p build
