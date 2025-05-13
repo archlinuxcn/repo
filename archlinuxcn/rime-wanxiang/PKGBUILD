@@ -2,7 +2,7 @@
 
 pkgbase=rime-wanxiang
 pkgname=(rime-wanxiang-base)
-pkgver=6.7.7
+pkgver=6.7.8
 pkgrel=1
 pkgdesc="万象拼音：带声调的拼音词库，万象拼音系列方案基础版，可扩展全拼、双拼、中英混输、语言模型"
 arch=(any)
@@ -10,7 +10,7 @@ license=('CC-BY-4.0')
 
 url="https://github.com/amzxyz/rime_wanxiang"
 source=("${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('b0a97556d2ebebf4e7bb521231f9f4ab51594661b3c006c2e2b1756d80ffc30c')
+sha256sums=('7ae91fff6b2bb65e6729160841e8ccef19111e00bd2a8f4e0739d7d0abc4a959')
 
 makedepends=("librime" "rime-prelude" "rime-essay" "sed")
 
