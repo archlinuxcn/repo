@@ -1,3 +1,68 @@
+## GE-Proton10-1
+
+Proton:
+- GE-Proton rebased on top of Valve's Proton 10 Bleeding Edge
+- Wine-Wayland has been enabled and patches from upstream wine backported for it. YMMV (Your mileage may vary). Thanks [Etaash-mathamsetty](https://github.com/Etaash-mathamsetty) for the backporting as well as the wine-wayland specific patch fixes for various games.
+- Dualsense controller patches from [ClearlyClaire](https://github.com/ClearlyClaire) https://gitlab.winehq.org/wine/wine/-/merge_requests/7238 rebased (thanks loathingKernel)
+- FSR patches rebased (thanks loathingKernel)
+- Nvidia Reflex low latency patches rebased
+
+Protonfixes:
+- Marvel Rivals EGS fix added (thanks termdisc)
+- Fix added for The Testament of Sherlock Holmes (thanks UsernamesAreNotMyThing)
+- Fix added for Borderlans: The Pre-Sequel (thanks loathingKernel)
+- Fix added for Elder Scrolls IV: Oblivion Remastered (thanks Reilley64)
+- Fix added for Breath of Fire 4 (GOG) (Thanks ImLinguin)
+- Fixes added for Star Citizen (Thanks mactan-sc)
+- Fix added for Yosumin (Thanks UsernamesAreNotMyThing)
+- Fix added for DOOM 2016 (GOG) (Thanks ImLinguin)
+- Fix added for Lord of the Rings Online (thanks mdmatthias/MathiasDillain)
+- Fix added for Once Human (Thanks jcdickinson)
+- Fix added for Shadows of Adam (Thanks UsernamesAreNotMyThing)
+- Save import fix added for Metaphor ReFantazio  (Thanks UsernamesAreNotMyThing)
+- Save import fix added for Persona 3 Reload  (Thanks UsernamesAreNotMyThing)
+- Fix added for Liminal Border Part III (thanks R1kaB3rN)
+- Fix added for Mojika Truth Rears Its Head (thanks superboo7)
+
+
+Info regarding Wine-Wayland:
+
+YMMV (Your mileage may vary). Most games that utilizes DXVK or VKD3D should be fine. Games that have native Vulkan or OpenGL  are a coin toss. Most launchers should also be fine (Again huge thanks to Etaash, he's been hammering out a lot off the Wine-Wayland bug fixes, including one that was critical for OpenGL and launcher rendering).  If a game or launcher isn't working, please DON'T come bugging us to fix it. Officially we're with Valve on this -- it's not supported. It's there for people to use/try/test out because it's a wanted feature, that's the extent of it. 
+
+New option for using Wine-Wayland:
+
+`PROTON_ENABLE_WAYLAND=1`
+
+New option for using HDR with Wine-Wayland:
+
+`PROTON_ENABLE_HDR=1`
+
+It goes without saying, but just in case people don't know -- You need Wine-Wayland to use HDR, therefore you need both options for HDR:
+
+`PROTON_ENABLE_WAYLAND=1 PROTON_ENABLE_HDR=1 %command%`
+
+If you want to use Wine-Wayland without HDR, you do NOT need this option:
+
+`PROTON_ENABLE_HDR=1`
+
+Known issues with Wine-Wayland:
+
+DOOM 2016:  Opens in small window and crashes on resolution change without mesa patch. Fixed with patch
+DOOM Eternal: Crashes without mesa patch. Broken mouse cursor in menus, Broken mouse pointing in-game
+DOOM The Dark Ages: Broken mouse pointing in-game
+Wolfenstein The Old Blood: OpenGL error crash
+Wolfenstein The New Order: OpenGL error crash
+Wolfenstein Youn Blood: mangohud broken
+Path of Exile/Path of Exile 2: Vulkan renderer broken without mesa patch. Fixed with patch.
+
+AMD-Specific:
+
+mesa patches needed for DOOM 2016 and DOOM Eternal: https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34918
+mesa patches needed for DOOM Dark Ages: https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34944
+mesa patches needed for Path of Exile/Path of Exile 2 (currently not submitted yet):  https://github.com/Nobara-Project/rpm-sources/blob/42/baseos/mesa/min_image_count.patch
+
+Hopefully we can figure out a fix for the cursor issue in the DOOM games. Fingers crossed
+
 ## GE-Proton9-27
 
 Proton:
