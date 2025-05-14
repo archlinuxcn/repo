@@ -3,7 +3,7 @@
 
 pkgbase=ast-grep
 pkgname=(ast-grep python-ast-grep)
-pkgver=0.38.0
+pkgver=0.38.1
 pkgrel=1
 pkgdesc='A fast and polyglot tool for code structural search, lint, rewriting at large scale'
 arch=('x86_64')
@@ -13,8 +13,8 @@ depends=('gcc-libs')
 makedepends=('cargo' 'python-build' 'python-installer' 'python-wheel' 'python-maturin')
 checkdepends=('python')
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/ast-grep/ast-grep/archive/$pkgver.tar.gz")
-sha256sums=('1377cfcaaf0d42c9cb757ab92a91b2fd84404944b194030fda7b4d5180d6fb68')
-b2sums=('2dc701e3ea883add36123ac68579c289ceadaaae0a2249c3bdb39814c3591beab9c31905a5cc0672c7d43d41ad1376ffb3d1e881721ca64471a9bd39a18ccf1b')
+sha256sums=('e1378aef969fbedd450f52eb85bf56a0389acdfd09316c130b28ade920a59cb3')
+b2sums=('4d663a1d57da2fceb2c653edbef7481a9c067841c15224ac2c657af7bcad0553d10b8c7e91cd58a205b4f450f7fac9c1d2b1fc5b2541039ffae7c7d458b64fe0')
 options=('!lto')
 
 export RUSTUP_TOOLCHAIN=${RUSTUP_TOOLCHAIN:-stable}
