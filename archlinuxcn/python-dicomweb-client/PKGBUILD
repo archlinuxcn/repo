@@ -17,20 +17,23 @@ depends=(
 )
 
 makedepends=(
-  'python-setuptools'
+  python-build
+  # python-hatchling
+  python-installer
+  python-wheel
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/MGHComputationalPathology/dicomweb-client/archive/v${pkgver}.tar.gz")
-sha512sums=('be919f00b9a2aa0c108c3760be2f8874c028494a67ee816b7ba50d1cfee55f8e091dccec67de4026a4e96a52bf77a1b2f650720eca726623d118b9bc85de9dcb')
+sha512sums=('a5be896d6d301a09ad814a96a657f719f49ae3292f18edf58b32438427e84cdb2f12616e8cacb9e85329d10a13f00aca404cbba55f10de6e84e78eb20103c017')
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
 # vim:set ts=2 sw=2 et:
