@@ -2,8 +2,8 @@
 
 _name=hexbytes
 pkgname=python-${_name}
-pkgver=1.2.1
-pkgrel=3
+pkgver=1.3.1
+pkgrel=1
 pkgdesc="Python bytes subclass that decodes hex, with a readable console output"
 arch=(any)
 url="https://github.com/ethereum/${_name}"
@@ -12,7 +12,7 @@ depends=(python)
 makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx python-sphinx_rtd_theme)
 checkdepends=(python-pytest python-eth-utils python-hypothesis)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('8f0dbbe57c9829d5cfd4a404c7e18772f12581977562c655ff5b0815c8ce7230dc13e30561a23da2d3dba0dbdac16a9ea24862068b0f50d388e645d03fefefa7')
+sha512sums=('621c3aaa5d9782f2d78b7d80ed78e7f0d94b7b8222beda498cc5eb18f15a9048fb9718c536aa834efe251dbf5ed80097ce09c00cdfa235fd3ee7505efd39e570')
 
 build() {
   cd $_name-$pkgver
