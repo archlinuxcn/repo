@@ -23,6 +23,12 @@ user_settings = {
 
     ###### Proton flags ######
 
+    #Enable Wayland display output. Games running with native Vulkan and OpenGL may have problems. Required for HDR support
+#   "PROTON_ENABLE_WAYLAND": "1",
+
+    #Enable HDR support. Requires Wayland to be enabled and for HDR to be enabled in system settings.
+#   "PROTON_ENABLE_HDR":    "1",
+
     #Convenience method for dumping a useful debug log to $PROTON_LOG_DIR/steam-$APPID.log
 #    "PROTON_LOG": "1",
 
