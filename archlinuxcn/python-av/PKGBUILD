@@ -10,7 +10,7 @@ pkgrel=1
 arch=('x86_64')
 license=('BSD-3-Clause')
 makedepends=(
-  # cython
+  cython
   python-build
   python-installer
   python-pip
@@ -27,7 +27,6 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/PyAV-Org/PyAV/archive/v
 sha512sums=('b8d5107dfd7c7d02dbbf231a0a34965ef53462c5216f2350d49811b065e302db1e71ca28243b3c77c98ff049e53620a048b884c1fbc1c74d428ec89d48fee713')
 
 build() {
-  pip install --break-system-packages -U cython==3.1.0b1
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation --skip-dependency-check
 }
