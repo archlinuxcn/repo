@@ -10,7 +10,7 @@
 # Contributor: Giusy Digital <kurmikon at libero dot it>
 
 pkgname=brave-bin
-pkgver=1.78.97
+pkgver=1.78.102
 pkgrel=1
 epoch=1
 pkgdesc='Web browser that blocks ads and trackers by default (binary release)'
@@ -35,8 +35,8 @@ source_aarch64=(${pkgname}-${pkgver}-aarch64.zip::https://github.com/brave/brave
 noextract=(${pkgname}-${pkgver}-x86_64.zip ${pkgname}-${pkgver}-aarch64.zip)
 sha256sums=('75a87dd17b42fcc6f27adfd16c82bed1c08e9251b07d2012f8d49f7412fa1d00'
             'c07276b69c7304981525ecb022f92daf7ae125a4fb05ac3442157b50826e257a')
-sha256sums_x86_64=('047e552e5582fabd4a2e2ae7cdbd02e82eb8feb5893da991f69daca3c98b436f')
-sha256sums_aarch64=('5ae7718426aee520de6bd50c6c45d53d0b8e6212fd85b1ab6839c63da3315302')
+sha256sums_x86_64=('f8acbb4bb65b35b695f74e8555c359102f38bd6151e0223f1036faf2448bc858')
+sha256sums_aarch64=('788ac784d5e0eb3acae320c2ec5b0da1b1880c235cf12b424f4aa6d15ddcda41')
 
 prepare() {
 	mkdir -p brave
