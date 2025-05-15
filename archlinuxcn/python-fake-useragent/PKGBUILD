@@ -1,0 +1,44 @@
+# Maintainer: <Hu Butui> <hot123tea123@gmail.com>
+# Contributor: Alan Beale <the.mrabz@gmail.com>
+
+_name=fake-useragent
+pkgname=python-fake-useragent
+pkgver=2.2.0
+pkgrel=1
+pkgdesc='Up to date simple useragent faker with real world database'
+arch=('any')
+url=https://github.com/fake-useragent/fake-useragent
+license=('Apache-2.0')
+depends=(
+  python
+)
+makedepends=(
+  python-build
+  python-installer
+  python-setuptools
+  python-wheel
+)
+checkdepends=(
+  python-pytest
+  python-pytest-cov
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/fake-useragent/fake-useragent/archive/refs/tags/${pkgver}.tar.gz")
+sha512sums=('2fa2d3db0e582d1e03b1c50ec7eaa5268f8ff7efde05ed5a09a4386ed7fb2043b8e3729fdd1c4b519523f114cb809ad01146a1400844ad122433d6cd35b707ee')
+
+build() {
+  cd ${_name}-${pkgver}
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd ${_name}-${pkgver}
+  PYTHONPATH="${PWD}/build/lib" \
+  pytest -v
+}
+
+package() {
+  cd ${_name}-${pkgver}
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
+
+# vim:set ts=2 sw=2 et:
