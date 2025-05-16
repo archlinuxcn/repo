@@ -1,0 +1,6 @@
+[quickjs]
+source = "htmlparser"
+url = "https://bellard.org/quickjs/"
+xpath = "/html/body/ul/li/a[starts-with(@href, 'quickjs-') and contains(@href, '.tar.xz')]"
+from_pattern = 'quickjs-(\d+)-(\d+)-(\d+).tar.xz'
+to_pattern = '\1.\2.\3'
