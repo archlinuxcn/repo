@@ -1,7 +1,7 @@
 # Maintainer: ZeekoZhu <vaezt@outlook.com>
 
 pkgname=rime-sbxlm
-pkgver=20250330
+pkgver=20250516
 pkgrel=1
 pkgdesc='声笔系列码配置'
 arch=(any)
@@ -10,7 +10,7 @@ source=('sbxlm-init' "${pkgname}-${pkgver}.zip::${url}/releases/download/${pkgve
 noextract=("${pkgname}-${pkgver}.zip" "${pkgname}-${pkgver}-src.zip")
 license=('BSD-3-Clause')
 sha256sums=('ddd93d18c5ecd40df142666df06d8588d4c345d662c38e31ea22402c3308549f'
-            '7d7786efbafb577b850db39f3c7d61e444755f9516a30350e49cb3688fc362c1'
+            'b285c6fc9da94f58fee0eb9639a28a6e5523bd34264250c186bfb98765a2d135'
             'e8bba20f18930bbae7c6635befa38b75a86d92da72a8afe3712de5966ef57fee')
 makedepends=('unzip')
 optdepends=('librime' 'fcitx5-rime')
