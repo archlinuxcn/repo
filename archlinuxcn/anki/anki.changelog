@@ -1,3 +1,11 @@
+# 25.02.5-1
+More security fixes, thanks to some reports by Michael Lappas:
+
+  * Plug a hole that could allow a malicious shared deck on Windows to execute arbitrary commands when playing audio.
+  * Links to other apps (eg obsidian://...) will now request permission to open. Thanks to @soleuniverse101 for the UI improvements here.
+
+Also, building of the Docker image for this release should be fixed, thanks to @KolbyML.
+
 # 25.02.4-1
 Fixes regressions in the 25.02.1 security update:
 

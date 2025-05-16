@@ -11,15 +11,16 @@
 declare -gA _tags=(
  [ftl_core]="0fe0162f4a18e8ef2fbac1d9a33af8e38cf7260e"
  [ftl_desktop]="17216b03db7249600542e388bd4ea124478400e5"
- [anki]="acc6aa7f"
+ [anki]="d5a7a0d1"
 )
+
 declare -gA _caches=(
     [yarn]="yarn-cache"
     [cargo]="cargo-cache"
 )
 
 pkgname=anki
-pkgver=25.02.4
+pkgver=25.02.5
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
@@ -77,7 +78,8 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
         "strip-python-pip-system-certs.patch"
 )
 
-sha256sums=(94bcc31d446a36491f6aee0c15936821b34aa2639aeb6a014a93c5f32d5c1581
+
+sha256sums=(4cd7d54dddd42466af82724505ad5ee436d3fcdcaff3375116cbbba639de502b
             da57df3665ee094aa7d3566cd45a126f95b6cffef662a4c6f1959ea9e5b3f135
             041684b0e23d041d4f7a0c21785371e3344c6b67824b1683318e3e70f08523bc
             cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff
