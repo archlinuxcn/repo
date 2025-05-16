@@ -1,5 +1,6 @@
-# Maintainer: Sick Codes <info at sick dot codes>
-# Maintainer: Wachid Adi Nugroho <wachidadinugroho.maya@gmail.com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Sick Codes <info at sick dot codes>
+# Contributor: Wachid Adi Nugroho <wachidadinugroho.maya@gmail.com>
 # Contributor: Danct12 <danct12@disroot.org>
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
@@ -13,21 +14,20 @@ url="https://github.com/${_pkgname}/${_pkgname}"
 license=('GPL-3.0-or-later')
 depends=('lxc' 'python-gbinder' 'python-gobject' 'nftables' 'dnsmasq' 'gtk3' 'dbus-python')
 makedepends=('git')
-optdepends=('waydroid-image: Android image for use with ${_pkgname}'
-	'python-pyclip: share clipboard with container')
-install="${_pkgname}.install"
-source=("git+$url.git")
-sha256sums=('SKIP')
+optdepends=(
+	'waydroid-image: Android image for use with ${_pkgname}'
+	'python-pyclip: share clipboard with container'
+)
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+install="${_pkgname}.install"
 
 pkgver() {
-	cd "${_pkgname}/"
-	git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+	git -C "${_pkgname}" describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 package() {
-	cd "${_pkgname}/"
-	make DESTDIR="${pkgdir}/" install
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	DESTDIR="${pkgdir}" USE_NFTABLES=1 make -C "${_pkgname}" install
 }
