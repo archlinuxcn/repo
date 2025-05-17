@@ -44,8 +44,10 @@ prepare() {
 }
 
 build() {
-	cmake -B build -S "${_pkgname}/" \
-		-DCMAKE_INSTALL_PREFIX="/usr" \
+	cmake -B build \
+		-S "${_pkgname}/" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=None \
 		-DENABLE_BROWSER=OFF \
 		-DENABLE_WEBSOCKET=ON \
 		-DENABLE_VST=ON \
