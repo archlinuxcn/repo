@@ -18,6 +18,10 @@ optdepends=('waydroid-image: Android images for use with waydroid'
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
 sha512sums=('fde8c699fdd67d49ee355c96dbba5c94ce2061c280bb28533035982cd460335f93cd9350de90b525d286f72bd3e4bad73a341fca31909e9623553e9280fe7463')
 
+prepare() {
+  sed -i '1s/env //' "${srcdir}/${pkgname}-${pkgver}/waydroid.py"
+}
+
 package() {
   DESTDIR="${pkgdir}" USE_NFTABLES=1 make -C "${srcdir}/${pkgname}-${pkgver}" install
 }
