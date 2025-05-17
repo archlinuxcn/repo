@@ -15,7 +15,7 @@ license=('GPL-3.0-or-later')
 depends=('lxc' 'python-gbinder' 'python-gobject' 'nftables' 'dnsmasq' 'gtk3' 'dbus-python')
 makedepends=('git')
 optdepends=(
-	'waydroid-image: Android image for use with ${_pkgname}'
+	"waydroid-image: Android image for use with ${_pkgname}"
 	'python-pyclip: share clipboard with container'
 )
 provides=("${_pkgname}")
@@ -26,6 +26,10 @@ install="${_pkgname}.install"
 
 pkgver() {
 	git -C "${_pkgname}" describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	sed -i '1s/env //' "${_pkgname}/waydroid.py"
 }
 
 package() {
