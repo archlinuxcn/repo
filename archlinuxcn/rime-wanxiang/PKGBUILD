@@ -18,7 +18,7 @@ prepare() {
     cd "${srcdir}/rime_wanxiang-${pkgver}"
 
     # 清理文件
-    rm squirrel.yaml weasel.yaml *.trime.yaml *.md custom_phrase.txt LICENSE
+    rm squirrel.yaml weasel.yaml ./*.trime.yaml ./*.md custom_phrase.txt LICENSE
     rm -r .github custom
 
     mv default.yaml wanxiang_suggestion.yaml
@@ -43,7 +43,7 @@ build() {
 
 package_rime-wanxiang-base() {
     pkgdesc="万象拼音基础版基础文件"
-    depends=(lua librime "rime-wanxiang-data>=${pkgver}")
+    depends=(lua librime rime-wanxiang-gram-zh-hans rime-wanxiang-dict-cn)
 
     cd "${srcdir}/rime_wanxiang-${pkgver}"
 
@@ -80,7 +80,7 @@ _schemas=('pinyin  全拼'
 _conflicts=()
 for _line in "${_schemas[@]}"; do
     _schema=${_line%% *}
-    _conflicts+=(${pkgbase}-${_schema,,})
+    _conflicts+=("${pkgbase}-${_schema,,}")
 done
 
 for _line in "${_schemas[@]}"; do
@@ -96,8 +96,8 @@ for _line in "${_schemas[@]}"; do
     _name=${_line##* }
     eval "package_$_pkgname() {
         depends=('rime-wanxiang-base')
-        pkgdesc='万象拼音基础版（"${_name}"方案）'
-        conflicts=("${_pkgconflicts[@]}")
+        pkgdesc='万象拼音基础版（${_name}方案）'
+        conflicts=(${_pkgconflicts[*]})
         install='post.install'
 
         _package $_line
