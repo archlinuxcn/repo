@@ -3,7 +3,7 @@
 
 _pkgname=usb_monitor
 pkgname="python-${_pkgname}"
-pkgver=1.21
+pkgver=1.23
 pkgrel=1
 pkgdesc="An easy-to-use cross-platform Python library for USB device monitoring"
 arch=('any')
@@ -12,7 +12,7 @@ license=('MIT')
 depends=('python-pyudev')
 makedepends=('python-wheel' 'python-build' 'python-installer' 'python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/u/${_pkgname/_/-}/${_pkgname}-${pkgver}.tar.gz")
-sha256sums=('33e05499b3714167142c51027b14e7a79e4466227acb76d8084b52c2a2a57409')
+sha256sums=('ef1677d092cf76e634cb6487588edfbd91c1dbb15b34500c7331cc5e769797cf')
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
