@@ -4,7 +4,7 @@ pkgname=rime-wanxiang-dict-cn
 _schema_version=6.8.1
 _dict_version=20250517
 pkgver=6.8.1+r20250517
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="万象中文词库"
 arch=(any)
@@ -30,9 +30,9 @@ build() {
 }
 
 package() {
-    cd "${srcdir}"
+    cd "${srcdir}/rime_wanxiang-${_schema_version}"
 
     find cn_dicts -type f -exec install -Dm664 {} "${pkgdir}"/usr/share/rime-data/{} \;
 
-    install -Dm664 "rime_wanxiang-${_schema_version}"/build/wanxiang.*.bin -t "${pkgdir}"/usr/share/rime-data/build
+    install -Dm664 ./build/wanxiang.*.bin -t "${pkgdir}"/usr/share/rime-data/build
 }
