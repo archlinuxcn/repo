@@ -1,0 +1,124 @@
+# Maintainer: sukanka <su975853527 [at] gmail [dot] com>
+_pkgname=eden
+pkgname=${_pkgname,,}-git
+_cmd=yuzu
+pkgver=0.0.2.pre.alpha.r7
+pkgrel=1
+pkgdesc="Nintendo Switch emulator forked from yuzu"
+arch=(x86_64)
+url=https://git.eden-emu.dev/eden-emu/eden
+license=(GPL-3.0-or-later)
+provides=('eden')
+conflicts=('yuzu')
+depends=('boost-libs' 'hicolor-icon-theme' 'sdl2' 'qt6-base' 'qt6-webengine' 'fmt' 'opus' 'lz4'
+  'openssl' 'zstd' 'cubeb' 'enet' 'discord-rpc' 'cpp-httplib' 'dynarmic' 'mbedtls2' 'ffmpeg'
+)
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'perl' 'clang' 'patch'
+  'qt6-tools' 'qt6-multimedia' 'libxkbcommon-x11' 'libzip' 'libfdk-aac' 'libinih'
+  'vulkan-memory-allocator' 'vulkan-utility-libraries' 'vulkan-headers' 'spirv-headers'
+  'boost' 'nlohmann-json' 'robin-map' 'cpp-jwt' 'gamemode' 'python' 'renderdoc'
+
+  'xbyak'
+
+  # for documentation
+  # 'doxygen' 'python-jinja' 'python-jsonschema' 'graphviz'
+
+  # for testing
+  # 'catch2'
+)
+optdepends=('qt6-wayland: for Wayland support')
+source=(
+  eden::git+${url}.git
+  git+https://github.com/yuzu-mirror/sirit.git#commit=ab75463
+  git+https://github.com/brofield/simpleini.git#commit=6048871ea9
+  "https://github.com/lat9nq/tzdb_to_nx/releases/download/221202/221202.zip"
+  0001-fix-package-version.patch
+  0002-fix-function-definition.patch
+  0003-use-system-boost-headers.patch
+  0004-system-mbedtls.patch
+  0005-fix-for-boost-1.88.0.patch
+)
+noextract=('221202.zip')
+b2sums=('SKIP'
+  '91e4cd03d67c930b6d751ca19cf6fbaaba86084412bd13b172186387ea27b461457a3e19bc0af315c807839e64f91c865298678af748e2d6e07df2abc85430ed'
+  'fae42bb13f180ab991f6bfc8a45ea3df08ced1d77db77f54cf5a222f93ea468bd6fc0d36d65f9f3739e9813d77dbae31931948dc9afa28e884c53b8128c13c94'
+  '7bd0ff5ca80cf560344ae7edbfeb7c9466c096dc499a7348276cff5d30aa07464f7e2ea391ca9cedac0e21ba6f563169a8b38f2df729a230a0acfb1125ea1b66'
+  '4f4f9cc40fb7e057e1c94f550211893f06d595097af1b93618358dfba25e57aa2945d31cd1327af8a5d42829b59e8cd1debb7c9b15c874f0e69f48c8d0e4d26e'
+  '32ef50a0d16df9ebb567f0997b5d12a1d77b2fd976f9d6a3059de50d0cb23e825eb6f67b7365af04e08656183f4b191a4ddb69589d898cff189ace7ff0dac3e5'
+  '357c8f15c0c6f4caab7c0ad1788f0b0e6b12b552deaec53cea776539de429dc90733196a53c36ed31c941c8485ec102d23bd816e429ea4e3bf358cb0e94ecc55'
+  '66004b6033ff954da9b65fc72bc41f9c7bfc72a24d4961c2d67e240116c86798eea58100cf40420bbd47861b00fedea8debb8356c9aea651e85db726ae88a735'
+  'e6c889a66e724cbe96766153c17dd10cf406c0e126840e462152f20aaea8b4c4a206277428ba78cc8609cd94ac4c5ca6606673f7ec946e83abb52e8ae01a8ef4')
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  git describe --long --abbrev=7 --tags | sed 's/\([^-]*\)-g.*/r\1/;s/-/./g;s/^v//g'
+}
+
+_apply_patch() {
+  cd $srcdir/$_pkgname
+  for p in $srcdir/*.patch; do
+    patch -Np1 <${p}
+  done
+  # download tzdata from our zip file
+  sed -i externals/nx_tzdb/CMakeLists.txt \
+    -e "s|https://github.com/lat9nq/tzdb_to_nx/releases/download/\${NX_TZDB_VERSION}|file://${srcdir}|g"
+
+}
+prepare() {
+  local submods=(
+    sirit
+    simpleini
+  )
+
+  for pro in ${submods[@]}; do
+    cp -rf ${srcdir}/${pro}/* $srcdir/$_pkgname/externals/${pro}
+  done
+
+  (
+    _apply_patch
+  )
+
+}
+
+build() {
+  export CC=clang
+  export CXX=clang++
+  export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/lib/mbedtls2/pkgconfig
+
+  local cmake_args=(
+    -GNinja
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+    -DTITLE_BAR_FORMAT_IDLE="$_pkgname $pkgver"
+    -DTITLE_BAR_FORMAT_RUNNING="$_pkgname $pkgver | {3}"
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_BUILD_TYPE=Release
+    -DYUZU_ENABLE_COMPATIBILITY_REPORTING=OFF
+    -DENABLE_COMPATIBILITY_LIST_DOWNLOAD=OFF
+    -DYUZU_USE_QT_WEB_ENGINE=ON
+    -DUSE_DISCORD_PRESENCE=ON
+    -DENABLE_QT_TRANSLATION=ON
+    -DYUZU_USE_BUNDLED_FFMPEG=OFF
+    -DYUZU_USE_BUNDLED_QT=OFF
+    -DYUZU_USE_EXTERNAL_SDL2=OFF
+    -DYUZU_CHECK_SUBMODULES=OFF
+    -DYUZU_USE_EXTERNAL_VULKAN_HEADERS=OFF
+    -DYUZU_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF
+    -DYUZU_USE_FASTER_LD=OFF
+    -DYUZU_USE_PRECOMPILED_HEADERS=OFF
+    -DYUZU_USE_QT_MULTIMEDIA=ON
+    # download timezone data from our zip file.
+    -DYUZU_DOWNLOAD_TIME_ZONE_DATA=ON
+    -DYUZU_TESTS=OFF
+    -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON
+    -DUSE_SYSTEM_QT=ON
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+  )
+  install -d build
+  cmake -S ${_pkgname} -B build "${cmake_args[@]}"
+  ninja -C build
+
+}
+
+package() {
+  install -Dm644 $srcdir/${_pkgname}/dist/72-${_cmd}-input.rules -t ${pkgdir}/usr/lib/udev/rules.d/
+  DESTDIR="$pkgdir/" ninja -C $srcdir/build install
+}
