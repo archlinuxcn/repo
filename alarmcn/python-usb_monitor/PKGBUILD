@@ -1,0 +1,26 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: J. Nathanael Philipp (jnphilipp) <nathanael@philipp.land>
+
+_pkgname=usb_monitor
+pkgname="python-${_pkgname}"
+pkgver=1.21
+pkgrel=1
+pkgdesc="An easy-to-use cross-platform Python library for USB device monitoring"
+arch=('any')
+url="https://github.com/Eric-Canas/USBMonitor"
+license=('MIT')
+depends=('python-pyudev')
+makedepends=('python-wheel' 'python-build' 'python-installer' 'python-setuptools')
+source=("https://files.pythonhosted.org/packages/source/u/${_pkgname/_/-}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('33e05499b3714167142c51027b14e7a79e4466227acb76d8084b52c2a2a57409')
+
+build() {
+	cd "${_pkgname}-${pkgver}/"
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd "${_pkgname}-${pkgver}/"
+	python -m installer --destdir="${pkgdir}" dist/*.whl
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
