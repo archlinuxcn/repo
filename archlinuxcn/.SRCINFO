@@ -1,0 +1,23 @@
+pkgbase = keypunch-git
+	pkgdesc = Practice your typing skills
+	pkgver = 6.3
+	pkgrel = 1
+	url = https://github.com/bragefuglseth/keypunch
+	arch = aarch64
+	arch = x86_64
+	license = GPL-3.0-or-later
+	makedepends = blueprint-compiler
+	makedepends = gettext
+	makedepends = git
+	makedepends = meson
+	makedepends = ninja
+	makedepends = pkgconf
+	makedepends = rust
+	depends = gtk4
+	depends = libadwaita
+	provides = keypunch
+	conflicts = keypunch
+	source = https://github.com/bragefuglseth/keypunch/archive/refs/tags/v6.3.tar.gz
+	sha512sums = 63edd187becde410750779d053252897bc1ce31d03fd8dd682b6aac85f55e0e22ca9cbf1fb75518036f36cadd64fe73a7b7001a7ec99703b5840cae14423fad7
+
+pkgname = keypunch-git
