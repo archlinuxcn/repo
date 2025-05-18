@@ -4,11 +4,12 @@
 pkgname=dae-avx2-bin
 _pkgname=dae
 pkgver=1.0.0rc3
-pkgrel=1
+pkgrel=2
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF (with AVX2 CPU optimizations)"
 arch=('x86_64')
 url="https://github.com/daeuniverse/${_pkgname}"
 license=('AGPL-3.0-or-later')
+depends=('v2ray-geoip' 'v2ray-domain-list-community')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 replaces=('dae-bin-x64-v3')
@@ -28,12 +29,14 @@ package() {
 	# Install systemd service
 	install -vDm644 "${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
 
-	# Install geoip.dat & geosite.dat
-	install -vDm644 geo{ip,site}.dat -t "${pkgdir}/usr/share/${_pkgname}/"
-
 	# Install exmaple config
 	install -vDm644 "example.${_pkgname}" -t "${pkgdir}/etc/${_pkgname}/"
 
 	# Install empty config
 	install -vDm640 "empty.${_pkgname}" "${pkgdir}/etc/${_pkgname}/config.${_pkgname}"
+
+	# Create symbolic links for geoip.dat & geosite.dat
+	install -d "${pkgdir}/usr/share/${_pkgname}/"
+	ln -vs /usr/share/v2ray/geoip.dat "${pkgdir}/usr/share/${_pkgname}/geoip.dat"
+	ln -vs /usr/share/v2ray/geosite.dat "${pkgdir}/usr/share/${_pkgname}/geosite.dat"
 }
