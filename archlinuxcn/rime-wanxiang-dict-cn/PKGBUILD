@@ -15,13 +15,12 @@ source=("cn_dicts.${_dict_version}.zip::${url}/releases/download/dict-nightly/cn
 sha256sums=('b2464193c188d08fab6464ba8aeb9e60f69453d73013a3127342265872a945ed'
             '3b91be51e7f652f39340c7c0f69bc4e1688a3e9d562c2af3f45e7ef4462578de')
 
-makedepends=("librime" "rime-prelude" "rime-essay" "sed")
+makedepends=(librime rime-prelude rime-essay sed rsync)
 
 build() {
     cd "${srcdir}/rime_wanxiang-${_schema_version}"
 
-    rm -r cn_dicts
-    cp -r "${srcdir}/cn_dicts" .
+    rsync -a --existing --update "${srcdir}/cn_dicts/" cn_dicts
 
     for _f in $(pacman -Qql rime-prelude rime-essay | grep -v "/$"); do ln -sf "${_f}" .; done
 
