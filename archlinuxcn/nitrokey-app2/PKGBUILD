@@ -1,0 +1,27 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: J. Nathanael Philipp (jnphilipp) <nathanael@philipp.land>
+
+pkgname=nitrokey-app2
+pkgver=2.3.3
+pkgrel=1
+pkgdesc="Nitrokey management application for Nitrokey 3 devices"
+arch=('any')
+url="https://github.com/Nitrokey/${pkgname}"
+license=('Apache-2.0')
+depends=('python-nitrokey' 'pyside6' 'python-qt-material' 'qt6-svg' 'python-pyudev' 'hicolor-icon-theme' 'python-usb_monitor')
+makedepends=('python-poetry')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('3eaa4984f90dc238c305a3a1160a44517b2bdbf1d5d3ae1c6b796ab28b0cc54e')
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	python -m installer --destdir="${pkgdir}" dist/*.whl
+	install -Dm644 "meta/com.nitrokey.nitrokey-app2.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "meta/nk-app2.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/com.nitrokey.nitrokey-app2.svg"
+	install -Dm644 docs/* -t "${pkgdir}/usr/share/doc/${pkgname}/"
+}
