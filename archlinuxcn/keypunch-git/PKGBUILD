@@ -11,7 +11,6 @@ pkgver=6.3
 pkgrel=2
 pkgdesc='Practice your typing skills'
 url='https://github.com/bragefuglseth/keypunch'
-_app_website='https://apps.gnome.org/Keypunch'
 arch=('aarch64' 'x86_64')
 license=('GPL-3.0-or-later')
 source=("https://github.com/bragefuglseth/keypunch/archive/refs/tags/v${pkgver}.tar.gz")
@@ -19,7 +18,7 @@ sha512sums=('63edd187becde410750779d053252897bc1ce31d03fd8dd682b6aac85f55e0e22ca
 provides=('keypunch')
 conflicts=('keypunch')
 depends=('gtk4' 'libadwaita')
-makedepends=('blueprint-compiler' 'cargo' 'git' 'meson' 'ninja' 'pkgconf')
+makedepends=('blueprint-compiler' 'cargo' 'git' 'meson' 'ninja')
 
 pkgver() {
     cd "${srcdir}/${_appname}-${pkgver}"
