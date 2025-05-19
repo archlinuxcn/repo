@@ -34,6 +34,7 @@ pkgver() {
 }
 
 build() {
+	export RUSTUP_TOOLCHAIN=nightly
 	arch-meson "${srcdir}/${_pkgname}" build
 	meson compile -C build
 }
