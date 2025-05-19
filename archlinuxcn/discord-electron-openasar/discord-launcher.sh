@@ -38,4 +38,5 @@ unset flags_file krisp_bin
 exec /usr/lib/@ELECTRON@/electron \
 	/usr/lib/@PKGNAME@/resources/app.asar \
 	--ozone-platform-hint=auto \
+	--gtk-version=3 \
 	"${flags[@]}" "$@"
