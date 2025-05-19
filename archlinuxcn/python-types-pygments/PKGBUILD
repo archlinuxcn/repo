@@ -1,7 +1,7 @@
 # Maintainer: Gesh <gesh@gesh.uni.cx>
 
-pkgname='python-types-pygments'
-pkgver='2.19.0.20250305'
+pkgname=python-types-pygments
+pkgver=2.19.0.20250516
 _name=${pkgname#python-}
 _name="${_name//-/_}"
 _src_folder="${_name}-${pkgver}"
@@ -15,7 +15,7 @@ makedepends=(
 license=('Apache-2.0')
 arch=('any')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('044c50e80ecd4128c00a7268f20355e16f5c55466d3d49dfda09be920af40b4b')
+sha256sums=('b53fd07e197f0e7be38ee19598bd99c78be5ca5f9940849c843be74a2f81ab58')
 
 build() {
     cd "${srcdir}/${_src_folder}"
@@ -23,7 +23,6 @@ build() {
 }
 
 package() {
-
     cd "${srcdir}/${_src_folder}"
     python -m installer --destdir="${pkgdir}" dist/*.whl
 }
