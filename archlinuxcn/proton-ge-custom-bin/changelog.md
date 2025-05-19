@@ -1,3 +1,17 @@
+## GE-Proton10-2
+
+Hotfix release:
+- Fixes missing comma in proton script causing prefix issues (this was also a valve upstream issue)
+- Fixes accidental import of the steam ffmpeg libraries instead of the ones we build and ship (this was an accidental copy/paste when porting changes from Proton 10) -- this should fix video playback in a lot of titles as they worked in proton 9
+- Removes setting ENABLE_HDR_WSI -- this option is only specific for the vk_hdr_layer (https://github.com/Zamundaaa/VK_hdr_layer) hack, which is -not- needed as of mesa 25.1 and can cause washed out colors. If you previously used this, it's advised to remove it, and update mesa to 25.1 if you want HDR.
+- added a few patches for allowing more launchers to work in wayland (epic, battlenet, star citizen)
+- added patch to allow 32 bit EOS overlay to work for Among Us.
+- added raw input patches for winewayland (un-accelerated mouse)
+- added touchpad scrolling support patch for winewayland
+- xalia library updates imported from upstream
+- dxvk updated to latest git
+- vkd3d-proton updated to latest git
+
 ## GE-Proton10-1
 
 Proton:
