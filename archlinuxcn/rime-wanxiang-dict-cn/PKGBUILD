@@ -9,9 +9,9 @@ epoch=1
 pkgdesc="万象中文词库"
 arch=(any)
 license=('CC-BY-4.0')
-url="https://github.com/amzxyz/RIME-LMDG"
+url="https://github.com/amzxyz/rime_wanxiang"
 source=("cn_dicts.${_dict_version}.zip::${url}/releases/download/dict-nightly/cn_dicts.zip"
-        "https://github.com/amzxyz/rime_wanxiang/archive/refs/tags/v${_schema_version}.tar.gz")
+        "${url}/archive/refs/tags/v${_schema_version}.tar.gz")
 sha256sums=('02bcd8aeb26d0cb0d9f1571b08bb2255aee774ca6a1e5772f57c432e54063ebb'
             '6004119efea3e2e30ead0824df655db0c1eabe55c20fe12da2694c5fa065cdac')
 
