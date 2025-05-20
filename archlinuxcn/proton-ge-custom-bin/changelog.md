@@ -1,3 +1,12 @@
+## GE-Proton10-3
+
+Hotfix release:
+- added envvar needed for winewayland patch fixes to work (automatically set when PROTON_ENABLE_WAYLAND is set)
+- added patch so that PROTON_ENABLE/DISABLE_HIDRAW works as expected.
+
+Important note:
+PLEASE do NOT manually set `DISPLAY=` when trying to enable winewayland. ALL that is needed is PROTON_ENABLE_WAYLAND=1. When you manually disable DISPLAY= it can break many applications that need to render natively, in particular things like launchers or things that need to render with OpenGL or Vulkan directly. (not via dxvk/vkd3d).
+
 ## GE-Proton10-2
 
 Hotfix release:
