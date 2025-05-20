@@ -1,4 +1,5 @@
-# Maintainer: seth <getchoo at tuta dot io>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: seth <getchoo at tuta dot io>
 
 pkgname=joshuto
 pkgver=0.9.8
@@ -6,7 +7,7 @@ pkgrel=1
 pkgdesc="ranger-like terminal file manager written in Rust"
 arch=('x86_64' 'aarch64')
 url="https://github.com/kamiyaa/${pkgname}"
-license=('LGPL3')
+license=('LGPL-3.0-or-later')
 makedepends=('cargo')
 optdepends=(
 	'fzf: for better file searching'
@@ -20,19 +21,16 @@ options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	cargo fetch --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${pkgname}-${pkgver}/"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
 	cargo build --frozen --release --all-features
 }
 
 package() {
 	cd "${pkgname}-${pkgver}/"
 	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
 }
