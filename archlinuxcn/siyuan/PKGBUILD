@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 # Contributor: Xiaozhu1337 <nihaoaheheda@gmail.com>
 pkgname=siyuan
-pkgver=3.1.29
+pkgver=3.1.30
 _electronversion=35
 _nodeversion=22
 pkgrel=1
@@ -34,7 +34,7 @@ source=(
     "${pkgname}-${pkgver}::git+${_ghurl}#tag=v${pkgver}"
     "${pkgname}.sh"
 )
-sha256sums=('d2a49b982071c4daa70740a678a2e0ba7454e9b425b3eea8adaf11945c757a0c'
+sha256sums=('38c7e5e8c9367cb945352ce343a11e3c1a017f35aa1eebf597be4e29d39fd9ed'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 _ensure_local_nvm() {
     local NVM_DIR="${srcdir}/.nvm"
@@ -76,7 +76,7 @@ prepare() {
             echo 'electron_mirror=https://registry.npmmirror.com/-/binary/electron/'
             echo 'electron_builder_binaries_mirror=https://registry.npmmirror.com/-/binary/electron-builder-binaries/'
         } >> .npmrc
-        go env -w GOPROXY=https://goproxy.cn,direct
+        export GOPROXY="https://goproxy.cn,direct"
     fi
     sed -i -e "
         /build:mobile/d
