@@ -1,17 +1,16 @@
 # Maintainer: Robin Broda <robin at broda dot me>
 
 pkgname=glava
-pkgver=1.6.3
-pkgrel=3
+pkgver=1.6.3 # renovate: datasource=github-tags depName=wacossusca34/glava
+pkgrel=4
 pkgdesc='OpenGL audio spectrum visualizer'
 arch=('x86_64')
 url='https://github.com/wacossusca34/glava'
 license=('GPL3')
-depends=('x-server' 'pulse-native-provider' 'libxext' 'libxcomposite' 'libxrender')
-makedepends=('git' 'python')
-_commit=094dec9b009268814751d3801fc7a5068381c90b  # tags/v1.6.3
-source=("git+https://github.com/wacossusca34/glava#commit=${_commit}")
-b2sums=('SKIP')
+depends=('libpulse' 'libx11' 'libxcomposite' 'libxext' 'libxrender' 'pulse-native-provider' 'x-server')
+makedepends=('git' 'libpulse' 'libx11' 'libxcomposite' 'libxext' 'libxrender' 'python')
+source=("git+https://github.com/wacossusca34/glava#tag=v${pkgver}")
+b2sums=('426ab5e654ba677379a98d15b629eeb9fc86d1c067f4dde20a1a1686276097a78a75cc01e6b032564a291c1bec1c4bd0a71d044fcf1bcb87f3209f5e5c035418')
 
 pkgver() {
 	cd "${pkgname}"
