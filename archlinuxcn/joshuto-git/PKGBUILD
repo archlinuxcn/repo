@@ -1,4 +1,5 @@
-# Maintainer: seth <getchoo at tuta dot io>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: seth <getchoo at tuta dot io>
 
 pkgname=joshuto-git
 _pkgname=joshuto
@@ -27,20 +28,17 @@ pkgver() {
 }
 
 prepare() {
-	cd "${_pkgname}"
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cd "${_pkgname}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
-	cd "${_pkgname}"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
+	cd "${_pkgname}/"
 	cargo build --frozen --release --all-features
 }
 
 package() {
-	cd "${_pkgname}"
+	cd "${_pkgname}/"
 	install -Dm755 "target/release/${_pkgname}" -t "${pkgdir}/usr/bin/"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
 }
