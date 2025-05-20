@@ -17,7 +17,7 @@ depends=(
 )
 makedepends=(
 	'git'
-	'cargo'
+	'rustup'
 	'meson'
 )
 source=(
@@ -33,8 +33,11 @@ pkgver() {
 	echo $(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).r$(git rev-list --count HEAD).g$(git describe --long --tags --abbrev=7 | tail -c 7)
 }
 
+prepare() {
+	rustup default nightly
+}
+
 build() {
-	export RUSTUP_TOOLCHAIN=nightly
 	arch-meson "${srcdir}/${_pkgname}" build
 	meson compile -C build
 }
