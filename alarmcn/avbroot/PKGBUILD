@@ -1,0 +1,28 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=avbroot
+pkgver=3.16.0
+pkgrel=1
+pkgdesc="Tool for manipulating and re-signing Android A/B OTAs"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/chenxiaolong/${pkgname}"
+license=('GPL-3.0-or-later')
+makedepends=('cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('717da778e08343919bd21a88e9eb50e5324aff9bd2cccb7af87c4b6f6d221621')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+}
