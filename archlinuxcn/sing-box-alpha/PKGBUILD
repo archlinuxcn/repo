@@ -2,9 +2,9 @@
 
 pkgname=sing-box-alpha
 _pkgname=sing-box
-pkgver=1.12.0beta.15
+pkgver=1.12.0beta.16
 _pkgver=$(echo "${pkgver}" | sed 's/\([0-9]\+\.[0-9]\+.[0-9]\+\)\(alpha\|beta\|rc\)/\1-\2/')
-pkgrel=2
+pkgrel=1
 epoch=1
 
 pkgdesc='The universal proxy platform.'
@@ -15,7 +15,7 @@ license=('custom:GPL-3.0-or-later WITH name use or association addition')
 makedepends=('go')
 
 source=("${_pkgname}-${_pkgver}.tar.gz::https://github.com/SagerNet/sing-box/archive/v${_pkgver}.tar.gz")
-sha256sums=('8069d28c3b104c274fe962e05fd44d7848f260bfba1dcad221d0c4e0f4f60fd2')
+sha256sums=('76b8b9029c26e90490a057b34ac8f47e14273166ca5a588ffdf96fc6394775e0')
 
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
