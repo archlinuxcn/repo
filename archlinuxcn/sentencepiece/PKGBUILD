@@ -21,6 +21,9 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/google/sentencepiece/ar
 sha512sums=('b4214f5bfbe2a0757794c792e87e7c53fda7e65b2511b37fc757f280bf9287ba59b5d630801e17de6058f8292a3c6433211917324cb3446a212a51735402e614')
 
 build() {
+  # workaround gcc15
+  export CXXFLAGS="-include cstdint"
+  # workaround cmake 4
   cmake \
     -B "${srcdir}/build" \
     -DCMAKE_INSTALL_PREFIX=/usr \
