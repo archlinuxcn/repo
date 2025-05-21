@@ -1,4 +1,5 @@
-# Contributor:  Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Maintainer: Michał Wojdyła < micwoj9292 at gmail dot com >
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Mateusz Gozdek <mgozdekof@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
 # Contributor: judd <jvinet@zeroflux.org>
@@ -6,10 +7,10 @@
 pkgname=ncurses5-compat-libs
 _pkgname=ncurses
 pkgver=6.5
-pkgrel=1
+pkgrel=2
 pkgdesc='System V Release 4.0 curses emulation library, ABI 5'
 arch=(i686 x86_64)
-url='http://invisible-island.net/ncurses/ncurses.html'
+url='https://invisible-island.net/ncurses/ncurses.html'
 license=(MIT)
 depends=(glibc gcc-libs sh)
 provides=(libtinfo5)
@@ -37,6 +38,9 @@ build() {
     --with-versioned-syms
     --with-abi-version=5
   )
+
+  # allow building with gcc >= 15
+  CFLAGS+=' -std=gnu17'
 
   cd "${srcdir}/${_pkgname}-${pkgver}"
 
