@@ -1,7 +1,7 @@
 # Maintainer: ml <ml-aur@ransomware.download>
 pkgname=kind
-pkgver=0.28.0
-pkgrel=2
+pkgver=0.29.0
+pkgrel=1
 pkgdesc='Kubernetes IN Docker - local clusters for testing Kubernetes'
 arch=('aarch64' 'x86_64')
 url='https://kind.sigs.k8s.io/'
@@ -16,7 +16,7 @@ optdepends=(
 source=("https://github.com/kubernetes-sigs/kind/archive/v$pkgver/$pkgname-$pkgver.tar.gz"
     modules-load.conf
     registry-aliases.conf)
-sha256sums=('14779aecccaa159a9221ffdc9fe92ac347553952a260c72671bd128a4419ab16'
+sha256sums=('32fcd55671f241b7a782400e1bf1c762f9729526850e7eda08f56451f12268ea'
             '87bc2d0263e7393c66d540375efa9b68f2e3fdd72d5b12688587e0c3d6b99d88'
             '82b71230a61f9b1f5072c841bb637aac200272a9cbbddcfc6fd01c308dbb5923')
 
