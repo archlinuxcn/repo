@@ -1,0 +1,42 @@
+# Maintainer: Mumi Jim <echo "=02bj5yav9Gb0V3bA1Waq9VatVXb" | rev | base64 -d>
+#Thanks Integral and Klaus
+#only for x86_64
+
+pkgname="oniux-git"
+_appname="oniux"
+pkgver=0.4.0
+pkgrel=1
+url='https://gitlab.torproject.org/tpo/core/oniux'
+license=('MIT' 'Apache-2.0')
+options=('!lto')
+makedepends=('git' 'cargo')
+arch=('x86_64')
+provides=('oniux')
+conflicts=('oniux')
+source=("git+$url.git")
+sha512sums=('SKIP')
+_target=("$(rustc -vV | sed -n 's/host: //p')")
+
+build() {
+	cd "${_appname}"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	#Execute 'cargo fetch' to detect Cargo.lock and download and cache dependencies.
+	cargo fetch --locked --target "${_target}"
+	#Build oniux and all features
+	cargo build --frozen --target "${_target}" --release --all-features
+}
+
+check() {
+	cd "${_appname}"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo test --frozen --target "${_target}" --all-features
+}
+
+package() {
+	cd "${_appname}"
+	#install it
+	install -Dm0755 -t "${pkgdir}/usr/bin" "target/"${_target}"/release/${_appname}"
+	install -Dm644 LICENSE-MIT "${pkgdir}/usr/share/license/${_appname}/LICENSE-MIT"
+	install -Dm644 LICENSE-APACHE "${pkgdir}/usr/share/license/${_appname}/LICENSE-APACHE"
+}
