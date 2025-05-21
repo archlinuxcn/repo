@@ -1,9 +1,9 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=rime-wanxiang-dict-cn
-_schema_version=6.8.4
+_schema_version=6.8.5
 _dict_version=20250521
-pkgver=6.8.4+r20250521
+pkgver=6.8.5+r20250521
 pkgrel=1
 epoch=1
 pkgdesc="万象中文词库"
@@ -13,7 +13,7 @@ url="https://github.com/amzxyz/rime_wanxiang"
 source=("cn_dicts.${_dict_version}.zip::${url}/releases/download/dict-nightly/cn_dicts.zip"
         "${url}/archive/refs/tags/v${_schema_version}.tar.gz")
 sha256sums=('020c79ef6f0a0771660df841be7d4db70faaad5af17b09a9d67cac301b3c542c'
-            '51e39ded7738b762d9e44bc5917d854de326dc690e2e6719a5f4f2a9352ca530')
+            'a0e892efb68051bf4edd464f77f80e53e69514d37717995cd2f22a31b26b83c2')
 
 makedepends=(librime rime-prelude rime-essay sed rsync)
 

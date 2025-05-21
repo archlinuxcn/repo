@@ -2,7 +2,7 @@
 
 pkgname=sentencepiece
 pkgver=0.2.0
-pkgrel=12
+pkgrel=13
 pkgdesc="Unsupervised text tokenizer for Neural Network-based text generation"
 arch=('x86_64')
 url="https://github.com/google/sentencepiece"
@@ -21,6 +21,9 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/google/sentencepiece/ar
 sha512sums=('b4214f5bfbe2a0757794c792e87e7c53fda7e65b2511b37fc757f280bf9287ba59b5d630801e17de6058f8292a3c6433211917324cb3446a212a51735402e614')
 
 build() {
+  # workaround gcc15
+  export CXXFLAGS="-include cstdint"
+  # workaround cmake 4
   cmake \
     -B "${srcdir}/build" \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -30,6 +33,7 @@ build() {
     -DSPM_ENABLE_TCMALLOC=ON \
     -DSPM_ENABLE_SHARED=ON \
     -DSPM_PROTOBUF_PROVIDER=package \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -S "${srcdir}/${pkgname}-${pkgver}"
   make -C "${srcdir}/build"
 
