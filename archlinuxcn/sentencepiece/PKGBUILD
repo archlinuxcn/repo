@@ -30,6 +30,7 @@ build() {
     -DSPM_ENABLE_TCMALLOC=ON \
     -DSPM_ENABLE_SHARED=ON \
     -DSPM_PROTOBUF_PROVIDER=package \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -S "${srcdir}/${pkgname}-${pkgver}"
   make -C "${srcdir}/build"
 
