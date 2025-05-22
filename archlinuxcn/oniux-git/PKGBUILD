@@ -6,6 +6,7 @@ pkgname="oniux-git"
 _appname="oniux"
 pkgver=0.4.0
 pkgrel=1
+pkgdesc='Written in Rust, this program uses the naming mechanism of the Linux kernel to encrypt traffic'
 url='https://gitlab.torproject.org/tpo/core/oniux'
 license=('MIT OR Apache-2.0')
 options=('!lto')
@@ -22,16 +23,15 @@ pkgver() {
 }
 
 prepare() {
+	cd "${_appname}"
 	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
 	#Execute 'cargo fetch' to detect Cargo.lock and download and cache dependencies.
-	cargo fetch --locked -target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${_appname}"
 	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
 	#Build oniux and all features
 	cargo build --frozen --release --all-features
 }
@@ -46,6 +46,6 @@ package() {
 	cd "${_appname}"
 	#install it
 	install -Dm0755 -t "${pkgdir}/usr/bin" "target/"${_target}"/release/${_appname}"
-	install -Dm644 LICENSE-MIT "${pkgdir}/usr/share/licenses/${_appname}/LICENSE-MIT"
-	install -Dm644 LICENSE-APACHE "${pkgdir}/usr/share/licenses/${_appname}/LICENSE-APACHE"
+	install -Dm644 LICENSE-MIT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-MIT"
+	install -Dm644 LICENSE-APACHE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-APACHE"
 }
