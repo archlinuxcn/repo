@@ -7,29 +7,29 @@ pkgrel=1
 pkgdesc='The universal proxy platform.'
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 url='https://sing-box.sagernet.org/'
-license=('custom:GPL-3.0-or-later WITH name use or association addition')
+license=("LicenseRef-${pkgname}")
 
 makedepends=('go')
-
 source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz"
         "sing-box.rules")
 sha256sums=('97d58dd873d7cf9b5e4b4aca5516568f3b2e6f5c3dbc93241c82fff5e4a609fd'
             '1365536e1875043b969e2e18d7313ab7c6f7f9f63387f25506bb04362b44f206')
-
 conflicts=("$pkgname-git" "$pkgname-beta")
+depends=("glibc")
 optdepends=('sing-geosite: sing-geosite database'
             'sing-geoip: sing-geoip database')
 
 backup=("etc/$pkgname/config.json")
 
-_tags=with_gvisor,with_quic,with_wireguard,with_utls,with_reality_server,with_clash_api,with_ech,with_acme,with_dhcp
+_tags=with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale
 build(){
     cd "$pkgname-$pkgver"
 
     export CGO_CPPFLAGS="$CPPFLAGS"
     export CGO_CFLAGS="$CFLAGS"
     export CGO_CXXFLAGS="$CXXFLAGS"
-    export CGO_LDFLAGS="$LDFLAGS"
+    # fix for ELF file ('usr/bin/sing-box') lacks GNU_PROPERTY_X86_FEATURE_1_SHSTK.
+    export CGO_LDFLAGS="$LDFLAGS -Wl,-z,shstk -Wl,-z,ibt"
 
     go build \
         -v \
@@ -43,12 +43,6 @@ build(){
             -s -w -buildid= -linkmode=external" \
         ./cmd/sing-box
 
-    sed -i "/^\[Service\]$/a StateDirectory=$pkgname"    release/config/$pkgname.service
-    sed -i "/^\[Service\]$/a StateDirectory=$pkgname-%i" release/config/$pkgname@.service
-    sed -i "/^\[Service\]$/a User=$pkgname"              release/config/$pkgname*.service
-
-    echo "u $pkgname - \"Sing-box Service\" - -" > "release/config/$pkgname.sysusers"
-
     install -d completions
     go run ./cmd/sing-box completion bash   > completions/bash
     go run ./cmd/sing-box completion fish   > completions/fish
@@ -58,13 +52,14 @@ build(){
 package() {
     cd "$pkgname-$pkgver"
 
-    install -Dm644 LICENSE                            -t "$pkgdir/usr/share/licenses/$pkgname"
-    install -Dm755 "$pkgname"                         -t "$pkgdir/usr/bin"
-    install -Dm644 "release/config/config.json"       -t "$pkgdir/etc/$pkgname"
-    install -Dm644 "release/config/$pkgname.service"  -t "$pkgdir/usr/lib/systemd/system"
-    install -Dm644 "release/config/$pkgname@.service" -t "$pkgdir/usr/lib/systemd/system"
-    install -Dm644 "release/config/$pkgname.sysusers"    "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
-    install -Dm644 "${srcdir}/sing-box.rules"            "$pkgdir/usr/share/polkit-1/rules.d/sing-box.rules"
+    install -Dm644 LICENSE                                 -t "$pkgdir/usr/share/licenses/$pkgname"
+    install -Dm755 "$pkgname"                              -t "$pkgdir/usr/bin"
+    install -Dm644 "release/config/config.json"            -t "$pkgdir/etc/$pkgname"
+    install -Dm644 "release/config/$pkgname.service"       -t "$pkgdir/usr/lib/systemd/system"
+    install -Dm644 "release/config/$pkgname@.service"      -t "$pkgdir/usr/lib/systemd/system"
+    install -Dm644 "release/config/$pkgname.sysusers"         "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
+    install -Dm644 "release/config/sing-box.rules"         -t "$pkgdir/usr/share/polkit-1/rules.d"
+    install -Dm644 "release/config/sing-box-split-dns.xml"    "$pkgdir/usr/share/dbus-1/system.d/sing-box-split-dns.conf"
 
     install -Dm644 completions/bash "${pkgdir}/usr/share/bash-completion/completions/${pkgname}.bash"
     install -Dm644 completions/fish "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
