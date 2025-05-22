@@ -16,8 +16,8 @@ depends=(
 	'gtk4'
 )
 makedepends=(
+	'cargo-nightly'
 	'git'
-	'rustup'
 	'meson'
 )
 source=(
@@ -31,10 +31,6 @@ options=(!lto)
 pkgver() {
 	cd "${_pkgname}"
 	echo $(grep '^version =' Cargo.toml | head -n1 | cut -d\" -f2).r$(git rev-list --count HEAD).g$(git describe --long --tags --abbrev=7 | tail -c 7)
-}
-
-prepare() {
-	rustup default nightly
 }
 
 build() {
