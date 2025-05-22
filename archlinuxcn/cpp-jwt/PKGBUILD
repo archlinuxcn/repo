@@ -1,8 +1,8 @@
 # Maintainer: Marco Rubin <marco.rubin@protonmail.com>
 
 pkgname=cpp-jwt
-pkgver=1.4
-pkgrel=20
+pkgver=1.5
+pkgrel=1
 pkgdesc="JSON Web Token library for C++"
 arch=('any')
 url="https://github.com/arun11299/cpp-jwt"
@@ -13,7 +13,7 @@ checkdepends=('gtest' 'expat')
 provides=("$pkgname=$pkgver")
 conflicts=($pkgname-git)
 source=("$url/archive/refs/tags/v$pkgver.tar.gz")
-b2sums=('5ded054cca527b803507d49edac82946cea2e9458ca783c5e693bba18313db1aba5c021eb79447bd4d2a077cb3483b9cf11e3119b9920eb4a9b35c43ea8a188e')
+b2sums=('6df13d10b1f20c9422bf2da5e87f031e6c4ede655c550c5f6682f0010e3a4008777cffd29e57d76537d6bc2da88d85ae1b1bc719bd2e25ee23afbb28622b4152')
 
 prepare() {
     # fix outdated version
