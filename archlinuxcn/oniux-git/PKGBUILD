@@ -25,8 +25,8 @@ pkgver() {
 prepare() {
 	cd "${_appname}"
 	export RUSTUP_TOOLCHAIN=stable
-	#Execute 'cargo fetch' to detect Cargo.lock and download and cache dependencies.
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	# cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
