@@ -34,10 +34,10 @@ pkgver() {
 }
 
 build() {
-	arch-meson "${srcdir}/${_pkgname}" build --no-rebuild
+	arch-meson "${srcdir}/${_pkgname}" build
 	meson compile -C build
 }
 
 package() {
-	meson install -C build --destdir "$pkgdir"
+	meson install -C build --no-rebuild --destdir "$pkgdir"
 }
