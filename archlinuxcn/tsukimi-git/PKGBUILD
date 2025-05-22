@@ -34,7 +34,7 @@ pkgver() {
 }
 
 build() {
-	arch-meson "${srcdir}/${_pkgname}" build
+	arch-meson "${srcdir}/${_pkgname}" build --no-rebuild
 	meson compile -C build
 }
 
