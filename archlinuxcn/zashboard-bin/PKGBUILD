@@ -3,7 +3,7 @@
 
 _pkgname=zashboard
 pkgname="${_pkgname}-bin"
-pkgver=1.89.1
+pkgver=1.89.2
 pkgrel=1
 pkgdesc="A dashboard using clash api"
 arch=('any')
@@ -19,7 +19,7 @@ provides=("${_pkgname}=${pkgver}")
 conflicts=("${_pkgname}")
 source=("${pkgname}-${pkgver}.zip::${url}/releases/download/v${pkgver}/dist.zip"
         "${url}/raw/v${pkgver}/LICENSE")
-sha256sums=('a390af85e0c464a4f9f2622636f16dad24eea2c7080c9bdc0d7ca9c83ee41234'
+sha256sums=('c018a745e2c076be4d5331d430ffcd22e94ae82e5da65f128bea44ef9875a0d5'
             'ffc390eec51f16b58506b1a42c99fe0cd9ffea1e3081aab443100fd8c20182d9')
 
 package() {
