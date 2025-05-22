@@ -32,6 +32,7 @@ prepare() {
 build() {
 	cd "${_appname}"
 	export RUSTUP_TOOLCHAIN=stable
+ 	export CARGO_TARGET_DIR=target
 	#Build oniux and all features
 	cargo build --frozen --release --all-features
 }
