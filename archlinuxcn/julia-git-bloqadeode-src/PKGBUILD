@@ -1,6 +1,6 @@
 pkgname=julia-git-bloqadeode-src
-pkgver=0.2.2
-_commit=78a960f9191422f9fa93458369c885f6926b797f
+pkgver=0.2.3
+_commit=a791087d42c834659df1f349e67fb16186753a03
 pkgrel=1
 pkgdesc="BloqadeODE.jl"
 url="https://github.com/QuEraComputing/Bloqade.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuEraComputing/Bloqade.jl.git#commit=$_commit")
-sha256sums=('30524af45db5c00b553a71769f432c94457e1dc19cdeb6c1928e755bd39430d5')
+sha256sums=('0c411b4434284b11aec1cfccfc475ca6da2a76a83dbbc4addde57bfa9d6db2d3')
 
 package() {
   cd Bloqade.jl/lib/BloqadeODE
