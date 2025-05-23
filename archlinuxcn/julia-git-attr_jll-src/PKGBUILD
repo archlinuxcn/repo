@@ -1,6 +1,6 @@
 pkgname=julia-git-attr_jll-src
-pkgver=2.5.2+0
-_commit=77d98ab4e0016b0f146559eac1d8d5b6905a9d45
+pkgver=2.5.3+0
+_commit=2ccbefcb4a4c60a08734b2881261dd9086272188
 pkgrel=1
 pkgdesc="Attr_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Attr_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git attr)
 source=("git+https://github.com/JuliaBinaryWrappers/Attr_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('b381b5c12c93a0562aa53dd4e3093798cc4fa006b83f4ce589a3c5d91bf0ad29'
             'c112f330e1418e859226c1f3c551b6e4e7a6ccc1194b60dd74d7393e202aedbc')
 
 build() {
