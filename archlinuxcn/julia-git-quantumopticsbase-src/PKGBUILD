@@ -1,6 +1,6 @@
 pkgname=julia-git-quantumopticsbase-src
-pkgver=0.5.4
-_commit=2b6763bcda97002cbdd6e3cd9109aff5013b1145
+pkgver=0.5.7
+_commit=c9c24f96ed9b79a2cb2eeeeb6fc497defedea6a5
 pkgrel=1
 pkgdesc="QuantumOpticsBase.jl"
 url="https://github.com/qojulia/QuantumOpticsBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/qojulia/QuantumOpticsBase.jl.git#commit=$_commit")
-sha256sums=('9fd9506546391bbbabaeeb50d0085257ef074607edd50b6424ac9a7783c5f80b')
+sha256sums=('7b306a8186aec278092a277611d9d4530b627ce0432386e05f50c7ae006da4c4')
 
 package() {
   cd QuantumOpticsBase.jl
