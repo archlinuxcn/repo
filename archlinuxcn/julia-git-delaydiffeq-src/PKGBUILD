@@ -1,6 +1,6 @@
 pkgname=julia-git-delaydiffeq-src
-pkgver=5.52.0
-_commit=b74a9bf246e4569a268c900dcc62d4db0b977f2b
+pkgver=5.53.1
+_commit=13d23a2d34671ce43a2fa060a5a2c0e873a40fa2
 pkgrel=1
 pkgdesc="DelayDiffEq.jl"
 url="https://github.com/SciML/DelayDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/DelayDiffEq.jl.git#commit=$_commit")
-sha256sums=('d780fb8c8ef8d672b8623ab9c56ddb5ae975024073edc6ebeec4d9b36be607ed')
+sha256sums=('e7dbcad29be085466ce76bbda21c66f28bf3985837aa4af379da0427c49b4dad')
 
 package() {
   cd DelayDiffEq.jl
