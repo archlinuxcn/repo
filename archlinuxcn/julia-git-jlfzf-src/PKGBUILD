@@ -1,6 +1,6 @@
 pkgname=julia-git-jlfzf-src
-pkgver=0.1.9
-_commit=01450cfee735b110570dda380be1bafed2c4e0b7
+pkgver=0.1.11
+_commit=cddfbbc3cacc3589c79c084d009f0b443c733a68
 pkgrel=1
 pkgdesc="JLFzf.jl"
 url="https://github.com/Moelf/JLFzf.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Moelf/JLFzf.jl.git#commit=$_commit")
-sha256sums=('3025802727c6476fd3bd13c821baab344547b099261d4bd2abfc49e2ece27521')
+sha256sums=('c3c934ae7860dec038e4a7c7998a17919ae9948a8d8a2844f05fa45348797bbf')
 
 package() {
   cd JLFzf.jl
