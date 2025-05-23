@@ -1,6 +1,6 @@
 pkgname=julia-git-genericschur-src
-pkgver=0.5.4
-_commit=9cefda05a46776defb1b16f03915413400f21ef3
+pkgver=0.5.5
+_commit=67ab7deaf782635e44271a8c5c3cc3199044a76c
 pkgrel=1
 pkgdesc="GenericSchur.jl"
 url="https://github.com/RalphAS/GenericSchur.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/RalphAS/GenericSchur.jl.git#commit=$_commit")
-sha256sums=('00a43f3bc545e9a83fa2404ab6a4f2d4c3f3be36977638cc55a7bfef7ca1f304')
+sha256sums=('fbe4a0b0df79173b2965437015c6967f7437627ab3342c2e4c10706e28997a82')
 
 package() {
   cd GenericSchur.jl
