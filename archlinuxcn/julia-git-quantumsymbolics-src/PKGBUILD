@@ -1,6 +1,6 @@
 pkgname=julia-git-quantumsymbolics-src
-pkgver=0.4.8
-_commit=26c017681535104db2bc7970cbb3d9b4ed161f16
+pkgver=0.4.10
+_commit=a4980ef8c691ad09c621c79b1cd0fe2532d6289c
 pkgrel=1
 pkgdesc="QuantumSymbolics.jl"
 url="https://github.com/QuantumSavory/QuantumSymbolics.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumSavory/QuantumSymbolics.jl.git#commit=$_commit")
-sha256sums=('d9d19cd5e350fef32bed270593067a1ea4613347bfd4d8b750a0adad8d296df5')
+sha256sums=('44be76533d8e85caaca7ea14a54351e54c3a5de3e272c6379ccb58e36819c77e')
 
 package() {
   cd QuantumSymbolics.jl
