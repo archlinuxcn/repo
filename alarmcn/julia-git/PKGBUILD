@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.13.0.DEV.193.gd369c10c6fe
+pkgver=1.13.0.DEV.223.g3e57a8ac3ad
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -71,7 +71,7 @@ _patches=(
   0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
   0007-Disable-per-thread-TLS-cache-for-now.patch
 )
-source=('git+https://github.com/JuliaLang/julia'
+source=('git+https://github.com/JuliaLang/julia#commit=2c2114ceed8a538290fbb6413e314c28bfd5b4f3'
         'git+https://github.com/yuyichao/archcn-julia-scripts'
         "${_patches[@]}"
         arch-source-translate.cpp
