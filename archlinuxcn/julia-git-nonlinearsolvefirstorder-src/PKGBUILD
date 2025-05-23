@@ -1,6 +1,6 @@
 pkgname=julia-git-nonlinearsolvefirstorder-src
-pkgver=1.3.0
-_commit=9dc50449c9634cd8f3697405076bae9ad9d10c81
+pkgver=1.5.0
+_commit=07b83efcbef31ed1c8aeb523e4618d1b4c3070bf
 pkgrel=1
 pkgdesc="NonlinearSolveFirstOrder.jl"
 url="https://github.com/SciML/NonlinearSolve.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/NonlinearSolve.jl.git#commit=$_commit")
-sha256sums=('6e459bf31b7fcb44e056074c72beace3e817ddfb63706460ffcc16cecf442955')
+sha256sums=('c08e8907ad9ab78c97f227816254867e2bbc819ec2b20c5b1896c0d597925c72')
 
 package() {
   cd NonlinearSolve.jl/lib/NonlinearSolveFirstOrder
