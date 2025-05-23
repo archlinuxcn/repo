@@ -1,11 +1,13 @@
-From bea40e2eaaac676d92bb5910f0e4a06e7241c6c4 Mon Sep 17 00:00:00 2001
+From 46128ab16daeaea32d186550454061ac9abe12a3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 30 Dec 2022 16:15:59 -0500
 Subject: [PATCH 4/7] Revert to hard code system lib path
 
 ---
  .../src/CompilerSupportLibraries_jll.jl       | 59 +++++--------------
- 1 file changed, 15 insertions(+), 44 deletions(-)
+ stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl       |  2 +-
+ .../src/libblastrampoline_jll.jl              |  2 +-
+ 3 files changed, 17 insertions(+), 46 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 index 1f5c34c9c1..f6191b3f49 100644
@@ -107,6 +109,32 @@ index 1f5c34c9c1..f6191b3f49 100644
      global artifact_dir = dirname(Sys.BINDIR)
      LIBPATH[] = dirname(libgcc_s_path)
      push!(LIBPATH_list, LIBPATH[])
+diff --git a/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl b/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl
+index bd93b050eb..f4f0ec48c3 100644
+--- a/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl
++++ b/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl
+@@ -26,7 +26,7 @@ if Sys.iswindows()
+ elseif Sys.isapple()
+     const _libopenblas_path = BundledLazyLibraryPath(string("libopenblas", libsuffix, ".dylib"))
+ else
+-    const _libopenblas_path = BundledLazyLibraryPath(string("libopenblas", libsuffix, ".so"))
++    const _libopenblas_path = string("libopenblas", libsuffix, ".so")
+ end
+ const libopenblas = LazyLibrary(_libopenblas_path, dependencies=[libgfortran])
+ 
+diff --git a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
+index 6cdc1b4ac3..a7db723861 100644
+--- a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
++++ b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
+@@ -39,7 +39,7 @@ const _libblastrampoline_path = if Sys.iswindows()
+ elseif Sys.isapple()
+     BundledLazyLibraryPath("libblastrampoline.5.dylib")
+ else
+-    BundledLazyLibraryPath("libblastrampoline.so.5")
++    "libblastrampoline.so.5"
+ end
+ const libblastrampoline = LazyLibrary(_libblastrampoline_path, dependencies=[],
+                                       on_load_callback=libblastrampoline_on_load_callback)
 -- 
 2.48.1
 
