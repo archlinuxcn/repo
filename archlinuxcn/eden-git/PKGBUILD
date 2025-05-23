@@ -2,14 +2,13 @@
 _pkgname=eden
 pkgname=${_pkgname,,}-git
 _cmd=yuzu
-pkgver=0.0.2.pre.alpha.r7
+pkgver=0.0.2.pre.alpha.r25
 pkgrel=1
 pkgdesc="Nintendo Switch emulator forked from yuzu"
 arch=(x86_64)
 url=https://git.eden-emu.dev/eden-emu/eden
 license=(GPL-3.0-or-later)
 provides=('eden')
-conflicts=('yuzu')
 depends=('boost-libs' 'hicolor-icon-theme' 'sdl2' 'qt6-base' 'qt6-webengine' 'fmt' 'opus' 'lz4'
   'openssl' 'zstd' 'cubeb' 'enet' 'discord-rpc' 'cpp-httplib' 'dynarmic' 'mbedtls2' 'ffmpeg'
 )
@@ -36,7 +35,6 @@ source=(
   0002-fix-function-definition.patch
   0003-use-system-boost-headers.patch
   0004-system-mbedtls.patch
-  0005-fix-for-boost-1.88.0.patch
 )
 noextract=('221202.zip')
 b2sums=('SKIP'
@@ -46,8 +44,7 @@ b2sums=('SKIP'
   '4f4f9cc40fb7e057e1c94f550211893f06d595097af1b93618358dfba25e57aa2945d31cd1327af8a5d42829b59e8cd1debb7c9b15c874f0e69f48c8d0e4d26e'
   '32ef50a0d16df9ebb567f0997b5d12a1d77b2fd976f9d6a3059de50d0cb23e825eb6f67b7365af04e08656183f4b191a4ddb69589d898cff189ace7ff0dac3e5'
   '357c8f15c0c6f4caab7c0ad1788f0b0e6b12b552deaec53cea776539de429dc90733196a53c36ed31c941c8485ec102d23bd816e429ea4e3bf358cb0e94ecc55'
-  '66004b6033ff954da9b65fc72bc41f9c7bfc72a24d4961c2d67e240116c86798eea58100cf40420bbd47861b00fedea8debb8356c9aea651e85db726ae88a735'
-  'e6c889a66e724cbe96766153c17dd10cf406c0e126840e462152f20aaea8b4c4a206277428ba78cc8609cd94ac4c5ca6606673f7ec946e83abb52e8ae01a8ef4')
+  '66004b6033ff954da9b65fc72bc41f9c7bfc72a24d4961c2d67e240116c86798eea58100cf40420bbd47861b00fedea8debb8356c9aea651e85db726ae88a735')
 pkgver() {
   cd "$srcdir/$_pkgname"
   git describe --long --abbrev=7 --tags | sed 's/\([^-]*\)-g.*/r\1/;s/-/./g;s/^v//g'
