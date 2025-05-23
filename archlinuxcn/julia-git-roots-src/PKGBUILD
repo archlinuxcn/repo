@@ -1,6 +1,6 @@
 pkgname=julia-git-roots-src
-pkgver=2.2.6
-_commit=2bc0633e6bd2937899135824cd688512f12b6c9b
+pkgver=2.2.7
+_commit=6b2d1322a9e99748219be7a6ad5476b04fb5ba97
 pkgrel=1
 pkgdesc="Roots.jl"
 url="https://github.com/JuliaMath/Roots.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/Roots.jl.git#commit=$_commit")
-sha256sums=('4cde92a88b026287fe93b20d68df2d8769e71e971e95da35f62924a3594480c8')
+sha256sums=('9a15a9c7982a5634157de939528e5accb1be3efecd8aa7930502de5ec6184d25')
 
 package() {
   cd Roots.jl
