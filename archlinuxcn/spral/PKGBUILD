@@ -1,5 +1,5 @@
 pkgname=spral
-pkgver=2025.03.06
+pkgver=2025.05.20
 pkgrel=1
 pkgdesc="Sparse Parallel Robust Algorithms Library"
 arch=('aarch64' 'x86_64')
@@ -8,30 +8,16 @@ license=('BSD')
 makedepends=(gcc-fortran)
 depends=('metis' 'lapack' 'hwloc')
 source=("https://github.com/ralna/spral/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('1da8576a64a415166d12b529cd30977a1917d2867509f9cb6682aaab2a57b21c')
+sha256sums=('77c03b52b5f52b5dff7fb5338be7518e09b1bdf0c0c8899c8938377b9ff240da')
 
 build() {
   cd $pkgname-$pkgver
-  CFLAGS+=' -O3 -fPIC'
-  CPPFLAGS+=' -O3 -fPIC'
-  CXXFLAGS+=' -O3 -fPIC'
-  FFLAGS+=' -O3 -fPIC'
-  FCFLAGS+=' -O3 -fPIC'
-  export CFLAGS CPPFLAGS CXXFLAGS FFLAGS FCFLAGS
-  ./autogen.sh
-  ./configure --prefix=/usr \
-              --with-blas="-lblas" \
-              --with-lapack="-llapack"
-
-  make -j1 # Buggy build system
-  gfortran -fPIC -shared -Wl,--whole-archive libspral.a -Wl,--no-whole-archive \
-           -lgomp -llapack -lhwloc -lmetis -lstdc++ -o libspral.so
+  arch-meson build -Dtests=false -Dmodules=false
+  meson compile -C build
 }
 
 package () {
   cd $pkgname-$pkgver
-
-  make DESTDIR="$pkgdir" install
-  rm "$pkgdir/usr/lib/libspral.a"
-  install -Dm755 libspral.so "$pkgdir/usr/lib/libspral.so"
+  DESTDIR="$pkgdir" meson install -C build
+  install -Dm644 LICENCE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
