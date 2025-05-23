@@ -31,6 +31,7 @@ prepare() {
   mkdir -p build
 
   sed -i -e'1 i#include <stdint.h>' external_imported/sentry-native/external/breakpad/src/client/linux/handler/minidump_descriptor.h
+  sed -i -e'1 i#include <stdint.h>' external_imported/sentry-native/external/crashpad/util/file/filesystem.h
 }
 
 build() {
