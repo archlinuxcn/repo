@@ -1,6 +1,6 @@
 pkgname=julia-git-xorg_libxrandr_jll-src
-pkgver=1.5.4+0
-_commit=bcc6d1ad49ff26ef2de10f21c2cdb331390a8fda
+pkgver=1.5.5+0
+_commit=c77bdd0e5d6fbbcad94d6ef95f2b37e8c50f2aba
 pkgrel=1
 pkgdesc="Xorg_libXrandr_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXrandr_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxrandr)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXrandr_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('406ac59d6c73b5ddc5e220fe683f17f07f95b7593d2c0c3c8386b4db10fda954'
+sha256sums=('c1085232eca18c48ea4b4dd5544a496bf7f5e4424cecbbd8f849e0a265f09d4e'
             'ff4431c111a384e843ae19d2dfa6a62c32e433640736944df77adf88f2f1987b')
 
 build() {
