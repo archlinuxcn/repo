@@ -1,6 +1,6 @@
 pkgname=julia-git-datastructures-src
-pkgver=0.18.20
-_commit=45f9985c5d2129e3a1c50f83449544b66ecd7594
+pkgver=0.18.22
+_commit=66913732043a4e4a362f65e8af143ab16d7b4e6c
 pkgrel=1
 pkgdesc="DataStructures.jl"
 url="https://github.com/JuliaCollections/DataStructures.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaCollections/DataStructures.jl.git#commit=$_commit")
-sha256sums=('aef983ef635d13f821b196894034fefac1fd2006c777c83f9f4de7c242b7778c')
+sha256sums=('53aac5ee558ded9da190e770d9a711122ab0791a32b78456773f9b87aa9d734c')
 
 package() {
   cd DataStructures.jl
