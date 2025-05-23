@@ -1,6 +1,6 @@
 pkgname=julia-git-yaoblocks-src
-pkgver=0.13.14
-_commit=aa1007d7a119d5c2383c0a88d7647c9a88cc43f4
+pkgver=0.13.15
+_commit=9a0e31397bc97a454eaaacb6f850ceea79d426dc
 pkgrel=1
 pkgdesc="YaoBlocks.jl"
 url="https://github.com/QuantumBFS/Yao.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumBFS/Yao.jl.git#commit=$_commit")
-sha256sums=('838603d469066ad2ed96c1c63c350c032595523d40a8b04833d605e4162cd0bf')
+sha256sums=('31390af86213b17907106a8b8d346abb7bf3f2001ddb5c1fdeec4f43ad90fb1a')
 
 package() {
   cd Yao.jl/lib/YaoBlocks
