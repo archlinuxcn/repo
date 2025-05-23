@@ -1,6 +1,6 @@
 pkgname=julia-git-linearoperators-src
-pkgver=2.9.0
-_commit=647c15eb5a76fc9021cb63e4e21650fab7ef48d4
+pkgver=2.10.0
+_commit=3070e02aa9441d8e8c52f53643e00873e0f2a712
 pkgrel=1
 pkgdesc="LinearOperators.jl"
 url="https://github.com/JuliaSmoothOptimizers/LinearOperators.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSmoothOptimizers/LinearOperators.jl.git#commit=$_commit")
-sha256sums=('62dd357f95d8ddca6bedbc4b10261d29182df24e4094262456c93539c0636c29')
+sha256sums=('49854f6674ddee51cee2cf6d8fbfceadb9512206ff9570cbf72eb5b5b8fcf5d4')
 
 package() {
   cd LinearOperators.jl
