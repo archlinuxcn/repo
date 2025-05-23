@@ -2,7 +2,7 @@
 # Contributor: tippfehlr <tippfehlr@tippfehlr.eu>
 # Contributor: Chewing_Bever
 pkgname=fish-lsp
-pkgver=1.0.8_4
+pkgver=1.0.9_1
 _pkgver=${pkgver//_/-}
 pkgrel=1
 pkgdesc="LSP implementation for the fish shell language"
@@ -15,7 +15,7 @@ makedepends=('git' 'yarn') # 'typescript' tsc doesn’t work
 provides=($pkgname)
 conflicts=(${pkgname}-git)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('426816e99134dbd5ef0f1fba40f3ca7fdb02792711715af3f8f13b1f07f2abdf')
+sha256sums=('efe3fa30bbc4cf9d17e1f56c44f53361640d5b4531cf4262f1ba3a8fc8dfeadd')
 
 prepare() {
     cd "${pkgname}-${_pkgver}"
