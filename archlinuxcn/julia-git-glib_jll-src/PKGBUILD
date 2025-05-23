@@ -1,6 +1,6 @@
 pkgname=julia-git-glib_jll-src
-pkgver=2.82.4+0
-_commit=b73f32048c723d73be6856c3f894130da6a1eb85
+pkgver=2.84.0+0
+_commit=f257fbdbecc882bdd6fab279bace3ea617fd5dc8
 pkgrel=1
 pkgdesc="Glib_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Glib_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git glib2)
 source=("git+https://github.com/JuliaBinaryWrappers/Glib_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('6317bf5b37934b1e0b3b88a064d81b0f0605114bfa2f66ed666403656369f469'
+sha256sums=('78b1424cc111cc994dda19ad92aeabda67a2d6659009e369aa7bdf15e950be1d'
             'd6fdb2eefd2d9534e549d7e9868d7be88fe4455dcd1463fd7ba46811a28c65d5')
 
 build() {

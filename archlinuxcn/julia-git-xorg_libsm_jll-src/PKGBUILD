@@ -1,6 +1,6 @@
 pkgname=julia-git-xorg_libsm_jll-src
-pkgver=1.2.4+0
-_commit=d92bb50ccfebf9c075f14ff01d2b0b278dc41450
+pkgver=1.2.6+0
+_commit=7968c309cd614a808b014d02e0127c54c1b84d05
 pkgrel=1
 pkgdesc="Xorg_libSM_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libSM_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libsm)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libSM_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('d5396b002a48c7895dcdbded481c6063a61fcf449e9dbe3caa3dbce27d8a3e56'
+sha256sums=('348e97af2a0caa39a38e6581116f504814b7748f7f3682463f850539a73904fa'
             '49613562a118f20e8b77141bfa48a85a0e7da06e990c8dcb3d7a1486e8fbf4e1')
 
 build() {

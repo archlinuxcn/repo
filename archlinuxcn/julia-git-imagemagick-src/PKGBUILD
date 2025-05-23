@@ -1,6 +1,6 @@
 pkgname=julia-git-imagemagick-src
-pkgver=1.4.0
-_commit=43a7f985f78ed3b3fa8e7c670353085b8d559d27
+pkgver=1.4.1
+_commit=0ea13633c65df64599ca02662bf5b5c0845e5690
 pkgrel=1
 pkgdesc="ImageMagick.jl"
 url="https://github.com/JuliaIO/ImageMagick.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/ImageMagick.jl.git#commit=$_commit")
-sha256sums=('1ea1806ce245196b4c6dbaf2e9163407e0bdf542c419d4c9607c66f721ca7b2e')
+sha256sums=('b33840a36233b9c2785ccb029e08869f65cd71ea3467235f5425271378cc925b')
 
 package() {
   cd ImageMagick.jl

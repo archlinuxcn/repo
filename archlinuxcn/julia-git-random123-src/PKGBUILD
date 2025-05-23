@@ -1,6 +1,6 @@
 pkgname=julia-git-random123-src
-pkgver=1.7.0
-_commit=35cdee369a30f6980a95369da01f6e5b301a70d2
+pkgver=1.7.1
+_commit=1dc3d52cd9d3492d067e9bb4af918721a2f09a4d
 pkgrel=1
 pkgdesc="Random123.jl"
 url="https://github.com/JuliaRandom/Random123.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaRandom/Random123.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('d732b3fba09c7a80e1dbd999b233d70fa64b13b6d2519c18a0b40dc1653e7aa2')
 
 package() {
   cd Random123.jl

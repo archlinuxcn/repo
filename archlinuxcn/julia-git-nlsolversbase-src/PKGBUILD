@@ -1,7 +1,7 @@
 pkgname=julia-git-nlsolversbase-src
-pkgver=7.8.3
-_commit=78af38393b14992ea996899c6486d971b5bfa612
-pkgrel=2
+pkgver=7.9.1
+_commit=fa8b3bc1f9856567b280cea345dd3c7eabb43d87
+pkgrel=1
 pkgdesc="NLSolversBase.jl"
 url="https://github.com/JuliaNLSolvers/NLSolversBase.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaNLSolvers/NLSolversBase.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('78f3813018a197fa40bca2d519f08c20d46bf869a6aea6e9df1d147a6b978bfb')
 
 package() {
   cd NLSolversBase.jl

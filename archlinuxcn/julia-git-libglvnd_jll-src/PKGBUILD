@@ -1,6 +1,6 @@
 pkgname=julia-git-libglvnd_jll-src
-pkgver=1.7.0+0
-_commit=2a07d8815e634c1e43a250f7a5b54e7cf4778601
+pkgver=1.7.1+1
+_commit=eeffaa35f2551df4706c8e9d9313afb4fa5596f6
 pkgrel=1
 pkgdesc="Libglvnd_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Libglvnd_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libglvnd)
 source=("git+https://github.com/JuliaBinaryWrappers/Libglvnd_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('7200e2d1f3caea193dfe0606c0c28727b1fcdf290aac559ca87efd9111c0bda0'
+sha256sums=('a2c9d5b8fdcf3a165b4a61c2dbb735519a6ad5a90559f0b42eafd2e79108c10b'
             '1d44b68976881f2da13951ed196ee1c22af7a4d3bc762aecb13cd14a2779e82a')
 
 build() {

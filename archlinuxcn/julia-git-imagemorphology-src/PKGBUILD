@@ -1,7 +1,7 @@
 pkgname=julia-git-imagemorphology-src
-pkgver=0.4.5
-_commit=67ee4e4fc932fdfd3736110973ecdf3166c2a47e
-pkgrel=2
+pkgver=0.4.6
+_commit=2ce397fe8ae5e2b6fb6c9a7ce05a9106e42d148a
+pkgrel=1
 pkgdesc="ImageMorphology.jl"
 url="https://github.com/JuliaImages/ImageMorphology.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaImages/ImageMorphology.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('c0ba27cd40abf46fc168b1bb703f6c84fb09b9a910f9720d79a7c3e217674618')
 
 package() {
   cd ImageMorphology.jl

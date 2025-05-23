@@ -1,6 +1,6 @@
 pkgname=julia-git-acl_jll-src
-pkgver=2.3.2+0
-_commit=b8f026d162b5ede19c4331ecb5bb92bfd5662ad0
+pkgver=2.3.3+0
+_commit=ada88b525a2c73328606ee5da1eeaabbc4d75f52
 pkgrel=1
 pkgdesc="acl_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/acl_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git acl)
 source=("git+https://github.com/JuliaBinaryWrappers/acl_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('f3e9c3b4ca8805667346c32711037aa774cb641c376c41c38e1fa251537c51e5'
             'd84d1abd8f1c2b730ea6096c6dcd5fd3bb5e9b1b257b62739ad02892b0be7e0a')
 
 build() {

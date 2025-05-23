@@ -1,6 +1,6 @@
 pkgname=julia-git-opencl_jll-src
-pkgver=2024.10.24+0
-_commit=87b36b8a15f5c186b2a9753450de5533da7f8fd7
+pkgver=2024.10.24+1
+_commit=eb4542efb49048348c880596fabc5d5e21e287ff
 pkgrel=1
 pkgdesc="OpenCL_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenCL_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git ocl-icd)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenCL_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('1019cc936d3c78c137ee3875e7eed40ef5676635295a9bf26a8b72454cce52df'
+sha256sums=('0b88775235b75aacd434196e8d88592c0128b279f2bcfd9625f5192f0d9d9a32'
             'd5e0db6e439f8a62f225e50b2638eabc580e398f4c467033973bbf48e6b3f1c5')
 
 build() {

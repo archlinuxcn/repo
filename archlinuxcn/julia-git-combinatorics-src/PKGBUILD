@@ -1,7 +1,7 @@
 pkgname=julia-git-combinatorics-src
-pkgver=1.0.2
-_commit=1ab5eb1e0014af0ff06288d5530e1d5e649bef96
-pkgrel=2
+pkgver=1.0.3
+_commit=7afa48d15d923ead565b4504e5d6546fb594b3a7
+pkgrel=1
 pkgdesc="Combinatorics.jl"
 url="https://github.com/JuliaMath/Combinatorics.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/Combinatorics.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('e631579ee8b04c80c0cc26cca403dbb543648144fa4de87419e39892175a270e')
 
 package() {
   cd Combinatorics.jl

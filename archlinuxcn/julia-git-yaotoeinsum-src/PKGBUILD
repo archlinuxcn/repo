@@ -1,6 +1,6 @@
 pkgname=julia-git-yaotoeinsum-src
-pkgver=0.2.4
-_commit=aa1007d7a119d5c2383c0a88d7647c9a88cc43f4
+pkgver=0.2.5
+_commit=0a6cfe9097448eaab7c981170be09513b99f9603
 pkgrel=1
 pkgdesc="YaoToEinsum.jl"
 url="https://github.com/QuantumBFS/Yao.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumBFS/Yao.jl.git#commit=$_commit")
-sha256sums=('838603d469066ad2ed96c1c63c350c032595523d40a8b04833d605e4162cd0bf')
+sha256sums=('2fd34d24ecef22bc9194d01065757b9ec0c7479e7442ddfac2e808fcf67c625b')
 
 package() {
   cd Yao.jl/lib/YaoToEinsum

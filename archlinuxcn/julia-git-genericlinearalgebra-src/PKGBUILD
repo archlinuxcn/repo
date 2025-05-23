@@ -1,6 +1,6 @@
 pkgname=julia-git-genericlinearalgebra-src
-pkgver=0.3.15
-_commit=cffae66c02b27a81ef25c067fb09910cb911fc16
+pkgver=0.3.17
+_commit=42b2e43d9101f004bc7bd43e0de5b9f099b3de30
 pkgrel=1
 pkgdesc="GenericLinearAlgebra.jl"
 url="https://github.com/JuliaLinearAlgebra/GenericLinearAlgebra.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/GenericLinearAlgebra.jl.git#commit=$_commit")
-sha256sums=('fb9030a98180599d1d662031f7d05c0c10d4e0408cb74affcd4d74dba9ffff17')
+sha256sums=('18a6419f0b9d092f2d8170010eb5f23a1c44dc450c0791f93e1b6c1b2a84fcdf')
 
 package() {
   cd GenericLinearAlgebra.jl

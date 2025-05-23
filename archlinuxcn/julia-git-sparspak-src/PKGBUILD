@@ -1,7 +1,7 @@
 pkgname=julia-git-sparspak-src
-pkgver=0.3.9
-_commit=020b13b3a5b5e83881fda88056e581a715ea17fc
-pkgrel=2
+pkgver=0.3.11
+_commit=b8465ea2f24dab229ad74d010266d73a43ba06e6
+pkgrel=1
 pkgdesc="Sparspak.jl"
 url="https://github.com/PetrKryslUCSD/Sparspak.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/PetrKryslUCSD/Sparspak.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('fff430e1b066093eb2d6e60a1cb014b67f632942e1f4972b46718ff9ef99d6dd')
 
 package() {
   cd Sparspak.jl

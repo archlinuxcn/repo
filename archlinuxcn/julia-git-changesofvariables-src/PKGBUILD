@@ -1,6 +1,6 @@
 pkgname=julia-git-changesofvariables-src
-pkgver=0.1.9
-_commit=7442802dce509a59cc33214966c7c7e25e6c36c0
+pkgver=0.1.10
+_commit=8bb9cfa07db9813efcbd4da7d9c2aed8a5eea056
 pkgrel=1
 pkgdesc="ChangesOfVariables.jl"
 url="https://github.com/JuliaMath/ChangesOfVariables.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/ChangesOfVariables.jl.git#commit=$_commit")
-sha256sums=('743d97d24d605b30e95f99e2bfaf56a6a28cce7691d78a15cf585482f212129c')
+sha256sums=('72b325c7b6bb98e87afce780e5441ba21ae35a0e478c0a53387993e86d07b50d')
 
 package() {
   cd ChangesOfVariables.jl

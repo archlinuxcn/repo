@@ -1,6 +1,6 @@
 pkgname=julia-git-unsafearrays-src
-pkgver=1.0.6
-_commit=f7460059232fc93f9ac93ba864e9b6ef76e38233
+pkgver=1.0.8
+_commit=5758726b52ccde9b2a23bbcbf4e415ead27aab9b
 pkgrel=1
 pkgdesc="UnsafeArrays.jl"
 url="https://github.com/JuliaArrays/UnsafeArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/UnsafeArrays.jl.git#commit=$_commit")
-sha256sums=('4f89e52c89e8c37cab8e612a2b5176dd8027c318cb4711d0e270a4a77eb47cfa')
+sha256sums=('55c2d234f0e1ee148b033366e9e88411068651e58d85d0d7cc283b7e1e65ac1f')
 
 package() {
   cd UnsafeArrays.jl
