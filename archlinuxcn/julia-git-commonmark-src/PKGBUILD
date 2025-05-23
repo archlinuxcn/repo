@@ -1,6 +1,6 @@
 pkgname=julia-git-commonmark-src
-pkgver=0.8.15
-_commit=9fadcf9b44bf7edaf06057dd8482723f72d9f14d
+pkgver=0.8.16
+_commit=bf1ab63a87802fb30f5cba92049bb38cc0859699
 pkgrel=1
 pkgdesc="CommonMark.jl"
 url="https://github.com/MichaelHatherly/CommonMark.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/MichaelHatherly/CommonMark.jl.git#commit=$_commit")
-sha256sums=('e266691b8372f9d56a237da333be14d06c8dc0fcd8e8478fbbfc33c5e1807824')
+sha256sums=('af4af429aa715373c2edf12505364de84ce16f66d0e4f4ed1aeb679576fd1670')
 
 package() {
   cd CommonMark.jl
