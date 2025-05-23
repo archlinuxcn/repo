@@ -30,6 +30,9 @@ prepare() {
   cd gr-framework
 
   patch -Np1 < ../0001-Fix-loading-paths.patch
+  # Move compile time font path to where we patch to
+  mkdir -p lib/gks/share/fonts/
+  ln -sf ../../fonts lib/gks/share/fonts/gr
 }
 
 build() {
