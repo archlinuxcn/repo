@@ -1,6 +1,6 @@
 pkgname=julia-git-zygote-src
-pkgver=0.7.4
-_commit=12cd77d82546674e4951b900e6c8076d94e397b4
+pkgver=0.7.7
+_commit=6dc5d2f6273cd3aaf3e959555ac65ac91d189194
 pkgrel=1
 pkgdesc="Zygote.jl"
 url="https://github.com/FluxML/Zygote.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FluxML/Zygote.jl.git#commit=$_commit")
-sha256sums=('b2601c323ca26d2b166a870717d0dd80f1c3bb06f8bc4acf7e0113fb08cc25b3')
+sha256sums=('06cec6d3f4fd432f74b64792654f3371a789d2faa589e003bdb6be462a2d0ec8')
 
 package() {
   cd Zygote.jl
