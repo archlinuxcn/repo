@@ -1,14 +1,14 @@
-From 5b89e5187f84ba3c6a66f613fa812a29487cd17f Mon Sep 17 00:00:00 2001
+From bea40e2eaaac676d92bb5910f0e4a06e7241c6c4 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 30 Dec 2022 16:15:59 -0500
 Subject: [PATCH 4/7] Revert to hard code system lib path
 
 ---
  .../src/CompilerSupportLibraries_jll.jl       | 59 +++++--------------
- 1 file changed, 14 insertions(+), 45 deletions(-)
+ 1 file changed, 15 insertions(+), 44 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-index 1f5c34c9c1..3a080a9a0a 100644
+index 1f5c34c9c1..f6191b3f49 100644
 --- a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 +++ b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 @@ -13,10 +13,6 @@ const PATH_list = String[]
@@ -22,7 +22,7 @@ index 1f5c34c9c1..3a080a9a0a 100644
  
  if Sys.iswindows()
      const _libatomic_path = BundledLazyLibraryPath("libatomic-1.dll")
-@@ -44,40 +40,26 @@ elseif Sys.isapple()
+@@ -44,40 +40,31 @@ elseif Sys.isapple()
      const _libssp_path = BundledLazyLibraryPath("libssp.0.dylib")
  else
      if Sys.isfreebsd()
@@ -37,15 +37,16 @@ index 1f5c34c9c1..3a080a9a0a 100644
 -    const _libgomp_path = BundledLazyLibraryPath("libgomp.so.1")
 -    if libc(HostPlatform()) != "musl"
 -        const _libssp_path = BundledLazyLibraryPath("libssp.so.0")
--    end
--    if arch(HostPlatform()) ∈ ("x86_64", "i686")
--        const _libquadmath_path = BundledLazyLibraryPath("libquadmath.so.0")
 +        const libatomic_path = "libatomic.so.1"
      end
 +    const libgcc_s_path = "libgcc_s.so.1"
 +    const libgfortran_path = "libgfortran.so.5"
 +    const libstdcxx_path = "libstdc++.so.6"
 +    const libgomp_path = "libgomp.so.1"
+     if arch(HostPlatform()) ∈ ("x86_64", "i686")
+-        const _libquadmath_path = BundledLazyLibraryPath("libquadmath.so.0")
++        const libquadmath_path = "libquadmath.so.0"
+     end
  end
  
 -if @isdefined(_libatomic_path)
@@ -58,8 +59,10 @@ index 1f5c34c9c1..3a080a9a0a 100644
  libgfortran_deps = [libgcc_s]
 -if @isdefined _libquadmath_path
 -    const libquadmath = LazyLibrary(_libquadmath_path)
--    push!(libgfortran_deps, libquadmath)
--end
++if @isdefined libquadmath_path
++    const libquadmath = LazyLibrary(libquadmath_path)
+     push!(libgfortran_deps, libquadmath)
+ end
 -const libgfortran = LazyLibrary(_libgfortran_path, dependencies=libgfortran_deps)
 -const libstdcxx = LazyLibrary(_libstdcxx_path, dependencies=[libgcc_s])
 -const libgomp = LazyLibrary(_libgomp_path)
@@ -69,15 +72,13 @@ index 1f5c34c9c1..3a080a9a0a 100644
 -if @isdefined(_libssp_path) && isfile(string(_libssp_path))
 -    const libssp = LazyLibrary(_libssp_path)
 -end
-+const libquadmath = LazyLibrary(libquadmath_path)
-+push!(libgfortran_deps, libquadmath)
 +const libgfortran = LazyLibrary(libgfortran_path, dependencies=libgfortran_deps)
 +const libstdcxx = LazyLibrary(libstdcxx_path, dependencies=[libgcc_s])
 +const libgomp = LazyLibrary(libgomp_path)
  
  # Conform to LazyJLLWrappers API
  function eager_mode()
-@@ -89,28 +71,15 @@ function eager_mode()
+@@ -89,28 +76,12 @@ function eager_mode()
      if @isdefined libquadmath
          dlopen(libquadmath)
      end
@@ -95,9 +96,9 @@ index 1f5c34c9c1..3a080a9a0a 100644
 -    end
 -    global libgcc_s_path = string(_libgcc_s_path)
 -    global libgomp_path = string(_libgomp_path)
-     if @isdefined _libquadmath_path
-         global libquadmath_path = string(_libquadmath_path)
-     end
+-    if @isdefined _libquadmath_path
+-        global libquadmath_path = string(_libquadmath_path)
+-    end
 -    if @isdefined _libssp_path
 -        global libssp_path = string(_libssp_path)
 -    end
