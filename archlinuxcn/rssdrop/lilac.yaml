@@ -6,5 +6,5 @@ update_on:
     aur: rssdrop
   - source: github
     github: petronny/rssdrop
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['petronny'])
 post_build: aur_post_build
