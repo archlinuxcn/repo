@@ -1,6 +1,6 @@
 pkgname=julia-git-llvm-src
-pkgver=9.2.0
-_commit=7f85b643e08b8934fae5692ef5b8fb091d9f094c
+pkgver=9.4.0
+_commit=326f833f770cbfa83968e75f59ec0e3a85b8fa4b
 pkgrel=1
 pkgdesc="LLVM.jl"
 url="https://github.com/maleadt/LLVM.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit")
-sha256sums=('9b9f90e7fb5b6330e3f5801a1e58c71eb9877e4b80879d93f1266be756b94e65')
+sha256sums=('018dfb43f4dda0ee6cc374e8e51c891fb5146f611b1e48378c05c60ff1bd4ac5')
 
 package() {
   cd LLVM.jl
