@@ -1,6 +1,6 @@
 pkgname=julia-git-statsfuns-src
-pkgver=1.3.2
-_commit=bf95228b4245251b64ed99921edb4e9891004648
+pkgver=1.5.0
+_commit=d2c6983c8ea9c5031adb0eb354fa3bc7c7b0b60a
 pkgrel=1
 pkgdesc="StatsFuns.jl"
 url="https://github.com/JuliaStats/StatsFuns.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStats/StatsFuns.jl.git#commit=$_commit")
-sha256sums=('7e291c9e10dc831b92b1c08004c4839427b5c101d9d187838e83ec8d5f1b119b')
+sha256sums=('efc66abfbab0690ec640ca40ddb62e64efc929d7635ec99986d729b870ae411c')
 
 package() {
   cd StatsFuns.jl
