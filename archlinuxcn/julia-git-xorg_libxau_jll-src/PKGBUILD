@@ -1,6 +1,6 @@
 pkgname=julia-git-xorg_libxau_jll-src
-pkgver=1.0.12+0
-_commit=8ea24f602b9cacd77ae6396a559ce1e8951606e6
+pkgver=1.0.13+0
+_commit=43651114321db521dea6ae4aaaf4f50df5ed8725
 pkgrel=1
 pkgdesc="Xorg_libXau_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXau_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxau)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXau_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('c4b44c377e5b49e28d991152de61ce0068fcc8322242b4651645d4ff4abe857c'
+sha256sums=('57f68fb277384a598b65ca32acd7bb90e3257e6d341a6fd16c5d83d1d9694fff'
             '058b74e418be448befe9c6d0419575c833cf03964898cf46bb01a7c2f2cd0881')
 
 build() {
