@@ -1,6 +1,6 @@
 pkgname=julia-git-steadystatediffeq-src
-pkgver=2.4.1
-_commit=9f2b0a9d27c2d170307dc20b28179f58e4f867b4
+pkgver=2.5.0
+_commit=a8c2de9b0011f8b66c67ef83963c7b5229b7ece1
 pkgrel=1
 pkgdesc="SteadyStateDiffEq.jl"
 url="https://github.com/SciML/SteadyStateDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/SteadyStateDiffEq.jl.git#commit=$_commit")
-sha256sums=('b70a09461847a3bffc8085bf46f10ac0ca4bea1637583d1ab4c3c88eb7bd637b')
+sha256sums=('45b15dc77f08e011aac559f0788558f78b7e067e57d2f5d80781f38858e2fd89')
 
 package() {
   cd SteadyStateDiffEq.jl
