@@ -1,14 +1,14 @@
-From 2428e250bf81e607f1277f10599bddd95c3fdb26 Mon Sep 17 00:00:00 2001
+From 5b89e5187f84ba3c6a66f613fa812a29487cd17f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 30 Dec 2022 16:15:59 -0500
 Subject: [PATCH 4/7] Revert to hard code system lib path
 
 ---
- .../src/CompilerSupportLibraries_jll.jl       | 52 ++++++-------------
- 1 file changed, 15 insertions(+), 37 deletions(-)
+ .../src/CompilerSupportLibraries_jll.jl       | 59 +++++--------------
+ 1 file changed, 14 insertions(+), 45 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-index b32a229d65..813c7127ef 100644
+index 1f5c34c9c1..3a080a9a0a 100644
 --- a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 +++ b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 @@ -13,10 +13,6 @@ const PATH_list = String[]
@@ -22,7 +22,7 @@ index b32a229d65..813c7127ef 100644
  
  if Sys.iswindows()
      const _libatomic_path = BundledLazyLibraryPath("libatomic-1.dll")
-@@ -44,36 +40,28 @@ elseif Sys.isapple()
+@@ -44,40 +40,26 @@ elseif Sys.isapple()
      const _libssp_path = BundledLazyLibraryPath("libssp.0.dylib")
  else
      if Sys.isfreebsd()
@@ -30,51 +30,63 @@ index b32a229d65..813c7127ef 100644
 +        const libatomic_path = "libatomic.so.3"
      else
 -        const _libatomic_path = BundledLazyLibraryPath("libatomic.so.1")
-+        const libatomic_path = "libatomic.so.1"
-     end
+-    end
 -    const _libgcc_s_path = BundledLazyLibraryPath("libgcc_s.so.1")
 -    const _libgfortran_path = BundledLazyLibraryPath(string("libgfortran.so.", libgfortran_version(HostPlatform()).major))
 -    const _libstdcxx_path = BundledLazyLibraryPath("libstdc++.so.6")
 -    const _libgomp_path = BundledLazyLibraryPath("libgomp.so.1")
-+    const libgcc_s_path = "libgcc_s.so.1"
-+    const libgfortran_path = "libgfortran.so.5"
-+    const libstdcxx_path = "libstdc++.so.6"
-+    const libgomp_path = "libgomp.so.1"
-     if libc(HostPlatform()) != "musl"
+-    if libc(HostPlatform()) != "musl"
 -        const _libssp_path = BundledLazyLibraryPath("libssp.so.0")
 -    end
 -    if arch(HostPlatform()) ∈ ("x86_64", "i686")
 -        const _libquadmath_path = BundledLazyLibraryPath("libquadmath.so.0")
-+        const libssp_path = "libc.so.6"
++        const libatomic_path = "libatomic.so.1"
      end
++    const libgcc_s_path = "libgcc_s.so.1"
++    const libgfortran_path = "libgfortran.so.5"
++    const libstdcxx_path = "libstdc++.so.6"
++    const libgomp_path = "libgomp.so.1"
  end
  
 -if @isdefined(_libatomic_path)
 -    const libatomic = LazyLibrary(_libatomic_path)
--end
++if @isdefined(libatomic_path)
++    const libatomic = LazyLibrary(libatomic_path)
+ end
 -const libgcc_s = LazyLibrary(_libgcc_s_path)
--libgfortran_deps = [libgcc_s]
++const libgcc_s = LazyLibrary(libgcc_s_path)
+ libgfortran_deps = [libgcc_s]
 -if @isdefined _libquadmath_path
 -    const libquadmath = LazyLibrary(_libquadmath_path)
 -    push!(libgfortran_deps, libquadmath)
-+if @isdefined(libatomic_path)
-+    const libatomic = libatomic_path
- end
+-end
 -const libgfortran = LazyLibrary(_libgfortran_path, dependencies=libgfortran_deps)
 -const libstdcxx = LazyLibrary(_libstdcxx_path, dependencies=[libgcc_s])
 -const libgomp = LazyLibrary(_libgomp_path)
--if @isdefined _libssp_path
+-
+-# Some installations (such as those from-source) may not have `libssp`
+-# So let's do a compile-time check to see if we've got it.
+-if @isdefined(_libssp_path) && isfile(string(_libssp_path))
 -    const libssp = LazyLibrary(_libssp_path)
-+const libgcc_s = libgcc_s_path
-+const libgfortran = libgfortran_path
-+const libstdcxx = libstdcxx_path
-+const libgomp = libgomp_path
-+if @isdefined libssp_path
-+    const libssp = libssp_path
- end
+-end
++const libquadmath = LazyLibrary(libquadmath_path)
++push!(libgfortran_deps, libquadmath)
++const libgfortran = LazyLibrary(libgfortran_path, dependencies=libgfortran_deps)
++const libstdcxx = LazyLibrary(libstdcxx_path, dependencies=[libgcc_s])
++const libgomp = LazyLibrary(libgomp_path)
  
  # Conform to LazyJLLWrappers API
-@@ -95,19 +83,9 @@ end
+ function eager_mode()
+@@ -89,28 +71,15 @@ function eager_mode()
+     if @isdefined libquadmath
+         dlopen(libquadmath)
+     end
+-    if @isdefined libssp
+-        dlopen(libssp)
+-    end
+     dlopen(libgfortran)
+     dlopen(libstdcxx)
+ end
  is_available() = true
  
  function __init__()
