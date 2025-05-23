@@ -1,6 +1,6 @@
 pkgname=julia-git-argcheck-src
-pkgver=2.4.0
-_commit=062d3737fe48eeee2fe497a333680288722c5e83
+pkgver=2.5.0
+_commit=4733a47d91c6777d3e313677cb8d531a7f8ecbce
 pkgrel=1
 pkgdesc="ArgCheck.jl"
 url="https://github.com/jw3126/ArgCheck.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jw3126/ArgCheck.jl.git#commit=$_commit")
-sha256sums=('775f2097e4bde4a7acb2116a582f6ae4eb6681caf390106ebed4c462b14cbbe9')
+sha256sums=('ae902e5c620203fc6537c7dc384c3ace7d8535ddc0426d8ca25e458874c3927f')
 
 package() {
   cd ArgCheck.jl
