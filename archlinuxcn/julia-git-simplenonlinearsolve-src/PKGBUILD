@@ -1,18 +1,18 @@
 pkgname=julia-git-simplenonlinearsolve-src
-pkgver=1.12.3
-_commit=8a50d1d8fc8c7a0f15d9c70227d0b7187748960c
-pkgrel=1
+pkgver=2.5.0
+_commit=5e3ea1837bf3b32388711c8d7b82f027662886f8
+pkgrel=0
 pkgdesc="SimpleNonlinearSolve.jl"
 url="https://github.com/SciML/SimpleNonlinearSolve.jl.git"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/SciML/SimpleNonlinearSolve.jl.git#commit=$_commit")
-sha256sums=('35bfac1c0f2c1c7ded37596407b0529806b4e43949d49e4f5d86f032c8d4037c')
+source=("git+https://github.com/SciML/NonlinearSolve.jl.git#commit=$_commit")
+sha256sums=('fb619edbc60d6160326813d44d2ecc327fa0b42cc00579b89b54a1dd72a76e4f')
 
 package() {
-  cd SimpleNonlinearSolve.jl
+  cd NonlinearSolve.jl/lib/SimpleNonlinearSolve
 
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SimpleNonlinearSolve "${pkgdir}" "${pkgname}" julia-git
 }
