@@ -4,7 +4,7 @@
 pkgname='libeb'
 _pkgname='eb'
 pkgver=4.4.3
-pkgrel=11
+pkgrel=12
 _pkgrel_debian=14  # Version of Debian package patch
 pkgdesc='C library for accessing CD-ROM books. Supports EB, EBG, EBXA, EBXA-C, S-EBXA and EPWING formats.'
 arch=('i686' 'x86_64')
@@ -55,7 +55,7 @@ build() {
     --with-pkgdocdir="/usr/share/doc/html/${pkgname}" \
     --disable-silent-rules \
     --disable-static
-  make
+  make CFLAGS="-std=gnu17 -fpermissive"
 }
 
 check() {
