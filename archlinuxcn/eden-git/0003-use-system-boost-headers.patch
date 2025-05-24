@@ -1,0 +1,40 @@
+From 5aa0a45d38ab69e8e456e85f4b38c3216499bcf2 Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Sun, 18 May 2025 11:12:26 +0800
+Subject: [PATCH 3/5] use system boost headers
+
+add option to allow system-wide boost headers.
+
+1	0	CMakeLists.txt
+3	1	externals/CMakeLists.txt
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 86cb1e430..3ec018d0f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -298,6 +298,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+ # =======================================================================
+ 
+ # Enforce the search mode of non-required packages for better and shorter failure messages
++find_package(Boost REQUIRED context)
+ find_package(enet 1.3 MODULE)
+ find_package(fmt 10 REQUIRED)
+ find_package(LLVM MODULE COMPONENTS Demangle)
+diff --git a/externals/CMakeLists.txt b/externals/CMakeLists.txt
+index d89eb1804..4a378707d 100644
+--- a/externals/CMakeLists.txt
++++ b/externals/CMakeLists.txt
+@@ -161,7 +161,9 @@ if (YUZU_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES)
+ endif()
+ 
+ # Boost headers
+-add_subdirectory(boost-headers)
++if (YUZU_USE_EXTERNAL_BOOST_HEADERS)
++    add_subdirectory(boost-headers)
++endif()
+ 
+ # TZDB (Time Zone Database)
+ add_subdirectory(nx_tzdb)
+-- 
+2.49.0
+
