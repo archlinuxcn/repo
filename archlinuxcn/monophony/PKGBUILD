@@ -1,7 +1,7 @@
 # Maintainer: Otreblan <otreblain@gmail.com>
 
 pkgname=monophony
-pkgver=3.3.2
+pkgver=3.3.3
 pkgrel=1
 pkgdesc="Linux app for streaming music from YouTube."
 arch=('any')
@@ -31,7 +31,7 @@ provides=()
 conflicts=()
 replaces=()
 source=("$url/-/archive/v$pkgver/$pkgname-v$pkgver.tar.gz")
-sha256sums=('9b47fb34a8c079e664adced717fd3af89e3b947399f47a9662f6883b3e8f5075')
+sha256sums=('87f74251a37317bcb85cbdf8eb9b87912a92c959756b31b762f6c5d292761f41')
 
 prepare() {
 	cd "$srcdir/$pkgname-v$pkgver/source"
