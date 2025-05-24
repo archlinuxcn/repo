@@ -3,7 +3,7 @@
 
 buildarch=8
 
-pkgver=6.14.7.asahi1
+pkgver=6.14.8.asahi1
 pkgrel=1
 
 [[ $pkgver =~ ([.0-9]+)\.asahi([0-9]+) ]]
@@ -30,10 +30,10 @@ source=(
   config         # the main kernel config file
   enable-mic.patch
 )
-sha256sums=('612c84f203dc6fb3035fc0cfeae8b55545c961bef18e8435ab785a7b9aa1ca02'
+sha256sums=('c55cf52d58927db1314d7b69a7fb8093dfcfb168a3c6d18b726c7bdb43379117'
             'c919489632ec77a59fbb6bb210940fceb2cac30e3ab80566915a581d2f8159fb'
             '22d4e28e1e1ebe6a05e8d0d23641ee71a5f5cde06f375e72baa4d8e32b7a90fa')
-b2sums=('4e3ab84612c50485d6c98af8cbd3a6416ca18dbfe06d93ac584417f8f74cccb10187cbb2ba77817760a98d55e0027d8b10b76bbb7a8540020194b898b278acfd'
+b2sums=('57f275a7caeb18f4899d3f105b6eb0e428580e0917eafe5d0420b0aef3f4604ede37433c3f30e58dccf02d2fc0e69ed4efa99ba693c24204421c4f3c554471d6'
         '2fcdbba91b905a19d1a27fd268b7f04e1ee7f8f41e9a9a0975611f00a2820120c90b02235d49255362512f4ffe7aa9f28e24856cc575ffe6a7fa54f397f90f1c'
         'bc29091b42d2e3a9ecd9386791c63664288135ad56a073d7ed4c45b50b75c01334ed8f72ef510c130bc0d4d7952e5955974b316efd05426ebe78c7ed042a47ac')
 export KBUILD_BUILD_HOST=archlinux
