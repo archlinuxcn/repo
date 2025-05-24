@@ -6,7 +6,7 @@
 # Contributor: Bart Ribbers <bribbers at disroot dot org>
 
 pkgname=waydroid-image-beta
-pkgver=20.0_20250517
+pkgver=20.0_20250524
 _pkgver=${pkgver/_/-}
 pkgrel=1
 epoch=1
@@ -20,8 +20,8 @@ conflicts=('waydroid-image')
 _srcprefix="https://sourceforge.net/projects/waydroid/files/images"
 source=("${_srcprefix}/system/lineage/waydroid_x86_64/lineage-${_pkgver}-VANILLA-waydroid_x86_64-system.zip"
 	"${_srcprefix}/vendor/waydroid_x86_64/lineage-${_pkgver}-MAINLINE-waydroid_x86_64-vendor.zip")
-sha256sums=('bca4b725a38fc5e151c6b8a0d5a95b2f87c653334c181f4b02080aa598deb5e1'
-            '59a6f37ba1775589fd3497ae9251d51ae906fafef766dd8c535620936f90fdd5')
+sha256sums=('fc55ff3a30fdb68b935f6a012002ca90ed6f89b6d802ef2fe3840525edb309a6'
+            '578548d9cb358f940477058fd23fed5cf9baf1ab7e2fc93d435972daacf5e309')
 
 package() {
 	install -Dm644 {system,vendor}.img -t "${pkgdir}/usr/share/waydroid-extra/images/"
