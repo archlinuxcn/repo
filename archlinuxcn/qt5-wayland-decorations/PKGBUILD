@@ -4,10 +4,10 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt5-wayland-decorations
-_basever=5.15.16
-pkgver=5.15.16+kde+r60
+_basever=5.15.17
+pkgver=5.15.17+kde+r57
 pkgrel=1
-_commit=84870d539c396a7f202a2e14013dd13657ff5573
+_commit=c1ac089f3f37ab172d8010b0fabf4007d62d1812
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -29,7 +29,7 @@ source=("git+https://invent.kde.org/qt/qt/qtwayland#commit=${_commit}"
         "${_fpatchfile100}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile100}"
         "${_fpatchfile101}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile101}"
         "${_fpatchfile102}-${_fcommit}::${_frepourl}/raw/${_fcommit}/f/${_fpatchfile102}")
-sha256sums=('76c2fc033531ec3573b3cf3bda591d7ee7def6e727486d465ecdbfe0b1beab8e'
+sha256sums=('f87ce12868c5599f6efe6446ae1f1b4fea1e2884ac2da7953534283c13583903'
             '5b606c5526b44c0db9f5f7fd4be91c95bcb73bd06af304589c9f8c1922607fca'
             '4d8c5d686666cbaae7550ec3defee66ea56ca624152c56c51ff945693706c29d'
             '569ae734860335b72a0fc04e3418bc87086f574baf8db22c0dc5ba0846e22d4f')
