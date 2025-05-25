@@ -1,0 +1,12 @@
+maintainers:
+  - github: xiaohuirong
+    email: horeamxiao@archlinuxcn.org
+
+pre_build_script: aur_pre_build(maintainers=['Hoream', 'lilac'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: totalmapper-git
+  - source: github
+    github: ellbur/totalmapper
