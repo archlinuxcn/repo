@@ -35,6 +35,7 @@ prepare() {
   cd "$srcdir/$pkgname-$pkgver"
   patch -p1 -i "$srcdir/fix_build_with_QT6.diff"
   sed CMakeLists.txt -i -e 's/CMAKE_MINIMUM_REQUIRED\(.*\)/cmake_minimum_required(VERSION 3.10)/'
+  sed -i -e'1 i#include <QJsonValue>' src/message-poller.cpp
 }
 
 build() {
