@@ -1,0 +1,21 @@
+From 6931d80e16afc92498e345835204059ac1980782 Mon Sep 17 00:00:00 2001
+From: Tarulia <mihawk.90+git@googlemail.com>
+Date: Sun, 30 Mar 2025 06:18:47 +0200
+Subject: [PATCH] deps/json11: Fix compile error on GCC 15+
+
+---
+ deps/json11/json11.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/deps/json11/json11.cpp b/deps/json11/json11.cpp
+index 88024e9223accf..45dbbcbe6f7766 100644
+--- a/deps/json11/json11.cpp
++++ b/deps/json11/json11.cpp
+@@ -22,6 +22,7 @@
+ #include "json11.hpp"
+ #include <cassert>
+ #include <cmath>
++#include <cstdint>
+ #include <cstdlib>
+ #include <cstdio>
+ #include <limits>
