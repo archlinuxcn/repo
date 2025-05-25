@@ -16,6 +16,7 @@ sha256sums=('9d50d5174ffa0e38fe732533e18c4416fb5cd166497704e41b60f9501dc759f7')
 prepare() {
   mkdir bin
   ln -sf /usr/bin/qmake6 bin/qmake
+  sed seadrive-gui/CMakeLists.txt -i -e 's/CMAKE_MINIMUM_REQUIRED\(.*\)/cmake_minimum_required(VERSION 3.10)/'
 }
 
 build() {
