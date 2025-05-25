@@ -9,6 +9,7 @@ url="https://github.com/shibatch/tlfloat"
 license=('BSL-1.0')
 depends=()
 makedepends=(cmake git mpfr)
+provides=(libtlfloat.so)
 options=('debug' 'strip')
 source=("git+https://github.com/shibatch/tlfloat#tag=v${pkgver}")
 sha512sums=('SKIP')
