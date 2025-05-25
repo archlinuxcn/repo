@@ -2,7 +2,7 @@
 
 pkgname=tlfloat
 pkgver=1.15.0
-pkgrel=1
+pkgrel=2
 pkgdesc='C++ template library for floating point operations '
 arch=('aarch64' 'i686' 'x86_64')
 url="https://github.com/shibatch/tlfloat"
@@ -12,7 +12,7 @@ makedepends=(cmake git mpfr)
 provides=(libtlfloat.so)
 options=('debug' 'strip')
 source=("git+https://github.com/shibatch/tlfloat#tag=v${pkgver}")
-sha512sums=('SKIP')
+sha512sums=('1242e9db614e43e4cf1a1fd13bf38d4ecdcfe06ddd92df263ebe39aaddae630b3c37d2b4db117dc0dd876ae9d3f05d35177b3291131e88d870f9a78794040813')
 
 build() {
   cd tlfloat
