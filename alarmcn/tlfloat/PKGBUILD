@@ -1,0 +1,36 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=tlfloat
+pkgver=1.15.0
+pkgrel=1
+pkgdesc='C++ template library for floating point operations '
+arch=('aarch64' 'i686' 'x86_64')
+url="https://github.com/shibatch/tlfloat"
+license=('BSL-1.0')
+depends=()
+makedepends=(cmake git mpfr)
+options=('debug' 'strip')
+source=("git+https://github.com/shibatch/tlfloat#tag=v${pkgver}")
+sha512sums=('SKIP')
+
+build() {
+  cd tlfloat
+
+  mkdir -p build
+  cd build
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DENABLE_INTSQRT=On \
+    -DENABLE_INLINING=On \
+    -DENABLE_LTO=On \
+    -DBUILD_TESTS=Off \
+    -DBUILD_SHARED_LIBS=On
+  make
+}
+
+package() {
+  cd tlfloat/build
+
+  make DESTDIR="$pkgdir/" install
+}
