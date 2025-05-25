@@ -1,0 +1,28 @@
+msg() {
+    ALL_OFF="\e[1;0m"
+    BOLD="\e[1;1m"
+    GREEN="${BOLD}\e[1;32m"
+	local mesg=$1; shift
+	printf "${GREEN}==>${ALL_OFF}${BOLD} ${mesg}${ALL_OFF}" "$@" >&2
+}
+
+post_upgrade() {
+  msg "Attempting to enable iio-sensor-proxy service..."
+  systemctl is-active iio-sensor-proxy >/dev/null || systemctl enable iio-sensor-proxy
+  echo ""
+  msg "services enabled."
+  echo ""
+}
+
+post_install() {
+  msg "Attempting to enable iio-sensor-proxy service..."
+  systemctl is-active iio-sensor-proxy >/dev/null || systemctl enable iio-sensor-proxy
+  echo ""
+  msg "services enabled."
+  echo ""
+  msg "services should now be enabled."
+  msg "Reboot your system, so changes will take effect.."
+  echo ""
+}
+
+# vim: ts=2 sw=2 et:

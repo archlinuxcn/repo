@@ -1,0 +1,15 @@
+maintainers:
+  - github: xiaohuirong
+    email: horeamxiao@archlinuxcn.org
+
+pre_build_script: aur_pre_build(maintainers=['kode54'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: wayfire-plugins-extra-git
+  - source: github
+    github: WayfireWM/wayfire-plugins-extra
+
+repo_depends:
+  - wayfire-git
