@@ -1,0 +1,50 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=tlfloat-git
+pkgver=1.15.0.0.6.0.g5877ac9
+pkgrel=1
+pkgdesc='C++ template library for floating point operations '
+arch=('aarch64' 'i686' 'x86_64')
+url="https://github.com/shibatch/tlfloat"
+license=('BSL-1.0')
+depends=()
+makedepends=(cmake git mpfr)
+provides=(libtlfloat.so)
+options=('debug' 'strip')
+source=("git+https://github.com/shibatch/tlfloat")
+sha512sums=('SKIP')
+
+pkgver() {
+  cd tlfloat
+
+  git describe --tags | sed -e 's/^[a-z]*//' -e 's/-/.0./g'
+}
+
+build() {
+  cd tlfloat
+
+  mkdir -p build
+  cd build
+
+  CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+  export CFLAGS
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DENABLE_INTSQRT=On \
+    -DENABLE_INLINING=On \
+    -DENABLE_LTO=On \
+    -DBUILD_TESTS=Off \
+    -DBUILD_SHARED_LIBS=On
+  make
+}
+
+package() {
+  cd tlfloat/build
+
+  make DESTDIR="$pkgdir/" install
+
+  ver=$(PKG_CONFIG_LIBDIR="$pkgdir/"usr/lib/pkgconfig pkg-config --modversion tlfloat)
+  _provides=("tlfloat=${ver}")
+  provides=("${provides[@]}" "${_provides[@]}")
+}
