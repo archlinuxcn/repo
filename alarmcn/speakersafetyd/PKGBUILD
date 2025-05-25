@@ -1,25 +1,35 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=speakersafetyd
-pkgver=1.0.2
+pkgver=1.1.2
 pkgrel=1
 pkgdesc='Asahi Linux speaker safety daemon'
 arch=('aarch64')
 url='http://asahilinux.org'
 depends=('alsa-lib')
 makedepends=('rust')
+options=('!emptydirs')
 license=('MIT')
 source=(
   "speakersafetyd-${pkgver}.tar.gz::https://github.com/AsahiLinux/speakersafetyd/archive/refs/tags/${pkgver}.tar.gz"
+  speakersafetyd.sysusers
 )
-sha256sums=('844ae3719c029e826f58c3799b6e358d189b0c42ade7a91f6c35b960cae35919')
+sha256sums=('b3ccbbf4c3ee0da537203186f80eb8f3cc16037bf41f4cd0de50b7cd25dd713f'
+            '3eedb6ddce80f888e0c47016c3773776c91942bcd7a08da8740daddf403c6bbb')
 
 build() {
-  cd "${srcdir}/speakersafetyd-${pkgver}"
+  cd "speakersafetyd-${pkgver}"
   make
 }
 
 package() {
-  cd "${srcdir}/speakersafetyd-${pkgver}"
-  make DESTDIR="${pkgdir}" UNITDIR=/usr/lib/systemd/system UDEVDIR=/usr/lib/udev/rules.d install
+  cd "speakersafetyd-${pkgver}"
+  make install \
+       DESTDIR="${pkgdir}" \
+       UNITDIR=/usr/lib/systemd/system \
+       UDEVDIR=/usr/lib/udev/rules.d \
+       SPEAKERSAFETYD_USER=root \
+       SPEAKERSAFETYD_GROUP=root
+  install -Dm644 "${srcdir}/speakersafetyd.sysusers" \
+          "${pkgdir}/usr/lib/sysusers.d/speakersafetyd.conf"
 }
