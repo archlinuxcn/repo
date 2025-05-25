@@ -45,6 +45,10 @@ prepare() {
 
 build() {
   cd "$srcdir/$pkgname-$pkgver-server"
+  export CPPFLAGS="$CPPFLAGS -Wno-error -Wno-incompatible-pointer-types"
+  export CFLAGS="$CFLAGS -Wno-error -Wno-incompatible-pointer-types"
+  export CXXFLAGS="$CXXFLAGS -Wno-error -Wno-incompatible-pointer-types"
+
   ./autogen.sh
   ./configure \
     --enable-fuse \
@@ -55,9 +59,9 @@ build() {
 
   # Build Go packages
   export GOPATH="$srcdir"
-  export CGO_CPPFLAGS="$CPPFLAGS -Wno-error -Wno-incompatible-pointer-types"
-  export CGO_CFLAGS="$CFLAGS -Wno-error -Wno-incompatible-pointer-types"
-  export CGO_CXXFLAGS="$CXXFLAGS -Wno-error -Wno-incompatible-pointer-types"
+  export CGO_CPPFLAGS="$CPPFLAGS"
+  export CGO_CFLAGS="$CFLAGS"
+  export CGO_CXXFLAGS="$CXXFLAGS"
   export CGO_LDFLAGS="$LDFLAGS"
   export CGO_ENABLED=1
 
