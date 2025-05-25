@@ -34,6 +34,7 @@ sha256sums=('34e3c9dbc84b2735d05f2d45e0135ac352a54ce98269ce5b34e45d1af859076b'
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"
   patch -p1 -i "$srcdir/fix_build_with_QT6.diff"
+  sed CMakeLists.txt -i -e 's/CMAKE_MINIMUM_REQUIRED\(.*\)/cmake_minimum_required(VERSION 3.10)/'
 }
 
 build() {
