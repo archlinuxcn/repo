@@ -14,5 +14,7 @@ sha256sums=('9bdd68fcb8f23feaeda2625d18666a71cddae6a14750c9ba0d19b35ccd2b59a1')
 package() {
   cd NLopt.jl
 
+  sed -i -e 's/    global Optimizer/    @eval global Optimizer/' src/NLopt.jl
+
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh NLopt "${pkgdir}" "${pkgname}" julia-git
 }
