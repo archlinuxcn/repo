@@ -7,8 +7,7 @@ repo_depends:
 
 update_on:
   - source: regex
-    url: 
-        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HDF5_jll/version
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HDF5_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpmfiles
     pkgname: hdf5
@@ -19,4 +18,4 @@ update_on:
     strip_dir: true
     filename: libhdf5_hl.so.\d+
   - source: manual
-    manual: 1
+    manual: 2
