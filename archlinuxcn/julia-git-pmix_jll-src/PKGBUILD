@@ -1,6 +1,6 @@
 pkgname=julia-git-pmix_jll-src
-pkgver=5.0.3+0
-_commit=ce8489b116cf1b3151ce24017e699d93da2873bd
+pkgver=6.0.0+0
+_commit=94f1700d1d9bc5f490738d47f316b7ff6687ad61
 pkgrel=1
 pkgdesc="PMIx_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/PMIx_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git openpmix)
 source=("git+https://github.com/JuliaBinaryWrappers/PMIx_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('30841a08c5bb138ce2195d809d92b95d1a98147c4037fb7f1eb0106354494eb3'
+sha256sums=('fe5a81ead627992acfb464fda8572fc04864b0d761118144553ccd66cffca798'
             '6d435a987ee9af5a886a3b755530a7d74eecc67547546b2b743a56cbb0b0ed71')
 
 build() {
