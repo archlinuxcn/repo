@@ -11,7 +11,7 @@ depends=(julia-git openmpi)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenMPI_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('22888b3abe778afc09bd05091968e7507e2f49f9b01c972a86e0ef3011ce77ad'
-            '996f2935aa2a2d26461bbf93299ee10aa5c1fd71692d7aea122f1fca6bf0a52d')
+            'd4222fc431af8cea75dcbc3f160bd096dc5ef4bb7a795b425b1bf94297bcbb68')
 
 build() {
   cd OpenMPI_jll.jl
