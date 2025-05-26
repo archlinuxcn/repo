@@ -8,8 +8,8 @@
 # fine with them.
 
 pkgname=blender
-pkgver=4.3.2
-pkgrel=5
+pkgver=4.4.3
+pkgrel=1
 epoch=17
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=(aarch64 x86_64)
@@ -110,8 +110,8 @@ source=("git+https://projects.blender.org/blender/blender.git#tag=v$pkgver"
         "git+https://projects.blender.org/blender/blender-assets#tag=v$pkgver"
         https://developer.download.nvidia.com/redist/optix/v8.0/OptiX-8.0-Include.zip
         hiprt-lib-path.patch)
-sha512sums=('c19e26326cebd8afe4f8c6ca2bbeed15092c53a0bfceec5b6ac226fe2ebd48e701830c840b8e44a6142da95bbf6ddbe9da93aa1afc5f1d379848a38bd06d1f93'
-            '88be713847bca183f78efd5dccb049e1d40e366b48bfdfb5ef781832f235dedaae84a109b04ce3c2b7d379c38e49daa340e8cd1f1a87e2ee4929e489b5d10dc3'
+sha512sums=('e24f3ab3b02a3d1b89f0db55ba51fda4e9108a51971692fde52bf371714dd3f79f8878cbc6df159b09b074068377941e2da79b4e049c2b39144ae7731cb2c137'
+            '43cc5f388581698a68ad611222fcf48445441fc58685259beacb4e6de62c86db6adb7d255f1781bbb1cacf3eade4a6745ddcc519dfed3f776bddcbe1e3ee82d9'
             '5502d9df847de12badc702c0444bd4f1f7620460b2235026df2c3133da1e04c148af0f1fc7f345e9a0c009c32f905f66c8d427743445e8864d3a797cdce6a483'
             '52dd6c4496af38505761e559adee556176aa2ad023f073618af77f6c9bc5e3a8faa59c8f259dc92302f7e650740afd2060951129408f1939d29c0901e8ccccae')
 
