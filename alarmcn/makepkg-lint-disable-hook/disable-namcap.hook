@@ -1,0 +1,23 @@
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = namcap
+
+[Trigger]
+Type = Package
+Operation = Install
+Operation = Upgrade
+Target = makepkg-lint-disable-hook
+
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = /usr/bin/namcap
+
+[Action]
+Description = Disabling namcap...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/disable-namcap.sh

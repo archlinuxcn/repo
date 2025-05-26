@@ -2,18 +2,24 @@
 
 pkgname=makepkg-lint-disable-hook
 
-pkgver=1.2
+pkgver=1.3
 pkgrel=0
 pkgdesc="Hook to disable makepkg linting"
 arch=(aarch64 armv7h x86_64)
 url="https://archlinuxcn.org"
 license=('GPL')
 source=(disable-makepkg-lint.sh
-        disable-makepkg-lint.hook)
+        disable-makepkg-lint.hook
+        disable-namcap.sh
+        disable-namcap.hook)
 sha512sums=('cf4b26fcf0ae24e16ab576874c5a6a742c4179e2b0175ccc868902ba61d4d534d9319a9ca75f7436d0b21d4485d1d39c029f97afcb46fe47dfd4743bfb78675a'
-            '4cdbb5558db7679e7312d10dcb5fcbc9625fdba0145d3ec40a52246bbb77c84a3641bf00385c65fcd3e4c2a2bc203012161e09292d3a0d10050b28117ad20469')
+            '4cdbb5558db7679e7312d10dcb5fcbc9625fdba0145d3ec40a52246bbb77c84a3641bf00385c65fcd3e4c2a2bc203012161e09292d3a0d10050b28117ad20469'
+            '4e40894b61fbe21bc1b37aac6ec7f8a0ced41d96d8221f00764ab94290679b5995616638818866005e59a54f41835c7fe82bb12920f23723e20d357adc4b936f'
+            'da0c020ff18df3a3afa83b56f1a580be40c4311b6b2171f2c22c610c2641aa23e52ff57ef17c60f42bdccfbf2821e3b766dc6f3a769d64071362ba4aff4b4766')
 
 package() {
   install -Dm755 disable-makepkg-lint.sh "${pkgdir}/usr/share/libalpm/scripts/disable-makepkg-lint.sh"
   install -Dm644 disable-makepkg-lint.hook "${pkgdir}/usr/share/libalpm/hooks/disable-makepkg-lint.hook"
+  install -Dm755 disable-namcap.sh "${pkgdir}/usr/share/libalpm/scripts/disable-namcap.sh"
+  install -Dm644 disable-namcap.hook "${pkgdir}/usr/share/libalpm/hooks/disable-namcap.hook"
 }
