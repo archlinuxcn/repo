@@ -1,6 +1,6 @@
 pkgname=julia-git-json3-src
-pkgver=1.14.2
-_commit=fb220e513d8c43e6a698e2c863da2a5e9bcab2e3
+pkgver=1.14.3
+_commit=cc047e027fbd148c41d8778bcef98a93bb43cd55
 pkgrel=1
 pkgdesc="JSON3.jl"
 url="https://github.com/quinnj/JSON3.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/quinnj/JSON3.jl.git#commit=$_commit")
-sha256sums=('64e1841398bf8feb5479d25a89cc0f602030377d0d74e8c0b9472c96eb50edef')
+sha256sums=('5f85f6470b2ff1221d04c5e2e1da51c579f2f5fea20b7b2838ddcecd20633342')
 
 package() {
   cd JSON3.jl
