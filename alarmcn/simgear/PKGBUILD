@@ -4,34 +4,32 @@
 # Contributor: Hans Janssen <hans@janserv.xs4all.nl>
 
 pkgname=simgear
-pkgver=2020.3.19
-_pkgver=${pkgver%.*}
-pkgrel=1
+pkgver=2024.1.1
+pkgrel=0
 pkgdesc="A set of open-source libraries designed to be used as building blocks for quickly assembling 3d simulations, games, and visualization applications."
 arch=(armv7h aarch64 x86_64)
-depends=(glu glut freealut openscenegraph libexpat.so udns)
+depends=(glu glut freealut openscenegraph libexpat.so udns
+         libavcodec.so libavformat.so libavutil.so libswscale.so)
 makedepends=(boost cmake mesa plib)
 provides=(libSimGearCore.so libSimGearScene.so)
 license=("GPL")
 url="http://www.flightgear.org/"
 options=('makeflags' 'staticlibs')
-source=("https://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/${pkgname}-${pkgver}.tar.bz2"
-        0001-Fix-a-new-Clang-compile-failure-with-current-XCode.patch)
-sha256sums=('3b937c5b94422478e5d79114bdcd6c78e43a0a6ffba97544a86d441c3f9e8c3a'
-            '1cb7dce940b980334b111e495f44fd2f184d1e7f239e0bf7e4cd35eebfece741')
+source=(
+  https://gitlab.com/flightgear/simgear/-/archive/v${pkgver}/simgear-v${pkgver}.tar.gz)
+sha256sums=('5e7215d5876d1def78b90a1dee5424f0b3f4ecd7a71a1e074e21d984d4d2dbbf')
 
 prepare() {
-  cd "$srcdir"/simgear-$pkgver
-  # sed -i -e "s|#include <simgear/structure/map.hxx>|#include <simgear/structure/map.hxx>\n#include <boost/utility/enable_if.hpp>|g" simgear/nasal/cppbind/NasalHash.hxx
+  cd simgear-v$pkgver
 
   rm -rf build
   mkdir -p build/
 
-  patch -Np1 < ../0001-Fix-a-new-Clang-compile-failure-with-current-XCode.patch
+  sed -i -e'1 i#include <boost/mpl/if.hpp>' simgear/nasal/cppbind/NasalHash.hxx
 }
 
 build() {
-  cd "$srcdir"/simgear-$pkgver/build
+  cd simgear-v$pkgver/build
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   cmake .. \
@@ -42,13 +40,11 @@ build() {
         -DSIMGEAR_SHARED=On \
         -DSYSTEM_EXPAT=On \
         -DSYSTEM_UDNS=On \
-        -DENABLE_SIMD=On \
-        -DENABLE_SIMD_CODE=On \
-        -DENABLE_OPENMP=On
+        -DENABLE_SIMD=On
   make
 }
 
 package() {
-  cd "$srcdir"/simgear-$pkgver/build
+  cd simgear-v$pkgver/build
   make DESTDIR="$pkgdir" install
 }

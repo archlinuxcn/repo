@@ -7,18 +7,17 @@
 pkgname=flightgear-data
 pkgver=2024.1.1
 _pkgver=${pkgver%.*}
-pkgrel=1
+pkgrel=0
 pkgdesc="Base-Data for the opensource flight-simulator."
 arch=(any)
 license=('GPL')
 url="http://www.flightgear.org/"
 options=('!strip')
-source=("https://downloads.sourceforge.net/project/flightgear/release-${_pkgver}/FlightGear-${pkgver}-data.txz")
-sha256sums=('90f47e1d8b3be150923dab83941cef008b91b2e277fed72dbbc781f06d28933d')
+source=("https://gitlab.com/flightgear/fgdata/-/archive/v${pkgver}/fgdata-v${pkgver}.tar.gz")
+sha256sums=('39202a62d1236d51450232778751339bd29de650ea16a27c7ebbdccd6ea355b7')
 
 package() {
-  cd "$srcdir"
   mkdir -p "$pkgdir"/usr/share/flightgear
-  mv fgdata/ "$pkgdir"/usr/share/flightgear/data
+  mv fgdata-v${pkgver}/ "$pkgdir"/usr/share/flightgear/data
   chown root:root "$pkgdir"/usr/share/flightgear/data
 }

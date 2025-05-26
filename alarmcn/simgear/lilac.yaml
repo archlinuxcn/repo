@@ -1,18 +1,32 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 post_build: git_pkgbuild_commit
 
 update_on:
-  - source: regex
-    url: 'https://sourceforge.net/projects/flightgear/rss?path=/'
-    regex: simgear-([0-9.]+)\.tar
+  - source: gitlab
+    gitlab: flightgear/simgear
+    host: gitlab.com
+    use_max_tag: true
+    include_regex: 'v(\d+.\d+.\d+)'
   - source: alpm
     alpm: expat
     provided: libexpat.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavformat.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libswscale.so
   - source: manual
-    manual: 2
+    manual: 1
 
 repo_depends:
   - plib
