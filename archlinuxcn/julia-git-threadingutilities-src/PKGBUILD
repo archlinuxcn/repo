@@ -1,6 +1,6 @@
 pkgname=julia-git-threadingutilities-src
-pkgver=0.5.3
-_commit=cb9cf258273977e832bdd7d507052ea5d05d0ae6
+pkgver=0.5.4
+_commit=db36597d61de11cb9d8b6676214dff36f8ed9697
 pkgrel=1
 pkgdesc="ThreadingUtilities.jl"
 url="https://github.com/JuliaSIMD/ThreadingUtilities.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/ThreadingUtilities.jl.git#commit=$_commit")
-sha256sums=('38d8d6b1353d1e0650ce84d9bd31562c241a4242082adf41ec9915ffd9fe037b')
+sha256sums=('17740ab23d95bf2fdc0f6255cc7342d752a27e276133240b1b3246cba5135d61')
 
 package() {
   cd ThreadingUtilities.jl
