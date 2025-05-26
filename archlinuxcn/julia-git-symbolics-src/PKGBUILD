@@ -1,6 +1,6 @@
 pkgname=julia-git-symbolics-src
-pkgver=6.29.2
-_commit=4248752dd0f5725f21f4098f2aa05a5e4ee5a04d
+pkgver=6.31.1
+_commit=9e772d8446313afb8bef41cad302131a282e25dc
 pkgrel=1
 pkgdesc="Symbolics.jl"
 url="https://github.com/JuliaSymbolics/Symbolics.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSymbolics/Symbolics.jl.git#commit=$_commit")
-sha256sums=('d79083e6100cc3a0047b669bd7772144eeff902947e9b3e7109cb53f2bbd0980')
+sha256sums=('cc8cb8262d940e1fbbd6472eb32d2ef1de4ad44302e01883b06a49fce4b78f4c')
 
 package() {
   cd Symbolics.jl
