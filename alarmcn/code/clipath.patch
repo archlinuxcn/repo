@@ -1,8 +1,8 @@
 diff --git a/src/vs/code/node/cli.ts b/src/vs/code/node/cli.ts
-index b25377a804d..cd690d9a230 100644
+index 312df0c1f92..33d115a3f7b 100644
 --- a/src/vs/code/node/cli.ts
 +++ b/src/vs/code/node/cli.ts
-@@ -43,7 +43,7 @@ export async function main(argv: string[]): Promise<any> {
+@@ -44,7 +44,7 @@ export async function main(argv: string[]): Promise<any> {
  	let args: NativeParsedArgs;
  
  	try {
@@ -12,10 +12,10 @@ index b25377a804d..cd690d9a230 100644
  		console.error(err.message);
  		return;
 diff --git a/src/vs/platform/lifecycle/electron-main/lifecycleMainService.ts b/src/vs/platform/lifecycle/electron-main/lifecycleMainService.ts
-index 0016baac80f..0974953cc92 100644
+index 4912966c79c..5b75bcd5973 100644
 --- a/src/vs/platform/lifecycle/electron-main/lifecycleMainService.ts
 +++ b/src/vs/platform/lifecycle/electron-main/lifecycleMainService.ts
-@@ -690,7 +690,7 @@ export class LifecycleMainService extends Disposable implements ILifecycleMainSe
+@@ -691,7 +691,7 @@ export class LifecycleMainService extends Disposable implements ILifecycleMainSe
  		const quitListener = () => {
  			if (!this.relaunchHandler?.handleRelaunch(options)) {
  				this.trace('Lifecycle#relaunch() - calling app.relaunch()');
@@ -25,10 +25,10 @@ index 0016baac80f..0974953cc92 100644
  		};
  		electron.app.once('quit', quitListener);
 diff --git a/src/vs/platform/native/electron-main/nativeHostMainService.ts b/src/vs/platform/native/electron-main/nativeHostMainService.ts
-index 6f57b9a7b44..4a05b88edf1 100644
+index 45964bcdcc2..1ef23c64a1a 100644
 --- a/src/vs/platform/native/electron-main/nativeHostMainService.ts
 +++ b/src/vs/platform/native/electron-main/nativeHostMainService.ts
-@@ -609,31 +609,7 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
+@@ -686,31 +686,7 @@ export class NativeHostMainService extends Disposable implements INativeHostMain
  
  	@memoize
  	private get cliPath(): string {
