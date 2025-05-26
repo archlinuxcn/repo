@@ -1,0 +1,27 @@
+pkgname=julia-git-openblasconsistentfpcsr_jll-src
+pkgver=0.3.29+0
+_commit=015ed167918d86b8ee085ba698221b7ce24f632e
+pkgrel=1
+pkgdesc="OpenBLASConsistentFPCSR_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenBLASConsistentFPCSR_jll.jl.git"
+arch=('any')
+license=('MIT')
+# Use the normal openblas for now
+makedepends=(git julia-pkg-scripts openblas64)
+depends=(julia-git)
+source=("git+https://github.com/JuliaBinaryWrappers/OpenBLASConsistentFPCSR_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('30a15d9ab7bd54eae7d35833033ed5ef8ece7a2dbe5161f62def8ca400b33f4d'
+            '601c1c505320084e203bcb445265d1820743ddd175632007203bdaead47ec088')
+
+build() {
+  cd OpenBLASConsistentFPCSR_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl OpenBLASConsistentFPCSR_jll ../jll.toml
+}
+
+package() {
+  cd OpenBLASConsistentFPCSR_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OpenBLASConsistentFPCSR_jll "${pkgdir}" "${pkgname}" julia-git
+}

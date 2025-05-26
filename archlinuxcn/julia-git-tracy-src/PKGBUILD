@@ -1,0 +1,18 @@
+pkgname=julia-git-tracy-src
+pkgver=0.1.4
+_commit=d52878c33ef0fc9b2567392ce940fb97c08c285e
+pkgrel=1
+pkgdesc="Tracy.jl"
+url="https://github.com/topolarity/Tracy.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/topolarity/Tracy.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Tracy.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Tracy "${pkgdir}" "${pkgname}" julia-git
+}

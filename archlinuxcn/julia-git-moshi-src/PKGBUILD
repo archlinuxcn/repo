@@ -1,0 +1,18 @@
+pkgname=julia-git-moshi-src
+pkgver=0.3.5
+_commit=b2017b48408642c8b75bfe5622b89a08ff20b80e
+pkgrel=1
+pkgdesc="Moshi.jl"
+url="https://github.com/Roger-luo/Moshi.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/Roger-luo/Moshi.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Moshi.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Moshi "${pkgdir}" "${pkgname}" julia-git
+}

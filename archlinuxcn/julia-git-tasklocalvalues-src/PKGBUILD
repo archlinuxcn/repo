@@ -1,0 +1,18 @@
+pkgname=julia-git-tasklocalvalues-src
+pkgver=0.1.2
+_commit=f57ae328c0ab4acee60d91e105828badcff1cd8f
+pkgrel=1
+pkgdesc="TaskLocalValues.jl"
+url="https://github.com/vchuravy/TaskLocalValues.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/vchuravy/TaskLocalValues.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TaskLocalValues.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TaskLocalValues "${pkgdir}" "${pkgname}" julia-git
+}

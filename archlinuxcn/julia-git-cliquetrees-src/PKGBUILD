@@ -1,0 +1,18 @@
+pkgname=julia-git-cliquetrees-src
+pkgver=1.6.0
+_commit=7cb0c433d26fb593b144697343f33d5270cbce95
+pkgrel=1
+pkgdesc="CliqueTrees.jl"
+url="https://github.com/AlgebraicJulia/CliqueTrees.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/AlgebraicJulia/CliqueTrees.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CliqueTrees.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CliqueTrees "${pkgdir}" "${pkgname}" julia-git
+}
