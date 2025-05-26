@@ -14,5 +14,7 @@ sha256sums=('139c18c9128b62788186ad22a4d0532297b3a0bbebfca68cb47003ef5fb63e44')
 package() {
   cd MatrixEquations.jl
 
+  sed -i -e 's/@static if VERSION < v"1.12"/if VERSION < v"1.12"/' src/*.jl
+
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh MatrixEquations "${pkgdir}" "${pkgname}" julia-git
 }
