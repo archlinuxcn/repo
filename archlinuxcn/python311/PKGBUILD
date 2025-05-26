@@ -7,8 +7,8 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=python311
-pkgver=3.11.11
-pkgrel=3
+pkgver=3.11.12
+pkgrel=1
 _pybasever=${pkgver%.*}
 pkgdesc="The Python programming language (version 3.11)"
 arch=("x86_64")
@@ -23,13 +23,13 @@ source=(
 	EXTERNALLY-MANAGED
 )
 sha256sums=(
-	"2a9920c7a0cd236de33644ed980a13cbbc21058bfdc528febb6081575ed73be3" # "SKIP"
+	"849da87af4df137710c1796e276a955f7a85c9f971081067c8f565d15c352a09" # "SKIP"
 	"d96bca8f7be0d1a83eb88f7c40924434168b1cb8a57870a55ad34207a3718c0a"
 )
 validpgpkeys=(
-	"0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D" # Ned Deily (Python release signing key) <nad@python.org>
-	"E3FF2839C048B25C084DEBE9B26995E310250568" # Łukasz Langa (GPG langa.pl) <lukasz@langa.pl>
-	"A035C8C19219BA821ECEA86B64E628F8D684696D" # Pablo Galindo Salgado <pablogsal@gmail.com>
+	# "0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D" # Ned Deily (Python release signing key) <nad@python.org>
+	# "E3FF2839C048B25C084DEBE9B26995E310250568" # Łukasz Langa (GPG langa.pl) <lukasz@langa.pl>
+	# "A035C8C19219BA821ECEA86B64E628F8D684696D" # Pablo Galindo Salgado <pablogsal@gmail.com>
 )
 
 prepare() {
