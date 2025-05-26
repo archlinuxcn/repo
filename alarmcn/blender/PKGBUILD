@@ -140,10 +140,12 @@ build() {
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS/}
   CXXFLAGS+=' --param=max-vartrack-size=640000000'
 
+  # Fix numpy discovery
+  sed -i "s|core/include|_core/include|g" blender/CMakeLists.txt
+
   local cmake_options=(
     -B build
     -C "$pkgname/build_files/cmake/config/blender_release.cmake"
-    -C "$srcdir/precache"
     -D CMAKE_BUILD_TYPE=Release
     -D CMAKE_INSTALL_PREFIX=/usr
     -D WITH_LINKER_MOLD=ON
@@ -178,11 +180,6 @@ package() {
   python -O -m compileall "${pkgdir}/usr/share/blender"
 
   install -Dm644 release/freedesktop/org.blender.Blender.metainfo.xml "${pkgdir}/usr/share/metainfo/org.blender.Blender.metainfo.xml"
-
-  # Manually install draco bindings (See FS#73415)
-  mkdir -p "${pkgdir}/usr/lib/python$(_get_pyver)"/
-  mv "${pkgdir}"/usr/share/blender/4*/python/lib/* "${pkgdir}"/usr/lib/
-  rm -r "${pkgdir}"/usr/share/blender/4*/python
 
   install -vDm 644 doc/license/{BSD-{2,3}-Clause,MIT,Zlib}-license.txt -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
