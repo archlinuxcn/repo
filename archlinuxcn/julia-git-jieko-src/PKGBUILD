@@ -1,7 +1,7 @@
 pkgname=julia-git-jieko-src
 pkgver=0.2.1
 _commit=97ff59b2e5d0ed2c9473c180ce39327da3f195e4
-pkgrel=1
+pkgrel=2
 pkgdesc="Jieko.jl"
 url="https://github.com/Roger-luo/Jieko.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Roger-luo/Jieko.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('eed293ffd98db83be99ba30832ab3f4fd98686270512bbb29c0e2192a830cbf6')
 
 package() {
   cd Jieko.jl
