@@ -1,6 +1,6 @@
 pkgname=julia-git-orderedcollections-src
-pkgver=1.8.0
-_commit=b86ae0881ff71cd7fe479e6e66678df92c92ba5b
+pkgver=1.8.1
+_commit=5ec176442763e9b6e5247a47dc6a8e7d1f678201
 pkgrel=1
 pkgdesc="OrderedCollections.jl"
 url="https://github.com/JuliaCollections/OrderedCollections.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaCollections/OrderedCollections.jl.git#commit=$_commit")
-sha256sums=('bbd144c4055b007ceaee673c10c2c48d1fbebe1ad989d8978456fd0b3ad01725')
+sha256sums=('82f00b7040f806746607372233381872f61de4dc08f9dc107abeba6b6657710b')
 
 package() {
   cd OrderedCollections.jl
