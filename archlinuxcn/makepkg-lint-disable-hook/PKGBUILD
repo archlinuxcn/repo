@@ -2,15 +2,15 @@
 
 pkgname=makepkg-lint-disable-hook
 
-pkgver=1.1
-pkgrel=1
+pkgver=1.2
+pkgrel=0
 pkgdesc="Hook to disable makepkg linting"
 arch=(aarch64 armv7h x86_64)
 url="https://archlinuxcn.org"
 license=('GPL')
 source=(disable-makepkg-lint.sh
         disable-makepkg-lint.hook)
-sha512sums=('10e78f8b4398f5d35ca0a16434b95e3cb7244e31fd6d1392837460592695a6da21188e886c5af8c24c979838f294504de07511cbc6bf76a81bc34770eff2b470'
+sha512sums=('cf4b26fcf0ae24e16ab576874c5a6a742c4179e2b0175ccc868902ba61d4d534d9319a9ca75f7436d0b21d4485d1d39c029f97afcb46fe47dfd4743bfb78675a'
             '4cdbb5558db7679e7312d10dcb5fcbc9625fdba0145d3ec40a52246bbb77c84a3641bf00385c65fcd3e4c2a2bc203012161e09292d3a0d10050b28117ad20469')
 
 package() {
