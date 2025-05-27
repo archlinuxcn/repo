@@ -1,4 +1,5 @@
-# Maintainer: Grzegorz Koperwas <admin@grzegorzkoperwas.site>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Grzegorz Koperwas <admin@grzegorzkoperwas.site>
 
 pkgname=swww-git
 _pkgname=${pkgname%-git}
@@ -50,7 +51,6 @@ package() {
 	install -Dm644 "completions/swww.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
 	install -Dm644 "completions/_swww" -t "${pkgdir}/usr/share/zsh/site-functions/"
 	install -Dm644 "README.md" -t "${pkgdir}/usr/share/doc/${_pkgname}/"
-	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 
 	# manpages
 	cd ./doc/generated
