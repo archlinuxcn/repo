@@ -22,22 +22,24 @@ pkgver() {
 }
 
 prepare() {
-	# export RUSTUP_TOOLCHAIN=nightly
-	export RUSTUP_TOOLCHAIN=stable
 	cd "${_pkgname}/"
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${_pkgname}/"
-	export RUSTUP_TOOLCHAIN=stable
-	cargo build --release
+	cargo build --frozen --release --all-features
 
 	# manpages
 	./doc/gen.sh
 	for page in $(ls ./doc/generated/*.1); do
 		gzip -f "${page}"
 	done
+}
+
+check() {
+	cd "${_pkgname}/"
+	cargo test --frozen --all-features
 }
 
 package() {
