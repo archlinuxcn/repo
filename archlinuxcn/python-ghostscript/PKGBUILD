@@ -2,8 +2,8 @@
 
 _name=ghostscript
 pkgname=python-ghostscript
-pkgver=0.7
-pkgrel=6
+pkgver=0.8.1
+pkgrel=1
 pkgdesc='Python interface to the Ghostscript C-API using ctypes'
 arch=('any')
 url='https://gitlab.com/pdftools/python-ghostscript'
@@ -18,7 +18,7 @@ makedepends=(
   python-wheel
 )
 source=("${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha512sums=('2a9c538e161bc83181992ac5fb521b10c133a4662472a2c4de2fa50e2f4128f742c2d369dd87b4cb3915086d07f1faa49af71287b62706efed19b76ca3eb3350')
+sha512sums=('153126680a614302b5b6b8b2a8110d09f5015eb5de35cc5260cef16f6c86a80ca99ac7539f985579f70ec1644135175d1df463bbf8a182d7ba12cd5b35694e12')
 
 build() {
   cd "${_name}-${pkgver}"
