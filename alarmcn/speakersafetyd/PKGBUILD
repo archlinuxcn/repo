@@ -30,6 +30,8 @@ package() {
        UDEVDIR=/usr/lib/udev/rules.d \
        SPEAKERSAFETYD_USER=root \
        SPEAKERSAFETYD_GROUP=root
+  sed -i '/User=speakersafetyd/a SupplementaryGroups=audio' \
+      "${pkgdir}/usr/lib/systemd/system/speakersafetyd.service"
   install -Dm644 "${srcdir}/speakersafetyd.sysusers" \
           "${pkgdir}/usr/lib/sysusers.d/speakersafetyd.conf"
 }
