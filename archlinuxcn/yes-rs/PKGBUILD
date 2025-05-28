@@ -2,7 +2,7 @@
 
 _name=yes-rs
 pkgname="${_name}"
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="A blazingly fast, memory-safe rewrite of the classic Unix 'yes' command"
 arch=(
@@ -22,7 +22,7 @@ makedepends=(
     'cargo'
 )
 source=("${_name}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-b2sums=('e51509a2467ce43fa6f79dc1ab1a202f0c5e23ee252e1d14387b619c6ae5ba1ee58ad27b90071e35e6506ffdd9cee60f2f40ca4fa6564e94b6a4f74ac0656b9d')
+b2sums=('1c4287a86a711ea3bc30c07e5fca3600f59160d0ef7e9233b47ee5b7dbfb73736455563094dc885b3cce79fd80c2731287e7f8fecbc591d77218d21610566077')
 
 prepare() {
     cd "${srcdir}/${_name}-${pkgver}"
