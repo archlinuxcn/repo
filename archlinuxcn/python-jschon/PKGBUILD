@@ -3,7 +3,7 @@
 pkgname=python-jschon
 _gitpkgname=jschon
 pkgver=0.11.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Object-oriented JSON Schema implementation for Python'
 arch=('any')
 url='https://github.com/marksparkza/jschon'
@@ -32,9 +32,7 @@ source=(
   "${_gitpkgname}-${pkgver}.tar.gz::https://github.com/marksparkza/jschon/archive/v${pkgver}.tar.gz"
 )
 
-sha512sums=(
-  'a4b3c559501189efcfdd5a3dfca96594c7d5bbea0e7343524c2cea6bb661790704956401ea3901ff13d5bf15d15843ee2724c14061a3f1ee47a08dbbb0c9c2ab'
-)
+sha512sums=('a4b3c559501189efcfdd5a3dfca96594c7d5bbea0e7343524c2cea6bb661790704956401ea3901ff13d5bf15d15843ee2724c14061a3f1ee47a08dbbb0c9c2ab')
 
 prepare() {
   local _schemas_basedir
