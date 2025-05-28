@@ -2,7 +2,7 @@
 
 pkgname=python-dicomweb-client
 _pkgname=dicomweb-client
-pkgver=0.59.3
+pkgver=0.60.0
 pkgrel=3
 pkgdesc='Python client for DICOMweb RESTful services'
 arch=(any)
@@ -17,22 +17,25 @@ depends=(
 )
 
 makedepends=(
+  git
   python-build
-  # python-hatchling
+  python-hatchling
   python-installer
+  python-uv-dynamic-versioning
   python-wheel
 )
 
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/MGHComputationalPathology/dicomweb-client/archive/v${pkgver}.tar.gz")
-sha512sums=('a5be896d6d301a09ad814a96a657f719f49ae3292f18edf58b32438427e84cdb2f12616e8cacb9e85329d10a13f00aca404cbba55f10de6e84e78eb20103c017')
+source=("${_pkgname}::git+https://github.com/ImagingDataCommons/dicomweb-client.git#tag=v${pkgver}")
+sha512sums=('cdc2249f90b654f7707f3148746c954df90f712ff25e3f38d31ab0e979beb59d2f8c349c374cf08c66cc9826f535d8d291ccc2cbf21966f1a477ab574169fc2a')
+
 
 build() {
-  cd "${_pkgname}-${pkgver}"
+  cd "${_pkgname}"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "${_pkgname}-${pkgver}"
+  cd "${_pkgname}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
