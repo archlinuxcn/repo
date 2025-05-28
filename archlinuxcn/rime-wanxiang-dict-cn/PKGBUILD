@@ -2,8 +2,8 @@
 
 pkgname=rime-wanxiang-dict-cn
 _schema_version=6.8.8
-_dict_version=20250527
-pkgver=6.8.8+r20250527
+_dict_version=20250528
+pkgver=6.8.8+r20250528
 pkgrel=1
 epoch=1
 pkgdesc="万象中文词库"
@@ -12,7 +12,7 @@ license=('CC-BY-4.0')
 url="https://github.com/amzxyz/rime_wanxiang"
 source=("cn_dicts.${_dict_version}.zip::${url}/releases/download/dict-nightly/cn_dicts.zip"
         "${url}/archive/refs/tags/v${_schema_version}.tar.gz")
-sha256sums=('d2b9eef8e9ed8a5f2430049e3b0296e35eff0aeaebbbf35fb048fdca2b201831'
+sha256sums=('328a3b73cd27f605a2db8417ac9bc9ef2332664f1d19ad2c66ced81aa4b007e8'
             '4cb835230fdfff3607f03c28839eb239cff36e8c68d6e93760f4b8d26352c81c')
 
 makedepends=(librime rime-prelude rime-essay sed rsync)
