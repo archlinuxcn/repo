@@ -19,13 +19,14 @@ replaces=('python-nmigen')
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/amaranth-lang/amaranth/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('84fe631b12160c0f42bf39d926d9e9f87240969578036ae3b68b4523bda65f4182e130b75f9aeaec658ca4ef87059a30ac6abcbc5e7ba80d7d8a1ae04bdd8b38')
+sha512sums=('78ed434e382b7ce66104b817ebf38e2650aa3e87c6b611c4d8d5bf4639b28f1de72c6508a18b517b7a82238f1a70c7c4005c5623bcbc038eaf4b5141473a412e')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
 
   sed -i -e "s/pdm\\.backend\\._vendor\\.//" pdm_build.py
   sed -i -e 's/"pdm-backend~=2.3.0",//' pyproject.toml
+  sed -i -e 's/"pdm-backend~=2.3.0"//' pyproject.toml
 }
 
 build() {
