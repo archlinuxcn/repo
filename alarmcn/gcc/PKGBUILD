@@ -174,7 +174,7 @@ package_gcc-libs() {
   options=(!emptydirs !strip)
   provides=(libgo.so libgfortran.so libgphobos.so
             libubsan.so libasan.so libtsan.so liblsan.so)
-  replaces=(libgphobos)
+  # replaces=(libgphobos)
 
   cd gcc-build
   make -C $CHOST/libgcc DESTDIR="$pkgdir" install-shared
@@ -371,7 +371,7 @@ package_gcc-d() {
   pkgdesc="D frontend for GCC"
   depends=("gcc=$pkgver-$pkgrel" libisl.so)
   provides=(gdc)
-  replaces=(gdc)
+  # replaces=(gdc)
   options=(staticlibs)
 
   cd gcc-build
