@@ -1,0 +1,94 @@
+# Maintainer: Claudia Pellegrino <aur ät cpellegrino.de>
+
+pkgname=python-jschon
+_gitpkgname=jschon
+pkgver=0.11.1
+pkgrel=2
+pkgdesc='Object-oriented JSON Schema implementation for Python'
+arch=('any')
+url='https://github.com/marksparkza/jschon'
+license=('MIT')
+depends=(
+  'python'
+  'python-requests'
+  'python-rfc3986'
+)
+makedepends=(
+  'python-build'
+  'python-installer'
+  'python-setuptools'
+  'python-sphinx'
+  'python-sphinx_rtd_theme'
+  'python-wheel'
+  'stylelint'
+)
+checkdepends=(
+  'python-hypothesis'
+  'python-pytest'
+  'python-pytest-httpserver'
+)
+
+source=(
+  "${_gitpkgname}-${pkgver}.tar.gz::https://github.com/marksparkza/jschon/archive/v${pkgver}.tar.gz"
+)
+
+sha512sums=(
+  'a4b3c559501189efcfdd5a3dfca96594c7d5bbea0e7343524c2cea6bb661790704956401ea3901ff13d5bf15d15843ee2724c14061a3f1ee47a08dbbb0c9c2ab'
+)
+
+prepare() {
+  local _schemas_basedir
+
+  cd "${_gitpkgname}-${pkgver}"
+
+  echo >&2 'Linking stable JSON schema specs'
+  _schemas_basedir='/usr/lib/node_modules/stylelint/node_modules/table/node_modules/ajv/dist/refs'
+  rmdir -v jschon/catalog/json-schema-{2019-09,2020-12}
+  ln -nsv "${_schemas_basedir}"/json-schema-{2019-09,2020-12} jschon/catalog/
+
+  echo >&2 'Disabling verification for unstable, unversioned schema specs'
+  # shellcheck disable=SC2016  # Not meant to be expanded
+  sed -i -e 's/, ``next``//' -e 's/, _next//' -e '/_next\.initialize/d' jschon/__init__.py
+  sed -i -e "s/, 'next'//" tests/{conftest,test_catalog,test_metaschema}.py
+}
+
+build() {
+  local _site_packages
+  cd "${_gitpkgname}-${pkgver}"
+
+  echo >&2 'Building wheel'
+  python -m build --wheel --no-isolation
+
+  echo >&2 'Generating HTML documentation'
+  _site_packages="$(python -c 'import site; print(site.getsitepackages()[0])')"
+  python -m installer --destdir=tmp_install dist/*.whl
+  PYTHONPATH="${PWD}/tmp_install/${_site_packages}" \
+            make -C docs singlehtml
+}
+
+check() {
+  cd "${_gitpkgname}-${pkgver}"
+
+  echo >&2 'Running unit tests'
+  # Excluding `next` tests due to missing unstable schema
+  # Excluding benchmark tests, which are not relevant for system packaging
+  # Excluding test_hierarchical_output: missing validation output schema
+  pytest -k 'not [next] and not test_benchmarks and not test_hierarchical_output'
+}
+
+package() {
+  cd "${_gitpkgname}-${pkgver}"
+
+  echo >&2 'Packaging the wheel'
+  python -I -m installer --destdir="${pkgdir}" dist/*.whl
+
+  echo >&2 'Packaging the documentation'
+  install -D -m 644 -t "${pkgdir}/usr/share/doc/${pkgname}" \
+          README.rst
+  cp -R --preserve=mode -t "${pkgdir}/usr/share/doc/${pkgname}" \
+     docs/_build/singlehtml/{index.html,_static}
+
+  echo >&2 'Packaging the license'
+  install -D -m 644 -t "${pkgdir}/usr/share/licenses/${pkgname}" \
+          LICENSE
+}

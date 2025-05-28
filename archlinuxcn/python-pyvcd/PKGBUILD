@@ -1,0 +1,31 @@
+# Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
+
+_pkgname=pyvcd
+pkgname=python-$_pkgname
+pkgver=0.4.1
+pkgrel=1
+pkgdesc='Python package for writing Value Change Dump (VCD) files'
+arch=('any')
+url='https://github.com/SanDisk-Open-Source/pyvcd'
+license=('MIT')
+depends=('python')
+makedepends=('python-setuptools-scm' 'python-setuptools' 'python-build'
+             'python-installer' 'python-wheel')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
+sha512sums=('3ae5e965bde0fc5e70b8b5f0b5fddd9019f9e545949c987177ff2bc7749df2efaf579990c36c0f8eb550892389995c1e0345b9654061030e3a00700c2f1bd382')
+
+export SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver
+
+build() {
+  cd $_pkgname-$pkgver
+
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd $_pkgname-$pkgver
+
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -Dm 644 LICENSE.txt "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

@@ -1,0 +1,43 @@
+# Maintainer: Scott Alfter <scott@alfter.us>
+# Contributor: xiretza <xiretza+aur@xiretza.xyz>
+
+_pkgname=amaranth
+pkgname="python-$_pkgname"
+pkgver=0.5.6
+pkgrel=1
+pkgdesc="A modern hardware definition language and toolchain based on Python (formerly nMigen)"
+arch=(any)
+url="https://github.com/amaranth-lang/amaranth"
+license=('BSD-2-Clause')
+depends=('python' 'python-jinja' 'python-pyvcd' 'python-jschon')
+makedepends=('git' 'python-build' 'python-installer' 'python-wheel'
+             'python-setuptools-scm' 'python-packaging' 'python-pdm-backend')
+optdepends=('python-paramiko: for remote builds')
+provides=("python-nmigen=$pkgver" "python-$_pkgname=$pkgver")
+conflicts=('python-nmigen' "python-nmigen-git" "python-$_pkgname-git")
+replaces=('python-nmigen')
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/amaranth-lang/amaranth/archive/refs/tags/v${pkgver}.tar.gz"
+)
+sha512sums=('84fe631b12160c0f42bf39d926d9e9f87240969578036ae3b68b4523bda65f4182e130b75f9aeaec658ca4ef87059a30ac6abcbc5e7ba80d7d8a1ae04bdd8b38')
+
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+
+  sed -i -e "s/pdm\\.backend\\._vendor\\.//" pdm_build.py
+  sed -i -e 's/"pdm-backend~=2.3.0",//' pyproject.toml
+}
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
