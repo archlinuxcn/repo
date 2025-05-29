@@ -1,7 +1,7 @@
 pkgname=julia-git-stackviews-src
-pkgver=0.1.1
-_commit=415add2873e266a1733385890d7f2a95dd454566
-pkgrel=2
+pkgver=0.1.2
+_commit=3412abbe7de124a2250d55d9b7e9603055cc3f9d
+pkgrel=1
 pkgdesc="StackViews.jl"
 url="https://github.com/JuliaArrays/StackViews.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/StackViews.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('0a07d7f0f2fda4e08f46f1f4582dc4be61d33b236119aee1a0f5c6d72a9caf41')
 
 package() {
   cd StackViews.jl
