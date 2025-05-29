@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=136.0.7103.113
+pkgver=137.0.7151.55
 pkgrel=1
 _launcher_ver=8
-_manual_clone=1
+_manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=136.0.7103.113-1
+_uc_ver=137.0.7151.55-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -47,11 +47,12 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager_v3.patch
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch
-        add-more-CFI-suppressions-for-inline-PipeWire-functions.patch
         chromium-136-drop-nodejs-ver-check.patch
-        disable-clang-warning-suppression-flag.patch)
-sha256sums=('720a1196410080056cd97a1f5ec34d68ba216a281d9b5157b7ea81ea018ec661'
-            'ab4c1b21292b860eaa750d3fb9ee73dae58a86d2dd59d4e41e06102e8c9f635a'
+        disable-clang-warning-suppression-flag.patch
+        disable-clang-fextend-variable-liveness.patch
+        pdfium-fix-build-with-system-libpng.patch)
+sha256sums=('7b8fa89febed9fae0297c8175bd35cc912d794fbf03d33a121a0bc9d3d13ef34'
+            '68ec6108c64ee516ed925d0b0ea44c2dc3d5973da92eb91f2788f7075596ddd6'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'cc8a71a312e9314743c289b7b8fddcc80350a31445d335f726bb2e68edf916d1'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
@@ -61,9 +62,10 @@ sha256sums=('720a1196410080056cd97a1f5ec34d68ba216a281d9b5157b7ea81ea018ec661'
             'd9974ddb50777be428fd0fa1e01ffe4b587065ba6adefea33678e1b3e25d1285'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
-            'd3dd9b4132c9748b824f3dcf730ec998c0087438db902bc358b3c391658bebf5'
             '32f0080282fc0b2795a342bf17fcb3db4028c5d02619c7e304222230ba99d5fe'
-            'd6f3914c6adadaf061e7e2b1430c96d32b0cad05244b5cfaf58cf5344006a169')
+            'd6f3914c6adadaf061e7e2b1430c96d32b0cad05244b5cfaf58cf5344006a169'
+            '2d98a7a6a553fb5c17c4bfe36f011410f377afa12a6a818ba36543dc9a258f4a'
+            'de3222b13d3a49628a00fd74acae633912b830f78c2de452d3bdff3d0e42026d')
 
 if (( _manual_clone )); then
   source[0]=fetch-chromium-release
@@ -124,7 +126,8 @@ prepare() {
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
   # Upstream fixes
-  patch -Np1 -i ../add-more-CFI-suppressions-for-inline-PipeWire-functions.patch
+  patch -Np1 -i ../disable-clang-fextend-variable-liveness.patch
+  patch -d third_party/pdfium -Np1 <../pdfium-fix-build-with-system-libpng.patch
 
   # Fixes from Gentoo
   patch -Np1 -i ../chromium-136-drop-nodejs-ver-check.patch

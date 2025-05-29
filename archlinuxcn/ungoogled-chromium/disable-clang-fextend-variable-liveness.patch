@@ -1,0 +1,74 @@
+From d4dacec1b04c5356fbe2dfb19aa5815f366622cb Mon Sep 17 00:00:00 2001
+From: Devon Loehr <dloehr@google.com>
+Date: Wed, 14 May 2025 20:20:50 -0700
+Subject: [PATCH] Roll clang+rust llvmorg-21-init-9266-g09006611-2 :
+ llvmorg-21-init-11777-gfd3fecfc-1 /
+ c8f94230282a8e8c1148f3e657f0199aad909228-1 :
+ 4a0969e06dbeaaa43914d2d00b2e843d49aa3886-1
+
+https://chromium.googlesource.com/external/github.com/llvm/llvm-project/+log/09006611..fd3fecfc
+
+https://chromium.googlesource.com/external/github.com/rust-lang/rust/+log/c8f94230282a..4a0969e06dbe
+
+Ran: ./tools/clang/scripts/upload_revision.py fd3fecfc0936703f2715fe6fea890e81b0b3c2ac
+But keeping Rust back to the version we successfully rolled last week.
+
+Bug: 414182431
+Change-Id: I565f3985f168e4f91e974146247bb97ae3007a45
+Tricium: skip
+Disable-Rts: True
+Cq-Include-Trybots: chromium/try:chromeos-amd64-generic-cfi-thin-lto-rel
+Cq-Include-Trybots: chromium/try:dawn-win10-x86-deps-rel
+Cq-Include-Trybots: chromium/try:linux-chromeos-dbg
+Cq-Include-Trybots: chromium/try:linux_chromium_cfi_rel_ng
+Cq-Include-Trybots: chromium/try:linux_chromium_chromeos_msan_rel_ng
+Cq-Include-Trybots: chromium/try:linux_chromium_msan_rel_ng
+Cq-Include-Trybots: chromium/try:mac11-arm64-rel,mac_chromium_asan_rel_ng
+Cq-Include-Trybots: chromium/try:ios-catalyst,win-asan,android-official
+Cq-Include-Trybots: chromium/try:fuchsia-arm64-cast-receiver-rel
+Cq-Include-Trybots: chromium/try:mac-official,linux-official
+Cq-Include-Trybots: chromium/try:win-official,win32-official
+Cq-Include-Trybots: chromium/try:win-arm64-rel
+Cq-Include-Trybots: chromium/try:linux-swangle-try-x64,win-swangle-try-x86
+Cq-Include-Trybots: chromium/try:android-cronet-riscv64-dbg
+Cq-Include-Trybots: chromium/try:android-cronet-riscv64-rel
+Cq-Include-Trybots: chrome/try:iphone-device,ipad-device
+Cq-Include-Trybots: chrome/try:linux-chromeos-chrome
+Cq-Include-Trybots: chrome/try:win-chrome,win64-chrome,linux-chrome,mac-chrome
+Cq-Include-Trybots: chrome/try:mac-pgo,win32-pgo,win64-pgo
+Cq-Include-Trybots: luci.chromium.try:linux-cast-x64-rel
+Cq-Include-Trybots: chromium/try:android-rust-arm32-rel
+Cq-Include-Trybots: chromium/try:android-rust-arm64-dbg
+Cq-Include-Trybots: chromium/try:android-rust-arm64-rel
+Cq-Include-Trybots: chromium/try:linux-rust-x64-dbg
+Cq-Include-Trybots: chromium/try:linux-rust-x64-rel
+Cq-Include-Trybots: chromium/try:mac-rust-x64-dbg
+Cq-Include-Trybots: chromium/try:win-rust-x64-dbg
+Cq-Include-Trybots: chromium/try:win-rust-x64-rel
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/6541127
+Reviewed-by: Devon Loehr <dloehr@google.com>
+Reviewed-by: Hans Wennborg <hans@chromium.org>
+Commit-Queue: Devon Loehr <dloehr@google.com>
+Cr-Commit-Position: refs/heads/main@{#1460490}
+---
+ build/config/compiler/BUILD.gn | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/build/config/compiler/BUILD.gn b/build/config/compiler/BUILD.gn
+index 94fc4b4c09fd..5a58de131986 100644
+--- a/build/config/compiler/BUILD.gn
++++ b/build/config/compiler/BUILD.gn
+@@ -626,13 +626,6 @@ config("compiler") {
+         default_toolchain != "//build/toolchain/cros:target") {
+       cflags += [ "-Wa,--crel,--allow-experimental-crel" ]
+     }
+-
+-    # TODO(crbug.com/413427035): Remove once
+-    # https://github.com/llvm/llvm-project/pull/136867/ is landed.
+-    if (!is_win && !llvm_android_mainline &&
+-        default_toolchain != "//build/toolchain/cros:target") {
+-      cflags += [ "-fextend-variable-liveness=none" ]
+-    }
+   }
+ 
+   # C11/C++11 compiler flags setup.
