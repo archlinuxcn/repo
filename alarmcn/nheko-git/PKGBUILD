@@ -2,23 +2,23 @@
 # Maintainer: Joseph Donofry <joe at joedonofry dot com>
 
 pkgname=nheko-git
-pkgver=0.11.3.r263.gd95d2fca
-pkgrel=1
+pkgver=0.12.0.r131.g978174af
+pkgrel=0
 pkgdesc="Desktop client for the Matrix protocol"
 arch=(armv7h aarch64 i686 x86_64)
 
 url="https://github.com/Nheko-Reborn/nheko"
-license=("GPL3")
+license=("GPL-3.0-or-later")
 
 depends=(
-  lmdb qt5-base qt5-svg qt5-multimedia qt5-declarative qt5-quickcontrols2
-  qt5-graphicaleffects qtkeychain-qt5
+  lmdb qt6-base qt6-svg qt6-multimedia qt6-declarative
+  qtkeychain-qt6 kdsingleapplication
   openssl libmatrix_client.so libolm.so libspdlog.so libfmt.so
-  cmark gst-plugins-base-libs gst-plugins-bad-libs gst-plugin-qmlgl
+  cmark gst-plugins-base-libs gst-plugins-bad-libs gst-plugin-qml6
   gst-plugin-pipewire libxcb xcb-util-wm hicolor-icon-theme
 )
 
-makedepends=(git cmake qt5-tools nlohmann-json fontconfig lmdbxx pkg-config asciidoc mtxclient-git)
+makedepends=(git cmake qt6-tools nlohmann-json fontconfig lmdbxx pkg-config asciidoc mtxclient-git)
 
 provides=("nheko")
 conflicts=("nheko")
@@ -41,11 +41,11 @@ build() {
   cd $pkgname/build
 
   # build with more cores than the default
+  # https://wiki.archlinux.org/title/CMake_package_guidelines
   cmake .. -DHUNTER_ENABLED=OFF \
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCOMPILE_QML=On
+        -DCMAKE_BUILD_TYPE=None
   make
 }
 
