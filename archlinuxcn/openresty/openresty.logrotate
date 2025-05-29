@@ -1,0 +1,8 @@
+/var/log/nginx/*.log {
+	missingok
+	sharedscripts
+	compress
+	postrotate
+		test -r /run/openresty.pid && kill -USR1 `cat /run/openresty.pid`
+	endscript
+}

@@ -1,4 +1,4 @@
- Maintainer: Kim Brandt <myrveln@gmail.com>
+# Maintainer: Kim Brandt <myrveln@gmail.com>
 # Contributor: Daichi Shinozaki <dseg@shield.jp>
 # Contributor: Jean-Sébastien Ney <jeansebastien.ney@gmail.com>
 # Contributor: James Cleveland <jc@blackflags.co.uk>
@@ -12,7 +12,7 @@ pkgdesc="A Fast and Scalable Web Platform by Extending NGINX with Lua"
 arch=('i686' 'x86_64' 'armv6h')
 url="http://openresty.org/"
 license=('BSD')
-depends=('perl>=5.6.1' 'readline' 'pcre')
+depends=('perl>=5.6.1')
 install=$pkgname.install
 options=(!purge)
 validpgpkeys=(
