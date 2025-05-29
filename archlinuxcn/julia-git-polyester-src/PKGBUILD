@@ -1,6 +1,6 @@
 pkgname=julia-git-polyester-src
-pkgver=0.7.17
-_commit=5e8bcc6773338e3b0503902db3720eaf34fdb96b
+pkgver=0.7.18
+_commit=a3a8314ba8f93de563a43f3eeb9ce5c5949bb23a
 pkgrel=1
 pkgdesc="Polyester.jl"
 url="https://github.com/JuliaSIMD/Polyester.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/Polyester.jl.git#commit=$_commit")
-sha256sums=('3ccfe192c732f5cc3def8b16cb27ed57bfd1600dac944f91b5eaa3d2b3455262')
+sha256sums=('a40c76af69b87a89a0d4f547c87eda5ed72aaab84b67dafaf97afc998cf51b67')
 
 package() {
   cd Polyester.jl
