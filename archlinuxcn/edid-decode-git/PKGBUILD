@@ -12,6 +12,7 @@ license=('MIT')
 depends=('glibc' 'gcc-libs')
 makedepends=('git' 'meson')
 provides=('edid-decode')
+conflicts=('v4l-utils')
 source=('git+https://git.linuxtv.org/v4l-utils.git'
         'install-tag.patch')
 sha256sums=('SKIP'
