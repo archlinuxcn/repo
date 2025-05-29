@@ -1,0 +1,15 @@
+maintainers:
+  - github: oowl
+    email: ouyangjun1999@gmail.com
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: openrazer/openrazer
+    prefix: v
+    use_max_tag: true

@@ -1,0 +1,254 @@
+ Maintainer: Kim Brandt <myrveln@gmail.com>
+# Contributor: Daichi Shinozaki <dseg@shield.jp>
+# Contributor: Jean-Sébastien Ney <jeansebastien.ney@gmail.com>
+# Contributor: James Cleveland <jc@blackflags.co.uk>
+# Contributor: Eimantas Bunevičius <eimantaster@gmail.com>
+_cfgdir=/opt/openresty/nginx/conf
+_tmpdir=/var/lib/openresty
+pkgname=openresty
+pkgver=1.27.1.2
+pkgrel=1
+pkgdesc="A Fast and Scalable Web Platform by Extending NGINX with Lua"
+arch=('i686' 'x86_64' 'armv6h')
+url="http://openresty.org/"
+license=('BSD')
+depends=('perl>=5.6.1' 'readline' 'pcre')
+install=$pkgname.install
+options=(!purge)
+validpgpkeys=(
+'25451EB088460026195BD62CB550E09EA0E98066'
+)
+
+source=(https://openresty.org/download/$pkgname-$pkgver.tar.gz{,.asc}
+        service
+        $pkgname.logrotate
+        $pkgname.install
+        $pkgname.sh
+        )
+noextract=()
+sha256sums=('74f076f7e364b2a99a6c5f9bb531c27610c78985abe956b442b192a2295f7548'
+            'SKIP'
+            'ec55ac7da98f5f5ec54d096c5f79b656edec0ebca835b6b9f1d20fb7be7119c5'
+            'f910ab75edcb062375fea70fcb2859de159c9901bc381d33b985072a0344193d'
+            'f071e0fd8d0d588f03fcc7db6f3cb3f7ea1b870d3416a0bde142d9aeb839d0f6'
+            'bf628aa47fb85f036f250416f13900be61dccac89736434498a80989b16ae85a')
+backup=(${_cfgdir:1}/fastcgi.conf
+        ${_cfgdir:1}/fastcgi_params
+        ${_cfgdir:1}/koi-win
+        ${_cfgdir:1}/koi-utf
+        ${_cfgdir:1}/mime.types
+        ${_cfgdir:1}/nginx.conf
+        ${_cfgdir:1}/scgi_params
+        ${_cfgdir:1}/uwsgi_params
+        ${_cfgdir:1}/win-utf
+        etc/logrotate.d/openresty)
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure \
+    --prefix=/opt/openresty \
+    --conf-path=$_cfgdir/nginx.conf \
+    --user=http --group=http \
+    --with-file-aio \
+    --with-http_dav_module \
+    --with-http_gzip_static_module \
+    --with-http_realip_module \
+    --with-http_ssl_module \
+    --with-http_stub_status_module \
+    --with-mail \
+    --with-mail_ssl_module \
+    --with-luajit \
+    --with-pcre-jit \
+    --with-http_v2_module \
+    --with-http_v3_module \
+    --with-stream \
+    --with-stream_ssl_module \
+    --with-http_iconv_module \
+    # Complete set of configure options
+    # --without-lua_cjson                \ # disable the lua-cjson library
+    # --without-lua_redis_parser         \ # disable the lua-redis-parser library
+    # --without-lua_rds_parser           \ # disable the lua-rds-parser library
+    # --without-lua_resty_dns            \ # disable the lua-resty-dns library
+    # --without-lua_resty_memcached      \ # disable the lua-resty-memcached library
+    # --without-lua_resty_redis          \ # disable the lua-resty-redis library
+    # --without-lua_resty_mysql          \ # disable the lua-resty-mysql library
+    # --without-lua_resty_upload         \ # disable the lua-resty-upload library
+    # --without-lua_resty_upstream_healthcheck \
+    #                                    \ # disable the lua-resty-upstream-healthcheck library
+    # --without-lua_resty_string         \ # disable the lua-resty-string library
+    # --without-lua_resty_websocket      \ # disable the lua-resty-websocket library
+    # --without-lua_resty_limit_traffic  \ # disable the lua-resty-limit-traffic library
+    # --without-lua_resty_lock           \ # disable the lua-resty-lock library
+    # --without-lua_resty_lrucache       \ # disable the lua-resty-lrucache library
+    # --without-lua_resty_core           \ # disable the lua-resty-core library
+    # --with-luajit                      \ # enable and build the bundled LuaJIT 2.1 (the default)
+    # --with-luajit=DIR                  \ # use the external LuaJIT 2.1 installation specified by DIR
+    # --with-luajit-xcflags=FLAGS        \ # Specify extra C compiler flags for LuaJIT 2.1
+    # --without-luajit-lua52             \ # Turns off the LuaJIT extensions from Lua 5.2 that may break
+    #                                    \ # backward compatibility.
+    # --with-libdrizzle=DIR              \ # specify the libdrizzle 1.0 (or drizzle) installation prefix
+    # --with-libpq=DIR                   \ # specify the libpq (or postgresql) installation prefix
+    # --with-pg_config=PATH              \ # specify the path of the pg_config utility
+    # Options directly inherited from nginx
+    # --sbin-path=PATH                   \ # set nginx binary pathname
+    # --modules-path=PATH                \ # set modules path
+    # --conf-path=PATH                   \ # set nginx.conf pathname
+    # --error-log-path=PATH              \ # set error log pathname
+    # --pid-path=PATH                    \ # set nginx.pid pathname
+    # --lock-path=PATH                   \ # set nginx.lock pathname
+    # --tapset-prefix=PATH               \ # set systemtap tapset directory prefix
+    # --stap-nginx-path=PATH             \ # set stap-nginx pathname
+    # --user=USER                        \ # set non-privileged user for
+    #                                    \ # worker processes
+    # --group=GROUP                      \ # set non-privileged group for
+    #                                    \ # worker processes
+    # --build=NAME                       \ # set build name
+    # --builddir=DIR                     \ # set the build directory
+    # --with-select_module               \ # enable select module
+    # --with-poll_module                 \ # enable poll module
+    # --without-poll_module              \ # disable poll module
+    # --with-threads                     \ # enable thread pool support
+    # --with-file-aio                    \ # enable file AIO support
+    # --with-ipv6                        \ # enable IPv6 support
+    # --with-http_v2_module              \ # enable ngx_http_v2_module
+    # --with-http_realip_module          \ # enable ngx_http_realip_module
+    # --with-http_addition_module        \ # enable ngx_http_addition_module
+    # --with-http_xslt_module            \ # enable ngx_http_xslt_module
+    # --with-http_xslt_module=dynamic    \ # enable dynamic ngx_http_xslt_module
+    # --with-http_image_filter_module    \ # enable ngx_http_image_filter_module
+    # --with-http_image_filter_module=dynamic \
+    #                                    \ # enable dynamic ngx_http_image_filter_module
+    # --with-http_geoip_module           \ # enable ngx_http_geoip_module
+    # --with-http_geoip_module=dynamic   \ # enable dynamic ngx_http_geoip_module
+    # --with-http_sub_module             \ # enable ngx_http_sub_module
+    # --with-http_dav_module             \ # enable ngx_http_dav_module
+    # --with-http_flv_module             \ # enable ngx_http_flv_module
+    # --with-http_mp4_module             \ # enable ngx_http_mp4_module
+    # --with-http_gunzip_module          \ # enable ngx_http_gunzip_module
+    # --with-http_gzip_static_module     \ # enable ngx_http_gzip_static_module
+    # --with-http_auth_request_module    \ # enable ngx_http_auth_request_module
+    # --with-http_random_index_module    \ # enable ngx_http_random_index_module
+    # --with-http_secure_link_module     \ # enable ngx_http_secure_link_module
+    # --with-http_degradation_module     \ # enable ngx_http_degradation_module
+    # --with-http_slice_module           \ # enable ngx_http_slice_module
+    # --with-http_stub_status_module     \ # enable ngx_http_stub_status_module
+    # --without-http_charset_module      \ # disable ngx_http_charset_module
+    # --without-http_gzip_module         \ # disable ngx_http_gzip_module
+    # --without-http_ssi_module          \ # disable ngx_http_ssi_module
+    # --without-http_userid_module       \ # disable ngx_http_userid_module
+    # --without-http_access_module       \ # disable ngx_http_access_module
+    # --without-http_auth_basic_module   \ # disable ngx_http_auth_basic_module
+    # --without-http_autoindex_module    \ # disable ngx_http_autoindex_module
+    # --without-http_geo_module          \ # disable ngx_http_geo_module
+    # --without-http_map_module          \ # disable ngx_http_map_module
+    # --without-http_split_clients_module \
+    #                                    \ # disable ngx_http_split_clients_module
+    # --without-http_referer_module      \ # disable ngx_http_referer_module
+    # --without-http_rewrite_module      \ # disable ngx_http_rewrite_module
+    # --without-http_proxy_module        \ # disable ngx_http_proxy_module
+    # --without-http_fastcgi_module      \ # disable ngx_http_fastcgi_module
+    # --without-http_uwsgi_module        \ # disable ngx_http_uwsgi_module
+    # --without-http_scgi_module         \ # disable ngx_http_scgi_module
+    # --without-http_memcached_module    \ # disable ngx_http_memcached_module
+    # --without-http_limit_conn_module   \ # disable ngx_http_limit_conn_module
+    # --without-http_limit_req_module    \ # disable ngx_http_limit_req_module
+    # --without-http_empty_gif_module    \ # disable ngx_http_empty_gif_module
+    # --without-http_browser_module      \ # disable ngx_http_browser_module
+    # --without-http_upstream_hash_module \
+    #                                    \ # disable ngx_http_upstream_hash_module
+    # --without-http_upstream_ip_hash_module \
+    #                                    \ # disable ngx_http_upstream_ip_hash_module
+    # --without-http_upstream_least_conn_module \
+    #                                    \ # disable ngx_http_upstream_least_conn_module
+    # --without-http_upstream_keepalive_module \
+    #                                    \ # disable ngx_http_upstream_keepalive_module
+    # --without-http_upstream_zone_module \
+    #                                    \ # disable ngx_http_upstream_zone_module
+    # --with-http_perl_module            \ # enable ngx_http_perl_module
+    # --with-http_perl_module=dynamic    \ # enable dynamic ngx_http_perl_module
+    # --with-perl_modules_path=PATH      \ # set Perl modules path
+    # --with-perl=PATH                   \ # set perl binary pathname
+    # --http-log-path=PATH               \ # set http access log pathname
+    # --http-client-body-temp-path=PATH  \ # set path to store
+    #                                    \ # http client request body temporary files
+    # --http-proxy-temp-path=PATH        \ # set path to store
+    #                                    \ # http proxy temporary files
+    # --http-fastcgi-temp-path=PATH      \ # set path to store
+    #                                    \ # http fastcgi temporary files
+    # --http-uwsgi-temp-path=PATH        \ # set path to store
+    #                                    \ # http uwsgi temporary files
+    # --http-scgi-temp-path=PATH         \ # set path to store
+    #                                    \ # http scgi temporary files
+    # --without-http                     \ # disable HTTP server
+    # --without-http-cache               \ # disable HTTP cache
+    # --with-mail                        \ # enable POP3/IMAP4/SMTP proxy module
+    # --with-mail=dynamic                \ # enable dynamic POP3/IMAP4/SMTP proxy module
+    # --with-mail_ssl_module             \ # enable ngx_mail_ssl_module
+    # --without-mail_pop3_module         \ # disable ngx_mail_pop3_module
+    # --without-mail_imap_module         \ # disable ngx_mail_imap_module
+    # --without-mail_smtp_module         \ # disable ngx_mail_smtp_module
+    # --with-stream                      \ # enable TCP/UDP proxy module
+    # --with-stream=dynamic              \ # enable dynamic TCP/UDP proxy module
+    # --with-stream_ssl_module           \ # enable ngx_stream_ssl_module
+    # --with-stream_realip_module        \ # enable ngx_stream_realip_module
+    # --with-stream_geoip_module         \ # enable ngx_stream_geoip_module
+    # --with-stream_geoip_module=dynamic \ # enable dynamic ngx_stream_geoip_module
+    # --with-stream_ssl_preread_module   \ # enable ngx_stream_ssl_preread_module
+    # --without-stream_limit_conn_module \ # disable ngx_stream_limit_conn_module
+    # --without-stream_access_module     \ # disable ngx_stream_access_module
+    # --without-stream_geo_module        \ # disable ngx_stream_geo_module
+    # --without-stream_map_module        \ # disable ngx_stream_map_module
+    # --without-stream_split_clients_module \
+    #                                    \ # disable ngx_stream_split_clients_module
+    # --without-stream_return_module     \ # disable ngx_stream_return_module
+    # --without-stream_upstream_hash_module \
+    #                                    \ # disable ngx_stream_upstream_hash_module
+    # --without-stream_upstream_least_conn_module \
+    #                                    \ # disable ngx_stream_upstream_least_conn_module
+    # --without-stream_upstream_zone_module \
+    #                                    \ # disable ngx_stream_upstream_zone_module
+    # --with-google_perftools_module     \ # enable ngx_google_perftools_module
+    # --with-cpp_test_module             \ # enable ngx_cpp_test_module
+    # --add-module=PATH                  \ # enable external module
+    # --add-dynamic-module=PATH          \ # enable dynamic external module
+    # --with-cc=PATH                     \ # set C compiler pathname
+    # --with-cpp=PATH                    \ # set C preprocessor pathname
+    # --with-cc-opt=OPTIONS              \ # set additional C compiler options
+    # --with-ld-opt=OPTIONS              \ # set additional linker options
+    # --with-cpu-opt=CPU                 \ # build for the specified CPU, valid values:
+    #                                    \ # pentium, pentiumpro, pentium3, pentium4,
+    #                                    \ # athlon, opteron, sparc32, sparc64, ppc64
+    # --without-pcre                     \ # disable PCRE library usage
+    # --with-pcre                        \ # force PCRE library usage
+    # --with-pcre=DIR                    \ # set path to PCRE library sources
+    # --with-pcre-opt=OPTIONS            \ # set additional make options for PCRE
+    # --with-pcre-conf-opt=OPTIONS       \ # set additional configure options for PCRE
+    # --with-pcre-jit                    \ # build PCRE with JIT compilation support
+    # --with-zlib=DIR                    \ # set path to zlib library sources
+    # --with-zlib-opt=OPTIONS            \ # set additional build options for zlib
+    # --with-zlib-asm=CPU                \ # use zlib assembler sources optimized
+    #                                    \ # for the specified CPU, valid values:
+    #                                    \ # pentium, pentiumpro
+    # --with-libatomic                   \ # force libatomic_ops library usage
+    # --with-libatomic=DIR               \ # set path to libatomic_ops library sources
+    # --with-openssl=DIR                 \ # set path to OpenSSL library sources
+    # --with-openssl-opt=OPTIONS         \ # set additional build options for OpenSSL
+    # --dry-run                          \ # dry running the configure, for testing only
+    # --platform=PLATFORM                \ # forcibly specify a platform name, for testing only
+
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 COPYRIGHT $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  install -d "$pkgdir"/etc/logrotate.d
+  install -m644 "$srcdir"/openresty.logrotate "$pkgdir"/etc/logrotate.d/openresty
+  install -d "$pkgdir"/$_tmpdir
+  install -Dm644 "$srcdir/service" "$pkgdir/usr/lib/systemd/system/openresty.service"
+  rm -rf "$pkgdir/var/run"
+  install -Dm755 $srcdir/$pkgname.sh $pkgdir/etc/profile.d/$pkgname.sh
+}
+# vim:set ts=2 sw=2 et:
