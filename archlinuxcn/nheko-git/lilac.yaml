@@ -28,8 +28,10 @@ update_on:
   - source: alpm
     alpm: libolm
     provided: libolm.so
-  - source: alpm
-    alpm: kdsingleapplication
+  - source: alpmfiles
+    pkgname: kdsingleapplication
+    strip_dir: true
+    filename: libkdsingleapplication-.*.so.\d+.*
   - source: manual
     manual: 2
 

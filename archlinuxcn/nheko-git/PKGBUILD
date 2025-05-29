@@ -13,12 +13,12 @@ license=("GPL-3.0-or-later")
 depends=(
   lmdb qt6-base qt6-svg qt6-multimedia qt6-declarative
   qtkeychain-qt6 kdsingleapplication
-  openssl mtxclient-git libolm.so libspdlog.so libfmt.so
+  openssl libmatrix_client.so libolm.so libspdlog.so libfmt.so
   cmark gst-plugins-base-libs gst-plugins-bad-libs gst-plugin-qml6
   gst-plugin-pipewire libxcb xcb-util-wm hicolor-icon-theme
 )
 
-makedepends=(git cmake qt6-tools nlohmann-json fontconfig lmdbxx pkg-config asciidoc)
+makedepends=(git cmake qt6-tools nlohmann-json fontconfig lmdbxx pkg-config asciidoc mtxclient-git)
 
 provides=("nheko")
 conflicts=("nheko")
