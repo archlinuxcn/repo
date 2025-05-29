@@ -1,0 +1,33 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+
+_name=renpy
+_pkgname="${_name}-sdk"
+pkgname="${_pkgname}-bin"
+pkgver=8.3.6.25022803
+_pkgver="${pkgver%.*}"
+pkgrel=0
+pkgdesc="A visual novel engine"
+arch=('x86_64')
+url="https://github.com/${_name}/${_name}"
+license=('MIT')
+depends=('gcc-libs')
+provides=("${_name}=${_pkgver}" "${_pkgname}=${_pkgver}")
+conflicts=("${_name}" "${_pkgname}")
+options=('!debug' '!strip')
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/releases/download/${pkgver}/renpy-${_pkgver}-sdk.tar.bz2")
+b2sums=('75f568ae03afadad8eaf9fc0a88219a280dcaaf0e591dc7bc071d2b60d755826d2bfd436c76ef0ce25ab9f1985aa67c19227f5c829cfc392317d7428c2ab756a')
+
+prepare() {
+    cd "${srcdir}/${_name}-${_pkgver}-sdk"
+    rm --recursive --verbose lib/py3-mac-universal lib/py3-windows-x86_64 renpy.app renpy.exe update
+}
+
+package() {
+    cd "${srcdir}/${_name}-${_pkgver}-sdk"
+    install -dm0755 "${pkgdir}/opt/${_pkgname}"
+    cp --recursive --no-dereference --preserve=links --no-preserve=ownership --verbose . "${pkgdir}/opt/${_pkgname}"
+    install -dm0755 "${pkgdir}/usr/bin"
+    ln --symbolic --relative --verbose "${pkgdir}/opt/${_pkgname}/${_name}.sh" "${pkgdir}/usr/bin/${_name}"
+    install -dm0755 "${pkgdir}/usr/share/licenses/${pkgname}"
+    ln --symbolic --relative --verbose "${pkgdir}/opt/${_pkgname}/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
