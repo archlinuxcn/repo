@@ -15,11 +15,8 @@ license=('BSD')
 depends=('perl>=5.6.1')
 install=$pkgname.install
 options=(!purge)
-validpgpkeys=(
-'25451EB088460026195BD62CB550E09EA0E98066'
-)
 
-source=(https://openresty.org/download/$pkgname-$pkgver.tar.gz{,.asc}
+source=(https://openresty.org/download/$pkgname-$pkgver.tar.gz
         service
         $pkgname.logrotate
         $pkgname.install
@@ -27,7 +24,6 @@ source=(https://openresty.org/download/$pkgname-$pkgver.tar.gz{,.asc}
         )
 noextract=()
 sha256sums=('74f076f7e364b2a99a6c5f9bb531c27610c78985abe956b442b192a2295f7548'
-            'SKIP'
             'ec55ac7da98f5f5ec54d096c5f79b656edec0ebca835b6b9f1d20fb7be7119c5'
             'f910ab75edcb062375fea70fcb2859de159c9901bc381d33b985072a0344193d'
             'f071e0fd8d0d588f03fcc7db6f3cb3f7ea1b870d3416a0bde142d9aeb839d0f6'
