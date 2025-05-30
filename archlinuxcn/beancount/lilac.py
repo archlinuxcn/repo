@@ -3,7 +3,7 @@
 from lilac2.api import *
 
 def pre_build():
-  aur_pre_build()
+  aur_pre_build(maintainers=['wzyboy'])
   for l in edit_file('PKGBUILD'):
     if l.startswith('conflicts='):
       l += '\nmakedepends=(python-setuptools)'
