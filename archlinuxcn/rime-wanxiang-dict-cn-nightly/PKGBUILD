@@ -2,8 +2,8 @@
 
 pkgname=rime-wanxiang-dict-cn-nightly
 _pkgbase=${pkgname%-nightly}
-_schema_version=6.8.9
-pkgver=6.8.9+r20250530.135537
+_schema_version=6.9
+pkgver=6.9+r20250530.072729
 pkgrel=1
 epoch=1
 pkgdesc="万象中文词库"
@@ -14,7 +14,7 @@ _dict_url="${url}/releases/download/dict-nightly/cn_dicts.zip"
 source=("${url}/releases/download/dict-nightly/cn_dicts.zip"
         "${url}/archive/refs/tags/v${_schema_version}.tar.gz")
 b2sums=('SKIP'
-        'ba64857a484028b505c845cca9512a385edc3e8c0838aaa8a1081c635ace4d99810e06399406e8c14b2369667e0ecf804491f1b8645680e96eba59f3543e31b3')
+        '11ed0ccb714e789ace8ae9d266799e3653837926c5c06d3d608b0798904ff10c9163056d9538d3add6e9818fd1582eaadb533a380ccae1a0b09849b6df8e7e1e')
 provides=("${_pkgbase}=${_schema_version}")
 replaces=("${_pkgbase}")
 
