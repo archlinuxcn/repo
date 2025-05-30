@@ -10,12 +10,23 @@ pkgdesc="A visual novel engine"
 arch=('x86_64')
 url="https://github.com/${_name}/${_name}"
 license=('MIT')
-depends=('gcc-libs')
+depends=(
+    'bash'
+    'gcc-libs'
+    'glibc'
+)
+optdepends=(
+    'kdialog: KDE dialog support'
+    'zenity: GNOME dialog support'
+)
 provides=("${_name}=${_pkgver}" "${_pkgname}=${_pkgver}")
 conflicts=("${_name}" "${_pkgname}")
 options=('!debug' '!strip')
-source=("${_pkgname}-${pkgver}.tar.gz::${url}/releases/download/${pkgver}/renpy-${_pkgver}-sdk.tar.bz2")
-b2sums=('75f568ae03afadad8eaf9fc0a88219a280dcaaf0e591dc7bc071d2b60d755826d2bfd436c76ef0ce25ab9f1985aa67c19227f5c829cfc392317d7428c2ab756a')
+install="${_pkgname}.install"
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/releases/download/${pkgver}/renpy-${_pkgver}-sdk.tar.bz2"
+        "${_name}.desktop")
+b2sums=('75f568ae03afadad8eaf9fc0a88219a280dcaaf0e591dc7bc071d2b60d755826d2bfd436c76ef0ce25ab9f1985aa67c19227f5c829cfc392317d7428c2ab756a'
+        'ea985387093fea3fa08fe4784221bba5eceecc261b535275c235052a14fd8f09a58ebcd4fcdd6368db41ee4e58ce14f41db5c875d37921435f6f2e46ab3acbd1')
 
 prepare() {
     cd "${srcdir}/${_name}-${_pkgver}-sdk"
@@ -28,6 +39,10 @@ package() {
     cp --recursive --no-dereference --preserve=links --no-preserve=ownership --verbose . "${pkgdir}/opt/${_pkgname}"
     install -dm0755 "${pkgdir}/usr/bin"
     ln --symbolic --relative --verbose "${pkgdir}/opt/${_pkgname}/${_name}.sh" "${pkgdir}/usr/bin/${_name}"
+    install -dm0755 "${pkgdir}/usr/share/icons"
+    ln --symbolic --relative --verbose "${pkgdir}/opt/${_pkgname}/launcher/game/images/window-icon.png" "${pkgdir}/usr/share/icons/${_name}.png"
     install -dm0755 "${pkgdir}/usr/share/licenses/${pkgname}"
     ln --symbolic --relative --verbose "${pkgdir}/opt/${_pkgname}/LICENSE.txt" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+    install -Dm0644 "${srcdir}/${_name}.desktop" -t "${pkgdir}/usr/share/applications/"
 }
