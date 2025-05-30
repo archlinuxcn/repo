@@ -5,7 +5,7 @@ from lilaclib import edit_file
 
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['dr460nf1r3', 'xiota'])
     for line in edit_file("PKGBUILD"):
         if "_build_cuda=false" in line:
             line = line.replace("false", "true", 1)
