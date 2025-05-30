@@ -12,7 +12,7 @@ pkgbase=python-dlib
 [[ $_build_cpu -eq 1 ]] && pkgname+=('python-dlib')
 [[ $_build_cuda -eq 1 ]] && pkgname+=('python-dlib-cuda')
 _pkgname=dlib
-pkgver=19.24.8
+pkgver=20.0
 pkgrel=1
 pkgdesc="Dlib is a general purpose cross-platform C++ library designed using contract programming and modern C++ techniques."
 arch=('x86_64')
@@ -25,7 +25,7 @@ optdepends=('sqlite')
 #source=("$url/files/${_pkgname}-${pkgver}.tar.bz2")
 #source=("https://pypi.io/packages/source/${_pkgname:0:1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
 source=("https://github.com/davisking/dlib/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('819cfd28639fe80ca28039f591a15e01772b7ada479de4a002b95bcb8077ce80')
+sha256sums=('705749801c7896f5c19c253b6be639f4cef2c1831a9606955f01b600b3d86d80')
 [[ $_build_cuda -eq 1 ]] && options=(!lto)
 
 prepare() {
@@ -41,10 +41,10 @@ build_python-dlib(){
 build_python-dlib-cuda(){
 	cd "${srcdir}/${_pkgname}-${pkgver}-cuda"
 	python setup.py build \
-		--set CUDA_HOST_COMPILER=/usr/bin/gcc-13 \
+		--set CUDA_HOST_COMPILER=/usr/bin/gcc-14 \
 		--set CUDA_NVCC_EXECUTABLE=/usr/lib/ccache/bin/nvcc-ccache \
-		--set CMAKE_C_COMPILER=/usr/bin/gcc-13 \
-		--set CMAKE_CXX_COMPILER=/usr/bin/g++-13
+		--set CMAKE_C_COMPILER=/usr/bin/gcc-14 \
+		--set CMAKE_CXX_COMPILER=/usr/bin/g++-14
 }
 
 build(){
