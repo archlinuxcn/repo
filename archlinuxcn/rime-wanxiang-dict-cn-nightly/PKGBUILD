@@ -16,6 +16,7 @@ source=("${url}/releases/download/dict-nightly/cn_dicts.zip"
 b2sums=('SKIP'
         'ba64857a484028b505c845cca9512a385edc3e8c0838aaa8a1081c635ace4d99810e06399406e8c14b2369667e0ecf804491f1b8645680e96eba59f3543e31b3')
 provides=("${_pkgbase}=${_schema_version}")
+replaces=("${_pkgbase}")
 
 makedepends=(curl rsync librime rime-prelude rime-essay)
 
