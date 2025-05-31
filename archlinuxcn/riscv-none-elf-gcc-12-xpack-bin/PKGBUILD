@@ -1,0 +1,48 @@
+# Maintainer: matrikslee <im.lechain@gmail.com>
+
+_target=riscv-none-elf
+_pkgname=$_target-gcc
+pkgname=$_pkgname-12-xpack-bin
+pkgver=12.3.0_2
+pkgrel=1
+pkgdesc='Cross compiler for 32-bit and 64-bit RISC-V (The xPack GNU RISC-V Embedded GCC)'
+arch=('arm' 'aarch64' 'x86_64')
+url='https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack'
+license=('GPL' 'LGPL')
+conflicts=("xpack-riscv-none-elf-gcc" "xpack-riscv-none-embed-gcc")
+depends=("libmpc")
+provides=("xpack-${_pkgname}"
+          "${_target}-gdb" "${_target}-binutils" "${_target}-newlib")
+options=('!emptydirs' '!strip')
+source_arm=("${url}/releases/download/v${pkgver//_/-}/xpack-${_pkgname}-${pkgver//_/-}-linux-arm.tar.gz")
+source_aarch64=("${url}/releases/download/v${pkgver//_/-}/xpack-${_pkgname}-${pkgver//_/-}-linux-arm64.tar.gz")
+source_x86_64=("${url}/releases/download/v${pkgver//_/-}/xpack-${_pkgname}-${pkgver//_/-}-linux-x64.tar.gz")
+sha256sums_arm=('79d7859b8ab7ead40bd34a0ea14d063f02ada92cc24c8ef98416681008bb2bce')
+sha256sums_aarch64=('09343a15feafa1b370436d806dc4efba5bce02586ef7f317a894c16615213c27')
+sha256sums_x86_64=('9921d63c04611954af016b9ca74cd52c1ccb832800d321d67e4e651f16146d16')
+
+package() {
+  install -dm755 ${pkgdir}/opt/xpack/${_pkgname}
+
+  cp -a ${srcdir}/xpack-${_pkgname}-${pkgver//_/-}/* ${pkgdir}/opt/xpack/${_pkgname}/
+
+  # Strip target binaries
+  #find "$pkgdir/opt/xpack/${_pkgname}/lib/gcc/$_target/" -type f \
+  #  -and \( -name \*.a -or -name \*.o \) -exec $_target-objcopy \
+  #  -R .comment -R .note -R .debug_info -R .debug_aranges -R .debug_pubnames \
+  #  -R .debug_pubtypes -R .debug_abbrev -R .debug_line -R .debug_str \
+  #  -R .debug_ranges -R .debug_loc '{}' \;
+
+  # Strip host binaries
+  # find "$pkgdir/opt/xpack/${_pkgname}/bin/" "$pkgdir/opt/xpack/${_pkgname}/libexec/gcc/$_target/" -type f \
+  #  -and \( -executable \) -exec strip '{}' \;
+
+   install -Dm0644 /dev/stdin "${pkgdir}/etc/profile.d/${_pkgname}.sh" << EOF
+#!/bin/sh
+[ -d /opt/xpack/${_pkgname}/bin ] && append_path '/opt/xpack/${_pkgname}/bin'
+
+export PATH
+EOF
+}
+
+
