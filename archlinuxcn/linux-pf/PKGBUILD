@@ -3,8 +3,8 @@
 pkgbase="linux-pf"
 _suffix=""
 pkgname=(${pkgbase}${_suffix} ${pkgbase}-headers${_suffix})
-_rev=d0c4e460e0f13c14cc60cefbdee7af281951ed0d
-pkgver=6.14.pf6
+_rev=40314eef045cb7631b601780583609cc23b30653
+pkgver=6.15.pf1
 pkgrel=1
 pkgdesc="pf-kernel"
 arch=(x86_64)
@@ -15,7 +15,7 @@ options=(!debug !strip)
 source=(https://codeberg.org/pf-kernel/linux/archive/${_rev}.tar.gz
 		config)
 b2sums=(SKIP
-		'731edd689829b23c565af4ef9e8cd1ec81d0dd3e335a75b7ea0e3eca675ab7a85c5c0faad6d78ab072d522aa27deef6718c77120c17a1442d67d3d5bf0402dcc')
+		'c4f5f536567df4943e8306c4586782efab9a69b58b38cf770a970b79526da4d2584326e497c27db13f0dd75e7b572d03b28187c6e01b788fe3b3321cbaee892f')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=${pkgbase}
@@ -152,15 +152,18 @@ _package-headers() {
 	while read -rd '' file; do
 		case "$(file -Sib "${file}")" in
 			application/x-sharedlib\;*)      # Libraries (.so)
-				strip -v $STRIP_SHARED "${file}" ;;
+				strip -v ${STRIP_SHARED} "${file}" ;;
 			application/x-archive\;*)        # Libraries (.a)
-				strip -v $STRIP_STATIC "${file}" ;;
+				strip -v ${STRIP_STATIC} "${file}" ;;
 			application/x-executable\;*)     # Binaries
-				strip -v $STRIP_BINARIES "${file}" ;;
+				strip -v ${STRIP_BINARIES} "${file}" ;;
 			application/x-pie-executable\;*) # Relocatable binaries
-				strip -v $STRIP_SHARED "${file}" ;;
+				strip -v ${STRIP_SHARED} "${file}" ;;
 		esac
 	done < <(find "${builddir}" -type f -perm -u+x ! -name vmlinux -print0)
+
+	echo "Stripping vmlinux..."
+	strip -v ${STRIP_STATIC} "${builddir}"/vmlinux
 
 	echo "Adding symlink..."
 	mkdir -p "${pkgdir}"/usr/src
