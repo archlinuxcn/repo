@@ -1,22 +1,21 @@
 # This file is part of Arch Linux CN ( http://www.archlinuxcn.org ).
 # See COPYING for license details.
 
-pkgname='archlinuxcn-keyring'
-pkgver='20250506'
+pkgname=archlinuxcn-keyring
+pkgver=20250531
 pkgrel=1
 pkgdesc='Arch Linux CN PGP keyring'
 arch=('any')
 url='https://github.com/archlinuxcn/repo'
 license=('GPL')
 depends=('archlinux-keyring')
+makedepends=('git')
 optdepends=('pkgstats: install to submit package usage statistics')
 install="archlinuxcn-keyring.install"
-source=("archlinuxcn-keyring-$pkgver.tar.gz::https://github.com/archlinuxcn/archlinuxcn-keyring/archive/$pkgver.tar.gz")
-sha512sums=('14e20dc84046b0db83b59299f07906601616720429b39013a3d474bf54638d53ee706bf768463dc67b5a55af6769c14bc9d71591e5a04cc9e21c8ea4b42c217a')
+source=("git+https://github.com/archlinuxcn/archlinuxcn-keyring.git#tag=$pkgver")
+sha512sums=('c07506448cae7122cba28322a21cde04d2d6968aec1b997fed077709648991c73ae2a6073d860b1ace4c58faf7af327d1cbb3b8441ddc724804b5f96125d5c5f')
 
 package() {
-  cd "$srcdir/archlinuxcn-keyring-$pkgver"
-
-  make PREFIX=/usr "DESTDIR=$pkgdir" install
+  cd archlinuxcn-keyring
+  make PREFIX=/usr DESTDIR="$pkgdir" install
 }
-
