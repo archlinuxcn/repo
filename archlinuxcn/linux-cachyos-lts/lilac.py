@@ -5,7 +5,7 @@ from lilaclib import edit_file
 from lilaclib import run_cmd
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['ptr1337', 'sir_lucjan'])
     in_nvidia_open = False
     for line in edit_file("PKGBUILD"):
         if "_build_nvidia_open:=no" in line:
