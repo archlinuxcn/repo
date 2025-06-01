@@ -13,7 +13,7 @@ export FVM_CACHE_PATH
 _pkgname="fluffychat"
 pkgname="$_pkgname"
 pkgver=1.26.1
-pkgrel=1
+pkgrel=2
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
 license=('AGPL-3.0-only')
@@ -21,8 +21,10 @@ arch=('x86_64' 'aarch64')
 
 depends=(
   'gtk3'
-  'libsecret'
-  'openssl'
+  'libsecret'     # flutter_secure_storage
+  'xdg-user-dirs' # path_provider
+  'libolm'        # for e2ee
+  'openssl'       # sqlite encryption
 )
 makedepends=(
   'clang'
@@ -33,6 +35,10 @@ makedepends=(
   'llvm'
   'ninja'
   'patchelf'
+)
+optdepends=(
+  'zenity: for flutter_file_picker'
+  'kdialog: for flutter_file_picker'
 )
 
 options=('!strip' '!debug')
