@@ -1,3 +1,10 @@
+# 25.02.6-1
+Another security update. Windows users are strongly recommended to update.
+
+  * Specially-crafted sound file references could cause files to be written to arbitrary locations on Windows. Thanks again to Michael Lappas for his investigation.
+  * References to audio files outside of the media folder are no longer allowed.
+  * Ensure mpv is tidied up even on a crash, which should fix the mpv errors some people got when updating.
+
 # 25.02.5-1
 More security fixes, thanks to some reports by Michael Lappas:
 
