@@ -1,3 +1,19 @@
+## GE-Proton10-4
+
+Proton:
+- Fixed broken cursor issue with DOOM Eternal, DOOM Dark Ages, and Rocket League in winewayland (Thanks OOOOOF123/Etaash)
+- Added a stub implementation for amdxc64.dll to enable FSR4. Use FSR4_UPGRADE=1 to upgrade FSR3.1 games to FSR4. Again thanks to Thanks OOOOOF123/Etaash. Instructions: https://github.com/Etaash-mathamsetty/wine-builds/releases/tag/fsr4
+- import upstream proton changes
+
+Protonfixes:
+- fix libcuda for star citizen
+- remove deprecated fixes for daedalic games
+- remove deprecated fix for Once human
+- add fix for The Chronicles of Myrtana: Archolos
+- add fix for Colin McRaie: DiRT
+- add quartz protonfix for Tree of Savior
+- remove deprecated fix for LOTRO
+
 ## GE-Proton10-3
 
 Hotfix release:
