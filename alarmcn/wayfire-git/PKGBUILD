@@ -12,11 +12,10 @@ depends=('cairo' 'pango' 'freetype2' 'glm'
          'libpng' 'libxkbcommon' 'libxml2' 'pixman' 'polkit'
          'pkgconf' 'seatd' 'xcb-util-errors' 'xcb-util-renderutil'
          'xcb-util-wm' 'xorg-xwayland' 'wayland' 'wayland-protocols' 'libdisplay-info' 'libvulkan.so' 'liblcms2.so'
-         'libliftoff' 'yyjson')
+         'libliftoff' 'yyjson' 'wlroots0.18')
 makedepends=('git' 'glslang' 'meson' 'ninja' 'cmake' 'vulkan-headers' 'doctest')
 optdepends=('xorg-xeyes')
-provides=("${pkgname%-git}" 'wlroots' 'wf-config' 'libwlroots.so')
-#conflicts=("$pkgname" 'wlroots-git' 'wlroots' 'wf-config-git' 'wf-config')
+provides=("${pkgname%-git}" 'wf-config')
 replaces=()
 options=()
 
@@ -34,7 +33,7 @@ build() {
     arch-meson \
         --buildtype=release \
         -Dxwayland=auto \
-        -Duse_system_wlroots=disabled \
+        -Duse_system_wlroots=enabled \
         -Duse_system_wfconfig=disabled \
         -Db_lto=true \
         -Db_pie=true \
