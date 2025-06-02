@@ -17,7 +17,7 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname='mozc-ut'
-pkgver=2.31.5810.102.20250425
+pkgver=2.31.5851.102.20250602
 pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
@@ -28,10 +28,10 @@ makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=2.31.5810.102')
+provides=('mozc=2.31.5851.102')
 conflicts=('mozc')
 options=(!distcc !ccache)
-source=('git+https://github.com/google/mozc.git#commit=1621842243c0f43fca77697aba523fb698e865bd'
+source=('git+https://github.com/google/mozc.git#commit=d703e617246b3916edcb5b95812badef1a2764bc'
         'git+https://github.com/abseil/abseil-cpp.git#commit=4447c7562e3bc702ade25105912dce503f0c4010'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=b514bdc898e2951020cbdca1304b75f5950d1f59'
@@ -39,18 +39,18 @@ source=('git+https://github.com/google/mozc.git#commit=1621842243c0f43fca77697ab
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
         'git+https://github.com/protocolbuffers/protobuf.git#commit=7cc670c1809e704ebeba90fb430d50e009f36727'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d'
-        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=98a124f9ce6b282531fe5ca1b0fb93a3763aa9db'
+        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=3e6d04df2efd9303caf7c6a7489749a392c52e73'
         'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=bf26bcbb1846f2e9cf35cbfcafcc91c015a1fb22'
-        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=663f3ad0fd4c2350b655aef994e320f0756d0e14'
-        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=02af54077293d4721d3079df03616b54cc699cb6'
+        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=b43932b90dc5f9788383b708cb117f06d16df521'
+        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=1f79374f1b5b83f143f3328091794dfa369271ef'
         'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=e33ac4ce808fa4253c6c97bf5178e229a4bfb50f'
-        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=db98bba0542cce073a609af468e949d26c39d3cf'
-        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=5b3f01cd3ccf0e0aa9855c48b6587cbf6e13c94c'
-        'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=e5c5573cd35a62f779c391f0bb48fef79e63f384'
-        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=170e3704f7927ba76619e869e7047ea7ed4c8d49'
-        'https://dumps.wikimedia.org/jawiki/20250420/jawiki-20250420-pages-articles-multistream-index.txt.bz2')
-noextract=('jawiki-20250420-pages-articles-multistream-index.txt.bz2')
-sha256sums=('06672be7c6a92004bb7e3b7155c0c5fe428d2e42e53f3a3b662c3c0ab45197a5'
+        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=f9e05d2e06fc30137e4dadaf22966e6616442710'
+        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=2d942f3f30ebe6fcab5e92ca0bd76a531c87c33f'
+        'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=384ad926e306d5308839c6dedb63696f11703968'
+        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=d1afebf15d8d63be62c2df2aceaf42cb1c243acd'
+        'https://dumps.wikimedia.org/jawiki/20250601/jawiki-20250601-pages-articles-multistream-index.txt.bz2')
+noextract=('jawiki-20250601-pages-articles-multistream-index.txt.bz2')
+sha256sums=('8b5ec72c5a12feeaa96bf87be35d9e96986938cc71305e5f9e539c919f2873ea'
             'e131bbdd4e207d6cc2930bca9db82d6da9e347175c1125d9d1f2e09a36652278'
             '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
             'c081295f2c22705e07fc430e152a30b36f949a179075d47d3e12ff3109d43c6a'
@@ -58,16 +58,16 @@ sha256sums=('06672be7c6a92004bb7e3b7155c0c5fe428d2e42e53f3a3b662c3c0ab45197a5'
             '10a13d356071f2b0c2b6dcab1d841fae451f6a2020ee9b901533533fc7ac3008'
             '578ead09a4a3fbf2f70b6af56e0b385ca136c79a4f4a62c777cb13e7a6f733f5'
             'abb86ac4d546c98d7d9a10fdeb1059d6e3395e892d5397fb03179361f37c98fe'
-            'e3bb664660fc0d919759f5c3730ddf8edd9c8da9857980996d7f2dd9c331c3e9'
+            '862da24719ef04346d57f99fa7c0a37b0fe246378cf30cb4a8def24aa12a1155'
             '81ed16f6b59f64e08482ea7ab676913584d95ecac00255e981374f02df2188e9'
-            'e7771bf0a0c94872ba60d5857c6a98c3089c5cf3cdfed5073266b4acd17c6d00'
-            'b8492936c29fa9f4f5b9732640d505c83d318e82b0249a71640bf5d8ecc76e75'
+            '5e276fa4fe063852ae54d18fc8adcb068c1f1b725b51cb3255f429439cc7ca9f'
+            'ca6d56ca8ae41a71ecffa2958f8d36349f869dc479f87f43a5b41569eb6c4736'
             '2bb007c54db6bb70d1771bffaeb05217c0e768cb176b9343ec0a25e9756d9f67'
-            '3908ee4e9e553ffe7f3449074847f05c89e4dcaea39c6f11b1180c87e9cc238e'
-            'c4128d15511efde50a2b1ecccdd8bb28aca3b0e5d57cc494f8370c8d8d12c97e'
-            'cef5015c77bfd25ac44468ba6850fffc99a907cb9fbbaf3e8f33b8ef91cf9c70'
-            'dd18b4f8c15e4e69246ceb89937c130524e30bb2c5fda0bb6cacf1cbbe72234f'
-            '8f846a480801f1b8f1441153dadfc80cd25fcdaba732594966729b82a3712233')
+            '2fa1dfeab0bc5a13ab1062b8257521d0102530093ad8ac6b5ca77d34ae3e3069'
+            'b6fc7068995ece29cf585f5c23c471f5f364e24516ac92b44defdc5ef987754c'
+            'bf1960c14d821a01a9717bbd22b3321844514796c59e6eae84afbb18c295f9c3'
+            '18e64d1ef7a7589765b2d35eb4b4d05cc50251ccebc67c7d8a8042f30757cca9'
+            '0abc2bd1645c20a8fc1f9fd8297dc55d1d5493931ed2e82062e933381c486920')
 
 prepare() {
     cd mozc/src
@@ -86,7 +86,7 @@ prepare() {
 
     # Use a dated snapshot for the jawiki dump data
     sed -i -e '124,127d' merge_dictionaries.py
-    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20250420|g" merge_dictionaries.py
+    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20250601|g" merge_dictionaries.py
 
     # Use our local copy of the Mozc repo
     sed -i -e "65s|os\.path\.exists(f'mozc-{date}.zip')|False|" merge_dictionaries.py
