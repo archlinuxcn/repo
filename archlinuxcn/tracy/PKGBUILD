@@ -2,20 +2,22 @@
 # Maintainer: Angelo Theodorou <encelo at gmail dot com>
 
 pkgname=tracy
-pkgver=0.11.1
-pkgrel=3
+pkgver=0.12.0
+pkgrel=0
 pkgdesc="Real-time, nanosecond resolution frame profiler"
 arch=('aarch64' 'i686' 'x86_64')
 url="https://github.com/wolfpld/tracy"
 license=('BSD-3-Clause')
-depends=('wayland' 'libglvnd' 'libxkbcommon' 'freetype2' 'dbus' 'hicolor-icon-theme' 'intel-tbb' 'capstone')
+depends=('wayland' 'libglvnd' 'libxkbcommon' 'freetype2' 'dbus' 'hicolor-icon-theme' 'intel-tbb'
+         # 'capstone'
+        )
 makedepends=('pkgconf' 'git' 'cmake' 'wayland-protocols')
 optdepends=('xdg-desktop-portal: file dialogs')
 options=('!lto' 'staticlibs')
 provides=('tracy' "libTracyClient.so")
 conflicts=('tracy')
 source=("git+$url#tag=v$pkgver")
-sha256sums=('6f7bb3a538ebe021f5e34ca01260a4280721a53703d94864be4bc5dacd3ed008')
+sha256sums=('a7810a0930271fbeb056a6aefe72d0b8002b02e2bf01dc29b5a81efd3199bcda')
 
 build() {
   cd tracy
@@ -29,15 +31,15 @@ build() {
   make -C build-static
   cmake -S . -B build-shared -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=On -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On -DCMAKE_INSTALL_INCLUDEDIR=include/Tracy -DTRACY_PATCHABLE_NOPSLEDS=On
   make -C build-shared
-  cmake -S capture -B capture/build -DCMAKE_BUILD_TYPE=Release -DDOWNLOAD_CAPSTONE=OFF -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
+  cmake -S capture -B capture/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
   make -C capture/build
-  cmake -S csvexport -B csvexport/build -DCMAKE_BUILD_TYPE=Release -DDOWNLOAD_CAPSTONE=OFF -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
+  cmake -S csvexport -B csvexport/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
   make -C csvexport/build
-  cmake -S import -B import/build -DCMAKE_BUILD_TYPE=Release -DDOWNLOAD_CAPSTONE=OFF -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
+  cmake -S import -B import/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
   make -C import/build
-  cmake -S profiler -B profiler/build -DCMAKE_BUILD_TYPE=Release -DDOWNLOAD_CAPSTONE=OFF -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
+  cmake -S profiler -B profiler/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
   make -C profiler/build
-  cmake -S update -B update/build -DCMAKE_BUILD_TYPE=Release -DDOWNLOAD_CAPSTONE=OFF -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
+  cmake -S update -B update/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DNO_ISA_EXTENSIONS=On
   make -C update/build
 }
 
