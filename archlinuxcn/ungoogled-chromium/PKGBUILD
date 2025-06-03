@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=137.0.7151.55
+pkgver=137.0.7151.68
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=137.0.7151.55-1
+_uc_ver=137.0.7151.68-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -51,8 +51,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         disable-clang-warning-suppression-flag.patch
         disable-clang-fextend-variable-liveness.patch
         pdfium-fix-build-with-system-libpng.patch)
-sha256sums=('7b8fa89febed9fae0297c8175bd35cc912d794fbf03d33a121a0bc9d3d13ef34'
-            '68ec6108c64ee516ed925d0b0ea44c2dc3d5973da92eb91f2788f7075596ddd6'
+sha256sums=('63dfb8509737466ac4de636ddf3d8110f1434e0c4999ba5e6f34891439dbfe20'
+            '663185e039ed96ef5016f332f4d1d50675bc4fa0c96f82195912710fe94a979b'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'cc8a71a312e9314743c289b7b8fddcc80350a31445d335f726bb2e68edf916d1'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
