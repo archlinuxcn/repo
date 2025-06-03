@@ -22,7 +22,7 @@ makedepends=(curl rsync librime rime-prelude rime-essay)
 
 pkgver() {
     _last_modified=$(curl -ILs -o /dev/null -w '%header{last-modified}' ${_dict_url})
-    _dict_version=$(date -d "${_last_modified}" +%Y%m%d.%H%M%S)
+    _dict_version=$(TZ="Asia/Shanghai" date -d "${_last_modified}" +%Y%m%d.%H%M%S)
     
     printf "%s+r%s" "${_schema_version}" "${_dict_version}"
 }
