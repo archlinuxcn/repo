@@ -6,10 +6,10 @@ pkgdesc="C++ tiny version of mamba, the fast conda package installer"
 arch=('aarch64' 'armv7h' 'i686' 'x86_64')
 url="https://github.com/mamba-org/mamba"
 license=('MIT')
-depends=('libarchive.so' 'libcurl.so' 'libsolv' 'libfmt.so' 'libsimdjson.so'
+depends=('libarchive.so' 'libcurl.so' 'libsolv' 'fmt' 'libsimdjson.so'
          'libspdlog.so' 'libyaml-cpp.so' 'libreproc.so' 'libreproc++.so')
 makedepends=('gtest' 'termcolor' 'cmake' 'cli11' 'nlohmann-json'
-             'ghc-filesystem' 'tl-expected' 'python' 'fmt')
+             'ghc-filesystem' 'tl-expected' 'python')
 source=(micromamba-${pkgver}.tar.gz::https://github.com/mamba-org/mamba/archive/refs/tags/micromamba-${pkgver}.tar.gz)
 sha256sums=('f3c4d39921b2036aa77e1093cb21006bf8787f720a11a2a1ef9a80568d660bf3')
 provides=('micromamba')
@@ -41,6 +41,7 @@ check() {
 package() {
   cd mamba-micromamba-${pkgver}
   DESTDIR="${pkgdir}" cmake --install build
+  depends+=('libfmt.so')
 
   mv "${pkgdir}"/usr/bin/{mamba,micromamba}
 }
