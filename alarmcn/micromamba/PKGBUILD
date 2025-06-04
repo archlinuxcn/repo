@@ -9,7 +9,7 @@ license=('MIT')
 depends=('libarchive.so' 'libcurl.so' 'libsolv' 'libfmt.so' 'libsimdjson.so'
          'libspdlog.so' 'libyaml-cpp.so' 'libreproc.so' 'libreproc++.so')
 makedepends=('gtest' 'termcolor' 'cmake' 'cli11' 'nlohmann-json'
-             'ghc-filesystem' 'tl-expected' 'python')
+             'ghc-filesystem' 'tl-expected' 'python' 'fmt')
 source=(micromamba-${pkgver}.tar.gz::https://github.com/mamba-org/mamba/archive/refs/tags/micromamba-${pkgver}.tar.gz)
 sha256sums=('f3c4d39921b2036aa77e1093cb21006bf8787f720a11a2a1ef9a80568d660bf3')
 provides=('micromamba')
