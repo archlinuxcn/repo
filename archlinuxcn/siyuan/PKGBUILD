@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 # Contributor: Xiaozhu1337 <nihaoaheheda@gmail.com>
 pkgname=siyuan
-pkgver=3.1.31
+pkgver=3.1.32
 _electronversion=35
 _nodeversion=22
 pkgrel=1
@@ -34,7 +34,7 @@ source=(
     "${pkgname}-${pkgver}::git+${_ghurl}#tag=v${pkgver}"
     "${pkgname}.sh"
 )
-sha256sums=('eff2712fb5d80dfea964f9fec7f3e3d638994a8e224c9c55c98d7f70610f336f'
+sha256sums=('f66bc8e5cf54c33b5760773713529e31d179b96d102d301a91191d6634669a9c'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 _ensure_local_nvm() {
     local NVM_DIR="${srcdir}/.nvm"
@@ -52,13 +52,13 @@ prepare() {
         s/@options@/env ELECTRON_OZONE_PLATFORM_HINT=auto/g
     " "${srcdir}/${pkgname}.sh"
     _ensure_local_nvm
-    gendesk -q -f -n --pkgname="${pkgname}" --pkgdesc="${pkgdesc}" --categories="Office" --name="${pkgname}" --exec="${pkgname} %U"
-    sed -i "2i\Name[zh_CN]=思源笔记" "${srcdir}/${pkgname}-${pkgver}/app/${pkgname}.desktop"
-    export CGO_ENABLED=1
-    export GO111MODULE=on
-    export GOOS=linux
-    export GOCACHE="${srcdir}/go-build"
-    export GOMODCACHE="${srcdir}/go/pkg/mod"
+    gendesk -q -f -n \
+        --pkgname="${pkgname}" \
+        --pkgdesc="${pkgdesc}" \
+        --categories="Office" \
+        --name="${pkgname}" \
+        --exec="${pkgname} %U" \
+        --custom="Name[zh_CN]=思源笔记"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
     HOME="${srcdir}/.electron-gyp"
@@ -88,6 +88,11 @@ build() {
     cd "${srcdir}/${pkgname}-${pkgver}/app"
     NODE_ENV=production     pnpm run build
     cd "${srcdir}/${pkgname}-${pkgver}/kernel"
+    export CGO_ENABLED=1
+    export GO111MODULE=on
+    export GOOS=linux
+    export GOCACHE="${srcdir}/go-build"
+    export GOMODCACHE="${srcdir}/go/pkg/mod"
     go build --tags fts5 -o "../app/kernel-linux/SiYuan-Kernel" -v -ldflags "-s -w -X github.com/siyuan-note/siyuan/kernel/util.Mode=prod"
     cd "${srcdir}/${pkgname}-${pkgver}/app"
     local electronDist="/usr/lib/electron${_electronversion}"
