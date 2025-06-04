@@ -1,7 +1,7 @@
-From cb05644b22535c51029e89ca5677892520034e53 Mon Sep 17 00:00:00 2001
+From bf8cbea392ba73b09476d8f4fac27802eef37846 Mon Sep 17 00:00:00 2001
 From: sukanka <su975853527@gmail.com>
-Date: Sun, 18 May 2025 11:30:53 +0800
-Subject: [PATCH 4/5] system mbedtls
+Date: Wed, 4 Jun 2025 20:19:19 +0800
+Subject: [PATCH 4/4] system mbedtls
 
 we use system mbedtls here, it works.
 
@@ -11,10 +11,10 @@ we use system mbedtls here, it works.
 1	1	src/yuzu_cmd/CMakeLists.txt
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 3ec018d0f..0ba3fec9e 100644
+index 957ef7b907..669965695b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -311,6 +311,10 @@ find_package(stb MODULE)
+@@ -321,6 +321,10 @@ find_package(stb MODULE)
  find_package(VulkanMemoryAllocator CONFIG)
  find_package(ZLIB 1.2 REQUIRED)
  find_package(zstd 1.5 REQUIRED)
@@ -26,7 +26,7 @@ index 3ec018d0f..0ba3fec9e 100644
  if (NOT YUZU_USE_EXTERNAL_VULKAN_HEADERS)
      find_package(VulkanHeaders 1.3.274 REQUIRED)
 diff --git a/externals/CMakeLists.txt b/externals/CMakeLists.txt
-index 4a378707d..ba6cdc706 100644
+index 754800ed16..bdc1e8e163 100644
 --- a/externals/CMakeLists.txt
 +++ b/externals/CMakeLists.txt
 @@ -40,13 +40,6 @@ endif()
@@ -44,10 +44,10 @@ index 4a378707d..ba6cdc706 100644
  # MicroProfile
  add_library(microprofile INTERFACE)
 diff --git a/src/yuzu/CMakeLists.txt b/src/yuzu/CMakeLists.txt
-index 83ca3307f..c96dc613b 100644
+index 440ef3c46d..0562c9a818 100644
 --- a/src/yuzu/CMakeLists.txt
 +++ b/src/yuzu/CMakeLists.txt
-@@ -391,7 +391,7 @@ endif()
+@@ -397,7 +397,7 @@ endif()
  target_link_libraries(yuzu PRIVATE common core input_common frontend_common network video_core)
  target_link_libraries(yuzu PRIVATE Boost::headers glad Qt6::Widgets)
  target_link_libraries(yuzu PRIVATE ${PLATFORM_LIBRARIES} Threads::Threads)
@@ -57,7 +57,7 @@ index 83ca3307f..c96dc613b 100644
  if (NOT WIN32)
      target_include_directories(yuzu PRIVATE ${Qt6Gui_PRIVATE_INCLUDE_DIRS})
 diff --git a/src/yuzu_cmd/CMakeLists.txt b/src/yuzu_cmd/CMakeLists.txt
-index ebd8fd738..20c2c285d 100644
+index ebd8fd7387..20c2c285d9 100644
 --- a/src/yuzu_cmd/CMakeLists.txt
 +++ b/src/yuzu_cmd/CMakeLists.txt
 @@ -29,7 +29,7 @@ add_executable(yuzu-cmd
