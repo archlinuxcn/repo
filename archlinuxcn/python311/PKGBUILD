@@ -7,11 +7,11 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=python311
-pkgver=3.11.12
+pkgver=3.11.13
 pkgrel=1
 _pybasever=${pkgver%.*}
 pkgdesc="The Python programming language (version 3.11)"
-arch=("x86_64")
+arch=("x86_64" "aarch64")
 license=("PSF-2.0")
 url="https://www.python.org/"
 depends=("mpdecimal")
@@ -23,7 +23,7 @@ source=(
 	EXTERNALLY-MANAGED
 )
 sha256sums=(
-	"849da87af4df137710c1796e276a955f7a85c9f971081067c8f565d15c352a09" # "SKIP"
+	"8fb5f9fbc7609fa822cb31549884575db7fd9657cbffb89510b5d7975963a83a"
 	"d96bca8f7be0d1a83eb88f7c40924434168b1cb8a57870a55ad34207a3718c0a"
 )
 validpgpkeys=(
