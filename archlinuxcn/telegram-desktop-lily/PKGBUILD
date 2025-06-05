@@ -130,4 +130,5 @@ build() {
 
 package() {
   DESTDIR="$pkgdir" cmake --install build
+  ln -s Telegram "$pkgdir"/usr/bin/telegram-desktop
 }
