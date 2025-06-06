@@ -1,4 +1,5 @@
-# Maintainer: Yurii Kolesnykov <root@yurikoles.com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Yurii Kolesnykov <root@yurikoles.com>
 # Based on uefitool-ng-git by Bailey Fox <bfox200012@gmail.com>
 # Contributor: Integral <integral@member.fsf.org>
 
@@ -20,7 +21,11 @@ source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
 sha256sums=('87ad768161a579d08c97c47ad7ab383668487fb65ac29e0079f80876513e3a7e')
 
 build() {
-	cmake -B build -S "${_pkgname}-${pkgver}" -DCMAKE_INSTALL_PREFIX=/usr
+	cmake -B build \
+		-S "${_pkgname}-${pkgver}" \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr
+
 	cmake --build build
 }
 
