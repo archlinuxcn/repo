@@ -3,15 +3,16 @@
 
 pkgname=stellarium
 pkgver=25.1
-pkgrel=4
+pkgrel=5
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
 url="https://stellarium.org/"
 license=('GPL-2.0-or-later')
 depends=('libpng' 'libgl' 'freetype2' 'openssl' 'gpsd'
-         'qt6-serialport' 'qt6-multimedia' 'qt6-positioning' 'qt6-charts' 'calcmysky-qt6'
+         'qt6-serialport' 'qt6-multimedia' 'qt6-positioning' 'qt6-charts'
          "qt6-webengine" "qxlsx" "nlopt" "libindi" "md4c")
-makedepends=('cmake' 'mesa' 'qt6-tools')
+makedepends=('cmake' 'mesa' 'qt6-tools' 'calcmysky')
+optdepends=('calcmysky: better atmosphere simulation')
 source=(https://github.com/Stellarium/stellarium/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz{,.asc}
 fix-qt69.patch
 use-system-md4c.patch
