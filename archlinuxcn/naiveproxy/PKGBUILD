@@ -3,10 +3,10 @@
 
 pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
-pkgver=137.0.7151.44_1
+pkgver=137.0.7151.44_2
 pkgrel=1
 _pkgver=137.0.7151.44
-_pkgrel=1
+_pkgrel=2
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
 license=('BSD-3-Clause')
@@ -33,13 +33,13 @@ noextract=(
 sha1sums=('8157dcfe4cfdaa34acb15932d0fc81ccf8a4f50c'
           '518df21dfb82f32b11d1dc8ed6e5cfca58706c6f'
           '5257aa60a388a69b8ab6a2c787c021b750096879'
-          '03db797ba51c807ecc6bee256618fdd8acb97708'
+          '8fff4ef2eab58c183fdb7241ca2a6b5393266dc1'
           '14800e8fd840fdd5e6e7a1c94b0284dc938d3248'
           'fcacc227633507fdfdacff6acc9184f96a7d5239')
 sha256sums=('a9d56f8a8aada5ba2fd240ec91265b8590e7b3ee0d970e3b7a3e45095014752f'
             'ba7f4338f6fa26b1da762b711e04f714e496e0bace482a59f236472ac7925e56'
             'a16e3039d5d2766ae123ab0afe31c4d1f610355f733e30baf2bf21f0c4a82b6e'
-            'd4e47b2f27d07a0617e9a29fabb215afeb370c4e1d6772935bce8c5a923d3cc7'
+            '86b7207612699f41ea3f0afb637f22daf0579561928726d92dc7a8bd39906f19'
             '944718d5ed561d3543df514243867867488b3590044327321d86ace1e3d206fa'
             '2cccd3a5b04461f17a2e78d2f8bd18b448443a9dd4d6dfac50e8e84b4d5176f1')
 
