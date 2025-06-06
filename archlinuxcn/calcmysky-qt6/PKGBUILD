@@ -1,35 +1,17 @@
-# Maintainer: oldherl <oldherl@gmail.com>
+pkgbase=calcmysky-qt6
+pkgname=(
+  calcmysky-qt6
+)
 
-pkgname=calcmysky-qt6
-_pkgname=CalcMySky
 pkgver=0.3.4
-pkgrel=4
-pkgdesc='Simulates scattering of light by the atmosphere to render daytime and twilight skies'
-arch=('x86_64')
-url='https://10110111.github.io/CalcMySky/'
-license=('GPL-3.0-only')
-depends=('qt6-base')
-makedepends=('cmake' 'git' 'gcc' 'eigen' 'glm')
-#provides=('')
-conflicts=('calcmysky-qt5')
-source=("git+https://github.com/10110111/CalcMySky.git#tag=v$pkgver")
-md5sums=('b80a3f4e1b86268a4f76638ed4ce6522')
+pkgrel=5
+pkgdesc="You should uninstall this package and use calcmysky instead."
+arch=(x86_64)
+license=("None")
 
-prepare() {
-	mkdir -p build
-    # to prevent the 'sudo' usage in version.sh
-    rm -r $_pkgname/.git
-}
-
-build() {
-	cd build
-	cmake ../$_pkgname \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DQT_VERSION=6
-	make
-}
-
-package() {
-	cd build
-	make DESTDIR="$pkgdir/" install
+package_calcmysky-qt6() {
+  depends=(
+    'calcmysky>=0.3.4'
+    'Please_uninstall_this_package_and_use_calcmysky_instead'
+  )
 }
