@@ -5,15 +5,15 @@
 # https://fluffychat.im/
 # https://github.com/krille-chan/fluffychat
 
-: ${_fvm_version:=3.29.3}
+: ${_fvm_version:=3.32.1}
 
 : ${FVM_CACHE_PATH:=$SRCDEST/fvm-cache}
 export FVM_CACHE_PATH
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=1.26.1
-pkgrel=2
+pkgver=1.27.0
+pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
 license=('AGPL-3.0-only')
@@ -46,7 +46,7 @@ options=('!strip' '!debug')
 _pkgsrc="$_pkgname-$pkgver"
 _pkgext="tar.gz"
 source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
-sha256sums=('ca5d32ae785e8a8688d433a9f16524d217c18b685fcb5b9369700fbfabf3f5f4')
+sha256sums=('b673eb2559853d2b4a4b52e74be212c50169a12a22e05d62dfadb3fd7ed15965')
 
 build() {
   # fix incompatible C(XX)FLAGS on Arch Linux on ARM
