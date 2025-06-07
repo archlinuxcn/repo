@@ -121,6 +121,7 @@ build() {
     -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON \
     -DFFmpeg_COMPONENTS="swscale;avutil;avfilter;avcodec" \
     -DFFmpeg_PREFIX=$srcdir/externals/ffmpeg/ffmpeg \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -GNinja \
     -Wno-dev
   ninja -C build
