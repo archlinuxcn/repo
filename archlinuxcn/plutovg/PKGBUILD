@@ -1,0 +1,43 @@
+# Maintainer:
+
+_pkgname="plutovg"
+pkgname="$_pkgname"
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Tiny 2D vector graphics library in C"
+url="https://github.com/sammycage/plutovg"
+license=("MIT")
+arch=('x86_64')
+
+depends=(
+  'glibc'
+)
+makedepends=(
+  'cmake'
+  'git'
+  'ninja'
+)
+
+_pkgsrc="$_pkgname"
+source=("$_pkgname"::"git+$url.git#tag=v$pkgver")
+sha256sums=('e83b72e54560680e6c5aa57b916495589351806164cd312620a4b8fbe78da988')
+
+build() {
+  local _cmake_options=(
+    -B build
+    -S "$_pkgsrc"
+    -G Ninja
+    -DCMAKE_BUILD_TYPE=None
+    -DCMAKE_INSTALL_PREFIX='/usr'
+    -DBUILD_SHARED_LIBS=ON
+    -Wno-dev
+  )
+
+  cmake "${_cmake_options[@]}"
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 "$_pkgsrc/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
