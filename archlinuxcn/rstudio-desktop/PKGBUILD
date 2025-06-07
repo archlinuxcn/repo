@@ -14,11 +14,11 @@
 
 : ${_copilot_version:=1.300.0}
 
-: ${_commit:=f0b76cc00df96fe7f0ee687d4bed0423bc3de1f8}
+: ${_commit:=ab7c1bc795c7dcff8f26215b832a3649a19fc16c}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2025.05.0.496
+pkgver=2025.05.1.513
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
