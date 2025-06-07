@@ -1,7 +1,7 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgname=townsemu-git
-pkgver=3260.9a077bb
+pkgver=3304.5959e453
 pkgrel=1
 pkgdesc="An emulator of legendary Fujitsu FM TOWNS computer"
 arch=('i686' 'x86_64')
@@ -46,10 +46,10 @@ build() {
   cd TOWNSEMU/build
   export CC=/usr/bin/gcc-13
   export CXX=/usr/bin/g++-13
-  cmake ../src -DCMAKE_INSTALL_PREFIX=/usr
+  cmake ../src -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   cmake --build . --config Release -j1
   cd ../build_gui
-  cmake ../gui/src -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+  cmake ../gui/src -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_POLICY_VERSION_MINIMUM=3.5
   #sed -i -e "s|char *vertexShaderProgramLinear|const* char const *vertexShaderProgramLinear|g" ${srcdir}/TOWNSEMU/gui/src/public/src/ysgl/src/ysglslutil.c
   #sed -i -e "s|char *fragmentShaderProgramLinear|const* char const *fragmentShaderProgramLinear|g" ${srcdir}/TOWNSEMU/gui/src/public/src/ysgl/src/ysglslutil.c
   VERBOSE=1 cmake --build main_gui -j1
