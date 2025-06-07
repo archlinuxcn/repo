@@ -2,12 +2,9 @@ maintainers:
   - github: SilverRainZ
     email: la@archlinuxcn.org
 
-pre_build_script: aur_pre_build(maintainers=['sukanka', 'lilac'])
+pre_build_script: aur_pre_build(maintainers=['dctxmei', 'lilac'])
 post_build: aur_post_build
-
-repo_depends:
-  - clash-geoip
 
 update_on:
   - source: aur
-    aur: clash-meta
+    aur: clash-geoip
