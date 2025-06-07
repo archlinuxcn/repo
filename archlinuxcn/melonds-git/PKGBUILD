@@ -1,20 +1,33 @@
 # Maintainer: Zion Nimchuk <zionnimchuk@gmail.com>
 
+## links
+# http://melonds.kuribo64.net/
+# https://github.com/melonDS-emu/melonDS
+
+: ${_use_clang=true}
+
 pkgname=melonds-git
 _gitname=melonDS
-pkgver=2538.9ed7e5803
-pkgdesc='DS emulator, sorta. also 1st quality melon.'
+pkgver=2545.7117178c
 pkgrel=1
-arch=('i686' 'x86_64')
-url="http://melonds.kuribo64.net/"
-license=('GPLv3')
-makedepends=('git' 'cmake' 'extra-cmake-modules')
-depends=('qt6-base' 'qt6-multimedia' 'pkg-config' 'sdl2' 'libslirp' 'libepoxy' 'libarchive' 'hicolor-icon-theme' 'enet' 'qt6-svg')
-source=("${_gitname}::git+https://github.com/Arisotura/${_gitname}.git")
+pkgdesc='DS emulator, sorta'
+url="https://github.com/melonDS-emu/melonDS"
+license=('GPL-3.0-or-later')
+arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
+depends=('enet' 'libarchive' 'libepoxy' 'libslirp' 'qt6-base' 'qt6-multimedia' 'qt6-svg' 'sdl2')
+makedepends=('cmake' 'extra-cmake-modules' 'git' 'ninja' 'pkg-config')
+
+if [[ "${_use_clang::1}" == "t" ]]; then
+  makedepends+=('clang' 'lld')
+else
+  options=('!lto')
+fi
+
 provides=('melonds')
 conflicts=('melonds')
 
-md5sums=('SKIP')
+source=("${_gitname}::git+https://github.com/melonDS-emu/melonDS.git")
+sha256sums=('SKIP')
 
 pkgver()
 {
@@ -22,24 +35,32 @@ pkgver()
   printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-build()
-{
-  if [[ -d build ]]; then
-    rm -rf build
+build() {
+  local _ldflags=(${LDFLAGS})
+
+  if [[ "${_use_clang::1}" == "t" ]]; then
+    export CC=clang
+    export CXX=clang++
+    export LDFLAGS="${_ldflags[@]//*fuse-ld*/} -fuse-ld=lld"
   fi
-  mkdir build
-  cd build
-  cmake ../${_gitname} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX='/usr' \
+
+  local _cmake_options=(
+    -B build
+    -S "$_gitname"
+    -G Ninja
+    -DCMAKE_BUILD_TYPE=None
+    -DCMAKE_INSTALL_PREFIX='/usr'
     -DUSE_QT6=ON
-  make VERBOSE=ON
+    -DUSE_SYSTEM_LIBSLIRP=ON
+    -Wno-dev
+  )
+
+  cmake "${_cmake_options[@]}"
+  cmake --build build
 }
 
-package()
-{
-  cd build
-  make DESTDIR="${pkgdir}" install
+package() {
+  DESTDIR="$pkgdir" cmake --install build
 }
 
 # vim: ts=2 sw=2 et:
