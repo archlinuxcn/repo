@@ -10,7 +10,7 @@ notify() {
     local message="${2}"
 
     if command -v notify-send >/dev/null && [ -n "${DISPLAY}" ]; then
-        notify-send --urgency=normal --expire-time=0 --app-name=renpy --icon=renpy "${title}" "${message}"
+        notify-send --urgency=normal --expire-time=0 --app-name="Ren'Py" --icon=renpy "${title}" "${message}"
     else
         echo "${title} - ${message}"
     fi
