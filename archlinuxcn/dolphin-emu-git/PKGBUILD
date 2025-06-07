@@ -9,7 +9,7 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2503.r174.g9819d66a478
+pkgver=2506.r43.g5eb61024c6
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -19,16 +19,17 @@ license=('GPL-2.0-or-later')
 depends=(
 	# Based on the repo package
 	'bluez-libs' 'bzip2' 'enet' 'gcc-libs' 'glibc' 'hidapi' 'libavcodec.so'
-	'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so' 'libgl'
+	'libavformat.so' 'libavutil.so' 'libcurl.so' 'fmt' 'libgl'
 	'libsfml-network.so' 'libsfml-system.so' 'libspng.so' 'libswscale.so'
-	'libusb-1.0.so' 'libx11' 'libxi' 'libxrandr' 'lz4' 'lzo' 'mbedtls2'
-	'pugixml' 'sdl2' 'speexdsp' 'xz' 'zstd' 'fmt' 'sfml'
-	# Addition dependencies to replace vendored deps
-	'cubeb' 'libxxhash.so' 'vulkan-memory-allocator' 'minizip-ng' 
+	'libusb-1.0.so' 'libx11' 'libxi' 'libxrandr' 'lz4' 'lzo' 'mbedtls2' 'pugixml'
+	'sdl2' 'sfml' 'speexdsp' 'xxhash' 'xz' 'zstd'
+	# Additional dependencies to replace vendored deps
+	'cubeb' 'libiconv' 'minizip-ng' 'zlib-ng'
 )
 makedepends=(
-	'alsa-lib' 'cmake' 'git' 'libevdev' 'libminiupnpc.so' 'libpulse' 'libudev.so'
-	'ninja' 'python' 'qt6-base' 'qt6-svg' 'vulkan-headers'
+	'alsa-lib' 'cmake' 'git' 'libevdev' 'libminiupnpc.so' 'libpulse'
+	'libudev.so' 'ninja' 'python' 'qt6-base' 'qt6-svg' 'vulkan-headers'
+	'vulkan-memory-allocator'
 )
 checkdepends=('gtest')
 optdepends=('pulseaudio: PulseAudio backend')
@@ -39,8 +40,9 @@ source=(
 	"$pkgbase-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
-    "$pkgbase-zlib-ng::git+https://github.com/zlib-ng/zlib-ng.git"
-    "minizip-ng.diff"
+	"$pkgbase-vh::git+https://github.com/KhronosGroup/Vulkan-Headers.git"
+	'cmake-discord-rpc.diff'
+	'cmake-mgba.diff'
 )
 b2sums=('SKIP'
         'SKIP'
@@ -48,7 +50,8 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
-        'c9d32ab3e6f4c7fb56ce68d9a68d3a25c6abcaeea4d59e136e98c4f0553bb1b72e34b63dc602917bf9ac89d7ad14514cf27adad0d9b2bf8cbc3b744effaf50ea')
+        '7db29101fc7496355776eee0701ddb971147aea096828f73dc02501d8981a8f1105f16e206a24f3ab94d169dc7ea0443c37b664c25ba064533b7cdcc644bd6f4'
+        'd9e6ba73de8e1c49a7ebf9efe6caffcffbe1a545dfb61caebe2b830d8f496aaa221269c25a3f849ba02228dfb866b362c8c74f7e897e66a9362469dea679721d')
 
 _sourcedirectory="$pkgbase"
 
@@ -57,18 +60,13 @@ prepare() {
 	if [ -d 'build/' ]; then rm -rf 'build/'; fi
 	mkdir 'build/'
 
-	# Fix minizip-ng check for Arch (see https://github.com/dolphin-emu/dolphin/pull/12910#issuecomment-2249001387)
-	patch --forward -p1 < "$srcdir/minizip-ng.diff"
-
 	# Provide submodules
 	declare -A _submodules=(
 		[implot]='implot/implot'
 		[mgba]='mGBA/mgba'
 		[rcheevos]='rcheevos/rcheevos'
 		[tinygltf]='tinygltf/tinygltf'
-		[zlib-ng]='zlib-ng/zlib-ng'
-	#	[vh]='Vulkan-Headers'
-#		[vma]='VulkanMemoryAllocator'
+		[vh]='Vulkan-Headers'
 	)
 
 	for _submod in "${!_submodules[@]}"; do
@@ -77,6 +75,12 @@ prepare() {
 		git config "submodule.$_path.url" "$srcdir/$pkgbase-$_submod/"
 		git -c protocol.file.allow=always submodule update "$_path"
 	done
+
+	# Patch cmake_minimum_required below 3.5.0
+	patch --forward -p1 < "$srcdir/cmake-discord-rpc.diff"
+
+	cd "$srcdir/$_sourcedirectory/Externals/mGBA/mgba/"
+	patch --forward -p1 < "$srcdir/cmake-mgba.diff"
 }
 
 pkgver() {
@@ -86,9 +90,6 @@ pkgver() {
 
 build() {
 	cd "$srcdir/$_sourcedirectory/"
-
-	# Consider symbols in dependencies of directly specified dynamic libraries as available to fix the build
-	export LDFLAGS="$LDFLAGS -Wl,--copy-dt-needed-entries"
 
 	# CMAKE_BUILD_TYPE - the dolphin-emu package in the repos uses 'None' for some reason, so we use it as well
 	# CMAKE_SKIP_RPATH - do not add run time path information (the package in the repos does it, presumably because of reproducible builds)
@@ -118,7 +119,7 @@ check() {
 	# Verify that the basic functionality works
 	_checkoutput="$(QT_QPA_PLATFORM='offscreen' "$srcdir/$_sourcedirectory/build/Binaries/$_noguipkgname" --version)"
 	printf '%s\n' "$_checkoutput"
-	printf '%s\n' "$_checkoutput" | grep -q -E "^${_projectname^} ${_checkversion}(-dirty)?$"
+	printf '%s\n' "$_checkoutput" | grep -q -E "^${_projectname^}( \[.+\])? ${_checkversion}(-dirty)?(-ICC)?$"
 }
 
 package_dolphin-emu-git() {
@@ -154,6 +155,9 @@ package_dolphin-emu-nogui-git() {
 
 package_dolphin-emu-tool-git() {
 	pkgdesc="$pkgdesc - CLI-based utility for functions such as managing disc images$_pkgdescappend"
+	depends+=(
+		'alsa-lib' 'libevdev' 'libpulse' 'libudev.so' 'qt6-base'
+	)
 	provides=("$_toolpkgname")
 	conflicts=("$_toolpkgname")
 
