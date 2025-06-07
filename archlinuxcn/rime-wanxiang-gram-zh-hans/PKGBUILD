@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=rime-wanxiang-gram-zh-hans
-pkgver=20250604
+pkgver=20250607
 pkgrel=1
 epoch=2
 pkgdesc="万象词库中文语法模型"
