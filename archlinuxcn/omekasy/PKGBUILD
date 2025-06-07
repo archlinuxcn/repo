@@ -1,17 +1,17 @@
 # Maintainer:  Vitalii Kuzhdin <vitaliikuzhdin@gmail.com>
 
 pkgname="omekasy"
-pkgver=1.3.1
+pkgver=1.3.3
 pkgrel=1
 pkgdesc="Convert alphanumeric characters to various styles defined in Unicode"
-arch=('any')
+arch=('aarch64' 'x86_64')
 url="https://github.com/ikanago/${pkgname}"
 license=('MIT')
-depends=('glibc' 'gcc-libs')
+depends=('gcc-libs' 'glibc')
 makedepends=('cargo')
-_pkgsrc="${pkgname}-${pkgver}"
+_pkgsrc="${url##*/}-${pkgver}"
 source=("${_pkgsrc}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('c887cf7c35dd2f82df823e1e74cde496967e0ff3bfecb4b87560fb4fb18d36f9')
+sha256sums=('0def519ad64396aa12b341dee459049fb54a3cfae265ae739da5e65ca1d7e377')
 
 prepare() {
   cd "${srcdir}/${_pkgsrc}"
