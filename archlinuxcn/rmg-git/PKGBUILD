@@ -1,7 +1,7 @@
 # Maintainer: Rosalie Wanders <rosalie@mailbox.org>
 _pkgname=rmg
 pkgname=${_pkgname}-git
-pkgver=0.7.8.1.g443ff545
+pkgver=0.7.9.1.ga74cff50
 pkgrel=1
 pkgdesc="Rosalie's Mupen GUI"
 arch=('x86_64')
@@ -12,7 +12,7 @@ provides=("$_pkgname")
 conflicts=("$_pkgname")
 
 depends=("hidapi" "libsamplerate" "speexdsp" "minizip" "sdl2_net" "zlib" "freetype2" "qt6-base" "qt6-svg" "xdg-user-dirs" 'qt6-websockets')
-makedepends=("git" "pkg-config" "nasm" "cmake" "cargo" "ninja")
+makedepends=("git" "nasm" "cmake" "vulkan-headers")
 
 source=("git+https://github.com/Rosalie241/${_pkgname}.git")
 sha256sums=('SKIP')
@@ -34,8 +34,9 @@ build()
     cmake -S "$srcdir/${_pkgname}" -B "$srcdir/${_pkgname}/build" \
                 -DCMAKE_BUILD_TYPE="Release" \
                 -DPORTABLE_INSTALL="OFF" \
+                -DNO_RUST="ON" \
                 -DCMAKE_INSTALL_PREFIX="/usr" \
-                -G "Ninja"
+                -G "Unix Makefiles"
 
     cmake --build "$srcdir/${_pkgname}/build"
 }
