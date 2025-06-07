@@ -1,25 +1,32 @@
+# Maintainer: CUI Hao <cuihao.leo@gmail.com>
+# Contributor: dosenpils <dosenpils at donotdevelopmyapp dot com>
+# Contributor: Alfredo Palhares <alfredo at palhares dot me>
+# Contributor: Mark Wagie <mark dot wagie at tutanota dot com>
+# Contributor: Matteo Parolari
+# Contributor: gardar <aur@gardar.net>
+
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.2.13
+pkgver=3.3.12
 groups=('joplin')
 pkgrel=1
-_electronVersion=34
-depends=("electron${_electronVersion}" "nodejs<23" "nodejs>18" "libvips")
+_electronVersion=36
+depends=("electron${_electronVersion}" "nodejs<23" "nodejs>20" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
 makedepends=('npm' 'git' 'rsync' 'python-setuptools' 'libxcrypt-compat')
 url="https://joplinapp.org/"
-license=('MIT')
+license=("AGPL-3.0-or-later")
 source=(
     "joplin-desktop.sh"
     "joplin-desktop.desktop"
     "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz"
 )
 sha256sums=(
-    'SKIP'
-    'SKIP'
-    '3280f29a8f7955f0d09540aac7fb55c01e43b8d2e8c20fe717a6eb88b25c73a3'
+    '9223cc816f8175ddaf8839f9357d2bd1c4831692504927c98d8e1eefa7df796e'
+    'ff2232a2e518de7987af2a6d25524d75c2f7d1b343993b5134a341ae8f815dd5'
+    '0a12596230ab98632fd1324e35014ceb471172d60c9b4b2e95dff3da20a47931'
 )
 
 _setup_env() {
@@ -88,7 +95,7 @@ package_joplin() {
 
 package_joplin-desktop() {
     pkgdesc="A note taking and to-do application with synchronization capabilities - Desktop"
-    depends=("electron${_electronVersion}" "nodejs")
+    depends=("electron${_electronVersion}" "nodejs" "libvips")
     optdepends=('libappindicator-gtk3: for tray icon')
 
     _setup_env
