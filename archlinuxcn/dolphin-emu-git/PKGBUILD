@@ -9,7 +9,7 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2506.r43.g5eb61024c6e
+pkgver=2506.r91.g944dd711b7
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -40,7 +40,7 @@ source=(
 	"$pkgbase-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
-	"$pkgbase-vh::git+https://github.com/KhronosGroup/Vulkan-Headers.git"
+	"$pkgbase-watcher::git+https://github.com/e-dant/watcher.git"
 	'cmake-discord-rpc.diff'
 	'cmake-mgba.diff'
 )
@@ -66,7 +66,7 @@ prepare() {
 		[mgba]='mGBA/mgba'
 		[rcheevos]='rcheevos/rcheevos'
 		[tinygltf]='tinygltf/tinygltf'
-		[vh]='Vulkan-Headers'
+		[watcher]='watcher/watcher'
 	)
 
 	for _submod in "${!_submodules[@]}"; do
