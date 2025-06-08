@@ -1,8 +1,9 @@
-# Maintainer: exu <aur _a_ frm01 _d_ net>
+# Maintainer: jason _d_ nader _a_ proton _d_ me
+# Submitter: exu <aur _a_ frm01 _d_ net>
 
 pkgname=feishin-bin
 pkgdesc='Rewrite of Sonixd'
-pkgver=0.12.7
+pkgver=0.14.0
 pkgrel=1
 arch=('x86_64' 'aarch64')
 url='https://github.com/jeffvli/feishin'
@@ -15,8 +16,8 @@ source=("feishin.desktop")
 source_x86_64=("https://github.com/jeffvli/feishin/releases/download/v${pkgver//_/-}/${_filename}-x64.tar.xz")
 source_aarch64=("https://github.com/jeffvli/feishin/releases/download/v${pkgver//_/-}/${_filename}-arm64.tar.xz")
 sha256sums=('ef112b1a9ef80d8bf27f721fdbb12de0a195da4e464dbf27282503ba398bef8d')
-sha256sums_x86_64=('f58e4009169d58dcd22dfb13d4bfc5ab836a05e4ff10e031c9c4d7c9407b5633')
-sha256sums_aarch64=('e5d5e617b1243694a90bb2475beaa6307432fdf38af749448918416040dbb4c2')
+sha256sums_x86_64=('bbc2dfa6ceb09999515f6ade30233415936a2e0b52c7c40ad4f1c7e8b5c93b32')
+sha256sums_aarch64=('c268d912dfee0619d73ffdc594355a252f1c75157f5745f1f782fef62abc3b45')
 
 package() {
   # create target file structure
