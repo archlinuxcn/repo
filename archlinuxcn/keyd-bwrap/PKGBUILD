@@ -1,0 +1,27 @@
+# Maintainer: Roald Clark <roaldclark@gmail.com>
+
+pkgname=keyd-bwrap
+pkgver=0.0.1
+pkgrel=0
+pkgdesc="A key remapping daemon for linux (sandboxed with bwrap)"
+arch=('any')
+url="https://github.com/archlinuxcn/repo/tree/master/archlinuxcn/${pkgname}"
+license=('Unlicense')
+source=(
+    "keyd-bwrap"
+    "keyd-bwrap.service"
+)
+sha256sums=('0e6cda1490c56dccb291f6206cabc39ff79a1fc8b2faa992bd2a456938d7ea86'
+            'fc014687e665db84ea4aac91691c7cf5587e87d9489093e13853d1f611ee4e73')
+
+package() {
+    depends+=(
+        'bash'
+        'bubblewrap'
+        'keyd'
+    )
+
+    cd "${srcdir}"
+    install -Dm0755 keyd-bwrap -t "${pkgdir}/usr/bin/"
+    install -Dm0644 keyd-bwrap.service -t "${pkgdir}/usr/lib/systemd/system/"
+}
