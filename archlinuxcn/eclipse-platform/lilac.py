@@ -18,10 +18,11 @@ def pre_build():
     if not m:
         raise RuntimeError("Could not find Eclipse release marker in HTML")
     ver, _ver = m.group(1), m.group(2)
+    print("_ver = " + _ver)
 
     for line in edit_file('PKGBUILD'):
-        if line.startswith('_pkgver='):
-            line = f'_pkgver="{_ver}"'
+        if line.startswith('_pkgbuild='):
+            line = f'_pkgbuild="{_ver}"'
         print(line)
 
     update_pkgver_and_pkgrel(ver)
