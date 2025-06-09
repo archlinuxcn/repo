@@ -75,7 +75,7 @@ prepare() {
   sed -i -e 's_^MimeType=.*_&application/x-nx-nsp;application/x-nx-xci;_' dist/yuzu.desktop
   sed -i -e 's| (%2)||' src/yuzu/aboutdialog.ui
   sed -i -e 's/boost::asio::io_service/boost::asio::io_context/g' src/input_common/drivers/udp_client.cpp
-  sed -i -e 's|#include <boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g' src/yuzu/src/core/debugger/debugger.cpp
+  sed -i -e 's|#include <boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g' src/core/debugger/debugger.cpp
 
   perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n        -msse4.1/igs' src/video_core/CMakeLists.txt
 }
