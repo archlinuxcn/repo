@@ -87,17 +87,18 @@
 # "thin: uses multiple threads, faster and uses less memory, may have a lower runtime performance than Full."
 # "thin-dist: Similar to thin, but uses a distributed model rather than in-process: https://discourse.llvm.org/t/rfc-distributed-thinlto-build-for-kernel/85934"
 # "none: disable LTO
-: "${_use_llvm_lto:=thin}"
+: "${_use_llvm_lto:=none}"
 
 # Use suffix -lto only when requested by the user
+# Enabled by default.
 # yes - enable -lto suffix
 # no - disable -lto suffix
 # https://github.com/CachyOS/linux-cachyos/issues/36
-: "${_use_lto_suffix:=no}"
+: "${_use_lto_suffix:=yes}"
 
 # Use suffix -gcc when requested by the user
-# Enabled by default to show the difference between LTO kernels and GCC kernels
-: "${_use_gcc_suffix:=yes}"
+# This was added to facilitate https://github.com/CachyOS/linux-cachyos/issues/286
+: "${_use_gcc_suffix:=no}"
 
 # KCFI is a proposed forward-edge control-flow integrity scheme for
 # Clang, which is more suitable for kernel use than the existing CFI
@@ -175,7 +176,7 @@ _stable=${_major}.${_minor}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + LTO + AutoFDO + Propeller Cachy Sauce Kernel by CachyOS with other patches and improvements.'
-pkgrel=2
+pkgrel=4
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -773,7 +774,6 @@ for _p in "${pkgname[@]}"; do
 done
 
 b2sums=('bce19089e6c7b7e6f905855940b69a6edb68818caa25de866a3673082ec9e8ad95f842689db185a9271eac5cccd122212c05711f99b4d0c2e0a1b7abc895bc24'
-        '314fc1f56f6c812592b4b74a42bd7ba48a8b2c4a3d0a36c21486023b5fec907ff9ce97c6e8e0f73ede2ea6743750b912f2c236fe2788e36980c160ad23838258'
+        'd254c6174c787eccba7918ba607f3bbd591909721d610385622acad7386e33e2f3cca42784727ce93e797faf8e493322f89dc4c29bab00fff32600fc73b5451d'
         '5660ed3bdbad6030acc683c4d0df61cb4d0ceb2aabce0dcefc7b2a955915bacb29033988ca1953e123b7f85b81e4f056c510c7734fd2c7ced90e74ee644702e8'
-        'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
         '162130c38d315b06fdb9f0b08d1df6b63c1cc44ee140df044665ff693ab3cde4f55117eed12253504184ccd379fc7f9142aa91c5334dff1a42dbd009f43d8897')
