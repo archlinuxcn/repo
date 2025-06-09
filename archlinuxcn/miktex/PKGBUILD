@@ -24,6 +24,7 @@ prepare() {
     cp cmake/modules/FindPOPPLER_QT5.cmake cmake/modules/FindPOPPLER_QT6.cmake
     sed -i 's/QT5/QT6/g' cmake/modules/FindPOPPLER_QT6.cmake
     sed -i 's/qt5/qt6/g' cmake/modules/FindPOPPLER_QT6.cmake
+    sed -i -e '1i #include <cstdint>' Programs/DviWare/dvisvgm/source/libs/woff2/include/woff2/output.h
     #sed -i 's|tm/packages/|tm/packages|g' CMakeLists.txt
 }
 build() {
