@@ -9,6 +9,7 @@ pkgdesc="A language server for NASM/GAS/GO Assembly"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/bergercookie/${pkgname}"
 license=('BSD-2-Clause')
+depends=('openssl')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('4755848aa7d88856be7e40d0930990b95b46c4593a53db3809d3ba7214d9d16d')
