@@ -9,8 +9,6 @@ from lilaclib import *
 build_prefix = 'extra-x86_64'
 
 def pre_build():
-    aur_pre_build(maintainers=['BochengZou'])
-
     html = subprocess.check_output(
         ['curl', '-fsSL', 'https://download.eclipse.org/eclipse/downloads/index.html']
     )
