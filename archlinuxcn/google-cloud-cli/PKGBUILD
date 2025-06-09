@@ -19,7 +19,7 @@
 _extractedName="google-cloud-sdk"
 pkgname="google-cloud-cli"
 pkgver=525.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq."
 url="https://cloud.google.com/cli/"
 license=('Apache-2.0')
@@ -29,7 +29,7 @@ depends=('python')
 optdepends=(
   "python-crcmod: [gsutil] verify the integrity of GCS object contents"
 )
-options=('!strip' 'staticlibs' !zipman)
+options=('!strip' 'staticlibs' '!zipman' '!debug' '!lto')
 
 # Python 3.13 is not officialy supported yet, force use of bundled 3.12
 export _force_budled_python=true
