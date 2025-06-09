@@ -1,0 +1,36 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Kino <cybao292261@163.com>
+# Contributor: Mattia Ronchi <ronchimattia03 at gmail dot com>
+
+pkgname=asm-lsp
+pkgver=0.10.0
+pkgrel=1
+pkgdesc="A language server for NASM/GAS/GO Assembly"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/bergercookie/${pkgname}"
+license=('BSD-2-Clause')
+makedepends=('cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('4755848aa7d88856be7e40d0930990b95b46c4593a53db3809d3ba7214d9d16d')
+options=('!lto')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	cargo test --frozen --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "target/release/${pkgname}" -t "$pkgdir/usr/bin/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
