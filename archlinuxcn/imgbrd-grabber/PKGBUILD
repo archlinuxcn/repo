@@ -1,7 +1,7 @@
 # Maintainer: HurricanePootis <hurricanepootis@protonmail.com>
 pkgname=imgbrd-grabber
 pkgver=7.13.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Very customizable imageboard/booru downloader with powerful filenaming features."
 arch=('x86_64')
 url="https://github.com/Bionus/imgbrd-grabber"
@@ -14,16 +14,16 @@ optdepends=('openssl: Access HTTPS sources')
 conflicts=("imgbrd-grabber-git" 'imgbrd-grabber-bin' 'imgbrd-grabber-appimage')
 _commit=5b8d326f4f29e9fbb89973f4ca1e84624756b475
 source=("git+https://github.com/Bionus/imgbrd-grabber.git#commit=$_commit"
-        'git+https://github.com/LaurentGomila/qt-android-cmake.git'
-        'git+https://github.com/sakra/cotire.git'
-        'git+https://github.com/lexbor/lexbor.git'
-        'git+https://github.com/catchorg/Catch2.git'
+        'git+https://github.com/LaurentGomila/qt-android-cmake.git#commit=5a62962dbe35e955374688461784ddb7f757a377'
+        'git+https://github.com/sakra/cotire.git#commit=391bf6b7609e14f5976bd5247b68d63cbf8d4d12'
+        'git+https://github.com/lexbor/lexbor.git#commit=44db846ef41d33e20557af985af12c82840003a3'
+        'git+https://github.com/catchorg/Catch2.git#commit=52066dbc2a53f4c3ab2a418d03f93200a8245451'
 	'patch.patch')
 sha256sums=('175f41d63ec78f8d13c9584853ec511030a30ca41b25b9aefd000bf1cc937cf0'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
+            '6620432c2d433a5c6d436c3d4e726ca2331d45f2e59082ba2e099b9a13962737'
+            '00c13691b600778f0236123ec700e2098f05ac245edae100d529fea64b7a2765'
+            '23c7c8d74759ff3df5ee4577368f52609224dd7d44de7ff891b5b450e973cd7c'
+            '67acc1cfa92f01d4152345047c0368a52c816ffe7b28ee961c7c674140631c60'
             'da1801c6c98889be826197dae57c6753c90ab820b122c9ce22b08bcdf2cf09da')
 
 prepare() {
