@@ -18,8 +18,8 @@
 
 _extractedName="google-cloud-sdk"
 pkgname="google-cloud-cli"
-pkgver=525.0.0
-pkgrel=2
+pkgver=526.0.0
+pkgrel=1
 pkgdesc="A set of command-line tools for the Google Cloud Platform. Includes gcloud (with beta and alpha commands), gsutil, and bq."
 url="https://cloud.google.com/cli/"
 license=('Apache-2.0')
@@ -54,8 +54,8 @@ replaces=('google-cloud-sdk')
 sha256sums=('6e88b535c020b0f28c986fdb66918f8c07e4d337e813b77ec2068068f03457f8'
             'fdba342aecce102b85fd96f21205d7ee2f8043b4bb56cabf363375785e3d423c'
             'c19dbe916e6fd18d9b17b3309ee60c5d389035c5520822d2c14c045d8b853924')
-sha256sums_x86_64=('09e0bdcc3113d9c7688e0b8bbf0f86f61080aea37df4ebe227e44b951b24a43a')
-sha256sums_aarch64=('ce055d88cc68ef93cf95feec04d12b4ba8829fd356661dbc700483f796ff81c7')
+sha256sums_x86_64=('984d66321b4e3022769e63f88fd3db17855990ebae00aa31b8fe8e6677f45dd4')
+sha256sums_aarch64=('b3ed34cfb145b1d6fedba0e56e447457f447722368d28fac3ad13ef93f2aec94')
 
 backup=(etc/profile.d/google-cloud-cli.sh)
 
