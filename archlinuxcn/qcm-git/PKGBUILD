@@ -49,14 +49,12 @@ prepare() {
 }
 
 build() {
-	export CXXFLAGS+=" -fno-builtin" # Temporary fix for clang 19
-
 	cmake -B build \
 		-S Qcm \
 		-G Ninja \
 		-D CMAKE_BUILD_TYPE=None \
 		-D CMAKE_INSTALL_PREFIX=/usr \
-		-D CMAKE_CXX_COMPILER=clang++ # Require clang 19+ to build
+		-D CMAKE_CXX_COMPILER=clang++ # Require clang 20+ to build
 
 	cmake --build build
 }
