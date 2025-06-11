@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=137.0.7151.68
+pkgver=137.0.7151.103
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=137.0.7151.68-1
+_uc_ver=137.0.7151.103-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -48,11 +48,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch
         chromium-136-drop-nodejs-ver-check.patch
-        disable-clang-warning-suppression-flag.patch
         disable-clang-fextend-variable-liveness.patch
         pdfium-fix-build-with-system-libpng.patch)
-sha256sums=('63dfb8509737466ac4de636ddf3d8110f1434e0c4999ba5e6f34891439dbfe20'
-            '663185e039ed96ef5016f332f4d1d50675bc4fa0c96f82195912710fe94a979b'
+sha256sums=('f5f051a30c732b21ce9957cdd7fe0a083623e19078a15ee20d49b27a5cb857e6'
+            'e5bba1205daee5e1c7a6ff9714b58d88b2257126deef514b3cdcdd16d32d3005'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'cc8a71a312e9314743c289b7b8fddcc80350a31445d335f726bb2e68edf916d1'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
@@ -63,7 +62,6 @@ sha256sums=('63dfb8509737466ac4de636ddf3d8110f1434e0c4999ba5e6f34891439dbfe20'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
             '32f0080282fc0b2795a342bf17fcb3db4028c5d02619c7e304222230ba99d5fe'
-            'd6f3914c6adadaf061e7e2b1430c96d32b0cad05244b5cfaf58cf5344006a169'
             '2d98a7a6a553fb5c17c4bfe36f011410f377afa12a6a818ba36543dc9a258f4a'
             'de3222b13d3a49628a00fd74acae633912b830f78c2de452d3bdff3d0e42026d')
 
@@ -137,9 +135,6 @@ prepare() {
 
   # Increase _FORTIFY_SOURCE level to match Arch's default flags
   patch -Np1 -i ../increase-fortify-level.patch
-
-  # Disable usage of --warning-suppression-mappings flag which needs clang 20
-  patch -Np1 -i ../disable-clang-warning-suppression-flag.patch
 
   # Fixes for building with libstdc++ instead of libc++
 
