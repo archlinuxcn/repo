@@ -34,7 +34,7 @@ package() {
 
 	# Binaries
 	pushd "target/release/"
-	for bin in tunet tunet-gui tunet-cui tunet-service; do
+	for bin in tunet tunet-gui tunet-service; do
 		install -Dm755 "${bin}" -t "${pkgdir}/usr/bin/"
 	done
 
