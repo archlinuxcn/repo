@@ -6,7 +6,7 @@ from lilaclib import edit_file
 
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['Morganamilo', 'andreas_baumann'])
     run_cmd(["iconv", "-f", "iso-8859-1", "-t", "utf-8", "PKGBUILD", "-o", "PKGBUILD"])
     for line in edit_file("PKGBUILD"):
         if "tm@t8m.info" in line:

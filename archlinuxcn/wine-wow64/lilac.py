@@ -6,7 +6,7 @@ from lilaclib import run_cmd
 
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['tiziodcaio', 'xiota'])
     for line in edit_file("PKGBUILD"):
         if line.startswith("local _makeoptdeps="):
             line = "_makeoptdeps=("

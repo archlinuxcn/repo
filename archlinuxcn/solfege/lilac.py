@@ -5,7 +5,7 @@ from lilaclib import edit_file
 
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['peregrinus'])
     for line in edit_file("PKGBUILD"):
         if line.startswith("groups="):
             continue
