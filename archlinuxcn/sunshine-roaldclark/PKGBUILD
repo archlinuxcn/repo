@@ -97,9 +97,9 @@ package() {
     cd "${srcdir}/${_pkgname}"
     make -C build install DESTDIR="${pkgdir}"
     rm --recursive --verbose "${pkgdir}/usr/lib/systemd/user/"
-    rm --verbose "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
-    rm --verbose "${pkgdir}/usr/share/applications/${_pkgname}_terminal.desktop"
-    install -Dm0644 "${srcdir}/${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+    rm --verbose "${pkgdir}/usr/share/applications/dev.lizardbyte.app.Sunshine.desktop"
+    rm --verbose "${pkgdir}/usr/share/applications/dev.lizardbyte.app.Sunshine.terminal.desktop"
+    install -Dm0644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/dev.lizardbyte.app.Sunshine.desktop"
     install -Dm0644 "${srcdir}/${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
     install -Dm0644 "${srcdir}/60-${_pkgname}.rules" -t "${pkgdir}/usr/share/polkit-1/rules.d/"
 }
