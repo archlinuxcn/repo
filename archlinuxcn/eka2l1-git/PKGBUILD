@@ -2,14 +2,13 @@
 _pkgname=eka2l1
 pkgname="${_pkgname}-git"
 pkgver=5852.e67f84dc6
-pkgrel=3
+pkgrel=4
 pkgdesc="Experimental Symbian OS emulator (GIT version)"
 arch=('x86_64')
 url="https://github.com/EKA2L1/EKA2L1"
 license=('GPL2')
 makedepends=(
 	'boost'
-	'cmake'
 	'git'
 	'ccache'
     'glfw'
@@ -19,6 +18,7 @@ makedepends=(
   'qt6-declarative'
     'imagemagick'
     'clang'
+    'cmake3-bin'
 )
 depends=(
   'qt6-base'
@@ -53,7 +53,7 @@ build() {
 	cd "${srcdir}/${_pkgname}-git"
 
     export CFLAGS+=" -Wno-incompatible-pointer-types -Wno-int-conversion"
-    cmake -B build -DCMAKE_BUILD_TYPE=Release -DEKA2L1_NO_TERMINAL=ON -DEKA2L1_ENABLE_UNEXPECTED_EXCEPTION_HANDLER=ON -DEKA2L1_BUILD_VULKAN_BACKEND=OFF -DEKA2L1_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=/opt/eka2l1 .
+    cmake3 -B build -DCMAKE_BUILD_TYPE=Release -DEKA2L1_NO_TERMINAL=ON -DEKA2L1_ENABLE_UNEXPECTED_EXCEPTION_HANDLER=ON -DEKA2L1_BUILD_VULKAN_BACKEND=OFF -DEKA2L1_BUILD_TESTS=OFF -DCMAKE_INSTALL_PREFIX=/opt/eka2l1 -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .
 
     cd build
 

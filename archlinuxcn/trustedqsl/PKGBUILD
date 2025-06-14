@@ -5,12 +5,12 @@
 pkgname=trustedqsl
 __pkgname=tqsl
 pkgver=2.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc="QSO log signing data for the ARRL Logbook of The World (LoTW)"
 arch=('i686' 'x86_64' 'aarch64')
 url="http://lotw.arrl.org/"
 license=('LicenseRef-:ARRL')
-depends=('lmdb' 'wxgtk3' 'hamradio-menus')
+depends=('lmdb' 'wxwidgets-gtk3' 'hamradio-menus')
 makedepends=('cmake' 'libxxf86vm')
 provides=('tqsllib' 'trustedqsl')
 conflicts=('trustedqsl-git')

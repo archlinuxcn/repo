@@ -3,13 +3,13 @@
 
 pkgname=swww-git
 _pkgname=${pkgname%-git}
-pkgver=0.10.2.r0.g7ceddc0
+pkgver=0.10.3.r12.g66d270f
 pkgrel=1
 pkgdesc="Efficient animated wallpaper daemon for wayland, controlled at runtime."
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/Horus645/${_pkgname}"
 license=('GPL-3.0-or-later')
-depends=('gcc-libs' 'lz4')
+depends=('gcc-libs' 'lz4' 'dav1d')
 makedepends=('git' 'cargo' 'scdoc' 'wayland' 'wayland-protocols')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")

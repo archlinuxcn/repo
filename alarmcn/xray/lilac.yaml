@@ -1,0 +1,17 @@
+maintainers:
+  - github: xiaohuirong
+    email: horeamxiao@archlinuxcn.org
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: XTLS/Xray-core
+    prefix: v
+    use_latest_release: true
+    include_prereleases: false
+
+repo_depends:
+  - xray-geodata: xray-geoip
+  - xray-geodata: xray-geosite

@@ -5,7 +5,7 @@
 
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
-pkgver=5.15.2
+pkgver=5.15.4
 pkgrel=1
 pkgdesc="Official Telegram Desktop client with lilydjwg's patch"
 arch=('x86_64')
@@ -22,6 +22,7 @@ depends=(
   'libavif'
   'libdispatch'
   'libheif'
+  'libjxl'
   'libxcomposite'
   'libxdamage'
   'libxrandr'
@@ -78,7 +79,7 @@ source=(
   "0004-make-animated-avatar-follow-power-settings.patch"
   "0001-don-t-ask-which-program-to-use-when-opening-a-file-w.patch"
 )
-sha512sums=('fdc2655eeb71df79d01dbebd92f9e666842c30d0dd3ba9dc8263934523d12063478cacf319f354e11396813c9ed32e753aaa1814a8a39c646c340e09b9a20068'
+sha512sums=('c7d549fad45342fc6218cf862ececad9b1a58a2f771757bf49c1092e6bd67a93e3128b24373b65a2646944f9acf6afe10f226da2b40b2d41bcb3c08096962bdc'
             'd622b8f3580ee49415546d025c4ba45f5b2de50b315fc379dc57c0427c5f815c7cc3820cca937c12182ee461641bb61f87ebc99b6c74a1a666cea9a08f0f41a0'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'

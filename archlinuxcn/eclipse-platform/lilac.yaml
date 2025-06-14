@@ -6,10 +6,6 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['BochengZou'])
-
-post_build: aur_post_build
-
 update_on:
-  - source: aur
-    aur: eclipse-platform
+  - source: cmd
+    cmd: curl -s https://download.eclipse.org/eclipse/downloads/index.html | grep "Latest Release" | grep -oP '(?<=R-)[0-9]+\.[0-9]+' | head -1

@@ -1,6 +1,6 @@
 pkgname=julia-git-docstringextensions-src
-pkgver=0.9.4
-_commit=bca4b2c9d7730856ac5ca3984d1c98baa0f2432b
+pkgver=0.9.5
+_commit=a84ff785d022cac14770a34c722fd67f5111d755
 pkgrel=1
 pkgdesc="DocStringExtensions.jl"
 url="https://github.com/JuliaDocs/DocStringExtensions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDocs/DocStringExtensions.jl.git#commit=$_commit")
-sha256sums=('c6cbd7e62a73c3a8bcb455a118fdeb5ed2d9c212d86526c50b196eca33c74513')
+sha256sums=('4a26a876df7f29d57413d0db8d871238f9b1783142d5707f1afd27e838c82264')
 
 package() {
   cd DocStringExtensions.jl
