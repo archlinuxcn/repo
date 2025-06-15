@@ -2,7 +2,7 @@
 # Contributor: Jisu-Woniu <jswn@jswn9945.xyz>
 
 pkgname=typstyle
-pkgver=0.13.10
+pkgver=0.13.11
 pkgrel=1
 pkgdesc="Beautiful and reliable typst code formatter"
 arch=('aarch64' 'armv7h' 'x86_64' 'riscv64')
@@ -12,7 +12,7 @@ depends=('gcc-libs')
 makedepends=('cargo')
 optdepends=("typst: For typst compilation")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('9fe4f555cd3d838341443d92d18d45394d57df08aaab276bbab074ccb1a0fcb3')
+sha256sums=('7a7bff0980f00f468dfadc04e2c26531ea7d2301b2909bf2cb24116c97902ec7')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
