@@ -10,7 +10,7 @@
 _pkgname="sunshine"
 pkgname="$_pkgname"
 pkgver=2025.122.141614
-pkgrel=7
+pkgrel=8
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
@@ -150,11 +150,10 @@ prepare() {
   _run_if_exists _prepare_sunshine
   _run_if_exists _prepare_moonlight_common_c
 
-  #include <boost/process.hpp>
+  ## fix for miniupnpc 2.3.3
+  sed '1i #include <stddef.h>' -i "$_pkgsrc"/src/upnp.cpp
 
-  #sed -E 's&(#include <boost/process.hpp>)&\1\n#include "'"${srcdir}"'/boost_process_v1.hpp"&' \
-  #  -i "$_pkgsrc"/src/platform/common.h
-
+  ## fix for boost 1.88
   sed -E 's&<boost/process.hpp>&"'"${srcdir}"'/boost_process_v1.hpp"&' \
     -i "$_pkgsrc"/src/platform/common.h
 
