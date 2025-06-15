@@ -24,7 +24,8 @@ build() {
 		-DCPR_USE_SYSTEM_CURL=ON \
 		-DCPR_USE_SYSTEM_GTEST=ON \
 		-DCPR_BUILD_TESTS=ON \
-		-DBUILD_SHARED_LIBS=ON
+		-DBUILD_SHARED_LIBS=ON \
+		-Wno-dev
 
 	cmake --build build
 }
