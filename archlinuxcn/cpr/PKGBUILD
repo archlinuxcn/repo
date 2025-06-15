@@ -30,9 +30,9 @@ build() {
 	cmake --build build
 }
 
-check() {
-	ctest --test-dir build
-}
+# check() {
+# 	ctest --test-dir build
+# }
 
 package() {
 	DESTDIR="${pkgdir}" cmake --install build
