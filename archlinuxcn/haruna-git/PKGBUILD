@@ -1,4 +1,5 @@
-# Maintainer: Josip Ponjavic <josipponjavic at gmail dot com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Josip Ponjavic <josipponjavic at gmail dot com>
 
 pkgname=haruna-git
 _pkgname=${pkgname%-git}
@@ -41,7 +42,11 @@ pkgver() {
 }
 
 build() {
-	cmake -B build -S "${_pkgname}/" -DCMAKE_INSTALL_PREFIX=/usr
+	cmake -B build \
+		-S "${_pkgname}/" \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_BUILD_TYPE=None
+
 	cmake --build build
 }
 
