@@ -1,0 +1,38 @@
+# Maintainer: xiretza <xiretza+aur@gmail.com>
+pkgname=aiger
+pkgver=1.9.20
+pkgrel=0
+pkgdesc="A format, library and set of utilities for And-Inverter Graphs (AIGs)"
+arch=(aarch64 x86_64)
+url="http://fmv.jku.at/aiger/"
+license=('MIT' 'BSD')
+source=("https://github.com/arminbiere/aiger/archive/refs/tags/rel-${pkgver}.tar.gz"
+        "configure-sh-commas-in-cflags.patch"
+       )
+sha256sums=('3db9cb416bfe309449f0737e9cd9d44b2e04cced7bd70e9f3bd57428440d0e86'
+            'e7abca2a8ed4a3fd36d8b65c2b9e7ab79210729f23b3130c5065f4c1b1ec1234')
+
+prepare() {
+  cd aiger-rel-$pkgver
+
+  patch -p1 < ../configure-sh-commas-in-cflags.patch
+}
+
+build() {
+  cd aiger-rel-$pkgver
+
+  CFLAGS="$CFLAGS $LDFLAGS" ./configure.sh
+  make
+}
+
+package() {
+  cd aiger-rel-$pkgver
+
+  make PREFIX="$pkgdir/usr" install
+
+  install -d "$pkgdir/usr/share/$pkgname"
+  cp -r examples/ "$pkgdir/usr/share/$pkgname/"
+  rm "$pkgdir/usr/share/$pkgname/examples/.cvsignore"
+
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

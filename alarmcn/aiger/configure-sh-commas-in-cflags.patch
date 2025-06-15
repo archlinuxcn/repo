@@ -1,0 +1,37 @@
+diff --git a/configure.sh b/configure.sh
+index 3e7de47..7946e71 100755
+--- a/configure.sh
++++ b/configure.sh
+@@ -134,18 +134,18 @@ fi
+ msg "compiling with: $CC $CFLAGS"
+ rm -f makefile
+ sed \
+-  -e "s/@CC@/$CC/" \
+-  -e "s/@CFLAGS@/$CFLAGS/" \
+-  -e "s/@AIGBMCTARGET@/$AIGBMCTARGET/" \
+-  -e "s/@AIGBMCTARGET@/$AIGBMCTARGET/" \
+-  -e "s,@AIGBMCHDEPS@,$AIGBMCHDEPS," \
+-  -e "s,@AIGBMCODEPS@,$AIGBMCODEPS," \
+-  -e "s,@AIGBMCLIBS@,$AIGBMCLIBS," \
+-  -e "s,@AIGBMCFLAGS@,$AIGBMCFLAGS," \
+-  -e "s/@AIGDEPTARGET@/$AIGDEPTARGET/" \
+-  -e "s/@AIGDEPTARGET@/$AIGDEPTARGET/" \
+-  -e "s,@AIGDEPHDEPS@,$AIGDEPHDEPS," \
+-  -e "s,@AIGDEPCODEPS@,$AIGDEPCODEPS," \
+-  -e "s,@AIGDEPLIBS@,$AIGDEPLIBS," \
+-  -e "s,@AIGDEPFLAGS@,$AIGDEPFLAGS," \
++  -e "s#@CC@#$CC#" \
++  -e "s#@CFLAGS@#$CFLAGS#" \
++  -e "s#@AIGBMCTARGET@#$AIGBMCTARGET#" \
++  -e "s#@AIGBMCTARGET@#$AIGBMCTARGET#" \
++  -e "s#@AIGBMCHDEPS@#g$AIGBMCHDEPS#g" \
++  -e "s#@AIGBMCODEPS@#g$AIGBMCODEPS#g" \
++  -e "s#@AIGBMCLIBS@#g$AIGBMCLIBS#g" \
++  -e "s#@AIGBMCFLAGS@#g$AIGBMCFLAGS#g" \
++  -e "s#@AIGDEPTARGET@#$AIGDEPTARGET#" \
++  -e "s#@AIGDEPTARGET@#$AIGDEPTARGET#" \
++  -e "s#@AIGDEPHDEPS@#g$AIGDEPHDEPS#g" \
++  -e "s#@AIGDEPCODEPS@#g$AIGDEPCODEPS#g" \
++  -e "s#@AIGDEPLIBS@#g$AIGDEPLIBS#g" \
++  -e "s#@AIGDEPFLAGS@#g$AIGDEPFLAGS#g" \
+   makefile.in > makefile
