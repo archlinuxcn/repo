@@ -78,49 +78,50 @@
 # if this list is updated on updating
 # the kernel compiler patchset.
 #
-#  1. AMD Opteron/Athlon64/Hammer/K8 (MK8)
-#  2. AMD Opteron/Athlon64/Hammer/K8 with SSE3 (MK8SSE3)
-#  3. AMD 61xx/7x50/PhenomX3/X4/II/K10 (MK10)
-#  4. AMD Barcelona (MBARCELONA)
-#  5. AMD Bobcat (MBOBCAT)
-#  6. AMD Jaguar (MJAGUAR)
-#  7. AMD Bulldozer (MBULLDOZER)
-#  8. AMD Piledriver (MPILEDRIVER)
-#  9. AMD Steamroller (MSTEAMROLLER)
-#  10. AMD Excavator (MEXCAVATOR)
-#  11. AMD Zen (MZEN)
-#  12. AMD Zen 2 (MZEN2)
-#  13. AMD Zen 3 (MZEN3)
-#  14. AMD Zen 4 (MZEN4)
-#  15. AMD Zen 5 (MZEN5)
-#  16. Intel P4 / older Netburst based Xeon (MPSC)
-#  17. Intel Atom (MATOM)
-#  18. Intel Core 2 (MCORE2)
-#  19. Intel Nehalem (MNEHALEM)
-#  20. Intel Westmere (MWESTMERE)
-#  21. Intel Silvermont (MSILVERMONT)
-#  22. Intel Goldmont (MGOLDMONT)
-#  23. Intel Goldmont Plus (MGOLDMONTPLUS)
-#  24. Intel Sandy Bridge (MSANDYBRIDGE)
-#  25. Intel Ivy Bridge (MIVYBRIDGE)
-#  26. Intel Haswell (MHASWELL)
-#  27. Intel Broadwell (MBROADWELL)
-#  28. Intel Skylake (MSKYLAKE)
-#  29. Intel Skylake X (MSKYLAKEX)
-#  30. Intel Cannon Lake (MCANNONLAKE)
-#  31. Intel Ice Lake (MICELAKE)
-#  32. Intel Cascade Lake (MCASCADELAKE)
-#  33. Intel Cooper Lake (MCOOPERLAKE)
-#  34. Intel Tiger Lake (MTIGERLAKE)
-#  35. Intel Sapphire Rapids (MSAPPHIRERAPIDS)
-#  36. Intel Rocket Lake (MROCKETLAKE)
-#  37. Intel Alder Lake (MALDERLAKE)
-#  38. Intel Raptor Lake (MRAPTORLAKE)
-#  39. Intel Meteor Lake (MMETEORLAKE)
-#  40. Intel Emerald Rapids (MEMERALDRAPIDS)
-#  41. Generic-x86-64 (GENERIC_CPU)
-#  42. Intel-Native optimizations autodetected by the compiler (MNATIVE_INTEL)
-#  43. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD)
+#  1. Build and optimize for local/native CPU (X86_NATIVE_CPU)
+#  2. Generic-x86-64 (GENERIC_CPU)
+#  3. Intel-Native optimizations autodetected by the compiler (MNATIVE_INTEL)
+#  4. AMD-Native optimizations autodetected by the compiler (MNATIVE_AMD)
+#  5. AMD Opteron/Athlon64/Hammer/K8 (MK8)
+#  6. AMD Opteron/Athlon64/Hammer/K8 with SSE3 (MK8SSE3)
+#  7. AMD 61xx/7x50/PhenomX3/X4/II/K10 (MK10)
+#  8. AMD Barcelona (MBARCELONA)
+#  9. AMD Bobcat (MBOBCAT)
+#  10. AMD Jaguar (MJAGUAR)
+#  11. AMD Bulldozer (MBULLDOZER)
+#  12. AMD Piledriver (MPILEDRIVER)
+#  13. AMD Steamroller (MSTEAMROLLER)
+#  14. AMD Excavator (MEXCAVATOR)
+#  15. AMD Ryzen (MZEN)
+#  16. AMD Ryzen 2 (MZEN2)
+#  17. AMD Ryzen 3 (MZEN3)
+#  18. AMD Ryzen 4 (MZEN4)
+#  19. AMD Ryzen 5 (MZEN5)
+#  20. Intel P4 / older Netburst based Xeon (MPSC)
+#  21. Intel Core 2 (MCORE2)
+#  22. Intel Nehalem (MNEHALEM)
+#  23. Intel Westmere (MWESTMERE)
+#  24. Intel Silvermont (MSILVERMONT)
+#  25. Intel Goldmont (MGOLDMONT)
+#  26. Intel Goldmont Plus (MGOLDMONTPLUS)
+#  27. Intel Sandy Bridge (MSANDYBRIDGE)
+#  28. Intel Ivy Bridge (MIVYBRIDGE)
+#  29. Intel Haswell (MHASWELL)
+#  30. Intel Broadwell (MBROADWELL)
+#  31. Intel Skylake (MSKYLAKE)
+#  32. Intel Skylake X (MSKYLAKEX)
+#  33. Intel Cannon Lake (MCANNONLAKE)
+#  34. Intel Ice Lake (MICELAKE_CLIENT)
+#  35. Intel Ice Lake Server (MICELAKE_SERVER)
+#  36. Intel Cooper Lake (MCOOPERLAKE)
+#  37. Intel Cascade Lake (MCASCADELAKE)
+#  38. Intel Tiger Lake (MTIGERLAKE)
+#  39. Intel Sapphire Rapids (MSAPPHIRERAPIDS)
+#  40. Intel Rocket Lake (MROCKETLAKE)
+#  41. Intel Alder Lake (MALDERLAKE)
+#  42. Intel Raptor Lake (MRAPTORLAKE)
+#  43. Intel Meteor Lake (MMETEORLAKE)
+#  44. Intel Emerald Rapids (MEMERALDRAPIDS)
 : "${_subarch:=""}"
 
 # Selects the x86-64 microarchitecture to compile for.
@@ -171,12 +172,14 @@
 
 
 # Kernel version
-_kernel_major=6.14
-_kernel_minor=10
+_kernel_major=6.15
+_kernel_minor=2
 # Clear Linux patches version
-_clr=6.14.8-1574
+_clr=6.15.1-1584
 # kernel_compiler_patch version
-_kernelcompilerpatch="20241018"
+_kernelcompilerpatch="20250612"
+# kernel_compiler_patch name
+_kernelcompilername="more-ISA-levels-and-uarches-for-kernel-6.15-rc1+.patch"
 # Source directory names
 _src_linux=linux-${_kernel_major}
 
@@ -259,6 +262,7 @@ _get_patches() {
 
 # Applies all patches
 _apply_patches() {
+    set -x
     # Patch with kernel version patches
     patch -Np1 -i ../patch-${_kernel_major}.${_kernel_minor} || true
 
@@ -281,7 +285,7 @@ _apply_patches() {
     # Patch with kernel_compiler_patch patches.
     # Do this before any defconfig invocations so we
     # have all of the extra selectable uarches ready and selectable
-    patch -Np1 -i "$srcdir/kernel_compiler_patch-$_kernelcompilerpatch/more-ISA-levels-and-uarches-for-kernel-6.1.79+.patch"
+    patch -Np1 -i "$srcdir/kernel_compiler_patch-${_kernelcompilerpatch}/${_kernelcompilername}"
 }
 
 # Allows user to modify the kernel config
@@ -616,9 +620,9 @@ validpgpkeys=(
   "E27E5D8A3403A2EF66873BBCDEA66FF797772CDC"  # Sasha Levin (sashal@kernel.org)
   "AC2B29BD34A6AFDDB3F68F35E7BFC8EC95861109"  # Ben Hutchings (benh@debian.org)
 )
-sha256sums=("a294b683e7b161bb0517bb32ec7ed1d2ea7603dfbabad135170ed12d00c47670"
+sha256sums=("7586962547803be7ecc4056efc927fb25214548722bd28171172f3599abb9764"
             "SKIP"
-            "6ed2cf0d734b872ff433726dc18da14a501bacd4ec4e9d16c95daf1d9fc5bfa5"
+            "0ff99b5765590b019579a61aaff35b7bb3d56deb7013653c45b7a3fb189fe9e3"
             "SKIP"
-            "b3fd8b1c5bbd39a577afcccf6f1119fdf83f6d72119f4c0811801bdd51d1bc61")
+            "91adc6bf4b263480399d24a7640e11b0302d4b411910ee99eee2788b34bd297a")
 replaces=("linux-clear-x64-v3" "linux-clear-x64-v4")
