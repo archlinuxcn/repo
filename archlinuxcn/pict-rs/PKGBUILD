@@ -36,5 +36,5 @@ check() {
 package() {
 	cd "${pkgname}/"
 	install -vDm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
-	install -vDm644 docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
+	install -vDm644 docs/* -t "${pkgdir}/usr/share/doc/${pkgname}/"
 }
