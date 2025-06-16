@@ -16,11 +16,8 @@ depends=(
 	'ffmpeg'
 	'perl-image-exiftool'
 )
-makedepends=('git' 'cargo' 'protobuf')
-optdepends=(
-	'lemmy-ui: for the web app'
-	'pict-rs: for image hosting backend'
-)
+makedepends=('git' 'cargo' 'protobuf' 'pict-rs')
+optdepends=('lemmy-ui: for the web app')
 backup=("etc/${pkgname}/${pkgname}.hjson")
 source=(
 	"git+https://github.com/LemmyNet/${pkgname}.git#tag=${pkgver}"
