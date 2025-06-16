@@ -47,7 +47,9 @@ prepare() {
 
 build() {
 	cd "${pkgname}/"
-	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
+
+	# Version 0.19.12 fails to build with `--all-features`.
+	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release # --all-features
 }
 
 package() {
