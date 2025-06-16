@@ -1,0 +1,40 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: lifespirit <life@crabs.pro>
+
+pkgname=pict-rs
+pkgver=0.5.16
+pkgrel=1
+pkgdesc="A simple image hosting service"
+arch=('x86_64')
+url="https://git.asonix.dog/asonix/${pkgname}"
+license=('AGPL-3.0-or-later')
+depends=(
+	'gcc-libs'
+	'imagemagick'
+	'ffmpeg'
+	'perl-image-exiftool'
+)
+makedepends=('git' 'cargo' 'protobuf')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+prepare() {
+	cd "${pkgname}/"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${pkgname}/"
+	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${pkgname}/"
+	CFLAGS+=" -ffat-lto-objects" cargo test --frozen --all-features
+}
+
+package() {
+	cd "${pkgname}/"
+	install -vDm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -vDm644 docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
+}
