@@ -1,0 +1,43 @@
+# Maintainer: Cryolitia <cryolitia at gmail dot com>
+
+pkgname=adif-multitool
+pkgver=0.1.20
+pkgrel=1
+pkgdesc='Validate, modify, and convert ham radio log files with a handy command-line tool'
+url='https://github.com/flwyd/adif-multitool'
+arch=('x86_64')
+license=('Apache-2.0')
+depends=('glibc')
+makedepends=('go')
+source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('cab8ee80d77633bf18b1699026b06ddb1c6c7bed499e94f075e2510caea459e2')
+b2sums=('e73701b4d31c31aa046eaa845bbecce377ada2649317a6f2ccc3f566bc5d85cc58d263d1da4efd480d3fcd496d1192a894cc74f91088648978a9853d3bcbf8ac')
+
+prepare(){
+  cd "$pkgname-$pkgver"
+  mkdir -p build/
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+
+  go build -o build ./adifmt
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  go test ./...
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm755 build/adifmt "$pkgdir"/usr/bin/$pkgname
+}
+
+# vim: ts=2 sw=2 et:

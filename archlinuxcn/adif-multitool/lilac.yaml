@@ -1,0 +1,19 @@
+maintainers:
+  - github: cryolitia
+    email: Cryolitia <cryolitia@gmail.com>
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+    aur_pre_build(maintainers=['Cryolitia', 'lilac'])
+    update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
+update_on:
+  - source: github
+    gitlab: flwyd/adif-multitool
+    use_latest_release: true
+    prefix: v
