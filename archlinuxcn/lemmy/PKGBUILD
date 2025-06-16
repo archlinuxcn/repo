@@ -15,10 +15,12 @@ depends=(
 	'imagemagick'
 	'ffmpeg'
 	'perl-image-exiftool'
-	'pict-rs'
 )
 makedepends=('git' 'cargo' 'protobuf')
-optdepends=('lemmy-ui: for the web app')
+optdepends=(
+	'lemmy-ui: for the web app'
+	'pict-rs: for image hosting backend'
+)
 backup=("etc/${pkgname}/${pkgname}.hjson")
 source=(
 	"git+https://github.com/LemmyNet/${pkgname}.git#tag=${pkgver}"
