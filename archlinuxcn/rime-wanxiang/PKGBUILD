@@ -44,6 +44,7 @@ build() {
 package_rime-wanxiang-base() {
     pkgdesc="万象拼音基础版基础文件"
     depends=(lua librime rime-wanxiang-gram-zh-hans "rime-wanxiang-dict-cn=${pkgver}")
+    optdepends=('libnotify: notification support in lua scripts')
 
     cd "${srcdir}/rime_wanxiang-${pkgver}"
 
