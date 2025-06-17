@@ -1,0 +1,16 @@
+build_prefix: extra-x86_64
+#pre_build: aur_pre_build
+#post_build: aur_post_build
+update_on:
+  - source: aur
+    aur: "opa"
+  - source: "github"
+    git: "open-policy-agent/opa"
+    use_latest_release: true
+    include_prereleases: false
+    prefix: "v"
+
+maintainers:
+  - github: Kimiblock
+
+managed: true
