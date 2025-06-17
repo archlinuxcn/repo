@@ -7,10 +7,9 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: "gitea"
-    gitea: "swsnr/turnon"
-    host: "codeberg.org"
-    use_max_tag: true
+  - source: "git"
+    git: "https://codeberg.org/swsnr/turnon.git"
+    use_commit: false
 
   - source: alpm
     alpm: libadwaita
