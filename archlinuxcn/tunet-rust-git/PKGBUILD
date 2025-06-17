@@ -9,11 +9,12 @@ url="https://github.com/Berrysoft/tunet-rust"
 arch=('x86_64' 'aarch64')
 license=('MIT')
 depends=('openssl' 'freetype2' 'hicolor-icon-theme' 'qt6-base')
-makedepends=('git' 'cargo' 'clang')
+makedepends=('git' 'cargo')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
 sha512sums=('SKIP')
+options=('!lto')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -31,7 +32,7 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	cargo build --frozen --release --all-features --workspace --exclude native
+	cargo build --frozen --release --workspace --exclude native
 }
 
 check() {
