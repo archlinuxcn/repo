@@ -31,12 +31,8 @@ package() {
 	cd "${pkgname}-${pkgver}/"
 
 	# Binaries
-	pushd "target/release/"
-	for bin in tunet tunet-gui tunet-cui tunet-service; do
-		install -Dm755 "${bin}" -t "${pkgdir}/usr/bin/"
-	done
+	install -Dm755 target/release/tunet{,-{gui,cui,service}} -t "${pkgdir}/usr/bin/"
 
-	popd
 	# Desktop file
 	install -Dm644 "tunet/tunet.desktop" -t "${pkgdir}/usr/share/applications/"
 
