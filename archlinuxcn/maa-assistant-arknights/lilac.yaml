@@ -5,7 +5,6 @@ maintainers:
 build_prefix: archlinuxcn-x86_64
 
 pre_build_script: |
-    aur_pre_build(maintainers=['horror-proton', 'Cryolitia', 'lilac'])
     for line in edit_file('PKGBUILD'):
       if line.startswith('_pkgver='):
         line = f"_pkgver={_G.newver}"
@@ -18,5 +17,5 @@ post_build_script: |
 update_on:
   - source: github
     github: MaaAssistantArknights/MaaAssistantArknights
-    use_latest_release: true
     prefix: v
+    include_regex: 'v(\d+.\d+.\d+)(-beta.\d+)?'
