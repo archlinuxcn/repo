@@ -5,10 +5,21 @@ maintainers:
 build_prefix: archlinuxcn-x86_64
 
 pre_build_script: |
+    pkgver, pkgrel = get_pkgver_and_pkgrel()
+    assert pkgver is not None and pkgrel is not None
+    newver = _G.newver
+
     for line in edit_file('PKGBUILD'):
-      if line.startswith('_pkgver='):
-        line = f"_pkgver={_G.newver}"
+      if line.startswith('_pkgver=') and pkgver != newver:
+          line = f'_pkgver={newver}'
+      elif line.startswith('pkgrel='):
+        if pkgver != newver:
+          line = 'pkgrel=1'
+        else:
+          line = f'pkgrel={_next_pkgrel(pkgrel)}'
       print(line)
+
+    run_protected(["updpkgsums"])
 
 post_build_script: |
     git_pkgbuild_commit()
