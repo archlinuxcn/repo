@@ -18,8 +18,6 @@ def post_build():
 def edit_it():
   sh = open('PKGBUILD').read()
   sh = sh.replace('$pkgname', '$_pkgname')
-  lib32_re = re.compile(r'\s+lib32-[\S]+')
-  sh = lib32_re.sub('', sh)
 
   doc = SgRoot(sh, 'bash')
   r = doc.root()
@@ -68,22 +66,6 @@ conflicts=(wine)''' % node.text())
   patch -p1 < ../wine-wechat.patch
 }\n\n''' + node.text())
     edits.append(e)
-
-  node = r.find(pattern='--enable-win64')
-  indent = node.range().start.column
-  e = node.replace('--enable-win64 \\\n%s--enable-archs=x86_64,i386' % (' ' * indent))
-  edits.append(e)
-  comm = node.parent().next()
-  for c in comm.next_all():
-    edits.append(c.replace(''))
-  del edits[-1] # keep last '}'
-
-  node = r.find(pattern='package').parent()
-  body = node.children()[-1]
-  for c in body.child(0).next_all():
-    if c.find(pattern='"Packaging Wine-64..."'):
-      break
-    edits.append(c.replace(''))
 
   new = r.commit_edits(edits)
   with open('PKGBUILD', 'w') as f:
