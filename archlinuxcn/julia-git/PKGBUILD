@@ -72,7 +72,7 @@ _patches=(
   0007-Disable-per-thread-TLS-cache-for-now.patch
   0008-Disable-UCX-signal-handler.patch
 )
-source=('git+https://github.com/JuliaLang/julia#commit=2c2114ceed8a538290fbb6413e314c28bfd5b4f3'
+source=('git+https://github.com/JuliaLang/julia'
         'git+https://github.com/yuyichao/archcn-julia-scripts'
         "${_patches[@]}"
         arch-source-translate.cpp
