@@ -1,0 +1,22 @@
+maintainers:
+  - github: cryolitia
+    email: Cryolitia <cryolitia@gmail.com>
+
+build_prefix: archlinuxcn-x86_64
+
+pre_build_script: |
+    aur_pre_build(maintainers=['horror-proton', 'Cryolitia', 'lilac'])
+    for line in edit_file('PKGBUILD'):
+      if line.startswith('_pkgver='):
+        line = f"_pkgver={_G.newver}"
+      print(line)
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
+update_on:
+  - source: github
+    github: MaaAssistantArknights/MaaAssistantArknights
+    use_latest_release: true
+    prefix: v
