@@ -1,7 +1,7 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-lily
-pkgver=6.14.2
+pkgver=6.15.2
 pkgrel=1
 pkgdesc='Linux-lily'
 url="https://www.kernel.org/"
@@ -88,7 +88,7 @@ build() {
 }
 
 _package() {
-  pkgdesc="The $pkgdesc kernel and modules (cjktty, default bbr, pmadv_ksm, drm panic)"
+  pkgdesc="The $pkgdesc kernel and modules (cjktty, default bbr)"
   depends=(
     coreutils
     initramfs
@@ -104,7 +104,6 @@ _package() {
     NTSYNC-MODULE
     VIRTUALBOX-GUEST-MODULES
     WIREGUARD-MODULE
-    UKSMD-BUILTIN
   )
   replaces=(
     virtualbox-guest-modules-lily
@@ -172,6 +171,14 @@ _package-headers() {
 
   echo "Installing KConfig files..."
   find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
+
+  echo "Installing Rust files..."
+  install -Dt "$builddir/rust" -m644 rust/*.rmeta
+  install -Dt "$builddir/rust" rust/*.so
+
+  echo "Installing unstripped VDSO..."
+  make INSTALL_MOD_PATH="$pkgdir/usr" vdso_install \
+    link=  # Suppress build-id symlinks
 
   echo "Removing unneeded architectures..."
   local arch
