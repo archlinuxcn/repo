@@ -55,8 +55,6 @@ build() {
             -DCUDA_ARCH_NAME=Auto
         )
         
-        CXXFLAGS+=" -fmacro-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}/${pkgbase:?}"
-        
         cmake -B build-cuda -S "MaaAssistantArknights-${_pkgver}" "${_cmake_flags[@]}"
         cmake --build build-cuda
     fi
