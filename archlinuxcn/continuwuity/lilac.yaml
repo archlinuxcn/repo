@@ -12,6 +12,6 @@ update_on:
     host: "forgejo.ellis.link"
     use_latest_release: true
     prefix: "v"
-    from_pattern: '(\\d+\\.\\d+\\.\\d+)(-rc\\.\\d+)?'
-    to_pattern: '\\1_\\2'
+    from_pattern: r'-'
+    to_pattern: '_'
 build_prefix: extra-x86_64
