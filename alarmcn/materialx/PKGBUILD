@@ -3,20 +3,28 @@
 # Contributor: Fabio Loli <fabio.loli@disroot.org>
 
 pkgname=materialx
-pkgver=1.38.10
-pkgrel=8
+pkgver=1.39.3
+pkgrel=1
 pkgdesc="Open standard for representing rich material and look-development content in computer graphics"
 arch=(aarch64 x86_64)
 url="https://materialx.org/"
-license=('Apache')
+license=('Apache-2.0')
 depends=('glibc' 'gcc-libs' 'glfw' 'libglvnd' 'libx11' 'libxt' 'python'
          'python-setuptools' 'opencolorio' 'dos2unix' 'zenity')
-makedepends=('cmake' 'chrpath' 'libxinerama' 'libxcursor' 'pybind11' 'ninja')
-source=("https://github.com/AcademySoftwareFoundation/MaterialX/releases/download/v${pkgver}/MaterialX-${pkgver}.tar.gz"
+makedepends=('cmake' 'chrpath' 'libxinerama' 'libxcursor' 'pybind11' 'ninja' 'git')
+source=("git+https://github.com/AcademySoftwareFoundation/MaterialX.git#tag=v${pkgver}"
+        "${pkgname}-imgui-node-editor::git+https://github.com/thedmd/imgui-node-editor"
+        "${pkgname}-imgui::git+https://github.com/ocornut/imgui"
+        "${pkgname}-nanogui::git+https://github.com/mitsuba-renderer/nanogui"
+        materialx-2338.patch::https://patch-diff.githubusercontent.com/raw/AcademySoftwareFoundation/MaterialX/pull/2338.patch
         "materialx-grapheditor.desktop"
         "materialx-view.desktop"
         "materialx.xml")
-sha256sums=('f7f2aa7587ae63eb095cef35d202d23df341e3d67c8c458357d2a555d76c69f2'
+sha256sums=('4a06c9357634624baf4af7673132c93f80841d7a793b2bf38ddc460b5cb2f201'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '97f373d29ac53ee21dc9f856a408ab960e5d2eccdd3f4295452f00af52c7a5c0'
             '88e5ecafa8088b90f799b49c36af59f8462ca7426cdec58215332ee283556ddb'
             '2f2b675540fea39a749f89083a9c341319c1f7b478fbb049a77bd66c29b2ee01'
             'd9b9426fb94121da052b796542cc74a0c5d7cef06997be70611c25f345553861')
@@ -24,7 +32,14 @@ sha256sums=('f7f2aa7587ae63eb095cef35d202d23df341e3d67c8c458357d2a555d76c69f2'
 _pyver=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
 
 prepare() {
-  cd MaterialX-${pkgver}
+  cd MaterialX
+
+  git submodule init
+  git config submodule."source/MaterialXGraphEditor/External/ImGui".url "${srcdir}/${pkgname}"-imgui
+  git config submodule."source/MaterialXGraphEditor/External/ImGuiNodeEditor".url "${srcdir}/${pkgname}"-imgui-node-editor
+  git config submodule."source/MaterialXView/NanoGUI".url "${srcdir}/${pkgname}"-nanogui
+
+  git -c protocol.file.allow=always submodule update --init --recursive
 
   # Repath
   sed -i 's|CMAKE_INSTALL_PREFIX|CMAKE_BINARY_DIR|g' python/CMakeLists.txt
@@ -36,10 +51,14 @@ prepare() {
   sed -i 's|"libraries"|"/usr/share/materialx/libraries"|g' source/MaterialXGenShader/GenOptions.h
 
   dos2unix python/Scripts/*
+
+  patch -Np1 -i "$srcdir"/materialx-2338.patch
 }
 
 build() {
-  cmake -DNANOGUI_NATIVE_FLAGS=-march=armv8-a -S MaterialX-${pkgver} -B build -G Ninja \
+  export CMAKE_POLICY_VERSION_MINIMUM=3.5
+
+  cmake -DNANOGUI_NATIVE_FLAGS=-march=armv8-a -S MaterialX -B build -G Ninja \
   	-DCMAKE_INSTALL_PREFIX=/usr \
   	-DCMAKE_SKIP_INSTALL_RPATH=ON \
   	-DCMAKE_SKIP_RPATH=ON \
@@ -74,7 +93,7 @@ package() {
   mkdir -p ${pkgdir}/usr/lib/python$_pyver
   mv ${pkgdir}/usr/python $_/site-packages
 
-  install -Dm755 ${srcdir}/MaterialX-${pkgver}/documents/Images/MaterialXLogo_200x155.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/materialx.png
+  install -Dm755 ${srcdir}/MaterialX/documents/Images/MaterialXLogo_200x155.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/materialx.png
 
   # Fix CMake configs
   sed -i 's|libraries|share/materialx/libraries|g' ${pkgdir}/usr/lib/cmake/MaterialX/MaterialXConfig.cmake
@@ -85,9 +104,6 @@ package() {
   cp ${srcdir}/{materialx-grapheditor.desktop,materialx-view.desktop} ${pkgdir}/usr/share/applications
   install -Dm644 ${srcdir}/materialx.xml ${pkgdir}/usr/share/mime/model/materialx.xml
   mv ${pkgdir}/usr/{LICENSE,THIRD-PARTY.md} ${pkgdir}/usr/share/licenses/materialx/
-
-  # Remove junk
-  rm -rf ${pkgdir}/build
 
   # Remove empty dirs
   find ${pkgdir}/usr -empty -type d -delete
