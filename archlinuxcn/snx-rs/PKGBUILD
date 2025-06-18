@@ -1,6 +1,6 @@
 # Maintainer: Zdeněk Biberle <zdenek at biberle dot net>
 pkgname=snx-rs
-pkgver=4.4.3
+pkgver=4.4.4
 pkgrel=1
 pkgdesc="Rust client for Checkpoint VPN tunnels"
 arch=(x86_64)
@@ -14,7 +14,7 @@ source=(
   fix-executable-path.patch
   fix-desktop-file.patch
 )
-sha256sums=('9f9a827c2fd6dda462ccd3e33c0e350a3d370165bf469c5b5329c2accdfc1cbb'
+sha256sums=('38e813d2f95b64ca9919ba8092e257f272e5515466f22fc292df840b7f256ace'
             'c4438f1167b76cc278610faacdd6d821e21a9339dd12fd86bf5c27f6af66424d'
             '0609b65d09e1120f1f6038d3b2bfa6ba86e801a807a452c57dec640fa2fced04')
 _icon_sizes=(16 20 22 24 32 36 40 48 64 72 96 128 192 256)
