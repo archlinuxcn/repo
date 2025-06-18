@@ -32,7 +32,7 @@ package() {
 	cd "${pkgname}-${pkgver}/"
 
 	# Binaries
-	install -Dm755 target/release/tunet{,-{gui,cui,service}} -t "${pkgdir}/usr/bin/"
+	install -Dm755 target/release/tunet{,-{gui,service}} -t "${pkgdir}/usr/bin/"
 
 	# Desktop file
 	install -Dm644 "tunet/tunet.desktop" -t "${pkgdir}/usr/share/applications/"
@@ -44,5 +44,5 @@ package() {
 	install -Dm644 "tunet-service/tunet@.service" -t "${pkgdir}/usr/lib/systemd/system/"
 
 	# License
-	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
