@@ -7,10 +7,11 @@ pkgdesc="A Tsinghua University network authentication client for Linux, written 
 url="https://github.com/Berrysoft/${pkgname}"
 arch=('x86_64' 'aarch64')
 license=('MIT')
-depends=('openssl' 'freetype2' 'hicolor-icon-theme')
+depends=('openssl' 'freetype2' 'hicolor-icon-theme' 'qt6-base')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('1af9232b1e663dbf7b104d541b17c4d17f1bbdf1c9c204f07f6aabbdc22199c1')
+options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
@@ -19,7 +20,7 @@ prepare() {
 
 build() {
 	cd "${pkgname}-${pkgver}/"
-	cargo build --frozen --release --all-features --workspace --exclude native
+	cargo build --frozen --release --workspace --exclude native
 }
 
 check() {
@@ -31,7 +32,7 @@ package() {
 	cd "${pkgname}-${pkgver}/"
 
 	# Binaries
-	install -Dm755 target/release/tunet{,-{gui,cui,service}} -t "${pkgdir}/usr/bin/"
+	install -Dm755 target/release/tunet{,-{gui,service}} -t "${pkgdir}/usr/bin/"
 
 	# Desktop file
 	install -Dm644 "tunet/tunet.desktop" -t "${pkgdir}/usr/share/applications/"
@@ -43,5 +44,5 @@ package() {
 	install -Dm644 "tunet-service/tunet@.service" -t "${pkgdir}/usr/lib/systemd/system/"
 
 	# License
-	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
