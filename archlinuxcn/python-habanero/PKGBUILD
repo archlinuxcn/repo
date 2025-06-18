@@ -2,8 +2,8 @@
 # Contributor: JP-Ellis <josh@jpellis.me>
 
 pkgname='python-habanero'
-pkgver='2.2.0'
-pkgrel=4
+pkgver=2.3.0
+pkgrel=1
 _name=${pkgname#python-}
 _name="${_name//-/_}"
 _src_folder="${_name}-${pkgver}"
@@ -34,7 +34,7 @@ optdepends=(
 license=('MIT')
 arch=('any')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('18c5c3b59b8db1887811da6de8bd976ac4077d61a25a058f3a67044e8bcab8eb')
+sha256sums=('871e5d088ef641b05514d44b004af512852b309bcd0d81f10545e58d54a654ab')
 
 build() {
     cd "${srcdir}/${_src_folder}"
