@@ -3,7 +3,7 @@
 pkgname=onedrivegui-git
 _pkgname=OneDriveGUI
 pkgver=1.2.1.r4.ge3ac7bd
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple GUI for OneDrive Linux client, with multi-account support."
 url="https://github.com/bpozdena/${_pkgname}"
 license=("GPL-3.0-or-later")
@@ -31,8 +31,9 @@ prepare() {
 
 package() {
 	cd "${_pkgname}/src/"
-	install -Dm755 "${_pkgname}.py" -t "${pkgdir}/usr/lib/${_pkgname}/"
-	cp -r {resources,ui} "${pkgdir}/usr/lib/${_pkgname}/"
+	install -d "${pkgdir}/usr/lib/${_pkgname}/"
+	cp -a * "${pkgdir}/usr/lib/${_pkgname}/"
+	chmod +x "${pkgdir}/usr/lib/${_pkgname}/${_pkgname}.py"
 
 	cd resources
 	install -Dm644 "images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"

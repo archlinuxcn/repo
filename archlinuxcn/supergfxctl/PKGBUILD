@@ -3,12 +3,12 @@
 
 pkgname=supergfxctl
 pkgver=5.2.7
-pkgrel=1
+pkgrel=2
 pkgdesc="A utility for Linux graphics switching on Intel/AMD iGPU + nVidia dGPU laptops"
 arch=('x86_64')
 url="https://gitlab.com/asus-linux/supergfxctl"
 license=('MPL-2.0')
-depends=('gcc-libs' 'systemd')
+depends=('gcc-libs' 'systemd' 'lsof')
 makedepends=('rust')
 provides=('supergfxctl')
 conflicts=('supergfxctl-git'

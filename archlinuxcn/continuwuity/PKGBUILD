@@ -1,0 +1,56 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=continuwuity
+pkgdesc="a very cool, featureful fork of conduit (rust matrix homeserver)"
+url="https://forgejo.ellis.link/continuwuation/continuwuity"
+license=("Apache-2.0")
+arch=("x86_64")
+pkgver=0.5.0_rc.6
+pkgrel=1
+makedepends=("gcc14" "rust" "cargo" "git" "clang" "linux-api-headers" "linux-headers" "llvm" "libc++" "autoconf")
+depends=("gcc-libs" "glibc" "liburing" "jemalloc")
+source=("git+https://forgejo.ellis.link/continuwuation/continuwuity.git#tag=v$(echo ${pkgver} | sed 's|_|-|g')")
+sha256sums=('85cb04d99a33b9f0f3a0380e9bec423a3fbbe56bb4502b13528c7f925b895f6c')
+provides=("conduwuit" "continuwuity")
+conflicts=("conduwuit" "continuwuity")
+options=(!lto)
+backup=("etc/conduwuit/conduwuit.toml")
+
+#function pkgver() {
+#	cd continuwuity
+#	echo "$(grep '^version =' Cargo.toml|head -n1|cut -d\" -f2|cut -d\- -f1).$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+#}
+
+function prepare() {
+	export CC=gcc-14
+	export CXX=g++-14
+	export CFLAGS="-march=x86-64-v3 -mtune=generic -O3 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=3 -Wformat -fstack-clash-protection -fcf-protection -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"
+	cd "${srcdir}/continuwuity"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	export CONDUWUIT_VERSION_EXTRA=$(git rev-parse --short HEAD)
+}
+
+function build() {
+	export CC=gcc-14
+	export CXX=g++-14
+	cd "${srcdir}/continuwuity"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo build --frozen --release --all-features --locked
+}
+
+function check() {
+	export CC=gcc-14
+	export CXX=g++-14
+	cd "${srcdir}/continuwuity"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo test --frozen --locked --all-features
+}
+
+function package() {
+	install -Dm755 "${srcdir}/continuwuity/target/release/conduwuit" "${pkgdir}/usr/bin/conduwuit"
+	install -Dm644 "${srcdir}/continuwuity/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -Dm644 "${srcdir}/continuwuity/conduwuit-example.toml" "${pkgdir}/etc/conduwuit/conduwuit.toml"
+	install -Dm644 "${srcdir}/continuwuity/arch/conduwuit.service" "${pkgdir}/usr/lib/systemd/system/continuwuity.service"
+}
