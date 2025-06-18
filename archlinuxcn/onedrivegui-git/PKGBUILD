@@ -31,8 +31,9 @@ prepare() {
 
 package() {
 	cd "${_pkgname}/src/"
-	install -Dm755 "${_pkgname}.py" -t "${pkgdir}/usr/lib/${_pkgname}/"
-	cp -r {resources,ui} "${pkgdir}/usr/lib/${_pkgname}/"
+	install -d "${pkgdir}/usr/lib/${_pkgname}/"
+	cp -a * "${pkgdir}/usr/lib/${_pkgname}/"
+	chmod +x "${pkgdir}/usr/lib/${_pkgname}/${_pkgname}.py"
 
 	cd resources
 	install -Dm644 "images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"
