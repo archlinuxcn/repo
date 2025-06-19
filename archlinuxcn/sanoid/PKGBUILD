@@ -1,8 +1,8 @@
 # Maintainer: Donald Webster <fryfrog@gmail.com>
 
 pkgname=sanoid
-pkgver=2.2.0
-pkgrel=2
+pkgver=2.3.0
+pkgrel=1
 pkgdesc="Policy-driven snapshot management (sanoid), dataset sending/receiving (syncoid) and snapshot searching (findoid) tools for ZFS."
 arch=('any')
 url='https://github.com/jimsalterjrs/sanoid'
@@ -26,15 +26,14 @@ source=(
   "$pkgname-$pkgver.tar.gz::https://github.com/jimsalterjrs/sanoid/archive/v$pkgver.tar.gz"
 )
 
-sha256sums=('a997552e3c5f9fc8407fd20fa1adc99fc37a1f61547f738114c96a1ea1658fe2')
+sha256sums=('1d8735a271a34ec87ea46313a66f6f20bd38b583886924574d3c1f72ea173620')
 
 prepare() {
   # Change /usr/sbin to /usr/bin
   cd "${srcdir}/sanoid-${pkgver}"
   sed -i 's|/usr/sbin|/usr/bin|g' \
     "packages/debian/sanoid.timer" \
-    "packages/debian/sanoid.service" \
-    "packages/debian/sanoid-prune.service"
+    "packages/debian/sanoid.service"
 }
 
 package() {
@@ -56,5 +55,4 @@ package() {
   # systemd
   install -D -m 644 "packages/debian/sanoid.timer" "${pkgdir}/usr/lib/systemd/system/sanoid.timer"
   install -D -m 644 "packages/debian/sanoid.service" "${pkgdir}/usr/lib/systemd/system/sanoid.service"
-  install -D -m 644 "packages/debian/sanoid-prune.service" "${pkgdir}/usr/lib/systemd/system/sanoid-prune.service"
 }
