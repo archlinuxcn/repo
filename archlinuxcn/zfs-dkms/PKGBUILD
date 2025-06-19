@@ -3,7 +3,7 @@
 # Contributor: Iacopo Isimbaldi <isiachi@rhye.it>
 
 pkgname=zfs-dkms
-pkgver=2.3.2
+pkgver=2.3.3
 pkgrel=1
 pkgdesc="Kernel modules for the Zettabyte File System."
 arch=('any')
@@ -13,7 +13,7 @@ depends=("zfs-utils" 'dkms' 'perl')
 provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}" "zfs")
 source=("https://github.com/zfsonlinux/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"
 	"0001-only-build-the-module-in-dkms.conf.patch")
-sha256sums=('80da628a9543ec3355bf410617450e167706948ceb287541455a1b8d87b8758a'
+sha256sums=('844122118f0ea81205a01753bbcb1315330f8967c1f866dcd10155273131f071'
             '8d5c31f883a906ab42776dcda79b6c89f904d8f356ade0dab5491578a6af55a5')
 
 prepare() {
