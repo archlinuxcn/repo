@@ -3,18 +3,18 @@
 pkgname=rime-wanxiang-dict-cn-nightly
 _pkgbase=${pkgname%-nightly}
 _schema_version=7.2
-pkgver=7.2+r20250620.000000
+pkgver=7.2+r20250620.111114
 pkgrel=1
 epoch=1
 pkgdesc="万象中文词库"
 arch=(any)
 license=('CC-BY-4.0')
 url="https://github.com/amzxyz/rime_wanxiang"
-_dict_url="${url}/releases/download/dict-nightly/cn_dicts.zip"
-source=("${url}/releases/download/dict-nightly/cn_dicts.zip"
-        "${url}/archive/refs/tags/v${_schema_version}.tar.gz")
+_dict_url="${url}/releases/download/dict-nightly/9-zh-dicts.zip"
+source=("${_dict_url}"
+        "schema-${_schema_version}.zip::${url}/releases/download/v${_schema_version}/rime-wanxiang.zip")
 b2sums=('SKIP'
-        '1be081d41a30091139a1e05faaaa433dea8830f86dc5acf732dc1c7792b27c81e940589ff57f43d07f2521b4cd6f2d591579e056bacef7f4b8c0451e84c69931')
+        '6a4a522eae188167a06f305f47fde87dc9d189bce75cfc53f43447c26e1495b3c32f179efc0db266d77238536be1c3b2019d82dfd80f871c445235a17561614e')
 provides=("${_pkgbase}=${_schema_version}")
 replaces=("${_pkgbase}")
 
@@ -27,10 +27,11 @@ pkgver() {
     printf "%s+r%s" "${_schema_version}" "${_dict_version}"
 }
 
+_schema_folder_name="万象拼音标准版"
 build() {
-    cd "${srcdir}/rime_wanxiang-${_schema_version}"
+    cd "${srcdir}/${_schema_folder_name}"
 
-    rsync -a --existing --update "${srcdir}/cn_dicts/" cn_dicts
+    rsync -a --existing --update "${srcdir}/zh_dicts/" cn_dicts
 
     for _f in $(pacman -Qql rime-prelude rime-essay | grep -v "/$"); do ln -sf "${_f}" .; done
 
@@ -40,7 +41,7 @@ build() {
 }
 
 package() {
-    cd "${srcdir}/rime_wanxiang-${_schema_version}"
+    cd "${srcdir}/${_schema_folder_name}"
 
     find cn_dicts -type f -exec install -Dm664 {} "${pkgdir}"/usr/share/rime-data/{} \;
 
