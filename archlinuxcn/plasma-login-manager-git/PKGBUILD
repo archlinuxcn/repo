@@ -4,7 +4,7 @@
 pkgname=plasma-login-manager-git
 _pkgname=plasma-login-manager
 pkgver=0.0.0.r1753.adb78e7
-pkgrel=1
+pkgrel=2
 pkgdesc='Plasma Login provides a display manager for KDE Plasma, forked from SDDM and with an new frontend providing a greeter, wallpaper plugin integration and System Settings module (KCM).'
 url='https://invent.kde.org/plasma/plasma-login-manager'
 arch=(x86_64)
@@ -36,9 +36,9 @@ source=(git+https://invent.kde.org/plasma/plasma-login-manager
     plasmalogin-autologin
     plasmalogin-greeter)
 sha256sums=('SKIP'
-    'd7394292a65ae463926c2c3d2cb4e67bbfeb20995450c8e4c92fe5a28e7c4254'
-    '1a84cf752782b03b53f66188013bf7e4af4f5e6feb7266bfe58c3faaa20777b4'
-    '3406bce46be8450e28ddbccfbcd0e1f8fa585d57da8833ff7294cf3aee84bb46')
+            'd7394292a65ae463926c2c3d2cb4e67bbfeb20995450c8e4c92fe5a28e7c4254'
+            '1a84cf752782b03b53f66188013bf7e4af4f5e6feb7266bfe58c3faaa20777b4'
+            '3406bce46be8450e28ddbccfbcd0e1f8fa585d57da8833ff7294cf3aee84bb46')
 provides=(${_pkgname})
 conflicts=(
     ${_pkgname}
