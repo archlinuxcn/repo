@@ -1,4 +1,5 @@
 # Maintainer: everyx <lunt.luo#gmail.com>
+# Maintainer: DeepChirp <DeepChirp#outlook.com>
 
 _pkgbase=rime-ice
 pkgbase=rime-ice-git
@@ -11,6 +12,7 @@ pkgname=(
   ${_pkgbase}-double-pinyin-sogou-git
   ${_pkgbase}-double-pinyin-flypy-git
   ${_pkgbase}-double-pinyin-ziguang-git
+  ${_pkgbase}-double-pinyin-jiajia-git
 )
 
 pkgver=r798.bd514e4
@@ -46,6 +48,7 @@ _schemas=(
   double_pinyin_sogou
   double_pinyin_flypy
   double_pinyin_ziguang
+  double_pinyin_jiajia
 )
 
 build() {
@@ -261,6 +264,7 @@ package_rime-ice-git() {
     ${_pkgbase}-double-pinyin-sogou
     ${_pkgbase}-double-pinyin-flypy
     ${_pkgbase}-double-pinyin-ziguang
+    ${_pkgbase}-double-pinyin-jiajia
   )
 
   for _schema_name in "${_schemas[@]}"; do
@@ -282,6 +286,7 @@ package_rime-ice-pinyin-git() {
     ${_pkgbase}-double-pinyin-sogou
     ${_pkgbase}-double-pinyin-flypy
     ${_pkgbase}-double-pinyin-ziguang
+    ${_pkgbase}-double-pinyin-jiajia
   )
 
   _package_schema rime_ice
@@ -301,6 +306,7 @@ package_rime-ice-double-pinyin-git() {
     ${_pkgbase}-double-pinyin-sogou
     ${_pkgbase}-double-pinyin-flypy
     ${_pkgbase}-double-pinyin-ziguang
+    ${_pkgbase}-double-pinyin-jiajia
   )
 
   _package_schema double_pinyin
@@ -320,6 +326,7 @@ package_rime-ice-double-pinyin-abc-git() {
     ${_pkgbase}-double-pinyin-sogou
     ${_pkgbase}-double-pinyin-flypy
     ${_pkgbase}-double-pinyin-ziguang
+    ${_pkgbase}-double-pinyin-jiajia
   )
 
   _package_schema double_pinyin_abc
@@ -339,6 +346,7 @@ package_rime-ice-double-pinyin-mspy-git() {
     ${_pkgbase}-double-pinyin-sogou
     ${_pkgbase}-double-pinyin-flypy
     ${_pkgbase}-double-pinyin-ziguang
+    ${_pkgbase}-double-pinyin-jiajia
   )
 
   _package_schema double_pinyin_mspy
@@ -358,6 +366,7 @@ package_rime-ice-double-pinyin-sogou-git() {
     # ${_pkgbase}-double-pinyin-sogou
     ${_pkgbase}-double-pinyin-flypy
     ${_pkgbase}-double-pinyin-ziguang
+    ${_pkgbase}-double-pinyin-jiajia
   )
 
   _package_schema double_pinyin_sogou
@@ -377,6 +386,7 @@ package_rime-ice-double-pinyin-flypy-git() {
     ${_pkgbase}-double-pinyin-sogou
     # ${_pkgbase}-double-pinyin-flypy
     ${_pkgbase}-double-pinyin-ziguang
+    ${_pkgbase}-double-pinyin-jiajia
   )
 
   _package_schema double_pinyin_flypy
@@ -396,7 +406,28 @@ package_rime-ice-double-pinyin-ziguang-git() {
     ${_pkgbase}-double-pinyin-sogou
     ${_pkgbase}-double-pinyin-flypy
     # ${_pkgbase}-double-pinyin-ziguang
+    ${_pkgbase}-double-pinyin-jiajia
   )
 
   _package_schema double_pinyin_ziguang
+}
+
+package_rime-ice-double-pinyin-jiajia-git() {
+  pkgdesc='Rime 配置：雾凇拼音 | 长期维护的简体词库 - 拼音加加双拼'
+  provides=(rime-ice-double-pinyin-jiajia)
+  install='post.install'
+  conflicts=(
+    rime-emoji
+    ${_pkgbase}
+    ${_pkgbase}-pinyin
+    ${_pkgbase}-double-pinyin
+    ${_pkgbase}-double-pinyin-abc
+    ${_pkgbase}-double-pinyin-mspy
+    ${_pkgbase}-double-pinyin-sogou
+    ${_pkgbase}-double-pinyin-flypy
+    ${_pkgbase}-double-pinyin-ziguang
+    # ${_pkgbase}-double-pinyin-jiajia
+  )
+
+  _package_schema double_pinyin_jiajia
 }
