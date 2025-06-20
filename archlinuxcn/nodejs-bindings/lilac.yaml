@@ -8,10 +8,7 @@ post_build_script: |
 
 update_on:
   - source: "github"
-    github: "the-draupnir-project/Draupnir"
+    github: "TooTallNate/node-bindings"
     use_latest_release: true
     include_prereleases: false
-    prefix: "v"
-build_prefix: archlinuxcn-x86_64
-repo_depends:
-  - nodejs-bindings
+build_prefix: extra-x86_64

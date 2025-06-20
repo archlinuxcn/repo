@@ -6,17 +6,17 @@ pkgname=pacman-static
 pkgver=7.0.0.r6.gc685ae6
 _cares_ver=1.34.5
 _nghttp2_ver=1.65.0
-_curlver=8.13.0
+_curlver=8.14.1
 _sslver=3.5.0
 _zlibver=1.3.1
 _xzver=5.8.1
 _bzipver=1.0.8
 _zstdver=1.5.7
-_libarchive_ver=3.7.9
-_gpgerrorver=1.53
+_libarchive_ver=3.8.1
+_gpgerrorver=1.55
 _libassuanver=3.0.0
-_gpgmever=1.24.2
-pkgrel=48
+_gpgmever=2.0.0
+pkgrel=49
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.0.0
 _git_patch_level_commit=c685ae6412af04cae1eaa5d6bda8c277c7ffb8c8
@@ -89,7 +89,7 @@ sha512sums=('44e00c2bc259fe6a85de71f7fd8a43fcfd1b8fb7d920d2267bd5b347e02f1dab736
             'e1ef685a425017474ea0412c8ad13a217a45a320322b3aee48e646be21457d9b1f374abb9f681f47595a0ad8feb07d076bd0aa3279d35c5c9b5b8c921d8dd39e'
             '386709e9f405034cb16ba514f9792e89992be52b24a237e6c51f1032e4ca99a8c57b1c3038d6f0a205202a3bfb1246bb95ff0d5e6fc0ee2bba1cb17f6677f97f'
             'SKIP'
-            '718e3d70dbab8a62f506a90c608e57d541baac0ac5c2c4fae0a59fca4e4f31ef4f73f76f00a9ee0e339e7a9bd5dea9643090d3ab3ff5ca1631d1be0e2de15b31'
+            '22307bd41d5ded22e7e53e2412b3218763db9b7c32b1254df26172e6cf00d1650c66874dfc03037da89a5bd72ffbca1eeb83784be62a38d5779484376f3a53c7'
             'SKIP'
             '39cc80e2843a2ee30f3f5de25cd9d0f759ad8de71b0b39f5a679afaaa74f4eb58d285ae50e29e4a27b139b49343ac91d1f05478f96fb0c6b150f16d7b634676f'
             'SKIP'
@@ -102,13 +102,13 @@ sha512sums=('44e00c2bc259fe6a85de71f7fd8a43fcfd1b8fb7d920d2267bd5b347e02f1dab736
             'SKIP'
             '2af02be3df319556b65403450acc55964d971fe263fed87dea823fb264a862db807a2a3d89358564277a83e5b303302cc677f66b5e523e3d224120b884e5ef1b'
             'SKIP'
-            'e42b013eaa4af3bbd7085eff4b9fa980052f7efebe98e512728b6079be85ae156f040acbb0bb16f0b9113b512e0c7e6fb4762c0593a4a154183965901e81f552'
+            'd3f6ca9d9abefe81f5cbbc195fbe259d3362119018c535ad2621ee407cad3487011325a9f4c4a15442a9ac5a0fe7ce86dafd7b3d891a446516362ba6b7b9047b'
             'SKIP'
             '7c5c95c1b85bef2d4890c068a5a8ea8a1fe0d8def6ab09e5f34fc2746d8808bbb0fc168e3bd66d52ee5ed799dcf9f258f4125cda98c8384f6411bcad8d8b3139'
             'SKIP'
-            'ad69101d1fceef6cd1dd6d5348f6f2be06912da6b6a7d0fece3ce08cf35054e6953b80ca9c4748554882892faa44e7c54e705cf25bbf2b796cd4ad12b09da185'
+            'ee58dc2a4273c740d5b9ef13cc655d5e600ddddd137fb85a781c31e8854829283b4ce241d7810a963d9a125d603213600f37e7d0c1ce3b3cf1b935e62cf60777'
             'SKIP'
-            'd8918445e2536eb29c2d6a6c8cd3671a8525be1619009a2e7c3a9c2a821b51939172dfccc25bfd62fec2a17fb01796b4f522b0ba72b31e3de9b9658c44c46345'
+            'c794d1c6e6a6dcf4072438dc4e8ce5b1530bbe9ad40afad18f4e6a444aa5d85e48c58cfbd8af41d4d25e93844956de3ce262cb1d68097d2e5f95bd87b5a982b7'
             'SKIP')
 
 export LDFLAGS="$LDFLAGS -static"

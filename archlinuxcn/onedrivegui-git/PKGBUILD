@@ -1,32 +1,24 @@
-# Maintainer: bpozdena <https://github.com/bpozdena>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: bpozdena <https://github.com/bpozdena>
 
 pkgname=onedrivegui-git
 _pkgname=OneDriveGUI
-pkgver=1.2.1.r4.ge3ac7bd
-pkgrel=2
+pkgver=1.2.1.r10.g740cd51
+pkgrel=1
 pkgdesc="A simple GUI for OneDrive Linux client, with multi-account support."
+arch=('any')
 url="https://github.com/bpozdena/${_pkgname}"
 license=("GPL-3.0-or-later")
 depends=("pyside6" "python-requests" "onedrive-abraunegg" "qt6-webengine")
 makedepends=("git")
 conflicts=("onedrivegui")
 provides=("onedrivegui")
-arch=("any")
-source=(
-	"git+${url}.git"
-	"${_pkgname}-desktop-file.patch::${url}/pull/215.patch"
-)
-sha256sums=('SKIP'
-            '213640add88486963daaa4d8d751fdf7fde81d8d2d1adc286c8a8ed104d8f53e')
+source=("git+${url}.git")
+sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
 	git describe --tags --long | sed 's/v//;s/-/.r/;s/-/./g'
-}
-
-prepare() {
-	cd "${_pkgname}/"
-	patch -p1 -i "../${_pkgname}-desktop-file.patch"
 }
 
 package() {
