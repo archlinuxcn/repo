@@ -1,0 +1,61 @@
+# Maintainer: Integral <integral@member.fsf.org>
+
+pkgname=c001apk-flutter-git
+_pkgname=${pkgname%-git}
+pkgver=r52.affd15e
+pkgrel=1
+pkgdesc="A third-party CoolApk client written in Flutter | 使用 Flutter 开发的第三方酷安客户端"
+arch=('x86_64' 'aarch64')
+url="https://github.com/Integral-Tech/${_pkgname}"
+license=('AGPL-3.0-or-later')
+depends=('gtk3')
+makedepends=('git' 'fvm' 'clang' 'cmake' 'ninja' 'imagemagick')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+prepare() {
+	cd "${_pkgname}/"
+	fvm install stable
+	fvm use stable -f
+	fvm flutter --disable-analytics
+	fvm flutter --no-version-check pub get
+}
+
+build() {
+	cd "${_pkgname}/"
+	fvm flutter build linux --no-pub --release
+}
+
+package() {
+	cd "${_pkgname}/"
+	install -Dm644 "packaging/${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+
+	install -Dm644 assets/icon/icon.png "${pkgdir}/usr/share/icons/hicolor/1024x1024/apps/${_pkgname}.png"
+	for r in 16 24 32 48 64 128 256 512; do
+		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/"
+		magick assets/icon/icon.png -resize "${r}x${r}" "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/${_pkgname}.png"
+	done
+
+	case "${CARCH}" in
+	"x86_64")
+		local _dartarch="x64"
+		;;
+	"aarch64")
+		local _dartarch="arm64"
+		;;
+	esac
+
+	cd "build/linux/${_dartarch}/release/"
+	cmake -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/lib/${_pkgname}" .
+	cmake -P cmake_install.cmake
+
+	install -dm755 "${pkgdir}/usr/bin/"
+	ln -s "/usr/lib/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+}
