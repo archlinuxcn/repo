@@ -7,12 +7,11 @@ post_build_script: |
   update_aur_repo()
 
 repo_depends:
-  - python-mutf8
   - python-amulet-compiler-version
 
 update_on:
   - source: "github"
-    github: "Amulet-Team/Amulet-NBT"
+    github: "Amulet-Team/Amulet-pybind11-extensions"
     use_latest_release: true
     include_prereleases: false
   - alias: "python"
