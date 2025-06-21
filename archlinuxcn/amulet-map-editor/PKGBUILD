@@ -36,4 +36,5 @@ function package() {
 	install -Dm644 "${srcdir}/amulet.desktop" "${pkgdir}/usr/share/applications/amulet.desktop"
 	cd "${srcdir}/Amulet-Map-Editor"
 	python -m installer --destdir="${pkgdir}" dist/*.whl
+	rm -rf "${pkgdir}/usr/bin/amulet_map_editor_no_console"
 }
