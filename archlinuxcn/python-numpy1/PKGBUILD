@@ -13,7 +13,7 @@ license=('LicenseRef-custom')
 url="https://www.numpy.org/"
 depends=('cblas' 'lapack' 'python')
 optdepends=('blas-openblas: faster linear algebra')
-makedepends=('python-build' 'python-installer' 'meson-python' 'cmake' 'gcc-fortran' 'cython')
+makedepends=('python-build' 'python-installer' 'meson-python' 'cmake' 'gcc-fortran' 'cython0')
 checkdepends=('python-pytest' 'python-hypothesis' 'python-setuptools')
 provides=("python-numpy=$pkgver")
 conflicts=('python-numpy')

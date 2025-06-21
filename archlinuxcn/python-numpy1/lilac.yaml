@@ -5,8 +5,11 @@ maintainers:
 pre_build_script: |
   update_pkgrel()
 
+repo_depends:
+  - cython0
+
 update_on:
   - alias: "python"
   - source: "aur"
     aur: "python-numpy1"
-build_prefix: extra-x86_64
+build_prefix: archlinuxcn-x86_64
