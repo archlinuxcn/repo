@@ -4,44 +4,36 @@ _name=Amulet-NBT
 _lowername=${_name,,}
 _pyname=${_lowername/-/_}
 pkgname=python-$_lowername
-pkgver=2.1.4
+pkgver=5.0.0a4
 pkgrel=1
 pkgdesc='A Python and Cython library for reading and writing binary NBT and stringified NBT'
 arch=('x86_64')
 url="https://github.com/Amulet-Team/$_name"
 license=('LicenseRef-Amulet-Team-1.0.0')
-depends=('python' 'python-mutf8' 'python-numpy' 'python-amulet-zlib')
-makedepends=('cython' 'git' 'python-build' 'python-installer' 'python-setuptools' 'python-versioneer' 'python-wheel')
-# tests directory isn't in pypi sdist
-# github tarball has unstable hash due to https://github.com/Amulet-Team/Amulet-NBT/blob/61cb6fe0c614b95ee75868ff85677284e2b3cb74/amulet_nbt/_version.py#L27
+depends=('python' 'python-mutf8' 'python-numpy' 'python-amulet_pybind11_extensions' 'python-amulet-zlib' 'python-amulet-io')
+makedepends=('cython' 'git' 'python-build' 'python-installer' 'python-setuptools' 'python-versioneer' 'python-wheel' 'python-amulet-compiler-version' 'python-amulet-compiler-target' 'cmake')
 source=("git+$url.git#tag=${pkgver}")
-sha256sums=('SKIP')
+sha256sums=('79b98719b631ba7c4a38c319671e79e970163968c9c6cea4494ea386c4f9a0a0')
 
 prepare() {
-  cd "$_name"
-
-  # expand placeholders
-  git archive --format tar HEAD amulet_nbt/_version.py | tar -x
-
-  # use current versioneer
-  sed -Ei 's/(versioneer)-518/\1/' pyproject.toml
+	cd "$_name"
+#	sed -i 's|{AMULET_IO_REQUIREMENT},||g' requirements.py
+#	sed -i 's|{AMULET_ZLIB_REQUIREMENT},||g' requirements.py
+#	sed -i 's|AMULET_IO_REQUIREMENT = "|#AMULET_IO_REQUIREMENT = "|g' requirements.py
+#	sed -i 's|AMULET_ZLIB_REQUIREMENT = "|#AMULET_ZLIB_REQUIREMENT = "|g' requirements.py
 }
 
 build() {
-  cd "$_name"
-
-  python -m build --wheel --no-isolation
+	cd "$_name"
+	#export AMULET_ZLIB_REQUIREMENT="~=$(pacman -Q python-amulet-zlib | awk '{sub(/-.*/, "", $2); print $2}')"
+#	unset AMULET_ZLIB_REQUIREMENT
+	#export AMULET_IO_REQUIREMENT="~=$(pacman -Q python-amulet-io | awk '{sub(/-.*/, "", $2); print $2}')"
+#	unset AMULET_IO_REQUIREMENT
+	export AMULET_FREEZE_COMPILER=1
+	python -m build --wheel --no-isolation
 }
 
-#check() {
-#  cd "$_name"
-#
-#  # based on https://wiki.archlinux.org/title/Python_package_guidelines#Check
-#  # build directory needs to be before script directory
-#  CARCH="$CARCH" python -c 'import os, sys; sys.path.insert(0, f"{os.getcwd()}/build/lib.linux-{os.environ['\''CARCH'\'']}-cpython-" + "".join(map(str, sys.version_info[:2]))); from unittest import __main__' discover -s tests
-#}
-
-package() {
+function package() {
   cd "$_name"
 
   python -m installer --destdir="$pkgdir" dist/*.whl
