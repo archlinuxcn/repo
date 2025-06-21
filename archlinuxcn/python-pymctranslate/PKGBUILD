@@ -3,7 +3,6 @@
 _name=PyMCTranslate
 pkgname=python-${_name,,}
 pkgver=1.2.30
-_commit=9d747dc87843ba1ee5956e931d6affa11e65cbce
 pkgrel=1
 pkgdesc='A library of block mappings that can be used to convert from any Minecraft format into any other Minecraft format'
 arch=('any')
@@ -11,10 +10,8 @@ url="https://github.com/gentlegiantJGC/$_name"
 license=('LicenseRef-Amulet-Team-1.0.0')
 depends=('python' 'python-amulet-nbt' 'python-numpy')
 makedepends=('git' 'python-build' 'python-installer' 'python-setuptools' 'python-versioneer' 'python-wheel')
-# tests directory isn't in pypi sdist
-# github tarball has unstable hash due to https://github.com/gentlegiantJGC/PyMCTranslate/blob/45024a6ca12592913e6249269d8a180b2940f6aa/PyMCTranslate/_version.py#L25
-source=("git+$url.git#commit=$_commit")
-sha256sums=('SKIP')
+source=("git+$url.git#tag=${pkgver}")
+sha256sums=('f7e831c1b2300a46f296c1f75b88bfabce19f741da4ef993d7ce058415972ae4')
 
 prepare() {
   cd "$_name"
