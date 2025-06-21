@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=tunet-rust
-pkgver=0.10.2
+pkgver=0.10.3
 pkgrel=1
 pkgdesc="A Tsinghua University network authentication client for Linux, written in Rust. 清华大学校园网 Rust 客户端"
 url="https://github.com/Berrysoft/${pkgname}"
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('openssl' 'freetype2' 'hicolor-icon-theme' 'qt6-base')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('03d47c1bb6815a7d4e6576e457d3d6ffb00d3921b3e18c35706e8d80ab578661')
+sha256sums=('3807d3765ee69de044aa46c475f858b61c5e59357ac16188414cb313f636ac32')
 options=('!lto')
 
 prepare() {
@@ -35,7 +35,7 @@ package() {
 	install -Dm755 target/release/tunet{,-{gui,service}} -t "${pkgdir}/usr/bin/"
 
 	# Desktop file
-	install -Dm644 "tunet/tunet.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "tunet/io.github.berrysoft.tunet.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	# Icon
 	install -Dm644 "logo.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/tunet.png"

@@ -2,7 +2,7 @@
 
 pkgname=tunet-rust-git
 _pkgname=tunet-rust
-pkgver=0.10.1.r7.g7af7c70
+pkgver=0.10.3.r1.g9bbcb42
 pkgrel=1
 pkgdesc="A Tsinghua University network authentication client for Linux, written in Rust. 清华大学校园网 Rust 客户端"
 url="https://github.com/Berrysoft/tunet-rust"
@@ -47,7 +47,7 @@ package() {
 	install -Dm755 target/release/tunet{,-{gui,service}} -t "${pkgdir}/usr/bin/"
 
 	# Desktop file
-	install -Dm644 "tunet/tunet.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "tunet/io.github.berrysoft.tunet.desktop" -t "${pkgdir}/usr/share/applications/"
 
 	# Icon
 	install -Dm644 "logo.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/tunet.png"
