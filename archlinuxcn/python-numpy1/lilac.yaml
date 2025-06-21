@@ -1,0 +1,10 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+update_on:
+  - source: "aur"
+    aur: "python-numpy1"
+  - alias: "python"
+build_prefix: extra-x86_64
