@@ -66,7 +66,7 @@ package_rime-wanxiang-base() {
     done
 
     for _d in en_dicts jm_dicts lua opencc; do
-        find $_d -type f -exec install -Dm664 {} "${pkgdir}"/usr/share/rime-data/{} \;
+        find $_d -type f ! -name "librime.lua" -exec install -Dm664 {} "${pkgdir}"/usr/share/rime-data/{} \;
     done
 }
 
