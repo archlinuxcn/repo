@@ -1,0 +1,31 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=python-amulet-compiler-version
+pkgdesc="A tiny library to allow dependencies to require the same compiler"
+url="https://github.com/Amulet-Team/Amulet-Compiler-Version"
+license=("LicenseRef-Amulet-Team-License")
+arch=(any)
+pkgver=3.0.0
+pkgrel=1
+makedepends=(python-setuptools git python-wheel)
+depends=(python)
+source=(
+	"git+https://github.com/Amulet-Team/Amulet-Compiler-Version.git#tag=${pkgver}"
+)
+md5sums=('800ecc9747df95f65954b3ed1e298a96')
+
+function prepare() {
+	cd "${srcdir}/Amulet-Compiler-Version"
+	git submodule init
+	git submodule update
+}
+
+function build() {
+	cd "${srcdir}/Amulet-Compiler-Version"
+	python setup.py build
+}
+
+function package() {
+	cd "${srcdir}/Amulet-Compiler-Version"
+	python setup.py install --root="$pkgdir" --optimize=1
+}
