@@ -1,0 +1,21 @@
+From d7ebf00065357b537a8ae2673f7d161de3837197 Mon Sep 17 00:00:00 2001
+From: Nathan Goldbaum <nathan.goldbaum@gmail.com>
+Date: Tue, 30 Apr 2024 13:31:27 -0600
+Subject: [PATCH] TST: static types are now immortal in the default build too
+
+Backported to v1.26.x by Claudia Pellegrino <aur@cpellegrino.de>
+
+---
+--- a/numpy/core/tests/test_nditer.py
++++ b/numpy/core/tests/test_nditer.py
+@@ -67,7 +67,9 @@ def test_iter_refcount():
+     rc2_dt = sys.getrefcount(dt)
+     it2 = it.copy()
+     assert_(sys.getrefcount(a) > rc2_a)
+-    assert_(sys.getrefcount(dt) > rc2_dt)
++    if sys.version_info < (3, 13):
++        # np.dtype('f4') is immortal after Python 3.13
++        assert_(sys.getrefcount(dt) > rc2_dt)
+     it = None
+     assert_equal(sys.getrefcount(a), rc2_a)
+     assert_equal(sys.getrefcount(dt), rc2_dt)
