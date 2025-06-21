@@ -9,24 +9,24 @@ arch=(any)
 license=('CC-BY-4.0')
 
 url="https://github.com/amzxyz/rime_wanxiang"
-source=("${pkgver}.zip::${url}/releases/download/v${pkgver}/rime-wanxiang.zip")
-sha256sums=('1e6752cef96e86e8d2cdac8e9e8da53145c7878a516b7872b0207c9db1bf1f47')
+source=("${pkgver}.zip::${url}/releases/download/v${pkgver}/rime-wanxiang-base.zip")
+b2sums=('d438bf9600dcf19dba19eda1c2ae0367d59a7624b612e78803fa4e7b64371361cfcaed463bd3fe0668e6d6beef6577bdb80cfbfe63570d12c0fbb08b81bb662d')
 
 makedepends=("librime" "rime-prelude" "rime-essay" "sed")
 
 _schema_folder_name="万象拼音标准版"
 prepare() {
-    cd "${srcdir}/${_schema_folder_name}"
+    cd "${srcdir}"
 
     # 清理文件
-    rm squirrel.yaml weasel.yaml ./*.trime.yaml ./*.md custom_phrase.txt LICENSE
+    rm squirrel.yaml weasel.yaml ./*.trime.yaml ./*.md ./custom_phrase*.txt
     rm -r custom
 
     mv default.yaml wanxiang_suggestion.yaml
 }
 
 build() {
-    cd "${srcdir}/${_schema_folder_name}"
+    cd "${srcdir}"
 
     rm -rf build/*
 
@@ -47,7 +47,7 @@ package_rime-wanxiang-base() {
     depends=(lua librime rime-wanxiang-gram-zh-hans "rime-wanxiang-dict-cn=${pkgver}")
     optdepends=('libnotify: notification support in lua scripts')
 
-    cd "${srcdir}/${_schema_folder_name}"
+    cd "${srcdir}"
 
     for _f in *.db *.yaml; do
         [[ $_f == wanxiang.schema.yaml ]] && continue
@@ -119,7 +119,7 @@ _package() {
     local _schema=$1
     local _name=$2
 
-    cd "${srcdir}/${_schema_folder_name}"
+    cd "${srcdir}"
 
     local _cn_en_user_dict=en_dicts/"${_schema}"
     sed -Ei \
