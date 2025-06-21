@@ -9,5 +9,6 @@ update_on:
     use_latest_release: true
     include_prereleases: false
   - alias: "python"
-  - alias: "aur"
+  - source: "aur"
+    aur: "python-leveldb"
 build_prefix: extra-x86_64
