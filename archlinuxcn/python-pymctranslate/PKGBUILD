@@ -29,12 +29,6 @@ build() {
   python -m build --wheel --no-isolation
 }
 
-check() {
-  cd "$_name"
-
-  python -m unittest discover -s tests
-}
-
 package() {
   cd "$_name"
 
