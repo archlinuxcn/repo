@@ -8,7 +8,7 @@
 _pkgbase=vlc
 pkgname=(vlc-nox libvlc-nox)
 pkgver=3.0.21
-pkgrel=4
+pkgrel=5
 pkgdesc='Multi-platform MPEG, VCD/DVD, and DivX player (without GUI support)'
 url=https://www.videolan.org/vlc/
 arch=(x86_64)
@@ -116,11 +116,13 @@ source=(
   update-vlc-plugin-cache.hook
   taglib-2.patch
   libnfs6-mr-6527.patch
+  https://github.com/videolan/vlc/commit/8befcbfa.patch # Fix build with recent live-media
 )
 sha512sums=('cb1af76c8056648c331d7e6e0680d161ed1849eb635987504f45eae02531e9b432651034317fa7e02b0722905dfb9f0f5dad67b5924cc62edcaf0d173ac36aee'
             'b247510ffeadfd439a5dadd170c91900b6cdb05b5ca00d38b1a17c720ffe5a9f75a32e0cb1af5ebefdf1c23c5acc53513ed983a736e8fa30dd8fad237ef49dd3'
             'ea0d1e1dfed16dac8f9027eb55d987dee59630568b9744ceb42bfa134ea9295252d83574f3d793a76a5be3b02661c1731ed366003b6b55b2d7f02fde70586ff3'
-            'ea13dd8a1815af183064590d25eb9e652e81bd2d481d311bc4f841c32977205d1d3663d1c3e1c2fe642d546b5e6ab38d5fa6e3ea77808f76d138052900c19032')
+            'ea13dd8a1815af183064590d25eb9e652e81bd2d481d311bc4f841c32977205d1d3663d1c3e1c2fe642d546b5e6ab38d5fa6e3ea77808f76d138052900c19032'
+            'eae772959f3f48f6a8e0ccb27711cc3ce59314db49ad38ecb4e03f52782e6acabd1d5ab21a2a5c1b702d7e35218c305d2e8f3082c84000bd6d1c0e136d33178e')
 
 prepare() {
   cd "$srcdir/$_pkgbase-$pkgver"
