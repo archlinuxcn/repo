@@ -1,0 +1,31 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=python-amulet-io
+pkgdesc="A tiny C++ header-only binary reader and writer library"
+url="https://github.com/Amulet-Team/Amulet-IO"
+license=("LicenseRef-Amulet-Team-License")
+arch=(any)
+pkgver=1.0.0
+pkgrel=1
+makedepends=(python-setuptools git python-wheel cmake python-versioneer)
+depends=(python python-black pybind11)
+source=(
+	"git+https://github.com/Amulet-Team/Amulet-IO.git#tag=${pkgver}"
+)
+md5sums=('b41b1ac68d1bdd131c43bee5620ede12')
+
+function prepare() {
+	cd "${srcdir}/Amulet-IO"
+	git submodule init
+	git submodule update
+}
+
+function build() {
+	cd "${srcdir}/Amulet-IO"
+	python setup.py build
+}
+
+function package() {
+	cd "${srcdir}/Amulet-IO"
+	python setup.py install --root="$pkgdir" --optimize=1
+}
