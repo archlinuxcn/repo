@@ -8,6 +8,7 @@ post_build_script: |
 
 repo_depends:
   - python-portalocker
+  - python-leveldb
 
 update_on:
   - source: "github"
@@ -15,4 +16,4 @@ update_on:
     use_latest_release: true
     include_prereleases: false
   - alias: "python"
-build_prefix: extra-x86_64
+build_prefix: archlinuxcn-x86_64
