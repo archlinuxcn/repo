@@ -7,14 +7,13 @@ post_build_script: |
   update_aur_repo()
 
 repo_depends:
-  - python-mutf8
   - python-amulet-compiler-version
   - python-amulet_pybind11_extensions
 
 update_on:
   - source: "github"
-    github: "Amulet-Team/Amulet-NBT"
+    github: "Amulet-Team/Amulet-zlib"
     use_latest_release: true
-    include_prereleases: false
+    include_prereleases: true
   - alias: "python"
 build_prefix: archlinuxcn-x86_64
