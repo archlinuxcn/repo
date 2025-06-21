@@ -1,0 +1,31 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=python-amulet_pybind11_extensions
+pkgdesc="Some useful extensions to pybind11"
+url="https://github.com/Amulet-Team/Amulet-pybind11-extensions"
+license=("LicenseRef-Amulet-Team-License")
+arch=(any)
+pkgver=1.0.0.1
+pkgrel=1
+makedepends=(python-setuptools git python-wheel python-amulet-compiler-version python-packaging python-versioneer)
+depends=(python pybind11 python-black)
+source=(
+	"git+https://github.com/Amulet-Team/Amulet-pybind11-extensions.git#tag=${pkgver}"
+)
+md5sums=('8b8c2664dffbca9f8326f1298535fe46')
+
+function prepare() {
+	cd "${srcdir}/Amulet-pybind11-extensions"
+	git submodule init
+	git submodule update
+}
+
+function build() {
+	cd "${srcdir}/Amulet-pybind11-extensions"
+	python setup.py build
+}
+
+function package() {
+	cd "${srcdir}/Amulet-pybind11-extensions"
+	python setup.py install --root="$pkgdir" --optimize=1
+}
