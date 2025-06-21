@@ -1,0 +1,13 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+repo_depends:
+  - python-amulet-nbt
+
+update_on:
+  - source: "aur"
+    aur: "python-pymctranslate"
+  - alias: "python"
+build_prefix: archlinuxcn-x86_64
