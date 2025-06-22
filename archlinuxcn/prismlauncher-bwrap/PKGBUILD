@@ -52,33 +52,31 @@ b2sums=('57bb4391e8b84265e42b08545bb0cf64046915fca2a80a7f40923f6abf605d9bdd7efef
         'e996cbba63dec2f49b5fcf35c9b78a2ca367c08cda6240847b6b6c1ff71b8fdff5734581e887021c08ee3a44f66e9f81b4a6cade3f3ac6e8f60ab1c70b766772'
         '417edca8819febc409431dee12ccb1d9466a274ce28d8bde554e6f28bfe352372ee0d88c5b53ebf95c9d13d0f91e9ff3b363980687fb04d0adf010fa0f8a4e26')
 
-build() {
-  cd PrismLauncher-$pkgver
+function build() {
+	cd PrismLauncher
+	export PATH="/usr/lib/jvm/java-17-openjdk/bin/:$PATH"
 
-  export PATH="/usr/lib/jvm/java-17-openjdk/bin/:$PATH"
-
-  cmake -DCMAKE_BUILD_TYPE= \
-    -DCMAKE_INSTALL_PREFIX="/usr" \
-    -DLauncher_BUILD_PLATFORM="archlinux" \
-    -DLauncher_QT_VERSION_MAJOR="6" \
-    -DLauncher_ENABLE_JAVA_DOWNLOADER=OFF \
-    -Bbuild -S.
-  cmake --build build
+	cmake -DCMAKE_BUILD_TYPE= \
+		-DCMAKE_INSTALL_PREFIX="/usr" \
+		-DLauncher_BUILD_PLATFORM="archlinux" \
+		-DLauncher_QT_VERSION_MAJOR="6" \
+		-DLauncher_ENABLE_JAVA_DOWNLOADER=OFF \
+		-Bbuild -S.
+		cmake --build build
 }
 
 check() {
-  cd PrismLauncher-$pkgver/build
-  ctest .
+	cd PrismLauncher/build
+	ctest .
 }
 
 package() {
-  # licenses
-  install -Dm644 lionshead.license -t "$pkgdir"/usr/share/licenses/$pkgname/
-  install -Dm644 batch.license -t "$pkgdir"/usr/share/licenses/$pkgname/
-  install -Dm644 mdi.license -t "$pkgdir"/usr/share/licenses/$pkgname/
-
-  cd PrismLauncher-$pkgver/build
-  DESTDIR="$pkgdir" cmake --install .
+	# licenses
+	install -Dm644 lionshead.license -t "$pkgdir"/usr/share/licenses/$pkgname/
+	install -Dm644 batch.license -t "$pkgdir"/usr/share/licenses/$pkgname/
+	install -Dm644 mdi.license -t "$pkgdir"/usr/share/licenses/$pkgname/
+	cd PrismLauncher/build
+	DESTDIR="$pkgdir" cmake --install .
 	install -Dm755 \
 		"${srcdir}/start.sh" \
 		"${pkgdir}/usr/bin/prismlauncher-bwrap"
