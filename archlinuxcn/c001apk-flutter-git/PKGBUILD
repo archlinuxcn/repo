@@ -10,6 +10,7 @@ url="https://github.com/Integral-Tech/${_pkgname}"
 license=('AGPL-3.0-or-later')
 depends=('gtk3')
 makedepends=('git' 'fvm' 'clang' 'cmake' 'ninja' 'imagemagick')
+optdepends=('kdialog: support for native dialogs in Plasma')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+${url}.git")
