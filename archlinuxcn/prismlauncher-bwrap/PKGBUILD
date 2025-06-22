@@ -79,11 +79,17 @@ package() {
 
   cd PrismLauncher-$pkgver/build
   DESTDIR="$pkgdir" cmake --install .
-  install -Dm755 "${srcdir}/start.sh" "${pkgdir}/usr/bin/prismlauncher-bwrap"
-  install -Dm755 "${srcdir}/portable-config" "${pkgdir}/usr/lib/portable/info/org.prismlauncher.PrismLauncher/config"
-  desktop-file-edit --set-key=Exec --set-value='/usr/bin/prismlauncher-bwrap %U' \
-    "${pkgdir}/usr/share/applications/org.prismlauncher.PrismLauncher.desktop"
-  install -d "${pkgdir}/usr/lib/prismlauncher-bwrap/prismlauncher"
-  mv "${pkgdir}/usr/bin/prismlauncher" "${pkgdir}/usr/lib/prismlauncher-bwrap/prismlauncher"
-  ln -srf "${pkgdir}/usr/bin/prismlauncher-bwrap" "${pkgdir}/usr/bin/prismlauncher"
+	install -Dm755 \
+		"${srcdir}/start.sh" \
+		"${pkgdir}/usr/bin/prismlauncher-bwrap"
+	install -Dm755 \
+		"${srcdir}/portable-config" \
+		"${pkgdir}/usr/lib/portable/info/org.prismlauncher.PrismLauncher/config"
+	desktop-file-edit \
+		--set-key=Exec \
+		--set-value='env _portableConfig=org.prismlauncher.PrismLauncher portable -- %U' \
+		"${pkgdir}/usr/share/applications/org.prismlauncher.PrismLauncher.desktop"
+	install -d "${pkgdir}/usr/lib/prismlauncher-bwrap/prismlauncher"
+	mv "${pkgdir}/usr/bin/prismlauncher" "${pkgdir}/usr/lib/prismlauncher-bwrap/prismlauncher"
+	ln -srf "${pkgdir}/usr/bin/prismlauncher-bwrap" "${pkgdir}/usr/bin/prismlauncher"
 }
