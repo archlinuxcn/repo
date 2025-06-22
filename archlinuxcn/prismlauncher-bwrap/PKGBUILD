@@ -56,13 +56,13 @@ function build() {
 	cd PrismLauncher
 	export PATH="/usr/lib/jvm/java-17-openjdk/bin/:$PATH"
 
-	cmake -DCMAKE_BUILD_TYPE= \
+	cmake3 -DCMAKE_BUILD_TYPE= \
 		-DCMAKE_INSTALL_PREFIX="/usr" \
 		-DLauncher_BUILD_PLATFORM="archlinux" \
 		-DLauncher_QT_VERSION_MAJOR="6" \
 		-DLauncher_ENABLE_JAVA_DOWNLOADER=OFF \
 		-Bbuild -S.
-		cmake --build build
+	cmake3 --build build
 }
 
 check() {
@@ -76,7 +76,7 @@ package() {
 	install -Dm644 batch.license -t "$pkgdir"/usr/share/licenses/$pkgname/
 	install -Dm644 mdi.license -t "$pkgdir"/usr/share/licenses/$pkgname/
 	cd PrismLauncher/build
-	DESTDIR="$pkgdir" cmake --install .
+	DESTDIR="$pkgdir" cmake3 --install .
 	install -Dm755 \
 		"${srcdir}/start.sh" \
 		"${pkgdir}/usr/bin/prismlauncher-bwrap"
