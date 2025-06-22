@@ -1,11 +1,20 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=fotema
-pkgver=1.20.0
-pkgrel=2
+pkgver=2.0.0
+pkgrel=1
 pkgdesc="Photo gallery for Linux"
 arch=('x86_64')
 url="https://github.com/blissd/fotema"
-license=('CC0-1.0 AND CC-BY-2.0 AND CC-BY-4.0 AND CC-BY-NC-SA-4.0 AND CC-BY-SA-4.0 AND GFDL-1.3-or-later AND GPL-3.0-or-later AND MIT')
+license=(
+  'CC0-1.0'
+  'CC-BY-2.0'
+  'CC-BY-4.0'
+  'CC-BY-NC-SA-4.0'
+  'CC-BY-SA-4.0'
+  'GFDL-1.3-or-later'
+  'GPL-3.0-or-later'
+  'MIT'
+)
 depends=("openmpi"
   'ffmpeg'
   'glycin'
@@ -14,6 +23,7 @@ depends=("openmpi"
   'libshumate'
   'onnxruntime'
   'opencv'
+  'xdg-desktop-portal'
 )
 makedepends=(
   'cargo'
@@ -22,7 +32,7 @@ makedepends=(
   'mold'
 )
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('52f018dcd01b690745f5cb8d039cb01ea356482823cf83961469e6f532bfcb9e')
+sha256sums=('f05a7b2941d135a34427a7cea17c7f1c22685f674ced4ee2f69c329b56d277ab')
 
 prepare() {
   cd "$pkgname-$pkgver"
