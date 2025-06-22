@@ -6,12 +6,12 @@
 # Contributor: Michael 'manveru' Fellinger <m.fellinger@gmail.com>
 # Contributor: Dave Pretty <david dot pretty at gmail dot com>
 
-# anki -> git rev-parse --short=8 $pkgver
+# anki -> git rev-parse $pkgver^{}
 # ftl -> git submodule
 declare -gA _tags=(
  [ftl_core]="0fe0162f4a18e8ef2fbac1d9a33af8e38cf7260e"
  [ftl_desktop]="17216b03db7249600542e388bd4ea124478400e5"
- [anki]="a60e2b3b"
+ [anki]="98253c81"
 )
 
 declare -gA _caches=(
@@ -20,7 +20,7 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=25.02.6
+pkgver=25.02.7
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
@@ -79,7 +79,7 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
 )
 
 
-sha256sums=(943cb8a8aaa67864342ee1e00cecec01ca26d2a6ff2d7f6c295c5e6f800e18ca
+sha256sums=(d3df8eef62fe6a6639fb6d27aec6ff2b91e5f18ea2599855d9adcf9cef253132
             da57df3665ee094aa7d3566cd45a126f95b6cffef662a4c6f1959ea9e5b3f135
             041684b0e23d041d4f7a0c21785371e3344c6b67824b1683318e3e70f08523bc
             cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff
