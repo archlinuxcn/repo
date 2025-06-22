@@ -5,7 +5,7 @@
 # This PKGBUILD is base on the AUR repo waydroid, by Danct12 <danct12@disroot.org> and Bart Ribbers <bribbers@disroot.org>
 
 pkgname='waydroid'
-pkgver=1.5.2
+pkgver=1.5.3
 pkgrel=1
 pkgdesc='A container-based approach to boot a full Android system on a regular Linux system'
 arch=('any')
@@ -16,7 +16,7 @@ optdepends=('waydroid-image: Android images for use with waydroid'
             'waydroid-image-gapps: Android images for use with waydroid, including gapps'
             'python-pyclip: Share clipboard with container')
 source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('80be97409d73c3dc649482ff9b8a9b3c316f7cfa7560c87e26a2b68a0efdcaa34c070825334789b6830e3ee0a88eb0967e9101575e4eadc4a39bda099c0f7651')
+sha512sums=('58d5a9384aa9755368a79992f69a863805b231f1f2f85c35eb46cc4a07b283b666a8d75cdc7651d28eee97001b81a4dc5353e7c3f32e301b19eab532083b9a29')
 
 prepare() {
   sed -i '1s/env //' "${srcdir}/${pkgname}-${pkgver}/waydroid.py"
