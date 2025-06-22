@@ -1,0 +1,26 @@
+--- SheepShaver/src/Unix/Linux/NetDriver/sheep_net.c 2025-06-22 23:55:15.258294050 +0800
++++ SheepShaver/src/Unix/Linux/NetDriver/sheep_net.c 2025-06-22 23:55:15.258294050 +0800
+@@ -221,7 +221,7 @@
+  *  Initialize module
+  */
+ 
+-int init_module(void)
++int LinuxDriverInit(void)
+ {
+ 	int ret;
+ 
+@@ -236,7 +236,7 @@
+  *  Deinitialize module
+  */
+ 
+-void cleanup_module(void)
++void LinuxDriverExit(void)
+ {
+ 	/* Unregister driver */
+ 	misc_deregister(&sheep_net_device);
+@@ -809,3 +809,5 @@
+ }
+ 
+ MODULE_LICENSE("GPL");
++module_init(LinuxDriverInit);
++module_exit(LinuxDriverExit);

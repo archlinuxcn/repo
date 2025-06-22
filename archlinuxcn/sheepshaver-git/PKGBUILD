@@ -2,8 +2,8 @@
 
 pkgbase=sheepshaver-git
 pkgname=(basiliskii-git sheepshaver-git sheepnet-dkms-git)
-epoch=3
-pkgver=r3457.gf39b6e8e
+epoch=4
+pkgver=r3551.g55ac71ba
 pkgrel=1
 pkgdesc="An Open Source PowerMac and Classic Macintosh Emulator"
 arch=('x86_64')
@@ -16,14 +16,16 @@ source=('git+https://github.com/kanjitalk755/macemu'
         'SheepShaver.desktop'
         'SheepShaver.png'
         'BasiliskII.desktop'
-        'BasiliskII.png')
+        'BasiliskII.png'
+        'sheep_net.patch')
 makedepends=('git')
 sha256sums=('SKIP'
             'a4aa858b95d29906873693988d5db42d5a4da8aa94a72c79374f59fc488efd51'
             'fa5e3828b40dfa5196c4b801b9a6761f57dde47756734f37bdd3c8333eec5670'
             'b7f67b1f8424f3e0ffa1a5e57597f368c4c4f93ea1f871ec0a76700b7519b241'
             '435c68f045cff3a8e407a13bf6d25f81a045cb6477bf3d116ec7e83c0218668d'
-            '66635f63471e314fcc587d1a14b6caf87ed582ba80525e12462da0dba87eec60')
+            '66635f63471e314fcc587d1a14b6caf87ed582ba80525e12462da0dba87eec60'
+            '27e63a5d9a9d86b66ac7884b9ca2923b398deacb5c7f44758ea71c0d10d25a4b')
 
 pkgver() {
   cd macemu
@@ -31,7 +33,9 @@ pkgver() {
 }
 
 prepare() {
-  cd macemu/SheepShaver/src/Unix
+  cd macemu
+  patch -p0 -i ../sheep_net.patch
+  cd SheepShaver/src/Unix
   sed -i "s/#error \"You don't have ANSI C header files.\"//g" sysdeps.h 
 }
 
