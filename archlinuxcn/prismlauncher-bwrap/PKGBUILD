@@ -41,7 +41,7 @@ depends=(
 )
 makedepends=(cmake extra-cmake-modules git jdk17-openjdk scdoc ghc-filesystem gamemode desktop-file-utils)
 optdepends=('visualvm: Profiling support')
-source=("https://github.com/PrismLauncher/PrismLauncher/releases/download/$pkgver/PrismLauncher-$pkgver.tar.gz"
+source=("git+https://github.com/PrismLauncher/PrismLauncher#tag=${pkgver}"
         {lionshead,batch,mdi}.license
         portable-config
         start.sh)
