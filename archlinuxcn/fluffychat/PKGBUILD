@@ -5,14 +5,15 @@
 # https://fluffychat.im/
 # https://github.com/krille-chan/fluffychat
 
-: ${_fvm_version:=3.32.1}
+: ${_fvm_version=}
 
 : ${FVM_CACHE_PATH:=$SRCDEST/fvm-cache}
-export FVM_CACHE_PATH
+: ${RUSTUP_TOOLCHAIN:=nightly}
+export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=1.27.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
@@ -35,18 +36,39 @@ makedepends=(
   'llvm'
   'ninja'
   'patchelf'
+  'rustup'
 )
 optdepends=(
   'zenity: for flutter_file_picker'
   'kdialog: for flutter_file_picker'
 )
 
-options=('!strip' '!debug')
+options=('!lto' '!strip' '!debug')
 
 _pkgsrc="$_pkgname-$pkgver"
 _pkgext="tar.gz"
-source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
-sha256sums=('b673eb2559853d2b4a4b52e74be212c50169a12a22e05d62dfadb3fd7ed15965')
+source=(
+  "$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext"
+  '0000-fix-wayland-gtk-csd.patch'
+)
+sha256sums=(
+  'f49e212844f2b983a104510fb370fbb1fafccda39457bb62b62c3bad76136fca'
+  '0699d9eca413975cf8c99fcc906092cb4f546c9be139b6fcb3995e607eac1763'
+)
+
+prepare() {
+  cd "$_pkgsrc"
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    src="${src%.zst}"
+    if [[ $src == *.patch ]]; then
+      printf '\n\nApplying patch: %s\n' "$src"
+      patch -Np1 -F100 -i "${srcdir:?}/$src"
+    fi
+  done
+}
 
 build() {
   # fix incompatible C(XX)FLAGS on Arch Linux on ARM
@@ -68,6 +90,8 @@ build() {
     CFLAGS="${_cflags[@]}"
     CXXFLAGS="${_cxxflags[@]}"
   fi
+
+  : ${_fvm_version:=$(grep -Pom1 '(?<=FLUTTER_VERSION=)[0-9\.]+' "$_pkgsrc/.github/workflows/versions.env")}
 
   cd "$_pkgsrc"
   fvm install $_fvm_version
