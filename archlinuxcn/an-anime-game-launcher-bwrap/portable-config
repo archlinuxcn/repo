@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+
+# This is your Application ID, avoid conflict
+appID="moe.launcher.an-anime-game-launcher"
+
+# This is a friendly name of an application. It should only contain ASCII characters and not spaces.
+friendlyName="An_Anime_Game_Launcher"
+
+# This is the state directory of your application, which is located under "XDG_DATA_HOME"
+stateDirectory="AAGL_Data"
+
+# This is the target executable to launch
+launchTarget="an-anime-game-launcher"
+
+# Takes boolean value. When enabled, do not process XAuth files and forces wayland input method. Generally this should be true when possible.
+waylandOnly="false"
+
+# Takes boolean value.
+bindInputDevices="true"
+
+# Expose all GPUs. Takes boolean value, usually used in games.
+gameMode="true"
+
+#VK_LOADER_DRIVERS_SELECT=""
+
+# Below you can set envs that will be imported into the application sandbox
