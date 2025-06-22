@@ -1,0 +1,14 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+update_on:
+  - source: "github"
+    github: "rjpower/py-leveldb"
+    use_latest_release: true
+    include_prereleases: false
+  - alias: "python"
+  - source: "aur"
+    aur: "python-leveldb"
+build_prefix: extra-x86_64

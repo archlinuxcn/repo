@@ -1,0 +1,23 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+repo_depends:
+  - python-mutf8
+  - python-amulet-compiler-version
+  - python-amulet_pybind11_extensions
+  - python-amulet-zlib
+  - python-amulet-compiler-target
+  - python-amulet-io
+
+update_on:
+  - source: "github"
+    github: "Amulet-Team/Amulet-NBT"
+    use_latest_release: true
+    include_prereleases: false
+  - alias: "python"
+build_prefix: archlinuxcn-x86_64
