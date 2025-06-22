@@ -1,0 +1,38 @@
+# Maintainer: steffeno <steffeno dash etc at protonmail dot com>
+_pkgname=ly
+pkgname="$_pkgname"-git
+pkgver=1.0.0.r210.g2df2c44
+pkgrel=1
+pkgdesc="TUI display manager"
+arch=(i686 x86_64 aarch64)
+url="https://codeberg.org/fairyglade/ly.git"
+license=('WTFPL')
+depends=(pam glibc libxcb)
+makedepends=(git zig)
+optdepends=('xorg-xauth: for X server sessions')
+conflicts=(ly)
+provides=(ly)
+backup=(
+    etc/$pkgname/{config.ini,setup.sh}
+    etc/pam.d/ly
+)
+source=("git+$url")
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$_pkgname"
+    git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "$_pkgname"
+    zig build -Ddest_directory="$pkgdir" -Dname="ly-dm" -Dcpu=baseline -Doptimize=ReleaseSafe
+}
+
+package() {
+    cd "$_pkgname"
+    zig build -Ddest_directory="$pkgdir" -Dname="ly-dm" -Dcpu=baseline -Doptimize=ReleaseSafe installexe
+
+    install -Dm644 license.md "$pkgdir/usr/share/licenses/$pkgname/WTFPL"
+}
+
