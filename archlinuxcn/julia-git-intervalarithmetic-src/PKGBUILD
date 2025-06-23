@@ -1,6 +1,6 @@
 pkgname=julia-git-intervalarithmetic-src
-pkgver=0.22.35
-_commit=38e1cd614edc8e188027bc7c753a1f83567e03ae
+pkgver=0.22.36
+_commit=ad85dab23d76c5399369fdd71ee10f2416cbb5ce
 pkgrel=1
 pkgdesc="IntervalArithmetic.jl"
 url="https://github.com/JuliaIntervals/IntervalArithmetic.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIntervals/IntervalArithmetic.jl.git#commit=$_commit")
-sha256sums=('bc64cd6c574aaee5989a3c89a7e560abdb13236b05a072a7441efcc7c4a06db0')
+sha256sums=('aec63764b192f1f67f2bd6546763b9c59e1da8a834b82b20d49f3446baac733b')
 
 package() {
   cd IntervalArithmetic.jl
