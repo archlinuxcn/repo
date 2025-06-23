@@ -26,8 +26,8 @@ build() {
   # CFLAGS etc are normally written into the wrapper compilers.  This
   # gives surprising results, e.g. when the user wants to compile their
   # program without optimization.
-  export MPICHLIB_CFLAGS="${CFLAGS}";      unset CFLAGS
-  export MPICHLIB_CXXFLAGS="${CXXFLAGS}";  unset CXXFLAGS
+  export MPICHLIB_CFLAGS="${CFLAGS} -Wno-incompatible-pointer-types";      unset CFLAGS
+  export MPICHLIB_CXXFLAGS="${CXXFLAGS} -Wno-incompatible-pointer-types";  unset CXXFLAGS
   export MPICHLIB_CPPFLAGS="${CPPFLAGS}";  unset CPPFLAGS
   export MPICHLIB_FFLAGS="${FFLAGS}";      unset FFLAGS
   export MPICHLIB_FCFLAGS="${FCFLAGS}";    unset FCFLAGS

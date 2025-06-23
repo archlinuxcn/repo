@@ -3,8 +3,8 @@
 # Contributor: George Eleftheriou <eleftg>
 
 pkgname=mpich
-pkgver=4.3.0
-pkgrel=1
+pkgver=4.3.1
+pkgrel=0
 pkgdesc="An improved implementation of the Message Passing Interface."
 url="https://mpich.org"
 arch=(aarch64 armv7h x86_64)
@@ -26,8 +26,8 @@ build() {
   # CFLAGS etc are normally written into the wrapper compilers.  This
   # gives surprising results, e.g. when the user wants to compile their
   # program without optimization.
-  export MPICHLIB_CFLAGS="${CFLAGS}";      unset CFLAGS
-  export MPICHLIB_CXXFLAGS="${CXXFLAGS}";  unset CXXFLAGS
+  export MPICHLIB_CFLAGS="${CFLAGS} -Wno-incompatible-pointer-types";      unset CFLAGS
+  export MPICHLIB_CXXFLAGS="${CXXFLAGS} -Wno-incompatible-pointer-types";  unset CXXFLAGS
   export MPICHLIB_CPPFLAGS="${CPPFLAGS}";  unset CPPFLAGS
   export MPICHLIB_FFLAGS="${FFLAGS}";      unset FFLAGS
   export MPICHLIB_FCFLAGS="${FCFLAGS}";    unset FCFLAGS
