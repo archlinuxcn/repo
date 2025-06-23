@@ -12,6 +12,8 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('arch='):
       line = 'arch=(aarch64 x86_64)'
+    if line.startswith('makedepends='):
+      line = line.replace(' cuda', '')
     print(line)
 
 def post_build():
