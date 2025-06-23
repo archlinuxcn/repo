@@ -3,8 +3,8 @@
 
 pkgbase=seabios
 pkgname=(seabios seabios-docs)
-pkgver=1.16.3
-pkgrel=2
+pkgver=1.17.0
+pkgrel=1
 pkgdesc="Open-source legacy BIOS implementation"
 arch=(aarch64) # Avoid conflicting with the official package in the x86 repo
 url="https://www.seabios.org/SeaBIOS"
@@ -16,8 +16,8 @@ license=(
   LGPL-3.0-only
 )
 makedepends_aarch64=(x86_64-linux-gnu-gcc)
-makedepends=(acpica inetutils python)
-options=(!makeflags !strip)
+makedepends=(acpica python)
+options=(!makeflags !strip !debug)
 source=(
   seabios-$pkgver.tar.gz::https://github.com/coreboot/seabios/archive/rel-$pkgver.tar.gz
   config.coreboot
@@ -35,7 +35,7 @@ source=(
   config.vga-virtio
   config.vga-vmware
 )
-sha512sums=('5e6a930c694f5b88e982a56af9b9269f74823ef1641d173f42128687ec31da8772f7679e51466e6483c19b0a5ebd4475a543c026ff6c768db2979ce83b316cc4'
+sha512sums=('6f322eefaa3721e6b0c4b3b0e21dc2f9f4a1873f9853dd059769847bfcb8f4fc5da62abae2422d010f20978c2f5636456a0d363e45f85c11af518dc731636a4a'
             'dc77f693e2426a8a9b084f22d607d9bf6dfd0776cb86373a55d6e02f154f546b6fd616bb981783e914be51eb843311652a90b111fb573e32b3a8207d66aea218'
             'a2238723fbbb96184bb52b018633701aeb929bfae43f50659258dee854acaf4f1bdf2c201c65fb46d2712372d11ab345eac1c41068f82d6dcbef91ef9d1d39cd'
             '91719d73daf931a8f1d4efd06db4d581779875cadbb0458dd2bad8548d07f990ec37fabf590684fb4e9b64579125adb21d11f7a9187fcb0dfdad50764ca47cd6'
@@ -50,7 +50,7 @@ sha512sums=('5e6a930c694f5b88e982a56af9b9269f74823ef1641d173f42128687ec31da8772f
             '4a1b7fcc729d78dc8fd4e73d1cb6258ed9d49f8a91e6e00cc184e07c89a304f8d38ef5446d1c4ba5e8e929c82693d82c21526e42992ad6e1a008f39bb7c90448'
             '4d627be11d79f0b8bd814a49e608826375aba6b59a0189dcba9afe24a181347b92e6ab18e0d9199e2f7a78f8fb02f03dad84c63fbbc2ffe9af76777ef28c5f8a'
             '2a82f75ca6dbf48546ffa5a756136dd7085855d9411c3b37a74cc53281027b4916cf628dba784bcad915682d94705b5f8116f7a1b7ec6a99d9b2fb3fffba01c0')
-b2sums=('8eb6e1ee1d4de71104d9d94463e3bf694a2b3a367d64165bddedbb7dd0580be44b797e6e5f1b8a4b944aa29a0eb79a801979f3f8b132f5ef95ebf92fe49a0af5'
+b2sums=('9b8bea0166bd48f974125f168b2aa633fc45ad5dcddf99600d75f7cf986137b8a5665022b3860fabe8f1b3ba31b1adf2a6d069287c6a2d8cda924f2d27aeb1da'
         '9c581d4f109e23daec6933506d8e857d9f1075295e9a898dee09bcf621509bf016f542d77c36b1dd7a2b17394158999d3d18a628dfcf3c834a146d78329b8e53'
         '66f9593b5d5d9ef60836bdcf43a3fcc52e7797bd131653b526d3d6b07e77273590e83284fac256164348aa956600d0f493c1ab75f8b65587822b6496be135639'
         '415a160c17f578aaff2a0ee33240a98e1d8df2e8c6e9ae9c17b8455de06661d7a5491538b201cf066c0a5649171c1e6423cf97cbb5489a3a82a0ab327243868c'
