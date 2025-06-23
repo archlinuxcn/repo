@@ -1,0 +1,759 @@
+From 657332e8cf806c16988d9eca0e7af45094c7d3b7 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 22 Jun 2021 10:35:16 -0400
+Subject: [PATCH 3/7] Clear soname and hard code system lib path
+
+---
+ .../src/CompilerSupportLibraries_jll.jl       | 153 ++---------
+ stdlib/LibGit2_jll/src/LibGit2_jll.jl         |  38 +--
+ stdlib/LibSSH2_jll/src/LibSSH2_jll.jl         |  38 +--
+ stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl       |  38 +--
+ stdlib/OpenLibm_jll/src/OpenLibm_jll.jl       |  30 +--
+ stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl | 248 ++----------------
+ .../src/libblastrampoline_jll.jl              |  28 +-
+ 7 files changed, 67 insertions(+), 506 deletions(-)
+
+diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
+index 9a0729c50d..1a5c0e2855 100644
+--- a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
++++ b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
+@@ -10,127 +10,24 @@ export libgfortran, libstdcxx, libgomp, libatomic, libgcc_s
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
+-
+-libatomic_path::String = ""
+-const libatomic = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libatomic-1.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libatomic.1.dylib")
+-    elseif Sys.isfreebsd()
+-        BundledLazyLibraryPath("libatomic.so.3")
+-    elseif Sys.islinux()
+-        BundledLazyLibraryPath("libatomic.so.1")
+-    else
+-        error("CompilerSupportLibraries_jll: Library 'libatomic' is not available for $(Sys.KERNEL)")
+-    end
+-)
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
++const libatomic_path = "/usr/lib/libatomic.so"
++const libatomic = LazyLibrary(libatomic_path)
+ if Sys.iswindows() || Sys.isapple() || arch(HostPlatform()) ∈ ("x86_64", "i686")
+-    global libquadmath_path::String = ""
+-    const libquadmath = LazyLibrary(
+-        if Sys.iswindows()
+-            BundledLazyLibraryPath("libquadmath-0.dll")
+-        elseif Sys.isapple()
+-            BundledLazyLibraryPath("libquadmath.0.dylib")
+-        elseif (Sys.islinux() || Sys.isfreebsd()) && arch(HostPlatform()) ∈ ("x86_64", "i686")
+-            BundledLazyLibraryPath("libquadmath.so.0")
+-        else
+-            error("CompilerSupportLibraries_jll: Library 'libquadmath' is not available for $(Sys.KERNEL)")
+-        end
+-    )
+-end
+-
+-libgcc_s_path::String = ""
+-const libgcc_s = LazyLibrary(
+-    if Sys.iswindows()
+-        if arch(HostPlatform()) == "x86_64"
+-            BundledLazyLibraryPath("libgcc_s_seh-1.dll")
+-        else
+-            BundledLazyLibraryPath("libgcc_s_sjlj-1.dll")
+-        end
+-    elseif Sys.isapple()
+-        if arch(HostPlatform()) == "aarch64" || libgfortran_version(HostPlatform()) == v"5"
+-            BundledLazyLibraryPath("libgcc_s.1.1.dylib")
+-        else
+-            BundledLazyLibraryPath("libgcc_s.1.dylib")
+-        end
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libgcc_s.so.1")
+-    else
+-        error("CompilerSupportLibraries_jll: Library 'libgcc_s' is not available for $(Sys.KERNEL)")
+-    end
+-)
+-
+-libgfortran_path::String = ""
+-const libgfortran = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath(string("libgfortran-", libgfortran_version(HostPlatform()).major, ".dll"))
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath(string("libgfortran.", libgfortran_version(HostPlatform()).major, ".dylib"))
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath(string("libgfortran.so.", libgfortran_version(HostPlatform()).major))
+-    else
+-        error("CompilerSupportLibraries_jll: Library 'libgfortran' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = @static if @isdefined(libquadmath)
+-        LazyLibrary[libgcc_s, libquadmath]
+-    else
+-        LazyLibrary[libgcc_s]
+-    end
+-)
+-
+-libstdcxx_path::String = ""
+-const libstdcxx = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libstdc++-6.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libstdc++.6.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libstdc++.so.6")
+-    else
+-        error("CompilerSupportLibraries_jll: Library 'libstdcxx' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = LazyLibrary[libgcc_s]
+-)
+-
+-libgomp_path::String = ""
+-const libgomp = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libgomp-1.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libgomp.1.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libgomp.so.1")
+-    else
+-        error("CompilerSupportLibraries_jll: Library 'libgomp' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows()
+-        LazyLibrary[libgcc_s]
+-    else
+-        LazyLibrary[]
+-    end
+-)
+-
+-# only define if isfile
+-let
+-    if Sys.iswindows() || Sys.isapple() || libc(HostPlatform()) != "musl"
+-        _libssp_path = if Sys.iswindows()
+-            BundledLazyLibraryPath("libssp-0.dll")
+-        elseif Sys.isapple()
+-            BundledLazyLibraryPath("libssp.0.dylib")
+-        elseif Sys.islinux() && libc(HostPlatform()) != "musl"
+-            BundledLazyLibraryPath("libssp.so.0")
+-        end
+-        if isfile(string(_libssp_path))
+-            global libssp_path::String = ""
+-            @eval const libssp = LazyLibrary($(_libssp_path))
+-        end
+-    end
++    const libquadmath_path = "/usr/lib/libquadmath.so"
++    const libquadmath = LazyLibrary(libquadmath_path)
+ end
++const libgcc_s_path = "/usr/lib/libgcc_s.so.1"
++const libgcc_s = LazyLibrary(libgcc_s_path)
++const libgfortran_path = "/usr/lib/libgfortran.so"
++const libgfortran = LazyLibrary(libgfortran_path)
++const libstdcxx_path = "/usr/lib/libstd++.so"
++const libstdcxx = LazyLibrary(libstdcxx_path)
++const libgomp_path = "/usr/lib/libgomp.so"
++const libgomp = LazyLibrary(libgomp_path)
+ 
+ # Conform to LazyJLLWrappers API
+ function eager_mode()
+@@ -142,31 +39,11 @@ function eager_mode()
+     if @isdefined libquadmath
+         dlopen(libquadmath)
+     end
+-    if @isdefined libssp
+-        dlopen(libssp)
+-    end
+     dlopen(libgfortran)
+     dlopen(libstdcxx)
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libatomic_path = string(libatomic.path)
+-    global libgcc_s_path = string(libgcc_s.path)
+-    global libgomp_path = string(libgomp.path)
+-    if @isdefined libquadmath_path
+-        global libquadmath_path = string(libquadmath.path)
+-    end
+-    if @isdefined libssp_path
+-        global libssp_path = string(libssp.path)
+-    end
+-    global libgfortran_path = string(libgfortran.path)
+-    global libstdcxx_path = string(libstdcxx.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libgcc_s_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
+index 350ed85a50..6b44a76481 100644
+--- a/stdlib/LibGit2_jll/src/LibGit2_jll.jl
++++ b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
+@@ -16,33 +16,12 @@ export libgit2
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libgit2_path::String = ""
+-const libgit2 = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libgit2.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libgit2.1.9.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libgit2.so.1.9")
+-    else
+-        error("LibGit2_jll: Library 'libgit2' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows()
+-        if Sys.WORD_SIZE == 32
+-            LazyLibrary[libssh2, libgcc_s, libpcre2_8, libz]
+-        else
+-            LazyLibrary[libssh2, libpcre2_8, libz]
+-        end
+-    elseif Sys.isfreebsd() || Sys.islinux()
+-        LazyLibrary[libssh2, libssl, libcrypto, libpcre2_8, libz]
+-    else
+-        LazyLibrary[libssh2, libpcre2_8, libz]
+-    end
+-)
++const libgit2_path = "/usr/lib/libgit2.so"
++const libgit2 = LazyLibrary(libgit2_path)
+ 
+ function eager_mode()
+     LibSSH2_jll.eager_mode()
+@@ -56,13 +35,6 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libgit2_path = string(libgit2.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libgit2_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
+index 6c273bbdec..c43c228e66 100644
+--- a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
++++ b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
+@@ -19,33 +19,12 @@ export libssh2
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libssh2_path::String = ""
+-const libssh2 = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libssh2.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libssh2.1.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libssh2.so.1")
+-    else
+-        error("LibSSH2_jll: Library 'libssh2' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows()
+-        if Sys.WORD_SIZE == 32
+-            LazyLibrary[libgcc_s]
+-        else
+-            LazyLibrary[]
+-        end
+-    elseif Sys.islinux()
+-        LazyLibrary[libcrypto]
+-    elseif Sys.isfreebsd() || Sys.isapple()
+-        LazyLibrary[libz, libcrypto]
+-    end
+-)
++const libssh2_path = "/usr/lib/libssh.so"
++const libssh2 = LazyLibrary(libssh2_path)
+ 
+ function eager_mode()
+     @static if @isdefined Zlib_jll
+@@ -61,13 +40,6 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libssh2_path = string(libssh2.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libssh2_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl b/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl
+index 238ad459a2..8849b45a89 100644
+--- a/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl
++++ b/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl
+@@ -10,9 +10,9 @@ export libopenblas
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+ 
+ if Base.USE_BLAS64
+@@ -21,30 +21,8 @@ else
+     const libsuffix = ""
+ end
+ 
+-libopenblas_path::String = ""
+-const libopenblas = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath(string("libopenblas", libsuffix, ".dll"))
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath(string("libopenblas", libsuffix, ".dylib"))
+-    else
+-        BundledLazyLibraryPath(string("libopenblas", libsuffix, ".so"))
+-    end,
+-    dependencies = if Sys.iswindows()
+-        LazyLibrary[libgfortran, libgcc_s]
+-    elseif Sys.isapple()
+-        deps = LazyLibrary[libgfortran]
+-        if isdefined(CompilerSupportLibraries_jll, :libquadmath)
+-            push!(deps, CompilerSupportLibraries_jll.libquadmath)
+-        end
+-        if Sys.ARCH != :aarch64
+-            push!(deps, CompilerSupportLibraries_jll.libgcc_s)
+-        end
+-        deps
+-    else
+-        LazyLibrary[libgfortran]
+-    end
+-)
++const libopenblas_path = "/usr/lib/libopenblas64_.so"
++const libopenblas = LazyLibrary(libopenblas_path)
+ 
+ # Conform to LazyJLLWrappers API
+ function eager_mode()
+@@ -54,7 +32,6 @@ end
+ is_available() = true
+ 
+ function __init__()
+-    global libopenblas_path = string(libopenblas.path)
+     # make sure OpenBLAS does not set CPU affinity (#1070, #9639)
+     if !(haskey(ENV, "OPENBLAS_MAIN_FREE"))
+         ENV["OPENBLAS_MAIN_FREE"] = "1"
+@@ -70,11 +47,6 @@ function __init__()
+         # to the true value in its `__init__()` function.
+         ENV["OPENBLAS_DEFAULT_NUM_THREADS"] = "1"
+     end
+-
+-    global libopenblas_path = string(libopenblas.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libopenblas_path)
+-    push!(LIBPATH_list, LIBPATH[])
+ end
+ 
+ end  # module OpenBLAS_jll
+diff --git a/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl b/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
+index 264dbbf9af..c315f5d8d3 100644
+--- a/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
++++ b/stdlib/OpenLibm_jll/src/OpenLibm_jll.jl
+@@ -12,25 +12,12 @@ export libopenlibm
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libopenlibm_path::String = ""
+-const libopenlibm = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libopenlibm.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libopenlibm.4.dylib")
+-    else
+-        BundledLazyLibraryPath("libopenlibm.so.4")
+-    end,
+-    dependencies = if Sys.iswindows()
+-        LazyLibrary[libgcc_s]
+-    else
+-        LazyLibrary[]
+-    end
+-)
++const libopenlibm_path = "/usr/lib/libopenlibm.so"
++const libopenlibm = LazyLibrary(libopenlibm_path)
+ 
+ function eager_mode()
+     dlopen(libopenlibm)
+@@ -40,11 +27,4 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libopenlibm_path = string(libopenlibm.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libopenlibm_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ end  # module OpenLibm_jll
+diff --git a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
+index 1dcb2d24e4..abc5249079 100644
+--- a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
++++ b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
+@@ -14,216 +14,45 @@ export libamd, libbtf, libcamd, libccolamd, libcholmod, libcolamd, libklu, libld
+ # Man I can't wait until these are automatically handled by an in-Base JLLWrappers clone.
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libsuitesparseconfig_path::String = ""
+-const libsuitesparseconfig = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libsuitesparseconfig.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libsuitesparseconfig.7.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libsuitesparseconfig.so.7")
+-    else
+-        error("SuiteSparse_jll: Library 'libsuitesparseconfig' is not available for $(Sys.KERNEL)")
+-    end
+-)
++const libsuitesparseconfig_path = "/usr/lib/libsuitesparseconfig.so"
++const libsuitesparseconfig = LazyLibrary(libsuitesparseconfig_path)
+ 
+-libldl_path::String = ""
+-const libldl = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libldl.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libldl.3.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libldl.so.3")
+-    else
+-        error("SuiteSparse_jll: Library 'libldl' is not available for $(Sys.KERNEL)")
+-    end
+-)
++const libldl_path = "/usr/lib/libldl.so"
++const libldl = LazyLibrary(libldl_path)
+ 
+-libbtf_path::String = ""
+-const libbtf = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libbtf.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libbtf.2.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libbtf.so.2")
+-    else
+-        error("SuiteSparse_jll: Library 'libbtf' is not available for $(Sys.KERNEL)")
+-    end
+-)
++const libbtf_path = "/usr/lib/libbtf.so"
++const libbtf = LazyLibrary(libbtf_path)
+ 
+-libcolamd_path::String = ""
+-const libcolamd = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libcolamd.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libcolamd.3.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libcolamd.so.3")
+-    else
+-        error("SuiteSparse_jll: Library 'libcolamd' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libsuitesparseconfig, libgcc_s]
+-    else
+-        LazyLibrary[libsuitesparseconfig]
+-    end
+-)
++const libcolamd_path = "/usr/lib/libcolamd.so"
++const libcolamd = LazyLibrary(libcolamd_path)
+ 
+-libamd_path::String = ""
+-const libamd = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libamd.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libamd.3.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libamd.so.3")
+-    else
+-        error("SuiteSparse_jll: Library 'libamd' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libsuitesparseconfig, libgcc_s]
+-    else
+-        LazyLibrary[libsuitesparseconfig]
+-    end
+-)
++const libamd_path = "/usr/lib/libamd.so"
++const libamd = LazyLibrary(libamd_path)
+ 
+-libcamd_path::String = ""
+-const libcamd = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libcamd.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libcamd.3.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libcamd.so.3")
+-    else
+-        error("SuiteSparse_jll: Library 'libcamd' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libsuitesparseconfig, libgcc_s]
+-    else
+-        LazyLibrary[libsuitesparseconfig]
+-    end
+-)
++const libcamd_path = "/usr/lib/libcamd.so"
++const libcamd = LazyLibrary(libcamd_path)
+ 
+-libccolamd_path::String = ""
+-const libccolamd = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libccolamd.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libccolamd.3.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libccolamd.so.3")
+-    else
+-        error("SuiteSparse_jll: Library 'libccolamd' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libsuitesparseconfig, libgcc_s]
+-    else
+-        LazyLibrary[libsuitesparseconfig]
+-    end
+-)
++const libccolamd_path = "/usr/lib/libccolamd.so"
++const libccolamd = LazyLibrary(libccolamd_path)
+ 
+-librbio_path::String = ""
+-const librbio = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("librbio.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("librbio.4.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("librbio.so.4")
+-    else
+-        error("SuiteSparse_jll: Library 'librbio' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libsuitesparseconfig, libgcc_s]
+-    else
+-        LazyLibrary[libsuitesparseconfig]
+-    end
+-)
++const librbio_path = "/usr/lib/librbio.so"
++const librbio = LazyLibrary(librbio_path)
+ 
+-libcholmod_path::String = ""
+-const libcholmod = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libcholmod.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libcholmod.5.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libcholmod.so.5")
+-    else
+-        error("SuiteSparse_jll: Library 'libcholmod' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows()
+-        LazyLibrary[
+-            libsuitesparseconfig, libamd, libcamd, libccolamd, libcolamd, libblastrampoline, libgcc_s
+-        ]
+-    else
+-        LazyLibrary[
+-            libsuitesparseconfig, libamd, libcamd, libccolamd, libcolamd, libblastrampoline
+-        ]
+-    end
+-)
++const libcholmod_path = "/usr/lib/libcholmod.so"
++const libcholmod = LazyLibrary(libcholmod_path)
+ 
+-libklu_path::String = ""
+-const libklu = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libklu.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libklu.2.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libklu.so.2")
+-    else
+-        error("SuiteSparse_jll: Library 'libklu' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libsuitesparseconfig, libamd, libcolamd, libbtf, libgcc_s]
+-    else
+-        LazyLibrary[libsuitesparseconfig, libamd, libcolamd, libbtf]
+-    end
+-)
++const libklu_path = "/usr/lib/libklu.so"
++const libklu = LazyLibrary(libklu_path)
+ 
+-libspqr_path::String = ""
+-const libspqr = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libspqr.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libspqr.4.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libspqr.so.4")
+-    else
+-        error("SuiteSparse_jll: Library 'libspqr' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows()
+-        LazyLibrary[libsuitesparseconfig, libcholmod, libblastrampoline, libgcc_s]
+-    elseif Sys.isfreebsd() || Sys.isapple()
+-        LazyLibrary[libsuitesparseconfig, libcholmod, libblastrampoline]
+-    else
+-        LazyLibrary[libsuitesparseconfig, libcholmod, libblastrampoline, libstdcxx, libgcc_s]
+-    end
+-)
++const libspqr_path = "/usr/lib/libspqr.so"
++const libspqr = LazyLibrary(libspqr_path)
+ 
+-libumfpack_path::String = ""
+-const libumfpack = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libumfpack.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libumfpack.6.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libumfpack.so.6")
+-    else
+-        error("SuiteSparse_jll: Library 'libumfpack' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libsuitesparseconfig, libamd, libcholmod, libblastrampoline, libgcc_s]
+-    else
+-        LazyLibrary[libsuitesparseconfig, libamd, libcholmod, libblastrampoline]
+-    end
+-)
++const libumfpack_path = "/usr/lib/libumfpack.so"
++const libumfpack = LazyLibrary(libumfpack_path)
+ 
+ function eager_mode()
+     @static if @isdefined CompilerSupportLibraries_jll
+@@ -246,29 +75,6 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    # BSD-3-Clause
+-    global libamd_path = string(libamd.path)
+-    global libcamd_path = string(libcamd.path)
+-    global libccolamd_path = string(libccolamd.path)
+-    global libcolamd_path = string(libcolamd.path)
+-    global libsuitesparseconfig_path = string(libsuitesparseconfig.path)
+-
+-    # LGPL-2.1+
+-    global libbtf_path = string(libbtf.path)
+-    global libklu_path = string(libklu.path)
+-    global libldl_path = string(libldl.path)
+-
+-    # GPL-2.0+
+-    if Base.USE_GPL_LIBS
+-        global libcholmod_path = string(libcholmod.path)
+-        global librbio_path = string(librbio.path)
+-        global libspqr_path = string(libspqr.path)
+-        global libumfpack_path = string(libumfpack.path)
+-    end
+-    global artifact_dir = dirname(Sys.BINDIR)
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
+index a75e2e30db..aede65805b 100644
+--- a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
++++ b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
+@@ -10,9 +10,9 @@ export libblastrampoline
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+ # Because LBT needs to have a weak-dependence on OpenBLAS (or any other BLAS)
+ # we must manually construct a list of which modules and libraries we're going
+@@ -31,19 +31,8 @@ function add_dependency!(mod::Module, lib::LazyLibrary, on_load_callback::Functi
+     push!(on_load_callbacks, on_load_callback)
+ end
+ 
+-libblastrampoline_path::String = ""
+-const libblastrampoline = LazyLibrary(
+-    # NOTE: keep in sync with `Base.libblas_name` and `Base.liblapack_name`.
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libblastrampoline-5.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libblastrampoline.5.dylib")
+-    else
+-        BundledLazyLibraryPath("libblastrampoline.so.5")
+-    end,
+-    dependencies = LazyLibrary[],
+-    on_load_callback = libblastrampoline_on_load_callback
+-)
++const libblastrampoline_path = "/usr/lib/libblastrampoline.so"
++const libblastrampoline = LazyLibrary(libblastrampoline_path)
+ 
+ function eager_mode()
+     for mod in eager_mode_modules
+@@ -53,13 +42,6 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libblastrampoline_path = string(libblastrampoline.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libblastrampoline_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+-- 
+2.49.0
+

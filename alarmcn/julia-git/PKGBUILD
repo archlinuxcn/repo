@@ -65,12 +65,11 @@ options=('!debug' '!strip' '!buildflags')
 _patches=(
   0001-Force-enable-GDB-debug-info-registration.patch
   0002-Fix-source-file-paths.patch
-  0003-Clear-soname.patch
-  0004-Revert-to-hard-code-system-lib-path.patch
-  0005-Support-loading-extensions-from-STDLIB.patch
-  0006-julia-git-add-a-safeguard-for-bad-unwinding.patch
-  0007-Disable-per-thread-TLS-cache-for-now.patch
-  0008-Disable-UCX-signal-handler.patch
+  0003-Clear-soname-and-hard-code-system-lib-path.patch
+  0004-Support-loading-extensions-from-STDLIB.patch
+  0005-julia-git-add-a-safeguard-for-bad-unwinding.patch
+  0006-Disable-per-thread-TLS-cache-for-now.patch
+  0007-Disable-UCX-signal-handler.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         'git+https://github.com/yuyichao/archcn-julia-scripts'
@@ -80,14 +79,13 @@ source=('git+https://github.com/JuliaLang/julia'
         download_curl.diff)
 sha512sums=('SKIP'
             'SKIP'
-            '7dc0f04ea78103dc4c9d20a94cf3f77caa2eba2f7f340b077e39a39d6848dbd2bb77bb7e5d4731f1271ca79303465431d63be2c5a0e57b45392a545bce091849'
-            '7f0af8befdaaf4cbf16f504efc26e54916ea354f58593265490218d096cbe738057e9acf6cb5acc21a198d1f34d4d0ceefafde403dd8547156e8c3edcad3ff8f'
-            '2a6b6abd1ce705ea5ca759e2744a4dc6700847d8b69db7bfa8cd51f03682348a13b3ebb7e43c88acb5b84f4f8ac0e8e4b63d2153ae0029777506acdc3fac96e9'
-            '5391e55de20ccf6ccb5c754bb17dce31f5aa54c3589b7d290677cc2f4ed51b12c8d8ba599a5e779c58da2fe7822752a66890420d317320f60284f199385434d9'
-            '65416de6ed205890624c4a7bb218c595c117eca0e6f3a3aa4a95995151bf5536d1744c9784e4ba74a13c462bf83248c99cd2e78bf4c35ba992e64045beb90ed7'
-            'f53fbe819ce9d96e96375f046ac89c5144ba5ce8bedbc31d7837a4322b246a78a2e2b5a846f06d133b72bced7eb3b68f99ae5817edfa7cb8cf9624d89c50b924'
-            'f83052f5c477a91b66fd8ba8129a63cbf5ba8f9b773c2f253da4360b1377700aa1204de2447a05199724fe632b5782a613473bf6445775294c68eb7078e66c45'
-            '0fe6b2ab1ed242097839dbae545e6d2894cd824a7e7d0482c78edfef4c7c43617e8eb8b2d3923c312e757acee9166fc8cd3a756d31d411256b1002a87607227c'
+            '9bd6eaf9fdb35defd903eda099970818bc4d8e861dab4ac8a36004f4d47b1a513c66229fc589eb6a1aa8b5ff2dc7864552e6b6b2dfa939dfe86945c6c7a340d8'
+            '1e8bac6c7ef64c8386276639afc8c976b8a4315403e433af11bb8a0489e1089cfed7b2d30178e2c734cfad164b81ee778f54f2dace55cc91fdc7814b2b8d2a8e'
+            'c838384915880cb2d65d42d9e82593af57931e758cc86f13bfabbaa03f2ef6a9e6fe4596a965ddf93e2ebefd255ab3dcb1f43c1faca48aabf817aa6dca23acf4'
+            '6d5247ba67e18fda20783191a70376a67d6df0fd2e7908f5c6937a529138c11f37904c46519ee57c3f9c6fd76c0ebee55df42ec4a1554eef08c3c65cb1927d19'
+            '3c7339a15195f4ce31b3fa16007b8e5b3ce194de3aa6b7ed2cd14180d6b9a2df0eb183f4bd09872e05efbe45d2babb73318c01fbfa114e7f4c4e019d22e171c2'
+            '53b552047bb2b49a768612a2e5c12adf5d06d5295b2f556b3691f976a4cf61e543885079a281816e6a6672d3ff71d989f8bf582e6bec0e3803018bfd761b1816'
+            '32f92ecee7bb93b46c40a7d330d4e258238df4bc46225659a0407c7e7c694265aa6e2892f78cbc58bf7cb8a42c161b795a98161270088d33db08047e870bfe59'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
             '5be40dcb72428885c06c8353019bd8fac0ea186a7536cf2bab2554d2724fb3d4a5b0b3f61727428e5cf7906f14a213f08dcb238b5bd10d408d86669e2c93ca78')

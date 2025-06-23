@@ -1,17 +1,17 @@
-From b27b916738cf034a2e4e3a5f2c5c637da02591fd Mon Sep 17 00:00:00 2001
+From 04c6d3fdc90e9eca50d6530d275de817eebb3e46 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 3 Oct 2020 08:45:51 -0400
-Subject: [PATCH 1/8] Force enable GDB debug info registration
+Subject: [PATCH 1/7] Force enable GDB debug info registration
 
 ---
  src/codegen.cpp | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index c0aeb5bac1..97e6fe565e 100644
+index 3ea65d46dc..c9f594bc0d 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -10128,7 +10128,7 @@ extern "C" void jl_init_llvm(void)
+@@ -10125,7 +10125,7 @@ extern "C" void jl_init_llvm(void)
  
      bool jl_using_gdb_jitevents = false;
      // Register GDB event listener
@@ -21,5 +21,5 @@ index c0aeb5bac1..97e6fe565e 100644
  #endif
      const char *jit_gdb = getenv("ENABLE_GDBLISTENER");
 -- 
-2.48.1
+2.49.0
 

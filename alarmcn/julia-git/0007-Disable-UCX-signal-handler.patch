@@ -1,14 +1,14 @@
-From 79ceb3f6dfead0d5b665a80634fec2de6a048ac9 Mon Sep 17 00:00:00 2001
+From f31e3e8f9277a7f9ef11dd7ce8972aca23bc1ef9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 26 May 2025 23:20:16 -0400
-Subject: [PATCH 8/8] Disable UCX signal handler
+Subject: [PATCH 7/7] Disable UCX signal handler
 
 ---
  src/init.c | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/src/init.c b/src/init.c
-index c3a20443b6..8370585608 100644
+index a64f43c62f..3928541a8e 100644
 --- a/src/init.c
 +++ b/src/init.c
 @@ -672,6 +672,8 @@ static void init_global_mutexes(void) {
@@ -21,5 +21,5 @@ index c3a20443b6..8370585608 100644
      // but generally running from simple platform things to optional
      // configuration features
 -- 
-2.48.1
+2.49.0
 
