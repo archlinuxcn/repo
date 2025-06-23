@@ -1,4 +1,4 @@
-From 5c6e059045243457216ebd7110cc56b7b6cd9ea9 Mon Sep 17 00:00:00 2001
+From 0cdf05f143f9e5db525fcd544e0ddd9141e82fdc Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/7] Clear soname and hard code system lib path
@@ -514,7 +514,7 @@ index 350ed85a50..6b44a76481 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
-index 6c273bbdec..c43c228e66 100644
+index 6c273bbdec..47ffe89111 100644
 --- a/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
 +++ b/stdlib/LibSSH2_jll/src/LibSSH2_jll.jl
 @@ -19,33 +19,12 @@ export libssh2
@@ -551,7 +551,7 @@ index 6c273bbdec..c43c228e66 100644
 -        LazyLibrary[libz, libcrypto]
 -    end
 -)
-+const libssh2_path = "/usr/lib/libssh.so"
++const libssh2_path = "/usr/lib/libssh2.so"
 +const libssh2 = LazyLibrary(libssh2_path)
  
  function eager_mode()
