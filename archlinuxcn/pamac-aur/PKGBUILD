@@ -5,10 +5,10 @@ ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
 pkgver=11.7.3
-pkgrel=2
+pkgrel=3
 _pkgfixver=$pkgver
 _pkgfixvercli=11.7.3
-_pkgrelcli=2
+_pkgrelcli=3
 
 _commit='f756a059f79cdeadcd2f13ebbe9aef8591ef6cb6'
 _commitcli='1953797ae16a455ace764202e91849284c67b2cb'
@@ -52,24 +52,20 @@ prepare() {
 
 build() {
   cd "${srcdir}/${_srcdir}"
-  mkdir -p builddir && cd builddir
-  meson --buildtype=release \
-        --prefix=/usr \
-        --sysconfdir=/etc $define_meson
-  ninja
-
+  arch-meson build $define_meson
+	meson compile -C build
   cd "${srcdir}/${_srcdircli}"
-  mkdir -p builddir && cd builddir
-  meson setup --prefix=/usr --sysconfdir=/etc --buildtype=release
-	meson compile
+  arch-meson build
+	meson compile -C build
 }
 
 package() {
-  cd "${srcdir}/${_srcdir}/builddir"
-  DESTDIR="$pkgdir" ninja install
+  cd "${srcdir}/${_srcdir}"
+#  DESTDIR="$pkgdir" ninja install
+  meson install -C build --no-rebuild --destdir "$pkgdir"
   cp -r "$srcdir/pamac-$_commit/data/gnome-shell/pamac-updates@manjaro.org" "$pkgdir/usr/share/gnome-shell/extensions"
-  cd "${srcdir}/${_srcdircli}/builddir"
-  meson install --destdir "$pkgdir"
+  cd "${srcdir}/${_srcdircli}"
+  meson install -C build --no-rebuild --destdir "$pkgdir"
 
   install -Dm644 "${srcdir}/${_srcdir}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
