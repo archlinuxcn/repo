@@ -1,17 +1,31 @@
-From 657332e8cf806c16988d9eca0e7af45094c7d3b7 Mon Sep 17 00:00:00 2001
+From 5c6e059045243457216ebd7110cc56b7b6cd9ea9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/7] Clear soname and hard code system lib path
 
 ---
  .../src/CompilerSupportLibraries_jll.jl       | 153 ++---------
+ stdlib/GMP_jll/src/GMP_jll.jl                 |  45 +---
+ stdlib/LLD_jll/src/LLD_jll.jl                 |  63 +----
+ .../src/LLVMLibUnwind_jll.jl                  |  17 +-
+ stdlib/LibCURL_jll/src/LibCURL_jll.jl         |  38 +--
  stdlib/LibGit2_jll/src/LibGit2_jll.jl         |  38 +--
  stdlib/LibSSH2_jll/src/LibSSH2_jll.jl         |  38 +--
+ stdlib/LibUnwind_jll/src/LibUnwind_jll.jl     |  26 +-
+ stdlib/MPFR_jll/src/MPFR_jll.jl               |  32 +--
+ .../src/MozillaCACerts_jll.jl                 |  11 +-
  stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl       |  38 +--
  stdlib/OpenLibm_jll/src/OpenLibm_jll.jl       |  30 +--
+ stdlib/OpenSSL_jll/src/OpenSSL_jll.jl         |  51 +---
+ stdlib/PCRE2_jll/src/PCRE2_jll.jl             |  27 +-
  stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl | 248 ++----------------
+ stdlib/Zlib_jll/src/Zlib_jll.jl               |  27 +-
+ stdlib/Zstd_jll/src/Zstd_jll.jl               |  47 +---
+ stdlib/libLLVM_jll/src/libLLVM_jll.jl         |  34 +--
  .../src/libblastrampoline_jll.jl              |  28 +-
- 7 files changed, 67 insertions(+), 506 deletions(-)
+ stdlib/nghttp2_jll/src/nghttp2_jll.jl         |  30 +--
+ stdlib/p7zip_jll/src/p7zip_jll.jl             |  30 +--
+ 21 files changed, 149 insertions(+), 902 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 index 9a0729c50d..1a5c0e2855 100644
@@ -192,6 +206,256 @@ index 9a0729c50d..1a5c0e2855 100644
  if Base.generating_output()
      precompile(eager_mode, ())
      precompile(is_available, ())
+diff --git a/stdlib/GMP_jll/src/GMP_jll.jl b/stdlib/GMP_jll/src/GMP_jll.jl
+index 12a3fc21bd..7ecd0c91e3 100644
+--- a/stdlib/GMP_jll/src/GMP_jll.jl
++++ b/stdlib/GMP_jll/src/GMP_jll.jl
+@@ -12,38 +12,15 @@ export libgmp, libgmpxx
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libgmp_path::String = ""
+-const libgmp = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libgmp-10.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libgmp.10.dylib")
+-    else
+-        BundledLazyLibraryPath("libgmp.so.10")
+-    end
+-)
++const libgmp_path = "/usr/lib/libgmp.so"
++const libgmp = LazyLibrary(libgmp_path)
+ 
+-libgmpxx_path::String = ""
+-const libgmpxx = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libgmpxx-4.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libgmpxx.4.dylib")
+-    else
+-        BundledLazyLibraryPath("libgmpxx.so.4")
+-    end,
+-    dependencies = if Sys.isfreebsd()
+-        LazyLibrary[libgmp, libgcc_s]
+-    elseif Sys.isapple()
+-        LazyLibrary[libgmp]
+-    else
+-        LazyLibrary[libgmp, libstdcxx, libgcc_s]
+-    end
+-)
++const libgmpxx_path = "/usr/lib/libgmpxx.so"
++const libgmpxx = LazyLibrary(libgmpxx_path)
+ 
+ function eager_mode()
+     @static if @isdefined CompilerSupportLibraries_jll
+@@ -54,14 +31,6 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libgmp_path = string(libgmp.path)
+-    global libgmpxx_path = string(libgmpxx.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libgmp_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/LLD_jll/src/LLD_jll.jl b/stdlib/LLD_jll/src/LLD_jll.jl
+index 9b8365dddc..7c6a4cebc9 100644
+--- a/stdlib/LLD_jll/src/LLD_jll.jl
++++ b/stdlib/LLD_jll/src/LLD_jll.jl
+@@ -5,16 +5,15 @@
+ baremodule LLD_jll
+ using Base, Libdl
+ 
+-const PATH_list = String[]
+-const LIBPATH_list = String[]
+-
+ export lld
+ 
+ # These get calculated in __init__()
+-const PATH = Ref("")
+-const LIBPATH = Ref("")
+-artifact_dir::String = ""
+-lld_path::String = ""
++const PATH = Ref("/usr/bin")
++const PATH_list = String["/usr/bin"]
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
++const lld_path = "/usr/bin/lld"
+ if Sys.iswindows()
+     const lld_exe = "lld.exe"
+ else
+@@ -36,63 +35,17 @@ else
+ end
+ 
+ function adjust_ENV!(env::Dict, PATH::String, LIBPATH::String, adjust_PATH::Bool, adjust_LIBPATH::Bool)
+-    if adjust_LIBPATH
+-        LIBPATH_base = get(env, LIBPATH_env, expanduser(LIBPATH_default))
+-        if !isempty(LIBPATH_base)
+-            env[LIBPATH_env] = string(LIBPATH, pathsep, LIBPATH_base)
+-        else
+-            env[LIBPATH_env] = LIBPATH
+-        end
+-    end
+-    if adjust_PATH && (LIBPATH_env != "PATH" || !adjust_LIBPATH)
+-        if adjust_PATH
+-            if !isempty(get(env, "PATH", ""))
+-                env["PATH"] = string(PATH, pathsep, env["PATH"])
+-            else
+-                env["PATH"] = PATH
+-            end
+-        end
+-    end
+     return env
+ end
+ 
+ function lld(f::Function; adjust_PATH::Bool = true, adjust_LIBPATH::Bool = true)
+-    env = adjust_ENV!(copy(ENV), PATH[], LIBPATH[], adjust_PATH, adjust_LIBPATH)
+-    withenv(env...) do
+-        return f(lld_path)
+-    end
++    return f(lld_path)
+ end
+ function lld(; adjust_PATH::Bool = true, adjust_LIBPATH::Bool = true)
+-    env = adjust_ENV!(copy(ENV), PATH[], LIBPATH[], adjust_PATH, adjust_LIBPATH)
+-    return Cmd(Cmd([lld_path]); env)
++    return `$lld_path`
+ end
+ 
+ function init_lld_path()
+-    # Prefer our own bundled lld, but if we don't have one, pick it up off of the PATH
+-    # If this is an in-tree build, `lld` will live in `tools`.  Otherwise, it'll be in `private_libexecdir`
+-    for bundled_lld_path in (joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR, lld_exe),
+-                             joinpath(Sys.BINDIR, "..", "tools", lld_exe),
+-                             joinpath(Sys.BINDIR, lld_exe))
+-        if isfile(bundled_lld_path)
+-            global lld_path = abspath(bundled_lld_path)
+-            return
+-        end
+-    end
+-    global lld_path = something(Sys.which(lld_exe), lld_exe)
+-end
+-
+-function __init__()
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    init_lld_path()
+-    PATH[] = dirname(lld_path)
+-    push!(PATH_list, PATH[])
+-    if Sys.iswindows()
+-        # On windows, the dynamic libraries (.dll) are in Sys.BINDIR ("usr\\bin")
+-        append!(LIBPATH_list, [joinpath(Sys.BINDIR, Base.LIBDIR, "julia"), Sys.BINDIR])
+-    else
+-        append!(LIBPATH_list, [joinpath(Sys.BINDIR, Base.LIBDIR, "julia"), joinpath(Sys.BINDIR, Base.LIBDIR)])
+-    end
+-    LIBPATH[] = join(LIBPATH_list, pathsep)
+ end
+ 
+ # JLLWrappers API compatibility shims.  Note that not all of these will really make sense.
+diff --git a/stdlib/LLVMLibUnwind_jll/src/LLVMLibUnwind_jll.jl b/stdlib/LLVMLibUnwind_jll/src/LLVMLibUnwind_jll.jl
+index c6e2750895..374402fcfe 100644
+--- a/stdlib/LLVMLibUnwind_jll/src/LLVMLibUnwind_jll.jl
++++ b/stdlib/LLVMLibUnwind_jll/src/LLVMLibUnwind_jll.jl
+@@ -10,25 +10,18 @@ export llvmlibunwind
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-llvmlibunwind_path::String = ""
+-const llvmlibunwind = LazyLibrary(BundledLazyLibraryPath("libunwind"))
++const llvmlibunwind_path = "/usr/lib/libunwind.so"
++const llvmlibunwind = LazyLibrary(llvmlibunwind_path)
+ 
+ function eager_mode()
+     dlopen(llvmlibunwind)
+ end
+ is_available() = @static Sys.isapple() ? true : false
+ 
+-function __init__()
+-    global llvmlibunwind_path = string(llvmlibunwind.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(llvmlibunwind_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/LibCURL_jll/src/LibCURL_jll.jl b/stdlib/LibCURL_jll/src/LibCURL_jll.jl
+index 43ae2dec24..618730de25 100644
+--- a/stdlib/LibCURL_jll/src/LibCURL_jll.jl
++++ b/stdlib/LibCURL_jll/src/LibCURL_jll.jl
+@@ -16,33 +16,12 @@ export libcurl
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libcurl_path::String = ""
+-const libcurl = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libcurl-4.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libcurl.4.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libcurl.so.4")
+-    else
+-        error("LibCURL_jll: Library 'libcurl' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows()
+-        if  Sys.WORD_SIZE == 32
+-            LazyLibrary[libz, libnghttp2, libssh2, libgcc_s]
+-        else
+-            LazyLibrary[libz, libnghttp2, libssh2]
+-        end
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        LazyLibrary[libz, libnghttp2, libssh2, libssl, libcrypto]
+-    elseif Sys.isapple()
+-        LazyLibrary[libz, libnghttp2, libssh2]
+-    end
+-)
++const libcurl_path = "/usr/lib/libcurl.so"
++const libcurl = LazyLibrary(libcurl_path)
+ 
+ function eager_mode()
+     Zlib_jll.eager_mode()
+@@ -58,13 +37,6 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libcurl_path = string(libcurl.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libcurl_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
 diff --git a/stdlib/LibGit2_jll/src/LibGit2_jll.jl b/stdlib/LibGit2_jll/src/LibGit2_jll.jl
 index 350ed85a50..6b44a76481 100644
 --- a/stdlib/LibGit2_jll/src/LibGit2_jll.jl
@@ -306,6 +570,121 @@ index 6c273bbdec..c43c228e66 100644
  if Base.generating_output()
      precompile(eager_mode, ())
      precompile(is_available, ())
+diff --git a/stdlib/LibUnwind_jll/src/LibUnwind_jll.jl b/stdlib/LibUnwind_jll/src/LibUnwind_jll.jl
+index d396540dba..e08992aefa 100644
+--- a/stdlib/LibUnwind_jll/src/LibUnwind_jll.jl
++++ b/stdlib/LibUnwind_jll/src/LibUnwind_jll.jl
+@@ -14,19 +14,12 @@ export libunwind
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
+-
+-libunwind_path::String = ""
+-const libunwind = LazyLibrary(
+-    BundledLazyLibraryPath("libunwind.so.8"),
+-    dependencies = if Sys.isfreebsd()
+-        LazyLibrary[libz]
+-    else
+-        LazyLibrary[libgcc_s, libz]
+-    end
+-)
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
++
++const libunwind_path = "/usr/lib/libunwind.so"
++const libunwind = LazyLibrary(libunwind_path)
+ 
+ function eager_mode()
+     @static if @isdefined CompilerSupportLibraries_jll
+@@ -37,13 +30,6 @@ function eager_mode()
+ end
+ is_available() = @static(Sys.islinux() || Sys.isfreebsd()) ? true : false
+ 
+-function __init__()
+-    global libunwind_path = string(libunwind.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libunwind_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/MPFR_jll/src/MPFR_jll.jl b/stdlib/MPFR_jll/src/MPFR_jll.jl
+index b7b379c543..ff6e48a9ad 100644
+--- a/stdlib/MPFR_jll/src/MPFR_jll.jl
++++ b/stdlib/MPFR_jll/src/MPFR_jll.jl
+@@ -12,27 +12,12 @@ export libmpfr
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libmpfr_path::String = ""
+-const libmpfr = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libmpfr-6.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libmpfr.6.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libmpfr.so.6")
+-    else
+-        error("MPFR_jll: Library 'libmpfr' is not available for $(Sys.KERNEL)")
+-    end,
+-    dependencies = if Sys.iswindows()
+-        LazyLibrary[libgmp, libgcc_s]
+-    else
+-        LazyLibrary[libgmp]
+-    end
+-)
++const libmpfr_path = "/usr/lib/libmpfr.so"
++const libmpfr = LazyLibrary(libmpfr_path)
+ 
+ function eager_mode()
+     GMP_jll.eager_mode()
+@@ -43,11 +28,4 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libmpfr_path = string(libmpfr.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libmpfr_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ end  # module MPFR_jll
+diff --git a/stdlib/MozillaCACerts_jll/src/MozillaCACerts_jll.jl b/stdlib/MozillaCACerts_jll/src/MozillaCACerts_jll.jl
+index 1d5df0236a..895fc2dfbe 100644
+--- a/stdlib/MozillaCACerts_jll/src/MozillaCACerts_jll.jl
++++ b/stdlib/MozillaCACerts_jll/src/MozillaCACerts_jll.jl
+@@ -10,14 +10,9 @@ const LIBPATH_list = String[]
+ 
+ # These get calculated in __init__()
+ const PATH = Ref("")
+-const LIBPATH = Ref("")
+-global artifact_dir::String = ""
+-global cacert::String = ""
+-
+-function __init__()
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    global cacert = normpath(Sys.BINDIR, Base.DATAROOTDIR, "julia", "cert.pem")
+-end
++const LIBPATH = Ref("/usr/lib")
++artifact_dir::String = "/usr"
++cacert::String = "/usr/share/julia/cert.pem"
+ 
+ # JLLWrappers API compatibility shims.  Note that not all of these will really make sense.
+ # For instance, `find_artifact_dir()` won't actually be the artifact directory, because
 diff --git a/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl b/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl
 index 238ad459a2..8849b45a89 100644
 --- a/stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl
@@ -423,6 +802,122 @@ index 264dbbf9af..c315f5d8d3 100644
 -end
 -
  end  # module OpenLibm_jll
+diff --git a/stdlib/OpenSSL_jll/src/OpenSSL_jll.jl b/stdlib/OpenSSL_jll/src/OpenSSL_jll.jl
+index f4d11ee65b..447cf65771 100644
+--- a/stdlib/OpenSSL_jll/src/OpenSSL_jll.jl
++++ b/stdlib/OpenSSL_jll/src/OpenSSL_jll.jl
+@@ -10,44 +10,15 @@ export libcrypto, libssl
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libcrypto_path::String = ""
+-const libcrypto = LazyLibrary(
+-    if Sys.iswindows()
+-        if arch(HostPlatform()) == "x86_64"
+-            BundledLazyLibraryPath("libcrypto-3-x64.dll")
+-        else
+-            BundledLazyLibraryPath("libcrypto-3.dll")
+-        end
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libcrypto.3.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libcrypto.so.3")
+-    else
+-        error("OpenSSL_jll: Library 'libcrypto' is not available for $(Sys.KERNEL)")
+-    end
+-)
++const libcrypto_path = "/usr/lib/libcrypto.so"
++const libcrypto = LazyLibrary(libcrypto_path)
+ 
+-libssl_path::String = ""
+-const libssl = LazyLibrary(
+-    if Sys.iswindows()
+-        if arch(HostPlatform()) == "x86_64"
+-            BundledLazyLibraryPath("libssl-3-x64.dll")
+-        else
+-            BundledLazyLibraryPath("libssl-3.dll")
+-        end
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libssl.3.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libssl.so.3")
+-    else
+-        error("OpenSSL_jll: Library 'libssl' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = LazyLibrary[libcrypto]
+-)
++const libssl_path = "/usr/lib/libssl.so"
++const libssl = LazyLibrary(libssl_path)
+ 
+ function eager_mode()
+     dlopen(libcrypto)
+@@ -55,14 +26,6 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libcrypto_path = string(libcrypto.path)
+-    global libssl_path = string(libssl.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libssl_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/PCRE2_jll/src/PCRE2_jll.jl b/stdlib/PCRE2_jll/src/PCRE2_jll.jl
+index c6e32bf3e6..da183b153d 100644
+--- a/stdlib/PCRE2_jll/src/PCRE2_jll.jl
++++ b/stdlib/PCRE2_jll/src/PCRE2_jll.jl
+@@ -9,35 +9,18 @@ export libpcre2_8
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libpcre2_8_path::String = ""
+-const libpcre2_8 = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libpcre2-8.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libpcre2-8.0.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libpcre2-8.so.0")
+-    else
+-        error("PCRE2_jll: Library 'libpcre2_8' is not available for $(Sys.KERNEL)")
+-    end
+-)
++const libpcre2_8_path = "/usr/lib/libpcre2-8.so"
++const libpcre2_8 = LazyLibrary(libpcre2_8_path)
+ 
+ function eager_mode()
+     dlopen(libpcre2_8)
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libpcre2_8_path = string(libpcre2_8.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libpcre2_8_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
 diff --git a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 index 1dcb2d24e4..abc5249079 100644
 --- a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
@@ -701,6 +1196,182 @@ index 1dcb2d24e4..abc5249079 100644
  if Base.generating_output()
      precompile(eager_mode, ())
      precompile(is_available, ())
+diff --git a/stdlib/Zlib_jll/src/Zlib_jll.jl b/stdlib/Zlib_jll/src/Zlib_jll.jl
+index a52168bf24..b27161814e 100644
+--- a/stdlib/Zlib_jll/src/Zlib_jll.jl
++++ b/stdlib/Zlib_jll/src/Zlib_jll.jl
+@@ -9,35 +9,18 @@ export libz
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libz_path::String = ""
+-const libz = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libz.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libz.1.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libz.so.1")
+-    else
+-        error("Zlib_jll: Library 'libz' is not available for $(Sys.KERNEL)")
+-    end
+-)
++const libz_path = "/usr/lib/libz.so"
++const libz = LazyLibrary(libz_path)
+ 
+ function eager_mode()
+     dlopen(libz)
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libz_path = string(libz.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libz_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/Zstd_jll/src/Zstd_jll.jl b/stdlib/Zstd_jll/src/Zstd_jll.jl
+index ce2dda69d5..95d1fd74dc 100644
+--- a/stdlib/Zstd_jll/src/Zstd_jll.jl
++++ b/stdlib/Zstd_jll/src/Zstd_jll.jl
+@@ -13,27 +13,12 @@ export libzstd, zstd, zstdmt
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libzstd_path::String = ""
+-const libzstd = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libzstd-1.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libzstd.1.dylib")
+-    elseif Sys.islinux() || Sys.isfreebsd()
+-        BundledLazyLibraryPath("libzstd.so.1")
+-    else
+-        error("Zstd_jll: Library 'libzstd' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libgcc_s]
+-    else
+-        LazyLibrary[]
+-    end
+-)
++const libzstd_path = "/usr/lib/libzstd.so"
++const libzstd = LazyLibrary(libzstd_path)
+ 
+ if Sys.iswindows()
+     const zstd_exe = "zstd.exe"
+@@ -63,24 +48,17 @@ adjust_ENV(cmd::Cmd) = cmd
+ end
+ 
+ function adjust_ENV()
+-    addPATH = joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR)
+-    oldPATH = get(ENV, "PATH", "")
+-    newPATH = isempty(oldPATH) ? addPATH : "$addPATH$pathsep$oldPATH"
+-    return ("PATH"=>newPATH,)
++    return ()
+ end
+ 
+ function zstd(f::Function; adjust_PATH::Bool = true, adjust_LIBPATH::Bool = true) # deprecated, for compat only
+-    withenv((adjust_PATH ? adjust_ENV() : ())...) do
+-        f(zstd())
+-    end
++    f(zstd())
+ end
+ function zstdmt(f::Function; adjust_PATH::Bool = true, adjust_LIBPATH::Bool = true) # deprecated, for compat only
+-    withenv((adjust_PATH ? adjust_ENV() : ())...) do
+-        f(zstdmt())
+-    end
++    f(zstdmt())
+ end
+-zstd() = adjust_ENV(`$(joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR, zstd_exe))`)
+-zstdmt() = adjust_ENV(`$(joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR, zstdmt_exe))`)
++zstd() = `/usr/bin/zstd`
++zstdmt() = `/usr/bin/zstdmt`
+ 
+ # Function to eagerly dlopen our library and thus resolve all dependencies
+ function eager_mode()
+@@ -92,11 +70,6 @@ end
+ 
+ is_available() = true
+ 
+-function __init__()
+-    global libzstd_path = string(libzstd.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
+diff --git a/stdlib/libLLVM_jll/src/libLLVM_jll.jl b/stdlib/libLLVM_jll/src/libLLVM_jll.jl
+index 2edff186b1..a4d85dbd47 100644
+--- a/stdlib/libLLVM_jll/src/libLLVM_jll.jl
++++ b/stdlib/libLLVM_jll/src/libLLVM_jll.jl
+@@ -14,27 +14,12 @@ export libLLVM
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
+-
+-libLLVM_path::String = ""
+-const libLLVM = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("$(Base.libllvm_name).dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libLLVM.dylib")
+-    else
+-        BundledLazyLibraryPath("$(Base.libllvm_name).so")
+-    end,
+-    dependencies = if Sys.isapple()
+-        LazyLibrary[libz, libzstd]
+-    elseif Sys.isfreebsd()
+-        LazyLibrary[libz, libzstd, libgcc_s]
+-    else
+-        LazyLibrary[libz, libzstd, libstdcxx, libgcc_s]
+-    end
+-)
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
++
++const libLLVM_path = "/usr/lib/$(Base.libllvm_name).so"
++const libLLVM = LazyLibrary(libLLVM_path)
+ 
+ function eager_mode()
+     @static if @isdefined CompilerSupportLibraries_jll
+@@ -46,13 +31,6 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libLLVM_path = string(libLLVM.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libLLVM_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ if Base.generating_output()
+     precompile(eager_mode, ())
+     precompile(is_available, ())
 diff --git a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
 index a75e2e30db..aede65805b 100644
 --- a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
@@ -754,6 +1425,109 @@ index a75e2e30db..aede65805b 100644
  if Base.generating_output()
      precompile(eager_mode, ())
      precompile(is_available, ())
+diff --git a/stdlib/nghttp2_jll/src/nghttp2_jll.jl b/stdlib/nghttp2_jll/src/nghttp2_jll.jl
+index e0a1559a85..b9dba7b2ff 100644
+--- a/stdlib/nghttp2_jll/src/nghttp2_jll.jl
++++ b/stdlib/nghttp2_jll/src/nghttp2_jll.jl
+@@ -12,25 +12,12 @@ export libnghttp2
+ # These get calculated in __init__()
+ const PATH = Ref("")
+ const PATH_list = String[]
+-const LIBPATH = Ref("")
+-const LIBPATH_list = String[]
+-artifact_dir::String = ""
++const LIBPATH = Ref("/usr/lib")
++const LIBPATH_list = String["/usr/lib"]
++artifact_dir::String = "/usr"
+ 
+-libnghttp2_path::String = ""
+-const libnghttp2 = LazyLibrary(
+-    if Sys.iswindows()
+-        BundledLazyLibraryPath("libnghttp2-14.dll")
+-    elseif Sys.isapple()
+-        BundledLazyLibraryPath("libnghttp2.14.dylib")
+-    else
+-        BundledLazyLibraryPath("libnghttp2.so.14")
+-    end,
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libgcc_s]
+-    else
+-        LazyLibrary[]
+-    end
+-)
++const libnghttp2_path = "/usr/lib/libnghttp2.so"
++const libnghttp2 = LazyLibrary(libnghttp2_path)
+ 
+ function eager_mode()
+     @static if @isdefined CompilerSupportLibraries_jll
+@@ -40,11 +27,4 @@ function eager_mode()
+ end
+ is_available() = true
+ 
+-function __init__()
+-    global libnghttp2_path = string(libnghttp2.path)
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    LIBPATH[] = dirname(libnghttp2_path)
+-    push!(LIBPATH_list, LIBPATH[])
+-end
+-
+ end  # module nghttp2_jll
+diff --git a/stdlib/p7zip_jll/src/p7zip_jll.jl b/stdlib/p7zip_jll/src/p7zip_jll.jl
+index af461c6719..e95ace424d 100644
+--- a/stdlib/p7zip_jll/src/p7zip_jll.jl
++++ b/stdlib/p7zip_jll/src/p7zip_jll.jl
+@@ -7,9 +7,9 @@ using Base
+ export p7zip
+ 
+ # These get calculated in __init__()
+-const PATH = Ref("")
+-artifact_dir::String = ""
+-p7zip_path::String = ""
++const PATH = Ref("/usr/bin")
++artifact_dir::String = "/usr"
++const p7zip_path = "/usr/bin/7z"
+ if Sys.iswindows()
+     const p7zip_exe = "7z.exe"
+ else
+@@ -25,36 +25,16 @@ else
+ end
+ 
+ function adjust_ENV()
+-    addPATH = PATH[]
+-    oldPATH = get(ENV, "PATH", "")
+-    newPATH = isempty(oldPATH) ? addPATH : "$addPATH$pathsep$oldPATH"
+-    return ("PATH"=>newPATH,)
++    return ()
+ end
+ 
+ function p7zip(f::Function; adjust_PATH::Bool = true, adjust_LIBPATH::Bool = true) # deprecated, for compat only
+-    withenv((adjust_PATH ? adjust_ENV() : ())...) do
+-        return f(p7zip())
+-    end
++    return f(p7zip())
+ end
+ # the 7z.exe we ship has no dependencies, so it needs no PATH adjustment
+ p7zip(; adjust_PATH::Bool = true, adjust_LIBPATH::Bool = true) = `$p7zip_path`
+ 
+ function init_p7zip_path()
+-    # Prefer our own bundled p7zip, but if we don't have one, pick it up off of the PATH
+-    # Our `7z` lives in `private_libexecdir`
+-    bundled_p7zip_path = joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR, p7zip_exe)
+-    if isfile(bundled_p7zip_path)
+-        global p7zip_path = abspath(bundled_p7zip_path)
+-    else
+-        global p7zip_path = something(Sys.which(p7zip_exe), p7zip_exe)
+-    end
+-end
+-
+-function __init__()
+-    global artifact_dir = dirname(Sys.BINDIR)
+-    init_p7zip_path()
+-    PATH[] = path = dirname(p7zip_path)
+-    nothing
+ end
+ 
+ # JLLWrappers API compatibility shims.  Note that not all of these will really make sense.
 -- 
 2.49.0
 
