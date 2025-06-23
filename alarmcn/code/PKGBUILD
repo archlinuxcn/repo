@@ -5,9 +5,9 @@
 pkgname=code
 pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
-_electron=electron34
-pkgver=1.100.3
-pkgrel=1
+_electron=electron35
+pkgver=1.101.1
+pkgrel=2
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
 license=('MIT')
@@ -15,19 +15,21 @@ depends=($_electron 'libsecret' 'libx11' 'libxkbfile' 'ripgrep')
 optdepends=('bash-completion: Bash completions'
             'zsh-completions: ZSH completitons'
             'x11-ssh-askpass: SSH authentication')
-makedepends=('git' 'nodejs-lts-iron' 'npm' 'pnpm' 'python' 'desktop-file-utils' 'zip' 'jq')
+makedepends=('git' 'nodejs-lts-iron' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq')
 provides=('vscode')
 options=('!strip' '!debug')
 source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
         'code.mjs'
         'code.sh'
         'product_json.diff'
-        'clipath.patch')
-sha512sums=('dd9c523f5c9af0608af563661fe20c71b1f91bbb3502f85c0c97a46287640d7a87e029f06c63b5394a45301c94db5f0583dba0d7f8658d57c1d78390d16d8181'
+        'clipath.patch'
+        'https://github.com/termux/termux-packages/raw/0974620c52e72d0c80bcc8a42bad482555f629e8/x11-packages/code-oss/0009-openvsx-extension-signature.patch')
+sha512sums=('17f6683e1b81afe1dffff6a534c2d5b7758ff4082849c5ad5d316633f737e3bab9024d7d20dd88e7f980845305c66dde6d8c280d1d8fc594b50d196bc112869f'
             '793f9ff6306e3992ac89802d98110cba288ea1181a901467333293b7d76182ef9792c2a39ff49d9347a18a174b1f42bc58862091dff583f4146c2704eea28033'
             '937299c6cb6be2f8d25f7dbc95cf77423875c5f8353b8bd6cd7cc8e5603cbf8405b14dbf8bd615db2e3b36ed680fc8e1909410815f7f8587b7267a699e00ab37'
             'b1aa0d7c5b3e3e8ba1172822d75ea38e90efc431b270e0b4ca9e45bf9c0be0f60922c8618969ef071b5b6dbd9ac9f030294f1bf49bcc28c187b46d113dca63a7'
-            'e570b30cd470190aa56596913478d5fb8ba265a0f8c9d1408ea2118612cc69a360cc55e4523c3dc9c65f73e3dea53fc6620c97f6592fb9f86c3aca51ad3d9744')
+            'e570b30cd470190aa56596913478d5fb8ba265a0f8c9d1408ea2118612cc69a360cc55e4523c3dc9c65f73e3dea53fc6620c97f6592fb9f86c3aca51ad3d9744'
+            'dadb4132a4a1c3b58c09abb3d49d4622be727a49ca0e177ca988fa339e561ec3dad8b55f4fcfdd6c7ed2043282534dcb48762d45fd53d3f54ab2f4938910a8f2')
 
 # Even though we don't officially support other archs, let's
 # allow the user to use this PKGBUILD to compile the package
@@ -76,9 +78,6 @@ prepare() {
   fi
   _electronver=$(jq -r '.packages[""].devDependencies.electron' package-lock.json)
 
-  # Add vsce-sign necessary for extensions' signature verification
-  pnpm add @vscode/vsce-sign @vscode/vsce-sign-linux-$_vscode_arch
-
   # Change electron binary name to the target electron
   sed -e "s|name=electron|name=$_electron |" \
       -e '/PKGBUILD/d' \
@@ -88,6 +87,9 @@ prepare() {
   # This patch no longer contains proprietary modifications.
   # See https://github.com/Microsoft/vscode/issues/31168 for details.
   patch -p0 -i ../product_json.diff
+
+  # OpenVSX signature verification
+  patch -p1 -i ../0009-openvsx-extension-signature.patch
 
   # Set the commit and build date
   sed -e "s/@COMMIT@/$(git rev-parse HEAD)/" -e "s/@DATE@/$(date -u -Is | sed 's/\+00:00/Z/')/" -i product.json
@@ -160,6 +162,8 @@ package() {
   install -Dm 644 vscode/resources/linux/code-url-handler.desktop "$pkgdir"/usr/share/applications/code-url-handler.desktop
   install -Dm 644 vscode/resources/linux/code-oss-url-handler.desktop "$pkgdir"/usr/share/applications/code-oss-url-handler.desktop
   install -Dm 644 VSCode-linux-$_vscode_arch/resources/app/resources/linux/code.png "$pkgdir"/usr/share/pixmaps/com.visualstudio.code.oss.png
+  mkdir --parents --verbose "$pkgdir"/usr/share/icons/hicolor/scalable/apps
+  ln --symbolic --force /usr/lib/code/out/media/code-icon.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/com.visualstudio.code.oss.svg
 
   # Install bash and zsh completions
   install -Dm 644 vscode/resources/completions/bash/code "$pkgdir"/usr/share/bash-completion/completions/code
