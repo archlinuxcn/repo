@@ -1,6 +1,6 @@
 pkgname=julia-git-openmpi_jll-src
-pkgver=5.0.7+2
-_commit=ede887c93b5438ded2d816c30060595c7669895e
+pkgver=5.0.8+0
+_commit=eba3296c7fb35c467e9fcf315e0b4f88cda1a3d7
 pkgrel=1
 pkgdesc="OpenMPI_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenMPI_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git openmpi)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenMPI_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('67047b10e0ec9b50c3591e795662af16372bed079b1dc14b28cdb4674b91d196'
+sha256sums=('e3150b1cb7bce64f1283f024eeccafd80df6c4b39a652c0f222dda0656c4879a'
             'd4222fc431af8cea75dcbc3f160bd096dc5ef4bb7a795b425b1bf94297bcbb68')
 
 build() {
