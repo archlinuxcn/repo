@@ -6,7 +6,7 @@ ENABLE_SNAPD=0
 
 pkgname=libpamac-aur
 pkgver=11.7.3
-pkgrel=3
+pkgrel=4
 _pkgfixver=$pkgver
 
 _commit='06d1a3cb0a50d92d003d3b3215e2d033e98f9fe7'
@@ -60,19 +60,14 @@ prepare() {
 
 build() {
   cd "$srcdir/libpamac-$_commit"
-  mkdir -p builddir
-  cd builddir
-  meson setup --buildtype=release \
-        -Denable-aur=true -Denable-appstream=true \
-        --prefix=/usr \
-        --sysconfdir=/etc $define_meson
+  arch-meson build -Denable-aur=true -Denable-appstream=true $define_meson
   # build
-  meson compile
+  meson compile -C build
 }
 
 package() {
-  cd "$srcdir/libpamac-$_commit/builddir"
-  DESTDIR="$pkgdir" ninja install
+  cd "$srcdir/libpamac-$_commit"
+  meson install -C build --no-rebuild --destdir "$pkgdir"
   # fix appstream issue
   install -Dm644 "$srcdir/fix-appstream-data.hook" "$pkgdir/etc/pacman.d/hooks/fix-appstream-data.hook"
   install -Dm755 "$srcdir/fix-appstream-data.sh" "$pkgdir/etc/pacman.d/hooks.bin/fix-appstream-data.sh"
