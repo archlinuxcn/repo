@@ -367,6 +367,10 @@ package-julia-in() {
   # Install the debug version first. If there's any file conflict
   # due to build system bugs, I want the final version to be the release one.
 
+  # Installing julia requires this link
+  mkdir -p "${pkgdir}"/usr/libexec/julia/
+  ln -sf /usr/bin/{7z,zstd,zstdmt,lld,dsymutil}  "${pkgdir}"/usr/libexec/julia/
+
   # Delete precompiled environment since it seems to be picking up the one compiled
   # for the wrong julia build during document generation.
   rm -rf doc/deps/compiled
@@ -521,6 +525,8 @@ package-julia-in() {
     depends+=("${libname}=${soversion}-${soarch}")
   done
   rm "${pkgdir}"/usr/lib/libstdc++.so.6
+  # We patched references to these out in julia code
+  rm -rf "${pkgdir}"/usr/libexec/julia/
 }
 
 package_julia-git() {
