@@ -2,7 +2,7 @@
 
 pkgname=pndpd
 pkgver=1.2.14
-pkgrel=1
+pkgrel=2
 pkgdesc="NDP Proxy / Responder daemon (IPv6)"
 arch=("x86_64" "i686")
 url="https://github.com/Kioubit/pndpd"
@@ -13,7 +13,7 @@ depends=('glibc')
 makedepends=('go')
 backup=("etc/pndpd.conf")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('1687c661644435d5c47412bc03e6703b16ada19715d53984ee4186cb471f6e5a808073bedd13d52843ad7f564ea77fad576b8323e05a471582e559cf0a81b724')
+b2sums=('62b324bafe0fe4bea07394b513efec1098199bd0a68b3b207514ca6972170c49b2f4356a946b5775862cbc75c55b6cb67745e7b93a67bb43a4941d7b1069411e')
 
 build() {
   cd ${pkgname}-${pkgver}
