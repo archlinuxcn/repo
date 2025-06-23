@@ -1,7 +1,7 @@
 # Maintainer: zxp19821005 <zxp19821005 at 163 dot com>
 pkgname=webgal-terre-bin
 _appname=WebGAL_Terre
-pkgver=4.5.13
+pkgver=4.5.14
 _electronversion=29
 pkgrel=1
 pkgdesc="Galgame Editing. Redefined(Prebuilt version) / 视觉小说编辑，再进化"
@@ -37,13 +37,18 @@ source=(
 )
 sha256sums=('1f256ecad192880510e84ad60474eab7589218784b9a50bc7ceee34c2b91f1d5'
             'd51d809af628cc8292bd430a4847adb4adefa9d4b0aee00a55a84ff9630e167c')
-sha256sums_aarch64=('c3bd5042296b9d90f2549dfcb51900d0315aa202188d6d9a3593a793c92ae1cf')
-sha256sums_x86_64=('498a4e12d866bbadf10e2663f0ca06835d2605bdf8679a3ef9468c83b50763c1')
+sha256sums_aarch64=('34e44365c23dedd419762a2c28707b8c6a8585f0d1954d75d9e3e78883581f97')
+sha256sums_x86_64=('480fc74e31d162814ed5dc6f736389795e67510e7202ab0374098f1006191cc1')
+_get_electron_version() {
+    _electronversion="$(strings "${srcdir}/release/assets/templates/WebGAL_Electron_Template/webgal-electron-project" | grep '^Chrome/[0-9.]* Electron/[0-9]' | cut -d'/' -f3 | cut -d'.' -f1)"
+    echo -e "The electron version is: \033[1;31m${_electronversion}\033[0m"
+}
 prepare() {
     sed -i -e "
         s/@appname@/${pkgname%-bin}/g
         s/@runname@/${_appname}/g
     " "${srcdir}/${pkgname%-bin}.sh"
+    _get_electron_version
     gendesk -q -f -n \
         --pkgname="${pkgname%-bin}" \
         --pkgdesc="${pkgdesc}" \
