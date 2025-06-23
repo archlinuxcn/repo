@@ -1,6 +1,6 @@
 pkgname=julia-git-chainrules-src
-pkgver=1.72.4
-_commit=a9b45843e3caf309175e23edabc78999d68b7d4f
+pkgver=1.72.5
+_commit=b969ebacfbb5a21ac7471480d299ecd172b8eabc
 pkgrel=1
 pkgdesc="ChainRules.jl"
 url="https://github.com/JuliaDiff/ChainRules.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDiff/ChainRules.jl.git#commit=$_commit")
-sha256sums=('27651e12f052e7652b053f4f4deef59b18327aab681c5af9689f9cc1bc7043bd')
+sha256sums=('236296e2550b2fd8a146ae4b3dcdd1c5d2fad15186a838bfb26b7551a6ea7464')
 
 package() {
   cd ChainRules.jl
