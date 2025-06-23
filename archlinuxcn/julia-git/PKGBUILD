@@ -237,6 +237,12 @@ EOF
     chmod +x bin/$p
   done
 
+  cat > bin/patchelf <<EOF
+/usr/bin/patchelf "$@"
+exit 0
+EOF
+  chmod +x bin/patchelf
+
   cd julia
 
   git reset --hard HEAD
@@ -361,15 +367,12 @@ package-julia-in() {
   cd "$1"
 
   export JL_MAKEPKG_SRCDIR="${PWD}"
+  export PATH="${srcdir}/bin:${PATH}"
 
   # TODO docless build
   # if ((BUILD_DOC)); then
   # Install the debug version first. If there's any file conflict
   # due to build system bugs, I want the final version to be the release one.
-
-  # Installing julia requires this link
-  mkdir -p "${pkgdir}"/usr/libexec/julia/
-  ln -sf /usr/bin/{7z,zstd,zstdmt,lld,dsymutil}  "${pkgdir}"/usr/libexec/julia/
 
   # Delete precompiled environment since it seems to be picking up the one compiled
   # for the wrong julia build during document generation.
