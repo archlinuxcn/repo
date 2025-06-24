@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_xcb_util_wm_jll-src
-pkgver=0.4.1+1
-_commit=422a2a4142c30c71778738d47f3bd9b3e9105a41
-pkgrel=3
+pkgver=0.4.2+0
+_commit=97a9db19ff66cb5bd0b6512932b07c43c8685766
+pkgrel=1
 pkgdesc="Xorg_xcb_util_wm_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_wm_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git xcb-util-wm)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_wm_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('56035225dc00ff4ef93bf9f9e5a6b36cc14985cd25257c4815a9c70e8053b8af'
             '521188192cbfb9bae56aec2872a4e31bb4b6dac4def0521867100a253623a8a2')
 
 build() {
