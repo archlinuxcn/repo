@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_xcb_util_keysyms_jll-src
-pkgver=0.4.0+1
-_commit=78d349c3208c0e56b40fd0fbf523730c7f080df8
-pkgrel=3
+pkgver=0.4.1+0
+_commit=3b7913eb51283e34b9be730210816858dbb60f0f
+pkgrel=1
 pkgdesc="Xorg_xcb_util_keysyms_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_keysyms_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git xcb-util-keysyms)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_keysyms_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('ee9d0fd4d6c3c06565d6ef8f504f0537859ce297dc42bf50db7010f677c7ec71'
             '988111af7686790c31ba54eaf0c684ef5e367a7c4fd7e14e97e55f7c4509c9f3')
 
 build() {
