@@ -1,4 +1,4 @@
-From 0cdf05f143f9e5db525fcd544e0ddd9141e82fdc Mon Sep 17 00:00:00 2001
+From 04cff7a592c6296cf7c8e3f6714875a8b989db4d Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/7] Clear soname and hard code system lib path
@@ -22,10 +22,10 @@ Subject: [PATCH 3/7] Clear soname and hard code system lib path
  stdlib/Zlib_jll/src/Zlib_jll.jl               |  27 +-
  stdlib/Zstd_jll/src/Zstd_jll.jl               |  47 +---
  stdlib/libLLVM_jll/src/libLLVM_jll.jl         |  34 +--
- .../src/libblastrampoline_jll.jl              |  28 +-
+ .../src/libblastrampoline_jll.jl              |  24 +-
  stdlib/nghttp2_jll/src/nghttp2_jll.jl         |  30 +--
  stdlib/p7zip_jll/src/p7zip_jll.jl             |  30 +--
- 21 files changed, 149 insertions(+), 902 deletions(-)
+ 21 files changed, 149 insertions(+), 898 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 index 9a0729c50d..1a5c0e2855 100644
@@ -1373,7 +1373,7 @@ index 2edff186b1..a4d85dbd47 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
-index a75e2e30db..aede65805b 100644
+index a75e2e30db..ce9e0c673b 100644
 --- a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
 +++ b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
 @@ -10,9 +10,9 @@ export libblastrampoline
@@ -1389,12 +1389,13 @@ index a75e2e30db..aede65805b 100644
  
  # Because LBT needs to have a weak-dependence on OpenBLAS (or any other BLAS)
  # we must manually construct a list of which modules and libraries we're going
-@@ -31,19 +31,8 @@ function add_dependency!(mod::Module, lib::LazyLibrary, on_load_callback::Functi
+@@ -31,16 +31,9 @@ function add_dependency!(mod::Module, lib::LazyLibrary, on_load_callback::Functi
      push!(on_load_callbacks, on_load_callback)
  end
  
 -libblastrampoline_path::String = ""
--const libblastrampoline = LazyLibrary(
++const libblastrampoline_path = "/usr/lib/libblastrampoline.so"
+ const libblastrampoline = LazyLibrary(
 -    # NOTE: keep in sync with `Base.libblas_name` and `Base.liblapack_name`.
 -    if Sys.iswindows()
 -        BundledLazyLibraryPath("libblastrampoline-5.dll")
@@ -1403,15 +1404,11 @@ index a75e2e30db..aede65805b 100644
 -    else
 -        BundledLazyLibraryPath("libblastrampoline.so.5")
 -    end,
--    dependencies = LazyLibrary[],
--    on_load_callback = libblastrampoline_on_load_callback
--)
-+const libblastrampoline_path = "/usr/lib/libblastrampoline.so"
-+const libblastrampoline = LazyLibrary(libblastrampoline_path)
- 
- function eager_mode()
-     for mod in eager_mode_modules
-@@ -53,13 +42,6 @@ function eager_mode()
++    libblastrampoline_path,
+     dependencies = LazyLibrary[],
+     on_load_callback = libblastrampoline_on_load_callback
+ )
+@@ -53,13 +46,6 @@ function eager_mode()
  end
  is_available() = true
  
