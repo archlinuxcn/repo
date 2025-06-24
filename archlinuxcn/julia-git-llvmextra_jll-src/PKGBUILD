@@ -1,6 +1,6 @@
 pkgname=julia-git-llvmextra_jll-src
-pkgver=0.0.36+0
-_commit=7b4bc2a9189ac65a20776098f26761b06f37fe84
+pkgver=0.0.37+2
+_commit=9045607d724276ee974a0d38d0fb2dc50e5559d2
 pkgrel=1
 pkgdesc="LLVMExtra_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LLVMExtra_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libllvmextra_jll)
 source=("git+https://github.com/JuliaBinaryWrappers/LLVMExtra_jll.jl.git#commit=$_commit"
         jll.toml.in)
-sha256sums=('29bddaa1ecd0a7bc202dec9ed99064ea900fb407d2846e70cf485162b8abe01f'
+sha256sums=('4581c4183866148dd98f235c0e462aee5bc76ce2307e8d317203334a298db4c3'
             '8fa0f6501498012f5f4a258bd42ccf315e32eb39894ca1218e4eb0b620db2c39')
 
 _versioned_llvm=
