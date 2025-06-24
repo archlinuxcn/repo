@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_xcb_util_renderutil_jll-src
-pkgver=0.3.9+1
-_commit=61f5f4651eb5ecce194209442ac9e0ab60a0fc4e
-pkgrel=3
+pkgver=0.3.10+0
+_commit=fc596f48e0e850422e145b634cb778fc4a2f621e
+pkgrel=1
 pkgdesc="Xorg_xcb_util_renderutil_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_renderutil_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git xcb-util-renderutil)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_xcb_util_renderutil_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('19eb5f246c73734328b4a394736876ed0447eb46ccec53692ff10088bc3c8d60'
             '105a9a8f262d478b5ee927d7f3874853dd2acda30cd6a13debc73074071d62ea')
 
 build() {
