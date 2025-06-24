@@ -1,6 +1,6 @@
 # Maintainer: Kimiblock Moe
 pkgname=colortest-git
-pkgver=r4.a068b31
+pkgver=r8.4589873
 pkgrel=1
 epoch=
 pkgdesc="None"
@@ -16,7 +16,7 @@ makedepends+=(git cmake extra-cmake-modules)
 source=(
 	git+"https://invent.kde.org/zamundaaa/colortest.git"
 )
-sha256sums=(SKIP)
+sha256sums=('SKIP')
 
 function pkgver() {
 	cd "${srcdir}/colortest"
