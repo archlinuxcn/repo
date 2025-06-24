@@ -4,8 +4,8 @@
 # Contributor: Manuel Schneider  <manuelschneid3r at googles mail>
 
 pkgname=albert
-pkgver=0.29.0
-pkgrel=2
+pkgver=0.29.1
+pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
 url="https://${pkgname}launcher.github.io"
@@ -16,7 +16,7 @@ optdepends=('ddgr: duckduckgo search plugin'
 	'libarchive: documentation plugin'
 	'libqalculate: calculator plugin')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}launcher/${pkgname}/releases/download/v${pkgver}/v${pkgver}.tar.gz")
-sha512sums=('673e4193d4321e39e3e508abc80a8cf4bbfac714733ddd79ac64948ec1eb9da1124470b0afe342fec73f33ca8b797b50428c3ab765fcf2c8053eaccf0d834c16')
+sha512sums=('93d26c4fd6dfbaf0089ae2d8a42282243df8cf95215e67c148b4da9d6c602b809fce9b1d29e9b780b89f5d5fa3b88a3d264cf5ceed746dd51707a3dfe5a5cdef')
 
 build() {
 	cmake -B build -S "${pkgname}" \
