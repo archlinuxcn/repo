@@ -1,7 +1,7 @@
 pkgname=julia-git-luxurysparse-src
-pkgver=0.7.4
-_commit=77ff1ed16ea89e422de660196a137ae082e34d3c
-pkgrel=2
+pkgver=0.7.5
+_commit=27dfe5bf565d4183bf86f6ad8a4ba7d4bac9ff7e
+pkgrel=1
 pkgdesc="LuxurySparse.jl"
 url="https://github.com/QuantumBFS/LuxurySparse.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumBFS/LuxurySparse.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('cd046ead436e1a92a235a8b3669b4e26898f54649e84dd9b1e338a9985303a45')
 
 package() {
   cd LuxurySparse.jl
