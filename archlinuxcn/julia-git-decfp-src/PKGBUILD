@@ -1,7 +1,7 @@
 pkgname=julia-git-decfp-src
-pkgver=1.3.2
-_commit=2501a28f99fb91469d7002d97d51f6744efc47f9
-pkgrel=2
+pkgver=1.4.1
+_commit=aad37031121789c974011f85244bc745ece4cac3
+pkgrel=1
 pkgdesc="DecFP.jl"
 url="https://github.com/JuliaMath/DecFP.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/DecFP.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('a3f6b125063c7058675a325e21f15114359400ffa06a03fa447a733fdea64c70')
 
 package() {
   cd DecFP.jl
