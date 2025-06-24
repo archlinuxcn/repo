@@ -1,6 +1,6 @@
 pkgname=julia-git-adtypes-src
-pkgver=1.14.0
-_commit=2b3f3605ac39c51d4639541c40d574b384dc3fd1
+pkgver=1.15.0
+_commit=5e7a91aef2cafd727af547441db8607bbd8defd3
 pkgrel=1
 pkgdesc="ADTypes.jl"
 url="https://github.com/SciML/ADTypes.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/ADTypes.jl.git#commit=$_commit")
-sha256sums=('bc3b8b61a8b0b6499be852b8b64d848382aba7d2dddf060bfd11a6107e59bd2a')
+sha256sums=('a9b3746f69ca07d944ff6b35f408f5e2eb20f71adcab2340f5acb0d3df4d3057')
 
 package() {
   cd ADTypes.jl
