@@ -1,6 +1,6 @@
 pkgname=julia-git-pixman_jll-src
-pkgver=0.46.0+0
-_commit=2f85025a9c883f57063a773b63f0cb699e77b0ab
+pkgver=0.46.2+0
+_commit=4b1ead4cee5a5518d040cc5966c34d2f0bf5cde3
 pkgrel=1
 pkgdesc="Pixman_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Pixman_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git pixman)
 source=("git+https://github.com/JuliaBinaryWrappers/Pixman_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('bbedc9d894ac119bcb9d2c9091a0d096e380da44729267ad4dc414731d422a7a'
+sha256sums=('e4287cfd5516b7aa3f283c94eddbc09387d7a3b9c2a5bcdc47574c4eb369b358'
             'bfe0a7dcea4572d0a6c4b5902a113a25620cb3b348defcd0481f75f0697b683a')
 
 build() {
