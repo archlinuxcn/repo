@@ -1,6 +1,6 @@
 pkgname=julia-git-scratch-src
-pkgver=1.2.1
-_commit=d68e430dee44a1b4995be06d675491cf5c080880
+pkgver=1.3.0
+_commit=ed2538678f2d6ba1f8499189f4df90a2f41f3ecb
 pkgrel=1
 pkgdesc="Scratch.jl"
 url="https://github.com/JuliaPackaging/Scratch.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPackaging/Scratch.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('acfdcd0b907196cbea901b39bfd2087e9d6526b9232a48dfab741fae9ddcdae4')
 
 package() {
   cd Scratch.jl
