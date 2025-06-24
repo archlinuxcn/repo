@@ -1,6 +1,6 @@
 pkgname=julia-git-mathtexengine-src
-pkgver=0.6.4
-_commit=2928fb7e55dc17e83b7dd5724b7cd52af74dfa52
+pkgver=0.6.5
+_commit=5e44f57092d92fd1360bf265774fcb7b082de509
 pkgrel=1
 pkgdesc="MathTeXEngine.jl"
 url="https://github.com/Kolaru/MathTeXEngine.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Kolaru/MathTeXEngine.jl.git#commit=$_commit")
-sha256sums=('e80308c264185da4e11c50fd4d6388fc862536dd98eb63d72607329324f8dd5f')
+sha256sums=('5b16c7230ae36f6a6d5e74b9b18c3f720c950a1bc23e1130b2ac6afd80188080')
 
 package() {
   cd MathTeXEngine.jl
