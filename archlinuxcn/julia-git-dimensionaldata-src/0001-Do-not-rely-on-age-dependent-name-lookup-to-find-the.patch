@@ -1,0 +1,35 @@
+From 2ffb8c235e3b9f54b1f24a26d38b804128da62bd Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 24 Jun 2025 15:12:28 -0400
+Subject: [PATCH] Do not rely on age-dependent name lookup to find the base
+ type
+
+The information is in the type and does not require a name lookup to find
+
+Fix #937
+---
+ src/Lookups/utils.jl | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/Lookups/utils.jl b/src/Lookups/utils.jl
+index 93e54fe9..c5e00a56 100644
+--- a/src/Lookups/utils.jl
++++ b/src/Lookups/utils.jl
+@@ -71,11 +71,13 @@ In DimensionalData this is primarily used for comparing `Dimension`s,
+ where `Dim{:x}` is different from `Dim{:y}`.
+ """
+ @inline basetypeof(x::T) where T = basetypeof(T)
++_typewrapper(t::DataType) = t.name.wrapper
++_typewrapper(t::UnionAll) = _typewrapper(Base.unwrap_unionall(t))
+ @generated function basetypeof(::Type{T}) where T
+     if T isa Union
+         T
+     else
+-        getfield(parentmodule(T), nameof(T))
++        _typewrapper(T)
+     end
+ end
+ 
+-- 
+2.49.0
+

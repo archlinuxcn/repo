@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/rafaqz/DimensionalData.jl.git#commit=$_commit")
-sha256sums=('31a033df9ce8d557c82ecc544913e1fc65b971572ccb7c5271db7c5d81083643')
+source=("git+https://github.com/rafaqz/DimensionalData.jl.git#commit=$_commit"
+        0001-Do-not-rely-on-age-dependent-name-lookup-to-find-the.patch)
+sha256sums=('31a033df9ce8d557c82ecc544913e1fc65b971572ccb7c5271db7c5d81083643'
+            '436f5e399cad373b2db6d2be5e76a74be902c9a96661d0729c643c0b0d2b7781')
+
+prepare() {
+  cd DimensionalData.jl
+
+  patch -Np1 --no-backup-if-mismatch < ../0001-Do-not-rely-on-age-dependent-name-lookup-to-find-the.patch
+}
 
 package() {
   cd DimensionalData.jl
