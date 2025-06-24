@@ -1,6 +1,6 @@
 pkgname=julia-git-kernelabstractions-src
-pkgver=0.9.34
-_commit=1516dcee9540455b343396312cfc2b28ad8ab09c
+pkgver=0.9.35
+_commit=f7a37d0d1fec57698615846e75fc9f3b64d5ec9e
 pkgrel=1
 pkgdesc="KernelAbstractions.jl"
 url="https://github.com/JuliaGPU/KernelAbstractions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGPU/KernelAbstractions.jl.git#commit=$_commit")
-sha256sums=('13253f7168db86b9e4070bfaadee548ae43c5f92ce019220a77e2d4334d5bda7')
+sha256sums=('680463349121a69b8fe3d398dfe52215b82611df2d5580196227da66643aaa4a')
 
 package() {
   cd KernelAbstractions.jl
