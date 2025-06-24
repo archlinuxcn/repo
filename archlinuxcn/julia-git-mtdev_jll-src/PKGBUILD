@@ -1,7 +1,7 @@
 pkgname=julia-git-mtdev_jll-src
-pkgver=1.1.6+0
-_commit=a19df607b625d6d9e67fc892cc9cc071dd504ec1
-pkgrel=3
+pkgver=1.1.7+0
+_commit=5806e91dfae4003e6b37624e64152a7c67d021fa
+pkgrel=1
 pkgdesc="mtdev_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/mtdev_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git mtdev)
 source=("git+https://github.com/JuliaBinaryWrappers/mtdev_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('54d0c84f28d7fadf4273aff6dab1aa9ead096a23abf1b997b85ae923f17a6ec3'
             '23a81c9457aa89f1127a4f37da7d2795abe4fd953f4e17a0e6f23201325b56d7')
 
 build() {
