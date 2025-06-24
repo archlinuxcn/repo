@@ -1,6 +1,6 @@
 pkgname=julia-git-optim-src
-pkgver=1.12.0
-_commit=8a55bc3e4b4c1ccf86d5ea860de10d772c005171
+pkgver=1.13.2
+_commit=d815f74694ba4cc0e6187b6b7f43db7853ddfc70
 pkgrel=1
 pkgdesc="Optim.jl"
 url="https://github.com/JuliaNLSolvers/Optim.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaNLSolvers/Optim.jl.git#commit=$_commit")
-sha256sums=('7a19d17d8a28cd65c035b59ab6525b6754a0a94e22638b7f74493b68c10355ed')
+sha256sums=('a78902c8624d404af58633daad0ad9eee06ebb24fe7ae18d3d5e43aec755a6a1')
 
 package() {
   cd Optim.jl
