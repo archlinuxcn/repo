@@ -11,6 +11,12 @@ depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/LazyArrays.jl.git#commit=$_commit")
 sha256sums=('953c6ee7299a34058f5378aaf7bc52ce2bb70b198b4614a8eb5326750a3afa15')
 
+prepare() {
+  cd LazyArrays.jl
+
+  sed -i -e '/^Base\.to_power_type/d' src/LazyArrays.jl
+}
+
 package() {
   cd LazyArrays.jl
 
