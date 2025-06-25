@@ -5,7 +5,7 @@
 
 pkgname=kwin-without-gestures
 _pkgname=kwin
-pkgver=6.4.0
+pkgver=6.4.1
 _dirver=$(echo $pkgver | cut -d. -f1-3)
 pkgrel=1
 pkgdesc='An easy to use, but flexible, composited Window Manager. Patched to get red of hardcoded touchpad gestures'
@@ -87,7 +87,7 @@ optdepends=('maliit-keyboard: virtual keyboard for kwin-wayland')
 source=(https://download.kde.org/stable/plasma/$_dirver/$_pkgname-$pkgver.tar.xz{,.sig}
 	0001-feature-allow-disable-hardcoded-touchpad-gestures.patch)
 install=$_pkgname.install
-sha256sums=('0d3492317a719a645bf2893fcac21bb2979606baf3703610e556b5f7ad54de6a'
+sha256sums=('d4e4306c96cc2e8ba8630eac3234fbc085685b00abc5e5afc2c2c1c6c6fca4d4'
             'SKIP'
             'c821314c83316a1f80b32eddf5095692b433ec91c0767796692f4de2e497ee2c')
 validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
