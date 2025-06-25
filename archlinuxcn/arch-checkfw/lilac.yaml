@@ -9,9 +9,9 @@ post_build_script: |
 update_on:
   - source: "github"
     github: "GalaxySnail/arch-checkfw"
-    use_latest_release: true
+    use_max_tag: true
     prefix: "v"
-    include_prereleases: false
+    #include_prereleases: false
   - alias: python
 
 build_prefix: extra-x86_64
