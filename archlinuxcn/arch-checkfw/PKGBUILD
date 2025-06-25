@@ -3,7 +3,7 @@
 _pkgname=arch_checkfw
 pkgname=arch-checkfw
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="auto detect required firmware packages on Arch Linux"
 arch=('any')
 license=('GPL-2.0-or-later')
@@ -23,7 +23,7 @@ makedepends=(
 #_tag='v1.1.0'
 _commit='1372b1c40e2f0f103fc7a4adb520ffa81b9f95ee'
 source=("$pkgname::git+$url#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('7ca7cbc234ec5aeef904e555976fa82d166dad2da26184fe636ca8f50bf582cf')
 
 build() {
   cd $pkgname
