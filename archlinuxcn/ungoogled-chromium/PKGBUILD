@@ -9,14 +9,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=137.0.7151.119
+pkgver=138.0.7204.49
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=137.0.7151.119-1
+_uc_ver=138.0.7204.49-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -47,13 +47,11 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager_v3.patch
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch
-        chromium-136-drop-nodejs-ver-check.patch
-        disable-clang-fextend-variable-liveness.patch
-        pdfium-fix-build-with-system-libpng.patch)
-sha256sums=('515ee24f24a24a68ec2a4ddbe58e460097769771039e3364ac89e6681fd4cae1'
-            '60785379a3864e42b3afd3d0d5ee9f997fd5e6116379db1eab7d117aad1f0ef4'
+        chromium-138-nodejs-version-check.patch)
+sha256sums=('bcbc0f25cdebfb1b485ef9941689435957c9795d25ea2a414ac0315b8eef608f'
+            '72167aaa699b2e0a7a459b8a753cf901ffcf955ec835835360730aae3a91eda1'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            'cc8a71a312e9314743c289b7b8fddcc80350a31445d335f726bb2e68edf916d1'
+            'bafb04282db0ae19d4e42e022fdccfafb424f18406e5b893475dc18bf4bd8f9e'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             'e6da901e4d0860058dc2f90c6bbcdc38a0cf4b0a69122000f62204f24fa7e374'
             '8ba5c67b7eb6cacd2dbbc29e6766169f0fca3bbb07779b1a0a76c913f17d343f'
@@ -61,9 +59,7 @@ sha256sums=('515ee24f24a24a68ec2a4ddbe58e460097769771039e3364ac89e6681fd4cae1'
             'd9974ddb50777be428fd0fa1e01ffe4b587065ba6adefea33678e1b3e25d1285'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
-            '32f0080282fc0b2795a342bf17fcb3db4028c5d02619c7e304222230ba99d5fe'
-            '2d98a7a6a553fb5c17c4bfe36f011410f377afa12a6a818ba36543dc9a258f4a'
-            'de3222b13d3a49628a00fd74acae633912b830f78c2de452d3bdff3d0e42026d')
+            '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e')
 
 if (( _manual_clone )); then
   source[0]=fetch-chromium-release
@@ -124,11 +120,9 @@ prepare() {
   patch -Np1 -i ../use-oauth2-client-switches-as-default.patch
 
   # Upstream fixes
-  patch -Np1 -i ../disable-clang-fextend-variable-liveness.patch
-  patch -d third_party/pdfium -Np1 <../pdfium-fix-build-with-system-libpng.patch
 
   # Fixes from Gentoo
-  patch -Np1 -i ../chromium-136-drop-nodejs-ver-check.patch
+  patch -Np1 -i ../chromium-138-nodejs-version-check.patch
 
   # Allow libclang_rt.builtins from compiler-rt >= 16 to be used
   patch -Np1 -i ../compiler-rt-adjust-paths.patch
@@ -203,6 +197,8 @@ build() {
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
     'is_official_build=true' # implies is_cfi=true on x86_64
     'symbol_level=0' # sufficient for backtraces on x86(_64)
+    'treat_warnings_as_errors=false'
+    'fatal_linker_warnings=false'
     'disable_fieldtrial_testing_config=true'
     'blink_enable_generated_code_formatting=false'
     'ffmpeg_branding="Chrome"'
