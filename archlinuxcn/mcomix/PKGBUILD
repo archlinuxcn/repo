@@ -3,7 +3,7 @@
 
 pkgname=mcomix
 pkgver=3.1.0
-pkgrel=8
+pkgrel=9
 pkgdesc="GTK comic book viewer"
 arch=('any')
 url="https://sourceforge.net/p/mcomix/wiki/Home/"
@@ -21,8 +21,15 @@ optdepends=(
 )
 source=(
   "https://downloads.sourceforge.net/project/${pkgname}/MComix-${pkgver}/${pkgname}-${pkgver}.tar.gz"
+  0001-Move-multiprocessing-initialization-out-of-functions.patch
 )
-sha256sums=('f9286eba7ffbc3ce9528135a9939823c425f3bbe9f74a639f8706fcc28b4c427')
+sha256sums=('f9286eba7ffbc3ce9528135a9939823c425f3bbe9f74a639f8706fcc28b4c427'
+            '28981cb58be8de3d81bc6178a7f4c830bcf670d15a3e837e61fed32fddfbc6ed')
+
+prepare() {
+  cd "${pkgname}-${pkgver}"
+  patch -Np1 -i ../0001-Move-multiprocessing-initialization-out-of-functions.patch
+}
 
 build() {
   cd "${pkgname}-${pkgver}"
