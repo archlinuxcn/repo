@@ -5,8 +5,8 @@ pkgdesc="A Synapse module that forwards spam checking to an HTTP server."
 url="https://github.com/maunium/synapse-http-antispam"
 license=(MIT)
 arch=(any)
-pkgver=0.4.0
-pkgrel=2
+pkgver=0.5.0
+pkgrel=1
 makedepends=(python-build python-installer python-wheel git python-hatchling)
 depends=(python python-twisted matrix-synapse)
 source=(
@@ -25,4 +25,4 @@ function package() {
 	python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 
-sha256sums=('b33c97686f6af0441a89397793b2055d4dac77f98efcdd35fa79b01ae1a30bd3')
+sha256sums=('9b02b1bdf8d28be1bbd823b654269a5647e8e407292b310a693e7733d85059b1')
