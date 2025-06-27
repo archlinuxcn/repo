@@ -12,6 +12,9 @@ update_on:
     use_max_tag: true
     prefix: "v"
     #include_prereleases: false
-  - alias: python
+  - source: "alpm"
+    alpm: "nginx-mainline"
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
 
 build_prefix: extra-x86_64
