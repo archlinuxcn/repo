@@ -28,6 +28,7 @@ sha512sums=('5928866270d2ccc7cdcaae697e7dbc2d5319bd505a48738677bade1fdc7a33c536a
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  GITHUB_ACTIONS=true \
   python -m build --wheel --no-isolation --skip-dependency-check
 }
 
