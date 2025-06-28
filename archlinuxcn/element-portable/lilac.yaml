@@ -7,7 +7,14 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
+  - source: "github"
+    github: "element-hq/element-web"
+    use_latest_release: true
+    prefix: "v"
+    include_prereleases: false
   - source: "alpm"
     alpm: "element-web"
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
 
 build_prefix: extra-x86_64
