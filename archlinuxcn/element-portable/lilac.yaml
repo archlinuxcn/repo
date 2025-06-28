@@ -9,7 +9,7 @@ post_build_script: |
 update_on:
   - source: "alpm"
     alpm: "element-web"
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: '-.*'
+    to_pattern: ''
 
 build_prefix: extra-x86_64
