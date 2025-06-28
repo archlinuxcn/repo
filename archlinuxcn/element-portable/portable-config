@@ -1,0 +1,45 @@
+#!/usr/bin/bash
+
+# This is your Application ID, avoid conflict
+appID="io.element.Element"
+
+# This is a friendly name of an application. It should only contain ASCII characters and not spaces.
+friendlyName="Element-Desktop"
+
+# This is the state directory of your application, which is located under "XDG_DATA_HOME"
+stateDirectory="Element_Data"
+
+# This is the target executable to launch
+launchTarget="electron /usr/lib/element/app.asar --disable-dev-mode --gtk-version=3 --enable-features=AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoDecodeLinuxGL --enable-wayland-ime --wayland-text-input-version=3"
+
+# Takes a boolean value or string "adaptive". When true, do not process XAuth files and forces wayland input method. "adaptive" enables this option on Wayland and vice versa. Generally this should be adaptive when possible.
+waylandOnly="false"
+
+# Takes boolean value.
+bindInputDevices="false"
+
+# Takes boolean value. Binds /dev/video* into the sandbox. Required if target application uses /dev/video* interfaces directly instead of v4l2.
+bindCameras="false"
+
+# Takes boolean value. Binds PipeWire socket into the sandbox. Required if target application doesn't use Portals. Please be aware that such operation may impact the integrity of host.
+bindPipewire="true"
+
+# Expose all GPUs. Takes boolean value, usually used in games.
+gameMode="false"
+
+# Wake the application using D-Bus calls towards StatusNotifiers.
+dbusWake="false"
+
+# Enables Network access within the sandbox. Defaults to true.
+bindNetwork="true"
+
+# Use pipewire-v4l2 to replace v4l2. Requires bindPipewire=true!
+pwCam="true"
+
+# Use zink for GL -> Vulkan translation
+useZink="true"
+
+# Enable compatibility workarounds for Qt5. Defaults to true.
+qt5Compat="false"
+
+# Below you can set envs that will be imported into the application sandbox
