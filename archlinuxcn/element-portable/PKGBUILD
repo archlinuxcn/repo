@@ -10,7 +10,7 @@
 # Use latest Electron
 _electron=electron
 pkgname=element-portable
-pkgver=1.11.103
+pkgver=1.11.104
 pkgrel=1
 pkgdesc="Glossy Matrix collaboration client — "
 arch=(x86_64)
@@ -38,8 +38,8 @@ source=(git+https://github.com/element-hq/element-desktop.git#tag=v${pkgver}
         io.element.Element.desktop
         element-portable.sh
         portable-config)
-sha256sums=('eeeff356e6b3b1083f375b6c730eecd7a8713ea3c7907642b1b893d920bc0abd'
-            '238f2d5aafba3fd6d9dbbba2987e78723782b8b35523a512eafe7badcaf79590'
+sha256sums=('d07e174472f768a5a05c8cec84fcd474efb94704e982bae3fcf94c6f490d271d'
+            'edfc6c6c7e901a54ab85af55e8c0a32f5b901ed5d94b209240ad536059297c11'
             '268485f35103d00a89be7f5c84703e3d393350c71f4f90932f7bcb5ea2fd094f'
             '02245e0619c679f5db78966b963d165eed47546eaf28377de70fb29861f9baa3'
             '38808c57f5783383a22e68f6ab3a2bdd2edb15decc1f890a950ae50290df97b2'
