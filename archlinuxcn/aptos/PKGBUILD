@@ -30,6 +30,8 @@ build() {
   export CARGO_TARGET_DIR=target
   # https://github.com/aptos-labs/aptos-core/issues/10293
   export RUSTFLAGS="--cfg tokio_unstable"
+  # Fix rocksdb
+  export CXXFLAGS="$CXXFLAGS -include cstdint"
   cargo build --frozen --release -p aptos
 }
 
