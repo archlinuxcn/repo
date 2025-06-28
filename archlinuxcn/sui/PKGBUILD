@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=sui
-pkgver=1.46.3
+pkgver=1.50.1
 pkgrel=1
 pkgdesc='Sui, a next-generation smart contract platform with high throughput, low latency, and an asset-oriented programming model powered by the Move programming language.'
 url='https://sui.io'
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(glibc gcc-libs)
 makedepends=(git cargo clang)
 source=(git+https://github.com/MystenLabs/$pkgname#tag=mainnet-v$pkgver)
-sha512sums=('9854891964815340573c3212825b9cbbf5ff016cc1d1be3df434976d2d967e5e9af690f949ef0eafa865d91ee9cd49cc9f4b5fb7a5853a1db9446bf7a04b1c1d')
+sha512sums=('b36e79d7d56346bff1d0e5dbdd837cddde05e0261243acd8e9623fd51a22212270dbab7900e02033bfedab2a7ae1579807eb39c174ccb79d769b8bb8d39a3d7f')
 # https://github.com/briansmith/ring/issues/1444
 options=(!lto)
 
@@ -24,6 +24,9 @@ build() {
   cd $pkgname
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
+
+  # Fix rocksdb
+  export CXXFLAGS="$CXXFLAGS -include cstdint"
 
   binarys=(
     move-analyzer
@@ -48,7 +51,7 @@ build() {
 package() {
   cd $pkgname
 
-  binarys=(move-analyzer sui sui-bridge sui-bridge-cli sui-data-ingestion sui-faucet sui-graphql-rpc sui-node sui-test-validator sui-tool)
+  binarys=(sui sui-bridge sui-bridge-cli sui-data-ingestion sui-faucet sui-graphql-rpc sui-node sui-test-validator sui-tool)
   for binary in "${binarys[@]}"; do
     install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$binary"
   done
