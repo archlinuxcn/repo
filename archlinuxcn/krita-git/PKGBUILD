@@ -28,16 +28,17 @@ depends=(
     'gsl'
     'harfbuzz'
     'imath'
-    'kcompletion5'
-    'kconfig5'
-    'kcoreaddons5'
-    'kcrash5'
-    'kguiaddons5'
-    'ki18n5'
-    'kitemmodels5'
-    'kitemviews5'
-    'kwidgetsaddons5'
-    'kwindowsystem5'
+    'kcolorscheme'
+    'kcompletion'
+    'kconfig'
+    'kcoreaddons'
+    'kcrash'
+    'kguiaddons'
+    'ki18n'
+    'kitemmodels'
+    'kitemviews'
+    'kwidgetsaddons'
+    'kwindowsystem'
     'lcms2'
     'libjpeg-turbo'
     'libkdcraw5'
@@ -50,10 +51,9 @@ depends=(
     'opencolorio'
     'openexr'
     'openjpeg2'
-    'qt5-base'
-    'qt5-svg'
-    'qt5-x11extras'
-    'quazip-qt5'
+    'qt6-base'
+    'qt6-svg'
+    'quazip-qt6'
     'zlib'
 )
 makedepends=(
@@ -62,16 +62,15 @@ makedepends=(
     'extra-cmake-modules'
     'git'
     'immer'
-    'kdoctools5'
-    'kseexpr'
+    'kdoctools'
+    'kseexpr-qt6'
     'lager'
     'libheif'
     'libjxl'
     'libmypaint'
-    'poppler-qt5'
-    'python-pyqt5'
-    'qt5-quickcontrols2'
-    'qt5-tools'
+    'poppler-qt6'
+    'python-pyqt6'
+    'qt6-tools'
     'sip'
     'xsimd'
     'zug'
@@ -79,13 +78,13 @@ makedepends=(
 optdepends=(
     'kimageformats5: PSD support'
     'krita-plugin-gmic: GMic plugin'
-    'kseexpr: SeExpr generator layer'
+    'kseexpr-qt6: SeExpr generator layer'
     'libheif: HEIF filter'
     'libjxl: JPEG-XL filter'
     'libmypaint: support for MyPaint brushes'
-    'poppler-qt5: PDF filter'
+    'poppler-qt6: PDF filter'
     'python-legacy-cgi: for the Python plugins'
-    'python-pyqt5: for the Python plugins'
+    'python-pyqt6: for the Python plugins'
 )
 provides=(
     "${_pkgname}=${pkgver}"
@@ -111,6 +110,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DBUILD_TESTING=OFF \
+        -DBUILD_WITH_QT6=ON \
         -DBUILD_KRITA_QT_DESIGNER_PLUGINS=ON
     cmake --build build --clean-first
 }
