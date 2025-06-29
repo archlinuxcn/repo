@@ -11,7 +11,7 @@
 _electron=electron
 pkgname=element-portable
 pkgver=1.11.103
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Glossy Matrix collaboration client — "
 arch=(x86_64)
@@ -44,7 +44,7 @@ sha256sums=('eeeff356e6b3b1083f375b6c730eecd7a8713ea3c7907642b1b893d920bc0abd'
             '268485f35103d00a89be7f5c84703e3d393350c71f4f90932f7bcb5ea2fd094f'
             '02245e0619c679f5db78966b963d165eed47546eaf28377de70fb29861f9baa3'
             '38808c57f5783383a22e68f6ab3a2bdd2edb15decc1f890a950ae50290df97b2'
-            '291a8e444dc77d52535c4b546454b649fd96d4322fd790c83f260708d6c57b3e')
+            'e762104d6a3cd5b0a18b03cb3dcbe010af611083ad9c0a41c2570534ffa2ff30')
 
 prepare() {
 #   # Find out which major release of electron this version of element-desktop requires
