@@ -1,0 +1,34 @@
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Nico <d3sox at protonmail dot com>
+
+pkgname=uxplay
+_srcname=UxPlay
+pkgver=1.72.1
+pkgrel=1
+pkgdesc="AirPlay Unix mirroring server"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/FDH2/${_srcname}"
+license=('GPL-3.0-or-later')
+depends=('openssl' 'libplist' 'avahi' 'gst-plugins-base' 'gst-plugins-good' 'gst-plugins-bad' 'gst-libav')
+optdepends=('gstreamer-vaapi: GStreamer plugin required for certain GPUs')
+makedepends=('cmake')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+	"${pkgname}.desktop")
+sha256sums=('f1c1f38bb503142f48e1bb2fb03df7a6581bddda7ecd95562189166844f36563'
+            '40b9d95f9ca1dd9e88a6dc235cc6c8e9fe0bf14a3c5cd56c4847494ce5badb0b')
+
+build() {
+	cmake -B build \
+		-S "${_srcname}-${pkgver}" \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D NO_MARCH_NATIVE=ON \
+		-D NO_X11_DEPS=ON
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+}
