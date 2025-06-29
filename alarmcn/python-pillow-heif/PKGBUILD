@@ -2,7 +2,7 @@
 
 pkgname=python-pillow-heif
 _pkgname=pillow_heif
-pkgver=0.22.0
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="Python library for working with HEIF images and plugin for Pillow."
 arch=(armv7h aarch64 i686 x86_64)
@@ -12,7 +12,7 @@ options=(!emptydirs)
 depends=("python" "python-pillow" "libheif")
 makedepends=("python-setuptools")
 source=("$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('1f044f53fd0b688173cc5f24db5e3e14b111630f51e08507fb599310b713a543')
+sha256sums=('010fdc4af7a21535bc1edd03eb358d387c35c980cf7961332a4b9021df6ca3db')
 
 prepare() {
   cd "$_pkgname-$pkgver"
