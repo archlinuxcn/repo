@@ -1,7 +1,7 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 pkgname=spectra
-pkgver=1.1.0
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="A header-only C++ library for large scale eigenvalue problems"
 license=('MPL-2.0')
@@ -13,7 +13,7 @@ makedepends=(
   eigen
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/yixuan/spectra/archive/v${pkgver}.tar.gz")
-sha512sums=('52f1f14a5a8baa9cf16d563b2bc05ad3c508fa2627c8b8a0ceb8e2b25118020e619dd2cafbc67755316d9d7efa24889699c09fdb3860e664f7a0448e546a8c93')
+sha512sums=('dfd8824d33853dc23c476af4ca8458393284e1d50b8524c000b14109df0095257c3975881d01286bdd057950366d0ff498afb63fbde02f9f313122212ddf62a6')
 
 build() {
   cmake \
