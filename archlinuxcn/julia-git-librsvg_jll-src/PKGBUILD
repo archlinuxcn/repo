@@ -1,7 +1,7 @@
 pkgname=julia-git-librsvg_jll-src
-pkgver=2.54.5+0
-_commit=b78b30293efcdeceeb2e662d81358553ac04e8e7
-pkgrel=2
+pkgver=2.54.7+0
+_commit=e586d7e2b3e4bed59ae882dea148c4bbb46f25aa
+pkgrel=1
 pkgdesc="Librsvg_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Librsvg_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git librsvg)
 source=("git+https://github.com/JuliaBinaryWrappers/Librsvg_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('18f95f22f3604e07d36e7bf49d44d119a05232c6bffd4d09074a8211aa744c8a'
+sha256sums=('d8597be8573e23c69e2a94e2412e274bdba369aa32c102a81d91f1676a0fb8e1'
             'c91dc6001c051a20c3febc4f5ec89943221e0fd3408630226a061a58de0f618c')
 
 build() {
