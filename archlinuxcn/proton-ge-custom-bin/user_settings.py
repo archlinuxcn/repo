@@ -81,6 +81,9 @@ user_settings = {
     #This improves performance for some very specific games (e.g. CoreRT-based games).
 #    "PROTON_NO_WRITE_WATCH": "1",
 
+    #When this envvar is set steam input and hidraw are disabled so that SDL takes priority over controller support.
+#    "PROTON_PREFER_SDL": "1",
+
     ###### DXVK flags ######
 
     #DXVK debug logging; none|error|warn|info|debug
