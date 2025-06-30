@@ -12,12 +12,12 @@ BLUE="${BOLD}$(tput setaf 4)"
 YELLOW="${BOLD}$(tput setaf 3)"
 
 post_install() {
-    msg_blue "Binaries are now linked to /usr/bin/, no need to adjust PATH anymore"
+    msg_blue "Binaries are now linked to /usr/bin, no need to adjust PATH anymore"
 
-    note "Bundled Python 3.12 is currently enforced by adjusted profile file."
-    msg_blue "gcloud is not (yet) fully compatible with python >=3.13"
-    echo "     If you want to use another python version, switch _force_budled_python"
-    echo "     in PKGBUILD and/or adjust /etc/profile.d/google-cloud-cli.sh accordingly."
+    msg_blue "Bundled Python was removed from the package as python >=3.13 is now supported."
+    
+    note "Package was split into 3 packages:"
+    echo "    google-cloud-cli, google-cloud-cli-bq, google-cloud-cli-gsutil"
 }
 
 post_upgrade() {
