@@ -10,8 +10,8 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git librsvg)
 source=("git+https://github.com/JuliaBinaryWrappers/Librsvg_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
-            '4e50a1a419e7d7b65f1e312b7c8d11dfd1105c72c44f9d9fbe1833d2b143c0e2')
+sha256sums=('18f95f22f3604e07d36e7bf49d44d119a05232c6bffd4d09074a8211aa744c8a'
+            'c91dc6001c051a20c3febc4f5ec89943221e0fd3408630226a061a58de0f618c')
 
 build() {
   cd Librsvg_jll.jl
