@@ -3,6 +3,7 @@
 [Unit]
 Description=Blocky service
 After=network-online.target
+Requires=network-online.target
 
 [Service]
 User=blocky
@@ -11,4 +12,4 @@ Restart=on-failure
 AmbientCapabilities=CAP_NET_BIND_SERVICE
 
 [Install]
-WantedBy=network-online.target
+WantedBy=multi-user.target
