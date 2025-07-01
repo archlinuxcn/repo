@@ -4,14 +4,14 @@
 : ${_use_sodeps:=true}
 
 : ${_use_cuda:=false} # nvenc
-: ${_cuda_gcc_version:=14}
+: ${_cuda_gcc_version:=$(LC_ALL=C pacman -Si cuda | grep -Po '^Depends On\s*:.*\bgcc\K[0-9]+\b')}
 
-: ${_commit=64544e7960f5141f71438d72e5dedad81c03729c}
+: ${_commit=65f14e1003f831e776c170621bd06d8292f65155}
 
 _pkgname="sunshine"
 pkgname="$_pkgname"
-pkgver=2025.122.141614
-pkgrel=9
+pkgver=2025.628.4510
+pkgrel=1
 pkgdesc="A self-hosted GameStream host for Moonlight"
 url="https://github.com/LizardByte/Sunshine"
 license=('GPL-3.0-only')
@@ -45,7 +45,8 @@ optdepends=(
   'libva-mesa-driver: AMD GPU encoding support'
 )
 
-if [[ "${_use_cuda::1}" == "t" ]]; then
+if pacman -Qi cuda > /dev/null 2>&1 || [[ "${_use_cuda::1}" == "t" ]]; then
+  _use_cuda=true
   makedepends+=('cuda')
   checkdepends+=('nvidia-utils')
   optdepends+=(
