@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=firefox-portable
-pkgver=1.11.103
+pkgver=140.0.2
 pkgrel=1
 epoch=1
 pkgdesc="Firefox sandboxed by portable"
