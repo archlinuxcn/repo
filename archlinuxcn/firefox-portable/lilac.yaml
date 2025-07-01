@@ -6,4 +6,13 @@ post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()
 
+update_on:
+  - source: "alpm"
+    alpm: "element-web"
+    from_pattern: '-.*'
+    to_pattern: ''
+
+repo_depends:
+  - portable
+
 build_prefix: extra-x86_64
