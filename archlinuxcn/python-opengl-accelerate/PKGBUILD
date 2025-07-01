@@ -11,7 +11,7 @@ groups=()
 depends=('python' 'python-opengl' 'cython')
 makedepends=(python-build python-installer python-wheel git)
 options=(!emptydirs)
-source=(git+https://github.com/mcfletch/pyopengl.git#tag=${pkgver})
+source=(git+https://github.com/mcfletch/pyopengl.git#tag=release-${pkgver})
 sha256sums=('85957c7c76975818ff759ec9243f9dc7091ef6f373ea37a2eb50c320fd9a86f3')
 
 function build() {
