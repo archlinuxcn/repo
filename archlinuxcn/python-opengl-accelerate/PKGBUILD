@@ -14,12 +14,12 @@ options=(!emptydirs)
 source=(git+https://github.com/mcfletch/pyopengl.git#tag=${pkgver})
 sha256sums=('85957c7c76975818ff759ec9243f9dc7091ef6f373ea37a2eb50c320fd9a86f3')
 
-build() {
-  cd "$srcdir/pyopengl"
-  python -m build --wheel --no-isolation
+function build() {
+	cd "$srcdir/pyopengl"
+	python -m build --wheel --no-isolation
 }
 
-package() {
-  cd "$srcdir/pyopengl"
-  python -m installer --destdir="${pkgdir}" dist/*.whl
+function package() {
+	cd "$srcdir/pyopengl"
+	python -m installer --destdir="${pkgdir}" dist/*.whl
 }

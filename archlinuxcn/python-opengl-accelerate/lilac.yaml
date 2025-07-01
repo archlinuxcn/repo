@@ -9,7 +9,6 @@ post_build_script: |
 update_on:
   - source: "github"
     github: "mcfletch/pyopengl"
-    use_latest_release: true
-    include_prereleases: false
+    use_max_tag: true
     prefix: "release-"
 build_prefix: extra-x86_64
