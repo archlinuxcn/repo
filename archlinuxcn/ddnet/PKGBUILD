@@ -2,8 +2,10 @@
 # Contributor: Edgar Luque <git@edgarluque.com>
 
 pkgname=ddnet
-pkgver=19.2.1
-pkgrel=2
+pkgver=19.3
+pkgrel=1
+# allow testing locally a release candidate using pkgver like '19.3rc3'
+_version=${pkgver/rc/-rc}
 pkgdesc="A Teeworlds modification with a unique cooperative gameplay."
 arch=('x86_64')
 url="https://ddnet.org"
@@ -14,11 +16,11 @@ checkdepends=('gmock')
 optdepends=('ddnet-maps-git: All the maps used on the official DDNet Servers.'
             'discord-game-sdk: Enable rich presence in Discord desktop client.')
 backup=('usr/share/ddnet/data/autoexec_server.cfg')
-source=("https://github.com/ddnet/ddnet/archive/$pkgver/$pkgname-$pkgver.tar.gz"
+source=("https://github.com/ddnet/ddnet/archive/$_version/$pkgname-$_version.tar.gz"
         "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf"
         # Licenses extracted from license.txt
         "Zlib.txt" "OFL-1.1.txt" "Bitstream-Vera.txt" "Arev.txt")
-sha256sums=('a6204a951339c2ec6834801a0b44e31fa4f8b0f39edcdc51413b2dabb8c82dd3'
+sha256sums=('15fe9fe8aeebe1edfd14ea9b188c9db4b281cc24c155c64e817fc4ab4387d8f3'
             '9377a9d7c87abae166c8fa98cd79a61c74482f80f80bc930ae043349e9a84965'
             '70034f237270b38bf312238a26cfd322e212ca5714bfea4ae91e80c639ce8738'
             '043452f4de3c86d903973009bb3e59b3492a6669b86d0b1410e59a1476a87369'
@@ -32,7 +34,7 @@ build() {
     cd build
     # https://bbs.archlinux.org/viewtopic.php?id=293078
     CXXFLAGS+=' -ffat-lto-objects'
-    cmake ../$pkgname-$pkgver       \
+    cmake ../$pkgname-$_version     \
         -DCMAKE_BUILD_TYPE=None     \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DAUTOUPDATE=OFF            \
