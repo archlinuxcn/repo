@@ -1,3 +1,10 @@
+## GE-Proton10-8
+
+- Fix doom eternel black screen regression when using wine-wayland
+- disable steam input and xalia in wine-wayland (they dont work with it) and enable sdl instead
+- add protonfixes for Blade & Soul NEO -- game is now playable but there is a known crash in-game when you open the settings. Opening the settings at character select works fine
+- add protonfix to set SteamOS=1 for Wuthering Waves --game is now playable
+
 ## GE-Proton10-7
 
 - Re-added the PROTON_PREFER_SDL option. When this envvar is set steam input and hidraw are disabled so that SDL takes priority over controller support.
