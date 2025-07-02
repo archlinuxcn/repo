@@ -2,7 +2,7 @@
 
 pkgname=thunderbird-portable
 pkgver=139.0.2
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Thunderbird sandboxed by portable"
 arch=('any')
@@ -27,7 +27,7 @@ source=(
 
 md5sums=('ea5929c2da88108fa43a4d7a7c566050'
          'ad98beaed27a3b529c9ceb5038a6e987'
-         '8f09e1dba74deb4e4efab78d0b13d315')
+         '1d7c12414f01b38e33ebf19a70dcd708')
 
 function package() {
 	install -Dm644 portable-config \
