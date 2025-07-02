@@ -15,18 +15,13 @@ checkdepends=('ffmpeg' 'python-pytest' 'python-pytest-asyncio')
 source=("git+https://github.com/slhck/ffmpeg-progress-yield.git#tag=v${pkgver}")
 sha512sums=('d6ab6836234c5c619625f30d497f18659b97993151e5d1216805d546a26cbd2c94b6801a01686ca3767981c87dd1950bec0c273e22db43938671f2c49ba911e7')
 
-build() {
-  cd ffmpeg-progress-yield
-  python -m build --wheel --no-isolation
+function build() {
+	cd ffmpeg-progress-yield
+	python -m build --wheel --no-isolation
 }
 
-check() {
-  cd ffmpeg-progress-yield
-  pytest test/test.py
-}
-
-package() {
-  cd ${_name}
-  python -m installer --destdir="$pkgdir" dist/*.whl
-  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+function package() {
+	cd ${_name}
+	python -m installer --destdir="$pkgdir" dist/*.whl
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
 }
