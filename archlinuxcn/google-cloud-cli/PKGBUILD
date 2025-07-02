@@ -64,8 +64,8 @@ pkgname=(
 #   'google-cloud-cli-component-kubectl'
 #   'google-cloud-cli-component-gsutil'
 # )
-pkgver=528.0.0
-pkgrel=3
+pkgver=529.0.0
+pkgrel=2
 pkgdesc="A core set of command-line tools for the Google Cloud Platform. Includes only gcloud core (with beta and alpha commands), gcloud-crc32c and man pages"
 url="https://cloud.google.com/cli/"
 license=('Apache-2.0')
@@ -86,8 +86,8 @@ source_aarch64=("$pkgbase-$pkgver.orig_aarch64.tar.gz::https://dl.google.com/dl/
 
 sha256sums=('6e88b535c020b0f28c986fdb66918f8c07e4d337e813b77ec2068068f03457f8'
             '6ac95bcc5afa06e9c1e3bd402ecbe1a2092b963d70a8f314215dd4be27e16fc6')
-sha256sums_x86_64=('0eb967e6d906af8aee517561104899de81520a54d37421c715e94b13a176d3dc')
-sha256sums_aarch64=('23d31bc8d0723fc9564b42e5a233dafa2462cca3c21a23834c541a58f2835e04')
+sha256sums_x86_64=('2899c79a0db01414a8373b415c153198ab3b078e121f14c262c7339da2d0130f')
+sha256sums_aarch64=('31be516c6886c6361bdb77b0d3923e8c434deeafcd761007db761b54225cdd47')
 
 prepare() {
   cd "$_extracted_name"
@@ -126,8 +126,6 @@ package_google-cloud-cli() {
     "${pkgdir}/usr/share/zsh/site-functions"
 
   cp -r "${sdir}" "${ddir}"
-
-  cd 
 
   # remove components
   rm -rf "$ddir/platform/gsutil"
@@ -204,16 +202,17 @@ package_google-cloud-cli-gsutil() {
   pkgdesc='Cloud Storage Command Line Tool: gsutil is not the recommended CLI for Cloud Storage'
   provides=('google-cloud-cli-gsutil' 'gsutil')
   conflicts=('gsutil')
-  depends+=('google-cloud-cli-bundled-python3-unix')
-  optdepends=("python-crcmod: verify the integrity of GCS object contents")
+  #depends+=('google-cloud-cli-bundled-python3-unix')
+  optdepends=("python-crcmod: verify the integrity of GCS object contents"
+  "google-cloud-cli-bundled-python3-unix: bundled python to use if system python is not compatible")
   c=${pkgname#google-cloud-cli-} # component
   backup=( "etc/profile.d/google-cloud-cli-gsutil.sh" )
   _package_helper
 
-  _bundled_py_bin="${ddir:${#pkgdir}}/platform/bundledpythonunix/bin/python3"
-  install -d -m 0755 "${pkgdir}/etc/profile.d"
-  echo "export CLOUDSDK_GSUTIL_PYTHON=${_bundled_py_bin}" >> \
-  "${pkgdir}/etc/profile.d/google-cloud-cli-${c}.sh"
+  # _bundled_py_bin="${ddir:${#pkgdir}}/platform/bundledpythonunix/bin/python3"
+  # install -d -m 0755 "${pkgdir}/etc/profile.d"
+  # echo "export CLOUDSDK_GSUTIL_PYTHON=${_bundled_py_bin}" >> \
+  # "${pkgdir}/etc/profile.d/google-cloud-cli-${c}.sh"
 }
 
 package_google-cloud-cli-bundled-python3-unix() {
