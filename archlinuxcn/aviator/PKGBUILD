@@ -16,8 +16,7 @@ sha512sums=('b70bdd33d7849cd7035154d2e11e501f7133d9a6569ca2846b5428a354bb268560e
 
 function prepare() {
 	echo '''#!/usr/bin/bash
-	mkdir -p "${HOME}/.var/app/net.natesales.Aviator"
-	exec bwrap --dev-bind / / --bind "${HOME}/.var/app/net.natesales.Aviator" "${HOME}"  $@
+	exec bwrap --dev-bind / / --dir "${HOME}/.var/app/net.natesales.Aviator" --bind "${HOME}/.var/app/net.natesales.Aviator" "${HOME}"  $@
 	''' >"${srcdir}/wrapper"
 }
 
