@@ -27,6 +27,12 @@ function build() {
 
 function package() {
 	meson install -C build --destdir "$pkgdir"
-	desktop-file-edit --set-key=Exec --set-value=aviator-wrapper
-	install -vDm755 "${srcdir}/wrapper" "${pkgdir}/usr/bin/aviator-wrapper"
+	desktop-file-edit \
+		--set-key=Exec \
+		--set-value=aviator-wrapper \
+		"${pkgdir}/usr/share/applications/net.natesales.Aviator.desktop"
+	install \
+		-vDm755 \
+		"${srcdir}/wrapper" \
+		"${pkgdir}/usr/bin/aviator-wrapper"
 }
