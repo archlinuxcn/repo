@@ -1,7 +1,7 @@
 pkgname=julia-git-tracy-src
-pkgver=0.1.4
-_commit=d52878c33ef0fc9b2567392ce940fb97c08c285e
-pkgrel=2
+pkgver=0.1.5
+_commit=7b50cae65736e5f72feb10b7014f788f734ee666
+pkgrel=1
 pkgdesc="Tracy.jl"
 url="https://github.com/topolarity/Tracy.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/topolarity/Tracy.jl.git#commit=$_commit")
-sha256sums=('6625936c7bd96b9cbe7f3556a74a254f33022268539b3adbe8e99b7cfe43c126')
+sha256sums=('5061dc75b799964581f469bb84c37499e1a1c3f64cb9dd14dc739ac5e1daa67b')
 
 package() {
   cd Tracy.jl
