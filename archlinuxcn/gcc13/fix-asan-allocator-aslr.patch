@@ -1,0 +1,60 @@
+From fb77ca05ffb4f8e666878f2f6718a9fb4d686839 Mon Sep 17 00:00:00 2001
+From: Thurston Dang <thurston@google.com>
+Date: Thu, 13 Apr 2023 23:55:01 +0000
+Subject: [PATCH] Re-land 'ASan: move allocator base to avoid conflict with
+ high-entropy ASLR for x86-64 Linux'
+
+D147984 was reverted because it broke lit tests on Mac. This revision is based on D147984
+but maintains the old behavior for Apple.
+
+Note that, per the follow-up discussion with MaskRay in D147984, this patch excludes Apple
+but includes other platforms (e.g., aarch64, MIPS64) and OSes (e.g., FreeBSD, S390X), not just
+x86-64 Linux.
+
+Original commit message from D147984:
+
+Users have discovered [*] that when CONFIG_ARCH_MMAP_RND_BITS == 32,
+it will frequently conflict with ASan's allocator on x86-64 Linux, because the
+PIE program segment base address of 0x555555555554 plus an ASLR shift of up to
+((2**32) * 4K == 0x100000000000) will sometimes exceed ASan's hardcoded
+base address of 0x600000000000. We fix this by simply moving the allocator base
+to 0x500000000000, which is below the PIE program segment base address. This is
+cleaner than trying to move it to another location that is sandwiched between
+the PIE program and library segments, because if either of those grow too large,
+it will collide with the allocator region.
+
+Note that we will never need to change this base address again (unless we want to increase
+the size of the allocator), because ASLR cannot be set above 32-bits for x86-64 Linux (the
+PIE program segment and library segments would collide with each other; see also
+ARCH_MMAP_RND_BITS_MAX in https://github.com/torvalds/linux/blob/master/arch/x86/Kconfig).
+
+[*] see https://b.corp.google.com/issues/276925478
+and https://groups.google.com/a/google.com/g/chrome-os-gardeners/c/BbfzCP3dEeo/m/h3C_vVUxCQAJ
+
+Differential Revision: https://reviews.llvm.org/D148280
+---
+ compiler-rt/lib/asan/asan_allocator.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/compiler-rt/lib/asan/asan_allocator.h b/compiler-rt/lib/asan/asan_allocator.h
+index 0b4dbf03bb9d5..6a12a6c602528 100644
+--- a/compiler-rt/lib/asan/asan_allocator.h
++++ b/compiler-rt/lib/asan/asan_allocator.h
+@@ -143,11 +143,15 @@ typedef DefaultSizeClassMap SizeClassMap;
+ const uptr kAllocatorSpace = ~(uptr)0;
+ const uptr kAllocatorSize  =  0x8000000000ULL;  // 500G
+ typedef DefaultSizeClassMap SizeClassMap;
+-# else
++#  elif SANITIZER_APPLE
+ const uptr kAllocatorSpace = 0x600000000000ULL;
+ const uptr kAllocatorSize  =  0x40000000000ULL;  // 4T.
+ typedef DefaultSizeClassMap SizeClassMap;
+-# endif
++#  else
++const uptr kAllocatorSpace = 0x500000000000ULL;
++const uptr kAllocatorSize = 0x40000000000ULL;  // 4T.
++typedef DefaultSizeClassMap SizeClassMap;
++#  endif
+ template <typename AddressSpaceViewTy>
+ struct AP64 {  // Allocator64 parameters. Deliberately using a short name.
+   static const uptr kSpaceBeg = kAllocatorSpace;
