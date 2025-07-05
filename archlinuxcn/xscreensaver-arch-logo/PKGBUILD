@@ -1,23 +1,24 @@
-# Maintainer: Geballin <macniaque [at] free [dot] fr>
 # Maintainer: Morgenstern <charles [at] charlesbwise [dot] com>
+# Maintainer: Geballin <macniaque [at] free [dot] fr>
 # Contributor: Thomas Mudrunka <harvie [at] email [dot] cz>
 # Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=xscreensaver-arch-logo
-pkgver=6.10.1
+pkgver=6.11
 pkgrel=1
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 url="https://www.jwz.org/${pkgname%%-*}/"
 arch=('x86_64')
 license=('0BSD')
-depends=('glu' 
+depends=('glu'
          'gtk3'
-         'libxmu'         
-         'perl-libwww' 
+         'libxmu'
+         'perl-libwww'
+         'xdg-utils'
          'xorg-appres') 
-makedepends=('bc' 
-             'intltool' 
+makedepends=('bc'
+             'intltool'
              'libxpm'
              'systemd')
 optdepends=('gdm: for login manager support'
@@ -25,7 +26,7 @@ optdepends=('gdm: for login manager support'
 conflicts=('xscreensaver')
 provides=('xscreensaver')
 backup=('etc/pam.d/xscreensaver')
-source=("${pkgname}-${pkgver%.*}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pkgname%%-*}-${pkgver}.tar.gz"
+source=("${pkgname}-${pkgver}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pkgname%%-*}-${pkgver}.tar.gz"
         LICENSE 
         logo-50.gif
         logo-180.gif
@@ -40,7 +41,7 @@ source=("${pkgname}-${pkgver%.*}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pk
         logo-50.xpm
         logo-180.xpm
         logo-360.xpm)
-sha512sums=('25219f670cdd18db34fc514dc68c628ac8721f88a15d5df2cecbef92ebdfaa916be40ddd171b79166fc20469c199573827dbcbeb7bfa258d48b7f1a9ca7ea07a'
+sha512sums=('b12c14b27cef14b75c2b61d5f754599a1c3d2962e23b2a0b7ff7670f205b6235b56d30473d43b8f26f721847853f43b93b60bd36e6b0998bc6a3836d81b503ab'
             '529ed9b7904631989803a4e1f306a0f3e496e50a123ebbd6ff77058e52aeb1b2328148d8224e54b547faff14e9d591146b9849c5fb9d1063e6db41f295f3074e'
             'a63d93f148500eb8ae4a011286c1e762a38575773381d33fa1c79cb1b94df8bdba54b40c52c5861ab865934f1d3a3a225c1ef5758a698a9e587b0779d76a0a34'
             '4814fa3178d5f37b5422dcfa73b53f94492863e958987590796ea1a5a5df85977033aa2064e2cd6b2b813908751d8f9982e5103b6615d5b60d521d720340483b'
@@ -66,7 +67,7 @@ prepare() {
              logo-180.png
              logo-360.png)
   for _pngfile in "${logos_png[@]}"; do
-	install -Dm0644 "${_pngfile}" "${srcdir}/${pkgname%%-*}-${pkgver%.*}/hacks/images/${_pngfile}"
+	install -Dm0644 "${_pngfile}" "${srcdir}/${pkgname%%-*}-${pkgver}/hacks/images/${_pngfile}"
   done
   
   logos=(logo.pdf
@@ -79,12 +80,12 @@ prepare() {
          logo-512.png
          logo-big.gif)
   for _file in "${logos[@]}"; do
-	install -Dm0644 "${_file}" "${srcdir}/${pkgname%%-*}-${pkgver%.*}/utils/images/${_file}"
+	install -Dm0644 "${_file}" "${srcdir}/${pkgname%%-*}-${pkgver}/utils/images/${_file}"
   done
 }
 
 build() {
-  cd "${pkgname%%-*}-${pkgver%.*}"
+  cd "${pkgname%%-*}-${pkgver}"
   ./configure \
 	--prefix=/usr \
 	--sysconfdir=/etc \
@@ -98,13 +99,16 @@ build() {
 	--with-gl \
 	--without-gle \
 	--with-pixbuf \
-	--with-jpeg
+	--with-jpeg \
+    --with-systemd \
+    --enable-pam-check-account-type \
+    --with-wayland=no
   make
 }
 
 package() {
-  cd "${pkgname%%-*}-${pkgver%.*}"
+  cd "${pkgname%%-*}-${pkgver}"
   install -d "${pkgdir}/etc/pam.d"
   make install_prefix="${pkgdir}" install
-  install -Dm0644 ../LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -vDm0644 ../LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
