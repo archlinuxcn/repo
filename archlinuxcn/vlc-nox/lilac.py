@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['Booloki'])
     for line in edit_file("PKGBUILD"):
         if "replaces=" in line:
             continue
