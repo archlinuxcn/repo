@@ -1,7 +1,7 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 pkgname="ddns-go"
-pkgver=6.11.1
+pkgver=6.11.2
 pkgrel=1
 pkgdesc="A simple, easy-to-use ddns service"
 license=('MIT')
@@ -19,10 +19,10 @@ source=("${pkgname}::git+${url}.git#tag=v${pkgver}"
         "${pkgname}.user.service"
         "${pkgname}.sysusers"
         "${pkgname}.tmpfiles")
-sha256sums=('648344c75c54683c9ee05ca0e1d215768338bafbebea60b646c5889fcbcdbafe'
+sha256sums=('acbf305c817599e0d4c52b6616500da39077002dd12444e247b901a51da0e1cd'
             'adc5116f5b965e642a826dd2ac5680a112b85b89963658dae18242cffb9224dc'
             'f1d7ee4f2ef6c13270ff7e3b9f17a35c5faba76e7601a81cc0ac75da9e27f724'
-            '9f7130bfaf2e1cd48803ca1fe18708c425e2336ad7d90051d121ca1948d6e6f1'
+            '2f94cb5b27c38d98ea758b27709c4fac7b1b78e946c8b1f6c810ab2296708278'
             '558a170cae11f423591c5487dfe5f5e72f4aa88aaf62055f79a6656b6a98235a'
             '1d8bffaf2683e72d13d18e4208b91ac96e440159069a94f34068c42ec98ed5c2')
 
@@ -50,6 +50,7 @@ package() {
     install -Dm755 "${pkgname}/${pkgname}"   "${pkgdir}/usr/bin/${pkgname}"
     install -Dm644 "${pkgname}/LICENSE"      "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
     install -Dm644 "${pkgname}/README.md"    "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+    install -Dm644 "${pkgname}/README_EN.md" "${pkgdir}/usr/share/doc/${pkgname}/README_EN.md"
     install -Dm644 "${pkgname}.env"          "${pkgdir}/etc/${pkgname}/${pkgname}.env"
     install -Dm644 "${pkgname}.service"      "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
     install -Dm644 "${pkgname}.user.service" "${pkgdir}/usr/lib/systemd/user/${pkgname}.service"
