@@ -4,9 +4,9 @@ Wants = network-online.target
 After = network-online.target
 
 [Service]
-EnvironmentFile = -%h/.config/ddns-go/ddns-go.env
-ExecStartPre = /usr/bin/mkdir -p %h/.config/ddns-go ; /usr/bin/touch %h/.config/ddns-go/config.yml
-ExecStart = /usr/bin/ddns-go -c %h/.config/ddns-go/config.yml $EXTRA_OPTS
+EnvironmentFile = -%E/ddns-go/ddns-go.env
+ExecStartPre = /usr/bin/mkdir -p %E/ddns-go ; /usr/bin/touch %E/ddns-go/config.yml
+ExecStart = /usr/bin/ddns-go -c %E/ddns-go/config.yml $EXTRA_OPTS
 Restart = always
 RestartSec = 5
 
