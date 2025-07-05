@@ -9,12 +9,16 @@ arch=('any')
 url='https://github.com/huggingface/transformers'
 license=('Apache')
 depends=(
+  python-av
+  python-accelerate
   python-filelock
   python-huggingface-hub
   python-numpy
   python-regex
   python-requests
   python-sacremoses
+  python-safetensors
+  python-scikit-learn
   python-tokenizers
   python-tqdm
   python-yaml
