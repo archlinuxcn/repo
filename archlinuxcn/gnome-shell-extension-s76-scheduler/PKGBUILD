@@ -11,15 +11,8 @@ url='https://github.com/ossianwinter/s76-scheduler'
 license=('MPL-2.0')
 depends=('gnome-shell>=46' 'system76-scheduler')
 makedepends=('git')
-source=("git+https://github.com/ossianwinter/s76-scheduler.git#tag=v${pkgver}"
-        'fix-shell-version.patch')
-b2sums=('ee8c0d386c85d6bb4dcbf942031c7ec2dccd87ef2d39faa779e4dd2be90f41248e0c9a05fab085df7be8e243783dd8f42175d8813c73b2908c3a8b1da598d73b'
-        '9f644169733e69af55b960afa093596cb27efb51bb3a2a8b99246e5f5a069f1804957428285398ae0eb4f3107e97a79145f2e9903c019fc1244f199f93a2fb4a')
-
-prepare() {
-  cd "${srcdir}/s76-scheduler"
-  git apply -3 "${srcdir}"/*.patch
-}
+source=("git+https://github.com/ossianwinter/s76-scheduler.git#tag=v${pkgver}")
+b2sums=('ee8c0d386c85d6bb4dcbf942031c7ec2dccd87ef2d39faa779e4dd2be90f41248e0c9a05fab085df7be8e243783dd8f42175d8813c73b2908c3a8b1da598d73b')
 
 package() {
   cd "${srcdir}/s76-scheduler"
