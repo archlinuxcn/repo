@@ -1,0 +1,44 @@
+# Anki does not properly support local uv binaries, this patch
+# allows for offline builds with system uv binaries via the UV_BINARY env var
+--- a/build/configure/src/python.rs
++++ a/build/configure/src/python.rs
+@@ -122,7 +122,14 @@
+     }
+
+     fn files(&mut self, build: &mut impl FilesHandle) {
+-        build.add_inputs("uv", inputs![":uv_binary"]);
++        if std::env::var("OFFLINE_BUILD").ok().as_deref() == Some("1") {
++            let uv_path = std::env::var("UV_BINARY")
++                .expect("UV_BINARY must be set in OFFLINE_BUILD mode");
++            build.add_inputs("uv", inputs![uv_path]);
++        } else {
++            build.add_inputs("uv", inputs![":uv_binary"]);
++        }
++
+         build.add_inputs("", &self.deps);
+
+         // Set the project directory based on which package we're building
+@@ -219,15 +226,19 @@
+
+ impl BuildAction for Sphinx {
+     fn command(&self) -> &str {
+-        if env::var("OFFLINE_BUILD").is_err() {
+-            "$uv sync --extra sphinx && $python python/sphinx/build.py"
+-        } else {
++        if std::env::var("OFFLINE_BUILD").ok().as_deref() == Some("1") {
+             "$python python/sphinx/build.py"
++        } else {
++            "$uv sync --extra sphinx && $python python/sphinx/build.py"
+         }
+     }
+
+     fn files(&mut self, build: &mut impl FilesHandle) {
+-        if env::var("OFFLINE_BUILD").is_err() {
++        if std::env::var("OFFLINE_BUILD").ok().as_deref() == Some("1") {
++            let uv_path = std::env::var("UV_BINARY")
++                .expect("UV_BINARY must be set in OFFLINE_BUILD mode");
++            build.add_inputs("uv", inputs![uv_path]);
++        } else {
+             build.add_inputs("uv", inputs![":uv_binary"]);
+             // Set environment variable to use the existing pyenv
+             build.add_variable("pyenv_path", "$builddir/pyenv");

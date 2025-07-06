@@ -1,7 +1,252 @@
+# 25.07.1-1
+What's Changed
+
+If the existing launcher is working well for you, you don't need to download a new version - just use
+Tools>Upgrade/Downgrade inside Anki to update.
+
+  * Fixed regression in editor font by @dae in #4159
+  * Fixed launcher failing to run on some Linux distros by @Grinkers in #4162
+  * Add a contributor to about.py by @GithubAnon0000 in #4161
+  * Rename: true retention > retention rate by @brishtibheja in #4164
+
+PKGBUILD:
+
+  * updated packaging to allow offline building with the new bundler, uv.
+  * added man page and default xdg-mime types to the package.
+
+# 25.07
+What's Changed
+
+New Launcher
+
+The way Anki is packaged and distributed has changed:
+
+  * You can use the launchers below to download the latest Anki version, and update to newer versions/downgrade to
+  old ones.
+  * You'll find a Tools>Upgrade/Downgrade menu item inside Anki to return the launcher.
+  * The oldest supported Anki version to install is 2.1.50.
+  * The Mac and Linux launchers support both AMD64 (Intel) and ARM64 (Apple Silicon) machines. The Windows
+  installer is AMD64-only, but will run in emulation mode on ARM Windows.
+  * On Linux, glibc 2.36 or later is now required.
+  * Anki now ships with Python 3.13 (but has not yet bumped the minimum Python from 3.9).
+  * The new launcher still has room for improvement.
+
+Notable FSRS/Scheduling changes
+
+  * FSRS-6 brings further algorithm improvements by @L-M-Sherlock in #3929
+  * Add "grade now" action by @L-M-Sherlock in #3840 and @iamllama in #4055
+  * Support load balance and easy days when rescheduling by @L-M-Sherlock in #3815
+  * Support load balance and easy days in FSRS simulator by @L-M-Sherlock in #3829
+  * Add a 'max interval too low' warning. by @Luc-Mcgrady in #3847
+  * The optimizer uses a better approach for evaluating optimizations by @L-M-Sherlock in #3962
+    The Evaluate button has been replaced with an optional health check that runs during optimization by
+    @Luc-Mcgrady in
+    #4068 and #4047. If you wish to keep using the old evaluate, you can show the button with a debug
+    console command: #4149.
+  * Calculate accurate retrievability in card info by elapsed seconds by @L-M-Sherlock in #4034
+  * Desired retention warning improvements by @Luc-Mcgrady in #3995
+  * Set Due Date: Set interval to actual elapsed days when FSRS is enabled by @L-M-Sherlock in #4035
+  * Feat/Card ID special field by @Luc-Mcgrady in #4046
+  * Limit study time to hours in reviews graph by @user1823 in #4086
+  * Add search keyword to strip clozes beforehand by @iamllama in #4145
+
+Other Notable Changes
+
+  * Add IO mask colour fill tool by @iamllama in #4048
+  * Allow rotating IO masks by @iamllama in #3987
+  * Add an option to disable middle click to paste on Linux by @derivativeoflog7 in #3904
+  * Allow drag-dropping into plaintext editor by @iamllama in #3902
+  * Cache rendered mathjax to avoid stalling when editing plaintext by @iamllama in #3828
+  * Consider leeches in FSRS simulator by @Luc-Mcgrady in #3837
+  * Copy card debug info by @Luc-Mcgrady in #3801
+  * Improve handling of 'ignore cards before' by @Luc-Mcgrady in #3910
+  * Improve performance of nested clozes and increase limit to 10 levels by @iamllama in #3886
+  * Replace some means in Stats with medians by @user1823 in #3900
+
+Other Improvements
+
+  * Add a warning when there is a cloze in "back extra" and "text" is empty by @rreemmii-dev in #3912
+  * Add Cmd+W close shortcut (on Mac) to more dialogs by @beyondcompute in #3905
+  * Add help modal to TR table by @GithubAnon0000 in #3874
+  * Add hook for day rollover by @jakeprobst in #3817
+  * Add hooks for comparing answers by @chel-ou in #3855
+  * Add min-height to fields by @GithubAnon0000 in #3922
+  * Add title for some dialogs and avoid hardcoding the text of the discard changes dialog by @BrayanDSO in
+  #3846
+  * Add-ons Dialog: disable View Config/Page/Files buttons when clicking them would not lead to useful result by
+  @beyondcompute in #3869
+  * Added translation contributor by @Danika-Dakika in #3820
+  * Center align rows in FSRS simulator by @GithubAnon0000 in #3882
+  * Chore/Simulator modal i18n by @Luc-Mcgrady in #3927
+  * Cleanup old TODO by @GithubAnon0000 in #3903
+  * Cloze button get disabled outside of cloze field by @Arthur-Milchior in #3879
+  * Comment for translators for "Daily load" by @sommerluk in #3887
+  * Comment for translators for statistics-total by @sommerluk in #3880
+  * Comments for translators about sort order by @sommerluk in #3831
+  * Debounce mathjax rendering to avoid stalling by @iamllama in #3827
+  * Don't recalculate remaining steps, conditionally by @graves in #3849
+  * feat: add title to some of the sync dialogs by @BrayanDSO in #3838
+  * Feat/simplified relearning steps logic with updated FSRS training API by @L-M-Sherlock in #3867
+  * Fine-tune load balancer by @Expertium in #3864
+  * Fix autoplay not being stopped on editor close if it interrupted another by @iamllama in #3915
+  * Fix broken window decorations on unpackaged GNOME instances by @krischerven in #3858
+  * Fix card layout editor crash when editing while reviewing by @iamllama in #3814
+  * Fix cargo ignoring lockfile when building syncserver image by @iamllama in #3856
+  * Fix deck day limits incorrectly being carried over when importing by @iamllama in #3878
+  * Fix drag/drop breaking when editor is zoomed by @iamllama in #3916
+  * Fix error when middle clicking in editor on systems w/o global mouse selection by @iamllama in #3923
+  * Fix fields with \n being ignored when searching all fields w/o regex by @iamllama in #3943
+  * Fix flashing when opening the stats, empty cards or find dupes dialogs by @iamllama in #3928
+  * Fix panic when clearing today limits on the day collection was made by @iamllama in #3877
+  * Fix superfluous message when a deck is dragged to its parent by @krischerven in #3859
+  * Fix: Cloze cards missing "copy card info" button by @Luc-Mcgrady in #3811
+  * Fix: correct typo and adjust indentation in docstring by @babofitos in #3920
+  * fix: Task manager exception handling by @RisingOrange in #3839
+  * Fix/Calculate missing memory states on simulate by @Luc-Mcgrady in #3940
+  * Fix/incorrect initialization of SchedTimingToday in graphs/retrievability.rs by @L-M-Sherlock in #3857
+  * Fix/index out of bounds exception in Card Stats Data by @L-M-Sherlock in #3872
+  * Hide AverageForDaysStudied when studiedPercent = 100 by @user1823 in #3888
+  * Improve natural unit conversion for a time b/w 360 to 365 days by @user1823 in #3901
+  * Improve performance of stats revlog entries with memory state by @L-M-Sherlock in #3866
+  * Increase font size in mathjax preview for accessibility by @GithubAnon0000 in #3832
+  * Loosen csv metadata parsing by @iamllama in #3862
+  * Modify card rendering output to specify if rendered card is empty by @iamllama in #3890
+  * Move TR table upwards by @GithubAnon0000 in #3873
+  * NF: explaining the bridge between languages by @Arthur-Milchior in #3572
+  * NF: sligthly optimize cards.py by @Arthur-Milchior in #3870
+  * Persist tags when refetching csv metadata while importing by @iamllama in #3938
+  * Prevent accidental dragging of audio playback buttons and hint links by @beyondcompute in #3844
+  * Refactor: Make Load Balancer Optional Throughout Codebase by @YukiNagat0 in #3860
+  * Remove use of createClassComponent in mathjax-element.ts by @iamllama in #3919
+  * Return a copy of note type in ModelManager.get() by @abdnh in #3865
+  * Show "and others" at the end of the contributor list in the About dialog by @krischerven in #3863
+  * Some documentation and reduce copy/paste by @Arthur-Milchior in #3917
+   * Style: add shadow to graph tooltip by @ikkz in #3891
+  * Style: use consistent input styles in deck options by @ikkz in #3894
+  * Update FsrsOptions.svelte to add margin / gap between simulator buttons by @GithubAnon0000 in #3822
+  * Update my name in Anki's credits by @vtenfys in #3852
+  * Update NoteEditor.svelte to swap sticky pin and html view. by @GithubAnon0000 in #3821
+  * Update uninstall.sh to give feedback to the user by @GithubAnon0000 in #3834
+  * Use default flag name when flag is renamed to empty string by @mumtazrifai in #3826
+  * Use tilted (filled and unfilled) sticky icons in the cards editor by @GithubAnon0000 in #3825
+  * Update to FSRS-rs v3.0.0 (fix historic memory state) by @L-M-Sherlock in #3946
+  * Fix/FSRS-6 doesn't give <1d intervals & use log loss instead of RMSE(bins) by @L-M-Sherlock in #3948
+  * Update sorting by R for FSRS 6 by @user1823 in #3949
+  * Fix/No memory state cards have revlogs in reverse order on card stats screen. by @Luc-Mcgrady in
+  #3951
+  * Fix/incorrect fallback of decay by @L-M-Sherlock in #3954
+  * Fix/missing-simulator-decay-for-FSRS-5 by @L-M-Sherlock in #3956
+  * Feat/CMRR uses simulate config by @Luc-Mcgrady in #3947
+  * Add a way to pass information from browser_will_search to browser_did_search without having it going to the
+  backend by @JSchoreels in #3945
+  * Fix docs of note_fields_check to match changes made in PR #3912 by @rreemmii-dev[34] in #3944
+  * add toggle for browser sidebar by @JL710 in #3953
+  * Close only “child” window (e.g. Preview) inside Browser on Cmd+W by @beyondcompute in #3913
+  * Add ellipsis to Grade Now by @L-M-Sherlock in #3970
+  * Add left margin to browser when sidebar is closed by @iamllama in #4040
+  * Add myself to about.py by @GithubAnon0000 in #4026
+  * Bump vite from 5.4.18 to 5.4.19 by @dependabot in #4018
+  * Change collection size too large error to add MB values and info about compressed vs. uncompressed. by
+  @GithubAnon0000 in #3981
+  * Check if self.card.reps>0 before substracing 1 by @JSchoreels in #3966
+  * Clarify field separator being a guess when importing csv by @iamllama in #3996
+  * Clear notetypes cache on import by @abdnh in #3969
+  * Docs: correct reference for linux dockerfile by @thedroiddiv in #3982
+  * Don't use intraday relearning step as starting memory state by @mbrubeck in #3959
+  * Expose decay of Card object in Python by @L-M-Sherlock in #3985
+  * Fix "Open Image" being broken for filenames with certain reserved characters by @iamllama in #3986
+  * Fix broken support link by @GithubAnon0000 in #4019
+  * FIX diacritics being cutoff in input card templates by @GithubAnon0000 in #4049
+  * Fix DR not being in percent in the forgetting curve by @GithubAnon0000 in #4024
+  * Fix existing IO mask borders getting scaled by @iamllama in #3991
+  * Fix invalid rust-analyzer option by @abdnh in #3972
+  * Fix IO masks not saving when scaled by @iamllama in #4021
+  * Fix IO undo logic error by @iamllama in #4027
+  * Fix mathjax images erroneously appearing enlarged by @iamllama in #3957
+  * Fix mpv cleanup by @dae in #4042
+  * Fix new card sort order not reacting to changes in gather order by @abdnh in #4039
+  * Fix polygons closing when clicking existing masks while editing IO by @iamllama in #3990
+  * Fix pressing Ctrl+Shift+N in browser editor potentially discarding field changes by @iamllama in #4001
+  * Fix searching for non-blank adjacent wildcard fields by @iamllama in #4009
+  * Fix syncserver docker image build by bumping Dockerfile rust version by @KolbyML in #3993
+  * Fix unescaped deck names missing from tooltips when deleted by @iamllama in #3960
+  * Fix URL schemes translation by @sommerluk in #4004
+  * Fix/CMRR button style by @Luc-Mcgrady in #4043
+  * Fix/Invalid parameter counts saveable by @Luc-Mcgrady in #4052
+    * Fix/Layout shift on Card Counts button hover by @Luc-Mcgrady in #3971
+  * Fix/Leech suspended tooltip by @Luc-Mcgrady in #3992
+  * Fix/Prevent manual resize of params input by @Luc-Mcgrady in #4008
+  * Fix/remove incorrect invalid input check by @L-M-Sherlock in #3963
+  * Fix/SQL retrievability underflow by @Luc-Mcgrady in #3980
+  * Fix/stability doesn't increase after pressing good by @L-M-Sherlock in #3975
+  * Improve an Error Message by @brishtibheja in #3964
+  * improve the accuracy of the expected workload calculation by @L-M-Sherlock in #4056
+  * Include reset entries in dataset exported for research by @user1823 in #3998
+  * Make IO polygon markers centred and transparent by @iamllama in #3989
+  * Offload mpv callback registration to background thread to avoid UI bl… by @marvinkopf in #4038
+  * Optimize All -> Optimize All Presets by @Expertium in #4050
+  * Properly align label and radio input in the stats window by @GithubAnon0000 in #3977
+  * Remove dead code in reviews_for_fsrs by @mbrubeck in #3958
+  * Remove incorrect "double-click to expand" overlay label on small images in editor by @iamllama in
+  #4030
+  * Remove percentages of x-axis in the answer buttons graph by @GithubAnon0000 in #3952
+  * Resize fsrs params input to fit content by @iamllama in #3999
+  * Resolve Python regex library warnings by @emmanuel-ferdman in #4012
+  * Restore richtext editor focus on mathjax overlay close event by @iamllama in #4016
+  * Style the fsrs params input by @iamllama in #3997
+  * Update backup restore message by @brishtibheja in #4005
+  * Update sync.ftl by @sommerluk in #4003
+  * Upgrade esbuild versions by @spiritualfather in #4011
+  * Use correct debug scripts folder by @abdnh in #3973
+  * Use non breaking spaces for names on about page by @Luc-Mcgrady in #4025
+  * Update default styles by @brishtibheja in #4060
+  * Fix/remove the lower limit of interval when set due date by @L-M-Sherlock in #4063
+  * Delay retention workload info display after FSRS optimization alerts by @Sunrongguo2008 in #4066
+  * style hr element by @brishtibheja in #4067
+  * Feat/Message at 100% progress for optimize by @Luc-Mcgrady in #4069
+  * Use abbreviations for days of week by @brishtibheja in #4077
+  * Fix/Missing CardID special field by @Luc-Mcgrady in #4078
+  * update to fsrs-rs 4.1.1 by @L-M-Sherlock in #4080
+  * Fix IO text labels' fill attr being saved even if default colour by @iamllama in #4083
+  * Comments for translators by @sommerluk in #4075
+  * Fix unescaped deck names potentially missing from overview by @iamllama in #4084
+  * Clear desired retention and decay when changing decks by @user1823 in #4095
+  * Update the default value of FSRS-6 decay in forgetting curve by @user1823 in #4096
+  * The remaining Qt5 compatibility code has been removed.
+  * include decay in ComputeMemoryStateResponse by @L-M-Sherlock in #4102
+  * Upgrade to nom 8.0.0 by @iamllama in #4105
+  * Fix/set due date on intraday learning card by @L-M-Sherlock in #4101
+  * Save dr and decay in card even if item is None by @user1823 in #4106
+  * Fix repeated ticks in reviews graph by @user1823 in #4108
+  * Fix arrow keys not working in tag editor on qt 6.8 by @iamllama in #4114
+  * Fix tag editor's focus outline appearing cut off by @iamllama in #4115
+  * Adjust top toolbar height on body class update by @iamllama in #4120
+  * Refactor FSRS data clearing into Card::clear_fsrs_data by @L-M-Sherlock in #4123
+  * Fix/Optimize button alignment by @Luc-Mcgrady in #4117
+  * Fix/unapplied scss by @Luc-Mcgrady in #4103
+  * Make PYTHONPYCACHEPREFIX point to an absolute path by @abdnh in #4111
+  * Fix/Add check_output_timestamps to PythonEnvironment by @Luc-Mcgrady in #4113
+  * Remove newline: 'Restore to default confirmation' by @david-allison in #4128
+  * Fix/update card.decay in card_state_updater by @L-M-Sherlock in #4127
+  * Fix deck options page being scrollable while simulator modal is open by @iamllama in #4133
+  * CHANGE right-click in the editor to show option to open folder in linux by @GithubAnon0000 in #4125
+  * FIX: Margin between icon was selectable but shouldn't be by @GithubAnon0000 in #4122
+  * Switch to Ruff by @abdnh in #4119
+  * Revert "Fix/unapplied scss" by @dae in #4136
+  * Add disclaimer to workload tooltip by @Luc-Mcgrady in #4131
+  * Followup to #4122 (make text selectable) by @GithubAnon0000 in #4132
+  * Only run "empty_filtered_deck" on filtered decks by @mbrubeck in #4139
+  * Add "Copy Debug Info" to show_exception's dialog by @iamllama in #4146
+  * Comments for translators by @sommerluk in #4137
+  * Use system font for webviews instead of bootstrap font stack by @GithubAnon0000 in #4147
+  * Feat/Add globe to help tooltip by @Luc-Mcgrady in #4148
+  * Fix unique blank decks being created per row with empty deck column when importing csv by @iamllama in
+  #4150
+
 # 25.02.7-1
 
-  * Fix some add-ons broken by the security update a few days ago (thanks to @tatsumoto-ren[1])
-  * Fix 'record own voice' and TTS breakages (thanks to @abdnh[2])
+  * Fix some add-ons broken by the security update a few days ago (thanks to @tatsumoto-ren)
+  * Fix 'record own voice' and TTS breakages (thanks to @abdnh)
   * Silence an "unknown error" message that appears on some devices.
 
 # 25.02.6-1
@@ -49,8 +294,8 @@ What's Changed
 Platform Support
 
   * Qt 5 builds are no longer provided.
-  * Intel Mac builds now require macOS 12+.
-  * Linux builds now require glibc 2.35+.
+  * Intel Mac builds now require macOS 1.
+  * Linux builds now require glibc 2.3.
 
 Features
 
@@ -188,7 +433,7 @@ PKGBUILD:
 What's Changed:
 
 Compatibility
-The Linux package now requires glibc 2.28+ (2019 Ubuntu/Fedora, and 2021 Debian).
+The Linux package now requires glibc 2.2 (2019 Ubuntu/Fedora, and 2021 Debian).
 
 New Features
 FSRS
@@ -610,7 +855,7 @@ Platform changes:
   * Platform CSS has been reimplemented. Standard selectors like .win and .mobile should continue to work; more obscure ones
   that weren't documented will not. By @abdnh in #2854
   * Automatically disable sandbox on Qt5 PyPi/packaged builds on Linux, as is required on modern glibc versions.
-  * The Qt6 Apple Silicon build now correctly declares it requires macOS 12+ to run, instead of crashing on startup.
+  * The Qt6 Apple Silicon build now correctly declares it requires macOS 1 to run, instead of crashing on startup.
   * Update licensing info of a few third-party modules by @antecrescent in #2850
   * Mention environment variable YARN_BINARY in documentation by @antecrescent in #2851
 
