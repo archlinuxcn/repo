@@ -5,7 +5,7 @@ from lilaclib import edit_file
 
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['gesh'])
     for line in edit_file('PKGBUILD'):
         if 'python-bibtexparser>=2.0.0b5' in line:
             continue

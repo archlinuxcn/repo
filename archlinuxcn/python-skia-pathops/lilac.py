@@ -6,7 +6,7 @@ from lilaclib import run_cmd
 
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['thrasibule', 'alerque'])
     for line in edit_file("PKGBUILD"):
         if line.startswith("_py="):
             line = "_py=cp313"
