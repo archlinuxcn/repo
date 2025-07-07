@@ -1,6 +1,6 @@
 pkgname=julia-git-lame_jll-src
-pkgver=3.100.2+0
-_commit=56f63390d7848138d35ba7d02562706d03f03d9c
+pkgver=3.100.3+0
+_commit=e7bdb94e79727ecc85cacc3be5ea145b42e4b99a
 pkgrel=1
 pkgdesc="LAME_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LAME_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git lame)
 source=("git+https://github.com/JuliaBinaryWrappers/LAME_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('2435b01affef880b379391980b578dd744c92abe6917e4b892f47b3ce47e4711'
+sha256sums=('fc36d9a11b700fe78eb27bdcaeba82df5e065c031a3a243db5b34870e9739284'
             '6c81aa82adc9441dbc9f80da398309e827f57b6f85bfc7e3b3a687ce0c40bd01')
 
 build() {
