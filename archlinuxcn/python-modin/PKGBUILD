@@ -2,7 +2,7 @@
 
 _pkgname=modin
 pkgname=python-modin
-pkgver=0.33.2
+pkgver=0.34.0
 pkgrel=1
 pkgdesc='Speed up your Pandas workflows by changing a single line of code'
 arch=('any')
@@ -28,7 +28,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/modin-project/modin/archive/${pkgver}.tar.gz")
-sha512sums=('c23b5a1d0d378b59f25a51d8da70b0f16abbac28dad3a97395b2fdd893b7e493276202768cb6fafbd4653180e71284dead59a8abeb735501a3431e448e45f841')
+sha512sums=('5fa2a36b0c77a7c2d7825c9be4d497631614733a62de2df797d0258429511856b5269c580aef225a317d673f10aa60de201d03ccafdd1192906cc44774d2430d')
 
 prepare() {
   sed -i "s,SafeConfigParser,ConfigParser," "${srcdir}/${_pkgname}-${pkgver}/versioneer.py"
