@@ -2,7 +2,7 @@
 
 _pkgname=SimSIMD
 pkgname=python-simsimd
-pkgver=6.4.10
+pkgver=6.5.0
 pkgrel=1
 pkgdesc='A Fast Dot Products & Similarity Metrics for Python using SIMD'
 arch=('x86_64')
@@ -19,7 +19,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ashvardanian/SimSIMD/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('039e62da33abd0a2b36548c3e64af528a7d2b75d34cbb45c32ba8408d79692f11e73600e7c9e5464b28b51d271a26a02a0e3e086583055b5c298db51b7421c07')
+sha512sums=('d745782051250acd2e43bb6d35ee6c9e62b93d7f59ba58ac716715f638489d9c5f7f762381023a69f975eaa22ea239fb5b7bee2a73cdf91cf5d9112eee8d2c76')
 
 build() {
   cd "${_pkgname}-${pkgver}"
