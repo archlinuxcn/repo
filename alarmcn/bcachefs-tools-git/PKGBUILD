@@ -49,8 +49,7 @@ build() {
 	export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 	export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
-	BCACHEFS_FUSE=1 make \
-		LIBEXECDIR=/usr/lib \
+	make LIBEXECDIR=/usr/lib \
 		DESTDIR="${pkgdir}" \
 		ROOT_SBINDIR="/usr/bin" \
 		INITRAMFS_DIR="/etc/initcpio"
@@ -63,8 +62,7 @@ package() {
 	export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 	export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
-	BCACHEFS_FUSE=1 make \
-		PREFIX="/usr" \
+	make PREFIX="/usr" \
 		LIBEXECDIR=/usr/lib \
 		DESTDIR="${pkgdir}" \
 		ROOT_SBINDIR="/usr/bin" \
