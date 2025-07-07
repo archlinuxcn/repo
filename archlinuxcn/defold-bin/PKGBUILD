@@ -1,8 +1,8 @@
 # Maintainer: Asakura Mizu <asakuramizu111@gmail.com>
-_sha1=5944eddf7392f6735768b5dfc495695b63ef3c76
+_sha1=1c76521bb8b08c63ef619aa8a5ab563dddf7b3cf
 _channel=editor-alpha
 pkgname=defold-bin
-pkgver=1.10.2.5944edd
+pkgver=1.10.3.1c76521
 pkgrel=1
 epoch=
 pkgdesc='Defold is a completely free to use game engine for development of desktop, mobile and web games.'
@@ -19,7 +19,7 @@ options=('!strip')
 source=("${pkgname}-${pkgver}-${pkgrel}.tar.gz::https://d.defold.com/archive/${_channel}/${_sha1}/${_channel}/editor2/Defold-x86_64-linux.tar.gz"
         'https://github.com/defold/defold/raw/refs/heads/dev/LICENSE.txt'
         'Defold.desktop')
-sha256sums=('20c47301d9ef306b04712bf5a8a1a5947999bcead37e31abc2c5c74fb81f8041'
+sha256sums=('9ffa3ff16d7970066cfcd8d537beab02d365bfaa46f9773b6cbea9fbed4d4707'
             'be6e9921ba01445d200ba3dc09b5cab149a58d57a76ca98376b52af87d817a7a'
             '5c92dc2b1cf4acc81f26b6848c3bb3ee812158e80a15fb1e7f5585362acb20f2')
 
