@@ -1,7 +1,7 @@
 pkgname=julia-git-ogg_jll-src
-pkgver=1.3.5+1
-_commit=afdc5109105b24e572d494ff9f542cae60ea57be
-pkgrel=2
+pkgver=1.3.6+0
+_commit=b7cf69e42fdc5868ebcb906c90951961e0d90567
+pkgrel=1
 pkgdesc="Ogg_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Ogg_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libogg)
 source=("git+https://github.com/JuliaBinaryWrappers/Ogg_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('930d8c2fab38d5d1d0eb2a6d834e4f632f90d002af4c6d2d15e1b64dfb50996b'
             '946746b0a709f75ebf5702ac4bde8215d8c9f5d04a2151989eb5fab2fb05258a')
 
 build() {
