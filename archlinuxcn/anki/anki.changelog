@@ -1,3 +1,20 @@
+#25.07.2-1
+What's Changed
+
+  * The first run of the launcher now installs the latest version automatically.
+  * When choosing a specific version, recent versions are shown.
+  * Feat/Confirmation box for save options to preset by @Luc-Mcgrady in #4172
+  * Respect env var UV_BINARY with OFFLINE_BUILD being set by @AlexBocken in #4170
+  * [A11Y] FIX: revert button is visible for screenreaders by @GithubAnon0000 in #4174
+  * Try unix terminals in roughly most specific to least specific. by @Grinkers in #4177
+  * Feat/Replace easy day table with display:grid by @Luc-Mcgrady in #4179
+  * Fix/Help modal appears behind simulator modal by @Luc-Mcgrady in #4171
+  * Aqt wheel: fix unintended inclusion of qt/aqt/data by @pHlt7 in #4180
+
+PKGBUILD:
+
+  * removed fix-offline-uv-build.patch as merged into upstream with #4170
+
 # 25.07.1-1
 What's Changed
 

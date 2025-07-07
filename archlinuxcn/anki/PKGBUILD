@@ -9,9 +9,9 @@
 # anki -> git rev-parse $pkgver^{}
 # ftl -> git submodule
 declare -gA _tags=(
- [ftl_core]="a9216499ba1fb1538cfd740c698adaaa3410fd4b"
- [ftl_desktop]="a1134ab59d3d23468af2968741aa1f21d16ff308"
- [anki]="a83a6b59"
+ [ftl_core]="3d04bcbf7fefca0007bc9db307409d88210995d8"
+ [ftl_desktop]="c65a9587b1f18931986bdf145872e8e4c44c5c82"
+ [anki]="3adcf05c"
 )
 
 declare -gA _caches=(
@@ -20,7 +20,7 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=25.07.1
+pkgver=25.07.2
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
@@ -77,18 +77,16 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
         "strip-formatter-deps.patch"
         "strip-type-checking-deps.patch"
         "strip-python-pip-system-certs.patch"
-	"fix-offline-uv-build.patch"
 )
 
 
-sha256sums=(1724f692fdc5112492cea1a7c3b0549247a1a8760cefee50f93f101212f7f474
-            50295d56f62abd16c91e29cd2cabaf82c662e12d80c8d674c880e056ea5ecc1c
-            621682c641584709f65b444a08c0003c0065842e1371eec7b5801e4eacc6874d
+sha256sums=(9cffb53ef99fb3929f1f359cc626de09222e76f4c0f612d7f3e037f63697cf9f
+            a1874235e2e69cc2a280fecb716b04fef62a8ac1cb7223d6f3e2a883ad4ef413
+            f352507631ac89b60caa10d4b4a64a002545de3363fcca10904bd5bf35c77fec
             cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff
             bda56f774a676c894032086b124aeb4d61f1c28acb1868d117e3ed6b77780170
             198bc2ec14439e3ba41a03c4823f07df4b0c559c1dcbdaf678416ed12a720c2e
             2506cf9d5b0c47a2c519ec4bb0ef87e7921dca8db5cae39b0dae265d01e253b3
-            e14490574ab6a502089b7e3960def01c0e6e737fec6d47ddcd31ab36544e40ca
 )
 
 prepare() {
@@ -99,7 +97,6 @@ prepare() {
     patch -p1 < "$srcdir/strip-formatter-deps.patch"
     patch -p1 < "$srcdir/strip-type-checking-deps.patch"
     patch -p1 < "$srcdir/strip-python-pip-system-certs.patch"
-    patch -p1 < "$srcdir/fix-offline-uv-build.patch"
 
     sed -i 's/opt-level = 1$/opt-level= 3/' Cargo.toml	# optimize more
     sed -i 's/channel = "[0-9\.]*"$/channel = "stable"/' rust-toolchain.toml # use most recent stable rust toolchain
