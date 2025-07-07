@@ -1,6 +1,6 @@
 pkgname=julia-git-libfdk_aac_jll-src
-pkgver=2.0.3+0
-_commit=dbb27c4d60b5c55d77f132ad251bf088da213966
+pkgver=2.0.4+0
+_commit=c7ee326f56b00556f07d2ab173e95799ea64beaa
 pkgrel=1
 pkgdesc="libfdk_aac_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libfdk_aac_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libfdk-aac)
 source=("git+https://github.com/JuliaBinaryWrappers/libfdk_aac_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('85695215ca6e347da7ebb5351892460e415488efcc934b65177faf4f655d749a'
+sha256sums=('2d5e23aa8089f962d4b80b303898e31743ebb3cbfbac5d60f9aec6b0e36d50bf'
             '0111eb0b5f22082916419a105225b5c454c480fafff5ea0e9519c1e197ab3428')
 
 build() {
