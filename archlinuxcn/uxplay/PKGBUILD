@@ -3,8 +3,8 @@
 
 pkgname=uxplay
 _srcname=UxPlay
-pkgver=1.72.1
-pkgrel=2
+pkgver=1.72.2
+pkgrel=1
 pkgdesc="AirPlay Unix mirroring server"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/FDH2/${_srcname}"
@@ -14,7 +14,7 @@ optdepends=('gstreamer-vaapi: GStreamer plugin required for certain GPUs')
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 	"${pkgname}.desktop")
-sha256sums=('f1c1f38bb503142f48e1bb2fb03df7a6581bddda7ecd95562189166844f36563'
+sha256sums=('9d144c5439f1736c98227c64020f3b07294cd17e5f27a205d1d4a4e950c322c0'
             '40b9d95f9ca1dd9e88a6dc235cc6c8e9fe0bf14a3c5cd56c4847494ce5badb0b')
 
 build() {
