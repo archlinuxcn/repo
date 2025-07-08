@@ -1,8 +1,9 @@
+# Maintainer Chris Werner Rau <aur@cwrau.io>
 # Maintainer: Robin Broda <robin at broda dot me>
 
 pkgname=glava
 pkgver=1.6.3 # renovate: datasource=github-tags depName=wacossusca34/glava
-pkgrel=4
+pkgrel=5
 pkgdesc='OpenGL audio spectrum visualizer'
 arch=('x86_64')
 url='https://github.com/wacossusca34/glava'
