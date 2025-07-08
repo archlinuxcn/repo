@@ -5,7 +5,7 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=xscreensaver-arch-logo
-pkgver=6.11
+pkgver=6.12
 pkgrel=1
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 url="https://www.jwz.org/${pkgname%%-*}/"
@@ -41,7 +41,8 @@ source=("${pkgname}-${pkgver}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pkgna
         logo-50.xpm
         logo-180.xpm
         logo-360.xpm)
-sha512sums=('b12c14b27cef14b75c2b61d5f754599a1c3d2962e23b2a0b7ff7670f205b6235b56d30473d43b8f26f721847853f43b93b60bd36e6b0998bc6a3836d81b503ab'
+noextract=("${pkgname}-${pkgver}.tar.gz")
+sha512sums=('df98e07fe66fd6ad1fd680c6790d66a160f146ff721f90a76c46142888a0d17f82f068343b1ac82aa4562385460da393dc4733abdb26f0cda0f2a8944a614497'
             '529ed9b7904631989803a4e1f306a0f3e496e50a123ebbd6ff77058e52aeb1b2328148d8224e54b547faff14e9d591146b9849c5fb9d1063e6db41f295f3074e'
             'a63d93f148500eb8ae4a011286c1e762a38575773381d33fa1c79cb1b94df8bdba54b40c52c5861ab865934f1d3a3a225c1ef5758a698a9e587b0779d76a0a34'
             '4814fa3178d5f37b5422dcfa73b53f94492863e958987590796ea1a5a5df85977033aa2064e2cd6b2b813908751d8f9982e5103b6615d5b60d521d720340483b'
@@ -58,6 +59,9 @@ sha512sums=('b12c14b27cef14b75c2b61d5f754599a1c3d2962e23b2a0b7ff7670f205b6235b56
             'dcbf893a99ad1ad8c4868481eea1921c465737cb09b36fc7cafcdee6b0ec9c8b701051e2a17e215ed9b368d79c72b4a752c532e1ddd565602c0d58782b7cb4a7')
 
 prepare() {
+  # xscreensaver-6.12 tarball has duplicates that will not work with bsdtar - workaround
+  tar -zxf "${pkgname}-${pkgver}.tar.gz"
+
   local logos_png
   local logos
 
@@ -87,22 +91,22 @@ prepare() {
 build() {
   cd "${pkgname%%-*}-${pkgver}"
   ./configure \
-	--prefix=/usr \
-	--sysconfdir=/etc \
-	--localstatedir=/var \
-	--libexecdir=/usr/lib \
-	--with-app-defaults=/usr/share/X11/app-defaults \
-	--without-setuid-hacks \
-	--with-pam \
-	--with-login-manager \
-	--with-gtk \
-	--with-gl \
-	--without-gle \
-	--with-pixbuf \
-	--with-jpeg \
-    --with-systemd \
-    --enable-pam-check-account-type \
-    --with-wayland=no
+      --prefix=/usr \
+      --sysconfdir=/etc \
+      --localstatedir=/var \
+      --libexecdir=/usr/lib \
+      --with-app-defaults=/usr/share/X11/app-defaults \
+      --without-setuid-hacks \
+      --with-pam \
+      --with-login-manager \
+      --with-gtk \
+      --with-gl \
+      --without-gle \
+      --with-pixbuf \
+      --with-jpeg \
+      --with-systemd \
+      --enable-pam-check-account-type \
+      --with-wayland=no
   make
 }
 
