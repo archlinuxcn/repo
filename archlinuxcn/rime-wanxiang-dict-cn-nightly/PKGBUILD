@@ -3,7 +3,7 @@
 pkgname=rime-wanxiang-dict-cn-nightly
 _pkgbase=${pkgname%-nightly}
 _schema_version=8.6.1
-pkgver=8.6.1+r20250707.203549
+pkgver=8.6.1+r20250708.114129
 pkgrel=1
 epoch=1
 pkgdesc="万象中文词库"
