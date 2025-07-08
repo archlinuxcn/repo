@@ -2,7 +2,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=nekoray
-pkgver=4.3.6
+pkgver=4.3.7
 _pkgver=${pkgver/.beta/-beta}
 pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-box)"
@@ -20,7 +20,7 @@ source=(
 	${pkgname}.{sh,desktop}
 )
 install="${pkgname}.install"
-sha512sums=('b08f9ed55b2eabd7e7c840d29e295f951bd10ddc6ee2b8d41cde06f39b5357e7f389692e8c4924574e47637616d52d03bbee821420113b788a68b5fc6d0bc35c'
+sha512sums=('d9a4d87d0dd3d5c10626c44664349b8eb3e76498a9efe2bc1e97005fee7d9556594a2653acba3609135eda175c3a38398fc8cdf0c2f56007dc5de1c8df76bea6'
             'b377f7e8c859ee0b5bc05f89e2dc6c0b8535e740e089e9afe5e5f145c38a05fccbbddfcb6eb8ced9a7478e4d9ccc3cbd3ffb6843c128189c75599c40c87737e8'
             'b0cfd99d7fd038d660af275a5f2fc7f9ebfe63d6751edd6eea66a8c5350f314b6dbc9eddaa5aaed134e97087290630d369b1bdf4ad59d12868c780103b33dbed')
 
