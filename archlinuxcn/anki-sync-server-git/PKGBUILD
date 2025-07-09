@@ -52,7 +52,7 @@ sha512sums=('SKIP'
             '5bfc25688ac5354ca96aeff21fadb82b85bac210d9356e3225289a7179d21fcf25c0dc4dff432ef17e5d23761ea433416a4b14695ae0b010280611bce32e03b0')
 
 function pkgver() {
-	cd "${srcdir}/pkuseg-python"
+	cd "${srcdir}/anki"
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
