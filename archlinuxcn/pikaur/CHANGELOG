@@ -2478,3 +2478,23 @@ Thu Dec 19 19:23:52 2024 +0100
     *  2024-12-19 01e5ee4 actionless chore(config: decoration): 💥
     *  2024-12-18 49dc6e4 Bundy01 chore(locale): update es.po and fr.po (#858)
     *  2024-12-17 233f922 actionless fix(pikaur-static: make): unbuffered python
+
+
+Tue Jul 8 22:17:04 2025 +0200
+-------------------------------------------------
+1.33            Release 1.33
+    
+    Notables Changes:
+    *  2025-07-05 910909e5 Pranav JP fix(completions: bash): replace function names comflicting with pacman to pikaur prefix (#886)
+    *  2025-06-08 c5548ffd Jona Wagner fix(pikspect): proper handling of max_question_length (#884)
+    *  2025-04-25 fcbf3173 actionless chore(config: build: DynamicUsers): enable value migration, since it was announced long enough beforehand
+    *  2025-04-25 1860d6f7 Drommer chore(locale): update for Ukrainian Localization (#882)
+    *  2025-01-30 0cd3e4eb actionless fix(args, argparse_extras): repair `positional1 --arg positional2` usecase with python 3.13
+    *  2025-01-18 3a0467f6 Bundy01 chore(locale): update for es.po and fr.po (#864)
+    *  2025-01-14 5ed3833a actionless feat(args): print error if one of --user-id or --group-id is set and other isn't
+    *  2025-01-14 4e28c497 actionless fix/feat(privilege,args,config,os_utils,main,readme): add --group-id/misc.GroupId and use it automatically where needed (Fixes: #863)
+    *  2025-01-03 05fce8d7 actionless fix(config: deprecate, warning): handle [partially] empty config (fixes: #752)
+    *  2024-12-29 3c242370 actionless fix(install_cli: edit_pkgbuild_during_the_build): handle case when install_info object isn't created yet - 2
+    *  2024-12-29 95b9ce0b actionless fix(install_cli: edit_pkgbuild_during_the_build): handle case when install_info object isn't created yet
+    *  2024-12-25 84cb7643 actionless fix(build, install_cli): when passing --rebuild flag - rebuild only explicitly requested package itself, but not its deps
+    *  2024-12-23 dc5e10e5 actionless fix(updates): in `-Qu` print upgradeable pkgs even they have potential deps' problems
