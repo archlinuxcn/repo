@@ -26,8 +26,8 @@ pkgname=(
   qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-pkgver=10.0.0
-pkgrel=7
+pkgver=10.0.2
+pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
 url="https://www.qemu.org/"
@@ -52,7 +52,6 @@ license=(
   LicenseRef-Public-Domain
   MIT
 )
-# TODO: consider providing rdma-core
 # TODO: consider providing lzfse
 # TODO: package systemtap
 # TODO: package openbios for qemu-system-{ppc,sparc}
@@ -112,6 +111,7 @@ makedepends=(
   python-pip
   python-sphinx
   python-sphinx_rtd_theme
+  rdma-core
   rutabaga-ffi
   sdl2
   sdl2_image
@@ -136,7 +136,7 @@ source=(
   $pkgbase-8.1.1-static_regression.patch
   $pkgbase-9.2.2-libnfs6.patch
 )
-sha512sums=('2215458ed8be3ab0b0032fe2a96e79183f5fc2da323d927018412ea3d980b022a07ba87d4f446229eaaa7d1b19a577d438dbcaa3af3bd537c7720b56734a2d8b'
+sha512sums=('7fda582c3845ea663aa5eda21bb38ebcfb6c25bccf8944ea6cdf8b5be6946b5a874b36674a7f5db3e325abb9cca0dd9bc0727837fdceb71a8c947d96169a9b20'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
@@ -145,7 +145,7 @@ sha512sums=('2215458ed8be3ab0b0032fe2a96e79183f5fc2da323d927018412ea3d980b022a07
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839'
             'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12'
             '7949b1435ed979836c59149b4b06b80fe14fa89ef12d1e027860df392e2ffdaf4a0f881021f80b4ee56e8657068bf7f2c6415c9891f34c32228b9d35e9359c8f')
-b2sums=('3408c7b2a38ace7f0b2e0912411a26cab96cb23bcb03d7095f7b081cb88db55f36b004ff6458281d73190b9cc9006da85dde2a0b4b068c80662a8de205c29fda'
+b2sums=('be4ddf050d2102cefded5b4967222df749ee8af92c2427c31a9b29b3800fac8bb328daf2c38d11aa307b51eb7d7243f9b064b3bf24d446a001e5520359ee83c3'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
@@ -180,6 +180,7 @@ _qemu_system_deps=(
   pam libpam.so
   pixman libpixman-1.so
   qemu-common=$pkgver-$pkgrel
+  rdma-core
   snappy
   vde2
   zlib
@@ -797,7 +798,7 @@ package_qemu-hw-display-virtio-gpu-pci() {
 
 package_qemu-hw-display-virtio-gpu-pci-rutabaga() {
   pkgdesc="QEMU virtio-gpu-pci-rutabaga display device"
-  depends=(gcc-libs glibc pixman libpixman-1.so qemu-common=$pkgver-$pkgrel rutabaga-ffi)
+  depends=(qemu-common=$pkgver-$pkgrel)
   mv -v $pkgname/* "$pkgdir"
   _install_licenses
 }
@@ -825,7 +826,7 @@ package_qemu-hw-display-virtio-vga-gl() {
 
 package_qemu-hw-display-virtio-vga-rutabaga() {
   pkgdesc="QEMU virtio-vga-rutabaga display device"
-  depends=(gcc-libs glibc pixman qemu-common=$pkgver-$pkgrel rutabaga-ffi)
+  depends=(qemu-common=$pkgver-$pkgrel)
   mv -v $pkgname/* "$pkgdir"
   _install_licenses
 }
