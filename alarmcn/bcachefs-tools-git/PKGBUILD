@@ -34,6 +34,7 @@ makedepends=(
 )
 source=("git+https://github.com/koverstreet/${_pkgname}.git")
 sha512sums=('SKIP')
+options=('!lto')
 
 pkgver() {
 	cd "${_pkgname}/"
