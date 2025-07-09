@@ -1,0 +1,38 @@
+# Maintainer: Seppia <$(base64 -d <<< 'YXJjaGxpbnV4QHNlcHBpYS5uZXQK')>
+
+_reponame="lk-jwt-service"
+pkgname="element-${_reponame}"
+pkgver=0.2.3
+pkgrel=1
+pkgdesc='LiveKit Management Service for Element Call'
+arch=(x86_64)
+url='https://github.com/vector-im/lk-jwt-service/'
+license=("AGPL-3")
+makedepends=(go git)
+source=(
+	"git+${url}.git#tag=v${pkgver}"
+	"${_reponame}.service"
+)
+sha512sums=(
+	'dbe6f35ab44dcf5503ac5a331f3c2a2356accc91e7cbba9932472d9589dea0db5a95ac8d5d0a121d0d1c7809f437b7a75d9f4972a023018292eb2c5b998a37dc'
+	'8526c23f727b338b1b40a3013cd204decca79bb4b3d6f56feac902fc27d7d8bff7153d613aa9a7eabd1229d7928b3d4740bb18728f6025cd18c2fc0e9eef5896'
+)
+
+prepare() {
+  cd ${_reponame}
+}
+
+build() {
+  cd ${_reponame}
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+  go build -o lk-jwt-service
+}
+
+package() {
+  install -vDm755 ${_reponame}/lk-jwt-service -t "$pkgdir/usr/bin"
+  install -vDm644 ${_reponame}.service -t "$pkgdir/usr/lib/systemd/system/"
+}
