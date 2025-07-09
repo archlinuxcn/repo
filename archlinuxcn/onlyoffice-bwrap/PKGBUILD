@@ -71,15 +71,17 @@ source=(
     "portable-config"
     "onlyoffice.desktop"
     "0001-Disable-static-linking-of-libstdc.patch"
+    "0001-Dynamically-link-libstdc-in-icu.patch"
 )
 sha256sums=("SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
 "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
 "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
 "SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
-"SKIP" "SKIP" "SKIP" "SKIP" "SKIP")
+"SKIP" "SKIP" "SKIP" "SKIP" "SKIP"
+"SKIP")
 
 _set_flags() {
-	if [[ ! "-std=" =~ "$CXXFLAGS" ]]; then
+	if [[ ! "$CXXFLAGS" =~ '-std=' ]]; then
 		CXXFLAGS="$CXXFLAGS -std=gnu++11"
 	fi
 }
@@ -112,6 +114,8 @@ prepare() {
     patch -Np1 -i ../0003-use-QT_VERSION-env-instead-of-guessing.patch
     # Don't build debs/rpm/..
     patch -Np1 -i ../0004-Only-build-tar.patch
+    # Dyn linking system libs for vendored ICU
+    patch -Np1 -i ../0001-Dynamically-link-libstdc-in-icu.patch
     # Use https when download CEF
     sed -i 's|http://|https://|' ./scripts/core_common/modules/cef.py
 
