@@ -1,7 +1,7 @@
 # Maintainer: Tom Yang <tomyangsh at icloud dot com>
 
 pkgname=cloudflarespeedtest
-pkgver=2.3.0
+pkgver=2.3.1
 pkgrel=1
 license=('GPL-3.0-only')
 pkgdesc="Cloudflare IP Batch Test Tool"
@@ -10,7 +10,7 @@ makedepends=('go')
 arch=('x86_64')
 url="https://github.com/XIU2/CloudflareSpeedTest"
 source=("$pkgname-$pkgver.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('a6ff836e25ec9fb062cebf1beb509bbb82a0d794ad0cdfac06d8d68888c60c45')
+sha256sums=('7fe74bef39555c216ceee3c1705dbb4536aa2dd5d09acb89de89c242cb6fb68b')
 
 build() {
   cd "CloudflareSpeedTest-$pkgver"
