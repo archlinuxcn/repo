@@ -85,19 +85,19 @@ build() {
   export OFFLINE_BUILD=1
   export CFLAGS+=' -ffat-lto-objects'
   export LTOFLAGS='-flto=auto -ffat-lto-objects'
-  cargo build --package runner --release --package "$pkgname"
+  cargo build --package runner --release --package "anki-sync-server"
 }
 
 check() {
   cd "${srcdir}/anki"
   export RUSTUP_TOOLCHAIN=stable
-  cargo test --frozen --package "$pkgname"
+  cargo test --frozen --package "anki-sync-server"
 }
 
 package() {
   cd "${srcdir}/anki"
   mkdir -p "${pkgdir}/usr/bin/"
-  install -Dm755 "target/release/release/${pkgname}" "${pkgdir}/usr/bin/"
+  install -Dm755 "target/release/release/anki-sync-server" "${pkgdir}/usr/bin/"
   mkdir -p "${pkgdir}/usr/lib/systemd/system/"
   install -Dm644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
   mkdir -p "${pkgdir}/etc/default/"
