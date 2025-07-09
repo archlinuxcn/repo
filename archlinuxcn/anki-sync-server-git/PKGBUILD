@@ -1,0 +1,100 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=anki-sync-server-git
+pkgver="1"
+pkgrel=1
+provides=(anki-sync-server)
+conflicts=(anki-sync-server)
+pkgdesc='Sync server for Anki'
+url="https://github.com/ankitects/anki"
+depends=(
+  'gcc-libs'
+  'glibc'
+)
+makedepends=(
+  'bash'
+  'cargo'
+  'clang'
+  'curl'
+  'findutils'
+  'gcc'
+  'git'
+  'grep'
+  'llvm'
+  'make'
+  'ninja'
+  'nodejs'
+  'openssl'
+  'protobuf'
+  'python'
+  'python-mypy-protobuf' # AUR
+  'rsync'
+  'yarn'
+)
+options=('!lto')
+arch=('x86_64')
+license=('AGPL-3.0-or-later')
+backup=("etc/default/anki-sync-server")
+source=(
+    "git+${url}.git"
+    "git+https://github.com/ankitects/PyOxidizer.git"
+    "git+https://github.com/ankitects/anki-desktop-ftl.git"
+    "git+https://github.com/ankitects/anki-core-i18n.git"
+    "anki-sync-server-git.env"
+    "anki-sync-server-git.service"
+)
+
+sha512sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'ccd4e5d316f73a554e33c457ea77f0a99eb70a89d0f140f2383be6b5e9545d4c4e88c319bfea5aa2f6e9c49c9d296f2ab89cfb954a7763514b86dce918d88dab'
+            '5bfc25688ac5354ca96aeff21fadb82b85bac210d9356e3225289a7179d21fcf25c0dc4dff432ef17e5d23761ea433416a4b14695ae0b010280611bce32e03b0')
+
+prepare() {
+  cd "${srcdir}/anki"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  mkdir -p "qt/bundle"
+  ln -s "${srcdir}/PyOxidizer" "qt/bundle/PyOxidizer"
+  cd ftl
+  rmdir "qt-repo"
+  rmdir "core-repo"
+  ln -s "${srcdir}/anki-desktop-ftl" "qt-repo"
+  ln -s "${srcdir}/anki-core-i18n" "core-repo"
+  cd "${srcdir}/anki"
+  mkdir -p "out/pyenv/bin"
+  ln -s "/usr/bin/python" "out/pyenv/bin/python"
+  ln -s "/usr/bin/protoc-gen-mypy" "out/pyenv/bin/protoc-gen-mypy"
+}
+
+build() {
+  cd "${srcdir}/anki"
+  export CARGO_TARGET_DIR="target/release"
+  export PROTOC="/usr/bin/protoc"
+  export PROTOC_BINARY="$PROTOC"
+  export PYTHON_BINARY="/usr/bin/python"
+  export NODE_BINARY="/usr/bin/node"
+  export YARN_BINARY="/usr/bin/yarn"
+  export RUST_BACKTRACE=full
+  export OFFLINE_BUILD=1
+  export CFLAGS+=' -ffat-lto-objects'
+  export LTOFLAGS='-flto=auto -ffat-lto-objects'
+  cargo build --package runner --release --package "$pkgname"
+}
+
+check() {
+  cd "${srcdir}/anki"
+  export RUSTUP_TOOLCHAIN=stable
+  cargo test --frozen --package "$pkgname"
+}
+
+package() {
+  cd "${srcdir}/anki"
+  mkdir -p "${pkgdir}/usr/bin/"
+  install -Dm755 "target/release/release/${pkgname}" "${pkgdir}/usr/bin/"
+  mkdir -p "${pkgdir}/usr/lib/systemd/system/"
+  install -Dm644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+  mkdir -p "${pkgdir}/etc/default/"
+  install -Dm600 "${srcdir}/${pkgname}.env" "${pkgdir}/etc/default/${pkgname}"
+}
