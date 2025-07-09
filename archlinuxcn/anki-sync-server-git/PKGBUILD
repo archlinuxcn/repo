@@ -51,6 +51,11 @@ sha512sums=('SKIP'
             'ccd4e5d316f73a554e33c457ea77f0a99eb70a89d0f140f2383be6b5e9545d4c4e88c319bfea5aa2f6e9c49c9d296f2ab89cfb954a7763514b86dce918d88dab'
             '5bfc25688ac5354ca96aeff21fadb82b85bac210d9356e3225289a7179d21fcf25c0dc4dff432ef17e5d23761ea433416a4b14695ae0b010280611bce32e03b0')
 
+function pkgver() {
+	cd "${srcdir}/pkuseg-python"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
 prepare() {
   cd "${srcdir}/anki"
   export RUSTUP_TOOLCHAIN=stable
