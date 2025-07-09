@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=stellar-cli
-pkgver=22.8.1
+pkgver=22.8.2
 pkgrel=1
 pkgdesc='Command-line multi-tool for running and deploying Stellar contracts on the Stellar network'
 url='https://stellar.org'
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(glibc gcc-libs systemd-libs openssl dbus)
 makedepends=(git cargo clang)
 source=(git+https://github.com/stellar/$pkgname#tag=v$pkgver)
-sha512sums=('14138155e62397f027dbf5d3a68c86b4d53643affb754504b9e5c6cb9da5fe81112910daf1d770161ddf9c54f4ad8dd25590ba5707c4a5fce9e45d9305c99182')
+sha512sums=('3b85ef511a21e3a45ce328ff9a801864646556aad44483fadf9c1bf3a3f1109879d74b9e0a8f4644489851b455c1aa35f0413e96a1f055e20da8e0d922f6adfd')
 # https://github.com/briansmith/ring/issues/1444
 options=(!lto)
 
@@ -25,7 +25,7 @@ build() {
   cd $pkgname
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
-  cargo build --frozen --release -p stellar-cli --features opt
+  cargo build --frozen --release -p stellar-cli
   local _completion="target/release/stellar completion"
   $_completion --shell bash > "completions/stellar"
   $_completion --shell fish > "completions/stellar.fish"
