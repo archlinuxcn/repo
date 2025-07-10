@@ -5,7 +5,7 @@
 
 pkgname=taisei-gles
 _pkgname=${pkgname%-gles}
-pkgver=1.4.2
+pkgver=1.4.3
 pkgrel=1
 pkgdesc="Open source Touhou clone (using OpenGL ES backends)"
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ optdepends=('gamemode: GameMode integration')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("https://github.com/taisei-project/taisei/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz")
-sha256sums=('5d869aae64f8f3390c47b74441fd041c7777e594e4a60536bb7b52564ea84fa7')
+sha256sums=('826b5e3af8f2181423aca12d21bba1d8925179f5d9d933156293c16ca29861fb')
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
