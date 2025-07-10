@@ -1,6 +1,6 @@
 pkgname=julia-git-nlopt-src
-pkgver=1.1.4
-_commit=a134eea3e49ffbb39bcb5c1384546d3e0dc393c5
+pkgver=1.2.0
+_commit=d8f0e2dae354b125bda057a5dede914cd73cc1ca
 pkgrel=1
 pkgdesc="NLopt.jl"
 url="https://github.com/JuliaOpt/NLopt.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaOpt/NLopt.jl.git#commit=$_commit")
-sha256sums=('e786ef997deb2955be4850f9fd23e57057b31cd33d4b56791c155af6f3b4eddd')
+sha256sums=('c617a159f7fcc16831bf3e0d7c0c18d7ac8855bbadaa597beb10d7798f2e921e')
 
 package() {
   cd NLopt.jl
