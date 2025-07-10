@@ -1,6 +1,6 @@
 pkgname=julia-git-wayland_jll-src
-pkgver=1.23.1+2
-_commit=d9196d3a70ea351ada840ca7ed8e7a82b5b8c990
+pkgver=1.24.0+0
+_commit=0340ff674ae31d416e5d2048e24968b3062f3546
 pkgrel=1
 pkgdesc="Wayland_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Wayland_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git wayland)
 source=("git+https://github.com/JuliaBinaryWrappers/Wayland_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('67fc3fd6d8bb0c692f45d767ecd40fd9899d97a9236edfe4ac7460ab4a73293e'
+sha256sums=('50ff1df80fdcb9565921571bed350a220db639b9a31a272fc60495a2db874de5'
             '55230c3c1d3be43862d6a8b3dee2b81cb2138087d5ef8908365ee23ea30dcf08')
 
 build() {
