@@ -2,16 +2,16 @@
 # Contributor: Christoph W <c w e g e n e r at gmail dot com>
 
 pkgname=usql
-pkgver=0.19.21
-pkgrel=1
+pkgver=0.19.24
+pkgrel=0
 pkgdesc='A universal command-line interface for SQL databases'
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 url="https://github.com/xo/usql"
 license=('MIT')
-depends=('icu')
+depends=('glibc' 'gcc-libs')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('608558102283075114f379b7405a4b295a62b56962a1a5251ee4016056584363')
+sha256sums=('b4a78bf942754dfb835710533a25a83f52d0cafb3a4caf896a92398886b14b1c')
 
 build() {
     cd $pkgname-$pkgver
@@ -21,8 +21,7 @@ build() {
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
 
-    TAGS="most sqlite_app_armor sqlite_fts5 sqlite_introspect sqlite_json1
-          sqlite_stat4 sqlite_userauth sqlite_vtable sqlite_icu no_adodb"
+    TAGS="most sqlite_app_armor sqlite_fts5 sqlite_introspect sqlite_json1 sqlite_math_functions sqlite_stat4 sqlite_vtable no_adodb"
 
     go build \
         -tags="$TAGS" \
@@ -39,5 +38,6 @@ build() {
 package() {
     cd $pkgname-$pkgver
     install -Dm755 $pkgname -t "$pkgdir/usr/bin"
+    install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
     install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
 }
