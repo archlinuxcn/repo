@@ -2,7 +2,10 @@ maintainers:
   - github: xiaohuirong
     email: horeamxiao@archlinuxcn.org
 
-pre_build_script: aur_pre_build(maintainers=['kode54'])
+pre_build_script: |
+  aur_pre_build(maintainers=['kode54'])
+  add_makedepends(['vulkan-headers'])
+
 post_build: aur_post_build
 
 update_on:
