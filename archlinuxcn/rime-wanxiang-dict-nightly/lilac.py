@@ -7,7 +7,8 @@ from lilaclib import *
 
 def pre_build():
     schema_version = _G.newvers[0]
-    dict_version = parsedate_to_datetime(_G.newvers[1]).astimezone(ZoneInfo("Asia/Shanghai"))
+    dt = parsedate_to_datetime(_last_modified).astimezone(ZoneInfo("Asia/Shanghai"))
+    dict_version = dt.strftime("%Y%m%d.%H%M%S")
 
     # update checksums for schema
     update_pkgver_and_pkgrel(f"{schema_version}+r{dict_version}")
