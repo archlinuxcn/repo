@@ -12,7 +12,7 @@ url="https://github.com/amzxyz/rime_wanxiang"
 source=("${url}/archive/refs/tags/v${pkgver}.zip")
 b2sums=('b8ef1c7292d6d5ef0f5d149f5a74fd3936b1c2e46f57aa3456fdfeec1e74feeffc4691ebcbe2c1731697cc5181c2fb6d8cf1a3077d576ebd3799042c42691768')
 
-makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python")
+makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python" "zip")
 build() {
     cd "${srcdir}/rime_wanxiang-${pkgver}" || exit 1
     bash .github/workflows/scripts/release-build.sh
@@ -36,6 +36,7 @@ package_rime-wanxiang-data() {
 
     find . -type f ! \( \
             -path "./custom/*" -o \
+            -path "./custom_phrase.txt" -o \
             -path "./en_dicts/flypy.txt" -o \
             -path "./en_dicts/mspy.txt" -o \
             -path "./en_dicts/pinyin.txt" -o \
@@ -43,8 +44,8 @@ package_rime-wanxiang-data() {
             -path "./en_dicts/zrm.txt" -o \
             -path "./jm_dicts/flypy.txt" -o \
             -path "./jm_dicts/zrm.txt" -o \
-            -path "./lua/librime.lua"\
-            -path "./lua/tips/tips_user.txt*"\
+            -path "./lua/librime.lua" -o \
+            -path "./lua/tips/tips_user.*" -o \
             -path "./zh_dicts/*" -o \
             -path "./zh_dicts_pro/*" -o \
             -path "./default.yaml" -o \
