@@ -4,9 +4,9 @@
 
 pkgname=hmcl
 _pkgname=HMCL
-pkgver=3.6.12
+pkgver=3.6.14
 # https://github.com/huanghongxun/HMCL/commits/release-${pkgver}
-_commit=8e57729349407f457c1f8c0ea5783ddd787d0948
+_commit=8ebf58e8fa5560ba7ccf18ba5c22b9210f49748f
 pkgrel=1
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
@@ -21,7 +21,7 @@ source=("hmcl-launch-script"
         "${pkgname}-${pkgver}.tgz::${url}/archive/${_commit}.tar.gz")
 b2sums=('1de8eca922b01b9c4c6d9a173143f05b900fd6b12b1b27bae175948a43125619d0e14c82d704548f70539af13eb4fd9f7288749265949089c7d6a8fe9032d284'
         '6c38da38fa13ad0af061d593f7733d6a406025c473240ccee4d07c89e71f8d5ead430374a7500f1395a7341c67e06ef3664cb1747ab93cba63459f7906b1598a'
-        '123eb7c889d711f4bf3a7c8b3edd4f68ece371216d291256066e1f0c2d9deeaa8eb8d048bbf1230d590651956c12bda271a5dd8d34916a2beaab347ac11b008e')
+        'be97b2a31c0080b709a6e0a907e17274cbcdc5da6d41160ee9bdbc7d9fd70be947cdbb6eee586559e3420f91ced262c6fc9377b8af28cd2c6cdd160cf4145cc5')
 
 build() {
   cd "${_pkgname}-${_commit}"
