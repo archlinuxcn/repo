@@ -3,7 +3,7 @@
 _name=renpy
 _pkgname="${_name}-sdk"
 pkgname="${_pkgname}-bin"
-pkgver=8.3.7.25031702
+pkgver=8.4.0.25071206
 _pkgver="${pkgver%.*}"
 pkgrel=1
 pkgdesc="A visual novel engine"
@@ -25,7 +25,7 @@ options=('!debug' '!strip')
 install="${_pkgname}.install"
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/releases/download/${pkgver}/renpy-${_pkgver}-sdk.tar.bz2"
         "${_name}.desktop")
-b2sums=('b994a6bd235671322a2d07b8c604365d86a0d8a0544b3c833632a285bd19b7973e8f2146b724d7832b8d33402c7bbe09d7b88c052d9567e8501484d0c7229b25'
+b2sums=('3769ef2c3c579b2ddc83d6ec5f3bd01f695fa0f8184ae722619034d3212049eae880d2695af4fef40bf435015426cc9c3565b949d1d3ac18b8f2a598ae428679'
         'ea985387093fea3fa08fe4784221bba5eceecc261b535275c235052a14fd8f09a58ebcd4fcdd6368db41ee4e58ce14f41db5c875d37921435f6f2e46ab3acbd1')
 
 prepare() {
