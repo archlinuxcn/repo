@@ -3,8 +3,8 @@
 # Contributor: David Herrmann <dh.herrmann@gmail.com>
 
 pkgname=libtsm
-pkgver=4.0.2
-pkgrel=3
+pkgver=4.1.0
+pkgrel=1
 pkgdesc='Terminal-emulator State Machine'
 arch=('x86_64')
 url="https://www.freedesktop.org/wiki/Software/kmscon/$pkgname"
@@ -23,17 +23,13 @@ checkdepends=(
 provides=('libtsm.so')
 source=(
   "https://github.com/Aetf/libtsm/archive/v$pkgver/$pkgname-$pkgver.tar.gz"
-  "$pkgname-fix-backspace.patch::https://github.com/Aetf/libtsm/commit/96374808d926cda8fb764aded6729abdd38c9ce8.patch"
   "$pkgname-0001-chore-allow-None-as-BUILD_TYPE.patch"
 )
-b2sums=('4d81d5a19003ca1487e85bcea22604990e88770484a08a072105a2f193a0c7aa40832c9a81197c0fa26acc9c8d39d1ab796d4b92fa6af790f5ef803b8c68af05'
-        '5ebec6c2f2186dda1c7cc7c3c452ac70d3c45fa1e2a7b584e81a625917802467dfa129671759e422d9eee5b2b885671ba2341a2d358a705146dec2c324fd9e2e'
+b2sums=('c289c0532fcf8b322ea5c1e3c8af61fc04bef6da58fd6746e81251d0ec08069874be86c81729085b9a198351c51b2a5f9ff41a07b421518e40624a029962bb68'
         '97b4ca3e1f34e6f8e99a022fc52c685d5ecf8e3b9619bf452b738d4a3d77634ed36390229fa86a686bf0474ef4d1573b32abb30c6acca8204ab44923934528a5')
 
 prepare() {
   cd $pkgname-$pkgver
-  # FIXME: https://github.com/Aetf/kmscon/issues/58
-  patch -Np1 -i ../$pkgname-fix-backspace.patch
   # FIXME: https://github.com/Aetf/libtsm/issues/42
   patch -Np1 -i ../$pkgname-0001-chore-allow-None-as-BUILD_TYPE.patch
 }
