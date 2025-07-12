@@ -32,16 +32,12 @@ makedepends=(
 )
 source=(
   "$pkgname-$pkgver.tar.gz::https://github.com/Aetf/kmscon/archive/refs/tags/v$pkgver.tar.gz"
-  "$pkgname-fix-backspace.patch::https://github.com/Aetf/kmscon/commit/0310e62e0473d94d649a59e7a9d7622dfa6302e8.patch"
 )
 b2sums=('7316f1fcff4aa9d5693d7ab7f2da12fe50132c575667bc349b12a3e604b2cd92ffc0a55c9648d03e73d1695764067adc0807a4cd220ec190df637ad3d6929dea'
         '35e7d5ffb7779b5bb1d82b484c634797b2240057753b1cd5439ac802602d082c3ec4acd0aae011e06f5deca5682a34e06d9179d91e96d879045418cbd03ee5e2')
 
 prepare() {
   cd $pkgname-$pkgver
-  # FIXME: https://github.com/Aetf/kmscon/issues/58
-  patch -Np1 -i ../"$pkgname-fix-backspace.patch"
-  sed 's/>=4.1.0/>=4.0.0/' -i meson.build
 }
 
 build() {
