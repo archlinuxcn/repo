@@ -276,6 +276,6 @@ _package_dict_zh() {
 
     pushd "${pkgdir}"/usr/share/rime-data/
         _build_dicts wanxiang*.schema.yaml
-        rm -f ./*.schema.yaml ./wanxiang*.dict.yaml ./wanxiang_symbols.yaml
+        rm -f ./*.schema.yaml ./{wanxiang,wanxiang_pro}.dict.yaml ./wanxiang_symbols.yaml
     popd
 }
