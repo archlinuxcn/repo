@@ -22,7 +22,7 @@ depends=(
 	'qt6-svg'
 	'qtkeychain-qt6'
 )
-makedepends=('cmake' 'qt6-tools')
+makedepends=('git' 'cmake' 'qt6-tools')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}/${_pkgname}.git"
