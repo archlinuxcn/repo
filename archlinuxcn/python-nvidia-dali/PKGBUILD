@@ -14,7 +14,7 @@ depends=(
   cfitsio
   cuda
   ffmpeg
-  gcc-libs
+  gcc13-libs
   glibc
   libcudart.so
   libsndfile
@@ -29,6 +29,7 @@ depends=(
   python-six
 )
 makedepends=(
+  gcc13
   python-build
   python-installer
   python-wheel
@@ -81,7 +82,10 @@ build() {
     -DBUILD_PROTOBUF=ON \
     -DBUILD_PYTHON=ON \
     -DBUILD_TEST=OFF \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_C_COMPILER=gcc-13 \
+    -DCMAKE_CXX_COMPILER=g++-13 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
     -DCUDA_TARGET_ARCHS=${_CUDA_ARCH_LIST} \
@@ -94,7 +98,10 @@ build() {
   python -m build --wheel --no-isolation
   # built tf plugin
   cmake -B ${srcdir}/build-tf \
-    -DCUDA_VERSION=12.5.1 \
+    -DCUDA_VERSION=12.9.1 \
+    -DCMAKE_C_COMPILER=gcc-13 \
+    -DCMAKE_CXX_COMPILER=g++-13 \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -S ${srcdir}/${pkgname}/dali_tf_plugin
   make -C ${srcdir}/build-tf
 }
