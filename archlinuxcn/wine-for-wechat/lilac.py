@@ -56,7 +56,7 @@ conflicts=(wine)''' % node.text())
     body = node.parent().children()[-1]
     elems = body.children()
     indent = elems[-2].range().start.column
-    text = 'patch -p1 < "$srcdir"/wine-wechat.patch\n}'
+    text = 'cd wine && patch -p1 < "$srcdir"/wine-wechat.patch\n}'
     e = elems[-1].replace(' ' * indent + text)
     edits.append(e)
   else:
