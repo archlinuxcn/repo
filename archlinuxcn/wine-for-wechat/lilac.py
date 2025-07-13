@@ -37,7 +37,7 @@ def edit_it():
   e = elems[-1].replace('\n%swine-wechat.patch)' % (' ' * indent))
   edits.append(e)
 
-  text = "'646dfd6ec62fb9ddbfb27aac0ac80d87926fbc3360bb53cca942622e95d1ec380f0b5efdfd45bbe1cdce72661b7b36b15ffb7874b1b4269e3bd56a14ec0d2166')"
+  text = "'acb6f1a0db48872994d0829a40f7be239d7114bc2ca0964cbbfe44af3d02dec03cb63528c52990d22ac3b926de510faf8ad5a9f88b98b2e9914836531023684f')"
   node = r.find(pattern='sha512sums=($$$A)')
   arr = node.child(2)
   elems = arr.children()
