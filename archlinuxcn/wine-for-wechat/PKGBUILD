@@ -6,7 +6,7 @@
 
 _pkgname=wine
 pkgname=wine-for-wechat
-pkgver=10.11
+pkgver=10.12
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -15,17 +15,17 @@ source=("git+https://gitlab.winehq.org/wine/wine.git?signed#tag=wine-$_pkgbaseve
         30-win32-aliases.conf
         wine-binfmt.conf
         wine-wechat.patch)
-sha512sums=('5eb7d1fa3710507dc94a216443ecdb165c4c0854563349fbef9e799fa4a91ad4bec3ed9846032871d2b9658fb0f7760494517c4bb3ecf382309e158782219d89'
+sha512sums=('5a2d37d1616833ae06061c1fdefba30884983a1bf1ccfc2ec90afdec1101850c8685e5df95e0932b7f8faeed383e2c343abbd34a11d24b8d0e7d830ffa23d90c'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285'
-            '646dfd6ec62fb9ddbfb27aac0ac80d87926fbc3360bb53cca942622e95d1ec380f0b5efdfd45bbe1cdce72661b7b36b15ffb7874b1b4269e3bd56a14ec0d2166')
+            'acb6f1a0db48872994d0829a40f7be239d7114bc2ca0964cbbfe44af3d02dec03cb63528c52990d22ac3b926de510faf8ad5a9f88b98b2e9914836531023684f')
 validpgpkeys=(5AC1A08B03BD7A313E0A955AF5E6E9EEB9461DD7
               DA23579A74D4AD9AF9D3F945CEFAC8EAAF17519D)
 
 pkgdesc="A patched version of Wine for running Wechat and Netease Music without persistent shadow windows"
 url="https://www.winehq.org"
 arch=(x86_64)
-options=(staticlibs !lto)
+options=(!lto)
 license=(LGPL-2.1-or-later)
 depends=(
   desktop-file-utils
@@ -41,10 +41,10 @@ depends=(
   libxrandr
   wayland
 )
-makedepends=(autoconf bison perl flex mingw-w64-gcc
-  git
+makedepends=(
   alsa-lib
   ffmpeg
+  git
   gnutls
   gst-plugins-base-libs
   libcups
@@ -54,11 +54,11 @@ makedepends=(autoconf bison perl flex mingw-w64-gcc
   libxinerama
   libxxf86vm
   mesa
-  mesa-libgl
+  mingw-w64-gcc
   opencl-headers
   opencl-icd-loader
   pcsclite
-  python
+  perl
   samba
   sane
   sdl2
@@ -72,6 +72,7 @@ optdepends=(
   alsa-plugins
   cups
   dosbox
+  ffmpeg
   gnutls
   gst-plugins-bad
   gst-plugins-base
@@ -92,7 +93,6 @@ optdepends=(
   wine-gecko
   wine-mono
 )
-makedepends=(${makedepends[@]} ${depends[@]})
 install=wine.install
 provides=(wine=$pkgver)
 conflicts=(wine)
@@ -101,36 +101,26 @@ prepare() {
   # Get rid of old build dirs
   rm -rf $_pkgname-64-build
   mkdir $_pkgname-64-build
-
-  cd wine
-  patch -p1 < "$srcdir"/wine-wechat.patch
+  cd wine && patch -p1 < "$srcdir"/wine-wechat.patch
 }
 
 build() {
-  # Doesn't compile without remove these flags as of 4.10
-  export CFLAGS="$CFLAGS -ffat-lto-objects"
-
   # Apply flags for cross-compilation
   export CROSSCFLAGS="-O2 -pipe -g"
   export CROSSCXXFLAGS="-O2 -pipe -g"
   export CROSSLDFLAGS="-Wl,-O1"
 
-  echo "Building Wine-64..."
   cd "$srcdir/$_pkgname-64-build"
   ../wine/configure \
     --prefix=/usr \
     --libdir=/usr/lib \
-    --with-x \
-    --with-wayland \
-    --with-gstreamer \
-    --with-freetype \
+    --disable-tests \
     --enable-archs=x86_64,i386
 
   make
 }
 
 package() {
-  echo "Packaging Wine-64..."
   cd "$srcdir/$_pkgname-64-build"
   make prefix="$pkgdir/usr" \
     libdir="$pkgdir/usr/lib" \
