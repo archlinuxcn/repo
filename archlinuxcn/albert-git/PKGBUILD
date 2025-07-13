@@ -10,11 +10,19 @@ pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
 url="https://github.com/${_pkgname}launcher"
 license=('LicenseRef-Albert')
-depends=('hicolor-icon-theme' 'qt6-5compat' 'qt6-declarative' 'qt6-scxml' 'qt6-shadertools' 'qt6-svg' 'qtkeychain-qt6')
-makedepends=('cmake' 'git' 'libqalculate' 'pybind11' 'python' 'qt6-tools')
-optdepends=('ddgr: duckduckgo search plugin'
-	'libarchive: documentation plugin'
-	'libqalculate: calculator plugin')
+depends=(
+	'libqalculate'
+	'python'
+	'python-pip'
+	'qt6-base'
+	'qt6-declarative'
+	'qt6-5compat'
+	'qt6-scxml'
+	'qt6-shadertools'
+	'qt6-svg'
+	'qtkeychain-qt6'
+)
+makedepends=('cmake' 'qt6-tools')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}/${_pkgname}.git"
