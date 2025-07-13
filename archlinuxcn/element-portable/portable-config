@@ -10,7 +10,7 @@ friendlyName="Element-Desktop"
 stateDirectory="Element_Data"
 
 # This is the target executable to launch
-launchTarget="electron /usr/lib/element/app.asar --disable-dev-mode --gtk-version=3 --ozone-platform-hint=auto --enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,WebRTCPipeWireCapturer,AcceleratedVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverCheck,Vulkan --disable-features=UseChromeOSDirectVideoDecoder --wayland-text-input-version=3 --enable-wayland-ime --disable-sandbox --no-suid-sandbox --enable-zero-copy --ignore-gpu-blocklist --enable-gpu-rasterization"
+launchTarget="electron /usr/lib/element/app.asar --disable-dev-mode --gtk-version=3 --ozone-platform-hint=auto --enable-features=VaapiVideoDecodeLinuxGL,VaapiVideoDecoder,WebRTCPipeWireCapturer,AcceleratedVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverCheck,Vulkan --disable-features=UseChromeOSDirectVideoDecoder --wayland-text-input-version=3 --enable-wayland-ime --disable-sandbox --no-suid-sandbox --enable-zero-copy --ignore-gpu-blocklist --enable-gpu-rasterization --password-store=gnome-libsecret"
 
 # Takes a boolean value or string "adaptive". When true, do not process XAuth files and forces wayland input method. "adaptive" enables this option on Wayland and vice versa. Generally this should be adaptive when possible.
 waylandOnly="adaptive"
@@ -19,7 +19,7 @@ waylandOnly="adaptive"
 bindInputDevices="false"
 
 # Takes boolean value. Binds /dev/video* into the sandbox. Required if target application uses /dev/video* interfaces directly instead of v4l2.
-bindCameras="false"
+bindCameras="true"
 
 # Takes boolean value. Binds PipeWire socket into the sandbox. Required if target application doesn't use Portals. Please be aware that such operation may impact the integrity of host.
 bindPipewire="true"
@@ -33,13 +33,7 @@ dbusWake="false"
 # Enables Network access within the sandbox. Defaults to true.
 bindNetwork="true"
 
-# Use pipewire-v4l2 to replace v4l2. Requires bindPipewire=true!
-pwCam="false"
-
 # Use zink for GL -> Vulkan translation
 useZink="false"
-
-# Enable compatibility workarounds for Qt5. Defaults to true.
-qt5Compat="false"
 
 # Below you can set envs that will be imported into the application sandbox
