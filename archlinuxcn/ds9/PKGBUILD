@@ -24,7 +24,7 @@ build() {
     # workaround for unsatisfying build order in upstream
     # "-j 1" doesn't work, need to change JOBS in Makefile
     sed -i 's/^JOBS.*/JOBS = 1/' Makefile
-    make
+    CFLAGS="-std=gnu17" CXXFLAGS="-std=gnu++17" make
 }
 
 package() {
