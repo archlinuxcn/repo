@@ -1,6 +1,6 @@
 pkgname=julia-git-strided-src
-pkgver=2.3.1
-_commit=8e3ccc4c5dcc12b864ee666f0bc8830dca780852
+pkgver=2.3.2
+_commit=24fcf11be91f255eb3374c221544c066f07aab12
 pkgrel=1
 pkgdesc="Strided.jl"
 url="https://github.com/Jutho/Strided.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Jutho/Strided.jl.git#commit=$_commit")
-sha256sums=('1adcc8d28ddd3f7da2283d6de6fc3196603717832ee479f14d37c85d099198f3')
+sha256sums=('597140002579423d774096fd15c487cfd93ad30a5fc49ae4ebb69dfd304f8b90')
 
 package() {
   cd Strided.jl
