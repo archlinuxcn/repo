@@ -1,0 +1,20 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=zen-browser-dark-reader
+pkgver=1
+pkgrel=1
+pkgdesc='Inverts brightness of web pages and aims to reduce eyestrain while browsing the web. Symlink to the Firefox addon.'
+arch=(any)
+url=https://darkreader.org/
+license=(MIT)
+depends=(firefox-dark-reader)
+source=()
+b2sums=()
+
+function package() {
+	install -d \
+		"${pkgdir}/usr/lib/zen-browser/browser/extensions"
+	ln -sf \
+		"/usr/lib/firefox/browser/extensions/addon@darkreader.org.xpi" \
+		"${pkgdir}/usr/lib/zen-browser/browser/extensions/addon@darkreader.org.xpi"
+}
