@@ -9,8 +9,8 @@ post_build_script: |
 update_on:
   - source: "alpm"
     alpm: "zen-browser"
-    from_pattern: '-.*'
-    to_pattern: ''
+    repo: "archlinuxcn"
+    strip_release: true
 
 repo_depends:
   - portable
