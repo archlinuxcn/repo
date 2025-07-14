@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=zen-browser-ublock-origin
-pkgver=1
+pkgver=4.9.109
 pkgrel=1
 pkgdesc='Efficient blocker add-on for various browsers. Fast, potent, and lean. Symlink to the Firefox addon.'
 arch=(any)
@@ -9,7 +9,7 @@ url=https://github.com/gorhill/uBlock
 license=(GPL-3.0-or-later)
 depends=(firefox-ublock-origin)
 source=(https://github.com/gorhill/uBlock.git)
-b2sums=('SKIP')
+b2sums=('d30c8a3c0b9d80124fb02a7a5b341d193491403af874cd3bf84eb1cfc56a2d4231681fa29a7d9b0fa9f7984c6caad8967c27d144faec8930e0f721e43fec57ba')
 
 function package() {
 	install -d \
