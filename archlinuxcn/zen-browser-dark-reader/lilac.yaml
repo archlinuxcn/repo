@@ -9,7 +9,6 @@ post_build_script: |
 update_on:
   - source: "alpm"
     alpm: "dark-reader"
-    from_pattern: '-.*'
-    to_pattern: ''
+    strip_release: true
 
 build_prefix: extra-x86_64

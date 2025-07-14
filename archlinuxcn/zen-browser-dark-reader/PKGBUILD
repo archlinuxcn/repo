@@ -8,8 +8,9 @@ arch=(any)
 url=https://darkreader.org/
 license=(MIT)
 depends=(firefox-dark-reader)
-source=()
-b2sums=()
+source=(https://github.com/darkreader/darkreader.git)
+b2sums=('SKIP')
+makedepends=(git)
 
 function package() {
 	install -d \
