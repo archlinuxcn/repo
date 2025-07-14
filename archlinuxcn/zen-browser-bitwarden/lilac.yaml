@@ -10,6 +10,7 @@ update_on:
   - source: "github"
     github: "bitwarden/clients"
     prefix: "browser-v"
-    use_latest_release: true
+    use_max_tag: true
+    include_regex: 'browser-v.*'
 
 build_prefix: extra-x86_64
