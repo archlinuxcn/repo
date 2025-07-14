@@ -1,0 +1,65 @@
+# Maintainer: Kimiblock Moe
+pkgname=zen-browser-portable
+pkgver=1.14.4b
+pkgrel=1
+pkgdesc="Zen Browser sandboxed by portable"
+arch=('any')
+url="https://github.com/Kraftland/portable"
+license=(GPL-3.0-or-later)
+groups=()
+options=(!debug !strip)
+
+makedepends+=(git)
+
+depends=(
+	"portable"
+)
+
+optdepends=()
+
+provides=(zen-browser)
+conflicts=(zen-browser)
+
+makedepends+=(
+	"zen-browser"
+)
+
+checkdepends=()
+
+source=(
+	portable-config
+	start.sh
+	desktop.file
+	)
+
+function prepare() {
+	pacman -Ql zen-browser >file.list
+}
+
+function package() {
+	while IFS= read -r line; do
+		file="$(echo "$line" | awk '{print $2}')"
+		if [[ -d ${file} ]]; then
+			echo "Omitting Directory"
+		else
+			install -Dm755 "${file}" "${pkgdir}/${file}"
+		fi
+	done < file.list
+	install -Dm755 \
+		portable-config \
+		"${pkgdir}/usr/lib/portable/info/org.zen.firefox/config"
+	rm "${pkgdir}/usr/share/applications"/*
+	rm "${pkgdir}/usr/bin"/*
+	install -Dm755 \
+		"${srcdir}/start.sh" \
+		"${pkgdir}/usr/bin/zen"
+	install -Dm755 \
+		"${srcdir}/start.sh" \
+		"${pkgdir}/usr/bin/zen-browser"
+	install -Dm644 \
+		"${srcdir}/desktop.file" \
+		"${pkgdir}/usr/share/applications/org.zen.firefox.desktop"
+}
+sha256sums=('379daf7354ef347114ba84592979ad1f840781bfd89102c13d4a643d3d01f77c'
+            '9a56f78f7a6f2f7d1157cc4137e4f1b9ee7eedbb7e122dde02cc7072f7087e05'
+            '5c8cf17b30930c3dd3b7e248086b54f6891bac3dc94a1985291a83c44af14fdc')
