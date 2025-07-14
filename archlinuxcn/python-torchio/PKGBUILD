@@ -6,7 +6,7 @@ pkgver=0.20.17
 pkgrel=1
 pkgdesc='Tools for medical image processing in deep learning and PyTorch'
 arch=('any')
-url='https://github.com/fepegar/torchio'
+url='https://github.com/TorchIO-project/torchio'
 license=('MIT')
 depends=(
   python-click
@@ -16,14 +16,16 @@ depends=(
   python-nibabel
   python-numpy
   python-pytorch
+  python-rich
   python-scipy
   python-simpleitk
   python-torchvision
   python-tqdm
+  python-typer
 )
 makedepends=(
   python-build
-  python-hatchling
+  python-uv-build
   python-installer
   python-wheel
 )
