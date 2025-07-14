@@ -1,3 +1,25 @@
+## GE-Proton10-9
+
+- Added ntsync support:
+```
+Enable with PROTON_USE_NTSYNC=1
+
+NOTES: 
+1. Your kernel must be patched with ntsync patches. If your system does not have /dev/ntsync then your kernel does not have the patches required to use ntsync.
+2. Some applications, mostly 32 bit, may also need PROTON_USE_WOW64=1 when using ntsync
+```
+
+- Added FSR4 upgrade support via PROTON_FSR4_UPGRADE=1 (auto upgrades from amd directly https://download.amd.com/dir/bin/amdxcffx64.dll)
+- Added fixes from upstream for flicker/rendering issue when using wine-wayland
+- Refactored a lot of the patches section and cleaned up outdated or merged patches
+- Update wine-wayland patches
+- Updated wine to latest bleeding edge
+- Updated dxvk to latest git
+- Updated vkd3d-proton to latest git
+- Imported all upstream proton changes
+- protonfixes: added a fix for winetricks wget gnutls failing inside fex
+- protonfixes: add fix for sifu freeze (thanks UsernamesAreNotMyThing)
+
 ## GE-Proton10-8
 
 - Fix doom eternel black screen regression when using wine-wayland

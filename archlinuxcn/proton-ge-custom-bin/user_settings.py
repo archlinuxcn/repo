@@ -23,6 +23,12 @@ user_settings = {
 
     ###### Proton flags ######
 
+    #Enable use of the ntsync kernel driver to improve performance and compatibility of Windows NT synchronization primitives.
+#   "PROTON_USE_NTSYNC": "1",
+
+    #Enable automatic upgrading of AMD FidelityFX Super Resolution (FSR) to FSR4.
+#   "PROTON_FSR4_UPGRADE": "1",
+
     #Enable Wayland display output. Games running with native Vulkan and OpenGL may have problems. Required for HDR support
 #   "PROTON_ENABLE_WAYLAND": "1",
 
