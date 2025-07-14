@@ -47,7 +47,7 @@ function package() {
 	done < file.list
 	install -Dm755 \
 		portable-config \
-		"${pkgdir}/usr/lib/portable/info/org.zen.firefox/config"
+		"${pkgdir}/usr/lib/portable/info/org.mozilla.zen/config"
 	rm "${pkgdir}/usr/share/applications"/*
 	rm "${pkgdir}/usr/bin"/*
 	install -Dm755 \
@@ -58,7 +58,7 @@ function package() {
 		"${pkgdir}/usr/bin/zen-browser"
 	install -Dm644 \
 		"${srcdir}/desktop.file" \
-		"${pkgdir}/usr/share/applications/org.zen.firefox.desktop"
+		"${pkgdir}/usr/share/applications/org.mozilla.zen.desktop"
 }
 sha256sums=('379daf7354ef347114ba84592979ad1f840781bfd89102c13d4a643d3d01f77c'
             '9a56f78f7a6f2f7d1157cc4137e4f1b9ee7eedbb7e122dde02cc7072f7087e05'
