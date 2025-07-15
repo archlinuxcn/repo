@@ -26,6 +26,9 @@ user_settings = {
     #Enable use of the ntsync kernel driver to improve performance and compatibility of Windows NT synchronization primitives.
 #   "PROTON_USE_NTSYNC": "1",
 
+    #Enable WoW64 Mode For Wine Prefixes. Required for Ntsync use with 32-bit games
+#   "PROTON_USE_WOW64": "1",
+
     #Enable automatic upgrading of AMD FidelityFX Super Resolution (FSR) to FSR4.
 #   "PROTON_FSR4_UPGRADE": "1",
 
