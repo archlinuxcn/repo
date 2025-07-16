@@ -14,6 +14,7 @@ arch=('x86_64')
 url="https://waydro.id"
 license=('Apache-2.0')
 depends=('waydroid')
+replaces=('waydroid-image-beta')
 _srcprefix="https://sourceforge.net/projects/waydroid/files/images"
 source=("${_srcprefix}/system/lineage/waydroid_x86_64/lineage-${_pkgver}-VANILLA-waydroid_x86_64-system.zip"
 	"${_srcprefix}/vendor/waydroid_x86_64/lineage-${_pkgver}-MAINLINE-waydroid_x86_64-vendor.zip")
