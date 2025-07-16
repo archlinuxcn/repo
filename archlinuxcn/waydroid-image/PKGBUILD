@@ -8,12 +8,13 @@
 pkgname=waydroid-image
 pkgver=20.0_20250712
 _pkgver=${pkgver/_/-}
-pkgrel=1
+pkgrel=2
 pkgdesc="LineageOS-based Android images for Waydroid"
 arch=('x86_64')
 url="https://waydro.id"
 license=('Apache-2.0')
 depends=('waydroid')
+replaces=('waydroid-image-beta')
 _srcprefix="https://sourceforge.net/projects/waydroid/files/images"
 source=("${_srcprefix}/system/lineage/waydroid_x86_64/lineage-${_pkgver}-VANILLA-waydroid_x86_64-system.zip"
 	"${_srcprefix}/vendor/waydroid_x86_64/lineage-${_pkgver}-MAINLINE-waydroid_x86_64-vendor.zip")
