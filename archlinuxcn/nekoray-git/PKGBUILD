@@ -24,7 +24,7 @@ source=(
 install="${pkgname}.install"
 sha512sums=('SKIP'
             'b377f7e8c859ee0b5bc05f89e2dc6c0b8535e740e089e9afe5e5f145c38a05fccbbddfcb6eb8ced9a7478e4d9ccc3cbd3ffb6843c128189c75599c40c87737e8'
-            'b0cfd99d7fd038d660af275a5f2fc7f9ebfe63d6751edd6eea66a8c5350f314b6dbc9eddaa5aaed134e97087290630d369b1bdf4ad59d12868c780103b33dbed')
+            '932b2a5ea5b08a460cae1e42e3b364c57e3673c74a10b0e8aa6d9c1f7ea503254dc5d260e03283bc173a3ee016e90e3ea685498653e6b24d845f6b1a0db3c5f8')
 
 pkgver() {
 	git -C "${_pkgname}/" describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
@@ -60,6 +60,6 @@ package() {
 	install -Dm755 "${_pkgname}.sh" "${pkgdir}/usr/bin/${_pkgname}"
 
 	cd "${_pkgname}/"
-	install -Dm644 "res/public/nekobox.png" -t "${pkgdir}/usr/share/pixmaps/"
-	install -Dm755 build/{${_pkgname},nekobox_core} -t "${pkgdir}/usr/lib/${_pkgname}/"
+	install -Dm644 "res/public/Throne.png" -t "${pkgdir}/usr/share/pixmaps/"
+	install -Dm755 build/{Throne,Core} -t "${pkgdir}/usr/lib/${_pkgname}/"
 }
