@@ -3,7 +3,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154
 
 pkgname="memos"
-pkgver=0.24.4
+pkgver=0.25.0
 pkgrel=1
 pkgdesc="A privacy-first, lightweight note-taking service. Easily capture and share your great thoughts."
 url="https://github.com/usememos/${pkgname}"
@@ -19,7 +19,7 @@ source=(
   "memos.conf"
   'tmpfiles.conf'
 )
-sha512sums=('b14c157ff5e47429468c1aa09773a3c498282d064f6d8233269b3c94138cd29a291a3c6ce41a38ae3dd7bf77dcc4f9c0750a69c6944aa37722de08ea1b3b4879'
+sha512sums=('c636e7f56109ee993a9a142f830df80e4ace46ae5c5d823a12b546ecc657d347345440334a00d4224f6a02bab4aa1fe7d25fcb75bb63972e30a0d930f3b71718'
             '9c37361974d8b3beecdd8b0bf8db929a4a882623ea7b23aa51bddf37790b66042cef593d6da89b34e7dde4a9a9a1e097ea31ec713b33fee6a699448fb300d4a2'
             '692dc4674b86b36c5464c78f493ace50091068f962d40130a32b4ed17517d77e33860333e870f5e80a5e17b6cbd5de45bf57e7de5ea7984bd4e36f95a8daf0fa'
             '251e01c4f5fc8aea209453d91da5dde91d58397668e34b78e52a31940e30a89be5601a6ea8cdebe791a96c9324733095de3567998b45ce1542578b1d9b7a5b76'
