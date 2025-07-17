@@ -13,7 +13,6 @@ pkgdesc='Adds support for getting events from gamepad devices'
 depends=('qt5-base' 'sdl2')
 makedepends=('qt5-declarative' 'git')
 optdepends=('qt5-declarative: QML bindings')
-groups=('qt5')
 _pkgfqn=${pkgname/5-/}
 source=(kde-$_pkgfqn::git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit)
 sha256sums=('ca1e92a8bafaf1b70c7a209f0df916b8a5423dede30c2dba9bbfd0df8b33a58b')
