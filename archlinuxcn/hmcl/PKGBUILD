@@ -39,6 +39,11 @@ package() {
   # install jar
   _path=$(echo libs/HMCL*.jar)
   install -Dm644 $_path "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
-  # install icon
-  install -Dm644 "resources/main/assets/img/craft_table.png" "${pkgdir}/usr/share/icons/hicolor/48x48/apps/${pkgname}.png"
+  # install icons
+  local _icon _iconfile
+  for _icon in 32:icon.png 64:icon@2x.png 128:icon@4x.png 256:icon@8x.png; do
+    _iconfile=${_icon#*:}
+    _icon=${_icon%:*}
+    install -Dm644 "resources/main/assets/img/${_iconfile}" "${pkgdir}/usr/share/icons/hicolor/${_icon}x${_icon}/apps/${pkgname}.png"
+  done
 }
