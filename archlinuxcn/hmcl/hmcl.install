@@ -1,0 +1,18 @@
+post_install() {
+  case "$LANG" in
+    zh_CN*|zh_TW*|zh_HK*|zh_SG*|zh*)
+      printf '\033[1;36m==> 注意：在未显式配置必要变量之前，Microsoft 登录功能将不可用。\033[m\n'
+      printf '\033[1;36m==> 根据 HMCL 官方在 https://github.com/HMCL-dev/HMCL/discussions/4084 中的说明，\033[m\n'
+      printf '\033[1;36m==> 请勿使用 HMCL 官方发布版本中所包含的认证变量。\033[m\n'
+      printf '\033[1;36m==> 若您已自行获取合法的变量值，可通过以下方式传入：\033[m\n'
+      printf '\033[1;35m$ hmcl -Dhmcl.microsoft.auth.id=... -Dhmcl.microsoft.auth.secret=... -Dhmcl.curseforge.apikey=...\033[m\n'
+      ;;
+    *)
+      printf '\033[1;36m==> Note: Microsoft login will be unavailable until the required variables are explicitly configured.\033[m\n'
+      printf '\033[1;36m==> As stated in https://github.com/HMCL-dev/HMCL/discussions/4084,\033[m\n'
+      printf '\033[1;36m==> please do not use the credentials embedded in the official HMCL builds.\033[m\n'
+      printf '\033[1;36m==> If you have obtained valid credentials on your own, you may provide them as follows:\033[m\n'
+      printf '\033[1;35m$ hmcl -Dhmcl.microsoft.auth.id=... -Dhmcl.microsoft.auth.secret=... -Dhmcl.curseforge.apikey=...\033[m\n'
+      ;;
+  esac
+}
