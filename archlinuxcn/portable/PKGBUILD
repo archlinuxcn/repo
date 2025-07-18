@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 pkgname=portable
 epoch=1
-pkgver=6.2
+pkgver=7.0rc4
 pkgrel=1
 epoch=
 pkgdesc="Portable Sandboxing framework"
@@ -15,7 +15,6 @@ options=(!debug !strip)
 makedepends+=(git)
 
 depends=(
-	"polkit"
 	"procps-ng"
 	"coreutils"
 	"awk"
@@ -55,17 +54,16 @@ makedepends+=(
 
 checkdepends=()
 
-source=(portable-source::git+https://github.com/Kraftland/portable.git#tag=${pkgver})
+source=(portable::git+https://github.com/Kraftland/portable.git#tag=${pkgver})
 
-md5sums=('4be36c499efb33522fb9834ed0b6bda3')
+md5sums=('4dc17eae5022deb047865072971cfb1f')
 
 
 function package() {
-	cd "${srcdir}/portable-source"
-	install -Dm755 portable.sh ${pkgdir}/usr/bin/portable
-	install -Dm755 open.sh ${pkgdir}/usr/lib/portable/open
-	install -Dm755 portable-pools ${pkgdir}/usr/bin/portable-pools
-	install -Dm755 flatpak-info ${pkgdir}/usr/lib/portable/flatpak-info
-	install -Dm755 bwrapinfo.json ${pkgdir}/usr/lib/portable/bwrapinfo.json
-	install -Dm755 portable-helper.sh ${pkgdir}/usr/lib/portable/helper
+	cd portable
+	install -Dm755 portable.sh "${pkgdir}/usr/bin/portable"
+	install -d "${pkgdir}/usr/lib/"
+	cp -r "${srcdir}/portable/lib" "${pkgdir}/usr/lib/portable"
+	install -t "${pkgdir}/usr/share/portable" -Dm755 "${srcdir}/portable/share"/*
+	install -Dm755 portable-pools "${pkgdir}/usr/bin/portable-pools"
 }

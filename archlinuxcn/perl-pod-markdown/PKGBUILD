@@ -3,7 +3,7 @@
 
 pkgname=perl-pod-markdown
 pkgver=3.400
-pkgrel=3
+pkgrel=4
 pkgdesc='Convert POD to Markdown'
 _dist=Pod-Markdown
 arch=('any')
@@ -14,7 +14,7 @@ checkdepends=('perl-test-differences')
 optdepends=('perl-html-parser: for nicer encoding of HTML entities')
 options=('!emptydirs' 'purge')
 source=("https://cpan.metacpan.org/authors/id/R/RW/RWSTAUNER/${_dist}-${pkgver}.tar.gz")
-sha256sums=("a626e99bcd4e7d214e43d4722a54e3aafac3713862f7479cfb94a0e2879f8442")
+sha256sums=('a626e99bcd4e7d214e43d4722a54e3aafac3713862f7479cfb94a0e2879f8442')
 
 build() {
   cd $_dist-$pkgver

@@ -1,32 +1,31 @@
-# Maintainer: Hao Long <imlonghao@archlinuxcn.org>
+# Maintainer: Misaka13514 <Misaka13514 at gmail dot com>
+# Contributor: Hao Long <imlonghao@archlinuxcn.org>
 # Contributor: Lin Ruoshui <LinRs at users.noreply.github dot com>
 # Contributor: hexchain <i at hexchain.org>
 
 pkgname=hmcl
 _pkgname=HMCL
 pkgver=3.6.14
-# https://github.com/huanghongxun/HMCL/commits/release-${pkgver}
-_commit=8ebf58e8fa5560ba7ccf18ba5c22b9210f49748f
-pkgrel=1
+_tag="release-${pkgver}"
+pkgrel=2
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
-url="https://github.com/huanghongxun/HMCL"
+url="https://github.com/HMCL-dev/HMCL"
 license=('GPL-3.0-or-later')
-provides=('hmcl')
-conflicts=('hmcl')
-depends=('java-runtime')
-makedepends=('liberica-jdk-11-full-bin')
+depends=('java-runtime' 'hicolor-icon-theme')
+makedepends=('java-environment-openjdk=11')
+install="$pkgname.install"
 source=("hmcl-launch-script"
         "${pkgname}.desktop"
-        "${pkgname}-${pkgver}.tgz::${url}/archive/${_commit}.tar.gz")
+        "${pkgname}-${pkgver}.tgz::${url}/archive/${_tag}.tar.gz")
 b2sums=('1de8eca922b01b9c4c6d9a173143f05b900fd6b12b1b27bae175948a43125619d0e14c82d704548f70539af13eb4fd9f7288749265949089c7d6a8fe9032d284'
         '6c38da38fa13ad0af061d593f7733d6a406025c473240ccee4d07c89e71f8d5ead430374a7500f1395a7341c67e06ef3664cb1747ab93cba63459f7906b1598a'
-        'be97b2a31c0080b709a6e0a907e17274cbcdc5da6d41160ee9bdbc7d9fd70be947cdbb6eee586559e3420f91ced262c6fc9377b8af28cd2c6cdd160cf4145cc5')
+        '148547547f71e7867894fe7df82a6f47e6d576c076722e5abc09ed0f571cd836afa9f7b81ea5c65ced066b77051bf229a846e4d65500815e13461f44b4567339')
 
 build() {
-  cd "${_pkgname}-${_commit}"
-  export JAVA_HOME=/usr/lib/jvm/liberica-jdk-11-full
-  ./gradlew clean build
+  cd "${_pkgname}-${_tag}"
+  export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+  ./gradlew clean build --no-daemon
 }
 
 package() {
@@ -35,11 +34,16 @@ package() {
   # desktop file
   install -Dm644 "hmcl.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
-  cd "${_pkgname}-${_commit}/${_pkgname}/build"
+  cd "${_pkgname}-${_tag}/${_pkgname}/build"
 
   # install jar
   _path=$(echo libs/HMCL*.jar)
   install -Dm644 $_path "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
-  # install icon
-  install -Dm644 "resources/main/assets/img/craft_table.png" "${pkgdir}/usr/share/icons/hicolor/48x48/apps/${pkgname}.png"
+  # install icons
+  local _icon _iconfile
+  for _icon in 32:icon.png 64:icon@2x.png 128:icon@4x.png 256:icon@8x.png; do
+    _iconfile=${_icon#*:}
+    _icon=${_icon%:*}
+    install -Dm644 "resources/main/assets/img/${_iconfile}" "${pkgdir}/usr/share/icons/hicolor/${_icon}x${_icon}/apps/${pkgname}.png"
+  done
 }

@@ -1,0 +1,20 @@
+maintainers:
+  - github: cryolitia
+    email: Cryolitia <cryolitia@gmail.com>
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+    aur_pre_build(maintainers=['andreas_baumann'])
+
+    for line in edit_file('PKGBUILD'):
+      if not line.startswith('groups='):
+        print(line)
+
+ 
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: qt5-gamepad

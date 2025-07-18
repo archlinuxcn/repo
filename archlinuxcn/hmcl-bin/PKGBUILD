@@ -1,0 +1,50 @@
+# Maintainer: Misaka13514 <Misaka13514 at gmail dot com>
+# Contributor: Hao Long <imlonghao@archlinuxcn.org>
+# Contributor: Lin Ruoshui <LinRs at users.noreply.github dot com>
+# Contributor: hexchain <i at hexchain.org>
+
+pkgname=hmcl-bin
+_pkgname=${pkgname%-bin}
+pkgver=3.6.14
+_tag="release-${pkgver}"
+pkgrel=2
+pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
+arch=('any')
+url="https://github.com/HMCL-dev/HMCL"
+license=('GPL-3.0-or-later')
+depends=('java-runtime' 'hicolor-icon-theme')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("hmcl-launch-script"
+        "${_pkgname}.desktop"
+        "${_pkgname}-${pkgver}.jar::${url}/releases/download/${_tag}/HMCL-${pkgver}.jar")
+b2sums=('1de8eca922b01b9c4c6d9a173143f05b900fd6b12b1b27bae175948a43125619d0e14c82d704548f70539af13eb4fd9f7288749265949089c7d6a8fe9032d284'
+        '6c38da38fa13ad0af061d593f7733d6a406025c473240ccee4d07c89e71f8d5ead430374a7500f1395a7341c67e06ef3664cb1747ab93cba63459f7906b1598a'
+        '1eace79b52efa28fad04062d6ce23cda65db794ce78a3da086fad9e55d0b681ad8503b9fa07e3b5816cd76ced0e9924d197772af9b7fae81674b5de84be52f92')
+
+prepare() {
+  # extract icons from jar
+  local _iconfile
+  for _iconfile in icon.png icon@2x.png icon@4x.png icon@8x.png; do
+    jar -xf "${_pkgname}-${pkgver}.jar" "assets/img/${_iconfile}"
+  done
+}
+
+package() {
+  # custom launch script
+  install -Dm755 "hmcl-launch-script" "${pkgdir}/usr/bin/$_pkgname"
+
+  # desktop file
+  install -Dm644 "hmcl.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+
+  # install jar
+  install -Dm644 "${_pkgname}-${pkgver}.jar" "${pkgdir}/usr/share/java/${_pkgname}/${_pkgname}.jar"
+
+  # install icons
+  local _icon _iconfile
+  for _icon in 32:icon.png 64:icon@2x.png 128:icon@4x.png 256:icon@8x.png; do
+    _iconfile=${_icon#*:}
+    _icon=${_icon%:*}
+    install -Dm644 "assets/img/${_iconfile}" "${pkgdir}/usr/share/icons/hicolor/${_icon}x${_icon}/apps/${_pkgname}.png"
+  done
+}

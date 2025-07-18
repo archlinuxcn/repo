@@ -77,7 +77,7 @@ package_element-portable() {
 	pkgdesc+="desktop version. Sandboxed by Portable."
 	provides+=("element-desktop")
 	conflicts+=("element-desktop")
-	depends+=('portable>4' "element-web=${pkgver}" ${_electron} libsecret)
+	depends+=('portable' "element-web=${pkgver}" ${_electron} libsecret)
 	backup=('etc/element/config.json')
 
 	cd element-desktop
