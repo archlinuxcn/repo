@@ -37,11 +37,6 @@ package_rime-wanxiang-data() {
     find . -type f ! \( \
             -path "./custom/*" -o \
             -path "./custom_phrase.txt" -o \
-            -path "./en_dicts/flypy.txt" -o \
-            -path "./en_dicts/mspy.txt" -o \
-            -path "./en_dicts/pinyin.txt" -o \
-            -path "./en_dicts/sogou.txt" -o \
-            -path "./en_dicts/zrm.txt" -o \
             -path "./jm_dicts/flypy.txt" -o \
             -path "./jm_dicts/zrm.txt" -o \
             -path "./lua/librime.lua" -o \
@@ -52,8 +47,9 @@ package_rime-wanxiang-data() {
             -path "./squirrel.yaml" -o \
             -path "./wanxiang.*.yaml" -o \
             -path "./wanxiang_pro.*.yaml" -o \
+            -path "./wanxiang_cnanden.schema.yaml" -o \
             -path "./wanxiang_en.schema.yaml" -o \
-            -path "./wanxiang_radical.*.yaml" -o \
+            -path "./wanxiang_radical.schema.yaml" -o \
             -path "./wanxiang_charset.*.yaml" -o \
             -path "./wanxiang_lookup.*.yaml" -o \
             -path "./weasel.yaml" -o \
@@ -73,12 +69,12 @@ declare -A _schemas=(
     [flypy]="小鹤双拼"
     [mspy]="微软双拼"
     [sogou]="搜狗双拼"
-    # 以下没有对应的英文词库
+    [abc]="智能ABC"
+    [ziguang]="紫光双拼"
+    [jiajia]="拼音加加"
+    # 以下没有对应的英文和混输词库
     # [hanxin]="汉心龙"
     # [..]="自然龙"
-    # [..]="智能ABC"
-    # [..]="紫光双拼"
-    # [..]="拼音加加"
     # [..]="乱序17"
 )
 declare -A _fuzhu_names=(
@@ -182,7 +178,6 @@ done
 
 _package_schema() {
     _type=$1
-    _en_dict="en_dicts/$2"
     _shuru_schema=$3
 
     _dist_dir="rime-wanxiang-base"
@@ -191,13 +186,14 @@ _package_schema() {
     cd "${srcdir}/rime_wanxiang-${pkgver}/dist/${_dist_dir}" || exit 1
 
     if [[ $_type == 'shared' ]]; then
+        # shared 为对应拼写方案的基础 pro 和 base 共用的包
         find . -type f \( \
-            -path "./wanxiang_radical.*.yaml" -o \
+            -path "./wanxiang_cnanden.*.yaml" -o \
             -path "./wanxiang_en.*.yaml" -o \
-            -path "./en_dicts/*.dict.yaml" -o \
-            -path "./${_en_dict}*" \
+            -path "./wanxiang_radical.*.yaml" \
             \) -exec install -Dm664 {} "${pkgdir}"/usr/share/rime-data/{} \;
     else
+        # pro/base 独立包
         find . -type f \( \
             -path "./default.yaml" -o \
             -path "./wanxiang.*.yaml" -o \
@@ -210,7 +206,7 @@ _package_schema() {
     pushd "${pkgdir}"/usr/share/rime-data/
         _schema_files=()
         if [[ $_type == 'shared' ]]; then
-            for _s in wanxiang_{radical,en}.schema.yaml; do
+            for _s in wanxiang_{cnanden,en,radical}.schema.yaml; do
                 sed -Ei \
                     -e "/^set_shuru_schema:/,/^[^[:space:]]/ { s|^(\s+__include:\s*)\S+(\s*.*)|\1${_shuru_schema}\2| }" \
                     "${_s}"
@@ -234,7 +230,6 @@ _package_schema() {
             # patch current schema
             sed -Ei \
                 -e "/^set_shuru_schema:/,/^[^[:space:]]/ { s|^(\s+__include:\s*)\S+(\s*.*)|\1${_shuru_schema}\2| }" \
-                -e "/^set_cn_en:/,/^[^[:space:]]/ { s|^(\s+user_dict:\s*)\S+(\s*.*)|\1${_en_dict}\2| }" \
                 ${_main_schema_file}
 
             # 编译此包中的 dicts
@@ -251,7 +246,7 @@ _package_schema() {
         _build_dicts "${_schema_files[@]}"
 
         # 已在 data 包中，这里仅用于编译
-        rm -rf ./en_dicts/*.dict.yaml ./wanxiang_en.dict.yaml
+        rm -rf ./wanxiang_{en,cnanden,radical}.dict.yaml
     popd
 }
 
