@@ -1,6 +1,6 @@
 # Maintainer: swearchnick <swearchnick[at]gmail[dot]com>
 pkgname=svtplay-dl
-pkgver=4.127
+pkgver=4.131
 pkgrel=1
 pkgdesc="Media downloader for play sites (e.g. SVT Play)"
 url="https://github.com/spaam/svtplay-dl"
@@ -10,7 +10,7 @@ depends=('python-cryptography' 'python-requests' 'ffmpeg' 'python-yaml')
 optdepends=('python-pysocks: proxy support')
 makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel' 'perl')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/spaam/svtplay-dl/archive/$pkgver.tar.gz")
-sha256sums=('fbff3d44b4e4feda5d66393b859ef05a0166a2f4ce91ef0a70279cc2682cfb49')
+sha256sums=('3898891ea03da6081b5d7e624f0cd1742a0aaf7d653098ba77cd70629c989ec3')
 
 build() {
 

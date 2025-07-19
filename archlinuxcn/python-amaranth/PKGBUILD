@@ -3,8 +3,8 @@
 
 _pkgname=amaranth
 pkgname="python-$_pkgname"
-pkgver=0.5.6
-pkgrel=2
+pkgver=0.5.7
+pkgrel=1
 pkgdesc="A modern hardware definition language and toolchain based on Python (formerly nMigen)"
 arch=(any)
 url="https://github.com/amaranth-lang/amaranth"
@@ -17,7 +17,7 @@ provides=("python-nmigen=$pkgver" "python-$_pkgname=$pkgver")
 conflicts=('python-nmigen' "python-nmigen-git" "python-$_pkgname-git")
 replaces=('python-nmigen')
 source=("git+https://github.com/amaranth-lang/amaranth.git#tag=v${pkgver}")
-sha512sums=('3757837dfb6dea0304e8aadeede09fba0df29058b74ac04fa96d2fd66121602f6c65c49e227135cb2c83037b76bb489b25b3ecb81e288821b96c18d4a4d21b29')
+sha512sums=('e5fbc3c95fb46f1c23dfee94cfcefeaf4cc466c96f11263a620c0b281c6e334d4476a65a552a9e90a8cc886c9daec3215723a7223de9fbe87508b339fc6188b2')
 
 prepare() {
   cd "${_pkgname}"
