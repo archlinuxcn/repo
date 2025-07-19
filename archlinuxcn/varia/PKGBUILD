@@ -2,7 +2,7 @@
 # Contributor: jdigi78 <jdigiovanni78 at gmail dot com>
 
 pkgname=varia
-pkgver=2025.5.14
+pkgver=2025.7.19
 pkgrel=1
 pkgdesc="Download manager based on aria2"
 arch=('any')
@@ -26,7 +26,7 @@ depends=('aria2'
          'yt-dlp')
 makedepends=('meson')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('c50a77aec556a48d7e97e40340cc1fdb2201f673f9f71615fec457451ac2dc54')
+sha256sums=('3b9296eae3388234b9b59330111db128c89a32641d9f5caca85113bea99f3d3e')
 
 build() {
     arch-meson "${pkgname}-${pkgver}" build
