@@ -6,7 +6,7 @@ pkgname=code
 pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
 _electron=electron35
-pkgver=1.101.2
+pkgver=1.102.1
 pkgrel=1
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
@@ -15,7 +15,7 @@ depends=($_electron 'libsecret' 'libx11' 'libxkbfile' 'ripgrep')
 optdepends=('bash-completion: Bash completions'
             'zsh-completions: ZSH completitons'
             'x11-ssh-askpass: SSH authentication')
-makedepends=('git' 'nodejs-lts-iron' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq')
+makedepends=('git' 'nodejs-lts-jod' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq')
 provides=('vscode')
 options=('!strip' '!debug')
 source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
@@ -24,7 +24,7 @@ source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
         'product_json.diff'
         'clipath.patch'
         'https://github.com/termux/termux-packages/raw/0974620c52e72d0c80bcc8a42bad482555f629e8/x11-packages/code-oss/0009-openvsx-extension-signature.patch')
-sha512sums=('18f57f4856cbcd7e6a3eec873be2fd88a1b98735267a6394f1e5e53e99de9ee28159c1296cd7fe673daedfb988d74187e42eccc5265c7f144e393312de606403'
+sha512sums=('10018d6ea5fceee9ebe3328a997a141d59ae7366aa7efdfb8d625c67be5fd4887c71f88489cad503e60e6471630335786a90214bf79bea168303338441651f98'
             '793f9ff6306e3992ac89802d98110cba288ea1181a901467333293b7d76182ef9792c2a39ff49d9347a18a174b1f42bc58862091dff583f4146c2704eea28033'
             '937299c6cb6be2f8d25f7dbc95cf77423875c5f8353b8bd6cd7cc8e5603cbf8405b14dbf8bd615db2e3b36ed680fc8e1909410815f7f8587b7267a699e00ab37'
             'b1aa0d7c5b3e3e8ba1172822d75ea38e90efc431b270e0b4ca9e45bf9c0be0f60922c8618969ef071b5b6dbd9ac9f030294f1bf49bcc28c187b46d113dca63a7'
@@ -123,14 +123,8 @@ prepare() {
 
   patch -p1 -i "$srcdir/clipath.patch"
 
-  # Put a fake of zipped electron required by the build process.
-  local _hash=$(echo -n "https://github.com/electron/electron/releases/download/v$_electronver" | sha256sum | cut -d ' ' -f 1)
-  export XDG_CACHE_HOME="$srcdir" # Don't let our manually created electron zip appear in users' cache dir
-  local _cache_dir="$XDG_CACHE_HOME/electron/$_hash"
-  mkdir -p "$_cache_dir"
-  local _electron_zip="electron-v$_electronver-linux-$_electron_arch.zip"
-  zip -q "$_cache_dir/$_electron_zip" . -i .
-  echo "$(sha256sum "$_cache_dir/$_electron_zip" | cut -d " " -f 1) *$_electron_zip" > build/checksums/electron.txt
+  # disable electron checksum verification as we are not bundling electron
+  sed -i 's|validateChecksum: false,|validateChecksum: true,|' build/lib/electron.{js,ts}
 }
 
 build() {
