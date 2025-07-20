@@ -21,17 +21,16 @@ optdepends=(
 	'python-aiosqlite: sqlite database support')
 license=('AGPLv3')
 arch=('any')
-source=("${pkgname}-${pkgver}::git+${url}#tag=v${pkgver}" "${pkgname}.service")
+source=("${pkgname}::git+${url}#tag=v${pkgver}" "${pkgname}.service")
 sha256sums=('e201b9604c04a927d12b7a23d218a32430eb4b721da555f3112e0150811a0572'
             '5745211f778be7220159f8e23f493cc819dd9290ddd81c6b83a9b5fef2a15547'
             '83dc721df0451c199d23ea74b60a065d92f98e9026dd779aca30d25195b88cf9'
             '2f5c45f6b0a9d1ae5237a91bdcb527609d262bc27cb7fa1dc736b4103ee230e5')
 backup=("etc/${pkgname}/config.yaml" "etc/${pkgname}/registration.yaml")
-_dirname="${pkgname#mautrix-}-${pkgver}"
 
 
 prepare() {
-	cd "${srcdir}/${_dirname}"
+	cd "${srcdir}/${pkgname}"
 	# the author makes liberal usage of max version for requirements without a real need
 	# we'll strip them and re-introduce in the deps/optdeps array if truly necessary
 	# to prevent a nightmare during updates while tracking stable releases
@@ -45,13 +44,13 @@ prepare() {
 }
 
 build() {
-	cd "${srcdir}/${_dirname}"
+	cd "${srcdir}/${pkgname}"
 	export PYTHONHASHSEED=0
 	python -m build --wheel --no-isolation
 }
 
 package() {
-	cd "${srcdir}/${_dirname}"
+	cd "${srcdir}/${pkgname}"
 
 	_shared_dir="/usr/share/${pkgname}"
 
