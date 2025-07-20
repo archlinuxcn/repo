@@ -1,0 +1,25 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=python-cryptg
+pkgver=0.5
+pkgrel=1
+pkgdesc="Cryptographic utilities for Telegram, designed to use with Telethon."
+url="https://github.com/cher-nov/cryptg"
+depends=('python')
+makedepends=('python-setuptools' 'python-setuptools-rust' 'python-build' 'python-installer' 'python-wheel' 'git')
+license=('CC0-1.0')
+arch=('any')
+source=("git+https://github.com/cher-nov/cryptg.git#tag=v${pkgver}")
+
+sha256sums=('c23d0055ea730b372de29cc6ff1aaa7a23d165e2b20908e1c27cb65b9aa29f97')
+
+build() {
+    cd "${srcdir}/cryptg"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "${srcdir}/cryptg"
+    install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE.txt"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+}
