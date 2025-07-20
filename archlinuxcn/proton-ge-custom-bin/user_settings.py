@@ -23,10 +23,7 @@ user_settings = {
 
     ###### Proton flags ######
 
-    #Enable use of the ntsync kernel driver to improve performance and compatibility of Windows NT synchronization primitives.
-#   "PROTON_USE_NTSYNC": "1",
-
-    #Enable WoW64 Mode For Wine Prefixes. Required for Ntsync use with 32-bit games
+    #Enable WoW64 Mode For Wine Prefixes
 #   "PROTON_USE_WOW64": "1",
 
     #Enable automatic upgrading of AMD FidelityFX Super Resolution (FSR) to FSR4.
@@ -64,6 +61,9 @@ user_settings = {
 
     #Disable futex-based in-process synchronization primitives
 #    "PROTON_NO_FSYNC": "1",
+
+    #Disable ntsync-based in-process synchronization primitives
+#   "PROTON_NO_NTSYNC": "1",
 
     #Enable NVIDIA's NVAPI GPU support library.
 #    "PROTON_ENABLE_NVAPI": "1",

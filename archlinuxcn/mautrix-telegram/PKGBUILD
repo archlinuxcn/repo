@@ -1,0 +1,72 @@
+# Maintainer: BrainDamage
+pkgname=mautrix-telegram
+pkgver=0.15.3
+pkgrel=2
+pkgdesc="Matrix-Telegram hybrid puppeting/relaybot bridge"
+url="https://github.com/tulir/mautrix-telegram"
+depends=('python' 'python-asyncpg' 'python-ruamel-yaml'
+	'python-magic' 'python-commonmark' 'python-aiohttp' 'python-yarl'
+	'python-mautrix'
+	'python-tulir-telethon'
+	'python-mako'
+	'python-pytest-runner' 'ffmpeg' 'python-cryptg' 'python-cchardet' 'python-brotli' 'python-aiodns' 'python-pillow')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'git')
+optdepends=(
+	'python-qrcode: qr code login'
+	'python-phonenumbers: formatted numbers'
+	'python-prometheus_client: metrics upload'
+	'python-olm: end-to-bridge encryption support'
+	'python-pycryptodome: end-to-bridge encryption support'
+	'python-unpaddedbase64: end-to-bridge encryption support'
+	'python-aiosqlite: sqlite database support')
+license=('AGPLv3')
+arch=('any')
+source=("${pkgname}::git+${url}#tag=v${pkgver}" "${pkgname}.service")
+sha256sums=('6b80d47a6d397afbf9a1ea8064c4a552c5be9848906187e9b3a0dc71dcfbccfb'
+            '1a010a61402bfadaf3c2f67421ebf94835b35b9cc572d162935554e55e624499')
+backup=("etc/${pkgname}/config.yaml" "etc/${pkgname}/registration.yaml")
+
+
+prepare() {
+	cd "${srcdir}/${pkgname}"
+	# the author makes liberal usage of max version for requirements without a real need
+	# we'll strip them and re-introduce in the deps/optdeps array if truly necessary
+	# to prevent a nightmare during updates while tracking stable releases
+	cp requirements.txt ../requirements.txt.orig
+	cp optional-requirements.txt  ../optional-requirements.txt.orig
+	sed -i -E 's/,?<[[:digit:]]*\.?[[:digit:]]+,?//g' requirements.txt
+	sed -i -E 's/,?<[[:digit:]]*\.?[[:digit:]]+,?//g' optional-requirements.txt
+	# create an empty registration file so that permissions get written properly from the get go
+	# this way secret keys are never world readable
+	touch registration.yaml
+}
+
+build() {
+	cd "${srcdir}/${pkgname}"
+	export PYTHONHASHSEED=0
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+
+	_shared_dir="/usr/share/${pkgname}"
+
+	find dist -name '*.whl' \
+		-exec python -m installer --compile-bytecode 1 --destdir="${pkgdir}" {} \;
+
+	# it's a semi-common failure for python packages to install tests in the main dir
+	# which would make them conflict eachother
+	rm -rf "${pkgdir}$(python -c 'import site; print(site.getsitepackages()[0])')/tests"
+
+	# install the original requirements file, useful as documentation
+	install -Dvm 644 "${srcdir}/requirements.txt.orig" "$(find "${pkgdir}" -name '*.dist-info' -printf '%h/%f')"
+	install -Dvm 644 "${srcdir}/optional-requirements.txt.orig" "$(find "${pkgdir}" -name '*.dist-info' -printf '%h/%f')"
+
+	install -Dvm 644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+
+	mkdir -p "${pkgdir}/etc/${pkgname}"
+	chmod o-rwX "${pkgdir}/usr/example-config.yaml"
+	mv "${pkgdir}/usr/example-config.yaml" "${pkgdir}/etc/${pkgname}/config.yaml"
+	install -Dvm 640 registration.yaml "${pkgdir}/etc/${pkgname}/registration.yaml"
+}

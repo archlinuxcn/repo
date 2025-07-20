@@ -1,0 +1,40 @@
+# Maintainer: BrainDamage
+
+pkgname=python-tulir-telethon
+pkgver=1.99.0a6
+pkgrel=2
+pkgdesc="fork of Telethon library with custom patches from Tulir"
+arch=('any')
+url="https://github.com/tulir/Telethon"
+license=('MIT')
+depends=('python' 'python-pyaes' 'python-rsa' 'python-cryptg' 'python-pysocks' 'python-hachoir' 'python-pillow')
+makedepends=(python-build python-installer python-wheel python-setuptools)
+provides=('python-telethon')
+conflicts=('python-telethon')
+optdepends=()
+
+sha256sums=('7b0a9ceace715eab9925365506c1661de6a604b0f0e8f9d348d7264cd283d2c9')
+
+_basename="tulir_telethon"
+_dirname="${_basename}-${pkgver}"
+
+
+
+source=("https://files.pythonhosted.org/packages/source/${_basename::1}/${_basename}/${_basename}-${pkgver}.tar.gz")
+
+
+
+build() {
+	cd "${srcdir}/${_dirname}"
+	export PYTHONHASHSEED=0
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd "${srcdir}/${_dirname}"
+	find dist -name '*.whl' -exec python -m installer --compile-bytecode 1 --destdir="${pkgdir}" {} \;
+	# not necessary for every package, but for those who it is, it'd generate conflict with others otherwise
+	rm -rf "${pkgdir}/$(python -c 'import site; print(site.getsitepackages()[0])')/tests/"
+	find . -maxdepth 1 -iname 'README*' -exec install -Dvm 644 {} -t "${pkgdir}/usr/share/doc/${_basename}" \;
+	find . -maxdepth 1 -iname 'LICENSE*' -exec install -Dvm 644 {} -t "${pkgdir}/usr/share/licenses/${_basename}" \;
+}

@@ -11,8 +11,8 @@
 ## pkginfo
 pkgdesc='A fancy custom distribution of Valves Proton with various patches'
 pkgname=proton-ge-custom-bin
-pkgver=GE_Proton10_9
-pkgrel=2
+pkgver=GE_Proton10_10
+pkgrel=1
 epoch=1
 arch=('x86_64')
 license=('BSD' 'LGPL' 'zlib' 'MIT' 'MPL' 'custom')
@@ -76,10 +76,12 @@ url='https://github.com/GloriousEggroll/proton-ge-custom'
 source=("${_pkgver}_${pkgrel}.tar.gz::${url}/releases/download/${_pkgver}/${_pkgver}.tar.gz"
   'user_settings.py'
   'launcher.sh'
+  'proton-ge-custom-bin.conf'
   'pam_limits.conf')
-sha512sums=('d5ce1989a827b8589d0ee4380b846755a9c6278307dd4fb7ca9ff966d360a4f44876c796ffdb2008ace9e99660f902804b3d68f36256b55f6b22e8a2933b6980'
-            '4b9828471cbbafd6d4e88e150cfa86d7a16755d3c97cf4c5c0201d3e08d996a06e5c432b3f7a6335c6a6daa7ca0ee3b8552757c204824be51a3a8d6b2dc61b1c'
+sha512sums=('afc056dc569e4ddca0eaf46e20f6af4f5a573f50ca723fc667f55ce963801b5962e355c1a0edeebfe6b5ee7288a14aae59fac9aef15b2efdccae1af4e2301fa6'
+            'a32352932967b4a32ca754ab00941d9c76c3b8936e050e443248cc7c8642d6e8c8dd6d1558f270fbd00d83052c349b06516791c309b012926ff092d75d95f0a8'
             '78ede6d50f9c43407da511c8b37dcf60aae2ddbd461c0081f0d0ce3de08ace3a84dee86e9253acbac829b47c5818ef4e1a354ccb05feaa9853ce279dc3f903fd'
+            'ac2bd634838ffe6b90f2637e229013f0993fc1013271dbeefd216dc262a8bb79e4a5ce15a75cbfcb0c3b521d32f4ebe1ed25a6b066b99cc327b60bd6d7212e6f'
             '60bcb1ad899d108fca9c6267321d11871feae96b696e44607ef533becc6decb493e93cbe699382e8163ad83f35cfa003a059499c37278f31afeba4700be6e356')
 
 build() {
@@ -96,6 +98,7 @@ package() {
   install -d "${pkgdir}/${_licensedir}/"
   install -d "${pkgdir}/$(dirname "${_execfile}")/"
   install -d "${pkgdir}/etc/security/limits.d/"
+  install -d "${pkgdir}/usr/lib/modules-load.d"
   ## licenses
   mv "${_srcdir}/LICENSE" "${pkgdir}/${_licensedir}/license"
   mv "${_srcdir}/LICENSE.OFL" "${pkgdir}/${_licensedir}/license_OFL"
@@ -103,6 +106,7 @@ package() {
   ## config files
   install --mode=0775 --group=50 "${srcdir}"/user_settings.py "${pkgdir}/${_protoncfg}"
   install --mode=0644 "${srcdir}"/pam_limits.conf "${pkgdir}"/etc/security/limits.d/10-games.conf
+  install --mode=0644 "${srcdir}"/${pkgname}.conf "${pkgdir}"/usr/lib/modules-load.d/${pkgname}.conf
   ## executables
   mv "${_srcdir}"/* "${pkgdir}/${_protondir}"
   install --mode=0755 "${srcdir}"/launcher.sh "${pkgdir}/${_execfile}"
