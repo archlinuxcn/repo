@@ -1,7 +1,7 @@
 # Maintainer: BrainDamage
 pkgname=mautrix-telegram
 pkgver=0.15.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Matrix-Telegram hybrid puppeting/relaybot bridge"
 url="https://github.com/tulir/mautrix-telegram"
 depends=('python' 'python-asyncpg' 'python-ruamel-yaml'
@@ -22,10 +22,8 @@ optdepends=(
 license=('AGPLv3')
 arch=('any')
 source=("${pkgname}::git+${url}#tag=v${pkgver}" "${pkgname}.service")
-sha256sums=('e201b9604c04a927d12b7a23d218a32430eb4b721da555f3112e0150811a0572'
-            '5745211f778be7220159f8e23f493cc819dd9290ddd81c6b83a9b5fef2a15547'
-            '83dc721df0451c199d23ea74b60a065d92f98e9026dd779aca30d25195b88cf9'
-            '2f5c45f6b0a9d1ae5237a91bdcb527609d262bc27cb7fa1dc736b4103ee230e5')
+sha256sums=('6b80d47a6d397afbf9a1ea8064c4a552c5be9848906187e9b3a0dc71dcfbccfb'
+            '1a010a61402bfadaf3c2f67421ebf94835b35b9cc572d162935554e55e624499')
 backup=("etc/${pkgname}/config.yaml" "etc/${pkgname}/registration.yaml")
 
 
