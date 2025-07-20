@@ -1,6 +1,6 @@
 pkgname=julia-git-dimensionaldata-src
-pkgver=0.29.18
-_commit=bc6a4c8af7a99667733e01a35897034082fc4f78
+pkgver=0.29.19
+_commit=8e235791b06c25531102b96fb3054b7f1fdb5fef
 pkgrel=1
 pkgdesc="DimensionalData.jl"
 url="https://github.com/rafaqz/DimensionalData.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/rafaqz/DimensionalData.jl.git#commit=$_commit")
-sha256sums=('c3f82ded169635369797a00927da2151aab058a91b8f19367e727bb0a0597114')
+sha256sums=('fe1e79a6536a8bd89b4396b40c1132ebc59b9f1cc53d136b01b133bf0c4cb055')
 
 package() {
   cd DimensionalData.jl
