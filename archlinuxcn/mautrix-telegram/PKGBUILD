@@ -1,0 +1,80 @@
+# Maintainer: BrainDamage
+pkgname=mautrix-telegram
+pkgver=0.15.3
+pkgrel=1
+pkgdesc="Matrix-Telegram hybrid puppeting/relaybot bridge"
+url="https://github.com/tulir/mautrix-telegram"
+# python-tulir-telethon needs exact version matching
+# as long as I maintain both I can just keep the updates in sync myself
+# if someone else were to maintain only one, it'd need explicit version pin
+depends=('python' 'python-asyncpg' 'python-ruamel-yaml'
+	'python-magic' 'python-commonmark' 'python-aiohttp' 'python-yarl'
+	'python-mautrix>=0.20.8' 'python-mautrix<0.21'
+	'python-tulir-telethon'
+	'python-mako')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-pytest-runner' 'ffmpeg' 'python-cryptg' 'python-cchardet' 'python-brotli' 'python-aiodns' 'python-pillow')
+optdepends=(
+	'python-qrcode: qr code login'
+	'python-phonenumbers: formatted numbers'
+	'python-prometheus_client: metrics upload'
+	'python-olm: end-to-bridge encryption support'
+	'python-pycryptodome: end-to-bridge encryption support'
+	'python-unpaddedbase64: end-to-bridge encryption support'
+	'python-aiosqlite: sqlite database support')
+license=('AGPLv3')
+arch=('any')
+source=("${pkgname}-${pkgver}::${url}/archive/v${pkgver}.tar.gz" "${pkgname}.service" "${pkgname}.sysusers" "${pkgname}.tmpfiles")
+sha256sums=('e201b9604c04a927d12b7a23d218a32430eb4b721da555f3112e0150811a0572'
+            '5745211f778be7220159f8e23f493cc819dd9290ddd81c6b83a9b5fef2a15547'
+            '83dc721df0451c199d23ea74b60a065d92f98e9026dd779aca30d25195b88cf9'
+            '2f5c45f6b0a9d1ae5237a91bdcb527609d262bc27cb7fa1dc736b4103ee230e5')
+backup=("etc/${pkgname}/config.yaml" "etc/${pkgname}/registration.yaml")
+install="${pkgname}.install"
+_dirname="${pkgname#mautrix-}-${pkgver}"
+
+
+prepare() {
+	cd "${srcdir}/${_dirname}"
+	# the author makes liberal usage of max version for requirements without a real need
+	# we'll strip them and re-introduce in the deps/optdeps array if truly necessary
+	# to prevent a nightmare during updates while tracking stable releases
+	cp requirements.txt ../requirements.txt.orig
+	cp optional-requirements.txt  ../optional-requirements.txt.orig
+	sed -i -E 's/,?<[[:digit:]]*\.?[[:digit:]]+,?//g' requirements.txt
+	sed -i -E 's/,?<[[:digit:]]*\.?[[:digit:]]+,?//g' optional-requirements.txt
+	# create an empty registration file so that permissions get written properly from the get go
+	# this way secret keys are never world readable
+	touch registration.yaml
+}
+
+build() {
+	cd "${srcdir}/${_dirname}"
+	export PYTHONHASHSEED=0
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd "${srcdir}/${_dirname}"
+
+	_shared_dir="/usr/share/${pkgname}"
+
+	find dist -name '*.whl' \
+		-exec python -m installer --compile-bytecode 1 --destdir="${pkgdir}" {} \;
+
+	# it's a semi-common failure for python packages to install tests in the main dir
+	# which would make them conflict eachother
+	rm -rf "${pkgdir}$(python -c 'import site; print(site.getsitepackages()[0])')/tests"
+
+	# install the original requirements file, useful as documentation
+	install -Dvm 644 "${srcdir}/requirements.txt.orig" "$(find "${pkgdir}" -name '*.dist-info' -printf '%h/%f')"
+	install -Dvm 644 "${srcdir}/optional-requirements.txt.orig" "$(find "${pkgdir}" -name '*.dist-info' -printf '%h/%f')"
+
+	install -Dvm 644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+	install -Dvm 644 "${srcdir}/${pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
+	install -Dvm 644 "${srcdir}/${pkgname}.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
+
+	mkdir -p "${pkgdir}/etc/${pkgname}"
+	chmod o-rwX "${pkgdir}/usr/example-config.yaml"
+	mv "${pkgdir}/usr/example-config.yaml" "${pkgdir}/etc/${pkgname}/config.yaml"
+	install -Dvm 640 registration.yaml "${pkgdir}/etc/${pkgname}/registration.yaml"
+}
