@@ -4,15 +4,13 @@ pkgver=0.15.3
 pkgrel=1
 pkgdesc="Matrix-Telegram hybrid puppeting/relaybot bridge"
 url="https://github.com/tulir/mautrix-telegram"
-# python-tulir-telethon needs exact version matching
-# as long as I maintain both I can just keep the updates in sync myself
-# if someone else were to maintain only one, it'd need explicit version pin
 depends=('python' 'python-asyncpg' 'python-ruamel-yaml'
 	'python-magic' 'python-commonmark' 'python-aiohttp' 'python-yarl'
-	'python-mautrix>=0.20.8' 'python-mautrix<0.21'
+	'python-mautrix'
 	'python-tulir-telethon'
-	'python-mako')
-makedepends=('python-build' 'python-installer' 'python-wheel' 'python-pytest-runner' 'ffmpeg' 'python-cryptg' 'python-cchardet' 'python-brotli' 'python-aiodns' 'python-pillow')
+	'python-mako'
+	'python-pytest-runner' 'ffmpeg' 'python-cryptg' 'python-cchardet' 'python-brotli' 'python-aiodns' 'python-pillow')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'git')
 optdepends=(
 	'python-qrcode: qr code login'
 	'python-phonenumbers: formatted numbers'
@@ -23,7 +21,7 @@ optdepends=(
 	'python-aiosqlite: sqlite database support')
 license=('AGPLv3')
 arch=('any')
-source=("${pkgname}-${pkgver}::${url}/archive/v${pkgver}.tar.gz" "${pkgname}.service")
+source=("${pkgname}-${pkgver}::git+${url}#tag=v${pkgver}" "${pkgname}.service")
 sha256sums=('e201b9604c04a927d12b7a23d218a32430eb4b721da555f3112e0150811a0572'
             '5745211f778be7220159f8e23f493cc819dd9290ddd81c6b83a9b5fef2a15547'
             '83dc721df0451c199d23ea74b60a065d92f98e9026dd779aca30d25195b88cf9'
