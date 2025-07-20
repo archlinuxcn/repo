@@ -1,7 +1,7 @@
 pkgname=julia-git-nameddims-src
-pkgver=1.2.2
-_commit=e55c11cc3db94849dbf123e28e5636e423265648
-pkgrel=2
+pkgver=1.2.3
+_commit=7e00f0e9c5821164cec27383a72d652728798de7
+pkgrel=1
 pkgdesc="NamedDims.jl"
 url="https://github.com/invenia/NamedDims.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/invenia/NamedDims.jl.git#commit=$_commit")
-sha256sums=('22d697ef29191b69eb8b962ac17b8235e15a5c7a7e64335ca27448b121e98743')
+sha256sums=('274b34c58e360621dda915c7a21afcc4039864d43c2e445fe24866a9c46f2298')
 
 package() {
   cd NamedDims.jl
