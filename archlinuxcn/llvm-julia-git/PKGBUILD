@@ -2,7 +2,7 @@
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 
 pkgname=(llvm-julia-git llvm-libs-julia-git)
-pkgver=20.1.7
+pkgver=20.1.8
 pkgrel=1
 _archcn_rel=0
 _versioned_llvm=
@@ -17,7 +17,7 @@ makedepends=('cmake' 'ninja' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses'
 options=('staticlibs' '!strip' '!lto')
 source=(https://github.com/yuyichao/llvm-project/archive/refs/tags/archcn-$pkgver-$_archcn_rel.tar.gz)
 repodir=llvm-project-archcn-$pkgver-$_archcn_rel
-sha256sums=('268b2011a0a5acf172a04d84603b7bde1f07276434c2f0f5b758ef3d85402ffc')
+sha256sums=('3ebc7d1b6aa57a89587f47cb64f2b1789a3a0d625cfd1ec80061857e0e1b1fb2')
 
 if [[ -z $_versioned_llvm ]]; then
   _llvm_prefix=/usr
