@@ -122,7 +122,6 @@ package() {
     'python-simplejson: gnome-shell-test-tool performance tester'
     'switcheroo-control: Multi-GPU support'
   )
-  groups=(gnome)
 
   meson install -C build --destdir "$pkgdir"
 

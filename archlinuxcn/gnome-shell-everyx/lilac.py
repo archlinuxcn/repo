@@ -15,21 +15,18 @@ def pre_build():
       line = "_pkgbase=gnome-shell"
 
     elif line.startswith("pkgname=("):
-      line = "pkgname=gnome-shell-everyx\n" + 'provides=("gnome-shell=$pkgver")\n' + 'conflicts=(gnome-shell)'
+      line = "pkgname=gnome-shell-everyx"
       state = "pkgname"
     elif state == "pkgname":
-      line = ""
       if line.endswith(")"):
           state = "out"
-
-    elif line.startswith("epoch="):
       line = ""
 
     elif line.startswith("epoch="):
       line = ""
 
     elif line.startswith("pkgdesc="):
-      line = line + " (with everyx's patch)"
+      line = 'provides=("gnome-shell=$pkgver")\n' + 'conflicts=("gnome-shell")\n' +  line[:-1] + ''' (with everyx's patch)"'''
 
     elif line.startswith("source=("):
       state = "source"
@@ -40,7 +37,7 @@ def pre_build():
     elif line.startswith('b2sums='):
       state = 'b2sums'
     elif state == 'b2sums' and line.endswith(')'):
-      line = line.replace(')', '\n        a99cc3a412e85435cf766ed4c34842f4840cef3072dc669d6e595219398824ebc74e7bce489d7aa150c0dbaa231560122f7694c88358fb187289201fbe0904b9)')
+      line = line.replace(')', "\n        'a99cc3a412e85435cf766ed4c34842f4840cef3072dc669d6e595219398824ebc74e7bce489d7aa150c0dbaa231560122f7694c88358fb187289201fbe0904b9')")
       state = 'out'
 
     elif line.startswith('prepare='):
@@ -51,6 +48,9 @@ def pre_build():
 
     elif line.startswith('package_gnome-shell()'):
       line = line.replace("package_gnome-shell()", "package()")
+
+    elif "groups=" in line:
+      line = ""
 
     elif "$pkgbase" in line:
       line = line.replace('$pkgbase', '$_pkgbase')
