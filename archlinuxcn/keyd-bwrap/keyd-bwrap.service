@@ -1,9 +1,0 @@
-[Unit]
-Description=key remapping daemon (bwrap sandboxed)
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/keyd-bwrap
-
-[Install]
-WantedBy=multi-user.target
