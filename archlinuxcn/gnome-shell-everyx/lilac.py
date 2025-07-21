@@ -22,10 +22,10 @@ def pre_build():
       if line.endswith(")"):
           state = "out"
 
-    elif line.line.startswith("epoch="):
+    elif line.startswith("epoch="):
       line = ""
 
-    elif line.line.startswith("epoch="):
+    elif line.startswith("epoch="):
       line = ""
 
     elif line.startswith("pkgdesc="):
