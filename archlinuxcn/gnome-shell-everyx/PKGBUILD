@@ -1,15 +1,18 @@
-# Maintainer: Gavin Luo (heftig) <lunt.luo@gmail.com>
-# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
-# Contributor: Fabian Bornschein <fabiscafe@archlinux.org>
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Maintainer: Fabian Bornschein <fabiscafe@archlinux.org>
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Flamelab <panosfilip@gmail.com
 
 _pkgbase=gnome-shell
 pkgname=gnome-shell-everyx
+
+
+
 pkgver=48.3
+pkgrel=2
+
 provides=("gnome-shell=$pkgver")
-conflicts=(gnome-shell)
-pkgrel=1
+conflicts=("gnome-shell")
 pkgdesc="Next generation desktop shell (with everyx's patch)"
 url="https://gitlab.gnome.org/GNOME/gnome-shell"
 arch=(x86_64)
@@ -89,7 +92,6 @@ prepare() {
   ln -s libgnome-volume-control gvc
 
   cd $_pkgbase
-  git apply -3 "$srcdir"/*.patch
 }
 
 build() {
@@ -122,6 +124,7 @@ package() {
     'python-simplejson: gnome-shell-test-tool performance tester'
     'switcheroo-control: Multi-GPU support'
   )
+
 
   meson install -C build --destdir "$pkgdir"
 
