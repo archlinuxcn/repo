@@ -40,6 +40,7 @@ prepare() {
 
   # Apply patchs
   sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./lib/libseafile.pc.in"
+  sed -i '1i #include "seaf-utils.h"' server/gc/fsck.c
   patch -Np1 --no-backup-if-mismatch < ../0001-Fix-controller-path-and-migrate-old-pids-directory.patch
   patch -Np1 --no-backup-if-mismatch < ../0002-Fix-seafile-admin.patch
 }
