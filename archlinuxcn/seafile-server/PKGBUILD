@@ -58,7 +58,7 @@ build() {
     --enable-python \
     --prefix=/usr \
     PYTHON='/usr/bin/python'
-  make
+  make -j1
 
   # Build Go packages
   export GOPATH="$srcdir"
