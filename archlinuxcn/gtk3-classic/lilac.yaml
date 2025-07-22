@@ -3,7 +3,7 @@ pre_build_script: |
   for line in edit_file('PKGBUILD'):
     if line.startswith('_tagname='):
       line = f"_tagname={_G.newver}"
-    elif line.stratswith('_gtkver='):
+    elif line.startswith('_gtkver='):
       line = f"_gtkver={_G.newver.split('-')[0]}"
     print(line)
 
