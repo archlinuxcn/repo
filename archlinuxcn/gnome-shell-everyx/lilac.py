@@ -49,6 +49,9 @@ def pre_build():
     elif line.startswith('package_gnome-shell()'):
       line = line.replace("package_gnome-shell()", "package()")
 
+    elif line.startswith('package_gnome-shell-docs()'):
+      line = "no" + line
+
     elif "groups=" in line:
       line = ""
 
