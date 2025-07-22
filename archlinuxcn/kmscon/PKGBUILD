@@ -5,8 +5,8 @@
 # Contributor: David Herrmann <dh.herrmann@googlemail dot com>
 
 pkgname=kmscon
-pkgver=9.0.0
-pkgrel=3
+pkgver=9.1.0
+pkgrel=1
 pkgdesc='Terminal emulator based on Kernel Mode Setting (KMS)'
 arch=('x86_64')
 url='https://github.com/Aetf/kmscon/'
@@ -25,6 +25,7 @@ depends=(
   'systemd-libs'
 )
 makedepends=(
+  'check'
   'docbook-xsl'
   'libxslt'
   'linux-api-headers'
@@ -33,8 +34,7 @@ makedepends=(
 source=(
   "$pkgname-$pkgver.tar.gz::https://github.com/Aetf/kmscon/archive/refs/tags/v$pkgver.tar.gz"
 )
-b2sums=('7316f1fcff4aa9d5693d7ab7f2da12fe50132c575667bc349b12a3e604b2cd92ffc0a55c9648d03e73d1695764067adc0807a4cd220ec190df637ad3d6929dea'
-        '35e7d5ffb7779b5bb1d82b484c634797b2240057753b1cd5439ac802602d082c3ec4acd0aae011e06f5deca5682a34e06d9179d91e96d879045418cbd03ee5e2')
+b2sums=('44db0910d447cea89fc38ce5a332151524197910a02b1ffc2ba3006343c6721c02dcbf72fb2d428734e20da16fd6f201b4082eb1ab7a6763068846ac99c94a75')
 
 prepare() {
   cd $pkgname-$pkgver
