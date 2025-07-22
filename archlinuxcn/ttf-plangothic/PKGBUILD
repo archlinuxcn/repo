@@ -21,25 +21,25 @@ package_otf-plangothic() {
     install -Dm755 -d "$pkgdir/usr/share/fonts/OTF/Plangothic"
     install -Dm644 "otf/PlangothicP1-Regular.otf" "$pkgdir/usr/share/fonts/OTF/Plangothic/PlangothicP1-Regular.otf"
     install -Dm644 "otf/PlangothicP2-Regular.otf" "$pkgdir/usr/share/fonts/OTF/Plangothic/PlangothicP2-Regular.otf"
-    install -Dm644 "$pkgbase-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 ../"$pkgbase-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_otc-plangothic() {
     cd "Plangothic-Super-V$pkgver"
     install -Dm755 -d "$pkgdir/usr/share/fonts/OTF/Plangothic"
     install -Dm644 "otf/Plangothic.ttc" "$pkgdir/usr/share/fonts/OTF/Plangothic/Plangothic.ttc"
-    install -Dm644 "$pkgbase-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 ../"$pkgbase-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_ttf-plangothic() {
     cd "Plangothic-Super-V$pkgver"
     install -Dm755 -d "$pkgdir/usr/share/fonts/TTF/Plangothic"
     install -Dm644 "static/PlangothicP1-Regular.ttf" "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP1-Regular.ttf"
     install -Dm644 "static/PlangothicP2-Regular.ttf" "$pkgdir/usr/share/fonts/TTF/Plangothic/PlangothicP2-Regular.ttf"
-    install -Dm644 "$pkgbase-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 ../"$pkgbase-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 package_ttc-plangothic() {
     cd "Plangothic-Super-V$pkgver"
     install -Dm755 -d "$pkgdir/usr/share/fonts/TTF/Plangothic"
     install -Dm644 "static/Plangothic.ttc" "$pkgdir/usr/share/fonts/TTF/Plangothic/Plangothic.ttc"
-    install -Dm644 "$pkgbase-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 ../"$pkgbase-$pkgver-LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 # vim: set ts=4 sw=4 et:
