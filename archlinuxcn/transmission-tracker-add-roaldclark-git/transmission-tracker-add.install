@@ -1,8 +1,0 @@
-post_install() {
-    chown --verbose transmission:transmission /usr/lib/transmission-tracker-add/transmission-tracker-add
-    chown --verbose transmission:transmission /etc/default/transmission-tracker-add
-}
-
-post_upgrade() {
-    post_install
-}

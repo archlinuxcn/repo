@@ -4,7 +4,7 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seafile-server
-pkgver=12.0.14
+pkgver=13.0.7
 pkgrel=1
 pkgdesc='Seafile server core'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
@@ -15,6 +15,7 @@ depends=(
   'fuse2'
   'libevhtp-seafile'
   'libarchive'
+  'hiredis'
   libargon2.so
   libjwt.so
   libcrypto.so)
@@ -27,7 +28,7 @@ source=(
   0002-Fix-seafile-admin.patch
   'seafile-server@.service'
 )
-sha256sums=('b548fc0370ac81c173408eac4306c56035d89a205ebb7d1a9febba495ab53aad'
+sha256sums=('c9a5bac396f1f343e67895034bce469038114405ebe30be7e4fa897d0d1ffad6'
             '9bda93fbb380f2bca626ecf0c8a85a50db0d52bf0a2ea128ca0a6e75766446d8'
             '1f74be846471e75bc280e83095339cf22bd789283e221c82765b6109566badb1'
             '347982254a025ce86cd53fbb6bf505320638bf69736d65a96d17f74551139072')
@@ -38,7 +39,10 @@ prepare() {
   rm -rf "./integration-tests"
 
   # Apply patchs
-  sed -i "s|(DESTDIR)@prefix@|@prefix@|" "./lib/libseafile.pc.in"
+  sed -i "s|(DESTDIR)@prefix@|@prefix@|" lib/libseafile.pc.in
+  sed -i '1i #include "seaf-utils.h"' server/gc/fsck.c
+  sed -i '1i typedef struct _SeafRepo SeafRepo;' server/gc/fsck.c
+  sed -i 's|objcache_new (GKeyFile \*config)|objcache_new ()|g' common/obj-cache.c
   patch -Np1 --no-backup-if-mismatch < ../0001-Fix-controller-path-and-migrate-old-pids-directory.patch
   patch -Np1 --no-backup-if-mismatch < ../0002-Fix-seafile-admin.patch
 }
@@ -55,7 +59,7 @@ build() {
     --enable-python \
     --prefix=/usr \
     PYTHON='/usr/bin/python'
-  make
+  make -j1
 
   # Build Go packages
   export GOPATH="$srcdir"

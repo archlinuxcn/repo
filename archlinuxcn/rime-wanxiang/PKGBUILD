@@ -2,7 +2,7 @@
 
 pkgbase=rime-wanxiang
 pkgname=(rime-wanxiang-data)
-pkgver=9.1.0
+pkgver=9.2.1
 pkgrel=1
 pkgdesc="万象拼音：带声调的拼音词库，万象拼音系列方案基础版，可扩展全拼、双拼、中英混输、语言模型"
 arch=(any)
@@ -10,7 +10,7 @@ license=('CC-BY-4.0')
 
 url="https://github.com/amzxyz/rime_wanxiang"
 source=("${url}/archive/refs/tags/v${pkgver}.zip")
-b2sums=('639756f6139e349618aa0867df08ee175048a936a8816df4c6f0d3ebec5c4a6b36e2e902f06176f51a1d7d84e2b61305d15b215ea5da67582836647ca38a5c98')
+b2sums=('fc53a0a30847b62ef639b751f696f1b2c1337f5f0e1f551483ecfc197e06a745dab06175d2dc32da0b68a7f3658cecadb09841f9c0846270ff0bdbba3f5d797d')
 
 makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python" "zip")
 build() {
@@ -71,11 +71,12 @@ declare -A _schemas=(
     [sogou]="搜狗双拼"
     [abc]="智能ABC"
     [ziguang]="紫光双拼"
-    [jiajia]="拼音加加"
+    [pyjj]="拼音加加"
+    [gbpy]="国标双拼"
     # 以下没有对应的英文和混输词库
+    # [lxsq]="乱序17"
     # [hanxin]="汉心龙"
-    # [..]="自然龙"
-    # [..]="乱序17"
+    # [zrlong]="自然龙"
 )
 declare -A _fuzhu_names=(
 #   [all]="全"
@@ -94,6 +95,8 @@ for _schema in "${!_schemas[@]}"; do
     _pkgname=${pkgbase}-${_schema}-data
     pkgname+=("${_pkgname}")
     _conflicts=()
+    _replaces=()
+    if [[ ${_schema} == 'pyjj' ]]; then _replaces=("${_pkgname//pyjj/jiajia}"); fi
     for _schema_c in "${!_schemas[@]}"; do
         if [[ "${_schema_c}" == "${_schema}" ]]; then continue; fi
         _conflicts+=("${pkgbase}-${_schema_c}-data")
@@ -102,6 +105,7 @@ for _schema in "${!_schemas[@]}"; do
         pkgdesc='万象拼音基础数据（${_name}方案）'
         depends=(rime-wanxiang-data)
         conflicts=(${_conflicts[*]})
+        replaces=(${_replaces[*]})
 
         _package_schema shared $_schema $_name
     }"
@@ -109,6 +113,8 @@ for _schema in "${!_schemas[@]}"; do
     _pkgname=${pkgbase}-${_schema}
     pkgname+=("${_pkgname}")
     _conflicts=()
+    _replaces=()
+    if [[ ${_schema} == 'pyjj' ]]; then _replaces=("${_pkgname//pyjj/jiajia}"); fi
     for _schema_c in "${!_schemas[@]}"; do
         if [[ "${_schema_c}" == "${_schema}" ]]; then continue; fi
         _conflicts+=("${pkgbase}-${_schema_c}")
@@ -118,6 +124,7 @@ for _schema in "${!_schemas[@]}"; do
         depends=('rime-wanxiang-${_schema}-data' 'rime-wanxiang-dict-zh=${pkgver}')
         provides=('rime-wanxiang=${pkgver}')
         conflicts=(${_conflicts[*]})
+        replaces=(${_replaces[*]})
         install='post.install'
 
         _package_schema base $_schema $_name
@@ -140,6 +147,8 @@ for _schema in "${!_schemas[@]}"; do
     _pkgname=${pkgbase}-pro-${_schema}
     pkgname+=("${_pkgname}")
     _conflicts=()
+    _replaces=()
+    if [[ ${_schema} == 'pyjj' ]]; then _replaces=("${_pkgname//pyjj/jiajia}"); fi
     for _schema_c in "${!_schemas[@]}"; do
         if [[ "${_schema_c}" == "${_schema}" ]]; then continue; fi
         _conflicts+=("${pkgbase}-pro-${_schema_c}")
@@ -149,6 +158,7 @@ for _schema in "${!_schemas[@]}"; do
         depends=('rime-wanxiang-${_schema}-data' 'rime-wanxiang-pro-dict-zh=${pkgver}')
         provides=('rime-wanxiang-pro=${pkgver}')
         conflicts=(${_conflicts[*]})
+        replaces=(${_replaces[*]})
         install='post.install'
 
         _package_schema pro $_schema $_name

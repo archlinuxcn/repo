@@ -1,6 +1,6 @@
 pkgname=julia-git-scimljacobianoperators-src
-pkgver=0.1.6
-_commit=f37afd7bb81e1852b1a3855b5ce7395a6f6c7a98
+pkgver=0.1.8
+_commit=dcd98305bdc83a6e9e21c34e7984ef64afe3ba3b
 pkgrel=1
 pkgdesc="SciMLJacobianOperators.jl"
 url="https://github.com/SciML/NonlinearSolve.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/NonlinearSolve.jl.git#commit=$_commit")
-sha256sums=('845a9d63758b3f7460fa9a87ecee0a6ecdc1a5901e2c16dd3c1c2ddcec64596d')
+sha256sums=('3059f4cea6f0f8fa68aff212e9dbb6bdbc29ecce65d9ccf1be1e9372aa862f93')
 
 package() {
   cd NonlinearSolve.jl/lib/SciMLJacobianOperators
