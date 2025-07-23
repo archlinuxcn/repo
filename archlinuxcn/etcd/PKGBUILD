@@ -5,7 +5,7 @@
 # Contributor: codekoala <codekoala at gmail dot com>
 
 pkgname=etcd
-pkgver=3.6.2
+pkgver=3.6.3
 pkgrel=1
 pkgdesc="A distributed, reliable key-value store for the most critical data of a distributed system."
 url="https://github.com/etcd-io/etcd"
@@ -30,7 +30,7 @@ source=(
   etcd.sysusers
   etcd.tmpfiles
 )
-b2sums=('4b16e778c8ace7470a45fe8484858d2907ed4258f5b6b368cbe151c5a3972a53ea95393c79cd1a353b19b1d493607cfcf38c3a364131b14088d5e27c830d1987'
+b2sums=('0ab56a9712e95d75613b945a9d0c23c510e281745d56bbb6f4b6835a1afb20f088516491d1bab3b0c0fa48577626d00e95e60871a102da5e05b545df0c007a59'
         '754d5e84506b9aff7629b9b08743e609d8e9db5926d5dd1ef22366a2eeffd4b9e56903284c3b6081bc2a3035e75922a009174aa612517d93e0f6a48fd6345729'
         '71f207c4ef1643dc70eecea6bdba4dcd7226626813d2a9f3330059f1b9f78ea2d3607b8b15b67b1afec0d201b01c10f6db3267695118732621a05f967a56a65a'
         'd59f33f6f6d84ade2c5053fe920b6185e5ab39ba9a6fed36d5d6bbad6a03f2950ed19c41856d343f969c1046e8abd9497c12f028482d705a65e0439675408776'
