@@ -24,10 +24,10 @@ true "${QUIET:=}" "${logpipe:=}"
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.4.0'
+_pkgver='1.4.1'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
-_pkgverhbb='20250509-6e556f7e1751a3a709cd5cca0df7268ba3cb1c48'
+_pkgverhbb='20250718-f91459c4ab80fc3cfdef0882b2af51f984bc914c'
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
 arch=('x86_64')
 url='https://rustdesk.com/'
@@ -46,7 +46,7 @@ makedepends+=('ninja') # vcpkg build can use the latest ninja
 options=('!makeflags' '!lto')
 _patches=(
   '0000-disable-update-check@rustdesk.patch'
-  '0001-extended_text-drop-version-for-flutter.3.22.3@rustdesk.patch' # https://github.com/rustdesk/rustdesk/blob/master/.github/workflows/bridge.yml#L77
+  #'0001-extended_text-drop-version-for-flutter.3.22.3@rustdesk.patch' # https://github.com/rustdesk/rustdesk/blob/master/.github/workflows/bridge.yml#L77
   '0002-screen_retriever@rustdesk.patch'
 )
 install="${pkgname}.install"
@@ -80,7 +80,7 @@ else
 fi
 source+=("${_vcs[@]}")
   if [ "${_opt_SYS_FLUTTER}" -eq 0 ]; then
-    _FLUVER='3.19.6' # https://docs.flutter.dev/release/archive
+    _FLUVER='3.27.4' # https://docs.flutter.dev/release/archive
     source+=(
       "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${_FLUVER}-stable.tar.xz"
     )
@@ -95,33 +95,31 @@ source+=("${_vcs[@]}")
     )
   fi
 ####
-md5sums=('1f874983696b9e83332261c4ea66e503'
-         'f9d9e4ab0e266bf6a274906247ba8c37'
+md5sums=('84d2ca9b4abf0fa6809c353e146b3f75'
+         'd7dd05d0ca5709c328ba8e0b15f180e1'
          '6acc4b5b14befec55ef84006b60c7ff5'
-         '9b997c2eb989a044704fd7c1d2152d02'
          'a77a4586f30f77de2eed63e160b3a051'
          '379cfba8479c2a92e05e3b855d1e6901'
          '4d782be2571f14e7b74b10a385f74e15'
-         'a45fa99b7f1a972e364cc68f1ebf949c'
+         '891ec3b9ddd007f8bce61d9fc451c451'
          '1695d39ba38a9593f4107722f3459fe0'
-         '47cdfce4c02c6bd9bc249d7abfa23485'
+         '84b8505eeb3a73b91f17a0f5ca9afdd5'
          'd2c9de1c247f18a204e75ecefa7a2217'
          '557a08d88aa605ee6cf4156686ce4cc2'
-         '74dc171bf2cfc1ada56b6e284adabca8'
+         '4faa930d94db6f19d36dbbfbc5e86b5e'
          'cc8e5418ff0c163228aabbe385ba2596')
-sha256sums=('67d8600ba4aeff8152e3b05723d69ec286b6923f1e4324b1d45b700859994f59'
-            '4d18bae204222037c2b2dd2d983931f7f3c5693e9c3e15125d42b0a66f80165e'
+sha256sums=('22050a73bd42e8b590a29786fbbea7ad49ae90f31cfd5664b114aec161f8a848'
+            '1506802672283c3f9b39a7c81f7f880cae320553a59335f033919e93ec42e729'
             '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
-            '17ad644a9987ad2dc8ddaf68e62e026c1825b3ecae46254ea98d985c5d5df582'
             '82757ee1ab6b956a3c601f7db82e2d9ad80dbbcf2ba68c63059f0b529426ccd0'
             '359046f24f8a81b96a198000a1cfd7934c1f4870b2a1306e13f65694cefef68f'
             '3df9359a39b91929868265090b97d7e2365dc8cdd5aaa1473a717720b4598f55'
-            '06b9ea2f20a216fffac0c3991ea517ad4159df976bb7cd05084c8bfba3608fba'
+            'd0cbc8da063e0231da536d71e59c5583a0d4ae4ceceefd5909102611b4a0b79e'
             '35fec2e1ddfb05ecf6d93e50bc57c1e54bc81c16d611ddf6eff73fff266d8285'
-            '146ea9c0fb18a268b5b6de90882a94853d557f11325d17ab40ee9c32841068d3'
+            '1767b6b5f5fb4efb50d06f5ccab4fb904ad9b05f249d12cb52e3c49e69e3ade9'
             '00dae80465567272abd077f59355f95ac91d7809a2d3006f9ace2637dd429d14'
             '9480e329e989f70d69886ded470c7f8cfe6c0667cc4196d4837ac9e668fb7404'
-            'db6742a20626d0d2a089eb41ad61b9b2138b996679911e9c8268c1f896191f97'
+            '64df4273de625433c7ba41967932b782f5f9abf3199db8330782d64508379344'
             '5c1494e79024de228a9f383c8e52e45b042cd0cf24f4b0f47ee4d5448938b336')
 _vcs=("${_vcs[@]%%::*}")
 _vcs=("${_vcs[@]##*/}")
