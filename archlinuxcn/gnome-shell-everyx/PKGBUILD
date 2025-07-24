@@ -9,7 +9,7 @@ pkgname=gnome-shell-everyx
 
 
 pkgver=48.3
-pkgrel=3
+pkgrel=4
 
 provides=("gnome-shell=$pkgver")
 conflicts=("gnome-shell")
@@ -132,7 +132,7 @@ package() {
   mv {"$pkgdir",doc}/usr/share/doc
 }
 
-package_gnome-shell-docs() {
+ignore_package-gnome-shell-docs() {
   pkgdesc+=" (API documentation)"
   depends=()
 

@@ -2,8 +2,8 @@
 
 _pkgname=qlog
 pkgname="$_pkgname-git"
-pkgver=0.44.1.r0.g79625cf1
-pkgrel=3
+pkgver=0.45.0.r0.g6f90e012
+pkgrel=2
 pkgdesc="Amateur radio logbook software"
 arch=("x86_64")
 url="https://github.com/foldynl/QLog"
@@ -31,29 +31,12 @@ conflicts=(${provides[@]})
 source=(
   "$_pkgname"::"git+$url"
 
-  # submodule
-  "flags"::"git+https://github.com/foldynl/QLog-Flags"
 )
-sha256sums=('SKIP'
-            'SKIP')
+sha256sums=('SKIP')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
   git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-}
-
-prepare() {
-  # prepare submodules
-  cd "$srcdir/$_pkgname"
-  _submodules=(
-    'res/flags'
-  )
-  for submodule in ${_submodules[@]} ; do
-    mkdir -p "$submodule"
-    git submodule init ${submodule}
-    git submodule set-url ${submodule} "${srcdir}/${submodule##*/}"
-    git -c protocol.file.allow=always submodule update ${submodule}
-  done
 }
 
 build() {
