@@ -1,0 +1,45 @@
+pkgbase='python-dataclasses-json'
+pkgname=('python-dataclasses-json')
+_module='dataclasses-json'
+pkgver='0.6.7'
+pkgrel=2
+pkgdesc='Easily serialize Python Data Classes to and from JSON'
+url='https://github.com/lidatong/dataclasses-json'
+depends=(
+    'python'
+    'python-marshmallow'
+    'python-typing_inspect'
+)
+optdepends=()
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-poetry-core'
+    'python-poetry-dynamic-versioning'
+    git
+)
+checkdepends=(
+    'python-hypothesis'
+    'python-pytest-mypy'
+)
+license=('MIT')
+arch=('any')
+source=("python-dataclasses-json::git+https://github.com/lidatong/dataclasses-json.git#tag=v${pkgver}")
+sha256sums=('113c90da5957f13cc49f80d535cde965e66850f72559498a9ebfd934c4db449f')
+export POETRY_DYNAMIC_VERSIONING_BYPASS="$pkgver"
+
+build() {
+    cd "${srcdir}/python-dataclasses-json"
+    python -m build --wheel --no-isolation
+}
+
+check() {
+    cd "${srcdir}/python-dataclasses-json"
+    python -m pytest
+}
+
+package() {
+    cd "${srcdir}/python-dataclasses-json"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

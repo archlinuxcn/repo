@@ -1,0 +1,35 @@
+# Maintainer: Mohamed Amine Zghal (medaminezghal) <medaminezghal at outlook dot com>
+
+_name=pytest-retry
+pkgname=python-${_name}
+pkgver=1.7.0
+pkgrel=2
+pkgdesc='Adds the ability to retry flaky tests in CI environments.'
+arch=('any')
+url='https://github.com/str0zzapreti/pytest-retry'
+license=('MIT')
+source=("git+https://github.com/str0zzapreti/pytest-retry.git#tag=${pkgver}")
+sha256sums=('9c5e3a8a4ffe471351f308cad17bf8551c8b3e083127e42a1aeae40dc3792fac')
+depends=('python' 'python-pytest')
+makedepends=('python-hatchling' 'python-build' 'python-installer' 'python-wheel' 'python-setuptools' 'git')
+checkdepends=('python-pytest')
+
+build() {
+  cd "${srcdir}"/pytest-retry
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  local pytest_options=(
+    -vv
+  )
+  cd "${srcdir}"/pytest-retry
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  test-env/bin/python -m pytest "${pytest_options[@]}" tests
+}
+
+package() {
+  cd "${srcdir}"/pytest-retry
+  python -m installer --destdir="$pkgdir" dist/*.whl
+}

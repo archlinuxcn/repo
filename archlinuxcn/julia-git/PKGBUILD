@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.13.0.DEV.883.gc1c091e45bb
+pkgver=1.13.0.DEV.898.gcc81a0b6546
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -140,6 +140,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
             USE_BINARYBUILDER=0
             WITH_TERMINFO=0
             LLVM_USE_CMAKE=0 # Workaround LLVM linking with system LLVM
+            MSYS_NONEXISTENT_SYMLINK_TARGET_FIX=true # fix compilation
             LLVM_CONFIG=${_LLVM_CONFIG})
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'

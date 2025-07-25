@@ -1,6 +1,6 @@
 pkgname=julia-git-ordinarydiffeqrosenbrock-src
-pkgver=1.11.0
-_commit=b59c6eb2406a76167d3d4c19c36a1e7aa186a075
+pkgver=1.12.0
+_commit=5ca8191edc667a3aeb636aa7c1a2a97367e15fde
 pkgrel=1
 pkgdesc="OrdinaryDiffEqRosenbrock.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('8a86900c4f8a2d69c7c925e60198f8f15be519b16502c769d7f8b6d24f80f12e')
+sha256sums=('fd18d4813b692f39909b9a8eb44b16d31bf9251a7f8696e50875a3f0fd42593a')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/OrdinaryDiffEqRosenbrock

@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=thunderbird-portable
-pkgver=140.0.1
+pkgver=141.0
 pkgrel=1
 epoch=1
 pkgdesc="Thunderbird sandboxed by portable"
