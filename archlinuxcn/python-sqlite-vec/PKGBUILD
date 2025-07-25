@@ -3,14 +3,13 @@
 _name=sqlite-vec
 pkgname=python-${_name}
 pkgver=0.1.6
-pkgrel=1
+pkgrel=2
 pkgdesc=''
 arch=(x86_64)
 url='https://pypi.org/project/sqlite-vec/'
 license=('MIT OR Apache-2.0')
 source=("https://files.pythonhosted.org/packages/py3/${_name::1}/$_name/${_name//-/_}-$pkgver-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux1_x86_64.whl")
-sha256sums_x86_64=('SKIP')
-sha256sums_aarch64=('SKIP')
+sha256sums=('823b0493add80d7fe82ab0fe25df7c0703f4752941aee1c7b2b02cec9656cb24')
 depends=('python' 'glibc')
 makedepends=('python-installer')
 
