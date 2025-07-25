@@ -8,7 +8,7 @@ pkgdesc='Adds the ability to retry flaky tests in CI environments.'
 arch=('any')
 url='https://github.com/str0zzapreti/pytest-retry'
 license=('MIT')
-source=("git+https://github.com/str0zzapreti/pytest-retry.git#tag=v${pkgver}")
+source=("git+https://github.com/str0zzapreti/pytest-retry.git#tag=${pkgver}")
 sha256sums=('f8d52339f01e949df47c11ba9ee8d5b362f5824dff580d3870ec9ae0057df80f')
 depends=('python' 'python-pytest')
 makedepends=('python-hatchling' 'python-build' 'python-installer' 'python-wheel' 'python-setuptools' 'git')
