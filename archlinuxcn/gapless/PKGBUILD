@@ -1,0 +1,40 @@
+# Maintainer: Mahdi Sarikhani <mahdisarikhani@outlook.com>
+# Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
+
+pkgname=gapless
+_name=g4music
+pkgver=4.5
+pkgrel=1
+pkgdesc="Play your music elegantly (AKA: G4Music)"
+arch=('aarch64' 'x86_64')
+url="https://gitlab.gnome.org/neithern/g4music"
+license=('GPL-3.0-only')
+depends=('dconf'
+         'gdk-pixbuf2'
+         'glib2'
+         'glibc'
+         'graphene'
+         'gst-plugins-base-libs'
+         'gstreamer'
+         'gtk4'
+         'hicolor-icon-theme'
+         'libadwaita'
+         'pango')
+makedepends=('meson' 'vala' git)
+optdepends=('gst-plugins-bad: "bad" plugin libraries'
+            'gst-plugins-base: "base" plugin libraries'
+            'gst-plugins-good: "good" plugin libraries'
+            'gst-plugins-ugly: "ugly" plugin libraries')
+provides=("${_name}")
+conflicts=("${_name}")
+source=(source::git+"${url}.git#tag=v${pkgver}")
+b2sums=('0e21492da08ad4c930520bf3985c21ae213610394d92b43bdc82e65b22ce133108026fcecd00f3c48b36d09a01c7fd137a3fbebd6c2c27ddc497f983a9c257da')
+
+build() {
+  arch-meson "source" build
+  meson compile -C build
+}
+
+package() {
+  meson install -C build --destdir "${pkgdir}"
+}
