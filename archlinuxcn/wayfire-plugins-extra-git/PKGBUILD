@@ -1,14 +1,14 @@
 # Maintainer: Librewish <librewish@gmail.com>
 
 pkgname=wayfire-plugins-extra-git
-pkgver=r286.e8b974f
+pkgver=r294.4bc574f
 pkgrel=2
 pkgdesc="3D wayland compositor extra plugins"
-arch=('any')
+arch=('x86_64')
 url="https://github.com/WayfireWM/wayfire-plugins-extra"
 license=('MIT')
 depends=('wayfire-git' 'glibmm' 'iio-sensor-proxy' 'wayland-protocols' 'glm')
-makedepends=('git' 'meson' 'ninja' 'libdisplay-info' 'nlohmann-json' 'boost')
+makedepends=("boost" "git" "libdisplay-info" "meson" "ninja" "vulkan-headers" "yyjson")
 optdepends=('wcm: GTK3-based configuration tool for the Wayfire compositor')
 provides=("${pkgname}" "wayfire-plugins-extra")
 conflicts=("wayfire-plugins-extra")
@@ -29,16 +29,23 @@ pkgver() {
 
 }
 
-build() {
+prepare() {
+  rm -rf build
   arch-meson wayfire-plugins-extra build \
     -Denable_wayfire_shadows=true \
     -Denable_focus_request=true \
     -Denable_pixdecor=true \
     -Denable_filters=true
+}
+
+
+build() {
   ninja -C build
 }
 
 
 package() {
         DESTDIR="$pkgdir/" ninja -C build install
+        install -Dm644 "$srcdir/wayfire-plugins-extra/LICENSE" \
+                "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
