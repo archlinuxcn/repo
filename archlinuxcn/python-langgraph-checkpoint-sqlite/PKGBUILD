@@ -11,7 +11,7 @@ url="https://github.com/langchain-ai/langgraph/tree/main/libs/checkpoint-sqlite"
 depends=('python' 'python-langgraph-checkpoint' 'python-aiosqlite' 'python-sqlite-vec')
 makedepends=('python-hatchling' 'python-build' 'python-installer' 'python-wheel' 'git')
 checkdepends=('python-pytest' 'python-pytest-asyncio' 'python-pytest-mock' 'python-pytest-watcher' 'python-pytest-retry')
-source=(langgraph-checkpoint-sqlite::'git+https://github.com/langchain-ai/langgraph.git#tag=cli==*'${pkgver})
+source=(langgraph-checkpoint-sqlite::'git+https://github.com/langchain-ai/langgraph.git#tag=cli=='${pkgver})
 sha256sums=('c8a55a268b857761dc77f123df48addaf8e9a40b72c4eaddb7c551ddced1c5b6')
 
 build() {
