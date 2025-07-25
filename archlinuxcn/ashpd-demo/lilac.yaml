@@ -1,0 +1,24 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: "github"
+    github: "bilelmoussaoui/ashpd"
+    use_latest_release: true
+    from_pattern: '-demo$'
+    to_pattern: ''
+    prefix: "v"
+  - source: alpm
+    alpm: gtk4
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: libadwaita
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+build_prefix: extra-x86_64

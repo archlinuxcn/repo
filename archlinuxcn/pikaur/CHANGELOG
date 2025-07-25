@@ -2498,3 +2498,14 @@ Tue Jul 8 22:17:04 2025 +0200
     *  2024-12-29 95b9ce0b actionless fix(install_cli: edit_pkgbuild_during_the_build): handle case when install_info object isn't created yet
     *  2024-12-25 84cb7643 actionless fix(build, install_cli): when passing --rebuild flag - rebuild only explicitly requested package itself, but not its deps
     *  2024-12-23 dc5e10e5 actionless fix(updates): in `-Qu` print upgradeable pkgs even they have potential deps' problems
+
+
+Fri Jul 25 02:25:09 2025 +0200
+-------------------------------------------------
+1.33.1          Release 1.33.1
+    
+    Notable Changes:
+    *  2025-07-25 692e9199 actionless fix(pkgbuild): don't overwrite generated shortcut
+    *  2025-07-15 b4b5e996 Diego Sevilla Ruiz chore(locale): update es.po (#887)
+    *  2025-07-08 7728bda7 actionless fix(install_info_fetcher: get_aur_deps_info): if dep can't be satisfied directly in aur, check if provided package could help (fixes: #885)
+    *  2025-07-08 3e258f6c actionless feat(aur_deps, install_cli): write which package provides the dependency

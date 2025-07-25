@@ -9,9 +9,9 @@
 # anki -> git rev-parse --short=8 $pkgver^{}
 # ftl -> git submodule
 declare -gA _tags=(
- [ftl_core]="b90ef6f03c251eb336029ac7c5f551200d41273f"
- [ftl_desktop]="9aa63c335c61b30421d39cf43fd8e3975179059c"
- [anki]="65b5aefd"
+ [ftl_core]="939298f7c461407951988f362b1a08b451336a1e"
+ [ftl_desktop]="bc2da83c77749d96f3df8144f00c87d68dd2187a"
+ [anki]="e511d63b"
 )
 
 declare -gA _caches=(
@@ -20,7 +20,7 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=25.07.3
+pkgver=25.07.4
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
@@ -80,9 +80,9 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
 )
 
 
-sha256sums=(1a6062c1923ece79d7294fab884effc49ce9c03c55ece8a04207d4abba6f4df2
-            80d9a98720331c63bb5ed3c17557aedc46ee8ba545084fda78ce11bad89285d3
-            a517b128cd7f2ae420d354f5893a3d21a94c7afa5072929453d9e82c2282b307
+sha256sums=(1eb7247fbeb4ec9a88d6b8375c67a73a00f001675869f3a4871cbd177db4688a
+            4bfa48821716fa6b8c31b03a93f263f96dae82f664c54430456ef23f3ff2b993
+            e81f423f3fbe28bd526d47f7e1b386da26f3f6e00194c3085696180e48915cce
             cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff
             bda56f774a676c894032086b124aeb4d61f1c28acb1868d117e3ed6b77780170
             198bc2ec14439e3ba41a03c4823f07df4b0c559c1dcbdaf678416ed12a720c2e
