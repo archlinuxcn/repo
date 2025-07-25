@@ -16,6 +16,7 @@ makedepends=(
     'python-installer'
     'python-poetry-core'
     'python-poetry-dynamic-versioning'
+    git
 )
 checkdepends=(
     'python-hypothesis'
@@ -23,7 +24,7 @@ checkdepends=(
 )
 license=('MIT')
 arch=('any')
-source=("python-dataclasses-json::git+https://github.com/lidatong/dataclasses-json.git$tag=v${pkgver}")
+source=("python-dataclasses-json::git+https://github.com/lidatong/dataclasses-json.git#tag=v${pkgver}")
 sha256sums=('33518eac8d2dcf6a46c97dace4411e591a2443d3e3a1bfd87c51ee032f65d9e0')
 export POETRY_DYNAMIC_VERSIONING_BYPASS="$pkgver"
 
