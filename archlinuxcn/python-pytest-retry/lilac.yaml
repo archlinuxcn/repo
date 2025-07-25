@@ -7,7 +7,10 @@ post_build_script: |
 #  update_aur_repo()
 
 update_on:
-  - source: "pypi"
-    pypi: "retry-pytest"
+  - source: "github"
+    github: "str0zzapreti/pytest-retry"
+    use_latest_release: true
+    include_prereleases: false
+    prefix: "v"
   - alias: "python"
-build_prefix: extra-x86_64
+build_prefix: archlinuxcn-x86_64
