@@ -37,7 +37,7 @@ function build() {
 	cd "${srcdir}/continuwuity"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
-	cargo build --frozen --release --all-features --locked
+	cargo build --frozen --release --locked
 }
 
 function check() {
@@ -45,7 +45,7 @@ function check() {
 	export CXX=g++-14
 	cd "${srcdir}/continuwuity"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo test --frozen --locked --all-features
+	cargo test --frozen --locked
 }
 
 function package() {
