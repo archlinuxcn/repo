@@ -1,0 +1,29 @@
+From dd91e56918ad8face6101637c3ba992d53e762f5 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Steffen=20Kie=C3=9F?=
+ <steffen.kiess@cis.iti.uni-stuttgart.de>
+Date: Wed, 25 Oct 2023 18:37:07 +0200
+Subject: [PATCH] Fix support for Minecraft version 1.12.2 (data version 1343)
+
+For data version 1343, the 'Blocks' key is needed. In
+commit cd0133de7aa8b0023d80769e9fc6a1a78bd9fe57 the code was change to
+no longer create an AnvilSection if there is no 'BlockStates' key.
+Change this to also create an AnvilSection if there is a 'Blocks' key.
+---
+ nbt/chunk.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nbt/chunk.py b/nbt/chunk.py
+index e0dd661..a59fcc0 100644
+--- a/nbt/chunk.py
++++ b/nbt/chunk.py
+@@ -296,7 +296,7 @@ class AnvilChunk(Chunk):
+         self.sections = {}
+         if 'Sections' in self.chunk_data:
+             for s in self.chunk_data['Sections']:
+-                if "BlockStates" in s.keys(): # sections may only contain lighting information
++                if "BlockStates" in s.keys() or "Blocks" in s.keys(): # sections may only contain lighting information
+                     self.sections[s['Y'].value] = AnvilSection(s, version)
+
+
+--
+2.44.0
