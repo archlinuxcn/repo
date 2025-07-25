@@ -8,9 +8,8 @@ post_build_script: |
 
 update_on:
   - source: "github"
-    github: "olzhasar/pytest-watcher"
-    use_latest_release: true
-    include_prereleases: false
+    github: "langchain-ai/langgraph"
+    use_max_tag: true
     prefix: "cli=="
     include_regex: "cli==*"
   - alias: "python"
