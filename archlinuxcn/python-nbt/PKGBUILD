@@ -4,7 +4,7 @@
 _name=NBT
 pkgname=python-${_name,,}
 pkgver=1.5.1
-pkgrel=5
+pkgrel=6
 pkgdesc="Named Binary Tag Reader/Writer"
 url="https://github.com/twoolie/$_name"
 depends=('python')
@@ -14,9 +14,8 @@ arch=('any')
 source=("git+$url#tag=version-${pkgver}"
         '0001-Fix-support-for-Minecraft-version-1.12.2-data-versio.patch')
 noextract=('Sample_World.tar.gz')
-sha256sums=('8b260dc68ed91819e990ca677ee05417e259145fb7531428a1f7b948d71367dc'
-            '8966c9333b69307420512c4ae57639863980b1123d621155830f75167f79a8e8'
-            '4f16d8e0cdc6e29af972b52200c439e67626c4454d853f69a3001c58cec84b45')
+sha256sums=('3345567f844a7f2cd281033031b2002b4b4772158edbbf7d5eefeebb5079117d'
+            '693b7a826596ae00b747a47b5ab3e0e72babd0d5253e68046187ab48a60d9e1b')
 
 prepare() {
   cd NBT
