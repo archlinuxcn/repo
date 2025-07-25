@@ -1,0 +1,26 @@
+pkgname=ashpd-demo
+pkgver=0.5.0
+epoch=1
+pkgrel=1.0
+pkgdesc='asph-demo'
+arch=('x86_64' 'aarch64')
+url='https://github.com/bilelmoussaoui/ashpd'
+license=('MIT')
+depends=('gtk4' 'libadwaita' 'libshumate' xdg-desktop-portal)
+makedepends=('git' 'ninja' 'meson' 'rust' libpipewire clang)
+source=("git+https://github.com/bilelmoussaoui/ashpd.git#tag=${pkgver}-demo)
+sha256sums=('1387915d6bb238aa5d2c658a735f5ee96f99704210e01d96b56ad96024c51215')
+
+build() {
+  cd ashpd
+  meson setup \
+    -Dprefix=/usr \
+    -Dbuildtype=release \
+    build
+  ninja -C build
+}
+
+package() {
+  cd ashpd
+  DESTDIR="$pkgdir" ninja -C build install
+}

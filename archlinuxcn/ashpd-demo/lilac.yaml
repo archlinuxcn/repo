@@ -7,10 +7,11 @@ post_build_script: |
 #  update_aur_repo()
 
 update_on:
-  - source: "gitlab"
-    gitlab: "neithern/g4music"
-    host: "gitlab.gnome.org"
-    use_max_tag: true
+  - source: "github"
+    github: "bilelmoussaoui/ashpd"
+    use_latest_release: true
+    from_pattern: '-demo$'
+    to_pattern: ''
     prefix: "v"
   - source: alpm
     alpm: gtk4
