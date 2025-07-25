@@ -9,7 +9,7 @@ license=('Apache-2.0 OR MIT')
 source=("ormsgpack::git+${url}#tag=${pkgver}")
 sha256sums=('5a9ab2b3eac58362e86db43c9fbfd5702795b389a6f981a631228c044af60c21')
 depends=('python' 'gcc-libs')
-makedepends=('python-maturin' 'python-build' 'python-installer' 'python-wheel')
+makedepends=('python-maturin' 'python-build' 'python-installer' 'python-wheel' 'git')
 checkdepends=('python-msgpack' 'python-numpy' 'python-pendulum' 'python-pydantic' 'python-pytest' 'python-pytest-benchmark' 'python-dateutil' 'python-pytz' 'python-tzdata')
 optdepends=('python-aiohttp: aiohttp')
 
