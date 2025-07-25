@@ -1,0 +1,25 @@
+# Maintainer:  JakobDev<jakobdev at gmx dot de>
+
+pkgname=jdnbtexplorer
+pkgver=3.0
+pkgrel=1
+pkgdesc="An Editor for Minecraft NBT files"
+arch=("any")
+url="https://codeberg.org/JakobDev/jdNBTExplorer"
+license=("GPL3")
+depends=("python" "python-pyqt6" "python-nbt" "python-setuptools" "hicolor-icon-theme")
+makedepends=("python-build" "python-setuptools" "python-installer" "python-wheel" "qt6-tools" git)
+source=("git+https://codeberg.org/JakobDev/jdNBTExplorer.git#tag=${pkgver}")
+sha256sums=("014e19d7c688cd9a92a715bc89e8b80ca74c651e1148e135396b5b3ccf070cca")
+
+build() {
+      cd "jdnbtexplorer"
+      python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "jdnbtexplorer"
+    python -m installer --destdir "$pkgdir" dist/*.whl
+    python install-unix-datafiles.py --prefix "${pkgdir}/usr"
+    install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
