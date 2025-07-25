@@ -1,0 +1,50 @@
+# Maintainer: 0x9fff00 <0x9fff00+git@protonmail.ch>
+# Contributor: Buce <dmbuce@gmail.com>
+
+_name=NBT
+pkgname=python-${_name,,}
+pkgver=1.5.1
+pkgrel=5
+pkgdesc="Named Binary Tag Reader/Writer"
+url="https://github.com/twoolie/$_name"
+depends=('python')
+makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
+checkdepends=('python-pillow')
+license=('MIT')
+arch=('any')
+source=("git+$url#tag=version-${pkgver}"
+        '0001-Fix-support-for-Minecraft-version-1.12.2-data-versio.patch')
+noextract=('Sample_World.tar.gz')
+sha256sums=('8b260dc68ed91819e990ca677ee05417e259145fb7531428a1f7b948d71367dc'
+            '8966c9333b69307420512c4ae57639863980b1123d621155830f75167f79a8e8'
+            '4f16d8e0cdc6e29af972b52200c439e67626c4454d853f69a3001c58cec84b45')
+
+prepare() {
+  cd NBT
+
+  # fix regression in 1.5.1
+  patch -Np1 -i "$srcdir/0001-Fix-support-for-Minecraft-version-1.12.2-data-versio.patch"
+
+  # Python 3.12
+  sed -Ei 's/(locale\.format)/\1_string/g' examples/{chest,mob}_analysis.py
+}
+
+build() {
+  cd NBT
+
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd NBT
+
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  # https://wiki.archlinux.org/title/Python_package_guidelines#Using_site-packages
+  local _site_packages="$(python -c 'import site; print(site.getsitepackages()[0])')"
+
+  install -d "$pkgdir/usr/share/licenses/$pkgname"
+  local _license_path="$_site_packages/${_name,,}-$pkgver.dist-info/licenses/LICENSE.txt"
+  [ -f "$pkgdir/$_license_path" ] || { echo "License file not found"; exit 1; }
+  ln -s "$_license_path" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
