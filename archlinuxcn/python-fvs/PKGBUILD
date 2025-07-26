@@ -1,6 +1,6 @@
 pkgname=python-fvs
 pkgver=0.3.4
-pkgrel=4
+pkgrel=5
 pkgdesc="File Versioning System with hash comparison, deduplication and data storage to create unlinked states that can be deleted"
 arch=(any)
 url="https://github.com/mirkobrombin/FVS"
@@ -11,7 +11,7 @@ provides=(fvs)
 conflicts=(fvs)
 replaces=(vfs)
 source=("git+https://github.com/mirkobrombin/FVS#tag=${pkgver}")
-sha256sums=('c57bcda81cd7500bc54b8f93c81405cccbc4c54b794209f8316ae27f43372696')
+sha256sums=('9c08c2f8db15e2bbce6dd3ac636320b0c0c00fb670c1f5d2ba9e9b1eb784772f')
 
 build() {
   cd FVS
