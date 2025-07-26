@@ -1,7 +1,7 @@
-diff --git a/sdk/cargo-build-sbf/src/main.rs b/sdk/cargo-build-sbf/src/main.rs
+diff --git a/platform-tools-sdk/cargo-build-sbf/src/main.rs b/platform-tools-sdk/cargo-build-sbf/src/main.rs
 index 6d02499c..e7f7dde2 100644
---- a/sdk/cargo-build-sbf/src/main.rs
-+++ b/sdk/cargo-build-sbf/src/main.rs
+--- a/platform-tools-sdk/cargo-build-sbf/src/main.rs
++++ b/platform-tools-sdk/cargo-build-sbf/src/main.rs
 @@ -47,13 +47,7 @@ impl Default for Config<'_> {
          Self {
              cargo_args: vec![],
@@ -11,9 +11,9 @@ index 6d02499c..e7f7dde2 100644
 -                .parent()
 -                .expect("Unable to get parent directory")
 -                .to_path_buf()
--                .join("sdk")
+-                .join("platform-tools-sdk")
 -                .join("sbf"),
-+            sbf_sdk: Path::new("/usr/lib/solana/sdk/sbf").to_path_buf(),
++            sbf_sdk: Path::new("/usr/lib/solana/platform-tools-sdk/sbf").to_path_buf(),
              sbf_out_dir: None,
-             platform_tools_version: "(unknown)",
+             platform_tools_version: None,
              dump: false,
