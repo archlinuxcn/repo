@@ -1,0 +1,31 @@
+!/usr/bin/bash
+
+# This is your Application ID, avoid conflict
+appID="com.usebottles.bottles"
+
+# This is a friendly name of an application. It should only contain ASCII characters and not spaces.
+friendlyName="Bottles"
+
+# This is the state directory of your application, which is located under "XDG_DATA_HOME"
+stateDirectory="Bottles_Data"
+
+# This is the target executable to launch
+launchTarget="/usr/lib/bottles-bwrap/bottles"
+
+# Takes a boolean value or string "adaptive". When true, do not process XAuth files and forces wayland input method. "adaptive" enables this option on Wayland and vice versa. Generally this should be adaptive when possible.
+waylandOnly="false"
+
+# Takes boolean value.
+bindInputDevices="true"
+
+# Takes boolean value. Binds /dev/video* into the sandbox. Required if target application uses /dev/video* interfaces directly instead of v4l2.
+bindCameras="false"
+
+# Takes boolean value. Binds PipeWire socket into the sandbox. Required if target application doesn't use Portals.
+bindPipewire="false"
+
+# Expose all GPUs. Takes boolean value, usually used in games.
+gameMode="true"
+
+# Wake the application using D-Bus calls towards StatusNotifiers.
+dbusWake="false"
