@@ -7,9 +7,8 @@ post_build_script: |
 #  update_aur_repo()
 
 update_on:
-  - source: "github"
-    github: "TheEvilSkeleton/vkbasalt-cli"
-    use_max_tag: true
+  - source: "git"
+    git: "https://gitlab.com/TheEvilSkeleton/vkbasalt-cli.git"
     prefix: "v"
   - alias: "python"
 build_prefix: extra-x86_64
