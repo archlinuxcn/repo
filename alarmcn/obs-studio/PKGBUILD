@@ -3,7 +3,7 @@
 # Contributor: Maciek Marciniak <mm2pl at kotmisia.pl>
 
 pkgname=obs-studio
-pkgver=31.0.4
+pkgver=31.1.1
 pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
@@ -13,7 +13,7 @@ depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise'
          'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
          'libdatachannel' 'uthash')
 makedepends=('cmake' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'nlohmann-json'
-             'ffnvcodec-headers' 'websocketpp' 'asio' 'qrcodegencpp-cmake')
+             'ffnvcodec-headers' 'websocketpp' 'asio' 'qrcodegencpp-cmake' 'extra-cmake-modules')
 optdepends=('libfdk-aac: FDK AAC codec support'
             'libva-intel-driver: hardware encoding'
             'libva-mesa-driver: hardware encoding'
@@ -23,7 +23,7 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'qrcodegencpp-cmake: websocket support'
             'v4l2loopback-dkms: virtual camera support')
 source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz)
-sha256sums=('ff9b49dbb89248064e4c9e9f8fb41dc8998bfa9d36842aae0a442a55f166ec0c')
+sha256sums=('544d0af03129083a36fa244a9cad84db18c2149e8ca658370437fd2dd16f8577')
 
 prepare() {
   cd $pkgname-$pkgver-sources
