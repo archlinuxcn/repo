@@ -6,7 +6,8 @@ post_build_script: |
 update_on:
   - source: github
     github: "thombashi/pathvalidate"
+    use_latest_release: true
     prefix: "v"
   - alias: python
 maintainers:
-  - github: roaldclark
+  - github: Kimiblock
