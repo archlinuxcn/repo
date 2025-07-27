@@ -1,0 +1,7 @@
+#! /usr/bin/env bash
+
+if grep -q gossip <<<"$@"; then
+    /usr/bin/pgp-sig2dot --simple "$@" | /usr/bin/dot -Goverlap=false -Tsvg -Ktwopi
+else
+    /usr/bin/pgp-sig2dot --simple "$@" | /usr/bin/dot -Goverlap=false -Tsvg -Ksfdp
+fi
