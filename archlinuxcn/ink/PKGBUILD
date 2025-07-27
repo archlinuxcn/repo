@@ -1,0 +1,30 @@
+# Maintainer: mickael9 <mickael9 at gmail dot com>
+# Contributor: Alexander Fehr <pizzapunk gmail com>
+
+pkgname=ink
+pkgver=0.5.3
+pkgrel=1
+pkgdesc="Command line tool for checking the ink level of printers"
+arch=('x86_64')
+url="http://ink.sourceforge.net/"
+makedepends=(sed)
+license=('GPL2')
+depends=('libinklevel')
+source=(http://downloads.sourceforge.net/ink/ink-$(echo $pkgver | sed 's|_|.|g').tar.gz)
+md5sums=('7ddb245c1b0314a4348f2a43e8d37885')
+
+function pkgver() {
+	echo "${pkgver}" | sed 's|_|.|g'
+}
+
+build() {
+  cd "$srcdir/ink-$pkgver"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/ink-$pkgver"
+  make DESTDIR=$pkgdir install
+}
