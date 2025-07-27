@@ -1,14 +1,14 @@
 # Maintainer: oldherl <oldherl@gmail.com>
 
 pkgname=skychart
-_pkgver=4.3-4867
+_pkgver=4.3-4991
 pkgver=${_pkgver/-/.}
-pkgrel=3
+pkgrel=1
 pkgdesc="Free software to draw sky charts, also known as Cartes du Ciel. Beta version"
 arch=('x86_64')
 license=('GPL-2.0-or-later')
-depends=('qt5-base' 'xplanet' 'libpasastro' 'qt5pas')
-makedepends=('fpc' 'lazarus-qt5' 'wget')
+depends=('qt6-base' 'xplanet' 'libpasastro' 'qt6pas')
+makedepends=('fpc' 'lazarus-qt6' 'wget')
 optdepends=(
 "xplanet: for displaying textures on planets"
 )
@@ -19,7 +19,7 @@ source=(
 "https://build.archlinuxcn.org/~oldherl/files/skychart/skychart-${_pkgver}-src.tar.xz"
 )
 
-sha256sums=('914a1191d6829f25b304889d8f1533290d6b3d986ba8830680c939c53d622a8b')
+sha256sums=('2d58f801872804b75ac7df3d585a447023768cce7fab8817602f3eea4f066906')
 
 prepare() {
   cd "skychart-$_pkgver-src"
@@ -37,8 +37,8 @@ build() {
   echo fpcopts="$fpcopts"
   echo ./configure fpc="$fpc" lazarus=/usr/lib/lazarus prefix="$pkgdir/usr" target=x86_64-linux 
   ./configure fpc="$fpc" lazarus=/usr/lib/lazarus prefix="$pkgdir/usr" target=x86_64-linux 
-  make CPU_TARGET=x86_64 OS_TARGET=linux clean
-  make CPU_TARGET=x86_64 OS_TARGET=linux -j 1
+  make CPU_TARGET=x86_64 OS_TARGET=linux LCL_PLATFORM=qt6 clean
+  make CPU_TARGET=x86_64 OS_TARGET=linux LCL_PLATFORM=qt6 -j 1
 }
 
 package() {
