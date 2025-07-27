@@ -18,12 +18,12 @@ source=("source"::"git+https://git.code.sf.net/p/libinklevel/git#tag=v${pkgver}"
 sha256sums=('c69848f9f2ca71f7a3a4f8415132933ed8d4b5882158c7c543181222081b5134')
 
 build() {
-	cd source
+	cd source/libinklevel-ng
 	./configure --prefix=/usr
 	make
 }
 
 package() {
-	cd source
+	cd source/libinklevel-ng
 	make DESTDIR="$pkgdir/" install
 }
