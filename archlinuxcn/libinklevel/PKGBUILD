@@ -1,0 +1,28 @@
+# Contributor: Asuka Minato
+# Contributor: Luis Martinez <luis dot martinez at disroot dot org>
+# Contributor: Andrew Sun <adsun701@gmail.com>
+# Contributor: Anton Bazhenov <anton.bazhenov at gmail>
+# Contributor: Axel Reidemeister[computerkranker] <mail@axelreidemeister.de>
+
+pkgname=libinklevel
+pkgver=0.9.6
+pkgrel=1
+pkgdesc="A library for checking the ink level of your printer"
+arch=('x86_64')
+url="http://libinklevel.sourceforge.net/"
+license=('GPL')
+depends=('libusb' 'libxml2' 'glibc')
+provides=('libinklevel.so=5-64')
+source=("$pkgname-$pkgver.tar.gz::https://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
+sha256sums=('c69848f9f2ca71f7a3a4f8415132933ed8d4b5882158c7c543181222081b5134')
+
+build() {
+	cd "$pkgname-$pkgver"
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	make DESTDIR="$pkgdir/" install
+}
