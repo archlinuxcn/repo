@@ -10,4 +10,6 @@ update_on:
   - source: "git"
     git: "https://git.code.sf.net/p/libinklevel/git"
     prefix: "v"
+    include_regex: "v.*"
+    exclude_regex: "version.*"
 build_prefix: extra-x86_64
