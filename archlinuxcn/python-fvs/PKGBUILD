@@ -1,0 +1,25 @@
+pkgname=python-fvs
+pkgver=0.3.4
+pkgrel=6
+pkgdesc="File Versioning System with hash comparison, deduplication and data storage to create unlinked states that can be deleted"
+arch=(any)
+url="https://github.com/mirkobrombin/FVS"
+license=(MIT)
+depends=(python-orjson)
+makedepends=(python-setuptools git)
+provides=(fvs)
+conflicts=(fvs)
+replaces=(vfs)
+source=("git+https://github.com/mirkobrombin/FVS#tag=${pkgver}")
+sha256sums=('9c08c2f8db15e2bbce6dd3ac636320b0c0c00fb670c1f5d2ba9e9b1eb784772f')
+
+build() {
+  cd FVS
+  python setup.py build
+}
+
+package() {
+  cd FVS
+  python setup.py install --skip-build --optimize=1 --prefix=/usr --root="${pkgdir}"
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

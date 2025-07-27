@@ -1,0 +1,23 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: "git"
+    git: "https://github.com/bottlesdevs/Bottles.git"
+    prefix: "v"
+  - alias: "python"
+build_prefix: extra-x86_64
+
+repo_depends:
+  - icoextract
+  - patool
+  - python-fvs
+  - python-pathvalidate
+  - python-steamgriddb
+  - vkbasalt-cli
+  - portable

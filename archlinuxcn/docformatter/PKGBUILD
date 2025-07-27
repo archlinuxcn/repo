@@ -2,7 +2,7 @@
 
 pkgname=docformatter
 pkgver=1.7.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Formats docstrings to follow PEP 257"
 arch=(any)
 url="https://github.com/PyCQA/$pkgname"

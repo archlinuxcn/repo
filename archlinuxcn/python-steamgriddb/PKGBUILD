@@ -1,0 +1,24 @@
+# Maintainer: Fabio 'Lolix' Loli <fabio.loli@disroot.org> -> https://github.com/FabioLolix
+
+pkgname=python-steamgriddb
+pkgver=1.0.5
+pkgrel=5
+pkgdesc="Python API wrapper for SteamGridDB.com"
+arch=(any)
+url="https://github.com/ZebcoWeb/python-steamgriddb"
+license=(MIT)
+depends=(python python-requests)
+makedepends=(python-setuptools git)
+source=("git+https://github.com/ZebcoWeb/python-steamgriddb.git#tag=v${pkgver}")
+sha256sums=('89b3883d0487dbcc05f8e6a50670acc053c7b1ad515835010c688b12767e6186')
+
+build() {
+  cd python-steamgriddb
+  python setup.py build
+}
+
+package() {
+  cd python-steamgriddb
+  python setup.py install --skip-build --optimize=1 --prefix=/usr --root="${pkgdir}"
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

@@ -1,0 +1,28 @@
+pkgname=icoextract
+pkgver=0.2.0
+pkgrel=2
+pkgdesc='Icon extractor for Windows PE files (.exe/.dll) with optional thumbnailer functionality'
+arch=('any')
+url='https://github.com/jlu5/icoextract'
+license=('MIT')
+depends=('python-pefile')
+makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel' git)
+optdepends=('python-pillow: required for the optional thumbnailer')
+provides=('exe-thumbnailer')
+conflicts=('exe-thumbnailer')
+source=("git+https://github.com/jlu5/${pkgname}.git#tag=${pkgver}")
+sha256sums=('c4ce1db7c638d45f9f9c6c3cfd677a8405f9e9148d18f791d3f34977442ee320')
+
+build() {
+    cd ${pkgname}
+
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd ${pkgname}
+
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+
+    install -Dm644 exe-thumbnailer.thumbnailer "${pkgdir}"/usr/share/thumbnailers/exe-thumbnailer.thumbnailer
+}

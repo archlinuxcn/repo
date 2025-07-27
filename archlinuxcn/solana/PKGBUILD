@@ -4,10 +4,10 @@
 
 pkgname=solana  
 epoch=1
-pkgver=2.1.21
+pkgver=2.2.20
 # https://github.com/anza-xyz/agave/blob/$pkgver/scripts/spl-token-cli-version.sh
 _splTokenCliVersion=4.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast, secure, and censorship resistant blockchain."
 url="https://www.solana.com"
 arch=(x86_64)
@@ -19,12 +19,14 @@ source=(git+https://github.com/anza-xyz/agave.git#tag=v$pkgver
         git+https://github.com/solana-labs/solana-program-library.git#tag=token-cli-v$_splTokenCliVersion
         $pkgname.sysusers
         $pkgname.tmpfiles
-        $pkgname-sbf_sdk-path.patch)
-sha256sums=('d66c843c59534e9ee1267bdb9d7462c1f521eb4506e47efe2af898f250d35398'
+        $pkgname-sbf_sdk-path.patch
+        $pkgname-fix-unified-scheduler-pool.patch::https://cgit.freebsd.org/ports/plain/security/agave/files/patch-rust-1.87.0?id=60d35858d322e4ae32bd6e4c8741b5cc4abd97f2)
+sha256sums=('80f83e3fb8dd4591ffe246d4ac34a828e58ad2212583ca732268277caa091085'
             'd0d7c7e98b42a6613d4ba1ddc8ec7650434793bab5925bf565de6cf3ba6093a1'
             'bf7e015436e3d15e70fc67f323bbd04163f79a4de7d06a254a5409bd031227b0'
             'a0f9ee2a24ab97da977eed1dd68a92165c2f2e6d5467462fe83c762031f4e02b'
-            'ca9915c38949bd275192f0a1761aafc238612e13096c4d227b5a9fc531509eee')
+            '8fee0981fb31343719c6f4f3b845dd8d957ad7d38319c0cc80f4637f9210874c'
+            '71ae2a8c57c16d425e689c196e0ba1292154f76225abaa1b2614a21c441aac64')
 install=$pkgname.install
 options=(!lto)
 
@@ -71,6 +73,7 @@ prepare() {
   export RUSTUP_TOOLCHAIN=stable
   cd $srcdir/agave
   patch -Np1 -i ../$pkgname-sbf_sdk-path.patch
+  patch unified-scheduler-pool/src/lib.rs -i ../$pkgname-fix-unified-scheduler-pool.patch
   cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 
   cd $srcdir/solana-program-library
@@ -97,6 +100,9 @@ build() {
     dcouBinArgs+=(--bin "$bin")
   done
 
+  # Fix rocksdb
+  export CXXFLAGS="$CXXFLAGS -include cstdint"
+
   cargo build --frozen --release "${binargs[@]}" --workspace "${excludeArgs[@]}"
   cargo build --frozen --release "${dcouBinArgs[@]}"
   cargo build --frozen --release --manifest-path programs/bpf_loader/gen-syscall-list/Cargo.toml
@@ -115,10 +121,8 @@ package() {
     install -Dm755 target/release/$bin -t $pkgdir/usr/bin
   done
 
-  install -dm755 $pkgdir/usr/lib/$pkgname/sdk
-  cp -a sdk/sbf $pkgdir/usr/lib/$pkgname/sdk
-  install -dm755 $pkgdir/usr/lib/$pkgname/deps
-  cp -a target/release/deps/libsolana*program.* $pkgdir/usr/lib/$pkgname/deps
+  install -dm755 $pkgdir/usr/lib/$pkgname/platform-tools-sdk
+  cp -a platform-tools-sdk/sbf $pkgdir/usr/lib/$pkgname/platform-tools-sdk
 
   cd $srcdir/solana-program-library
   install -Dm755 target/release/spl-token -t $pkgdir/usr/bin
