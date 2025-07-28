@@ -84,8 +84,6 @@ package() {
 		install -Dm755 {} -t "${runtime_dir}/grammars" \;
 	install -Dm644 "runtime/tutor" -t "${runtime_dir}"
 
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
-
 	cd contrib/
 	install -Dm644 "completion/hx.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
 	install -Dm644 "completion/hx.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
