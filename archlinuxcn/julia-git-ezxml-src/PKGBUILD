@@ -1,6 +1,6 @@
 pkgname=julia-git-ezxml-src
-pkgver=1.2.1
-_commit=32ea7ca8ddbe16dc612daae26fe33053c1c591d3
+pkgver=1.2.2
+_commit=af3997717c974be278dac23f082770f85f4e23cf
 pkgrel=1
 pkgdesc="EzXML.jl"
 url="https://github.com/JuliaIO/EzXML.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/EzXML.jl.git#commit=$_commit")
-sha256sums=('a922a99da16d6c31c8591e4a4fb8f8d8e6ca7ba4dfcef8e7035fe0c82669a4e0')
+sha256sums=('0993c83e192db9e76d40c409a5319efa4f5bb31e53533c6ea99a774703ca6473')
 
 package() {
   cd EzXML.jl
