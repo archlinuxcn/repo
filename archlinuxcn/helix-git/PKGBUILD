@@ -55,12 +55,17 @@ prepare() {
 	# NOTE: we are renaming hx to helix so there is no conflict with hex (providing hx)
 	sed -i "s|hx|${_pkgname}|g" contrib/completion/hx.*
 	sed -i "s|hx|${_pkgname}|g" contrib/Helix.desktop
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${_pkgname}/"
 	cargo build --frozen --release
+}
+
+check() {
+	cd "${_pkgname}/"
+	cargo test --frozen
 }
 
 package() {
