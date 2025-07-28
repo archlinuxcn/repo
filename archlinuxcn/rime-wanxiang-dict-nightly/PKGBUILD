@@ -124,7 +124,7 @@ _package() {
 
 package_rime-wanxiang-dict-nightly() {
     pkgdesc="万象拼音词库基础数据——每日构建版"
-    provides=("${_pkgbase}-dict=${pkgver}")
+    provides=("${_pkgbase}-dict=${_schema_version}")
     conflicts=("$_pkgbase-dict")
     # shellcheck disable=SC2128
     _package "$pkgname"
@@ -132,7 +132,7 @@ package_rime-wanxiang-dict-nightly() {
 package_rime-wanxiang-pro-dict-nightly() {
     pkgdesc="万象拼音双拼辅助码版词库基础数据——每日构建版"
     conflicts=("$_pkgbase-dict" "$_pkgbase-dict-nightly" "$_pkgbase-pro-dict")
-    provides=("${_pkgbase}-pro-dict=${pkgver}")
+    provides=("${_pkgbase}-pro-dict=${_schema_version}")
     # shellcheck disable=SC2128
     _package "$pkgname"
 }
@@ -163,9 +163,9 @@ for _schema in "${!_schemas[@]}"; do
     done
     eval "package_${_pkgname}() {
         pkgdesc='万象拼音标准版词库——每日构建版（${_schema_name}方案）'
-        depends=('${_pkgbase}-dict-nightly=${pkgver}')
+        depends=('${_pkgbase}-dict-nightly')
         conflicts=(${_conflicts[*]})
-        provides=('${_pkgbase}-dict-${_schema}=${pkgver}')
+        provides=('${_pkgbase}-dict-${_schema}=${_schema_version}')
         _package ${_pkgname}
     }"
 done
@@ -183,9 +183,9 @@ for _fuzhu in "${!_fuzhus[@]}"; do
     done
     eval "package_${_pkgname}() {
         pkgdesc='万象拼音双拼辅助码词库——每日构建版（${_fuzhu_name}辅助）'
-        depends=('${_pkgbase}-pro-dict-nightly=${pkgver}')
+        depends=('${_pkgbase}-pro-dict-nightly')
         conflicts=(${_conflicts[*]})
-        provides=('${_pkgbase}-pro-dict-${_fuzhu}-fuzhu=${pkgver}')
+        provides=('${_pkgbase}-pro-dict-${_fuzhu}-fuzhu=${_schema_version}')
         _package ${_pkgname}
     }"
 done
