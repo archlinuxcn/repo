@@ -88,7 +88,9 @@ package() {
 	install -Dm644 "completion/hx.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
 	install -Dm644 "completion/hx.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
 	install -Dm644 "completion/hx.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${_pkgname}"
+	install -Dm644 "completion/hx.elv" "${pkgdir}/usr/share/elvish/lib/${_pkgname}.elv"
 	install -Dm644 "Helix.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+	install -Dm644 "Helix.appdata.xml" -t "${pkgdir}/usr/share/metainfo/"
 	install -Dm644 "${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/256x256/apps/"
 }
 
