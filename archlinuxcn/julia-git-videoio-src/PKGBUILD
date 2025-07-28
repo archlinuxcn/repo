@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaIO/VideoIO.jl.git#commit=$_commit"
-        0001-Support-FFMPEG-6.patch)
-sha256sums=('2823ac40c40fab907fdff728a26b042c941d69d34e4a28a71e2c61ed536eb237'
-            '854e8f35256b10aaad7e20223061476a169b767a3f13f3948023a75444d32eb8')
-
-prepare() {
-  cd VideoIO.jl
-
-  patch --no-backup-if-mismatch -Np1 < ../0001-Support-FFMPEG-6.patch
-}
+source=("git+https://github.com/JuliaIO/VideoIO.jl.git#commit=$_commit")
+sha256sums=('2823ac40c40fab907fdff728a26b042c941d69d34e4a28a71e2c61ed536eb237')
 
 package() {
   cd VideoIO.jl
