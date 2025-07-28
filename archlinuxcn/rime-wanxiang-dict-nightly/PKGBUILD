@@ -81,7 +81,7 @@ build() {
     msg2 "updating dicts..."
     for zip_file in "${srcdir}"/*.zip; do
         local tmp_dir && tmp_dir="${srcdir}/$(basename "${zip_file%%.zip}")" && rm -rf "$tmp_dir"
-        unzip -q "$zip_file" -d "${tmp_dir}"
+        bsdunzip -q "$zip_file" -d "${tmp_dir}"
         (
             local target_dir
             target_dir="${srcdir}"/$(basename "$zip_file" | sed -E "s/.*-(base-dicts|\w+-fuzhu-dicts).*/\1/")
