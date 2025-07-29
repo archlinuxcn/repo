@@ -23,6 +23,16 @@ b2sums=('1de8eca922b01b9c4c6d9a173143f05b900fd6b12b1b27bae175948a43125619d0e14c8
         'bf1c33125015018a3c18aa7df46fdc92a858e4f906589f31a8391b7047a8e0a7b0fe1238019fe1804225f948fe8d4cbf51e4190adc8feb287da2a2d679a8bf0a')
 
 build() {
+  # Pre-configured Microsoft Azure app credentials for HMCL's Microsoft login feature
+  # These are maintained by the package maintainer (Misaka13514) to ensure out-of-box
+  # functionality for users who cannot register their own Azure application
+
+  # Registration guide:
+  # https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app
+  # https://help.minecraft.net/hc/en-us/articles/16254801392141
+  export MICROSOFT_AUTH_ID='004be3ca-1c2a-4dc1-b805-d06494b3e968'
+  export MICROSOFT_AUTH_SECRET='~mD8Q~J1C4cwiiEoTUdR3XYA96Jobsp.EZEnCauP'
+
   cd "${_pkgname}-${_tag}"
   export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
   ./gradlew clean build --no-daemon
