@@ -2,7 +2,7 @@
 
 _target="x86_64-linux-gnu"
 pkgname=${_target}-binutils
-pkgver=2.44+r94+gfe459e33c676
+pkgver=2.45
 pkgrel=1
 pkgdesc="A set of programs to assemble and manipulate binary and object files (${_target})"
 arch=(aarch64 armv7h i686 x86_64)
@@ -17,7 +17,7 @@ else
   _git_ref="tag=binutils-${pkgver//./_}"
 fi
 source=("git+https://sourceware.org/git/binutils-gdb.git#${_git_ref}")
-sha256sums=('07a821f494fbb61dcf9e958f6f840eaa4a45c748c59415fd3ea1ec4b3326673c')
+sha256sums=('005763c1ecf23168be877788ed148467d31b1852ff15b27c0f69343c2a64652a')
 
 prepare() {
   mkdir -p binutils-build
