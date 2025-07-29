@@ -1,46 +1,12 @@
-build:
-  stage: build
-  image:
-    name: docker:24.0.5
-  services:
-    - docker:24.0.5-dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""
-  script:
-    - docker run -e EXPORT_PKG=true -v "$(pwd):/pkg" ghcr.io/zaggash/arch-makepkg:latest
-  artifacts:
-    untracked: false
-    expire_in: 5 days
-    paths:
-      - '*.pkg.tar.zst'
+include:
+  - project: languitar-aur-packages/gitlab-templates
+    ref: main
+    file: PKGBUILD.gitlab-ci.yml
+
+variables:
+  PKGNAME: jdtls
+  OPT_DEPS_TEST: python
 
 test:
-  stage: test
-  image: archlinux:latest
   script:
-    - pacman -Syu --noconfirm
-    - pacman -S --noconfirm python
-    - pacman --noconfirm -U *.pkg.tar.zst
     - jdtls --help | grep usage
-
-deploy:
-  stage: deploy
-  image: bitnami/git:latest
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  variables:
-    GIT_DEPTH: "0"
-  before_script:
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-
-    - ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-
-    - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-
-  script:
-    - git remote add aur ssh://aur@aur.archlinux.org/jdtls.git
-    - git push aur origin/master:master
