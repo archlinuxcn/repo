@@ -1,4 +1,4 @@
-From b0f504197eff14a7f4539c41071e79f62fd8a7ee Mon Sep 17 00:00:00 2001
+From d74fde348ea2d66f66bcfb9dd96c8bf2d17ee2ff Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
 Subject: [PATCH 2/7] Fix source file paths
@@ -11,7 +11,7 @@ Subject: [PATCH 2/7] Fix source file paths
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 7e205ca955..5f3d6f91d6 100644
+index fd71544c20..84c5967d88 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
 @@ -125,6 +125,13 @@ let
@@ -29,10 +29,10 @@ index 7e205ca955..5f3d6f91d6 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index 77fd628ff2..3c38e0e101 100644
+index 06e5cd298c..123a0f2238 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
-@@ -56,7 +56,7 @@ A string containing the full path to the directory containing the `stdlib` packa
+@@ -57,7 +57,7 @@ A string containing the full path to the directory containing the `stdlib` packa
  global STDLIB::String = "$BINDIR/../share/julia/stdlib/v$(VERSION.major).$(VERSION.minor)" # for bootstrap
  # In case STDLIB change after julia is built, the variable below can be used
  # to update cached method locations to updated ones.

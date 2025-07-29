@@ -2,26 +2,28 @@
 
 pkgbase=rime-wanxiang-dict-nightly
 _pkgbase=${pkgbase%-dict-nightly}
-pkgname=()
-pkgver=9.2.2+r20250723.150217
+pkgname=(rime-wanxiang-dict-nightly rime-wanxiang-pro-dict-nightly)
+pkgver=10.0.5+r20250728.184658
 _schema_version=${pkgver%%+*}
-pkgrel=1
-pkgdesc="万象词库每日构建版"
+pkgrel=2
+pkgdesc="万象词库——每日构建版"
 arch=(any)
 license=('CC-BY-4.0')
 
 url="https://github.com/amzxyz/rime_wanxiang"
-source=("${url}/archive/refs/tags/v${_schema_version}.zip")
-b2sums=('e3ea73e6f15cc9b93a92193f5ae0c20f1df274d6f43f22bd0961e78e93b5f2ce138e5c8c64b0cfa88e77805917edd53b32dfb8eeb708e9178690de011ad10624'
-        '9edb9b94743a8ee331452c89e63fc01a536dd84f066d6d8143cadbf03dd1fc3d1407ef90c174d4dd9c30d5e95cf03bf11cf8e50aa8170f361e16e6d033a05c6d'
-        '7c317b0922438d3f5bc9e7f4eff45ce0509ee518655c8db310b1f292b7621bec144bfb9a8013cf94e5c171ce2302aa9251a05dc463c3a77baba21fcfabe3a76e'
-        '08b5e38878cebcb6f46ff913a041994243363451321cc4e5e413711e1a623b01dad941bc81c695a8d96522318a9d2ae8f3ad17428a624e79110e8672fd26eae7'
-        'c853f6ac3c39d525b08d2daf65df81fcf112c0ab100fe44bf6fc3af2e355cabc07cf2fd8f32c4df3d821c314ba54c893b02af0eb564808d2eb3d8c0928a85544'
-        '8e426b1de2ac7cf323ec83cfbf36c915e80bb4b84d763396d0b624faf8beec4b27edd0a874b5e9052e36f86f8655d2f1d9cc6d88159850ba5e19d753a1d005f5'
-        'eb233309b94659ca9408cb3470c884480e0e130cb508a90b6ad4da24a78eec63e6025b13c9a37170b5f212dd766204055ac68f274b082c71f350bb0487d2b51c'
-        '877bc754e8d1e482fc1bbc7396e3ab4ae21c256ea74fc68cf40e5b001456f59b441ee8ba7fccc56d1f0abdc9c1ab5b27c0f4681018119f3911b55961149f0ae2'
-        'bef4cc762585d152ed2a9d3191aabf23a1b062379b4c3ed7380fa991e19606dec719250382986d2cd3201de5a327a70eaf8d0e64e3540ba098b66929bff348a6')
-
+source=("${url}/archive/refs/tags/v${_schema_version}.tar.gz"
+        build.sh)
+b2sums=('d92bee70b850b1ca623e9107f0d6a784837f547d4c337ae619a80086812832c9d333670736f93c138e20205f67222471db076e64395043b12e8944c90c4af54f'
+        'ffbab0a401f81e8f520304ec8016dfb5188b84b5a948582409d25b890c75f65ad738379a01999f8315b9b73a58163f1c44feb09d51c25ef300a53bd55456395d'
+        '7f4d748bb14fc2c8bf14b9bb1a94eef9ea5125e038d5bff2a44b20f958e95bddb7bc3cbc14f7854a2c4aebda15088aeb8a57d516abdf6c5793ba0dae010b2e23'
+        '9d966f310904dca98f09f47e93e490bcce8c65b452640acc34b60b46425ed5a6f94f915ea2d78dd5ec512fc664ce2a7f31c7b82866d70fffbfbbba3d844234cd'
+        '9f08227a26b5c21cb14f77a6764c0097510652f47d9f80f2a3d85e534f96d5f7c547150d503483320caff8246b22924fc30d4ace04e7d157dd18cd944a6bc53d'
+        '139c8f0a4bfc925e6d44d25b2c8569ad32671a5eb11fc09213b5982ecce2b62b2e47ffdf5c44b0d7f2bff44847faf11dff6ba6225e0e21b5db1ed3b2e222a4a6'
+        '9e63d69aa6a238b6f0659930cb729012340fa05c26a7ada3fbd6448e1f8b03bf5350580d313dbfc5c31efc12c6458f2b0132088b32ab2b320e0db91e0941cb66'
+        'f8265271f483e44d6db4be15010ef150345f695815701c6a65c8e326eb2f212e40841063b2df3262a443a85834c308fd9fba3c40db200403c41035db9954d157'
+        '3d54426c932919d13265e63b3a5264e1b149fe722355df9cdb1eb4c1d00db846255e71d2960780bca3310bbb4c8491b25a2a2fb0b49e529b76b4a701cb8c3809'
+        '3305b7f622fa48f927bc50d032d19b5d5d16742f16770439d643015a2676113c20e93f05e62d0695cdd77cbd5a8b3ab73479b88c965e3194cd6f84e82f6e58ba')
+noextract=()
 makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python" "zip")
 
 declare -A _dict_filenames=(
@@ -32,32 +34,35 @@ declare -A _dict_filenames=(
   [tiger]="5-pro-tiger-fuzhu-dicts.zip"
   [wubi]="6-pro-wubi-fuzhu-dicts.zip"
   [hanxin]="7-pro-hanxin-fuzhu-dicts.zip"
-  [base]="9-base-zh-dicts.zip"
+  [base]="9-base-dicts.zip"
 )
 
 for _dict in "${!_dict_filenames[@]}"; do
     _filename="${_dict_filenames[${_dict}]}"
-    source+=("${url}/releases/download/dict-nightly/${_filename}")
+    _dict_url="${url}/releases/download/dict-nightly/${_filename}"
+    source+=("${_dict_url}")
+    noextract+=("${_dict_url##*/}")
 done
 
-build() {
-    cd "${srcdir}/rime_wanxiang-${_schema_version}" || exit 1
-    bash .github/workflows/scripts/release-build.sh
-}
+# 拼写方案
+declare -A _schemas=(
+    [pinyin]="全拼"
+    [zrm]="自然码"
+    [flypy]="小鹤双拼"
+    [mspy]="微软双拼"
+    [sogou]="搜狗双拼"
+    [abc]="智能ABC"
+    [ziguang]="紫光双拼"
+    # 以下方案支持不完善
+    # [pyjj]="拼音加加"
+    # [gbpy]="国标双拼"
+    # [lxsq]="乱序17"
+    # [hanxin]="汉心龙"
+    # [zrlong]="自然龙"
+)
 
-# 基础版中文词库
-_pkgname=${_pkgbase}-dict-zh-nightly
-pkgname+=("${_pkgname}")
-eval "package_${_pkgname}() {
-    pkgdesc='万象拼音中文词库每日构建版（标准版）'
-    provides=('${_pkgname%-nightly}=${_schema_version}')
-    conflicts=(${_pkgname%-nightly})
-    replaces=(rime-wanxiang-dict-cn-nightly)
-
-    _package_dict_zh base
-}"
-
-declare -A _fuzhu_names=(
+# 辅助码类型
+declare -A _fuzhus=(
   [zrm]="自然码"
   [moqi]="墨奇"
   [flypy]="小鹤"
@@ -67,62 +72,120 @@ declare -A _fuzhu_names=(
   [tiger]="虎码首末"
 )
 
-# Pro 中文词库
-for _fuzhu in "${!_fuzhu_names[@]}"; do
-    _fuzhu_name="${_fuzhu_names[${_fuzhu}]}"
-    _pkgname=${_pkgbase}-pro-dict-zh-${_fuzhu}-nightly
-    pkgname+=("${_pkgname}")
-    _conflicts=("${_pkgname%-nightly}")
-    for _fuzhu_c in "${!_fuzhu_names[@]}"; do
-        if [[ "${_fuzhu_c}" == "${_fuzhu}" ]]; then continue; fi
-        _conflicts+=("${pkgbase}-pro-dict-zh-${_fuzhu_c}-nightly")
+build() {
+    cd "${srcdir}/rime_wanxiang-${_schema_version}" || exit 1
+
+    msg2 "release building..."
+    bash .github/workflows/scripts/release-build.sh >/dev/null
+
+    msg2 "updating dicts..."
+    for zip_file in "${srcdir}"/*.zip; do
+        local tmp_dir && tmp_dir="${srcdir}/$(basename "${zip_file%%.zip}")" && rm -rf "$tmp_dir"
+        bsdunzip -q "$zip_file" -d "${tmp_dir}"
+        (
+            local target_dir
+            target_dir="${srcdir}"/$(basename "$zip_file" | sed -E "s/.*-(base-dicts|\w+-fuzhu-dicts).*/\1/")
+            rm -rf "$target_dir" && mkdir "${target_dir}"
+
+            cd "${tmp_dir}" || exit 1
+            if [[ $(find . -mindepth 1 -maxdepth 1 | wc -l) -eq 1 ]]; then
+                find . -mindepth 2 -type f -exec sh -c '
+                    src="$1"
+                    dest="$2/${src#./*/}"
+                    install -Dm664 "$src" "$dest"
+                ' sh {} "$target_dir" \;
+            else
+                find . -mindepth 1 -type f -exec install -Dm664 {} "${target_dir}/{}" \;
+            fi
+        )
+        rm -rf "${tmp_dir}"
+    done
+
+    local _dir && for _dir in dist/*; do
+        [[ ! -d $_dir ]] && continue
+        (
+            local target_dir && target_dir=$(realpath "$_dir"/dicts) && rm -rf "${target_dir:?}"/*
+            local fuzhu_type && fuzhu_type=$(basename "$_dir" | sed "s/rime-wanxiang-//")
+
+            cd "${srcdir}/${fuzhu_type}-dicts" || exit 1
+            find . -mindepth 1 -type f -exec install -Dm664 {} "$target_dir"/{} \;
+        )
+    done
+
+    msg2 "schema building..."
+    bash "${srcdir}"/build.sh
+}
+
+_package() {
+    dist_dir=${1//rime-wanxiang-} && dist_dir=${dist_dir//-nightly}
+    cd "${srcdir}/dist/${dist_dir}" || exit 1
+    find . -type f -exec install -Dm664 {} "${pkgdir}"/usr/share/rime-data/{} \;
+}
+
+package_rime-wanxiang-dict-nightly() {
+    pkgdesc="万象拼音词库基础数据——每日构建版"
+    provides=("${_pkgbase}-dict=${_schema_version}")
+    conflicts=("$_pkgbase-dict")
+    # shellcheck disable=SC2128
+    _package "$pkgname"
+}
+package_rime-wanxiang-pro-dict-nightly() {
+    pkgdesc="万象拼音双拼辅助码版词库基础数据——每日构建版"
+    conflicts=("$_pkgbase-dict" "$_pkgbase-dict-nightly" "$_pkgbase-pro-dict")
+    provides=("${_pkgbase}-pro-dict=${_schema_version}")
+    # shellcheck disable=SC2128
+    _package "$pkgname"
+}
+
+#
+# ${_pkgbase}-<schema>
+# - ${_pkgbase}-data
+# - ${_pkgbase}-dict-<schema>
+#   - ${_pkgbase}-dict
+# 
+# ${_pkgbase}-pro-<schema>
+# - ${_pkgbase}-pro-data
+# - [${_pkgbase}-pro-data-fuzhu]
+#   - ${_pkgbase}-pro-data-<fuzhu>-fuzhu
+#     - ${_pkgbase}-pro-dict-<fuzhu>-fuzhu
+#       - ${_pkgbase}-pro-dict
+# 
+for _schema in "${!_schemas[@]}"; do
+    _schema_name=${_schemas[$_schema]}
+
+    # 基础版词库
+    _pkgname=${_pkgbase}-dict-${_schema}-nightly && pkgname+=("${_pkgname}")
+    _conflicts=()
+    for _schema_c in "${!_schemas[@]}"; do
+        _conflicts+=("${_pkgbase}-dict-${_schema_c}")
+        [[ "${_schema_c}" == "${_schema}" ]] && continue
+        _conflicts+=("${_pkgbase}-dict-${_schema_c}-nightly")
     done
     eval "package_${_pkgname}() {
-        pkgdesc='万象拼音中文词库每日构建版（${_fuzhu_name}辅助码版）'
-        provides=('${_pkgname%-nightly}=${_schema_version}')
+        pkgdesc='万象拼音标准版词库——每日构建版（${_schema_name}方案）'
+        depends=('${_pkgbase}-dict-nightly')
         conflicts=(${_conflicts[*]})
-
-        _package_dict_zh pro $_fuzhu
+        provides=('${_pkgbase}-dict-${_schema}=${_schema_version}')
+        _package ${_pkgname}
     }"
 done
 
-_build_dicts() {
-    for _f in $(pacman -Qql rime-prelude rime-essay | grep -v "/$"); do ln -sf "${_f}" .; done
+for _fuzhu in "${!_fuzhus[@]}"; do
+    _fuzhu_name=${_fuzhus[$_fuzhu]}
 
-    for _s in "$@"; do rime_deployer --compile "${_s}"; done
-
-    find . -type l -delete
-    rm build/*.txt
-}
-
-_package_dict_zh() {
-    _type=$1
-    _fuzhu=$2
-
-    _dist_dir="rime-wanxiang-base"
-    _dict_src_dir="zh_dicts"
-    _dict_dir="zh_dicts"
-    if [[ $_type == 'pro' ]]; then
-        _dist_dir="rime-wanxiang-${_fuzhu}-fuzhu";
-        _dict_src_dir="pro-${_fuzhu}-fuzhu-dicts"
-        _dict_dir="zh_dicts_pro"
-    fi
-    cd "${srcdir}/rime_wanxiang-${_schema_version}/dist/${_dist_dir}" || exit 1
-
-    rm ./${_dict_dir}/*
-    install -Dm664 "${srcdir}/${_dict_src_dir}/"* -t ./${_dict_dir}/
-
-    find . -type f \( \
-        -path "./zh_dicts*" -o \
-        -path "./wanxiang.*.yaml" -o \
-        -path "./wanxiang_pro.*.yaml" -o \
-        -path "./wanxiang_lookup.*.yaml" -o \
-        -path "./wanxiang_symbols.yaml" \
-        \) \
-        -exec install -Dm664 {} "${pkgdir}"/usr/share/rime-data/{} \;
-
-    pushd "${pkgdir}"/usr/share/rime-data/
-        _build_dicts wanxiang*.schema.yaml
-        rm -f ./*.schema.yaml ./{wanxiang,wanxiang_pro}.dict.yaml ./wanxiang_symbols.yaml
-    popd
-}
+    # PRO 版词库
+    _pkgname=${_pkgbase}-pro-dict-${_fuzhu}-fuzhu-nightly && pkgname+=("${_pkgname}")
+    _conflicts=()
+    for _fuzhu_c in "${!_fuzhus[@]}"; do
+        _conflicts+=("${_pkgbase}-dict-${_fuzhu_c}")
+        [[ "${_fuzhu_c}" == "${_schema}" ]] && continue
+        _conflicts+=("${_pkgbase}-dict-${_fuzhu_c}-nightly")
+    done
+    eval "package_${_pkgname}() {
+        pkgdesc='万象拼音双拼辅助码词库——每日构建版（${_fuzhu_name}辅助）'
+        depends=('${_pkgbase}-pro-dict-nightly')
+        conflicts=(${_conflicts[*]})
+        provides=('${_pkgbase}-pro-dict-${_fuzhu}-fuzhu=${_schema_version}')
+        _package ${_pkgname}
+    }"
+done

@@ -1,4 +1,4 @@
-From 04cff7a592c6296cf7c8e3f6714875a8b989db4d Mon Sep 17 00:00:00 2001
+From 5f28955612f3aaa943401f71a4d26bd0b4916f16 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/7] Clear soname and hard code system lib path
@@ -8,7 +8,7 @@ Subject: [PATCH 3/7] Clear soname and hard code system lib path
  stdlib/GMP_jll/src/GMP_jll.jl                 |  45 +---
  stdlib/LLD_jll/src/LLD_jll.jl                 |  63 +----
  .../src/LLVMLibUnwind_jll.jl                  |  17 +-
- stdlib/LibCURL_jll/src/LibCURL_jll.jl         |  38 +--
+ stdlib/LibCURL_jll/src/LibCURL_jll.jl         |  36 +--
  stdlib/LibGit2_jll/src/LibGit2_jll.jl         |  38 +--
  stdlib/LibSSH2_jll/src/LibSSH2_jll.jl         |  38 +--
  stdlib/LibUnwind_jll/src/LibUnwind_jll.jl     |  26 +-
@@ -25,7 +25,7 @@ Subject: [PATCH 3/7] Clear soname and hard code system lib path
  .../src/libblastrampoline_jll.jl              |  24 +-
  stdlib/nghttp2_jll/src/nghttp2_jll.jl         |  30 +--
  stdlib/p7zip_jll/src/p7zip_jll.jl             |  30 +--
- 21 files changed, 149 insertions(+), 898 deletions(-)
+ 21 files changed, 149 insertions(+), 896 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 index 9a0729c50d..1a5c0e2855 100644
@@ -400,10 +400,10 @@ index c6e2750895..374402fcfe 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/LibCURL_jll/src/LibCURL_jll.jl b/stdlib/LibCURL_jll/src/LibCURL_jll.jl
-index 43ae2dec24..618730de25 100644
+index fb091caee4..2355d04d08 100644
 --- a/stdlib/LibCURL_jll/src/LibCURL_jll.jl
 +++ b/stdlib/LibCURL_jll/src/LibCURL_jll.jl
-@@ -16,33 +16,12 @@ export libcurl
+@@ -16,31 +16,12 @@ export libcurl
  # These get calculated in __init__()
  const PATH = Ref("")
  const PATH_list = String[]
@@ -431,10 +431,8 @@ index 43ae2dec24..618730de25 100644
 -        else
 -            LazyLibrary[libz, libnghttp2, libssh2]
 -        end
--    elseif Sys.islinux() || Sys.isfreebsd()
+-    else
 -        LazyLibrary[libz, libnghttp2, libssh2, libssl, libcrypto]
--    elseif Sys.isapple()
--        LazyLibrary[libz, libnghttp2, libssh2]
 -    end
 -)
 +const libcurl_path = "/usr/lib/libcurl.so"
@@ -442,7 +440,7 @@ index 43ae2dec24..618730de25 100644
  
  function eager_mode()
      Zlib_jll.eager_mode()
-@@ -58,13 +37,6 @@ function eager_mode()
+@@ -56,13 +37,6 @@ function eager_mode()
  end
  is_available() = true
  
