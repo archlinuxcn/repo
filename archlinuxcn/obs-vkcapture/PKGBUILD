@@ -8,8 +8,8 @@ pkgdesc='OBS Linux Vulkan/OpenGL game capture'
 arch=('x86_64')
 url="https://github.com/nowrep/$pkgbase"
 license=('GPL-2.0-or-later')
-depends=('vulkan-icd-loader' 'libgl' 'libegl' 'obs-studio>=27')
-makedepends=('gcc' 'cmake' 'vulkan-headers' 'lib32-gcc-libs' 'lib32-vulkan-icd-loader' 'lib32-libgl' 'lib32-libegl')
+depends=('vulkan-icd-loader' 'libgl' 'libegl' 'obs-studio')
+makedepends=('gcc' 'cmake' 'vulkan-headers' 'lib32-gcc-libs' 'lib32-vulkan-icd-loader' 'lib32-libgl' 'lib32-libegl' 'obs-studio')
 source=("https://github.com/nowrep/$pkgbase/archive/v$pkgver/$pkgbase-$pkgver.tar.gz")
 sha512sums=('bb195bed417d54c2482246d4482a4c1ba3c222cdabbfa078ed5d702de046f44fa6c94bccdaeb44a25b741c634a6f08209c6e6e19062aa0a053af890acba478fa')
 
