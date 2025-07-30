@@ -1,0 +1,69 @@
+# Maintainer: Kimiblock Moe
+pkgname=camodet-git
+pkgver=r43.224677e
+pkgrel=2
+epoch=
+pkgdesc="Lightweight Simple CAmera MOtion DETection application."
+arch=('x86_64')
+url="https://github.com/oyzzo/camodet"
+license=(GPL-3.0-or-later)
+provides=(camodet)
+groups=()
+options=()
+
+makedepends+=(git)
+
+depends=(
+	"pkgconf"
+	"ffmpeg"
+	"gcc-libs"
+	"glibc"
+	"opencv"
+	"libjpeg-turbo"
+	"libpng"
+	"libtiff"
+)
+
+optdepends=(
+	"gtk2"
+	'cuda'
+	"python"
+	"python-numpy"
+	"libbtbb"
+	"jasper"
+	"libdc1394"
+)
+
+makedepends+=(
+	"libarchive"
+	"cmake"
+	"qt6-base"
+	"extra-cmake-modules"
+)
+
+checkdepends=()
+
+source=(
+	"git+https://github.com/oyzzo/camodet.git"
+)
+
+sha256sums=('SKIP')
+
+function pkgver() {
+	cd "${srcdir}/camodet"
+	#git describe --long --tags --abbrev=8 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+function build() {
+	cmake -B build -S "camodet" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5
+	cmake --build build
+}
+
+function package() {
+	#cd camodet
+	DESTDIR="$pkgdir" cmake --install build
+}

@@ -2,8 +2,8 @@
 
 _reponame="lk-jwt-service"
 pkgname="element-${_reponame}"
-pkgver=0.2.3
-pkgrel=2
+pkgver=0.3.0
+pkgrel=1
 pkgdesc='LiveKit Management Service for Element Call'
 arch=(x86_64)
 url='https://github.com/vector-im/lk-jwt-service/'
@@ -13,7 +13,7 @@ source=(
 	"git+https://github.com/element-hq/lk-jwt-service.git#tag=v${pkgver}"
 	"${_reponame}.service"
 )
-sha512sums=('46a02444cbe84062e57218ac64d70b60e5c46bb485769076b1ae664058e563e6d894e3f3c64b2ab3b6800c3e97c522d884a18615131c8512de07fac40d6f5d03'
+sha512sums=('8f9ff0ed288e3d09bfcef1f927aebe8606aecbd69714410fa9fda185add34330ecd1b521f611bb4e6e43f9aacc25f34c63dfaed10f326a001b11ced1eb449a3e'
             '7f78c64b5a6de2505ea0c57b95071493bf9d57cc80e091f7bd70e8288690f4a2e0cb8a3dda267e62645d40e93769845e2a1e04844490fd04a320e763b2a69db4')
 
 prepare() {

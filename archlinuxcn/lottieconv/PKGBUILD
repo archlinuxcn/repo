@@ -1,0 +1,59 @@
+pkgname="lottieconv"
+pkgver=0.3.0
+pkgrel=5
+pkgdesc='Convert lottie files to WEBP or GIF'
+url='https://crates.io/crates/lottieconv'
+license=('MIT')
+
+depends=('gcc-libs' 'libwebp' 'rlottie')
+makedepends=('cargo' 'cargo-auditable' 'clang' git)
+conflicts=('lottie2gif' 'lottie2webp')
+replaces=('lottie2gif' 'lottie2webp')
+
+source=("source::git+https://github.com/msrd0/rlottie-rs.git#tag=lottieconv-${pkgver}")
+sha512sums=('8c9d6be9a1945f69521fc8df84e8ac4fa8d01b7c0f17803c10ef40cc08e3369d687f1130aac46c99d68c28a7bc60deb27ab1ed31f931956eba7163d1b8d4b6b1')
+
+arch=('x86_64')
+
+prepare() {
+	cd "${srcdir}/source/lottieconv"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "${srcdir}/source/lottieconv"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	CFLAGS+=" -ffat-lto-objects"
+	cargo auditable build \
+		--frozen \
+		--features 'clap,gif,webp' \
+		--release
+}
+
+_check() {
+	cd "${srcdir}/source/lottieconv"
+
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	CFLAGS+=" -ffat-lto-objects"
+
+	cargo test \
+		--frozen \
+		--features 'clap,gif,webp' \
+		--release \
+		"${@}"
+}
+
+check() {
+	_check --bins
+	_check --lib
+}
+
+package() {
+	cd "${srcdir}/source/lottieconv"
+	install -Dm755 "target/release/lottie2gif" -t "$pkgdir/usr/bin"
+	install -Dm755 "target/release/lottie2webp" -t "$pkgdir/usr/bin"
+	install -Dm644 'LICENSE' -t "$pkgdir/usr/share/licenses/$pkgname/"
+}

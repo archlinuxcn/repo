@@ -1,0 +1,47 @@
+pkgname=rlottie
+pkgver=0.2
+pkgrel=6
+pkgdesc='A platform independent standalone library that plays Lottie Animation'
+arch=('x86_64')
+url='https://github.com/Samsung/rlottie'
+license=('Custom')
+makedepends=('cmake' 'git' 'ninja' git)
+depends=('gcc-libs')
+optdepends=('lottieconv: Command-line utilities to convert lottie to webp and gif animations')
+source=(
+	"source::git+https://github.com/Samsung/rlottie.git#tag=v${pkgver}"
+	'0001-add-missing-include.patch'
+	'0002-cmake-3.5.patch'
+)
+sha256sums=('a0c60d9bb714ee41ee17162dfddda524668d7ae8d5bbe503cae8483d8425efc7'
+            '32301e6e7788cc5188b8ec1b59e41659be21ca463b632a5bcfc7a72bc0a5e0a3'
+            'db0d996d01c01d7a82d0132f10090a9028eae4d31b88dc0f7c9f0062694e7dbe')
+
+prepare() {
+	cd source
+
+	patch -N -p0 -i "$srcdir/0001-add-missing-include.patch"
+	patch -N -p1 -i "$srcdir/0002-cmake-3.5.patch"
+	mkdir -p build
+}
+
+build() {
+	cd "source/build"
+
+	cmake .. \
+		-G Ninja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=None
+	ninja
+}
+
+package() {
+	cd "source/build"
+
+	DESTDIR="$pkgdir" ninja install
+
+	install -Dm644 "../COPYING" "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+	for _file in ../licenses/*; do
+		install -Dm644 $_file "$pkgdir/usr/share/licenses/$pkgname/licenses/$(basename $_file)"
+	done
+}
