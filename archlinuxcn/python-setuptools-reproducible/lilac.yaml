@@ -7,10 +7,10 @@ post_build_script: |
 #  update_aur_repo()
 
 update_on:
-  - alias: "python"
   - source: github
     github: "wimglenn/setuptools-reproducible"
     use_latest_release: true
     prefix: "v"
+  - alias: "python"
 
 build_prefix: extra-x86_64
