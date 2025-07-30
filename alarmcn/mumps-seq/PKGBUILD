@@ -5,7 +5,7 @@
 pkgname=mumps-seq
 _pkgname=mumps
 _PKGNAME=MUMPS
-pkgver=5.8.0
+pkgver=5.8.1
 pkgrel=1
 pkgdesc="Sparse solver library using Gaussian elimination (sequential version)"
 url="http://mumps-solver.org"
@@ -14,7 +14,7 @@ depends=('gcc-libs' 'lapack' 'lapack64' 'metis')
 makedepends=(gcc-fortran)
 arch=('aarch64' 'x86_64')
 source=("http://mumps-solver.org/${_PKGNAME}_${pkgver}.tar.gz")
-sha256sums=('c784d936a50750c1845b7cbeeebdfeb0d762f3176b851191b8dd46a4663c076e')
+sha256sums=('e91b6dcd93597a34c0d433b862cf303835e1ea05f12af073b06c32f652f3edd8')
 options=(staticlibs '!lto')
 
 prepare() {
