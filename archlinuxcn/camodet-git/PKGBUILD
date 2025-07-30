@@ -53,14 +53,11 @@ function pkgver() {
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-function test() {
-	ctest --test-dir build --output-on-failure
-}
-
 function build() {
 	cmake -B build -S "camodet" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_INSTALL_LIBDIR=lib
+		-DCMAKE_INSTALL_LIBDIR=lib \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5
 	cmake --build build
 }
 
