@@ -22,7 +22,7 @@ build() {
 		"${srcdir}/links/LibObsConfig.cmake"
 	ln -srf \
 		/usr/lib/cmake/libobs/* \
-		"${srcdir}/links/LibObsConfig.cmake"
+		"${srcdir}/links"
 	cmake -B build -S "$pkgbase-$pkgver" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
