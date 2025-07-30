@@ -1,0 +1,42 @@
+# Contributor: BluePeril <blueperil (at) blueperil _dot_ de>
+
+_pkgname=lottieconverter
+pkgname=lottieconverter-git
+pkgver=r19.190dc66
+pkgrel=1
+pkgdesc='Simple, dummy lottie converter'
+arch=('x86_64')
+url='https://github.com/sot-tech/LottieConverter'
+license=('LGPL-v2.1')
+makedepends=('git' 'cmake')
+depends=('rlottie' 'libpng' 'giflib')
+provides=(${_pkgname})
+replaces=(${_pkgname})
+source=(${_pkgname}::"git+https://github.com/sot-tech/LottieConverter.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${_pkgname}"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    cd "${_pkgname}"
+
+    rm -rf build
+    mkdir build
+}
+
+build() {
+    cd "${_pkgname}/build"
+
+    cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_RL=true -DSYSTEM_GL=true ..
+    cmake --build .
+}
+
+package() {
+    cd "${_pkgname}/build"
+
+    install -d -m755 "${pkgdir}/usr/bin"
+    install -D -m755 lottieconverter "${pkgdir}/usr/bin/lottieconverter"
+}
