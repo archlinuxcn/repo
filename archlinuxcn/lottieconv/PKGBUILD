@@ -16,13 +16,13 @@ sha512sums=('aec0d45d2dfdcc70ff062d73780dfd5860bff0180d87797c0fab24b76e9c6fa39a8
 arch=('x86_64')
 
 prepare() {
-	cd source/lottieconv
+	cd "${srcdir}/source/lottieconv"
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
-	cd source/lottieconv
+	cd "${srcdir}/source/lottieconv"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 	CFLAGS+=" -ffat-lto-objects"
@@ -33,7 +33,7 @@ build() {
 }
 
 _check() {
-	cd source/lottieconv
+	cd "${srcdir}/source/lottieconv"
 
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
@@ -52,7 +52,7 @@ check() {
 }
 
 package() {
-	cd source/lottieconv
+	"${srcdir}/source/lottieconv"
 	install -Dm755 "target/release/lottie2gif" -t "$pkgdir/usr/bin"
 	install -Dm755 "target/release/lottie2webp" -t "$pkgdir/usr/bin"
 	install -Dm644 'LICENSE' -t "$pkgdir/usr/share/licenses/$pkgname/"
