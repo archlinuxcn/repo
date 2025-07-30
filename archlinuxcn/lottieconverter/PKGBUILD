@@ -12,7 +12,7 @@ makedepends=('git' 'cmake')
 depends=('rlottie' 'libpng' 'giflib')
 provides=(${_pkgname})
 replaces=(${_pkgname})
-source=(${_pkgname}::"git+https://github.com/sot-tech/LottieConverter.git#tag=v${pkgver}")
+source=(${_pkgname}::"git+https://github.com/sot-tech/LottieConverter.git#tag=r${pkgver}")
 sha256sums=('SKIP')
 
 pkgver() {
