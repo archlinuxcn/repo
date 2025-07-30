@@ -15,7 +15,7 @@ sha512sums=('bb195bed417d54c2482246d4482a4c1ba3c222cdabbfa078ed5d702de046f44fa6c
 
 build() {
 	export LibObs_DIR="${srcdir}"
-	install \
+	ln -srf \
 		/usr/lib/cmake/libobs/libobsConfig.cmake \
 		"${srcdir}/LibObsConfig.cmake"
 	cmake -B build -S "$pkgbase-$pkgver" \
