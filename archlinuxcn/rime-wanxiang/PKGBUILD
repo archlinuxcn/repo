@@ -61,11 +61,13 @@ _package() {
 
 package_rime-wanxiang-dict() {
     pkgdesc="万象拼音词库基础数据"
+    replaces=("${pkgbase}-dict-zh")
     # shellcheck disable=SC2128
     _package "$pkgname"
 }
 package_rime-wanxiang-pro-dict() {
     pkgdesc="万象拼音双拼辅助码版词库基础数据"
+    replaces=("${pkgbase}-dict-zh")
     conflicts=("$pkgbase-dict")
     # shellcheck disable=SC2128
     _package "$pkgname"

@@ -126,6 +126,7 @@ package_rime-wanxiang-dict-nightly() {
     pkgdesc="万象拼音词库基础数据——每日构建版"
     provides=("${_pkgbase}-dict=${_schema_version}")
     conflicts=("$_pkgbase-dict")
+    replaces=("${_pkgbase}-dict-zh-nightly")
     # shellcheck disable=SC2128
     _package "$pkgname"
 }
@@ -133,6 +134,7 @@ package_rime-wanxiang-pro-dict-nightly() {
     pkgdesc="万象拼音双拼辅助码版词库基础数据——每日构建版"
     conflicts=("$_pkgbase-dict" "$_pkgbase-dict-nightly" "$_pkgbase-pro-dict")
     provides=("${_pkgbase}-pro-dict=${_schema_version}")
+    replaces=("${_pkgbase}-pro-dict-zh-nightly")
     # shellcheck disable=SC2128
     _package "$pkgname"
 }
