@@ -23,6 +23,9 @@ build() {
 	ln -srf \
 		/usr/lib/cmake/libobs/* \
 		"${srcdir}/links"
+	ln -srf \
+		"/usr/lib"
+		"/build/lib"
 	cmake -B build -S "$pkgbase-$pkgver" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
