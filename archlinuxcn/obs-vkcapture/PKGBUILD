@@ -14,10 +14,15 @@ source=("https://github.com/nowrep/$pkgbase/archive/v$pkgver/$pkgbase-$pkgver.ta
 sha512sums=('bb195bed417d54c2482246d4482a4c1ba3c222cdabbfa078ed5d702de046f44fa6c94bccdaeb44a25b741c634a6f08209c6e6e19062aa0a053af890acba478fa')
 
 build() {
-	export LibObs_DIR="${srcdir}"
+	export LibObs_DIR="${srcdir}/links"
+	rm -rf "${srcdir}/links"
+	mkdir -p "${srcdir}/links"
 	ln -srf \
 		/usr/lib/cmake/libobs/libobsConfig.cmake \
-		"${srcdir}/LibObsConfig.cmake"
+		"${srcdir}/links/LibObsConfig.cmake"
+	ln -srf \
+		/usr/lib/cmake/libobs/* \
+		"${srcdir}/links/LibObsConfig.cmake"
 	cmake -B build -S "$pkgbase-$pkgver" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
