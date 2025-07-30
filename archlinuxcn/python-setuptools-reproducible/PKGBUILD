@@ -1,6 +1,6 @@
 pkgname="python-setuptools-reproducible"
 pkgver=0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Extension of setuptools to support reproducible builds"
 arch=("any")
 url="https://github.com/wimglenn/setuptools-reproducible"
@@ -8,7 +8,7 @@ license=("MIT")
 depends=(python-setuptools)
 makedepends=(python-build python-installer python-wheel git)
 source=("source::git+https://github.com/wimglenn/setuptools-reproducible.git#tag=v${pkgver}")
-sha256sums=('10688a31a300dba15e7420205752868a9c0a65e17763d7357f356e2de973e6aa')
+sha256sums=('2f19d04c0615c1ce92eac17ea64cbb53738b39ab6c9456e3cb655bfd5d1c847b')
 
 
 build() {
