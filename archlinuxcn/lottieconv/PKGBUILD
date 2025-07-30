@@ -18,7 +18,7 @@ arch=('x86_64')
 prepare() {
 	cd source/lottieconv
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --offline --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
