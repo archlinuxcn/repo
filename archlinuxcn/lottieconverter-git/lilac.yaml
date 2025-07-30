@@ -9,8 +9,8 @@ post_build_script: |
 update_on:
   - source: github
     github: "sot-tech/LottieConverter"
-    use_max_tag: true
-    prefix: "r"
+    #use_max_tag: true
+    #prefix: "r"
   - source: alpm
     alpm: rlottie
     from_pattern: '^(\d+\.\d+)\..*'
