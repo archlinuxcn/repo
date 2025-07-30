@@ -9,7 +9,7 @@ makedepends=('cmake' 'git' 'ninja' git)
 depends=('gcc-libs')
 optdepends=('lottieconv: Command-line utilities to convert lottie to webp and gif animations')
 source=(
-	"source::git+https://github.com/Samsung/rlottie#tag=v${pkgver}.tar.gz"
+	"source::git+https://github.com/Samsung/rlottie.git#tag=v${pkgver}"
 	'0001-add-missing-include.patch'
 	'0002-cmake-3.5.patch'
 )
