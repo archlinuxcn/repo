@@ -51,11 +51,11 @@ function package() {
 	install -Dm644 "firefox.desktop" "${pkgdir}/usr/share/applications/org.mozilla.firefox.desktop"
 	echo '''[Desktop Entry]
 Type=Application
-Name=Zen Browser
+Name=Firefox Web Browser
 GenericName=Stub for MPRIS
-Icon=zen-browser
+Icon=firefox
 TryExec=portable
-Exec=env _portableConfig=org.mozilla.zen portable -- %u
+Exec=env _portableConfig="org.mozilla.firefox" portable -- %u
 Terminal=false
-NoDisplay=true''' >"${pkgdir}/usr/share/applications/zen-browser.desktop"
+NoDisplay=true''' >"${pkgdir}/usr/share/applications/firefox.desktop"
 }
