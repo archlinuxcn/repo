@@ -173,9 +173,9 @@
 
 # Kernel version
 _kernel_major=6.15
-_kernel_minor=4
+_kernel_minor=8
 # Clear Linux patches version
-_clr=6.15.3-1586
+_clr=6.15.7-1591
 # kernel_compiler_patch version
 _kernelcompilerpatch="20250612"
 # kernel_compiler_patch name
@@ -186,20 +186,20 @@ _src_linux=linux-${_kernel_major}
 # Package information
 pkgbase=linux-clear
 pkgver=${_kernel_major}.${_kernel_minor}
-pkgrel=2
+pkgrel=4
 pkgdesc="Linux kernel with patches from Clear Linux which allow for higher performance."
 arch=("x86_64")
-url="https://git.staropensource.de/JeremyStarTM/aur-linux-clear"
-license=(GPL-2.0-only)
+url="https://git.staropensource.de/StarOpenSource/Linux-Tachyon"
+license=("GPL-2.0-only")
 makedepends=("bc" "cpio" "gettext" "git" "libelf" "pahole" "perl" "pv" "python" "tar" "xz" "zstd")
-[ -n "${_use_llvm_to}" ] && makedepends+=("clang" "llvm" "lld")
+[ -n "${_use_llvm_lto}" ] && makedepends+=("clang" "llvm" "lld")
 options=("!strip" "!debug")
 [ "${_debug}" == "y" ] && options=("!strip")
 source=(
   "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${_kernel_major}.tar.xz"
   "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${_kernel_major}.tar.sign"
   "https://cdn.kernel.org/pub/linux/kernel/v6.x/patch-${_kernel_major}.${_kernel_minor}.xz"
-  "cl-linux::git+https://github.com/clearlinux-pkgs/linux.git#tag=${_clr}"
+  "tachyon::git+https://git.staropensource.de/StarOpenSource/Linux-Tachyon.git#tag=${_clr}"
   "more-uarches-${_kernelcompilerpatch}.tar.gz::https://github.com/graysky2/kernel_compiler_patch/archive/${_kernelcompilerpatch}.tar.gz"
 )
 
@@ -212,7 +212,7 @@ export "KBUILD_BUILD_TIMESTAMP=$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EP
 # Check for deprecated settings
 _check_deprecated_settings() {
     if [ -n "${_update_kconfig_on_reuse}" ]; then
-        warning "Please switch to using '_update_kconfig_on_reuse' flag instead of '_optimize_defconfig'"
+        warning "Please switch to using '_optimize_defconfig' flag instead of '_update_kconfig_on_reuse'"
         _optimize_defconfig="y"
     fi
     if [ -n "${_reuse_current}" ]; then
@@ -226,8 +226,7 @@ _check_deprecated_settings() {
 }
 
 _get_patches() {
-    # set -x
-    local spec_file="${srcdir}/cl-linux/linux.spec"
+    local spec_file="${srcdir}/tachyon/linux.spec"
 
     # 1. Search for patches in the linux.spec file
     #    Matches lines starting exactly with: %patch followed immediately by digits.
@@ -262,7 +261,6 @@ _get_patches() {
 
 # Applies all patches
 _apply_patches() {
-    set -x
     # Patch with kernel version patches
     patch -Np1 -i ../patch-${_kernel_major}.${_kernel_minor} || true
 
@@ -279,7 +277,7 @@ _apply_patches() {
             fi
         fi
 
-        patch -Np1 -i "${srcdir}/cl-linux/${i}" || true
+        patch -Np1 -i "${srcdir}/tachyon/${i}" || true
     done
 
     # Patch with kernel_compiler_patch patches.
@@ -323,7 +321,7 @@ _update_defconfig() {
         cp -Tf "${startdir}/kconfig" ./.config
     else
         echo ":: Using configuration file \"${srcdir}/${pkgbase}/config\""
-        cp -Tf $srcdir/cl-linux/config ./.config
+        cp -Tf $srcdir/tachyon/config ./.config
     fi
 
     # Extra configuration
@@ -406,7 +404,7 @@ _update_defconfig() {
 
     # Run olddefconfig
     make ${BUILD_FLAGS[*]} olddefconfig
-    diff -u $srcdir/cl-linux/config .config || :
+    diff -u $srcdir/tachyon/config .config || :
 
     # Here we slightly break the config by removing one of the
     # members of the 'Processor family' selection.
@@ -622,7 +620,7 @@ validpgpkeys=(
 )
 sha256sums=("7586962547803be7ecc4056efc927fb25214548722bd28171172f3599abb9764"
             "SKIP"
-            "64d5ed5bd25723410e56b5957de66aaf9864402bda408bc5d609765917e54b2d"
+            "effa3deecc0266054731349ecabb68455f125c7be2f88fd21a841080fd30a4c8"
             "SKIP"
             "91adc6bf4b263480399d24a7640e11b0302d4b411910ee99eee2788b34bd297a")
 replaces=("linux-clear-x64-v3" "linux-clear-x64-v4")
