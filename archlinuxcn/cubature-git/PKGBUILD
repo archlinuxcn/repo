@@ -25,7 +25,9 @@ build() {
   cd build
   export CFLAGS+=' -g -flto -O3'
   export LDFLAGS+=' -g -flto -O3 -Wl,-Bsymbolic-functions'
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ..
   make
 }
 
