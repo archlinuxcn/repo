@@ -1,6 +1,6 @@
 pkgname=julia-git-compat-src
-pkgver=4.17.0
-_commit=743ee8c6c31f57dfb49729b81921cee818790da8
+pkgver=4.18.0
+_commit=9477a247089c742f7d3b3f5554e1a6af4f83f7ea
 pkgrel=1
 pkgdesc="Compat.jl"
 url="https://github.com/JuliaLang/Compat.jl"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=('git' 'julia-pkg-scripts')
 depends=(julia-git)
 source=("git+https://github.com/JuliaLang/Compat.jl#commit=$_commit")
-md5sums=('00795cacf4069fbdc78932ce0f8a74d1')
+md5sums=('2784280058ae7cd1ea92dc9cb3c9a9b3')
 
 package() {
   cd Compat.jl
