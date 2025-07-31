@@ -12,6 +12,8 @@ source=("https://github.com/nowrep/$pkgbase/archive/v$pkgver/$pkgbase-$pkgver.ta
 sha512sums=('bb195bed417d54c2482246d4482a4c1ba3c222cdabbfa078ed5d702de046f44fa6c94bccdaeb44a25b741c634a6f08209c6e6e19062aa0a053af890acba478fa')
 
 build() {
+	ls /usr/include/obs -la
+	export CMAKE_INCLUDE_PATH=/usr/include/obs:/usr/include
 	install -d "${srcdir}/links"
 	cp -r \
 		/usr/lib/cmake/libobs \
