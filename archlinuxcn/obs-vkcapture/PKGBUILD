@@ -13,17 +13,17 @@ sha512sums=('bb195bed417d54c2482246d4482a4c1ba3c222cdabbfa078ed5d702de046f44fa6c
 
 build() {
 	install -d "${srcdir}/links"
-	cp \
-		/usr/lib/cmake/libobs/libobsConfig.cmake \
-		"${srcdir}/links/LibObsConfig.cmake"
 	cp -r \
 		/usr/lib/cmake/libobs \
 		"${srcdir}/cmake-org"
+	install \
+		/usr/lib/cmake/libobs/libobsConfig.cmake \
+		"${srcdir}/cmake-org/LibObsConfig.cmake"
 	bwrap \
 		--dev-bind / / \
-		--overlay-src "${srcdir}/cmake-org" \
-		--overlay-src "${srcdir}/links" \
-		--tmp-overlay "/usr/lib/cmake/libobs" \
+		--ro-bind \
+		"${srcdir}/cmake-org" \
+		"/usr/lib/cmake/libobs" \
 		-- \
 	cmake -B build -S "$pkgbase-$pkgver" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
@@ -32,9 +32,9 @@ build() {
 		-DCMAKE_BUILD_TYPE=Release
 	bwrap \
 		--dev-bind / / \
-		--overlay-src "${srcdir}/cmake-org" \
-		--overlay-src "${srcdir}/links" \
-		--tmp-overlay "/usr/lib/cmake/libobs" \
+		--ro-bind \
+		"${srcdir}/cmake-org" \
+		"/usr/lib/cmake/libobs" \
 		-- \
 	cmake --build build
 }
