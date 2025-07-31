@@ -1,5 +1,3 @@
-# Maintainer: Manuel Hüsers <aur@huesers.de>
-
 pkgbase=obs-vkcapture
 pkgname=("$pkgbase")
 pkgver=1.5.2
@@ -9,11 +7,24 @@ arch=('x86_64')
 url="https://github.com/nowrep/$pkgbase"
 license=('GPL-2.0-or-later')
 depends=('vulkan-icd-loader' 'libgl' 'libegl' 'obs-studio')
-makedepends=('gcc' 'cmake' 'vulkan-headers' 'obs-studio')
+makedepends=('gcc' 'cmake' 'vulkan-headers' 'obs-studio' bubblewrap)
 source=("https://github.com/nowrep/$pkgbase/archive/v$pkgver/$pkgbase-$pkgver.tar.gz")
 sha512sums=('bb195bed417d54c2482246d4482a4c1ba3c222cdabbfa078ed5d702de046f44fa6c94bccdaeb44a25b741c634a6f08209c6e6e19062aa0a053af890acba478fa')
 
 build() {
+	install -d "${srcdir}/links"
+	cp \
+		/usr/lib/cmake/libobs/libobsConfig.cmake \
+		"${srcdir}/links/LibObsConfig.cmake"
+	cp -r \
+		/usr/lib/cmake/libobs \
+		"${srcdir}/cmake-org"
+	bwrap \
+		--dev-bind / / \
+		--overlay-src "${srcdir}/cmake-org" \
+		--overlay-src "${srcdir}/links" \
+		--tmp-overlay "/usr/lib/cmake/libobs" \
+		-- \
 	cmake -B build -S "$pkgbase-$pkgver" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_INSTALL_LIBDIR=lib \
