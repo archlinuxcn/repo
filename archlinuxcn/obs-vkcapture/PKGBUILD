@@ -30,6 +30,12 @@ build() {
 		-DCMAKE_INSTALL_LIBDIR=lib \
 		-DCMAKE_INSTALL_DATADIR=/share \
 		-DCMAKE_BUILD_TYPE=Release
+	bwrap \
+		--dev-bind / / \
+		--overlay-src "${srcdir}/cmake-org" \
+		--overlay-src "${srcdir}/links" \
+		--tmp-overlay "/usr/lib/cmake/libobs" \
+		-- \
 	cmake --build build
 }
 
