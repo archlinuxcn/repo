@@ -12,7 +12,7 @@
 
 # Release Notes: https://cloud.google.com/sdk/docs/release-notes
 # Cloud Storage Bucket: https://console.cloud.google.com/storage/browser/cloud-sdk-release/for_packagers/linux
-# deb pool: 
+# deb pool:
 #  - https://packages.cloud.google.com/apt/dists/cloud-sdk/main/binary-amd64/Packages
 #  - https://packages.cloud.google.com/apt/pool/cloud-sdk/google-cloud-cli_516.0.0-0_amd64_e19fae4ce840c378a624e2cbdba2aa87.deb
 
@@ -64,7 +64,7 @@ pkgname=(
 #   'google-cloud-cli-component-kubectl'
 #   'google-cloud-cli-component-gsutil'
 # )
-pkgver=531.0.0
+pkgver=532.0.0
 pkgrel=1
 pkgdesc="A core set of command-line tools for the Google Cloud Platform. Includes only gcloud core (with beta and alpha commands), gcloud-crc32c and man pages"
 url="https://cloud.google.com/cli/"
@@ -86,8 +86,8 @@ source_aarch64=("$pkgbase-$pkgver.orig_aarch64.tar.gz::https://dl.google.com/dl/
 
 sha256sums=('6e88b535c020b0f28c986fdb66918f8c07e4d337e813b77ec2068068f03457f8'
             '6ac95bcc5afa06e9c1e3bd402ecbe1a2092b963d70a8f314215dd4be27e16fc6')
-sha256sums_x86_64=('f233b9f8b7fbcdb1c113e0eec49c752a0a5ec0067048ede99d1320a65e49470a')
-sha256sums_aarch64=('7493eb9b009485893073ed9877dfe8fcdf0a3feecaa8b546c1eb7fc71bf2b720')
+sha256sums_x86_64=('f4f04c41c8760fbf6e728a474a440f0a50b42a744220d00b2e62ef52f6848260')
+sha256sums_aarch64=('b62f4a52e849c4d0cfd114f0c305135df031bdaca259c2732e97f5574e569bfc')
 
 prepare() {
   cd "$_extracted_name"
