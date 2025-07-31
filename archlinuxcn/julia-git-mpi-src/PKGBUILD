@@ -1,8 +1,8 @@
 pkgbase=julia-git-mpi-src
 _subpkgs=(MPIPreferences)
 pkgname=(julia-git-mpi-src)
-pkgver=0.20.22
-_commit=230c9a239c8d2eaf7047f87fd090d751e47cfd75
+pkgver=0.20.23
+_commit=969844f21710340a75fe1658510cf28586e34de6
 pkgrel=1
 pkgdesc="MPI.jl"
 url="https://github.com/JuliaParallel/MPI.jl.git"
@@ -11,7 +11,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaParallel/MPI.jl.git#commit=$_commit")
-sha256sums=('abad344e7b5900127f789816ab4655215a493cab9c7407b0f4fe27bbe7e84961')
+sha256sums=('c8ec629c7003d9367e0e63f7cab8e236212ee251d45a573d501ddf83573f05b3')
 
 package_julia-git-mpi-src() {
   cd MPI.jl
