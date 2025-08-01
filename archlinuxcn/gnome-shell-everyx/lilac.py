@@ -40,7 +40,7 @@ def pre_build():
       line = line.replace(')', "\n        'a99cc3a412e85435cf766ed4c34842f4840cef3072dc669d6e595219398824ebc74e7bce489d7aa150c0dbaa231560122f7694c88358fb187289201fbe0904b9')")
       state = 'out'
 
-    elif line.startswith('prepare='):
+    elif line.startswith('prepare('):
       state = 'prepare'
     elif state == 'prepare' and line.endswith('}'):
       line = '  git apply -3 "$srcdir"/*.patch\n' + line
