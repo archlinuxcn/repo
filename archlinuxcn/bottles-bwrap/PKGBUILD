@@ -5,7 +5,7 @@
 pkgname=bottles-bwrap
 _pkgname=Bottles
 pkgver=51.21
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc='Easily manage wine and proton prefix. Sandboxed by portable.'
 arch=(any)
@@ -66,9 +66,9 @@ source=(
 	start.sh
 )
 sha256sums=('3f341e90c88f2d48d0b1899cd5141cb5599e154a81a57c398991e67d320b70f5'
-            '012f00b6678ff20bb0a43c592c8f6b6af0d315053bf0473aa3f3b56c74845b73'
-            '27902d2558373e9a1129702d2cfb27a2b608430b3e88f73868fbd61da57f74f4'
-            '6441bfac93fa2a859eb4a78e6e818d972787abc4190aea0032a331c153696f27')
+            '95f644fff5b9579be60a391c49f16c3c765b6c02ebbffcf91e4001b3ffc7dd76'
+            'afc4d4d5f8242f1f5cdb13845c4067b8bb28253ce7814bd7deeaf2c094ef89a4'
+            'e8151fe783b4c202c99e206535f6f2b3e025b070d7237cb6f8bbb1f23ad0eb94')
 
 function prepare() {
 	patch --forward --directory="${srcdir}/${_pkgname}" --strip=1 --input="${srcdir}/disable-flatpak-check.patch"

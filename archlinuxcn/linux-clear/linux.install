@@ -11,24 +11,11 @@ function _5_2_9_6_changes() {
 
 
 # Clear Linux patchset fork CTA
-function print_fork_cta() {
-    echo ":: IMPORTANT NOTICE"
+function print_deprecation_notice() {
+    echo ":: DEPRECATION NOTICE"
     echo ""
-    echo "   Intel has announced that they are shutting the Clear Linux distribution,"
-    echo "   which includes the Linux kernel patches that this package relies on."
-    echo ""
-    echo "   This means that we (JeremyStarTM and yarost12) won't be able to update the"
-    echo "   linux-clear package anymore."
-    echo ""
-    echo "   To avoid this, we have decided to fork the Clear Linux kernel patchset and"
-    echo "   want to continue updating it for newer kernel versions. Unfortunately, we"
-    echo "   both will not be able to maintain that patchset alone and require help from"
-    echo "   others. If you have experience with kernel development and want to help out,"
-    echo "   please contribute! If we don't manage to get enough developers on board, we"
-    echo "   might need to kill the package, which we definitely want to avoid."
-    echo ""
-    echo "   You can find the fork here:"
-    echo "   https://git.staropensource.de/StarOpenSource/Linux-Tachyon"
+    echo "   This package is now deprecated due to the recent Clear Linux patchset fork.
+    echo "   The new package is named \"linux-tachyon\", please install it instead."
     echo ""
     echo "   Thank you for using this package!"
 }
@@ -48,17 +35,16 @@ function post_upgrade() {
     done
     
     # Print the fork CTA
-    print_fork_cta
+    print_deprecation_notice
 }
 
 function post_install() {
-    echo ":: Clear Linux bundles a custom command line which must be applied manually on other distributions."
-    echo "   This is their default command line:"
+    echo ":: Tachyon Linux provides the following recommended command line:"
     echo "   quiet console=tty0 console=ttyS0,115200n8 cryptomgr.notests initcall_debug"
     echo "   intel_iommu=igfx_off kvm-intel.nested=1 no_timer_check noreplace-smp"
     echo "   page_alloc.shuffle=1 rcupdate.rcu_expedited=1"
     echo "   rootfstype=ext4,btrfs,xfs,f2fs tsc=reliable rw"
     
     # Print the fork CTA
-    print_fork_cta
+    print_deprecation_notice
 }

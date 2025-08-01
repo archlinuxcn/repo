@@ -8,9 +8,9 @@ post_build_script: |
 
 update_on:
   - source: github
-    github: "sot-tech/LottieConverter"
+    github: "nowrep/obs-vkcapture"
     use_max_tag: true
-    prefix: "r"
+    prefix: "v"
   - source: alpm
     alpm: obs-studio
     from_pattern: '^(\d+\.\d+)\..*'
@@ -25,3 +25,4 @@ update_on:
     to_pattern: '\1'
 
 build_prefix: extra-x86_64
+#managed: false

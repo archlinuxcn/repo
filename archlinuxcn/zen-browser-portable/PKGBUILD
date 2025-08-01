@@ -59,6 +59,15 @@ function package() {
 	install -Dm644 \
 		"${srcdir}/desktop.file" \
 		"${pkgdir}/usr/share/applications/org.mozilla.zen.desktop"
+	echo '''[Desktop Entry]
+Type=Application
+Name=Zen Browser
+GenericName=Stub for MPRIS
+Icon=zen-browser
+TryExec=portable
+Exec=env _portableConfig=org.mozilla.zen portable -- %u
+Terminal=false
+NoDisplay=true''' >"${pkgdir}/usr/share/applications/zen-browser.desktop"
 }
 sha256sums=('e79bba18a1cc0997cab92a1d6cb7d9c8c6c5263de5b1f350b2ab45b1e8ce5d75'
             'b1df66c4246e6584efef74f5c0ae74b7c51c32823bf28bd92a3ef3c938dcaa09'

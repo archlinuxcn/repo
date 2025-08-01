@@ -19,7 +19,7 @@ The PKGBUILD file supports customization via environment variables. Here's a lis
 - `_copyfinalconfig`: Copies the final kernel configuration into the repository root as `kconfig-new` before compilation starts
 - `_localmodcfg`: Only compiles modules found in modprobed-db's database (which decreases compilation time and kernel size)
 - `_use_llvm_lto`: Compiles the kernel with LLVM instead of GCC. Should work, if not open an issue
-- `_subarch`: Specifies the subarchitecture to compile for (see the [PKGBUILD file](https://git.staropensource.de/JeremyStarTM/aur-linux-clear/src/branch/develop/PKGBUILD) for a list of all subarches). Default is `41` (Generic x86-64), which is compatible with all amd64 processors. Must be a number
+- `_subarch`: Specifies the subarchitecture to compile for (see the [PKGBUILD file](https://git.staropensource.de/Packaging/Linux-Tachyon-AUR/src/branch/develop/PKGBUILD) for a list of all subarches). Default is `41` (Generic x86-64), which is compatible with all amd64 processors. Must be a number
 - `_subarch_microarch`: Specifies the microarchitecture to compile for. Only applies to and is required by the `GENERIC_CPU` subarch. Must be a number between `1` and `4` ([click for more information](https://en.wikipedia.org/wiki/X86-64#Microarchitecture_levels))
 - `_debug`: Force enables debug options when set to `y`, force disables debug options when set to `n` or uses the config defaults when unset
 
@@ -37,7 +37,7 @@ Please only submit issues if they aren't bug reports about the package or help r
 Please keep them on the AUR only. This prevents unnecessary signups.
 
 ## Branches
-This repository (at least if you view it on [sos!git](https://git.staropensource.de/JeremyStarTM/aur-linux-clear))
+This repository (at least if you view it on [sos!git](https://git.staropensource.de/Packaging/Linux-Tachyon-AUR))
 has two branches: `master` and `develop`. The `master` branch is the stable branch, where stable changes
 are introduced. The `develop` branch is (as you might have already guessed) the development branch.
 

@@ -1,0 +1,33 @@
+From 22fe045deac0551720d7292022f443b22703f336 Mon Sep 17 00:00:00 2001
+From: Yaowei Zhou <yaowei.zhou@intel.com>
+Date: Thu, 20 Apr 2023 14:37:26 +0800
+Subject: [PATCH] Enable "linux:unstable_deb" build target when using the chromium minigbm
+
+Bug: N/A
+Change-Id: Ic37059be0f0719895acdba756292aed71820feba
+---
+
+diff --git a/third_party/minigbm/BUILD.gn b/third_party/minigbm/BUILD.gn
+index 739e278..50bf5d8 100644
+--- a/third_party/minigbm/BUILD.gn
++++ b/third_party/minigbm/BUILD.gn
+@@ -58,7 +58,7 @@
+     }
+   }
+ 
+-  shared_library("minigbm") {
++  static_library("minigbm") {
+     sources = [
+       "src/amdgpu.c",
+       "src/dri.c",
+@@ -89,8 +89,8 @@
+     }
+ 
+     # Clients need this to pick up the shared library correctly.
+-    all_dependent_configs =
+-        [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
++    #all_dependent_configs =
++    #    [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+   }
+ 
+   # This target is used for Chromecast build, which expects the resulting lib

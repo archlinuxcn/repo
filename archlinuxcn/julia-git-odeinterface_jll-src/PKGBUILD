@@ -1,7 +1,7 @@
 pkgname=julia-git-odeinterface_jll-src
-pkgver=0.0.1+0
-_commit=55a159756598af1c69d9f32d1193aa54e065b520
-pkgrel=2
+pkgver=0.0.2+0
+_commit=b442b6e33a50fb505d4a81fafdb0ff7099837fa8
+pkgrel=1
 pkgdesc="ODEInterface_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/ODEInterface_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libodeinterface_jll)
 source=("git+https://github.com/JuliaBinaryWrappers/ODEInterface_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('252ab3a8e2304cffe9ad848bf390cd6e4afbfc108737b84b0188ac725c91e465'
             'fc217c0e6c382706bab4475237c56abf33ce7e6ab43af45fb47f92366972c64e')
 
 build() {
