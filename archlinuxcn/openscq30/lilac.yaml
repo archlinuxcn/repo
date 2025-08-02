@@ -1,0 +1,20 @@
+maintainers:
+  - github: oldherl
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    gitlab: Oppzippy/OpenSCQ30
+    use_max_tag: true
+    prefix: "v"
+  - source: alpm
+    alpm: gtk4
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: libadwaita
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
