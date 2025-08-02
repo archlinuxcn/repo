@@ -11,7 +11,7 @@
 declare -gA _tags=(
  [ftl_core]="939298f7c461407951988f362b1a08b451336a1e"
  [ftl_desktop]="bc2da83c77749d96f3df8144f00c87d68dd2187a"
- [anki]="e511d63b"
+ [anki]="7172b2d2"
 )
 
 declare -gA _caches=(
@@ -20,7 +20,7 @@ declare -gA _caches=(
 )
 
 pkgname=anki
-pkgver=25.07.4
+pkgver=25.07.5
 pkgrel=1
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
@@ -80,7 +80,7 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/ankitects/anki/archive/refs
 )
 
 
-sha256sums=(1eb7247fbeb4ec9a88d6b8375c67a73a00f001675869f3a4871cbd177db4688a
+sha256sums=(ad9c0f53c2388680cde23b131d9c2abbf0f5338024ae35d8f34592fdcdf63179
             4bfa48821716fa6b8c31b03a93f263f96dae82f664c54430456ef23f3ff2b993
             e81f423f3fbe28bd526d47f7e1b386da26f3f6e00194c3085696180e48915cce
             cc546f4e5af642af89f82be0375800c2721dd904c0a212cf46f6459495b75bff
