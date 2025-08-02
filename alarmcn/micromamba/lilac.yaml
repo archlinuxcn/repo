@@ -1,7 +1,7 @@
 maintainers:
   - github: yuyichao
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('micromamba-'))
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
 # For termcolor
@@ -15,7 +15,7 @@ update_on:
   - source: github
     github: mamba-org/mamba
     use_max_tag: true
-    include_regex: 'micromamba-\d+\.\d+\.\d+'
+    include_regex: '\d\.\d+\.\d+'
   - source: alpm
     alpm: libarchive
     provided: libarchive.so

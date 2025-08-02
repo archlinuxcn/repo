@@ -2,7 +2,7 @@
 
 pkgname=firefox-portable
 pkgver=141.0
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Firefox sandboxed by portable"
 arch=('any')
@@ -10,7 +10,8 @@ url="https://github.com/Kraftland/portable"
 license=('GPL-3.0-or-later')
 groups=()
 options=(!debug !strip)
-depends=("firefox" "portable")
+depends=("portable")
+conflicts=("firefox")
 
 optdepends=()
 

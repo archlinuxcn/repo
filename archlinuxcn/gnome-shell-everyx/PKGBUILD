@@ -9,7 +9,7 @@ pkgname=gnome-shell-everyx
 
 
 pkgver=48.3
-pkgrel=4
+pkgrel=5
 
 provides=("gnome-shell=$pkgver")
 conflicts=("gnome-shell")
@@ -92,6 +92,7 @@ prepare() {
   ln -s libgnome-volume-control gvc
 
   cd $_pkgbase
+  git apply -3 "$srcdir"/*.patch
 }
 
 build() {
