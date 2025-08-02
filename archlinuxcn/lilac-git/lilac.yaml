@@ -8,7 +8,7 @@ repo_depends:
   - pid_children-git
   - python-fluent.runtime
 
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['malacology', 'yan12125', 'lilydjwg'])
 
 post_build: aur_post_build
 

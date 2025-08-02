@@ -2,7 +2,7 @@
 from lilaclib import *
 
 build_prefix = 'extra-x86_64'
-pre_build = aur_pre_build
+pre_build_script = aur_pre_build(maintainers=['Geballin', 'morgenstern'])
 post_build = aur_post_build
 
 if __name__ == '__main__':
