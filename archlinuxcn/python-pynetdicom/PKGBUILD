@@ -2,7 +2,7 @@
 
 pkgname=python-pynetdicom
 _pkgname=pynetdicom
-pkgver=3.0.3
+pkgver=3.0.4
 pkgrel=1
 pkgdesc='A Python implementation of the DICOM networking protocol'
 arch=(any)
@@ -19,7 +19,7 @@ makedepends=(
   python-wheel
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pydicom/pynetdicom/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('c2445ad854ffa227427202175b5d3ed1a0787454edb49cc04931205026abc799000f41b8eaafa7928bc47d33431c448124fef3647c4d21d98e55a894d1cea975')
+sha512sums=('5f7cafb8abc3937cdc7156fec2105ad6740c1861cccb03c449a42b131ba5e97241d6341a8781533b55332885d6de34e6eeaecdfefc2a69ebe46c220a492bf98a')
 
 build() {
   cd "${_pkgname}-${pkgver}"
