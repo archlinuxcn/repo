@@ -1,0 +1,32 @@
+From d9162376eb8cdbb5aa77d82d32f217caffa73c36 Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Wed, 4 Jun 2025 20:17:43 +0800
+Subject: [PATCH 2/4] fix function definition
+
+we need a function `create_target_directory_groups` which is defined in `src/`
+
+1	1	CMakeLists.txt
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index edc56a16d5..b328c3f41e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -409,7 +409,6 @@ set(FFmpeg_COMPONENTS
+     avutil
+     swscale)
+ 
+-add_subdirectory(externals)
+ 
+ if (ENABLE_QT)
+     if (YUZU_USE_BUNDLED_QT)
+@@ -637,6 +636,7 @@ if(MSVC)
+ endif()
+ 
+ add_subdirectory(src)
++add_subdirectory(externals)
+ 
+ # Set yuzu project or yuzu-cmd project as default StartUp Project in Visual Studio depending on whether QT is enabled or not
+ if(ENABLE_QT)
+-- 
+2.49.0
+
