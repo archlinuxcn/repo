@@ -15,9 +15,13 @@ depends=(
 	"portable"
 )
 
-optdepends=()
+optdepends=(
+	"zen-browser-i18n-zh-cn: Language pack for Zen Browser (zh-CN)"
+	"zen-browser-i18n-zh-tw: Language pack for Zen Browser (zh-TW)"
+	"zen-browser-i18n-ja: Language pack for Zen Browser (ja)"
+)
 
-provides=(zen-browser)
+provides=("zen-browser=${pkgver}")
 conflicts=(zen-browser)
 
 makedepends+=(
