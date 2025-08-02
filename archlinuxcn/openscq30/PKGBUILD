@@ -18,6 +18,7 @@ license=('GPL-3.0-or-later')
 groups=("$pkgbase")
 makedepends=('cargo')
 depends=('libdbus-1.so' 'libgtk-4.so' 'libadwaita-1.so')
+checkdepends=(xorg-server-xvfb)
 source=("$_pname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 sha512sums=('0b656bd00a2ef187bf5c24cc328d97768a3b0eddaff4cbc6ee8cdfa5de8df6cce6fbb7238b5366b44d10967d38663134527ef1f42c592cbb00a5b32ce78d4846')
 
@@ -40,7 +41,7 @@ check() {
 	export RUSTUP_TOOLCHAIN=stable
 	# shellcheck disable=SC2046
 	env LC_ALL=C \
-		cargo test --frozen --features bluetooth,demo $(echo "-p openscq30_"{lib,cli,gui})
+		xvfb-run cargo test --frozen --features bluetooth,demo $(echo "-p openscq30_"{lib,cli,gui})
 }
 
 package_openscq30-cli() {
