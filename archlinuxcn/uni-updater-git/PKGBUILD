@@ -1,0 +1,39 @@
+# Maintainer: TTsdzb <ttsdzboutlook dot com>
+# Maintainer: Jia Yin<lok-ation at outlook dot com>
+
+pkgname=uni-updater-git
+pkgver=0.2.4.r3.g45389d7
+pkgrel=1
+pkgdesc='Helper program that updates everything on your system.'
+arch=('x86_64')
+url="https://codeberg.org/TTsdzb/uni-updater"
+license=('MIT')
+depends=('gcc-libs')
+makedepends=('cargo' 'git')
+conflicts=('uni-updater')
+provides=("uni-updater=${pkgver}")
+source=("$pkgname::git+$url")
+sha512sums=('SKIP')
+pkgver() {
+  cd "$pkgname"
+  git describe --long --abbrev=7 --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd "$pkgname"
+	cargo update
+	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cd "$pkgname"
+	cargo build --release --frozen --all-features
+}
+
+package() {
+	cd "$pkgname"
+	install -Dm755 -t "$pkgdir/usr/bin" target/release/uni-updater
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
