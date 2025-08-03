@@ -6,7 +6,7 @@ build_prefix: extra-x86_64
 repo_depends:
   - cd-discid
 
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['FabioLolix', 'arojas'])
 
 post_build: aur_post_build
 

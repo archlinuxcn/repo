@@ -9,7 +9,7 @@ def pre_build():
     if str(datetime.datetime.now())[:8] < '20180604':
         run_cmd('rm -rf dnsmasq-china-list'.split(' '))
 
-    aur_pre_build()
+    aur_pre_build(maintainers=['felixonmars', 'lilac'])
 
 #post_build = aur_post_build
 
