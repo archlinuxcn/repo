@@ -2,7 +2,7 @@
 
 pkgname=sanoid
 pkgver=2.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Policy-driven snapshot management (sanoid), dataset sending/receiving (syncoid) and snapshot searching (findoid) tools for ZFS."
 arch=('any')
 url='https://github.com/jimsalterjrs/sanoid'
@@ -33,7 +33,8 @@ prepare() {
   cd "${srcdir}/sanoid-${pkgver}"
   sed -i 's|/usr/sbin|/usr/bin|g' \
     "packages/debian/sanoid.timer" \
-    "packages/debian/sanoid.service"
+    "packages/debian/sanoid.service" \
+    "packages/debian/sanoid.sanoid-prune.service"
 }
 
 package() {
@@ -55,4 +56,5 @@ package() {
   # systemd
   install -D -m 644 "packages/debian/sanoid.timer" "${pkgdir}/usr/lib/systemd/system/sanoid.timer"
   install -D -m 644 "packages/debian/sanoid.service" "${pkgdir}/usr/lib/systemd/system/sanoid.service"
+  install -D -m 644 "packages/debian/sanoid.sanoid-prune.service" "${pkgdir}/usr/lib/systemd/system/sanoid-prune.service"
 }
