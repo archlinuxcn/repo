@@ -16,13 +16,38 @@ update_on:
     from_pattern: '^(\d+\.\d+)\..*'
     to_pattern: '\1'
   - source: alpm
-    alpm: libegl
+    alpm: libglvnd
     from_pattern: '^(\d+\.\d+)\..*'
     to_pattern: '\1'
   - source: alpm
-    alpm: libgl
+    alpm: libxcb
     from_pattern: '^(\d+\.\d+)\..*'
     to_pattern: '\1'
+  - source: alpm
+    alpm: wayland
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: ffmpeg
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: jansson
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: zlib
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: libx11
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: libpulse
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+
 
 build_prefix: extra-x86_64
 #managed: false
