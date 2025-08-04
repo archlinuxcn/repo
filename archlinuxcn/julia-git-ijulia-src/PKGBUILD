@@ -7,7 +7,7 @@ url="https://github.com/JuliaLang/IJulia.jl.git"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts julia-git-conda-src)
-depends=(julia-git jupyter-notebook)
+depends=(julia-git jupyter-notebook jq)
 source=("git+https://github.com/JuliaLang/IJulia.jl.git#commit=$_commit")
 sha256sums=('7b55aa6135cb1b14e91ab6ca29df39ed9d74524bde9b61711fa0318636fe873b')
 
@@ -32,6 +32,15 @@ build() {
       JUPYTER=/usr/bin/jupyter \
       IJULIA_DIR="${stdlib_dir}/IJulia" \
       julia --startup-file=no build.jl
+
+  for kern_dir in "$srcdir/jupyter/.local/share/jupyter/kernels"/*/; do
+    kern_dir="${kern_dir%/}"
+    thread_kern_dir="${kern_dir}-thread"
+    cp -a "${kern_dir}" "${thread_kern_dir}"
+    jq \
+      '.env.JULIA_NUM_THREADS="auto" | .display_name = .display_name + " (auto thread)"' \
+      "${kern_dir}"/kernel.json > "${thread_kern_dir}"/kernel.json
+  done
 }
 
 package() {
