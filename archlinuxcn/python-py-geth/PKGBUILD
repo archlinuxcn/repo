@@ -2,7 +2,7 @@
 
 _name=py-geth
 pkgname=python-${_name}
-pkgver=6.1.0
+pkgver=6.2.0
 pkgrel=1
 pkgdesc="Python wrapping for running Go-Ethereum as a subprocess"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(go-ethereum python python-pydantic python-requests python-semantic-vers
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-flaky)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('677eab1e080a150bd768f4faf33c91fbb1362525f136a758d8159b74510f46d39de15103b4d39918e367bd9f9f8150530f788fea49fba0af67181d42bbcb0eda')
+sha512sums=('8c48ba3ff240c40f408788e08bc6122de3b7ffade5238a3d3d617180259c43ce00e30edc6696efb48ee59233dc6c2bcf7d236f897fac2d682409e31e9fe8ecc8')
 
 build() {
   cd $_name-$pkgver
