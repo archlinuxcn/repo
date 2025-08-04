@@ -1,4 +1,4 @@
-From 5f28955612f3aaa943401f71a4d26bd0b4916f16 Mon Sep 17 00:00:00 2001
+From 4e71ce4f6f67c4f4908cb9188e7e6606f6d7bc6d Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/7] Clear soname and hard code system lib path
@@ -20,12 +20,12 @@ Subject: [PATCH 3/7] Clear soname and hard code system lib path
  stdlib/PCRE2_jll/src/PCRE2_jll.jl             |  27 +-
  stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl | 248 ++----------------
  stdlib/Zlib_jll/src/Zlib_jll.jl               |  27 +-
- stdlib/Zstd_jll/src/Zstd_jll.jl               |  47 +---
+ stdlib/Zstd_jll/src/Zstd_jll.jl               |  53 +---
  stdlib/libLLVM_jll/src/libLLVM_jll.jl         |  34 +--
  .../src/libblastrampoline_jll.jl              |  24 +-
  stdlib/nghttp2_jll/src/nghttp2_jll.jl         |  30 +--
  stdlib/p7zip_jll/src/p7zip_jll.jl             |  30 +--
- 21 files changed, 149 insertions(+), 896 deletions(-)
+ 21 files changed, 151 insertions(+), 900 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 index 9a0729c50d..1a5c0e2855 100644
@@ -400,7 +400,7 @@ index c6e2750895..374402fcfe 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/LibCURL_jll/src/LibCURL_jll.jl b/stdlib/LibCURL_jll/src/LibCURL_jll.jl
-index fb091caee4..2355d04d08 100644
+index 528ca92ffb..9683472e82 100644
 --- a/stdlib/LibCURL_jll/src/LibCURL_jll.jl
 +++ b/stdlib/LibCURL_jll/src/LibCURL_jll.jl
 @@ -16,31 +16,12 @@ export libcurl
@@ -427,12 +427,12 @@ index fb091caee4..2355d04d08 100644
 -    end;
 -    dependencies = if Sys.iswindows()
 -        if  Sys.WORD_SIZE == 32
--            LazyLibrary[libz, libnghttp2, libssh2, libgcc_s]
+-            LazyLibrary[libz, libzstd, libnghttp2, libssh2, libgcc_s]
 -        else
--            LazyLibrary[libz, libnghttp2, libssh2]
+-            LazyLibrary[libz, libzstd, libnghttp2, libssh2]
 -        end
 -    else
--        LazyLibrary[libz, libnghttp2, libssh2, libssl, libcrypto]
+-        LazyLibrary[libz, libzstd, libnghttp2, libssh2, libssl, libcrypto]
 -    end
 -)
 +const libcurl_path = "/usr/lib/libcurl.so"
@@ -440,7 +440,7 @@ index fb091caee4..2355d04d08 100644
  
  function eager_mode()
      Zlib_jll.eager_mode()
-@@ -56,13 +37,6 @@ function eager_mode()
+@@ -57,13 +38,6 @@ function eager_mode()
  end
  is_available() = true
  
@@ -1240,10 +1240,10 @@ index a52168bf24..b27161814e 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/Zstd_jll/src/Zstd_jll.jl b/stdlib/Zstd_jll/src/Zstd_jll.jl
-index ce2dda69d5..95d1fd74dc 100644
+index 30481a12e0..8dfa2fb405 100644
 --- a/stdlib/Zstd_jll/src/Zstd_jll.jl
 +++ b/stdlib/Zstd_jll/src/Zstd_jll.jl
-@@ -13,27 +13,12 @@ export libzstd, zstd, zstdmt
+@@ -13,29 +13,14 @@ export libzstd, zstd, zstdmt
  # These get calculated in __init__()
  const PATH = Ref("")
  const PATH_list = String[]
@@ -1255,6 +1255,8 @@ index ce2dda69d5..95d1fd74dc 100644
 +artifact_dir::String = "/usr"
  
 -libzstd_path::String = ""
+-zstd_path::String = ""
+-zstdmt_path::String = ""
 -const libzstd = LazyLibrary(
 -    if Sys.iswindows()
 -        BundledLazyLibraryPath("libzstd-1.dll")
@@ -1273,10 +1275,12 @@ index ce2dda69d5..95d1fd74dc 100644
 -)
 +const libzstd_path = "/usr/lib/libzstd.so"
 +const libzstd = LazyLibrary(libzstd_path)
++const zstd_path = "/usr/bin/zstd"
++const zstdmt_path = "/usr/bin/zstdmt"
  
  if Sys.iswindows()
      const zstd_exe = "zstd.exe"
-@@ -63,24 +48,17 @@ adjust_ENV(cmd::Cmd) = cmd
+@@ -65,24 +50,17 @@ adjust_ENV(cmd::Cmd) = cmd
  end
  
  function adjust_ENV()
@@ -1299,19 +1303,21 @@ index ce2dda69d5..95d1fd74dc 100644
 -    end
 +    f(zstdmt())
  end
--zstd() = adjust_ENV(`$(joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR, zstd_exe))`)
--zstdmt() = adjust_ENV(`$(joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR, zstdmt_exe))`)
+-zstd() = adjust_ENV(`$zstd_path`)
+-zstdmt() = adjust_ENV(`$zstdmt_path`)
 +zstd() = `/usr/bin/zstd`
 +zstdmt() = `/usr/bin/zstdmt`
  
  # Function to eagerly dlopen our library and thus resolve all dependencies
  function eager_mode()
-@@ -92,11 +70,6 @@ end
+@@ -94,13 +72,6 @@ end
  
  is_available() = true
  
 -function __init__()
 -    global libzstd_path = string(libzstd.path)
+-    global zstd_path = joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR, zstd_exe)
+-    global zstdmt_path = joinpath(Sys.BINDIR, Base.PRIVATE_LIBEXECDIR, zstdmt_exe)
 -    global artifact_dir = dirname(Sys.BINDIR)
 -end
 -
