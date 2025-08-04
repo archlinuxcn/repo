@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=6.15.8
+pkgver=6.16
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -37,12 +37,10 @@ options=('!debug' '!strip')
 _basever="$({ grep -Eq '[0-9]\.[0-9]+\.[0-9]+' <<< "$pkgver" && printf '%s' "${pkgver%.*}"; } || printf '%s' "$pkgver")"
 _srcname="linux-${_basever}"
 source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${_basever}-gnu/linux-libre-${_basever}-gnu.tar.lz"{,.sign}
-        "http://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/patch-${_basever}-gnu-${pkgver}-gnu.bz2"{,.sign}
+        #"http://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/patch-${_basever}-gnu-${pkgver}-gnu.bz2"{,.sign}
         'https://repo.parabola.nu/other/linux-libre/logos/logo_linux_'{clut224.ppm,vga16.ppm,mono.pbm}{,.sig}
         'config')
-sha256sums=('0efe86824b798134aaee70ef5324b57af547679b2a4bed867a1d58a7a19d8af9'
-            'SKIP'
-            '44e1174420275b56bbfa72f3a8df217999480f9cbb031abc1375c2e6644c4978'
+sha256sums=('f392cea26972378b1bde17dc4045426eac64a59c31b4ca2e02ba5eb787af5ba0'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -50,7 +48,7 @@ sha256sums=('0efe86824b798134aaee70ef5324b57af547679b2a4bed867a1d58a7a19d8af9'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP'
-            '65f8f5e6aacfb330f557cd5e11e52a3468737297760771daca74e0518d9a2d5b')
+            'a6b434fd90ea8cf18ba115e26d2d9cc82ffe7e9d71a84adad22609a790203d82')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
