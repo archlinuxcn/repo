@@ -10,7 +10,7 @@ pre_build_script: |
     print(line)
 
 post_build_script: |
-  git_add_files(_G.files)
+  git_add_files(_G.files, force=True)
   git_commit()
 
 update_on:
