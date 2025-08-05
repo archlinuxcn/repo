@@ -1,0 +1,164 @@
+# Maintainer: Kimiblock Moe
+
+# Based on: ToKiNoBug's PKGBUILD
+_pkgname=slopecraft
+pkgname=${_pkgname}-portable
+pkgver=5.3.1
+pkgrel=1
+pkgdesc="Map Pixel Art Generator for Minecraft. Sandboxed by Portable, w/ auto updates."
+arch=('armv7h' 'aarch64' 'x86_64')
+url="https://github.com/SlopeCraft/SlopeCraft"
+license=('GPL3')
+makedepends=('clang' 'cmake' 'ninja' 'eigen' 'git' 'xsimd' 'qt6-tools' 'opencl-headers' 'opencl-clhpp' 'cereal' 'tl-expected' 'cli11' git)
+depends=('gcc-libs' 'glibc' 'fmt' 'libpng' 'libzip' 'zlib' 'zstd' 'qt6-base' 'openmp' 'ocl-icd' 'boost-libs' 7zip boost boost-libs nlohmann-json)
+optdepends=('opencl-nvidia: nvidia GPU boosting',
+            'intel-compute-runtime: Intel GPU boosting',
+            'rocm-opencl-runtime: AMD GPU boosting',
+            'opencl-clover-mesa: GPU boosting with mesa')
+source=(git+https://github.com/SlopeCraft/SlopeCraft.git#tag=v${pkgver})
+b2sums=('a5f3f0a34621503e0e4831d92f2228501513bc24b5d1bc2208d1b4445f2a323cceac8f5c4ec67268c304c8a92fb27f5681c15e7d7f578af8d170e4a40306eecb')
+
+build() {
+	cmake -S SlopeCraft -B build \
+		-G Ninja \
+		-DCMAKE_C_COMPILER=clang \
+		-DCMAKE_CXX_COMPILER=clang++ \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DSlopeCraft_vectorize=ON \
+		-Wno-dev \
+		-DSlopeCraft_GPU_API="OpenCL"
+
+	cmake --build build --parallel
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	depends+=(portable)
+	cd "$pkgdir/usr"
+	rm README.md
+	rm README-en.md
+	rm LICENSE
+	rm LICENSE-zh.md
+	install -d "${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft"
+	install -d "${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft/exec"
+	mv "${pkgdir}/usr/bin"/* "${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft/exec"
+	mv "${pkgdir}/usr/share/applications" "${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft/desktop"
+	install -d "${pkgdir}/usr/share/applications/"
+
+	echo '''#!/usr/bin/bash
+appID="com.github.SlopeCraft"
+friendlyName="SlopeCraft"
+stateDirectory="SlopeCraft_Data"
+#launchTarget="bwrap --dev-bind / / --ro-bind /usr/lib/portable/info/com.github.SlopeCraft/exec/SlopeCraft /usr/bin/SlopeCraft -- SlopeCraft"
+launchTarget="/usr/lib/portable/info/com.github.SlopeCraft/exec/SlopeCraft"
+bindNetwork="false"
+useZink="false"
+qt5Compat="false"
+waylandOnly="adaptive"
+gameMode="false"
+pwCam="false"
+bindCameras="false"
+bindPipewire="false"
+bindInputDevices="false"
+allowInhibit="false"
+allowGlobalShortcuts="true"''' >"${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft/config"
+    echo '''[Desktop Entry]
+Name=SlopeCraft
+Comment=Map Pixel Art Generator for Minecraft
+Exec=SlopeCraft
+Icon=com.github.SlopeCraft.SlopeCraft.png
+Type=Application
+Keywords=SlopeCraft;''' >"${pkgdir}/usr/share/applications/com.github.SlopeCraft.desktop"
+    echo '''#!/usr/bin/bash
+    export _portableConfig=com.github.SlopeCraft
+    exec portable -- $@''' >"${pkgdir}/usr/bin/SlopeCraft"
+
+	install -d "${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft.MapViewer"
+	echo '''#!/usr/bin/bash
+appID="com.github.SlopeCraft.MapViewer"
+friendlyName="VisualCraft"
+stateDirectory="SlopeCraft_Data"
+#launchTarget="bwrap --dev-bind / / --ro-bind /usr/lib/portable/info/com.github.SlopeCraft/exec/MapViewer /usr/bin/MapViewer -- MapViewer"
+launchTarget="/usr/lib/portable/info/com.github.SlopeCraft/exec/MapViewer"
+bindNetwork="false"
+useZink="false"
+qt5Compat="false"
+waylandOnly="adaptive"
+gameMode="false"
+pwCam="false"
+bindCameras="false"
+bindPipewire="false"
+bindInputDevices="false"
+allowInhibit="false"
+allowGlobalShortcuts="true"''' >"${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft.MapViewer/config"
+    echo '''[Desktop Entry]
+Name=MapViewer
+Comment=Minecraft map browser
+Exec=MapViewer
+Icon=com.github.SlopeCraft.MapViewer.png
+Type=Application
+Keywords=SlopeCraft;''' >"${pkgdir}/usr/share/applications/com.github.SlopeCraft.MapViewer.desktop"
+    echo '''#!/usr/bin/bash
+    export _portableConfig=com.github.SlopeCraft.MapViewer
+    exec portable -- $@''' >"${pkgdir}/usr/bin/MapViewer"
+
+	install -d "${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft.VisualCraft"
+	echo '''#!/usr/bin/bash
+appID="com.github.SlopeCraft.VisualCraft"
+friendlyName="VisualCraft"
+stateDirectory="SlopeCraft_Data"
+#launchTarget="bwrap --dev-bind / / --ro-bind /usr/lib/portable/info/com.github.SlopeCraft/exec/VisualCraft /usr/bin/VisualCraft -- VisualCraft"
+launchTarget="/usr/lib/portable/info/com.github.SlopeCraft/exec/VisualCraft"
+bindNetwork="false"
+useZink="false"
+qt5Compat="false"
+waylandOnly="adaptive"
+gameMode="false"
+pwCam="false"
+bindCameras="false"
+bindPipewire="false"
+bindInputDevices="false"
+allowInhibit="false"
+allowGlobalShortcuts="true"''' >"${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft.VisualCraft/config"
+    echo '''[Desktop Entry]
+Name=MapViewer
+Comment=Minecraft map browser
+Exec=MapViewer
+Icon=com.github.SlopeCraft.MapViewer.png
+Type=Application
+Keywords=SlopeCraft;''' >"${pkgdir}/usr/share/applications/com.github.SlopeCraft.VisualCraft.desktop"
+    echo '''#!/usr/bin/bash
+    export _portableConfig=com.github.SlopeCraft.VisualCraft
+    exec portable -- $@''' >"${pkgdir}/usr/bin/VisualCraft"
+
+	install -d "${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft.imageCutter"
+	echo '''#!/usr/bin/bash
+appID="com.github.SlopeCraft.imageCutter"
+friendlyName="imageCutter"
+stateDirectory="SlopeCraft_Data"
+#launchTarget="bwrap --dev-bind / / --ro-bind /usr/lib/portable/info/com.github.SlopeCraft/exec/imageCutter /usr/bin/imageCutter -- imageCutter"
+launchTarget="/usr/lib/portable/info/com.github.SlopeCraft/exec/imageCutter"
+bindNetwork="false"
+useZink="false"
+qt5Compat="false"
+waylandOnly="adaptive"
+gameMode="false"
+pwCam="false"
+bindCameras="false"
+bindPipewire="false"
+bindInputDevices="false"
+allowInhibit="false"
+allowGlobalShortcuts="true"''' >"${pkgdir}/usr/lib/portable/info/com.github.SlopeCraft.imageCutter/config"
+    echo '''[Desktop Entry]
+Name=imageCutter
+Comment=Minecraft map browser
+Exec=imageCutter
+Icon=com.github.SlopeCraft.imageCutter.png
+Type=Application
+Keywords=SlopeCraft;''' >"${pkgdir}/usr/share/applications/com.github.SlopeCraft.imageCutter.desktop"
+    echo '''#!/usr/bin/bash
+    export _portableConfig=com.github.SlopeCraft.imageCutter
+    exec portable -- $@''' >"${pkgdir}/usr/bin/imageCutter"
+	chmod 755 -R "${pkgdir}/usr/bin"
+}
