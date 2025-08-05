@@ -19,10 +19,10 @@ pkgname=(
   vulkan-freedreno-asahi
   vulkan-asahi
 )
-_asahiver=20250425
+_asahiver=20250723
 _commit=asahi-$_asahiver
 pkgver=25.1.0_pre20250425
-pkgrel=2
+pkgrel=0
 arch=(aarch64 x86_64)
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
@@ -120,7 +120,7 @@ for _crate in "${!_crates[@]}"; do
   )
 done
 
-sha256sums=('1008a7a245276203a39021d914b4ecc386f33ff50cd872817955c14550a928da'
+sha256sums=('e5d6a833bc4d3e8620863167ab68db2e672b9af2cc4a6b7c1648be263c957cb4'
             'ed646292ffc8188ef8ea4d1e0e0150fb15a5c2e12ad9b8fc191ae7a8a7f3c4b9'
             'a941429fea7e08bedec25e4f6785b6ffaacc6b755da98df5ef3e7dcf4a124c4f'
             '168fb715dda47215e360912c096649d23d58bf392ac62f73919e831745e40f26'
@@ -136,7 +136,7 @@ sha256sums=('1008a7a245276203a39021d914b4ecc386f33ff50cd872817955c14550a928da'
             '3c93a82e8d145725dcbaf44e5ea887c8a869efdcc28706df2d08c69e17077183'
             '692fcb63b64b1758029e0a96ee63e049ce8c5948587f2f7208df04625e5f6b56'
             '901fa70d88b9d6c98022e23b4136f9f3e54e4662c3bc1bd1d84a42a9a0f0c1e9')
-b2sums=('22afbbbfa9d32d78f1799f1b214ff5a48ed3960a963cefd43cf6c6399e0f9bbb08e4a92616b313b7eb3405d460f78931bac672ae81224ac2bb2ea12f081b0958'
+b2sums=('7146854902354cafe8f100f68805b7fff840e3f8a98cf1a7a418f4c400c84fd261f4427d50fa08504051839e73ee5c53952c2ad880dc8ba4a01298c8a44e9d52'
         'a6d47c903be6094423d89b8ec3ca899d0a84df6dbd6e76632bb6c9b9f40ad9c216f8fa400310753d392f85072756b43ac3892e0a2c4d55f87ab6463002554823'
         '9c34f1ab14ad5ae124882513e0f14b1d731d06a43203bdc37fa3b202dd3ce93dbe8ebb554d01bab475689fe6ffd3ec0cbc0d5365c9b984cb83fb34ea3e9e732e'
         'fac5cf6339dc3c0a40b100035a5c874cc7b2efeafeb31c51488d25156e392dc9db86a497e76eead351d2126f69d060422faa9c55d73407a0de9f5be18d234123'
@@ -159,17 +159,16 @@ pkgver() {
   cd mesa-$_commit
 
   _ver=$(cat VERSION)
-  [[ $_ver =~ ([.0-9]+)- ]]
+  [[ $_ver =~ ([.0-9]+)-? ]]
   _ver=${BASH_REMATCH[1]}
-
-  echo ${_ver}_pre$_asahiver
+  echo ${_ver}_rel$_asahiver
 }
 
 prepare() {
   cd mesa-$_commit
 
   _ver=$(cat VERSION)
-  [[ $_ver =~ ([.0-9]+)- ]]
+  [[ $_ver =~ ([.0-9]+)-? ]]
   _ver=${BASH_REMATCH[1]}
 
   # Include package release in version string so Chromium invalidates
