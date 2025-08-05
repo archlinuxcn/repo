@@ -30,9 +30,8 @@ sha512sums=('b738d8aa552795b927e612d9f37b4785f2f0abeab5deb88313f9f56dea20677d1a7
             'c21a1384f7eba77afdcda4bd0cffcdfa1bc6989e009f02c685160de443f8fc658bee7def57fe93162b3d5f31d366b48271d7204b4f6e7dd057facb2787703a15'
             'e9b2aa47a87f96af97fc55686e85d905bd7bb06b633a9a318aeeea2731d87b38e50f9f821c2e68a30d58f4daaeaff97124247c1028a049ced922c6e7b4cc20ab'
             'cf7062baa8dfe6d97946979545094a1962b73347f233065219b69488f078b6022b46f9bf59d0643de01ef36fe45b2d72375f0578747f85a6d389bdef4acc6967')
-provides=(librime)
+provides=("librime=${pkgver}")
 conflicts=(librime)
-replaces=(librime)
 
 prepare() {
   cd librime/plugins
