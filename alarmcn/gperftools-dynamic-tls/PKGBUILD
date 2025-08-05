@@ -7,7 +7,7 @@
 # Contributor: Jan Rüegg <rggjan@gmail.com>
 
 pkgname=gperftools-dynamic-tls
-pkgver=2.16
+pkgver=2.17
 pkgrel=1
 pkgdesc='Fast, multi-threaded malloc and nifty performance analysis tools'
 arch=(aarch64 x86_64)
@@ -18,13 +18,12 @@ depends=(
   glibc
   libunwind
 )
-makedepends=(git)
-optdepends=(
-  'graphviz: pprof graph generation'
-  'perl: pprof and pprof-symbolize commands'
+makedepends=(
+  asciidoctor
+  git
 )
 source=("git+https://github.com/gperftools/gperftools.git#tag=gperftools-$pkgver")
-b2sums=(e48d103d3954aea25b1dc0315cbfe080a12ca45154e25d824b4096fc735928104e4c28d98287fd44993f38ec28f56fa72be6ecee85227d03f69235c70063e5da)
+b2sums=(b0cd59121adb2b1c3d6a298759fad19ce78c610dfe0a4353e03f2d817fc97d9df2fac0ef9de1c04deedb4305a2ebc37f2b1ae4174183cd600f06216b69d40422)
 
 _prepare() {
   cd gperftools
@@ -50,7 +49,7 @@ build() {
   make
 }
 
-check() {
+_check() {
   cd gperftools
   make check
 }
