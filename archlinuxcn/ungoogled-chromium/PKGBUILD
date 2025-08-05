@@ -11,7 +11,7 @@
 
 pkgname=ungoogled-chromium
 pkgver=138.0.7204.183
-pkgrel=1
+pkgrel=2
 _launcher_ver=8
 _manual_clone=1
 _system_clang=1
@@ -154,10 +154,8 @@ prepare() {
     -f "$_ungoogled_repo/domain_substitution.list" -c domainsubcache.tar.gz ./
 
   # Link to system tools required by the build
-  if (( ! _manual_clone )); then
-    mkdir -p third_party/node/linux/node-linux-x64/bin/ third_party/jdk/current/bin/
-    ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
-  fi
+  mkdir -p third_party/node/linux/node-linux-x64/bin/ third_party/jdk/current/bin/
+  ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
   ln -s /usr/bin/java third_party/jdk/current/bin/
 
   # Remove bundled libraries for which we will use the system copies; this
