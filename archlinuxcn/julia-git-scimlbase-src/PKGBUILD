@@ -1,6 +1,6 @@
 pkgname=julia-git-scimlbase-src
-pkgver=2.106.0
-_commit=c1a4e649ecfdccb30c63ac8f4d5d052331202e2b
+pkgver=2.107.0
+_commit=1aeb1486db16cdc6c1251a88d8ba43f10af54114
 pkgrel=1
 pkgdesc="SciMLBase.jl"
 url="https://github.com/SciML/SciMLBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/SciMLBase.jl.git#commit=$_commit")
-sha256sums=('25eb84270c4de9ffe49bfeb406c8689c98e32d06f04c56eebf58400f4be0419c')
+sha256sums=('bb47097d3badb549e79eba2ac141ad4ab8e5160d6f707cb2ecb988f072603c76')
 
 package() {
   cd SciMLBase.jl
