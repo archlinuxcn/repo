@@ -11,21 +11,24 @@ pkgrel=1
 pkgdesc="Free design software that keeps your flow with AI tools and built-in graphics"
 arch=('x86_64')
 url="https://icons8.com/lunacy"
-license=('custom:commercial')
-depends=('gcc-libs' 'hicolor-icon-theme' 'zlib' 'fontconfig')
+license=("LicenseRef-${pkgname}")
+depends=('glibc' 'hicolor-icon-theme' 'fontconfig')
 conflicts=("${pkgname}-bin")
 
-source=(mime.xml)
+source=("mime.xml"
+       "LICENSE::https://lunacy.docs.icons8.com/lunacy%20license/")
 source_x86_64=("lunacy_x86_64_${pkgver}.deb::https://lcdn.icons8.com/setup/Lunacy_${pkgver}.deb")
 
-sha256sums=('be1683401bdd1d39df283e8bdceb01704566a753fef3e4da7717827e8ebe2c55')
+sha256sums=('be1683401bdd1d39df283e8bdceb01704566a753fef3e4da7717827e8ebe2c55'
+            '9904d1bc4aed149fc75fa9f2d9c566d428da31b140d8066836478b6b23cf03f8')
 sha256sums_x86_64=('543776a813630b27cecb7bd915a55cdc123cce1426cc4231603370b3b0c86027')
 
 package() {
-  bsdtar -xf data.tar.xz -C "$pkgdir/"
+  bsdtar -xf data.tar.xz -C "${pkgdir}/"
 
   install -d "${pkgdir}/usr/bin"
-  ln -s /opt/icons8/${pkgname}/Lunacy "${pkgdir}"/usr/bin/lunacy
+  ln -srv /opt/icons8/${pkgname}/Lunacy "${pkgdir}"/usr/bin/lunacy
 
-  install -m644 mime.xml  "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 mime.xml    "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
 }
