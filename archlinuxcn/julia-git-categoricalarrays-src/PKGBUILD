@@ -1,7 +1,7 @@
 pkgname=julia-git-categoricalarrays-src
-pkgver=0.10.8
-_commit=99faa562185e2befc04e6513cc54a4775793be61
-pkgrel=2
+pkgver=1.0.1
+_commit=6ad3908db5920fc647ea441d6fb0514cb2a6587e
+pkgrel=1
 pkgdesc="CategoricalArrays.jl"
 url="https://github.com/JuliaData/CategoricalArrays.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/CategoricalArrays.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('167390bc3b685084cc4a1d71fdeb4fb4953c244539dea7391bd399cc53355290')
 
 package() {
   cd CategoricalArrays.jl
