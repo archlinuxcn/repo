@@ -1,7 +1,7 @@
 pkgname=julia-git-stringviews-src
-pkgver=1.3.4
-_commit=f9976503f93c51390a7eefc882c7c7c966b11151
-pkgrel=2
+pkgver=1.3.5
+_commit=8784b053519e7c478e820868dfc7c44c0c759368
+pkgrel=1
 pkgdesc="StringViews.jl"
 url="https://github.com/JuliaStrings/StringViews.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStrings/StringViews.jl.git#commit=$_commit")
-sha256sums=('858044c16855d7250c28ac71a1b708ed3b2234c8bdfe48ff25cf3d66d577f743')
+sha256sums=('7ea9579428248ca1e0897c54e752ef31133275c6b736b78a9c2f10df3bebd827')
 
 package() {
   cd StringViews.jl
