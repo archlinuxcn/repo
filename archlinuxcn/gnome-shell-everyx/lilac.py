@@ -37,7 +37,7 @@ def pre_build():
     elif line.startswith('b2sums='):
       state = 'b2sums'
     elif state == 'b2sums' and line.endswith(')'):
-      line = line.replace(')', "\n        'a99cc3a412e85435cf766ed4c34842f4840cef3072dc669d6e595219398824ebc74e7bce489d7aa150c0dbaa231560122f7694c88358fb187289201fbe0904b9')")
+      line = line.replace(')', "\n        'cad4524e03b5a4d7df133c8cc946f9b7cc340cbfe1c8856e91a13d196bf74706519abc9d900bd064d5024146fa19d8a39d970df3d22d92f68f020c28f516ba62')")
       state = 'out'
 
     elif line.startswith('prepare('):
@@ -61,5 +61,4 @@ def pre_build():
     print(line)
 
 def post_build():
-  git_add_files(g.files)
-  git_commit()
+  git_pkgbuild_commit()

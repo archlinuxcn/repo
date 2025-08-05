@@ -18,7 +18,7 @@ index bedc31186..fe8276d80 100644
  
  .candidate-box {
 diff --git a/js/ui/ibusCandidatePopup.js b/js/ui/ibusCandidatePopup.js
-index 0bb4e47ee..7028abfbd 100644
+index 0bb4e47ee..c3614e4a7 100644
 --- a/js/ui/ibusCandidatePopup.js
 +++ b/js/ui/ibusCandidatePopup.js
 @@ -42,8 +42,10 @@ const CandidateArea = GObject.registerClass({
@@ -61,6 +61,15 @@ index 0bb4e47ee..7028abfbd 100644
          }
  
          this._candidateBoxes[this._cursorPosition].remove_style_pseudo_class('selected');
+@@ -169,7 +191,7 @@ class IbusCandidatePopup extends BoxPointer.BoxPointer {
+         box.add_child(this._preeditText);
+ 
+         this._auxText = new St.Label({
+-            style_class: 'candidate-popup-text',
++            style_class: 'candidate-popup-text candidate-popup-aux-text',
+             visible: false,
+         });
+         box.add_child(this._auxText);
 @@ -288,9 +310,10 @@ class IbusCandidatePopup extends BoxPointer.BoxPointer {
  
              let candidates = [];
