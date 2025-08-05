@@ -8,8 +8,8 @@
 # fine with them.
 
 pkgname=blender
-pkgver=4.4.3
-pkgrel=1
+pkgver=4.5.1
+pkgrel=0
 epoch=17
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=(aarch64 x86_64)
@@ -107,28 +107,17 @@ optdepends=('libdecor: wayland support')
 # We're using !lto here as otherwise we get stuff such as FS#77557
 options=('!lto')
 source=("git+https://projects.blender.org/blender/blender.git#tag=v$pkgver"
-        "git+https://projects.blender.org/blender/blender-assets#tag=v$pkgver"
-        https://developer.download.nvidia.com/redist/optix/v8.0/OptiX-8.0-Include.zip
-        hiprt-lib-path.patch)
-sha512sums=('e24f3ab3b02a3d1b89f0db55ba51fda4e9108a51971692fde52bf371714dd3f79f8878cbc6df159b09b074068377941e2da79b4e049c2b39144ae7731cb2c137'
-            '43cc5f388581698a68ad611222fcf48445441fc58685259beacb4e6de62c86db6adb7d255f1781bbb1cacf3eade4a6745ddcc519dfed3f776bddcbe1e3ee82d9'
-            '5502d9df847de12badc702c0444bd4f1f7620460b2235026df2c3133da1e04c148af0f1fc7f345e9a0c009c32f905f66c8d427743445e8864d3a797cdce6a483'
-            '52dd6c4496af38505761e559adee556176aa2ad023f073618af77f6c9bc5e3a8faa59c8f259dc92302f7e650740afd2060951129408f1939d29c0901e8ccccae')
+        https://developer.download.nvidia.com/redist/optix/v8.0/OptiX-8.0-Include.zip)
+sha512sums=('482a618d483d6e5e43dbf000629ce81b526a7301323bb4e677d87b91ade62d046497727b57c4dd80807787f5f8f71deafc7c36d9330b1658a0c0b1b8998c5b4f'
+            '5502d9df847de12badc702c0444bd4f1f7620460b2235026df2c3133da1e04c148af0f1fc7f345e9a0c009c32f905f66c8d427743445e8864d3a797cdce6a483')
 
 prepare() {
   cd "$pkgname"
 
-  git submodule init
-  git config submodule.release/datafiles/assets.url "$srcdir/blender-assets"
-  git -c protocol.file.allow=always submodule update
-
-  # Fetch assets from git-lfs
-  git -C release/datafiles/assets lfs install --local
-  git -C release/datafiles/assets remote add network-origin https://projects.blender.org/blender/blender-assets
-  git -C release/datafiles/assets lfs fetch network-origin
-  git -C release/datafiles/assets lfs checkout
-
-  patch -p1 -i "$srcdir"/hiprt-lib-path.patch
+  git lfs install --local
+  git remote add network-origin https://projects.blender.org/blender/blender
+  git lfs fetch network-origin
+  git lfs checkout
 }
 
 _get_pyver() {
@@ -162,10 +151,6 @@ build() {
     -S "$pkgname"
     -W no-dev
   )
-
-  # CUDA arch 90 is unsupported
-  echo 'set(CYCLES_CUDA_BINARIES_ARCH sm_52 sm_53 sm_60 sm_61 sm_62 sm_70 sm_72 sm_75 sm_80 sm_86 sm_87 sm_89 compute_89 CACHE STRING "CUDA architectures to build binaries for" FORCE)' > precache
-  echo 'mark_as_advanced(CYCLES_CUDA_BINARIES_ARCH)' >> precache
 
   cmake "${cmake_options[@]}"
   cmake --build build
