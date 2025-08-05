@@ -4,10 +4,10 @@
 
 pkgname=solana  
 epoch=1
-pkgver=2.2.20
-# https://github.com/anza-xyz/agave/blob/$pkgver/scripts/spl-token-cli-version.sh
+pkgver=2.3.6
+# https://github.com/anza-xyz/agave/blob/v$pkgver/scripts/spl-token-cli-version.sh
 _splTokenCliVersion=4.1.1
-pkgrel=2
+pkgrel=1
 pkgdesc="A fast, secure, and censorship resistant blockchain."
 url="https://www.solana.com"
 arch=(x86_64)
@@ -19,14 +19,12 @@ source=(git+https://github.com/anza-xyz/agave.git#tag=v$pkgver
         git+https://github.com/solana-labs/solana-program-library.git#tag=token-cli-v$_splTokenCliVersion
         $pkgname.sysusers
         $pkgname.tmpfiles
-        $pkgname-sbf_sdk-path.patch
-        $pkgname-fix-unified-scheduler-pool.patch::https://cgit.freebsd.org/ports/plain/security/agave/files/patch-rust-1.87.0?id=60d35858d322e4ae32bd6e4c8741b5cc4abd97f2)
-sha256sums=('80f83e3fb8dd4591ffe246d4ac34a828e58ad2212583ca732268277caa091085'
+        $pkgname-sbf_sdk-path.patch)
+sha256sums=('26e94af6cebb1d42b2909ab419edb6590cc91d15232ebe3cf1c76d8939046d78'
             'd0d7c7e98b42a6613d4ba1ddc8ec7650434793bab5925bf565de6cf3ba6093a1'
             'bf7e015436e3d15e70fc67f323bbd04163f79a4de7d06a254a5409bd031227b0'
             'a0f9ee2a24ab97da977eed1dd68a92165c2f2e6d5467462fe83c762031f4e02b'
-            '8fee0981fb31343719c6f4f3b845dd8d957ad7d38319c0cc80f4637f9210874c'
-            '71ae2a8c57c16d425e689c196e0ba1292154f76225abaa1b2614a21c441aac64')
+            '8fee0981fb31343719c6f4f3b845dd8d957ad7d38319c0cc80f4637f9210874c')
 install=$pkgname.install
 options=(!lto)
 
@@ -73,7 +71,6 @@ prepare() {
   export RUSTUP_TOOLCHAIN=stable
   cd $srcdir/agave
   patch -Np1 -i ../$pkgname-sbf_sdk-path.patch
-  patch unified-scheduler-pool/src/lib.rs -i ../$pkgname-fix-unified-scheduler-pool.patch
   cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 
   cd $srcdir/solana-program-library
