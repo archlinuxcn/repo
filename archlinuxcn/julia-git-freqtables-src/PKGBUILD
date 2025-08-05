@@ -1,7 +1,7 @@
 pkgname=julia-git-freqtables-src
-pkgver=0.4.6
-_commit=b466ddb8a3f6278fba23d6a575aee1c8fb25f2f0
-pkgrel=2
+pkgver=1.0.0
+_commit=c58fba80e86e599b31246f46687064029720e19b
+pkgrel=1
 pkgdesc="FreqTables.jl"
 url="https://github.com/nalimilan/FreqTables.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/nalimilan/FreqTables.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('fe12f77a85471454e382c73bf2c9d272b72a41b33ca195fce4068e04b64faf99')
 
 package() {
   cd FreqTables.jl
