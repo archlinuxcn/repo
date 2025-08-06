@@ -2,8 +2,8 @@
 
 _pkgname=draupnir
 pkgname="${_pkgname}"
-pkgver=2.5.0
-pkgrel=2
+pkgver=2.5.1
+pkgrel=1
 pkgdesc="A Matrix moderation bot"
 arch=('x86_64')
 options=(!debug !zipman !purge !lto)
@@ -16,7 +16,7 @@ conflicts=("${_pkgname}")
 source=(
 	"${_pkgname}::git+https://github.com/the-draupnir-project/Draupnir.git#tag=v$(echo ${pkgver} | sed 's|_|-|g')"
 )
-sha256sums=('b6d9a9e25ebfdaed66205aad748a8f05755829f6bec5a7670605260b3b7b366a')
+sha256sums=('7d72cdd5492f4540be2c1c61104fb962d509c246a36b20e5dbe59c34d113f4b8')
 
 function prepare() {
 	cd "${_pkgname}"
