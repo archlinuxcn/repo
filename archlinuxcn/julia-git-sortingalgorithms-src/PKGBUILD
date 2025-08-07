@@ -1,6 +1,6 @@
 pkgname=julia-git-sortingalgorithms-src
-pkgver=1.2.1
-_commit=52fc44f10cd1a61e74f163eb58640640755e9ee5
+pkgver=1.2.2
+_commit=bc9140b21560685446288027cca30adfdc4e04e5
 pkgrel=1
 pkgdesc="SortingAlgorithms.jl"
 url="https://github.com/JuliaCollections/SortingAlgorithms.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaCollections/SortingAlgorithms.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('8f1d2dc6f1dab65ecde20d924abdd97296392ea2a56b7e1e4eb9a07426eda899')
 
 package() {
   cd SortingAlgorithms.jl
