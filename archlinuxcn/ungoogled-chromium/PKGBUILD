@@ -10,14 +10,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=138.0.7204.183
-pkgrel=2
+pkgver=139.0.7258.66
+pkgrel=1
 _launcher_ver=8
-_manual_clone=1
+_manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=138.0.7204.183-1
+_uc_ver=139.0.7258.66-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -26,7 +26,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'libva'
          'libffi' 'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'gn' 'ninja' 'clang' 'lld' 'gperf' 'nodejs' 'pipewire'
-             'rust' 'rust-bindgen' 'qt5-base' 'qt6-base' 'java-runtime-headless'
+             'rust' 'rust-bindgen' 'qt6-base' 'java-runtime-headless'
              'git')
 optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kdialog: support for native dialogs in Plasma'
@@ -49,10 +49,10 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch
         chromium-138-nodejs-version-check.patch)
-sha256sums=('720a1196410080056cd97a1f5ec34d68ba216a281d9b5157b7ea81ea018ec661'
-            'd0220de7aba2334449ae1ba69f906f42d47c9a02a3448bf7c64b2d2e4c6cfe53'
+sha256sums=('8cd37b224dba4fc5e3c8ac98cc278d17a713a3b5a2f1dbb241ad94caca83d630'
+            '2708a275cc9408b975efcc7afa0a15223dcec47c87188e8516b74a21b9f45d5e'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            'bafb04282db0ae19d4e42e022fdccfafb424f18406e5b893475dc18bf4bd8f9e'
+            'a6507371588ed4d87d6501220249264abfbcd814771cc1ba351e0ac6cc987400'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             'e6da901e4d0860058dc2f90c6bbcdc38a0cf4b0a69122000f62204f24fa7e374'
             '8ba5c67b7eb6cacd2dbbc29e6766169f0fca3bbb07779b1a0a76c913f17d343f'
@@ -210,7 +210,7 @@ build() {
     'use_sysroot=false'
     'use_system_libffi=true'
     'enable_widevine=true'
-    'use_qt5=true'
+    'use_qt5=false'
     'use_qt6=true'
     'moc_qt6_path="/usr/lib/qt6"'
     'use_vaapi=true'
@@ -236,14 +236,6 @@ build() {
       "clang_version=\"$_clang_version\""
       #'chrome_pgo_phase=0' # needs newer clang to read the bundled PGO profile
     )
-
-    if (( _manual_clone )); then
-      _flags+=('chrome_pgo_phase=0')
-    else
-      _flags+=(
-        #'chrome_pgo_phase=0' # needs newer clang to read the bundled PGO profile
-      )
-    fi
 
     # Allow the use of nightly features with stable Rust compiler
     # https://github.com/ungoogled-software/ungoogled-chromium/pull/2696#issuecomment-1918173198
@@ -326,7 +318,6 @@ package() {
     chrome_100_percent.pak
     chrome_200_percent.pak
     chrome_crashpad_handler
-    libqt5_shim.so
     libqt6_shim.so
     resources.pak
     v8_context_snapshot.bin
