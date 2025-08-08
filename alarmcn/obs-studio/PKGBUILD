@@ -3,7 +3,7 @@
 # Contributor: Maciek Marciniak <mm2pl at kotmisia.pl>
 
 pkgname=obs-studio
-pkgver=31.1.1
+pkgver=31.1.2
 pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
@@ -23,14 +23,14 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'qrcodegencpp-cmake: websocket support'
             'v4l2loopback-dkms: virtual camera support')
 source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz)
-sha256sums=('544d0af03129083a36fa244a9cad84db18c2149e8ca658370437fd2dd16f8577')
+sha256sums=('5d66d4fb0d3ea91bb16aed58843bf652cf5b0aa692480b3d37eb878333b74f97')
 
 prepare() {
   cd $pkgname-$pkgver-sources
 }
 
 build() {
-  export CFLAGS+=" -Wno-error=deprecated-declarations"
+  export CXXFLAGS+=" -Wno-error=deprecated-declarations"
   cmake -B build -S $pkgname-$pkgver-sources \
     -DENABLE_QSV11=OFF \
     -DCMAKE_INSTALL_PREFIX="/usr" \
