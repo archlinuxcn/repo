@@ -1,88 +1,101 @@
-# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+# Maintainer: envolution
+# Contributor: Gavin Luo <lunt.luo@gmail.com>
+# shellcheck shell=bash disable=SC2034,SC2154
 
 pkgbase=zen-browser
 pkgname=("$pkgbase")
-pkgver=1.14.5b
+pkgver=1.14.9b
 _zen_version=${pkgver//_/-}
-_firefox_version=140.0.4
+_firefox_version=141.0
 pkgrel=1
 pkgdesc='Experience tranquillity while browsing the web without people tracking you'
 url='https://zen-browser.app/'
 arch=('x86_64')
 license=(MPL-2.0)
-depends=(alsa-lib
-         at-spi2-core
-         bash
-         cairo
-         dbus
-         ffmpeg
-         fontconfig
-         freetype2
-         gcc-libs
-         gdk-pixbuf2
-         glib2
-         glibc
-         gtk3
-         hicolor-icon-theme
-         libpulse
-         libx11
-         libxcb
-         libxcomposite
-         libxdamage
-         libxext
-         libxfixes
-         libxrandr
-         libxss
-         libxt
-         mime-types
-         nspr
-         nss
-         pango
-         ttf-font)
-makedepends=(git
-             pnpm
-             rsync
-             cbindgen
-             clang
-             diffutils
-             imake
-             lld
-             llvm
-             mesa
-             nasm
-             nodejs-lts-iron
-            #  pyenv
-             python
-             rust
-             unzip
-             wasi-compiler-rt
-             wasi-libc
-             wasi-libc++
-             wasi-libc++abi
-             xorg-server-xvfb
-             yasm
-             zip)
-optdepends=('hunspell-en_US: Spell checking, American English'
-            'libnotify: Notification integration'
-            'networkmanager: Location detection via available WiFi networks'
-            'speech-dispatcher: Text-to-Speech'
-            'xdg-desktop-portal: Screensharing with Wayland')
-options=(!emptydirs
-         !lto
-         !makeflags
-         !debug)
+depends=(
+  alsa-lib
+  at-spi2-core
+  bash
+  cairo
+  dbus
+  ffmpeg
+  fontconfig
+  freetype2
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
+  gtk3
+  hicolor-icon-theme
+  libpulse
+  libx11
+  libxcb
+  libxcomposite
+  libxdamage
+  libxext
+  libxfixes
+  libxrandr
+  libxss
+  libxt
+  mime-types
+  nspr
+  nss
+  pango
+  ttf-font)
+makedepends=(
+  git
+  pnpm
+  rsync
+  cbindgen
+  clang
+  diffutils
+  imake
+  lld
+  llvm
+  mesa
+  nasm
+  nodejs-lts-iron
+  #  pyenv
+  python
+  rust
+  unzip
+  wasi-compiler-rt
+  wasi-libc
+  wasi-libc++
+  wasi-libc++abi
+  xorg-server-xvfb
+  yasm
+  zip)
+optdepends=(
+  'hunspell-en_US: Spell checking, American English'
+  'libnotify: Notification integration'
+  'networkmanager: Location detection via available WiFi networks'
+  'speech-dispatcher: Text-to-Speech'
+  'xdg-desktop-portal: Screensharing with Wayland')
+options=(
+  !emptydirs
+  !lto
+  !makeflags
+  !debug)
 
 _repo='https://github.com/zen-browser/desktop'
-source=("git+$_repo.git#tag=$_zen_version"
-        "https://archive.mozilla.org/pub/firefox/releases/${_firefox_version}/source/firefox-${_firefox_version}.source.tar.xz"
-        0001-fix-desktop.zen.patch
-        0003-do-not-disable-system-extensions.zen.patch
-        0004-fix-package-json.zen.patch)
-sha256sums=('e10748dc897a71d5d348d88384455969666d0626ca5bf66b31d002111cc333b5'
-            '4027beb34f43ce4da8c0053a1d740ec6a2e766dc8b700216316aa7adcc59e377'
-            'f55ed69dc6f90f898f91d24966b203cb7fb10211ce62405e3ccb8b3069014990'
+source=(
+  "git+$_repo.git#tag=$_zen_version"
+  "https://archive.mozilla.org/pub/firefox/releases/${_firefox_version}/source/firefox-${_firefox_version}.source.tar.xz"
+  "l10n::git+https://github.com/zen-browser/l10n-packs"
+  "firefox-l10n::git+https://github.com/mozilla-l10n/firefox-l10n"
+  zen-browser.desktop
+  0003-do-not-disable-system-extensions.zen.patch
+  0004-fix-package-json.zen.patch
+  0005-source-firefox-language-packs.patch)
+sha256sums=('608c4499569673a48025d5407b2cf07043bc4bc826557aec7a84733843252ede'
+            '80982a84bb7ca41a67ac073321de96f74e0c25f296d19ca432b11fc2a33535c8'
+            'SKIP'
+            'SKIP'
+            '523fba56892357a1b37811021e06d548cb94af58948294a436c566581e7454a9'
             '36bff2af04da55da0cc71f960d921889ccf21c11fcd8343087c144dfcc50f10a'
-            '803c3f456abfc1acd963b594cf684aed2453534e7ab951abc38efa0351b648a1')
+            '803c3f456abfc1acd963b594cf684aed2453534e7ab951abc38efa0351b648a1'
+            'dce0823cc827fa72b52c17dbf73251e80c9a07b1a5dc3eb7ee03c40720f3ad58')
 noextract=("firefox-${_firefox_version}.source.tar.xz")
 
 _languages=(zh-CN zh-TW ja)
@@ -119,11 +132,14 @@ prepare() {
   cd desktop
 
   msg2 "init repo submodules"
-  git submodule update --init --recursive --depth 1
+  git submodule init
+  git config submodule.l10n.url "$srcdir/l10n"
+  git -c protocol.file.allow=always submodule update
 
   # Apply patches
   msg2 "apply patches"
   git apply -3 "$srcdir"/*.zen.patch
+  patch -Np1 -i ../0005-source-firefox-language-packs.patch
 
   msg2 "prepare dependencies"
   pnpm config set store-dir "$srcdir"/pnpm-store
@@ -138,11 +154,11 @@ prepare() {
   env SURFER_COMPAT="$CARCH" pnpm surfer import
 
   msg2 "prepare firefox l10n"
-  sh scripts/download-language-packs.sh
+  srcdir="$srcdir" sh scripts/download-language-packs.sh
 
   msg2 "prepare custom mozconfig"
   echo -n "$_google_api_key" >google-api-key
-  cat > mozconfig <<END
+  cat >mozconfig <<END
 # # sccache
 # mk_add_options 'export RUSTC_WRAPPER=sccache'
 # mk_add_options 'export CCACHE_CPP2=yes'
@@ -184,16 +200,17 @@ ac_add_options --with-system-nss
 # Features
 # ac_add_options --enable-alsa
 # ac_add_options --enable-jack
-ac_add_options --enable-crashreporter
+# ac_add_options --enable-crashreporter
+ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 # ac_add_options --disable-tests
 END
+
 }
 
 _mach() {
   "$srcdir/desktop/engine/mach" "$@"
 }
-
 build() {
   export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=pip
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
@@ -210,7 +227,7 @@ build() {
   CFLAGS="${CFLAGS/-fexceptions/}"
   CXXFLAGS="${CXXFLAGS/-fexceptions/}"
   LD=ld.lld
-  RUSTFLAGS="-Clink-arg=-fuse-ld=lld -Clink-arg=-Xlinker"
+  RUSTFLAGS="-Clink-arg=-fuse-ld=lld"
   # LTO needs more open files
   ulimit -n 4096
 
@@ -230,6 +247,7 @@ build() {
     # so we need this patch
     sed -i 's/clangASTMatchers/clang-cpp/g' ./engine/build/clang-plugin/moz.build
 
+    pnpm run ffprefs
     env \
       SURFER_COMPAT="$CARCH" \
       SURFER_PLATFORM=linux \
@@ -237,12 +255,12 @@ build() {
       ZEN_RELEASE=1 \
       LLVM_PROFDATA=llvm-profdata \
       dbus-run-session \
-        xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
-          pnpm surfer build --skip-patch-check
+      xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
+      pnpm surfer build --skip-patch-check
   )
 
   # Build langpacks
-  echo $_firefox_version > "$srcdir/desktop/engine/browser/config/version.txt"
+  echo $_firefox_version >"$srcdir/desktop/engine/browser/config/version.txt"
   for _lang in "${_languages[@]}"; do
     msg2 "build langpack: ${_lang}"
     _mach build "merge-$_lang"
@@ -314,7 +332,8 @@ END
   install -Dvm644 "$srcdir"/desktop/docs/assets/zen-black.svg "$pkgdir/usr/share/icons/hicolor/symbolic/apps/$pkgbase-symbolic.svg"
 
   msg2 "install desktop file"
-  install -Dvm644 "$srcdir"/desktop/build/AppDir/*.desktop "$pkgdir/usr/share/applications/$pkgbase.desktop"
+  #install -Dvm644 "$srcdir"/desktop/build/AppDir/*.desktop "$pkgdir/usr/share/applications/$pkgbase.desktop"
+  install -Dvm644 "$srcdir"/zen-browser.desktop "$pkgdir/usr/share/applications/$pkgbase.desktop"
 
   msg2 "use system certificates"
   local _nssckbi="$_appdir/libnssckbi.so"
@@ -323,12 +342,13 @@ END
   fi
 
   # TODO: Enable GNOME Shell search provider
-#   local sprovider="$pkgdir/usr/share/gnome-shell/search-providers/$pkgbase.search-provider.ini"
-#   install -Dvm644 /dev/stdin "$sprovider" <<END
-# [Shell Search Provider]
-# DesktopId=$pkgbase.desktop
-# BusName=org.mozilla.${pkgname//-/_}.SearchProvider
-# ObjectPath=/org/mozilla/${pkgname//-/_}/SearchProvider
-# Version=2
-# END
+  #   local sprovider="$pkgdir/usr/share/gnome-shell/search-providers/$pkgbase.search-provider.ini"
+  #   install -Dvm644 /dev/stdin "$sprovider" <<END
+  # [Shell Search Provider]
+  # DesktopId=$pkgbase.desktop
+  # BusName=org.mozilla.${pkgname//-/_}.SearchProvider
+  # ObjectPath=/org/mozilla/${pkgname//-/_}/SearchProvider
+  # Version=2
+  # END
 }
+# vim:set ts=2 sw=2 et:
