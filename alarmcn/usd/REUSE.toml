@@ -1,0 +1,32 @@
+version = 1
+
+[[annotations]]
+path = [
+    "PKGBUILD",
+    "README.md",
+    "keys/**",
+    ".SRCINFO",
+    ".nvchecker.toml",
+    "*.install",
+    "*.sysusers",
+    "*.tmpfiles",
+    "*.logrotate",
+    "*.pam",
+    "*.service",
+    "*.socket",
+    "*.timer",
+    "*.desktop",
+    "*.hook",
+    ".gitignore",
+]
+SPDX-FileCopyrightText = "Arch Linux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "usd-defaultfonts.patch",
+    "usd-find-dependency-OpenGL.patch",
+    "usd-tbb.patch",
+]
+SPDX-FileCopyrightText = "usd contributors"
+SPDX-License-Identifier = "Apache-2.0"
