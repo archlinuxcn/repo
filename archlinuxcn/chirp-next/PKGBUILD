@@ -6,8 +6,8 @@
 # Contributor: Erez Raviv (erezraviv@gmail.com)
 
 pkgname=chirp-next
-pkgver=20250801
-pkgrel=2
+pkgver=20250808
+pkgrel=1
 pkgdesc="GUI tool for programming ham radios"
 arch=('any')
 url="https://chirpmyradio.com/projects/chirp/wiki/Home"
@@ -22,7 +22,7 @@ provides=(chirp)
 install=$pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::https://archive.chirpmyradio.com/chirp_next/next-${pkgver}/chirp-${pkgver}.tar.gz")
 # Checksums: https://archive.chirpmyradio.com/chirp_next/next-$pkgver/SHA1SUM
-sha1sums=('5757abf47b454e0bc54bfd5873a558db4242d124')
+sha1sums=('167312f957a960a754f7b0a8c27ee637d4312270')
 
 # User-Agent override workaround for nitpicky Cloudflare config; see:
 # https://wiki.archlinux.org/title/Nonfree_applications_package_guidelines#Custom_DLAGENTS
