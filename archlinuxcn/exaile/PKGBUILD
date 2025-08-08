@@ -7,7 +7,7 @@
 # Contributor: Joshua Stiefer <facedelajunk@gmail.com>
 
 pkgname=exaile
-pkgver=4.1.3.1
+pkgver=4.1.4
 pkgrel=1
 pkgdesc="A full-featured Amarok-style media player for GTK+"
 arch=('any')
@@ -44,26 +44,25 @@ optdepends=('udisks2: device detection'
 	'gst-plugins-bad: BPM Counter plugin'
 	'python-beautifulsoup4: lyrics from lyrics.wikia.com (lyricwiki)'
 	'ipython: ipconsole plugin')
-source=("$pkgname::git+https://github.com/exaile/exaile.git#commit=a66b3129f06b1540565f80a6ede862bbc330f68e")
-#source=("$pkgname-$pkgver.tar.gz::https://github.com/exaile/exaile/archive/$pkgver.tar.gz")
+source=("$pkgname-$pkgver.tar.gz::https://github.com/exaile/exaile/archive/$pkgver.tar.gz")
 sha256sums=(SKIP)
 
 prepare() {
-    cd "$srcdir/$pkgname"
-    sed -i '/GIRepository/s/2.0/3.0/' xl/main.py
+	cd "$srcdir/$pkgname-$pkgver"
+	sed -i '/__version__/s/devel/'"$pkgver"'/' xl/version.py
 }
 
 build() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$pkgname-$pkgver"
 	make PREFIX="/usr"
 }
 
 check() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$pkgname-$pkgver"
 	make PYTEST=py.test test
 }
 
 package() {
-	cd "$srcdir/$pkgname"
+	cd "$srcdir/$pkgname-$pkgver"
 	make PREFIX="/usr" DESTDIR="$pkgdir" install
 }

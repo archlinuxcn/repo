@@ -2,12 +2,11 @@ maintainers:
   - github: oldherl
 
 update_on:
-# Disabled AUR sync because 4.1.3 is not new enough for python 3.13
-#  - source: aur
-#    aur: exaile
+  - source: github
+    github: exaile/exaile
+    exclude_regex: ".*beta.*"
+    use_latest_release: true
+    include_prereleases: false
   - source: manual
     manual: 1
   - alias: python
-#pre_build_script: aur_pre_build(maintainers='UnicornDarkness')
-
-#post_build: aur_post_build
