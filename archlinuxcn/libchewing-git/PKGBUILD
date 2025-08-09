@@ -3,7 +3,7 @@
 
 _pkgname=libchewing
 pkgname=libchewing-git
-pkgver=0.10.1.r11.g5ce5abb
+pkgver=0.10.1.r14.g44adf6e
 pkgrel=1
 epoch=1
 pkgdesc='Intelligent Chinese phonetic input method'
@@ -14,8 +14,10 @@ conflicts=("$_pkgname")
 provides=("$_pkgname")
 depends=('sqlite')
 makedepends=('cmake' 'git' 'rust')
-source=("git+https://github.com/chewing/libchewing/")
-md5sums=('SKIP')
+source=("git+https://github.com/chewing/libchewing/"
+        "git+https://github.com/chewing/libchewing-data/")
+md5sums=('SKIP'
+         'SKIP')
 
 pkgver() {
   cd "$_pkgname"
@@ -26,6 +28,11 @@ pkgver() {
 
 prepare() {
   cd "$_pkgname"
+
+  git submodule init
+  git config submodule.data.url "$srcdir/libchewing-data"
+  git -c protocol.file.allow=always submodule update
+
   mkdir build
 }
 
