@@ -1,5 +1,5 @@
 #!/usr/bin/bash
 
-export _portableConfig="org.mozilla.zen"
+export _portableConfig="zen-browser"
 
 portable -- $@

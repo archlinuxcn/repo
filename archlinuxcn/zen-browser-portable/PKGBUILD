@@ -15,13 +15,9 @@ depends=(
 	"portable"
 )
 
-optdepends=(
-	"zen-browser-i18n-zh-cn: Language pack for Zen Browser (zh-CN)"
-	"zen-browser-i18n-zh-tw: Language pack for Zen Browser (zh-TW)"
-	"zen-browser-i18n-ja: Language pack for Zen Browser (ja)"
-)
+optdepends=()
 
-provides=("zen-browser=${pkgver}")
+provides=(zen-browser=${pkgver})
 conflicts=(zen-browser)
 
 makedepends+=(
@@ -50,29 +46,17 @@ function package() {
 		fi
 	done < file.list
 	install -Dm755 \
-		portable-config \
-		"${pkgdir}/usr/lib/portable/info/org.mozilla.zen/config"
+		"${srcdir}/portable-config" \
+		"${pkgdir}/usr/lib/portable/info/zen-browser/config"
 	rm "${pkgdir}/usr/share/applications"/*
 	rm "${pkgdir}/usr/bin"/*
-	install -Dm755 \
-		"${srcdir}/start.sh" \
-		"${pkgdir}/usr/bin/zen"
 	install -Dm755 \
 		"${srcdir}/start.sh" \
 		"${pkgdir}/usr/bin/zen-browser"
 	install -Dm644 \
 		"${srcdir}/desktop.file" \
-		"${pkgdir}/usr/share/applications/org.mozilla.zen.desktop"
-	echo '''[Desktop Entry]
-Type=Application
-Name=Zen Browser
-GenericName=Stub for MPRIS
-Icon=zen-browser
-TryExec=portable
-Exec=env _portableConfig=org.mozilla.zen portable -- %u
-Terminal=false
-NoDisplay=true''' >"${pkgdir}/usr/share/applications/zen-browser.desktop"
+		"${pkgdir}/usr/share/applications/zen-browser.desktop"
 }
 sha256sums=('e79bba18a1cc0997cab92a1d6cb7d9c8c6c5263de5b1f350b2ab45b1e8ce5d75'
-            'b1df66c4246e6584efef74f5c0ae74b7c51c32823bf28bd92a3ef3c938dcaa09'
-            'b016d614f68dd6f51e9b31344bd81befae1de0d2b4f93d9ee4c1ef5c40aff350')
+            '4765d74c609358734bf65af6c536862f58807fd6af71957d560c09db1a621815'
+            '631ae3b81618e0dd3a33de907a5d7aa795c5bd026ce957bda0b315c8e58c7b3e')
