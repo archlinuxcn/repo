@@ -52,9 +52,6 @@ function package() {
 	rm "${pkgdir}/usr/bin"/*
 	install -Dm755 \
 		"${srcdir}/start.sh" \
-		"${pkgdir}/usr/bin/zen"
-	install -Dm755 \
-		"${srcdir}/start.sh" \
 		"${pkgdir}/usr/bin/zen-browser"
 	install -Dm644 \
 		"${srcdir}/desktop.file" \
