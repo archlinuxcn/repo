@@ -7,6 +7,9 @@ pre_build_script: aur_pre_build(maintainers=['denn'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - bstring
+
 update_on:
   - source: aur
     aur: netatalk
