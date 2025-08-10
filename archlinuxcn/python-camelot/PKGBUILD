@@ -28,6 +28,7 @@ makedepends=(
   python-build
   python-installer
   python-setuptools
+  python-setuptools-scm
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/camelot-dev/camelot/archive/v${pkgver}.tar.gz")
@@ -35,6 +36,7 @@ sha512sums=('366629edc1ee07b86abd5124c92ceae040bdd0627bcfbf65c56b406b3de927341f2
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver} \
   python -m build --wheel --no-isolation
 }
 
