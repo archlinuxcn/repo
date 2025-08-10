@@ -5,7 +5,7 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.2.4
+pkgver=4.3.0
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
@@ -13,7 +13,7 @@ license=('GPL-2.0-or-later')
 
 source=("https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz")
 
-md5sums=('d654060d7ff646402ea05d9aeaa52562')
+md5sums=('c7ca0f798102eb97a8e4e26766412a74')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
@@ -23,6 +23,7 @@ makedepends=('cmark'
 
 depends=('acl'
          'bash'
+         'bstring'
          'db5.3'
          'glib2'
          'glibc'
@@ -44,6 +45,7 @@ optdepends=('localsearch: AFP Spotlight support'
             'libcups: Network printer queues support'
             'libtirpc: Quota support'
             'rpcsvc-proto: Quota support'
+            'sqlite3: SQLite CNID backend support'
             'libwrap: TCP wrappers support'
             'cracklib: Weak password detection')
 
@@ -57,7 +59,7 @@ backup=('etc/afp.conf'
         'etc/pam.d/netatalk')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}-${pkgver}" || exit 1
   arch-meson . build \
     --localstatedir /var/lib \
     -Dwith-appletalk=true \
@@ -73,7 +75,7 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}-${pkgver}" || exit 1
   meson install -C build --destdir "${pkgdir}"
 }
 
