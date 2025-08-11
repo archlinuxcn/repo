@@ -1,6 +1,6 @@
 pkgname=julia-git-ordinarydiffeqexponentialrk-src
-pkgver=1.5.0
-_commit=4a91cc8f8d85c2ed47c7a7c8f64c514d06df72a0
+pkgver=1.7.0
+_commit=bda09ee6a17665d67cc1728c72c02fb97d86a31a
 pkgrel=1
 pkgdesc="OrdinaryDiffEqExponentialRK.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('d164c363ddfc9617a1c6fec0f0fd8b48b9b12d029850fd2b8ecd60370e9c128f')
+sha256sums=('6dc721682ce0d2a421661d561ea23b4de2f21381bbadf8d350bf78135b74019c')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/OrdinaryDiffEqExponentialRK
