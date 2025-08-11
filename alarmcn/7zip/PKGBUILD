@@ -1,8 +1,8 @@
 # Maintainer: Evangelos Foutras <foutrelis@archlinux.org>
 
 pkgname=7zip
-pkgver=24.09
-pkgrel=3
+pkgver=25.01
+pkgrel=1
 pkgdesc="File archiver for extremely high compression"
 arch=(aarch64 x86_64)
 url="https://www.7-zip.org"
@@ -13,7 +13,7 @@ provides=('p7zip')
 conflicts=('p7zip')
 _replaces=('p7zip')
 source=(https://7-zip.org/a/7z${pkgver//./}-src.tar.xz)
-sha256sums=('49c05169f49572c1128453579af1632a952409ced028259381dac30726b6133a')
+sha256sums=('ed087f83ee789c1ea5f39c464c55a5c9d4008deb0efe900814f2df262b82c36e')
 
 build() {
   local _platform_flags=()
@@ -46,10 +46,9 @@ package() {
     CPP/7zip/UI/Console/b/g/7z
   install -D CPP/7zip/Bundles/SFXCon/b/g/7zCon "$pkgdir/usr/lib/7zip/7zCon.sfx"
 
-  mkdir -p "$pkgdir/usr/bin"
   for _prog in 7za 7zr 7z; do
-    echo -e "#!/bin/sh\nexec /usr/lib/7zip/$_prog \"\$@\"" >"$pkgdir/usr/bin/$_prog"
-    chmod +x "$pkgdir/usr/bin/$_prog"
+    printf '#!/bin/sh\nexec /usr/lib/7zip/%s "$@"\n' "$_prog" \
+    | install -D /dev/stdin "$pkgdir/usr/bin/$_prog"
   done
 
   install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" DOC/{,unRar}License.txt
