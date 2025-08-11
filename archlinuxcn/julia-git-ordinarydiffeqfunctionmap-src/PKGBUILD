@@ -1,6 +1,6 @@
 pkgname=julia-git-ordinarydiffeqfunctionmap-src
-pkgver=1.2.0
-_commit=f67baa8a16070ec8aa5108efc5c07d33c89d8512
+pkgver=1.4.0
+_commit=6a38c140ce727bc2dbebb4b026d14eebb70c609a
 pkgrel=1
 pkgdesc="OrdinaryDiffEqFunctionMap.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('2ac67e7e7b189ed710d9bee8398be9e7a0e7cddb460bb9dda66e21ca26b3c893')
+sha256sums=('772f32f526e5b7de9963f6249a80eecd44919590e816e1635d2c633ff718350a')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/OrdinaryDiffEqFunctionMap
