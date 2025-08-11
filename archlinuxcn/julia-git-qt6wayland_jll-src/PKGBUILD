@@ -11,7 +11,7 @@ depends=(julia-git qt6-base)
 source=("git+https://github.com/JuliaBinaryWrappers/Qt6Wayland_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('15ccfc4237eec498dcd2ee47636da6aa6123107de26c137d743ebf86660908f3'
-            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
+            '7bdec004c4ab6d55fc708015d8edc491d35a3c821a7f1bbbffa7cfae4c21cd7f')
 
 build() {
   cd Qt6Wayland_jll.jl
