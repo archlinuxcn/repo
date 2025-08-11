@@ -1,6 +1,6 @@
 pkgname=julia-git-tricks-src
-pkgver=0.1.11
-_commit=a7e0e31a854ffa0997d05743393a52d87afd01b5
+pkgver=0.1.12
+_commit=3f10e010dc0caceab649c0c5c4d5ee39d5b70e4a
 pkgrel=1
 pkgdesc="Tricks.jl"
 url="https://github.com/oxinabox/Tricks.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/oxinabox/Tricks.jl.git#commit=$_commit")
-sha256sums=('8d217b57a04c2387111333e238690e9c2198f72815384d0e9335a60047df6996')
+sha256sums=('998e2f0d232859d51d098cccb8f0f846a05e7348a08ab4f131a159222461d253')
 
 package() {
   cd Tricks.jl
