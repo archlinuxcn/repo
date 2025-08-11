@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 pkgname=portable
 epoch=1
-pkgver=7.3
+pkgver=7.5
 pkgrel=1
 epoch=
 pkgdesc="Portable Sandboxing framework"
@@ -52,7 +52,7 @@ checkdepends=()
 
 source=(portable::git+https://github.com/Kraftland/portable.git#tag=${pkgver})
 
-md5sums=('eb186d69d39c323bd262365eafb3d3a3')
+md5sums=('f895c287b223929a0e4d00f6544adf61')
 
 
 function package() {
