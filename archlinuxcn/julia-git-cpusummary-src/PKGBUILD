@@ -1,6 +1,6 @@
 pkgname=julia-git-cpusummary-src
-pkgver=0.2.6
-_commit=e2dc3cf784ed963524bb7ab0c682abe02e8ab26b
+pkgver=0.2.7
+_commit=ce1391fac7c7e09a24d38d37eadadcc2090341dc
 pkgrel=1
 pkgdesc="CPUSummary.jl"
 url="https://github.com/JuliaSIMD/CPUSummary.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/CPUSummary.jl.git#commit=$_commit")
-sha256sums=('c7bb8470933f0d1f292240e1db35a833860b8ac31e53ae9fd749ae9826b44cd4')
+sha256sums=('096439ade02d60b8dbda10193c00a3cb25f142eaac45315bdc1a22ebc222166e')
 
 package() {
   cd CPUSummary.jl
