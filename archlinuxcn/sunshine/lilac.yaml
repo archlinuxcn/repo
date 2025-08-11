@@ -1,0 +1,26 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['xiota', 'LizardByte'])
+post_build: aur_post_build
+update_on:
+  - source: aur
+    aur: sunshine
+  - alias: icu
+  - alias: libssl
+  - alias: libcrypto
+  - source: alpm
+    alpm: libva
+    strip_release: true
+    provided: libva.so
+  - source: alpm
+    alpm: miniupnpc
+    strip_release: true
+    provided: libminiupnpc.so
+  - source: alpm
+    alpm: opus
+    strip_release: true
+    provided: libopus.so
+  - source: manual
+    manual: 1
+
+maintainers:
+  - github: Misaka13514
