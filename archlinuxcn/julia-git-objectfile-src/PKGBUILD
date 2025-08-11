@@ -1,6 +1,6 @@
 pkgname=julia-git-objectfile-src
-pkgver=0.4.4
-_commit=47c72951a6ee3c37fab3d7e603c86a6131387213
+pkgver=0.5.0
+_commit=1c5a0fe14c73c0bf964eec71d35f9def87f7998f
 pkgrel=1
 pkgdesc="ObjectFile.jl"
 url="https://github.com/staticfloat/ObjectFile.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/staticfloat/ObjectFile.jl.git#commit=$_commit")
-sha256sums=('421120f2a22460f39834942eab12922194765d5cd3093251e92bcd348e30026d')
+sha256sums=('b1a9cc14fce0d5e6628356cc328a6e30311135adc39c4a21cd24d6cdb3d31aa6')
 
 package() {
   cd ObjectFile.jl
