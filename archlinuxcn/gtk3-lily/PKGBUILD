@@ -7,8 +7,8 @@ pkgname=(
   # gtk3-demos
   # gtk3-docs
 )
-pkgver=3.24.49
-pkgrel=2
+pkgver=3.24.50
+pkgrel=1
 epoch=1
 pkgdesc="GObject-based multi-platform GUI toolkit, with lilydjwg's patches"
 url="https://www.gtk.org/"
@@ -52,7 +52,6 @@ depends=(
   wayland
 )
 makedepends=(
-  cantarell-fonts
   git
   glib2-devel
   gobject-introspection
@@ -68,9 +67,9 @@ source=(
   0001-Allow-disabling-legacy-Tracker-search.patch
   0001-wayland-im-notify-wayland-after-set_cursor_location.patch
   0001-inhibit-hex-check.patch)
-b2sums=('d406c2d0ce8c578af27624550a49e298ad5ebacb4e6c6998011cf31fe12dfd8aef3227cf8972820d48d2a87465165384b16f927b25be235f7617dea1944b7611'
+b2sums=('93ee986e75b2b94b50f1485a183d6ab558306bf17ab15a500ea485c40123257873a6a99fc5e20f864da6c561f0f6f4c7a15f42694bd691db03aeddd5dd6587d2'
         '8e6a3906126749c6d853f582e3802254cdbba099c6af7190ad576eff6ea5425404a72b1b36950a87e3afdac82295cfe246003172c3e0341a73bd931a36f3b407'
-        'e37702aa7116038818d3b922e70d6b2c0644e69e63fe31d0d00c042fb825f07318b4fa32a74c825e2f7e0aafce3a5fbe5265d2f575b5002e25350b1f31a2ca75'
+        'f63a30a5823c564861145128a91b6d6ca4f13fd40cf09d1b8897bccaf8664af085b3cbe20ba7da6289439a820440a7af17b6281efea1f84a8c4decd62df00a54'
         '2718db7adc07ee2df86b6dacbfb7638217b2cb76c5f5acde4ce9bd7a4617989744326069670b6cc4e5aff59fac410db9b60db7f07dd2a2e36a40b7a3b0d2d8b9'
         '9b7bf67ff3f5398bec57ca405c33757c14721d012aaa465df3f629b1d685b2183850e91ff6b1e879ec927b6d710806790a0302e2307e782eb7d64eb34dd71820')
 
@@ -157,7 +156,6 @@ package_gtk3-lily-demos() {
   depends=(
     at-spi2-core
     cairo
-    cantarell-fonts
     dconf
     gdk-pixbuf2
     glib2
