@@ -1,6 +1,6 @@
 pkgname=julia-git-imagefiltering-src
-pkgver=0.7.10
-_commit=e92b73db06424a222adb07c9c34318a7a6c4e51e
+pkgver=0.7.12
+_commit=3cca7d07f9031d76eab2aff1629d1d81a771858b
 pkgrel=1
 pkgdesc="ImageFiltering.jl"
 url="https://github.com/JuliaImages/ImageFiltering.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaImages/ImageFiltering.jl.git#commit=$_commit")
-sha256sums=('a96a1bbb0215fe0f9142ed6591c45c1bfc278e75c6b7be63c940decc07128026')
+sha256sums=('8a73ff33299e9219702ad1274f48b4604c2f0957a4b82722037b6eb5bfa44c50')
 
 package() {
   cd ImageFiltering.jl
