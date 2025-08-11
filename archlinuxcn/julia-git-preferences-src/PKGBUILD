@@ -1,6 +1,6 @@
 pkgname=julia-git-preferences-src
-pkgver=1.4.3
-_commit=30889fe8055b129c8a689f7385ff51f2672b8936
+pkgver=1.5.0
+_commit=5c536fdea268838f2365e8e3b93397d2de752971
 pkgrel=1
 pkgdesc="Preferences.jl"
 url="https://github.com/JuliaPackaging/Preferences.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPackaging/Preferences.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('664cfccfe742fecdaf845166a1dc63c0b7bda4a50f1462f3a402bfb114174e01')
 
 package() {
   cd Preferences.jl
