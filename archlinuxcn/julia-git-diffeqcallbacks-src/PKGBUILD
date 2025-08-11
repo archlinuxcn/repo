@@ -1,6 +1,6 @@
 pkgname=julia-git-diffeqcallbacks-src
-pkgver=4.8.0
-_commit=403d81a556db44e6199d75e5b2f7ab8bffe5b9b1
+pkgver=4.9.0
+_commit=317ead25f82372b95fc7c9633f266ba048ea5900
 pkgrel=1
 pkgdesc="DiffEqCallbacks.jl"
 url="https://github.com/SciML/DiffEqCallbacks.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/DiffEqCallbacks.jl.git#commit=$_commit")
-sha256sums=('19fc188805a4e003b5e42201c90a670c7191412e69d730bc2f9a2869060161d7')
+sha256sums=('4cb710a5ccafc97c533bb3a972de39b0f980a052d29012b0e14e621b49fb9db5')
 
 package() {
   cd DiffEqCallbacks.jl
