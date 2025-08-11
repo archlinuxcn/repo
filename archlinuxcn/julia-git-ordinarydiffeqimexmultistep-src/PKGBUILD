@@ -1,6 +1,6 @@
 pkgname=julia-git-ordinarydiffeqimexmultistep-src
-pkgver=1.4.0
-_commit=c87e2a95b7440419e37476b93aaa092b43d140e0
+pkgver=1.6.0
+_commit=6a38c140ce727bc2dbebb4b026d14eebb70c609a
 pkgrel=1
 pkgdesc="OrdinaryDiffEqIMEXMultistep.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('3d4071e3473b2782503b8da13cd0253cdadca3e6bb885a8cab53e84b2287b402')
+sha256sums=('772f32f526e5b7de9963f6249a80eecd44919590e816e1635d2c633ff718350a')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/OrdinaryDiffEqIMEXMultistep
