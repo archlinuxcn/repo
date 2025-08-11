@@ -1,6 +1,6 @@
 pkgname=julia-git-ordinarydiffeqstabilizedirk-src
-pkgver=1.3.0
-_commit=55bd93b34cde303be4801053236b6d1b1d464620
+pkgver=1.5.0
+_commit=3e9e4561e1a35dacbc361fd36a51524417bac391
 pkgrel=1
 pkgdesc="OrdinaryDiffEqStabilizedIRK.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('249adc7143592d86927c5fd5c03ebdcbd8b6635180595416be14281f07972dcf')
+sha256sums=('687dd3fae89517e6ab49edc45eb79690ab4125c76b888f2a5768076a1f8ff169')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/OrdinaryDiffEqStabilizedIRK
