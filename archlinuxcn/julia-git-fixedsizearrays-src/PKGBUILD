@@ -1,7 +1,7 @@
 pkgname=julia-git-fixedsizearrays-src
 pkgver=1.2.0
 _commit=fc463906c0bfd803d7504d21c11461d14b96844f
-pkgrel=1
+pkgrel=2
 pkgdesc="FixedSizeArrays.jl"
 url="https://github.com/JuliaArrays/FixedSizeArrays.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/FixedSizeArrays.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('71926613ac76cf1d185b51a14ba02c729a9cfc822b6dbff9315d0446f8f44f4e')
 
 package() {
   cd FixedSizeArrays.jl
