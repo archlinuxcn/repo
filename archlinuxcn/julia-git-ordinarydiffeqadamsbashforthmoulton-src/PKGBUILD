@@ -1,6 +1,6 @@
 pkgname=julia-git-ordinarydiffeqadamsbashforthmoulton-src
-pkgver=1.4.0
-_commit=6a38c140ce727bc2dbebb4b026d14eebb70c609a
+pkgver=1.5.0
+_commit=a0a514e351394ba487f93afd8ff674130bd929c2
 pkgrel=1
 pkgdesc="OrdinaryDiffEqAdamsBashforthMoulton.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('772f32f526e5b7de9963f6249a80eecd44919590e816e1635d2c633ff718350a')
+sha256sums=('5a2d45880d819e3b896d4fcc8ed5c3017ae098ea98ab3deaf7f79edf7caa8302')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/OrdinaryDiffEqAdamsBashforthMoulton
