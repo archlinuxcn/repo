@@ -1,7 +1,7 @@
 pkgname=julia-git-lemongraphs-src
 pkgver=0.1.0
 _commit=5841fbe2cae14774bce8998414df99f147c74c24
-pkgrel=1
+pkgrel=2
 pkgdesc="LEMONGraphs.jl"
 url="https://github.com/JuliaGraphs/LEMONGraphs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphs/LEMONGraphs.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('62305c7d65101e85353f8a7dc3c1260275971b0201fe1a30319c7cc08b0c5d2d')
 
 package() {
   cd LEMONGraphs.jl
