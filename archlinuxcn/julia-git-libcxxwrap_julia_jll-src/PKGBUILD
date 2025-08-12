@@ -6,9 +6,8 @@ pkgdesc="libcxxwrap_julia_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libcxxwrap_julia_jll.jl.git"
 arch=('any')
 license=('MIT')
-# TODO: Add dependency on the libraries
 makedepends=(git julia-pkg-scripts)
-depends=(julia-git)
+depends=(julia-git libcxxwrap_julia)
 source=("git+https://github.com/JuliaBinaryWrappers/libcxxwrap_julia_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('51edea85e3e26aedc789212e416b61462bb5969b711681c99733e2663dd7f034'
