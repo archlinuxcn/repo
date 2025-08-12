@@ -1,0 +1,26 @@
+pkgname=julia-git-spirv_llvm_backend_jll-src
+pkgver=20.1.5+1
+_commit=0129b48f5cb7270640909187978edda2885f9d3d
+pkgrel=1
+pkgdesc="SPIRV_LLVM_Backend_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/SPIRV_LLVM_Backend_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git) # Provided by llvm-julia-git package
+source=("git+https://github.com/JuliaBinaryWrappers/SPIRV_LLVM_Backend_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('dc03126f17975e5ee0474808ad37b161c7a588e8e0f082f1fa9c4f1256a632c5'
+            'a77d4e73db64e193cd5b09864754efd9ac329e92cf27f750216cacc3cf86fe6a')
+
+build() {
+  cd SPIRV_LLVM_Backend_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl SPIRV_LLVM_Backend_jll ../jll.toml
+}
+
+package() {
+  cd SPIRV_LLVM_Backend_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SPIRV_LLVM_Backend_jll "${pkgdir}" "${pkgname}" julia-git
+}

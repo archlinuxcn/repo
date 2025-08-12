@@ -14,5 +14,7 @@ sha256sums=('3ee9d96ae3ce56d1404e4cfaf761b9fa852b4545ea479a2924832b293044791d')
 package() {
   cd QuantumClifford.jl
 
+  rm -rf lib
+
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh QuantumClifford "${pkgdir}" "${pkgname}" julia-git
 }

@@ -1,0 +1,26 @@
+pkgname=julia-git-gettextruntime_jll-src
+pkgver=0.22.4+0
+_commit=eade7022fad52fd8a8e687157d524a63059127af
+pkgrel=1
+pkgdesc="GettextRuntime_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/GettextRuntime_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git gettext)
+source=("git+https://github.com/JuliaBinaryWrappers/GettextRuntime_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('0a01cb0f8f467efdb65fa0ad06a78cf73cd9a75b22e827613324935a62fbc5ea'
+            '6f5a4e84b352a7a9cad6cfed54e77406cc53245ac469543d87890d6ae1106713')
+
+build() {
+  cd GettextRuntime_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl GettextRuntime_jll ../jll.toml
+}
+
+package() {
+  cd GettextRuntime_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GettextRuntime_jll "${pkgdir}" "${pkgname}" julia-git
+}

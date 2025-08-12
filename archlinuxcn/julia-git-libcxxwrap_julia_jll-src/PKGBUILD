@@ -1,0 +1,27 @@
+pkgname=julia-git-libcxxwrap_julia_jll-src
+pkgver=0.14.4+0
+_commit=aeb697d77fcaadcef6f72c02588d5214df604af8
+pkgrel=1
+pkgdesc="libcxxwrap_julia_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libcxxwrap_julia_jll.jl.git"
+arch=('any')
+license=('MIT')
+# TODO: Add dependency on the libraries
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaBinaryWrappers/libcxxwrap_julia_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('51edea85e3e26aedc789212e416b61462bb5969b711681c99733e2663dd7f034'
+            '060d7eaf22c63514773d0d8d19f74a26f5d880032716a51e082d3603483d08d9')
+
+build() {
+  cd libcxxwrap_julia_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libcxxwrap_julia_jll ../jll.toml
+}
+
+package() {
+  cd libcxxwrap_julia_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libcxxwrap_julia_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,20 @@
+pkgname=liblemon_jll
+pkgver=1.3.1+0
+_src_commit=d272a6d6e3905eef0c65dc1fe944c130dbb4294b
+pkgrel=0
+pkgdesc="CxxWrap.jl wrapper for lemon"
+url="https://github.com/JuliaBinaryWrappers/LEMON_jll.jl.git"
+arch=('aarch64' 'x86_64')
+license=('MIT')
+makedepends=(git julia-pkg-scripts cmake)
+depends=(julia-git coin-or-lemon libcxxwrap_julia)
+source=("https://raw.githubusercontent.com/JuliaPackaging/Yggdrasil/${_src_commit}/L/LEMON/bundled/cxxwrap/lemoncxxwrap.cpp")
+sha256sums=('SKIP')
+
+build() {
+  g++ -shared -std=c++17 -O3 -fPIC ${CXXFLAGS} ${LDFLAGS} -o liblemoncxxwrap.so lemoncxxwrap.cpp -I/usr/include/julia -lemon -ljulia -lcxxwrap_julia
+}
+
+package() {
+  install -D -m755 -t "$pkgdir/usr/lib" liblemoncxxwrap.so
+}

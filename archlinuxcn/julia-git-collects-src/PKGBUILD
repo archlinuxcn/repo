@@ -1,0 +1,18 @@
+pkgname=julia-git-collects-src
+pkgver=1.0.0
+_commit=a8aff1e6675d4c4e98fc03af04758fd440b2c327
+pkgrel=1
+pkgdesc="Collects.jl"
+url="https://github.com/JuliaCollections/Collects.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaCollections/Collects.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Collects.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Collects "${pkgdir}" "${pkgname}" julia-git
+}

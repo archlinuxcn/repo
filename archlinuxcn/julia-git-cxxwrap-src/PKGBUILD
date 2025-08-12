@@ -1,0 +1,18 @@
+pkgname=julia-git-cxxwrap-src
+pkgver=0.17.2
+_commit=6c707b4af44171727ce8fc7b1b897844e76bc315
+pkgrel=1
+pkgdesc="CxxWrap.jl"
+url="https://github.com/JuliaInterop/CxxWrap.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaInterop/CxxWrap.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CxxWrap.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CxxWrap "${pkgdir}" "${pkgname}" julia-git
+}

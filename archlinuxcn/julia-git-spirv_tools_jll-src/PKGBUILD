@@ -1,0 +1,26 @@
+pkgname=julia-git-spirv_tools_jll-src
+pkgver=2025.1.0+2
+_commit=d01eb4db67ba28a898d6210c85f31e3f996f959a
+pkgrel=1
+pkgdesc="SPIRV_Tools_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/SPIRV_Tools_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git spirv-tools)
+source=("git+https://github.com/JuliaBinaryWrappers/SPIRV_Tools_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('0f6ebe74aef89c09c37cae9570546e0da8a212661ab4e678e5eed9f3d96a8aee'
+            '96b4b312f6de0beb06407d832e142843cfa5f514dcf920a4a5f15402828b3e1a')
+
+build() {
+  cd SPIRV_Tools_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl SPIRV_Tools_jll ../jll.toml
+}
+
+package() {
+  cd SPIRV_Tools_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SPIRV_Tools_jll "${pkgdir}" "${pkgname}" julia-git
+}

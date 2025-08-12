@@ -1,0 +1,18 @@
+pkgname=julia-git-gputoolbox-src
+pkgver=0.2.0
+_commit=4cdaedb0f0650e20008c5c767e73cfe1ecb59cda
+pkgrel=1
+pkgdesc="GPUToolbox.jl"
+url="https://github.com/JuliaGPU/GPUToolbox.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaGPU/GPUToolbox.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd GPUToolbox.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh GPUToolbox "${pkgdir}" "${pkgname}" julia-git
+}
