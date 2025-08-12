@@ -1,0 +1,18 @@
+pkgname=julia-git-commoneq-src
+pkgver=0.2.1
+_commit=2eca8da6552c3ba50d2315d107a5e65d10bd2bbe
+pkgrel=1
+pkgdesc="CommonEq.jl"
+url="https://github.com/jverzani/CommonEq.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jverzani/CommonEq.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CommonEq.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CommonEq "${pkgdir}" "${pkgname}" julia-git
+}

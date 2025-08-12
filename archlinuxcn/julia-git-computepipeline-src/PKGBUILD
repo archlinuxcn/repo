@@ -1,0 +1,18 @@
+pkgname=julia-git-computepipeline-src
+pkgver=0.1.4
+_commit=ea79cd546559dd88b3a46b0d9786376c3587256d
+pkgrel=1
+pkgdesc="ComputePipeline.jl"
+url="https://github.com/MakieOrg/Makie.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Makie.jl/ComputePipeline
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ComputePipeline "${pkgdir}" "${pkgname}" julia-git
+}

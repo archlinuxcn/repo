@@ -1,0 +1,18 @@
+pkgname=julia-git-scimlpublic-src
+pkgver=1.0.0
+_commit=9bbc1dcdf6f2df8a8441b1ca1fdf0a24e071bb4d
+pkgrel=1
+pkgdesc="SciMLPublic.jl"
+url="https://github.com/SciML/SciMLPublic.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/SciMLPublic.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SciMLPublic.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SciMLPublic "${pkgdir}" "${pkgname}" julia-git
+}

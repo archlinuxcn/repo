@@ -1,0 +1,18 @@
+pkgname=julia-git-compiler-src
+pkgver=0.1.1
+_commit=55a7383c2420d72fbae12f8fd118a487155246a2
+pkgrel=1
+pkgdesc="Compiler.jl"
+url="https://github.com/JuliaLang/BaseCompiler.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaLang/BaseCompiler.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd BaseCompiler.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Compiler "${pkgdir}" "${pkgname}" julia-git
+}

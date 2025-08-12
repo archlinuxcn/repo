@@ -1,0 +1,18 @@
+pkgname=julia-git-sympycore-src
+pkgver=0.3.2
+_commit=f301f15e5790387f9efb385fad9530f3a102a5c3
+pkgrel=1
+pkgdesc="SymPyCore.jl"
+url="https://github.com/jverzani/SymPyCore.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/jverzani/SymPyCore.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SymPyCore.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SymPyCore "${pkgdir}" "${pkgname}" julia-git
+}
