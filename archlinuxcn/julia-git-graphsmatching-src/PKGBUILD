@@ -1,7 +1,7 @@
 pkgname=julia-git-graphsmatching-src
-pkgver=0.2.0
-_commit=7d14c0b345eb701f86ff20236e26a8a050994932
-pkgrel=2
+pkgver=0.2.1
+_commit=905d9ca243b1929d75519f038c224242e6b707cf
+pkgrel=1
 pkgdesc="GraphsMatching.jl"
 url="https://github.com/JuliaGraphs/GraphsMatching.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphs/GraphsMatching.jl.git#commit=$_commit")
-sha256sums=('891467443cb4afc9e69394288c3ebfda06417b7e0e3c8b738dfb4dcc1fc6e2ca')
+sha256sums=('a3ae22606cb63e78cc39d922c821feeb12186fa1f17fb48f81405dc29125c30e')
 
 package() {
   cd GraphsMatching.jl
