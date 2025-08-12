@@ -9,7 +9,7 @@ def pre_build():
   url = f"https://github.com/JuliaBinaryWrappers/LEMON_jll.jl/blob/{commit}/README.md"
   r = s.get(url)
   r.raise_for_status()
-  readme = r.content
+  readme = r.content.decode()
   m = re.search("https://github\\.com/JuliaPackaging/Yggdrasil/blob/([0-9a-f]*)/L", readme)
   src_commit = m[1]
   for line in edit_file('PKGBUILD'):
