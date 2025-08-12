@@ -17,6 +17,12 @@ pkgver() {
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
 }
 
+function prepare() {
+	git remote add pick https://github.com/jpstotz/better-adb-sync.git
+	git fetch --all
+	git cherry-pick 35e23e95d9c220fa5f3c34f02e9650ddec690ae7 --no-commit
+}
+
 build() {
 	cd $pkgname
 	python -m build --wheel --no-isolation
