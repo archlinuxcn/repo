@@ -1,6 +1,6 @@
 pkgname=julia-git-qt6wayland_jll-src
-pkgver=6.8.2+0
-_commit=46f608911a2d3b87c62309e409f2a8df9770d6ce
+pkgver=6.8.2+1
+_commit=d858337ac42a7e282944372bb0f2e49df8e5de11
 pkgrel=1
 pkgdesc="Qt6Wayland_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Qt6Wayland_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git qt6-base)
 source=("git+https://github.com/JuliaBinaryWrappers/Qt6Wayland_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('15ccfc4237eec498dcd2ee47636da6aa6123107de26c137d743ebf86660908f3'
+sha256sums=('5ad7e2e5a23620b78efe1cab5e5f195d2f71c8c4153724298572acfe0a1dfce1'
             '7bdec004c4ab6d55fc708015d8edc491d35a3c821a7f1bbbffa7cfae4c21cd7f')
 
 build() {
