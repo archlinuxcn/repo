@@ -1,7 +1,7 @@
 pkgname=julia-git-computepipeline-src
 pkgver=0.1.4
 _commit=ea79cd546559dd88b3a46b0d9786376c3587256d
-pkgrel=1
+pkgrel=2
 pkgdesc="ComputePipeline.jl"
 url="https://github.com/MakieOrg/Makie.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('a31b1ae7c75254d952bafb7f71a38df1fab14cade26d286b7596fe1f0bd45389')
 
 package() {
   cd Makie.jl/ComputePipeline
