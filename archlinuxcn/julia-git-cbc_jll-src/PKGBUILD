@@ -1,7 +1,7 @@
 pkgname=julia-git-cbc_jll-src
 pkgver=200.1000.800+0
 _commit=f60fbd93b6b6bb3af63c5c6eae09d859605905b0
-pkgrel=3
+pkgrel=4
 pkgdesc="Cbc_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Cbc_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git coin-or-cbc)
 source=("git+https://github.com/JuliaBinaryWrappers/Cbc_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('cba1a52be1a192b19897ea0c4e547ea234180f8409f0db5b5c0f8681cc569bd7'
             'ba68b1d653189cd4c5b1a1ab46b5802e28c5586e290bd0a2d4da76be4fc3d093')
 
 build() {
