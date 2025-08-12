@@ -1,7 +1,7 @@
 pkgname=julia-git-ghostscript_jll-src
 pkgver=9.55.0+4
 _commit=e2e0d14d4bca0ce99c5c25e639ab188256193174
-pkgrel=3
+pkgrel=4
 pkgdesc="Ghostscript_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Ghostscript_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git ghostscript)
 source=("git+https://github.com/JuliaBinaryWrappers/Ghostscript_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('cdc0d58255e918152988b4c9245ce5ab093dd79ea8dad3e47dd534c19d508b8e'
             '131378471bb9342fb416cfbbbee3d344644f767834473d92d1ee7746ea54e95a')
 
 build() {
