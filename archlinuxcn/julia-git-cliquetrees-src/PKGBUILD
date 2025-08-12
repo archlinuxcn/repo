@@ -1,6 +1,6 @@
 pkgname=julia-git-cliquetrees-src
-pkgver=1.7.2
-_commit=d72f3dbe5ba683e45921c6588f89226eda126078
+pkgver=1.11.0
+_commit=358f0e33ce417c707e501960ddb293638eae30fd
 pkgrel=1
 pkgdesc="CliqueTrees.jl"
 url="https://github.com/AlgebraicJulia/CliqueTrees.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/AlgebraicJulia/CliqueTrees.jl.git#commit=$_commit")
-sha256sums=('f34c7f1ece34c82c21cc7bb185b11f4c0de574bcba9cbcdd4dcb9c49e890be0c')
+sha256sums=('0736469e02904fc1091e4a9c0ef4a8877af60f8358052bc24cb0f3baf5c64301')
 
 package() {
   cd CliqueTrees.jl
