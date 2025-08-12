@@ -6,7 +6,6 @@ def pre_build():
   pkgver, commit = _G.newver.split('@')
   pkgver = pkgver.strip()
   commit = commit.strip()
-  https://raw.githubusercontent.com/JuliaBinaryWrappers/LEMON_jll.jl/{commit}/README.md
   url = f"https://github.com/JuliaBinaryWrappers/LEMON_jll.jl/blob/{commit}/README.md"
   r = s.get(url)
   r.raise_for_status()
