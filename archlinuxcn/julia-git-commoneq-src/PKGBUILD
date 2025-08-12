@@ -1,7 +1,7 @@
 pkgname=julia-git-commoneq-src
 pkgver=0.2.1
 _commit=2eca8da6552c3ba50d2315d107a5e65d10bd2bbe
-pkgrel=1
+pkgrel=2
 pkgdesc="CommonEq.jl"
 url="https://github.com/jverzani/CommonEq.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jverzani/CommonEq.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('2de5ae77b4918f9597c3617f68b477cbf77d119e98dfb6694a462eea05a5d04e')
 
 package() {
   cd CommonEq.jl
