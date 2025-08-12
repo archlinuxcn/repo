@@ -1,7 +1,7 @@
 pkgname=julia-git-basedirs-src
 pkgver=1.3.2
 _commit=1a496786af16e62b52c705d7b1f49f2999fa04cf
-pkgrel=1
+pkgrel=2
 pkgdesc="BaseDirs.jl"
 url="https://github.com/tecosaur/BaseDirs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/tecosaur/BaseDirs.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('843c72a4243ab810995ff65c6171de92b5c266e2ad51fa89a62d3e493089c720')
 
 package() {
   cd BaseDirs.jl
