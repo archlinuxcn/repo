@@ -1,7 +1,7 @@
 pkgname=julia-git-hungarian-src
-pkgver=0.6.0
-_commit=09e909cde795404c798f1799fa55c7556a544481
-pkgrel=2
+pkgver=0.7.0
+_commit=76b232629869d10ab8b75ee58a1db57c8a61fdc9
+pkgrel=1
 pkgdesc="Hungarian.jl"
 url="https://github.com/Gnimuc/Hungarian.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Gnimuc/Hungarian.jl.git#commit=$_commit")
-sha256sums=('c9b55cfcbc673528ae62c49f83ec786d6e32b69d940516e6bf091a4e1f48104a')
+sha256sums=('1c9f2e7f1322e619535f2876500ef457e861855a44a393f0183f86cb92974111')
 
 package() {
   cd Hungarian.jl
