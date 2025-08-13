@@ -1,0 +1,13 @@
+maintainers:
+- github: lilydjwg
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+- source: github
+  github: archlinuxcn/imap2discourse
+- alias: python
+
+repo_depends:
+- python-aioimaplib
