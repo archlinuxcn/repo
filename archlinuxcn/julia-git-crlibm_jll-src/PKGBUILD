@@ -1,7 +1,7 @@
 pkgname=julia-git-crlibm_jll-src
 pkgver=1.0.1+0
 _commit=dfd2d64d434e8ee39cc428a1aa2a432ca666cea1
-pkgrel=2
+pkgrel=3
 pkgdesc="CRlibm_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/CRlibm_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git crlibm-git)
 source=("git+https://github.com/JuliaBinaryWrappers/CRlibm_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('3b011d145c0e1de03ba74fcb7906965d3017a95643bc68b8f6cfa8b775de1cd5'
             '9a9165a8ac4bab6a4d676cb03b710033fb615a824c8276b424fc8e6bb98d23c7')
 
 build() {
