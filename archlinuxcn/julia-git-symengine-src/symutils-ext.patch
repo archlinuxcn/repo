@@ -1,0 +1,289 @@
+From 8cf73f79417d416b62e4e3e18d6855b8768f3da5 Mon Sep 17 00:00:00 2001
+From: jverzani <jverzani@gmail.com>
+Date: Mon, 9 Sep 2024 15:37:19 -0400
+Subject: [PATCH 1/3] update extensions
+
+---
+ Project.toml                     |  7 ++-
+ ext/SymEngineSymbolicUtilsExt.jl | 91 ++++++++------------------------
+ ext/SymEngineTermInterfaceExt.jl | 61 +++++++++++++++++++++
+ 3 files changed, 89 insertions(+), 70 deletions(-)
+ create mode 100644 ext/SymEngineTermInterfaceExt.jl
+
+diff --git a/Project.toml b/Project.toml
+index c74cee3..b76bb8e 100644
+--- a/Project.toml
++++ b/Project.toml
+@@ -1,6 +1,6 @@
+ name = "SymEngine"
+ uuid = "123dc426-2d89-5057-bbad-38513e3affd8"
+-version = "0.12.0"
++version = "0.12.1"
+ 
+ [deps]
+ Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
+@@ -13,16 +13,19 @@ SymEngine_jll = "3428059b-622b-5399-b16f-d347a77089a4"
+ 
+ [weakdeps]
+ SymbolicUtils = "d1185830-fcd6-423d-90d6-eec64667417b"
++TermInterface = "8ea1fca8-c5ef-4a55-8b96-4e9afe9c9a3c"
+ 
+ [extensions]
+ SymEngineSymbolicUtilsExt = "SymbolicUtils"
++SymEngineTermInterfaceExt = "TermInterface"
+ 
+ [compat]
+ Compat = "0.63.0, 1, 2, 3, 4"
+ RecipesBase = "0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0"
+ SpecialFunctions = "0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.10, 1, 2"
+ SymEngine_jll = "0.9, 0.10, 0.11, 0.12"
+-SymbolicUtils = "1.4"
++SymbolicUtils = "3"
++TermInterface = "2"
+ julia = "1.6"
+ 
+ [extras]
+diff --git a/ext/SymEngineSymbolicUtilsExt.jl b/ext/SymEngineSymbolicUtilsExt.jl
+index d5ab754..7584509 100644
+--- a/ext/SymEngineSymbolicUtilsExt.jl
++++ b/ext/SymEngineSymbolicUtilsExt.jl
+@@ -2,79 +2,31 @@ module SymEngineSymbolicUtilsExt
+ 
+ using SymEngine
+ using SymbolicUtils
+-import SymEngine: SymbolicType
+-
+-#
+-function is_number(a::SymEngine.Basic)
+-    cls = SymEngine.get_symengine_class(a)
+-    any(==(cls), SymEngine.number_types) && return true
+-    false
+-end
+-
+-
+-λ(x::SymEngine.SymbolicType) = λ(Val(SymEngine.get_symengine_class(x)))
+-λ(::Val{T}) where {T} = getfield(Main, Symbol(lowercase(string(T))))
+-
+-λ(::Val{:Add}) = +; λ(::Val{:Sub}) = -
+-λ(::Val{:Mul}) = *; λ(::Val{:Div}) = /
+-λ(::Val{:Pow}) = ^
+-λ(::Val{:re}) = real; λ(::Val{:im}) = imag
+-λ(::Val{:Abs}) = abs
+-λ(::Val{:Log}) = log
+-λ(::Val{:Sin}) = sin; λ(::Val{:Cos}) = cos; λ(::Val{:Tan}) = tan
+-λ(::Val{:Csc}) = csc; λ(::Val{:Sec}) = sec; λ(::Val{:Cot}) = cot
+-λ(::Val{:Asin}) = asin; λ(::Val{:Acos}) = acos; λ(::Val{:Atan}) = atan
+-λ(::Val{:Acsc}) = acsc; λ(::Val{:Asec}) = asec; λ(::Val{:Acot}) = acot
+-λ(::Val{:Sinh}) = sinh; λ(::Val{:Cosh}) = cosh; λ(::Val{:Tanh}) = tanh
+-λ(::Val{:Csch}) = csch; λ(::Val{:Sech}) = sech; λ(::Val{:Coth}) = coth
+-λ(::Val{:Asinh}) = asinh; λ(::Val{:Acosh}) = acosh; λ(::Val{:Atanh}) = atanh
+-λ(::Val{:Acsch}) = acsch; λ(::Val{:Asech}) = asech; λ(::Val{:Acoth}) = acoth
+-λ(::Val{:Gamma}) = gamma; λ(::Val{:Zeta}) = zeta; λ(::Val{:LambertW}) = lambertw
+-
+-#==
+-Check if x represents an expression tree. If returns true, it will be assumed that operation(::T) and arguments(::T) methods are defined. Definining these three should allow use of SymbolicUtils.simplify on custom types. Optionally symtype(x) can be defined to return the expected type of the symbolic expression.
+-==#
+-function SymbolicUtils.istree(x::SymEngine.SymbolicType)
+-    cls = SymEngine.get_symengine_class(x)
+-    cls == :Symbol && return false
+-    cls == :Constant && return false
+-    any(==(cls), SymEngine.number_types) && return false
+-    return true
+-end
+-
+-SymbolicUtils.issym(x::SymEngine.SymbolicType) = SymEngine.get_symengine_class(x) == :Symbol
+-Base.nameof(x::SymEngine.SymbolicType) = Symbol(x)
+-
+-# no metadata(x), metadata(x, data)
+-
+-#==
+-Returns the head (a function object) performed by an expression tree. Called only if istree(::T) is true. Part of the API required for simplify to work. Other required methods are arguments and istree
+-==#
+-function SymbolicUtils.operation(x::SymEngine.SymbolicType)
+-    istree(x) || error("$(typeof(x)) doesn't have an operation!")
+-    return λ(x)
+-end
+-
+-
+-#==
+-Returns the arguments (a Vector) for an expression tree. Called only if istree(x) is true. Part of the API required for simplify to work. Other required methods are operation and istree
+-==#
+-function SymbolicUtils.arguments(x::SymEngine.SymbolicType)
+-    get_args(x)
+-end
+-
+-#==
+-Construct a new term with the operation f and arguments args, the term should be similar to t in type. if t is a SymbolicUtils.Term object a new Term is created with the same symtype as t. If not, the result is computed as f(args...). Defining this method for your term type will reduce any performance loss in performing f(args...) (esp. the splatting, and redundant type computation). T is the symtype of the output term. You can use SymbolicUtils.promote_symtype to infer this type. The exprhead keyword argument is useful when creating Exprs.
+-==#
+-function SymbolicUtils.similarterm(t::SymEngine.SymbolicType, f, args, symtype=nothing;
+-                                   metadata=nothing, exprhead=:call)
+-    f(args...) # default
+-end
+ 
+ # Needed for some simplification routines
+ # a total order <ₑ
+ import SymbolicUtils: <ₑ, isterm, isadd, ismul, issym, get_degrees, monomial_lt, _arglen
++
++#Base.nameof(x::SymEngine.SymbolicType) = Symbol(x)
++#
++#function is_number(a::SymEngine.Basic)
++#    cls = SymEngine.get_symengine_class(a)
++#    any(==(cls), SymEngine.number_types) && return true
++#    false
++#end
++
++
+ function SymbolicUtils.:<ₑ(a::SymEngine.Basic, b::SymEngine.Basic)
++    if !SymbolicUtils.iscall(a) || !SymbolicUtils.iscall(a)
++        if !SymbolicUtils.iscall(a) && !SymbolicUtils.iscall(b)
++            return <ₑ(Symbol(a), Symbol(b))
++        elseif SymbolicUtils.iscall(a) && !SymbolicUtils.iscall(b)
++            return false
++        elseif !SymbolicUtils.iscall(a) && SymbolicUtils.iscall(b)
++            return true
++        end
++    end
++
+     da, db = get_degrees(a), get_degrees(b)
+     fw = monomial_lt(da, db)
+     bw = monomial_lt(db, da)
+@@ -89,4 +41,7 @@ function SymbolicUtils.:<ₑ(a::SymEngine.Basic, b::SymEngine.Basic)
+     end
+ end
+ 
++Base.isless(x::Number, y::SymEngine.Basic) = isless(promote(x,y)...)
++Base.isless(x::SymEngine.Basic,y::Number) = isless(promote(x,y)...)
++
+ end
+diff --git a/ext/SymEngineTermInterfaceExt.jl b/ext/SymEngineTermInterfaceExt.jl
+new file mode 100644
+index 0000000..942a08e
+--- /dev/null
++++ b/ext/SymEngineTermInterfaceExt.jl
+@@ -0,0 +1,61 @@
++module SymEngineTermInterfaceExt
++
++import SymEngine
++import SymEngine: SymbolicType
++import TermInterface
++
++
++λ(x::SymEngine.SymbolicType) = λ(Val(SymEngine.get_symengine_class(x)))
++λ(::Val{T}) where {T} = getfield(Main, Symbol(lowercase(string(T))))
++
++λ(::Val{:Add}) = +; λ(::Val{:Sub}) = -
++λ(::Val{:Mul}) = *; λ(::Val{:Div}) = /
++λ(::Val{:Pow}) = ^
++λ(::Val{:re}) = real; λ(::Val{:im}) = imag
++λ(::Val{:Abs}) = abs
++λ(::Val{:Log}) = log
++λ(::Val{:Sin}) = sin; λ(::Val{:Cos}) = cos; λ(::Val{:Tan}) = tan
++λ(::Val{:Csc}) = csc; λ(::Val{:Sec}) = sec; λ(::Val{:Cot}) = cot
++λ(::Val{:Asin}) = asin; λ(::Val{:Acos}) = acos; λ(::Val{:Atan}) = atan
++λ(::Val{:Acsc}) = acsc; λ(::Val{:Asec}) = asec; λ(::Val{:Acot}) = acot
++λ(::Val{:Sinh}) = sinh; λ(::Val{:Cosh}) = cosh; λ(::Val{:Tanh}) = tanh
++λ(::Val{:Csch}) = csch; λ(::Val{:Sech}) = sech; λ(::Val{:Coth}) = coth
++λ(::Val{:Asinh}) = asinh; λ(::Val{:Acosh}) = acosh; λ(::Val{:Atanh}) = atanh
++λ(::Val{:Acsch}) = acsch; λ(::Val{:Asech}) = asech; λ(::Val{:Acoth}) = acoth
++λ(::Val{:Gamma}) = gamma; λ(::Val{:Zeta}) = zeta; λ(::Val{:LambertW}) = lambertw
++
++#==
++Check if x represents an expression tree. If returns true, it will be assumed that operation(::T) and arguments(::T) methods are defined. Definining these three should allow use of SymbolicUtils.simplify on custom types. Optionally symtype(x) can be defined to return the expected type of the symbolic expression.
++==#
++function TermInterface.iscall(x::SymEngine.SymbolicType)
++    cls = SymEngine.get_symengine_class(x)
++    cls == :Symbol && return false
++    cls == :Constant && return false
++    any(==(cls), SymEngine.number_types) && return false
++    return true
++end
++TermInterface.isexpr(x::SymEngine.SymbolicType) = TermInterface.iscall(x)
++
++##TermInterface.issym(x::SymEngine.SymbolicType) = SymEngine.get_symengine_class(x) == :Symbol
++
++function TermInterface.operation(x::SymEngine.SymbolicType)
++    TermInterface.iscall(x) || error("$(typeof(x)) doesn't have an operation!")
++    return λ(x)
++end
++
++function TermInterface.arguments(x::SymEngine.SymbolicType)
++    SymEngine.get_args(x)
++end
++
++TermInterface.head(x::SymEngine.SymbolicType) = TermInterface.operation(x)
++TermInterface.children(x::SymEngine.SymbolicType) = TermInterface.arguments(x)
++
++function TermInterface.maketerm(t::Type{<:SymEngine.SymbolicType}, f, args,
++                                metadata=nothing)
++    f(args...) # default
++end
++
++
++# no metadata(x), metadata(x, data)
++
++end
+
+From 033f34c6b5bde6fb65ace358631a24b26492ebdc Mon Sep 17 00:00:00 2001
+From: jverzani <jverzani@gmail.com>
+Date: Mon, 9 Sep 2024 17:06:55 -0400
+Subject: [PATCH 2/3] add test, fix 1.6 issue
+
+---
+ Project.toml               | 3 ++-
+ test/test-SymbolicUtils.jl | 8 ++++++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/Project.toml b/Project.toml
+index b76bb8e..a6e5c80 100644
+--- a/Project.toml
++++ b/Project.toml
+@@ -31,6 +31,7 @@ julia = "1.6"
+ [extras]
+ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+ SymbolicUtils = "d1185830-fcd6-423d-90d6-eec64667417b"
++TermInterface = "8ea1fca8-c5ef-4a55-8b96-4e9afe9c9a3c"
+ 
+ [targets]
+-test = ["SymbolicUtils", "Test"]
++test = ["SymbolicUtils", "TermInterface", "Test"]
+diff --git a/test/test-SymbolicUtils.jl b/test/test-SymbolicUtils.jl
+index f6e7426..3c6f9d2 100644
+--- a/test/test-SymbolicUtils.jl
++++ b/test/test-SymbolicUtils.jl
+@@ -2,6 +2,14 @@ using Test
+ using SymEngine
+ import SymbolicUtils: simplify, @rule, @acrule, Chain, Fixpoint
+ 
++import TermInterface
++@testset "TermInterface" begin
++    @vars x
++    @test !TermInterface.iscall(x)
++    @test TermInterface.iscall(x^2)
++    @test TermInterface.operation(sin(x)) == sin
++    @test TermInterface.arguments(sin(x)) == [x]
++end
+ 
+ @testset "SymbolicUtils" begin
+     # from SymbolicUtils.jl docs
+
+From c6f211854da0baa9ebc7ce0bb075a3acba02a653 Mon Sep 17 00:00:00 2001
+From: Isuru Fernando <isuruf@gmail.com>
+Date: Tue, 25 Feb 2025 16:44:37 -0600
+Subject: [PATCH 3/3] Update Project.toml
+
+---
+ Project.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Project.toml b/Project.toml
+index a6e5c80..4d923c3 100644
+--- a/Project.toml
++++ b/Project.toml
+@@ -1,6 +1,6 @@
+ name = "SymEngine"
+ uuid = "123dc426-2d89-5057-bbad-38513e3affd8"
+-version = "0.12.1"
++version = "0.12.0"
+ 
+ [deps]
+ Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"

@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/symengine/SymEngine.jl.git#commit=$_commit")
-sha256sums=('bf02af98945cd4b3307a7484bd977dacc4e710091ecea1e9accf64828c42718b')
+source=("git+https://github.com/symengine/SymEngine.jl.git#commit=$_commit"
+        symutils-ext.patch)
+sha256sums=('bf02af98945cd4b3307a7484bd977dacc4e710091ecea1e9accf64828c42718b'
+            'e774f056deae2cf3fe7c5b26499078bc8b2403d659c7440c439e27790acbf566')
+
+prepare() {
+  cd SymEngine.jl
+
+  patch -Np1 --no-backup-if-mismatch < "../symutils-ext.patch"
+}
 
 package() {
   cd SymEngine.jl
