@@ -1,7 +1,7 @@
 pkgname=julia-git-asl_jll-src
 pkgver=0.1.3+0
 _commit=04752988fdbccc3ab42095ce8ce2e28fb415ea2b
-pkgrel=4
+pkgrel=5
 pkgdesc="ASL_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/ASL_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git coin-or-asl)
 source=("git+https://github.com/JuliaBinaryWrappers/ASL_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('d9f562dbc472bf661a3d93fda93f54a3510fa92a1329fa9b14b433c90313fab5'
             'd06a1529466bf83e58b89cf8b3162154ef40f6aca7669706aec4eb47ae7202c8')
 
 build() {
