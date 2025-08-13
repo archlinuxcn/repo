@@ -11,6 +11,12 @@ depends=(julia-git)
 source=("git+https://github.com/EnzymeAD/Enzyme.jl.git#commit=$_commit")
 sha256sums=('bf72832e2f6cd2de832d26b45a25ce64cf2d46af06df6926b8552f2568b7b8c4')
 
+prepare() {
+  cd Enzyme.jl
+
+  sed -i 's/GlobalMethods/methodtable/g' src/rules/jitrules.jl
+}
+
 package() {
   cd Enzyme.jl
 
