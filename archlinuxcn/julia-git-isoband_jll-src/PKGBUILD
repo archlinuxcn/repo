@@ -1,7 +1,7 @@
 pkgname=julia-git-isoband_jll-src
 pkgver=0.2.3+0
 _commit=63ed1cc683bce14f77775a001faca95f99c4f050
-pkgrel=2
+pkgrel=3
 pkgdesc="isoband_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/isoband_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libisoband)
 source=("git+https://github.com/JuliaBinaryWrappers/isoband_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('4d97ace652f7b1b18e907502ce622d3586133cebb27967e79bf3794894579e08'
             '1e7d482660cb9681fbc5f8e4af6e9564b9dedcef8aa02ba94fc60a4a2bf3beda')
 
 build() {
