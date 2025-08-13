@@ -9,6 +9,8 @@ makedepends=(git cmake)
 depends=(julia-git)
 source=("git+https://github.com/JuliaInterop/libcxxwrap-julia#tag=v${pkgver}")
 sha256sums=('b7427d3765c76e97e02d00d7554951e679d6c3e230392370c260dfecdf52e8d1')
+# LTO breaks unique linkage of guard variable
+options=('!lto')
 
 build() {
   cd libcxxwrap-julia
