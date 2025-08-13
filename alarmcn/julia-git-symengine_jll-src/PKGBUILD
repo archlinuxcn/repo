@@ -7,7 +7,7 @@ url="https://github.com/JuliaBinaryWrappers/SymEngine_jll.jl.git"
 arch=(aarch64 armv7h i686 x86_64)
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
-depends=(julia-git symengine)
+depends=(julia-git symengine-notcmalloc)
 source=("git+https://github.com/JuliaBinaryWrappers/SymEngine_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('a8870042f455446ec5ef0404be95ad645b90b54b39ff45d220919908a56ec689'

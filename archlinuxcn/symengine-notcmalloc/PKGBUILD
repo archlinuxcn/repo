@@ -1,0 +1,63 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Michael Schubert <mschu.dev at gmail>
+
+pkgname=symengine-notcmalloc
+pkgver=0.14.0
+pkgrel=5
+pkgdesc='Fast symbolic manipulation library, written in C++'
+url='http://sympy.org/'
+arch=(aarch64 x86_64)
+license=(MIT)
+depends=(flint
+         gcc-libs
+         glibc
+         gmp
+         gmp-ecm
+         gperftools
+         libmpc
+         llvm-libs
+         mpfr
+         primesieve)
+makedepends=(boost
+             cereal
+             cmake
+             git
+             llvm)
+source=(git+https://github.com/symengine/symengine#tag=v$pkgver
+        llvm-shared.patch)
+sha256sums=('fc1e0aa9f3cbcfdadcf18e69117869c2062302b94931781b53d85866cb1a4df4'
+            '3b2eb5bad4c2a2dc4f3a32e56c40df86c009bf9c1005759e0cb349f5256ee947')
+
+prepare() {
+  patch -d symengine -p1 < llvm-shared.patch
+}
+
+build() {
+  cmake -B build -S symengine \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_SHARED_LIBS=ON \
+    -DWITH_TCMALLOC=OFF \
+    -DWITH_PTHREAD=ON \
+    -DWITH_SYMENGINE_THREAD_SAFE=ON \
+    -DWITH_ARB=ON \
+    -DWITH_ECM=ON \
+    -DWITH_LLVM=ON \
+    -DWITH_MPFR=ON \
+    -DWITH_MPC=ON \
+    -DWITH_PRIMESIEVE=ON \
+    -DWITH_BOOST=ON \
+    -DWITH_COTIRE=OFF \
+    -DWITH_SYSTEM_CEREAL=ON
+  cmake --build build
+}
+
+check() {
+  cmake --build build --target test
+}
+
+package() {
+  provides+=(symengine=$pkgver)
+  conflicts+=(symengine=$pkgver)
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 symengine/LICENSE -t "$pkgdir"/usr/share/licenses/symengine
+}

@@ -8,6 +8,7 @@ build_prefix: archlinuxcn-aarch64
 
 repo_depends:
   - julia-git
+  - symengine-notcmalloc
 
 update_on:
   - source: regex
@@ -18,4 +19,4 @@ update_on:
     strip_dir: true
     filename: libsymengine.so.\d+.\d+
   - source: manual
-    manual: 1
+    manual: 2
