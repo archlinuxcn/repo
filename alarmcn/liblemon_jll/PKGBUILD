@@ -10,6 +10,8 @@ makedepends=(git cmake)
 depends=(julia-git coin-or-lemon libcxxwrap_julia)
 source=("https://raw.githubusercontent.com/JuliaPackaging/Yggdrasil/${_src_commit}/L/LEMON/bundled/cxxwrap/lemoncxxwrap.cpp")
 sha256sums=('3cfab5992d8aa30470571ab0b6ba166b0728f6a2143a09051393b01ad1aef164')
+# LTO breaks unique linkage of guard variable
+options=('!lto')
 
 build() {
   g++ -shared -std=c++17 -O3 -fPIC ${CXXFLAGS} ${LDFLAGS} -o liblemoncxxwrap.so lemoncxxwrap.cpp -I/usr/include/julia -lemon -ljulia -lcxxwrap_julia
