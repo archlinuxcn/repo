@@ -1,0 +1,18 @@
+pkgname=julia-git-zipfile-src
+pkgver=0.10.1
+_commit=df45eee024d020dccbf9d5ef3ac8b6518ce48965
+pkgrel=1
+pkgdesc="ZipFile.jl"
+url="https://github.com/fhs/ZipFile.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/fhs/ZipFile.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ZipFile.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ZipFile "${pkgdir}" "${pkgname}" julia-git
+}

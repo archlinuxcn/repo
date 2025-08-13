@@ -1,0 +1,18 @@
+pkgname=julia-git-npz-src
+pkgver=0.4.3
+_commit=b83fddf2d773936b531e5f355d4f3f1d2738a5d6
+pkgrel=1
+pkgdesc="NPZ.jl"
+url="https://github.com/fhs/NPZ.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/fhs/NPZ.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd NPZ.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh NPZ "${pkgdir}" "${pkgname}" julia-git
+}
