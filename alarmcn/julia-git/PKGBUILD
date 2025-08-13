@@ -544,11 +544,15 @@ package_julia-git() {
 package_julia-git-package-env() {
   backup=(usr/lib/julia/.package-precompile-env)
   pkgdesc+=" (Package precompilation environment)"
+  _nproc=4
+  if [[ "$CARCH" = x86_64 ]]; then
+    _nproc=8
+  fi
 
   mkdir -p "${pkgdir}/usr/lib/julia/"
   cat > "${pkgdir}/usr/lib/julia/.package-precompile-env" <<EOF
 export JULIA_CPU_TARGET="${_cpu_target}"
-export JULIA_PRECOMPILE_NPROCESS=4
+export JULIA_PRECOMPILE_NPROCESS=${_nproc}
 EOF
 }
 
