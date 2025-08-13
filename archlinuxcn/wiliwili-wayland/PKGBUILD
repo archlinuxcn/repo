@@ -5,7 +5,7 @@
 
 pkgname=wiliwili-wayland
 _pkgname=wiliwili
-pkgver=1.5.1
+pkgver=1.5.2
 pkgrel=1
 pkgdesc='专为手柄控制设计的第三方跨平台B站客户端, 使用 Wayland 运行并阻止唤醒独显'
 arch=('x86_64' 'aarch64')
@@ -14,10 +14,10 @@ license=('GPL-3.0-or-later')
 depends=("mpv" "opencc" "pystring" "glibc" "curl" "hicolor-icon-theme" "openssl" "gcc-libs" "dbus" "zlib" "libwebp" "bash" "libpng")
 makedepends=("cmake" "git" "libxi" "ninja" "python" "wayland-protocols" "sdl2")
 source=("${_pkgname}"::"git+${url}.git#tag=v${pkgver}" "wiliwili.sh" "cn.xfangfang.wiliwili.desktop" "portable-config")
-sha512sums=('925bbffe1c78947b96f3b18ae4d7e6c58dc0b53a457c100c2a9813b81927da3c19a68f333308580a2e4478b818fa85f399074e106e27738cebd32ae642ddd18d'
-            'bba4395509aa6580f61a1957ae0bdf858065b29f40a361eabd605bf254e65325566fcd05482516e3ce09379184a2666a05393c8efee5c3dd6de6933af27fa600'
-            'c50160e58c1ccc53f5d0455973a484e4d2d133eae834ca157480df23e6ecbe3cd3befe3f6976220c1787cad5192f6550761a82837fe114897a83af5535e4fb5f'
-            '5ae515e517a828457b92370bde84d306f683f9bb4623a8512985f136f8f8b7889128eb87fd6c666306e8579c103fc64fdf353a88ab44292dbf34e52de6e1d1fd')
+sha512sums=('7c88ed18be429bab8abdacf2063591eabf9f7fe82bd95c6a202b0af6807a755d4926a276872a995b3aa52c3de7f128ccfc884f8d95006989d63373f4c69d07bf'
+            'cc97c4bdb168538d2f2485c3f54cb6ae11e3765b66848ae35ec8790b5fcba481a5170cdbcafc9b12e9498dcf8b8442b29843cbe9b6d8cbe425fccce71206df5e'
+            '6dd399c8bb5950caa0e774922751af48ef16e7fe4c4daf4a67693a1183913e9b052461bb28aa287061358572f38920f6ddc0112e9a69a3385d5c0a0214d0684d'
+            'ae7d1aaf6be7377387e08e768098c68ccdccf23fd7976d8a5f9785b157cd26f44aeb3f5e9442910e59a7f73d788d99bfb9374e697becb52410797f1e8543f63b')
 conflicts=(wiliwili)
 provides=(wiliwili)
 
