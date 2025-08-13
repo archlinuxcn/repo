@@ -1,7 +1,7 @@
 pkgname=julia-git-earcut_jll-src
 pkgver=2.2.4+0
 _commit=a6025b6b8338a77be9c3c249604f7bcc2808e1f6
-pkgrel=2
+pkgrel=3
 pkgdesc="EarCut_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/EarCut_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libearcut_jll)
 source=("git+https://github.com/JuliaBinaryWrappers/EarCut_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('2c3421567f1a72618d2b6cd59b340cdf3ae2762b0f42f9062e5b62d8fa54fb93'
             '5fda8e2b3f25b928995dc307da81da1801931e0a4473a9d89d54f511e3c4c35c')
 
 build() {
