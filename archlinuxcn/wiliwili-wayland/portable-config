@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+
+# This is your Application ID, avoid conflict
+appID="cn.xfangfang.wiliwili"
+
+# This is a friendly name of an application. It should only contain ASCII characters and not spaces.
+friendlyName="Wiliwili"
+
+# This is the state directory of your application, which is located under "XDG_DATA_HOME"
+stateDirectory="Wiliwili_Data"
+
+# This is the target executable to launch
+launchTarget="/usr/bin/env -u DISPLAY wiliwili"
+
+# Takes boolean value. When enabled, do not process XAuth files and forces wayland input method. Generally this should be true when possible.
+waylandOnly="adaptive"
+
+# Takes boolean value.
+bindInputDevices="true"
+
+# Takes boolean value. Binds /dev/video* into the sandbox. Required if target application uses /dev/video* interfaces directly instead of v4l2.
+bindCameras="false"
+
+# Takes boolean value. Binds PipeWire socket into the sandbox. Required if target application doesn't use Portals.
+bindPipewire="false"
+
+# Expose all GPUs. Takes boolean value, usually used in games.
+gameMode="false"
+
+# Below you can set envs that will be imported into the application sandbox

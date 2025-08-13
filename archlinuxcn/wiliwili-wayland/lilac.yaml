@@ -1,0 +1,34 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: "github"
+    github: "xfangfang/wiliwili"
+    use_latest_release: true
+    include_prereleases: false
+    prefix: v
+  - source: alpm
+    alpm: mpv
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+  - source: alpm
+    alpm: openssl
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+  - source: alpm
+    alpm: curl
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+  - source: alpm
+    alpm: opencc
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
+build_prefix: extra-x86_64
+
+#repo_depends:
+#  - portable

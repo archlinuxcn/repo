@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=wiliwili
+Comment=A 3rd party bilibili client
+Exec=env _portableConfig="cn.xfangfang.wiliwili" portable --
+Icon=cn.xfangfang.wiliwili
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;Video;
+
+#X-Flatpak-Tags=proprietary;
+X-Flatpak=cn.xfangfang.wiliwili
+X-Flatpak-RenamedFrom=wiliwili.desktop;
+Actions=quit;
+
+
+[Desktop Action quit]
+Name=Quit Wiliwili
+Name[zh_CN]=退出 Wiliwili
+Exec=/usr/bin/wiliwili-wayland --actions quit
+Icon=system-log-out-symbolic
