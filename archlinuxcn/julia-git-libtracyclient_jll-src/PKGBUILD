@@ -6,8 +6,8 @@ pkgdesc="LibTracyClient_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LibTracyClient_jll.jl.git"
 arch=('any')
 license=('MIT')
-makedepends=(git julia-pkg-scripts tracy)
-depends=(julia-git)
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git tracy)
 source=("git+https://github.com/JuliaBinaryWrappers/LibTracyClient_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('99ee002c83fdd912b79c1d9b052e63ebc107b49d7ad604b7708155158330db20'
