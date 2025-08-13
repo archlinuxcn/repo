@@ -1,7 +1,7 @@
 pkgname=julia-git-npz-src
 pkgver=0.4.3
 _commit=b83fddf2d773936b531e5f355d4f3f1d2738a5d6
-pkgrel=1
+pkgrel=2
 pkgdesc="NPZ.jl"
 url="https://github.com/fhs/NPZ.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/fhs/NPZ.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('69d0dfd1b01d139c708eb628aa039eb765f26aaa368230e4e29d8a0e91d85386')
 
 package() {
   cd NPZ.jl
