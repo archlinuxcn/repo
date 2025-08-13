@@ -1,7 +1,7 @@
 pkgname=julia-git-cubature_jll-src
 pkgver=1.0.5+0
 _commit=b8ebd00e185c66d6f20613dbb30ad469f8d144e7
-pkgrel=2
+pkgrel=3
 pkgdesc="Cubature_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Cubature_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git cubature)
 source=("git+https://github.com/JuliaBinaryWrappers/Cubature_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('4269eb07f64082848bd33a6c1f2e35ff476311a3bbe8cc68cd2d14cddf3b533e'
             '98270b63c0b780d8bac889cceff6a60e5eb591cde295af787464ddd105823bf7')
 
 build() {
