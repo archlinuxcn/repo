@@ -1,7 +1,7 @@
 pkgname=julia-git-cgl_jll-src
 pkgver=0.6000.600+0
 _commit=250c2f52129ff846f462f654ef5b5ad8708ee56e
-pkgrel=3
+pkgrel=4
 pkgdesc="Cgl_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Cgl_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git coin-or-cgl)
 source=("git+https://github.com/JuliaBinaryWrappers/Cgl_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('da1cd752bd3b2ab2eac89fc3cd0f4c223233c7598dd4fad9fdc0e40c1aab9eb8'
             '7cb028a8ed9017417a980abf353fdea857903fdb2a45a02a6b97c62cf9a16d95')
 
 build() {
