@@ -1,7 +1,7 @@
 pkgname=julia-git-vulkan_loader_jll-src
 pkgver=1.3.243+0
 _commit=cb048e8c3522b4d2db01c309bf5b5b2405c159a9
-pkgrel=2
+pkgrel=3
 pkgdesc="Vulkan_Loader_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Vulkan_Loader_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git vulkan-icd-loader)
 source=("git+https://github.com/JuliaBinaryWrappers/Vulkan_Loader_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('SKIP'
+sha256sums=('0668c60e6735ca525756e7c674b6d84c1867359d35551b9ddb2cf6ec7617a7a1'
             '0e2204954492a20ffd4b2e1290f907568dc21a0f9cd4b1440aedc59a7bdbbad6')
 
 build() {
