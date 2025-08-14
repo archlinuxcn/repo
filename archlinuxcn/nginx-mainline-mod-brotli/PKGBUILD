@@ -9,7 +9,7 @@ _modname="ngx_${pkgname#nginx-mainline-mod-}"
 
 pkgdesc="Brotli compression filter module for mainline nginx"
 arch=('x86_64' 'aarch64')
-depends=("nginx-mainline" 'brotli')
+depends=('brotli')
 makedepends=('nginx-mainline-src')
 url="https://github.com/google/ngx_brotli"
 license=('CUSTOM')
@@ -34,7 +34,8 @@ build() {
 }
 
 package() {
-	depends=("nginx-mainline=$(pacman -Q nginx-mainline | awk '{print $NF}' | sed 's/-.*//')" 'brotli')
+	local nginxVer=$(pacman -Q nginx-mainline | awk '{print $NF}' | sed 's/-.*//')
+	depends+=("nginx-mainline=${nginxVer}")
 	install -Dm644 "$srcdir"/$_modname-$pkgver/LICENSE \
 		"$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 
