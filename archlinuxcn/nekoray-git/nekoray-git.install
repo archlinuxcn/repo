@@ -1,6 +1,0 @@
-post_upgrade() {
-	# If the old package version < 4.2.12.r0.g94acf0f
-	if [[ $(vercmp $2 "4.2.12.r0.g94acf0f") -lt 0 ]]; then
-		echo "Note: The upstream repository of nekoray has been changed to Mahdi-zarei/nekoray"
-	fi
-}
