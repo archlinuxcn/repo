@@ -1,8 +1,8 @@
 # Maintainer: Puqns67 <me@puqns67.icu>
 
 pkgname='dufs'
-pkgver='0.43.0'
-pkgrel=3
+pkgver=0.44.0
+pkgrel=1
 pkgdesc='A distinctive utility file server that supports static serving, uploading, searching, accessing control, webdav...'
 arch=('x86_64')
 url='https://github.com/sigoden/dufs'
@@ -19,7 +19,7 @@ source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.
         "${pkgname}-tmpfiles.conf"
         "${pkgname}-config.yaml")
 
-b2sums=('a35eeb62e3aa4404a7ed5d2ffc2db12bb9f039d7e097fd7b9bc9c8b3aff592026b5b7a337da2596aa7ae5f2f73d5933938252c80d09c6b66c8177a7e429fbde6'
+b2sums=('8ab2590de9254dc6d8c0b1417483e17d4ba8646374346541f10302499368a78be627b4f2a80cbff7b271b82e29d26e675c2b8a596721db4fb252548c509cf6ac'
         '5929a74b6898709884df766c94e6a0c30d18e632aece2a36d57bc41f05c5a8d23da036a6a0773fb7c13df7f149c001abfaab647a09593b84e85cb13026eb11a2'
         '004aaa2c669860830ee63ad413b4eec224863f30a2087fa1ea9079ab517576ad95609e6daddfeab7a2c2821290f081545d03ad31e5b27cb4e9e6cc37c9040284'
         '4a647e5365e8e4d101470960cd72317b29dae68cff2331031aeccfc8bf860e72662febbda6673ddde09944555847a3b4598b3f3389fc6e67bccf9d08ab8cca4e'
