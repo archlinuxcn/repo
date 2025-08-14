@@ -9,8 +9,8 @@ pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/throneproj/${pkgname}"
 license=('GPL-3.0-or-later')
-makedepends=('cmake' 'go' 'qt6-tools')
-depends=('qt6-base' 'qt6-charts' 'protobuf' 'yaml-cpp' 'zxing-cpp' 'abseil-cpp' 'cpr')
+depends=('qt6-base' 'qt6-charts' 'protobuf')
+makedepends=('cmake' 'go' 'qt6-tools' 'vulkan-headers')
 optdepends=(
 	'sing-geoip-db: geoip database for NekoBox'
 	'sing-geosite-db: geosite database for NekoBox'
