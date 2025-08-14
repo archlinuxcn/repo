@@ -1,0 +1,66 @@
+#!/usr/bin/bash
+
+########## Section: General ##########
+
+# This is your Application ID, avoid conflict
+appID="org.jellyfin.jellyfin-media-player"
+
+# This is a friendly name of an application. It should only contain ASCII characters and not spaces.
+friendlyName="Jellyfin"
+
+# This is the state directory of your application, which is located under "XDG_DATA_HOME"
+stateDirectory="Jellyfin_Data"
+
+# This is the target executable to launch
+launchTarget="jellyfinmediaplayer"
+
+# Enables Network access within the sandbox. Defaults to true.
+bindNetwork="true"
+
+########## Section: Output ##########
+
+# Use zink for GL -> Vulkan translation
+useZink="false"
+
+# Enable compatibility workarounds for Qt5. Defaults to true.
+qt5Compat="true"
+
+# Takes a boolean value or string "adaptive". When true, do not process XAuth files and forces wayland input method. "adaptive" enables this option on Wayland and vice versa. Generally this should be adaptive when possible.
+waylandOnly="adaptive"
+
+# Expose all GPUs. Takes boolean value, usually used in games.
+gameMode="false"
+
+# If not empty, will own the org.mpris.MediaPlayer2.mprisName bus name instead of "org.mpris.MediaPlayer2.${appID##*.}"
+mprisName="mpv"
+
+########## Section: Input ##########
+
+# Use pipewire-v4l2 to replace v4l2. Requires bindPipewire=true! Unstable for now
+pwCam="false"
+
+# Takes boolean value. Binds /dev/video* into the sandbox. Required if target application uses /dev/video* interfaces directly instead of v4l2.
+bindCameras="false"
+
+# Takes boolean value. Binds PipeWire socket into the sandbox. Required if target application doesn't use Portals. Please be aware that such operation may impact the integrity of host.
+bindPipewire="false"
+
+# Takes boolean value.
+bindInputDevices="false"
+
+########## Section: Portals ##########
+
+# If true, allows the sandboxed application to use the org.freedesktop.portal.Inhibit interface to inhibit certain actions, like suspend and logout
+allowInhibit="true"
+
+# If true, allow apps to register Global Shortcuts via the Portal.
+allowGlobalShortcuts="false"
+
+########## Section: Miscellaneous ##########
+
+# Wake the application using D-Bus calls towards StatusNotifiers. Deprecated.
+dbusWake="false"
+
+########## Environment ##########
+
+# Below you can set envs that will be imported into the application sandbox
