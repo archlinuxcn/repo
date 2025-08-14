@@ -544,7 +544,7 @@ package_julia-git() {
 package_julia-git-package-env() {
   backup=(usr/lib/julia/.package-precompile-env)
   pkgdesc+=" (Package precompilation environment)"
-  _nproc=4
+  _nproc=3
   if [[ "$CARCH" = x86_64 ]]; then
     _nproc=8
   fi
