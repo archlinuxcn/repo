@@ -2,7 +2,7 @@ maintainers:
   - github: Integral-Tech
     email: integral@archlinuxcn.org
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver.replace('-','.'))
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: |
     git_pkgbuild_commit()
     update_aur_repo()
@@ -11,15 +11,6 @@ update_on:
   - source: github
     github: throneproj/Throne
     use_latest_release: true
-
-  - source: alpm
-    alpm: yaml-cpp
-    provided: libyaml-cpp.so
-    strip_release: true
-
-  - source: alpm
-    alpm: abseil-cpp
-    strip_release: true
 
   - alias: protobuf
   - alias: qt6-base
