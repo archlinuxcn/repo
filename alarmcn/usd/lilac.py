@@ -25,6 +25,7 @@ def pre_build():
       print(f"_{line}")
       continue
     print(line)
+  run_cmd(['updpkgsums'])
 
 def post_build():
   git_add_files([f for f in g.files if not f.startswith(".")])
