@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=jellyfin-media-player-portable
-pkgver=141.0.3
+pkgver=1.12.0
 pkgrel=1
 epoch=1
 pkgdesc="Jellyfin Desktop. Sandboxed to prevent dGPU wakeup."
@@ -27,9 +27,9 @@ source=(
 )
 
 
-md5sums=('c4a91aae851117c60742624c1b64a7c9'
-         'e9286af04e5d107b38523c92f9c68c76'
-         '2f74e3e788705621db286bb25fcabdee')
+md5sums=('886c7336ab017afd8d2d9a3acbbb18e8'
+         'a0fd049fc174d7a0942a5488cdefc7a2'
+         'd82778df35e3aca815ba3a75a2d267e1')
 
 function prepare() {
 	pacman -Ql jellyfin-media-player >file.list
