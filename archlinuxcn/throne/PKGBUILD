@@ -30,7 +30,7 @@ prepare() {
 	cd "${_srcname}-${pkgver}/core/server"
 	export GOBIN="${srcdir}/bin"
 	export PATH="${PATH}:${GOBIN}"
-	go install google.golang.org/protobuf/protoc-gen-go@latest
+	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install github.com/chai2010/protorpc/protoc-gen-protorpc@latest
 
 	cd gen
