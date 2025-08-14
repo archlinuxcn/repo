@@ -15,7 +15,7 @@ def pre_build():
     if line.startswith('makedepends='):
       line = line.replace(' cuda', '')
     if line.startswith('prepare()'):
-      print('sources+=(0001-Use-Valgrind-macro-to-mark-memory-defined.patch)')
+      print('source+=(0001-Use-Valgrind-macro-to-mark-memory-defined.patch)')
       print("""prepare() {
   (cd OpenUSD
   patch -Np1 -i "$srcdir/0001-Use-Valgrind-macro-to-mark-memory-defined.patch")
