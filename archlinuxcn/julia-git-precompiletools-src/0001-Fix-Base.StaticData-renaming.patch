@@ -1,0 +1,36 @@
+From d52d4126568e872c99c445dcab7d99e326d0358c Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 14 Aug 2025 14:30:31 -0400
+Subject: [PATCH] Fix Base.StaticData renaming
+
+Ref JuliaLang/julia#59238
+---
+ src/invalidations.jl | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/invalidations.jl b/src/invalidations.jl
+index 452e216..ded2670 100644
+--- a/src/invalidations.jl
++++ b/src/invalidations.jl
+@@ -12,14 +12,16 @@ macro recompile_invalidations(expr)
+     return :(recompile_invalidations($__module__, $(QuoteNode(expr))))
+ end
+ 
++const ReinferUtils = isdefined(Base, :ReinferUtils) ? Base.ReinferUtils : Base.StaticData
++
+ function recompile_invalidations(__module__::Module, @nospecialize expr)
+     listi = ccall(:jl_debug_method_invalidation, Any, (Cint,), 1)
+-    liste = Base.StaticData.debug_method_invalidation(true)
++    liste = ReinferUtils.debug_method_invalidation(true)
+     try
+         Core.eval(__module__, expr)
+     finally
+         ccall(:jl_debug_method_invalidation, Any, (Cint,), 0)
+-        Base.StaticData.debug_method_invalidation(false)
++        ReinferUtils.debug_method_invalidation(false)
+     end
+     if ccall(:jl_generating_output, Cint, ()) == 1
+         foreach(precompile_mi, invalidation_leaves(listi, liste))
+-- 
+2.49.0
+
