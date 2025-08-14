@@ -1,0 +1,54 @@
+From de7de3e38fb7e9ac6447d1779f46350489cecd6d Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 14 Aug 2025 14:39:23 -0400
+Subject: [PATCH] Use Valgrind macro to mark memory defined
+
+---
+ pxr/exec/vdf/executorDataVector.cpp | 24 +++---------------------
+ 1 file changed, 3 insertions(+), 21 deletions(-)
+
+diff --git a/pxr/exec/vdf/executorDataVector.cpp b/pxr/exec/vdf/executorDataVector.cpp
+index 12f9e517e..d4332b421 100644
+--- a/pxr/exec/vdf/executorDataVector.cpp
++++ b/pxr/exec/vdf/executorDataVector.cpp
+@@ -11,6 +11,8 @@
+ #include "pxr/base/tf/stl.h"
+ #include "pxr/base/trace/trace.h"
+ 
++#include <valgrind/valgrind.h>
++
+ PXR_NAMESPACE_OPEN_SCOPE
+ 
+ 
+@@ -24,27 +26,7 @@ PXR_NAMESPACE_OPEN_SCOPE
+ static inline void
+ Vdf_ExecutorDataVector_ValgrindMakeDefined(void *ptr, size_t size)
+ {
+-#if defined(ARCH_OS_LINUX)
+-    // Pass a result and a pointer to some arguments via registers
+-    volatile unsigned long long int result;
+-    volatile unsigned long long int args[6] = {
+-        0x4D430002,                  // Memcheck: MAKE_MEM_DEFINED
+-        (uintptr_t)(ptr),            // Memory address
+-        size,                        // Size in bytes
+-        0, 0, 0                      // Remaining unused arguments
+-    };
+-
+-    // Magical instruction sequence which Valgrind will interpret as an
+-    // annotation (see valgrind.h)
+-    __asm__ volatile(
+-        "rolq $3,  %%rdi ; rolq $13, %%rdi\n\t"
+-        "rolq $61, %%rdi ; rolq $51, %%rdi\n\t"
+-        "xchgq %%rbx, %%rbx"
+-        : "=d" (result)
+-        : "a" (&args[0]), "0" (0)
+-        : "cc", "memory"
+-    );
+-#endif
++    VALGRIND_MAKE_MEM_DEFINED(ptr, size);
+ }
+ 
+ Vdf_ExecutorDataVector::~Vdf_ExecutorDataVector()
+-- 
+2.49.0
+
