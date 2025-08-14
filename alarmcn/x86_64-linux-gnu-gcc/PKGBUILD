@@ -7,7 +7,7 @@
 _target="x86_64-linux-gnu"
 pkgbase="${_target}-gcc"
 _pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
-pkgver=15.1.1+r500+gb1b8d8ce3eea
+pkgver=15.2.1+r22+gc4e96a094636
 _gccver=${pkgver%%+*}
 _majorver=${_gccver%%.*}
 pkgrel=1
@@ -30,7 +30,7 @@ fi
 options=(!emptydirs !distcc debug)
 source=("git+https://gcc.gnu.org/git/gcc.git#${_git_ref}"
         gcc-ada-repro.patch)
-sha256sums=('b407ba1cefe9b343dc68e5d3fd51c7752b856621908c96de38f4fd910d51e9a2'
+sha256sums=('d1d0263f7595e2189110dbe5d12608e144637a6a29a247e41c6926915caab8de'
             '1773f5137f08ac1f48f0f7297e324d5d868d55201c03068670ee4602babdef2f')
 
 _libdir="usr/lib/gcc/${_target}/${_gccver}"
