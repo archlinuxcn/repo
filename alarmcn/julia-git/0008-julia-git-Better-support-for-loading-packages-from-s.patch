@@ -1,0 +1,28 @@
+From d2bd08ef8a8fcf2ee490a64a42b873a3920a8cf3 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 15 Aug 2025 12:24:38 -0400
+Subject: [PATCH 8/8] [julia-git] Better support for loading packages from
+ stdlib
+
+---
+ base/loading.jl | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/base/loading.jl b/base/loading.jl
+index 6d6566ef2c..cb1f8fe2a2 100644
+--- a/base/loading.jl
++++ b/base/loading.jl
+@@ -1101,6 +1101,10 @@ function explicit_manifest_entry_path(manifest_file::String, pkg::PkgId, entry::
+             ispath(path) && return entry_path(abspath(path), pkg.name, entryfile)
+         end
+     end
++    mbypath = manifest_uuid_path(Sys.STDLIB, pkg)
++    if mbypath isa String && isfile(mbypath)
++        return mbypath
++    end
+     # no depot contains the package, return missing to stop looking
+     return missing
+ end
+-- 
+2.50.1
+
