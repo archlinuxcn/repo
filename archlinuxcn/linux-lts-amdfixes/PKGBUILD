@@ -1,8 +1,8 @@
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-lts
-pkgver=6.12.41
-pkgrel=2
+pkgver=6.12.42
+pkgrel=1
 pkgdesc='LTS Linux'
 url='https://www.kernel.org'
 arch=(x86_64)
@@ -42,23 +42,23 @@ validpgpkeys=(
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('6b19a3ae99423de2416964d67251d745910277af258b4c4c63e88fd87dbf0e27'
+sha256sums=('4804528a29cd20309a0b41c30e5aeffc35fa21ee3358f4a706d4586d003bc1fb'
             'SKIP'
             '3cf389ced2b40e6457421cb27892bf126b73032fbf1de895ecc37b13d981a17c'
             '423b2c6fbc8d6df79997550bef1b1e4f6f402b668007d150013623a83a12b49e'
             '596f8e0aef1df72a84685e8f2b8a9dde7e33b513de555fae6069ba652cbd00c1'
-            '098625e478a0248860923b217cd93a5d68a75d23326a0a7e7b131785b03656bd')
-b2sums=('397efcded0f4adec48820e6c97685ce58bbe213cfb0355e36b096a1fad88f108eeee6ee3ce460cadc3b543252ed115c3b6dd4d27fb533dad8fd6a7a2ae53b338'
+            '4a4d9988fd52d6483f29326a22beeb365bf762f978b5cefe0e26de8461c1d0df')
+b2sums=('a323cc0250a1df65c269882052d13b97fd0fb04fb46ba875cc64ef75eca3398577ef28461f0f850092b733142aa4a7e526537ea2455375dfe5ce92714bd3463c'
         'SKIP'
         'b2e1f3544470a0ded336a8d9097b879060530d795a9b60ef5d617d16c165f3ca27424529a7c464d249ab72abcaf48d65d66d96508a7b49622ab404739ae0a918'
         '01f1a8249983b1a52437843ce3566242b3ed1df03fcab98ec092982be9a4dc947ab0f932a6bc9ac84f85248dca479ebe193a6032cfd2b574dc6f5ca31a0190c5'
         '410dc8911051905c5c01b47890eeff817fc180434372864cfa9ee0d77e0ff43571b9fcc3c193d562c4dcd49511edf7c6c01dde12dd0778845d1868dc435531ea'
-        'b80dc0cc881d88476e9b86286ade5cabeccecf6d67d6d7946be4bf86a11311d39569fbbd9af880ddb6afa90e0d37320e89c903c3c8bef2bab1689ca2fd73c86b')
+        'fc31364f88e20e1e67dbe21e0a3c68128e281d37aa23acf957194853440ca9347e967095f2cb5fa5fbf5d609044fae1c681faf675d2448c29dbb00a73016d651')
 export KBUILD_BUILD_HOST=archlinux
 pkgbase=linux-lts-amdfixes
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
-upstream_pkgrel=2
+upstream_pkgrel=1
 source+=(0004-amdgpu-fix-edp-brightness-control-on-HP-laptops.patch)
 sha256sums+=('13464deccb3d30ff4d2b731f6110befc3a794fcf538fa4313720c8f8c93c9d3b')
 b2sums+=('2fb944d6a277806fa113f86566b5b28814e2f43b85b52fbd791cdcce76a22e7aae3e143cbabb17b096b9e39fa9f36aa9b014224b871b4e0a8c2e4e8aa90cb9b5')
