@@ -2,7 +2,7 @@
 # Maintainer: Janne Grunau <j@jannau.net>
 
 pkgver=6.16.1.asahi1
-pkgrel=1
+pkgrel=2
 
 [[ $pkgver =~ ([.0-9]+)\.asahi([0-9]+) ]]
 _rcver=${BASH_REMATCH[1]}
@@ -28,11 +28,9 @@ source=(
   config         # the main kernel config file
 )
 sha256sums=('608fdbd4a773d91fc5921f7d0e01b62df3682e5be167b54031fe46c67886a0fc'
-            '6af4bb07b446ab0edf7163d11647e5779e3fd42e9d46134aee4d94305b86d2cc'
-            '22d4e28e1e1ebe6a05e8d0d23641ee71a5f5cde06f375e72baa4d8e32b7a90fa')
+            '207eaeb006d8e602c528fc9b1aa173169a7334f7a0361c35d0d955a4a9fae766')
 b2sums=('d6b0e2a1d025e918d8bd813a9a954a3b6d9429b232e690cac6bf24fce29dfebbdd829f7a3f9d6163effa2128fd6ac1520ccbe7706320c4f2574f281c977376e1'
-        '829f8b9f8564ba1ab5badf2b16a619bb23da16badbe947abe893246f0d6862a371230ec50ff435ab630518c94ec05e39496276a69076cd7e5cbfc919967964f7'
-        'bc29091b42d2e3a9ecd9386791c63664288135ad56a073d7ed4c45b50b75c01334ed8f72ef510c130bc0d4d7952e5955974b316efd05426ebe78c7ed042a47ac')
+        '3be6af4d05eb1a8c8016e645acb78ad832883c5ee87d027551d2309784e3e3d654bb61fb93c387342fcbf68002b8fbfb91330caa7cb048f3845251904b35a2de')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
