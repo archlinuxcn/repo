@@ -3,13 +3,13 @@ shopt -s extglob
 
 pkgbase="zfs-linux-lts-rc-poscat"
 pkgname=("zfs-utils-rc-poscat" "zfs-linux-lts-rc-poscat" "zfs-linux-lts-rc-poscat-headers")
-_kernelver=6.12.41-2
+_kernelver=6.12.42-1
 _extramodules="${_kernelver}-lts"
 _sd_zfs_commit="dece62d"
 
 pkgver=2.3.3
 _fullver=2.3.3
-pkgrel=11
+pkgrel=12
 makedepends=(
   "linux-lts-headers=${_kernelver}"
   "libunwind"
