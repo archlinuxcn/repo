@@ -1,0 +1,29 @@
+From 6c2872afcd9ae8e313621eb6cb7f407e89097304 Mon Sep 17 00:00:00 2001
+From: Tom Rix <Tom.Rix@amd.com>
+Date: Sun, 13 Apr 2025 07:41:34 -0700
+Subject: [PATCH] rocm-llvm: gold-plugin: fix ModuleName
+
+---
+ llvm/tools/gold/gold-plugin.cpp | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/llvm/tools/gold/gold-plugin.cpp b/llvm/tools/gold/gold-plugin.cpp
+index 0d4ca5299689..dd577206408c 100644
+--- a/llvm/tools/gold/gold-plugin.cpp
++++ b/llvm/tools/gold/gold-plugin.cpp
+@@ -1100,10 +1100,8 @@ static std::vector<std::pair<SmallString<128>, bool>> runLTO() {
+   };
+ 
+   auto AddBuffer = [&](size_t Task, const Twine &moduleName,
+-                       std::unique_ptr<MemoryBuffer> MB) {
+-    auto Stream = *AddStream(Task, ModuleName);
+-    Stream->OS << MB->getBuffer();
+-    check(Stream->commit(), "Failed to commit cache");
++		       std::unique_ptr<MemoryBuffer> MB) {
++    *AddStream(Task, moduleName)->OS << MB->getBuffer();
+   };
+ 
+   FileCache Cache;
+-- 
+2.48.1
+

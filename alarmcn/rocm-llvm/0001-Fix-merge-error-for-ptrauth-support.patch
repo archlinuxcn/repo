@@ -1,0 +1,444 @@
+From c38cda946b2b327da9a992f5caba0ff182a9223b Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 15 Aug 2025 20:11:55 -0400
+Subject: [PATCH] Fix merge error for ptrauth support
+
+Merge error in 6510e754a5b16ab835e0e1eb3dd56049ed7777e8
+---
+ llvm/docs/GlobalISel/GenericOpcode.rst        | 11 +++++++
+ .../CodeGen/GlobalISel/MachineIRBuilder.h     |  7 ++++
+ llvm/include/llvm/CodeGen/ISDOpcodes.h        |  6 ++++
+ llvm/include/llvm/Support/TargetOpcodes.def   |  3 ++
+ llvm/include/llvm/Target/GenericOpcodes.td    |  6 ++++
+ llvm/lib/CodeGen/GlobalISel/IRTranslator.cpp  |  6 +++-
+ .../CodeGen/GlobalISel/MachineIRBuilder.cpp   | 13 ++++++++
+ llvm/lib/CodeGen/MachineModuleInfoImpls.cpp   |  1 +
+ llvm/lib/CodeGen/MachineVerifier.cpp          |  6 ++++
+ .../SelectionDAG/SelectionDAGBuilder.cpp      |  7 ++++
+ .../SelectionDAG/SelectionDAGDumper.cpp       |  4 +--
+ llvm/lib/Target/AArch64/AArch64AsmPrinter.cpp | 16 ++++++++++
+ .../Target/AArch64/AArch64ISelLowering.cpp    |  4 +++
+ llvm/lib/Target/AArch64/AArch64ISelLowering.h |  6 ++++
+ llvm/lib/Target/AArch64/AArch64InstrInfo.td   | 32 +++++++++++++++++++
+ .../AArch64/AArch64TargetObjectFile.cpp       |  3 ++
+ .../Target/AArch64/AArch64TargetObjectFile.h  |  6 ++++
+ .../GISel/AArch64InstructionSelector.cpp      |  5 +++
+ .../AArch64/GISel/AArch64LegalizerInfo.cpp    |  3 ++
+ .../GlobalISel/legalizer-info-validation.mir  |  4 +++
+ 20 files changed, 146 insertions(+), 3 deletions(-)
+
+diff --git a/llvm/docs/GlobalISel/GenericOpcode.rst b/llvm/docs/GlobalISel/GenericOpcode.rst
+index b66a857d5c0c..d32aeff5a69b 100644
+--- a/llvm/docs/GlobalISel/GenericOpcode.rst
++++ b/llvm/docs/GlobalISel/GenericOpcode.rst
+@@ -60,6 +60,17 @@ The address of a global value.
+ 
+   %0(p0) = G_GLOBAL_VALUE @var_local
+ 
++G_PTRAUTH_GLOBAL_VALUE
++^^^^^^^^^^^^^^^^^^^^^^
++
++The signed address of a global value. Operands: address to be signed (pointer),
++key (32-bit imm), address for address discrimination (zero if not needed) and
++an extra discriminator (64-bit imm).
++
++.. code-block:: none
++
++  %0:_(p0) = G_PTRAUTH_GLOBAL_VALUE %1:_(p0), s32, %2:_(p0), s64
++
+ G_BLOCK_ADDR
+ ^^^^^^^^^^^^
+ 
+diff --git a/llvm/include/llvm/CodeGen/GlobalISel/MachineIRBuilder.h b/llvm/include/llvm/CodeGen/GlobalISel/MachineIRBuilder.h
+index 3c8088349b1b..56a77b8596a1 100644
+--- a/llvm/include/llvm/CodeGen/GlobalISel/MachineIRBuilder.h
++++ b/llvm/include/llvm/CodeGen/GlobalISel/MachineIRBuilder.h
+@@ -886,6 +886,13 @@ public:
+   MachineInstrBuilder buildFConstant(const DstOp &Res, double Val);
+   MachineInstrBuilder buildFConstant(const DstOp &Res, const APFloat &Val);
+ 
++  /// Build and insert G_PTRAUTH_GLOBAL_VALUE
++  ///
++  /// \return a MachineInstrBuilder for the newly created instruction.
++  MachineInstrBuilder buildConstantPtrAuth(const DstOp &Res,
++                                           const ConstantPtrAuth *CPA,
++                                           Register Addr, Register AddrDisc);
++
+   /// Build and insert \p Res = COPY Op
+   ///
+   /// Register-to-register COPY sets \p Res to \p Op.
+diff --git a/llvm/include/llvm/CodeGen/ISDOpcodes.h b/llvm/include/llvm/CodeGen/ISDOpcodes.h
+index f744fe746b4e..daceaf98583b 100644
+--- a/llvm/include/llvm/CodeGen/ISDOpcodes.h
++++ b/llvm/include/llvm/CodeGen/ISDOpcodes.h
+@@ -83,6 +83,12 @@ enum NodeType {
+   ExternalSymbol,
+   BlockAddress,
+ 
++  /// A ptrauth constant.
++  /// ptr, key, addr-disc, disc
++  /// Note that the addr-disc can be a non-constant value, to allow representing
++  /// a constant global address signed using address-diversification, in code.
++  PtrAuthGlobalAddress,
++
+   /// The address of the GOT
+   GLOBAL_OFFSET_TABLE,
+ 
+diff --git a/llvm/include/llvm/Support/TargetOpcodes.def b/llvm/include/llvm/Support/TargetOpcodes.def
+index a633eaa51607..176f285d24ee 100644
+--- a/llvm/include/llvm/Support/TargetOpcodes.def
++++ b/llvm/include/llvm/Support/TargetOpcodes.def
+@@ -300,6 +300,9 @@ HANDLE_TARGET_OPCODE(G_FRAME_INDEX)
+ /// Generic reference to global value.
+ HANDLE_TARGET_OPCODE(G_GLOBAL_VALUE)
+ 
++/// Generic ptrauth-signed reference to global value.
++HANDLE_TARGET_OPCODE(G_PTRAUTH_GLOBAL_VALUE)
++
+ /// Generic instruction to materialize the address of an object in the constant
+ /// pool.
+ HANDLE_TARGET_OPCODE(G_CONSTANT_POOL)
+diff --git a/llvm/include/llvm/Target/GenericOpcodes.td b/llvm/include/llvm/Target/GenericOpcodes.td
+index f5106d7331af..36a0a087ba45 100644
+--- a/llvm/include/llvm/Target/GenericOpcodes.td
++++ b/llvm/include/llvm/Target/GenericOpcodes.td
+@@ -110,6 +110,12 @@ def G_GLOBAL_VALUE : GenericInstruction {
+   let hasSideEffects = false;
+ }
+ 
++def G_PTRAUTH_GLOBAL_VALUE : GenericInstruction {
++  let OutOperandList = (outs type0:$dst);
++  let InOperandList = (ins unknown:$addr, i32imm:$key, type1:$addrdisc, i64imm:$disc);
++  let hasSideEffects = 0;
++}
++
+ def G_CONSTANT_POOL : GenericInstruction {
+   let OutOperandList = (outs type0:$dst);
+   let InOperandList = (ins unknown:$src);
+diff --git a/llvm/lib/CodeGen/GlobalISel/IRTranslator.cpp b/llvm/lib/CodeGen/GlobalISel/IRTranslator.cpp
+index 0ba8c66f96f7..3990ec38f751 100644
+--- a/llvm/lib/CodeGen/GlobalISel/IRTranslator.cpp
++++ b/llvm/lib/CodeGen/GlobalISel/IRTranslator.cpp
+@@ -3542,7 +3542,11 @@ bool IRTranslator::translate(const Constant &C, Register Reg) {
+     EntryBuilder->buildConstant(Reg, 0);
+   else if (auto GV = dyn_cast<GlobalValue>(&C))
+     EntryBuilder->buildGlobalValue(Reg, GV);
+-  else if (auto CAZ = dyn_cast<ConstantAggregateZero>(&C)) {
++  else if (auto CPA = dyn_cast<ConstantPtrAuth>(&C)) {
++    Register Addr = getOrCreateVReg(*CPA->getPointer());
++    Register AddrDisc = getOrCreateVReg(*CPA->getAddrDiscriminator());
++    EntryBuilder->buildConstantPtrAuth(Reg, CPA, Addr, AddrDisc);
++  } else if (auto CAZ = dyn_cast<ConstantAggregateZero>(&C)) {
+     if (!isa<FixedVectorType>(CAZ->getType()))
+       return false;
+     // Return the scalar if it is a <1 x Ty> vector.
+diff --git a/llvm/lib/CodeGen/GlobalISel/MachineIRBuilder.cpp b/llvm/lib/CodeGen/GlobalISel/MachineIRBuilder.cpp
+index 96a7a5c5b652..7eb6cd4e0d79 100644
+--- a/llvm/lib/CodeGen/GlobalISel/MachineIRBuilder.cpp
++++ b/llvm/lib/CodeGen/GlobalISel/MachineIRBuilder.cpp
+@@ -397,6 +397,19 @@ MachineInstrBuilder MachineIRBuilder::buildFConstant(const DstOp &Res,
+   return buildFConstant(Res, *CFP);
+ }
+ 
++MachineInstrBuilder
++MachineIRBuilder::buildConstantPtrAuth(const DstOp &Res,
++                                       const ConstantPtrAuth *CPA,
++                                       Register Addr, Register AddrDisc) {
++  auto MIB = buildInstr(TargetOpcode::G_PTRAUTH_GLOBAL_VALUE);
++  Res.addDefToMIB(*getMRI(), MIB);
++  MIB.addUse(Addr);
++  MIB.addImm(CPA->getKey()->getZExtValue());
++  MIB.addUse(AddrDisc);
++  MIB.addImm(CPA->getDiscriminator()->getZExtValue());
++  return MIB;
++}
++
+ MachineInstrBuilder MachineIRBuilder::buildBrCond(const SrcOp &Tst,
+                                                   MachineBasicBlock &Dest) {
+   assert(Tst.getLLTTy(*getMRI()).isScalar() && "invalid operand type");
+diff --git a/llvm/lib/CodeGen/MachineModuleInfoImpls.cpp b/llvm/lib/CodeGen/MachineModuleInfoImpls.cpp
+index 51398ca07d42..956317510dc7 100644
+--- a/llvm/lib/CodeGen/MachineModuleInfoImpls.cpp
++++ b/llvm/lib/CodeGen/MachineModuleInfoImpls.cpp
+@@ -13,6 +13,7 @@
+ 
+ #include "llvm/CodeGen/MachineModuleInfoImpls.h"
+ #include "llvm/ADT/DenseMap.h"
++#include "llvm/ADT/STLExtras.h"
+ #include "llvm/MC/MCSymbol.h"
+ 
+ using namespace llvm;
+diff --git a/llvm/lib/CodeGen/MachineVerifier.cpp b/llvm/lib/CodeGen/MachineVerifier.cpp
+index 1f808ca5e8c3..5e9bb4c27ffb 100644
+--- a/llvm/lib/CodeGen/MachineVerifier.cpp
++++ b/llvm/lib/CodeGen/MachineVerifier.cpp
+@@ -2140,6 +2140,12 @@ void MachineVerifier::verifyPreISelGenericInstruction(const MachineInstr *MI) {
+       report("Dst operand 0 must be a pointer", MI);
+     break;
+   }
++  case TargetOpcode::G_PTRAUTH_GLOBAL_VALUE: {
++    const MachineOperand &AddrOp = MI->getOperand(1);
++    if (!AddrOp.isReg() || !MRI->getType(AddrOp.getReg()).isPointer())
++      report("addr operand must be a pointer", &AddrOp, 1);
++    break;
++  }
+   default:
+     break;
+   }
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+index bf34f1188421..11acf3850d03 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGBuilder.cpp
+@@ -1803,6 +1803,13 @@ SDValue SelectionDAGBuilder::getValueImpl(const Value *V) {
+     if (const GlobalValue *GV = dyn_cast<GlobalValue>(C))
+       return DAG.getGlobalAddress(GV, getCurSDLoc(), VT);
+ 
++    if (const ConstantPtrAuth *CPA = dyn_cast<ConstantPtrAuth>(C)) {
++      return DAG.getNode(ISD::PtrAuthGlobalAddress, getCurSDLoc(), VT,
++                         getValue(CPA->getPointer()), getValue(CPA->getKey()),
++                         getValue(CPA->getAddrDiscriminator()),
++                         getValue(CPA->getDiscriminator()));
++    }
++
+     if (isa<ConstantPointerNull>(C)) {
+       unsigned AS = V->getType()->getPointerAddressSpace();
+       return DAG.getConstant(0, getCurSDLoc(),
+diff --git a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGDumper.cpp b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGDumper.cpp
+index 90b926bc86f4..16fc52caebb7 100644
+--- a/llvm/lib/CodeGen/SelectionDAG/SelectionDAGDumper.cpp
++++ b/llvm/lib/CodeGen/SelectionDAG/SelectionDAGDumper.cpp
+@@ -75,6 +75,7 @@ std::string SDNode::getOperationName(const SelectionDAG *G) const {
+     }
+     return "<<Unknown Node #" + utostr(getOpcode()) + ">>";
+ 
++    // clang-format off
+ #ifndef NDEBUG
+   case ISD::DELETED_NODE:               return "<<Deleted Node!>>";
+ #endif
+@@ -126,6 +127,7 @@ std::string SDNode::getOperationName(const SelectionDAG *G) const {
+   case ISD::ConstantFP:                 return "ConstantFP";
+   case ISD::GlobalAddress:              return "GlobalAddress";
+   case ISD::GlobalTLSAddress:           return "GlobalTLSAddress";
++  case ISD::PtrAuthGlobalAddress:       return "PtrAuthGlobalAddress";
+   case ISD::FrameIndex:                 return "FrameIndex";
+   case ISD::JumpTable:                  return "JumpTable";
+   case ISD::JUMP_TABLE_DEBUG_INFO:
+@@ -168,8 +170,6 @@ std::string SDNode::getOperationName(const SelectionDAG *G) const {
+       return "OpaqueTargetConstant";
+     return "TargetConstant";
+ 
+-    // clang-format off
+-
+   case ISD::TargetConstantFP:           return "TargetConstantFP";
+   case ISD::TargetGlobalAddress:        return "TargetGlobalAddress";
+   case ISD::TargetGlobalTLSAddress:     return "TargetGlobalTLSAddress";
+diff --git a/llvm/lib/Target/AArch64/AArch64AsmPrinter.cpp b/llvm/lib/Target/AArch64/AArch64AsmPrinter.cpp
+index b99e27bc816f..b003c0938e2e 100644
+--- a/llvm/lib/Target/AArch64/AArch64AsmPrinter.cpp
++++ b/llvm/lib/Target/AArch64/AArch64AsmPrinter.cpp
+@@ -134,6 +134,13 @@ public:
+   unsigned emitPtrauthDiscriminator(uint16_t Disc, unsigned AddrDisc,
+                                     unsigned &InstsEmitted);
+ 
++  // Emit the sequence for LOADauthptrstatic
++  void LowerLOADauthptrstatic(const MachineInstr &MI);
++
++  // Emit the sequence for LOADgotPAC/MOVaddrPAC (either GOT adrp-ldr or
++  // adrp-add followed by PAC sign)
++  void LowerMOVaddrPAC(const MachineInstr &MI);
++
+   /// tblgen'erated driver function for lowering simple MI->MC
+   /// pseudo instructions.
+   bool emitPseudoExpansionLowering(MCStreamer &OutStreamer,
+@@ -2050,6 +2057,15 @@ void AArch64AsmPrinter::emitInstruction(const MachineInstr *MI) {
+     return;
+   }
+ 
++  case AArch64::LOADauthptrstatic:
++    LowerLOADauthptrstatic(*MI);
++    return;
++
++  case AArch64::LOADgotPAC:
++  case AArch64::MOVaddrPAC:
++    LowerMOVaddrPAC(*MI);
++    return;
++
+   case AArch64::BLRA:
+     emitPtrauthBranch(MI);
+     return;
+diff --git a/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp b/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
+index e8735b907a34..d7bc1d549060 100644
+--- a/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
++++ b/llvm/lib/Target/AArch64/AArch64ISelLowering.cpp
+@@ -511,6 +511,8 @@ AArch64TargetLowering::AArch64TargetLowering(const TargetMachine &TM,
+   setOperationAction(ISD::JumpTable, MVT::i64, Custom);
+   setOperationAction(ISD::SETCCCARRY, MVT::i64, Custom);
+ 
++  setOperationAction(ISD::PtrAuthGlobalAddress, MVT::i64, Custom);
++
+   setOperationAction(ISD::SHL_PARTS, MVT::i64, Custom);
+   setOperationAction(ISD::SRA_PARTS, MVT::i64, Custom);
+   setOperationAction(ISD::SRL_PARTS, MVT::i64, Custom);
+@@ -6699,6 +6701,8 @@ SDValue AArch64TargetLowering::LowerOperation(SDValue Op,
+     return LowerGlobalAddress(Op, DAG);
+   case ISD::GlobalTLSAddress:
+     return LowerGlobalTLSAddress(Op, DAG);
++  case ISD::PtrAuthGlobalAddress:
++    return LowerPtrAuthGlobalAddress(Op, DAG);
+   case ISD::SETCC:
+   case ISD::STRICT_FSETCC:
+   case ISD::STRICT_FSETCCS:
+diff --git a/llvm/lib/Target/AArch64/AArch64ISelLowering.h b/llvm/lib/Target/AArch64/AArch64ISelLowering.h
+index fb0aff1f9bc7..fcdd47541be8 100644
+--- a/llvm/lib/Target/AArch64/AArch64ISelLowering.h
++++ b/llvm/lib/Target/AArch64/AArch64ISelLowering.h
+@@ -1129,6 +1129,12 @@ private:
+   SDValue LowerELFTLSDescCallSeq(SDValue SymAddr, const SDLoc &DL,
+                                  SelectionDAG &DAG) const;
+   SDValue LowerWindowsGlobalTLSAddress(SDValue Op, SelectionDAG &DAG) const;
++  SDValue LowerPtrAuthGlobalAddress(SDValue Op, SelectionDAG &DAG) const;
++  SDValue LowerPtrAuthGlobalAddressStatically(SDValue TGA, SDLoc DL, EVT VT,
++                                              AArch64PACKey::ID Key,
++                                              SDValue Discriminator,
++                                              SDValue AddrDiscriminator,
++                                              SelectionDAG &DAG) const;
+   SDValue LowerSETCC(SDValue Op, SelectionDAG &DAG) const;
+   SDValue LowerSETCCCARRY(SDValue Op, SelectionDAG &DAG) const;
+   SDValue LowerBR_CC(SDValue Op, SelectionDAG &DAG) const;
+diff --git a/llvm/lib/Target/AArch64/AArch64InstrInfo.td b/llvm/lib/Target/AArch64/AArch64InstrInfo.td
+index e42649922957..643bcc33f920 100644
+--- a/llvm/lib/Target/AArch64/AArch64InstrInfo.td
++++ b/llvm/lib/Target/AArch64/AArch64InstrInfo.td
+@@ -1776,6 +1776,38 @@ let Predicates = [HasPAuth] in {
+   defm LDRAA  : AuthLoad<0, "ldraa", simm10Scaled>;
+   defm LDRAB  : AuthLoad<1, "ldrab", simm10Scaled>;
+ 
++  // Materialize a signed global address, with adrp+add and PAC.
++  def MOVaddrPAC : Pseudo<(outs),
++                          (ins i64imm:$Addr, i32imm:$Key,
++                               GPR64noip:$AddrDisc, i64imm:$Disc), []>,
++               Sched<[WriteI, ReadI]> {
++    let isReMaterializable = 1;
++    let isCodeGenOnly = 1;
++    let Size = 40; // 12 fixed + 28 variable, for pointer offset, and discriminator
++    let Defs = [X16,X17];
++  }
++
++  // Materialize a signed global address, using a GOT load and PAC.
++  def LOADgotPAC : Pseudo<(outs),
++                          (ins i64imm:$Addr, i32imm:$Key,
++                               GPR64noip:$AddrDisc, i64imm:$Disc), []>,
++               Sched<[WriteI, ReadI]> {
++    let isReMaterializable = 1;
++    let isCodeGenOnly = 1;
++    let Size = 40; // 12 fixed + 28 variable, for pointer offset, and discriminator
++    let Defs = [X16,X17];
++  }
++
++  // Load a signed global address from a special $auth_ptr$ stub slot.
++  def LOADauthptrstatic : Pseudo<(outs GPR64:$dst),
++                              (ins i64imm:$Addr, i32imm:$Key,
++                                   i64imm:$Disc), []>,
++               Sched<[WriteI, ReadI]> {
++    let isReMaterializable = 1;
++    let isCodeGenOnly = 1;
++    let Size = 8;
++  }
++
+   // Size 16: 4 fixed + 8 variable, to compute discriminator.
+   let isCall = 1, isTerminator = 1, isReturn = 1, isBarrier = 1, Size = 16,
+       Uses = [SP] in {
+diff --git a/llvm/lib/Target/AArch64/AArch64TargetObjectFile.cpp b/llvm/lib/Target/AArch64/AArch64TargetObjectFile.cpp
+index 4bcb006e5e2f..d916f644de9b 100644
+--- a/llvm/lib/Target/AArch64/AArch64TargetObjectFile.cpp
++++ b/llvm/lib/Target/AArch64/AArch64TargetObjectFile.cpp
+@@ -8,7 +8,10 @@
+ 
+ #include "AArch64TargetObjectFile.h"
+ #include "AArch64TargetMachine.h"
++#include "MCTargetDesc/AArch64MCExpr.h"
++#include "llvm/ADT/StringExtras.h"
+ #include "llvm/BinaryFormat/Dwarf.h"
++#include "llvm/CodeGen/MachineModuleInfoImpls.h"
+ #include "llvm/IR/Mangler.h"
+ #include "llvm/IR/Module.h"
+ #include "llvm/MC/MCContext.h"
+diff --git a/llvm/lib/Target/AArch64/AArch64TargetObjectFile.h b/llvm/lib/Target/AArch64/AArch64TargetObjectFile.h
+index fe7d5ecadc3c..2ef8bda2988d 100644
+--- a/llvm/lib/Target/AArch64/AArch64TargetObjectFile.h
++++ b/llvm/lib/Target/AArch64/AArch64TargetObjectFile.h
+@@ -9,6 +9,7 @@
+ #ifndef LLVM_LIB_TARGET_AARCH64_AARCH64TARGETOBJECTFILE_H
+ #define LLVM_LIB_TARGET_AARCH64_AARCH64TARGETOBJECTFILE_H
+ 
++#include "Utils/AArch64BaseInfo.h"
+ #include "llvm/CodeGen/TargetLoweringObjectFileImpl.h"
+ #include "llvm/Target/TargetLoweringObjectFile.h"
+ 
+@@ -29,6 +30,11 @@ public:
+                                           const MCValue &MV, int64_t Offset,
+                                           MachineModuleInfo *MMI,
+                                           MCStreamer &Streamer) const override;
++
++  MCSymbol *getAuthPtrSlotSymbol(const TargetMachine &TM,
++                                 MachineModuleInfo *MMI, const MCSymbol *RawSym,
++                                 AArch64PACKey::ID Key,
++                                 uint16_t Discriminator) const;
+ };
+ 
+ /// AArch64_MachoTargetObjectFile - This TLOF implementation is used for Darwin.
+diff --git a/llvm/lib/Target/AArch64/GISel/AArch64InstructionSelector.cpp b/llvm/lib/Target/AArch64/GISel/AArch64InstructionSelector.cpp
+index 2af71623e856..009928a8a748 100644
+--- a/llvm/lib/Target/AArch64/GISel/AArch64InstructionSelector.cpp
++++ b/llvm/lib/Target/AArch64/GISel/AArch64InstructionSelector.cpp
+@@ -224,6 +224,8 @@ private:
+   bool selectJumpTable(MachineInstr &I, MachineRegisterInfo &MRI);
+   bool selectBrJT(MachineInstr &I, MachineRegisterInfo &MRI);
+   bool selectTLSGlobalValue(MachineInstr &I, MachineRegisterInfo &MRI);
++  bool selectPtrAuthGlobalValue(MachineInstr &I,
++                                MachineRegisterInfo &MRI) const;
+   bool selectReduction(MachineInstr &I, MachineRegisterInfo &MRI);
+   bool selectMOPS(MachineInstr &I, MachineRegisterInfo &MRI);
+   bool selectUSMovFromExtend(MachineInstr &I, MachineRegisterInfo &MRI);
+@@ -2853,6 +2855,9 @@ bool AArch64InstructionSelector::select(MachineInstr &I) {
+     return constrainSelectedInstRegOperands(I, TII, TRI, RBI);
+   }
+ 
++  case TargetOpcode::G_PTRAUTH_GLOBAL_VALUE:
++    return selectPtrAuthGlobalValue(I, MRI);
++
+   case TargetOpcode::G_ZEXTLOAD:
+   case TargetOpcode::G_LOAD:
+   case TargetOpcode::G_STORE: {
+diff --git a/llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp b/llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp
+index 914f79181a2e..3f8641945bcd 100644
+--- a/llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp
++++ b/llvm/lib/Target/AArch64/GISel/AArch64LegalizerInfo.cpp
+@@ -778,6 +778,9 @@ AArch64LegalizerInfo::AArch64LegalizerInfo(const AArch64Subtarget &ST)
+   else
+     getActionDefinitionsBuilder(G_GLOBAL_VALUE).legalFor({p0});
+ 
++  getActionDefinitionsBuilder(G_PTRAUTH_GLOBAL_VALUE)
++      .legalIf(all(typeIs(0, p0), typeIs(1, p0)));
++
+   getActionDefinitionsBuilder(G_PTRTOINT)
+       .legalFor({{s64, p0}, {v2s64, v2p0}})
+       .widenScalarToNextPow2(0, 64)
+diff --git a/llvm/test/CodeGen/AArch64/GlobalISel/legalizer-info-validation.mir b/llvm/test/CodeGen/AArch64/GlobalISel/legalizer-info-validation.mir
+index 0f06cfc8505c..0e7804e98ae6 100644
+--- a/llvm/test/CodeGen/AArch64/GlobalISel/legalizer-info-validation.mir
++++ b/llvm/test/CodeGen/AArch64/GlobalISel/legalizer-info-validation.mir
+@@ -86,6 +86,10 @@
+ # DEBUG-NEXT: .. type index coverage check SKIPPED: user-defined predicate detected
+ # DEBUG-NEXT: .. imm index coverage check SKIPPED: user-defined predicate detected
+ #
++# DEBUG-NEXT: G_PTRAUTH_GLOBAL_VALUE (opcode {{[0-9]+}}): 2 type indices, 0 imm indices
++# DEBUG-NEXT: .. type index coverage check SKIPPED: user-defined predicate detected
++# DEBUG-NEXT: .. imm index coverage check SKIPPED: user-defined predicate detected
++#
+ # DEBUG-NEXT: G_CONSTANT_POOL (opcode {{[0-9]+}}): 1 type index, 0 imm indices
+ # DEBUG-NEXT: .. type index coverage check SKIPPED: no rules defined
+ # DEBUG-NEXT: .. imm index coverage check SKIPPED: no rules defined
+-- 
+2.50.1
+

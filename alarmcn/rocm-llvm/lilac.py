@@ -13,6 +13,16 @@ def pre_build():
     line = line.replace('AMDGPU;NVPTX;X86', 'AMDGPU;NVPTX;AArch64')
     if line.startswith('arch='):
       line = 'arch=(aarch64)'
+    if line.startswith('prepare()'):
+      print('source+=(0001-Fix-merge-error-for-ptrauth-support.patch)')
+      print("""prepare() {
+  (cd rocm-llvm/
+  patch -Np1 -i "$srcdir/0001-Fix-merge-error-for-ptrauth-support.patch")
+  _prepare
+}
+""")
+      print(f"_{line}")
+      continue
     print(line)
   run_cmd(['updpkgsums'])
 
