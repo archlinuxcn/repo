@@ -15,13 +15,20 @@ def pre_build():
       line = 'arch=(aarch64)'
     if line.startswith('prepare()'):
       print('source+=(0001-Fix-merge-error-for-ptrauth-support.patch)')
+      print('source+=(0001-Fix-char-array-initializer.patch)')
       print("""prepare() {
   (cd rocm-llvm/
-  patch -Np1 -i "$srcdir/0001-Fix-merge-error-for-ptrauth-support.patch")
+  patch -Np1 -i "$srcdir/0001-Fix-merge-error-for-ptrauth-support.patch"
+  patch -Np1 -i "$srcdir/0001-Fix-char-array-initializer.patch")
   _prepare
 }
 """)
       print(f"_{line}")
+      continue
+    if line.startswith('build()'):
+      print(line)
+      print("    CXXFLAGS+=' -Wno-error -Wno-narrowing'")
+      print("    CFLAGS+=' -Wno-error -Wno-narrowing'")
       continue
     print(line)
   run_cmd(['updpkgsums'])

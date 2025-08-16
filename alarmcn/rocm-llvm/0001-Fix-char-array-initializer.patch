@@ -1,0 +1,23 @@
+From 83861698975bc1e7f751e03e7d41d38d078efb8d Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 16 Aug 2025 02:02:43 -0400
+Subject: [PATCH] Fix char array initializer
+
+---
+ amd/comgr/cmake/device-libs-id.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/amd/comgr/cmake/device-libs-id.py b/amd/comgr/cmake/device-libs-id.py
+index 2a27d120dc63..90a9234bd9e1 100644
+--- a/amd/comgr/cmake/device-libs-id.py
++++ b/amd/comgr/cmake/device-libs-id.py
+@@ -16,5 +16,5 @@ if __name__ == "__main__":
+         hash.update(open(x, 'rb').read())
+     digest_uchar = hash.digest()
+     digest_char = [e if e < 128 else e-256 for e in digest_uchar]
+-    digest_elts = ", ".join(map(str, digest_char))
++    digest_elts = ", ".join(f"(char){c}" for c in digest_char)
+     print(f"static const char {args.varname}[] = {{{digest_elts}, 0}};", file=open(args.output, 'w'))
+-- 
+2.50.1
+

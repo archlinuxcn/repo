@@ -15,13 +15,16 @@ source=("$pkgbase::git+https://github.com/ROCm/llvm-project#tag=rocm-$pkgver"
 sha256sums=('edb637d082a0d0a41e50f5128cf5b23226313bbc4f28e888843cde137e2f3594'
             '0293c307131426a9c031f215045e2f0725677de0aac6dda1729456ac9a444415'
             '6485a06e4f3b85df76110548f428217f86e785ec3dec7b0de0a7a2cf6384f0c0'
-            'eb4f45eb0cbba0cdbb9d9a3823482bac43cf91079e1bf59c5f6b7bd129ec6592')
+            'eb4f45eb0cbba0cdbb9d9a3823482bac43cf91079e1bf59c5f6b7bd129ec6592'
+            'edda75ff7c0f22a370f41a940e4e391825d7706f9fe300e2bf568dfc23908016')
 options=(staticlibs !lto)
 
 source+=(0001-Fix-merge-error-for-ptrauth-support.patch)
+source+=(0001-Fix-char-array-initializer.patch)
 prepare() {
   (cd rocm-llvm/
-  patch -Np1 -i "$srcdir/0001-Fix-merge-error-for-ptrauth-support.patch")
+  patch -Np1 -i "$srcdir/0001-Fix-merge-error-for-ptrauth-support.patch"
+  patch -Np1 -i "$srcdir/0001-Fix-char-array-initializer.patch")
   _prepare
 }
 
@@ -48,6 +51,8 @@ _prepare() {
 }
 
 build() {
+    CXXFLAGS+=' -Wno-error -Wno-narrowing'
+    CFLAGS+=' -Wno-error -Wno-narrowing'
     # Build only minimal debug info to reduce size
     CFLAGS+=' -g1'
     CXXFLAGS+=' -g1'
