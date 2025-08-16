@@ -26,7 +26,6 @@ options=('!strip')
 source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
-  enable-mic.patch
 )
 sha256sums=('608fdbd4a773d91fc5921f7d0e01b62df3682e5be167b54031fe46c67886a0fc'
             '6af4bb07b446ab0edf7163d11647e5779e3fd42e9d46134aee4d94305b86d2cc'
@@ -38,7 +37,7 @@ export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
-_rust_ver=1.87.0
+_rust_ver=1.88.0
 
 _set_cargo_path() {
   PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$PATH"
@@ -51,7 +50,7 @@ prepare() {
   rustup component add rust-src
   _path=$PATH
   PATH="$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$_path"
-  cargo install --locked --version 0.71.1 bindgen-cli
+  cargo install --locked --version 0.72.0 bindgen-cli
   PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$_path"
 
   echo "Setting version..."
