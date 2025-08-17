@@ -11,7 +11,7 @@ depends=(julia-git ocl-icd)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenCL_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('0b88775235b75aacd434196e8d88592c0128b279f2bcfd9625f5192f0d9d9a32'
-            'd5e0db6e439f8a62f225e50b2638eabc580e398f4c467033973bbf48e6b3f1c5')
+            'aee8572a1408d46e7d93ce137cf127e48fcd2a12874be576cb5cc2d1dbd8df96')
 
 build() {
   cd OpenCL_jll.jl

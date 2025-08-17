@@ -1,3 +1,7 @@
 [[library]]
 name = "libopencl"
 file = "libOpenCL"
+
+[global]
+extra = "const drivers = String[]"
+extra_init = "    empty!(drivers)"
