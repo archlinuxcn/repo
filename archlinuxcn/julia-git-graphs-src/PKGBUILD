@@ -1,6 +1,6 @@
 pkgname=julia-git-graphs-src
-pkgver=1.13.0
-_commit=2d6f4d56b06cb597ebd5c40c5a8db783f1b83991
+pkgver=1.13.1
+_commit=b5da85a19979c355d974f6547dd789edecae9b18
 pkgrel=1
 pkgdesc="Graphs.jl"
 url="https://github.com/JuliaGraphs/Graphs.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphs/Graphs.jl.git#commit=$_commit")
-sha256sums=('543b3dd91b37303bb304b3598ca7312ea3411313782f75102fd2b002ab1aa89f')
+sha256sums=('1a0ce649a6784d88204a50c112b528abd23d2efab44bcbc1bc4ba796b30f1178')
 
 package() {
   cd Graphs.jl
