@@ -1,6 +1,6 @@
 pkgname=julia-git-clang-src
-pkgver=0.18.3
-_commit=0a0d245be658b814c498ed4ac85578770d692dc8
+pkgver=0.19.0
+_commit=aa6520c13b025cf88a5576ad4b83567084b81ff4
 pkgrel=1
 pkgdesc="Clang.jl"
 url="https://github.com/JuliaInterop/Clang.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaInterop/Clang.jl.git#commit=$_commit"
         0001-Support-Clang-20.patch)
-sha256sums=('568e020246884f57f87444d4e54f706c7ceb848db3d9b03885892f7c6ccf8bbc'
+sha256sums=('30f34efe64750c02e093f6dc22ad2030863eba1ba0d4f77e303be8e2cf10de4b'
             '1e7863313459af9aa036dad9e50e07545147ef9796b112efbbd8cb1cb59d69d5')
 
 prepare() {
