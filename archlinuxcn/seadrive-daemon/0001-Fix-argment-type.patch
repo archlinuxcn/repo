@@ -1,0 +1,25 @@
+From 7574365538b7b9fb5ec5a1fcbf063f26285f5149 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 18 Aug 2025 14:32:47 -0400
+Subject: [PATCH] Fix argment type
+
+---
+ src/sync-mgr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/sync-mgr.c b/src/sync-mgr.c
+index 4b93a81..c706af8 100644
+--- a/src/sync-mgr.c
++++ b/src/sync-mgr.c
+@@ -3713,7 +3713,7 @@ handle_update_file_attr_op (SeafRepo *repo, ChangeSet *changeset, const char *us
+         // If not only the file mtime has changed, but also the file size, then the file needs to be re-indexed.
+         if (cache_st.size != op->size) {
+             handle_update_file_op (repo, changeset, username, op, FALSE,
+-                                    updated_files, &total_size, crypt);
++                                    updated_files, total_size, crypt);
+             return;
+         }
+     }
+-- 
+2.50.1
+
