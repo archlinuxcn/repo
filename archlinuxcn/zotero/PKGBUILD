@@ -1,7 +1,7 @@
 # Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=7.0.22
+pkgver=7.0.24
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686')
@@ -9,7 +9,7 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch')
-_tag=21396701c0c5664c1d8f5c472d48d1c22d6dfb56  # git rev-parse $pkgver
+_tag=245c018ec0d15cf32cc123bc57ecb0f155634fde  # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
@@ -27,7 +27,7 @@ source=("zotero.desktop"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            'e3b2f69d544742892fdd1099b7893c4f4b35bc23c08d625bb4f17d53ad0e0b25'
+            'e7f21a0a0d8561b8e58a2ecba564f89aceff87792b84083360deb460787601a4'
             'SKIP'
             'SKIP'
             'SKIP'
