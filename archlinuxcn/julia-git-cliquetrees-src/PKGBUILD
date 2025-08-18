@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/AlgebraicJulia/CliqueTrees.jl.git#commit=$_commit"
-        0001-Use-Base-version-of-ispositive-isnegative-on-1.13.patch)
-sha256sums=('0736469e02904fc1091e4a9c0ef4a8877af60f8358052bc24cb0f3baf5c64301'
-            'd7444de151a170ceeef24a6e42fcf27e21ae6902d3f7b47e8fb0ee3e0c7c29eb')
-
-prepare() {
-  cd CliqueTrees.jl
-
-  patch -Np1 --no-backup-if-mismatch < "../0001-Use-Base-version-of-ispositive-isnegative-on-1.13.patch"
-}
+source=("git+https://github.com/AlgebraicJulia/CliqueTrees.jl.git#commit=$_commit")
+sha256sums=('0736469e02904fc1091e4a9c0ef4a8877af60f8358052bc24cb0f3baf5c64301')
 
 package() {
   cd CliqueTrees.jl
