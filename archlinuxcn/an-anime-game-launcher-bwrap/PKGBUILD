@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 # Contributor: HurricanePootis <hurricanepootis@protonmail.com>
 pkgname=an-anime-game-launcher-bwrap
-pkgver=3.15.5
+pkgver=3.15.6
 pkgrel=1
 pkgdesc="A Launcher for a specific anime game with auto-patching, discord rpc and time tracking"
 arch=('x86_64')
