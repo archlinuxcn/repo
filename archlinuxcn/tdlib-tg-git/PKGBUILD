@@ -11,7 +11,7 @@ url="https://core.telegram.org/tdlib"
 license=('BSL-1.0')
 provides=("${_pkgname}")
 depends=('gcc-libs' 'zlib' 'openssl')
-makedepends=('git' 'gperf' 'cmake')
+makedepends=('git' 'gperf' 'gcc14' 'cmake')
 source=("${_pkgname}::git+https://github.com/tdlib/td.git")
 sha256sums=('SKIP')
 
@@ -20,18 +20,18 @@ pkgver() {
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
-prepare() {
-	mkdir -p "${_pkgname}/build/"
-}
-
 build() {
-	cd "${_pkgname}/build/"
-	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
-	cmake --build .
+	cmake -S "${_pkgname}" \
+		-B build \
+		-DCMAKE_BUILD_TYPE=None \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_C_COMPILER=gcc-14 \
+		-DCMAKE_CXX_COMPILER=g++-14
+
+	cmake --build build
 }
 
 package() {
-	cd "${_pkgname}/"
 	DESTDIR="${pkgdir}" cmake --install build
-	install -Dm644 LICENSE_1_0.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 "${_pkgname}/LICENSE_1_0.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
