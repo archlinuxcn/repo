@@ -53,6 +53,7 @@ build() {
       --enable-terminal \
       --with-features=huge \
       --with-luajit \
+      --enable-socketserver \
       --disable-icon-cache-update --disable-desktop-database-update \
       $(eval "echo \$${name}_options") --enable-fail-if-missing \
       --with-compiledby=百合仙子 --with-modified-by=百合仙子
