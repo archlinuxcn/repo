@@ -9,6 +9,7 @@ pkgdesc="Cross-platform library for building Telegram clients"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://core.telegram.org/tdlib"
 license=('BSL-1.0')
+conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 depends=('gcc-libs' 'zlib' 'openssl')
 makedepends=('git' 'gperf' 'gcc14' 'cmake')
