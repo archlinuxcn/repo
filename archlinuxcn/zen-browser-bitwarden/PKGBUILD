@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=zen-browser-bitwarden
-pkgver=2025.7.1
+pkgver=2025.8.0
 pkgrel=1
 pkgdesc='Bitwarden browser extension for Zen'
 arch=('any')
@@ -11,7 +11,7 @@ groups=('zen-browser-addons')
 pkgdesc='Bitwarden browser extension for Firefox'
 makedepends=('nodejs' 'npm' 'unzip' 'zip' 'git')
 source=("${pkgname}::git+https://github.com/bitwarden/clients.git#tag=browser-v${pkgver}")
-b2sums=('43a677d50cc9952d564d89a72c84c0fdc4b166b977c5fa6871ce5601bbd1014b0e4509b019ebdaaf27800e640fae0ccd877bb8316ee6507712446af96f78c46d')
+b2sums=('a41417dae5eb3f05d6a65388934b8fddc034abecc0b1773ce5f3cf1c4b082a2c86e95fe2df7b9853c55134d0029ca78868dca88940df100e203fdb491fc9b42f')
 
 prepare() {
   cd "${srcdir}/zen-browser-bitwarden"
