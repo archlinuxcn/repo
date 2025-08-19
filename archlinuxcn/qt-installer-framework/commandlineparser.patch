@@ -1,0 +1,11 @@
+diff -Naur installer-framework-4.10.0.orig/src/libs/installer/commandlineparser.h installer-framework-4.10.0/src/libs/installer/commandlineparser.h
+--- installer-framework-4.10.0.orig/src/libs/installer/commandlineparser.h	2025-08-19 17:47:00.096809138 +0200
++++ installer-framework-4.10.0/src/libs/installer/commandlineparser.h	2025-08-19 17:55:07.388040589 +0200
+@@ -30,6 +30,7 @@
+ #define COMMANDLINEPARSER_H
+ 
+ #include <QCommandLineParser>
++#include <QHash>
+ 
+ class CommandLineParserPrivate;
+ 
