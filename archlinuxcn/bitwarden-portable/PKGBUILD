@@ -1,6 +1,6 @@
 # Maintainer: Kimiblock Moe
 pkgname=bitwarden-portable
-pkgver=2025.7.0
+pkgver=2025.8.0
 pkgrel=1
 pkgdesc="Zen Browser sandboxed by portable"
 arch=('any')
