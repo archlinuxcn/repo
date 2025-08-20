@@ -3,7 +3,7 @@
 
 pkgname=protontricks
 pkgver=1.13.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple wrapper that does winetricks things for Proton enabled games."
 arch=('any')
 url="https://github.com/Matoking/protontricks"
@@ -16,21 +16,19 @@ optdepends=(
 makedepends=('git' 'python-setuptools-scm' 'python-build' 'python-installer' 'python-wheel')
 provides=("protontricks")
 conflicts=('protontricks-git')
-source=("git+${url}.git#tag=${pkgver}")
+source=("${pkgname}-${pkgver}::git+${url}.git#tag=${pkgver}")
 sha512sums=('SKIP')
 
 build() {
-  cd "${srcdir}/${pkgname}"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "${srcdir}/${pkgname}"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   python -m installer --destdir="$pkgdir" dist/*.whl
 
   install -D -m 0644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
 }
-
-# vim:set ts=2 sw=2 et:
