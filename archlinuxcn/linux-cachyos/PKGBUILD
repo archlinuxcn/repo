@@ -166,17 +166,17 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=6.16
-_minor=0
+_minor=1
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
-#_stable=${_major}.${_minor}
-_stable=${_major}
+_stable=${_major}.${_minor}
+#_stable=${_major}
 #_stablerc=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + LTO + AutoFDO + Propeller Cachy Sauce Kernel by CachyOS with other patches and improvements.'
-pkgrel=2
+pkgrel=1
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -200,7 +200,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=575.64.05
+_nv_ver=580.76.05
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -529,6 +529,20 @@ prepare() {
     fi
 }
 
+_sign_modules() {
+    msg2 "Signing modules in $1"
+    local sign_script="${srcdir}/${_srcname}/scripts/sign-file"
+    local sign_key="$(grep -Po 'CONFIG_MODULE_SIG_KEY="\K[^"]*' "${srcdir}/${_srcname}/.config")"
+    if [[ ! "$sign_key" =~ ^/ ]]; then
+        sign_key="${srcdir}/${_srcname}/${sign_key}"
+    fi
+    local sign_cert="${srcdir}/${_srcname}/certs/signing_key.x509"
+    local hash_algo="$(grep -Po 'CONFIG_MODULE_SIG_HASH="\K[^"]*' "${srcdir}/${_srcname}/.config")"
+
+    find "$1" -type f -name '*.ko' -print -exec \
+        "${sign_script}" "${hash_algo}" "${sign_key}" "${sign_cert}" '{}' \;
+}
+
 build() {
     cd "$_srcname"
     make "${BUILD_FLAGS[@]}" -j"$(nproc)" all
@@ -544,7 +558,6 @@ build() {
         MODULE_FLAGS+=(NV_EXCLUDE_BUILD_MODULES='__EXCLUDE_MODULES')
         cd "${srcdir}/${_nv_pkg}/kernel"
         make "${BUILD_FLAGS[@]}" "${MODULE_FLAGS[@]}" -j"$(nproc)" modules
-
     fi
 
     if [ "$_build_nvidia_open" = "yes" ]; then
@@ -723,6 +736,8 @@ _package-zfs(){
     cd "${srcdir}/zfs"
     install -dm755 "${modulesdir}"
     install -m644 module/*.ko "${modulesdir}"
+
+    _sign_modules "${modulesdir}"
     find "$pkgdir" -name '*.ko' -exec zstd --rm -19 -T0 {} +
     #  sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${pkgver}-${pkgbase}'/" "$startdir/zfs.install"
 }
@@ -741,6 +756,8 @@ _package-nvidia(){
     install -dm755 "${modulesdir}"
     install -m644 kernel/*.ko "${modulesdir}"
     install -Dt "$pkgdir/usr/share/licenses/${pkgname}" -m644 LICENSE
+
+    _sign_modules "${modulesdir}"
     find "$pkgdir" -name '*.ko' -exec zstd --rm -19 -T0 {} +
 }
 
@@ -759,6 +776,7 @@ _package-nvidia-open(){
     install -m644 kernel-open/*.ko "${modulesdir}"
     install -Dt "$pkgdir/usr/share/licenses/${pkgname}" -m644 COPYING
 
+    _sign_modules "${modulesdir}"
     find "$pkgdir" -name '*.ko' -exec zstd --rm -19 -T0 {} +
 }
 
@@ -775,7 +793,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('87bc4da7e89cc8265aebffea7ec6c09f711be24fee87cb1c03a264c03fd5a538d66aa806640835aa5103926e612cdfbc52d7c861d7f7065f1a8bb11d893b0921'
-        'e323923f3029a69272f6d895cedf8375e06a89de1b1663b63220997edfb64b0c9922751240fc130b3f32e811b4b5a7f02c354b89413fa84c4cf0f5d11c0f253b'
-        '45e0e15040d2d2577e10a8ab5e03ac861ab7faaf5081da590f5378268f5d54391e457aa3a91d0e0cb318749871372fee7f7f95a6557d6db762f2999419c98312'
-        'dfda2c44baec52d4fc904d02dd9afe54fad51d5048d96f0ddc5668eb71f82b06fabc74d9db23db884377d6a69476290bfeba061483b7709cfa56ded247587ff9')
+b2sums=('280386f483f3f181fd0e45789815621f6f6bed208b7c10b05a7e2c2eed102d53928ce3f0e28cdd58d1e3c69f9977f60f7b6e832c3a00c0f4524aa45f83ec9491'
+        '08e0162b75c1b78f523efb71afbc06f2d37e5b8e73731517c5eec2b3663e5cf48a1ad4577304e7bf2eee270e5a9ee381cab8209c3104c8598653dce9cbcbb056'
+        '9ded1dae30b2ecf1bf2e6d811e1ead4518b185d318d70e3aa8cdc355c49adf5203b413346dcbe999a27c9765e770951b209d740f9824d3343a2881127b9ef1b1'
+        'b8d0a52afbe6545c1d300e1a8ee2c74dcf97316a691cd5902b3356dc5f9ed28255b2515218ae2282a0a0bbd092b1cbb4a7f9cf04f786bf7df7067b0c72f7e4d3')
