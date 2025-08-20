@@ -165,10 +165,10 @@ else
 fi
 
 pkgbase="linux-$_pkgsuffix"
-_major=6.16
-_minor=0
+_major=6.17
+_minor=1
 #_minorc=$((_minor+1))
-_rcver=rc7
+_rcver=rc2
 pkgver=${_major}.${_rcver}
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -176,7 +176,7 @@ _stable=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + LTO + AutoFDO + Propeller + Cachy Sauce Kernel by CachyOS with other patches and improvements - Release Candidate'
-pkgrel=2
+pkgrel=1
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -200,7 +200,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=575.64.05
+_nv_ver=580.76.05
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -240,7 +240,8 @@ fi
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
              "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
-             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch")
+             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
+             "${_patchsource}/misc/nvidia/6.17.patch")
 fi
 
 # Use generated AutoFDO Profile
@@ -386,7 +387,7 @@ prepare() {
     ### Select preempt type
 
     # We should not set up the PREEMPT for RT kernels
-    if [[ "$_cpusched" != "rt" || "$_cpusched" != "rt-bore" ]]; then
+    if [[ "$_cpusched" != "rt" && "$_cpusched" != "rt-bore" ]]; then
         case "$_preempt" in
             full) scripts/config -e PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -d PREEMPT_NONE;;
             lazy) scripts/config -e PREEMPT_DYNAMIC -d PREEMPT -d PREEMPT_VOLUNTARY -e PREEMPT_LAZY -d PREEMPT_NONE;;
@@ -526,7 +527,22 @@ prepare() {
     if [ "$_build_nvidia_open" = "yes" ]; then
         patch -Np1 -i "${srcdir}/0001-Enable-atomic-kernel-modesetting-by-default.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
         patch -Np1 -i "${srcdir}/0002-Add-IBT-support.patch" -d "${srcdir}/${_nv_open_pkg}/"
+        patch -Np1 -i "${srcdir}/6.17.patch" -d "${srcdir}/${_nv_open_pkg}/"
     fi
+}
+
+_sign_modules() {
+    msg2 "Signing modules in $1"
+    local sign_script="${srcdir}/${_srcname}/scripts/sign-file"
+    local sign_key="$(grep -Po 'CONFIG_MODULE_SIG_KEY="\K[^"]*' "${srcdir}/${_srcname}/.config")"
+    if [[ ! "$sign_key" =~ ^/ ]]; then
+        sign_key="${srcdir}/${_srcname}/${sign_key}"
+    fi
+    local sign_cert="${srcdir}/${_srcname}/certs/signing_key.x509"
+    local hash_algo="$(grep -Po 'CONFIG_MODULE_SIG_HASH="\K[^"]*' "${srcdir}/${_srcname}/.config")"
+
+    find "$1" -type f -name '*.ko' -print -exec \
+        "${sign_script}" "${hash_algo}" "${sign_key}" "${sign_cert}" '{}' \;
 }
 
 build() {
@@ -544,7 +560,6 @@ build() {
         MODULE_FLAGS+=(NV_EXCLUDE_BUILD_MODULES='__EXCLUDE_MODULES')
         cd "${srcdir}/${_nv_pkg}/kernel"
         make "${BUILD_FLAGS[@]}" "${MODULE_FLAGS[@]}" -j"$(nproc)" modules
-
     fi
 
     if [ "$_build_nvidia_open" = "yes" ]; then
@@ -577,7 +592,7 @@ _package() {
                 'linux-firmware: firmware images needed for some devices'
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
                 'scx-scheds: to use sched-ext schedulers')
-    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE UKSMD-BUILTIN NTSYNC-MODULE VHBA-MODULE ADIOS-MODULE)
+    provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE V4L2LOOPBACK-MODULE NTSYNC-MODULE VHBA-MODULE ADIOS-MODULE)
 
     cd "$_srcname"
 
@@ -723,6 +738,8 @@ _package-zfs(){
     cd "${srcdir}/zfs"
     install -dm755 "${modulesdir}"
     install -m644 module/*.ko "${modulesdir}"
+
+    _sign_modules "${modulesdir}"
     find "$pkgdir" -name '*.ko' -exec zstd --rm -19 -T0 {} +
     #  sed -i -e "s/EXTRAMODULES='.*'/EXTRAMODULES='${pkgver}-${pkgbase}'/" "$startdir/zfs.install"
 }
@@ -741,6 +758,8 @@ _package-nvidia(){
     install -dm755 "${modulesdir}"
     install -m644 kernel/*.ko "${modulesdir}"
     install -Dt "$pkgdir/usr/share/licenses/${pkgname}" -m644 LICENSE
+
+    _sign_modules "${modulesdir}"
     find "$pkgdir" -name '*.ko' -exec zstd --rm -19 -T0 {} +
 }
 
@@ -759,6 +778,7 @@ _package-nvidia-open(){
     install -m644 kernel-open/*.ko "${modulesdir}"
     install -Dt "$pkgdir/usr/share/licenses/${pkgname}" -m644 COPYING
 
+    _sign_modules "${modulesdir}"
     find "$pkgdir" -name '*.ko' -exec zstd --rm -19 -T0 {} +
 }
 
@@ -775,7 +795,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('702dcf606431d078ad4b37f989798273409e9d60682a732853c9f53bef1297741c5688af8b065df081adf899df5e34466271deb23173fab6d80ad4b6b72aa518'
-        'e323923f3029a69272f6d895cedf8375e06a89de1b1663b63220997edfb64b0c9922751240fc130b3f32e811b4b5a7f02c354b89413fa84c4cf0f5d11c0f253b'
-        '6190217f092890cc76a9ceab22030441fe7655db3bbf5ac57315e28b71eec5f9c8fe45b0637f67a9b247a44d5998208eb8000c66329cf3ab1870b52d77a3a27e'
-        '28ea26a000cee71ad9887437ccd710bdaa0a7175e44ff9cc8c193db95bd095bd8a4c6d8d0129c3e76a0b8dd495452be1756d3315464b8cf76c16cb8ce848a471')
+b2sums=('a9394d84c391dcdd80022662b144ed8799ef979c26fcabdd3ce9ae72596b622579ad93c903c5f1f51c1c22ad0be26af120f7e55321f6af8e38162c53e4091748'
+        'c09c260d24486060c9f86a59ea90cb4701d0c82b5eb0191371af10897827d5223dec991c2596905ac8fc3d93e6a99566e167ba33854837c24073d60c42c750de'
+        '5343ff0854577e8bd2bf6e55697c5bdaaa202abd72f7aee70ef9e9ffc8a53f6db58f3b2b2f5e4d47532a14909d1914be7d9a05559d9d66870864ccdf32bb1830'
+        '30475fff33af9cfada20e8f4ff9892e3a783654a87009058163043605620c447dae17864ddbf6227080e8e427b800a116a18550684a39cec9ebff4d50bb30706')
