@@ -8,8 +8,8 @@
 # fine with them.
 
 pkgname=blender
-pkgver=4.5.1
-pkgrel=3
+pkgver=4.5.2
+pkgrel=1
 epoch=17
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=(aarch64 x86_64)
@@ -108,7 +108,7 @@ optdepends=('libdecor: wayland support')
 options=('!lto')
 source=("git+https://projects.blender.org/blender/blender.git#tag=v$pkgver"
         https://developer.download.nvidia.com/redist/optix/v8.0/OptiX-8.0-Include.zip)
-sha512sums=('482a618d483d6e5e43dbf000629ce81b526a7301323bb4e677d87b91ade62d046497727b57c4dd80807787f5f8f71deafc7c36d9330b1658a0c0b1b8998c5b4f'
+sha512sums=('cc45510ec632d8a14667b4cb50cba981ce22936206778881ac53e9bdd6e3bbb5fc5f0d207cbc034556ba5e2055cf0d4cea287ab757a91c24d70e1b71025455e0'
             '5502d9df847de12badc702c0444bd4f1f7620460b2235026df2c3133da1e04c148af0f1fc7f345e9a0c009c32f905f66c8d427743445e8864d3a797cdce6a483')
 
 prepare() {
