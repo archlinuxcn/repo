@@ -2,7 +2,7 @@
 
 pkgname=discord-electron-openasar
 _pkgname=discord
-pkgver=0.0.105+837
+pkgver=0.0.106+837
 _pkgver=${pkgver%%+*}
 pkgrel=1
 _electronver=37
@@ -28,7 +28,7 @@ source=("https://dl.discordapp.net/apps/linux/${_pkgver}/${_pkgname}-${_pkgver}.
 	'discord-launcher.sh'
 	'krisp-patcher.py' # original: https://github.com/sersorrel/sys/blob/main/hm/discord/krisp-patcher.py
 	"git+https://github.com/goosemod/openasar.git#commit=92abbb0e3efc39e553fd24e9125c42cdba1318ec")
-sha512sums=('755664846c09b83b49c1321485ad6dd81866d4cf34576afe4a447a7b2b6b4ec1a76b525e7eb2d44ebe5df696f2dc2045c4aaf91cd77d71bd8089c7ad7595e2af'
+sha512sums=('972d6ff124260c2d4f7b07845095c9738847b92a9d6e9f8914b8f3ddd21a232d454ea7f27e3e16f380a415bf28d46e437ccea3bf4edc8e9c1858de83ce69dbe1'
             'd996494c6c606de01814c68954613afc009957ac8a539b4331c87fe40c79927f09470c7e6d8bbc07411413bb91592818c98bcea49972703ec13a2f94efbc488e'
             '42cef68c1f7d574b4fbe859a4dc616e8994c7d16f62bcae3ff1f88e1edc58ac37b39c238d7defa9c97ceda417fcd6224cf0a0fd2608b8d18d0877e3c1befa59c'
             '855c53c067eca6b27791de7b4d859d5566daf1a85361d8fff1e6ecc3a3dd07560f248b4a2f1da5a788af5c22409b6bb4701fba935da3dc2f98b984a842fc8b92')
