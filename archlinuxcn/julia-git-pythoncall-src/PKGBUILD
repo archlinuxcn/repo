@@ -1,6 +1,6 @@
 pkgname=julia-git-pythoncall-src
-pkgver=0.9.26
-_commit=4ac1b2b02f4b17619c9494e7b777e8939a8de255
+pkgver=0.9.27
+_commit=57d143f33fa9db313929a4c6b3a620eb46dba99a
 pkgrel=1
 pkgdesc="PythonCall.jl"
 url="https://github.com/JuliaPy/PythonCall.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git python)
 source=("git+https://github.com/JuliaPy/PythonCall.jl.git#commit=$_commit"
         0001-Patch-for-ArchLinux-package.patch)
-sha256sums=('d95f9b9d1db81347709db22432d5a33beba9e09372f4576397f502e2b4e2c6b2'
+sha256sums=('860c864deba5ec76bf6ffab51298f82396385f186445dde6ff93411a9004da02'
             '1289fbec57bd9d8887268df39785627575de4baa1a81a803639175dc5e55d917')
 
 prepare() {
