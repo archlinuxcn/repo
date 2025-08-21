@@ -2,7 +2,7 @@
 # Contributor: Oliver Nordbjerg <hi@notbjerg.me>
 
 pkgname=foundry
-pkgver=1.3.1
+pkgver=1.3.2
 pkgrel=1
 pkgdesc="A blazing fast, portable and modular toolkit for Ethereum application development written in Rust."
 arch=(x86_64)
@@ -12,7 +12,7 @@ depends=(bzip2 gcc-libs glibc libusb)
 makedepends=(git cargo)
 provides=(forge cast anvil chisel)
 source=("git+https://github.com/foundry-rs/foundry.git#tag=v$pkgver")
-sha256sums=('a341e982137c93570a2d4affe69d790e5dcedc9889b3758d5678c7fa0456b0d5')
+sha256sums=('cdfdb59a1729a3a1a4d2ac89e6fb5e4922fba3322809cff2f9e11d01ede2d4e0')
 options=(!lto)
 
 prepare() {
