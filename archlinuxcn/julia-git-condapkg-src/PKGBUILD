@@ -1,6 +1,6 @@
 pkgname=julia-git-condapkg-src
-pkgver=0.2.29
-_commit=c0e1979985441e2b66fe60afd12dd4476a492c60
+pkgver=0.2.30
+_commit=443ae4da0baf6ef2253aa9dd6bb6835e27c6758e
 pkgrel=1
 pkgdesc="CondaPkg.jl"
 url="https://github.com/JuliaPy/CondaPkg.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPy/CondaPkg.jl.git#commit=$_commit")
-sha256sums=('949d842768f620c7b2e7337cf019f4e6bc906f423786bee6af2940ad84be553d')
+sha256sums=('8f563eaaea4a92e76a7cdacaef954eb0b873d34b914719bc2cee775508611b4e')
 
 package() {
   cd CondaPkg.jl
