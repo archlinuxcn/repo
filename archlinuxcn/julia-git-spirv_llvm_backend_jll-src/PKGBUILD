@@ -1,7 +1,7 @@
 pkgname=julia-git-spirv_llvm_backend_jll-src
-pkgver=20.1.5+1
-_commit=0129b48f5cb7270640909187978edda2885f9d3d
-pkgrel=3
+pkgver=20.1.5+2
+_commit=94df949f840ff74199f66effc7415391cf70fca7
+pkgrel=1
 pkgdesc="SPIRV_LLVM_Backend_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/SPIRV_LLVM_Backend_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git) # Provided by llvm-julia-git package
 source=("git+https://github.com/JuliaBinaryWrappers/SPIRV_LLVM_Backend_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('dc03126f17975e5ee0474808ad37b161c7a588e8e0f082f1fa9c4f1256a632c5'
+sha256sums=('b6f3541ad7c45c2e96fbf8cf3d3c8a6cded0a855f9bf4f573b9e54fda41a5d4b'
             'a77d4e73db64e193cd5b09864754efd9ac329e92cf27f750216cacc3cf86fe6a')
 
 build() {
