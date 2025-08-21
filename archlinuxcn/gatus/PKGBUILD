@@ -2,7 +2,7 @@
 
 pkgname=gatus
 pkgver=5.23.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Automated service health dashboard"
 arch=("x86_64")
 url="https://github.com/TwiN/gatus"
@@ -16,6 +16,12 @@ source=('gatus.service'
 b2sums=('4ec6761e07afe08137d28ba38c208e6a6717c4943cea62fb732ce83cab7fa9455ac39ab2faab83a8f6554fbdc8443d99c4d400291d90dbe778e86a2c022e3f67'
         'a1818c1b4ff769285ea1eb3fcede9da445f0abbed0583d1817107b2b2798924559fac0b5e7a658a910c15a6bbf33f2fab4019e43e158eebf11b668a3af5f0a82'
         'f1c4a6ab5fbc0b0c62f5521d9a9f39292be530c8dcf7905cd9bccd470ba13f3bb9b485cf685a4b9de8d6a0c4327928919faabf015361a69ee76d6ab779784dfc')
+
+prepare() {
+  cd "${pkgname}-${pkgver}"
+  export GOPATH="${srcdir}"
+  go mod download
+}
 
 build() {
   cd "${pkgname}-${pkgver}"
