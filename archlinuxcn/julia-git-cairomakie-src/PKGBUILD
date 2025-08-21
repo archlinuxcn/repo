@@ -1,6 +1,6 @@
 pkgname=julia-git-cairomakie-src
-pkgver=0.15.5
-_commit=4ded556b570b54010e71f1639b0af14546d66e8e
+pkgver=0.15.6
+_commit=d8f53444bc7d328d351d3265b1380d279eb2058b
 pkgrel=1
 pkgdesc="CairoMakie.jl"
 url="https://github.com/MakieOrg/Makie.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit")
-sha256sums=('e8a1fc0cbba313391d17795ae4e7cf6f8e21040cfc113a7a2efdc9af5a6464c5')
+sha256sums=('75692e2c421d8ce33d90776a39c9878673204ef8cec6b405a0516032e9b309a1')
 
 package() {
   cd Makie.jl/CairoMakie
