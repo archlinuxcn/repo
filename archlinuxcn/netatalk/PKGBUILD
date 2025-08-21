@@ -6,7 +6,7 @@
 
 pkgname=netatalk
 pkgver=4.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
