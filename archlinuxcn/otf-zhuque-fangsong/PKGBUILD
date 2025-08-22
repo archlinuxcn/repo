@@ -18,23 +18,26 @@ source=(
 b2sums=('f3abaf43b0a72bbf771811d391ebf0561b5d9d679551363859e74949039c3f2bbcc83a781ffb4d11c2c84272dc7157bd2ed4b7c12f64dd6e50bd44ce70d613bf')
 
 build() {
+    cd "$pkgbase"
     fontmake \
-        --verbose \
+        --verbose INFO \
         -g src/ZhuqueFangsong.glyphspackage \
         -o ttf \
         --output-dir ttf
     fontmake \
-        --verbose \
+        --verbose INFO \
         -g src/ZhuqueFangsong.glyphspackage \
         -o otf \
         --output-dir otf
 }
 
 package_ttf-zhuque-fangsong() {
+    cd "$pkgbase"
     install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" ttf/*.ttf
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
 }
 package_otf-zhuque-fangsong() {
+    cd "$pkgbase"
     install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" otf/*.otf
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
 }
