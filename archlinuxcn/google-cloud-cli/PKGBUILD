@@ -65,7 +65,7 @@ pkgname=(
 #   'google-cloud-cli-component-gsutil'
 # )
 pkgver=535.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A core set of command-line tools for the Google Cloud Platform. Includes only gcloud core (with beta and alpha commands), gcloud-crc32c and man pages"
 url="https://cloud.google.com/cli/"
 license=('Apache-2.0')
@@ -95,9 +95,11 @@ prepare() {
   if [ "$_package_bundled_python" = false ]; then
     # relax forced 'core' dependency on bundled-python3-unix
     sed -i '/bundled-python3-unix/d' .install/core*.snapshot.json
-    mkdir -p "$srcdir/bundledpython/.install"
-    mv platform/bundledpythonunix     $srcdir/bundledpython/
-    mv .install/bundled-python3-unix* $srcdir/bundledpython/.install/
+    if ls .install/bundled-python3-* 1> /dev/null 2>&1; then
+      mkdir -p "$srcdir/bundledpython/.install"
+      mv platform/bundledpythonunix     $srcdir/bundledpython/
+      mv .install/bundled-python3-unix* $srcdir/bundledpython/.install/
+    fi
   fi
 
   find "$srcdir" -name '__pycache__' -type d -exec rm -rf {} +
@@ -216,6 +218,7 @@ package_google-cloud-cli-gsutil() {
 }
 
 package_google-cloud-cli-bundled-python3-unix() {
+  arch=('x86_64')
   pkgdesc='gcloud Bundled Python 3.12'
   ddir="${pkgdir}/opt/${pkgbase}"
   c=${pkgname#google-cloud-cli-} # component
@@ -223,7 +226,6 @@ package_google-cloud-cli-bundled-python3-unix() {
   mv "$srcdir"/bundledpython/bundledpythonunix platform/
   mv "$srcdir"/bundledpython/.install/"${c}"*  .install/
 }
-
 
 package_google-cloud-cli-component-gke-gcloud-auth-plugin() {
   pkgdesc='gke-gcloud-auth-plugin'
