@@ -1,7 +1,6 @@
 maintainers:
-  - github: edward-p
-  - github: MarvelousBlack
-  - github: taotieren
+- github: MarvelousBlack
+- github: taotieren
 
 build_prefix: extra-x86_64
 
@@ -10,9 +9,9 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  - source: gitlab
-    gitlab: kicad/libraries/kicad-symbols
-  - source: gitlab
-    gitlab: kicad/libraries/kicad-footprints
-  - source: gitlab
-    gitlab: kicad/libraries/kicad-templates
+- source: gitlab
+  gitlab: kicad/libraries/kicad-symbols
+- source: gitlab
+  gitlab: kicad/libraries/kicad-footprints
+- source: gitlab
+  gitlab: kicad/libraries/kicad-templates

@@ -1,40 +1,39 @@
 maintainers:
-  - github: felixonmars
-  - github: berberman
+- github: felixonmars
 build_prefix: extra-x86_64
 pre_build_script: aur_pre_build(maintainers='berberman')
 post_build: aur_post_build
 update_on:
-  - source: vcs
-  - source: aur
-    aur: arch-hs-git
-  - source: alpm
-    alpm: haskell-aeson
-  - source: alpm
-    alpm: haskell-hackage-db
-  - source: alpm
-    alpm: haskell-megaparsec
-  - source: alpm
-    alpm: haskell-algebraic-graphs
-  - source: alpm
-    alpm: haskell-conduit
-  - source: alpm
-    alpm: haskell-tar-conduit
-  - source: alpm
-    alpm: haskell-conduit-extra
-  - source: alpm
-    alpm: haskell-split
-  - source: alpm
-    alpm: haskell-neat-interpolation
-  - source: alpm
-    alpm: haskell-microlens
-  - source: alpm
-    alpm: haskell-microlens-th
-  - source: alpm
-    alpm: haskell-polysemy
-  - source: alpm
-    alpm: haskell-optparse-applicative
-  - source: alpm
-    alpm: haskell-arch-web
-  - source: alpm
-    alpm: haskell-prettyprinter-ansi-terminal
+- source: vcs
+- source: aur
+  aur: arch-hs-git
+- source: alpm
+  alpm: haskell-aeson
+- source: alpm
+  alpm: haskell-hackage-db
+- source: alpm
+  alpm: haskell-megaparsec
+- source: alpm
+  alpm: haskell-algebraic-graphs
+- source: alpm
+  alpm: haskell-conduit
+- source: alpm
+  alpm: haskell-tar-conduit
+- source: alpm
+  alpm: haskell-conduit-extra
+- source: alpm
+  alpm: haskell-split
+- source: alpm
+  alpm: haskell-neat-interpolation
+- source: alpm
+  alpm: haskell-microlens
+- source: alpm
+  alpm: haskell-microlens-th
+- source: alpm
+  alpm: haskell-polysemy
+- source: alpm
+  alpm: haskell-optparse-applicative
+- source: alpm
+  alpm: haskell-arch-web
+- source: alpm
+  alpm: haskell-prettyprinter-ansi-terminal

@@ -1,8 +1,8 @@
 maintainers:
-  - github: Giteeajake
-    email: mumi_jim@outlook.com
-  - github: Integral-Tech
-    email: integral@archlinuxcn.org
+- github: Giteeajake
+  email: mumi_jim@outlook.com
+- github: Integral-Tech
+  email: integral@archlinuxcn.org
 
 pre_build_script: |
   update_pkgrel()
@@ -13,8 +13,8 @@ post_build_script: |
   update_aur_repo()
 
 repo_depends:
-  - python-name-that-hash
+- python-name-that-hash
 
 update_on:
-  - source: github
-    github: zefr0x/hashes
+- source: github
+  github: zefr0x/hashes
