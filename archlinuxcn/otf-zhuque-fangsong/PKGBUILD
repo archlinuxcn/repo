@@ -1,0 +1,40 @@
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
+
+pkgbase=otf-zhuque-fangsong
+pkgname=(
+    otf-zhuque-fangsong
+    ttf-zhuque-fangsong
+)
+pkgver=0.212
+pkgrel=1
+pkgdesc='朱雀仿宋/朱雀宋朝/Zhuque Fangsong: An open-source Fangsong typeface project'
+url='https://github.com/TrionesType/zhuque'
+arch=('any')
+license=('OFL-1.1')
+makedepends=(git python-fontmake)
+source=(
+    $pkgbase::git+$url.git#tag=v$pkgver
+    )
+b2sums=('f3abaf43b0a72bbf771811d391ebf0561b5d9d679551363859e74949039c3f2bbcc83a781ffb4d11c2c84272dc7157bd2ed4b7c12f64dd6e50bd44ce70d613bf')
+
+build() {
+    fontmake \
+        --verbose \
+        -g src/ZhuqueFangsong.glyphspackage \
+        -o ttf \
+        --output-dir ttf
+    fontmake \
+        --verbose \
+        -g src/ZhuqueFangsong.glyphspackage \
+        -o otf \
+        --output-dir otf
+}
+
+package_ttf-zhuque-fangsong() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" ttf/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_otf-zhuque-fangsong() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" otf/*.otf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}

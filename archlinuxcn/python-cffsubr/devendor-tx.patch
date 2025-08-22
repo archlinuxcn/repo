@@ -1,0 +1,64 @@
+--- setup.py~	2024-01-18 14:25:11.000000000 +0300
++++ setup.py	2024-04-06 11:34:23.105681317 +0300
+@@ -72,21 +72,6 @@
+ 
+ cmdclass["build_ext"] = ExecutableBuildExt
+ 
+-afdko_root_dir = os.path.join("external", "afdko")
+-afdko_output_dir = os.path.join(afdko_root_dir, "build", "bin")
+-build_release_cmd = f"{sys.executable} setup.py build --build-scripts build/bin"
+-
+-tx = Executable(
+-    "cffsubr.tx",
+-    build_cmd=build_release_cmd,
+-    cwd=afdko_root_dir,
+-    output_dir=afdko_output_dir,
+-    # we don't care about the precise afdko version, but we need *some* version
+-    # otherwise building a wheel from a cffsubr sdist tarball fails because the
+-    # afdko submodule in the unzipped sdist isn't recognized as a git repo
+-    env={"SETUPTOOLS_SCM_PRETEND_VERSION_FOR_AFDKO": "0.0.0"},
+-)
+-
+ with open("README.md", "r", encoding="utf-8") as readme:
+     long_description = readme.read()
+ 
+@@ -104,7 +89,6 @@
+     package_dir={"": "src"},
+     packages=find_packages("src"),
+     entry_points={"console_scripts": ["cffsubr = cffsubr.__main__:main"]},
+-    ext_modules=[tx],
+     zip_safe=False,
+     cmdclass=cmdclass,
+     install_requires=[
+--- pyproject.toml~	2024-01-18 14:25:11.000000000 +0300
++++ pyproject.toml	2024-04-06 11:39:27.212681262 +0300
+@@ -3,8 +3,5 @@
+     "setuptools",
+     "setuptools_scm",
+ ]
+-# https://setuptools.pypa.io/en/latest/build_meta.html#dynamic-build-dependencies-and-other-build-meta-tweaks
+-build-backend = "backend"
+-backend-path = ["_custom_build"]
+ [tool.setuptools_scm]
+ write_to = "src/cffsubr/_version.py"
+--- src/cffsubr/__init__.py~	2024-01-18 14:25:11.000000000 +0300
++++ src/cffsubr/__init__.py	2024-04-06 11:59:38.500072332 +0300
+@@ -57,7 +57,7 @@
+ 
+ 
+ def _run_embedded_tx(*args, **kwargs):
+-    """Run the embedded tx executable with the list of positional arguments.
++    """Run the (not) embedded tx executable with the list of positional arguments.
+ 
+     All keyword arguments are forwarded to subprocess.run function.
+ 
+@@ -65,8 +65,7 @@
+         subprocess.CompletedProcess object with the following attributes:
+         args, returncode, stdout, stderr.
+     """
+-    with path(__name__, TX_EXE) as tx_cli:
+-        return subprocess.run([str(tx_cli)] + list(args), **kwargs)
++    return subprocess.run([TX_EXE] + list(args), **kwargs)
+ 
+ 
+ def _tx_subroutinize(data: bytes, output_format: str = CFFTableTag.CFF) -> bytes:

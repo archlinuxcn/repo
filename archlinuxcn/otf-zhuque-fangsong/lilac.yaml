@@ -1,0 +1,19 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: coelacanthus@archlinuxcn.org
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+    git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: TrionesType/zhuque
+    prefix: v
+    use_max_release: true
+    # FIXME: Because it have pre-release only, remove it if official released.
+    include_prereleases: true
