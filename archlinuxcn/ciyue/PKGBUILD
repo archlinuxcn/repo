@@ -8,7 +8,7 @@ pkgdesc="A simple mdict dictionary with Android/Windows/Linux support"
 url="https://mumulhl.eu.org/${_srcname}"
 license=('MIT')
 arch=('x86_64')
-depends=('gtk3' 'gstreamer' 'gst-plugins-base')
+depends=('gtk3' 'gstreamer' 'gst-plugins-base' 'libkeybinder3')
 makedepends=('clang' 'cmake' 'ninja' 'fvm')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mumu-lhl/${_srcname}/archive/refs/tags/v${pkgver}.tar.gz"
 	"${pkgname}.desktop")
