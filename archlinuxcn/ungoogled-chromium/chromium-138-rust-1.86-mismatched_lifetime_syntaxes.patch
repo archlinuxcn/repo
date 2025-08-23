@@ -1,0 +1,14 @@
+diff --git a/build/rust/cargo_crate.gni b/build/rust/cargo_crate.gni
+index 0e73b54..0e002ef 100644
+--- a/build/rust/cargo_crate.gni
++++ b/build/rust/cargo_crate.gni
+@@ -310,6 +310,9 @@
+       rustflags +=
+           [ "-Awarnings" ]  # Suppress other warnings in 3rd-party crates.
+ 
++      # TODO(crbug.com/424424323): Clean up and enable.
++      rustflags += [ "-Amismatched_lifetime_syntaxes" ]
++
+       if (!defined(build_native_rust_unit_tests)) {
+         build_native_rust_unit_tests = _crate_type != "proc-macro"
+       }
