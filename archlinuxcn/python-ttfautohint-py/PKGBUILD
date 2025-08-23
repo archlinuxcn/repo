@@ -3,7 +3,7 @@
 _pyname=ttfautohint-py
 pkgname=python-$_pyname
 pkgver=0.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Python wrapper for ttfautohint, a free auto-hinter for TrueType fonts'
 url="https://github.com/fonttools/$_pyname"
 arch=(x86_64)
