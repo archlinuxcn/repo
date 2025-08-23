@@ -7,9 +7,9 @@ _kernelver=6.12.43-1
 _extramodules="${_kernelver}-lts"
 _sd_zfs_commit="dece62d"
 
-pkgver=2.3.3
-_fullver=2.3.3
-pkgrel=13
+pkgver=2.4.0rc1
+_fullver=2.4.0-rc1
+pkgrel=1
 makedepends=(
   "linux-lts-headers=${_kernelver}"
   "libunwind"
@@ -26,7 +26,7 @@ source=(
   'zfs.initcpio.hook'
   'zfs.initcpio.zfsencryptssh.install'
 )
-sha256sums=('844122118f0ea81205a01753bbcb1315330f8967c1f866dcd10155273131f071'
+sha256sums=('0068102a4162d7445b80218b882ff54e1acf3cfbeef909d53bd984ddcd9339b1'
             '3dcc79915e41c5326135f2c3a8787fd2abfc2fc50c349327ef41222440ba2c4a'
             '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
             '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
