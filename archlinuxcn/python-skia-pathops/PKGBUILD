@@ -4,7 +4,7 @@
 pkgname=python-skia-pathops
 _pkgname=${pkgname#python-}
 pkgver=0.8.0.post2
-pkgrel=3
+pkgrel=4
 pkgdesc='Python bindings for the Skia library’s Path Ops (wheel)'
 arch=(x86_64)
 url="https://github.com/fonttools/$_pkgname"
