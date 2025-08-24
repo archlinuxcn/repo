@@ -68,8 +68,9 @@ _patches=(
   0003-Clear-soname-and-hard-code-system-lib-path.patch
   0004-Support-loading-extensions-from-STDLIB.patch
   0005-julia-git-add-a-safeguard-for-bad-unwinding.patch
-  0007-Disable-UCX-signal-handler.patch
-  0008-julia-git-Better-support-for-loading-packages-from-s.patch
+  0006-Disable-UCX-signal-handler.patch
+  0007-julia-git-Better-support-for-loading-packages-from-s.patch
+  0008-Reduce-likelyhood-of-symbol-conflict.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         'git+https://github.com/yuyichao/archcn-julia-scripts'
@@ -79,13 +80,14 @@ source=('git+https://github.com/JuliaLang/julia'
         download_curl.diff)
 sha512sums=('SKIP'
             'SKIP'
-            '0d5a587906a39ef8df3aa9a490a05a6b4c5d6cf712ac32230cb96e49e5c47bf8a00167585942faceb16715431ec1538117a332dcb332ca7f0629107bbff4ed4f'
-            'c1727ec3090da8c2f40088221af23f1b9b07f1301408ab50be70a485176b213bb5db821ae9c8478df7b5f95aa86ffdb754c892c54d504a2142cf56d53d12a5d2'
-            '3d025530687b305699be1787e34a9d36e405e3ff5ef48b1034a3c2bbfe308c857225a1ed963a62bff818744f35249e810a1826394f12e65b5dd7c0965a5abde7'
-            '42719169c639e00cb4963f991b78f6d49208d442aed375e03d6fd59c41079d6887370c84942dff2a710bb0337e2adaba6c9c6f2f1f4153d610ded9a79e36938f'
-            'ae1b9deee962573339620f5fa4056fd0b9d6322f6cad5dcc48357afd5211f093c517eda6c402873879c577aa42a6a8947cdb18b03a987c7e22829a192d174c10'
-            '1ee4bbb6fb2edf4e62b45a60a0ee91f62cc86403277aba5a8f1d1522ec59fa0fae9cc26bef91118af9e3a6b5a32751319ed73637fbed1e11aa1368cd8f4adc93'
-            'b4c96d03e57b970fe417f8197f5d4d60911810abaecce6b45ce4e6964ece44785a5572bdd5d547c66c5e05cef64f7d37b684d800305c43222472c475de0f86a4'
+            '40db9117cc6d6aade472d8c483d1573aaef9a4ec95bd5e8e59c7cc1ab761f2e8f7d3b7fc2c09c7551ec6bc465eb532d43f66a53b9b020a69b6d3149dd2226ae2'
+            'bda39031ddf07ba6672f8d9c213e2fb51cb32342b161e3cfc624cd19c226855e8e0bb2d3ad88e263313836f8c290126e2ec428ed750fcb847f77e4612c8dab85'
+            '47c462630e218248d9772c1070ece7f7fd45939ef8da4c5dc6954b2cf79181f4d85b9c252d6044a88e6d3412cc1c754b962a5617de4ccb960a93750e186c0893'
+            '400702d4c0e217abe66dc1ac7afecff7a5ed6b11b325a6eb8bbde20f4ffe79985f03f2f1c1fa0cbd4a3ebae08d398c47e28e340e119d7b165b8c650b64faa86c'
+            'a6352a49ecad888c3940ece7dbf4c485520bda027acd43c98c8f2db4ab3fa3834b15bed4e36d76a796085be8c868720e962a2646691ad92c09e0c4e97ebe8463'
+            'c4c30e60ad12bf5e2aa2a8ff401cb82e25e548e5a5cbb415420988287ea290468bd0035d6a6fd3a03d7ac26ccc0a55778a41c1d20ea5d2932b0b4f28937e4397'
+            'b65caaa654f2d8ae8faeb8c9cfffc1b36c788f59a8808cacaacaff61eabbc834cb41fe913c91ab015345480ebf37f5578a6ec2da236cfa9afe59b28616e67cbc'
+            '794f8ae1931875e488704f0e8974eea0d5cac3fbf4f20bf4d4210ddfc8cff13ab62cc78ca27475947c09d124ab4070b1f1b125f50ee09b28da3486899c678a3a'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
             '5be40dcb72428885c06c8353019bd8fac0ea186a7536cf2bab2554d2724fb3d4a5b0b3f61727428e5cf7906f14a213f08dcb238b5bd10d408d86669e2c93ca78')

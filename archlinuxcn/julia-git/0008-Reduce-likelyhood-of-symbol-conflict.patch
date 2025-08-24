@@ -1,0 +1,25 @@
+From 5247e5383aae5afd7d1d2f27db654d0e6071c32d Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 24 Aug 2025 19:28:22 -0400
+Subject: [PATCH 8/8] Reduce likelyhood of symbol conflict
+
+---
+ base/docs/Docs.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/base/docs/Docs.jl b/base/docs/Docs.jl
+index 13a5b35a11..b2aa60cfe6 100644
+--- a/base/docs/Docs.jl
++++ b/base/docs/Docs.jl
+@@ -75,7 +75,7 @@ export doc, hasdoc, undocumented_names
+ # Basic API / Storage
+ 
+ const modules = Module[]
+-const META    = gensym(:meta)
++const META    = gensym("#Base#Docs#meta#")
+ const METAType = IdDict{Any,Any}
+ 
+ function meta(m::Module; autoinit::Bool=true)
+-- 
+2.51.0
+
