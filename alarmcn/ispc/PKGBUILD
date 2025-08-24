@@ -3,8 +3,8 @@
 # Maintainer: Torsten Keßler <tpkessler@archlinux.org>
 
 pkgname=ispc
-pkgver=1.27.0
-pkgrel=3
+pkgver=1.28.1
+pkgrel=1
 pkgdesc="Compiler for high-performance SIMD programming on the CPU"
 arch=(aarch64 x86_64)
 url="https://ispc.github.io/"
@@ -24,7 +24,7 @@ source=(
   $pkgname-benchmark::git+https://github.com/google/benchmark.git
   $pkgname-googletest::git+https://github.com/google/googletest.git
 )
-sha256sums=('9fe37bff2da0f1130a9592be96fb28e8c57750235d116bf9e14670ac42801edd'
+sha256sums=('9c214dce78593bad607e1db61796753b32b403b9ca4417f0d3bad222fb5db6d6'
             'SKIP'
             'SKIP')
 
