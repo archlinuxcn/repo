@@ -1,6 +1,6 @@
 pkgname=julia-git-progressmeter-src
-pkgver=1.10.4
-_commit=f6a0d8777498f8dd9f9ecce119c4ee6acebf3247
+pkgver=1.11.0
+_commit=e5710edd1d5807813738c73d2b7bc394c6832f2e
 pkgrel=1
 pkgdesc="ProgressMeter.jl"
 url="https://github.com/timholy/ProgressMeter.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/timholy/ProgressMeter.jl.git#commit=$_commit")
-sha256sums=('60f7282714dd4d6d2890672b2d84a397cd640b151480b66e906434122c2fb732')
+sha256sums=('5cfb42fb1193e340b921b08c4b209cbe22e8772815b9e814982fbe3a453c2054')
 
 package() {
   cd ProgressMeter.jl
