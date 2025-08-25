@@ -1,0 +1,23 @@
+# Maintainer: Yuzu Vita <g311571057 at gmail dot com>
+pkgname=plasma6-splashscreen-kuro-git
+pkgver=2.0.0.r0.g1c390b2
+pkgrel=3
+pkgdesc="Splash screen for KDE plasma: Wake up your pc with Kuro the cat"
+arch=('any')
+url="https://github.com/bouteillerAlan/kuro"
+license=('GPL-3.0-only')
+depends=(qt6-declarative)
+makedepends=('git')
+source=("git+https://github.com/bouteillerAlan/kuro")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd kuro
+    git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+    cd kuro
+    install -d "$pkgdir/usr/share/plasma/look-and-feel/"
+    cp -r a2n.kuro "$pkgdir/usr/share/plasma/look-and-feel/"
+}
