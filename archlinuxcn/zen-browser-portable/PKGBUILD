@@ -139,9 +139,11 @@ function prepare() {
   cd desktop
 
   msg2 "init repo submodules"
-  git submodule init
-  git config submodule.l10n.url "$srcdir/firefox-l10n"
+  #git submodule init
+
+  #git config submodule.l10n.url "$srcdir/l10n"
   git -c protocol.file.allow=always submodule update
+  git submodule update --init --recursive
 
   # Apply patches
   msg2 "apply patches"
