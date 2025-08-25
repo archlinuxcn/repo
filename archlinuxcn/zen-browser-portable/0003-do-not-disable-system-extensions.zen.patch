@@ -1,0 +1,39 @@
+From 9151fb64184efae829f0acf4c6dd1a632dff3b65 Mon Sep 17 00:00:00 2001
+From: everyx <lunt.luo@gmail.com>
+Date: Tue, 24 Dec 2024 13:43:04 +0800
+Subject: [PATCH 3/3] donnot disable system extensions
+
+---
+ ...ble-extensions-in-system-directories.patch | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 src/browser/app/profile/Don-t-auto-disable-extensions-in-system-directories.patch
+
+diff --git a/src/browser/app/profile/Don-t-auto-disable-extensions-in-system-directories.patch b/src/browser/app/profile/Don-t-auto-disable-extensions-in-system-directories.patch
+new file mode 100644
+index 0000000..544fe6f
+--- /dev/null
++++ b/src/browser/app/profile/Don-t-auto-disable-extensions-in-system-directories.patch
+@@ -0,0 +1,21 @@
++From: Mike Hommey <mh@glandium.org>
++Date: Fri, 17 Feb 2012 17:47:15 +0100
++Subject: Don't auto-disable extensions in system directories
++
++---
++ browser/app/profile/firefox.js | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
++index 5066b56..964b931 100644
++--- a/browser/app/profile/firefox.js
+++++ b/browser/app/profile/firefox.js
++@@ -56,7 +56,7 @@ pref("extensions.systemAddon.update.enabled", true);
++
++ // Disable add-ons that are not installed by the user in all scopes by default.
++ // See the SCOPE constants in AddonManager.sys.mjs for values to use here.
++-pref("extensions.autoDisableScopes", 15);
+++pref("extensions.autoDisableScopes", 3);
++ // Scopes to scan for changes at startup.
++ pref("extensions.startupScanScopes", 0);
++
+--
+2.47.1

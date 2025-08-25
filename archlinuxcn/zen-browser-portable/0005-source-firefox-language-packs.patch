@@ -1,0 +1,17 @@
+--- desktop/scripts/download-language-packs.sh_orig	2025-08-06 17:50:50.946503037 -0400
++++ desktop/scripts/download-language-packs.sh	2025-08-06 17:54:50.873132554 -0400
+@@ -23,8 +23,12 @@
+
+ cd ./locales
+ rm -rf firefox-l10n
+-# clone only from LAST_FIREFOX_L10N_COMMIT
+-git clone https://github.com/mozilla-l10n/firefox-l10n
++if [[ -d "$srcdir/firefox-l10n" ]]; then
++  cp -r "$srcdir/firefox-l10n" firefox-l10n
++else
++  git clone https://github.com/mozilla-l10n/firefox-l10n
++fi
++
+ cd firefox-l10n
+ git checkout $LAST_FIREFOX_L10N_COMMIT
+ cd $CURRENT_DIR
