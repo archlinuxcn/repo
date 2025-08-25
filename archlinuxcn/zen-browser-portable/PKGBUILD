@@ -79,11 +79,11 @@ options=(
 
 _repo='https://github.com/zen-browser/desktop'
 
-optdepends=(
-	"zen-browser-i18n-zh-cn: Language pack for Zen Browser (zh-CN)"
-	"zen-browser-i18n-zh-tw: Language pack for Zen Browser (zh-TW)"
-	"zen-browser-i18n-ja: Language pack for Zen Browser (ja)"
-)
+# optdepends=(
+# 	"zen-browser-i18n-zh-cn: Language pack for Zen Browser (zh-CN)"
+# 	"zen-browser-i18n-zh-tw: Language pack for Zen Browser (zh-TW)"
+# 	"zen-browser-i18n-ja: Language pack for Zen Browser (ja)"
+# )
 
 provides=("zen-browser=${pkgver}")
 conflicts=(zen-browser)
@@ -108,22 +108,22 @@ source=(
 
 noextract=("firefox-${_firefox_version}.source.tar.xz")
 
-_languages=(zh-CN zh-TW ja)
+# _languages=(zh-CN zh-TW ja)
 
-for _lang in "${_languages[@]}"; do
-  _pkgname=$pkgbase-i18n-${_lang,,}
-  pkgname+=("$_pkgname")
+# for _lang in "${_languages[@]}"; do
+#   _pkgname=$pkgbase-i18n-${_lang,,}
+#   pkgname+=("$_pkgname")
 
-  eval "package_$_pkgname() {
-  arch=(any)
-  depends=('$pkgbase>=$pkgver')
-  optdepends=()
-  pkgdesc='Language pack for Zen Browser ($_lang)'
+#   eval "package_$_pkgname() {
+#   arch=(any)
+#   depends=('$pkgbase>=$pkgver')
+#   optdepends=()
+#   pkgdesc='Language pack for Zen Browser ($_lang)'
 
-  _package_i18n '$_lang'
-}"
+#   _package_i18n '$_lang'
+# }"
 
-done
+# done
 
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
