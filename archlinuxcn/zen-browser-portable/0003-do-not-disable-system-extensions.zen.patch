@@ -27,13 +27,14 @@ index 0000000..544fe6f
 +--- a/browser/app/profile/firefox.js
 ++++ b/browser/app/profile/firefox.js
 +@@ -56,7 +56,7 @@ pref("extensions.systemAddon.update.enabled", true);
-+
++ 
 + // Disable add-ons that are not installed by the user in all scopes by default.
 + // See the SCOPE constants in AddonManager.sys.mjs for values to use here.
 +-pref("extensions.autoDisableScopes", 15);
 ++pref("extensions.autoDisableScopes", 3);
 + // Scopes to scan for changes at startup.
 + pref("extensions.startupScanScopes", 0);
-+
---
++ 
+-- 
 2.47.1
+
