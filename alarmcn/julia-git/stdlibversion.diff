@@ -1,0 +1,46 @@
+diff --git a/src/Registry/registry_instance.jl b/src/Registry/registry_instance.jl
+index b60e7a15d..921e87b52 100644
+--- a/src/Registry/registry_instance.jl
++++ b/src/Registry/registry_instance.jl
+@@ -185,6 +185,27 @@ end
+ 
+ registry_info(pkg::PkgEntry) = init_package_info!(pkg)
+ 
++include("stdlib_registry_info.jl")
++function _get_stdlib_version_info(name, uuid, version_info)
++    sha1 = get(_stdlib_registry_info, name, nothing)
++    sha1 === nothing && return
++    all_stdlibs = Pkg.Types.stdlib_infos()
++    stdlib_info = get(all_stdlibs, uuid, nothing)
++    stdlib_info === nothing && return
++    haskey(version_info, stdlib_info.version) && return
++    compat = Dict{String, VersionSpec}()
++    deps = Dict{String, UUID}()
++    for dep_uuid in stdlib_info.deps
++        dep_info = get(all_stdlibs, dep_uuid, nothing)
++        if dep_info === nothing
++            continue
++        end
++        deps[dep_info.name] = dep_uuid
++        compat[dep_info.name] = VersionSpec(dep_info.version)
++    end
++    return (sha1=sha1, version=stdlib_info.version, compat=compat, deps=deps)
++end
++
+ function init_package_info!(pkg::PkgEntry)
+     # Thread-safe lazy loading with double-check pattern
+     return @lock pkg.info_lock begin
+@@ -231,6 +252,13 @@ function init_package_info!(pkg::PkgEntry)
+         # All packages depend on julia
+         deps[VersionRange()] = Dict("julia" => JULIA_UUID)
+ 
++        stdlib_info = _get_stdlib_version_info(name, pkg.uuid, version_info)
++        if stdlib_info !== nothing
++            version_info[stdlib_info.version] = VersionInfo(stdlib_info.sha1, false)
++            compat[VersionRange(stdlib_info.version)] = stdlib_info.compat
++            deps[VersionRange(stdlib_info.version)] = stdlib_info.deps
++        end
++
+         # WeakCompat.toml
+         weak_compat_data_toml = custom_isfile(pkg.in_memory_registry, pkg.registry_path, joinpath(pkg.path, "WeakCompat.toml")) ?
+             parsefile(pkg.in_memory_registry, pkg.registry_path, joinpath(pkg.path, "WeakCompat.toml")) : Dict{String, Any}()
