@@ -1,6 +1,5 @@
 # Maintainer: Kimiblock Moe
 pkgname=zen-browser-portable
-_zen_version=${pkgver//_/-}
 _firefox_version=141.0.2
 pkgver=1.14.11b
 pkgrel=1
@@ -98,9 +97,9 @@ source=(
 	portable-config
 	start.sh
 	desktop.file
-	"git+$_repo.git#tag=$_zen_version"
+	"git+$_repo.git#tag=${pkgver}"
 	"https://archive.mozilla.org/pub/firefox/releases/${_firefox_version}/source/firefox-${_firefox_version}.source.tar.xz"
-	"firefox-l10n::git+https://github.com/mozilla-l10n/firefox-l10n"
+	"firefox-l10n::git+https://github.com/mozilla-l10n/firefox-l10n.git"
 	0003-do-not-disable-system-extensions.zen.patch
 	0004-fix-package-json.zen.patch
 	0005-source-firefox-language-packs.patch
