@@ -1,0 +1,26 @@
+pkgname=julia-git-libzip_jll-src
+pkgver=1.11.3+0
+_commit=9ae877b045f6a7106d9fe83e88f9f7eb1227e7f2
+pkgrel=1
+pkgdesc="libzip_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libzip_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libzip)
+source=("git+https://github.com/JuliaBinaryWrappers/libzip_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('546abdc50226d97ee7999474cd1030f9d162e159f89fcb7f1f4f840cbc4bb200'
+            '2445f402f61138bc2b929795be81a9892629ae128f1007a6a6c2f418d59b670a')
+
+build() {
+  cd libzip_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libzip_jll ../jll.toml
+}
+
+package() {
+  cd libzip_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libzip_jll "${pkgdir}" "${pkgname}" julia-git
+}
