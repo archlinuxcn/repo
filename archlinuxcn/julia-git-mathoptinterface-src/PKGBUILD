@@ -1,6 +1,6 @@
 pkgname=julia-git-mathoptinterface-src
-pkgver=1.42.1
-_commit=0fdd90e762b089a00d39d462399166160b5fb2e8
+pkgver=1.43.0
+_commit=6479b1fc7637e4ded625d336bef775e6cbe0b3ff
 pkgrel=1
 pkgdesc="MathOptInterface.jl"
 url="https://github.com/jump-dev/MathOptInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/MathOptInterface.jl.git#commit=$_commit")
-sha256sums=('af60fef9b0584f83e006f59db99f740a8aecfa79234f57b5fbe40208c3bdeb33')
+sha256sums=('7ec63a9792e39f63abc8fe55f2a534e5bb59805d828ef094af95d6eb0acc1fe3')
 
 package() {
   cd MathOptInterface.jl
