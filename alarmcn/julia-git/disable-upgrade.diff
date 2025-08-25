@@ -1,0 +1,13 @@
+diff --git a/src/Types.jl b/src/Types.jl
+index 80f623548..78b6310d2 100644
+--- a/src/Types.jl
++++ b/src/Types.jl
+@@ -482,7 +482,7 @@ is_project_uuid(env::EnvCache, uuid::UUID) = project_uuid(env) == uuid
+ # Context #
+ ###########
+ 
+-const UPGRADABLE_STDLIBS = ["DelimitedFiles", "Statistics"]
++const UPGRADABLE_STDLIBS = String[]
+ const UPGRADABLE_STDLIBS_UUIDS = Set{UUID}()
+ const STDLIB = Ref{Union{DictStdLibs, Nothing}}(nothing)
+ function load_stdlib()

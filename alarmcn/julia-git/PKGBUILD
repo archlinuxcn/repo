@@ -77,7 +77,7 @@ source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
         arch-source-translate.cpp
         sysp7z.diff
-        stdlibversion.diff
+        disable-upgrade.diff
         download_curl.diff)
 sha512sums=('SKIP'
             'SKIP'
@@ -91,7 +91,7 @@ sha512sums=('SKIP'
             '794f8ae1931875e488704f0e8974eea0d5cac3fbf4f20bf4d4210ddfc8cff13ab62cc78ca27475947c09d124ab4070b1f1b125f50ee09b28da3486899c678a3a'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
-            '3f4fdaab9e921c13be185da9ceb28ef1a025df5ea4913e0205d3d9280ce90e575e654eeca1948d8d9051d5e13c82ee3a619ee7c67c361b31468fd7e51a021080'
+            'cd5ce157624156d7fce015dc7955d3ba8c8efa4c10dbf2cb7ab532428d00e17d0a5be2c2963e2f8dd4c63471ac2ff895f207ecc0db17557fb0eb8b7d883891ec'
             '5be40dcb72428885c06c8353019bd8fac0ea186a7536cf2bab2554d2724fb3d4a5b0b3f61727428e5cf7906f14a213f08dcb238b5bd10d408d86669e2c93ca78')
 
 _versioned_llvm=
@@ -259,17 +259,8 @@ EOF
   make "${julia_opts[@]}" julia-stdlib
   (
     cd usr/share/julia/stdlib/v*/Pkg
-    (cd "${srcdir}"/julia/stdlib
-     echo "const _stdlib_registry_info = Dict{String,SHA1}("
-     for ver_file in *.version; do
-       pkgname=${ver_file%.version}
-       SHA1=$(sed -ne 's/.*_SHA1 *= *\([0-9a-fA-F]*\)/\1/p' "$ver_file")
-       echo "\"$pkgname\"=>SHA1(\"$SHA1\"),"
-     done
-     echo ")"
-    ) > src/Registry/stdlib_registry_info.jl
     patch -Np0 --no-backup-if-mismatch < "$srcdir/sysp7z.diff"
-    patch -Np1 --no-backup-if-mismatch < "$srcdir/stdlibversion.diff"
+    patch -Np1 --no-backup-if-mismatch < "$srcdir/disable-upgrade.diff"
   )
   (
     cd usr/share/julia/stdlib/v*/Downloads
