@@ -272,7 +272,7 @@ build() {
 function package() {
 	depends+=("portable")
 	DESTDIR="$pkgdir" _mach install
-	local _appdir="$pkgdir/usr/lib/$pkgbase"
+	local _appdir="$pkgdir/usr/lib/zen-browser"
 	mv "$pkgdir"/usr/lib/zen "$_appdir"
 	rm -rf "$_appdir"
 	msg2 "install distribution config files from Zen Browser"
@@ -309,16 +309,16 @@ END
 		install -d "$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps"
 		ln -srvf \
 			"$_appdir/browser/chrome/icons/default/default${i}.png" \
-			"$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/$pkgbase.png"
+			"$pkgdir/usr/share/icons/hicolor/${i}x${i}/apps/zen-browser.png"
 	done
 	install \
 		-Dvm644 \
 		"$srcdir"/desktop/docs/assets/zen-black.svg \
-		"$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgbase.svg"
+		"$pkgdir/usr/share/icons/hicolor/scalable/apps/zen-browser.svg"
 	install \
 		-Dvm644 \
 		"$srcdir"/desktop/docs/assets/zen-black.svg \
-		"$pkgdir/usr/share/icons/hicolor/symbolic/apps/$pkgbase-symbolic.svg"
+		"$pkgdir/usr/share/icons/hicolor/symbolic/apps/zen-browser-symbolic.svg"
 	msg2 "use system certificates"
 	local _nssckbi="$_appdir/libnssckbi.so"
 	if test -e "$_nssckbi"; then
