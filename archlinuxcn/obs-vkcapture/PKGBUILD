@@ -1,7 +1,7 @@
 pkgbase=obs-vkcapture
 pkgname=("$pkgbase")
-pkgver=1.5.2
-pkgrel=3
+pkgver=1.5.3
+pkgrel=1
 pkgdesc='OBS Linux Vulkan/OpenGL game capture'
 arch=('x86_64')
 url="https://github.com/nowrep/$pkgbase"
@@ -9,7 +9,7 @@ license=('GPL-2.0-or-later')
 depends=('vulkan-icd-loader' 'libgl' 'libegl' 'obs-studio')
 makedepends=('gcc' 'cmake' 'vulkan-headers' 'obs-studio' bubblewrap)
 source=("https://github.com/nowrep/$pkgbase/archive/v$pkgver/$pkgbase-$pkgver.tar.gz")
-sha512sums=('bb195bed417d54c2482246d4482a4c1ba3c222cdabbfa078ed5d702de046f44fa6c94bccdaeb44a25b741c634a6f08209c6e6e19062aa0a053af890acba478fa')
+sha512sums=('fdc3e1dd3d86b2ef6e5721e235abad4e45a3b03ad386f237c6bcf168f23f125e2cf2a4d10d040a53fadb5633a426d13d3152080ebc70fbbccf49cfb1d9f385fb')
 
 build() {
 	ls /usr/include/obs -la
