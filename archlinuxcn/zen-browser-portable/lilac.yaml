@@ -6,13 +6,14 @@ post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()
 
-update_on:
-  - source: "alpm"
-    alpm: "zen-browser"
-    repo: "archlinuxcn"
-    strip_release: true
+# update_on:
+#   - source: "alpm"
+#     alpm: "zen-browser"
+#     repo: "archlinuxcn"
+#     strip_release: true
 
 repo_depends:
   - portable
 
 build_prefix: extra-x86_64
+managed: false
