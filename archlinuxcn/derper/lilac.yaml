@@ -1,0 +1,10 @@
+build_prefix: extra-x86_64
+pre_build_script: aur_pre_build(maintainers=['takase'])
+post_build: aur_post_build
+update_on:
+  - source: aur
+    aur: derper
+
+maintainers:
+  - github: cjc7373
+    email: cjc7373@archlinuxcn.org
