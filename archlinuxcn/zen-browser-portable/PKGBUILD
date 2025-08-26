@@ -327,8 +327,8 @@ END
 	install -Dm755 \
 		portable-config \
 		"${pkgdir}/usr/lib/portable/info/org.mozilla.zen/config"
-	rm "${pkgdir}/usr/share/applications"/*
-	rm "${pkgdir}/usr/bin"/*
+	#rm "${pkgdir}/usr/share/applications"/*
+	#rm "${pkgdir}/usr/bin"/*
 	install -Dm755 \
 		"${srcdir}/start.sh" \
 		"${pkgdir}/usr/bin/zen"
