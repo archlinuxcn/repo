@@ -1,4 +1,4 @@
-From 2579a262df501da1e1ff839dc5423c5b990a4d3a Mon Sep 17 00:00:00 2001
+From 805414c45d3ca46376030bcc5bc3921587653d66 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 3 Oct 2020 08:45:51 -0400
 Subject: [PATCH 1/9] Force enable GDB debug info registration
@@ -8,7 +8,7 @@ Subject: [PATCH 1/9] Force enable GDB debug info registration
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 2d9c94baee..5992b30889 100644
+index 0465a15c43..ae9b8153ae 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -10144,7 +10144,7 @@ extern "C" void jl_init_llvm(void)

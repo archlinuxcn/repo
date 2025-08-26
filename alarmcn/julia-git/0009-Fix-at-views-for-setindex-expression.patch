@@ -1,12 +1,11 @@
-From 9e201aacb600573f65089aad294507ed704b1af4 Mon Sep 17 00:00:00 2001
+From 2c19ccf392f03e780aaaadb71768913405edf743 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 26 Aug 2025 10:51:18 -0400
 Subject: [PATCH 9/9] Fix at-views for setindex expression
 
 ---
- base/views.jl                         | 18 +++++++++++-------
- stdlib/InteractiveUtils/src/macros.jl |  4 ++--
- 2 files changed, 13 insertions(+), 9 deletions(-)
+ base/views.jl | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
 diff --git a/base/views.jl b/base/views.jl
 index 10fb3b0dc5..a4fd9bcc97 100644
@@ -74,28 +73,6 @@ index 10fb3b0dc5..a4fd9bcc97 100644
              used_withex |= used
          end
      end
-diff --git a/stdlib/InteractiveUtils/src/macros.jl b/stdlib/InteractiveUtils/src/macros.jl
-index 8825b4802f..3be13adf5d 100644
---- a/stdlib/InteractiveUtils/src/macros.jl
-+++ b/stdlib/InteractiveUtils/src/macros.jl
-@@ -320,7 +320,7 @@ function gen_call_with_extracted_types(__module__, fcn, ex0, kws = Expr[]; is_so
-                     else
-                         lhs.args[1] = esc(arr)
-                     end
--                    ex, _ = replace_ref_begin_end_!(__module__, lhs, nothing, false, 1)
-+                    ex, _ = replace_ref_begin_end_!(__module__, lhs, nothing, false, 1, false, false)
-                     ## since replace_ref_begin_end! mutates lhs in place, we can mutate inplace also then return ex
-                     lhs.head = :call
-                     lhs.args[1] = get_typeof(rhs)
-@@ -355,7 +355,7 @@ function gen_call_with_extracted_types(__module__, fcn, ex0, kws = Expr[]; is_so
-             else
-                 ex0.args[1] = esc(arr)
-             end
--            ex, _ = replace_ref_begin_end_!(__module__, ex0, nothing, false, 1)
-+            ex, _ = replace_ref_begin_end_!(__module__, ex0, nothing, false, 1, false, false)
-             ## since replace_ref_begin_end! mutates ex0 in place, we can mutate inplace also then return ex
-             ex0.head = :call
-             ex0.args[1] = arrex
 -- 
 2.51.0
 
