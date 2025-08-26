@@ -36,7 +36,6 @@ makedepends+=(
   zip)
 
 depends=(
-	"portable"
 # Original
   alsa-lib
   at-spi2-core
@@ -269,6 +268,7 @@ build() {
 }
 
 function package() {
+	depends+=("portable")
 	DESTDIR="$pkgdir" _mach install
 	local _appdir="$pkgdir/usr/lib/$pkgbase"
 	mv "$pkgdir"/usr/lib/zen "$_appdir"
