@@ -139,8 +139,8 @@ prepare() {
 
   msg2 "init repo submodules"
   git submodule init
-  git config submodule.l10n.url "$srcdir/l10n"
-  mkdir -p -v "$srcdir/l10n"
+  git config submodule.l10n.url "$srcdir/firefox-l10n"
+  #mkdir -p -v "$srcdir/l10n"
   git submodule update --init --recursive
   #git -c protocol.file.allow=always submodule update
 
