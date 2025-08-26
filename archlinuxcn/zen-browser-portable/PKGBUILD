@@ -135,15 +135,13 @@ _package_i18n() {
     "$pkgdir/usr/lib/$pkgbase/browser/extensions/langpack-$1@firefox.mozilla.org.xpi"
 }
 
-function prepare() {
+prepare() {
   cd desktop
 
   msg2 "init repo submodules"
-  #git submodule init
-
-  #git config submodule.l10n.url "$srcdir/l10n"
+  git submodule init
+  git config submodule.l10n.url "$srcdir/l10n"
   git -c protocol.file.allow=always submodule update
-  git submodule update --init --recursive
 
   # Apply patches
   msg2 "apply patches"
@@ -214,6 +212,7 @@ ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 # ac_add_options --disable-tests
 END
+
 }
 
 _mach() {
@@ -267,14 +266,6 @@ build() {
       xvfb-run -s "-screen 0 1920x1080x24 -nolisten local" \
       pnpm surfer build --skip-patch-check
   )
-
-  # Build langpacks
-  echo $_firefox_version >"$srcdir/desktop/engine/browser/config/version.txt"
-  for _lang in "${_languages[@]}"; do
-    msg2 "build langpack: ${_lang}"
-    _mach build "merge-$_lang"
-    _mach build "langpack-$_lang"
-  done
 }
 
 function package() {
