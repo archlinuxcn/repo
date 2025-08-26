@@ -1,0 +1,101 @@
+From 9e201aacb600573f65089aad294507ed704b1af4 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 26 Aug 2025 10:51:18 -0400
+Subject: [PATCH 9/9] Fix at-views for setindex expression
+
+---
+ base/views.jl                         | 18 +++++++++++-------
+ stdlib/InteractiveUtils/src/macros.jl |  4 ++--
+ 2 files changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/base/views.jl b/base/views.jl
+index 10fb3b0dc5..a4fd9bcc97 100644
+--- a/base/views.jl
++++ b/base/views.jl
+@@ -14,10 +14,14 @@ should transform to
+     A[B[lastindex(B)]]
+ 
+ """
+-replace_ref_begin_end!(__module__::Module, @nospecialize ex) = replace_ref_begin_end_!(__module__, ex, nothing, false, 0)[1]
++replace_ref_begin_end!(__module__::Module, @nospecialize ex) = replace_ref_begin_end_!(__module__, ex, nothing, false, 0, false, false)[1]
+ # replace_ref_begin_end_!(...) returns (new ex, whether withex was used)
+-function replace_ref_begin_end_!(__module__::Module, ex, withex, in_quote_context::Bool, escs::Int)
++function replace_ref_begin_end_!(__module__::Module, ex, withex, in_quote_context::Bool, escs::Int, in_assignment::Bool, in_setindex::Bool)
+     @nospecialize
++    # in_assignment is true for immediate LHS of assignment
++    #     :ref expression is therefore actually a setindex
++    # in_setindex is true in the indexing part of a setindex expression
++    #     :begin and :end expressions are allowed but won't be expanded.
+     used_withex = false
+     function escapes(@nospecialize(ex), escs::Int)
+         for i = 1:escs
+@@ -35,7 +39,7 @@ function replace_ref_begin_end_!(__module__::Module, ex, withex, in_quote_contex
+         ex = macroexpand(__module__, ex)
+     end
+     if isa(ex,Symbol)
+-        if !in_quote_context
++        if !in_quote_context && !in_setindex
+             if ex === :begin
+                 withex === nothing && error("Invalid use of begin outside []")
+                 return escapes((withex::NTuple{2,Expr})[1], escs), true
+@@ -46,7 +50,7 @@ function replace_ref_begin_end_!(__module__::Module, ex, withex, in_quote_contex
+         end
+     elseif isa(ex,Expr)
+         if !in_quote_context && ex.head === :ref # n.b. macroexpand.scm design is incapable of tracking :begin and :end scope, so emulate that here too and ignore escs
+-            ex.args[1], used_withex = replace_ref_begin_end_!(__module__, ex.args[1], withex, in_quote_context, escs)
++            ex.args[1], used_withex = replace_ref_begin_end_!(__module__, ex.args[1], withex, in_quote_context, escs, false, in_setindex)
+             S = gensym(:S) # temp var to cache ex.args[1] if needed. if S is a global or expression, then it has side effects to use
+             assignments = []
+             used_S = false # whether we actually need S
+@@ -56,7 +60,7 @@ function replace_ref_begin_end_!(__module__::Module, ex, withex, in_quote_contex
+                 return ex, used_withex
+             elseif nargs == 1
+                 # replace with lastindex(S)
+-                ex.args[2], used_S = replace_ref_begin_end_!(__module__, ex.args[2], (:($firstindex($S)),:($lastindex($S))), in_quote_context, escs)
++                ex.args[2], used_S = replace_ref_begin_end_!(__module__, ex.args[2], (:($firstindex($S)),:($lastindex($S))), in_quote_context, escs, false, in_assignment)
+             else
+                 ni = 1
+                 nx = 0
+@@ -76,7 +80,7 @@ function replace_ref_begin_end_!(__module__::Module, ex, withex, in_quote_contex
+                 temp_vars = Tuple{Int,Symbol}[]
+                 for j = 2:J
+                     n = nx === 0 ? ni : :($nx + $ni)
+-                    exj, used = replace_ref_begin_end_!(__module__, ex.args[j], (:($firstindex($S,$n)),:($lastindex($S,$n))), in_quote_context, escs)
++                    exj, used = replace_ref_begin_end_!(__module__, ex.args[j], (:($firstindex($S,$n)),:($lastindex($S,$n))), in_quote_context, escs, false, in_assignment)
+                     used_S |= used
+                     ex.args[j] = exj
+                     ni += 1
+@@ -135,7 +139,7 @@ function replace_ref_begin_end_!(__module__::Module, ex, withex, in_quote_contex
+         end
+         # recursive search
+         for i = eachindex(ex.args)
+-            ex.args[i], used = replace_ref_begin_end_!(__module__, ex.args[i], withex, in_quote_context, escs)
++            ex.args[i], used = replace_ref_begin_end_!(__module__, ex.args[i], withex, in_quote_context, escs, i == 1 && ex.head === :(=), in_setindex)
+             used_withex |= used
+         end
+     end
+diff --git a/stdlib/InteractiveUtils/src/macros.jl b/stdlib/InteractiveUtils/src/macros.jl
+index 8825b4802f..3be13adf5d 100644
+--- a/stdlib/InteractiveUtils/src/macros.jl
++++ b/stdlib/InteractiveUtils/src/macros.jl
+@@ -320,7 +320,7 @@ function gen_call_with_extracted_types(__module__, fcn, ex0, kws = Expr[]; is_so
+                     else
+                         lhs.args[1] = esc(arr)
+                     end
+-                    ex, _ = replace_ref_begin_end_!(__module__, lhs, nothing, false, 1)
++                    ex, _ = replace_ref_begin_end_!(__module__, lhs, nothing, false, 1, false, false)
+                     ## since replace_ref_begin_end! mutates lhs in place, we can mutate inplace also then return ex
+                     lhs.head = :call
+                     lhs.args[1] = get_typeof(rhs)
+@@ -355,7 +355,7 @@ function gen_call_with_extracted_types(__module__, fcn, ex0, kws = Expr[]; is_so
+             else
+                 ex0.args[1] = esc(arr)
+             end
+-            ex, _ = replace_ref_begin_end_!(__module__, ex0, nothing, false, 1)
++            ex, _ = replace_ref_begin_end_!(__module__, ex0, nothing, false, 1, false, false)
+             ## since replace_ref_begin_end! mutates ex0 in place, we can mutate inplace also then return ex
+             ex0.head = :call
+             ex0.args[1] = arrex
+-- 
+2.51.0
+
