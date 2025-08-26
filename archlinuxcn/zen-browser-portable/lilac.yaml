@@ -7,10 +7,7 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: "alpm"
-    alpm: "zen-browser"
-    repo: "archlinuxcn"
-    strip_release: true
+  - source: "manual"
 
 repo_depends:
   - portable
