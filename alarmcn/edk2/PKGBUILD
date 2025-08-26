@@ -3,8 +3,8 @@
 
 pkgbase=edk2
 pkgname=(edk2-arm edk2-aarch64 edk2-shell edk2-ovmf)
-pkgver=202411
-pkgrel=2
+pkgver=202505
+pkgrel=1
 pkgdesc="Modern, feature-rich firmware development environment for the UEFI specifications"
 arch=(aarch64) # Avoid conflicting with the official package in the x86 repo
 url="https://github.com/tianocore/edk2"
@@ -54,7 +54,7 @@ source=(
   80-edk2-ovmf-ia32-on-x86_64-secure-4m.json
   81-edk2-ovmf-ia32-on-x86_64-4m.json
 )
-sha512sums=('fb15d0709778aebca8060004820f7af6718e95ea3b3ceb50efe7af82b64feee85af1480be4126691569d0c89c891677db4bb27b4d54126875a3748044017f4eb'
+sha512sums=('88484c4676ea076758c18473c798d91b42aeea8cad5f7c0e7d13cb1510b0445567f465e94dd823d471e4a1613f5d7108f8ddabf54888c4b9f7f7569704b16034'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -83,7 +83,7 @@ sha512sums=('fb15d0709778aebca8060004820f7af6718e95ea3b3ceb50efe7af82b64feee85af
             'bbf663d539a985504d5fbc95552a2a60ac860a6bce4a62ecc551292d838b41cba3b5203f580a76a05e9f862ef98e7a3e5da39505c1f39d8ef48c08778fac584a'
             '95661c2182112a76652507de84b7d0f9bb0d21f6b3b62134952bd7aada8df5cfc727658d11b71a7780a22049d9cafc4361d9a1d515b68d1463e7082465fd4f7e'
             'c9dbe7b2b6b8c18b7b8fdfef5bc329d9142c442f2f3dbae3ca4919255dcaf2ab576cd305648228d5dd48040ca3b14f44ee33b05cb6ca13b49e2836947b78ea53')
-b2sums=('fb2977af32fd2f33bfc661cb6c4b28a7f5d390c498122b26920cf18d1c3c0f29f19c618726d7f5a439a1b964e05d689eac94be1bada34c35b6358eb5e591e287'
+b2sums=('34173ca6676e43bb65484f8d94bb652539d468427b951f08b8420437454ad3f14787b8c3be302df4a458769e0c688fb84a298c5aa585426ff8b857d1758b6303'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -114,7 +114,7 @@ b2sums=('fb2977af32fd2f33bfc661cb6c4b28a7f5d390c498122b26920cf18d1c3c0f29f19c618
         '0c1e145109de9a25339633b563e47f6c09ea314f636023d09a58559a499dd0bd283a45e050fc99fe34c4d712bd00a035064fa8406734d57029c67b9adb4b11ce')
 _arch_list=(ARM AARCH64 IA32 X64)
 _build_type=RELEASE
-_build_plugin=GCC5
+_build_plugin=GCC
 
 prepare() {
   local submodule
@@ -197,14 +197,12 @@ build() {
   )
 
   cd $pkgbase
-  export GCC5_IA32_PREFIX="x86_64-linux-gnu-"
-  export GCC5_X64_PREFIX="x86_64-linux-gnu-"
-  export GCC5_AARCH64_PREFIX="aarch64-linux-gnu-"
-  export GCC5_ARM_PREFIX="arm-none-eabi-"
-  echo "Building base tools (AARCH64)"
-  ARCH=AARCH64 make -C BaseTools
-  echo "Building base tools (ARM)"
-  ARCH=ARM make -C BaseTools
+  # This is used as the prefix for both gcc and objcopy
+  # so it cannot be set to x86_64-linux-gnu-
+  # (binutils does not provide x86_64-linux-gnu-objcopy)
+  export GCC_BIN=""
+  export GCC_AARCH64_PREFIX="aarch64-linux-gnu-"
+  export GCC_ARM_PREFIX="arm-none-eabi-"
   echo "Building base tools"
 
   export GCC_BIN="x86_64-linux-gnu-"
@@ -399,7 +397,6 @@ package_edk2-ovmf() {
 
   pkgdesc="Firmware for Virtual Machines (x86_64, i686)"
   url="https://github.com/tianocore/tianocore.github.io/wiki/OVMF"
-  license+=(MIT)
   provides=(ovmf)
   conflicts=(ovmf)
   replaces=(ovmf)
