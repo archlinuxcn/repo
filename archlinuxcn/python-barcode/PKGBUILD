@@ -2,8 +2,8 @@
 
 _name=barcode
 pkgname=python-${_name}
-pkgver=0.15.1
-pkgrel=2
+pkgver=0.16.1
+pkgrel=1
 pkgdesc="㊙️ Create standard barcodes with Python. No external dependencies. 100% Organic Python."
 arch=(any)
 url="https://github.com/WhyNotHugo/$pkgname"
@@ -12,7 +12,7 @@ depends=(python)
 makedepends=(git python-build python-installer python-setuptools python-wheel python-setuptools-scm)
 optdepends=('python-pillow: generate images')
 source=(git+$url.git#tag=v$pkgver)
-sha512sums=('e4aa48f1febb742c943db8681d05a0a0436f29b82305ef37e81536546f5e312ee0c460409610a94df2474a84e855dce23a261d6b24f2f12a925ace7fb4a68370')
+sha512sums=('6f16b6af9f6b6c0a9f53551e710e6e93076ed50b7d8da922286728a9b16e36e87532351e7413602c53e41ecaea5a2c2a1f66d11abc99f23dc7aa0744d1a6c18a')
 
 build() { 
   cd $pkgname
