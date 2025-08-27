@@ -1,7 +1,7 @@
 pkgname=julia-git-chunkcodecliblz4-src
 pkgver=0.3.0
 _commit=dce49c1cf4e10b9e3591a7385be22ac652d92860
-pkgrel=1
+pkgrel=2
 pkgdesc="ChunkCodecLibLz4.jl"
 url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('c1f6edd86634046a964a11cd1b0c6e1f4ff7ccd63ab3a885b3de90a29653c2bc')
 
 package() {
   cd ChunkCodecs.jl/LibLz4
