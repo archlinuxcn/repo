@@ -1,29 +1,39 @@
 #!/bin/bash
-set -o pipefail
+set -e
 _APPDIR="/usr/lib/@appname@"
 _RUNNAME="${_APPDIR}/@runname@"
-_CFGDIR="@cfgdirname@/"
 _OPTIONS="@options@"
 export PATH="${_APPDIR}:${PATH}"
 export LD_LIBRARY_PATH="${_APPDIR}/swiftshader:${_APPDIR}/lib:${LD_LIBRARY_PATH}"
 export ELECTRON_IS_DEV=0
 export ELECTRON_FORCE_IS_PACKAGED=true
 export ELECTRON_DISABLE_SECURITY_WARNINGS=true
-export ELECTRON_OVERRIDE_DIST_PATH="/usr/bin/electron@electronversion@"
 export NODE_ENV=production
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-export _FLAGS_FILE="${XDG_CONFIG_HOME}/${_CFGDIR}@appname@-flags.conf"
-declare -a _USER_FLAGS
+_FLAGS_FILE="${XDG_CONFIG_HOME}/@appname@-flags.conf"
+declare -a flags
 if [[ -f "${_FLAGS_FILE}" ]]; then
-    while read -r line; do
-        if [[ ! "${line}" =~ ^[[:space:]]*#.* ]]; then
-            _USER_FLAGS+=("${line}")
-        fi
-    done < "${_FLAGS_FILE}"
+    mapfile -t < "${_FLAGS_FILE}"
 fi
-cd "${_APPDIR}" || { echo "Failed to change directory to ${_APPDIR}"; exit 1; }
+for line in "${MAPFILE[@]}"; do
+    if [[ ! "${line}" =~ ^[[:space:]]*#.* ]] && [[ -n "${line}" ]]; then
+        flags+=("${line}")
+    fi
+done
+_WAYLAND_OPTION=false
+for arg in "$@"; do
+    if [[ "${arg}" == "--wayland" ]]; then
+        _WAYLAND_OPTION=true
+        break
+    fi
+done
+if [[ "${_WAYLAND_OPTION}" == true ]]; then
+    echo "Forcing Wayland"
+    flags+=("--enable-features=UseOzonePlatform,WaylandWindowDecorations,VaapiVideoDecodeLinuxGL" "--ozone-platform=wayland")
+fi
+cd "${_APPDIR}"
 if [[ "${EUID}" -ne 0 ]] || [[ "${ELECTRON_RUN_AS_NODE}" ]]; then
-    exec electron@electronversion@ "${_RUNNAME}" ${_OPTIONS} "${_USER_FLAGS[@]}" "$@"
+    exec electron@electronversion@ "${_RUNNAME}" "${_OPTIONS}" "${flags[@]}" "$@" || exit $?
 else
-    exec electron@electronversion@ "${_RUNNAME}" ${_OPTIONS} --no-sandbox "${_USER_FLAGS[@]}" "$@"
+    exec electron@electronversion@ "${_RUNNAME}" "${_OPTIONS}" --no-sandbox "${flags[@]}" "$@" || exit $?
 fi
