@@ -195,7 +195,7 @@ ac_add_options --with-wasi-sysroot=/usr/share/wasi-sysroot
 # ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
 # export MOZILLA_OFFICIAL=1
-export MOZ_APP_REMOTINGNAME=$pkgbase
+export MOZ_APP_REMOTINGNAME=zen-browser
 
 # Keys
 ac_add_options --with-google-location-service-api-keyfile=${PWD@Q}/google-api-key
@@ -300,7 +300,7 @@ about=Zen Browser for Arch Linux
 
 [Preferences]
 app.distributor=archlinux
-app.distributor.channel=$pkgbase
+app.distributor.channel=zen-browser
 app.partner.archlinux=archlinux
 END
 
