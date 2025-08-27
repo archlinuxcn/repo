@@ -15,4 +15,6 @@ package() {
   cd Optimization.jl
 
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Optimization "${pkgdir}" "${pkgname}" julia-git
+
+  rm -rf "${dest_dir}"/lib
 }
