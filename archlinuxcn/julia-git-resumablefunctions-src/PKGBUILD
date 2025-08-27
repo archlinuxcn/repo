@@ -1,6 +1,6 @@
 pkgname=julia-git-resumablefunctions-src
-pkgver=1.0.3
-_commit=0f13cd6613546ab66be6bb124cd722b366213453
+pkgver=1.0.4
+_commit=36b779d54023ae491d434fb228be93a8bb1c0adc
 pkgrel=1
 pkgdesc="ResumableFunctions.jl"
 url="https://github.com/JuliaDynamics/ResumableFunctions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDynamics/ResumableFunctions.jl.git#commit=$_commit")
-sha256sums=('16b0fa342c36e203957cbf0a0589ab2029fb20f858f5563638a0f6afa5e6631f')
+sha256sums=('6ad4dde3c80d7612acf009c14289df7fd3c3ffd70ff74b8b570ecbbbf2c09784')
 
 package() {
   cd ResumableFunctions.jl
