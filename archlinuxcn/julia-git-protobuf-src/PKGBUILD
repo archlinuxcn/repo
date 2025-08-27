@@ -1,0 +1,18 @@
+pkgname=julia-git-protobuf-src
+pkgver=1.1.1
+_commit=9d682e471f308bb483092326798148197988d001
+pkgrel=1
+pkgdesc="ProtoBuf.jl"
+url="https://github.com/JuliaIO/ProtoBuf.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/ProtoBuf.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ProtoBuf.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ProtoBuf "${pkgdir}" "${pkgname}" julia-git
+}
