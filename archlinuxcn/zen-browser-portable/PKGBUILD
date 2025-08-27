@@ -347,5 +347,15 @@ TryExec=portable
 Exec=env _portableConfig=org.mozilla.zen portable -- %u
 Terminal=false
 NoDisplay=true''' >"${pkgdir}/usr/share/applications/zen-browser.desktop"
+
+	echo '''[Desktop Entry]
+Type=Application
+Name=Zen Browser
+GenericName=Stub for MPRIS
+Icon=zen-browser
+TryExec=portable
+Exec=env _portableConfig=org.mozilla.zen portable -- %u
+Terminal=false
+NoDisplay=true''' >"${pkgdir}/usr/share/applications/zen-browser-portable.desktop"
 }
 sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
