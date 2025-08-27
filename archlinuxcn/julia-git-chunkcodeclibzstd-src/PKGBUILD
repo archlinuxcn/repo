@@ -1,0 +1,18 @@
+pkgname=julia-git-chunkcodeclibzstd-src
+pkgver=0.3.0
+_commit=b4883caf1db214426de3f8b90288dc9f8c3e05cf
+pkgrel=1
+pkgdesc="ChunkCodecLibZstd.jl"
+url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ChunkCodecs.jl/LibZstd
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ChunkCodecLibZstd "${pkgdir}" "${pkgname}" julia-git
+}

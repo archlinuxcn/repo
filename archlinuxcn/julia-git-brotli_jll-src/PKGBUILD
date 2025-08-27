@@ -1,0 +1,26 @@
+pkgname=julia-git-brotli_jll-src
+pkgver=1.1.1+0
+_commit=58064afa6b741206901b5d245275043129770f3d
+pkgrel=1
+pkgdesc="brotli_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/brotli_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git brotli)
+source=("git+https://github.com/JuliaBinaryWrappers/brotli_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('3bef945c8a29001b306af2da895799c8b3955002d0382f2d6b0504f5c8a2f763'
+            '4c3014dfae99b3d68786189414115419bd106b2a19eb767c168dec39c46b391c')
+
+build() {
+  cd brotli_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl brotli_jll ../jll.toml
+}
+
+package() {
+  cd brotli_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh brotli_jll "${pkgdir}" "${pkgname}" julia-git
+}

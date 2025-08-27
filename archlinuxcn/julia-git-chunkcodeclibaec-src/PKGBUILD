@@ -1,0 +1,18 @@
+pkgname=julia-git-chunkcodeclibaec-src
+pkgver=0.2.0
+_commit=bb9e58bcd33031d01eea6b1c220e0e9b195a8d47
+pkgrel=1
+pkgdesc="ChunkCodecLibAec.jl"
+url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ChunkCodecs.jl/LibAec
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ChunkCodecLibAec "${pkgdir}" "${pkgname}" julia-git
+}

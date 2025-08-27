@@ -1,0 +1,18 @@
+pkgname=julia-git-chunkcodeclibsnappy-src
+pkgver=0.3.0
+_commit=6bc8e0e96d01692efb55606a8b792ee35a5012de
+pkgrel=1
+pkgdesc="ChunkCodecLibSnappy.jl"
+url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ChunkCodecs.jl/LibSnappy
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ChunkCodecLibSnappy "${pkgdir}" "${pkgname}" julia-git
+}

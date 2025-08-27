@@ -1,0 +1,26 @@
+pkgname=julia-git-snappy_jll-src
+pkgver=1.2.3+0
+_commit=140eec0d38cb60adad5179482bf1b083cc1f0229
+pkgrel=1
+pkgdesc="snappy_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/snappy_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git snappy)
+source=("git+https://github.com/JuliaBinaryWrappers/snappy_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('90e7e35c58f9193d14a9e28c5f1c9e1203b863745c536c7f161a03f33b27be9c'
+            '0fc179a80599840c1e16edfc02e7e5007cfc8d21e864968957332c641004a896')
+
+build() {
+  cd snappy_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl snappy_jll ../jll.toml
+}
+
+package() {
+  cd snappy_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh snappy_jll "${pkgdir}" "${pkgname}" julia-git
+}

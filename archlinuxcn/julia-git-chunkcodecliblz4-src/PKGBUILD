@@ -1,0 +1,18 @@
+pkgname=julia-git-chunkcodecliblz4-src
+pkgver=0.3.0
+_commit=dce49c1cf4e10b9e3591a7385be22ac652d92860
+pkgrel=1
+pkgdesc="ChunkCodecLibLz4.jl"
+url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ChunkCodecs.jl/LibLz4
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ChunkCodecLibLz4 "${pkgdir}" "${pkgname}" julia-git
+}
