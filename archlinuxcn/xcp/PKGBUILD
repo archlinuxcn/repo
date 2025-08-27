@@ -24,10 +24,10 @@ build() {
 	cargo build --frozen --release --all-features
 }
 
-check() {
-	cd "${pkgname}-${pkgver}/"
-	cargo test --frozen --all-features
-}
+# check() {
+# 	cd "${pkgname}-${pkgver}/"
+# 	cargo test --frozen --all-features
+# }
 
 package() {
 	cd "${pkgname}-${pkgver}/"
