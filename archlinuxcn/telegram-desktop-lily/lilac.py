@@ -9,7 +9,7 @@ qt_re = re.compile(r"'qt6-base=[^']+'")
 def prepare():
   pkgver = _G.newver.lstrip('v').lstrip()
   url = f'https://github.com/telegramdesktop/tdesktop/releases/download/v{pkgver}/tdesktop-{pkgver}-full.tar.gz'
-  r = s.head(url, allow_redirects=False)
+  r = s.head(url, follow_redirects=False)
   if r.status_code == 404:
     return 'upstream source tarball not available'
 
