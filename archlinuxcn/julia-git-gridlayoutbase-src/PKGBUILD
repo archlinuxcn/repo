@@ -1,6 +1,6 @@
 pkgname=julia-git-gridlayoutbase-src
-pkgver=0.11.1
-_commit=697198064c0c71aa3285e901baf059ecaab6672c
+pkgver=0.11.2
+_commit=6970b3422426bb4ecd19a40faee86906bfe50e17
 pkgrel=1
 pkgdesc="GridLayoutBase.jl"
 url="https://github.com/jkrumbiegel/GridLayoutBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jkrumbiegel/GridLayoutBase.jl.git#commit=$_commit")
-sha256sums=('b9c0a6066f3b01a43aff9b74e260f887fce74f54caf487d775c84b50296040ee')
+sha256sums=('3f4fae161c8e2918d1f37f32da3c34584f0f7307a85b255988863d6d67825250')
 
 package() {
   cd GridLayoutBase.jl
