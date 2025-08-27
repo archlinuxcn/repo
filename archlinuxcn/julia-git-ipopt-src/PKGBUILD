@@ -1,6 +1,6 @@
 pkgname=julia-git-ipopt-src
-pkgver=1.10.6
-_commit=42de9672a402c2d34b44d7da12109f6b79a9a78f
+pkgver=1.11.0
+_commit=eb08a4f0436a9529cd57ad4b0f760f06d18a6a2f
 pkgrel=1
 pkgdesc="Ipopt.jl"
 url="https://github.com/jump-dev/Ipopt.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/Ipopt.jl.git#commit=$_commit")
-sha256sums=('be28c9b292237a6ba293e21c13bf260dd8cc9a712b111d38783926e0169a6e1b')
+sha256sums=('478c5f605dd937b1fefc350d99a59f732141e96aa89ce844999d0903b36e9e85')
 
 package() {
   cd Ipopt.jl
