@@ -3,7 +3,7 @@
 # Contributor: Sebastian Krämer <basti.kr@gmail.com>
 
 pkgname=python-qutip
-pkgver=5.2.0
+pkgver=5.2.1
 pkgrel=1
 pkgdesc="QuTiP is open-source software for simulating the dynamics of open quantum systems"
 arch=("aarch64" "x86_64")
@@ -21,7 +21,7 @@ optdepends=(
 )
 
 source=("https://github.com/qutip/qutip/archive/v$pkgver.tar.gz")
-sha256sums=('bd4bd89addbb6001dc8393678ac5eb943e9ecac4c5decc8d33f8ceb49f93ff22')
+sha256sums=('708b182f09db8a6a0fa41b8a59ed5bcfdf43befe625afc2efe30885b68898b6e')
 
 build() {
   cd qutip-$pkgver
