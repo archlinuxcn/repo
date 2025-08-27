@@ -1,7 +1,7 @@
 pkgname=julia-git-flatbuffers-src
 pkgver=0.6.2
 _commit=1f3e5d97380a7ea5e4691412861e6424aaffa077
-pkgrel=1
+pkgrel=2
 pkgdesc="FlatBuffers.jl"
 url="https://github.com/JuliaData/FlatBuffers.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/FlatBuffers.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('4b5cf903419d425e0822ae8d6302bbcc6b673050842f627fe00ec1f3dc81266d')
 
 package() {
   cd FlatBuffers.jl
