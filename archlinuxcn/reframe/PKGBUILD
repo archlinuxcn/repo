@@ -1,0 +1,29 @@
+# Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
+pkgname=reframe
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="DRM/KMS based remote desktop for Linux that supports Wayland/NVIDIA/headless/login…"
+arch=("x86_64" "i686" "aarch64" "armv7h" "armv6h")
+url="https://github.com/AlynxZhou/reframe/"
+license=("Apache-2.0")
+depends=("glib2" "libepoxy" "libvncserver" "libxkbcommon" "libdrm" "systemd-libs" "gcc-libs" "glibc")
+makedepends=("meson" "glib2-devel")
+backup=("etc/${pkgname}/example.conf")
+source=("https://github.com/AlynxZhou/${pkgname}/archive/v${pkgver}.tar.gz")
+sha512sums=('9f89f38d4fffb55ecb49c6e0466078e710fd56cc0007f931e71bf76028ce07d0fc825ebe8d82ecc855b5572880603f3cff4de69db8964b1b05e4ac0df0cdd1c8')
+
+prepare() {
+  cd "${pkgname}-${pkgver}"
+  mkdir -p build
+}
+
+build() {
+  cd "${pkgname}-${pkgver}/build"
+  arch-meson . ..
+  meson compile
+}
+
+package() {
+  cd "${pkgname}-${pkgver}/build"
+  meson install --destdir "${pkgdir}"
+}
