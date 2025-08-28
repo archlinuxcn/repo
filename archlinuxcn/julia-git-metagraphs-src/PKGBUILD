@@ -1,6 +1,6 @@
 pkgname=julia-git-metagraphs-src
-pkgver=0.8.0
-_commit=82865e3d4db4220a66f3d5be2cfc9739f5cd849a
+pkgver=0.8.1
+_commit=a5cad0d49ac485b31d75218b9d433b812fd286b8
 pkgrel=1
 pkgdesc="MetaGraphs.jl"
 url="https://github.com/JuliaGraphs/MetaGraphs.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphs/MetaGraphs.jl.git#commit=$_commit")
-sha256sums=('fbed60a3627cc6ca169b1cd526ff6b3d283e015b9b3e4c505ba1199421da3fda')
+sha256sums=('8e9a58fa33c4557e5bee08a802d1790f2cefdde7bd3356c70803f89e238ed715')
 
 package() {
   cd MetaGraphs.jl
