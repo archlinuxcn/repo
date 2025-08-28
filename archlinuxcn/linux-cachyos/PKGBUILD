@@ -87,18 +87,17 @@
 # "thin: uses multiple threads, faster and uses less memory, may have a lower runtime performance than Full."
 # "thin-dist: Similar to thin, but uses a distributed model rather than in-process: https://discourse.llvm.org/t/rfc-distributed-thinlto-build-for-kernel/85934"
 # "none: disable LTO
-: "${_use_llvm_lto:=none}"
+: "${_use_llvm_lto:=thin}"
 
 # Use suffix -lto only when requested by the user
-# Enabled by default.
 # yes - enable -lto suffix
 # no - disable -lto suffix
 # https://github.com/CachyOS/linux-cachyos/issues/36
-: "${_use_lto_suffix:=yes}"
+: "${_use_lto_suffix:=no}"
 
 # Use suffix -gcc when requested by the user
-# This was added to facilitate https://github.com/CachyOS/linux-cachyos/issues/286
-: "${_use_gcc_suffix:=no}"
+# Enabled by default to show the difference between LTO kernels and GCC kernels
+: "${_use_gcc_suffix:=yes}"
 
 # KCFI is a proposed forward-edge control-flow integrity scheme for
 # Clang, which is more suitable for kernel use than the existing CFI
@@ -166,7 +165,7 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=6.16
-_minor=2
+_minor=4
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -228,7 +227,7 @@ fi
 # ZFS support
 if [ "$_build_zfs" = "yes" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=725d591cf34aca2a4b1f19f2a733def2c8c8dc41")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=3b64a9619f8f724ecac3e280a235f6b56d20ee1c")
 fi
 
 # NVIDIA pre-build module support
@@ -591,6 +590,11 @@ _package() {
                 'modprobed-db: Keeps track of EVERY kernel module that has ever been probed - useful for those of us who make localmodconfig'
                 'scx-scheds: to use sched-ext schedulers')
     provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE V4L2LOOPBACK-MODULE NTSYNC-MODULE VHBA-MODULE ADIOS-MODULE)
+    # Replace LTO kernel with the default kernel
+    if _is_lto_kernel; then
+        provides+=(linux-cachyos-lto=$_kernver)
+        replaces=(linux-cachyos-lto)
+    fi
 
     cd "$_srcname"
 
@@ -617,6 +621,8 @@ _package-headers() {
     depends=('pahole' "${pkgbase}")
 
     if _is_lto_kernel; then
+        provides+=(linux-cachyos-lto-headers=$_kernver)
+        replaces=(linux-cachyos-lto-headers)
         depends+=(clang llvm lld)
     fi
 
@@ -793,7 +799,8 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('9585d9abd085707cf5b7f3917ee41ff234083b941863fc5fa9eb7e81ed486da5fc58cd756020359f8784d29fcdac96720cc1dec2c10bef9a5c061cd2222f1680'
-        '08e0162b75c1b78f523efb71afbc06f2d37e5b8e73731517c5eec2b3663e5cf48a1ad4577304e7bf2eee270e5a9ee381cab8209c3104c8598653dce9cbcbb056'
-        '54752f141a1807bf231d8991760ca75fe8e88bc0550b540c0adf07b33a1d46df234cf04310e21085a1e13a8fec0656b70958eb0408e8238ffbd5095c724ac995'
-        '9cd868f95e189c9cee66500bf47e3b5b215f036ffb08b8fa9b9d979728d3757c88d1c4e00feb25a18afcfe92b9e64e87b9ae8fe0d27ef432813cc00541f1c37b')
+b2sums=('251feef2f995c155850eac2fce5b89f37f39e9f13b6a4e6873370fdc69654692c6bf6c92f04ca7c0b5fd6088d74442afb68db71d2cc18691e23c61b0be714f34'
+        'ca08c1ad172af846ccf78e3694713a68191fec6e59fba5e0a6c90ba228fac5eab77fb8603f35190586d77f6acbf6f87fdb3a1c835d2d68e635c5e1e4d7e7ebe8'
+        '6b812a28e6e8aedda3af3bb4fabb8ff38719bd97697a77ad1ce4dce47ac205a72d27d14757d43a1dc7298fced1ba35a96973f58cc50e780635169cf7675ccc82'
+        'c7294a689f70b2a44b0c4e9f00c61dbd59dd7063ecbe18655c4e7f12e21ed7c5bb4f5169f5aa8623b1c59de7b2667facb024913ecb9f4c650dabce4e8a7e5452'
+        'c7f5b2e6c1f95ec961666c338057501a41f3e8de584f0985021b4c5c0ce5ddf738b56f2c50fe33d879a9cddd2236c26fb995c03445cab93580379d2e2c4669cc')
