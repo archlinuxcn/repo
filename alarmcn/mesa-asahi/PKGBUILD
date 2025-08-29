@@ -5,19 +5,19 @@
 # Contributor: Andreas Radke <andyrtr@archlinux.org>
 # Contributor: Dan Johansen <strit@manjaro.org>
 
-pkgbase=mesa-asahi
+pkgbase=mesa
 pkgname=(
-  mesa-asahi
-  opencl-clover-mesa-asahi
-  opencl-rusticl-mesa-asahi
-  vulkan-mesa-layers-asahi
-  vulkan-nouveau-asahi
-  vulkan-radeon-asahi
-  vulkan-virtio-asahi
-  vulkan-broadcom-asahi
-  vulkan-panfrost-asahi
-  vulkan-freedreno-asahi
+  mesa
+  opencl-clover-mesa
+  opencl-rusticl-mesa
   vulkan-asahi
+  vulkan-broadcom
+  vulkan-freedreno
+  vulkan-nouveau
+  vulkan-panfrost
+  vulkan-radeon
+  vulkan-virtio
+  vulkan-mesa-layers
 )
 _asahiver=20250723
 _commit=asahi-$_asahiver
@@ -96,21 +96,21 @@ source=(
 
 # Rust crates for NVK, used as Meson subprojects
 declare -A _crates=(
-   equivalent      1.0.1
-   hashbrown       0.14.1
-   indexmap        2.2.6
-   once_cell       1.8.0
-   paste           1.0.14
-   pest            2.7.11
-   pest_derive     2.7.11
-   pest_generator  2.7.11
-   pest_meta       2.7.11
-   proc-macro2     1.0.86
-   quote           1.0.33
-   roxmltree       0.20.0
-   syn             2.0.68
-   ucd-trie        0.1.6
-   unicode-ident   1.0.12
+  equivalent      1.0.1
+  hashbrown       0.14.1
+  indexmap        2.2.6
+  once_cell       1.8.0
+  paste           1.0.14
+  pest            2.7.11
+  pest_derive     2.7.11
+  pest_generator  2.7.11
+  pest_meta       2.7.11
+  proc-macro2     1.0.86
+  quote           1.0.33
+  roxmltree       0.20.0
+  syn             2.0.68
+  ucd-trie        0.1.6
+  unicode-ident   1.0.12
 )
 
 for _crate in "${!_crates[@]}"; do
@@ -234,7 +234,7 @@ _pick() {
   done
 }
 
-package_mesa-asahi() {
+package_mesa() {
   depends=(
     expat
     gcc-libs
@@ -262,19 +262,16 @@ package_mesa-asahi() {
     libva-driver
     opengl-driver
     vdpau-driver
-    mesa
   )
   conflicts=(
     'libva-mesa-driver<1:24.2.7-1'
     'mesa-libgl<17.0.1-2'
     'mesa-vdpau<1:24.2.7-1'
-    mesa
   )
   replaces=(
     'libva-mesa-driver<1:24.2.7-1'
     'mesa-libgl<17.0.1-2'
     'mesa-vdpau<1:24.2.7-1'
-    mesa-asahi-edge
   )
 
   meson install -C build --destdir "$pkgdir"
@@ -324,7 +321,7 @@ package_mesa-asahi() {
   install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_opencl-clover-mesa-asahi() {
+package_opencl-clover-mesa() {
   pkgdesc="Open-source OpenCL drivers - Clover variant"
   depends=(
     clang
@@ -340,16 +337,16 @@ package_opencl-clover-mesa-asahi() {
     libclc # For /usr/share/clc/
   )
   optdepends=("opencl-headers: headers necessary for OpenCL development")
-  provides=(opencl-driver opencl-clover-mesa)
+  provides=(opencl-driver)
   replaces=("opencl-mesa<=23.1.4-1")
-  conflicts=(opencl-mesa opencl-clover-mesa)
+  conflicts=(opencl-mesa)
 
   mv clover/* "$pkgdir"
 
   install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_opencl-rusticl-mesa-asahi() {
+package_opencl-rusticl-mesa() {
   pkgdesc="Open-source OpenCL drivers - RustICL variant"
   depends=(
     clang
@@ -367,46 +364,27 @@ package_opencl-rusticl-mesa-asahi() {
     libclc # For /usr/share/clc/
   )
   optdepends=("opencl-headers: headers necessary for OpenCL development")
-  provides=(opencl-driver opencl-rusticl-mesa)
+  provides=(opencl-driver)
   replaces=("opencl-mesa<=23.1.4-1")
-  conflicts=(opencl-mesa opencl-rusticl-mesa)
+  conflicts=(opencl-mesa)
 
   mv clrust/* "$pkgdir"
 
   install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_vulkan-mesa-layers-asahi() {
-  pkgdesc="Mesa's Vulkan layers"
-  depends=(
-    gcc-libs
-    glibc
-    libdrm
-    libpng
-    libxcb
-    wayland
-
-    python
-  )
-  provides=(vulkan-mesa-layers)
-  conflicts=(vulkan-mesa-layer vulkan-mesa-layers)
-  replaces=(vulkan-mesa-layer)
-
-  mv vklayer/* "$pkgdir"
-
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-nouveau-asahi() {
-  pkgdesc="Open-source Vulkan driver for Nvidia GPUs"
+package_vulkan-asahi() {
+  pkgdesc="Open-source Vulkan driver for Apple-GPU (Asahi)"
   depends=(
     expat
     gcc-libs
     glibc
     libdrm
+    libelf
     libx11
     libxcb
     libxshmfence
+    llvm-libs
     spirv-tools
     systemd-libs
     vulkan-icd-loader
@@ -416,15 +394,126 @@ package_vulkan-nouveau-asahi() {
     zstd
   )
   optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver vulkan-nouveau)
-  conflicts=(vulkan-nouveau)
+  provides=(vulkan-driver)
+
+  mv vkasahi/* "$pkgdir"
+
+  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-broadcom() {
+  pkgdesc="Broadcom's Vulkan mesa driver"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm
+    libelf
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs
+    spirv-tools
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=("vulkan-mesa-layers: additional vulkan layers")
+  provides=(vulkan-driver)
+
+  mv vkbroadcom/* "$pkgdir"
+
+  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-freedreno() {
+  pkgdesc="Freedreno Vulkan mesa driver"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm
+    libelf
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs
+    spirv-tools
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=("vulkan-mesa-layers: additional vulkan layers")
+  provides=(vulkan-driver)
+
+  mv vkfreedreno/* "$pkgdir"
+
+  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-nouveau() {
+  pkgdesc="Open-source Vulkan driver for Nvidia GPUs"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm
+    libelf
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs
+    spirv-tools
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=("vulkan-mesa-layers: additional vulkan layers")
+  provides=(vulkan-driver)
 
   mv vknvidia/* "$pkgdir"
 
   install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_vulkan-radeon-asahi() {
+package_vulkan-panfrost() {
+  pkgdesc="Panfrost Vulkan mesa driver"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm
+    libelf
+    libx11
+    libxcb
+    libxshmfence
+    llvm-libs
+    spirv-tools
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=("vulkan-mesa-layers: additional vulkan layers")
+  provides=(vulkan-driver)
+
+  mv vkpanfrost/* "$pkgdir"
+
+  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-radeon() {
   pkgdesc="Open-source Vulkan driver for AMD GPUs"
   depends=(
     expat
@@ -445,24 +534,26 @@ package_vulkan-radeon-asahi() {
     zstd
   )
   optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver vulkan-radeon)
-  conflicts=(vulkan-radeon)
+  provides=(vulkan-driver)
 
   mv vkradeon/* "$pkgdir"
 
   install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_vulkan-virtio-asahi() {
+package_vulkan-virtio() {
   pkgdesc="Open-source Vulkan driver for Virtio-GPU (Venus)"
   depends=(
     expat
     gcc-libs
     glibc
     libdrm
+    libelf
     libx11
     libxcb
     libxshmfence
+    llvm-libs
+    spirv-tools
     systemd-libs
     vulkan-icd-loader
     wayland
@@ -471,87 +562,29 @@ package_vulkan-virtio-asahi() {
     zstd
   )
   optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver vulkan-virtio)
-  conflicts=(vulkan-virtio)
+  provides=(vulkan-driver)
 
   mv vkvirtio/* "$pkgdir"
 
   install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_vulkan-broadcom-asahi() {
-  pkgdesc="Broadcom's Vulkan mesa driver"
+package_vulkan-mesa-layers() {
+  pkgdesc="Mesa's Vulkan layers"
   depends=(
-    wayland
-    libx11
-    libxshmfence
-    libdrm
-  )
-  optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver vulkan-broadcom)
-  conflicts=(vulkan-broadcom)
-
-  mv vkbroadcom/* "$pkgdir"
-
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-panfrost-asahi() {
-  pkgdesc="Panfrost Vulkan mesa driver"
-  depends=(
-    wayland
-    libx11
-    libxshmfence
-    libdrm
-  )
-  optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver vulkan-panfrost)
-  conflicts=(vulkan-panfrost)
-
-  mv vkpanfrost/* "$pkgdir"
-
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-freedreno-asahi() {
-  pkgdesc="Freedreno Vulkan mesa driver"
-  depends=(
-    wayland
-    libx11
-    libxshmfence
-    spirv-tools
-    libdrm
-  )
-  optdepends=("vulkan-mesa-layers: additional vulkan layers")
-  provides=(vulkan-driver vulkan-freedreno)
-  conflicts=(vulkan-freedreno)
-
-  mv vkfreedreno/* "$pkgdir"
-
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_vulkan-asahi() {
-  pkgdesc="Open-source Vulkan driver for Apple-GPU (Asahi)"
-  depends=(
-    expat
     gcc-libs
     glibc
     libdrm
-    libx11
+    libpng
     libxcb
-    libxshmfence
-    systemd-libs
-    vulkan-icd-loader
     wayland
-    xcb-util-keysyms
-    zlib
-    zstd
-  )
-  optdepends=("vulkan-mesa-layers-asahi: additional vulkan layers")
-  provides=(vulkan-driver)
 
-  mv vkasahi/* "$pkgdir"
+    python
+  )
+  conflicts=(vulkan-mesa-layer)
+  replaces=(vulkan-mesa-layer)
+
+  mv vklayer/* "$pkgdir"
 
   install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
