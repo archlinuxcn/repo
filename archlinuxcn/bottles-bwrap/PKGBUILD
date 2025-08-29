@@ -4,8 +4,8 @@
 
 pkgname=bottles-bwrap
 _pkgname=Bottles
-pkgver=51.21
-pkgrel=2
+pkgver=51.24
+pkgrel=1
 epoch=2
 pkgdesc='Easily manage wine and proton prefix. Sandboxed by portable.'
 arch=(any)
@@ -65,7 +65,7 @@ source=(
 	portable-config
 	start.sh
 )
-sha256sums=('3f341e90c88f2d48d0b1899cd5141cb5599e154a81a57c398991e67d320b70f5'
+sha256sums=('c946c4316250ec311ffa0f7275f0604f4920a2d5a556d6da19c07acda711c40b'
             '95f644fff5b9579be60a391c49f16c3c765b6c02ebbffcf91e4001b3ffc7dd76'
             'afc4d4d5f8242f1f5cdb13845c4067b8bb28253ce7814bd7deeaf2c094ef89a4'
             'e8151fe783b4c202c99e206535f6f2b3e025b070d7237cb6f8bbb1f23ad0eb94')
