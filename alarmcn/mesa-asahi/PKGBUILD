@@ -8,27 +8,30 @@
 pkgbase=mesa
 pkgname=(
   mesa
-  opencl-clover-mesa
-  opencl-rusticl-mesa
+  opencl-mesa
   vulkan-asahi
   vulkan-broadcom
+  vulkan-dzn
   vulkan-freedreno
+  vulkan-gfxstream
+  vulkan-intel
   vulkan-nouveau
   vulkan-panfrost
   vulkan-radeon
+  vulkan-swrast
   vulkan-virtio
   vulkan-mesa-layers
 )
-_asahiver=20250723
-_commit=asahi-$_asahiver
-pkgver=25.1.6_rel20250723
-pkgrel=1
-arch=(aarch64 x86_64)
+pkgver=25.2.1
+pkgrel=4
+epoch=1
 pkgdesc="Open-source OpenGL drivers"
 url="https://www.mesa3d.org/"
+arch=(aarch64 x86_64)
 license=("MIT AND BSD-3-Clause AND SGI-B-2.0")
 makedepends=(
   clang
+  directx-headers
   expat
   gcc-libs
   glibc
@@ -74,14 +77,16 @@ makedepends=(
   wayland-protocols
   xorgproto
 
-  # valgrind deps
+  # mesa-only deps
+  libsysprof-capture
   valgrind
-
-  # d3d12 deps
-  directx-headers
 
   # etnaviv deps
   python-pycparser
+
+  # html-docs
+  python-sphinx
+  python-sphinx-hawkmoth
 )
 options=(
   # GCC 14 LTO causes segfault in LLVM under si_llvm_optimize_module
@@ -91,27 +96,46 @@ options=(
   !lto
 )
 source=(
-  https://gitlab.freedesktop.org/asahi/mesa/-/archive/$_commit/mesa-$_commit.tar.gz
+  "https://archive.mesa3d.org/mesa-$pkgver.tar.xz"
 )
 
 # Rust crates for NVK, used as Meson subprojects
 declare -A _crates=(
-  equivalent      1.0.1
-  hashbrown       0.14.1
-  indexmap        2.2.6
-  once_cell       1.8.0
-  paste           1.0.14
-  pest            2.7.11
-  pest_derive     2.7.11
-  pest_generator  2.7.11
-  pest_meta       2.7.11
-  proc-macro2     1.0.86
-  quote           1.0.33
-  roxmltree       0.20.0
-  syn             2.0.68
-  ucd-trie        0.1.6
-  unicode-ident   1.0.12
+  bitflags         2.9.1
+  cfg-if           1.0.0
+  equivalent       1.0.1
+  errno            0.3.12
+  hashbrown        0.14.1
+  indexmap         2.2.6
+  libc             0.2.168
+  log              0.4.27
+  once_cell        1.8.0
+  paste            1.0.14
+  pest             2.8.0
+  pest_derive      2.8.0
+  pest_generator   2.8.0
+  pest_meta        2.8.0
+  proc-macro2      1.0.86
+  quote            1.0.35
+  remain           0.2.12
+  roxmltree        0.20.0
+  rustc-hash       2.1.1
+  rustix           1.0.7
+  syn              2.0.87
+  thiserror        2.0.11
+  thiserror-impl   2.0.11
+  ucd-trie         0.1.6
+  unicode-ident    1.0.12
+  zerocopy         0.8.13
+  zerocopy-derive  0.8.13
 )
+
+# Used to generate the above table
+_gencrates() {
+  grep crates.io subprojects/*.wrap | \
+    sed -r 's|.*crates/([^/]+)/([0-9.]+)/download|\1 \2|' | \
+    column -t -S 2 | sed 's/^/  /'
+}
 
 for _crate in "${!_crates[@]}"; do
   _ver="${_crates[$_crate]}"
@@ -120,97 +144,102 @@ for _crate in "${!_crates[@]}"; do
   )
 done
 
-sha256sums=('e5d6a833bc4d3e8620863167ab68db2e672b9af2cc4a6b7c1648be263c957cb4'
-            'ed646292ffc8188ef8ea4d1e0e0150fb15a5c2e12ad9b8fc191ae7a8a7f3c4b9'
-            'a941429fea7e08bedec25e4f6785b6ffaacc6b755da98df5ef3e7dcf4a124c4f'
-            '168fb715dda47215e360912c096649d23d58bf392ac62f73919e831745e40f26'
-            '7dfda62a12f55daeae5015f81b0baea145391cb4520f86c248fc615d72640d12'
-            '5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77'
-            '2a548d2beca6773b1c244554d36fcf8548a8a58e74156968211567250e48e49a'
-            '3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b'
-            '5267fca4496028628a95160fc423a33e8b2e6af8a5302579e322e4b520293cae'
-            '6c20b6793b5c2fa6553b250154b78d6d0db37e72700ae35fad9387a46f487c97'
-            'de3145af08024dea9fa9914f381a17b8fc6034dfb00f3a84013f7ff43f29ed4c'
-            'cd53dff83f26735fdc1ca837098ccf133605d794cdae66acfc2bfac3ec809d95'
-            '5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5'
-            '3c93a82e8d145725dcbaf44e5ea887c8a869efdcc28706df2d08c69e17077183'
-            '692fcb63b64b1758029e0a96ee63e049ce8c5948587f2f7208df04625e5f6b56'
-            '901fa70d88b9d6c98022e23b4136f9f3e54e4662c3bc1bd1d84a42a9a0f0c1e9')
-b2sums=('7146854902354cafe8f100f68805b7fff840e3f8a98cf1a7a418f4c400c84fd261f4427d50fa08504051839e73ee5c53952c2ad880dc8ba4a01298c8a44e9d52'
+b2sums=('f7dd9dd570bc21def5b829747854143eef5fed50bbe01d17c91a0b28ae71251001d8de116347ec62578aaf7381b5f12584995ff17dab3ed33f4f678246c431f7'
+        '431439d31632d177aeb15f910b4f546efa76d54fc74fc8e140399dc5e54eca33fd606f11dbfb48fa83067c8474ee512e62751895d5948367b65ab08b984284e5'
         'a6d47c903be6094423d89b8ec3ca899d0a84df6dbd6e76632bb6c9b9f40ad9c216f8fa400310753d392f85072756b43ac3892e0a2c4d55f87ab6463002554823'
-        '9c34f1ab14ad5ae124882513e0f14b1d731d06a43203bdc37fa3b202dd3ce93dbe8ebb554d01bab475689fe6ffd3ec0cbc0d5365c9b984cb83fb34ea3e9e732e'
+        '9a73962e1e38b84131ab2350b69a1f5d611c549533eec73e898c394a9b9442f357bb5d5f59e1be12270dd29bdf237dc2d21786c0c2210736e224ef5d48300dcf'
+        '2597fdf5a77345754b8c9168d9f07f83ebaa0413262b94ebb19f976f49cc2c47893e788ee2abb3d00a995bc8f99b6ebcf24abbdb320e18037e779e1241599b44'
         'fac5cf6339dc3c0a40b100035a5c874cc7b2efeafeb31c51488d25156e392dc9db86a497e76eead351d2126f69d060422faa9c55d73407a0de9f5be18d234123'
         'afa9268513caa93fb141e69d27e7d65e72b9232b57d91e499f36ea4ec89d65bc6c8cbb37753ed59d149be5a2d349028b1fb0414c6223914366d6f3f31619855f'
+        '09a2159032baaff7eede480062da30ffec1c1d4c77e76288467941dc13722ab1566742c1821326ca5f8c2f9f7597099e235213ecbf883fd93daf5ae9ad5ee981'
+        'd76b20a45f2a0d888703a429b01397bab847af524e71a97797b472d6de0cf66b6aa2a0f5214451feba5a384534f1912a9e090091e32edcf40d79e60ef92d6022'
+        '7a1b3b82bbbf6a123512815c3e8f068a17890cbbb8b68e88a5a492f62469942fadd776207eebd913052a1c06e1fd37a549e86526b9fc8f08b9ca7cb0044ac16b'
+        'e99a5589c11d79d77a4537b34ce0a45d37b981c123b79b807cea836c89fc3926d693458893baca2882448d3d44e3f64e06141f6d916b748daa10b8cc1ae16d1b'
+        '0184a318bc08a523c0430a04ae9b6e9c862f5acdcd2bd41b3f568c3529239be1951c64410fb3cf26ed9749fd05520e187614d4d28f3e77b1b172a30446d31d16'
         '4b89e07f23af8328dbb34fe2b3f1b202f1e6a3885a6269740a23359b41bb4099ac2484565d3b2b0936261689ca525785ac620c766997234fd8d0f409e80e5ea3'
-        'e81ed8b60492da9612d2208c6cfa712ebf8c6ed7993642bfc4fadeaba10a0bc16700bce012d34d955104041ed8bbf659d16d9b86eab52342875d4c6148e7f60d'
+        '56322cafd4f761aa6192d4906ec7884f50f3fc20f0714381d5bba2e8355c03380aa65ea9e68188f75d00cd9014037e2eaac026113c5a57974a33ac46ed1b431c'
+        '33be76d7ab098eaeeaefb2ea5ef20a73221ac51b491d6339e1fff66e24118854f3640de43241e233c68be17804b90d22d75f1d60f7df274acef4647c871e0e17'
         '4cede03c08758ccd6bf53a0d0057d7542dfdd0c93d342e89f3b90460be85518a9fd24958d8b1da2b5a09b5ddbee8a4263982194158e171c2bba3e394d88d6dac'
-        '77c4b166f1200e1ee2ab94a5014acd334c1fe4b7d72851d73768d491c56c6779a0882a304c1f30c88732a6168351f0f786b10516ae537cff993892a749175848'
+        'b14ee41348336981ab86459417b9feab90879a11a6524a8b43f2b89c09c844b4441c31e315c471be00ad21fa88b5dcc7671b56567fdcd72bb0790ceeaa25813b'
+        '81424245e1e2b94459df68bb3a9a866c6a364102b5e1d010ede9c5f8278f8406d7b651957d091c5914e936b494b0f6e9a6a1dd8b7d35cd7d7100f86dee4ec12e'
         '9605ca407af248c71e0d2bc24d213aa6ff08a14eb548b85de16de7e172a617cdf12c2e4c686f6dd1c80455448a313f6e7d760885f189ae726934efbe06fb5603'
         '35e8548611c51ee75f4d04926149e5e54870d7073d9b635d550a6fa0f85891f57f326bdbcff3dd8618cf40f8e08cf903ef87d9c034d5921d8b91e1db842cdd7c'
-        '23bb1f3453d5d839dba7b3292806eb2d327ccafb1b1472fd970262a44c0abbabfbf3316ca16dd5526177bcb67a701cf79fa86b68fd1e57a3d875cb4b7ff89ad9'
+        '1649129fb459f1b68423e1f2ddf4f2a4cfb9746796786a7ac3f10f9239aec0023604dfc48835180b554a86c533867ebf335bebd12700a4c2d6ef212738560ac6'
+        '493473a0d4c669260efa7017981f2e095acd5edff597a0f9808c3501336954cc63b54a682e35740a3518286e8675242790130f6690b42e10738cf2ce95d1c954'
+        '9b92fc5f3a3448d023e68e75ebcf71f97b2cd44b0fcb6ebb9fe38243f60cda48bb00cc1e67a779f2e42f56310ef8d7b37d94afe920524263e69c65754cb7cb3e'
+        '973126f9a9ca5f3118e830af11ddde4b26c905e13df89b2888b42facc4e48b3adea53b66405260f6291c3df7ddb85a93856841be3626b005040b3fd15502e2bd'
         '302d78069d9df05e78b53f0488a9e4eb98fa2bc1e21893dc8a0acf2234347ba7c4df4b9d6b380ae77d8ffb1074b9c790460fe2dae47318aa1c4fe4208244540a'
-        'dd65c69d8d0ff343d36e31e6a4f4e11aeb01b1fd23d0db06d90f506ec2f2bb2c50422f6a73b48780e16e07c8d0addb374dd09cfabaf6230d5b2ba409dd3fa6cd'
+        '849e0ec8b86f0622d199eea1e7f03987d93f6231fae53b5dbfd90ae7d4b6a8d9e8cef5856c3714ce1f3f561f1e80dd8ed121e7ab45cecdf722f21c3e5db540c9'
         '7681b1a7497b5711e663773c1a7e076f333c06c10d3f289079a781c36f050c1620cc279742ea8e5b15ec48f3d6038a6079bbda7fee3ae8e1128bd916d53ed43a'
-        '8bc6f68ed286bea617a2cfaf3949bb699d3a0466faeca735314a51596ce950e4ee57eda88154bd562c1728cfaff4cdb5bc1ba701b9d47a9c50d4c4f011bee975')
+        '93385f64103fdb482bec34c7912474ae7a5935948715e6eb9a54907e0db5c39f089f6cd393bab33c935c59a1bbb0f4099431f206343811c1a450554d96a35756')
 
 # https://docs.mesa3d.org/relnotes.html
-
-pkgver() {
-  cd mesa-$_commit
-
-  _ver=$(cat VERSION)
-  [[ $_ver =~ ([.0-9]+)-? ]]
-  _ver=${BASH_REMATCH[1]}
-  echo ${_ver}_rel$_asahiver
-}
+sha256sums=('c124372189d35f48e049ee503029171c68962c580971cb86d968a6771c965ba4'
+            '67914ab451f3bfd2e69e5e9d2ef3858484e7074d63f204fd166ec391b54de21d'
+            'ed646292ffc8188ef8ea4d1e0e0150fb15a5c2e12ad9b8fc191ae7a8a7f3c4b9'
+            '7f9f832470494906d1fca5329f8ab5791cc60beb230c74815dff541cbd2b5ca0'
+            '5aaeb2981e0606ca11d79718f8bb01164f1d6ed75080182d3abf017e6d244b6d'
+            '168fb715dda47215e360912c096649d23d58bf392ac62f73919e831745e40f26'
+            '7dfda62a12f55daeae5015f81b0baea145391cb4520f86c248fc615d72640d12'
+            '13dc2df351e3202783a1fe0d44375f7295ffb4049267b0f3018346dc122a1d94'
+            '7988d73a4303ca289df03316bc490e934accf371af6bc745393cf3c2c5c4f25d'
+            '357703d41365b4b27c590e3ed91eabb1b663f07c4c084095e60cbed4362dff0d'
+            'baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd'
+            '1ad5e011230cad274d0532460c5ab69828ea47ae75681b42a841663efffaf794'
+            '5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77'
+            'd725d9cfd79e87dccc9341a2ef39d1b6f6353d68c4b33c177febbe1a402c97c5'
+            '26afc1baea8a989337eeb52b6e72a039780ce45c3edfcc9c5b9d112feeb173c2'
+            '3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b'
+            '1b8e56985ec62d17e9c1001dc89c88ecd7dc08e47eba5ec7c29c7b5eeecde967'
+            '291ec9ab5efd934aaf503a6466c5d5251535d108ee747472c3977cc5acc868ef'
+            '6c20b6793b5c2fa6553b250154b78d6d0db37e72700ae35fad9387a46f487c97'
+            'de3145af08024dea9fa9914f381a17b8fc6034dfb00f3a84013f7ff43f29ed4c'
+            'cea14ef9355e3beab063703aa9dab15afd25f0667c341310c1e5274bb1d0da18'
+            'c71e83d6afe7ff64890ec6b71d6a69bb8a610ab78ce364b3352876bb4c801266'
+            '198db74531d58c70a361c42201efde7e2591e976d518caf7662a47dc5720e7b6'
+            'd452f284b73e6d76dd36758a0c8684b1d5be31f92b89d07fd5822175732206fc'
+            '5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5'
+            'db7d01726be8ab66ab32f9df467ae8b1148906685bbe75c82d1e65d7f5b3f841'
+            '692fcb63b64b1758029e0a96ee63e049ce8c5948587f2f7208df04625e5f6b56'
+            '25aa4ce346d03a6dcd68dd8b4010bcb74e54e62c90c573f394c46eae99aba32d')
 
 prepare() {
-  cd mesa-$_commit
+  cd mesa-$pkgver
 
-  _ver=$(cat VERSION)
-  [[ $_ver =~ ([.0-9]+)-? ]]
-  _ver=${BASH_REMATCH[1]}
+  local src
+  for src in "${source[@]}"; do
+    src="${src%%::*}"
+    src="${src##*/}"
+    src="${src%.zst}"
+    [[ $src = *.patch ]] || continue
+    echo "Applying patch $src..."
+    patch -Np1 < "../$src"
+  done
 
   # Include package release in version string so Chromium invalidates
   # its GPU cache; otherwise it can cause pages to render incorrectly.
   # https://bugs.launchpad.net/ubuntu/+source/chromium-browser/+bug/2020604
-  echo "$_ver-arch$epoch.$pkgrel" > VERSION
+  echo "$pkgver-arch$epoch.$pkgrel" >VERSION
 }
 
 build() {
   local meson_options=(
     -D android-libbacktrace=disabled
     -D b_ndebug=true
-    -D b_lto=false
-    -D gallium-drivers=r300,r600,radeonsi,freedreno,nouveau,llvmpipe,softpipe,virgl,zink,d3d12,etnaviv,lima,panfrost,svga,v3d,vc4,asahi
+    -D gallium-drivers=r300,r600,radeonsi,nouveau,virgl,svga,llvmpipe,softpipe,iris,crocus,i915,zink,d3d12,etnaviv,lima,panfrost,v3d,vc4,asahi,freedreno
     -D gallium-extra-hud=true
-    -D gallium-nine=true
-    -D gallium-opencl=icd
+    -D gallium-mediafoundation=disabled
     -D gallium-rusticl=true
-    -D gallium-va=enabled
-    -D gallium-vdpau=enabled
-    -D gallium-xa=disabled
-    -D egl=enabled
-    -D gbm=enabled
-    -D opengl=true
-    -D gles1=enabled
-    -D gles2=enabled
-    -D glvnd=enabled
-    -D glx=dri
-    -D llvm=enabled
-    -D html-docs=disabled
-    -D intel-clc=enabled
-    -D intel-rt=disabled
+    -D gles1=disabled
+    -D html-docs=enabled
+    -D intel-rt=enabled
     -D libunwind=disabled
     -D microsoft-clc=disabled
-    -D lmsensors=enabled
-    -D osmesa=true
-    -D shared-glapi=enabled
-    -D platforms=x11,wayland
+    -D sysprof=true
     -D valgrind=enabled
     -D video-codecs=all
-    -D vulkan-drivers=amd,broadcom,panfrost,virtio,freedreno,nouveau,asahi
-    -D vulkan-layers=device-select,overlay,screenshot
+    -D vulkan-drivers=amd,gfxstream,intel,intel_hasvk,nouveau,swrast,virtio,microsoft-experimental,asahi,freedreno,broadcom,panfrost
+    -D vulkan-layers=device-select,intel-nullhw,overlay,screenshot,vram-report-limit
   )
 
   # Build only minimal debug info to reduce size
@@ -220,7 +249,7 @@ build() {
   # Inject subproject packages
   export MESON_PACKAGE_CACHE_DIR="$srcdir"
 
-  arch-meson mesa-$_commit build "${meson_options[@]}"
+  arch-meson mesa-$pkgver build "${meson_options[@]}"
   meson compile -C build
 }
 
@@ -272,82 +301,70 @@ package_mesa() {
     'libva-mesa-driver<1:24.2.7-1'
     'mesa-libgl<17.0.1-2'
     'mesa-vdpau<1:24.2.7-1'
+    'mesa-asahi<25.2'
   )
 
-  meson install -C build --destdir "$pkgdir"
+  meson install -C build --destdir "$pkgdir" --no-rebuild
 
   (
     local libdir=usr/lib icddir=usr/share/vulkan/icd.d
 
     cd "$pkgdir"
 
-    _pick clover $libdir/gallium-pipe
-    _pick clover $libdir/libMesaOpenCL*
-    _pick clover etc/OpenCL/vendors/mesa.icd
+    _pick opencl $libdir/libRusticlOpenCL*
+    _pick opencl etc/OpenCL/vendors/rusticl.icd
 
-    _pick clrust $libdir/libRusticlOpenCL*
-    _pick clrust etc/OpenCL/vendors/rusticl.icd
+    _pick vkasahi $icddir/asahi_icd.*.json
+    _pick vkasahi $libdir/libvulkan_asahi.so
+
+    _pick vkbroadcom $icddir/broadcom_icd.*.json
+    _pick vkbroadcom $libdir/libvulkan_broadcom.so
+
+    _pick vkdzn $icddir/dzn_icd.*.json
+    _pick vkdzn $libdir/libvulkan_dzn.so
+    _pick vkdzn $libdir/libspirv_to_dxil.*
+    _pick vkdzn usr/bin/spirv2dxil
+
+    _pick vkfreedreno $icddir/freedreno_icd.*.json
+    _pick vkfreedreno $libdir/libvulkan_freedreno.so
+
+    _pick vkgfxstr $icddir/gfxstream_vk_icd.*.json
+    _pick vkgfxstr $libdir/libvulkan_gfxstream.so
+
+    _pick vkintel $icddir/intel{,_hasvk}_icd.*.json
+    _pick vkintel $libdir/libvulkan_intel{,_hasvk}.so
+
+    _pick vknvidia $icddir/nouveau_icd.*.json
+    _pick vknvidia $libdir/libvulkan_nouveau.so
+
+    _pick vkpanfrost $icddir/panfrost_icd.*.json
+    _pick vkpanfrost $libdir/libvulkan_panfrost.so
+
+    _pick vkradeon $icddir/radeon_icd.*.json
+    _pick vkradeon $libdir/libvulkan_radeon.so
+    _pick vkradeon usr/share/drirc.d/00-radv-defaults.conf
+
+    _pick vkswrast $icddir/lvp_icd.*.json
+    _pick vkswrast $libdir/libvulkan_lvp.so
+
+    _pick vkvirtio $icddir/virtio_icd.*.json
+    _pick vkvirtio $libdir/libvulkan_virtio.so
 
     _pick vklayer $libdir/libVkLayer_*.so
     _pick vklayer usr/bin/mesa-*-control.py
     _pick vklayer usr/share/vulkan/{ex,im}plicit_layer.d
 
-    _pick vknvidia $icddir/nouveau_*.json
-    _pick vknvidia $libdir/libvulkan_nouveau*.so
-
-    _pick vkradeon $icddir/radeon_icd*.json
-    _pick vkradeon $libdir/libvulkan_radeon.so
-    _pick vkradeon usr/share/drirc.d/00-radv-defaults.conf
-
-    _pick vkvirtio $icddir/virtio_icd*.json
-    _pick vkvirtio $libdir/libvulkan_virtio.so
-
-    _pick vkasahi $icddir/asahi_icd*.json
-    _pick vkasahi $libdir/libvulkan_asahi.so
-
-    _pick vkbroadcom $icddir/broadcom_icd*.json
-    _pick vkbroadcom $libdir/libvulkan_broadcom.so
-
-    _pick vkpanfrost $icddir/panfrost_icd*.json
-    _pick vkpanfrost $libdir/libvulkan_panfrost.so
-
-    _pick vkfreedreno $icddir/freedreno_icd*.json
-    _pick vkfreedreno $libdir/libvulkan_freedreno.so
+    _pick docs usr/share/doc
 
     # indirect rendering
     ln -sr $libdir/libGLX_{mesa,indirect}.so.0
   )
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_opencl-clover-mesa() {
-  pkgdesc="Open-source OpenCL drivers - Clover variant"
-  depends=(
-    clang
-    expat
-    gcc-libs
-    glibc
-    libdrm
-    libelf
-    llvm-libs
-    zlib
-    zstd
-
-    libclc # For /usr/share/clc/
-  )
-  optdepends=("opencl-headers: headers necessary for OpenCL development")
-  provides=(opencl-driver)
-  replaces=("opencl-mesa<=23.1.4-1")
-  conflicts=(opencl-mesa)
-
-  mv clover/* "$pkgdir"
-
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
-}
-
-package_opencl-rusticl-mesa() {
-  pkgdesc="Open-source OpenCL drivers - RustICL variant"
+package_opencl-mesa() {
+  pkgdesc="Open-source OpenCL drivers"
   depends=(
     clang
     expat
@@ -365,12 +382,20 @@ package_opencl-rusticl-mesa() {
   )
   optdepends=("opencl-headers: headers necessary for OpenCL development")
   provides=(opencl-driver)
-  replaces=("opencl-mesa<=23.1.4-1")
-  conflicts=(opencl-mesa)
+  replaces=(
+    "opencl-clover-mesa<=1:25.0.5-1"
+    "opencl-rusticl-mesa<=1:25.0.5-1"
+    'opencl-clover-mesa-asahi<25.2'
+    'opencl-rusticl-mesa-asahi<25.2'
+  )
+  conflicts=(
+    opencl-clover-mesa
+    opencl-rusticl-mesa
+  )
 
-  mv clrust/* "$pkgdir"
+  mv opencl/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-asahi() {
@@ -380,11 +405,35 @@ package_vulkan-asahi() {
     gcc-libs
     glibc
     libdrm
-    libelf
     libx11
     libxcb
     libxshmfence
-    llvm-libs
+    spirv-tools
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=("vulkan-mesa-layers-asahi: additional vulkan layers")
+  provides=(vulkan-driver)
+
+  mv vkasahi/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-dzn() {
+  pkgdesc="Open-source Vulkan driver for D3D12"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm
+    libx11
+    libxcb
+    libxshmfence
     spirv-tools
     systemd-libs
     vulkan-icd-loader
@@ -396,9 +445,9 @@ package_vulkan-asahi() {
   optdepends=("vulkan-mesa-layers: additional vulkan layers")
   provides=(vulkan-driver)
 
-  mv vkasahi/* "$pkgdir"
+  mv vkdzn/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-broadcom() {
@@ -426,7 +475,7 @@ package_vulkan-broadcom() {
 
   mv vkbroadcom/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-freedreno() {
@@ -436,11 +485,9 @@ package_vulkan-freedreno() {
     gcc-libs
     glibc
     libdrm
-    libelf
     libx11
     libxcb
     libxshmfence
-    llvm-libs
     spirv-tools
     systemd-libs
     vulkan-icd-loader
@@ -454,7 +501,56 @@ package_vulkan-freedreno() {
 
   mv vkfreedreno/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-gfxstream() {
+  pkgdesc="Open-source Vulkan driver for Graphics Streaming Kit"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm
+    libx11
+    libxcb
+    libxshmfence
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+  )
+  optdepends=("vulkan-mesa-layers: additional vulkan layers")
+  provides=(vulkan-driver)
+
+  mv vkgfxstr/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-intel() {
+  pkgdesc="Open-source Vulkan driver for Intel GPUs"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm
+    libx11
+    libxcb
+    libxshmfence
+    spirv-tools
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=("vulkan-mesa-layers: additional vulkan layers")
+  provides=(vulkan-driver)
+
+  mv vkintel/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-nouveau() {
@@ -464,11 +560,9 @@ package_vulkan-nouveau() {
     gcc-libs
     glibc
     libdrm
-    libelf
     libx11
     libxcb
     libxshmfence
-    llvm-libs
     spirv-tools
     systemd-libs
     vulkan-icd-loader
@@ -482,7 +576,7 @@ package_vulkan-nouveau() {
 
   mv vknvidia/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-panfrost() {
@@ -510,7 +604,7 @@ package_vulkan-panfrost() {
 
   mv vkpanfrost/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-radeon() {
@@ -538,17 +632,16 @@ package_vulkan-radeon() {
 
   mv vkradeon/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
-package_vulkan-virtio() {
-  pkgdesc="Open-source Vulkan driver for Virtio-GPU (Venus)"
+package_vulkan-swrast() {
+  pkgdesc="Open-source Vulkan driver for CPUs (Software Rasterizer)"
   depends=(
     expat
     gcc-libs
     glibc
     libdrm
-    libelf
     libx11
     libxcb
     libxshmfence
@@ -562,11 +655,38 @@ package_vulkan-virtio() {
     zstd
   )
   optdepends=("vulkan-mesa-layers: additional vulkan layers")
+  conflicts=(vulkan-mesa)
+  replaces=(vulkan-mesa)
+  provides=(vulkan-driver)
+
+  mv vkswrast/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_vulkan-virtio() {
+  pkgdesc="Open-source Vulkan driver for Virtio-GPU (Venus)"
+  depends=(
+    expat
+    gcc-libs
+    glibc
+    libdrm
+    libx11
+    libxcb
+    libxshmfence
+    systemd-libs
+    vulkan-icd-loader
+    wayland
+    xcb-util-keysyms
+    zlib
+    zstd
+  )
+  optdepends=("vulkan-mesa-layers: additional vulkan layers")
   provides=(vulkan-driver)
 
   mv vkvirtio/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }
 
 package_vulkan-mesa-layers() {
@@ -586,5 +706,5 @@ package_vulkan-mesa-layers() {
 
   mv vklayer/* "$pkgdir"
 
-  install -Dm644 mesa-$_commit/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
 }

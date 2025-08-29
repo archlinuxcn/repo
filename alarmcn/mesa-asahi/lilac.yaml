@@ -1,15 +1,16 @@
 maintainers:
   - github: yuyichao
 
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.removeprefix('mesa-'))
 post_build: git_pkgbuild_commit
 time_limit_hours: 2
 
 update_on:
   - source: gitlab
-    gitlab: asahi/mesa
+    gitlab: mesa/mesa
     host: gitlab.freedesktop.org
     use_max_tag: true
-    include_regex: 'asahi-[0-9.]+'
+    include_regex: 'mesa-[0-9.]+'
   - source: alpm
     from_pattern: ^(\d+)\..*
     to_pattern: \1
