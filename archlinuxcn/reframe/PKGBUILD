@@ -1,6 +1,6 @@
 # Maintainer: Alynx Zhou <alynx.zhou@gmail.com>
 pkgname=reframe
-pkgver=1.0.1
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="DRM/KMS based remote desktop for Linux that supports Wayland/NVIDIA/headless/login…"
 arch=("x86_64" "i686" "aarch64" "armv7h" "armv6h")
@@ -10,7 +10,7 @@ depends=("glib2" "libepoxy" "libvncserver" "libxkbcommon" "libdrm" "systemd-libs
 makedepends=("meson")
 backup=("etc/${pkgname}/example.conf")
 source=("https://github.com/AlynxZhou/${pkgname}/archive/v${pkgver}.tar.gz")
-sha512sums=('376c87eb891d26bebc3120338dfed2c272b327a20342d5a7da852bef0bbf752b85047c3ae6b6f5c49e830cefee22750bf08c9b3cdc31495ffcb30fd5c3009bee')
+sha512sums=('2ca9bfcb73710b8c0d72083219ba57283223c9301a077b7dfb6bad3b8d6320f0416e71e506db911fd4dee77a5ae96ed20ad692ec706c5a2a6b382cd27e2fee80')
 
 prepare() {
   cd "${pkgname}-${pkgver}"
