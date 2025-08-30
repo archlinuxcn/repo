@@ -2,7 +2,7 @@ maintainers:
   - github: everyx
 
 post_build: aur_post_build
-pre_build: aur_pre_build
+pre_build_script: aur_pre_build(maintainers=['yochananmarqos'])
 
 update_on:
   - source: aur
