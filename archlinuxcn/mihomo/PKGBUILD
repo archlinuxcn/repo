@@ -3,7 +3,7 @@
 pkgname=mihomo
 pkgver=1.19.13
 pkgrel=2
-pkgdesc="Mihomo Kernel by MetaCubeX, formerly known as Clash.Meta"
+pkgdesc="Another Clash Kernel by MetaCubeX, formerly known as Clash.Meta"
 arch=("x86_64" 'aarch64')
 url="https://github.com/MetaCubeX/mihomo"
 license=("MIT")
@@ -41,6 +41,7 @@ package() {
 	install -vDm600 "${srcdir}/config.yaml" "${pkgdir}/etc/mihomo/config.yaml"
 	install -vDm644 "${srcdir}/${pkgname}.service"  -t "${pkgdir}/usr/lib/systemd/system"
 	cd "${srcdir}"/mihomo-${pkgver}
+	install -vDm644 LICENSE "${pkgdir}/usr/share/licenses/mihomo/LICENSE"
 	install -vDm755 "${pkgname}-${pkgver}" "${pkgdir}/usr/bin/${pkgname}"
 	ln -sf /etc/clash/Country.mmdb ${pkgdir}/etc/${pkgname}/Country.mmdb
 	# Compability with applications executing /usr/bin/clash-meta
