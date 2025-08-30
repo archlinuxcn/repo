@@ -5,14 +5,14 @@ pkgdesc="A tiny library to allow dependencies to require the same compiler"
 url="https://github.com/Amulet-Team/Amulet-Compiler-Version"
 license=("LicenseRef-Amulet-Team-License")
 arch=(any)
-pkgver=3.0.0
-pkgrel=3
+pkgver=4.0.0
+pkgrel=1
 makedepends=(python-setuptools git python-wheel cmake)
 depends=(python)
 source=(
 	"git+https://github.com/Amulet-Team/Amulet-Compiler-Version.git#tag=${pkgver}"
 )
-md5sums=('800ecc9747df95f65954b3ed1e298a96')
+md5sums=('5d6f6c57fac11b8d963dacdbbdcb00ce')
 
 function prepare() {
 	cd "${srcdir}/Amulet-Compiler-Version"
