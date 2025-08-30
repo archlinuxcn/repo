@@ -1,0 +1,50 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=mihomo
+pkgver=1.19.13
+pkgrel=1
+pkgdesc="Mihomo Kernel by MetaCubeX, formerly known as Clash.Meta"
+arch=("x86_64" 'aarch64')
+url="https://github.com/MetaCubeX/mihomo"
+license=("MIT")
+depends=('glibc' 'clash-geoip')
+makedepends=('go')
+conflicts=('clash-meta')
+provides=('clash-meta')
+replaces=('clash-meta')
+backup=('etc/mihomo/config.yaml')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+	"${pkgname}.service"
+	"config.yaml"
+	start.sh)
+sha256sums=('dcbdcfb84bde1d70758247e7f3a4fbd4e4771655d01b23aabbdf3cafcaf749b1'
+            '7b60925a78c9a4b726833e194b395cabddf89b364a5c721522cb78aaece33e79'
+            '81a93a53a59dee006bfaa3f8b6490e654ea8a929cd2acb136136b5f7d569aad4'
+            '60b5e5308d9aec711e797c402b82899ea0f20951de9baca1594884fbe21f8acc'
+            '60b60d84c52443d976265f0be68b13ae1700daffd8de35edf63990380f4c93d9'
+            '90f7fdacecd5928e37865b4f841517f925c8bedc769f16f7a7a1e89b923f1fb9')
+
+build(){
+	cd "${srcdir}"/mihomo-${pkgver}
+	BUILDTIME=$(date -u --rfc-3339=seconds)
+	GOOS=linux go build \
+		-trimpath \
+		-buildmode=pie \
+		-mod=readonly \
+		-modcacherw \
+		-ldflags "-linkmode external -extldflags \"${LDFLAGS}\" \
+		-X \"github.com/metacubex/mihomo/constant.Version=${pkgver}\" \
+		-X \"github.com/metacubex/mihomo/constant.BuildTime=${BUILDTIME}\" \
+		" \
+		-tags with_gvisor -o ${pkgname}-${pkgver}
+}
+package() {
+	install -vDm755 "${srcdir}/start.sh" "${pkgdir}/usr/lib/mihomo/start"
+	install -vDm600 "${srcdir}/config.yaml" "${pkgdir}/etc/mihomo/config.yaml"
+	install -vDm644 "${srcdir}/${pkgname}.service"  -t "${pkgdir}/usr/lib/systemd/system"
+	cd "${srcdir}"/mihomo-${pkgver}
+	install -vDm755 "${pkgname}-${pkgver}" "${pkgdir}/usr/bin/${pkgname}"
+	ln -sf /etc/clash/Country.mmdb ${pkgdir}/etc/${pkgname}/Country.mmdb
+	# Compability with applications executing /usr/bin/clash-meta
+	ln -sf /usr/bin/mihomo ${pkgdir}/usr/bin/clash-meta
+}
