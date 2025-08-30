@@ -11,7 +11,10 @@ license=('GPL-3.0-or-later')
 groups=()
 provides=(firefox)
 options=(!debug !strip)
-depends=("portable")
+depends=("portable"
+alsa-lib  at-spi2-core  bash  cairo  dbus  ffmpeg  fontconfig  freetype2  gcc-libs  gdk-pixbuf2
+glib2  glibc  gtk3  hicolor-icon-theme  libpulse  libx11  libxcb  libxcomposite  libxdamage
+libxext  libxfixes  libxrandr  libxss  libxt  mime-types  nspr  nss  pango  ttf-font)
 conflicts=("firefox")
 
 optdepends=()
