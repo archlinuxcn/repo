@@ -5,9 +5,9 @@
 pkgbase=qt6-base-24hms
 pkgname=(qt6-base-24hms)
 
-_pkgver=6.9.1
+_pkgver=6.9.2
 pkgver=${_pkgver/-/}
-pkgrel=6
+pkgrel=1.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -97,7 +97,7 @@ sha256sums=(
       '0c845268bde9718fbd76ad759b8a51352a5fddd30dbd76aaa7d4dbf5ea010151'
       'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      '7fd870a6390c89540385969cc757364dbf3a658e3f1b56dd848a592976f61848'
+      '4660524959f547a58839ff56c695994e061dc3fa3646b06cca951a7ef1748aae'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
@@ -105,13 +105,6 @@ prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
   git -C $_pkgfn cherry-pick -n dc52aa68ea305d8ef40f8b514bfeba80cd6c2c1e # Unbreak reproducibility
-  git -C $_pkgfn cherry-pick -n eb6fd1d74b66fa2f390ec8b2456141cad3e571b9 # Fix plasmashell crashes in QHttp2Connection::handleDATA
-  git -C $_pkgfn cherry-pick -n 1fe3a3c059bcaa2319505006df60df1f7f60769d # https://bugreports.qt.io/browse/QTBUG-137427
-  git -C $_pkgfn cherry-pick -n f5eb24d5b8767521e821b00aed87ab87615800e4 # Fix potential use-after-free
-  git -C $_pkgfn cherry-pick -n c903337a069d37dfb9d529757e4068a4382311f8 \
-                                c2bfd0b67dccb348fcf6710ed3fd40173ee6ed56 \
-                                e14c892997ddcabb78fd1b6102cf54e13850faa8 \
-                                86c8200e0175330d5e21fd45ed35dea5444e883f # Fix crash in TabBar
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24hms.patch
