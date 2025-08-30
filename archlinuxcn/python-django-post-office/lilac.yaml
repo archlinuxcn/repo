@@ -1,16 +1,17 @@
 maintainers:
   - github: yuyichao
 
-build_prefix: extra-x86_64
-
-post_build: pypi_post_build
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+post_build: git_pkgbuild_commit
 
 repo_depends:
   - python-django-jsonfield
 
 update_on:
-  - source: pypi
-    pypi: django-post-office
+  - source: github
+    github: ui/django-post_office
+    use_max_tag: true
+    include_regex: 'v(\d+.\d+.\d+)'
   - alias: python
   - source: manual
-    manual: 5
+    manual: 1

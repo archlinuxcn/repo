@@ -1,32 +1,26 @@
 _name=django-post-office
 pkgname=python-django-post-office
-pkgver=3.9.1
-pkgrel=2
+pkgver=3.10.1
+pkgrel=0
 pkgdesc="A Django app to monitor and send mail asynchronously, complete with template support."
 arch=(any)
 url="https://github.com/ui/django-post_office"
 license=('MIT')
 depends=('python-django-jsonfield')
-makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/django-post_office-3.9.1.tar.gz")
-sha256sums=('3d8f502f7829e4cf83e830d9efd6909bb44690af6bc41c7e4fc5a85d7b04df10')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools-scm')
+source=("https://github.com/ui/django-post_office/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('ce497d2faed6d502967d06f04fa723af12cca457492924da25f30f4240b04f8e')
 
 build() {
-  cd "$srcdir/django-post_office-3.9.1"
-  python3 setup.py build
+  cd "$srcdir/django-post_office-${pkgver}"
+
+  python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/django-post_office-3.9.1"
-  python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
+  cd "$srcdir/django-post_office-${pkgver}"
 
-  # make sure we don't install any world-writable or root-readable-only files
-  # we shouldn't need to fix ownership as we extract tarballs as a non-root user
-  # https://github.com/pypa/setuptools/issues/1328
-  # https://github.com/LonamiWebs/Telethon/issues/1605
-  chmod u=rwX,go=rX -R "$pkgdir"
-  # make sure we don't install annoying files
-  local _site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
-  rm -rf "$pkgdir/$_site_packages/tests/"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
-
