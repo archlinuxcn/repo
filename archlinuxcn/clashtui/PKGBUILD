@@ -9,7 +9,7 @@ arch=("x86_64" "aarch64")
 pkgver=0.2.3
 pkgrel=2
 makedepends=("rust" "cargo" "git")
-depends=("gcc-libs" "glibc")
+depends=("gcc-libs" "glibc" "mihomo")
 source=("git+https://github.com/JohanChane/clashtui.git#tag=v${pkgver}")
 md5sums=('2c9657e0241ece3c94a5f1ab723660f0')
 provides=("clashtui")
