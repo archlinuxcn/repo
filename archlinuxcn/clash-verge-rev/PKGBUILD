@@ -9,7 +9,7 @@ pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://github.com/${pkgname}/${pkgname}"
 license=('GPL-3.0-or-later')
-depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'clash-meta')
+depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'mihomo')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 makedepends=('pnpm' 'cargo')
@@ -44,8 +44,8 @@ build() {
 
 package() {
 	cp -a ${pkgname}-${pkgver}/src-tauri/target/release/bundle/deb/Clash\ Verge_${pkgver}_*/data/* "${pkgdir}"
-	ln -sf /usr/bin/clash-meta "${pkgdir}/usr/bin/verge-mihomo"
-	ln -sf /usr/bin/clash-meta "${pkgdir}/usr/bin/verge-mihomo-alpha"
+	ln -sf /usr/bin/mihomo "${pkgdir}/usr/bin/verge-mihomo"
+	ln -sf /usr/bin/mihomo "${pkgdir}/usr/bin/verge-mihomo-alpha"
 }
 
 _prepare_service() {
