@@ -1,4 +1,4 @@
-From 0e406e4c6d2ccaa4a32e969fb75d33d5f348d836 Mon Sep 17 00:00:00 2001
+From 4122d72639f371da3dbcb08aae98faa1ff90d394 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 26 Feb 2023 14:11:02 -0500
 Subject: [PATCH 2/3] Migrate old pids directory
@@ -8,10 +8,10 @@ Subject: [PATCH 2/3] Migrate old pids directory
  1 file changed, 28 insertions(+)
 
 diff --git a/scripts/upgrade/minor-upgrade.sh b/scripts/upgrade/minor-upgrade.sh
-index 1b514a682..c6c724c5e 100755
+index 55a1285a6..180006737 100755
 --- a/scripts/upgrade/minor-upgrade.sh
 +++ b/scripts/upgrade/minor-upgrade.sh
-@@ -46,6 +46,33 @@ function migrate_avatars() {
+@@ -45,6 +45,33 @@ function migrate_avatars() {
      echo
  }
  
@@ -45,7 +45,7 @@ index 1b514a682..c6c724c5e 100755
  function make_media_custom_symlink() {
      media_symlink=${INSTALLPATH}/seahub/media/custom
      if [[ -L "${media_symlink}" ]]; then
-@@ -144,6 +171,7 @@ function rename_gunicorn_config() {
+@@ -143,6 +170,7 @@ function rename_gunicorn_config() {
  validate_seafile_data_dir;
  rename_gunicorn_config;
  migrate_avatars;
@@ -54,5 +54,5 @@ index 1b514a682..c6c724c5e 100755
  move_old_customdir_outside;
  make_media_custom_symlink;
 -- 
-2.48.1
+2.51.0
 

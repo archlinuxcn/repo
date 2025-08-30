@@ -1,4 +1,4 @@
-From 90c9879f2fe88fc1f3daa8a8b084d105862cdcb0 Mon Sep 17 00:00:00 2001
+From 73e57db50f31e7e273287c6c26f1b8628526af4a Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sat, 25 Feb 2023 20:31:18 -0500
 Subject: [PATCH 1/3] Add support for more audio and video formats
@@ -10,7 +10,7 @@ Subject: [PATCH 1/3] Add support for more audio and video formats
  3 files changed, 23 insertions(+), 3 deletions(-)
 
 diff --git a/seahub/base/templatetags/seahub_tags.py b/seahub/base/templatetags/seahub_tags.py
-index 150862a15..327eedbc9 100644
+index 1f54ab440..26339e095 100644
 --- a/seahub/base/templatetags/seahub_tags.py
 +++ b/seahub/base/templatetags/seahub_tags.py
 @@ -78,14 +78,19 @@ FILEEXT_ICON_MAP = {
@@ -55,9 +55,9 @@ index 150862a15..327eedbc9 100644
 +    'webp': 'pic.png',
      'psd': 'psd.png',
      'draw': 'draw.png',
- 
+     'exdraw': 'draw.png',
 diff --git a/seahub/thumbnail/utils.py b/seahub/thumbnail/utils.py
-index a1c52c627..bd3c2cc7f 100644
+index 28d0ec080..fb5d1d2ed 100644
 --- a/seahub/thumbnail/utils.py
 +++ b/seahub/thumbnail/utils.py
 @@ -14,6 +14,15 @@ except:
@@ -77,16 +77,16 @@ index a1c52c627..bd3c2cc7f 100644
  from seaserv import get_file_id_by_path, get_repo, get_file_size, \
      seafile_api
 diff --git a/seahub/utils/__init__.py b/seahub/utils/__init__.py
-index a467403f0..a76746cdc 100644
+index 82edb17a8..7a64d7e39 100644
 --- a/seahub/utils/__init__.py
 +++ b/seahub/utils/__init__.py
-@@ -132,14 +132,14 @@ EMPTY_SHA1 = '0000000000000000000000000000000000000000'
+@@ -115,14 +115,14 @@ EMPTY_SHA1 = '0000000000000000000000000000000000000000'
  MAX_INT = 2147483647
  
  PREVIEW_FILEEXT = {
 -    IMAGE: ('gif', 'jpeg', 'jpg', 'png', 'heic', 'ico', 'bmp', 'tif', 'tiff', 'psd', 'webp', 'jfif'),
 +    IMAGE: ('avif', 'gif', 'jpeg', 'jpg', 'png', 'heic', 'heif', 'ico', 'bmp', 'tif', 'tiff', 'psd', 'webp', 'jfif'),
-     DOCUMENT: ('doc', 'docx', 'docxf', 'oform', 'ppt', 'pptx', 'odt', 'fodt', 'odp', 'fodp', 'odg'),
+     DOCUMENT: ('doc', 'docx', 'docxf', 'oform', 'ppt', 'pptx', 'odt', 'fodt', 'odp', 'fodp', 'odg', 'pages'),
      SPREADSHEET: ('xls', 'xlsx', 'ods', 'fods'),
      SVG: ('svg',),
      PDF: ('pdf', 'ai'),
@@ -96,8 +96,8 @@ index a467403f0..a76746cdc 100644
 +    VIDEO: ('m4v', 'mkv', 'mp4', 'ogv', 'webm', 'mov'),
 +    AUDIO: ('aac', 'mp3', 'caf', 'm4a', 'oga', 'ogg', 'wav', 'flac', 'opus'),
      #'3D': ('stl', 'obj'),
-     XMIND: ('xmind',),
      SEADOC: ('sdoc',),
+     TLDRAW: ('draw',),
 -- 
-2.48.1
+2.51.0
 

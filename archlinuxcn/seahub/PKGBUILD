@@ -4,8 +4,8 @@
 # Contributor: Aaron Lindsay <aaron@aclindsay.com>
 
 pkgname=seahub
-pkgver=12.0.14
-pkgrel=1
+pkgver=13.0.9
+pkgrel=0
 pkgdesc='The web frontend for seafile server'
 arch=('any')
 url='https://github.com/haiwen/seahub'
@@ -19,13 +19,13 @@ source=("$pkgname-$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz"
         0001-Add-support-for-more-audio-and-video-formats.patch
         0002-Migrate-old-pids-directory.patch
         0003-Fix-gunicorn-binary-path.patch)
-sha256sums=('127ad4161f37321ac198c09625ada6114dbfe0ea5fdd6d9fa568073bb9483fe9'
+sha256sums=('7e6f5908afc0d3bf533d40d5b203a96e5884fab559f0607571fb664014e3ee6e'
             '92bac5b4432a64532abb73b2ac27203f485e40225d2640a7fbef2b62b876e789'
             '6a065382573771baf400754c4d39c0913b0a29a453a941dfb9122eebed21572f'
             '0d03255c47eb9bd2f26aa9bb7f2107732e7e8fe195ca2f64709fcf3b0a4a085c'
-            '39d128f18fb0e5638d6df843e628b82b5621038beb89717cd34171883ed1e538'
-            '7d181959fc52f0cd3a39c8bc6a4b16b149909751f0a85957fcc8a5be77744135'
-            '85e0aecbc4125db2fc2f5ddbf9ca10970430292f436af2ee097e9f41b6f18870')
+            'b5935ce7bbc14b0ba6e75473205940d82cf24082378ac28297322dd44c10a2ec'
+            'cb95bc47844e734a1b58ed3e230f7f85512d3a706ed33ec172c65aca7910f506'
+            '1cc8ff7ee5b28fcfed280eed197d464533ebcfcf9821331952988a2b146e15b8')
 options=('!strip')
 
 _patch_js() {
@@ -43,8 +43,8 @@ prepare() {
 
   echo "Patch JS 1"
   _patch_js \
-    'txt:"txt.png",md:"md.png",pdf:"pdf.png",doc:"word.png",docx:"word.png",odt:"word.png",fodt:"word.png",ppt:"ppt.png",pptx:"ppt.png",odp:"ppt.png",fodp:"ppt.png",xls:"excel.png",xlsx:"excel.png",ods:"excel.png",fods:"excel.png",mp4:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",mp3:"music.png",oga:"music.png",ogg:"music.png",wav:"music.png",flac:"music.png",opus:"music.png",aac:"music.png",ac3:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png",heic:"pic.png",tif:"pic.png",tiff:"pic.png",webp:"pic.png",jfif:"pic.png",draw:"draw.png",psd:"psd.png",zip:"zip.png",rar:"zip.png",tar:"zip.png",css:"css.png",sdoc:"sdoc.png",sdoc_notification:"sdoc_notification.ico",default:"file.png"' \
-    'txt:"txt.png",md:"md.png",pdf:"pdf.png",doc:"word.png",docx:"word.png",odt:"word.png",fodt:"word.png",ppt:"ppt.png",pptx:"ppt.png",odp:"ppt.png",fodp:"ppt.png",xls:"excel.png",xlsx:"excel.png",ods:"excel.png",fods:"excel.png",mp4:"video.png",m4v:"video.png",mkv:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",rm:"video.png",m4a:"music.png",mp3:"music.png",oga:"music.png",ogg:"music.png",wav:"music.png",flac:"music.png",opus:"music.png",aac:"music.png",ac3:"music.png",caf:"music.png",wma:"music.png",avif:"pic.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png",heic:"pic.png",heif:"pic.png",tif:"pic.png",tiff:"pic.png",webp:"pic.png",jfif:"pic.png",draw:"draw.png",psd:"psd.png",zip:"zip.png",rar:"zip.png",tar:"zip.png",css:"css.png",sdoc:"sdoc.png",sdoc_notification:"sdoc_notification.ico",default:"file.png"' \
+    'txt:"txt.png",md:"md.png",pdf:"pdf.png",doc:"word.png",docx:"word.png",odt:"word.png",fodt:"word.png",ppt:"ppt.png",pptx:"ppt.png",odp:"ppt.png",fodp:"ppt.png",xls:"excel.png",xlsx:"excel.png",ods:"excel.png",fods:"excel.png",mp4:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",mp3:"music.png",oga:"music.png",ogg:"music.png",wav:"music.png",flac:"music.png",opus:"music.png",aac:"music.png",ac3:"music.png",wma:"music.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png",heic:"pic.png",tif:"pic.png",tiff:"pic.png",webp:"pic.png",jfif:"pic.png",draw:"draw.png",exdraw:"draw.png",psd:"psd.png",zip:"zip.png",rar:"zip.png",tar:"zip.png",css:"css.png",sdoc:"sdoc.png",sdoc_notification:"sdoc_notification.ico",default:"file.png"' \
+    'txt:"txt.png",md:"md.png",pdf:"pdf.png",doc:"word.png",docx:"word.png",odt:"word.png",fodt:"word.png",ppt:"ppt.png",pptx:"ppt.png",odp:"ppt.png",fodp:"ppt.png",xls:"excel.png",xlsx:"excel.png",ods:"excel.png",fods:"excel.png",mp4:"video.png",m4v:"video.png",mkv:"video.png",ogv:"video.png",webm:"video.png",mov:"video.png",flv:"video.png",wmv:"video.png",rmvb:"video.png",rm:"video.png",m4a:"music.png",mp3:"music.png",oga:"music.png",ogg:"music.png",wav:"music.png",flac:"music.png",opus:"music.png",aac:"music.png",ac3:"music.png",caf:"music.png",wma:"music.png",avif:"pic.png",jpg:"pic.png",jpeg:"pic.png",png:"pic.png",svg:"pic.png",gif:"pic.png",bmp:"pic.png",ico:"pic.png",heic:"pic.png",heif:"pic.png",tif:"pic.png",tiff:"pic.png",webp:"pic.png",jfif:"pic.png",draw:"draw.png",exdraw:"draw.png",psd:"psd.png",zip:"zip.png",rar:"zip.png",tar:"zip.png",css:"css.png",sdoc:"sdoc.png",sdoc_notification:"sdoc_notification.ico",default:"file.png"' \
     media/assets/frontend/static/js/
   echo "Patch JS 2"
   _patch_js \
