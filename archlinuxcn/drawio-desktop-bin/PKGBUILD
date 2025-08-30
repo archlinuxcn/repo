@@ -3,7 +3,7 @@
 
 _pkgname=drawio-desktop
 pkgname=drawio-desktop-bin
-pkgver=28.0.6
+pkgver=28.1.2
 pkgrel=1
 pkgdesc='Diagram drawing application built on web technology'
 arch=('x86_64')
@@ -21,7 +21,7 @@ conflicts=(${_pkgname})
 source=(
   "https://github.com/jgraph/drawio-desktop/releases/download/v${pkgver}/drawio-amd64-${pkgver}.deb"
 )
-sha256sums=('18bb98ddf90dc09bc1d365d410a4a41e9d919b5d929a63950ad9a862c3f363bd')
+sha256sums=('0fc8bff740dceb2e4f917a43eaed77fe9e93eaa6d468b4452736d3f386fcd329')
 
 prepare() {
   tar xfv data.tar.xz
