@@ -9,5 +9,6 @@ fi
 mkdir -p "${confDir}"
 
 cp "${CREDENTIALS_DIRECTORY}/config.yaml" "${confDir}"/config.yaml
+cp /etc/clash/Country.mmdb "${confDir}"
 
 clash-meta -d /var/tmp/clash-conf
