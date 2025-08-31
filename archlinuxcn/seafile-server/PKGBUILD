@@ -59,6 +59,7 @@ build() {
   ./configure \
     --enable-fuse \
     --enable-python \
+    --with-mysql=mysql_config \
     --prefix=/usr \
     PYTHON='/usr/bin/python'
   make -j1
