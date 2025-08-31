@@ -22,7 +22,7 @@ depends=(
   libjwt.so
   libcrypto.so)
 # libevhtp-seafile uses oniguruma headers
-makedepends=('vala' 'go' 'oniguruma')
+makedepends=('vala' 'go' 'oniguruma' 'mariadb-clients')
 conflicts=('seafile')
 source=(
   "$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver-server.tar.gz"
