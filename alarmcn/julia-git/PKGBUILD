@@ -309,6 +309,7 @@ build_in() {
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export CFLAGS+=' -Wno-pedantic -Wno-clobbered'
   export CXXFLAGS+=' -Wno-pedantic -Wno-clobbered'
+  export LDFLAGS+=' -lzstd'
 
   ver=$(cat VERSION | cut -f 1-2 -d '.')
 
