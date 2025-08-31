@@ -2,25 +2,33 @@
 # Co-Maintainer: huyz
 
 pkgname=realm
-pkgver=2.7.1
+pkgver=2.9.2
 pkgrel=1
 pkgdesc="A simple, high performance relay server written in rust."
 url="https://github.com/zhboner/realm"
 arch=("x86_64")
 license=("MIT")
 depends=("glibc" "gcc-libs")
-makedepends=("cargo-nightly")
+makedepends=("cargo-nightly" "cmake" "clang")
 options=("!lto")
 source=("${pkgname}-${pkgver}.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
         "realm.service"
         "realm@.service")
-sha512sums=('bf97a0786c969feb20fc43b826ff01e90b2d5b35ffb61d2f2cb05cdcd51a46a23fc9918748e1d1fd469e899100a59bac634202d51c3e51045091b5aca1845c84'
+sha512sums=('025b0563ac30ad67b819fe41f1e30a4642c9a6669c6b9656a56f7124f9ac3243175adb90acf6cb287bbbb696659d6f87b4004dbdb3570f084dab917468c82a99'
             'bc7f6ad263e9d34caf5d07a6c76b1833a18a1ab52e8b1813d6227ffb286d714efe0272931b9afc4c1db0994fbe65b445392a61657c1447b6145decef4a2ebc32'
             '61a61c7f16fe175f38d6dbef56a6e0b9ac6d66dc3d8627a8a70f921177027d9160ce45e1b6ca4034117e053ea79d13a02ceacfd8ce9ef3a15373ca989192fef8')
 
+prepare() {
+  cd $pkgname-$pkgver
+  export RUSTUP_TOOLCHAIN=nightly
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
 build() {
   cd $pkgname-$pkgver
-  cargo build --release --all-features
+  export RUSTUP_TOOLCHAIN=nightly
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release
 }
 
 package() {
