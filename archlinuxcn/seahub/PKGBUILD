@@ -10,7 +10,8 @@ pkgdesc='The web frontend for seafile server'
 arch=('any')
 url='https://github.com/haiwen/seahub'
 license=('Apache')
-depends=('python-pytz' 'python-json5' 'python-pymysql' 'python-ldap' 'python-redis')
+depends=('python-pytz' 'python-json5' 'python-pymysql'
+         'python-ldap' 'python-redis' 'python-pylibmc')
 makedepends=('python-setuptools')
 source=("$pkgname-$pkgver-server.tar.gz::$url/archive/v$pkgver-server.tar.gz"
         "https://files.pythonhosted.org/packages/0a/dd/33d2a11713f6b78493273a32d99bb449f2d93663ed4ec15a8b890d44ba04/Django-4.2.20.tar.gz"
