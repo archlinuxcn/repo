@@ -1,7 +1,7 @@
 pkgname=julia-git-chunkcodecbitshuffle-src
-pkgver=0.2.0
-_commit=633022ce60f4452f85a71332a59274e2930f36b6
-pkgrel=2
+pkgver=0.2.1
+_commit=cf0e4237f58a43b55633889231837f3d00abad8c
+pkgrel=1
 pkgdesc="ChunkCodecBitshuffle.jl"
 url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
-sha256sums=('4764fb13ee48f2f6db59f60be5ecbd0c39f59d7cc7ef023a732f5e4365e5a379')
+sha256sums=('ebf1264860b1ab54b185f5c3b9e6d33654f52316c0eb22a9255558e87f785362')
 
 package() {
   cd ChunkCodecs.jl/Bitshuffle
