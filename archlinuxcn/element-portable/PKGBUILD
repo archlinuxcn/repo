@@ -11,7 +11,7 @@
 _electron=electron
 pkgname=element-portable
 pkgver=1.11.110
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Glossy Matrix collaboration client — "
 arch=(x86_64)
@@ -40,7 +40,7 @@ source=(
         portable-config)
 sha256sums=('02245e0619c679f5db78966b963d165eed47546eaf28377de70fb29861f9baa3'
             '38808c57f5783383a22e68f6ab3a2bdd2edb15decc1f890a950ae50290df97b2'
-            '4c48738603a6c8f62c6b0e22f36a84b76b1c3422e862f366c6a64159d6adbf22')
+            'a073477619024af0d5445195ff0047899d2ac60b56cf3643b6abc22cf00d5832')
 
 prepare() {
 	pacman -Ql element-desktop >file.list
