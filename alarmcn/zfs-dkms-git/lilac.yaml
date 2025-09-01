@@ -2,11 +2,8 @@ maintainers:
   - github: Integral-Tech
     email: integral@archlinuxcn.org
 
-pre_build_script: |
-  update_pkgrel()
-  vcs_update()
-
-post_build_script: git_pkgbuild_commit()
+pre_build_script: aur_pre_build(maintainers=['yurikoles'])
+post_build: aur_post_build
 
 repo_depends:
   - zfs-utils-git
@@ -14,3 +11,5 @@ repo_depends:
 update_on:
   - source: github
     github: zfsonlinux/zfs
+
+  - source: aur
