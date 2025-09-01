@@ -8,7 +8,7 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/keiko233/clash-nyanpasu"
 license=('GPL-3.0-or-later')
 depends=('webkit2gtk' 'clash-geoip' 'libayatana-appindicator' "mihomo")
-makedepends=('yarn' 'cargo-tauri' 'jq' 'moreutils' 'rust-nightly' 'cargo-nightly' 'git' 'pnpm' 'clang' 'nodejs')
+makedepends=('yarn' 'cargo-tauri' 'jq' 'moreutils' 'rustup' 'git' 'pnpm' 'clang' 'nodejs')
 optdepends=('clash' 'clash-rs')
 source=("git+https://github.com/keiko233/clash-nyanpasu.git#tag=v${pkgver}"
 	"${_pkgname}.desktop"
@@ -21,6 +21,7 @@ sha512sums=('e2e9020f4c39db1b584ac8abc4257e260c30ba01640e5a9d720ed07ed09997d2d53
 options=(strip !debug !lto !debug)
 
 function prepare(){
+	rustup default nightly
 	cd "${srcdir}/clash-nyanpasu"
 	ln -sf backend/tauri/ src-tauri
 
