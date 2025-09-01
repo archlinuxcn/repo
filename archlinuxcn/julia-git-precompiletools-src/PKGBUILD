@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaLang/PrecompileTools.jl.git#commit=$_commit"
-        0001-Fix-Base.StaticData-renaming.patch)
-sha256sums=('c736a70e157e7969f1f770be388229edbaf0c95b83fc67740dac642d65f998c0'
-            '4359918e244cb806478e6dd3cd19f3cfd36d18df5d1657e42ddfbdf7cd674dde')
-
-prepare() {
-  cd PrecompileTools.jl
-
-  patch -Np1 --no-backup-if-mismatch < "../0001-Fix-Base.StaticData-renaming.patch"
-}
+source=("git+https://github.com/JuliaLang/PrecompileTools.jl.git#commit=$_commit")
+sha256sums=('c736a70e157e7969f1f770be388229edbaf0c95b83fc67740dac642d65f998c0')
 
 package() {
   cd PrecompileTools.jl
