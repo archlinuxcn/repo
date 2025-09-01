@@ -1,7 +1,7 @@
 pkgname=julia-git-precompiletools-src
-pkgver=1.3.2
-_commit=990c356a8ed864876665363533eba83e1a2cbba8
-pkgrel=2
+pkgver=1.3.3
+_commit=542d9648d44984bc92491399a5b911eb8def5086
+pkgrel=1
 pkgdesc="PrecompileTools.jl"
 url="https://github.com/JuliaLang/PrecompileTools.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLang/PrecompileTools.jl.git#commit=$_commit")
-sha256sums=('c736a70e157e7969f1f770be388229edbaf0c95b83fc67740dac642d65f998c0')
+sha256sums=('ac2c6037fa05ab39ebfd280f58ed200db0fe3d7d9113928682885bac1e340658')
 
 package() {
   cd PrecompileTools.jl
