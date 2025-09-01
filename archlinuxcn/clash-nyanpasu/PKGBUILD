@@ -8,7 +8,7 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/keiko233/clash-nyanpasu"
 license=('GPL-3.0-or-later')
 depends=('webkit2gtk' 'clash-geoip' 'libayatana-appindicator' "mihomo")
-makedepends=('yarn' 'cargo-tauri' 'jq' 'moreutils' 'rust-nightly' 'cargo-nightly' 'git' 'pnpm' 'clang' 'nodejs')
+makedepends=('yarn' 'cargo-tauri' 'jq' 'moreutils' 'rust' 'cargo' 'git' 'pnpm' 'clang' 'nodejs')
 optdepends=('clash' 'clash-rs')
 source=("git+https://github.com/keiko233/clash-nyanpasu.git#tag=v${pkgver}"
 	"${_pkgname}.desktop"
