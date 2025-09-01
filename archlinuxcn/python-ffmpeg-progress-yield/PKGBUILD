@@ -9,7 +9,7 @@ pkgdesc="Run an ffmpeg command with its progress yielded."
 arch=('any')
 url="https://github.com/slhck/ffmpeg-progress-yield"
 license=('MIT')
-depends=('ffmpeg' 'python-tqdm' python-uv)
+depends=('ffmpeg' 'python-tqdm' python-uv-build)
 makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel' 'git')
 checkdepends=('ffmpeg' 'python-pytest' 'python-pytest-asyncio')
 source=("git+https://github.com/slhck/ffmpeg-progress-yield.git#tag=v${pkgver}")
