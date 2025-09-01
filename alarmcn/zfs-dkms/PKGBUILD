@@ -4,45 +4,57 @@
 
 pkgname=zfs-dkms
 pkgver=2.3.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Kernel modules for the Zettabyte File System."
 arch=('any')
 url="https://zfsonlinux.org/"
-license=('CDDL-1.0')
-depends=("zfs-utils" 'dkms' 'perl')
-provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}" "zfs")
-source=("https://github.com/zfsonlinux/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"
-	"0001-only-build-the-module-in-dkms.conf.patch")
+license=('CDDL')
+provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}")
+# ambiguous, provided for backwards compat, pls don't use
+provides+=('zfs')
+source=("https://github.com/zfsonlinux/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"{,.asc}
+        "0001-only-build-the-module-in-dkms.conf.patch")
 sha256sums=('9ec397cf360133161a1180035f3e7d6962186ed2b3457953a28d45aa883fa495'
+            'SKIP'
             '8d5c31f883a906ab42776dcda79b6c89f904d8f356ade0dab5491578a6af55a5')
+b2sums=('e7619445a9138475e51e1578cb4e85032570830faba5aab44013a652596a07e49cf602acfe7fd0e5411199d11614d4686cc3f14fddf3062695ce3da922075efd'
+        'SKIP'
+        '58dc2494e71b50833d44c126b72acad52e9817626542afbc245b7ba82009e8c8252ebde6023592aac42d9942207e7655c0a421da9067fbdd619746ebc372d791')
+validpgpkeys=('4F3BA9AB6D1F8D683DC2DFB56AD860EED4598027'  # Tony Hutter (GPG key for signing ZFS releases) <hutter2@llnl.gov>
+              'C33DF142657ED1F7C328A2960AB9E991C6AF658B') # Brian Behlendorf <behlendorf1@llnl.gov>
 
 prepare() {
-	cd "zfs-${pkgver}/"
+    cd "${srcdir}"/${pkgname%-dkms}-${pkgver}
 
-	patch -p1 -i ../0001-only-build-the-module-in-dkms.conf.patch
+    patch -p1 -i ../0001-only-build-the-module-in-dkms.conf.patch
 
-	# remove unneeded sections from module build
-	sed -ri "/AC_CONFIG_FILES/,/]\)/{
-/AC_CONFIG_FILES/n
-/]\)/n
-/^\s*(module\/.*|zfs.release|Makefile)/!d
-}" configure.ac
+    # remove unneeded sections from module build
+    sed -ri "/^AC_CONFIG_FILES\(\[$/,/^\]\)$/{
+/^AC_CONFIG_FILES\(\[$/p
+/^\]\)$/p
+/^\s*(module\/.+|${pkgname%-dkms}.release|Makefile)$/!d
+}
+/^AC_CONFIG_FILES\(\[.*\]\)$/d
+" configure.ac
 
-	./autogen.sh
+    autoreconf -fi
 }
 
 build() {
-	cd "zfs-${pkgver}/"
+    cd "${srcdir}"/${pkgname%-dkms}-${pkgver}
 
-	./scripts/dkms.mkconf -n zfs -v ${pkgver} -f dkms.conf
-	./scripts/make_gitrev.sh include/zfs_gitrev.h
+    ./scripts/dkms.mkconf -n ${pkgname%-dkms} -v ${pkgver} -f dkms.conf
+    ./scripts/make_gitrev.sh include/zfs_gitrev.h
 }
 
 package() {
-	cd "zfs-${pkgver}/"
+    depends=("zfs-utils=${pkgver}" 'dkms')
 
-	dkmsdir="${pkgdir}/usr/src/zfs-${pkgver}"
-	install -d ${dkmsdir}/{config,scripts}
-	cp -a configure dkms.conf Makefile.in META zfs_config.h.in zfs.release.in include/ module/ "${dkmsdir}/"
-	install -Dm644 config/compile config/config.* config/missing config/*sh "${dkmsdir}/config/"
+    cd "${srcdir}"/${pkgname%-dkms}-${pkgver}
+
+    dkmsdir="${pkgdir}/usr/src/${pkgname%-dkms}-${pkgver}"
+    install -d "${dkmsdir}"/{config,scripts}
+    cp -a configure dkms.conf Makefile.in META ${pkgname%-dkms}_config.h.in ${pkgname%-dkms}.release.in include/ module/ "${dkmsdir}"/
+    cp config/compile config/config.* config/missing config/*sh "${dkmsdir}"/config/
+    cp scripts/dkms.postbuild "${dkmsdir}"/scripts/
 }
