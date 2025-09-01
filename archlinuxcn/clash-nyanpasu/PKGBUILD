@@ -38,6 +38,7 @@ function prepare(){
 	jq 'del(.scripts.prepare)' package.json|sponge package.json
 
 	cd src-tauri
+	cargo update
 	# only build the excutable
 	jq '.tauri.bundle.active = false' tauri.conf.json|sponge tauri.conf.json
 	# disable updater
