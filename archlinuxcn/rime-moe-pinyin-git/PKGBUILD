@@ -19,7 +19,7 @@ sha256sums=('SKIP'
 makedepends=("git" "git-lfs")
 
 function pkgver() {
-	cd "${srcdir}/${_pkgname}"
+	cd "${srcdir}/pinyin"
 	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
