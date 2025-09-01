@@ -1,7 +1,7 @@
 pkgname=julia-git-chunkcodeccore-src
-pkgver=0.6.0
-_commit=0b187bac06e66f467269b0c01ba7339b9ce83d3f
-pkgrel=2
+pkgver=1.0.0
+_commit=5b706d6d26ceaf4ff2a15c8f4227abfaad78998f
+pkgrel=1
 pkgdesc="ChunkCodecCore.jl"
 url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
-sha256sums=('0d4c229ee7177b2fa40f93871dfd555f0c769836512b9395ad710856f28fce83')
+sha256sums=('a60c8b7e288fba2e3cb00c5163f2951fc83dc0ae253724941cc5fd977584de6f')
 
 package() {
   cd ChunkCodecs.jl/ChunkCodecCore
