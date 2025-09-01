@@ -17,6 +17,11 @@ sha256sums=('SKIP'
             '28a34da7f25ae6edbb9906abd9aecb4cf31f0ec004709a23bf602fc1630cafb6')
 makedepends=("git" "git-lfs")
 
+function pkgver() {
+	cd "${srcdir}/${_pkgname}"
+	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
 function prepare() {
 	cd pinyin
 	git submodule update --init --depth 1 --remote
