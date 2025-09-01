@@ -64,4 +64,6 @@ package_element-portable() {
 	rm -f "${pkgdir}/usr/share/applications"/*
 	rm -f "${pkgdir}/usr/bin"/*
 	install -vDm755 "${srcdir}/portable-config" "${pkgdir}/usr/lib/portable/info/io.element.Element/config"
+	install -vDm644 "${srcdir}/io.element.Element.desktop" -t "${pkgdir}/usr/share/applications"
+	install -vDm755 "${srcdir}/element-portable.sh" -t "${pkgdir}/usr/bin"
 }
