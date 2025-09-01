@@ -1,20 +1,20 @@
-From 00ff63ea9cdf92539b36bde81b7df3e70eb05480 Mon Sep 17 00:00:00 2001
+From f6cbd3ebd4961bb305780cf69905286dab93fe43 Mon Sep 17 00:00:00 2001
 From: Yurii Kolesnykov <root@yurikoles.com>
-Date: Fri, 27 May 2022 04:04:02 +0300
-Subject: [PATCH] only build the module in dkms.conf
+Date: Sat, 10 May 2025 13:06:09 +0100
+Subject: [PATCH] [PATCH] only build the module in dkms.conf
 
-Signed-off-by: Yurii Kolesnykov <root@yurikoles.com>
 Co-authored-by: Eli Schwartz <eschwartz@archlinux.org>
+Signed-off-by: Yurii Kolesnykov <root@yurikoles.com>
 ---
- scripts/dkms.mkconf | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ scripts/dkms.mkconf | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
 diff --git a/scripts/dkms.mkconf b/scripts/dkms.mkconf
-index 0bd3834204..e33f637260 100755
+index 046ce9edc..e805bf211 100755
 --- a/scripts/dkms.mkconf
 +++ b/scripts/dkms.mkconf
-@@ -28,14 +28,7 @@ NO_WEAK_MODULES="yes"
- PRE_BUILD="configure
+@@ -29,14 +29,7 @@ PRE_BUILD="configure
+   --disable-dependency-tracking
    --prefix=/usr
    --with-config=kernel
 -  --with-linux=\$(
@@ -25,19 +25,20 @@ index 0bd3834204..e33f637260 100755
 -      echo "\${kernel_source_dir}"
 -    fi
 -  )
-+  --with-linux=\${kernel_source_dir}
++  --with-linux="\${kernel_source_dir}"
    --with-linux-obj="\${kernel_source_dir}"
    \$(
      [[ -n \"\${ICP_ROOT}\" ]] && \\
-@@ -68,7 +61,7 @@ POST_BUILD="scripts/dkms.postbuild
+@@ -69,7 +62,8 @@ POST_BUILD="scripts/dkms.postbuild
    -t \${dkms_tree}
  "
  AUTOINSTALL="yes"
 -MAKE[0]="make"
 +MAKE[0]="make -C module/"
++CLEAN="true"
  STRIP[0]="\$(
    [[ -r \${PACKAGE_CONFIG} ]] \\
    && source \${PACKAGE_CONFIG} \\
 -- 
-2.36.1
+2.50.0
 

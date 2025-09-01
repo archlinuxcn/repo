@@ -1,0 +1,27 @@
+diff --git a/configure.ac b/configure.ac
+index f4b52e1f7..5dc43a5b7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -68,22 +68,9 @@ ZFS_AC_DEBUG_INVARIANTS
+ ZFS_AC_OBJTOOL_WERROR
+ 
+ AC_CONFIG_FILES([
+-	contrib/debian/rules
+-	contrib/debian/changelog
+ 	Makefile
+-	include/Makefile
+-	lib/libzfs/libzfs.pc
+-	lib/libzfs_core/libzfs_core.pc
+-	lib/libzfsbootenv/libzfsbootenv.pc
+ 	module/Kbuild
+ 	module/Makefile
+-	rpm/generic/zfs-dkms.spec
+-	rpm/generic/zfs-kmod.spec
+-	rpm/generic/zfs.spec
+-	rpm/redhat/zfs-dkms.spec
+-	rpm/redhat/zfs-kmod.spec
+-	rpm/redhat/zfs.spec
+-	tests/zfs-tests/tests/Makefile
+ 	zfs.release
+ ])
+ 
