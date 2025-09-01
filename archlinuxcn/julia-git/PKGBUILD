@@ -554,7 +554,7 @@ package_julia-git-package-env() {
   pkgdesc+=" (Package precompilation environment)"
   _nproc=3
   if [[ "$CARCH" = x86_64 ]]; then
-    _nproc=8
+    _nproc=32
   fi
 
   mkdir -p "${pkgdir}/usr/lib/julia/"
