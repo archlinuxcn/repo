@@ -1,14 +1,10 @@
 #!/usr/bin/bash
 
-confDir=/var/tmp/clash-conf
-
-if [ -d "${confDir}" ]; then
-	rm -rf "${confDir}"
-fi
+confDir=/var/lib/private/mihomo/conf
 
 mkdir -p "${confDir}"
 
-cp "${CREDENTIALS_DIRECTORY}/config.yaml" "${confDir}"/config.yaml
-cp /etc/clash/Country.mmdb "${confDir}"
+install "${CREDENTIALS_DIRECTORY}/config.yaml" "${confDir}"/config.yaml
+install /etc/clash/Country.mmdb -t "${confDir}"
 
-clash-meta -d /var/tmp/clash-conf
+clash-meta -d "${confDir}"
