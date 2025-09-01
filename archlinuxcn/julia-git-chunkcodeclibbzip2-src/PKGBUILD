@@ -1,7 +1,7 @@
 pkgname=julia-git-chunkcodeclibbzip2-src
-pkgver=0.3.0
-_commit=19c5a71367b981cc0559b61f594bd303b75bbc6c
-pkgrel=2
+pkgver=1.0.0
+_commit=d724d5f49f3af8a92303389a4586a462c29440c7
+pkgrel=1
 pkgdesc="ChunkCodecLibBzip2.jl"
 url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
-sha256sums=('b999317ad3cf80d8f2768b9f0f7cd0f19b58b9f7b57c41b303bb3836696baeb4')
+sha256sums=('9fe3427b584b7aa934e924d25eb15ea42fcd643167d47d7c6cf626162b774759')
 
 package() {
   cd ChunkCodecs.jl/LibBzip2
