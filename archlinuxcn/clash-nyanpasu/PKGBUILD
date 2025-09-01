@@ -21,7 +21,7 @@ sha512sums=('e2e9020f4c39db1b584ac8abc4257e260c30ba01640e5a9d720ed07ed09997d2d53
 options=(strip !debug !lto !debug)
 
 function prepare(){
-	rustup default nightly-2024-11-13
+	rustup default nightly-2024-01-15
 	cd "${srcdir}/clash-nyanpasu"
 	ln -sf backend/tauri/ src-tauri
 
