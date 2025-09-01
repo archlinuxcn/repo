@@ -14,6 +14,7 @@ md5sums=('e938a8b0c65c5b3508daac008562f6b1')
 
 function prepare() {
 	cd "${srcdir}/turnon"
+	git revert -n 34d798cee604c1a7914ea363b8a39ad278dc1004
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --target "$CARCH-unknown-linux-gnu"
 	sed -i 's|@# Compile settings schemas after installation||g' justfile
