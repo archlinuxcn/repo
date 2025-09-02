@@ -31,13 +31,18 @@ def pre_build():
     elif line.startswith("source=("):
       state = "source"
     elif state == "source" and line == ')':
-      line = '  "0001-ibus-candidate-popup-support-rime-comment-style.patch"\n' + line
+      line = '  "0001-ibus-candidate-popup-support-rime-comment-style.patch"\n' + \
+             '  "0002-message-tray-add-timeout-watchdog-for-notification-hiding-animation.patch"\n' + \
+             line
       state = "out"
 
     elif line.startswith('b2sums='):
       state = 'b2sums'
     elif state == 'b2sums' and line.endswith(')'):
-      line = line.replace(')', "\n        'cad4524e03b5a4d7df133c8cc946f9b7cc340cbfe1c8856e91a13d196bf74706519abc9d900bd064d5024146fa19d8a39d970df3d22d92f68f020c28f516ba62')")
+      line = line.replace(')', 
+                          "\n        'c9cb3d42cdbb16322b170268b7a18ba7156ed1839525c6a6398d286d55aab15720dee17442ce103e2d8521a335046b5137d2b182113e1e72ff4477cea3c55594'" + \
+                          "\n        'a95c44fd46bc51db91ec5867dc93b550cfef630113f63545555dfaa779b972bc2bea6c60c349abf5ac76c942e481d80b9f4fbd84c779a3907a17f2d32a10e72f'" + \
+                          ")")
       state = 'out'
 
     elif line.startswith('prepare('):

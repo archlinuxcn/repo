@@ -1,0 +1,42 @@
+diff --git a/js/ui/messageTray.js b/js/ui/messageTray.js
+index cbc006478..671d58bef 100644
+--- a/js/ui/messageTray.js
++++ b/js/ui/messageTray.js
+@@ -1246,6 +1246,14 @@ export const MessageTray = GObject.registerClass({
+ 
+         const duration = animate ? ANIMATION_TIME : 0;
+         this._notificationState = State.HIDING;
++
++        const timeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT,
++            duration + 1000, () => {
++                log('Animation timeout, forcing notification cleanup');
++                this._forceHideNotificationCompleted();
++                return GLib.SOURCE_REMOVE;
++            });
++
+         this._bannerBin.ease({
+             opacity: 0,
+             duration,
+@@ -1256,6 +1264,7 @@ export const MessageTray = GObject.registerClass({
+             duration,
+             mode: Clutter.AnimationMode.EASE_OUT_BACK,
+             onComplete: () => {
++                GLib.source_remove(timeoutId);
+                 this._notificationState = State.HIDDEN;
+                 this._hideNotificationCompleted();
+                 this._updateState();
+@@ -1263,6 +1272,14 @@ export const MessageTray = GObject.registerClass({
+         });
+     }
+ 
++    _forceHideNotificationCompleted() {
++        if (this._notificationState !== State.HIDDEN) {
++            this._notificationState = State.HIDDEN;
++            this._hideNotificationCompleted();
++            this._updateState();
++        }
++    }
++
+     _hideNotificationCompleted() {
+         let notification = this._notification;
+         this._notification = null;

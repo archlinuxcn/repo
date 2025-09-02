@@ -1,3 +1,15 @@
+diff --git a/.gitignore b/.gitignore
+index e3d4d8242..964e240fd 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -8,3 +8,7 @@ subprojects/jasmine-gjs
+ .buildconfig
+ .eslintcache
+ .vscode
++node_modules
++package.json
++pnpm-lock.yaml
++GEMINI.md
 diff --git a/data/theme/gnome-shell-sass/widgets/_ibus-popup.scss b/data/theme/gnome-shell-sass/widgets/_ibus-popup.scss
 index bedc31186..fe8276d80 100644
 --- a/data/theme/gnome-shell-sass/widgets/_ibus-popup.scss
@@ -18,7 +30,7 @@ index bedc31186..fe8276d80 100644
  
  .candidate-box {
 diff --git a/js/ui/ibusCandidatePopup.js b/js/ui/ibusCandidatePopup.js
-index 0bb4e47ee..c3614e4a7 100644
+index 0bb4e47ee..8f14d7848 100644
 --- a/js/ui/ibusCandidatePopup.js
 +++ b/js/ui/ibusCandidatePopup.js
 @@ -42,8 +42,10 @@ const CandidateArea = GObject.registerClass({
@@ -75,7 +87,7 @@ index 0bb4e47ee..c3614e4a7 100644
              let candidates = [];
              for (let i = startIndex; i < endIndex; ++i) {
 -                candidates.push(lookupTable.get_candidate(i).get_text());
-+                const candidate = lookupTable.get_candidate(i)
++                const candidate = lookupTable.get_candidate(i);
 +                candidates.push(candidate);
  
 -                Main.keyboard.addSuggestion(lookupTable.get_candidate(i).get_text(), () => {
