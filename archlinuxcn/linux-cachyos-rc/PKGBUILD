@@ -176,7 +176,7 @@ _stable=${_major}-${_rcver}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + LTO + AutoFDO + Propeller + Cachy Sauce Kernel by CachyOS with other patches and improvements - Release Candidate'
-pkgrel=1
+pkgrel=2
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -200,7 +200,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=580.76.05
+_nv_ver=580.82.07
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -228,7 +228,7 @@ fi
 # ZFS support
 if [ "$_build_zfs" = "yes" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=3b64a9619f8f724ecac3e280a235f6b56d20ee1c")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=f0378b0f5906b4eda7b95f76bb0762ba08a9bf63")
 fi
 
 # NVIDIA pre-build module support
@@ -240,8 +240,7 @@ fi
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
              "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
-             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
-             "${_patchsource}/misc/nvidia/6.17.patch")
+             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch")
 fi
 
 # Use generated AutoFDO Profile
@@ -527,7 +526,6 @@ prepare() {
     if [ "$_build_nvidia_open" = "yes" ]; then
         patch -Np1 -i "${srcdir}/0001-Enable-atomic-kernel-modesetting-by-default.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
         patch -Np1 -i "${srcdir}/0002-Add-IBT-support.patch" -d "${srcdir}/${_nv_open_pkg}/"
-        patch -Np1 -i "${srcdir}/6.17.patch" -d "${srcdir}/${_nv_open_pkg}/"
     fi
 }
 
@@ -796,6 +794,6 @@ for _p in "${pkgname[@]}"; do
 done
 
 b2sums=('cc1c4c4a4411263b4d2c6d312bc4ce6987b4447b7981b8f748efbd8f6a17cdde9a5a2ef1f96bd2a60ca8265dfafb68baa1574543fa9d637fa714d50f1dbce803'
-        '7cc981f7248d693d5c0a6af3f8712af89848c5a446820cd0a72703d7b7461b5cd313f9bdf84037124e2f0b3209d44c4308b5474d97152e6c99128e1b0c4f3e95'
+        '60c923e85e0b768c69de6c1d764546c66c54e092244f936ab648c43f5d5454dd0c9a4e662b9ceaf6e9f82f5b648686aaeaba4e328ed57abda33a349ab1febb90'
         'eb15e025e803dc7816fe5f3467b2380db3c0e942cff97d6a548cc81fe24c25305e47287542d6d71ca324392ee0969000f622d29b2b967209775d61ce9cbc3eca'
         'c37d88a8853d92d342acc76c641ef2979eb002ac68936425d7c9fceb45fab70cbf9e15eecb949a0af1e4b895736458d20bca4c525ffdcedbbb736dfaceaad91d')
