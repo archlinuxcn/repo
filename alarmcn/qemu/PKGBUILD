@@ -26,7 +26,7 @@ pkgname=(
   qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-pkgver=10.0.3
+pkgver=10.1.0
 pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
@@ -136,20 +136,20 @@ source=(
   $pkgbase-8.1.1-static_regression.patch
   $pkgbase-9.2.2-libnfs6.patch
 )
-sha512sums=('7f37c2df5ac7048fb32f1d89a7c2da0929be9d2f5767bc209ca1e99167f196fb5867fc8b69f915c8c349c58089ce3d7e08c9a3f35a73223abff258b9a5bf3466'
+sha512sums=('20552a524b6b298181df1af7084b470ded3fe8d1505f05011dda3c33cbc3d91f518ce026b44ba1a8b7f34c64ae81afddceda383066f4772a3a2a6333a2638caf'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
-            '985c2c7a6b5217c87a15b45368089ee91b2f9027b070f9eafa448a18b27ae0d9edd964d52e134b9c1f4aeef4d6aae88afd3f454551ca898affef7f9d28b99b8f'
+            '87c3175aeecbb84852f9aea91fd775af13c21340eef8047520d78550ef72d3d1935a396bb843fc571db8fcb5ca2154d8a135dcca04ca0dfeba3191b16a5a402c'
             'bdf05f99407491e27a03aaf845b7cc8acfa2e0e59968236f10ffc905e5e3d5e8569df496fd71c887da2b5b8d1902494520c7da2d3a8258f7fd93a881dd610c99'
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839'
             'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12'
             '7949b1435ed979836c59149b4b06b80fe14fa89ef12d1e027860df392e2ffdaf4a0f881021f80b4ee56e8657068bf7f2c6415c9891f34c32228b9d35e9359c8f')
-b2sums=('382800d9a9f5241123ebeb43d8eaa6a4aaf9acae0df7a25f2c7831aa7eeb97014cff29886c53f03ea0a1ac98729b85bad1e4d5634e592a373af84f79a9219adc'
+b2sums=('025012e73cdd2468b1b0fdef9b34aae41893780cfcad0d52c05e7f67ff7a9969c8c596f006b8a7e6f1b59e39da8fdec07d6f241911c604502755acd26bb750b6'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
-        '69177b962d2fda20cafdbc6226fd017b5ca5a0f69f866d055dc1c744b7b2955059f47c693cfb5b4c863ec159569fdabd4327ab4b8a95566a68cd8ce38e339c7a'
+        '3c8e365b9dbba8ca06e8be0b99f2e6393a8ad0019a3c6fddc2d7806b454fafd65e99a0a1dbedf55b86e982c2e7b2825e67f4d28a61d8078795cae499956e98f6'
         '3559fe9c4f744194939770047a0a02d07ff791c845a80726d0bc7b8c4801ed5f11150e7d5adab813844b3dab1cf38c3a5a87fb6efbb8fc9dccdda9fa56409ed8'
         'a9a2bdfeeb44eb86cbe88ac7c65f72800bdb2fd5cecb02f3a258cf9470b52832180aab43c89d481f7fd4d067342a9a27dd6c8a94d625b95d6e2b912e47d274e7'
         '209ec05e161d157aaa08a9fcbea45cf87aa22fe9360f9b3c477a78a274e4ecee989c16121f9e6b7765bb479c9db718c98db047c27fd426c127c4c95e28877a16'
@@ -524,7 +524,7 @@ package_qemu-common() {
     _pick qemu-system-arm usr/bin/qemu-system-arm
     _pick qemu-system-arm usr/share/man/man1/qemu-system-arm.1*
 
-    _pick qemu-system-arm-firmware usr/share/qemu/npcm{7,8}xx_bootrom.bin
+    _pick qemu-system-arm-firmware usr/share/qemu/{ast27x0,npcm{7,8}xx}_bootrom.bin
 
     _pick qemu-system-avr usr/bin/qemu-system-avr
     _pick qemu-system-avr usr/share/man/man1/qemu-system-avr.1*
@@ -543,7 +543,7 @@ package_qemu-common() {
     _pick qemu-system-microblaze usr/bin/qemu-system-microblaze{,el}
     _pick qemu-system-microblaze usr/share/man/man1/qemu-system-microblaze{,el}.1*
 
-    _pick qemu-system-microblaze-firmware usr/share/qemu/petalogix-*.dtb
+    _pick qemu-system-microblaze-firmware usr/share/qemu/dtb/petalogix-*.dtb
 
     _pick qemu-system-mips usr/bin/qemu-system-mips{,64,64el,el}
     _pick qemu-system-mips usr/share/man/man1/qemu-system-mips{,64,64el,el}.1*
@@ -554,7 +554,7 @@ package_qemu-common() {
     _pick qemu-system-ppc usr/bin/qemu-system-ppc{,64}
     _pick qemu-system-ppc usr/share/man/man1/qemu-system-ppc{,64}.1*
 
-    _pick qemu-system-ppc-firmware usr/share/qemu/{bamboo,canyonlands}.dtb
+    _pick qemu-system-ppc-firmware usr/share/qemu/dtb/{bamboo,canyonlands}.dtb
     # NOTE: needs to be replaced by openbios
     _pick qemu-system-ppc-firmware usr/share/qemu/openbios-ppc
     _pick qemu-system-ppc-firmware usr/share/qemu/pnv-pnor.bin
