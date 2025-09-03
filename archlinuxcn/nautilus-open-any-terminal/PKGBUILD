@@ -5,7 +5,7 @@
 pkgname=(nautilus-open-any-terminal
          caja-open-any-terminal)
 pkgbase="${pkgname[0]}"
-pkgver=0.6.1
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="Context-menu entry for opening other terminal in nautilus"
 arch=('x86_64' 'aarch64')
@@ -13,7 +13,7 @@ url="https://github.com/Stunkymonkey/nautilus-open-any-terminal"
 license=("GPL-3.0-or-later")
 makedepends=(make gettext)
 source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('30f6569bbf2e05166669467d523fae6328d15e5f7ea83e8b93af46353990f8b2')
+sha256sums=('789dfeae25810c1eeefdce436a3c635fc6d8077b715820f0b046ecceae1c0f70')
 install='post.install'
 
 build() {
