@@ -5,7 +5,7 @@
 
 pkgname=nvidia-lily
 pkgver=580.76.05
-pkgrel=1
+pkgrel=2
 pkgdesc="NVIDIA kernel modules for linux-lily"
 arch=('x86_64')
 url="https://www.nvidia.com/"
@@ -23,7 +23,7 @@ build() {
 }
 
 package() {
-    depends=("linux-lily=6.15.8-1" "nvidia-utils=${pkgver}" 'libglvnd')
+    depends=("linux-lily=6.16.4-1" "nvidia-utils=${pkgver}" 'libglvnd')
 
     _kernver=$(</usr/src/linux-lily/version)
 
