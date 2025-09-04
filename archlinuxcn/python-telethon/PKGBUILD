@@ -1,6 +1,6 @@
 _name=Telethon
 pkgname=python-telethon
-pkgver=1.41.0
+pkgver=1.41.2
 pkgrel=1
 pkgdesc="Full-featured Telegram client library for Python 3"
 arch=(any)
@@ -9,16 +9,16 @@ license=('MIT')
 depends=('python-pyaes' 'python-rsa')
 makedepends=('python-setuptools' 'python-build' 'python-installer')
 optdepends=('python-cryptg: alternative crypto library' 'python-pysocks: socks proxy support' 'python-python-socks: socks proxy support' 'python-hachoir: parse media metadata for uploading' 'python-pillow: resize photos for uploading')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/telethon-1.41.0.tar.gz")
-sha256sums=('2a4a47309c1cfec565a7f984b5023fe9e3eab276c2b11c8e946f937e0abcd5ff')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/telethon-1.41.2.tar.gz")
+sha256sums=('300a3441df62668378626b46cafda346573e9ac296367182510756334d2bdc5e')
 
 build() {
-  cd "$srcdir/telethon-1.41.0"
+  cd "$srcdir/telethon-1.41.2"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/telethon-1.41.0"
+  cd "$srcdir/telethon-1.41.2"
   python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
