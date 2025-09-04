@@ -15,9 +15,9 @@ cd ../linux/src/archlinux-linux
 git clean -xdf
 git fetch --all
 git fetch --tags archlinux
-git co -b lily-6.15 v6.15.2-arch1
+git co -b lily-6.16 v6.16.4-arch1
 
-patch -p1 < ~/cjktty-6.9.patch
+patch -p1 < ~/cjktty-6.16.patch
 git add .
 git commit -m 'apply cjktty patch'
 patch -p1 < ~/cjktty-add-cjk32x32-font-data.patch
@@ -25,14 +25,14 @@ git add .
 git commit -m 'apply cjktty 32x32 font data'
 
 cp ../../config .config
-patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.14.2
+patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.15.2
 make clean oldconfig
-diff -Naur ../../config .config > ../../config.diff.6.15.2
-vim ../../config.diff.6.15.2
+diff -Naur ../../config .config > ../../config.diff.6.16.4
+vim ../../config.diff.6.16.4
 
 cd ../..
 # 升级 gcc
 command makepkg
 
-for f in ./*.pkg.tar.zst(om[1,3]); do gpg --detach-sign $f; done
-cp -l ./*.pkg.tar.zst(|.sig)(om[1,6]) ~/repo/
+for f in ./*.pkg.tar.zst(om[1,2]); do gpg --detach-sign $f; done
+cp -l ./*.pkg.tar.zst(|.sig)(om[1,4]) ~/repo/
