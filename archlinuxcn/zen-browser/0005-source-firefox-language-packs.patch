@@ -1,0 +1,19 @@
+--- desktop/scripts/download-language-packs.sh_orig	2025-07-29 17:53:21.242753359 -0400
++++ desktop/scripts/download-language-packs.sh	2025-07-29 17:55:40.679334057 -0400
+@@ -22,9 +22,14 @@
+ LAST_FIREFOX_L10N_COMMIT=$(cat ./build/firefox-cache/l10n-last-commit-hash)
+
+ cd ./l10n
++
+ rm -rf firefox-l10n
+-# clone only from LAST_FIREFOX_L10N_COMMIT
+-git clone https://github.com/mozilla-l10n/firefox-l10n
++if [[ -d "$srcdir/firefox-l10n" ]]; then
++  cp -r "$srcdir/firefox-l10n" firefox-l10n
++else
++  git clone https://github.com/mozilla-l10n/firefox-l10n
++fi
++
+ cd firefox-l10n
+ git checkout $LAST_FIREFOX_L10N_COMMIT
+ cd $CURRENT_DIR
