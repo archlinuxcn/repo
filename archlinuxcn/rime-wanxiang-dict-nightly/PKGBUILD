@@ -3,7 +3,7 @@
 pkgbase=rime-wanxiang-dict-nightly
 _pkgbase=${pkgbase%-dict-nightly}
 pkgname=(rime-wanxiang-dict-nightly rime-wanxiang-pro-dict-nightly)
-pkgver=11.4.2+r20250905.121526
+pkgver=11.4.3+r20250905.141909
 _schema_version=${pkgver%%+*}
 pkgrel=1
 pkgdesc="万象词库——每日构建版"
@@ -13,7 +13,7 @@ license=('CC-BY-4.0')
 url="https://github.com/amzxyz/rime_wanxiang"
 source=("${url}/archive/refs/tags/v${_schema_version}.tar.gz"
         build.sh)
-b2sums=('6fb2a534ee79cfd1e808f22df300f78c9279c93acef394d3572736c8c80f04ab66bb125a1856efb2f46a4ed206b942a64fc434f8d7461ee7be3f87568c71b9fb'
+b2sums=('a7846af0668f0aee00dc31c7f89efc7b5a6434c3f562c7e990a5e86b8bd769adb5699dd60d405cd8f39921da529704054b9a77e433ade85fe80097bd21e9522d'
         'ffbab0a401f81e8f520304ec8016dfb5188b84b5a948582409d25b890c75f65ad738379a01999f8315b9b73a58163f1c44feb09d51c25ef300a53bd55456395d'
         '0273cbf0c3a6834284a3990ece6c4c8538102bad1a408a9d41319b50ce27dd54cfaf69413862d64953a6fcc69beddd23516c7f9327f0d54f2ab9b1f8499d631f'
         '7b29b28c1a8514c0d94470becd78958ae3b5a05847731dfbf2a69f8636a9c3a7b7f5c6ac9ffbe27f0ac732277780f10d7438a480ab63a035044cb7e3250c4221'
