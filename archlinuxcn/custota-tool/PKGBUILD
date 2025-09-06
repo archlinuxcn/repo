@@ -19,7 +19,7 @@ prepare() {
 
 build() {
 	cd "${_srcname}/${pkgname}/"
-	cargo build --frozen --release --all-features
+	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
 package() {
