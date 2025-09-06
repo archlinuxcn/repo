@@ -25,10 +25,6 @@ prepare() {
   _ver=$(protoc --version|cut -d ' ' -f 2)
   # using protobuf from official repo
   sed -i "s/DESIRED_PROTO_VERSION=.*/DESIRED_PROTO_VERSION=${_ver}/" compile.sh
-  # fix Deprecated config in `setup.cfg`
-  sed -i "s/license_file /license_files /" setup.cfg
-  # dirty hack to skip pip install command
-  sed -i "s/pip install/echo/" setup.py
 }
 
 
