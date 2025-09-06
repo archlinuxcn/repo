@@ -3,7 +3,7 @@
 # Contributor: Philip <philip1731 protonmail ch>
 
 pkgname=qucs-s
-pkgver=25.1.2
+pkgver=25.2.0
 pkgrel=1
 pkgdesc="A spin-off of Qucs that supports other free SPICE circuit simulators like ngspice with the same Qucs GUI"
 arch=('x86_64' 'i686')
@@ -37,7 +37,7 @@ optdepends=(
     'octave: high-level language for post-simulation data processing'
 )
 source=(https://github.com/ra3xdh/qucs_s/releases/download/$pkgver/$pkgname-$pkgver.tar.gz)
-b2sums=('04ebe413f7e0ab529fed003718def80212a8c48eca4ee78b71ecd651139e9db9b059359b793a0980c01a91762715ea7076c632392577432ba7f8f7cc3ce7eda9')
+b2sums=('1630f48cda9d6e77d1adc5667d5dae5443d0589935b9408b6dd4ce2d93f83cd92ff73e6898baed8e2bc3520dfe1a2f43c88cfa73c6e3f3be11bd2b3b1029bb47')
 
 build() {
     cmake -S "$pkgname-$pkgver" -B build \
