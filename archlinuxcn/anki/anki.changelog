@@ -1,3 +1,77 @@
+# 25.09
+What's Changed
+
+New Features
+
+  * Per-deck desired retention by @L-M-Sherlock in #4194
+  * Desired retention info graphs by @Luc-Mcgrady in #4199
+  * Use cached workload values by @Luc-Mcgrady in #4208
+  * Expected_workload_with_existing_cards implementation by @Luc-Mcgrady in #4243
+  * Show health check and already optimal at the same time by @Luc-Mcgrady in #4238
+  * Card stats update review time by @Luc-Mcgrady in #4236
+  * Neaten dr graph x-axis by @Luc-Mcgrady in #4251
+  * Enable nc: to only search in a specific field (#4276) by @maxr777 in #4312
+  * Show the number of cards added when adding by @iamllama in #4310
+  * Expose control over AppNap for AnkiConnect
+
+Launcher Updates
+
+  * Linux
+
+  * Added an experimental new mode to use your system's Qt version, for things like Fcitx: https://github.com/ankitects/anki-manual/pull/445/files
+  * Possible fix for launcher failing to appear to some Linux systems
+
+All platforms
+
+  * The launcher now has a download mirror option for users in China, and no longer auto-downloads on first run. The version check should now also work with SOCKS proxies.
+  * Fix mirror configuration not working during launcher download by @aldlss in #4280
+  * Fix install problems on some systems with UV_* env vars defined.
+
+Other Improvements
+
+  * A small clarification in deck-config.ftl by @Expertium in #4264
+  * Add desired_retention field to NormalDeckSchema11 by @L-M-Sherlock in #4292
+  * Chore/Remove CMRR from fsrs help modal by @Luc-Mcgrady in #4290
+  * Fix #4253 by @Luc-Mcgrady in #4259
+  * Fix crash when disabling FSRS
+  * FIX gap above bury by @GithubAnon0000 in #4298
+  * Fix importing of Mnemosyne collections with missing cards
+  * Fix LRT database check for cards with no usable reviews by @user1823 in #4284
+  * Fix Mnemosyne fact ID in error messages by @abdnh in #4266
+  * Fix ninja BuildAction name sanitization by @memchr in #4291
+  * Fix recording errors on some system
+  * Fix sync errors not being reported in some cases by @abdnh in #4281
+  * Fix theme/checkboxes when path contains an apostrophe
+  * Fix/Invalid memory states in simulator after parameters changed by @Luc-Mcgrady in #4317
+  * Fix/Learn count not included in workload graph by @Luc-Mcgrady in #4274
+  * Fix/recompute memory state when deck-specific DR is changed by @L-M-Sherlock in #4293
+  * Fix/Simulator intervals decending overflows by @Luc-Mcgrady in #4275
+  * Fix/System locale for simulator percentages by @Luc-Mcgrady in #4260
+  * Fix/Workload simulator config deck_size unset by @Luc-Mcgrady in #4283
+  * Hi res microhpone icon for the recording dialog by @Madoshakalaka in #4262
+  * Improve elapsed seconds calculation for learning cards in browser table by @user1823 in #4255
+  * Increase randomness in random sorting of new cards by @user1823 in #4286
+  * Make simulator fill missing values of DR and decay too by @user1823 in #4269
+  * Replace activeWindow() with activeModalWidget() by @abdnh in #4267
+  * Replace deprecated $app/stores with $app/state in SvelteKit frontend by @leedoughty in #4282
+  * Revert "Fix/Retention help button bounds" by @dae in #4258
+  * Update record dialog microphone icon to respect dark mode by @leedoughty in #4297
+  * Use existing translation instead of adding new one (#4310) by @iamllama in #4316
+  * Update stale comment by @user1823 in #4235
+  * "Workload" variable typo by @Luc-Mcgrady in #4239
+  * Fix/use real step count to simulate by @L-M-Sherlock in #4240
+  * Statistics "Reviews" graph, make the color of "New" and "Learning" cards consistent with the color of card count by @thomasrixen in #4245
+  * Fix simulator graph not visible when viewport height < 400px by @iamllama in #4248
+  * Fix show_exception's messagebox always formatting as plaintext by @iamllama in #4246
+  * Limit time studied today to minutes by @user1823 in #4242
+  * Fix Cards with Missing Last Review Time During Database Check by @L-M-Sherlock in #4237
+  * Use space-around for tabbed values by @Luc-Mcgrady in #4252
+  * Fix/Retention help button bounds by @Luc-Mcgrady in #4253
+  * Fix/Exclude new cards from is_due_in_days by @user1823 in #4249
+  * Refactor IO fill tool target check logic by @iamllama in #4222
+  * Fix/use current_retrievability_seconds in SQL to keep consistent with card info by @L-M-Sherlock in #4231
+  * Update deck-config.ftl by @sommerluk in #4319
+
 # 25.07.5
 
   * Fix launcher failing to work after installing older Anki version.
@@ -621,199 +695,199 @@ Image occlusion during review has been reported as broken in this release. An up
 
 Changes in FSRS:
 
-* Update to latest FSRS by @L-M-Sherlock in #3106 and #3200
-* Return current weights if fsrs items is zero & handle error in evaluation and optimal retention by @L-M-Sherlock in #3141
-* Update optimal retention and parameters tooltip by @L-M-Sherlock in #3148
-* Show review count with FSRS evaluation results by @abdnh in #3165
-* Show review count for Evaluate/Optimize button by @abdnh in #3170
-* Use median in calculating cost and remove outliers by @L-M-Sherlock in #3181
-* Fix/exclude suspended cards when optimize all presets by @L-M-Sherlock in #3198
-* Fix/ignore revlogs when there is not learn entry after the last forget entry by @L-M-Sherlock in #3199
-* Tweaks to the 'optimize all presets' progress
+  * Update to latest FSRS by @L-M-Sherlock in #3106 and #3200
+  * Return current weights if fsrs items is zero & handle error in evaluation and optimal retention by @L-M-Sherlock in #3141
+  * Update optimal retention and parameters tooltip by @L-M-Sherlock in #3148
+  * Show review count with FSRS evaluation results by @abdnh in #3165
+  * Show review count for Evaluate/Optimize button by @abdnh in #3170
+  * Use median in calculating cost and remove outliers by @L-M-Sherlock in #3181
+  * Fix/exclude suspended cards when optimize all presets by @L-M-Sherlock in #3198
+  * Fix/ignore revlogs when there is not learn entry after the last forget entry by @L-M-Sherlock in #3199
+  * Tweaks to the 'optimize all presets' progress
 
 Other improvements:
 
-* Highlight the current I/O shape during review by @krmanik in #3098
-* Auto-answer can now show reminder instead of answer (#3064) by @Loudwig in #3119
-* Switch to SvelteKit by @dae in #3077
-* Optimum → Minimum retention by @user1823 in #3133
-* Add Margins on the Buttons on the About Page by @Ianwu0812 in #3137
-* Improve typing of custom fabric.Object properties by @abdnh in #3134
-* Fix IO text size in review screen by @abdnh in #2986
-* Ignore errors in do_window_cleanup to fix shutdown issue by @abdnh in #3142
-* Fix spacebar causing stutter when editing cards by @abdnh in #3150
-* Fix auto sync not working on Windows shutdown by @abdnh in #3153
-* Add minimalist mode tooltip by @hnvy in #3155
-* Fix dark mode icons by @RumovZ in #3135
-* Add number truncation before back-end translation by @lucasscharenbroch in #3162
-* Add keyboard shortcuts for empty cards and toggle mask on image occlusion by @escribapetrus in #3136
-* Use key instead of code in type-in field by @abdnh in #3166
-* Improve and unify web dialog styling by @RumovZ in #3167
-* fix polygon tool draw by @krmanik in #3184
-* Clean up #3167 by @RumovZ in #3186
-* Do not clear unused parent tags by @abdnh in #3174
-* Fix '366 of 365 days studied' by @abdnh in #3182
-* Fix IO event handlers being run on normal notes by @abdnh in #3195
-* Fix finished preview learning cards being repeated by @abdnh in #3196
-* Use SplashScreen flag for all aqt tooltips by @voczi in #3194
-* Do not show media auto sync errors by @abdnh in #3197
-* HMR on Windows by @RumovZ in #3144
-* Mnemosyne importer now handles float values for due date and interval
-* Fix Mnemosyne importer clobbering source file
-* Ensure DB check tooltip appears in main window
-* Call profile_did_open hook at the end of loadProfile by @abdnh in #3202
-* Fix future due search missing cards on last day by @abdnh in #3206
-* Do not recreate io page when toggle button used by @krmanik in #3208
-* Reschedule → Reposition by @user1823 in #3209
-* Add support for custom certificates by @voczi in #3203
-* Another try at fixing IO events issue by @abdnh in #3210
-* Fixes shift click selection after programmatic selection in most cases, Issue #2469 by @RRomeroJr in #3213
-* Reword sync conflict explanation by @abdnh in #3221
-* Add a preference to toggle LaTeX generation by @abdnh in #3218
-* Pass -- to mpv/mplayer before filename by @abdnh in #3219
-* Add starting window class by @upsuper in #3216
-* Remove empty cards shortcut key, as it conflicts.
-* Honor night mode when switching between cards in card info.
-* Probable fix for crash when syncing from preferences screen.
-* Avoid askUser() in sync dialogs by @abdnh in #3222
-* Work around RuntimeError in _update_button_label() by @abdnh in #3224
-* Mention missing field's name in CardTypeError by @abdnh in #3225
-* Fix missing i18n module in IO review screen by @abdnh in #3223
+  * Highlight the current I/O shape during review by @krmanik in #3098
+  * Auto-answer can now show reminder instead of answer (#3064) by @Loudwig in #3119
+  * Switch to SvelteKit by @dae in #3077
+  * Optimum → Minimum retention by @user1823 in #3133
+  * Add Margins on the Buttons on the About Page by @Ianwu0812 in #3137
+  * Improve typing of custom fabric.Object properties by @abdnh in #3134
+  * Fix IO text size in review screen by @abdnh in #2986
+  * Ignore errors in do_window_cleanup to fix shutdown issue by @abdnh in #3142
+  * Fix spacebar causing stutter when editing cards by @abdnh in #3150
+  * Fix auto sync not working on Windows shutdown by @abdnh in #3153
+  * Add minimalist mode tooltip by @hnvy in #3155
+  * Fix dark mode icons by @RumovZ in #3135
+  * Add number truncation before back-end translation by @lucasscharenbroch in #3162
+  * Add keyboard shortcuts for empty cards and toggle mask on image occlusion by @escribapetrus in #3136
+  * Use key instead of code in type-in field by @abdnh in #3166
+  * Improve and unify web dialog styling by @RumovZ in #3167
+  * fix polygon tool draw by @krmanik in #3184
+  * Clean up #3167 by @RumovZ in #3186
+  * Do not clear unused parent tags by @abdnh in #3174
+  * Fix '366 of 365 days studied' by @abdnh in #3182
+  * Fix IO event handlers being run on normal notes by @abdnh in #3195
+  * Fix finished preview learning cards being repeated by @abdnh in #3196
+  * Use SplashScreen flag for all aqt tooltips by @voczi in #3194
+  * Do not show media auto sync errors by @abdnh in #3197
+  * HMR on Windows by @RumovZ in #3144
+  * Mnemosyne importer now handles float values for due date and interval
+  * Fix Mnemosyne importer clobbering source file
+  * Ensure DB check tooltip appears in main window
+  * Call profile_did_open hook at the end of loadProfile by @abdnh in #3202
+  * Fix future due search missing cards on last day by @abdnh in #3206
+  * Do not recreate io page when toggle button used by @krmanik in #3208
+  * Reschedule → Reposition by @user1823 in #3209
+  * Add support for custom certificates by @voczi in #3203
+  * Another try at fixing IO events issue by @abdnh in #3210
+  * Fixes shift click selection after programmatic selection in most cases, Issue #2469 by @RRomeroJr in #3213
+  * Reword sync conflict explanation by @abdnh in #3221
+  * Add a preference to toggle LaTeX generation by @abdnh in #3218
+  * Pass -- to mpv/mplayer before filename by @abdnh in #3219
+  * Add starting window class by @upsuper in #3216
+  * Remove empty cards shortcut key, as it conflicts.
+  * Honor night mode when switching between cards in card info.
+  * Probable fix for crash when syncing from preferences screen.
+  * Avoid askUser() in sync dialogs by @abdnh in #3222
+  * Work around RuntimeError in _update_button_label() by @abdnh in #3224
+  * Mention missing field's name in CardTypeError by @abdnh in #3225
+  * Fix missing i18n module in IO review screen by @abdnh in #3223
 
 PKGBUILD:
-* With the switch from Svelte to SvelteKit the build process is not entirely clean yet. SvelteKit does not respect YARN_BINRAY env var. The PKGBUILD includes a patch to fix this. A discussion has been started with remote to integrate this into upstream.
+  * With the switch from Svelte to SvelteKit the build process is not entirely clean yet. SvelteKit does not respect YARN_BINRAY env var. The PKGBUILD includes a patch to fix this. A discussion has been started with remote to integrate this into upstream.
 
 # 24.04.1-1
- * Fix crashing on first sync.
- * Image occlusion fixes, thanks to @krmanik and @abdnh.
- * Fix dark mode not being detected on Intel Macs.
- * Another attempt at fixing a rounding issue with optimal retention.
- * Rename optimal retention and clarify wording, thanks to @AntoineQ1.
- * Fix an error that can occur when using Linux distro packages, thanks to @escape0707.
+  * Fix crashing on first sync.
+  * Image occlusion fixes, thanks to @krmanik and @abdnh.
+  * Fix dark mode not being detected on Intel Macs.
+  * Another attempt at fixing a rounding issue with optimal retention.
+  * Rename optimal retention and clarify wording, thanks to @AntoineQ1.
+  * Fix an error that can occur when using Linux distro packages, thanks to @escape0707.
 
 PKGBUILD:
- * remove python-pip-system-certs and patch anki accordingly
- * remove disable-git-checks.patch as it is no longer needed
+  * remove python-pip-system-certs and patch anki accordingly
+  * remove disable-git-checks.patch as it is no longer needed
 
 # 24.04-2
 PKGBUILD:
- * add forgotten update to disable git checks
+  * add forgotten update to disable git checks
 # 24.04-1
- * Update Qt to 6.6.2. On macOS, this should fix issues with Japanese input.
- * Update FSRS & export benchmark API by @L-M-Sherlock in #3056
- * Keep previous FSRS parameters if they get worse when optimizing by @abdnh in #2996
- * The I/O editor better preserves images quality when zooming in, and supports two-finger pinch/drag on mobile platforms. By @krmanik in #3052
- * Improved pan/zoom in image occlusions: middle mouse button, space, or ctrl/shift/alt with two fingers by @krmanik in #3080 and #3066
- * Improvements/simplifications to FSRS optimal retention feature by @L-M-Sherlock in #3065 and #3072
- * When updating all FSRS parameters at once, exclude suspended cards.
- * Move most FSRS options into their own section of the deck options.
- * Don't hide FSRS optimization section.
- * Show a warning in the optimization section if all presets haven't been optimized for 30 days or longer.
- * Show preset and original deck in card info by @abdnh in #3055
- * Use system certificate store by @abdnh in #3050
- * Ignore some extra chars in no-combining search by @abdnh in #2929
- * Add "select all" shapes tool by @krmanik in #2981
- * Maintain original IO cloze order in editing mode by @abdnh in #2987
- * Fix occasional 'failed to fetch' message popping up.
- * Fix pasted images failing to download from some sites.
- * Add by creation date review sort order by @abdnh in #2957
- * Add log-in button to preferences screen by @lucasscharenbroch in #2994
- * Add support for offline builds by @knobix in #2963
- * Add support for python logging by @cav71 in #2969
- * Add View Files button to Check Media screen by @abdnh in #3006
- * Allow > inside HTML attributes by @vaxr in #2918
- * Americanize "synchronisation" by @hnvy in #2935
- * Change default font in code editors by @abdnh in #2985
- * Check required review count for FSRS after filtering by @abdnh in #3019
- * clamp interval before fuzz_bounds by @L-M-Sherlock in #3024
- * Clear out old FSRS progress as new operation starts
- * Default to 'Bury Card' action consistently by @abdnh in #2950
- * Do not reset original_due when card stays in filtered deck by @abdnh in #2988
- * Don't urllib.unquote when using requests by @vaxr in #2943
- * Fix 'ignore this update' not working.
- * Fix processEvents() reentrancy bug in progress manager window handling by @kieranlblack in #3030
- * Fix a 'protocol wrong type' message sometimes popping up.
- * Fix circular import in legacy importer by @abdnh in #3007
- * Fix code completion in Qt forms by @abdnh in #2993
- * Fix corner rounding of alignment buttons in editor by @lucasscharenbroch in #2989
- * Fix crash in Reviewer by @mjuhanne in #2945
- * Fix deck names differing in case being duplicated in CSV import by @abdnh in #3008
- * Fix error after notetype merge + downgrade.
- * Fix flicker when hovering over deck list by @abdnh in #2958
- * Fix Image field not hidden until user selects an image by @abdnh in #2960
- * Fix importing of Mnemosyne due dates by @dae in #2936
- * Fix inconsistent count in optimize/evaluate.
- * Fix MathJax editor not opening when navigating into blocks by @abdnh in #2953
- * Fix maybe_coalesce_note_undo_entry() by @abdnh in #2992
- * Fix misaligned image occlusions in RTL languages by @abdnh in #3018
- * Fix note id mix-up when resolving notetype conflicts by @RumovZ in #2940
- * Fix notetype conflict resolution by @RumovZ in #2967
- * Fix preset: search ignoring cards in filtered decks by @abdnh in #2997
- * Fix progress manager window race condition by @kieranlblack in #3029
- * Fix regex skipping over all src except the last by @vaxr in #3021
- * Fix text input custom style wiping out base user style by @kieranlblack in #3031
- * Fix title of Auto Advance section by @abdnh in #2949
- * Fix toolbar button shifting on hover by @BlueGreenMagick in #2928
- * Fix undo handling of group and some other IO tools by @abdnh in #2931
- * Fix visual behavior of modal buttons in editor by @lucasscharenbroch in #3009
- * Fix windows build issue by @qxo in #2947
- * Fix/ignore revlogs before Forget entry by @L-M-Sherlock in #3002
- * Flip indent/outdent buttons for RTL by @abdnh in #2930
- * FSRS - Ignore revlogs before date while optimizing by @Luc-Mcgrady in #2922
- * Honor NINJA_STATUS if already set by @knobix in #2984
- * Improve appearance of resize handles in I/O by @krmanik in #2919
- * Improve typing deck_due_tree() by @nix6839 in #3003
- * Include details on what's missing when a NotFound error is triggered.
- * Increase parent limits in custom study when 'limits start from top' is enabled by @RumovZ in #2971
- * Initialize Browser.aspect_ratio earlier to fix AttributeError by @abdnh in #2924
- * Make a deep copy in addcards/set_note by @lucasscharenbroch in #3013
- * Make image occlusion's option buttons tabbable by @PLameiras in #2966
- * Make sure editor note is saved before triggering buttons by @abdnh in #2995
- * Make tags and tag suggestions able to be styled by add-ons by @glutanimate in #2941
- * More precise percent of days studied by @user1823 in #2889
- * Refactor text attribute button components by @lucasscharenbroch in #3012
- * Shift the default network timeout back to 60 seconds.
- * Show message if current FSRS parameters are optimal by @abdnh in #3014
- * Show total review count when optimizing FSRS parameters by @abdnh in #3027
- * Tweak type-in-answer filter hack by @lucasscharenbroch in #3010
- * update FSRS to v0.2.0 by @L-M-Sherlock in #2977
- * Use card.reps - 1 when calculating fuzz by @dae in #2933
- * Use our translation of 'Discard' by @abdnh in #2920
- * Containerize anki-sync-server by @jeankhawand in #3036
- * Fix alert not appearing when FSRS parameters input is focused by @abdnh in #3053
- * Adjust HTML editor / add-on config editor font by @abdnh in #3054
- * Fix/set pretrain_only by fsrs_items by @L-M-Sherlock in #3051
- * Use Card %d for IO template names by @BrayanDSO in #3049
- * alert when the resp.weights is empty by @L-M-Sherlock in #3061
- * When cards become due on the congrats screen, switch to overview, not back into study.
- * Adding a note to the import options to indicate that leech and marked tags will be removed if disabled by @arbyste in #3067
- * Fix full sync dialog failing to appear.
- * Fix consolas not being used in editor.
- * qt/aqt/init.py: Skip GL library workaround for FreeBSD by @knobix in #3071
- * fix: cloze_numbers_in_string treating {{c0::}} as valid by @BrayanDSO in #3059
- * Display deck names when deleting by @escribapetrus in #3058
- * Rename "Forget" to "Reset" (#3078) by @vasll in #3088
- * Reset original id when cloning notetypes by @RumovZ in #3089
- * Use rmse in comparing parameters by @L-M-Sherlock in #3087
- * Fix summary string for notes that failed to be imported by @RumovZ in #3092
- * Disable ligatures in type-in highlighting by @abdnh in #3093
- * Sync-server: add option to store hashed passwords by @laalsaas in #3083
- * Refactor offline build process and add offline generation of Sphinx docs by @antecrescent in #3082
- * Replace deprecated method chrono::NaiveDateTime::timestamp_millis by @ijqq in #3097
- * Update optimal retention tooltip, and add a few extra translations.
- * Possible workaround for sporadic toolbar height warning.
- * "Full sync" -> "One-way sync".
- * rename sm2 retention to historical retention by @L-M-Sherlock in #3101
- * Use "importing-added" string in importing detail table by @snowtimeglass in #3104
- * Fix mpv loadfile syntax change by @kelciour in #3105
- * Improve timer interval display (#3096) by @AntoineQ1 in #3100
- * Fix incorrect search results after preset used.
+  * Update Qt to 6.6.2. On macOS, this should fix issues with Japanese input.
+  * Update FSRS & export benchmark API by @L-M-Sherlock in #3056
+  * Keep previous FSRS parameters if they get worse when optimizing by @abdnh in #2996
+  * The I/O editor better preserves images quality when zooming in, and supports two-finger pinch/drag on mobile platforms. By @krmanik in #3052
+  * Improved pan/zoom in image occlusions: middle mouse button, space, or ctrl/shift/alt with two fingers by @krmanik in #3080 and #3066
+  * Improvements/simplifications to FSRS optimal retention feature by @L-M-Sherlock in #3065 and #3072
+  * When updating all FSRS parameters at once, exclude suspended cards.
+  * Move most FSRS options into their own section of the deck options.
+  * Don't hide FSRS optimization section.
+  * Show a warning in the optimization section if all presets haven't been optimized for 30 days or longer.
+  * Show preset and original deck in card info by @abdnh in #3055
+  * Use system certificate store by @abdnh in #3050
+  * Ignore some extra chars in no-combining search by @abdnh in #2929
+  * Add "select all" shapes tool by @krmanik in #2981
+  * Maintain original IO cloze order in editing mode by @abdnh in #2987
+  * Fix occasional 'failed to fetch' message popping up.
+  * Fix pasted images failing to download from some sites.
+  * Add by creation date review sort order by @abdnh in #2957
+  * Add log-in button to preferences screen by @lucasscharenbroch in #2994
+  * Add support for offline builds by @knobix in #2963
+  * Add support for python logging by @cav71 in #2969
+  * Add View Files button to Check Media screen by @abdnh in #3006
+  * Allow > inside HTML attributes by @vaxr in #2918
+  * Americanize "synchronisation" by @hnvy in #2935
+  * Change default font in code editors by @abdnh in #2985
+  * Check required review count for FSRS after filtering by @abdnh in #3019
+  * clamp interval before fuzz_bounds by @L-M-Sherlock in #3024
+  * Clear out old FSRS progress as new operation starts
+  * Default to 'Bury Card' action consistently by @abdnh in #2950
+  * Do not reset original_due when card stays in filtered deck by @abdnh in #2988
+  * Don't urllib.unquote when using requests by @vaxr in #2943
+  * Fix 'ignore this update' not working.
+  * Fix processEvents() reentrancy bug in progress manager window handling by @kieranlblack in #3030
+  * Fix a 'protocol wrong type' message sometimes popping up.
+  * Fix circular import in legacy importer by @abdnh in #3007
+  * Fix code completion in Qt forms by @abdnh in #2993
+  * Fix corner rounding of alignment buttons in editor by @lucasscharenbroch in #2989
+  * Fix crash in Reviewer by @mjuhanne in #2945
+  * Fix deck names differing in case being duplicated in CSV import by @abdnh in #3008
+  * Fix error after notetype merge + downgrade.
+  * Fix flicker when hovering over deck list by @abdnh in #2958
+  * Fix Image field not hidden until user selects an image by @abdnh in #2960
+  * Fix importing of Mnemosyne due dates by @dae in #2936
+  * Fix inconsistent count in optimize/evaluate.
+  * Fix MathJax editor not opening when navigating into blocks by @abdnh in #2953
+  * Fix maybe_coalesce_note_undo_entry() by @abdnh in #2992
+  * Fix misaligned image occlusions in RTL languages by @abdnh in #3018
+  * Fix note id mix-up when resolving notetype conflicts by @RumovZ in #2940
+  * Fix notetype conflict resolution by @RumovZ in #2967
+  * Fix preset: search ignoring cards in filtered decks by @abdnh in #2997
+  * Fix progress manager window race condition by @kieranlblack in #3029
+  * Fix regex skipping over all src except the last by @vaxr in #3021
+  * Fix text input custom style wiping out base user style by @kieranlblack in #3031
+  * Fix title of Auto Advance section by @abdnh in #2949
+  * Fix toolbar button shifting on hover by @BlueGreenMagick in #2928
+  * Fix undo handling of group and some other IO tools by @abdnh in #2931
+  * Fix visual behavior of modal buttons in editor by @lucasscharenbroch in #3009
+  * Fix windows build issue by @qxo in #2947
+  * Fix/ignore revlogs before Forget entry by @L-M-Sherlock in #3002
+  * Flip indent/outdent buttons for RTL by @abdnh in #2930
+  * FSRS - Ignore revlogs before date while optimizing by @Luc-Mcgrady in #2922
+  * Honor NINJA_STATUS if already set by @knobix in #2984
+  * Improve appearance of resize handles in I/O by @krmanik in #2919
+  * Improve typing deck_due_tree() by @nix6839 in #3003
+  * Include details on what's missing when a NotFound error is triggered.
+  * Increase parent limits in custom study when 'limits start from top' is enabled by @RumovZ in #2971
+  * Initialize Browser.aspect_ratio earlier to fix AttributeError by @abdnh in #2924
+  * Make a deep copy in addcards/set_note by @lucasscharenbroch in #3013
+  * Make image occlusion's option buttons tabbable by @PLameiras in #2966
+  * Make sure editor note is saved before triggering buttons by @abdnh in #2995
+  * Make tags and tag suggestions able to be styled by add-ons by @glutanimate in #2941
+  * More precise percent of days studied by @user1823 in #2889
+  * Refactor text attribute button components by @lucasscharenbroch in #3012
+  * Shift the default network timeout back to 60 seconds.
+  * Show message if current FSRS parameters are optimal by @abdnh in #3014
+  * Show total review count when optimizing FSRS parameters by @abdnh in #3027
+  * Tweak type-in-answer filter hack by @lucasscharenbroch in #3010
+  * update FSRS to v0.2.0 by @L-M-Sherlock in #2977
+  * Use card.reps - 1 when calculating fuzz by @dae in #2933
+  * Use our translation of 'Discard' by @abdnh in #2920
+  * Containerize anki-sync-server by @jeankhawand in #3036
+  * Fix alert not appearing when FSRS parameters input is focused by @abdnh in #3053
+  * Adjust HTML editor / add-on config editor font by @abdnh in #3054
+  * Fix/set pretrain_only by fsrs_items by @L-M-Sherlock in #3051
+  * Use Card %d for IO template names by @BrayanDSO in #3049
+  * alert when the resp.weights is empty by @L-M-Sherlock in #3061
+  * When cards become due on the congrats screen, switch to overview, not back into study.
+  * Adding a note to the import options to indicate that leech and marked tags will be removed if disabled by @arbyste in #3067
+  * Fix full sync dialog failing to appear.
+  * Fix consolas not being used in editor.
+  * qt/aqt/init.py: Skip GL library workaround for FreeBSD by @knobix in #3071
+  * fix: cloze_numbers_in_string treating {{c0::}} as valid by @BrayanDSO in #3059
+  * Display deck names when deleting by @escribapetrus in #3058
+  * Rename "Forget" to "Reset" (#3078) by @vasll in #3088
+  * Reset original id when cloning notetypes by @RumovZ in #3089
+  * Use rmse in comparing parameters by @L-M-Sherlock in #3087
+  * Fix summary string for notes that failed to be imported by @RumovZ in #3092
+  * Disable ligatures in type-in highlighting by @abdnh in #3093
+  * Sync-server: add option to store hashed passwords by @laalsaas in #3083
+  * Refactor offline build process and add offline generation of Sphinx docs by @antecrescent in #3082
+  * Replace deprecated method chrono::NaiveDateTime::timestamp_millis by @ijqq in #3097
+  * Update optimal retention tooltip, and add a few extra translations.
+  * Possible workaround for sporadic toolbar height warning.
+  * "Full sync" -> "One-way sync".
+  * rename sm2 retention to historical retention by @L-M-Sherlock in #3101
+  * Use "importing-added" string in importing detail table by @snowtimeglass in #3104
+  * Fix mpv loadfile syntax change by @kelciour in #3105
+  * Improve timer interval display (#3096) by @AntoineQ1 in #3100
+  * Fix incorrect search results after preset used.
 # 23.12.1-3
 PKGBUILD:
- * reintroduce mold as linker, appears to be more memory efficient on some machines. Otherwise does not compile on memory constrained machines (<= 8GB)
+  * reintroduce mold as linker, appears to be more memory efficient on some machines. Otherwise does not compile on memory constrained machines (<= 8GB)
 # 23.12.1-2
 PKGBUILD:
- * attempt to move away from mold as linker
+  * attempt to move away from mold as linker
 
 # 23.12-1
 FSRS:
