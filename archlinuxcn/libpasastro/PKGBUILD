@@ -2,7 +2,7 @@
 # Contributor: Anatoly V. Beregovoy <avberegovoy@gmail.com>
 
 pkgname=libpasastro
-pkgver=1.4.3
+pkgver=1.4.4
 pkgrel=1
 _pkgver="v$pkgver"
 pkgdesc="Provide Pascal interface for standard astronomy libraries"
@@ -14,7 +14,7 @@ makedepends=('git')
 options=()
 source=("git+https://github.com/pchev/libpasastro.git#tag=$_pkgver"
 )
-sha256sums=('38f95945e0d63525a1f0dc7d0a7b66c3869f561ad58a28dea79be901d27ad5df')
+sha256sums=('c75f91d93ef4a308a4dbfe995a8a79f335d8b7708f7cf3f2cb559f928e769ea7')
 
 build() {
   cd $srcdir/$pkgname
