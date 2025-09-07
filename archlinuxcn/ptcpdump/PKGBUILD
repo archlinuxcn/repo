@@ -1,6 +1,6 @@
 # Maintainer: poscat
 pkgname=ptcpdump
-pkgver=0.35.0
+pkgver=0.35.1
 pkgrel=1
 pkgdesc='packet capture tool with process awareness'
 arch=('x86_64' 'aarach64')
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('libpcap' 'glibc')
 makedepends=('go')
 source=("ptcpdump-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('f1b642b0f0a573191dd60136129926d631fba249844412dcff1eeee437256cf2')
+sha256sums=('a188a3b3b90bff0843f6705dba46cb23282e5827c513f1bd6ed6a074e4d156eb')
 
 build() {
   cd "${srcdir}"/ptcpdump-${pkgver}
