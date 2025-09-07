@@ -4,14 +4,14 @@ pkgname=q-dns
 pkgdesc='A tiny command line DNS client with support for UDP, TCP, DoT, DoH, DoQ and ODoH.'
 arch=('x86_64')
 url='https://github.com/natesales/q'
-pkgver=0.19.5
+pkgver=0.19.8
 pkgrel=1
 license=('GPL-3.0-or-later')
 depends=('glibc')
 makedepends=('unzip' 'go')
 # source zip from GitHub contains commit hash in its comment
 source=("q-$pkgver.zip::$url/archive/refs/tags/v$pkgver.zip")
-sha256sums=('f3f66ca9550fa1b233d68af7cbce507a8a4fcd3490fc97668e5908ca6994dad1')
+sha256sums=('7c874ad4a23e57ea67d6747a2123ab211e99e9308f5db808b6c223d574f0446c')
 
 build() {
   local _date=$(date --utc +"%Y-%m-%dT%H:%M:%SZ")
