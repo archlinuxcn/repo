@@ -30,6 +30,7 @@ prepare() {
 build() (
 	cd DanXi
 	export CXXFLAGS+=" -Wno-error=unused-result"
+	fvm dart --disable-analytics
 	fvm dart run intl_utils:generate
 	fvm dart build_release.dart --target linux --versionCode dummy
 )
