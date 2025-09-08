@@ -1,4 +1,4 @@
-From 2e1b50f7d4a3306dacd615fa9603e65e17355fd3 Mon Sep 17 00:00:00 2001
+From 597e2e7065a1903c75e2031043c170e45d1e90e6 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
 Subject: [PATCH 4/9] Support loading extensions from STDLIB
@@ -8,7 +8,7 @@ Subject: [PATCH 4/9] Support loading extensions from STDLIB
  1 file changed, 55 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index 2da72b7828..52202ce188 100644
+index ecbb8db4a8..61878de599 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
 @@ -1124,6 +1124,14 @@ end

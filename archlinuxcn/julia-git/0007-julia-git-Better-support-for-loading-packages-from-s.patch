@@ -1,4 +1,4 @@
-From b8e5fe64605e90e9a823bd74b4dbd1990e78a481 Mon Sep 17 00:00:00 2001
+From f205d89385ec9bae204b21464505f87ccfc53851 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 15 Aug 2025 12:24:38 -0400
 Subject: [PATCH 7/9] [julia-git] Better support for loading packages from
@@ -9,7 +9,7 @@ Subject: [PATCH 7/9] [julia-git] Better support for loading packages from
  1 file changed, 4 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index 52202ce188..c17f7f8978 100644
+index 61878de599..07cee4a7e9 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
 @@ -1101,6 +1101,10 @@ function explicit_manifest_entry_path(manifest_file::String, pkg::PkgId, entry::

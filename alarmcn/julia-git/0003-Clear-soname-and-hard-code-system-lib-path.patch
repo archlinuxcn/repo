@@ -1,4 +1,4 @@
-From 229f2f3346a61f9544426b4f0d84b184830bfd68 Mon Sep 17 00:00:00 2001
+From a1992eef09e1f6d81463d2f9bc901260345b192f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/9] Clear soname and hard code system lib path
@@ -11,7 +11,7 @@ Subject: [PATCH 3/9] Clear soname and hard code system lib path
  stdlib/LibCURL_jll/src/LibCURL_jll.jl         |  36 +--
  stdlib/LibGit2_jll/src/LibGit2_jll.jl         |  38 +--
  stdlib/LibSSH2_jll/src/LibSSH2_jll.jl         |  38 +--
- stdlib/LibUnwind_jll/src/LibUnwind_jll.jl     |  26 +-
+ stdlib/LibUnwind_jll/src/LibUnwind_jll.jl     |  20 +-
  stdlib/MPFR_jll/src/MPFR_jll.jl               |  32 +--
  .../src/MozillaCACerts_jll.jl                 |  11 +-
  stdlib/OpenBLAS_jll/src/OpenBLAS_jll.jl       |  38 +--
@@ -25,7 +25,7 @@ Subject: [PATCH 3/9] Clear soname and hard code system lib path
  .../src/libblastrampoline_jll.jl              |  24 +-
  stdlib/nghttp2_jll/src/nghttp2_jll.jl         |  30 +--
  stdlib/p7zip_jll/src/p7zip_jll.jl             |  30 +--
- 21 files changed, 151 insertions(+), 900 deletions(-)
+ 21 files changed, 150 insertions(+), 895 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 index 9a0729c50d..1a5c0e2855 100644
@@ -569,36 +569,31 @@ index 6c273bbdec..47ffe89111 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/LibUnwind_jll/src/LibUnwind_jll.jl b/stdlib/LibUnwind_jll/src/LibUnwind_jll.jl
-index d396540dba..e08992aefa 100644
+index 01d12556de..e08992aefa 100644
 --- a/stdlib/LibUnwind_jll/src/LibUnwind_jll.jl
 +++ b/stdlib/LibUnwind_jll/src/LibUnwind_jll.jl
-@@ -14,19 +14,12 @@ export libunwind
+@@ -14,15 +14,12 @@ export libunwind
  # These get calculated in __init__()
  const PATH = Ref("")
  const PATH_list = String[]
 -const LIBPATH = Ref("")
 -const LIBPATH_list = String[]
 -artifact_dir::String = ""
--
--libunwind_path::String = ""
--const libunwind = LazyLibrary(
--    BundledLazyLibraryPath("libunwind.so.8"),
--    dependencies = if Sys.isfreebsd()
--        LazyLibrary[libz]
--    else
--        LazyLibrary[libgcc_s, libz]
--    end
--)
 +const LIBPATH = Ref("/usr/lib")
 +const LIBPATH_list = String["/usr/lib"]
 +artifact_dir::String = "/usr"
-+
+ 
+-libunwind_path::String = ""
+-const libunwind = LazyLibrary(
+-    BundledLazyLibraryPath("libunwind.so.8"),
+-    dependencies = LazyLibrary[libz]
+-)
 +const libunwind_path = "/usr/lib/libunwind.so"
 +const libunwind = LazyLibrary(libunwind_path)
  
  function eager_mode()
      @static if @isdefined CompilerSupportLibraries_jll
-@@ -37,13 +30,6 @@ function eager_mode()
+@@ -33,13 +30,6 @@ function eager_mode()
  end
  is_available() = @static(Sys.islinux() || Sys.isfreebsd()) ? true : false
  
