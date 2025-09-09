@@ -23,6 +23,8 @@ sha512sums=('45f2e6178a0f8174c1dabcd18ac89bd275f12f928a313954dfe939b9124144d31d7
 
 build() {
   cd "${_pkgname}-${pkgver}"
+  # fix building
+  sed -i "/build_backend/d" pyproject.toml
   python -m build --wheel --no-isolation
 }
 
