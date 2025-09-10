@@ -10,6 +10,7 @@ arch=('x86_64')
 url="https://www.cmake.org/"
 license=('custom')
 provides=(cmake=3 cmake3)
+conflicts=(cmake)
 depends=(cppdap
 	curl
 	expat
