@@ -23,13 +23,13 @@ pkgver() {
 prepare() {
 	rustup default stable
 	cd "$srcdir/autopush-rs"
-    	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "$srcdir/autopush-rs"
-    	export CARGO_TARGET_DIR=target
-    	cargo build --frozen --no-default-features --features redis --release --target-dir target
+	export CARGO_TARGET_DIR=target
+	cargo build --frozen --no-default-features --features redis --release --target-dir target
 }
 
 package() {
