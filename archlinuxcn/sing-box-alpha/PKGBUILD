@@ -39,6 +39,7 @@ build() {
         "-w"
         "-buildid="
         "-linkmode=external"
+        "-checklinkname=0"
     )
     ldflags_string=$(printf "%s " "${ldflags[@]}")
     echo "${ldflags[@]}"
