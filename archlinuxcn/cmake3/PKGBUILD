@@ -1,0 +1,61 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=cmake3
+pkgver=3.31.6
+provides=(${pkgname%3}=$pkgver)
+conflicts=(${pkgname%3})
+pkgrel=2
+pkgdesc='A cross-platform open-source make system'
+arch=('x86_64')
+url="https://www.cmake.org/"
+license=('custom')
+provides=(cmake=3 cmake3)
+depends=(cppdap
+	curl
+	expat
+	gcc-libs
+	glibc
+	hicolor-icon-theme
+	jsoncpp
+	libarchive
+	libuv
+	ncurses
+	rhash
+	zlib)
+makedepends=(emacs
+             git
+             nlohmann-json
+             python-sphinx
+             qt6-base)
+optdepends=(
+  'make: for unix Makefile generator'
+  'ninja: for ninja generator'
+  'qt6-base: cmake-gui'
+)
+source=(git+https://gitlab.kitware.com/cmake/cmake.git#tag=v$pkgver)
+sha512sums=('SKIP')
+#validpgpkeys=(CBA23971357C2E6590D9EFD3EC8FEF3A7BFB4EDA) # Brad King <brad.king@kitware.com>
+
+build() {
+  cd ${pkgname%3}
+  ./bootstrap --prefix=/usr \
+    CXXFLAGS="-fpermissive" \
+    --mandir=/share/man \
+    --docdir=/share/doc/cmake \
+    --datadir=/share/cmake \
+    --sphinx-man \
+    --sphinx-html \
+    --system-libs \
+    --qt-gui \
+    --parallel=$(/usr/bin/getconf _NPROCESSORS_ONLN)
+  make
+}
+
+package() {
+  cd ${pkgname%3}
+  make DESTDIR="${pkgdir}" install
+
+  rm -r "$pkgdir"/usr/share/doc/cmake/html/_sources
+  emacs -batch -f batch-byte-compile "${pkgdir}"/usr/share/emacs/site-lisp/cmake-mode.el
+  install -Dm644 Copyright.txt "${pkgdir}"/usr/share/licenses/${pkgname%3}/LICENSE
+}
