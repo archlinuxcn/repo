@@ -1,6 +1,6 @@
 # Maintainer: wszqkzqk <wszqkzqk@qq.com>
 pkgname=oh-my-posh
-pkgver=26.22.0
+pkgver=26.22.2
 pkgrel=1
 pkgdesc="A prompt theme engine for any shell."
 arch=('x86_64' 'armv7h' 'aarch64' 'riscv64' 'loong64')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=('go' 'gcc')
 depends=('glibc')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('a9dd6579373ebfc3ab137846f8254931883189dec58722271a1f71bbdbd95805')
+sha256sums=('1fc8aa15b3c09afde9aade860922a1f8ca76c499a61dab5f7a654cffaf10445e')
 
 build() {
     export CGO_CPPFLAGS="${CPPFLAGS}"
