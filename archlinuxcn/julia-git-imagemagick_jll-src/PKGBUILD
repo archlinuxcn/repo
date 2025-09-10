@@ -1,6 +1,6 @@
 pkgname=julia-git-imagemagick_jll-src
-pkgver=7.1.2002+0
-_commit=19fea2c0c9c7a95767d7559c9e396512594fa978
+pkgver=7.1.2004+0
+_commit=ae118b7cfc723c40f989643cc6b0b6ab8435c319
 pkgrel=1
 pkgdesc="ImageMagick_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/ImageMagick_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git imagemagick)
 source=("git+https://github.com/JuliaBinaryWrappers/ImageMagick_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('1aff4f63006c6862a9b76c49ea79339a98a2c9c1e4d2ea6175258e393ff80118'
+sha256sums=('a340476a756aad90cb38736fffbc98e32ccc2f07737055dcd5d5456bbbfcd3d6'
             'e89b4d26d0ebce537ae53477d9bd332a1280f8b17a12ee46160e248a43471f0e')
 
 build() {
