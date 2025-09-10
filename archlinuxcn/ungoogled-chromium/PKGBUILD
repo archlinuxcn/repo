@@ -10,14 +10,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=139.0.7258.154
+pkgver=140.0.7339.80
 pkgrel=1
 _launcher_ver=8
-_manual_clone=1
+_manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=139.0.7258.154-1
+_uc_ver=140.0.7339.80-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -49,11 +49,12 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch
         chromium-138-nodejs-version-check.patch
-        chromium-138-rust-1.86-mismatched_lifetime_syntaxes.patch)
-sha256sums=('720a1196410080056cd97a1f5ec34d68ba216a281d9b5157b7ea81ea018ec661'
-            'f70d1e9b180fcf4e65cb07a632c781aee02e11a3f6cb218974287f81a8e7122e'
+        chromium-138-rust-1.86-mismatched_lifetime_syntaxes.patch
+        chromium-140.0.7339.41-rust.patch)
+sha256sums=('3c59ca1da92a7d1ec2cf152b3c99ebd9348e1db43e8cb782afcb19dfcaeaca2c'
+            '468a0618f4620860464477d505f516d1305794bcb0354a2241f212ac99e9aa8d'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
-            'a6507371588ed4d87d6501220249264abfbcd814771cc1ba351e0ac6cc987400'
+            '75681c815bb2a8c102f0d7af3a3790b5012adbbce38780716b257b7da2e1c3d5'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             'e6da901e4d0860058dc2f90c6bbcdc38a0cf4b0a69122000f62204f24fa7e374'
             '8ba5c67b7eb6cacd2dbbc29e6766169f0fca3bbb07779b1a0a76c913f17d343f'
@@ -62,7 +63,8 @@ sha256sums=('720a1196410080056cd97a1f5ec34d68ba216a281d9b5157b7ea81ea018ec661'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
-            '5abc8611463b3097fc5ce58017ef918af8b70d616ad093b8b486d017d021bbdf')
+            '5abc8611463b3097fc5ce58017ef918af8b70d616ad093b8b486d017d021bbdf'
+            '0eb47afd031188cf5a3f0502f3025a73a1799dfa52dff9906db5a3c2af24e2eb')
 
 if (( _manual_clone )); then
   source[0]=fetch-chromium-release
@@ -129,6 +131,7 @@ prepare() {
 
   # Fixes from NixOS
   patch -Np1 -i ../chromium-138-rust-1.86-mismatched_lifetime_syntaxes.patch
+  patch -Np1 -i ../chromium-140.0.7339.41-rust.patch
 
   # Allow libclang_rt.builtins from compiler-rt >= 16 to be used
   patch -Np1 -i ../compiler-rt-adjust-paths.patch

@@ -1,8 +1,6 @@
-diff --git a/build/config/clang/BUILD.gn b/build/config/clang/BUILD.gn
-index 4b6365dc70f6..1e96b663d04c 100644
---- a/build/config/clang/BUILD.gn
-+++ b/build/config/clang/BUILD.gn
-@@ -210,16 +210,21 @@ template("clang_lib") {
+--- a/build/config/clang/BUILD.gn	2025-09-06 17:16:42.185248252 +0000
++++ b/build/config/clang/BUILD.gn	2025-09-06 17:19:45.922911584 +0000
+@@ -209,16 +209,21 @@ template("clang_lib") {
        } else if (is_linux || is_chromeos) {
          if (current_cpu == "x64") {
            _dir = "x86_64-unknown-linux-gnu"
@@ -21,18 +19,6 @@ index 4b6365dc70f6..1e96b663d04c 100644
          } else if (current_cpu == "riscv64") {
            _dir = "riscv64-unknown-linux-gnu"
 +          _suffix = "-riscv64"
-         } else {
-           assert(false)  # Unhandled cpu type
-         }
-@@ -250,6 +255,11 @@ template("clang_lib") {
-         assert(false)  # Unhandled target platform
-       }
- 
-+      # Bit of a hack to make this find builtins from compiler-rt >= 16
-+      if (is_linux || is_chromeos) {
-+        _dir = "linux"
-+      }
-+
-       _lib_file = "${_prefix}clang_rt.${_libname}${_suffix}.${_ext}"
-       libs = [ "$_clang_lib_dir/$_dir/$_lib_file" ]
- 
+         } else if (current_cpu == "ppc64") {
+           _dir = "ppc64le-unknown-linux-gnu"
+         } else if (current_cpu == "s390x") {
