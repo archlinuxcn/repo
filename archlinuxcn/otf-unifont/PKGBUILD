@@ -6,7 +6,7 @@
 
 pkgname=otf-unifont
 _pkgname="${pkgname#otf-}"
-pkgver=16.0.04
+pkgver=17.0.01
 pkgrel=1
 pkgdesc='OpenType version of the GNU Unifont'
 url='https://unifoundry.com/unifont.html'
@@ -15,7 +15,7 @@ license=('OFL-1.1 OR GPL-2.0-or-later WITH Font-exception-2.0')
 provides=(emoji-font)
 options=(!debug)
 source=("https://unifoundry.com/pub/unifont/unifont-${pkgver}/unifont-${pkgver}.tar.gz"{,.sig})
-sha256sums=('2bd4e4679757126f48e1bf2c1be40b09aa92162bfedda4683ce5fbc70a2a5972'
+sha256sums=('234af86e7a0e851f020900db5ad0afc32691c248db362df9b2914cf50c42d940'
             'SKIP')
 validpgpkeys=('95D2E9AB8740D8046387FD151A09227B1F435A33') # Paul Hardy
 
