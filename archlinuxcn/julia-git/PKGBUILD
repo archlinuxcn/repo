@@ -318,7 +318,7 @@ build_in() {
   make "${opts[@]}" -C base version_git.jl.phony
   make "${opts[@]}" -C deps
   make "${opts[@]}" -C src jl_internal_funcs.inc
-  make "${opts[@]}" compile-database
+  make "${opts[@]}" -C src compile-database
   make "${opts[@]}" julia-cli-release
   # I'm a bit too lazy to fix this properly
   # so I'm just going to create this missing symlink
