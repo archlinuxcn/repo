@@ -29,7 +29,7 @@ build() {
 
 package() {
 	cd "$srcdir/autopush-rs"
-	install -Dm755 "target/release/autopush" "$pkgdir/usr/bin/autopush"
+	#install -Dm755 "target/release/autoconnect" "$pkgdir/usr/bin/autoconnect"
 	install -Dm755 "target/release/autoendpoint" -t "$pkgdir/usr/bin/"
 
 	# These are missing
