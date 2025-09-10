@@ -1,0 +1,16 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: vcs_update()
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: "github"
+    github: "p1gp1g/autopush-rs"
+  - alias: "grpc"
+build_prefix: archlinuxcn-x86_64
+
+repo_depends:
+  - portable
