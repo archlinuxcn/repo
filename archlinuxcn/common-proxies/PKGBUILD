@@ -3,14 +3,14 @@
 pkgname=common-proxies
 arch=('x86_64')
 pkgver=3.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Gateways and Rewrite Proxies for UnifiedPush written in Go"
 url=https://codeberg.org/UnifiedPush/common-proxies.git
 license=("MIT")
 depends=("glibc")
 source=("git+https://codeberg.org/UnifiedPush/common-proxies.git#tag=v${pkgver}")
 makedepends=("go" "git" )
-sha256sums=('SKIP')
+sha256sums=('b8b7872d638fa3a3125c4f0d35c914dad5c17fc6795a1fedf8d452f16940bab1')
 provides=("common-proxies")
 
 function prepare(){
