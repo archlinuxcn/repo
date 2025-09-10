@@ -5,7 +5,7 @@
 
 pkgname=hmcl
 _pkgname=HMCL
-pkgver=3.6.16
+pkgver=3.6.17
 _tag="release-${pkgver}"
 pkgrel=1
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
@@ -20,7 +20,7 @@ source=("hmcl-launch-script"
         "${pkgname}-${pkgver}.tgz::${url}/archive/${_tag}.tar.gz")
 b2sums=('1de8eca922b01b9c4c6d9a173143f05b900fd6b12b1b27bae175948a43125619d0e14c82d704548f70539af13eb4fd9f7288749265949089c7d6a8fe9032d284'
         '6c38da38fa13ad0af061d593f7733d6a406025c473240ccee4d07c89e71f8d5ead430374a7500f1395a7341c67e06ef3664cb1747ab93cba63459f7906b1598a'
-        '792c19d86cdc7c0d73d522549e64cbf366c72240003f4a6f1252dd6568b0eec024837ec2127d19d1dbfe0891c5d87959dcf9ca42df01584b68648b5badd4d9f2')
+        'dc6347fb426cc0b113333b528245fa159cb9f7b4e59b7aa122a65a222383b496e43cdb1f69b0a091477c632defbbc916a548f73655cce1063565b228617003f1')
 
 build() {
   # Pre-configured Microsoft Azure app credentials for HMCL's Microsoft login feature
