@@ -17,7 +17,7 @@ sha256sums=('SKIP')
 
 pkgver() {
 	cd autopush-rs
-	git describe --long --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
