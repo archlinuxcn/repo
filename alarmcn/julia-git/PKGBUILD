@@ -280,6 +280,11 @@ EOF
       -e 's/cpu-target=native/cpu-target=native -t1,0/' contrib/generate_precompile.jl
   sed -i -e 's/-fno-omit-frame-pointer/-fomit-frame-pointer/g' */Makefile
   sed -i -e 's/\(symlink_system_library,CSL,libquadmath,[0-9]*\))/\1,ALLOW_FAILURE)/g' base/Makefile
+  # compile_commands.json was treated as a PHONY target and therefore will be regenerated
+  # even if it exists. The generation also break if there are two version of it running
+  # in parallel (which happens when we compile release and debug build in parallel)
+  sed -i -e '/^\.PHONY:/s/compile_commands\.json/compile_commands.json.tmp/' \
+      src/Makefile src/flisp/Makefile src/support/Makefile
 }
 
 _with_git_url_override() {
@@ -312,6 +317,8 @@ build_in() {
   export LDFLAGS+=' -lzstd'
 
   ver=$(cat VERSION | cut -f 1-2 -d '.')
+
+  find -name 'compile_commands.json*' -exec rm {} \;
 
   # These are to workaround bugs in the hand-made build system that can't handle
   # parallel build properly.
