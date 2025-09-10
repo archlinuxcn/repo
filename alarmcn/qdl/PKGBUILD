@@ -7,7 +7,7 @@ pkgver=2.1
 pkgrel=3
 pkgdesc="Tool to communicate with Qualcomm System On a Chip bootroms to install or execute code"
 arch=(armv7h aarch64 i686 x86_64)
-url='https://github.com/andersson/qdl'
+url='https://github.com/linux-msm/qdl'
 license=('BSD3')
 depends=(libxml2.so zlib xz libicui18n.so libicuuc.so libicudata.so libusb-1.0.so)
 source=("https://github.com/andersson/${pkgname}/archive/v${pkgver}.tar.gz")
@@ -28,5 +28,5 @@ package(){
 
   # Package documentation
   install -d "${pkgdir}/usr/share/doc/${pkgname}/"
-  install README "${pkgdir}/usr/share/doc/${pkgname}/"
+  install README.md "${pkgdir}/usr/share/doc/${pkgname}/"
 }
