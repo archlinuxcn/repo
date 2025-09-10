@@ -7,9 +7,8 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: "github"
-    github: "mozilla-services/autopush-rs"
-    use_latest_release: true
-    include_prereleases: false
+  - source: "git"
+    git: "https://codeberg.org/UnifiedPush/common-proxies.git"
+    prefix: v
   - alias: "grpc"
-build_prefix: archlinuxcn-x86_64
+build_prefix: extra-x86_64
