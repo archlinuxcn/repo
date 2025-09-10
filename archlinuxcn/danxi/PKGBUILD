@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=danxi
-pkgver=1.4.8
+pkgver=1.4.9
 pkgrel=1
 pkgdesc="Maybe the best all-rounded service app for Fudan University students | 可能是复旦学生最好的第三方校园服务 APP"
 url="https://github.com/DanXi-Dev/DanXi"
@@ -10,7 +10,7 @@ arch=('x86_64')
 depends=('gtk3' 'libsecret' 'gnome-keyring')
 makedepends=('git' 'clang' 'cmake' 'ninja' 'fvm' 'imagemagick')
 source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('24bc79baf3a9eda79dc0e768e104b5a608f4a0a73c4e7bc26d9bbdde0969f1f9')
+sha256sums=('d3ccae05b5975dfbb43882a3254475d469930ed87a50be8483d93743c56dc12c')
 
 prepare() {
 	cd DanXi
