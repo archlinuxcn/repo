@@ -2,8 +2,8 @@
 # Contributor: Edgar Luque <git@edgarluque.com>
 
 pkgname=ddnet
-pkgver=19.3
-pkgrel=2
+pkgver=19.4
+pkgrel=1
 # allow testing locally a release candidate using pkgver like '19.3rc3'
 _version=${pkgver/rc/-rc}
 pkgdesc="A Teeworlds modification with a unique cooperative gameplay."
@@ -20,7 +20,7 @@ source=("https://github.com/ddnet/ddnet/archive/$_version/$pkgname-$_version.tar
         "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf"
         # Licenses extracted from license.txt
         "Zlib.txt" "OFL-1.1.txt" "Bitstream-Vera.txt" "Arev.txt")
-sha256sums=('15fe9fe8aeebe1edfd14ea9b188c9db4b281cc24c155c64e817fc4ab4387d8f3'
+sha256sums=('1bae13f965cc349ff3dd3d5761cc06bf76db72b7febcb0747730ca3dc1c5c0d2'
             '9377a9d7c87abae166c8fa98cd79a61c74482f80f80bc930ae043349e9a84965'
             '70034f237270b38bf312238a26cfd322e212ca5714bfea4ae91e80c639ce8738'
             '043452f4de3c86d903973009bb3e59b3492a6669b86d0b1410e59a1476a87369'
