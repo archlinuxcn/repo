@@ -1,6 +1,6 @@
 pkgname=julia-git-latexify-src
-pkgver=0.16.9
-_commit=ae6262ed8133521af2eac3e4fbefd4e613f1b8d7
+pkgver=0.16.10
+_commit=7ea6bdf6c2a5aa1a399ae980d57eba6691c11c6c
 pkgrel=1
 pkgdesc="Latexify.jl"
 url="https://github.com/korsbo/Latexify.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/korsbo/Latexify.jl.git#commit=$_commit")
-sha256sums=('fb0f5acf6edf9fa132fdd3c59262acd94bec1ce8f20fee4b295f519dc154fe05')
+sha256sums=('6b3f8c629393364d58afe6a9a4089c72dd586c94c7a83b68515f0e8a94ed1d03')
 
 package() {
   cd Latexify.jl
