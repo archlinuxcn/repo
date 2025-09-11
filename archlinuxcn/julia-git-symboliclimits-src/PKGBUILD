@@ -1,6 +1,6 @@
 pkgname=julia-git-symboliclimits-src
-pkgver=0.2.2
-_commit=5851b0df92346a05850bd234794669ce079a178a
+pkgver=0.2.3
+_commit=09f09dfcb6c081aad76ffbcca810f32b2e2751c5
 pkgrel=1
 pkgdesc="SymbolicLimits.jl"
 url="https://github.com/SciML/SymbolicLimits.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/SymbolicLimits.jl.git#commit=$_commit")
-sha256sums=('0b634344d72f8e0965fb967af293d7f1720fefd4eb7e6fbb21da6d7d1c494ac2')
+sha256sums=('1ae8985e32fc5f2bd52bf715c86f33701d446f8a863f5768cce20c286fa39548')
 
 package() {
   cd SymbolicLimits.jl
