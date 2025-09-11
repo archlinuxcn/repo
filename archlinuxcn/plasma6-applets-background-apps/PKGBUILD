@@ -1,0 +1,26 @@
+# Maintainer: Yuzu Vita <g311571057 at gmail dot com>
+pkgname=plasma6-applets-background-apps-git
+pkgver=r14.94fa3fa
+pkgrel=1
+pkgdesc="An Plasma applet to list XDG Desktop Background Apps"
+arch=('x86_64')
+url="https://github.com/jinliu/plasma-applet-background-apps"
+license=('GPL-3.0-or-later')
+depends=(libplasma qt6-base qt6-declarative kirigami kservice gcc-libs glibc)
+makedepends=(git cmake extra-cmake-modules)
+source=(${pkgname}::git+https://github.com/jinliu/plasma-applet-background-apps.git)
+sha256sums=(SKIP)
+
+pkgver() {
+    cd "$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B build -S $pkgname -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}
