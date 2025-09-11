@@ -45,7 +45,7 @@ libxext  libxfixes  libxrandr  libxss  libxt  mime-types  nspr  nss  pango  ttf-
 			echo "Omitting Directory"
 		else
 			if [[ -L "${file}" ]]; then
-				ln -vsf "$(readlink -f "${file}"")" "${pkgdir}/${file}"
+				ln -vsf "$(readlink -f "${file}")" "${pkgdir}/${file}"
 			else
 				install -vDm755 "${file}" "${pkgdir}/${file}"
 			fi
