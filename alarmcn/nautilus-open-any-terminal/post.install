@@ -2,9 +2,9 @@
 
 post_install() {
     echo "---------------------------------------------------------------------------------------------"
-    echo "> Run 'nautilus|caja -q' to kill and allow it to load this extension."
+    echo "> Run 'nautilus -q' or 'caja -q' to kill and allow it to load this extension."
 	echo "> To change default settings:"
-	echo "gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal alacritty"
+	echo "gsettings set com.github.stunkymonkey.nautilus-open-any-terminal terminal ptyxis"
 	echo "gsettings set com.github.stunkymonkey.nautilus-open-any-terminal keybindings '<Ctrl><Alt>t'"
 	echo "gsettings set com.github.stunkymonkey.nautilus-open-any-terminal new-tab true"
 	echo "gsettings set com.github.stunkymonkey.nautilus-open-any-terminal flatpak system"
