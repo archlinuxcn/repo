@@ -21,15 +21,21 @@ optdepends=('sing-geosite: sing-geosite database'
 
 backup=("etc/$pkgname/config.json")
 
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    export GOPATH="${srcdir}"
+    go mod download -modcacherw
+}
+
 _tags=with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale
 build(){
-    cd "$pkgname-$pkgver"
+    cd "${pkgname}-${pkgver}"
 
-    export CGO_CPPFLAGS="$CPPFLAGS"
-    export CGO_CFLAGS="$CFLAGS"
-    export CGO_CXXFLAGS="$CXXFLAGS"
-    # fix for ELF file ('usr/bin/sing-box') lacks GNU_PROPERTY_X86_FEATURE_1_SHSTK.
-    export CGO_LDFLAGS="$LDFLAGS -Wl,-z,shstk -Wl,-z,ibt"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 
     go build \
         -v \
@@ -38,9 +44,8 @@ build(){
         -mod=readonly \
         -modcacherw \
         -tags "$_tags" \
-        -ldflags "
-            -X \"github.com/sagernet/sing-box/constant.Version=$pkgver\"
-            -s -w -buildid= -linkmode=external" \
+        -ldflags "-s -buildid= -X \"github.com/sagernet/sing-box/constant.Version=${pkgver}\" -checklinkname=0
+            -linkmode external -extldflags \"${LDFLAGS}\"" \
         ./cmd/sing-box
 
     install -d completions
