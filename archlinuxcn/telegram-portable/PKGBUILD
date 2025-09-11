@@ -74,6 +74,7 @@ function package() {
 		fi
 	done < file.list
 	rm -f "${pkgdir}/usr/share/applications"/*
+	install -Dm755 "${pkgdir}/usr/bin/Telegram" -t "${pkgdir}/usr/lib/portable/overlay-usr"
 	rm -f "${pkgdir}/usr/bin"/*
 	rm -rf "${pkgdir}/usr/share/dbus-1/services"
 	install -Dm644 portable-config \
