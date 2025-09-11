@@ -5,11 +5,6 @@
 
 pkgname=librime-luajit
 pkgver=1.14.0
-_octagramcommit=dfcc15115788c828d9dd7b4bff68067d3ce2ffb8
-_luacommit=68f9c364a2d25a04c7d4794981d7c796b05ab627
-_charcodecommit=55e7f563e999802d41a13ba02657c1be4b2011b4
-_protocommit=657a923cd4c333e681dc943e6894e6f6d42d25b4
-_predictcommit=920bd41ebf6f9bf6855d14fbe80212e54e749791
 pkgrel=1
 epoch=1
 pkgdesc="Rime input method engine"
@@ -19,27 +14,27 @@ license=('BSD-3-Clause')
 depends=('boost-libs' 'capnproto' 'gcc-libs' 'glibc' 'opencc' 'yaml-cpp' 'leveldb' 'librime-data' 'luajit' 'google-glog' 'marisa')
 makedepends=('git' 'cmake' 'boost' 'gtest' 'ninja')
 source=("git+https://github.com/rime/librime.git#tag=$pkgver"
-        "git+https://github.com/lotem/librime-octagram.git#commit=$_octagramcommit"
-        "git+https://github.com/hchunhui/librime-lua.git#commit=$_luacommit"
-        "git+https://github.com/rime/librime-charcode.git#commit=$_charcodecommit"
-        "git+https://github.com/lotem/librime-proto.git#commit=$_protocommit"
-        "git+https://github.com/rime/librime-predict.git#commit=$_predictcommit")
+        "git+https://github.com/lotem/librime-octagram.git"
+        "git+https://github.com/hchunhui/librime-lua.git"
+        "git+https://github.com/rime/librime-charcode.git"
+        "git+https://github.com/lotem/librime-proto.git"
+        "git+https://github.com/rime/librime-predict.git")
 sha512sums=('b738d8aa552795b927e612d9f37b4785f2f0abeab5deb88313f9f56dea20677d1a7faf9dce807300b948bfb86cca2f590c1497f6142d33b406202eb1103d8a08'
-            '1d4c633d15a810b97171f9d44c8474b59e857253310a961a2ab93042bc8bc5c86e549c60816470959c35b68909fcfad14e0661ca28627289f18c1445eb690485'
-            '96c5c65c7909b2940d9016fe0efc2331824af8cb68a7d4079574b0f9a1470f2e7e004af61f431f264f9589ffec78e31ae637d10a1d3fdffd9d4a0f8730c13dc6'
-            'c21a1384f7eba77afdcda4bd0cffcdfa1bc6989e009f02c685160de443f8fc658bee7def57fe93162b3d5f31d366b48271d7204b4f6e7dd057facb2787703a15'
-            'e9b2aa47a87f96af97fc55686e85d905bd7bb06b633a9a318aeeea2731d87b38e50f9f821c2e68a30d58f4daaeaff97124247c1028a049ced922c6e7b4cc20ab'
-            'cf7062baa8dfe6d97946979545094a1962b73347f233065219b69488f078b6022b46f9bf59d0643de01ef36fe45b2d72375f0578747f85a6d389bdef4acc6967')
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 provides=("librime=${pkgver}")
 conflicts=(librime)
 
 prepare() {
   cd librime/plugins
-  ln -sf "$srcdir"/librime-octagram
-  ln -sf "$srcdir"/librime-lua
-  ln -sf "$srcdir"/librime-charcode
-  ln -sf "$srcdir"/librime-proto
-  ln -sf "$srcdir"/librime-predict
+  ln -sf "$srcdir"/librime-octagram .
+  ln -sf "$srcdir"/librime-lua .
+  ln -sf "$srcdir"/librime-charcode .
+  ln -sf "$srcdir"/librime-proto .
+  ln -sf "$srcdir"/librime-predict .
 }
 
 build() {
