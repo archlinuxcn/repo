@@ -1,6 +1,6 @@
 # Maintainer: Yuzu Vita <g311571057 at gmail dot com>
 pkgname=plasma6-applets-catwalk
-pkgver=2.3
+pkgver=None
 pkgrel=1
 pkgdesc="A simple plasmoid showing the total CPU usage. Visually made like RunCat."
 arch=('any')
