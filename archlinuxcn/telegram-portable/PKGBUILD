@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=telegram-portable
-pkgver=142.0
+pkgver=6.1.3
 pkgrel=1
 epoch=1
 pkgdesc="Telegram version by Lily, sandboxed by portable"
@@ -56,9 +56,9 @@ source=(
 )
 
 
-md5sums=('c4a91aae851117c60742624c1b64a7c9'
-         'e9286af04e5d107b38523c92f9c68c76'
-         '2f74e3e788705621db286bb25fcabdee')
+md5sums=('601d52651237e4f6d1d89ef3f8c7e346'
+         '7df62cd08a94af40006c27f232471d26'
+         '331de7dca46cab34e5b3cdba8a6d2f68')
 
 function prepare() {
 	pacman -Ql telegram-desktop-lily >file.list
