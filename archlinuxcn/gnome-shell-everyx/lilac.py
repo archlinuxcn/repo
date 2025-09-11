@@ -32,7 +32,7 @@ def pre_build():
       state = "source"
     elif state == "source" and line == ')':
       line = '  "0001-ibus-candidate-popup-support-rime-comment-style.patch"\n' + \
-             '  "0002-message-tray-add-timeout-watchdog-for-notification-hiding-animation.patch"\n' + \
+             '  "0002-messageTray-Add-timeout-watchdog-for-notification-hi.patch"\n' + \
              line
       state = "out"
 
@@ -40,8 +40,8 @@ def pre_build():
       state = 'b2sums'
     elif state == 'b2sums' and line.endswith(')'):
       line = line.replace(')', 
-                          "\n        'c9cb3d42cdbb16322b170268b7a18ba7156ed1839525c6a6398d286d55aab15720dee17442ce103e2d8521a335046b5137d2b182113e1e72ff4477cea3c55594'" + \
-                          "\n        'a95c44fd46bc51db91ec5867dc93b550cfef630113f63545555dfaa779b972bc2bea6c60c349abf5ac76c942e481d80b9f4fbd84c779a3907a17f2d32a10e72f'" + \
+                          "\n        'd462269fe9894d44ec6a2b5a030010ce16aaee5cebdd79c9d1817c4e5bbf054f9cc0da2e8048e1e09828645e142c3cab664d119f922b597c8b19f7687358e7b4'" + \
+                          "\n        'cb4c20a87eb17de850d2e16e31f9acd4d4d5a5d5cd4d31c6d57627f2d67391b4d5d85c8b545ee188826609a0eee8d0bb57fb8249e48e08c15112d9aba4ad4ffa'" + \
                           ")")
       state = 'out'
 

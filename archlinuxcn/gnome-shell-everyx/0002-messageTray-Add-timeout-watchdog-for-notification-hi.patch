@@ -1,8 +1,25 @@
+From 8ee5adda1ac8c78b59fe5790da5f0510b067a079 Mon Sep 17 00:00:00 2001
+From: everyx <lunt.luo@gmail.com>
+Date: Mon, 1 Sep 2025 11:56:09 +0800
+Subject: [PATCH 2/3] messageTray: Add timeout watchdog for notification hiding
+ animation
+
+The animation in `_hideNotification()` can occasionally get stuck, failing to call its `onComplete` handler. This leaves the notification in the HIDING state indefinitely.
+
+Add a `GLib.timeout_add()` as a watchdog. If the animation doesn't complete within a reasonable time after it starts, the timeout forces the state to HIDDEN and completes the cleanup.
+
+The timeout is removed upon successful animation completion.
+
+Closes: https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/6006
+---
+ js/ui/messageTray.js | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
 diff --git a/js/ui/messageTray.js b/js/ui/messageTray.js
-index cbc006478..671d58bef 100644
+index 30502bfe1..bae529893 100644
 --- a/js/ui/messageTray.js
 +++ b/js/ui/messageTray.js
-@@ -1246,6 +1246,14 @@ export const MessageTray = GObject.registerClass({
+@@ -1241,6 +1241,14 @@ export const MessageTray = GObject.registerClass({
  
          const duration = animate ? ANIMATION_TIME : 0;
          this._notificationState = State.HIDING;
@@ -17,7 +34,7 @@ index cbc006478..671d58bef 100644
          this._bannerBin.ease({
              opacity: 0,
              duration,
-@@ -1256,6 +1264,7 @@ export const MessageTray = GObject.registerClass({
+@@ -1251,6 +1259,7 @@ export const MessageTray = GObject.registerClass({
              duration,
              mode: Clutter.AnimationMode.EASE_OUT_BACK,
              onComplete: () => {
@@ -25,7 +42,7 @@ index cbc006478..671d58bef 100644
                  this._notificationState = State.HIDDEN;
                  this._hideNotificationCompleted();
                  this._updateState();
-@@ -1263,6 +1272,14 @@ export const MessageTray = GObject.registerClass({
+@@ -1258,6 +1267,14 @@ export const MessageTray = GObject.registerClass({
          });
      }
  
@@ -40,3 +57,6 @@ index cbc006478..671d58bef 100644
      _hideNotificationCompleted() {
          let notification = this._notification;
          this._notification = null;
+-- 
+2.51.0
+

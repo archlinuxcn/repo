@@ -1,15 +1,13 @@
-diff --git a/.gitignore b/.gitignore
-index e3d4d8242..964e240fd 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -8,3 +8,7 @@ subprojects/jasmine-gjs
- .buildconfig
- .eslintcache
- .vscode
-+node_modules
-+package.json
-+pnpm-lock.yaml
-+GEMINI.md
+From 1a6d7661559dc1af525cf1aedad54e7b80a95836 Mon Sep 17 00:00:00 2001
+From: everyx <lunt.luo@gmail.com>
+Date: Fri, 1 Aug 2025 17:17:14 +0800
+Subject: [PATCH 1/3] ibus-candidate-popup: support rime comment style
+
+---
+ .../gnome-shell-sass/widgets/_ibus-popup.scss |  8 ++++-
+ js/ui/ibusCandidatePopup.js                   | 31 ++++++++++++++++---
+ 2 files changed, 34 insertions(+), 5 deletions(-)
+
 diff --git a/data/theme/gnome-shell-sass/widgets/_ibus-popup.scss b/data/theme/gnome-shell-sass/widgets/_ibus-popup.scss
 index bedc31186..fe8276d80 100644
 --- a/data/theme/gnome-shell-sass/widgets/_ibus-popup.scss
@@ -95,3 +93,6 @@ index 0bb4e47ee..8f14d7848 100644
                      let index = i;
                      this._panelService.candidate_clicked(index, 1, 0);
                  });
+-- 
+2.51.0
+
