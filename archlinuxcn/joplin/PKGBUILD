@@ -8,10 +8,10 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.4.10
+pkgver=3.4.12
 groups=('joplin')
 pkgrel=1
-_electronVersion=36
+_electronVersion=37
 depends=("electron${_electronVersion}" "nodejs>20" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
@@ -25,7 +25,7 @@ source=(
 )
 sha256sums=('9223cc816f8175ddaf8839f9357d2bd1c4831692504927c98d8e1eefa7df796e'
             'ff2232a2e518de7987af2a6d25524d75c2f7d1b343993b5134a341ae8f815dd5'
-            '549fb5e0410cedb8d03241e97b07114068fb288387b1cd2731713aa6b7e3cb56')
+            'c00ac2540371543d85b4362fd716ff4748f18a61276d137cad91d318cd30f744')
 
 _setup_env() {
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
