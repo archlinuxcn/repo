@@ -8,7 +8,7 @@ pkgdesc="Local Profile Agent (LPA) for eSIM cards via PC/SC readers, or AT / APD
 arch=(x86_64 aarch64 armv7h)
 url="https://github.com/estkme-group/lpac"
 license=('AGPL-3.0-only AND LGPL-2.0-only AND MIT')
-depends=(curl pcsclite glibc)
+depends=(curl pcsclite glibc cjson)
 makedepends=(cmake git ninja)
 provides=(lpac)
 conflicts=(lpac)
@@ -26,7 +26,8 @@ build() {
     -G Ninja \
     -DCMAKE_INSTALL_PREFIX="/usr" \
     -DLPAC_DYNAMIC_LIBEUICC=ON \
-    -DLPAC_DYNAMIC_DRIVERS=ON
+    -DLPAC_DYNAMIC_DRIVERS=ON \
+    -DUSE_SYSTEM_DEPS=ON
   ninja -C build
 }
 
