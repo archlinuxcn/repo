@@ -1,7 +1,7 @@
 # Maintainer: everyx <lunt.luo#gmail.com>
 
 pkgname=sing-box
-pkgver=1.12.5
+pkgver=1.12.7
 pkgrel=1
 
 pkgdesc='The universal proxy platform.'
@@ -12,7 +12,7 @@ license=("LicenseRef-${pkgname}")
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz"
         "sing-box.rules")
-sha256sums=('47171af120860b7367b64d6bd4fbf7cccb090c66e5d98b2b7abc292a0be20847'
+sha256sums=('cf2c6b9782c95287720f5a64dfcc937b0d417df0168fcd358ccd58c324f2b924'
             '1365536e1875043b969e2e18d7313ab7c6f7f9f63387f25506bb04362b44f206')
 conflicts=("$pkgname-git" "$pkgname-beta")
 depends=("glibc")
@@ -21,15 +21,21 @@ optdepends=('sing-geosite: sing-geosite database'
 
 backup=("etc/$pkgname/config.json")
 
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    export GOPATH="${srcdir}"
+    go mod download -modcacherw
+}
+
 _tags=with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale
 build(){
-    cd "$pkgname-$pkgver"
+    cd "${pkgname}-${pkgver}"
 
-    export CGO_CPPFLAGS="$CPPFLAGS"
-    export CGO_CFLAGS="$CFLAGS"
-    export CGO_CXXFLAGS="$CXXFLAGS"
-    # fix for ELF file ('usr/bin/sing-box') lacks GNU_PROPERTY_X86_FEATURE_1_SHSTK.
-    export CGO_LDFLAGS="$LDFLAGS -Wl,-z,shstk -Wl,-z,ibt"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 
     go build \
         -v \
@@ -38,9 +44,8 @@ build(){
         -mod=readonly \
         -modcacherw \
         -tags "$_tags" \
-        -ldflags "
-            -X \"github.com/sagernet/sing-box/constant.Version=$pkgver\"
-            -s -w -buildid= -linkmode=external" \
+        -ldflags "-s -buildid= -X \"github.com/sagernet/sing-box/constant.Version=${pkgver}\" -checklinkname=0
+            -linkmode external -extldflags \"${LDFLAGS}\"" \
         ./cmd/sing-box
 
     install -d completions
