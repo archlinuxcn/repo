@@ -2,7 +2,7 @@
 
 _pkgname=uv-dynamic-versioning
 pkgname=python-uv-dynamic-versioning
-pkgver=0.11.0
+pkgver=0.11.1
 pkgrel=1
 pkgdesc='PDynamic versioning based on VCS tags for uv/hatch project'
 arch=(any)
@@ -25,7 +25,7 @@ makedepends=(
 source=(
   "${_pkgname}-${pkgver}.tar.gz::https://github.com/ninoseki/uv-dynamic-versioning/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('fe614d0e1bbf2264438c3044400776e0f4f56461f93db33ddbef45b1940f31deba0e31f92e70a12d3a345d7dc24fc1dfbeef6f50f6825436098e2caa9970d0b1')
+sha512sums=('c75a66a0c86871f72235023025453bc6de67235abbf81e83b9372ff48a4945e7d25135207a6a8d6b353cf9ee0927b785cc9d732f12e01c0487509f46eefe5ff4')
 
 build() {
   cd "${_pkgname}-${pkgver}"
