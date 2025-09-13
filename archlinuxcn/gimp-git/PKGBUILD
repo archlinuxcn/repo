@@ -8,7 +8,7 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=2
-pkgver=55074.0dbc19d3036
+pkgver=55745.2d74278860
 pkgrel=1
 pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
@@ -29,7 +29,7 @@ depends=(
 	'poppler-glib>=0.69.0'
 	'poppler-data>=0.4.9'
 	'openexr>=1.6.1'
-	'mypaint-brushes1>=1.3.0'
+	'mypaint-brushes'
 	'babl-git'
 	'gegl-git'
 	'cairo>=1.14.0'
@@ -38,8 +38,8 @@ depends=(
 	)
 makedepends=('git' 'intltool>=0.40.1'
              'alsa-lib>=1.0.0' 'libxslt' 'glib-networking'
-             'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk'
-             'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'glib2-devel'
+             'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk' 'appstream'
+             'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'glib2-devel' 'cmake'
              'gjs' 'python-gobject' 'luajit' 'meson' 'xorg-server-xvfb' 'gtk-doc' 'gi-docgen')
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
