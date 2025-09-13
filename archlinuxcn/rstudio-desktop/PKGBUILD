@@ -6,19 +6,22 @@
 # https://github.com/rstudio/rstudio
 
 ## options
+: ${_gwt_version:=2.12.2}
+: ${_java_version:=17}
 : ${_nodeversion:=23}
 : ${_pandocver:=current}
 : ${_soci_version:=4.0.3}
+
 : ${_quarto_branch:=release/rstudio-cranberry-hibiscus}
 : ${_quarto:=false}
 
-: ${_copilot_version:=1.300.0}
+: ${_copilot_version:=1.371.0}
 
-: ${_commit:=ab7c1bc795c7dcff8f26215b832a3649a19fc16c}
+: ${_commit:=af5fc22a687c0f462ee27c6afeeee38ee46507b9}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2025.05.1.513
+pkgver=2025.09.0.387
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
@@ -43,11 +46,11 @@ depends=(
   'r'
 )
 makedepends=(
-  'apache-ant'
+  "java-environment${_java_version:+=$_java_version}"
+  'ant'
   'boost'
   'cmake'
   'git'
-  'java-environment'
   'libcups'
   'ninja'
   'nvm'
@@ -75,7 +78,7 @@ fi
 provides=("$_pkgname")
 conflicts=("$_pkgname")
 
-options=('!emptydirs' '!debug')
+options=('!emptydirs' '!debug' '!strip')
 
 _source_main() {
   _pkgsrc="rstudio-$_commit"
@@ -88,6 +91,13 @@ _source_main() {
     'SKIP'
     'SKIP'
   )
+}
+
+_source_gwt() {
+  _pkgext_gwt="tar.gz"
+  noextract+=("gwt-${_gwt_version}.$_pkgext_gwt")
+  source+=("https://rstudio-buildtools.s3.us-east-1.amazonaws.com/gwt/gwt-${_gwt_version}.$_pkgext_gwt")
+  sha256sums+=('27284accdad05ff8919a7ac6dc5f939a511a90842a35f6393517506d74809e76')
 }
 
 _source_soci() {
@@ -129,6 +139,7 @@ _source_copilot() {
 }
 
 _source_main
+_source_gwt
 _source_soci
 _source_copilot
 
@@ -199,6 +210,11 @@ prepare() (
 
   # Panmirror is picked up now from Quarto repo
   ln -sfT "$srcdir/quarto" "$srcdir/$_pkgsrc/src/gwt/lib/quarto"
+
+  # GWT
+  mkdir -p common/gwtproject
+  cd common/gwtproject
+  bsdtar -xf "$srcdir/gwt-$_gwt_version.$_pkgext_gwt"
 )
 
 build() (
