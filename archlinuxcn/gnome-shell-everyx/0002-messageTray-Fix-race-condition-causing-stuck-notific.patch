@@ -1,0 +1,46 @@
+From 209ccb5fce34fc72b3ee7b67a2b5dbe7cfe6a9b4 Mon Sep 17 00:00:00 2001
+From: everyx <lunt.luo@gmail.com>
+Date: Sat, 13 Sep 2025 12:01:17 +0800
+Subject: [PATCH 2/2] messageTray: Fix race condition causing stuck
+ notification banners
+
+A race condition can occur where a notification banner gets stuck on screen
+and never disappears.
+
+This happens when a new notification needs to be shown while an old one
+is in the middle of its hiding animation. The process to show the new
+notification calls `remove_all_transitions()`, which forcefully stops
+the hiding animation of the old one.
+
+The cleanup logic, which destroys the old banner actor, was located in
+the `onComplete` handler of the animation. Since the animation was
+interrupted and not completed, this handler was never called, leaving a
+"zombie" banner on screen.
+
+To fix this, the call to the cleanup function is moved from the
+`onComplete` handler to an `onStopped` handler. This handler is
+guaranteed to be called whenever an animation stops, regardless of
+whether it finished successfully or was interrupted. This ensures the
+banner is always cleaned up correctly.
+
+Closes: https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/6006
+---
+ js/ui/messageTray.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/js/ui/messageTray.js b/js/ui/messageTray.js
+index 30502bfe1..f9f9bbf39 100644
+--- a/js/ui/messageTray.js
++++ b/js/ui/messageTray.js
+@@ -1250,7 +1250,7 @@ export const MessageTray = GObject.registerClass({
+             y: -this._bannerBin.height,
+             duration,
+             mode: Clutter.AnimationMode.EASE_OUT_BACK,
+-            onComplete: () => {
++            onStopped: () => {
+                 this._notificationState = State.HIDDEN;
+                 this._hideNotificationCompleted();
+                 this._updateState();
+-- 
+2.51.0
+
