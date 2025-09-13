@@ -3,7 +3,7 @@
 _pyname=openstep_plist
 pkgname=python-${_pyname/_/-}
 pkgver=0.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc='OpenStep plist parser and writer written in Cython'
 arch=(x86_64)
 url="https://github.com/fonttools/$_pyname"
@@ -16,6 +16,12 @@ checkdepends=(python-pytest)
 _archive="$_pyname-$pkgver"
 source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz")
 sha256sums=('daf386652ae086bce8b18784c59a8252523faca3b1ded876bbf393594d862b78')
+
+prepare() {
+	cd "$_archive"
+	# https://github.com/fonttools/openstep-plist/commit/5467a2c3bed3004b79c70b5b288f33293c96742b
+	sed -i -e '200s/(int, long)/int/' src/openstep_plist/writer.pyx
+}
 
 build() {
 	cd "$_archive"
