@@ -1,12 +1,8 @@
 # Contributor: katt <magunasu.b97@gmail.com>
 
-## options
-: ${i_swear_to_never_bother_the_developer_about_this_package:=false}
-: ${forbidden_versions_file_path:=/dev/null}
-
 pkgname=duckstation-git
 _pkgname=duckstation
-pkgver=0.1.r9409.g168b80dd4
+pkgver=0.1.r9701.gee9f32185
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
 pkgrel=1
 arch=(x86_64 aarch64)
@@ -107,42 +103,14 @@ pkgver() {
 }
 
 prepare() {
-    # checkout correct versions of deps
-    if [[ "$forbidden_versions_file_path" == "/dev/null" ]]; then
-        cat <<EOF
-Stenzek prohibits using the versions file in this build script.
-Set the path to the dependencies versions file (from scripts/)
-in the forbidden_versions_file_path variable, relative to the project root.
-EOF
-        exit 1
-    fi
-
-    deps_script=$srcdir/duckstation/$forbidden_versions_file_path
-    for src in "${source[@]}"; do
-        local src_name=${src%%::*}
-        for dep in "${_source_var[@]}"; do
-            local dep_name dep_var
-            IFS=':' read dep_name dep_var _ <<< "$dep"
-            if [ "$src_name" = "$dep_name" ]; then
-                local dep_ver
-                dep_ver=$(grep -Po "(?<=^$dep_var=).+" "$deps_script" )
-                echo "Checking out $dep_ver for $src_name..."
-                git -C "$srcdir/$src_name" checkout -q "$dep_ver"
-            fi
-        done
-    done
-
     # bundle additional resources
     cp "$srcdir/cheats.zip" "$srcdir/patches.zip" "$srcdir/duckstation/data/resources"
 
     # unbreak the build
-    if [ "$i_swear_to_never_bother_the_developer_about_this_package" = "true" ]; then
-        cd "$srcdir/duckstation"
-        sed -i 's/archlinux/marchlinux/g' CMakeModules/DuckStationBuildSummary.cmake
-        sed -i 's/\/usr\/lib/\/usr\/local\/lib/g' src/duckstation-qt/qthost.cpp
-        sed -i 's/StartsWithNoCase/EndsWithNoCase/g' src/duckstation-qt/qthost.cpp
-    fi
-
+    cd "$srcdir/duckstation"
+    sed -i 's/archlinux/marchlinux/g' CMakeModules/DuckStationBuildSummary.cmake
+    sed -i 's/\/usr\/lib/\/usr\/local\/lib/g' src/duckstation-qt/qthost.cpp
+    sed -i 's/StartsWithNoCase/EndsWithNoCase/g' src/duckstation-qt/qthost.cpp
 }
 
 build() {
@@ -201,7 +169,11 @@ build() {
 }
 
 package() {
-    ninja -C build install
+    install -d ${pkgdir}/usr/lib/$_pkgname
+    cp -a "${srcdir}/build/bin/." "${pkgdir}/usr/lib/${_pkgname}/"
+    chmod -R 755 "${pkgdir}/usr/lib/${_pkgname}"
+
+    install -Dvm644 ${srcdir}/deps/usr/lib/*.so* ${pkgdir}/usr/lib/${_pkgname}
 
     # patch rpath
     patchelf --force-rpath --set-rpath "/usr/lib/${_pkgname}" "${pkgdir}/usr/lib/${_pkgname}/$_pkgname-qt"
