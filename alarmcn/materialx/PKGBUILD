@@ -3,7 +3,7 @@
 # Contributor: Fabio Loli <fabio.loli@disroot.org>
 
 pkgname=materialx
-pkgver=1.39.3
+pkgver=1.39.4
 pkgrel=1
 pkgdesc="Open standard for representing rich material and look-development content in computer graphics"
 arch=(aarch64 x86_64)
@@ -16,15 +16,13 @@ source=("git+https://github.com/AcademySoftwareFoundation/MaterialX.git#tag=v${p
         "${pkgname}-imgui-node-editor::git+https://github.com/thedmd/imgui-node-editor"
         "${pkgname}-imgui::git+https://github.com/ocornut/imgui"
         "${pkgname}-nanogui::git+https://github.com/mitsuba-renderer/nanogui"
-        materialx-2338.patch::https://patch-diff.githubusercontent.com/raw/AcademySoftwareFoundation/MaterialX/pull/2338.patch
         "materialx-grapheditor.desktop"
         "materialx-view.desktop"
         "materialx.xml")
-sha256sums=('4a06c9357634624baf4af7673132c93f80841d7a793b2bf38ddc460b5cb2f201'
+sha256sums=('a3200358c13f8ce332cb46136a1ec67b2bbf7f22ab6b0e57466c3ab863baaa05'
             'SKIP'
             'SKIP'
             'SKIP'
-            '97f373d29ac53ee21dc9f856a408ab960e5d2eccdd3f4295452f00af52c7a5c0'
             '88e5ecafa8088b90f799b49c36af59f8462ca7426cdec58215332ee283556ddb'
             '2f2b675540fea39a749f89083a9c341319c1f7b478fbb049a77bd66c29b2ee01'
             'd9b9426fb94121da052b796542cc74a0c5d7cef06997be70611c25f345553861')
@@ -51,8 +49,6 @@ prepare() {
   sed -i 's|"libraries"|"/usr/share/materialx/libraries"|g' source/MaterialXGenShader/GenOptions.h
 
   dos2unix python/Scripts/*
-
-  patch -Np1 -i "$srcdir"/materialx-2338.patch
 }
 
 build() {
