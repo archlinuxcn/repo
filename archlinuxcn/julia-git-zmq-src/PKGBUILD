@@ -1,6 +1,6 @@
 pkgname=julia-git-zmq-src
-pkgver=1.4.1
-_commit=f3f8fa9977c798396f25627f7562db700ed27c47
+pkgver=1.5.0
+_commit=8e1a50f14f439b1590033973e8391b64e1191d93
 pkgrel=1
 pkgdesc="ZMQ.jl"
 url="https://github.com/JuliaInterop/ZMQ.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaInterop/ZMQ.jl.git#commit=$_commit")
-sha256sums=('9c17a7821a5077d2df7e26f36c9587e6a75060b367c310625c6034e6c40160c2')
+sha256sums=('fd4b162b83d4aa65150d695f2831104e726bcfdf6d47db7bf070c74ad8fb87e3')
 
 package() {
   cd ZMQ.jl
