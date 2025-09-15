@@ -1,6 +1,6 @@
 pkgname=julia-git-forwarddiff-src
-pkgver=0.10.38
-_commit=eb5ddeb4529e1d153fedca54d6373820a0118a4b
+pkgver=0.10.39
+_commit=55ba55d104c0890e098b2e7cfe37a50dbbc5e26f
 pkgrel=1
 pkgdesc="ForwardDiff.jl"
 url="https://github.com/JuliaDiff/ForwardDiff.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDiff/ForwardDiff.jl.git#commit=$_commit")
-sha256sums=('f697eec911d02436817e9155718162caa1bbef3f8c0cfeafe03184d8cab64b6f')
+sha256sums=('30ac9ba3ef07169a5c82235dbded498a9372faf27539ee58c11c4e2df816f92b')
 
 package() {
   cd ForwardDiff.jl
