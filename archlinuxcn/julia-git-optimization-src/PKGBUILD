@@ -1,6 +1,6 @@
 pkgname=julia-git-optimization-src
-pkgver=4.6.0
-_commit=628d4224318049785f91178e45ee64b40f0ad822
+pkgver=4.7.0
+_commit=85c5e515d5b44a9762a7b19d1bb0a03148eefcb5
 pkgrel=1
 pkgdesc="Optimization.jl"
 url="https://github.com/SciML/Optimization.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/Optimization.jl.git#commit=$_commit")
-sha256sums=('3813acfacd771cc8c90bb6591403c3d13c22aa297801389fdc2476b6fbf34158')
+sha256sums=('5a83031f8e498a463ab60515ada86612ad1d5da97bc33b1bdcb9646731056d34')
 
 package() {
   cd Optimization.jl
