@@ -2,8 +2,8 @@ pkgbase=julia-git-plots-src
 _subpkgs=(RecipesBase
           RecipesPipeline)
 pkgname=(julia-git-plots-src)
-pkgver=1.40.19
-_commit=3a2a37357ba5d3598a5023bacc329bbb10bf339a
+pkgver=1.40.20
+_commit=8d8965d40dd565472abe4ca9b26fa8411470b1a3
 pkgrel=1
 pkgdesc="Plots.jl"
 url="https://github.com/JuliaPlots/Plots.jl.git"
@@ -12,7 +12,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPlots/Plots.jl.git#commit=$_commit")
-sha256sums=('847ed994951fac941254aff1fbc233727f0f1a634adbc919088f5de84145e841')
+sha256sums=('8288f9e611f6eb97aad4ed94b0434425f336cf3011b69de27dc1f6e917791c39')
 
 package_julia-git-plots-src() {
   cd Plots.jl
