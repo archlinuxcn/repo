@@ -2,13 +2,13 @@
 
 pkgname=beancount
 pkgdesc='Double-Entry Accounting from Text Files'
-pkgver=3.1.0
+pkgver=3.2.0
 pkgrel=1
 arch=('i686' 'x86_64' 'armv7h')
 url="http://furius.ca/beancount/"
 license=('GPL')
 source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-b2sums=('a20322fa4e71cf357529ed96e137a03a3854fad569c66a20dcbea4b79258aa80cb6aab9297f933205749fb11d7fad0cbb0ed17a1a96de4cb462c0e14cd6bdb09')
+b2sums=('4f6caa0b68c84e3e90556569eda3ef47005db326f9e01db31338a0630dd8a7fb844d496bceaaee757b45779c20e7561427cc52c35b74542d71c6209098b493f3')
 depends=("python" "python-click" "python-dateutil" "python-regex")
 conflicts=("beancount-hg")
 makedepends=(python-setuptools)
