@@ -1,0 +1,18 @@
+pkgname=julia-git-incompletelu-src
+pkgver=0.2.1
+_commit=9a111fe23bbcb651f7f84779965d584070b2a015
+pkgrel=1
+pkgdesc="IncompleteLU.jl"
+url="https://github.com/haampie/IncompleteLU.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/haampie/IncompleteLU.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd IncompleteLU.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh IncompleteLU "${pkgdir}" "${pkgname}" julia-git
+}
