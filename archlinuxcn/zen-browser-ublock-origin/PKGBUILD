@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=zen-browser-ublock-origin
-pkgver=1.66.2
+pkgver=1.66.4
 pkgrel=1
 epoch=1
 pkgdesc='Efficient blocker add-on for various browsers. Fast, potent, and lean. Symlink to the Firefox addon.'
