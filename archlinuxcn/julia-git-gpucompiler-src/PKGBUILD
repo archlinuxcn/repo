@@ -11,7 +11,7 @@ depends=(julia-git)
 source=("git+https://github.com/JuliaGPU/GPUCompiler.jl.git#commit=$_commit"
         0001-Fix-compilation.patch)
 sha256sums=('db81d0529c5ceeaa879bcf81173e8e50e29936b0ffcce1c734d283c6870b2180'
-            'abb24770576d6d7d8b85d01cbcc9b56e5b65a6ea310414fdce819166962f490e')
+            'ebfd63323ed118d1b3cb97d0bf64f6eda6ba7c69f4d82bf90a001e6ef63edb6b')
 
 prepare() {
   cd GPUCompiler.jl

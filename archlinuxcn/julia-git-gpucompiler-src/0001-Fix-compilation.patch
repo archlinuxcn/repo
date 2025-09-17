@@ -1,14 +1,14 @@
-From d76bc9a2efd17d574f8c707203e0ed21b1f267b2 Mon Sep 17 00:00:00 2001
+From 8369efa83e46f596cd441612d52efd0d626f4f2b Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 16 Sep 2025 23:20:38 -0400
 Subject: [PATCH] Fix compilation
 
 ---
- src/jlgen.jl | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ src/jlgen.jl | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
 diff --git a/src/jlgen.jl b/src/jlgen.jl
-index 1bff8a0..96a3301 100644
+index 1bff8a0..07412d6 100644
 --- a/src/jlgen.jl
 +++ b/src/jlgen.jl
 @@ -589,7 +589,11 @@ function ci_cache_populate(interp, cache, mi, min_world, max_world)
@@ -24,6 +24,30 @@ index 1bff8a0..96a3301 100644
              else
                  # TODO: typeinf_code could return something with different edges/ages/owner/abi (needing an update to callee), which we don't handle here
                  src = CC.typeinf_code(interp, mi, true)
+@@ -801,7 +805,22 @@ function compile_method_instance(@nospecialize(job::CompilerJob))
+         end
+     end
+ 
+-    if VERSION >= v"1.12.0-DEV.1703"
++    if VERSION >= v"1.13.0-DEV.1131"
++        num_cis = Ref{Csize_t}(0)
++        @ccall jl_get_llvm_cis(native_code::Ptr{Cvoid}, num_cis::Ptr{Csize_t},
++                               C_NULL::Ptr{Cvoid})::Nothing
++        code_instances = Vector{CodeInstance}(undef, num_cis[])
++        resize!(method_instances, num_cis[])
++        @ccall jl_get_llvm_cis(native_code::Ptr{Cvoid}, num_cis::Ptr{Csize_t},
++                               code_instances::Ptr{Cvoid})::Nothing
++        for i in 1:num_cis[]
++            cidef = code_instances[i].def
++            if isa(cidef, Core.ABIOverride)
++                cidef = cidef.def
++            end
++            method_instances[i] = cidef
++        end
++    elseif VERSION >= v"1.12.0-DEV.1703"
+         # on sufficiently recent versions of Julia, we can query the MIs compiled.
+         # this is required after the move to `invokce(::CodeInstance)`, because our
+         # lookup function (used to populate method_instances) isn't always called then.
 -- 
 2.51.0
 
