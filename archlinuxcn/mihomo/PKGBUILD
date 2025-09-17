@@ -36,7 +36,6 @@ build(){
 		-tags with_gvisor -o ${pkgname}-${pkgver}
 }
 package() {
-	install -vDm755 "${srcdir}/start.sh" "${pkgdir}/usr/lib/mihomo/start"
 	install -vDm600 "${srcdir}/config.yaml" "${pkgdir}/etc/mihomo/config.yaml"
 	install -vDm644 "${srcdir}/${pkgname}.service"  -t "${pkgdir}/usr/lib/systemd/system"
 	cd "${srcdir}"/mihomo-${pkgver}
