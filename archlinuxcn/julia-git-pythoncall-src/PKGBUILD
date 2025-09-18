@@ -11,7 +11,7 @@ depends=(julia-git python)
 source=("git+https://github.com/JuliaPy/PythonCall.jl.git#commit=$_commit"
         0001-Patch-for-ArchLinux-package.patch)
 sha256sums=('860c864deba5ec76bf6ffab51298f82396385f186445dde6ff93411a9004da02'
-            '1289fbec57bd9d8887268df39785627575de4baa1a81a803639175dc5e55d917')
+            'cc7681430488984a8a16be908d6b7408bc4d0096c5e594179f95dc080c397bc3')
 
 prepare() {
   cd PythonCall.jl
