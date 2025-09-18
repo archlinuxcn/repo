@@ -6,14 +6,14 @@ _ARCHS=('ecp5' 'ice40' 'himbaechel' 'nexus' 'generic')
 
 _pkgname="nextpnr"
 pkgname="$_pkgname-git"
-pkgver=0.8.r20.g5206162
+pkgver=0.9.r4.g4ab735c
 pkgrel=1
 pkgdesc='Portable FPGA place and route tool'
 url='https://github.com/YosysHQ/nextpnr'
 license=('ISC')
 arch=('i686' 'x86_64')
 
-depends=(
+depends=("libboost_filesystem.so" "libboost_iostreams.so" "libboost_program_options.so" "libboost_system.so" "libboost_thread.so"
   'boost-libs'
   'python'
   'qt5-base'
