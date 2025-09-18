@@ -1,6 +1,6 @@
 pkgname=spral
-pkgver=2025.05.20
-pkgrel=2
+pkgver=2025.09.18
+pkgrel=1
 pkgdesc="Sparse Parallel Robust Algorithms Library"
 arch=('aarch64' 'x86_64')
 url="https://github.com/ralna/spral"
@@ -8,7 +8,7 @@ license=('BSD')
 makedepends=(gcc-fortran meson)
 depends=('metis' 'lapack' 'hwloc')
 source=("https://github.com/ralna/spral/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('77c03b52b5f52b5dff7fb5338be7518e09b1bdf0c0c8899c8938377b9ff240da')
+sha256sums=('1358168ac95297049e4fc810e54a16e0c765796cfbaa156e09979e2620b7dae7')
 
 build() {
   cd $pkgname-$pkgver
