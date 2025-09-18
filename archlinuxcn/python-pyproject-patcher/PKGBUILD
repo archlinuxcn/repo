@@ -3,7 +3,7 @@
 pkgname=python-pyproject-patcher
 _gitpkgname=pyproject-patcher
 pkgver=0.2.3
-pkgrel=2
+pkgrel=3
 # shellcheck disable=SC2016  # Not meant to expand
 pkgdesc='Collection of convenience functions to patch `pyproject.toml` in place'
 arch=('any')
