@@ -1,7 +1,7 @@
 # Maintainer: Claudia Pellegrino <aur ät cpellegrino.de>
 
 pkgname=packetry-git
-pkgver=0.4.0.r875.12a867b
+pkgver=0.4.0.r1047.3d39650
 pkgrel=1
 pkgdesc='USB 2.0 protocol analysis app for use with Cynthion'
 arch=('x86_64')
@@ -45,7 +45,11 @@ sha512sums=(
 
 pkgver() {
   printf "%s.r%s.%s" \
-    "$(cargo pkgid --manifest-path "${pkgname}/Cargo.toml" | sed "s/^.*${pkgname%-git}@//")" \
+    "$(
+      RUSTUP_TOOLCHAIN=stable \
+        cargo pkgid --manifest-path "${pkgname}/Cargo.toml" \
+        | sed "s/^.*${pkgname%-git}@//"
+    )" \
     "$(git -C "${pkgname}" rev-list --count HEAD)" \
     "$(git -C "${pkgname}" rev-parse --short HEAD)"
 }
