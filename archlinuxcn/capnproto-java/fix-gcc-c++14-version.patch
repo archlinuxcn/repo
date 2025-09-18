@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 91369c0..088383d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -8,7 +8,7 @@ CAPNP_CXX_FLAGS=-I $(CAPNP_PREFIX)/include -L $(CAPNP_PREFIX)/lib -lkj -lcapnp
+ endif
+ 
+ CXX=g++
+-CXX_FLAGS=-std=c++11 $(CAPNP_CXX_FLAGS)
++CXX_FLAGS=-std=c++14 $(CAPNP_CXX_FLAGS)
+ 
+ CAPNPC_JAVA_SOURCES=compiler/src/main/cpp/capnpc-java.c++
+ 

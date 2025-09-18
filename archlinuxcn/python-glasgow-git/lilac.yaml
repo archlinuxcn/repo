@@ -1,0 +1,22 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: coelacanthus@archlinuxcn.org
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  aur_pre_build(maintainers=['m42uko'])
+  add_makedepends(['git'])
+
+post_build: aur_post_build
+
+repo_depends:
+  - icestorm-git
+  - nextpnr-git
+  - python-amaranth
+  - python-fx2-git
+
+update_on:
+  - source: aur
+    aur: python-glasgow-git
+  - alias: python

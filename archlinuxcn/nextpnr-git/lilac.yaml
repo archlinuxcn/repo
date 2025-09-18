@@ -1,0 +1,42 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: coelacanthus@archlinuxcn.org
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  aur_pre_build(maintainers=['grahamedgecombe', 'xiota', 'thotypous'])
+  add_depends([
+    'libboost_system.so',
+    'libboost_filesystem.so',
+    'libboost_iostreams.so',
+    'libboost_program_options.so',
+    'libboost_thread.so'
+  ])
+
+post_build: aur_post_build
+
+repo_depends:
+  - icestorm-git
+  - prjapicula-git
+  - prjoxide-git
+
+update_on:
+  - source: aur
+    aur: nextpnr-git
+  - alias: python
+  - source: alpm
+    alpm: boost-libs
+    provided: libboost_system.so
+  - source: alpm
+    alpm: boost-libs
+    provided: libboost_filesystem.so
+  - source: alpm
+    alpm: boost-libs
+    provided: libboost_iostreams.so
+  - source: alpm
+    alpm: boost-libs
+    provided: libboost_program_options.so
+  - source: alpm
+    alpm: boost-libs
+    provided: libboost_thread.so
