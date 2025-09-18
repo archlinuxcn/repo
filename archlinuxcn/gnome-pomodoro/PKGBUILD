@@ -8,7 +8,7 @@
 # Contributor: maus25 <mirko378@gmail.com>
 
 pkgname=gnome-pomodoro
-pkgver=0.27.0
+pkgver=0.28.0
 pkgrel=1
 pkgdesc='A time management utility for GNOME based on the pomodoro technique!'
 arch=('i686' 'x86_64')
@@ -41,7 +41,7 @@ depends=(
 )
 makedepends=('meson' 'vala')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/gnome-pomodoro/gnome-pomodoro/archive/$pkgver.tar.gz")
-sha256sums=('266c773dd591ae373440805fd6885d3052155e63c4c3671322e621ad1a42f7f8')
+sha256sums=('31c0ad477dc4f22e3c4fa284b51a415faa2e807f91aa580798b07f90973b7271')
 
 prepare() {
   cd "$srcdir/gnome-pomodoro-$pkgver"
