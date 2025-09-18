@@ -1,0 +1,36 @@
+# Maintainer: Jos Dehaes <jos.dehaes@gmail.com>
+# Maintainer: Matthias Kurz <m.kurz@irregular.at>
+
+pkgname=muvm
+pkgver=0.4.1
+pkgrel=1
+pkgdesc='run programs from your system in a microVM'
+arch=('aarch64')
+url='https://github.com/AsahiLinux/muvm'
+makedepends=('cargo' 'clang')
+depends=('libkrun' 'socat' 'passt')
+source=(
+  "muvm-${pkgver}.tar.gz::https://github.com/AsahiLinux/muvm/archive/refs/tags/muvm-${pkgver}.tar.gz"
+  LICENSE
+)
+sha256sums=(
+  'e60b104e7d85e2dcc1b70521060524384cd91d6a1dbc6923d591d00efa276e5f'
+  'bd61ba908048f45e22a02784e3c9bd595307d8a3d838346dab9ca4a1b1217b93'
+)
+
+build() {
+  cd muvm-muvm-${pkgver}
+  export RUSTFLAGS="-C debuginfo=0 --remap-path-prefix=${srcdir}=."
+  cargo build --release
+  strip --strip-unneeded target/release/muvm
+  strip --strip-unneeded target/release/muvm-guest
+}
+
+package() {
+  cd muvm-muvm-${pkgver}
+  install -Dpm0755 -t "$pkgdir"/usr/share/licenses/muvm/ ../LICENSE
+  install -Dm755 target/release/muvm "$pkgdir"/usr/bin/muvm
+  install -Dm755 target/release/muvm-guest "$pkgdir"/usr/bin/muvm-guest
+  install -Dm644 share/wireplumber/wireplumber.conf.d/50-muvm-access.conf "$pkgdir"/usr/share/wireplumber/wireplumber.conf.d/50-muvm-access.conf
+  install -Dm644 share/wireplumber/scripts/client/access-muvm.lua "$pkgdir"/usr/share/wireplumber/scripts/client/access-muvm.lua
+}

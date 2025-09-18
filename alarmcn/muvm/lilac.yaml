@@ -1,0 +1,14 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.removeprefix('muvm-'))
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: AsahiLinux/muvm
+    use_max_tag: true
+    include_regex: 'muvm-([0-9.]+)'
+  - source: manual
+    manual: 1
