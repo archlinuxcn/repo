@@ -4,7 +4,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-User=naiveproxy
+DynamicUser=true
 Restart=on-failure
 RestartSec=5s
 LoadCredential=config.json:/etc/naiveproxy/%i.json

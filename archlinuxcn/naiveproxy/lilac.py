@@ -39,7 +39,7 @@ def download_and_extract_source():
     tmp_folder = tempfile.mkdtemp()
     tar_gz_file_path = os.path.join(tmp_folder, '{}.tar.gz'.format(latest_tag))
 
-    r = s.get(latest_tar_gz_url)
+    r = s.get(latest_tar_gz_url, follow_redirects=True)
     with open(tar_gz_file_path, 'wb') as f:
         f.write(r.content)
 

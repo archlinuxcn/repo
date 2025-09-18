@@ -3,9 +3,9 @@
 
 pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
-pkgver=138.0.7204.35_1
+pkgver=140.0.7339.123_1
 pkgrel=1
-_pkgver=138.0.7204.35
+_pkgver=140.0.7339.123
 _pkgrel=1
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
@@ -14,13 +14,12 @@ depends=("gcc-libs" "glibc")
 makedepends=("ninja" "gn" "ccache" "python")
 checkdepends=("python" "openssl")
 
-_PGO_PATH='chrome-linux-7204-1750182162-e119762f9b8c4eff265cc04443b39939e0b77575-569fd9dc10e73e84c7d4b1c66b5ed02250b14769.profdata'
-_clang_path='clang-llvmorg-21-init-11777-gfd3fecfc-1.tar.xz'
+_PGO_PATH='chrome-linux-main-1752989296-3dc3c84b1ea64dfbadeca18145c6e823bab3ff87-3a0e503d2bd87771c1e55103ac2a9a7b59a7411b.profdata'
+_clang_path='clang-llvmorg-21-init-16348-gbd809ffb-15.tar.xz'
 
 source=(
   "naiveproxy.service"
   "naiveproxy@.service"
-  "naiveproxy.sysusers"
   "${pkgname}-${_pkgver}-${_pkgrel}.tar.gz::https://github.com/klzgrad/naiveproxy/archive/refs/tags/v${_pkgver}-${_pkgrel}.tar.gz"
   "${_PGO_PATH}::https://storage.googleapis.com/chromium-optimization-profiles/pgo_profiles/${_PGO_PATH}"
   "${_clang_path}::https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64/${_clang_path}"
@@ -30,22 +29,20 @@ noextract=(
   "${_clang_path}"
 )
 
-sha1sums=('8157dcfe4cfdaa34acb15932d0fc81ccf8a4f50c'
-          '518df21dfb82f32b11d1dc8ed6e5cfca58706c6f'
-          '5257aa60a388a69b8ab6a2c787c021b750096879'
-          '4a6ad497dedfc1515890356d6f10a2585a3937bf'
-          'e119762f9b8c4eff265cc04443b39939e0b77575'
-          '11b8be03e351f868f57ae91cde529b090a741e8c')
-sha256sums=('a9d56f8a8aada5ba2fd240ec91265b8590e7b3ee0d970e3b7a3e45095014752f'
-            'ba7f4338f6fa26b1da762b711e04f714e496e0bace482a59f236472ac7925e56'
-            'a16e3039d5d2766ae123ab0afe31c4d1f610355f733e30baf2bf21f0c4a82b6e'
-            'b2d409ea4118ec4a3cc7abe003bfed35eab2a366655ac16c67e6cf477f4f1ac5'
-            '0bb14d8f9c9bd2d7a6c4ed62e60efde77ce20e939bb01e5074b5754aed814273'
-            '5f69279b3697166facfc354634157e0a8a32fa6e36864200ad8a8f85add3f3f6')
+sha1sums=('f959ceed9d451e3344d99b2a1572ca27416a5675'
+          '278983a6edd5477e8f6f0557ea206f236fdc51dc'
+          'ead91b7704ae58cb5796475fa2bb4e8dae335872'
+          '3dc3c84b1ea64dfbadeca18145c6e823bab3ff87'
+          '0bce0a1e502116cc502d24a5709c19e23701953b')
+sha256sums=('8b56b5a401cb7f77b50376ec27e40445f4bdbe85890ab717327de187ded92c53'
+            'dd8f8e154832d49795be417557db9cc408976cc324452715f5d796b40e5a752d'
+            '0f272070b91c5f19e9a922d5e4412ce3274878ab9d30385a3c2a89ab41394b10'
+            '97dcc3060a7ea38abffffc128e030d16bed0992810a551cef740d56f1eb1f09b'
+            'b448a78b42740352a37b458115a9482f213097bbf28f1f839e72cab829bdfa6d')
 
 backup=('etc/naiveproxy/config.json')
 provides=('naiveproxy')
-conflicts=('naiveproxy-git' 'naiveproxy-bin')
+conflicts=('naiveproxy')
 
 prepare() {
   SRC_DIR="${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}/src"
@@ -71,9 +68,8 @@ build() {
     is_official_build=true
     exclude_unwind_tables=true
     enable_resource_allowlist_generation=false
+    chrome_pgo_phase=2
     symbol_level=0"
-
-  PYTHON=$(which python3 2>/dev/null)
 
   export CCACHE_SLOPPINESS=time_macros
   export CCACHE_BASEDIR="$PWD"
@@ -91,16 +87,14 @@ build() {
     treat_warnings_as_errors=false
 
     is_cronet_build=true
-    chrome_pgo_phase=2
 
-    enable_base_tracing=false
     use_udev=false
     use_aura=false
     use_ozone=false
     use_gio=false
-    use_gtk=false
     use_platform_icu_alternatives=true
     use_glib=false
+    is_perfetto_embedder=true
 
     disable_file_support=true
     enable_websockets=false
@@ -112,9 +106,11 @@ build() {
     include_transport_security_state_preload_list=false
     enable_device_bound_sessions=false
     enable_bracketed_proxy_uris=true
+    enable_quic_proxy_support=true
+    enable_disk_cache_sql_backend=false
 
     use_nss_certs=false
-  
+
     enable_backup_ref_ptr_support=false
     enable_dangling_raw_ptr_checks=false
   '
@@ -147,11 +143,10 @@ package() {
   pushd "${srcdir}"
   install -Dm644 naiveproxy.service "${pkgdir}/usr/lib/systemd/system/naiveproxy.service"
   install -Dm644 naiveproxy@.service "${pkgdir}/usr/lib/systemd/system/naiveproxy@.service"
-  install -Dm644 naiveproxy.sysusers "${pkgdir}/usr/lib/sysusers.d/naiveproxy.conf"
   popd
 
   pushd "${srcdir}/${pkgname}-${_pkgver}-${_pkgrel}"
-  install -d -m700 "${pkgdir}/etc/naiveproxy"
+  install -d -m750 "${pkgdir}/etc/naiveproxy"
   install -Dm644 src/config.json "${pkgdir}/etc/naiveproxy/config.json"
   install -Dm755 src/out/Release/naive "${pkgdir}/usr/bin/naiveproxy"
   install -Dm644 README.md "${pkgdir}/usr/share/doc/naiveproxy/README.md"
