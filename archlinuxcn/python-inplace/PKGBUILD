@@ -3,7 +3,7 @@
 pkgname=python-inplace
 _gitpkgname=inplace
 pkgver=1.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc='In-place file processing in Python'
 arch=('any')
 url='https://github.com/jwodder/inplace'
