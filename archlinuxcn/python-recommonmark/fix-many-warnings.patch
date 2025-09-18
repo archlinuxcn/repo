@@ -1,0 +1,114 @@
+From bef73f2832abf1a2c4ffe47bf3e5821b4ad9cb84 Mon Sep 17 00:00:00 2001
+From: a821 <a821@nospam.mail.de>
+Date: Sun, 24 Nov 2024 13:31:51 +0100
+Subject: [PATCH] fix many warnings
+
+* docs: set default languagei, remove unused path, fix source prefix
+* parser: remove unused parameter (ignored anyway)
+* transform: change regex to raw string
+* tests: fix escaped sequences
+* setup: remove unsused/deprecated config
+---
+ docs/conf.py              | 6 +++---
+ recommonmark/parser.py    | 2 +-
+ recommonmark/transform.py | 2 +-
+ setup.cfg                 | 3 ---
+ tests/test_basic.py       | 6 +++---
+ 5 files changed, 8 insertions(+), 11 deletions(-)
+
+diff --git a/docs/conf.py b/docs/conf.py
+index a67cc99..307a145 100644
+--- a/docs/conf.py
++++ b/docs/conf.py
+@@ -24,7 +24,7 @@ import recommonmark
+ from recommonmark.transform import AutoStructify
+ 
+ 
+-source_suffix = ['.rst', '.md']
++source_suffix = {'.rst': 'restructuredtext', '.md': 'restructuredtext'}
+ 
+ # -- General configuration ------------------------------------------------
+ 
+@@ -71,7 +71,7 @@ release = recommonmark.__version__
+ #
+ # This is also used if you do content translation via gettext catalogs.
+ # Usually you set "language" from the command line for these cases.
+-language = None
++language = 'en'
+ 
+ # There are two options for replacing |today|: either, you set today to some
+ # non-false value, then it is used:
+@@ -144,7 +144,7 @@ html_theme = 'sphinx_rtd_theme'
+ # Add any paths that contain custom static files (such as style sheets) here,
+ # relative to this directory. They are copied after the builtin static files,
+ # so a file named "default.css" will overwrite the builtin "default.css".
+-html_static_path = ['_static']
++# html_static_path = ['_static']
+ 
+ # Add any extra paths that contain custom files (such as robots.txt or
+ # .htaccess) here, relative to this directory. These files are copied
+diff --git a/recommonmark/parser.py b/recommonmark/parser.py
+index 45c26df..c7933fe 100644
+--- a/recommonmark/parser.py
++++ b/recommonmark/parser.py
+@@ -114,7 +114,7 @@ class CommonMarkParser(parsers.Parser):
+         self.current_node = section
+ 
+     def visit_text(self, mdnode):
+-        self.current_node.append(nodes.Text(mdnode.literal, mdnode.literal))
++        self.current_node.append(nodes.Text(mdnode.literal))
+ 
+     def visit_softbreak(self, _):
+         self.current_node.append(nodes.Text('\n'))
+diff --git a/recommonmark/transform.py b/recommonmark/transform.py
+index 0fdb764..d228c55 100644
+--- a/recommonmark/transform.py
++++ b/recommonmark/transform.py
+@@ -253,7 +253,7 @@ class AutoStructify(transforms.Transform):
+                     0, node=node, match_titles=True)
+                 return node.children[:]
+         else:
+-            match = re.search('[ ]?[\w_-]+::.*', language)
++            match = re.search(r'[ ]?[\w_-]+::.*', language)
+             if match:
+                 parser = Parser()
+                 new_doc = new_document(None, self.document.settings)
+diff --git a/setup.cfg b/setup.cfg
+index 24b2df3..6a6f6fb 100644
+--- a/setup.cfg
++++ b/setup.cfg
+@@ -1,6 +1,3 @@
+-[bdist_wheel]
+-universal = 1
+-
+ [metadata]
+ name = recommonmark
+ version = 0.7.1
+diff --git a/tests/test_basic.py b/tests/test_basic.py
+index 0f8bf60..78079f0 100644
+--- a/tests/test_basic.py
++++ b/tests/test_basic.py
+@@ -35,9 +35,9 @@ class TestParsing(unittest.TestCase):
+             """
+             <?xml version="1.0" ?>
+             <document source="&lt;string&gt;">
+-              <section ids="heading-1" names="heading\ 1">
++              <section ids="heading-1" names="heading\\ 1">
+                 <title>Heading 1</title>
+-                <section ids="heading-2" names="heading\ 2">
++                <section ids="heading-2" names="heading\\ 2">
+                   <title>Heading 2</title>
+                   <paragraph>Body</paragraph>
+                 </section>
+@@ -52,7 +52,7 @@ class TestParsing(unittest.TestCase):
+             """
+             <?xml version="1.0" ?>
+             <document source="&lt;string&gt;">
+-              <section ids="heading-foo" names="heading\ foo">
++              <section ids="heading-foo" names="heading\\ foo">
+                 <title>
+                   Heading \n\
+                   <emphasis>foo</emphasis>
+-- 
+2.47.0
+

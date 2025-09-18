@@ -1,0 +1,33 @@
+version = 1
+
+[[annotations]]
+path = [
+    "PKGBUILD",
+    "README.md",
+    "keys/**",
+    ".SRCINFO",
+    ".nvchecker.toml",
+    "*.install",
+    "*.sysusers",
+    "*.tmpfiles",
+    "*.logrotate",
+    "*.pam",
+    "*.service",
+    "*.socket",
+    "*.timer",
+    "*.desktop",
+    "*.hook",
+]
+SPDX-FileCopyrightText = "Arch Linux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "archlinux-managed-udev-rules.patch",
+]
+SPDX-FileCopyrightText = """
+Copyright (c) Katherine J. Temkin <ktemkin@greatscottgadgets.com>
+Copyright (c) 2019-2020, Great Scott Gadgets <info@greatscottgadgets.com>
+Copyright (c) 2025 Arch Linux Contributors
+"""
+SPDX-License-Identifier = "BSD-3-Clause"

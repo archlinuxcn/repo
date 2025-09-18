@@ -1,0 +1,144 @@
+From 7d52043671c723fd615fc04c176aa6e970231f85 Mon Sep 17 00:00:00 2001
+From: Claudia Pellegrino <claui@users.noreply.github.com>
+Date: Tue, 20 May 2025 14:53:52 +0200
+Subject: [PATCH] Fix `cynthion setup` so it works for managed pkgs
+
+The upstream project assumes that the user needs to run `cynthion setup`
+to configure the Cynthion package correctly.
+
+However, with the system package, pacman automatically installs the
+udev rules file into `/usr/lib/udev/rules.d` and triggers the udev
+service daemon.
+
+Fix `cynthion setup` to make it aware of the managed file and to check
+for unwanted shadow copies at `/etc/udev/rules.d`.
+---
+ cynthion/python/src/commands/cli.py           |  4 +-
+ .../python/src/commands/cynthion_setup.py     | 61 ++++++++-----------
+ 2 files changed, 27 insertions(+), 38 deletions(-)
+
+diff --git a/cynthion/python/src/commands/cli.py b/cynthion/python/src/commands/cli.py
+index 4faa252..7c35b69 100644
+--- a/cynthion/python/src/commands/cli.py
++++ b/cynthion/python/src/commands/cli.py
+@@ -75,8 +75,8 @@ def main():
+         setup_parser.set_defaults(func=cynthion_setup)
+         setup_group = setup_parser.add_mutually_exclusive_group()
+         setup_group.add_argument("--check", action='store_true', help="check Cynthion support files")
+-        setup_group.add_argument("--uninstall", action='store_true', help="remove Cynthion support files")
+-        setup_parser.add_argument("--udev", action='store_true', help="Linux udev access rules")
++        setup_group.add_argument("--uninstall", action='store_true', help="remove unmanaged Cynthion support files")
++        setup_parser.add_argument("--udev", action='store_true', help="same as --uninstall")
+ 
+     # Parse arguments.
+     args = parser.parse_args()
+diff --git a/cynthion/python/src/commands/cynthion_setup.py b/cynthion/python/src/commands/cynthion_setup.py
+index 57dec59..d9f293b 100644
+--- a/cynthion/python/src/commands/cynthion_setup.py
++++ b/cynthion/python/src/commands/cynthion_setup.py
+@@ -11,69 +11,58 @@ import logging, os, shutil, subprocess, sys
+ 
+ from .util import find_cynthion_asset
+ 
+-UDEV_PATH     = "/etc/udev/rules.d"
+-UDEV_CYNTHION = "54-cynthion.rules"
++MANAGED_UDEV_PATH   = "/usr/lib/udev/rules.d"
++UNMANAGED_UDEV_PATH = "/etc/udev/rules.d"
++UDEV_CYNTHION       = "54-cynthion.rules"
+ 
+ 
+ def cynthion_setup(args):
+     if args.check:
+         _check_udev(args)
+-    elif args.uninstall:
++    else:
+         _uninstall_udev(args)
+-    else:
+-        _install_udev(args)
+ 
+ 
+ def _check_udev(args):
+     logging.info("Checking: Linux udev rules")
+ 
+-    sys_path = os.path.join(UDEV_PATH, UDEV_CYNTHION)
++    managed_sys_path = os.path.join(MANAGED_UDEV_PATH, UDEV_CYNTHION)
++    unmanaged_sys_path = os.path.join(UNMANAGED_UDEV_PATH, UDEV_CYNTHION)
+ 
+-    if not os.path.isfile(sys_path):
+-        logging.error(f"❌\t{UDEV_CYNTHION} not installed")
+-        logging.info("\nPlease run 'cynthion setup' to install.")
++    if not os.path.isfile(managed_sys_path):
++        logging.error(f"❌\t{UDEV_CYNTHION} not installed in {MANAGED_UDEV_PATH}")
++        logging.info("\nPlease run `sudo pacman -S python-cynthion`.")
+         sys.exit(1)
+ 
+-    logging.info(f"✅\t{UDEV_CYNTHION} is present")
++    logging.info(f"✅\t{UDEV_CYNTHION} is managed by Pacman")
+ 
+-    sys_rules     = open(sys_path, "r").readlines()
++    sys_rules     = open(managed_sys_path, "r").readlines()
+     factory_rules = open(find_cynthion_asset(UDEV_CYNTHION), "r").readlines()
+ 
+     if sys_rules != factory_rules:
+         logging.error(f"❌\t{UDEV_CYNTHION} differs from factory rules")
+-        logging.info("\nPlease run 'cynthion setup' to re-install.")
++        logging.info("\nPlease re-install the `python-cynthion` package.")
+         sys.exit(1)
+ 
+     logging.info(f"✅\t{UDEV_CYNTHION} matches factory rules")
++
++    if os.path.isfile(unmanaged_sys_path):
++        logging.error(f"❌\tFound an unmanaged copy of {UDEV_CYNTHION} under {UNMANAGED_UDEV_PATH}.")
++        logging.info("\nPlease run 'cynthion setup' to remove.")
++        sys.exit(1)
++    
++    logging.info(f"✅\tNo unmanaged shadow copy of {UDEV_CYNTHION} found")
+     logging.info("\nAll checks completed successfully.")
+ 
+ 
+-def _install_udev(args):
+-    logging.info("Installing: Linux udev rules")
+-
+-    src = find_cynthion_asset(UDEV_CYNTHION)
+-    dst = os.path.join(UDEV_PATH, UDEV_CYNTHION)
+-
+-    # copy udev rules file
+-    _run_shell_command(f"cp {src} {dst}", root=True)
+-
+-    # reload udev rules
+-    _run_shell_command("udevadm control --reload", root=True)
+-
+-    # apply udev rules to any devices that are already plugged in
+-    _run_shell_command("udevadm trigger", root=True)
+-
+-    logging.info("\nInstallation completed successfully.")
+-
+-
+ def _uninstall_udev(args):
+-    logging.info("Uninstalling: Linux udev rules")
++    logging.info("Uninstalling: unmanaged Linux udev rules file")
+ 
+-    rules = os.path.join(UDEV_PATH, UDEV_CYNTHION)
++    unmanaged_rules = os.path.join(UNMANAGED_UDEV_PATH, UDEV_CYNTHION)
+ 
+-    if os.path.isfile(rules):
+-        # remove udev rules file
+-        _run_shell_command(f"rm {rules}", root=True)
++    if os.path.isfile(unmanaged_rules):
++        # remove unmanaged udev rules file
++        _run_shell_command(f"rm {unmanaged_rules}", root=True)
+ 
+         # reload udev rules
+         _run_shell_command("udevadm control --reload", root=True)
+@@ -81,7 +70,7 @@ def _uninstall_udev(args):
+         # apply udev rules to any devices that are already plugged in
+         _run_shell_command("udevadm trigger", root=True)
+     else:
+-        logging.info(f"✅\t{rules} not present, skipping.")
++        logging.info(f"✅\t{unmanaged_rules} not present, skipping.")
+ 
+     logging.info("\nUninstallation completed successfully.")
+ 
+-- 
+2.49.0
+

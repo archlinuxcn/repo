@@ -1,0 +1,188 @@
+From 86d60168817e673dfdeccee0e5155bc50467c40e Mon Sep 17 00:00:00 2001
+From: Antoine van Gelder <antoine@greatscottgadgets.com>
+Date: Mon, 29 Jan 2024 16:25:25 +0200
+Subject: [PATCH] docs: add getting started documentation
+
+---
+ docs/requirements.txt                    |  2 +-
+ docs/source/conf.py                      |  8 +--
+ docs/source/documentation_intro.rst      |  3 --
+ docs/source/getting_started.rst          | 68 ++++++++++++++++++++++++
+ docs/source/howto_facedancer_backend.rst |  3 ++
+ docs/source/index.rst                    | 20 +++++--
+ docs/source/library_overview.rst         |  3 ++
+ 7 files changed, 95 insertions(+), 12 deletions(-)
+ delete mode 100644 docs/source/documentation_intro.rst
+ create mode 100644 docs/source/getting_started.rst
+ create mode 100644 docs/source/howto_facedancer_backend.rst
+ create mode 100644 docs/source/library_overview.rst
+
+diff --git a/docs/requirements.txt b/docs/requirements.txt
+index 44299fb..9956c7c 100644
+--- a/docs/requirements.txt
++++ b/docs/requirements.txt
+@@ -1,4 +1,4 @@
+ sphinx==7.2.6
+-sphinx_rtd_theme==1.3.0
++sphinx_rtd_theme==2.0.0
+ readthedocs-sphinx-search==0.3.2
+ jinja2==3.1.3
+diff --git a/docs/source/conf.py b/docs/source/conf.py
+index 56e68d0..1a3e34d 100644
+--- a/docs/source/conf.py
++++ b/docs/source/conf.py
+@@ -6,9 +6,9 @@
+ 
+ # -- Project information -----------------------------------------------------
+ 
+-project = 'Project name'
+-copyright = '2023, Person writing this'
+-author = 'Person writing this'
++project = 'Facedancer'
++copyright = '2023, Great Scott Gadgets'
++author = 'Great Scott Gadget'
+ 
+ version = ''
+ release = ''
+@@ -24,7 +24,7 @@
+ exclude_patterns = ['_build']
+ source_suffix = '.rst'
+ master_doc = 'index'
+-language = None
++language = "en"
+ exclude_patterns = []
+ pygments_style = None
+ 
+diff --git a/docs/source/documentation_intro.rst b/docs/source/documentation_intro.rst
+deleted file mode 100644
+index 5d410f6..0000000
+--- a/docs/source/documentation_intro.rst
++++ /dev/null
+@@ -1,3 +0,0 @@
+-===================
+-Documentation Intro
+-===================
+\ No newline at end of file
+diff --git a/docs/source/getting_started.rst b/docs/source/getting_started.rst
+new file mode 100644
+index 0000000..c2e4df7
+--- /dev/null
++++ b/docs/source/getting_started.rst
+@@ -0,0 +1,68 @@
++================================================
++Getting started with Facedancer
++================================================
++
++
++Install the Facedancer library
++------------------------------
++
++You can install the Facedancer library from the `Python Package Index (PyPI) <https://pypi.org/project/facedancer/>`__, a `release archive <https://github.com/greatscottgadgets/Facedancer/releases>`__ or directly from `source <https://github.com/greatscottgadgets/Facedancer/>`__.
++
++
++Install From PyPI
++^^^^^^^^^^^^^^^^^
++
++You can use the `pip <https://pypi.org/project/pip/>`__ tool to install the Facedancer library from PyPI using the following command:
++
++.. code-block :: sh
++
++    pip install facedancer
++
++For more information on installing Python packages from PyPI please refer to the `"Installing Packages" <https://packaging.python.org/en/latest/tutorials/installing-packages/>`__ section of the Python Packaging User Guide.
++
++
++Install From Source
++^^^^^^^^^^^^^^^^^^^
++
++.. code-block :: sh
++
++    git clone https://github.com/greatscottgadgets/facedancer.git
++    cd facedancer/
++
++Once you have the source code downloaded you can install the Facedancer library with:
++
++.. code-block :: sh
++
++    pip install .
++
++
++
++Run a Facedancer example
++------------------------
++
++Create a new Python file called `rubber-ducky.py` with the following content:
++
++.. code-block :: python
++
++    import asyncio
++    import logging
++
++    from facedancer import main
++    from facedancer.devices.keyboard     import USBKeyboardDevice
++    from facedancer.classes.hid.keyboard import KeyboardModifiers
++
++    device = USBKeyboardDevice()
++
++    async def type_letters():
++        await asyncio.sleep(2)
++        await device.type_string("echo hello, facedancer\n")
++
++    main(device, type_letters())
++
++
++
++Open a terminal and run:
++
++.. code-block :: sh
++
++    python ./rubber-ducky.py
+diff --git a/docs/source/howto_facedancer_backend.rst b/docs/source/howto_facedancer_backend.rst
+new file mode 100644
+index 0000000..da83d6b
+--- /dev/null
++++ b/docs/source/howto_facedancer_backend.rst
+@@ -0,0 +1,3 @@
++================================================
++How to write a new Facedancer backend
++================================================
+diff --git a/docs/source/index.rst b/docs/source/index.rst
+index 7856ae2..e69c3f8 100644
+--- a/docs/source/index.rst
++++ b/docs/source/index.rst
+@@ -1,9 +1,21 @@
+-======================
+-Documentation
+-======================
++========================
++Facedancer Documentation
++========================
+ 
+ .. toctree::
+   :maxdepth: 2
+   :caption: User Documentation
+ 
+-  documentation_intro
+\ No newline at end of file
++  getting_started
++
++.. toctree::
++  :maxdepth: 2
++  :caption: Library Documentation
++
++  library_overview
++
++.. toctree::
++  :maxdepth: 2
++  :caption: Developer Documentation
++
++  howto_facedancer_backend
+diff --git a/docs/source/library_overview.rst b/docs/source/library_overview.rst
+new file mode 100644
+index 0000000..79337c6
+--- /dev/null
++++ b/docs/source/library_overview.rst
+@@ -0,0 +1,3 @@
++================================================
++Overview
++================================================
