@@ -1,7 +1,7 @@
 pkgname=julia-git-spral_jll-src
-pkgver=2025.5.20+0
-_commit=117bd5d3aa8806cd8dcf828075343fef4038b798
-pkgrel=3
+pkgver=2025.9.18+0
+_commit=081e7fabb11928ff75f3311089750c63cfe122da
+pkgrel=1
 pkgdesc="SPRAL_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/SPRAL_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git spral)
 source=("git+https://github.com/JuliaBinaryWrappers/SPRAL_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('95339522d18b006e8bd1f0980d04dc558c05a8ca7717ecb035ebcf61fe620ab0'
+sha256sums=('d0c65ba94ff852784dd011bcebb37daf0b73ab34b5df2e3648e46fbda3404c63'
             '8da059b87ceb69bdb656d5edccea61e38dfaf78bf0881b00ba2d79ecaca2c1f4')
 
 build() {
