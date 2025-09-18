@@ -3,7 +3,7 @@
 pkgname=python-pyfwup
 _gitpkgname=pyfwup
 pkgver=0.5.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Python Firmware Upgrader, a DFU (and similar) utility for Python'
 arch=('any')
 url='https://github.com/greatscottgadgets/pyfwup'
