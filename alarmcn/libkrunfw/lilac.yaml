@@ -1,0 +1,10 @@
+maintainers:
+  - github: yuyichao
+
+update_on:
+  # Note that we need to get the official package and not the archlinux arm package
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: libkrunfw
+  - source: manual
+    manual: 1
