@@ -1,0 +1,13 @@
+maintainers:
+  - github: poscat0x04
+
+pre_build_script: |
+  aur_pre_build(maintainers=["lod"])
+post_build: |
+  aur_post_build()
+
+update_on:
+  - source: github
+    github: SoftFever/OrcaSlicer
+  - source: aur
+    aur: orca-slicer-git
