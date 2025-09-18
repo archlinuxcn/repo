@@ -1,0 +1,29 @@
+maintainers:
+  - github: poscat0x04
+
+pre_build_script: |
+  aur_pre_build(maintainers=["Gigas002"])
+post_build_script: |
+  aur_post_build()
+
+update_on:
+  - source: github
+    github: easymodo/qimgv
+  - source: aur
+    aur: qimgv-qt6-kde-git
+  - source: alpm
+    alpm: opencv
+  - source: alpm
+    alpm: qt6-base
+  - source: alpm
+    alpm: qt6-imageformats
+  - source: alpm
+    alpm: qt6-svg
+  - source: alpm
+    alpm: qt6-5compat
+  - source: alpm
+    alpm: exiv2
+  - source: alpm
+    alpm: kwindowsystem
+  - source: alpm
+    alpm: mpv
