@@ -1,0 +1,39 @@
+# Maintainer: Shengyu Zhang <la@archlinuxcn.org>
+
+pkgname=chezetc
+pkgver=202509.1
+pkgrel=1
+pkgdesc='Extending chezmoi to manage files under /etc and other root-owned directories'
+arch=(any)
+url='https://silverrainz.me/chezetc'
+license=(MIT)
+depends=(bash gettext python python-tomli python-tomli-w)
+source=(
+    "$pkgname-$pkgver.tar.gz::https://github.com/SilverRainZ/chezetc/archive/refs/tags/$pkgver.tar.gz"
+    chezetc
+    )
+
+sha256sums=('ac94238493c8f1135d8f1bdf938f38019f06fa3d0aa9070c005f4ae2769f608a'
+            '10c022dc7f78dc00e1aeaad816a932fad7271bc2d2d0e8a4c12d14106471843b')
+
+package() {
+    cd "$srcdir"
+
+    install -Dm775 $pkgname "$pkgdir/usr/bin/$pkgname"
+
+    cd "$pkgname-$pkgver"
+
+    install -Dm775 $pkgname "$pkgdir/usr/lib/$pkgname/$pkgname"
+
+    for i in README.rst chezmoi.toml; do
+        install -Dm644 $i "$pkgdir/usr/lib/$pkgname/"
+    done
+
+    for i in commands completions hooks utils; do
+        install -Dm644 $i/* -t "$pkgdir/usr/lib/$pkgname/$i"
+    done
+
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim: set filetype=sh:
