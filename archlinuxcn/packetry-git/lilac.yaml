@@ -4,10 +4,7 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: |
-  aur_pre_build(maintainers=['Auerhuhn'])
-  # make sure it won't use rustup
-  add_makedepends(['rust'])
+pre_build_script: aur_pre_build(maintainers=['Auerhuhn'])
 
 post_build: aur_post_build
 
