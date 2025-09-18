@@ -1,0 +1,14 @@
+maintainers:
+  - github: poscat0x04
+
+pre_build_script: |
+  aur_pre_build(maintainers=["fermino"])
+
+post_build_script: |
+  aur_post_build()
+
+update_on:
+  - source: github
+    github: JetBrains/jcef
+  - source: aur
+    aur: jcef-jetbrains-git
