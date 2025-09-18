@@ -1,0 +1,28 @@
+# Maintainer: Jos Dehaes <jos.dehaes@gmail.com>
+# Maintainer: Matthias Kurz <m.kurz@irregular.at>
+
+pkgname=asahi-btsync
+pkgver=0.2.4
+pkgrel=1
+pkgdesc='Tool to sync Bluetooth pairing keys with macos on ARM Macs'
+arch=('aarch64')
+url="https://crates.io/crates/asahi-btsync"
+makedepends=('rust' 'cargo-license')
+license=('MIT')
+source=("asahi-btsync-${pkgver}.tar.gz::https://crates.io/api/v1/crates/asahi-btsync/${pkgver}/download")
+sha256sums=('10b44fcd6f66e9dcc7c7315392232619a46cb4467ca9450b2b15bc384ffc722b')
+
+build() {
+  cd "asahi-btsync-${pkgver}"
+  cargo build --release
+  cargo license > LICENSE.dependencies
+}
+
+package() {
+  cd "asahi-btsync-${pkgver}"
+  install -Dm755 target/release/asahi-btsync "$pkgdir"/usr/bin/asahi-btsync
+  install -p -m 0644 -D etc/systemd/system/asahi-btsync.service "$pkgdir"/etc/systemd/system/asahi-btsync.service
+  install -p -m 0644 -D etc/udev/rules.d/96-asahi-btsync.rules "$pkgdir"/etc/udev/rules.d/96-asahi-btsync.rules
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  install -Dm644 LICENSE.dependencies "$pkgdir"/usr/share/licenses/$pkgname/LICENSE.dependencies
+}

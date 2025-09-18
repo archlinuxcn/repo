@@ -1,0 +1,36 @@
+# Maintainer: Jos Dehaes <jos.dehaes@gmail.com>
+# Maintainer: Matthias Kurz <m.kurz@irregular.at>
+
+pkgname=tiny-dfr
+pkgver=0.3.5
+pkgrel=1
+pkgdesc='Apple silicon touch bar input / display daemon'
+arch=('aarch64')
+url="https://crates.io/crates/tiny-dfr"
+license=('MIT' 'APACHE')
+makedepends=('rust')
+depends=('pango' 'libinput' 'gdk-pixbuf2' 'librsvg')
+source=("tiny-dfr-${pkgver}.tar.gz::https://crates.io/api/v1/crates/tiny-dfr/${pkgver}/download")
+sha512sums=('0406ad4a8ab3557db4f04128834084d0c872540b4e160a11aec5efe2ca29a7fe512063d50ea713c6d68939ea3d08c0178971c13e0e2bf14face5eafa9f6a891f')
+
+prepare() {
+  cd tiny-dfr-$pkgver
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+  cd tiny-dfr-$pkgver
+  export CARGO_TARGET_DIR=target
+  cargo build --frozen --release --all-features
+}
+
+package() {
+  cd tiny-dfr-$pkgver
+  install -Dm755 target/release/tiny-dfr "$pkgdir"/usr/bin/tiny-dfr
+  install -Dm644 share/tiny-dfr/* -t "$pkgdir/usr/share/tiny-dfr"
+  install -Dm644 etc/systemd/system/tiny-dfr.service "$pkgdir/usr/lib/systemd/system/tiny-dfr.service"
+  install -Dm644 etc/udev/rules.d/99-touchbar-seat.rules "$pkgdir/usr/lib/udev/rules.d/99-touchbar-seat.rules"
+  install -Dm644 etc/udev/rules.d/99-touchbar-tiny-dfr.rules "$pkgdir/usr/lib/udev/rules.d/99-touchbar-tiny-dfr.rules"
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  install -Dm644 LICENSE.material "$pkgdir"/usr/share/licenses/$pkgname/LICENSE.material
+}

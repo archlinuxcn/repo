@@ -1,0 +1,24 @@
+# Maintainer: Jos Dehaes <jos.dehaes@gmail.com>
+# Maintainer: Matthias Kurz <m.kurz@irregular.at>
+
+pkgname=asahi-nvram
+pkgver=0.2.3
+pkgrel=1
+pkgdesc='Tool to change nvram fields on ARM Macs'
+arch=('aarch64')
+url="https://crates.io/crates/asahi-nvram"
+makedepends=('rust')
+license=('MIT')
+source=("asahi-nvram-${pkgver}.tar.gz::https://crates.io/api/v1/crates/asahi-nvram/${pkgver}/download")
+sha256sums=('dc80eff56f2dc5c8224b8d56b8814f765858f5485db35b76805eeb820b39c211')
+
+build() {
+  cd asahi-nvram-${pkgver}
+  cargo build --release --locked
+}
+
+package() {
+  cd asahi-nvram-${pkgver}
+  cargo install --locked --path . --root "$pkgdir/usr"
+  rm "$pkgdir/usr/".crates*
+}
