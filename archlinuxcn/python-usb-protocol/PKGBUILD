@@ -2,7 +2,7 @@
 
 pkgname=python-usb-protocol
 pkgver=0.9.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Utilities, data structures, constants, parsers, and tools for working with USB data'
 arch=('any')
 url='https://github.com/greatscottgadgets/python-usb-protocol'
