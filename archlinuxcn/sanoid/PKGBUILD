@@ -2,7 +2,7 @@
 
 pkgname=sanoid
 pkgver=2.3.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Policy-driven snapshot management (sanoid), dataset sending/receiving (syncoid) and snapshot searching (findoid) tools for ZFS."
 arch=('any')
 url='https://github.com/jimsalterjrs/sanoid'
@@ -21,6 +21,7 @@ optdepends=(
   'lz4: compression'
   'xz: compression'
   'lzop: compression'
+  'busybox: insecure direct connection'
 )
 source=(
   "$pkgname-$pkgver.tar.gz::https://github.com/jimsalterjrs/sanoid/archive/v$pkgver.tar.gz"
