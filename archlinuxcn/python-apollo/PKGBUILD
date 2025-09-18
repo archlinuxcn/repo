@@ -3,7 +3,7 @@
 pkgname=python-apollo
 _gitpkgname=apollo
 pkgver=1.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Microcontroller-based FPGA/JTAG programmer'
 arch=('any')
 url='https://github.com/greatscottgadgets/apollo'
