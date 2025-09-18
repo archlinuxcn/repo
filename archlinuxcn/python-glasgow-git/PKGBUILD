@@ -1,7 +1,7 @@
 # Maintainer: Markus Koch <markus@notsyncing.net>
 
 pkgname=python-glasgow-git
-pkgver=0.2253
+pkgver=0.2633
 pkgrel=1
 pkgdesc="Software for the Glasgow Interface Explorer, the Scots Army Knife for electronics"
 arch=('any')
@@ -11,7 +11,7 @@ depends=(python python-pyvcd python-libusb1 python-fx2 python-amaranth yosys nex
 optdepends=('python-aiohttp: For specific plugins (applets, loggers, etc.)',
 	    'python-aiohttp_remotes: For specific plugins (applets, loggers, etc.)'
 )
-makedepends=('python-build' 'python-pdm' 'python-pdm-backend')
+makedepends=("git" "python-build" "python-pdm" "python-pdm-backend")
 source=("git+https://github.com/GlasgowEmbedded/glasgow.git")
 sha256sums=('SKIP')
 provides=(python-glasgow)
