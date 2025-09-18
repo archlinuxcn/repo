@@ -3,27 +3,32 @@
 # Contributor: Mark Wagie <mark dot wagie at tutanota dot com>
 # Contributor: aspen <aspen@aspenuwu.me>
 pkgname=zulip-desktop-electron
-pkgver=5.12.0
-pkgrel=3
-_electronversion=34
+pkgver=5.12.2
+pkgrel=1
+_electronversion=37
 pkgdesc="Real-time team chat based on the email threading model"
 arch=('x86_64')
 url="https://zulip.com"
 license=('Apache')
 depends=("electron$_electronversion" 'libxkbfile' 'libxss')
-makedepends=('nodejs>=12.10.0' 'npm')
+makedepends=('nvm' 'npm')
 provides=("${pkgname%-*}")
 conflicts=("${pkgname%-*}")
 source=(
   "${pkgname%-*}-$pkgver.tar.gz::https://github.com/zulip/zulip-desktop/archive/v$pkgver.tar.gz"
   "Zulip.desktop"
   "${pkgname%-*}.sh.in")
-sha256sums=(
-  '65deb781e00e2857ad459ea98574c569e15a0fd7c3c41d6dc11ed4e7c5b12666'
+sha256sums=('ffd0473910889797ba8f0944c7819f38c4210c44e2e886ff8cb63a2a2f2b75e5'
   '8f3440dc9195c6763de16f8b13409a5c130bdf417015e7e27bb64fdb227f4f10'
   '70ed0f08158c6ea8ef99dbbe360861e2c63911c2fadc74c0154bd6567abc8979')
 
+prepare() {
+  source /usr/share/nvm/init-nvm.sh
+  nvm install 22.19.0
+}
+
 build() {
+  source /usr/share/nvm/init-nvm.sh
   cd "${pkgname%-*}-$pkgver"
   electronDist="/usr/lib/electron$_electronversion"
   electronVer="$(sed s/^v// $electronDist/version)"
