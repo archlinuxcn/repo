@@ -3,7 +3,7 @@
 pkgname='python-pygreat'
 _gitpkgname=libgreat
 pkgver=2024.0.5
-pkgrel=1
+pkgrel=2
 pkgdesc='Host-side drivers for communication with embedded devices'
 arch=('any')
 url='https://github.com/greatscottgadgets/libgreat'
