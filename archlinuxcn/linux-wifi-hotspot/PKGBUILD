@@ -1,4 +1,5 @@
-# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Mark Wagie <mark dot wagie at proton dot me>
 # Contributor: Dimitris Kiziridis <ragouel at outlook dot com>
 
 pkgname=linux-wifi-hotspot
@@ -22,8 +23,7 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('4c85d8c333454da6fd5f03abcf207bb5375387a95acb852b8d7629fcab65326c')
 
 build() {
-	cd "${pkgname}-${pkgver}/"
-	make
+	make -C "${pkgname}-${pkgver}/"
 }
 
 package() {
@@ -31,6 +31,6 @@ package() {
 	make DESTDIR="${pkgdir}" install
 
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-    install -d "${pkgdir}/usr/share/doc/${pkgname}/"
+	install -d "${pkgdir}/usr/share/doc/${pkgname}/"
 	cp -r docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
 }
