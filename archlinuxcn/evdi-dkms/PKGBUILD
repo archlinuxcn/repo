@@ -23,19 +23,16 @@ sha256sums=('d303a33499b777596153f75c08fcf638efbc8fb9e1c71660666e50bc3f5b383f')
 
 build() {
   cd "${_srcdir}"
-  CFLAGS="${CFLAGS/-fno-plt/}"
-  CFLAGS="${CFLAGS/-fexceptions/}"
-  make -j1 -C 'library'
+  make -C 'library'
 }
 
 package() {
   cd "${_srcdir}"
-  make -C 'library' -j1 install DESTDIR="${pkgdir}" PREFIX='/usr'
+  make -C 'library' install DESTDIR="${pkgdir}" PREFIX='/usr'
 
   local _DKMS="${pkgdir}/usr/src/evdi-${_pkgver}"
-  #install -Dpm644 module/* -t "${_DKMS}/"
   install -d "${_DKMS}/"
   cp -pr 'module/'* "${_DKMS}/"
-  make -j1 -C "${_DKMS}" clean
+  make -C "${_DKMS}" clean
   rm -f "${_DKMS}/evdi.mod"
 }
