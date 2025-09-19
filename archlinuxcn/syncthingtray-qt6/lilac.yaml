@@ -1,0 +1,15 @@
+maintainers:
+  - github: poscat0x04
+
+pre_build_script: |
+  aur_pre_build(maintainers=['Martchus'])
+post_build_script: |
+  aur_post_build()
+
+repo_depends:
+  - c++utilities
+  - qtutilities-qt6
+  - qtforkawesome-qt6
+
+update_on:
+  - source: aur
