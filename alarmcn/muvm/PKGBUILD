@@ -3,7 +3,7 @@
 
 pkgname=muvm
 pkgver=0.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc='run programs from your system in a microVM'
 arch=('aarch64')
 url='https://github.com/AsahiLinux/muvm'
@@ -13,10 +13,8 @@ source=(
   "muvm-${pkgver}.tar.gz::https://github.com/AsahiLinux/muvm/archive/refs/tags/muvm-${pkgver}.tar.gz"
   LICENSE
 )
-sha256sums=(
-  'e60b104e7d85e2dcc1b70521060524384cd91d6a1dbc6923d591d00efa276e5f'
-  'bd61ba908048f45e22a02784e3c9bd595307d8a3d838346dab9ca4a1b1217b93'
-)
+sha256sums=('e60b104e7d85e2dcc1b70521060524384cd91d6a1dbc6923d591d00efa276e5f'
+            'bd61ba908048f45e22a02784e3c9bd595307d8a3d838346dab9ca4a1b1217b93')
 
 build() {
   cd muvm-muvm-${pkgver}
