@@ -11,6 +11,7 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/lakinduakash/${pkgname}"
 license=('BSD-2-Clause')
 depends=('gtk3' 'hostapd' 'iproute2' 'iw' 'procps-ng' 'qrencode')
+makedepends=('git')
 optdepends=("dnsmasq: For 'NATed' or 'None' Internet sharing method"
 	"iptables: For 'NATed' or 'None' Internet sharing method"
 	'haveged: For random MAC generation'
@@ -19,15 +20,20 @@ provides=('wihotspot' 'create_ap')
 conflicts=('wihotspot' 'create_ap')
 backup=('etc/create_ap.conf')
 install="${pkgname}.install"
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('4c85d8c333454da6fd5f03abcf207bb5375387a95acb852b8d7629fcab65326c')
+source=("git+${url}.git#tag=v${pkgver}")
+sha256sums=('648414d5ea809e9a7eacacbcebca61c8d61fd01d86677d23340501c817b8587c')
+
+prepare() {
+	cd "${pkgname}/"
+	git cherry-pick -n a3fce4b3ee9371eeb7b300fa7e9f291d93986db3
+}
 
 build() {
-	make -C "${pkgname}-${pkgver}/"
+	make -C "${pkgname}/"
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${pkgname}/"
 	make DESTDIR="${pkgdir}" install
 
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
