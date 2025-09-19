@@ -1,8 +1,8 @@
 # Maintainer: Cryolitia <cryolitia at gmail dot com>
 
 pkgname=adif-multitool
-pkgver=0.1.20
-pkgrel=3
+pkgver=0.1.21
+pkgrel=1
 pkgdesc='Validate, modify, and convert ham radio log files with a handy command-line tool'
 url='https://github.com/flwyd/adif-multitool'
 arch=('x86_64')
@@ -10,8 +10,8 @@ license=('Apache-2.0')
 depends=('glibc')
 makedepends=('go')
 source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('cab8ee80d77633bf18b1699026b06ddb1c6c7bed499e94f075e2510caea459e2')
-b2sums=('e73701b4d31c31aa046eaa845bbecce377ada2649317a6f2ccc3f566bc5d85cc58d263d1da4efd480d3fcd496d1192a894cc74f91088648978a9853d3bcbf8ac')
+sha256sums=('ef82b287eda555fb3fb4b6874ca2a01db41208882c76e590caaa12b6641d9b79')
+b2sums=('e6ca103cc340be4ca3dd40639916bf35244cdd80567b8416e339b60e07957fdec23dd2e2cf0580502e80ccd6f1b7e636c07b7c8071c1cb474ddb80576dc12c6e')
 
 prepare(){
   cd "$pkgname-$pkgver"
