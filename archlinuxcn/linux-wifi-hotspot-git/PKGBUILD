@@ -1,4 +1,5 @@
-# Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+# Maintainer: Integral <integral@member.fsf.org>
+# Contributor: Mark Wagie <mark dot wagie at tutanota dot com>
 # Contributor: Dimitris Kiziridis <ragouel at outlook dot com>
 
 pkgname=linux-wifi-hotspot-git
@@ -27,8 +28,7 @@ pkgver() {
 }
 
 build() {
-	cd "${_pkgname}/"
-	make
+	make -C "${_pkgname}/"
 }
 
 package() {
@@ -36,4 +36,6 @@ package() {
 	make DESTDIR="${pkgdir}" install
 
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
+	install -d "${pkgdir}/usr/share/doc/${pkgname}/"
+	cp -r docs/* "${pkgdir}/usr/share/doc/${pkgname}/"
 }
