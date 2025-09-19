@@ -13,19 +13,15 @@ makedepends=("meson" "scdoc" "wayland-protocols")
 source=("https://github.com/philj56/${pkgname}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha512sums=('a14ab5ecf2c6e1ecb0ec3366c436140aa422995d464de513e81e454df0f303fc9661b534a3f40df4f14897629cd0cc299bb449482b676fbf254002731ac02231')
 
-prepare() {
-	rm -rf build
-	CFLAGS=$CFLAGS LDFLAGS=$LDFLAGS meson setup "${pkgname}-${pkgver}" build --prefix /usr -Dbuildtype=release
-}
-
 build() {
-	ninja -C build
+	arch-meson "${pkgname}-${pkgver}" build
+	meson compile -C build
 }
 
 check() {
-	ninja -C build test
+	meson test -C build --print-errorlogs
 }
 
 package() {
-	DESTDIR="${pkgdir}" ninja -C build install
+	meson install -C build --destdir "${pkgdir}"
 }
