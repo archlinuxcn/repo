@@ -1,0 +1,32 @@
+pkgname=libirecovery
+pkgver=1.3.0
+pkgrel=1
+pkgdesc="Library and utility to talk to iBoot/iBSS via USB"
+arch=('x86_64')
+url="https://libimobiledevice.org/"
+license=('LGPL-2.1-only')
+depends=('libimobiledevice-glue' 'libusb' 'readline')
+# systemd is needed to build udev rules and is not in base-devel
+makedepends=('git' 'systemd')
+source=("git+https://github.com/libimobiledevice/$pkgname.git#tag=$pkgver")
+sha256sums=('54423eb3aff346c2aeaedb0b9c73cb5d0b4e381df313feb4860cddd2532be697')
+
+prepare() {
+  cd "$pkgname"
+
+  # don't overlink to libplist-2.0.so
+  sed -Ei 's/(\$\(limd_glue_LIBS)\)/\1:-lplist-2.0=)/' src/Makefile.am
+}
+
+build() {
+  cd "$pkgname"
+
+  RELEASE_VERSION=$pkgver ./autogen.sh --prefix=/usr
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  make DESTDIR="$pkgdir" install
+}
