@@ -34,6 +34,7 @@ build() {
 		-DCMAKE_BUILD_TYPE=None
 		-DCMAKE_INSTALL_PREFIX=/usr
 		-DVKFFT_BACKEND=0
+		-DGLSLANG_GIT_TAG="15.4.0"
 	)
 	cmake -S "VkFFT-$pkgver" -B build "${cmake_options[@]}"
 
