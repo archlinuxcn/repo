@@ -1,0 +1,44 @@
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
+
+pkgname=vkfft-vulkan
+pkgver=1.3.4
+pkgrel=1
+pkgdesc='Vulkan/CUDA/HIP/OpenCL/Level Zero/Metal Fast Fourier Transform library.'
+arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
+url='https://github.com/DTolm/VkFFT'
+license=('MIT')
+depends=(
+	'vulkan-icd-loader'
+)
+makedepends=(
+	'cmake'
+	'git'
+	'ninja'
+	'vulkan-headers'
+)
+source=("$pkgname-$pkgver.tar.gz::https://github.com/DTolm/VkFFT/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('c177cd105eeb50d7172de50d241b54b541842cdfb1362428252214660531b1971f4b9229d1b722b5b362fc35df7d14c898bf0700ad955d799bb16651246e7c51')
+
+prepare() {
+	cd "VkFFT-$pkgver"
+
+}
+
+build() {
+	local cmake_options=(
+		-Wno-dev
+		-G Ninja
+		-DCMAKE_BUILD_TYPE=None
+		-DCMAKE_INSTALL_PREFIX=/usr
+		-DVKFFT_BACKEND=0
+	)
+	cmake -S "VkFFT-$pkgver" -B build "${cmake_options[@]}"
+
+	ninja -C build
+}
+
+package() {
+	DESTDIR="$pkgdir" ninja -C build install
+}
+
+# vim: set noet ts=4
