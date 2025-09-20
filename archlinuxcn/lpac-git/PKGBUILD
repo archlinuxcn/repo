@@ -8,12 +8,34 @@ pkgdesc="Local Profile Agent (LPA) for eSIM cards via PC/SC readers, or AT / APD
 arch=(x86_64 aarch64 armv7h)
 url="https://github.com/estkme-group/lpac"
 license=('AGPL-3.0-only AND LGPL-2.0-only AND MIT')
-depends=(curl pcsclite glibc cjson)
-makedepends=(cmake git ninja)
+depends=(
+  glibc
+  cjson
+)
+makedepends=(
+  cmake
+  git
+  ninja
+)
+makedepends=(
+  curl
+  cmake
+  git
+  pcsclite
+  libqmi
+  libmbim
+  ninja
+)
+optdepends=(
+  'pcsclite: PC/SC support'
+  'curl: cURL support'
+  'libqmi: QMI support'
+  'libmbim: MBIM support'
+)
 provides=(lpac)
 conflicts=(lpac)
 source=($pkgname::git+https://github.com/estkme-group/lpac)
-b2sums=(SKIP)
+b2sums=('SKIP')
 
 pkgver() {
   cd "$pkgname"
@@ -22,18 +44,25 @@ pkgver() {
 
 build() {
   cd "$srcdir/$pkgname"
-  cmake -S . -B build \
-    -G Ninja \
-    -DCMAKE_INSTALL_PREFIX="/usr" \
-    -DLPAC_DYNAMIC_LIBEUICC=ON \
-    -DLPAC_DYNAMIC_DRIVERS=ON \
+  local cmake_options=(
+    -G Ninja
+    -DCMAKE_INSTALL_PREFIX="/usr"
     -DUSE_SYSTEM_DEPS=ON
+    -DLPAC_DYNAMIC_DRIVERS=ON
+    -DLPAC_DYNAMIC_LIBEUICC=ON
+    -DLPAC_WITH_APDU_AT=ON
+    -DLPAC_WITH_APDU_MBIM=ON
+    -DLPAC_WITH_APDU_PCSC=ON
+    -DLPAC_WITH_APDU_QMI=ON
+    -DLPAC_WITH_APDU_QMI_QRTR=ON
+  )
+  cmake -S . -B build "${cmake_options[@]}"
   ninja -C build
 }
 
 package() {
   cd "$srcdir/$pkgname"
   DESTDIR="$pkgdir" ninja -C build install
-  install -Dm644 -t "$pkgdir"/usr/share/licenses/"$pkgname" README.md
+  install -Dm644 -t "$pkgdir"/usr/share/licenses/"$pkgname" LICENSES/*
 }
 
