@@ -10,7 +10,7 @@
 
 pkgname='sunshine'
 pkgver=2025.628.4510
-pkgrel=6
+pkgrel=7
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
@@ -71,7 +71,6 @@ if [[ "${_use_cuda::1}" == "d" ]] && pacman -Qi cuda &> /dev/null; then
 fi
 
 if [[ "${_use_cuda::1}" == "t" ]]; then
-  makedepends+=('cuda')
   optdepends+=(
     'cuda: Nvidia GPU encoding support'
   )
