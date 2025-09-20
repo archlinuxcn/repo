@@ -110,6 +110,8 @@ build() {
 		-DLIBDSDCC_INCLUDE_DIR=/usr/include/dsdcc
 		-DCM256CC_INCLUDE_DIR=/usr/include/cm256cc
 		-DENABLE_QT6=ON
+		# FIXME: FTBFS
+		-DENABLE_CHANNELRX_DEMODDAB=OFF
 	)
 	cmake -S "$_pkgname" -B build "${cmake_options[@]}"
 
