@@ -68,10 +68,10 @@ optdepends=(
 	'zlib: DAB demodulator'
 	'faad2: DAB demodulator'
 	'sgp4: satellite tracker'
-	'aptdec: APT (weather satellite) decoder'
+	#'aptdec: APT (weather satellite) decoder'
 	'codec2: FreeDV modulator/demodulator'
 	# Driver
-	'libmirisdr4<2.0.0: SDRPlay support'
+	'libmirisdr4: SDRPlay support'
 	'rtl-sdr: RTLSDR support'
 	'hackrf: HackRF support'
 	'libiio: PlutoSDR support'
@@ -80,7 +80,7 @@ optdepends=(
 	'libperseus-sdr: Perseus SDR support'
 	'airspy: Airspy support'
 	'airspyhf: Airspy HF+ support'
-	'libxtrx: XTRX SDR support'
+	#'libxtrx: XTRX SDR support'
 	'libuhd: USRP support'
 )
 provides=("$_pkgname=$pkgver")
