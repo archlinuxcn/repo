@@ -1,0 +1,27 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: coelacanthus@archlinuxcn.org
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  aur_pre_build(maintainers=['Mikos', 'nemanjan00'])
+
+post_build: aur_post_build
+
+repo_makedepends:
+  - airspyhf-git
+  - aptdec-git
+  - libdab-git
+  - libmirisdr4-git
+  - libperseus-sdr-git
+  - libxtrx-git
+  - libsgp4-git
+  - log4cpp
+
+update_on:
+  - source: aur
+    aur: sdrangel-git
+  - source: alpm
+    alpm: faad2
+    provided: libfaad.so
