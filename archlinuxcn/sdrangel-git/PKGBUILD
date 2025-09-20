@@ -40,16 +40,17 @@ depends=(
 
 # libsigmf requires the vendored version at https://github.com/f4exb/libsigmf/tree/new-namespaces, which isn't packaged yet
 makedepends=(
-	'git'
 	'cmake'
 	'boost'
-	'doxygen'
-	'graphviz'
-	'ffmpeg'
-	'libdab'
-	'zlib'
-	'faad2'
 	'codec2'
+	'doxygen'
+	'faad2'
+	'ffmpeg'
+	'git'
+	'graphviz'
+	'libdab'
+	'ninja'
+	'zlib'
 	# Driver
 	'airspy'
 	'airspyhf'
@@ -103,19 +104,22 @@ prepare() {
 build() {
 	# https://bugs.gentoo.org/704322
 	export CXXFLAGS="$CXXFLAGS -fpermissive"
-	cmake -B build -S "$_pkgname" \
-		-Wno-dev \
-		-DARCH_OPT="" \
-		-DCMAKE_BUILD_TYPE=None \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DLIBDSDCC_INCLUDE_DIR=/usr/include/dsdcc \
+	local cmake_options=(
+		-Wno-dev
+		-G Ninja
+		-DARCH_OPT=""
+		-DCMAKE_BUILD_TYPE=None
+		-DCMAKE_INSTALL_PREFIX=/usr
+		-DLIBDSDCC_INCLUDE_DIR=/usr/include/dsdcc
 		-DCM256CC_INCLUDE_DIR=/usr/include/cm256cc
+	)
+	cmake -S "$_pkgname" -B build "${cmake_options[@]}"
 
-	make -C build
+	ninja -C build
 }
 
 package() {
-	make -C build DESTDIR="$pkgdir" install
+	DESTDIR="$pkgdir" ninja -C build install
 }
 
 # vim: set noet ts=4
