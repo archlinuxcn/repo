@@ -47,7 +47,15 @@ makedepends=(
 	'graphviz'
 	'libdab'
 	'ninja'
+	'vulkan-headers'
 	'zlib'
+	# VkFFT
+	'glslang'
+	'spirv-headers'
+	'spirv-tools'
+	'vulkan-headers'
+	'vulkan-icd-loader'
+	'vkfft-vulkan'
 	# Driver
 	'airspy'
 	'airspyhf'
@@ -112,6 +120,8 @@ build() {
 		-DENABLE_QT6=ON
 		# FIXME: FTBFS
 		-DENABLE_CHANNELRX_DEMODDAB=OFF
+		# Use Vulkan backend instead of CUDA to cover more device.
+		-DVKFFT_BACKEND=0
 	)
 	cmake -S "$_pkgname" -B build "${cmake_options[@]}"
 
