@@ -4,14 +4,12 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: |
-  aur_pre_build(maintainers=['Mikos', 'nemanjan00'])
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
 
-post_build: aur_post_build
 
 repo_makedepends:
   - airspyhf-git
-  - aptdec-git
   - libdab-git
   - libmirisdr4-git
   - libperseus-sdr-git
@@ -20,8 +18,9 @@ repo_makedepends:
   - log4cpp
 
 update_on:
-  - source: aur
-    aur: sdrangel-git
+  - source: github
+    github: f4exb/sdrangel
+    branch: master
   - source: alpm
     alpm: faad2
     provided: libfaad.so
