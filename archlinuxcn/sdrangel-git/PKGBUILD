@@ -50,6 +50,7 @@ makedepends=(
 	'graphviz'
 	'libdab'
 	'ninja'
+	'vulkan-headers'
 	'zlib'
 	# Driver
 	'airspy'
@@ -112,6 +113,8 @@ build() {
 		-DCMAKE_INSTALL_PREFIX=/usr
 		-DLIBDSDCC_INCLUDE_DIR=/usr/include/dsdcc
 		-DCM256CC_INCLUDE_DIR=/usr/include/cm256cc
+		# Use Vulkan backend instead of CUDA to cover more device.
+		-DVKFFT_BACKEND=0
 	)
 	cmake -S "$_pkgname" -B build "${cmake_options[@]}"
 
