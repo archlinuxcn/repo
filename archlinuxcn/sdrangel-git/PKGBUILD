@@ -15,7 +15,6 @@ depends=(
 	'cm256cc'
 	'dsdcc'
 	'fftw'
-	'libsigmf-git'
 	'lz4'
 	'nanomsg'
 	'opencv'
@@ -34,7 +33,7 @@ depends=(
 	'qt6-svg'
 	'qt6-scxml'
 )
-
+# libsigmf requires the vendored version at https://github.com/f4exb/libsigmf/tree/new-namespaces, which isn't packaged yet
 makedepends=(
 	'cmake'
 	'boost'
