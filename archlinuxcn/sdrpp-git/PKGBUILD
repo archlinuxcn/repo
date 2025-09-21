@@ -1,0 +1,69 @@
+# Maintainer: Alexandre Rouma <whatsthetgeek@gmail.com>
+# Maintainer: éclairevoyant
+# Contributor: Marin Atanasov Nikolov <dnaeon@gmail.com>
+
+_pkgname=sdrpp
+pkgname="$_pkgname-git"
+pkgver=1.0.4.r826.dd9b8db6
+pkgrel=1
+pkgdesc="The bloat-free SDR receiver"
+arch=(x86_64)
+url="https://www.sdrpp.org/"
+license=(GPL-3.0-or-later)
+depends=(
+    fftw
+    glew
+    glfw
+    libvolk
+)
+_plugindeps=(
+    airspy
+    airspyhf-git
+    bladerf
+    codec2
+    hackrf
+    libad9361
+    libiio
+    libsdrplay
+    libuhd
+    limesuite
+    rtaudio
+    rtl-sdr
+    portaudio
+    soapysdr
+)
+makedepends=(cmake git "${_plugindeps[@]}")
+optdepends=("${_plugindeps[@]}")
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+source=("$_pkgname::git+https://github.com/AlexandreRouma/SDRPlusPlus.git")
+b2sums=('SKIP')
+
+pkgver() {
+    git -C $_pkgname describe --long --tags --exclude nightly | sed 's/\([^-]*-\)g/r\1/;s/-/./g'
+}
+
+build() {
+    local cmake_options=(
+        -Wno-dev
+        -G Ninja
+        -DARCH_OPT=""
+        -DCMAKE_BUILD_TYPE=None
+        -DCMAKE_INSTALL_PREFIX=/usr
+        -DLIBDSDCC_INCLUDE_DIR=/usr/include/dsdcc
+        -DCM256CC_INCLUDE_DIR=/usr/include/cm256cc
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+        -DOPT_BUILD_BLADERF_SOURCE=ON
+        -DOPT_BUILD_LIMESDR_SOURCE=ON
+        -DOPT_BUILD_SDRPLAY_SOURCE=ON
+        -DOPT_BUILD_NEW_PORTAUDIO_SINK=ON
+        -DOPT_BUILD_M17_DECODER=ON
+        -DOPT_BUILD_USRP_SOURCE=ON
+    )
+    cmake -S "$_pkgname" -B build "${cmake_options[@]}"
+    ninja -C build
+}
+
+package() {
+    DESTDIR="$pkgdir" ninja -C build install
+}

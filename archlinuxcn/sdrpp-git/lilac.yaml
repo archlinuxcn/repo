@@ -1,0 +1,20 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: coelacanthus@archlinuxcn.org
+
+build_prefix: extra-x86_64
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+repo_makedepends:
+  - airspyhf-git
+  - libsdrplay
+
+update_on:
+  - source: github
+    github: AlexandreRouma/SDRPlusPlus
+    branch: master
+  - source: alpm
+    alpm: libuhd
+    provided: libuhd.so
