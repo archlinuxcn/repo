@@ -1,0 +1,7 @@
+[Unit]
+Description=Planisphere report
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/planisphere-report report
+DynamicUser=yes
