@@ -1,8 +1,8 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=chezetc
-pkgver=202509.3
-pkgrel=3
+pkgver=202509.6
+pkgrel=1
 pkgdesc='Extending chezmoi to manage files under /etc and other root-owned directories'
 arch=(any)
 url='https://silverrainz.me/chezetc'
@@ -13,7 +13,7 @@ source=(
     chezetc
     )
 
-sha256sums=('b04764d1e6a899642241ebd214a1001f9133ed1fd116ce650d7bada302fb3e68'
+sha256sums=('d10f0f0892ebd00b2a196191ea1e227da160c66d3b1d863425584fcce1926bd8'
             '10c022dc7f78dc00e1aeaad816a932fad7271bc2d2d0e8a4c12d14106471843b')
 
 package() {
