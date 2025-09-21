@@ -1,4 +1,4 @@
-From 19e8edba5d36ec9fc30e1501026da5fe10ccd0d3 Mon Sep 17 00:00:00 2001
+From 035f47e13985970e43dfa7aa39cff4e8383ad79c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 28 Oct 2021 09:25:05 -0400
 Subject: [PATCH] trim down
@@ -8,7 +8,7 @@ Subject: [PATCH] trim down
  1 file changed, 10 insertions(+), 202 deletions(-)
 
 diff --git a/planisphere-report-go/internal/os/linux/linux.go b/planisphere-report-go/internal/os/linux/linux.go
-index a4b7ccc..a0b9e36 100644
+index a4b7ccc..9b304e8 100644
 --- a/planisphere-report-go/internal/os/linux/linux.go
 +++ b/planisphere-report-go/internal/os/linux/linux.go
 @@ -4,18 +4,11 @@ Package linux defines how to interact with the Linux os stuff
@@ -177,7 +177,7 @@ index a4b7ccc..a0b9e36 100644
 -	}
 -	// Switch to MB here
 -	return memory / 1024, err
-+	return 1024, nil
++	return uint64(1024), nil
  }
  
  // GetOSFamily satisfies the OSLookuper interface
