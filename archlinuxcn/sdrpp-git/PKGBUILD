@@ -11,6 +11,7 @@ arch=(x86_64)
 url="https://www.sdrpp.org/"
 license=(GPL-3.0-or-later)
 depends=(
+    boost-libs
     fftw
     glew
     glfw
@@ -32,7 +33,13 @@ _plugindeps=(
     portaudio
     soapysdr
 )
-makedepends=(cmake git ninja "${_plugindeps[@]}")
+makedepends=(
+    boost
+    cmake
+    git
+    ninja
+    "${_plugindeps[@]}"
+)
 optdepends=("${_plugindeps[@]}")
 provides=("$_pkgname")
 conflicts=("$_pkgname")
