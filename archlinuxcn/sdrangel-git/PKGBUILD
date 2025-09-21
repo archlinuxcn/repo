@@ -110,6 +110,7 @@ build() {
 	# https://bugs.gentoo.org/704322
 	export CXXFLAGS="$CXXFLAGS -fpermissive"
 	# Many features require SSE3.
+	export CFLAGS="$CFLAGS -march=x86-64-v3"
 	export CXXFLAGS="$CXXFLAGS -march=x86-64-v3"
 	local cmake_options=(
 		-Wno-dev
