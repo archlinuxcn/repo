@@ -2,7 +2,7 @@
 
 pkgname=chezetc
 pkgver=202509.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Extending chezmoi to manage files under /etc and other root-owned directories'
 arch=(any)
 url='https://silverrainz.me/chezetc'
@@ -32,6 +32,10 @@ package() {
     for i in commands completions hooks utils; do
         install -Dm644 $i/* -t "$pkgdir/usr/lib/$pkgname/$i"
     done
+
+    chmod +x "$pkgdir/usr/lib/$pkgname/utils/toml-merge.py"
+    chmod +x "$pkgdir/usr/lib/$pkgname/commands/cd"
+    chmod +x "$pkgdir/usr/lib/$pkgname/commands/editor"
 
     install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
 }
