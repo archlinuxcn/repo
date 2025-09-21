@@ -1,17 +1,36 @@
-From d543edc413a0ec18c9bcba60fbd0056766a822a1 Mon Sep 17 00:00:00 2001
+From 19e8edba5d36ec9fc30e1501026da5fe10ccd0d3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Thu, 28 Oct 2021 09:25:05 -0400
 Subject: [PATCH] trim down
 
 ---
- .../internal/os/linux/linux.go                | 205 +-----------------
- 1 file changed, 10 insertions(+), 195 deletions(-)
+ .../internal/os/linux/linux.go                | 212 +-----------------
+ 1 file changed, 10 insertions(+), 202 deletions(-)
 
 diff --git a/planisphere-report-go/internal/os/linux/linux.go b/planisphere-report-go/internal/os/linux/linux.go
-index a4b7ccc..f688f1f 100644
+index a4b7ccc..a0b9e36 100644
 --- a/planisphere-report-go/internal/os/linux/linux.go
 +++ b/planisphere-report-go/internal/os/linux/linux.go
-@@ -36,12 +36,6 @@ func (o OSLookup) ApplyPlatformDetections(_ *lookups.Lookup) error {
+@@ -4,18 +4,11 @@ Package linux defines how to interact with the Linux os stuff
+ package linux
+ 
+ import (
+-	"bufio"
+-	"bytes"
+ 	"errors"
+ 	"fmt"
+ 	"log/slog"
+-	"os"
+-	"regexp"
+-	"sort"
+-	"strconv"
+ 	"strings"
+ 
+-	report "gitlab.oit.duke.edu/devil-ops/planisphere-tools/planisphere-report-go"
+ 	"gitlab.oit.duke.edu/devil-ops/planisphere-tools/planisphere-report-go/internal/lookups"
+ )
+ 
+@@ -36,12 +29,6 @@ func (o OSLookup) ApplyPlatformDetections(_ *lookups.Lookup) error {
  
  // GetEnabledRepos returns a list of enabled repositories on a given system
  func GetEnabledRepos(l *lookups.Lookup) ([]string, error) {
@@ -24,7 +43,7 @@ index a4b7ccc..f688f1f 100644
  	return nil, errors.New("no apt-cache or yum found to look up enabled repositories")
  }
  
-@@ -49,10 +43,7 @@ func GetEnabledRepos(l *lookups.Lookup) ([]string, error) {
+@@ -49,10 +36,7 @@ func GetEnabledRepos(l *lookups.Lookup) ([]string, error) {
  func GetInstalledSoftware(l *lookups.Lookup) ([][]string, error) {
  	softwareTable := [][]string{}
  	softwareQueries := [][]string{
@@ -36,7 +55,7 @@ index a4b7ccc..f688f1f 100644
  	}
  
  	for _, softwareQuery := range softwareQueries {
-@@ -81,97 +72,22 @@ func GetInstalledSoftware(l *lookups.Lookup) ([][]string, error) {
+@@ -81,97 +65,22 @@ func GetInstalledSoftware(l *lookups.Lookup) ([][]string, error) {
  
  // GetExtendedOSSupport returns the vendor providing Extended OS Support for an operating system
  func (o OSLookup) GetExtendedOSSupport(l *lookups.Lookup) (interface{}, error) {
@@ -137,7 +156,7 @@ index a4b7ccc..f688f1f 100644
  }
  
  // GetDiskEncrypted satisfies the OSLookuper interface
-@@ -181,23 +97,7 @@ func (o OSLookup) GetDiskEncrypted(_ *lookups.Lookup) (interface{}, error) {
+@@ -181,23 +90,7 @@ func (o OSLookup) GetDiskEncrypted(_ *lookups.Lookup) (interface{}, error) {
  
  // GetMemory satisfies the OSLookuper interface
  func (o OSLookup) GetMemory(l *lookups.Lookup) (interface{}, error) {
@@ -162,7 +181,7 @@ index a4b7ccc..f688f1f 100644
  }
  
  // GetOSFamily satisfies the OSLookuper interface
-@@ -207,94 +107,20 @@ func (o OSLookup) GetOSFamily(_ *lookups.Lookup) (interface{}, error) {
+@@ -207,94 +100,20 @@ func (o OSLookup) GetOSFamily(_ *lookups.Lookup) (interface{}, error) {
  
  // GetDeviceType satisfies the OSLookuper interface
  func (o OSLookup) GetDeviceType(l *lookups.Lookup) (interface{}, error) {
@@ -260,7 +279,7 @@ index a4b7ccc..f688f1f 100644
  }
  
  // GetInstalledSoftware satisfies the OSLookuper interface
-@@ -308,23 +134,12 @@ func (o OSLookup) GetInstalledSoftware(l *lookups.Lookup) (interface{}, error) {
+@@ -308,23 +127,12 @@ func (o OSLookup) GetInstalledSoftware(l *lookups.Lookup) (interface{}, error) {
  
  // GetHostname satisfies the OSLookuper interface
  func (o OSLookup) GetHostname(_ *lookups.Lookup) (interface{}, error) {
