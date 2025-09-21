@@ -6,22 +6,32 @@ pkgname=opentabletdriver-git
 _pkgname=OpenTabletDriver
 _lpkgname=opentabletdriver
 _spkgname=otd
-pkgver=v0.7.0.0pre.r1094.gd4150dea3
-pkgrel=2
+pkgver=0.6.5.1.r219.g4312b4a1c
+pkgrel=1
 pkgdesc="A cross-platform open source tablet driver"
 arch=('x86_64')
 url="https://opentabletdriver.net"
 license=('LGPL-3.0-or-later')
 depends=('dotnet-runtime-8.0' 'gtk3' 'libevdev')
 optdepends=('libxrandr: x11 display querying support' 'libx11')
-makedepends=('git' 'dotnet-sdk-8.0' 'jq')
+makedepends=('git' 'dotnet-sdk-8.0>=8.0' 'jq')
 provides=("opentabletdriver")
-conflicts=('opentabletdriver' 'digimend-kernel-drivers-dkms-git' 'digimend-drivers-git-dkms' 'digimend-kernel-drivers-dkms' 'digimend-kernel-drivers')
+conflicts=(
+  'opentabletdriver'
+  'digimend-kernel-drivers-dkms-git'
+  'digimend-drivers-git-dkms'
+  'digimend-kernel-drivers-dkms'
+  'digimend-kernel-drivers'
+)
 install="notes.install"
-# unified binary dotnet releases break when stripped, see https://github.com/dotnet/runtime/issues/54947
-# disabling debug is necessary for the time being, see https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/19
+
+# unified binary dotnet releases break when stripped
+# see https://github.com/dotnet/runtime/issues/54947
+#
+# disabling debug is necessary for the time being
+# see https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/19
 options=('!strip' '!debug')
-source=('git+https://github.com/OpenTabletDriver/OpenTabletDriver'
+source=('git+https://github.com/OpenTabletDriver/OpenTabletDriver#branch=0.6.x'
         "notes.install"
         )
 
@@ -30,15 +40,7 @@ sha256sums=('SKIP'
 
 pkgver() {
     cd "$srcdir/$_pkgname"
-    # check for the DI rewrite commit that makes plugins incompatible
-    if git merge-base --is-ancestor 10a3c07206028f7df5befbdeca6aadb30efe4cb3 HEAD >/dev/null; then
-        printf "%s.r%s.g%s\n" \
-        "v0.7.0.0pre" \
-        $(git log --oneline 10a3c072.. | wc -l) \
-        $(git describe --long --tags | sed 's/.*-g\(.*\)/\1/')
-    else
-        git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
-    fi
+    git describe --long --tags | sed 's/v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
@@ -46,21 +48,23 @@ build() {
     export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
     cd "$srcdir/$_pkgname"
-    # check for the DI rewrite commit that makes plugins incompatible
-    if git merge-base --is-ancestor 10a3c07206028f7df5befbdeca6aadb30efe4cb3 HEAD >/dev/null; then
-        PREFIX="0.7.0.0-pre"
-    else
-        PREFIX=$(git describe --long --tags | sed 's/-.*//;s/v//')
-    fi
+    VERSION_SUFFIX="$(git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/[^-]*-\(.*\)/\1/;s/-/./g')"
 
     if check_option "strip" y; then
         EXTRA_OPTIONS="/p:DebugType=None /p:DebugSymbols=false"
     fi
 
-    ./eng/linux/package.sh --dog-food "false" --package Generic -- /p:VersionPrefix="$PREFIX" $EXTRA_OPTIONS
+    export OTD_CONFIGURATIONS="${PWD}/OpenTabletDriver.Configurations/Configurations"
+    ./eng/linux/package.sh --dog-food "false" --package Generic -- /p:VersionSuffix="$VERSION_SUFFIX" $EXTRA_OPTIONS
 }
 
 package() {
     cd "${srcdir}/${_pkgname}"
     cp -r ./dist/files/* "${pkgdir}/"
+
+    # moving LICENSE to the suggested Arch folder is also tracked upstream:
+    # https://github.com/OpenTabletDriver/OpenTabletDriver/issues/3572
+    mkdir -p "$pkgdir"/usr/share/licenses/$pkgname
+    mv "$pkgdir"/usr/share/doc/opentabletdriver/LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+    rmdir -p --ignore-fail-on-non-empty "$pkgdir"/usr/share/doc/opentabletdriver
 }
