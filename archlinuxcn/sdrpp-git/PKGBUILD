@@ -32,7 +32,7 @@ _plugindeps=(
     portaudio
     soapysdr
 )
-makedepends=(cmake git "${_plugindeps[@]}")
+makedepends=(cmake git ninja "${_plugindeps[@]}")
 optdepends=("${_plugindeps[@]}")
 provides=("$_pkgname")
 conflicts=("$_pkgname")
