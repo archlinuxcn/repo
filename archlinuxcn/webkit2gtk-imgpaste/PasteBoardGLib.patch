@@ -1,7 +1,7 @@
-diff -Naur webkitgtk-2.40.0/Source/WebCore/platform/gtk/PasteboardGtk.cpp webkitgtk-2.40.0-imgpaste/Source/WebCore/platform/gtk/PasteboardGtk.cpp
---- webkitgtk-2.40.0/Source/WebCore/platform/gtk/PasteboardGtk.cpp	2023-03-17 18:00:23.481180200 +0800
-+++ webkitgtk-2.40.0-imgpaste/Source/WebCore/platform/gtk/PasteboardGtk.cpp	2023-03-19 15:37:47.620609123 +0800
-@@ -329,6 +329,25 @@
+diff -Naur webkitgtk-2.50.0/Source/WebCore/platform/glib/PasteboardGLib.cpp webkitgtk-2.50.0-patched/Source/WebCore/platform/glib/PasteboardGLib.cpp
+--- webkitgtk-2.50.0/Source/WebCore/platform/glib/PasteboardGLib.cpp	2025-08-08 17:17:55.336475000 +0800
++++ webkitgtk-2.50.0-patched/Source/WebCore/platform/glib/PasteboardGLib.cpp	2025-09-23 01:43:19.241817869 +0800
+@@ -336,6 +336,25 @@
          auto filePaths = platformStrategies()->pasteboardStrategy()->readFilePathsFromClipboard(m_name);
          for (const auto& filePath : filePaths)
              reader.readFilename(filePath);
