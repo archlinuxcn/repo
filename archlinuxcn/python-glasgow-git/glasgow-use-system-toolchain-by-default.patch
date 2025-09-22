@@ -1,0 +1,14 @@
+diff --git i/software/glasgow/hardware/toolchain.py w/software/glasgow/hardware/toolchain.py
+index 0a90a319..9c875a05 100644
+--- i/software/glasgow/hardware/toolchain.py
++++ w/software/glasgow/hardware/toolchain.py
+@@ -365,8 +365,8 @@ def find_toolchain(tools=("yosys", "nextpnr-ice40", "icepack"), *, quiet=False):
+     if sys.platform == "emscripten":
+         available_toolchains["js"]      = Toolchain(map(JsTool,     tools))
+     else:
+-        available_toolchains["builtin"] = Toolchain(map(WasmTool,   tools))
+         available_toolchains["system"]  = Toolchain(map(SystemTool, tools))
++        available_toolchains["builtin"] = Toolchain(map(WasmTool,   tools))
+ 
+     kinds = os.environ.get(env_var_name, ",".join(available_toolchains.keys())).split(",")
+     for kind in kinds:
