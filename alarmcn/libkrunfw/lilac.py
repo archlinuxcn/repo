@@ -12,12 +12,8 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('arch='):
       line = 'arch=(aarch64 x86_64)'
-    if line.startswith('makedepends='):
-      line = line.replace('(', '(cpio ')
-    if line.startswith('_kver=6.12.20'):
-      line = '_kver=6.12.34'
     print(line)
-  run_cmd(['updpkgsums'])
+  # run_cmd(['updpkgsums'])
 
 def post_build():
   git_add_files([f for f in g.files if not f.startswith(".")])
