@@ -69,7 +69,7 @@ package() {
     SHELL=fish target/release/probe-rs complete --shell fish install > probe-rs.fish
 
 	install -Dm644 ~/.zfunc/_probe-rs -t "$pkgdir/usr/share/zsh/site-functions"
-	install -Dm644 ~/.local/share/bash-completion/completions/complete.bash -t "$pkgdir/usr/share/bash-completion/completions/"
+	install -Dm644 ~/.local/share/bash-completion/completions/probe-rs.bash -t "$pkgdir/usr/share/bash-completion/completions/"
 	install -Dm644 probe-rs.fish -t "$pkgdir/usr/share/fish/vendor_completions.d"
 	install -Dm644 "$pkgname-69-probe-rs.rules" -t "$pkgdir/usr/lib/udev/rules.d/"
 }
