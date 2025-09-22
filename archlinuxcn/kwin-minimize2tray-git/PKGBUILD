@@ -1,0 +1,26 @@
+# Maintainer: Yuzu Vita <g311571057 at gmail dot com>
+pkgname=kwin-minimize2tray-git
+pkgver=r27.33eb2f2
+pkgrel=1
+pkgdesc="Hide windows to the system tray, similar to KDocker but in the form of a KWin Script that works on Wayland"
+arch=('x86_64')
+url="https://github.com/luisbocanegra/kwin-minimize2tray"
+license=('GPL-3.0-or-later')
+depends=(qt6-base qt6-declarative kservice gcc-libs glibc kstatusnotifieritem)
+makedepends=(git cmake kpackage extra-cmake-modules)
+source=(${pkgname}::git+${url}.git)
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+    cmake -B build -S $pkgname -DCMAKE_INSTALL_PREFIX=/usr -Wno-dev
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}
