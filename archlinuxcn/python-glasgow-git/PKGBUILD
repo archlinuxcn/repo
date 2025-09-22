@@ -1,44 +1,92 @@
-# Maintainer: Markus Koch <markus@notsyncing.net>
+# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
+# Markus Koch <markus@notsyncing.net>
 
 pkgname=python-glasgow-git
+epoch=1
 pkgver=0.2675
 pkgrel=1
 pkgdesc="Software for the Glasgow Interface Explorer, the Scots Army Knife for electronics"
 arch=('any')
 url='https://github.com/GlasgowEmbedded/glasgow.git'
 license=('0BSD' 'Apache-2.0')
-depends=(python python-pyvcd python-libusb1 python-fx2 python-amaranth yosys nextpnr icestorm)
-optdepends=('python-aiohttp: For specific plugins (applets, loggers, etc.)',
-	    'python-aiohttp_remotes: For specific plugins (applets, loggers, etc.)'
+# https://github.com/GlasgowEmbedded/glasgow/blob/main/software/pyproject.toml
+depends=(
+    icestorm
+    nextpnr
+    python
+    python-amaranth
+    python-cobs
+    python-fx2
+    python-importlib_resources
+    python-libusb1
+    python-platformdirs
+    python-pyvcd
+    python-typing_extensions
+    yosys
 )
-makedepends=("git" "python-build" "python-pdm" "python-pdm-backend")
-source=("git+https://github.com/GlasgowEmbedded/glasgow.git")
-sha256sums=('SKIP')
+optdepends=(
+    'python-aiohttp: yamaha_opx, logger'
+	'python-aiohttp_remotes: yamaha_opx'
+    'python-matplotlib: memory-floppy'
+    'python-numpy: memory-floppy'
+    'yowasp-runtime: WASM based toolchain (slower than system yosys toolchain)'
+    'yowasp-yosys: WASM based toolchain (slower than system yosys toolchain)'
+)
+makedepends=(
+    git
+    python-build
+    python-pdm
+    python-pdm-backend
+)
+source=(
+    "git+https://github.com/GlasgowEmbedded/glasgow.git"
+    "glasgow-use-system-toolchain-by-default.patch"
+)
+# Only needed when build firmware
+#"git+https://github.com/whitequark/libfx2.git"
+b2sums=('SKIP')
 provides=(python-glasgow)
 conflicts=(python-glasgow)
 
 pkgver() {
-	cd "$srcdir/glasgow"
-	#git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
-	git rev-list HEAD --count | sed "s/^/0./"
+	cd "glasgow"
+	( 
+        set -o pipefail
+        git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+            ||printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+    )
 }
 
 prepare() {
-	cd "$srcdir/glasgow"
+	cd "glasgow"
 
-	git submodule update --init
+    # Only needed when build firmware
+    #git submodule init
+    #git config submodule.vendor/libfx2.url "$srcdir/libfx2"
+    #git -c protocol.file.allow=always submodule update
+    
+    # Change default value of $GLASGOW_TOOLCHAIN from builtin,system to system,builtin.
+    # Use patch so if upstream changed the order we can found immediately.
+    patch -Np1 -i ../glasgow-use-system-toolchain-by-default.patch
 }
 
 build() {
-	cd "$srcdir/glasgow/software"
+	pushd "glasgow/software"
+        python -m build --wheel --no-isolation
+    popd
 
-	python -m build --wheel --no-isolation
+    # Upstream do reproducible build for firmware
+    #make -C vendor/libfx2/firmware/library all MODELS=medium
+    #make -C firmware all
+    #PYTHONPATH=vendor/libfx2/software python3 firmware/normalize.py \
+    #    firmware/glasgow.ihex software/glasgow/hardware/firmware.ihex
+
 }
 
 package() {
-	cd "$srcdir/glasgow/software"
+	cd "glasgow/software"
 
 	python -m installer --destdir="$pkgdir" dist/*.whl
-
 	install -Dm 644 $srcdir/glasgow/config/70-glasgow.rules $pkgdir/etc/udev/rules.d/70-glasgow.rules
 }
+# vim: set sts=4 ts=4 sw=4 et:
