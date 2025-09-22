@@ -2,7 +2,7 @@
 
 pkgname=mihomo
 pkgver=1.19.13
-pkgrel=3
+pkgrel=4
 pkgdesc="Another Clash Kernel by MetaCubeX, formerly known as Clash.Meta"
 arch=("x86_64" 'aarch64')
 url="https://github.com/MetaCubeX/mihomo"
@@ -17,9 +17,9 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
 	"config.yaml"
 	start.sh)
 sha256sums=('dcbdcfb84bde1d70758247e7f3a4fbd4e4771655d01b23aabbdf3cafcaf749b1'
-            '434f5bfab25b7185c002cb0338cbd8c528b6e24fa12c857dfa7f1a7178a76ac6'
+            '89be75f803bbeb417888d8e1ff48e30e73312cb4776f2253c3e4e84ead55a58b'
             '90f7fdacecd5928e37865b4f841517f925c8bedc769f16f7a7a1e89b923f1fb9'
-            '9cb9b070715082c18c0d0150ec01fdfc8d3558c1a63d338e0663986ca9a21fbf')
+            'f4db2d06701e0893b11c56ef489e47f263731851278ef4b63a17059b6facd654')
 
 build(){
 	cd "${srcdir}"/mihomo-${pkgver}
