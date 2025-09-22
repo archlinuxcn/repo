@@ -9,7 +9,7 @@ pkgver=1.0.0.1
 pkgrel=2
 makedepends=(python-setuptools git python-wheel python-amulet-compiler-version python-packaging python-versioneer)
 optdepends+=(python-black)
-depends=(python pybind11 python-black)
+depends=(python pybind11)
 source=(
 	"git+https://github.com/Amulet-Team/Amulet-pybind11-extensions.git#tag=${pkgver}"
 )
