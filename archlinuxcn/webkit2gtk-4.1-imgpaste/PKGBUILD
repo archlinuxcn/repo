@@ -3,7 +3,7 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-4.1-imgpaste
-pkgver=2.48.5
+pkgver=2.50.0
 pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
@@ -107,12 +107,12 @@ conflicts=(webkit2gtk-4.1)
 source=(
   $url/releases/webkitgtk-$pkgver.tar.xz{,.asc}
   EnlargeObjectSize.patch
-  PasteBoardGtk.patch
+  PasteBoardGLib.patch
 )
-sha256sums=('bb64ed9d1cfd58e8b5e89ccad71dd31adfed56336bad7695031ad0b668e1987c'
+sha256sums=('e564b8099f9a3ae32409539b290bbd2ad084e99b6d22d4aac5e51e4554df8bc2'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
-            '20ebac2caf15fa546e6da00cb0fa90d5d37fcf7bfa883014d7d15eb4963d12d2')
+            'a6b7fd668a42dc27cd6ea0fec5eb3501ab8241e18b4bd6c8844ad6bd3207cf6e')
 validpgpkeys=(
   # https://www.webkitgtk.org/verifying.html
   5AA3BC334FD7E3369E7C77B291C559DBE4C9123B # Adrián Pérez de Castro <aperez@igalia.com>
@@ -122,7 +122,7 @@ validpgpkeys=(
 prepare() {
   cd webkitgtk-$pkgver
 
-  patch -Np1 -i ../PasteBoardGtk.patch
+  patch -Np1 -i ../PasteBoardGLib.patch
   patch -Np1 -i ../EnlargeObjectSize.patch
 }
 
