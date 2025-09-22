@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=shh
-pkgver=2025.7.13
+pkgver=2025.9.22
 pkgrel=1
 pkgdesc="Automatic systemd service hardening guided by strace profiling"
 arch=("x86_64")
@@ -10,7 +10,7 @@ license=("GPL-3.0-or-later")
 depends=("gcc-libs" "glibc" "strace")
 makedepends=("cargo")
 source=("${url}/archive/v${pkgver}/${pkgname}-v${pkgver}.tar.gz")
-b2sums=('a506f0c272635746dca213d2d4c5c1e5b5810f8a3b4d68e30acd8e02a26efbeda968b8b467151ca5820b071722c54c644ccad629aedee157be9d341814b2469f')
+b2sums=('a3dd7ee98eb7c430ec419a155db289fe2bc85075b75fc94ea7d338fb1ec8f5bc39d5bcfaa1adff2825656ff2c33d38b57883d89f4a4d402f7faf54812d301d71')
 
 prepare() {
   cd "$pkgname-$pkgver"
