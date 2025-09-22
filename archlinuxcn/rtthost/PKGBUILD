@@ -4,7 +4,7 @@
 _crate="rtthost"
 pkgname="rtthost"
 pkgver=0.29.1
-pkgrel=1
+pkgrel=2
 pkgdesc='RTT (Real-Time Transfer) client.'
 url='https://probe.rs'
 arch=('aarch64' 'i686' 'x86_64')
@@ -21,8 +21,7 @@ makedepends=(
 source=(
     "$pkgname-$pkgver.tar.gz::https://static.crates.io/crates/$_crate/$_crate-$pkgver.crate"
 )
-b2sums=('3ffe73ac2a2d769b684b150150769e668b1b02b65b558fd461639d8581d8efcdc8bbc4a931e7645c31b0594f0632dab01d10d88cf22afba0fbdfa0645b6fab2e'
-        '155e37902a17198be77c3aa1f1f9407ab2112083606630f5115ca27261a47345fb646770ff44d90cd258d8bc187d4b2a0f5620b3bc0eadaddd5a845d4226a45f')
+b2sums=('6b8f5b947ca88a0ca0327bc7c6d4eb2d4f7385e401e03330295642213964b958b987d32467d0fcdbe0550eb3154cc8aa22d62cf9f98c81d4b7d97c711046cb74')
 
 
 prepare() {
