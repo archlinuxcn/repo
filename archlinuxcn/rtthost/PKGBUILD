@@ -1,0 +1,57 @@
+# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
+# Contributor: Dominic Meiser [git at msrd0 dot de]
+
+_crate="rtthost"
+pkgname="rtthost"
+pkgver=0.29.1
+pkgrel=1
+pkgdesc='RTT (Real-Time Transfer) client.'
+url='https://probe.rs'
+arch=('aarch64' 'i686' 'x86_64')
+license=('MIT')
+depends=(
+    'gcc-libs'
+    'systemd-libs'
+)
+makedepends=(
+    'cargo'
+    'cargo-auditable'
+    'cmake'
+)
+source=(
+    "$pkgname-$pkgver.tar.gz::https://static.crates.io/crates/$_crate/$_crate-$pkgver.crate"
+)
+b2sums=('3ffe73ac2a2d769b684b150150769e668b1b02b65b558fd461639d8581d8efcdc8bbc4a931e7645c31b0594f0632dab01d10d88cf22afba0fbdfa0645b6fab2e'
+        '155e37902a17198be77c3aa1f1f9407ab2112083606630f5115ca27261a47345fb646770ff44d90cd258d8bc187d4b2a0f5620b3bc0eadaddd5a845d4226a45f')
+
+
+prepare() {
+	cd "$_crate-$pkgver"
+
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "$_crate-$pkgver"
+	
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	CFLAGS+=" -ffat-lto-objects"
+
+	cargo auditable build \
+		--frozen \
+		--release \
+        --all-features
+}
+
+package() {
+	cd "$_crate-$pkgver"
+    find target/release \
+        -maxdepth 1 \
+        -executable \
+        -type f \
+        -exec install -Dm0755 -t "$pkgdir/usr/bin/" {} +
+}
+
+# vim: set sts=4 ts=4 sw=4 et:

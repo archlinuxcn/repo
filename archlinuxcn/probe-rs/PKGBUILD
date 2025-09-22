@@ -1,0 +1,77 @@
+# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
+# Contributor: Dominic Meiser [git at msrd0 dot de]
+
+_crate="probe-rs-tools"
+pkgname="probe-rs"
+pkgver=0.29.1
+pkgrel=1
+pkgdesc='A collection of on chip debugging tools to communicate with microchips.'
+url='https://probe.rs'
+arch=('aarch64' 'i686' 'x86_64')
+license=('Apache-2.0' 'MIT')
+depends=(
+    'gcc-libs'
+    'systemd-libs'
+)
+makedepends=(
+    'cargo'
+    'cargo-auditable'
+    'cmake'
+)
+optdepends=(
+    'rtthost: Real-time transfer client'
+)
+provides=(
+    'cargo-embed'
+    'cargo-flash'
+)
+conflicts=(
+    'cargo-embed'
+    'cargo-flash'
+)
+source=(
+    "$pkgname-$pkgver.tar.gz::https://static.crates.io/crates/$_crate/$_crate-$pkgver.crate"
+    "$pkgname-69-probe-rs.rules::https://github.com/probe-rs/webpage/raw/refs/heads/master/public/files/69-probe-rs.rules"
+)
+b2sums=('3ffe73ac2a2d769b684b150150769e668b1b02b65b558fd461639d8581d8efcdc8bbc4a931e7645c31b0594f0632dab01d10d88cf22afba0fbdfa0645b6fab2e'
+        '155e37902a17198be77c3aa1f1f9407ab2112083606630f5115ca27261a47345fb646770ff44d90cd258d8bc187d4b2a0f5620b3bc0eadaddd5a845d4226a45f')
+
+
+prepare() {
+	cd "$_crate-$pkgver"
+
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "$_crate-$pkgver"
+	
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	CFLAGS+=" -ffat-lto-objects"
+
+	cargo auditable build \
+		--frozen \
+		--release \
+        --all-features
+}
+
+package() {
+	cd "$_crate-$pkgver"
+    find target/release \
+        -maxdepth 1 \
+        -executable \
+        -type f \
+        -exec install -Dm0755 -t "$pkgdir/usr/bin/" {} +
+    SHELL=zsh  target/release/probe-rs complete --shell zsh install
+    SHELL=bash target/release/probe-rs complete --shell bash install
+    SHELL=fish target/release/probe-rs complete --shell fish install > probe-rs.fish
+
+	install -Dm644 ~/.zfunc/_probe-rs -t "$pkgdir/usr/share/zsh/site-functions"
+	install -Dm644 ~/.local/share/bash-completion/completions/complete.bash -t "$pkgdir/usr/share/bash-completion/completions/"
+	install -Dm644 probe-rs.fish -t "$pkgdir/usr/share/fish/vendor_completions.d"
+	install -Dm644 "$pkgname-69-probe-rs.rules" -t "$pkgdir/usr/lib/udev/rules.d/"
+}
+
+# vim: set sts=4 ts=4 sw=4 et:
