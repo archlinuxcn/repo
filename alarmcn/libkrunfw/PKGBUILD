@@ -4,13 +4,13 @@ pkgname=libkrunfw
 # Check https://github.com/containers/libkrunfw/blob/main/Makefile#L1 for kernel version
 _kver=6.12.34
 pkgver=4.10.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A dynamic library bundling the guest payload consumed by libkrun"
 url="https://github.com/containers/libkrunfw"
 arch=(aarch64 x86_64)
 license=('GPL-2.0-only' 'LGPL-2.1-only')
 depends=('glibc')
-makedepends=(cpio 'bc' 'python-pyelftools')
+makedepends=(cpio 'bc' 'python-pyelftools' 'cpio')
 source=("https://github.com/containers/libkrunfw/archive/refs/tags/v$pkgver/$pkgname-$pkgver.tar.gz"
         "https://cdn.kernel.org/pub/linux/kernel/v${_kver%%.*}.x/linux-${_kver}.tar.xz")
 noextract=("linux-${_kver}.tar.xz")
