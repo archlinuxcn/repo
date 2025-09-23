@@ -36,6 +36,9 @@ sha512sums=('e2899272a2b9015f8a73af15d36b7d2ccf2a56a69dbd9f02186b31a5939a2b8e257
 prepare() {
   # fix glog error
   sed -i "s/define_macros = \[\]/define_macros = [('GLOG_USE_GLOG_EXPORT', None)]/g" "${_pkgname}-${pkgver}/setup.py"
+  # dirty hack
+  sed -i 's,THC/THCAtomics.cuh,ATen/cuda/Atomic.cuh,' "${_pkgname}-${pkgver}/mmcv/ops/csrc/common/pytorch_cuda_helper.hpp"
+  sed -i 's,THC/THCAtomics.cuh,ATen/cuda/Atomic.cuh,' "${_pkgname}-${pkgver}/mmcv/ops/csrc/pytorch/cuda/ms_deform_attn_cuda.cu"
   # setting version
   sed -i "s/version=get_version()/version='$pkgver'/" "${_pkgname}-${pkgver}/setup.py"
   cp -a "${srcdir}/${_pkgname}-${pkgver}" "${srcdir}/${_pkgname}-full-${pkgver}"
