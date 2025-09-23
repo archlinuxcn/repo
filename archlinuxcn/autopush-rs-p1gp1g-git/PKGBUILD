@@ -23,6 +23,7 @@ pkgver() {
 prepare() {
 	rustup default stable
 	cd "$srcdir/autopush-rs"
+	git checkout "feat/redis"
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
