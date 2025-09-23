@@ -1,4 +1,4 @@
-From 1a6d7661559dc1af525cf1aedad54e7b80a95836 Mon Sep 17 00:00:00 2001
+From 2932d57a4d72557efd4d386d6b2f437e5ea9104d Mon Sep 17 00:00:00 2001
 From: everyx <lunt.luo@gmail.com>
 Date: Fri, 1 Aug 2025 17:17:14 +0800
 Subject: [PATCH 1/2] ibus-candidate-popup: support rime comment style
@@ -28,7 +28,7 @@ index bedc31186..fe8276d80 100644
  
  .candidate-box {
 diff --git a/js/ui/ibusCandidatePopup.js b/js/ui/ibusCandidatePopup.js
-index 0bb4e47ee..8f14d7848 100644
+index 6389f558e..e083aa722 100644
 --- a/js/ui/ibusCandidatePopup.js
 +++ b/js/ui/ibusCandidatePopup.js
 @@ -42,8 +42,10 @@ const CandidateArea = GObject.registerClass({
@@ -80,7 +80,7 @@ index 0bb4e47ee..8f14d7848 100644
              visible: false,
          });
          box.add_child(this._auxText);
-@@ -288,9 +310,10 @@ class IbusCandidatePopup extends BoxPointer.BoxPointer {
+@@ -290,9 +312,10 @@ class IbusCandidatePopup extends BoxPointer.BoxPointer {
  
              let candidates = [];
              for (let i = startIndex; i < endIndex; ++i) {

@@ -1,0 +1,32 @@
+From 793fe6de9ed60cfdd94b44147c13dd5b52c42540 Mon Sep 17 00:00:00 2001
+From: everyx <lunt.luo@gmail.com>
+Date: Sat, 20 Sep 2025 09:43:25 +0800
+Subject: [PATCH 2/2] theme: Fix jagged edges on notification buttons
+
+On hover, notification buttons would get jagged edges instead of
+smoothly rounded corners. This is a rendering glitch that can happen
+when the background color changes.
+
+To fix this, we apply a transparent inset box-shadow to the button.
+This acts as a hint to the GPU to enforce proper anti-aliasing on
+the corners, ensuring they remain smooth during transitions.
+---
+ data/theme/gnome-shell-sass/_common.scss | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/data/theme/gnome-shell-sass/_common.scss b/data/theme/gnome-shell-sass/_common.scss
+index 846427e8e..9bf988a5d 100644
+--- a/data/theme/gnome-shell-sass/_common.scss
++++ b/data/theme/gnome-shell-sass/_common.scss
+@@ -198,6 +198,8 @@ stage {
+   font-weight: bold;
+   padding: $base_padding $base_padding * 2;
+   border-radius: $base_border_radius;
++  border-width: 0;
++  box-shadow: inset 0 0 0 1px transparent;
+ 
+   @include button(normal, $style: notification);
+   &:focus { @include button(focus, $style: notification);}
+-- 
+2.51.0
+
