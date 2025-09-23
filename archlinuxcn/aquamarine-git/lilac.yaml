@@ -18,5 +18,9 @@ update_on:
   - source: github
     github: hyprwm/aquamarine
 
+  - source: alpm
+    alpm: libdisplay-info
+    provided: libdisplay-info.so
+
 update_on_build:
   - pkgbase: hyprutils-git
