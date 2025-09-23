@@ -4,7 +4,7 @@ pkgname=ceccomp
 pkgver=3.1
 pkgrel=1
 pkgdesc="A C-based seccomp analysis tool"
-arch=(x86_64)
+arch=(x86_64 aarch64)
 url="https://github.com/dbgbgtf1/Ceccomp"
 license=('GPL-3.0-or-later')
 depends=(
@@ -27,14 +27,10 @@ validpgpkeys=(
     'A7ACCC386C15E3C554D34B3EAB08F98092A456BB' # RocketDev <ma2014119@outlook.com>
 )
 
-prepare() {
+build() {
+    # lilac always has clean root build
     cd "$srcdir/$pkgname"
     ./configure --prefix="$pkgdir/usr"
-    make clean
-}
-
-build() {
-    cd "$srcdir/$pkgname"
     # force program to load locale in system
     make LOCALE_DIR=/usr/share/locale
 }
