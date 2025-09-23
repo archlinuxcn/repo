@@ -6,11 +6,11 @@
 : "${_support_headless_testing:=false}"
 : "${_use_cuda:=detect}" # nvenc
 
-: "${_commit:=65f14e1003f831e776c170621bd06d8292f65155}"
+: "${_commit:=f22b00d6981f756d3531fba0028723d4a5065824}"
 
 pkgname='sunshine'
-pkgver=2025.628.4510
-pkgrel=7
+pkgver=2025.923.33222
+pkgrel=1
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
@@ -101,8 +101,8 @@ prepare() {
 }
 
 build() {
-    export BRANCH="@GITHUB_BRANCH@"
-    export BUILD_VERSION="@BUILD_VERSION@"
+    export BRANCH="master"
+    export BUILD_VERSION="2025.923.33222"
     export COMMIT="${_commit}"
 
     export CC="gcc-${_gcc_version}"
@@ -129,6 +129,16 @@ build() {
 
     if [[ "${_use_cuda::1}" != "t" ]]; then
       _cmake_options+=(-DSUNSHINE_ENABLE_CUDA=OFF -DCUDA_FAIL_ON_MISSING=OFF)
+    else
+      # If cuda has just been installed, its variables will not be available in the environment
+      # therefore, set them manually to the expected values on Arch Linux
+      if [ -z "${CUDA_PATH:-}" ] && pacman -Qi cuda &> /dev/null; then
+        local _cuda_gcc_version
+        _cuda_gcc_version="$(LC_ALL=C pacman -Si cuda | grep -Pom1 '^Depends On\s*:.*\bgcc\K[0-9]+\b')"
+
+        export CUDA_PATH=/opt/cuda
+        export NVCC_CCBIN="/usr/bin/g++-${_cuda_gcc_version}"
+      fi
     fi
 
     if [[ "${_run_unit_tests::1}" != "t" ]]; then
