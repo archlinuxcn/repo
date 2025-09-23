@@ -8,7 +8,7 @@ pkgname=gnome-shell-everyx
 
 
 
-pkgver=48.5
+pkgver=49.0
 pkgrel=1
 
 provides=("gnome-shell=$pkgver")
@@ -41,7 +41,6 @@ depends=(
   libadwaita
   libcanberra-pulse
   libgdm
-  libgirepository
   libglvnd
   libgweather-4
   libibus
@@ -53,6 +52,7 @@ depends=(
   libsecret
   libsoup3
   libx11
+  libxext
   libxfixes
   mutter
   pango
@@ -80,17 +80,20 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/gnome-shell.git#tag=${pkgver/[a-z]/.&}"
   "git+https://gitlab.gnome.org/GNOME/libgnome-volume-control.git#commit=5f9768a2eac29c1ed56f1fbb449a77a3523683b6"
   "git+https://github.com/ptomato/jasmine-gjs.git#commit=856465dddbd92e82e574891e1ebc79e17d7b708a"
+  "git+https://gitlab.gnome.org/GNOME/libshew.git#commit=ed782477cb5164320ae4f731d49bc5d475ab2a52"
   "0001-ibus-candidate-popup-support-rime-comment-style.patch"
+  "0002-theme-Fix-jagged-edges-on-notification-buttons.patch"
 )
-b2sums=('70a2662c46c14888b34cd1379e49ebe2e40efd763a343f09682f90acdcb72942baa26410b4e7453dfebb3eef33db58fecf9343345dbb505992cfa14a69a9007d'
+b2sums=('fdc8acc857f136a654839d550bc57d3f349284d4c8e9e4a83ed7f63cf1ca95c18f3d0e59339814ea2fc8a2d8957f4797ac29572d7b9b15e970956da987ecd804'
         'e31ae379039dfc345e8032f7b9803a59ded075fc52457ba1553276d3031e7025d9304a7f2167a01be2d54c5e121bae00a2824a9c5ccbf926865d0b24520bb053'
         'ecbbb9ce5895cc1caed2ddef39c70b4768d78ea0a929ea932d4149f923f92650973cdaefc2aacc9063f2ccf4ec965b57a9698a286f9a6561e39ce2e579ae4522'
-        '151a4ad7f50dd2946fe8bef074e79e21dad78591b0624993b41cce64cb0ef0e7766d17f018bec878b105df5ed7d886efc7a0f7b49c13de3c8e8bcfabd78c1114')
+        'ec120324e4fe90fb8017847e5eda3c0b181b6609b78610b3a61ea106ee4d56d2b3bf243c3bc5d3ddd59fe55bb5ceed4f55b41f09626137027ed1c3e27930d082'
+        '1603004291b8dee5bfa8e2ae17893f21e88f9ee7151c67d1c5963fcdadc5a3e3b88ea6571979822c71e0fd39066823a6b4aa317ea1e8ac2880861c75a5b69549'
+        '5098032e61deeead14a596104df1c54569ec3f6ff6218cd313c40972435f508d099fef49fee7e19d8d2b4f5c43bd51a4f6d9237d4bd3544ec06764af620cdf53')
 
 prepare() {
   # Inject gvc
   ln -s libgnome-volume-control gvc
-
   cd $_pkgbase
   git apply -3 "$srcdir"/*.patch
 }
@@ -112,7 +115,7 @@ build() {
 }
 
 package() {
-  depends+=(libmutter-16.so)
+  depends+=(libmutter-17.so)
   optdepends=(
     'evolution-data-server: Evolution calendar integration'
     'gnome-bluetooth-3.0: Bluetooth support'
