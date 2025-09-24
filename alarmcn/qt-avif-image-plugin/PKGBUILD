@@ -3,7 +3,7 @@
 _pkgname=qt-avif-image-plugin
 pkgbase=$_pkgname
 pkgname=(qt5-avif-image-plugin qt6-avif-image-plugin)
-pkgver=0.9.3
+pkgver=0.9.4
 pkgrel=1
 pkgdesc='Qt plug-in to allow Qt and KDE based applications to read/write AVIF images'
 arch=(armv7h aarch64 i686 x86_64)
@@ -14,7 +14,7 @@ makedepends=('cmake' 'extra-cmake-modules' 'qt5-base' 'qt6-base')
 checkdepends=('appstream')
 source=("$url/archive/v$pkgver/$_pkgname-$pkgver.tar.gz"
         'avif.desktop')
-sha256sums=('3340fd3d7455d962787cdda627e00f02031a04671b785445abccf9f17311824a'
+sha256sums=('e6a1389e34290a9831dd931b03330b95d5aea4f7179ed84363ee359f5d8562fe'
             'e0d5dea2c8e0d5f1354dc0491de4fe252f8f05eff5102da3a3f41015fe608f31')
 
 build() {
