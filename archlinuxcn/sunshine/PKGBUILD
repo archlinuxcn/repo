@@ -6,10 +6,10 @@
 : "${_support_headless_testing:=false}"
 : "${_use_cuda:=detect}" # nvenc
 
-: "${_commit:=f22b00d6981f756d3531fba0028723d4a5065824}"
+: "${_commit:=86188d47a7463b0f73b35de18a628353adeaa20e}"
 
 pkgname='sunshine'
-pkgver=2025.923.33222
+pkgver=2025.924.154138
 pkgrel=1
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
@@ -102,7 +102,7 @@ prepare() {
 
 build() {
     export BRANCH="master"
-    export BUILD_VERSION="2025.923.33222"
+    export BUILD_VERSION="2025.924.154138"
     export COMMIT="${_commit}"
 
     export CC="gcc-${_gcc_version}"
