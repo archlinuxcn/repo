@@ -11,6 +11,9 @@ post_build: aur_post_build
 update_on:
   - source: aur
     aur: packetry-git
+  - source: github
+    github: greatscottgadgets/packetry
+    branch: main
   - source: alpm
     alpm: pango
     provided: libpango-1.0.so
