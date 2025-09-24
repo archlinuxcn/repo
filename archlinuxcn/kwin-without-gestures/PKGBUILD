@@ -7,14 +7,15 @@ pkgname=kwin-without-gestures
 _pkgname=kwin
 pkgver=6.4.5
 _dirver=$(echo $pkgver | cut -d. -f1-3)
-pkgrel=1
+pkgrel=3
 pkgdesc='An easy to use, but flexible, composited Window Manager. Patched to get red of hardcoded touchpad gestures'
 arch=(x86_64)
 url='https://kde.org/plasma-desktop/'
 license=(LGPL-2.0-or-later)
 provides=("$_pkgname=$pkgver" 'kwin-heddxh')
 conflicts=('kwin' 'kwin-heddxh')
-depends=(breeze
+depends=(aurorae
+         breeze
          gcc-libs
          glibc
          plasma-activities
@@ -22,7 +23,6 @@ depends=(breeze
          kcmutils
          kcolorscheme
          kconfig
-         kconfigwidgets
          kcoreaddons
          kcrash
          kdbusaddons
@@ -47,6 +47,7 @@ depends=(breeze
          kwindowsystem
          kxmlgui
          lcms2
+         libcanberra
          libdisplay-info
          libdrm
          libei
@@ -54,22 +55,18 @@ depends=(breeze
          libinput
          libpipewire
          libqaccessibilityclient-qt6
-         libx11
          libxcb
          libxcvt
-         libxi
          libxkbcommon
-         libxkbcommon-x11
          mesa
          pipewire-session-manager
          libplasma
          qt6-5compat
          qt6-base
          qt6-declarative
-         qt6-multimedia
          qt6-sensors
+         qt6-svg
          qt6-tools
-         qt6-wayland
          systemd-libs
          wayland
          xcb-util-cursor
@@ -82,14 +79,14 @@ makedepends=(extra-cmake-modules
              python
              wayland-protocols
              xorg-xwayland
-	     git)
+             git)
 optdepends=('maliit-keyboard: virtual keyboard for kwin-wayland')
 source=(https://download.kde.org/stable/plasma/$_dirver/$_pkgname-$pkgver.tar.xz{,.sig}
 	0001-feature-allow-disable-hardcoded-touchpad-gestures.patch)
-install=$_pkgname.install
 sha256sums=('decf1cb79127c285c7eda768e7ff4f97c72f314735c82685758f0b956ac151f7'
             'SKIP'
             'c821314c83316a1f80b32eddf5095692b433ec91c0767796692f4de2e497ee2c')
+install=$_pkgname.install
 validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
               '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'  # Bhushan Shah <bshah@kde.org>
               'D07BD8662C56CB291B316EB2F5675605C74E02CF'  # David Edmundson <davidedmundson@kde.org>
@@ -97,8 +94,9 @@ validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell
               '1FA881591C26B276D7A5518EEAAF29B42A678C20') # Marco Martin <notmart@gmail.com>
 
 prepare() {
-  cd $_pkgname-$pkgver
-  git apply ../0001-feature-allow-disable-hardcoded-touchpad-gestures.patch
+  patch -d $_pkgname-$pkgver -p1 < 0001-feature-allow-disable-hardcoded-touchpad-gestures.patch
+  # Fix doc build with libxml2 2.15
+  find -name index.docbook | xargs sed -e 's|url=" http|url="http|g' -i
 }
 
 build() {
