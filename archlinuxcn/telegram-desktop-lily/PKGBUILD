@@ -68,10 +68,11 @@ optdepends=(
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 replaces=('telegram-desktop-megumifox')
-_td_commit=51743dfd01dff6179e2d8f7095729caa4e2222e9
+_td_commit=6d74326c5ce53aeb52496f157f0080d9b8515970
 source=(
   "https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
   "git+https://github.com/tdlib/td.git#tag=${_td_commit}"
+  glib2.86.patch
   "no-embolded-font.patch"
   "dont-adjust-fontsize.patch"
   "0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
@@ -81,6 +82,7 @@ source=(
 )
 sha512sums=('951fbf4a9e0a5929130614aefdf2ac18d8d8e65b2d8d4d55da857136f17114e6a17677db9bb0585cfed121c3fe73e13b4db47b6da30fca7c276f33127eb3dba7'
             'd622b8f3580ee49415546d025c4ba45f5b2de50b315fc379dc57c0427c5f815c7cc3820cca937c12182ee461641bb61f87ebc99b6c74a1a666cea9a08f0f41a0'
+            'd1651683e0fecb43e37d5d01d75ae4b42fc1cfbf1d96eee42d37eb901b7d0cc22c4bc21b828dad2f4b40abe26923ed11f8c44dc759f969ca7efdc48280da9e23'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
             'cf8c7d27fa0838cf92af30d791187de3dbcaa10e9b43d5e7d5802c1113f6bae9b471bd92d72efd9b042d681d07b0bf8d2d2ff79cd74b1fe1799e683943e7c6bf'
@@ -96,8 +98,7 @@ prepare() {
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-make-blockquote-markup-less-distractive.patch
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0004-make-animated-avatar-follow-power-settings.patch
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0001-don-t-ask-which-program-to-use-when-opening-a-file-w.patch
-  sed -i 's/QGenericUnixServices/QDesktopUnixServices/;s/qgenericunixservices_p/qdesktopunixservices_p/' \
-    ${srcdir}/tdesktop-*-full/Telegram/lib_base/base/platform/linux/base_linux_xdp_utilities.cpp
+  patch -d tdesktop-$pkgver-full -Np1 < glib2.86.patch
 }
 
 build() {
