@@ -1,0 +1,45 @@
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
+
+pkgbase=otc-wenjinmincho
+pkgname=(
+    otc-wenjinmincho
+    otf-wenjinmincho
+    ttc-wenjinmincho
+    ttf-wenjinmincho
+)
+pkgver=2.000
+pkgrel=1
+pkgdesc='A large Han-ideograph character set Songti(Mincho) font suite.'
+url='https://github.com/takushun-wu/WenJinMincho'
+arch=('any')
+license=('OFL-1.1')
+makedepends=(git)
+source=(
+    $pkgbase::git+$url.git#tag=v$pkgver
+    )
+b2sums=('f3abaf43b0a72bbf771811d391ebf0561b5d9d679551363859e74949039c3f2bbcc83a781ffb4d11c2c84272dc7157bd2ed4b7c12f64dd6e50bd44ce70d613bf')
+
+build() {
+    cd "$pkgbase"
+}
+
+package_ttc-wenjinmincho() {
+    cd "$pkgbase"
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" ttc/WenJinMincho-TTF.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_otc-wenjinmincho() {
+    cd "$pkgbase"
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" ttc/WenJinMincho-OTF.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_ttf-wenjinmincho() {
+    cd "$pkgbase"
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" ttf/WenJinMinchoP[0-9]-*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_otf-wenjinmincho() {
+    cd "$pkgbase"
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" otf/WenJinMinchoP[0-9]-*.otf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
