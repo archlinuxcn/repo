@@ -70,7 +70,7 @@ build_schema() {
 
     # 预设处理
     local suggestion="suggestion" && [[ ${schema_type} == "pro" ]] && suggestion="pro_suggestion"
-    mv default.yaml ./wanxiang_${suggestion}.yaml
+    mv default.custom.yaml ./wanxiang_${suggestion}.yaml
 }
 
 get_shuru_schema() {
