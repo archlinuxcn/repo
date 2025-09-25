@@ -46,7 +46,7 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+	export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2} -ffat-lto-objects"
 	export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
 	make LIBEXECDIR=/usr/lib \
