@@ -11,7 +11,7 @@ depends=(julia-git imagemagick)
 source=("git+https://github.com/JuliaBinaryWrappers/ImageMagick_jll.jl.git#commit=$_commit"
         jll.toml)
 sha256sums=('a340476a756aad90cb38736fffbc98e32ccc2f07737055dcd5d5456bbbfcd3d6'
-            'e89b4d26d0ebce537ae53477d9bd332a1280f8b17a12ee46160e248a43471f0e')
+            '4beeeb02d3df64b3c2e46e4d812df78a2831d188173170a56b699a1a81eca0a7')
 
 build() {
   cd ImageMagick_jll.jl
