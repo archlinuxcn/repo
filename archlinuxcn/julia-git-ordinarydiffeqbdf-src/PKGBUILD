@@ -1,6 +1,6 @@
 pkgname=julia-git-ordinarydiffeqbdf-src
-pkgver=1.9.0
-_commit=3e9e4561e1a35dacbc361fd36a51524417bac391
+pkgver=1.10.1
+_commit=83a01e56fc97bf6b194edf8c4a9613d19018f0ab
 pkgrel=1
 pkgdesc="OrdinaryDiffEqBDF.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('687dd3fae89517e6ab49edc45eb79690ab4125c76b888f2a5768076a1f8ff169')
+sha256sums=('0f5299184b6e8b020e07d0743fc2eca8aed0428d20b215ac57d8fd09dde86669')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/OrdinaryDiffEqBDF
