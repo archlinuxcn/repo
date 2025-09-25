@@ -1,7 +1,7 @@
 pkgname=julia-git-cbc-src
-pkgver=1.2.0
-_commit=b7b754a1c6d215b2499227c8f7dae258afb9324c
-pkgrel=2
+pkgver=1.3.0
+_commit=2ff7a1ab824598266eaa5c6dcd7742aedcbb3386
+pkgrel=1
 pkgdesc="Cbc.jl"
 url="https://github.com/jump-dev/Cbc.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/Cbc.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('7825896d5a426fc0dc34545afe758b92a148ad24c7731be79693139147a03e76')
 
 package() {
   cd Cbc.jl
