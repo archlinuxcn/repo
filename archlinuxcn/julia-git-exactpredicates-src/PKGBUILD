@@ -1,6 +1,6 @@
 pkgname=julia-git-exactpredicates-src
-pkgver=2.2.8
-_commit=a9dce0334ee62104a14930fe206764bf802c23db
+pkgver=2.2.9
+_commit=8588a3a508b0c22f5b6e6e65fd832b942d11ebf9
 pkgrel=1
 pkgdesc="ExactPredicates.jl"
 url="https://github.com/lairez/ExactPredicates.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/lairez/ExactPredicates.jl.git#commit=$_commit")
-sha256sums=('6e58b57d88f3285cba1f56a609481a595df2c10149a709cebf51e463d8026bf5')
+sha256sums=('ea42c9e7bb5a58a1d21ec3abda9029b1bb2ec2679c3ae9ccbe12ee8165483d88')
 
 package() {
   cd ExactPredicates.jl
