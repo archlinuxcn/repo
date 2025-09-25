@@ -1,6 +1,6 @@
 # Maintainer: Zdeněk Biberle <zdenek at biberle dot net>
 pkgname=snx-rs
-pkgver=4.8.0
+pkgver=4.8.1
 pkgrel=1
 pkgdesc="Rust client for Checkpoint VPN tunnels"
 arch=(x86_64)
@@ -9,20 +9,12 @@ license=(AGPL-3.0-only)
 depends=(gcc-libs glibc openssl glib2 gdk-pixbuf2 gtk4)
 makedepends=(cargo imagemagick)
 checkdepends=(iproute2)
-source=(
-  "$pkgname-$pkgver.tar.gz::https://github.com/ancwrd1/$pkgname/archive/refs/tags/v$pkgver.tar.gz"
-  fix-executable-path.patch
-  fix-desktop-file.patch
-)
-sha256sums=('b44c471b8e89bfccfb856fe066bd794b44d9bc84e324306b3bfcbbb6e1d966bd'
-            'fdd298a90c9890c29bc016596a57c6055ded0c672e51a77a47c7f738c2673d11'
-            '0609b65d09e1120f1f6038d3b2bfa6ba86e801a807a452c57dec640fa2fced04')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/ancwrd1/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('cebc1c776d51731192a726dc391d245a493f0bd95b95a36505d352da4376778d')
 _icon_sizes=(16 20 22 24 32 36 40 48 64 72 96 128 192 256)
 
 prepare() {
   cd "$pkgname-$pkgver"
-  patch --forward --strip=1 --input="$srcdir/fix-executable-path.patch"
-  patch --forward --strip=1 --input="$srcdir/fix-desktop-file.patch"
   export RUSTUP_TOOLCHAIN=stable
   cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
