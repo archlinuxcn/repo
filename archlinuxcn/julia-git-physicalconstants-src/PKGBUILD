@@ -1,7 +1,7 @@
 pkgname=julia-git-physicalconstants-src
 pkgver=0.2.4
 _commit=4460f8dd997780ed517c3026d2516f2a42454aaf
-pkgrel=1
+pkgrel=2
 pkgdesc="PhysicalConstants.jl"
 url="https://github.com/JuliaPhysics/PhysicalConstants.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPhysics/PhysicalConstants.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('6585079185b4c96826983961609edb12ee488d6050df48baa95f1cef50a78db9')
 
 package() {
   cd PhysicalConstants.jl
