@@ -1,7 +1,7 @@
 pkgname=julia-git-periodictable-src
 pkgver=1.2.1
 _commit=dcc746da194d2521d3564ca22a4aebce08c36394
-pkgrel=1
+pkgrel=2
 pkgdesc="PeriodicTable.jl"
 url="https://github.com/JuliaPhysics/PeriodicTable.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPhysics/PeriodicTable.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('2616df07707729ea22b7fed998eee196cf4f862630dc9cbc7196869d594b38e3')
 
 package() {
   cd PeriodicTable.jl
