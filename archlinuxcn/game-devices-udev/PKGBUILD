@@ -10,7 +10,6 @@ license=('MIT')
 depends=('udev')
 makedepends=('git')
 provides=('nintendo-udev')
-install="install"
 source=(
 	"git+${url}.git?signed#tag=$pkgver"
 	"uinput.conf"
