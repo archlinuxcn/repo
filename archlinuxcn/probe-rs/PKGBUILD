@@ -3,7 +3,7 @@
 
 pkgname=probe-rs
 pkgver=0.29.1
-pkgrel=2
+pkgrel=3
 pkgdesc='A collection of on chip debugging tools to communicate with microchips.'
 url='https://probe.rs'
 arch=('aarch64' 'i686' 'x86_64')
@@ -38,7 +38,7 @@ source=(
     "$pkgname::git+https://github.com/probe-rs/probe-rs.git#tag=v$pkgver"
     "$pkgname-69-probe-rs.rules::https://github.com/probe-rs/webpage/raw/refs/heads/master/public/files/69-probe-rs.rules"
 )
-b2sums=('SKIP'
+b2sums=('57c2c5de9b3581c50547b833b96b4a5924ee7ddb93d1f7cd9aa24610301055687a40815b38988711f85910256f98103ecc13446bfa84d36863de59cba9a208c5'
         '155e37902a17198be77c3aa1f1f9407ab2112083606630f5115ca27261a47345fb646770ff44d90cd258d8bc187d4b2a0f5620b3bc0eadaddd5a845d4226a45f')
 
 prepare() {
