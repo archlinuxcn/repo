@@ -1,0 +1,89 @@
+# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
+# Contributor: Dominic Meiser [git at msrd0 dot de]
+
+pkgname="probe-rs-git"
+pkgver=0.29.1
+pkgrel=2
+pkgdesc='A collection of on chip debugging tools to communicate with microchips.'
+url='https://probe.rs'
+arch=('aarch64' 'i686' 'x86_64')
+license=('Apache-2.0' 'MIT')
+depends=(
+    'gcc-libs'
+    'systemd-libs'
+)
+makedepends=(
+    'cargo'
+    'cargo-auditable'
+    'cmake'
+)
+provides=(
+    'cargo-embed'
+    'cargo-flash'
+    'rtthost'
+    'smoke_tester'
+    'target-gen'
+    'xtask'
+)
+conflicts=(
+    'cargo-embed'
+    'cargo-flash'
+    'rtthost'
+    'smoke_tester'
+    'target-gen'
+    'xtask'
+)
+source=(
+    "$pkgname::git+https://github.com/probe-rs/probe-rs.git"
+    "$pkgname-69-probe-rs.rules::https://github.com/probe-rs/webpage/raw/refs/heads/master/public/files/69-probe-rs.rules"
+)
+b2sums=('SKIP'
+        '155e37902a17198be77c3aa1f1f9407ab2112083606630f5115ca27261a47345fb646770ff44d90cd258d8bc187d4b2a0f5620b3bc0eadaddd5a845d4226a45f')
+
+pkgver() {
+    cd "$pkgname"
+    (
+        set -o pipefail
+        git describe --long --tag --abbrev=7 2>/dev/null | sed 's/^v//g;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+            printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+    )
+}
+
+prepare() {
+	cd "$pkgname"
+
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	cd "$pkgname"
+	
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	CFLAGS+=" -ffat-lto-objects"
+
+	cargo auditable build \
+		--frozen \
+		--release \
+        --all-features
+}
+
+package() {
+	cd "$pkgname"
+    find target/release \
+        -maxdepth 1 \
+        -executable \
+        -type f \
+        -exec install -Dm0755 -t "$pkgdir/usr/bin/" {} +
+    SHELL=zsh  target/release/probe-rs complete --shell zsh install
+    SHELL=bash target/release/probe-rs complete --shell bash install
+    SHELL=fish target/release/probe-rs complete --shell fish install > probe-rs.fish
+
+	install -Dm644 ~/.zfunc/_probe-rs -t "$pkgdir/usr/share/zsh/site-functions"
+	install -Dm644 ~/.local/share/bash-completion/completions/probe-rs.bash -t "$pkgdir/usr/share/bash-completion/completions/"
+	install -Dm644 probe-rs.fish -t "$pkgdir/usr/share/fish/vendor_completions.d"
+	install -Dm644 "$srcdir/$pkgname-69-probe-rs.rules" "$pkgdir/usr/lib/udev/rules.d/69-probe-rs.rules"
+}
+
+# vim: set sts=4 ts=4 sw=4 et:
