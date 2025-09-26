@@ -3,8 +3,13 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Michael Kanis <mkanis_at_gmx_dot_de>
 
-pkgname=mutter-performance
-pkgver=48.2
+pkgbase=mutter-performance
+pkgname=(
+  mutter-performance
+  mutter-performance-devkit
+  mutter-performance-docs
+)
+pkgver=49.0
 epoch=1
 pkgrel=1
 pkgdesc="Window manager and compositor for GNOME"
@@ -13,7 +18,6 @@ arch=(x86_64)
 license=(GPL-2.0-or-later)
 depends=(
   at-spi2-core
-  bash-completion
   cairo
   colord
   dconf
@@ -24,6 +28,7 @@ depends=(
   gdk-pixbuf2
   glib2
   glibc
+  glycin
   gnome-desktop-4
   gnome-settings-daemon
   graphene
@@ -67,6 +72,7 @@ depends=(
   pixman
   python
   python-argcomplete
+  python-dbus
   python-gobject
   startup-notification
   systemd-libs
@@ -74,6 +80,7 @@ depends=(
   xorg-xwayland
 )
 makedepends=(
+  bash-completion
   gi-docgen
   git
   glib2-devel
@@ -86,22 +93,18 @@ makedepends=(
 source=(
   # Mutter tags use SSH signatures which makepkg doesn't understand
   "git+$url.git#tag=${pkgver/[a-z]/.&}"
-  "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=466fc22016cf0981424e7121557611942191992f"
-  3751-fixed.patch
+  "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
 )
-b2sums=('c391e383ebc19db1a2e1361eb23a52757eb1e2d18ca5349cf2ea658619cf220b4f6154c71e993c4a8f8f7bfe56e0c323da6812ab7ae7b564867f8bb97de37218'
-        'c25796ff54fee353c5fc7a0815c25255b399490148d2bad1f37932d2da66d80561d6e262a5f256c89d142419a504c23eff69f7ef4e65e349f2dea3e0ac0bac1a'
-        '851b9430438654ed47541528fac67c43b0c2dd60dd8f896084b90250481d18464b4e85e1bdd6cd1f38b2c75b66ac9d76119c71be1b6867843e925fc0f15e07d6')
-
-pkgver() {
-  cd mutter
-  git describe --tags --abbrev=9 | sed -r 's/\.([a-z])/\1/;s/([a-z])\./\1/;s/[^-]*-g/r&/;s/-/\./g'
-}
+b2sums=('99defeefd72cc366cfa5c433a22d855400cc14c1f41d7cfe08008fd98a0b7a36295e3591dead6e7ebec489a526f8cd9af5471031d36becb4de6b441391bd9e07'
+        'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf')
 
 prepare() {
   cd mutter
 
-  git apply -3 ../3751-fixed.patch
+  # Fix focus problems
+  # https://gitlab.gnome.org/GNOME/gnome-shell/-/issues/8640
+  # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4667
+  git cherry-pick -n 353b03b689216d7e1c5ebd0acaf2c433d712294c
 }
 
 build() {
@@ -133,12 +136,47 @@ _pick() {
   done
 }
 
-package() {
-  provides=(mutter libmutter-16.so)
+package_mutter-performance() {
+  provides=(mutter libmutter-17.so)
   conflicts=(mutter)
-  
+  optdepends=(
+    'bash-completion: Bash completions for gdctl'
+    'mutter-devkit: Mutter SDK, "MDK"'
+  )
 
   meson install -C build --destdir "$pkgdir"
+
+  _pick devkit "$pkgdir"/usr/lib/mutter-devkit
+  _pick devkit "$pkgdir"/usr/share/applications/org.gnome.Mutter.Mdk.desktop
+  _pick devkit "$pkgdir"/usr/share/icons/hicolor/scalable/apps/org.gnome.Mutter.Mdk.Devel.svg
+  _pick devkit "$pkgdir"/usr/share/icons/hicolor/scalable/apps/org.gnome.Mutter.Mdk.svg
+  _pick devkit "$pkgdir"/usr/share/icons/hicolor/symbolic/apps/org.gnome.Mutter.Mdk-symbolic.svg
+
+  _pick docs "$pkgdir"/usr/share/mutter-*/doc
+}
+
+package_mutter-performance-devkit() {
+  pkgdesc="GNOME Mutter Development Kit"
+  depends=(
+    gcc-libs
+    glib2
+    glibc
+    gtk4
+    hicolor-icon-theme
+    libadwaita
+    libei
+    libpipewire
+    mutter
+  )
+
+  mv devkit/* "$pkgdir"
+}
+
+package_mutter-performance-docs() {
+  pkgdesc+=" (documentation)"
+  depends=()
+
+  mv docs/* "$pkgdir"
 }
 
 # vim:set sw=2 sts=-1 et:
