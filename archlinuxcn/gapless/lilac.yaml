@@ -17,6 +17,10 @@ update_on:
     from_pattern: '^(\d+\.\d+)\..*'
     to_pattern: '\1'
   - source: alpm
+    alpm: gstreamer
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
     alpm: libadwaita
     from_pattern: '^(\d+\.\d+)\..*'
     to_pattern: '\1'
