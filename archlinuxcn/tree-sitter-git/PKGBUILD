@@ -3,10 +3,11 @@
 # Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
 
 pkgname=tree-sitter-git
-pkgver=0.21.0.r77.gc070c927
+epoch=1
+pkgver=0.25.10.r391.gd86e1b4f
 pkgrel=1
 pkgdesc="An incremental parsing system for programming tools"
-arch=('i686' 'x86_64')
+arch=('aarch64' 'i686' 'x86_64')
 url="https://tree-sitter.github.io/tree-sitter/"
 license=('MIT')
 depends=('glibc')
@@ -30,6 +31,7 @@ pkgver() {
 build() {
   cd "tree-sitter"
 
+  CFLAGS="$CFLAGS -ffat-lto-objects" \
   make
 }
 
