@@ -72,6 +72,14 @@ build() {
         --all-features
 }
 
+check() {
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test \
+        --workspace \
+        --frozen \
+        --all-features \
+}
+
 package() {
 	cd "$pkgname"
     find target/release \
