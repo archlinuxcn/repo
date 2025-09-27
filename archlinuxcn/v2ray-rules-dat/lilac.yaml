@@ -1,0 +1,14 @@
+maintainers:
+  - github: DeepChirp
+    email: DeepChirp@outlook.com
+
+build_prefix: extra-x86_64
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: Loyalsoldier/v2ray-rules-dat
+    use_max_tag: true
+  - source: manual
+    manual: 2
