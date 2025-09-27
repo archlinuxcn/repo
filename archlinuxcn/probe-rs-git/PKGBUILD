@@ -72,7 +72,8 @@ build() {
         --all-features
 }
 
-check() {
+# FIXME: disable because of util::cargo::test::get_binary_artifact_with_cargo_config{,_toml} need thumbv7m-none-eabi std.
+_check() {
     export RUSTUP_TOOLCHAIN=stable
     cargo test \
         --workspace \
