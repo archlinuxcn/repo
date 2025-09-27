@@ -2,7 +2,7 @@
 
 pkgname=game-devices-udev
 pkgver=0.25
-pkgrel=0.1
+pkgrel=1
 pkgdesc="Udev rules for controllers"
 url='https://codeberg.org/fabiscafe/game-devices-udev'
 arch=('any')
@@ -15,7 +15,7 @@ source=(
 	"uinput.conf"
 	)
 b2sums=('2f7838777d0d5b7914b632d7592063552935980be822f44071b53a7a48eec289cd6727b048c9b6b2681d87396dc9b6dfd8f6aaf672a502185186f791f7ab9233'
-        '4f298ba1d1fdc19f5b90ea8d9292be9a44c85567995ea14136e401d39ce3c159b43be50f0043d1f10bed6892d24d8f7a6bf04f5a448ee2044f43b07c4c66cee0')
+        '8d743c155fda8136438fdce80dfc8bfc0db511268ec401aebf7450c507999c4db98f5fe3b86ecdae81e07951b340fc0c161ac61d28e01fe335d9f51a8c0d5a40')
 
 package() {
 	install -vDm644 "${srcdir}/${pkgname}/LICENSE" \
