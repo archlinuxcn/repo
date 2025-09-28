@@ -34,7 +34,7 @@ function prepare() {
 	pacman -Ql firefox-nightly-en-us >file.list
 }
 
-pkgver() {
+function pkgver() {
 	date -I
 }
 
