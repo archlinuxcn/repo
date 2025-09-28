@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Sun, 28 Sep 2025 14:58:45 -0400
+Subject: [PATCH] gdk: Use read_pixels instead of get_pixels
+
+We are only reading the data here, so avoid an
+unnecessary copy.
+---
+ gdk/gdkcairo.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/gdk/gdkcairo.c b/gdk/gdkcairo.c
+index 633b39153fcd..8356687a8a2c 100644
+--- a/gdk/gdkcairo.c
++++ b/gdk/gdkcairo.c
+@@ -180,28 +180,29 @@ gdk_cairo_surface_paint_pixbuf (cairo_surface_t *surface,
+                                 const GdkPixbuf *pixbuf)
+ {
+   gint width, height;
+-  guchar *gdk_pixels, *cairo_pixels;
++  const guchar *gdk_pixels;
++  guchar *cairo_pixels;
+   int gdk_rowstride, cairo_stride;
+   int n_channels;
+   int j;
+ 
+   if (cairo_surface_status (surface) != CAIRO_STATUS_SUCCESS)
+     return;
+ 
+   /* This function can't just copy any pixbuf to any surface, be
+    * sure to read the invariants here before calling it */
+ 
+   g_assert (cairo_surface_get_type (surface) == CAIRO_SURFACE_TYPE_IMAGE);
+   g_assert (cairo_image_surface_get_format (surface) == CAIRO_FORMAT_RGB24 ||
+             cairo_image_surface_get_format (surface) == CAIRO_FORMAT_ARGB32);
+   g_assert (cairo_image_surface_get_width (surface) == gdk_pixbuf_get_width (pixbuf));
+   g_assert (cairo_image_surface_get_height (surface) == gdk_pixbuf_get_height (pixbuf));
+ 
+   cairo_surface_flush (surface);
+ 
+   width = gdk_pixbuf_get_width (pixbuf);
+   height = gdk_pixbuf_get_height (pixbuf);
+-  gdk_pixels = gdk_pixbuf_get_pixels (pixbuf);
++  gdk_pixels = gdk_pixbuf_read_pixels (pixbuf);
+   gdk_rowstride = gdk_pixbuf_get_rowstride (pixbuf);
+   n_channels = gdk_pixbuf_get_n_channels (pixbuf);
+   cairo_stride = cairo_image_surface_get_stride (surface);
