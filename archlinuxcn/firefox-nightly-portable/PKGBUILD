@@ -1,0 +1,68 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=firefox-nightly-portable
+pkgver=143.0.1
+pkgrel=1
+epoch=1
+pkgdesc="Firefox sandboxed by portable (en_US locale)"
+arch=('any')
+url="https://github.com/Kraftland/portable"
+license=('GPL-3.0-or-later')
+groups=()
+provides=(firefox-nightly)
+options=(!debug !strip)
+conflicts=("firefox-nightly")
+
+optdepends=()
+
+makedepends+=(firefox-nightly-en-us)
+
+checkdepends=()
+
+source=(
+	portable-config
+	firefox.sh
+	firefox.desktop
+)
+
+
+md5sums=('c4a91aae851117c60742624c1b64a7c9'
+         'e9286af04e5d107b38523c92f9c68c76'
+         '2f74e3e788705621db286bb25fcabdee')
+
+function prepare() {
+	pacman -Ql firefox >file.list
+}
+
+function package() {
+	depends=("portable")
+	depends+=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
+	while IFS= read -r line; do
+		file="$(echo "$line" | awk '{print $2}')"
+		if [[ -d ${file} ]]; then
+			echo "Omitting Directory"
+		else
+			if [[ -L "${file}" ]]; then
+				ln -vsf "$(readlink -f "${file}")" "${pkgdir}/${file}"
+			else
+				install -vDm755 "${file}" "${pkgdir}/${file}"
+			fi
+		fi
+	done < file.list
+	rm -f "${pkgdir}/usr/share/applications"/*
+	rm -f "${pkgdir}/usr/bin"/*
+	install -Dm644 portable-config \
+		"${pkgdir}/usr/lib/portable/info/org.mozilla.FirefoxNightly/config"
+	install -Dm755 "firefox.sh" \
+		"${pkgdir}/usr/bin/firefox-nightly-portable"
+	install -Dm644 "firefox.desktop" "${pkgdir}/usr/share/applications/org.mozilla.FirefoxNightly.desktop"
+	echo '''[Desktop Entry]
+Type=Application
+Name=Firefox Nightly
+GenericName=Stub for MPRIS
+Icon=firefox-nightly
+TryExec=portable
+Exec=env _portableConfig="org.mozilla.FirefoxNightly" portable -- %u
+Terminal=false
+NoDisplay=true''' >"${pkgdir}/usr/share/applications/firefox-nightly.desktop"
+}
