@@ -8,7 +8,7 @@ post_build_script: |
 
 update_on:
   - source: cmd
-    cmd: date -I
+    cmd: bash -c "date -I | sed 's|-|_|g'"
 
 repo_depends:
   - portable

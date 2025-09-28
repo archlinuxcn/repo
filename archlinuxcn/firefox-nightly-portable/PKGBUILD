@@ -35,7 +35,7 @@ function prepare() {
 }
 
 function pkgver() {
-	date -I
+	date -I | sed 's|-|_|g'
 }
 
 function package() {
