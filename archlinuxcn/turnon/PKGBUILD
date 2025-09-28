@@ -5,12 +5,12 @@ pkgdesc="Turn on devices in your local network"
 url="https://codeberg.org/swsnr/turnon"
 license=("EUPL-1.2")
 arch=("x86_64" "aarch64")
-pkgver=2.9.1
+pkgver=2.9.2
 pkgrel=1
 makedepends=("rust" "cargo" "git" "blueprint-compiler" "just")
 depends=(libadwaita gtk4 hicolor-icon-theme graphene dconf gcc-libs glib2 glibc)
 source=("git+https://codeberg.org/swsnr/turnon.git#tag=v${pkgver}")
-md5sums=('ff608448075e4d3ef1ba69f4ae5c6756')
+md5sums=('72dafe350dd7555ab8af5abaa2918588')
 
 function prepare() {
 	cd "${srcdir}/turnon"
