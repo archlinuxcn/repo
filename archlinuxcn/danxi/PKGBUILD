@@ -8,7 +8,7 @@ url="https://github.com/DanXi-Dev/DanXi"
 license=('GPL-3.0-or-later')
 arch=('x86_64')
 depends=('gtk3' 'libsecret' 'gnome-keyring')
-makedepends=('git' 'clang' 'cmake' 'ninja' 'fvm' 'imagemagick')
+makedepends=('git' 'clang' 'cmake' 'ninja' 'fvm' 'imagemagick' 'patchelf')
 source=("git+${url}.git#tag=v${pkgver}")
 sha256sums=('d3ccae05b5975dfbb43882a3254475d469930ed87a50be8483d93743c56dc12c')
 
@@ -36,6 +36,9 @@ package() {
 	cmake -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/lib/${pkgname}" .
 	cmake -P cmake_install.cmake
 	popd
+
+	# Reset RUNPATH
+	patchelf --set-rpath '$ORIGIN' ${pkgdir}/usr/lib/${pkgname}/lib/*.so
 
 	# Symlink
 	install -dm755 "${pkgdir}/usr/bin"
