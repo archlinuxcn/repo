@@ -57,7 +57,7 @@ package() {
 	cmake -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/lib/${_pkgname}" .
 	cmake -P cmake_install.cmake
 
-	patchelf --set-rpath '$ORIGIN' ${pkgdir}/usr/lib/${pkgname}/lib/*.so
+	patchelf --set-rpath '$ORIGIN' ${pkgdir}/usr/lib/${_pkgname}/lib/*.so
 
 	install -dm755 "${pkgdir}/usr/bin/"
 	ln -s "/usr/lib/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
