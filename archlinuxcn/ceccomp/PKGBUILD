@@ -30,9 +30,8 @@ validpgpkeys=(
 build() {
     # lilac always has clean root build
     cd "$srcdir/$pkgname"
-    ./configure --prefix="$pkgdir/usr"
-    # force program to load locale in system
-    make LOCALE_DIR=/usr/share/locale
+    ./configure --destdir="$pkgdir" --packager="Arch Linux CN"
+    make
 }
 
 package() {
