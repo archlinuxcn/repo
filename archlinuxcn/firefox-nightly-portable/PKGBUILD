@@ -47,6 +47,7 @@ function package() {
 			echo "Omitting Directory"
 		else
 			if [[ -L "${file}" ]]; then
+				mkdir -p "$(dirname "${pkgdir}/${file}")"
 				ln -vsf "$(readlink -f "${file}")" "${pkgdir}/${file}"
 			else
 				install -vDm755 "${file}" "${pkgdir}/${file}"
