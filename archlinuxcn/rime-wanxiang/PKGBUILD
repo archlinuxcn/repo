@@ -14,7 +14,7 @@ source=("${url}/archive/refs/tags/v${pkgver}.tar.gz"
 b2sums=('79291151b30c7e238f6e0bef8c506e56e110cc728f9670213ca3abe2baf20e6b740b94ffb0a22d0cd306198594a08987a25be7ebf5b30517ed65774181d64538'
         'ffbab0a401f81e8f520304ec8016dfb5188b84b5a948582409d25b890c75f65ad738379a01999f8315b9b73a58163f1c44feb09d51c25ef300a53bd55456395d')
 
-makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python" "zip")
+makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python" "zip" "rsync")
 
 # 拼写方案
 declare -A _schemas=(
