@@ -26,5 +26,5 @@ build() {
 }
 
 package() {
-	install -Dm755 "${_srcname}/target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm755 "${_srcname}/${pkgname}/target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
 }
