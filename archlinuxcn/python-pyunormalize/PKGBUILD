@@ -2,8 +2,8 @@
 
 _name=pyunormalize
 pkgname=python-${_name}
-pkgver=16.0.0
-pkgrel=3
+pkgver=17.0.0
+pkgrel=1
 pkgdesc="Unicode normalization forms (NFC, NFKC, NFD, NFKD). A library independent of the Python core Unicode database."
 arch=(any)
 url="https://github.com/mlodewijck/${_name}"
@@ -12,7 +12,7 @@ depends=(python)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 # https://github.com/mlodewijck/pyunormalize/issues/7
 source=(https://files.pythonhosted.org/packages/source/${_name::1}/${_name//-/_}/${_name//-/_}-$pkgver.tar.gz)
-sha512sums=('909156d3c6f3f0f82e90e3b991c619e5334083bc8d0c5b1e8e4851599a4ccb95d8822a3bf50997f97c5fe321336471f21c1ad69b61ba467c0ef398829b26978c')
+sha512sums=('ba06f4b18e315a4d57060d695529b63148f87714fd0f30c702cc62058282ad6c9125b58e3f413da2bc06762778ed47f250e8ae11ab04a221aafd87bfad1b4054')
 
 build() {
   cd $_name-$pkgver
