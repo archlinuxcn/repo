@@ -3,19 +3,19 @@ set -e
 
 # 拼写方案
 declare -A schemas=(
-    [pinyin]="全拼"
-    [zrm]="自然码"
+    # 注释掉的为方案支持不完善
     [flypy]="小鹤双拼"
     [mspy]="微软双拼"
+    [zrm]="自然码"
     [sogou]="搜狗双拼"
     [abc]="智能ABC"
     [ziguang]="紫光双拼"
-    # 以下方案支持不完善
     # [pyjj]="拼音加加"
     # [gbpy]="国标双拼"
     # [lxsq]="乱序17"
-    # [hanxin]="汉心龙"
     # [zrlong]="自然龙"
+    # [hxlong]="汉心龙"
+    [pinyin]="全拼"
 )
 
 src_dir=$(realpath "$PWD"/../)
@@ -125,6 +125,7 @@ build_dist_dir() {
                 -path "./custom_phrase.txt" -o \
                 -path "./squirrel.yaml" -o \
                 -path "./weasel.yaml" -o \
+                -path "./wanxiang_t9.schema.yaml" -o \
                 -path "./*.trime.yaml" -o \
                 -path "./*.md" -o \
                 -path "./version.txt" \

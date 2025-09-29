@@ -44,19 +44,19 @@ done
 
 # 拼写方案
 declare -A _schemas=(
-    [pinyin]="全拼"
-    [zrm]="自然码"
+    # 注释掉的为方案支持不完善
     [flypy]="小鹤双拼"
     [mspy]="微软双拼"
+    [zrm]="自然码"
     [sogou]="搜狗双拼"
     [abc]="智能ABC"
     [ziguang]="紫光双拼"
-    # 以下方案支持不完善
     # [pyjj]="拼音加加"
     # [gbpy]="国标双拼"
     # [lxsq]="乱序17"
-    # [hanxin]="汉心龙"
     # [zrlong]="自然龙"
+    # [hxlong]="汉心龙"
+    [pinyin]="全拼"
 )
 
 # 辅助码类型
@@ -77,25 +77,10 @@ build() {
 
     msg2 "updating dicts..."
     for zip_file in "${srcdir}"/*.zip; do
-        local tmp_dir && tmp_dir="${srcdir}/$(basename "${zip_file%%.zip}")" && rm -rf "$tmp_dir"
-        bsdunzip -q "$zip_file" -d "${tmp_dir}"
-        (
-            local target_dir
-            target_dir="${srcdir}"/$(basename "$zip_file" | sed -E "s/.*-(base-dicts|\w+-fuzhu-dicts).*/\1/")
-            rm -rf "$target_dir" && mkdir "${target_dir}"
-
-            cd "${tmp_dir}" || exit 1
-            if [[ $(find . -mindepth 1 -maxdepth 1 | wc -l) -eq 1 ]]; then
-                find . -mindepth 2 -type f -exec sh -c '
-                    src="$1"
-                    dest="$2/${src#./*/}"
-                    install -Dm664 "$src" "$dest"
-                ' sh {} "$target_dir" \;
-            else
-                find . -mindepth 1 -type f -exec install -Dm664 {} "${target_dir}/{}" \;
-            fi
-        )
-        rm -rf "${tmp_dir}"
+        local tmp_dir
+        tmp_dir="${srcdir}"/$(basename "$zip_file" | sed -E "s/pro-//; s/\.zip//;")
+        rm -rf "$tmp_dir"
+        bsdunzip -qj "$zip_file" -d "${tmp_dir}"
     done
 
     local _dir && for _dir in dist/*; do
