@@ -39,6 +39,7 @@ repo_depends:
   - julia-git-intelopenmp_jll-src
   - julia-git-llvmextra_jll-src
   - julia-git-mkl_jll-src
+  - julia-git-openexr_jll-src
   - julia-git-pardiso-src
   - julia-git-pycall-src
   - julia-git-spirv_llvm_translator_unified_jll-src
@@ -51,6 +52,7 @@ update_on_build:
   - pkgbase: julia-git-intelopenmp_jll-src
   - pkgbase: julia-git-llvmextra_jll-src
   - pkgbase: julia-git-mkl_jll-src
+  - pkgbase: julia-git-openexr_jll-src
   - pkgbase: julia-git-pardiso-src
   - pkgbase: julia-git-pycall-src
   - pkgbase: julia-git-spirv_llvm_translator_unified_jll-src
@@ -1108,8 +1110,6 @@ update_on:
     alpm: julia-git-opencl_jll-src
   - alias: alpm-lilac
     alpm: julia-git-openexr-src
-  - alias: alpm-lilac
-    alpm: julia-git-openexr_jll-src
   - alias: alpm-lilac
     alpm: julia-git-openjpeg_jll-src
   - alias: alpm-lilac
