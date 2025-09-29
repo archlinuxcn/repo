@@ -8,7 +8,8 @@ post_build_script: |
 update_on:
   - source: github
     github: Oppzippy/OpenSCQ30
-    use_max_tag: true
+    use_latest_release: true
+    include_prereleases: false
     prefix: "v"
   - source: alpm
     alpm: gtk4
