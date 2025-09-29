@@ -7,7 +7,7 @@
 
 pkgname=sasquatch
 pkgver=4.5.1_5
-pkgrel=1
+pkgrel=2
 pkgdesc='Patches to the standard unsquashfs utility that attempts to add support for many hacked-up vendor-specific SquashFS implementations.'
 arch=(x86_64)
 url='https://github.com/onekey-sec/sasquatch'
@@ -24,6 +24,17 @@ depends=(
 makedepends=(git)
 source=(git+$url.git#tag=$pkgname-v${pkgver//_/-})
 sha512sums=('cf54ad00877e706e3646e7b502a7c0570e932dd3f82fa98257b48f98ee27df55f8e73e9582a3b3a449d954e8990acdcdbc80cfcc65cb394dba0c773c86db4996')
+
+prepare() {
+  cd "$srcdir/$pkgname"
+  # Fix: signal handlers must be void (*)(int)
+  sed -i -E \
+    's/^void[[:space:]]+sigwinch_handler\(\)/void sigwinch_handler(int __attribute__((unused)) signum)/' \
+    squashfs-tools/unsquashfs.c
+  sed -i -E \
+    's/^void[[:space:]]+sigalrm_handler\(\)/void sigalrm_handler(int __attribute__((unused)) signum)/' \
+    squashfs-tools/unsquashfs.c
+}
 
 build() {
   local make_options=(
