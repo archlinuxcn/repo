@@ -27,16 +27,20 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
 	cargo build --frozen --release --workspace --exclude native
 }
 
 check() {
 	cd "${_pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
 	cargo test --frozen --all-features --workspace --exclude native
 }
 
