@@ -26,13 +26,13 @@ noextract=()
 makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python" "zip")
 
 declare -A _dict_filenames=(
-  [moqi]="1-pro-moqi-fuzhu-dicts.zip"
-  [flypy]="2-pro-flypy-fuzhu-dicts.zip"
-  [zrm]="3-pro-zrm-fuzhu-dicts.zip"
-  [tiger]="4-pro-tiger-fuzhu-dicts.zip"
-  [wubi]="5-pro-wubi-fuzhu-dicts.zip"
-  [hanxin]="6-pro-hanxin-fuzhu-dicts.zip"
-  [base]="7-base-dicts.zip"
+  [base]="base-dicts.zip"
+  [flypy]="pro-flypy-fuzhu-dicts.zip"
+  [hanxin]="pro-hanxin-fuzhu-dicts.zip"
+  [moqi]="pro-moqi-fuzhu-dicts.zip"
+  [tiger]="pro-tiger-fuzhu-dicts.zip"
+  [wubi]="pro-wubi-fuzhu-dicts.zip"
+  [zrm]="pro-zrm-fuzhu-dicts.zip"
 )
 
 for _dict in "${!_dict_filenames[@]}"; do
