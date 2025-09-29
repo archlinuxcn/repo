@@ -14,11 +14,14 @@ sha256sums=('8e2997e5fd79c0c92f018df5b3d5d739f61b3dd517737a867e00bc9251e1c0d0')
 
 prepare() {
 	cd "${_srcname}/${pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
 	cd "${_srcname}/${pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
 	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
