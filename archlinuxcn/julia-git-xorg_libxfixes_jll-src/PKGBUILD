@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_libxfixes_jll-src
-pkgver=6.0.1+0
-_commit=40ce47d46128b7e1e18a4f57135545fe242398bb
-pkgrel=2
+pkgver=6.0.2+0
+_commit=0b4ce05930804536151802e8ec73f4bc6d331832
+pkgrel=1
 pkgdesc="Xorg_libXfixes_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXfixes_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxfixes)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXfixes_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('234b1ba47e15bdc8b48e5e9d3e5206535f41f1a3cefb559afc6185990dbf3048'
+sha256sums=('a8e541b991e325f2e0911fc22900909e5f05a755e4a3f822b46ec77cb70c7f6b'
             '2ffd9714fb0e29e20b17c793abede605bf3fec72eeaaf1d28d61c0718be0fc96')
 
 build() {
