@@ -1,0 +1,9 @@
+post_install() {
+  printf "To run \"rustnet\" without sudo, you may grant Linux capabilities to the binary.\n"
+  printf "You can run following command as root:\n"
+  printf "  setcap 'cap_net_raw,cap_net_admin,cap_sys_admin+eip' /usr/bin/rustnet\n"
+}
+
+post_upgrade() {
+  post_install
+}
