@@ -1,0 +1,21 @@
+_name=AbuseFilter
+pkgname=mediawiki-abusefilter
+pkgver=20250930
+pkgrel=1
+pkgdesc="MediaWiki extension that allows specific behavior-based restrictions to be placed on wiki activity"
+arch=(any)
+url="https://www.mediawiki.org/wiki/Extension:AbuseFilter"
+license=(''GPL-2.0-or-later'')
+depends=('mediawiki>=1.44' 'mediawiki<1.45')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/AbuseFilter-REL1_44-103b15f.tar.gz")
+sha256sums=('0e3576038e8379da96b6338f523ef4c4ba3965d4e519c0d4a043895cd52d6ae3')
+
+build() {
+  true
+}
+
+package() {
+  cd "$srcdir"
+  mkdir -p "$pkgdir/usr/share/webapps/mediawiki/extensions/"
+  cp -ar $_name "$pkgdir/usr/share/webapps/mediawiki/extensions/"
+}
