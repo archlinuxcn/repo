@@ -1,5 +1,5 @@
 pkgname=pandoc-bin
-pkgver=3.8
+pkgver=3.8.1
 pkgrel=1
 pkgdesc="Conversion between documentation formats"
 url="https://pandoc.org"
@@ -24,9 +24,9 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/jgm/pandoc/archive/${pkgver
 source_x86_64=("https://github.com/jgm/pandoc/releases/download/${pkgver}/pandoc-${pkgver}-linux-amd64.tar.gz")
 source_aarch64=("https://github.com/jgm/pandoc/releases/download/${pkgver}/pandoc-${pkgver}-linux-arm64.tar.gz")
 
-sha256sums=('2d375526e7d26d46ebcdaf107564c8bbfd68e40a7af425906e9612889699bcf6')
-sha256sums_x86_64=('1a035c1f7d295c353f614461fa4bc13d703c0e865387d44341d1556d703de59a')
-sha256sums_aarch64=('87cac7b2b02495c0533f75193b40837c50c5c313d905b19829c721d617a073b9')
+sha256sums=('1d66d35952e7037cc049a9f170c9ba394693014a71925a84c55dffcaf98ff677')
+sha256sums_x86_64=('2d9086a2d01e7887797e0cc4f07a8fa6008b34f89612dd9214192c0008ab58ab')
+sha256sums_aarch64=('b333dd83017cd0ca3748146c051034fff4eb0b05677e47f1aea36aa5240fd3b5')
 
 package() {
   cd "${srcdir}/pandoc-${pkgver}"
@@ -35,6 +35,8 @@ package() {
   cp -R bin share "${pkgdir}/usr"
   cp -R data citeproc "${pkgdir}/usr/share/pandoc/"
   cp COPYRIGHT MANUAL.txt "${pkgdir}/usr/share/pandoc/"
+  bin/pandoc --bash-completion | \
+    install -Dm644 /dev/stdin "$pkgdir"/usr/share/bash-completion/completions/pandoc
 }
 
 # vim: set ts=2 sw=2 et
