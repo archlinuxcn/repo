@@ -4,8 +4,8 @@
 
 pkgname=trustedqsl
 __pkgname=tqsl
-pkgver=2.8.1
-pkgrel=2
+pkgver=2.8.2
+pkgrel=1
 pkgdesc="QSO log signing data for the ARRL Logbook of The World (LoTW)"
 arch=('i686' 'x86_64' 'aarch64')
 url="http://lotw.arrl.org/"
@@ -44,7 +44,7 @@ package() {
 
 	rm -rf $pkgdir/usr/include $pkgdir/usr/share/applications/org.arrl.trustedqsl.desktop
 }
-md5sums=('acfebbd893d92d95a4ad9ea1bd53eb7a'
+md5sums=('933d18950a74e6112898a2d9713184ad'
          '6dd4296f5fda2d77922c9cbe4a120d3b')
-sha256sums=('fed1ccb7b4cdf22ece32aa6e9b58c2245af1ad0b77483e3466b693af2c57e7a6'
+sha256sums=('1c7efca53793ff05bd759820c5ca91899dcea92854ec1dae3d66b8c9ae7d2df0'
             '68129b7f7ddbb75be52f1b9164d43c6d9805c5877423546b50397c2d920c79e9')
