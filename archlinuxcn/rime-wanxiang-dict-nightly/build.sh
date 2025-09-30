@@ -54,38 +54,25 @@ extract_dicts() {
 }
 
 build_schema() {
-    local schema_type=$1 # pro | base
-    local schema=$2      # pinyin | ...
-    local algebra=$3     # 拼音 | ...
-    local fuzhu_type=$4  # zrm-fuzhu | ...
+    local schema_type=$1    # pro | base
+    local schema_code=$2    # pinyin | ...
+    local schema_algebra=$3 # 拼音 | ...
+    local fuzhu_type=$4     # zrm-fuzhu | ...
 
     # 更新拼写方案
-    sed -Ei \
-        -e "/^set_shuru_schema:/,/^[^[:space:]]/ { s|^(\s+__include:\s*)\S+(\s*.*)|\1${algebra}\2| }" \
-        wanxiang*.schema.yaml
+    local schemas_joined; schemas_joined=$(IFS='|'; echo "${schemas[*]}")
+    sed -Ei "
+        s/(wanxiang_algebra:\/)(reverse|mixed)\/(${schemas_joined})/\1\2\/${schema_algebra}/;
+        s/(wanxiang_algebra:\/)(pro|base)\/(${schemas_joined})/\1${schema_type}\/${schema_algebra}/;
+        " wanxiang*.schema.yaml
 
     build_dicts wanxiang*.schema.yaml
 
-    extract_dicts "${schema_type}" "${schema}" "${fuzhu_type}" true
+    extract_dicts "${schema_type}" "${schema_code}" "${fuzhu_type}" true
 
     # 预设处理
     local suggestion="suggestion" && [[ ${schema_type} == "pro" ]] && suggestion="pro_suggestion"
     mv default.yaml ./wanxiang_${suggestion}.yaml
-}
-
-get_shuru_schema() {
-    local name
-    name=$(sed -n '/set_shuru_schema:/,/^[^ ]/{/__include:/{s/^[ \t]*__include:[ \t]*//;s/[ \t]*#.*$//;s/[ \t]*$//;p}}' "$1")
-    for schema in "${!schemas[@]}"; do
-        local algebra="${schemas[$schema]}"
-        if [[ "$algebra" == "$name" ]]; then
-            echo "$schema"
-            break
-            return
-        fi
-    done
-
-    exit 1
 }
 
 build_dist_dir() {
