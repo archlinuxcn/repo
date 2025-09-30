@@ -7,26 +7,46 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=5.24.2
+_pkgver=5.25.0
 pkgver=${_pkgver//-/}
 pkgrel=1
 pkgdesc="An Arknights assistant"
 arch=(x86_64)
 url="https://github.com/MaaAssistantArknights/MaaAssistantArknights"
 license=('AGPL-3.0-only')
-depends=(opencv onnxruntime cpr)
-makedepends=(asio eigen git cmake)
-_fastdeploy_ref=2896b6d3641c18218209c496ea149a773373fa8b
+depends=(opencv onnxruntime)
+makedepends=(boost eigen git cmake)
+_fastdeploy_ref=e962983da6daba7d0c12f6bf5f8ff7173be70982
 source=("${_pkgname}-${_pkgver}.tar.gz::$url/archive/refs/tags/v$_pkgver.tar.gz"
-"FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaAssistantArknights/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
+"FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaXYZ/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
 install="${_pkgname}.install"
-md5sums=('b26f445121d0c970f2a8bfba51681dda'
-         '795116aab12a8c2eda2a9c7498595ae7')
+md5sums=('39ab1450a1f21404f9348cd3fdb23d3a'
+         '4555f8dce0cec02022356d50c8f2275c')
 
 if ((WITH_CUDA)); then
     pkgname+=(maa-assistant-arknights-cuda)
     depends+=(cuda)
 fi
+
+prepare() {
+    cd "${srcdir}/MaaAssistantArknights-${_pkgver}"
+
+    sed -e '/^find_package(fast/s/^/# /;' \
+        -e '/maadeps/s/^/# /;' \
+        -e 's/imgproc/imgproc calib3d videoio xfeatures2d/' \
+        -i CMakeLists.txt
+
+    sed -e '/copy_and_add_rpath_library(/s/^/# /;' \
+        -e '/add_compile_options/s/^/# /;' \
+        -i cmake/config.cmake
+    sed -e '/maadeps/s/^/# /;' -i cmake/utils.cmake -i src/MaaCore/CMakeLists.txt
+
+    cat <<_EOF >>CMakeLists.txt
+add_subdirectory(\${fastdeploy_SOURCE_DIR} \${fastdeploy_BINARY_DIR} EXCLUDE_FROM_ALL SYSTEM)
+target_include_directories(MaaCore SYSTEM PRIVATE \${fastdeploy_SOURCE_DIR})
+install(TARGETS fastdeploy_ppocr)
+_EOF
+}
 
 build() {
     local _cmake_flags=(
