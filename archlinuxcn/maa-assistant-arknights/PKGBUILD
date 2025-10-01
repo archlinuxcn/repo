@@ -7,7 +7,7 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=5.25.0
+_pkgver=5.26.0
 pkgver=${_pkgver//-/}
 pkgrel=1
 pkgdesc="An Arknights assistant"
@@ -20,7 +20,7 @@ _fastdeploy_ref=e962983da6daba7d0c12f6bf5f8ff7173be70982
 source=("${_pkgname}-${_pkgver}.tar.gz::$url/archive/refs/tags/v$_pkgver.tar.gz"
 "FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaXYZ/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
 install="${_pkgname}.install"
-md5sums=('39ab1450a1f21404f9348cd3fdb23d3a'
+md5sums=('bd34d9ada6c695665383e0d27ad7d3a4'
          '4555f8dce0cec02022356d50c8f2275c')
 
 if ((WITH_CUDA)); then
