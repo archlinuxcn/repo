@@ -14,7 +14,6 @@ depends=('libpcap' 'libelf' 'zlib' 'gcc-libs' 'glibc')
 makedepends=('git' 'cargo' 'pkgconf' 'clang' 'llvm' 'lld' 'libbpf')
 provides=(${pkgname%})
 conflicts=("${pkgname%}-git" "${pkgname%}-bin")
-options=(strip)
 install=$_pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "rustnet-setcap.hook")
