@@ -1,0 +1,31 @@
+--- a/zshrc	2025-10-01 08:23:39.507178645 +0800
++++ b/zshrc	2025-10-01 09:56:46.276330650 +0800
+@@ -2,7 +2,7 @@
+ # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+ 
+ # Path to your Oh My Zsh installation.
+-export ZSH="$HOME/.oh-my-zsh"
++ZSH=/usr/share/oh-my-zsh/
+ 
+ # Set name of the theme to load --- if set to "random", it will
+ # load a random theme each time Oh My Zsh is loaded, in which case,
+@@ -72,8 +72,6 @@
+ # Add wisely, as too many plugins slow down shell startup.
+ plugins=(git)
+ 
+-source $ZSH/oh-my-zsh.sh
+-
+ # User configuration
+ 
+ # export MANPATH="/usr/local/man:$MANPATH"
+@@ -102,3 +100,10 @@
+ # Example aliases
+ # alias zshconfig="mate ~/.zshrc"
+ # alias ohmyzsh="mate ~/.oh-my-zsh"
++
++ZSH_CACHE_DIR=$HOME/.cache/oh-my-zsh
++if [[ ! -d $ZSH_CACHE_DIR ]]; then
++  mkdir $ZSH_CACHE_DIR
++fi
++
++source $ZSH/oh-my-zsh.sh
