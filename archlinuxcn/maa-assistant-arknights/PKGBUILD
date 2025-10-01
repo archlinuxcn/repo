@@ -29,6 +29,8 @@ if ((WITH_CUDA)); then
 fi
 
 prepare() {
+    sed -e 's/35 50 52 60 61 70//g;' -i "${srcdir}/FastDeploy-${_fastdeploy_ref}/cmake/cuda.cmake"
+
     cd "${srcdir}/MaaAssistantArknights-${_pkgver}"
 
     sed -e '/^find_package(fast/s/^/# /;' \
