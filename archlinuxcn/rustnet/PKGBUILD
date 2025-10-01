@@ -4,7 +4,7 @@ pkgname=rustnet
 _pkgname=${pkgname%}
 _reponame=${pkgname%}
 pkgver=0.11.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Real-time network monitoring TUI with process identification via eBPF and deep packet inspection"
 arch=('x86_64' 'armv7h' 'aarch64')
 _author=domcyrus
@@ -71,5 +71,5 @@ package() {
     cd "$srcdir/$pkgname-$pkgver"
 
     install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$_pkgname"
-    install -Dm644 "${srcdir}/rustnet-setcap.hook" "${pkgdir}/usr/share/${pkgname}/hooks/rustnet-setcap.hook"
+    install -Dm644 -t "$pkgdir/usr/share/$_pkgname/hooks/" "$srcdir/rustnet-setcap.hook"
 }
