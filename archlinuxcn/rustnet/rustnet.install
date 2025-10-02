@@ -1,0 +1,6 @@
+post_install() {
+  printf 'To allow running "rustnet" without sudo, you can enable the optional pacman hook:\n'
+  printf '  sudo ln -s /usr/share/rustnet/hooks/rustnet-setcap.hook /etc/pacman.d/hooks/\n'
+  printf 'Note: This hook grants Linux capabilities (cap_net_raw, cap_net_admin, cap_sys_admin).\n'
+  printf 'Granting cap_sys_admin is highly privileged; enable only if you understand the risk.\n'
+}

@@ -1,0 +1,10 @@
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Target = usr/bin/rustnet
+
+[Action]
+Description = Reapplying capabilities for RustNet
+When = PostTransaction
+Exec = /usr/bin/setcap 'cap_net_raw,cap_net_admin,cap_sys_admin+eip' /usr/bin/rustnet
