@@ -14,10 +14,8 @@ depends=('gtk3' 'mpv' 'libayatana-appindicator')
 makedepends=('git' 'clang' 'cmake' 'ninja' 'fvm' 'patchelf')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("git+${url}.git"
-	"${_pkgname}.desktop")
-sha256sums=('SKIP'
-            'cad91a008e837952ec7268312ce9f5305a59783584843df7dbb10230464b8731')
+source=("git+${url}.git")
+sha256sums=('SKIP')
 
 pkgver() {
 	cd "${_srcname}/"
@@ -53,9 +51,7 @@ package() {
 	install -dm755 "${pkgdir}/usr/bin"
 	ln -s "/usr/lib/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
 
-	# Icon
-	install -Dm644 assets/images/logo/logo.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/${_pkgname}.png"
-
-	# Desktop Launcher
-	install -Dm644 "${srcdir}/${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+	cd assets
+	install -Dm644 images/logo/logo.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/${_pkgname}.png"
+	install -Dm644 "linux/${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 }
