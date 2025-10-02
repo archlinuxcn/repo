@@ -26,8 +26,7 @@ pkgver() {
 
 prepare() {
 	cd "${_srcname}/"
-	fvm install stable
-	fvm use stable -f
+	fvm install
 	fvm flutter --disable-analytics
 	fvm flutter --no-version-check pub get
 }
