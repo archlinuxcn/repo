@@ -17,8 +17,7 @@ sha256sums=('3ad9b04e589f9845e8f76992662dd0ee66c876d04e63957a010c35fe1e79927a'
 
 prepare() {
 	cd "${_srcname}/"
-	fvm install stable
-	fvm use stable -f
+	fvm install
 	fvm flutter --disable-analytics
 	fvm flutter --no-version-check pub get
 }
