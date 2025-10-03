@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/ds4dm/Tulip.jl.git#commit=$_commit"
-        0001-Support-Krylov-0.10.patch)
-sha256sums=('bfcedfb9d9788859a286fe6f09b6dbf37608e35d13983c4534083a5b9b0f1887'
-            'c03762c72e6f4472ee50fbde8746b17aaa405a67d20140adb90717b49d70a90c')
-
-prepare() {
-  cd Tulip.jl
-
-  patch -Np1 --no-backup-if-mismatch < ../0001-Support-Krylov-0.10.patch
-}
+source=("git+https://github.com/ds4dm/Tulip.jl.git#commit=$_commit")
+sha256sums=('bfcedfb9d9788859a286fe6f09b6dbf37608e35d13983c4534083a5b9b0f1887')
 
 package() {
   cd Tulip.jl
