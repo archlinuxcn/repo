@@ -4,11 +4,12 @@ maintainers:
   - github: heavysink
     email: winstonwu91@gmail.com
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['dpeukert'])
+pre_build: vcs_update
 
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 repo_depends:
   - cubeb-git
+  - vulkan-memory-allocator-git
 
 update_on:
   - source: aur

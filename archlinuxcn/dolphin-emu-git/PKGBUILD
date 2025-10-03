@@ -9,7 +9,7 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2509.r102.ga570b24c961
+pkgver=2509.r117.g70f9ae2432
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -19,29 +19,29 @@ license=('GPL-2.0-or-later')
 depends=(
 	# Based on the repo package
 	'bluez-libs' 'bzip2' 'enet' 'gcc-libs' 'glibc' 'hidapi' 'libavcodec.so'
-	'libavformat.so' 'libavutil.so' 'libcurl.so' 'fmt' 'libgl'
+	'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so' 'libgl'
 	'libsfml-network.so' 'libsfml-system.so' 'libspng.so' 'libswscale.so'
 	'libusb-1.0.so' 'libx11' 'libxi' 'libxrandr' 'lz4' 'lzo' 'mbedtls2' 'pugixml'
-	'sdl2' 'sfml' 'speexdsp' 'xxhash' 'xz' 'zstd'
+	'sdl3' 'sfml' 'speexdsp' 'xxhash' 'xz' 'zstd' 'fmt'
 	# Additional dependencies to replace vendored deps
 	'cubeb' 'libiconv' 'minizip-ng' 'zlib-ng'
 )
 makedepends=(
 	'alsa-lib' 'cmake' 'git' 'libevdev' 'libminiupnpc.so' 'libpulse'
-	'libudev.so' 'ninja' 'python' 'qt6-base' 'qt6-svg' 'vulkan-headers'
-	'vulkan-memory-allocator'
+	'libudev.so' 'ninja' 'python' 'qt6-base' 'qt6-svg' 'vulkan-headers' 'vulkan-memory-allocator-git'
 )
 checkdepends=('gtest')
 optdepends=('pulseaudio: PulseAudio backend')
 options=('!lto')
 source=(
 	"$pkgbase::git+https://github.com/$_mainpkgname/$_projectname"
+	"$pkgbase-glslang::git+https://github.com/KhronosGroup/glslang.git"
 	"$pkgbase-implot::git+https://github.com/epezent/implot.git"
 	"$pkgbase-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
+	"$pkgbase-vh::git+https://github.com/KhronosGroup/Vulkan-Headers.git"
 	"$pkgbase-watcher::git+https://github.com/e-dant/watcher.git"
-	'cmake-discord-rpc.diff'
 	'cmake-mgba.diff'
 )
 b2sums=('SKIP'
@@ -50,7 +50,8 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
-        '7db29101fc7496355776eee0701ddb971147aea096828f73dc02501d8981a8f1105f16e206a24f3ab94d169dc7ea0443c37b664c25ba064533b7cdcc644bd6f4'
+        'SKIP'
+        'SKIP'
         'd9e6ba73de8e1c49a7ebf9efe6caffcffbe1a545dfb61caebe2b830d8f496aaa221269c25a3f849ba02228dfb866b362c8c74f7e897e66a9362469dea679721d')
 
 _sourcedirectory="$pkgbase"
@@ -62,10 +63,12 @@ prepare() {
 
 	# Provide submodules
 	declare -A _submodules=(
+		[glslang]='glslang/glslang'
 		[implot]='implot/implot'
 		[mgba]='mGBA/mgba'
 		[rcheevos]='rcheevos/rcheevos'
 		[tinygltf]='tinygltf/tinygltf'
+		[vh]='Vulkan-Headers'
 		[watcher]='watcher/watcher'
 	)
 
@@ -75,9 +78,6 @@ prepare() {
 		git config "submodule.$_path.url" "$srcdir/$pkgbase-$_submod/"
 		git -c protocol.file.allow=always submodule update "$_path"
 	done
-
-	# Patch cmake_minimum_required below 3.5.0
-	patch --forward -p1 < "$srcdir/cmake-discord-rpc.diff"
 
 	cd "$srcdir/$_sourcedirectory/Externals/mGBA/mgba/"
 	patch --forward -p1 < "$srcdir/cmake-mgba.diff"
