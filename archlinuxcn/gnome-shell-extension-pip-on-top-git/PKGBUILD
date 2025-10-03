@@ -8,9 +8,9 @@ pkgrel=1
 pkgdesc='Makes "Picture-in-Picture" windows stay on top (even on Wayland session). Compatible with Firefox and Clapper media player.'
 arch=('any')
 url="https://github.com/Rafostar/gnome-shell-extension-pip-on-top"
-license=('GPL-2.0')
-depends=('gnome-shell>=45' 'gnome-shell<50')
-makedepends=('git')
+license=('GPL-2.0-only')
+depends=('gnome-shell>=45')
+makedepends=('git' 'zip')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=(git+"${url}".git
