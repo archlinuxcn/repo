@@ -3,7 +3,7 @@
 # Contributors: teutat3s
 
 pkgname=k6
-pkgver=1.0.0
+pkgver=1.3.0
 pkgrel=1
 pkgdesc="A modern load testing tool, using Go and JavaScript"
 arch=('x86_64' 'i686')
@@ -12,7 +12,7 @@ license=('AGPL3')
 depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('790e8a1d1171262095edbd5df5a74f18406d11ea88098560d0f18b7614c8b880')
+sha256sums=('6a04403eea25fc721de3a7515b89301fb8679deb3faff5c9703d79d76e114fd9')
 
 build() {
 	cd "${pkgname}-${pkgver}"
