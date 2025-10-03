@@ -1,7 +1,7 @@
 pkgname=julia-git-tulip-src
-pkgver=0.9.7
-_commit=aa69fac1c956ad3b1c1cff6bdbb8b3671f65ef0f
-pkgrel=2
+pkgver=0.9.8
+_commit=5e3b51d1a4698441d60b3aee127a285fa19c3f14
+pkgrel=1
 pkgdesc="Tulip.jl"
 url="https://github.com/ds4dm/Tulip.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/ds4dm/Tulip.jl.git#commit=$_commit")
-sha256sums=('bfcedfb9d9788859a286fe6f09b6dbf37608e35d13983c4534083a5b9b0f1887')
+sha256sums=('66ddf66038ef755b080397762f8b06fdf539b376e2e2eff638d32599b10a5061')
 
 package() {
   cd Tulip.jl
