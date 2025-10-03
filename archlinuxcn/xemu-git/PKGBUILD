@@ -1,7 +1,7 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=xemu
 pkgname=$_pkgname-git
-pkgver=0.8.96.r4.g7676418
+pkgver=0.8.106.r0.g1973482
 pkgrel=1
 pkgdesc="Original Xbox emulator (fork of XQEMU)"
 arch=('x86_64')
@@ -27,6 +27,7 @@ makedepends=(
 	'libslirp'
 	'meson'
 	'nlohmann-json'
+	'python-distlib'
 	'python-yaml'
 	'tomlplusplus>=3.1'
 	'vulkan-headers'
@@ -89,8 +90,9 @@ package() {
 	# shellcheck disable=SC2154
 	install -Dm755 ../build/qemu-system-i386 "$pkgdir"/usr/bin/$_pkgname
 	install -Dm644 ui/xemu.desktop "$pkgdir"/usr/share/applications/$_pkgname.desktop
-	for _size in 16 24 32 48 64 128 256 512; do
-		install -Dm644 ui/icons/xemu_${_size}x${_size}.png "$pkgdir"/usr/share/icons/hicolor/${_size}x${_size}/apps/$_pkgname.png
+	local size
+	for size in 16 24 32 48 64 128 256 512; do
+		install -Dm644 ui/icons/xemu_${size}x${size}.png "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps/$_pkgname.png
 	done
 	install -Dm644 ui/icons/xemu.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/$_pkgname.svg
 	install -Dm644 XEMU_LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE.txt
