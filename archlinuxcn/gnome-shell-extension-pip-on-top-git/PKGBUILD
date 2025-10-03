@@ -1,0 +1,49 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+# Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
+
+pkgname=gnome-shell-extension-pip-on-top-git
+_pkgname=${pkgname%-git}
+pkgver=r40.5f1f93e
+pkgrel=1
+pkgdesc='Makes "Picture-in-Picture" windows stay on top (even on Wayland session). Compatible with Firefox and Clapper media player.'
+arch=('any')
+url="https://github.com/Rafostar/gnome-shell-extension-pip-on-top"
+license=('GPL-2.0')
+depends=('gnome-shell>=45' 'gnome-shell<50')
+makedepends=('git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=(git+"${url}".git
+       gnome-49-support.patch)
+b2sums=('SKIP'
+        'ea854d94f70790912c469adc0deeeea0508896d56ee6d503e33c0134f74fe0860153ab760c0ea0e969b4000abe06b8e8034119282b8621e1b31eb84012e02ff6')
+
+pkgver() {
+  cd "${_pkgname}"
+  ( set -o pipefail
+    git describe --long 2>/dev/null | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  )
+}
+
+prepare() {
+  cd "${_pkgname}"
+
+  git apply -3 "${srcdir}"/*.patch
+
+  ./translate.sh
+}
+
+build() {
+  cd "${_pkgname}"
+
+  ./bundle.sh
+}
+
+package() {
+  cd "${_pkgname}"
+
+  local uuid; uuid=$(grep -Po '(?<="uuid": ")[^"]*' metadata.json)
+  install -d "$pkgdir/usr/share/gnome-shell/extensions/${uuid}"
+  bsdtar --uid 0 --gid 0 -xvf "${uuid}".zip -C "$pkgdir/usr/share/gnome-shell/extensions/${uuid}"
+}
