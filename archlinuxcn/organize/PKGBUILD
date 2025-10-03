@@ -4,7 +4,7 @@
 _pkgname="organize"
 pkgname="$_pkgname"
 pkgver=3.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A command line utility to automate file organization tasks'
 url='https://github.com/tfeldmann/organize'
 license=('MIT')
@@ -32,7 +32,6 @@ build() {
 
 package() {
   depends+=(
-    'docx2txt'
     'python-arrow'
     'python-jinja'
     'python-natsort'
@@ -45,6 +44,7 @@ package() {
 
     ## AUR
     'python-docopt-ng'
+    'python-docx2txt'
     'python-exifread'
     'python-simplematch'
   )
