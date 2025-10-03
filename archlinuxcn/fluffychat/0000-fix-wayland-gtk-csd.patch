@@ -1,6 +1,6 @@
 --- a/linux/my_application.cc
 +++ b/linux/my_application.cc
-@@ -20,36 +20,21 @@
+@@ -20,22 +20,25 @@
    GtkWindow* window =
        GTK_WINDOW(gtk_application_window_new(GTK_APPLICATION(application)));
  
@@ -16,37 +16,28 @@
 -  // Please re-add these lines after updating the linux build files
 -  // If the user explicitly requests to disable the header bar, switch back to 
 -  // using a traditional title bar
-+  // Do not use csd header bar unless using GNOME
++  // Enable header bar (CSD) only if GTK_CSD is not "0",
++  // we're running under GNOME, and the libhandy theme resource exists.
 +  gboolean use_header_bar = FALSE;
-+
-+  const gchar *desktop = g_getenv("XDG_CURRENT_DESKTOP");
-+  if (desktop != nullptr && g_strrstr(desktop, "GNOME") != nullptr) {
-+    g_setenv("GTK_CSD", "1", TRUE);
-+  } else {
-+    g_setenv("GTK_CSD", "0", TRUE);
-+  }
-+
    const gchar* gtk_csd_env = g_getenv("GTK_CSD");
 -  if (gtk_csd_env != nullptr && g_strcmp0(gtk_csd_env, "1") != 0)
 -    use_header_bar = FALSE;
 -  // Lines added to the template end
--#ifdef GDK_WINDOWING_X11
--  GdkScreen* screen = gtk_window_get_screen(window);
--  if (GDK_IS_X11_SCREEN(screen)) {
--    const gchar* wm_name = gdk_x11_screen_get_window_manager_name(screen);
--    if (g_strcmp0(wm_name, "GNOME Shell") != 0) {
--      use_header_bar = FALSE;
--      // Lines added to the template start
--      // Please re-add these lines after updating the linux build files
--      // Disable libhandy here, otherwise the close button disappears on KDE X11
--      g_setenv("GTK_CSD", "0", TRUE);
--      // Lines added to the template end
--    }
-+  if (gtk_csd_env != nullptr && g_strcmp0(gtk_csd_env, "1") == 0) {
-+    use_header_bar = TRUE;
-   }
--#endif
++  const gchar* desktop_env = g_getenv("XDG_CURRENT_DESKTOP");
 +
-   if (use_header_bar) {
-     GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
-     gtk_widget_show(GTK_WIDGET(header_bar));
++  if ((gtk_csd_env == NULL || g_strcmp0(gtk_csd_env, "0") != 0) &&
++      desktop_env != NULL &&
++      g_strrstr(desktop_env, "GNOME") != NULL &&
++      g_resources_get_info("/org/gtk/libhandy/theme/Adwaita.css",
++                           G_RESOURCE_LOOKUP_FLAGS_NONE,
++                           NULL, NULL, NULL)) {
++    use_header_bar = TRUE;
++  } else {
++    g_setenv("GTK_CSD", "0", TRUE);
++  }
++
++// On X11, disable CSD if the window manager is not GNOME Shell,
++// even though XDG_CURRENT_DESKTOP may report GNOME.
+ #ifdef GDK_WINDOWING_X11
+   GdkScreen* screen = gtk_window_get_screen(window);
+   if (GDK_IS_X11_SCREEN(screen)) {
