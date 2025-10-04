@@ -1,0 +1,36 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=gnome-shell-extension-autohide-battery
+pkgver=58
+pkgrel=1
+pkgdesc="GNOME Shell extension to hide battery icon, if battery is fully charged and AC is connected"
+arch=('any')
+url="https://github.com/ai/autohide-battery"
+license=('MIT')
+depends=('gnome-shell>=45')
+makedepends=()
+_work_dir=autohide-battery-${pkgver}
+source=("${_work_dir}".tar.gz::"${url}"/archive/refs/tags/"${pkgver}".tar.gz)
+b2sums=('dafa9e6dc52808b57d1c74ed76086fc61c7cdfaca09568234a6e7fcfec5ebb54a6aca2a36b6da27f0972c5fc532ed7a9df9afb9ecc9ac86da680323444f20514')
+
+build() {
+  cd "${_work_dir}"
+
+  make build
+}
+
+package() {
+  cd "${_work_dir}"
+
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  local _uuid; _uuid=$(grep -Po '(?<="uuid": ")[^"]*' metadata.json)
+
+  local _ext_dir="$pkgdir/usr/share/gnome-shell/extensions/${_uuid}"
+  install -d "$_ext_dir"
+  bsdtar --uid 0 --gid 0 -xvf "${_uuid}".shell-extension.zip -C "$_ext_dir"
+
+  local _schema_dir="$pkgdir/usr/share/glib-2.0"
+  install -d "$_schema_dir"
+  mv "$pkgdir/usr/share/gnome-shell/extensions/${_uuid}/schemas" "$_schema_dir"
+}
