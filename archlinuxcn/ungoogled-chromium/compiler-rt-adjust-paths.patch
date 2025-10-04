@@ -1,9 +1,12 @@
---- a/build/config/clang/BUILD.gn	2025-09-06 17:16:42.185248252 +0000
-+++ b/build/config/clang/BUILD.gn	2025-09-06 17:19:45.922911584 +0000
-@@ -209,16 +209,21 @@ template("clang_lib") {
+diff -ura chromium-141.0.7390.54/build/config/clang/BUILD.gn chromium-141.0.7390.54.patched/build/config/clang/BUILD.gn
+--- chromium-141.0.7390.54/build/config/clang/BUILD.gn  2025-10-01 13:36:59.000000000 +0000
++++ chromium-141.0.7390.54.patched/build/config/clang/BUILD.gn  2025-10-01 13:42:38.977184172 +0000
+@@ -170,17 +170,22 @@
+         _dir = "darwin"
        } else if (is_linux || is_chromeos) {
          if (current_cpu == "x64") {
-           _dir = "x86_64-unknown-linux-gnu"
+-          _dir = "x86_64-unknown-linux-gnu"
++          _dir = "linux"
 +          _suffix = "-x86_64"
          } else if (current_cpu == "x86") {
            _dir = "i386-unknown-linux-gnu"
