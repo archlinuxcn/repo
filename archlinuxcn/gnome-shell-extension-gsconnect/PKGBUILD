@@ -1,0 +1,27 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+# Contributor: Guillaume Hayot <ghayot@postblue.info>
+
+pkgname=gnome-shell-extension-gsconnect
+pkgver=67
+pkgrel=1
+pkgdesc="KDE Connect implementation with GNOME Shell integration"
+arch=('any')
+url="https://github.com/GSConnect/gnome-shell-extension-gsconnect"
+license=('GPL-2.0-or-later OR MPL-2.0')
+makedepends=('meson')
+depends=('gnome-shell>=46')
+optdepends=('evolution-data-server: Contacts integration (Evolution)'
+            'libgdata: Contacts integration (GNOME Online Accounts)'
+            'gsound: Themed sound effects'
+            'python-nautilus: Nautilus integration')
+source=(https://github.com/GSConnect/"${pkgname}"/archive/v"${pkgver}".tar.gz)
+b2sums=('1f87b2bb99cefb74b06958d14fd137ba5670f8af9c1a8cf30671d370cf3cda3e3432fe4ebedc430b19f7be28dbe8b160f8e450d8dfe37e05a5217493a473b565')
+
+build() {
+  arch-meson -Dinstalled_tests=false -Dfirewalld=true ${pkgname}-${pkgver} build
+  meson compile -C build
+}
+
+package() {
+  DESTDIR="$pkgdir" meson install -C build
+}
