@@ -1,0 +1,10 @@
+maintainers:
+  - github: everyx
+
+pre_build_script: vcs_update
+
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: mukul29/legacy-theme-auto-switcher-gnome-extension

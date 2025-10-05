@@ -1,0 +1,31 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=gnome-shell-extension-legacy-theme-auto-switcher-git
+_pkgname=${pkgname%-git}
+pkgver=1.r27.09bb3cf
+pkgrel=1
+pkgdesc="Change the GTK3 theme to light/dark variant based on the system color scheme"
+arch=('any')
+url="https://github.com/mukul29/legacy-theme-auto-switcher-gnome-extension"
+license=('AGPL-3.0-only')
+depends=('gnome-shell>=45')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+makedepends=('git')
+source=("${_pkgname}"::git+"${url}#branch=main")
+b2sums=('SKIP')
+
+pkgver() {
+  cd "${_pkgname}"
+  printf "%s.r%s.%s"\
+    "$(grep -Po '(?<="version": )[\d]*' metadata.json)"\
+    "$(git rev-list --count HEAD)"\
+    "$(git rev-parse --short=7 HEAD)"
+}
+
+package() {
+  cd "${_pkgname}"
+  local _uuid; _uuid=$(grep -Po '(?<="uuid": ")[^"]*' metadata.json)
+  install -d "$pkgdir/usr/share/gnome-shell/extensions/${_uuid}"
+  install -Dm644 ./*.js metadata.json -t "$pkgdir/usr/share/gnome-shell/extensions/${_uuid}"
+}
