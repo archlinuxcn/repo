@@ -1,0 +1,35 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: github
+    github: "complexlogic/rsgain"
+    use_latest_release: true
+    prefix: "v"
+  - source: alpm
+    alpm: ffmpeg
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: libebur128
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: taglib
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: fmt
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: gcc-libs
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+
+build_prefix: extra-x86_64

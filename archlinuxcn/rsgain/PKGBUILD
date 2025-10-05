@@ -1,0 +1,32 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=rsgain
+pkgver=4.2
+pkgrel=2
+pkgdesc="A simple, but powerful ReplayGain 2.0 tagging utility"
+arch=('x86_64')
+url="https://github.com/complexlogic/rsgain?tab=readme-ov-file"
+license=('LicenseRef-custom')
+depends=(libebur128 taglib ffmpeg fmt libinih gcc-libs)
+source=(
+	"${pkgname}"::"git+https://github.comcomplexlogic/rsgain.git#tag=v${pkgver}"
+sha256sums=('SKIP')
+makedepends=("git" "cmake")
+
+build() {
+	local cmake_options=(
+		-B build
+		-S $pkgname
+		-W no-dev
+		-D CMAKE_BUILD_TYPE=Release
+		-DUSE_STD_FORMAT=ON
+		-D CMAKE_INSTALL_PREFIX=/usr
+	)
+	cmake "${cmake_options[@]}"
+	cmake --build build
+}
+
+package() {
+	DESTDIR="$pkgdir" cmake --install build
+	install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}"
+}
