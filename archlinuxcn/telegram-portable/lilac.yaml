@@ -7,13 +7,12 @@ post_build_script: |
 
 update_on:
   - source: "alpm"
-    alpm: "telegram-desktop-lily"
-    repo: "archlinuxcn"
+    alpm: "telegram-desktop"
+    #repo: "archlinuxcn"
     from_pattern: '-.*'
     to_pattern: ''
 
 repo_depends:
   - portable
-  - telegram-desktop-lily
 
 build_prefix: archlinuxcn-x86_64
