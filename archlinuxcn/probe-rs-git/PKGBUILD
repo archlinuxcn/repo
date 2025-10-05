@@ -75,7 +75,7 @@ build() {
 
     SHELL=zsh  target/release/probe-rs complete --shell zsh install --manual > _probe-rs
     SHELL=bash target/release/probe-rs complete --shell bash install --manual > probe-rs.bash
-    SHELL=fish target/release/probe-rs complete --shell fish install > probe-rs.fish
+    SHELL=fish target/release/probe-rs complete --shell fish install --manual > probe-rs.fish
 }
 
 # FIXME: disable because of util::cargo::test::get_binary_artifact_with_cargo_config{,_toml} need thumbv7m-none-eabi std.
