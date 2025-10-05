@@ -6,7 +6,7 @@ def pre_build():
     aur_pre_build(maintainers=['dbermond'])
 
     for line in edit_file('PKGBUILD'):
-        if not line.strip().startswith('ctest'):
-            print(line)
+        if line.strip().startswith('ctest'):
+            print(line + ' --exclude-regex spirv-cross-test-hlsl{,-opt}')
         else:
-            print('# Temporarily disabled')
+            print(line)

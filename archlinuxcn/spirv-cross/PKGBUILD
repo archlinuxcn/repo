@@ -61,7 +61,7 @@ build() {
 }
 
 check() {
-    ctest --test-dir build-SPIRV-Cross --output-on-failure
+    ctest --test-dir build-SPIRV-Cross --output-on-failure --exclude-regex spirv-cross-test-hlsl{,-opt}
 }
 
 package() {
