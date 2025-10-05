@@ -15,6 +15,7 @@ name = "libavutil"
 
 [[library]]
 name = "libpostproc"
+file = "libavutil.so" # Removed in 8.0 and no one is using this ATM. Use a dummy one before archlinux package the new libpostproc library
 
 [[library]]
 name = "libswresample"
