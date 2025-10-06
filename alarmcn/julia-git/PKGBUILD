@@ -58,7 +58,7 @@ case "$CARCH" in
     ;;
 esac
 makedepends=("${depends_libs[@]}" llvm-julia-git gcc-fortran git patchelf python proot
-             "${_soname_deps[@]}")
+             "${_soname_deps[@]}" julia-git-common-scripts)
 # Both debug and strip cause pacman to edit the ELF files and breaking them
 # for loading.
 options=('!debug' '!strip' '!buildflags')
@@ -74,14 +74,14 @@ _patches=(
   0009-Fix-at-views-for-setindex-expression.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
-        'git+https://github.com/yuyichao/archcn-julia-scripts'
         "${_patches[@]}"
+        julia-preinstall.hook
+        julia-postinstall.hook
         arch-source-translate.cpp
         sysp7z.diff
         disable-upgrade.diff
         download_curl.diff)
 sha512sums=('SKIP'
-            'SKIP'
             'edfa00dd05f5ab2dc25cdc98624f7ab7cf6e62e16cfab06f1a63fa68b7745a8b531d7f8ff5e3aa38b91e0b6f4f906655eecb4ec2a76667a67e19d4d76caa0709'
             'd88cbc7edf2f9b0a34ceda68fe507cfb8e49d3b6cd3d2006f97f0bd7fc78fe114d0fe1d957a02ffe21b6b01796fbffc09450ae0ae74e8084771e96d27ba8057c'
             'b1377a64f21b629f8cacca385edfff7940b1e7977ddf6e8d0465d89e1bbaba8f953bde5e772c0dd7416781bfcaf9b7110a3dc610167973e13b70a954ec9ccafd'
@@ -91,6 +91,8 @@ sha512sums=('SKIP'
             '19d2a1a2169704aeae10fe2f56a90d31e1031535b320a6693998ab8006488ef9dfd245a5124358552f619d78af120890dd041c428ce30de7d14b806f7cd64768'
             '250714d118ff30bb5d89e04049c25483319d52c8741fdead3fd4159c24340f4a034d4424e395eeb0628506146198c4a078d0fb1a4c02fd7f95be6e5ac7bdfe81'
             'fd474beaf95e6f832c3adde96cb6d56c5d46abc19a69d96f20218ffaeff293f21602f1492410067ae11e481b7d650c7beae75dad80b34342ee15e3bc968e7fb9'
+            '997f22456f175c6cc03b2dd407b7584df514bc4c91602ef011b93d8b558f7c587b4e216535e573f6063f3a606f88c48dee3041a5122a7dbf0bee6d1bc8df15b4'
+            'a668a9bd01cec8f53f457d9124107a230260c79fd57cbce4c4bf80e3451758d8e67263faa3f9d8b3da0c10bffbe29e4032106881ebe682c7f66414d8989638be'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
             'cd5ce157624156d7fce015dc7955d3ba8c8efa4c10dbf2cb7ab532428d00e17d0a5be2c2963e2f8dd4c63471ac2ff895f207ecc0db17557fb0eb8b7d883891ec'
@@ -378,7 +380,7 @@ package-julia-in() {
   depends=("${depends_libs[@]}"
            "llvm-libs-julia-git>=${llvm_maj_ver}.0"
            "llvm-libs-julia-git<${next_llvm_maj}.0"
-           hicolor-icon-theme xdg-utils)
+           julia-git-common-scripts hicolor-icon-theme xdg-utils)
   opts=("${@:2}")
 
   cd "$1"
@@ -432,7 +434,10 @@ package-julia-in() {
   conflicts=('julia' "${builtin_pkgs[@]}")
   replaces=("${builtin_pkgs[@]}")
 
-  "${srcdir}/archcn-julia-scripts/install.sh" "${pkgdir}" "$ver_short"
+  sed -e "s|@VER@|$ver_short|g" "${srcdir}/julia-preinstall.hook" |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-preinstall.hook"
+  sed -e "s|@VER@|$ver_short|g" "${srcdir}/julia-postinstall.hook" |
+    install -Dm644 /dev/stdin "${pkgdir}/usr/share/libalpm/hooks/julia-postinstall.hook"
 
   mkdir -p "${pkgdir}/usr/share/julia/compiled/v$ver_short"
 
@@ -489,12 +494,12 @@ package-julia-in() {
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
       "${pkgdir}/usr/bin/julia" --startup-file=no \
-      "${srcdir}/archcn-julia-scripts/julia-compile-pkgs.jl" /usr/share/julia
+      "/usr/lib/julia/julia-compile-pkgs.jl" /usr/share/julia
   env JULIA_PRECOMPILE_STDLIB_DIR="/usr/share/julia/stdlib/v$ver_short" \
       JULIA_CPU_TARGET="${_cpu_target}" \
       proot -b "${pkgdir}/usr/share/julia/:/usr/share/julia/" \
       "${pkgdir}/usr/bin/julia-debug" --startup-file=no \
-      "${srcdir}/archcn-julia-scripts/julia-compile-pkgs.jl" /usr/share/julia
+      "/usr/lib/julia/julia-compile-pkgs.jl" /usr/share/julia
   mkdir -p "${pkgdir}/usr/lib/julia/arch-compiled/julia/"
   mv "${pkgdir}/usr/share/julia/compiled/v$ver_short/"* \
      "${pkgdir}/usr/lib/julia/arch-compiled/julia/"

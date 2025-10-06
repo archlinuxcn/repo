@@ -14,15 +14,14 @@ repo_depends:
   - openlibm-git
   - proot-git
   - 7zip
+  - julia-git-common-scripts
 
 update_on_build:
   - pkgbase: llvm-julia-git
+
 update_on:
   - source: vcs
     lilac_throttle: 6d
-  - source: github
-    github: yuyichao/archcn-julia-scripts
-    branch: master
   - source: alpm
     alpm: curl
     provided: libcurl.so
@@ -50,4 +49,4 @@ update_on:
     strip_dir: true
     filename: libutf8proc.so.\d+
   - source: manual
-    manual: 2
+    manual: 1
