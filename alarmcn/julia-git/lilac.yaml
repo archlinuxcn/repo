@@ -4,6 +4,7 @@ maintainers:
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
+build_prefix: archlinuxcn-aarch64
 time_limit_hours: 2
 
 repo_depends:
@@ -14,7 +15,6 @@ repo_depends:
   - openlibm-git
   - proot-git
   - 7zip
-  - julia-git-common-scripts
 
 update_on_build:
   - pkgbase: llvm-julia-git
