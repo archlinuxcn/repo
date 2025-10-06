@@ -18,7 +18,7 @@ ENABLED_DICTIONARIES=(
 
 pkgname='mozc-ut'
 pkgver=2.31.5851.102.20250602
-pkgrel=1
+pkgrel=2
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
 url='https://github.com/google/mozc'
@@ -48,8 +48,8 @@ source=('git+https://github.com/google/mozc.git#commit=d703e617246b3916edcb5b958
         'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=2d942f3f30ebe6fcab5e92ca0bd76a531c87c33f'
         'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=384ad926e306d5308839c6dedb63696f11703968'
         'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=d1afebf15d8d63be62c2df2aceaf42cb1c243acd'
-        'https://dumps.wikimedia.org/jawiki/20250601/jawiki-20250601-pages-articles-multistream-index.txt.bz2')
-noextract=('jawiki-20250601-pages-articles-multistream-index.txt.bz2')
+        'https://dumps.wikimedia.org/jawiki/20251001/jawiki-20251001-pages-articles-multistream-index.txt.bz2')
+noextract=('jawiki-20251001-pages-articles-multistream-index.txt.bz2')
 sha256sums=('8b5ec72c5a12feeaa96bf87be35d9e96986938cc71305e5f9e539c919f2873ea'
             'e131bbdd4e207d6cc2930bca9db82d6da9e347175c1125d9d1f2e09a36652278'
             '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
@@ -67,7 +67,7 @@ sha256sums=('8b5ec72c5a12feeaa96bf87be35d9e96986938cc71305e5f9e539c919f2873ea'
             'b6fc7068995ece29cf585f5c23c471f5f364e24516ac92b44defdc5ef987754c'
             'bf1960c14d821a01a9717bbd22b3321844514796c59e6eae84afbb18c295f9c3'
             '18e64d1ef7a7589765b2d35eb4b4d05cc50251ccebc67c7d8a8042f30757cca9'
-            '0abc2bd1645c20a8fc1f9fd8297dc55d1d5493931ed2e82062e933381c486920')
+            '167a8c545318f45519cff0cd90321314e11d841aea067ffcce39731d90d8c368')
 
 prepare() {
     cd mozc/src
@@ -86,7 +86,7 @@ prepare() {
 
     # Use a dated snapshot for the jawiki dump data
     sed -i -e '124,127d' merge_dictionaries.py
-    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20250601|g" merge_dictionaries.py
+    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20251001|g" merge_dictionaries.py
 
     # Use our local copy of the Mozc repo
     sed -i -e "65s|os\.path\.exists(f'mozc-{date}.zip')|False|" merge_dictionaries.py
