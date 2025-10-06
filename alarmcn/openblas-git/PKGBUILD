@@ -16,7 +16,8 @@ makedepends=('git' 'perl' 'gcc-fortran')
 options=(!emptydirs debug strip '!lto')
 source=("git+https://github.com/xianyi/OpenBLAS"
         0001-Fix-compilation-on-ARM.patch)
-md5sums=('SKIP')
+md5sums=('SKIP'
+         '89a1b53b0f78084eb1158100bb1ca49b')
 
 pkgver() {
   cd OpenBLAS
