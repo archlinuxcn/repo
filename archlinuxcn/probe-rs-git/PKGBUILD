@@ -56,6 +56,13 @@ prepare() {
 	cd "$pkgname"
 
     git cherry-pick -n a5b2248d804e35faef0b39e3f5a9d4c0ed7c318c^..d66feaccd7fff7ab3b0f9cdc38532134343969c0
+    
+    # Arch doesn't have this system group, but if user create this group and it's not system group, newer systemd will
+    # ignore this rule.
+    sed -i \
+        -e 's/, MODE="660"//g' \
+        -e 's/, GROUP="plugdev"//g' \
+        ../"$pkgname-69-probe-rs.rules"
 
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
