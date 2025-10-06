@@ -1,6 +1,6 @@
 pkgname=julia-git-simd-src
-pkgver=3.7.1
-_commit=1e61e8522675fdeaca8c61431bf4bb4ead2e68d7
+pkgver=3.7.2
+_commit=3eb12fc1fc8993db97d4c28095a9cb82258a3330
 pkgrel=1
 pkgdesc="SIMD.jl"
 url="https://github.com/eschnett/SIMD.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/eschnett/SIMD.jl.git#commit=$_commit")
-sha256sums=('4b6e83409467a09cb7e1310e3704ea74dcac56f2a70835c8952c8a41fc88f791')
+sha256sums=('2b67196af3c7cea8d4b42432b048326254a36fc423aea125581f264cf38ddb9e')
 
 package() {
   cd SIMD.jl
