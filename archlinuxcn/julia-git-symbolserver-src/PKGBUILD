@@ -1,0 +1,18 @@
+pkgname=julia-git-symbolserver-src
+pkgver=7.4.0
+_commit=65b0cc722844c297ddd206029b37e72f1bac4a0a
+pkgrel=1
+pkgdesc="SymbolServer.jl"
+url="https://github.com/julia-vscode/SymbolServer.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/julia-vscode/SymbolServer.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd SymbolServer.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SymbolServer "${pkgdir}" "${pkgname}" julia-git
+}

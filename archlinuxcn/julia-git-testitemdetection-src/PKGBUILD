@@ -1,0 +1,18 @@
+pkgname=julia-git-testitemdetection-src
+pkgver=0.2.0
+_commit=7a3f0c2a9d5a281cfe40a6ce58f671d8ba31a514
+pkgrel=1
+pkgdesc="TestItemDetection.jl"
+url="https://github.com/julia-vscode/TestItemDetection.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/julia-vscode/TestItemDetection.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd TestItemDetection.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh TestItemDetection "${pkgdir}" "${pkgname}" julia-git
+}

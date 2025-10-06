@@ -1,0 +1,18 @@
+pkgname=julia-git-vectorizedrng-src
+pkgver=0.2.25
+_commit=bfe3c8f75eef2dffa16f5434e349d3d58697c676
+pkgrel=1
+pkgdesc="VectorizedRNG.jl"
+url="https://github.com/JuliaSIMD/VectorizedRNG.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaSIMD/VectorizedRNG.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd VectorizedRNG.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh VectorizedRNG "${pkgdir}" "${pkgname}" julia-git
+}

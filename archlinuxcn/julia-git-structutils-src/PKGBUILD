@@ -1,0 +1,18 @@
+pkgname=julia-git-structutils-src
+pkgver=2.5.1
+_commit=567a5c68c38637dafd29abc070c514dc8f06285e
+pkgrel=1
+pkgdesc="StructUtils.jl"
+url="https://github.com/JuliaServices/StructUtils.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaServices/StructUtils.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StructUtils.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StructUtils "${pkgdir}" "${pkgname}" julia-git
+}

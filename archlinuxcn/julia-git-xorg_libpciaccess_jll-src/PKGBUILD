@@ -1,0 +1,26 @@
+pkgname=julia-git-xorg_libpciaccess_jll-src
+pkgver=0.18.1+0
+_commit=cd1ccfbcb3bc8a077c705991f9f9d8b97d466098
+pkgrel=1
+pkgdesc="Xorg_libpciaccess_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Xorg_libpciaccess_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libpciaccess)
+source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libpciaccess_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('1577f2641e253c3b16fac3eb6626eb4de6708cb8cf6517a8a72602215e84486d'
+            '9273b488e278f6892696793c011800093b1f6a0cb9aeb5504c17fd2136a5d6dc')
+
+build() {
+  cd Xorg_libpciaccess_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Xorg_libpciaccess_jll ../jll.toml
+}
+
+package() {
+  cd Xorg_libpciaccess_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Xorg_libpciaccess_jll "${pkgdir}" "${pkgname}" julia-git
+}

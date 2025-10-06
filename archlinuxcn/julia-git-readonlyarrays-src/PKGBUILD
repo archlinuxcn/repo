@@ -1,0 +1,18 @@
+pkgname=julia-git-readonlyarrays-src
+pkgver=0.2.0
+_commit=a7f398aef426a2bee3414b5b8089c9a8cae636b2
+pkgrel=1
+pkgdesc="ReadOnlyArrays.jl"
+url="https://github.com/JuliaArrays/ReadOnlyArrays.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaArrays/ReadOnlyArrays.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ReadOnlyArrays.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ReadOnlyArrays "${pkgdir}" "${pkgname}" julia-git
+}
