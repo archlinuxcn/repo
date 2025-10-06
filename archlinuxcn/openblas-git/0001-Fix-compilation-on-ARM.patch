@@ -1,0 +1,30 @@
+From 0c4d160b71d5881e39d8083fa29cf726974e1f6f Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 5 Oct 2025 00:23:40 -0400
+Subject: [PATCH] Fix compilation on ARM
+
+Define a dummy function if SME is not supported, following what sgemm does
+---
+ kernel/arm64/ssymm_direct_alpha_beta_arm64_sme1.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/arm64/ssymm_direct_alpha_beta_arm64_sme1.c b/kernel/arm64/ssymm_direct_alpha_beta_arm64_sme1.c
+index 8e3c0c056..d89eb3dbb 100644
+--- a/kernel/arm64/ssymm_direct_alpha_beta_arm64_sme1.c
++++ b/kernel/arm64/ssymm_direct_alpha_beta_arm64_sme1.c
+@@ -189,7 +189,11 @@ static void ssymm_direct_sme1_preprocessLL(uint64_t nbr, uint64_t nbc,
+     }
+   }
+ }
+-
++#else
++static void ssymm_direct_sme1_preprocessLU(uint64_t nbr, uint64_t nbc,
++                const float *restrict a, float *restrict a_mod){}
++static void ssymm_direct_sme1_preprocessLL(uint64_t nbr, uint64_t nbc,
++                const float *restrict a, float *restrict a_mod){}
+ #endif
+ 
+ //
+-- 
+2.51.0
+
