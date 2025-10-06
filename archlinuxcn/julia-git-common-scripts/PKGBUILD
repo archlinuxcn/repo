@@ -1,0 +1,22 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=julia-git-common-scripts
+pkgver=0.0.0.38.a240cce
+pkgrel=1
+pkgdesc="Common scripts for julia-git package"
+arch=(any)
+url="https://github.com/yuyichao/archcn-julia-scripts"
+license=('GPL')
+makedepends=(git)
+source=('git+https://github.com/yuyichao/archcn-julia-scripts')
+sha512sums=('SKIP')
+
+pkgver() {
+  cd archcn-julia-scripts
+
+  echo "0.0.0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+package() {
+  archcn-julia-scripts/install.sh "${pkgdir}"
+}
