@@ -36,6 +36,7 @@ repo_depends:
 
   - julia-git-clang_jll-src
   - julia-git-enzyme_jll-src
+  - julia-git-ffmpeg_jll-src
   - julia-git-intelopenmp_jll-src
   - julia-git-llvmextra_jll-src
   - julia-git-mkl_jll-src
@@ -49,6 +50,7 @@ update_on_build:
   - pkgbase: julia-git
   - pkgbase: julia-git-clang_jll-src
   - pkgbase: julia-git-enzyme_jll-src
+  - pkgbase: julia-git-ffmpeg_jll-src
   - pkgbase: julia-git-intelopenmp_jll-src
   - pkgbase: julia-git-llvmextra_jll-src
   - pkgbase: julia-git-mkl_jll-src
@@ -504,8 +506,6 @@ update_on:
     alpm: julia-git-fastrounding-src
   - alias: alpm-lilac
     alpm: julia-git-ffmpeg-src
-  - alias: alpm-lilac
-    alpm: julia-git-ffmpeg_jll-src
   - alias: alpm-lilac
     alpm: julia-git-fftviews-src
   - alias: alpm-lilac
