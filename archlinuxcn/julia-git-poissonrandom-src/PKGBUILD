@@ -1,6 +1,6 @@
 pkgname=julia-git-poissonrandom-src
-pkgver=0.4.6
-_commit=bef80e4c915a2826f83971cb4bcaae2d25c7ff55
+pkgver=0.4.7
+_commit=b4c1527b646eb522e0662a47187abe674155e00f
 pkgrel=1
 pkgdesc="PoissonRandom.jl"
 url="https://github.com/SciML/PoissonRandom.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/PoissonRandom.jl.git#commit=$_commit")
-sha256sums=('5dc3980bc53452aba6f481fcc3a8337a1895d59a312d92c9f9b49f3ed2b5d357')
+sha256sums=('43eda30b249bf528259b74568ec8df530e9352e7d1a0ad64cd71521462484034')
 
 package() {
   cd PoissonRandom.jl
