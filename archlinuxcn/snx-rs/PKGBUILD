@@ -1,6 +1,6 @@
 # Maintainer: Zdeněk Biberle <zdenek at biberle dot net>
 pkgname=snx-rs
-pkgver=4.8.1
+pkgver=4.8.2
 pkgrel=1
 pkgdesc="Rust client for Checkpoint VPN tunnels"
 arch=(x86_64)
@@ -10,7 +10,7 @@ depends=(gcc-libs glibc openssl glib2 gdk-pixbuf2 gtk4)
 makedepends=(cargo imagemagick)
 checkdepends=(iproute2)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ancwrd1/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('cebc1c776d51731192a726dc391d245a493f0bd95b95a36505d352da4376778d')
+sha256sums=('253f24992333956cd7222bb14a7990826e99fbbd1fc60318b97f3d13b2e497a4')
 _icon_sizes=(16 20 22 24 32 36 40 48 64 72 96 128 192 256)
 
 prepare() {
@@ -26,11 +26,11 @@ build() {
   cargo build --frozen --release
 
   # Make sure that the source icon we're using has the expected size
-  local source_icon=assets/icons/light/network-vpn.png
+  local source_icon=apps/snx-rs-gui/assets/icons/light/network-vpn.png
   test "$(magick identify -format "%wx%h" "$source_icon")" = 256x256
   # And now resize it to all the other sizes
   for size in "${_icon_sizes[@]}" ; do
-    magick "$source_icon" -resize "${size}x$size" "assets/icons/$size.png"
+    magick "$source_icon" -resize "${size}x$size" "apps/snx-rs-gui/assets/icons/$size.png"
   done
 }
 
@@ -49,9 +49,9 @@ package() {
   depends+=(libayatana-appindicator systemd iproute2)
   cd "$pkgname-$pkgver"
   install -Dm0755 -t "$pkgdir/usr/bin/" target/release/{snx-rs,snxctl,snx-rs-gui}
-  install -Dm0644 -t "$pkgdir/usr/lib/systemd/system/" assets/snx-rs.service
-  install -Dm0644 -t "$pkgdir/usr/share/applications/" assets/snx-rs-gui.desktop
+  install -Dm0644 -t "$pkgdir/usr/lib/systemd/system/" package/snx-rs.service
+  install -Dm0644 -t "$pkgdir/usr/share/applications/" package/snx-rs-gui.desktop
   for size in "${_icon_sizes[@]}" ; do
-    install -Dm0644 -T "assets/icons/$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x$size/apps/snx-rs-gui.png"
+    install -Dm0644 -T "apps/snx-rs-gui/assets/icons/$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x$size/apps/snx-rs-gui.png"
   done
 }
