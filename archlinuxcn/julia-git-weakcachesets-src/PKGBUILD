@@ -1,7 +1,7 @@
 pkgname=julia-git-weakcachesets-src
 pkgver=0.1.0
 _commit=e6caf2b95bea33c1f499c720f7aa54d702316604
-pkgrel=1
+pkgrel=2
 pkgdesc="WeakCacheSets.jl"
 url="https://github.com/JuliaCollections/WeakCacheSets.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaCollections/WeakCacheSets.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('597d6f344acd569b42e9ac27ed4a54182a1acfecfcde1a67d55c287a3796ca18')
 
 package() {
   cd WeakCacheSets.jl
