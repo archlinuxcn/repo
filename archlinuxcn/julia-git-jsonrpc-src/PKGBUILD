@@ -1,7 +1,7 @@
 pkgname=julia-git-jsonrpc-src
 pkgver=1.4.2
 _commit=edcd10d73ce351023ae43009ec6c89d7ea07a9fd
-pkgrel=1
+pkgrel=2
 pkgdesc="JSONRPC.jl"
 url="https://github.com/julia-vscode/JSONRPC.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/julia-vscode/JSONRPC.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('784a9a0f600d5aedcf38c6cf6500729f8e19ba31f222a1848cb0727a769106ac')
 
 package() {
   cd JSONRPC.jl
