@@ -70,14 +70,12 @@ _td_commit=6d74326c5ce53aeb52496f157f0080d9b8515970
 source=(
   "https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
   "git+https://github.com/tdlib/td.git#tag=${_td_commit}"
-  glib2.86.patch
   "no-embolded-font.patch"
   "dont-adjust-fontsize.patch"
   "0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
   "0002-make-blockquote-markup-less-distractive.patch"
   "0004-make-animated-avatar-follow-power-settings.patch"
   "0001-don-t-ask-which-program-to-use-when-opening-a-file-w.patch"
-  0001-Fix-compatibility-with-ffmpeg-8.patch
 )
 sha512sums=('951fbf4a9e0a5929130614aefdf2ac18d8d8e65b2d8d4d55da857136f17114e6a17677db9bb0585cfed121c3fe73e13b4db47b6da30fca7c276f33127eb3dba7'
             '6dc6e684a0bf35bb83f6fa6579a0da82d604190b222f2cd2de9b8ef5b93f5f18ac9a8733e2c5cf2a64ed9933b346ea31e26a4bcc0039956280ec2deef9649457'
@@ -98,10 +96,6 @@ prepare() {
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-make-blockquote-markup-less-distractive.patch
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0004-make-animated-avatar-follow-power-settings.patch
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0001-don-t-ask-which-program-to-use-when-opening-a-file-w.patch
-  # Fix build with glib2 2.86
-  patch -d "tdesktop-$pkgver-full" -Np1 -i ../glib2.86.patch
-  # Fix compatibility with ffmpeg 8
-  patch -d "tdesktop-$pkgver-full" -Np1 -i ../0001-Fix-compatibility-with-ffmpeg-8.patch
 }
 
 build() {
