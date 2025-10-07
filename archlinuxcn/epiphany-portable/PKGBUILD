@@ -1,0 +1,72 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=epiphany-portable
+pkgver=143.0.4
+pkgrel=1
+epoch=1
+pkgdesc="Epiphany sandboxed by portable, avoids dGPU wakeups"
+arch=('x86_64')
+url="https://github.com/Kraftland/portable"
+license=('GPL-3.0-or-later')
+groups=()
+provides=(epiphany)
+options=(!debug !strip)
+conflicts=(epiphany)
+
+optdepends=()
+
+makedepends+=(epiphany)
+
+checkdepends=()
+
+source=(
+	portable-config
+	epiphany.sh
+	epiphany.desktop
+)
+
+
+md5sums=('SKIP'
+         'SKIP'
+         'SKIP')
+
+function prepare() {
+	pacman -Ql epiphany >file.list
+}
+
+function package() {
+	depends=("portable"
+	cairo  dconf  gcc-libs  gcr-4  gdk-pixbuf2  glib2  glibc  gmp  gstreamer  gtk4  hicolor-icon-theme  json-glib  libadwaita
+	libarchive  libportal  libportal-gtk4  libsecret  libsoup3  libxml2  nettle  pango  sqlite  webkitgtk-6.0
+	)
+	while IFS= read -r line; do
+		file="$(echo "$line" | awk '{print $2}')"
+		if [[ -d ${file} ]]; then
+			echo "Omitting Directory"
+		else
+			if [[ -L "${file}" ]]; then
+				mkdir -p "$(dirname "${pkgdir}/${file}")"
+				ln -vsf "$(readlink -f "${file}")" "${pkgdir}/${file}"
+			else
+				install -vDm755 "${file}" "${pkgdir}/${file}"
+			fi
+		fi
+	done < file.list
+	rm -f "${pkgdir}/usr/share/applications"/*
+	install -Dm755 "${pkgdir}/usr/bin/epiphany" -t "${pkgdir}/usr/lib/portable/overlay-usr/"
+	rm -f "${pkgdir}/usr/bin"/*
+	install -Dm644 portable-config \
+		"${pkgdir}/usr/lib/portable/info/org.gnome.Epiphany/config"
+	install -Dm755 "epiphany.sh" \
+		"${pkgdir}/usr/bin/epiphany-portable"
+	install -Dm644 "epiphany.desktop" "${pkgdir}/usr/share/applications/org.gnome.Epiphany.desktop"
+	echo '''[Desktop Entry]
+Type=Application
+Name=Epiphany Web Browser
+GenericName=Stub for MPRIS
+Icon=org.gnome.Epiphany
+TryExec=portable
+Exec=env _portableConfig="org.gnome.Epiphany" portable -- %u
+Terminal=false
+NoDisplay=true''' >"${pkgdir}/usr/share/applications/epiphany.desktop"
+}
