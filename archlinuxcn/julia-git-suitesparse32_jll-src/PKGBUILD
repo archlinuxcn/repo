@@ -1,0 +1,26 @@
+pkgname=julia-git-suitesparse32_jll-src
+pkgver=7.11.0+0
+_commit=b788725923cb929e59718a64815d26e33e80d54a
+pkgrel=1
+pkgdesc="SuiteSparse32_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/SuiteSparse32_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git suitesparse)
+source=("git+https://github.com/JuliaBinaryWrappers/SuiteSparse32_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('01f76fbe7f168d7a1695bc429bd6fc4a100c8ee41c7fa52509daebd7ffb6ca9d'
+            '1c57a8f14522ff97df83b36a05beca864e8e21832c0c083b031cc4afad2495db')
+
+build() {
+  cd SuiteSparse32_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl SuiteSparse32_jll ../jll.toml
+}
+
+package() {
+  cd SuiteSparse32_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SuiteSparse32_jll "${pkgdir}" "${pkgname}" julia-git
+}

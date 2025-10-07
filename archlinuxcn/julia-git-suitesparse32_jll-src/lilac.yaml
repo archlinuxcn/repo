@@ -1,0 +1,19 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - julia-git
+  - julia-pkg-scripts
+
+update_on:
+  - source: regex
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/SuiteSparse32_jll/version
+    regex: 'version: *([^ ]*@[^ ]*)'
+  - source: alpmfiles
+    pkgname: suitesparse
+    strip_dir: true
+    filename: libcholmod.so.\d+
+  - source: manual
+    manual: 1

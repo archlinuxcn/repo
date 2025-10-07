@@ -1,0 +1,26 @@
+pkgname=julia-git-vulkan_headers_jll-src
+pkgver=1.4.321+0
+_commit=365edf3d429911e5e403be5eaf1dc0882ebcc21e
+pkgrel=1
+pkgdesc="Vulkan_Headers_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Vulkan_Headers_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git vulkan-headers)
+source=("git+https://github.com/JuliaBinaryWrappers/Vulkan_Headers_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('50d07f42a080137fe3930fa5a23fef1d9ce1fe4f516e6ab807b994221ec47f4b'
+            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
+
+build() {
+  cd Vulkan_Headers_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Vulkan_Headers_jll ../jll.toml
+}
+
+package() {
+  cd Vulkan_Headers_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Vulkan_Headers_jll "${pkgdir}" "${pkgname}" julia-git
+}
