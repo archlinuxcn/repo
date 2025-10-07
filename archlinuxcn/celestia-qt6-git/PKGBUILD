@@ -1,6 +1,6 @@
 # Maintainer: Sich <little_sich@tuta.io>
 pkgname=celestia-qt6-git
-pkgver=r7284.d3f404040
+pkgver=r7286.a221a47d2
 pkgrel=1
 pkgdesc="Real-time space simulation (git version with Qt6 frontend and video capture support)"
 arch=(x86_64)
@@ -20,6 +20,11 @@ pkgver() {
     printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+	cd "$srcdir/Celestia"
+    sed -i 's/Eigen3 3\.3/Eigen3 5/g' CMakeLists.txt
+}
+
 build() {
 	cd "$srcdir/Celestia"
 	cmake -B build \
@@ -28,6 +33,7 @@ build() {
         -DENABLE_QT6=ON \
 		-DENABLE_FFMPEG=ON \
 		-DENABLE_LIBAVIF=ON \
+        -DENABLE_NLS=ON \
         -DUSE_WAYLAND=ON \
         -DUSE_ICU=ON \
 		-Wno-dev
