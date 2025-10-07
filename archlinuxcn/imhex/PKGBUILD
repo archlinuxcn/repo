@@ -53,6 +53,8 @@ source=(
     "plutovg::git+https://github.com/sammycage/plutovg"
     "ImHex-Patterns::git+https://github.com/WerWolv/ImHex-Patterns.git"
     "disassembler::git+https://github.com/WerWolv/Disassembler.git"
+    "fmt-update.patch"
+    "patterns-fmt-update.patch"
 )
 b2sums=('d91e03eddae1a78a0679db066bccdc31fe4dd28975097d1299ea303987df8307e2bf239e21401d39b76e52d2ce4ef71581bd65639d8203978594c70ff27ee7ab'
         'SKIP'
@@ -69,7 +71,9 @@ b2sums=('d91e03eddae1a78a0679db066bccdc31fe4dd28975097d1299ea303987df8307e2bf239
         'SKIP'
         'SKIP'
         'SKIP'
-        'SKIP')
+        'SKIP'
+        '95b48f077d47af4b430477e5581f4da3f34e2d27920a038bcd5d4affb812c4de3801aba89053b9ffa394eb501a1c2eede40de0a9d7d940a9be292e3ac74dd2f3'
+        '46eea8e7a7133ac2b5d37c02ca892cdbebaf68204947936757708f72e37d3ba332f3cd908a06d0e4bbd4a1a19c2f1f8d6bb6e01606e97dd383584c9f6060f40f')
 
 prepare() {
     cd "$pkgname"
@@ -101,14 +105,20 @@ prepare() {
         git config --remove-section submodule.lib/third_party/"$name"
     done
 
-    cd lib/third_party/edlib
-    # Fix cmake minimum version
-    git cherry-pick -n 47359e591f3861f12105fa8e72242de64d5597c4
+
+    pushd lib/third_party/edlib
+        # Fix cmake minimum version
+        git cherry-pick -n 47359e591f3861f12105fa8e72242de64d5597c4
+    popd
+
+    # Fix deprecated fmt::localtime
+    patch -Np1 -i "$srcdir/fmt-update.patch"
+    pushd lib/external/pattern_language
+        patch -Np1 -i "$srcdir/patterns-fmt-update.patch"
+    popd
 }
 
 build() {
-    # Fix deprecated fmt::localtime
-    export CXXFLAGS="$CXXFLAGS -Wno-error=deprecated-declarations"
     cmake -B build -S "$pkgname" \
         -G Ninja \
         -Wno-dev \
@@ -129,7 +139,8 @@ build() {
         -D USE_SYSTEM_CAPSTONE=OFF \
         -D LIBPL_ENABLE_CLI=ON \
         -D LIBPL_BUILD_CLI_AS_EXECUTABLE=OFF \
-        -D IMHEX_VERSION="$pkgver"
+        -D IMHEX_VERSION="$pkgver" \
+        -D CMAKE_POLICY_VERSION_MINIMUM=3.5
 
     cmake --build build --parallel
 }
