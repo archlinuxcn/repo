@@ -6,7 +6,21 @@ pkgdesc="A Quick Share client for Linux"
 arch=('x86_64')
 url="https://github.com/nozwock/packet"
 license=('GPL-3.0-or-later')
-depends=('libadwaita' 'nautilus-python' 'python-dbus')
+depends=(
+	'libadwaita'
+	'nautilus-python'
+	'python-dbus'
+	hicolor-icon-theme
+	pango
+	python-gobject
+	python
+	gtk4
+	dbus
+	gcc-libs
+	glib2
+	glibc
+	dconf
+)
 makedepends=(
   'blueprint-compiler'
   'cargo'
