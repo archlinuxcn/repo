@@ -1,7 +1,7 @@
 pkgname=julia-git-match-src
 pkgver=2.4.1
 _commit=920eb26be1aa3f8fbe9b75e6901f136f2bcdf477
-pkgrel=1
+pkgrel=2
 pkgdesc="Match.jl"
 url="https://github.com/JuliaServices/Match.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaServices/Match.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('b383d2eecf8b9d6e47b8cdff78236daff67df324d0d1c3b87a2a977fd9be3e8c')
 
 package() {
   cd Match.jl
