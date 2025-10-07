@@ -1,0 +1,18 @@
+pkgname=julia-git-cancellationtokens-src
+pkgver=1.0.0
+_commit=9130370b57161b38d5a8b2bb0f947f60d7adc988
+pkgrel=1
+pkgdesc="CancellationTokens.jl"
+url="https://github.com/davidanthoff/CancellationTokens.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/davidanthoff/CancellationTokens.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd CancellationTokens.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CancellationTokens "${pkgdir}" "${pkgname}" julia-git
+}
