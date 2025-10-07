@@ -1,7 +1,7 @@
 pkgname=julia-git-staticlint-src
 pkgver=8.2.2
 _commit=16b4f2d2970b0c68a9bbb04b7fcb773f6100b406
-pkgrel=1
+pkgrel=2
 pkgdesc="StaticLint.jl"
 url="https://github.com/julia-vscode/StaticLint.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/julia-vscode/StaticLint.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('24b4f911082985414e85002f2d56db017239a4907ad1e602976a02aa25403c65')
 
 package() {
   cd StaticLint.jl
