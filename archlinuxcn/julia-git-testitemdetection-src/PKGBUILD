@@ -1,7 +1,7 @@
 pkgname=julia-git-testitemdetection-src
 pkgver=0.2.0
 _commit=7a3f0c2a9d5a281cfe40a6ce58f671d8ba31a514
-pkgrel=1
+pkgrel=2
 pkgdesc="TestItemDetection.jl"
 url="https://github.com/julia-vscode/TestItemDetection.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/julia-vscode/TestItemDetection.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('30641ad2c930a240301a44d29d161f1355191b198646224e60f02706f44beab4')
 
 package() {
   cd TestItemDetection.jl
