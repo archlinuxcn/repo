@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=pcsx2-portable
-pkgver=1
+pkgver=2.5.203.r1.ge388294004
 pkgrel=1
 epoch=1
 pkgdesc="PCSX2 devel sandboxed by portable. Always uses discrete GPU & Wayland when available."
@@ -26,9 +26,9 @@ source=(
 )
 
 
-md5sums=('f6612dd74a9ec725f8ada10742416882'
-         'e9286af04e5d107b38523c92f9c68c76'
-         '2f74e3e788705621db286bb25fcabdee')
+md5sums=('cd10f9dee36fead58407f4f3cbaacffc'
+         '14f762dc90c98f1c3ab833e77bc91480'
+         '7e7bfb55217dcd2a7dc2c562774b3082')
 
 function prepare() {
 	pacman -Ql pcsx2-git >file.list
