@@ -100,9 +100,15 @@ prepare() {
     for name in fmt yara/yara; do
         git config --remove-section submodule.lib/third_party/"$name"
     done
+
+    cd lib/third_party/edlib
+    # Fix cmake minimum version
+    git cherry-pick -n 47359e591f3861f12105fa8e72242de64d5597c4
 }
 
 build() {
+    # Fix deprecated fmt::localtime
+    export CXXFLAGS="$CXXFLAGS -Wno-error=deprecated-declarations"
     cmake -B build -S "$pkgname" \
         -G Ninja \
         -Wno-dev \
