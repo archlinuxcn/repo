@@ -1,0 +1,23 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: "alpm"
+    alpm: "pcsx2-git"
+    repo: archlinuxcn
+    from_pattern: '-.*'
+    to_pattern: ''
+
+repo_depends:
+  - portable
+  - pcsx2-git
+  - kddockwidgets-qt6
+  - plutovg
+  - plutosvg
+
+build_prefix: archlinuxcn-x86_64
