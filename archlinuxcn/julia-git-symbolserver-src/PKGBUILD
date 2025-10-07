@@ -1,7 +1,7 @@
 pkgname=julia-git-symbolserver-src
 pkgver=7.4.0
 _commit=65b0cc722844c297ddd206029b37e72f1bac4a0a
-pkgrel=1
+pkgrel=2
 pkgdesc="SymbolServer.jl"
 url="https://github.com/julia-vscode/SymbolServer.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/julia-vscode/SymbolServer.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('9e92033ea53b9dd43c3a96b64c0a4a9f987912b7395ad5c58ea9ce16b0f0abd9')
 
 package() {
   cd SymbolServer.jl
