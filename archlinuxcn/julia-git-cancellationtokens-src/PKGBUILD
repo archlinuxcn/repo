@@ -1,7 +1,7 @@
 pkgname=julia-git-cancellationtokens-src
 pkgver=1.0.0
 _commit=9130370b57161b38d5a8b2bb0f947f60d7adc988
-pkgrel=1
+pkgrel=2
 pkgdesc="CancellationTokens.jl"
 url="https://github.com/davidanthoff/CancellationTokens.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/davidanthoff/CancellationTokens.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('14f5ef4a23d2b468736e2aec15af08d3c0a17ab2fde843bdd9db32c7f6d8f766')
 
 package() {
   cd CancellationTokens.jl
