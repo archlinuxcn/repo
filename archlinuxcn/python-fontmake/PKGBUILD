@@ -39,7 +39,7 @@ build() {
 	python -m build -wn
 }
 
-check() {
+_check() {
 	cd "$_archive"
 	export PYTHONPATH="$PWD/build/lib"
 	pytest tests
