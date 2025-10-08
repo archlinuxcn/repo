@@ -19,6 +19,7 @@ makedepends=("git" "git-lfs")
 function prepare() {
 	cd pinyin
 	git submodule update --init --depth 1 --remote
+	./release.sh
 }
 
 function package() {
