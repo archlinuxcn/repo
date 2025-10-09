@@ -1,0 +1,51 @@
+# Maintainer: RocketDev <marocketbd@gmail.com>
+
+_pkgbase=paho-mqtt-c
+pkgname=($_pkgbase $_pkgbase-docs)
+pkgver=1.3.15
+pkgrel=1
+pkgdesc="Eclipse Paho C Client Library for the MQTT Protocol"
+arch=('x86_64' 'aarch64')
+url="https://www.eclipse.org/paho/"
+license=('EPL-2.0')
+depends=('openssl' 'glibc')
+makedepends=('git' 'cmake' 'ninja' 'doxygen')
+source=("$_pkgbase"::git+https://github.com/eclipse-paho/paho.mqtt.c.git#tag=v${pkgver}?signed)
+b2sums=('5ab50c503ee237ffbce2f36d6a882314cef949cda12eabc5c8739a994d3169775c840829e632f6708f2c77dc966e0cd0e4e590c55363b12214fff6d1389ab955')
+
+validpgpkeys=('0C3CFB4764727BB13196B0ABA7AE1A8F2CCAB186') # Ian Craggs
+
+
+build() {
+    cd "$_pkgbase"
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_DOCDIR="/$_pkgbase" \
+        -DPAHO_WITH_SSL=TRUE \
+        -DPAHO_WITH_UNIX_SOCKETS=TRUE \
+        -DPAHO_BUILD_DOCUMENTATION=TRUE \
+        -DPAHO_ENABLE_TESTING=FALSE \
+        -DCMAKE_C_STANDARD=11 \
+        -S . -B build -GNinja
+    cmake --build build
+}
+
+package_paho-mqtt-c() {
+    cd "$_pkgbase"
+    DESTDIR="$pkgdir/" cmake --install build
+    # some trick to move doc to separated package
+    mv "$pkgdir/$_pkgbase" build/$_pkgbase
+    install -Dm 0644 -t $pkgdir/usr/share/licenses/$_pkgbase/ LICENSE
+}
+
+package_paho-mqtt-c-docs() {
+    depends=()
+    arch=('any')
+
+    cd "$_pkgbase"
+    # clean doxygen-generated manual pages, some have the same name and
+    # it will be better to read html version
+    rm -rf build/$_pkgbase/*/man
+    mkdir -p $pkgdir/usr/share/doc
+    mv build/$_pkgbase $pkgdir/usr/share/doc
+}
