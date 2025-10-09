@@ -1,0 +1,29 @@
+Submodule library/borealis contains modified content
+diff --git a/library/borealis/library/include/borealis/core/logger.hpp b/library/borealis/library/include/borealis/core/logger.hpp
+index 7efb49a1..ae73ad8a 100644
+--- a/library/borealis/library/include/borealis/core/logger.hpp
++++ b/library/borealis/library/include/borealis/core/logger.hpp
+@@ -99,7 +99,8 @@ class Logger
+         if (sceRtcGetCurrentClockLocalTime)
+             sceRtcGetCurrentClockLocalTime(&lt);
+ #else
+-        std::tm time_tm = fmt::localtime(std::chrono::system_clock::to_time_t(now));
++        std::time_t time_t = std::chrono::system_clock::to_time_t(now);
++        std::tm time_tm = *std::localtime(&time_t);
+ #endif
+         std::string log = fmt::format(format, std::forward<Args>(args)...);
+ 
+diff --git a/library/borealis/library/lib/views/debug_layer.cpp b/library/borealis/library/lib/views/debug_layer.cpp
+index e19cf899..bcb1f163 100644
+--- a/library/borealis/library/lib/views/debug_layer.cpp
++++ b/library/borealis/library/lib/views/debug_layer.cpp
+@@ -54,7 +54,8 @@ DebugLayer::DebugLayer()
+                 sceRtcGetCurrentClockLocalTime(&lt);
+             std::string timeBase = fmt::format("{:02d}:{:02d}:{:02d}.{:03d}", lt.hour, lt.minute, lt.second, (int)ms);
+ #else
+-            std::tm time_tm = fmt::localtime(std::chrono::system_clock::to_time_t(now));
++            std::time_t time_t = std::chrono::system_clock::to_time_t(now);
++            std::tm time_tm = *std::localtime(&time_t);
+             std::string timeBase = fmt::format("{:%H:%M:%S}.{:03d}", time_tm, (int)ms);
+ #endif
+ 
