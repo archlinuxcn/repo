@@ -14,8 +14,8 @@ post_build_script: |
 update_on:
   - source: github
     github: Kraftland/portable
-    #use_latest_release: true
-    use_max_tag: true
+    use_latest_release: true
+    #use_max_tag: true
     from_pattern: '-'
     to_pattern: '_'
     exclude_regex: "beta*"
