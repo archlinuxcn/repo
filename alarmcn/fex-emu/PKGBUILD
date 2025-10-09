@@ -1,14 +1,15 @@
 # Maintainer: Eric Engestrom <aur@engestrom.ch>
 
 pkgname=fex-emu
-pkgver=2509
-pkgrel=1
+pkgver=2510
+pkgrel=0
 pkgdesc='Fast usermode x86 and x86-64 emulator for Arm64'
 url=https://fex-emu.com
 arch=(aarch64)
 license=(MIT)
-makedepends=(git cmake ninja clang llvm python-setuptools)
-depends=(qt5-declarative qt5-quickcontrols squashfs-tools squashfuse erofs-utils)
+makedepends=(git cmake ninja clang lld llvm python-setuptools)
+depends=(qt6-declarative qt6-base squashfs-tools squashfuse
+         erofs-utils libxxhash.so)
 source=("git+https://github.com/FEX-Emu/FEX#tag=FEX-$pkgver"
         "git+https://github.com/catchorg/Catch2"
         "git+https://github.com/KhronosGroup/Vulkan-Headers"
@@ -25,7 +26,7 @@ source=("git+https://github.com/FEX-Emu/FEX#tag=FEX-$pkgver"
         "git+https://github.com/herumi/xbyak"
         "git+https://github.com/Cyan4973/xxhash"
         )
-sha256sums=('b3c14621eb08f5752967684ebc7aa7869d14bc6cb32ce3679894e0522ce25cdd'
+sha256sums=('6e6c328b6db9572ae89b097ba21c014e2382275538c3176c24d0a048d0eedc52'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -73,29 +74,24 @@ prepare() {
   done
 
   git -c protocol.file.allow=always submodule update
+
+  find External/jemalloc* -iname '*.h' -exec \
+    sed -i -e 's/#define *LG_PAGE *12/#define LG_PAGE 14/g' {} \;
 }
 
 build() {
-  FEX_OPTIONS=()
-  FEX_OPTIONS+=(-D ENABLE_LTO=True)
-  FEX_OPTIONS+=(-D BUILD_TESTS=False)
-
-  if command -V ld.mold &>/dev/null
-  then
-    FEX_OPTIONS+=(-D USE_LINKER=True)
-  elif command -V ld.lld &>/dev/null
-  then
-    FEX_OPTIONS+=(-D USE_LINKER=lld)
-  fi
-
   CC=clang \
   CXX=clang++ \
   cmake \
     -S FEX -B build -G Ninja \
-    -D CMAKE_INSTALL_PREFIX=/usr \
-    -D CMAKE_BUILD_TYPE=Release \
-    -D FMT_INSTALL=False \
-    "${FEX_OPTIONS[@]}"
+    -DENABLE_OFFLINE_TELEMETRY=Off \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DFMT_INSTALL=Off \
+    -DBUILD_TESTING=Off \
+    -DUSE_LINKER=lld \
+    -DENABLE_LTO=On \
+    -DTUNE_CPU=apple-m1
   ninja -C build
 }
 
