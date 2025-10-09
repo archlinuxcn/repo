@@ -1,0 +1,35 @@
+# Maintainer: Kimiblock Moe
+# Contributor: evan <mail@evangoo.de>
+_pkgname=drasl
+pkgname="${_pkgname}"
+pkgver=3.0.0
+pkgrel=1
+pkgdesc="Yggdrasil-compatible API server for Minecraft"
+arch=('x86_64' 'aarch64')
+url="https://github.com/unmojang/drasl"
+license=('GPL-3.0-only')
+makedepends=('git' 'go' 'gcc' 'nodejs' 'npm' 'swag')
+conflicts=("${_pkgname}")
+source=(
+	"${_pkgname}::git+https://github.com/unmojang/drasl.git#tag=v${pkgver}"
+)
+sha256sums=('daf10a392b0f1d799f874fd1875d50c151b83c4826123e115e7e6d657cf5bcd8')
+
+#function pkgver() {
+#	cd "${srcdir}/${_pkgname}"
+#	git describe --long --tags --abbrev=8 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+#}
+
+function build() {
+	cd "${srcdir}/${_pkgname}"
+	make
+}
+
+function package() {
+	cd "$srcdir/${_pkgname}"
+	make install prefix="${pkgdir}/usr"
+	install -D -m644 ./example/config-example.toml "${pkgdir}/etc/drasl/config-example.toml"
+	install -D -m644 ./example/config-example.toml "${pkgdir}/etc/drasl/config.toml"
+	install -D -m644 ./example/drasl.service "${pkgdir}/etc/systemd/system/${_pkgname}.service"
+}
+
