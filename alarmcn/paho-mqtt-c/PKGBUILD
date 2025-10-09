@@ -41,6 +41,7 @@ package_paho-mqtt-c() {
 package_paho-mqtt-c-docs() {
     depends=()
     arch=('any')
+    pkgdesc+=' (documentation)'
 
     cd "$_pkgbase"
     # clean doxygen-generated manual pages, some have the same name and
