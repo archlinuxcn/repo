@@ -5,7 +5,7 @@
 
 pkgname=unzip-natspec
 pkgver=6.0
-pkgrel=7
+pkgrel=8
 pkgdesc="Unpacks .zip archives with non-latin filenames, using libnatspec patch from AltLinux."
 arch=('i686' 'x86_64' 'armv7h' 'armv6h')
 url="https://www.info-zip.org/"
@@ -22,9 +22,10 @@ source=('https://downloads.sourceforge.net/infozip/unzip60.tar.gz'
  'crc32.patch'
  'empty-input.patch'
  'csiz-underflow.patch'
- 'nextbyte-overflow.patch' )
+ 'nextbyte-overflow.patch'
+ 'gcc15.patch' )
 sha256sums=('036d96991646d0449ed0aa952e4fbe21b476ce994abc276e49d30e686708bd37'
- SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP )
+ SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP )
 
 build() {
   cd ${srcdir}/${pkgname/-natspec/}${pkgver/./}
@@ -37,6 +38,7 @@ build() {
   patch -p1 -i ${srcdir}/empty-input.patch || return 1 # FS#46955
   patch -p1 -i ${srcdir}/csiz-underflow.patch || return 1 # FS#46955
   patch -p1 -i ${srcdir}/nextbyte-overflow.patch || return 1 # FS#46955
+  patch -p1 -i ${srcdir}/gcc15.patch || return 1
   export CFLAGS="${CFLAGS//-Werror=format-security/} -D_FILE_OFFSET_BITS=64 -DACORN_FTYPE_NFS \
   -DWILD_STOP_AT_DIR -DLARGE_FILE_SUPPORT -DUNICODE_SUPPORT \
   -DUNICODE_WCHAR -DUTF8_MAYBE_NATIVE -DNO_LCHMOD -DDATE_FORMAT=DF_YMD \
