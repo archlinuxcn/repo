@@ -9,9 +9,7 @@ post_build_script: |
 update_on:
   - source: "github"
     github: "unmojang/drasl"
-    prefix: v
-    use_latest_release: true
-    include_prereleases: false
+    use_max_tag: true
 
 build_prefix: extra-x86_64
 
