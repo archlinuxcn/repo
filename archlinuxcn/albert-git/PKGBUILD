@@ -43,11 +43,13 @@ source=("git+${url}/${_pkgname}.git"
 	"git+${url}/${_pkgname}-plugin-docs.git"
 	"git+${url}/${_pkgname}-plugin-files.git"
 	"git+${url}/${_pkgname}-plugin-hash.git"
+	"git+${url}/${_pkgname}-plugin-mediaremote.git"
 	"git+${url}/${_pkgname}-plugin-menubar.git"
-	"git+${url}/${_pkgname}-plugin-mpris.git"
+	"git+${url}/${_pkgname}-plugin-obsidian.git"
 	"git+${url}/${_pkgname}-plugin-path.git"
 	"git+${url}/${_pkgname}-plugin-python.git"
 	"git+${url}/${_pkgname}-plugin-snippets.git"
+	"git+${url}/${_pkgname}-plugin-spotify.git"
 	"git+${url}/${_pkgname}-plugin-ssh.git"
 	"git+${url}/${_pkgname}-plugin-system.git"
 	"git+${url}/${_pkgname}-plugin-timer.git"
@@ -61,6 +63,8 @@ source=("git+${url}/${_pkgname}.git"
 	"git+https://github.com/pybind/pybind11.git"
 )
 sha512sums=('SKIP'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -122,11 +126,13 @@ prepare() {
 	git config submodule.plugins/docs.url "${srcdir}/${_pkgname}-plugin-docs/"
 	git config submodule.plugins/files.url "${srcdir}/${_pkgname}-plugin-files/"
 	git config submodule.plugins/hash.url "${srcdir}/${_pkgname}-plugin-hash/"
+	git config submodule.plugins/mediaremote.url "${srcdir}/${_pkgname}-plugin-mediaremote/"
 	git config submodule.plugins/menubar.url "${srcdir}/${_pkgname}-plugin-menubar/"
-	git config submodule.plugins/mpris.url "${srcdir}/${_pkgname}-plugin-mpris/"
+	git config submodule.plugins/obsidian.url "${srcdir}/${_pkgname}-plugin-obsidian/"
 	git config submodule.plugins/path.url "${srcdir}/${_pkgname}-plugin-path/"
 	git config submodule.plugins/python.url "${srcdir}/${_pkgname}-plugin-python/"
 	git config submodule.plugins/snippets.url "${srcdir}/${_pkgname}-plugin-snippets/"
+	git config submodule.plugins/spotify.url "${srcdir}/${_pkgname}-plugin-spotify/"
 	git config submodule.plugins/ssh.url "${srcdir}/${_pkgname}-plugin-ssh/"
 	git config submodule.plugins/system.url "${srcdir}/${_pkgname}-plugin-system/"
 	git config submodule.plugins/timer.url "${srcdir}/${_pkgname}-plugin-timer/"
