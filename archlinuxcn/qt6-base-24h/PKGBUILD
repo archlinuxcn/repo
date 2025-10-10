@@ -5,7 +5,7 @@
 pkgbase=qt6-base-24h
 pkgname=(qt6-base-24h)
 
-_pkgver=6.9.2
+_pkgver=6.10.0
 pkgver=${_pkgver/-/}
 pkgrel=1.4
 arch=(x86_64)
@@ -49,6 +49,7 @@ depends=(libicui18n.so brotli
          sqlite
          systemd-libs
          tslib
+         wayland
          xcb-util-cursor
          xcb-util-image
          xcb-util-keysyms
@@ -64,11 +65,13 @@ makedepends=(python alsa-lib
              git
              gst-plugins-base-libs
              gtk3
+             jemalloc
              libfbclient
              libpulse
              mariadb-libs
              ninja
              postgresql
+             renderdoc
              unixodbc
              vulkan-headers
              xmlstarlet)
@@ -80,7 +83,6 @@ optdepends=('freetds: MS SQL driver'
             'pango: GTK platform plugin'
             'perl: for syncqt'
             'postgresql-libs: PostgreSQL driver'
-            'qt6-wayland: to run Qt6 applications in a Wayland session'
             'unixodbc: ODBC driver')
 
 provides=("qt6-base=$pkgver")
@@ -97,14 +99,14 @@ sha256sums=(
       '8c1599167d7ed0b326f6bc19ea8a93be584ae8144570104be3584d0c4eae677f'
       'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      '4660524959f547a58839ff56c695994e061dc3fa3646b06cca951a7ef1748aae'
+      'be60bf981a67824c2a27155d794eb30d10a6daa71db37695668a8a703acff929'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-  git -C $_pkgfn cherry-pick -n dc52aa68ea305d8ef40f8b514bfeba80cd6c2c1e # Unbreak reproducibility
+  git -C $_pkgfn cherry-pick -n a374ab6ce9f01f1f559403ec377cde990a689890 # Fix yakuake
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
