@@ -24,6 +24,7 @@ depends=(
 )
 makedepends=(
 	'git'
+	'git-lfs'
 	'clang'
 	'cmake'
 	'ninja'
@@ -32,12 +33,16 @@ makedepends=(
 	'vulkan-headers'
 )
 optdepends=('qcm-ncm-plugin-git: Netease Cloud Music plugin')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('e441f3b5172c93b365a977e96a95873fd75831e51c07fd429d9f2fcb37685318')
+source=("git+${url}.git#tag=v${pkgver}")
+sha256sums=('cd2cdea3c2e1340bb36cb7446b89acef3940afe39032aef07e2451bf378f62d1')
+
+prepare() {
+	git lfs install
+}
 
 build() {
 	cmake -B build \
-		-S "Qcm-${pkgver}" \
+		-S Qcm \
 		-G Ninja \
 		-D CMAKE_BUILD_TYPE=None \
 		-D CMAKE_INSTALL_PREFIX=/usr \
