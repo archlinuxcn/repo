@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=avm
-pkgver=0.32.0
+pkgver=0.32.1
 pkgrel=1
 pkgdesc='Anchor Version Manager (avm) is provided to manage multiple installations of the anchor-cli binary.'
 arch=(x86_64)
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(cargo gcc-libs glibc)
 makedepends=(git)
 source=("git+https://github.com/coral-xyz/anchor.git#tag=v$pkgver")
-sha256sums=('b99e3c569acd255578f3d1b9dc943579fdaf0f992a72cac348a4f70919963fcc')
+sha256sums=('f5d983278a557a3b6bcd2f42f8faf135971f39055d28fb96cedd6a06b7e41d34')
 options=(!lto)
 
 prepare() {
