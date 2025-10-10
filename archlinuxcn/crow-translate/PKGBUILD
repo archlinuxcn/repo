@@ -2,13 +2,13 @@
 
 pkgname=crow-translate
 pkgver=4.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Application that allows you to translate and speak text'
 arch=(x86_64 aarch64)
 url=https://apps.kde.org/crowtranslate/
 license=(GPL-3.0-or-later)
-depends=(qt6-base qt6-svg qt6-multimedia tesseract)
-makedepends=(qt6-tools extra-cmake-modules kwayland espeak-ng onnxruntime)
+depends=(qt6-base qt6-svg qt6-multimedia tesseract qt6-scxml qt6-speech)
+makedepends=(qt6-tools extra-cmake-modules kwayland espeak-ng onnxruntime protobuf)
 optdepends=(kwayland espeak-ng onnxruntime)
 source=(https://download.kde.org/stable/crow-translate/$pkgver/crow-translate-$pkgver.tar.gz)
 sha256sums=('e24b8e78b0bffa5dd02875e25126c371967f53729102c784e4e02d165feb3753')
