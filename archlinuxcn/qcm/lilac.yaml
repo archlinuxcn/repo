@@ -9,19 +9,19 @@ post_build_script: |
 
 repo_depends:
   - cubeb-git
-
-repo_makedepends:
-  - ctre
+  - qcmbackend-git
 
 update_on:
   - source: github
     github: hypengw/Qcm
-    use_latest_tag: true
-    prefix: v
 
   - alias: qt6-base
+  - alias: fmt
 
   - source: alpm
     alpm: ffmpeg
     provided: libavformat.so
     strip_release: true
+
+update_on_build:
+  - pkgbase: qcmbackend-git
