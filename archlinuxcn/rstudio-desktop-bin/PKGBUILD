@@ -1,7 +1,7 @@
 # Maintainer: Meow
 
 pkgname=rstudio-desktop-bin
-_pkgver=2025.05.1-513
+_pkgver=2025.09.1-401
 pkgver=${_pkgver/-/.}
 pkgrel=1
 pkgdesc="An integrated development environment (IDE) for R (binary from RStudio official repository)"
@@ -16,7 +16,7 @@ provides=("rstudio-desktop=${pkgver}")
 options=(!strip)
 
 sha256sums_x86_64=(
-89a68b37fc700ff28fea16e3a8771cea58c72d573e3b09cba7f8d3ead74fc58d
+f897dd5bf35295e709dba448f1c7412b8363041e9ac3ba04a3efce8369d7abc9
 )
 
 source_x86_64=("https://download1.rstudio.org/electron/jammy/amd64/rstudio-${_pkgver}-amd64.deb")
