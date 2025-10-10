@@ -8,7 +8,7 @@ arch=(x86_64)
 url=https://github.com/NickvisionApps/$pkgname
 license=(GPL-3.0-or-later)
 depends=('dotnet-runtime-8.0' libadwaita glibc bash fontconfig gcc-libs hicolor-icon-theme)
-makedepends=(blueprint-compiler 'dotnet-sdk>=8' git)
+makedepends=(blueprint-compiler 'dotnet-sdk-8.0' git)
 source=("git+$url#tag=$pkgver" "git+${url%denaro}cakescripts#commit=1b48cc0957fcd65c3b0f25285e84033fb5b7f542")
 b2sums=('7f552abb722bb5c12d63bc482d300a8d1c8a5a91358992aa0737c254fe90cb1cbed5de7c38845a97aecdb325564d3d4700d2d258ee884479faf22e434842de0d'
         'c8461ecf9be0410256b56338bfb282706a3d25146cc2a17e0f4b266ad574e594f653054104052c97abda98f5723e16031da0a81b7fbafe568e67325458c0a201')
