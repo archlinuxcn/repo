@@ -1,0 +1,31 @@
+#Maintainer：	Mumi Jim <echo "=02bj5yav9Gb0V3bA1Waq9VatVXb" | rev | base64 -d>
+#This package name is used to distinguish it from another package name with a different function, nucleus-bin.
+
+pkgname="nucleus-gtk4-git"
+_appname="nucleus"
+pkgver=1.r27.gb6aaa61f
+pkgrel=1
+pkgdesc="Chemistry educational software written in Python"
+url="https://codeberg.org/lo-vely/nucleus"
+arch=(any)
+license=('GPL-3.0-or-later')
+source=("git+$url.git")
+sha256sums=('SKIP')
+depends=('gtk4' 'libadwaita' 'python-gobject')
+makedepends=('blueprint-compiler' 'git' 'meson' 'ninja')
+
+pkgver() {
+	cd "${srcdir}/${_appname}"
+	git describe --long --tags --abbrev=8 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	cd "${srcdir}/${_appname}"
+	arch-meson . build
+	meson compile -C build
+}
+
+package() {
+	cd "${srcdir}/${_appname}"
+	meson install -C build --destdir "$pkgdir"
+}
