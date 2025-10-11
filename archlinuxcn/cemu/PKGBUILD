@@ -1,13 +1,12 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 pkgname=cemu
 pkgver=2.6
-pkgrel=3
+pkgrel=4
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://cemu.info/"
 license=('MPL2')
 depends=(
-	'discord-rpc'
 	'glslang>=14'
 	'hicolor-icon-theme'
 	'libx11'
@@ -15,6 +14,7 @@ depends=(
 	'sdl2'
 	'wxwidgets-gtk3>=3.2'
     'llvm-libs'
+    'discord-rpc-git'
 )
 makedepends=(
     'bluez-libs'
@@ -43,6 +43,7 @@ makedepends=(
 	'zlib'
 	'zstd'
     'clang'
+    'discord-rpc-git'
 )
 source=(
 	"$pkgname::git+https://github.com/cemu-project/Cemu#tag=v${pkgver}"
