@@ -114,7 +114,7 @@ package() {
     install -Dm644 _probe-rs -t "$pkgdir/usr/share/zsh/site-functions"
     install -Dm644 probe-rs.bash -t "$pkgdir/usr/share/bash-completion/completions/"
     install -Dm644 probe-rs.fish -t "$pkgdir/usr/share/fish/vendor_completions.d"
-    install -Dm644 "$srcdir/$pkgname-69-probe-rs.rules" "$pkgdir/usr/lib/udev/rules.d/69-probe-rs.rules"
+    install -Dm644 "$srcdir/$pkgname-$pkgver-69-probe-rs.rules" "$pkgdir/usr/lib/udev/rules.d/69-probe-rs.rules"
 }
 
 # vim: set sts=4 ts=4 sw=4 et:
