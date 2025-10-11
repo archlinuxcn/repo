@@ -21,7 +21,7 @@ declare -gA _caches=(
 
 pkgname=anki
 pkgver=25.09.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
