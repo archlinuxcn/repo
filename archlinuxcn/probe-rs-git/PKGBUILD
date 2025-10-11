@@ -66,7 +66,8 @@ build() {
     cargo auditable build \
         --frozen \
         --release \
-        --all-features
+        --no-default-features \
+        --features remote
 
     SHELL=zsh  target/release/probe-rs complete --shell zsh install --manual > _probe-rs
     SHELL=bash target/release/probe-rs complete --shell bash install --manual > probe-rs.bash
@@ -79,7 +80,8 @@ _check() {
     cargo test \
         --workspace \
         --frozen \
-        --all-features
+        --no-default-features \
+        --features remote
 }
 
 _pick() {
@@ -93,7 +95,7 @@ package() {
     find target/release \
         -mindepth 1 \
         -type d \
-        -delete
+        -exec rm -rf {} +
     # Remove all non-executable files.
     find target/release \
         -maxdepth 1 \
