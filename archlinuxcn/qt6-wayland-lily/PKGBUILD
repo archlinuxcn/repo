@@ -4,8 +4,8 @@
 
 _pkgname=qt6-wayland
 pkgname=qt6-wayland-lily
-_pkgver=6.9.2
-pkgver=6.9.2
+_pkgver=6.10.0
+pkgver=6.10.0
 pkgrel=1
 arch=(x86_64)
 url='https://www.qt.io'
@@ -31,18 +31,12 @@ makedepends=(cmake
 
 _pkgfn=qtwayland
 source=(git+https://code.qt.io/qt/$_pkgfn#tag=v$_pkgver
-        0001-text-input-v3-use-dashed-underline-instead-of-solid-.patch
-        0002-text-input-v3-always-update-cursor-rectangle-after-e.patch
         0005-fix-egl-compositor-shutdown.patch)
-sha256sums=('a1717e5bf742307ae1154812ad6131316f53bb1feeea0260e721033f19ff851b'
-            aa80925ad53ee9762962bfa6cc9635ee4962c98e707bf7712db88b294cdccde5
-            5bb012c561badd9c7cfdc93eba0fb1612ef510fc0b013919968152714eb29929
+sha256sums=('fd3dfcedcc7fe901bcfd40358fb536a33100b6164615b9e67e8e04bea9ba35fd'
             fe4b74099872ba6e5071704899741597fb2b0234052e9c343d746a0db4497e95)
 
 prepare() {
   cd $_pkgfn
-  patch -p1 < "$srcdir"/0001-text-input-v3-use-dashed-underline-instead-of-solid-.patch
-  patch -p1 < "$srcdir"/0002-text-input-v3-always-update-cursor-rectangle-after-e.patch
   patch -p1 < "$srcdir"/0005-fix-egl-compositor-shutdown.patch
 }
 
