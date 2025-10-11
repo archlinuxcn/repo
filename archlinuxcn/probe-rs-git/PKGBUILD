@@ -23,18 +23,12 @@ provides=(
     'cargo-flash'
     'probe-rs'
     'rtthost'
-    'smoke_tester'
-    'target-gen'
-    'xtask'
 )
 conflicts=(
     'cargo-embed'
     'cargo-flash'
     'probe-rs'
     'rtthost'
-    'smoke_tester'
-    'target-gen'
-    'xtask'
 )
 source=(
     "$pkgname::git+https://github.com/probe-rs/probe-rs.git"
@@ -92,13 +86,32 @@ _check() {
         --all-features
 }
 
+_pick() {
+    install -Dm0755 "$1" -t "$pkgdir/usr/bin/"
+    rm "$1"
+}
+
 package() {
 	cd "$pkgname"
+    # Remove all other files.
     find target/release \
         -maxdepth 1 \
-        -executable \
+        -type d \
+        -delete
+    # Remove all non-executable files.
+    find target/release \
+        -maxdepth 1 \
         -type f \
-        -exec install -Dm0755 -t "$pkgdir/usr/bin/" {} +
+        -perm /a+x \
+        -delete
+    # Remove all executable files not for end users.
+    rm target/release/{target-gen,xtask,smoke_tester}
+    _pick probe-rs
+    _pick cargo-flash
+    _pick cargo-embed
+    _pick rtthost
+    # Ensure no files to install.
+    rmdir target/release
 
 	install -Dm644 _probe-rs -t "$pkgdir/usr/share/zsh/site-functions"
 	install -Dm644 probe-rs.bash -t "$pkgdir/usr/share/bash-completion/completions/"
