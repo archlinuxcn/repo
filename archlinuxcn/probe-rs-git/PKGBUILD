@@ -100,7 +100,7 @@ package() {
     find target/release \
         -maxdepth 1 \
         -type f \
-        -not -perm /u+x,g+x,o+x
+        -not -perm /u+x,g+x,o+x \
         -delete
     # Remove all executable files not for end users.
     rm target/release/{target-gen,xtask,smoke_tester}
