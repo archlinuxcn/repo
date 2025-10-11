@@ -2,7 +2,7 @@
 
 _name=lru-dict
 pkgname=python-${_name}
-pkgver=1.4.0
+pkgver=1.5.0
 pkgrel=1
 pkgdesc="A fast and memory efficient LRU cache for Python"
 arch=(x86_64)
@@ -12,7 +12,7 @@ depends=(glibc python)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('c2d755ecea3d20f669e5be2226c34bfe85efaa8f1a9afde46dffb59df03c91bb3d376702a87af3cf6c4e1bb9d5c973a1fd41912144e9fea9bee32a047e936c4b')
+sha512sums=('ee316c829f63e7e8772167f21aa71e981318d35b5911cc313e39dabca7e375406a0ecca6552477a729cfcf863cf954a1549cf26a8c1a881d4666f30ed00cdc83')
 
 build() {
   cd $_name-$pkgver
