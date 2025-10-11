@@ -23,31 +23,25 @@ checkdepends=(
 provides=('libtsm.so')
 source=(
   "https://github.com/Aetf/libtsm/archive/v$pkgver/$pkgname-$pkgver.tar.gz"
-  "$pkgname-0001-chore-allow-None-as-BUILD_TYPE.patch"
 )
-b2sums=('c289c0532fcf8b322ea5c1e3c8af61fc04bef6da58fd6746e81251d0ec08069874be86c81729085b9a198351c51b2a5f9ff41a07b421518e40624a029962bb68'
-        '97b4ca3e1f34e6f8e99a022fc52c685d5ecf8e3b9619bf452b738d4a3d77634ed36390229fa86a686bf0474ef4d1573b32abb30c6acca8204ab44923934528a5')
+b2sums=('c289c0532fcf8b322ea5c1e3c8af61fc04bef6da58fd6746e81251d0ec08069874be86c81729085b9a198351c51b2a5f9ff41a07b421518e40624a029962bb68')
 
 prepare() {
   cd $pkgname-$pkgver
-  # FIXME: https://github.com/Aetf/libtsm/issues/42
-  patch -Np1 -i ../$pkgname-0001-chore-allow-None-as-BUILD_TYPE.patch
 }
 
 build() {
-  cmake -B build -S $pkgname-$pkgver \
-    -G Ninja \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_TESTING=ON
-  ninja -C build
+  local _meson_options=(
+  )
+  arch-meson $pkgname-$pkgver build "${_meson_options[@]}"
 }
 
 check() {
-  ctest -C None --test-dir build
+  meson test -C build --print-errorlogs
 }
 
 package() {
-  DESTDIR="$pkgdir" ninja -C build install
+  meson install -C build --no-rebuild --destdir="$pkgdir"
   install -Dm644 $pkgname-$pkgver/COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
 # vim:set ts=2 sw=2 et:
