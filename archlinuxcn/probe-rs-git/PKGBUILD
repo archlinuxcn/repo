@@ -86,7 +86,7 @@ _check() {
 
 _pick() {
     install -Dm0755 target/release/"$1" -t "$pkgdir/usr/bin/"
-    rm "$1"
+    rm target/release/"$1"
 }
 
 package() {
