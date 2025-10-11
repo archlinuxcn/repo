@@ -32,7 +32,7 @@ conflicts=(
 )
 source=(
     "$pkgname::git+https://github.com/probe-rs/probe-rs.git"
-    "$pkgname-69-probe-rs.rules::https://github.com/probe-rs/webpage/raw/refs/heads/master/public/files/69-probe-rs.rules"
+    "$pkgname-$pkgver-69-probe-rs.rules::https://github.com/CoelacanthusHex/webpage/raw/refs/heads/fix-udev/public/files/69-probe-rs.rules"
 )
 b2sums=('SKIP'
         '155e37902a17198be77c3aa1f1f9407ab2112083606630f5115ca27261a47345fb646770ff44d90cd258d8bc187d4b2a0f5620b3bc0eadaddd5a845d4226a45f')
@@ -48,13 +48,6 @@ pkgver() {
 
 prepare() {
 	cd "$pkgname"
-
-    # Arch doesn't have this system group, but if user create this group and it's not system group, newer systemd will
-    # ignore this rule.
-    sed -i \
-        -e 's/, MODE="660"//g' \
-        -e 's/, GROUP="plugdev"//g' \
-        ../"$pkgname-69-probe-rs.rules"
 
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
