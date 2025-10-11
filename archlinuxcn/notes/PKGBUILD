@@ -28,6 +28,8 @@ prepare() {
 	git submodule set-url 3rdParty/qmarkdowntextedit "${srcdir}/qmarkdowntextedit"
 	git submodule set-url 3rdParty/QSimpleUpdater "${srcdir}/QSimpleUpdater"
 	git -c protocol.file.allow=always submodule update
+
+	git cherry-pick -n 1585918af82e9ab03208be00a20816e5599f93f2 # Fix Qt 6.10 build
 }
 
 build() {
