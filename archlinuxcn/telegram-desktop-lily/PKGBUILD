@@ -38,7 +38,6 @@ depends=(
   'qt6-base=6.10.0'
   'qt6-imageformats'
   'qt6-svg'
-  'qt6-wayland'
   'rnnoise'
   'xxhash'
 )
@@ -74,17 +73,17 @@ source=(
   "dont-adjust-fontsize.patch"
   "0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
   "0002-make-blockquote-markup-less-distractive.patch"
-  "0004-make-animated-avatar-follow-power-settings.patch"
-  "0001-don-t-ask-which-program-to-use-when-opening-a-file-w.patch"
+  "0003-make-animated-avatar-follow-power-settings.patch"
+  "0004-don-t-ask-which-program-to-use-when-opening-a-file-w.patch"
 )
 sha512sums=('a551042954188499a2ea459ea1037644ddf9b83ccb5d7722dbdcd5238699c481242b6fa7f973768b2f6c451c621996d5adf5dbfe156cadd17e25df68e0cdaa0e'
             '6dc6e684a0bf35bb83f6fa6579a0da82d604190b222f2cd2de9b8ef5b93f5f18ac9a8733e2c5cf2a64ed9933b346ea31e26a4bcc0039956280ec2deef9649457'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
-            'cf8c7d27fa0838cf92af30d791187de3dbcaa10e9b43d5e7d5802c1113f6bae9b471bd92d72efd9b042d681d07b0bf8d2d2ff79cd74b1fe1799e683943e7c6bf'
-            '9d2e7512734044682a18b79cdda4fd21aa1427c4e066c9288e8218e890744225ff19114a5a129e861a9d382fb5dae0bf19e82e0e9ca862c112ad9a2b54a853d0'
-            '871fd0994bb35dcf32d3d2cbf222db92c30acfd76df06fe87feecbac205f08e3bbed8e48a56c4e11737638fafddc12a1e278519481f77f7dab3f9957ea6e61ed'
-            '653945cb6e6425fb4631b4c98f47d4769b069e205be822156a8c455dbddd65f6ff38b57f279350a1891a16c53d2623564803274a8700fc4573b4ba3810979766')
+            'bb0e706b7a2629ba6fae9b7c71cb5a3f292e568f8c8d845aeb2584835c849b232ff9b7886ec931e446d077f249e2587abc70868659a5d08f7d94dc431fa3f914'
+            'f315cbe729c568c27c745e12c3061d4757b1a146db108afb184bc55c55e7aaa317408e7f609111a3f3e79aab3af320204dc6e63aa35221aad99228ee6fdf2454'
+            '57182ca0ae0aba5bc7fbc474329d13062d9ec0c4cab0911abe13d19beaac73a4cafbe23f995c669596d6e6b9bbf2785da740450cfb8a62295a629dc843812b2c'
+            '131eff0887513137be97f4ca04aa258f0a59df45e7bd1eb7ee6736c1e366ff887ada196f069ef8ddce1d4477189d531b24d5235cbefe0407ba42d164bbbed09f')
 options=(!debug)
 
 prepare() {

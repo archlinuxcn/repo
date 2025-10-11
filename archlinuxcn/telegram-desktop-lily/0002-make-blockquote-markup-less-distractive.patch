@@ -1,4 +1,4 @@
-From d2da930cd227b641075f8562d1e27d28d3388798 Mon Sep 17 00:00:00 2001
+From 2f5848d568e4f669b8f5dd4bcc60a5541074648a Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Sun, 29 Oct 2023 18:14:47 +0800
 Subject: [PATCH 2/4] make blockquote markup less distractive
@@ -11,10 +11,10 @@ Subject: [PATCH 2/4] make blockquote markup less distractive
  4 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/Telegram/SourceFiles/chat_helpers/chat_helpers.style b/Telegram/SourceFiles/chat_helpers/chat_helpers.style
-index d48f32c00..145ffbf71 100644
+index ba4a07b5a6..40eb8118df 100644
 --- a/Telegram/SourceFiles/chat_helpers/chat_helpers.style
 +++ b/Telegram/SourceFiles/chat_helpers/chat_helpers.style
-@@ -1000,7 +1000,7 @@ historyQuoteStyle: QuoteStyle(defaultQuoteStyle) {
+@@ -1040,7 +1040,7 @@ historyQuoteStyle: QuoteStyle(defaultQuoteStyle) {
  	verticalSkip: 4px;
  	outline: 3px;
  	outlineShift: 2px;
@@ -24,19 +24,22 @@ index d48f32c00..145ffbf71 100644
  historyTextStyle: TextStyle(defaultTextStyle) {
  	blockquote: QuoteStyle(historyQuoteStyle) {
 diff --git a/Telegram/SourceFiles/history/view/history_view_reply.cpp b/Telegram/SourceFiles/history/view/history_view_reply.cpp
-index d2043b027..6964d1464 100644
+index ee4f18ed21..35fb9d9378 100644
 --- a/Telegram/SourceFiles/history/view/history_view_reply.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_reply.cpp
-@@ -157,21 +157,21 @@ void FillBackgroundEmoji(
- 			frames[index]);
+@@ -271,24 +271,24 @@ void FillBackgroundEmoji(
  	};
  
--	paint(28, 4, 2, 0.32);
+ 	if (firstGiftFrame.isNull()) {
+-		paint(28, 4, 2, 0.32);
++		paint(28, 4, 2, 0.10);
+ 	} else {
+ 		paintImage(28, 4, firstGiftFrame, 1.);
+ 	}
 -	paint(51, 15, 1, 0.32);
 -	paint(64, -2, 0, 0.28);
 -	paint(87, 11, 1, 0.24);
 -	paint(125, -2, 2, 0.16);
-+	paint(28, 4, 2, 0.10);
 +	paint(51, 15, 1, 0.10);
 +	paint(64, -2, 0, 0.09);
 +	paint(87, 11, 1, 0.08);
@@ -61,7 +64,7 @@ index d2043b027..6964d1464 100644
  
  	p.setClipping(false);
 diff --git a/Telegram/SourceFiles/ui/chat/chat_style.cpp b/Telegram/SourceFiles/ui/chat/chat_style.cpp
-index 0c50f77b8..1751ab467 100644
+index 974b85f192..a666991385 100644
 --- a/Telegram/SourceFiles/ui/chat/chat_style.cpp
 +++ b/Telegram/SourceFiles/ui/chat/chat_style.cpp
 @@ -57,10 +57,10 @@ void EnsurePreCache(
@@ -78,10 +81,10 @@ index 0c50f77b8..1751ab467 100644
  	cache->icon.setAlpha(kDefaultOutline3Opacity * 255);
  }
 diff --git a/Telegram/SourceFiles/ui/chat/chat_style.h b/Telegram/SourceFiles/ui/chat/chat_style.h
-index a00fe941a..81e5b05bd 100644
+index f97cde14c2..3b2d936e94 100644
 --- a/Telegram/SourceFiles/ui/chat/chat_style.h
 +++ b/Telegram/SourceFiles/ui/chat/chat_style.h
-@@ -35,7 +35,7 @@ inline constexpr auto kColorPatternsCount = Text::kMaxQuoteOutlines;
+@@ -36,7 +36,7 @@ inline constexpr auto kColorPatternsCount = Text::kMaxQuoteOutlines;
  inline constexpr auto kColorIndexCount = uint8(1 << 6);
  inline constexpr auto kSimpleColorIndexCount = uint8(7);
  
@@ -91,5 +94,5 @@ index a00fe941a..81e5b05bd 100644
  inline constexpr auto kDefaultOutline2Opacity = 0.3;
  inline constexpr auto kDefaultOutline3Opacity = 0.6;
 -- 
-2.46.0
+2.51.0
 
