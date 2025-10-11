@@ -91,7 +91,7 @@ package() {
     cd "$pkgname"
     # Remove all other files.
     find target/release \
-        -maxdepth 1 \
+        -mindepth 1 \
         -type d \
         -delete
     # Remove all non-executable files.
