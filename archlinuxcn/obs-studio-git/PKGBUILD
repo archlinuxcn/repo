@@ -41,6 +41,8 @@ prepare() {
 	git submodule init
 	git config submodule.plugins/obs-websocket.url "${srcdir}/obs-websocket/"
 	git -c protocol.file.allow=always submodule update
+
+	git cherry-pick -n 26dfacbd4f5217258a2f1c5472a544c65a182d10 # Fix Qt 6.10 build
 }
 
 build() {
