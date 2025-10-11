@@ -1,0 +1,35 @@
+From b549c6708f9efcc7268e1947e715da3fda39f490 Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Tue, 25 Mar 2025 16:23:57 +0800
+Subject: [PATCH 2/2] text input v3: always update cursor rectangle after enter
+ event
+
+This fix the following issue:
+
+* activate input method
+* right click to bring up a popup menu
+* dismiss the popup
+
+If the cursor rectangle does not update, the compositor won't know where
+to put the input method window since it has been sent since last enable
+request.
+---
+ src/plugins/platforms/wayland/qwaylandtextinputv3.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp b/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
+index 3e9f2cafbfd..8b6d4ba2d97 100644
+--- a/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
++++ b/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
+@@ -290,7 +290,7 @@ void QWaylandTextInputv3::updateState(Qt::InputMethodQueries queries, uint32_t f
+         const QRect &nativeRect = QHighDpi::toNativePixels(windowRect, QGuiApplication::focusWindow());
+         const QMargins margins = window->clientSideMargins();
+         const QRect &surfaceRect = nativeRect.translated(margins.left(), margins.top());
+-        if (surfaceRect != m_cursorRect) {
++        if (surfaceRect != m_cursorRect || flags == update_state_enter) {
+             set_cursor_rectangle(surfaceRect.x(), surfaceRect.y(), surfaceRect.width(), surfaceRect.height());
+             m_cursorRect = surfaceRect;
+             needsCommit = true;
+-- 
+2.51.0
+
