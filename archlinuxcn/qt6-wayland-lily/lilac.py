@@ -41,16 +41,12 @@ def edit_it():
   elems = arr.children()
   indent = elems[-2].range().start.column
   patches = [
-    '0001-text-input-v3-use-dashed-underline-instead-of-solid-.patch',
-    '0002-text-input-v3-always-update-cursor-rectangle-after-e.patch',
     '0005-fix-egl-compositor-shutdown.patch',
   ]
   e = elems[-1].replace(''.join(f'\n%s{s}' % (' ' * indent) for s in patches) + ')')
   edits.append(e)
 
   sums = [
-    'aa80925ad53ee9762962bfa6cc9635ee4962c98e707bf7712db88b294cdccde5',
-    '5bb012c561badd9c7cfdc93eba0fb1612ef510fc0b013919968152714eb29929',
     'fe4b74099872ba6e5071704899741597fb2b0234052e9c343d746a0db4497e95',
   ]
   node = r.find(pattern='sha256sums=($$$A)')
