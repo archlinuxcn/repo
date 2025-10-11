@@ -3,7 +3,7 @@
 
 pkgname="nucleus-gtk4-git"
 _appname="nucleus"
-pkgver=1.r27.gb6aaa61f
+pkgver=1.r31.gb17df957
 pkgrel=1
 pkgdesc="Chemistry educational software written in Python"
 url="https://codeberg.org/lo-vely/nucleus"
@@ -11,7 +11,7 @@ arch=(any)
 license=('GPL-3.0-or-later')
 source=("git+$url.git")
 sha256sums=('SKIP')
-depends=('gtk4' 'libadwaita' 'python-gobject')
+depends=('gtk4' 'libadwaita' 'python-gobject' 'python')
 makedepends=('blueprint-compiler' 'git' 'meson' 'ninja')
 
 pkgver() {
