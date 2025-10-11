@@ -31,6 +31,9 @@ prepare() {
 	git config submodule.third_party/librealcugan_ncnn_vulkan.url "${srcdir}/librealcugan-ncnn-vulkan"
 	git config submodule.third_party/librife_ncnn_vulkan.url "${srcdir}/librife-ncnn-vulkan"
 	git -c protocol.file.allow=always submodule update
+
+	cd third_party/librife_ncnn_vulkan
+	git cherry-pick -n a60b30ade45b48b4f5df5f223f3a8674def93275 # Fix build with ncnn 20250916
 }
 
 build() {
