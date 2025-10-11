@@ -1,4 +1,4 @@
-# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
+# Maintainee: Coelacanthus <coelacanthus@archlinuxcn.org>
 # Contributor: Dominic Meiser [git at msrd0 dot de]
 
 pkgname="probe-rs-git"
@@ -47,22 +47,22 @@ pkgver() {
 }
 
 prepare() {
-	cd "$pkgname"
+    cd "$pkgname"
 
-	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
-	cd "$pkgname"
-	
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
-	CFLAGS+=" -ffat-lto-objects"
+    cd "$pkgname"
+    
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    CFLAGS+=" -ffat-lto-objects"
 
-	cargo auditable build \
-		--frozen \
-		--release \
+    cargo auditable build \
+        --frozen \
+        --release \
         --all-features
 
     SHELL=zsh  target/release/probe-rs complete --shell zsh install --manual > _probe-rs
@@ -85,7 +85,7 @@ _pick() {
 }
 
 package() {
-	cd "$pkgname"
+    cd "$pkgname"
     # Remove all other files.
     find target/release \
         -maxdepth 1 \
@@ -106,10 +106,10 @@ package() {
     # Ensure no files to install.
     rmdir target/release
 
-	install -Dm644 _probe-rs -t "$pkgdir/usr/share/zsh/site-functions"
-	install -Dm644 probe-rs.bash -t "$pkgdir/usr/share/bash-completion/completions/"
-	install -Dm644 probe-rs.fish -t "$pkgdir/usr/share/fish/vendor_completions.d"
-	install -Dm644 "$srcdir/$pkgname-69-probe-rs.rules" "$pkgdir/usr/lib/udev/rules.d/69-probe-rs.rules"
+    install -Dm644 _probe-rs -t "$pkgdir/usr/share/zsh/site-functions"
+    install -Dm644 probe-rs.bash -t "$pkgdir/usr/share/bash-completion/completions/"
+    install -Dm644 probe-rs.fish -t "$pkgdir/usr/share/fish/vendor_completions.d"
+    install -Dm644 "$srcdir/$pkgname-69-probe-rs.rules" "$pkgdir/usr/lib/udev/rules.d/69-probe-rs.rules"
 }
 
 # vim: set sts=4 ts=4 sw=4 et:
