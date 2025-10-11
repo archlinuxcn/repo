@@ -13,8 +13,8 @@ url="https://codeberg.org/lo-vely/nucleus"
 license=('GPL-3.0-or-later')
 depends=('gtk4' 'libadwaita' 'python-gobject' 'python')
 makedepends=('blueprint-compiler' 'git' 'meson' 'ninja')
-provides=("${_pkgname}")
-conflicts=("${_pkgname}")
+provides=("${_pkgname}" "${_appname}")
+conflicts=("${_pkgname}" "${_appname}")
 source=("git+$url.git")
 sha256sums=('SKIP')
 
