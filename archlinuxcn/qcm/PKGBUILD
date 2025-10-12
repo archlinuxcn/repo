@@ -51,8 +51,12 @@ sha256sums=('cd2cdea3c2e1340bb36cb7446b89acef3940afe39032aef07e2451bf378f62d1'
             '08a3aa14c098044dd4a129a292558df4ecfaf7bbeec0b295e5d8009c5939c422')
 
 prepare() {
-	git lfs install
 	patch -d Qcm -Np1 -i ../fix-kdsingleapplication.patch
+
+	cd QmlMaterial
+	git lfs install --local
+	git remote add network-origin https://github.com/hypengw/QmlMaterial.git
+	git lfs pull network-origin
 }
 
 build() {
