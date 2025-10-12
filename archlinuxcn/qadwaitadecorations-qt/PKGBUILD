@@ -15,7 +15,7 @@ makedepends=(make cmake qt5-wayland-decorations qt6-wayland qt5-svg qt6-svg)
 source=("https://github.com/FedoraQt/QAdwaitaDecorations/archive/$pkgver/$_pkgname-$pkgver.tar.gz"
         "0001-fix-QT-6.10-build.patch")
 b2sums=('69c687e6e909d0260b95bbf2980c8550606149d051562418d5d3489625c39911da73267f01ec263db46b0ef9717de3145942d7ac682aa93ba91853ec41ad0b6d'
-        '6f8d3b42f2dfd3634f10d8e5d200b59f4e9e89a29b034f2c18aa442a78823afa8b6eba11aa50b3de9c85c5e381d34241e62be6ba0d1387979cf25b1505dc6304')
+        'e2a529dcbc1f026da93fd275a11215940450a20d1c7170a2ea6f7bad1d9f177e792ef315ac3ea808806e2473492cdb5dfd50c479e255b225ac93a8d6631b6f67')
 
 prepare() {
   cd ${_pkgname}-${pkgver}

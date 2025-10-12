@@ -1,15 +1,15 @@
-From 805a65594b028a1f9eccc94f8dcdc3708a66c32e Mon Sep 17 00:00:00 2001
+From 718c7987c123859f32824fce395e87570e802534 Mon Sep 17 00:00:00 2001
 From: everyx <lunt.luo@gmail.com>
-Date: Sun, 12 Oct 2025 15:27:18 +0800
+Date: Sun, 12 Oct 2025 16:04:10 +0800
 Subject: [PATCH] fix QT 6.10 build
 
 ---
- CMakeLists.txt              |  9 ++++++++-
- src/qadwaitadecorations.cpp | 16 ++++++++--------
- 2 files changed, 16 insertions(+), 9 deletions(-)
+ CMakeLists.txt              | 11 ++++++++++-
+ src/qadwaitadecorations.cpp | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 42 insertions(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f50ebf7..d77cc0b 100644
+index f50ebf7..d8b23d1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -24,6 +24,10 @@ include(FeatureSummary)
@@ -23,87 +23,113 @@ index f50ebf7..d77cc0b 100644
  else()
      find_package(QT NAMES Qt5 COMPONENTS Core Gui Svg Wayland Widgets REQUIRED)
  endif()
-@@ -35,6 +39,10 @@ find_package(Qt${QT_VERSION_MAJOR} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+@@ -35,6 +39,12 @@ find_package(Qt${QT_VERSION_MAJOR} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
      WaylandClient
      Widgets
  )
-+if (Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.9.0)
-+    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS GuiPrivate)
-+    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClientPrivate)
++if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
++    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
++        GuiPrivate
++        WaylandClientPrivate
++    )
 +endif()
  
  find_package(Qt${QT_VERSION_MAJOR}Gui ${QT_MIN_VERSION} CONFIG REQUIRED Private)
  if (NOT USE_QT6)
-@@ -68,4 +76,3 @@ endif()
+@@ -68,4 +78,3 @@ endif()
  add_subdirectory(src)
  
  feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 -
 diff --git a/src/qadwaitadecorations.cpp b/src/qadwaitadecorations.cpp
-index 4189fa3..1691046 100644
+index 4189fa3..4b4bc1a 100644
 --- a/src/qadwaitadecorations.cpp
 +++ b/src/qadwaitadecorations.cpp
-@@ -798,19 +798,19 @@ void QAdwaitaDecorations::processMouseTop(QWaylandInputDevice *inputDevice, cons
+@@ -798,19 +798,31 @@ void QAdwaitaDecorations::processMouseTop(QWaylandInputDevice *inputDevice, cons
          if (local.x() <= margins().left()) {
              // top left bit
  #if QT_CONFIG(cursor)
--            waylandWindow()->setMouseCursor(inputDevice, Qt::SizeFDiagCursor);
++#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
 +            waylandWindow()->applyCursor(inputDevice, Qt::SizeFDiagCursor);
++#else
+             waylandWindow()->setMouseCursor(inputDevice, Qt::SizeFDiagCursor);
++#endif
  #endif
              startResize(inputDevice, Qt::TopEdge | Qt::LeftEdge, b);
          } else if (local.x() > surfaceRect.right() - margins().left()) {
              // top right bit
  #if QT_CONFIG(cursor)
--            waylandWindow()->setMouseCursor(inputDevice, Qt::SizeBDiagCursor);
++#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
 +            waylandWindow()->applyCursor(inputDevice, Qt::SizeBDiagCursor);
++#else
+             waylandWindow()->setMouseCursor(inputDevice, Qt::SizeBDiagCursor);
++#endif
  #endif
              startResize(inputDevice, Qt::TopEdge | Qt::RightEdge, b);
          } else {
              // top resize bit
  #if QT_CONFIG(cursor)
--            waylandWindow()->setMouseCursor(inputDevice, Qt::SizeVerCursor);
++#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
 +            waylandWindow()->applyCursor(inputDevice, Qt::SizeVerCursor);
++#else
+             waylandWindow()->setMouseCursor(inputDevice, Qt::SizeVerCursor);
++#endif
  #endif
              startResize(inputDevice, Qt::TopEdge, b);
          }
-@@ -857,19 +857,19 @@ void QAdwaitaDecorations::processMouseBottom(QWaylandInputDevice *inputDevice, c
+@@ -857,19 +869,31 @@ void QAdwaitaDecorations::processMouseBottom(QWaylandInputDevice *inputDevice, c
      if (local.x() <= margins().left()) {
          // bottom left bit
  #if QT_CONFIG(cursor)
--        waylandWindow()->setMouseCursor(inputDevice, Qt::SizeBDiagCursor);
++#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
 +        waylandWindow()->applyCursor(inputDevice, Qt::SizeBDiagCursor);
++#else
+         waylandWindow()->setMouseCursor(inputDevice, Qt::SizeBDiagCursor);
++#endif
  #endif
          startResize(inputDevice, Qt::BottomEdge | Qt::LeftEdge, b);
      } else if (local.x() > window()->width() + margins().right()) {
          // bottom right bit
  #if QT_CONFIG(cursor)
--        waylandWindow()->setMouseCursor(inputDevice, Qt::SizeFDiagCursor);
++#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
 +        waylandWindow()->applyCursor(inputDevice, Qt::SizeFDiagCursor);
++#else
+         waylandWindow()->setMouseCursor(inputDevice, Qt::SizeFDiagCursor);
++#endif
  #endif
          startResize(inputDevice, Qt::BottomEdge | Qt::RightEdge, b);
      } else {
          // bottom bit
  #if QT_CONFIG(cursor)
--        waylandWindow()->setMouseCursor(inputDevice, Qt::SizeVerCursor);
++#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
 +        waylandWindow()->applyCursor(inputDevice, Qt::SizeVerCursor);
++#else
+         waylandWindow()->setMouseCursor(inputDevice, Qt::SizeVerCursor);
++#endif
  #endif
          startResize(inputDevice, Qt::BottomEdge, b);
      }
-@@ -881,7 +881,7 @@ void QAdwaitaDecorations::processMouseLeft(QWaylandInputDevice *inputDevice, con
+@@ -881,7 +905,11 @@ void QAdwaitaDecorations::processMouseLeft(QWaylandInputDevice *inputDevice, con
      Q_UNUSED(local)
      Q_UNUSED(mods)
  #if QT_CONFIG(cursor)
--    waylandWindow()->setMouseCursor(inputDevice, Qt::SizeHorCursor);
++#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
 +    waylandWindow()->applyCursor(inputDevice, Qt::SizeHorCursor);
++#else
+     waylandWindow()->setMouseCursor(inputDevice, Qt::SizeHorCursor);
++#endif
  #endif
      startResize(inputDevice, Qt::LeftEdge, b);
  }
-@@ -892,7 +892,7 @@ void QAdwaitaDecorations::processMouseRight(QWaylandInputDevice *inputDevice, co
+@@ -892,7 +920,11 @@ void QAdwaitaDecorations::processMouseRight(QWaylandInputDevice *inputDevice, co
      Q_UNUSED(local)
      Q_UNUSED(mods)
  #if QT_CONFIG(cursor)
--    waylandWindow()->setMouseCursor(inputDevice, Qt::SizeHorCursor);
++#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
 +    waylandWindow()->applyCursor(inputDevice, Qt::SizeHorCursor);
++#else
+     waylandWindow()->setMouseCursor(inputDevice, Qt::SizeHorCursor);
++#endif
  #endif
      startResize(inputDevice, Qt::RightEdge, b);
  }
