@@ -14,7 +14,6 @@ depends=(
   gcc-libs
   python
   ggml
-  vulkan-radeon # choose the right one for the building system
 )
 makedepends=(
   cmake
@@ -43,6 +42,7 @@ build() {
     -DBUILD_SHARED_LIBS=ON
     -DLLAMA_CURL=ON
     -DLLAMA_BUILD_TESTS=OFF
+    -DLLAMA_BUILD_EXAMPLES=OFF
     -DLLAMA_USE_SYSTEM_GGML=ON
     -Wno-dev
   )
@@ -52,12 +52,6 @@ build() {
 }
 
 package() {
-  depends=(
-    curl
-    gcc-libs
-    python
-    ggml
-  )
   DESTDIR="${pkgdir}" cmake --install build
 
   install -Dm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
