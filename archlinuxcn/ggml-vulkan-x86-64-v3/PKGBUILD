@@ -2,7 +2,7 @@
 
 pkgname=ggml-vulkan-x86_86_v3
 pkgver=0.9.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Tensor library for machine learning with OpenBLAS + Vulkan optimizations for x86-86-v3"
 url="https://github.com/ggml-org/ggml"
 license=('MIT')
@@ -22,7 +22,7 @@ conflicts=(libggml ggml)
 provides=(ggml=$pkgver libggml=$pkgver)
 
 source=("git+$url.git#tag=v$pkgver")
-sha256sums=('SKIP')
+sha256sums=('31ef760658d3bc2693ff9d972727244025f632c70e79de0b82a9bdc681f29d9d')
 
 prepare() {
   cd ggml
