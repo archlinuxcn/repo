@@ -1,0 +1,11 @@
+diff '--color=auto' -Naur a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+--- a/examples/CMakeLists.txt	2025-10-01 23:32:43.065672026 +0200
++++ b/examples/CMakeLists.txt	2025-10-01 23:41:58.604788508 +0200
+@@ -117,7 +117,6 @@
+         endif()
+     endif (WHISPER_SDL2)
+ 
+-    add_subdirectory(deprecation-warning)
+ endif()
+ 
+ if (WHISPER_SDL2)
