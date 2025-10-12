@@ -33,11 +33,26 @@ makedepends=(
 	'vulkan-headers'
 )
 optdepends=('qcm-ncm-plugin: Netease Cloud Music plugin')
-source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('cd2cdea3c2e1340bb36cb7446b89acef3940afe39032aef07e2451bf378f62d1')
+source=(
+	"git+${url}.git#tag=v${pkgver}"
+	"git+https://github.com/hypengw/rstd.git"
+	"git+https://github.com/hypengw/ncrequest.git"
+	"git+https://github.com/hypengw/kstore.git"
+	"git+https://github.com/hypengw/QmlMaterial.git"
+	"git+https://github.com/ilqvya/random.git"
+	"fix-kdsingleapplication.patch"
+)
+sha256sums=('cd2cdea3c2e1340bb36cb7446b89acef3940afe39032aef07e2451bf378f62d1'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '08a3aa14c098044dd4a129a292558df4ecfaf7bbeec0b295e5d8009c5939c422')
 
 prepare() {
 	git lfs install
+	patch -d Qcm -Np1 -i ../fix-kdsingleapplication.patch
 }
 
 build() {
@@ -46,6 +61,12 @@ build() {
 		-G Ninja \
 		-D CMAKE_BUILD_TYPE=None \
 		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D FETCHCONTENT_FULLY_DISCONNECTED=ON \
+		-D FETCHCONTENT_SOURCE_DIR_RSTD="${srcdir}/rstd" \
+		-D FETCHCONTENT_SOURCE_DIR_NCREQUEST="${srcdir}/ncrequest" \
+		-D FETCHCONTENT_SOURCE_DIR_KSTORE="${srcdir}/kstore" \
+		-D FETCHCONTENT_SOURCE_DIR_QML_MATERIAL="${srcdir}/QmlMaterial" \
+		-D FETCHCONTENT_SOURCE_DIR_RANDOM="${srcdir}/random" \
 		-D CMAKE_CXX_COMPILER=clang++ # Require clang 20+ to build
 
 	cmake --build build
