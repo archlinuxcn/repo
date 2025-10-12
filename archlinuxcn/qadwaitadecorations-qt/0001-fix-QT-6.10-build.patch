@@ -1,34 +1,44 @@
-From e77681b3aaeb06517e921c80bbe50509f8e1f4b6 Mon Sep 17 00:00:00 2001
+From 805a65594b028a1f9eccc94f8dcdc3708a66c32e Mon Sep 17 00:00:00 2001
 From: everyx <lunt.luo@gmail.com>
-Date: Sun, 12 Oct 2025 14:47:11 +0800
+Date: Sun, 12 Oct 2025 15:27:18 +0800
 Subject: [PATCH] fix QT 6.10 build
 
 ---
- CMakeLists.txt              |  6 +++---
+ CMakeLists.txt              |  9 ++++++++-
  src/qadwaitadecorations.cpp | 16 ++++++++--------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ 2 files changed, 16 insertions(+), 9 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f50ebf7..a46ed13 100644
+index f50ebf7..d77cc0b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -23,13 +23,13 @@ include(GNUInstallDirs)
- include(FeatureSummary)
+@@ -24,6 +24,10 @@ include(FeatureSummary)
  
  if (USE_QT6)
--    find_package(QT NAMES Qt6 COMPONENTS Core Gui Svg Wayland Widgets REQUIRED)
-+    find_package(QT NAMES Qt6 COMPONENTS Core GuiPrivate WaylandClientPrivate Gui Svg Wayland Widgets REQUIRED)
+     find_package(QT NAMES Qt6 COMPONENTS Core Gui Svg Wayland Widgets REQUIRED)
++    if (Qt6Gui_VERSION VERSION_GREATER_EQUAL "6.10.0")
++        find_package(Qt6GuiPrivate REQUIRED)
++        find_package(Qt6WaylandClientPrivate REQUIRED)
++    endif()
  else()
--    find_package(QT NAMES Qt5 COMPONENTS Core Gui Svg Wayland Widgets REQUIRED)
-+    find_package(QT NAMES Qt5 COMPONENTS Core GuiPrivate WaylandClientPrivate Gui Svg Wayland Widgets REQUIRED)
+     find_package(QT NAMES Qt5 COMPONENTS Core Gui Svg Wayland Widgets REQUIRED)
  endif()
- 
- find_package(Qt${QT_VERSION_MAJOR} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
--    Core
-+    Core GuiPrivate WaylandClientPrivate
-     Gui
-     Svg
+@@ -35,6 +39,10 @@ find_package(Qt${QT_VERSION_MAJOR} ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
      WaylandClient
+     Widgets
+ )
++if (Qt6Gui_VERSION VERSION_GREATER_EQUAL 6.9.0)
++    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS GuiPrivate)
++    find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS WaylandClientPrivate)
++endif()
+ 
+ find_package(Qt${QT_VERSION_MAJOR}Gui ${QT_MIN_VERSION} CONFIG REQUIRED Private)
+ if (NOT USE_QT6)
+@@ -68,4 +76,3 @@ endif()
+ add_subdirectory(src)
+ 
+ feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+-
 diff --git a/src/qadwaitadecorations.cpp b/src/qadwaitadecorations.cpp
 index 4189fa3..1691046 100644
 --- a/src/qadwaitadecorations.cpp
