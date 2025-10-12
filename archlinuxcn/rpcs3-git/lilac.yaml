@@ -10,6 +10,12 @@ pre_build: vcs_update
 
 post_build: git_pkgbuild_commit
 
+repo_depends:
+  - faudio
+
+repo_makedepends:
+  - vulkan-memory-allocator-git
+
 update_on:
   - source: github
     github: RPCS3/rpcs3

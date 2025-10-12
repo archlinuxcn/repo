@@ -2,7 +2,7 @@
 # Submitter: Maxime Gauduin <alucryd@archlinux.org>
 
 pkgname=rpcs3-git
-pkgver=0.0.38.r18179.b18a0830f3
+pkgver=0.0.38.r18185.9e49b9100f
 pkgrel=1
 pkgdesc='A Sony PlayStation 3 emulator'
 arch=(x86_64 aarch64)
@@ -13,9 +13,8 @@ depends=(
   glew
   glu
   # Use bundled FFMPEG for now since we use FFMPEG 5.1.2
-  #libavcodec.so
-  #libavutil.so
-  #libswscale.so
+  #ffmpeg
+  opencv
   libevdev
   libgl
   libice
@@ -37,6 +36,8 @@ depends=(
   pugixml
   flatbuffers
   llvm
+  libusb
+  faudio
 )
 optdepends=(
   vulkan-validation-layers
@@ -47,6 +48,8 @@ makedepends=(
   git
   libglvnd
   python
+  vulkan-headers
+  vulkan-memory-allocator-git
   # clang+lld is required because audio is broken with latest gcc
   clang
   lld
@@ -58,10 +61,8 @@ source=(
   git+https://github.com/RPCS3/rpcs3.git
   git+https://github.com/KhronosGroup/glslang.git
 )
-sha256sums=(
-  SKIP
-  SKIP
-)
+sha256sums=('SKIP'
+            'SKIP')
 
 pkgver() {
   cd rpcs3
@@ -74,12 +75,15 @@ pkgver() {
 
 prepare() {
   cd rpcs3
-  
+
+  # Fix Qt6.10 build
+  sed -i 's/ SvgWidgets)/ SvgWidgets GuiPrivate)/g;s/Qt6::SvgWidgets)/Qt6::SvgWidgets Qt6::GuiPrivate)/g' 3rdparty/qt6.cmake
+
   git submodule init 3rdparty/glslang/glslang
   git config submodule.3rdparty/glslang.url ../glslang
   
   SUBMODULES=($(git config --file .gitmodules --get-regexp path | \
-    awk '!/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/pugixml/ && !/SDL/ && !/flatbuffers/ '))
+    awk '!/libpng/ && !/zlib/ && !/curl/ && !/llvm/ && !/glslang/ && !/pugixml/ && !/SDL/ && !/flatbuffers/ &&!/opencv/ &&!/libusb/ && !/FAudio/ && !/VulkanMemoryAllocator/ && !/openal-soft/'))
 
   # We need to convert from a relative folder path to a https://github.com path
   for ((i=0;i<${#SUBMODULES[@]};i+=2))
@@ -114,10 +118,15 @@ build() {
     -DUSE_SYSTEM_LIBPNG=ON \
     -DUSE_SYSTEM_ZLIB=ON \
     -DUSE_SYSTEM_CURL=ON \
+    -DUSE_SYSTEM_OPENAL=ON \
     -DUSE_SYSTEM_FLATBUFFERS=ON \
     -DUSE_SYSTEM_PUGIXML=ON \
+    -DUSE_SYSTEM_VULKAN_MEMORY_ALLOCATOR=ON \
     -DUSE_SDL=ON \
     -DUSE_SYSTEM_SDL=ON \
+    -DUSE_SYSTEM_LIBUSB=ON \
+    -DUSE_SYSTEM_OPENCV=ON \
+    -DUSE_SYSTEM_FAUDIO=ON \
     -DBUILD_LLVM=OFF \
     -DUSE_SYSTEM_WOLFSSL=OFF \
     -DCMAKE_LINKER=lld \
