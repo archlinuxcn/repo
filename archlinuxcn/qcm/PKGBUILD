@@ -18,9 +18,9 @@ depends=(
 	'dbus'
 	'ffmpeg'
 	'fmt'
-	'cubeb-git'
+	'cubeb'
 	'kdsingleapplication'
-	'qcmbackend-git'
+	'qcmbackend'
 )
 makedepends=(
 	'git'
@@ -32,7 +32,7 @@ makedepends=(
 	'pegtl'
 	'vulkan-headers'
 )
-optdepends=('qcm-ncm-plugin-git: Netease Cloud Music plugin')
+optdepends=('qcm-ncm-plugin: Netease Cloud Music plugin')
 source=("git+${url}.git#tag=v${pkgver}")
 sha256sums=('cd2cdea3c2e1340bb36cb7446b89acef3940afe39032aef07e2451bf378f62d1')
 
