@@ -18,7 +18,7 @@ b2sums=('69c687e6e909d0260b95bbf2980c8550606149d051562418d5d3489625c39911da73267
         'f6844973970f70173ca01f6c42b03b58e7b146ee104890dd7863368db309136e39ae60d7a42b222fd991ebfbb425f8e299c2f4c17fff856edbec86194e273fe3')
 
 prepare() {
-  patch -p1 < .${srcdir}/0001-fix-QT-6.10-build.patch
+  patch -p1 < "${srcdir}"/0001-fix-QT-6.10-build.patch
 }
 
 build() {
