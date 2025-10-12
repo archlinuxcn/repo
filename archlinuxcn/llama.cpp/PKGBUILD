@@ -35,6 +35,7 @@ prepare() {
 }
 
 build() {
+  export VK_LOADER_DRIVERS_SELECT=nvidia_icd.json # get nvidia out of the way!
   local _cmake_options=(
     -B build
     -S "${pkgname}"
