@@ -1,0 +1,26 @@
+diff --git a/app/CMakeLists.txt b/app/CMakeLists.txt
+index 1339301..594ced7 100644
+--- a/app/CMakeLists.txt
++++ b/app/CMakeLists.txt
+@@ -277,7 +277,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_SCAN_FOR_MODULES ON
+ target_compile_definitions(${PROJECT_NAME} PRIVATE "${APP_INFO_MACROS}")
+ 
+ target_link_libraries(
+-  ${PROJECT_NAME} PRIVATE app kdsingleapplication
++  ${PROJECT_NAME} PRIVATE app kdsingleapplication-qt6
+                           "$<LINK_GROUP:RESCAN,core,qcm.log>")
+ 
+ set(APP_DESKTOP assets/Qcm.desktop)
+diff --git a/app/src/main.cpp b/app/src/main.cpp
+index 417a7f9..3869bd7 100644
+--- a/app/src/main.cpp
++++ b/app/src/main.cpp
+@@ -14,7 +14,7 @@ import qcm.log;
+ #include <QtQml/QQmlExtensionPlugin>
+ Q_IMPORT_QML_PLUGIN(Qcm_AppPlugin)
+ 
+-#include <kdsingleapplication.h>
++#include <kdsingleapplication-qt6/kdsingleapplication.h>
+ 
+ namespace qcm
+ {
