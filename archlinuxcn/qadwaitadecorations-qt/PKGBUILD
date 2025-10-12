@@ -7,13 +7,19 @@ _pkgname=QAdwaitaDecorations
 pkgname=(qadwaitadecorations-qt5 qadwaitadecorations-qt6)
 pkgver=0.1.7
 pkgrel=1
-pkgdesc=' Qt decoration plugin implementing Adwaita-like client-side decorations'
+pkgdesc='Qt decoration plugin implementing Adwaita-like client-side decorations'
 arch=('x86_64')
 url='https://github.com/FedoraQt/QAdwaitaDecorations'
-license=(LGPL-2.1-only)
+license=(LGPL2.1-or-later)
 makedepends=(make cmake qt5-wayland-decorations qt6-wayland qt5-svg qt6-svg)
-source=("https://github.com/FedoraQt/QAdwaitaDecorations/archive/$pkgver/$_pkgname-$pkgver.tar.gz")
-sha256sums=('6cd96efca241a4b60fb6bf449c64dbad713b223c36e003ae89f45e34739d56d1')
+source=("https://github.com/FedoraQt/QAdwaitaDecorations/archive/$pkgver/$_pkgname-$pkgver.tar.gz"
+        "0001-fix-QT-6.10-build.patch")
+b2sums=('69c687e6e909d0260b95bbf2980c8550606149d051562418d5d3489625c39911da73267f01ec263db46b0ef9717de3145942d7ac682aa93ba91853ec41ad0b6d'
+        'f6844973970f70173ca01f6c42b03b58e7b146ee104890dd7863368db309136e39ae60d7a42b222fd991ebfbb425f8e299c2f4c17fff856edbec86194e273fe3')
+
+prepare() {
+  patch -p1 < .${srcdir}/0001-fix-QT-6.10-build.patch
+}
 
 build() {
   cmake -B build-$pkgver-qt5 -S $_pkgname-$pkgver \
