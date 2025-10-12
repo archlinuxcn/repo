@@ -14,11 +14,11 @@ depends=(
   gcc-libs
   python
   ggml
+  vulkan-radeon # choose the right one for the building system
 )
 makedepends=(
   cmake
   git
-  vulkan-radeon # choose the right one for the building system
 )
 optdepends=(
   'python-numpy: needed for convert_hf_to_gguf.py'
@@ -35,7 +35,6 @@ prepare() {
 }
 
 build() {
-  export VK_LOADER_DRIVERS_SELECT=nvidia_icd.json # get nvidia out of the way!
   local _cmake_options=(
     -B build
     -S "${pkgname}"
@@ -53,6 +52,12 @@ build() {
 }
 
 package() {
+  depends=(
+    curl
+    gcc-libs
+    python
+    ggml
+  )
   DESTDIR="${pkgdir}" cmake --install build
 
   install -Dm644 "${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
