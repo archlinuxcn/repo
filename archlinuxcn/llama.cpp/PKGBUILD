@@ -1,0 +1,57 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+# Contributor: Orion-zhen <https://github.com/Orion-zhen>
+# Contributor: txtsd <aur.archlinux@ihavea.quest>
+
+pkgname=llama.cpp
+_pkgname=${pkgname%%-vulkan}
+pkgver=b6379
+pkgrel=1
+pkgdesc="Port of Facebook's LLaMA model in C/C++ (with system ggml support)"
+arch=(x86_64 armv7h aarch64)
+url='https://github.com/ggerganov/llama.cpp'
+license=('MIT')
+depends=(
+  curl
+  gcc-libs
+  python
+)
+makedepends=(
+  cmake
+  git
+)
+optdepends=(
+  'python-numpy: needed for convert_hf_to_gguf.py'
+  'python-safetensors: needed for convert_hf_to_gguf.py'
+  'python-sentencepiece: needed for convert_hf_to_gguf.py'
+  'python-pytorch: needed for convert_hf_to_gguf.py'
+  'python-transformers: needed for convert_hf_to_gguf.py'
+)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ggml-org/llama.cpp/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('6b29b76d4ab3fc9b015b62508920547ae61b2dc0f0f758efd717090ca2f71330')
+
+prepare() {
+  ln -sf "${_pkgname}-${pkgver}" llama.cpp
+}
+
+build() {
+  local _cmake_options=(
+    -B build
+    -S "${_pkgname}"
+    -DCMAKE_BUILD_TYPE=None
+    -DCMAKE_INSTALL_PREFIX='/usr'
+    -DBUILD_SHARED_LIBS=ON
+    -DLLAMA_CURL=ON
+    -DLLAMA_BUILD_TESTS=OFF
+    -DLLAMA_USE_SYSTEM_GGML=ON
+    -Wno-dev
+  )
+
+  cmake "${_cmake_options[@]}"
+  cmake --build build
+}
+
+package() {
+  DESTDIR="${pkgdir}" cmake --install build
+
+  install -Dm644 "${_pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

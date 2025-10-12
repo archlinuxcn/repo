@@ -1,0 +1,68 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+pkgname=ggml-vulkan-x86_86_v3
+pkgver=0.9.4
+pkgrel=1
+pkgdesc="Tensor library for machine learning with OpenBLAS + Vulkan optimizations for x86-86-v3"
+url="https://github.com/ggml-org/ggml"
+license=('MIT')
+arch=('x86_64')
+
+depends=('openblas' 'vulkan-driver')
+makedepends=(
+  'cmake'
+  'git'
+  'ninja'
+  'shaderc'
+  'vulkan-headers'
+  'vulkan-radeon' # choose the right one for the building system
+)
+
+conflicts=(libggml ggml)
+provides=(ggml=$pkgver libggml=$pkgver)
+
+source=("git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+prepare() {
+  cd ggml
+
+  # ignore cpu feature flags; allow global microarchitecture level
+  sed -E -e '/(set|APPEND).ARCH_FLAGS/d' -i src/ggml-cpu/CMakeLists.txt
+}
+
+build() {
+  local _cmake_common=(
+    -S ggml
+    -G Ninja
+    -DCMAKE_BUILD_TYPE=None
+    -DCMAKE_INSTALL_PREFIX="/usr"
+    -DGGML_NATIVE=ON # will follow standard flags; march=native removed in prepare
+    -DGGML_LTO=ON
+    -DGGML_RPC=ON
+    -DGGML_ALL_WARNINGS=OFF
+    -DGGML_ALL_WARNINGS_3RD_PARTY=OFF
+    -DGGML_BLAS=ON
+    -DGGML_BLAS_VENDOR=OpenBLAS
+    -DGGML_VULKAN=ON
+    -DGGML_CUDA_FA_ALL_QUANTS=ON
+    -DGGML_STATIC=OFF
+    -DBUILD_SHARED_LIBS=ON
+    -Wno-dev
+  )
+
+  local _cflags=($(sed -E -e 's&-(march|mtune)=\S+\b&&g' -e 's&-O[0-9]+\b&&g' <<< "${CFLAGS}"))
+  local _cxxflags=($(sed -E -e 's&-(march|mtune)=\S+\b&&g' -e 's&-O[0-9]+\b&&g' <<< "${CXXFLAGS}"))
+
+  echo "Building with OpenBLAS + Vulkan + x86-64-v3 support..."
+  CFLAGS="${_cflags[@]} -march=x86-64-v3 -O3"
+  CXXFLAGS="${_cxxflags[@]} -march=x86-64-v3 -O3"
+  cmake -B "build" "${_cmake_common[@]}" -DCMAKE_INSTALL_LIBDIR="lib"
+  cmake --build "build"
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 "ggml/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
