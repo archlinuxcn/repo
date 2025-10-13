@@ -10,7 +10,7 @@ friendlyName="Bitwarden"
 stateDirectory="Bitwarden_Data"
 
 # This is the target executable to launch
-launchTarget="electron /usr/lib/bitwarden/app.asar --ozone-platform-hint=auto --enable-features=AcceleratedVideoEncoder,AcceleratedVideoDecoder,AcceleratedVideoDecodeLinuxGL,VaapiIgnoreDriverChecks  --wayland-text-input-version=3 --enable-wayland-ime --no-suid-sandbox --no-sandbox"
+launchTarget="electron /usr/lib/bitwarden/app.asar --enable-features=AcceleratedVideoEncoder,AcceleratedVideoDecoder,AcceleratedVideoDecodeLinuxGL,VaapiIgnoreDriverChecks  --wayland-text-input-version=3 --enable-wayland-ime --no-suid-sandbox --no-sandbox --ozone-platform=wayland"
 
 # Takes a boolean value or string "adaptive". When true, do not process XAuth files and forces wayland input method. "adaptive" enables this option on Wayland and vice versa. Generally this should be adaptive when possible.
 waylandOnly="adaptive"
