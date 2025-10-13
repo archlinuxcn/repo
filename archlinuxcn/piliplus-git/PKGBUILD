@@ -31,7 +31,11 @@ prepare() {
 
 build() (
 	cd "${_srcname}/"
-	fvm flutter build linux --no-pub --release
+	fvm flutter build linux --no-pub --release \
+		--dart-define pili.name="${pkgver}" \
+		--dart-define pili.code="$(git rev-list --count HEAD)" \
+		--dart-define pili.hash="$(git rev-parse HEAD)" \
+		--dart-define pili.time="$(date +%s)"
 )
 
 package() {
