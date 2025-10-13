@@ -22,7 +22,6 @@ prepare() {
 
 build() (
 	cd "${_srcname}/"
-	fvm dart lib/scripts/build.dart
 	fvm flutter build linux --no-pub --release
 )
 
