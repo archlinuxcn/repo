@@ -14,10 +14,8 @@ url="https://www.openblas.net/"
 license=('BSD')
 makedepends=('git' 'perl' 'gcc-fortran')
 options=(!emptydirs debug strip '!lto')
-source=("git+https://github.com/xianyi/OpenBLAS"
-        0001-Fix-compilation-on-ARM.patch)
-md5sums=('SKIP'
-         '89a1b53b0f78084eb1158100bb1ca49b')
+source=("git+https://github.com/xianyi/OpenBLAS")
+md5sums=('SKIP')
 
 pkgver() {
   cd OpenBLAS
@@ -35,11 +33,6 @@ pkgver() {
 }
 
 prepare() {
-  (
-    cd OpenBLAS
-    patch -Np1 < ../0001-Fix-compilation-on-ARM.patch
-  )
-
   rm -rf OpenBLAS-64
   cp -a OpenBLAS OpenBLAS-64
 }
