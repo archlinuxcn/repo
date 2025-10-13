@@ -1,7 +1,7 @@
 pkgname=julia-git-qt6base_jll-src
-pkgver=6.8.2+1
-_commit=792eebf38468f1d8d9e2e63d2a59b0a532bafe87
-pkgrel=2
+pkgver=6.8.2+2
+_commit=149e370239674278ed0ebdfc4ea982878c18f55b
+pkgrel=1
 pkgdesc="Qt6Base_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Qt6Base_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git qt6-base)
 source=("git+https://github.com/JuliaBinaryWrappers/Qt6Base_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('683859292b3891d86dcde1c82a1f091988bd5c968e26cee109caf562319af891'
+sha256sums=('18f91b659d200a2374339fecf584c5e9733d2aaed990713cb45538c1e37c6731'
             '3546857df6451172f09ef4655d50fb7011214538694aeb12e7b7c60b29aa51b6')
 
 build() {
