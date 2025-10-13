@@ -7,7 +7,7 @@ pkgname=(
   rog-control-center
 )
 pkgver=6.1.14
-pkgrel=0.1
+pkgrel=0.2
 pkgdesc="A control daemon, tools, and a collection of crates for interacting with ASUS ROG laptops"
 arch=('x86_64')
 url="https://asus-linux.org"
@@ -54,22 +54,11 @@ build() {
   make build
 }
 
-_pick() {
-  local p="$1" f d; shift
-  for f; do
-    d="$srcdir/$p/${f#$pkgdir/}"
-    mkdir -p "$(dirname "$d")"
-    mv "$f" "$d"
-    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
-  done
-}
-
 package_asusctl() {
   pkgdesc="${pkgdesc/tools/CLI tools}"
   depends=(
     gcc-libs
     glibc
-    hicolor-icon-theme
     libusb
     systemd
     systemd-libs
@@ -78,19 +67,19 @@ package_asusctl() {
   install=asusctl.install
   optdepends=(
     'acpi_call: fan control'
-    'supergfxctl: hybrid GPU control'
     'asusctltray: tray profile switcher'
     'rog-control-center: app to control asusctl'
+    'supergfxctl: hybrid GPU control'
   )
 
   cd "${pkgbase}"
   export CARGO_HOME="${srcdir}/cargo"
-  make DESTDIR="${pkgdir}" install
-
-  _pick rogcc "${pkgdir}/usr/bin/rog-control-center" \
-     "${pkgdir}/usr/share/applications/rog-control-center.desktop" \
-     "${pkgdir}/usr/share/icons/hicolor/512x512/apps/rog-control-center.png" \
-     "${pkgdir}/usr/share/rog-gui"
+  make DESTDIR="${pkgdir}" \
+    install-asusctl \
+    install-asusd \
+    install-asusd_user \
+    install-data-asusd \
+    install-data-asusd_user
 }
 
 package_rog-control-center() {
@@ -109,5 +98,10 @@ package_rog-control-center() {
     systemd-libs
   )
   pkgdesc="App to control asusctl"
-  mv rogcc/* "${pkgdir}"
+
+  cd "${pkgbase}"
+  export CARGO_HOME="${srcdir}/cargo"
+  make DESTDIR="${pkgdir}" \
+    install-data-rog_gui \
+    install-rog_gui
 }
