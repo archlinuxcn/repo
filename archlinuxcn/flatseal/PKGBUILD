@@ -11,7 +11,7 @@ arch=('any')
 license=('GPL-3.0-or-later')
 depends=('flatpak' 'gjs' 'webkitgtk-6.0' 'appstream' 'libadwaita')
 makedepends=('meson' 'ninja' git)
-source=("source::https://github.com/tchx84/Flatseal.git#tag=v${pkgver}")
+source=("source::git+https://github.com/tchx84/Flatseal.git#tag=v${pkgver}")
 sha256sums=('8f00ab3a3ea8e5ce3c5c7c1f345518c18da72fa9fad3a3f27b86ffc93e339178')
 
 build() {
