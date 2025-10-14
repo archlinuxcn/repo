@@ -1,0 +1,32 @@
+# Maintainer: giver <giverc139@gmail.com>
+
+_pyname=cxxheaderparser
+pkgname=python-${_pyname}
+pkgver=1.5.0
+pkgrel=1
+pkgdesc="Parse C++ header files and generate a data structure representing the class"
+arch=('any')
+url="https://github.com/robotpy/cxxheaderparser"
+license=('BSD-3-Clause')
+depends=('python')
+makedepends=(
+  'git'
+  'python-build'
+  'python-installer'
+  'python-setuptools'
+  'python-wheel'
+)
+source=("$pkgname-$pkgver::git+$url#tag=$pkgver")
+sha256sums=('280426e2877bbc231a22454f4140725fe55954ec5d653f9f4c2753cdce611e1b')
+b2sums=('e190fe6fcd6030744b100e0810424d1965bb99cb017e19a4d357f09d920e6f1e4f8342963cd5fafcd51326aed686bf3e67e745bd1602ddba6b64c6d3a7540ad3')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm 644 LICENSE.txt -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}

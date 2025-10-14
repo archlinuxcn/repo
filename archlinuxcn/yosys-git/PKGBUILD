@@ -14,7 +14,7 @@ license=('custom:ISC')
 provides=("yosys=$pkgver")
 conflicts=("yosys")
 depends=('bash' 'tcl' 'libffi' 'protobuf') # boost-libs python (added in package())
-makedepends=('git' 'boost' 'clang' 'python' 'pybind11')
+makedepends=('git' 'boost' 'clang' 'python' 'pybind11' 'python-cxxheaderparser')
 optdepends=('graphviz: Schematics display support'
             'xdot: Display netlists'
             'yices: default solver for yosys-smtbmc'
