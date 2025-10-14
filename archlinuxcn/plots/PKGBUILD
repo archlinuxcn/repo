@@ -48,4 +48,7 @@ package() {
 		--set-key=Exec \
 		--set-value='env GDK_DEBUG=gl-prefer-gl plots' \
 		"$pkgdir/usr/share/applications/plots.desktop"
+	mv \
+		"$pkgdir/usr/share/applications/plots.desktop"
+		"$pkgdir/usr/share/applications/com.github.alexhuntley.Plots.desktop"
 }
