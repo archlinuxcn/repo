@@ -1,0 +1,49 @@
+pkgname=plots
+_name=Plots
+
+pkgver=0.8.5
+pkgrel=1
+pkgdesc="A graph plotting app for GNOME"
+arch=('any')
+url="https://github.com/alexhuntley/Plots/"
+license=('GPL')
+depends=(
+	'gtk4'
+	'libhandy'
+	'python-gobject'
+	'python-opengl'
+	'python-jinja'
+	'python-numpy'
+	'python-lark-parser'
+	'otf-latinmodern-math'
+	'python-freetype-py'
+	'python-pyglm'
+)
+
+makedepends=('python-setuptools' git desktop-file-utils)
+checkdepends=('python-pytest')
+
+source=(
+	"source::git+https://github.com/alexhuntley/$_name#tag=v$pkgver"
+)
+sha256sums=('e37295676143a0712827e8b79f2789f628b8d26161f18503737752dcb0c430d6')
+
+build() {
+	cd source
+	python setup.py build
+}
+
+package() {
+	cd source
+	rm -rf build/lib/tests
+	python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+	install -D -t "$pkgdir/usr/share/help/C/plots/" help/C/*
+	install -Dm644 res/com.github.alexhuntley.Plots.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/plots.svg"
+	install -Dm644 res/com.github.alexhuntley.Plots-symbolic.svg "$pkgdir/usr/share/icons/hicolor/symbolic/apps/plots-symbolic.svg"
+	install -Dm644 res/com.github.alexhuntley.Plots.desktop "$pkgdir/usr/share/applications/plots.desktop"
+	sed -Ei 's/^(Icon=).*$/\1plots/' "$pkgdir/usr/share/applications/plots.desktop"
+	desktop-file-edit \
+		--set-key=Exec \
+		--set-value='env GSK_RENDERER=vulkan plots' \
+		"$pkgdir/usr/share/applications/plots.desktop"
+}

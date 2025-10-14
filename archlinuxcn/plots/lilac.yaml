@@ -1,0 +1,23 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: "github"
+    github: "alexhuntley/Plots"
+    #prefix: v
+    use_max_tag: true
+  - source: alpm
+    alpm: python
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: gtk3
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+
+build_prefix: extra-x86_64
