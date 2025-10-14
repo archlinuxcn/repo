@@ -2,7 +2,7 @@ pkgname=plots
 _name=Plots
 
 pkgver=0.8.5
-pkgrel=3
+pkgrel=2
 pkgdesc="A graph plotting app for GNOME"
 arch=('any')
 url="https://github.com/alexhuntley/Plots/"
@@ -49,6 +49,6 @@ package() {
 		--set-value='env GDK_DEBUG=gl-prefer-gl plots' \
 		"$pkgdir/usr/share/applications/plots.desktop"
 	mv \
-		"$pkgdir/usr/share/applications/plots.desktop"
+		"$pkgdir/usr/share/applications/plots.desktop" \
 		"$pkgdir/usr/share/applications/com.github.alexhuntley.Plots.desktop"
 }
