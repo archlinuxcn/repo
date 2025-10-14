@@ -46,6 +46,6 @@ package() {
 	sed -Ei 's/^(Icon=).*$/\1plots/' "$pkgdir/usr/share/applications/plots.desktop"
 	desktop-file-edit \
 		--set-key=Exec \
-		--set-value='env GSK_RENDERER=vulkan plots' \
+		--set-value='env GDK_DEBUG=gl-prefer-gl plots' \
 		"$pkgdir/usr/share/applications/plots.desktop"
 }
