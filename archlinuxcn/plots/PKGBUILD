@@ -2,7 +2,7 @@ pkgname=plots
 _name=Plots
 
 pkgver=0.8.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A graph plotting app for GNOME"
 arch=('any')
 url="https://github.com/alexhuntley/Plots/"
@@ -26,7 +26,7 @@ checkdepends=('python-pytest')
 source=(
 	"source::git+https://github.com/alexhuntley/$_name#tag=v$pkgver"
 )
-sha256sums=('e37295676143a0712827e8b79f2789f628b8d26161f18503737752dcb0c430d6')
+sha256sums=('43399270917e599f5beb67940a6661d8875f2afb65a44ebbdc7e6d7fc5a25d36')
 
 build() {
 	cd source
