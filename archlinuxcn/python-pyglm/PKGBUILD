@@ -17,6 +17,11 @@ options=(!lto)
 source=("$pkgname::git+https://github.com/Zuzu-Typ/PyGLM.git#tag=${pkgver}")
 sha256sums=('d26ecc224b11b12fc4d90465917dbac966448bec6245bebe09d004b0e0ae2c67')
 
+prepare() {
+	cd "$srcdir/$pkgname"
+	git submodule update --init --depth 1 --remote
+}
+
 build() {
 	cd "$srcdir/$pkgname"
 	env \
