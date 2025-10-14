@@ -1,0 +1,76 @@
+# Maintainer: chengxuncc <chengxuncc@gmail.com>
+# Contributor: Timothy Gu <timothygu99@gmail.com>
+# Contributor: Morten Linderud <foxboron@archlinux.org>
+# Contributor: David Anderson <dave@natulte.net>
+
+pkgname=tailscale-git
+_pkgname=tailscale
+pkgver=1.89.254+t005e264b5
+pkgrel=1
+pkgdesc="A mesh VPN that makes it easy to connect your devices, wherever they are. (GIT version)"
+arch=("x86_64")
+url="https://tailscale.com"
+license=("MIT")
+makedepends=("git" "go")
+depends=("glibc")
+provides=($_pkgname)
+conflicts=($_pkgname)
+backup=("etc/default/tailscaled")
+source=("git+https://github.com/tailscale/$_pkgname.git")
+sha256sums=('SKIP')
+
+options=(!lto)
+
+pkgver() {
+  cd "${_pkgname}"
+  eval "$(./build_dist.sh shellvars)"
+  echo "$VERSION_LONG" | sed 's/-/+/g'
+}
+
+prepare() {
+    cd "${_pkgname}"
+    go mod vendor
+}
+
+build() {
+    cd "${_pkgname}"
+
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+
+    # The version stamp flags mirror build_dist.sh. However, we have to
+    # duplicate that logic since we also want to set -linkmode=external, and Go
+    # has no way of merging ldflags specified through GOFLAGS with those in the
+    # command line: https://github.com/golang/go/issues/26849
+    eval "$(./build_dist.sh shellvars)"
+    GO_LDFLAGS="\
+        -linkmode=external \
+        -X tailscale.com/version.longStamp=${VERSION_LONG} \
+        -X tailscale.com/version.shortStamp=${VERSION_SHORT}"
+
+    for cmd in ./cmd/tailscale ./cmd/tailscaled; do
+        go build -v -tags xversion -ldflags "$GO_LDFLAGS" "$cmd"
+    done
+}
+
+#TODO: Figure out why tests are failing
+# check() {
+#     cd "${_pkgname}"
+#     go test $(go list ./... | grep -v tsdns_test)
+# }
+
+package() {
+    cd "${_pkgname}"
+    install -Dm755 tailscale tailscaled -t "$pkgdir/usr/bin"
+    install -Dm644 cmd/tailscaled/tailscaled.defaults "$pkgdir/etc/default/tailscaled"
+    install -Dm644 cmd/tailscaled/tailscaled.service -t "$pkgdir/usr/lib/systemd/system"
+    install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+
+    "$pkgdir/usr/bin/tailscale" completion bash | install -Dm644 /dev/stdin "$pkgdir/usr/share/bash-completion/completions/tailscale"
+    "$pkgdir/usr/bin/tailscale" completion zsh | install -Dm644 /dev/stdin "$pkgdir/usr/share/zsh/site-functions/_tailscale"
+    "$pkgdir/usr/bin/tailscale" completion fish | install -Dm644 /dev/stdin "$pkgdir/usr/share/fish/vendor_completions.d/tailscale.fish"
+
+}
