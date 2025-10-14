@@ -21,15 +21,15 @@ sha256sums=('SKIP')
 
 options=(!lto)
 
+prepare() {
+    cd "${_pkgname}"
+    go mod vendor
+}
+
 pkgver() {
   cd "${_pkgname}"
   eval "$(./build_dist.sh shellvars)"
   echo "$VERSION_LONG" | sed 's/-/+/g'
-}
-
-prepare() {
-    cd "${_pkgname}"
-    go mod vendor
 }
 
 build() {
