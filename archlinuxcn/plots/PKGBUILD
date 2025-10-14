@@ -23,6 +23,8 @@ depends=(
 makedepends=('python-setuptools' git desktop-file-utils)
 checkdepends=('python-pytest')
 
+options=(!lto)
+
 source=(
 	"source::git+https://github.com/alexhuntley/$_name#tag=v$pkgver"
 )
