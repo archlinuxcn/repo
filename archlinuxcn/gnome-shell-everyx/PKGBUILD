@@ -8,7 +8,7 @@ pkgname=gnome-shell-everyx
 
 
 
-pkgver=49.0
+pkgver=49.1
 pkgrel=1
 
 provides=("gnome-shell=$pkgver")
@@ -37,6 +37,7 @@ depends=(
   gsettings-desktop-schemas
   gtk4
   hicolor-icon-theme
+  ibus
   json-glib
   libadwaita
   libcanberra-pulse
@@ -84,7 +85,7 @@ source=(
   "0001-ibus-candidate-popup-support-rime-comment-style.patch"
   "0002-theme-Fix-jagged-edges-on-notification-buttons.patch"
 )
-b2sums=('fdc8acc857f136a654839d550bc57d3f349284d4c8e9e4a83ed7f63cf1ca95c18f3d0e59339814ea2fc8a2d8957f4797ac29572d7b9b15e970956da987ecd804'
+b2sums=('50e2bb1d5b64bcb322163653364c8074072266898eefec1eded44ad3da385b63fa4d6911135882fa0ab3895592878a402048d6a87d0718dfe432156ef807b0fa'
         'e31ae379039dfc345e8032f7b9803a59ded075fc52457ba1553276d3031e7025d9304a7f2167a01be2d54c5e121bae00a2824a9c5ccbf926865d0b24520bb053'
         'ecbbb9ce5895cc1caed2ddef39c70b4768d78ea0a929ea932d4149f923f92650973cdaefc2aacc9063f2ccf4ec965b57a9698a286f9a6561e39ce2e579ae4522'
         'ec120324e4fe90fb8017847e5eda3c0b181b6609b78610b3a61ea106ee4d56d2b3bf243c3bc5d3ddd59fe55bb5ceed4f55b41f09626137027ed1c3e27930d082'
@@ -94,6 +95,7 @@ b2sums=('fdc8acc857f136a654839d550bc57d3f349284d4c8e9e4a83ed7f63cf1ca95c18f3d0e5
 prepare() {
   # Inject gvc
   ln -s libgnome-volume-control gvc
+
   cd $_pkgbase
   git apply -3 "$srcdir"/*.patch
 }
@@ -131,6 +133,11 @@ package() {
 
 
   meson install -C build --destdir "$pkgdir"
+
+  install -Dm644 /dev/stdin "$pkgdir/usr/share/glib-2.0/schemas/30_org.archlinux.$pkgname.gschema.override" <<END
+[org.gnome.mutter:GNOME]
+experimental-features=['scale-monitor-framebuffer', 'variable-refresh-rate', 'xwayland-native-scaling']
+END
 
   mkdir -p doc/usr/share
   mv {"$pkgdir",doc}/usr/share/doc
