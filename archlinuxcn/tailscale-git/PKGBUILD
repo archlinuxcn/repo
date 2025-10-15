@@ -28,8 +28,28 @@ prepare() {
 
 pkgver() {
   cd "${_pkgname}"
-  eval "$(./build_dist.sh shellvars)"
-  echo "$VERSION_LONG" | sed 's/-/+/g'
+  # Ensure local tags are present (quietly ignore network issues)
+  git fetch --tags --force --quiet 2>/dev/null || true
+
+  # Latest tag like v1.89.0
+  local tag base major minor patch commits hash newpatch
+  tag="$(git describe --tags --match 'v*' --abbrev=0)"
+  base="${tag#v}"
+  IFS=. read -r major minor patch <<<"$base"
+
+  # Commits since tag and 9-char abbrev SHA
+  commits="$(git rev-list --count "${tag}..HEAD" 2>/dev/null || echo 0)"
+  hash="$(git rev-parse --short=9 HEAD)"
+
+  # Tailscale’s VERSION_SHORT is patch + commits
+  newpatch=$((patch + commits))
+  if [[ "$commits" -eq 0 ]]; then
+    # On the tag: no suffix
+    printf '%s.%s.%s\n' "$major" "$minor" "$newpatch"
+  else
+    # Between tags: append +t<hash> (the PKGBUILD used to s/-/+/)
+    printf '%s.%s.%s+t%s\n' "$major" "$minor" "$newpatch" "$hash"
+  fi
 }
 
 build() {
