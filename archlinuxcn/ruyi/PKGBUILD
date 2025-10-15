@@ -22,7 +22,6 @@ depends=(
   'python-tomlkit'
   'python-typing_extensions'
   'python-yaml'
-  'sh'
 )
 makedepends=(
   'python-build'
@@ -47,9 +46,11 @@ optdepends=(
 source=(
   "${pkgname}-${pkgver}.tar.gz::https://github.com/ruyisdk/ruyi/archive/refs/tags/${pkgver}.tar.gz"
   "config.toml"
+  "ruyi-completion"
 )
 sha512sums=('a3044fae1f3533bcd5524040d2d022a6f782fa8136c2f99153c30cb38920a328c9340c1b4b24f271b6ff863bb40dcdfc9879da6a33ededaa81bec6ff1d3a115a'
-            '03b9a18c495c37203e5c56518e1ab94118b3bf99e83c99924f3eeca7be64ac3b03d744c105ac99ab703c40e570195a7ed39785e5beef5f619bdf868bd6add6f6')
+            '03b9a18c495c37203e5c56518e1ab94118b3bf99e83c99924f3eeca7be64ac3b03d744c105ac99ab703c40e570195a7ed39785e5beef5f619bdf868bd6add6f6'
+            '8fb7bdd45b70ee740fcf279037a62463e13da589221bb52793a074e4063bf8b7d306fef0879980a1be893d76a0536c4ab6b124aec576b96372a8898f5307d609')
 provides=(python-ruyi)
 
 build() {
@@ -61,10 +62,7 @@ build() {
 check() {
   cd "$pkgname-$pkgver"
 
-  # pluginhost/test_api.py failed during collection
-  python -m pytest -v --ignore tests/pluginhost/test_api.py \
-                      --ignore tests/config/test_editor.py \
-                      --ignore tests/config/test_schema.py
+  python -m pytest -v --ignore tests/pluginhost/test_api.py
 }
 
 package() {
@@ -76,4 +74,5 @@ package() {
   install -Dm644 LICENSE*.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   install -Dm644 ../config.toml -t "${pkgdir}/usr/share/${pkgname}/"
+  install -Dm644 ../ruyi-completion -t "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
 }
