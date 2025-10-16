@@ -1,7 +1,7 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=framework-tool-tui
-pkgver=0.5.1
+pkgver=0.5.2
 pkgrel=1
 pkgdesc="TUI for controlling and monitoring Framework Computers hardware built in Rust"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('gcc-libs')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('261932dd6751a4a321489b7952904782b785411069682924483474108d9c1cf1')
+sha256sums=('19a6cce484fa8810abc9785f4d1770a641557846c433554ed173b3a568fa4d63')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
