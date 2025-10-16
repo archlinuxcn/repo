@@ -1,6 +1,6 @@
 pkgname=julia-git-irrationalconstants-src
-pkgver=0.2.4
-_commit=9984b8e99a0e84ad8eb6af47df4145632c4543c5
+pkgver=0.2.6
+_commit=fad4689eed56e58a37b5bc9b9ee27aab6aa0a1e1
 pkgrel=1
 pkgdesc="IrrationalConstants.jl"
 url="https://github.com/JuliaMath/IrrationalConstants.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/IrrationalConstants.jl.git#commit=$_commit")
-sha256sums=('0d2ec1c7e2bcf2fcbfa2975abdcea41f1d3474c12c312d9e0b906dbce28ff6d6')
+sha256sums=('40850ef9ea2649b10b1e6dc9f169321b168c6030b5d4b3d857dd47069ad1e015')
 
 package() {
   cd IrrationalConstants.jl
