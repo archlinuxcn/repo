@@ -17,6 +17,7 @@ md5sums=('4d69389848d3c58c7b5a98c9c3dec018')
 function prepare() {
 	sed -i 's/versioneer-518/versioneer/g' "${srcdir}/Amulet-Core/pyproject.toml"
 	sed -i 's| ~= 1.17||g' "${srcdir}/Amulet-Core/pyproject.toml"
+	git -C "${srcdir}/Amulet-Core" clean -dfx
 }
 
 function build() {
