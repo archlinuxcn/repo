@@ -44,7 +44,7 @@ build() {
 package() {
   cd "${pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
-  install -Dm644 "labelme/icons/icon.png" "${pkgdir}/usr/share/pixmaps/labelme.png"
+  install -Dm644 "labelme/icons/icon-256.png" "${pkgdir}/usr/share/pixmaps/labelme.png"
   install -Dm644 "${srcdir}/labelme.desktop" -t "${pkgdir}/usr/share/applications"
 }
 # vim:set ts=2 sw=2 et:
