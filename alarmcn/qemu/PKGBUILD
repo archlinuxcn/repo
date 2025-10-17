@@ -26,7 +26,7 @@ pkgname=(
   qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-pkgver=10.1.0
+pkgver=10.1.1
 pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
@@ -136,7 +136,7 @@ source=(
   $pkgbase-8.1.1-static_regression.patch
   $pkgbase-9.2.2-libnfs6.patch
 )
-sha512sums=('20552a524b6b298181df1af7084b470ded3fe8d1505f05011dda3c33cbc3d91f518ce026b44ba1a8b7f34c64ae81afddceda383066f4772a3a2a6333a2638caf'
+sha512sums=('72ca08894fb63c734163a53c6a836a6237de0f9f4ece4570e871bf80bcfba43fb5d4f11715564e0aef7244b7b3c4fe1890d5f10bbb05528b592d25cd95a57dfa'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
@@ -145,7 +145,7 @@ sha512sums=('20552a524b6b298181df1af7084b470ded3fe8d1505f05011dda3c33cbc3d91f518
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839'
             'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12'
             '7949b1435ed979836c59149b4b06b80fe14fa89ef12d1e027860df392e2ffdaf4a0f881021f80b4ee56e8657068bf7f2c6415c9891f34c32228b9d35e9359c8f')
-b2sums=('025012e73cdd2468b1b0fdef9b34aae41893780cfcad0d52c05e7f67ff7a9969c8c596f006b8a7e6f1b59e39da8fdec07d6f241911c604502755acd26bb750b6'
+b2sums=('3617898fb4275e1e18f9567e9a9137ad0f3e3e3bc6a1b77301fd59614047757d77a9b810ece2e504ff47c1b98e2b9881a1ff551a4bc356c87c0d5d85f471a59b'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
@@ -394,7 +394,7 @@ package_qemu-common() {
     --preserve-argv0 yes
   )
 
-  depends=(gcc-libs glibc glib2 libglib-2.0.so libgmodule-2.0.so hicolor-icon-theme libcap-ng libcap-ng.so numactl libnuma.so)
+  depends=(gcc-libs glibc glib2 libglib-2.0.so libgmodule-2.0.so hicolor-icon-theme libcap-ng libcap-ng.so)
   backup=(
     etc/$pkgbase/bridge.conf
     etc/sasl2/$pkgbase.conf
@@ -1087,7 +1087,7 @@ package_qemu-tests() {
 
 package_qemu-tools() {
   pkgdesc="QEMU tools"
-  depends=(curl libcurl.so gcc-libs glib2 libglib-2.0.so libgmodule-2.0.so glibc libxkbcommon libxkbcommon.so numactl libnuma.so python qemu-common=$pkgver-$pkgrel)
+  depends=(curl libcurl.so gcc-libs glib2 libglib-2.0.so libgmodule-2.0.so glibc libxkbcommon libxkbcommon.so python qemu-common=$pkgver-$pkgrel)
   mv -v $pkgname/* "$pkgdir"
   install -vDm 644 $pkgbase-$pkgver/scripts/dump-guest-memory.py -t "$pkgdir/usr/share/$pkgbase/"
   install -vDm 755 $pkgbase-$pkgver/scripts/simpletrace.py -t "$pkgdir/usr/share/$pkgbase/"
