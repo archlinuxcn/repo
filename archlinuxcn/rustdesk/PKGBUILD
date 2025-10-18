@@ -99,16 +99,17 @@ _fn_hwcodec() {
 
 true "${QUIET:=}" "${logpipe:=}"
 
+DLAGENTS="${DLAGENTS[@]/curl /curl -L}"
+
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.4.2'
+_pkgver='1.4.3'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
-#_sfx='-pr1-5c9b4ab'
-#_sfx='-pr2-8d45301'
-_sfx='-pr3-3176391'
 _sfx=''
+#_sfx='-pr1-a898c22'
+#_sfx='-pr2-6a0da9c'
 _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific hbb.
   '1.3.7:20250120-49c6b24a7a8c39d4448e07b743007ef1a3febd43'
   '1.3.8:20250223-7cf11f7b771e27ecbd14fd1dd0ced55a64f40eb5'
@@ -116,6 +117,7 @@ _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific 
   '1.4.0:20250509-6e556f7e1751a3a709cd5cca0df7268ba3cb1c48'
   '1.4.1:20250718-f91459c4ab80fc3cfdef0882b2af51f984bc914c'
   '1.4.2:20250904-9e7696c7d4e346508ba68e801a53c6d1f1748fb5'
+  '1.4.3:20251008-5ed0afde0841659e2fb37ae7acaddc005fa1a8d3'
 )
 _pkgverhbb="$(_fn_VCL "${_pkgver}" -eq "${_HBB[@]}")"; unset _HBB; test "$(_vercmp "${_pkgver}" '1.3.7')" -lt 0 -o ! -z "${_pkgverhbb}" || exit 1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -222,8 +224,8 @@ source+=("${_vcs[@]}")
     )
   fi
 ####
-md5sums=('12e2031a6cad26de3128105db26a2049'
-         '030607b35c8d70d62f42e3a82b68b1da'
+md5sums=('e58b44aa2a7c4da37d12aea25bcf63fc'
+         '09970a85e7806927ab836bd76b5b8e3a'
          '6acc4b5b14befec55ef84006b60c7ff5'
          'a77a4586f30f77de2eed63e160b3a051'
          '379cfba8479c2a92e05e3b855d1e6901'
@@ -238,8 +240,8 @@ md5sums=('12e2031a6cad26de3128105db26a2049'
          '03485098fb64a000a4f7cd97e468dfff'
          'a3efc04e00cede00296f1a0dc323e8d1'
          'cc8e5418ff0c163228aabbe385ba2596')
-sha256sums=('63815b4772f60389418c3868efcd783801ed3001c406b6aac5e16b7c1499acdc'
-            'b064a3796aa6284190a73489eb4a997f3ecfd7e9b1fc176fc4c08b576fc3c8c6'
+sha256sums=('8fe00a7702d871e6425bd47d0c05ad66558dbb0bc769132225122efdde71cf88'
+            'bf312c6b8d2ca5941a0f445eb08114fbc46e93c532e065169a8e0f07d2d7122a'
             '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
             '82757ee1ab6b956a3c601f7db82e2d9ad80dbbcf2ba68c63059f0b529426ccd0'
             '359046f24f8a81b96a198000a1cfd7934c1f4870b2a1306e13f65694cefef68f'
