@@ -1,0 +1,24 @@
+[Unit]
+Description=Squeezelite Player
+After=network.target
+
+[Service]
+Nice=-10
+LimitRTPRIO=98
+LimitMEMLOCK=infinity
+#ControlGroup=cpu:/
+User=squeezelite
+Group=squeezelite
+SupplementaryGroups=audio
+EnvironmentFile=-/etc/squeezelite.conf
+
+ExecStart=/usr/bin/squeezelite\
+ $OPTIONS\
+ $NAME $MAC $PRIORITY\
+ $MAX_RATE $AUDIO_DEV\
+ $BUFFER $CODEC $ALSA_PARAMS $VOLUME\
+ $LOG_FILE $LOG_LEVEL\
+ $UPSAMPLE $DOP $VISULIZER $SERVER_IP
+
+[Install]
+WantedBy=multi-user.target
