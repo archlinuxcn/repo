@@ -86,9 +86,5 @@ check() {
 
 package() {
   meson install -C build --destdir "$pkgdir"
-
-  mkdir -p doc/usr/share
-  mv {"$pkgdir",doc}/usr/share/doc
-
   install -Dt "$pkgdir/usr/share/libalpm/hooks" -m644 "${srcdir}/gdk-pixbuf-query-loaders.hook"
 }
