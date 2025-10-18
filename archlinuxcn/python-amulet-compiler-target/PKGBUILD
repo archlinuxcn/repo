@@ -16,6 +16,7 @@ md5sums=('85c55ed1c7f26ac0f4c0fba47f1e42e2')
 
 function prepare() {
 	cd "${srcdir}/Amulet-Compiler-Target"
+	git clean -fdx
 	git submodule init
 	git submodule update
 }
