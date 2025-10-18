@@ -1,0 +1,30 @@
+post_install() {
+	getent group squeezelite &>/dev/null || groupadd -r squeezelite >/dev/null
+	getent passwd squeezelite &>/dev/null || useradd -r -g squeezelite -G audio -c 'Squeezelite' -s /bin/false squeezelite >/dev/null
+	post_upgrade
+}
+
+pre_upgrade() {
+	systemctl stop squeezelite.service
+}
+
+post_upgrade() {
+	touch /var/log/squeezelite.log
+	chown -R squeezelite:squeezelite /var/log/squeezelite.log
+	if [ ! -f /etc/squeezelite.conf ]; then
+		cp /etc/squeezelite.conf.default /etc/squeezelite.conf
+	fi
+
+	systemctl daemon-reload
+	systemctl restart squeezelite.service
+}
+
+pre_remove() {
+	systemctl stop squeezelite.service
+	systemctl disable squeezelite.service
+}
+
+post_remove() {
+	getent passwd squeezelite &>/dev/null && userdel squeezelite >/dev/null
+	getent group squeezelite &>/dev/null && groupdel squeezelite >/dev/null || true
+}
