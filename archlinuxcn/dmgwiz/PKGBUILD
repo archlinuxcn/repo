@@ -1,7 +1,7 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=dmgwiz
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Extract filesystem data from DMG files"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('gcc-libs' 'bzip2')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('799cb71d6c66ab47fb6c3772fbc2c0de3893720b4eae2851a5a473015bb8e5d0')
+sha256sums=('c2cdea92bcb934aaeea4f1797cf15e85bdb3e7b6da577cc8c974869753d11601')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
