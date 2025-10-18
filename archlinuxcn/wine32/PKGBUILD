@@ -4,7 +4,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine32
-pkgver=10.16
+pkgver=10.17
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -12,11 +12,9 @@ _pkgbasever=${pkgver/rc/-rc}
 source=("https://dl.winehq.org/wine/source/10.x/wine-${pkgver}.tar.xz"
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('6d511cb5dea4b8a85c591140c06cf563b96df39095020f0957cd4dc70a9c0082152138c482ccfcc52cb4d1be23578dd0734fc154b478e3b31dc792ec5b7e387b'
+sha512sums=('e6abd944c5c39f86f57152ff35a0e8f337004feb1a4a449535c40f7a0403d5274f2361b232d341427027006b42486e82855070b0a7c9f74526359e1ba968cd3a'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
-
-pkgdesc="A compatibility layer for running Windows programs on both 32-bit and 64-bit architectures (without WoW64)"
 url="https://www.winehq.org"
 arch=(x86_64)
 options=(staticlibs !lto)
