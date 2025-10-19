@@ -8,14 +8,14 @@
 
 pkgname=melonds-git
 _gitname=melonDS
-pkgver=2613.f143e89c9
+pkgver=2614.91ab6809
 pkgrel=1
 pkgdesc='DS emulator, sorta'
 url="https://github.com/melonDS-emu/melonDS"
 license=('GPL-3.0-or-later')
 arch=('i686' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
-depends=('enet' 'libarchive' 'libepoxy' 'libslirp' 'qt6-base' 'qt6-multimedia' 'qt6-svg' 'sdl2' 'faad2')
-makedepends=('cmake' 'extra-cmake-modules' 'git' 'ninja' 'pkg-config')
+depends=('enet' 'libarchive' 'libslirp' 'qt6-base' 'qt6-multimedia' 'qt6-svg' 'sdl2' 'faad2' 'vulkan-icd-loader')
+makedepends=('cmake' 'extra-cmake-modules' 'git' 'ninja' 'pkg-config' 'vulkan-headers')
 
 if [[ "${_use_clang::1}" == "t" ]]; then
   makedepends+=('clang' 'lld')
@@ -35,7 +35,22 @@ pkgver()
   printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  cd "${_gitname}"
+
+  # allow Arch build system to control build
+  sed -e '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' -i CMakeLists.txt
+  truncate -s 0 cmake/DefaultBuildFlags.cmake
+
+  # fix for Qt 6.10
+  sed -E -e 's&\b(Qt6::)?(Widgets)\b&\1\2 \1GuiPrivate&' -i src/frontend/qt_sdl/CMakeLists.txt
+}
+
 build() {
+  export CC CXX CFLAGS CXXFLAGS LDFLAGS
+  CFLAGS+=" -DNDEBUG"
+  CXXFLAGS+=" -DNDEBUG"
+
   local _ldflags=(${LDFLAGS})
 
   if [[ "${_use_clang::1}" == "t" ]]; then
