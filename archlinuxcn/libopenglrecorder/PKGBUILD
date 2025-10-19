@@ -3,7 +3,7 @@
 
 pkgname=libopenglrecorder
 pkgver=0.1.0
-pkgrel=25
+pkgrel=26
 pkgdesc="A library allowing optional async readback OpenGL frame buffer with optional audio recording"
 arch=('i686' 'x86_64')
 url="https://github.com/Benau/libopenglrecorder"
@@ -32,6 +32,7 @@ build() {
     -DBUILD_WITH_H264=ON            \
     -DBUILD_RECORDER_WITH_SOUND=ON  \
     -DCMAKE_INSTALL_PREFIX=/usr     \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DCMAKE_INSTALL_LIBDIR=lib      \
     -DCMAKE_BUILD_TYPE=Release      \
     ..
