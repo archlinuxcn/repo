@@ -5,7 +5,7 @@ pkgname=rustnet
 _pkgname=${pkgname%}
 _reponame=${pkgname%}
 pkgver=0.14.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Real-time network monitoring TUI with process identification via eBPF and deep packet inspection"
 arch=('x86_64' 'armv7h' 'aarch64')
 _author=domcyrus
@@ -19,7 +19,7 @@ install=$_pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "rustnet-setcap.hook")
 sha256sums=('92c252523ab9c7ab6b2f844aab995d8ef11a6140039c003dd68a58ddd2ef3372'
-            'b14ba212f2a589ca327a2e59563a4fdd3787c022baf43b6dc249b03814757cc4')
+            '5fa300e21753588f5decdbb17ac2a6fc3c25601bed27de59ddf4dd101d8cf37c')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
@@ -46,8 +46,7 @@ build() {
 
     export CARGO_PROFILE_RELEASE_LTO=thin
     export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
-    # Use ebpf for better performance
-    CFLAGS='-flto=auto' cargo build --frozen --release --features ebpf
+    CFLAGS='-flto=auto' cargo build --frozen --release --all-features
 }
 
 check() {
@@ -65,7 +64,7 @@ check() {
 
     export CARGO_PROFILE_RELEASE_LTO=thin
     export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
-    CFLAGS='-flto=auto' cargo test --frozen --release --features ebpf
+    CFLAGS='-flto=auto' cargo test --frozen --release --all-features
 }
 
 package() {
