@@ -19,7 +19,7 @@ install=$_pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "rustnet-setcap.hook")
 sha256sums=('92c252523ab9c7ab6b2f844aab995d8ef11a6140039c003dd68a58ddd2ef3372'
-            '5fa300e21753588f5decdbb17ac2a6fc3c25601bed27de59ddf4dd101d8cf37c')
+            '40363ced28dca33d3e7425c7a3c3ee793bafa8e90e7697768149e5fe53b337eb')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
