@@ -1,29 +1,29 @@
 # Maintainer: Alexandre Bouvier <contact@amb.tf>
 _pkgname=cemu
 pkgname=$_pkgname-git
-pkgver=2.6.r71.g955ce9b9
+pkgver=2.6.r85.g492116a
 pkgrel=1
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://cemu.info/"
-license=('MPL2')
+license=('MPL-2.0')
 depends=(
-	'discord-rpc'
+	'gcc-libs'
+	'glibc'
 	'glslang>=14'
 	'hicolor-icon-theme'
 	'libx11'
 	'pugixml'
 	'sdl2'
 	'wxwidgets-gtk3-git'
-    'llvm-libs'
 )
 makedepends=(
-    'bluez-libs'
+	'bluez-libs'
 	'boost'
 	'cmake>=3.21.1'
 	'cubeb'
 	'curl'
-	'fmt'
+	'fmt>=9'
 	'git'
 	'glib2'
 	'glm'
@@ -43,7 +43,6 @@ makedepends=(
 	'zarchive>=0.1.2'
 	'zlib'
 	'zstd'
-    'clang'
 )
 provides=("$_pkgname")
 conflicts=("$_pkgname")
@@ -51,45 +50,40 @@ source=(
 	"$_pkgname::git+https://github.com/cemu-project/Cemu.git"
 	'imgui::git+https://github.com/ocornut/imgui.git'
 )
-b2sums=('SKIP'
-        'SKIP')
+b2sums=(
+	'SKIP'
+	'SKIP'
+)
 
 pkgver() {
 	cd $_pkgname
-	git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	git describe --long --tags --abbrev=7 | sed 's/^v//;s/[^-]*-g/r&/;s/-/./g'
 }
 
 prepare() {
 	cd $_pkgname
-
 	git config submodule.dependencies/imgui.url ../imgui
 	git -c protocol.file.allow=always submodule update
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
-	sed -i '/discord-rpc/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
-    # https://github.com/cemu-project/Cemu/pull/1436
-	sed -i '/set/s/"glslang"/"glslang::glslang"/' src/Cafe/CMakeLists.txt
-	# https://github.com/cemu-project/Cemu/pull/1474
-	sed -i 's/fmt::format("{}", v)/fmt::format("{}", fmt::underlying(v))/' src/Cafe/GameProfile/GameProfile.cpp
 }
 
 build() {
-	cmake -S $_pkgname -B build \
-        -DALLOW_PORTABLE=OFF \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_C_FLAGS_RELEASE="-DNDEBUG" \
-		-DCMAKE_CXX_FLAGS_RELEASE="-DNDEBUG" \
-		-DENABLE_VCPKG=OFF \
-		-DCMAKE_C_COMPILER=clang \
-		-DCMAKE_CXX_COMPILER=clang++ \
-		-DCMAKE_CXX_FLAGS="$CXXFLAGS -w" \
+	local options=(
+		-D ALLOW_PORTABLE=OFF
+		-D CMAKE_BUILD_TYPE=Release
+		-D CMAKE_C_FLAGS_RELEASE="-DNDEBUG"
+		-D CMAKE_CXX_FLAGS_RELEASE="-DNDEBUG"
+		-D ENABLE_VCPKG=OFF
 		-Wno-dev
+	)
+	cmake "${options[@]}" -B build -S $_pkgname
 	cmake --build build
 }
 
 package() {
-		depends+=(
-        'libbluetooth.so'
+	depends+=(
+		'libbluetooth.so'
 		'libboost_program_options.so'
 		'libcrypto.so'
 		'libcubeb.so'
@@ -107,12 +101,12 @@ package() {
 		'libzip.so'
 		'libzstd.so'
 	)
-    cd $_pkgname
+	cd $_pkgname
 	# shellcheck disable=SC2154
 	install -d "$pkgdir"/usr/{bin,share/Cemu}
 	mv bin/Cemu_release "$pkgdir"/usr/bin/Cemu
 	cp -dr --no-preserve=ownership -t "$pkgdir"/usr/share/Cemu bin/*
 	install -Dm644 -t "$pkgdir"/usr/share/applications dist/linux/info.cemu.Cemu.desktop
+	install -Dm644 -t "$pkgdir"/usr/share/icons/hicolor/128x128/apps dist/linux/info.cemu.Cemu.png
 	install -Dm644 -t "$pkgdir"/usr/share/metainfo dist/linux/info.cemu.Cemu.metainfo.xml
-	install -Dm644 src/resource/logo_icon.png "$pkgdir"/usr/share/icons/hicolor/128x128/apps/info.cemu.Cemu.png
 }
