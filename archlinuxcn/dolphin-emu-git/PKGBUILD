@@ -9,7 +9,7 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2509.r165.gd8bcd6d82ee
+pkgver=2509.r202.ga2913abeb9
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -24,7 +24,7 @@ depends=(
 	'libusb-1.0.so' 'libx11' 'libxi' 'libxrandr' 'lz4' 'lzo' 'mbedtls2' 'pugixml'
 	'sdl3' 'sfml' 'speexdsp' 'xxhash' 'xz' 'zstd' 'fmt'
 	# Additional dependencies to replace vendored deps
-	'cubeb' 'libiconv' 'minizip-ng' 'zlib-ng'
+	'cubeb' 'libiconv' 'minizip-ng' 'zlib-ng' 'glslang'
 )
 makedepends=(
 	'alsa-lib' 'cmake' 'git' 'libevdev' 'libminiupnpc.so' 'libpulse'
@@ -42,9 +42,11 @@ source=(
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
 	"$pkgbase-vh::git+https://github.com/KhronosGroup/Vulkan-Headers.git"
 	"$pkgbase-watcher::git+https://github.com/e-dant/watcher.git"
+	"$pkgbase-cpp-optparse::git+https://github.com/weisslj/cpp-optparse.git"
 	'cmake-mgba.diff'
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -70,6 +72,7 @@ prepare() {
 		[tinygltf]='tinygltf/tinygltf'
 		[vh]='Vulkan-Headers'
 		[watcher]='watcher/watcher'
+        [cpp-optparse]='cpp-optparse/cpp-optparse'
 	)
 
 	for _submod in "${!_submodules[@]}"; do
@@ -79,6 +82,7 @@ prepare() {
 		git -c protocol.file.allow=always submodule update "$_path"
 	done
 
+    sed -i 's/15.0/16.0/g' "$srcdir/$_sourcedirectory/CMakeLists.txt"
 	cd "$srcdir/$_sourcedirectory/Externals/mGBA/mgba/"
 	patch --forward -p1 < "$srcdir/cmake-mgba.diff"
 }
