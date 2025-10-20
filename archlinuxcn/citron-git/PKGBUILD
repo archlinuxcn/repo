@@ -1,0 +1,178 @@
+# Maintainer: Sébastien TERRIER <ouinouin at ouinouin dot eu>
+# Maintainer: HurricanePootis <hurricanepootis@protonmail.com>
+_pkgname=citron
+pkgname=citron-git
+pkgver=0.8.0.r28.gb85fd5f
+pkgrel=1
+pkgdesc="Nintendo Switch emulator forked from yuzu."
+arch=(x86_64)
+url=https://citron-emu.org
+license=(GPL-2.0-or-later)
+provides=('citron')
+depends=('qt6-base' 'qt6-webengine' 'ffmpeg' 'sdl2-compat' 'hicolor-icon-theme' 'brotli' 'libusb' 'enet' 'opus' 'fmt' 'zydis' 'glibc' 'boost-libs' 'gcc-libs' 'lz4' 'openssl' 'zstd' 'libva' 'zlib' 'openal' 'speexdsp' 'discord-rpc-git' 'cubeb-git' 'cpp-httplib' 'cpp-jwt')
+makedepends=('git' 'cmake' 'glslang' 'ninja' 'doxygen' 'nlohmann-json' 'vulkan-headers' 'boost' 'qt6-tools' 'qt6-multimedia-ffmpeg'  'qt6-multimedia' 'rapidjson' 'vulkan-headers' 'vulkan-utility-libraries' 'catch2' 'vulkan-memory-allocator-git')
+optdepends=('gamemode: Gamemoded support')
+conflicts=('citron')
+options=(!debug)
+source=(citron::git+https://git.citron-emu.org/citron/emulator.git
+        dynarmic::git+https://github.com/yuzu-mirror/dynarmic.git
+        sirit::git+https://github.com/yuzu-mirror/sirit.git
+        SPIRV-Headers::git+https://github.com/KhronosGroup/SPIRV-Headers
+        mbedtls::git+https://github.com/yuzu-mirror/mbedtls.git
+        xbyak::git+https://github.com/herumi/xbyak.git
+        libadrenotools::git+https://github.com/bylaws/libadrenotools.git
+        tzdb_to_nx::git+https://github.com/lat9nq/tzdb_to_nx.git
+        breakpad::git+https://github.com/yuzu-mirror/breakpad.git
+        simpleini::git+https://github.com/brofield/simpleini.git
+        oaknut::git+https://github.com/yuzu-mirror/oaknut.git
+        Vulkan-Utility-Libraries::git+https://github.com/KhronosGroup/Vulkan-Utility-Libraries.git
+        googletest::git+https://github.com/google/googletest.git
+        sanitizers-cmake::git+https://github.com/arsenm/sanitizers-cmake.git
+        zycore::git+https://github.com/zyantific/zycore-c.git
+        linkernsbypass::git+https://github.com/bylaws/liblinkernsbypass.git
+        tz::git+https://github.com/eggert/tz.git)
+
+b2sums=('SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP')
+
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  git describe --tags --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g;s/canary.refresh.//g'
+}
+
+prepare() {
+  cd "$srcdir/$_pkgname"
+
+  #patch -Rp1 < "$srcdir/moc.diff"
+  git rm -f externals/SDL
+  git rm -f externals/ffmpeg/ffmpeg
+  git rm -f externals/enet
+  git rm -f externals/opus
+  git rm -f externals/vcpkg
+  git rm -f externals/libusb/libusb
+  
+  git submodule init
+  for _submodule in cubeb dynarmic discord-rpc Vulkan-Headers sirit mbedtls xbyak cpp-httplib cpp-jwt libadrenotools tzdb_to_nx VulkanMemoryAllocator breakpad simpleini oaknut Vulkan-Utility-Libraries;
+    do
+      git config submodule.$_submodule.url "${srcdir}/$_submodule"
+    done
+  git -c protocol.file.allow=always submodule update --init
+
+  pushd externals/cubeb
+    git config submodule.cmake/sanitizers-cmake.url "${srcdir}"/sanitizers-cmake
+    git config submodule.googletest.url "${srcdir}"/googletest
+    git -c protocol.file.allow=always submodule update
+  popd
+
+  pushd externals/dynarmic/externals/zydis
+    git config submodule.dependencies/zycore.url "${srcdir}"/zycore
+    git -c protocol.file.allow=always submodule update
+  popd
+
+  pushd externals/libadrenotools
+    git config submodule.lib/linkernsbypass.url "${srcdir}"/linkernsbypass
+    git -c protocol.file.allow=always submodule update
+  popd
+
+  pushd externals/nx_tzdb/tzdb_to_nx
+    git config submodule.externals/tz/tz.url "${srcdir}"/tz
+    git -c protocol.file.allow=always submodule update
+  popd
+  
+  pushd externals/sirit
+    git config submodule.externals/SPIRV-Headers.url "${srcdir}"/SPIRV-Headers
+    git -c protocol.file.allow=always submodule update
+  popd
+
+  # Compatibility Boost 1.88
+  find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service\b/boost::asio::io_context/g'
+  find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::asio::io_service::strand\b/boost::asio::strand<boost::asio::io_context::executor_type>/g'
+  find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's|#include *<boost/process/async_pipe.hpp>|#include <boost/process/v1/async_pipe.hpp>|g'
+  find . -type f \( -name '*.cpp' -o -name '*.h' \) | xargs sed -i 's/\bboost::process::async_pipe\b/boost::process::v1::async_pipe/g'
+
+  # Ensure cubeb is used from externals
+  sed -is 's/if (ENABLE_CUBEB/if (ENABLE_SWAG/' CMakeLists.txt
+  # Fix for qt 6.10.0
+  sed -i 's/find_package(Qt6 REQUIRED COMPONENTS Widgets/find_package(Qt6 REQUIRED COMPONENTS Widgets GuiPrivate/g;s/set(CITRON_QT_COMPONENTS2 Core/set(CITRON_QT_COMPONENENTS2 Core GuiPrivate/g' CMakeLists.txt
+  sed -i 's/target_link_libraries(citron PRIVATE Boost\:\:headers/target_link_libraries(citron PRIVATE Boost\:\:headers Qt6\:\:GuiPrivate/g' src/citron/CMakeLists.txt
+}
+
+build() {
+  # Forcing GCC since clang currently fails to compile citron
+  case $LTOFLAGS in
+	  *thin*)
+		  export CFLAGS="${CFLAGS//thin/auto}"
+		  export CXXFLAGS="${CXXFLAGS//thin/auto}"
+		  export LDFLAGS="${LDFLAGS//thin/auto}"
+		  echo "YOU GOT THIN"
+	  ;;
+  esac
+  case $LDFLAGS in
+	  *lld*)
+		  export LDFLAGS="${LDFLAGS//lld/bfd}"
+		  echo "YOU GOT LLD"
+		  ;;
+  esac
+  cd "$srcdir"
+  
+  cmake -B build -GNinja -S "$_pkgname" \
+    -DCITRON_USE_BUNDLED_VCPKG=OFF \
+    -DCITRON_USE_BUNDLED_QT=OFF \
+    -DCITRON_USE_BUNDLED_FFMPEG=OFF \
+    -DCITRON_USE_EXTERNAL_VULKAN_HEADERS=ON \
+    -DCITRON_USE_EXTERNAL_VULKAN_UTILITY_LIBRARIES=OFF \
+    -DCITRON_USE_EXTERNAL_SDL2=ON \
+    -DCITRON_TESTS=OFF \
+    -DCITRON_CHECK_SUBMODULES=OFF \
+    -DCITRON_ENABLE_LTO=ON \
+    -DCITRON_USE_QT_MULTIMEDIA=ON \
+    -DCITRON_USE_QT_WEB_ENGINE=ON \
+    -DENABLE_QT_TRANSLATION=ON \
+    -DUSE_DISCORD_PRESENCE=ON \
+    -DCITRON_USE_FASTER_LD=OFF \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_CXX_FLAGS="$CXXFLAGS -DNDEBUG" \
+    -DCMAKE_C_FLAGS="$CFLAGS -DNDEBUG" \
+    -DTITLE_BAR_FORMAT_RUNNING="citron | ${pkgver} {}" \
+    -DTITLE_BAR_FORMAT_IDLE="citron | ${pkgver} {}" \
+    -DCMAKE_SYSTEM_PROCESSOR=$CARCH \
+    -DCMAKE_SYSTEM_PROCESSOR=x86_64 \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_C_COMPILER=gcc \
+    -DCMAKE_CXX_COMPILER=g++ \
+    -DCMAKE_EXE_LINKER_FLAGS="$LDFLAGS" \
+    -DCMAKE_SHARED_LINKER_FLAGS="$LDFLAGS" \
+    -DCMAKE_C_FLAGS="$CFLAGS" \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    
+  cmake --build build
+} 
+
+package() {
+  cd "$srcdir"
+  DESTDIR="$pkgdir/" cmake --install build
+  cd "$srcdir/$_pkgname/LICENSES"
+  for file in *.txt;
+  do
+    install -Dm644 $file "$pkgdir/usr/share/licenses/$pkgname/$file"
+  done
+
+  install -Dm644 "$srcdir/$_pkgname/dist/72-citron-input.rules" "$pkgdir/usr/lib/udev/rules.d/72-citron-input.rules"
+  sed -i 's/KERNEL==/ACTION!="remove", KERNEL==/' "$pkgdir/usr/lib/udev/rules.d/72-citron-input.rules"
+
+}
