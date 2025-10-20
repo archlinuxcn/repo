@@ -6,7 +6,7 @@ arch=('x86_64')
 url="https://github.com/jeremy-rifkin/cpptrace"
 license=('MIT')
 
-depends=('zstd' 'libdwarf' 'libunwind')
+depends=('zstd' 'libdwarf' 'libunwind' glibc gcc-libs)
 makedepends=('git' 'cmake' 'make' 'pkgconf')
 provides=('cpptrace')
 
