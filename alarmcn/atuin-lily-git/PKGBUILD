@@ -15,6 +15,8 @@ url="https://github.com/lilydjwg/atuin"
 license=('MIT')
 depends=('gcc-libs' 'sqlite3')
 makedepends=('cargo' 'git' 'protobuf')
+# alarm is slow to update its rust toolchain
+makedepends_aarch64=('rustup')
 optdepends=('bash-preexec: bash integration')
 source=("${_pkgname}::git+https://github.com/lilydjwg/atuin.git")
 sha256sums=('SKIP')
