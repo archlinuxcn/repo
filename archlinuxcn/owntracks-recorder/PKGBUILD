@@ -23,12 +23,13 @@ makedepends=(
 	'pkgconf'
 )
 backup=(
-	'etc/owntracks-recorder.conf
+	'etc/owntracks-recorder.conf'
+)
 source=(
 	"$pkgname-$pkgver.tar.gz::https://github.com/owntracks/recorder/archive/refs/tags/$pkgver.tar.gz"
-	systemd.service
+	"systemd.service"
 )
-sha256sums=("f0fa4b413675128037b26ceabef48c29947426f989467e200e0739ff0c92bf00")
+sha256sums=("SKIP" "SKIP")
 
 build() {
 	cd "${srcdir}/recorder-${pkgver}"
@@ -65,13 +66,6 @@ package() {
 	# Tune owntracks-recorder.conf
 	sed -i 's#OTR_STORAGEDIR="/var/spool/owntracks/recorder/store"#OTR_STORAGEDIR="/var/lib/owntracks-recorder"#g' etc/owntracks-recorder.conf
 	sed -i 's%# OTR_PORT=1883%OTR_PORT=0%g' etc/owntracks-recorder.conf
-
-	# Tune owntracks-recorder.service
-	sed -i 's%# /etc/systemd/system/ot-recorder.service%%g'                      usr/lib/systemd/system/owntracks-recorder.service
-	sed -i 's#ExecStartPre=/bin/sleep 15#Environment="OTR_LMDBSIZE=104857600"#g' usr/lib/systemd/system/owntracks-recorder.service
-	sed -i 's#User=owntracks#DynamicUser=yes#g'                                 usr/lib/systemd/system/owntracks-recorder.service
-	sed -i 's#WorkingDirectory=/#WorkingDirectory=/var/lib/owntracks-recorder#g' usr/lib/systemd/system/owntracks-recorder.service
-
 	install -Dm644"${srcdir}/recorder-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 	chmod 755 "${pkgdir}/etc/owntracks-recorder.conf"
 }
