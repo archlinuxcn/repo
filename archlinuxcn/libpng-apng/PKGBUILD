@@ -6,7 +6,7 @@ pkgrel=2
 pkgdesc="A collection of routines used to create PNG format graphics files"
 arch=('x86_64')
 url="https://sourceforge.net/projects/libpng-apng/"
-license=('custom')
+license=('LicenseRef-custom')
 depends=('zlib' 'bash')
 provides=(libpng=$pkgver libpng16.so)
 conflicts=(libpng)
@@ -43,7 +43,7 @@ package() {
 
   make DESTDIR="$pkgdir" install
 
-  install -D -m0644 LICENSE "$pkgdir/usr/share/licenses/$libname/LICENSE"
+  install -D -m0644 LICENSE -t "$pkgdir/usr/share/licenses/${pkgname}/"
 
   cd contrib/pngminus
   make PNGLIB_SHARED="-L$pkgdir/usr/lib -lpng" CFLAGS="$CFLAGS" LDFLAGS="$LDFLAGS" png2pnm pnm2png
