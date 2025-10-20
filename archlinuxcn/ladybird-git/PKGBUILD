@@ -4,7 +4,7 @@
 # Contributor: Brian <brain@derelict.garden>
 
 pkgname=ladybird-git
-pkgver=r72097.6f31d9a40d0
+pkgver=r72275.ab3eb9adab7
 pkgrel=1
 pkgdesc='Truly independent web browser'
 arch=(x86_64)
@@ -44,9 +44,7 @@ options=('!lto' '!debug' '!buildflags' '!staticlibs' '!emptydirs')
 source=(
   "git+$url"
 )
-sha256sums=(
-  'SKIP'
-)
+sha256sums=('SKIP')
 
 pkgver() {
   cd ladybird
