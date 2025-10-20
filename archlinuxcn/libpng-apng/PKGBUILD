@@ -7,7 +7,7 @@ pkgdesc="A collection of routines used to create PNG format graphics files"
 arch=('x86_64')
 url="https://sourceforge.net/projects/libpng-apng/"
 license=('LicenseRef-custom')
-depends=('zlib' 'bash')
+depends=('zlib' 'bash' 'glibc')
 provides=(libpng=$pkgver libpng16.so)
 conflicts=(libpng)
 source=("https://downloads.sourceforge.net/sourceforge/$libname/$libname-$pkgver.tar.xz"
