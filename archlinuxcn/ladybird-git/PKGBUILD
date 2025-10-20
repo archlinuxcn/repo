@@ -39,7 +39,7 @@ depends=(
   cpptrace
 )
 makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip libpng-apng)
-options=('!lto' '!debug' '!buildflags' '!staticlibs' '!emptydirs')
+options=('!lto' '!staticlibs' '!emptydirs')
 source=(
   "git+$url"
 )
