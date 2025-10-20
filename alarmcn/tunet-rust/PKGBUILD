@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=tunet-rust
-pkgver=0.10.5
+pkgver=0.10.6
 pkgrel=1
 pkgdesc="A Tsinghua University network authentication client for Linux, written in Rust. 清华大学校园网 Rust 客户端"
 url="https://github.com/Berrysoft/${pkgname}"
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('openssl' 'freetype2' 'hicolor-icon-theme' 'qt6-base')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('bbfd48020601f61c15455462c38b678e2db0936694b080db6fc78bbae546a4ba')
+sha256sums=('f7998f9a901af3e501c2d29b414e5fb4bfdfbdba6df4e7fd5b6354c3c6779aef')
 options=('!lto')
 
 prepare() {
