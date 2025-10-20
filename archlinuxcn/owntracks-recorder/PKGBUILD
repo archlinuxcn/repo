@@ -1,4 +1,3 @@
-
 pkgname=owntracks-recorder
 pkgver=1.0.0
 pkgrel=2
@@ -24,9 +23,7 @@ makedepends=(
 	'pkgconf'
 )
 backup=(
-	'etc/owntracks-recorder.conf'
-)
-install='install.sh'
+	'etc/owntracks-recorder.conf
 source=(
 	"$pkgname-$pkgver.tar.gz::https://github.com/owntracks/recorder/archive/refs/tags/$pkgver.tar.gz"
 	systemd.service
