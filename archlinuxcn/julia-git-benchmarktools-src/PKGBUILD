@@ -1,6 +1,6 @@
 pkgname=julia-git-benchmarktools-src
-pkgver=1.6.0
-_commit=cddd794ba336763be6831cfa076d27df96ef893c
+pkgver=1.6.2
+_commit=bf334cf74b814b2b2cf08041a23d3daeed6e7aa0
 pkgrel=1
 pkgdesc="BenchmarkTools.jl"
 url="https://github.com/JuliaCI/BenchmarkTools.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaCI/BenchmarkTools.jl.git#commit=$_commit")
-sha256sums=('1907605d56772c29ec34c3d4a89b02a2f350a278805769db512faa9895e2fef3')
+sha256sums=('47039fa82e597d6453ac46e08882337645a7c60e01070e2c39b3dae8b1a0918a')
 
 package() {
   cd BenchmarkTools.jl
