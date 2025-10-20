@@ -5,7 +5,7 @@ pkgdesc="Unicode validation and transcoding at billions of characters per second
 arch=('i686' 'x86_64')
 url="https://simdutf.github.io/simdutf/"
 license=('Apache-2.0' 'MIT')
-depends=('gcc-libs')
+depends=('gcc-libs' glibc)
 makedepends=('git' 'cmake' 'ninja')
 provides=("simdutf=$pkgver")
 conflicts=('simdutf')
