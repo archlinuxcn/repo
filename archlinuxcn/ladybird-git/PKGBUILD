@@ -1,0 +1,104 @@
+# Maintainer: Ali Mohammad Pur <totally@fakegmail.ch>
+# Contributor: Tim Schumacher <timschumi@gmx.de>
+# Contributor: Alexander F. Rødseth <xyproto@archlinux.org>
+# Contributor: Brian <brain@derelict.garden>
+
+pkgname=ladybird-git
+pkgver=r72097.6f31d9a40d0
+pkgrel=1
+pkgdesc='Truly independent web browser'
+arch=(x86_64)
+url='https://github.com/LadybirdBrowser/ladybird'
+license=(BSD-2-Clause)
+conflicts=(ladybird)
+provides=(ladybird)
+depends=(
+  curl
+  fast_float
+  ffmpeg
+  harfbuzz
+  icu
+  libavif
+  libgl
+  libjpeg-turbo
+  libjxl
+  libtiff
+  libtommath
+  libwebp
+  qt6-base
+  qt6-multimedia
+  qt6-tools
+  qt6-wayland
+  sdl3
+  sqlite
+  ttf-liberation
+  woff2
+
+  libpng # Should be AUR apng variant
+  angle
+  simdutf
+  cpptrace
+)
+makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip)
+options=('!lto' '!debug' '!buildflags' '!staticlibs' '!emptydirs')
+source=(
+  "git+$url"
+)
+sha256sums=(
+  'SKIP'
+)
+
+pkgver() {
+  cd ladybird
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "${srcdir}"
+
+  export PKG_CONFIG_PATH=$(realpath .)
+
+  local use_linker=
+  if ! echo $'#if defined(__clang__)\nWE ARE ON CLANG\n#endif' | "${CC:-/usr/bin/cc}" -E - | grep -q 'WE ARE ON CLANG'; then
+    echo "Disabling LTO on Release build with GCC"
+    use_linker='-DENABLE_LTO_FOR_RELEASE=OFF'
+  fi
+
+  cmake \
+    -B build \
+    -S ladybird \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DLADYBIRD_CACHE_DIR=Build/caches \
+    -DCMAKE_BUILD_TYPE=Release \
+    $use_linker \
+    -DCMAKE_INSTALL_PREFIX='/opt/ladybird/usr' \
+    -DENABLE_INSTALL_HEADERS=OFF \
+    -DCMAKE_INSTALL_LIBEXECDIR="lib/${pkgname%-git}" \
+    -GNinja \
+    -Wno-dev
+  cmake --build build
+}
+
+package() {
+  cd "${srcdir}"
+
+  DESTDIR="${pkgdir}" cmake --install build
+
+  find "$pkgdir" -name '*.a' -delete
+  find "$pkgdir" -name '*.cmake' -delete
+
+  find "$pkgdir" -type f -executable -exec sh -c '
+    for exe; do
+      r=$(patchelf --print-rpath "$exe" 2>/dev/null)
+      [ "${r%%/opt/angle/lib*}" = "$r" ] && patchelf --set-rpath "/opt/angle/lib${r:+:$r}" "$exe"
+    done
+  ' sh {} +
+
+  # Make the desktop file point to the file in /opt
+  RELATIVE_DESKTOP_FILE_PATH='usr/share/applications/org.ladybird.Ladybird.desktop'
+  sed -i -e 's#Exec=Ladybird #Exec=/opt/ladybird/usr/bin/Ladybird #' "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}"
+
+
+  install -Dm644 ladybird/LICENSE -t "${pkgdir}/opt/ladybird/usr/share/licenses/${pkgname}/"
+  install -Dm644 "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}" "${pkgdir}/${RELATIVE_DESKTOP_FILE_PATH}"
+}

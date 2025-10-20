@@ -1,0 +1,42 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: "github"
+    github: "LadybirdBrowser/ladybird"
+  - source: alpm
+    alpm: ffmpeg
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: libgl
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: curl
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: qt6-base
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: icu
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: sqlite
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+
+build_prefix: archlinuxcn-x86_64
+
+repo_depends:
+  - angle
+  - simdutf
+  - cpptrace
