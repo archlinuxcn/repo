@@ -33,6 +33,18 @@ update_on:
     alpm: sqlite
     from_pattern: '^(\d+\.\d+)\..*'
     to_pattern: '\1'
+  - source: alpm
+    alpm: libxml2
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: zlib
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: brotli
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
 
 build_prefix: archlinuxcn-x86_64
 
