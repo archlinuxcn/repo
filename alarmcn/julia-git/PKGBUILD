@@ -563,15 +563,15 @@ package_julia-git() {
 package_julia-git-package-env() {
   backup=(usr/lib/julia/.package-precompile-env)
   pkgdesc+=" (Package precompilation environment)"
-  _nproc=3
-  if [[ "$CARCH" = x86_64 ]]; then
-    _nproc=32
-  fi
 
   mkdir -p "${pkgdir}/usr/lib/julia/"
   cat > "${pkgdir}/usr/lib/julia/.package-precompile-env" <<EOF
 export JULIA_CPU_TARGET="${_cpu_target}"
-export JULIA_PRECOMPILE_NPROCESS=${_nproc}
+if ((\$(getconf PAGESIZE) * \$(getconf _PHYS_PAGES) > 100000000000)); then
+  export JULIA_PRECOMPILE_NPROCESS=\$(nproc)
+else
+  export JULIA_PRECOMPILE_NPROCESS=3
+fi
 EOF
 }
 
