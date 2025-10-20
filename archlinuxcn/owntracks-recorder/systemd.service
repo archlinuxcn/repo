@@ -1,0 +1,18 @@
+# /etc/systemd/system/ot-recorder.service
+
+[Unit]
+Description=OwnTracks Recorder
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+WorkingDirectory=/var/lib/owntracks-recorder
+StateDirectory=owntracks-recorder
+Environment="OTR_LMDBSIZE=104857600"
+ExecStartPre=ot-recorder --initialize
+ExecStart=ot-recorder
+
+[Install]
+WantedBy=multi-user.target
