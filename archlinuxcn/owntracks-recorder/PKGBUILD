@@ -66,6 +66,6 @@ package() {
 	# Tune owntracks-recorder.conf
 	sed -i 's#OTR_STORAGEDIR="/var/spool/owntracks/recorder/store"#OTR_STORAGEDIR="/var/lib/owntracks-recorder"#g' etc/owntracks-recorder.conf
 	sed -i 's%# OTR_PORT=1883%OTR_PORT=0%g' etc/owntracks-recorder.conf
-	install -Dm644"${srcdir}/recorder-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+	install -Dm644 "${srcdir}/recorder-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 	chmod 755 "${pkgdir}/etc/owntracks-recorder.conf"
 }
