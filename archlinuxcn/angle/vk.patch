@@ -1,0 +1,15 @@
+diff --git a/src/libANGLE/renderer/vulkan/vk_cache_utils.cpp b/src/libANGLE/renderer/vulkan/vk_cache_utils.cpp
+index 974657a3110..11d288b9f5f 100644
+--- a/src/libANGLE/renderer/vulkan/vk_cache_utils.cpp
++++ b/src/libANGLE/renderer/vulkan/vk_cache_utils.cpp
+@@ -7362,6 +7362,10 @@ T *UpdateDescriptorSetsBuilder::DescriptorInfoAllocator<T>::allocate(uint32_t co
+     return &mCurrentVector->front();
+ }
+
++template VkBufferView *UpdateDescriptorSetsBuilder::DescriptorInfoAllocator<VkBufferView>::allocate(uint32_t);
++template VkWriteDescriptorSet *UpdateDescriptorSetsBuilder::DescriptorInfoAllocator<VkWriteDescriptorSet>::allocate(uint32_t);
++template VkDescriptorImageInfo *UpdateDescriptorSetsBuilder::DescriptorInfoAllocator<VkDescriptorImageInfo>::allocate(uint32_t);
++
+ uint32_t UpdateDescriptorSetsBuilder::WriteDescriptorSetAllocator::updateDescriptorSets(
+     VkDevice device) const
+ {

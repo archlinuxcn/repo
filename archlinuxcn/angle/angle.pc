@@ -1,0 +1,9 @@
+prefix=/opt/angle/usr
+includedir=${prefix}/include
+libdir=${prefix}/lib
+
+Name: angle
+Description: A conformant OpenGL ES implementation for Windows, Mac, Linux, iOS and Android.
+Version: 7258
+Libs: -L${libdir} -lEGL -lEGL_vulkan_secondaries -lGLESv1_CM -lGLESv2 -lGLESv2_vulkan_secondaries -lGLESv2_with_capture -lVkICD_mock_icd -lfeature_support
+Cflags: -I${includedir}
