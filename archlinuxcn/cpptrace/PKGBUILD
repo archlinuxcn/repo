@@ -2,7 +2,7 @@ pkgname=cpptrace
 pkgver=1.0.4
 pkgrel=2
 pkgdesc="Simple, portable, and self-contained stacktrace library for C++11 and newer"
-arch=('any')
+arch=('x86_64')
 url="https://github.com/jeremy-rifkin/cpptrace"
 license=('MIT')
 
@@ -27,5 +27,6 @@ prepare() {
 }
 
 package() {
-    cmake --build build --target install
+	cmake --build build --target install
+	install -vDm644 "${srcdir}/cpptrace/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
