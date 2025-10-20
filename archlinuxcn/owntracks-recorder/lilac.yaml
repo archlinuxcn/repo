@@ -9,7 +9,7 @@ post_build_script: |
 update_on:
   - source: "github"
     github: "owntracks/recorder"
-    use_max_tag: true
+    use_latest_release: true
   - source: alpm
     alpm: curl
     from_pattern: '^(\d+\.\d+)\..*'
