@@ -68,7 +68,7 @@ build() {
     -DLADYBIRD_CACHE_DIR=Build/caches \
     -DCMAKE_BUILD_TYPE=Release \
     $use_linker \
-    -DCMAKE_INSTALL_PREFIX='/opt/ladybird/usr' \
+    -DCMAKE_INSTALL_PREFIX='/usr' \
     -DENABLE_INSTALL_HEADERS=OFF \
     -DCMAKE_INSTALL_LIBEXECDIR="lib/${pkgname%-git}" \
     -GNinja \
@@ -92,10 +92,10 @@ package() {
   ' sh {} +
 
   # Make the desktop file point to the file in /opt
-  RELATIVE_DESKTOP_FILE_PATH='usr/share/applications/org.ladybird.Ladybird.desktop'
-  sed -i -e 's#Exec=Ladybird #Exec=/opt/ladybird/usr/bin/Ladybird #' "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}"
+  #RELATIVE_DESKTOP_FILE_PATH='usr/share/applications/org.ladybird.Ladybird.desktop'
+  #sed -i -e 's#Exec=Ladybird #Exec=/opt/ladybird/usr/bin/Ladybird #' "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}"
 
 
   install -Dm644 ladybird/LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-  install -Dm644 "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}" "${pkgdir}/${RELATIVE_DESKTOP_FILE_PATH}"
+  #install -vDm644 "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}" "${pkgdir}/${RELATIVE_DESKTOP_FILE_PATH}"
 }
