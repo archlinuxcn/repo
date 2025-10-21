@@ -133,5 +133,12 @@ properties:
     description: Whether the package should be built by lilac or not
     type: boolean
     default: true
+  allowed_workers:
+    description: The workers that can pick up this package. Empty means any worker.
+    type: array
+    items:
+      type: string
+      description: worker name
+    minItems: 0
 required:
   - maintainers
