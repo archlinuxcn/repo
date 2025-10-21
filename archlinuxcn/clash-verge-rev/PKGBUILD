@@ -27,6 +27,8 @@ prepare() {
 build() {
 	cd "${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
 	export CFLAGS+=" -ffat-lto-objects"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
 	_prepare_service
 	_build_service
 	_check_service
