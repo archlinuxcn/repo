@@ -158,10 +158,11 @@ prepare() {
 
   ./build/linux/unbundle/replace_gn_files.py \
     --system-libraries "${!_system_libs[@]}"
-  find third_party/libyuv -type f -exec sed -i -e 's/__arm_locally_streaming/__attribute__((target("+sme"))) __arm_locally_streaming/' {} \;
 }
 
 build() {
+  CFLAGS="${CFLAGS/-march=*([^ ]) }"
+  CXXFLAGS="${CXXFLAGS/-march=*([^ ]) }"
   make -C chromium-launcher-$_launcher_ver
 
   cd chromium-$pkgver

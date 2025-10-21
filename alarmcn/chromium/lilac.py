@@ -25,9 +25,12 @@ def pre_build():
     if line.startswith('prepare()'):
       in_prepare = True
     if in_prepare and line.startswith('}'):
-      print('  find third_party/libyuv -type f -exec sed -i -e \'s/__arm_locally_streaming/__attribute__((target("+sme"))) __arm_locally_streaming/\' {} \\;')
+      # print('  find third_party/libyuv -type f -exec sed -i -e \'s/__arm_locally_streaming/__attribute__((target("+sme"))) __arm_locally_streaming/\' {} \\;')
       in_prepare = False
     print(line)
+    if line.startswith('build()'):
+      print('  CFLAGS="${CFLAGS/-march=*([^ ]) }"')
+      print('  CXXFLAGS="${CXXFLAGS/-march=*([^ ]) }"')
 
   run_protected(["updpkgsums"])
 
