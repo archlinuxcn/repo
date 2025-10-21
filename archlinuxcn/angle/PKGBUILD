@@ -9,6 +9,7 @@ depends=('zlib' 'libglvnd' 'freetype2' 'expat' 'libpng' 'libjpeg-turbo' 'fontcon
 makedepends=('git' 'python' 'procps-ng' 'ninja' 'gn' 'patchelf' 'pciutils' 'linux-headers')
 provides=(angle)
 conflicts=(angle)
+options=("!debug")
 source=(
     "git+$url#branch=chromium/$pkgver"
     "angle.pc"
