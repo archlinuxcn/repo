@@ -46,7 +46,7 @@ depends=(
   simdutf
   cpptrace
 )
-makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip libpng-apng)
+makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip libpng-apng patchelf)
 options=('!lto' '!staticlibs' '!emptydirs' '!debug')
 source=(
   "git+$url"
@@ -105,5 +105,6 @@ package() {
 
 
   install -Dm644 ladybird/LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+  patchelf --set-rpath /usr/lib/angle:/usr/lib/ladybird "${pkgdir}/usr/bin/Ladybird"
   #install -vDm644 "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}" "${pkgdir}/${RELATIVE_DESKTOP_FILE_PATH}"
 }

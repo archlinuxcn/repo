@@ -118,7 +118,7 @@ package() {
     cd "$srcdir/angle"
 
     # License
-    install -D -m644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -vDm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
     # Library
     libs=(
