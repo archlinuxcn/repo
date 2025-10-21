@@ -1,20 +1,24 @@
 # Maintainer: Torsten Keßler <tpkessler at archlinux dot org>
+# Maintainer: Christian Heusel <gromit@archlinux.org>
 # Contributor: acxz <akashpatel2008 at yahoo dot com>
 
 pkgbase=rocm-llvm
 pkgname=(rocm-llvm rocm-device-libs comgr)
-pkgver=6.4.1
-pkgrel=0
+epoch=2
+pkgver=6.4.4
+pkgrel=2
 arch=(aarch64)
 url='https://rocm.docs.amd.com/en/latest/reference/rocmcc.html'
 makedepends=('git' 'cmake' 'python' 'ninja' 'rocm-core' 'rocm-cmake' 'perl'
              'gcc-libs' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses' 'libxml2' 'patchelf')
 source=("$pkgbase::git+https://github.com/ROCm/llvm-project#tag=rocm-$pkgver"
         rocm-llvm-6.4-llvm-gold-plugin-fix-ModuleName.patch
-        rocm-llvm-6.4-fix-array-assert.patch)
-sha256sums=('edb637d082a0d0a41e50f5128cf5b23226313bbc4f28e888843cde137e2f3594'
+        rocm-llvm-6.4-fix-array-assert.patch
+        rocm-llvm-6.4-fix-glibc-2.42-termio-removal.patch)
+sha256sums=('9e4f250e3e294112c49ea7aab722475f5061d997651b1dc9e1a0df0b902c1170'
             '0293c307131426a9c031f215045e2f0725677de0aac6dda1729456ac9a444415'
             '6485a06e4f3b85df76110548f428217f86e785ec3dec7b0de0a7a2cf6384f0c0'
+            '09d9135f8212a93d678c6c2fd9f551e55cab431e257f1182cfdfae7834e2fa14'
             'eb4f45eb0cbba0cdbb9d9a3823482bac43cf91079e1bf59c5f6b7bd129ec6592'
             'edda75ff7c0f22a370f41a940e4e391825d7706f9fe300e2bf568dfc23908016')
 options=(staticlibs !lto)
@@ -48,6 +52,9 @@ _prepare() {
   # Add fix for missing function overload (openat)
   # https://github.com/llvm/llvm-project/issues/100754
   git cherry-pick -n 155b7a12820ec45095988b6aa6e057afaf2bc892
+
+  # Fix build with glibc 2.42: https://github.com/llvm/llvm-project/issues/137321
+  patch -Np1 < ../rocm-llvm-6.4-fix-glibc-2.42-termio-removal.patch
 }
 
 build() {
@@ -70,6 +77,7 @@ build() {
         -D LLVM_HOST_TRIPLE=$CHOST
         -D LLVM_ENABLE_PROJECTS='clang;lld;clang-tools-extra'
         -D CLANG_ENABLE_AMDCLANG=ON
+        -D PACKAGE_VENDOR="AMD"
         -D LLVM_ENABLE_RUNTIMES='compiler-rt;libunwind;libcxx;libcxxabi'
         -D LIBCXX_ENABLE_SHARED=OFF
         -D LIBCXX_ENABLE_STATIC=ON
@@ -80,6 +88,7 @@ build() {
         -D LIBCXXABI_INSTALL_STATIC_LIBRARY=OFF
         -D LLVM_TARGETS_TO_BUILD='AMDGPU;NVPTX;AArch64'
         -D CLANG_DEFAULT_LINKER=lld
+        -D ENABLE_LINKER_BUILD_ID=ON
         -D CLANG_DEFAULT_RTLIB=compiler-rt
         -D CLANG_DEFAULT_UNWINDLIB=libgcc
         -D LLVM_INSTALL_UTILS=ON
