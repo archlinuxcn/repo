@@ -68,7 +68,7 @@ package_element-portable() {
 	install -vDm755 "${srcdir}/element-portable.sh" "${pkgdir}/usr/bin/element-portable"
 
 
-	pacman -Ql firefox >file.list
+	pacman -Ql element-web >file.list
 	while IFS= read -r line; do
 		file="$(echo "$line" | awk '{print $2}')"
 		if [[ -d ${file} ]]; then
