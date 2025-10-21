@@ -45,6 +45,11 @@ update_on:
     alpm: brotli
     from_pattern: '^(\d+\.\d+)\..*'
     to_pattern: '\1'
+  - source: alpm
+    alpm: angle
+    repo: archlinuxcn
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
 
 build_prefix: archlinuxcn-x86_64
 
