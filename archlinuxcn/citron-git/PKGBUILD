@@ -67,17 +67,11 @@ prepare() {
   git rm -f externals/libusb/libusb
   
   git submodule init
-  for _submodule in cubeb dynarmic discord-rpc Vulkan-Headers sirit mbedtls xbyak cpp-httplib cpp-jwt libadrenotools tzdb_to_nx VulkanMemoryAllocator breakpad simpleini oaknut Vulkan-Utility-Libraries;
+  for _submodule in dynarmic sirit mbedtls xbyak libadrenotools tzdb_to_nx VulkanMemoryAllocator breakpad simpleini oaknut Vulkan-Utility-Libraries;
     do
       git config submodule.$_submodule.url "${srcdir}/$_submodule"
     done
   git -c protocol.file.allow=always submodule update --init
-
-  pushd externals/cubeb
-    git config submodule.cmake/sanitizers-cmake.url "${srcdir}"/sanitizers-cmake
-    git config submodule.googletest.url "${srcdir}"/googletest
-    git -c protocol.file.allow=always submodule update
-  popd
 
   pushd externals/dynarmic/externals/zydis
     git config submodule.dependencies/zycore.url "${srcdir}"/zycore
