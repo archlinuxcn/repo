@@ -3,8 +3,8 @@
 
 pkgname=sundials-lapack
 epoch=1
-pkgver=7.5.0
-pkgrel=0
+pkgver=5.8.0
+pkgrel=1
 pkgdesc='Suite of nonlinear differential/algebraic equation solvers'
 arch=(armv7h aarch64 x86_64)
 url='https://computing.llnl.gov/projects/sundials'
@@ -13,7 +13,7 @@ depends=(openmpi suitesparse lapack)
 makedepends=(cmake gcc-fortran python)
 provides=("sundials=$pkgver")
 source=(https://github.com/LLNL/sundials/archive/v$pkgver/sundials-$pkgver.tar.gz)
-sha256sums=('8b5fe715009cd0f1a0ff244729c2570e3e631d3bf357495e7813b5063d4d0cf3')
+sha256sums=('e8ebc2004aae8c642791fdf51aac8a7774b21fc9baf41f26b18e76ec38adfa3e')
 
 build() {
   cmake -B build -S sundials-$pkgver \
@@ -24,7 +24,6 @@ build() {
     -DENABLE_OPENMP=ON \
     -DENABLE_KLU=ON \
     -DKLU_LIBRARY_DIR=/usr/lib \
-    -DKLU_INCLUDE_DIR=/usr/include/suitesparse \
     -DENABLE_LAPACK=ON \
     -DEXAMPLES_INSTALL_PATH=/usr/share/sundials/examples
   cmake --build build
