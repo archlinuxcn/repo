@@ -14,6 +14,7 @@ conflicts=(ladybird)
 provides=(ladybird)
 depends=(
   curl
+  dbus
   fast_float
   ffmpeg
   harfbuzz
@@ -40,13 +41,14 @@ depends=(
   gcc-libs
   zlib
   brotli
+  libproxy
 
   libpng # Should be AUR apng variant
   angle
   simdutf
   cpptrace
 )
-makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip libpng-apng patchelf)
+makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip libpng-apng patchelf clang compiler-rt)
 options=('!lto' '!staticlibs' '!emptydirs' '!debug')
 source=(
   "git+$url"
@@ -63,24 +65,20 @@ build() {
 
   export PKG_CONFIG_PATH=$(realpath .)
 
-  local use_linker=
-  if ! echo $'#if defined(__clang__)\nWE ARE ON CLANG\n#endif' | "${CC:-/usr/bin/cc}" -E - | grep -q 'WE ARE ON CLANG'; then
-    echo "Disabling LTO on Release build with GCC"
-    use_linker='-DENABLE_LTO_FOR_RELEASE=OFF'
-  fi
-
   cmake \
     -B build \
     -S ladybird \
+    -DENABLE_CI_BASELINE_CPU=ON \
+    -DENABLE_LTO_FOR_RELEASE=ON \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++ \
     -DBUILD_SHARED_LIBS=OFF \
     -DLADYBIRD_CACHE_DIR=Build/caches \
-    -DCMAKE_BUILD_TYPE=None \
-    $use_linker \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX='/usr' \
     -DENABLE_INSTALL_HEADERS=OFF \
+    -DENABLE_INSTALL_FREEDESKTOP_FILES=ON \
     -DCMAKE_INSTALL_LIBEXECDIR="lib/${pkgname%-git}" \
-    -GNinja \
-    -Wno-dev
   cmake --build build
 }
 
