@@ -92,12 +92,12 @@ package() {
   find "$pkgdir" -name '*.a' -delete
   find "$pkgdir" -name '*.cmake' -delete
 
-  find "$pkgdir" -type f -executable -exec sh -c '
-    for exe; do
-      r=$(patchelf --print-rpath "$exe" 2>/dev/null)
-      [ "${r%%/opt/angle/lib*}" = "$r" ] && patchelf --set-rpath "/opt/angle/lib${r:+:$r}" "$exe"
-    done
-  ' sh {} +
+  # find "$pkgdir" -type f -executable -exec sh -c '
+  #   for exe; do
+  #     r=$(patchelf --print-rpath "$exe" 2>/dev/null)
+  #     [ "${r%%/opt/angle/lib*}" = "$r" ] && patchelf --set-rpath "/opt/angle/lib${r:+:$r}" "$exe"
+  #   done
+  # ' sh {} +
 
   # Make the desktop file point to the file in /opt
   #RELATIVE_DESKTOP_FILE_PATH='usr/share/applications/org.ladybird.Ladybird.desktop'
