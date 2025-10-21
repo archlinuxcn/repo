@@ -9,6 +9,7 @@ post_build_script: |
 update_on:
   - source: "git"
     git: "https://chromium.googlesource.com/chromium/tools/depot_tools"
+    use_commit: true
   - source: alpm
     alpm: python
     from_pattern: '^(\d+\.\d+)\..*'
