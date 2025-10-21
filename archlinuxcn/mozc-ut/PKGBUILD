@@ -17,8 +17,8 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname='mozc-ut'
-pkgver=2.31.5851.102.20250602
-pkgrel=2
+pkgver=2.32.5981.102.20251020
+pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
 url='https://github.com/google/mozc'
@@ -28,10 +28,10 @@ makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=2.31.5851.102')
+provides=('mozc=2.32.5981.102')
 conflicts=('mozc')
 options=(!distcc !ccache)
-source=('git+https://github.com/google/mozc.git#commit=d703e617246b3916edcb5b95812badef1a2764bc'
+source=('git+https://github.com/google/mozc.git#commit=8b9b14cb0a41c4f353e5d4c76619044522af885a'
         'git+https://github.com/abseil/abseil-cpp.git#commit=4447c7562e3bc702ade25105912dce503f0c4010'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=b514bdc898e2951020cbdca1304b75f5950d1f59'
@@ -39,35 +39,35 @@ source=('git+https://github.com/google/mozc.git#commit=d703e617246b3916edcb5b958
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
         'git+https://github.com/protocolbuffers/protobuf.git#commit=7cc670c1809e704ebeba90fb430d50e009f36727'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d'
-        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=3e6d04df2efd9303caf7c6a7489749a392c52e73'
-        'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=bf26bcbb1846f2e9cf35cbfcafcc91c015a1fb22'
-        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=b43932b90dc5f9788383b708cb117f06d16df521'
-        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=1f79374f1b5b83f143f3328091794dfa369271ef'
+        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=e173cd106891d76e73263711036070c2b31d7f9d'
+        'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=69d40eed4e9cf016384d9629920fefa199116ea2'
+        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=4f82fc1003403874d9d4dd9adecfeff17f06a1f1'
+        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=95d6e3d24a3e22700b57b162bcd18c87b1d213e9'
         'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=e33ac4ce808fa4253c6c97bf5178e229a4bfb50f'
-        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=f9e05d2e06fc30137e4dadaf22966e6616442710'
-        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=2d942f3f30ebe6fcab5e92ca0bd76a531c87c33f'
+        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=d0ad47deea54f3a6818efacd93e20ba5bac93213'
+        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=5d91fc6fdc33f802174398ca208ded7f8c561427'
         'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=384ad926e306d5308839c6dedb63696f11703968'
-        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=d1afebf15d8d63be62c2df2aceaf42cb1c243acd'
+        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=662ef1939eb6e9297d91abd18e53bbd0f8690914'
         'https://dumps.wikimedia.org/jawiki/20251001/jawiki-20251001-pages-articles-multistream-index.txt.bz2')
 noextract=('jawiki-20251001-pages-articles-multistream-index.txt.bz2')
-sha256sums=('8b5ec72c5a12feeaa96bf87be35d9e96986938cc71305e5f9e539c919f2873ea'
-            'e131bbdd4e207d6cc2930bca9db82d6da9e347175c1125d9d1f2e09a36652278'
-            '5168bb8ea19e2f696eeecbdee991f28e496aea206a473fd7cb49b547f5d0c5af'
-            'c081295f2c22705e07fc430e152a30b36f949a179075d47d3e12ff3109d43c6a'
-            '8a136786407526c64686c3f9990d6416d62c7e2d474ef4a75ced337ecfc58cef'
-            '10a13d356071f2b0c2b6dcab1d841fae451f6a2020ee9b901533533fc7ac3008'
-            '578ead09a4a3fbf2f70b6af56e0b385ca136c79a4f4a62c777cb13e7a6f733f5'
-            'abb86ac4d546c98d7d9a10fdeb1059d6e3395e892d5397fb03179361f37c98fe'
-            '862da24719ef04346d57f99fa7c0a37b0fe246378cf30cb4a8def24aa12a1155'
-            '81ed16f6b59f64e08482ea7ab676913584d95ecac00255e981374f02df2188e9'
-            '5e276fa4fe063852ae54d18fc8adcb068c1f1b725b51cb3255f429439cc7ca9f'
-            'ca6d56ca8ae41a71ecffa2958f8d36349f869dc479f87f43a5b41569eb6c4736'
-            '2bb007c54db6bb70d1771bffaeb05217c0e768cb176b9343ec0a25e9756d9f67'
-            '2fa1dfeab0bc5a13ab1062b8257521d0102530093ad8ac6b5ca77d34ae3e3069'
-            'b6fc7068995ece29cf585f5c23c471f5f364e24516ac92b44defdc5ef987754c'
-            'bf1960c14d821a01a9717bbd22b3321844514796c59e6eae84afbb18c295f9c3'
-            '18e64d1ef7a7589765b2d35eb4b4d05cc50251ccebc67c7d8a8042f30757cca9'
-            '167a8c545318f45519cff0cd90321314e11d841aea067ffcce39731d90d8c368')
+b2sums=('8ff3b4a900f9b4e71cf5b51c23db3a0c0dd25889a07ee6a3afb2de2669a01f2ce43b5d975c8ff121daaabd6608b8deb610e38d7ad284bcaef8d84fd0735592c1'
+        '45ca8cc8c61d9696365d19064e36be9edf38112f57e413063b0f72155fc8a67147768386eae005e1e23e9c95ede95ce1df0c630b1704a84f2d3e05397b0ddade'
+        'eb54c87947561d6d985b3a244860a247a6ae41e5667ed6f4687dc864a3f02bc0b52d111c5b16025e06f44a1db31d7731c42eb38725521512b4c102475aebf585'
+        '89cbc8965037def33f8c46210b16c35e306fceb437f74aa0133e9a914dbc876d363394f4e7b94485e6d518e78f20db07a832751b0afd7a732e37c22eb1896435'
+        'a6de318769bc421794d46b207eceb92920c7610cf107249183b40801fec3b1b079d679565de05e6a24b9970623563d914a8a674c5481a498d9fecf5a23e214ca'
+        '7abe2c678b7983fbc86b11b25e6f6f1dfc4dfe75b8db40510849ce8b06f415dc4932c16fa0bae213fa0a466d7a837363d0860024ac0e5bcb87f64dc23561c220'
+        'd284ef75e86d80000a65afe5e1d60493a70af47acb664432e8e12e9cf84a33acfebd7751f75b4693d187c36def1bdca1d5f9e336dd2edea6c28120064f7956c3'
+        '8d105ce08ca103db180ec99c7845eee08d15abcc3e7cfce51d1b565a4ed5942be40aaefbc78e80e09e84c5583640d6a33feed7d3d9ec572c4a9ebf505ea6a7f5'
+        'eb5fa8ba9d72e9c79465c1f1af8228267a5a22263afd62e5fc5123b9daca3fc8c016704904426e14f1b871efd7c762b4915705ac51d3bf0d19df1f062ec52071'
+        'f585f3d3463e01669eea5568198cd9bf49492a0a1f5fc3afa7ce3fc2ce744ce02e4fe970cc2ab9b40fa287569c66ed8fb8fec6f580042c2fb76850e3cd93da6c'
+        '9bb7d0dc31341b91f31831189ac7a3443cfc845b9f6f2eb970c83490c78c9fc9fe85ed50d64ffac94997062c229a95ba02bf15ce0ced14ba551c89a267e814ce'
+        '7a359c989b4316398a243e0191c492360f11c7122d979ad0ddbd74b27929516769f2b4425038ff467145186bc1677cb71738770c906faad65be2c831f6ea98d2'
+        'b2a8a919973d1a74e18b69adf7753cf0cacfa038b3c97bb37c57f6ff0749092e323befd56ae58a3eea637cefe2a3f55280f391d25fd4639dbca3ede2e8472f44'
+        '23190bc9a2f555c8a3744917417960c9c9b42ebe2fed6d084869dc75da1f49daf84782fc35cec1ad401bb381bf5eef8ba0cf9e8c5150fc0c07b636e9bab10a79'
+        'd972e4a113b6a6087d7fd7e6a39609d605771dc8a41b872628562c4593217095f6beb26b9d93e843d5713de9fedcf3e313366eb6ba4973f31ba41cfdf30d4256'
+        '3c63f51241bd659e5841f26b11620ce755663aafe2a7c750738bb840df2e50de6b033f6cbf43e8a74258b1d07e86f1487b4caf1954e99354ce8f526ab469623a'
+        '471c91bb69846ead9a3bf48cf61433705cc0fbaedc86a2fde45f2527c13b2364598222d4d8dc5196a3ba0c62469a762596c4bf47f173b9c394927c33940002fb'
+        'bb2e781571f09d1a69485001193bce370cd47212a363efdc3306da36fb931ffa54a6fcef31ba2d33fb2ca02226a71cd50f305bf13b95c641dc4aecd3dba1b5f2')
 
 prepare() {
     cd mozc/src
@@ -150,7 +150,7 @@ package() {
     sed -n 698,704p data/installer/credits_en.html > Tamachi-Phonetic-Kanji-Alphabet
     install -Dm644 Tamachi-Phonetic-Kanji-Alphabet "${pkgdir}"/usr/share/licenses/mozc/Tamachi-Phonetic-Kanji-Alphabet
     # MIT
-    sed -n 762,782p data/installer/credits_en.html > Windows-Implementation-Library
+    sed -n 715,735p data/installer/credits_en.html > Windows-Implementation-Library
     sed -i -e 's|^[ \t]*||g' Windows-Implementation-Library
     install -Dm644 Windows-Implementation-Library "${pkgdir}"/usr/share/licenses/mozc/Windows-Implementation-Library
 
