@@ -67,7 +67,7 @@ prepare() {
   git rm -f externals/libusb/libusb
   
   git submodule init
-  for _submodule in dynarmic sirit mbedtls xbyak libadrenotools tzdb_to_nx VulkanMemoryAllocator breakpad simpleini oaknut Vulkan-Utility-Libraries;
+  for _submodule in dynarmic sirit mbedtls xbyak libadrenotools tzdb_to_nx breakpad simpleini oaknut Vulkan-Utility-Libraries;
     do
       git config submodule.$_submodule.url "${srcdir}/$_submodule"
     done
