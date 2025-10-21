@@ -10,10 +10,10 @@ friendlyName="Element-Desktop"
 stateDirectory="Element_Data"
 
 # This is the target executable to launch
-launchTarget="electron /usr/lib/element/app.asar --disable-dev-mode --ozone-platform-hint=auto --enable-features=AcceleratedVideoEncoder,AcceleratedVideoDecoder,AcceleratedVideoDecodeLinuxGL,VaapiIgnoreDriverChecks  --wayland-text-input-version=3 --enable-wayland-ime --no-suid-sandbox --no-sandbox --password-store=gnome-libsecret"
+launchTarget="electron /usr/lib/element/app.asar --disable-dev-mode --ozone-platform=wayland --enable-features=AcceleratedVideoEncoder,AcceleratedVideoDecoder,AcceleratedVideoDecodeLinuxGL,VaapiIgnoreDriverChecks  --wayland-text-input-version=3 --enable-wayland-ime --no-suid-sandbox --no-sandbox --password-store=gnome-libsecret"
 
 # Takes a boolean value or string "adaptive". When true, do not process XAuth files and forces wayland input method. "adaptive" enables this option on Wayland and vice versa. Generally this should be adaptive when possible.
-waylandOnly="adaptive"
+waylandOnly="true"
 
 # Takes boolean value.
 bindInputDevices="false"
