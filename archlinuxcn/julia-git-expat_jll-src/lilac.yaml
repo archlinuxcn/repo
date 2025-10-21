@@ -7,11 +7,10 @@ repo_depends:
 
 update_on:
   - source: regex
-    url: 
-        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Expat_jll/version
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/Expat_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpm
     alpm: expat
     provided: libexpat.so
   - source: manual
-    manual: 1
+    manual: 2
