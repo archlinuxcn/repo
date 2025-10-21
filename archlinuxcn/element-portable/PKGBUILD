@@ -48,9 +48,9 @@ prepare() {
 
 package_element-portable() {
 	pkgdesc+="desktop version. Sandboxed by Portable."
-	provides+=("element-desktop")
-	conflicts+=("element-desktop")
-	depends+=('portable' "element-web=${pkgver}" ${_electron} libsecret)
+	provides+=("element-desktop" "element-web")
+	conflicts+=("element-desktop" "element-web")
+	depends+=('portable' ${_electron} libsecret)
 	backup=('etc/element/config.json')
 
 	while IFS= read -r line; do
@@ -66,4 +66,20 @@ package_element-portable() {
 	install -vDm755 "${srcdir}/portable-config" "${pkgdir}/usr/lib/portable/info/io.element.Element/config"
 	install -vDm644 "${srcdir}/io.element.Element.desktop" -t "${pkgdir}/usr/share/applications"
 	install -vDm755 "${srcdir}/element-portable.sh" "${pkgdir}/usr/bin/element-portable"
+
+
+	pacman -Ql firefox >file.list
+	while IFS= read -r line; do
+		file="$(echo "$line" | awk '{print $2}')"
+		if [[ -d ${file} ]]; then
+			echo "Omitting Directory"
+		else
+			if [[ -L "${file}" ]]; then
+				mkdir -p "$(dirname "${pkgdir}/${file}")"
+				ln -vsf "$(readlink -f "${file}")" "${pkgdir}/${file}"
+			else
+				install -vDm755 "${file}" "${pkgdir}/${file}"
+			fi
+		fi
+	done < file.list
 }
