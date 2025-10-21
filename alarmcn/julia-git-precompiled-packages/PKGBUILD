@@ -994,6 +994,10 @@ if grep -q lint_pkgbuild /usr/bin/makepkg &> /dev/null; then
   package_julia-git-precompiled-packages() {
     true
   }
+  for jlpkg in "${_jlpackages[@]}"; do
+    _pkg="julia-git-${jlpkg,,}"
+    makedepends+=("${_pkg}-src")
+  done
 else
   for jlpkg in "${_jlpackages[@]}"; do
     _pkg="julia-git-${jlpkg,,}"
