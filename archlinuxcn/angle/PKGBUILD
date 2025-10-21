@@ -109,9 +109,7 @@ prepare() {
 
 build() {
 	cd angle
-	ninja \
-		-DNO_AVX512=1 \
-		-C ./out/Release
+	ninja -C ./out/Release
 }
 
 package() {
