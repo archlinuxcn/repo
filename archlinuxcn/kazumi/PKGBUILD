@@ -18,6 +18,9 @@ depends=(
 	'libpulse'
 	'libxss'
 	'libarchive'
+	'libcdio'
+	'libcdio-paranoia'
+	'libdvdnav'
 )
 makedepends=('clang' 'cmake' 'ninja' 'fvm' 'patchelf')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Predidit/${_srcname}/archive/refs/tags/${pkgver}.tar.gz")
