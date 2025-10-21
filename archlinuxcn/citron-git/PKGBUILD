@@ -3,7 +3,7 @@
 _pkgname=citron
 pkgname=citron-git
 pkgver=0.8.0.r28.gb85fd5f
-pkgrel=2
+pkgrel=3
 pkgdesc="Nintendo Switch emulator forked from yuzu."
 arch=(x86_64)
 url=https://citron-emu.org
@@ -109,6 +109,7 @@ prepare() {
   sed -is 's/if (ENABLE_CUBEB/if (ENABLE_SWAG/' CMakeLists.txt
   # Fix for qt 6.10.0
   sed -i 's/find_package(Qt6 REQUIRED COMPONENTS Widgets/find_package(Qt6 REQUIRED COMPONENTS Widgets GuiPrivate/g;s/set(CITRON_QT_COMPONENTS2 Core/set(CITRON_QT_COMPONENENTS2 Core GuiPrivate/g' CMakeLists.txt
+  sed -i -e 's/httplib 0.12/httplib/g' CMakeLists.txt
   sed -i 's/target_link_libraries(citron PRIVATE Boost\:\:headers/target_link_libraries(citron PRIVATE Boost\:\:headers Qt6\:\:GuiPrivate/g' src/citron/CMakeLists.txt
 }
 
