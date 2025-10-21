@@ -1,7 +1,10 @@
 maintainers:
   - github: yuyichao
-managed: false
+
 time_limit_hours: 4
+
+allowed_workers:
+  - yyc
 
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
@@ -9,4 +12,4 @@ update_on:
     dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
     alpm: rocm-llvm
   - source: manual
-    manual: 2
+    manual: 1

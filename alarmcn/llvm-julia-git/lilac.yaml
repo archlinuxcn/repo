@@ -4,6 +4,9 @@ maintainers:
 post_build: git_pkgbuild_commit
 time_limit_hours: 3
 
+allowed_workers:
+  - yyc
+
 update_on:
   - source: alpm
     # Get the upstream LLVM version, we want to match this

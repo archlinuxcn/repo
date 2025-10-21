@@ -7,6 +7,9 @@ post_build: git_pkgbuild_commit
 build_prefix: archlinuxcn-aarch64
 time_limit_hours: 2
 
+allowed_workers:
+  - yyc
+
 repo_depends:
   - llvm-julia-git
   - llvm-julia-git: llvm-libs-julia-git
@@ -18,9 +21,6 @@ repo_depends:
 
 update_on_build:
   - pkgbase: llvm-julia-git
-
-allowed_workers:
-  - yyc
 
 update_on:
   - source: vcs

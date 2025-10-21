@@ -5,6 +5,9 @@ post_build: git_pkgbuild_commit
 
 time_limit_hours: 4
 
+allowed_workers:
+  - yyc
+
 update_on:
   # Note that we need to get the official package and not the archlinux arm package
   # (which doesn't exist yet) in this case.

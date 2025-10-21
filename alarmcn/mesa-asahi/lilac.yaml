@@ -5,6 +5,9 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver.removeprefix('mesa-'))
 post_build: git_pkgbuild_commit
 time_limit_hours: 2
 
+allowed_workers:
+  - yyc
+
 update_on:
   - source: gitlab
     gitlab: mesa/mesa

@@ -5,6 +5,9 @@ pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 time_limit_hours: 3
 
+allowed_workers:
+  - yyc
+
 repo_depends:
   - x86_64-linux-gnu-linux-api-headers
   - x86_64-linux-gnu-binutils
