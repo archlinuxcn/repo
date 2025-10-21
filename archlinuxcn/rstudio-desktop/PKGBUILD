@@ -16,14 +16,14 @@
 : ${_quarto:=false}
 
 # dependencies/common/install-copilot-language-server
-: ${_copilot_version:=1.378.0}
+: ${_copilot_version:=1.381.0}
 
 : ${_commit:=20de356561bd58a6d88927cce948bd076d06e4ca}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
 pkgver=2025.09.1.401
-pkgrel=1
+pkgrel=2
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
 license=('AGPL-3.0-only')
@@ -87,10 +87,12 @@ _source_main() {
   source=(
     "rstudio-$pkgver-${_commit::7}.$_pkgext"::"https://github.com/rstudio/rstudio/archive/$_commit.$_pkgext"
     "quarto"::"git+https://github.com/quarto-dev/quarto.git#branch=${_quarto_branch}"
+    '0001-steady_timer.patch'
   )
   sha256sums=(
     'SKIP'
     'SKIP'
+    'd192d1f7344fcf73bf7ffc404f0a385a1d4fbfd962b701689cd84099d97ab90a'
   )
 }
 
@@ -163,17 +165,23 @@ prepare() (
 
   cd "$_pkgsrc"
   # Do not use outdated version name of pandoc
-  sed -E -e '/PANDOC_VERSION/s/"[0-9\.]+"/"'${_pandocver}'"/' -i "cmake/globals.cmake"
+  sed -E -e '/PANDOC_VERSION/s/"[0-9\.]+"/"'${_pandocver}'"/' -i cmake/globals.cmake
 
   # Suppress _FORTIFY_SOURCE mismatch warnings
-  sed -i 's/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=3/' "src/cpp/CMakeLists.txt"
+  sed -e 's/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=3/' -i src/cpp/CMakeLists.txt
+
+  # fix for Boost 1.89
+  sed -e 's/^\s*system$//' -i src/cpp/CMakeLists.txt
+
+  patch -Np1 -F100 -i ../0001-steady_timer.patch
 
   # fix npm/node paths
   sed -E -e 's&set\(RSTUDIO_NODE_PATH .*\)&set(RSTUDIO_NODE_PATH "/usr/bin")&' \
     -i cmake/globals.cmake
 
-  install -dm755 "$srcdir/$_pkgsrc/dependencies/common/node"
-  ln -sfT "$NVM_DIR/versions/node/v$RSTUDIO_NODE_VERSION" "$srcdir/$_pkgsrc/dependencies/common/node/${RSTUDIO_NODE_VERSION}-patched"
+  install -dm755 dependencies/common/node
+  ln -sfT "$NVM_DIR/versions/node/v$RSTUDIO_NODE_VERSION" \
+    dependencies/common/node/"${RSTUDIO_NODE_VERSION}-patched"
 
   sed -E -e 's&^external-node-path=.*$&external-node-path=/usr/bin/node&' \
     -i src/cpp/conf/rsession-dev.conf

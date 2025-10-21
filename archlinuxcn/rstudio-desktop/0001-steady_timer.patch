@@ -1,0 +1,301 @@
+diff --git a/src/cpp/core/ExponentialBackoff.cpp b/src/cpp/core/ExponentialBackoff.cpp
+index 8a42983..a29c5c5 100644
+--- a/src/cpp/core/ExponentialBackoff.cpp
++++ b/src/cpp/core/ExponentialBackoff.cpp
+@@ -17,6 +17,8 @@
+ 
+ #include <core/ExponentialBackoff.hpp>
+ 
++#include <chrono>
++
+ namespace rstudio {
+ namespace core {
+ 
+@@ -101,8 +103,8 @@ bool ExponentialBackoff::next()
+          maxNumRetries_ = totalNumTries_ + 2;
+       }
+ 
+-      boost::shared_ptr<boost::asio::deadline_timer> timer =
+-            boost::make_shared<boost::asio::deadline_timer>(ioContext_, timeout);
++      auto chronoTimeout = std::chrono::milliseconds(timeout.total_milliseconds());
++      auto timer = boost::make_shared<boost::asio::steady_timer>(ioContext_, chronoTimeout);
+ 
+       timer->async_wait([=](const boost::system::error_code& error) mutable
+       {
+diff --git a/src/cpp/core/Timer.cpp b/src/cpp/core/Timer.cpp
+index fadd933..35a36cd 100644
+--- a/src/cpp/core/Timer.cpp
++++ b/src/cpp/core/Timer.cpp
+@@ -14,6 +14,7 @@
+  */
+ 
+ #include <core/Timer.hpp>
++#include <chrono>
+ 
+ namespace rstudio {
+ namespace core {
+@@ -25,7 +26,7 @@ Timer::Timer(boost::asio::io_context& ioContext) :
+ 
+ void Timer::setExpiration(const boost::posix_time::time_duration& timeDuration)
+ {
+-   timer_.expires_from_now(timeDuration);
++   timer_.expires_after(std::chrono::milliseconds(timeDuration.total_milliseconds()));
+ }
+ 
+ void Timer::cancel()
+diff --git a/src/cpp/core/file_lock/FileLock.cpp b/src/cpp/core/file_lock/FileLock.cpp
+index 8f00d28..5dfaf8b 100644
+--- a/src/cpp/core/file_lock/FileLock.cpp
++++ b/src/cpp/core/file_lock/FileLock.cpp
+@@ -276,9 +276,10 @@ void FileLock::cleanUp()
+ 
+ namespace {
+ 
++
+ void schedulePeriodicExecution(
+       const boost::system::error_code& ec,
+-      boost::asio::deadline_timer& timer,
++      boost::asio::steady_timer& timer,
+       boost::posix_time::seconds interval,
+       boost::function<void()> callback)
+ {
+@@ -296,14 +297,8 @@ void schedulePeriodicExecution(
+       callback();
+ 
+       // reschedule
+-      boost::system::error_code errc;
+-      timer.expires_at(timer.expires_at() + interval, errc);
+-      if (errc)
+-      {
+-         LOG_ERROR(Error(errc, ERROR_LOCATION));
+-         return;
+-      }
+-      
++      auto chronoInterval = std::chrono::seconds(interval.total_seconds());
++      timer.expires_after(chronoInterval);
+       timer.async_wait(boost::bind(
+                           schedulePeriodicExecution,
+                           boost::asio::placeholders::error,
+@@ -330,7 +325,7 @@ void FileLock::refreshPeriodically(boost::asio::io_context& service,
+    
+    verifyInitialized();
+    
+-   static boost::asio::deadline_timer timer(service, interval);
++   static boost::asio::steady_timer timer(service, std::chrono::seconds(interval.total_seconds()));
+    timer.async_wait(boost::bind(
+                        schedulePeriodicExecution,
+                        boost::asio::placeholders::error,
+diff --git a/src/cpp/core/include/core/FileLock.hpp b/src/cpp/core/include/core/FileLock.hpp
+index 769fb31..1f59e2f 100644
+--- a/src/cpp/core/include/core/FileLock.hpp
++++ b/src/cpp/core/include/core/FileLock.hpp
+@@ -27,6 +27,7 @@
+ #include <boost/scoped_ptr.hpp>
+ #include <boost/asio.hpp>
+ #include <boost/asio/io_context.hpp>
++#include <boost/date_time/posix_time/posix_time.hpp>
+ 
+ #include <core/Log.hpp>
+ #include <core/Settings.hpp>
+diff --git a/src/cpp/core/include/core/Timer.hpp b/src/cpp/core/include/core/Timer.hpp
+index b1ba941..1248949 100644
+--- a/src/cpp/core/include/core/Timer.hpp
++++ b/src/cpp/core/include/core/Timer.hpp
+@@ -18,7 +18,9 @@
+ 
+ #include <functional>
+ #include <boost/asio/io_context.hpp>
+-#include <boost/asio/deadline_timer.hpp>
++#include <boost/asio/steady_timer.hpp>
++#include <boost/date_time/posix_time/posix_time.hpp>
++#include <chrono>
+ 
+ namespace rstudio {
+ namespace core {
+@@ -46,7 +48,7 @@ public:
+    virtual void wait(const std::function<void(const boost::system::error_code& ec)>& callback) override;
+ 
+ private:
+-   boost::asio::deadline_timer timer_;
++   boost::asio::steady_timer timer_;
+ };
+ 
+ using TimerPtr = boost::shared_ptr<ITimer>;
+diff --git a/src/cpp/core/include/core/http/AsyncClient.hpp b/src/cpp/core/include/core/http/AsyncClient.hpp
+index 521134c..71065d2 100644
+--- a/src/cpp/core/include/core/http/AsyncClient.hpp
++++ b/src/cpp/core/include/core/http/AsyncClient.hpp
+@@ -28,7 +28,7 @@
+ #include <boost/asio/streambuf.hpp>
+ #include <boost/asio/read.hpp>
+ #include <boost/asio/read_until.hpp>
+-#include <boost/asio/deadline_timer.hpp>
++#include <boost/asio/steady_timer.hpp>
+ 
+ #include <boost/algorithm/string/predicate.hpp>
+ 
+@@ -420,28 +420,16 @@ private:
+ 
+    bool scheduleRetry()
+    {
+-      // set expiration
+-      boost::system::error_code ec;
+-      connectionRetryContext_.retryTimer.expires_from_now(
+-                  connectionRetryContext_.profile.retryInterval,
+-                  ec);
++      auto chronoInterval = std::chrono::milliseconds(
++            connectionRetryContext_.profile.retryInterval.total_milliseconds());
++      connectionRetryContext_.retryTimer.expires_after(chronoInterval);
+ 
+-      // attempt to schedule retry timer (should always succeed but
+-      // include error check to be paranoid/robust)
+-      if (!ec)
+-      {
+-         connectionRetryContext_.retryTimer.async_wait(boost::asio::bind_executor(*pStrand_, boost::bind(
+-               &AsyncClient<SocketService>::handleConnectionRetryTimer,
+-               AsyncClient<SocketService>::shared_from_this(),
+-               boost::asio::placeholders::error)));
++      connectionRetryContext_.retryTimer.async_wait(boost::asio::bind_executor(*pStrand_, boost::bind(
++            &AsyncClient<SocketService>::handleConnectionRetryTimer,
++            AsyncClient<SocketService>::shared_from_this(),
++            boost::asio::placeholders::error)));
+ 
+-         return true;
+-      }
+-      else
+-      {
+-         logError(Error(ec, ERROR_LOCATION));
+-         return false;
+-      }
++      return true;
+    }
+ 
+    void handleConnectionRetryTimer(const boost::system::error_code& ec)
+@@ -792,7 +780,7 @@ private:
+ 
+       http::ConnectionRetryProfile profile;
+       boost::posix_time::ptime stopTryingTime;
+-      boost::asio::deadline_timer retryTimer;
++      boost::asio::steady_timer retryTimer;
+    };
+ 
+    struct ChunkState
+diff --git a/src/cpp/core/include/core/http/AsyncServerImpl.hpp b/src/cpp/core/include/core/http/AsyncServerImpl.hpp
+index 1027ec4..7228fb4 100644
+--- a/src/cpp/core/include/core/http/AsyncServerImpl.hpp
++++ b/src/cpp/core/include/core/http/AsyncServerImpl.hpp
+@@ -26,7 +26,7 @@
+ 
+ #include <boost/asio/io_context.hpp>
+ #include <boost/asio/placeholders.hpp>
+-#include <boost/asio/deadline_timer.hpp>
++#include <boost/asio/steady_timer.hpp>
+ 
+ #include <core/BoostThread.hpp>
+ #include <shared_core/Error.hpp>
+@@ -975,7 +975,7 @@ private:
+    AsyncUriHandlerFunction defaultHandler_;
+    std::vector<boost::shared_ptr<boost::thread> > threads_;
+    boost::posix_time::time_duration scheduledCommandInterval_;
+-   boost::asio::deadline_timer scheduledCommandTimer_;
++   boost::asio::steady_timer scheduledCommandTimer_;
+ 
+    boost::mutex scheduledCommandMutex_;
+    std::vector<boost::shared_ptr<ScheduledCommand> > scheduledCommands_;
+diff --git a/src/cpp/core/include/core/http/TcpIpAsyncConnector.hpp b/src/cpp/core/include/core/http/TcpIpAsyncConnector.hpp
+index 63472e4..8c9d752 100644
+--- a/src/cpp/core/include/core/http/TcpIpAsyncConnector.hpp
++++ b/src/cpp/core/include/core/http/TcpIpAsyncConnector.hpp
+@@ -20,13 +20,15 @@
+ #include <boost/shared_ptr.hpp>
+ #include <boost/enable_shared_from_this.hpp>
+ 
+-#include <boost/asio/deadline_timer.hpp>
++#include <boost/asio/steady_timer.hpp>
+ #include <boost/asio/ip/tcp.hpp>
+ #include <boost/asio/placeholders.hpp>
+ 
+ #include <core/http/TcpIpSocketUtils.hpp>
+ #include <core/Thread.hpp>
+ 
++#include <chrono>
++
+ // special version of unexpected exception handler which makes
+ // sure to call the user's ErrorHandler
+ #define CATCH_UNEXPECTED_ASYNC_CONNECTOR_EXCEPTION \
+@@ -82,7 +84,8 @@ public:
+       {
+          // start a timer that will cancel any outstanding asynchronous operations
+          // when it elapses if the connection operation has not succeeded
+-         pConnectionTimer_.reset(new boost::asio::deadline_timer(service_, timeout));
++         auto chronoTimeout = std::chrono::milliseconds(timeout.total_milliseconds());
++         pConnectionTimer_.reset(new boost::asio::steady_timer(service_, chronoTimeout));
+          pConnectionTimer_->async_wait(boost::bind(&TcpIpAsyncConnector::onConnectionTimeout,
+                                                    TcpIpAsyncConnector::shared_from_this(),
+                                                    boost::asio::placeholders::error));
+@@ -267,7 +270,7 @@ private:
+    bool isConnected_;
+    bool hasFailed_;
+    boost::mutex mutex_;
+-   boost::shared_ptr<boost::asio::deadline_timer> pConnectionTimer_;
++   boost::shared_ptr<boost::asio::steady_timer> pConnectionTimer_;
+ };
+ 
+ } // namespace http
+diff --git a/src/cpp/core/system/PosixChildProcess.cpp b/src/cpp/core/system/PosixChildProcess.cpp
+index 4e28dd7..44dc2eb 100644
+--- a/src/cpp/core/system/PosixChildProcess.cpp
++++ b/src/cpp/core/system/PosixChildProcess.cpp
+@@ -35,6 +35,8 @@
+ 
+ #include <boost/asio.hpp>
+ #include <boost/bind/bind.hpp>
++#include <boost/date_time/posix_time/posix_time.hpp>
++#include <chrono>
+ 
+ #include <shared_core/Error.hpp>
+ 
+@@ -1560,7 +1562,7 @@ struct AsioAsyncChildProcess::Impl : public boost::enable_shared_from_this<AsioA
+                // check again in 20 milliseconds - this is a short amount of time, but long enough
+                // to play nice with the rest of the system. in terms of process cleanup time,
+                // in most cases this should be a significant amount of time
+-               exitTimer_.reset(new deadline_timer(ioContext_, milliseconds(20)));
++               exitTimer_.reset(new boost::asio::steady_timer(ioContext_, std::chrono::milliseconds(20)));
+                exitTimer_->async_wait(boost::bind(&Impl::checkExitedTimer,
+                                                   boost::weak_ptr<Impl>(shared_from_this()),
+                                                   boost::asio::placeholders::error,
+@@ -1662,7 +1664,7 @@ struct AsioAsyncChildProcess::Impl : public boost::enable_shared_from_this<AsioA
+    std::atomic<bool> stderrFailure_;
+    int exitCode_;
+ 
+-   boost::shared_ptr<boost::asio::deadline_timer> exitTimer_;
++   boost::shared_ptr<boost::asio::steady_timer> exitTimer_;
+ 
+    ProcessCallbacks callbacks_;
+ 
+diff --git a/src/cpp/session/SessionConsoleProcessSocketTests.cpp b/src/cpp/session/SessionConsoleProcessSocketTests.cpp
+index 146c5d4..6df0a33 100644
+--- a/src/cpp/session/SessionConsoleProcessSocketTests.cpp
++++ b/src/cpp/session/SessionConsoleProcessSocketTests.cpp
+@@ -27,6 +27,8 @@
+ 
+ #include <tests/TestThat.hpp>
+ 
++#include <chrono>
++
+ namespace rstudio {
+ namespace session {
+ namespace console_process {
+@@ -38,9 +40,9 @@ namespace {
+ 
+ void blockingwait(int ms)
+ {
+-   boost::asio::io_context io;
+-   boost::asio::deadline_timer timer(io, boost::posix_time::milliseconds(ms));
+-   timer.wait();
++    boost::asio::io_context io;
++    boost::asio::steady_timer timer(io, std::chrono::milliseconds(ms));
++    timer.wait();
+ }
+ 
+ // Wrapper for ConsoleProcessSocket, the class we're testing. Primarily
