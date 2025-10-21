@@ -82,4 +82,7 @@ package_element-portable() {
 			fi
 		fi
 	done < file.list
+	ln -srf \
+		"${pkgdir}/usr/share/webapps/element" \
+		"${pkgdir}/usr/lib/element/webapp"
 }
