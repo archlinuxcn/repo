@@ -1,6 +1,6 @@
 pkgname=julia-git-ijulia-src
-pkgver=1.31.0
-_commit=1d548c77798392ce72f4f2062a2f5c8750de76f8
+pkgver=1.31.1
+_commit=47b9930275363c30f3f874755d3744bf90ab2243
 pkgrel=1
 pkgdesc="IJulia.jl"
 url="https://github.com/JuliaLang/IJulia.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts julia-git-conda-src)
 depends=(julia-git jupyter-notebook jq)
 source=("git+https://github.com/JuliaLang/IJulia.jl.git#commit=$_commit")
-sha256sums=('46d6d354a0234cf0802275f119bcea1d9943311490e75d632341d7aacb1892e1')
+sha256sums=('0038b76cc0cdad3290ad17182fa81f2542506df8bd7370f82e23e40246b813d5')
 
 prepare() {
   cd IJulia.jl

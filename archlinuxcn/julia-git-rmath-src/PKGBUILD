@@ -1,6 +1,6 @@
 pkgname=julia-git-rmath-src
-pkgver=0.8.0
-_commit=bb77fdb6358d5d4d32ba09ecbce0373fce8150b0
+pkgver=0.8.1
+_commit=d9ad73655897f05ab7150f43335904f679791228
 pkgrel=1
 pkgdesc="Rmath.jl"
 url="https://github.com/JuliaStats/Rmath.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStats/Rmath.jl.git#commit=$_commit")
-sha256sums=('22f4a2e1334c20454681672d7e0525f9df73829310bdcce12e5f311ce427ae45')
+sha256sums=('642f0f5e2fd752d3749b48bb7ad49b190960c4b359e9f3a9ad3b0e2a9b0b62f6')
 
 package() {
   cd Rmath.jl
