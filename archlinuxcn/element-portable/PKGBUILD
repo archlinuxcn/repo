@@ -56,9 +56,9 @@ package_element-portable() {
 	while IFS= read -r line; do
 	file="$(echo "$line" | awk '{print $2}')"
 	if [[ -d ${file} ]]; then
-		echo "Omitting Directory"
+		echo "Omitting Directory" >/dev/null
 	else
-		install -Dm755 "${file}" "${pkgdir}/${file}"
+		install -vDm755 "${file}" "${pkgdir}/${file}"
 	fi
 	done < file.list
 	rm -f "${pkgdir}/usr/share/applications"/*
@@ -72,7 +72,7 @@ package_element-portable() {
 	while IFS= read -r line; do
 		file="$(echo "$line" | awk '{print $2}')"
 		if [[ -d ${file} ]]; then
-			echo "Omitting Directory"
+			echo "Omitting Directory" >/dev/null
 		else
 			if [[ -L "${file}" ]]; then
 				mkdir -p "$(dirname "${pkgdir}/${file}")"
