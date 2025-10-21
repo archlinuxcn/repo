@@ -72,6 +72,12 @@ prepare() {
       git config submodule.$_submodule.url "${srcdir}/$_submodule"
     done
   git -c protocol.file.allow=always submodule update --init
+  
+  pushd externals/cubeb
+    git config submodule.cmake/sanitizers-cmake.url "${srcdir}"/sanitizers-cmake
+    git config submodule.googletest.url "${srcdir}"/googletest
+    git -c protocol.file.allow=always submodule update
+  popd
 
   pushd externals/dynarmic/externals/zydis
     git config submodule.dependencies/zycore.url "${srcdir}"/zycore
