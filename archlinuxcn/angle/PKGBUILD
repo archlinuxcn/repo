@@ -136,6 +136,9 @@ package() {
 
     # Headers
     find include -type f -and -name "*.h" -exec install -v -D -m644 {} "$pkgdir/usr/"{} \; -print
+    mv "${pkgdir}/usr/include" "${pkgdir}/usr/include.angle"
+    install -d "${pkgdir}/usr/include/"
+    mv "${pkgdir}/usr/include.angle" "${pkgdir}/usr/include/angle"
 
     install -D -m644 "$srcdir/angle.pc" "$pkgdir/usr/lib/pkgconfig/angle.pc"
 
