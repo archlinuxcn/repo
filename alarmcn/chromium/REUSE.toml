@@ -1,0 +1,43 @@
+version = 1
+
+[[annotations]]
+path = [
+    "PKGBUILD",
+    "README.md",
+    "keys/**",
+    ".SRCINFO",
+    ".nvchecker.toml",
+    "*.install",
+    "*.sysusers",
+    "*.tmpfiles",
+    "*.logrotate",
+    "*.pam",
+    "*.service",
+    "*.socket",
+    "*.timer",
+    "*.desktop",
+    "*.hook",
+    "fetch-chromium-release",
+]
+SPDX-FileCopyrightText = "Arch Linux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "chromium-136-drop-nodejs-ver-check.patch",
+    "chromium-138-nodejs-version-check.patch",
+    "chromium-141-cssstylesheet-iwyu.patch",
+    "compiler-rt-adjust-paths.patch",
+    "increase-fortify-level.patch",
+    "use-oauth2-client-switches-as-default.patch",
+]
+SPDX-FileCopyrightText = "chromium contributors"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+[[annotations]]
+path = [
+    "chromium-138-rust-1.86-mismatched_lifetime_syntaxes.patch",
+    "chromium-140.0.7339.41-rust.patch",
+]
+SPDX-FileCopyrightText = "NixOs contributors"
+SPDX-License-Identifier = "MIT"
