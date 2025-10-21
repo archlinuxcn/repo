@@ -70,15 +70,15 @@ build() {
 		-S ladybird \
 		-DENABLE_CI_BASELINE_CPU=ON \
 		-DENABLE_LTO_FOR_RELEASE=ON \
-		-DCMAKE_C_COMPILER=clang \
-		-DCMAKE_CXX_COMPILER=clang++ \
 		-DBUILD_SHARED_LIBS=OFF \
 		-DLADYBIRD_CACHE_DIR=Build/caches \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX='/usr' \
 		-DENABLE_INSTALL_HEADERS=OFF \
 		-DENABLE_INSTALL_FREEDESKTOP_FILES=ON \
-		-DCMAKE_INSTALL_LIBEXECDIR="lib/${pkgname%-git}"
+		-DCMAKE_INSTALL_LIBEXECDIR="lib/${pkgname%-git}" \
+		-GNinja \
+		-Wno-dev
 	cmake --build build
 }
 
