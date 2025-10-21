@@ -6,7 +6,7 @@ arch=('x86_64')
 url="https://chromium.googlesource.com/angle/angle"
 license=('BSD-3-Clause')
 depends=('zlib' 'libglvnd' 'freetype2' 'expat' 'libpng' 'libjpeg-turbo' 'fontconfig' 'harfbuzz' 'gcc-libs' 'libwebp' 'glibc')
-makedepends=('git' 'python' 'procps-ng' 'ninja' 'gn' 'patchelf' 'pciutils')
+makedepends=('git' 'python' 'procps-ng' 'ninja' 'gn' 'patchelf' 'pciutils' 'linux-headers')
 provides=(angle)
 conflicts=(angle)
 source=(
@@ -130,11 +130,11 @@ package() {
     )
     for lib in "${libs[@]}"; do
         patchelf --set-rpath "/usr/lib" "out/Release/$lib.so"
-        install -D -m644 "out/Release/$lib.so" "$pkgdir/usr/lib/$lib.so"
+        install -vDm755 "out/Release/$lib.so" "$pkgdir/usr/lib/$lib.so"
     done
 
     # Headers
-    #find include -type f -and -name "*.h" -exec install -v -D -m644 {} "$pkgdir/usr/"{} \; -print
+    find include -type f -and -name "*.h" -exec install -v -D -m644 {} "$pkgdir/usr/"{} \; -print
 
     install -D -m644 "$srcdir/angle.pc" "$pkgdir/usr/lib/pkgconfig/angle.pc"
 
