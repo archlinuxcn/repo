@@ -1,4 +1,4 @@
-From 4089989150b61ff93b71ae4fdb168ff41551e6f7 Mon Sep 17 00:00:00 2001
+From 9fb6a887316a2910e7ac419eed21d366df2c0b16 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 7 Oct 2025 09:30:24 -0400
 Subject: [PATCH 1/2] Remove deprecated ticks_per_frame
@@ -9,18 +9,18 @@ Ref https://github.com/FFmpeg/FFmpeg/commit/7d1d61cc5f57708434ba720b03234b3dd93a
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/avio.jl b/src/avio.jl
-index 7a496d2..7d3193d 100644
+index 5ba2c21..ce45a06 100644
 --- a/src/avio.jl
 +++ b/src/avio.jl
-@@ -410,7 +410,7 @@ Most notably, H.264 and MPEG-2 specify time_base as half of frame duration if no
- Set to time_base ticks per frame. Default 1, e.g., H.264/MPEG-2 set it to 2.
- =#
- framerate(f::VideoReader) =
--    f.codec_context.time_base.den // f.codec_context.time_base.num // f.codec_context.ticks_per_frame
-+    f.codec_context.time_base.den // f.codec_context.time_base.num // ((f.codec_context.codec_descriptor.props & AV_CODEC_PROP_FIELDS) == 0 ? 1 : 2)
- height(f::VideoReader) = f.codec_context.height
- width(f::VideoReader) = f.codec_context.width
- 
+@@ -433,7 +433,7 @@ function framerate(f::VideoReader)
+     # Try codec_context time_base first
+     tb = f.codec_context.time_base
+     if tb.num != 0
+-        fps = tb.den // tb.num // f.codec_context.ticks_per_frame
++        fps = tb.den // tb.num // ((f.codec_context.codec_descriptor.props & AV_CODEC_PROP_FIELDS) == 0 ? 1 : 2)
+         if isfinite(fps) && fps > 0
+             return fps
+         end
 -- 
 2.51.0
 
