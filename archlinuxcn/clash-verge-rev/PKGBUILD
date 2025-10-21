@@ -12,7 +12,7 @@ license=('GPL-3.0-or-later')
 depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'mihomo')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-makedepends=('pnpm' 'cargo')
+makedepends=('pnpm' 'cargo' 'jq' 'moreutils')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 	"${_pkgname}-service.tar.gz::https://github.com/${pkgname}/${_pkgname}-service/archive/refs/tags/${CARCH}-unknown-linux-gnu.tar.gz")
 sha512sums=('f8d8de0c8e8475a0133d82d5db45ff63e8409534abbddaab97d2d13c7e2c702bbacb41e9af4ea468368b2ae25662b65caed7c9dec668d51573506a416d7c821e'
@@ -20,7 +20,7 @@ sha512sums=('f8d8de0c8e8475a0133d82d5db45ff63e8409534abbddaab97d2d13c7e2c702bbac
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	sed -i '/createUpdaterArtifacts/s/true/false/' src-tauri/tauri.conf.json
+	jq '.bundle.createUpdaterArtifacts = false' src-tauri/tauri.conf.json | sponge src-tauri/tauri.conf.json
 	pnpm i
 }
 
