@@ -129,14 +129,15 @@ package() {
         libfeature_support
     )
     for lib in "${libs[@]}"; do
-        patchelf --set-rpath "/opt/angle/usr/lib" "out/Release/$lib.so"
-        install -D -m644 "out/Release/$lib.so" "$pkgdir/opt/angle/usr/lib/$lib.so"
+        patchelf --set-rpath "/usr/lib" "out/Release/$lib.so"
+        install -D -m644 "out/Release/$lib.so" "$pkgdir/usr/lib/$lib.so"
     done
 
     # Headers
-    find include -type f -and -name "*.h" -exec install -v -D -m644 {} "$pkgdir/opt/angle/usr/"{} \; -print
+    find include -type f -and -name "*.h" -exec install -v -D -m644 {} "$pkgdir/usr/"{} \; -print
 
     install -D -m644 "$srcdir/angle.pc" "$pkgdir/usr/lib/pkgconfig/angle.pc"
 
     git reset --hard origin/main
+    chmod 755 -R "${pkgdir}/usr/lib"
 }
