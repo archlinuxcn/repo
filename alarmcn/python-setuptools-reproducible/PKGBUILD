@@ -1,0 +1,24 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+
+pkgname=python-setuptools-reproducible
+pkgver=0.1
+pkgrel=1
+pkgdesc="Extension of setuptools to support reproducible builds"
+arch=('any')
+url="https://github.com/wimglenn/setuptools-reproducible"
+license=('MIT')
+depends=('python-setuptools')
+makedepends=('python-build' 'python-installer' 'python-wheel' git)
+source=("${pkgname}-${pkgver}::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('2f19d04c0615c1ce92eac17ea64cbb53738b39ab6c9456e3cb655bfd5d1c847b')
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	python -m installer --destdir="${pkgdir}" dist/*.whl
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
