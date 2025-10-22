@@ -44,8 +44,4 @@ package() {
   cd "${_pkgname}/"
 
   make DESTDIR="${pkgdir}" install
-
-  for _bin in $(find "${pkgdir}/usr/bin" -type f -printf '%f\n'); do
-    mv "${pkgdir}/usr/bin/${_bin}" "${pkgdir}/usr/bin/${_pkgname}_${_bin}"
-  done
 }
