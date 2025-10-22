@@ -105,5 +105,5 @@ package() {
 	install -Dm644 ladybird/LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	patchelf --set-rpath /usr/lib/angle:/usr/lib/ladybird "${pkgdir}/usr/bin/Ladybird"
 	#install -vDm644 "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}" "${pkgdir}/${RELATIVE_DESKTOP_FILE_PATH}"
-	install -Dm644 "${srcdir}/usr/COMMIT" -t "${pkgdir}/usr/lib/ladybird"
+	rm -f "${srcdir}/usr/COMMIT"
 }
