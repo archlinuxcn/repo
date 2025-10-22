@@ -2,28 +2,40 @@
 pkgname='absolutely-proprietary'
 pkgver='20220518'
 _commit='632ebf75bff68959e48ad7db06a9350fede806d0'
-pkgrel=4
+pkgrel='5'
 pkgdesc="Proprietary package detector for arch-based distros that uses Parabola's package blacklist"
 arch=('any')
 url="https://github.com/vmavromatis/$pkgname"
 license=('GPL-3.0-only')
-depends=('python')
-makedepends=('python-setuptools')
-source=("$pkgname-$pkgver.tar.gz::$url/archive/$_commit.tar.gz")
-sha512sums=('d6b10dd6b89171e568b07a86617b0b731aa8cbd20f61968f4fd1e4bf42e73665d4746034a6181a210b1644070abfe80d91b1378ad0dab0413ffe58516b3332b2')
+makedepends=('python-build' 'python-setuptools' 'python-installer' 'python-wheel')
+source=(
+	"$pkgname-$pkgver.tar.gz::$url/archive/$_commit.tar.gz"
+	"$pkgname-$pkgver-pep518.diff::$url/commit/319bb3c3455dde5f7da8db6b147a36af2c1dd989.diff"
+)
+b2sums=('d7309fd18b934f9f02d70f0fe085670be0a041d83da0c12cac0429100f64023f235498135872658c26d86f77a704097515ebf93b1173a143fc2d37b6113e8d1c'
+        'a0a16ba4b58bd35475b6b020c7b8d0c4090768f98083577660b5b34fada188e756f67c283b9dd3b88d2dbd0ca2da8f686325d8f96fb227c3cf29d1dc1da9a339')
 
 _sourcedirectory="$pkgname-$_commit"
 
+prepare() {
+	cd "$srcdir/$_sourcedirectory/"
+
+	# Migrate to a PEP518-based workflow
+	patch --forward -p1 < "../$pkgname-$pkgver-pep518.diff"
+}
+
 build() {
 	cd "$srcdir/$_sourcedirectory/"
-	python setup.py build
+	python -m build --wheel --no-isolation
 }
 
 check() {
-	python "$srcdir/$_sourcedirectory/absolutely_proprietary/__init__.py" --help | tee '/dev/stderr' | grep -q '^Find proprietary packages$'
+	_checkoutput="$(python "$srcdir/$_sourcedirectory/absolutely_proprietary/__init__.py" --help)"
+	printf '%s\n' "$_checkoutput"
+	printf '%s\n' "$_checkoutput" | grep -q '^Find proprietary packages$'
 }
 
 package() {
 	cd "$srcdir/$_sourcedirectory/"
-	python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
+	python -m installer --destdir="$pkgdir" 'dist/'*'.whl'
 }
