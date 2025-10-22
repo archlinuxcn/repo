@@ -14,7 +14,7 @@ pkgrel=1
 pkgdesc="Experimental APFS kernel module with Write support (DKMS)"
 arch=('any')
 url="https://github.com/linux-apfs/${_pkgname}"
-license=('GPL-2.0-only')
+license=('GPL-2.0-only AND BSD-3-Clause')
 depends=('dkms')
 makedepends=('git')
 provides=("${_pkgname}")
@@ -27,8 +27,14 @@ pkgver() {
 	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
+prepare() {
+	# Extract BSD-3-Clause terms from sources
+	sed -n '2,21p' $_pkgname-$pkgver/lzfse/lzfse.h > BSD-3-Clause.txt
+}
+
 package() {
 	local dkms_dir="${pkgdir}/usr/src/${_pkgname}-${pkgver}/"
 	install -d "${dkms_dir}"
 	cp -r ${_pkgname}/* "${dkms_dir}"
+	install -Dm644 BSD-3-Clause.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
