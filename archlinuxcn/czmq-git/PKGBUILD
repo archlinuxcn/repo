@@ -16,32 +16,32 @@ license=('MPL-2.0')
 source=("git+${url}")
 sha256sums=('SKIP')
 provides=("${_pkgname}=${pkgver%.r*}" libczmq.so)
-conflicts=(${_pkgname})
+conflicts=("${_pkgname}")
 
 pkgver() {
-  git -C "${_pkgname}" describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	git -C "${_pkgname}" describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-  cd "${_pkgname}/"
+	cd "${_pkgname}/"
 
-  ./autogen.sh
-  ./configure \
-    --prefix=/usr \
-    --sbindir=/usr/bin \
-    --libexecdir=/usr/lib/czmq \
-    --sysconfdir=/etc \
-    --sharedstatedir=/usr/share/czmq \
-    --localstatedir=/var/lib/czmq \
-    --disable-czmq_selftest \
-    --disable-zmakecert \
-    --with-gnu-ld \
-    --with-nss=no
-  make
+	./autogen.sh
+	./configure \
+		--prefix=/usr \
+		--sbindir=/usr/bin \
+		--libexecdir=/usr/lib/czmq \
+		--sysconfdir=/etc \
+		--sharedstatedir=/usr/share/czmq \
+		--localstatedir=/var/lib/czmq \
+		--disable-czmq_selftest \
+		--disable-zmakecert \
+		--with-gnu-ld \
+		--with-nss=no
+
+	make
 }
 
 package() {
-  cd "${_pkgname}/"
-
-  make DESTDIR="${pkgdir}" install
+	cd "${_pkgname}/"
+	make DESTDIR="${pkgdir}" install
 }
