@@ -29,7 +29,7 @@ pkgver() {
 
 prepare() {
 	# Extract BSD-3-Clause terms from sources
-	sed -n '2,21p' $_pkgname-$pkgver/lzfse/lzfse.h > BSD-3-Clause.txt
+	sed -n '2,21p' "${_pkgname}/lzfse/lzfse.h" > BSD-3-Clause.txt
 }
 
 package() {
