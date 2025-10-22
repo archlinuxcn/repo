@@ -7,8 +7,6 @@ build_prefix: extra-x86_64
 pre_build_script: |
   aur_pre_build(maintainers=['grahamedgecombe', 'xiota', 'thotypous'])
   add_depends([
-    'libboost_system.so',
-    'libboost_filesystem.so',
     'libboost_iostreams.so',
     'libboost_program_options.so',
     'libboost_thread.so'
@@ -29,12 +27,6 @@ update_on:
   - source: github
     github: YosysHQ/nextpnr
   - alias: python
-  - source: alpm
-    alpm: boost-libs
-    provided: libboost_system.so
-  - source: alpm
-    alpm: boost-libs
-    provided: libboost_filesystem.so
   - source: alpm
     alpm: boost-libs
     provided: libboost_iostreams.so
