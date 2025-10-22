@@ -44,18 +44,16 @@ conflicts=(
 install=gdk-pixbuf2-noglycin.install
 source=(
   "https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/archive/${pkgver}/${_pkgname}-${pkgver}.tar.gz"
-  "bmp-pixel-order.patch::https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/commit/9b100a1d3995b7debd0fffcb3afaaf0346c18ac5.patch"
   gdk-pixbuf2-noglycin.install
   gdk-pixbuf-query-loaders.hook
 )
 sha256sums=('cc591e3949a95e2f7b50173c9373df8846648b15aa596d9e7ec7258381bfac0d'
-            '750ffa1e5a1a67bfc4605340053cbdff157d9198659bc5dba03c17fce92b7531'
             'a92b5437b664c293a709c418abd455a7878b4c0adf3ea2f6fcf7439300c3d1e9'
             '9fb71d95e6a212779eb0f88dde5a3cee0df7f4d9183f8f9ce286f8cdc14428f0')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
-  patch -Np1 -i "${srcdir}/bmp-pixel-order.patch"
+  #patch -Np1 -i
 }
 
 build() {
