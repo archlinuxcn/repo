@@ -2,7 +2,7 @@
 
 pkgname=alvr-nvidia
 _pkgname=${pkgname%-nvidia}
-pkgver=20.13.0
+pkgver=20.14.1
 pkgrel=1
 pkgdesc="Experimental Linux version of ALVR. Stream VR games from your PC to your headset via Wi-Fi."
 arch=('x86_64')
@@ -15,7 +15,7 @@ conflicts=("${_pkgname}")
 source=("${_pkgname}"::"git+https://github.com/alvr-org/ALVR.git#tag=v$pkgver"
 		"git+https://github.com/ValveSoftware/openvr.git"
 )
-md5sums=('79249a6dd2c0d6060fc622362e829ec8'
+md5sums=('d5b0186e8f872520d1820e8452635568'
          'SKIP')
 options=('!lto')
 
@@ -32,8 +32,9 @@ prepare() {
 	git -c protocol.file.allow=always submodule update
 
 	sed -i 's:../../../lib64/libalvr_vulkan_layer.so:libalvr_vulkan_layer.so:' alvr/vulkan_layer/layer/alvr_x86_64.json
-
-	cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+    sed -i 's:-gencode arch=compute_52,code=sm_52 ::' alvr/xtask/src/dependencies.rs
+	
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 
 build() {
