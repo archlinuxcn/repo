@@ -10,12 +10,14 @@ arch=('any')
 url="https://wummel.github.io/${pkgname}"
 license=('GPL-3.0-or-later')
 depends=('python')
-makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools' 'python-argcomplete')
-optdepends=("lz4: extracting LZ4 archives"
-    "p7zip: extracting ZIP and 7z files"
-    "unarchiver: extracting various formats"
-    "unrar: extracting RAR files"
-    "zstd: extracting ZSTANDARD files")
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools' 'python-setuptools-reproducible' 'python-argcomplete')
+optdepends=(
+	"lz4: extracting LZ4 archives"
+	"p7zip: extracting ZIP and 7z files"
+	"unarchiver: extracting various formats"
+	"unrar: extracting RAR files"
+	"zstd: extracting ZSTANDARD files"
+)
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wummel/${pkgname}/archive/${pkgver}.tar.gz")
 sha256sums=('1e56fedfc2b17778e7f8ed944856704d7e027f2b87546011d8defc428c02ab88')
 
