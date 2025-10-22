@@ -19,17 +19,7 @@ provides=("${_pkgname}=${pkgver%.r*}" libczmq.so)
 conflicts=(${_pkgname})
 
 pkgver() {
-  cd "${_pkgname}/"
-
-  # Generate git tag based version. Count only proper (v)#.#* [#=number] tags.
-  local _gitversion=$(git describe --long --match '[v0-9][0-9.][0-9.]*' | sed -e 's|^v||' | tr '[:upper:]' '[:lower:]')
-
-  # Format git tag based version for pkgver
-  # Expected format: e.g. 1.5.0rc2.r521.g99982a1c
-  echo "${_gitversion}" | sed \
-      -e 's|^\([0-9][0-9.]*\)-\([a-zA-Z]\+\)|\1\2|' \
-      -e 's|\([0-9]\+-g\)|r\1|' \
-      -e 's|-|.|g'
+  git -C "${_pkgname}" describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
