@@ -35,7 +35,6 @@ pkgver() {
 build() {
   cd "${_pkgname}/"
 
-  msg2 'Building...'
   ./autogen.sh
   ./configure \
     --prefix=/usr \
@@ -54,15 +53,12 @@ build() {
 package() {
   cd "${_pkgname}/"
 
-  msg2 'Installing...'
   make DESTDIR="${pkgdir}" install
 
-  msg2 'Renaming binaries...'
   for _bin in $(find "${pkgdir}/usr/bin" -type f -printf '%f\n'); do
     mv "${pkgdir}/usr/bin/${_bin}" "${pkgdir}/usr/bin/${_pkgname}_${_bin}"
   done
 
-  msg2 'Cleaning up pkgdir...'
   find "${pkgdir}" -type d -name .git -exec rm -r '{}' +
   find "${pkgdir}" -type f -name .gitignore -exec rm -r '{}' +
 }
