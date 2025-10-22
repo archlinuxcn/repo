@@ -2,8 +2,8 @@
 # Maintainer: Gianluca Pettinello <g_pet at hotmail dot com>
 # Contributor: Christian Pfeiffer <cpfeiffer at live dot de>
 pkgname=superlu_dist
-pkgver=9.1.0
-pkgrel=2
+pkgver=9.2.0
+pkgrel=1
 pkgdesc="Distributed memory, MPI based SuperLU"
 arch=(aarch64 x86_64)
 url="https://github.com/xiaoyeli/superlu_dist"
@@ -13,7 +13,7 @@ optdepends=(python)
 makedepends=(cmake gcc-fortran python)
 provides=(libsuperlu_dist.so)
 source=(superlu_dist-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('76251ac49ff03ca9b040a9ce34764047fe182f1361d05e5e73b6df92510135170c9c946d15d716dadc3326995515a703b999a56bd762e6f77e9b8749f298fed1')
+sha512sums=('9aba137cde807b468d6a3bbb405a7a8d227f6ddcc16965421f59781592dba6878da78609a71f1d73adcc5d7b70b355df1dabb7fd453bf79066b4118992bb24e8')
 options=('!emptydirs')
 
 build() {
