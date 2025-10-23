@@ -3,8 +3,8 @@
 
 _pkgname=yappi
 pkgname=python-yappi
-pkgver=1.6.10
-pkgrel=2
+pkgver=1.7.0
+pkgrel=1
 pkgdesc='Yet Another Python Profiler, but this time thread & coroutine & greenlet aware'
 url='https://github.com/sumerc/yappi'
 license=('MIT')
@@ -16,7 +16,7 @@ makedepends=(
     python-setuptools
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/sumerc/yappi/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('6d0b9f339fe1b52af5ae48ee423c245418f2a192177e3e220b4e7ac1c63d9733')
+sha256sums=('f51f3d4441f3ef50a5e48a409339c0bdd9dfedcbbd2b77d73937930db9fb5ec7')
 
 build() {
     cd "${_pkgname}-${pkgver}"
