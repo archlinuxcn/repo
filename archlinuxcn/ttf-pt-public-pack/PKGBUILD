@@ -3,14 +3,14 @@
 pkgbase=ttf-pt-public-pack
 pkgname=('ttf-pt-astra-sans' 'ttf-pt-astra-serif' 'ttf-pt-mono' 'ttf-pt-root_ui' 'ttf-pt-sans' 'ttf-pt-serif')
 pkgver=2024.09.02
-pkgrel=1
+pkgrel=2
 epoch=1
 arch=('any')
 url='https://www.paratype.ru'
 license=('custom:OFL')
 source=("PT-Public-Pack.ottt.zip"::"https://api.paratype.com/api/editions/ofl/download/59384")
 DLAGENTS=('https::/usr/bin/curl -gqb "" -fLC - --retry 3 --retry-delay 3 -o %o %u --referer https://www.paratype.com/ --user-agent Mozilla')
-sha256sums=('72323301a6f00f5792e54e7c3aaadec8c92c96dc22f547a8da614590cd5c7fd7')
+sha256sums=('SKIP')
 
 package_ttf-pt-astra-sans() {
   pkgdesc='A sans-serif font designed to be metrically equivalent to Times New Roman'
