@@ -10,15 +10,6 @@ def pre_build():
   g.files = download_official_pkgbuild('qemu-base')
 
   for line in edit_file('PKGBUILD'):
-    if line.startswith('package_qemu-vmsr-helper() {'):
-      # This is x86 only
-      print(line)
-      print('  pkgdesc="QEMU persistent reservation utility"')
-      print('  return')
-      continue
-    elif line.strip().startswith('_pick qemu-vmsr-helper'):
-      # This is x86 only, skip
-      continue
-    elif line.startswith('arch='):
+    if line.startswith('arch='):
       line = 'arch=(aarch64 x86_64)'
     print(line)
