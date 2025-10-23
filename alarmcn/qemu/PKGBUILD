@@ -23,10 +23,13 @@ pkgname=(
   qemu-ui-{curses,dbus,egl-headless,gtk,opengl,sdl,spice-{app,core}}
   qemu-user{,-static}{,-binfmt}
   qemu-vhost-user-gpu
-  qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-pkgver=10.1.1
+# The qemu-vmsr-helper is only available on the x86 architecture.
+if [[ $CARCH = x86_64 ]]; then
+  pkgname=("${pkgname[@]}" qemu-vmsr-helper)
+fi
+pkgver=10.1.2
 pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
@@ -136,7 +139,7 @@ source=(
   $pkgbase-8.1.1-static_regression.patch
   $pkgbase-9.2.2-libnfs6.patch
 )
-sha512sums=('72ca08894fb63c734163a53c6a836a6237de0f9f4ece4570e871bf80bcfba43fb5d4f11715564e0aef7244b7b3c4fe1890d5f10bbb05528b592d25cd95a57dfa'
+sha512sums=('4defbcb78f65ba3d8079466bdb3ab29e26f10129723e045d34901e7d524656e5ff729dc97fb33537febe2596eb0b21a02aadd88007eb5b226e599bd236213263'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
@@ -145,7 +148,7 @@ sha512sums=('72ca08894fb63c734163a53c6a836a6237de0f9f4ece4570e871bf80bcfba43fb5d
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839'
             'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12'
             '7949b1435ed979836c59149b4b06b80fe14fa89ef12d1e027860df392e2ffdaf4a0f881021f80b4ee56e8657068bf7f2c6415c9891f34c32228b9d35e9359c8f')
-b2sums=('3617898fb4275e1e18f9567e9a9137ad0f3e3e3bc6a1b77301fd59614047757d77a9b810ece2e504ff47c1b98e2b9881a1ff551a4bc356c87c0d5d85f471a59b'
+b2sums=('6e6e27c5de4f70f928a19ef64c00adbcb9723882db3eabd6acd7543f6b3d886db2862cf75ddcec86012c103d6927be464f03e2a3e91873b87cbbcafa0be95671'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
@@ -222,7 +225,6 @@ _qemu_desktop_optdepends=(
   'qemu-tests: for QEMU tests'
   'qemu-tools: for QEMU tools'
   'qemu-user: for user mode emulation of QEMU targets'
-  'qemu-vmsr-helper: for accessing the Running Average Power Limit (RAPL) MSR'
 )
 
 _qemu_base_optdepends=(
@@ -623,6 +625,9 @@ package_qemu-common() {
     _pick qemu-vhost-user-gpu usr/lib/qemu/vhost-user-gpu
     _pick qemu-vhost-user-gpu usr/share/qemu/vhost-user/50-qemu-gpu.json
 
+    if [[ -e usr/bin/qemu-vmsr-helper ]]; then
+      _pick qemu-vmsr-helper usr/bin/qemu-vmsr-helper
+    fi
   )
 }
 
@@ -1207,8 +1212,6 @@ package_qemu-vhost-user-gpu() {
 
 package_qemu-vmsr-helper() {
   pkgdesc="QEMU persistent reservation utility"
-  return
-  pkgdesc="QEMU persistent reservation utility"
   depends=(gcc-libs glib2 libglib-2.0.so libgmodule-2.0.so glibc gnutls libcap-ng libcap-ng.so liburing liburing.so numactl libnuma.so pam libpam.so qemu-common=$pkgver-$pkgrel)
   mv -v $pkgname/* "$pkgdir"
   install -vDm 644 $pkgbase-$pkgver/contrib/systemd/$pkgname.{service,socket} -t "$pkgdir/usr/lib/systemd/system/"
@@ -1224,6 +1227,7 @@ package_qemu-base() {
     virtiofsd
   )
   optdepends=("${_qemu_base_optdepends[@]}")
+  optdepends_x86_64=('qemu-vmsr-helper: for accessing the Running Average Power Limit (RAPL) MSR')
   provides=(qemu=$pkgver)
   _install_licenses
 }
@@ -1243,6 +1247,7 @@ package_qemu-desktop() {
     qemu-vhost-user-gpu=$pkgver-$pkgrel
   )
   optdepends=("${_qemu_desktop_optdepends[@]}")
+  optdepends_x86_64=('qemu-vmsr-helper: for accessing the Running Average Power Limit (RAPL) MSR')
   provides=(qemu=$pkgver)
   _install_licenses
 }
@@ -1270,8 +1275,8 @@ package_qemu-full() {
     qemu-tests=$pkgver-$pkgrel
     qemu-tools=$pkgver-$pkgrel
     qemu-user=$pkgver-$pkgrel
-    qemu-vmsr-helper=$pkgver-$pkgrel
   )
+  depends_x86_64=(qemu-vmsr-helper=$pkgver-$pkgrel)
   optdepends=("${_qemu_full_optdepends[@]}")
   provides=(qemu=$pkgver)
   _install_licenses
