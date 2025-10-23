@@ -1,7 +1,7 @@
 # Maintainer: Shengyu Zhang <la@archlinuxcn.org>
 
 pkgname=chezetc
-pkgver=202509.6
+pkgver=202510.1
 pkgrel=1
 pkgdesc='Extending chezmoi to manage files under /etc and other root-owned directories'
 arch=(any)
@@ -13,7 +13,7 @@ source=(
     chezetc
     )
 
-sha256sums=('d10f0f0892ebd00b2a196191ea1e227da160c66d3b1d863425584fcce1926bd8'
+sha256sums=('3f637faaf338a5eb147188458988d108b2e7a0105b026e800a185715b4d0465b'
             '10c022dc7f78dc00e1aeaad816a932fad7271bc2d2d0e8a4c12d14106471843b')
 
 package() {

@@ -7,13 +7,12 @@ repo_depends:
 
   - metis
   - parmetis
-  - superlu_dist
   - hypre
 
 update_on:
   - source: regex
     url: 
-        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HYPRE_jll/version
+      https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HYPRE_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - source: alpmfiles
     pkgname: hypre

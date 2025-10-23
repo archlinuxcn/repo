@@ -2,21 +2,23 @@
 # Contributor: xiretza <xiretza+aur@xiretza.xyz>
 # Contributor: Graham Edgecombe <gpe@grahamedgecombe.com>
 
-_ARCHS=('ecp5' 'ice40' 'himbaechel' 'nexus' 'generic')
+: ${_use_sodeps:=false}
+
+: ${_archs=ecp5;ice40;himbaechel;nexus;generic}
 
 _pkgname="nextpnr"
 pkgname="$_pkgname-git"
-pkgver=0.9.r26.gf19a671
+pkgver=0.9.r35.gc133d00
 pkgrel=1
 pkgdesc='Portable FPGA place and route tool'
 url='https://github.com/YosysHQ/nextpnr'
 license=('ISC')
 arch=('i686' 'x86_64')
 
-depends=("libboost_filesystem.so" "libboost_iostreams.so" "libboost_program_options.so" "libboost_system.so" "libboost_thread.so"
+depends=("libboost_iostreams.so" "libboost_program_options.so" "libboost_thread.so"
   'boost-libs'
   'python'
-  'qt5-base'
+  'qt6-base'
 )
 makedepends=(
   'boost'
@@ -29,38 +31,9 @@ makedepends=(
 provides=("nextpnr=$pkgver")
 conflicts=('nextpnr')
 
-_source_main() {
-  _pkgsrc="$_pkgname"
-  source=("$_pkgsrc"::"git+$url.git")
-  sha256sums=('SKIP')
-}
-
-_source_nextpnr() {
-  local _sources_add=(
-    #'corrosion-rs.corrosion'::'git+https://github.com/corrosion-rs/corrosion.git'
-    #'gatecat.nextpnr-xilinx-meta'::'git+https://github.com/gatecat/nextpnr-xilinx-meta.git'
-    'yosyshq.nextpnr-tests'::'git+https://github.com/YosysHQ/nextpnr-tests.git'
-  )
-
-  local _p
-  for _p in ${_sources_add[@]}; do
-    source+=("$_p")
-    sha256sums+=('SKIP')
-  done
-
-  _prepare_nextpnr() (
-    cd "$srcdir/$_pkgsrc"
-    local _submodules=(
-      #'corrosion-rs.corrosion'::'3rdparty/corrosion'
-      #'gatecat.nextpnr-xilinx-meta'::'himbaechel/uarch/xilinx/meta'
-      'yosyshq.nextpnr-tests'::'tests'
-    )
-    _submodule_update
-  )
-}
-
-_source_main
-_source_nextpnr
+_pkgsrc="$_pkgname"
+source=("$_pkgsrc"::"git+$url.git")
+sha256sums=('SKIP')
 
 pkgver() {
   cd "$_pkgsrc"
@@ -69,16 +42,16 @@ pkgver() {
 }
 
 prepare() {
-  _submodule_update() {
-    local _module
-    for _module in "${_submodules[@]}"; do
-      git submodule init "${_module##*::}"
-      git submodule set-url "${_module##*::}" "$srcdir/${_module%%::*}"
-      git -c protocol.file.allow=always submodule update "${_module##*::}"
-    done
-  }
+  cd "$_pkgsrc"
+  git rm -r 3rdparty/corrosion
+  git rm -r himbaechel/uarch/xilinx/meta
+  git submodule update --init --recursive --depth=1
 
-  _prepare_nextpnr
+  # force Qt6
+  sed -E -e '/Qt6 COMPONENTS/s&\bQUIET\b&REQUIRED&' -i CMakeLists.txt
+
+  # fix for Boost 1.89
+  sed -E -e 's&\bsystem\b&&g' -i CMakeLists.txt bba/CMakeLists.txt
 }
 
 build() {
@@ -88,17 +61,13 @@ build() {
     -G Ninja
     -DCMAKE_BUILD_TYPE=None
     -DCMAKE_INSTALL_PREFIX='/usr'
-    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
-    -DUSE_OPENMP=ON
-    -DUSE_IPO=OFF
-    -DBUILD_GUI=ON
-    -DBUILD_TESTS=ON
+    -DBUILD_TESTS=$CHECKFUNC
     -Wno-dev
 
-    -DARCH=$(
-      IFS=';'
-      echo "${_ARCHS[*]}"
-    )
+    -DARCH="$_archs"
+    -DBUILD_GUI=ON
+    -DUSE_IPO=OFF
+    -DUSE_OPENMP=ON
     "${_CONFIG[@]}"
   )
 
@@ -111,12 +80,21 @@ check() {
 }
 
 package() {
+  if [[ "${_use_sodeps::1}" == "t" ]]; then
+    eval "depends+=(
+      'libboost_filesystem.so'
+      'libboost_iostreams.so'
+      'libboost_program_options.so'
+      'libboost_thread.so'
+    )"
+  fi
+
   DESTDIR="$pkgdir" cmake --install build
   install -Dm644 "$_pkgsrc"/COPYING -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
 
 _CONFIG=()
-for _arch in ${_ARCHS[@]}; do
+for _arch in ${_archs//;/ }; do
   case $_arch in
     ice40)
       makedepends+=(
@@ -150,7 +128,7 @@ for _arch in ${_ARCHS[@]}; do
       ;;
     *)
       echo "Unhandled architecture: $_arch" >&2
-      exit 1
+      false # let makepkg handle error
       ;;
   esac
 done
