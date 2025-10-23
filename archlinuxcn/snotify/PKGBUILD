@@ -1,8 +1,8 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=snotify
-pkgver=0.1.1
-pkgrel=2
+pkgver=0.1.2
+pkgrel=1
 epoch=1
 pkgdesc="Play sounds when receiving a notification."
 arch=("any")
@@ -12,7 +12,7 @@ depends=("dbus" "glibc" "pipewire" "pipewire-audio" "pipewire-pulse" "wireplumbe
 makedepends=('go' 'git')
 backup=()
 source=("git+https://github.com/Kimiblock/snotify.git#tag=${pkgver}")
-sha256sums=('c39c7ce6c8f15598ec6db39239e97ca4e37c721742b182ca4bff3046ca87b701')
+sha256sums=('c610afe83a99c3d40984c87fca979c6a88904b23b20feff11c4db97f0b92337f')
 
 function prepare() {
 	cd "${srcdir}/snotify"
