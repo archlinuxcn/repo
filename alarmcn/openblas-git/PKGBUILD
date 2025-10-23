@@ -14,10 +14,8 @@ url="https://www.openblas.net/"
 license=('BSD')
 makedepends=('git' 'perl' 'gcc-fortran')
 options=(!emptydirs debug strip '!lto')
-source=("git+https://github.com/xianyi/OpenBLAS"
-        0001-Make-dummy-function-have-the-same-linkage-as-the-rea.patch)
-md5sums=('SKIP'
-         'f068f241fc8c05dfd367f1d859834121')
+source=("git+https://github.com/xianyi/OpenBLAS")
+md5sums=('SKIP')
 
 pkgver() {
   cd OpenBLAS
@@ -35,10 +33,6 @@ pkgver() {
 }
 
 prepare() {
-  (
-    cd OpenBLAS
-    patch -Np1 < ../0001-Make-dummy-function-have-the-same-linkage-as-the-rea.patch
-  )
   rm -rf OpenBLAS-64
   cp -a OpenBLAS OpenBLAS-64
 }
