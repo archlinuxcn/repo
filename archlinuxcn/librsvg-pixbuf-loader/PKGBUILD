@@ -1,0 +1,74 @@
+# Maintainer: Rocket Aaron (rocka) <rocka@archlinuxcn.org>
+# Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Fabian Bornschein <fabiscafe@archlinux.org>
+# Contributor: Jan de Groot <jgc@archlinux.org>
+
+pkgname=librsvg-pixbuf-loader
+pkgver=2.61.2
+pkgrel=1
+pkgdesc="SVG GDK Pixbuf Loader library (from librsvg)"
+url="https://gitlab.gnome.org/GNOME/librsvg"
+arch=(x86_64)
+license=(LGPL-2.1-or-later)
+depends=(
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
+  librsvg
+)
+makedepends=(
+# librsvg deps
+  cairo
+  dav1d
+  freetype2
+  harfbuzz
+  libxml2
+  pango
+# build deps
+  cargo-c
+  gi-docgen
+  git
+  gobject-introspection
+  llvm
+  meson
+  python-docutils
+  rust
+  vala
+)
+checkdepends=(ttf-dejavu)
+source=(
+  "https://gitlab.gnome.org/GNOME/librsvg/-/archive/${pkgver}/librsvg-${pkgver}.tar.gz"
+  install-tag.patch
+)
+sha256sums=('59732d6344ed53a38107de76b0bdd3cb1b2005d85971fc489ae2a1a1ad8b8d90'
+            '3b6d1dc3bda1b9387ac6b9e50dade552ab374b060dbc3a44af67b0e57f2d895d')
+
+# Use debug
+export CARGO_PROFILE_RELEASE_DEBUG=2 CARGO_PROFILE_RELEASE_STRIP=false
+
+# Use LTO
+export CARGO_PROFILE_RELEASE_LTO=true CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+
+prepare() {
+  cd "${srcdir}/librsvg-${pkgver}"
+  patch -Np1 -i "${srcdir}/install-tag.patch"
+}
+
+build() {
+  local meson_options=(
+    -D avif=enabled
+    -D pixbuf-loader=enabled
+  )
+
+  arch-meson "${meson_options[@]}" "${srcdir}/build" "${srcdir}/librsvg-${pkgver}"
+  meson compile -C "${srcdir}/build" pixbufloader-svg
+}
+
+check() {
+  meson test -C build --print-errorlogs --no-rebuild 'Rust tests (pixbufloader-svg)'
+}
+
+package() {
+  meson install -C "${srcdir}/build" --destdir "${pkgdir}" --no-rebuild --tags pixbufloader-svg
+}

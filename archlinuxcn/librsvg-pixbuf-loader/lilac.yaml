@@ -1,0 +1,17 @@
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: gitlab
+    host: gitlab.gnome.org
+    gitlab: GNOME/librsvg
+    use_max_tag: true
+    # 2.61.2
+    include_regex: \d+(\.\d+)+
+
+maintainers:
+  - github: rocka
+    email: Rocka <rocka@archlinuxcn.org>

@@ -1,0 +1,10 @@
+--- a/gdk-pixbuf-loader/meson.build
++++ b/gdk-pixbuf-loader/meson.build
+@@ -11,6 +11,7 @@
+   output: ['@0@pixbufloader_svg.@1@'.format(cargo_dylib_prefix, ext_dynamic)],
+   console: true,
+   install: true,
++  install_tag: 'pixbufloader-svg',
+   install_dir: pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_moduledir', pkgconfig_define: ['prefix', prefix]),
+   depends: librsvg_rust_dep,
+   depend_files: pixbufloader_sources,
