@@ -3,7 +3,7 @@
 _repo=uswitch
 pkgname=plasma6-applets-uswitch
 # TODO remove this when new version releases
-_ref=440f2d859468aa5a8958766c171ff3f5e01d90f5
+_ref=fdb573e4c03d73023f3555968a186c15d4233e8b
 pkgver=1.3.0
 pkgrel=2
 pkgdesc='Modified version of User Switch plasmoid'
@@ -13,18 +13,9 @@ arch=('any')
 depends=('plasma-workspace')
 makedepends=('cmake' 'extra-cmake-modules')
 source=("$_repo-$pkgver.tar.gz::https://gitlab.com/divinae/$_repo/-/archive/$_ref/archive.tar.gz"
-        "https://gitlab.com/divinae/uswitch/-/merge_requests/7.patch"
         "CMakeLists.txt")
-sha256sums=('c1752af72c5df6a456de058dd8d5248ea68a312ed3fe3cf821fc15ecb7a08cca'
-            'e5bf03cef1c8c0369b253135bae95927fa3bb2a21c29975dd9834dedd19d7590'
+sha256sums=('2e251c4ee1fca3d173798c64265c89ed477555b26b5195a92ad317596b537466'
             '6a650bb4f2e4781a2b0a33f088cc1dad97f21547cc93b2b7b1b64d0dfbb9f35b')
-
-prepare() {
-  local _src="$_repo-$_ref"
-  cd "$_src"
-  patch -Np1 -i "$srcdir/7.patch"
-}
-
 build() {
   local _src="$_repo-$_ref"
   cp "$srcdir/CMakeLists.txt" "$_src"
