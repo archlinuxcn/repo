@@ -73,8 +73,8 @@ package() {
 
   install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
-  boostver=$(objdump -p /usr/lib/libboost_system.so | \
-               grep SONAME | sed -e 's/.*boost_system\.so\.//')
+  boostver=$(objdump -p /usr/lib/libboost_thread.so | \
+               grep SONAME | sed -e 's/.*boost_thread\.so\.//')
   [[ $boostver =~ ^([0-9]*)\.([0-9]*)\.([0-9]*) ]]
   maj_ver=${BASH_REMATCH[1]}
   min_ver=${BASH_REMATCH[2]}
