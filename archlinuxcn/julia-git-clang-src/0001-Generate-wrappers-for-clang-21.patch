@@ -9,19 +9,6 @@ Subject: [PATCH] Generate wrappers for clang-21
  2 files changed, 7811 insertions(+), 1 deletion(-)
  create mode 100644 lib/21/LibClang.jl
 
-diff --git a/gen/generator.jl b/gen/generator.jl
-index 08e2662..c389eb6 100644
---- a/gen/generator.jl
-+++ b/gen/generator.jl
-@@ -64,7 +64,7 @@ cd(@__DIR__) do
-                                           #=(v"15.0.6", v"1.10"),=#
-                                           #=(v"16.0.6", v"1.11"),=#
-                                           #=(v"18.1.7", v"1.12"),=#
--                                          (v"20.1.8", v"1.13"),)
-+                                          (v"21.1.2", v"1.13"),)
-         @info "Generating..." llvm_version julia_version
-         temp_prefix() do prefix
-             # let prefix = Prefix(mktempdir())
 diff --git a/lib/21/LibClang.jl b/lib/21/LibClang.jl
 new file mode 100644
 index 0000000..9e060f8
