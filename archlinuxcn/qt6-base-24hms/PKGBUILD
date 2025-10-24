@@ -7,7 +7,7 @@ pkgname=(qt6-base-24hms)
 
 _pkgver=6.10.0
 pkgver=${_pkgver/-/}
-pkgrel=2
+pkgrel=2.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -110,7 +110,8 @@ sha256sums=(
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-  git -C $_pkgfn cherry-pick -n a374ab6ce9f01f1f559403ec377cde990a689890 # Fix yakuake
+
+  git -C $_pkgfn cherry-pick -n 2974b3d740a705767a1b6ca0779eb0d989364769 # Fix window positioning
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24hms.patch
