@@ -1,217 +1,295 @@
-From b6454007e1e110d1d3afab8e82b42faef51643a2 Mon Sep 17 00:00:00 2001
+From ed1ef0aeb925927b837096b4bdd568b230be8795 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Thu, 23 Oct 2025 22:46:44 -0400
-Subject: [PATCH] LLVM 21
+Date: Fri, 24 Oct 2025 10:41:22 -0400
+Subject: [PATCH 09/10] Fix some compiler error on LLVM 21
 
+Remaining issues are the removal of EHFrameRegistrar class and manual locking interface for ThreadSafeContext.
+Some other deprecation warnings are also left as is for now.
 ---
- src/aotcompile.cpp |  7 +++----
- src/cgutils.cpp    |  4 ++--
- src/codegen.cpp    | 23 +++++++++++------------
- src/debuginfo.cpp  |  3 ++-
- src/disasm.cpp     |  8 ++++----
- src/jitlayers.cpp  | 35 ++++++++++++++---------------------
- 6 files changed, 36 insertions(+), 44 deletions(-)
+ src/aotcompile.cpp | 14 ++++++++++++
+ src/cgutils.cpp    | 10 +++++++++
+ src/codegen.cpp    | 53 +++++++++++++++++++++++++++++++++++++---------
+ src/debuginfo.cpp  |  7 +++++-
+ src/disasm.cpp     | 16 +++++++++-----
+ src/jitlayers.cpp  |  4 +++-
+ 6 files changed, 87 insertions(+), 17 deletions(-)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 2d9a3b85b65..5df4f498d6b 100644
+index 1f1ed18e88..83d340329f 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
-@@ -541,7 +541,6 @@ Function *IRLinker_copyFunctionProto(Module *DstM, Function *SF) {
+@@ -541,7 +541,9 @@ Function *IRLinker_copyFunctionProto(Module *DstM, Function *SF) {
    auto *F = Function::Create(SF->getFunctionType(), SF->getLinkage(),
                               SF->getAddressSpace(), SF->getName(), DstM);
    F->copyAttributesFrom(SF);
--  F->IsNewDbgInfoFormat = SF->IsNewDbgInfoFormat;
++#if JL_LLVM_VERSION < 210000
+   F->IsNewDbgInfoFormat = SF->IsNewDbgInfoFormat;
++#endif
  
    // Remove these copied constants since they point to the source module.
    F->setPersonalityFn(nullptr);
-@@ -2138,7 +2137,7 @@ void jl_dump_native_impl(void *native_code,
+@@ -2138,7 +2140,11 @@ void jl_dump_native_impl(void *native_code,
          LLVMContext Context;
          Context.setDiscardValueNames(true);
          Module sysimgM("sysimg", Context);
--        sysimgM.setTargetTriple(TheTriple.str());
++#if JL_LLVM_VERSION < 210000
+         sysimgM.setTargetTriple(TheTriple.str());
++#else
 +        sysimgM.setTargetTriple(TheTriple);
++#endif
          sysimgM.setDataLayout(DL);
          sysimgM.setStackProtectorGuard(StackProtectorGuard);
          sysimgM.setOverrideStackAlignment(OverrideStackAlignment);
-@@ -2206,7 +2205,7 @@ void jl_dump_native_impl(void *native_code,
+@@ -2206,7 +2212,11 @@ void jl_dump_native_impl(void *native_code,
  
      data->M.withModuleDo([&](Module &dataM) {
          JL_TIMING(NATIVE_AOT, NATIVE_Setup);
--        dataM.setTargetTriple(TheTriple.str());
++#if JL_LLVM_VERSION < 210000
+         dataM.setTargetTriple(TheTriple.str());
++#else
 +        dataM.setTargetTriple(TheTriple);
++#endif
          dataM.setDataLayout(DL);
          dataM.setPICLevel(PICLevel::BigPIC);
          auto &Context = dataM.getContext();
-@@ -2307,7 +2306,7 @@ void jl_dump_native_impl(void *native_code,
+@@ -2307,7 +2317,11 @@ void jl_dump_native_impl(void *native_code,
          LLVMContext Context;
          Context.setDiscardValueNames(true);
          Module metadataM("metadata", Context);
--        metadataM.setTargetTriple(TheTriple.str());
++#if JL_LLVM_VERSION < 210000
+         metadataM.setTargetTriple(TheTriple.str());
++#else
 +        metadataM.setTargetTriple(TheTriple);
++#endif
          metadataM.setDataLayout(DL);
          metadataM.setStackProtectorGuard(StackProtectorGuard);
          metadataM.setOverrideStackAlignment(OverrideStackAlignment);
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index 88b869fd5df..6b5a7a137ab 100644
+index 88b869fd5d..ab096e4c89 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
-@@ -1010,7 +1010,7 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+@@ -1009,8 +1009,13 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+     // above problem won't be as serious.
  
      auto merged_ai = dst_ai.merge(src_ai);
++#if JL_LLVM_VERSION < 210000
      ctx.builder.CreateMemCpy(dst, align_dst, src, align_src, sz, is_volatile,
--                             merged_ai.tbaa, merged_ai.tbaa_struct, merged_ai.scope, merged_ai.noalias);
-+                             AAMDNodes(merged_ai.tbaa, merged_ai.tbaa_struct, merged_ai.scope, merged_ai.noalias));
+                              merged_ai.tbaa, merged_ai.tbaa_struct, merged_ai.scope, merged_ai.noalias);
++#else
++    ctx.builder.CreateMemCpy(dst, align_dst, src, align_src, sz, is_volatile,
++                             merged_ai.toAAMDNodes());
++#endif
  }
  
  static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const &dst_ai, Value *src,
-@@ -1024,7 +1024,7 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+@@ -1023,8 +1028,13 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+     ++EmittedMemcpys;
  
      auto merged_ai = dst_ai.merge(src_ai);
++#if JL_LLVM_VERSION < 210000
      ctx.builder.CreateMemCpy(dst, align_dst, src, align_src, sz, is_volatile,
--                             merged_ai.tbaa, merged_ai.tbaa_struct, merged_ai.scope, merged_ai.noalias);
-+                             AAMDNodes(merged_ai.tbaa, merged_ai.tbaa_struct, merged_ai.scope, merged_ai.noalias));
+                              merged_ai.tbaa, merged_ai.tbaa_struct, merged_ai.scope, merged_ai.noalias);
++#else
++    ctx.builder.CreateMemCpy(dst, align_dst, src, align_src, sz, is_volatile,
++                             merged_ai.toAAMDNodes());
++#endif
  }
  
  template<typename T1>
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index aefe075d3b2..b9b7a48d921 100644
+index aefe075d3b..66202d8854 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -617,7 +617,7 @@ static AttributeList get_func_attrs(LLVMContext &C)
+@@ -605,6 +605,24 @@ AttributeSet Attributes(LLVMContext &C, std::initializer_list<Attribute::AttrKin
+     return AttributeSet::get(C, ArrayRef<Attribute>(attrs));
+ }
+ 
++static inline Attribute NoCaptureAttr(LLVMContext &C)
++{
++#if JL_LLVM_VERSION < 210000
++    return Attribute::get(C, Attribute::NoCapture);
++#else
++    return Attribute::getWithCaptureInfo(C, CaptureInfo(CaptureComponents::None));
++#endif
++}
++
++static inline void addNoCaptureAttr(AttrBuilder &param)
++{
++#if JL_LLVM_VERSION < 210000
++    param.addAttribute(Attribute::NoCapture);
++#else
++    param.addCapturesAttr(CaptureInfo(CaptureComponents::None));
++#endif
++}
++
+ static Type *get_pjlvalue(LLVMContext &C) { return JuliaType::get_pjlvalue_ty(C); }
+ 
+ static FunctionType *get_func_sig(LLVMContext &C) { return JuliaType::get_jlfunc_ty(C); }
+@@ -617,7 +635,7 @@ static AttributeList get_func_attrs(LLVMContext &C)
              AttributeSet(),
              Attributes(C, {Attribute::NonNull}),
              {AttributeSet(),
 -             Attributes(C, {Attribute::NoAlias, Attribute::ReadOnly, Attribute::NoCapture, Attribute::NoUndef})});
-+             Attributes(C, {Attribute::NoAlias, Attribute::ReadOnly, Attribute::NoUndef}, {Attribute::getWithCaptureInfo(C, CaptureInfo(CaptureComponents::None))})});
++             Attributes(C, {Attribute::NoAlias, Attribute::ReadOnly, Attribute::NoUndef}, {NoCaptureAttr(C)})});
  }
  
  static AttributeList get_attrs_noreturn(LLVMContext &C)
-@@ -998,7 +998,7 @@ static const auto jllockvalue_func = new JuliaFunction<>{
+@@ -998,7 +1016,7 @@ static const auto jllockvalue_func = new JuliaFunction<>{
      [](LLVMContext &C) { return AttributeList::get(C,
              AttributeSet(),
              AttributeSet(),
 -            {Attributes(C, {Attribute::NoCapture})}); },
-+            {Attributes(C, {}, {Attribute::getWithCaptureInfo(C, CaptureInfo(CaptureComponents::None))})}); },
++            {Attributes(C, {}, {NoCaptureAttr(C)})}); },
  };
  static const auto jlunlockvalue_func = new JuliaFunction<>{
      XSTR(jl_unlock_value),
-@@ -1007,7 +1007,7 @@ static const auto jlunlockvalue_func = new JuliaFunction<>{
+@@ -1007,7 +1025,7 @@ static const auto jlunlockvalue_func = new JuliaFunction<>{
      [](LLVMContext &C) { return AttributeList::get(C,
              AttributeSet(),
              AttributeSet(),
 -            {Attributes(C, {Attribute::NoCapture})}); },
-+            {Attributes(C, {}, {Attribute::getWithCaptureInfo(C, CaptureInfo(CaptureComponents::None))})}); },
++            {Attributes(C, {}, {NoCaptureAttr(C)})}); },
  };
  static const auto jllockfield_func = new JuliaFunction<>{
      XSTR(jl_lock_field),
-@@ -1016,7 +1016,7 @@ static const auto jllockfield_func = new JuliaFunction<>{
+@@ -1016,7 +1034,7 @@ static const auto jllockfield_func = new JuliaFunction<>{
      [](LLVMContext &C) { return AttributeList::get(C,
              AttributeSet(),
              AttributeSet(),
 -            {Attributes(C, {Attribute::NoCapture})}); },
-+            {Attributes(C, {}, {Attribute::getWithCaptureInfo(C, CaptureInfo(CaptureComponents::None))})}); },
++            {Attributes(C, {}, {NoCaptureAttr(C)})}); },
  };
  static const auto jlunlockfield_func = new JuliaFunction<>{
      XSTR(jl_unlock_field),
-@@ -1025,7 +1025,7 @@ static const auto jlunlockfield_func = new JuliaFunction<>{
+@@ -1025,7 +1043,7 @@ static const auto jlunlockfield_func = new JuliaFunction<>{
      [](LLVMContext &C) { return AttributeList::get(C,
              AttributeSet(),
              AttributeSet(),
 -            {Attributes(C, {Attribute::NoCapture})}); },
-+            {Attributes(C, {}, {Attribute::getWithCaptureInfo(C, CaptureInfo(CaptureComponents::None))})}); },
++            {Attributes(C, {}, {NoCaptureAttr(C)})}); },
  };
  static const auto jlenter_func = new JuliaFunction<>{
      XSTR(jl_enter_handler),
-@@ -1493,7 +1493,7 @@ static const auto gc_loaded_func = new JuliaFunction<>{
+@@ -1493,7 +1511,7 @@ static const auto gc_loaded_func = new JuliaFunction<>{
          RetAttrs.addAttribute(Attribute::NonNull);
          RetAttrs.addAttribute(Attribute::NoUndef);
          return AttributeList::get(C, AttributeSet::get(C,FnAttrs), AttributeSet::get(C,RetAttrs),
 -                { Attributes(C, {Attribute::NonNull, Attribute::NoUndef, Attribute::ReadNone, Attribute::NoCapture}),
-+                { Attributes(C, {Attribute::NonNull, Attribute::NoUndef, Attribute::ReadNone}, {Attribute::getWithCaptureInfo(C, CaptureInfo(CaptureComponents::None))}),
++                { Attributes(C, {Attribute::NonNull, Attribute::NoUndef, Attribute::ReadNone}, {NoCaptureAttr(C)}),
                    Attributes(C, {Attribute::NonNull, Attribute::NoUndef, Attribute::ReadNone}) });
                    },
  };
-@@ -2685,7 +2685,7 @@ std::unique_ptr<Module> jl_create_llvm_module(StringRef name, LLVMContext &conte
+@@ -1688,6 +1706,15 @@ struct jl_aliasinfo_t {
+     // memory region non-aliasing. It should be deleted once the TBAA metadata
+     // is improved to encode only memory layout and *not* memory regions.
+     static jl_aliasinfo_t fromTBAA(jl_codectx_t &ctx, MDNode *tbaa);
++
++    AAMDNodes toAAMNNodes() const
++    {
++#if JL_LLVM_VERSION < 220000
++        return AAMDNodes(tbaa, tbaa_struct, scope, noalias);
++#else
++        return AAMDNodes(tbaa, tbaa_struct, scope, noalias, nullptr);
++#endif
++    }
+ };
+ 
+ // metadata tracking for a llvm Value* during codegen
+@@ -2685,7 +2712,11 @@ std::unique_ptr<Module> jl_create_llvm_module(StringRef name, LLVMContext &conte
          m->addModuleFlag(llvm::Module::Warning, "Debug Info Version",
              llvm::DEBUG_METADATA_VERSION);
      m->setDataLayout(DL);
--    m->setTargetTriple(triple.str());
++#if JL_LLVM_VERSION < 210000
+     m->setTargetTriple(triple.str());
++#else
 +    m->setTargetTriple(triple);
++#endif
  
      if (triple.isOSWindows() && triple.getArch() == Triple::x86) {
          // tell Win32 to assume the stack is always 16-byte aligned,
-@@ -7944,7 +7944,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -7944,7 +7975,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
          AttrBuilder param(M->getContext());
          param.addStructRetAttr(srt);
          param.addAttribute(Attribute::NoAlias);
 -        param.addAttribute(Attribute::NoCapture);
-+        param.addCapturesAttr(CaptureInfo(CaptureComponents::None));
++        addNoCaptureAttr(param);
          param.addAttribute(Attribute::NoUndef);
          attrs.push_back(AttributeSet::get(M->getContext(), param));
          assert(fsig.size() == 1);
-@@ -7952,7 +7952,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -7952,7 +7983,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
      if (props.cc == jl_returninfo_t::Union) {
          AttrBuilder param(M->getContext());
          param.addAttribute(Attribute::NoAlias);
 -        param.addAttribute(Attribute::NoCapture);
-+        param.addCapturesAttr(CaptureInfo(CaptureComponents::None));
++        addNoCaptureAttr(param);
          param.addAttribute(Attribute::NoUndef);
          attrs.push_back(AttributeSet::get(M->getContext(), param));
          assert(fsig.size() == 1);
-@@ -7961,7 +7961,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -7961,7 +7992,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
      if (props.return_roots) {
          AttrBuilder param(M->getContext());
          param.addAttribute(Attribute::NoAlias);
 -        param.addAttribute(Attribute::NoCapture);
-+        param.addCapturesAttr(CaptureInfo(CaptureComponents::None));
++        addNoCaptureAttr(param);
          param.addAttribute(Attribute::NoUndef);
          attrs.push_back(AttributeSet::get(M->getContext(), param));
          fsig.push_back(getPointerTy(M->getContext()));
-@@ -7995,7 +7995,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -7995,7 +8026,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
          AttrBuilder param(M->getContext());
          Type *ty = et;
          if (et == nullptr || et->isAggregateType()) { // aggregate types are passed by pointer
 -            param.addAttribute(Attribute::NoCapture);
-+            param.addCapturesAttr(CaptureInfo(CaptureComponents::None));
++            addNoCaptureAttr(param);
              param.addAttribute(Attribute::ReadOnly);
              ty = PointerType::get(M->getContext(), AddressSpace::Derived);
          }
-@@ -9888,7 +9888,6 @@ void linkFunctionBody(Function &Dst, Function &Src)
+@@ -9888,7 +9919,9 @@ void linkFunctionBody(Function &Dst, Function &Src)
          Dst.setPersonalityFn(Src.getPersonalityFn());
      if (Src.hasPersonalityFn())
          Dst.setPersonalityFn(Src.getPersonalityFn());
--    assert(Src.IsNewDbgInfoFormat == Dst.IsNewDbgInfoFormat);
++#if JL_LLVM_VERSION < 210000
+     assert(Src.IsNewDbgInfoFormat == Dst.IsNewDbgInfoFormat);
++#endif
  
      // Copy over the metadata attachments without remapping.
      Dst.copyMetadata(&Src, 0);
 diff --git a/src/debuginfo.cpp b/src/debuginfo.cpp
-index c0f8c0d5883..05daa9f6256 100644
+index c0f8c0d588..6449140c06 100644
 --- a/src/debuginfo.cpp
 +++ b/src/debuginfo.cpp
-@@ -505,7 +505,8 @@ static int lookup_pointer(
+@@ -505,8 +505,13 @@ static int lookup_pointer(
          else {
              int havelock = jl_lock_profile_wr();
              assert(havelock); (void)havelock;
 -            info = context->getLineInfoForAddress(makeAddress(Section, pointer + slide), infoSpec);
-+            if (auto res = context->getLineInfoForAddress(makeAddress(Section, pointer + slide), infoSpec))
-+                info = res.value();
++            auto lineinfo = context->getLineInfoForAddress(makeAddress(Section, pointer + slide), infoSpec);
              jl_unlock_profile_wr();
++#if JL_LLVM_VERSION < 210000
++            info = std::move(lineinfo);
++#else
++            info = std::move(lineinfo.value());
++#endif
          }
  
+         jl_frame_t *frame = &(*frames)[i];
 diff --git a/src/disasm.cpp b/src/disasm.cpp
-index a80f79218f5..f6eccb349e7 100644
+index a80f79218f..23364f028f 100644
 --- a/src/disasm.cpp
 +++ b/src/disasm.cpp
-@@ -927,7 +927,7 @@ static void jl_dump_asm_internal(
- #if JL_LLVM_VERSION >= 190000
+@@ -924,7 +924,11 @@ static void jl_dump_asm_internal(
+     // LLVM will destroy the formatted stream, and we keep the raw stream.
+     std::unique_ptr<formatted_raw_ostream> ustream(new formatted_raw_ostream(rstream));
+     std::unique_ptr<MCStreamer> Streamer(
+-#if JL_LLVM_VERSION >= 190000
++#if JL_LLVM_VERSION >= 210000
++        TheTarget->createAsmStreamer(Ctx, std::move(ustream),
++
++                                     std::move(IP), std::move(CE), std::move(MAB))
++#elif JL_LLVM_VERSION >= 190000
          TheTarget->createAsmStreamer(Ctx, std::move(ustream),
  
--                                     IP.release(), std::move(CE), std::move(MAB))
-+                                     std::move(IP), std::move(CE), std::move(MAB))
- #else
-         TheTarget->createAsmStreamer(Ctx, std::move(ustream), /*asmverbose*/ true,
-                                      /*useDwarfDirectory*/ true, IP.release(),
-@@ -1268,8 +1268,8 @@ jl_value_t *jl_dump_function_asm_impl(jl_llvmf_dump_t* dump, char emit_mc, const
+                                      IP.release(), std::move(CE), std::move(MAB))
+@@ -1268,8 +1272,8 @@ jl_value_t *jl_dump_function_asm_impl(jl_llvmf_dump_t* dump, char emit_mc, const
                  OutputAsmDialect = 0;
              if (!strcmp(asm_variant, "intel"))
                  OutputAsmDialect = 1;
@@ -222,83 +300,41 @@ index a80f79218f5..f6eccb349e7 100644
              std::unique_ptr<MCAsmBackend> MAB(TM->getTarget().createMCAsmBackend(
                  STI, MRI, Options));
              std::unique_ptr<MCCodeEmitter> MCE;
-@@ -1279,7 +1279,7 @@ jl_value_t *jl_dump_function_asm_impl(jl_llvmf_dump_t* dump, char emit_mc, const
+@@ -1278,8 +1282,10 @@ jl_value_t *jl_dump_function_asm_impl(jl_llvmf_dump_t* dump, char emit_mc, const
+             }
              auto FOut = std::make_unique<formatted_raw_ostream>(asmfile);
              std::unique_ptr<MCStreamer> S(TM->getTarget().createAsmStreamer(
- #if JL_LLVM_VERSION >= 190000
+-#if JL_LLVM_VERSION >= 190000
 -                *Context, std::move(FOut), InstPrinter, std::move(MCE), std::move(MAB)
++#if JL_LLVM_VERSION >= 210000
 +                *Context, std::move(FOut), std::move(InstPrinter), std::move(MCE), std::move(MAB)
++#elif JL_LLVM_VERSION >= 190000
++                *Context, std::move(FOut), InstPrinter.release(), std::move(MCE), std::move(MAB)
  #else
                  *Context, std::move(FOut), true, true, InstPrinter, std::move(MCE),
                  std::move(MAB), false
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index eae26636493..980a2d51c1f 100644
+index eae2663649..37200fc372 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
-@@ -37,6 +37,7 @@
- #include <llvm/Transforms/Utils/Cloning.h>
- #include <llvm/Transforms/Utils/ModuleUtils.h>
- #include <llvm/Bitcode/BitcodeWriter.h>
+@@ -14,6 +14,7 @@
+ #include <llvm/ExecutionEngine/Orc/CompileUtils.h>
+ #include <llvm/ExecutionEngine/Orc/ExecutionUtils.h>
+ #include <llvm/ExecutionEngine/Orc/DebugObjectManagerPlugin.h>
 +#include <llvm/ExecutionEngine/Orc/SelfExecutorProcessControl.h>
- 
- // target machine computation
- #include <llvm/CodeGen/TargetSubtargetInfo.h>
-@@ -1223,18 +1224,18 @@ std::unique_ptr<jitlink::JITLinkMemoryManager> createJITLinkMemoryManager() JL_N
- #endif
- }
- 
--class JLEHFrameRegistrar final : public jitlink::EHFrameRegistrar {
--public:
--    Error registerEHFrames(orc::ExecutorAddrRange EHFrameSection) override {
--        register_eh_frames(EHFrameSection.Start.toPtr<uint8_t *>(), static_cast<size_t>(EHFrameSection.size()));
--        return Error::success();
--    }
-+// class JLEHFrameRegistrar final : public jitlink::EHFrameRegistrar {
-+// public:
-+//     Error registerEHFrames(orc::ExecutorAddrRange EHFrameSection) override {
-+//         register_eh_frames(EHFrameSection.Start.toPtr<uint8_t *>(), static_cast<size_t>(EHFrameSection.size()));
-+//         return Error::success();
-+//     }
- 
--    Error deregisterEHFrames(orc::ExecutorAddrRange EHFrameSection) override {
--        deregister_eh_frames(EHFrameSection.Start.toPtr<uint8_t *>(), static_cast<size_t>(EHFrameSection.size()));
--        return Error::success();
--    }
--};
-+//     Error deregisterEHFrames(orc::ExecutorAddrRange EHFrameSection) override {
-+//         deregister_eh_frames(EHFrameSection.Start.toPtr<uint8_t *>(), static_cast<size_t>(EHFrameSection.size()));
-+//         return Error::success();
-+//     }
-+// };
- 
- RTDyldMemoryManager *createRTDyldMemoryManager(void) JL_NOTSAFEPOINT;
- 
-@@ -1931,7 +1932,7 @@ JuliaOJIT::JuliaOJIT()
+ #include <llvm/ExecutionEngine/Orc/TargetProcess/JITLoaderGDB.h>
+ #if JL_LLVM_VERSION >= 200000
+ #include <llvm/ExecutionEngine/Orc/AbsoluteSymbols.h>
+@@ -1931,7 +1932,8 @@ JuliaOJIT::JuliaOJIT()
      MemMgr(createRTDyldMemoryManager()),
      UnlockedObjectLayer(
              ES,
 -            [this]() {
-+            [this](auto&) {
++            [this](auto&&...) {
++                // LLVM 21+ passes in a memory buffer
                  std::unique_ptr<RuntimeDyld::MemoryManager> result(new ForwardingMemoryManager(MemMgr));
                  return result;
              }
-@@ -1946,15 +1947,7 @@ JuliaOJIT::JuliaOJIT()
-     OptSelLayer(ES, OptimizeLayer, static_cast<orc::ThreadSafeModule (*)(orc::ThreadSafeModule, orc::MaterializationResponsibility&)>(selectOptLevel))
- {
- #ifdef JL_USE_JITLINK
--# if defined(LLVM_SHLIB)
--    // When dynamically linking against LLVM, use our custom EH frame registration code
--    // also used with RTDyld to inform both our and the libc copy of libunwind.
--    auto ehRegistrar = std::make_unique<JLEHFrameRegistrar>();
--# else
--    auto ehRegistrar = std::make_unique<jitlink::InProcessEHFrameRegistrar>();
--# endif
--    ObjectLayer.addPlugin(std::make_unique<EHFrameRegistrationPlugin>(
--        ES, std::move(ehRegistrar)));
-+    ObjectLayer.addPlugin(std::make_unique<EHFrameRegistrationPlugin>(ES));
- 
-     ObjectLayer.addPlugin(std::make_unique<JLDebuginfoPlugin>());
-     ObjectLayer.addPlugin(std::make_unique<JLMemoryUsagePlugin>(&jit_bytes_size));
 -- 
-2.51.1
+2.51.0
 
