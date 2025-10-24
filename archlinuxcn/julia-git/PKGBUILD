@@ -337,14 +337,17 @@ build_in() {
   # so I'm just going to create this missing symlink
   ln -sf /usr/lib/libgcc_s.so.1 usr/lib/julia/
   ln -sf /usr/lib/libstdc++.so.6 usr/lib/
-  if [[ "$CARCH" = x86_64 ]]; then
-    # Currently only the x86 build machine
-    # has enough memory to compile release and debug build in parallel...
-    make "${opts[@]}" release debug
-  else
-    make "${opts[@]}" release
-    make "${opts[@]}" debug
-  fi
+  # if [[ "$CARCH" = x86_64 ]]; then
+
+  # Currently only the x86 build machine
+  # has enough memory to compile release and debug build in parallel...
+  make "${opts[@]}" release debug
+
+  # else
+  #   make "${opts[@]}" release
+  #   make "${opts[@]}" debug
+  # fi
+
   # TODO docless build
   JL_MAKEPKG_SRCDIR= _with_git_url_override make "${opts[@]}" docs
 
