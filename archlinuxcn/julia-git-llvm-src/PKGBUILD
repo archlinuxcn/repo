@@ -1,7 +1,7 @@
 pkgname=julia-git-llvm-src
 pkgver=9.4.4
 _commit=90917c8d4f7ab8d6ba6acf0f0d583486b8b02610
-pkgrel=2
+pkgrel=3
 pkgdesc="LLVM.jl"
 url="https://github.com/maleadt/LLVM.jl.git"
 arch=('any')
@@ -13,8 +13,9 @@ source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit"
         0002-Generate-wrappers-for-LLVM-21.patch
         0003-Restored-API-from-locally-patched-llvm.patch)
 sha256sums=('1e825342574806972fad84e5c88ad8f50d0b3dd231aba79c53eea287a12638ad'
-            '4d4339bddf88bbc4dfdaffd3f53581c0a275ac75f10cd96acfb8927b99a19de4'
-            '8469813cfab6ce90389560addb88434eb8b71cbfaeb1771ac820cd650ec753d3')
+            'd78da6a3b7bbe24ed141d1e412f621c64051be0e30c5eb88e39538e8b2ddd8e3'
+            '53098f5a77d7f403dc4df582868b6c29ccf5c3068b97c28a112f02b74bbef1ea'
+            '2af293cf1acc775fbfba09ed118808e00c25abc3e2b9e2d070483381d08dafbd')
 
 prepare() {
   cd LLVM.jl
