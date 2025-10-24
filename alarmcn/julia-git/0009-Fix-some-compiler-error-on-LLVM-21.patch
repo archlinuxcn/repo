@@ -1,4 +1,4 @@
-From ed1ef0aeb925927b837096b4bdd568b230be8795 Mon Sep 17 00:00:00 2001
+From b29731f1bc443f2f9fde7925581003638808eb00 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 10:41:22 -0400
 Subject: [PATCH 09/10] Fix some compiler error on LLVM 21
@@ -97,7 +97,7 @@ index 88b869fd5d..ab096e4c89 100644
  
  template<typename T1>
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index aefe075d3b..66202d8854 100644
+index aefe075d3b..2c1e86ec6a 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -605,6 +605,24 @@ AttributeSet Attributes(LLVMContext &C, std::initializer_list<Attribute::AttrKin
@@ -184,7 +184,7 @@ index aefe075d3b..66202d8854 100644
      // is improved to encode only memory layout and *not* memory regions.
      static jl_aliasinfo_t fromTBAA(jl_codectx_t &ctx, MDNode *tbaa);
 +
-+    AAMDNodes toAAMNNodes() const
++    AAMDNodes toAAMDNodes() const
 +    {
 +#if JL_LLVM_VERSION < 220000
 +        return AAMDNodes(tbaa, tbaa_struct, scope, noalias);
