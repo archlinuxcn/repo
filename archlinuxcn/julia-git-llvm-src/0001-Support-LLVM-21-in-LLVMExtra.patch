@@ -1,0 +1,47 @@
+From c72a1ba46ec85de784ccf3facd6f857c7ae0b79c Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 24 Oct 2025 09:43:36 -0400
+Subject: [PATCH 1/2] Support LLVM 21 in LLVMExtra
+
+---
+ deps/LLVMExtra/include/LLVMExtra.h | 2 ++
+ deps/LLVMExtra/lib/Core.cpp        | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/deps/LLVMExtra/include/LLVMExtra.h b/deps/LLVMExtra/include/LLVMExtra.h
+index 0773ca49..5a0510b7 100644
+--- a/deps/LLVMExtra/include/LLVMExtra.h
++++ b/deps/LLVMExtra/include/LLVMExtra.h
+@@ -162,8 +162,10 @@ void LLVMReplaceMDNodeOperandWith(LLVMValueRef V, unsigned Index,
+ #endif
+ 
+ // Constant data
++#if LLVM_VERSION_MAJOR < 21
+ LLVMValueRef LLVMConstDataArray(LLVMTypeRef ElementTy, const void *Data,
+                                 unsigned NumElements);
++#endif
+ 
+ // Missing opaque pointer APIs
+ #if LLVM_VERSION_MAJOR < 17
+diff --git a/deps/LLVMExtra/lib/Core.cpp b/deps/LLVMExtra/lib/Core.cpp
+index 1d2311b7..778be33c 100644
+--- a/deps/LLVMExtra/lib/Core.cpp
++++ b/deps/LLVMExtra/lib/Core.cpp
+@@ -569,12 +569,14 @@ void LLVMReplaceMDNodeOperandWith(LLVMValueRef V, unsigned Index,
+ // Constant data
+ //
+ 
++#if LLVM_VERSION_MAJOR < 21
+ LLVMValueRef LLVMConstDataArray(LLVMTypeRef ElementTy, const void *Data,
+                                 unsigned NumElements) {
+   StringRef S((const char *)Data,
+               NumElements * unwrap(ElementTy)->getPrimitiveSizeInBits() / 8);
+   return wrap(ConstantDataArray::getRaw(S, NumElements, unwrap(ElementTy)));
+ }
++#endif
+ 
+ 
+ //
+-- 
+2.51.0
+
