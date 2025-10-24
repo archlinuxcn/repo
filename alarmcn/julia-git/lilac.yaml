@@ -1,7 +1,15 @@
 maintainers:
   - github: yuyichao
+
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
+
+build_prefix: archlinuxcn-aarch64
+time_limit_hours: 2
+
+allowed_workers:
+  - yyc
+
 repo_depends:
   - llvm-julia-git
   - llvm-julia-git: llvm-libs-julia-git
@@ -9,14 +17,14 @@ repo_depends:
   - openblas-git: openblas64-git
   - openlibm-git
   - proot-git
-  - julia-git-common-scripts
+  - 7zip
 
 update_on_build:
   - pkgbase: llvm-julia-git
 
 update_on:
   - source: vcs
-    lilac_throttle: 3d
+    lilac_throttle: 6d
   - source: alpm
     alpm: curl
     provided: libcurl.so
