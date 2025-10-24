@@ -32,8 +32,8 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.13.0.DEV.1359.ga3cf9b10ec4
-pkgrel=2
+pkgver=1.13.0.DEV.1371.g7dfa7d1b0d3
+pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="http://julialang.org"
@@ -71,6 +71,7 @@ _patches=(
   0006-Disable-UCX-signal-handler.patch
   0007-julia-git-Better-support-for-loading-packages-from-s.patch
   0008-Reduce-likelyhood-of-symbol-conflict.patch
+  0001-LLVM-21.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -89,6 +90,7 @@ sha512sums=('SKIP'
             '10795e9fe246eddcff7f6b8cef7761bcbc95149091f6a7fe69b9c75cad97d529a16d9e8f21439931e364259fd75e252be55510cf9b172636b80604297811be39'
             'a86be4015bc6b25248fcb79bfffcc2f5fd2514e7fa82b2e840a45547b559cc8fa1a08c020b8ad9195902c0189742cfff0b92d83e4e5fd374376a8f70fdb0adbd'
             '667e3624cc88b1f4e79384b3df15885ef50e40d60f8900963495dfa5a8afbbaf3c0ceb777d4166eeccbbd3a4f4cb481db0b6e49ca0e984866fc722b48505b201'
+            '836668152214a393d2c74563a1b8e1673b844891127193b8cabbb1a6521688f90afe1ccaa0e346194f1b85a3b4dfeca6fd6a141d9e17d3fa829ddfb39daf5020'
             '997f22456f175c6cc03b2dd407b7584df514bc4c91602ef011b93d8b558f7c587b4e216535e573f6063f3a606f88c48dee3041a5122a7dbf0bee6d1bc8df15b4'
             'a668a9bd01cec8f53f457d9124107a230260c79fd57cbce4c4bf80e3451758d8e67263faa3f9d8b3da0c10bffbe29e4032106881ebe682c7f66414d8989638be'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
