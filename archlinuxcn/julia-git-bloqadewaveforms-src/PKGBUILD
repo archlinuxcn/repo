@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/QuEraComputing/Bloqade.jl.git#commit=$_commit")
-sha256sums=('8d4eba1022ff588c688d4156ee46d603465e02693f0c11eca5866267aa366260')
+source=("git+https://github.com/QuEraComputing/Bloqade.jl.git#commit=$_commit"
+        0002-Fix-loading-on-julia-master.patch)
+sha256sums=('8d4eba1022ff588c688d4156ee46d603465e02693f0c11eca5866267aa366260'
+            '3704ab160079ba6a32939f60627bff874646574550e9a1c034a310d4097abd14')
+
+prepare() {
+  cd Bloqade.jl
+
+  patch -Np1 --no-backup-if-mismatch < "../0002-Fix-loading-on-julia-master.patch"
+}
 
 package() {
   cd Bloqade.jl/lib/BloqadeWaveforms

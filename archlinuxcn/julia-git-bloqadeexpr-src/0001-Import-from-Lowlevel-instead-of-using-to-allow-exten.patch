@@ -1,0 +1,26 @@
+From 5d830ec6995a45d8218129814dead8e733fa63f5 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 19 Oct 2025 15:00:30 -0400
+Subject: [PATCH 1/2] Import from Lowlevel instead of using to allow extending
+ (#706)
+
+---
+ lib/BloqadeExpr/src/BloqadeExpr.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/BloqadeExpr/src/BloqadeExpr.jl b/lib/BloqadeExpr/src/BloqadeExpr.jl
+index 9175c0f0..3705efa6 100644
+--- a/lib/BloqadeExpr/src/BloqadeExpr.jl
++++ b/lib/BloqadeExpr/src/BloqadeExpr.jl
+@@ -20,7 +20,7 @@ using BloqadeLattices: BoundedLattice, rydberg_interaction_matrix
+ 
+ include("Lowlevel/Lowlevel.jl")
+ 
+-using .Lowlevel: Hamiltonian, SumOfLinop, ThreadedMatrix, storage_size, to_matrix, precision_type, highest_type, add_I, derivative, RegularLinop, isskewhermitian
++import .Lowlevel: Hamiltonian, SumOfLinop, ThreadedMatrix, storage_size, to_matrix, precision_type, highest_type, add_I, derivative, RegularLinop, isskewhermitian
+ 
+ 
+ export rydberg_h,
+-- 
+2.51.0
+
