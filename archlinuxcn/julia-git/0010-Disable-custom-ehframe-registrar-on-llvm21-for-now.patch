@@ -1,4 +1,4 @@
-From 53c095e522b6bfe384c0162d61ed78182eb5aca1 Mon Sep 17 00:00:00 2001
+From b0cab71412b78cba55114310e3e7249c205abd48 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 10:50:40 -0400
 Subject: [PATCH 10/11] Disable custom ehframe registrar on llvm21 for now
@@ -8,10 +8,10 @@ Subject: [PATCH 10/11] Disable custom ehframe registrar on llvm21 for now
  1 file changed, 6 insertions(+)
 
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index 37200fc372..15ea8584f7 100644
+index ff92840b42..8d10b44d01 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
-@@ -1224,6 +1224,7 @@ std::unique_ptr<jitlink::JITLinkMemoryManager> createJITLinkMemoryManager() JL_N
+@@ -1226,6 +1226,7 @@ std::unique_ptr<jitlink::JITLinkMemoryManager> createJITLinkMemoryManager() JL_N
  #endif
  }
  
@@ -19,7 +19,7 @@ index 37200fc372..15ea8584f7 100644
  class JLEHFrameRegistrar final : public jitlink::EHFrameRegistrar {
  public:
      Error registerEHFrames(orc::ExecutorAddrRange EHFrameSection) override {
-@@ -1236,6 +1237,7 @@ public:
+@@ -1238,6 +1239,7 @@ public:
          return Error::success();
      }
  };
@@ -27,7 +27,7 @@ index 37200fc372..15ea8584f7 100644
  
  RTDyldMemoryManager *createRTDyldMemoryManager(void) JL_NOTSAFEPOINT;
  
-@@ -1948,6 +1950,7 @@ JuliaOJIT::JuliaOJIT()
+@@ -1950,6 +1952,7 @@ JuliaOJIT::JuliaOJIT()
      OptSelLayer(ES, OptimizeLayer, static_cast<orc::ThreadSafeModule (*)(orc::ThreadSafeModule, orc::MaterializationResponsibility&)>(selectOptLevel))
  {
  #ifdef JL_USE_JITLINK
@@ -35,7 +35,7 @@ index 37200fc372..15ea8584f7 100644
  # if defined(LLVM_SHLIB)
      // When dynamically linking against LLVM, use our custom EH frame registration code
      // also used with RTDyld to inform both our and the libc copy of libunwind.
-@@ -1957,6 +1960,9 @@ JuliaOJIT::JuliaOJIT()
+@@ -1959,6 +1962,9 @@ JuliaOJIT::JuliaOJIT()
  # endif
      ObjectLayer.addPlugin(std::make_unique<EHFrameRegistrationPlugin>(
          ES, std::move(ehRegistrar)));

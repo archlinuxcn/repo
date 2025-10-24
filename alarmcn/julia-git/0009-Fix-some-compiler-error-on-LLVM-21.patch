@@ -1,4 +1,4 @@
-From 14734af524e11eb5cb98f7c4ab266356ca823d36 Mon Sep 17 00:00:00 2001
+From 85ca40ddd6da2bdb932950f57bb3413407438259 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 10:41:22 -0400
 Subject: [PATCH 09/11] Fix some compiler error on LLVM 21
@@ -11,8 +11,8 @@ Some other deprecation warnings are also left as is for now.
  src/codegen.cpp    | 53 +++++++++++++++++++++++++++++++++++++---------
  src/debuginfo.cpp  |  7 +++++-
  src/disasm.cpp     | 16 +++++++++-----
- src/jitlayers.cpp  |  4 +++-
- 6 files changed, 87 insertions(+), 17 deletions(-)
+ src/jitlayers.cpp  |  6 +++++-
+ 6 files changed, 89 insertions(+), 17 deletions(-)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
 index 1f1ed18e88..83d340329f 100644
@@ -314,18 +314,20 @@ index a80f79218f..23364f028f 100644
                  *Context, std::move(FOut), true, true, InstPrinter, std::move(MCE),
                  std::move(MAB), false
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index eae2663649..37200fc372 100644
+index eae2663649..ff92840b42 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
-@@ -14,6 +14,7 @@
+@@ -14,6 +14,9 @@
  #include <llvm/ExecutionEngine/Orc/CompileUtils.h>
  #include <llvm/ExecutionEngine/Orc/ExecutionUtils.h>
  #include <llvm/ExecutionEngine/Orc/DebugObjectManagerPlugin.h>
-+#include <llvm/ExecutionEngine/Orc/SelfExecutorProcessControl.h>
++#if JL_LLVM_VERSION >= 210000
++#  include <llvm/ExecutionEngine/Orc/SelfExecutorProcessControl.h>
++#endif
  #include <llvm/ExecutionEngine/Orc/TargetProcess/JITLoaderGDB.h>
  #if JL_LLVM_VERSION >= 200000
  #include <llvm/ExecutionEngine/Orc/AbsoluteSymbols.h>
-@@ -1931,7 +1932,8 @@ JuliaOJIT::JuliaOJIT()
+@@ -1931,7 +1934,8 @@ JuliaOJIT::JuliaOJIT()
      MemMgr(createRTDyldMemoryManager()),
      UnlockedObjectLayer(
              ES,
