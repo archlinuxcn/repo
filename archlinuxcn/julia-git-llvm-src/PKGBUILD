@@ -10,7 +10,8 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit"
         0001-Support-LLVM-21-in-LLVMExtra.patch
-        0002-Generate-wrappers-for-LLVM-21.patch)
+        0002-Generate-wrappers-for-LLVM-21.patch
+        0003-Restored-API-from-locally-patched-llvm.patch)
 sha256sums=('1e825342574806972fad84e5c88ad8f50d0b3dd231aba79c53eea287a12638ad'
             '4d4339bddf88bbc4dfdaffd3f53581c0a275ac75f10cd96acfb8927b99a19de4'
             '8469813cfab6ce90389560addb88434eb8b71cbfaeb1771ac820cd650ec753d3')
@@ -20,6 +21,7 @@ prepare() {
 
   patch -Np1 --no-backup-if-mismatch < "../0001-Support-LLVM-21-in-LLVMExtra.patch"
   patch -Np1 --no-backup-if-mismatch < "../0002-Generate-wrappers-for-LLVM-21.patch"
+  patch -Np1 --no-backup-if-mismatch < "../0003-Restored-API-from-locally-patched-llvm.patch"
 }
 
 package() {

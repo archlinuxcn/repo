@@ -1,7 +1,7 @@
-From c012cda8735a3bad4ecd9d0918c7fc13a0dd5565 Mon Sep 17 00:00:00 2001
+From dd38a3be39795e3e9eab5c8e8d97daa4f474f2e3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 13:14:54 -0400
-Subject: [PATCH 2/2] Generate wrappers for LLVM 21
+Subject: [PATCH 2/3] Generate wrappers for LLVM 21
 
 ---
  lib/15/libLLVM.jl       |    30 +-
@@ -18,8 +18,7 @@ Subject: [PATCH 2/2] Generate wrappers for LLVM 21
  lib/20/libLLVM_extra.jl |     7 +-
  lib/21/libLLVM.jl       | 13638 ++++++++++++++++++++++++++++++++++++++
  lib/21/libLLVM_extra.jl |   254 +
- res/wrap.jl             |     2 +-
- 15 files changed, 14024 insertions(+), 42 deletions(-)
+ 14 files changed, 14023 insertions(+), 41 deletions(-)
  create mode 100644 lib/21/libLLVM.jl
  create mode 100644 lib/21/libLLVM_extra.jl
 
@@ -14399,19 +14398,6 @@ index 00000000..69b9c49f
 +    ccall((:LLVMGlobalsAddressSpace, libLLVMExtra), Cuint, (LLVMTargetDataRef,), TD)
 +end
 +
-diff --git a/res/wrap.jl b/res/wrap.jl
-index fce3eaae..5360a911 100644
---- a/res/wrap.jl
-+++ b/res/wrap.jl
-@@ -8,7 +8,7 @@ import Clang
- @add_def off_t
- 
- # based on the supported Julia versions
--const llvm_versions = ["15", "16", "17", "18", "19", "20"]
-+const llvm_versions = ["15", "16", "17", "18", "19", "20", "21"]
- const llvm_configs = Dict()
- 
- function main()
 -- 
 2.51.0
 
