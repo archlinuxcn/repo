@@ -1,0 +1,16 @@
+[Unit]
+Description=RustDesk Relay Server
+Requires=network.target
+
+[Service]
+User=rustdesk-server
+Group=rustdesk-server
+WorkingDirectory=~
+EnvironmentFile=-/etc/default/rustdesk-server-hbbr
+ExecStart=/usr/bin/rustdesk-server-hbbr
+Restart=always
+RestartSec=10
+LimitNOFILE=infinity
+
+[Install]
+WantedBy=multi-user.target
