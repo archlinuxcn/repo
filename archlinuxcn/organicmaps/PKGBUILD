@@ -1,12 +1,12 @@
 # Maintainer: Aleksej Kovura <aur-b1a3 at mekboy dot ru>
 
 pkgname=organicmaps
-pkgver=2025.10.07_1
+pkgver=2025.10.23_22
 tag="${pkgver%%_*}-${pkgver##*_}-android"
-pkgrel=2
+pkgrel=1
 pkgdesc="Organic Maps: Offline Hike, Bike, Trails and Navigation"
 arch=(x86_64)
-makedepends=(cmake git jq gcc ninja mold)
+makedepends=(cmake git jq gcc libxinerama ninja mold)
 depends=(mesa libglvnd freetype2 sqlite icu qt6-svg qt6-base zlib libpng glibc
   qt6-positioning gcc-libs harfbuzz libxrandr libxi libxcursor)
 optdepends=("ccache: faster re-compilation" "qt6-wayland: for Wayland users")
@@ -14,7 +14,7 @@ license=("Apache")
 url="https://organicmaps.app"
 source_url="https://github.com/organicmaps/organicmaps.git"
 source=(organicmaps.desktop)
-sha256sums=('8205a6abb2c053380940d5c2e83cf10b5b889544e2d36c1c777778bf35772729')
+sha256sums=('a60443ee9a909b372f190ec8e1bde880fc2303da5d11261ef218e67c40c35c03')
 conflicts=("${pkgname}-bin" "${pkgname}-git")
 prepare() {
   avail=$(df -P -B 1048576 $srcdir|awk 'NR>1 {print $4}')
