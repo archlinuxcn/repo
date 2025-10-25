@@ -1,0 +1,71 @@
+# Maintainer: Coelacanthus <CoelacanthusHex at gmail dot com>
+
+pkgname=opentype-sanitizer-git
+_gitname=opentype-sanitizer
+pkgver=9.2.0.r13.gee75ff5
+pkgrel=1
+pkgdesc='Sanitizer for OpenType'
+arch=('x86_64')
+license=('BSD-3-Clause')
+url='https://github.com/khaledhosny/ots'
+depends=(
+    'freetype2'
+    'gcc-libs'
+    'glibc'
+    'lz4'
+    'woff2'
+    'zlib'
+)
+makedepends=(
+    'git'
+    'gtest'
+    'meson'
+)
+provides=('ots')
+source=(
+    "opentype-sanitizer::git+https://github.com/khaledhosny/ots"
+    "0001-feat-add-libots-be-built-as-dynamic-library.patch"
+)
+b2sums=('SKIP'
+        '317ced14e633c409a3c66ac737f2a9b77608c8b7570b13014cb790e5663608f00c0769ed615a0a6f725e468f77deaafcca0b903ed890eaf00bd4b9c239610db7')
+
+pkgver() {
+    cd opentype-sanitizer
+    git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//g'
+}
+
+prepare() {
+    cd opentype-sanitizer
+    patch -Np1 -i ../0001-feat-add-libots-be-built-as-dynamic-library.patch
+}
+
+build() {
+    local _opt_extra_flags=(
+        # FIXME: gtest: #error C++ versions less than C++17 are not supported.
+        '-Dcpp_std=gnu++17'
+    )
+    
+    arch-meson opentype-sanitizer build \
+        -Ddefault_library=shared \
+        "${_opt_extra_flags[@]}"
+    meson compile -C build
+}
+
+package() {
+    depends+=(
+        'libfreetype.so'
+        'liblz4.so'
+        'libwoff2dec.so'
+        'libz.so'
+    )
+    
+    meson install -C build --no-rebuild --destdir="$pkgdir"
+
+    install -Dm644 opentype-sanitizer/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+check() {
+    meson test -C build --print-errorlogs
+}
+
+# vim: set ts=4 sw=4 et:
