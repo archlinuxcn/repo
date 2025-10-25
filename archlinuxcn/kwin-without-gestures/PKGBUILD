@@ -6,10 +6,10 @@
 
 pkgname=kwin-without-gestures
 _pkgname=kwin
-pkgver=6.4.5
+pkgver=6.5.0
 _dirver=$(echo $pkgver | cut -d. -f1-3)
-pkgrel=5
-pkgdesc='An easy to use, but flexible, composited Window Manager. Patched to get red of hardcoded touchpad gestures'
+pkgrel=1
+pkgdesc='An easy to use, but flexible, wayland compositor. Patched to get rid of hardcoded touchpad gestures'
 arch=(x86_64)
 url='https://kde.org/plasma-desktop/'
 license=(LGPL-2.0-or-later)
@@ -37,6 +37,7 @@ depends=(aurorae
          kirigami
          kitemmodels
          knewstuff
+         knighttime
          knotifications
          kpackage
          kquickcharts
@@ -70,7 +71,6 @@ depends=(aurorae
          qt6-tools
          systemd-libs
          wayland
-         xcb-util-cursor
          xcb-util-keysyms
          xcb-util-wm)
 makedepends=(extra-cmake-modules
@@ -79,12 +79,11 @@ makedepends=(extra-cmake-modules
              plasma-wayland-protocols
              python
              wayland-protocols
-             xorg-xwayland
-             git)
-optdepends=('maliit-keyboard: virtual keyboard for kwin-wayland')
+             xorg-xwayland)
+optdepends=('maliit-keyboard: virtual keyboard')
 source=(https://download.kde.org/stable/plasma/$_dirver/$_pkgname-$pkgver.tar.xz{,.sig}
 	0001-feature-allow-disable-hardcoded-touchpad-gestures.patch)
-sha256sums=('decf1cb79127c285c7eda768e7ff4f97c72f314735c82685758f0b956ac151f7'
+sha256sums=('e0eaa67980266fe27fe32d15c9f18f8206776919f81d4e1a889d34c5f65cf982'
             'SKIP'
             'c821314c83316a1f80b32eddf5095692b433ec91c0767796692f4de2e497ee2c')
 install=$_pkgname.install
@@ -96,8 +95,6 @@ validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell
 
 prepare() {
   patch -d $_pkgname-$pkgver -p1 < 0001-feature-allow-disable-hardcoded-touchpad-gestures.patch
-  # Fix doc build with libxml2 2.15
-  find -name index.docbook | xargs sed -e 's|url=" http|url="http|g' -i
 }
 
 build() {
