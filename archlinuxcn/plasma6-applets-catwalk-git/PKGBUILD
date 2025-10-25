@@ -2,7 +2,7 @@
 # Contributor: mcfd <mcfd at noreply dot github dot com>
 pkgname=plasma6-applets-catwalk-git
 pkgver=r11.01a51e7
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple plasmoid showing the total CPU usage. Visually made like RunCat."
 arch=('any')
 url="https://invent.kde.org/rocka/applet-catwalk"
@@ -12,7 +12,7 @@ conflicts=(plasma6-applets-catwalk)
 depends=(ksvg libksysguard libplasma qt6-declarative kcmutils kirigami)
 makedepends=(cmake git extra-cmake-modules ki18n)
 source=("$pkgname::git+https://invent.kde.org/rocka/applet-catwalk.git")
-sha256sums=(SKIP)
+sha256sums=('SKIP')
 # options=(!emptydirs)
 
 pkgver() {
