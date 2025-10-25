@@ -1,8 +1,7 @@
 # Maintainer: Heddxh <g311571057 at gmail dot com>
 # Contributor: tippfehlr <tippfehlr@tippfehlr.eu>
 # Contributor: Chewing_Bever
-pkgname=fish-lsp-bin
-_pkgname=fish-lsp
+pkgname=fish-lsp
 pkgver=1.1.0
 pkgrel=2
 pkgdesc="LSP implementation for the fish shell language 🐠"
@@ -11,8 +10,7 @@ url="https://github.com/ndonfris/fish-lsp"
 license=('MIT')
 depends=('nodejs')
 optdepends=('fish: fish shell')
-provides=(${_pkgname})
-conflicts=(${_pkgname}-git ${_pkgname})
+conflicts=(${pkgname}-git)
 source=("${pkgname}-${pkgver}::${url}/releases/download/v${pkgver}/fish-lsp.standalone"
         "${pkgname}-${pkgver}-LICENSE.md"::"https://raw.githubusercontent.com/ndonfris/fish-lsp/refs/tags/v${pkgver}/LICENSE.md"
         "${pkgname}-${pkgver}-fish-lsp.1"::"https://raw.githubusercontent.com/ndonfris/fish-lsp/refs/tags/v${pkgver}/man/fish-lsp.1")
