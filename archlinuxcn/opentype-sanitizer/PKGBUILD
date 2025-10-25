@@ -2,7 +2,7 @@
 
 pkgname=opentype-sanitizer
 pkgver=9.2.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Sanitizer for OpenType'
 arch=('x86_64')
 license=('BSD-3-Clause')
@@ -19,6 +19,9 @@ makedepends=(
     'git'
     'gtest'
     'meson'
+)
+optdepends=(
+    'glibc-tools: provide catchsegv tool to use with ots-validator-checker'
 )
 provides=('ots')
 source=(

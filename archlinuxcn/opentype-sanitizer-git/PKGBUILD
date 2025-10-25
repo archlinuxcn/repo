@@ -21,6 +21,9 @@ makedepends=(
     'gtest'
     'meson'
 )
+optdepends=(
+    'glibc-tools: provide catchsegv tool to use with ots-validator-checker'
+)
 provides=('ots' 'opentype-sanitizer')
 conflicts=('opentype-sanitizer')
 source=(
