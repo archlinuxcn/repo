@@ -14,18 +14,14 @@ optdepends=('fish: fish shell')
 provides=(${_pkgname})
 conflicts=(${_pkgname}-git ${_pkgname})
 source=("${pkgname}-${pkgver}::${url}/releases/download/v${pkgver}/fish-lsp.standalone"
-        "${pkgname}-${pkgver}-LICENSE.md"::"https://raw.githubusercontent.com/ndonfris/fish-lsp/refs/tags/v${pkgver}/LICENSE.md")
+        "${pkgname}-${pkgver}-LICENSE.md"::"https://raw.githubusercontent.com/ndonfris/fish-lsp/refs/tags/v${pkgver}/LICENSE.md"
+        "${pkgname}-${pkgver}-fish-lsp.1"::"https://raw.githubusercontent.com/ndonfris/fish-lsp/refs/tags/v${pkgver}/man/fish-lsp.1")
 sha256sums=('67d37033789ef15dae88e5fed5ca883ec2b0007a6e0b899234055a938c454768'
-            '42d622608175e998ffcdbb53217a6356a578282782a553ef9a86f5192ffcd7c2')
-
-prepare() {
-    chmod +x ${pkgname}-${pkgver}
-    ./${pkgname}-${pkgver} info --man-file --show >fish-lsp.1 2> /dev/null
-}
-
+            '42d622608175e998ffcdbb53217a6356a578282782a553ef9a86f5192ffcd7c2'
+            '3248e45d62b13e6530209f185a08b975ae99bcaad9b9da8879ae8b7d7c7d1717')
 
 package() {
     install -Dm755 ${pkgname}-${pkgver} "$pkgdir/usr/bin/fish-lsp"
     install -Dm644 ${pkgname}-${pkgver}-LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    install -Dm644 fish-lsp.1 "$pkgdir/usr/share/man/man1/fish-lsp.1"
+    install -Dm644 ${pkgname}-${pkgver}-fish-lsp.1 "$pkgdir/usr/share/man/man1/fish-lsp.1"
 }
