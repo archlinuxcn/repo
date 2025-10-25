@@ -21,7 +21,8 @@ makedepends=(
     'gtest'
     'meson'
 )
-provides=('ots')
+provides=('ots' 'opentype-sanitizer')
+conflicts=('opentype-sanitizer')
 source=(
     "opentype-sanitizer::git+https://github.com/khaledhosny/ots"
     "0001-feat-add-libots-be-built-as-dynamic-library.patch"
