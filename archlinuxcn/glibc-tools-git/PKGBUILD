@@ -1,0 +1,47 @@
+# Maintainer: Coelacanthus <CoelacanthusHex at gmail dot com>
+
+pkgname=glibc-tools-git
+_gitname=glibc-tools
+pkgver=r4.ff16adf
+pkgrel=1
+pkgdesc='Tools and library provided by glibc that either have been deprectated of moved out from the project.'
+arch=('x86_64')
+license=('LGPL-2.1-or-later')
+url='https://github.com/zatrazz/glibc-tools'
+depends=(
+    'glibc'
+    'sh'
+)
+makedepends=(
+    'git'
+)
+provides=('glibc-tools')
+source=(
+    "$_gitname::git+$url"
+)
+b2sums=('SKIP')
+
+pkgver() {
+    cd $_gitname
+    ( set -o pipefail
+        git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+    )
+}
+
+prepare() {
+    cd $_gitname
+}
+
+build() {
+    mkdir -p build
+    cd build
+    ../$_gitname/configure --prefix=/usr
+    make
+}
+
+package() {
+    make -C build DESTDIR="$pkgdir" install
+}
+
+# vim: set ts=4 sw=4 et:
