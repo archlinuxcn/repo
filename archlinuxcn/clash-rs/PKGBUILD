@@ -16,7 +16,7 @@ options=(!lto)
 
 function prepare() {
 	cd "${srcdir}/clash-rs"
-	rustup toolchain install nightly
+	#rustup toolchain install nightly
 	rustup default nightly
 	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
