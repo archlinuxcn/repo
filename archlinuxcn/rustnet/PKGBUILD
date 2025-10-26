@@ -4,8 +4,8 @@
 pkgname=rustnet
 _pkgname=${pkgname%}
 _reponame=${pkgname%}
-pkgver=0.14.0
-pkgrel=4
+pkgver=0.15.0
+pkgrel=1
 pkgdesc="Real-time network monitoring TUI with process identification via eBPF and deep packet inspection"
 arch=('x86_64' 'armv7h' 'aarch64')
 _author=domcyrus
@@ -18,7 +18,7 @@ conflicts=("${pkgname%}-git" "${pkgname%}-bin")
 install=$_pkgname.install
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "rustnet-setcap.hook")
-sha256sums=('92c252523ab9c7ab6b2f844aab995d8ef11a6140039c003dd68a58ddd2ef3372'
+sha256sums=('9fa251bbce11c4ff6f58ba57e08efbec94b2a031cd3d102d2ce45f0611d4f42e'
             '40363ced28dca33d3e7425c7a3c3ee793bafa8e90e7697768149e5fe53b337eb')
 
 prepare() {
