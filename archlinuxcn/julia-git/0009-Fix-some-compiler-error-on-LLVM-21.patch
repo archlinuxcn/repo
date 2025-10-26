@@ -1,7 +1,7 @@
-From 85ca40ddd6da2bdb932950f57bb3413407438259 Mon Sep 17 00:00:00 2001
+From cc5d7f1fe4e3827d64e124aa1976f2b99adfe151 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 10:41:22 -0400
-Subject: [PATCH 09/11] Fix some compiler error on LLVM 21
+Subject: [PATCH 09/12] Fix some compiler error on LLVM 21
 
 Remaining issues are the removal of EHFrameRegistrar class and manual locking interface for ThreadSafeContext.
 Some other deprecation warnings are also left as is for now.

@@ -1,0 +1,83 @@
+From 4c1ff75581f8d06d991e6b5333e88362058afeb7 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sun, 26 Oct 2025 10:37:32 -0400
+Subject: [PATCH 11/12] Fix createTargetMachine triple argument deprecation
+
+---
+ src/aotcompile.cpp | 12 ++++++++++++
+ src/jitlayers.cpp  | 11 ++++++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
+index 83d340329f..8f354b054b 100644
+--- a/src/aotcompile.cpp
++++ b/src/aotcompile.cpp
+@@ -1531,7 +1531,11 @@ static AOTOutputs add_output_impl(Module &M, TargetMachine &SourceTM, ShardTimer
+     AOTOutputs out;
+     auto TM = std::unique_ptr<TargetMachine>(
+         SourceTM.getTarget().createTargetMachine(
++#if JL_LLVM_VERSION < 210000
+             SourceTM.getTargetTriple().str(),
++#else
++            SourceTM.getTargetTriple(),
++#endif
+             SourceTM.getTargetCPU(),
+             SourceTM.getTargetFeatureString(),
+             SourceTM.Options,
+@@ -1559,7 +1563,11 @@ static AOTOutputs add_output_impl(Module &M, TargetMachine &SourceTM, ShardTimer
+ 
+         auto PMTM = std::unique_ptr<TargetMachine>(
+             SourceTM.getTarget().createTargetMachine(
++#if JL_LLVM_VERSION < 210000
+                 SourceTM.getTargetTriple().str(),
++#else
++                SourceTM.getTargetTriple(),
++#endif
+                 SourceTM.getTargetCPU(),
+                 SourceTM.getTargetFeatureString(),
+                 SourceTM.Options,
+@@ -2107,7 +2115,11 @@ void jl_dump_native_impl(void *native_code,
+     }
+     std::unique_ptr<TargetMachine> SourceTM(
+         jl_ExecutionEngine->getTarget().createTargetMachine(
++#if JL_LLVM_VERSION < 210000
+             TheTriple.getTriple(),
++#else
++            TheTriple,
++#endif
+             jl_ExecutionEngine->getTargetCPU(),
+             jl_ExecutionEngine->getTargetFeatureString(),
+             jl_ExecutionEngine->getTargetOptions(),
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index b5e5380714..74c714a29a 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -1472,7 +1472,12 @@ namespace {
+         }
+         auto optlevel = CodeGenOptLevelFor(jl_options.opt_level);
+         auto TM = TheTarget->createTargetMachine(
+-                TheTriple.getTriple(), TheCPU, FeaturesStr,
++#if JL_LLVM_VERSION < 210000
++                TheTriple.getTriple(),
++#else
++                TheTriple,
++#endif
++                TheCPU, FeaturesStr,
+                 options,
+                 relocmodel,
+                 codemodel,
+@@ -2470,7 +2475,11 @@ std::unique_ptr<TargetMachine> JuliaOJIT::cloneTargetMachine() const
+ {
+     auto NewTM = std::unique_ptr<TargetMachine>(getTarget()
+         .createTargetMachine(
++#if JL_LLVM_VERSION < 210000
+             getTargetTriple().str(),
++#else
++            getTargetTriple(),
++#endif
+             getTargetCPU(),
+             getTargetFeatureString(),
+             getTargetOptions(),
+-- 
+2.51.0
+
