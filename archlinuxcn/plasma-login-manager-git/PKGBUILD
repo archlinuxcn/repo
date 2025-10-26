@@ -56,7 +56,7 @@ build() {
 
 package() {
     DESTDIR="$pkgdir" cmake --install build
-    install -m644 plasmalogin -t "$pkgdir"/etc/pam.d
-    install -m644 plasmalogin-autologin -t "$pkgdir"/etc/pam.d
-    install -m644 plasmalogin-greeter -t "$pkgdir"/etc/pam.d
+    install -Dm644 plasmalogin -t "$pkgdir"/etc/pam.d
+    install -Dm644 plasmalogin-autologin -t "$pkgdir"/etc/pam.d
+    install -Dm644 plasmalogin-greeter -t "$pkgdir"/etc/pam.d
 }
