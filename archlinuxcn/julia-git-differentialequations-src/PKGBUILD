@@ -1,6 +1,6 @@
 pkgname=julia-git-differentialequations-src
-pkgver=7.16.1
-_commit=c2bdd7e6fe6d79ee6f14cb232eb9d29bb05628be
+pkgver=7.17.0
+_commit=2e33183d66d533067b2ac92adb2495eb4b942914
 pkgrel=1
 pkgdesc="DifferentialEquations.jl"
 url="https://github.com/SciML/DifferentialEquations.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/DifferentialEquations.jl.git#commit=$_commit")
-sha256sums=('72226eeccd7113022e7892e7f04ae159fb17771a6c6e46a887c171f2dfb4dac9')
+sha256sums=('2a81004cf8b5c2c3f91ae189cd58bd37f97e52ecfb15fa22919591d9f26bdc73')
 
 package() {
   cd DifferentialEquations.jl
