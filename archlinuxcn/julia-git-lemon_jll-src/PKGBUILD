@@ -1,6 +1,6 @@
 pkgname=julia-git-lemon_jll-src
-pkgver=1.3.2+0
-_commit=b02de13deec244346d9e8dc2dd9e4bba48ae32fe
+pkgver=1.3.3+0
+_commit=a39d7ab86a86eb83b20a5a9aa75d95ff5bf55c51
 pkgrel=1
 pkgdesc="LEMON_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LEMON_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git coin-or-lemon liblemon_jll)
 source=("git+https://github.com/JuliaBinaryWrappers/LEMON_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('ae4515d425c4c16e74453a2cebf8642d437b16eba11642cff8e2de6f986a739c'
+sha256sums=('865c6d99862957e438a2bd77a5751f44a282666ea4c6aa9c21756dcfc0c692dc'
             '5b77c181667a566f36fc305cfdadc7fbaf4314f6b9947babe42ee862f517dcd5')
 
 build() {
