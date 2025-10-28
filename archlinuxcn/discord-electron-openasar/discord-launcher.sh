@@ -32,13 +32,6 @@ for line in "${MAPFILE[@]}"; do
 	fi
 done
 
-if [[ -e "${XDG_RUNTIME_DIR:-}/${WAYLAND_SOCKET:-}" || -e "${WAYLAND_DISPLAY:-}" || "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
-	# work around electron's broken wayland detection
-	# TODO: remove when Arch updates to an electron release that includes the fix
-	# https://github.com/electron/electron/pull/48301
-	flags+=("--ozone-platform=wayland")
-fi
-
 unset flags_file krisp_bin
 
 
