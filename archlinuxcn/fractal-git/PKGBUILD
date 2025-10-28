@@ -65,7 +65,7 @@ prepare() {
 
 build() {
 	CFLAGS+=' -ffat-lto-objects'
-	arch-meson $pkgname-$pkgver build
+	arch-meson source build
 	meson compile -C build
 }
 
