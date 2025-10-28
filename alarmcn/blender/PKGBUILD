@@ -8,8 +8,8 @@
 # fine with them.
 
 pkgname=blender
-pkgver=4.5.3
-pkgrel=2
+pkgver=4.5.4
+pkgrel=1
 epoch=17
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=(aarch64 x86_64)
@@ -113,7 +113,7 @@ optdepends=('cuda: Cycles renderer CUDA support'
 options=('!lto')
 source=("git+https://projects.blender.org/blender/blender.git#tag=v$pkgver"
         https://developer.download.nvidia.com/redist/optix/v8.0/OptiX-8.0-Include.zip)
-sha512sums=('195d71e860728f88ef70b8f6d21fbb0af941e5485a87acd5c43daf7c156b0c0092a440b2435eeba33f06094022fa7257ab359c15049d9d97b2d101b796c261fc'
+sha512sums=('da28154b33983d8f34931c0ae3aa3234e52e36a4e2852e835be4fa8ef48496d83c8d58bc1d85c0fec623d4e1004d48819dab9e6ed1c69212cea63f763461cec2'
             '5502d9df847de12badc702c0444bd4f1f7620460b2235026df2c3133da1e04c148af0f1fc7f345e9a0c009c32f905f66c8d427743445e8864d3a797cdce6a483')
 
 prepare() {
