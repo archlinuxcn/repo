@@ -34,13 +34,15 @@ depends=(
   sqlite
 )
 makedepends=(
-  clang
-  cmake
-  dart-sass
-  libwebp
-  meson
-  rust
-  xdg-desktop-portal
+	clang
+	cmake
+	dart-sass
+	libwebp
+	meson
+	rust
+	cargo
+	xdg-desktop-portal
+	git
 )
 source=(
 	"source::git+$url.git"
@@ -54,6 +56,7 @@ pkgver() {
 
 prepare() {
 	cd source
+	git reset --hard
 	git clean -f
 	export CARGO_HOME="$(pwd)/build/cargo-home"
 	export RUSTUP_TOOLCHAIN=stable
