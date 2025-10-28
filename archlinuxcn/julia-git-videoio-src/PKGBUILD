@@ -18,7 +18,7 @@ sha256sums=('5df188f9c3b3cdc51880a9da918a58818d0f42cb6d8c81fa54ca033aa391af91'
 prepare() {
   cd VideoIO.jl
 
-  patch -Np1 --no-backup-if-mismatch < "../0001-Remove-deprecated-ticks_per_frame.patch"
+  # patch -Np1 --no-backup-if-mismatch < "../0001-Remove-deprecated-ticks_per_frame.patch"
   patch -Np1 --no-backup-if-mismatch < "../0002-Support-both-FFMPEG-7-and-8.patch"
 }
 
