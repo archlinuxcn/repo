@@ -26,6 +26,11 @@ build() {
 	cargo build --frozen --release --all-features --workspace
 }
 
+check() {
+	cd "${pkgname}/"
+	cargo test --frozen --all-features --workspace
+}
+
 package() {
 	cd "${pkgname}/target/release"
 	install -Dm755 "${pkgname}" -t "${pkgdir}/usr/bin/"
