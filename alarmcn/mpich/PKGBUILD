@@ -10,7 +10,8 @@ url="https://mpich.org"
 arch=(aarch64 armv7h x86_64)
 license=("custom")
 replaces=(mpich2)
-depends=('gcc-fortran' 'libxml2' 'openssh' 'numactl' 'pciutils' 'hwloc' 'bash')
+depends=('gcc-fortran' 'libxml2' 'openssh' 'numactl' 'pciutils' 'hwloc' 'bash'
+         libsframe.so)
 makedepends=(texlive-core sowing autoconf python)
 optdepends=(perl python)
 install="${pkgname}.install"
@@ -41,7 +42,7 @@ build() {
                --with-hwloc \
                --without-java \
                --without-ze \
-               --enable-fast=all,O3 \
+               --enable-fast=ndebug,alwaysinline,O3 \
                --enable-error-checking=runtime \
                --enable-error-messages=all \
                CC=gcc CXX=g++ FC=gfortran

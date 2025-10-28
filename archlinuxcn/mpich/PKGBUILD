@@ -42,7 +42,7 @@ build() {
                --with-hwloc \
                --without-java \
                --without-ze \
-               --enable-fast=all,O3 \
+               --enable-fast=ndebug,alwaysinline,O3 \
                --enable-error-checking=runtime \
                --enable-error-messages=all \
                CC=gcc CXX=g++ FC=gfortran

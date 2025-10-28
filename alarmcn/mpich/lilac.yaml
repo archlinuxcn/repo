@@ -8,3 +8,8 @@ update_on:
   - source: regex
     regex: '/mpich-(\d+\.\d+[.0-9]*\d)\.tar'
     url: https://www.mpich.org/downloads/
+  - source: alpm
+    alpm: binutils
+    provided: libsframe.so
+  - source: manual
+    manual: 1
