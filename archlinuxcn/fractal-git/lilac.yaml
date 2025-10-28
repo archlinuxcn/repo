@@ -1,7 +1,7 @@
 maintainers:
   - github: Kimiblock
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+pre_build_script: vcs_update()
 post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()
