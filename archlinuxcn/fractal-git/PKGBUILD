@@ -48,6 +48,8 @@ makedepends=(
 source=(
 	"source::git+$url.git"
 )
+provides=(fractal)
+conflicts=(fractal)
 sha512sums=('SKIP')
 
 pkgver() {
