@@ -3,16 +3,16 @@ pkgver=2.7.0
 _commit=c74ecef0242ebf8598de1f684af19a7b2a85eb26
 pkgrel=1
 pkgdesc="OptimizationBase.jl"
-url="https://github.com/SciML/OptimizationBase.jl.git"
+url="https://github.com/SciML/Optimization.jl.git"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/SciML/OptimizationBase.jl.git#commit=$_commit")
+source=("git+https://github.com/SciML/Optimization.jl.git#commit=$_commit")
 sha256sums=('c088f63087133e624a28edfe84bc100a22dfd2c3b07160feb6ac0d72a0d38c47')
 
 package() {
-  cd OptimizationBase.jl
+  cd Optimization.jl/lib/OptimizationBase
 
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OptimizationBase "${pkgdir}" "${pkgname}" julia-git
 }
