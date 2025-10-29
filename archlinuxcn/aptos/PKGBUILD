@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=aptos
-pkgver=7.10.1
+pkgver=7.10.2
 pkgrel=1
 pkgdesc='Aptos is a layer 1 blockchain built to support the widespread use of blockchain through better technology and user experience.'
 url='https://aptos.dev'
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(gcc-libs glibc libelf libssl.so libcrypto.so systemd-libs)
 makedepends=(git cargo clang)
 source=(git+https://github.com/aptos-labs/aptos-core#tag=aptos-cli-v$pkgver)
-sha512sums=('c87392aca433bfd6040b576d7bed11b6e2743ca6aa6e66c5f2a93647571fb93ab5b8485f23cc02b036743920f982bc4511b39be6d576998b4198e749a8b39316')
+sha512sums=('0f88360b9bdba64cbf14d2509de114baa468ec5ad4939fc6bd80499aa0e99b3b45ba10fcc034842c01f2b5b08b9e9fd78cf0f4362be399cce6d6b8c264043f02')
 # undefined reference to `git_repository_open'
 options=(!lto)
 
