@@ -1,6 +1,6 @@
 pkgname=julia-git-secondquantizedalgebra-src
-pkgver=0.3.1
-_commit=046953d88a99d36d5bc9ec6ef5b5023f5acd4f4a
+pkgver=0.4.3
+_commit=614b1637cb9250b189bf7a8cc03b332eb8e4053b
 pkgrel=1
 pkgdesc="SecondQuantizedAlgebra.jl"
 url="https://github.com/qojulia/SecondQuantizedAlgebra.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/qojulia/SecondQuantizedAlgebra.jl.git#commit=$_commit")
-sha256sums=('73a6e990c06b53e99f58ff8482a2e6375918108c0c50cce266b53b15f49538ab')
+sha256sums=('2c9d3fe2e6ebda4729da3228681022badc66c63b87f42fb3a8ce68a5e0b5f2ad')
 
 package() {
   cd SecondQuantizedAlgebra.jl
