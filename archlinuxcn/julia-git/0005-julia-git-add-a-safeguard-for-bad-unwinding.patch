@@ -1,7 +1,7 @@
-From 9b04ee40d95957c7fa543838c31d20100c88fd68 Mon Sep 17 00:00:00 2001
+From f0129cd962651a9d98a99e488c75c5595429620f Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 3 Oct 2023 19:00:59 -0400
-Subject: [PATCH 05/12] [julia-git] add a safeguard for bad unwinding
+Subject: [PATCH 05/18] [julia-git] add a safeguard for bad unwinding
 
 ---
  src/stackwalk.c | 2 ++
@@ -21,5 +21,5 @@ index 782a699d9b..a2947884fa 100644
              offset += size_incr;
          }
 -- 
-2.51.0
+2.51.2
 

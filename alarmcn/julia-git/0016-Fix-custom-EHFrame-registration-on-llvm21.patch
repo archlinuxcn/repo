@@ -1,14 +1,14 @@
-From f20a13b91eef4da114fcc7a1b9f61f694e44d1da Mon Sep 17 00:00:00 2001
+From 952383b5ddd083eef9fc92fbd46ad1c12edac0a8 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 26 Oct 2025 10:28:41 -0400
-Subject: [PATCH 10/12] Fix custom EHFrame registration on llvm21
+Subject: [PATCH 16/18] Fix custom EHFrame registration on llvm21
 
 ---
  src/jitlayers.cpp | 85 +++++++++++++++++++++++++++++++++++++++++++++--
  1 file changed, 82 insertions(+), 3 deletions(-)
 
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index ff92840b42..b5e5380714 100644
+index ad8978be8b..74c714a29a 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -1226,6 +1226,8 @@ std::unique_ptr<jitlink::JITLinkMemoryManager> createJITLinkMemoryManager() JL_N
@@ -93,7 +93,7 @@ index ff92840b42..b5e5380714 100644
  
  RTDyldMemoryManager *createRTDyldMemoryManager(void) JL_NOTSAFEPOINT;
  
-@@ -1950,15 +2018,26 @@ JuliaOJIT::JuliaOJIT()
+@@ -1955,15 +2023,26 @@ JuliaOJIT::JuliaOJIT()
      OptSelLayer(ES, OptimizeLayer, static_cast<orc::ThreadSafeModule (*)(orc::ThreadSafeModule, orc::MaterializationResponsibility&)>(selectOptLevel))
  {
  #ifdef JL_USE_JITLINK
@@ -124,5 +124,5 @@ index ff92840b42..b5e5380714 100644
      ObjectLayer.addPlugin(std::make_unique<JLDebuginfoPlugin>());
      ObjectLayer.addPlugin(std::make_unique<JLMemoryUsagePlugin>(&jit_bytes_size));
 -- 
-2.51.0
+2.51.2
 

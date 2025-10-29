@@ -1,7 +1,7 @@
-From be942fcb001441d1999dcfb73e6d579ef06a180f Mon Sep 17 00:00:00 2001
+From 39f53d6319163895f47ee2101238bfa2a7900522 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 17:45:57 -0400
-Subject: [PATCH 12/12] Revert "Docs: Make @doc macro return the value of
+Subject: [PATCH 09/18] Revert "Docs: Make @doc macro return the value of
  documented expression"
 
 This reverts commit 1a07c92a1eadf7de66a3fcb5eaed48de8e8c0984.
@@ -77,5 +77,5 @@ index eec5fd3fd1..470aeb098c 100644
      isexpr(x, :module) ? moduledoc(source, mod, meta, def, x::Expr) :
      # Document several expressions with the same docstring. `a, b, c`.
 -- 
-2.51.0
+2.51.2
 
