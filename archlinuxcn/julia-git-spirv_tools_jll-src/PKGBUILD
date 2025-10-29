@@ -1,6 +1,6 @@
 pkgname=julia-git-spirv_tools_jll-src
-pkgver=2025.1.0+3
-_commit=30de64c6618e6def5a5f6b799ea84923131b6966
+pkgver=2025.4.0+0
+_commit=aeaa714ab5b95c41ab7009fc9c022493beb4de1a
 pkgrel=1
 pkgdesc="SPIRV_Tools_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/SPIRV_Tools_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git spirv-tools)
 source=("git+https://github.com/JuliaBinaryWrappers/SPIRV_Tools_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('0d34d6956eabbafb11220ef90b898e45e14a2c922441eabac60f99ffd7fb72fd'
+sha256sums=('8250f47718f21403fced86df89e8c3f15f964c632d0fe9b946b0c19aebd8c1b3'
             '96b4b312f6de0beb06407d832e142843cfa5f514dcf920a4a5f15402828b3e1a')
 
 build() {
