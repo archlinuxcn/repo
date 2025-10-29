@@ -282,7 +282,7 @@ EOF
   (
     cd usr/share/julia/stdlib/v*/Pkg
 
-    patch -Np0 --no-backup-if-mismatch < "$srcdir/0001-Disable-upgrade-of-stdlib-package.diff"
+    patch -Np1 --no-backup-if-mismatch < "$srcdir/0001-Disable-upgrade-of-stdlib-package.diff"
     patch -Np1 --no-backup-if-mismatch < "$srcdir/0002-Hard-code-7z-and-zstd-path.diff"
   )
   (
