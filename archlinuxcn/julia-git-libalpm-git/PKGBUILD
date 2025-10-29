@@ -20,6 +20,6 @@ pkgver() {
 package() {
   cd LibALPM.jl
 
-  . /usr/lib/julia/julia-install-pkg.sh LibALPM "${pkgdir}" "${pkgname}" julia-git
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LibALPM "${pkgdir}" "${pkgname}" julia-git
   rm -rf "${dest_dir}"/travis
 }
