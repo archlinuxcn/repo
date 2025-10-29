@@ -1,7 +1,7 @@
 pkgname=julia-git-highs_jll-src
-pkgver=1.11.0+1
-_commit=283b969e9502efd48fb34898169a1f0088bf6577
-pkgrel=3
+pkgver=1.12.0+0
+_commit=19c3e1a258328f73bc453bb11e0760055ec3c858
+pkgrel=1
 pkgdesc="HiGHS_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/HiGHS_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git highs)
 source=("git+https://github.com/JuliaBinaryWrappers/HiGHS_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('3a3f49c5e48616db015e157be2b1538b3e39cc023a26fb915c60327ad305246f'
+sha256sums=('2bc797b9eef7f8cacd7c2ac3f6c57b44b1362ca6cde890fdcdb84b427ba20f88'
             '195c0cdeed5e8e389b2de5d5bb8993fd871cbf89bb3d3eee00a575e1b34b3d16')
 
 build() {

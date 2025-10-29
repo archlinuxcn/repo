@@ -1,6 +1,6 @@
 pkgname=julia-git-libalpm-git
 pkgver=0.9.0.0.51.g2a02bb9
-pkgrel=3
+pkgrel=4
 pkgdesc="LibALPM.jl"
 url="https://github.com/yuyichao/LibALPM.jl"
 arch=('any')
@@ -20,6 +20,6 @@ pkgver() {
 package() {
   cd LibALPM.jl
 
-  . /usr/lib/julia/julia-install-pkg.sh LibALPM "${pkgdir}" "${pkgname}" julia-git
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LibALPM "${pkgdir}" "${pkgname}" julia-git
   rm -rf "${dest_dir}"/travis
 }

@@ -4,7 +4,7 @@
 
 pkgname=mpich
 pkgver=4.3.2
-pkgrel=1
+pkgrel=2
 pkgdesc="An improved implementation of the Message Passing Interface."
 url="https://mpich.org"
 arch=(aarch64 armv7h x86_64)
@@ -42,7 +42,7 @@ build() {
                --with-hwloc \
                --without-java \
                --without-ze \
-               --enable-fast=all,O3 \
+               --enable-fast=ndebug,alwaysinline,O3 \
                --enable-error-checking=runtime \
                --enable-error-messages=all \
                CC=gcc CXX=g++ FC=gfortran

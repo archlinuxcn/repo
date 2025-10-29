@@ -1,0 +1,26 @@
+From 95af66bc200c193562976153d69c8a332c09e5f7 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Oct 2025 10:47:10 -0400
+Subject: [PATCH] Disable upgrade of stdlib package
+
+We are packaging the latested already
+---
+ src/Types.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Types.jl b/src/Types.jl
+index ecd1c29ed..44d46593d 100644
+--- a/src/Types.jl
++++ b/src/Types.jl
+@@ -523,7 +523,7 @@ is_project_uuid(env::EnvCache, uuid::UUID) = project_uuid(env) == uuid
+ # Context #
+ ###########
+ 
+-const UPGRADABLE_STDLIBS = ["DelimitedFiles", "Statistics"]
++const UPGRADABLE_STDLIBS = String[]
+ const UPGRADABLE_STDLIBS_UUIDS = Set{UUID}()
+ const STDLIB = Ref{Union{DictStdLibs, Nothing}}(nothing)
+ function load_stdlib()
+-- 
+2.51.2
+

@@ -1,15 +1,23 @@
 pkgname=julia-git-bloqadeexpr-src
 pkgver=0.2.3
 _commit=8d9462cc280b6de70154ad0f545ddc5be9734165
-pkgrel=1
+pkgrel=2
 pkgdesc="BloqadeExpr.jl"
 url="https://github.com/QuEraComputing/Bloqade.jl.git"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/QuEraComputing/Bloqade.jl.git#commit=$_commit")
-sha256sums=('8d4eba1022ff588c688d4156ee46d603465e02693f0c11eca5866267aa366260')
+source=("git+https://github.com/QuEraComputing/Bloqade.jl.git#commit=$_commit"
+        0001-Import-from-Lowlevel-instead-of-using-to-allow-exten.patch)
+sha256sums=('8d4eba1022ff588c688d4156ee46d603465e02693f0c11eca5866267aa366260'
+            '87803ad782857eeaff6a853c40f2ca8c5b35f62124332121419d54a0a160a288')
+
+prepare() {
+  cd Bloqade.jl
+
+  patch -Np1 --no-backup-if-mismatch < "../0001-Import-from-Lowlevel-instead-of-using-to-allow-exten.patch"
+}
 
 package() {
   cd Bloqade.jl/lib/BloqadeExpr

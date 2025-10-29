@@ -1,0 +1,16 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: coelacanthus@archlinuxcn.org
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  vcs_update()
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+
+update_on:
+  - source: github
+    github: zatrazz/glibc-tools
+    branch: main

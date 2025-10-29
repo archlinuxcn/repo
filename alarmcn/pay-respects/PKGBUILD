@@ -3,7 +3,7 @@
 
 pkgname=pay-respects
 pkgver=0.7.9
-pkgrel=1
+pkgrel=2
 pkgdesc="Terminal command suggestion, alternative to thefuck written in Rust with AI support"
 arch=('x86_64' 'aarch64')
 url="https://codeberg.org/iff/${pkgname}"
@@ -24,6 +24,11 @@ build() {
 	export CFLAGS+=" -ffat-lto-objects"
 	export _DEF_PR_LIB="/usr/lib/${pkgname}/"
 	cargo build --frozen --release --all-features --workspace
+}
+
+check() {
+	cd "${pkgname}/"
+	cargo test --frozen --all-features --workspace
 }
 
 package() {

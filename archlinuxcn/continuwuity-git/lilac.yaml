@@ -1,7 +1,9 @@
 maintainers:
   - github: Kimiblock
 
-pre_build_script: vcs_update
+pre_build_script: |
+  aur_pre_build
+  vcs_update
 post_build_script: |
   git_pkgbuild_commit()
   update_aur_repo()

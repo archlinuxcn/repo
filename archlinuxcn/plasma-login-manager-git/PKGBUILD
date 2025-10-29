@@ -3,9 +3,9 @@
 
 pkgname=plasma-login-manager-git
 _pkgname=plasma-login-manager
-pkgver=0.0.0.r1833.6d0d667
+pkgver=0.0.0.r1841.79d6436
 pkgrel=1
-pkgdesc='Plasma Login provides a display manager for KDE Plasma, forked from SDDM and with an new frontend providing a greeter, wallpaper plugin integration and System Settings module (KCM).'
+pkgdesc='Plasma Login Manager (git version)'
 url='https://invent.kde.org/plasma/plasma-login-manager'
 arch=(x86_64)
 license=(GPL-2.0-or-later)
@@ -40,10 +40,7 @@ sha256sums=('SKIP'
             '1a84cf752782b03b53f66188013bf7e4af4f5e6feb7266bfe58c3faaa20777b4'
             '3406bce46be8450e28ddbccfbcd0e1f8fa585d57da8833ff7294cf3aee84bb46')
 provides=(${_pkgname})
-conflicts=(
-    ${_pkgname}
-    lightdm  # /usr/share/dbus-1/system.d/org.freedesktop.DisplayManager.conf
-)
+conflicts=(${_pkgname})
 
 pkgver() {
     cd $_pkgname
@@ -51,14 +48,15 @@ pkgver() {
 }
 
 build() {
-    cmake -B build -S $_pkgname -GNinja
+    cmake -B build -S $_pkgname -GNinja \
+      -DCMAKE_INSTALL_LIBEXECDIR=lib \
+      -DDBUS_CONFIG_FILENAME=plasma_org.freedesktop.DisplayManager.conf
     cmake --build build
 }
 
 package() {
     DESTDIR="$pkgdir" cmake --install build
-    mkdir -p "$pkgdir"/etc/pam.d
-    install -m644 plasmalogin -t "$pkgdir"/etc/pam.d
-    install -m644 plasmalogin-autologin -t "$pkgdir"/etc/pam.d
-    install -m644 plasmalogin-greeter -t "$pkgdir"/etc/pam.d
+    install -Dm644 plasmalogin -t "$pkgdir"/etc/pam.d
+    install -Dm644 plasmalogin-autologin -t "$pkgdir"/etc/pam.d
+    install -Dm644 plasmalogin-greeter -t "$pkgdir"/etc/pam.d
 }

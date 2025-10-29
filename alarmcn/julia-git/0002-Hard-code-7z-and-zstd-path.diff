@@ -1,0 +1,57 @@
+From 295514a8f5f6f118a2192a85070a1726f537f254 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Oct 2025 10:48:58 -0400
+Subject: [PATCH] Hard code 7z and zstd path
+
+---
+ src/PlatformEngines.jl | 28 ++++------------------------
+ 1 file changed, 4 insertions(+), 24 deletions(-)
+
+diff --git a/src/PlatformEngines.jl b/src/PlatformEngines.jl
+index 7ddaa27a6..f2e38f6b4 100644
+--- a/src/PlatformEngines.jl
++++ b/src/PlatformEngines.jl
+@@ -12,36 +12,16 @@ using Base.BinaryPlatforms, p7zip_jll, Zstd_jll
+ export verify, unpack, package, download_verify_unpack, get_extract_cmd, detect_archive_format
+ 
+ const EXE7Z_LOCK = ReentrantLock()
+-const EXE7Z = Ref{String}()
++const EXE7Z = Ref{String}("/usr/bin/7z")
+ const EXEZSTD_LOCK = ReentrantLock()
+-const EXEZSTD = Ref{String}()
++const EXEZSTD = Ref{String}("/usr/bin/zstd")
+ 
+ function exe7z()
+-    # If the JLL is available, use the wrapper function defined in there
+-    if p7zip_jll.is_available()
+-        return p7zip_jll.p7zip()
+-    end
+-
+-    return lock(EXE7Z_LOCK) do
+-        if !isassigned(EXE7Z)
+-            EXE7Z[] = find7z()
+-        end
+-        return Cmd([EXE7Z[]])
+-    end
++    return `/usr/bin/7z`
+ end
+ 
+ function exezstd()
+-    # If the JLL is available, use the wrapper function defined in there
+-    if Zstd_jll.is_available()
+-        return Zstd_jll.zstd()
+-    end
+-
+-    return lock(EXEZSTD_LOCK) do
+-        if !isassigned(EXEZSTD)
+-            EXEZSTD[] = findzstd()
+-        end
+-        return Cmd([EXEZSTD[]])
+-    end
++    return `/usr/bin/zstd`
+ end
+ 
+ function find7z()
+-- 
+2.51.2
+

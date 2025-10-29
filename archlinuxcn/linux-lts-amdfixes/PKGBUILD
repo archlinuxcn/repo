@@ -1,7 +1,7 @@
 # Maintainer: Andreas Radke <andyrtr@archlinux.org>
 
 pkgbase=linux-lts
-pkgver=6.12.53
+pkgver=6.12.55
 pkgrel=1
 pkgdesc='LTS Linux'
 url='https://www.kernel.org'
@@ -35,6 +35,7 @@ source=(
   0001-ZEN-Add-sysctl-and-CONFIG-to-disallow-unprivileged-C.patch
   0002-Default-to-maximum-amount-of-ASLR-bits.patch
   0003-skip-simpledrm-if-nvidia-drm.modeset\=1-is.patch
+  0004-handle_the_obsolescensce_of_docutils.ErrorString.patch
   config  # the main kernel config file
 )
 validpgpkeys=(
@@ -42,18 +43,20 @@ validpgpkeys=(
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
 )
 # https://www.kernel.org/pub/linux/kernel/v6.x/sha256sums.asc
-sha256sums=('663507accae673afcf4e210b4ae8d4352e61d926202e5da3f04bf71ca1d2c0b5'
+sha256sums=('328f8f4608a653063a5fd82d29b17163faab2825fa419fa85b961740a342fb9f'
             'SKIP'
             '3cf389ced2b40e6457421cb27892bf126b73032fbf1de895ecc37b13d981a17c'
             '423b2c6fbc8d6df79997550bef1b1e4f6f402b668007d150013623a83a12b49e'
             '596f8e0aef1df72a84685e8f2b8a9dde7e33b513de555fae6069ba652cbd00c1'
-            '86302239a478b87bb3532d674f7f1a38ea4bd1f36ed155664d88446079860481')
-b2sums=('d9f395e99efa66ae8dda71d5874a4ae5a61eb55ac2869bbe911be4c0b8f0a1cc507381b559a9e0e522e831e36aa861060d4bd4381a47f30262f17be517bd5081'
+            '5faebcb2af26ad129bf8c544ba2795ac1b4781eba3bafe1bbad85dbef5e9e79f'
+            '18333868f69bb6fad853241002e183e506195734b8c121afe412f44198007e35')
+b2sums=('dc1e6872f28dac711ea9005a9742586590de27656825f88fa3e12ea35357619309267c46a4bcf914d26c5fa4b0c7bb69809b27bec8dea66e020cbae80d0d3a98'
         'SKIP'
         'b2e1f3544470a0ded336a8d9097b879060530d795a9b60ef5d617d16c165f3ca27424529a7c464d249ab72abcaf48d65d66d96508a7b49622ab404739ae0a918'
         '01f1a8249983b1a52437843ce3566242b3ed1df03fcab98ec092982be9a4dc947ab0f932a6bc9ac84f85248dca479ebe193a6032cfd2b574dc6f5ca31a0190c5'
         '410dc8911051905c5c01b47890eeff817fc180434372864cfa9ee0d77e0ff43571b9fcc3c193d562c4dcd49511edf7c6c01dde12dd0778845d1868dc435531ea'
-        '1a67a7f8c1201cc93120e3d62f2000a050ce064bb0a06ee6aa7749a73287e5f135eb3efa42dede621c3a3dbfb6b32b1241991639d5a7dfeb09c77b9bb778133e')
+        'ad33c6a3b9a6e61efe6136b8df93f4e614e1d32a18ab1b9fd2ea6eabaf02b971fbc8cfd7f9f202c6fca42693a41a73ba9992b65052afa22021446a4d1e0a4104'
+        '13a9af854c941019aea67854980a711354a23301e2bce3c88b5ab27bb83bd9642df4ef491edf86a90a5cf075fd9cb0265a7b7ef08df971d926a57399afe075c6')
 export KBUILD_BUILD_HOST=archlinux
 pkgbase=linux-lts-amdfixes
 export KBUILD_BUILD_USER=$pkgbase

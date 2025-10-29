@@ -1,0 +1,99 @@
+From e696350fe1637e1abc8e9535f2c3f76aca739976 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 27 Oct 2025 15:43:26 -0400
+Subject: [PATCH 15/18] Assorted return value/argument type/include change for
+ LLVM 21
+
+---
+ src/debuginfo.cpp |  7 ++++++-
+ src/disasm.cpp    | 16 +++++++++++-----
+ src/jitlayers.cpp |  6 +++++-
+ 3 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/src/debuginfo.cpp b/src/debuginfo.cpp
+index 752dc50509..98044f7637 100644
+--- a/src/debuginfo.cpp
++++ b/src/debuginfo.cpp
+@@ -505,8 +505,13 @@ static int lookup_pointer(
+         else {
+             int havelock = jl_lock_profile_wr();
+             assert(havelock); (void)havelock;
+-            info = context->getLineInfoForAddress(makeAddress(Section, pointer + slide), infoSpec);
++            auto lineinfo = context->getLineInfoForAddress(makeAddress(Section, pointer + slide), infoSpec);
+             jl_unlock_profile_wr();
++#if JL_LLVM_VERSION < 210000
++            info = std::move(lineinfo);
++#else
++            info = std::move(lineinfo.value());
++#endif
+         }
+ 
+         jl_frame_t *frame = &(*frames)[i];
+diff --git a/src/disasm.cpp b/src/disasm.cpp
+index a80f79218f..23364f028f 100644
+--- a/src/disasm.cpp
++++ b/src/disasm.cpp
+@@ -924,7 +924,11 @@ static void jl_dump_asm_internal(
+     // LLVM will destroy the formatted stream, and we keep the raw stream.
+     std::unique_ptr<formatted_raw_ostream> ustream(new formatted_raw_ostream(rstream));
+     std::unique_ptr<MCStreamer> Streamer(
+-#if JL_LLVM_VERSION >= 190000
++#if JL_LLVM_VERSION >= 210000
++        TheTarget->createAsmStreamer(Ctx, std::move(ustream),
++
++                                     std::move(IP), std::move(CE), std::move(MAB))
++#elif JL_LLVM_VERSION >= 190000
+         TheTarget->createAsmStreamer(Ctx, std::move(ustream),
+ 
+                                      IP.release(), std::move(CE), std::move(MAB))
+@@ -1268,8 +1272,8 @@ jl_value_t *jl_dump_function_asm_impl(jl_llvmf_dump_t* dump, char emit_mc, const
+                 OutputAsmDialect = 0;
+             if (!strcmp(asm_variant, "intel"))
+                 OutputAsmDialect = 1;
+-            MCInstPrinter *InstPrinter = TM->getTarget().createMCInstPrinter(
+-                jl_ExecutionEngine->getTargetTriple(), OutputAsmDialect, MAI, MII, MRI);
++            std::unique_ptr<MCInstPrinter> InstPrinter(TM->getTarget().createMCInstPrinter(
++                                                           jl_ExecutionEngine->getTargetTriple(), OutputAsmDialect, MAI, MII, MRI));
+             std::unique_ptr<MCAsmBackend> MAB(TM->getTarget().createMCAsmBackend(
+                 STI, MRI, Options));
+             std::unique_ptr<MCCodeEmitter> MCE;
+@@ -1278,8 +1282,10 @@ jl_value_t *jl_dump_function_asm_impl(jl_llvmf_dump_t* dump, char emit_mc, const
+             }
+             auto FOut = std::make_unique<formatted_raw_ostream>(asmfile);
+             std::unique_ptr<MCStreamer> S(TM->getTarget().createAsmStreamer(
+-#if JL_LLVM_VERSION >= 190000
+-                *Context, std::move(FOut), InstPrinter, std::move(MCE), std::move(MAB)
++#if JL_LLVM_VERSION >= 210000
++                *Context, std::move(FOut), std::move(InstPrinter), std::move(MCE), std::move(MAB)
++#elif JL_LLVM_VERSION >= 190000
++                *Context, std::move(FOut), InstPrinter.release(), std::move(MCE), std::move(MAB)
+ #else
+                 *Context, std::move(FOut), true, true, InstPrinter, std::move(MCE),
+                 std::move(MAB), false
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index 900793d663..ad8978be8b 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -14,6 +14,9 @@
+ #include <llvm/ExecutionEngine/Orc/CompileUtils.h>
+ #include <llvm/ExecutionEngine/Orc/ExecutionUtils.h>
+ #include <llvm/ExecutionEngine/Orc/DebugObjectManagerPlugin.h>
++#if JL_LLVM_VERSION >= 210000
++#  include <llvm/ExecutionEngine/Orc/SelfExecutorProcessControl.h>
++#endif
+ #include <llvm/ExecutionEngine/Orc/TargetProcess/JITLoaderGDB.h>
+ #if JL_LLVM_VERSION >= 200000
+ #include <llvm/ExecutionEngine/Orc/AbsoluteSymbols.h>
+@@ -1936,7 +1939,8 @@ JuliaOJIT::JuliaOJIT()
+     MemMgr(createRTDyldMemoryManager()),
+     UnlockedObjectLayer(
+             ES,
+-            [this]() {
++            [this](auto&&...) {
++                // LLVM 21+ passes in a memory buffer
+                 std::unique_ptr<RuntimeDyld::MemoryManager> result(new ForwardingMemoryManager(MemMgr));
+                 return result;
+             }
+-- 
+2.51.2
+

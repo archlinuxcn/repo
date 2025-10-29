@@ -1,6 +1,6 @@
 pkgname=julia-git-libarchive-git
 pkgver=0.0.2.0.67.g4ca361a
-pkgrel=1
+pkgrel=2
 pkgdesc="LibArchive.jl"
 url="https://github.com/yuyichao/LibArchive.jl"
 arch=('any')
@@ -20,5 +20,5 @@ pkgver() {
 package() {
   cd LibArchive.jl
 
-  . /usr/lib/julia/julia-install-pkg.sh LibArchive "${pkgdir}" "${pkgname}" julia-git
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh LibArchive "${pkgdir}" "${pkgname}" julia-git
 }

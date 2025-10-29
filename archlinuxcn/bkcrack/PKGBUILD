@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=bkcrack
-pkgver=1.8.0
+pkgver=1.8.1
 pkgrel=1
 pkgdesc="Crack legacy zip encryption with Biham and Kocher's known plaintext attack."
 arch=(x86_64)
@@ -11,7 +11,7 @@ depends=(gcc-libs glibc)
 makedepends=(cmake doxygen git)
 optdepends=('python: deflate/inflate tools')
 source=(git+$url.git#tag=v$pkgver)
-sha256sums=('6bae3b5a59cc1ab452b185030c8f1a417b58823c084cade2b2f1f72cb97eb25c')
+sha256sums=('fdcd6a9745f1d746715b33959b166d3ae429697b35fc00df2c29254acb0b6bbc')
 
 build() {
   local cmake_options=(

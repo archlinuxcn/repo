@@ -1,7 +1,7 @@
 pkgname=julia-git-videoio-src
-pkgver=1.3.1
-_commit=ce0f8deb21a8188ebea5807d68225614d224afc4
-pkgrel=2
+pkgver=1.3.2
+_commit=a40e40c6d9462469fc66e2c43f4d95ed6a417c99
+pkgrel=1
 pkgdesc="VideoIO.jl"
 url="https://github.com/JuliaIO/VideoIO.jl.git"
 arch=('any')
@@ -11,14 +11,14 @@ depends=(julia-git)
 source=("git+https://github.com/JuliaIO/VideoIO.jl.git#commit=$_commit"
         0001-Remove-deprecated-ticks_per_frame.patch
         0002-Support-both-FFMPEG-7-and-8.patch)
-sha256sums=('5df188f9c3b3cdc51880a9da918a58818d0f42cb6d8c81fa54ca033aa391af91'
+sha256sums=('9e8b7ac8f9c2383dbfa6d3deeec545196601b284b1793899bc0baa6126eb2e29'
             '0009d92fa8cdba88c7138468f240c5b91956775d421a39b4e0aab063312c6133'
             'ee4b8532840ddabaa4c1f94cb5a995b9f9006fc61287550b1040e194ee9c0075')
 
 prepare() {
   cd VideoIO.jl
 
-  patch -Np1 --no-backup-if-mismatch < "../0001-Remove-deprecated-ticks_per_frame.patch"
+  # patch -Np1 --no-backup-if-mismatch < "../0001-Remove-deprecated-ticks_per_frame.patch"
   patch -Np1 --no-backup-if-mismatch < "../0002-Support-both-FFMPEG-7-and-8.patch"
 }
 

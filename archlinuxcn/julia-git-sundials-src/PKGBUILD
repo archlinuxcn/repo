@@ -1,6 +1,6 @@
 pkgname=julia-git-sundials-src
-pkgver=4.28.0
-_commit=4f0b1e504f971da1ce2a5b5fc122012627bf4bcd
+pkgver=5.1.0
+_commit=1cff2a4544de08a8b6bea8970621511afd22383b
 pkgrel=1
 pkgdesc="Sundials.jl"
 url="https://github.com/SciML/Sundials.jl.git"
@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/SciML/Sundials.jl.git#commit=$_commit"
-        0001-Remove-use-of-deprecated-function-that-is-removed-in.patch)
-sha256sums=('b46ed04501e9cd52231129ac030d6bccae4d65548fa90a463e64b8e87ed25c58'
-            'bdb83ea58f4d929161078daf40d7cf2181788023129b1f9b9722613475f49980')
-
-prepare() {
-  cd Sundials.jl
-
-  patch --no-backup-if-mismatch -Np1 < ../0001-Remove-use-of-deprecated-function-that-is-removed-in.patch
-}
+source=("git+https://github.com/SciML/Sundials.jl.git#commit=$_commit")
+sha256sums=('22267e94179179e77fecb3092876afaa8925aa61b32d063875c5246efa796869')
 
 package() {
   cd Sundials.jl

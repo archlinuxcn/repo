@@ -1,6 +1,6 @@
 pkgname=julia-git-linearsolve-src
-pkgver=3.45.0
-_commit=0f3e53a9b8f75520b5b8a6d5c612a283965cf110
+pkgver=3.46.1
+_commit=13de42c98fa5ab6534dfc7ba0e39e17fb355349c
 pkgrel=1
 pkgdesc="LinearSolve.jl"
 url="https://github.com/SciML/LinearSolve.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/LinearSolve.jl.git#commit=$_commit")
-sha256sums=('cccf811ed6e1133b9b131385d029a0734bf6b75e9e5285549007deace09b271e')
+sha256sums=('f1d6d78a48edb9b48c9755f7995bcf391d7b3fb73ac197a4389467b386704f14')
 
 package() {
   cd LinearSolve.jl

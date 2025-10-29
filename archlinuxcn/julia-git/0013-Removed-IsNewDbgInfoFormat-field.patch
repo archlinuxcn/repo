@@ -1,0 +1,41 @@
+From 694f2e4fe3ed95638d0e1b65b538aec27b23c9ff Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 27 Oct 2025 15:42:12 -0400
+Subject: [PATCH 13/18] Removed IsNewDbgInfoFormat field
+
+---
+ src/aotcompile.cpp | 2 ++
+ src/codegen.cpp    | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
+index 9ff7fc2d3f..5c7f7bc20e 100644
+--- a/src/aotcompile.cpp
++++ b/src/aotcompile.cpp
+@@ -541,7 +541,9 @@ Function *IRLinker_copyFunctionProto(Module *DstM, Function *SF) {
+   auto *F = Function::Create(SF->getFunctionType(), SF->getLinkage(),
+                              SF->getAddressSpace(), SF->getName(), DstM);
+   F->copyAttributesFrom(SF);
++#if JL_LLVM_VERSION < 210000
+   F->IsNewDbgInfoFormat = SF->IsNewDbgInfoFormat;
++#endif
+ 
+   // Remove these copied constants since they point to the source module.
+   F->setPersonalityFn(nullptr);
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 5f24879eb6..99bdc6a9af 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -9906,7 +9906,9 @@ void linkFunctionBody(Function &Dst, Function &Src)
+         Dst.setPersonalityFn(Src.getPersonalityFn());
+     if (Src.hasPersonalityFn())
+         Dst.setPersonalityFn(Src.getPersonalityFn());
++#if JL_LLVM_VERSION < 210000
+     assert(Src.IsNewDbgInfoFormat == Dst.IsNewDbgInfoFormat);
++#endif
+ 
+     // Copy over the metadata attachments without remapping.
+     Dst.copyMetadata(&Src, 0);
+-- 
+2.51.2
+

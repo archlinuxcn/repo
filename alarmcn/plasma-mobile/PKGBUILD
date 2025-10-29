@@ -2,7 +2,7 @@
 # Contributor: Devin Lin <devin@kde.org>
 
 pkgname=plasma-mobile
-pkgver=6.4.5
+pkgver=6.5.1
 pkgrel=1
 pkgdesc="Plasma Mobile shell components."
 arch=('x86_64' 'i686' 'i486' 'pentium4' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -26,9 +26,9 @@ optdepends=(
 	'plasma-workspace-wallpapers: A large wallpaper selection for Plasma'
 	'plasma-mobile-sounds: Plasma Mobile sound theme'
 )
-makedepends=('cmake' 'extra-cmake-modules')
+makedepends=('cmake' 'extra-cmake-modules' 'plasma-wayland-protocols')
 source=("https://download.kde.org/stable/plasma/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('a73cf8dad89a2843df412f395fa1dc694e001cce2d671aec26e7e82174fb8be5')
+sha256sums=('042ecd9f2be032bd5bf948b8418bb40f4c3dcac68defc2afabe8871a78fb4c8e')
 
 build() {
 	cmake -B build -S "${pkgname}-${pkgver}" \

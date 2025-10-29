@@ -1,0 +1,103 @@
+From c7dd449e808fbd0a2a070bde516450f92a0790fe Mon Sep 17 00:00:00 2001
+From: Jonathan Corbet <corbet@lwn.net>
+Date: Tue, 9 Sep 2025 13:35:37 -0600
+Subject: [PATCH] docs: kdoc: handle the obsolescensce of
+ docutils.ErrorString()
+
+The ErrorString() and SafeString() docutils functions were helpers meant to
+ease the handling of encodings during the Python 3 transition.  There is no
+real need for them after Python 3.6, and docutils 0.22 removes them,
+breaking the docs build
+
+Handle this by just injecting our own one-liner version of ErrorString(),
+and removing the sole SafeString() call entirely.
+
+Reported-by: Zhixu Liu <zhixu.liu@gmail.com>
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+Message-ID: <87ldmnv2pi.fsf@trenco.lwn.net>
+---
+ Documentation/sphinx/kernel_feat.py         | 4 +++-
+ Documentation/sphinx/kernel_include.py      | 6 ++++--
+ Documentation/sphinx/maintainers_include.py | 4 +++-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/sphinx/kernel_feat.py b/Documentation/sphinx/kernel_feat.py
+index e3a51867f27bd5..aaac76892cebb0 100644
+--- a/Documentation/sphinx/kernel_feat.py
++++ b/Documentation/sphinx/kernel_feat.py
+@@ -40,9 +40,11 @@
+ from docutils import nodes, statemachine
+ from docutils.statemachine import ViewList
+ from docutils.parsers.rst import directives, Directive
+-from docutils.utils.error_reporting import ErrorString
+ from sphinx.util.docutils import switch_source_input
+ 
++def ErrorString(exc):  # Shamelessly stolen from docutils
++    return f'{exc.__class__.__name}: {exc}'
++
+ __version__  = '1.0'
+ 
+ def setup(app):
+diff --git a/Documentation/sphinx/kernel_include.py b/Documentation/sphinx/kernel_include.py
+index 1e566e87ebcdda..641e81c58a8c18 100755
+--- a/Documentation/sphinx/kernel_include.py
++++ b/Documentation/sphinx/kernel_include.py
+@@ -35,13 +35,15 @@
+ import os.path
+ 
+ from docutils import io, nodes, statemachine
+-from docutils.utils.error_reporting import SafeString, ErrorString
+ from docutils.parsers.rst import directives
+ from docutils.parsers.rst.directives.body import CodeBlock, NumberLines
+ from docutils.parsers.rst.directives.misc import Include
+ 
+ __version__  = '1.0'
+ 
++def ErrorString(exc):  # Shamelessly stolen from docutils
++    return f'{exc.__class__.__name}: {exc}'
++
+ # ==============================================================================
+ def setup(app):
+ # ==============================================================================
+@@ -112,7 +114,7 @@ def _run(self):
+             raise self.severe('Problems with "%s" directive path:\n'
+                               'Cannot encode input file path "%s" '
+                               '(wrong locale?).' %
+-                              (self.name, SafeString(path)))
++                              (self.name, path))
+         except IOError as error:
+             raise self.severe('Problems with "%s" directive path:\n%s.' %
+                       (self.name, ErrorString(error)))
+diff --git a/Documentation/sphinx/maintainers_include.py b/Documentation/sphinx/maintainers_include.py
+index d31cff8674367c..519ad18685b23f 100755
+--- a/Documentation/sphinx/maintainers_include.py
++++ b/Documentation/sphinx/maintainers_include.py
+@@ -22,10 +22,12 @@
+ import os.path
+ 
+ from docutils import statemachine
+-from docutils.utils.error_reporting import ErrorString
+ from docutils.parsers.rst import Directive
+ from docutils.parsers.rst.directives.misc import Include
+ 
++def ErrorString(exc):  # Shamelessly stolen from docutils
++    return f'{exc.__class__.__name}: {exc}'
++
+ __version__  = '1.0'
+ 
+ def setup(app):
+--- a/Documentation/sphinx/kernel_abi.py	2025-10-23 16:20:48.000000000 +0200
++++ b/Documentation/sphinx/kernel_abi.py.new	2025-10-26 08:08:33.168985951 +0100
+@@ -42,9 +42,11 @@
+ from docutils import nodes, statemachine
+ from docutils.statemachine import ViewList
+ from docutils.parsers.rst import directives, Directive
+-from docutils.utils.error_reporting import ErrorString
+ from sphinx.util.docutils import switch_source_input
+ 
++def ErrorString(exc):  # Shamelessly stolen from docutils                                                                             
++    return f'{exc.__class__.__name}: {exc}'                                                                                           
++
+ __version__  = '1.0'
+ 
+ def setup(app):

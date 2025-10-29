@@ -1,0 +1,25 @@
+From 957bc9b80ae940cc56885a41ced58aba7f27ac68 Mon Sep 17 00:00:00 2001
+From: Coelacanthus <uwu@coelacanthus.name>
+Date: Sun, 26 Oct 2025 00:28:10 +0800
+Subject: [PATCH] feat: add libots be built as dynamic library
+
+Signed-off-by: Coelacanthus <uwu@coelacanthus.name>
+---
+ meson.build | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/meson.build b/meson.build
+index 89348ec..8a627fb 100644
+--- a/meson.build
++++ b/meson.build
+@@ -166,6 +166,7 @@ libots = library('ots',
+   include_directories: include_directories('include'),
+   cpp_args : '-DHAVE_CONFIG_H',
+   dependencies: ots_deps,
++  install: true,
+ )
+ 
+ 
+-- 
+2.51.1
+

@@ -40,7 +40,8 @@ pkgver() {
 }
 
 build() {
-  cmake -B build -S ksysguard6
+  cmake -B build -S ksysguard6 \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib
   cmake --build build
 }
 

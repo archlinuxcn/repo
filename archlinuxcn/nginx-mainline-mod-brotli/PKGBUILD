@@ -3,7 +3,7 @@
 pkgname=nginx-mainline-mod-brotli
 epoch=1
 pkgver=1.0.0rc
-pkgrel=10
+pkgrel=12
 
 _modname="ngx_${pkgname#nginx-mainline-mod-}"
 
@@ -34,7 +34,7 @@ build() {
 }
 
 package() {
-	local nginxVer=$(pacman -Q nginx-mainline | awk '{print $NF}' | sed 's/-.*//')
+	local nginxVer=$(pacman -Q nginx-mainline-src | awk '{print $NF}' | sed 's/-.*//')
 	depends+=("nginx-mainline=${nginxVer}")
 	install -Dm644 "$srcdir"/$_modname-$pkgver/LICENSE \
 		"$pkgdir"/usr/share/licenses/$pkgname/LICENSE

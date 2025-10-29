@@ -1,6 +1,6 @@
 pkgname=julia-git-pdmats-src
-pkgver=0.11.35
-_commit=b4c2257b6331d6ba53a85fa6a0eed588bb7c1435
+pkgver=0.11.36
+_commit=dc25bc6818860dc6a16cb62cae084aeb35ec498a
 pkgrel=1
 pkgdesc="PDMats.jl"
 url="https://github.com/JuliaStats/PDMats.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStats/PDMats.jl.git#commit=$_commit")
-sha256sums=('b0c695a411f43ad2fc4f65df74b21b075d1674aa5a9d333a860cf79c27dc5fea')
+sha256sums=('c79c01cb33be822e0332f26d986953f6683d33978c8cdc0a1a8ae7c4f38df289')
 
 package() {
   cd PDMats.jl

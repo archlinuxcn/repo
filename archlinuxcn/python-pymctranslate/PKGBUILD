@@ -2,8 +2,8 @@
 
 _name=PyMCTranslate
 pkgname=python-${_name,,}
-pkgver=1.2.30
-pkgrel=1
+pkgver=1.2.36
+pkgrel=4
 pkgdesc='A library of block mappings that can be used to convert from any Minecraft format into any other Minecraft format'
 arch=('any')
 url="https://github.com/gentlegiantJGC/$_name"
@@ -11,7 +11,7 @@ license=('LicenseRef-Amulet-Team-1.0.0')
 depends=('python' 'python-amulet-nbt' 'python-numpy')
 makedepends=('git' 'python-build' 'python-installer' 'python-setuptools' 'python-versioneer' 'python-wheel')
 source=("git+$url.git#tag=${pkgver}")
-sha256sums=('f7e831c1b2300a46f296c1f75b88bfabce19f741da4ef993d7ce058415972ae4')
+sha256sums=('969bc486c709a42349248e4c52cae34857bc3f056b7b883345e1ea58b58f20fa')
 
 prepare() {
   cd "$_name"

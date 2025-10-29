@@ -1,0 +1,27 @@
+From 9f7c6d01fa563683b6d0ba8ff68a9b362498ae72 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 24 Oct 2025 16:52:19 -0400
+Subject: [PATCH 2/2] Fix loading on julia master
+
+The parsing for this was somehow changed to an anonymous function with `..` as the argument name, which was not something that one can attach a doc to so it causes an error.
+
+Simply using the binding as the target to document.
+This works on at least 1.7.
+---
+ lib/BloqadeWaveforms/src/waveform.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/BloqadeWaveforms/src/waveform.jl b/lib/BloqadeWaveforms/src/waveform.jl
+index 0f13c6ec..e0f32870 100644
+--- a/lib/BloqadeWaveforms/src/waveform.jl
++++ b/lib/BloqadeWaveforms/src/waveform.jl
+@@ -655,4 +655,4 @@ julia> wf[0.9..1.5]
+ ```
+ 
+ """
+-function (..) end
+\ No newline at end of file
++..
+-- 
+2.51.0
+

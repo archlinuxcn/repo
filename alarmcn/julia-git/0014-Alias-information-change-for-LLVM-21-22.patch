@@ -1,0 +1,65 @@
+From 4750692c4d4a92da18fb36bcea08dbbcfae1aa3a Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 27 Oct 2025 15:42:47 -0400
+Subject: [PATCH 14/18] Alias information change for LLVM 21/22
+
+---
+ src/cgutils.cpp | 10 ++++++++++
+ src/codegen.cpp |  9 +++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/src/cgutils.cpp b/src/cgutils.cpp
+index e6e101b353..e9cd182757 100644
+--- a/src/cgutils.cpp
++++ b/src/cgutils.cpp
+@@ -1009,8 +1009,13 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+     // above problem won't be as serious.
+ 
+     auto merged_ai = dst_ai.merge(src_ai);
++#if JL_LLVM_VERSION < 210000
+     ctx.builder.CreateMemCpy(dst, align_dst, src, align_src, sz, is_volatile,
+                              merged_ai.tbaa, merged_ai.tbaa_struct, merged_ai.scope, merged_ai.noalias);
++#else
++    ctx.builder.CreateMemCpy(dst, align_dst, src, align_src, sz, is_volatile,
++                             merged_ai.toAAMDNodes());
++#endif
+ }
+ 
+ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const &dst_ai, Value *src,
+@@ -1023,8 +1028,13 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
+     ++EmittedMemcpys;
+ 
+     auto merged_ai = dst_ai.merge(src_ai);
++#if JL_LLVM_VERSION < 210000
+     ctx.builder.CreateMemCpy(dst, align_dst, src, align_src, sz, is_volatile,
+                              merged_ai.tbaa, merged_ai.tbaa_struct, merged_ai.scope, merged_ai.noalias);
++#else
++    ctx.builder.CreateMemCpy(dst, align_dst, src, align_src, sz, is_volatile,
++                             merged_ai.toAAMDNodes());
++#endif
+ }
+ 
+ template<typename T1>
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 99bdc6a9af..7ab7b976a2 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -1702,6 +1702,15 @@ struct jl_aliasinfo_t {
+     // memory region non-aliasing. It should be deleted once the TBAA metadata
+     // is improved to encode only memory layout and *not* memory regions.
+     static jl_aliasinfo_t fromTBAA(jl_codectx_t &ctx, MDNode *tbaa);
++
++    AAMDNodes toAAMDNodes() const
++    {
++#if JL_LLVM_VERSION < 220000
++        return AAMDNodes(tbaa, tbaa_struct, scope, noalias);
++#else
++        return AAMDNodes(tbaa, tbaa_struct, scope, noalias, nullptr);
++#endif
++    }
+ };
+ 
+ // metadata tracking for a llvm Value* during codegen
+-- 
+2.51.2
+

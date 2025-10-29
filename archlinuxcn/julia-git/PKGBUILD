@@ -32,7 +32,7 @@ case "$CARCH" in
 esac
 
 epoch=1
-pkgver=1.13.0.DEV.1371.g7dfa7d1b0d3
+pkgver=1.14.0.DEV.9.ge55ab3c99ac
 pkgrel=1
 pkgdesc="Julia is a high-level, high-performance, dynamic programming language."
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -71,33 +71,49 @@ _patches=(
   0006-Disable-UCX-signal-handler.patch
   0007-julia-git-Better-support-for-loading-packages-from-s.patch
   0008-Reduce-likelyhood-of-symbol-conflict.patch
-  0009-Fix-some-compiler-error-on-LLVM-21.patch
-  0010-Disable-custom-ehframe-registrar-on-llvm21-for-now.patch
+  0009-Revert-Docs-Make-doc-macro-return-the-value-of-docum.patch
+  0010-Avoid-an-unnecessary-std-function-allocation-in-code.patch
+  0011-Use-triple-without-roundtrip-through-string-on-LLVM-.patch
+  0012-Use-CaptureInfo-for-NoCapture-on-LLVM-21.patch
+  0013-Removed-IsNewDbgInfoFormat-field.patch
+  0014-Alias-information-change-for-LLVM-21-22.patch
+  0015-Assorted-return-value-argument-type-include-change-f.patch
+  0016-Fix-custom-EHFrame-registration-on-llvm21.patch
+  0017-Fix-to-use-new-ThreadSafeContext-API.patch
+  0018-Fix-ArrayRef-std-nullopt_t-deprecation.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
         julia-preinstall.hook
         julia-postinstall.hook
         arch-source-translate.cpp
-        sysp7z.diff
-        disable-upgrade.diff
+        0001-Disable-upgrade-of-stdlib-package.diff
+        0002-Hard-code-7z-and-zstd-path.diff
         download_curl.diff)
 sha512sums=('SKIP'
-            '0231ea98703d6c2d6295c03c24b9664fb694de2d92957943f754ce5c211758a9336ca44ee697613089bb70f3b710f9676b2a3f3e14fc2738a2f77057683aa35e'
-            'd40ef023013d1fa981b1fc07cc7420e0405e3fb6f5b26a107f1420bf9337130bedb212d42f34772d60a64ac008fa6cfaa6c4fd908d49ef3bc2558e1665f7dadc'
-            'aade6a5511271437d285fced12de276d806dd6f75b0b89a592377dbfd6867675fd630e2db6a9492b15d8c54747a7dc60344fc7b6cc5f212f9d1787ae17061e15'
-            '41dac9586ff5b5976da1ea04ca2e3a1ca953e4ce24f468af9db5cc368b89d6ccfa83786bf81acfd450b6eed83d7efcfb040eb30a9515cd1ea2b4426b869ab859'
-            '09db2305c1a0200c3f3d415dd48e76ad16864e33e7089dcb9d790d7a2a22090c8805f66318fed0927f0814b7e573335913c6edcc68fca808397ba51fcb6d28bf'
-            '257c16587f810052f0c0609579988e5b26d4b30fcc5e5c19c92ea4f5c5d1c4c11280be828996e376167429f216e720a88f3781da9f437cd50590a38a14acb1cb'
-            'd80d327f8351ec3b65ae47f54913e1cf86ade8c109ef65214a382468091975ffc8bc2defd2236ae549a6d1c4adac26a3cf6b119b2dd24e489189f98903c79886'
-            '89d7da9a98a19e877bc2b717a96b4e59d07fd54e1eba840d5d1855c3b22d29e00d8e8045161c36c109aee41bc8e548108de79e96586c82edea4abf533db688eb'
-            '3755b63654b31597afb6d0dee4ede0f1423b9d82037a57444cd01e20c3873591e71413e1ae3528b2e451072f52106da4ee0927fb1b20cef423ac3aeb4e9f5a52'
-            '027d4be4da6e6177e16eeeca7838a3b67710a2345dae0c5effbae050e87107aed688739ca8bd91dca1612d50ee8f5300aa613a85e996cd30ee9e8c7ef88a3914'
+            '4a8a3f18b563291da01810f9b4024a30bd1b99bcde23f6c252309decb539564cf83436143484de79001e51ddb2a02b8ae3a7d73cba9ff1216eb0ab3f9f776326'
+            'ccd1ac0918c0e7bb3ad64d3a0dd2929194a8dd11b7c293cd8fa378e5a6b701d1f29926facbbfcaddf9cb7993e3db0a64f27c0db246be0dbc3f4b7d242f5c849c'
+            '18ca20621dc05150d1b9c8968913d4538a85e642deb0ce46bd797691166036313aa8f18acd9b011694bfcf5f4f0b382224348d34f57d1ac74b698b0746ab9f0d'
+            'f4f99a0904d5e5e0638371ddf9c13c641e981458c37bbcb5b1891d3b8b22df27abab30cf671d87518cda1ba8ad15fcd2dfb04dcef6080527a58fdcdb176f0d24'
+            '16a36590176bda969170f78f83f19ee906171c145a5145e49b4c595c7679de2fa7bf2a9f6800a82bbdc29b66482c10eb12af0354ce43656bc3d387b783352c24'
+            'ecf76b08e76370f389915fe86ad99cbf8d120662a4dbcd0e37f301796a4b0d697cfafd9de6e199723f1aafa088bb65232caaf3f84b28d79602c8c1408dd0d87b'
+            '8c09959b50a3e9a7ac1e170615b94bf35afd43d8e97d96764aaa5fcb16fdb7c78e8d70e9f1cd2ec93def71ac0b1191febd23b0a92fd1047fd887d7a1cb30e11d'
+            '6dfe8d48bc93830ae2d25434942727543fca7c77467531ed31061ab36f5ff5509eab1c0c481af2061c11afb5d6666376ae6bd558372467378ba567fbf688dfff'
+            '27afa566896c38bc0876ebde6e6e9ab261d4b3756bdf529d63956052918c4dce7c54ce043c707519ac1bd766d495f2f617656f61900a1d0b04744e2356b41537'
+            '4f4d709a0db781b78c89d7ae45d24527571c9964705c11e9536ba8f8d7c478350a9b65a4527d6bc80544db45cc5215da793c67149b401891afcbbdb439a308c2'
+            'bb9ee56f8e4101db737be40ee92a615b2153af4c7217e573fd19b96487d1f21186520fd176e5855aba4cedf32d5e4088d965f5cac385b7aefe9cb59475d2a81c'
+            '854fa9dc4b7d7e78d8df22f471ce5ae8535a2f63450373b981218ddaddcca64147a3fe39adc5773b4e5f7cab1a7419840ad941bf6cb29ea4351f46909e4751e8'
+            '348a6212072e108587feaf75146ed575336a7ff9066896434328cf77ae31708fad147065b5dcb4ce53a98c9746322aa6377fe7412a914f5c985bbca84f7660f6'
+            '6f6d4dbf6b699bd2a747a0656acfaa7f9aeec84c73e39aa033961e488568695e822cec4ed1f0908948cff5aa82ef64470ca5bc2378fad21696b438d24cd260b6'
+            '10c8d3f153061ee72685089a474ff141d161d564e3f5c38c8c234270f76bc761d2f9f91a8d24cb87c8e2f63c920ab6ba2abf00956a92162825008cfb04ca95a1'
+            '74e12fc64db62decb4408924c73d0cf783ddfd1bff00a3a326c35190e1915bf9a1f91bb8b463e9703c229a70aec6ea2e2761b88fc4ffc4c433b4072c34ee50d1'
+            'd2b4407b624c6eba4152cca665d6e92259458935deee98caae592e1773b4f29483df92543180bc1f709cb8a0d9b670f2832486a5445f31b74e012ed8aefcd30f'
+            'c8d68e340196900d170cfa552deb89aee0f3b4154945cffa72a3783ffa1be4cf89cb3e62d23376b7c08022fa3cbbe3ed600882a06bee39aaf8bbd76eeec2b810'
             '997f22456f175c6cc03b2dd407b7584df514bc4c91602ef011b93d8b558f7c587b4e216535e573f6063f3a606f88c48dee3041a5122a7dbf0bee6d1bc8df15b4'
             'a668a9bd01cec8f53f457d9124107a230260c79fd57cbce4c4bf80e3451758d8e67263faa3f9d8b3da0c10bffbe29e4032106881ebe682c7f66414d8989638be'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
-            '79012833348654947f6b045e2ab5aa0a155aadbc1fd9e034c04456ce13acccdbbd2d3e6389daa2e4644c979b1f7ccea41afb0d54c1719b1b681f68fcb6006849'
-            'cd5ce157624156d7fce015dc7955d3ba8c8efa4c10dbf2cb7ab532428d00e17d0a5be2c2963e2f8dd4c63471ac2ff895f207ecc0db17557fb0eb8b7d883891ec'
+            '99b91e921e730016e758dba10fb80436c0bb595789c941536d4533fd053caeff1100c06d1813cd0326790c85a988f1c6e282bb185eba7991b0485d529d35ba2c'
+            '6184ec0c916cf51a478760dba85d3a140077ec073a49aac1b95d9fd3f46b4ecefad44725729adfc4af576e6940f65ee8205bce153db1e9fe8fb432c6316f90c5'
             '5be40dcb72428885c06c8353019bd8fac0ea186a7536cf2bab2554d2724fb3d4a5b0b3f61727428e5cf7906f14a213f08dcb238b5bd10d408d86669e2c93ca78')
 
 _versioned_llvm=
@@ -265,8 +281,9 @@ EOF
   make "${julia_opts[@]}" julia-stdlib
   (
     cd usr/share/julia/stdlib/v*/Pkg
-    patch -Np0 --no-backup-if-mismatch < "$srcdir/sysp7z.diff"
-    patch -Np1 --no-backup-if-mismatch < "$srcdir/disable-upgrade.diff"
+
+    patch -Np1 --no-backup-if-mismatch < "$srcdir/0001-Disable-upgrade-of-stdlib-package.diff"
+    patch -Np1 --no-backup-if-mismatch < "$srcdir/0002-Hard-code-7z-and-zstd-path.diff"
   )
   (
     cd usr/share/julia/stdlib/v*/Downloads
@@ -335,14 +352,17 @@ build_in() {
   # so I'm just going to create this missing symlink
   ln -sf /usr/lib/libgcc_s.so.1 usr/lib/julia/
   ln -sf /usr/lib/libstdc++.so.6 usr/lib/
-  if [[ "$CARCH" = x86_64 ]]; then
-    # Currently only the x86 build machine
-    # has enough memory to compile release and debug build in parallel...
-    make "${opts[@]}" release debug
-  else
-    make "${opts[@]}" release
-    make "${opts[@]}" debug
-  fi
+  # if [[ "$CARCH" = x86_64 ]]; then
+
+  # Currently only the x86 build machine
+  # has enough memory to compile release and debug build in parallel...
+  make "${opts[@]}" release debug
+
+  # else
+  #   make "${opts[@]}" release
+  #   make "${opts[@]}" debug
+  # fi
+
   # TODO docless build
   JL_MAKEPKG_SRCDIR= _with_git_url_override make "${opts[@]}" docs
 

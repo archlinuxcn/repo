@@ -2,46 +2,24 @@
 # Contributor: tippfehlr <tippfehlr@tippfehlr.eu>
 # Contributor: Chewing_Bever
 pkgname=fish-lsp
-pkgver=1.0.10
-_pkgver=${pkgver//_/-}
-pkgrel=1
-pkgdesc="LSP implementation for the fish shell language"
-# tree-sitter contains compiled files
-arch=('x86_64')
+pkgver=1.1.0
+pkgrel=3
+pkgdesc="LSP implementation for the fish shell language 🐠"
+arch=('x86_64') # tree-sitter contains compiled files
 url="https://github.com/ndonfris/fish-lsp"
 license=('MIT')
-depends=('fish' 'nodejs' 'python')
-makedepends=('git' 'yarn') # 'typescript' tsc doesn’t work
-provides=($pkgname)
+depends=('nodejs')
+optdepends=('fish: fish shell')
 conflicts=(${pkgname}-git)
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('3db7ace2173a2c1d3622808aae518e23e4ccee99cf4cf9722a11ae9c760cfcfa')
-
-prepare() {
-    cd "${pkgname}-${_pkgver}"
-    yarn --frozen-lockfile --ignore-scripts
-}
-
-build() {
-    cd "${pkgname}-${_pkgver}"
-    ./node_modules/.bin/tsc
-    ./bin/fish-lsp complete >./fish-lsp.fish
-}
+source=("${pkgname}-${pkgver}::${url}/releases/download/v${pkgver}/fish-lsp.standalone"
+        "${pkgname}-${pkgver}-LICENSE.md"::"https://raw.githubusercontent.com/ndonfris/fish-lsp/refs/tags/v${pkgver}/LICENSE.md"
+        "${pkgname}-${pkgver}-fish-lsp.1"::"https://raw.githubusercontent.com/ndonfris/fish-lsp/refs/tags/v${pkgver}/man/fish-lsp.1")
+sha256sums=('67d37033789ef15dae88e5fed5ca883ec2b0007a6e0b899234055a938c454768'
+            '42d622608175e998ffcdbb53217a6356a578282782a553ef9a86f5192ffcd7c2'
+            '3248e45d62b13e6530209f185a08b975ae99bcaad9b9da8879ae8b7d7c7d1717')
 
 package() {
-    cd "${pkgname}-${_pkgver}"
-    mkdir -p "$pkgdir/usr/bin"
-    mkdir -p "$pkgdir/usr/lib/node_modules/fish-lsp"
-
-    rm -r node_modules/@types
-    cp -r node_modules out package.json fish_files "$pkgdir/usr/lib/node_modules/fish-lsp"
-    # nvim-lspconfig doesn’t work without this symlink
-    ln -s /usr/lib/node_modules/fish-lsp/node_modules/@esdmr/tree-sitter-fish/tree-sitter-fish.wasm \
-        "$pkgdir/usr/lib/node_modules/fish-lsp/"
-
-    printf "%s\n" "#!/usr/bin/env node" "require('/usr/lib/node_modules/fish-lsp/out/cli');" >"$pkgdir/usr/bin/fish-lsp"
-    chmod 755 "$pkgdir/usr/bin/fish-lsp"
-
-    install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    install -Dm644 "fish-lsp.fish" "$pkgdir/usr/share/fish/vendor_completions.d/fish-lsp.fish"
+    install -Dm755 ${pkgname}-${pkgver} "$pkgdir/usr/bin/fish-lsp"
+    install -Dm644 ${pkgname}-${pkgver}-LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 ${pkgname}-${pkgver}-fish-lsp.1 "$pkgdir/usr/share/man/man1/fish-lsp.1"
 }

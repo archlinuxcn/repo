@@ -3,8 +3,8 @@
 # Based on: ToKiNoBug's PKGBUILD
 _pkgname=slopecraft
 pkgname=${_pkgname}-portable
-pkgver=5.3.1
-pkgrel=3
+pkgver=5.3.2
+pkgrel=1
 pkgdesc="Map Pixel Art Generator for Minecraft. Sandboxed by Portable, w/ auto updates."
 arch=('armv7h' 'aarch64' 'x86_64')
 url="https://github.com/SlopeCraft/SlopeCraft"
@@ -16,7 +16,7 @@ optdepends=('opencl-nvidia: nvidia GPU boosting',
             'rocm-opencl-runtime: AMD GPU boosting',
             'opencl-clover-mesa: GPU boosting with mesa')
 source=(git+https://github.com/SlopeCraft/SlopeCraft.git#tag=v${pkgver})
-b2sums=('a5f3f0a34621503e0e4831d92f2228501513bc24b5d1bc2208d1b4445f2a323cceac8f5c4ec67268c304c8a92fb27f5681c15e7d7f578af8d170e4a40306eecb')
+b2sums=('9281483d7a121deca9e1d33576ae368125a4a372f4ed5d74cd6461ee98d1a114755a4c807122e21171a1d499645e2ab287f7977b529c4a9612abbdbd4e7603be')
 
 build() {
 	cmake -S SlopeCraft -B build \

@@ -1,0 +1,136 @@
+From a62bbb1e7bd7fa63b35517f1cfc5697c25286fb2 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 27 Oct 2025 15:39:05 -0400
+Subject: [PATCH 11/18] Use triple without roundtrip through string on LLVM 21
+
+---
+ src/aotcompile.cpp | 24 ++++++++++++++++++++++++
+ src/codegen.cpp    |  4 ++++
+ src/jitlayers.cpp  | 11 ++++++++++-
+ 3 files changed, 38 insertions(+), 1 deletion(-)
+
+diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
+index acfd0fedd8..9ff7fc2d3f 100644
+--- a/src/aotcompile.cpp
++++ b/src/aotcompile.cpp
+@@ -1529,7 +1529,11 @@ static AOTOutputs add_output_impl(Module &M, TargetMachine &SourceTM, ShardTimer
+     AOTOutputs out;
+     auto TM = std::unique_ptr<TargetMachine>(
+         SourceTM.getTarget().createTargetMachine(
++#if JL_LLVM_VERSION < 210000
+             SourceTM.getTargetTriple().str(),
++#else
++            SourceTM.getTargetTriple(),
++#endif
+             SourceTM.getTargetCPU(),
+             SourceTM.getTargetFeatureString(),
+             SourceTM.Options,
+@@ -1557,7 +1561,11 @@ static AOTOutputs add_output_impl(Module &M, TargetMachine &SourceTM, ShardTimer
+ 
+         auto PMTM = std::unique_ptr<TargetMachine>(
+             SourceTM.getTarget().createTargetMachine(
++#if JL_LLVM_VERSION < 210000
+                 SourceTM.getTargetTriple().str(),
++#else
++                SourceTM.getTargetTriple(),
++#endif
+                 SourceTM.getTargetCPU(),
+                 SourceTM.getTargetFeatureString(),
+                 SourceTM.Options,
+@@ -2109,7 +2117,11 @@ void jl_dump_native_impl(void *native_code,
+     }
+     std::unique_ptr<TargetMachine> SourceTM(
+         jl_ExecutionEngine->getTarget().createTargetMachine(
++#if JL_LLVM_VERSION < 210000
+             TheTriple.getTriple(),
++#else
++            TheTriple,
++#endif
+             jl_ExecutionEngine->getTargetCPU(),
+             jl_ExecutionEngine->getTargetFeatureString(),
+             jl_ExecutionEngine->getTargetOptions(),
+@@ -2142,7 +2154,11 @@ void jl_dump_native_impl(void *native_code,
+         LLVMContext Context;
+         Context.setDiscardValueNames(true);
+         Module sysimgM("sysimg", Context);
++#if JL_LLVM_VERSION < 210000
+         sysimgM.setTargetTriple(TheTriple.str());
++#else
++        sysimgM.setTargetTriple(TheTriple);
++#endif
+         sysimgM.setDataLayout(DL);
+         sysimgM.setStackProtectorGuard(StackProtectorGuard);
+         sysimgM.setOverrideStackAlignment(OverrideStackAlignment);
+@@ -2210,7 +2226,11 @@ void jl_dump_native_impl(void *native_code,
+ 
+     data->M.withModuleDo([&](Module &dataM) {
+         JL_TIMING(NATIVE_AOT, NATIVE_Setup);
++#if JL_LLVM_VERSION < 210000
+         dataM.setTargetTriple(TheTriple.str());
++#else
++        dataM.setTargetTriple(TheTriple);
++#endif
+         dataM.setDataLayout(DL);
+         dataM.setPICLevel(PICLevel::BigPIC);
+         auto &Context = dataM.getContext();
+@@ -2311,7 +2331,11 @@ void jl_dump_native_impl(void *native_code,
+         LLVMContext Context;
+         Context.setDiscardValueNames(true);
+         Module metadataM("metadata", Context);
++#if JL_LLVM_VERSION < 210000
+         metadataM.setTargetTriple(TheTriple.str());
++#else
++        metadataM.setTargetTriple(TheTriple);
++#endif
+         metadataM.setDataLayout(DL);
+         metadataM.setStackProtectorGuard(StackProtectorGuard);
+         metadataM.setOverrideStackAlignment(OverrideStackAlignment);
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 97c563ba20..7ca0f4d2d3 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -2681,7 +2681,11 @@ std::unique_ptr<Module> jl_create_llvm_module(StringRef name, LLVMContext &conte
+         m->addModuleFlag(llvm::Module::Warning, "Debug Info Version",
+             llvm::DEBUG_METADATA_VERSION);
+     m->setDataLayout(DL);
++#if JL_LLVM_VERSION < 210000
+     m->setTargetTriple(triple.str());
++#else
++    m->setTargetTriple(triple);
++#endif
+ 
+     if (triple.isOSWindows() && triple.getArch() == Triple::x86) {
+         // tell Win32 to assume the stack is always 16-byte aligned,
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index eae2663649..900793d663 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -1401,7 +1401,12 @@ namespace {
+         }
+         auto optlevel = CodeGenOptLevelFor(jl_options.opt_level);
+         auto TM = TheTarget->createTargetMachine(
+-                TheTriple.getTriple(), TheCPU, FeaturesStr,
++#if JL_LLVM_VERSION < 210000
++                TheTriple.getTriple(),
++#else
++                TheTriple,
++#endif
++                TheCPU, FeaturesStr,
+                 options,
+                 relocmodel,
+                 codemodel,
+@@ -2387,7 +2392,11 @@ std::unique_ptr<TargetMachine> JuliaOJIT::cloneTargetMachine() const
+ {
+     auto NewTM = std::unique_ptr<TargetMachine>(getTarget()
+         .createTargetMachine(
++#if JL_LLVM_VERSION < 210000
+             getTargetTriple().str(),
++#else
++            getTargetTriple(),
++#endif
+             getTargetCPU(),
+             getTargetFeatureString(),
+             getTargetOptions(),
+-- 
+2.51.2
+

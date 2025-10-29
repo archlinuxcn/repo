@@ -1,6 +1,6 @@
 pkgname=julia-git-ffmpeg-src
-pkgver=0.4.4
-_commit=68ff4877f43b752a03d57a5f5aa8ecfc494b6aaa
+pkgver=0.4.5
+_commit=ef57f7dab01dcf7cebee1126b2b433aafc03eade
 pkgrel=1
 pkgdesc="FFMPEG.jl"
 url="https://github.com/JuliaIO/FFMPEG.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/FFMPEG.jl.git#commit=$_commit")
-sha256sums=('5b5e8b2df18cec76fb05bfbc3aeb54021b35d2357d412d3aab017759cf290d13')
+sha256sums=('a6821cc3e4f6497d58bedc02ed414f83aa2de7d6bb6523d648e62f93592c8f33')
 
 package() {
   cd FFMPEG.jl

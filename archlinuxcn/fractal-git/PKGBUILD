@@ -1,0 +1,81 @@
+# Maintainer: Bruno Pagani <archange@archlinux.org>
+
+pkgname=fractal-git
+pkgver=13.rc.r12.g65d041b3
+pkgrel=1
+pkgdesc="Matrix group messaging app"
+arch=(x86_64)
+url="https://gitlab.gnome.org/World/fractal"
+license=(GPL-3.0-only)
+depends=(
+  dconf
+  fontconfig
+  gcc-libs
+  gdk-pixbuf2
+  glib2
+  glibc
+  glycin1  # dlopen'ed
+  graphene
+  gst-plugins-bad-libs
+  gst-plugins-base-libs
+  gst-plugin-gtk4
+  gstreamer
+  gtk4
+  gtksourceview5
+  hicolor-icon-theme
+  lcms2
+  libadwaita
+  libpipewire
+  libseccomp
+  libshumate
+  openssl
+  org.freedesktop.secrets
+  pango
+  sqlite
+)
+makedepends=(
+	clang
+	blueprint-compiler
+	cmake
+	dart-sass
+	libwebp
+	meson
+	rust
+	cargo
+	xdg-desktop-portal
+	git
+)
+source=(
+	"source::git+$url.git"
+)
+provides=(fractal)
+conflicts=(fractal)
+sha512sums=('SKIP')
+
+pkgver() {
+	cd source
+	git describe --long | sed -E 's/^v//g;s/([^-]*-g)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd source
+	git reset --hard
+	git clean -f
+	export CARGO_HOME="$(pwd)/build/cargo-home"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+	CFLAGS+=' -ffat-lto-objects'
+	arch-meson source build
+	meson compile -C build
+}
+
+check() {
+	meson test -C build --print-errorlogs
+}
+
+package() {
+	meson install -C build --destdir "$pkgdir" --no-rebuild
+}

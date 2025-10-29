@@ -1,9 +1,9 @@
 # Maintainer: Kimiblock Moe
 pkgname=zen-browser-portable
-_firefox_version=143.0.1
-pkgver=1.16.4b
+_firefox_version=144.0.2
+pkgver=1.17.3b
 _zen_version=${pkgver//_/-}
-pkgrel=1
+pkgrel=2
 pkgdesc="Experience tranquillity while browsing the web without people tracking you, sandboxed by portable"
 arch=('x86_64')
 url="https://github.com/Kraftland/portable"
@@ -38,6 +38,7 @@ makedepends+=(
 depends=(
 	ffmpeg4.4
 	onnxruntime
+	libnotify
 # Original
   alsa-lib
   at-spi2-core
@@ -104,23 +105,6 @@ source=(
 
 noextract=("firefox-${_firefox_version}.source.tar.xz")
 
-# _languages=(zh-CN zh-TW ja)
-
-# for _lang in "${_languages[@]}"; do
-#   _pkgname=$pkgbase-i18n-${_lang,,}
-#   pkgname+=("$_pkgname")
-
-#   eval "package_$_pkgname() {
-#   arch=(any)
-#   depends=('$pkgbase>=$pkgver')
-#   optdepends=()
-#   pkgdesc='Language pack for Zen Browser ($_lang)'
-
-#   _package_i18n '$_lang'
-# }"
-
-# done
-
 # Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
 # Note: These are for Arch Linux use ONLY. For your own distribution, please
 # get your own set of keys. Feel free to contact foutrelis@archlinux.org for
@@ -143,7 +127,7 @@ prepare() {
   git submodule init
   git config submodule.l10n.url "$srcdir/firefox-l10n"
   #mkdir -p -v "$srcdir/l10n"
-  git submodule update --init --recursive
+  git -c protocol.file.allow=always submodule update --init --recursive
   #git -c protocol.file.allow=always submodule update
 
   # Apply patches

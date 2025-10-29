@@ -1,15 +1,15 @@
-From c72a1ba46ec85de784ccf3facd6f857c7ae0b79c Mon Sep 17 00:00:00 2001
+From 7f7b890cc786e3b33d2ac4c8c247b2770dfd13dc Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 09:43:36 -0400
-Subject: [PATCH] Support LLVM 21 in LLVMExtra
+Subject: [PATCH 1/2] Support LLVM 21 in LLVMExtra
 
 ---
- deps/LLVMExtra/include/LLVMExtra.h | 2 ++
- deps/LLVMExtra/lib/Core.cpp        | 2 ++
- 2 files changed, 4 insertions(+)
+ deps/LLVMExtra/include/LLVMExtra.h |  6 ++++++
+ deps/LLVMExtra/lib/Core.cpp        | 17 +++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
 diff --git a/deps/LLVMExtra/include/LLVMExtra.h b/deps/LLVMExtra/include/LLVMExtra.h
-index 0773ca49..5a0510b7 100644
+index 0773ca49..bcc40bfb 100644
 --- a/deps/LLVMExtra/include/LLVMExtra.h
 +++ b/deps/LLVMExtra/include/LLVMExtra.h
 @@ -162,8 +162,10 @@ void LLVMReplaceMDNodeOperandWith(LLVMValueRef V, unsigned Index,
@@ -23,8 +23,18 @@ index 0773ca49..5a0510b7 100644
  
  // Missing opaque pointer APIs
  #if LLVM_VERSION_MAJOR < 17
+@@ -258,5 +260,9 @@ LLVMErrorRef LLVMRunJuliaPassesOnFunction(LLVMValueRef F, const char *Passes,
+ // More DataLayout queries
+ unsigned LLVMGlobalsAddressSpace(LLVMTargetDataRef TD);
+ 
++#if LLVM_VERSION_MAJOR >= 21
++LLVMContextRef LLVMOrcThreadSafeContextGetContext(LLVMOrcThreadSafeContextRef TSCtx);
++#endif
++
+ LLVM_C_EXTERN_C_END
+ #endif
 diff --git a/deps/LLVMExtra/lib/Core.cpp b/deps/LLVMExtra/lib/Core.cpp
-index 1d2311b7..778be33c 100644
+index 1d2311b7..d583052c 100644
 --- a/deps/LLVMExtra/lib/Core.cpp
 +++ b/deps/LLVMExtra/lib/Core.cpp
 @@ -569,12 +569,14 @@ void LLVMReplaceMDNodeOperandWith(LLVMValueRef V, unsigned Index,
@@ -42,6 +52,25 @@ index 1d2311b7..778be33c 100644
  
  
  //
+@@ -807,3 +809,18 @@ LLVMContextRef LLVMGetBuilderContext(LLVMBuilderRef Builder) {
+ unsigned LLVMGlobalsAddressSpace(LLVMTargetDataRef TD) {
+   return unwrap(TD)->getDefaultGlobalsAddressSpace();
+ }
++
++#if LLVM_VERSION_MAJOR >= 21
++
++DEFINE_SIMPLE_CONVERSION_FUNCTIONS(orc::ThreadSafeContext, LLVMOrcThreadSafeContextRef)
++
++//
++// Removed from LLVM and unsafe but it's only used to provide an unsafe API
++// on the julia side anyway
++//
++
++LLVMContextRef LLVMOrcThreadSafeContextGetContext(LLVMOrcThreadSafeContextRef TSCtx) {
++  return wrap(unwrap(TSCtx)->withContextDo([] (LLVMContext *ctx) { return ctx; }));
++}
++
++#endif
 -- 
-2.51.0
+2.51.2
 
