@@ -1,7 +1,7 @@
 pkgname=julia-git-unsafeatomics-src
-pkgver=0.2.1
-_commit=92f2cb802ee15f74b0923a86001e8d5d2961ed6a
-pkgrel=2
+pkgver=0.3.0
+_commit=0437ba79489eaba02fb8a8fdd92f5f79312b779e
+pkgrel=1
 pkgdesc="UnsafeAtomics.jl"
 url="https://github.com/JuliaConcurrent/UnsafeAtomics.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaConcurrent/UnsafeAtomics.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('dd68339fe5776430ac1fe33297e6707db0e11a324411cdf53ccc86cf41ef147f')
 
 package() {
   cd UnsafeAtomics.jl
