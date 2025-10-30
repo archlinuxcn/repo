@@ -1,7 +1,7 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=tbox
-pkgver=1.7.7
+pkgver=1.7.8
 pkgrel=1
 pkgdesc="A glib-like multi-platform C library"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ license=('Apache-2.0')
 depends=('glibc')
 provides=('libtbox.so')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('ae387dcf1952aca572516bdce4a47d04e9b411f5bf7add281247af7c874f3c3f')
+sha256sums=('eda4ea0fe53b55594a0c4842fcf1f3510fec5b183936142873c47455fdaefa4a')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
