@@ -1,7 +1,7 @@
-From c777865d9d79667d5ca9b9d34af1b3efb399b4a2 Mon Sep 17 00:00:00 2001
+From d2c737395a1de05dd407e44f59c914fb6281137c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 13:14:54 -0400
-Subject: [PATCH 2/2] Generate wrappers for LLVM 21
+Subject: [PATCH 2/5] Generate wrappers for LLVM 21
 
 Remove dummy function from LLVMExtra.h since it does not seem to be necessary for Clang 18+ anymore
 ---
@@ -20,14 +20,14 @@ Remove dummy function from LLVMExtra.h since it does not seem to be necessary fo
  lib/20/libLLVM_extra.jl            |     2 +-
  lib/21/libLLVM.jl                  | 13638 +++++++++++++++++++++++++++
  lib/21/libLLVM_extra.jl            |   253 +
- res/wrap.jl                        |     2 +-
+ res/wrap.jl                        |    27 +-
  src/LLVM.jl                        |     6 +-
- 17 files changed, 13996 insertions(+), 49 deletions(-)
+ 17 files changed, 14021 insertions(+), 49 deletions(-)
  create mode 100644 lib/21/libLLVM.jl
  create mode 100644 lib/21/libLLVM_extra.jl
 
 diff --git a/deps/LLVMExtra/include/LLVMExtra.h b/deps/LLVMExtra/include/LLVMExtra.h
-index bcc40bfb..0931375e 100644
+index 46734587..1933bd72 100644
 --- a/deps/LLVMExtra/include/LLVMExtra.h
 +++ b/deps/LLVMExtra/include/LLVMExtra.h
 @@ -11,10 +11,6 @@
@@ -485,7 +485,7 @@ index 50c4c4f6..a16b6dfa 100644
      ccall((:LLVMExtraInitializeNativeTarget, libLLVMExtra), LLVMBool, ())
 diff --git a/lib/21/libLLVM.jl b/lib/21/libLLVM.jl
 new file mode 100644
-index 00000000..d0756149
+index 00000000..c0689e88
 --- /dev/null
 +++ b/lib/21/libLLVM.jl
 @@ -0,0 +1,13638 @@
@@ -4213,7 +4213,7 @@ index 00000000..d0756149
 +llvm::ConstantDataArray::getRaw()
 +"""
 +function LLVMConstDataArray(ElementTy, Data, SizeInBytes)
-+    ccall((:LLVMConstDataArray, libllvm), LLVMValueRef, (LLVMTypeRef, Cstring, Csize_t), ElementTy, Data, SizeInBytes)
++    ccall((:LLVMConstDataArray, libllvm), LLVMValueRef, (LLVMTypeRef, Ptr{Cvoid}, Csize_t), ElementTy, Data, SizeInBytes)
 +end
 +
 +"""
@@ -14387,7 +14387,7 @@ index 00000000..1af12933
 +end
 +
 diff --git a/res/wrap.jl b/res/wrap.jl
-index fce3eaae..5360a911 100644
+index fce3eaae..89fb4201 100644
 --- a/res/wrap.jl
 +++ b/res/wrap.jl
 @@ -8,7 +8,7 @@ import Clang
@@ -14399,6 +14399,45 @@ index fce3eaae..5360a911 100644
  const llvm_configs = Dict()
  
  function main()
+@@ -41,6 +41,29 @@ function main()
+     end
+ end
+ 
++# custom rewriter
++function rewrite!(e::Expr)
++    Meta.isexpr(e, :function) || return e
++    fname = e.args[1].args[1]
++    if fname == :LLVMConstDataArray
++        # The data argument for LLVMConstDataArray accepts a memory buffer not a c-string
++        ccall_ex = e.args[2].args[1]
++        @assert Meta.isexpr(ccall_ex, :call) && ccall_ex.args[1] == :ccall
++        types_arg = ccall_ex.args[4]
++        @assert Meta.isexpr(types_arg, :tuple) && types_arg.args[2] == :Cstring
++        types_arg.args[2] = :(Ptr{Cvoid})
++    end
++    return e
++end
++
++function rewrite!(dag::ExprDAG)
++    for node in get_nodes(dag)
++        for expr in get_exprs(node)
++            rewrite!(expr)
++        end
++    end
++end
++
+ function wrap(version; includedir, cppflags)
+ 
+     args = get_default_args("x86_64-linux-gnu")
+@@ -60,6 +83,8 @@ function wrap(version; includedir, cppflags)
+ 
+         build!(ctx, BUILDSTAGE_NO_PRINTING)
+ 
++        rewrite!(ctx.dag)
++
+         build!(ctx, BUILDSTAGE_PRINTING_ONLY)
+     end
+ 
 diff --git a/src/LLVM.jl b/src/LLVM.jl
 index 5d59ba7e..a5069bdd 100644
 --- a/src/LLVM.jl

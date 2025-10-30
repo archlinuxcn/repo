@@ -1,15 +1,17 @@
-From 7f7b890cc786e3b33d2ac4c8c247b2770dfd13dc Mon Sep 17 00:00:00 2001
+From a6b78adb788ee6a04bf11d28997e491ea5ad2d2e Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 24 Oct 2025 09:43:36 -0400
-Subject: [PATCH 1/2] Support LLVM 21 in LLVMExtra
+Subject: [PATCH 1/5] Support LLVM 21 in LLVMExtra
 
+Update LLVMConstDataArray to match LLVM version.
 ---
- deps/LLVMExtra/include/LLVMExtra.h |  6 ++++++
- deps/LLVMExtra/lib/Core.cpp        | 17 +++++++++++++++++
- 2 files changed, 23 insertions(+)
+ deps/LLVMExtra/include/LLVMExtra.h |  8 +++++++-
+ deps/LLVMExtra/lib/Core.cpp        | 25 +++++++++++++++++++++----
+ src/core/value/constant.jl         |  2 +-
+ 3 files changed, 29 insertions(+), 6 deletions(-)
 
 diff --git a/deps/LLVMExtra/include/LLVMExtra.h b/deps/LLVMExtra/include/LLVMExtra.h
-index 0773ca49..bcc40bfb 100644
+index 0773ca49..46734587 100644
 --- a/deps/LLVMExtra/include/LLVMExtra.h
 +++ b/deps/LLVMExtra/include/LLVMExtra.h
 @@ -162,8 +162,10 @@ void LLVMReplaceMDNodeOperandWith(LLVMValueRef V, unsigned Index,
@@ -18,7 +20,8 @@ index 0773ca49..bcc40bfb 100644
  // Constant data
 +#if LLVM_VERSION_MAJOR < 21
  LLVMValueRef LLVMConstDataArray(LLVMTypeRef ElementTy, const void *Data,
-                                 unsigned NumElements);
+-                                unsigned NumElements);
++                                size_t SizeInBytes);
 +#endif
  
  // Missing opaque pointer APIs
@@ -34,7 +37,7 @@ index 0773ca49..bcc40bfb 100644
  LLVM_C_EXTERN_C_END
  #endif
 diff --git a/deps/LLVMExtra/lib/Core.cpp b/deps/LLVMExtra/lib/Core.cpp
-index 1d2311b7..d583052c 100644
+index 1d2311b7..a5708a39 100644
 --- a/deps/LLVMExtra/lib/Core.cpp
 +++ b/deps/LLVMExtra/lib/Core.cpp
 @@ -569,12 +569,14 @@ void LLVMReplaceMDNodeOperandWith(LLVMValueRef V, unsigned Index,
@@ -43,10 +46,14 @@ index 1d2311b7..d583052c 100644
  
 +#if LLVM_VERSION_MAJOR < 21
  LLVMValueRef LLVMConstDataArray(LLVMTypeRef ElementTy, const void *Data,
-                                 unsigned NumElements) {
-   StringRef S((const char *)Data,
-               NumElements * unwrap(ElementTy)->getPrimitiveSizeInBits() / 8);
-   return wrap(ConstantDataArray::getRaw(S, NumElements, unwrap(ElementTy)));
+-                                unsigned NumElements) {
+-  StringRef S((const char *)Data,
+-              NumElements * unwrap(ElementTy)->getPrimitiveSizeInBits() / 8);
+-  return wrap(ConstantDataArray::getRaw(S, NumElements, unwrap(ElementTy)));
++                                size_t SizeInBytes) {
++  Type *Ty = unwrap(ElementTy);
++  size_t Len = SizeInBytes / (Ty->getPrimitiveSizeInBits() / 8);
++  return wrap(ConstantDataArray::getRaw(StringRef((const char*)Data, SizeInBytes), Len, Ty));
  }
 +#endif
  
@@ -71,6 +78,19 @@ index 1d2311b7..d583052c 100644
 +}
 +
 +#endif
+diff --git a/src/core/value/constant.jl b/src/core/value/constant.jl
+index d81a3950..8563f65f 100644
+--- a/src/core/value/constant.jl
++++ b/src/core/value/constant.jl
+@@ -270,7 +270,7 @@ Create a constant array of simple data values of the given type and data.
+ function ConstantDataArray(typ::LLVMType, data::AbstractVector{T}) where {T <: Union{Integer, AbstractFloat}}
+     # TODO: can we look up the primitive size of the LLVM type?
+     #       use that to assert it matches the Julia element type.
+-    return ConstantDataArray(API.LLVMConstDataArray(typ, data, length(data)))
++    return ConstantDataArray(API.LLVMConstDataArray(typ, data, sizeof(data)))
+ end
+ 
+ """
 -- 
 2.51.2
 

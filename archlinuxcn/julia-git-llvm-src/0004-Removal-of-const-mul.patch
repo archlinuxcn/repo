@@ -1,0 +1,100 @@
+From 4c11f27c15f82848f7b849c2de819c29853dd930 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Oct 2025 15:08:13 -0400
+Subject: [PATCH 4/5] Removal of const mul
+
+---
+ src/core/value/constant.jl | 27 ++++++++++++++++-----------
+ test/core.jl               |  8 +++++---
+ test/instructions.jl       |  4 +++-
+ 3 files changed, 24 insertions(+), 15 deletions(-)
+
+diff --git a/src/core/value/constant.jl b/src/core/value/constant.jl
+index 8563f65f..1ce5d563 100644
+--- a/src/core/value/constant.jl
++++ b/src/core/value/constant.jl
+@@ -526,8 +526,7 @@ register(ConstantVector, API.LLVMConstantVectorValueKind)
+ export ConstantExpr,
+ 
+        const_neg, const_nswneg, const_nuwneg, const_not, const_add,
+-       const_nswadd, const_nuwadd, const_sub, const_nswsub, const_nuwsub, const_mul,
+-       const_nswmul, const_nuwmul, const_xor,
++       const_nswadd, const_nuwadd, const_sub, const_nswsub, const_nuwsub, const_xor,
+        const_gep, const_inbounds_gep, const_trunc,
+        const_ptrtoint, const_inttoptr, const_bitcast,
+        const_addrspacecast, const_truncorbitcast,
+@@ -578,15 +577,6 @@ const_nswsub(lhs::Constant, rhs::Constant) =
+ const_nuwsub(lhs::Constant, rhs::Constant) =
+     Value(API.LLVMConstNUWSub(lhs, rhs))
+ 
+-const_mul(lhs::Constant, rhs::Constant) =
+-    Value(API.LLVMConstMul(lhs, rhs))
+-
+-const_nswmul(lhs::Constant, rhs::Constant) =
+-    Value(API.LLVMConstNSWMul(lhs, rhs))
+-
+-const_nuwmul(lhs::Constant, rhs::Constant) =
+-    Value(API.LLVMConstNUWMul(lhs, rhs))
+-
+ const_xor(lhs::Constant, rhs::Constant) =
+     Value(API.LLVMConstXor(lhs, rhs))
+ 
+@@ -709,6 +699,21 @@ const_shl(lhs::Constant, rhs::Constant) =
+ 
+ end
+ 
++if version() < v"21"
++
++export const_mul, const_nswmul, const_nuwmul
++
++const_mul(lhs::Constant, rhs::Constant) =
++    Value(API.LLVMConstMul(lhs, rhs))
++
++const_nswmul(lhs::Constant, rhs::Constant) =
++    Value(API.LLVMConstNSWMul(lhs, rhs))
++
++const_nuwmul(lhs::Constant, rhs::Constant) =
++    Value(API.LLVMConstNUWMul(lhs, rhs))
++
++end
++
+ # TODO: alignof, sizeof, block_address
+ 
+ 
+diff --git a/test/core.jl b/test/core.jl
+index 2a637465..b1ed0cda 100644
+--- a/test/core.jl
++++ b/test/core.jl
+@@ -607,9 +607,11 @@ end
+             @check_ir ce "i32 40"
+         end
+ 
+-        for f in [const_mul, const_nswmul, const_nuwmul]
+-            ce = f(val, other_val)::LLVM.Constant
+-            @check_ir ce "i32 84"
++        if LLVM.version() < v"21"
++            for f in [const_mul, const_nswmul, const_nuwmul]
++                ce = f(val, other_val)::LLVM.Constant
++                @check_ir ce "i32 84"
++            end
+         end
+ 
+         ce = const_xor(val, other_val)::LLVM.Constant
+diff --git a/test/instructions.jl b/test/instructions.jl
+index 204eebb3..3ce35f70 100644
+--- a/test/instructions.jl
++++ b/test/instructions.jl
+@@ -147,7 +147,9 @@
+     ptr = parameters(fn)[6]
+ 
+     array_mallocinst = array_malloc!(builder, LLVM.Int8Type(), ConstantInt(Int32(42)))
+-    if supports_typed_pointers(ctx)
++    if LLVM.version() >= v"21"
++        @check_ir array_mallocinst r"call ptr @malloc\(.+\)"
++    elseif supports_typed_pointers(ctx)
+         @check_ir array_mallocinst r"call i8\* @malloc\(.+, i32 42\)"
+     else
+         @check_ir array_mallocinst r"call ptr @malloc\(.+, i32 42\)"
+-- 
+2.51.2
+

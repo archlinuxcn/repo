@@ -1,0 +1,27 @@
+From 0ec46195ccbb3279b472b37848846e5c8fde6785 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Oct 2025 14:57:49 -0400
+Subject: [PATCH 3/5] Remove deprecated pass
+
+---
+ src/newpm.jl | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/newpm.jl b/src/newpm.jl
+index 42a64332..fcf284c6 100644
+--- a/src/newpm.jl
++++ b/src/newpm.jl
+@@ -437,7 +437,9 @@ end
+ @module_pass "print<inline-advisor>" InlineAdvisorAnalysisPrinterPass
+ @module_pass "inliner-wrapper-no-mandatory-first" ModuleInlinerWrapperNoMandatoryFirstPass
+ @module_pass "insert-gcov-profiling" GCOVProfilerPass
+-@module_pass "instrorderfile" InstrOrderFilePass
++@static if version() < v"21"
++    @module_pass "instrorderfile" InstrOrderFilePass
++end
+ @module_pass "instrprof" InstrProfiling
+ @module_pass "invalidate<all>" InvalidateAllAnalysesPass
+ @module_pass "ipsccp" IPSCCPPass
+-- 
+2.51.2
+

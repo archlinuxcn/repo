@@ -1,0 +1,30 @@
+From 327939f6eed52e52425d1a0eacd1a6282e962dab Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 29 Oct 2025 15:45:22 -0400
+Subject: [PATCH 5/5] LLVM 21 removed uselist from constants
+
+---
+ test/core.jl | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/test/core.jl b/test/core.jl
+index b1ed0cda..feed951a 100644
+--- a/test/core.jl
++++ b/test/core.jl
+@@ -718,7 +718,12 @@ end
+                 @check_ir ce "ptr addrspace(1) addrspacecast (ptr null to ptr addrspace(1))"
+             end
+             # deletion of a constant
+-            @test !isempty(uses(ptr))
++            if LLVM.version() < v"21"
++                @test !isempty(uses(ptr))
++            else
++                # LLVM 21+ removed uselist from constants
++                @test isempty(uses(ptr))
++            end
+             LLVM.unsafe_destroy!(ce)
+             @test isempty(uses(ptr))
+         end
+-- 
+2.51.2
+
