@@ -1,4 +1,4 @@
-pkgname=julia-git-libalpm-git
+pkgname=julia-git-libalpm-src
 pkgver=0.9.0.0.51.g2a02bb9
 pkgrel=5
 pkgdesc="LibALPM.jl"
@@ -7,7 +7,6 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git pacman)
-provides=(julia-git-libalpm-src)
 source=(git+https://github.com/yuyichao/LibALPM.jl)
 md5sums=('SKIP')
 
