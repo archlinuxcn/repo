@@ -1,7 +1,7 @@
 pkgname=julia-git-llvm-src
 pkgver=9.4.4
 _commit=90917c8d4f7ab8d6ba6acf0f0d583486b8b02610
-pkgrel=4
+pkgrel=5
 pkgdesc="LLVM.jl"
 url="https://github.com/maleadt/LLVM.jl.git"
 arch=('any')
@@ -15,8 +15,11 @@ source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit"
         0004-Removal-of-const-mul.patch
         0005-LLVM-21-removed-uselist-from-constants.patch)
 sha256sums=('1e825342574806972fad84e5c88ad8f50d0b3dd231aba79c53eea287a12638ad'
-            '784dd1e8c28f4a455cd38f1e696969d3f57ca014ba2f6e5f9efadb37d1837405'
-            '1f5d4ff81200780bfc5d21e5613dcebc8d431218217d78af91c4a7293d69eaaf')
+            '18dd2f2f0a3220f6b59efc6397a1eb8ceb2505aa710917fc3b6df9930820b17f'
+            '4944003347d936bfdc980b628898ce341962c75130cf33791a9f27ff2da30505'
+            '94b3cfe758d34a1c947f988f18fc1d1353d6b80368872653985a048bdb17896a'
+            '04564085f1d905d81783f454fb141e5046794254b965dded201390ad9a2a3ade'
+            '448e5fd00f5a9e825de202867cfc005726edca24f4ef47ccccbd00d6c65ee13b')
 
 prepare() {
   cd LLVM.jl
