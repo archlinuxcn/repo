@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=firefox-developer-edition-portable
-pkgver=1
+pkgver=145.0b8
 pkgrel=1
 epoch=1
 pkgdesc="Firefox sandboxed by portable (en_US locale)"
@@ -26,9 +26,9 @@ source=(
 )
 
 
-md5sums=('SKIP'
-         'SKIP'
-         'SKIP')
+md5sums=('4987caba5b30e79786efdc151d6444e4'
+         'e9286af04e5d107b38523c92f9c68c76'
+         'b6b83e3fc0e8f8a3f5b3eac5acbda4ba')
 
 function prepare() {
 	pacman -Ql firefox-developer-edition >file.list
