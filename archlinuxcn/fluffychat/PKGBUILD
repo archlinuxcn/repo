@@ -1,20 +1,14 @@
 # Maintainer:
 # Contributor: The one with the braid <info@braid.business>
 
-## links
-# https://fluffychat.im/
-# https://github.com/krille-chan/fluffychat
-
-: ${_fvm_version=}
-
 : ${FVM_CACHE_PATH:=$SRCDEST/fvm-cache}
 : ${RUSTUP_TOOLCHAIN:=nightly}
 export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=2.1.1
-pkgrel=2
+pkgver=2.2.0
+pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
 license=('AGPL-3.0-only')
@@ -29,7 +23,7 @@ depends=(
 makedepends=(
   'clang'
   'cmake'
-  'fvm' # AUR
+  'fvm'
   'git'
   'lld'
   'llvm'
@@ -51,50 +45,45 @@ source=(
   '0000-fix-wayland-gtk-csd.patch'
 )
 sha256sums=(
-  '6baf2b25feb575b27a9775f9a8b7cd948043a86f9bd05d281a10c002fe5b182b'
+  '7efc395a198d006dbf768163e0812e22d8cbf708ed8eb57448c20e308e9b7056'
   '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230'
 )
 
-prepare() {
-  cd "$_pkgsrc"
-  local src
+prepare() (
   for src in "${source[@]}"; do
     src="${src%%::*}"
     src="${src##*/}"
     src="${src%.zst}"
     if [[ $src == *.patch ]]; then
       printf '\n\nApplying patch: %s\n' "$src"
-      patch -Np1 -F100 -i "${srcdir:?}/$src"
+      patch -d "$_pkgsrc" -Np1 -F100 -i "${srcdir:?}/$src"
     fi
   done
-}
+)
 
 build() {
-  # fix incompatible C(XX)FLAGS on Arch Linux on ARM
+  # fix incompatible flags on ARM
   if [ "${CARCH::1}" != "x" ]; then
-    local i _cflags _cxxflags _unwanted
-    _cflags=(${CFLAGS})
-    _cxxflags=(${CXXFLAGS})
+    export CFLAGS CXXFLAGS
+    local i _unwanted
 
     _unwanted=(
       -fstack-protector-strong
       -fstack-clash-protection
     )
 
-    for i in ${_unwanted[@]}; do
-      _cflags=(${_cflags[@]//$i/})
-      _cxxflags=(${_cxxflags[@]//$i/})
+    for i in "${_unwanted[@]}"; do
+      CFLAGS=$(sed -E -e "s&${i}&&g" -e 's&\s+& &g' <<< "$CFLAGS")
+      CXXFLAGS=$(sed -E -e "s&${i}&&g" -e 's&\s+& &g' <<< "$CXXFLAGS")
     done
-
-    CFLAGS="${_cflags[@]}"
-    CXXFLAGS="${_cxxflags[@]}"
   fi
 
-  : ${_fvm_version:=$(grep -Pom1 '(?<=FLUTTER_VERSION=)[0-9\.]+' "$_pkgsrc/.github/workflows/versions.env")}
-
   cd "$_pkgsrc"
-  fvm install $_fvm_version
-  fvm global $_fvm_version
+
+  : ${_fvm_version=$(grep -Pom1 '(?<=FLUTTER_VERSION=)[0-9\.]+' ".github/workflows/versions.env")}
+
+  fvm install "$_fvm_version"
+  fvm use "$_fvm_version" --force
 
   fvm flutter --disable-analytics
   #fvm flutter pub upgrade --major-versions
@@ -108,7 +97,7 @@ package() {
   DESTDIR="$pkgdir" cmake -P cmake_install.cmake
   popd
 
-  # reset rpath
+  # rpath
   patchelf --set-rpath '$ORIGIN' "$pkgdir/usr/lib/$_pkgname/lib"/*.so
 
   # symlink
