@@ -6,8 +6,8 @@
 
 pkgname=nginx-mod-lua
 _modname="${pkgname#nginx-mod-}"
-pkgver=0.10.28
-pkgrel=5
+pkgver=0.10.29
+pkgrel=1
 _ndkver=0.3.4
 pkgdesc='Lua script engine module for nginx'
 arch=('x86_64')
@@ -17,7 +17,7 @@ url="https://github.com/openresty/lua-nginx-module"
 license=('BSD-2-Clause')
 source=(https://github.com/openresty/$_modname-nginx-module/archive/v$pkgver/$_modname-$pkgver.tar.gz
         https://github.com/simpl/ngx_devel_kit/archive/v$_ndkver/ngx_devel_kit-$_ndkver.tar.gz)
-sha256sums=('634827d54de6216cb0502d14f76610788b3a3e33160e91d5578d6db0d9a34a20'
+sha256sums=('ca2c2122b909529bf9d1a89e9a5763835a2bd2629def8cb279c550f638f0a78f'
             '14a28063294f645d457b1eb10e3c23bbba44398f1c5f021421b58b6f8ab31662')
 provides=(nginx-mod-ndk=$_ndkver)
 conflicts=(nginx-mod-ndk)
