@@ -54,17 +54,17 @@ function package() {
 	rm -f "${pkgdir}/usr/share/applications"/*
 	rm -f "${pkgdir}/usr/bin"/*
 	install -Dm644 portable-config \
-		"${pkgdir}/usr/lib/portable/info/org.mozilla.Firefox.Developer/config"
+		"${pkgdir}/usr/lib/portable/info/org.mozilla.firefox_developer_edition/config"
 	install -Dm755 "firefox.sh" \
 		"${pkgdir}/usr/bin/firefox-developer-edition-portable"
-	install -Dm644 "firefox.desktop" "${pkgdir}/usr/share/applications/org.mozilla.Firefox.Developer.desktop"
+	install -Dm644 "firefox.desktop" "${pkgdir}/usr/share/applications/org.mozilla.firefox_developer_edition.desktop"
 	echo '''[Desktop Entry]
 Type=Application
 Name=Firefox Developer Edition
 GenericName=Stub for MPRIS
 Icon=firefox-developer-edition
 TryExec=portable
-Exec=env _portableConfig="org.mozilla.Firefox.Developer" portable -- %u
+Exec=env _portableConfig="org.mozilla.firefox_developer_edition" portable -- %u
 Terminal=false
 NoDisplay=true''' >"${pkgdir}/usr/share/applications/firefox-developer-edition.desktop"
 }
