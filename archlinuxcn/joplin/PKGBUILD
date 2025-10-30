@@ -10,12 +10,12 @@ pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
 pkgver=3.4.12
 groups=('joplin')
-pkgrel=1
-_electronVersion=37
+pkgrel=2
+_electronVersion=38
 depends=("electron${_electronVersion}" "nodejs>20" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64')
-makedepends=('npm' 'git' 'rsync' 'python-setuptools' 'libxcrypt-compat')
+makedepends=('npm' 'git' 'rsync' 'python-setuptools' 'libxcrypt-compat' 'corepack')
 url="https://joplinapp.org/"
 license=("AGPL-3.0-or-later")
 source=(
@@ -24,7 +24,7 @@ source=(
     "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz"
 )
 sha256sums=('9223cc816f8175ddaf8839f9357d2bd1c4831692504927c98d8e1eefa7df796e'
-            'ff2232a2e518de7987af2a6d25524d75c2f7d1b343993b5134a341ae8f815dd5'
+            'f485c089904d91750d137d4413297676446e0068892cb08e20bee928bcac516c'
             'c00ac2540371543d85b4362fd716ff4748f18a61276d137cad91d318cd30f744')
 
 _setup_env() {

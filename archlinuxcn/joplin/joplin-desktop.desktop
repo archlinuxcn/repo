@@ -1,8 +1,11 @@
 [Desktop Entry]
 Name=Joplin
-Comment=Joplin - a note taking and to-do application with synchronization capabilities for Windows, macOS, Linux, Android and iOS.
+Comment=Joplin for Desktop
 Exec=/usr/bin/joplin-desktop
-Icon=joplin-desktop
 Terminal=false
+Icon=joplin-desktop
+StartupWMClass=@joplin/app-desktop
 Type=Application
-Categories=Application;Office;
+Categories=Office;
+MimeType=x-scheme-handler/joplin;
+SingleMainWindow=true
