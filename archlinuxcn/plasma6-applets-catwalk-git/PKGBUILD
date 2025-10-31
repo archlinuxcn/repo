@@ -9,6 +9,7 @@ url="https://invent.kde.org/heddxh/applet-catwalk"
 license=('GPL-2.0-or-later')
 provides=(plasma6-applets-catwalk)
 conflicts=(plasma6-applets-catwalk)
+replaces=(plasma6-applets-catwalk)
 depends=(ksvg libksysguard libplasma qt6-declarative kcmutils kirigami)
 makedepends=(cmake git extra-cmake-modules ki18n)
 source=("$pkgname::git+${url}.git")
