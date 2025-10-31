@@ -39,6 +39,6 @@ package_ttf-chiron-hei-hk-vf() {
 }
 package_otf-chiron-hei-hk-vf() {
     cd chiron-hei-hk-$pkgver
-    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" VAR_OTF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" VAR_OTF/*.otf
     install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
 }
