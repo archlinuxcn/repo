@@ -4,8 +4,6 @@ maintainers:
 update_on:
 - source: github
   github: ggml-org/ggml
-  use_latest_release: true
-  prefix: v
 
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit

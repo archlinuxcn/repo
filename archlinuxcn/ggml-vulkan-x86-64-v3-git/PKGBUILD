@@ -1,8 +1,8 @@
 # Maintainer: lilydjwg <lilydjwg@gmail.com>
 
-pkgname=ggml-vulkan-x86-64-v3
-pkgver=0.9.4
-pkgrel=4
+pkgname=ggml-vulkan-x86-64-v3-git
+pkgver=0.9.4.r88.ge02fb860
+pkgrel=1
 pkgdesc="Tensor library for machine learning with OpenBLAS + Vulkan optimizations for x86-86-v3"
 url="https://github.com/ggml-org/ggml"
 license=('MIT')
@@ -20,9 +20,15 @@ makedepends=(
 
 conflicts=(libggml ggml)
 provides=(ggml=$pkgver libggml=$pkgver)
+replaces=(ggml-vulkan-x86-64-v3)
 
-source=("git+$url.git#tag=v$pkgver")
-sha256sums=('31ef760658d3bc2693ff9d972727244025f632c70e79de0b82a9bdc681f29d9d')
+source=("git+$url.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd ggml
+  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
+}
 
 prepare() {
   cd ggml

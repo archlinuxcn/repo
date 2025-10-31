@@ -2,16 +2,12 @@ maintainers:
 - github: lilydjwg
 
 update_on:
-# - source: github
-#   github: ggml-org/llama.cpp
-#   use_latest_release: true
-# newer version doesn't build with latest ggml release
-# https://aur.archlinux.org/packages/llama.cpp-git#comment-1042335
-- source: manual
-  manual: b6661
+- source: github
+  github: ggml-org/llama.cpp
+  use_latest_release: true
 
 repo_depends:
-- ggml-vulkan-x86-64-v3
+- ggml-vulkan-x86-64-v3-git
 
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
