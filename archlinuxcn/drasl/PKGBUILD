@@ -9,6 +9,7 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/unmojang/drasl"
 license=('GPL-3.0-only')
 makedepends=('git' 'go' 'gcc' 'nodejs' 'npm' 'swag')
+depends+=(glibc)
 conflicts=("${_pkgname}")
 source=(
 	"${_pkgname}::git+https://github.com/unmojang/drasl.git#tag=v${pkgver}"
