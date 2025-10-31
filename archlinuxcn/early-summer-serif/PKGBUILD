@@ -1,0 +1,111 @@
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
+
+pkgbase=early-summer-serif
+pkgname=(
+    otf-early-summer-serif
+    ttf-early-summer-serif
+    otf-early-summer-serif-st
+    ttf-early-summer-serif-st
+    otf-early-summer-serif-vf
+    ttf-early-summer-serif-vf
+    otf-early-summer-serif-st-vf
+    ttf-early-summer-serif-st-vf
+    otc-early-summer-serif-vf
+    ttc-early-summer-serif-vf
+    ttf-early-summer-serif-screen
+    ttf-early-summer-serif-screen-st
+    ttc-early-summer-serif-screen
+)
+pkgver=1.006
+pkgrel=1
+pkgdesc='初夏明朝體：一款接近傳統印刷體的中文字型，基於思源宋體。'
+url='https://github.com/GuiWonder/EarlySummerSerif'
+arch=('any')
+license=('OFL-1.1')
+source=(
+    $pkgbase-$pkgver-EarlySummerSerifOTF.zip::$url/releases/download/$pkgver/EarlySummerSerifOTF.zip
+    $pkgbase-$pkgver-EarlySummerSerifOTFTTC.zip::$url/releases/download/$pkgver/EarlySummerSerifOTFTTC.zip
+    $pkgbase-$pkgver-EarlySummerSerifScreen.zip::$url/releases/download/$pkgver/EarlySummerSerifScreen.zip
+    $pkgbase-$pkgver-EarlySummerSerifScreenTTC.zip::$url/releases/download/$pkgver/EarlySummerSerifScreenTTC.zip
+    $pkgbase-$pkgver-EarlySummerSerifSTOTF.zip::$url/releases/download/$pkgver/EarlySummerSerifSTOTF.zip
+    $pkgbase-$pkgver-EarlySummerSerifSTScreen.zip::$url/releases/download/$pkgver/EarlySummerSerifSTScreen.zip
+    $pkgbase-$pkgver-EarlySummerSerifSTTTF.zip::$url/releases/download/$pkgver/EarlySummerSerifSTTTF.zip
+    $pkgbase-$pkgver-EarlySummerSerifSTVF.zip::$url/releases/download/$pkgver/EarlySummerSerifSTVF.zip
+    $pkgbase-$pkgver-EarlySummerSerifTTF.zip::$url/releases/download/$pkgver/EarlySummerSerifTTF.zip
+    $pkgbase-$pkgver-EarlySummerSerifTTFTTC.zip::$url/releases/download/$pkgver/EarlySummerSerifTTFTTC.zip
+    $pkgbase-$pkgver-EarlySummerSerifVF.zip::$url/releases/download/$pkgver/EarlySummerSerifVF.zip
+    $pkgbase-$pkgver-EarlySummerSerifVFTTC.zip::$url/releases/download/$pkgver/EarlySummerSerifVFTTC.zip
+)
+b2sums=('eb1e5ce437f4d3dc899b6d240cd3cce049b43519addd10c9cf689404e420f3ca7df5b2e1d4dc8a90152c5ba7f98d7ec63e6ffe2c04652202f5e84c594bec1f18'
+        'a5d472ac29a7fd8a92a8ba07bbc21054eabf8ffaea19f4edb579940071a55c2143599ffeda920ab2967158bb8ebbdc0dbae846777be6a0264113e8c22157e182'
+        'f8ca01b37398ed2b9c83c01ed498ca27daef5b39c920a4d710aa3b2073ced476f10b72a9fd147c936e9b0541b290a7d18019fa8e8aecf340e8798c741035fd1b'
+        'd4a8cc12524f91e026fe4b32760fb801d4fe5415e249b8e7a7ea4012dcb6939161d96f283fa5c6d6b65177e9207c8d87d4d50edd4d1fca911e5f6387590f2df1'
+        'ad05f1108e9f081c9be70ae501e62f475e0fc1a528b870169e572138771f9457d7e751e52b2b84a987a0b66c526d199a8d3610f7775812efcb636d5e590cc1c5'
+        '62bab6e21d5b443da52e43fce6d8dab29f8baed94b56ba6a6d6406316a0532bbb21df7e17f10d5c9b041254e854d61b145f404d2f1f69da0415a700b7accb081'
+        'f7558b8d5bee6e3b50b875e5da82d792398f26fac0c9d1757311833fa6ba1a043f105c21b62742976611fe96c228928a62fb0ce26d4317e7c56970edce011227'
+        '8f72109c350d15df7d958a009e0a602a03e12d9d2c996b8569a45e863f629d297dd3d908165b30b005b1f2b7e78321433a42af442a5e727eddc23a06c785b392'
+        'ea7c821dcc80052ce55b84f27588f0bb063caf9f520aec2a7c0b1c65460d8230661fbe85b4489c87cbdf54130defb3e4147299b5e57ce6f85125e355e562aaa8'
+        '2e7be951f56d19f05773fee10a3ee44088c4081b66bf686635ac83abe1380079a7564036592dd7e58849fbe7fe3a2a60db4d46bb51a840f7f3ac7203235a05f2'
+        '54b9c059415853254f594b243c583ea8fbffcac29b3beb5c2260fa274c046062204fbc92342d29fa1fdb351073ac8fcef8438825caca091a8fbf2de22df464dc'
+        '33059e1d4256f217d1b30d9ad78d3e9dab568dd5ed88a762b177f4019b4358fdda3eac5fe86d0eea6644f3ffb08432eb755a473d894c3ec770302d737239e74a')
+
+package_otf-early-summer-serif() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" EarlySummerSerif-*.otf
+    rm -f "$pkgdir/usr/share/fonts/OTF/$pkgname"/*-Screen.*
+    rm -f "$pkgdir/usr/share/fonts/OTF/$pkgname"/*-VF.*
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_ttf-early-summer-serif() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" EarlySummerSerif-*.ttf
+    rm -f "$pkgdir/usr/share/fonts/OTF/$pkgname"/*-Screen.*
+    rm -f "$pkgdir/usr/share/fonts/OTF/$pkgname"/*-VF.*
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_otf-early-summer-serif-st() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" EarlySummerSerifST-*.otf
+    rm -f "$pkgdir/usr/share/fonts/OTF/$pkgname"/*-Screen.*
+    rm -f "$pkgdir/usr/share/fonts/OTF/$pkgname"/*-VF.*
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_ttf-early-summer-serif-st() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" EarlySummerSerifST-*.ttf
+    rm -f "$pkgdir/usr/share/fonts/OTF/$pkgname"/*-Screen.*
+    rm -f "$pkgdir/usr/share/fonts/OTF/$pkgname"/*-VF.*
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_otf-early-summer-serif-vf() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" EarlySummerSerif-VF.otf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_ttf-early-summer-serif-vf() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" EarlySummerSerif-VF.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_otf-early-summer-serif-st-vf() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" EarlySummerSerifST-VF.otf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_ttf-early-summer-serif-st-vf() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" EarlySummerSerifST-VF.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_otc-early-summer-serif-vf() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" EarlySummerSerif-VF.otf.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_ttc-early-summer-serif-vf() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" EarlySummerSerif-VF.ttf.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_ttf-early-summer-serif-screen() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" EarlySummerSerif-Screen.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_ttf-early-summer-serif-screen-st() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" EarlySummerSerifST-Screen.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
+package_ttc-early-summer-serif-screen() {
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" EarlySummerSerif-Screen.ttc
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.txt
+}
