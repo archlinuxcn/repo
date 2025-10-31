@@ -38,6 +38,6 @@ function package() {
 	make install prefix="${pkgdir}/usr"
 	install -D -m644 ./example/config-example.toml "${pkgdir}/etc/drasl/config-example.toml"
 	install -D -m644 ./example/config-example.toml "${pkgdir}/etc/drasl/config.toml"
-	install -D -m644 ./example/drasl.service "${pkgdir}/etc/systemd/system/${_pkgname}.service"
+	install -D -m644 ./example/drasl.service "${pkgdir}/usr/lib/systemd/system/${_pkgname}.service"
 }
 
