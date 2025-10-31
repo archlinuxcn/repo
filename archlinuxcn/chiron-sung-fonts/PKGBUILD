@@ -1,0 +1,44 @@
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
+
+pkgbase=chiron-sung-fonts
+pkgname=(
+    otf-chiron-sung-hk
+    ttf-chiron-sung-hk
+    otf-chiron-sung-hk-vf
+    ttf-chiron-sung-hk-vf
+)
+pkgver=1.022
+pkgrel=1
+pkgdesc='昭源宋體：現代筆形風格，平衡標準字形和印刷體慣用筆形的免費開源宋體字型'
+url='https://github.com/chiron-fonts/chiron-sung-hk'
+arch=('any')
+license=('OFL-1.1')
+source=(
+    $pkgbase-$pkgver.tar.gz::https://github.com/chiron-fonts/chiron-sung-hk/archive/refs/tags/v$pkgver.tar.gz
+)
+b2sums=('7af857e57da1fe8c2bda1b7f96564c8d845f6b601fb778b6923ddfa7f6007b79382d17e1bb3772a143ac4acb3c58a844c992dc1ec6d4e31915ea1ef397a2c4d2')
+
+prepare() {
+    cd chiron-sung-hk-$pkgver
+}
+
+package_ttf-chiron-sung-hk() {
+    cd chiron-sung-hk-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" STATIC_TTF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_otf-chiron-sung-hk() {
+    cd chiron-sung-hk-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" STATIC_OTF/*.otf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_ttf-chiron-sung-hk-vf() {
+    cd chiron-sung-hk-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" VAR_TTF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_otf-chiron-sung-hk-vf() {
+    cd chiron-sung-hk-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" VAR_OTF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}

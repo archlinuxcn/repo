@@ -1,0 +1,44 @@
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
+
+pkgbase=chiron-go-round-fonts
+pkgname=(
+    otf-chiron-go-round-tc
+    ttf-chiron-go-round-tc
+    otf-chiron-go-round-tc-vf
+    ttf-chiron-go-round-tc-vf
+)
+pkgver=1.006
+pkgrel=1
+pkgdesc='昭源環方：現代筆形風格，平衡標準字形和印刷體慣用筆形的免費開源仿圓體字型 '
+url='https://github.com/chiron-fonts/chiron-go-round-tc'
+arch=('any')
+license=('OFL-1.1')
+source=(
+    $pkgbase-$pkgver.tar.gz::https://github.com/chiron-fonts/chiron-go-round-tc/archive/refs/tags/v$pkgver.tar.gz
+)
+b2sums=('522fab3f22b8a5132692a205f31375edd536044d4bfea29865efa2f72cc00a81a08f8e91e8cf27a1eaf6c3519e1175144725d6ef7ec74e5004e65f31d5f81ceb')
+
+prepare() {
+    cd chiron-go-round-tc-$pkgver
+}
+
+package_ttf-chiron-go-round-tc() {
+    cd chiron-go-round-tc-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" STATIC_TTF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_otf-chiron-go-round-tc() {
+    cd chiron-go-round-tc-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" STATIC_OTF/*.otf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_ttf-chiron-go-round-tc-vf() {
+    cd chiron-go-round-tc-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/TTF/$pkgname" VAR_TTF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
+package_otf-chiron-go-round-tc-vf() {
+    cd chiron-go-round-tc-$pkgver
+    install -Dm644 -t "$pkgdir/usr/share/fonts/OTF/$pkgname" VAR_OTF/*.ttf
+    install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
+}
