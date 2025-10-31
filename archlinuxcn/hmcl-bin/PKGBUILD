@@ -5,9 +5,9 @@
 
 pkgname=hmcl-bin
 _pkgname=${pkgname%-bin}
-pkgver=3.6.20
+pkgver=3.7.3
 _tag="v${pkgver}"
-pkgrel=2
+pkgrel=1
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
 url="https://github.com/HMCL-dev/HMCL"
@@ -20,7 +20,7 @@ source=("hmcl-launch-script"
         "${_pkgname}-${pkgver}.jar::${url}/releases/download/${_tag}/HMCL-${pkgver}.jar")
 b2sums=('1de8eca922b01b9c4c6d9a173143f05b900fd6b12b1b27bae175948a43125619d0e14c82d704548f70539af13eb4fd9f7288749265949089c7d6a8fe9032d284'
         '6c38da38fa13ad0af061d593f7733d6a406025c473240ccee4d07c89e71f8d5ead430374a7500f1395a7341c67e06ef3664cb1747ab93cba63459f7906b1598a'
-        '382d51e60ae6d6f7d376de81f2410a2347e4e157decddbe66343a31ad9459432aa924b80c54917977bfae7a569f0bdf36aa95369d2260ed53cc0bf7ff20db7a3')
+        'faa6f78c42ce47d44c9e7cebf25b1cd598ce618a6740f24e0b33edd9d6278c3c54e22f636310d824c96ca5a8de46a1b0842b520484dc4f9e41e7d963785522d4')
 
 prepare() {
   # extract icons from jar
