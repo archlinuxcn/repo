@@ -18,12 +18,12 @@
 # dependencies/common/install-copilot-language-server
 : ${_copilot_version:=1.381.0}
 
-: ${_commit:=20de356561bd58a6d88927cce948bd076d06e4ca}
+: ${_commit:=12f6d5e22720bd78dbd926bb344efe12d0dce83d}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2025.09.1.401
-pkgrel=2
+pkgver=2025.09.2.418
+pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
 license=('AGPL-3.0-only')
@@ -233,7 +233,9 @@ build() (
   export CMAKE_POLICY_VERSION_MINIMUM=3.5
 
   _nvm_env
-  _run_if_exists _build_soci
+
+  echo "Building soci..."
+  _build_soci
 
   # Quarto set up
   if (pacman -Q quarto > /dev/null 2> /dev/null); then
@@ -346,10 +348,4 @@ export ELECTRON_FORCE_IS_PACKAGED
 
 exec /usr/lib/rstudio/rstudio "\${flags[@]}" "\$@"
 END
-}
-
-_run_if_exists() {
-  if declare -F "$1" > /dev/null; then
-    eval "$1"
-  fi
 }
