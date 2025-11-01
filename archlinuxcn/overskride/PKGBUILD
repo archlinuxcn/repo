@@ -5,7 +5,7 @@ pkgdesc='A simple yet powerful bluetooth client'
 url="https://github.com/kaii-lb/overskride"
 license=('GPL-3.0-or-later')
 arch=('x86_64' 'aarch64')
-depends=('bluez' 'libadwaita' 'libpulse')
+depends=('bluez' 'libadwaita' 'libpulse' hicolor-icon-theme glibc gcc-libs dbus dconf glib2 gtk4)
 makedepends=('blueprint-compiler' 'cargo' 'git' 'meson')
 checkdepends=('appstream-glib')
 source=("source::git+$url.git#tag=v${pkgver}")
