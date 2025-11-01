@@ -1,4 +1,5 @@
-# Maintainer: Rikka <ayasa0520@gmail.com>
+# Maintainer: Integral <integral@archlinuxcn.org>
+# Contributor: Rikka <ayasa0520@gmail.com>
 
 pkgname=waydroid-helper
 pkgver=0.2.9
@@ -7,8 +8,25 @@ pkgdesc="A GUI application for Waydroid configuration and extension installation
 arch=('any')
 url="https://github.com/ayasa520/${pkgname}"
 license=('GPL-3.0-or-later')
-depends=('python' 'python-httpx' 'python-gobject>=3.50.0' 'python-yaml' 'gtk4' 'libadwaita' 'python-aiofiles')
-makedepends=('git' 'python-setuptools' 'meson')
+depends=(
+	'dconf'
+	'glib2'
+	'gtk4'
+	'hicolor-icon-theme'
+	'libadwaita'
+	'waydroid'
+	'pango'
+	'python'
+	'python-httpx'
+	'python-gobject>=3.50.0'
+	'python-yaml'
+	'python-aiofiles'
+	'python-dbus'
+	'python-cairo'
+	'python-pywayland'
+	'vte4'
+)
+makedepends=('meson')
 provides=("${pkgname}")
 conflicts=("${pkgname}")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
@@ -21,5 +39,4 @@ build() {
 
 package() {
 	meson install -C build --destdir "${pkgdir}"
-	install -Dm644 "${pkgname}-${pkgver}/COPYING" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
