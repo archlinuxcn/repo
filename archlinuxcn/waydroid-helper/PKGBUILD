@@ -9,15 +9,20 @@ arch=('any')
 url="https://github.com/ayasa520/${pkgname}"
 license=('GPL-3.0-or-later')
 depends=(
+	'dconf'
+	'glib2'
 	'gtk4'
+	'hicolor-icon-theme'
 	'libadwaita'
 	'waydroid'
+	'pango'
 	'python'
 	'python-httpx'
 	'python-gobject>=3.50.0'
 	'python-yaml'
 	'python-aiofiles'
 	'python-dbus'
+	'python-cairo'
 	'python-pywayland'
 	'vte4'
 )
