@@ -38,6 +38,7 @@ depends=(
     'libvdpau'
     'libx11'
     'libxext'
+    'libxfixes'
     'libxkbcommon'
     'libxpresent'
     'libxrandr'
@@ -94,7 +95,9 @@ build() {
         '-Dcdda=enabled'
         '-Dlua=enabled' '-Dlua=luajit'
         '-Ddvbin=enabled'
-        '-Dsdl2=enabled'
+        '-Dsdl2-gamepad=enabled'
+        '-Dsdl2-audio=enabled'
+        '-Dsdl2-video=enabled'
         '-Ddvdnav=enabled'
     )
     
