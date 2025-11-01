@@ -1,0 +1,25 @@
+pkgname=evhz-git
+pkgver=r28.2c94d6f
+pkgrel=1
+pkgdesc="Display the current mouse refresh rate"
+arch=('x86_64')
+url="https://git.sr.ht/~iank/evhz"
+license=('GPL-3.0-or-later')
+makedepends=('git' 'gcc' linux-headers)
+depends=(gcc-libs glibc)
+source=('evhz-git::git+https://git.sr.ht/~iank/evhz')
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "$pkgname"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "$pkgname"
+    gcc -o evhz evhz.c
+}
+
+package() {
+    install -Dm755 "$pkgname/evhz" "$pkgdir/usr/bin/evhz"
+}

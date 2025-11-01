@@ -1,0 +1,14 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: vcs_update()
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: "git"
+    git: "https://git.sr.ht/~iank/evhz"
+    use_commit: true
+
+build_prefix: extra-x86_64
