@@ -1,0 +1,34 @@
+pkgname=overskride
+pkgver=0.6.3
+pkgrel=1
+pkgdesc='A simple yet powerful bluetooth client'
+url="https://github.com/kaii-lb/overskride"
+license=('GPL-3.0-or-later')
+arch=('x86_64' 'aarch64')
+depends=('bluez' 'libadwaita' 'libpulse')
+makedepends=('blueprint-compiler' 'cargo' 'git' 'meson')
+checkdepends=('appstream-glib')
+source=("source::git+$url.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+prepare() {
+	cd source
+	export CARGO_HOME="$srcdir/CARGO_HOME"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+	export CARGO_HOME="$srcdir/CARGO_HOME"
+	export RUSTUP_TOOLCHAIN=stable
+	arch-meson source build
+	meson compile -C build
+}
+
+check() {
+	meson test -C build --print-errorlogs || :
+}
+
+package() {
+	meson install -C build --no-rebuild --destdir "$pkgdir"
+}
