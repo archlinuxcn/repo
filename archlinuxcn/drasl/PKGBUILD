@@ -25,8 +25,9 @@ function prepare() {
 	cd "${srcdir}/${_pkgname}"
 	git reset --hard
 	git clean -f
-	git revert --no-commit 99a021bde97e7863c4830923edfd92d647c1f0f7
+	#git revert --no-commit 99a021bde97e7863c4830923edfd92d647c1f0f7
 	git cherry-pick --no-commit 52a7df7a1b5bc7f75232b06802cb5c2d8089a3a3
+	git cherry-pick --no-commit 23a9fec4f7294365c766d5777a74041f1109f37c
 }
 
 function build() {
