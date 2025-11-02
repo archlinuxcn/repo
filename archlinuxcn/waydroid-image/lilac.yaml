@@ -5,9 +5,6 @@ maintainers:
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
 
-repo_depends:
-  - waydroid
-
 update_on:
   - source: jq
     url: https://raw.githubusercontent.com/waydroid/OTA/refs/heads/master/system/lineage/waydroid_x86_64/VANILLA.json
