@@ -25,12 +25,12 @@
 
 pkgname=btdu
 pkgver=0.6.1
-pkgrel=3
+pkgrel=4
 pkgdesc='sampling disk usage profiler for btrfs'
 arch=('aarch64' 'i686' 'x86_64')
 url='https://github.com/CyberShadow/btdu'
 license=('GPL2')
-depends=('ncurses' 'd-runtime')
+depends=('ncurses' 'liblphobos')
 _d_compiler_spec='ldc'
 makedepends=("$_d_compiler_spec" 'dub' 'dtools')
 
