@@ -1,0 +1,80 @@
+# Maintainer: Vladimir Panteleev <arch-pkg at thecybershadow.net>
+# Maintainer: Kamish Almarem <kalma87 at gmail.com>
+
+# Note: this PKGBUILD is a little more complicated than it could be,
+# because we try to be strictly pedantic about separating the download
+# phase from the build phase to conform to PKGBUILD ideals.
+#
+# Namely, all PKGBUILDs should ideally be written such that:
+#
+# - The download phase is done by the package build tool
+#   (i.e. everything and anything that needs to be obtained from the
+#   Internet is listed in the source array).
+#
+# - The download phase does not run any external code.
+#
+# - The build phase does not access the Internet.
+#
+# Satisfying these constraints allows users to configure the download
+# mechanisms to e.g. use proxies and provides security and
+# reproducibility guarantees.
+#
+# If you are packaging btdu and don't care about the above, you can
+# skip all the "dub add-local ..." commands and simply run "dub build
+# -b release", as documented in btdu's README.
+
+pkgname=btdu
+pkgver=0.6.1
+pkgrel=2
+pkgdesc='sampling disk usage profiler for btrfs'
+arch=('aarch64' 'i686' 'x86_64')
+url='https://github.com/CyberShadow/btdu'
+license=('GPL2')
+depends=('ncurses' 'd-runtime')
+_d_compiler_spec='ldc'
+makedepends=("$_d_compiler_spec" 'dub' 'dtools')
+
+# These should match dub.selections.json from the btdu repository:
+pkgver=0.6.1
+_d_ae_ver=0.0.3655
+_d_btrfs_ver=0.0.21
+_d_ncurses_ver=1.0.0
+_d_emsi_containers_ver=0.9.0
+
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/CyberShadow/${pkgname}/archive/v${pkgver}.tar.gz
+		ae-${_d_ae_ver}.tar.gz::https://github.com/CyberShadow/ae/archive/v${_d_ae_ver}.tar.gz
+		d-btrfs-${_d_btrfs_ver}.tar.gz::https://github.com/CyberShadow/d-btrfs/archive/v${_d_btrfs_ver}.tar.gz
+		ncurses-${_d_ncurses_ver}.tar.gz::https://github.com/D-Programming-Deimos/ncurses/archive/v${_d_ncurses_ver}.tar.gz
+		emsi_containers-${_d_emsi_containers_ver}.tar.gz::https://github.com/dlang-community/containers/archive/v${_d_emsi_containers_ver}.tar.gz
+	   )
+sha256sums=('20a9beb6a5b02199df553eb1b24ce53d895ed0a70d3ec258f8294206ab7ca475'
+            '5adc509dc64358eeee6a43b207b7b7ce3c523dd8a5a1be2a3d4eb3dbdd00dd02'
+            '343bef0cd60f4708fdab721a2aff003d0921267cc99ebfb778e93793433e3970'
+            'b5db677b75ebef7a1365ca4ef768f7344a2bc8d07ec223a2ada162f185d0d9c6'
+            '5e256b84bbdbd2bd625cba0472ea27a1fde6d673d37a85fe971a20d52874acaa')
+
+prepare() {
+  ln -sfT ae-${_d_ae_ver} "${srcdir}/ae" # directory name must be "ae" for --rdmd
+  rm -rf "${srcdir}/_dub"
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  HOME="${srcdir}/_dub" dub add-local ../ae ${_d_ae_ver}
+  HOME="${srcdir}/_dub" dub add-local ../d-btrfs-${_d_btrfs_ver} ${_d_btrfs_ver}
+  HOME="${srcdir}/_dub" dub add-local ../ncurses-${_d_ncurses_ver} ${_d_ncurses_ver}
+  HOME="${srcdir}/_dub" dub add-local ../containers-${_d_emsi_containers_ver} ${_d_emsi_containers_ver}
+}
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  # Ensure Dub doesn't try to use GDC
+  local d_compiler
+  d_compiler=$(pacman -Qq "$_d_compiler_spec")
+
+  HOME="${srcdir}/_dub" dub --skip-registry=all build --compiler="$d_compiler" -b release --rdmd || # --rdmd creates smaller binaries
+  HOME="${srcdir}/_dub" dub --skip-registry=all build --compiler="$d_compiler" -b release # retry without --rdmd - https://github.com/dlang/dub/pull/2033
+}
+
+package() {
+  install -D -m755 "${srcdir}/${pkgname}-${pkgver}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -D "${srcdir}/${pkgname}-${pkgver}/${pkgname}.1" "${pkgdir}/usr/share/man/man1/${pkgname}.1"
+}
