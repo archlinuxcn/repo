@@ -1,6 +1,6 @@
 pkgname=julia-git-fastlapackinterface-src
-pkgver=2.0.4
-_commit=606c30813ce70d50321763217834214757813ffe
+pkgver=2.1.0
+_commit=a88a71504b4680a48e2d8dd684d73fa7aa5415d8
 pkgrel=1
 pkgdesc="FastLapackInterface.jl"
 url="https://github.com/DynareJulia/FastLapackInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/DynareJulia/FastLapackInterface.jl.git#commit=$_commit")
-sha256sums=('db029cee82b3992584b74a64312abef244aafd2b8390096b487b5320907bab72')
+sha256sums=('b9a35cc4f738e733cfed8073bd0f3fae3c75add94b642a19d48e09b0a9888ac1')
 
 package() {
   cd FastLapackInterface.jl
