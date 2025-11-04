@@ -35,7 +35,8 @@ prepare() {
 
 build() {
   cd "$pkgbase"
-  ./build.sh
+  cp twemoji.toml.tmpl
+  ../build.sh
   nanoemoji twemoji_*.toml
 }
 
