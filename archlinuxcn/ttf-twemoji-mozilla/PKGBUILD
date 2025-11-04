@@ -3,7 +3,7 @@
 
 pkgname=ttf-twemoji-mozilla
 pkgver=0.7.0
-pkgrel=5
+pkgrel=6
 pkgdesc="Twitter Emoji with COLRv1 with Mozilla."
 url="https://github.com/mozilla/twemoji-colr"
 arch=(any)
@@ -21,18 +21,21 @@ source=(
   "twemoji-colr-v$pkgver.tar.gz::https://github.com/mozilla/twemoji-colr/archive/refs/tags/v$pkgver.tar.gz"
   "$pkgname-twemoji-15.0.3.patch::https://github.com/mozilla/twemoji-colr/commit/3ab46d5f06862d2fb4d6b112ca7b3cb5b856c63c.patch"
   "$pkgname-twemoji-15.1.0.patch::https://github.com/mozilla/twemoji-colr/commit/0dccb7e5da29654918e73697a3e8d0d4d33e21fb.patch"
-  "$pkgname-twemoji-16.0.1.patch::https://github.com/mozilla/twemoji-colr/commit/d0404a5c83e1b0cbbdab3096541f4ef4762ceca3.patch"
+  "$pkgname-twemoji-16.0.1-v2.patch::https://github.com/mozilla/twemoji-colr/commit/34042a1335040cbd43b91867dcb344ced26cc5a8.patch"
+  "$pkgname-twemoji-17.0.1.patch::https://github.com/mozilla/twemoji-colr/commit/850af90f845f4b7b52e86f0900219f32d9037f45.patch"
 )
 b2sums=('8acf3756bbf0244c73ffeeb8a9c34916dac1c446e8aee1c1cf39dd5f8a09e22bf881a67d678803800ed756a35b4e080ad190be75265944a282bf3539dd834061'
         '9ac440f68096c466429ed6ca5fa94b990d79258e459a58f0c34059bc867aeb502c4cb936907310fb819aa8ec49c40da614f65b4ea5548e148e20d0fc52f9d0e0'
         '168a0548c548e8601bc6e82aa8916fa4c9a9869f4d98ab8ad5b40cf5db42ccaa018bf819ce46662b7f7959575c6671f9486aafc101c8562890ec57e0c0a587e8'
-        '7b9c1389158cc24bc023467b2f7cc0dc48c5b86de1cfee978d0cf446992ec232f16954db9275b47a4efbaebce211410960dbff2e83bbcd97f74b0edcd687fcb0')
+        '519b2eed19cb99ee3e7e11cc5e2da10a2b44d8792daa41e3d65d0110d8d3f3f88498af97caa9cf9d4d90220e534d037aa7be92f075e594733f4902dee4ad69d8'
+        '33ad6e0f8f4a8031ec0ba0826cd6ba7d31c58aa65cc1191f2db2e238418e29d38ef8018c8954bafa5a07b700e9ac9ae52adacb8070413ed02f59e24401c40709')
 
 prepare() {
   cd "twemoji-colr-$pkgver"
   git apply -p1 ../"$pkgname-twemoji-15.0.3.patch"
   git apply -p1 ../"$pkgname-twemoji-15.1.0.patch"
-  git apply -p1 ../"$pkgname-twemoji-16.0.1.patch"
+  git apply -p1 ../"$pkgname-twemoji-16.0.1-v2.patch"
+  git apply -p1 ../"$pkgname-twemoji-17.0.1.patch"
 }
 
 build() {
