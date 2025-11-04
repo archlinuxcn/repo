@@ -15,9 +15,12 @@ url="https://github.com/jdecked/twemoji"
 arch=(any)
 license=('CC-BY-4.0')
 makedepends=(
+  'awk'
   'git'
   'nanoemoji'
+  'perl-rename'
   'resvg'
+  'sed'
 )
 provides=('emoji-font')
 source=(
