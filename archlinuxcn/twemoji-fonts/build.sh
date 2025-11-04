@@ -12,13 +12,13 @@ FILES=$(echo assets/svg/* | tr ' ' '\n' | awk '{printf("\"%s\",NEWLINE", $0)}')
 echo "s|PLACEHOLDER|$FILES|" > files.sed
 
 sed -e 's/FORMAT/cff2_colr_1/' \
-    -e 's/FILENAME/TwemojiCOLRv1.otf/' \
+    -e 's/FILENAME/Twemoji-CFF2-COLRv1.otf/' \
     twemoji.toml.tmpl > twemoji_cff2_colrv1.toml
 sed -i -f files.sed twemoji_cff2_colrv1.toml
 sed -i -e 's/NEWLINE/\n/g' twemoji_cff2_colrv1.toml
 
 sed -e 's/FORMAT/cff_colr_0/' \
-    -e 's/FILENAME/TwemojiCOLRv0.otf/' \
+    -e 's/FILENAME/Twemoji-CFF-COLRv0.otf/' \
     twemoji.toml.tmpl > twemoji_cff_colrv0.toml
 sed -i -f files.sed twemoji_cff_colrv0.toml
 sed -i -e 's/NEWLINE/\n/g' twemoji_cff_colrv0.toml

@@ -48,14 +48,14 @@ build() {
 
 package_otf-twemoji-colrv0() {
   cd "$pkgbase"
-  install -Dm644 "build/TwemojiCOLRv0.otf" \
+  install -Dm644 "build/Twemoji-CFF-COLRv0.otf" \
     "$pkgdir/usr/share/fonts/Twemoji.otf"
   install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
     LICENSE-GRAPHICS
 }
 package_otf-twemoji-colrv1() {
   cd "$pkgbase"
-  install -Dm644 "build/TwemojiCOLRv1.otf" \
+  install -Dm644 "build/Twemoji-CFF2-COLRv1.otf" \
     "$pkgdir/usr/share/fonts/Twemoji.otf"
   install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
     LICENSE-GRAPHICS
