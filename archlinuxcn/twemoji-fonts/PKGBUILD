@@ -84,8 +84,8 @@ package_ttf-twemoji-cbdt() {
 }
 package_otf-twemoji-all() {
   cd "$pkgbase"
-  install -Dm644 "build/TwemojiALL.otf" \
-    "$pkgdir/usr/share/fonts/Twemoji.otf"
+  install -Dm644 "build/TwemojiALL.ttf" \
+    "$pkgdir/usr/share/fonts/Twemoji.ttf"
   install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
     LICENSE-GRAPHICS
 }
