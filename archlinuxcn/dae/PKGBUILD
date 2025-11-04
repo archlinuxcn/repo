@@ -2,7 +2,7 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 
 pkgname=dae
-pkgver=1.0.0
+pkgver=1.1.0rc1
 pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=('x86_64' 'aarch64')
@@ -17,7 +17,7 @@ makedepends=('clang' 'go')
 backup=("etc/${pkgname}/config.${pkgname}")
 source=("${pkgname}-${pkgver}.tar.xz::${url}/releases/download/v${pkgver}/${pkgname}-full-src.tar.xz")
 install="${pkgname}.install"
-sha256sums=('6821e377bf657ab0abf47e610b9aeef63f980181e8c364f1c83083ab4766c5d2')
+sha256sums=('62ceafadd4b3634e01456e0badc6fda2a4c920495a6a7805d66a1f19d88b86fe')
 
 build() {
 	export CFLAGS="-fno-stack-protector"
