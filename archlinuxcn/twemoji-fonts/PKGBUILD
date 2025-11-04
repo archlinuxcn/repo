@@ -10,7 +10,7 @@ pkgname=(
   otf-twemoji-all
 )
 pkgver=17.0.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Twemoji built with nanoemoji"
 url="https://github.com/jdecked/twemoji"
 arch=(any)
@@ -31,7 +31,7 @@ source=(
   twemoji.toml.tmpl
 )
 b2sums=('72c9417c37f4de670ba9f19327c3e87cdcc3f34110ef717edd941e1aa38684c02f6de4e69d399436c590dc76b86eae7db52e07251f4ff9a0df0a0c5cd976cd52'
-        'b3280b0f5f1a0ed6528a5095cd172debbe13d3e4f2c407b87d51e3de1098cd2f5474eaedf8a2e3528c40a2f390ca37c7a3e3644bd6e0e7519d082e015b715b30'
+        '3a96dbeb6a809d6643b31b171d5c261f1880d00480dd5858d0a7685a2d1a39b94c88c7f8748b8acffac50b55e96dc41d03568be5956eddf02978cb24e570217e'
         'fc76af253b91aa5d0a60c812c54aab9c91b04a7671e653b2ee8c80a116153e07d27a2dc10e257bd59434c384e68981dc151f2731dc48f96f20c104fd7ed8222f')
 
 prepare() {
