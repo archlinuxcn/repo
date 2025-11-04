@@ -7,7 +7,7 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=5.26.2
+_pkgver=5.27.1
 pkgver=${_pkgver//-/}
 pkgrel=1
 pkgdesc="An Arknights assistant"
@@ -17,10 +17,12 @@ license=('AGPL-3.0-only')
 depends=(opencv onnxruntime)
 makedepends=(boost eigen git cmake)
 _fastdeploy_ref=e962983da6daba7d0c12f6bf5f8ff7173be70982
-source=("${_pkgname}-${_pkgver}.tar.gz::$url/archive/refs/tags/v$_pkgver.tar.gz"
+source=("git+$url.git#tag=v${_pkgver}"
+"git+https://github.com/MaaXYZ/MaaUtils.git"
 "FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaXYZ/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
 install="${_pkgname}.install"
-md5sums=('4d9fb677cb06e898b520dd883097e24c'
+md5sums=('SKIP'
+         'SKIP'
          '4555f8dce0cec02022356d50c8f2275c')
 
 if ((WITH_CUDA)); then
@@ -31,23 +33,53 @@ fi
 prepare() {
     sed -e 's/35 50 52 60 61 70//g;' -i "${srcdir}/FastDeploy-${_fastdeploy_ref}/cmake/cuda.cmake"
 
-    cd "${srcdir}/MaaAssistantArknights-${_pkgver}"
+    cd "${srcdir}/MaaAssistantArknights"
+
+    git submodule init
+    git config submodule.src/MaaUtils.url "${srcdir}/MaaUtils"
+    git -c protocol.file.allow=always submodule update src/MaaUtils
 
     sed -e '/^find_package(fast/s/^/# /;' \
         -e '/maadeps/s/^/# /;' \
         -e 's/imgproc/imgproc calib3d videoio xfeatures2d/' \
-        -i CMakeLists.txt
+        -e 's/ system)/ process)/'\
+        -i CMakeLists.txt -i src/MaaUtils/MaaUtils.cmake
 
     sed -e '/copy_and_add_rpath_library(/s/^/# /;' \
         -e '/add_compile_options/s/^/# /;' \
-        -i cmake/config.cmake
-    sed -e '/maadeps/s/^/# /;' -i cmake/utils.cmake -i src/MaaCore/CMakeLists.txt
+        -i {,src/MaaUtils/}cmake/config.cmake
+    sed -e '/maadeps/s/^/# /;' \
+        -e 's/Boost::system/Boost::process/g;' \
+        -i {,src/MaaUtils/}cmake/utils.cmake -i src/MaaCore/CMakeLists.txt
+
+    sed -e '/MAADEPS_DIR/s/^/# /;' \
+        -e '/system/s/^/# /;' \
+        -i src/MaaUtils/MaaUtils.cmake
+    sed -e 's/Boost::system//g' \
+        -i src/MaaUtils/source/CMakeLists.txt
 
     cat <<_EOF >>CMakeLists.txt
 add_subdirectory(\${fastdeploy_SOURCE_DIR} \${fastdeploy_BINARY_DIR} EXCLUDE_FROM_ALL SYSTEM)
 target_include_directories(MaaCore SYSTEM PRIVATE \${fastdeploy_SOURCE_DIR})
-install(TARGETS fastdeploy_ppocr)
+install(TARGETS fastdeploy_ppocr MaaUtils)
 _EOF
+
+    # fix for boost 1.89
+    cat <<_EOF >>src/MaaUtils/include/MaaUtils/IOStream/BoostIO.hpp
+// #define BOOST_PROCESS_VERSION 1
+#include <boost/process/v1/child.hpp>
+#include <boost/process/v1/io.hpp>
+#include <boost/process/v1/pipe.hpp>
+#include <boost/process/v1/search_path.hpp>
+_EOF
+    sed -e 's/address::from_string/make_address/g' \
+        -e 's/\*ios\.rdbuf/ios\.socket/' \
+        -i src/MaaUtils/source/IOStream/SockIOStream.cpp
+
+    sed -e '4i #include <unordered_map>' \
+        -i src/MaaCore/Config/Roguelike/RoguelikeMapConfig.h
+    sed -e '24i #include <cstring>' \
+        -i src/MaaCore/./Utils/ExceptionStacktrace.hpp
 }
 
 build() {
@@ -64,10 +96,11 @@ build() {
         -Dfastdeploy_SOURCE_DIR="$srcdir"/FastDeploy-"$_fastdeploy_ref"
         -Dfastdeploy_BINARY_DIR="$srcdir"/build-FastDeploy
     )
+    CXXFLAGS+=" -DBOOST_PROCESS_VERSION=1"
     
     CXXFLAGS+=" -fmacro-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}/${pkgbase:?}"
     
-    cmake -B build -S "MaaAssistantArknights-${_pkgver}" "${_cmake_flags[@]}"
+    cmake -B build -S "MaaAssistantArknights" "${_cmake_flags[@]}"
     cmake --build build
     
     if ((WITH_CUDA)); then
@@ -77,7 +110,7 @@ build() {
             -DCUDA_ARCH_NAME=Auto
         )
         
-        cmake -B build-cuda -S "MaaAssistantArknights-${_pkgver}" "${_cmake_flags[@]}"
+        cmake -B build-cuda -S "MaaAssistantArknights" "${_cmake_flags[@]}"
         cmake --build build-cuda
     fi
 }
