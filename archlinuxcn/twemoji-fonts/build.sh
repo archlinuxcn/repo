@@ -20,7 +20,7 @@ sed -i -e 's/NEWLINE/\n/g' twemoji_cff2_colrv1.toml
 sed -e 's/FORMAT/cff_colr_0/' \
     -e 's/FILENAME/TwemojiCOLRv0.otf/' \
     twemoji.toml.tmpl > twemoji_cff_colrv0.toml
-sed -i -f files.sed twemoji_cff2_colrv0.toml
+sed -i -f files.sed twemoji_cff_colrv0.toml
 sed -i -e 's/NEWLINE/\n/g' twemoji_cff_colrv0.toml
 
 sed -e 's/FORMAT/glyf_colr_1/' \
