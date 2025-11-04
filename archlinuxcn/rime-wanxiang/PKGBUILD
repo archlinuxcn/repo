@@ -41,6 +41,7 @@ declare -A _fuzhus=(
   [hanxin]="汉心"
   [wubi]="五笔前2"
   [tiger]="虎码首末"
+  [shouyou]="首右"
 )
 
 build() {
@@ -93,14 +94,14 @@ package_rime-wanxiang-pro-data() {
 # - ${pkgbase}-data
 # - ${pkgbase}-dict-<schema>
 #   - ${pkgbase}-dict
-# 
+#
 # ${pkgbase}-pro-<schema>
 # - ${pkgbase}-pro-data
 # - [${pkgbase}-pro-data-fuzhu]
 #   - ${pkgbase}-pro-data-<fuzhu>-fuzhu
 #     - ${pkgbase}-pro-dict-<fuzhu>-fuzhu
 #       - ${pkgbase}-pro-dict
-# 
+#
 for _schema in "${!_schemas[@]}"; do
     _schema_name=${_schemas[$_schema]}
 
