@@ -1,0 +1,32 @@
+maintainers:
+  - github: CoelacanthusHex
+    email: coelacanthus@archlinuxcn.org
+build_prefix: extra-x86_64
+
+pre_build_script: |
+    aur_pre_build(maintainers=['Coelacanthus', 'lilac'])
+    update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
+repo_makedepends:
+  - nanoemoji
+
+update_on:
+  - source: github
+    github: jdecked/twemoji
+    use_latest_release: true
+    prefix: v
+  # Trigger rebuild when build tools update.
+  - alias: alpm-lilac
+    alpm: nanoemoji
+  - alias: alpm-lilac
+    alpm: picosvg
+  - alias: alpm-lilac
+    alpm: python-cffsubr
+  - source: alpm
+    alpm: resvg
+  - source: alpm
+    alpm: python-fonttools

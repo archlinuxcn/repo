@@ -1,0 +1,77 @@
+# Maintainer: Coelacanthus <uwu@coelacanthus.name>
+
+pkgbase=twemoji-fonts
+pkgname=(
+  otf-twemoji-colrv0
+  ttf-twemoji-colrv0
+  otf-twemoji-colrv1
+  ttf-twemoji-colrv1
+  ttf-twemoji-cbdt
+)
+pkgver=17.0.1
+pkgrel=1
+pkgdesc="Twemoji built with nanoemoji"
+url="https://github.com/jdecked/twemoji"
+arch=(any)
+license=('CC-BY-4.0')
+makedepends=(
+  'git'
+  'nanoemoji'
+  'resvg'
+)
+provides=('emoji-font')
+source=(
+  "$pkgbase::git+https://github.com/jdecked/twemoji.git#tag=v$pkgver"
+  build.sh
+  twemoji.toml.tmpl
+)
+b2sums=('72c9417c37f4de670ba9f19327c3e87cdcc3f34110ef717edd941e1aa38684c02f6de4e69d399436c590dc76b86eae7db52e07251f4ff9a0df0a0c5cd976cd52'
+        'd665fe11e0f3e791bc96f94f73b7a7d68b65b02a266dddce3a425e86092a837dca86a6dded74566cf7c272a0d526eb378acfc9d96cbb616a54b2b5350c584092'
+        'fc76af253b91aa5d0a60c812c54aab9c91b04a7671e653b2ee8c80a116153e07d27a2dc10e257bd59434c384e68981dc151f2731dc48f96f20c104fd7ed8222f')
+
+prepare() {
+  cd "$pkgbase"
+}
+
+build() {
+  cd "$pkgbase"
+  ./build.sh
+  nanoemoji twemoji_*.toml
+}
+
+package_otf-twemoji-colrv0() {
+  cd "$pkgbase"
+  install -Dm644 "build/TwemojiCOLRv0.otf" \
+    "$pkgdir/usr/share/fonts/Twemoji.otf"
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
+    LICENSE-GRAPHICS
+}
+package_otf-twemoji-colrv1() {
+  cd "$pkgbase"
+  install -Dm644 "build/TwemojiCOLRv1.otf" \
+    "$pkgdir/usr/share/fonts/Twemoji.otf"
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
+    LICENSE-GRAPHICS
+}
+package_ttf-twemoji-colrv0() {
+  cd "$pkgbase"
+  install -Dm644 "build/TwemojiCOLRv0.ttf" \
+    "$pkgdir/usr/share/fonts/Twemoji.ttf"
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
+    LICENSE-GRAPHICS
+}
+package_ttf-twemoji-colrv1() {
+  cd "$pkgbase"
+  install -Dm644 "build/TwemojiCOLRv1.ttf" \
+    "$pkgdir/usr/share/fonts/Twemoji.ttf"
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
+    LICENSE-GRAPHICS
+}
+package_ttf-twemoji-cbdt() {
+  cd "$pkgbase"
+  install -Dm644 "build/TwemojiCBDT.ttf" \
+    "$pkgdir/usr/share/fonts/Twemoji.ttf"
+  install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
+    LICENSE-GRAPHICS
+}
+# vim: set ts=2 sw=2 et:
