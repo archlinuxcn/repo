@@ -5,7 +5,7 @@ set -eu
 pushd assets/svg
     perl-rename 's/[0-9a-f]++(?!$)/sprintf"%04x",hex($&)/ge' *.svg
     perl-rename 's/^/emoji_u/' *.svg
-    perl-rename 's/-/_u/g' *.svg
+    perl-rename 's/-/_/g' *.svg
 popd
 
 FILES=$(echo assets/svg/* | tr ' ' '\n' | awk '{printf("\"%s\",NEWLINE", $0)}')
