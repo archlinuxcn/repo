@@ -2,7 +2,7 @@
 
 pkgname=picosvg
 pkgver=0.22.3
-pkgrel=1
+pkgrel=2
 pkgdesc='CLI tool to simplify SVG files, intended for use as part of a font build'
 arch=(any)
 url="https://github.com/googlefonts/$pkgname"
