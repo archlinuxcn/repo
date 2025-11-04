@@ -1,13 +1,13 @@
 _name=ormsgpack
 pkgname=python-${_name}
-pkgver=1.11.0
+pkgver=1.12.0
 pkgrel=1
 pkgdesc="Fast, correct Python msgpack library supporting dataclasses, datetimes, and numpy."
 arch=('any')
 url='https://github.com/aviramha/ormsgpack'
 license=('Apache-2.0 OR MIT')
 source=("ormsgpack::git+${url}#tag=${pkgver}")
-sha256sums=('607c2f7c78ed758d09c8e27de55a3438ec71d0d02b27e462654813d6bf46028b')
+sha256sums=('3323fcf9f76e2bbae3c7996bbe1c0cc5453eedfd099bf8d03c702a9e055edbd5')
 depends=('python' 'gcc-libs')
 makedepends=('python-maturin' 'python-build' 'python-installer' 'python-wheel' 'git')
 checkdepends=('python-msgpack' 'python-numpy' 'python-pendulum' 'python-pydantic' 'python-pytest' 'python-pytest-benchmark' 'python-dateutil' 'python-pytz' 'python-tzdata')
