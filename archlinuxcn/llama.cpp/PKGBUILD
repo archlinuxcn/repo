@@ -3,7 +3,7 @@
 # Contributor: txtsd <aur.archlinux@ihavea.quest>
 
 pkgname=llama.cpp
-pkgver=b6955
+pkgver=b6960
 pkgrel=1
 pkgdesc="Port of Facebook's LLaMA model in C/C++ (with system ggml support)"
 arch=(x86_64 armv7h aarch64)
@@ -28,7 +28,7 @@ optdepends=(
   'python-transformers: needed for convert_hf_to_gguf.py'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ggml-org/llama.cpp/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('93f2e16a34c4d17400b273c4cdbdf8ee47fa37d976d375823e59b871480419ca')
+sha256sums=('5794d54698aae8a2f2d9c96b3c902871b999cabaf9838b7ae83be5b12939a6f3')
 
 prepare() {
   ln -sf "${pkgname}-${pkgver}" llama.cpp
