@@ -4,19 +4,19 @@
 # Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 pkgname='fcitx5-mozc-ut'
-pkgver=2.32.5981.102
+pkgver=2.32.5994.102
 pkgrel=1
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
-depends=('fcitx5' 'mozc>=2.32.5981.102')
+depends=('fcitx5' 'mozc>=2.32.5994.102')
 makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-configtool')
-provides=('fcitx5-mozc=2.32.5981.102')
+provides=('fcitx5-mozc=2.32.5994.102')
 conflicts=('fcitx5-mozc')
 options=(!distcc !ccache)
-source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=29e2b953deacc1b6aa35c28ffedb692399ee4c05'
+source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=7cd777dbb11946a75525e77ed867dd0f930fb78e'
         'git+https://github.com/abseil/abseil-cpp.git#commit=4447c7562e3bc702ade25105912dce503f0c4010'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=b514bdc898e2951020cbdca1304b75f5950d1f59'
@@ -24,7 +24,7 @@ source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=29e2b953deacc1
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
         'git+https://github.com/protocolbuffers/protobuf.git#commit=7cc670c1809e704ebeba90fb430d50e009f36727'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d')
-b2sums=('463c1fb3d6c4fb3c19b3f334c1af1fa5b4f6b42af71cb4ff31d45a3ea19945f054546d9412ccd10f1caf3a7b375da0729d56eb9a8323d5c535ef214f636d25f0'
+b2sums=('158102d8c979c8de715047125692d97c4c79bcc81e2095e417dbda5cf064a5c3d3cae4d1629d0b10e4c7fc12213e2c8402e30281f3d7f1f31ff66d4cb96e8a59'
         '45ca8cc8c61d9696365d19064e36be9edf38112f57e413063b0f72155fc8a67147768386eae005e1e23e9c95ede95ce1df0c630b1704a84f2d3e05397b0ddade'
         'eb54c87947561d6d985b3a244860a247a6ae41e5667ed6f4687dc864a3f02bc0b52d111c5b16025e06f44a1db31d7731c42eb38725521512b4c102475aebf585'
         '89cbc8965037def33f8c46210b16c35e306fceb437f74aa0133e9a914dbc876d363394f4e7b94485e6d518e78f20db07a832751b0afd7a732e37c22eb1896435'
