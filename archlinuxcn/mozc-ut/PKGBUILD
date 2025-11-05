@@ -17,7 +17,7 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname='mozc-ut'
-pkgver=2.32.5981.102.20251020
+pkgver=2.32.5994.102.20251105
 pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
@@ -28,10 +28,10 @@ makedepends=('bazel' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=2.32.5981.102')
+provides=('mozc=2.32.5994.102')
 conflicts=('mozc')
 options=(!distcc !ccache)
-source=('git+https://github.com/google/mozc.git#commit=8b9b14cb0a41c4f353e5d4c76619044522af885a'
+source=('git+https://github.com/google/mozc.git#commit=d9c3f195582de6b0baa07ecb81a04e8902acf9af'
         'git+https://github.com/abseil/abseil-cpp.git#commit=4447c7562e3bc702ade25105912dce503f0c4010'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=b514bdc898e2951020cbdca1304b75f5950d1f59'
@@ -39,18 +39,18 @@ source=('git+https://github.com/google/mozc.git#commit=8b9b14cb0a41c4f353e5d4c76
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
         'git+https://github.com/protocolbuffers/protobuf.git#commit=7cc670c1809e704ebeba90fb430d50e009f36727'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d'
-        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=e173cd106891d76e73263711036070c2b31d7f9d'
+        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=05942c4da7a4066882e8aa3c972bce8c880ba3cf'
         'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=69d40eed4e9cf016384d9629920fefa199116ea2'
         'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=4f82fc1003403874d9d4dd9adecfeff17f06a1f1'
-        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=95d6e3d24a3e22700b57b162bcd18c87b1d213e9'
+        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=17c5ca473b0b001460215fcd42c9cc520634516f'
         'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=e33ac4ce808fa4253c6c97bf5178e229a4bfb50f'
-        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=d0ad47deea54f3a6818efacd93e20ba5bac93213'
-        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=5d91fc6fdc33f802174398ca208ded7f8c561427'
+        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=0310f591108cffdfc9e39ff56e17fb3bb188b2e0'
+        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=b10b5c2c946e68f32cce4173cfd8c4676e4145b9'
         'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=384ad926e306d5308839c6dedb63696f11703968'
-        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=662ef1939eb6e9297d91abd18e53bbd0f8690914'
-        'https://dumps.wikimedia.org/jawiki/20251001/jawiki-20251001-pages-articles-multistream-index.txt.bz2')
-noextract=('jawiki-20251001-pages-articles-multistream-index.txt.bz2')
-b2sums=('8ff3b4a900f9b4e71cf5b51c23db3a0c0dd25889a07ee6a3afb2de2669a01f2ce43b5d975c8ff121daaabd6608b8deb610e38d7ad284bcaef8d84fd0735592c1'
+        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=33f9835cfafc85d6761037342debec0e7ae8aa17'
+        'https://dumps.wikimedia.org/jawiki/20251101/jawiki-20251101-pages-articles-multistream-index.txt.bz2')
+noextract=('jawiki-20251101-pages-articles-multistream-index.txt.bz2')
+b2sums=('d522977e6612b69e8c1088e0a7f22c1ed346e334a3778824ef027718372b5b17145b5644a6edb68c8ab606643f7281f75c9437b0f2a22103cb482bf2fc7a24fb'
         '45ca8cc8c61d9696365d19064e36be9edf38112f57e413063b0f72155fc8a67147768386eae005e1e23e9c95ede95ce1df0c630b1704a84f2d3e05397b0ddade'
         'eb54c87947561d6d985b3a244860a247a6ae41e5667ed6f4687dc864a3f02bc0b52d111c5b16025e06f44a1db31d7731c42eb38725521512b4c102475aebf585'
         '89cbc8965037def33f8c46210b16c35e306fceb437f74aa0133e9a914dbc876d363394f4e7b94485e6d518e78f20db07a832751b0afd7a732e37c22eb1896435'
@@ -58,16 +58,16 @@ b2sums=('8ff3b4a900f9b4e71cf5b51c23db3a0c0dd25889a07ee6a3afb2de2669a01f2ce43b5d9
         '7abe2c678b7983fbc86b11b25e6f6f1dfc4dfe75b8db40510849ce8b06f415dc4932c16fa0bae213fa0a466d7a837363d0860024ac0e5bcb87f64dc23561c220'
         'd284ef75e86d80000a65afe5e1d60493a70af47acb664432e8e12e9cf84a33acfebd7751f75b4693d187c36def1bdca1d5f9e336dd2edea6c28120064f7956c3'
         '8d105ce08ca103db180ec99c7845eee08d15abcc3e7cfce51d1b565a4ed5942be40aaefbc78e80e09e84c5583640d6a33feed7d3d9ec572c4a9ebf505ea6a7f5'
-        'eb5fa8ba9d72e9c79465c1f1af8228267a5a22263afd62e5fc5123b9daca3fc8c016704904426e14f1b871efd7c762b4915705ac51d3bf0d19df1f062ec52071'
+        '0d892a32ef01d77adebb9d646aa5a78713946fa74c8e1b4c1183f40fe8afd0605281280b7d6d8e15bb3d3bc0cc481dc624e27cca4fe023235265107fe803ead0'
         'f585f3d3463e01669eea5568198cd9bf49492a0a1f5fc3afa7ce3fc2ce744ce02e4fe970cc2ab9b40fa287569c66ed8fb8fec6f580042c2fb76850e3cd93da6c'
         '9bb7d0dc31341b91f31831189ac7a3443cfc845b9f6f2eb970c83490c78c9fc9fe85ed50d64ffac94997062c229a95ba02bf15ce0ced14ba551c89a267e814ce'
-        '7a359c989b4316398a243e0191c492360f11c7122d979ad0ddbd74b27929516769f2b4425038ff467145186bc1677cb71738770c906faad65be2c831f6ea98d2'
+        '4ea3b9aa4a729ca78d8a114f5afffb39fb00c999372d890a2b0bb91443b4fd1e62ed5738538aec26d47ce15f251a62b77e6be886e067ad0aa422495840e18ff7'
         'b2a8a919973d1a74e18b69adf7753cf0cacfa038b3c97bb37c57f6ff0749092e323befd56ae58a3eea637cefe2a3f55280f391d25fd4639dbca3ede2e8472f44'
-        '23190bc9a2f555c8a3744917417960c9c9b42ebe2fed6d084869dc75da1f49daf84782fc35cec1ad401bb381bf5eef8ba0cf9e8c5150fc0c07b636e9bab10a79'
-        'd972e4a113b6a6087d7fd7e6a39609d605771dc8a41b872628562c4593217095f6beb26b9d93e843d5713de9fedcf3e313366eb6ba4973f31ba41cfdf30d4256'
+        '194b02857dfe477bea93e47c844eb4a6757988745e0c4b8f00ad07704b8393b8384e920ad041d1344b42bba9be0ba10df53e640cc5d8d733da812866cb6a72e1'
+        '1fefd676841f6534d93d0be22dc6cdacf516282db159f91372a9d2258143ffd555d59d07a2b4543e5d2fa79a3496a174687d0b397ca1ba7a9c2c1b53ab7555b9'
         '3c63f51241bd659e5841f26b11620ce755663aafe2a7c750738bb840df2e50de6b033f6cbf43e8a74258b1d07e86f1487b4caf1954e99354ce8f526ab469623a'
-        '471c91bb69846ead9a3bf48cf61433705cc0fbaedc86a2fde45f2527c13b2364598222d4d8dc5196a3ba0c62469a762596c4bf47f173b9c394927c33940002fb'
-        'bb2e781571f09d1a69485001193bce370cd47212a363efdc3306da36fb931ffa54a6fcef31ba2d33fb2ca02226a71cd50f305bf13b95c641dc4aecd3dba1b5f2')
+        'fad5b6d720c6e4a76947a790ac727fbacd03d6da76802b7f75b1f07fcdeae88bd401d0ba130073e4804efca481aaedf039c7a9e60b5c07f7eb5ed42cd3470839'
+        'bc23729bb43c750a757cf140638551edf663ef7bf52095033e859391a6109a7490c30156defb389fc95483ea4d4c4da561b04dc7b511d8dd6843b0a60a989139')
 
 prepare() {
     cd mozc/src
@@ -86,7 +86,7 @@ prepare() {
 
     # Use a dated snapshot for the jawiki dump data
     sed -i -e '124,127d' merge_dictionaries.py
-    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20251001|g" merge_dictionaries.py
+    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20251101|g" merge_dictionaries.py
 
     # Use our local copy of the Mozc repo
     sed -i -e "65s|os\.path\.exists(f'mozc-{date}.zip')|False|" merge_dictionaries.py
