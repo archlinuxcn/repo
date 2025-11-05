@@ -2,7 +2,7 @@
 
 _pkgname=ITK
 pkgname=(itk-git python-itk-git)
-_pkgver=5.4
+_pkgver=5.4.4
 pkgver=5.4.r57322.5e15be76d7
 pkgrel=1
 pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
@@ -29,12 +29,11 @@ depends=(
 makedepends=(
   castxml
   cmake
-  gcc13
   git
-  # gtest
+  gtest
   python
   subversion
-  swig
+#  swig
 )
 options=(!emptydirs)
 source=("${_pkgname}::git+https://github.com/InsightSoftwareConsortium/ITK.git")
@@ -49,14 +48,6 @@ get_pyver() {
   python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
 }
 
-prepare() {
-  # quick fix for building with system eigen
-  sed -i 's/_Eigen3_min_version 3.3/_Eigen3_min_version 5.0/' ${_pkgname}/Modules/ThirdParty/Eigen3/CMakeLists.txt
-  # quick fix for building with swig < 4.3.0
-  find ${_pkgname} -type f -exec sed -i "s/SWIG_Py_DECREF/Py_DECREF/g" {} \;
-  find ${_pkgname} -type f -exec sed -i "s/SWIG_Py_INCREF/Py_INCREF/g" {} \;
-}
-
 build() {
   # we build the default modules by default
   # you could add additional modules by setting -DModule_<NAME>=ON
@@ -65,8 +56,8 @@ build() {
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
     -DCMAKE_BUILD_TYPE=Release
-    -DCMAKE_CXX_COMPILER=g++-13
-    -DCMAKE_C_COMPILER=gcc-13
+    -DCMAKE_CXX_COMPILER=g++
+    -DCMAKE_C_COMPILER=gcc
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DCMAKE_SKIP_RPATH=ON
@@ -81,12 +72,12 @@ build() {
     -DITK_USE_SYSTEM_EXPAT=ON
     -DITK_USE_SYSTEM_FFTW=ON
     -DITK_USE_SYSTEM_GDCM=ON
-    -DITK_USE_SYSTEM_GOOGLETEST=OFF
+    -DITK_USE_SYSTEM_GOOGLETEST=ON
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
-    -DITK_USE_SYSTEM_SWIG=ON
+    -DITK_USE_SYSTEM_SWIG=OFF
     -DITK_USE_SYSTEM_TIFF=ON
     -DITK_USE_SYSTEM_VXL=OFF
     -DITK_USE_SYSTEM_ZLIB=ON
