@@ -1,0 +1,32 @@
+diff -Nurp tdesktop-6.1.3-full/Telegram/lib_base/base/platform/linux/base_url_scheme_linux.cpp tdesktop-6.1.3-full-glib2.86/Telegram/lib_base/base/platform/linux/base_url_scheme_linux.cpp
+--- tdesktop-6.1.3-full/Telegram/lib_base/base/platform/linux/base_url_scheme_linux.cpp	2025-08-29 21:45:45.000000000 +0200
++++ tdesktop-6.1.3-full-glib2.86/Telegram/lib_base/base/platform/linux/base_url_scheme_linux.cpp	2025-09-24 01:50:58.857742263 +0200
+@@ -15,6 +15,7 @@
+ #include <ksandbox.h>
+ 
+ #include <gio/gio.hpp>
++#include <giounix/giounix.hpp>
+ #include <snapcraft/snapcraft.hpp>
+ 
+ namespace base::Platform {
+@@ -117,7 +118,7 @@ void RegisterUrlScheme(const UrlSchemeDe
+ 
+ 	const auto appId = QGuiApplication::desktopFileName().toStdString();
+ 	if (!appId.empty()) {
+-		Gio::AppInfo appInfo = Gio::DesktopAppInfo::new_(appId + ".desktop");
++		Gio::AppInfo appInfo = GioUnix::DesktopAppInfo::new_(appId + ".desktop");
+ 		if (appInfo) {
+ 			if (appInfo.get_commandline() == commandlineForCreator + " %u") {
+ 				appInfo.set_as_default_for_type(handlerType);
+diff -Nurp tdesktop-6.1.3-full/cmake/external/glib/CMakeLists.txt tdesktop-6.1.3-full-glib2.86/cmake/external/glib/CMakeLists.txt
+--- tdesktop-6.1.3-full/cmake/external/glib/CMakeLists.txt	2025-08-22 19:17:08.000000000 +0200
++++ tdesktop-6.1.3-full-glib2.86/cmake/external/glib/CMakeLists.txt	2025-09-24 01:26:42.221160210 +0200
+@@ -15,7 +15,7 @@ block()
+ endblock()
+ 
+ include(generate_cppgir.cmake)
+-generate_cppgir(external_glib Gio-2.0)
++generate_cppgir(external_glib GioUnix-2.0)
+ 
+ find_package(PkgConfig REQUIRED)
+ pkg_check_modules(DESKTOP_APP_GLIB2 REQUIRED IMPORTED_TARGET glib-2.0 gobject-2.0 gio-2.0 gio-unix-2.0)

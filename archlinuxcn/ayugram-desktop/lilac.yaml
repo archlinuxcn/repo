@@ -1,0 +1,34 @@
+maintainers:
+  - github: Misaka13514
+
+pre_build_script: aur_pre_build(maintainers=['ZhangHua'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: ayugram-desktop
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    from_pattern: ^(\d+\.\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt6-base
+    strip_release: true
+  - alias: protobuf
+  - alias: icu
+  - source: alpm
+    alpm: abseil-cpp
+    strip_release: true
+  - source: alpm
+    alpm: libvpx
+    provided: libvpx.so
+  - alias: libssl
+  - alias: libcrypto
+  - source: alpm
+    alpm: openh264
+    provided: libopenh264.so
+  - source: alpmfiles
+    pkgname: ada
+    filename: 'usr/lib/libada\.so\.(\d+)'
