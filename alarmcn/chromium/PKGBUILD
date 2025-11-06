@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium
-pkgver=142.0.7444.59
+pkgver=142.0.7444.134
 pkgrel=1
 _launcher_ver=8
 _manual_clone=1
