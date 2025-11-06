@@ -86,17 +86,12 @@ optdepends=('freetds: MS SQL driver'
             'perl: for syncqt'
             'postgresql-libs: PostgreSQL driver'
             'unixodbc: ODBC driver')
-groups=(qt6)
 _pkgfn=${_pkgbase/6-/}
 provides=(
     qt6-base
     qt6-base=${pkgver}
-    qt6-xcb-private-headers
 )
-conflicts=(
-    qt6-base
-    qt6-xcb-private-headers
-)
+conflicts=(qt6-base)
 source=(git+https://code.qt.io/qt/$_pkgfn#tag=v$_pkgver
         qt6-base-cflags.patch
         qt6-base-nostrip.patch)
