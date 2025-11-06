@@ -2,7 +2,7 @@
 # Maintainer: Matrix <thysupremematrix atttttt tuta dottttt io>
 _pkgname=onedrive
 pkgname=$_pkgname-abraunegg
-pkgver=2.5.7
+pkgver=2.5.9
 pkgrel=1
 pkgdesc="Free OneDrive client written in D - abraunegg's fork. Follows the releases on https://github.com/abraunegg/onedrive/releases"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
@@ -13,7 +13,7 @@ source=("https://github.com/abraunegg/onedrive/archive/refs/tags/v${pkgver}.tar.
 provides=("onedrive=$pkgver")
 depends=('libnotify' 'sqlite' 'd-runtime' 'dbus')
 makedepends=('d-compiler')
-md5sums=('3fb49f69380636ca0f2de3f259632c39')
+md5sums=('e9195e2d83314b8b9fac704fbb06e2fb')
 
 build() {
 	# Fix "W: ELF file ('usr/bin/onedrive') lacks FULL RELRO, check LDFLAGS."
