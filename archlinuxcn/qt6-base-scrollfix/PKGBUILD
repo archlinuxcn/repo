@@ -1,0 +1,172 @@
+# Maintainer: Vita Yuzu <g311571057 at gmail dot com>
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Gilles Gagniard <gilles@gagniard.org>
+
+pkgbase=qt6-base-scrollfix
+_pkgbase=qt6-base
+pkgname=(qt6-base-scrollfix)
+_pkgver=6.10.0
+pkgver=${_pkgver/-/}
+pkgrel=2.1
+arch=(x86_64)
+url='https://www.qt.io'
+license=(GPL-3.0-only
+         LGPL-3.0-only
+         LicenseRef-Qt-Commercial
+         Qt-GPL-exception-1.0)
+pkgdesc='A cross-platform application and UI framework'
+depends=(brotli
+         dbus
+         double-conversion
+         fontconfig
+         freetype2
+         gcc-libs
+         glib2
+         glibc
+         harfbuzz
+         icu
+         krb5
+         libb2
+         libcups
+         libdrm
+         libgl
+         libice
+         libinput
+         libjpeg-turbo
+         libpng
+         libproxy
+         libsm
+         libx11
+         libxcb
+         libxkbcommon
+         libxkbcommon-x11
+         md4c
+         mesa
+         mtdev
+         openssl
+         pcre2
+         shared-mime-info
+         sqlite
+         systemd-libs
+         tslib
+         wayland
+         xcb-util-cursor
+         xcb-util-image
+         xcb-util-keysyms
+         xcb-util-renderutil
+         xcb-util-wm
+         xdg-utils
+         zlib
+         zstd)
+makedepends=(alsa-lib
+             cmake
+             cups
+             freetds
+             git
+             gst-plugins-base-libs
+             gtk3
+             jemalloc
+             libfbclient
+             libpulse
+             mariadb-libs
+             ninja
+             postgresql
+             renderdoc
+             unixodbc
+             vulkan-headers
+             xmlstarlet)
+optdepends=('freetds: MS SQL driver'
+            'gdk-pixbuf2: GTK platform plugin'
+            'gtk3: GTK platform plugin'
+            'libfbclient: Firebird/iBase driver'
+            'mariadb-libs: MariaDB driver'
+            'pango: GTK platform plugin'
+            'perl: for syncqt'
+            'postgresql-libs: PostgreSQL driver'
+            'unixodbc: ODBC driver')
+groups=(qt6)
+_pkgfn=${_pkgbase/6-/}
+provides=(
+    qt6-base
+    qt6-base=${pkgver}
+    qt6-xcb-private-headers
+)
+conflicts=(
+    qt6-base
+    qt6-xcb-private-headers
+)
+source=(git+https://code.qt.io/qt/$_pkgfn#tag=v$_pkgver
+        qt6-base-cflags.patch
+        qt6-base-nostrip.patch)
+sha256sums=('be60bf981a67824c2a27155d794eb30d10a6daa71db37695668a8a703acff929'
+            '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
+            '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
+
+prepare() {
+  patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
+  patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
+
+  git -C $_pkgfn cherry-pick -n 2974b3d740a705767a1b6ca0779eb0d989364769 # Fix window positioning
+
+  # GG: fix scrolling in libreoffice on wayland
+  echo "Apply additional patches for optimizing scrolling ..."
+  git -C $_pkgfn cherry-pick -n 095759818854e5a011aa8f859e566bbc6368ab76 # wayland: Compress high frequency mouse events
+  git -C $_pkgfn cherry-pick -n 6f25f703fd37a900c139e14a33a4639502bfeae7 # wayland: Optimize scroll operation
+  git -C $_pkgfn cherry-pick -n 9dd0d936d6691904a4bb212dcf48999a5228b84f # wayland: Enable event compression and fix scroll end event
+  echo "... done."
+}
+
+build() {
+  cmake -B build -S $_pkgfn -G Ninja \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DINSTALL_BINDIR=lib/qt6/bin \
+    -DINSTALL_PUBLICBINDIR=usr/bin \
+    -DINSTALL_LIBEXECDIR=lib/qt6 \
+    -DINSTALL_DOCDIR=share/doc/qt6 \
+    -DINSTALL_ARCHDATADIR=lib/qt6 \
+    -DINSTALL_DATADIR=share/qt6 \
+    -DINSTALL_INCLUDEDIR=include/qt6 \
+    -DINSTALL_MKSPECSDIR=lib/qt6/mkspecs \
+    -DINSTALL_EXAMPLESDIR=share/doc/qt6/examples \
+    -DFEATURE_journald=ON \
+    -DFEATURE_libproxy=ON \
+    -DFEATURE_openssl_linked=ON \
+    -DFEATURE_system_sqlite=ON \
+    -DFEATURE_system_xcb_xinput=ON \
+    -DFEATURE_no_direct_extern_access=ON \
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
+    -DCMAKE_MESSAGE_LOG_LEVEL=STATUS
+  cmake --build build
+}
+
+package_qt6-base-scrollfix() {
+pkgdesc='A cross-platform application and UI framework with scroll fix patch cherry picked from 6.11'
+  depends+=(qt6-translations)
+  DESTDIR="$pkgdir" cmake --install build
+
+  install -Dm644 $_pkgfn/LICENSES/* -t "$pkgdir"/usr/share/licenses/$_pkgbase
+
+# Install symlinks for user-facing tools
+  cd "$pkgdir"
+  mkdir usr/bin
+  while read _line; do
+    ln -s $_line
+  done < "$srcdir"/build/user_facing_tool_links.txt
+}
+
+nopackage_qt6-xcb-private-headers-scrollfix() {
+  pkgdesc='Private headers for Qt6 Xcb'
+
+  depends=("qt6-base=$pkgver")
+  optdepends=()
+  groups=()
+
+  cd $_pkgfn
+  install -d -m755 "$pkgdir"/usr/include/qt6xcb-private/{gl_integrations,nativepainting}
+  cp -r src/plugins/platforms/xcb/*.h "$pkgdir"/usr/include/qt6xcb-private/
+  cp -r src/plugins/platforms/xcb/gl_integrations/*.h "$pkgdir"/usr/include/qt6xcb-private/gl_integrations/
+  cp -r src/plugins/platforms/xcb/nativepainting/*.h "$pkgdir"/usr/include/qt6xcb-private/nativepainting/
+}
