@@ -1,7 +1,7 @@
 # Maintainer: Cryolitia <cryolitia at gmail dot com>
 
 pkgname=gridtracker2
-pkgver=2.250914.1
+pkgver=2.251105.0
 pkgrel=1
 _electronver=35
 pkgdesc="An Amateur Radio Companion"
@@ -13,7 +13,7 @@ depends=("electron${_electronver}" 'libxss' 'libappindicator-gtk3' 'libxtst' 'at
 source=("https://gitlab.com/gridtracker.org/${pkgname}/-/archive/v${pkgver}/${pkgname}-v${pkgver}.tar.gz"
         "gridtracker2.desktop"
         "gridtracker2.sh")
-sha512sums=('901c0e3e71cd54660a78417c81a8ac37b69d5ef37e52fb1ea1c3b5fbc03d822a61ea8aecb3e8b3800dcabcb8269217f6c98bb4b739fc82237c93bcf9b34c7442'
+sha512sums=('37a1ac3b2fcf560eb7cc20dc0dc6d6145be9b39ea74536b278508fdb774cc595214fbdcdb9edcca08cf35497a6024d4f30e0b873c86a4d085066ce258c296813'
             'd0b2a0aa0a1ef8826d594bfab433ce38bd2ba9c6db1fa290552e7cd72312d7de88fb5912b8a0459ba4a137251cc91fb1f981ffcf21d98234555d5fc59fca219f'
             'bc530bac0b04211bbf1f81851a3c23869a519d9ed6b77c56fcc13b43b56cf855bb01497aa453c69a2a141e17a6003bc534bc75bc3591dcc1e666d5c66202cd53')
 
