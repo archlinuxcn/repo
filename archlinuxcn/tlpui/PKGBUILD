@@ -7,7 +7,7 @@
 pkgname=tlpui
 _srcname=TLPUI
 pkgver=1.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A GTK user interface for TLP written in Python"
 arch=('any')
 url="https://github.com/d4nj1/${_srcname}"
@@ -16,7 +16,7 @@ depends=('tlp' 'python-gobject' 'hicolor-icon-theme' 'python-yaml' 'gtk3' 'pytho
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel' 'python-poetry')
 checkdepends=('python-pytest')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/$pkgname-$pkgver.tar.gz")
-sha256sums=('658f3dcfa8ea080226dd2ec1419868fe195514aeac2b1ec8f4a8d2a4546ee2de')
+sha256sums=('5b688893cdbc9af17ba577a61201057b752a7912b41c31605812691fad72bb20')
 
 build() {
 	cd "${_srcname}-${pkgname}-${pkgver}/"
