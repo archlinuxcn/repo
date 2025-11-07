@@ -5,24 +5,25 @@
 # Contributor: slact
 
 pkgname=tlpui
+_srcname=TLPUI
 pkgver=1.8.1
 pkgrel=1
 pkgdesc="A GTK user interface for TLP written in Python"
 arch=('any')
-url="https://github.com/d4nj1/TLPUI"
+url="https://github.com/d4nj1/${_srcname}"
 license=('GPL-2.0-or-later')
 depends=('tlp' 'python-gobject' 'hicolor-icon-theme' 'python-yaml' 'gtk3' 'python-toml')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel' 'python-poetry')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/$pkgname-$pkgver.tar.gz")
-sha256sums=('5b688893cdbc9af17ba577a61201057b752a7912b41c31605812691fad72bb20')
+sha256sums=('658f3dcfa8ea080226dd2ec1419868fe195514aeac2b1ec8f4a8d2a4546ee2de')
 
 build() {
-	cd "TLPUI-${pkgname}-${pkgver}/"
+	cd "${_srcname}-${pkgname}-${pkgver}/"
 	python -m build --wheel --no-isolation
 }
 
 package() {
-	cd "TLPUI-${pkgname}-${pkgver}/"
+	cd "${_srcname}-${pkgname}-${pkgver}/"
 	python -m installer --destdir="${pkgdir}" dist/*.whl
 
 	for i in 16 32 48 64 128 96 128 256; do
