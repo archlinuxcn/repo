@@ -5,14 +5,14 @@ pkgdesc="A tiny C++ header-only binary reader and writer library"
 url="https://github.com/Amulet-Team/Amulet-IO"
 license=("LicenseRef-Amulet-Team-License")
 arch=(any)
-pkgver=1.0.0
-pkgrel=2
+pkgver=1.0.1
+pkgrel=1
 makedepends=(python-setuptools git python-wheel cmake python-versioneer)
 depends=(python python-black pybind11)
 source=(
 	"git+https://github.com/Amulet-Team/Amulet-IO.git#tag=${pkgver}"
 )
-md5sums=('b41b1ac68d1bdd131c43bee5620ede12')
+md5sums=('7dfb92c9943b34c8a1c0b684ea11b38a')
 
 function prepare() {
 	cd "${srcdir}/Amulet-IO"
