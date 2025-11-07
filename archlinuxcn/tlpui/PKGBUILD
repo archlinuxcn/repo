@@ -14,12 +14,18 @@ url="https://github.com/d4nj1/${_srcname}"
 license=('GPL-2.0-or-later')
 depends=('tlp' 'python-gobject' 'hicolor-icon-theme' 'python-yaml' 'gtk3' 'python-toml')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel' 'python-poetry')
+checkdepends=('python-pytest')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/$pkgname-$pkgver.tar.gz")
 sha256sums=('658f3dcfa8ea080226dd2ec1419868fe195514aeac2b1ec8f4a8d2a4546ee2de')
 
 build() {
 	cd "${_srcname}-${pkgname}-${pkgver}/"
 	python -m build --wheel --no-isolation
+}
+
+check() {
+	cd "${_srcname}-${pkgname}-${pkgver}/"
+	pytest
 }
 
 package() {
