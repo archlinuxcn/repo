@@ -5,7 +5,7 @@
 
 pkgname=wget-lily
 pkgver=1.25.0
-pkgrel=3
+pkgrel=4
 pkgdesc='Network utility to retrieve files from the web'
 url='https://www.gnu.org/software/wget/wget.html'
 arch=('x86_64')
@@ -13,16 +13,21 @@ license=('GPL-3.0-or-later')
 depends=('glibc' 'zlib' 'gnutls' 'libidn2' 'libidn2.so' 'util-linux-libs' 'libuuid.so'
          'libpsl' 'libpsl.so' 'pcre2' 'nettle' 'libnettle.so')
 checkdepends=('perl-http-daemon' 'perl-io-socket-ssl' 'python')
-makedepends=('autoconf-archive' 'git' 'gperf' 'wget' 'perl')
+makedepends=('autoconf-archive' 'git' 'gperf' 'perl')
 optdepends=('ca-certificates: HTTPS downloads')
 conflicts=('wget')
 provides=("wget=$pkgver")
 backup=('etc/wgetrc')
 source=("git+https://git.savannah.gnu.org/git/wget.git?signed#tag=v${pkgver}"
-        "git+https://git.savannah.gnu.org/git/gnulib.git" wget.patch)
+        "git+https://git.savannah.gnu.org/git/gnulib.git"
+        "https://ftp.gnu.org/gnu/wget/wget-${pkgver}.tar.lz"{,.sig} wget.patch)
 sha256sums=('c63fd5c082a3a7ecf9309c2334df95e61abfc413cbefe81e5ed5d40a4301344e'
+            'SKIP'
+            '19225cc756b0a088fc81148dc6a40a0c8f329af7fd8483f1c7b2fe50f4e08a1f'
             'SKIP' aa28cf8532f6b7cc1fe689eb253b0453102990eb725a6583704ca4f3e665c9b0)
 b2sums=('d4f747bd505a5b482013dfc20c307a34ce505833120ff2b77ba4d94b7476d1407e64eab862d6fd5490e96e5e9b8a7e3cf742404634a287996a7a702c8efd6304'
+        'SKIP'
+        '58edd7393b5109804d7a6ce77466d30e1fba3c5ae4b5b8634758c9ebd7fa95cf106d35ad0b4f9151833d88b0221fc488a1005ec0b98417766bf2092309744954'
         'SKIP' c6a292c1be5606c007d1dcd25f02b3760ac98e86f2c1de30b50847b65c5ecfdb5cd89a482ab1e6a5b5978d38057c21d671b72ec45f10f6e59c5596519cecdf2e)
 validpgpkeys=(
   'AC404C1C0BF735C63FF4D562263D6DF2E163E1EA' # Giuseppe Scrivano <gscrivano@gnu.org>
@@ -33,8 +38,16 @@ validpgpkeys=(
 prepare() {
   cd wget
 
+  # Skip downloading po files in bootstrap scripts
+  # to avoid non-deterministic builds
+  # and to avoid wget (make-)depending on itself
+  export SKIP_PO="1"
+  # The $SKIP_PO environment variable is only honored by
+  # the gnulib submodule if using its "sh" implementation
+  export GNULIB_TOOL_IMPL="sh"
+
   git submodule init
-  git config submodule.libs/gnulib.url "${srcdir}/gnulib"
+  git config submodule.gnulib.url "${srcdir}/gnulib"
   git -c protocol.file.allow=always submodule update
 
   sh bootstrap
@@ -57,6 +70,12 @@ build() {
     --enable-nls \
     --with-ssl=gnutls
   make
+
+  # Generate wget mo files from dist tarball
+  cd "${srcdir}/wget-${pkgver}/po"
+  for po in *.po; do
+    msgfmt "${po}" -o "${po%.po}.mo"
+  done
 }
 
 check() {
@@ -67,6 +86,16 @@ check() {
 package() {
   cd wget
   make DESTDIR="${pkgdir}" install
+
+  # Install wget and wget-gnulib mo files from dist tarball
+  cd "${srcdir}/wget-${pkgver}/po"
+  for wget_mo in *.mo; do
+    install -Dm 644 "${wget_mo}" "${pkgdir}/usr/share/locale/${wget_mo%.mo}/LC_MESSAGES/wget.mo"
+  done
+
+  for wget_gnulib_mo in *.gmo; do
+    install -Dm 644 "${wget_gnulib_mo}" "${pkgdir}/usr/share/locale/${wget_gnulib_mo%.gmo}/LC_MESSAGES/wget-gnulib.mo"
+  done
 }
 
 # vim: ts=2 sw=2 et:
