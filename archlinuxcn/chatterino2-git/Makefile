@@ -3,7 +3,7 @@
 all: clean rebuild srcinfo chroot-rebuild
 
 rebuild:
-	makepkg -s
+	makepkg -s --cleanbuild
 
 
 chroot-rebuild:
