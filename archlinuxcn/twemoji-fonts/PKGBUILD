@@ -10,7 +10,7 @@ pkgname=(
   otf-twemoji-all
 )
 pkgver=17.0.2
-pkgrel=1
+pkgrel=1.1
 pkgdesc="Twemoji built with nanoemoji"
 url="https://github.com/jdecked/twemoji"
 arch=(any)
@@ -85,7 +85,7 @@ package_ttf-twemoji-cbdt() {
 package_otf-twemoji-all() {
   cd "$pkgbase"
   install -Dm644 "build/TwemojiALL.ttf" \
-    "$pkgdir/usr/share/fonts/Twemoji.ttf"
+    "$pkgdir/usr/share/fonts/Twemoji.otf"
   install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" \
     LICENSE-GRAPHICS
 }
