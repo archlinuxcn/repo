@@ -1,7 +1,7 @@
 # Maintainer: Iyán Méndez Veiga <me (at) iyanmv (dot) com>
 pkgname=plasma6-applets-resources-monitor
 _name=plasma-applet-resources-monitor
-pkgver=3.1.1
+pkgver=3.2.0
 pkgrel=1
 pkgdesc='Plasmoid for monitoring CPU, memory, network traffic, GPUs and disks IO'
 arch=(any)
@@ -23,7 +23,7 @@ conflicts=(
     plasma6-applets-resources-monitor-git
 )
 source=($pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz)
-b2sums=('7e59f0178ea57987a6b9d749ca5d2a020e89afa67a60f8fbcba51cd32001637ba5efe5518043408c1a142a26e1abf3a6fafacca81c3aaa9b557735875b810a4f')
+b2sums=('b7d5c67f1a3fb54ac823bea0fe9f6a4f81466c52b454651eba509470f175ccfa866f524e5ac46ffd148a34b407558b6a73d426d5dd273ee33931e41c8f6d95d1')
 
 # TODO: change to cmake when upstream porting to Plasma 6
 package() {
