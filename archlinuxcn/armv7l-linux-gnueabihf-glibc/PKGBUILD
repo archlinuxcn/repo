@@ -7,7 +7,7 @@
 
 _target="armv7l-linux-gnueabihf"
 pkgname=${_target}-glibc
-pkgver=2.41
+pkgver=2.42
 pkgrel=1
 pkgdesc="GNU C Library (${_target})"
 arch=('any')
@@ -21,7 +21,7 @@ replaces=("${_target}-glibc-headers")
 options=(!buildflags !strip staticlibs)
 source=(https://ftp.gnu.org/gnu/glibc/glibc-$pkgver.tar.xz
         sdt.h sdt-config.h)
-md5sums=('19862601af60f73ac69e067d3e9267d4'
+md5sums=('23c6f5a27932b435cae94e087cb8b1f5'
          '91fec3b7e75510ae2ac42533aa2e695e'
          '680df504c683640b02ed4a805797c0b2')
 
