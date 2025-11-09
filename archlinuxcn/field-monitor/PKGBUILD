@@ -5,12 +5,12 @@ pkgdesc="Remote-desktop client designed for the GNOME platform. Access virtual m
 url="https://github.com/theCapypara/field-monitor"
 license=("GPL-3.0-or-later")
 arch=("x86_64")
-pkgver=48.0
+pkgver=49.0
 pkgrel=1
 makedepends=("rust" "cargo" "git" "blueprint-compiler" "meson" "libvirt" "libvirt-glib" "blueprint-compiler" "bubblewrap")
 depends=(libadwaita gtk4 hicolor-icon-theme dconf gcc-libs glib2 glibc spice-gtk spice-protocol phodav python-pyparsing libcacard spice freerdp2 vte4 json-c libtirpc gtk-vnc)
 source=("git+https://github.com/theCapypara/field-monitor#tag=v${pkgver}")
-sha256sums=('cdb3461d9963d2f20d61b1988395f4de9f2c69bbe08f6bc1a79134034f8ad526')
+sha256sums=('ca34af6195a730a47605035b68a1ed4944482ee726151d5e993105712917a027')
 options=()
 
 function prepare() {
