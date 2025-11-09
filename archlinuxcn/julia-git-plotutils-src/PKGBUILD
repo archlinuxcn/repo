@@ -1,6 +1,6 @@
 pkgname=julia-git-plotutils-src
-pkgver=1.4.3
-_commit=2a304e6ece08d4ba69c9d837186e0b4d58dd6d18
+pkgver=1.4.4
+_commit=b1157243bab7df7566cb47fc25888c40cf69aa10
 pkgrel=1
 pkgdesc="PlotUtils.jl"
 url="https://github.com/JuliaPlots/PlotUtils.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPlots/PlotUtils.jl.git#commit=$_commit")
-sha256sums=('4d7f598c763411f304bebc8211c41d654d2fba50960da86fee6563d11cdc7a66')
+sha256sums=('c9d4c9a84c0360992e280f52e19641d6687beb9a9f54a497040683f3102273a0')
 
 package() {
   cd PlotUtils.jl
