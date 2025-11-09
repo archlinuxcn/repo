@@ -1,6 +1,6 @@
 pkgname=julia-git-nonlinearsolvespectralmethods-src
-pkgver=1.5.0
-_commit=35488b65a4c0f884fe1de3ca19cb1a1c475da5ec
+pkgver=1.6.0
+_commit=23ae28073199e4e590f3e1bd66a23406f6eeed72
 pkgrel=1
 pkgdesc="NonlinearSolveSpectralMethods.jl"
 url="https://github.com/SciML/NonlinearSolve.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/NonlinearSolve.jl.git#commit=$_commit")
-sha256sums=('ac51161fb608d3676a9be2409b5d883f99d372cc680ea11b693b05dab0c06192')
+sha256sums=('1eb21e903fcc46fef6543303638963a560fd9de1fb6667bed9ebc4d522cbfc8e')
 
 package() {
   cd NonlinearSolve.jl/lib/NonlinearSolveSpectralMethods
