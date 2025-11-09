@@ -1,7 +1,7 @@
 pkgname=julia-git-measures-src
-pkgver=0.3.2
-_commit=842a3fb6edd1b7d2e22376bfa3ed0f02400b20a4
-pkgrel=2
+pkgver=0.3.3
+_commit=458a7d6e64ef312c3fe92e0dece343fa6a89d2ae
+pkgrel=1
 pkgdesc="Measures.jl"
 url="https://github.com/JuliaGraphics/Measures.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphics/Measures.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('48acf610059b47b52c9da20e4b20a4360f2b4292b2b19a48b40f83b927d73732')
 
 package() {
   cd Measures.jl
