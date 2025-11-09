@@ -1,7 +1,7 @@
-From 694f2e4fe3ed95638d0e1b65b538aec27b23c9ff Mon Sep 17 00:00:00 2001
+From 875c912f29ea527cc80e4c0d0237f8cd88bd6926 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:42:12 -0400
-Subject: [PATCH 13/18] Removed IsNewDbgInfoFormat field
+Subject: [PATCH 12/17] Removed IsNewDbgInfoFormat field
 
 ---
  src/aotcompile.cpp | 2 ++
@@ -23,7 +23,7 @@ index 9ff7fc2d3f..5c7f7bc20e 100644
    // Remove these copied constants since they point to the source module.
    F->setPersonalityFn(nullptr);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 5f24879eb6..99bdc6a9af 100644
+index c9c53ea357..b11ffb44fc 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -9906,7 +9906,9 @@ void linkFunctionBody(Function &Dst, Function &Src)

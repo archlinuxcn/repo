@@ -1,7 +1,7 @@
-From 72b43751720bc42e39244edae7ab2a399d325f05 Mon Sep 17 00:00:00 2001
+From f8daace12ec1f5fe106b248d7bcee0b012f574d0 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
-Subject: [PATCH 02/18] Fix source file paths
+Subject: [PATCH 02/17] Fix source file paths
 
 ---
  base/sysimg.jl              |  7 +++++++
@@ -29,17 +29,17 @@ index fd71544c20..84c5967d88 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index 5b0d60a406..d64c2f6f8d 100644
+index b77c312e3f..a7ffdc2584 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
 @@ -59,7 +59,7 @@ A string containing the full path to the directory containing the `stdlib` packa
- global STDLIB::String = "$BINDIR/../share/julia/stdlib/v$(VERSION.major).$(VERSION.minor)" # for bootstrap
+ global STDLIB::String = "$BINDIR/$DATAROOTDIR/julia/stdlib/v$(VERSION.major).$(VERSION.minor)" # for bootstrap
  # In case STDLIB change after julia is built, the variable below can be used
  # to update cached method locations to updated ones.
 -const BUILD_STDLIB_PATH = STDLIB
 +const BUILD_STDLIB_PATH = "/usr/share/julia/stdlib/v$(VERSION.major).$(VERSION.minor)"
- # Similarly, this is the root of the julia repo directory that julia was built from
- const BUILD_ROOT_PATH = "$BINDIR/../.."
+ 
+ # helper to avoid triggering precompile warnings
  
 diff --git a/contrib/write_base_cache.jl b/contrib/write_base_cache.jl
 index a81908b96a..4c463db143 100644

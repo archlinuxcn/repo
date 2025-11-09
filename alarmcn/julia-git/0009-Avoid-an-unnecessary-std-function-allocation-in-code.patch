@@ -1,7 +1,7 @@
-From 959035ad055a66289a8660cc79a1c8d870b50a67 Mon Sep 17 00:00:00 2001
+From fd30cd818bc303d8b1d436a3f4d5aadeda459513 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 11:19:32 -0400
-Subject: [PATCH 10/18] Avoid an unnecessary std::function allocation in
+Subject: [PATCH 09/17] Avoid an unnecessary std::function allocation in
  codegen
 
 We already need to manually create a C compatible function pointer and heap allocated data, might as well do so directly without another indirection through std::function.

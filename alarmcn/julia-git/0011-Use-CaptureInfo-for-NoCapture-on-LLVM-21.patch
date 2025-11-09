@@ -1,14 +1,14 @@
-From 848a0a865fd0ad6dfacafaf2d638587038c231e1 Mon Sep 17 00:00:00 2001
+From ae86774cf4f5bc6e59e1557edc2109f118ffeb97 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:40:37 -0400
-Subject: [PATCH 12/18] Use CaptureInfo for NoCapture on LLVM 21
+Subject: [PATCH 11/17] Use CaptureInfo for NoCapture on LLVM 21
 
 ---
  src/codegen.cpp | 38 ++++++++++++++++++++++++++++----------
  1 file changed, 28 insertions(+), 10 deletions(-)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 7ca0f4d2d3..5f24879eb6 100644
+index a203973ff2..c9c53ea357 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -605,6 +605,24 @@ AttributeSet Attributes(LLVMContext &C, std::initializer_list<Attribute::AttrKin

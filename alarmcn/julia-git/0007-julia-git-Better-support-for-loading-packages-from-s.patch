@@ -1,7 +1,7 @@
-From 4e5979ff72682cbbdbc1fd6ead5a348eaaf088d3 Mon Sep 17 00:00:00 2001
+From f5f38a28aef061c2fd25cbef380a58946d7985d7 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 15 Aug 2025 12:24:38 -0400
-Subject: [PATCH 07/18] [julia-git] Better support for loading packages from
+Subject: [PATCH 07/17] [julia-git] Better support for loading packages from
  stdlib
 
 ---
@@ -9,10 +9,10 @@ Subject: [PATCH 07/18] [julia-git] Better support for loading packages from
  1 file changed, 4 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index bb991ffd7a..18850dfbc4 100644
+index 8c7344e0a9..b630709af9 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
-@@ -1155,6 +1155,10 @@ function explicit_manifest_entry_path(manifest_file::String, pkg::PkgId, entry::
+@@ -1167,6 +1167,10 @@ function explicit_manifest_entry_path(manifest_file::String, pkg::PkgId, entry::
              ispath(path) && return entry_path(abspath(path), pkg.name, entryfile)
          end
      end

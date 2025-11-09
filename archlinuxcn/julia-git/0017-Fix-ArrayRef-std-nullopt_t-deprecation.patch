@@ -1,7 +1,7 @@
-From 1799f29928f819ff01507d355866a7cba0581ed7 Mon Sep 17 00:00:00 2001
+From b2d684500657f087a2b10415894532ddb2bfba38 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 14:47:57 -0400
-Subject: [PATCH 18/18] Fix ArrayRef(std::nullopt_t) deprecation
+Subject: [PATCH 17/17] Fix ArrayRef(std::nullopt_t) deprecation
 
 ---
  src/cgutils.cpp               | 15 ++++----
@@ -13,7 +13,7 @@ Subject: [PATCH 18/18] Fix ArrayRef(std::nullopt_t) deprecation
  6 files changed, 47 insertions(+), 48 deletions(-)
 
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index e9cd182757..783502e047 100644
+index 86e57f7208..4945ea06da 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
 @@ -284,7 +284,7 @@ void jl_debugcache_t::initialize(Module *m) {
@@ -62,7 +62,7 @@ index e9cd182757..783502e047 100644
          SmallVector<Value*,0> Args = {ptr, op, ctx.builder.getInt8((unsigned)Order), ctx.builder.getInt8(SyncScope::System)};
          if (rhs.V)
              Args.push_back(rhs.V);
-@@ -3399,7 +3398,7 @@ static Value *emit_genericmemoryptr(jl_codectx_t &ctx, Value *mem, const jl_data
+@@ -3401,7 +3400,7 @@ static Value *emit_genericmemoryptr(jl_codectx_t &ctx, Value *mem, const jl_data
      PointerType *PPT = cast<PointerType>(ctx.types().T_jlgenericmemory->getElementType(1));
      LoadInst *LI = ctx.builder.CreateAlignedLoad(PPT, addr, Align(sizeof(char*)));
      LI->setOrdering(AtomicOrdering::NotAtomic);
@@ -71,7 +71,7 @@ index e9cd182757..783502e047 100644
      jl_aliasinfo_t aliasinfo = jl_aliasinfo_t::fromTBAA(ctx, ctx.tbaa().tbaa_memoryptr);
      aliasinfo.decorateInst(LI);
      Value *ptr = LI;
-@@ -3418,7 +3417,7 @@ static Value *emit_genericmemoryowner(jl_codectx_t &ctx, Value *t)
+@@ -3420,7 +3419,7 @@ static Value *emit_genericmemoryowner(jl_codectx_t &ctx, Value *t)
      Type *T_data = ctx.types().T_jlgenericmemory->getElementType(1);
      LoadInst *LI = ctx.builder.CreateAlignedLoad(T_data, addr, Align(sizeof(char*)));
      LI->setOrdering(AtomicOrdering::NotAtomic);
@@ -81,7 +81,7 @@ index e9cd182757..783502e047 100644
      aliasinfo_mem.decorateInst(LI);
      addr = emit_ptrgep(ctx, m, JL_SMALL_BYTE_ALIGNMENT);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index f8d6a5e2d8..d6a48ee2a3 100644
+index 7a922f9abe..1630eeeab7 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -643,7 +643,7 @@ static AttributeList get_attrs_noreturn(LLVMContext &C)

@@ -1,7 +1,7 @@
-From a62bbb1e7bd7fa63b35517f1cfc5697c25286fb2 Mon Sep 17 00:00:00 2001
+From c7906548aa6f38069370e696e2fde299914fe6f9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:39:05 -0400
-Subject: [PATCH 11/18] Use triple without roundtrip through string on LLVM 21
+Subject: [PATCH 10/17] Use triple without roundtrip through string on LLVM 21
 
 ---
  src/aotcompile.cpp | 24 ++++++++++++++++++++++++
@@ -86,7 +86,7 @@ index acfd0fedd8..9ff7fc2d3f 100644
          metadataM.setStackProtectorGuard(StackProtectorGuard);
          metadataM.setOverrideStackAlignment(OverrideStackAlignment);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 97c563ba20..7ca0f4d2d3 100644
+index ad4f2cf3b4..a203973ff2 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -2681,7 +2681,11 @@ std::unique_ptr<Module> jl_create_llvm_module(StringRef name, LLVMContext &conte

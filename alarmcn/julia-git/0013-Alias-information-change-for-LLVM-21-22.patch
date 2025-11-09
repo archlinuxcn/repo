@@ -1,7 +1,7 @@
-From 4750692c4d4a92da18fb36bcea08dbbcfae1aa3a Mon Sep 17 00:00:00 2001
+From 392ce5be8880070ce4b178dfd32934bf76df0387 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:42:47 -0400
-Subject: [PATCH 14/18] Alias information change for LLVM 21/22
+Subject: [PATCH 13/17] Alias information change for LLVM 21/22
 
 ---
  src/cgutils.cpp | 10 ++++++++++
@@ -9,7 +9,7 @@ Subject: [PATCH 14/18] Alias information change for LLVM 21/22
  2 files changed, 19 insertions(+)
 
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index e6e101b353..e9cd182757 100644
+index 62f31e237f..86e57f7208 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
 @@ -1009,8 +1009,13 @@ static void emit_memcpy_llvm(jl_codectx_t &ctx, Value *dst, jl_aliasinfo_t const
@@ -41,7 +41,7 @@ index e6e101b353..e9cd182757 100644
  
  template<typename T1>
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 99bdc6a9af..7ab7b976a2 100644
+index b11ffb44fc..f9da9f4d4b 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -1702,6 +1702,15 @@ struct jl_aliasinfo_t {

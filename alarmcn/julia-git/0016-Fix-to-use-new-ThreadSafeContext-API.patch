@@ -1,7 +1,7 @@
-From c4a7a5152341150e7cb6f8f5715a5ec8dd933053 Mon Sep 17 00:00:00 2001
+From a80b94f8fb6a1b2fb64b78f55de17cfdb00b67ca Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 26 Oct 2025 20:11:49 -0400
-Subject: [PATCH 17/18] Fix to use new ThreadSafeContext API
+Subject: [PATCH 16/17] Fix to use new ThreadSafeContext API
 
 Turn `add_output` into a manual co-routine
 so that we can get out of the caller scope mid-call
@@ -996,7 +996,7 @@ index 5c7f7bc20e..c34037852f 100644
          if (F) {
              dump->TSM = wrap(new orc::ThreadSafeModule(std::move(m)));
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 7ab7b976a2..f8d6a5e2d8 100644
+index f9da9f4d4b..7a922f9abe 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -7793,7 +7793,7 @@ const char *jl_generate_ccallable(Module *llvmmod, jl_value_t *nameval, jl_value
