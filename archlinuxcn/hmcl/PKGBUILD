@@ -5,9 +5,9 @@
 
 pkgname=hmcl
 _pkgname=HMCL
-pkgver=3.7.3
+pkgver=3.7.5
 _tag="v${pkgver}"
-pkgrel=2
+pkgrel=1
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular"
 arch=('any')
 url="https://github.com/HMCL-dev/HMCL"
@@ -20,7 +20,7 @@ source=("hmcl-launch-script"
         "${pkgname}-${pkgver}.tgz::${url}/archive/${_tag}.tar.gz")
 b2sums=('1de8eca922b01b9c4c6d9a173143f05b900fd6b12b1b27bae175948a43125619d0e14c82d704548f70539af13eb4fd9f7288749265949089c7d6a8fe9032d284'
         '6c38da38fa13ad0af061d593f7733d6a406025c473240ccee4d07c89e71f8d5ead430374a7500f1395a7341c67e06ef3664cb1747ab93cba63459f7906b1598a'
-        'eb09d4f8f4cc7d772fba8c160600ddfb639426a5921d4590dff04b49050bbe6e8173049636c479ad634bb62b9cea769e3e72c556a7f7be0cd8926ebfb59ef35a')
+        'c6dce33f0a0ccf9688323596143e9c8ae94722acd6751c2a15ec73767af32c3a9ccd360dc96e8e910f0e772398c54a36f06bc550bfe301fa3c0292ae37071dfa')
 
 build() {
   # Pre-configured Microsoft Azure app credentials for HMCL's Microsoft login feature
