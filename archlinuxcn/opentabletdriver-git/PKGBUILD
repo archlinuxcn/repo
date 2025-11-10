@@ -6,7 +6,7 @@ pkgname=opentabletdriver-git
 _pkgname=OpenTabletDriver
 _lpkgname=opentabletdriver
 _spkgname=otd
-pkgver=0.6.6.0.r44.g7d2ff179b
+pkgver=0.6.6.2.r141.gec7ccbd4b
 pkgrel=1
 pkgdesc="A cross-platform open source tablet driver"
 arch=('x86_64')
@@ -55,7 +55,7 @@ build() {
     fi
 
     export OTD_CONFIGURATIONS="${PWD}/OpenTabletDriver.Configurations/Configurations"
-    ./eng/linux/package.sh --dog-food "false" --package Generic -- /p:VersionSuffix="$VERSION_SUFFIX" $EXTRA_OPTIONS
+    ./eng/bash/package.sh --dog-food "false" --package Generic -- /p:VersionSuffix="$VERSION_SUFFIX" $EXTRA_OPTIONS
 }
 
 package() {
