@@ -1,6 +1,6 @@
 pkgname=julia-git-lapack_jll-src
-pkgver=3.12.1+0
-_commit=9fddfd67ae2c460a2355b0019a8b57fecc6cea3d
+pkgver=3.12.1+1
+_commit=d80b885cdb778152cf215d1118c7c7d9d8cc7a55
 pkgrel=1
 pkgdesc="LAPACK_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LAPACK_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git lapack64)
 source=("git+https://github.com/JuliaBinaryWrappers/LAPACK_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('b1a3fe33efcb943a702e940c929c96b1e3747acac8eee3998107a836b9c66d60'
+sha256sums=('8d6776835963ae4c9d0af1d0991cc23d0c142ca83226ab8d80e46a86f5503023'
             '65fd3c86d5a6f28db678185ada4c843f8f7926939534258c26ce57f6e191679a')
 
 build() {
