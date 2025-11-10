@@ -1,7 +1,7 @@
 pkgname=julia-git-scimllogging-src
-pkgver=1.3.1
-_commit=dcec62e1ca71c8561f4b50a5063cb37f5cca3ca2
-pkgrel=2
+pkgver=1.5.0
+_commit=7aeca043f0ad743ae2fd85ca387f27e72ad91cea
+pkgrel=1
 pkgdesc="SciMLLogging.jl"
 url="https://github.com/SciML/SciMLLogging.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/SciMLLogging.jl.git#commit=$_commit")
-sha256sums=('57df4c3722d71c2bb6af5069a643c7f77b1bfd63dc97c047943644755f76b41c')
+sha256sums=('c8a378fc6323c135f14077dc1d45fc0c15c2695841492130ef800d7f9be11bb0')
 
 package() {
   cd SciMLLogging.jl
