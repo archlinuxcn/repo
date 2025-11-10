@@ -10,6 +10,7 @@ url="https://github.com/hyprwm/${_pkgname}"
 license=('BSD-3-Clause')
 depends=('pixman')
 makedepends=('git' 'cmake')
+checkdepends=('gtest')
 source=("git+${url}.git")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}" "lib${_pkgname}.so")
@@ -23,6 +24,10 @@ pkgver() {
 build() {
 	cmake -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr -S "${_pkgname}" -B build
 	cmake --build build
+}
+
+check() {
+	ctest --test-dir build --output-on-failure
 }
 
 package() {
