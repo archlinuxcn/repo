@@ -8,6 +8,9 @@ pre_build_script: |
 
 post_build_script: git_pkgbuild_commit()
 
+repo_depends:
+  - kddockwidgets-qt6
+
 update_on:
   - source: gitlab
     host: invent.kde.org
