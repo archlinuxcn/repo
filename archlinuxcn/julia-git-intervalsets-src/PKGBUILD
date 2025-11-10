@@ -1,6 +1,6 @@
 pkgname=julia-git-intervalsets-src
-pkgver=0.7.11
-_commit=745f2285033920c08c7db59bef487c8a5fff8af9
+pkgver=0.7.12
+_commit=f62d8d452870cc915bfd5297b7685a72eb667a29
 pkgrel=1
 pkgdesc="IntervalSets.jl"
 url="https://github.com/JuliaMath/IntervalSets.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/IntervalSets.jl.git#commit=$_commit")
-sha256sums=('550c28b03310dfc0eed0ecea685522b5b1ca6b56aebbbed5516e68d86b157877')
+sha256sums=('21edf098231fb34687d8421eabf4de14415d38326286be4c8743c07b9d45f80d')
 
 package() {
   cd IntervalSets.jl
