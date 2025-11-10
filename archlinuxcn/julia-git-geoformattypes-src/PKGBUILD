@@ -1,6 +1,6 @@
 pkgname=julia-git-geoformattypes-src
-pkgver=0.4.4
-_commit=b1d619567feb7c2dbd1c8e85b22bfc181eca8f3d
+pkgver=0.4.5
+_commit=8506bf03448c79636a4e8c3a9e7784e158538dce
 pkgrel=1
 pkgdesc="GeoFormatTypes.jl"
 url="https://github.com/JuliaGeo/GeoFormatTypes.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeo/GeoFormatTypes.jl.git#commit=$_commit")
-sha256sums=('704b16480192e9dbd4d76c48ee069d2060dfde16f4f80c48cf4e52f3034b67ad')
+sha256sums=('d65a22a5a027fc0623e52070e42fd2bcf35ce95358378d0688f8c1a1e9f75aa4')
 
 package() {
   cd GeoFormatTypes.jl
