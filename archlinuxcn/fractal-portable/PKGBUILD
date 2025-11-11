@@ -54,6 +54,7 @@ function package() {
 	install -vDm755 "${pkgdir}/usr/bin"/* -t "${pkgdir}/usr/lib/portable/overlay-usr"
 	rm -f "${pkgdir}/usr/share/applications"/*
 	rm -f "${pkgdir}/usr/bin"/*
+	rm -rf "${pkgdir}/usr/share/dbus-1"
 	install -Dm644 portable-config \
 		"${pkgdir}/usr/lib/portable/info/org.gnome.Fractal/config"
 	install -Dm755 "fractal.sh" \
