@@ -7,6 +7,10 @@ pre_build_script: aur_pre_build(maintainers=['zen', 'arojas', 'FabioLolix'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - qt5-doc
+  - qt5-webchannel
+
 update_on:
   - source: aur
     aur: qt5-webkit
