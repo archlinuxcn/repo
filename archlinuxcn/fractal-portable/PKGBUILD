@@ -2,7 +2,7 @@
 
 pkgname=fractal-portable
 pkgver=12.1
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="Fractal sandboxed by portable. No dGPU wakeups."
 arch=('x86_64')
@@ -28,7 +28,7 @@ source=(
 
 md5sums=('346bd5445d9704cfffb912a9933012e0'
          'f7fdec85a4e799a84b6c23fb86292aca'
-         'debd9915fb2045c83a8f16d2e8aec828')
+         'd5a575ce7ae88bef3316c860a4beab4d')
 
 function prepare() {
 	pacman -Ql fractal >file.list
