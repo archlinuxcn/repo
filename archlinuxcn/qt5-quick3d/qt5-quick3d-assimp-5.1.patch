@@ -1,0 +1,15 @@
+diff --git a/src/plugins/assetimporters/assimp/assimpimporter.cpp b/src/plugins/assetimporters/assimp/assimpimporter.cpp
+index f3660fdd..0f5fc901 100644
+--- a/src/plugins/assetimporters/assimp/assimpimporter.cpp
++++ b/src/plugins/assetimporters/assimp/assimpimporter.cpp
+@@ -1082,9 +1082,7 @@ void AssimpImporter::generateMaterial(aiMaterial *material, QTextStream &output,
+         }
+ 
+         // SpecularGlossiness Properties
+-        bool hasSpecularGlossiness;
+-        result = material->Get(AI_MATKEY_GLTF_PBRSPECULARGLOSSINESS, hasSpecularGlossiness);
+-        if (result == aiReturn_SUCCESS && hasSpecularGlossiness) {
++        {
+ 
+             // diffuseFactor (color) // not used (yet), but ends up being diffuseColor
+ //            {
