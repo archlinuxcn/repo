@@ -2,9 +2,9 @@
 
 pkgname=itk-snap-bin
 _pkgname=itk-snap
-_date=20241202
-pkgver=4.2.2
-pkgrel=3
+_date=20250909
+pkgver=4.4.0
+pkgrel=1
 pkgdesc="A software application used to segment structures in 3D medical images"
 arch=('x86_64')
 url="https://www.itksnap.org"
@@ -24,7 +24,7 @@ source=(
     "${_pkgname}.png::https://github.com/pyushkevich/itksnap/raw/master/GUI/Qt/Resources/logo_square.png"
 )
 noextract=("${_pkgname}-${pkgver}.tar.gz")
-sha512sums=('e9cace7d9235960a4a400ea86a3014c18a6ba2b23f24a58a5ded9e237d4f4669b07686f2f048f61398047d09a7144adc62a1dea9304415fccf4245b16ffa6877'
+sha512sums=('6b845d22e087c7f0e6bbabe664ab0cfde19478e72dbcba5b98c73f5131d403162a75dcb34aff806b0f093458e5803a1e9b01d4452e55a2100f13cf90d2f49b03'
             '7d7866a4f28ee645cf4a454488d197a776475d2959d0f9d4d34cf534f34a73ffbb1b92430518f36948b4c25b736990693be07dd345600ed8292e526e2846fca1')
 
 prepare() {
