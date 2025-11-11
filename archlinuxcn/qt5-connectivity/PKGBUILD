@@ -1,0 +1,46 @@
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+pkgname=qt5-connectivity
+_basever=5.15.18
+pkgver=5.15.18+kde+r1
+pkgrel=1
+_commit=f1be05c8efeb65b77a8bfd21763ab55bb5c04906
+arch=('x86_64')
+url='https://www.qt.io'
+license=('GPL3' 'LGPL3' 'FDL' 'custom')
+pkgdesc='Provides access to Bluetooth hardware'
+depends=('qt5-base' 'bluez-libs')
+makedepends=('qt5-declarative' 'git')
+optdepends=('qt5-declarative: QML bindings')
+_pkgfqn=${pkgname/5-/}
+source=(kde-$_pkgfqn::git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit)
+sha256sums=('0f5d727328575d49386b72b7580c1d50eb5a55451e0217ba2e81d4dfb8e3f836')
+
+pkgver() {
+  cd kde-$_pkgfqn
+  echo "$_basever+kde+r"`git rev-list --count v$_basever-lts-lgpl..$_commit` | sed -e 's|+kde+r0||'
+}
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+
+  qmake ../kde-$_pkgfqn
+  make
+}
+
+package() {
+  cd build
+  make INSTALL_ROOT="$pkgdir" install
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir/usr/lib" -type f -name '*.prl' \
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  install -d "$pkgdir"/usr/share/licenses
+  ln -s /usr/share/licenses/qt5-base "$pkgdir"/usr/share/licenses/${pkgname}
+}
