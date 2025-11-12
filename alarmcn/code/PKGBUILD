@@ -7,7 +7,7 @@ pkgname=code
 pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
 _electron=electron37
-pkgver=1.105.1
+pkgver=1.106.0
 pkgrel=1
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
@@ -26,7 +26,7 @@ source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
         'clipath.patch'
         # Originally taken from https://github.com/termux/termux-packages/raw/0974620c52e72d0c80bcc8a42bad482555f629e8/x11-packages/code-oss/0009-openvsx-extension-signature.patch
         '0009-openvsx-extension-signature.patch')
-sha512sums=('c8fa9a7a051d2d20627da565914844af54c20dedb873e7748b1bf1cde20f3a0f53c7437aa93e3138f60fa94b93cfca5e007ffd67ea008b098463f7de0610606b'
+sha512sums=('f39effa4f69cde04a4423674a8ce0818acded770dbcd74ae1b0a91cc394aad5abc50bcf306fbd2412787fb4a00ea401999a2c95309f53a600aa9441815007434'
             '793f9ff6306e3992ac89802d98110cba288ea1181a901467333293b7d76182ef9792c2a39ff49d9347a18a174b1f42bc58862091dff583f4146c2704eea28033'
             '937299c6cb6be2f8d25f7dbc95cf77423875c5f8353b8bd6cd7cc8e5603cbf8405b14dbf8bd615db2e3b36ed680fc8e1909410815f7f8587b7267a699e00ab37'
             'b1aa0d7c5b3e3e8ba1172822d75ea38e90efc431b270e0b4ca9e45bf9c0be0f60922c8618969ef071b5b6dbd9ac9f030294f1bf49bcc28c187b46d113dca63a7'
@@ -88,7 +88,10 @@ prepare() {
   patch -p1 -i ../0009-openvsx-extension-signature.patch
 
   # Set the commit and build date
-  sed -e "s/@COMMIT@/$(git rev-parse HEAD)/" -e "s/@DATE@/$(date -u -Is | sed 's/\+00:00/Z/')/" -i product.json
+  local _commit _date
+  _commit=$(git rev-parse HEAD)
+  _date=$(date -u -Is --date=@"$SOURCE_DATE_EPOCH" | sed 's/\+00:00/Z/')
+  sed -e "s/@COMMIT@/$_commit/" -e "s/@DATE@/$_date/" -i product.json
 
   # Build native modules for system electron
   sed -i "s/^target .*/target \"${_electronver//v/}\"/" .npmrc
