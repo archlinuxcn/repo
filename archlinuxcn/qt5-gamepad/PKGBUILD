@@ -1,11 +1,12 @@
-# Maintainer: Felix Yan <felixonmars@archlinux.org>
-# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Maintainer: Andreas Baumann <mail@andreasbaumann.cc>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Antonio Rojas <arojas@archlinux.org>
 
 pkgname=qt5-gamepad
-_basever=5.15.17
-pkgver=5.15.17
-pkgrel=2
-_commit=fb2191db07738c9a954a77c2fb15dcb925a4c361
+_basever=5.15.18
+pkgver=5.15.18
+pkgrel=1
+_commit=269fc0731f6838a1c02877a83c0ada23659c69fc
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -15,7 +16,7 @@ makedepends=('qt5-declarative' 'git')
 optdepends=('qt5-declarative: QML bindings')
 _pkgfqn=${pkgname/5-/}
 source=(kde-$_pkgfqn::git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit)
-sha256sums=('ca1e92a8bafaf1b70c7a209f0df916b8a5423dede30c2dba9bbfd0df8b33a58b')
+sha256sums=('3d19687ce1f12b50fe1f455069731b149fad830e302641221228c1f6638f2aed')
 
 pkgver() {
   cd kde-$_pkgfqn
