@@ -2,7 +2,6 @@ maintainers:
   - github: oldherl
 
 pre_build_script: |
-#  aur_pre_build(maintainers=["c2h5oh","lod"])
   update_pkgver_and_pkgrel(_G.newver)
 
 update_on:
@@ -10,5 +9,3 @@ update_on:
     github: SoftFever/OrcaSlicer
     use_latest_release: true
     prefix: v
-#  - source: aur
-#    aur: orca-slicer
