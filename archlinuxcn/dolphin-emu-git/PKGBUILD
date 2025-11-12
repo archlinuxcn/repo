@@ -38,6 +38,7 @@ source=(
 	"$pkgbase-cppipc::git+https://github.com/mutouyun/cpp-ipc.git"
 	"$pkgbase-cppoptparse::git+https://github.com/weisslj/cpp-optparse.git"
 	"$pkgbase-implot::git+https://github.com/epezent/implot.git"
+	"$pkgbase-imgui::git+https://github.com/ocornut/imgui.git"
 	"$pkgbase-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
@@ -76,6 +77,7 @@ prepare() {
 		[vh]='Vulkan-Headers'
 		[vma]='VulkanMemoryAllocator'
 		[watcher]='watcher/watcher'
+        [imgui]='imgui/imgui'
 	)
 
 	for _submod in "${!_submodules[@]}"; do
