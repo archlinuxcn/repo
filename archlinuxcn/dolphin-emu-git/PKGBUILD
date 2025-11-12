@@ -9,8 +9,8 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2509.r228.g3d764f7b42b
-pkgrel=1
+pkgver='2509.r294.g9c28f19e56'
+pkgrel='1'
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
 arch=('x86_64' 'aarch64')
@@ -22,30 +22,32 @@ depends=(
 	'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so' 'libgl'
 	'libsfml-network.so' 'libsfml-system.so' 'libspng.so' 'libswscale.so'
 	'libusb-1.0.so' 'libx11' 'libxi' 'libxrandr' 'lz4' 'lzo' 'mbedtls2' 'pugixml'
-	'sdl3' 'sfml' 'speexdsp' 'xxhash' 'xz' 'zstd' 'fmt'
+	'sdl3' 'sfml' 'speexdsp' 'xxhash' 'xz' 'zstd'
 	# Additional dependencies to replace vendored deps
-	'cubeb' 'libiconv' 'minizip-ng' 'zlib-ng' 'glslang'
+	'cubeb' 'glslang' 'libiconv' 'minizip-ng' 'zlib-ng'
 )
 makedepends=(
 	'alsa-lib' 'cmake' 'git' 'libevdev' 'libminiupnpc.so' 'libpulse'
-	'libudev.so' 'ninja' 'python' 'qt6-base' 'qt6-svg' 'vulkan-headers' 'vulkan-memory-allocator-git'
+	'libudev.so' 'ninja' 'python' 'qt6-base' 'qt6-svg' 'vulkan-headers'
 )
 checkdepends=('gtest')
 optdepends=('pulseaudio: PulseAudio backend')
 options=('!lto')
 source=(
 	"$pkgbase::git+https://github.com/$_mainpkgname/$_projectname"
-    "$pkgbase-cppipc::git+https://github.com/mutouyun/cpp-ipc.git"
+	"$pkgbase-cppipc::git+https://github.com/mutouyun/cpp-ipc.git"
+	"$pkgbase-cppoptparse::git+https://github.com/weisslj/cpp-optparse.git"
 	"$pkgbase-implot::git+https://github.com/epezent/implot.git"
 	"$pkgbase-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
 	"$pkgbase-vh::git+https://github.com/KhronosGroup/Vulkan-Headers.git"
+	"$pkgbase-vma::git+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git"
 	"$pkgbase-watcher::git+https://github.com/e-dant/watcher.git"
-	"$pkgbase-cpp-optparse::git+https://github.com/weisslj/cpp-optparse.git"
 	'cmake-mgba.diff'
 )
 b2sums=('SKIP'
+        'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -65,14 +67,15 @@ prepare() {
 
 	# Provide submodules
 	declare -A _submodules=(
+		[cppipc]='cpp-ipc/cpp-ipc'
+		[cppoptparse]='cpp-optparse/cpp-optparse'
 		[implot]='implot/implot'
 		[mgba]='mGBA/mgba'
 		[rcheevos]='rcheevos/rcheevos'
 		[tinygltf]='tinygltf/tinygltf'
 		[vh]='Vulkan-Headers'
+		[vma]='VulkanMemoryAllocator'
 		[watcher]='watcher/watcher'
-        [cppipc]='cpp-ipc/cpp-ipc'
-        [cpp-optparse]='cpp-optparse/cpp-optparse'
 	)
 
 	for _submod in "${!_submodules[@]}"; do
@@ -82,7 +85,10 @@ prepare() {
 		git -c protocol.file.allow=always submodule update "$_path"
 	done
 
+	# Get rid of glslang version, as it's used as an exact match (ABI v16 is compatible, see https://github.com/dolphin-emu/dolphin/pull/13974/files/cdfb389509b560b4a70661571d12edcebfb77fdf#r2384216168)
     sed -i 's/15.0/16.0/g' "$srcdir/$_sourcedirectory/CMakeLists.txt"
+
+	# Patch cmake_minimum_required below 3.5.0
 	cd "$srcdir/$_sourcedirectory/Externals/mGBA/mgba/"
 	patch --forward -p1 < "$srcdir/cmake-mgba.diff"
 }
