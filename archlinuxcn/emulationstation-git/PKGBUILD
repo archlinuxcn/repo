@@ -61,6 +61,7 @@ build() {
         -DCMAKE_BUILD_TYPE:STRING='None' \
         -DCMAKE_INSTALL_LIBDIR:PATH='lib' \
         -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
         ${_cmakeflags} \
         -Wno-dev -Wno-deprecated
     make -C "${_gitname}/build" all
