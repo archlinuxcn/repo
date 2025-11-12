@@ -35,7 +35,7 @@ optdepends=('pulseaudio: PulseAudio backend')
 options=('!lto')
 source=(
 	"$pkgbase::git+https://github.com/$_mainpkgname/$_projectname"
-	"$pkgbase-glslang::git+https://github.com/KhronosGroup/glslang.git"
+    "$pkgbase-cppipc::git+https://github.com/mutouyun/cpp-ipc.git"
 	"$pkgbase-implot::git+https://github.com/epezent/implot.git"
 	"$pkgbase-mgba::git+https://github.com/mgba-emu/mgba.git"
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
@@ -65,13 +65,13 @@ prepare() {
 
 	# Provide submodules
 	declare -A _submodules=(
-		[glslang]='glslang/glslang'
 		[implot]='implot/implot'
 		[mgba]='mGBA/mgba'
 		[rcheevos]='rcheevos/rcheevos'
 		[tinygltf]='tinygltf/tinygltf'
 		[vh]='Vulkan-Headers'
 		[watcher]='watcher/watcher'
+        [cppipc]='cpp-ipc/cpp-ipc'
         [cpp-optparse]='cpp-optparse/cpp-optparse'
 	)
 
