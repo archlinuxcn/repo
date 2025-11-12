@@ -1,0 +1,15 @@
+maintainers:
+  - github: oldherl
+
+pre_build_script: |
+  aur_pre_build(maintainers=["c2h5oh","lod"])
+  update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  aur_post_build()
+
+update_on:
+  - source: github
+    github: SoftFever/OrcaSlicer
+    use_latest_release: true
+  - source: aur
+    aur: orca-slicer
