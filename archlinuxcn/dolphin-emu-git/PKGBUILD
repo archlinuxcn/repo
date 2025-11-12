@@ -43,7 +43,6 @@ source=(
 	"$pkgbase-rcheevos::git+https://github.com/RetroAchievements/rcheevos.git"
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
 	"$pkgbase-vh::git+https://github.com/KhronosGroup/Vulkan-Headers.git"
-	"$pkgbase-vma::git+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git"
 	"$pkgbase-watcher::git+https://github.com/e-dant/watcher.git"
 	'cmake-mgba.diff'
 )
@@ -75,7 +74,6 @@ prepare() {
 		[rcheevos]='rcheevos/rcheevos'
 		[tinygltf]='tinygltf/tinygltf'
 		[vh]='Vulkan-Headers'
-		[vma]='VulkanMemoryAllocator'
 		[watcher]='watcher/watcher'
         [imgui]='imgui/imgui'
 	)
