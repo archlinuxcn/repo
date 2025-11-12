@@ -1,0 +1,87 @@
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+pkgname=qt5-webengine
+_basever=5.15.18
+pkgver=5.15.19
+pkgrel=4
+arch=('x86_64')
+url='https://www.qt.io'
+license=('LGPL3' 'LGPL2.1' 'BSD')
+pkgdesc='Provides support for web applications using the Chromium browser project'
+depends=('qt5-webchannel' 'qt5-location' 'libxcomposite' 'libxrandr' 'pciutils' 'libxss' 'libxkbfile' 'libxdamage'
+         'libevent' 'snappy' 'nss' 'libxslt' 'minizip' 'ffmpeg' 'libvpx' 'libxtst' 'ttf-font')
+makedepends=('git' 'python' 'gperf' 'jsoncpp' 'ninja' 'qt5-tools' 'poppler' 'pipewire' 'nodejs' 'python-html5lib')
+optdepends=('pipewire: WebRTC desktop sharing under Wayland')
+groups=('qt5')
+_pkgfqn=${pkgname/5-/}
+source=(kde-$_pkgfqn::git+https://code.qt.io/qt/qtwebengine.git#tag=v${pkgver}-lts
+        git+https://github.com/qt/qtwebengine-chromium.git
+        qt5-webengine-pipewire-0.3.patch
+        qt5-webengine-icu-75.patch
+        qt5-webengine-ninja-1.12.patch
+        qt5-webengine-gcc-15.patch
+        python3.12-six.patch
+        qt5-webengine-icu-78.patch)
+sha256sums=('10ae73fd623eff84af2921ea2c83c723d9a847e23abbc8d862d0dc346382ef9b'
+            'SKIP'
+            '5e3a3c4711d964d5152a04059a2b5c1d14bb13dd29bce370120f60e85b476b6f'
+            '7cac28ba784d24b4abf6414079548ada165343af507ecd8e23cbe7e4f63ae52f'
+            '6672741b64d896dc555c8ee42ca2329c4f20d5f406095a69fe72da44b3a142f4'
+            '813851a1c7de9947afab28b7f3cb26ca739254521f12c21f76a6a3ec164def24'
+            'ac87ec55ee5cbcf2d520e1ea433d041c0bf754271a17f859edbb9976f192ce3f'
+            'f5cf66e4006ca81def2625088e7dd2fc925a0a617b4b88d1a19f030b60b9ad96')
+
+prepare() {
+  mkdir -p build
+
+  cd kde-$_pkgfqn
+  git submodule init
+  git submodule set-url src/3rdparty "$srcdir"/qtwebengine-chromium
+  git submodule set-branch --branch 87-based src/3rdparty
+  git -c protocol.file.allow=always submodule update
+
+  patch -p1 -d src/3rdparty -i "$srcdir"/qt5-webengine-pipewire-0.3.patch # Port to pipewire 0.3
+  patch -p2 -d src/3rdparty/chromium -i "$srcdir"/qt5-webengine-icu-75.patch # Fix build with ICU 75
+  patch -p2 -d src/3rdparty/chromium -i "$srcdir"/qt5-webengine-ninja-1.12.patch # Fix build with ninja 1.12
+  patch -p1 -d src/3rdparty/chromium -i "$srcdir"/python3.12-six.patch # Fix build with python 3.12 - patch from Debian
+  patch -p1 -i "$srcdir"/qt5-webengine-gcc-15.patch # Fix build with GCC 15 (Fedora)
+  patch -Np1 -i "$srcdir"/qt5-webengine-icu-78.patch # Fix build with ICU78
+# Fix build with python 3.13
+  sed -e '/import pipes/d' -i src/3rdparty/chromium/build/android/gyp/util/build_utils.py
+}
+
+build() {
+  # this uses malloc_usable_size, which is incompatible with fortification level 3
+  export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+  export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+
+  cd build
+  qmake ../kde-$_pkgfqn CONFIG+=force_debug_info -- \
+    -proprietary-codecs \
+    -webp \
+    -webengine-icu \
+    -spellchecker \
+    -webengine-kerberos \
+    -webengine-webrtc-pipewire \
+    -webengine-python-version python3
+  make
+}
+
+package() {
+  # this uses malloc_usable_size, which is incompatible with fortification level 3
+  export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+  export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
+
+  cd build
+  make INSTALL_ROOT="$pkgdir" install
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "$pkgdir/usr/lib" -type f -name '*.prl' \
+    -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+
+  install -Dm644 "$srcdir"/kde-$_pkgfqn/src/3rdparty/chromium/LICENSE "$pkgdir"/usr/share/licenses/${pkgname}/LICENSE.chromium
+
+  # Fix cmake dependency versions
+  sed -e "s|$pkgver\ |$_basever |" -i "$pkgdir"/usr/lib/cmake/*/*Config.cmake
+}

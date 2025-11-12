@@ -1,0 +1,26 @@
+From d4eab861d58197b5f0e726e50bca5dda641c0f4f Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Wed, 12 Nov 2025 15:53:46 +0800
+Subject: [PATCH 2/2] fix build with system sqlite3
+
+Signed-off-by: Hu Butui <hot123tea123@gmail.com>
+---
+ SuperBuild/External_sqlite.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/SuperBuild/External_sqlite.cmake b/SuperBuild/External_sqlite.cmake
+index 4b54bf5b63..299d6b487b 100644
+--- a/SuperBuild/External_sqlite.cmake
++++ b/SuperBuild/External_sqlite.cmake
+@@ -10,7 +10,7 @@ ExternalProject_Include_Dependencies(${proj} PROJECT_VAR proj DEPENDS_VAR ${proj
+ if(Slicer_USE_SYSTEM_${proj})
+   unset(${proj}_DIR CACHE)
+   unset(${proj} CACHE)
+-  find_package(${proj} REQUIRED)
++  find_package(SQLite3 REQUIRED)
+ endif()
+ 
+ # Sanity checks
+-- 
+2.51.2
+
