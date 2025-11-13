@@ -45,6 +45,7 @@ depends=(
   zlib
 )
 makedepends=(
+  cmake
   gcc14
   gendesk
   git
@@ -64,8 +65,8 @@ source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
 sha512sums=('c3d91fdd02292c5231389baec26827a5e2503a2c5ba0bf226c7ef383e12fb11cf5b7925d9689a359428bc6a55431140b1b0aa43c1f0a8270256d12c1e47ad8ea'
             '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
             '42395e20b10a8e9ef3e33014f9a4eed08d46ab952e02d2c1bbc8f6133eca0d7719fb75680f9bbff6552f20fcd1b73d86860f7f39388d631f98fb6f622b37cf04'
-            '486d209f4d317766932ea24b9b1472f523804d72f3db13154acb565c5505368cb7df6e728a8727340104542e3fdf1b56f76a951fcd36e1e168a658c628bba1fc'
-            'bae29501585b5abd768010f844d3caceff9f9023ef431024323b421b3880976d56bb7925559fc308879ca1e80bc619a267b4a97f143d0fbf3418a5b401518f0d')
+            'b1cc508098af1b5b5bbef187b85032fe921ed04e29653983282c00022db65d579fd68b5aebb089980faf598ef4af1a262971b354e7841219bd2b0d9cfde5c499'
+            'b6cbe68b1639410322f669fb822e5a6c52daa7873bc1eb9b63610aa8f894b7c9c6892b1d01e47ac3492dc233c02e1f45fbcf148e91597a4d3c6c95b1bd619592')
 
 prepare() {
   # fix building with system rapidjson
@@ -85,10 +86,8 @@ prepare() {
 build() {
   export CC=gcc-14
   export CXX=g++-14
-  # build with cmake 3.31.6, not working with cmake 4.0.0 yet
-  export PATH=${srcdir}/cmake-3.31.6-linux-x86_64/bin:${PATH}
   cmake \
-    -B build \
+    -B "${srcdir}/build" \
     -DBUILD_TESTING=OFF \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -106,7 +105,9 @@ build() {
     -DSlicer_USE_SYSTEM_LZMA=ON \
     -DSlicer_USE_SYSTEM_LibArchive=ON \
     -DSlicer_USE_SYSTEM_LibFFI=ON \
+    -DSlicer_USE_SYSTEM_LZMA=ON \
     -DSlicer_USE_SYSTEM_OpenSSL=ON \
+    -DSlicer_USE_SYSTEM_ParameterSerializer=OFF \
     -DSlicer_USE_SYSTEM_PCRE2=OFF \
     -DSlicer_USE_SYSTEM_QT=ON \
     -DSlicer_USE_SYSTEM_RapidJSON=ON \
@@ -126,7 +127,7 @@ build() {
     -GNinja \
     -S "${srcdir}/${_pkgname}" \
     -Wno-dev
-  cmake --build ${srcdir}/build
+  cmake --build "${srcdir}/build"
 }
 
 package() {
