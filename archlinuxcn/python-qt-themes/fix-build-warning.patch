@@ -1,0 +1,23 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 3f039df..71d6b55 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -7,7 +7,7 @@ authors = [
+ ]
+ dependencies = []
+ requires-python = ">=3.9"
+-license = {text = "MIT"}
++license = "MIT"
+ readme = "README.md"
+ 
+ [project.optional-dependencies]
+@@ -23,6 +23,9 @@ pyside6 = ["PySide6"]
+ requires = ["setuptools"]
+ build-backend = "setuptools.build_meta"
+ 
++[tool.setuptools]
++include-package-data = false
++
+ [tool.setuptools.packages.find]
+ include = ["qt_themes"]
+ 

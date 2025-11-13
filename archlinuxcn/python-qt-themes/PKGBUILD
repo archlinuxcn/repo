@@ -1,0 +1,41 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+_pkgbase='qt-themes'
+pkgname=python-$_pkgbase
+pkgver=0.3.0
+pkgrel=1
+pkgdesc='A collection of themes for Qt in Python'
+arch=('any')
+url='https://github.com/beatreichenbach/qt-themes'
+license=('MIT')
+depends=(
+    'python'
+    'pyside6' # if pyside6 not found, fallback to pyside2, so pyside2 not needed
+)
+makedepends=(
+    'python-build'
+    'python-setuptools'
+    'python-installer'
+    'python-wheel'
+)
+source=(
+    "$_pkgbase-$pkgver.tar.gz::https://github.com/beatreichenbach/qt-themes/archive/v$pkgver.tar.gz"
+    "fix-build-warning.patch"
+)
+b2sums=('0fa9ce63b4e65e6e4a84286097b054e7055a369c7eea58ca6d31ea3125f1f2324a10380b9996fc14d6f6a3c653b962edf50eaf574432be7c11c1eb73fd45e237'
+        'a51a99ca10b7821cf8918b677ab72b4a4f8a0498f7a999636d013e28252467ab81858c7c18a1d213e78799cfb34f086f8b3a436b92c3d2201b4c484f30cf876b')
+
+prepare() {
+    cd "$srcdir/$_pkgbase-$pkgver"
+    patch -p1 < ../fix-build-warning.patch
+}
+
+build() {
+    cd "$srcdir/$_pkgbase-$pkgver"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "$srcdir/$_pkgbase-$pkgver"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}
