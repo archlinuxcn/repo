@@ -19,10 +19,9 @@ depends=(
 	'libinput'
 )
 makedepends=('git' 'cmake' 'hyprwayland-scanner-git')
-provides=("lib${_pkgname}.so")
-source=("git+${url}.git")
-provides=("${_pkgname}")
+provides=("${_pkgname}" "lib${_pkgname}.so")
 conflicts=("${_pkgname}")
+source=("git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
