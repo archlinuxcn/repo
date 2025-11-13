@@ -50,7 +50,7 @@ prepare() {
     cd "$pkgname"
 
     # https://github.com/probe-rs/probe-rs/pull/3583
-    git cherry-pick -n 80fa93aa86d39a2e747cc65774bb4c93e3a08761^..fd307b65e7adb5bd642063447d8c846a45daeda2
+    git cherry-pick -n 6834bceb53c3f6405b3a3e49984ef24b6495b8bd^..27c678bafdd168ada70af3a8c5668053d885fcf8
 
     export RUSTUP_TOOLCHAIN=stable
     cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
