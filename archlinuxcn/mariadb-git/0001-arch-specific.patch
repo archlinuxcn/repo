@@ -90,10 +90,10 @@ diff --git a/support-files/tmpfiles.conf.in b/support-files/tmpfiles.conf.in
 index 70de7a12fdb..101b37f306a 100644
 --- a/support-files/tmpfiles.conf.in
 +++ b/support-files/tmpfiles.conf.in
-@@ -9,3 +9,5 @@
- # It shouldn't be used for datadir which is why it
+@@ -14,3 +14,5 @@
  # may be disabled.
- @DISABLE_TMP@d @MYSQL_UNIX_DIR@ 0755 @MYSQLD_USER@ @MYSQLD_USER@ -
+ @DISABLE_RUNDATADIR@d @INSTALL_RUNDATADIR@ 0755 @MYSQLD_USER@ @MYSQLD_USER@ -
+ @DISABLE_MYSQL_UNIX_ADDRDIR@d @MYSQL_UNIX_ADDRDIR@ 0755 @MYSQLD_USER@ root -
 +d @MYSQL_DATADIR@ 0700 @MYSQLD_USER@ @MYSQLD_USER@ -
 +h @MYSQL_DATADIR@ - - - - +C
 
