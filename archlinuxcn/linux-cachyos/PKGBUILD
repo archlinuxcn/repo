@@ -175,7 +175,7 @@ _stable=${_major}.${_minor}
 _srcname=linux-${_stable}
 #_srcname=linux-${_major}
 pkgdesc='Linux BORE + LTO + AutoFDO + Propeller Cachy Sauce Kernel by CachyOS with other patches and improvements.'
-pkgrel=2
+pkgrel=3
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -239,7 +239,8 @@ fi
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
              "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
-             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch")
+             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
+             "${_patchsource}/misc/nvidia/0006-nvkms-Limit-default-maximum-TMDS-character-rate-to-3.patch")
 fi
 
 # Use generated AutoFDO Profile
@@ -737,7 +738,7 @@ _package-zfs(){
     license=('CDDL')
 
     cd "$_srcname"
-    local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
+    local modulesdir="$pkgdir/usr/lib/modules/$(<version)/extramodules"
 
     cd "${srcdir}/zfs"
     install -dm755 "${modulesdir}"
@@ -756,7 +757,7 @@ _package-nvidia(){
     license=('custom')
 
     cd "$_srcname"
-    local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
+    local modulesdir="$pkgdir/usr/lib/modules/$(<version)/extramodules"
 
     cd "${srcdir}/${_nv_pkg}"
     install -dm755 "${modulesdir}"
@@ -775,7 +776,7 @@ _package-nvidia-open(){
     license=('MIT AND GPL-2.0-only')
 
     cd "$_srcname"
-    local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
+    local modulesdir="$pkgdir/usr/lib/modules/$(<version)/extramodules"
 
     cd "${srcdir}/${_nv_open_pkg}"
     install -dm755 "${modulesdir}"
