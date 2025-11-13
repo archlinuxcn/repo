@@ -19,6 +19,7 @@ depends=(
 	'libinput'
 )
 makedepends=('git' 'cmake' 'hyprwayland-scanner-git')
+provides=("lib${_pkgname}.so")
 source=("git+${url}.git")
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
