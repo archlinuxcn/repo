@@ -3,8 +3,9 @@ maintainers:
 build_prefix: extra-x86_64
 time_limit_hours: 4
 repo_depends:
-  - gcc13
-  - gcc13: gcc13-libs
+  - icu76
+  - qt5-webchannel
+  - qt5-webengine
   - teem
 update_on:
   - source: github
@@ -16,4 +17,3 @@ update_on:
   - alias: icu
 managed: true
 # vim:set ts=2 sw=2 et:
-
