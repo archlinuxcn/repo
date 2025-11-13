@@ -1,0 +1,51 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+_pkgbase=typstwriter
+pkgname=$_pkgbase-git
+pkgver=0.3.r12.gc4e8962
+pkgrel=1
+pkgdesc='An integrated editor for the typst typesetting system.'
+arch=('any')
+url='https://github.com/Bzero/typstwriter'
+license=('MIT')
+depends=(
+    'python'
+    'python-qtpy'
+    'pyside6' # explicitly required by upstream
+    'python-pygments'
+    'python-platformdirs'
+    'python-qt-themes'
+    'typst' # renderer backend
+)
+makedepends=(
+    'git'
+    'python-build'
+    'python-flit-core'
+    'python-installer'
+    'python-wheel'
+)
+source=(
+    "$_pkgbase::git+https://github.com/Bzero/typstwriter.git"
+    'com.github.Bzero.typstwriter.desktop'
+)
+b2sums=(
+    'SKIP'
+    'fdc336acfbb3e9e95cd16eae16a320e9874e05b1b133fccb8f50acd0adf93c767bd7465084feb11124bcef7e6e001198b4acae31f161f3743c2ebc99f57ea250'
+)
+
+pkgver() {
+    cd "$_pkgbase"
+    git describe --long --abbrev=7 | sed 's/^V//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "$srcdir/$_pkgbase"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "$srcdir/$_pkgbase"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+    install -Dm0644 -t "$pkgdir/usr/share/pixmaps" typstwriter/icons/typstwriter.svg
+    install -Dm0644 -t "$pkgdir/usr/share/applications" ../com.github.Bzero.typstwriter.desktop
+}

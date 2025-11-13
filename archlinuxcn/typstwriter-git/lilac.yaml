@@ -1,0 +1,9 @@
+maintainers:
+  - github: RocketMaDev
+    email: RocketDev <marocketbd@gmail.com>
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: vcs
