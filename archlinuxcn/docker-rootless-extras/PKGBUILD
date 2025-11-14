@@ -1,37 +1,51 @@
-# Maintainer: Hugo Osvaldo Barrera <hugo@barrera.io>
+# Maintainer: Ľubomír 'the-k' Kučera <lubomir.kucera.jr at gmail.com>
+# Contributor: Hugo Osvaldo Barrera <hugo@barrera.io>
+# Contributor: PastLeo <chgu82837@gmail.com>
+# Contributor: koba1t <kobdotsh at gmail dot com>
 
 pkgname=docker-rootless-extras
-pkgver=28.5.2
+pkgver=29.0.0
 pkgrel=1
-pkgdesc='Extras to run docker as non-root'
+pkgdesc="Extras to run docker as non-root."
 arch=('any')
-url='https://docs.docker.com/engine/security/rootless'
+url="https://docs.docker.com/engine/security/rootless/"
 license=('Apache-2.0')
-depends=(
-  docker
-  rootlesskit
-  slirp4netns
-)
-optdepends=(
-  'fuse-overlayfs: overlayfs support'
-)
-install=${pkgname}.install
+depends=('docker' 'rootlesskit' 'slirp4netns')
+optdepends=('fuse-overlayfs: overlayfs support')
+provides=('docker-rootless' 'docker-rootless-extras-bin')
+conflicts=('docker-rootless' 'docker-rootless-extras-bin')
+install=$pkgname.install
 source=(
-  "${pkgname}-${pkgver}.sh::https://raw.githubusercontent.com/moby/moby/v${pkgver}/contrib/dockerd-rootless.sh"
-  "99-docker-rootless.conf"
-  "docker.service"
-  "docker.socket"
-)
-sha256sums=('bfb8adb8edd55819492c4a11a506c2621e39a3a8c2ae447231ecae2ee7fa803f'
-            'd0d790d4c3d887b10b2b155b83a58a44980b9fa638f8c0f1faec0739dc0ef473'
-            '8112a27a099bb12e4d587dca0f49a419b7553a4f1e5daac254c6aa693e7e6e7c'
-            'd8695293e5d4a814763f13e1d36ed37273040666b4b91363d6c33171df8934c7')
+        "dockerd-rootless-${pkgver}.sh::https://raw.githubusercontent.com/moby/moby/docker-v${pkgver}/contrib/dockerd-rootless.sh"
+        "dockerd-rootless-setuptool-${pkgver}.sh::https://raw.githubusercontent.com/moby/moby/docker-v${pkgver}/contrib/dockerd-rootless-setuptool.sh"
+        "docker.socket"
+        "99-docker-rootless.conf")
 
+sha256sums=('c2b688c1ddda742d669b20b73ca4ac97ba68dea54f265d7302b8f8b0b6f2a1fe'
+            '0172d6f5c301b764a41bc37453d7bfd29c7681c02d3ece9ab109e7d04b52acc2'
+            'd8695293e5d4a814763f13e1d36ed37273040666b4b91363d6c33171df8934c7'
+            'd0d790d4c3d887b10b2b155b83a58a44980b9fa638f8c0f1faec0739dc0ef473')
 
 package() {
-  install -Dm755 "${srcdir}/${pkgname}-${pkgver}.sh" "${pkgdir}/usr/bin/dockerd-rootless.sh"
-  install -Dm644 "${srcdir}/docker.service" "${pkgdir}/usr/lib/systemd/user/docker.service"
-  install -Dm644 "${srcdir}/docker.socket" "${pkgdir}/usr/lib/systemd/user/docker.socket"
-  install -Dm644 "${srcdir}/99-docker-rootless.conf" "${pkgdir}/usr/lib/sysctl.d/99-docker-rootless.conf"
+  install -Dm755 "$srcdir/dockerd-rootless-${pkgver}.sh" "$pkgdir/usr/bin/dockerd-rootless.sh"
+  install -Dm644 "$srcdir/docker.socket" "$pkgdir/usr/lib/systemd/user/docker.socket"
+  install -Dm644 "$srcdir/99-docker-rootless.conf" "$pkgdir/usr/lib/sysctl.d/99-docker-rootless.conf"
+
+  # The systemd service file is bundled inside the setup script. The script is
+  # unsuitable to run in this PKGBUILD, since it tampers with $HOME and other
+  # similar paths, so would mess up the environment for users who run
+  # `makepkg` on their host.
+  # TODO: Send a patch upstream so we can make the script JUST print this.
+  awk '/Unit/,/EOT/' "$srcdir/dockerd-rootless-setuptool-$pkgver.sh" | \
+    head -n-1 | \
+    sed 's/^[[:space:]]*//' | \
+    sed 's|$BIN|/usr/bin|' | \
+    sed 's|\\$MAINPID|$MAINPID|' | \
+    sed 's| $DOCKERD_ROOTLESS_SH_FLAGS||' \
+    > "$pkgdir/usr/lib/systemd/user/docker.service"
+
+  # Remove the $PATH override, since this will be dependant on $PATH at build
+  # time and is usually undesirable.
+  # TODO: Patch this upstream.
+  sed -i '/Environment=PATH=/d' "$pkgdir/usr/lib/systemd/user/docker.service"
 }
-# vim:set ts=2 sw=2 et:
