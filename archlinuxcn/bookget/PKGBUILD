@@ -1,0 +1,38 @@
+# Maintainer: taotieren <admin@taotieren.com>
+# Maintainer: DeepChirp <DeepChirp@outlook.com>
+
+pkgname=bookget
+pkgver=25.0701
+pkgrel=1
+pkgdesc="A tool for downloading digitized classics, currently supporting 50+ digital libraries."
+arch=('x86_64' 'aarch64')
+url="https://github.com/deweizhu/bookget"
+license=('GPL-3.0-only')
+provides=(${pkgname})
+conflicts=("${pkgname%}-git" "${pkgname%}-bin")
+depends=(glibc)
+optdepends=('dezoomify-rs: Zoomable image downloader for Google Arts & Culture, Zoomify, IIIF, and others')
+makedepends=(go)
+source=("$pkgname-$pkgver.tar.gz::https://github.com/deweizhu/bookget/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('f4b6aa4762b2fa4b96147fd2a70613ced7cf0f69bfeed394eb8ecd44c955d4bd')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+    export GO111MODULE=on
+    export GOPROXY=https://goproxy.cn,direct
+
+    mkdir -pv build/
+    go build -o build/${pkgname} ./cmd/
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    install -Dm755 build/${pkgname} -t ${pkgdir}/usr/bin/
+    install -Dm0644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
