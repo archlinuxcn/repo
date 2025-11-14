@@ -39,22 +39,18 @@ depends=(
   zstd
 )
 makedepends=(
-  boost-libs
   cmake
   doxygen
   glew
   glm
-  git
   ngspice
   mesa
   boost
   swig
-  ngspice
   ninja
-  pkgconf
 )
-conflicts=(${pkgname} 'kicad' 'kicad-bzr')
-provides=(${pkgname} 'kicad' 'kicad-bzr')
+conflicts=("${_name}")
+provides=("${_name}")
 optdepends=(
   'kicad-library: KiCad symbol, footprint and template libraries'
   'kicad-library-3d: KiCad 3D model libraries'
