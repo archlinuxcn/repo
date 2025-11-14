@@ -6,74 +6,74 @@ pkgver=9.0.6
 pkgrel=2
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('x86_64')
-url="https://gitlab.com/kicad-hq/kicad"
+url="https://gitlab.com/${pkgname}/${_name}"
 license=('GPL-3.0-or-later')
 depends=(
-  abseil-cpp
-  cairo
-  curl
-  freetype2
-  fontconfig
-  gcc-libs
-  glib2
-  glibc
-  glu
-  gtk3
-  libglvnd
-  libgit2
-  libsecret
-  harfbuzz
-  hicolor-icon-theme
-  nng
-  opencascade
-  openssl
-  protobuf
-  python
-  python-wxpython
-  wayland
-  webkit2gtk-4.1
-  wxwidgets-gtk3
-  wxwidgets-common
-  unixodbc
-  zlib
-  zstd
+	abseil-cpp
+	cairo
+	curl
+	freetype2
+	fontconfig
+	gcc-libs
+	glib2
+	glibc
+	glu
+	gtk3
+	libglvnd
+	libgit2
+	libsecret
+	harfbuzz
+	hicolor-icon-theme
+	nng
+	opencascade
+	openssl
+	protobuf
+	python
+	python-wxpython
+	wayland
+	webkit2gtk-4.1
+	wxwidgets-gtk3
+	wxwidgets-common
+	unixodbc
+	zlib
+	zstd
 )
 makedepends=(
-  cmake
-  doxygen
-  glew
-  glm
-  ngspice
-  mesa
-  boost
-  swig
-  ninja
+	cmake
+	doxygen
+	glew
+	glm
+	ngspice
+	mesa
+	boost
+	swig
+	ninja
 )
 conflicts=("${_name}")
 provides=("${_name}")
 optdepends=(
-  'kicad-library: KiCad symbol, footprint and template libraries'
-  'kicad-library-3d: KiCad 3D model libraries'
+	'kicad-library: KiCad symbol, footprint and template libraries'
+	'kicad-library-3d: KiCad 3D model libraries'
 )
 source=("${url}/-/archive/${pkgver}/${_name}-${pkgver}.tar.gz")
 sha256sums=('9c10fbcd4190010a340fc06fa3b6f0faf8e62a5c3fd3e98b46e200b6ec7638d3')
 
 build() {
-  cmake -B build \
-        -S "${_name}-${pkgver}" \
-	-G Ninja \
-        -D CMAKE_BUILD_TYPE=Release \
-        -D CMAKE_INSTALL_PREFIX=/usr \
-        -D KICAD_USE_EGL=ON \
-	-D KICAD_USE_BUNDLED_GLEW=OFF \
-        -D KICAD_BUILD_I18N=ON \
-        -D KICAD_I18N_UNIX_STRICT_PATH=ON \
-        -D KICAD_BUILD_QA_TESTS=OFF \
-        -W no-dev
+	cmake -B build \
+	      -S "${_name}-${pkgver}" \
+	      -G Ninja \
+	      -D CMAKE_BUILD_TYPE=Release \
+	      -D CMAKE_INSTALL_PREFIX=/usr \
+	      -D KICAD_USE_EGL=ON \
+	      -D KICAD_USE_BUNDLED_GLEW=OFF \
+	      -D KICAD_BUILD_I18N=ON \
+	      -D KICAD_I18N_UNIX_STRICT_PATH=ON \
+	      -D KICAD_BUILD_QA_TESTS=OFF \
+	      -W no-dev
 
-  cmake --build build
+	cmake --build build
 }
 
 package() {
-  DESTDIR="${pkgdir}" cmake --install build
+	DESTDIR="${pkgdir}" cmake --install build
 }
