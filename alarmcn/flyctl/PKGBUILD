@@ -13,6 +13,12 @@ checkdepends=('ruby-rake')
 source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('27f3f1abef5d655462859d15e84640506a422833f4ce4bffa23e2f5d75d2af57')
 
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	export GOPATH="${srcdir}"
+	go mod download -modcacherw
+}
+
 build() {
 	cd "${pkgname}-${pkgver}/"
 	export CGO_CPPFLAGS="${CPPFLAGS}"
@@ -24,7 +30,8 @@ build() {
 }
 
 check() {
-	make -C "${pkgname}-${pkgver}" test
+	cd "${pkgname}-${pkgver}/"
+	go test ./...
 }
 
 package() {
