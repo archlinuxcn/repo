@@ -1,0 +1,16 @@
+[Unit]
+Description=A simple, decentralized mesh VPN with WireGuard support.
+After=network.target
+
+[Service]
+TimeoutStartSec=10s
+Type=exec
+ExecStart=/usr/bin/easytier-core -c /etc/easytier/config.toml
+LimitNPROC=500
+LimitNOFILE=1000000
+Restart=on-failure
+RestartSec=5s
+WorkingDirectory=/var/lib/easytier
+
+[Install]
+WantedBy=multi-user.target

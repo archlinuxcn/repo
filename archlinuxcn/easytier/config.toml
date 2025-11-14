@@ -1,0 +1,74 @@
+# Instance name, used to identify this VPN node on the same machine
+instance_name = ""
+# Hostname, used to identify the hostname of this device
+hostname = ""
+# Instance ID, generally a UUID, unique within the same VPN network
+instance_id = ""
+# IPv4 address of this VPN node, if empty, this node will only forward packets and will not create a TUN device
+ipv4 = ""
+# Automatically determined and set IP address by Easytier, default starts from 10.0.0.1. Warning: When using DHCP, if there is an IP conflict in the network, the IP will automatically change
+dhcp = false
+
+# List of listeners, used to accept connections
+listeners = [
+"tcp://0.0.0.0:11010",
+"udp://0.0.0.0:11010",
+"wg://0.0.0.0:11011",
+"ws://0.0.0.0:11011/",
+"wss://0.0.0.0:11012/",
+]
+
+# Exit node list
+exit_nodes = [
+]
+
+# RPC portal address for management
+rpc_portal = "127.0.0.1:15888"
+
+[network_identity]
+# Network name, used to identify the VPN network
+network_name = ""
+# Network secret, used to verify that this node belongs to the VPN network
+network_secret = ""
+
+# Peer connection node configuration, can have multiple configurations
+[[peer]]
+uri = ""
+
+[[peer]]
+uri = ""
+
+# Subnet proxy node configuration, can have multiple configurations
+[[proxy_network]]
+cidr = "10.0.1.0/24"
+
+[[proxy_network]]
+cidr = "10.0.2.0/24"
+
+[flags]
+# Default protocol used to connect to peer nodes
+default_protocol = "tcp"
+# TUN device name, if empty, the default name will be used
+dev_name = ""
+# Enable encryption
+enable_encryption = true
+# Enable IPv6 support
+enable_ipv6 = true
+# MTU of the TUN device
+mtu = 1380
+# Latency-first mode, will attempt to forward traffic using the lowest latency path, default is to use the shortest path
+latency_first = false
+# Configure this node as an exit node
+enable_exit_node = false
+# Disable TUN device
+no_tun = false
+# Enable smoltcp stack for subnet proxy
+use_smoltcp = false
+# Only forward traffic for whitelisted networks, supports wildcard strings. Multiple network names can be separated by spaces. If this parameter is empty, forwarding is disabled. Default allows all networks. For example: '*' (all networks), 'def*' (networks prefixed with def), 'net1 net2' (only allow net1 and net2)
+foreign_network_whitelist = "*"
+# Disable P2P
+disable_p2p = false
+# Relay Other
+relay_all_peer_rpc = false
+# Disable udp hole punching
+disable_udp_hole_punching = false
