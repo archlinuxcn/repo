@@ -9,6 +9,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/superfly/${pkgname}"
 license=("Apache-2.0")
 makedepends=('go')
+checkdepends=('ruby-rake')
 source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('42c5c5e759bb4eaabc1b04a045fed0144a7eb892e7ca7fb2c4c0ee645aa16cc2')
 
