@@ -3,7 +3,7 @@
 # Contributor: David Herrmann <dh.herrmann@gmail.com>
 
 pkgname=libtsm
-pkgver=4.2.0
+pkgver=4.3.0
 pkgrel=1
 pkgdesc='Terminal-emulator State Machine'
 arch=('x86_64')
@@ -23,7 +23,7 @@ provides=('libtsm.so')
 source=(
   "https://github.com/Aetf/libtsm/archive/v$pkgver/$pkgname-$pkgver.tar.gz"
 )
-b2sums=('80d9ef966db05bca7a1a274671f5922c575d61f54aca229ee2a796e8ab66a546adb1af44a4ac9d000d8c1d57b7450e085acc27c7326288f3239d69468c57b447')
+b2sums=('fc8071011e4c8833c96e6e2aa09490ddd51f6468e11c87e3ae58f818db29b11c737d9c6440539be108a636f36dabee1148beaf6a24a59f4f102bc99b52eee95c')
 
 prepare() {
   cd $pkgname-$pkgver
