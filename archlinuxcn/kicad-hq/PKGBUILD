@@ -61,23 +61,21 @@ source=("${_name}-${pkgver}.tar.gz::https://gitlab.com/kicad-hq/kicad/-/archive/
 sha256sums=('9c10fbcd4190010a340fc06fa3b6f0faf8e62a5c3fd3e98b46e200b6ec7638d3')
 
 build() {
-  cd "${srcdir}/${_name}-${pkgver}"
+  cmake -B build \
+        -S "${_name}-${pkgver}" \
+	-G Ninja \
+        -D CMAKE_BUILD_TYPE=Release \
+        -D CMAKE_INSTALL_PREFIX=/usr \
+        -D KICAD_USE_EGL=ON \
+	-D KICAD_USE_BUNDLED_GLEW=OFF \
+        -D KICAD_BUILD_I18N=ON \
+        -D KICAD_I18N_UNIX_STRICT_PATH=ON \
+        -D KICAD_BUILD_QA_TESTS=OFF \
+        -W no-dev
 
-  cmake -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DKICAD_USE_EGL=ON \
-    -DKICAD_SCRIPTING_WXPYTHON=ON \
-    -DKICAD_BUILD_I18N=ON \
-    -DKICAD_I18N_UNIX_STRICT_PATH=ON \
-    -DKICAD_BUILD_QA_TESTS=OFF \
-    -DFMT_INSTALL=OFF \
-    -Bbuild \
-    -GNinja \
-    -Wno-dev
-
-  ninja -C build
+  cmake --build build
 }
 
 package() {
-  DESTDIR="$pkgdir" ninja -C ${srcdir}/${_name}-${pkgver}/build install
+  DESTDIR="${pkgdir}" cmake --install build
 }
