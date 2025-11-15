@@ -26,7 +26,7 @@ function prepare() {
 	export CC=gcc-14
 	export CXX=g++-14
 	cd "${srcdir}/continuwuity"
-	git merge jade/clippy-fixes
+	git merge origin/jade/clippy-fixes
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 	export CONDUWUIT_VERSION_EXTRA=$(git rev-parse --short HEAD)
