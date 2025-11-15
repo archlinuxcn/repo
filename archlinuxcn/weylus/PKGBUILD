@@ -18,7 +18,7 @@ prepare() {
     cargo update
     git apply < ../linking.patch
     git apply < ../const.patch
-    git apply < ../cargo_lock.patch
+    #git apply < ../cargo_lock.patch
     cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
