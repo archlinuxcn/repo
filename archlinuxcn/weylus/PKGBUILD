@@ -15,6 +15,7 @@ prepare() {
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_HOME="$srcdir/cargo"
     cd source
+    cargo update
     git apply < ../linking.patch
     git apply < ../const.patch
     git apply < ../cargo_lock.patch
