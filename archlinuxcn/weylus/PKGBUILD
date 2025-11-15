@@ -9,16 +9,18 @@ conflicts=("weylus")
 source=("source::git+https://github.com/H-M-H/Weylus.git#tag=v$pkgver" "linking.patch" "const.patch" "cargo_lock.patch")
 sha256sums=("SKIP" "SKIP" "SKIP" "SKIP")
 
-makedepends=(cargo typescript gcc libx11 pkg-config git make cmake)
+makedepends=(rustup typescript gcc libx11 pkg-config git make cmake)
 
 prepare() {
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_HOME="$srcdir/cargo"
     cd source
-    cargo update
+    #cargo update
+    rustup toolchain install 1.88.0
+    rustup default 1.88.0
     git apply < ../linking.patch
     git apply < ../const.patch
-    #git apply < ../cargo_lock.patch
+    git apply < ../cargo_lock.patch
     cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
