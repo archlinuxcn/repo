@@ -11,6 +11,7 @@
 # Contributor: Eric Forgeot < http://esclinux.tk >
 
 pkgname=qgis-qt6
+_basename=qgis
 pkgver=3.44.4
 pkgrel=2
 pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
@@ -78,12 +79,12 @@ optdepends=(
   'fcgi: Map server'
   'gpsbabel: GPS Tools plugin'
 )
-conflicts=(qgis)
-source=("https://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
+conflicts=($_basename)
+source=("https://qgis.org/downloads/$_basename-$pkgver.tar.bz2")
 sha256sums=('e54d407c5fe921f31ec69104f8d4abbed310b277379e0a5e20af21d46565da0d')
 
 build() {
-  cmake -S $pkgname-$pkgver -B build -G Ninja \
+  cmake -S $_basename-$pkgver -B build -G Ninja \
     -DCMAKE_INSTALL_PREFIX='/usr' \
     -DWITH_3D=TRUE \
     -DWITH_QUICK=TRUE \
@@ -113,6 +114,6 @@ build() {
 
 package() {
   DESTDIR="$pkgdir" cmake --install build
-  install -Dm644 $pkgname-$pkgver/rpm/sources/qgis-mime.xml "$pkgdir/usr/share/mime/packages/qgis.xml"
+  install -Dm644 $_basename-$pkgver/rpm/sources/qgis-mime.xml "$pkgdir/usr/share/mime/packages/qgis.xml"
 }
 

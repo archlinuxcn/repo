@@ -5,10 +5,10 @@ pkgver=6.3.0
 pkgrel=3
 pkgdesc="Qt Widgets for Technical Applications (qt6)"
 arch=('x86_64')
-license=('LicenseRef-qwt')
+license=(LicenseRef-qwt)
 url="https://qwt.sourceforge.io/"
-depends=('qt6-svg')
-makedepends=('qt6-base' 'qt6-tools')
+depends=('qt6-svg' 'qt6-base')
+makedepends=('qt6-tools')
 source=("http://downloads.sourceforge.net/qwt/qwt-${pkgver}.tar.bz2")
 sha256sums=('dcb085896c28aaec5518cbc08c0ee2b4e60ada7ac929d82639f6189851a6129a')
 options=(!emptydirs)
@@ -39,4 +39,5 @@ package() {
   cd qwt-${pkgver}
   make install INSTALL_ROOT="${pkgdir}"
   rm -r "${pkgdir}"/usr/share/doc
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
