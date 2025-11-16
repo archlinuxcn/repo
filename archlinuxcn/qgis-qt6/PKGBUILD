@@ -1,5 +1,6 @@
+# Maintainer: Vita Yuzu <g311571057 at gmail dot com>
 # Maintainer: Balló György <ballogyor+arch at gmail dot com>
-# Maintainer: Bruno Pagani <archange@archlinux.org
+# Maintainer: Bruno Pagani <archange@archlinux.org>
 # Contributor: Doug Newgard <scimmia at archlinux dot org>
 # Contributor: XavierCLL <xavier.corredor.llano (a) gmail.com>
 # Contributor: SaultDon <sault.don gmail>
@@ -9,7 +10,7 @@
 # Contributor: Gerardo Exequiel Pozzi <vmlinuz386@yahoo.com.ar>
 # Contributor: Eric Forgeot < http://esclinux.tk >
 
-pkgname=qgis
+pkgname=qgis-qt6
 pkgver=3.44.4
 pkgrel=2
 pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
@@ -77,6 +78,7 @@ optdepends=(
   'fcgi: Map server'
   'gpsbabel: GPS Tools plugin'
 )
+conflicts=(qgis)
 source=("https://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
 sha256sums=('e54d407c5fe921f31ec69104f8d4abbed310b277379e0a5e20af21d46565da0d')
 
