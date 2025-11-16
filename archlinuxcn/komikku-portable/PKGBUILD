@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=komikku-portable
-pkgver=1
+pkgver=1.91.0
 pkgrel=1
 epoch=1
 pkgdesc="Manga reader sandboxed by portable (prevents dGPU wakeups)"
@@ -26,9 +26,9 @@ source=(
 )
 
 
-md5sums=('1ce4e3c8db9bb3f86bbb0aaf5fd583bf'
-         '7b9045a876cb70cfce509dcef69d6561'
-         '7c0b0bae889e55058c366fc47d9edd25')
+md5sums=('7bc9e48038298ec3f0db1b70bae9d167'
+         '5d5aef3f6dd4f268371cc20fe875ebc2'
+         'c15e280ebf501ffe01c48754edd4cdc0')
 
 function prepare() {
 	pacman -Ql komikku >file.list
