@@ -1,0 +1,17 @@
+maintainers:
+  - github: heddxh
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgrel()
+
+post_build_script: git_pkgbuild_commit()
+
+repo_depends:
+  - qwt-qt6
+
+update_on:
+  - source: github
+    github: qgis/QGIS
+    use_latest_release: true
+    use_release_name: true

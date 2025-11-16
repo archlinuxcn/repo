@@ -1,0 +1,116 @@
+# Maintainer: Balló György <ballogyor+arch at gmail dot com>
+# Maintainer: Bruno Pagani <archange@archlinux.org
+# Contributor: Doug Newgard <scimmia at archlinux dot org>
+# Contributor: XavierCLL <xavier.corredor.llano (a) gmail.com>
+# Contributor: SaultDon <sault.don gmail>
+# Contributor: Lantald < lantald at gmx.com >
+# Contributor: Thomas Dziedzic < gostrc at gmail >
+# Contributor: dibblethewrecker dibblethewrecker.at.jiwe.dot.org
+# Contributor: Gerardo Exequiel Pozzi <vmlinuz386@yahoo.com.ar>
+# Contributor: Eric Forgeot < http://esclinux.tk >
+
+pkgname=qgis
+pkgver=3.44.4
+pkgrel=1
+pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
+arch=(x86_64)
+url='https://qgis.org/'
+license=(GPL-2.0-or-later)
+depends=(
+  abseil-cpp
+  draco
+  exiv2
+  expat
+  gcc-libs
+  gdal
+  geos
+  glibc
+  gsl
+  hdf5
+  hicolor-icon-theme
+# libspatialindex
+  libspatialite
+  libxml2
+  libzip
+  netcdf
+  ocl-icd
+  pdal
+  postgresql-libs
+  proj
+  protobuf
+  python
+  python-gdal
+  python-jinja
+  python-numpy
+  python-owslib
+  python-packaging
+  python-psycopg2
+  python-pyqt6
+  python-qscintilla-qt6
+  python-yaml
+  qca-qt6
+  qscintilla-qt6
+  qt6-3d
+  qt6-base
+  qt6-declarative
+  qt6-imageformats
+  qt6-location
+  qt6-multimedia
+  qt6-serialport
+  qt6-svg
+  qtkeychain-qt6
+  qwt-qt6
+  sqlite
+  zlib
+  zstd
+)
+makedepends=(
+  cmake
+  fcgi
+  ninja
+  opencl-clhpp
+  pyqt-builder
+  qt6-tools
+  sip
+)
+optdepends=(
+  'fcgi: Map server'
+  'gpsbabel: GPS Tools plugin'
+)
+source=("https://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
+sha256sums=('e54d407c5fe921f31ec69104f8d4abbed310b277379e0a5e20af21d46565da0d')
+
+build() {
+  cmake -S $pkgname-$pkgver -B build -G Ninja \
+    -DCMAKE_INSTALL_PREFIX='/usr' \
+    -DWITH_3D=TRUE \
+    -DWITH_QUICK=TRUE \
+    -DQGIS_QML_SUBDIR=lib/qt/qml \
+    -DWITH_SERVER=TRUE \
+    -DWITH_CUSTOM_WIDGETS=TRUE \
+    -DBINDINGS_GLOBAL_INSTALL=TRUE \
+    -DQGIS_MANUAL_SUBDIR=share/man \
+    -DWITH_QTWEBKIT=FALSE \
+    -DWITH_QWTPOLAR=TRUE \
+    -DQWTPOLAR_LIBRARY=/usr/lib/libqwt-qt6.so \
+    -DQWTPOLAR_INCLUDE_DIR=/usr/include/qwt-qt6 \
+    -DWITH_INTERNAL_QWTPOLAR=FALSE \
+    -DWITH_PDAL=TRUE \
+    -DBUILD_WITH_QT6=TRUE \
+    -DWITH_INTERNAL_SPATIALINDEX=TRUE # https://github.com/libspatialindex/libspatialindex/issues/276
+    # -DHAS_KDE_QT5_PDF_TRANSFORM_FIX=TRUE \
+    # -DHAS_KDE_QT5_SMALL_CAPS_FIX=TRUE \
+    # -DHAS_KDE_QT5_FONT_STRETCH_FIX=TRUE \
+    # https://github.com/qgis/QGIS/issues/48374
+    #-DWITH_INTERNAL_LAZPERF=FALSE \
+    # https://github.com/qgis/QGIS/issues/35440
+    #-DWITH_PY_COMPILE=TRUE \
+
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 $pkgname-$pkgver/rpm/sources/qgis-mime.xml "$pkgdir/usr/share/mime/packages/qgis.xml"
+}
+
