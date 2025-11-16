@@ -36,8 +36,10 @@ function prepare() {
 
 function package() {
 	depends=("portable")
-	depends+=(alsa-lib  at-spi2-core  bash  cairo  dbus  ffmpeg4.4  fontconfig  freetype2  gcc-libs  gdk-pixbuf2  glib2  glibc  gtk3  hicolor-icon-theme  libpulse
-                  libx11  libxcb  libxcomposite  libxdamage  libxext  libxfixes  libxrandr  libxss  libxt  mime-types  nspr  nss  pango  ttf-font)
+	depends+=(dconf  gdk-pixbuf2  glib2  graphene  gtk4  hicolor-icon-theme  libadwaita  libnotify  libsoup3  pango  python  python-beautifulsoup4  python-brotli
+                  python-colorthief  python-cryptography  python-dateparser  python-emoji  python-gobject  python-keyring  python-lxml  python-magic  python-natsort
+                  python-piexif  python-pillow  python-pypdf  python-pytz  python-rarfile  python-regex  python-requests  python-tzlocal  python-unidecode
+                  python-urllib3  webkitgtk-6.0)
 	while IFS= read -r line; do
 		file="$(echo "$line" | awk '{print $2}')"
 		if [[ -d ${file} ]]; then
