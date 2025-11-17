@@ -39,11 +39,9 @@ prepare() {
   tar xvf "${srcdir}/${_pkgname}-${pkgver}.tar.gz" -C "${srcdir}/${_pkgname}" --strip-components 1
 }
 package() {
-  # install -d "${pkgdir}/usr"
-  cp -a "${srcdir}/${_pkgname}" "${pkgdir}/usr"
+  mkdir -p "${pkgdir}/opt"
+  cp -a "${srcdir}/${_pkgname}" "${pkgdir}/opt/${_pkgname}"
   install -Dm644 "${srcdir}/${_pkgname}.desktop" "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
   install -Dm644 "${srcdir}/${_pkgname}.png" "${pkgdir}/usr/share/pixmaps/${_pkgname}.png"
-  # move qt translations to the right place
-  mv -v "${pkgdir}/usr/translations" "${pkgdir}/usr/lib/snap-${pkgver}"
 }
 # vim:set ts=2 sw=2 et:
