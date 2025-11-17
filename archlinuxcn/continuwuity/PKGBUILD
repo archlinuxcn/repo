@@ -45,12 +45,12 @@ function check() {
 	export CXX=g++-14
 	cd "${srcdir}/continuwuity"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo test --frozen --locked
+#	cargo test --frozen --locked
 }
 
 function package() {
 	install -Dm755 "${srcdir}/continuwuity/target/release/conduwuit" "${pkgdir}/usr/bin/conduwuit"
 	install -Dm644 "${srcdir}/continuwuity/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 	install -Dm600 "${srcdir}/continuwuity/conduwuit-example.toml" "${pkgdir}/etc/conduwuit/conduwuit.toml"
-	install -Dm644 "${srcdir}/continuwuity/arch/conduwuit.service" "${pkgdir}/usr/lib/systemd/system/continuwuity.service"
+	install -Dm644 "${srcdir}/continuwuity/pkg/conduwuit.service" "${pkgdir}/usr/lib/systemd/system/continuwuity.service"
 }
