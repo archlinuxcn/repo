@@ -3,67 +3,77 @@
 _pkgname=ITK
 pkgname=(itk-git python-itk-git)
 _pkgver=5.4.4
-pkgver=5.4.4.r57389.099addc78a
+pkgver=5.4.4.r57448.150da41473
 pkgrel=1
-pkgdesc='An open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis'
-arch=('x86_64')
-url='https://www.itk.org'
-license=('Apache-2.0')
-depends=(
-  dcmtk
-  double-conversion
-  eigen
-  expat
-  fftw
-  gcc-libs
-  gdcm
-  glibc
-  hdf5
-  intel-oneapi-mkl
-  libjpeg-turbo
-  libpng
-  libtiff.so
-  # vxl
-  zlib
-)
+pkgdesc="An open-source toolkit for multidimensional image analysis"
+arch=(x86_64)
+url="https://www.itk.org"
+license=(Apache-2.0)
 makedepends=(
   castxml
+  clang
   cmake
-  git
-  gtest
+  eigen
+  git   # used for fetching remote modules
+  lld
+  ninja
   python
-  subversion
-#  swig
+  swig
+  # fftw is needed only for detection by cmake, ITK links to static libs from MKL
+  fftw
+  intel-oneapi-mkl
+  # depends
+  dcmtk
+  double-conversion
+  expat
+  gdcm
+  hdf5
+  libjpeg-turbo
+  libpng
+  libtiff
+  zlib
 )
 options=(!emptydirs)
 source=("${_pkgname}::git+https://github.com/InsightSoftwareConsortium/ITK.git")
 sha512sums=('SKIP')
+
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+  done
+}
 
 pkgver() {
   cd "${_pkgname}"
   printf "%s.r%s.%s" "${_pkgver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-get_pyver() {
-  python -c 'import sys; print(str(sys.version_info[0]) + "." + str(sys.version_info[1]))'
+prepare() {
+  # quick fix for simpleitkfilter module
+  sed -i "s/d13acf7ae2d6056d66477de15edd641ba3b23ce9/526d6c1140d76f2e5e198ff467371c2d74dc25eb/" "${srcdir}/${_pkgname}/Modules/Remote/SimpleITKFilters.remote.cmake"
 }
 
 build() {
-  # we build the default modules by default
-  # you could add additional modules by setting -DModule_<NAME>=ON
-  # set ITK_USE_SYSTEM_VXL=OFF due to conflicting file: /usr/lib/libvpl.so (owned by libvpl)
-  cmake_opts=(
+  local cmake_options=(
+    -B build
+    -S "${srcdir}/${_pkgname}"
+    -G Ninja
+    -W no-dev
     -DBUILD_SHARED_LIBS=ON
     -DBUILD_TESTING=OFF
-    -DCMAKE_BUILD_TYPE=Release
-    -DCMAKE_CXX_COMPILER=g++
-    -DCMAKE_C_COMPILER=gcc
+    -DCMAKE_BUILD_TYPE=None
+    -DCMAKE_CXX_COMPILER=clang++
+    -DCMAKE_C_COMPILER=clang
+    -DCMAKE_LINKER_TYPE=LLD
     -DCMAKE_INSTALL_PREFIX=/usr
     -DCMAKE_SKIP_INSTALL_RPATH=ON
     -DCMAKE_SKIP_RPATH=ON
-    -DDO_NOT_BUILD_ITK_TEST_DRIVER=ON
     -DITK_BUILD_DEFAULT_MODULES=ON
-    -DITK_LEGACY_REMOVE=ON
+    -DITK_USE_GPU=OFF
     -DITK_USE_MKL=ON
     -DITK_USE_SYSTEM_CASTXML=ON
     -DITK_USE_SYSTEM_DCMTK=ON
@@ -72,17 +82,19 @@ build() {
     -DITK_USE_SYSTEM_EXPAT=ON
     -DITK_USE_SYSTEM_FFTW=ON
     -DITK_USE_SYSTEM_GDCM=ON
-    -DITK_USE_SYSTEM_GOOGLETEST=ON
+    -DITK_USE_SYSTEM_GOOGLETEST=OFF
     -DITK_USE_SYSTEM_HDF5=ON
     -DITK_USE_SYSTEM_JPEG=ON
     -DITK_USE_SYSTEM_MINC=OFF
     -DITK_USE_SYSTEM_PNG=ON
-    -DITK_USE_SYSTEM_SWIG=OFF
+    -DITK_USE_SYSTEM_SWIG=ON
     -DITK_USE_SYSTEM_TIFF=ON
-    -DITK_USE_SYSTEM_VXL=OFF
+    -DITK_USE_SYSTEM_VXL=OFF  # not packaged
     -DITK_USE_SYSTEM_ZLIB=ON
     -DITK_WRAP_IMAGE_DIMS="2;3;4"
     -DITK_WRAP_PYTHON=ON
+    # Swig does not work with Python's limited API
+    -DITK_USE_PYTHON_LIMITED_API=OFF
     -DITK_WRAP_complex_double=ON
     -DITK_WRAP_complex_float=ON
     -DITK_WRAP_covariant_vector_double=ON
@@ -91,9 +103,7 @@ build() {
     -DITK_WRAP_float=ON
     -DITK_WRAP_rgb_unsigned_char=ON
     -DITK_WRAP_rgb_unsigned_short=ON
-    -DITK_WRAP_rgb_unsigned_short=ON
     -DITK_WRAP_rgba_unsigned_char=ON
-    -DITK_WRAP_rgba_unsigned_short=ON
     -DITK_WRAP_rgba_unsigned_short=ON
     -DITK_WRAP_signed_char=ON
     -DITK_WRAP_signed_long_long=ON
@@ -104,39 +114,53 @@ build() {
     -DITK_WRAP_vector_double=ON
     -DModule_GenericLabelInterpolator=ON
     -DModule_ITKIODCMTK=ON
+    -DModule_ITKIOMINC=ON
     -DModule_ITKIOTransformMINC=ON
     -DModule_ITKReview=ON
     -DModule_MorphologicalContourInterpolation=ON
-    # -DModule_SimpleITKFilters=ON
-)
-
-  cmake -B "build" -S "${srcdir}/${_pkgname}" \
-    ${cmake_opts[@]} \
-    -DITK_USE_GPU=OFF
-  make -C "${srcdir}/build"
+    -DModule_SimpleITKFilters=ON
+  )
+  cmake "${cmake_options[@]}"
+  cmake --build build
 }
 
 package_itk-git() {
+  depends=(
+    dcmtk
+    double-conversion
+    expat libexpat.so
+    gcc-libs
+    gdcm libgdcmCommon.so libgdcmDICT.so libgdcmDSED.so libgdcmMSFF.so
+    glibc
+    hdf5
+    libjpeg-turbo libjpeg.so
+    libpng libpng16.so
+    libtiff libtiff.so
+    zlib libz.so
+  )
   provides=(itk=${_pkgver})
   conflicts=(itk)
 
-  make -C "${srcdir}/build" DESTDIR="${pkgdir}" install
-  rm -rf "${pkgdir}/usr/lib/python$(get_pyver)"
+  DESTDIR="$pkgdir" cmake --install build
+  (
+    cd "$pkgdir"
+    site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+    _pick python-itk-git "${site_packages#/}"
+  )
 }
 
 package_python-itk-git() {
-  pkgdesc="${pkgdesc} (Python binding)"
-  depends+=(
+  pkgdesc+=" - Python bindings"
+  depends=(
     itk
+    python
     python-numpy
     python-xarray
   )
   provides=(python-itk=${_pkgver})
   conflicts=(python-itk)
 
-  make -C "${srcdir}/build" DESTDIR="${srcdir}/dist" install
-  install -dm755 "${pkgdir}/usr/lib"
-  cp -a "${srcdir}/dist/usr/lib/python$(get_pyver)" "${pkgdir}/usr/lib"
-  python -O -m compileall "${pkgdir}/usr/lib"
+  mv -v $pkgname/* "$pkgdir"
+  python -O -m compileall "$pkgdir"/usr/lib
 }
 # vim:set ts=2 sw=2 et:
