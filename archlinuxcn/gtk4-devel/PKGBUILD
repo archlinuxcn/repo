@@ -157,25 +157,4 @@ END
   _pick guic usr/share/man/man1/gtk4-update-icon-cache.1
 }
 
-package_gtk-update-icon-cache() {
-  pkgdesc="GTK icon cache updater"
-  depends=(
-    bash
-    gdk-pixbuf2
-    glib2
-    glibc
-    hicolor-icon-theme
-    librsvg
-  )
-
-  mv guic/* "$pkgdir"
-
-  ln -sr "$pkgdir"/usr/bin/gtk{4,}-update-icon-cache
-  ln -sr "$pkgdir"/usr/share/man/man1/gtk{4,}-update-icon-cache.1
-
-  install -Dt "$pkgdir/usr/share/libalpm/hooks" -m644 gtk-update-icon-cache.hook
-  install -D gtk-update-icon-cache.script \
-    "$pkgdir/usr/share/libalpm/scripts/gtk-update-icon-cache"
-}
-
 # vim:set sw=2 sts=-1 et:
