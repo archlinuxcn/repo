@@ -128,6 +128,7 @@ package_gtk4-devel() {
     'xdg-desktop-portal-gtk: Fallback portals for various APIs'
   )
   provides=(libgtk-4.so gtk4)
+  conflicts+=(gtk4)
 
   meson install -C build --destdir "$pkgdir"
 
