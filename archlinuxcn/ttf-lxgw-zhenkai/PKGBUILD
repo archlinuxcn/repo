@@ -1,0 +1,22 @@
+# Maintainer: Yuzu Vita <g311571057 at gmail dot com>
+
+pkgname=ttf-lxgw-zhenkai
+pkgver=0.818
+pkgrel=1
+pkgdesc="An unprofessional open-source Chinese font derived from Fontworks' Klee One. 一款非专业的开源中文字体，基于 FONTWORKS 出品字体 Klee One 衍生。 "
+url="https://github.com/lxgw/LxgwZhenKai"
+license=("LicenseRef-OFL")
+arch=(any)
+source=(
+"$url/releases/download/v$pkgver/LXGWZhenKaiGB-Regular.ttf"
+"LICENSE::https://raw.githubusercontent.com/lxgw/LxgwZhenKai/main/OFL.txt"
+)
+sha256sums=('1d0858cb139ba98cf562a3def1777dca3b308651f1586dffd4593d20e4e2b848'
+            '71651b1dc30e0c8ab1768640db78e8139c86ca7af096d9b1d8c46eda67eeb524')
+
+package(){
+  install -d "$pkgdir/usr/share/fonts/TTF"
+  install -d "$pkgdir/usr/share/licenses/${pkgname}"
+  install -m644 LXGWZhenKaiGB-Regular.ttf "$pkgdir/usr/share/fonts/TTF/"
+  install -m644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/"
+}
