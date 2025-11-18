@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
+Date: Sat, 18 Nov 2023 06:59:03 +0100
+Subject: [PATCH] HACK: Don't use objcopy for resource embedding
+
+The build attempts to use objcopy to link in the resource data, but
+loses the code protection flags `IBT` and `SHSTK` in the process.
+
+If we don't let it do that, it generates a C string literal for the data
+instead. This is a bit slower to build but doesn't mess with the flags.
+
+See: https://gitlab.gnome.org/GNOME/gtk/-/issues/6153
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index b32c921224c1..ed6933ae30c8 100644
+--- a/meson.build
++++ b/meson.build
+@@ -902,7 +902,7 @@ if ld.found()
+ endif
+ 
+ if not meson.is_cross_build() and build_machine.cpu_family() == 'x86_64' and build_machine.system() == 'linux' and objcopy.found() and objcopy_supports_add_symbol and objcopy_supports_section_alignment and ld.found() and ld_is_bfd
+-  can_use_objcopy_for_resources = true
++  can_use_objcopy_for_resources = false
+ else
+   can_use_objcopy_for_resources = false
+ endif

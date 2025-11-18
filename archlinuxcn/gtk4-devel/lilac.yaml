@@ -1,0 +1,13 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: "git"
+    git: "https://gitlab.gnome.org/GNOME/gtk.git"
+    prefix: "v"
+build_prefix: extra-x86_64
