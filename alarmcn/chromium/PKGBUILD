@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium
-pkgver=142.0.7444.134
+pkgver=142.0.7444.162
 pkgrel=1
 _launcher_ver=8
 _manual_clone=1
@@ -35,7 +35,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         increase-fortify-level.patch
         use-oauth2-client-switches-as-default.patch
         chromium-141-cssstylesheet-iwyu.patch)
-sha256sums=('31b8caa864326e04f4f20b3d804d8e8fe371b322a75590b4aa6e5ffc0dd9a98e'
+sha256sums=('2e2f36e3cd1ebc4ad57fd310774a5e5e9db77883d5f9374fedeaabd3c103b819'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '5abc8611463b3097fc5ce58017ef918af8b70d616ad093b8b486d017d021bbdf'
@@ -130,10 +130,8 @@ prepare() {
   # Fixes for building with libstdc++ instead of libc++
 
   # Link to system tools required by the build
-  if (( ! _manual_clone )); then
-    mkdir third_party/node/linux/node-linux-x64/bin
-    ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
-  fi
+  mkdir third_party/node/linux/node-linux-x64/bin
+  ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
   ln -s /usr/bin/java third_party/jdk/current/bin/
 
   if (( !_system_clang )); then
@@ -168,8 +166,6 @@ prepare() {
 }
 
 build() {
-  CFLAGS="${CFLAGS/-march=*([^ ]) }"
-  CXXFLAGS="${CXXFLAGS/-march=*([^ ]) }"
   make -C chromium-launcher-$_launcher_ver
 
   cd chromium-$pkgver
@@ -264,6 +260,15 @@ build() {
 
   # https://crbug.com/957519#c122
   CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
+
+  if [[ $CARCH == aarch64 ]]; then
+    # On aarch64, certain files (e.g. in libvpx and libyuv) needs to be compiled
+    # with additional arch features (e.g. dotprod, sve, sme)
+    # Having an arch setting in the C(XX)FLAGS overrides those
+    # and causes compilation failure
+    CFLAGS="${CFLAGS/-march=*([^ ]) }"
+    CXXFLAGS="${CXXFLAGS/-march=*([^ ]) }"
+  fi
 
   gn gen out/Release --args="${_flags[*]}"
   ninja -C out/Release chrome chrome_sandbox chromedriver.unstripped

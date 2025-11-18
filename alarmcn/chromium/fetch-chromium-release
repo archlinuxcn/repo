@@ -42,7 +42,6 @@ src/tools/update_pgo_profiles.py --target=linux update \
 # https://gitlab.archlinux.org/archlinux/packaging/packages/electron32/-/issues/1
 src/third_party/node/update_npm_deps
 
+rm -rf src/third_party/node/linux/node-linux-x64/bin/
 find src/third_party/jdk/current -type f -delete
 mv src ../chromium-$VERSION
-
-ln -sf /usr/bin/node ../chromium-$VERSION/third_party/node/linux/node-linux-x64/bin/
