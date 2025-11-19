@@ -1,0 +1,181 @@
+From bd1f56f9f7c4bda7451a2afbf20b8f61e32d2c9c Mon Sep 17 00:00:00 2001
+From: detiam <dehe_tian@outlook.com>
+Date: Wed, 30 Aug 2023 13:33:51 +0800
+Subject: [PATCH 1/2] resolve both v4 and v6 dns record default
+
+---
+ phantomtcp/dns.go | 116 +++++++++++++++++++++++-----------------------
+ 1 file changed, 59 insertions(+), 57 deletions(-)
+
+diff --git a/phantomtcp/dns.go b/phantomtcp/dns.go
+index 92dff77..308c5c1 100755
+--- a/phantomtcp/dns.go
++++ b/phantomtcp/dns.go
+@@ -986,10 +986,7 @@ func StoreDNSCache(qname string, record *DNSRecords) {
+ }
+ 
+ func NSLookup(name string, hint uint32, server string) (uint32, []net.IP) {
+-	var qtype uint16 = 1
+-	if hint&HINT_IPV6 != 0 {
+-		qtype = 28
+-	}
++	isDefault := hint&HINT_IPV6 == 0 && hint&HINT_IPV4 == 0
+ 
+ 	records := LoadDNSCache(name)
+ 	if records == nil {
+@@ -1012,24 +1009,23 @@ func NSLookup(name string, hint uint32, server string) (uint32, []net.IP) {
+ 			offset++
+ 		}
+ 	}
+-	switch qtype {
+-	case 1:
+-		if records.IPv4Hint != nil {
+-			logPrintln(3, "cached:", name, qtype, records.IPv4Hint.Addresses)
+-			return records.Index, records.IPv4Hint.Addresses
+-		}
+-	case 28:
+-		if records.IPv6Hint != nil {
+-			logPrintln(3, "cached:", name, qtype, records.IPv6Hint.Addresses)
+-			return records.Index, records.IPv6Hint.Addresses
+-		}
+-	default:
+-		return 0, nil
++
++	var address []net.IP
++	if records.IPv6Hint != nil && (isDefault || hint&HINT_IPV6 != 0) {
++		logPrintln(3, "cached:", name, 28, records.IPv6Hint.Addresses)
++		address = append(address, records.IPv6Hint.Addresses...)
++	}
++	if records.IPv4Hint != nil && (isDefault || hint&HINT_IPV4 != 0) {
++		logPrintln(3, "cached:", name, 1, records.IPv4Hint.Addresses)
++		address = append(address, records.IPv4Hint.Addresses...)
++	}
++	if len(address) > 0 {
++		return records.Index, address
+ 	}
+ 
+-	var request []byte
+-	var response []byte
+-	var err error
++	var request6, request4 []byte
++	var response6, response4 []byte
++	var err, err6, err4 error
+ 
+ 	var options ServerOptions
+ 	u, err := url.Parse(server)
+@@ -1042,22 +1038,24 @@ func NSLookup(name string, hint uint32, server string) (uint32, []net.IP) {
+ 	}
+ 
+ 	if u.Host != "" {
++		request6 = PackRequest(name, 28, uint16(0), options.ECS)
++		request4 = PackRequest(name, 1, uint16(0), options.ECS)
+ 		switch u.Scheme {
+ 		case "udp":
+-			request = PackRequest(name, qtype, uint16(0), options.ECS)
+-			response, err = UDPlookup(request, u.Host)
++			response6, err6 = UDPlookup(request6, u.Host)
++			response4, err4 = UDPlookup(request4, u.Host)
+ 		case "tcp":
+-			request = PackRequest(name, qtype, uint16(0), options.ECS)
+-			response, err = TCPlookup(request, u.Host, nil)
++			response6, err6 = TCPlookup(request6, u.Host, nil)
++			response4, err4 = TCPlookup(request4, u.Host, nil)
+ 		case "tls":
+-			request = PackRequest(name, qtype, uint16(0), options.ECS)
+-			response, err = TLSlookup(request, u.Host)
++			response6, err6 = TLSlookup(request6, u.Host)
++			response4, err4 = TLSlookup(request4, u.Host)
+ 		case "https":
+-			request = PackRequest(name, qtype, uint16(0), options.ECS)
+-			response, err = HTTPSlookup(request, u, options.Domain)
++			response6, err6 = HTTPSlookup(request6, u, options.Domain)
++			response4, err4 = HTTPSlookup(request4, u, options.Domain)
+ 		case "tfo":
+-			request = PackRequest(name, qtype, uint16(0), options.ECS)
+-			response, err = TFOlookup(request, u.Host)
++			response6, err6 = TFOlookup(request6, u.Host)
++			response4, err4 = TFOlookup(request4, u.Host)
+ 		default:
+ 			NoseLock.Lock()
+ 			records.Index = uint32(len(Nose))
+@@ -1067,23 +1065,37 @@ func NSLookup(name string, hint uint32, server string) (uint32, []net.IP) {
+ 			return records.Index, nil
+ 		}
+ 	}
+-	if err != nil {
+-		logPrintln(1, err)
+-		return 0, nil
+-	}
+ 
+-	if records.Index == 0 && hint != 0 {
+-		NoseLock.Lock()
+-		records.Index = uint32(len(Nose))
+-		records.ALPN = hint & HINT_DNS
+-		Nose = append(Nose, name)
+-		NoseLock.Unlock()
++	if isDefault || hint&HINT_IPV6 != 0 {
++		if err6 != nil {
++			logPrintln(1, err6)
++			return 0, nil
++		}
++
++		records.GetAnswers(response6, options)
++
++		if records.IPv6Hint == nil && options.Fallback != nil {
++			if options.Fallback.To4() == nil {
++				logPrintln(4, "request:", name, "fallback", options.Fallback)
++				records.IPv6Hint = &RecordAddresses{0, []net.IP{options.Fallback}}
++			}
++		}
++		if records.IPv6Hint == nil {
++			records.IPv6Hint = &RecordAddresses{0, []net.IP{}}
++		}
++
++		logPrintln(3, "nslookup", name, 28, records.IPv6Hint.Addresses)
++		address = append(address, records.IPv6Hint.Addresses...)
+ 	}
+ 
+-	records.GetAnswers(response, options)
++	if isDefault || hint&HINT_IPV4 != 0 {
++		if err4 != nil {
++			logPrintln(1, err4)
++			return 0, nil
++		}
++
++		records.GetAnswers(response4, options)
+ 
+-	switch qtype {
+-	case 1:
+ 		if records.IPv4Hint == nil && options.Fallback != nil {
+ 			if options.Fallback.To4() != nil {
+ 				logPrintln(4, "request:", name, "fallback", options.Fallback)
+@@ -1093,22 +1105,12 @@ func NSLookup(name string, hint uint32, server string) (uint32, []net.IP) {
+ 		if records.IPv4Hint == nil {
+ 			records.IPv4Hint = &RecordAddresses{0, []net.IP{}}
+ 		}
+-		logPrintln(3, "nslookup", name, qtype, records.IPv4Hint.Addresses)
+-		return records.Index, records.IPv4Hint.Addresses
+-	case 28:
+-		if records.IPv6Hint == nil && options.Fallback != nil {
+-			if options.Fallback.To4() == nil {
+-				records.IPv6Hint = &RecordAddresses{0, []net.IP{options.Fallback}}
+-			}
+-		}
+-		if records.IPv6Hint == nil {
+-			records.IPv6Hint = &RecordAddresses{0, []net.IP{}}
+-		}
+-		logPrintln(3, "nslookup", name, qtype, records.IPv6Hint.Addresses)
+-		return records.Index, records.IPv6Hint.Addresses
++
++		logPrintln(3, "nslookup", name, 1, records.IPv4Hint.Addresses)
++		address = append(address, records.IPv4Hint.Addresses...)
+ 	}
+ 
+-	return records.Index, nil
++	return records.Index, address
+ }
+ 
+ func NSRequest(request []byte, cache bool) (uint32, []byte) {
+-- 
+2.43.0
+

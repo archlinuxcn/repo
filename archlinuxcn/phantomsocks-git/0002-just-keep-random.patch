@@ -1,0 +1,27 @@
+From e62a62aef92d670e542a6bd68c5b7c6e17bf661f Mon Sep 17 00:00:00 2001
+From: detiam <dehe_tian@outlook.com>
+Date: Tue, 15 Aug 2023 13:26:14 +0800
+Subject: [PATCH 2/2] just keep random
+
+---
+ phantomtcp/tcp.go | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/phantomtcp/tcp.go b/phantomtcp/tcp.go
+index 7691785..4e8ce5b 100755
+--- a/phantomtcp/tcp.go
++++ b/phantomtcp/tcp.go
+@@ -266,8 +266,8 @@ func (pface *PhantomInterface) Dial(host string, port int, b []byte) (net.Conn,
+ 
+ 		var synpacket *ConnectionInfo
+ 		for i := 0; i < len(raddrs); i++ {
+-			//raddr := raddrs[rand.Intn(len(raddrs))]
+-			raddr := raddrs[i]
++			raddr := raddrs[rand.Intn(len(raddrs))]
++			//raddr := raddrs[i]
+ 
+ 			laddr, err := GetLocalAddr(device, raddr.IP.To4() == nil)
+ 			if err != nil {
+-- 
+2.43.0
+

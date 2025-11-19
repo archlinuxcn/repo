@@ -1,0 +1,15 @@
+_sysusers_conf=/usr/lib/sysusers.d/phantomsocks.conf
+_tmpfiles_conf=/usr/lib/tmpfiles.d/phantomsocks.conf
+
+post_install() {
+  systemd-sysusers "$_sysusers_conf"
+  systemd-tmpfiles --create "$_tmpfiles_conf"
+  echo 'Phantomsocks systemd service runs as the dedicated phantomsocks user with configs in /etc/phantomsocks/'
+  echo 'Enable it via: sudo systemctl enable --now phantomsocks.service'
+  echo 'Manual launches require sudo so phantomsocks can access raw sockets.'
+}
+
+post_upgrade() {
+  systemd-sysusers "$_sysusers_conf"
+  systemd-tmpfiles --create "$_tmpfiles_conf"
+}

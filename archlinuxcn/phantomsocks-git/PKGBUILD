@@ -1,0 +1,77 @@
+# Maintainer: detiam <dehe_tian@outlook.com>
+# Maintainer: DeepChirp <DeepChirp@outlook.com>
+
+_pkgname=phantomsocks
+pkgname=phantomsocks-git
+pkgver=r319.dcce0a4
+pkgrel=1
+pkgdesc="A cross-platform proxy client/server for Linux/Windows/macOS (resolve both ipv4 and ipv6 dns record)"
+arch=(x86_64)
+url="https://github.com/detiam/$_pkgname"
+license=('LGPL-3.0-only')
+
+provides=("$_pkgname")
+conflicts=("$_pkgname")
+replaces=("$_pkgname")
+makedepends=('go' 'git')
+depends=('glibc' 'jq' 'libpcap')
+
+install=$_pkgname.install
+source=(
+    "git+${url}.git"
+    "$_pkgname-init.sh"
+    "$_pkgname.service"
+    "$_pkgname@.service"
+    "$_pkgname.sysusers"
+    "$_pkgname.tmpfiles")
+sha256sums=('SKIP'
+            'c70b16947a2645bdb2e3e9136d9900800fbbdd62873e829a07da2e74fe4b3c2c'
+            'd68da10cd79215f3f7d4fcce7c38796168d84c9fdae5257e9a396a7ca8127f7c'
+            'd9e61882b41bf334924067ddb37b828befa32f3f05a210505adefe63f3013201'
+            '5cf83128bc193a907cdd77783750aef8993dd6742f28b469ccaa211463dd7c6c'
+            '9f26c54809ad5be9149caf9549a51bf131ca2aefa95ac6197eaa992ee5794548')
+
+pkgver() {
+    cd "$_pkgname"
+    ( set -o pipefail
+        git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+        printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+    )
+}
+
+build() {
+    cd "$_pkgname"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+
+    go build \
+        -trimpath \
+        -buildmode=pie \
+        -mod=readonly \
+        -modcacherw \
+        -ldflags "-linkmode external -extldflags \"${LDFLAGS}\"" \
+        -tags pcap \
+        .
+}
+
+package() {
+    install -dm755 "$pkgdir/usr/bin"
+    install -dm755 "$pkgdir/usr/lib/systemd/system"
+    install -dm755 "$pkgdir/usr/lib/phantomsocks"
+
+    install -Dm644 "$_pkgname.service" "$pkgdir/usr/lib/systemd/system/"
+    install -Dm644 "$_pkgname@.service" "$pkgdir/usr/lib/systemd/system/"
+    install "$_pkgname-init.sh" "$pkgdir/usr/bin/$_pkgname-init"
+    install -Dm644 "$_pkgname.sysusers" "$pkgdir/usr/lib/sysusers.d/$_pkgname.conf"
+    install -Dm644 "$_pkgname.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/$_pkgname.conf"
+
+    cd "$_pkgname"
+
+    install -Dm644 "config.json" "$pkgdir/usr/lib/phantomsocks/config.json"
+    install -Dm644 "default.conf" "$pkgdir/usr/lib/phantomsocks/default.conf"
+
+    install "$_pkgname" "$pkgdir/usr/bin/$_pkgname"
+}
