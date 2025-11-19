@@ -2,7 +2,7 @@
 
 _pkgname=skorch
 pkgname=python-skorch
-pkgver=1.2.0
+pkgver=1.3.0
 pkgrel=1
 pkgdesc='A scikit-learn compatible neural network library that wraps pytorch'
 arch=(any)
@@ -24,7 +24,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz"::"https://github.com/skorch-dev/skorch/archive/v${pkgver}.tar.gz")
-sha512sums=('3cc8dd114c159a6b2ed5af71f91ac21125c3d992efb0f922142dba59b191e3feecc777c3b9fe310d91a57c8db7605e3f8d08ebfd7a8c1083e38a0a6d59ef2413')
+sha512sums=('dbc76aef13df39b8cea8e427c273e1b3c9af399d86246a437c58acda241ebf4d5f6eed29e73b6a927552591a1c3e28905c7f8f3e34f259090fc32578cae17063')
 
 build() {
   cd "${_pkgname}-${pkgver}"
