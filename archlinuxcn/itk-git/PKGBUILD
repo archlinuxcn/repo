@@ -119,6 +119,13 @@ build() {
     -DModule_ITKReview=ON
     -DModule_MorphologicalContourInterpolation=ON
     -DModule_SimpleITKFilters=ON
+    # add more modules comparing to vtk from extra repo
+    -DModule_AdaptiveDenoising=ON
+    -DModule_GenericLabelInterpolator=ON
+    -DModule_GrowCut=ON
+    -DModule_IOScanco=ON
+    -DModule_ITKIODCMTK=ON
+    -DModule_MGHIO=ON
   )
   cmake "${cmake_options[@]}"
   cmake --build build
