@@ -1,0 +1,15 @@
+[Unit]
+Description=FakeHTTP TCP obfuscation daemon
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/conf.d/fakehttp
+ExecStart=/usr/bin/fakehttp $FAKEHTTP_ARGS
+User=fakehttp
+AmbientCapabilities=CAP_NET_RAW CAP_NET_ADMIN CAP_SYS_NICE
+CapabilityBoundingSet=CAP_NET_RAW CAP_NET_ADMIN CAP_SYS_NICE
+NoNewPrivileges=yes
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

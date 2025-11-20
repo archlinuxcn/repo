@@ -1,0 +1,46 @@
+# Maintainer: DeepChirp <DeepChirp@outlook.com>
+# Contributor: bgme <i@bgme.me>
+
+pkgname=fakehttp
+_reponame=FakeHTTP
+pkgver=0.9.18
+pkgrel=1
+pkgdesc="Obfuscate all your TCP connections into HTTP protocol."
+arch=('x86_64' 'armv7h' 'aarch64')
+_author=MikeWang000000
+url="https://github.com/${_author}/${_reponame}"
+license=('GPL-3.0-only')
+depends=('glibc' 'libmnl' 'libnfnetlink' 'libnetfilter_queue' 'nftables')
+makedepends=('make')
+conflicts=("${pkgname%}-git" "${pkgname%}-bin")
+install=${pkgname}.install
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
+        "${pkgname}.service"
+        "${pkgname}.sysusers"
+        "${pkgname}.conf")
+backup=("etc/conf.d/${pkgname}")
+sha256sums=('c95c4d46e122390b0dcfd8509c708a6fc6817fb3e325cb966bf81a62bae973be'
+            'cedc4c4a0018a95d071c0e16a0ba3987f7da3a5f9589e501b9b43f7572196cdd'
+            'ae55fc0399df3ed3b9585dcf3d3a43322ee555954f8f4a24796bc532e7f735b3'
+            'a316231897b13ca8a98cd7e63e83716336ec92570275fb08ddc6e53703558166')
+
+build() {
+    cd "${srcdir}/${_reponame}-${pkgver}"
+    make
+}
+
+package() {
+    install -dm755 "${pkgdir}/usr/bin"
+    install -dm755 "${pkgdir}/usr/lib/systemd/system"
+    install -dm755 "${pkgdir}/etc/conf.d"
+
+    install -Dm644 "${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/"
+    install -Dm644 "${pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
+    install -Dm644 "${pkgname}.conf" "${pkgdir}/etc/conf.d/${pkgname}"
+
+    cd "${srcdir}/${_reponame}-${pkgver}"
+
+    install -Dm755 build/fakehttp "${pkgdir}/usr/bin/${pkgname}"
+    install -dm755 "${pkgdir}/usr/share/doc/${pkgname}"
+    install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+}
