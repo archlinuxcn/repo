@@ -5,8 +5,8 @@
 # Contributor: Paul Mattal <paul@archlinux.org>
 
 pkgname=ffmpeg-lily
-pkgver=8.0
-pkgrel=3
+pkgver=8.0.1
+pkgrel=1
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video (with AMD HEVC VAAPI alignment patch)'
 arch=(x86_64)
@@ -116,14 +116,14 @@ provides=(
   ffmpeg=$epoch:$pkgver
 )
 conflicts=(ffmpeg)
-_tag=a4044e04486d1136022498891088a90baf5b2775
+_tag=d22ecc4f6f3fca77b3e71b18641ceddb25973e97
 source=(
   git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=${_tag}
   0001-Add-av_stream_get_first_dts-for-Chromium.patch
   0001-unbreak-glslang-build.patch
   0001-AMD-VAAPI-H265-encode-dimemsion-fix.patch
 )
-b2sums=('7c71ec5f098e248b584fd3e28e7f648e5929ff7c5a6cfc5dcce8300a8a0b91de804cd92ef72963ef86dc57a73d15ab03aeab61d99d1872baad1163462730d7d6'
+b2sums=('0796d77c58d5db487ccda15454dadf129a6e0ae2a5a9cec562c86f2050b1e9314164c7f2dbf0a6c8cdae37dfd5e28f494d5ac248e970bc7f01b097100971fe8a'
         'e5f7b79f7731be9ee5a7280a9221fb531ac5a2d9820fc5870b68b0eabea667dfbe8f39f41c1e1763a4c84982896afaa54c81ff57847d203b70afafd726689e5d'
         '650631d4f06dffec55bd6419f680d95617a9093d8e548b3dac0b379496477dcbd4121883128438343c568e992cb5b455efc0b7c4e34a5e7200518f9b5beaa231'
         b520886c53d3a1ad2e3eb482058dd38e04df298b89f199c3cc23d498bd9d27d28fa4fffba6262319ec3e2dd7c940a3bc8de701871fc5f200cd4793ffedb76210)
