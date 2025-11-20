@@ -1,0 +1,46 @@
+# Maintainer: DeepChirp <DeepChirp@outlook.com>
+# Contributor: bgme <i@bgme.me>
+
+pkgname=fakesip
+_reponame=FakeSIP
+pkgver=0.9.1
+pkgrel=1
+pkgdesc="Disguise your UDP traffic as SIP protocol to evade DPI detection."
+arch=('x86_64' 'armv7h' 'aarch64')
+_author=MikeWang000000
+url="https://github.com/${_author}/${_reponame}"
+license=('GPL-3.0-only')
+depends=('glibc' 'libmnl' 'libnfnetlink' 'libnetfilter_queue' 'nftables')
+makedepends=('make')
+conflicts=("${pkgname%}-git" "${pkgname%}-bin")
+install=${pkgname}.install
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
+        "${pkgname}.service"
+        "${pkgname}.sysusers"
+        "${pkgname}.conf")
+backup=("etc/conf.d/${pkgname}")
+sha256sums=('1216d9649fb69e5a1deaf48c3d48c26f9418bd18ffe15f44b0cf33039dbb3478'
+            '9e935f3a9e274154ad07d3ded0f581b3934f5d91692c6323a9f1500591ec2658'
+            '2d8a43aa73650c605ad1e88d997b46f61ea20b6743f483d3a1f1ebcbe577a4c0'
+            'd9c5ed0542978335e56cfa446c83d318b7b2268ba4fe0ef583caeb252e3fdafe')
+
+build() {
+    cd "${srcdir}/${_reponame}-${pkgver}"
+    make
+}
+
+package() {
+    install -dm755 "${pkgdir}/usr/bin"
+    install -dm755 "${pkgdir}/usr/lib/systemd/system"
+    install -dm755 "${pkgdir}/etc/conf.d"
+
+    install -Dm644 "${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/"
+    install -Dm644 "${pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
+    install -Dm644 "${pkgname}.conf" "${pkgdir}/etc/conf.d/${pkgname}"
+
+    cd "${srcdir}/${_reponame}-${pkgver}"
+
+    install -Dm755 build/fakesip "${pkgdir}/usr/bin/${pkgname}"
+    install -dm755 "${pkgdir}/usr/share/doc/${pkgname}"
+    install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+}

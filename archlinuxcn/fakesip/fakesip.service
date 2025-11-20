@@ -1,0 +1,15 @@
+[Unit]
+Description=FakeSIP UDP disguise daemon
+After=network.target
+
+[Service]
+EnvironmentFile=-/etc/conf.d/fakesip
+ExecStart=/usr/bin/fakesip $FAKESIP_ARGS
+User=fakesip
+AmbientCapabilities=CAP_NET_RAW CAP_NET_ADMIN CAP_SYS_NICE
+CapabilityBoundingSet=CAP_NET_RAW CAP_NET_ADMIN CAP_SYS_NICE
+NoNewPrivileges=yes
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
