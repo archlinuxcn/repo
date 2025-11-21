@@ -12,8 +12,8 @@
 
 pkgname=qgis-qt6
 _basename=qgis
-pkgver=3.44.4
-pkgrel=4
+pkgver=3.44.5
+pkgrel=1
 pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
 arch=(x86_64)
 url='https://qgis.org/'
@@ -81,7 +81,7 @@ optdepends=(
 )
 conflicts=($_basename)
 source=("https://qgis.org/downloads/$_basename-$pkgver.tar.bz2")
-sha256sums=('e54d407c5fe921f31ec69104f8d4abbed310b277379e0a5e20af21d46565da0d')
+sha256sums=('f1e4d52789b65cd5678a6e9b9c10bdf04df930b847a827bbf8f873db98019f2f')
 
 build() {
   cmake -S $_basename-$pkgver -B build -G Ninja \
