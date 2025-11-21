@@ -87,7 +87,7 @@ def pre_build():
 
         elif line.startswith("source=("):
             line = re.sub(
-                r"\)$", f"\n        {'\n        '.join(patche_sources)})", line
+                r"\)$", "\n        " + "\n        ".join(patche_sources) + ")", line
             )
 
         elif line.startswith("prepare("):
