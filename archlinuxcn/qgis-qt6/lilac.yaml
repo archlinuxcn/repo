@@ -15,3 +15,11 @@ update_on:
     github: qgis/QGIS
     use_latest_release: true
     use_release_name: true
+  # rebuild on
+  - alias: protobuf
+  - source: archpkg
+    archpkg: gdal
+    strip_release: true
+  - source: archpkg
+    archpkg: abseil-cpp
+    strip_release: true
