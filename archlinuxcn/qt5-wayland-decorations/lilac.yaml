@@ -1,9 +1,12 @@
 maintainers:
   - github: everyx
 
-post_build: aur_post_build
-pre_build: aur_pre_build
-
 update_on:
-  - source: aur
-    aur: qt5-wayland-decorations
+  - source: alpm
+    alpm: qt5-wayland
+    strip_release: true
+
+  - source: git
+    use_commit: true
+    git: https://src.fedoraproject.org/rpms/qt5-qtwayland.git
+    branch: rawhide
