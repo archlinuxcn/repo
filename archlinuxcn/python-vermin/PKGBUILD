@@ -1,7 +1,7 @@
 # Maintainer: mark.blakeney at bullet-systems dot net
 _pkgname="vermin"
 pkgname="python-$_pkgname"
-pkgver=1.7.0
+pkgver=1.8.0
 pkgrel=1
 pkgdesc="Concurrently detect the minimum Python versions needed to run code"
 url="https://github.com/netromdk/$_pkgname"
@@ -13,7 +13,7 @@ _pkgtag="$_pkgname-$pkgver"
 _pkgtar="$_pkgtag.tar.gz"
 source=("$_pkgtar::$url/archive/v$pkgver.tar.gz")
 noextract=("$_pkgtar")
-md5sums=('4635fdd432e257028e4f9a5a58bf9e90')
+md5sums=('113043fea13ac31e7cb5aa19d338ca70')
 
 prepare() {
   mkdir -p "$_pkgtag"
