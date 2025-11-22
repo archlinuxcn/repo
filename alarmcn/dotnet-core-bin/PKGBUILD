@@ -14,7 +14,7 @@ pkgver=10.0.0.sdk100
 _runtimever=10.0.0
 _sdkver=10.0.100
 _short_ver=10.0
-pkgrel=2
+pkgrel=3
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://www.microsoft.com/net/core'
 license=('MIT')
@@ -69,8 +69,8 @@ package_dotnet-runtime-bin() {
 package_aspnet-runtime-bin() {
   pkgdesc='The ASP.NET Core runtime (binary)'
   depends=('dotnet-runtime-bin')
-  provides=("aspnet-runtime-${_short_ver}")
-  conflicts=("aspnet-runtime-${_short_ver}")
+  provides=("aspnet-runtime=${_runtimever}" "aspnet-runtime-${_short_ver}")
+  conflicts=("aspnet-runtime=${_runtimever}" "aspnet-runtime-${_short_ver}")
 
   install -dm 755 "${pkgdir}"/usr/share/{dotnet/shared,licenses}
   cp -dr --no-preserve='ownership' shared/Microsoft.AspNetCore.App "${pkgdir}"/usr/share/dotnet/shared/
@@ -97,8 +97,8 @@ package_dotnet-sdk-bin() {
 
 package_dotnet-targeting-pack-bin() {
   pkgdesc='The .NET Core targeting pack (binary)'
-  provides=(dotnet-targeting-pack-${_short_ver})
-  conflicts=(dotnet-targeting-pack-${_short_ver})
+  provides=(dotnet-targeting-pack=${_runtimever} dotnet-targeting-pack-${_short_ver})
+  conflicts=(dotnet-targeting-pack=${_runtimever} dotnet-targeting-pack-${_short_ver})
 
   if [ $CARCH = 'x86_64' ]; then msarch=x64;
   elif [ $CARCH = 'armv7h' ]; then msarch=arm;
@@ -112,8 +112,8 @@ package_dotnet-targeting-pack-bin() {
 package_aspnet-targeting-pack-bin() {
   pkgdesc='The ASP.NET Core targeting pack (binary)'
   depends=(dotnet-targeting-pack-bin)
-  provides=(aspnet-targeting-pack-${_short_ver})
-  conflicts=(aspnet-targeting-pack-${_short_ver})
+  provides=(aspnet-targeting-pack=${_runtimever} aspnet-targeting-pack-${_short_ver})
+  conflicts=(aspnet-targeting-pack=${_runtimever} aspnet-targeting-pack-${_short_ver})
 
   install -dm 755 "${pkgdir}"/usr/share/{dotnet,dotnet/packs,licenses}
   cp -dr --no-preserve='ownership' packs/Microsoft.AspNetCore.App.Ref "${pkgdir}"/usr/share/dotnet/packs/
