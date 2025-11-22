@@ -12,16 +12,18 @@ url='https://github.com/xfangfang/wiliwili'
 license=('GPL-3.0-or-later')
 depends=('curl' 'dbus' 'fmt' 'gcc-libs' 'glibc' 'hicolor-icon-theme' 'libwebp' 'mpv' 'opencc' 'openssl' 'pystring' 'qrcodegencpp-cmake' 'tinyxml2' 'zlib')
 makedepends=('cmake' 'git' 'libxi' 'libxinerama' 'ninja' 'python' 'wayland-protocols')
-source=("${pkgname}"::"git+${url}.git#tag=v${pkgver}")
-b2sums=('ac7d1fef8aafe0a34ad9c9447c14432b0d649a7c2e365bfaf95aeebd9efb348e0817adf13114b1687303250769e6fc2635061b3246baa7c611e175c3a52fe11e')
+
+source=("${pkgname}"::"git+${url}.git#tag=v${pkgver}"
+        "fmt-12.patch")
+
+b2sums=('ac7d1fef8aafe0a34ad9c9447c14432b0d649a7c2e365bfaf95aeebd9efb348e0817adf13114b1687303250769e6fc2635061b3246baa7c611e175c3a52fe11e'
+        'a7c6f4ad86b102287a8f2d73599e84b917d4654524e74c7dd444ca56cfb3d65a8676c1e6815c8d2dd637a92552cb466b4587a425bfa57b37b7779ce5bb1e6b5b')
 
 prepare() {
   git -C "${srcdir}/${pkgname}" rm library/{OpenCC,QR-Code-generator,pystring}
   git -C "${srcdir}/${pkgname}" submodule update --init --recursive
 
-  # Update borealis to the latest commit to temporarily fix a CMake version compatibility issue.
-  # Please delete this line after the new version is released.
-  git -C "${srcdir}/${pkgname}" submodule update --remote library/borealis
+  patch -d "${srcdir}/${pkgname}" -Np1 -i "${srcdir}/fmt-12.patch"
 
   cmake \
     -B "${srcdir}/build" \
