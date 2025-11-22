@@ -3,8 +3,8 @@
 
 pkgname=python-fontmake
 _pyname=${pkgname#python-}
-pkgver=3.10.1
-pkgrel=1.1
+pkgver=3.11.1
+pkgrel=1
 pkgdesc='Compile fonts from sources (UFO, Glyphs) to binary (OpenType, TrueType)'
 arch=(any)
 url="https://github.com/googlefonts/$_pyname"
@@ -31,15 +31,15 @@ makedepends=(python-{build,installer,wheel}
 optdepends=(python-mutatormath
             python-skia-pathops)
 _archive="$_pyname-$pkgver"
-source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.zip")
-sha256sums=('b388dc6b28a7037ff1f50c0ab24a87e396f37c1e798868281be46ba308740d63')
+source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz")
+sha256sums=('a3b958a2f6d0b978a803a5643f04c27c88c5ed9dc5af999752408aa94053d082')
 
 build() {
 	cd "$_archive"
 	python -m build -wn
 }
 
-_check() {
+check() {
 	cd "$_archive"
 	export PYTHONPATH="$PWD/build/lib"
 	pytest tests
