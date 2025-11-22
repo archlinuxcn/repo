@@ -1,0 +1,39 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+# Contributor: alba4k <blaskoazzolaaaron[at]gmail.com>
+
+pkgname=hyprland-guiutils-git
+_pkgname=${pkgname%-git}
+pkgver=0.1.0.r0.ga415eba
+pkgrel=1
+pkgdesc="Hyprland GUI utilities (successor to hyprland-qtutils)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('BSD-3-Clause')
+depends=('hyprlang-git' 'hyprtoolkit-git' 'hyprutils-git' 'libdrm' 'pixman')
+makedepends=('cmake' 'git')
+provides=("${_pkgname}" "hyprland-qtutils-git")
+conflicts=("${_pkgname}" "hyprland-qtutils-git")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}"
+	git describe --long --abbrev=7 --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	local cmake_options=(
+		-B build
+		-S "${_pkgname}"
+		-D CMAKE_BUILD_TYPE=None
+		-D CMAKE_INSTALL_PREFIX=/usr
+	)
+
+	cmake "${cmake_options[@]}"
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
