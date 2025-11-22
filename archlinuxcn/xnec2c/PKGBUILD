@@ -3,8 +3,8 @@
 # Contributor: Vitaliy Berdinskikh ur6lad[at]i.ua
 
 pkgname=xnec2c
-pkgver=4.4.12
-pkgrel=7
+pkgver=4.4.17
+pkgrel=1
 pkgdesc="GTK+ Antenna EM Modeling Client"
 arch=('i686' 'x86_64')
 url="https://www.xnec2c.org/"
@@ -26,7 +26,7 @@ optdepends=(
   'lapacke: to use OpenBLAS'
 )
 source=("$pkgname-$pkgver.tgz::https://github.com/KJ7LNW/xnec2c/archive/refs/tags/v$pkgver.tar.gz")
-b2sums=('710a13e534da3faeabe8c62771cd7c45d121d6ef28869647f5aac45f499f71854880383e2f6b053c6c5b2b60446fc9add6e74a5b4d705a51a33c99bdc71739e7')
+b2sums=('2a5527acc0d54d9a7daf0375086496235fd964281e89983dcd99a7142d948629ac82d39cccad354a8afb37fd96a43aee909bb4eeb37d5594d5ff4501a3dd894a')
 
 prepare() {
   cd "$pkgname-$pkgver"
