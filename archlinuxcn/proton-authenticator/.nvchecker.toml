@@ -1,0 +1,4 @@
+[proton-authenticator]
+source = 'jq'
+url = 'https://proton.me/download/authenticator/linux/version.json'
+filter = '.Releases[] | select(.CategoryName=="Stable") | .Version'
