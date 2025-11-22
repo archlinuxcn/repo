@@ -1,0 +1,52 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+# Contributor: alba4k <blaskoazzolaaaron[at]gmail.com>
+
+pkgname=hyprtoolkit-git
+_pkgname=${pkgname%-git}
+pkgver=r97.f3e4245
+pkgrel=1
+pkgdesc="A modern C++ Wayland-native GUI toolkit"
+arch=('x86_64' 'aarch64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('BSD-3-Clause')
+depends=(
+	'aquamarine-git'
+	'libglvnd'
+	'iniparser'
+	'hyprgraphics-git'
+	'hyprlang-git'
+	'hyprutils-git'
+	'hyprwayland-scanner-git'
+	'libdrm'
+	'libxkbcommon'
+	'pango'
+	'pixman'
+	'wayland'
+)
+makedepends=('cmake' 'git')
+provides=("${_pkgname}" "lib${_pkgname}.so")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	local cmake_options=(
+		-B build
+		-S "${_pkgname}"
+		-D CMAKE_BUILD_TYPE=None
+		-D CMAKE_INSTALL_PREFIX=/usr
+	)
+
+	cmake "${cmake_options[@]}"
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
