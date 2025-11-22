@@ -1,0 +1,473 @@
+From 89d2b86003d3cff6b813d51d801fb9b132893a6b Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Sat, 5 Apr 2025 19:08:53 +0800
+Subject: [PATCH 2/7] fix fmt11 and memory errors
+
+
+1	1	src/common/logging/formatter.h
+3	3	src/common/typed_address.h
+1	1	src/core/arm/dynarmic/arm_dynarmic_cp15.cpp
+1	1	src/core/arm/dynarmic/dynarmic_cp15.cpp
+1	0	src/core/debugger/gdbstub.cpp
+1	0	src/core/frontend/applets/cabinet.h
+1	0	src/core/hle/service/nfc/common/device.cpp
+1	1	src/core/hle/service/psc/time/common.h
+1	0	src/core/memory/dmnt_cheat_vm.h
+1	1	src/hid_core/resources/applet_resource.h
+1	1	src/hid_core/resources/npad/npad_vibration.h
+1	1	src/hid_core/resources/touch_screen/gesture.h
+1	1	src/hid_core/resources/touch_screen/touch_screen.h
+1	0	src/hid_core/resources/touch_screen/touch_screen_resource.h
+7	7	src/shader_recompiler/backend/glasm/reg_alloc.h
+1	1	src/shader_recompiler/frontend/ir/attribute.h
+1	1	src/shader_recompiler/frontend/ir/condition.h
+1	1	src/shader_recompiler/frontend/ir/flow_test.h
+1	1	src/shader_recompiler/frontend/ir/opcodes.h
+1	1	src/shader_recompiler/frontend/ir/pred.h
+1	1	src/shader_recompiler/frontend/ir/reg.h
+1	1	src/shader_recompiler/frontend/ir/type.h
+1	1	src/shader_recompiler/frontend/maxwell/location.h
+1	1	src/shader_recompiler/frontend/maxwell/opcodes.h
+1	0	src/sudachi/main.cpp
+1	0	src/video_core/renderer_vulkan/renderer_vulkan.cpp
+3	3	src/video_core/texture_cache/formatter.h
+
+diff --git a/src/common/logging/formatter.h b/src/common/logging/formatter.h
+index 88e5550..16bddde 100644
+--- a/src/common/logging/formatter.h
++++ b/src/common/logging/formatter.h
+@@ -14,7 +14,7 @@ template <typename T>
+ struct fmt::formatter<T, std::enable_if_t<std::is_enum_v<T>, char>>
+     : formatter<std::underlying_type_t<T>> {
+     template <typename FormatContext>
+-    auto format(const T& value, FormatContext& ctx) -> decltype(ctx.out()) {
++    auto format(const T& value, FormatContext& ctx) const -> decltype(ctx.out()) {
+         return fmt::formatter<std::underlying_type_t<T>>::format(
+             static_cast<std::underlying_type_t<T>>(value), ctx);
+     }
+diff --git a/src/common/typed_address.h b/src/common/typed_address.h
+index d5e7435..41f7f1e 100644
+--- a/src/common/typed_address.h
++++ b/src/common/typed_address.h
+@@ -262,7 +262,7 @@ struct fmt::formatter<Common::PhysicalAddress> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Common::PhysicalAddress& addr, FormatContext& ctx) {
++    auto format(const Common::PhysicalAddress& addr, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{:#x}", static_cast<u64>(addr.GetValue()));
+     }
+ };
+@@ -273,7 +273,7 @@ struct fmt::formatter<Common::ProcessAddress> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Common::ProcessAddress& addr, FormatContext& ctx) {
++    auto format(const Common::ProcessAddress& addr, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{:#x}", static_cast<u64>(addr.GetValue()));
+     }
+ };
+@@ -284,7 +284,7 @@ struct fmt::formatter<Common::VirtualAddress> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Common::VirtualAddress& addr, FormatContext& ctx) {
++    auto format(const Common::VirtualAddress& addr, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{:#x}", static_cast<u64>(addr.GetValue()));
+     }
+ };
+diff --git a/src/core/arm/dynarmic/arm_dynarmic_cp15.cpp b/src/core/arm/dynarmic/arm_dynarmic_cp15.cpp
+index 5a4eba3..9871c9d 100644
+--- a/src/core/arm/dynarmic/arm_dynarmic_cp15.cpp
++++ b/src/core/arm/dynarmic/arm_dynarmic_cp15.cpp
+@@ -22,7 +22,7 @@ struct fmt::formatter<Dynarmic::A32::CoprocReg> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Dynarmic::A32::CoprocReg& reg, FormatContext& ctx) {
++    auto format(const Dynarmic::A32::CoprocReg& reg, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "cp{}", static_cast<size_t>(reg));
+     }
+ };
+diff --git a/src/core/arm/dynarmic/dynarmic_cp15.cpp b/src/core/arm/dynarmic/dynarmic_cp15.cpp
+index f3eee0d..ee97ac6 100644
+--- a/src/core/arm/dynarmic/dynarmic_cp15.cpp
++++ b/src/core/arm/dynarmic/dynarmic_cp15.cpp
+@@ -22,7 +22,7 @@ struct fmt::formatter<Dynarmic::A32::CoprocReg> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Dynarmic::A32::CoprocReg& reg, FormatContext& ctx) {
++    auto format(const Dynarmic::A32::CoprocReg& reg, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "cp{}", static_cast<size_t>(reg));
+     }
+ };
+diff --git a/src/core/debugger/gdbstub.cpp b/src/core/debugger/gdbstub.cpp
+index 80091cc..a5667d1 100644
+--- a/src/core/debugger/gdbstub.cpp
++++ b/src/core/debugger/gdbstub.cpp
+@@ -10,6 +10,7 @@
+ 
+ #include <boost/algorithm/string.hpp>
+ 
++#include <fmt/ranges.h>
+ #include "common/hex_util.h"
+ #include "common/logging/log.h"
+ #include "common/scope_exit.h"
+diff --git a/src/core/frontend/applets/cabinet.h b/src/core/frontend/applets/cabinet.h
+index af3fc6c..7c0694f 100644
+--- a/src/core/frontend/applets/cabinet.h
++++ b/src/core/frontend/applets/cabinet.h
+@@ -6,6 +6,7 @@
+ #include <functional>
+ #include "core/frontend/applets/applet.h"
+ #include "core/hle/service/nfp/nfp_types.h"
++#include <memory>
+ 
+ namespace Service::NFC {
+ class NfcDevice;
+diff --git a/src/core/hle/service/nfc/common/device.cpp b/src/core/hle/service/nfc/common/device.cpp
+index 14e6c7a..5291aa7 100644
+--- a/src/core/hle/service/nfc/common/device.cpp
++++ b/src/core/hle/service/nfc/common/device.cpp
+@@ -15,6 +15,7 @@
+ #endif
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/fs/file.h"
+ #include "common/fs/fs.h"
+diff --git a/src/core/hle/service/psc/time/common.h b/src/core/hle/service/psc/time/common.h
+index 3e13144..a3f1009 100644
+--- a/src/core/hle/service/psc/time/common.h
++++ b/src/core/hle/service/psc/time/common.h
+@@ -167,7 +167,7 @@ constexpr inline Result GetSpanBetweenTimePoints(s64* out_seconds, const SteadyC
+ template <>
+ struct fmt::formatter<Service::PSC::Time::TimeType> : fmt::formatter<fmt::string_view> {
+     template <typename FormatContext>
+-    auto format(Service::PSC::Time::TimeType type, FormatContext& ctx) {
++    auto format(Service::PSC::Time::TimeType type, FormatContext& ctx) const {
+         const string_view name = [type] {
+             using Service::PSC::Time::TimeType;
+             switch (type) {
+diff --git a/src/core/memory/dmnt_cheat_vm.h b/src/core/memory/dmnt_cheat_vm.h
+index 8abf5d3..f36d83a 100644
+--- a/src/core/memory/dmnt_cheat_vm.h
++++ b/src/core/memory/dmnt_cheat_vm.h
+@@ -3,6 +3,7 @@
+ 
+ #pragma once
+ 
++#include <memory>
+ #include <variant>
+ #include <vector>
+ #include <fmt/printf.h>
+diff --git a/src/hid_core/resources/applet_resource.h b/src/hid_core/resources/applet_resource.h
+index 4a5416f..81a8122 100644
+--- a/src/hid_core/resources/applet_resource.h
++++ b/src/hid_core/resources/applet_resource.h
+@@ -4,8 +4,8 @@
+ #pragma once
+ 
+ #include <array>
++#include <memory>
+ #include <mutex>
+-
+ #include "common/bit_field.h"
+ #include "common/common_types.h"
+ #include "core/hle/result.h"
+diff --git a/src/hid_core/resources/npad/npad_vibration.h b/src/hid_core/resources/npad/npad_vibration.h
+index 6412ca4..4b22098 100644
+--- a/src/hid_core/resources/npad/npad_vibration.h
++++ b/src/hid_core/resources/npad/npad_vibration.h
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-3.0-or-later
+ 
+ #pragma once
+-
++#include <memory>
+ #include <mutex>
+ 
+ #include "common/common_types.h"
+diff --git a/src/hid_core/resources/touch_screen/gesture.h b/src/hid_core/resources/touch_screen/gesture.h
+index d92912b..2710642 100644
+--- a/src/hid_core/resources/touch_screen/gesture.h
++++ b/src/hid_core/resources/touch_screen/gesture.h
+@@ -3,8 +3,8 @@
+ 
+ #pragma once
+ 
++#include <memory>
+ #include <mutex>
+-
+ #include "common/common_types.h"
+ #include "core/hle/result.h"
+ 
+diff --git a/src/hid_core/resources/touch_screen/touch_screen.h b/src/hid_core/resources/touch_screen/touch_screen.h
+index 2fcb624..0a05dd3 100644
+--- a/src/hid_core/resources/touch_screen/touch_screen.h
++++ b/src/hid_core/resources/touch_screen/touch_screen.h
+@@ -2,7 +2,7 @@
+ // SPDX-License-Identifier: GPL-3.0-or-later
+ 
+ #pragma once
+-
++#include <memory>
+ #include <mutex>
+ 
+ #include "common/common_types.h"
+diff --git a/src/hid_core/resources/touch_screen/touch_screen_resource.h b/src/hid_core/resources/touch_screen/touch_screen_resource.h
+index 095cddd..c0e7be7 100644
+--- a/src/hid_core/resources/touch_screen/touch_screen_resource.h
++++ b/src/hid_core/resources/touch_screen/touch_screen_resource.h
+@@ -4,6 +4,7 @@
+ #pragma once
+ 
+ #include <array>
++#include <memory>
+ #include <mutex>
+ 
+ #include "common/common_types.h"
+diff --git a/src/shader_recompiler/backend/glasm/reg_alloc.h b/src/shader_recompiler/backend/glasm/reg_alloc.h
+index bd6e2d9..7cd8c41 100644
+--- a/src/shader_recompiler/backend/glasm/reg_alloc.h
++++ b/src/shader_recompiler/backend/glasm/reg_alloc.h
+@@ -184,7 +184,7 @@ struct fmt::formatter<Shader::Backend::GLASM::Id> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(Shader::Backend::GLASM::Id id, FormatContext& ctx) {
++    auto format(Shader::Backend::GLASM::Id id, FormatContext& ctx) const {
+         return Shader::Backend::GLASM::FormatTo<true>(ctx, id);
+     }
+ };
+@@ -195,7 +195,7 @@ struct fmt::formatter<Shader::Backend::GLASM::Register> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::Register& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::Register& value, FormatContext& ctx) const {
+         if (value.type != Shader::Backend::GLASM::Type::Register) {
+             throw Shader::InvalidArgument("Register value type is not register");
+         }
+@@ -209,7 +209,7 @@ struct fmt::formatter<Shader::Backend::GLASM::ScalarRegister> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarRegister& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarRegister& value, FormatContext& ctx) const  {
+         if (value.type != Shader::Backend::GLASM::Type::Register) {
+             throw Shader::InvalidArgument("Register value type is not register");
+         }
+@@ -223,7 +223,7 @@ struct fmt::formatter<Shader::Backend::GLASM::ScalarU32> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarU32& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarU32& value, FormatContext& ctx) const {
+         switch (value.type) {
+         case Shader::Backend::GLASM::Type::Void:
+             break;
+@@ -244,7 +244,7 @@ struct fmt::formatter<Shader::Backend::GLASM::ScalarS32> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarS32& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarS32& value, FormatContext& ctx) const {
+         switch (value.type) {
+         case Shader::Backend::GLASM::Type::Void:
+             break;
+@@ -265,7 +265,7 @@ struct fmt::formatter<Shader::Backend::GLASM::ScalarF32> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarF32& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarF32& value, FormatContext& ctx) const {
+         switch (value.type) {
+         case Shader::Backend::GLASM::Type::Void:
+             break;
+@@ -286,7 +286,7 @@ struct fmt::formatter<Shader::Backend::GLASM::ScalarF64> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Backend::GLASM::ScalarF64& value, FormatContext& ctx) {
++    auto format(const Shader::Backend::GLASM::ScalarF64& value, FormatContext& ctx) const {
+         switch (value.type) {
+         case Shader::Backend::GLASM::Type::Void:
+             break;
+diff --git a/src/shader_recompiler/frontend/ir/attribute.h b/src/shader_recompiler/frontend/ir/attribute.h
+index 5f039b6..45084ab 100644
+--- a/src/shader_recompiler/frontend/ir/attribute.h
++++ b/src/shader_recompiler/frontend/ir/attribute.h
+@@ -250,7 +250,7 @@ struct fmt::formatter<Shader::IR::Attribute> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Attribute& attribute, FormatContext& ctx) {
++    auto format(const Shader::IR::Attribute& attribute, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{}", Shader::IR::NameOf(attribute));
+     }
+ };
+diff --git a/src/shader_recompiler/frontend/ir/condition.h b/src/shader_recompiler/frontend/ir/condition.h
+index 1cad46b..d9172a1 100644
+--- a/src/shader_recompiler/frontend/ir/condition.h
++++ b/src/shader_recompiler/frontend/ir/condition.h
+@@ -52,7 +52,7 @@ struct fmt::formatter<Shader::IR::Condition> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Condition& cond, FormatContext& ctx) {
++    auto format(const Shader::IR::Condition& cond, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{}", Shader::IR::NameOf(cond));
+     }
+ };
+diff --git a/src/shader_recompiler/frontend/ir/flow_test.h b/src/shader_recompiler/frontend/ir/flow_test.h
+index 88f7c9e..d719d3e 100644
+--- a/src/shader_recompiler/frontend/ir/flow_test.h
++++ b/src/shader_recompiler/frontend/ir/flow_test.h
+@@ -55,7 +55,7 @@ struct fmt::formatter<Shader::IR::FlowTest> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::FlowTest& flow_test, FormatContext& ctx) {
++    auto format(const Shader::IR::FlowTest& flow_test, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{}", Shader::IR::NameOf(flow_test));
+     }
+ };
+diff --git a/src/shader_recompiler/frontend/ir/opcodes.h b/src/shader_recompiler/frontend/ir/opcodes.h
+index e300714..85ff20d 100644
+--- a/src/shader_recompiler/frontend/ir/opcodes.h
++++ b/src/shader_recompiler/frontend/ir/opcodes.h
+@@ -103,7 +103,7 @@ struct fmt::formatter<Shader::IR::Opcode> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Opcode& op, FormatContext& ctx) {
++    auto format(const Shader::IR::Opcode& op, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{}", Shader::IR::NameOf(op));
+     }
+ };
+diff --git a/src/shader_recompiler/frontend/ir/pred.h b/src/shader_recompiler/frontend/ir/pred.h
+index a77c1e2..d54681d 100644
+--- a/src/shader_recompiler/frontend/ir/pred.h
++++ b/src/shader_recompiler/frontend/ir/pred.h
+@@ -33,7 +33,7 @@ struct fmt::formatter<Shader::IR::Pred> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Pred& pred, FormatContext& ctx) {
++    auto format(const Shader::IR::Pred& pred, FormatContext& ctx) const  {
+         if (pred == Shader::IR::Pred::PT) {
+             return fmt::format_to(ctx.out(), "PT");
+         } else {
+diff --git a/src/shader_recompiler/frontend/ir/reg.h b/src/shader_recompiler/frontend/ir/reg.h
+index f7cb716..feb24a9 100644
+--- a/src/shader_recompiler/frontend/ir/reg.h
++++ b/src/shader_recompiler/frontend/ir/reg.h
+@@ -319,7 +319,7 @@ struct fmt::formatter<Shader::IR::Reg> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Reg& reg, FormatContext& ctx) {
++    auto format(const Shader::IR::Reg& reg, FormatContext& ctx) const  {
+         if (reg == Shader::IR::Reg::RZ) {
+             return fmt::format_to(ctx.out(), "RZ");
+         } else if (static_cast<int>(reg) >= 0 && static_cast<int>(reg) < 255) {
+diff --git a/src/shader_recompiler/frontend/ir/type.h b/src/shader_recompiler/frontend/ir/type.h
+index 04c8c4d..af9c360 100644
+--- a/src/shader_recompiler/frontend/ir/type.h
++++ b/src/shader_recompiler/frontend/ir/type.h
+@@ -54,7 +54,7 @@ struct fmt::formatter<Shader::IR::Type> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::IR::Type& type, FormatContext& ctx) {
++    auto format(const Shader::IR::Type& type, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{}", NameOf(type));
+     }
+ };
+diff --git a/src/shader_recompiler/frontend/maxwell/location.h b/src/shader_recompiler/frontend/maxwell/location.h
+index 0c0477e..d82057c 100644
+--- a/src/shader_recompiler/frontend/maxwell/location.h
++++ b/src/shader_recompiler/frontend/maxwell/location.h
+@@ -102,7 +102,7 @@ struct fmt::formatter<Shader::Maxwell::Location> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Maxwell::Location& location, FormatContext& ctx) {
++    auto format(const Shader::Maxwell::Location& location, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{:04x}", location.Offset());
+     }
+ };
+diff --git a/src/shader_recompiler/frontend/maxwell/opcodes.h b/src/shader_recompiler/frontend/maxwell/opcodes.h
+index 72dd143..028eabf 100644
+--- a/src/shader_recompiler/frontend/maxwell/opcodes.h
++++ b/src/shader_recompiler/frontend/maxwell/opcodes.h
+@@ -23,7 +23,7 @@ struct fmt::formatter<Shader::Maxwell::Opcode> {
+         return ctx.begin();
+     }
+     template <typename FormatContext>
+-    auto format(const Shader::Maxwell::Opcode& opcode, FormatContext& ctx) {
++    auto format(const Shader::Maxwell::Opcode& opcode, FormatContext& ctx) const  {
+         return fmt::format_to(ctx.out(), "{}", NameOf(opcode));
+     }
+ };
+diff --git a/src/sudachi/main.cpp b/src/sudachi/main.cpp
+index af7a33f..001de43 100644
+--- a/src/sudachi/main.cpp
++++ b/src/sudachi/main.cpp
+@@ -94,6 +94,7 @@ static FileSys::VirtualFile VfsDirectoryCreateFileWrapper(const FileSys::Virtual
+ #endif
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ #include "common/detached_tasks.h"
+ #include "common/fs/fs.h"
+ #include "common/fs/path_util.h"
+diff --git a/src/video_core/renderer_vulkan/renderer_vulkan.cpp b/src/video_core/renderer_vulkan/renderer_vulkan.cpp
+index dc64a36..281659c 100644
+--- a/src/video_core/renderer_vulkan/renderer_vulkan.cpp
++++ b/src/video_core/renderer_vulkan/renderer_vulkan.cpp
+@@ -10,6 +10,7 @@
+ #include <vector>
+ 
+ #include <fmt/format.h>
++#include <fmt/ranges.h>
+ 
+ #include "common/logging/log.h"
+ #include "common/polyfill_ranges.h"
+diff --git a/src/video_core/texture_cache/formatter.h b/src/video_core/texture_cache/formatter.h
+index cabbfcb..ea1c2df 100644
+--- a/src/video_core/texture_cache/formatter.h
++++ b/src/video_core/texture_cache/formatter.h
+@@ -13,7 +13,7 @@
+ template <>
+ struct fmt::formatter<VideoCore::Surface::PixelFormat> : fmt::formatter<fmt::string_view> {
+     template <typename FormatContext>
+-    auto format(VideoCore::Surface::PixelFormat format, FormatContext& ctx) {
++    auto format(VideoCore::Surface::PixelFormat format, FormatContext& ctx) const {
+         using VideoCore::Surface::PixelFormat;
+         const string_view name = [format] {
+             switch (format) {
+@@ -234,7 +234,7 @@ struct fmt::formatter<VideoCore::Surface::PixelFormat> : fmt::formatter<fmt::str
+ template <>
+ struct fmt::formatter<VideoCommon::ImageType> : fmt::formatter<fmt::string_view> {
+     template <typename FormatContext>
+-    auto format(VideoCommon::ImageType type, FormatContext& ctx) {
++    auto format(VideoCommon::ImageType type, FormatContext& ctx) const {
+         const string_view name = [type] {
+             using VideoCommon::ImageType;
+             switch (type) {
+@@ -262,7 +262,7 @@ struct fmt::formatter<VideoCommon::Extent3D> {
+     }
+ 
+     template <typename FormatContext>
+-    auto format(const VideoCommon::Extent3D& extent, FormatContext& ctx) {
++    auto format(const VideoCommon::Extent3D& extent, FormatContext& ctx) const {
+         return fmt::format_to(ctx.out(), "{{{}, {}, {}}}", extent.width, extent.height,
+                               extent.depth);
+     }
+-- 
+2.49.0
+
