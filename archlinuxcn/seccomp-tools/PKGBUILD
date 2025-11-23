@@ -1,8 +1,8 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=seccomp-tools
-pkgver=1.6.1
-pkgrel=3
+pkgver=1.6.2
+pkgrel=1
 pkgdesc="Provide powerful tools for seccomp analysis"
 arch=(x86_64)
 url="https://github.com/david942j/seccomp-tools"
@@ -11,7 +11,7 @@ depends=(glibc ruby ruby-os)
 makedepends=(git)
 provides=(ruby-${pkgname})
 source=("git+$url.git#tag=v$pkgver")
-sha256sums=('049b27bc7c2591159e5c27256afc42b9f49cffdf6f6d6d8ff289d592547c9edb')
+sha256sums=('ac7de801409a2fd4e2263b09076d2e32b49cb6c0ece4083e9064d088d964b857')
 
 prepare() {
   cd "${pkgname}"
