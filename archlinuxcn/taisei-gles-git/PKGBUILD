@@ -16,8 +16,14 @@ makedepends=('git' 'meson' 'python-docutils' 'python-zstandard' 'gamemode')
 optdepends=('gamemode: GameMode integration')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-source=("git+https://github.com/taisei-project/${_pkgname}.git")
-sha256sums=('SKIP')
+source=(
+	"git+https://github.com/taisei-project/${_pkgname}.git"
+	"git+https://github.com/taisei-project/SDL_GameControllerDB.git"
+	"git+https://github.com/taisei-project/koishi.git"
+	"git+https://github.com/taisei-project/basis_universal.git"
+	"git+https://github.com/taisei-project/python-zipfile-zstd.git"
+)
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 pkgver() {
 	cd "${_pkgname}/"
@@ -26,7 +32,12 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-	git submodule update --init --recursive
+	git submodule init
+	git config submodule.external/gamecontrollerdb.url "${srcdir}/SDL_GameControllerDB"
+	git config submodule.external/koishi.url "${srcdir}/koishi"
+	git config submodule.external/basis_universal.url "${srcdir}/basis_universal"
+	git config submodule.external/python-zipfile-zstd.url "${srcdir}/python-zipfile-zstd"
+	git -c protocol.file.allow=always submodule update
 }
 
 build() {
