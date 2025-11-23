@@ -1,6 +1,6 @@
 pkgname=overskride
-pkgver=0.6.3
-pkgrel=2
+pkgver=0.6.5
+pkgrel=1
 pkgdesc='A simple yet powerful bluetooth client'
 url="https://github.com/kaii-lb/overskride"
 license=('GPL-3.0-or-later')
@@ -9,7 +9,7 @@ depends=('bluez' 'libadwaita' 'libpulse' hicolor-icon-theme glibc gcc-libs dbus 
 makedepends=('blueprint-compiler' 'cargo' 'git' 'meson')
 checkdepends=('appstream-glib')
 source=("source::git+$url.git#tag=v${pkgver}")
-sha256sums=('e691485d5d847795e8e37f8bccab08eeed23d5696958e5d08c0741fa4f7a30f2')
+sha256sums=('ba5eac152c4c4effea3e83c3179ac35555520680b34f4ac859f17fdc10333949')
 
 prepare() {
 	cd source
