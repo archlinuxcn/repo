@@ -3,12 +3,12 @@
 # Contributor: Maciek Marciniak <mm2pl at kotmisia.pl>
 
 pkgname=obs-studio
-pkgver=32.0.1
+pkgver=32.0.2
 pkgrel=2
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
-license=('GPL2')
+license=('GPL-2.0-only')
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
          'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
          'libdatachannel' 'uthash' 'simde' 'qrcodegencpp-cmake')
@@ -21,8 +21,15 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'python: scripting support'
             'sndio: Sndio input client'
             'v4l2loopback-dkms: virtual camera support')
-source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz)
-sha256sums=('72b19fcc970f9b066b512326a3377526e1efb0ca1eb92cf89af26a1167f2fe35')
+source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz
+        obs-studio-12328.patch::https://github.com/obsproject/obs-studio/pull/12328.patch)
+sha256sums=('48d744037c553eea8f9b76bf46f6dcac753e52871f49b2c1a2580757f723a1b7'
+            '25322c692cf5cc88fc7d17cbb40a61b7e32d5ea675da647dd1a1996474ec2c8e')
+
+prepare() {
+  cd $pkgname-$pkgver-sources
+  patch -Np1 -i "$srcdir"/obs-studio-12328.patch
+}
 
 build() {
   export CXXFLAGS+=" -Wno-error=deprecated-declarations"
