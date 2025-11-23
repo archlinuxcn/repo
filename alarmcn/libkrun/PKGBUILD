@@ -2,20 +2,25 @@
 # Contributor: hexchain <arch at hexchain.org>
 pkgname=libkrun
 pkgver=1.16.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A dynamic library providing Virtualization-based process isolation capabilities"
 url='https://github.com/containers/libkrun'
 arch=(aarch64 x86_64)
 license=('Apache-2.0')
 makedepends=('cargo' 'patchelf' 'clang')
 depends=('glibc' 'gcc-libs' 'libkrunfw' 'pipewire' 'virglrenderer')
-source=("https://github.com/containers/libkrun/archive/refs/tags/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('04b6f01f44e263d168757ebcd9bc037d7c5836c1987a547c6b2fa5837abe1ab1')
+source=("https://github.com/containers/libkrun/archive/refs/tags/v$pkgver/$pkgname-$pkgver.tar.gz"
+        https://github.com/containers/libkrun/commit/7c4844953056c879f5cbc552f08870b97bdac71a.patch)
+sha256sums=('04b6f01f44e263d168757ebcd9bc037d7c5836c1987a547c6b2fa5837abe1ab1'
+            '309546c831828dc3b0cda99e32826f5b68c60422915608869714f0c231d2ff02')
 
 prepare() {
   cd "$pkgname-$pkgver"
 
   cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+
+  # Fix for libkrunfw 5.x
+  patch -Np1 -i "$srcdir"/7c4844953056c879f5cbc552f08870b97bdac71a.patch
 }
 
 build() {

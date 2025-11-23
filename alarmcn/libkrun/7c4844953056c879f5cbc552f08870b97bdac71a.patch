@@ -1,0 +1,49 @@
+From 7c4844953056c879f5cbc552f08870b97bdac71a Mon Sep 17 00:00:00 2001
+From: Sergio Lopez <slp@redhat.com>
+Date: Fri, 12 Sep 2025 04:52:08 +0200
+Subject: [PATCH] libkrun: bump libkrunfw to 5.x.x
+
+TSIv3 is an ABI breaking change, so it's provided by a different
+major version of libkrunfw.
+
+Signed-off-by: Sergio Lopez <slp@redhat.com>
+---
+ .github/workflows/integration_tests.yml | 2 +-
+ src/libkrun/src/lib.rs                  | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/.github/workflows/integration_tests.yml b/.github/workflows/integration_tests.yml
+index a7403a071..d45bc691b 100644
+--- a/.github/workflows/integration_tests.yml
++++ b/.github/workflows/integration_tests.yml
+@@ -49,7 +49,7 @@ jobs:
+         run: sudo apt-get install -y --no-install-recommends build-essential patchelf pkg-config net-tools
+       
+       - name: Install libkrunfw
+-        run: curl -L -o /tmp/libkrunfw-4.9.0-x86_64.tgz https://github.com/containers/libkrunfw/releases/download/v4.9.0/libkrunfw-4.9.0-x86_64.tgz && mkdir tmp && tar xf /tmp/libkrunfw-4.9.0-x86_64.tgz -C tmp && sudo mv tmp/lib64/* /lib/x86_64-linux-gnu
++        run: curl -L -o /tmp/libkrunfw-5.0.0-x86_64.tgz https://github.com/containers/libkrunfw/releases/download/v5.0.0/libkrunfw-5.0.0-x86_64.tgz && mkdir tmp && tar xf /tmp/libkrunfw-5.0.0-x86_64.tgz -C tmp && sudo mv tmp/lib64/* /lib/x86_64-linux-gnu
+       
+       - name: Integration tests
+         run: RUST_LOG=trace KRUN_ENOMEM_WORKAROUND=1 KRUN_NO_UNSHARE=1 make test
+diff --git a/src/libkrun/src/lib.rs b/src/libkrun/src/lib.rs
+index b9497ac0a..1fe8cee2a 100644
+--- a/src/libkrun/src/lib.rs
++++ b/src/libkrun/src/lib.rs
+@@ -76,13 +76,13 @@ const MAX_ARGS: usize = 4096;
+ 
+ // krunfw library name for each context
+ #[cfg(all(target_os = "linux", not(feature = "tee")))]
+-const KRUNFW_NAME: &str = "libkrunfw.so.4";
++const KRUNFW_NAME: &str = "libkrunfw.so.5";
+ #[cfg(all(target_os = "linux", feature = "amd-sev"))]
+-const KRUNFW_NAME: &str = "libkrunfw-sev.so.4";
++const KRUNFW_NAME: &str = "libkrunfw-sev.so.5";
+ #[cfg(all(target_os = "linux", feature = "tdx"))]
+-const KRUNFW_NAME: &str = "libkrunfw-tdx.so.4";
++const KRUNFW_NAME: &str = "libkrunfw-tdx.so.5";
+ #[cfg(target_os = "macos")]
+-const KRUNFW_NAME: &str = "libkrunfw.4.dylib";
++const KRUNFW_NAME: &str = "libkrunfw.5.dylib";
+ 
+ // Path to the init binary to be executed inside the VM.
+ const INIT_PATH: &str = "/init.krun";
