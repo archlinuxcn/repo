@@ -3,9 +3,9 @@
 pkgbase=rime-wanxiang-dict-nightly
 _pkgbase=${pkgbase%-dict-nightly}
 pkgname=(rime-wanxiang-dict-nightly rime-wanxiang-pro-dict-nightly)
-pkgver=13.4.6+r20251123.153811
+pkgver=13.4.6+r20251124.235147
 _schema_version=${pkgver%%+*}
-pkgrel=2
+pkgrel=1
 pkgdesc="万象词库——每日构建版"
 arch=(any)
 license=('CC-BY-4.0')
