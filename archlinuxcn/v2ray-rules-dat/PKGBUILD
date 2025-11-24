@@ -5,7 +5,7 @@
 # Contributor: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=v2ray-rules-dat
-pkgver=202511222213
+pkgver=202511232213
 pkgrel=1
 pkgdesc="Enhanced edition of V2Ray rules dat files."
 arch=('any')
@@ -17,7 +17,7 @@ conflicts=('v2ray-domain-list-community' 'v2ray-geoip' 'xray-geoip' 'xray-geosit
 source=("geoip-$pkgver.dat::${url}/releases/download/${pkgver}/geoip.dat"
         "geosite-$pkgver.dat::${url}/releases/download/${pkgver}/geosite.dat")
 sha256sums=('76669a90811b7166dcac621dca90f6246e2b210653c1884355137f42f41152b0'
-            '8365ce7dbd59382fbdebc0aa5d7393474b82f015813dc2edd6a9d81c3b295507')
+            'daf00a90bd5e248bc94d4d38eda601247c7a8b5d3267649987726201868b15be')
 
 package() {
     local d
