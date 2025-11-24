@@ -1,7 +1,7 @@
 # Maintainer: Butui Hu <hot123tea123@gmail.com>
 
 pkgname=openturns
-pkgver=1.25.1
+pkgver=1.26
 pkgrel=1
 pkgdesc='Uncertainty treatment library'
 license=('LGPL-3.0-or-later')
@@ -32,7 +32,7 @@ makedepends=(
   swig
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/openturns/openturns/archive/v${pkgver}.tar.gz")
-sha256sums=('10ab40ffa3240219bed0884ca7808655644adc25a8195a8cd1484318c267b9f7')
+sha256sums=('624bd45f89ab3afe1931cb07f8c5398e6983faa40a1d92a81b04006f45b66147')
 
 build() {
   cmake -B 'build' -S "${srcdir}/${pkgname}-${pkgver}" \
