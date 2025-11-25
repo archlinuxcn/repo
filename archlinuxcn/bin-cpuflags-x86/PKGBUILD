@@ -1,0 +1,34 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+
+pkgname=bin-cpuflags-x86
+pkgver=1.0.5
+pkgrel=1
+pkgdesc="A small CLI tool to detect CPU flags (instruction sets) of X86 binaries"
+arch=('x86_64')
+url="https://github.com/HanabishiRecca/${pkgname}"
+license=('MIT')
+depends=('gcc-libs')
+makedepends=('cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('59dc573c1b6b1ddc348508235addc8f28abccb70abd8789eabd77c109286b9a3')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	cargo fetch --locked --target $(rustc --print host-tuple)
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	cargo test --frozen --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
