@@ -2,7 +2,7 @@
 # Contributor: hexchain <arch at hexchain.org>
 pkgname=libkrun
 pkgver=1.16.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A dynamic library providing Virtualization-based process isolation capabilities"
 url='https://github.com/containers/libkrun'
 arch=(aarch64 x86_64)
@@ -27,7 +27,7 @@ build() {
   cd "$pkgname-$pkgver"
 
   export ZSTD_SYS_USE_PKG_CONFIG=1
-  make GPU=1 BLK=1 NET=1 SND=1 VERBOSE=1
+  make BLK=1 NET=1 EFI=0 GPU=1 SND=1 INPUT=1 VERBOSE=1
 }
 
 package() {
