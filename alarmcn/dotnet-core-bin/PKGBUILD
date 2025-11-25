@@ -14,7 +14,7 @@ pkgver=10.0.0.sdk100
 _runtimever=10.0.0
 _sdkver=10.0.100
 _short_ver=10.0
-pkgrel=3
+pkgrel=4
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://www.microsoft.com/net/core'
 license=('MIT')
@@ -58,8 +58,8 @@ package_dotnet-runtime-bin() {
     'openssl'
   )
   optdepends=('lttng-ust2.12: CoreCLR tracing')
-  provides=("dotnet-runtime-${_short_ver}")
-  conflicts=("dotnet-runtime-${_short_ver}")
+  provides=("dotnet-runtime=${_runtimever}" "dotnet-runtime-${_short_ver}")
+  conflicts=("dotnet-runtime=${_runtimever}" "dotnet-runtime-${_short_ver}")
 
   install -dm 755 "${pkgdir}"/usr/share/{dotnet/shared,licenses}
   cp -dr --no-preserve='ownership' shared/Microsoft.NETCore.App "${pkgdir}"/usr/share/dotnet/shared/
