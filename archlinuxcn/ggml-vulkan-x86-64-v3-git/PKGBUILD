@@ -61,8 +61,8 @@ build() {
   local _cxxflags=($(sed -E -e 's&-(march|mtune)=\S+\b&&g' -e 's&-O[0-9]+\b&&g' <<< "${CXXFLAGS}"))
 
   echo "Building with OpenBLAS + Vulkan + x86-64-v3 support..."
-  CFLAGS="${_cflags[@]} -march=x86-64-v3 -O3"
-  CXXFLAGS="${_cxxflags[@]} -march=x86-64-v3 -O3"
+  CFLAGS="${_cflags[@]} -march=x86-64-v3 -O3 -DNDEBUG"
+  CXXFLAGS="${_cxxflags[@]} -march=x86-64-v3 -O3 -DNDEBUG"
   cmake -B "build" "${_cmake_common[@]}" -DCMAKE_INSTALL_LIBDIR="lib"
   cmake --build "build"
 }

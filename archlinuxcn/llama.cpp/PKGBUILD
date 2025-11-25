@@ -47,6 +47,8 @@ build() {
     -DLLAMA_USE_SYSTEM_GGML=ON
     -Wno-dev
   )
+  CFLAGS="-DNDEBUG $CFLAGS"
+  CXXFLAGS="-DNDEBUG $CXXFLAGS"
 
   cmake "${_cmake_options[@]}"
   cmake --build build
