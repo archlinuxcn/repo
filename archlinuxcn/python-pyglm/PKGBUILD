@@ -1,6 +1,6 @@
 pkgname='python-pyglm'
-pkgver='2.8.2'
-pkgrel=5
+pkgver=2.8.3
+pkgrel=1
 pkgdesc="OpenGL Mathematics library for Python"
 url="https://github.com/Zuzu-Typ/PyGLM"
 depends=('glm' 'python')
@@ -15,7 +15,7 @@ license=('LicenseRef-Zlib')
 arch=('x86_64')
 options=(!lto)
 source=("$pkgname::git+https://github.com/Zuzu-Typ/PyGLM.git#tag=$pkgver")
-sha256sums=('d26ecc224b11b12fc4d90465917dbac966448bec6245bebe09d004b0e0ae2c67')
+sha256sums=('4b36d8bd25bfcb4ba450513d00cb994f67f649ea920e1762cb838bde1e0d07a4')
 
 prepare() {
 	cd "$srcdir/$pkgname"
