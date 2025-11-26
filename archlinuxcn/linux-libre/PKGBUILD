@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=6.17.8
+pkgver=6.17.9
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -45,7 +45,7 @@ source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${_basever}-gnu/
         'config')
 sha256sums=('0d6ee94f6b7ba57420f95f9c7a9d3d423dd6d772ce31538a74542a85bbf7fd83'
             'SKIP'
-            '2c86d719013b91505c4a6b73e60c91922c799d3602b1e4394f0efb00e93d5eb2'
+            '2a06d31e1930a3824f89507a2a80d7935d923ff33e3f4964e218d321e86f7a3a'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -53,7 +53,7 @@ sha256sums=('0d6ee94f6b7ba57420f95f9c7a9d3d423dd6d772ce31538a74542a85bbf7fd83'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP'
-            'f184a4aa813d6543e63cdc9c377f033d5fe4070f2514b2af6ea7d616619290ae')
+            'e316ea96e5423dc08e4512204993833192a01b8f260d0bfb0aba22b0317acf32')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
