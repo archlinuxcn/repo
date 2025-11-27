@@ -1,0 +1,82 @@
+diff -ura paru-2.1.0/Cargo.lock paru-2.1.0-new/Cargo.lock
+--- paru-2.1.0/Cargo.lock	2025-07-07 23:44:28.000000000 -0700
++++ paru-2.1.0-new/Cargo.lock	2025-11-26 21:28:06.621428308 -0800
+@@ -593,9 +593,9 @@
+ 
+ [[package]]
+ name = "flate2"
+-version = "1.1.2"
++version = "1.1.5"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+-checksum = "4a3d7db9596fecd151c5f638c0ee5d5bd487b6e0ea232e5dc96d5250f6f94b1d"
++checksum = "bfe33edd8e85a12a67454e37f8c75e730830d83e313556ab9ebf9ee7fbeb3bfb"
+ dependencies = [
+  "crc32fast",
+  "miniz_oxide",
+@@ -1294,6 +1294,7 @@
+ checksum = "1fa76a2c86f704bdb222d66965fb3d63269ce38518b83cb0575fca855ebb6316"
+ dependencies = [
+  "adler2",
++ "simd-adler32",
+ ]
+ 
+ [[package]]
+@@ -1509,6 +1510,7 @@
+  "cini",
+  "dirs",
+  "env_logger",
++ "flate2",
+  "futures",
+  "globset",
+  "htmlescape",
+@@ -2009,6 +2011,12 @@
+ ]
+ 
+ [[package]]
++name = "simd-adler32"
++version = "0.3.7"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "d66dc143e6b11c1eddc06d5c423cfc97062865baf299914ab64caa38182078fe"
++
++[[package]]
+ name = "siphasher"
+ version = "1.0.1"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+diff -ura paru-2.1.0/Cargo.toml paru-2.1.0-new/Cargo.toml
+--- paru-2.1.0/Cargo.toml	2025-07-07 23:44:28.000000000 -0700
++++ paru-2.1.0-new/Cargo.toml	2025-11-26 21:28:05.878407932 -0800
+@@ -57,6 +57,7 @@
+ signal-hook = "0.3.18"
+ bitflags = "2.9.1"
+ toml = { version = "0.8.23", features = ["preserve_order"] }
++flate2 = "1.1.5"
+ 
+ [profile.release]
+ codegen-units = 1
+diff -ura paru-2.1.0/src/sync.rs paru-2.1.0-new/src/sync.rs
+--- paru-2.1.0/src/sync.rs	2025-07-07 23:44:28.000000000 -0700
++++ paru-2.1.0-new/src/sync.rs	2025-11-26 21:28:51.656059455 -0800
+@@ -2,9 +2,10 @@
+ use crate::pkgbuild::PkgbuildRepos;
+ use crate::{exec, print_error};
+ 
+-use std::io::Write;
++use std::io::{Read, Write};
+ 
+ use anyhow::{anyhow, ensure, Context, Result};
++use flate2::read::GzDecoder;
+ 
+ use raur::Raur;
+ use tr::tr;
+@@ -105,6 +106,11 @@
+     ensure!(success, "get {}: {}", url, resp.status());
+ 
+     let data = resp.bytes().await?;
++    let mut extracted = Vec::new();
++    let data = match GzDecoder::new(&data[..]).read_to_end(&mut extracted) {
++        Ok(_) => extracted.into(),
++        Err(_) => data,
++    };
+ 
+     let stdout = std::io::stdout();
+     let mut stdout = stdout.lock();
