@@ -16,8 +16,19 @@ optdepends=(
   'doas: privilege elevation'
 )
 makedepends=('go>=1.24')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Jguer/yay/archive/v${pkgver}.tar.gz")
-sha256sums=('f1a089862b56a0ecd04c28d3e10d9964dc54c8477b38ffcf8a820ece11e80580')
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/Jguer/yay/archive/v${pkgver}.tar.gz"
+  "yay-fix-gibberish-chars-when-listing-aur.patch"
+)
+sha256sums=(
+  'f1a089862b56a0ecd04c28d3e10d9964dc54c8477b38ffcf8a820ece11e80580'
+  'b8f1b79a462a8af3429cd42bd218cacf2e22bd7476a27bb853a5d7fcb6f2c8f0'
+)
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  patch -Np1 -i ../yay-fix-gibberish-chars-when-listing-aur.patch
+}
 
 build() {
   export GOPATH="$srcdir"/gopath
