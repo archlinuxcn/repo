@@ -7,8 +7,7 @@
 pkgbase=qt6-base-scrollfix
 _pkgbase=qt6-base
 pkgname=(qt6-base-scrollfix)
-_pkgver=6.10.0
-pkgver=${_pkgver/-/}
+pkgver=6.10.0
 pkgrel=4
 arch=(x86_64)
 url='https://www.qt.io'
@@ -92,7 +91,7 @@ provides=(
     qt6-base=${pkgver}
 )
 conflicts=(qt6-base)
-source=(git+https://code.qt.io/qt/$_pkgfn#tag=v$_pkgver
+source=(git+https://code.qt.io/qt/$_pkgfn#tag=v$pkgver
         qt6-base-cflags.patch
         qt6-base-nostrip.patch)
 sha256sums=('be60bf981a67824c2a27155d794eb30d10a6daa71db37695668a8a703acff929'
