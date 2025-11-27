@@ -5,9 +5,9 @@
 pkgbase=qt6-base-24h
 pkgname=(qt6-base-24h)
 
-_pkgver=6.10.0
+_pkgver=6.10.1
 pkgver=${_pkgver/-/}
-pkgrel=3.4
+pkgrel=1.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -99,15 +99,13 @@ sha256sums=(
       '8c1599167d7ed0b326f6bc19ea8a93be584ae8144570104be3584d0c4eae677f'
       'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      'be60bf981a67824c2a27155d794eb30d10a6daa71db37695668a8a703acff929'
+      'fa40e720d488d256704d6a7dfc23dd178eda5e4774dfdfdf1f63cdb52d53cf86'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-
-  git -C $_pkgfn cherry-pick -n 2974b3d740a705767a1b6ca0779eb0d989364769 # Fix window positioning
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
