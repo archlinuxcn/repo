@@ -3,8 +3,8 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=webkit2gtk-4.1-imgpaste
-pkgver=2.50.1
-pkgrel=2
+pkgver=2.50.2
+pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
 arch=(x86_64)
@@ -110,7 +110,7 @@ source=(
   EnlargeObjectSize.patch
   PasteBoardGLib.patch
 )
-sha256sums=('33e912ee6e3cdb4b9803715f50686af85a60af47f1cf72a6acc6a2db1bb3d9fe'
+sha256sums=('19ab61f2d44e62cd443673943d2d5341b84d08405f67a7c37b7a77ad3550f880'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
             'a6b7fd668a42dc27cd6ea0fec5eb3501ab8241e18b4bd6c8844ad6bd3207cf6e')
