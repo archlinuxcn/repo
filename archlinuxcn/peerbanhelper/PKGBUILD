@@ -1,0 +1,54 @@
+# Maintainer: DeepChirp <DeepChirp@outlook.com>
+
+_repo=PeerBanHelper
+pkgname=peerbanhelper
+pkgver=9.1.3
+pkgrel=1
+pkgdesc="A tool to auto ban peers on the Bittorrent network."
+arch=('any')
+url="https://github.com/PBH-BTN/PeerBanHelper"
+license=('GPL-3.0-only')
+depends=('java-runtime>=21' 'sh')
+makedepends=('git' 'java-environment>=21' 'nodejs' 'pnpm')
+source=("${_repo}::git+https://github.com/PBH-BTN/PeerBanHelper.git#tag=v${pkgver}" # If we use the tarball, the git commit information is missing, and a warning will appear in the version information of the WebUI.
+        "0001-fix-outdated-build.sh.patch"
+        "peerbanhelper.sh"
+        "${pkgname}.sysusers"
+        "${pkgname}.tmpfiles"
+        "${pkgname}.service")
+sha256sums=('SKIP'
+            'e679ef6ccef30d52e482253c7c257aaa888a39aa9a1b096c073fcd00d05f0d39'
+            '990597699fc80ea8a3cdc4b57a74c0d2295a4763a9a00cf43d7ed18ebdd3f9aa'
+            '394ee8f74dd630f375c34cf5160059078516033b0867ad43b1c43377b4104bde'
+            '3fb27c63d4d00ca6ac182784fa22bf60bfd856b42601ba1d404e78070c59e437'
+            '4a84cc592ef1b5e22077ed2b2324f8aff4adfa6d037c982b4bd27d0818db8391')
+
+prepare() {
+    cd "${_repo}"
+    patch -Np1 -i "${srcdir}/0001-fix-outdated-build.sh.patch"
+}
+
+build() {
+    cd "${_repo}"
+    bash ./build.sh
+}
+
+package() {
+  cd "${_repo}"
+
+  install -Dm755 "build/libs/${_repo}.jar" "${pkgdir}/usr/share/java/${pkgname}/${_repo}.jar"
+  install -Dm644 build/libraries/*.jar -t "${pkgdir}/usr/share/java/${pkgname}/libraries"
+
+  install -Dm755 "${srcdir}/peerbanhelper.sh" "${pkgdir}/usr/bin/peerbanhelper"
+  install -Dm 644 "${srcdir}"/${pkgname}.sysusers "${pkgdir}"/usr/lib/sysusers.d/${pkgname}.conf
+  install -Dm 644 "${srcdir}"/${pkgname}.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/${pkgname}.conf
+  install -Dm 644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+
+  install -Dm 644 "pkg/deb/etc/peerbanhelper/config.yml" "${pkgdir}/usr/share/peerbanhelper/defaults/config.yml"
+  install -Dm 644 "pkg/deb/etc/peerbanhelper/profile.yml" "${pkgdir}/usr/share/peerbanhelper/defaults/profile.yml"
+
+  # disable checking updates
+  # touch "${pkgdir}/usr/share/java/${pkgname}/disable-update-check.txt"
+
+  install -Dm 644 "pkg/deb/usr/share/doc/${pkgname}/copyright" "${pkgdir}/usr/share/doc/${pkgname}/copyright"
+}

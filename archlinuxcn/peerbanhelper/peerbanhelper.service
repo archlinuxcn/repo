@@ -1,0 +1,14 @@
+[Unit]
+Description=PeerBanHelper Service
+After=network.target
+
+[Service]
+User=peerbanhelper
+WorkingDirectory=/usr/share/java/peerbanhelper
+ExecStart=/usr/bin/peerbanhelper
+SuccessExitStatus=143
+AmbientCapabilities=CAP_NET_ADMIN
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
