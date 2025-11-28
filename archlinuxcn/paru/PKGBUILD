@@ -14,10 +14,8 @@ license=('GPL-3.0-or-later')
 makedepends=('cargo')
 depends=('git' 'pacman' 'libalpm.so>=14')
 optdepends=('bat: colored pkgbuild printing' 'devtools: build in chroot and downloading pkgbuilds')
-sha256sums=(
-  'eea4dbb524db765d5316f540f9ee670c0bf81aae4827b5417eebb4c9b5651727'
-  'abf008f28b1e23a65c5724458b4e37c52998e7251e607eff9bf158d2e32ee203'
-)
+sha256sums=('eea4dbb524db765d5316f540f9ee670c0bf81aae4827b5417eebb4c9b5651727'
+            'abf008f28b1e23a65c5724458b4e37c52998e7251e607eff9bf158d2e32ee203')
 
 prepare() {
   cd "$pkgname-$pkgver"
