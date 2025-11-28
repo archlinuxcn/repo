@@ -9,7 +9,7 @@ url='https://github.com/bitwarden/clients'
 license=('GPL-3.0-or-later')
 groups=('zen-browser-addons')
 pkgdesc='Bitwarden browser extension for Firefox'
-makedepends=('nodejs' 'npm' 'unzip' 'zip' 'git')
+makedepends=('nodejs-lts-krypton' 'npm' 'unzip' 'zip' 'git' corepack)
 source=("${pkgname}::git+https://github.com/bitwarden/clients.git#tag=browser-v${pkgver}")
 b2sums=('f0240ab20424bfc660757c499e79a768ce8d70790c17113e90b58f5c6774eec5ceb9f51c1e3c71ba5233955b26321c8b14b4ce0e3f024cee571e2b10395c9b95')
 
