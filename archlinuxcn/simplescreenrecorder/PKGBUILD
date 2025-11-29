@@ -15,17 +15,14 @@ depends=("qt5-base" "qt5-x11extras"
 optdepends=("lib32-simplescreenrecorder: OpenGL recording of 32-bit applications")
 makedepends=("cmake" "qt5-tools")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/MaartenBaert/ssr/archive/refs/tags/${pkgver}.tar.gz"
-	"ffmpeg5.patch::https://patch-diff.githubusercontent.com/raw/MaartenBaert/ssr/pull/934.patch"
-	"ffmpeg7.patch::https://patch-diff.githubusercontent.com/raw/MaartenBaert/ssr/pull/1031.patch")
+	"ffmpeg7.patch::https://patch-diff.githubusercontent.com/raw/MaartenBaert/ssr/pull/1036.patch")
 sha256sums=('69fccf8df6e7285d4df5033eed8748f4eae13b407488906dcf4810a277d557b8'
-            '4b01938615a34127236a21ee0ffa20bbb179c8bfcc5ecef872fc5a246727d2e1'
-            '62c293841807e41cf8700420332c8cb9aa4a79fb4bbe993a5c9abb156e9d0ca9')
+            'a1d4a2c1d5cfcf6a327cc98e47e6cd76dd2fd03b33ca9e7fcaba971570fae914')
 
 prepare() {
 	cd "ssr-${pkgver}/"
 	mkdir -p build
 
-	patch -p1 -i ../ffmpeg5.patch # Fix build with ffmpeg 5
 	patch -p1 -i ../ffmpeg7.patch # Fix build with ffmpeg 7
 }
 
