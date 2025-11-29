@@ -39,7 +39,7 @@ function package() {
 	depends+=(dconf  gdk-pixbuf2  glib2  graphene  gtk4  hicolor-icon-theme  libadwaita  libnotify  libsoup3  pango  python  python-beautifulsoup4  python-brotli
                   python-colorthief  python-cryptography  python-dateparser  python-emoji  python-gobject  python-keyring  python-lxml  python-magic  python-natsort
                   python-piexif  python-pillow  python-pypdf  python-pytz  python-rarfile  python-regex  python-requests  python-tzlocal  python-unidecode
-                  python-urllib3  webkitgtk-6.0)
+                  python-urllib3  webkitgtk-6.0 python-pyjwt)
 	while IFS= read -r line; do
 		file="$(echo "$line" | awk '{print $2}')"
 		if [[ -d ${file} ]]; then
