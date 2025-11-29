@@ -20,9 +20,7 @@ conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 
 pkgver() {
-	cd ssr
-	# Use the tag of the last commit
-	git describe --long | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
+	git -C ssr describe --long --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
