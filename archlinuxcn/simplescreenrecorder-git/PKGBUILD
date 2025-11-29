@@ -25,19 +25,16 @@ pkgver() {
 	git describe --long | sed -E 's/([^-]*-g)/r\1/;s/-/./g'
 }
 
-prepare() {
-	mkdir -p ssr/build
-}
-
 build() {
-	cd ssr/build
-	cmake -DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DWITH_QT5=TRUE ..
+	cmake -B build \
+		-S ssr \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_BUILD_TYPE=None \
+		-D WITH_QT5=TRUE
 
-	make
+	cmake --build build
 }
 
 package() {
-	DESTDIR=${pkgdir} make -C ssr/build install
+	DESTDIR="${pkgdir}" cmake --install build
 }
