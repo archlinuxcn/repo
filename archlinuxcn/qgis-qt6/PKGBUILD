@@ -80,8 +80,16 @@ optdepends=(
   'gpsbabel: GPS Tools plugin'
 )
 conflicts=($_basename)
-source=("https://qgis.org/downloads/$_basename-$pkgver.tar.bz2")
-sha256sums=('f1e4d52789b65cd5678a6e9b9c10bdf04df930b847a827bbf8f873db98019f2f')
+source=(
+    "https://qgis.org/downloads/$_basename-$pkgver.tar.bz2"
+    "qt-6.10.1.patch::https://patch-diff.githubusercontent.com/raw/qgis/QGIS/pull/64056.patch")
+sha256sums=('f1e4d52789b65cd5678a6e9b9c10bdf04df930b847a827bbf8f873db98019f2f'
+            '5a9cc191092c94f9904059a3ba481c59f70fb78ce5e568da4fb4134a891444e7')
+
+prepare() {
+    # https://github.com/qgis/QGIS/pull/64056
+    patch -p1 -i "$srcdir/qt-6.10.1/patch"
+}
 
 build() {
   cmake -S $_basename-$pkgver -B build -G Ninja \
