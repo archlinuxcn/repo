@@ -20,24 +20,20 @@ sha256sums=('69fccf8df6e7285d4df5033eed8748f4eae13b407488906dcf4810a277d557b8'
             'a1d4a2c1d5cfcf6a327cc98e47e6cd76dd2fd03b33ca9e7fcaba971570fae914')
 
 prepare() {
-	cd "ssr-${pkgver}/"
-	mkdir -p build
-
-	patch -p1 -i ../ffmpeg7.patch # Fix build with ffmpeg 7
+	patch -d "ssr-${pkgver}" -p1 -i ../ffmpeg7.patch # Fix build with ffmpeg 7
 }
 
 build() {
-	cd "ssr-${pkgver}/build/"
+	cmake -B build \
+		-S "ssr-${pkgver}" \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_POLICY_VERSION_MINIMUM=3.5 \
+		-D WITH_QT5=on
 
-	cmake -DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-		-DWITH_QT5=on ..
-
-	make
+	cmake --build build
 }
 
 package() {
-	cd "ssr-${pkgver}/build/"
-	make DESTDIR="${pkgdir}" install
+	DESTDIR="${pkgdir}" cmake --install build
 }
