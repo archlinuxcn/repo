@@ -5,8 +5,8 @@
 # Contributor: Mark Blakeney at bullet-systems dot net
 
 pkgname=python-pssh
-pkgver=2.3.5
-pkgrel=14
+pkgver=2.3.6
+pkgrel=13
 pkgdesc="Parallel versions of the openssh tools ssh, scp, rsync, nuke, slurp"
 arch=('any')
 url="https://github.com/lilydjwg/pssh"
@@ -15,7 +15,7 @@ depends=('openssh' 'python')
 makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel')
 changelog=$pkgname.changelog
 source=(https://github.com/lilydjwg/pssh/archive/refs/tags/v${pkgver}.tar.gz)
-sha256sums=('97277f9d08b512c6a1b6dc5eac9677f34038096bae24484452d326137ba0d080')
+sha256sums=('dfe1b898e483377213b44b8316a81fd6e1bbe427e1607e76be18366071c04c85')
 
 build() {
   cd "${srcdir}"/pssh-$pkgver
