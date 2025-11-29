@@ -8,12 +8,12 @@ pkgdesc="A simple but powerful recording tool for X11, OpenGL and V4L2. (Git ver
 arch=("x86_64")
 url="https://www.maartenbaert.be/${_pkgname}"
 license=("GPL-3.0-or-later")
-depends=("qt5-base" "qt5-x11extras"
+depends=("qt6-base"
 	"ffmpeg" "alsa-lib" "libpulse" "jack" "libgl" "glu" "v4l-utils"
 	"libx11" "libxext" "libxfixes" "libxi" "libxinerama"
 	"desktop-file-utils" "gtk-update-icon-cache" "pipewire")
 optdepends=("lib32-simplescreenrecorder-git: OpenGL recording of 32-bit applications")
-makedepends=("git" "cmake" "qt5-tools")
+makedepends=("git" "cmake" "qt6-tools")
 source=("git+https://github.com/MaartenBaert/ssr.git")
 sha256sums=('SKIP')
 conflicts=("${_pkgname}")
@@ -30,7 +30,7 @@ build() {
 		-S ssr \
 		-D CMAKE_INSTALL_PREFIX=/usr \
 		-D CMAKE_BUILD_TYPE=None \
-		-D WITH_QT5=TRUE
+		-D WITH_QT6=TRUE
 
 	cmake --build build
 }
