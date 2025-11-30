@@ -13,6 +13,8 @@ url='https://sing-box.sagernet.org/'
 license=('custom:GPL-3.0-or-later WITH name use or association addition')
 
 depends=('glibc')
+optdepends=('sing-geosite: sing-geosite database'
+            'sing-geoip: sing-geoip database')
 makedepends=('go')
 
 source=("${_pkgname}-${_pkgver}.tar.gz::https://github.com/SagerNet/sing-box/archive/v${_pkgver}.tar.gz")
