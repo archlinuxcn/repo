@@ -39,30 +39,20 @@ import (
 
 	// ip sources
 	_ "github.com/WeidiDeng/caddy-cloudflare-ip"
-	_ "github.com/digilolnet/caddy-bunny-ip"
-	_ "github.com/fvbommel/caddy-combine-ip-ranges"
-	_ "github.com/fvbommel/caddy-dns-ip-range"
 	_ "github.com/xcaddyplugins/caddy-trusted-cloudfront"
-
-	// match
-	_ "github.com/lanrat/caddy-dynamic-remoteip"
-	_ "github.com/tuzzmaniandevil/caddy-dynamic-clientip"
-
-	// WAF
-	_ "github.com/corazawaf/coraza-caddy"
-
-	// cache
-	_ "github.com/caddyserver/cache-handler"
-	_ "github.com/darkweak/storages/nuts/caddy"
+	_ "github.com/digilolnet/caddy-bunny-ip"
+	_ "github.com/fvbommel/caddy-dns-ip-range"
+	_ "github.com/fvbommel/caddy-combine-ip-ranges"
 
 	// dns.providers
 	_ "github.com/caddy-dns/cloudflare"
+	_ "github.com/caddy-dns/porkbun"
 
 	// encoders
 	_ "github.com/dunglas/caddy-cbrotli"
 
 	// storage
-	_ "github.com/silinternational/certmagic-storage-dynamodb/v3"
+	_ "github.com/sil-org/certmagic-storage-dynamodb/v3"
 
 	// geoip
 	_ "github.com/zhangjiayin/caddy-geoip2"
