@@ -19,14 +19,16 @@ sha512sums=('399ae976b601f5cc1fdcc96d40766a07d8c4e5c2e031d27ca5ff7b8d1368c5b3ff2
             '82e50adf3228132f787522c8562b8b85958ce3f33b76445c148e2517c937b62999d3b4594ee1adc9bbe473619840b181ea984a34772c9f65fd592847e621fd66')
 
 package() {
+	# Install license
+	install -vDm644 "${_pkgname}-${pkgver}-LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+	cd "${_pkgname}-linux-x86_64_v3_avx2/"
+
 	# Install binary
 	install -vDm755 "${_pkgname}-linux-x86_64_v3_avx2" "${pkgdir}/usr/bin/${_pkgname}"
 
 	# Install systemd service
 	install -vDm644 "${_pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
-
-	# Install license
-	install -vDm644 "${_pkgname}-${pkgver}-LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
 	# Create symbolic links for geoip.dat & geosite.dat
 	install -d "${pkgdir}/usr/share/${_pkgname}/"
