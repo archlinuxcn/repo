@@ -1,0 +1,45 @@
+pkgbase=ttf-adobe-source-han-serif-cjk-variables
+pkgname=(ttf-adobe-source-han-serif-{cn,hk,tw,jp,kr}-variables)
+pkgver=1
+pkgrel=1
+url="https://github.com/adobe-fonts/source-han-serif"
+license=('OFL-1.1')
+arch=("any")
+options=(!debug)
+source=("https://github.com/adobe-fonts/source-han-serif/releases/download/$pkgver/02_SourceHanSerif-VF.zip")
+sha256sums=('e5944ea7253878409232f1ffad464e9e93879c0207eaf2960bba327eef89ed81')
+
+package_ttf-adobe-source-han-serif-cn-variables() {
+    pkgdesc="Adobe Source Han Serif Subset TTF - Simplified Chinese TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSerifCN-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_ttf-adobe-source-han-serif-hk-variables() {
+    pkgdesc="Adobe Source Han Serif Subset TTF - Traditional Chinese (Hong Kong) TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSerifHK-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_ttf-adobe-source-han-serif-tw-variables() {
+    pkgdesc="Adobe Source Han Serif Subset TTF - Traditional Chinese (Taiwan) Chinese TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSerifTW-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_ttf-adobe-source-han-serif-jp-variables() {
+    pkgdesc="Adobe Source Han Serif Subset TTF - Japanese TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSerifJP-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_ttf-adobe-source-han-serif-kr-variables() {
+    pkgdesc="Adobe Source Han Serif Subset TTF - Korean TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSerifKR-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
