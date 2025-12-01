@@ -12,28 +12,33 @@ package_ttf-adobe-source-han-sans-cn-variables() {
     pkgdesc="Adobe Source Han Sans Subset TTF - Simplified Chinese TrueType fonts"
 
     install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansCN-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
 package_ttf-adobe-source-han-sans-hk-variables() {
     pkgdesc="Adobe Source Han Sans Subset TTF - Traditional Chinese (Hong Kong) TrueType fonts"
 
     install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansHK-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
 package_ttf-adobe-source-han-sans-tw-variables() {
     pkgdesc="Adobe Source Han Sans Subset TTF - Traditional Chinese (Taiwan) Chinese TrueType fonts"
 
     install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansTW-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
 package_ttf-adobe-source-han-sans-jp-variables() {
     pkgdesc="Adobe Source Han Sans Subset TTF - Japanese TrueType fonts"
 
     install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansJP-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
 package_ttf-adobe-source-han-sans-kr-variables() {
     pkgdesc="Adobe Source Han Sans Subset TTF - Korean TrueType fonts"
 
     install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansKR-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+    install -vDm644 "${srcdir}/LICENSE.txt" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
