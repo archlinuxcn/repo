@@ -1,0 +1,39 @@
+pkgbase=ttf-adobe-source-han-sans-cjk-variables
+pkgname=(ttf-adobe-source-han-sans-{cn,hk,tw,jp,kr}-variables)
+pkgver=2.005R
+pkgrel=1
+url="https://github.com/adobe-fonts/source-han-sans"
+license=('OFL-1.1')
+arch=("any")
+source=("https://github.com/adobe-fonts/source-han-sans/releases/download/$pkgver/02_SourceHanSans-VF.zip")
+sha256sums=('49c35b06645c8df7be3795be1b55363fa863b2fbd6f296340fdc61a37492ddc5')
+
+package_ttf-adobe-source-han-sans-cn-variables() {
+    pkgdesc="Adobe Source Han Sans Subset TTF - Simplified Chinese TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansCN-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+}
+
+package_ttf-adobe-source-han-sans-hk-variables() {
+    pkgdesc="Adobe Source Han Sans Subset TTF - Traditional Chinese (Hong Kong) TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansHK-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+}
+
+package_ttf-adobe-source-han-sans-tw-variables() {
+    pkgdesc="Adobe Source Han Sans Subset TTF - Traditional Chinese (Taiwan) Chinese TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansTW-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+}
+
+package_ttf-adobe-source-han-sans-jp-variables() {
+    pkgdesc="Adobe Source Han Sans Subset TTF - Japanese TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansJP-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+}
+
+package_ttf-adobe-source-han-sans-kr-variables() {
+    pkgdesc="Adobe Source Han Sans Subset TTF - Korean TrueType fonts"
+
+    install -Dm644 "$srcdir"/Variable/TTF/Subset/SourceHanSansKR-VF.ttf -t "$pkgdir"/usr/share/fonts/adobe-source-han
+}
