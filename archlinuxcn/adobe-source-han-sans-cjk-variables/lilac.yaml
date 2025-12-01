@@ -9,6 +9,6 @@ post_build_script: |
 update_on:
   - source: "github"
     github: "adobe-fonts/source-han-sans"
-    use_max_tag: true
-    include_regex: "R$"
+    #use_max_tag: true
+    include_regex: "^.*R+$"
 build_prefix: extra-x86_64
