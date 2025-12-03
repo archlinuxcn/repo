@@ -3,7 +3,7 @@
 
 _pkgname=openslide-python
 pkgname=python-openslide
-pkgver=1.4.2
+pkgver=1.4.3
 pkgrel=1
 pkgdesc='Python bindings to OpenSlide'
 arch=('x86_64')
@@ -23,7 +23,7 @@ depends=(
 source=(
   "${_pkgname}-${pkgver}.tar.gz::https://github.com/openslide/openslide-python/archive/v${pkgver}.tar.gz"
 )
-sha256sums=('9a15d4f0ace96a3486582741f4a6b7d7e555406f07097506abe75e900e0f3b63')
+sha256sums=('2b56987a4b46cfd69e4e7a033949a1c13863db0e578568b8cb488ec9ddf27cb2')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
