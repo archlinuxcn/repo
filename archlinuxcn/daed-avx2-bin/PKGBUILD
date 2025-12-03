@@ -2,7 +2,7 @@
 
 pkgname=daed-avx2-bin
 _pkgname=daed
-pkgver=1.11.0
+pkgver=1.15.0
 pkgrel=1
 pkgdesc="A modern dashboard for dae, bundled with dae-wing (backend API server) and dae (core) (with AVX2 CPU optimizations)"
 url="https://daeuniverse.github.io/daed"
@@ -15,7 +15,7 @@ replaces=('daed-bin-x64-v3')
 source=("${pkgname}-${pkgver}.zip::https://github.com/daeuniverse/${_pkgname}/releases/download/v${pkgver}/${_pkgname}-linux-x86_64_v3_avx2.zip"
        "${_pkgname}-${pkgver}-LICENSE::https://raw.githubusercontent.com/daeuniverse/daed/v${pkgver}/LICENSE")
 install="${pkgname}.install"
-sha512sums=('b9f477d6da1469e2e0c07e5832643cb6188abb5984089c856297ffc9b194feec1f990151143d502c670f2440141ad7fffa59ddafb2bd8380622511b849325877'
+sha512sums=('eae9273af271ddbe249a1820238697fb523ba9a76e8c14a58f0c219426aac5e27bc7b57c22114fdcfb0aa180dfbd7f94468596a7f39986a295d9efd91568d913'
             '82e50adf3228132f787522c8562b8b85958ce3f33b76445c148e2517c937b62999d3b4594ee1adc9bbe473619840b181ea984a34772c9f65fd592847e621fd66')
 
 package() {
