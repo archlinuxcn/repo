@@ -16,8 +16,8 @@ sha256sums=('f08add81eab7e4d6091195179bb39fa3f64dbb0326feaa022994566b702d1245'
             '1365536e1875043b969e2e18d7313ab7c6f7f9f63387f25506bb04362b44f206')
 conflicts=("$pkgname-git" "$pkgname-beta")
 depends=("glibc")
-optdepends=('sing-geosite: sing-geosite database'
-            'sing-geoip: sing-geoip database')
+optdepends=('sing-geosite-rule-set: Geosite rule sets'
+            'sing-geoip-rule-set: GeoIP rule sets')
 
 backup=("etc/$pkgname/config.json")
 
@@ -49,9 +49,9 @@ build(){
         ./cmd/sing-box
 
     install -d completions
-    go run ./cmd/sing-box completion bash   > completions/bash
-    go run ./cmd/sing-box completion fish   > completions/fish
-    go run ./cmd/sing-box completion zsh    > completions/zsh
+    go run ./cmd/sing-box completion bash > completions/bash
+    go run ./cmd/sing-box completion fish > completions/fish
+    go run ./cmd/sing-box completion zsh  > completions/zsh
 }
 
 package() {
