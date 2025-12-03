@@ -7,8 +7,8 @@
 
 pkgname=chirp-next
 pkgver=20251128
-pkgrel=2
-#epoch=1
+pkgrel=3
+epoch=1
 pkgdesc="GUI tool for programming ham radios"
 arch=('any')
 url="https://chirpmyradio.com/projects/chirp/wiki/Home"
