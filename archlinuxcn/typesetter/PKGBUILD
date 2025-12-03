@@ -6,11 +6,11 @@ url="https://codeberg.org/haydn/typesetter"
 license=("GPL-3.0-or-later")
 arch=("x86_64")
 pkgver=0.6.0
-pkgrel=1
+pkgrel=2
 makedepends=("rust" "cargo" "git" "blueprint-compiler" "meson" "libvirt" "libvirt-glib" "blueprint-compiler")
 depends=(libadwaita gtk4 hicolor-icon-theme dconf gcc-libs glib2 glibc gtksourceview5 libspelling pango gdk-pixbuf2 openssl cairo)
 source=("source::git+https://codeberg.org/haydn/typesetter.git#tag=v${pkgver}")
-sha256sums=('86c38c7e0c2e1a8f17453a9143266179bcee0d161683cc4799067d5e99069512')
+sha256sums=('6a888edafe47803686f23018f3f333cfa212777ae75080f50c021dc82b13e200')
 options=()
 
 function prepare() {
