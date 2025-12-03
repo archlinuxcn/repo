@@ -1,6 +1,6 @@
 # Maintainer: Yuzu Vita <g311571057 at gmail dot com>
 pkgname=ktlint-compose-rules
-pkgver=0.4.28
+pkgver=0.5.0
 pkgrel=1
 pkgdesc="Lint rules for ktlint/detekt aimed to contribute to a healthier usage of Compose. Actively maintained and evolved fork of the Twitter Compose rules"
 arch=(any)
@@ -15,7 +15,7 @@ optdepends=(
     'intellij-idea-ultimate-edition'
 )
 source=("${pkgname}-${pkgver}.jar::${url}/releases/download/v${pkgver}/ktlint-compose-${pkgver}-all.jar")
-sha256sums=('a985a7f54344acf05066ded20437ef3fd4d8c567f27157278dbc9aa13754bb35')
+sha256sums=('354f71400e30a0952c5b9629f64dc152aee92e96c2b9933404ddd4c918c38a62')
 package() {
     install -Dm644 ${pkgname}-${pkgver}.jar -t "${pkgdir}/usr/share/${pkgname}/"
 }
