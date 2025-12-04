@@ -4,7 +4,7 @@
 pkgname=feishin-bin
 pkgdesc='A player for your self-hosted music server'
 pkgver=0.22.0
-pkgrel=2
+pkgrel=3
 arch=('x86_64' 'aarch64')
 url='https://github.com/jeffvli/feishin'
 license=('GPL3')
@@ -25,7 +25,7 @@ package() {
   # extract files to target
   tar -xf "${pkgname}-${pkgver}-${CARCH}.tar.xz" -C "$pkgdir/usr/share/feishin" --strip-components=1
   # install icon
-  install -Dm644 "$pkgdir/usr/share/feishin/resources/assets/icons/icon.png" "$pkgdir/usr/share/pixmaps/${pkgname%-bin}.png"
+  install -Dm644 "$pkgdir/usr/share/feishin/resources/assets/icons/icon.png" "$pkgdir/usr/share/pixmaps/org.jeffvli.feishin.png"
   # symlink executable to "/usr/bin/feishin"
   ln -s /usr/share/feishin/feishin "${pkgdir}/usr/bin/feishin"
   # install desktop entry
