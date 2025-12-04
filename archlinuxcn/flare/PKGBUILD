@@ -2,7 +2,7 @@
 # Contributor: Julian <juliannfairfax@protonmail.com>
 
 pkgname=flare
-pkgver=0.17.4
+pkgver=0.17.5
 _pkgver=${pkgver/beta/-beta/}
 pkgrel=1
 epoch=1
@@ -14,7 +14,7 @@ makedepends=("blueprint-compiler" "cargo" "meson")
 depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling")
 optdepends=("feedbackd: for vibrating notifications")
 source=("${url}/-/archive/${_pkgver}/${pkgname}-${_pkgver}.tar.gz")
-sha256sums=('46be3c7162ad458cc509487a74e62655d3e2d065ad6f40e23b8e95406b759f10')
+sha256sums=('ebdd2a66dd55fec72dfd24345c4f58aea771986cf0acd80cacbcb03cdd23b767')
 
 build() {
 	arch-meson "${pkgname}-${_pkgver}" build
