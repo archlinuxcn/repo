@@ -724,8 +724,9 @@ package_vulkan-mesa-implicit-layers() {
     libxcb
     wayland
   )
-  conflicts=(vulkan-mesa-device-select)
-  replaces=(vulkan-mesa-device-select)
+  # Avoid adding the conflict to make lilac happy
+  # conflicts=(vulkan-mesa-device-select)
+  # replaces=(vulkan-mesa-device-select)
 
   mv vkdevice/* "$pkgdir"
 
