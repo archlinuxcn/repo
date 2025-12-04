@@ -1,21 +1,21 @@
 # Maintainer: lanthora <lanthora@outlook.com>
 
 pkgname=candy
-pkgver=6.1.3
+pkgver=6.1.4
 pkgrel=1
-pkgdesc="A simple networking tool"
+pkgdesc="A tool for creating and managing a virtual network implemented in C++"
 url="https://github.com/lanthora/candy"
 license=('MIT')
 arch=('x86_64' 'aarch64' 'armv7h' 'riscv64' 'loong64')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/lanthora/candy/archive/refs/tags/v$pkgver.tar.gz" )
-sha256sums=('4745b8fbf14e531f57528885132cb8a7f43627a642b59f6f0295b958b52c5b37')
+sha256sums=('88b30fd9f0cdc57c7ffa0553cb35aaf9b574256242bd4670af2592724d0ec05f')
 makedepends=('cmake' 'ninja' 'pkgconf' 'gcc' 'git')
 depends=('fmt' 'glibc' 'gcc-libs' 'openssl' 'spdlog' 'poco')
 backup=('etc/candy.cfg')
 
 build() {
         cd "$pkgname-$pkgver"
-        cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+        cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
         cmake --build build
 }
 
