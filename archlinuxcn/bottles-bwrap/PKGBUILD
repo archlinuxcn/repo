@@ -61,7 +61,7 @@ makedepends=(
 )
 source=(
 	"Bottles::git+https://github.com/bottlesdevs/Bottles.git#tag=${pkgver}"
-	disable-flatpak-check.patch
+	remove-flatpak-check.patch
 	portable-config
 	start.sh
 )
@@ -71,7 +71,7 @@ sha256sums=('0f9d4f0e1bea536156abe7e0c49e537cd4289e119f955ab78415efddc369f0cb'
             'e8151fe783b4c202c99e206535f6f2b3e025b070d7237cb6f8bbb1f23ad0eb94')
 
 function prepare() {
-	patch --forward --directory="${srcdir}/${_pkgname}" --strip=1 --input="${srcdir}/disable-flatpak-check.patch"
+	patch --forward --directory="${srcdir}/${_pkgname}" --strip=1 --input="${srcdir}/remove-flatpak-checks.patch"
 }
 
 build() {

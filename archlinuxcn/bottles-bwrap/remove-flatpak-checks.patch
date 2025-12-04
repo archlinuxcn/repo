@@ -1,7 +1,7 @@
-diff -Naur Bottles-52.0-orig/bottles/frontend/meson.build Bottles-52.0/bottles/frontend/meson.build
---- Bottles-52.0-orig/bottles/frontend/meson.build	2025-11-03 02:20:26
-+++ Bottles-52.0/bottles/frontend/meson.build	2025-11-03 02:14:48
-@@ -23,11 +23,6 @@
+diff -Naur Bottles-60.0-orig/bottles/frontend/meson.build Bottles-60.0/bottles/frontend/meson.build
+--- Bottles-60.0-orig/bottles/frontend/meson.build	2025-11-22 00:25:12.000000000 +0100
++++ Bottles-60.0/bottles/frontend/meson.build	2025-11-24 09:25:16.842253533 +0100
+@@ -23,12 +23,6 @@
      configuration: conf
  )
 
@@ -10,25 +10,27 @@ diff -Naur Bottles-52.0-orig/bottles/frontend/meson.build Bottles-52.0/bottles/f
 -if not fs.is_file('/' + '.flatpak-info')
 -  error('file does not exist')
 -endif
-
+-
  bottles_sources = [
    '__init__.py',
-diff -Naur Bottles-52.0-orig/bottles/frontend/views/bottle_details.py Bottles-52.0/bottles/frontend/views/bottle_details.py
---- Bottles-52.0-orig/bottles/frontend/views/bottle_details.py	2025-11-03 02:20:26
-+++ Bottles-52.0/bottles/frontend/views/bottle_details.py	2025-11-03 02:16:03
-@@ -21,7 +21,7 @@
+   'main.py',
+diff -Naur Bottles-60.0-orig/bottles/frontend/views/bottle_details.py Bottles-60.0/bottles/frontend/views/bottle_details.py
+--- Bottles-60.0-orig/bottles/frontend/views/bottle_details.py	2025-11-22 00:25:12.000000000 +0100
++++ Bottles-60.0/bottles/frontend/views/bottle_details.py	2025-11-24 10:08:41.958017636 +0100
+@@ -22,7 +22,7 @@
  from gettext import gettext as _
- from typing import List, Optional
+ from typing import Dict, List, Optional, Tuple
 
--from gi.repository import Gtk, Gio, Adw, Gdk, GLib, Xdp
-+from gi.repository import Gtk, Gio, Adw, Gdk, GLib
+-from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Xdp
++from gi.repository import Adw, Gdk, Gio, GLib, Gtk
 
  from bottles.backend.managers.backup import BackupManager
  from bottles.backend.models.config import BottleConfig
-@@ -436,20 +436,19 @@
+@@ -819,21 +819,20 @@
+             dialog.set_modal(True)
              dialog.connect("response", execute)
              dialog.show()
-
+-
 -        if Xdp.Portal.running_under_sandbox():
 -            if self.window.settings.get_boolean("show-sandbox-warning"):
 -                dialog = Adw.MessageDialog.new(
@@ -43,6 +45,7 @@ diff -Naur Bottles-52.0-orig/bottles/frontend/views/bottle_details.py Bottles-52
 -                dialog.present()
 -            else:
 -                show_chooser()
++
 +        if self.window.settings.get_boolean("show-sandbox-warning"):
 +            dialog = Adw.MessageDialog.new(
 +                self.window,
@@ -59,19 +62,19 @@ diff -Naur Bottles-52.0-orig/bottles/frontend/views/bottle_details.py Bottles-52
 
      def __backup(self, widget, backup_type):
          """
-diff -Naur Bottles-52.0-orig/bottles/frontend/views/bottle_preferences.py Bottles-52.0/bottles/frontend/views/bottle_preferences.py
---- Bottles-52.0-orig/bottles/frontend/views/bottle_preferences.py	2025-11-03 02:20:26
-+++ Bottles-52.0/bottles/frontend/views/bottle_preferences.py	2025-11-03 02:16:30
+diff -Naur Bottles-60.0-orig/bottles/frontend/views/bottle_preferences.py Bottles-60.0/bottles/frontend/views/bottle_preferences.py
+--- Bottles-60.0-orig/bottles/frontend/views/bottle_preferences.py	2025-11-22 00:25:12.000000000 +0100
++++ Bottles-60.0/bottles/frontend/views/bottle_preferences.py	2025-11-24 09:30:48.061762357 +0100
 @@ -20,7 +20,7 @@
  import re
  from gettext import gettext as _
 
--from gi.repository import Gtk, Adw, Xdp
-+from gi.repository import Gtk, Adw
+-from gi.repository import Adw, Gdk, Gtk, Xdp
++from gi.repository import Adw, Gdk, Gtk
 
  from bottles.backend.globals import (
      gamemode_available,
-@@ -139,7 +139,7 @@
+@@ -148,7 +148,7 @@
          self.queue = details.queue
          self.details = details
 
@@ -80,40 +83,39 @@ diff -Naur Bottles-52.0-orig/bottles/frontend/views/bottle_preferences.py Bottle
              return
 
          _not_available = _("This feature is unavailable on your system.")
-diff -Naur Bottles-52.0-orig/bottles/frontend/views/list.py Bottles-52.0/bottles/frontend/views/list.py
---- Bottles-52.0-orig/bottles/frontend/views/list.py	2025-11-03 02:20:26
-+++ Bottles-52.0/bottles/frontend/views/list.py	2025-11-03 02:16:57
+diff -Naur Bottles-60.0-orig/bottles/frontend/views/list.py Bottles-60.0/bottles/frontend/views/list.py
+--- Bottles-60.0-orig/bottles/frontend/views/list.py	2025-11-22 00:25:12.000000000 +0100
++++ Bottles-60.0/bottles/frontend/views/list.py	2025-11-24 09:32:43.827610001 +0100
 @@ -18,7 +18,7 @@
  from datetime import datetime
  from gettext import gettext as _
 
--from gi.repository import Gtk, GLib, Adw, Xdp
-+from gi.repository import Gtk, GLib, Adw
+-from gi.repository import Adw, GLib, Gtk, Xdp
++from gi.repository import Adw, GLib, Gtk
 
  from bottles.backend.models.config import BottleConfig
  from bottles.backend.models.result import Result
-@@ -82,9 +82,6 @@
+@@ -82,8 +82,6 @@
 
      def run_executable(self, *_args):
          """Display file dialog for executable"""
 -        if not Xdp.Portal.running_under_sandbox():
 -            return
--
+
          def set_path(_dialog, response):
              if response != Gtk.ResponseType.ACCEPT:
-                 return
-diff -Naur Bottles-52.0-orig/bottles/frontend/views/new_bottle_dialog.py Bottles-52.0/bottles/frontend/views/new_bottle_dialog.py
---- Bottles-52.0-orig/bottles/frontend/views/new_bottle_dialog.py	2025-11-03 02:20:26
-+++ Bottles-52.0/bottles/frontend/views/new_bottle_dialog.py	2025-11-03 02:17:29
-@@ -21,7 +21,7 @@
+diff -Naur Bottles-60.0-orig/bottles/frontend/views/new_bottle_dialog.py Bottles-60.0/bottles/frontend/views/new_bottle_dialog.py
+--- Bottles-60.0-orig/bottles/frontend/views/new_bottle_dialog.py	2025-11-22 00:25:12.000000000 +0100
++++ Bottles-60.0/bottles/frontend/views/new_bottle_dialog.py	2025-11-24 09:33:45.958656585 +0100
+@@ -20,7 +20,7 @@
+ from threading import Event
  from typing import Any, Optional
 
- from bottles.backend.state import Task, TaskManager
--from gi.repository import Gtk, Adw, Pango, Gio, Xdp, GObject, GLib
-+from gi.repository import Gtk, Adw, Pango, Gio, GObject, GLib
+-from gi.repository import Adw, Gio, GLib, GObject, Gtk, Pango, Xdp
++from gi.repository import Adw, Gio, GLib, GObject, Gtk, Pango
+ from pathvalidate import sanitize_filename
 
  from bottles.backend.models.config import BottleConfig
- from bottles.backend.utils.threading import RunAsync
 @@ -86,7 +86,7 @@
          super().__init__(**kwargs)
          # common variables and references
@@ -123,23 +125,22 @@ diff -Naur Bottles-52.0-orig/bottles/frontend/views/new_bottle_dialog.py Bottles
              return
 
          self.app = self.window.get_application()
-diff -Naur Bottles-52.0-orig/bottles/frontend/windows/window.py Bottles-52.0/bottles/frontend/windows/window.py
---- Bottles-52.0-orig/bottles/frontend/windows/window.py	2025-11-03 02:20:26
-+++ Bottles-52.0/bottles/frontend/windows/window.py	2025-11-03 02:18:08
-@@ -21,7 +21,7 @@
+diff -Naur Bottles-60.0-orig/bottles/frontend/windows/window.py Bottles-60.0/bottles/frontend/windows/window.py
+--- Bottles-60.0-orig/bottles/frontend/windows/window.py	2025-11-22 00:25:12.000000000 +0100
++++ Bottles-60.0/bottles/frontend/windows/window.py	2025-11-24 09:35:00.706007482 +0100
+@@ -22,7 +22,7 @@
  from gettext import gettext as _
  from typing import Optional
 
--from gi.repository import Gtk, GLib, Gio, Adw, GObject, Gdk, Xdp
-+from gi.repository import Gtk, GLib, Gio, Adw, GObject, Gdk
+-from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk, Xdp
++from gi.repository import Adw, Gdk, Gio, GLib, GObject, Gtk
 
  from bottles.backend.globals import Paths
  from bottles.backend.health import HealthChecker
-@@ -110,35 +110,6 @@
-         if self.settings.get_boolean("dark-theme"):
+@@ -114,35 +114,6 @@
              manager = Adw.StyleManager.get_default()
              manager.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
--
+
 -        # Be VERY explicit that non-sandboxed environments are unsupported
 -        if not Xdp.Portal.running_under_sandbox():
 -
@@ -168,6 +169,7 @@ diff -Naur Bottles-52.0-orig/bottles/frontend/windows/window.py Bottles-52.0/bot
 -            )
 -            logging.error("https://usebottles.com/download/")
 -            return
-
+-
          # Loading view
          self.page_loading = LoadingView()
+ 
