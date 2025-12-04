@@ -6,8 +6,8 @@
 
 pkgname='usd'
 pkgbase=usd
-pkgver=25.08
-pkgrel=9
+pkgver=25.11
+pkgrel=1
 arch=(aarch64 x86_64)
 url='https://openusd.org'
 pkgdesc='3D VFX pipeline interchange file format'
@@ -38,32 +38,20 @@ depends=(alembic # libAlembic.so
 makedepends=(cmake help2man boost git fmt)
 source=("git+https://github.com/PixarAnimationStudios/OpenUSD.git#tag=v${pkgver//.a/a}"
         https://openusd.org/images/USDLogoUnsized.svg
-        usd-embree4.patch
         usd-find-dependency-OpenGL.patch
         "org.openusd.usdview.desktop")
-sha256sums=('c6273f60af680800f9d2eaa097bed92310bfa09d44727c8aee37798912dd633b'
+sha256sums=('ef6ccd8fdac03e5fa0b43971e41b9744fc34dd70344530e16cf2228ac30d3fef'
             '529dea685836be7de95800d9688db4e1df6a8a3f341130069abdd2b5b1572128'
-            '07f95f87fa9a6e3ab480d22208f956bb0ad11ef983ad0b11cea6384911e96486'
             '1cf9b9e4d902cecce278457af3092e8a180438388044939d3ab89e3a4520efc5'
-            '6b880a1dc44ee3286a19b3347f65be5337192d00bccd55fa549598db90a887da'
-            '38cd4f6065560d039b76819f4991dc2a37f3e8a9bedc3ed2dca70862231cd79f')
+            '6b880a1dc44ee3286a19b3347f65be5337192d00bccd55fa549598db90a887da')
 replaces=('usd-extras')
 provides=('usd-extras')
 
-source+=(0001-Use-Valgrind-macro-to-mark-memory-defined.patch)
-makedepends+=(valgrind)
 prepare() {
-  (cd OpenUSD
-  patch -Np1 -i "$srcdir/0001-Use-Valgrind-macro-to-mark-memory-defined.patch")
-  _prepare
-}
-
-_prepare() {
   cd OpenUSD
 
   _pyver=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
 
-  patch -Np1 -i "$srcdir/usd-embree4.patch"
   patch -Np1 -i "$srcdir/usd-find-dependency-OpenGL.patch"
 
   # Change directories to standard
