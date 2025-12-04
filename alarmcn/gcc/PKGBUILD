@@ -74,7 +74,7 @@ prepare() {
 
   # ALARM: Specify build host types, triplet patch
   [[ $CARCH == "armv7h" ]] && CONFIGFLAG="--host=armv7l-unknown-linux-gnueabihf --build=armv7l-unknown-linux-gnueabihf --with-arch=armv7-a --with-float=hard --with-fpu=neon"
-  [[ $CARCH == "aarch64" ]] && CONFIGFLAG="--host=aarch64-unknown-linux-gnu --build=aarch64-unknown-linux-gnu --with-arch=armv8-a --enable-fix-cortex-a53-835769 --enable-fix-cortex-a53-843419"
+  [[ $CARCH == "aarch64" ]] && CONFIGFLAG="--host=aarch64-unknown-linux-gnu --build=aarch64-unknown-linux-gnu --with-arch=armv8-a"
 
   mkdir -p "$srcdir/gcc-build"
   mkdir -p "$srcdir/libgccjit-build"
