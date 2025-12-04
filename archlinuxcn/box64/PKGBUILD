@@ -3,7 +3,7 @@
 
 pkgname=box64
 pkgver=0.3.8
-pkgrel=2
+pkgrel=3
 pkgdesc='Linux Userspace x86_64 Emulator with a twist'
 arch=('x86_64' 'aarch64' 'riscv64' 'powerpc64le')
 url='https://github.com/ptitSeb/box64'
@@ -35,21 +35,29 @@ build() {
         fi
         cmake -B build -S . \
               $exargs \
+              -DBOX32=ON \
+              -DBOX32_BINFMT=ON \
               -DARM_DYNAREC=ON \
               -DCMAKE_BUILD_TYPE=RelWithDebInfo \
               -DCMAKE_INSTALL_PREFIX=/usr
     elif [[ $CARCH == "x86_64" ]]; then
         cmake -B build -S . \
+              -DBOX32=ON \
+              -DBOX32_BINFMT=ON \
               -DLD80BITS=1 -DNOALIGN=1 \
               -DCMAKE_BUILD_TYPE=RelWithDebInfo \
               -DCMAKE_INSTALL_PREFIX=/usr
     elif [[ $CARCH == "powerpc64le" ]]; then
         cmake -B build -S . \
+              -DBOX32=ON \
+              -DBOX32_BINFMT=ON \
               -DPPC64LE=1 \
               -DCMAKE_BUILD_TYPE=RelWithDebInfo \
               -DCMAKE_INSTALL_PREFIX=/usr
     elif [[ $CARCH == "riscv64" ]]; then
         cmake -B build -S . \
+              -DBOX32=ON \
+              -DBOX32_BINFMT=ON \
               -DRV64=1 \
               -DCMAKE_BUILD_TYPE=RelWithDebInfo \
               -DCMAKE_INSTALL_PREFIX=/usr
