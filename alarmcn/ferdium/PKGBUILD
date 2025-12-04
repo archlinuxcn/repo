@@ -3,16 +3,16 @@
 
 _pkgname='ferdium'
 pkgname="ferdium"
-_electron='electron35'
-_electronpackage='electron35'
-pkgver=7.1.0
+_electron='electron37'
+_electronpackage='electron37'
+pkgver=7.1.1
 pkgrel=1
 pkgdesc='A messaging browser that allows you to combine your favorite messaging services into one application (git build from latest release).'
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 url="https://ferdium.org/"
 license=('Apache')
 depends=('nss' 'atk' 'at-spi2-atk' 'libcups' 'libdrm' 'gdk-pixbuf2' 'gtk3' 'alsa-lib' 'c-ares' 'ffmpeg' 'libevent' 'libxkbfile' 'libxslt' 'minizip' 're2' 'snappy' "$_electronpackage")
-apptag='v7.1.0'
+apptag='v7.1.1'
 makedepends=('nvm' 'git' 'python' 'libxcrypt-compat' 'asar')
 options=(!strip !debug)
 provides=(
@@ -30,7 +30,7 @@ conflicts=(
 source=(
 	"$pkgname::git+https://github.com/ferdium/ferdium-app#tag=${apptag}"
 )
-sha512sums=('020b3f887066007b48788171a84a46cb070a59c9c170a6eecef58de67482b4d02382b760d187dc65ef352274df50fe98faa9fdfdc0d6697f790b84b34e13b41b')
+sha512sums=('fd786a949183a0f1f665bb021ff857a69b4e0ce9de6e044e0918ba56f579e877f45cef6ce1d4680d282baab61f7eaa852b725bf145d572e8ac3a181f9937e43f')
 
 _sourcedirectory="$pkgname"
 
