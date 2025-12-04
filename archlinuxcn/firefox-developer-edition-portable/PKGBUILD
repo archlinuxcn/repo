@@ -7,7 +7,7 @@ epoch=1
 pkgdesc="Firefox sandboxed by portable (en_US locale)"
 arch=('x86_64')
 url="https://github.com/Kraftland/portable"
-license=('GPL-3.0-or-later')
+license=('MPL-2.0')
 groups=()
 provides=(firefox-developer-edition)
 options=(!debug !strip)
@@ -21,43 +21,30 @@ checkdepends=()
 
 source=(
 	portable-config
-	firefox.sh
 	firefox.desktop
 )
 
 
-md5sums=('1ce4e3c8db9bb3f86bbb0aaf5fd583bf'
-         '7b9045a876cb70cfce509dcef69d6561'
-         '7c0b0bae889e55058c366fc47d9edd25')
-
-function prepare() {
-	pacman -Ql firefox-developer-edition >file.list
-}
+md5sums=('SKIP'
+         'SKIP')
 
 function package() {
 	depends=("portable")
 	depends+=(alsa-lib  at-spi2-core  bash  cairo  dbus  ffmpeg4.4  fontconfig  freetype2  gcc-libs  gdk-pixbuf2  glib2  glibc  gtk3  hicolor-icon-theme  libpulse
                   libx11  libxcb  libxcomposite  libxdamage  libxext  libxfixes  libxrandr  libxss  libxt  mime-types  nspr  nss  pango  ttf-font)
-	while IFS= read -r line; do
-		file="$(echo "$line" | awk '{print $2}')"
-		if [[ -d ${file} ]]; then
-			echo "Omitting Directory"
-		else
-			if [[ -L "${file}" ]]; then
-				mkdir -p "$(dirname "${pkgdir}/${file}")"
-				ln -vsf "$(readlink -f "${file}")" "${pkgdir}/${file}"
-			else
-				install -vDm755 "${file}" "${pkgdir}/${file}"
-			fi
-		fi
-	done < file.list
-	rm -f "${pkgdir}/usr/share/applications"/*
-	rm -f "${pkgdir}/usr/bin"/*
-	install -Dm644 portable-config \
-		"${pkgdir}/usr/lib/portable/info/org.mozilla.firefox_developer_edition/config"
-	install -Dm755 "firefox.sh" \
-		"${pkgdir}/usr/bin/firefox-developer-edition-portable"
-	install -Dm644 "firefox.desktop" "${pkgdir}/usr/share/applications/org.mozilla.firefox_developer_edition.desktop"
+
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy firefox-developer-edition \
+		--hash true \
+		--config "${srcdir}/portable-config" \
+		--desktop-file "${srcdir}/firefox.desktop" \
+		--dbus-activation
+
 	echo '''[Desktop Entry]
 Type=Application
 Name=Firefox Developer Edition
