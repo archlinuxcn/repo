@@ -1,31 +1,31 @@
-From a80b94f8fb6a1b2fb64b78f55de17cfdb00b67ca Mon Sep 17 00:00:00 2001
+From ea93a5eaa6bc36557a08e87ea64f117dc82a26b6 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 26 Oct 2025 20:11:49 -0400
-Subject: [PATCH 16/17] Fix to use new ThreadSafeContext API
+Subject: [PATCH 15/16] Fix to use new ThreadSafeContext API
 
 Turn `add_output` into a manual co-routine
 so that we can get out of the caller scope mid-call
 to release the threadsafecontext lock early.
 ---
- src/aotcompile.cpp | 885 +++++++++++++++++++++++----------------------
+ src/aotcompile.cpp | 893 +++++++++++++++++++++++----------------------
  src/codegen.cpp    |   4 +-
  src/disasm.cpp     |  57 +--
  src/jitlayers.cpp  | 136 +++----
  src/jitlayers.h    |  51 ++-
- 5 files changed, 597 insertions(+), 536 deletions(-)
+ 5 files changed, 601 insertions(+), 540 deletions(-)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 5c7f7bc20e..c34037852f 100644
+index 6e86b7d245..af41c48ea5 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
-@@ -794,234 +794,235 @@ void *jl_emit_native_impl(jl_array_t *codeinfos, LLVMOrcThreadSafeModuleRef llvm
+@@ -822,234 +822,235 @@ void *jl_emit_native_impl(jl_array_t *codeinfos, LLVMOrcThreadSafeModuleRef llvm
          return std::make_pair(M.getDataLayout(), Triple(M.getTargetTriple()));
      });
      egal_set method_roots;
 -    jl_codegen_params_t params(ctxt, std::move(target_info.first), std::move(target_info.second));
 -    if (!llvmmod)
 -        params.getContext().setDiscardValueNames(true);
--    params.params = cgparams;
+-    params.params = &target_cgparams;
 -    assert(params.imaging_mode); // `_imaging_mode` controls if broken features like code-coverage are disabled
 -    params.external_linkage = external_linkage;
 -    params.temporary_roots = jl_alloc_array_1d(jl_array_any_type, 0);
@@ -61,7 +61,7 @@ index 5c7f7bc20e..c34037852f 100644
 +    return withCodegenParamsDo(ctxt, std::move(target_info.first), std::move(target_info.second), [&] (jl_codegen_params_t &params) {
 +        if (!llvmmod)
 +            params.getContext().setDiscardValueNames(true);
-+        params.params = cgparams;
++        params.params = &target_cgparams;
 +        assert(params.imaging_mode); // `_imaging_mode` controls if broken features like code-coverage are disabled
 +        params.external_linkage = external_linkage;
 +        params.temporary_roots = jl_alloc_array_1d(jl_array_any_type, 0);
@@ -463,7 +463,7 @@ index 5c7f7bc20e..c34037852f 100644
  }
  
  static object::Archive::Kind getDefaultForHost(Triple &triple)
-@@ -1851,63 +1852,142 @@ static inline void schedule_uv_thread(uv_thread_t *worker, CB &&cb)
+@@ -1883,63 +1884,142 @@ static inline void schedule_uv_thread(uv_thread_t *worker, CB &&cb)
  
  // Entrypoint to optionally-multithreaded image compilation. This handles global coordination of the threading,
  // as well as partitioning, serialization, and deserialization.
@@ -655,7 +655,7 @@ index 5c7f7bc20e..c34037852f 100644
  
          if (!report_timings) {
              timer_group.clear();
-@@ -1916,97 +1996,37 @@ static SmallVector<AOTOutputs, 16> add_output(Module &M, TargetMachine &TM, Stri
+@@ -1948,97 +2028,37 @@ static SmallVector<AOTOutputs, 16> add_output(Module &M, TargetMachine &TM, Stri
              for (auto &t : timers) {
                  t.print(dbgs(), true);
              }
@@ -780,7 +780,7 @@ index 5c7f7bc20e..c34037852f 100644
  
  extern int jl_is_timing_passes;
  static unsigned compute_image_thread_count(const ModuleInfo &info) {
-@@ -2144,8 +2164,8 @@ void jl_dump_native_impl(void *native_code,
+@@ -2176,8 +2196,8 @@ void jl_dump_native_impl(void *native_code,
          OverrideStackAlignment = M.getOverrideStackAlignment();
      });
  
@@ -791,7 +791,7 @@ index 5c7f7bc20e..c34037852f 100644
      };
  
      SmallVector<AOTOutputs, 16> sysimg_outputs;
-@@ -2214,7 +2234,7 @@ void jl_dump_native_impl(void *native_code,
+@@ -2246,7 +2266,7 @@ void jl_dump_native_impl(void *native_code,
          // Note that we don't set z to null, this allows the check in WRITE_ARCHIVE
          // to function as expected
          // no need to free the module/context, destructor handles that
@@ -800,7 +800,7 @@ index 5c7f7bc20e..c34037852f 100644
      }
  
      const bool imaging_mode = true;
-@@ -2313,19 +2333,13 @@ void jl_dump_native_impl(void *native_code,
+@@ -2345,19 +2365,13 @@ void jl_dump_native_impl(void *native_code,
      });
  
      {
@@ -826,7 +826,7 @@ index 5c7f7bc20e..c34037852f 100644
      }
  
      if (params->emit_metadata) {
-@@ -2428,7 +2442,7 @@ void jl_dump_native_impl(void *native_code,
+@@ -2460,7 +2474,7 @@ void jl_dump_native_impl(void *native_code,
          }
  
          // no need to free module/context, destructor handles that
@@ -835,7 +835,7 @@ index 5c7f7bc20e..c34037852f 100644
      }
  
      {
-@@ -2536,84 +2550,85 @@ void jl_get_llvmf_defn_impl(jl_llvmf_dump_t *dump, jl_method_instance_t *mi, jl_
+@@ -2568,88 +2582,89 @@ void jl_get_llvmf_defn_impl(jl_llvmf_dump_t *dump, jl_method_instance_t *mi, jl_
              uint8_t measure_compile_time_enabled = jl_atomic_load_relaxed(&jl_measure_compile_time_enabled);
              if (measure_compile_time_enabled)
                  compiler_start_time = jl_hrtime();
@@ -955,12 +955,20 @@ index 5c7f7bc20e..c34037852f 100644
 -                }
 -                assert(!verifyLLVMIR(*m.getModuleUnlocked()));
 -                if (optimize) {
--                    NewPM PM{jl_ExecutionEngine->cloneTargetMachine(), getOptLevel(jl_options.opt_level)};
+-                    auto opts = OptimizationOptions::defaults();
+-                    opts.sanitize_memory = params.sanitize_memory;
+-                    opts.sanitize_thread = params.sanitize_thread;
+-                    opts.sanitize_address = params.sanitize_address;
+-                    NewPM PM{jl_ExecutionEngine->cloneTargetMachine(), getOptLevel(jl_options.opt_level), opts};
 -                    //Safe b/c context lock is held by output
 -                    PM.run(*m.getModuleUnlocked());
                      assert(!verifyLLVMIR(*m.getModuleUnlocked()));
 +                    if (optimize) {
-+                        NewPM PM{jl_ExecutionEngine->cloneTargetMachine(), getOptLevel(jl_options.opt_level)};
++                        auto opts = OptimizationOptions::defaults();
++                        opts.sanitize_memory = params.sanitize_memory;
++                        opts.sanitize_thread = params.sanitize_thread;
++                        opts.sanitize_address = params.sanitize_address;
++                        NewPM PM{jl_ExecutionEngine->cloneTargetMachine(), getOptLevel(jl_options.opt_level), opts};
 +                        //Safe b/c context lock is held by output
 +                        PM.run(*m.getModuleUnlocked());
 +                        assert(!verifyLLVMIR(*m.getModuleUnlocked()));
@@ -996,10 +1004,10 @@ index 5c7f7bc20e..c34037852f 100644
          if (F) {
              dump->TSM = wrap(new orc::ThreadSafeModule(std::move(m)));
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index f9da9f4d4b..7a922f9abe 100644
+index 9ada0ed9fa..4d7a20a0c3 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -7793,7 +7793,7 @@ const char *jl_generate_ccallable(Module *llvmmod, jl_value_t *nameval, jl_value
+@@ -7790,7 +7790,7 @@ const char *jl_generate_ccallable(Module *llvmmod, jl_value_t *nameval, jl_value
          crt = (jl_value_t*)jl_any_type;
      }
      bool toboxed;
@@ -1008,7 +1016,7 @@ index f9da9f4d4b..7a922f9abe 100644
      if (toboxed)
          lcrt = JuliaType::get_prjlvalue_ty(lcrt->getContext());
      size_t nargs = jl_nparams(sigt)-1;
-@@ -8153,7 +8153,7 @@ static jl_llvm_functions_t
+@@ -8150,7 +8150,7 @@ static jl_llvm_functions_t
      size_t min_world = src->min_world;
      size_t max_world = src->max_world;
      jl_llvm_functions_t declarations;
@@ -1018,7 +1026,7 @@ index f9da9f4d4b..7a922f9abe 100644
      JL_GC_PUSH2(&ctx.code, &vatyp);
      ctx.code = src->code;
 diff --git a/src/disasm.cpp b/src/disasm.cpp
-index 23364f028f..2daa8bc2bc 100644
+index 7f79737a9a..7afe83c305 100644
 --- a/src/disasm.cpp
 +++ b/src/disasm.cpp
 @@ -506,37 +506,38 @@ jl_value_t *jl_dump_function_ir_impl(jl_llvmf_dump_t *dump, char strip_ir_metada
@@ -1089,7 +1097,7 @@ index 23364f028f..2daa8bc2bc 100644
  
      return jl_pchar_to_string(stream.str().data(), stream.str().size());
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index 74c714a29a..d9e8a1db99 100644
+index a12e0be034..fc330820cb 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -302,8 +302,7 @@ void *jl_jit_abi_converter_impl(jl_task_t *ct, jl_abi_t from_abi,
@@ -1255,7 +1263,7 @@ index 74c714a29a..d9e8a1db99 100644
      emittedmodules[codeinst] = std::move(result_m);
  }
  
-@@ -2193,27 +2198,28 @@ void JuliaOJIT::addModule(orc::ThreadSafeModule TSM)
+@@ -2188,27 +2193,28 @@ void JuliaOJIT::addModule(orc::ThreadSafeModule TSM)
      TSM = selectOptLevel(std::move(TSM));
      TSM = (*Optimizers)(std::move(TSM));
      TSM = (*JITPointers)(std::move(TSM));
@@ -1301,7 +1309,7 @@ index 74c714a29a..d9e8a1db99 100644
      if (Err) {
  #ifndef __clang_analyzer__ // reportError calls an arbitrary function, which the static analyzer thinks might be a safepoint
 diff --git a/src/jitlayers.h b/src/jitlayers.h
-index 331d9accc8..c185c6f3b7 100644
+index 5c1fb10a84..abf97e9e0e 100644
 --- a/src/jitlayers.h
 +++ b/src/jitlayers.h
 @@ -1,5 +1,6 @@
@@ -1311,7 +1319,7 @@ index 331d9accc8..c185c6f3b7 100644
  #include "llvm/ADT/SmallSet.h"
  #include <llvm/ADT/MapVector.h>
  #include <llvm/ADT/StringSet.h>
-@@ -226,15 +227,32 @@ struct cfunc_decl_t {
+@@ -246,15 +247,32 @@ struct cfunc_decl_t {
  
  typedef SmallVector<std::pair<jl_code_instance_t*, jl_codegen_call_target_t>, 0> jl_workqueue_t;
  
@@ -1346,7 +1354,7 @@ index 331d9accc8..c185c6f3b7 100644
      }
      typedef StringMap<GlobalVariable*> SymMapGV;
      // outputs
-@@ -273,9 +291,9 @@ struct jl_codegen_params_t {
+@@ -293,9 +311,9 @@ struct jl_codegen_params_t {
      bool imaging_mode;
      bool safepoint_on_entry = true;
      bool use_swiftcc = true;
@@ -1358,7 +1366,7 @@ index 331d9accc8..c185c6f3b7 100644
          DL(std::move(DL)),
          TargetTriple(std::move(triple)),
          imaging_mode(1)
-@@ -286,8 +304,28 @@ struct jl_codegen_params_t {
+@@ -306,8 +324,28 @@ struct jl_codegen_params_t {
      }
      jl_codegen_params_t(jl_codegen_params_t &&) JL_NOTSAFEPOINT = default;
      ~jl_codegen_params_t() JL_NOTSAFEPOINT JL_NOTSAFEPOINT_LEAVE = default;
@@ -1387,7 +1395,7 @@ index 331d9accc8..c185c6f3b7 100644
  const char *jl_generate_ccallable(Module *llvmmod, jl_value_t *nameval, jl_value_t *declrt, jl_value_t *sigt, jl_codegen_params_t &params);
  
  jl_llvm_functions_t jl_emit_code(
-@@ -669,8 +707,9 @@ private:
+@@ -689,8 +727,9 @@ private:
  extern JuliaOJIT *jl_ExecutionEngine;
  std::unique_ptr<Module> jl_create_llvm_module(StringRef name, LLVMContext &ctx, const DataLayout &DL, const Triple &triple) JL_NOTSAFEPOINT;
  inline orc::ThreadSafeModule jl_create_ts_module(StringRef name, orc::ThreadSafeContext ctx, const DataLayout &DL, const Triple &triple) JL_NOTSAFEPOINT {

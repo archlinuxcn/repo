@@ -1,14 +1,14 @@
-From ae86774cf4f5bc6e59e1557edc2109f118ffeb97 Mon Sep 17 00:00:00 2001
+From 835d72d49bc191c08cddc4e33180004aba583a75 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:40:37 -0400
-Subject: [PATCH 11/17] Use CaptureInfo for NoCapture on LLVM 21
+Subject: [PATCH 10/16] Use CaptureInfo for NoCapture on LLVM 21
 
 ---
  src/codegen.cpp | 38 ++++++++++++++++++++++++++++----------
  1 file changed, 28 insertions(+), 10 deletions(-)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index a203973ff2..c9c53ea357 100644
+index 22b410a447..b9241bb5e9 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -605,6 +605,24 @@ AttributeSet Attributes(LLVMContext &C, std::initializer_list<Attribute::AttrKin
@@ -90,7 +90,7 @@ index a203973ff2..c9c53ea357 100644
                    Attributes(C, {Attribute::NonNull, Attribute::NoUndef, Attribute::ReadNone}) });
                    },
  };
-@@ -7944,7 +7962,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -7941,7 +7959,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
          AttrBuilder param(M->getContext());
          param.addStructRetAttr(srt);
          param.addAttribute(Attribute::NoAlias);
@@ -99,7 +99,7 @@ index a203973ff2..c9c53ea357 100644
          param.addAttribute(Attribute::NoUndef);
          attrs.push_back(AttributeSet::get(M->getContext(), param));
          assert(fsig.size() == 1);
-@@ -7952,7 +7970,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -7949,7 +7967,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
      if (props.cc == jl_returninfo_t::Union) {
          AttrBuilder param(M->getContext());
          param.addAttribute(Attribute::NoAlias);
@@ -108,7 +108,7 @@ index a203973ff2..c9c53ea357 100644
          param.addAttribute(Attribute::NoUndef);
          attrs.push_back(AttributeSet::get(M->getContext(), param));
          assert(fsig.size() == 1);
-@@ -7961,7 +7979,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -7958,7 +7976,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
      if (props.return_roots) {
          AttrBuilder param(M->getContext());
          param.addAttribute(Attribute::NoAlias);
@@ -117,7 +117,7 @@ index a203973ff2..c9c53ea357 100644
          param.addAttribute(Attribute::NoUndef);
          attrs.push_back(AttributeSet::get(M->getContext(), param));
          fsig.push_back(getPointerTy(M->getContext()));
-@@ -7995,7 +8013,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -7992,7 +8010,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
          AttrBuilder param(M->getContext());
          Type *ty = et;
          if (et == nullptr || et->isAggregateType()) { // aggregate types are passed by pointer

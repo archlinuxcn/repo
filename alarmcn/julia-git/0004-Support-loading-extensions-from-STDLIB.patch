@@ -1,23 +1,23 @@
-From 5eaae6be4ba192cca537d3fe21a52e7e492ecd83 Mon Sep 17 00:00:00 2001
+From 9f990667d1fa98f30c5a35d067532d69be241ef1 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
-Subject: [PATCH 04/17] Support loading extensions from STDLIB
+Subject: [PATCH 04/16] Support loading extensions from STDLIB
 
 ---
- base/loading.jl | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ base/loading.jl | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index 39f892c384..8c7344e0a9 100644
+index 32617b77ad..c846a781af 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
-@@ -1197,6 +1197,33 @@ end
+@@ -1285,6 +1285,34 @@ end
  
  # look for an entry-point for `pkg` and return its path if UUID matches
- function implicit_manifest_uuid_path(dir::String, pkg::PkgId)::Union{Nothing,String}
-+    path = _implicit_manifest_uuid_path(dir, pkg)
-+    if path !== nothing || dir != Sys.STDLIB
-+        return path
+ function implicit_manifest_uuid_load_spec(dir::String, pkg::PkgId)::Union{Nothing, PkgLoadSpec}
++    spec = _implicit_manifest_uuid_load_spec(dir, pkg)
++    if spec !== nothing || dir != Sys.STDLIB
++        return spec
 +    end
 +    for parent_name in readdir(Sys.STDLIB)
 +        pkgdir = normpath(joinpath(Sys.STDLIB, parent_name))
@@ -33,7 +33,8 @@ index 39f892c384..8c7344e0a9 100644
 +            exts = get(d, "extensions", nothing)::Union{Dict{String, Any}, Nothing}
 +            if exts !== nothing
 +                if pkg.name in keys(exts)
-+                    return find_ext_path(pkgdir, pkg.name)
++                    return PkgLoadSpec(find_ext_path(pkgdir, pkg.name),
++                                       project_get_syntax_version(d))
 +                end
 +            end
 +        end
@@ -41,11 +42,11 @@ index 39f892c384..8c7344e0a9 100644
 +    return
 +end
 +
-+function _implicit_manifest_uuid_path(dir::String, pkg::PkgId)::Union{Nothing,String}
++function _implicit_manifest_uuid_load_spec(dir::String, pkg::PkgId)::Union{Nothing, PkgLoadSpec}
      path, project_file = entry_point_and_project_file(dir, pkg.name)
      if project_file === nothing
          pkg.uuid === nothing || return nothing
-@@ -1505,11 +1532,31 @@ const EXT_PRIMED = Dict{PkgId,Vector{PkgId}}() # Extension -> Parent + Triggers
+@@ -1594,11 +1622,31 @@ const EXT_PRIMED = Dict{PkgId,Vector{PkgId}}() # Extension -> Parent + Triggers
  const EXT_DORMITORY = Dict{PkgId,Vector{ExtensionId}}() # Trigger -> Extensions that can be triggered by it
  const EXT_DORMITORY_FAILED = ExtensionId[]
  
@@ -70,7 +71,7 @@ index 39f892c384..8c7344e0a9 100644
      pkg.uuid === nothing && return
      path_env_loc = locate_package_env(pkg)
      path_env_loc === nothing && return
-     path, env_loc = path_env_loc
+     _, env_loc = path_env_loc
 +    if env_loc == Sys.STDLIB && _insert_extension_triggers_stdlib(pkg)
 +        return
 +    end

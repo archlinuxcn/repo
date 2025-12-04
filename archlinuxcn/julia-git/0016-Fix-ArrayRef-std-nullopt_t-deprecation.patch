@@ -1,7 +1,7 @@
-From b2d684500657f087a2b10415894532ddb2bfba38 Mon Sep 17 00:00:00 2001
+From 7826b406af5733781aae845f1b67757ba06896df Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 14:47:57 -0400
-Subject: [PATCH 17/17] Fix ArrayRef(std::nullopt_t) deprecation
+Subject: [PATCH 16/16] Fix ArrayRef(std::nullopt_t) deprecation
 
 ---
  src/cgutils.cpp               | 15 ++++----
@@ -81,7 +81,7 @@ index 86e57f7208..4945ea06da 100644
      aliasinfo_mem.decorateInst(LI);
      addr = emit_ptrgep(ctx, m, JL_SMALL_BYTE_ALIGNMENT);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 7a922f9abe..1630eeeab7 100644
+index 4d7a20a0c3..b6be8484bf 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -643,7 +643,7 @@ static AttributeList get_attrs_noreturn(LLVMContext &C)
@@ -343,7 +343,7 @@ index 7a922f9abe..1630eeeab7 100644
      }
      return jl_cgval_t(v, typ, new_tindex);
  }
-@@ -5668,7 +5668,7 @@ static jl_cgval_t emit_varinfo(jl_codectx_t &ctx, jl_varinfo_t &vi, jl_sym_t *va
+@@ -5665,7 +5665,7 @@ static jl_cgval_t emit_varinfo(jl_codectx_t &ctx, jl_varinfo_t &vi, jl_sym_t *va
              Value *tindex = NULL;
              if (vi.pTIndex)
                  tindex = ctx.builder.CreateAlignedLoad(getInt8Ty(ctx.builder.getContext()), vi.pTIndex, Align(1), vi.isVolatile);
@@ -352,7 +352,7 @@ index 7a922f9abe..1630eeeab7 100644
          }
          if (vi.inline_roots) {
              AllocaInst *varslot = vi.inline_roots;
-@@ -6626,7 +6626,7 @@ static jl_cgval_t emit_expr(jl_codectx_t &ctx, jl_value_t *expr, ssize_t ssaidx_
+@@ -6623,7 +6623,7 @@ static jl_cgval_t emit_expr(jl_codectx_t &ctx, jl_value_t *expr, ssize_t ssaidx_
          SmallVector<Metadata *, 8> MDs;
  
          // Reserve first location for self reference to the LoopID metadata node.
@@ -361,7 +361,7 @@ index 7a922f9abe..1630eeeab7 100644
          MDs.push_back(TempNode.get());
  
          for (int i = 0, ie = nargs; i < ie; ++i) {
-@@ -8661,7 +8661,7 @@ static jl_llvm_functions_t
+@@ -8656,7 +8656,7 @@ static jl_llvm_functions_t
              AllocaInst *roots = sizes.second > 0 ? emit_static_roots(ctx, sizes.second) : nullptr;
              if (bits) bits->setName(jl_symbol_name(s));
              if (roots) roots->setName(StringRef(".roots.") + jl_symbol_name(s));
@@ -397,10 +397,10 @@ index ae1351ae41..8b4afbeedc 100644
                      CallInst *NewCall = CallInst::Create(CI, None, CI);
  #endif
 diff --git a/src/llvm-multiversioning.cpp b/src/llvm-multiversioning.cpp
-index e9276526ef..0c60bd5683 100644
+index 5387ae1ed9..55b2047940 100644
 --- a/src/llvm-multiversioning.cpp
 +++ b/src/llvm-multiversioning.cpp
-@@ -687,7 +687,7 @@ void CloneCtx::rewrite_alias(GlobalAlias *alias, Function *F)
+@@ -520,7 +520,7 @@ Function *CloneCtx::create_trampoline(Function *F, GlobalVariable *slot, bool au
  
      auto ptr = irbuilder.CreateLoad(F->getType(), slot);
      ptr->setMetadata(llvm::LLVMContext::MD_tbaa, tbaa_const);
@@ -409,7 +409,7 @@ index e9276526ef..0c60bd5683 100644
  
      SmallVector<Value *, 0> Args;
      for (auto &arg : trampoline->args())
-@@ -846,7 +846,7 @@ static void replaceUsesWithLoad(Function &F, Type *T_size, I2GV should_replace,
+@@ -876,7 +876,7 @@ static void replaceUsesWithLoad(Function &F, Type *T_size, I2GV should_replace,
  #endif
              Instruction *ptr = new LoadInst(F.getType(), slot, "", false, insert_before);
              ptr->setMetadata(llvm::LLVMContext::MD_tbaa, tbaa_const);

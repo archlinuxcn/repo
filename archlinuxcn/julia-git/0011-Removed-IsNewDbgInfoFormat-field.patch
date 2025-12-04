@@ -1,7 +1,7 @@
-From 875c912f29ea527cc80e4c0d0237f8cd88bd6926 Mon Sep 17 00:00:00 2001
+From c63eb72ebbd34a44516d5a792f5480949b923ab6 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:42:12 -0400
-Subject: [PATCH 12/17] Removed IsNewDbgInfoFormat field
+Subject: [PATCH 11/16] Removed IsNewDbgInfoFormat field
 
 ---
  src/aotcompile.cpp | 2 ++
@@ -9,10 +9,10 @@ Subject: [PATCH 12/17] Removed IsNewDbgInfoFormat field
  2 files changed, 4 insertions(+)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index 9ff7fc2d3f..5c7f7bc20e 100644
+index 5af783ee72..6e86b7d245 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
-@@ -541,7 +541,9 @@ Function *IRLinker_copyFunctionProto(Module *DstM, Function *SF) {
+@@ -565,7 +565,9 @@ Function *IRLinker_copyFunctionProto(Module *DstM, Function *SF) {
    auto *F = Function::Create(SF->getFunctionType(), SF->getLinkage(),
                               SF->getAddressSpace(), SF->getName(), DstM);
    F->copyAttributesFrom(SF);
@@ -23,10 +23,10 @@ index 9ff7fc2d3f..5c7f7bc20e 100644
    // Remove these copied constants since they point to the source module.
    F->setPersonalityFn(nullptr);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index c9c53ea357..b11ffb44fc 100644
+index b9241bb5e9..4adc8ce10a 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -9906,7 +9906,9 @@ void linkFunctionBody(Function &Dst, Function &Src)
+@@ -9901,7 +9901,9 @@ void linkFunctionBody(Function &Dst, Function &Src)
          Dst.setPersonalityFn(Src.getPersonalityFn());
      if (Src.hasPersonalityFn())
          Dst.setPersonalityFn(Src.getPersonalityFn());

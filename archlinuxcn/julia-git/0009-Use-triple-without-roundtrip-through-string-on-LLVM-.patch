@@ -1,7 +1,7 @@
-From c7906548aa6f38069370e696e2fde299914fe6f9 Mon Sep 17 00:00:00 2001
+From d126c9e84d00dee110a90fe12d290b34d255e291 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:39:05 -0400
-Subject: [PATCH 10/17] Use triple without roundtrip through string on LLVM 21
+Subject: [PATCH 09/16] Use triple without roundtrip through string on LLVM 21
 
 ---
  src/aotcompile.cpp | 24 ++++++++++++++++++++++++
@@ -10,10 +10,10 @@ Subject: [PATCH 10/17] Use triple without roundtrip through string on LLVM 21
  3 files changed, 38 insertions(+), 1 deletion(-)
 
 diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
-index acfd0fedd8..9ff7fc2d3f 100644
+index fe8b97a052..5af783ee72 100644
 --- a/src/aotcompile.cpp
 +++ b/src/aotcompile.cpp
-@@ -1529,7 +1529,11 @@ static AOTOutputs add_output_impl(Module &M, TargetMachine &SourceTM, ShardTimer
+@@ -1557,7 +1557,11 @@ static AOTOutputs add_output_impl(Module &M, TargetMachine &SourceTM, ShardTimer
      AOTOutputs out;
      auto TM = std::unique_ptr<TargetMachine>(
          SourceTM.getTarget().createTargetMachine(
@@ -25,7 +25,7 @@ index acfd0fedd8..9ff7fc2d3f 100644
              SourceTM.getTargetCPU(),
              SourceTM.getTargetFeatureString(),
              SourceTM.Options,
-@@ -1557,7 +1561,11 @@ static AOTOutputs add_output_impl(Module &M, TargetMachine &SourceTM, ShardTimer
+@@ -1585,7 +1589,11 @@ static AOTOutputs add_output_impl(Module &M, TargetMachine &SourceTM, ShardTimer
  
          auto PMTM = std::unique_ptr<TargetMachine>(
              SourceTM.getTarget().createTargetMachine(
@@ -37,7 +37,7 @@ index acfd0fedd8..9ff7fc2d3f 100644
                  SourceTM.getTargetCPU(),
                  SourceTM.getTargetFeatureString(),
                  SourceTM.Options,
-@@ -2109,7 +2117,11 @@ void jl_dump_native_impl(void *native_code,
+@@ -2141,7 +2149,11 @@ void jl_dump_native_impl(void *native_code,
      }
      std::unique_ptr<TargetMachine> SourceTM(
          jl_ExecutionEngine->getTarget().createTargetMachine(
@@ -49,7 +49,7 @@ index acfd0fedd8..9ff7fc2d3f 100644
              jl_ExecutionEngine->getTargetCPU(),
              jl_ExecutionEngine->getTargetFeatureString(),
              jl_ExecutionEngine->getTargetOptions(),
-@@ -2142,7 +2154,11 @@ void jl_dump_native_impl(void *native_code,
+@@ -2174,7 +2186,11 @@ void jl_dump_native_impl(void *native_code,
          LLVMContext Context;
          Context.setDiscardValueNames(true);
          Module sysimgM("sysimg", Context);
@@ -61,7 +61,7 @@ index acfd0fedd8..9ff7fc2d3f 100644
          sysimgM.setDataLayout(DL);
          sysimgM.setStackProtectorGuard(StackProtectorGuard);
          sysimgM.setOverrideStackAlignment(OverrideStackAlignment);
-@@ -2210,7 +2226,11 @@ void jl_dump_native_impl(void *native_code,
+@@ -2242,7 +2258,11 @@ void jl_dump_native_impl(void *native_code,
  
      data->M.withModuleDo([&](Module &dataM) {
          JL_TIMING(NATIVE_AOT, NATIVE_Setup);
@@ -73,7 +73,7 @@ index acfd0fedd8..9ff7fc2d3f 100644
          dataM.setDataLayout(DL);
          dataM.setPICLevel(PICLevel::BigPIC);
          auto &Context = dataM.getContext();
-@@ -2311,7 +2331,11 @@ void jl_dump_native_impl(void *native_code,
+@@ -2343,7 +2363,11 @@ void jl_dump_native_impl(void *native_code,
          LLVMContext Context;
          Context.setDiscardValueNames(true);
          Module metadataM("metadata", Context);
@@ -86,7 +86,7 @@ index acfd0fedd8..9ff7fc2d3f 100644
          metadataM.setStackProtectorGuard(StackProtectorGuard);
          metadataM.setOverrideStackAlignment(OverrideStackAlignment);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index ad4f2cf3b4..a203973ff2 100644
+index 3748ffeda4..22b410a447 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -2681,7 +2681,11 @@ std::unique_ptr<Module> jl_create_llvm_module(StringRef name, LLVMContext &conte
@@ -102,10 +102,10 @@ index ad4f2cf3b4..a203973ff2 100644
      if (triple.isOSWindows() && triple.getArch() == Triple::x86) {
          // tell Win32 to assume the stack is always 16-byte aligned,
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index eae2663649..900793d663 100644
+index 90091cc1f3..4250923d91 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
-@@ -1401,7 +1401,12 @@ namespace {
+@@ -1396,7 +1396,12 @@ namespace {
          }
          auto optlevel = CodeGenOptLevelFor(jl_options.opt_level);
          auto TM = TheTarget->createTargetMachine(
@@ -119,7 +119,7 @@ index eae2663649..900793d663 100644
                  options,
                  relocmodel,
                  codemodel,
-@@ -2387,7 +2392,11 @@ std::unique_ptr<TargetMachine> JuliaOJIT::cloneTargetMachine() const
+@@ -2382,7 +2387,11 @@ std::unique_ptr<TargetMachine> JuliaOJIT::cloneTargetMachine() const
  {
      auto NewTM = std::unique_ptr<TargetMachine>(getTarget()
          .createTargetMachine(

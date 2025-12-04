@@ -1,7 +1,7 @@
-From f8daace12ec1f5fe106b248d7bcee0b012f574d0 Mon Sep 17 00:00:00 2001
+From 6bd8cccc456094d6b3c05d48ea3e3a3ff85dbde9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
-Subject: [PATCH 02/17] Fix source file paths
+Subject: [PATCH 02/16] Fix source file paths
 
 ---
  base/sysimg.jl              |  7 +++++++
@@ -29,7 +29,7 @@ index fd71544c20..84c5967d88 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index b77c312e3f..a7ffdc2584 100644
+index ca67695e7e..3f1b849d61 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
 @@ -59,7 +59,7 @@ A string containing the full path to the directory containing the `stdlib` packa
@@ -59,7 +59,7 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index e8cdf57ad8..b06f54a1ff 100644
+index d6e3893751..7554e373af 100644
 --- a/src/ast.c
 +++ b/src/ast.c
 @@ -737,6 +737,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali

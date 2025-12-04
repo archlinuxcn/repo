@@ -1,7 +1,7 @@
-From cc6dc6da888f8f023daa834fa9a677cc05c4fe00 Mon Sep 17 00:00:00 2001
+From 3df6cbaa04d1253942d96907bf270a9d3f07b60e Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:43:26 -0400
-Subject: [PATCH 14/17] Assorted return value/argument type/include change for
+Subject: [PATCH 13/16] Assorted return value/argument type/include change for
  LLVM 21
 
 ---
@@ -11,7 +11,7 @@ Subject: [PATCH 14/17] Assorted return value/argument type/include change for
  3 files changed, 22 insertions(+), 7 deletions(-)
 
 diff --git a/src/debuginfo.cpp b/src/debuginfo.cpp
-index 752dc50509..98044f7637 100644
+index f8af82fa72..c461f0938e 100644
 --- a/src/debuginfo.cpp
 +++ b/src/debuginfo.cpp
 @@ -505,8 +505,13 @@ static int lookup_pointer(
@@ -30,7 +30,7 @@ index 752dc50509..98044f7637 100644
  
          jl_frame_t *frame = &(*frames)[i];
 diff --git a/src/disasm.cpp b/src/disasm.cpp
-index a80f79218f..23364f028f 100644
+index 3f994143a6..7f79737a9a 100644
 --- a/src/disasm.cpp
 +++ b/src/disasm.cpp
 @@ -924,7 +924,11 @@ static void jl_dump_asm_internal(
@@ -71,7 +71,7 @@ index a80f79218f..23364f028f 100644
                  *Context, std::move(FOut), true, true, InstPrinter, std::move(MCE),
                  std::move(MAB), false
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index 900793d663..ad8978be8b 100644
+index 4250923d91..0d504ec3e7 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -14,6 +14,9 @@
@@ -84,7 +84,7 @@ index 900793d663..ad8978be8b 100644
  #include <llvm/ExecutionEngine/Orc/TargetProcess/JITLoaderGDB.h>
  #if JL_LLVM_VERSION >= 200000
  #include <llvm/ExecutionEngine/Orc/AbsoluteSymbols.h>
-@@ -1936,7 +1939,8 @@ JuliaOJIT::JuliaOJIT()
+@@ -1931,7 +1934,8 @@ JuliaOJIT::JuliaOJIT()
      MemMgr(createRTDyldMemoryManager()),
      UnlockedObjectLayer(
              ES,
