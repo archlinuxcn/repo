@@ -28,14 +28,14 @@ source=(
   config         # the main kernel config file
 )
 sha256sums=('92aab43a5c17de5aa748149955f72589b583921058d797b5c0816fa1419ac0a6'
-            'd83f476bfd92908c95ff655c7fdd2ebedcc7dacbf2057268830f728f3fe1c9ad')
+            '9f8f7937c5514efaac4d72d1dbdb53f73dedb546ecf5174ee0c0492ac40afc81')
 b2sums=('2d8c5d78d0b738a6a8f1448e9fb688be048267ae31854d6d15d4c738b9de7dd2f1d0cf06dfeba41f18f35e82ba5177a0a91d81d31e06865f0f764a559b4065b0'
-        '8505d34477cf0bdedc213809fdd7f26cfdeea40e4f0905bd6083725bbffb9d17c7871fd761b5917deb53e8b72249d2e1aa33e61c636f9c3be965bace7bd2c284')
+        '20c8e9ff7b572c831ff7dfb0d41dcc8b85a679aa709a2d9c315823c4817b41979f9b8036888d38c79b3d1d47936d9e87cfc698030d2e084890dc471545f6f35e')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
-_rust_ver=1.88.0
+_rust_ver=1.91.1
 
 _set_cargo_path() {
   PATH="$HOME/.cargo/bin:$HOME/.rustup/toolchains/${_rust_ver}-$(uname -m)-unknown-linux-gnu/bin:$PATH"
