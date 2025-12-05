@@ -1,0 +1,26 @@
+pkgname=julia-git-aws_c_s3_jll-src
+pkgver=0.11.3+0
+_commit=77fca3f59b67a6e0463c09c24a9ffc22c8c84490
+pkgrel=1
+pkgdesc="aws_c_s3_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/aws_c_s3_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git aws-c-s3)
+source=("git+https://github.com/JuliaBinaryWrappers/aws_c_s3_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('cee171eb33a0caa3f3d142eb8f777b915470beea41323d66dc7b0dd788a3ac2e'
+            'fcd2650cf11c35b24e5819e081ed62bb77aa68adebd698959ecc725d901bb190')
+
+build() {
+  cd aws_c_s3_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl aws_c_s3_jll ../jll.toml
+}
+
+package() {
+  cd aws_c_s3_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh aws_c_s3_jll "${pkgdir}" "${pkgname}" julia-git
+}

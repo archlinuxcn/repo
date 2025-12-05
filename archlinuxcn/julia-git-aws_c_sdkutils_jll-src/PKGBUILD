@@ -1,0 +1,26 @@
+pkgname=julia-git-aws_c_sdkutils_jll-src
+pkgver=0.2.4+1
+_commit=db79d8b8164112f4bf5e48c5391cacff3b8bdb2b
+pkgrel=1
+pkgdesc="aws_c_sdkutils_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/aws_c_sdkutils_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git aws-c-sdkutils)
+source=("git+https://github.com/JuliaBinaryWrappers/aws_c_sdkutils_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('2d3bfa57e57eef14f41b83a1c8093a064eb1bac18d49d5119bdf3314b3e1f921'
+            '0e89a575f46de3e3ba077293a4f1df207891e47bb04c7287fedc3332d4e523f5')
+
+build() {
+  cd aws_c_sdkutils_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl aws_c_sdkutils_jll ../jll.toml
+}
+
+package() {
+  cd aws_c_sdkutils_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh aws_c_sdkutils_jll "${pkgdir}" "${pkgname}" julia-git
+}

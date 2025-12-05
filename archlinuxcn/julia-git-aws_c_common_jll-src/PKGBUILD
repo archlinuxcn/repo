@@ -1,0 +1,26 @@
+pkgname=julia-git-aws_c_common_jll-src
+pkgver=0.12.6+0
+_commit=338e431ed21d478d4091e53543faac4db42e1a8d
+pkgrel=1
+pkgdesc="aws_c_common_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/aws_c_common_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git aws-c-common)
+source=("git+https://github.com/JuliaBinaryWrappers/aws_c_common_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('9570a014ade3756b79d6f894c5048c6ac3a6b1ec3cc42e627c5c9988e9d78e7a'
+            '36f512d4427f569b82e12637eeb12cd74cba3f3d5bc1f671bb95df9db4765e66')
+
+build() {
+  cd aws_c_common_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl aws_c_common_jll ../jll.toml
+}
+
+package() {
+  cd aws_c_common_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh aws_c_common_jll "${pkgdir}" "${pkgname}" julia-git
+}

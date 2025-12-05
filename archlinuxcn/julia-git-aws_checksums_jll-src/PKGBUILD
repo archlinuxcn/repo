@@ -1,0 +1,26 @@
+pkgname=julia-git-aws_checksums_jll-src
+pkgver=0.2.8+0
+_commit=1b40a6d3076130e455c0789492752ced444fb0a0
+pkgrel=1
+pkgdesc="aws_checksums_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/aws_checksums_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git aws-checksums)
+source=("git+https://github.com/JuliaBinaryWrappers/aws_checksums_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('1a8a4a8838ab03be3f73f679238132e0b3164c79adf53310f84a35d1e53fccd8'
+            '633a6adecccef3a9d01ab8ed1e1634e57b120dcb62c1eeb54d43db2f17fff8bb')
+
+build() {
+  cd aws_checksums_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl aws_checksums_jll ../jll.toml
+}
+
+package() {
+  cd aws_checksums_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh aws_checksums_jll "${pkgdir}" "${pkgname}" julia-git
+}

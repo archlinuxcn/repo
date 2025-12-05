@@ -1,0 +1,26 @@
+pkgname=julia-git-aws_c_compression_jll-src
+pkgver=0.3.2+0
+_commit=fe045e3884d2c84f681ff2a79367ccd4deb217b4
+pkgrel=1
+pkgdesc="aws_c_compression_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/aws_c_compression_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git aws-c-compression)
+source=("git+https://github.com/JuliaBinaryWrappers/aws_c_compression_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('7d3b0a63fa74f2f49fd5bc689f5269d40dd7755949adc10dfbd3425b620745e8'
+            'aeae744c817b4448c55212ce41d3ae489ac7b8f6d1b5aba4f24130ec7a76758c')
+
+build() {
+  cd aws_c_compression_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl aws_c_compression_jll ../jll.toml
+}
+
+package() {
+  cd aws_c_compression_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh aws_c_compression_jll "${pkgdir}" "${pkgname}" julia-git
+}

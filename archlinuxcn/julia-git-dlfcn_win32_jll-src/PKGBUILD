@@ -1,0 +1,26 @@
+pkgname=julia-git-dlfcn_win32_jll-src
+pkgver=1.4.2+0
+_commit=a427ab9e24335860661d7fa656117ec2d526d6e2
+pkgrel=1
+pkgdesc="dlfcn_win32_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/dlfcn_win32_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git s2n-tls)
+source=("git+https://github.com/JuliaBinaryWrappers/dlfcn_win32_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('c3bbf9858778faddd34136feb210797379cab3a5ac8503687e842aa4de306385'
+            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
+
+build() {
+  cd dlfcn_win32_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl dlfcn_win32_jll ../jll.toml
+}
+
+package() {
+  cd dlfcn_win32_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh dlfcn_win32_jll "${pkgdir}" "${pkgname}" julia-git
+}

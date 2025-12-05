@@ -1,0 +1,26 @@
+pkgname=julia-git-aws_c_http_jll-src
+pkgver=0.10.7+0
+_commit=b417cd184d0643e8e48ccd62354f93b8bf8ad116
+pkgrel=1
+pkgdesc="aws_c_http_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/aws_c_http_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git aws-c-http)
+source=("git+https://github.com/JuliaBinaryWrappers/aws_c_http_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('202220c1eb00c9b85e7c064467b150e05e1eac77854a5fccc47b2015c1182ee1'
+            '980cfbbfa4d24f1534f380bff3bc0450421e4530ecb51eb991c8aa3b0548960d')
+
+build() {
+  cd aws_c_http_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl aws_c_http_jll ../jll.toml
+}
+
+package() {
+  cd aws_c_http_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh aws_c_http_jll "${pkgdir}" "${pkgname}" julia-git
+}

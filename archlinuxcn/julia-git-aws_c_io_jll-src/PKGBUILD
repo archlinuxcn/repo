@@ -1,0 +1,26 @@
+pkgname=julia-git-aws_c_io_jll-src
+pkgver=0.23.3+0
+_commit=c979d8c0900d4ca7ad86f7f21dfb590a1350a0ab
+pkgrel=1
+pkgdesc="aws_c_io_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/aws_c_io_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git aws-c-io)
+source=("git+https://github.com/JuliaBinaryWrappers/aws_c_io_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('18854bd5fe23d975fe591e47cf95a9932337169e9b6faab0c06f5d1e9f341a2e'
+            '549c70955f35c35c70166a442bc634bb2217af8967809704755988eac7567547')
+
+build() {
+  cd aws_c_io_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl aws_c_io_jll ../jll.toml
+}
+
+package() {
+  cd aws_c_io_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh aws_c_io_jll "${pkgdir}" "${pkgname}" julia-git
+}
