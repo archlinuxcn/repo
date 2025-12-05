@@ -7,7 +7,11 @@ arch=('aarch64' 'x86_64')
 license=('MIT')
 makedepends=(git cmake)
 depends=(julia-git)
-source=("git+https://github.com/JuliaInterop/libcxxwrap-julia#tag=v${pkgver}")
+if [[ $pkgver == 0.14.7 ]]; then
+  source=("git+https://github.com/JuliaInterop/libcxxwrap-julia#commit=a2c35fa39983bd9246eb7d9cda4a7a2369334799")
+else
+  source=("git+https://github.com/JuliaInterop/libcxxwrap-julia#tag=v${pkgver}")
+fi
 sha256sums=('3777d177f97913e2305adde190b56da33c2ab05fa4527993e4cd2e0a323e8cfd')
 # LTO breaks unique linkage of guard variable
 options=('!lto')
