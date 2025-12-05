@@ -1,7 +1,7 @@
 pkgname=julia-git-abstractplutodingetjes-src
 pkgver=1.3.2
 _commit=899bbaa052210cf3abde8baca0f2b77f2644e1c9
-pkgrel=1
+pkgrel=2
 pkgdesc="AbstractPlutoDingetjes.jl"
 url="https://github.com/JuliaPluto/AbstractPlutoDingetjes.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPluto/AbstractPlutoDingetjes.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('98a7d6bf9444da222343f384531ade6d903b1ed392ded2cbc6eb76ecac8f658e')
 
 package() {
   cd AbstractPlutoDingetjes.jl
