@@ -14,7 +14,7 @@ makedepends=(git texinfo python guile ncurses expat xz
 provides=('gdb-common' 'gdb')
 conflicts=('gdb-common' 'gdb')
 backup=('etc/gdb/gdbinit')
-options=('!libtool')
+options=('!libtool' '!lto')
 source=('gdb::git+https://sourceware.org/git/binutils-gdb.git')
 sha256sums=('SKIP')
 
