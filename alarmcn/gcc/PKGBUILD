@@ -7,7 +7,7 @@
 # toolchain build order: linux-api-headers->glibc->binutils->gcc->glibc->binutils->gcc
 # NOTE: libtool requires rebuilt with each new gcc version
 
-pkgname=(gcc gcc-libs gcc-ada gcc-d gcc-fortran gcc-go gcc-m2 gcc-objc gcc-rust lto-dump libgccjit)
+pkgname=(gcc gcc-libs gcc-ada gcc-d gcc-fortran gcc-go gcc-m2 gcc-objc gcc-rust gcc-gcobol lto-dump libgccjit)
 pkgver=15.2.1+r22+gc4e96a094636
 _commit=1cd744a6828f6ab9179906d16434ea40b6404737
 _gccver=${pkgver%%+*}
@@ -64,10 +64,10 @@ prepare() {
   sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
 
   # Arch Linux installs x86_64 libraries /lib
-  [[ $CARCH == "x86_64" ]] && sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
+  sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
 
   # Arch Linux ARM installs aarch64 libraries /lib
-  [[ $CARCH == "aarch64" ]] && sed -i '/lp64=/s/lib64/lib/' gcc/config/aarch64/t-aarch64-linux
+  sed -i '/lp64=/s/lib64/lib/' gcc/config/aarch64/t-aarch64-linux
 
   # Reproducible gcc-ada
   patch -Np0 < "$srcdir/gcc-ada-repro.patch"
@@ -121,7 +121,7 @@ build() {
   CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
 
   "$srcdir/gcc/configure" \
-    --enable-languages=ada,c,c++,d,fortran,go,lto,m2,objc,obj-c++,rust \
+    --enable-languages=ada,c,c++,d,fortran,go,lto,m2,objc,obj-c++,rust,cobol \
     --enable-bootstrap \
     "${_confflags[@]:?_confflags unset}"
 
@@ -181,6 +181,7 @@ package_gcc-libs() {
   rm -f "$pkgdir/$_libdir/libgcc_eh.a"
 
   for lib in libatomic \
+             libgcobol \
              libgfortran \
              libgo \
              libgomp \
@@ -230,12 +231,14 @@ package_gcc() {
   make -C $CHOST/libstdc++-v3/include DESTDIR="$pkgdir" install
   make -C $CHOST/libstdc++-v3/libsupc++ DESTDIR="$pkgdir" install
   make -C $CHOST/libstdc++-v3/python DESTDIR="$pkgdir" install
+  make -C $CHOST/libatomic DESTDIR="$pkgdir" install
 
   make DESTDIR="$pkgdir" install-libcc1
   install -d "$pkgdir/usr/share/gdb/auto-load/usr/lib"
   mv "$pkgdir"/usr/lib/libstdc++.so.6.*-gdb.py \
     "$pkgdir/usr/share/gdb/auto-load/usr/lib/"
   rm "$pkgdir"/usr/lib/libstdc++.so*
+  rm "$pkgdir"/usr/lib/libatomic.so*
 
   make DESTDIR="$pkgdir" install-fixincludes
   make -C gcc DESTDIR="$pkgdir" install-mkheaders
@@ -254,7 +257,8 @@ package_gcc() {
   make -C $CHOST/libsanitizer/lsan DESTDIR="$pkgdir" install-nodist_toolexeclibHEADERS
 
   make -C gcc DESTDIR="$pkgdir" install-man install-info
-  rm "$pkgdir"/usr/share/man/man1/{gccgo,gfortran,lto-dump,gdc,gm2}.1
+  rm "$pkgdir"/usr/share/man/man1/{gccgo,gfortran,lto-dump,gdc,gm2,gcobol}.1
+  rm "$pkgdir"/usr/share/man/man3/gcobol-io.3
   rm "$pkgdir"/usr/share/info/{gccgo,gfortran,gnat-style,gnat_rm,gnat_ugn,gdc,m2}.info
 
   make -C libcpp DESTDIR="$pkgdir" install
@@ -408,19 +412,36 @@ package_gcc-m2() {
 }
 
 package_gcc-rust() {
- pkgdesc="Rust frontend for GCC"
- depends=("gcc=$pkgver-$pkgrel" libisl.so)
+  pkgdesc="Rust frontend for GCC"
+  depends=("gcc=$pkgver-$pkgrel" libisl.so)
 
- cd gcc-build
- make -C gcc DESTDIR="$pkgdir" rust.install-{common,man,info}
+  cd gcc-build
+  make -C gcc DESTDIR="$pkgdir" rust.install-{common,man,info}
 
- install -Dm755 gcc/gccrs "$pkgdir"/usr/bin/gccrs
- install -Dm755 gcc/crab1 "$pkgdir"/usr/bin/crab1
+  install -Dm755 gcc/gccrs "$pkgdir"/usr/bin/gccrs
+  install -Dm755 gcc/crab1 "$pkgdir"/usr/bin/crab1
 
   # Install Runtime Library Exception
- install -d "$pkgdir/usr/share/licenses/$pkgname/"
- ln -s /usr/share/licenses/gcc-libs/RUNTIME.LIBRARY.EXCEPTION \
-   "$pkgdir/usr/share/licenses/$pkgname/"
+  install -d "$pkgdir/usr/share/licenses/$pkgname/"
+  ln -s /usr/share/licenses/gcc-libs/RUNTIME.LIBRARY.EXCEPTION \
+    "$pkgdir/usr/share/licenses/$pkgname/"
+}
+
+package_gcc-gcobol() {
+  pkgdesc="Cobol frontend for GCC"
+  depends=("gcc=$pkgver-$pkgrel" libisl.so)
+
+  cd gcc-build
+  make -C gcc DESTDIR="$pkgdir" cobol.install-{common,man,info}
+
+  install -Dm755 gcc/gcobol "$pkgdir"/usr/bin/gcobol
+
+  install -Dm644 $CHOST/libgcobol/libgcobol.spec "$pkgdir"/$_libdir/
+
+  # Install Runtime Library Exception
+  install -d "$pkgdir/usr/share/licenses/$pkgname/"
+  ln -s /usr/share/licenses/gcc-libs/RUNTIME.LIBRARY.EXCEPTION \
+    "$pkgdir/usr/share/licenses/$pkgname/"
 }
 
 package_lto-dump() {
