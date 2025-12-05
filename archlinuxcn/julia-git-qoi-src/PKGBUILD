@@ -1,6 +1,6 @@
 pkgname=julia-git-qoi-src
-pkgver=1.0.1
-_commit=76aab3535ed1ba05c711f6005344d5ef58ac6330
+pkgver=1.0.2
+_commit=b30027e61ef99d5314e7cf2eee8bfb71459dc585
 pkgrel=1
 pkgdesc="QOI.jl"
 url="https://github.com/KristofferC/QOI.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/KristofferC/QOI.jl.git#commit=$_commit")
-sha256sums=('d992367ddc9fcbed8945f35ac8830a86a6b14d3a47f364f9851960693f1a7c64')
+sha256sums=('16ece1f309f442a35f18153c125fba2fc7b98f44aed66bde9eeb8bf4d5a62f74')
 
 package() {
   cd QOI.jl
