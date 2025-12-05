@@ -1,7 +1,7 @@
-From ea93a5eaa6bc36557a08e87ea64f117dc82a26b6 Mon Sep 17 00:00:00 2001
+From c0b55c8b1abde20340cb9b39ab698e552d997831 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 26 Oct 2025 20:11:49 -0400
-Subject: [PATCH 15/16] Fix to use new ThreadSafeContext API
+Subject: [PATCH 16/17] Fix to use new ThreadSafeContext API
 
 Turn `add_output` into a manual co-routine
 so that we can get out of the caller scope mid-call

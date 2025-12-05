@@ -1,0 +1,36 @@
+From 3eb4c75f5cf8c2c4025504afff3be563fe9c1e9d Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 5 Dec 2025 09:51:26 -0500
+Subject: [PATCH 13/17] runFinalizedActions API change
+
+---
+ src/cgmemmgr.cpp | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/cgmemmgr.cpp b/src/cgmemmgr.cpp
+index e570834b85..6f7bd71ffb 100644
+--- a/src/cgmemmgr.cpp
++++ b/src/cgmemmgr.cpp
+@@ -1013,10 +1013,19 @@ public:
+             if (!FA)
+                 return OnFinalized(FA.takeError());
+             // Need to handle dealloc actions when we GC code
++#if JL_LLVM_VERSION >= 210000 && JL_LLVM_VERSION < 220000
++            // This change was reverted before llvm 22 is branched off
++            orc::shared::runFinalizeActions(GP->allocActions(), [&] (auto E) {
++                if (!E)
++                    return OnFinalized(E.takeError());
++                OnFinalized(std::move(FA));
++            });
++#else
+             auto E = orc::shared::runFinalizeActions(GP->allocActions());
+             if (!E)
+                 return OnFinalized(E.takeError());
+             OnFinalized(std::move(FA));
++#endif
+         });
+     }
+ };
+-- 
+2.51.2
+
