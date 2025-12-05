@@ -1,6 +1,6 @@
 pkgname=julia-git-libarchive_jll-src
-pkgver=3.8.2+0
-_commit=064246b4e3997dbf048813e29c89cf8b06acff97
+pkgver=3.8.4+0
+_commit=97dd589048c41ccaf45c9166a5084c72c846b70b
 pkgrel=1
 pkgdesc="LibArchive_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LibArchive_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libarchive)
 source=("git+https://github.com/JuliaBinaryWrappers/LibArchive_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('5bd6cee3fbcb7c00592da92e4f94e449fe2bad316c54fb84f399a4127b15e4ab'
+sha256sums=('0eda57ced2c1566437382749e7f34407f35b39b61c92b424cd6a889ba8a61475'
             'ab9c457cb6cb918d1439f14a47ad41878687a52b421a718ca99e85d01341eb97')
 
 build() {
