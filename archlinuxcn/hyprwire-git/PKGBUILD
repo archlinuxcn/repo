@@ -1,0 +1,38 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+
+pkgname=hyprwire-git
+_pkgname=${pkgname%-git}
+pkgver=0.2.0
+pkgrel=1
+pkgdesc="A fast and consistent wire protocol for IPC"
+arch=('x86_64')
+url="https://github.com/hyprwm/${_pkgname}"
+license=('BSD-3-Clause')
+depends=('gcc-libs' 'hyprutils-git' 'libffi' 'pugixml')
+makedepends=('git' 'cmake')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}" "lib${_pkgname}.so")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "${_pkgname}/"
+	git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+	local cmake_options=(
+		-B build
+		-S "${_pkgname}"
+		-D CMAKE_BUILD_TYPE=None
+		-D CMAKE_INSTALL_PREFIX=/usr
+	)
+
+	cmake "${cmake_options[@]}"
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+	install -Dm644 "${_pkgname}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
