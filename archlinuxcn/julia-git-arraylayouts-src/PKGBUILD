@@ -1,6 +1,6 @@
 pkgname=julia-git-arraylayouts-src
-pkgver=1.12.0
-_commit=e809d341a42c1d3a68f82db8da1d50a78b76093e
+pkgver=1.12.2
+_commit=3afd6904ea67c0dab7b8d008f932a47758086a2f
 pkgrel=1
 pkgdesc="ArrayLayouts.jl"
 url="https://github.com/JuliaLinearAlgebra/ArrayLayouts.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/ArrayLayouts.jl.git#commit=$_commit")
-sha256sums=('43b6c330e50fb75a68ad813680c4ee1e595a72ccea72e77b9d92b6cde8ca0123')
+sha256sums=('716791fbab7c1a29dbb0840165d7c671cec740446874bf1ff7ce82f234ffb4de')
 
 package() {
   cd ArrayLayouts.jl
