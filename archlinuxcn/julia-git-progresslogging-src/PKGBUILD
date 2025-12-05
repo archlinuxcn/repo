@@ -1,6 +1,6 @@
 pkgname=julia-git-progresslogging-src
-pkgver=0.1.5
-_commit=7c4983631f5eaaa00c121d1a355b7020dc7ef733
+pkgver=0.1.6
+_commit=ddfd7a82c5ee827faa31722cfe5049eb8bad2979
 pkgrel=1
 pkgdesc="ProgressLogging.jl"
 url="https://github.com/JuliaLogging/ProgressLogging.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLogging/ProgressLogging.jl.git#commit=$_commit")
-sha256sums=('252cffe68f53bb258fd01462be1e8f93f6dab543c34042049850ddf48272e704')
+sha256sums=('479632b77b87ca7ef9ab1e7dc9d0f9ad635552acf01f0af6bf2ea94455f42aec')
 
 package() {
   cd ProgressLogging.jl
