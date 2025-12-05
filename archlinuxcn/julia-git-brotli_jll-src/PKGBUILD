@@ -1,7 +1,7 @@
 pkgname=julia-git-brotli_jll-src
-pkgver=1.1.1+0
-_commit=58064afa6b741206901b5d245275043129770f3d
-pkgrel=2
+pkgver=1.2.0+0
+_commit=1f5d672dedf58d7036d8c243b87a19882365f9f3
+pkgrel=1
 pkgdesc="brotli_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/brotli_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git brotli)
 source=("git+https://github.com/JuliaBinaryWrappers/brotli_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('3bef945c8a29001b306af2da895799c8b3955002d0382f2d6b0504f5c8a2f763'
+sha256sums=('4a6892d100e280db49ad5e733611a380ae412f9cc94c3b35c0a5cd67a611c879'
             '4c3014dfae99b3d68786189414115419bd106b2a19eb767c168dec39c46b391c')
 
 build() {
