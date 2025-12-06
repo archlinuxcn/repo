@@ -2,8 +2,8 @@
 # Contributor: William Turner <willtur.will@gmail.com>
 
 pkgname=afdko
-pkgver=4.0.2
-pkgrel=4
+pkgver=4.0.3
+pkgrel=1
 pkgdesc='Adobe Font Development Kit for OpenType'
 arch=(x86_64)
 url="https://github.com/adobe-type-tools/$pkgname"
@@ -36,7 +36,7 @@ checkdepends=(python-pytest)
 conflicts=(spot-client)
 _archive="$pkgname-$pkgver"
 source=("$url/releases/download/$pkgver/$_archive.tar.gz")
-sha256sums=('e1a31e871e83dd022635b852297c433c8e9c9d9d4f0c0f634e8d55dde28ad930')
+sha256sums=('5feed7c2468e25b25fce0479c04af07f4ed2680bc9251bb4c4aef9ec2fba5720')
 
 prepare () {
 	cd "$_archive"
