@@ -2,9 +2,8 @@ maintainers:
   - github: oldherl
 
 update_on:
-  - source: github
-    github: oldherl/MEGAsync
-    use_latest_tag: true
+  - source: manual
+    manual: 6.0.0.3
   - source: alpm
     from_pattern: ^(\d+\.\d+)\..*
     to_pattern: \1
@@ -12,6 +11,3 @@ update_on:
   - alias: libcrypto
   - alias: libssl
   - alias: icu
-  - source: alpm
-    alpm: ffmpeg
-    provided: libavcodec.so
