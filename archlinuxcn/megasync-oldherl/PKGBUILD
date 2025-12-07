@@ -53,8 +53,9 @@ sha256sums=('f7b5264ec68b648179fd36bab1a200c0af1563c2fbaef4fec4221f142ea56b26'
             'c1911aabbff6b5d3878e5715ca6b981442f354eca3181a22b2f5beff0ca80733')
 
 prepare() {
+    ls -l -d src/DesignTokensImporter/megadesignassets || true
     # https://github.com/meganz/MEGAsync/issues/1010#issuecomment-2726028797
-    git -C MEGAsync rm --cached src/DesignTokensImporter/megadesignassets
+    git -C MEGAsync rm --cached src/DesignTokensImporter/megadesignassets || true
     
     git -C MEGAsync submodule init
     git -C MEGAsync config --local submodule.src/MEGASync/mega.url "${srcdir}/meganz-sdk"
