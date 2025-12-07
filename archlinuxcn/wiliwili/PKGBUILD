@@ -4,7 +4,7 @@
 # This PKGBUILD is base on the AUR repo wiliwili-git, by yuioto <yuiotochan@outlook.com>
 
 pkgname=wiliwili
-pkgver=1.5.2
+pkgver=1.5.3
 pkgrel=1
 pkgdesc='专为手柄控制设计的第三方跨平台B站客户端'
 arch=('x86_64' 'aarch64')
@@ -13,7 +13,7 @@ license=('GPL-3.0-or-later')
 depends=('curl' 'dbus' 'fmt' 'gcc-libs' 'glibc' 'hicolor-icon-theme' 'libwebp' 'mpv' 'opencc' 'openssl' 'pystring' 'qrcodegencpp-cmake' 'tinyxml2' 'zlib')
 makedepends=('cmake' 'git' 'libxi' 'libxinerama' 'ninja' 'python' 'wayland-protocols')
 source=("${pkgname}"::"git+${url}.git#tag=v${pkgver}")
-b2sums=('ac7d1fef8aafe0a34ad9c9447c14432b0d649a7c2e365bfaf95aeebd9efb348e0817adf13114b1687303250769e6fc2635061b3246baa7c611e175c3a52fe11e')
+b2sums=('c2922996bd4f4d5e1c8f92145e5e4e5e53d846cd3f0a1fb1179b90ae2bb82b2c15eba6995b23a914c5aaf1e009fef65b4d51214c4d5d8ecaec4e7b8819eb9aa8')
 
 prepare() {
   git -C "${srcdir}/${pkgname}" rm library/{OpenCC,QR-Code-generator,pystring}
