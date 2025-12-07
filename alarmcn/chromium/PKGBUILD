@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium
-pkgver=142.0.7444.175
+pkgver=143.0.7499.40
 pkgrel=1
 _launcher_ver=8
 _manual_clone=1
@@ -18,7 +18,7 @@ depends=('gtk3' 'nss' 'alsa-lib' 'xdg-utils' 'libxss' 'libcups' 'libgcrypt'
          'ttf-liberation' 'systemd' 'dbus' 'libpulse' 'pciutils' 'libva'
          'libffi' 'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('python' 'gn' 'ninja' 'clang' 'lld' 'gperf' 'nodejs' 'pipewire'
-             'rustup' 'rust-bindgen' 'qt6-base' 'java-runtime-headless'
+             'rust' 'rust-bindgen' 'qt6-base' 'java-runtime-headless'
              'git' 'compiler-rt')
 optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kdialog: support for native dialogs in Plasma'
@@ -64,7 +64,7 @@ declare -gA _system_libs=(
   #[libaom]=aom
   #[libavif]=libavif  # needs -DAVIF_ENABLE_EXPERIMENTAL_GAIN_MAP=ON
   [libjpeg]=libjpeg-turbo
-  [libpng]=libpng
+  # [libpng]=libpng
   #[libvpx]=libvpx
   [libwebp]=libwebp
   [libxml]=libxml2
@@ -89,7 +89,7 @@ depends+=(${_system_libs[@]})
 _google_api_key=AIzaSyDwr302FpOSkGRpLlUpPThNTDPbXcIn_FM
 
 prepare() {
-  rustup toolchain install 1.91.0
+  # rustup toolchain install 1.91.0
 
   if (( _manual_clone )); then
     ./fetch-chromium-release $pkgver
@@ -277,18 +277,18 @@ build() {
 package() {
   cd chromium-launcher-$_launcher_ver
   make PREFIX=/usr DESTDIR="$pkgdir" install
-  install -Dm644 LICENSE \
+  install -Dvm644 LICENSE \
     "$pkgdir/usr/share/licenses/chromium/LICENSE.launcher"
 
   cd ../chromium-$pkgver
 
-  install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
-  install -D out/Release/chromedriver.unstripped "$pkgdir/usr/bin/chromedriver"
-  install -Dm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
+  install -Dv out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
+  install -Dv out/Release/chromedriver.unstripped "$pkgdir/usr/bin/chromedriver"
+  install -Dvm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
 
-  install -Dm644 chrome/installer/linux/common/desktop.template \
+  install -Dvm644 chrome/installer/linux/common/desktop.template \
     "$pkgdir/usr/share/applications/chromium.desktop"
-  install -Dm644 chrome/app/resources/manpage.1.in \
+  install -Dvm644 chrome/app/resources/manpage.1.in \
     "$pkgdir/usr/share/man/man1/chromium.1"
   sed -i \
     -e 's/@@MENUNAME@@/Chromium/g' \
@@ -305,7 +305,7 @@ package() {
     export $(grep -o '^[A-Z_]*' $info_file)
     sed -E -e 's/@@([A-Z_]*)@@/\${\1}/g' -e '/<update_contact>/d' $tmpl_file | envsubst
   ) \
-  | install -Dm644 /dev/stdin "$pkgdir/usr/share/metainfo/chromium.appdata.xml"
+  | install -Dvm644 /dev/stdin "$pkgdir/usr/share/metainfo/chromium.appdata.xml"
 
   local toplevel_files=(
     chrome_100_percent.pak
@@ -330,19 +330,19 @@ package() {
   fi
 
   cp "${toplevel_files[@]/#/out/Release/}" "$pkgdir/usr/lib/chromium/"
-  install -Dm644 -t "$pkgdir/usr/lib/chromium/locales" out/Release/locales/*.pak
+  install -Dvm644 -t "$pkgdir/usr/lib/chromium/locales" out/Release/locales/*.pak
 
   for size in 24 48 64 128 256; do
-    install -Dm644 "chrome/app/theme/chromium/product_logo_$size.png" \
+    install -Dvm644 "chrome/app/theme/chromium/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
   done
 
   for size in 16 32; do
-    install -Dm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" \
+    install -Dvm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
   done
 
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/chromium/LICENSE"
+  install -Dvm644 LICENSE "$pkgdir/usr/share/licenses/chromium/LICENSE"
 }
 
 # vim:set ts=2 sw=2 et:
