@@ -1,0 +1,64 @@
+diff --git a/src/MEGASync/gui/InfoDialog.cpp b/src/MEGASync/gui/InfoDialog.cpp
+index 2838345a1..dce93f457 100644
+--- a/src/MEGASync/gui/InfoDialog.cpp
++++ b/src/MEGASync/gui/InfoDialog.cpp
+@@ -162,7 +162,7 @@ InfoDialog::InfoDialog(MegaApplication* app, QWidget* parent, InfoDialog* olddia
+         // To avoid issues with text input we implement a popup ourselves
+         // instead of using Qt::Popup by listening to the WindowDeactivate
+         // event.
+-        Qt::WindowFlags flags = Qt::FramelessWindowHint;
++        Qt::WindowFlags flags = Qt::FramelessWindowHint  | Qt::WindowStaysOnTopHint;
+ 
+         if (Platform::getInstance()->isTilingWindowManager())
+         {
+diff --git a/src/MEGASync/main.cpp b/src/MEGASync/main.cpp
+index fda1eeea0..d92b7421d 100644
+--- a/src/MEGASync/main.cpp
++++ b/src/MEGASync/main.cpp
+@@ -436,18 +436,6 @@ int main(int argc, char *argv[])
+     }
+ #endif
+ 
+-#if defined(Q_OS_LINUX)
+-    if (!qEnvironmentVariableIsSet("DO_NOT_UNSET_XDG_SESSION_TYPE"))
+-    {
+-        QString sessionType = qEnvironmentVariable("XDG_SESSION_TYPE");
+-        if (!sessionType.isEmpty() && sessionType == QString::fromUtf8("wayland"))
+-        {
+-            std::cerr << "Avoiding wayland" << std::endl;
+-            qunsetenv("XDG_SESSION_TYPE");
+-        }
+-    }
+-#endif
+-
+ #ifndef Q_OS_MACX
+ #if defined(WIN32)
+     ScaleFactorManager scaleFactorManager(OsType::WIN);
+diff --git a/src/MEGASync/platform/linux/PlatformImplementation.cpp b/src/MEGASync/platform/linux/PlatformImplementation.cpp
+index 3af19ee23..7f9b26f25 100644
+--- a/src/MEGASync/platform/linux/PlatformImplementation.cpp
++++ b/src/MEGASync/platform/linux/PlatformImplementation.cpp
+@@ -104,9 +104,10 @@ bool PlatformImplementation::isStartOnStartupActive()
+ bool PlatformImplementation::isTilingWindowManager()
+ {
+     static const QSet<QString> tiling_wms = {
+-        QLatin1String("i3"),
+-        QLatin1String("Hyprland"),
+-        QLatin1String("sway")
++        QString::fromUtf8("sway"),
++        QString::fromUtf8("wayfire"),
++        QString::fromUtf8("Hyprland"),
++        QString::fromUtf8("i3")
+     };
+ 
+     return getValue("MEGASYNC_ASSUME_TILING_WM", false)
+@@ -333,6 +334,9 @@ QString PlatformImplementation::getWindowManagerName()
+ {
+     static QString wmName;
+     static bool cached = false;
++    if (qgetenv("XDG_SESSION_TYPE") == "wayland") {
++        return QString::fromLocal8Bit(qgetenv("XDG_CURRENT_DESKTOP"));
++    }
+ 
+     if (!cached)
+     {

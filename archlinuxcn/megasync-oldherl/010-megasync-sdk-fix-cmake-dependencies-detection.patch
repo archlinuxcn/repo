@@ -1,6 +1,6 @@
---- a/contrib/cmake/modules/sdklib_libraries.cmake
-+++ b/contrib/cmake/modules/sdklib_libraries.cmake
-@@ -95,7 +95,7 @@ macro(load_sdklib_libraries)
+--- a/cmake/modules/sdklib_libraries.cmake
++++ b/cmake/modules/sdklib_libraries.cmake
+@@ -98,7 +98,7 @@ macro(load_sdklib_libraries)
  
          find_package(PkgConfig REQUIRED) # For libraries loaded using pkg-config
  
@@ -9,7 +9,7 @@
          target_link_libraries(SDKlib PUBLIC PkgConfig::cryptopp) # TODO: Private for SDK core
  
          pkg_check_modules(sodium REQUIRED IMPORTED_TARGET libsodium)
-@@ -139,7 +139,7 @@ macro(load_sdklib_libraries)
+@@ -143,7 +143,7 @@ macro(load_sdklib_libraries)
          endif()
  
          if(USE_PDFIUM)

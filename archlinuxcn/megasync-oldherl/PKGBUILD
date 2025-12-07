@@ -6,71 +6,83 @@
 # Contributor: Alfonso Saavedra "Son Link" <sonlink.dourden@gmail.com>
 # Contributor: Hexchain Tong <i at hexchain dot org>
 
-pkgname=megasync-oldherl
-_pkgname=megasync
-pkgver=5.4.1.0
-pkgrel=3
-pkgdesc="MEGA desktop application for syncing with MEGA Cloud Drive. Oldherl\'s fork"
+pkgname=megasync
+pkgver=6.0.0.3
+pkgrel=2
+pkgdesc='MEGA desktop application for syncing with MEGA Cloud Drive. Enable Wayland'
 arch=('x86_64')
-provides=(megasync)
-conflicts=(megasync)
-url='https://github.com/oldherl/MEGAsync/'
+url='https://github.com/meganz/MEGAsync/'
 license=('LicenseRef-Mega-Limited-Code-License')
-depends=('c-ares'
-         'crypto++'
-         'curl'
-         'ffmpeg'
-         'freeimage'
-         'hicolor-icon-theme'
-         'icu'
-         'libmediainfo'
-         'libsodium'
-         'libuv'
-         'libxcb'
-         'libzen'
-         'openssl'
-         'qt5-base'
-         'qt5-declarative'
-         'qt5-graphicaleffects'
-         'qt5-quickcontrols'
-         'qt5-quickcontrols2'
-         'qt5-svg'
-         'qt5-x11extras'
-         'sqlite'
-         'zlib'
-)
-makedepends=('git' 'cmake' 'qt5-tools')
-source=("git+https://github.com/oldherl/MEGAsync.git#tag=${pkgver}"
+depends=(
+    'crypto++'
+    'curl'
+    'gcc-libs'
+    'glibc'
+    'hicolor-icon-theme'
+    'icu'
+    'libmediainfo'
+    'libsodium'
+    'libuv'
+    'libxcb'
+    'libzen'
+    'openssl'
+    'qt5-base'
+    'qt5-declarative'
+    'qt5-graphicaleffects'
+    'qt5-quickcontrols'
+    'qt5-quickcontrols2'
+    'qt5-svg'
+    'qt5-x11extras'
+    'sqlite'
+    'zlib')
+makedepends=(
+    'cmake'
+    'git'
+    'qt5-tools')
+source=("git+https://github.com/meganz/MEGAsync.git#tag=v${pkgver}_Linux"
         'meganz-sdk'::'git+https://github.com/meganz/sdk.git'
-        '010-megasync-freeimage-remove-obsolete-ffmpeg-macros.patch'
-        '020-megasync-sdk-fix-cmake-dependencies-detection.patch'
-        '030-megasync-app-fix-cmake-dependencies-detection.patch'
-)
-sha256sums=('4041b208ad1f5a8c59ddc91edda5618362e2c8b608f1ba74fa4b1198bc12329e'
+        '010-megasync-sdk-fix-cmake-dependencies-detection.patch'
+        '020-megasync-app-fix-cmake-dependencies-detection.patch'
+        '030-megasync-app-disable-isolated-gfx-for-disabling-freeimage-in-sdk.patch'
+        'allow-wayland.patch')
+sha256sums=('f7b5264ec68b648179fd36bab1a200c0af1563c2fbaef4fec4221f142ea56b26'
             'SKIP'
-            '3df5d43ca1951c9e48dbb7f8e221bc8fff1a9fb1b7c934cb5ea7f195ae8f2e04'
-            '2da83bb6a20aa19b58b4115646bacb9d76e2504b45b5094abeba94beac2301fb'
-            'a5883be2d00dbacaacf78231bfeeac27f4e8a471c3256370e94fec3e55b1d171')
+            'ceedf9b236b3f65f796e389b2c6ef33d71348d8be3c517cc59c423f1f354d092'
+            'a5883be2d00dbacaacf78231bfeeac27f4e8a471c3256370e94fec3e55b1d171'
+            '6a2b12ac8f210ece16216168aa699e57218577e7fea6e971d0e9b398ad78c89f'
+            'c1911aabbff6b5d3878e5715ca6b981442f354eca3181a22b2f5beff0ca80733')
 
 prepare() {
+    # https://github.com/meganz/MEGAsync/issues/1010#issuecomment-2726028797
+    git -C MEGAsync rm --cached src/DesignTokensImporter/megadesignassets
+    
     git -C MEGAsync submodule init
     git -C MEGAsync config --local submodule.src/MEGASync/mega.url "${srcdir}/meganz-sdk"
     git -C MEGAsync -c protocol.file.allow='always' submodule update
     
-    patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/010-megasync-freeimage-remove-obsolete-ffmpeg-macros.patch"
-    patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/020-megasync-sdk-fix-cmake-dependencies-detection.patch"
-    patch -d MEGAsync -Np1 -i "${srcdir}/030-megasync-app-fix-cmake-dependencies-detection.patch"
+    patch -d MEGAsync/src/MEGASync/mega -Np1 -i "${srcdir}/010-megasync-sdk-fix-cmake-dependencies-detection.patch"
+    patch -d MEGAsync -Np1 -i "${srcdir}/020-megasync-app-fix-cmake-dependencies-detection.patch"
+    patch -d MEGAsync -Np1 -i "${srcdir}/030-megasync-app-disable-isolated-gfx-for-disabling-freeimage-in-sdk.patch"
+    patch -d MEGAsync -Np1 -i "${srcdir}/allow-wayland.patch"
 }
 
 build() {
     export CXXFLAGS+=' -DNDEBUG'
+    
+    # freeimage is disabled as it was dropped from the official repositories due to security concerns
+    # see: https://archlinux.org/todo/drop-freeimage/
+    # ffmpeg and libpdfium seems to be unneeded when disabling freeimage
     cmake -B build -S MEGAsync \
         -G 'Unix Makefiles' \
         -DCMAKE_BUILD_TYPE:STRING='None' \
-        -DCMAKE_MODULE_PATH:PATH="${srcdir}/MEGAsync/src/MEGASync/mega/contrib/cmake/modules/packages" \
+        -DCMAKE_MODULE_PATH:PATH="${srcdir}/MEGAsync/src/MEGASync/mega/cmake/modules/packages" \
         -DCMAKE_SKIP_INSTALL_RPATH:BOOL='YES' \
-        -DUSE_PDFIUM=0 \
-        -DENABLE_CHAT=0 \
+        -DENABLE_DESIGN_TOKENS_IMPORTER:BOOL='OFF' \
+        -DENABLE_DESKTOP_APP_TESTS:BOOL='OFF' \
+        -DUSE_BREAKPAD:BOOL='OFF' \
+        -DUSE_FFMPEG:BOOL='OFF' \
+        -DUSE_FREEIMAGE:BOOL='OFF' \
+        -DUSE_PDFIUM:BOOL='OFF' \
         -Wno-dev
     cmake --build build --target MEGAsync
 }
