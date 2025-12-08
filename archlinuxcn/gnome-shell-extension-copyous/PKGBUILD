@@ -1,0 +1,44 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname="gnome-shell-extension-copyous"
+_uuid=copyous@boerdereinar.dev
+pkgver=1.1.2
+pkgrel=1
+pkgdesc="Modern Clipboard Manager for GNOME"
+arch=('any')
+url="https://github.com/boerdereinar/copyous"
+license=('GPL-3.0+')
+depends=('gnome-shell>=45'
+         'libgda6'
+         'gsound')
+makedepends=('pnpm' 'git')
+source=("${pkgver}::git+${url}.git#tag=v${pkgver}")
+b2sums=('fbd82addb806c01dab2d10805b634baf386c3e2a1fadfd4074c92611a8dae6bd6f45964dacc9224fb017aacce32f681fefc25ac1d47558411a1887c63f395ad9')
+
+prepare() {
+  cd "${srcdir}/${pkgver}"
+
+  git submodule update --init --recursive --depth=1
+}
+
+build() {
+  cd "${srcdir}/${pkgver}"
+
+  pnpm install --ignore-scripts
+  env RELEASE=1 make build
+}
+
+package() {
+  cd "${srcdir}/${pkgver}"
+
+  local extdir="${pkgdir}"/usr/share/gnome-shell/extensions/"${_uuid}"
+
+  install -dm755 "${extdir}"
+
+  bsdtar xf "dist/"*.zip -C "${extdir}"
+
+  install -Dm644 "${extdir}"/schemas/*.gschema.xml -t "${pkgdir}"/usr/share/glib-2.0/schemas/
+  rm -rf "${extdir}"/schemas
+
+  mv "${extdir}/locale" "${pkgdir}"/usr/share/
+}
