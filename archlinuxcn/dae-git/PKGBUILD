@@ -36,6 +36,9 @@ prepare() {
 	git config submodule.control/kern/headers.url "${srcdir}/dae_bpf_headers"
 	git config submodule.trace/kern/headers.url "${srcdir}/dae_bpf_headers"
 	git -c protocol.file.allow=always submodule update
+
+	export GOPATH="${srcdir}"
+	go mod download -modcacherw -x
 }
 
 build() {
