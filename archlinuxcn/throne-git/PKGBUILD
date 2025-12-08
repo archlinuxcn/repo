@@ -31,11 +31,11 @@ sha512sums=('SKIP'
             'a47e8b547bd8759e7bc5c31f6055ad5ed3f6ee5879c07de8c05349b381578f907d3bdfb833fd5296fb4b20b6cacae6b622b2ab1fc7e46fce309cb273e82bc1c5')
 
 pkgver() {
-	git -C "${_pkgname}" describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+	git -C "${_srcname}" describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
-	cd "${_pkgname}/"
+	cd "${_srcname}/"
 	cp "${srcdir}/srslist.h" .
 
 	cd core/server
@@ -49,7 +49,7 @@ prepare() {
 }
 
 build() {
-	cd "${_pkgname}/"
+	cd "${_srcname}/"
 
 	cmake -B build \
 		-DCMAKE_BUILD_TYPE=None \
@@ -77,7 +77,7 @@ package() {
 	install -Dm644 "${_srcname}.desktop" -t "${pkgdir}/usr/share/applications/"
 	install -Dm755 "${_pkgname}.sh" "${pkgdir}/usr/bin/${_pkgname}"
 
-	cd "${_pkgname}/"
+	cd "${_srcname}/"
 	install -Dm644 "res/public/${_srcname}.png" -t "${pkgdir}/usr/share/pixmaps/"
 	install -Dm755 build/{Core,Throne} -t "${pkgdir}/usr/lib/${_pkgname}/"
 }
