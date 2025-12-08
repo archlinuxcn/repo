@@ -1,6 +1,6 @@
 pkgname=julia-git-libpng_jll-src
-pkgver=1.6.51+0
-_commit=ed088a59ebf4a397adb71f11dbee11daf475029f
+pkgver=1.6.53+0
+_commit=7cc355e1bdbe99c92a3517fc0a42af8a2a90b80b
 pkgrel=1
 pkgdesc="libpng_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libpng_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libpng)
 source=("git+https://github.com/JuliaBinaryWrappers/libpng_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('0c6d13efcb76dfeb98c5a81174a1aef4fd3047bc3fd753f4c260edcbcdadd3d8'
+sha256sums=('870277d3c1d2f3d6023f9136397cb98c9f055bfd6c08ad2a75e95c818974a58b'
             '155678c6fd8b9929fbd89560614ff1ca731f7c5ccaa857913e5259e0ec595b75')
 
 build() {
