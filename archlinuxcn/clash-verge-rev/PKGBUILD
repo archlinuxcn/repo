@@ -19,9 +19,13 @@ sha512sums=('d2e93f59a003eb05fd0bdaa985298ecf7d9a403ad7e908dcd87c3bf19651f07b6c6
             '9dbce77076b07691b5359b3e91c82190880f6caad291102fa28d8480bba53c27c8bac324032cbfee74e69653e2e97e54c430d17ad4fc5aaeb7a833d1b6598a4b')
 
 prepare() {
-	cd "${pkgname}-${pkgver}/"
+	pushd "${pkgname}-${pkgver}/"
 	jq '.bundle.createUpdaterArtifacts = false' src-tauri/tauri.conf.json | sponge src-tauri/tauri.conf.json
 	pnpm i
+	popd
+
+	cd "${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
+	_prepare_service
 }
 
 build() {
@@ -29,7 +33,6 @@ build() {
 	export CFLAGS+=" -ffat-lto-objects"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
-	_prepare_service
 	_build_service
 	_check_service
 	_package_service
