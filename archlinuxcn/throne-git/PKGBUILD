@@ -8,7 +8,7 @@ pkgver=1.0.11.r0.g6af1798
 pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-box)"
 arch=('x86_64' 'aarch64' 'riscv64')
-url="https://github.com/throneproj/${_pkgname}"
+url="https://throneproj.github.io"
 license=('GPL-3.0-or-later')
 depends=('qt6-base' 'qt6-charts')
 makedepends=('git' 'cmake' 'go' 'qt6-tools' 'protobuf' 'vulkan-headers')
@@ -20,7 +20,7 @@ conflicts=('throne' 'nekoray-git')
 provides=('throne')
 replaces=('nekoray-git')
 source=(
-	"git+${url}.git"
+	"git+https://github.com/throneproj/${_srcname}.git"
 	"https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/srslist.h"
 	"${_pkgname}.sh"
 	"${_srcname}.desktop"
