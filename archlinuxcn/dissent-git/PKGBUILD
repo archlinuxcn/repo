@@ -23,7 +23,10 @@ pkgver() {
 }
 
 prepare() {
-	mkdir -p "${_pkgname}/build/"
+	cd "${_pkgname}/"
+	export GOPATH="${srcdir}"
+	go mod download -modcacherw -x
+	mkdir build
 }
 
 build() {
@@ -33,7 +36,6 @@ build() {
 	export CGO_CFLAGS="${CFLAGS}"
 	export CGO_CXXFLAGS="${CXXFLAGS}"
 	export CGO_LDFLAGS="${LDFLAGS}"
-	export GOPATH="${srcdir}/go"
 	export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 	go build -o build
 }
