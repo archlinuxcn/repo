@@ -1,0 +1,51 @@
+From f814e9262308167161c2e688ce12aa77c0a5e02a Mon Sep 17 00:00:00 2001
+From: Tiago de Paula <tiagodepalves@gmail.com>
+Date: Sat, 14 Jun 2025 18:23:40 -0300
+Subject: [PATCH] fix: drop /etc files for Arch Linux
+
+This patch disables install of modprobe and udev file in '/etc' at
+DKMS step. For Arch at least, these files usually go on '/usr/lib'
+when they aren't actual user files.
+---
+ hid-xpadneo/dkms.post_install | 10 ----------
+ hid-xpadneo/dkms.post_remove  | 10 ----------
+ 2 files changed, 20 deletions(-)
+
+diff --git a/hid-xpadneo/dkms.post_install b/hid-xpadneo/dkms.post_install
+index 96a753f..97a8d03 100755
+--- a/hid-xpadneo/dkms.post_install
++++ b/hid-xpadneo/dkms.post_install
+@@ -21,13 +21,3 @@ else
+ 		echo "Y" >"${DISABLE_ERTM}"
+ 	fi
+ fi
+-
+-echo "Installing modalias database..."
+-install -D -m 0644 -t /etc/modprobe.d etc-modprobe.d/xpadneo.conf
+-
+-echo "Installing udev rules..."
+-install -D -m 0644 -t /etc/udev/rules.d etc-udev-rules.d/60-xpadneo.rules
+-install -D -m 0644 -t /etc/udev/rules.d etc-udev-rules.d/70-xpadneo-disable-hidraw.rules
+-
+-echo "Reloading udev..."
+-udevadm control --reload
+diff --git a/hid-xpadneo/dkms.post_remove b/hid-xpadneo/dkms.post_remove
+index 3a7a17d..8f72a03 100755
+--- a/hid-xpadneo/dkms.post_remove
++++ b/hid-xpadneo/dkms.post_remove
+@@ -4,13 +4,3 @@
+ ERTM_OVERRIDE="/etc/modprobe.d/99-xpadneo-bluetooth.conf"
+
+ [ -L "${ERTM_OVERRIDE}" ] || { echo "Uninstalling ERTM override..."; rm -f "${ERTM_OVERRIDE}"; }
+-
+-echo "Uninstalling modalias database..."
+-rm -f /etc/modprobe.d/xpadneo.conf
+-
+-echo "Uninstalling udev rules..."
+-rm -f /etc/udev/rules.d/70-xpadneo-disable-hidraw.rules
+-rm -f /etc/udev/rules.d/60-xpadneo.rules
+-
+-echo "Reloading udev..."
+-udevadm control --reload
+--
+2.49.0

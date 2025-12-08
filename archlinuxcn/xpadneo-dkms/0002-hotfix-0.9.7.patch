@@ -1,0 +1,43 @@
+From 48c9312c089072ba9b87bcb78c41ae9104aa25a7 Mon Sep 17 00:00:00 2001
+From: Tiago de Paula <tiagodepalves@gmail.com>
+Date: Sat, 6 Dec 2025 16:19:32 -0300
+Subject: [PATCH] hotfix(0.9.7): support for Linux 6.18
+
+Based on https://github.com/kakra/xpadneo/commit/97929262cc3103aa9d627cc4489dabe552098e05
+
+Fixes https://github.com/atar-axis/xpadneo/issues/575
+---
+ hid-xpadneo/src/hid-xpadneo.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/hid-xpadneo/src/hid-xpadneo.c b/hid-xpadneo/src/hid-xpadneo.c
+index 709df68..3c20923 100644
+--- a/hid-xpadneo/src/hid-xpadneo.c
++++ b/hid-xpadneo/src/hid-xpadneo.c
+@@ -1193,7 +1193,11 @@ static int xpadneo_probe(struct hid_device *hdev, const struct hid_device_id *id
+ 	if (xdata == NULL)
+ 		return -ENOMEM;
+ 
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 18, 0)
+ 	xdata->id = ida_simple_get(&xpadneo_device_id_allocator, 0, 0, GFP_KERNEL);
++#else
++	xdata->id = ida_alloc(&xpadneo_device_id_allocator, GFP_KERNEL);
++#endif
+ 	xdata->quirks = id->driver_data;
+ 
+ 	xdata->hdev = hdev;
+@@ -1288,7 +1292,11 @@ static int xpadneo_probe(struct hid_device *hdev, const struct hid_device_id *id
+ static void xpadneo_release_device_id(struct xpadneo_devdata *xdata)
+ {
+ 	if (xdata->id >= 0) {
++#if LINUX_VERSION_CODE < KERNEL_VERSION(4, 18, 0)
+ 		ida_simple_remove(&xpadneo_device_id_allocator, xdata->id);
++#else
++		ida_free(&xpadneo_device_id_allocator, xdata->id);
++#endif
+ 		xdata->id = -1;
+ 	}
+ }
+-- 
+2.52.0
+
