@@ -17,7 +17,10 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${_pkgver}.tar.g
 sha256sums=('b08ae331e5c69759eb7b9511908007fc3e9c7a28208bfa66ffbd84b6f335364a')
 
 prepare() {
-	mkdir "${pkgname}-${_pkgver}/build/"
+	cd "${pkgname}-${_pkgver}/"
+	export GOPATH="${srcdir}"
+	go mod download -modcacherw -x
+	mkdir build
 }
 
 build() {
@@ -27,7 +30,6 @@ build() {
 	export CGO_CFLAGS="${CFLAGS}"
 	export CGO_CXXFLAGS="${CXXFLAGS}"
 	export CGO_LDFLAGS="${LDFLAGS}"
-	export GOPATH="${srcdir}/go"
 	export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 	go build -o build
 }
