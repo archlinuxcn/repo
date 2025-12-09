@@ -1,0 +1,99 @@
+From f2ae3b4f639e981c6bcdaa6187051958eab4c356 Mon Sep 17 00:00:00 2001
+From: Jameson Nash <vtjnash@gmail.com>
+Date: Thu, 20 Nov 2025 09:46:02 -0500
+Subject: [PATCH] fix Julia v1.13 support (#124)
+
+Co-authored-by: Kristoffer Carlsson <kcarlsson89@gmail.com>
+---
+ src/Pardiso.jl     | 16 ++++++++--------
+ src/mkl_pardiso.jl |  8 ++++----
+ 2 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/src/Pardiso.jl b/src/Pardiso.jl
+index 4c575a9..3723214 100644
+--- a/src/Pardiso.jl
++++ b/src/Pardiso.jl
+@@ -38,7 +38,7 @@ else
+     const PARDISO_FUNC = :pardiso
+ end
+ 
+-const libmkl_rt = Ref{String}("")
++libmkl_rt = ""
+ 
+ export PardisoSolver, MKLPardisoSolver
+ export set_iparm!, set_dparm!, set_matrixtype!, set_solver!, set_phase!, set_msglvl!, set_nprocs!
+@@ -145,17 +145,17 @@ panua_is_available() = panua_is_loaded() && panua_is_licensed()
+ 
+     
+ function __init__()
+-    global MKL_LOAD_FAILED
++    global MKL_LOAD_FAILED, libmkl_rt
+     if LOCAL_MKL_FOUND
+         if Sys.iswindows()
+-            libmkl_rt[] = "mkl_rt"
++            libmkl_rt = "mkl_rt"
+         elseif Sys.isapple()
+-            libmkl_rt[] = "@rpath/libmkl_rt.dylib"
++            libmkl_rt = "@rpath/libmkl_rt.dylib"
+         else
+-            libmkl_rt[] = "libmkl_rt"
++            libmkl_rt = "libmkl_rt"
+         end
+     elseif MKL_jll.is_available()
+-        libmkl_rt[] = MKL_jll.libmkl_rt_path
++        libmkl_rt = MKL_jll.libmkl_rt
+     end
+ 
+     if !haskey(ENV, "PARDISOLICMESSAGE")
+@@ -168,7 +168,7 @@ function __init__()
+ 
+     if mkl_is_available()
+         try
+-            libmklpardiso = Libdl.dlopen(libmkl_rt[])
++            libmklpardiso = Libdl.dlopen(libmkl_rt)
+             mklpardiso_f = Libdl.dlsym(libmklpardiso, "pardiso")
+         catch e
+             @error("MKL Pardiso did not manage to load, error thrown was: $(sprint(showerror, e))")
+@@ -178,7 +178,7 @@ function __init__()
+ 
+     # This is apparently needed for MKL to not get stuck on 1 thread when
+     # libpardiso is loaded in the block below...
+-    if libmkl_rt[] !== ""
++    if libmkl_rt !== ""
+         get_nprocs_mkl()
+     end
+ 
+diff --git a/src/mkl_pardiso.jl b/src/mkl_pardiso.jl
+index 887ced2..0a29805 100644
+--- a/src/mkl_pardiso.jl
++++ b/src/mkl_pardiso.jl
+@@ -38,17 +38,17 @@ show(io::IO, ps::MKLPardisoSolver) = print(io, string("$MKLPardisoSolver:\n",
+ 
+ set_nprocs!(ps::MKLPardisoSolver, n::Integer) = set_nprocs_mkl!(n)
+ set_nprocs_mkl!(n::Integer) =
+-    ccall((:mkl_domain_set_num_threads, libmkl_rt[]), Cvoid, (Ptr{Int32}, Ptr{Int32}), Ref((Int32(n))), Ref(MKL_DOMAIN_PARDISO))
++    ccall((:mkl_domain_set_num_threads, libmkl_rt), Cvoid, (Ptr{Int32}, Ptr{Int32}), Ref((Int32(n))), Ref(MKL_DOMAIN_PARDISO))
+ get_nprocs(ps::MKLPardisoSolver) = get_nprocs_mkl()
+ get_nprocs_mkl() =
+-    ccall((:mkl_domain_get_max_threads, libmkl_rt[]), Int32, (Ptr{Int32},), Ref(MKL_DOMAIN_PARDISO))
++    ccall((:mkl_domain_get_max_threads, libmkl_rt), Int32, (Ptr{Int32},), Ref(MKL_DOMAIN_PARDISO))
+ 
+ valid_phases(ps::MKLPardisoSolver) = keys(MKL_PHASES)
+ phases(ps::MKLPardisoSolver) = MKL_PHASES
+ 
+ function ccall_pardisoinit(ps::MKLPardisoSolver)
+     ERR = Ref{MklInt}(0)
+-    ccall((:pardisoinit, libmkl_rt[]), Cvoid,
++    ccall((:pardisoinit, libmkl_rt), Cvoid,
+           (Ptr{Int}, Ptr{MklInt}, Ptr{MklInt}),
+           ps.pt, Ref(MklInt(ps.mtype)), ps.iparm)
+     check_error(ps, ERR[])
+@@ -63,7 +63,7 @@ function ccall_pardiso(ps::MKLPardisoSolver, N, nzval::Vector{Tv}, colptr, rowva
+     NRHS = MklInt(NRHS)
+ 
+     ERR = Ref{MklInt}(0)
+-    ccall((PARDISO_FUNC, libmkl_rt[]), Cvoid,
++    ccall((PARDISO_FUNC, libmkl_rt), Cvoid,
+           (Ptr{Int}, Ptr{MklInt}, Ptr{MklInt}, Ptr{MklInt}, Ptr{MklInt},
+            Ptr{MklInt}, Ptr{Tv}, Ptr{MklInt}, Ptr{MklInt}, Ptr{MklInt},
+            Ptr{MklInt}, Ptr{MklInt}, Ptr{MklInt}, Ptr{Tv}, Ptr{Tv},

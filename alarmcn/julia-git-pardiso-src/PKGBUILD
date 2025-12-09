@@ -9,11 +9,15 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 depends_x86_64=(intel-mkl)
-source=("git+https://github.com/JuliaSparse/Pardiso.jl.git#commit=$_commit")
-sha256sums=('a09b9f121236e0e74b3f721511a6f22e9146fa9c5a84a8d636b0eaaca8c7fecc')
+source=("git+https://github.com/JuliaSparse/Pardiso.jl.git#commit=$_commit"
+        f2ae3b4f639e981c6bcdaa6187051958eab4c356.patch)
+sha256sums=('a09b9f121236e0e74b3f721511a6f22e9146fa9c5a84a8d636b0eaaca8c7fecc'
+            'ec8698197cc1e0f300dc6890965168bde8a1f54e508c95782699b8c302eb3d62')
 
 prepare() {
   cd Pardiso.jl
+
+  patch -Np1 --no-backup-if-mismatch < "../f2ae3b4f639e981c6bcdaa6187051958eab4c356.patch"
 
   if [[ $CARCH != x86_64 ]]; then
     sed -i -e '/function  *__init__()/a\ \ \ \ return' src/Pardiso.jl
