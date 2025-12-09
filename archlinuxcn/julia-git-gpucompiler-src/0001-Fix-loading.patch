@@ -1,0 +1,29 @@
+From 59f276577d17fb58dc99bd3a0985f75c0e0713db Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Tue, 9 Dec 2025 09:34:07 -0500
+Subject: [PATCH] Fix loading
+
+---
+ src/jlgen.jl | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/jlgen.jl b/src/jlgen.jl
+index 330cf7f..8e3d682 100644
+--- a/src/jlgen.jl
++++ b/src/jlgen.jl
+@@ -523,7 +523,11 @@ end
+ 
+ 
+ ## world view of the cache
+-using Core.Compiler: WorldView
++if !isdefined(CC, :WorldView)
++    using Core.Compiler: InternalCodeCache as WorldView
++else
++    using Core.Compiler: WorldView
++end
+ 
+ if !HAS_INTEGRATED_CACHE
+ 
+-- 
+2.51.2
+
