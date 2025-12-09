@@ -1,4 +1,4 @@
-From 0b53a36573016fd6266ecdd4ffc205d385fc9272 Mon Sep 17 00:00:00 2001
+From ca250ab8b3f5ca7d71b6f0e26fadb8359b9883a9 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:40:37 -0400
 Subject: [PATCH 10/18] Use CaptureInfo for NoCapture on LLVM 21
@@ -8,7 +8,7 @@ Subject: [PATCH 10/18] Use CaptureInfo for NoCapture on LLVM 21
  1 file changed, 28 insertions(+), 10 deletions(-)
 
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 22b410a447..b9241bb5e9 100644
+index a939c119ec..aaa74fc9e1 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -605,6 +605,24 @@ AttributeSet Attributes(LLVMContext &C, std::initializer_list<Attribute::AttrKin
@@ -90,16 +90,16 @@ index 22b410a447..b9241bb5e9 100644
                    Attributes(C, {Attribute::NonNull, Attribute::NoUndef, Attribute::ReadNone}) });
                    },
  };
-@@ -7941,7 +7959,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
-         AttrBuilder param(M->getContext());
-         param.addStructRetAttr(srt);
+@@ -8109,7 +8127,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+             param.addAttribute("julia.return_roots", std::to_string(tracked_count));
+         }
          param.addAttribute(Attribute::NoAlias);
 -        param.addAttribute(Attribute::NoCapture);
 +        addNoCaptureAttr(param);
          param.addAttribute(Attribute::NoUndef);
          attrs.push_back(AttributeSet::get(M->getContext(), param));
          assert(fsig.size() == 1);
-@@ -7949,7 +7967,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -8117,7 +8135,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
      if (props.cc == jl_returninfo_t::Union) {
          AttrBuilder param(M->getContext());
          param.addAttribute(Attribute::NoAlias);
@@ -108,16 +108,16 @@ index 22b410a447..b9241bb5e9 100644
          param.addAttribute(Attribute::NoUndef);
          attrs.push_back(AttributeSet::get(M->getContext(), param));
          assert(fsig.size() == 1);
-@@ -7958,7 +7976,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -8126,7 +8144,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
      if (props.return_roots) {
          AttrBuilder param(M->getContext());
          param.addAttribute(Attribute::NoAlias);
 -        param.addAttribute(Attribute::NoCapture);
 +        addNoCaptureAttr(param);
          param.addAttribute(Attribute::NoUndef);
+         param.addAttribute("julia.return_roots", std::to_string(props.return_roots));
          attrs.push_back(AttributeSet::get(M->getContext(), param));
-         fsig.push_back(getPointerTy(M->getContext()));
-@@ -7992,7 +8010,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
+@@ -8161,7 +8179,7 @@ static jl_returninfo_t get_specsig_function(jl_codegen_params_t &params, Module
          AttrBuilder param(M->getContext());
          Type *ty = et;
          if (et == nullptr || et->isAggregateType()) { // aggregate types are passed by pointer

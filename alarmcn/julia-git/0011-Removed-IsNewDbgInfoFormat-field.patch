@@ -1,4 +1,4 @@
-From 64493c0ca84146c714d8264f48990c5f1b21832c Mon Sep 17 00:00:00 2001
+From 040ecb60695884f7785da1c8dce3984152f97452 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:42:12 -0400
 Subject: [PATCH 11/18] Removed IsNewDbgInfoFormat field
@@ -23,10 +23,10 @@ index 5af783ee72..6e86b7d245 100644
    // Remove these copied constants since they point to the source module.
    F->setPersonalityFn(nullptr);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index b9241bb5e9..4adc8ce10a 100644
+index aaa74fc9e1..b1774cddf7 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -9901,7 +9901,9 @@ void linkFunctionBody(Function &Dst, Function &Src)
+@@ -10060,7 +10060,9 @@ void linkFunctionBody(Function &Dst, Function &Src)
          Dst.setPersonalityFn(Src.getPersonalityFn());
      if (Src.hasPersonalityFn())
          Dst.setPersonalityFn(Src.getPersonalityFn());

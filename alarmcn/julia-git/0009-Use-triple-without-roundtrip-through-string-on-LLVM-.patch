@@ -1,4 +1,4 @@
-From 3a9acc6c0327e3ba598b5bf576c96f77728aeeae Mon Sep 17 00:00:00 2001
+From 3fb8bf625855aaef3b9b1f981cc17717fd228054 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 15:39:05 -0400
 Subject: [PATCH 09/18] Use triple without roundtrip through string on LLVM 21
@@ -86,10 +86,10 @@ index fe8b97a052..5af783ee72 100644
          metadataM.setStackProtectorGuard(StackProtectorGuard);
          metadataM.setOverrideStackAlignment(OverrideStackAlignment);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 3748ffeda4..22b410a447 100644
+index f4b4cb0b4c..a939c119ec 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -2681,7 +2681,11 @@ std::unique_ptr<Module> jl_create_llvm_module(StringRef name, LLVMContext &conte
+@@ -2812,7 +2812,11 @@ std::unique_ptr<Module> jl_create_llvm_module(StringRef name, LLVMContext &conte
          m->addModuleFlag(llvm::Module::Warning, "Debug Info Version",
              llvm::DEBUG_METADATA_VERSION);
      m->setDataLayout(DL);

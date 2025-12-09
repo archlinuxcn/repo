@@ -1,22 +1,22 @@
-From e8fd469fb516a8c336fcc8a22db9735d507b323c Mon Sep 17 00:00:00 2001
+From ce3823409646c1b0084fd3700023d5925c3cb6b4 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 27 Oct 2025 14:47:57 -0400
 Subject: [PATCH 17/18] Fix ArrayRef(std::nullopt_t) deprecation
 
 ---
  src/cgutils.cpp               | 15 ++++----
- src/codegen.cpp               | 64 +++++++++++++++++------------------
+ src/codegen.cpp               | 68 +++++++++++++++++------------------
  src/llvm-codegen-shared.h     |  2 +-
  src/llvm-late-gc-lowering.cpp |  2 +-
  src/llvm-multiversioning.cpp  |  4 +--
  src/llvm-ptls.cpp             |  8 ++---
- 6 files changed, 47 insertions(+), 48 deletions(-)
+ 6 files changed, 49 insertions(+), 50 deletions(-)
 
 diff --git a/src/cgutils.cpp b/src/cgutils.cpp
-index 86e57f7208..4945ea06da 100644
+index b78b1e44ec..92bfcc869c 100644
 --- a/src/cgutils.cpp
 +++ b/src/cgutils.cpp
-@@ -284,7 +284,7 @@ void jl_debugcache_t::initialize(Module *m) {
+@@ -308,7 +308,7 @@ void jl_debugcache_t::initialize(Module *m) {
      jl_di_func_sig = dbuilder.createSubroutineType(
          dbuilder.getOrCreateTypeArray(diargs));
      jl_di_func_null_sig = dbuilder.createSubroutineType(
@@ -25,7 +25,7 @@ index 86e57f7208..4945ea06da 100644
  }
  
  static Value *emit_pointer_from_objref(jl_codectx_t &ctx, Value *V)
-@@ -418,7 +418,7 @@ static Constant *julia_pgv(jl_codegen_params_t &params, Module *M, const char *c
+@@ -580,7 +580,7 @@ static Constant *julia_pgv(jl_codegen_params_t &params, Module *M, const char *c
      // since the load at the new location satisfy the same condition as the original one.
      // Mark the global as constant to LLVM code using our own metadata
      // which is much less likely to be striped.
@@ -34,7 +34,7 @@ index 86e57f7208..4945ea06da 100644
      assert(localname == gv->getName());
      assert(!gv->hasInitializer());
      return gv;
-@@ -536,7 +536,7 @@ static inline Instruction *maybe_mark_load_dereferenceable(Instruction *LI, bool
+@@ -698,7 +698,7 @@ static inline Instruction *maybe_mark_load_dereferenceable(Instruction *LI, bool
      if (isa<PointerType>(LI->getType())) {
          if (!can_be_null)
              // The `dereferenceable` below does not imply `nonnull` for non addrspace(0) pointers.
@@ -43,7 +43,7 @@ index 86e57f7208..4945ea06da 100644
          if (size) {
              Metadata *OP = ConstantAsMetadata::get(ConstantInt::get(getInt64Ty(LI->getContext()), size));
              LI->setMetadata(can_be_null ? LLVMContext::MD_dereferenceable_or_null : LLVMContext::MD_dereferenceable,
-@@ -1772,7 +1772,7 @@ static Value *emit_typeof(jl_codectx_t &ctx, Value *v, bool maybenull, bool just
+@@ -1912,7 +1912,7 @@ static Value *emit_typeof(jl_codectx_t &ctx, Value *v, bool maybenull, bool just
              Value *smallp = emit_ptrgep(ctx, prepare_global_in(M, jl_small_typeof_var), tag);
              jl_aliasinfo_t ai = jl_aliasinfo_t::fromTBAA(ctx, ctx.tbaa().tbaa_const);
              auto small = ctx.builder.CreateAlignedLoad(typetag->getType(), smallp, M->getDataLayout().getPointerABIAlignment(0));
@@ -52,7 +52,7 @@ index 86e57f7208..4945ea06da 100644
              return ai.decorateInst(small);
          });
      });
-@@ -2473,8 +2473,7 @@ static jl_cgval_t typed_store(jl_codectx_t &ctx,
+@@ -2610,8 +2610,7 @@ static jl_cgval_t typed_store(jl_codectx_t &ctx,
                  FunctionType::get(StructType::get(elty, elty), {ptr->getType(), ctx.builder.getPtrTy(), ctx.builder.getInt8Ty(), ctx.builder.getInt8Ty()}, true),
                  AttributeList::get(elty->getContext(),
                    Attributes(elty->getContext(), {Attribute::NoMerge}), // prevent llvm from merging calls to different functions
@@ -62,7 +62,7 @@ index 86e57f7208..4945ea06da 100644
          SmallVector<Value*,0> Args = {ptr, op, ctx.builder.getInt8((unsigned)Order), ctx.builder.getInt8(SyncScope::System)};
          if (rhs.V)
              Args.push_back(rhs.V);
-@@ -3401,7 +3400,7 @@ static Value *emit_genericmemoryptr(jl_codectx_t &ctx, Value *mem, const jl_data
+@@ -3538,7 +3537,7 @@ static Value *emit_genericmemoryptr(jl_codectx_t &ctx, Value *mem, const jl_data
      PointerType *PPT = cast<PointerType>(ctx.types().T_jlgenericmemory->getElementType(1));
      LoadInst *LI = ctx.builder.CreateAlignedLoad(PPT, addr, Align(sizeof(char*)));
      LI->setOrdering(AtomicOrdering::NotAtomic);
@@ -71,7 +71,7 @@ index 86e57f7208..4945ea06da 100644
      jl_aliasinfo_t aliasinfo = jl_aliasinfo_t::fromTBAA(ctx, ctx.tbaa().tbaa_memoryptr);
      aliasinfo.decorateInst(LI);
      Value *ptr = LI;
-@@ -3420,7 +3419,7 @@ static Value *emit_genericmemoryowner(jl_codectx_t &ctx, Value *t)
+@@ -3557,7 +3556,7 @@ static Value *emit_genericmemoryowner(jl_codectx_t &ctx, Value *t)
      Type *T_data = ctx.types().T_jlgenericmemory->getElementType(1);
      LoadInst *LI = ctx.builder.CreateAlignedLoad(T_data, addr, Align(sizeof(char*)));
      LI->setOrdering(AtomicOrdering::NotAtomic);
@@ -81,7 +81,7 @@ index 86e57f7208..4945ea06da 100644
      aliasinfo_mem.decorateInst(LI);
      addr = emit_ptrgep(ctx, m, JL_SMALL_BYTE_ALIGNMENT);
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 4d7a20a0c3..b6be8484bf 100644
+index 18abb0851b..fa5e97df3c 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
 @@ -643,7 +643,7 @@ static AttributeList get_attrs_noreturn(LLVMContext &C)
@@ -282,7 +282,7 @@ index 4d7a20a0c3..b6be8484bf 100644
  };
  static const auto gc_loaded_func = new JuliaFunction<>{
      "julia.gc_loaded",
-@@ -1679,7 +1679,7 @@ struct jl_aliasinfo_t {
+@@ -1698,7 +1698,7 @@ struct jl_aliasinfo_t {
                  MDNode *operand = cast<MDNode>(this->scope->getOperand(0));
                  auto scope_name = cast<MDString>(operand->getOperand(0))->getString();
                  if (scope_name == "jnoalias_const")
@@ -291,7 +291,7 @@ index 4d7a20a0c3..b6be8484bf 100644
              }
          }
  
-@@ -2040,7 +2040,7 @@ jl_aliasinfo_t jl_aliasinfo_t::fromTBAA(jl_codectx_t &ctx, MDNode *tbaa) {
+@@ -2092,7 +2092,7 @@ jl_aliasinfo_t jl_aliasinfo_t::fromTBAA(jl_codectx_t &ctx, MDNode *tbaa) {
  
  static Type *julia_type_to_llvm(jl_codectx_t &ctx, jl_value_t *jt, bool *isboxed = NULL);
  static jl_returninfo_t get_specsig_function(jl_codegen_params_t &ctx, Module *M, Value *fval, StringRef name, jl_value_t *sig, jl_value_t *jlrettype, bool is_opaque_closure,
@@ -300,7 +300,7 @@ index 4d7a20a0c3..b6be8484bf 100644
  static jl_cgval_t emit_expr(jl_codectx_t &ctx, jl_value_t *expr, ssize_t ssaval = -1);
  static jl_cgval_t emit_checked_var(jl_codectx_t &ctx, Value *bp, jl_sym_t *name, jl_value_t *scope, bool isvol, MDNode *tbaa);
  static jl_cgval_t emit_sparam(jl_codectx_t &ctx, size_t i);
-@@ -2218,7 +2218,7 @@ static inline jl_cgval_t ghostValue(jl_codectx_t &ctx, jl_value_t *typ)
+@@ -2270,7 +2270,7 @@ static inline jl_cgval_t ghostValue(jl_codectx_t &ctx, jl_value_t *typ)
      if (jl_is_type_type(typ)) {
          assert(is_uniquerep_Type(typ));
          // replace T::Type{T} with T, by assuming that T must be a leaftype of some sort
@@ -309,7 +309,7 @@ index 4d7a20a0c3..b6be8484bf 100644
          constant.constant = jl_tparam0(typ);
          if (typ == (jl_value_t*)jl_typeofbottom_type->super)
              constant.isghost = true;
-@@ -2242,13 +2242,13 @@ static inline jl_cgval_t mark_julia_const(jl_codectx_t &ctx, jl_value_t *jv)
+@@ -2294,13 +2294,13 @@ static inline jl_cgval_t mark_julia_const(jl_codectx_t &ctx, jl_value_t *jv)
          if (jl_is_datatype_singleton((jl_datatype_t*)typ))
              return ghostValue(ctx, typ);
      }
@@ -325,25 +325,43 @@ index 4d7a20a0c3..b6be8484bf 100644
  {
      // this enables lazy-copying of immutable values and stack or argument slots
      jl_cgval_t tagval(v, false, typ, tindex, tbaa, inline_roots);
-@@ -2334,7 +2334,7 @@ static inline jl_cgval_t mark_julia_type(jl_codectx_t &ctx, Value *v, bool isbox
-             return value_to_pointer(ctx, v, typ, NULL);
-     }
+@@ -2380,7 +2380,7 @@ static inline jl_cgval_t mark_julia_type(jl_codectx_t &ctx, Value *v, bool isbox
+     if (type_is_ghost(T))
+         return ghostValue(ctx, typ);
      if (isboxed)
 -        return jl_cgval_t(v, isboxed, typ, NULL, best_tbaa(ctx.tbaa(), typ), None);
 +        return jl_cgval_t(v, isboxed, typ, NULL, best_tbaa(ctx.tbaa(), typ), ArrayRef<Value*>());
-     return jl_cgval_t(v, typ, NULL);
- }
- 
-@@ -2613,7 +2613,7 @@ static jl_cgval_t convert_julia_type_union(jl_codectx_t &ctx, const jl_cgval_t &
+     if (v && v->getType()->isAggregateType()) {
+         // eagerly put this back onto the stack
+         // llvm mem2reg pass will remove this if unneeded
+@@ -2441,7 +2441,7 @@ static inline jl_cgval_t update_julia_type(jl_codectx_t &ctx, const jl_cgval_t &
+                 return jl_cgval_t();
+             }
+             if (v.Vboxed && (v.isboxed || alwaysboxed)) {
+-                return jl_cgval_t(v.Vboxed, true, typ, NULL, best_tbaa(ctx.tbaa(), typ), None);
++                return jl_cgval_t(v.Vboxed, true, typ, NULL, best_tbaa(ctx.tbaa(), typ), ArrayRef<Value*>());
+             }
          }
+         if (!jl_is_concrete_type(typ))
+@@ -2556,7 +2556,7 @@ static jl_cgval_t convert_julia_type_to_union(jl_codectx_t &ctx, const jl_cgval_
+             }
+             else if (jl_subtype(v.typ, typ)) {
+                 // convert to a simple isboxed value, since it must be boxed in the new union
+-                return jl_cgval_t(boxed(ctx, v), true, typ, new_tindex, best_tbaa(ctx.tbaa(), typ), None);
++                return jl_cgval_t(boxed(ctx, v), true, typ, new_tindex, best_tbaa(ctx.tbaa(), typ), ArrayRef<Value*>());
+             }
+             else {
+                 if (!allow_mismatch)
+@@ -2819,7 +2819,7 @@ static jl_cgval_t convert_julia_type_to_union(jl_codectx_t &ctx, const jl_cgval_
+     if (!computed_new_index_early && isa<Constant>(new_tindex)) {
+         // no new tindex (it is set to UNION_BOX_MARKER), so the new value must be something boxed in the new union
+         // TODO: use ret.Vboxed or box_union directly to set skip instead of emitting a trap?
+-        return jl_cgval_t(boxed(ctx, v), true, typ, new_tindex, best_tbaa(ctx.tbaa(), typ), None);
++        return jl_cgval_t(boxed(ctx, v), true, typ, new_tindex, best_tbaa(ctx.tbaa(), typ), ArrayRef<Value*>());
      }
-     else {
--        return jl_cgval_t(boxed(ctx, v), true, typ, NULL, best_tbaa(ctx.tbaa(), typ), None);
-+        return jl_cgval_t(boxed(ctx, v), true, typ, NULL, best_tbaa(ctx.tbaa(), typ), ArrayRef<Value*>());
-     }
-     return jl_cgval_t(v, typ, new_tindex);
- }
-@@ -5665,7 +5665,7 @@ static jl_cgval_t emit_varinfo(jl_codectx_t &ctx, jl_varinfo_t &vi, jl_sym_t *va
+     // some of the values are still unboxed
+     setName(ctx.emission_context, new_tindex, "tindex");
+@@ -5801,7 +5801,7 @@ static jl_cgval_t emit_varinfo(jl_codectx_t &ctx, jl_varinfo_t &vi, jl_sym_t *va
              Value *tindex = NULL;
              if (vi.pTIndex)
                  tindex = ctx.builder.CreateAlignedLoad(getInt8Ty(ctx.builder.getContext()), vi.pTIndex, Align(1), vi.isVolatile);
@@ -352,7 +370,7 @@ index 4d7a20a0c3..b6be8484bf 100644
          }
          if (vi.inline_roots) {
              AllocaInst *varslot = vi.inline_roots;
-@@ -6623,7 +6623,7 @@ static jl_cgval_t emit_expr(jl_codectx_t &ctx, jl_value_t *expr, ssize_t ssaidx_
+@@ -6765,7 +6765,7 @@ static jl_cgval_t emit_expr(jl_codectx_t &ctx, jl_value_t *expr, ssize_t ssaidx_
          SmallVector<Metadata *, 8> MDs;
  
          // Reserve first location for self reference to the LoopID metadata node.
@@ -361,17 +379,17 @@ index 4d7a20a0c3..b6be8484bf 100644
          MDs.push_back(TempNode.get());
  
          for (int i = 0, ie = nargs; i < ie; ++i) {
-@@ -8656,7 +8656,7 @@ static jl_llvm_functions_t
+@@ -8830,7 +8830,7 @@ static jl_llvm_functions_t
              AllocaInst *roots = sizes.second > 0 ? emit_static_roots(ctx, sizes.second) : nullptr;
              if (bits) bits->setName(jl_symbol_name(s));
              if (roots) roots->setName(StringRef(".roots.") + jl_symbol_name(s));
 -            varinfo.value = mark_julia_slot(bits, jt, NULL, ctx.tbaa().tbaa_stack, None);
 +            varinfo.value = mark_julia_slot(bits, jt, NULL, ctx.tbaa().tbaa_stack, {});
              varinfo.inline_roots = roots;
+             varinfo.inline_roots_count = sizes.second;
              alloc_def_flag(ctx, varinfo);
-             if (debug_enabled && varinfo.dinfo) {
 diff --git a/src/llvm-codegen-shared.h b/src/llvm-codegen-shared.h
-index d5d7ae3d50..f1324ddf2c 100644
+index 6840d7100e..10f8091aac 100644
 --- a/src/llvm-codegen-shared.h
 +++ b/src/llvm-codegen-shared.h
 @@ -158,7 +158,7 @@ static inline llvm::Instruction *tbaa_decorate(llvm::MDNode *md, llvm::Instructi
@@ -384,10 +402,10 @@ index d5d7ae3d50..f1324ddf2c 100644
      return inst;
  }
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index ae1351ae41..8b4afbeedc 100644
+index 4511c30924..4c4b5efcd5 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
-@@ -2291,7 +2291,7 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S, bool *CFGModified) {
+@@ -2198,7 +2198,7 @@ bool LateLowerGCFrame::CleanupIR(Function &F, State *S, bool *CFGModified) {
                  } else {
                      // remove all operand bundles
  #if JL_LLVM_VERSION >= 200000

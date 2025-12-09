@@ -1,4 +1,4 @@
-From 06cf89067a2f5315f07828c7f09e0ea20a22b528 Mon Sep 17 00:00:00 2001
+From d0951f0c3ad0f30d20e7da0a67d6f5dba9c54788 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 26 Oct 2025 20:11:49 -0400
 Subject: [PATCH 16/18] Fix to use new ThreadSafeContext API
@@ -1004,10 +1004,10 @@ index 6e86b7d245..af41c48ea5 100644
          if (F) {
              dump->TSM = wrap(new orc::ThreadSafeModule(std::move(m)));
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index 9ada0ed9fa..4d7a20a0c3 100644
+index 447f0b6df1..18abb0851b 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -7790,7 +7790,7 @@ const char *jl_generate_ccallable(Module *llvmmod, jl_value_t *nameval, jl_value
+@@ -7945,7 +7945,7 @@ const char *jl_generate_ccallable(Module *llvmmod, jl_value_t *nameval, jl_value
          crt = (jl_value_t*)jl_any_type;
      }
      bool toboxed;
@@ -1016,7 +1016,7 @@ index 9ada0ed9fa..4d7a20a0c3 100644
      if (toboxed)
          lcrt = JuliaType::get_prjlvalue_ty(lcrt->getContext());
      size_t nargs = jl_nparams(sigt)-1;
-@@ -8150,7 +8150,7 @@ static jl_llvm_functions_t
+@@ -8319,7 +8319,7 @@ static jl_llvm_functions_t
      size_t min_world = src->min_world;
      size_t max_world = src->max_world;
      jl_llvm_functions_t declarations;
