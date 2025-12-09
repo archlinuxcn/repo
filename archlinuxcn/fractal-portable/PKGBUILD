@@ -36,7 +36,7 @@ function prepare() {
 
 function package() {
 	depends=("portable")
-	depends+=(dconf  fontconfig  gcc-libs  gdk-pixbuf2  glib2  glibc  glycin1  graphene  gst-plugins-bad-libs  gst-plugins-base-libs  gst-plugin-gtk4  gstreamer
+	depends+=(dconf  fontconfig  gcc-libs  gdk-pixbuf2  glib2  glibc  	glycin-gtk4  graphene  gst-plugins-bad-libs  gst-plugins-base-libs  gst-plugin-gtk4  gstreamer
                   gtk4  gtksourceview5  hicolor-icon-theme  lcms2  libadwaita  libpipewire  libseccomp  libshumate  openssl  org.freedesktop.secrets  pango  sqlite)
 	while IFS= read -r line; do
 		file="$(echo "$line" | awk '{print $2}')"
