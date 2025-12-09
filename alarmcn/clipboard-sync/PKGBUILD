@@ -1,0 +1,34 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+
+pkgname=clipboard-sync
+pkgver=0.2.0
+pkgrel=1
+pkgdesc="Synchronizes the clipboard across multiple X11 and wayland instances running on the same machine"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/dnut/${pkgname}"
+license=('MIT OR Apache-2.0')
+depends=('gcc-libs' 'libxcb')
+makedepends=('cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('df87161efe0a9bcffa8800475bc2aaa97bdf914087d4357629b374615f6bca3b')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	cargo fetch --locked --target $(rustc --print host-tuple)
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	cargo test --frozen --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 "${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/user/"
+}
