@@ -7,10 +7,10 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: "github"
-    github: "unmojang/drasl"
+  - source: "git"
+    git: "https://gitlab.freedesktop.org/emersion/drm_info.git"
     prefix: v
-    use_max_tag: true
+    #use_max_tag: true
   - source: alpm
     alpm: libdisplay-info
     from_pattern: '^(\d+\.\d+)\..*'
