@@ -1,0 +1,34 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: "github"
+    github: "unmojang/drasl"
+    prefix: v
+    use_max_tag: true
+  - source: alpm
+    alpm: libdisplay-info
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: libdrm
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: json-c
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+  - source: alpm
+    alpm: pciutils
+    from_pattern: '^(\d+\.\d+)\..*'
+    to_pattern: '\1'
+
+build_prefix: extra-x86_64
+
+repo_depends:
+  - swag
