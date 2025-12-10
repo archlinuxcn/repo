@@ -1,0 +1,24 @@
+pkgname=toolblex
+pkgver=0.14.1
+pkgrel=3
+pkgdesc="A Bluetooth Low Energy device scanner and analyzer"
+url="https://github.com/emericg/toolBLEx"
+arch=("x86_64")
+license=("GPL-3.0-or-later")
+depends=("qt6-base" "qt6-declarative" "qt6-svg" "qt6-connectivity" "qt6-charts")
+makedepends=("qt6-tools" "cmake")
+optdepends=("bluez-utils: extra bluetooth infos")
+
+source=("https://github.com/emericg/toolBLEx.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+build() {
+	cd source
+	cmake -B build/ -DCMAKE_BUILD_TYPE=Release
+	cmake --build build/ --config Release
+}
+
+package() {
+	cd source
+	DESTDIR="$pkgdir" cmake --install build --prefix /usr
+}

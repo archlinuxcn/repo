@@ -9,8 +9,8 @@ depends=("libdrm>=2.4.115" libdisplay-info json-c pciutils)
 arch=(x86_64)
 url=https://gitlab.freedesktop.org/emersion/drm_info
 conflicts=(drm_info)
-source=("source::git+https://gitlab.freedesktop.org/emersion/drm_info.git")
-sha512sums=('SKIP')
+source=("source::git+https://gitlab.freedesktop.org/emersion/drm_info.git#tag=v${pkgver}")
+sha512sums=('7070268e464a216d9c1043f65edd536520198370269ad3a36f9bea0c81f8c09096ed6b4ba222ad793a1816b3bf3f41423997f6ca995502b200b11a50e3594598')
 
 build() {
 	rm -rf build
