@@ -9,7 +9,7 @@ depends=("qt6-base" "qt6-declarative" "qt6-svg" "qt6-connectivity" "qt6-charts")
 makedepends=("qt6-tools" "cmake")
 optdepends=("bluez-utils: extra bluetooth infos")
 
-source=("https://github.com/emericg/toolBLEx.git#tag=v${pkgver}")
+source=("source::git+https://github.com/emericg/toolBLEx.git#tag=v${pkgver}")
 sha256sums=('SKIP')
 
 build() {
