@@ -19,6 +19,9 @@ options=('!lto')
 prepare() {
 	cd "${_pkgname}-${_pkgver}/"
 	pnpm i
+
+	cd src-tauri
+	cargo fetch --locked --target $(rustc --print host-tuple)
 }
 
 build() {
