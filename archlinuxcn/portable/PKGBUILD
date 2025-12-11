@@ -64,4 +64,5 @@ function package() {
 	install -t "${pkgdir}/usr/share/portable" -Dm755 "${srcdir}/portable/share"/*
 	install -vDm755 portable-pools "${pkgdir}/usr/bin/portable-pools"
 	install -vDm755 portable-packer "${pkgdir}/usr/bin/portable-packer"
+	cp -r "${srcdir}/portable/lib/modules-load.d" "${pkgdir}/usr/lib"
 }
