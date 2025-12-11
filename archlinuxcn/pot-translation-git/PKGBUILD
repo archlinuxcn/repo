@@ -32,6 +32,9 @@ prepare() {
 	sed -i "s/\"version = \"0.0.0\"/version = \"${_pkgver}\"/g" src-tauri/Cargo.toml
 
 	pnpm i
+
+	cd src-tauri
+	cargo fetch --locked --target $(rustc --print host-tuple)
 }
 
 build() {
