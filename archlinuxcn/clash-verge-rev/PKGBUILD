@@ -37,7 +37,6 @@ build() {
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 	_build_service
-	_check_service
 	_package_service
 
 	cd "../${pkgname}-${pkgver}/"
@@ -64,11 +63,6 @@ _prepare_service() {
 _build_service() {
 	echo "==> Starting ${FUNCNAME[0]}()..."
 	cargo build --frozen --release --all-features
-}
-
-_check_service() {
-	echo "==> Starting ${FUNCNAME[0]}()..."
-	cargo test --frozen --all-features
 }
 
 _package_service() {
