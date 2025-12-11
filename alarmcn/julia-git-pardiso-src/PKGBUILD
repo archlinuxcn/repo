@@ -1,7 +1,7 @@
 pkgname=julia-git-pardiso-src
-pkgver=1.1.1
-_commit=01de2fd9d6076ce4e298498f61f5d81f4f2b65b3
-pkgrel=2
+pkgver=1.1.2
+_commit=9329f428699edb5b0e2c7780df478d40e7417aa4
+pkgrel=1
 pkgdesc="Pardiso.jl"
 url="https://github.com/JuliaSparse/Pardiso.jl.git"
 arch=(aarch64 armv7h i686 x86_64)
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 depends_x86_64=(intel-mkl)
 source=("git+https://github.com/JuliaSparse/Pardiso.jl.git#commit=$_commit")
-sha256sums=('a09b9f121236e0e74b3f721511a6f22e9146fa9c5a84a8d636b0eaaca8c7fecc')
+sha256sums=('c651bb5a39e7a5136e6aa18ee4ecc5543dee1bf16043c5da0985476843410476')
 
 prepare() {
   cd Pardiso.jl
