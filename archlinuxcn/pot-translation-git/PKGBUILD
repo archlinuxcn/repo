@@ -4,6 +4,7 @@
 pkgname=pot-translation-git
 _pkgname=pot-desktop
 pkgver=3.0.7.r7.g50ab944
+_pkgver=$(sed 's/.\(r[0-9]\)/\-\1/' <<<${pkgver})
 pkgrel=1
 pkgdesc="一个跨平台的划词翻译软件 | A cross-platform software for text translation."
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -26,7 +27,6 @@ prepare() {
 	cd "${_pkgname}/"
 
 	# Modify versions in configuration files
-	_pkgver=$(sed 's/.\(r[0-9]\)/\-\1/' <<<${pkgver})
 	sed -i "s/\"version\":.*/\"version\": \"${_pkgver}\",/g" package.json
 	sed -i "s/\"version\":.*/\"version\": \"${_pkgver}\"/g" src-tauri/tauri.conf.json
 	sed -i "s/\"version = \"0.0.0\"/version = \"${_pkgver}\"/g" src-tauri/Cargo.toml
@@ -40,6 +40,5 @@ build() {
 }
 
 package() {
-	_pkgver=$(sed 's/.\(r[0-9]\)/\-\1/' <<<${pkgver})
 	cp -a ${_pkgname}/src-tauri/target/release/bundle/deb/pot_${_pkgver}_*/data/* "${pkgdir}"
 }
