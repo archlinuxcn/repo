@@ -68,7 +68,10 @@ _build_service() {
 _package_service() {
 	echo "==> Starting ${FUNCNAME[0]}()..."
 
-	for bin in {${_pkgname},{,un}install}-service; do
-		install -vDm755 "./target/release/${bin}" "../${pkgname}-${pkgver}/src-tauri/resources/${bin}-${CARCH}-unknown-linux-gnu"
-	done
+	pushd target/release
+	local _suffix="${CARCH}-unknown-linux-gnu"
+	install -Dm755 "${_pkgname}-service" "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-${_suffix}"
+	install -Dm755 install-service "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-install-${_suffix}"
+	install -Dm755 uninstall-service "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-uninstall-${_suffix}"
+	popd
 }
