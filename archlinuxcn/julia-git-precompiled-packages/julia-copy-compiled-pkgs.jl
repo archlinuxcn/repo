@@ -2,10 +2,25 @@
 
 struct PkgInfo
     name::String
+    syntax_ver::VersionNumber
     sources::Dict{String,String}
     deps::Vector{String}
     weakdeps::Vector{String}
 end
+
+const has_syntax_ver = isdefined(Base, :PkgLoadSpec)
+
+@static if has_syntax_ver
+    import Base: project_get_syntax_version, PkgLoadSpec
+    stale_cachefile(src, syntax_ver, cachepath) =
+        Base.stale_cachefile(PkgLoadSpec(src, syntax_ver), cachepath,
+	                     ignore_loaded=true)
+else
+    project_get_syntax_version(d) = VERSION
+    stale_cachefile(src, syntax_ver, cachepath) =
+        Base.stale_cachefile(src, cachepath, ignore_loaded=true)
+end
+
 
 function read_deps(d, field)
     deps = get(d, field, nothing)
@@ -36,7 +51,7 @@ function pkg_info(srcdir, pkg, d)
     deps = read_deps(d, "deps")
     weakdeps = read_deps(d, "weakdeps")
     setdiff!(deps, weakdeps)
-    return PkgInfo(pkg, sources, deps, weakdeps)
+    return PkgInfo(pkg, project_get_syntax_version(d), sources, deps, weakdeps)
 end
 
 function get_pkginfo(stdlib_dir, pkg)
@@ -54,7 +69,7 @@ function get_pkginfo(stdlib_dir, pkg)
     return
 end
 
-function copy_pkg_cache_for_src(name, src, compiled_dir, pkg_tgt_dir)
+function copy_pkg_cache_for_src(name, syntax_ver, src, compiled_dir, pkg_tgt_dir)
     pkgcache_dir = joinpath(compiled_dir, name)
     if !isdir(pkgcache_dir)
         return
@@ -62,7 +77,7 @@ function copy_pkg_cache_for_src(name, src, compiled_dir, pkg_tgt_dir)
     for file in readdir(pkgcache_dir)
         endswith(file, ".ji") || continue
         cachepath = joinpath(pkgcache_dir, file)
-        if Base.stale_cachefile(src, cachepath, ignore_loaded=true) === true
+        if stale_cachefile(src, syntax_ver, cachepath) === true
             continue
         end
         mkpath(joinpath(pkg_tgt_dir, name))
@@ -97,7 +112,7 @@ function copy_pkg_cache(info, compiled_dir, tgt_dir)
     pkg_tgt_dir = joinpath(tgt_dir, info.name)
     mkpath(pkg_tgt_dir)
     for (pkg, src) in info.sources
-        copy_pkg_cache_for_src(pkg, src, compiled_dir, pkg_tgt_dir)
+        copy_pkg_cache_for_src(pkg, info.syntax_ver, src, compiled_dir, pkg_tgt_dir)
     end
     open(joinpath(tgt_dir, "package-$(info.name)_vars.sh"), "w") do io
         write_arch_deps(io, info.deps, "depends")
