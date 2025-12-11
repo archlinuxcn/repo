@@ -24,9 +24,4 @@ Import PGP Keys:
 sudo pacman -Sy && sudo pacman -S archlinuxcn-keyring
 ```
 
-### Issues
-
-* Flag package OUT-OF-DATE by submiting new issues (please follow the template).
-  * If the new release is within less than a day, please be patient and wait for up to one day; our bot is likely going to build a new one soon.
-* If there is something wrong with provided packages, please submit issues of desired type.
-* Please contact us via issues or email.
+### Soyam Kayasth
