@@ -1,6 +1,6 @@
 pkgname=julia-git-hostcpufeatures-src
-pkgver=0.1.17
-_commit=568f9e81d4bb409deee0c44244f3a1ce96bb58d5
+pkgver=0.1.18
+_commit=0deaff63de8a8bdfa5458db8d1fbf23cf9440559
 pkgrel=1
 pkgdesc="HostCPUFeatures.jl"
 url="https://github.com/JuliaSIMD/HostCPUFeatures.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/HostCPUFeatures.jl.git#commit=$_commit")
-sha256sums=('662e6bf1dfa34dfe2262c38b1d45a6600e131b332e8ac5e86a00e782bd8867aa')
+sha256sums=('3028eb899c652035ee090ce8aa6ddbc46c8a0443e239a02ae51810b7c70f13df')
 
 package() {
   cd HostCPUFeatures.jl
