@@ -1,6 +1,6 @@
 pkgname=julia-git-mat-src
-pkgver=0.11.3
-_commit=7b194a86a54949e58f83b554970d19e75963ecf5
+pkgver=0.11.4
+_commit=e16b030114442291f6517e669b25ecdc5e34786d
 pkgrel=1
 pkgdesc="MAT.jl"
 url="https://github.com/JuliaIO/MAT.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/MAT.jl.git#commit=$_commit")
-sha256sums=('a036ecb08e87f402ad13b2c305308cb008991270c10144fd875ddd2fe7287ed4')
+sha256sums=('4ce301350191c9303fb66738e22669f76905cdfae992662d6ea37308a335041c')
 
 package() {
   cd MAT.jl
