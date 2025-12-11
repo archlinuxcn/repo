@@ -1,6 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 # Maintainer: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 # Contributor: George Rawlinson <george@rawlinson.net.nz>
+# Contributor: RocketDev <ma2014119@outlook.com>
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
@@ -19,17 +20,16 @@ depends=(
     'fmt' 'libfmt.so'
     'yara' 'libyara.so'
     'file' 'libmagic.so'
-    'libglvnd'
-    'libarchive'
+    'libglvnd' # needed in runtime
     'glibc' 'gcc-libs' 'bash'
-    'libxrandr'
+    'libxrandr' # needed in runtime
     'fontconfig'
     'capstone'
     'md4c'
 )
-makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime' 'cli11')
+makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'cli11' 'boost')
 optdepends=(
-    'dotnet-runtime'
+    'dotnet-runtime: dotnet support'
     'lz4: decompress plugin'
     'zlib: decompress plugin'
     'bzip2: decompress plugin'
@@ -43,30 +43,22 @@ source=(
     "nativefiledialog::git+https://github.com/btzy/nativefiledialog-extended.git"
     "xdgpp::git+https://git.sr.ht/~danyspin97/xdgpp"
     "libromfs::git+https://github.com/WerWolv/libromfs"
-    # "capstone::git+https://github.com/capstone-engine/capstone"
     "pattern_language::git+https://github.com/WerWolv/PatternLanguage"
     "libwolv::git+https://github.com/WerWolv/libwolv"
     "HashLibPlus::git+https://github.com/WerWolv/HashLibPlus"
-    "cli11::git+https://github.com/CLIUtils/CLI11"
     "lunasvg::git+https://github.com/sammycage/lunasvg"
     "edlib::git+https://github.com/Martinsos/edlib"
     "throwing_ptr::git+https://github.com/rockdreamer/throwing_ptr"
-    # "plutovg::git+https://github.com/sammycage/plutovg"
-    # "md4c::git+https://github.com/mity/md4c"
     "ImHex-Patterns::git+https://github.com/WerWolv/ImHex-Patterns.git"
     "disassembler::git+https://github.com/WerWolv/Disassembler.git"
-    # "patterns-fmt-update.patch"
 )
 b2sums=('843846fd2c5a0136d52771c11aece24fd3b69dc69e8f8a5f375faab17569ea830c49b43fcd7a66346cf70d0d1ec0f5602619006e244501144556c4041b8ce2cc'
         'SKIP'
         'SKIP'
         'SKIP'
-        # 'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
-        'SKIP'
-        # 'SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -87,39 +79,18 @@ prepare() {
     done
     pushd lib/external/pattern_language
         git submodule init
-        for name in libwolv cli11 throwing_ptr; do
+        for name in libwolv throwing_ptr; do
             git submodule set-url external/"$name" "$srcdir/$name"
             git -c protocol.file.allow=always submodule update external/"$name"
         done
     popd
-    # pushd lib/third_party/lunasvg
-    #   git submodule init
-    #   git submodule set-url plutovg "$srcdir/plutovg"
-    #   git -c protocol.file.allow=always submodule update plutovg
-    # popd
-
-    # for name in fmt yara/yara; do
-    #     git config --remove-section submodule.lib/third_party/"$name"
-    # done
-
-
-    # pushd lib/third_party/edlib
-    #     # Fix cmake minimum version
-    #     git cherry-pick -n 47359e591f3861f12105fa8e72242de64d5597c4
-    # popd
-
-    # Fix deprecated fmt::localtime
-    # pushd lib/external/pattern_language
-    #     patch -Np1 -i "$srcdir/patterns-fmt-update.patch"
-    # popd
-
 }
 
 build() {
     cmake -B build -S "$pkgname" \
         -G Ninja \
         -Wno-dev \
-        -D CMAKE_BUILD_TYPE=None \
+        -D CMAKE_BUILD_TYPE=RelWithDebInfo \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_SKIP_RPATH=ON \
         -D IMHEX_OFFLINE_BUILD=ON \
@@ -135,9 +106,13 @@ build() {
         -D USE_SYSTEM_CAPSTONE=ON \
         -D USE_SYSTEM_MD4C=ON \
         -D USE_SYSTEM_CLI11=ON \
+        -D USE_SYSTEM_BOOST=ON \
         -D LIBPL_ENABLE_CLI=ON \
         -D LIBPL_BUILD_CLI_AS_EXECUTABLE=OFF \
         -D IMHEX_VERSION="$pkgver" \
+        -D IMHEX_ENABLE_UNIT_TESTS=OFF \
+        -D IMHEX_ENABLE_PLUGIN_TESTS=OFF \
+        -D IMHEX_ENABLE_IMGUI_TEST_ENGINE=OFF \
         -D CMAKE_POLICY_VERSION_MINIMUM=3.5
 
     cmake --build build --parallel
