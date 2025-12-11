@@ -26,16 +26,18 @@ depends=(
     'fontconfig'
     'capstone'
     'md4c'
+    # since these "optdepends" are depends of system core components,
+    # it's ok to list them in depends
+    'lz4'
+    'zlib'
+    'bzip2'
+    'xz'
+    'zstd'
+    'libssh2'
 )
-makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'cli11' 'boost')
+makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'cli11' 'boost' 'dotnet-runtime')
 optdepends=(
-    'dotnet-runtime: dotnet support'
-    'lz4: decompress plugin'
-    'zlib: decompress plugin'
-    'bzip2: decompress plugin'
-    'xz: decompress plugin'
-    'zstd: decompress plugin'
-    'libssh2: remote plugin'
+    'dotnet-runtime: dotnet script support'
 )
 replaces=('imhex-patterns-git')
 source=(
@@ -99,6 +101,7 @@ build() {
         -D IMHEX_USE_GTK_FILE_PICKER=OFF \
         -D IMHEX_STRICT_WARNINGS=OFF \
         -D IMHEX_BUNDLE_DOTNET=OFF \
+        -D IMHEX_BUNDLE_PLUGIN_SDK=OFF \
         -D USE_SYSTEM_LLVM=ON \
         -D USE_SYSTEM_YARA=ON \
         -D USE_SYSTEM_FMT=ON \
@@ -119,7 +122,6 @@ build() {
 }
 
 package() {
-    # FIXME: upstream install SDK in /usr/share and seems no way to disable it...
     DESTDIR="$pkgdir" cmake --install build
     
     # Documentation
