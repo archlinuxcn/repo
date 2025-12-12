@@ -134,6 +134,8 @@ prepare() {
 
   # Fix build with opencolorio 2.5.0
   git cherry-pick -n 98e400c3ae2fef75d2550a5fc1370d6e97ec9560
+
+  git cherry-pick -n d92f498ed80ef44b00fca7617aeaab093cd0f7f7
 }
 
 _get_pyver() {
