@@ -1,6 +1,6 @@
 pkgname=julia-git-dictionaries-src
-pkgver=0.4.5
-_commit=46491ad47ea1d8258a810bd70e2ba8a27ed69265
+pkgver=0.4.6
+_commit=a188e9cfc0ad4bce5e66a220c90f954bc8ebfb60
 pkgrel=1
 pkgdesc="Dictionaries.jl"
 url="https://github.com/andyferris/Dictionaries.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/andyferris/Dictionaries.jl.git#commit=$_commit")
-sha256sums=('0024462b61fded17594bfec3e281b1c8a8cbf89231cde0c05cffb7aa680afea6')
+sha256sums=('2d3b41855abb4f576cfc7fe3d2fafa7ebd3c11c84f957086df783d4c824f1bbf')
 
 package() {
   cd Dictionaries.jl
