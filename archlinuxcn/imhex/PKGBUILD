@@ -93,7 +93,7 @@ build() {
     cmake -B build -S "$pkgname" \
         -G Ninja \
         -Wno-dev \
-        -D CMAKE_BUILD_TYPE=RelWithDebInfo \
+        -D CMAKE_BUILD_TYPE=None \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_SKIP_RPATH=ON \
         -D IMHEX_OFFLINE_BUILD=ON \
@@ -114,12 +114,16 @@ build() {
         -D LIBPL_ENABLE_CLI=ON \
         -D LIBPL_BUILD_CLI_AS_EXECUTABLE=OFF \
         -D IMHEX_VERSION="$pkgver" \
-        -D IMHEX_ENABLE_UNIT_TESTS=OFF \
-        -D IMHEX_ENABLE_PLUGIN_TESTS=OFF \
-        -D IMHEX_ENABLE_IMGUI_TEST_ENGINE=OFF \
+        -D IMHEX_ENABLE_UNIT_TESTS=ON \
+        -D IMHEX_ENABLE_PLUGIN_TESTS=ON \
+        -D IMHEX_ENABLE_IMGUI_TEST_ENGINE=ON \
         -D CMAKE_POLICY_VERSION_MINIMUM=3.5
 
     cmake --build build --parallel
+
+    pushd build
+        ninja unit_tests
+    popd
 }
 
 package() {
@@ -130,4 +134,14 @@ package() {
         "$pkgname/README.md"
 }
 
+check() {
+    export LD_LIBRARY_PATH="$PWD/build/plugins:$PWD/build/lib/libimhex"
+    pushd "$pkgname/lib/external/pattern_language"
+        python tests/integration/integration.py ../../../../build/imhex --pl
+    popd
+
+    pushd build
+        ctest --output-on-failure
+    popd
+}
 # vim: set ts=4 sw=4 et:
