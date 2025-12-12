@@ -1,0 +1,34 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+
+pkgname=uefi-run
+pkgver=0.6.1
+pkgrel=1
+pkgdesc="Directly run UEFI applications in QEMU"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/richard-w/${pkgname}"
+license=('MIT')
+depends=('gcc-libs' 'qemu' 'edk2-ovmf')
+makedepends=('cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('004e004f9b08379c8dfbe8136aae51ed2613a720a8f285cf200411c607011761')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	cargo fetch --locked --target $(rustc --print host-tuple)
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	cargo test --frozen --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
