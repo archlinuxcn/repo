@@ -1,6 +1,6 @@
 pkgname=julia-git-codetracking-src
-pkgver=1.3.6
-_commit=cb2f6fd10fdee9570a7a5c0c4743e4a4d5fb8070
+pkgver=1.3.9
+_commit=4f3819cb000df5c8deb8211e36f4b742bbe023b8
 pkgrel=1
 pkgdesc="CodeTracking.jl"
 url="https://github.com/timholy/CodeTracking.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/timholy/CodeTracking.jl.git#commit=$_commit")
-sha256sums=('5b60a4261ff2de98d883e0ac468f22abb8cc1bebc6264ae1d2025b9bd8800d8d')
+sha256sums=('9c3a3c71ac995c4f4596051a2a9b06bd2df7df438b891b8ea34b94d195cbb45d')
 
 package() {
   cd CodeTracking.jl
