@@ -10,7 +10,7 @@
 
 pkgname='sunshine'
 pkgver=2025.924.154138
-pkgrel=2
+pkgrel=3
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
@@ -43,7 +43,7 @@ depends=(
   'which'
 )
 
-makedepends=(
+makedepends=("cuda"
   'appstream'
   'appstream-glib'
   'cmake'
@@ -85,7 +85,7 @@ fi
 # Ensure makedepends, checkdepends, optdepends are sorted
 if [ -n "${makedepends+x}" ]; then
   mapfile -t tmp_array < <(printf '%s\n' "${makedepends[@]}" | sort)
-  makedepends=("${tmp_array[@]}")
+  makedepends=("${tmp_array[@]}" "cuda")
   unset tmp_array
 fi
 
