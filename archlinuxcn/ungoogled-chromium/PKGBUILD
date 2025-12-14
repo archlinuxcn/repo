@@ -10,14 +10,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=142.0.7444.175
+pkgver=143.0.7499.109
 pkgrel=1
 _launcher_ver=8
 _manual_clone=1
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=142.0.7444.175-1
+_uc_ver=143.0.7499.109-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -52,7 +52,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-138-rust-1.86-mismatched_lifetime_syntaxes.patch
         chromium-141-cssstylesheet-iwyu.patch)
 sha256sums=('720a1196410080056cd97a1f5ec34d68ba216a281d9b5157b7ea81ea018ec661'
-            'ec3584995b6a69373fc06f6230602c1ebc68f802feedba44c962dc25bb896e33'
+            'd5b8561004cb19ef56d7f0e23e3045f01a5971edb7ec84c5c6e7b2e2335378da'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'ec8e49b7114e2fa2d359155c9ef722ff1ba5fe2c518fa48e30863d71d3b82863'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
@@ -86,7 +86,7 @@ declare -gA _system_libs=(
   #[libaom]=aom
   #[libavif]=libavif  # needs -DAVIF_ENABLE_EXPERIMENTAL_GAIN_MAP=ON
   [libjpeg]=libjpeg-turbo
-  [libpng]=libpng
+  #[libpng]=libpng
   #[libvpx]=libvpx
   [libwebp]=libwebp
   [libxml]=libxml2
@@ -298,18 +298,18 @@ build() {
 package() {
   cd chromium-launcher-$_launcher_ver
   make PREFIX=/usr DESTDIR="$pkgdir" install
-  install -Dm644 LICENSE \
+  install -Dvm644 LICENSE \
     "$pkgdir/usr/share/licenses/chromium/LICENSE.launcher"
 
   cd ../chromium-$pkgver
 
-  install -D out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
-  install -D out/Release/chromedriver "$pkgdir/usr/bin/chromedriver"
-  install -Dm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
+  install -Dv out/Release/chrome "$pkgdir/usr/lib/chromium/chromium"
+  install -Dv out/Release/chromedriver "$pkgdir/usr/bin/chromedriver"
+  install -Dvm4755 out/Release/chrome_sandbox "$pkgdir/usr/lib/chromium/chrome-sandbox"
 
-  install -Dm644 chrome/installer/linux/common/desktop.template \
+  install -Dvm644 chrome/installer/linux/common/desktop.template \
     "$pkgdir/usr/share/applications/chromium.desktop"
-  install -Dm644 chrome/app/resources/manpage.1.in \
+  install -Dvm644 chrome/app/resources/manpage.1.in \
     "$pkgdir/usr/share/man/man1/chromium.1"
   sed -i \
     -e 's/@@MENUNAME@@/Chromium/g' \
@@ -326,7 +326,7 @@ package() {
     export $(grep -o '^[A-Z_]*' $info_file)
     sed -E -e 's/@@([A-Z_]*)@@/\${\1}/g' -e '/<update_contact>/d' $tmpl_file | envsubst
   ) \
-  | install -Dm644 /dev/stdin "$pkgdir/usr/share/metainfo/chromium.appdata.xml"
+  | install -Dvm644 /dev/stdin "$pkgdir/usr/share/metainfo/chromium.appdata.xml"
 
   local toplevel_files=(
     chrome_100_percent.pak
@@ -351,19 +351,19 @@ package() {
   fi
 
   cp "${toplevel_files[@]/#/out/Release/}" "$pkgdir/usr/lib/chromium/"
-  install -Dm644 -t "$pkgdir/usr/lib/chromium/locales" out/Release/locales/*.pak
+  install -Dvm644 -t "$pkgdir/usr/lib/chromium/locales" out/Release/locales/*.pak
 
   for size in 24 48 64 128 256; do
-    install -Dm644 "chrome/app/theme/chromium/product_logo_$size.png" \
+    install -Dvm644 "chrome/app/theme/chromium/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
   done
 
   for size in 16 32; do
-    install -Dm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" \
+    install -Dvm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
   done
 
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/chromium/LICENSE"
+  install -Dvm644 LICENSE "$pkgdir/usr/share/licenses/chromium/LICENSE"
 }
 
 # vim:set ts=2 sw=2 et:
