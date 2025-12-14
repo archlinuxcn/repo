@@ -1,18 +1,19 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 # Maintainer: KokaKiwi <kokakiwi+aur@kokakiwi.net>
 # Contributor: George Rawlinson <george@rawlinson.net.nz>
+# Contributor: RocketDev <ma2014119@outlook.com>
 
 _pkgname=ImHex
 pkgname=${_pkgname,,}
-pkgver=1.37.4
-pkgrel=4
+pkgver=1.38.0
+pkgrel=1
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
 license=('GPL-2.0-only')
 arch=('x86_64')
 depends=(
     'glfw'
-    'hicolor-icon-theme' 'xdg-desktop-portal'
+    'hicolor-icon-theme' 'xdg-desktop-portal' # needed in runtime
     'dbus'
     'mbedtls' 'libmbedcrypto.so'
     'curl' 'libcurl.so'
@@ -20,20 +21,23 @@ depends=(
     'fmt' 'libfmt.so'
     'yara' 'libyara.so'
     'file' 'libmagic.so'
-    'libglvnd'
-    'libarchive'
+    'libglvnd' # needed in runtime
     'glibc' 'gcc-libs' 'bash'
-    'libxrandr'
+    'libxrandr' # needed in runtime
     'fontconfig'
+    'capstone'
+    'md4c'
+    # required by imhex plugins
+    'lz4'
+    'zlib'
+    'bzip2'
+    'xz'
+    'zstd'
+    'libssh2'
 )
-makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'dotnet-runtime')
+makedepends=('git' 'cmake' 'ninja' 'llvm' 'nlohmann-json' 'librsvg' 'python' 'cli11' 'boost' 'dotnet-runtime')
 optdepends=(
-    'dotnet-runtime'
-    'lz4: decompress plugin'
-    'zlib: decompress plugin'
-    'bzip2: decompress plugin'
-    'xz: decompress plugin'
-    'zstd: decompress plugin'
+    'dotnet-runtime: dotnet script support'
 )
 replaces=('imhex-patterns-git')
 source=(
@@ -41,22 +45,16 @@ source=(
     "nativefiledialog::git+https://github.com/btzy/nativefiledialog-extended.git"
     "xdgpp::git+https://git.sr.ht/~danyspin97/xdgpp"
     "libromfs::git+https://github.com/WerWolv/libromfs"
-    "capstone::git+https://github.com/capstone-engine/capstone"
     "pattern_language::git+https://github.com/WerWolv/PatternLanguage"
     "libwolv::git+https://github.com/WerWolv/libwolv"
     "HashLibPlus::git+https://github.com/WerWolv/HashLibPlus"
-    "jthread::git+https://github.com/josuttis/jthread"
-    "cli11::git+https://github.com/CLIUtils/CLI11"
     "lunasvg::git+https://github.com/sammycage/lunasvg"
     "edlib::git+https://github.com/Martinsos/edlib"
     "throwing_ptr::git+https://github.com/rockdreamer/throwing_ptr"
-    "plutovg::git+https://github.com/sammycage/plutovg"
     "ImHex-Patterns::git+https://github.com/WerWolv/ImHex-Patterns.git"
     "disassembler::git+https://github.com/WerWolv/Disassembler.git"
-    "fmt-update.patch"
-    "patterns-fmt-update.patch"
 )
-b2sums=('d91e03eddae1a78a0679db066bccdc31fe4dd28975097d1299ea303987df8307e2bf239e21401d39b76e52d2ce4ef71581bd65639d8203978594c70ff27ee7ab'
+b2sums=('843846fd2c5a0136d52771c11aece24fd3b69dc69e8f8a5f375faab17569ea830c49b43fcd7a66346cf70d0d1ec0f5602619006e244501144556c4041b8ce2cc'
         'SKIP'
         'SKIP'
         'SKIP'
@@ -67,13 +65,7 @@ b2sums=('d91e03eddae1a78a0679db066bccdc31fe4dd28975097d1299ea303987df8307e2bf239
         'SKIP'
         'SKIP'
         'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        'SKIP'
-        '95b48f077d47af4b430477e5581f4da3f34e2d27920a038bcd5d4affb812c4de3801aba89053b9ffa394eb501a1c2eede40de0a9d7d940a9be292e3ac74dd2f3'
-        '46eea8e7a7133ac2b5d37c02ca892cdbebaf68204947936757708f72e37d3ba332f3cd908a06d0e4bbd4a1a19c2f1f8d6bb6e01606e97dd383584c9f6060f40f')
+        'SKIP')
 
 prepare() {
     cd "$pkgname"
@@ -83,38 +75,16 @@ prepare() {
         git submodule set-url lib/external/"$name" "$srcdir/$name"
         git -c protocol.file.allow=always submodule update lib/external/$name
     done
-    for name in nativefiledialog xdgpp capstone HashLibPlus edlib lunasvg; do
+    for name in nativefiledialog xdgpp HashLibPlus edlib lunasvg; do
         git submodule set-url lib/third_party/"$name" "$srcdir/$name"
         git -c protocol.file.allow=always submodule update lib/third_party/"$name"
     done
-    git submodule set-url lib/third_party/jthread/jthread "$srcdir/jthread"
-    git -c protocol.file.allow=always submodule update lib/third_party/jthread/jthread
     pushd lib/external/pattern_language
         git submodule init
-        for name in libwolv cli11 throwing_ptr; do
+        for name in libwolv throwing_ptr; do
             git submodule set-url external/"$name" "$srcdir/$name"
             git -c protocol.file.allow=always submodule update external/"$name"
         done
-    popd
-    pushd lib/third_party/lunasvg
-      git submodule init
-      git submodule set-url plutovg "$srcdir/plutovg"
-      git -c protocol.file.allow=always submodule update plutovg
-    popd
-    for name in fmt yara/yara; do
-        git config --remove-section submodule.lib/third_party/"$name"
-    done
-
-
-    pushd lib/third_party/edlib
-        # Fix cmake minimum version
-        git cherry-pick -n 47359e591f3861f12105fa8e72242de64d5597c4
-    popd
-
-    # Fix deprecated fmt::localtime
-    patch -Np1 -i "$srcdir/fmt-update.patch"
-    pushd lib/external/pattern_language
-        patch -Np1 -i "$srcdir/patterns-fmt-update.patch"
     popd
 }
 
@@ -131,22 +101,29 @@ build() {
         -D IMHEX_USE_GTK_FILE_PICKER=OFF \
         -D IMHEX_STRICT_WARNINGS=OFF \
         -D IMHEX_BUNDLE_DOTNET=OFF \
+        -D IMHEX_BUNDLE_PLUGIN_SDK=OFF \
         -D USE_SYSTEM_LLVM=ON \
         -D USE_SYSTEM_YARA=ON \
         -D USE_SYSTEM_FMT=ON \
-        -D USE_SYSTEM_CURL=ON \
         -D USE_SYSTEM_NLOHMANN_JSON=ON \
-        -D USE_SYSTEM_CAPSTONE=OFF \
+        -D USE_SYSTEM_CAPSTONE=ON \
+        -D USE_SYSTEM_MD4C=ON \
+        -D USE_SYSTEM_CLI11=ON \
+        -D USE_SYSTEM_BOOST=ON \
         -D LIBPL_ENABLE_CLI=ON \
         -D LIBPL_BUILD_CLI_AS_EXECUTABLE=OFF \
         -D IMHEX_VERSION="$pkgver" \
+        -D IMHEX_ENABLE_UNIT_TESTS=ON \
+        -D IMHEX_ENABLE_PLUGIN_TESTS=ON \
+        -D IMHEX_ENABLE_IMGUI_TEST_ENGINE=ON \
         -D CMAKE_POLICY_VERSION_MINIMUM=3.5
 
     cmake --build build --parallel
+
+    cmake --build build --parallel unit_tests
 }
 
 package() {
-    # FIXME: upstream install SDK in /usr/share and seems no way to disable it...
     DESTDIR="$pkgdir" cmake --install build
     
     # Documentation
@@ -154,4 +131,12 @@ package() {
         "$pkgname/README.md"
 }
 
+check() {
+    export LD_LIBRARY_PATH="$PWD/build/plugins:$PWD/build/lib/libimhex"
+    pushd "$pkgname/lib/external/pattern_language"
+        python tests/integration/integration.py ../../../../build/imhex --pl
+    popd
+
+    ctest --test-dir build --output-on-failure
+}
 # vim: set ts=4 sw=4 et:
