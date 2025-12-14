@@ -4,13 +4,13 @@
 ## options
 : "${_run_unit_tests:=false}" # if set to true; unit tests will be executed post build; useful in CI
 : "${_support_headless_testing:=false}"
-: "${_use_cuda:=detect}" # nvenc
+_use_cuda=true
 
 : "${_commit:=86188d47a7463b0f73b35de18a628353adeaa20e}"
 
 pkgname='sunshine'
 pkgver=2025.924.154138
-pkgrel=3
+pkgrel=4
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
