@@ -120,7 +120,7 @@ build() {
 
     cmake --build build --parallel
 
-    cmake --build build --parallel unit_tests
+    cmake --build build --parallel --target unit_tests
 }
 
 package() {
