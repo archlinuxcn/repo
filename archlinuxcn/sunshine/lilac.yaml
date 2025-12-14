@@ -5,10 +5,6 @@ pre_build_script: |
   for line in edit_file('PKGBUILD'):
     if line.strip().startswith(': "${_use_cuda'):
       line = '_use_cuda=true'
-    elif line.strip().startswith(': "${_run_unit_tests'):
-      line = '_run_unit_tests=true'
-    elif line.strip().startswith(': "${_support_headless_testing'):
-      line = '_support_headless_testing=true'
     print(line)
 post_build: aur_post_build
 update_on:
