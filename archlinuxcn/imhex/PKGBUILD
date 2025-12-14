@@ -120,9 +120,7 @@ build() {
 
     cmake --build build --parallel
 
-    pushd build
-        ninja unit_tests
-    popd
+    cmake --build build --parallel unit_tests
 }
 
 package() {
@@ -139,8 +137,6 @@ check() {
         python tests/integration/integration.py ../../../../build/imhex --pl
     popd
 
-    pushd build
-        ctest --output-on-failure
-    popd
+    ctest --test-dir build --output-on-failure
 }
 # vim: set ts=4 sw=4 et:
