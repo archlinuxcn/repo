@@ -5,10 +5,10 @@ ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
 pkgver=11.7.4
-pkgrel=1
+pkgrel=2
 _pkgfixver=$pkgver
 _pkgfixvercli=11.7.4
-_pkgrelcli=1
+_pkgrelcli=2
 
 _commit='188905011b64f385c72c5c8f795237bf894390fa'
 _commitcli='1ce8a93aeeae71244ecec6d257daae5eea3f3fc4'
