@@ -17,7 +17,7 @@ _gpgerrorver=1.57
 _libassuanver=3.0.0
 _gpgmever=2.0.1
 _libseccompver=2.5.6
-pkgrel=3
+pkgrel=4
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=b9f7d4a5b0bea75953f5892621a2caecc5672de5
