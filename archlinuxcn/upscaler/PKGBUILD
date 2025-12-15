@@ -2,7 +2,7 @@
 # Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
 
 pkgname=upscaler
-pkgver=1.6.2
+pkgver=1.6.3
 pkgrel=1
 pkgdesc="Upscale and enhance images"
 arch=('x86_64')
@@ -22,7 +22,7 @@ makedepends=(git
              meson)
 checkdepends=(appstream-glib)
 source=("git+https://gitlab.gnome.org/World/Upscaler.git#tag=${pkgver}")
-b2sums=('28a35ec4e7cb66e0aca414f55eb767dbdb5ce7ea2eab238c5fdc70273af97483f5258e03b7c0b3232f4936cc6e12b1614a0756e8efc699fc6b7386fd7fa5ef19')
+b2sums=('841220ef114f34b922a0d682f301712e8a7718d43519be37570360079eb21c7d0af87f816d194392b8722f034e7c5d669bff4d65a0cdccbb3295c0ece90d22fb')
 
 build() {
   arch-meson Upscaler build
