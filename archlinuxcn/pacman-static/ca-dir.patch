@@ -1,0 +1,33 @@
+diff -rauN openssl-3.0.7/apps/CA.pl.in openssl-3.0.7-patched/apps/CA.pl.in
+--- openssl-3.0.7/apps/CA.pl.in	2022-11-01 15:14:36.000000000 +0100
++++ openssl-3.0.7-patched/apps/CA.pl.in	2022-11-07 21:35:19.641418630 +0100
+@@ -29,7 +29,7 @@
+ my $PKCS12 = "$openssl pkcs12";
+ 
+ # Default values for various configuration settings.
+-my $CATOP = "./demoCA";
++my $CATOP = "/etc/ssl";
+ my $CAKEY = "cakey.pem";
+ my $CAREQ = "careq.pem";
+ my $CACERT = "cacert.pem";
+diff -rauN openssl-3.0.7/apps/openssl.cnf openssl-3.0.7-patched/apps/openssl.cnf
+--- openssl-3.0.7/apps/openssl.cnf	2022-11-01 15:14:36.000000000 +0100
++++ openssl-3.0.7-patched/apps/openssl.cnf	2022-11-07 21:34:48.351281834 +0100
+@@ -79,7 +79,7 @@
+ ####################################################################
+ [ CA_default ]
+ 
+-dir		= ./demoCA		# Where everything is kept
++dir		= /etc/ssl		# Where everything is kept
+ certs		= $dir/certs		# Where the issued certs are kept
+ crl_dir		= $dir/crl		# Where the issued crl are kept
+ database	= $dir/index.txt	# database index file.
+@@ -309,7 +309,7 @@
+ [ tsa_config1 ]
+ 
+ # These are used by the TSA reply generation only.
+-dir		= ./demoCA		# TSA root directory
++dir		= /etc/ssl		# TSA root directory
+ serial		= $dir/tsaserial	# The current serial number (mandatory)
+ crypto_device	= builtin		# OpenSSL engine to use for signing
+ signer_cert	= $dir/tsacert.pem 	# The TSA signing certificate
