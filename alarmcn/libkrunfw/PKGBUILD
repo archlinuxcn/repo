@@ -3,7 +3,7 @@
 pkgname=libkrunfw
 # Check https://github.com/containers/libkrunfw/blob/main/Makefile#L1 for kernel version
 _kver=6.12.34
-pkgver=5.0.0
+pkgver=5.1.0
 pkgrel=1
 pkgdesc="A dynamic library bundling the guest payload consumed by libkrun"
 url="https://github.com/containers/libkrunfw"
@@ -15,7 +15,7 @@ source=("https://github.com/containers/libkrunfw/archive/refs/tags/v$pkgver/$pkg
         "https://cdn.kernel.org/pub/linux/kernel/v${_kver%%.*}.x/linux-${_kver}.tar.xz")
 noextract=("linux-${_kver}.tar.xz")
 options=(!debug)  # suppress empty debug package
-sha256sums=('8718d6dcb0239999a1a462be63539ff8141d97d68d750c181f6fccdb5853a0a4'
+sha256sums=('569034918d24be694f1f96df930f115fe8ae942bb1884795f371ce8d6141390b'
             'a7f3fe381f67eca4172e9b63efb61a14bd7f9e1278e03603d0ff5a93f270c24d')
 
 build() {
