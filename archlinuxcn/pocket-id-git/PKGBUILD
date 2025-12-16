@@ -12,7 +12,7 @@ makedepends=('git' 'go' 'gcc' 'pnpm' 'nodejs')
 depends+=(glibc)
 conflicts=("${_pkgname}")
 source=(
-	"${_pkgname}::git+${url}.git#tag=v${pkgver}"
+	"${_pkgname}::git+${url}.git"
 )
 sha256sums=('SKIP')
 
