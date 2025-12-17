@@ -3,9 +3,9 @@
 
 pkgname=naiveproxy
 pkgdesc="A Proxy using Chrome's network stack to camouflage traffic with strong censorship resistence and low detectablility."
-pkgver=140.0.7339.123_2
+pkgver=143.0.7499.109_2
 pkgrel=1
-_pkgver=140.0.7339.123
+_pkgver=143.0.7499.109
 _pkgrel=2
 arch=('x86_64')
 url='https://github.com/klzgrad/naiveproxy'
@@ -14,8 +14,8 @@ depends=("gcc-libs" "glibc")
 makedepends=("ninja" "gn" "ccache" "python")
 checkdepends=("python" "openssl")
 
-_PGO_PATH='chrome-linux-main-1752989296-3dc3c84b1ea64dfbadeca18145c6e823bab3ff87-3a0e503d2bd87771c1e55103ac2a9a7b59a7411b.profdata'
-_clang_path='clang-llvmorg-21-init-16348-gbd809ffb-15.tar.xz'
+_PGO_PATH='chrome-linux-7499-1764697213-c882935fa3cd65518c410503710d1c1528e41260-abb34356235cd297f57c1bb9c272d7f54dbe3bd8.profdata'
+_clang_path='clang-llvmorg-22-init-8940-g4d4cb757-84.tar.xz'
 
 source=(
   "naiveproxy.service"
@@ -31,14 +31,14 @@ noextract=(
 
 sha1sums=('f959ceed9d451e3344d99b2a1572ca27416a5675'
           '278983a6edd5477e8f6f0557ea206f236fdc51dc'
-          'cfdca9fa2d374b894dbbc4135f066c288c7c3bb4'
-          '3dc3c84b1ea64dfbadeca18145c6e823bab3ff87'
-          '0bce0a1e502116cc502d24a5709c19e23701953b')
+          'fa5d3795e16b6a3996933bed586a2f8676f9b5f7'
+          'c882935fa3cd65518c410503710d1c1528e41260'
+          'c4404642f924d16c497c5b6ee592e5a0fe21d3a8')
 sha256sums=('8b56b5a401cb7f77b50376ec27e40445f4bdbe85890ab717327de187ded92c53'
             'dd8f8e154832d49795be417557db9cc408976cc324452715f5d796b40e5a752d'
-            '9126a891716b529f7a3825f7ad3dad276ad7107526b3aa0b671a850d44735d5d'
-            '97dcc3060a7ea38abffffc128e030d16bed0992810a551cef740d56f1eb1f09b'
-            'b448a78b42740352a37b458115a9482f213097bbf28f1f839e72cab829bdfa6d')
+            '07e3a44a73c92cc9df347b12a23a2420458b31917a7f6dfdb06e18590d9c1aea'
+            'f983a4c13f1a4bffd2dca0b741b77c5bf57d67549a674df5854e935b16e9cf93'
+            'f6a487ffd0e56ba7a39b063d85d1f8ff7846514f50635785730cffb7368872ce')
 
 backup=('etc/naiveproxy/config.json')
 provides=('naiveproxy')
