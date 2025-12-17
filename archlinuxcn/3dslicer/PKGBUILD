@@ -57,8 +57,7 @@ source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
         "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
 )
 sha512sums=('c3d91fdd02292c5231389baec26827a5e2503a2c5ba0bf226c7ef383e12fb11cf5b7925d9689a359428bc6a55431140b1b0aa43c1f0a8270256d12c1e47ad8ea'
-            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
-            '42395e20b10a8e9ef3e33014f9a4eed08d46ab952e02d2c1bbc8f6133eca0d7719fb75680f9bbff6552f20fcd1b73d86860f7f39388d631f98fb6f622b37cf04')
+            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
 
 prepare() {
   echo "Creating desktop file"
@@ -82,6 +81,7 @@ build() {
     -DSlicer_BUILD_DOCUMENTATION=OFF \
     -DSlicer_BUILD_I18N_SUPPORT=ON \
     -DSlicer_STORE_SETTINGS_IN_APPLICATION_HOME_DIR=OFF \
+    -DSlicer_BUILD_PARAMETERSERIALIZER_SUPPORT=ON \
     -DSlicer_USE_GIT_PROTOCOL=OFF \
     -DSlicer_USE_PYTHONQT=ON \
     -DSlicer_USE_SimpleITK_SHARED=ON \
