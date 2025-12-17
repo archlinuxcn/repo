@@ -29,7 +29,7 @@ prepare() {
     # generate the ninja build files using gn
     cd skia
     tools/git-sync-deps
-    bin/gn gen out/Static --args='is_official_build=true is_debug=false skia_use_vulkan=true'
+    bin/gn gen out/Static --args='is_official_build=true is_debug=false skia_use_vulkan=true extra_cflags_cc=["-USK_HIDE_PATH_EDIT_METHODS"]'
 }
 
 build() {
