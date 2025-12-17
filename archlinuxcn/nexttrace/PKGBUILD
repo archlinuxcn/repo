@@ -13,7 +13,7 @@ source=("git+https://github.com/nxtrace/Ntrace-core.git#tag=v$pkgver")
 sha256sums=('877eab5a3c4aab99bb0529953f51fd53237ec6c5f990e6064c00a553c6c12b76')
 
 build() {
-  cd "Ntrace-V1"
+  cd "Ntrace-core"
   export BUILD_VERSION="$(git describe --tags --always)"
   export COMMIT_SHA1="$(git rev-parse --short HEAD)"
   export BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
@@ -30,7 +30,7 @@ build() {
 }
 
 package() {
-  cd "Ntrace-V1"
+  cd "Ntrace-core"
   install -Dm755 NTrace-core "$pkgdir"/usr/bin/nexttrace
   setcap cap_net_raw,cap_net_admin+eip "$pkgdir"/usr/bin/nexttrace
 }
