@@ -32,6 +32,9 @@ build() {
     -D CMAKE_BUILD_TYPE=None
     -D CMAKE_INSTALL_PREFIX=/usr
     -D EVMONE_TESTING=ON
+    -D EVMONE_X86_64_ARCH_LEVEL=1
+    # https://github.com/ethereum/evmone/issues/1183
+    -D CMAKE_POLICY_VERSION_MINIMUM=3.5
   )
   cmake "${cmake_options[@]}"
   cmake --build build
