@@ -40,7 +40,8 @@ function pkgver() {
 
 function package() {
 	depends=("portable")
-	depends+=('dbus-glib' 'gtk3' 'libxt' 'nss' 'mime-types')
+	depends+=(alsa-lib  at-spi2-core  bash  cairo  dbus  ffmpeg  fontconfig  freetype2  gcc-libs  gdk-pixbuf2  glib2  glibc  gtk3  hicolor-icon-theme  libpulse
+                  libx11  libxcb  libxcomposite  libxdamage  libxext  libxfixes  libxrandr  libxss  libxt  mime-types  nspr  nss  pango  ttf-font)
 	while IFS= read -r line; do
 		file="$(echo "$line" | awk '{print $2}')"
 		if [[ -d ${file} ]]; then
