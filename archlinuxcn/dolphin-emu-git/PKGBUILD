@@ -44,7 +44,6 @@ source=(
 	"$pkgbase-tinygltf::git+https://github.com/syoyo/tinygltf.git"
 	"$pkgbase-vh::git+https://github.com/KhronosGroup/Vulkan-Headers.git"
 	"$pkgbase-watcher::git+https://github.com/e-dant/watcher.git"
-	'cmake-mgba.diff'
 )
 b2sums=('SKIP'
         'SKIP'
@@ -55,8 +54,7 @@ b2sums=('SKIP'
         'SKIP'
         'SKIP'
         'SKIP'
-        'SKIP'
-        'd9e6ba73de8e1c49a7ebf9efe6caffcffbe1a545dfb61caebe2b830d8f496aaa221269c25a3f849ba02228dfb866b362c8c74f7e897e66a9362469dea679721d')
+        'SKIP')
 
 _sourcedirectory="$pkgbase"
 
@@ -87,10 +85,6 @@ prepare() {
 
 	# Get rid of glslang version, as it's used as an exact match (ABI v16 is compatible, see https://github.com/dolphin-emu/dolphin/pull/13974/files/cdfb389509b560b4a70661571d12edcebfb77fdf#r2384216168)
     sed -i 's/15.0/16.0/g' "$srcdir/$_sourcedirectory/CMakeLists.txt"
-
-	# Patch cmake_minimum_required below 3.5.0
-	cd "$srcdir/$_sourcedirectory/Externals/mGBA/mgba/"
-	patch --forward -p1 < "$srcdir/cmake-mgba.diff"
 }
 
 pkgver() {
