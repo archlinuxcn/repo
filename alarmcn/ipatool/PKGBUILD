@@ -1,0 +1,42 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+# Contributor: aliu <aaron! liu! 0130! at! gmail! dot! com! woohoo>
+
+pkgname=ipatool
+pkgver=2.2.0
+pkgrel=1
+pkgdesc="CLI tool for searching and downloading app packages from the iOS App Store"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/majd/${pkgname}"
+license=('MIT')
+makedepends=('go')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('676cd6bd039c25fe649a35ea86977706c0818442624da87c7f4285257cc7aa12')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	export GOPATH="${srcdir}"
+	go mod download -modcacherw -x
+	mkdir -p build
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
+	go build -o build -v
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	go generate ./...
+	go test ./...
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "build/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/${pkgname}/"
+}
