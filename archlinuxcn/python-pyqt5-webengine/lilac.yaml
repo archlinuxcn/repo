@@ -1,0 +1,21 @@
+maintainers:
+  - github: RocketMaDev
+    email: RocketDev <marocketmd@outlook.com>
+
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+repo_depends:
+  - qt5-webengine
+
+update_on:
+  - source: pypi
+    pypi: PyQtWebEngine
+  - source: alpm
+    alpm: python-pyqt5
+    repo: extra
+update_on_build:
+  - pkgbase: qt5-webengine
