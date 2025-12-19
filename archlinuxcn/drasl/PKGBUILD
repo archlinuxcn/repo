@@ -27,7 +27,6 @@ function prepare() {
 	git clean -fdx
 	git remote add oidcfix https://github.com/evan-goode/drasl.git
 	git fetch --all
-	git pull --all
 	git merge oidcfix/oidcfix --no-commit
 }
 
