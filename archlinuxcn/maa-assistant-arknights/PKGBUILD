@@ -10,7 +10,7 @@ pkgname=(maa-assistant-arknights)
 _pkgver=6.0.1
 pkgver=${_pkgver//-/}
 pkgrel=1
-pkgdesc="An Arknights assistant"
+_pkgdesc="An Arknights assistant"
 arch=(x86_64)
 url="https://github.com/MaaAssistantArknights/MaaAssistantArknights"
 license=('AGPL-3.0-only')
@@ -27,7 +27,7 @@ md5sums=('78974044a3dbd154a941f1611ff10720'
 
 if ((WITH_CUDA)); then
     pkgname+=(maa-assistant-arknights-cuda)
-    depends+=(cuda)
+    makedepends+=(cuda)
 fi
 
 prepare() {
@@ -115,20 +115,26 @@ build() {
     fi
 }
 
-package_maa-assistant-arknights() {
-    cmake --install "$srcdir"/build --prefix "$pkgdir"/usr
-    
+_package() {
     cd "$pkgdir"/usr/
     mkdir -p share/"$_pkgname"
     mv Python resource share/"$_pkgname"
     ln -sr lib/* share/"$_pkgname"
 }
 
+package_maa-assistant-arknights() {
+    pkgdesc="${_pkgdesc}"
+
+    cmake --install "$srcdir"/build --prefix "$pkgdir"/usr
+    
+    _package
+}
+
 package_maa-assistant-arknights-cuda() {
+    pkgdesc="${_pkgdesc} (with CUDA)"
+    depends+=(cuda)
+
     cmake --install "$srcdir"/build-cuda --prefix "$pkgdir"/usr
     
-    cd "$pkgdir"/usr/
-    mkdir -p share/"$_pkgname"
-    mv Python resource share/"$_pkgname"
-    ln -sr lib/* share/"$_pkgname"
+    _package
 }
