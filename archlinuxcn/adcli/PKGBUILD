@@ -1,6 +1,6 @@
 # Maintainer: Mantas Mikulėnas <grawity@gmail.com>
 pkgname=adcli
-pkgver=0.9.3.1
+pkgver=0.9.3.1.r1.g9c31bb0
 pkgrel=1
 pkgdesc="Active Directory account management tool"
 arch=(i686 x86_64)
@@ -18,8 +18,8 @@ makedepends=(
   smbclient   # optional, for offline join support
   xmlto
 )
-source=("git+https://gitlab.freedesktop.org/realmd/adcli.git#tag=$pkgver")
-sha256sums=('8fadd4a6df3f55134fc4b6458f7d0a3dd5ee5dd64a5150b89007077053b7c793')
+source=("git+https://gitlab.freedesktop.org/realmd/adcli.git#commit=9c31bb06590f2d96a2d6d8ce87dc3273c283a671")
+sha256sums=('bc7c82d1f81d57a508ddbe6345be8d9c7865fb62b963715e138b786b4d1b38e1')
 validpgpkeys=('C0F67099B808FB063E2C81117BFB1108D92765AF')
 
 pkgver() {
