@@ -1,0 +1,49 @@
+# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
+# Contributor: Vlad Zahorodnii <vladzzag@gmail.com>
+
+pkgname=kwin-effects-sliding-notifications-russh-git
+pkgver=r22.7a486fd
+pkgrel=1
+pkgdesc="Sliding animation for notification windows"
+arch=('x86_64')
+url="https://github.com/RussH/kwin-sliding-notifications"
+license=('GPL3')
+depends=('kwin>=6.0')
+makedepends=(
+    extra-cmake-modules
+    git
+)
+conflicts=(kwin-effects-sliding-notifications)
+source=(
+    ${pkgname}::git+https://github.com/RussH/kwin-sliding-notifications
+    CMakeLists.txt
+)
+sha256sums=('SKIP'
+            '42bb8e10a743a93037fa25cc4a63bc536b01521f50d8b35fe2fbcae794554c95')
+
+pkgver() {
+  cd "$pkgname"
+  ( set -o pipefail
+    git describe --long --abbrev=7 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+  )
+}
+
+prepare() {
+    mkdir -p build
+    cd $srcdir/$pkgname
+    cp -v ../CMakeLists.txt CMakeLists.txt
+}
+
+build() {
+    cd build
+    cmake ../$pkgname \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR="$pkgdir" install
+}
