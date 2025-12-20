@@ -45,7 +45,6 @@ build() {
 	# Use empty files as placeholders
 	touch ./src-tauri/sidecar/verge-mihomo{,-alpha}-${CARCH}-unknown-linux-gnu
 
-	install -vDm644 ./src/locales/* -t ./src-tauri/resources/locales/
 	pnpm build -b deb
 }
 
