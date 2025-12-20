@@ -1,5 +1,5 @@
 pkgname=simdutf
-pkgver=7.7.0
+pkgver=7.7.1
 pkgrel=1
 pkgdesc="Unicode validation and transcoding at billions of characters per second"
 arch=('i686' 'x86_64')
@@ -10,7 +10,7 @@ makedepends=('git' 'cmake' 'ninja')
 provides=("simdutf=$pkgver")
 conflicts=('simdutf')
 source=("source::git+https://github.com/simdutf/simdutf.git#tag=v${pkgver}")
-sha256sums=('c4ad2907225f5f6b2f98be53060eee0a4fe988c7e95da18e571cd26b661d7c63')
+sha256sums=('c5de6d3991b58925e9e94353079aa7e448d48b0c123a6a8b5fae30d0cc06f82e')
 
 build() {
   cd source
