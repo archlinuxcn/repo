@@ -27,6 +27,8 @@ function prepare() {
 	export CFLAGS="-march=x86-64-v3 -mtune=generic -O3 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=3 -Wformat -fstack-clash-protection -fcf-protection -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"
 	cd "${srcdir}/continuwuity"
 	export RUSTUP_TOOLCHAIN=stable
+	git cherry-pick -n b2bead67ac8bc45de9a612578f295e5b7fc6c2b5
+	git cherry-pick -n 7fa4fa98628593c1a963f5aa8dbc3657d604b047
 	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 	export CONDUWUIT_VERSION_EXTRA=$(git rev-parse --short HEAD)
 }
