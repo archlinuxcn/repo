@@ -1,11 +1,11 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=uboot-asahi
-_ver=2025.07
+_ver=2025.10
 _asahirel=1
 
 pkgver=${_ver}.asahi${_asahirel}
-pkgrel=5
+pkgrel=6
 pkgdesc='U-Boot for Apple Silicon Macs'
 _commit_id=asahi-v${_ver}-${_asahirel}
 _srcname=u-boot-${_commit_id}
@@ -16,8 +16,8 @@ makedepends=( bc imagemagick )
 source=(
   "u-boot-${_commit_id}.tar.gz::https://github.com/AsahiLinux/u-boot/archive/${_commit_id}.tar.gz"
 )
-sha256sums=('ca6f8f8a4ca1f5ddd51b855d7cd1cd4629677bf1a31e6643b66cf6a33fd6d9e6')
-b2sums=('597e89ef2ba604fbdb0be593bacb7137f3703d39ac06c8e3296958a023fe807bfab863e3c675ef5b3893bfd9a25b73b12d2fcdd89804ab5b14269f2e21f32558')
+sha256sums=('8c763e0f8912a4e991da73100f9d9d9c1c723a733e4004d9435b0a1681c0560a')
+b2sums=('d42dc640483f3392efaacf3c29cecb1dadbc539524ae482918ab963dda2c7845bb83d7f8bc44a147503866169afd75c264d79f9fc03c3c1f6931a33bc1275a44')
 
 prepare() {
   cd "${srcdir}/$_srcname"
