@@ -42,7 +42,7 @@ prepare() {
     sed -e '/^find_package(fast/s/^/# /;' \
         -e '/maadeps/s/^/# /;' \
         -e 's/imgproc/imgproc calib3d videoio xfeatures2d/' \
-        -e 's/ system)/ process)/'\
+        -e 's/COMPONENTS system/COMPONENTS process/'\
         -i CMakeLists.txt -i src/MaaUtils/MaaUtils.cmake
 
     sed -e '/copy_and_add_rpath_library(/s/^/# /;' \
