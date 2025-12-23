@@ -1,0 +1,75 @@
+# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
+
+pkgname=subrandr
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="A subtitle rendering library which aims to render SRV3 (YouTube) subtitles and WebVTT subtitles accurately."
+url="https://github.com/afishhh/subrandr"
+arch=('aarch64' 'i686' 'x86_64')
+license=('MPL-2.0')
+depends=(
+    'fontconfig'
+    'freetype2'
+    'gcc-libs'
+    'glibc'
+    'harfbuzz'
+)
+makedepends=(
+    'cargo'
+    'git'
+    # for tests
+    'libx11'
+)
+provides=(
+    'libsubrandr.so'
+)
+source=(
+    "$pkgname-$pkgver.tar.gz::https://github.com/afishhh/subrandr/archive/refs/tags/v$pkgver.tar.gz"
+)
+b2sums=('7ae927717070ec193f12af976abcebd4b2213a16f5927cfbf1a2eb47674c234f101940747abddb348c20d58b5d81e6eeffc0064294a19379489209ba1873c699')
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    
+    # FIXME: Prevent rebuild
+    sed '/build_library(ctx, &install.build)?;/d' -i xtask/src/build.rs
+    # FIXME: cargo use different path
+    sed '/.join(install.build.target.to_string())/d' -i xtask/src/build.rs
+    # FIXME: forget add PREFIX to libdir
+    sed 's/destdir.join(&install.libdir)/destdir.join(\&prefix).join(\&install.libdir)/' -i xtask/src/build.rs
+    sed 's/destdir.join(shared_dir)/destdir.join(\&prefix).join(shared_dir)/' -i xtask/src/build.rs
+    sed 's/destdir.join(&install.includedir)/destdir.join(\&prefix).join(\&install.includedir)/g' -i xtask/src/build.rs
+
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+    
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+
+    cargo build \
+        --frozen \
+        --release
+}
+
+check() {
+    cd "$pkgname-$pkgver"
+
+    export RUSTUP_TOOLCHAIN=stable
+    cargo test \
+        --workspace \
+        --frozen
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    cargo xtask install \
+       --prefix usr \
+       --destdir "$pkgdir"
+    #install -Dm0644 target/release/libsubrandr.so "$pkgdir/usr/lib/$(readelf -d target/release/libsubrandr.so | grep -Po '(?<=\(SONAME\).{,100}\[)[a-zA-Z0-9.]+(?=\])')"
+}
+
+# vim: set sts=4 ts=4 sw=4 et:

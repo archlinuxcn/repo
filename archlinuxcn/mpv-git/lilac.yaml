@@ -5,6 +5,9 @@ build_prefix: extra-x86_64
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
+repo_depends:
+  - subrandr
+
 update_on:
   - source: github
     github: mpv-player/mpv
@@ -96,3 +99,6 @@ update_on:
   - source: alpm
     alpm: libdisplay-info
     provided: libdisplay-info.so
+  - alias: alpm-lilac
+    alpm: subrandr
+    provided: libsubrandr.so
