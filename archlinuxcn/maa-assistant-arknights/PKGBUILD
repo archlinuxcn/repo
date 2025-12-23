@@ -108,6 +108,8 @@ build() {
         local _cmake_flags+=(
             -DWITH_CUDA=ON
             -DCUDA_DIRECTORY=/opt/cuda
+            -DCUDAToolkit_ROOT=/opt/cuda
+            -DCMAKE_CUDA_COMPILER=/opt/cuda/bin/nvcc
             -DCUDA_ARCH_NAME=Auto
         )
         
