@@ -4,7 +4,7 @@
 
 _pkgname=rasterio
 pkgname=python-rasterio
-pkgver=1.5a0
+pkgver=1.5a1
 pkgrel=1
 pkgdesc="Fast and direct raster I/O for use with Numpy and SciPy"
 url="https://github.com/rasterio/rasterio"
@@ -34,7 +34,7 @@ optdepends=('ipython: for ipython support'
   'python-matplotlib: for plotting support'
   'python-swiftclient: for OpenStack support')
 source=(${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
-sha512sums=('b43009477e7497225dc664aeeea28c384bd35a4d808455a35f68ff0fde02c3e53b69395200427510793582ac1d2cc9252e7034d8a32e972624933f8f90af48d5')
+sha512sums=('b5568e5cf09ebdef13fc27c58112146cd809e0478ec1084c4664a1f119d9143dd62738af645f88bd1fcfb1ea10e2ed3c37866207548fef894d8988ac44b48581')
 
 build() {
   cd ${_pkgname}-${pkgver}
