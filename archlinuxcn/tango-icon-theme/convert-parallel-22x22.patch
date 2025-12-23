@@ -1,0 +1,12 @@
+--- Makefile.am.slow_and_horrible	2007-08-13 17:28:58.000000000 -0700
++++ Makefile.am.fast_and_awesome	2019-12-19 16:08:02.181021750 -0800
+@@ -83,8 +83,6 @@
+ if ENABLE_ICON_FRAMING
+ 	$(mkinstalldirs) $(DESTDIR)$(themedir)/24x24/$(context)
+ 	(cd $(DESTDIR)$(themedir) && \
+-	for icon in $(icons_DATA); do \
+-		$(CONVERT) $(size)/$(context)/$$icon 24x24/$(context)/$$icon; \
+-	done)
++	parallel --will-cite -- $(CONVERT) $(size)/$(context)/{} 24x24/$(context)/{} ::: $(icons_DATA))
+ 	(cd $(DESTDIR)$(themedir)/24x24 && $(ICONMAP) -c $(context))
+ endif

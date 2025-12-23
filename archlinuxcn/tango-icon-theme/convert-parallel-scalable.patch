@@ -1,0 +1,12 @@
+--- Makefile.am.slow_and_horrible	2007-08-13 18:51:28.000000000 -0700
++++ Makefile.am.fast_and_wonderful	2019-12-19 15:19:17.235906331 -0800
+@@ -43,8 +43,6 @@
+ 	for i in 48 64 72 96 128; do \
+ 		pngdir="$(DESTDIR)$(themedir)/$${i}x$${i}/$(context)"; \
+ 		$(mkinstalldirs) $$pngdir; \
+-		for icon in $(icons_DATA); do \
+-			$(top_builddir)/svg2png.sh $$i $$pngdir $(srcdir)/$$icon; \
+-		done; \
++		parallel --will-cite -- $(top_builddir)/svg2png.sh $$i $$pngdir $(srcdir)/{} ::: $(icons_DATA); \
+ 		(cd $(DESTDIR)$(themedir)/$${i}x$${i} && $(ICONMAP) -c $(context)); \
+ 	done
