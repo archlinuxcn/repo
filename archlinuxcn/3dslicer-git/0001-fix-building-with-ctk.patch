@@ -1,0 +1,30 @@
+From ef2bd56dbd7c01910cbf80712ff7b47c257f5f00 Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Thu, 18 Dec 2025 17:18:22 +0800
+Subject: [PATCH] fix building with ctk
+
+Signed-off-by: Hu Butui <hot123tea123@gmail.com>
+---
+ SuperBuild/External_CTK.cmake | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/SuperBuild/External_CTK.cmake b/SuperBuild/External_CTK.cmake
+index 3eeb8771d6..d9387990f1 100644
+--- a/SuperBuild/External_CTK.cmake
++++ b/SuperBuild/External_CTK.cmake
+@@ -89,9 +89,12 @@ if(NOT DEFINED CTK_DIR AND NOT Slicer_USE_SYSTEM_${proj})
+     ${${proj}_EP_ARGS}
+     GIT_REPOSITORY "${Slicer_${proj}_GIT_REPOSITORY}"
+     GIT_TAG "${Slicer_${proj}_GIT_TAG}"
++    PATCH_COMMAND git apply ${CMAKE_SOURCE_DIR}/../0001-fix-building-ctk-with-pythonqt.patch && git apply ${CMAKE_SOURCE_DIR}/../0002-fix-undefined-reference-error-when-building-with-qt6.patch
+     SOURCE_DIR ${EP_SOURCE_DIR}
+     BINARY_DIR ${EP_BINARY_DIR}
+     CMAKE_CACHE_ARGS
++      # -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
++      # -DINTERPROCEDURAL_OPTIMIZATION:BOOL=OFF
+       -DCMAKE_CXX_COMPILER:FILEPATH=${CMAKE_CXX_COMPILER}
+       -DCMAKE_CXX_FLAGS:STRING=${ep_common_cxx_flags}
+       -DCMAKE_C_COMPILER:FILEPATH=${CMAKE_C_COMPILER}
+-- 
+2.52.0
+

@@ -1,0 +1,35 @@
+From d8c6891148f564c401d172dab4e4563b2a2ecb75 Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Thu, 18 Dec 2025 22:14:46 +0800
+Subject: [PATCH 1/2] fix building ctk with pythonqt
+
+Signed-off-by: Hu Butui <hot123tea123@gmail.com>
+---
+ CMakeExternals/PythonQt.cmake | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeExternals/PythonQt.cmake b/CMakeExternals/PythonQt.cmake
+index 3091d187..1a750f38 100644
+--- a/CMakeExternals/PythonQt.cmake
++++ b/CMakeExternals/PythonQt.cmake
+@@ -91,7 +91,7 @@ if(NOT DEFINED PYTHONQT_INSTALL_DIR)
+ 
+   ctkFunctionExtractOptimizedLibrary(PYTHON_LIBRARIES PYTHON_LIBRARY)
+ 
+-  set(revision_tag 0f8486a7ad0e95bfbf1be57600e42d6e2ed136ea) # patched-v3.6.1-2025-09-30-f4769f190
++  set(revision_tag 243ba160de326624e79285dffc3ae42693247adf) # patched-v3.6.1-2025-09-30-f4769f190
+   if(${proj}_REVISION_TAG)
+     set(revision_tag ${${proj}_REVISION_TAG})
+   endif()
+@@ -103,7 +103,7 @@ if(NOT DEFINED PYTHONQT_INSTALL_DIR)
+     set(location_args GIT_REPOSITORY ${${proj}_GIT_REPOSITORY}
+                       GIT_TAG ${revision_tag})
+   else()
+-    set(location_args GIT_REPOSITORY "https://github.com/commontk/PythonQt.git"
++    set(location_args GIT_REPOSITORY "https://github.com/codeling/PythonQt.git"
+                       GIT_TAG ${revision_tag})
+   endif()
+ 
+-- 
+2.52.0
+

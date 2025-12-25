@@ -1,0 +1,33 @@
+From d7e7f39c09e82c8d9c905f611d97d5ea4e00fe5b Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Wed, 24 Dec 2025 23:03:21 +0800
+Subject: [PATCH 2/2] fix undefined reference error when building with qt6
+
+Signed-off-by: Hu Butui <hot123tea123@gmail.com>
+---
+ Libs/ctkExport.h.in | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Libs/ctkExport.h.in b/Libs/ctkExport.h.in
+index 0bb77077..97b357a4 100644
+--- a/Libs/ctkExport.h.in
++++ b/Libs/ctkExport.h.in
+@@ -22,11 +22,11 @@
+ #endif
+ 
+ #if !defined(@MY_LIBRARY_EXPORT_DIRECTIVE@)
+-//#  if defined(CTK_SHARED)
++#  if defined(@MY_LIBNAME@_EXPORTS)
+ #    define @MY_LIBRARY_EXPORT_DIRECTIVE@ Q_DECL_EXPORT
+-//#  else
+-//#    define @MY_LIBRARY_EXPORT_DIRECTIVE@
+-//#  endif
++#  else
++#    define @MY_LIBRARY_EXPORT_DIRECTIVE@ Q_DECL_IMPORT
++#  endif
+ #endif
+ 
+ @CTK_EXPORT_CUSTOM_CONTENT@
+-- 
+2.52.0
+
