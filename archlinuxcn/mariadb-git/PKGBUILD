@@ -71,6 +71,7 @@ build() {
     -DINSTALL_SYSCONFDIR=/etc
     -DINSTALL_SYSCONF2DIR=/etc/my.cnf.d
     # /run
+    -DINSTALL_RUNDATADIR=/run/mariadb
     -DINSTALL_UNIX_ADDRDIR=/run/mysqld/mysqld.sock
     # /usr
     -DCMAKE_INSTALL_PREFIX=/usr
