@@ -3,7 +3,7 @@
 _projectname='ppx_let'
 pkgname="ocaml-$_projectname"
 pkgver='0.17.1'
-pkgrel='1'
+pkgrel=2
 pkgdesc='Monadic let-bindings'
 arch=('x86_64' 'aarch64')
 url="https://github.com/janestreet/$_projectname"
