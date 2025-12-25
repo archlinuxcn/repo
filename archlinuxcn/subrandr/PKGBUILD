@@ -25,11 +25,14 @@ provides=(
 )
 source=(
     "$pkgname-$pkgver.tar.gz::https://github.com/afishhh/subrandr/archive/refs/tags/v$pkgver.tar.gz"
+    "$pkgname-fix-version-1.0.0.patch::https://github.com/afishhh/subrandr/commit/d9520a339ff41024deb7c4bfecae689c787b46ef.patch"
 )
 b2sums=('7ae927717070ec193f12af976abcebd4b2213a16f5927cfbf1a2eb47674c234f101940747abddb348c20d58b5d81e6eeffc0064294a19379489209ba1873c699')
 
 prepare() {
     cd "$pkgname-$pkgver"
+
+    patch -Np1 -i ../$pkgname-fix-version-1.0.0.patch
     
     # FIXME: Prevent rebuild
     sed '/build_library(ctx, &install.build)?;/d' -i xtask/src/build.rs
