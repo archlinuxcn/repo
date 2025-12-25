@@ -19,6 +19,5 @@ build() {
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/"
-	DESTDIR="${pkgdir}" make install
+	DESTDIR="${pkgdir}" make -C "${pkgname}-${pkgver}" install
 }
