@@ -1,75 +1,45 @@
-# Maintainer : Johnathan Jenkins <twodopeshaggy@gmail.com>
+# Maintainer: Lubosz Sarnecki <lubosz at gmail dot com>
+# Contributor : Johnathan Jenkins <twodopeshaggy@gmail.com>
 # Contributor: Drew Liszewski <drew dot liszewski at gmail dot com>
 # Contributor: Daniel Varga <varga dot daniel at gmx dot de>
 
 pkgname=emulationstation-git
-_gitname=EmulationStation
 pkgrel=1
-pkgver=1839.6234ee52
-pkgdesc="A graphical front-end for emulators with controller navigation. Developed for the Raspbery Pi, but runs on most Linux systems."
-arch=('x86_64' 'aarch64')
+epoch=1
+pkgver=2.4.1.r866.ga72ca013
+pkgdesc="Flexible emulator front-end supporting keyboardless navigation and custom system themes. Active fork by the RetroPie project."
+arch=(x86_64 i686 armv6h armv7h)
 url="https://github.com/RetroPie/EmulationStation"
-license=('MIT')
-install=emulationstation.install
-depends=('python' 'vlc' 'alsa-lib' 'sdl2' 'freeimage' 'curl' 'pugixml')
-makedepends=('git' 'freetype2' 'cmake' 'curl' 'rapidjson') 
-optdepends=('ttf-droid: Fallback fonts for Chinese/Japanese/Korean characters'
-            'dolphin-emu: GameCube and Wii support'
-            'mupen64plus: Nintendo 64 support'
-            'mednafen: NES and GBA support'
-            'zsnes: SNES support'
-            'stella: Atari 2600 support'
-            'ppsspp-headless: PSP support'
-            'steam: Steam support')
-source=('git+https://github.com/RetroPie/EmulationStation.git'
-        "install.patch"
-        "emulationstation.desktop"
-        "emulationstation.png")
-sha256sums=('SKIP'
-            '2608b7de63be4d4d117c2712517e3c40df872f6619f08ac9356f13bdc8c179ab'
-            '56a68a60577d015224d721ab169f1439d1545a0fdcf1c23eeee599dc49ea51c6'
-            'ac589d9da5c258226f8de76e99afe2b07ac86030ced90d284d31b51193057f9c')
-provides=('emulationstation')
-conflicts=('emulationstation')
+license=(MIT)
+depends=(freeimage libvlc curl pugixml freetype2 sdl2 alsa-lib glibc gcc-libs libglvnd)
+makedepends=(git cmake rapidjson)
+provides=(emulationstation)
+conflicts=(emulationstation)
+source=('git+https://github.com/RetroPie/EmulationStation.git')
+sha256sums=('SKIP')
 
 pkgver() {
-  cd $srcdir/$_gitname
-  printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"  
-}
-
-prepare() {
-    rm -rf "${_gitname}/external/pugixml"
-    rm -rf "${_gitname}/.gitmodules"
-
-    patch -d "${_gitname}" -Np1 -i "${srcdir}/install.patch"
+  cd EmulationStation
+  git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
-    # Default to using desktop GL
-    _cmakeflags='-DGL:BOOL=ON'
+  local _flags=(
 
-    if [[ "${CARCH}" = 'armv6h' ]]; then
-        # Raspberry Pi Model 1 only supports embedded GLES, also enable omxplayer
-        _cmakeflags='-DGLES:BOOL=ON -DRPI:BOOL=ON'
-    elif [[ "${CARCH}" == 'armv7h' || "${CARCH}" = 'aarch64' ]]; then
-        # Raspberry Pi Model 2 and up use mesa drivers
-        _cmakeflags='-DUSE_MESA_GLES:BOOL=ON'
-    fi
+  )
 
-    cmake -B "${_gitname}/build" \
-        -S "${_gitname}" \
-        -DCMAKE_BUILD_TYPE:STRING='None' \
-        -DCMAKE_INSTALL_LIBDIR:PATH='lib' \
-        -DCMAKE_INSTALL_PREFIX:PATH='/usr' \
-        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
-        ${_cmakeflags} \
-        -Wno-dev -Wno-deprecated
-    make -C "${_gitname}/build" all
+  cmake -B build -S "EmulationStation" -Wno-dev \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    "${_flags[@]}"
+
+  cmake --build build
 }
 
 package() {
-    make -C "${_gitname}/build" DESTDIR="${pkgdir}" install
-    install -Dm644 "$srcdir/emulationstation.png" "$pkgdir/usr/share/icons/hicolor/256x256/apps/emulationstation.png"
-    install -Dm644 "$srcdir/emulationstation.desktop" "$pkgdir/usr/share/applications/emulationstation.desktop"
-    install -Dm644 "$srcdir/$_gitname/LICENSE.md" "$pkgdir/usr/share/licenses/emulationstation-git/LICENSE"
+    cd EmulationStation
+    # No install target..., should be fixed upstream
+    # make DESTDIR="$pkgdir" install
+    install -Dm755 "emulationstation" -t "${pkgdir}/usr/bin/"
+    install -Dm644 "LICENSE.md" -t "$pkgdir/usr/share/licenses/${pkgname}/"
 }
