@@ -1,6 +1,6 @@
 _name=TatSu-LTS
 pkgname=python-tatsu-lts
-pkgver=5.13.2
+pkgver=5.14.0
 pkgrel=1
 pkgdesc="TatSu takes a grammar in a variation of EBNF as input, and outputs a memoizing PEG/Packrat parser in Python."
 arch=(any)
@@ -10,16 +10,16 @@ depends=('python' 'python-setuptools')
 makedepends=('python-setuptools' 'python-build' 'python-installer')
 optdepends=('python-colorama' 'python-rich')
 conflicts=('python-tatsu')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/tatsu_lts-5.13.2.tar.gz")
-sha256sums=('7204dbc3075fabecedd1ec1cbe04c5f20b159d7344f63280e580a21f3c14bf9f')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/tatsu_lts-5.14.0.tar.gz")
+sha256sums=('1f09f328aa4a5b53242055e8e24493ef7d9e4f770b90daa4d4de7c88523c232a')
 
 build() {
-  cd "$srcdir/tatsu_lts-5.13.2"
+  cd "$srcdir/tatsu_lts-5.14.0"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/tatsu_lts-5.13.2"
+  cd "$srcdir/tatsu_lts-5.14.0"
   python -m installer --destdir="$pkgdir" dist/*.whl
 
   # make sure we don't install any world-writable or root-readable-only files
