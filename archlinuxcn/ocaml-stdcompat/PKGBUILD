@@ -3,7 +3,7 @@
 _ocamlname=stdcompat
 pkgname=ocaml-$_ocamlname
 pkgver=21.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Compatibility module for OCaml standard library"
 url="https://github.com/thierry-martinez/stdcompat"
 license=('LGPL-2.1-or-later')
