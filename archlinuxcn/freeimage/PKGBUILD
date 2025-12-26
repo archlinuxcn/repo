@@ -1,0 +1,53 @@
+# Maintainer: Sven-Hendrik Haase <svenstaro@archlinux.org>
+# Contributor: Thomas Dziedzic < gostrc at gmail >
+# Contributor: Stefan Husmann <stefan-husmann@t-online.de>
+# Contributor: Mihai Militaru <mihai.militaru@gmx.com>
+# Contributor: scippio <scippio@berounet.cz>
+
+pkgname=freeimage
+pkgver=3.18.0
+pkgrel=23
+pkgdesc="Library project for developers who would like to support popular graphics image formats"
+arch=('x86_64')
+license=('GPL-3.0-only' 'LicenseRef-FreeImage')
+url="http://freeimage.sourceforge.net/"
+depends=('libjpeg-turbo' 'openexr' 'openjpeg2' 'libwebp' 'libraw' 'libtiff' 'jxrlib')
+makedepends=('mesa' 'glu')
+source=("https://downloads.sourceforge.net/project/freeimage/Source%20Distribution/${pkgver}/FreeImage${pkgver//./}.zip"
+        freeimage-unbundle.patch
+        freeimage-libraw-0.20.patch
+        freeimage-libraw-0.21.patch)
+sha512sums=('9d9cc7e2d57552c3115e277aeb036e0455204d389026b17a3f513da5be1fd595421655488bb1ec2f76faebed66049119ca55e26e2a6d37024b3fb7ef36ad4818'
+            'bd96331900e3f13c8830ef59377c840fa36b3c3ef97d1effd6f644acfefb7d618812b268f00f8f051e9d4c978b8dac0c0ab0e6ec7db5aaebf0fa0328913cfaac'
+            '5709e4c5baac3505bf2f2498082fbf6b8614e631fec69fc629036c8d033fbe21434a198e9ae24d577dd65928fd31a0d95c584ea4349d74134f7859d4e57b8397'
+            'f922af1e000ee83afc87871bbce04076372220174c74a83a6fc3812277f6a0203b631d7f49f250dd78f94015d1a3fb2b72a6b5c4d0a32d4071b197b417d65b8a')
+
+prepare() {
+  cd FreeImage
+
+  # TODO: This will only compile against libjpeg-turbo 2 but we will wait for that :D
+  patch -p1 -i ../freeimage-unbundle.patch # Unbundle libraries (Fedora)
+  rm -r Source/Lib* Source/ZLib Source/OpenEXR
+  # can't be built due to private headers
+  > Source/FreeImage/PluginG3.cpp
+  > Source/FreeImageToolkit/JPEGTransform.cpp
+
+  patch -p1 -i ../freeimage-libraw-0.20.patch # Fix build with libraw 0.20
+  patch -p1 -i ../freeimage-libraw-0.21.patch # Fix build with libraw 0.21
+}
+
+build() {
+  cd FreeImage
+  sh gensrclist.sh
+  sh genfipsrclist.sh
+  make -f Makefile.gnu
+  make -f Makefile.fip
+}
+
+package() {
+  cd FreeImage
+  make -f Makefile.gnu DESTDIR="${pkgdir}" install
+  make -f Makefile.fip DESTDIR="${pkgdir}" install
+
+  install -D -m644 "${srcdir}"/FreeImage/license-fi.txt "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}
