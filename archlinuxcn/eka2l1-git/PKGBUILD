@@ -46,6 +46,7 @@ prepare() {
 	cd "${srcdir}/${_pkgname}-git"
 	git submodule update --recursive --init
     sed -i 's/-Werror//g' src/external/mbedtls/CMakeLists.txt
+    sed -i 's/Gui REQUIRED)/Gui GuiPrivate REQUIRED)/g' src/emu/qt/CMakeLists.txt
     sed -i '/#include <cstdint>/a #include <algorithm>' src/emu/common/include/common/pystr.h 
 }
 
