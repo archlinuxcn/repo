@@ -46,9 +46,8 @@ prepare() {
 	cd "${srcdir}/${_pkgname}-git"
 	git submodule update --recursive --init
     sed -i 's/-Werror//g' src/external/mbedtls/CMakeLists.txt
-    sed -i 's/Gui REQUIRED)/Gui GuiPrivate REQUIRED)/g;s/Svg Network/Svg Network GuiPrivate/g' src/emu/qt/CMakeLists.txt
+    sed -i 's/Gui REQUIRED)/Gui GuiPrivate REQUIRED)/g;s/Svg Network/Svg Network GuiPrivate/g;/Qt${QT_VERSION_MAJOR}::Network/a Qt${QT_VERSION_MAJOR}::GuiPrivate' src/emu/qt/CMakeLists.txt
     sed -i '/#include <cstdint>/a #include <algorithm>' src/emu/common/include/common/pystr.h
-    sed -i 's|qpa/qplatformnativeinterface.h|QPlatformNativeInterface|g' src/emu/qt/src/displaywidget.cpp
 }
 
 build() {
@@ -59,7 +58,7 @@ build() {
 
     cd build
 
-    make
+    make VERBOSE=1
 }
 
 package() {
@@ -72,7 +71,7 @@ package() {
  install -m 755 ${srcdir}/eka2l1_qt "${pkgdir}/usr/bin/eka2l1_qt"
  for s in 16 24 32 48 64 96 128 512; do
     install -d -m 755 "${pkgdir}/usr/share/icons/hicolor/${s}x${s}/apps"
-    convert "${srcdir}/${_pkgname}-git/src/emu/qt/duck_tank.ico" -resize ${s}x${s} "${pkgdir}/usr/share/icons/hicolor/${s}x${s}/apps/duck_tank.png"
+    magick convert "${srcdir}/${_pkgname}-git/src/emu/qt/duck_tank.ico" -resize ${s}x${s} "${pkgdir}/usr/share/icons/hicolor/${s}x${s}/apps/duck_tank.png"
  done
  install -d -m 755 "${pkgdir}/usr/share/applications"
  install -m 644 "${srcdir}/${_pkgname}-git/src/emu/qt/eka2l1.desktop" "${pkgdir}/usr/share/applications/eka2l1.desktop"
