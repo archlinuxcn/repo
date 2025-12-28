@@ -2,7 +2,7 @@
 
 pkgbase=sing-geosite
 pkgname=(sing-geosite-db sing-geosite-rule-set)
-pkgver=20251226120620
+pkgver=20251227135815
 pkgrel=1
 pkgdesc="Geosite Database and Rule Sets for sing-box"
 arch=(any)
@@ -15,11 +15,11 @@ source=("${pkgver}-geosite.db::$url/releases/download/$pkgver/geosite.db"
         "${pkgver}-geosite-cn.db.sha256sum::$url/releases/download/$pkgver/geosite-cn.db.sha256sum"
         "${pkgver}-rule-set.tar.gz::$url/archive/refs/heads/rule-set.tar.gz"
         "${pkgver}-LICENSE::https://raw.githubusercontent.com/v2fly/domain-list-community/master/LICENSE")
-sha256sums=('c630046671465f8599fac96b69c46fb1baaa2ad9d7e3b0c56fb80fc28f52b7ea'
-            'fee08c72e5ed2cc5fa37c93cb96f6290646e6511f1e7440ce16362e871d73c1b'
-            '869685c19228e825f829878ef586eaa6b9447f550a9966c3d1d4cf801dbd0b22'
-            '4d7d79b23b4301836219a9b1fc13b75c4315923b3acf825ac31500bcf9e14f4b'
-            '088bf7c59e19a83de4e96a766f214b6164699220ab9c196cb2d751f7e65b1271'
+sha256sums=('9140145591a8c2df0199444639b5b155b89d8b607a8cb85ea82311d833b3bb6e'
+            '0326c643eeec8562d73b2a03aeadb4e589d6ad8abc5a5d7b0ec75093a5b47327'
+            '5bc37e12464e9dbcf12f3d850080f3778a0dcb0264db30a77afd10de6150da78'
+            'bd975280d9f5c6f5cd34734adfe49f347e579c39ee5dfd4ea631cee03cb576e9'
+            '6c321c561c23fd9ec4098fafabc50209927949fa9a35c852bbbaceca0f0ccd16'
             'b9d84a22870d3f21c91a4c6e410c9cc51d00902f5233ad0c84011479244bf7d2')
 
 prepare() {
