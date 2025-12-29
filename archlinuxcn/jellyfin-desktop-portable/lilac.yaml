@@ -8,12 +8,12 @@ post_build_script: |
 
 update_on:
   - source: "alpm"
-    alpm: "jellyfin-media-player"
+    alpm: "jellyfin-desktop"
     repo: archlinuxcn
     from_pattern: '-.*'
     to_pattern: ''
 
 repo_depends:
-  - jellyfin-media-player
+  - jellyfin-desktop
 
 build_prefix: extra-x86_64

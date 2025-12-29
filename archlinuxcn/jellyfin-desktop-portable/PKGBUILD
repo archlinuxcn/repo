@@ -1,22 +1,23 @@
 # Maintainer: Kimiblock Moe
 
-pkgname=jellyfin-media-player-portable
+pkgname=jellyfin-desktop-portable
 pkgver=1.12.0
 pkgrel=1
 epoch=1
-pkgdesc="Jellyfin Desktop. Sandboxed to prevent dGPU wakeup."
+pkgdesc="Jellyfin Desktop. Sandboxed to prevent dGPU wakeups."
 arch=('x86_64')
 url="https://github.com/Kraftland/portable"
 license=('GPL-3.0-or-later')
 groups=()
-provides=(jellyfin-media-player)
+provides=(jellyfin-media-player jellyfin-desktop)
 options=(!debug !strip)
 #depends=("portable")
-conflicts=("jellyfin-media-player")
+replaces+=(jellyfin-media-player-portable)
+conflicts=("jellyfin-media-player" jellyfin-desktop)
 
 optdepends=()
 
-makedepends+=(jellyfin-media-player)
+makedepends+=(jellyfin-desktop)
 
 checkdepends=()
 
@@ -36,7 +37,7 @@ function prepare() {
 }
 
 function package() {
-	depends=("portable" mpv  libcec  sdl2  p8-platform  protobuf  qt5-webengine  qt5-x11extras  qt5-quickcontrols)
+	depends=("portable" 'mpv' 'mpvqt' 'libcec' 'sdl2' 'p8-platform' 'protobuf' 'qt6-webengine' 'qt6-declarative')
 	while IFS= read -r line; do
 		file="$(echo "$line" | awk '{print $2}')"
 		if [[ -d ${file} ]]; then
