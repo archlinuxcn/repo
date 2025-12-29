@@ -1,9 +1,9 @@
 # Maintainer: Kimiblock Moe
 pkgname=zen-browser-portable
 _firefox_version=146.0
-pkgver=1.17.14b
+pkgver=1.17.15b
 _zen_version=${pkgver//_/-}
-pkgrel=5
+pkgrel=1
 pkgdesc="Experience tranquillity while browsing the web without people tracking you, sandboxed by portable"
 arch=('x86_64')
 url="https://github.com/Kraftland/portable"
@@ -99,4 +99,5 @@ Exec=env _portableConfig=org.mozilla.zen portable -- %u
 Terminal=false
 NoDisplay=true''' >"${pkgdir}/usr/share/applications/zen-browser-portable.desktop"
 }
-sha256sums=(SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP SKIP)
+sha256sums=('f8fb3d9a78b5020a3de8e991e00d3a86eabc301daa266a71dc4310ac2686123f'
+            'b1366506d4df221581e67544edd00728b9793da1cb8609beec3cf138d4a75eaf')
