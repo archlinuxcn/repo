@@ -1,6 +1,6 @@
 pkgname=julia-git-nonlinearsolvequasinewton-src
-pkgver=1.11.0
-_commit=23ae28073199e4e590f3e1bd66a23406f6eeed72
+pkgver=1.12.0
+_commit=4661a07847302820528c13ade2c00221ee0698c2
 pkgrel=1
 pkgdesc="NonlinearSolveQuasiNewton.jl"
 url="https://github.com/SciML/NonlinearSolve.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/NonlinearSolve.jl.git#commit=$_commit")
-sha256sums=('1eb21e903fcc46fef6543303638963a560fd9de1fb6667bed9ebc4d522cbfc8e')
+sha256sums=('2ba8ce5b2109eef9b18e56240b81a4bbeaedfd3b60b808653ba8346f2ffd32d2')
 
 package() {
   cd NonlinearSolve.jl/lib/NonlinearSolveQuasiNewton
