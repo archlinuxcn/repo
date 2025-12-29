@@ -2,7 +2,7 @@
 
 pkgname=jellyfin-desktop-portable
 pkgver=2.0.0
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Jellyfin Desktop. Sandboxed to prevent dGPU wakeups."
 arch=('x86_64')
@@ -28,7 +28,7 @@ source=(
 
 
 md5sums=('886c7336ab017afd8d2d9a3acbbb18e8'
-         'd82778df35e3aca815ba3a75a2d267e1')
+         '61eae09ad69f227dc9065e5a616fb502')
 function package() {
 	depends=("portable" 'mpv' 'mpvqt' 'libcec' 'sdl2' 'p8-platform' 'protobuf' 'qt6-webengine' 'qt6-declarative')
 
