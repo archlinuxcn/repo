@@ -32,7 +32,7 @@ md5sums=('886c7336ab017afd8d2d9a3acbbb18e8'
 function package() {
 	depends=("portable" 'mpv' 'mpvqt' 'libcec' 'sdl2' 'p8-platform' 'protobuf' 'qt6-webengine' 'qt6-declarative')
 
-	install -vDm755 /usr/bin/jellyfin-desktop -t /usr/lib/portable/overlay-usr
+	install -vDm755 /usr/bin/jellyfin-desktop -t "${pkgdir}"/usr/lib/portable/overlay-usr
 	export pkgdir
 	export pkgname
 	export srcdir
