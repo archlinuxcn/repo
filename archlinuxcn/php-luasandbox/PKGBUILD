@@ -1,0 +1,41 @@
+# Maintainer: KokaKiwi <kokakiwi+aur [at] kokakiwi.net>
+
+pkgname=php-luasandbox
+pkgver=4.1.3
+pkgrel=1
+pkgdesc='PHP extension that provides a sandboxed environment to run Lua scripts in'
+arch=('i686' 'x86_64')
+url='https://www.mediawiki.org/wiki/LuaSandbox'
+license=('MIT')
+depends=('php' 'lua51')
+backup=('etc/php/conf.d/luasandbox.ini')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/wikimedia/mediawiki-php-luasandbox/archive/refs/tags/$pkgver.tar.gz")
+sha256sums=('b373705508fa3fe5a6f09c05c223b7c281dd29069b34b4f0e57ca30301ab01d8')
+b2sums=('0fb682e2e5b4431dac95b3fadb126c361ca3b921ee4a4aa039fba29569f8d371659a0ca6852ec7caf29f0d0cd547a583c331bd2870e7dfaa45f66f8f9026607a')
+
+build() {
+  cd "mediawiki-php-luasandbox-$pkgver"
+
+  phpize
+  ./configure \
+    --prefix=/usr
+
+  make
+}
+
+check() {
+  cd "mediawiki-php-luasandbox-$pkgver"
+
+  NO_INTERACTION=1 make test
+}
+
+package() {
+  cd "mediawiki-php-luasandbox-$pkgver"
+
+  make install INSTALL_ROOT="$pkgdir"
+
+  install -dm0755 "$pkgdir/etc/php/conf.d"
+  echo ';extension=luasandbox.so' > "$pkgdir/etc/php/conf.d/luasandbox.ini"
+
+  install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" COPYING
+}
