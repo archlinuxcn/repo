@@ -12,7 +12,7 @@ friendlyName="Jellyfin"
 stateDirectory="Jellyfin_Data"
 
 # This is the target executable to launch
-launchTarget="jellyfinmediaplayer"
+launchTarget="jellyfin-desktop"
 
 # Enables Network access within the sandbox. Defaults to true.
 bindNetwork="true"
@@ -23,7 +23,7 @@ bindNetwork="true"
 useZink="false"
 
 # Enable compatibility workarounds for Qt5. Defaults to true.
-qt5Compat="true"
+qt5Compat="false"
 
 # Takes a boolean value or string "adaptive". When true, do not process XAuth files and forces wayland input method. "adaptive" enables this option on Wayland and vice versa. Generally this should be adaptive when possible.
 waylandOnly="adaptive"
