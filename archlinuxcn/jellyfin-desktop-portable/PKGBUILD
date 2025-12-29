@@ -23,39 +23,26 @@ checkdepends=()
 
 source=(
 	portable-config
-	jellyfin-media-player.sh
 	jellyfin-media-player.desktop
 )
 
 
 md5sums=('886c7336ab017afd8d2d9a3acbbb18e8'
-         'a0fd049fc174d7a0942a5488cdefc7a2'
          'd82778df35e3aca815ba3a75a2d267e1')
-
-function prepare() {
-	pacman -Ql jellyfin-desktop >file.list
-}
-
 function package() {
 	depends=("portable" 'mpv' 'mpvqt' 'libcec' 'sdl2' 'p8-platform' 'protobuf' 'qt6-webengine' 'qt6-declarative')
-	while IFS= read -r line; do
-		file="$(echo "$line" | awk '{print $2}')"
-		if [[ -d ${file} ]]; then
-			echo "Omitting Directory"
-		else
-			install -Dm755 "${file}" "${pkgdir}/${file}"
-		fi
-	done < file.list
-	rm -f "${pkgdir}/usr/share/applications"/*
-	install -Dm755 \
-		"${pkgdir}/usr/bin/jellyfinmediaplayer" \
-		"${pkgdir}/usr/lib/portable/overlay-usr/jellyfinmediaplayer"
-	rm -f "${pkgdir}/usr/bin"/*
-	install -Dm644 portable-config \
-		"${pkgdir}/usr/lib/portable/info/org.jellyfin.jellyfin-media-player/config"
-	install -Dm755 "jellyfin-media-player.sh" \
-		"${pkgdir}/usr/bin/jellyfin-media-player-portable"
-	install -Dm644 "jellyfin-media-player.desktop" "${pkgdir}/usr/share/applications/org.jellyfin.jellyfin-media-player.desktop"
+
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy jellyfin-desktop \
+		--hash true \
+		--config "${srcdir}/portable-config" \
+		--desktop-file "${srcdir}/jellyfin-media-player.desktop"
+
 	echo '''[Desktop Entry]
 Type=Application
 Name=Jellyfin
