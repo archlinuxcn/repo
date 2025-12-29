@@ -3,8 +3,8 @@
 
 pkgname=(llvm-julia-git llvm-libs-julia-git)
 pkgver=21.1.6
-pkgrel=1
-_archcn_rel=0
+pkgrel=2
+_archcn_rel=1
 _versioned_llvm=
 arch=(i686 x86_64 armv7h aarch64)
 url="https://llvm.org/"
@@ -17,7 +17,7 @@ makedepends=('cmake' 'ninja' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses'
 options=('staticlibs' '!strip' '!lto')
 source=(https://github.com/yuyichao/llvm-project/archive/refs/tags/archcn-$pkgver-$_archcn_rel.tar.gz)
 repodir=llvm-project-archcn-$pkgver-$_archcn_rel
-sha256sums=('cd06561343f5b681d19fbb87187ab01b5389715cd2581d5ca40b35ab18b799c7')
+sha256sums=('5833ed7b965369873427f2dc21bef01c11456972769db06b665a22c5d034f01d')
 
 if [[ -z $_versioned_llvm ]]; then
   _llvm_prefix=/usr
