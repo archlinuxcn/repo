@@ -2,7 +2,7 @@
 Version=1.0
 Name=Jellyfin Media Player
 Comment=Desktop client for Jellyfin
-Exec=jellyfin-media-player-portable
+Exec=jellyfin-desktop-portable
 Icon=com.github.iwalton3.jellyfin-media-player
 Terminal=false
 Type=Application
@@ -13,16 +13,16 @@ Actions=DesktopF;DesktopW;TVF;TVW
 
 [Desktop Action DesktopF]
 Name=Desktop [Fullscreen]
-Exec=jellyfin-media-player-portable --fullscreen --desktop
+Exec=jellyfin-desktop-portable --fullscreen --desktop
 
 [Desktop Action DesktopW]
 Name=Desktop [Windowed]
-Exec=jellyfin-media-player-portable --windowed --desktop
+Exec=jellyfin-desktop-portable --windowed --desktop
 
 [Desktop Action TVF]
 Name=TV [Fullscreen]
-Exec=jellyfin-media-player-portable --fullscreen --tv
+Exec=jellyfin-desktop-portable --fullscreen --tv
 
 [Desktop Action TVW]
 Name=TV [Windowed]
-Exec=jellyfin-media-player-portable --windowed --tv
+Exec=jellyfin-desktop-portable --windowed --tv
