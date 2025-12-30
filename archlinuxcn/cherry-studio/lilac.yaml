@@ -1,0 +1,12 @@
+maintainers:
+- github: everyx
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+
+update_on:
+- source: github
+  github: CherryHQ/cherry-studio
+  use_latest_release: true
+  prefix: v

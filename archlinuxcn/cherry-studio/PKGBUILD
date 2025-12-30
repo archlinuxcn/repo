@@ -1,0 +1,89 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=cherry-studio
+_name="Cherry Studio"
+pkgver=1.7.7
+pkgrel=1
+pkgdesc='🍒 Cherry Studio is a desktop client that supports for multiple LLM providers'
+arch=(x86_64)
+url=https://github.com/CherryHQ/cherry-studio
+license=(AGPL-3.0-only)
+_electron=electron38
+depends=("$_electron"
+         'bash'
+         'hicolor-icon-theme'
+         'glibc'
+         'gcc-libs'
+         'python'
+         'python-defusedxml'
+         'python-numpy'
+         'python-lxml'
+         'python-six'
+         'python-yaml'
+         'python-pillow'
+         'python-playwright')
+optdepends=('ollama: Use your local LLM')
+makedepends=('gendesk'
+             'asar'
+             'nodejs'
+             'npm'
+             'yarn'
+             'python'
+             'python-setuptools'
+             'libcrypt.so=1')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('42c7f83eddd814f082b429d63a80363d9b037b0ef93313c3bde69acbe3e144936289923b396c846eeca043d056ad46f83362f6bae59131dc651bdf24bace0432')
+
+prepare() {
+    gendesk -q -f -n \
+        --pkgname="${pkgname}" \
+        --pkgdesc="A powerful AI assistant for producer." \
+        --categories="Utility" \
+        --name="${_name}" \
+        --exec="/usr/bin/${pkgname} --no-sandbox %U" \
+        --custom="StartupWMClass=${_name/ /}" \
+        --mimetypes="x-scheme-handler/cherrystudio"
+
+    cat >>"${pkgname}.sh" <<EOD
+#!/bin/bash
+XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-~/.config}
+
+# Allow users to override command-line options
+if [[ -f $XDG_CONFIG_HOME/${pkgname}-flags.conf ]]; then
+    mapfile -t _USER_FLAGS < <(sed 's/#.*//' "$XDG_CONFIG_HOME/${pkgname}-flags.conf" | tr '\n' ' ')
+fi
+
+exec /usr/bin/${_electron} /usr/lib/${pkgname}/app.asar "$@" "\${_USER_FLAGS[@]}"
+EOD
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+
+    local electronVer="$(</usr/lib/${_electron}/version)"
+    export NODE_ENV=production
+    export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+    HOME="$srcdir/.electron-gyp" yarn install --frozen-lockfile
+    yarn build
+    yarn run electron-builder --dir \
+        -c.electronDist=/usr/lib/"$_electron" \
+        -c.electronVersion=${electronVer}
+
+    find ./dist/linux-unpacked/resources/app.asar.unpacked \
+        -type d \( -name darwin \) -print -exec rm -r {} +
+}
+
+package() {
+    install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm755 "${pkgname}.sh"         "${pkgdir}/usr/bin/${pkgname}"
+
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    for icon in build/icons/*x*.png; do
+        install -Dm644 "$icon" "$pkgdir/usr/share/icons/hicolor/${icon%.png}/apps/${pkgname}.png"
+    done
+ 
+    cd "${srcdir}/${pkgname}-${pkgver}/dist/linux-unpacked/resources"
+    install -Dm644                 app.asar            -t "${pkgdir}/usr/lib/${pkgname}/"
+    cp -Pr --no-preserve=ownership app.asar.unpacked      "${pkgdir}/usr/lib/${pkgname}/"
+    cp -Pr --no-preserve=ownership claude-code-plugins    "${pkgdir}/usr/lib/${pkgname}/"
+}
