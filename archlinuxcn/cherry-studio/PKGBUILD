@@ -44,13 +44,14 @@ prepare() {
         --custom="StartupWMClass=${_name/ /}" \
         --mimetypes="x-scheme-handler/cherrystudio"
 
-    cat >>"${pkgname}.sh" <<EOD
+    cat >"${pkgname}.sh" <<EOD
 #!/bin/bash
-XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-~/.config}
+XDG_CONFIG_HOME=\${XDG_CONFIG_HOME:-~/.config}
+FLAT_FILE=\${XDG_CONFIG_HOME}/${pkgname}-flags.conf
 
 # Allow users to override command-line options
-if [[ -f $XDG_CONFIG_HOME/${pkgname}-flags.conf ]]; then
-    mapfile -t _USER_FLAGS < <(sed 's/#.*//' "$XDG_CONFIG_HOME/${pkgname}-flags.conf" | tr '\n' ' ')
+if [[ -f \${FLAT_FILE} ]]; then
+    mapfile -t _USER_FLAGS < <(sed 's/#.*//' "\${FLAT_FILE}" | tr '\n' ' ')
 fi
 
 exec /usr/bin/${_electron} /usr/lib/${pkgname}/app.asar "$@" "\${_USER_FLAGS[@]}"
