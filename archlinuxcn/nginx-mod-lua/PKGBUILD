@@ -7,6 +7,7 @@
 pkgname=nginx-mod-lua
 _modname="${pkgname#nginx-mod-}"
 pkgver=0.10.29R2
+_upstream_ver=${pkgver/R/.r}
 pkgrel=3
 _ndkver=0.3.4
 pkgdesc='Lua script engine module for nginx'
@@ -15,7 +16,7 @@ depends=("nginx=1.28.1" 'luajit' 'lua-resty-core' 'pcre')
 makedepends=('nginx-src')
 url="https://github.com/openresty/lua-nginx-module"
 license=('BSD-2-Clause')
-source=(https://github.com/openresty/$_modname-nginx-module/archive/v$pkgver/$_modname-$pkgver.tar.gz
+source=(https://github.com/openresty/$_modname-nginx-module/archive/v$_upstream_ver/$_modname-$_upstream_ver.tar.gz
         https://github.com/simpl/ngx_devel_kit/archive/v$_ndkver/ngx_devel_kit-$_ndkver.tar.gz)
 sha256sums=('2435bb65900d556a9175c77548ff0ef4cb507b786f57f7d1c4a7904a7f5063fd'
             '14a28063294f645d457b1eb10e3c23bbba44398f1c5f021421b58b6f8ab31662')
@@ -37,7 +38,7 @@ build() {
 		--with-compat \
 		--with-ld-opt='-lpcre -Wl,-E'  \
 		--add-dynamic-module=../ngx_devel_kit-$_ndkver \
-		--add-dynamic-module=../$_modname-nginx-module-$pkgver
+		--add-dynamic-module=../$_modname-nginx-module-$_upstream_ver
 	make modules
 }
 
