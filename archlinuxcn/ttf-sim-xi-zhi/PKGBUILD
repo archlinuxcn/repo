@@ -2,8 +2,8 @@
 
 pkgbase=ttf-sim-xi-zhi
 pkgname=('ttf-sim-xi-hei' 'ttf-sim-xi-hei-plus' 'ttf-sim-zhi-song' 'ttf-sim-zhi-song-plus')
-pkgver=1.026
-pkgrel=3
+pkgver=1.026.1
+pkgrel=1
 pkgdesc='新晰黑体＆新致宋体：「霞鹜新晰黑」「霞鹜新致宋」兼容 Windows 内置「黑体」「宋体」度量数据和字符集的版本，基于 IPA Gothic、IPA Mincho 衍生。'
 url='https://github.com/lxgw/SimXiZhi'
 arch=('any')
@@ -13,10 +13,10 @@ source=(SimXiHei-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimXiH
         SimZhiSong-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimZhiSong.ttf
         SimZhiSongPlus-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimZhiSongPlus.ttf
         LICENSE-"${pkgver}"::https://raw.githubusercontent.com/lxgw/SimXiZhi/refs/tags/v1.026/IPA_Font_License_Agreement_v1.0.txt)
-b2sums=('1259a7f34bc94dceb16abef11562b870e5aa958b4144b59d4cb0cf3752cec2b78471cc5aa9b110e50299defc9b7a2426cb5a17e179e5ef563795e4bb04132f4e'
-        'd0d06e0152abb67ddfa4231539de3ccb83395c420b60755c48f0366fbffa7c78373d6bc6554b5621ced54c900f48acc1231f1a18c61895d5f7570c434d68a238'
-        '553963ba50213f6f199e0efa42f1614efa4385936a2e808d01498863fce13200faf8ab1b2888112ae3aff971697617076e44f4c30c63bb9a5a23023f43924de0'
-        '98012d15ccaae7861b785d6bd149425892fdc9d140dde5f34c62dd47d0b20b9445dd4e7a53db57ba79351511dbd8db23e56bfd5ddf497aa88343e846cf5d9a86'
+b2sums=('cbd5d05c8c688a65b02b13d2b78f31c2f16b2ce250ff25c183e1bc77d21b10ae267cf25ef3e6a7e1e1c319d4e9f9c835e87415f8dba54e6a2360fab442b5324d'
+        '50a0e5db9533f882a5c18652ea9028e88b139cb63498b4cdd20024881182ed34781a2096f5a6e74773e9f59e1a600f86d4de608e6d6de506782171dcde2995fc'
+        '8dd5b060267d7751f4f6363c2500ce2a61bf4a9b94f320a04e0655978b37525cea88672b134dbee8570daab019bd0a0241b9ffff47355823515f3d8ec6dbba3b'
+        '04490b386aa22ed6564dbd7f8f6648da1fc0b5973d3097e53cd7e04a0d18b0318b55199e5d656ea903a016b7d6c7dfb5fee3383194e1e2c532243b4665413a86'
         'ccb79bec5d352b18591f925ddbbaf6d86a6274bfbbea318e126690e5b52ee8be80d2deb99ab7e5b5b1194e2b8c8ee47464713b89e75c629dd462f1a80691e38d')
 
 declare -A _font_family=(
