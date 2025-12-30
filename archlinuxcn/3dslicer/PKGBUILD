@@ -43,8 +43,8 @@ depends=(
   zlib
 )
 makedepends=(
+  clang
   cmake
-  gcc14
   gendesk
   git
   ninja
@@ -71,8 +71,8 @@ prepare() {
 }
 
 build() {
-  export CC=gcc-14
-  export CXX=g++-14
+  export CC=clang
+  export CXX=clang++
   cmake \
     -B "${srcdir}/build" \
     -DBUILD_TESTING=OFF \
