@@ -2,7 +2,7 @@
 
 pkgname=cherry-studio
 _name="Cherry Studio"
-pkgver=1.7.7
+pkgver=1.7.8
 pkgrel=1
 pkgdesc='🍒 Cherry Studio is a desktop client that supports for multiple LLM providers'
 arch=(x86_64)
@@ -32,7 +32,7 @@ makedepends=('gendesk'
              'python-setuptools'
              'libcrypt.so=1')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-b2sums=('42c7f83eddd814f082b429d63a80363d9b037b0ef93313c3bde69acbe3e144936289923b396c846eeca043d056ad46f83362f6bae59131dc651bdf24bace0432')
+b2sums=('9789059bb31d166ab1cf74e6ec296ee8f98f35505fa3d2a96904b7bc617b50c355499c1f72c4696f41db601a1e00a179b0454f0857093e5192f40fe5f67c3e8c')
 
 prepare() {
     gendesk -q -f -n \
