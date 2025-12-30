@@ -10,14 +10,23 @@ _use_cuda=true
 
 pkgname='sunshine'
 pkgver=2025.924.154138
-pkgrel=4
+pkgrel=5
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
 license=('GPL-3.0-only')
 install=sunshine.install
 
-_gcc_version=14
+# this variable remains for future cases where we need an older version of gcc for cuda compatibility
+_gcc_version=15
+_versioned_gcc=false  # set to true if we need a versioned gcc, e.g. gcc14
+
+_gcc_dep_suffix=""
+_gcc_env_suffix=""
+if [ "${_versioned_gcc}" = true ]; then
+  _gcc_dep_suffix="${_gcc_version}"
+  _gcc_env_suffix="-${_gcc_version}"
+fi
 
 depends=(
   'avahi'
@@ -48,7 +57,7 @@ makedepends=("cuda"
   'appstream-glib'
   'cmake'
   'desktop-file-utils'
-  "gcc${_gcc_version}"
+  "gcc${_gcc_dep_suffix}"
   'git'
   'make'
   'nodejs'
@@ -105,8 +114,8 @@ build() {
     export BUILD_VERSION="2025.924.154138"
     export COMMIT="${_commit}"
 
-    export CC="gcc-${_gcc_version}"
-    export CXX="g++-${_gcc_version}"
+    export CC="gcc${_gcc_env_suffix}"
+    export CXX="g++${_gcc_env_suffix}"
 
     export CFLAGS="${CFLAGS/-Werror=format-security/}"
     export CXXFLAGS="${CXXFLAGS/-Werror=format-security/}"
@@ -120,6 +129,7 @@ build() {
       -D BUILD_DOCS=OFF
       -D BUILD_WERROR=ON
       -D CMAKE_INSTALL_PREFIX=/usr
+      -D SUNSHINE_COMPILE_OPTIONS="-Wno-uninitialized"
       -D SUNSHINE_EXECUTABLE_PATH=/usr/bin/sunshine
       -D SUNSHINE_ASSETS_DIR="share/sunshine"
       -D SUNSHINE_PUBLISHER_NAME='LizardByte'
@@ -160,8 +170,8 @@ check() {
     ./sunshine --version
 
     if [[ "${_run_unit_tests::1}" == "t" ]]; then
-      export CC="gcc-${_gcc_version}"
-      export CXX="g++-${_gcc_version}"
+      export CC="gcc${_gcc_env_suffix}"
+      export CXX="g++${_gcc_env_suffix}"
 
       cd "${srcdir}/build/tests"
       ./test_sunshine --gtest_color=yes
