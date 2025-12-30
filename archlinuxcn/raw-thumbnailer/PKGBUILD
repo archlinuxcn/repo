@@ -1,0 +1,30 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=raw-thumbnailer
+pkgver=47.0.1
+pkgrel=1
+pkgdesc="A lightweight and fast raw image thumbnailer that can be used by file managers."
+url="https://gitlab.gnome.org/World/gnome-raw-thumbnailer/"
+license=('GPL-2.0-or-later')
+arch=('x86_64')
+depends=('libopenraw.so=9')
+makedepends=('meson' 'python' 'ninja' 'cargo')
+source=("$url/-/archive/$pkgver/gnome-$pkgname-$pkgver.tar.gz")
+b2sums=('65f8888852332c52e4a389b944ba675cf069ee1c2e4c2786ec52b2b02e49eb56f0a4f6f111dc0ced7c57c628a59b44d628a83751335a01b3c96db47dc88d386f')
+
+prepare() {
+    cd gnome-$pkgname-$pkgver
+
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target $(rustc --print host-tuple)
+}
+
+build() {
+    export RUSTUP_TOOLCHAIN=stable
+    arch-meson gnome-$pkgname-$pkgver build -Dprofile=release
+    meson compile -C build
+}
+
+package() {
+    meson install -C build --destdir "$pkgdir"
+}
