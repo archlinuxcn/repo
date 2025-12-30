@@ -7,7 +7,7 @@
 pkgname=nginx-mod-lua
 _modname="${pkgname#nginx-mod-}"
 pkgver=0.10.29R2
-_upstream_ver=${pkgver/R/.r}
+_upstream_ver=${pkgver/.r/R}
 pkgrel=3
 _ndkver=0.3.4
 pkgdesc='Lua script engine module for nginx'
