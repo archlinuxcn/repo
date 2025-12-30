@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=raw-thumbnailer
-pkgver=47.0.1
+pkgver=48.0.0
 pkgrel=1
 pkgdesc="A lightweight and fast raw image thumbnailer that can be used by file managers."
 url="https://gitlab.gnome.org/World/gnome-raw-thumbnailer/"
@@ -10,7 +10,7 @@ arch=('x86_64')
 depends=('libopenraw.so=9')
 makedepends=('meson' 'python' 'ninja' 'cargo')
 source=("$url/-/archive/$pkgver/gnome-$pkgname-$pkgver.tar.gz")
-b2sums=('65f8888852332c52e4a389b944ba675cf069ee1c2e4c2786ec52b2b02e49eb56f0a4f6f111dc0ced7c57c628a59b44d628a83751335a01b3c96db47dc88d386f')
+b2sums=('f90efd65e32c31f23e8a7a6f2e8ea451b43f83fc511a46dd12860fd3feda7fdf5b908e86e3f82361bdda1b2c0f730fa3d19a0f3f7f034ef4a50bafea9de83809')
 
 prepare() {
     cd gnome-$pkgname-$pkgver
