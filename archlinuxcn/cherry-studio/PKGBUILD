@@ -11,7 +11,6 @@ license=(AGPL-3.0-only)
 _electron=electron38
 depends=("$_electron"
          'bash'
-         'hicolor-icon-theme'
          'glibc'
          'gcc-libs'
          'python'
@@ -23,26 +22,27 @@ depends=("$_electron"
          'python-pillow'
          'python-playwright')
 optdepends=('ollama: Use your local LLM')
-makedepends=('gendesk'
-             'asar'
-             'nodejs'
-             'npm'
+makedepends=('npm'
              'yarn'
              'python'
-             'python-setuptools'
              'libcrypt.so=1')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 b2sums=('9789059bb31d166ab1cf74e6ec296ee8f98f35505fa3d2a96904b7bc617b50c355499c1f72c4696f41db601a1e00a179b0454f0857093e5192f40fe5f67c3e8c')
 
 prepare() {
-    gendesk -q -f -n \
-        --pkgname="${pkgname}" \
-        --pkgdesc="A powerful AI assistant for producer." \
-        --categories="Utility" \
-        --name="${_name}" \
-        --exec="/usr/bin/${pkgname} --no-sandbox %U" \
-        --custom="StartupWMClass=${_name/ /}" \
-        --mimetypes="x-scheme-handler/cherrystudio"
+    cat >"${pkgname}.desktop" <<EOD
+[Desktop Entry]
+Name=${_name}
+Exec=/usr/bin/${pkgname} --no-sandbox %U
+Terminal=false
+StartupNotify=false
+Type=Application
+Icon=${pkgname}
+StartupWMClass=${_name/ /}
+Comment=A powerful AI assistant for producer.
+MimeType=x-scheme-handler/cherrystudio;
+Categories=Utility;
+EOD
 
     cat >"${pkgname}.sh" <<EOD
 #!/bin/bash
@@ -62,9 +62,10 @@ build() {
     cd "$pkgname-$pkgver"
 
     local electronVer="$(</usr/lib/${_electron}/version)"
-    export NODE_ENV=production
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
-    HOME="$srcdir/.electron-gyp" yarn install --frozen-lockfile
+    HOME="$srcdir/.electron-gyp" yarn install
+
+    export NODE_ENV=production
     yarn build
     yarn run electron-builder --dir \
         -c.electronDist=/usr/lib/"$_electron" \
