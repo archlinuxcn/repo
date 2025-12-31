@@ -50,7 +50,7 @@ build() {
 
 check() {
 	cd "${_pkgname}/"
-	cargo test --frozen --all-features
+	cargo test --frozen --all-features --workspace
 }
 
 package() {
