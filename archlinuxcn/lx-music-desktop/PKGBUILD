@@ -1,0 +1,73 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=lx-music-desktop
+_name="LX Music"
+pkgver=2.11.0
+pkgrel=1
+pkgdesc='一个基于 Electron 的音乐软件'
+arch=(x86_64)
+url=https://github.com/lyswhut/lx-music-desktop
+license=('Apache-2.0 AND LicenseRef-LXMusicAddition')
+_electron=electron37
+depends=("$_electron" 'bash')
+makedepends=('nodejs' 'npm' 'python' 'git')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('68d5d787a9fffa0a19d1ccf0ac62f8e53c1224eeed61b59df019b725607e8a212b841402abdff540bfb468adee9dbc09eaba1d8c6b985a275ec50d0b0de1e6c3')
+
+prepare() {
+    cat >"${pkgname}.desktop" <<EOD
+[Desktop Entry]
+Name=${_name}
+Exec=/usr/bin/${pkgname} %U
+Terminal=false
+Type=Application
+Icon=${pkgname}
+StartupWMClass=${pkgname}
+Encoding=UTF-8
+MimeType=x-scheme-handler/lxmusic;
+StartupNotify=false
+Comment=${pkgdesc}
+Categories=Utility;AudioVideo;Audio;Player;Music;
+EOD
+
+    cat >"${pkgname}.sh" <<EOD
+#!/bin/bash
+XDG_CONFIG_HOME=\${XDG_CONFIG_HOME:-~/.config}
+FLAT_FILE=\${XDG_CONFIG_HOME}/${pkgname}-flags.conf
+
+# Allow users to override command-line options
+if [[ -f \${FLAT_FILE} ]]; then
+    mapfile -t _USER_FLAGS < <(sed 's/#.*//' "\${FLAT_FILE}" | tr '\n' ' ')
+fi
+
+exec /usr/bin/${_electron} /usr/lib/${pkgname}/app.asar "$@" "\${_USER_FLAGS[@]}"
+EOD
+}
+
+build() {
+    cd "$pkgname-$pkgver"
+
+    local electronVer="$(</usr/lib/${_electron}/version)"
+    npm pkg set devDependencies.electron=${electronVer}
+
+    export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+    export NPM_CACHE_DIR=${srcdir}/.npmcache
+    HOME="$srcdir/.electron-gyp" npm install
+
+    export NODE_ENV=production
+    export ELECTRON_DIST=/usr/lib/"$_electron"
+    export ELECTRON_VERSION=${electronVer}
+    npm run pack:dir
+}
+
+package() {
+    install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+    install -Dm755 "${pkgname}.sh"         "${pkgdir}/usr/bin/${pkgname}"
+
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    install -Dm644 ./licenses/*               -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    install -Dm644 ./resources/icons/icon.png    "${pkgdir}/usr/share/icons/${pkgname}.png"
+ 
+    cd "${srcdir}/${pkgname}-${pkgver}/build/linux-unpacked/resources"
+    install -Dm644                 app.asar          -t "${pkgdir}/usr/lib/${pkgname}/"
+}
