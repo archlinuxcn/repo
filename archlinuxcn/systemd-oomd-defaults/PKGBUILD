@@ -1,0 +1,29 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=systemd-oomd-defaults
+_commit=806c95e1c70af18f81d499b24cd7acfa4c36ffd6
+_revision=1206
+pkgver=253.2.r1206
+pkgrel=1
+pkgdesc="Configuration files for systemd-oomd from Fedora"
+url="https://src.fedoraproject.org/rpms/systemd"
+arch=('any')
+license=('LGPL-2.1-or-later')
+depends=('systemd')
+source=("${url}/raw/${_commit}/f/10-oomd-defaults.conf"
+        "${url}/raw/${_commit}/f/10-oomd-per-slice-defaults.conf"
+        "${url}/raw/${_commit}/f/systemd.spec")
+sha256sums=('f7c8e9d3455bf54795063e3914956b4e15ba52f493b0f2304abef6326a80c6cb'
+            '3f0d6882312affecddfdc5a204a44c34b90c573839f2a4850a26b44f528520bd'
+            'SKIP')
+
+pkgver() {
+  local _basever="$(sed -nE 's/^Version:[^0-9]*:?([0-9\.]+).*/\1/p' systemd.spec | head -n1)"
+  printf "%s.r%s" "${_basever}" "${_revision}"
+}
+
+package() {
+  install -Dm0644 -t "$pkgdir"/usr/lib/systemd/oomd.conf.d/ 10-oomd-defaults.conf
+  install -Dm0644 -t "$pkgdir"/usr/lib/systemd/system/system.slice.d/ 10-oomd-per-slice-defaults.conf
+  install -Dm0644 -t "$pkgdir"/usr/lib/systemd/user/slice.d/ 10-oomd-per-slice-defaults.conf
+}
