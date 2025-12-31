@@ -1,0 +1,10 @@
+#!/bin/sh
+post_install() {
+  cat << 'EOM'
+Configure aria2 at:
+  ~/.config/aria2/aria2.conf
+
+Enable the service:
+  systemctl --user enable --now aria2.service
+EOM
+}

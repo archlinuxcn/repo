@@ -1,0 +1,19 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=aria2-systemd-unit
+pkgdesc="Add missing systemd unit for aria2"
+pkgver=0.1.0
+pkgrel=1
+url=https://github.com/everyx/aria2-systemd-unit
+license=('GPL-3.0-or-later')
+arch=('any')
+depends=('aria2')
+install="${pkgname}.install"
+source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.gz")
+b2sums=('db1ba80dc72d000e5828e304b282433882ca8bb8560dd295dedc9a2d29fc69f307da5ca58e7c2691aaf215c1a1ee014f131bb803fac73f402d0a35ee894a8875')
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    install -Dm644 aria2.service -t "${pkgdir}/usr/lib/systemd/system/"
+    install -Dm644 aria2.service -t "${pkgdir}/usr/lib/systemd/user/"
+}
