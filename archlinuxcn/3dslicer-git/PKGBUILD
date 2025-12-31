@@ -2,7 +2,7 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer-git
-pkgver=5.10.0.r98.f52c8802cf
+pkgver=5.10.0.r104.afeb52ded0
 pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
@@ -97,8 +97,6 @@ build() {
     -DSlicer_STORE_SETTINGS_IN_APPLICATION_HOME_DIR=OFF \
     -DSlicer_USE_GIT_PROTOCOL=OFF \
     -DSlicer_USE_PYTHONQT=ON \
-    -DSlicer_USE_SimpleITK_SHARED=ON \
-    -DSlicer_USE_SimpleITK=ON \
     -DSlicer_USE_SYSTEM_bzip2=ON \
     -DSlicer_USE_SYSTEM_CTK=OFF \
     -DSlicer_USE_SYSTEM_CTKAPPLAUNCHER=OFF \
