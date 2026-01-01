@@ -1,6 +1,6 @@
 pkgname=julia-git-fastpower-src
-pkgver=1.2.0
-_commit=923090325fa514ebab97318b9b61694195f2690e
+pkgver=1.3.0
+_commit=8ddae219222107b9fc88ae19505c3275d5d14d46
 pkgrel=1
 pkgdesc="FastPower.jl"
 url="https://github.com/SciML/FastPower.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/FastPower.jl.git#commit=$_commit")
-sha256sums=('46dfdc6e9363dc098037a55629e5f2fcc881613d38eafb166db2da4b68195025')
+sha256sums=('4a830f215d2a07d5eb0bab085150259f582ebc720cba6b9f05baacc29e300c8c')
 
 package() {
   cd FastPower.jl
