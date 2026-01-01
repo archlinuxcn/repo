@@ -1,7 +1,7 @@
 pkgname=julia-git-openexr_jll-src
-pkgver=3.2.4+0
-_commit=ff0d27339b84a265808bf52036cadf6a7f0652f1
-pkgrel=6
+pkgver=3.4.4+0
+_commit=20cd5a76b9690802e4ad18c702c57ac669dac999
+pkgrel=1
 pkgdesc="OpenEXR_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenEXR_jll.jl.git"
 arch=(aarch64 x86_64)
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git openexr)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenEXR_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('9ae83c733357b1fafb444238f3bf0776dbc3563719d3ec836f02f75edfd76925'
+sha256sums=('de0b8b0d0416d3ce728f23e0261655693253a4a72937f6f1a609b9278730044d'
             '7620659eae19afa53023d1f99020c68041f03fd9f5d002a1de99fd848dfe400d')
 
 build() {
