@@ -1,6 +1,6 @@
 pkgname=julia-git-labelledarrays-src
-pkgver=1.16.1
-_commit=7d5b31977feddb9a5b9ed62f33cbb8a0c5229446
+pkgver=1.17.0
+_commit=ec67077c0ac30499be1f156bd920f75a4ced6e59
 pkgrel=1
 pkgdesc="LabelledArrays.jl"
 url="https://github.com/SciML/LabelledArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/LabelledArrays.jl.git#commit=$_commit")
-sha256sums=('b01855be71e5839b97ca0a8f721661b7ae4f0e47b75710e3110b3c4ebcb6a422')
+sha256sums=('3571bcb09fa649afd43874ab7949fb85572a10efceb891bf2a499b9b0d92f0d8')
 
 package() {
   cd LabelledArrays.jl
