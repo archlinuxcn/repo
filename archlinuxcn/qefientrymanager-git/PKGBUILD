@@ -48,7 +48,6 @@ build() {
 
 package() {
 	DESTDIR="${pkgdir}" cmake --install build
-
-	# Documentation
 	install -Dm644 "${_srcname}/README.md" -t "${pkgdir}/usr/share/doc/${_pkgname}/"
+	rm "${pkgdir}/usr/bin/efibootmgr" # Avoid conflict with core/efibootmgr
 }
