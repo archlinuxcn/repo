@@ -3,8 +3,8 @@
 pkgbase=ttf-plangothic
 pkgname=(ttf-plangothic otf-plangothic ttc-plangothic otc-plangothic)
 epoch=2
-pkgver=2.9.5779
-pkgrel=2
+pkgver=2.9.5792
+pkgrel=1
 pkgdesc='A project based on SourceHan to expand and supplement characters, and its ultimate goal is to complete the entire Unicode as much as possible.'
 url='https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic'
 arch=('any')
@@ -12,9 +12,9 @@ license=('OFL-1.1')
 replaces=('ttf-plangothic-mob')
 source=(
     https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project/releases/download/V$pkgver/Plangothic-Super-V$pkgver.zip
-    $pkgbase-$pkgver-LICENSE.txt::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project/raw/refs/tags/V$pkgver/LICENSE.txt
+    $pkgbase-$pkgver-LICENSE.txt::https://github.com/Fitzgerald-Porthmouth-Koenigsegg/Plangothic_Project/raw/refs/tags/V$pkgver/LICENSE-OFL.txt
 )
-b2sums=('2be0e5be01bd8d48c8dbf7e54604aefedb9550fb7eb6f38108a08bac6b26487cf9217780751a1143cd24d56d50f7a8d2a88e7a9bc9c2caa86b8440589ea2b488'
+b2sums=('d4dbaa7675f39fc79b045515216185d9842b6e31b924efc3fcdafdfa60f412d1d6bae35fe69b9008458c74bf0e10060b907ae043f49cba7e046bccbe69894ae9'
         'e3b7def662ec2412a460be8aebf5da2c2e57955d30438a7222c800c5ef6f5dce32cf510ea3f57f3435d93758725c172ea4e7e28d91f17ef049b45d4a428f88d9')
 
 package_otf-plangothic() {
