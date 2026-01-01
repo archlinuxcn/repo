@@ -24,13 +24,13 @@
 
 pkgname=btdu
 pkgver=0.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc='sampling disk usage profiler for btrfs'
 arch=('aarch64' 'i686' 'x86_64')
 url='https://github.com/CyberShadow/btdu'
 license=('GPL2')
+# Using ldc/liblphobos instead of generic d-compiler/d-runtime to avoid DMD 2.111.0 which hangs on btdu 0.6.x
 depends=('ncurses' 'liblphobos')
-# Using ldc instead of generic d-compiler to avoid DMD 2.111.0 which hangs on btdu 0.6.x
 makedepends=('ldc>=1:1.28.0' 'dub' 'dtools')
 
 # These should match dub.selections.json from the btdu repository:
