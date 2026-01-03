@@ -15,5 +15,7 @@ b2sums=('db1ba80dc72d000e5828e304b282433882ca8bb8560dd295dedc9a2d29fc69f307da5ca
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
     install -Dm644 aria2.service -t "${pkgdir}/usr/lib/systemd/system/"
-    install -Dm644 aria2.service -t "${pkgdir}/usr/lib/systemd/user/"
+
+    install -dm755 "${pkgdir}/usr/lib/systemd/user/"
+    ln -srvf "${pkgdir}/usr/lib/systemd/system/aria2.service" "${pkgdir}/usr/lib/systemd/user/"
 }
