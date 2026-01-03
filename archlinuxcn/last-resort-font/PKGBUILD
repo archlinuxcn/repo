@@ -1,0 +1,41 @@
+# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
+# Contributor: Bert Peters <bert@bertptrs.nl>
+
+pkgbase=last-resort-font
+pkgname=(
+        ttf-lastresort
+        ttf-lastresort-he
+)
+pkgver=17.000
+pkgrel=1
+pkgdesc="Unicode last resort fallback font."
+arch=('any')
+url="https://github.com/unicode-org/last-resort-font"
+license=('OFL-1.1')
+makedepends=(
+        afdko
+        git
+        python-fonttools
+)
+source=(
+        "git+https://github.com/unicode-org/last-resort-font.git#tag=$pkgver"
+)
+b2sums=('cbe37e92a7a81d5e10c0aa2d2f7a70bad9786a4cdbbbcda13d1f3b26aa8ce63cc1e55691e081d50a65482b20002c6828126e5cff96d103c92c2095daffe59477')
+
+build() {
+        cd last-resort-font
+        # FIXME: make it compatible with GNU sed
+        sed -i 's/sed -i ""/sed -i/g' build.sh
+        bash ./build.sh
+}
+
+package_ttf-lastresort() {
+        cd last-resort-font
+	install -Dm644 "LastResort-Regular.ttf" "$pkgdir/usr/share/fonts/TTF/LastResort-Regular.ttf"
+	install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+package_ttf-lastresort-he() {
+        cd last-resort-font
+	install -Dm644 "LastResortHE-Regular.ttf" "$pkgdir/usr/share/fonts/TTF/LastResortHE-Regular.ttf"
+	install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
