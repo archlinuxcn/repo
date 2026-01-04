@@ -1,0 +1,43 @@
+# Maintainer: everyx <lunt.luo@gmail.com>
+
+pkgname=trailbase
+pkgdesc='A blazingly fast, open-source application server with type-safe APIs, built-in WebAssembly runtime, realtime, auth, and admin UI built on Rust, SQLite & Wasmtime.'
+pkgver=0.22.5
+pkgrel=1
+url='https://trailbase.io/'
+arch=('x86_64')
+license=("OSL-3.0")
+
+depends=('gcc-libs' 'glibc')
+makedepends=('git' 'cargo' 'pnpm' 'openssl' 'sqlite' 'clang' 'protobuf' 'zstd')
+_repo='https://github.com/trailbaseio/trailbase'
+source=("git+${_repo}.git#tag=v${pkgver}")
+b2sums=('9bb7b15e4bea92b755ad49b2cedf23896dda21e6c4ce542e78c8aed93e4da0b7340515a8c8ef6de8b2a206b33ec2a98afc6372206e2e409061786c9de917722e')
+
+prepare() {
+    cd ${srcdir}/${pkgname}
+    git submodule update --init --recursive
+    pnpm install
+
+    cd "${srcdir}/${pkgname}/crates/cli"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target $(rustc --print host-tuple)
+}
+
+build(){
+    cd "${srcdir}/${pkgname}/crates/cli"
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR="${srcdir}/target"
+    export PNPM_OFFLINE=TRUE
+    # Add -ffat-lto-objects to CFLAGS to fix building with LTO
+    export CFLAGS+=' -ffat-lto-objects'
+    export CARGO_PROFILE_RELEASE_LTO=fat
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+    cargo build --frozen --release --bin trail
+}
+
+package() {
+    install -Dm0755 ${srcdir}/target/release/trail -t "$pkgdir/usr/bin/" 
+    install -Dm0644 ${srcdir}/${pkgname}/LICENSE   -t "$pkgdir/usr/share/licenses/$pkgname"
+}
