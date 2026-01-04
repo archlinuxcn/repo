@@ -77,4 +77,5 @@ _install_completions() {
 	install -Dm644 "$1.bash" "${pkgdir}/usr/share/bash-completion/completions/$1"
 	install -Dm644 "$1.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
 	install -Dm644 "_$1" -t "${pkgdir}/usr/share/zsh/site-functions/"
+	install -Dm644 "$1.elv" -t "${pkgdir}/usr/share/elvish/lib/"
 }
