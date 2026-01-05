@@ -11,12 +11,12 @@
 
 pkgname=zfs-utils-git
 pkgver=2.4.99.r305.gb9b84445ea
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc='Userspace utilities for the Zettabyte File System.'
 arch=('i686' 'x86_64' 'aarch64')
 url='https://zfsonlinux.org/'
-license=('LicenseRef-CDDL')
+license=('CDDL-1.0')
 groups=('zfs-git')
 makedepends=(
     'git'
@@ -57,7 +57,7 @@ pkgver() {
 prepare() {
     cd zfs
 
-    ./autogen.sh
+    autoreconf -fi
 }
 
 build() {
