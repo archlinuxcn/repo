@@ -3,7 +3,7 @@
 
 pkgname=feishin-bin
 pkgdesc='A player for your self-hosted music server'
-pkgver=1.1.0
+pkgver=1.2.0
 pkgrel=1
 arch=('x86_64' 'aarch64')
 url='https://github.com/jeffvli/feishin'
@@ -15,8 +15,8 @@ source=("feishin.desktop")
 source_x86_64=("${pkgname}-${pkgver}-${CARCH}.tar.xz::https://github.com/jeffvli/feishin/releases/download/v${pkgver//_/-}/Feishin-linux-x64.tar.xz")
 source_aarch64=("${pkgname}-${pkgver}-${CARCH}.tar.xz::https://github.com/jeffvli/feishin/releases/download/v${pkgver//_/-}/Feishin-linux-arm64.tar.xz")
 sha256sums=('818f9700176bc3fbb3a00a1e6e41c933114f2a6029c8143a88239c5b9fc5c194')
-sha256sums_x86_64=('3a8bcad07598b10e3450778b4561b46f87cac8973ddf75a8cbf78b90aa8573a5')
-sha256sums_aarch64=('503de97b7be9da63a2e8ef20b2c57be9500351e207427f307ddd10e01fcf4952')
+sha256sums_x86_64=('fc319141367f8dd9de18f88ec8fffd8c7180eba5f3f826b614fd19783c91d256')
+sha256sums_aarch64=('b4a1139cf8f354c9dd98a49f6c7e73b988363ab7b9a34320d0b7a532ed2cdf2d')
 
 package() {
   # create target file structure
