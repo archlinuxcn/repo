@@ -1,0 +1,20 @@
+post_install(){
+        echo -e '
+If your shell is Bash or a Bourne variant, enable conda for the current user with
+
+    $ echo "[ -f /opt/miniforge/etc/profile.d/conda.sh ] && source /opt/miniforge/etc/profile.d/conda.sh" >> ~/.bashrc
+
+or, for all users, enable conda with
+
+    $ sudo ln -s /opt/miniforge/etc/profile.d/conda.sh /etc/profile.d/conda.sh
+'
+}
+
+post_remove(){
+        echo -e '
+
+Remember to remove mamba initialization from your shell (e.g., .bashrc)
+
+or, if you enabled for all users, remove /etc/profile.d/conda.sh
+'
+}
