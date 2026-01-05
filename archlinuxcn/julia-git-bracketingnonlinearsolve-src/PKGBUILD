@@ -1,6 +1,6 @@
 pkgname=julia-git-bracketingnonlinearsolve-src
-pkgver=1.6.1
-_commit=dcb26a266d84f004bffd19f0f40b3caef3c0bac2
+pkgver=1.6.2
+_commit=3ce99e9409a01d07a8d7ce81e54e039ea9acb242
 pkgrel=1
 pkgdesc="BracketingNonlinearSolve.jl"
 url="https://github.com/SciML/NonlinearSolve.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/NonlinearSolve.jl.git#commit=$_commit")
-sha256sums=('9770d770f7102f90a65106db20efe0402bb63df84c5847fa126ef874c0bd5664')
+sha256sums=('c81e2ef6eff9f3ade7c12271db09ff2d73e337400356390cc433744e6548d288')
 
 package() {
   cd NonlinearSolve.jl/lib/BracketingNonlinearSolve
