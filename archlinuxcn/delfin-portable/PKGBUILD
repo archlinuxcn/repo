@@ -1,0 +1,44 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=delfin-portable
+pkgver=0.4.8
+pkgrel=1
+epoch=1
+pkgdesc="Delfin video player. Sandboxed to prevent dGPU wakeups."
+arch=('x86_64')
+url="https://github.com/Kraftland/portable"
+license=('GPL-3.0-or-later')
+groups=()
+provides=(delfin)
+options=(!debug !strip)
+conflicts=(delfin)
+
+optdepends=()
+
+makedepends+=(delfin portable)
+
+checkdepends=()
+
+source=(
+	portable-config
+	cafe.avery.Delfin.desktop
+)
+
+
+md5sums=('3d097c7900f55b9d51b9be742669ab84'
+         '61eae09ad69f227dc9065e5a616fb502')
+function package() {
+	depends=("portable" 'mpv' 'libadwaita' 'gtk4')
+
+	install -vDm755 /usr/bin/delfin -t "${pkgdir}"/usr/lib/portable/overlay-usr
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy delfin \
+		--hash true \
+		--config "${srcdir}/portable-config" \
+		--desktop-file "${srcdir}/cafe.avery.Delfin.desktop"
+}
