@@ -11,31 +11,29 @@
 
 pkgname=zfs-dkms-git
 pkgver=2.4.99.r305.gb9b84445ea
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc='Kernel modules for the Zettabyte File System.'
 arch=('any')
 url='https://zfsonlinux.org/'
-license=('LicenseRef-CDDL')
+license=('CDDL-1.0')
 groups=('zfs-git')
 makedepends=('git')
 provides=(
+    "zfs=${pkgver}"
+    "zfs-dkms=${pkgver}"
     "ZFS-MODULE=${pkgver}"
     "SPL-MODULE=${pkgver}"
-    "zfs-dkms=${pkgver}"
 )
 conflicts=('zfs-dkms')
 source=(
     'git+https://github.com/openzfs/zfs.git'
     '0001-only-build-the-module-in-dkms.conf.patch'
-    '0002-only-build-the-module-in-configure.ac.patch'
 )
 sha256sums=('SKIP'
-            '3e742db489eec60dbabb52178f590b96e29b166f359fc2167e188eeabceb0921'
-            '20704bcdc1fb9ec4ff6b0f308e994b3757e2b3cd327e3adddc432921a11af34f')
+            '3e742db489eec60dbabb52178f590b96e29b166f359fc2167e188eeabceb0921')
 b2sums=('SKIP'
-        '62ea720676e0cbf096d8c5f3b944d77ce6f3f54f55e221f80afd00061d577b5dea177150cfc785bb91586f93e1b3eb500661b38bb4d2cba26e8929b245957ee3'
-        'b14e3634bed825f7bd24ceee3435ac2673bdd13abca74647252827ffd6fc22329a7f191d8de04c85eaf43dfbcb968952e1f3af7d0b1d04563a8877e756f6dfd2')
+        '62ea720676e0cbf096d8c5f3b944d77ce6f3f54f55e221f80afd00061d577b5dea177150cfc785bb91586f93e1b3eb500661b38bb4d2cba26e8929b245957ee3')
 
 pkgver() {
     git -C zfs describe --long | sed 's/^zfs-//;s/-rc/rc/;s/\([^-]*-g\)/r\1/;s/-/./g'
@@ -53,7 +51,16 @@ prepare() {
       patch -Np1 < "../$src"
     done
 
-    ./autogen.sh
+    # remove unneeded sections from module build
+    sed -ri "/^AC_CONFIG_FILES\(\[$/,/^\]\)$/{
+/^AC_CONFIG_FILES\(\[$/p
+/^\]\)$/p
+/^\s*(module\/.+|zfs.release|Makefile)$/!d
+}
+/^AC_CONFIG_FILES\(\[.*\]\)$/d
+" configure.ac
+
+    autoreconf -fi
 }
 
 build() {
