@@ -23,8 +23,8 @@
 # -b release", as documented in btdu's README.
 
 pkgname=btdu
-pkgver=0.7.0
-pkgrel=2
+pkgver=0.7.2
+pkgrel=1
 pkgdesc='sampling disk usage profiler for btrfs'
 arch=('aarch64' 'i686' 'x86_64')
 url='https://github.com/CyberShadow/btdu'
@@ -45,7 +45,7 @@ source=(${pkgname}-${pkgver}.tar.gz::https://github.com/CyberShadow/${pkgname}/a
 		ncurses-${_d_ncurses_ver}.tar.gz::https://github.com/D-Programming-Deimos/ncurses/archive/v${_d_ncurses_ver}.tar.gz
 		emsi_containers-${_d_emsi_containers_ver}.tar.gz::https://github.com/dlang-community/containers/archive/v${_d_emsi_containers_ver}.tar.gz
 	   )
-sha256sums=('bff1da21df971b7a6b385887aec92b67257515caaf429b6b90f65ef2ee41b1b4'
+sha256sums=('695ded59fb2029c8ae48ca0f990e68928841cdf36a4cf4cbc2485460cadbbd67'
             'd73795735dafe48c7dbaabdabc122f3cc94cebb4b301a2aef9a9df9e0089bf05'
             '343bef0cd60f4708fdab721a2aff003d0921267cc99ebfb778e93793433e3970'
             'b5db677b75ebef7a1365ca4ef768f7344a2bc8d07ec223a2ada162f185d0d9c6'
