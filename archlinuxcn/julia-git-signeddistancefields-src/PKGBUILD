@@ -13,13 +13,6 @@ source=("git+https://github.com/JuliaGraphics/SignedDistanceFields.jl.git#commit
 sha256sums=('SKIP'
             '732913d736f4bf81e47bf606e965279ad82d5b132ad9f1f6041fc23237fb9b10')
 
-prepare() {
-  cd SignedDistanceFields.jl
-
-  cp -n ../Project.toml .
-  rm REQUIRE
-}
-
 package() {
   cd SignedDistanceFields.jl
 
