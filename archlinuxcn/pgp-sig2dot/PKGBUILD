@@ -1,7 +1,7 @@
 # Maintainer: Cryolitia <cryolitia at archlinuxcn dot org>>
 pkgname=pgp-sig2dot
 pkgver=0.4.3
-pkgrel=1
+pkgrel=2
 pkgdesc="OpenPGP sign party tool —— Visualize the Web of Trust"
 arch=('x86_64')
 url="https://github.com/cryolitia/pgp-sig2dot"
@@ -12,7 +12,7 @@ optdepends=('graphviz: for generating visualizations')
 source=("pgp-sig2dot-v$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
         "pgp-sig2dot-graphviz")
 sha256sums=('050c38a7ab10fbdd7e01c8638248ec262d47512e55b69352155a7a78e125badf'
-            'SKIP')
+            '75d9e150bba5c48b16ed97c83af9a6df7e12647b2c5df7dc61e51ebf67f1f2f3')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"
