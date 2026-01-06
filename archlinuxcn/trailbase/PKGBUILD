@@ -2,7 +2,7 @@
 
 pkgname=trailbase
 pkgdesc='A blazingly fast, open-source application server with type-safe APIs, built-in WebAssembly runtime, realtime, auth, and admin UI built on Rust, SQLite & Wasmtime.'
-pkgver=0.22.6
+pkgver=0.22.7
 pkgrel=1
 url='https://trailbase.io/'
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('gcc-libs' 'glibc')
 makedepends=('git' 'cargo' 'pnpm' 'openssl' 'sqlite' 'clang' 'protobuf' 'zstd')
 _repo='https://github.com/trailbaseio/trailbase'
 source=("git+${_repo}.git#tag=v${pkgver}")
-b2sums=('1ba48783d37d7604f3ef9318e58387b2f4c7b2cd5345c0c91f0ae72e20815c5e3290e1519560d976b0bbe75e461fe278654a1915367142884029e31fe92c5d17')
+b2sums=('61f438a3dccebe68f67eb4db0419dec7bcdeb69710ca63fd68dd2b002a9db2d14687f3e613a3d74738bc5bdce9afb90853e7ecf229ea9cf83f55a840b5c08a38')
 
 prepare() {
     cd ${srcdir}/${pkgname}
