@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=goldendict-ng
-pkgver=26.1.0
+pkgver=26.1.1
 pkgrel=1
 pkgdesc="The next generation GoldenDict (Supports Qt WebEngine & Qt6)."
 arch=('i686' 'x86_64' 'aarch64')
@@ -32,9 +32,9 @@ makedepends=('cmake' 'qt6-tools')
 conflicts=('goldendict')
 provides=('goldendict')
 replaces=('goldendict-svn' 'goldendict-git-opt' 'goldendict-webengine-git')
-_commit_id=13f0f844
+_commit_id=5491ffca
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-Release.${_commit_id}.tar.gz")
-sha256sums=('192fd08e1ff22d3ad03b11eda3784680a32487056ceccbdeecf514492bbc8059')
+sha256sums=('e59b343b4ecd2b34c110797119e700a25628d0ef6c7f589511e411bcf85adf7d')
 
 build() {
 	cmake -B build \
