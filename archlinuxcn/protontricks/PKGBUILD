@@ -3,7 +3,7 @@
 
 pkgname=protontricks
 pkgver=1.13.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Run Winetricks commands for Steam Play/Proton games among other common Wine features"
 arch=('any')
 url="https://github.com/Matoking/protontricks"
