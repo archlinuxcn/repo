@@ -14,3 +14,24 @@ repo_depends:
 update_on:
   - source: vcs
     vcs: git+https://notabug.org/litucks/torzu
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavformat.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavdevice.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavfilter.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libswresample.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libswscale.so
