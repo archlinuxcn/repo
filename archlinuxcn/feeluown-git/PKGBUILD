@@ -1,7 +1,8 @@
 # Maintainer: Bruce Zhang <zttt183525594@gmail.com>
+# Contributor: shinka
 _pkgname=feeluown
 pkgname=${_pkgname}-git
-pkgver=r1739.11b3293
+pkgver=r1739.11b32935
 pkgrel=1
 epoch=2
 pkgdesc="FeelUOwn Music Player (Master branch)"
@@ -10,38 +11,41 @@ url="https://github.com/feeluown/FeelUOwn"
 license=('GPL-3.0-or-later')
 provides=('feeluown')
 conflicts=('feeluown')
-depends=('python-qasync' 'python-pyqt5' 'mpv' 'python-opengl' 'python-janus' 'python-requests'
-         'python-tomlkit' 'python-packaging' 'python-pydantic' 'python-mutagen' 'qt5-svg'
-         'xdg-user-dirs')
-makedepends=('git' 'python-setuptools' 'python-pip')
+depends=('python-qasync' 'python-pyqt6' 'mpv' 'python-opengl' 'python-janus' 'python-requests'
+  'python-tomlkit' 'python-packaging' 'python-pydantic' 'python-mutagen' 'qt6-svg'
+  'xdg-user-dirs')
+makedepends=('git' 'python-setuptools' 'python-build' 'python-installer')
 optdepends=(
-	'feeluown-local'
-	'feeluown-netease'
-	'feeluown-kuwo'
-	'feeluown-qqmusic'
-	'feeluown-bilibili'
-	'feeluown-ytmusic'
+  'feeluown-local'
+  'feeluown-netease'
+  'feeluown-kuwo'
+  'feeluown-qqmusic'
+  'feeluown-bilibili'
+  'feeluown-ytmusic'
 )
 source=(
-	"$_pkgname::git+https://github.com/feeluown/FeelUOwn.git"
-	"$_pkgname.desktop"
+  "$_pkgname::git+https://github.com/feeluown/FeelUOwn.git"
+  "$_pkgname.desktop"
 )
 sha256sums=('SKIP'
-            'f403ba2261f847de1fc47bb04076beec74b62d8cd4776deb6be9b05d7b465860')
+  'f403ba2261f847de1fc47bb04076beec74b62d8cd4776deb6be9b05d7b465860')
 
 pkgver() {
-    cd "$srcdir/$_pkgname"
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  cd "$srcdir/$_pkgname"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 build() {
-	cd "$srcdir/$_pkgname"
-	LANG=en_US.UTF-8 python setup.py build
+  cd "$srcdir/$_pkgname"
+  python -m build --wheel --no-isolation
 }
 
 package() {
-	cd "$srcdir/$_pkgname"
-	LANG=en_US.UTF-8 python setup.py install --root="$pkgdir/" --optimize=1 --skip-build
-	install -D -m644 "$srcdir/$_pkgname/feeluown/gui/assets/icons/feeluown.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/feeluownapp.png"
-	install -D -m644 "$srcdir/feeluown.desktop" "$pkgdir/usr/share/applications/FeelUOwn.desktop"
+  cd "$srcdir/$_pkgname"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -D -m644 feeluown/gui/assets/icons/feeluown.png \
+    "$pkgdir/usr/share/icons/hicolor/512x512/apps/feeluownapp.png"
+  install -D -m644 "$srcdir/feeluown.desktop" \
+    "$pkgdir/usr/share/applications/FeelUOwn.desktop"
 }
