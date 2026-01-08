@@ -1,6 +1,6 @@
 pkgname=julia-git-enzyme-src
-pkgver=0.13.112
-_commit=dea1012af0317ee21bc77c35912e26bc0e99c030
+pkgver=0.13.114
+_commit=231d19087e90a5aebe112832f7d9cae404eda5cf
 pkgrel=1
 pkgdesc="Enzyme.jl"
 url="https://github.com/EnzymeAD/Enzyme.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/EnzymeAD/Enzyme.jl.git#commit=$_commit")
-sha256sums=('7de29482221be0cf8249244c1e6b1beeb48d1452aa563730b8af193d312a7ec2')
+sha256sums=('55038339d9fc83d9641caaf42e7c782bd0ceee1dadeb9934578e69a19a230740')
 
 prepare() {
   cd Enzyme.jl
