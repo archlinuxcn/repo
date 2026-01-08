@@ -1,7 +1,7 @@
 pkgname=julia-git-libtracyclient_jll-src
-pkgver=0.9.1+6
-_commit=f7a8b79432c0678157b844d46d63e8aee6a45eb6
-pkgrel=8
+pkgver=0.13.1+0
+_commit=8e96c2b74884ecc35615a94ed9d075cdf0d4b345
+pkgrel=1
 pkgdesc="LibTracyClient_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/LibTracyClient_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git tracy)
 source=("git+https://github.com/JuliaBinaryWrappers/LibTracyClient_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('99ee002c83fdd912b79c1d9b052e63ebc107b49d7ad604b7708155158330db20'
+sha256sums=('409f32dea982db69a9760328798e36f7673e6d249fbd13d76437b7b6af124c5c'
             '42279f5fa452167a7ac3eb24a7d2407c72ac535643458ebb114fc6050ac92c08')
 
 build() {
