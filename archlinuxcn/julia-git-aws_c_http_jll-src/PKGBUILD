@@ -1,7 +1,7 @@
 pkgname=julia-git-aws_c_http_jll-src
-pkgver=0.10.7+0
-_commit=b417cd184d0643e8e48ccd62354f93b8bf8ad116
-pkgrel=2
+pkgver=0.10.9+0
+_commit=5d232734854079d376eab33048b87f56fa7b4649
+pkgrel=1
 pkgdesc="aws_c_http_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/aws_c_http_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git aws-c-http)
 source=("git+https://github.com/JuliaBinaryWrappers/aws_c_http_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('202220c1eb00c9b85e7c064467b150e05e1eac77854a5fccc47b2015c1182ee1'
+sha256sums=('d589bd752ff055039568592e4ef616ea3d7bd3795069a6b157ec97965e63f366'
             '980cfbbfa4d24f1534f380bff3bc0450421e4530ecb51eb991c8aa3b0548960d')
 
 build() {
