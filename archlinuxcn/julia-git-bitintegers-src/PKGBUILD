@@ -1,6 +1,6 @@
 pkgname=julia-git-bitintegers-src
-pkgver=0.3.6
-_commit=ced42280072a4341d9e90e0c844e4954a05a1878
+pkgver=0.3.7
+_commit=1f3b3f04a6862aaa93c29a0923f9c38f612b530e
 pkgrel=1
 pkgdesc="BitIntegers.jl"
 url="https://github.com/rfourquet/BitIntegers.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/rfourquet/BitIntegers.jl.git#commit=$_commit")
-sha256sums=('316f3d1d6eeee94bbdffe9ede679720e876128ffe3a42dfdbad78db1844f2cea')
+sha256sums=('1993e86ac5d514aab277d788dbeb7a9337b113dfaa3b5445e44e76302a3635a5')
 
 package() {
   cd BitIntegers.jl
