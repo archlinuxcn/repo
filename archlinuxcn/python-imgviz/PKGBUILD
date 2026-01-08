@@ -2,7 +2,7 @@
 
 _pkgname=imgviz
 pkgname=python-imgviz
-pkgver=1.8.0
+pkgver=2.0.0a0
 pkgrel=1
 pkgdesc='Image Visualization Tools (object detection, semantic and instance segmentation)'
 arch=('any')
@@ -24,7 +24,7 @@ makedepends=(
   python-wheel
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/imgviz/archive/v${pkgver}.tar.gz")
-sha512sums=('1599d9daa9a530e2a692de1758c6f7bb8b7fe7b939dccc3ff48317c471a0103729334fd131c23c34656bc0bf720ca2e6fbf8dd783a6cd6ec0ece8acf28226829')
+sha512sums=('7bc6d37ebd7aca273f64e703a79a2eb6707360f626e59ffebcb69727ea065dede5167210367c5a7c0ed4dcf9d0665ebb21a19826bb91bace3beffb47f8351e42')
 
 build() {
   cd "${_pkgname}-${pkgver}"
