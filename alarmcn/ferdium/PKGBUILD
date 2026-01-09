@@ -6,7 +6,7 @@ pkgname="ferdium"
 _electron='electron37'
 _electronpackage='electron37'
 pkgver=7.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A messaging browser that allows you to combine your favorite messaging services into one application (git build from latest release).'
 arch=('x86_64' 'i686' 'armv7h' 'aarch64')
 url="https://ferdium.org/"
@@ -188,6 +188,10 @@ Comment=Ferdium is your messaging app / former heir to the throne of Austria-Hun
 MimeType=x-scheme-handler/ferdium;
 Categories=Network;InstantMessaging;
 EOF
+
+	# Fix the path of the application in the auto-start package to make it launch Ferdium instead of bare Electron which it autodetects
+	sed -i -e "s#path = arg.path;#path = '/usr/bin/${_pkgname}';#" "${pkgdir}/opt/$pkgname/node_modules/auto-launch/dist/index.js"
+
 	# Install the icons
 	for _size in 16 24 32 48 64 96 128 256 512 1024; do
 		install -Dm644 "build-helpers/images/icons/${_size}x${_size}.png" "$pkgdir/usr/share/icons/hicolor/${_size}x${_size}/apps/$_pkgname.png"
