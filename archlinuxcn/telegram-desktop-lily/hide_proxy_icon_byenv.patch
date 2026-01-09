@@ -1,0 +1,30 @@
+--- Telegram/SourceFiles/window/window_connecting_widget.cpp	2026-01-05 21:56:42.000000000 +0800
++++ Telegram/SourceFiles/window/window_connecting_widget.cpp	2026-01-08 13:20:38.329594569 +0800
+@@ -22,6 +22,7 @@
+ #include "lang/lang_keys.h"
+ #include "styles/style_window.h"
+ 
++#include <QtEnvironmentVariables>
+ #include <QtGui/QWindow>
+ 
+ namespace Window {
+@@ -438,11 +439,17 @@
+ 
+ auto ConnectionState::computeLayout(const State &state) const -> Layout {
+ 	auto result = Layout();
+-	result.proxyEnabled = state.useProxy;
++	// Do not show the icon when proxy is being used.
++	// Only show the icon when connecting or waiting.
++	bool show_icon = qEnvironmentVariableIsSet("TELEGRAM_DESKTOP_SHOW_PROXY_ICON");
++	result.proxyEnabled = state.useProxy && (
++			show_icon
++			|| state.type == State::Type::Connecting
++			|| state.type == State::Type::Waiting);
+ 	result.progressShown = (state.type != State::Type::Connected);
+ 	result.visible = state.exposed
+ 		&& !state.updateReady
+-		&& (state.useProxy
++		&& ((state.useProxy && show_icon)
+ 			|| state.type == State::Type::Connecting
+ 			|| state.type == State::Type::Waiting);
+ 	switch (state.type) {

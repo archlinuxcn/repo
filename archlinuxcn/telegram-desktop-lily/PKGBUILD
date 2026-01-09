@@ -75,6 +75,7 @@ source=(
   "0002-make-blockquote-markup-less-distractive.patch"
   "0003-make-animated-avatar-follow-power-settings.patch"
   "0004-don-t-ask-which-program-to-use-when-opening-a-file-w.patch"
+  "hide_proxy_icon_byenv.patch"
 )
 sha512sums=('fe66633997f2f9f9825fc48b9d669d983c9184ba826a62af84f937c81f387c4df214a35d60c0cf916c81827d0983c2858217fe90ff00ac4632232dd7c5dabd57'
             '6dc6e684a0bf35bb83f6fa6579a0da82d604190b222f2cd2de9b8ef5b93f5f18ac9a8733e2c5cf2a64ed9933b346ea31e26a4bcc0039956280ec2deef9649457'
@@ -83,7 +84,8 @@ sha512sums=('fe66633997f2f9f9825fc48b9d669d983c9184ba826a62af84f937c81f387c4df21
             'bb0e706b7a2629ba6fae9b7c71cb5a3f292e568f8c8d845aeb2584835c849b232ff9b7886ec931e446d077f249e2587abc70868659a5d08f7d94dc431fa3f914'
             'f315cbe729c568c27c745e12c3061d4757b1a146db108afb184bc55c55e7aaa317408e7f609111a3f3e79aab3af320204dc6e63aa35221aad99228ee6fdf2454'
             '57182ca0ae0aba5bc7fbc474329d13062d9ec0c4cab0911abe13d19beaac73a4cafbe23f995c669596d6e6b9bbf2785da740450cfb8a62295a629dc843812b2c'
-            '131eff0887513137be97f4ca04aa258f0a59df45e7bd1eb7ee6736c1e366ff887ada196f069ef8ddce1d4477189d531b24d5235cbefe0407ba42d164bbbed09f')
+            '131eff0887513137be97f4ca04aa258f0a59df45e7bd1eb7ee6736c1e366ff887ada196f069ef8ddce1d4477189d531b24d5235cbefe0407ba42d164bbbed09f'
+            '4cea9f3e8f93c607811f89f3569ce7e0df3af7bb96c8a8f71b15cb2efd2dfac0455126a5e87e81798ac714f3d3c969966df3a89280ac179f65a79e6420e454b8')
 options=(!debug)
 
 prepare() {
@@ -93,6 +95,7 @@ prepare() {
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0002-make-blockquote-markup-less-distractive.patch
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0003-make-animated-avatar-follow-power-settings.patch
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0004-don-t-ask-which-program-to-use-when-opening-a-file-w.patch
+  patch -b -l -d tdesktop-$pkgver-full/ -Np0 -i ${srcdir}/hide_proxy_icon_byenv.patch
 }
 
 build() {
