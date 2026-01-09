@@ -1,0 +1,15 @@
+--- /usr/share/devtools/makepkg.conf.d/conf.d/fortran.conf
++++ fortran-riscv64.conf
+@@ -11,9 +11,9 @@
+ 
+ # Flags used for the Fortran compiler, similar in spirit to CFLAGS. Read
+ # linkman:gfortran[1] for more details on the available flags.
+-FFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fno-plt \
+-        -Wp,-D_FORTIFY_SOURCE=3 -fstack-clash-protection -fcf-protection \
+-        -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"
++FFLAGS="-march=rv64gc -mabi=lp64d -O2 -pipe -fno-plt \
++        -Wp,-D_FORTIFY_SOURCE=3 -fstack-clash-protection \
++        -fno-omit-frame-pointer"
+ FCFLAGS="$FFLAGS"
+ 
+ # Additional compiler flags appended to `FFLAGS` and `FCFLAGS` for use in debugging. Usually
