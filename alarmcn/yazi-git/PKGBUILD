@@ -11,13 +11,22 @@ arch=("x86_64" "aarch64" "riscv64")
 license=("MIT")
 optdepends=(
 	'ttf-nerd-fonts-symbols: for full display of icons'
-	'jq: for JSON preview'
-	'unarchiver: for archive preview'
 	'ffmpeg: for video thumbnails'
+	'7zip: for archive extraction and preview'
+	'jq: for JSON preview'
+	'poppler: for PDF preview'
 	'fd: for file searching'
 	'ripgrep: for file content searching'
-	'fzf: for directory jumping'
-	'zoxide: for directory jumping')
+	'fzf: for quick file subtree navigation'
+	'zoxide: for historical directories navigation'
+	'resvg: for SVG preview'
+	'imagemagick: for image and font preview'
+	'xclip: for X11 clipboard support'
+	'xsel: for X11 clipboard support'
+	'wl-clipboard: for Wayland clipboard support'
+	'chafa: for ASCII image preview as fallback'
+	'git: for Yazi package management'
+)
 makedepends=("git" "cargo" "imagemagick")
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
@@ -42,7 +51,7 @@ build() {
 
 check() {
 	cd "${_pkgname}/"
-	cargo test --frozen --all-features
+	cargo test --frozen --all-features --workspace
 }
 
 package() {
@@ -51,8 +60,7 @@ package() {
 	install -Dm755 target/release/{${_pkgname},ya} -t "${pkgdir}/usr/bin/"
 	install -Dm644 "assets/${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 
-	local r
-	for r in 16 24 32 48 64 128 256; do
+	for r in 16 24 32 48 64 128 256 512; do
 		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/"
 		magick assets/logo.png -resize "${r}x${r}" "$pkgdir/usr/share/icons/hicolor/${r}x${r}/apps/${_pkgname}.png"
 	done
@@ -68,4 +76,5 @@ _install_completions() {
 	install -Dm644 "$1.bash" "${pkgdir}/usr/share/bash-completion/completions/$1"
 	install -Dm644 "$1.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
 	install -Dm644 "_$1" -t "${pkgdir}/usr/share/zsh/site-functions/"
+	install -Dm644 "$1.elv" -t "${pkgdir}/usr/share/elvish/lib/"
 }
