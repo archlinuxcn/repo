@@ -5,7 +5,7 @@
 # Clean Chroot ccm Xeon(R) E-2146G 6c12t: ----> Total build time for 1.4.1-hwcodec was 00:21:24
 # Clean chroot build is smaller than the system build
 
-# rm -rf ~/.cache/vcpkg ~/.cargo
+# rm -rf ~/.cache/vcpkg ~/.cargo ~/.pub-cache
 
 # 0 for PKGBUILD commands which may go out of date
 # 1 for build.py which should stay current
@@ -104,11 +104,11 @@ DLAGENTS="${DLAGENTS[@]/curl /curl -L}"
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.4.4'
+_pkgver='1.4.5'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
 _sfx=''
-_sfx='-pr1-7d06de0'
+#_sfx='-pr1-998b758'
 _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific hbb.
   '1.3.7:20250120-49c6b24a7a8c39d4448e07b743007ef1a3febd43'
   '1.3.8:20250223-7cf11f7b771e27ecbd14fd1dd0ced55a64f40eb5'
@@ -118,6 +118,7 @@ _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific 
   '1.4.2:20250904-9e7696c7d4e346508ba68e801a53c6d1f1748fb5'
   '1.4.3:20251008-5ed0afde0841659e2fb37ae7acaddc005fa1a8d3'
   '1.4.4:20251117-a86eda749e6fa33c282bab680e6b504d3ad87539'
+  '1.4.5:20251117-073403edbf1fffcb3acfe8cbe7582ee873b23398'
 )
 _pkgverhbb="$(_fn_VCL "${_pkgver}" -eq "${_HBB[@]}")"; unset _HBB; test "$(_vercmp "${_pkgver}" '1.3.7')" -lt 0 -o ! -z "${_pkgverhbb}" || exit 1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -224,8 +225,8 @@ source+=("${_vcs[@]}")
     )
   fi
 ####
-md5sums=('8d0f600cf00df79d5743e0421338cc93'
-         '0e45445c3ca3bba35c52caca491e65d0'
+md5sums=('e85ddd2397cb3c4d431c6922997862ce'
+         '5ed04fc39bda6e7f93e5237492e2a263'
          '6acc4b5b14befec55ef84006b60c7ff5'
          'a77a4586f30f77de2eed63e160b3a051'
          '379cfba8479c2a92e05e3b855d1e6901'
@@ -240,8 +241,8 @@ md5sums=('8d0f600cf00df79d5743e0421338cc93'
          '03485098fb64a000a4f7cd97e468dfff'
          'a3efc04e00cede00296f1a0dc323e8d1'
          'cc8e5418ff0c163228aabbe385ba2596')
-sha256sums=('a75620fa4a31ec8a47f2ad5fef48d44eebd47cbe3e0c764a5971d797407ec07b'
-            'a54de7909535b30d08d2900fd019a63e0251a28c31b0091ae6bb9492d78cd0fa'
+sha256sums=('0bf3b6f1e447bf7c24bbc005df2c6b91a60f05a873a4df8798fb1f711d22faa4'
+            '73f44cefbc27b32f259de84e19a251f196e53d096d15c747197d37d9b79e6ee5'
             '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
             '82757ee1ab6b956a3c601f7db82e2d9ad80dbbcf2ba68c63059f0b529426ccd0'
             '359046f24f8a81b96a198000a1cfd7934c1f4870b2a1306e13f65694cefef68f'
@@ -278,6 +279,7 @@ unset _fk
 _vcpkg=(libvpx libyuv opus aom)
 
 _prepare_vc() {
+  local -
   msg '_prepare_vc'
   set -u
   mkdir -p "${_srcdirvc}/downloads"
@@ -311,11 +313,11 @@ print(data_loaded.get('env').get('VCPKG_COMMIT_ID'))
     set +u
     false
   fi
-  set +u
 }
 
 # Same elements in same order
 _dpr_check() {
+  local -
   msg '_dpr_check'
   set -u
   pushd "${_srcdir}" > /dev/null
@@ -334,10 +336,10 @@ _dpr_check() {
     done
   )
   popd > /dev/null
-  set +u
 }
 
 _flutter_check() {
+  local -
   set +u; msg '_flutter_check'; set -u
     pushd "${_srcdir}"
     local _FLUTTER_VERSION
@@ -389,6 +391,7 @@ print(data_loaded.get('env').get('FLUTTER_RUST_BRIDGE_VERSION'))
 }
 
 _mod_py() {
+  local -
   if [ "$(grep -c -F -e 'os.system' 'build.py')" -gt 1 ]; then
     local _lf=$'\n'
     local _nc='
@@ -417,6 +420,7 @@ _fn_setvars() {
 }
 
 prepare() {
+  local -
   _dpr_check
   #rm -rf ~/'.cache/vcpkg/archives' ~/'.vcpkg'
   _prepare_vc
@@ -504,10 +508,10 @@ EOF
   #cd '..'; cp -pr "${_srcdir}" 'a'; ln -s "${_srcdir}" 'b'; cp -pr "${_srcdirfrb}" 'fa'; ln -s "${_srcdirfrb}" 'fb'; false
   #cd '..'; cp -pr "${_srcdirvc}" 'va'; ln -s "${_srcdirvc}" 'vb'; false
   #diff -pNaru5 'a' 'b' > "0000-$RANDOM@domain.patch"
-  set +u
 }
 
 build() {
+  local -
   msg2 'Build vcpkg'
   set -u
   unset VCPKG_DOWNLOADS
@@ -554,7 +558,6 @@ build() {
       popd
     fi
     set +x
-  set +u
 }
 
 # This rebuilds the entire package
@@ -564,6 +567,7 @@ check_disabled() {
 }
 
 package() {
+  local -
   set -u
   cd "${_srcdir}"
 
@@ -603,6 +607,5 @@ X-Desktop-File-Install-Version=0.23
 Name=Open a New Window
 EOF
   install -Dm644 'LICENCE' -t "${pkgdir}/usr/share/licenses/${_pkgname}"
-  set +u
 }
 set +u
