@@ -2,7 +2,7 @@
 
 pkgname=kazumi
 _srcname=Kazumi
-pkgver=1.9.3
+pkgver=1.9.4
 pkgrel=1
 pkgdesc="基于自定义规则的番剧采集APP，支持流媒体在线观看，支持弹幕"
 url="https://${pkgname}.app"
@@ -24,7 +24,7 @@ depends=(
 )
 makedepends=('clang' 'cmake' 'ninja' 'fvm' 'patchelf')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Predidit/${_srcname}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('78cd976acf6f06d70b54c74e5d36ca22653c524a97af4305d2b6878a7a3adbad')
+sha256sums=('d47dc241888d6ef38f39ef56171d312698906b2e2283d9be5f8441febb7336a9')
 
 prepare() {
 	cd "${_srcname}-${pkgver}/"
