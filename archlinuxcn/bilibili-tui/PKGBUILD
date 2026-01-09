@@ -22,13 +22,13 @@ build() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
-	cargo build --frozen --release --all-features
+	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
 check() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo test --frozen --all-features
+	CFLAGS+=" -ffat-lto-objects" cargo test --frozen --all-features
 }
 
 package() {
