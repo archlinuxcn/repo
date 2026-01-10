@@ -7,13 +7,10 @@ post_build_script: |
 #  update_aur_repo()
 
 update_on:
-  - source: "github"
-    github: "PrismLauncher/PrismLauncher"
-    use_latest_release: true
-    include_prereleases: false
-  - alias: "qt6-base"
-build_prefix: archlinuxcn-x86_64
+  - source: "alpm"
+    alpm: "prismlauncher"
+    #repo: extra
+    from_pattern: '-.*'
+    to_pattern: ''
 
-repo_depends:
-  - portable
-  - cmake3-bin
+build_prefix: archlinuxcn-x86_64
