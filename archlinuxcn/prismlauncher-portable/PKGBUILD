@@ -2,7 +2,7 @@
 
 pkgname=prismlauncher-portable
 pkgver=9.4
-pkgrel=5
+pkgrel=6
 provides=(prismlauncher prismlauncher-portable prismlauncher-bwrap)
 replaces=(prismlauncher-bwrap)
 conflicts=(prismlauncher)
@@ -18,11 +18,8 @@ source=(
 	portable-config
 	desktop.file
 )
-b2sums=(
-	SKIP
-	SKIP
-	SKIP
-)
+b2sums=('9207b8b3001285fae586f40e0284873173de8ee52e3a4407e67197ed3fac064de44b0ea90c252f7dfe834a85aa7149d270f9906ee2d2618a814b1803108b804c'
+        '8370d9a7b7f60ec115cad0c2c4d86cdaebbd2f1e5cd5c4d5b8525310aac8751397d59a09440058db67e9a6f1adbd5b227333f6cd03c7eb4cab66dad2c9035f2c')
 
 package() {
 	export pkgdir
