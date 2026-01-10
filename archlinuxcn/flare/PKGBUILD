@@ -12,11 +12,11 @@ license=("AGPL-3.0-or-later")
 makedepends=("blueprint-compiler" "cargo" "meson")
 depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling")
 optdepends=("feedbackd: for vibrating notifications")
-source=("${url}/-/archive/${_pkgver}/${pkgname}-${_pkgver}.tar.gz")
+source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('ebdd2a66dd55fec72dfd24345c4f58aea771986cf0acd80cacbcb03cdd23b767')
 
 build() {
-	arch-meson "${pkgname}-${_pkgver}" build
+	arch-meson "${pkgname}-${pkgver}" build
 	CFLAGS+=" -ffat-lto-objects" meson compile -C build
 }
 
@@ -26,5 +26,5 @@ check() {
 
 package() {
 	meson install -C build --no-rebuild --destdir "${pkgdir}"
-	install -Dm644 ${pkgname}-${_pkgver}/doc/* -t "${pkgdir}/usr/share/doc/${pkgname}/"
+	install -Dm644 ${pkgname}-${pkgver}/doc/* -t "${pkgdir}/usr/share/doc/${pkgname}/"
 }
