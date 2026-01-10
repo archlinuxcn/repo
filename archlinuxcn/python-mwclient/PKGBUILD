@@ -1,12 +1,13 @@
 _name=mwclient
 pkgname=python-mwclient
 pkgver=0.11.0
-pkgrel=2
+pkgrel=3
 pkgdesc="MediaWiki API client"
 arch=(any)
 url="https://github.com/mwclient/mwclient"
 license=('MIT')
 depends=('python-requests-oauthlib' 'python-six' 'python-setuptools')
+makedepends=('python-setuptools')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/mwclient-0.11.0.tar.gz")
 sha256sums=('2bb7696f3703243eb33514ab162d7f6076dcedd011be90682936046c5e34fd06')
 
