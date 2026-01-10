@@ -22,10 +22,7 @@ depends=("$_electron"
          'python-pillow'
          'python-playwright')
 optdepends=('ollama: Use your local LLM')
-makedepends=('npm'
-             'yarn'
-             'python'
-             'libcrypt.so=1')
+makedepends=('npm' 'pnpm' 'python' 'libcrypt.so=1')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 b2sums=('0d022a7d89bc57450dbb2a06374fca26efb78aaaf189611f6c1456188a05189c255dd7417a2cdf64488aea2409b688aa845f261230cb83917a2c9b226cc88179')
 
@@ -62,14 +59,16 @@ build() {
     cd "$pkgname-$pkgver"
 
     local electronVer="$(</usr/lib/${_electron}/version)"
+    npm pkg set devDependencies.electron=${electronVer}
+
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
-    HOME="$srcdir/.electron-gyp" yarn install
+    export NPM_CACHE_DIR=${srcdir}/.npmcache
+    HOME="$srcdir/.electron-gyp" pnpm install --ignore-scripts
 
     export NODE_ENV=production
-    yarn build
-    yarn run electron-builder --dir \
-        -c.electronDist=/usr/lib/"$_electron" \
-        -c.electronVersion=${electronVer}
+    export ELECTRON_DIST=/usr/lib/"$_electron"
+    export ELECTRON_VERSION=${electronVer}
+    pnpm build:unpack
 
     find ./dist/linux-unpacked/resources/app.asar.unpacked \
         -type d \( -name darwin \) -print -exec rm -r {} +
