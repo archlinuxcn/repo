@@ -10,7 +10,7 @@ friendlyName="PrismLauncher"
 stateDirectory="PrismLauncher"
 
 # This is the target executable to launch
-launchTarget="bwrap --dev-bind / / --ro-bind /usr/lib/prismlauncher-bwrap/prismlauncher/prismlauncher /usr/bin/prismlauncher -- /usr/bin/prismlauncher"
+launchTarget="/usr/bin/prismlauncher"
 
 # Takes a boolean value or string "adaptive". When true, do not process XAuth files and forces wayland input method. "adaptive" enables this option on Wayland and vice versa. Generally this should be adaptive when possible.
 waylandOnly="false"
@@ -26,5 +26,13 @@ bindPipewire="false"
 
 # Expose all GPUs. Takes boolean value, usually used in games.
 gameMode="true"
+
+########## Section: Portals ##########
+
+# If true, allows the sandboxed application to use the org.freedesktop.portal.Inhibit interface to inhibit certain actions, like suspend and logout
+allowInhibit="true"
+
+# If true, allow apps to register Global Shortcuts via the Portal.
+allowGlobalShortcuts="true"
 
 # Below you can set envs that will be imported into the application sandbox
