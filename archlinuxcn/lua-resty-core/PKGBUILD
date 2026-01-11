@@ -20,11 +20,11 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/openresty/$pkgname/archive/
 sha256sums=('7d36188261f44d489acc1671ced73207e2f7adba70663d3f32804509873f3370')
 
 build() {
-	cd "$pkgname-$pkgver"
+	cd "$pkgname-$_upstream_ver"
 	make
 }
 
 package() {
-	cd "$pkgname-$pkgver"
+	cd "$pkgname-$_upstream_ver"
 	make DESTDIR="$pkgdir" PREFIX=/usr LUA_LIB_DIR='$(PREFIX)/share/lua/$(LUA_VERSION)' LUA_VERSION=5.1 install
 }
