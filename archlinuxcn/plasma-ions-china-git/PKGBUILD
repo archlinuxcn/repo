@@ -1,0 +1,34 @@
+# Maintainer: Rocka <rocka@archlinuxcn.org>
+# Contributor: arenekosreal
+
+_pkgname=plasma-ions-china
+pkgname="${_pkgname}-git"
+pkgver=r117.g9ecdb47
+pkgrel=1
+pkgdesc="A collection of ions for Chinese users."
+arch=(x86_64)
+depends=(qt6-base kdeplasma-addons)
+makedepends=(extra-cmake-modules cmake git)
+source=("git+https://github.com/arenekosreal/plasma-ions-china")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "${srcdir}/${_pkgname}"
+    echo "0.0.0.r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+}
+
+build() {
+    local cmake_options=(
+        -B build
+        -S "${srcdir}/${_pkgname}"
+        -D CMAKE_BUILD_TYPE=None
+        -D PlasmaWeather_ROOT="${srcdir}/${_pkgname}"
+    )
+    cmake "${cmake_options[@]}"
+    cmake --build build
+}
+
+package() {
+    DESTDIR="${pkgdir}" cmake --install build
+}
+
