@@ -9,11 +9,15 @@ url='https://github.com/google/brunsli'
 license=('MIT')
 depends=(gcc-libs)
 makedepends=(
-  cmake
+#  cmake
   git
 )
-source=("${pkgname}::git+https://github.com/google/brunsli.git#tag=v${pkgver}")
-sha256sums=('842cb1ec23a6d244e6eebd1b253ae44e0bbff57c0fbf5dc8b153b10220ec4ca2')
+source=(
+  "${pkgname}::git+https://github.com/google/brunsli.git#tag=v${pkgver}"
+  https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-linux-x86_64.tar.gz
+)
+sha256sums=('842cb1ec23a6d244e6eebd1b253ae44e0bbff57c0fbf5dc8b153b10220ec4ca2'
+            '3cb3dd247b6a1de2d0f4b20c6fd4326c9024e894cebc9dc8699758887e566ca7')
 
 prepare() {
   cd "${srcdir}/${pkgname}"
@@ -21,7 +25,9 @@ prepare() {
 }
 
 build() {
+  export PATH="${srcdir}/cmake-3.31.10-linux-x86_64/bin":$PATH
 	cmake -B build -S "${srcdir}/${pkgname}" \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
 	make -C build
 }
