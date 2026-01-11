@@ -11,6 +11,10 @@ repo_makedepends:
   - airspyhf-git
   - libsdrplay
 
+update_on_build:
+  - pkgbase: airspyhf-git
+  - pkgbase: libsdrplay
+
 update_on:
   - source: github
     github: AlexandreRouma/SDRPlusPlus

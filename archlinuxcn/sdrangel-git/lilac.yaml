@@ -17,6 +17,15 @@ repo_makedepends:
   - vkfft-vulkan
   - libsdrplay
 
+update_on_build:
+  - pkgbase: airspyhf-git
+  - pkgbase: libdab-git
+  - pkgbase: libmirisdr4-git
+  - pkgbase: libperseus-sdr-git
+  - pkgbase: sgp4-git
+  - pkgbase: vkfft-vulkan
+  - pkgbase: libsdrplay
+
 update_on:
   - source: github
     github: f4exb/sdrangel
