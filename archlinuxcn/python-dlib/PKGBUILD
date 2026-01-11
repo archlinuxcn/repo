@@ -13,7 +13,7 @@ pkgbase=python-dlib
 [[ $_build_cuda -eq 1 ]] && pkgname+=('python-dlib-cuda')
 _pkgname=dlib
 pkgver=20.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Dlib is a general purpose cross-platform C++ library designed using contract programming and modern C++ techniques."
 arch=('x86_64')
 url="http://www.dlib.net/"
@@ -41,10 +41,10 @@ build_python-dlib(){
 build_python-dlib-cuda(){
 	cd "${srcdir}/${_pkgname}-${pkgver}-cuda"
 	python setup.py build \
-		--set CUDA_HOST_COMPILER=/usr/bin/gcc-14 \
+		--set CUDA_HOST_COMPILER=/usr/bin/gcc \
 		--set CUDA_NVCC_EXECUTABLE=/usr/lib/ccache/bin/nvcc-ccache \
-		--set CMAKE_C_COMPILER=/usr/bin/gcc-14 \
-		--set CMAKE_CXX_COMPILER=/usr/bin/g++-14
+		--set CMAKE_C_COMPILER=/usr/bin/gcc \
+		--set CMAKE_CXX_COMPILER=/usr/bin/g++
 }
 
 build(){
