@@ -13,6 +13,9 @@ post_build_script: |
 repo_makedepends:
   - nanoemoji
 
+build_on_update:
+  - pkgbase: nanoemoji
+
 update_on:
   - source: github
     github: jdecked/twemoji
