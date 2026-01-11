@@ -28,16 +28,19 @@ makedepends=(
 )
 # data files from https://nipy.org/data-packages/
 source=(
+  "https://github.com/nipy/nipy/pull/589.patch"
   'http://nipy.org/data-packages/nipy-templates-0.3.tar.gz'
   'http://nipy.org/data-packages/nipy-data-0.3.tar.gz'
   "${_pkgname}-${pkgver}::git+https://github.com/nipy/nipy.git")
-sha512sums=('3af927b8dde0b10ca45899016bce5e4f5b25ef285b2339a63346bfbfa99cc1a0e2f0728336c3ac7e32d4c05375f36fdfa7cf97cdfd26b42834cb3cb631d593b9'
+sha512sums=('e01b353a6535e4f5fb4c968aad8e2f7c6111c8323f41d129645af51780307a4c2991afe52f9975f8791412736762e59ee65a9924d2218ff34ff5cc53c84e6254'
+            '3af927b8dde0b10ca45899016bce5e4f5b25ef285b2339a63346bfbfa99cc1a0e2f0728336c3ac7e32d4c05375f36fdfa7cf97cdfd26b42834cb3cb631d593b9'
             'ea8ed3537fb00596c16fa8b3464a2da54845ce9782e7bb40eb1157eb94de53892dda99bb4f22a829493cd59cfb47551f39de7641bf65a33678e97e5a4974de1a'
             'SKIP')
 
 prepare() {
   # we don't use ninja from PyPI to build the package
   sed -i "/ninja/d" "${srcdir}/${_pkgname}-${pkgver}/pyproject.toml"
+  patch -d "${srcdir}/${_pkgname}-${pkgver}" -p1 -i "${srcdir}/589.patch"
 }
 
 build() {
