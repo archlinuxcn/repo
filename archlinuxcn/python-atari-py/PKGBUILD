@@ -17,16 +17,21 @@ depends=(
   zlib
 )
 makedepends=(
-  cmake
+#  cmake
   python-build
   python-installer
   python-setuptools
   python-wheel
 )
-source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/openai/atari-py/archive/${pkgver}.tar.gz")
-sha256sums=('0b9940e6685b704f7fa1bee91745fd9bc6fa1fa0d6844f6c42a8fe8a2d6144b3')
+source=(
+  "${_pkgname}-${pkgver}.tar.gz::https://github.com/openai/atari-py/archive/${pkgver}.tar.gz"
+  https://github.com/Kitware/CMake/releases/download/v3.31.10/cmake-3.31.10-linux-x86_64.tar.gz
+)
+sha256sums=('0b9940e6685b704f7fa1bee91745fd9bc6fa1fa0d6844f6c42a8fe8a2d6144b3'
+            '3cb3dd247b6a1de2d0f4b20c6fd4326c9024e894cebc9dc8699758887e566ca7')
 
 build() {
+  export PATH="${srcdir}/cmake-3.31.10-linux-x86_64/bin":$PATH
   cd "${_pkgname}-${pkgver}"
   python -m build --wheel --no-isolation
 }
