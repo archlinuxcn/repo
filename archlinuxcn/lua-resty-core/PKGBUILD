@@ -6,6 +6,7 @@
 
 pkgname=lua-resty-core
 pkgver=0.1.32R1
+_upstream_ver=${pkgver/.r/R}
 pkgrel=1
 
 pkgdesc='Lua script engine for nginx lua module'
@@ -14,7 +15,7 @@ depends=('luajit' 'lua-resty-lrucache')
 url="https://github.com/openresty/lua-resty-core"
 license=('BSD')
 
-source=("$pkgname-$pkgver.tar.gz::https://github.com/openresty/$pkgname/archive/v$pkgver.tar.gz")
+source=("$pkgname-$pkgver.tar.gz::https://github.com/openresty/$pkgname/archive/v$_upstream_ver.tar.gz")
 
 sha256sums=('7d36188261f44d489acc1671ced73207e2f7adba70663d3f32804509873f3370')
 
