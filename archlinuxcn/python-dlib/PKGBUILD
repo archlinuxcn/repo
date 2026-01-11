@@ -13,7 +13,7 @@ pkgbase=python-dlib
 [[ $_build_cuda -eq 1 ]] && pkgname+=('python-dlib-cuda')
 _pkgname=dlib
 pkgver=20.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Dlib is a general purpose cross-platform C++ library designed using contract programming and modern C++ techniques."
 arch=('x86_64')
 url="http://www.dlib.net/"
@@ -35,7 +35,7 @@ prepare() {
 
 build_python-dlib(){
 	cd "${srcdir}/${_pkgname}-${pkgver}"
-	python setup.py build --no DLIB_USE_CUDA
+	python setup.py build --no DLIB_USE_CUDA --no USE_SSE4_INSTRUCTIONS --no USE_AVX_INSTRUCTIONS
 }
 
 build_python-dlib-cuda(){
