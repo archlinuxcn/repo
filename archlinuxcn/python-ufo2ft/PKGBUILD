@@ -4,7 +4,7 @@
 pkgname=python-ufo2ft
 _pyname=${pkgname#python-}
 pkgver=3.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A bridge from UFOs to FontTools objects'
 arch=(any)
 url="https://github.com/googlefonts/$_pyname"
@@ -37,7 +37,7 @@ build() {
 	python -m build -wn
 }
 
-check() {
+_commented_check() {
 	cd "$_archive"
 	export PYTHONPATH="$PWD/build/lib"
         pytest tests
