@@ -11,6 +11,9 @@ post_build: aur_post_build
 repo_depends:
   - python-skia-pathops
 
+build_on_update:
+  - pkgbase: python-skia-pathops
+
 update_on:
   - source: aur
     aur: picosvg

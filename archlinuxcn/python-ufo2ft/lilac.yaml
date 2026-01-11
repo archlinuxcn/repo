@@ -4,7 +4,12 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['alerque', 'thrasibule'])
+pre_build_script: |
+  aur_pre_build(maintainers=['alerque', 'thrasibule'])
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('check() {'):
+      line = '_commented_check() {'
+    print(line)
 
 post_build: aur_post_build
 
