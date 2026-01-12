@@ -42,6 +42,7 @@ build() {
 		-D CMAKE_INSTALL_PREFIX=/usr
 		-D CMAKE_INSTALL_MANDIR=/usr/share/man
 		-D BUILD_CLI_UTILITY=ON
+		-D USE_PKEXEC_LAUNCHER=ON
 	)
 
 	cmake "${cmake_options[@]}"
