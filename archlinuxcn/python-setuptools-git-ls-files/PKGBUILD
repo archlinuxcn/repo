@@ -3,7 +3,7 @@
 pkgname=python-setuptools-git-ls-files
 _pyname=${pkgname#python-}
 pkgver=0.1.2
-pkgrel=8
+pkgrel=9
 pkgdesc='A plugin for setuptools that finds all git tracked files, including submodules'
 arch=(any)
 url="https://github.com/anthrotype/${_pyname//-/_}"
