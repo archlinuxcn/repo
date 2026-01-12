@@ -1,8 +1,8 @@
 # Maintainer: Puqns67 <me@puqns67.icu>
 
 pkgname='rustdesk-server'
-pkgver='1.1.14'
-pkgrel=7
+pkgver=1.1.15
+pkgrel=1
 pkgdesc='RustDesk Server Program'
 arch=('x86_64' 'aarch64')
 url='https://github.com/rustdesk/rustdesk-server'
@@ -22,7 +22,7 @@ source=("${pkgname}"::"git+${url}.git#tag=${pkgver}"
         "${pkgname}-hbbr.default"
         "${pkgname}-hbbs.default")
 
-b2sums=('8518ca0011823539c2987ee8460cfba5aa1f21cfa06dd7822e81563f6dd7e6b01c47c7598f49166e597da67ba5084860d4dc1e16c811343980d9e12548605d38'
+b2sums=('22cf7e90d5e5adc45b75d263923a082d8885feba09db93bed7d2889cb9f1c6c0b079b56b59d0d1c2e3a08f98e35bfaed222cca6b7f00180d4006cb2dab2a98c0'
         'SKIP'
         '736e07c9f81ca791e1ca05a209eb7551d6b87250f12554dbeb13b46f98795a3bcc556fc9548d856223b10566729988485e0376022afb1b59a333ec03d3b47cea'
         'ef24fd0191b6cb1e4a1919ea579f1568ceeccf58c562316990c5697c1a593d6e1bdaa780bde115a1f7bd6556c128b68515f5fb4e535c805a35b338fc3fca232a'
