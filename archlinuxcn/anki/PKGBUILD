@@ -21,7 +21,7 @@ declare -gA _caches=(
 
 pkgname=anki
 pkgver=25.09.2
-pkgrel=4
+pkgrel=5
 pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
 url="https://apps.ankiweb.net/"
 license=('AGPL3')
@@ -169,7 +169,7 @@ package() {
     install -Dm644 anki.desktop "$pkgdir"/usr/share/applications/anki.desktop
     install -Dm644 anki.png "$pkgdir"/usr/share/pixmaps/anki.png
     install -Dm644 anki.xpm "$pkgdir"/usr/share/pixmaps/anki.xpm
-    install -Dm644 anki.1 "$pkgdir"/usr/man/man1/anki.1
+    install -Dm644 anki.1 "$pkgdir"/usr/share/man/man1/anki.1
     install -Dm644 anki.xml "$pkgdir/usr/share/mime/application/anki.xml"
 
 }
