@@ -1,8 +1,8 @@
-# Maintainer: TTsdzb <ttsdzboutlook dot com>
-# Maintainer: Jia Yin<lok-ation at outlook dot com>
+# Maintainer: TTsdzb <ttsdzb at outlook dot com>
+# Maintainer: Jia Yin<yenfeng.shetiko at gmail dot com>
 
 pkgname=uni-updater
-pkgver=0.2.4
+pkgver=0.3.0
 pkgrel=1
 pkgdesc='Helper program that updates everything on your system.'
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('gcc-libs')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}-${pkgrel}.tar.gz::https://codeberg.org/TTsdzb/uni-updater/archive/$pkgver.tar.gz"
 	)
-sha512sums=('33a35ac7617257cde78bf574c5896593a2a2f70efb74690d6403ba6ce282cd4362a5089adef1b3ccea83ae7530c4643803e697b1ece898b82da33ec7c239bc7b')
+sha512sums=('db49f4e74fedaa2027cc9b82fc8c58d1ef66bee0e6d13b5abc4d2460471b27ad96e6b463b42e8768177496ea839711bc092e6ba61b3fa7db89e2fb2c2b952f64')
 prepare() {
 	cd "$pkgbase"
 	cargo update
