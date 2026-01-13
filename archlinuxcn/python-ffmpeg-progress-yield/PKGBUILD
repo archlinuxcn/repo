@@ -3,7 +3,7 @@
 
 pkgname=python-ffmpeg-progress-yield
 _name=${pkgname#python-}
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=1
 pkgdesc="Run an ffmpeg command with its progress yielded."
 arch=('any')
@@ -13,7 +13,7 @@ depends=('ffmpeg' 'python-tqdm' python-uv-build)
 makedepends=('python-setuptools' 'python-build' 'python-installer' 'python-wheel' 'git' 'python-uv-build')
 checkdepends=('ffmpeg' 'python-pytest' 'python-pytest-asyncio')
 source=("git+https://github.com/slhck/ffmpeg-progress-yield.git#tag=v${pkgver}")
-sha512sums=('848753139e1e8eff774688392496cebde962eb8612b6bc2cffce4c4a9777f6a57550f605d45e3ce1f7e32a7a002acce6ecaa43ae4f29b22e352578cd7af2eb5f')
+sha512sums=('756f5d3e0088bf17a0d74a3f4072e915167e4c44c121a96958d83eed5c7ad871971176f16116d95f8486297ad3292b4db59471d5f746e94089371ff9022107c5')
 
 function prepare() {
 	cd ffmpeg-progress-yield
