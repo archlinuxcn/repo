@@ -18,10 +18,9 @@ sha512sums=('cb4a5036f40e3e980f5fc18f74a46f1efc3b84710cf6e2b2c69d5255039e716756b
 
 prepare() {
   cd py-trie
-  git config --global protocol.file.allow always
   git submodule init fixtures
   git config submodule.fixtures.url ../tests
-  git submodule update fixtures
+  git -c protocol.file.allow=always submodule update fixtures
 }
 
 build() {
