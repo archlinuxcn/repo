@@ -17,10 +17,9 @@ sha512sums=('7b4e63704777bed6bc52f98695c45e6449c879fb3490c1126776f8547cd59226d32
 
 prepare() {
   cd c-kzg-4844
-  git config --global protocol.file.allow always
   git submodule init blst
   git config submodule.blst.url ../blst
-  git submodule update blst
+  git -c protocol.file.allow=always submodule update blst
 
   # Conflict with $CFLAGS
   sed -i 's/-Werror//g' src/Makefile
