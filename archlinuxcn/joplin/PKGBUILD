@@ -8,13 +8,13 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.4.12
+pkgver=3.5.11
 groups=('joplin')
-pkgrel=2
-_electronVersion=38
+pkgrel=1
+_electronVersion=39
 depends=("electron${_electronVersion}" "nodejs>20" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 makedepends=('npm' 'git' 'rsync' 'python-setuptools' 'libxcrypt-compat' 'corepack')
 url="https://joplinapp.org/"
 license=("AGPL-3.0-or-later")
@@ -25,7 +25,7 @@ source=(
 )
 sha256sums=('9223cc816f8175ddaf8839f9357d2bd1c4831692504927c98d8e1eefa7df796e'
             'f485c089904d91750d137d4413297676446e0068892cb08e20bee928bcac516c'
-            'c00ac2540371543d85b4362fd716ff4748f18a61276d137cad91d318cd30f744')
+            '0b7df045209ce554ee46be652789c4d88a2b1e317066103ae7dc5923f4b46d75')
 
 _setup_env() {
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
@@ -54,6 +54,9 @@ build() {
     # Fix: Build error due to removal of app-mobile
     sed -i '/app-mobile\//d' packages/tools/gulp/tasks/buildScriptIndexes.js
 
+    # Fix: joplin-plugin-freehand-drawing complains "not in a git directory"
+    git init
+
     corepack install
     npx yarn install
 
@@ -70,8 +73,12 @@ build() {
     npx gulp before-dist
     electronRoot=/usr/lib/electron${_electronVersion}/
     electronVersion="$(<${electronRoot}/version)"
+    arch_args="--x64"
+    if [[ $CARCH == "aarch64" ]]; then
+        arch_args="--arm64"
+    fi
     npx electron-builder \
-      --linux --x64 --dir=dist/ \
+      --linux "$arch_args" --dir=dist/ \
       -c.electronDist="${electronRoot}" \
       -c.electronVersion="${electronVersion}"
 }
