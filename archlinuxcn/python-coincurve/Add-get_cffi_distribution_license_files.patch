@@ -1,0 +1,53 @@
+From 435d4a22f6e104712016064bf8373a29593cccd2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Y=C3=B3Un=C7=8Ei?= <c0d3r.nodiru.gaji@gmail.com>
+Date: Tue, 7 Oct 2025 02:14:52 +0000
+Subject: [PATCH] Add `get_cffi_distribution_license_files()` (#188)
+
+Co-authored-by: Memento "RC" Mori <claude.rc@gmail.com>
+Co-authored-by: Ofek Lev <ofekmeister@gmail.com>
+---
+ .github/workflows/build.yml               |  6 ++++--
+ .github/workflows/verify_shared_build.yml |  6 ++++--
+ hatch_build.py                            | 17 ++++++++++++++---
+ 3 files changed, 22 insertions(+), 7 deletions(-)
+
+diff --git a/hatch_build.py b/hatch_build.py
+index ef350304..012e6501 100644
+--- a/hatch_build.py
++++ b/hatch_build.py
+@@ -3,7 +3,7 @@
+ import os
+ import shutil
+ from functools import cached_property
+-from importlib.metadata import distribution
++from importlib.metadata import PackagePath, distribution
+ from typing import Any
+ 
+ import _cffi_backend  # noqa: PLC2701
+@@ -22,13 +22,24 @@ class CustomBuildHook(BuildHookInterface):
+     def local_cffi_license(self) -> str:
+         return os.path.join(self.root, self.LICENSE_NAME)
+ 
++    @staticmethod
++    def get_cffi_distribution_license_files() -> list[PackagePath]:
++        license_files = []
++
++        dist_files = distribution("cffi").files or []
++        for f in dist_files:
++            if f.name == "LICENSE" and f.parts[0].endswith(".dist-info"):
++                license_files.append(f)
++                break
++
++        return license_files
++
+     def initialize(self, version: str, build_data: dict[str, Any]) -> None:  # noqa: ARG002
+         cffi_shared_lib = _cffi_backend.__file__
+         relative_path = f"coincurve/{os.path.basename(cffi_shared_lib)}"
+         build_data["force_include"][cffi_shared_lib] = relative_path
+ 
+-        dist = distribution("cffi")
+-        license_files = [f for f in dist.files if f.name == "LICENSE" and f.parent.name.endswith(".dist-info")]
++        license_files = self.get_cffi_distribution_license_files()
+         if len(license_files) != 1:
+             message = f"Expected exactly one LICENSE file in cffi distribution, got {len(license_files)}"
+             raise RuntimeError(message)
