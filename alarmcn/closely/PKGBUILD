@@ -1,8 +1,8 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=closely
-pkgver=0.1.23
-pkgrel=2
+pkgver=0.1.24
+pkgrel=1
 pkgdesc="Subscribe to updates from people you follow, from any platform to any platform"
 arch=('x86_64' 'aarch64')
 url="https://github.com/SpriteOvO/${pkgname}"
@@ -10,7 +10,7 @@ license=('AGPL-3.0-only')
 depends=('openssl')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('bcf1e1b94c61401edad024dc70cfcc2b62c1f014e2617a1891a03351bde55fd4')
+sha256sums=('07add8492e4c7ae211bcf92773395f499a9e41e7502f858cd05325e0c38a09a9')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
