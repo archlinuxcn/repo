@@ -3,7 +3,7 @@
 
 pkgname=plasma-login-manager-git
 _pkgname=plasma-login-manager
-pkgver=0.0.0.r1906.ad36a88
+pkgver=6.5.90.r4.g4fd0cfa
 pkgrel=1
 pkgdesc='Plasma Login Manager (git version)'
 url='https://invent.kde.org/plasma/plasma-login-manager'
@@ -31,20 +31,16 @@ makedepends=(extra-cmake-modules
     cmake
     ninja
     git)
-source=(git+https://invent.kde.org/plasma/plasma-login-manager
-    plasmalogin
-    plasmalogin-autologin
-    plasmalogin-greeter)
+source=('git+https://invent.kde.org/plasma/plasma-login-manager.git/'
+        'PROJECT_DEP_VERSION.patch')
 sha256sums=('SKIP'
-            'd7394292a65ae463926c2c3d2cb4e67bbfeb20995450c8e4c92fe5a28e7c4254'
-            '1a84cf752782b03b53f66188013bf7e4af4f5e6feb7266bfe58c3faaa20777b4'
-            '3406bce46be8450e28ddbccfbcd0e1f8fa585d57da8833ff7294cf3aee84bb46')
+            'd7f17a4f4cf26a369c0e355c4a519de3df15d55715354579ae2f721edacc3bdc')
 provides=(${_pkgname})
 conflicts=(${_pkgname})
 
 pkgver() {
     cd $_pkgname
-    printf "0.0.0.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    git describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
@@ -56,7 +52,4 @@ build() {
 
 package() {
     DESTDIR="$pkgdir" cmake --install build
-    install -Dm644 plasmalogin -t "$pkgdir"/etc/pam.d
-    install -Dm644 plasmalogin-autologin -t "$pkgdir"/etc/pam.d
-    install -Dm644 plasmalogin-greeter -t "$pkgdir"/etc/pam.d
 }
