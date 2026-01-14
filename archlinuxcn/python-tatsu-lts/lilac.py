@@ -2,7 +2,7 @@ from lilaclib import pypi_pre_build, pypi_post_build
 
 def pre_build():
   pypi_pre_build(
-    makedepends = ['python-setuptools'],
+    makedepends = ['python-hatchling'],
     optdepends = [
       'python-colorama',
       'python-rich',
