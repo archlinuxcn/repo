@@ -15,7 +15,7 @@ repo_dir = "systemd"
 repo_url = "https://src.fedoraproject.org/rpms/systemd.git"
 
 
-def update_pkg():
+def pre_build():
     if not os.path.isdir(repo_dir):
         os.mkdir(repo_dir)
         run_cmd(["git", "clone", repo_url, repo_dir], use_pty=True)
@@ -37,7 +37,7 @@ def update_pkg():
         print(line)
 
 
-def pre_build():
+def prepare():
     sums_before = obtain_array("sha256sums")
 
     shutil.copy("PKGBUILD", "PKGBUILD.backup")
@@ -63,9 +63,7 @@ def pre_build():
 
     if sums_before == sums_after:
         shutil.move("PKGBUILD.backup", "PKGBUILD")
-        return
-    else:
-        update_pkg()
+        return "source unchanged, skipping build"
 
     os.remove("PKGBUILD.backup")
 
