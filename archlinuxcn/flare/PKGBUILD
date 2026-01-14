@@ -2,8 +2,8 @@
 # Contributor: Julian <juliannfairfax@protonmail.com>
 
 pkgname=flare
-pkgver=0.17.5
-pkgrel=3
+pkgver=0.18.0
+pkgrel=1
 epoch=1
 pkgdesc="Chat with your friends on Signal"
 url="https://gitlab.com/schmiddi-on-mobile/${pkgname}"
@@ -13,7 +13,7 @@ makedepends=("blueprint-compiler" "cargo" "meson")
 depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling")
 optdepends=("feedbackd: for vibrating notifications")
 source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('ebdd2a66dd55fec72dfd24345c4f58aea771986cf0acd80cacbcb03cdd23b767')
+sha256sums=('c8cc99327e84328f581d8e9e2b67ff675974b5a034a50045c1d4c88b3e18e244')
 
 build() {
 	arch-meson "${pkgname}-${pkgver}" build
