@@ -43,6 +43,12 @@ pkgver() {
     git describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
+prepare() {
+    cd $_pkgname
+    # allow build for older version of plasma
+    patch -Np1 -i $srcdir/PROJECT_DEP_VERSION.patch
+}
+
 build() {
     cmake -B build -S $_pkgname -GNinja \
       -DCMAKE_INSTALL_LIBEXECDIR=lib \
