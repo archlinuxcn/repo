@@ -1,6 +1,6 @@
 pkgname=julia-git-linesearch-src
-pkgver=0.1.5
-_commit=2000c3cd4ed886669db8795e91b62753870df7ba
+pkgver=0.1.6
+_commit=3ce142c980168e8f76bd74e2198ab5f662fa42bd
 pkgrel=1
 pkgdesc="LineSearch.jl"
 url="https://github.com/SciML/LineSearch.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/LineSearch.jl.git#commit=$_commit")
-sha256sums=('d01ef3f30992f9d3b98ed6effefa6b3cce70d95f9aabfb15a468d79e8e21ddf2')
+sha256sums=('49b8120edfb0246ef9776a2615e5b433ca50e6ee8611708f400e920a432918e1')
 
 package() {
   cd LineSearch.jl
