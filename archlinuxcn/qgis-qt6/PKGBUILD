@@ -12,8 +12,8 @@
 
 pkgname=qgis-qt6
 _basename=qgis
-pkgver=3.44.5
-pkgrel=2
+pkgver=3.44.6
+pkgrel=1
 pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
 arch=(x86_64)
 url='https://qgis.org/'
@@ -83,7 +83,7 @@ conflicts=($_basename)
 source=(
     "https://qgis.org/downloads/$_basename-$pkgver.tar.bz2"
     "qt-6.10.1.patch::https://patch-diff.githubusercontent.com/raw/qgis/QGIS/pull/64056.patch")
-sha256sums=('f1e4d52789b65cd5678a6e9b9c10bdf04df930b847a827bbf8f873db98019f2f'
+sha256sums=('6a7a0ad471b325f0ac364a7256b415013fc23e3ede3e6b152005739a8d273cd3'
             '5a9cc191092c94f9904059a3ba481c59f70fb78ce5e568da4fb4134a891444e7')
 
 prepare() {
