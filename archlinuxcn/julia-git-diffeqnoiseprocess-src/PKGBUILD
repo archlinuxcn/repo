@@ -1,6 +1,6 @@
 pkgname=julia-git-diffeqnoiseprocess-src
-pkgver=5.25.0
-_commit=56647cc9869e01106cd69b12453c667fbe1137b9
+pkgver=5.26.0
+_commit=13cb024842ae7baa936ad5c78222eb0edc5ce38d
 pkgrel=1
 pkgdesc="DiffEqNoiseProcess.jl"
 url="https://github.com/SciML/DiffEqNoiseProcess.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/DiffEqNoiseProcess.jl.git#commit=$_commit")
-sha256sums=('240e2d871b70d28861d732126a88482359cd78ea4e78e26458c359072a56993b')
+sha256sums=('8436155e0ee3caf8292e300fa47b1852c66890163f31688ff6c7ad0eaedc0ae1')
 
 package() {
   cd DiffEqNoiseProcess.jl
