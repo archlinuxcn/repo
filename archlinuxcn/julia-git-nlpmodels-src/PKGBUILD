@@ -1,6 +1,6 @@
 pkgname=julia-git-nlpmodels-src
-pkgver=0.21.6
-_commit=776723a1b7e5955c172e004fb1b2d1dd6ef9be78
+pkgver=0.21.7
+_commit=01b4d9f8d5e4ce6d2b529566605504845cbafd08
 pkgrel=1
 pkgdesc="NLPModels.jl"
 url="https://github.com/JuliaSmoothOptimizers/NLPModels.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSmoothOptimizers/NLPModels.jl.git#commit=$_commit")
-sha256sums=('b932ebc3a0d45d8ee7c656055719af70ee7ff27e564f5f40589cd029bb9eb6fc')
+sha256sums=('4b16c218aa5de9236ad0b2a728bea44647cfdf34d24e6ff21f65b8df70db004b')
 
 package() {
   cd NLPModels.jl
