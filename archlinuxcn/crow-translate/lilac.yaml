@@ -4,7 +4,13 @@ maintainers:
 
 build_prefix: extra-x86_64
 
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+post_build: git_pkgbuild_commit
+
 update_on:
   - source: git
     prefix: v
     aur: https://invent.kde.org/office/crow-translate.git
+  - source: alpm
+    alpm: onnxruntime-opt-rocm
+    provided: onnxruntime
