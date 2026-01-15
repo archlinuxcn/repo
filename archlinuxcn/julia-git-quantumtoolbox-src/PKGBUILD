@@ -1,6 +1,6 @@
 pkgname=julia-git-quantumtoolbox-src
-pkgver=0.40.0
-_commit=cd5017f7b27b8ebfcde14ef041afa9d300cdd886
+pkgver=0.41.0
+_commit=9f9da525874d5b9888d5ad03246744a4d1d51976
 pkgrel=1
 pkgdesc="QuantumToolbox.jl"
 url="https://github.com/qutip/QuantumToolbox.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/qutip/QuantumToolbox.jl.git#commit=$_commit")
-sha256sums=('e2ba13357cff7c304574152b4e720830e8ae85f7665111c6f061c9c1ad36bf07')
+sha256sums=('73e6ca86f6a4b83d992a709e47296f521ad600235b707fcc8acbc790c6d6566e')
 
 package() {
   cd QuantumToolbox.jl
