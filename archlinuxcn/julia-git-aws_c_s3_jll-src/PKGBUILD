@@ -1,6 +1,6 @@
 pkgname=julia-git-aws_c_s3_jll-src
-pkgver=0.11.4+0
-_commit=ad24643137025c71efaf6caf8f6c8538134bf494
+pkgver=0.11.5+0
+_commit=7f5ea2c8614c67b111b8774954e96528c26c5d85
 pkgrel=1
 pkgdesc="aws_c_s3_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/aws_c_s3_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git aws-c-s3)
 source=("git+https://github.com/JuliaBinaryWrappers/aws_c_s3_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('d7c7d2234507a8756c1fc5eb41d7b81d28c05fcd09059910f9d2515e7bb94c7d'
+sha256sums=('c2add3be5c32c1cf3e2e5f40e9d9030e959371aa2d026aec7e21009b9e3f21cd'
             'fcd2650cf11c35b24e5819e081ed62bb77aa68adebd698959ecc725d901bb190')
 
 build() {
