@@ -35,6 +35,7 @@ package() {
 
     cd ${srcdir}/${pkgname}/
     cp -r resources ${pkgdir}/usr/lib/${pkgname}
+    chmod -R u=rwX,go=rX ${pkgdir}/usr/lib/${pkgname}
 
     # icon
     local _icon
