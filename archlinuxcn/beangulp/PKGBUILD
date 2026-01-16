@@ -3,7 +3,7 @@
 pkgname=beangulp
 pkgdesc='Importers framework for Beancount'
 pkgver=0.2.0
-pkgrel=2
+pkgrel=3
 arch=("any")
 url="https://github.com/beancount/beangulp"
 license=('GPL')
@@ -20,4 +20,6 @@ build() {
 package() {
   cd "${pkgname}-${pkgver}"
   python -m installer --destdir="${pkgdir}" dist/*.whl
+  # Fix upstream packaing issues
+  rm -r "${pkgdir}"/usr/lib/python3.*/site-packages/{examples,tools}
 }
