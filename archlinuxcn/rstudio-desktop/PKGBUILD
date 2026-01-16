@@ -16,13 +16,13 @@
 : ${_quarto:=false}
 
 # dependencies/common/install-copilot-language-server
-: ${_copilot_version:=1.381.0}
+: ${_copilot_version:=1.399.0}
 
-: ${_commit:=12f6d5e22720bd78dbd926bb344efe12d0dce83d}
+: ${_commit:=49fbea7a09a468fc4d1993ca376fd5b971cb58e3}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2025.09.2.418
+pkgver=2026.01.0.392
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
@@ -137,8 +137,17 @@ _source_soci() {
 }
 
 _source_copilot() {
-  source+=("https://github.com/github/copilot-language-server-release/releases/download/${_copilot_version}/copilot-language-server-linux-x64-${_copilot_version}.zip")
-  sha256sums+=('SKIP')
+  _copilot_js="copilot-language-server-js-${_copilot_version}"
+
+  noextract+=("${_copilot_js}.zip")
+
+  local _copilot_url="https://github.com/github/copilot-language-server-release"
+  source+=("$_copilot_url/releases/download/${_copilot_version}/copilot-language-server-linux-x64-${_copilot_version}.zip"
+    "$_copilot_url/releases/download/${_copilot_version}/${_copilot_js}.zip")
+  sha256sums+=(
+    'SKIP'
+    'SKIP'
+  )
 }
 
 _source_main
@@ -156,7 +165,7 @@ _nvm_env() {
   nvm use $_nodeversion
 
   _npm_path="$(which npm | sed -E 's&/[^/]+$&&')"
-  export RSTUDIO_NODE_VERSION=$(echo "$_npm_path" | sed -E 's&^\S+/v([0-9\.]+)/\S+$&\1&')
+  _node_version=$(echo "$_npm_path" | sed -E 's&^\S+/v([0-9\.]+)/\S+$&\1&')
 }
 
 prepare() (
@@ -177,11 +186,12 @@ prepare() (
 
   # fix npm/node paths
   sed -E -e 's&set\(RSTUDIO_NODE_PATH .*\)&set(RSTUDIO_NODE_PATH "/usr/bin")&' \
+    -e 's&(set\((RSTUDIO_INSTALLED_NODE_VERSION|RSTUDIO_NODE_VERSION)) "\S+"&\1 "'${_node_version}'"&' \
     -i cmake/globals.cmake
 
   install -dm755 dependencies/common/node
-  ln -sfT "$NVM_DIR/versions/node/v$RSTUDIO_NODE_VERSION" \
-    dependencies/common/node/"${RSTUDIO_NODE_VERSION}-patched"
+  ln -sfT "$NVM_DIR/versions/node/v$_node_version" \
+    dependencies/common/node/"${_node_version}-installed"
 
   sed -E -e 's&^external-node-path=.*$&external-node-path=/usr/bin/node&' \
     -i src/cpp/conf/rsession-dev.conf
@@ -214,8 +224,12 @@ prepare() (
   ln -sfT /usr/share/myspell/dicts dictionaries
   ln -sfT /usr/share/mathjax2 mathjax-27
 
-  install -Dm755 "$srcdir/copilot-language-server" -t "copilot-language-server"
   ln -sfT "$srcdir/soci-$_soci_version" "soci-$_soci_version"
+
+  # copilot
+  install -Dm755 "$srcdir/copilot-language-server" -t "copilot-language-server"
+  mkdir -p copilot-language-server-js
+  bsdtar -xf "$srcdir/${_copilot_js}.zip" -C copilot-language-server-js
 
   # Panmirror is picked up now from Quarto repo
   ln -sfT "$srcdir/quarto" "$srcdir/$_pkgsrc/src/gwt/lib/quarto"
