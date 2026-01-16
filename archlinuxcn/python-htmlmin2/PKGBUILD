@@ -2,14 +2,14 @@ _pkgname=htmlmin2
 pkgbase=python-htmlmin2
 pkgname=('htmlmin2' 'python-htmlmin2')
 pkgver=0.1.13
-pkgrel=1
+pkgrel=2
 pkgdesc='Configurable HTML Minifier with safety features'
 url='https://htmlmin.readthedocs.io'
 arch=('any')
 license=('BSD-3-Clause')
 makedepends=('python-sphinx' 'python-setuptools' git)
 source=("source::git+https://github.com/wilhelmer/htmlmin#tag=v${pkgver}")
-sha256sums=('dd67db4eaeb43c7733d08896001771343a5c23a9ef4508ebb58dd7315497dcdb')
+sha256sums=('1d3e9f8ccb6c7578b64355ed3382fe1392268797d69e2b99249fabb1e8a60802')
 
 prepare() {
 	cd source
