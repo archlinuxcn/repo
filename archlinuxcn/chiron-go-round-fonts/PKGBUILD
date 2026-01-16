@@ -7,7 +7,7 @@ pkgname=(
     otf-chiron-go-round-tc-vf
     ttf-chiron-go-round-tc-vf
 )
-pkgver=1.008
+pkgver=1.009
 pkgrel=1
 pkgdesc='昭源環方：現代筆形風格，平衡標準字形和印刷體慣用筆形的免費開源仿圓體字型 '
 url='https://github.com/chiron-fonts/chiron-go-round-tc'
@@ -16,7 +16,7 @@ license=('OFL-1.1')
 source=(
     $pkgbase-$pkgver.tar.gz::https://github.com/chiron-fonts/chiron-go-round-tc/archive/refs/tags/v$pkgver.tar.gz
 )
-b2sums=('ef7ef0cb24d95ddde5935408fa44e5d1bc2f1a30963d842b3ead826d796994a4f82e0261afaa3950977c980fa8696adc3a0aeed2a315e02a33f7848f4a54b44a')
+b2sums=('cb2e54ca9d7ffea14f803d83816616890da813c70c4536e60edabd1f585cfc2d73f9fe6cbbe9904e763d335e9385032c85bc105e74648b3c56aa53da69c4647d')
 
 prepare() {
     cd chiron-go-round-tc-$pkgver
