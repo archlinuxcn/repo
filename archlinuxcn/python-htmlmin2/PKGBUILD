@@ -8,17 +8,12 @@ url='https://htmlmin.readthedocs.io'
 arch=('any')
 license=('BSD-3-Clause')
 makedepends=('python-sphinx' 'python-setuptools' git)
-source=("source::git+https://github.com/wilhelmer/htmlmin#tag=v${pkgver}"
-        'fix-readme-filename.patch')
-sha256sums=('dd67db4eaeb43c7733d08896001771343a5c23a9ef4508ebb58dd7315497dcdb'
-            '38b473b3a34376b5e641ac7050756a5fe8f3eed6a6f059aaf6a7a32248e79851')
-sha512sums=('f5b790ce4c1c33ed571c43e54c4e602ed5fdaf0cebf71eb52980d8d8373613cdca76d0bf7de992844437479b616296cfd2b078287d4b481c76bf76c65b3bf862'
-            'ead38fa02b157702122fcb3ab8d03d20840141294118f360e6edb2d986169efae3704f959053336c81863751bbca8d94fac79e60a7e8cb7db625bc5079894f3d')
+source=("source::git+https://github.com/wilhelmer/htmlmin#tag=v${pkgver}")
+sha256sums=('dd67db4eaeb43c7733d08896001771343a5c23a9ef4508ebb58dd7315497dcdb')
 
 prepare() {
 	cd source
 	git clean -fdx
-	patch -Np1 -i "${srcdir}/fix-readme-filename.patch"
 }
 
 build() {
