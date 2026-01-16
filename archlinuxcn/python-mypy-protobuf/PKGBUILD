@@ -8,18 +8,18 @@ arch=('any')
 license=('Apache')
 
 depends=('mypy' 'protobuf' 'python' 'python-protobuf')
-makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools' git)
 
-source=("https://files.pythonhosted.org/packages/source/m/mypy-protobuf/mypy-protobuf-$pkgver.tar.gz")
+source=("source::git+https://${url}.git#tag=v${pkgver}")
 
 sha256sums=('02f242eb3409f66889f2b1a3aa58356ec4d909cdd0f93115622e9e70366eca3c')
 
 build() {
-  cd mypy-protobuf-$pkgver
-  python -m build --wheel --no-isolation
+	cd source
+	python -m build --wheel --no-isolation
 }
 
 package() {
-  cd mypy-protobuf-$pkgver
-  python -m installer --destdir="$pkgdir" dist/*.whl
+	cd source
+	python -m installer --destdir="$pkgdir" dist/*.whl
 }
