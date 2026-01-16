@@ -11,7 +11,7 @@ license=('MIT')
 source=("python-${_name}::git+https://github.com/olzhasar/pytest-watcher.git#tag=v${pkgver}")
 sha256sums=('6d767de82bd185e452accefec81ecc242b4d3f611f83b8eedaad5a85c36024a7')
 depends=('python' 'python-watchdog')
-makedepends=('python-poetry-core' 'python-build' 'python-installer' 'python-wheel' 'git')
+makedepends=('python-poetry-core' 'python-build' 'python-installer' 'python-wheel' 'git' 'python-hatchling')
 checkdepends=('python-pytest' 'python-pytest-mock' 'python-freezegun')
 
 build() {
