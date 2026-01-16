@@ -11,9 +11,9 @@ arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url='https://github.com/haiwen/seafile-server'
 license=('AGPL3')
 depends=(
-  "ccnet-server"
   'fuse2'
   'libevhtp-seafile'
+  'libsearpc'
   'libarchive'
   'hiredis'
   'mariadb-libs'
