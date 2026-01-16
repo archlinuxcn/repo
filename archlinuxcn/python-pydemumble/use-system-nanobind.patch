@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 92eab9d..9db4f56 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -28,10 +28,7 @@ find_package(Python 3.8
+   REQUIRED COMPONENTS Interpreter Development.Module
+   OPTIONAL_COMPONENTS Development.SABIModule)
+ 
+-if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+-endif()
++set(CMAKE_BUILD_TYPE None)
+ 
+ include_directories(
+ 	src/demumble/third_party/llvm/include
+@@ -44,8 +41,7 @@ add_definitions(
+   -DSWIFT_STDLIB_HAS_TYPE_PRINTING=1
+ )
+ 
+-# finding nanobind
+-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/src/nanobind)
++find_package(nanobind CONFIG REQUIRED)
+ 
+ nanobind_add_module(
+ 	pydemumble

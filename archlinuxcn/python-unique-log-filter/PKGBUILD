@@ -1,0 +1,36 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+_pkgbase='unique-log-filter'
+_dirname='unique_log_filter'
+pkgname=python-$_pkgbase
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='A log filter that removes duplicate log messages'
+arch=('any')
+url="https://github.com/twizmwazin/$_pkgbase"
+license=('BSD-2-Clause')
+depends=(
+    'python'
+)
+makedepends=(
+    'python-build'
+    'python-flit-core'
+    'python-installer'
+    'python-wheel'
+)
+provides=("python-$_dirname")
+source=(
+    "$_pkgbase-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
+)
+b2sums=('95306ad03625d96580b7ffda3265f1347ffd6d331f6de8a7f43a84dc98637b0b90df0e8b7abcba435e59fa6534bf37d3359dcf34aa2bec00e9cafeacbfca1be4')
+
+build() {
+    cd "$_dirname-$pkgver"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "$_dirname-$pkgver"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}

@@ -1,0 +1,57 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+_pkgbase='msgspec'
+pkgname=python-$_pkgbase
+pkgver=0.20.0
+pkgrel=1
+pkgdesc='A log filter that removes duplicate log messages'
+arch=('x86_64')
+url="https://github.com/jcrist/$_pkgbase"
+license=('BSD-2-Clause')
+depends=(
+    'python'
+    'glibc'
+    'python-typing_extensions'
+    'python-attrs'
+)
+optdepends=(
+    'python-yaml: yaml support'
+    'python-tomli-w: toml support'
+)
+makedepends=(
+    'python-build'
+    'python-setuptools'
+    'python-setuptools-scm'
+    'cython'
+    'python-installer'
+    'python-wheel'
+)
+checkdepends=(
+    'python-pytest'
+    'python-coverage'
+    'python-msgpack'
+    'python-yaml'
+    'python-tomli-w'
+)
+source=(
+    "$_pkgbase-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz"
+)
+b2sums=('848b29f99148ee1d5a81a6f57fdb515760c838e3ed9b8161f775d5c17b5decf7fc16a6ebd04599a1f2580e98882a7674720da899ba789ae6dbc9659da0d5ba6f')
+
+build() {
+    cd "$_pkgbase-$pkgver"
+    python -m build --wheel --no-isolation
+}
+
+check() {
+    cd "$_pkgbase-$pkgver"
+    python -m venv --system-site-packages .venv
+    .venv/bin/python -m installer dist/*.whl
+    .venv/bin/python -m pytest tests/unit
+}
+
+package() {
+    cd "$_pkgbase-$pkgver"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}

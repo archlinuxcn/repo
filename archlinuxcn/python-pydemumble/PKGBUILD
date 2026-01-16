@@ -1,0 +1,62 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+_pkgbase='pydemumble'
+pkgname=python-$_pkgbase
+pkgver=0.0.1
+pkgrel=1
+pkgdesc='A Python wrapper library for demumble to demangle C++, Rust, and Swift symbol names.'
+arch=('x86_64')
+url="https://github.com/angr/$_pkgbase"
+license=('BSD-2-Clause')
+depends=(
+    'python'
+    'glibc'
+    'gcc-libs'
+)
+makedepends=(
+    'git'
+    'python-build'
+    'python-scikit-build-core'
+    'nanobind'
+    'python-installer'
+    'python-wheel'
+    'python-pytest'
+)
+provides=("python-$_dirname")
+source=(
+    "$_pkgbase::git+$url.git#tag=v$pkgver"
+    'demumble::git+https://github.com/nico/demumble.git'
+    'use-system-nanobind.patch'
+)
+b2sums=('452637f66d4913e734b182a11c83591654139d3f09f9e11bcc9e8eacb6d0069a32131e9a6d34d90f43fe5b67adb9ac988d8957e7cbe1eaff38d4f540bc5dd5dc'
+        'SKIP'
+        'eb9e739550313220dbb0a0b3ba28f3f0420d0f748313bc01e173ce65c78878a072673a4bf5f7e8856846571fcc676c846bbf2660e8c7cf7f2aa455cfbf3d6b71')
+
+
+prepare() {
+    cd "$_pkgbase"
+
+    git submodule init
+    git submodule set-url src/demumble "$srcdir/demumble"
+    git -c protocol.file.allow=always submodule update src/demumble
+
+    patch -p1 -i ../use-system-nanobind.patch
+}
+
+build() {
+    cd "$_pkgbase"
+    python -m build --wheel --no-isolation # can't build with debug symbols??
+}
+
+check() {
+    cd "$_pkgbase"
+    python -m venv --system-site-packages .venv
+    .venv/bin/python -m installer dist/*.whl
+    .venv/bin/python -m pytest tests
+}
+
+package() {
+    cd "$_pkgbase"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}
