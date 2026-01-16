@@ -2,14 +2,14 @@
 
 _name=pytest-watcher
 pkgname=python-${_name}
-pkgver=0.5.0
+pkgver=0.6.3
 pkgrel=1
 pkgdesc="Automatically rerun your tests on file modifications."
 arch=('any')
 url='https://github.com/olzhasar/pytest-watcher'
 license=('MIT')
 source=("python-${_name}::git+https://github.com/olzhasar/pytest-watcher.git#tag=v${pkgver}")
-sha256sums=('6d767de82bd185e452accefec81ecc242b4d3f611f83b8eedaad5a85c36024a7')
+sha256sums=('b60f897277e08043ff45a72bda4ea2ae82978f5ddc28f80c558098cc1b482a8f')
 depends=('python' 'python-watchdog')
 makedepends=('python-poetry-core' 'python-build' 'python-installer' 'python-wheel' 'git' 'python-hatchling' 'python-hatch-vcs')
 checkdepends=('python-pytest' 'python-pytest-mock' 'python-freezegun')
