@@ -6,7 +6,7 @@ pkgbase=rocm-llvm
 pkgname=(rocm-llvm rocm-device-libs comgr)
 epoch=2
 pkgver=7.1.1
-pkgrel=1
+pkgrel=2
 arch=(aarch64)
 url='https://rocm.docs.amd.com/en/latest/reference/rocmcc.html'
 makedepends=('git' 'cmake' 'python' 'ninja' 'rocm-core' 'rocm-cmake' 'perl'
@@ -92,7 +92,6 @@ build() {
         -D LLVM_ENABLE_BINDINGS=OFF
         -D LLVM_LINK_LLVM_DYLIB=OFF
         -D LLVM_BUILD_LLVM_DYLIB=OFF
-        -D LLVM_ENABLE_ASSERTIONS=ON
         -D OCAMLFIND=NO
         -D LLVM_ENABLE_OCAMLDOC=OFF
         -D LLVM_INCLUDE_BENCHMARKS=OFF
