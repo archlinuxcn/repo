@@ -45,7 +45,7 @@ prepare() {
 
 build() {
     cd "$_pkgbase"
-    python -m build --wheel --no-isolation # can't build with debug symbols??
+    python -m build --wheel --no-isolation -C install.strip=false
 }
 
 check() {
