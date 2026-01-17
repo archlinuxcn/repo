@@ -6,7 +6,7 @@ _pkgname=qt5-wayland
 pkgname=qt5-wayland-decorations
 _basever=5.15.18
 pkgver=5.15.18+kde+r55
-pkgrel=2
+pkgrel=3
 _commit=df49b9f3badce793a0a9ea850cf1a02cc5bafef6
 arch=('x86_64')
 url='https://www.qt.io'
@@ -18,9 +18,9 @@ provides=('qt5-wayland=5.15.18+kde+r55')
 conflicts=('qt5-wayland')
 _pkgfqn=${_pkgname/5-/}
 source=(kde-$_pkgfqn::git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
-        Patch100-5bfde592e677861db0519f042fc9f2941b78dcde.patch::https://src.fedoraproject.org/rpms/qt5-qtwayland/raw/5bfde592e677861db0519f042fc9f2941b78dcde/f/qtwayland-use-adwaita-decorations-by-default.patch
-        Patch101-5bfde592e677861db0519f042fc9f2941b78dcde.patch::https://src.fedoraproject.org/rpms/qt5-qtwayland/raw/5bfde592e677861db0519f042fc9f2941b78dcde/f/qtwayland-decoration-support-backports-from-qt6.patch
-        Patch102-5bfde592e677861db0519f042fc9f2941b78dcde.patch::https://src.fedoraproject.org/rpms/qt5-qtwayland/raw/5bfde592e677861db0519f042fc9f2941b78dcde/f/qtwayland-client-fix-window-margin-calculation.patch)
+        Patch100-619e5705a1add5aa2be91a70715d1b80ee7abd7e.patch::https://src.fedoraproject.org/rpms/qt5-qtwayland/raw/619e5705a1add5aa2be91a70715d1b80ee7abd7e/f/qtwayland-use-adwaita-decorations-by-default.patch
+        Patch101-619e5705a1add5aa2be91a70715d1b80ee7abd7e.patch::https://src.fedoraproject.org/rpms/qt5-qtwayland/raw/619e5705a1add5aa2be91a70715d1b80ee7abd7e/f/qtwayland-decoration-support-backports-from-qt6.patch
+        Patch102-619e5705a1add5aa2be91a70715d1b80ee7abd7e.patch::https://src.fedoraproject.org/rpms/qt5-qtwayland/raw/619e5705a1add5aa2be91a70715d1b80ee7abd7e/f/qtwayland-client-fix-window-margin-calculation.patch)
 sha256sums=('ae10b9dc10bce4395bb713cae4e1ffab0faf7b766066ea665a5779c887b28884'
             '5b606c5526b44c0db9f5f7fd4be91c95bcb73bd06af304589c9f8c1922607fca'
             '4d8c5d686666cbaae7550ec3defee66ea56ca624152c56c51ff945693706c29d'
