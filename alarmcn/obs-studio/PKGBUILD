@@ -3,8 +3,8 @@
 # Contributor: Maciek Marciniak <mm2pl at kotmisia.pl>
 
 pkgname=obs-studio
-pkgver=32.0.2
-pkgrel=4
+pkgver=32.0.4
+pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
@@ -23,7 +23,7 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'v4l2loopback-dkms: virtual camera support')
 source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz
         obs-studio-12328.patch::https://github.com/obsproject/obs-studio/pull/12328.patch)
-sha256sums=('48d744037c553eea8f9b76bf46f6dcac753e52871f49b2c1a2580757f723a1b7'
+sha256sums=('d9e62ea24305fbfe14c69a6422de1525fe84da232df2cc0d7e4601a840bdbba8'
             '25322c692cf5cc88fc7d17cbb40a61b7e32d5ea675da647dd1a1996474ec2c8e')
 
 prepare() {
