@@ -32,7 +32,7 @@ package() {
 
 	cd target/release
 	install -Dm755 "${pkgname}" -t "${pkgdir}/usr/bin/"
-	"./${pkgname}" completions --shell bash | install -Dm644 /dev/stdin "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
-	"./${pkgname}" completions --shell fish | install -Dm644 /dev/stdin "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
-	"./${pkgname}" completions --shell zsh | install -Dm644 /dev/stdin "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
+	install -Dm644 <("./${pkgname}" completions --shell bash) "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+	install -Dm644 <("./${pkgname}" completions --shell fish) "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
+	install -Dm644 <("./${pkgname}" completions --shell zsh) "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
 }
