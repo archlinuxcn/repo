@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@archlinuxcn.org>
 
 pkgname=flymd
-pkgver=1.2.2
+pkgver=1.2.3
 pkgrel=1
 pkgdesc="A 7MB high-performance Markdown note tool"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ license=('GPL-3.0-only')
 depends=('cairo' 'gcc-libs' 'gdk-pixbuf2' 'glib2' 'gtk3' 'libsoup3' 'webkit2gtk-4.1')
 makedepends=('npm' 'cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('2b73f16399a2e17fff37b7640915ef34f10cc3fb697d17f30c454e60dab037b9')
+sha256sums=('9aa9914dfdb84e7dccd2298495b9a7faf344be544fb5600f8f1317fcce345ee4')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
