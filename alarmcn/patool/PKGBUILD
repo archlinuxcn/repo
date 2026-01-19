@@ -3,8 +3,8 @@
 # Contributor: Daniel Larsson <znixen@live.se>
 
 pkgname=patool
-pkgver=4.0.3
-pkgrel=2
+pkgver=4.0.4
+pkgrel=1
 pkgdesc="portable command line archive file manager"
 arch=('any')
 url="https://wummel.github.io/${pkgname}"
@@ -19,7 +19,7 @@ optdepends=(
 	"zstd: extracting ZSTANDARD files"
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wummel/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('93429bd5b911bd328087e7cf2a073dfd7078243d4184deccc8704bfaa8dbaee4')
+sha256sums=('ac9cebc3cf0d737906a0ed9ba37f4f722c2c5b7ae9d3c748c31aaefc3432f318')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
