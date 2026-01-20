@@ -7,7 +7,7 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=6.2.0
+_pkgver=6.3.0-beta.4
 pkgver=${_pkgver//-/}
 pkgrel=1
 _pkgdesc="An Arknights assistant"
@@ -79,8 +79,8 @@ _EOF
 
     sed -e '4i #include <unordered_map>' \
         -i src/MaaCore/Config/Roguelike/RoguelikeMapConfig.h
-    sed -e '24i #include <cstring>' \
-        -i src/MaaCore/./Utils/ExceptionStacktrace.hpp
+    #sed -e '24i #include <cstring>' \
+    #    -i src/MaaCore/./Utils/ExceptionStacktrace.hpp
 }
 
 build() {
