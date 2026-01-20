@@ -7,28 +7,43 @@
 pkgname=palemoon
 _repo=Pale-Moon
 epoch=1
-pkgver=33.9.1
+pkgver=34.0.0
 # Commit ID can be found at https://repo.palemoon.org/MoonchildProductions/Pale-Moon/tags
-_commit=f4b97ce0b7
+_commit=feaa937834
 pkgrel=1
 pkgdesc="Open source web browser based on Firefox focusing on efficiency."
 arch=('i686' 'x86_64')
 url="https://www.palemoon.org/"
 license=('MPL-2.0')
-depends=('gtk2' 'dbus-glib' 'desktop-file-utils' 'libxt' 'mime-types' 'alsa-lib')
-makedepends=('python2' 'unzip' 'zip' 'yasm' 'libpulse' 'git')
+depends=(
+  'alsa-lib'
+  'dbus-glib'
+  'desktop-file-utils'
+  'gtk2'
+  'libxt'
+  'mime-types'
+)
+makedepends=(
+  'python2'
+  'unzip'
+  'zip'
+  'yasm'
+  'libpulse'
+  'git'
+  'tar'
+)
 optdepends=('libpulse: PulseAudio audio driver'
             'ffmpeg: various video and audio support')
 source=(git+"https://repo.palemoon.org/MoonchildProductions/${_repo}?signed#commit=${_commit}"
         git+"https://repo.palemoon.org/MoonchildProductions/UXP"
         mozconfig.in)
 validpgpkeys=('3DAD8CD107197488D2A2A0BD40481E7B8FCF9CEC')
-sha1sums=('d78344ac1c35c644b432e3342a83341222da4573'
+sha1sums=('e12c33c5c4cf85ac892ae3612aef22a2e0e41617'
           'SKIP'
-          '999bbd13d2149a392d620901caf61ffeaf3f86b9')
-sha256sums=('79cf4c4a9d416270159482a3753a2c7aefa7138cef70c3c11ec5c0b964a132b9'
+          'd21428766b724448c66783ae985aeb8d0dd69f92')
+sha256sums=('78e75ef7b0fe06ccde5c44cfff4a6cf840ba6138e55b69544e276b750bd54d27'
             'SKIP'
-            '6fa73d13a3dc5dd5bb984bf2a37e2074ca256df7988f72289fb649a704405bc5')
+            'd0e1497609e8cfc6c22b95f2d0a1c55c6186635aee67672399639d080629588c')
 
 prepare() {
   sed 's#%SRCDIR%#'"${srcdir}"'#g' mozconfig.in > mozconfig
