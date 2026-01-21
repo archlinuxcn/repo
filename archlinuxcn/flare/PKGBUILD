@@ -2,7 +2,7 @@
 # Contributor: Julian <juliannfairfax@protonmail.com>
 
 pkgname=flare
-pkgver=0.18.0
+pkgver=0.18.1
 pkgrel=1
 epoch=1
 pkgdesc="Chat with your friends on Signal"
@@ -13,7 +13,7 @@ makedepends=("blueprint-compiler" "cargo" "meson")
 depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling")
 optdepends=("feedbackd: for vibrating notifications")
 source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('c8cc99327e84328f581d8e9e2b67ff675974b5a034a50045c1d4c88b3e18e244')
+sha256sums=('a6cee2cef6c57c9f24a44c0979790e03e4ac3dab6d4f2c49e03ce18053278948')
 
 build() {
 	arch-meson "${pkgname}-${pkgver}" build
