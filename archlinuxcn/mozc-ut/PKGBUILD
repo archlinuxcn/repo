@@ -18,13 +18,13 @@ ENABLED_DICTIONARIES=(
 
 pkgname='mozc-ut'
 pkgver=3.33.6079.102.20260116
-pkgrel=1
-pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
+pkgrel=2
+pkgdesc='The Open Source edition of Google Japanese Input (UT dictionary)'
 arch=('x86_64')
 url='https://github.com/google/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND CC0-1.0 AND CC-BY-SA-3.0 AND CC-BY-SA-4.0 AND GPL-2.0-only AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
 depends=('qt6-base')
-makedepends=('bazel' 'git' 'python' 'qt6-base')
+makedepends=('bazelisk' 'git' 'python' 'qt6-base')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
@@ -122,7 +122,7 @@ build() {
     unset ANDROID_HOME
     export JAVA_HOME='/usr/lib/jvm/java-21-openjdk/'
 
-    bazel build server:mozc_server gui/tool:mozc_tool --config oss_linux --compilation_mode opt
+    bazelisk build server:mozc_server gui/tool:mozc_tool --config oss_linux --config release_build
 }
 
 package() {
