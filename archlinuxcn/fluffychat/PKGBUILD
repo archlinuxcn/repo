@@ -7,7 +7,7 @@ export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=2.2.0
+pkgver=2.3.1
 pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
@@ -16,9 +16,10 @@ arch=('x86_64' 'aarch64')
 
 depends=(
   'gtk3'
-  'libsecret'     # flutter_secure_storage
+  'libsecret' # flutter_secure_storage
+  'openssl'   # sqlite encryption
+  'webkit2gtk-4.1'
   'xdg-user-dirs' # path_provider
-  'openssl'       # sqlite encryption
 )
 makedepends=(
   'clang'
@@ -45,7 +46,7 @@ source=(
   '0000-fix-wayland-gtk-csd.patch'
 )
 sha256sums=(
-  '7efc395a198d006dbf768163e0812e22d8cbf708ed8eb57448c20e308e9b7056'
+  '555e791192695cb2ddaa280cf6481a763481ed5c61c29cbf412e01d4528e0345'
   '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230'
 )
 
@@ -62,12 +63,13 @@ prepare() (
 )
 
 build() {
+  export CFLAGS CXXFLAGS
+  CFLAGS+=" -Wno-error=deprecated-literal-operator"
+  CXXFLAGS+=" -Wno-error=deprecated-literal-operator"
+
   # fix incompatible flags on ARM
   if [ "${CARCH::1}" != "x" ]; then
-    export CFLAGS CXXFLAGS
-    local i _unwanted
-
-    _unwanted=(
+    local _unwanted=(
       -fstack-protector-strong
       -fstack-clash-protection
     )
