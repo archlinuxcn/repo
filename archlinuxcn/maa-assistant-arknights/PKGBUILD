@@ -135,6 +135,8 @@ package_maa-assistant-arknights() {
 
 package_maa-assistant-arknights-cuda() {
     pkgdesc="${_pkgdesc} (with CUDA)"
+    provides=(maa-assistant-arknights)
+    conflicts=(maa-assistant-arknights)
     depends+=(cuda)
 
     cmake --install "$srcdir"/build-cuda --prefix "$pkgdir"/usr
