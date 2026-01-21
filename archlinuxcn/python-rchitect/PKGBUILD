@@ -2,8 +2,8 @@
 
 _pkgname=rchitect
 pkgname=python-rchitect
-pkgver=0.4.8
-pkgrel=2
+pkgver=0.4.9
+pkgrel=1
 pkgdesc='Interoperate R with Python'
 arch=('x86_64')
 url='https://github.com/randy3k/rchitect'
@@ -18,7 +18,7 @@ makedepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/randy3k/rchitect/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('611102527e5572ecee1827b50deaceb10893a2b3f1e6ea50ff0a70a2e44b6cebe607a321c2bbde01c195bb4109967ee0b129036a7e37badc577fc5eada73108b')
+sha512sums=('972c2824d02ae15829c5e378ff77b119a924cb5c5eac7f9ee3cd278f711cf7eb73546358e18fa9a80e154059ef104278272697c7e11d1b55c67d4acdfd841e3e')
 
 build() {
   cd "${_pkgname}-${pkgver}"
