@@ -3,15 +3,15 @@
 # Contributor: Felix Yan <felixonmars@gmail.com>
 # Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
-pkgname='fcitx5-mozc-ut'
+pkgname=fcitx5-mozc-ut
 pkgver=3.33.6079.102
-pkgrel=2
+pkgrel=3
 pkgdesc='Mozc module for Fcitx5'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
 depends=('fcitx5' 'mozc>=3.33.6079.102')
-makedepends=('bazel' 'git' 'python' 'qt6-base')
+makedepends=('bazelisk' 'git' 'python' 'qt6-base' 'unzip')
 optdepends=('fcitx5-configtool')
 provides=('fcitx5-mozc=3.33.6079.102')
 conflicts=('fcitx5-mozc')
@@ -37,13 +37,15 @@ prepare() {
     cd mozc-fcitx/src
 
     git submodule init
-    git config submodule.src/third_party/abseil-cpp.url "${srcdir}/abseil-cpp"
-    git config submodule.src/third_party/breakpad.url "${srcdir}/breakpad"
-    git config submodule.src/third_party/gtest.url "${srcdir}/googletest"
-    git config submodule.src/third_party/gyp.url "${srcdir}/gyp"
-    git config submodule.src/third_party/japanese_usage_dictionary.url "${srcdir}/japanese-usage-dictionary"
-    git config submodule.src/third_party/protobuf.url "${srcdir}/protobuf"
-    git config submodule.src/third_party/wil.url "${srcdir}/wil"
+
+    git config submodule.src/third_party/abseil-cpp.url                 "${srcdir}"/abseil-cpp
+    git config submodule.src/third_party/breakpad.url                   "${srcdir}"/breakpad
+    git config submodule.src/third_party/gtest.url                      "${srcdir}"/googletest
+    git config submodule.src/third_party/gyp.url                        "${srcdir}"/gyp
+    git config submodule.src/third_party/japanese_usage_dictionary.url  "${srcdir}"/japanese-usage-dictionary
+    git config submodule.src/third_party/protobuf.url                   "${srcdir}"/protobuf
+    git config submodule.src/third_party/wil.url                        "${srcdir}"/wil
+
     git -c protocol.file.allow=always submodule update
 }
 
@@ -54,7 +56,7 @@ build() {
     unset ANDROID_HOME
     export JAVA_HOME='/usr/lib/jvm/java-21-openjdk/'
 
-    bazel build unix/fcitx5:fcitx5-mozc.so unix/icons --config oss_linux --compilation_mode opt
+    bazelisk build unix/fcitx5:fcitx5-mozc.so unix/icons --config oss_linux --config release_build
 }
 
 package() {
@@ -63,32 +65,32 @@ package() {
     # BSD-3-Clause
     sed -n 1,29p unix/fcitx5/fcitx_key_translator.h > Fcitx5
     sed -i -e 's|^\/\/[ ]\?||g' Fcitx5
-    install -Dm644 Fcitx5 "${pkgdir}"/usr/share/licenses/${pkgname}/Fcitx5
+    install -Dm644 Fcitx5 "${pkgdir}"/usr/share/licenses/"${pkgname}"/Fcitx5
     # BSD-3-Clause
     sed -n 67,94p data/installer/credits_en.html > Mozc
-    install -Dm644 Mozc "${pkgdir}"/usr/share/licenses/${pkgname}/Mozc
+    install -Dm644 Mozc "${pkgdir}"/usr/share/licenses/"${pkgname}"/Mozc
     # BSD-3-Clause
     sed -n 317,344p data/installer/credits_en.html > Breakpad
-    install -Dm644 Breakpad "${pkgdir}"/usr/share/licenses/${pkgname}/Breakpad
+    install -Dm644 Breakpad "${pkgdir}"/usr/share/licenses/"${pkgname}"/Breakpad
     # NAIST-2003
     sed -n 355,424p data/installer/credits_en.html > IPAdic
-    install -Dm644 IPAdic "${pkgdir}"/usr/share/licenses/${pkgname}/IPAdic
+    install -Dm644 IPAdic "${pkgdir}"/usr/share/licenses/"${pkgname}"/IPAdic
     # BSD-2-Clause
     sed -n 435,457p data/installer/credits_en.html > Japanese-Usage-Dictionary
-    install -Dm644 Japanese-Usage-Dictionary "${pkgdir}"/usr/share/licenses/${pkgname}/Japanese-Usage-Dictionary
+    install -Dm644 Japanese-Usage-Dictionary "${pkgdir}"/usr/share/licenses/"${pkgname}"/Japanese-Usage-Dictionary
     # Public Domain Data
     sed -n 468,470p data/installer/credits_en.html > Okinawa-Dictionary
-    install -Dm644 Okinawa-Dictionary "${pkgdir}"/usr/share/licenses/${pkgname}/Okinawa-Dictionary
+    install -Dm644 Okinawa-Dictionary "${pkgdir}"/usr/share/licenses/"${pkgname}"/Okinawa-Dictionary
     # BSD-3-Clause
     sed -n 481,513p data/installer/credits_en.html > Protocol-Buffers
-    install -Dm644 Protocol-Buffers "${pkgdir}"/usr/share/licenses/${pkgname}/Protocol-Buffers
+    install -Dm644 Protocol-Buffers "${pkgdir}"/usr/share/licenses/"${pkgname}"/Protocol-Buffers
     # MIT
     sed -n 698,704p data/installer/credits_en.html > Tamachi-Phonetic-Kanji-Alphabet
-    install -Dm644 Tamachi-Phonetic-Kanji-Alphabet "${pkgdir}"/usr/share/licenses/${pkgname}/Tamachi-Phonetic-Kanji-Alphabet
+    install -Dm644 Tamachi-Phonetic-Kanji-Alphabet "${pkgdir}"/usr/share/licenses/"${pkgname}"/Tamachi-Phonetic-Kanji-Alphabet
     # MIT
     sed -n 715,735p data/installer/credits_en.html > Windows-Implementation-Library
     sed -i -e 's|^[ \t]*||g' Windows-Implementation-Library
-    install -Dm644 Windows-Implementation-Library "${pkgdir}"/usr/share/licenses/${pkgname}/Windows-Implementation-Library
+    install -Dm644 Windows-Implementation-Library "${pkgdir}"/usr/share/licenses/"${pkgname}"/Windows-Implementation-Library
 
     install -Dm755 bazel-bin/unix/fcitx5/fcitx5-mozc.so "${pkgdir}"/usr/lib/fcitx5/fcitx5-mozc.so
     install -Dm644 unix/fcitx5/mozc-addon.conf "${pkgdir}"/usr/share/fcitx5/addon/mozc.conf
