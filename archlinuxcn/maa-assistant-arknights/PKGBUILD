@@ -7,9 +7,9 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=6.2.0
+_pkgver=6.3.0-beta.5
 pkgver=${_pkgver//-/}
-pkgrel=1
+pkgrel=2
 _pkgdesc="An Arknights assistant"
 arch=(x86_64)
 url="https://github.com/MaaAssistantArknights/MaaAssistantArknights"
@@ -21,7 +21,7 @@ source=("git+$url.git#tag=v${_pkgver}"
 "git+https://github.com/MaaXYZ/MaaUtils.git"
 "FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaXYZ/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
 install="${_pkgname}.install"
-md5sums=('df98f2a8caa1f9aac2533e6e9edf47c0'
+md5sums=('92c6960c355d7f1b194aa814ba075214'
          'SKIP'
          '4555f8dce0cec02022356d50c8f2275c')
 
@@ -79,8 +79,8 @@ _EOF
 
     sed -e '4i #include <unordered_map>' \
         -i src/MaaCore/Config/Roguelike/RoguelikeMapConfig.h
-    sed -e '24i #include <cstring>' \
-        -i src/MaaCore/./Utils/ExceptionStacktrace.hpp
+    #sed -e '24i #include <cstring>' \
+    #    -i src/MaaCore/./Utils/ExceptionStacktrace.hpp
 }
 
 build() {
@@ -135,6 +135,8 @@ package_maa-assistant-arknights() {
 
 package_maa-assistant-arknights-cuda() {
     pkgdesc="${_pkgdesc} (with CUDA)"
+    provides=(maa-assistant-arknights)
+    conflicts=(maa-assistant-arknights)
     depends+=(cuda)
 
     cmake --install "$srcdir"/build-cuda --prefix "$pkgdir"/usr
