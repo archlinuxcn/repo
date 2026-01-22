@@ -37,7 +37,7 @@ prepare() {
 	git config submodule.platform-linux/crates/app-rummage.url "${srcdir}/app-detection"
 	git -c protocol.file.allow=always submodule update
 
-	cargo fetch --target "$CARCH-unknown-linux-gnu"
+	cargo fetch --locked --target host-tuple
 }
 
 build() {
