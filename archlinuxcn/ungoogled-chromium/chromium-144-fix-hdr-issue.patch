@@ -1,0 +1,37 @@
+From db1dbe8528be4d01f5ac9da0a797a14f425647f9 Mon Sep 17 00:00:00 2001
+From: Tom Anderson <thomasanderson@chromium.org>
+Date: Thu, 08 Jan 2026 10:44:15 -0800
+Subject: [PATCH] [Wayland] Remove sRGB hack for gamma 2.2
+
+KWin has deprecated sRGB support, causing unusable colors with our
+hack to force gamma 2.2 to sRGB. This change removes the hack.
+
+R=fangzhoug
+
+Bug: 449423580
+Change-Id: I236634d6dd899ba3ed9272dd41be3199d0397a36
+Fixed: 472094286
+Reviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/7415366
+Commit-Queue: Kramer Ge <fangzhoug@chromium.org>
+Reviewed-by: Kramer Ge <fangzhoug@chromium.org>
+Auto-Submit: Thomas Anderson <thomasanderson@chromium.org>
+Cr-Commit-Position: refs/heads/main@{#1566420}
+---
+
+diff --git a/ui/ozone/platform/wayland/host/wayland_wp_image_description.cc b/ui/ozone/platform/wayland/host/wayland_wp_image_description.cc
+index bfca9fdc..f7c1672a 100644
+--- a/ui/ozone/platform/wayland/host/wayland_wp_image_description.cc
++++ b/ui/ozone/platform/wayland/host/wayland_wp_image_description.cc
+@@ -185,12 +185,6 @@
+     return gfx::ColorSpace::CreateSRGB();
+   }
+ 
+-  if (!is_hdr && transfer == gfx::ColorSpace::TransferID::GAMMA22) {
+-    // Pass through SRGB content to the compositor instead of re-encoding
+-    // it as gamma 2.2 (https://crbug.com/449423580)
+-    transfer = gfx::ColorSpace::TransferID::SRGB;
+-  }
+-
+   gfx::ColorSpace color_space(
+       *primaries, *transfer, gfx::ColorSpace::MatrixID::RGB,
+       gfx::ColorSpace::RangeID::FULL, custom_primaries, custom_transfer_fn);
