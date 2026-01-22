@@ -3,8 +3,8 @@
 pkgname=python-nvidia-ml-py
 _name=nvidia-ml-py
 _pkgname=nvidia_ml_py
-pkgver=13.590.44
-pkgrel=3
+pkgver=13.590.48
+pkgrel=1
 pkgdesc='Python Bindings for the NVIDIA Management Library'
 arch=('any')
 url='https://pypi.org/project/nvidia-ml-py'
@@ -22,7 +22,7 @@ makedepends=(
 source=(
   "${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_pkgname}-${pkgver}.tar.gz"
 )
-sha512sums=('eab1e32ad55d5bf3c77cde68e48aa59e620a18a0394678950cea2998b28ed283d86f35722e767c0904c2a1515c7c52ee06efe2cc1ce5d97f757c0516b5688d91')
+sha512sums=('d6533852f98e3ee5f9c3f4656bd867c6a70f8b910024b4053345294683e1543729243f459b3060a9d356af2e4c811bd55ce049cf22d2c1e7345f706e48b48cf1')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
