@@ -2,8 +2,8 @@
 
 _pkgname=word_cloud
 pkgname=python-wordcloud
-pkgver=1.9.5
-pkgrel=2
+pkgver=1.9.6
+pkgrel=1
 pkgdesc='A little word cloud generator in Python'
 arch=('x86_64')
 url='https://github.com/amueller/word_cloud'
@@ -22,7 +22,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/amueller/word_cloud/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('2612038689a2575c413080d38fa7a422bfa74db2f0321a2ee48979484a12c5635fefb5466db11eb0069b83eebba3a454a2126a4166cfbaa3fbe6b788da01656c')
+sha512sums=('b8dd58064e1bec8fc028913c94410f8984b2eb7b0dc0b5c4cb2eadb18cb3851fddfff445405e99b0094ca90e17cb9e73a0e7aeb9fbf1132f0eb48cc3ca6e0729')
 
 prepare() {
   # quick fix for missing files
