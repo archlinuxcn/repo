@@ -1,8 +1,17 @@
 maintainers:
   - github: hour-keeper
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['hour-keeper','TTsdzb'])
-post_build: aur_post_build
+pre_build_script: |
+  aur_pre_build(maintainers=['hour-keeper','TTsdzb'])
+  update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
 update_on:
+  - source: gitea
+    github: Davi-S/sddm-theme-minesddm
+    gitea: TTsdzb/uni-updater
+    host: codeberg.org
+    use_latest_release: true
   - source: aur
     aur: uni-updater
