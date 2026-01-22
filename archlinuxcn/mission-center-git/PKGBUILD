@@ -14,8 +14,10 @@ checkdepends=('appstream-glib')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git"
-	"git+https://gitlab.com/${_pkgname}-devs/gng.git")
+	"git+https://gitlab.com/${_pkgname}-devs/gng.git"
+	"git+https://gitlab.com/${_pkgname}-devs/app-detection.git")
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP')
 options=('!lto')
 
@@ -26,9 +28,13 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
-
 	git submodule init
 	git config submodule.subprojects/magpie.url "${srcdir}/gng"
+	git -c protocol.file.allow=always submodule update
+
+	cd subprojects/magpie
+	git submodule init
+	git config submodule.platform-linux/crates/app-rummage.url "${srcdir}/app-detection"
 	git -c protocol.file.allow=always submodule update
 
 	cargo fetch --target "$CARCH-unknown-linux-gnu"
