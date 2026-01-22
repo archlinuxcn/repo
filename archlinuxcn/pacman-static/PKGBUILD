@@ -3,24 +3,24 @@
 # Contributor: Eli Schwartz <eschwartz@archlinux.org>
 
 pkgname=pacman-static
-pkgver=7.1.0.r7.gb9f7d4a
+pkgver=7.1.0.r9.g54d9411
 _cares_ver=1.34.6
 _nghttp2_ver=1.68.0
-_curlver=8.17.0
+_curlver=8.18.0
 _sslver=3.6.0
 _zlibver=1.3.1
-_xzver=5.8.1
+_xzver=5.8.2
 _bzipver=1.0.8
 _zstdver=1.5.7
-_libarchive_ver=3.8.4
-_gpgerrorver=1.57
+_libarchive_ver=3.8.5
+_gpgerrorver=1.58
 _libassuanver=3.0.0
 _gpgmever=2.0.1
-_libseccompver=2.5.6
-pkgrel=8
+_libseccompver=2.6.0
+pkgrel=1
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
-_git_patch_level_commit=b9f7d4a5b0bea75953f5892621a2caecc5672de5
+_git_patch_level_commit=54d94116164b0b2202c6061c4a59c6f3e70820d8
 pkgdesc="Statically-compiled pacman (to fix or install systems without libc)"
 arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
@@ -96,7 +96,7 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
             'a5182c2c54cdff3c70bdad204bff9a573cf7951e189d68665087f047cb79e5fc2d5d5aefbb41e2dfe264e2e74fbbe10196cb596248e328c944406ca09da98344'
             '826eecdb40942caf75da982b9ca57fbe7c3e7c23af43a908683c7c1523c46b06ebac68405c26db8bf4c8b0774ca415666866249a3bde663a71c278f4ec7b1827'
             'SKIP'
-            '88ab4b7aac12b26a6ad32fb0e1a9675288a45894438cb031102ef5d4ab6b33c2bc99cae0c70b71bdfa12eb49762827e2490555114c5eb4a6876b95e1f2a4eb74'
+            '84f193f28369ccb7fba0d8933cfc24f5fbb282b046e7e8c2c1a0da35db8ec13d17e6407c240ce3a12cf4dccac62e5919bd98f3add77065408c6259cfe1071575'
             'SKIP'
             '866825a1cdf0b705b409402fbc7a713e7d9b8e7736c5126be57b354927954c148a341fc52b02c0629c1e015a889bfd40217f8e703b73235892e91da060909b76'
             'SKIP'
@@ -104,20 +104,20 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
             'b5887ea77417fae49b6cb1e9fa782d3021f268d5219701d87a092235964f73fa72a31428b630445517f56f2bb69dcbbb24119ef9dbf8b4e40a753369a9f9a16f'
             '580677aad97093829090d4b605ac81c50327e74a6c2de0b85dd2e8525553f3ddde17556ea46f8f007f89e435493c9a20bc997d1ef1c1c2c23274528e3c46b94f'
             'SKIP'
-            'b9a0f746215cd93c04fecd390ca44fc281d892b989e740ec6abbaa6a1eb457bbef40a33596dfe6e2285a319f2b09ae1994d778f0cf61114cbee9454a0eaa754b'
+            '328fe243e5701ac8216d21168a9e17ea9475cc08b27659c18b68230d8ddd0fffa9f831c576b08c160774fe2c4795604f82b64113e7f84db417b4bd26a4dae2c1'
             '083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3'
             'SKIP'
             '2af02be3df319556b65403450acc55964d971fe263fed87dea823fb264a862db807a2a3d89358564277a83e5b303302cc677f66b5e523e3d224120b884e5ef1b'
             'SKIP'
-            'd45d2ba1539d99f2886fd568cc29642b12a028d26d13b494e5f6df5b3ed5cdec04a861b29e310ba3fa2ef6d1bbeca3e0ae922a230d4769756492ab912bd6902c'
+            '4f4cb7f24e6cf4266c30da3985b9e62d4ab6012d8f43e9969d6edfd344d2a08f6277ab10610627597f6c58d064b3127fd286ae678381b84610d611645db5bbb4'
             'SKIP'
             '7c5c95c1b85bef2d4890c068a5a8ea8a1fe0d8def6ab09e5f34fc2746d8808bbb0fc168e3bd66d52ee5ed799dcf9f258f4125cda98c8384f6411bcad8d8b3139'
             'SKIP'
             'ad19169594b6048b11df9311080e179232ff03def08f377e7d7536a3a91e12f722cbae93e80364b73db013152b327bc3457ec9a9ddea9c660d74f389f6ab8837'
             'SKIP'
-            '088f3726de7f8e2f4b2ac6cc9c01338328493de19f5b0645157114ef3b7a0fa5213cb6d64123736cae83354a2137bba9e2187bb4208cb7848e2566c65b100489'
+            'b050ca8488143503bdec38ffcab7a5010af61f1b93c1207a3fa006d72d643b84aa8c1ab267e890eb39966ccaedd6e18db8fe5b02f2789bbd1b318a3c4cf138f3'
             'SKIP'
-            'SKIP')
+            '34d33f96df79b4e6bb3112bc01d5991fb8045e2af43568f8a6bf02481c0e9295c71987ee17ef49d1fc32a870632acc2c233a851316ecfc9a212095868de24e33')
 
 export LDFLAGS="$LDFLAGS -static"
 export CC=musl-gcc
