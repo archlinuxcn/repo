@@ -4,8 +4,8 @@
 
 _name=CustomTkinter
 pkgname=python-customtkinter
-pkgver=5.2.2
-pkgrel=5
+pkgver=5.3.0
+pkgrel=1
 pkgdesc="A modern and customizable python UI-library based on Tkinter"
 arch=('any')
 url="https://github.com/TomSchimansky/CustomTkinter"
@@ -20,7 +20,7 @@ provides=('python-customtkinter')
 conflicts=('python-customtkinter-git')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('310010366d2c6fba53045cccc45117b4bdfaeaebaa090fed2e4fc99db805a05ea99c9f4f7d32b5129694036c77b6f442b43ef5a79b7d5fa0de19f8ffbb6fb646')
+sha512sums=('436cd5976539c249c5351f4aeef247047d6ae3a252c553400fb788efd47362f709cc0439630d0fd59d5db9aed52e8b541032615d744bbbe563217bb77e09cf84')
 
 build() {
   cd "${_name}-${pkgver}"
