@@ -8,7 +8,7 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.5.11
+pkgver=3.5.12
 groups=('joplin')
 pkgrel=1
 _electronVersion=39
@@ -25,7 +25,7 @@ source=(
 )
 sha256sums=('9223cc816f8175ddaf8839f9357d2bd1c4831692504927c98d8e1eefa7df796e'
             'f485c089904d91750d137d4413297676446e0068892cb08e20bee928bcac516c'
-            '0b7df045209ce554ee46be652789c4d88a2b1e317066103ae7dc5923f4b46d75')
+            'ae0793caa9f9a07c8be4cc02e1fe15430591a531a66261847a5a6f2d02553efe')
 
 _setup_env() {
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
