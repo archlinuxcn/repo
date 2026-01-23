@@ -1,0 +1,10 @@
+[Trigger]
+Type = Path
+Operation = Remove
+Target = usr/src/*/dkms.conf
+
+[Action]
+Description = Generating UKI images...
+When = PostTransaction
+Exec = /usr/bin/dracut-ukify -z
+NeedsTargets

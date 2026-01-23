@@ -1,0 +1,19 @@
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Target = usr/lib/modules/*/pkgbase
+Target = usr/lib/dracut/*
+Target = usr/lib/systemd/systemd
+Target = usr/lib/systemd/boot/efi/*.efi.stub
+Target = usr/share/libalpm/hooks/90-dracut-ukify-install.hook
+Target = usr/bin/dracut-ukify
+Target = usr/src/*/dkms.conf
+Target = usr/lib/firmware/*
+Target = boot/*-ucode.img
+
+[Action]
+Description = Generating UKI images...
+When = PostTransaction
+Exec = /usr/bin/dracut-ukify -z
+NeedsTargets

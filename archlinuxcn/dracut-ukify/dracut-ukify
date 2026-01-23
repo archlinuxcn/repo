@@ -1,0 +1,328 @@
+#!/usr/bin/bash
+set -e
+
+source /usr/share/makepkg/util/message.sh
+
+function usage {
+  echo "$(basename "$0") [OPTIONS]"
+  echo "  -h            shows usage"
+  echo "  -g <version>  generate UKI image for specified kernel version"
+  echo "  -a            generate UKI images for all available kernels"
+  exit 0
+}
+
+function check_root {
+  [ $EUID -eq 0 ] && return
+  echo "dracut-ukify requires root privileges to work" >&2
+  exit 1
+}
+
+if [[ ${#} -eq 0 ]]; then
+   usage
+fi
+
+declare -a ukify_global_args=()
+declare -A ukify_variants=()
+declare -A ukify_install_path=()
+declare -A ukify_cmdline=()
+
+[ -f "/etc/dracut-ukify.conf" ] && source /etc/dracut-ukify.conf
+
+case "$colorize" in
+  "true")
+    colorize
+    ;;
+  "auto")
+    grep -q -e '^\w*Color\w*$' /etc/pacman.conf && colorize
+    ;;
+esac
+
+[ ${#ukify_variants[@]} -eq 0 ] && {
+  # Fallback to default image if ukify_variants isn't specified
+  ukify_variants[default]="--hostonly"
+}
+
+ESP_PATH=$(bootctl --print-esp-path)
+BOOT_PATH=$(bootctl --print-boot-path)
+MACHINE_ID=$(</etc/machine-id)
+# shellcheck source=/etc/os-release
+source <(grep -E '^(BUILD_)?ID=' /etc/os-release)
+
+function variant_name() {
+  local prefix="$1"
+  local name="$2"
+  if [[ "$name" = "default" ]]; then
+    printf "%s" "$prefix"
+  else
+    printf "%s-%s" "$prefix" "$name"
+  fi
+}
+
+function uki_path() {
+  local name="$1"
+  local version="$2"
+  local variant="$3"
+
+  if [ ${ukify_install_path[$variant]+_} ]; then
+    local -A substitutions=(
+      [id]="$ID"
+      [build_id]="$BUILD_ID"
+      [name]="$name"
+      [version]="$version"
+      [machine_id]="$MACHINE_ID"
+      [version]="$version"
+      [efi]="$ESP_PATH"
+      [boot]="$BOOT_PATH"
+    )
+
+    local path="${ukify_install_path[$variant]}"
+    for key in "${!substitutions[@]}"; do
+      local value="${substitutions[$key]}"
+      path="${path//\$\{$key\}/${value}}"
+    done
+
+    case "$path" in
+      (/*) printf "%s" "$path";;
+      (*)  printf "%s/%s" "$ESP_PATH" "$path";;
+    esac
+  else
+    printf "%s/EFI/Linux/%s.efi" "$ESP_PATH" "$(variant_name "linux-$version-$MACHINE_ID-$BUILD_ID" "$variant")"
+  fi
+}
+
+function sanity_check() {
+  local verbose="$1"
+
+  local -A sanity_kernel=()
+  for candidate in /usr/lib/modules/*; do
+    [ -f "$candidate/pkgbase" ] || continue
+    if read -r pkgbase &> /dev/null < "$candidate/pkgbase"; then
+      sanity_kernel["${pkgbase}"]="$(basename "$candidate")"
+    fi
+  done
+
+  local -A uki_path=()
+
+  local -i result=0
+
+  for kernel in "${!sanity_kernel[@]}"; do
+    for variant in "${!ukify_variants[@]}"; do
+      local path=$(uki_path "$kernel" "${sanity_kernel[$kernel]}" "$variant")
+      if [ $verbose -ne 0 ]; then
+        msg "Resolved UKI path for package %s %s in variant %s: %s" "$kernel" "${sanity_kernel[$kernel]}" "$variant" "$path"
+      fi
+
+      if [ ${uki_path[$path]+_} ]; then
+        error "Found UKI path clash: %s-%s and %s points to the same path: %s" "$kernel" "$variant" "${uki_path[$path]}" "$path"
+        result=1
+      fi
+      uki_path[$path]="$kernel-$variant"
+    done
+  done
+
+  if [ $result -ne 0 ]; then
+    exit $result
+  fi
+}
+
+function parse_cmdline() {
+  grep --invert-match '^[[:blank:]]*#[^!]' "$1" | tr '\n' ' '
+}
+
+function remove_uki() {
+  local pkgbase="$1"
+
+  path="$(grep -lE "^${pkgbase}\$" /usr/lib/modules/*/pkgbase)"
+  version=$(basename "${path%/pkgbase}")
+  for variant in "${!ukify_variants[@]}"; do
+    IMAGE="$(uki_path "$pkgbase" "$version" "$variant")"
+    if [ -f "$IMAGE" ]; then
+      msg "Removing $IMAGE..."
+      rm -f "$IMAGE"
+    fi
+  done
+}
+
+function cleanup() {
+  local exitcode=$?
+  for file in "$@"; do
+    rm -f "$file" 
+  done
+  return $exitcode
+}
+
+declare -A kernels
+kernels_all=0
+
+function match_kernels() {
+  check_root
+
+  (( kernels_all )) || while read -r line; do
+    if [[ $line =~ ^usr/lib/modules/([^/]+)/pkgbase$ ]]; then
+	  read -r pkgbase < "/${line}"
+	  kernels["${pkgbase}"]="${BASH_REMATCH[1]}"
+	else
+	  kernels_all=1
+	  break 
+	fi
+  done
+  
+  if (( kernels_all )); then
+    declare -gA kernels=()
+    for candidate in /usr/lib/modules/*; do
+      [ -f "$candidate/pkgbase" ] || continue
+      if read -r pkgbase &> /dev/null < "$candidate/pkgbase"; then      
+        kernels["${pkgbase}"]="$(basename "$candidate")"
+      fi
+    done
+  fi
+}
+
+while getopts ":hag:sxyz" arg; do
+  case ${arg} in
+    g)
+      found=0
+      for line in $(pacman -Qql "$OPTARG"); do
+        if [[ $line =~ ^/usr/lib/modules/([^/]+)/pkgbase$ ]]; then
+          read -r pkgbase < "/${line}"
+          kernels["${pkgbase}"]="${BASH_REMATCH[1]}"
+          found=1
+          break
+        fi
+      done
+      if (( ! found )); then
+        error "Error occurred during '$OPTARG' package traversal"
+        exit 1
+      fi
+      ;;
+    a)
+      kernels_all=1
+      match_kernels
+      ;;
+    x)
+      check_root
+      # Trigger some IO on ESP path to be sure it's mounted by autofs if it's the case
+      # Otherwise upgrading systemd may cause ESP partition not mounted at the time dracut attempt to write new image
+      stat "$ESP_PATH" >/dev/null
+      [ "$ESP_PATH" = "$BOOT_PATH" ] || stat "$BOOT_PATH" >/dev/null
+      exit 0
+      ;;
+    y)
+      sanity_check 0
+      match_kernels
+      for kernel in "${!kernels[@]}"; do
+        remove_uki "$kernel"
+      done
+      exit 0
+      ;;
+    s)
+      sanity_check 1
+      exit 0
+      ;;
+    z)
+      sanity_check 0   
+      match_kernels
+      ;;
+    h)
+      usage
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+function gen_image() {
+  check_root
+  local kernel="$1"
+  local version="$2"
+  local path="/usr/lib/modules/${version}/pkgbase"
+  local vmlinuz="/usr/lib/modules/${version}/vmlinuz"
+
+  msg "dracut-ukify -g %s" "$kernel"
+
+  for variant in "${!ukify_variants[@]}"; do
+    local image="$(uki_path "$kernel" "$version" "$variant")"
+    local version_name=$(variant_name "$version" "$variant")
+
+    read -r pkgbase < "$path"
+
+    local initrd=$(mktemp --tmpdir ukify.XXXXXXXXXX)
+    trap "cleanup \"$initrd\"" ERR EXIT
+
+    msg2 "Building initrd image %s (%s)" "$kernel" "$version_name"
+    dracut -q -f --no-hostonly-cmdline --no-uefi --kver "${version}" ${ukify_variants[$variant]} "$initrd"
+
+    local os_release=$(mktemp --tmpdir ukify.XXXXXXXXXX)
+    trap "cleanup \"$initrd\" \"$os_release\"" ERR EXIT
+
+    grep -v '^BUILD_ID=' /etc/os-release > "$os_release"
+    echo "BUILD_ID=\"$version_name\"" >> "$os_release"
+    echo "VERSION_ID=\"$(variant_name "$pkgbase" "$variant")\"" >> "$os_release"
+
+    local -a ukify_args=(build)
+    ukify_args+=("${ukify_global_args[@]}")
+    ukify_args+=(--uname "$version")
+    ukify_args+=(--os-release "@$os_release")
+    ukify_args+=(--output "$image")
+
+    local cmdline="${ukify_cmdline["$variant"]}"
+    if [ -z "${cmdline}" ]; then
+        for i in "${!ukify_args[@]}"; do
+            [[ "${ukify_args[i]}" = "--cmdline" ]] && break
+        done
+        if [ "${ukify_args[i]}" == "--cmdline" ]; then
+            cmdline="${ukify_args[i + 1]}"
+        fi
+    fi
+    if [ -z "${cmdline}" ] && [ -f /etc/kernel/cmdline ]; then
+        cmdline=$(parse_cmdline /etc/kernel/cmdline)
+    fi
+    if [ -z "${cmdline}" ] && [ -f /usr/lib/kernel/cmdline ]; then
+        cmdline=$(parse_cmdline /usr/lib/kernel/cmdline)
+    fi
+    if [ -z "${cmdline}" ] && [ -f /proc/cmdline ]; then
+        cmdline=$(</proc/cmdline)
+    fi
+    if [ -n "${cmdline}" ]; then
+      for i in "${!ukify_args[@]}"; do
+         [[ "${ukify_args[i]}" = "--cmdline" ]] && break
+      done
+      if [ "${ukify_args[i]}" == "--cmdline" ]; then
+        # Global args contains cmdline, override it
+        ukify_args[i + 1]="${cmdline}"
+      else
+        # There is no global cmdline, append it
+        ukify_args+=("--cmdline" "${cmdline}")
+      fi
+    fi
+
+    ukify_args+=(--linux "$vmlinuz")
+    ukify_args+=(--initrd "$initrd")
+
+    msg2 "Ukify image %s (%s)" "$kernel" "$version_name"
+
+    /usr/lib/systemd/ukify "${ukify_args[@]}"
+
+    # Remove temporary files
+    rm "$initrd"
+    rm "$os_release"
+    trap - ERR EXIT
+
+    # Mark image as default if needed
+    if [[ "$pkgbase" == "$default_kernel_package" && "$variant" == "default" ]]; then
+      if ! bootctl is-installed --quiet; then
+        warning "systemd-boot is not installed, unable to mark image as default"
+      else
+        msg2 "Mark linux image %s (%s) as default" "$kernel" "$version"
+        bootctl set-default "$(basename "$image")" || {
+          error "Unable to mark linux image $kernel ($version) as default due to error"
+        }
+      fi
+    fi
+  done
+}
+
+for kernel in "${!kernels[@]}"; do
+  gen_image "$kernel" "${kernels[$kernel]}"
+done
