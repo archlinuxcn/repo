@@ -4,7 +4,7 @@
 # Contributor: Håvard Pettersson <mail@haavard.me>
 
 pkgname=python-sounddevice
-pkgver=0.5.4
+pkgver=0.5.5
 pkgrel=1
 pkgdesc='Record and play back sound'
 url='https://python-sounddevice.rtfd.io/'
@@ -14,7 +14,7 @@ depends=(portaudio python-cffi)
 makedepends=(python-setuptools)
 optdepends=('python-numpy: to play back and record NumPy arrays')
 source=("https://files.pythonhosted.org/packages/source/s/sounddevice/sounddevice-$pkgver.tar.gz")
-b2sums=('015a5192a8ac3862cc23ad0fee965fd97dd295f8a0b43c117aa4c97a944d1f51bf7664bc3114ede4db7d389931fe5a7b88491e27e06fe022d52804c7c3e531b3')
+b2sums=('25da7f11bb20f115c828bfb4de00c7ced40224126b5da3a08027c0459d40e1300a4747305c25dab480f73db87c9ad6f0982d0af6adf8c3cc4d5de2e0e9ffaaff')
 
 package() {
   cd sounddevice-$pkgver
