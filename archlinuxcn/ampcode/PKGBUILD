@@ -1,0 +1,29 @@
+# Maintainer: Yuzu <aur at vitayuzu dot day>
+_npmname=@sourcegraph/amp
+pkgname=ampcode
+pkgver=0.0.1769227939_g1cdb72
+pkgrel=1
+pkgdesc="The frontier coding agent from Sourcegraph."
+arch=('x86_64')
+url="https://ampcode.com"
+license=('LicenseRef-Amp-Commercial-License')
+depends=('nodejs' 'ripgrep' 'gcc-libs' 'glibc')
+makedepends=('npm')
+provides=('amp')
+conflicts=('amp')
+_archive="${pkgname}-${pkgver}"
+source=("${_archive}.tgz::https://registry.npmjs.org/${_npmname}/-/amp-${pkgver//_/-}.tgz")
+noextract=("${_archive}.tgz")
+sha256sums=('877c43278b54f6206556e145db5da7a8c4527e5ee2f669f369405652d41dc09b')
+
+package() {
+    npm install -g --prefix "${pkgdir}/usr" \
+        --cache "${srcdir}/npm-cache" \
+        "${_archive}.tgz"
+
+    find "${pkgdir}/usr" -type d -exec chmod 755 {} +
+    chown -R root:root "${pkgdir}"
+
+    install -Dm644 "${pkgdir}/usr/lib/node_modules/${_npmname}/LICENSE.md" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
