@@ -1,6 +1,6 @@
 pkgname=julia-git-hypre-src
-pkgver=1.7.0
-_commit=0fcc9e000eaf90cfdb6bc5f7fd20d2ff39910ea0
+pkgver=1.8.0
+_commit=c4f582c1d6de35dac4418b4154a4897bfac86206
 pkgrel=1
 pkgdesc="HYPRE.jl"
 url="https://github.com/fredrikekre/HYPRE.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/fredrikekre/HYPRE.jl.git#commit=$_commit")
-sha256sums=('b8a5a3283183bbf4c935c62fdffeedac99c09432ccbdd82fa9d79e7d7cbabeef')
+sha256sums=('93d1043db9a41f576443ba1b7b5cb9049523a303674ae83cbf37423d0d70a46f')
 
 package() {
   cd HYPRE.jl
