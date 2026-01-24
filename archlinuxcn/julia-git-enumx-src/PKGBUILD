@@ -1,6 +1,6 @@
 pkgname=julia-git-enumx-src
-pkgver=1.0.5
-_commit=c850aa7c65e59c133d5fdc15cdf0807768d40998
+pkgver=1.0.6
+_commit=dfe71fc8f8a4995ea37b3a470f4ae3038b7d1c54
 pkgrel=1
 pkgdesc="EnumX.jl"
 url="https://github.com/fredrikekre/EnumX.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/fredrikekre/EnumX.jl.git#commit=$_commit")
-sha256sums=('1967c073f973cbf6fcd3e1d34de4f8b9fe77fd1e79468e075e88f84b411009c1')
+sha256sums=('3db3336ea45b01b9a151375256f00329c79ed0540d536090f9ecfb2979215d2d')
 
 package() {
   cd EnumX.jl
