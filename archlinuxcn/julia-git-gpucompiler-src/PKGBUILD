@@ -8,16 +8,8 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaGPU/GPUCompiler.jl.git#commit=$_commit"
-        0001-Fix-loading.patch)
-sha256sums=('8b4015748b0820080b22a7238e07476e6f95d202b325aefcc6543ea227b31733'
-            '387124eb5ca206f996bd011165ee7e7a2c8c78c728d6d8f4801fb118f2357373')
-
-prepare() {
-  cd GPUCompiler.jl
-
-  patch -Np1 --no-backup-if-mismatch < "../0001-Fix-loading.patch"
-}
+source=("git+https://github.com/JuliaGPU/GPUCompiler.jl.git#commit=$_commit")
+sha256sums=('8b4015748b0820080b22a7238e07476e6f95d202b325aefcc6543ea227b31733')
 
 package() {
   cd GPUCompiler.jl
