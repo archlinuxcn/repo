@@ -2,7 +2,7 @@
 
 pkgname=servo
 pkgver=0.0.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Parallel Browser Project: web browser written in Rust'
 arch=(x86_64 i686)
 url=https://github.com/servo/servo
@@ -31,7 +31,7 @@ makedepends=(clang
              python
              python-distlib
              python-virtualenv
-             rustup # doesn't work with system rust
+             rust
              uv)
 options=('!lto') # lto breaks linking
 backup=("etc/profile.d/$pkgname".{csh,sh})
@@ -42,16 +42,13 @@ prepare() {
 	cd "$pkgname"
 	echo 'export PATH=$PATH:/opt/servo' > "$pkgname.sh"
 	echo 'setenv PATH ${PATH}:/opt/servo' > "$pkgname.csh"
-	# sed -i -e '/install_rust_toolchain/d' python/servo/platform/base.py
 	cargo fetch --locked --target "$(rustc --print host-tuple)"
 }
 
 build() {
 	cd "$pkgname"
-	# export RUSTUP_TOOLCHAIN=stable
+	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
-	rustup component add rust-src rustc-dev llvm-tools-preview
-	./mach bootstrap --skip-lints
 	./mach build --release
 }
 
