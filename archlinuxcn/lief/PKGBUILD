@@ -2,8 +2,8 @@
 
 pkgbase=lief
 pkgname=(lief python-lief)
-pkgver=0.17.2
-pkgrel=2
+pkgver=0.17.3
+pkgrel=1
 pkgdesc='Library to instrument executable formats'
 arch=(armv7h aarch64 x86_64)
 url='https://lief.quarkslab.com/'
@@ -14,7 +14,7 @@ makedepends=(git cmake ninja python python-build python-installer python-wheel
              nlohmann-json tl-expected) # mbedtls
 provides=(libLIEF.so)
 source=("git+https://github.com/lief-project/LIEF#tag=${pkgver}")
-md5sums=('bf46342d57c631a77d7c5b07fe9048e1')
+md5sums=('e254ceaacf0519a2a26d768c32ce2699')
 
 prepare() {
   cd LIEF
