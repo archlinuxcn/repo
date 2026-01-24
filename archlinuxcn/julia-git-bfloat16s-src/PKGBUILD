@@ -1,6 +1,6 @@
 pkgname=julia-git-bfloat16s-src
-pkgver=0.6.0
-_commit=bd1ff3697dfa532151588739244e99caf54aa398
+pkgver=0.6.1
+_commit=7ac65aa7ea1d30c6d1faab5f2a80c87824c940f4
 pkgrel=1
 pkgdesc="BFloat16s.jl"
 url="https://github.com/JuliaMath/BFloat16s.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/BFloat16s.jl.git#commit=$_commit")
-sha256sums=('016d0c39414b992d7aff3cec73d5ac623eff25cc03882fb330bc0364b3b3f512')
+sha256sums=('96c36a0d31bd7a9b09a90c981ada3526f52910c56951e84a0dbf944b54d8e711')
 
 package() {
   cd BFloat16s.jl
