@@ -2,7 +2,7 @@
 # Contributor: Edgar Luque <git@edgarluque.com>
 
 pkgname=ddnet
-pkgver=19.6
+pkgver=19.7
 pkgrel=1
 # allow testing locally a release candidate using pkgver like '19.3rc3'
 _version=${pkgver/rc/-rc}
@@ -20,7 +20,7 @@ source=("https://github.com/ddnet/ddnet/archive/$_version/$pkgname-$_version.tar
         "ddnet-server.service" "ddnet-sysusers.conf" "ddnet-tmpfiles.conf"
         # Licenses extracted from license.txt
         "Zlib.txt" "OFL-1.1.txt" "Bitstream-Vera.txt" "Arev.txt")
-sha256sums=('24b4ac24d265f4d928da1d0c13b35bbe4b3ac11df3436b07851d31c12a62ac63'
+sha256sums=('03af3999ac63a060559805e67539fbc2d087ba572facd70fae5a6d3ba65ca9cd'
             '9377a9d7c87abae166c8fa98cd79a61c74482f80f80bc930ae043349e9a84965'
             '70034f237270b38bf312238a26cfd322e212ca5714bfea4ae91e80c639ce8738'
             '043452f4de3c86d903973009bb3e59b3492a6669b86d0b1410e59a1476a87369'
