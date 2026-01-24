@@ -1,7 +1,7 @@
 pkgname=julia-git-hypre_jll-src
-pkgver=2.23.1+1
-_commit=2bad7140d0d13601c528900e59033510457236db
-pkgrel=8
+pkgver=3.0.0+0
+_commit=362019f617e508bfeff0ff0a337f57ae0d56a646
+pkgrel=1
 pkgdesc="HYPRE_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/HYPRE_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git hypre)
 source=("git+https://github.com/JuliaBinaryWrappers/HYPRE_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('f3d35e31dcd7d4512a314b8fd92ea2126f33741e941eeed78ce3a42aab2b6a72'
+sha256sums=('3b15a5e3a910ef7ce581de04a51a863a624179f1372d273b0a26316cefd2fd01'
             '039beba40e4be567f6a98e1c5e3da6d9223e0472f22b1a9515b00ae9bdb5bea3')
 
 build() {
