@@ -1,6 +1,6 @@
 pkgname=julia-git-krylov-src
-pkgver=0.10.3
-_commit=4e3d7a4e4dae9fd08f2c33c7f2db63e823da7fbf
+pkgver=0.10.4
+_commit=d7e241bfc218032caf48f2df07a754277f497a40
 pkgrel=1
 pkgdesc="Krylov.jl"
 url="https://github.com/JuliaSmoothOptimizers/Krylov.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSmoothOptimizers/Krylov.jl.git#commit=$_commit")
-sha256sums=('83765c2016ebcd98496158f06e0eb10e4cdc79bad36a245176c1ab7aa7fabbb3')
+sha256sums=('4899dd4d653e25917e3743462627dc8a72403994eaf1815c1541a84545954322')
 
 package() {
   cd Krylov.jl
