@@ -2,8 +2,8 @@
 
 pkgname=python-pyproject-patcher
 _gitpkgname=pyproject-patcher
-pkgver=0.2.3
-pkgrel=5
+pkgver=0.3.0
+pkgrel=1
 # shellcheck disable=SC2016  # Not meant to expand
 pkgdesc='Collection of convenience functions to patch `pyproject.toml` in place'
 arch=('any')
@@ -11,7 +11,6 @@ url='https://github.com/claui/pyproject-patcher'
 license=('Apache-2.0')
 depends=(
   'python'
-  'python-colorama'
   'python-distlib'
   'python-inplace'
   'python-tomlkit'
@@ -19,10 +18,11 @@ depends=(
 )
 makedepends=(
   'python-build'
+  'python-hatchling'
   'python-installer'
   'python-myst-parser'
-  'python-poetry-core'
   'python-sphinx'
+  'python-sphinx-autoapi'
   'python-sphinx_rtd_theme'
   'python-wheel'
 )
@@ -35,7 +35,7 @@ source=(
   "${_gitpkgname}-${pkgver}.tar.gz::https://github.com/claui/pyproject-patcher/archive/v${pkgver}.tar.gz"
 )
 
-sha512sums=('37737375d73acd1a44869231815ef21780a6de7758c1519fbc4219c77669639c4f3ff26d35b1e0e67ba139c6c2f55477af63576a8dba1f6e24eb08108fec7aa6')
+sha512sums=('eddfd8b4a668a3b1fea3fc8931b47084cac5ce0b0205345444d41097964f8d0fc029e183462f66bd1c73af81d1b151b3ad2f26add52bb5f05232e73c9a868b97')
 
 build() {
   cd "${_gitpkgname}-${pkgver}"
