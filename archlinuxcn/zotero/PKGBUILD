@@ -1,7 +1,7 @@
 # Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=7.0.32
+pkgver=8.0.0
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686')
@@ -9,7 +9,7 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch' 'tar')
-_tag=cf23f693db8569e2fc2156735a17d9d98431b1ea # git rev-parse $pkgver
+_tag=b5565e2be9f1a9c2ba20aa3f4d67b91f3c459462 # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
@@ -27,7 +27,7 @@ source=("zotero.desktop"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            'f536de969f16886e14540109506da184f9eadd12e852992483e1b59a97b0daf9'
+            '0da4a44814b2affcbab0883f0ac1cb1197a4fa3a2dbf3979f99885f321f0edde'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -80,8 +80,8 @@ prepare() {
 
   cd "$srcdir/zotero-client/reader"
   git submodule init
-  # Stupid hack because of dangling commit
-  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 67a1769bdaa0e89a6e239fcbaa5bf72b845223a0
+  # Stupid hack because of sometimes dangling commits
+  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 2ae628f9fd230e57ab5bf44ddc9355a7f9026951
   git config submodule.pdfjs/pdf.js.url "$srcdir/zotero-pdf-js"
   git config submodule.epubjs/epub.js.url "$srcdir/zotero-epub-js"
   git -c protocol.file.allow=always submodule update
@@ -89,7 +89,7 @@ prepare() {
   cd "$srcdir/zotero-client/pdf-worker"
   git submodule init
   # Ditto
-  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 8ac2ccc54dab2049cd92096c3448d6fdfab436ac
+  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 7cb304b6707d2c861f992612e9aced228555a7f3
   git config submodule.pdf.js.url "$srcdir/zotero-pdf-js"
   git -c protocol.file.allow=always submodule update
 }
