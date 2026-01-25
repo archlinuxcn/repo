@@ -1,6 +1,6 @@
 pkgname=julia-git-kerneldensity-src
-pkgver=0.6.10
-_commit=89ebd6c596fff88cba2b4ef36d3dbb2875987327
+pkgver=0.6.11
+_commit=986491dca4be2f36b6f94b65f43476ee828d093d
 pkgrel=1
 pkgdesc="KernelDensity.jl"
 url="https://github.com/JuliaStats/KernelDensity.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStats/KernelDensity.jl.git#commit=$_commit")
-sha256sums=('8f06f5ed1922c2a819c91be40504aad3e27d5aac1cb532e75f2fc388d9947053')
+sha256sums=('a3ab07d317ff673a91c06462f5a88b692b95e6706f178999745194aa956841cc')
 
 package() {
   cd KernelDensity.jl
