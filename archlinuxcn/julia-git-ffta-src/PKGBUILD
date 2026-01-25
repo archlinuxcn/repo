@@ -1,0 +1,18 @@
+pkgname=julia-git-ffta-src
+pkgver=0.3.1
+_commit=b3d386c9d3e3426134184e305a60caae39fb16f9
+pkgrel=1
+pkgdesc="FFTA.jl"
+url="https://github.com/JuliaMath/FFTA.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaMath/FFTA.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd FFTA.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FFTA "${pkgdir}" "${pkgname}" julia-git
+}
