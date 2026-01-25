@@ -1,7 +1,7 @@
 pkgname=julia-git-openblasconsistentfpcsr_jll-src
-pkgver=0.3.29+0
-_commit=015ed167918d86b8ee085ba698221b7ce24f632e
-pkgrel=3
+pkgver=0.3.30+0
+_commit=a143625cfe1de213cbc4462e9c4fa7886420aa06
+pkgrel=1
 pkgdesc="OpenBLASConsistentFPCSR_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenBLASConsistentFPCSR_jll.jl.git"
 arch=('any')
@@ -11,7 +11,7 @@ makedepends=(git julia-pkg-scripts openblas64)
 depends=(julia-git)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenBLASConsistentFPCSR_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('30a15d9ab7bd54eae7d35833033ed5ef8ece7a2dbe5161f62def8ca400b33f4d'
+sha256sums=('4be697b961dbb427a87c34d2f42378a2cdb2bfdd09a9baa6aac9ee174e7b38bd'
             '601c1c505320084e203bcb445265d1820743ddd175632007203bdaead47ec088')
 
 build() {
