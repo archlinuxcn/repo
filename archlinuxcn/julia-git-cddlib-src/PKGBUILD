@@ -1,6 +1,6 @@
 pkgname=julia-git-cddlib-src
-pkgver=0.10.1
-_commit=98cfa6599b839dcfc2c6c57fa3184f0401d9fd82
+pkgver=0.10.2
+_commit=34abc6ebcbf5df2e9e2fcf3aa6a65325e665b0e5
 pkgrel=1
 pkgdesc="CDDLib.jl"
 url="https://github.com/JuliaPolyhedra/CDDLib.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPolyhedra/CDDLib.jl.git#commit=$_commit")
-sha256sums=('205fcb9e5292822b47d369b7ef7684db75f381b1bdb432bbacf095cfa63c6e38')
+sha256sums=('f4c14f3543cb3a8012601fb7fae2bb310b8f8a47f1e0c3bce0a26eb4ea92f3a7')
 
 package() {
   cd CDDLib.jl
