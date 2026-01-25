@@ -9,11 +9,11 @@ depends=('bash')
 makedepends=('git' 'rust')
 optdepends=("fish: fish keybindings"
             "tmux: fzf-tmux script for launching fzf in a tmux pane"
-	        "vim: plugin"
-	        "zsh: zsh keybindings")
+	    "vim: plugin"
+	    "zsh: zsh keybindings")
 conflicts=("skim")
 provides=("skim")
-url="https://github.com/lotabout/skim"
+url="https://github.com/skim-rs/skim"
 license=('MIT')
 
 source=("$pkgname::git+$url")
@@ -22,7 +22,7 @@ sha256sums=('SKIP')
 
 pkgver() {
     cd "$srcdir/$pkgname"
-    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    git describe --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
 }
 
 build() {
