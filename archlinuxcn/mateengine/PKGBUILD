@@ -27,8 +27,10 @@ depends=(
     'gcc-libs'
     'zlib'
     'dbus'
+    'glxinfo'
 )
-optdepends=('pipewire-pulse: for dancing feature with PipeWire')
+optdepends=('pipewire-pulse: for dancing feature with PipeWire'
+            'xdpyinfo: for transparent background if glxinfo does not works')
 _archive="MateEngineX_${pkgver}"
 _srcdir="MateEngineX"
 source=("${_archive}.tar.gz::${url}/releases/download/Public-Release-${pkgver}/${_archive}.tar.gz"
