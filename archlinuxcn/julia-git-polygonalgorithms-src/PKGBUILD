@@ -1,6 +1,6 @@
 pkgname=julia-git-polygonalgorithms-src
-pkgver=0.3.5
-_commit=9b0efd2f2e2347eb2c1c613735a41fbde20c9d14
+pkgver=0.4.0
+_commit=6f4f8a820a5bc2376f5f82db55d46cd7b0284b13
 pkgrel=1
 pkgdesc="PolygonAlgorithms.jl"
 url="https://github.com/LiorSinai/PolygonAlgorithms.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/LiorSinai/PolygonAlgorithms.jl.git#commit=$_commit")
-sha256sums=('33297b38bd19893c99809eb99b311b2e5f6efe3d961b0c0b61f8fef560873b1e')
+sha256sums=('1debb65bcc2aa7a1575cc15440f4a2c9c8efcd1e0d36a67b17c704d0bfc28a5d')
 
 package() {
   cd PolygonAlgorithms.jl
