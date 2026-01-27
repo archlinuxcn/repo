@@ -12,12 +12,10 @@ provides=(portable)
 groups=()
 options=(!debug !strip)
 
-makedepends+=(git)
-
 depends=(
 	"libnotify"
-	"findutils"
 	pipewire
+	findutils
 	"procps-ng"
 	"coreutils"
 	"xdg-user-dirs"
@@ -42,22 +40,25 @@ optdepends=(
 
 makedepends+=(
 	"libarchive"
+	"git"
+	"go"
 )
 
 checkdepends=()
 
-source=(portable::git+https://github.com/Kraftland/portable.git#tag=${pkgver})
+source=(portable::git+https://github.com/Kraftland/portable.git)
 
-md5sums=('a9c36be583dae2cebe5fdf7a5a2d9c8f')
+md5sums=('SKIP')
 
+function build() {
+	cd "${srcdir}/portable"
+	export srcdir
+	lib/build.sh
+}
 
 function package() {
-	cd portable
-	install -vDm755 portable.sh "${pkgdir}/usr/bin/portable"
-	install -d "${pkgdir}/usr/lib/"
-	cp -r "${srcdir}/portable/lib" "${pkgdir}/usr/lib/portable"
-	install -t "${pkgdir}/usr/share/portable" -Dm755 "${srcdir}/portable/share"/*
-	install -vDm755 portable-pools "${pkgdir}/usr/bin/portable-pools"
-	install -vDm755 portable-packer "${pkgdir}/usr/bin/portable-packer"
-	cp -r "${srcdir}/portable/lib/modules-load.d" "${pkgdir}/usr/lib"
+	export srcdir
+	export pkgdir
+	cd "${srcdir}/portable"
+	lib/package.sh
 }
