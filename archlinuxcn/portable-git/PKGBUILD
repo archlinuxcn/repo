@@ -13,8 +13,6 @@ groups=()
 options=(!debug !strip)
 conflicts=(portable)
 
-makedepends+=(git)
-
 depends=(
 	"libnotify"
 	pipewire
@@ -43,6 +41,7 @@ optdepends=(
 
 makedepends+=(
 	"libarchive"
+	"git"
 	"go"
 )
 
