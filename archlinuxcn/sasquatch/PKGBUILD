@@ -6,8 +6,8 @@
 # Contributor: ciccio.a
 
 pkgname=sasquatch
-pkgver=4.5.1_5
-pkgrel=3
+pkgver=4.5.1_6
+pkgrel=1
 pkgdesc='Patches to the standard unsquashfs utility that attempts to add support for many hacked-up vendor-specific SquashFS implementations.'
 arch=(x86_64)
 url='https://github.com/onekey-sec/sasquatch'
@@ -23,7 +23,7 @@ depends=(
 )
 makedepends=(git)
 source=(git+$url.git#tag=$pkgname-v${pkgver//_/-})
-sha512sums=('cf54ad00877e706e3646e7b502a7c0570e932dd3f82fa98257b48f98ee27df55f8e73e9582a3b3a449d954e8990acdcdbc80cfcc65cb394dba0c773c86db4996')
+sha512sums=('a0d7837941b01746146fa5ecb1a854c6462cfaee7f3c78322655185a727f985fc322e022b14fb6930c44520f1b1bd154e901aeaed5c6996181b26bcf37e3b673')
 
 prepare() {
   cd "$srcdir/$pkgname"
