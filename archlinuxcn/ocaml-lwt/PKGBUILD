@@ -4,53 +4,74 @@
 # Contributor: Serge Zirukin <ftrvxmtrx@gmail.com>
 # Contributor: Sergei Lebedev <superbobry@gmail.com
 # Contributor: serp <serp256 at gmail dot com>
-_projectname='lwt'
-pkgname="ocaml-$_projectname"
-pkgver='5.9.2'
-pkgrel=2
+
+_ocamlname='lwt'
+pkgname="ocaml-$_ocamlname"
+pkgver='6.0.0'
+pkgrel='1'
 pkgdesc='A library for cooperative threads in OCaml'
 arch=('x86_64' 'aarch64')
-url="https://github.com/ocsigen/$_projectname"
+url="https://github.com/ocsigen/$_ocamlname"
 license=('MIT')
 depends=(
-    'dune>=3.15.0'
-    'libev'
-    'ocaml-findlib>=1.7.3'
-    'ocaml-ocplib-endian'
-    'ocaml-ppxlib>=0.36.0'
-    'ocaml-react>=1.0.0'
-    'ocaml>=5.1.0'
-    'zstd'
+	'dune>=3.18.0'
+	'glibc'
+	'libev'
+	'ocaml-ocplib-endian'
+	'ocaml-ppxlib>=0.36.0'
+	'ocaml-react>=1.0.0'
+	'ocaml>=4.14'
+	'zstd'
 )
-makedepends=('cppo>=1.1.0')
-checkdepends=('ocaml-ppx_let>=0.17.1')
+makedepends=(
+	'cppo>=1.1.0'
+	'ocaml-findlib>=1.7.3'
+)
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-b2sums=('8256236014992e4a009b34944e01215502c5f25a9979cafdbb2c93b4e4aa0c20717cf8a101ed43fec7f61d8213c73fd572058f87f800a6e034c681074fe93f56')
+b2sums=('76f1cfc45b8b2ee3058482b55c4f9ca5586e6b957ef8e7837dd29154b906964a789508f1a3395f51fef791b05de00ef7d33983cdad4a62454cb2d000aa1b5089')
 
-_sourcedirectory="$_projectname-$pkgver"
+prepare()
+{
+	cd $_ocamlname-$pkgver
 
-prepare() {
-	cd "$srcdir/$_sourcedirectory/"
-
-	# This test breaks for some people but not for others, see comments from oriba, crave and pha-qu on the AUR page
+	# This test breaks for some people but not for others, see comments from
+	# oriba, crave and pha-qu on the AUR page
 	sed -i '/test_mcast "mcast-join-loop"/d' 'test/unix/test_mcast.ml'
 }
 
-build() {
-	cd "$srcdir/$_sourcedirectory/"
-	LWT_DISCOVER_ARGUMENTS='--use-libev true --use-pthread true --libev-default true --verbose' dune build --release --verbose
+build()
+{
+	cd $_ocamlname-$pkgver
+
+	LWT_DISCOVER_ARGUMENTS='--use-libev true --use-pthread true --libev-default true --verbose' \
+						  dune \build \
+						  --release \
+						  --verbose
 }
 
-check() {
-	cd "$srcdir/$_sourcedirectory/"
-	dune runtest --release --verbose
+check()
+{
+	cd $_ocamlname-$pkgver
+
+	dune runtest \
+		 --release \
+		 --verbose
 }
 
-package() {
-	cd "$srcdir/$_sourcedirectory/"
-	DESTDIR="$pkgdir" dune install --prefix '/usr' --libdir '/usr/lib/ocaml' --docdir '/usr/share/doc/ocaml' --mandir '/usr/share/man' --release --verbose
+package()
+{
+	cd $_ocamlname-$pkgver
 
-	install -dm755 "$pkgdir/usr/share/licenses/$pkgname"
-	ln -sf "/usr/share/doc/ocaml/$_projectname/LICENSE.md" "$pkgdir/usr/share/licenses/$pkgname/MIT"
+	DESTDIR="$pkgdir" \
+		   dune install \
+		   --prefix '/usr' \
+		   --libdir '/usr/lib/ocaml' \
+		   --docdir '/usr/share/doc/ocaml' \
+		   --mandir '/usr/share/man' \
+		   --release \
+		   --verbose
+
+	install -dm755 $pkgdir/usr/share/licenses/$pkgname
+	ln -sf /usr/share/doc/ocaml/$_ocamlname/LICENSE.md $pkgdir/usr/share/licenses/$pkgname/MIT
 }
