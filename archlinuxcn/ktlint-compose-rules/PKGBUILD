@@ -1,6 +1,6 @@
 # Maintainer: Yuzu Vita <g311571057 at gmail dot com>
 pkgname=ktlint-compose-rules
-pkgver=0.5.5
+pkgver=0.5.6
 pkgrel=1
 pkgdesc="Lint rules for ktlint/detekt aimed to contribute to a healthier usage of Compose. Actively maintained and evolved fork of the Twitter Compose rules"
 arch=(any)
