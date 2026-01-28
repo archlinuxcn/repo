@@ -2,8 +2,8 @@
 
 _name=zpng
 pkgname=ruby-${_name}
-pkgver=0.4.5
-pkgrel=3
+pkgver=0.4.6
+pkgrel=1
 pkgdesc="pure ruby PNG file manipulation & validation"
 arch=(any)
 url="https://github.com/zed-0xff/${_name}"
@@ -11,7 +11,7 @@ license=(MIT)
 depends=(ruby ruby-rainbow)
 makedepends=(git)
 source=("git+$url.git#tag=v$pkgver")
-sha256sums=('041a236c861293623358f1ccad0dcc4d93beeffe1f8b844ed5aeb6ca286d7ec2')
+sha256sums=('bb9812f711332d0f57242f97aca279537caca8e010713a7c2c65def0d4ccac8a')
 
 prepare() {
   cd "${_name}"
