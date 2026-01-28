@@ -1,8 +1,8 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=zsteg
-pkgver=0.2.13
-pkgrel=3
+pkgver=0.2.14
+pkgrel=1
 pkgdesc="detect stegano-hidden data in PNG & BMP"
 arch=(any)
 url="https://github.com/zed-0xff/zsteg"
@@ -11,7 +11,7 @@ depends=(ruby ruby-zpng ruby-iostruct ruby-prime)
 makedepends=(git)
 provides=(ruby-${pkgname})
 source=("git+$url.git#tag=v$pkgver")
-sha256sums=('0761d70e6768377a9cc154ec6a4942e192a4c7dea58f7e358b070407bdf509d1')
+sha256sums=('a00718da0f5df391704ab8f5fc8563a160094b83e92c1c835d54d87510b078ff')
 
 prepare() {
   cd "${pkgname}"
