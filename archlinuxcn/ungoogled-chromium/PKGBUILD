@@ -10,14 +10,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=144.0.7559.96
+pkgver=144.0.7559.109
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=144.0.7559.96-1
+_uc_ver=144.0.7559.109-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -48,10 +48,9 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         0001-ozone-wayland-implement-text_input_manager_v3.patch
         0001-ozone-wayland-implement-text_input_manager-fixes.patch
         0001-vaapi-flag-ozone-wayland.patch
-        chromium-138-nodejs-version-check.patch
-        chromium-144-fix-hdr-issue.patch)
-sha256sums=('6f7fbeaa5ef0b1b4c0ede631edb7365ae48602f587c3c3b65af874922d21a064'
-            '769dff6846ee57058cb6a7c7c0a303d2d2c5e037e0b9f136d7367c7b396bb555'
+        chromium-138-nodejs-version-check.patch)
+sha256sums=('06c6bf558a17636070495d2d33117501c361c6984d71356188cdfae7d9ee8bc1'
+            'fd41306be5ee9411cae735a9a49a79dedeaacc5a8b9fb93f7b914192addf143e'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             'ec8e49b7114e2fa2d359155c9ef722ff1ba5fe2c518fa48e30863d71d3b82863'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
@@ -61,8 +60,7 @@ sha256sums=('6f7fbeaa5ef0b1b4c0ede631edb7365ae48602f587c3c3b65af874922d21a064'
             'd9974ddb50777be428fd0fa1e01ffe4b587065ba6adefea33678e1b3e25d1285'
             'a2da75d0c20529f2d635050e0662941c0820264ea9371eb900b9d90b5968fa6a'
             '9a5594293616e1390462af1f50276ee29fd6075ffab0e3f944f6346cb2eb8aec'
-            '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
-            '789ee9bfe39772eae0df42c187b7a54550921b909bfae8051df81a1b4621f307')
+            '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e')
 
 if (( _manual_clone )); then
   source[0]=fetch-chromium-release
@@ -132,8 +130,6 @@ prepare() {
 
   # Increase _FORTIFY_SOURCE level to match Arch's default flags
   patch -Np1 -i ../increase-fortify-level.patch
-
-  patch -Np1 -i ../chromium-144-fix-hdr-issue.patch
 
   if (( !_system_clang )); then
     # Use prebuilt rust as system rust cannot be used due to the error:
