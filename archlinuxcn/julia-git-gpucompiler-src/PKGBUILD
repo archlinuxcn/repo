@@ -1,6 +1,6 @@
 pkgname=julia-git-gpucompiler-src
-pkgver=1.8.1
-_commit=4e5ffedacde75ad5f056d1f18dc6177860ad7e63
+pkgver=1.8.2
+_commit=1bb5d647be306b366f9636e303dc6e1e05a49092
 pkgrel=1
 pkgdesc="GPUCompiler.jl"
 url="https://github.com/JuliaGPU/GPUCompiler.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGPU/GPUCompiler.jl.git#commit=$_commit")
-sha256sums=('c4ec9474fdecced318fd21d6384aafa530729617c21e884b97a7cfe177e4fbbf')
+sha256sums=('95e3bf14b83e4d625297c9597e185652a35a5b89de2d40412b6770285274ea55')
 
 package() {
   cd GPUCompiler.jl
