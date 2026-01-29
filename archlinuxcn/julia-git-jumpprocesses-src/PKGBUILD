@@ -1,6 +1,6 @@
 pkgname=julia-git-jumpprocesses-src
-pkgver=9.21.0
-_commit=17fe3b95d8a79a65673b7249ec11f046e872fbe0
+pkgver=9.21.1
+_commit=66ad3cf7e2350da87373851392d17370bcec194e
 pkgrel=1
 pkgdesc="JumpProcesses.jl"
 url="https://github.com/SciML/JumpProcesses.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/JumpProcesses.jl.git#commit=$_commit")
-sha256sums=('80ac731022b234ae06d7a4de51af39220ee994539385cdeca61a1ff6f3e662b7')
+sha256sums=('744d056832266cb61d60082d62c870d00f6fd33bde0a7f7c03ad4443bd2f5e83')
 
 package() {
   cd JumpProcesses.jl
