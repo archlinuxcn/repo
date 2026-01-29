@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=stellar-cli
-pkgver=25.0.0
+pkgver=25.1.0
 pkgrel=1
 pkgdesc='Command-line multi-tool for running and deploying Stellar contracts on the Stellar network'
 url='https://stellar.org'
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(glibc gcc-libs systemd-libs openssl dbus)
 makedepends=(git cargo clang)
 source=(git+https://github.com/stellar/$pkgname#tag=v$pkgver)
-sha512sums=('de68af2e659a8fcfa84ff88a6f31fbef24514d78c64b432476b53b16ddd05edfa7b64c9ee0ccdf857a4e686ace5171b704c7e16953c5cf92dd6db5a32e6374ed')
+sha512sums=('b95de1b1f98923ca99e05d3b07d4ba82df4027fdcd7a86de845e2348f5351acc818d21d29efb7cbbe029732cf6a549dcefc8ea8bfdceb7b7e713f98e08eba549')
 # https://github.com/briansmith/ring/issues/1444
 options=(!lto)
 
