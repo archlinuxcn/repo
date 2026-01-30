@@ -41,7 +41,7 @@ build() {
   done
 }
 
-package_atuin() {
+package_atuin-lily-git() {
   optdepends=('bash-preexec: bash integration'
               'atuin-server-lily-git: sync server')
   local _pdir="atuin-lily-git"
@@ -54,7 +54,7 @@ package_atuin() {
   install -Dm644 "completions/_$__pkgname" -t "${pkgdir}/usr/share/zsh/site-functions"
 }
 
-package_atuin-server() {
+package_atuin-server-lily-git() {
   pkgdesc="Magical shell history (sync server; lilydjwg's fork)"
 
   local _pdir="atuin-server-lily-git"
