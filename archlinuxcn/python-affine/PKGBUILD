@@ -3,7 +3,7 @@
 
 _pkgname=affine
 pkgname=python-affine
-pkgver=3.0rc2
+pkgver=3.0rc3
 pkgrel=1
 pkgdesc="Python package for matrices describing affine transformation of the plane"
 arch=('any')
@@ -19,7 +19,7 @@ depends=(
   python
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/rasterio/affine/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('c2484a5ba674ce4446a873c4f040b0dc7e092b56b8e5882d4a042cc6ee8942c9e700a06e4f6678650f953937d35e3de1ee1011316847c083d33717bbfb37f486')
+sha512sums=('272f1656ac4d5ffea023a7fe4559c439c5dfa7e23da0e6eed24fee211465473531af353ba31dff9b188f532a6db3c96d1e60ed83457b2bc4174f32e724b29c84')
 
 build() {
   cd "${_pkgname}-${pkgver}"
