@@ -1,12 +1,12 @@
 
 # Maintainer: Juanma Hernandez <juanmah@gmail.com>
-# Contributor: Juanma Hernandez <juanmah@gmail.com>
+# Contributor: Matthias Kurz <m.kurz@irregular.at>
 
 pkgname=zotero-bin
 pkgver=8.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
-arch=('x86_64')
+arch=('x86_64' 'i686' 'aarch64')
 url="https://www.zotero.org/download"
 license=('AGPL-3.0-or-later')
 depends=('alsa-lib' 'gtk3' 'nss')
@@ -15,8 +15,18 @@ conflicts=('zotero')
 
 sha256sums=('f727308716741cf9746b92047b890c3f76c4b8b010bc5ed21b5cdb1be85e21e9')
 sha256sums_x86_64=('9749708c5b66386069b3ca96ae8199de9283248503535fbcf30851a8776aac80')
+sha256sums_i686=('0ce1de0d8b4b984afbf1d28e2da980be214b7f036931ef1b2fb99bcb02d3765d')
+sha256sums_aarch64=('db78382a4efd5d77337cad433a5808ab3ee8d6697be817641126bf4345ee07ee')
 source=("zotero.desktop")
-source_x86_64=("Zotero-${pkgver}_linux_$CARCH.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-$CARCH&version=${pkgver}")
+source_x86_64=("Zotero-${pkgver}_linux_x86_64.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-x86_64&version=${pkgver}")
+source_i686=("Zotero-${pkgver}_linux_i686.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-i686&version=${pkgver}")
+source_aarch64=("Zotero-${pkgver}_linux_arm64.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-arm64&version=${pkgver}")
+
+prepare() {
+  if [[ "$CARCH" == "aarch64" ]]; then
+    mv ${srcdir}/Zotero_linux-arm64 ${srcdir}/Zotero_linux-aarch64
+  fi
+}
 
 package() {
   install -dDm755 "$pkgdir"/usr/{bin,lib/zotero}
