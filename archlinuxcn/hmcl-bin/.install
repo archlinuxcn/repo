@@ -1,0 +1,18 @@
+post_install() {
+	echo ">对于archlinux/repo用户:"
+	echo ">由于上游逻辑上认定自己为便携软件"
+	echo ">我们撤销了会造成错误的修改"
+	echo ">请按照以下步骤完成配置迁移"
+	echo ">请把 \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl/.minecraft 文件夹移动至 \${HOME}"
+	echo ">然后把 \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl 内的所有内容移动至 \${HOME}/.hmcl 文件夹内"
+
+}
+post_upgrade() {
+	echo ">对于archlinux/repo用户:"
+	echo ">由于上游逻辑上认定自己为便携软件"
+	echo ">我们撤销了会造成错误的修改"
+	echo ">请按照以下步骤完成配置迁移"
+	echo ">请把 \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl/.minecraft 文件夹移动至 \${HOME}"
+	echo ">然后把 \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl 内的所有内容移动至 \${HOME}/.hmcl 文件夹内"
+
+}
