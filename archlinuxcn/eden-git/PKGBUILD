@@ -1,0 +1,87 @@
+# Maintainer: sukanka <su975853527 [at] gmail [dot] com>
+_pkgname=eden
+pkgname=${_pkgname,,}-git
+_cmd=yuzu
+pkgver=0.0.4.rc3.r71.gdf3b940
+pkgrel=1
+epoch=2
+_tzdb_ver=121125
+pkgdesc="Nintendo Switch emulator forked from yuzu"
+arch=(x86_64)
+url=https://git.eden-emu.dev/eden-emu/eden
+license=(GPL-3.0-or-later)
+provides=('eden')
+depends=('boost-libs' 'hicolor-icon-theme' 'sdl2' 'qt6-base' 'qt6-webengine' 'fmt' 'opus' 'lz4'
+  'openssl' 'zstd' 'cubeb' 'enet' 'discord-rpc' 'cpp-httplib' 'mbedtls' 'ffmpeg'
+  'wireless_tools'
+  'quazip-qt6'
+  # 'dynarmic' # eden use forked dynarmic with some patches
+)
+makedepends=('llvm' 'git' 'glslang' 'cmake' 'ninja' 'perl' 'clang' 'patch'
+  'qt6-tools' 'qt6-multimedia' 'libxkbcommon-x11' 'libzip' 'libfdk-aac' 'libinih'
+  'vulkan-memory-allocator' 'vulkan-utility-libraries' 'vulkan-headers' 'spirv-headers'
+  'boost' 'nlohmann-json' 'robin-map' 'cpp-jwt' 'gamemode' 'python' 'renderdoc'
+  rapidjson zycore-c
+  unordered_dense
+
+  # 'xbyak' #
+  zydis
+
+  # for documentation
+  # 'doxygen' 'python-jinja' 'python-jsonschema' 'graphviz'
+
+  # for testing
+  # 'catch2'
+)
+optdepends=('qt6-wayland: for Wayland support')
+source=(
+  eden::git+${url}.git
+  "nx_tzdb-${_tzdb_ver}.tar.gz::https://git.crueter.xyz/misc/tzdb_to_nx/releases/download/${_tzdb_ver}/${_tzdb_ver}.tar.gz"
+)
+b2sums=('SKIP'
+  '6619b7ad2200be8efb495773d017a07985adb7b05ba97285427aa86103ae9a8c9befc698709539a0292c413c2c8082c39fd699e181140e6879844084e5c19382')
+pkgver() {
+  cd "$srcdir/$_pkgname"
+  git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/pre.alpha.//g' | sed 's/^v//'
+}
+
+build() {
+  export CC=clang
+  export CXX=clang++
+
+  local cmake_args=(
+    -GNinja
+    -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+    -DTITLE_BAR_FORMAT_IDLE="$_pkgname $pkgver"
+    -DTITLE_BAR_FORMAT_RUNNING="$_pkgname $pkgver | {3}"
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_BUILD_TYPE=Release
+    -DYUZU_ENABLE_COMPATIBILITY_REPORTING=OFF
+    -DYUZU_USE_QT_WEB_ENGINE=ON
+    -DUSE_DISCORD_PRESENCE=ON
+    -DENABLE_QT_TRANSLATION=ON
+    -DYUZU_USE_BUNDLED_FFMPEG=OFF
+    -DYUZU_USE_BUNDLED_QT=OFF
+    -DYUZU_USE_EXTERNAL_SDL2=OFF
+    -DYUZU_USE_FASTER_LD=OFF
+    -DYUZU_USE_QT_MULTIMEDIA=ON
+    -DYUZU_DOWNLOAD_TIME_ZONE_DATA=ON
+    -DYUZU_TZDB_PATH=${srcdir}/nx-tzdb-${_tzdb_ver}
+    -DYUZU_TESTS=OFF
+    -DSIRIT_USE_SYSTEM_SPIRV_HEADERS=ON
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DDYNARMIC_TESTS=OFF
+    -DYUZU_USE_CPM=OFF
+    -DJSON_BUNDLED_PACKAGE=OFF
+    -DENABLE_WIFI_SCAN=ON
+  )
+  install -d build
+  cmake -S ${_pkgname} -B build "${cmake_args[@]}"
+  ninja -C build
+
+}
+
+package() {
+  install -Dm644 $srcdir/${_pkgname}/dist/72-${_cmd}-input.rules -t ${pkgdir}/usr/lib/udev/rules.d/
+  DESTDIR="$pkgdir/" ninja -C $srcdir/build install
+}
