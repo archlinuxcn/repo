@@ -1,18 +1,44 @@
 post_install() {
+  # Thanks to @Misaka13514
+  case "$LANG" in
+    zh_CN*|zh_TW*|zh_HK*|zh_SG*|zh*)
 	echo ">对于archlinux/repo用户:"
 	echo ">由于上游逻辑上认定自己为便携软件"
 	echo ">我们撤销了会造成错误的修改"
 	echo ">请按照以下步骤完成配置迁移"
 	echo ">请把 \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl/.minecraft 文件夹移动至 \${HOME}"
 	echo ">然后把 \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl 内的所有内容移动至 \${HOME}/.hmcl 文件夹内"
+	;;
+    *)
+	echo ">For Arch Linux/repo users:"
+	echo ">Since the upstream project logically identifies itself as portable software"
+	echo ">we have reverted modifications that caused errors"
+	echo ">Please complete the configuration migration by following these steps:"
+	echo ">Move the \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl/.minecraft folder to \${HOME}"
+	echo ">Then move all contents from \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl to \${HOME}/.hmcl folder"
+	;;
+  esac
 
 }
 post_upgrade() {
+  # Thanks to @Misaka13514
+  case "$LANG" in
+    zh_CN*|zh_TW*|zh_HK*|zh_SG*|zh*)
 	echo ">对于archlinux/repo用户:"
 	echo ">由于上游逻辑上认定自己为便携软件"
 	echo ">我们撤销了会造成错误的修改"
 	echo ">请按照以下步骤完成配置迁移"
 	echo ">请把 \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl/.minecraft 文件夹移动至 \${HOME}"
 	echo ">然后把 \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl 内的所有内容移动至 \${HOME}/.hmcl 文件夹内"
+	;;
+    *)
+	echo ">For Arch Linux/repo users:"
+	echo ">Since the upstream project logically identifies itself as portable software"
+	echo ">we have reverted modifications that caused errors"
+	echo ">Please complete the configuration migration by following these steps:"
+	echo ">Move the \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl/.minecraft folder to \${HOME}"
+	echo ">Then move all contents from \${XDG_CONFIG_HOME:-\$HOME/.config}/hmcl to \${HOME}/.hmcl folder"
+	;;
+  esac
 
 }
