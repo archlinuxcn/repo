@@ -11,7 +11,7 @@
 # Contributor: HurricanePootis
 
 pkgname=stockfish
-pkgver=17.1
+pkgver=18
 pkgrel=1
 epoch=1
 pkgdesc="A strong UCI chess engine"
@@ -20,13 +20,13 @@ url="https://stockfishchess.org/"
 license=('GPL-3.0')
 depends=('glibc' 'gcc-libs')
 # Check EvalFileDefaultName{Big,Small} in src/evaluate.h and change accordingly
-_net_name_big=('1c0000000000')
+_net_name_big=('c288c895ea92')
 _net_name_small=('37f18f62d772')
 source=("$pkgname-$pkgver.zip::https://github.com/official-stockfish/Stockfish/archive/sf_$pkgver.zip"
         "https://tests.stockfishchess.org/api/nn/nn-${_net_name_big}.nnue"
         "https://tests.stockfishchess.org/api/nn/nn-${_net_name_small}.nnue")
-sha512sums=('67745a8af08bd5c7b06872c3fec95ac2537cfd261cd61466542243d3d5e76b688965de696b84a17d369d3dc68af8a52614b4c9446e7bd5c4a5d6bbfd4ecb2e9e'
-            '8f0aca52f6ce9b229eea6ab97c72ad74207d7c74cca8b35fb94ca349773bbe66d729b0d4bf7475a22cce2b5ebec0b605dd7625b98c2b6d0ce24227fddb969d7c'
+sha512sums=('1a0b36fc70146aefccc45a1647d04a5ac409df811a527fc7f679bb966271b5fd3348d3c9ecb3277ffcacda2dd760b6f06dbba677aa10b0553c445237e5ee544f'
+            '9568d21d7b229ec9c8ee97363e94560858f3f44f4c6647ec11770f617b4a3b03cbcfa445c407f52a6104f281d43e19e0f461cc13c875218b543860ebc8411622'
             'bf4d01f8cbff94dbff484636dd0351cd66f37eeaea7b7dbe16a3bfe231ae78cfabdeed040b789b64049c6063ef0dca21e4a4f332b99e49a52993e8595e372839')
 
 prepare() {
@@ -36,42 +36,6 @@ prepare() {
 
 build() {
   cd "Stockfish-sf_${pkgver}/src"
-
-  if [[ "$CARCH" == "armv7h" ]]; then
-    _arch=armv7
-  elif [[ "$CARCH" == "aarch64" ]]; then
-    if grep -wq asimddp /proc/cpuinfo; then
-      _arch=armv8-dotprod
-    else
-      _arch=armv8
-    fi
-  elif [[ "$CARCH" == "i686" ]]; then
-    _arch=x86-32
-  elif grep -wq avx512dq /proc/cpuinfo && grep -wq avx512vl /proc/cpuinfo && grep -wq avx512_vnni /proc/cpuinfo; then
-    # 256 bit operands are faster on most hardware
-    _arch=x86-64-vnni256
-  elif grep -wq avx512f /proc/cpuinfo && grep -wq avx512bw /proc/cpuinfo; then
-    _arch=x86-64-avx512
-  elif grep -wq bmi2 /proc/cpuinfo; then
-    if grep -wq GenuineIntel /proc/cpuinfo; then
-      _arch=x86-64-bmi2
-    elif grep -wq AuthenticAMD /proc/cpuinfo && [[ "$(grep --max-count=1 'cpu family' /proc/cpuinfo | sed -e 's/^.*: //')" -ge 25 ]]; then
-      _arch=x86-64-bmi2
-    else
-      # On AMD, bmi2 is emulated before Zen 3, so that using it is a slowdown
-      _arch=x86-64-avx2
-    fi
-  elif grep -wq avx2 /proc/cpuinfo; then
-    _arch=x86-64-avx2
-  elif grep -wq sse4_1 /proc/cpuinfo && grep -wq popcnt /proc/cpuinfo; then
-    _arch=x86-64-sse41-popcnt
-  elif grep -wq ssse3 /proc/cpuinfo; then
-    _arch=x86-64-ssse3
-  elif grep -wq pni /proc/cpuinfo && grep -wq popcnt /proc/cpuinfo; then
-    _arch=x86-64-sse3-popcnt
-  else
-    _arch=x86-64
-  fi
 
   if [[ "$CC" = "gcc" ]]
   then
@@ -83,7 +47,7 @@ build() {
     _COMP=
   fi
 
-  COMP=${_COMP} make ARCH="$_arch" profile-build
+  COMP=${_COMP} make profile-build
 }
 
 package() {
