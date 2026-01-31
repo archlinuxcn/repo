@@ -12,5 +12,7 @@ post_build_script: |
 update_on:
   - source: github
     github: HMCL-dev/HMCL
-    use_latest_release: true
+    use_max_release: true
+    include_prereleases: true
+    include_regex: 'v(\d+\.\d+\.\d+)'
     prefix: v
