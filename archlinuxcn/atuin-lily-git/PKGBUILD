@@ -59,7 +59,7 @@ package_atuin-server-lily-git() {
 
   local _pdir="atuin-server-lily-git"
   cd "$_pkgname"
-  install -Dm755 "target/release/$__pkgname" -t "$pkgdir/usr/bin"
+  install -Dm755 "target/release/$__pkgname-server" -t "$pkgdir/usr/bin"
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$_pdir"
   install -Dm644 README.md crates/atuin-server/server.toml -t "$pkgdir/usr/share/doc/$_pdir"
   install -Dm644 systemd/atuin-server.service -t "$pkgdir"/usr/lib/systemd/system/
