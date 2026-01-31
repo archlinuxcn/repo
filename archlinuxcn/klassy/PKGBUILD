@@ -5,7 +5,7 @@ _pkgname=klassy
 pkgbase="${_pkgname}"
 pkgname=("${_pkgname}"
          "${_pkgname}-qt5")
-pkgver=6.4.breeze6.4.0
+pkgver=6.4
 pkgrel=1
 pkgdesc='Highly customizable binary Window Decoration, Application Style and Global Theme plugin for recent versions of the KDE Plasma desktop.'
 arch=(x86_64)
@@ -39,13 +39,8 @@ makedepends=(extra-cmake-modules
              kiconthemes5
              kirigami2
              kwindowsystem5)
-source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('77c757b5edef9808a84fe50f9277369ecafc38fba8d7cda11eb448c0c170a3ff')
-
-#prepare() {
-#  cd "${_pkgname}-${pkgver}"
-#  patch -Np1 < "${srcdir}/plasma6.3.patch"
-#}
+source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('6d9e2bd22254e71a787678d2bd55013832f448e7328090d1ae9da00748cc02d2')
 
 build() {
   cmake -B build -S "${_pkgname}-${pkgver}" \
