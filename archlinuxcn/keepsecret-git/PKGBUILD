@@ -1,0 +1,34 @@
+# Maintainer: Rocka <rocka@archlinuxcn.org>
+
+_pkgname=keepsecret
+pkgname=keepsecret-git
+pkgver=1.0.0.r28.g84d8f7d
+pkgrel=1
+pkgdesc='Password manager'
+arch=(x86_64)
+url='https://apps.kde.org/keepsecret/'
+license=(GPL-2.0-or-later)
+depends=(gcc-libs glib2 glibc qt6-base qt6-declarative kconfig kcoreaddons kdbusaddons ki18n kirigami kirigami-addons libsecret)
+makedepends=(extra-cmake-modules git)
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=('git+https://invent.kde.org/utilities/keepsecret.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/${_pkgname}"
+  git describe --long --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  local cmake_options=(
+    -B build
+    -S "${srcdir}/${_pkgname}"
+  )
+  cmake "${cmake_options[@]}"
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
