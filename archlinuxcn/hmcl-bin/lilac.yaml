@@ -1,14 +1,14 @@
 maintainers:
-  - github: Misaka13514
-
+  - github: hour-keeper
 build_prefix: extra-x86_64
-
-pre_build_script: update_pkgver_and_pkgrel(_G.newver)
-
-post_build: git_pkgbuild_commit
-
+pre_build_script: |
+  aur_pre_build(maintainers=['hour-keeper','TTsdzb'])
+  update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+post_build_script: |
+  git_add_files(['PKGBUILD', '.install', 'hmcl-launch-script', 'hmcl.desktop'])
+  git_commit()
+  update_aur_repo()
 update_on:
   - source: github
     github: HMCL-dev/HMCL
-    use_latest_release: true
-    prefix: v
+    use_max_release: true
