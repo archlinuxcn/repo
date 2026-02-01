@@ -1,6 +1,6 @@
 pkgbase=ttf-noto-vf
 pkgname=(ttf-noto-{sans,serif,sans-mono}-vf)
-pkgver=2026.01.01
+pkgver=2026.02.01
 pkgrel=1
 provides=(ttf-font noto-fonts noto-fonts-extra)
 arch=(any)
@@ -9,7 +9,7 @@ license=('OFL-1.1')
 source=(https://github.com/notofonts/notofonts.github.io/archive/refs/tags/noto-monthly-release-$pkgver.tar.gz
         46-noto-sans-vf.conf 46-noto-serif-vf.conf 46-noto-sans-mono-vf.conf
         66-noto-sans-vf.conf 66-noto-serif-vf.conf 66-noto-sans-mono-vf.conf)
-sha256sums=('f1bec0dd722fcfcb0aa75c803530e3a8ae4e0dd59e5b93a52dd8f57d5494ef44'
+sha256sums=('d531eacd8ffc4c842474220b025ef7953c4bae329ecc8792a697d55a9f6a5204'
             '83a8faf6a47954075f97a2d555048e2a6689c38603b2ca00150157bf645f4593'
             'c94368b24506770767d003e5bcba589a8e402e489c240ee52453bf3ac7e9b5fa'
             'f5c09b37280d7569b6c99a78511639be4ae25b8c5406464422fe0421fe13a884'
