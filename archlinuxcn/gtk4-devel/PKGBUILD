@@ -89,10 +89,6 @@ b2sums=('b4bb5c865bc6b8447c8bd2e20502ecc08deae61a86d160497084201f365b975ee1a216a
 
 prepare() {
   cd gtk
-
-  # Allow -fcf-protection to work
-  # https://gitlab.gnome.org/GNOME/gtk/-/issues/6153
-  git apply -3 ../0001-HACK-Don-t-use-objcopy-for-resource-embedding.patch
 }
 
 build() {
@@ -155,6 +151,11 @@ END
   # Built by GTK 4, shared with GTK 3
   _pick guic usr/bin/gtk4-update-icon-cache
   _pick guic usr/share/man/man1/gtk4-update-icon-cache.1
+  rm -rf "${pkgdir}/usr/bin/gtk4-icon-editor"
+  rm -rf "${pkgdir}/usr/share/applications/org.gtk.Shaper.desktop"
+  rm -rf "${pkgdir}/usr/share/icons/hicolor/scalable/apps/org.gtk.Shaper.Devel.svg"
+  rm -rf "${pkgdir}/usr/share/icons/hicolor/scalable/apps/org.gtk.Shaper.svg"
+  rm -rf "${pkgdir}/usr/share/icons/hicolor/symbolic/apps/org.gtk.Shaper-symbolic.svg"
 }
 
 # vim:set sw=2 sts=-1 et:
