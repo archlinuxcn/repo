@@ -1,7 +1,7 @@
 # Maintainer: Rocket Aaron <i at rocka dot me>
 
 pkgname=ttf-noto-megamerge
-pkgver=2026.01.01
+pkgver=2026.02.01
 pkgrel=1
 pkgdesc='Single font covering all of the living and historical scripts in Noto'
 provides=(noto-fonts)
