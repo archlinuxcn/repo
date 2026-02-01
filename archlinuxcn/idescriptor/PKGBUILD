@@ -55,7 +55,6 @@ sha256sums=('554bc489048c4a1a0c93a4c40996021ccc486138a96af5acb6dba0f9766b1246'
 
 prepare() {
 	cd "${_srcname}/"
-	git cherry-pick -n dd9a6a7577e75b5897fda714b2d4019b8814f748
 	git rm lib/win-ifuse
 
 	git submodule init
