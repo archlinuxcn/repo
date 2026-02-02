@@ -1,6 +1,6 @@
 pkgname=julia-git-opus_jll-src
-pkgver=1.6.0+0
-_commit=d65bd4aac1a4c4e996d59ff5e0fbd49e4ab7c13e
+pkgver=1.6.1+0
+_commit=c3907c86bc28f184d533a99b1cca568acce18802
 pkgrel=1
 pkgdesc="Opus_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Opus_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git opus)
 source=("git+https://github.com/JuliaBinaryWrappers/Opus_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('eca22ed237f55e1e29dbc20fc90f34469b0a785143b216ed112cb54c1d2698e2'
+sha256sums=('7e211aa1449adf7953a7d7daf109de8b0a8ab274f9676de1d19c1c8030147b8f'
             '23ef6a1a734aea4c2880403239159acd5a69718cd8e20cbca1f8536f15c50294')
 
 build() {
