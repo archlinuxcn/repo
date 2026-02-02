@@ -8,8 +8,8 @@ pkgdesc="A tool to auto ban peers on the Bittorrent network."
 arch=('any')
 url="https://github.com/PBH-BTN/PeerBanHelper"
 license=('GPL-3.0-only')
-depends=('java-runtime>=21' 'sh')
-makedepends=('git' 'java-environment>=21' 'nodejs' 'pnpm')
+depends=('java-runtime>=25' 'sh')
+makedepends=('git' 'java-environment>=25' 'nodejs' 'pnpm')
 source=("${_repo}::git+https://github.com/PBH-BTN/PeerBanHelper.git#tag=v${pkgver}" # If we use the tarball, the git commit information is missing, and a warning will appear in the version information of the WebUI.
         "peerbanhelper.sh"
         "${pkgname}.sysusers"
