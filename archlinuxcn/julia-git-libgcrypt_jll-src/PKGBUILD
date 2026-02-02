@@ -1,6 +1,6 @@
 pkgname=julia-git-libgcrypt_jll-src
-pkgver=1.11.2+0
-_commit=ee6f99bff014fbb3a3a1f8d5a68a3707ec6d1cfa
+pkgver=1.12.0+0
+_commit=d94d1de3862765a51c11c4c1943983152b69fce6
 pkgrel=1
 pkgdesc="Libgcrypt_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Libgcrypt_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libgcrypt)
 source=("git+https://github.com/JuliaBinaryWrappers/Libgcrypt_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('00552b93839bca6e2336aa789e054e697900bfbd5765d6cdd7a56af94e3d93d8'
+sha256sums=('359d6b1dc84763d7535f36cac3a77fdcee689a20d927ac892e74e9ac2e6b82eb'
             'f6ef5f20326be6a90f201f8c3472eaef3dbf8c8be2fc60fc55d5be6ba9fb9732')
 
 build() {
