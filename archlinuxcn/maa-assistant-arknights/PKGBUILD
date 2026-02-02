@@ -7,9 +7,9 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=6.3.0-beta.5
+_pkgver=6.3.0-beta.6
 pkgver=${_pkgver//-/}
-pkgrel=3
+pkgrel=1
 _pkgdesc="An Arknights assistant"
 arch=(x86_64)
 url="https://github.com/MaaAssistantArknights/MaaAssistantArknights"
@@ -21,7 +21,7 @@ source=("git+$url.git#tag=v${_pkgver}"
 "git+https://github.com/MaaXYZ/MaaUtils.git"
 "FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaXYZ/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
 install="${_pkgname}.install"
-md5sums=('92c6960c355d7f1b194aa814ba075214'
+md5sums=('fc7803207a2c16b7abaedaf6da453f60'
          'SKIP'
          '4555f8dce0cec02022356d50c8f2275c')
 
