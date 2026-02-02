@@ -4,12 +4,10 @@ post_build: git_pkgbuild_commit
 repo_depends:
   - julia-git
   - julia-pkg-scripts
-  - highs
-
 update_on:
   - source: regex
     url: 
-        https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HiGHS_jll/version
+      https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HiGHS_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
   - alias: alpm-lilac
     alpm: highs
