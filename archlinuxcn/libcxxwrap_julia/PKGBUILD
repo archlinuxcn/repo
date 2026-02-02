@@ -1,6 +1,6 @@
 pkgname=libcxxwrap_julia
-pkgver=0.14.7
-pkgrel=22
+pkgver=0.14.8
+pkgrel=1
 pkgdesc=" C++ library for backing CxxWrap.jl "
 url="https://github.com/JuliaInterop/libcxxwrap-julia"
 arch=('aarch64' 'x86_64')
@@ -8,7 +8,7 @@ license=('MIT')
 makedepends=(git cmake)
 depends=(julia-git)
 source=("git+https://github.com/JuliaInterop/libcxxwrap-julia#tag=v${pkgver}")
-sha256sums=('e16b8b3273e7ae439628300052c12d9b1e8a5233fd5a076de61d7c2c8421aa3b')
+sha256sums=('66fa023ba9d4b7488bfc5fd8473e7e2bbc89ef706d12edc3f68614dd0795a5cb')
 # LTO breaks unique linkage of guard variable
 options=('!lto')
 
