@@ -7,7 +7,7 @@
 
 _ocamlname='lwt'
 pkgname="ocaml-$_ocamlname"
-pkgver='6.0.0'
+pkgver='6.1.0'
 pkgrel='1'
 pkgdesc='A library for cooperative threads in OCaml'
 arch=('x86_64' 'aarch64')
@@ -29,7 +29,7 @@ makedepends=(
 )
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-b2sums=('76f1cfc45b8b2ee3058482b55c4f9ca5586e6b957ef8e7837dd29154b906964a789508f1a3395f51fef791b05de00ef7d33983cdad4a62454cb2d000aa1b5089')
+b2sums=('b46a6a6d23e81b4d96b9e6a7944ebd1b492674cfc7f63a79e8b0776550dea7df922e26288d659ecc781d7d81fd27e931f74090793f43e9fa7faa511427bd32d0')
 
 prepare()
 {
