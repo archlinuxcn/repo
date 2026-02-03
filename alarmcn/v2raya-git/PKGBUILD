@@ -54,7 +54,7 @@ EOF
 }
 
 package() {
-	depends+=('v2ray>=5.0.0')
+	depends+=('v2raya-core')
 
 	cd "${pkgname}/"
 	install -Dm755 service/v2raya -t "${pkgdir}/usr/bin/"
