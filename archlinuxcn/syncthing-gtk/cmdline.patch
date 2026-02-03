@@ -1,0 +1,16 @@
+--- src/syncthing-gtk-0.9.4.5/syncthing_gtk/app.py  2023-03-12 18:09:43.000000000 +0100
++++ src/syncthing-gtk-0.9.4.5/syncthing_gtk/app.py  2025-08-23 11:13:09.630374090 +0200
+@@ -508,11 +508,11 @@
+         Sets self.process, adds related handlers and starts daemon.
+         Just so I don't have to write same code all over the place.
+         """
+-        cmdline = [self.config["syncthing_binary"], "-no-browser"]
++        cmdline = [self.config["syncthing_binary"], "--no-browser"]
+         vars, preargs, args = parse_config_arguments(self.config["syncthing_arguments"])
+         cmdline = preargs + cmdline + args
+         if self.home_dir_override:
+-            cmdline += ["-home", self.home_dir_override]
++            cmdline += ["--home", self.home_dir_override]
+
+         self.process = DaemonProcess(cmdline, self.config["daemon_priority"], self.config["max_cpus"], env=vars)
+         self.process.connect("failed", self.cb_daemon_startup_failed)

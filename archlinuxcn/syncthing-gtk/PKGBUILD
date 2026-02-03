@@ -5,7 +5,7 @@
 
 pkgname=syncthing-gtk
 pkgver=0.9.4.5
-pkgrel=5
+pkgrel=6
 pkgdesc='GTK3 based GUI and notification area icon for Syncthing.'
 arch=('any')
 url='https://github.com/syncthing-gtk/syncthing-gtk'
@@ -14,19 +14,20 @@ replaces=( 'syncthing-gtk-python3' )
 provides=( 'syncthing-gtk-python3' )
 conflicts=('syncthing-gtk-python3' )
 depends=(
-    'syncthing>=1.0' 'gtk3' 'libnotify'
+    'syncthing>=2.0' 'gtk3' 'libnotify'
     'python-bcrypt' 'python-cairo' 'python-dateutil' 'python-gobject'
 )
 makedepends=('python-setuptools' 'git')
 source=(
     "$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz"
+    "cmdline.patch"
 )
-sha256sums=(
-    '42758c3490a7f2ab1323c2ee6a6bef460ceb13b1f5d412c02f3b9347e798573c'
-)
+sha256sums=('42758c3490a7f2ab1323c2ee6a6bef460ceb13b1f5d412c02f3b9347e798573c'
+            '465706bb1003a3cca9f4cc9f71049b56b08f20bf436e8a517b24859780dce420')
 
 prepare() {
     cd "$pkgname-$pkgver"
+    patch -Np2 < "../cmdline.patch"
 }
 
 build() {
