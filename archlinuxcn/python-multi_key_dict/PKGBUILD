@@ -1,0 +1,19 @@
+# Maintainer: Maxwell Pray a.k.a. Synthead <synthead@gmail.com>
+
+_pkgname=multi_key_dict
+pkgname=python-$_pkgname
+pkgver=2.0.3
+pkgrel=1
+pkgdesc="Implementation of a multi-key dictionary."
+url="https://github.com/formiaczek/multi_key_dict"
+license=("MIT")
+arch=("any")
+makedepends=("python-setuptools")
+depends=("python")
+source=("https://pypi.python.org/packages/source/m/$_pkgname/$_pkgname-$pkgver.tar.gz")
+md5sums=("fea179deaaf496872c9db77dab30d523")
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python setup.py install --root="$pkgdir" --optimize=1
+}
