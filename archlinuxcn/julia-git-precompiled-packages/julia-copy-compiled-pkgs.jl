@@ -14,7 +14,7 @@ const has_syntax_ver = isdefined(Base, :PkgLoadSpec)
     import Base: project_get_syntax_version, PkgLoadSpec
     stale_cachefile(src, syntax_ver, cachepath) =
         Base.stale_cachefile(PkgLoadSpec(src, syntax_ver), cachepath,
-	                     ignore_loaded=true)
+                             ignore_loaded=true)
 else
     project_get_syntax_version(d) = VERSION
     stale_cachefile(src, syntax_ver, cachepath) =
@@ -126,5 +126,9 @@ const tgt_dir = ARGS[3]
 const pkgnames = ARGS[4:end]
 
 for name in pkgnames
-    copy_pkg_cache(get_pkginfo(stdlib_dir, name), compiled_dir, tgt_dir)
+    local info = get_pkginfo(stdlib_dir, name)
+    if info === nothing
+        error("Unable to load package $(name)")
+    end
+    copy_pkg_cache(info, compiled_dir, tgt_dir)
 end
