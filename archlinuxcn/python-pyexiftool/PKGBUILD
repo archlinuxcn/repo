@@ -1,0 +1,19 @@
+# Maintainer: samarthj <dev@samarthj.com>
+# Contributor: Levente Polyak <anthraxx[at]archlinux[dot]org>
+
+pkgname=python-pyexiftool
+pkgver=0.5.6
+pkgrel=0
+pkgdesc="Library to communicate with an instance of ExifTool command-line application"
+arch=('any')
+url="https://github.com/sylikc/pyexiftool"
+license=("GPL-3.0-or-later")
+makedepends=("python-setuptools")
+source=(https://github.com/sylikc/pyexiftool/archive/refs/tags/v${pkgver}.tar.gz)
+sha512sums=('5845de2da50e2d18bd869f2f82560a6b8e85d21e20d94dcf1c17e90c226867d48047c1f0d8b31d8fb3afbda47568cd74061d4e4bea8dc472dc2b1fdf004544d6')
+
+package() {
+  cd pyexiftool-${pkgver}
+
+  python setup.py install -O1 --prefix=/usr --root="${pkgdir}"
+}
