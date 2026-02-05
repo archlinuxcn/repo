@@ -9,7 +9,8 @@ update_on:
   - source: "github"
     github: "swaggo/swag"
     prefix: v
-    exclude_regex: '*-rc.*'
+    from_pattern: '-'
+    to_pattern: '.'
     use_latest_release: true
     include_prereleases: false
 
