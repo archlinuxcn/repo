@@ -14,3 +14,6 @@ post_build_script: |
 update_on:
   - source: github
     github: Kraftland/portable
+  - source: alpm
+    alpm: systemd
+    strip_release: true
