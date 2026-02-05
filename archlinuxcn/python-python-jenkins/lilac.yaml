@@ -1,0 +1,9 @@
+maintainers:
+  - github: jaxvanyang
+pre_build_script: aur_pre_build(maintainers=['jaxvanyang'])
+post_build: aur_post_build
+update_on:
+  - source: aur
+  - source: pypi
+    pypi: python-jenkins
+  - alias: python
