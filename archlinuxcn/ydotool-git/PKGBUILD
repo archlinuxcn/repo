@@ -1,12 +1,12 @@
 _pkgname=ydotool
 pkgname=$_pkgname-git
 pkgver=1.0.4.r38.g708e96f
-pkgrel=1
+pkgrel=2
 pkgdesc="Generic command-line automation tool (no X!), works on Wayland & tty"
 arch=('x86_64')
 makedepends=('cmake' 'git' 'make' 'pkg-config' 'scdoc')
 url="https://github.com/ReimuNotMoe/ydotool"
-license=('AGPL3')
+license=('AGPL-3.0-only')
 source=(${_pkgname}::git+https://github.com/ReimuNotMoe/ydotool.git
         66-uinput.rules uinput.conf)
 sha256sums=('SKIP'
