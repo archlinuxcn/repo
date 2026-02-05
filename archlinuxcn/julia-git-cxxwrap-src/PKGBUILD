@@ -1,6 +1,6 @@
 pkgname=julia-git-cxxwrap-src
-pkgver=0.17.4
-_commit=f761770cdc26da82e4c1176f2ccd230b7242b7d8
+pkgver=0.17.5
+_commit=858d87ce47eb82b5306ab76d6aad77f0e241e574
 pkgrel=1
 pkgdesc="CxxWrap.jl"
 url="https://github.com/JuliaInterop/CxxWrap.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaInterop/CxxWrap.jl.git#commit=$_commit")
-sha256sums=('a7d1c0eb1d9f49f5183e2f1bb9935c54be3014f7b4b0d621137c58bd19891208')
+sha256sums=('3fbcbad5b8f728f2687174fd4d39355b9a08dba97908c5b51980742e4867be2e')
 
 package() {
   cd CxxWrap.jl
