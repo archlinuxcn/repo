@@ -1,0 +1,48 @@
+# Maintainer: Jax Young <jaxvanyang@gmail.com>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Maxwell Pray a.k.a. Synthead <synthead@gmail.com>
+
+_name=python-jenkins
+pkgname=python-$_name
+pkgver=1.8.3
+_src="python_jenkins-$pkgver"
+pkgrel=2
+pkgdesc="A python wrapper for the Jenkins REST API which aims to provide a more conventionally pythonic way of controlling a Jenkins server"
+url='https://opendev.org/jjb/python-jenkins/'
+license=('BSD-3-Clause')
+arch=('any')
+depends=(
+  'python-six>=1.3.0'
+  'python-pbr>=0.8.2'
+  'python-multi_key_dict'
+  'python-requests'
+)
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+checkdepends=(
+  'python-mock'
+  'python-testscenarios'
+  'python-multiprocess'
+  'python-requests-mock'
+)
+optdepends=('python-requests-kerberos: Kerberos authentication support')
+source=("$_name-$pkgver.tar.gz::https://files.pythonhosted.org/packages/source/${_name::1}/${_name//-/_}/${_name//-/_}-$pkgver.tar.gz")
+sha512sums=('b9eeec59b114c941d4927b625decce82cd886e92823204a9c32b53954df1fab712f426fb3686cfeb2667db4cf559791e8e8d2b116b151c166d4ddc3936c3f511')
+
+build() {
+  export PBR_VERSION="$pkgver"
+
+  cd "$_src"
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd "$_src"
+  python -m unittest
+}
+
+package() {
+  cd "$_src"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -D COPYING "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}
