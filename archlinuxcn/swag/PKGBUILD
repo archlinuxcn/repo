@@ -6,7 +6,7 @@ arch=('x86_64')
 url="https://github.com/swaggo/swag"
 license=('MIT')
 makedepends=('go' git)
-source=(source::"git+https://github.com/swaggo/swag#tag=v$pkgver")
+source=(source::"git+https://github.com/swaggo/swag#tag=v$(echo ${pkgver} | sed "s/_/-/g")")
 sha256sums=('9f46bcc25d02c84499bf9c7cede955f57b8cbee945be789163764e996316de2c')
 
 build() {
