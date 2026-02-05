@@ -3,18 +3,22 @@
 _pkgname=multi_key_dict
 pkgname=python-$_pkgname
 pkgver=2.0.3
-pkgrel=3
+pkgrel=4
 pkgdesc="Implementation of a multi-key dictionary."
 url="https://github.com/formiaczek/multi_key_dict"
 license=("MIT")
 arch=("any")
 makedepends=("python-setuptools")
 depends=("python")
-source=("https://pypi.python.org/packages/source/m/$_pkgname/$_pkgname-$pkgver.tar.gz")
-md5sums=("fea179deaaf496872c9db77dab30d523")
+source=(
+  "https://pypi.python.org/packages/source/m/$_pkgname/$_pkgname-$pkgver.tar.gz"
+  LICENSE
+)
+md5sums=('fea179deaaf496872c9db77dab30d523'
+         '7fc12ed7603f5865f2a12bc7f77fe05e')
 
 package() {
   cd "$_pkgname-$pkgver"
   python setup.py install --root="$pkgdir" --optimize=1
-	install -Dm644 ../../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
