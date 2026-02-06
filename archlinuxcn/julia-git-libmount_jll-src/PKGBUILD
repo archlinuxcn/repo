@@ -1,6 +1,6 @@
 pkgname=julia-git-libmount_jll-src
-pkgver=2.41.2+0
-_commit=4a691f67073baef8bb9c6c4e573fc2f8062218ed
+pkgver=2.41.3+0
+_commit=6b6a06f157072486eccd0acd9f4ba2812a619b4d
 pkgrel=1
 pkgdesc="Libmount_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Libmount_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git util-linux-libs)
 source=("git+https://github.com/JuliaBinaryWrappers/Libmount_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('19fdd40eb6a346dfc8c1b6d3ecf27feac586999f2f9889d235e1ec6e48cfb9a8'
+sha256sums=('50c489bc99a064f194c9b17708157fa60a4100d6ebe35fae946a07b79a09865a'
             '31ffe8db146717b820b8d1442864efc65bdf23d829c2d14d6f870aee6e0c3dfd')
 
 build() {
