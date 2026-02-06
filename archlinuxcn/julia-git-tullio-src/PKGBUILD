@@ -11,6 +11,12 @@ depends=(julia-git)
 source=("git+https://github.com/mcabbott/Tullio.jl.git#commit=$_commit")
 sha256sums=('3b384486de04244c50cf436e8305073be0ecd5f79275a10d44814ab4f2730d51')
 
+prepare() {
+  cd Tullio.jl
+
+  sed -i -e '/typeof(Base._shrink)/s/.*/#&/' src/precompile/precompile_Base.jl
+}
+
 package() {
   cd Tullio.jl
 
