@@ -1,0 +1,18 @@
+pkgname=julia-git-tullio-src
+pkgver=0.3.8
+_commit=8ec0d4b2c81153283a475595590cac40783626ae
+pkgrel=1
+pkgdesc="Tullio.jl"
+url="https://github.com/mcabbott/Tullio.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/mcabbott/Tullio.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Tullio.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Tullio "${pkgdir}" "${pkgname}" julia-git
+}
