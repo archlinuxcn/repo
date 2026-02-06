@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 33590c1..f758cba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -199,6 +199,7 @@ endif(BUILD_TESTS)
+ 
+ if(BUILD_PLAYER)
+ add_executable(player player.cpp player/dblk_compr.c)
++set_target_properties(player PROPERTIES OUTPUT_NAME "vgmplayer")
+ target_include_directories(player PRIVATE ${LIBVGM_SOURCE_DIR})
+ target_link_libraries(player PRIVATE vgm-audio vgm-player vgm-utils)
+ if(USE_SANITIZERS)
