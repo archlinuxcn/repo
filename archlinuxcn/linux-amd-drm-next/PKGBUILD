@@ -2,8 +2,8 @@
 # Maintainer: heavysink <winstonwu91@gmail.com>
 
 pkgbase=linux-amd-drm-next              
-_tag='amd-drm-next-6.20-2026-01-30'
-pkgver=6.20.2026.01.30
+_tag='amd-drm-next-6.20-2026-02-06'
+pkgver=6.20.2026.02.06
 pkgrel=1
 pkgdesc="Linux kernel next with bleeding edge AMD DRM drivers"
 arch=(x86_64)
@@ -34,7 +34,7 @@ source=(
   "$_srcname::git+https://gitlab.freedesktop.org/agd5f/linux#tag=$_tag"
   config::https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/raw/main/config        # the main kernel config file
 )
-sha256sums=('5690df73c553c90d6f307431620da75966cd5f876d853f8076974a220bdc9f32'
+sha256sums=('23add6211ed8b694fcc8535052bdaa006d8fb725a58b3de1a92f87b976c105ed'
             '505d823490e964e66ebe5889a3701347b4e4e2faf1772b3964f0360a176eadf8')
 
 export KBUILD_BUILD_HOST=archlinux
