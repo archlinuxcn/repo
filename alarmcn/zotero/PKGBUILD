@@ -1,8 +1,8 @@
 # Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=7.0.15
-pkgrel=3
+pkgver=8.0.2
+pkgrel=0
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
 url="https://github.com/zotero/zotero"
@@ -10,8 +10,7 @@ license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch')
 source=("zotero.desktop"
-        "https://ftp.mozilla.org/pub/firefox/nightly/2024/06/2024-06-09-20-51-51-mozilla-central/firefox-128.0a1.en-US.linux-aarch64.tar.bz2"
-        "zotero-client::git+https://github.com/zotero/zotero.git#commit=3ff13bc"
+        "zotero-client::git+https://github.com/zotero/zotero.git#tag=$pkgver"
         "zotero-translators::git+https://github.com/zotero/translators.git"
         "zotero-styles::git+https://github.com/zotero/bundled-styles.git"
         "zotero-pdf-worker::git+https://github.com/zotero/pdf-worker.git"
@@ -24,12 +23,9 @@ source=("zotero.desktop"
         "zotero-csl::git+https://github.com/citation-style-language/locales.git"
         "zotero-libreoffice-integration::git+https://github.com/zotero/zotero-libreoffice-integration.git"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
-        "disable-updater.patch"
-        0001-A-more-generic-way-to-specify-the-archs-to-build.patch)
-noextract=(firefox-128.0a1.en-US.linux-aarch64.tar.bz2)
+        "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            '6ef76929cb6db1ffef92e99935dfaac700beb3a49f6a72cd173cb53167e6441f'
-            '9fc6d82c0a47bd65783e58524dacaa342425cdbeb3bb3c60791d633ad6ca9817'
+            '2aafa232b9c50e93cc27eae012e045ddecd02529ccaf01380450f544aa8bde96'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -42,27 +38,17 @@ sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
             'SKIP'
             'SKIP'
             'SKIP'
-            'dc1894ac2e1520c3dae8e9cd5e09608f4bb3298bdede2891a77118187edffa9d'
-            '181a2ee9bd6ecdf7078a3a5f399b1720824dc6d2bbc7b520e314fd294f6345c2')
+            'dc1894ac2e1520c3dae8e9cd5e09608f4bb3298bdede2891a77118187edffa9d')
+
+_zotero_arch=$CARCH
+if [[ $_zotero_arch == aarch64 ]]; then
+  _zotero_arch=arm64
+fi
 
 prepare() {
   cd "$srcdir/zotero-client"
 
-  # Lie about the version for now since we need fx128 to use the nightly build
-  echo "$pkgver.SOURCE" > version
-
-  cp "app/update-packaging/removed-files_linux-x86_64" \
-     "app/update-packaging/removed-files_linux-aarch64"
-  (
-    mkdir -p app/xulrunner
-    . app/config.sh
-    cp "$srcdir/firefox-128.0a1.en-US.linux-aarch64.tar.bz2" \
-       app/xulrunner/firefox-$GECKO_VERSION_LINUX-aarch64.tar.bz2
-  )
-  sed -i -e 's/MinVersion=.*/&a0/' app/assets/application.ini
-
   patch -N -p1 < "$srcdir/disable-updater.patch"
-  patch -N -p1 < "$srcdir/0001-A-more-generic-way-to-specify-the-archs-to-build.patch"
 
   npm i --legacy-peer-deps
 
@@ -101,12 +87,12 @@ prepare() {
 build() {
   cd "$srcdir/zotero-client"
   NODE_OPTIONS=--openssl-legacy-provider npm run build
-  app/scripts/dir_build -q -a 'x86_64 aarch64'
+  app/scripts/dir_build -q -a $_zotero_arch
 }
 
 package() {
   install -dDm755 "$pkgdir"/usr/{bin,lib/zotero}
-  cp -r "$srcdir/zotero-client/app/staging/Zotero_linux-$CARCH"/* "$pkgdir/usr/lib/zotero"
+  cp -r "$srcdir/zotero-client/app/staging/Zotero_linux-${_zotero_arch}"/* "$pkgdir/usr/lib/zotero"
   ln -s /usr/lib/zotero/zotero "$pkgdir/usr/bin/zotero"
   install -Dm644 "$srcdir/zotero.desktop" "$pkgdir/usr/share/applications/zotero.desktop"
 
