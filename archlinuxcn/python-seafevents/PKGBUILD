@@ -1,8 +1,8 @@
 # Maintainer: Klemens Schölhorn <klemens@schoelhorn.eu>
 
 pkgname=python-seafevents
-pkgver=13.0.17
-pkgrel=2
+pkgver=13.0.18
+pkgrel=1
 pkgdesc="Python library for accessing seafile data model"
 arch=('any')
 url="https://github.com/haiwen/seafevents"
@@ -11,7 +11,7 @@ depends=('python')
 makedepends=('python-setuptools')
 source=("https://github.com/haiwen/seafevents/archive/v${pkgver}-server.tar.gz"
         setup.py.in)
-sha256sums=('25841caa5c159d19d64d521f4b2fae979818c1d4300000fd2ac5d76552e7afda'
+sha256sums=('57dd2dc2a1788001f1b61c9fe402767c701a96e777ff0c7da40d54c3a558606d'
             'a8aeb5d2b62bb7b5d3468459730418936626f6cd748e35d99c07c6bb989656f7')
 
 package() {
