@@ -2,7 +2,7 @@
 # Contributor: Matthias Kurz <m dot kurz at irregular dot at>
 
 pkgname=zotero
-pkgver=8.0.1
+pkgver=8.0.2
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
@@ -10,7 +10,7 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch' 'tar')
-_tag=b029317bc19d288514a3ccc297dd487c6045b836 # git rev-parse $pkgver
+_tag=000111caef969e9e3286b50affa29c22ac7c5778 # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
@@ -28,7 +28,7 @@ source=("zotero.desktop"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            '4546e067501d1632e9b97fbceaec8d2efe8c843b05969a0048551315ee7132b9'
+            '2aafa232b9c50e93cc27eae012e045ddecd02529ccaf01380450f544aa8bde96'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -82,7 +82,7 @@ prepare() {
   cd "$srcdir/zotero-client/reader"
   git submodule init
   # Stupid hack because of sometimes dangling commits
-  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 2ae628f9fd230e57ab5bf44ddc9355a7f9026951
+  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 2334200130e8da8fad0e52714bb49f00aae83377
   git config submodule.pdfjs/pdf.js.url "$srcdir/zotero-pdf-js"
   git config submodule.epubjs/epub.js.url "$srcdir/zotero-epub-js"
   git -c protocol.file.allow=always submodule update
