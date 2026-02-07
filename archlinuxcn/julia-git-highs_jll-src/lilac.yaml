@@ -6,11 +6,11 @@ repo_depends:
   - julia-pkg-scripts
 update_on:
   - source: regex
-    url: 
-      https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HiGHS_jll/version
+    url: https://raw.githubusercontent.com/yuyichao/archcn-julia-pkgs/master/pkgs/HiGHS_jll/version
     regex: 'version: *([^ ]*@[^ ]*)'
-  - alias: alpm-lilac
-    alpm: highs
-    provided: libhighs.so
+  - source: alpmfiles
+    pkgname: highs
+    strip_dir: true
+    filename: libhighs.so.\d+
   - source: manual
     manual: 1
