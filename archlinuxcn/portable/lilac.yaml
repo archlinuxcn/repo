@@ -20,5 +20,6 @@ update_on:
     to_pattern: '_'
     exclude_regex: "beta*"
   - source: alpm
-    alpm: systemd
+    alpm: systemd-libs
+    provided: libudev.so
     strip_release: true

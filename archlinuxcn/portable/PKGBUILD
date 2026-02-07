@@ -10,7 +10,7 @@ url="https://github.com/Kraftland/portable"
 license=(GPL-3.0-or-later)
 provides=(portable)
 groups=()
-options=(!debug !strip)
+options=(!debug)
 
 depends=(
 	"libnotify"
@@ -20,12 +20,12 @@ depends=(
 	"xdg-dbus-proxy"
 	"bubblewrap"
 	"util-linux"
-	"glib2"
 	"glibc"
 	"dbus"
 	"bash"
 	"xdg-desktop-portal-impl"
 	"grep"
+	"systemd-libs"
 )
 
 optdepends=(
