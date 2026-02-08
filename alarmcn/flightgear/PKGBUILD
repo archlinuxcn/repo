@@ -4,7 +4,7 @@
 # Contributor: Hans Janssen <hans@janserv.xs4all.nl>
 
 pkgname=flightgear
-pkgver=2024.1.1
+pkgver=2024.1.4
 pkgrel=1
 pkgdesc="An open-source, multi-platform flight simulator"
 arch=(armv7h aarch64 x86_64)
@@ -19,7 +19,7 @@ optdepends=('qt6-base: fgfs --launcher'
 license=("GPL")
 url="http://www.flightgear.org/"
 source=("https://gitlab.com/flightgear/flightgear/-/archive/${pkgver}/flightgear-${pkgver}.tar.gz")
-sha256sums=('8a5410d7894d942bd2feed60c09d601bc46a670707ded771c6daf6ee7114655a')
+sha256sums=('7a91d585b6150a04423914d71e5094137cc90046c705abc5489441f0c2829a56')
 
 prepare() {
   cd flightgear-$pkgver
