@@ -24,7 +24,7 @@ sha256sums=('8a5410d7894d942bd2feed60c09d601bc46a670707ded771c6daf6ee7114655a'
             '2b1277d3e33d9e4a28d80c8089ef4477431a7346892f07581984ff5529a0237b')
 
 prepare() {
-  cd flightgear-v$pkgver
+  cd flightgear-$pkgver
 
   patch -Np1 --no-backup-if-mismatch < ../fix-openal.patch
 
@@ -33,7 +33,7 @@ prepare() {
 }
 
 build() {
-  cd flightgear-v$pkgver/build
+  cd flightgear-$pkgver/build
 
   # no -DSYSTEM_FLITE since flite1 is required
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
@@ -61,7 +61,7 @@ build() {
 }
 
 package() {
-  cd flightgear-v$pkgver/build
+  cd flightgear-$pkgver/build
   make DESTDIR="$pkgdir" install
 
   install -Dm0644 ../package/flightgear.ico "$pkgdir"/usr/share/icons/flightgear.ico

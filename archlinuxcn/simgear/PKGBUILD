@@ -20,7 +20,7 @@ source=(
 sha256sums=('5e7215d5876d1def78b90a1dee5424f0b3f4ecd7a71a1e074e21d984d4d2dbbf')
 
 prepare() {
-  cd simgear-v$pkgver
+  cd simgear-$pkgver
 
   rm -rf build
   mkdir -p build/
@@ -29,7 +29,7 @@ prepare() {
 }
 
 build() {
-  cd simgear-v$pkgver/build
+  cd simgear-$pkgver/build
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   cmake .. \
@@ -45,6 +45,6 @@ build() {
 }
 
 package() {
-  cd simgear-v$pkgver/build
+  cd simgear-$pkgver/build
   make DESTDIR="$pkgdir" install
 }

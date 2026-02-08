@@ -18,6 +18,6 @@ sha256sums=('39202a62d1236d51450232778751339bd29de650ea16a27c7ebbdccd6ea355b7')
 
 package() {
   mkdir -p "$pkgdir"/usr/share/flightgear
-  mv fgdata-v${pkgver}/ "$pkgdir"/usr/share/flightgear/data
+  mv fgdata-${pkgver}/ "$pkgdir"/usr/share/flightgear/data
   chown root:root "$pkgdir"/usr/share/flightgear/data
 }
