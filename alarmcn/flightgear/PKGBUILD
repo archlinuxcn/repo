@@ -18,15 +18,11 @@ optdepends=('qt6-base: fgfs --launcher'
             'flightgear-data')
 license=("GPL")
 url="http://www.flightgear.org/"
-source=("https://gitlab.com/flightgear/flightgear/-/archive/${pkgver}/flightgear-${pkgver}.tar.gz"
-        fix-openal.patch)
-sha256sums=('8a5410d7894d942bd2feed60c09d601bc46a670707ded771c6daf6ee7114655a'
-            '2b1277d3e33d9e4a28d80c8089ef4477431a7346892f07581984ff5529a0237b')
+source=("https://gitlab.com/flightgear/flightgear/-/archive/${pkgver}/flightgear-${pkgver}.tar.gz")
+sha256sums=('8a5410d7894d942bd2feed60c09d601bc46a670707ded771c6daf6ee7114655a')
 
 prepare() {
   cd flightgear-$pkgver
-
-  patch -Np1 --no-backup-if-mismatch < ../fix-openal.patch
 
   rm -rf build
   mkdir build
