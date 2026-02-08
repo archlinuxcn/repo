@@ -6,8 +6,8 @@ pkgdesc="Imporved Qt-based ZJU-Connect GUI"
 arch=("i686" "x86_64" "armv7h" "aarch64" "riscv64")
 url='https://github.com/chenx-dust/EZ4Connect'
 license=('GPL-3.0-or-later')
-depends=('hicolor-icon-theme' 'qt6-base>6.8.0' 'qt6-5compat>=6.8.0' 'qt6-webengine>=6.8.0' 'zju-connect-bin')
-makedepends=('make' 'qt6-tools' 'gcc' 'cmake')
+depends=('hicolor-icon-theme' 'qt6-base>6.8.0' 'qt6-5compat>=6.8.0' 'qt6-webengine>=6.8.0' 'qt6-svg>=6.8.0' 'zju-connect-bin')
+makedepends=('make' 'qt6-tools' 'gcc' 'cmake' 'extra-cmake-module')
 provides=('ez4connect')
 conflicts=('ez4connect-bin')
 _appname='EZ4Connect'
