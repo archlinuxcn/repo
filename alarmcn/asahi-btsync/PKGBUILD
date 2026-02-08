@@ -2,15 +2,15 @@
 # Maintainer: Matthias Kurz <m.kurz@irregular.at>
 
 pkgname=asahi-btsync
-pkgver=0.2.4
-pkgrel=2
+pkgver=0.2.5
+pkgrel=1
 pkgdesc='Tool to sync Bluetooth pairing keys with macos on ARM Macs'
 arch=('aarch64')
 url="https://crates.io/crates/asahi-btsync"
 makedepends=('rust' 'cargo-license')
 license=('MIT')
 source=("asahi-btsync-${pkgver}.tar.gz::https://crates.io/api/v1/crates/asahi-btsync/${pkgver}/download")
-sha256sums=('10b44fcd6f66e9dcc7c7315392232619a46cb4467ca9450b2b15bc384ffc722b')
+sha256sums=('22cef77c4f88f2d676cdae4bc2b472cfca7036a23c047f01d703f2a209af7b5d')
 
 build() {
   cd "asahi-btsync-${pkgver}"
