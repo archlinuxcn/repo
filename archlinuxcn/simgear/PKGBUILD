@@ -4,8 +4,8 @@
 # Contributor: Hans Janssen <hans@janserv.xs4all.nl>
 
 pkgname=simgear
-pkgver=2024.1.1
-pkgrel=2
+pkgver=2024.1.4
+pkgrel=1
 pkgdesc="A set of open-source libraries designed to be used as building blocks for quickly assembling 3d simulations, games, and visualization applications."
 arch=(armv7h aarch64 x86_64)
 depends=(glu glut freealut openscenegraph libexpat.so udns
@@ -17,7 +17,7 @@ url="http://www.flightgear.org/"
 options=('makeflags' 'staticlibs')
 source=(
   https://gitlab.com/flightgear/simgear/-/archive/${pkgver}/simgear-${pkgver}.tar.gz)
-sha256sums=('5e7215d5876d1def78b90a1dee5424f0b3f4ecd7a71a1e074e21d984d4d2dbbf')
+sha256sums=('512238508b9f4101ac1515acad31b3a1efbdd26cc24665e55523010f5753b613')
 
 prepare() {
   cd simgear-$pkgver
