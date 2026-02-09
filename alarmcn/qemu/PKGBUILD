@@ -23,14 +23,11 @@ pkgname=(
   qemu-ui-{curses,dbus,egl-headless,gtk,opengl,sdl,spice-{app,core}}
   qemu-user{,-static}{,-binfmt}
   qemu-vhost-user-gpu
+  qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-# The qemu-vmsr-helper is only available on the x86 architecture.
-if [[ $CARCH = x86_64 ]]; then
-  pkgname=("${pkgname[@]}" qemu-vmsr-helper)
-fi
-pkgver=10.1.2
-pkgrel=4
+pkgver=10.2.0
+pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
 url="https://www.qemu.org/"
@@ -137,9 +134,9 @@ source=(
   65-kvm.rules
   99-qemu-guest-agent.rules
   $pkgbase-8.1.1-static_regression.patch
-  $pkgbase-9.2.2-libnfs6.patch
+  $pkgbase-10.2.0-libnfs6.patch
 )
-sha512sums=('4defbcb78f65ba3d8079466bdb3ab29e26f10129723e045d34901e7d524656e5ff729dc97fb33537febe2596eb0b21a02aadd88007eb5b226e599bd236213263'
+sha512sums=('cd910090cf8146fdd30151bded8bebe43d9e7fce8b84d9f87130a99d0bd908f310f4bef5484b53a56c29dd7a08410890d02d0a7ab90ce6af73522ff8ba5b364e'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
@@ -147,8 +144,8 @@ sha512sums=('4defbcb78f65ba3d8079466bdb3ab29e26f10129723e045d34901e7d524656e5ff7
             'bdf05f99407491e27a03aaf845b7cc8acfa2e0e59968236f10ffc905e5e3d5e8569df496fd71c887da2b5b8d1902494520c7da2d3a8258f7fd93a881dd610c99'
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839'
             'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12'
-            '7949b1435ed979836c59149b4b06b80fe14fa89ef12d1e027860df392e2ffdaf4a0f881021f80b4ee56e8657068bf7f2c6415c9891f34c32228b9d35e9359c8f')
-b2sums=('6e6e27c5de4f70f928a19ef64c00adbcb9723882db3eabd6acd7543f6b3d886db2862cf75ddcec86012c103d6927be464f03e2a3e91873b87cbbcafa0be95671'
+            '7a01af6146658939aa2576eb888df3a1c22f321cfba0a3c6edc0e1c66e1c30d47b800420b328c655c0c1fda549eccf5cfa798441bcea0778249306bbc4f41f13')
+b2sums=('f0522a35221fbb4b2b2703c3a75be663e13a10357816ea60562323481c41bb18a93bf7202697df8a8b8f44e7685299ab3ffdc6bb791d785d8e4146658134d600'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
@@ -156,7 +153,7 @@ b2sums=('6e6e27c5de4f70f928a19ef64c00adbcb9723882db3eabd6acd7543f6b3d886db2862cf
         '3559fe9c4f744194939770047a0a02d07ff791c845a80726d0bc7b8c4801ed5f11150e7d5adab813844b3dab1cf38c3a5a87fb6efbb8fc9dccdda9fa56409ed8'
         'a9a2bdfeeb44eb86cbe88ac7c65f72800bdb2fd5cecb02f3a258cf9470b52832180aab43c89d481f7fd4d067342a9a27dd6c8a94d625b95d6e2b912e47d274e7'
         '209ec05e161d157aaa08a9fcbea45cf87aa22fe9360f9b3c477a78a274e4ecee989c16121f9e6b7765bb479c9db718c98db047c27fd426c127c4c95e28877a16'
-        '16fe3a16eb874a69324ae42ba9f96deacb832e8cf9123cafb7f5148fbc3c84a2c78876b8fc62b9b9abefabfcfdcdbcfc1955040368d4dc1b3d4ccd719ec9b410')
+        '18f05db5082752daef3c98f7fc996cd4ffc4ba5c282704997a40b916d3984bb999ed2bc6c66ff04f03834b1c6ff6474988b85e3752e5409bf8b3149f6986661b')
 validpgpkeys=('CEACC9E15534EBABB82D3FA03353C9CEF108B584') # Michael Roth <flukshun@gmail.com>
 
 _qemu_system_deps=(
@@ -291,7 +288,7 @@ prepare() {
   patch -Np1 -d $pkgbase-$pkgver -i ../$pkgbase-8.1.1-static_regression.patch
 
   # support libnfs 6 (LIBNFS_API_V2)
-  patch -Np1 -d $pkgbase-$pkgver -i ../$pkgbase-9.2.2-libnfs6.patch
+  patch -Np1 -d $pkgbase-$pkgver -i ../$pkgbase-10.2.0-libnfs6.patch
 
   # extract licenses for TCG
   sed -n '1,23p' $pkgbase-$pkgver/tcg/tcg-internal.h > tcg.LICENSE.MIT.txt
@@ -556,7 +553,7 @@ package_qemu-common() {
     _pick qemu-system-ppc usr/bin/qemu-system-ppc{,64}
     _pick qemu-system-ppc usr/share/man/man1/qemu-system-ppc{,64}.1*
 
-    _pick qemu-system-ppc-firmware usr/share/qemu/dtb/{bamboo,canyonlands}.dtb
+    _pick qemu-system-ppc-firmware usr/share/qemu/dtb/{bamboo,canyonlands,pegasos{1,2}}.dtb
     # NOTE: needs to be replaced by openbios
     _pick qemu-system-ppc-firmware usr/share/qemu/openbios-ppc
     _pick qemu-system-ppc-firmware usr/share/qemu/pnv-pnor.bin
@@ -565,7 +562,7 @@ package_qemu-common() {
     # NOTE: needs to be replaced by slof
     _pick qemu-system-ppc-firmware usr/share/qemu/slof.bin
     _pick qemu-system-ppc-firmware usr/share/qemu/u-boot.e500
-    _pick qemu-system-ppc-firmware usr/share/qemu/u-boot-sam460-20100605.bin
+    _pick qemu-system-ppc-firmware usr/share/qemu/u-boot-sam460.bin
 
     _pick qemu-system-riscv usr/bin/qemu-system-riscv{32,64}
     _pick qemu-system-riscv usr/share/man/man1/qemu-system-riscv{32,64}.1*
@@ -1212,6 +1209,8 @@ package_qemu-vhost-user-gpu() {
 
 package_qemu-vmsr-helper() {
   pkgdesc="QEMU persistent reservation utility"
+  # NOTE: The qemu-vmsr-helper is only available on the x86 architecture.
+  arch=(x86_64)
   depends=(gcc-libs glib2 libglib-2.0.so libgmodule-2.0.so glibc gnutls libcap-ng libcap-ng.so liburing liburing.so numactl libnuma.so pam libpam.so qemu-common=$pkgver-$pkgrel)
   mv -v $pkgname/* "$pkgdir"
   install -vDm 644 $pkgbase-$pkgver/contrib/systemd/$pkgname.{service,socket} -t "$pkgdir/usr/lib/systemd/system/"
