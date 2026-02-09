@@ -4,7 +4,7 @@
 
 # Tested on linux 6.13.6 with 03f0:0867 HP USB-C Universal Dock
 pkgname='evdi-dkms'
-pkgver=1.14.13
+pkgver=1.14.14
 _pkgver=$pkgver
 pkgrel=1
 pkgdesc='kernel module that enables management of multiple screens, primarily for DisplayLink USB VGA DVI HDMI DisplayPort video'
@@ -19,7 +19,7 @@ _srcdir="evdi"
 source=(
   "git+https://github.com/DisplayLink/evdi#tag=v${pkgver}"
 )
-sha256sums=('00b24ce5cf2a3b89b490192e172a74f2ff3823177ef6d29f8eef2cc35901807c')
+sha256sums=('a9e05ef83a715cd21b1f1813d28b2a13266d7756568170f9274b5e650f51924f')
 
 build() {
   cd "${_srcdir}"
