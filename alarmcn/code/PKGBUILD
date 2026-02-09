@@ -1,13 +1,14 @@
 # Maintainer: Filipe Laíns (FFY00) <lains@archlinux.org>
-# Maintainer Bert Peters <bertptrs@archlinux.org>
+# Maintainer: Bert Peters <bertptrs@archlinux.org>
+# Maintainer: Quentin Michaud <mh4ckt3mh4ckt1c4s@archlinux.org>
 # Contributor: Michael Hansen <zrax0111 gmail com>
 # Contributor: Francisco Magalhães <franmagneto gmail com>
 
 pkgname=code
 pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
-_electron=electron37
-pkgver=1.106.3
+_electron=electron39
+pkgver=1.109.0
 pkgrel=1
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
@@ -16,7 +17,7 @@ depends=($_electron 'libsecret' 'libx11' 'libxkbfile' 'ripgrep')
 optdepends=('bash-completion: Bash completions'
             'zsh-completions: ZSH completitons'
             'x11-ssh-askpass: SSH authentication')
-makedepends=('git' 'nodejs-lts-jod' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq' 'tar')
+makedepends=(tar 'git' 'nodejs-lts-jod' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq')
 provides=('vscode')
 options=('!strip' '!debug')
 source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
@@ -26,12 +27,12 @@ source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
         'clipath.patch'
         # Originally taken from https://github.com/termux/termux-packages/raw/0974620c52e72d0c80bcc8a42bad482555f629e8/x11-packages/code-oss/0009-openvsx-extension-signature.patch
         '0009-openvsx-extension-signature.patch')
-sha512sums=('11d1e82406a1e9d5f8250c55f256633f40409a53b0a10689ab4043c5566ad5adaf9ca124043f8a200d6549d68aa0d3670c213e18a54e46cc8d1aae64ee55dd07'
+sha512sums=('40c42728cc783d64d3a7f3178c154e11c955d6f72999bf0685ca0f0d4dc3ade7375633fa742b7b320e7a36681295addb575027f9422cd8c89a434cd07279ad80'
             '793f9ff6306e3992ac89802d98110cba288ea1181a901467333293b7d76182ef9792c2a39ff49d9347a18a174b1f42bc58862091dff583f4146c2704eea28033'
             '937299c6cb6be2f8d25f7dbc95cf77423875c5f8353b8bd6cd7cc8e5603cbf8405b14dbf8bd615db2e3b36ed680fc8e1909410815f7f8587b7267a699e00ab37'
             'b1aa0d7c5b3e3e8ba1172822d75ea38e90efc431b270e0b4ca9e45bf9c0be0f60922c8618969ef071b5b6dbd9ac9f030294f1bf49bcc28c187b46d113dca63a7'
             'e570b30cd470190aa56596913478d5fb8ba265a0f8c9d1408ea2118612cc69a360cc55e4523c3dc9c65f73e3dea53fc6620c97f6592fb9f86c3aca51ad3d9744'
-            '08054ecc96a9eaf49260dab31b921f94f6687ad73f7d5955f90db3ead370bf177d62dfc82c62484ae832c7282229ff5be71685f787dc25383da5b223be10cf9e')
+            'f60105e1a542d21622063d5c646ad9abf707394f214da24249bd873c130d2f5ebb875cc63a335c64dc9857b9c8d86ad1e75eb70072876db2453bace1f8d4475e')
 
 # Even though we don't officially support other archs, let's
 # allow the user to use this PKGBUILD to compile the package
@@ -123,7 +124,7 @@ prepare() {
   patch -p1 -i "$srcdir/clipath.patch"
 
   # disable electron checksum verification as we are not bundling electron
-  sed -i 's|validateChecksum: false,|validateChecksum: true,|' build/lib/electron.{js,ts}
+  sed -i 's|validateChecksum: false,|validateChecksum: true,|' build/lib/electron.ts
 }
 
 build() {
