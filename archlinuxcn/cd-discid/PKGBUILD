@@ -4,14 +4,14 @@
 
 pkgname=cd-discid
 pkgver=1.4
-pkgrel=5
+pkgrel=6
 pkgdesc="A backend utility to get CDDB discid information from a CD-ROM disc"
 arch=(x86_64)
 url="https://github.com/taem/cd-discid"
 license=(GPL-2.0-or-later)
 depends=(glibc)
 source=("cd-discid-${pkgver}.tar.gz::https://github.com/taem/cd-discid/archive/refs/tags/${pkgver}.tar.gz")
-sha512sums=('04f3962f7f3f0780c41b2f361397b54efe9c9748643d83311d63f7476d28f9bd295b96dd81f06df2c1e7d6ef095c6732107101c0fb7375fa521f4db67a3984da')
+sha512sums=('6bbc3395f61e41cc6343722bd2195518475911ac9c4fb9c2aefd7c2df49c4f36ea21b9cb5c7b0e57335dbe6f643923b9be56ebb9f51daa8128c2e665af3a12e5')
 
 build() {
   cd "cd-discid-${pkgver}"
