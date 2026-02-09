@@ -4,10 +4,10 @@ pkgname=continuwuity
 pkgdesc="a very cool, featureful fork of conduit (rust matrix homeserver)"
 url="https://forgejo.ellis.link/continuwuation/continuwuity"
 license=("Apache-2.0")
-arch=("x86_64")
+arch=("x86_64" "aarch64")
 pkgver=0.5.4
 pkgrel=1
-makedepends=("gcc" "rust" "cargo" "git" "clang" "linux-api-headers" "linux-headers" "llvm" "libc++" "autoconf")
+makedepends=("rust" "cargo" "git" "clang")
 depends=("gcc-libs" "glibc" "liburing" "jemalloc")
 source=("git+https://forgejo.ellis.link/continuwuation/continuwuity.git#tag=v$(echo ${pkgver} | sed 's|_|-|g')")
 sha256sums=('6737b351e5dc03fcbe1328c7735a3b915df8736fc3a32f39f1f9f0448b2c7488')
@@ -22,10 +22,9 @@ backup=("etc/conduwuit/conduwuit.toml")
 #}
 
 function prepare() {
-	export CFLAGS="-march=x86-64-v3 -mtune=generic -O3 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=3 -Wformat -fstack-clash-protection -fcf-protection -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"
 	cd "${srcdir}/continuwuity"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target host-tuple
 	export CONDUWUIT_VERSION_EXTRA=$(git rev-parse --short HEAD)
 }
 
@@ -39,7 +38,7 @@ function build() {
 function check() {
 	cd "${srcdir}/continuwuity"
 	export RUSTUP_TOOLCHAIN=stable
-#	cargo test --frozen --locked
+	cargo test --frozen --locked
 }
 
 function package() {
