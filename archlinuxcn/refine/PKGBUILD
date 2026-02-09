@@ -1,7 +1,7 @@
 # Maintainer: "Amhairghin" Oscar Garcia Amor (https://ogarcia.me)
 
 pkgname=refine
-pkgver=0.7.0
+pkgver=0.7.1
 pkgrel=1
 pkgdesc='Tweak various aspects of GNOME'
 arch=('any')
@@ -10,7 +10,7 @@ license=('GPL-3.0-or-later')
 depends=('libadwaita' 'python' 'python-gobject')
 makedepends=('blueprint-compiler' 'meson')
 source=("https://gitlab.gnome.org/TheEvilSkeleton/Refine/-/archive/${pkgver}/Refine-${pkgver}.tar.gz")
-b2sums=('77087961eaebc777de9ea4b525f682de19ee173d6954d6f6af28913bb86f4df65b85103595b191ef2bc568bbbe56979a2fc39b6523dafdd900275028ce1bec07')
+b2sums=('351dd132584dc1ed545b14292486a76d143e6b481ad2e2f689adc0c3518c20096b8adf81cd6ec6e82579319924bcc117015c7e89ac477988036d3f39aa6f9984')
 
 build() {
   arch-meson "Refine-${pkgver}" build -Dexec_name_as_base_id=true
