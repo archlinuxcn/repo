@@ -16,7 +16,7 @@ depends=($_electron 'libsecret' 'libx11' 'libxkbfile' 'ripgrep')
 optdepends=('bash-completion: Bash completions'
             'zsh-completions: ZSH completitons'
             'x11-ssh-askpass: SSH authentication')
-makedepends=('git' 'nodejs-lts-jod' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq')
+makedepends=('git' 'nodejs-lts-jod' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq' 'tar')
 provides=('vscode')
 options=('!strip' '!debug')
 source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
