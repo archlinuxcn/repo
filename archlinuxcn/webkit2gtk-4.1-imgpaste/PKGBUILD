@@ -1,9 +1,10 @@
 # Maintainer: q234 rty <q23456yuiop at gmail dot com>
 # Contributor: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 # Contributor: Eric Bélanger <eric@archlinux.org>
+# Deprecated, to be removed from AUR once 2.52.0 lands in extra
 
 pkgname=webkit2gtk-4.1-imgpaste
-pkgver=2.50.4
+pkgver=2.50.5
 pkgrel=1
 pkgdesc="Web content engine for GTK (with patches for pasting images from clipboard)"
 url="https://webkitgtk.org"
@@ -110,7 +111,7 @@ source=(
   EnlargeObjectSize.patch
   PasteBoardGLib.patch
 )
-sha256sums=('d3bfa473845acfab72635bada5e0d134fda6792c5b95c5c5cd141b46125bd8e4'
+sha256sums=('8737631bac3e9c7ad3e5208f9370e076c09d9c45b39980021ce54edadcc6f94f'
             'SKIP'
             '71b8a59c78d549fed0cd895207f49c7b3be40b236e96f4d7b9907a26521499bf'
             'a6b7fd668a42dc27cd6ea0fec5eb3501ab8241e18b4bd6c8844ad6bd3207cf6e')
