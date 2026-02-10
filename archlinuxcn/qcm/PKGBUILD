@@ -1,6 +1,12 @@
 # Maintainer: Integral <integral@member.fsf.org>
 # Contributor: Kimiblock Zhou <pn3535 at icloud dot com>
 
+# See third_party/CMakeLists.txt
+_rstd_commit=7eb8b411258b4a886231b8b87f7b5a472b6712e1
+_ncrequest_commit=b919f0ad9a85dc006392ebf8802eb4c7df7584a2
+_kstore_commit=d6f32d1a04be01328e1e528c0539e37b359c87e3
+_random_commit=6983466aadd1173627b362ff1a297527d9842531
+
 pkgname=qcm
 pkgver=1.3.4
 pkgrel=1
@@ -37,17 +43,17 @@ makedepends=(
 optdepends=('qcm-ncm-plugin: Netease Cloud Music plugin')
 source=(
 	"git+${url}.git#tag=v${pkgver}"
-	"git+https://github.com/hypengw/rstd.git"
-	"git+https://github.com/hypengw/ncrequest.git"
-	"git+https://github.com/hypengw/kstore.git"
-	"git+https://github.com/ilqvya/random.git"
+	"git+https://github.com/hypengw/rstd.git#commit=${_rstd_commit}"
+	"git+https://github.com/hypengw/ncrequest.git#commit=${_ncrequest_commit}"
+	"git+https://github.com/hypengw/kstore.git#commit=${_kstore_commit}"
+	"git+https://github.com/ilqvya/random.git#commit=${_random_commit}"
 	"fix-kdsingleapplication.patch"
 )
 sha256sums=('2f922f2a59099eecc84d843e24573efcd4d6bdf98919832bf4c0950ffd3301ba'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
+            'b709892b52b12b505cc8e6d04b01c5673ea6a468fb4209adac10e7ae50d2530a'
+            'c4e8c54feeddee23f759c732c467e5a215b253a63c6ab3876b6078eda9682abf'
+            '446da38faf1035aea96aef837923ee4c79c4d95a24c51c182d6d6d8edfb9e44a'
+            'd406c0f56460103047a15aab701e64993c0457e95ee61217f02effb5113db65e'
             '08a3aa14c098044dd4a129a292558df4ecfaf7bbeec0b295e5d8009c5939c422')
 
 prepare() {
