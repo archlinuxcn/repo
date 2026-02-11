@@ -6,16 +6,13 @@
 
 pkgname=lua-resty-lrucache
 pkgver=0.15
-pkgrel=1
-
+pkgrel=2
 pkgdesc='Lua lrucache for nginx lua module'
 arch=('any')
 depends=('luajit')
 url="https://github.com/openresty/lua-resty-lrucache"
-license=('BSD')
-
+license=('BSD-2-Clause')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/openresty/$pkgname/archive/v$pkgver.tar.gz")
-
 sha256sums=('8cf1a22e0d5b8f35cb0b2e14c58fcb3aa505a8fb6e956817f0cdb1f06593f072')
 
 build() {
