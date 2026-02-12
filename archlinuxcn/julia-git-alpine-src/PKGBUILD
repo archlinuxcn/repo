@@ -1,6 +1,6 @@
 pkgname=julia-git-alpine-src
-pkgver=0.5.7
-_commit=0925fa8240d9d1e91b9e8065676164e94a901deb
+pkgver=0.5.8
+_commit=b1e3664dc045bced90c141b312afdcb9520155dc
 pkgrel=1
 pkgdesc="Alpine.jl"
 url="https://github.com/lanl-ansi/Alpine.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/lanl-ansi/Alpine.jl.git#commit=$_commit")
-sha256sums=('fc1d63c721b688c4eea666d10b11d47840b11476c6d11981c91b268cc880a695')
+sha256sums=('b10e3d52cf26057ed2f290a9f301bd7998eb7cb62a2cca5b462aa2765cb3c65a')
 
 package() {
   cd Alpine.jl
