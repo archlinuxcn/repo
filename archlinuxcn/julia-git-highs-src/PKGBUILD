@@ -1,6 +1,6 @@
 pkgname=julia-git-highs-src
-pkgver=1.21.0
-_commit=771b92ff5bacd151ee0a5c7f991157664499d7ef
+pkgver=1.21.1
+_commit=86131da692a6ffb0eabeb133090dfe20e260c21f
 pkgrel=1
 pkgdesc="HiGHS.jl"
 url="https://github.com/jump-dev/HiGHS.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/HiGHS.jl.git#commit=$_commit")
-sha256sums=('d774e8f313566add1aaca68468bb7b3b0685877d33cd573e7a7a44aeda7968f0')
+sha256sums=('04bf9dfd44c5d6f6449f963b31aae322f14c46efab710744ea50315dd18917f2')
 
 package() {
   cd HiGHS.jl
