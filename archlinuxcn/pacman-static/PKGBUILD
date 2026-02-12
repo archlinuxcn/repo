@@ -17,7 +17,7 @@ _gpgerrorver=1.58
 _libassuanver=3.0.0
 _gpgmever=2.0.1
 _libseccompver=2.6.0
-pkgrel=4
+pkgrel=5
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=54d94116164b0b2202c6061c4a59c6f3e70820d8
@@ -213,7 +213,12 @@ build() {
             openssltarget='linux-aarch64'
             optflags='no-afalgeng'
             ;;
-    esac
+        riscv64)
+            openssltarget='linux64-$CARCH'
+            optflags=''
+            ;;
+	esac
+
     # mark stack as non-executable: http://bugs.archlinux.org/task/12434
     ./Configure --prefix="${srcdir}"/temp/usr \
                 --openssldir=/etc/ssl \
@@ -242,6 +247,7 @@ build() {
     install -Dvm644 bzlib.h "${srcdir}"/temp/usr/include/
     install -Dvm644 libbz2.a "${srcdir}"/temp/usr/lib/
 
+    # zstd
     cd "${srcdir}"/zstd-${_zstdver}/lib
     make libzstd.a
     make PREFIX="${srcdir}"/temp/usr install-pc install-static install-includes
@@ -270,7 +276,8 @@ build() {
     ./configure --prefix="${srcdir}"/temp/usr \
         --disable-shared \
         --disable-examples \
-        --disable-python-bindings
+        --disable-python-bindings \
+        --enable-lib-only
     make -C lib
     make -C lib install
 
@@ -278,6 +285,7 @@ build() {
     # needed for curl, which does not use it in the repos
     # but seems to be needed for static builds
     cd "${srcdir}"/c-ares-${_cares_ver}
+    autoreconf -fi
     ./configure --prefix="${srcdir}"/temp/usr \
         --disable-shared --disable-tests
     make -C src/lib
@@ -291,8 +299,9 @@ build() {
     ./configure --prefix="${srcdir}"/temp/usr \
                 --disable-shared \
                 --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
+                --enable-{ipv6,enable-threaded-resolver} \
                 --disable-{dict,gopher,imap,ldap,ldaps,manual,pop3,rtsp,smb,smtp,telnet,tftp} \
-                --without-{brotli,libidn2,librtmp,libssh2,libpsl} \
+                --without-{brotli,libidn2,librtmp,libssh2,libpsl,gssapi,nghttp3,ngtcp2} \
                 --disable-libcurl-option \
                 --with-openssl \
                 --enable-ares="${srcdir}"/temp/usr
@@ -320,7 +329,8 @@ build() {
     ./configure --prefix="${srcdir}"/temp/usr \
         --disable-fd-passing \
         --disable-shared \
-        --disable-languages
+        --disable-languages \
+        --disable-gpgsm-test
     make -C src
     make -C src install-{binSCRIPTS,libLTLIBRARIES,nodist_includeHEADERS,pkgconfigDATA}
 
