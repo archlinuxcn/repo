@@ -1,7 +1,7 @@
 pkgname=ashpd-demo
-pkgver=0.12.1
+pkgver=0.12.2
 epoch=1
-pkgrel=2
+pkgrel=1
 pkgdesc='asph-demo'
 arch=('x86_64')
 url='https://github.com/bilelmoussaoui/ashpd'
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('gtk4' 'libadwaita' 'libshumate' xdg-desktop-portal)
 makedepends=('git' 'ninja' 'meson' 'rust' libpipewire clang)
 source=("git+https://github.com/bilelmoussaoui/ashpd.git#tag=${pkgver}")
-sha256sums=('8cdb73647d50479d1d8ed2e224c4457e3dda61427280e01a8ed5281e1a2a7fa5')
+sha256sums=('4ccb39809e3b6c2ca2bcd3bf376a816e68c80d2d48e6611197dad613a7442df0')
 
 build() {
   cd ashpd/ashpd-demo
