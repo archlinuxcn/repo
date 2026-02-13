@@ -1,14 +1,14 @@
 _name=XSSProtector
 pkgname=mediawiki-xssprotector
-pkgver=20251003
+pkgver=20260213
 pkgrel=1
 pkgdesc="MediaWiki extension that add an extra layer of defense against XSS"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:XSSProtector"
 license=(''GPL-2.0-or-later'')
-depends=('mediawiki>=1.44' 'mediawiki<1.45')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/XSSProtector-REL1_44-8c882d5.tar.gz")
-sha256sums=('493f48c4476ed61a4fe431357044daef5eedd2092b624cdd75ef56589ab1a180')
+depends=('mediawiki>=1.45' 'mediawiki<1.46')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/XSSProtector-REL1_45-225d0e6.tar.gz")
+sha256sums=('90c24c818adc44219891a2b94a9c5fe630e855a8ed24b629d2d03acabaa17fe2')
 
 build() {
   true
