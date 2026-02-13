@@ -17,7 +17,7 @@ _gpgerrorver=1.58
 _libassuanver=3.0.0
 _gpgmever=2.0.1
 _libseccompver=2.6.0
-pkgrel=5
+pkgrel=6
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=54d94116164b0b2202c6061c4a59c6f3e70820d8
@@ -299,12 +299,11 @@ build() {
     ./configure --prefix="${srcdir}"/temp/usr \
                 --disable-shared \
                 --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
-                --enable-{ipv6,enable-threaded-resolver} \
+                --enable-{ipv6,threaded-resolver} \
                 --disable-{dict,gopher,imap,ldap,ldaps,manual,pop3,rtsp,smb,smtp,telnet,tftp} \
                 --without-{brotli,libidn2,librtmp,libssh2,libpsl,gssapi,nghttp3,ngtcp2} \
                 --disable-libcurl-option \
-                --with-openssl \
-                --enable-ares="${srcdir}"/temp/usr
+                --with-openssl
     make -C lib
     make install-pkgconfigDATA
     make -C lib install
