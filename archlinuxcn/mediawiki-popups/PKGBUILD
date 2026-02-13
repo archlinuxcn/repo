@@ -1,14 +1,14 @@
 _name=Popups
 pkgname=mediawiki-popups
-pkgver=20251003
+pkgver=20260213
 pkgrel=1
 pkgdesc="MediaWiki extension that displays popups when users hover over article links and footnote markers"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:Popups"
 license=(''GPL'')
-depends=('mediawiki>=1.44' 'mediawiki<1.45')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/Popups-REL1_44-f464e7f.tar.gz")
-sha256sums=('29d7e09312882183f8f93e5b36316dff1dc24b2baa58513153ef5f19aaf27300')
+depends=('mediawiki>=1.45' 'mediawiki<1.46')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/Popups-REL1_45-a4b1f6b.tar.gz")
+sha256sums=('4e2a3766328008ba1c6b17f718e9ed2082b00a699e6c7c9515131e6f8f7087e5')
 
 build() {
   true
