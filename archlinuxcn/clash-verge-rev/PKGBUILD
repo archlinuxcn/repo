@@ -14,12 +14,12 @@ conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 makedepends=('pnpm' 'cargo' 'jq' 'moreutils')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
-	"${_pkgname}-service.tar.gz::https://github.com/${pkgname}/${_pkgname}-service/archive/refs/tags/${CARCH}-unknown-linux-gnu.tar.gz")
+	"${_pkgname}-service-ipc.tar.gz::https://github.com/${pkgname}/${_pkgname}-service-ipc/archive/refs/tags/${CARCH}-unknown-linux-gnu.tar.gz")
 sha512sums=('8339aa91435e093c2b492b2f28b38ff43409b3d398c200866b5db13208aae326b26c0a4f65abd36a6fdf07777665145d0f90b7163867ebc45d50bb455125417b'
-            '9dbce77076b07691b5359b3e91c82190880f6caad291102fa28d8480bba53c27c8bac324032cbfee74e69653e2e97e54c430d17ad4fc5aaeb7a833d1b6598a4b')
+            'fccbc1a25697e60cdb190593266f7f68295f15d6524c016cf7837ea20ed54d66226c3eef5366d7ce58145de0d93ca05184db643dac53eab6f3bc988be888b244')
 
 prepare() {
-	pushd "${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
+	pushd "${_pkgname}-service-ipc-${CARCH}-unknown-linux-gnu/"
 	_prepare_service
 	popd
 
@@ -32,7 +32,7 @@ prepare() {
 }
 
 build() {
-	cd "${_pkgname}-service-${CARCH}-unknown-linux-gnu/"
+	cd "${_pkgname}-service-ipc-${CARCH}-unknown-linux-gnu/"
 	export CFLAGS+=" -ffat-lto-objects"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
@@ -70,7 +70,7 @@ _package_service() {
 	pushd target/release
 	local _suffix="${CARCH}-unknown-linux-gnu"
 	install -Dm755 "${_pkgname}-service" "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-${_suffix}"
-	install -Dm755 install-service "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-install-${_suffix}"
-	install -Dm755 uninstall-service "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-uninstall-${_suffix}"
+	install -Dm755 clash-verge-service-install "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-install-${_suffix}"
+	install -Dm755 clash-verge-service-uninstall "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-uninstall-${_suffix}"
 	popd
 }
