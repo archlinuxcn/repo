@@ -71,6 +71,7 @@ fi
 options=(
   !emptydirs
   !lto
+  !buildflags # Workaround arm pacman bug
 )
 _libdir=usr/lib/gcc/$CHOST/${pkgver%%+*}
 source=("git+https://sourceware.org/git/gcc.git#${_git_ref}"
