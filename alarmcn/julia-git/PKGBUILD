@@ -58,7 +58,7 @@ case "$CARCH" in
     ;;
 esac
 makedepends=("${depends_libs[@]}" llvm-julia-git gcc-fortran git patchelf python proot
-             "${_soname_deps[@]}" julia-git-common-scripts)
+             "${_soname_deps[@]}" julia-git-common-scripts tar)
 # Both debug and strip cause pacman to edit the ELF files and breaking them
 # for loading.
 options=('!debug' '!strip' '!buildflags')
