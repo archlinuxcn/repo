@@ -1,21 +1,16 @@
 # Maintainer:
 # Contributor: Patrick Northon <northon_patrick3@yahoo.ca>
 
-## links
-# https://localsend.org/
-# https://github.com/localsend/localsend
-
-## options
 : ${_install_path:=usr/lib}
 
 _pkgname="localsend"
 pkgname="$_pkgname"
 pkgver=1.17.0
-pkgrel=2
+pkgrel=3
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
-license=('MIT')
-arch=('x86_64')
+license=('Apache-2.0')
+arch=('x86_64' 'aarch64')
 
 depends=(
   'libayatana-appindicator'
@@ -23,7 +18,7 @@ depends=(
 makedepends=(
   'clang'
   'cmake'
-  'fvm' # AUR
+  'fvm'
   'git'
   'lld'
   'llvm'
@@ -58,7 +53,12 @@ build() (
 )
 
 package() {
-  cd "$_pkgsrc/app/build/linux/x64/release/bundle"
+  local _arch="x64"
+  if [[ "${CARCH::1}" == "a" ]]; then
+    _arch="arm64"
+  fi
+
+  cd "$_pkgsrc/app/build/linux/$_arch/release/bundle"
 
   # files
   install -Dm755 "localsend_app" "$pkgdir/$_install_path/$_pkgname/$_pkgname"
