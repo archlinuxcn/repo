@@ -3,12 +3,12 @@
 # Contributor: Roey Darwish Dror <roey.ghost@gmail.com>
 pkgname=topgrade
 pkgver=16.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Upgrade all the things"
 arch=('x86_64' 'aarch64')
 url="https://topgrade-rs.github.io"
 license=('GPL-3.0-or-later')
-depends=('gcc-libs')
+depends=('libgcc')
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/topgrade-rs/topgrade/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('d6e8376c6363545ce8994703c33f18d50fb4f8c689a2bc196bed159010c9cf03')
