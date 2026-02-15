@@ -1,19 +1,25 @@
 # Maintainer: Evangelos Foutras <foutrelis@archlinux.org>
 
 pkgname=7zip
-pkgver=25.01
+pkgver=26.00
 pkgrel=1
-pkgdesc="File archiver for extremely high compression"
+pkgdesc='File archiver for extremely high compression'
 arch=(aarch64 x86_64)
-url="https://www.7-zip.org"
-license=('LGPL-2.1-or-later' 'BSD-3-Clause' 'LicenseRef-UnRAR')
-depends=('glibc' 'gcc-libs' 'sh')
-makedepends=('uasm')
-provides=('p7zip')
-conflicts=('p7zip')
-_replaces=('p7zip')
+url='https://www.7-zip.org'
+license=('LGPL-2.1-or-later AND LicenseRef-UnRAR AND BSD-3-Clause AND BSD-2-Clause')
+depends=(
+  sh
+  libgcc
+  libstdc++
+  glibc
+)
+makedepends_x86_64=(uasm)
+provides=(p7zip)
+conflicts=(p7zip)
+_replaces=(p7zip)
 source=(https://7-zip.org/a/7z${pkgver//./}-src.tar.xz)
-sha256sums=('ed087f83ee789c1ea5f39c464c55a5c9d4008deb0efe900814f2df262b82c36e')
+sha512sums=('2374b3d90388838391ef35a95a81e97639478598011d46adee9ddb84ed8c287fad47f6d2d794c22b0fc5c1f7dec4bfaaa25b6e747c5e78100eb63818fe85b897')
+b2sums=('4ac1ecf98aa3bdcc968a75e250b467b0c38eb27dd6752fdc7c025d6d1b73cca648a12ba8a26691443cf929c22ef560c211959693f82acdff5d27cf0f8d159645')
 
 build() {
   local _platform_flags=()
@@ -26,7 +32,7 @@ build() {
       _platform_flags=(PLATFORM=x86 IS_X86=1 MY_ASM=uasm USE_ASM=1)
       ;;
     aarch64)
-      _platform_flags=(PLATFORM=arm64 IS_ARM64=1 MY_ASM=uasm USE_ASM=1)
+      _platform_flags=(PLATFORM=arm64 IS_ARM64=1 USE_ASM=1)
       ;;
   esac
 
