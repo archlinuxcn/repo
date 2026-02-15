@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+########## Section: General ##########
+
+# This is your Application ID, avoid conflict
+appID="org.flycast.Flycast"
+
+# This is a friendly name of an application. It should only contain ASCII characters and not spaces.
+friendlyName="Flycast"
+
+# This is the state directory of your application, which is located under "XDG_DATA_HOME"
+stateDirectory="Flycast_Data"
+
+# This is the target executable to launch
+launchTarget="flycast"
+
+# This is the target executable to launch when being activated by D-Bus
+#busLaunchTarget="gtk4-demo"
+
+# Enables Network access within the sandbox. Defaults to true.
+bindNetwork="true"
+
+# Takes a boolean value. Terminates the sandbox immediately after the main process exits. Defaults to true. Note that turning this on might affect applications that forks immediately and exits, like Firefox.
+terminateImmediately="true"
+
+########## Section: Output ##########
+
+# Allow apps to send notifications to the classic Notification endpoint, bypassing portals. Defaults to true.
+allowClassicNotifs="true"
+
+# Use zink for GL -> Vulkan translation
+useZink="false"
+
+# Enable compatibility workarounds for Qt5. Defaults to true.
+qt5Compat="false"
+
+# Takes a boolean value. When true, do not process XAuth files and forces wayland input method on Wayland and vice versa. Generally this should be true when possible.
+waylandOnly="false"
+
+# Expose all GPUs. Takes boolean value, usually used in games.
+gameMode="true"
+
+########## Section: Input ##########
+
+# Takes boolean value. Binds /dev/video* into the sandbox. Required if target application uses /dev/video* interfaces directly instead of v4l2.
+bindCameras="false"
+
+# Takes boolean value. Binds PipeWire socket into the sandbox. Required if target application doesn't use Portals. Please be aware that such operation *will* impact the integrity of host.
+bindPipewire="false"
+
+# Takes boolean value.
+bindInputDevices="true"
+
+########## Section: Portals ##########
+
+# If true, allows the sandboxed application to use the org.freedesktop.portal.Inhibit interface to inhibit certain actions, like suspend and logout
+allowInhibit="true"
+
+# If true, allow apps to register Global Shortcuts via the Portal.
+allowGlobalShortcuts="false"
+
+########## Section: Miscellaneous ##########
+
+# Wake the application using D-Bus calls towards StatusNotifiers. Deprecated.
+dbusWake="false"
+
+# Mount the flatpak-info. DO NOT disable unless you know what you are doing!
+mountInfo="true"
+
+########## Environment ##########
+
+# Below you can set envs that will be imported into the application sandbox
