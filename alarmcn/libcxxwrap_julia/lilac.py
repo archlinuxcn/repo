@@ -3,9 +3,9 @@
 from lilaclib import *
 
 def _get_libcxxwrap_commit(commit):
-  readme = s.get(f"https://raw.githubusercontent.com/JuliaBinaryWrappers/libcxxwrap_julia_jll.jl/{commit}/README.md").text
+  readme = s.get(f"https://raw.githubusercontent.com/JuliaBinaryWrappers/libcxxwrap_julia_jll.jl/{commit.strip()}/README.md").text
   m = re.search("https://github.com/JuliaPackaging/Yggdrasil/blob/([a-z0-9A-Z]*)/L/libcxxwrap_julia/build_tarballs\\.jl", readme)
-  build_tarballs = s.get(f"https://raw.githubusercontent.com/JuliaPackaging/Yggdrasil/{m[1]}/L/libcxxwrap_julia/build_tarballs.jl").text
+  build_tarballs = s.get(f"https://raw.githubusercontent.com/JuliaPackaging/Yggdrasil/{m[1].strip()}/L/libcxxwrap_julia/build_tarballs.jl").text
   m = re.search('git_repo, "([a-z0-9A-Z]*)"', build_tarballs)
   return m[1]
 
