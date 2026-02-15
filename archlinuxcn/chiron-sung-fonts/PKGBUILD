@@ -7,7 +7,7 @@ pkgname=(
     otf-chiron-sung-hk-vf
     ttf-chiron-sung-hk-vf
 )
-pkgver=1.023
+pkgver=1.024
 pkgrel=1
 pkgdesc='昭源宋體：現代筆形風格，平衡標準字形和印刷體慣用筆形的免費開源宋體字型'
 url='https://github.com/chiron-fonts/chiron-sung-hk'
@@ -16,7 +16,7 @@ license=('OFL-1.1')
 source=(
     $pkgbase-$pkgver.tar.gz::https://github.com/chiron-fonts/chiron-sung-hk/archive/refs/tags/v$pkgver.tar.gz
 )
-b2sums=('585b0a2ce84a5b405191d2a8f196d9fc56b0a82db35a796bcc4e494cee8497cadd4c5885eefa99d06b1076c90e2a1343d5832b2a05a49998fa59b20251edac51')
+b2sums=('64aea69fb2f1fd62a1c1f2880857124db765fa830c356afd1cb83c6a8876d566579d78a9357481953998fa5ac6a6400d8f283ef8bba46d9a2e1ce287f02a8b21')
 
 prepare() {
     cd chiron-sung-hk-$pkgver
