@@ -6,10 +6,13 @@ path = [
     "README.md",
     "keys/**",
     ".SRCINFO",
+    ".gitignore",
     ".nvchecker.toml",
     "*.install",
     "*.sysusers",
+    "*sysusers.conf",
     "*.tmpfiles",
+    "*tmpfiles.conf",
     "*.logrotate",
     "*.pam",
     "*.service",
@@ -24,21 +27,13 @@ SPDX-License-Identifier = "0BSD"
 
 [[annotations]]
 path = [
-    "chromium-136-drop-nodejs-ver-check.patch",
     "chromium-138-nodejs-version-check.patch",
-    "chromium-141-cssstylesheet-iwyu.patch",
+    "chromium-144-fix-hdr-issue.patch",
+    "chromium-145-fix-SYS_SECCOMP.patch",
     "compiler-rt-adjust-paths.patch",
     "increase-fortify-level.patch",
+    "ungoogled-chromium-145-build-with-wasm-rollup.patch",
     "use-oauth2-client-switches-as-default.patch",
-    "chromium-144-fix-hdr-issue.patch",
 ]
 SPDX-FileCopyrightText = "chromium contributors"
 SPDX-License-Identifier = "BSD-3-Clause"
-
-[[annotations]]
-path = [
-    "chromium-138-rust-1.86-mismatched_lifetime_syntaxes.patch",
-    "chromium-140.0.7339.41-rust.patch",
-]
-SPDX-FileCopyrightText = "NixOs contributors"
-SPDX-License-Identifier = "MIT"
