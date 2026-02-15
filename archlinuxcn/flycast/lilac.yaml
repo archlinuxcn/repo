@@ -1,0 +1,43 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: "github"
+    github: "flyinghead/flycast"
+    use_max_tag: true
+    prefix: "v"
+  - source: alpm
+    alpm: libao
+    provided: libao.so
+    strip_release: true
+  - source: alpm
+    alpm: alsa-lib
+    provided: libasound.so
+    strip_release: true
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+    strip_release: true
+  - source: alpm
+    alpm: miniupnpc
+    provided: libminiupnpc.so
+    strip_release: true
+  - source: alpm
+    alpm: libpulse
+    provided: libpulse.so
+    strip_release: true
+  - source: alpm
+    alpm: zlib-ng-compact
+    provided: libz.so
+    strip_release: true
+  - source: alpm
+    alpm: libzip
+    provided: libzip.so
+    strip_release: true
+
+build_prefix: archlinuxcn-x86_64
