@@ -18,7 +18,6 @@ depends=(
   'libzip'
   'miniupnpc'
   'sdl2'
-  zlib-ng-compat
 )
 makedepends=(
   'cmake'
@@ -94,6 +93,7 @@ package() {
 		'libminiupnpc.so'
 		'libpulse.so'
 		'libzip.so'
+		libz.so
 	)
 
 	DESTDIR="$pkgdir" cmake --install build
