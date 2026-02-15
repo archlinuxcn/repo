@@ -100,4 +100,5 @@ package() {
 	)
 
 	DESTDIR="$pkgdir" cmake --install build
+	rm -rfv "$pkgdir"/usr/{include,lib,share/pixmaps}
 }
