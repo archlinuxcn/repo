@@ -1,6 +1,6 @@
 pkgname=julia-git-aws_checksums_jll-src
-pkgver=0.2.9+0
-_commit=33566c164f353ef66277176517cbd4d0994e4be4
+pkgver=0.2.10+0
+_commit=5917fe1cbaebb7f5dce6451ba0d8e007082c49f0
 pkgrel=1
 pkgdesc="aws_checksums_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/aws_checksums_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git aws-checksums)
 source=("git+https://github.com/JuliaBinaryWrappers/aws_checksums_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('e7cb82786f4329ed8dcedd368e8befde4869b9ce39ac111d19087a5abeca72a2'
+sha256sums=('58bd868a40a1ea585ea2f0afa38989aeb7709eef09a652237140ae73ecc9085b'
             '633a6adecccef3a9d01ab8ed1e1634e57b120dcb62c1eeb54d43db2f17fff8bb')
 
 build() {
