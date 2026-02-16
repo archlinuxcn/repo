@@ -1,0 +1,15 @@
+maintainers:
+  - github: jaxvanyang
+pre_build_script: aur_pre_build(maintainers=['cotsuka'])
+post_build: aur_post_build
+update_on:
+  - source: aur
+  - source: github
+    github: simonw/llm
+    use_latest_release: true
+  - alias: python
+repo_depends:
+  - python-click-default-group
+  - python-condense-json
+  - python-sqlite-migrate
+  - sqlite-utils
