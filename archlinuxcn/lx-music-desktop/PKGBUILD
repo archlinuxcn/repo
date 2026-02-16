@@ -2,7 +2,7 @@
 
 pkgname=lx-music-desktop
 _name="LX Music"
-pkgver=2.12.0
+pkgver=2.12.1
 pkgrel=1
 pkgdesc='一个基于 Electron 的音乐软件'
 arch=(x86_64)
@@ -12,7 +12,7 @@ _electron=electron37
 depends=("$_electron" 'bash')
 makedepends=('nodejs' 'npm' 'python' 'git')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-b2sums=('bb32a395d1abd3c9fd505d5e712c82f0380791db657ee3ab9373cd122a8996ac14f1363190caa76b3eb68449c00fae355aa2b6f30a347bdd86b8a1bd82ae00e1')
+b2sums=('8992e42449b9af2b204f62c6e6136deafdc6adefc4a54dea735208e2fd309610c28dc9c54917c929ebd79d12fc732d863d28e10bf159cb0a880d5d2ed1529eb7')
 
 prepare() {
     cat >"${pkgname}.desktop" <<EOD
