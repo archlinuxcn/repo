@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_libxinerama_jll-src
-pkgver=1.1.6+0
-_commit=c576650b351815e5b9664f8c313dc28c015f1443
-pkgrel=2
+pkgver=1.1.7+0
+_commit=5428172f8b70714cd862317f637acee5758c5469
+pkgrel=1
 pkgdesc="Xorg_libXinerama_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libXinerama_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxinerama)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libXinerama_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('cc3723b0b850ef696695117058256bdd6d0784e46c61b18ff201d823dc968701'
+sha256sums=('58da139df475699cb82dde72f028662902c95c1087a2eef5b4045e85994df526'
             'e916333dc22ab236f137cc3040465476f0c9d71da7d524f4b0b0fd978898834d')
 
 build() {
