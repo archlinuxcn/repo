@@ -1,6 +1,6 @@
 pkgname=julia-git-statsmodels-src
-pkgver=0.7.8
-_commit=e835abc8c21a2769deac0fffd7992a285372423d
+pkgver=0.7.9
+_commit=99eb6b5679012cc2d41496da79aeb1749164c659
 pkgrel=1
 pkgdesc="StatsModels.jl"
 url="https://github.com/JuliaStats/StatsModels.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaStats/StatsModels.jl.git#commit=$_commit")
-sha256sums=('eb3a80c690e829e7d2d7068106d1387fcbdd275d5d9fff7b020e160afcffa394')
+sha256sums=('fc752331dcdf95d4978f3edf0fe42ceab833b8c3cb9dfe8b3d5a49902578e5cf')
 
 package() {
   cd StatsModels.jl
