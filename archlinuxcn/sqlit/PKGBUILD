@@ -1,0 +1,46 @@
+# Maintainer: Peter <peter.w.adams96@gmail.com>
+pkgname=sqlit
+pkgver=1.3.1
+pkgrel=2
+pkgdesc="The lazygit of SQL databases - a lightweight TUI for SQL Server, PostgreSQL, MySQL, SQLite, and more"
+arch=('any')
+url="https://github.com/Maxteabag/sqlit"
+license=('MIT')
+provides=('python-sqlit-tui')
+conflicts=('python-sqlit-tui')
+replaces=('python-sqlit-tui')
+depends=(
+    'python'
+    'python-textual'
+    'python-textual-fastdatatable'
+    'python-pyperclip'
+    'python-keyring'
+    'python-docker'
+)
+optdepends=(
+    'python-psycopg2: PostgreSQL, CockroachDB and Supabase support'
+    'python-pyodbc: SQL Server support'
+    'python-pymysql: MySQL support'
+    'python-mariadb-connector: MariaDB support'
+    'python-oracledb: Oracle support'
+    'python-duckdb: DuckDB support'
+    'python-clickhouse-connect: ClickHouse support'
+    'python-requests: Cloudflare D1 support'
+    'python-snowflake-connector-python: Snowflake support'
+    'python-paramiko: SSH tunnel support'
+    'python-sshtunnel: SSH tunnel support'
+)
+makedepends=('python-build' 'python-installer' 'python-hatchling' 'python-hatch-vcs')
+source=("https://files.pythonhosted.org/packages/source/s/sqlit-tui/sqlit_tui-${pkgver}.tar.gz")
+sha256sums=('6038767912de5541984b534906a995ab1163ba253ab96945b51e5a0e37123541')
+
+build() {
+    cd "sqlit_tui-${pkgver}"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "sqlit_tui-${pkgver}"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
