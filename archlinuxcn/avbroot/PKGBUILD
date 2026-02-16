@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=avbroot
-pkgver=3.24.1
+pkgver=3.25.0
 pkgrel=1
 pkgdesc="Tool for manipulating and re-signing Android A/B OTAs"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -9,7 +9,7 @@ url="https://github.com/chenxiaolong/${pkgname}"
 license=('GPL-3.0-or-later')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('dc7cbb3acf7de6742191e2b9c78905232c488e26e9a92b1d29111015f5c6eca8')
+sha256sums=('13cb1f91aeb01e26df31249cfe8d740d30cca82586d9c0af3a3fb7e93e7846fa')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
