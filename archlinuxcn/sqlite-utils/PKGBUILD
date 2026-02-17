@@ -1,10 +1,10 @@
 pkgname=sqlite-utils
 pkgver=3.39
-pkgrel=1
+pkgrel=2
 pkgdesc="CLI tool and Python utility functions for manipulating SQLite databases"
 arch=("any")
 url="https://sqlite-utils.datasette.io/"
-license=("Apache")
+license=("Apache-2.0")
 depends=("python-sqlite-fts4" "python-click" "python-click-default-group" "python-tabulate" "python-dateutil" "python-pluggy")
 makedepends=("python-build" "python-installer" "python-setuptools")
 checkdepends=("python-pytest" "python-hypothesis")
