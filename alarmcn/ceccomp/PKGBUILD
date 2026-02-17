@@ -2,7 +2,7 @@
 # Maintainer: RocketDev <ma2014119@outlook.com>
 pkgname=ceccomp
 pkgver=4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A C-based seccomp analysis tool"
 arch=(x86_64 aarch64)
 url="https://github.com/dbgbgtf1/Ceccomp"
@@ -18,6 +18,9 @@ makedepends=(
     util-linux # for flock to display a progress
     gettext # for i18n/l10n
 )
+checkdepends=(
+    python-pytest
+)
 
 source=("$pkgname"::git+https://github.com/dbgbgtf1/Ceccomp.git#tag=v${pkgver}?signed)
 b2sums=('178eaf32b6d1a17ed55ab00cc986ef3b7e7709fec86b3e1b17853f619a4ed9c37a5dba890ed4f33d95e102814c40465555ed0f7013eafe2e282d42edc3db8abe')
@@ -29,12 +32,18 @@ validpgpkeys=(
 
 build() {
     # lilac always has clean root build
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
     ./configure --destdir="$pkgdir" --packager="Arch Linux CN"
     make
 }
 
+check() {
+    cd "$pkgname"
+    make test
+    python -m pytest test
+}
+
 package() {
-    cd "$srcdir/$pkgname"
+    cd "$pkgname"
     make install
 }
