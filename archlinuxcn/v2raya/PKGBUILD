@@ -1,32 +1,31 @@
-# Maintainer: Dct Mei <dctxmei@yandex.com>
+# Maintainer: RocketDev <ma2014119@outlook.com>
+# Contributor: Dct Mei <dctxmei@yandex.com>
 
 pkgname=v2raya
 _pkgname=v2rayA
-pkgver=2.3.1
+pkgver=2.2.7.5
+epoch=1
 pkgrel=1
 pkgdesc="A web GUI client of Project V which supports VMess, VLESS, SS, SSR, Trojan and Pingtunnel protocols"
 arch=('x86_64')
 url="https://github.com/v2rayA/v2rayA"
-license=('AGPL-3.0')
-depends=('glibc' 'v2raya-core')
-makedepends=('git' 'go>=2:1.21.0-1' 'nodejs-lts-iron' 'yarn')
+license=('AGPL-3.0-only')
+depends=('glibc' 'v2raya-core' 'hicolor-icon-theme')
+makedepends=('git' 'go' 'nodejs-lts-jod' 'yarn')
 backup=("etc/default/v2raya")
-install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "v2raya.default")
-b2sums=('2d2c64badab875e968b297089a88be92bca4989679b57bf78c102c151ecb7e687729aee25c1068d3be03fd2259af6a880803227a72891654158d73dcede04963'
+b2sums=('76a5356f77b71fab8d0fe5ad3092556d49d7b7d74dcdd4e2c26f519ef3441b93276fe624d23ba876550e616adb129bdb4cadffd75a0f76082e706675fd336b45'
         '3a7be361041f2eda3fe36bb69268c316caf307bf3ec4f5d7b05bd994dd27032b2fc812d7776a669db471dda61594cc3f4fb98570e1abfe29758e1f4b8aea94b6')
 
 build() {
-    cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
+    cd "${_pkgname}-${pkgver}/gui"
     export OUTPUT_DIR="${srcdir}/${_pkgname}-${pkgver}/service/server/router/web/"
-    # https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
-    export NODE_OPTIONS="--openssl-legacy-provider"
     yarn cache clean
     yarn install
     yarn build
 
-    cd "$srcdir"/"v2rayA-${pkgver}"/service/
+    cd ../service
     export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
     export CGO_CPPFLAGS="${CPPFLAGS}"
     export CGO_CXXFLAGS="${CXXFLAGS}"
@@ -39,7 +38,7 @@ build() {
 }
 
 package() {
-    cd "${srcdir}"/"${_pkgname}-${pkgver}"/
+    cd "${_pkgname}-${pkgver}"
     install -Dm 644 LICENSE -t "${pkgdir}"/usr/share/licenses/v2raya/
     install -Dm 755 service/v2raya -t "${pkgdir}"/usr/bin/
     install -dm 750 "${pkgdir}"/etc/v2raya/
