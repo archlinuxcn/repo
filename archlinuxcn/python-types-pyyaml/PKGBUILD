@@ -2,7 +2,7 @@
 # Contributor: Achmad Fathoni<fathoni.id(at)gmail.com>
 
 pkgname=python-types-pyyaml
-pkgver=6.0.12.20250516
+pkgver=6.0.12.20250915
 pkgrel=1
 pkgdesc='Typing stubs for PyYAML'
 arch=(any)
@@ -13,7 +13,7 @@ makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools
 _name=${pkgname#python-}
 __name=${_name//-/_}
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${__name}/${__name}-$pkgver.tar.gz")
-sha512sums=('ecf1e43d80149972857867c1b53a7053f6a61774d7a6e9f285596bd2a55929c454aa4e4ea3f4e7c4769ba1aa32defeb8e0b58f4736f91688caad62d03c5da193')
+sha512sums=('0c4354814f53d044b58063f010a370f5b1fa503e21e4b431eb4af4554d9f9b9a404c6a91a476383434d12d1ebf741b5fcc0738db568f15a9a563cf91b1bd856c')
 
 build() {
     cd ${__name}-${pkgver}
