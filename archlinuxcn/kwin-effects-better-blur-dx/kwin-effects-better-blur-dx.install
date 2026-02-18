@@ -1,0 +1,12 @@
+msg() {
+  printf "%b" "\e[1;31m==> WARNING: To use this effect disable the default Blur effect and any other forks of the blur effect as well (such as the one provided by LightlyShaders). Then enable the Better Blur effect. You can do this under Desktop Effects in System Settings\n\e[0m"
+  printf "%b" "\e[1;33m==> NOTE: With Wobbly Windows enabled, the blur effect may be temporarily skipped during window wobbling or the square blur region may bleed outside the deformed window shape. This is expected behavior and the blur will return once the wobbling stops.\n\e[0m"
+}
+
+post_install() {
+  msg
+}
+
+post_upgrade() {
+  msg
+}

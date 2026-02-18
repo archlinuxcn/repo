@@ -1,20 +1,21 @@
 # Maintainer: Rocket Aaron <i at rocka dot me>
 # Contributor: Nico <d3sox at protonmail dot com>
 
-pkgname=kwin-effects-forceblur
-pkgver=1.5.0
-pkgrel=9
-pkgdesc="KWin Blur effect fork with window class force blur feature (Wayland & X11)"
+pkgname=kwin-effects-better-blur-dx
+pkgver=2.1.0
+pkgrel=1
+pkgdesc="Fork of the Plasma 6 blur effect with additional features (including force blur) and bug fixes."
 arch=(x86_64)
-url="https://github.com/taj-ny/kwin-effects-forceblur"
+url="https://github.com/xarblu/kwin-effects-better-blur-dx"
 license=(GPL-3.0-or-later)
 depends=(kio knotifications kwin kcrash kglobalaccel)
 makedepends=(git extra-cmake-modules qt6-tools)
+replaces=(kwin-effects-forceblur)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}.install")
 install="${pkgname}.install"
-sha256sums=('bfb43a73d270a63c1efa4a85da4f734af7289c9d57fb1d1ed475fbb90adbd7f1'
-            'ebf28d9a022c8b54039b373f5602f7e4f635d761706446d878f429b0ef1a7741')
+sha256sums=('64949e7cbb972e9b346c55af310d2a57b90255e0136e4bf083edb3f502e83b92'
+            '3c76155e0bb3fdd7f4ed84b70165063d96a7535ccef86b4e8ae642e42dc4f865')
 
 build() {
     cmake -S "${pkgname}-${pkgver}" -B build \
