@@ -3,7 +3,7 @@
 _repo=plasma6-window-title-applet
 pkgname=plasma6-applets-window-title
 pkgver=0.9.0
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc='Plasma 6 Window Title applet'
 url='https://github.com/dhruv8sh/plasma6-window-title-applet'
@@ -14,9 +14,16 @@ makedepends=('cmake' 'extra-cmake-modules')
 conflicts=('plasma5-applets-window-title')
 replaces=('plasma5-applets-window-title')
 source=("$_repo-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
-        "CMakeLists.txt")
+        "CMakeLists.txt"
+        "remove-appmenu-import.patch")
 sha256sums=('82a0ae9d10c47e36c510a45fb8f793891def81addfa32b0697b580a84d18a6c2'
-            '83714e18c7ed971aef0a58bb9546248d04376b9aeeb53b7b5c824eae0ed62d5b')
+            'dfa3eebcbe0f9f80cd9edbc9f983139993946319b3b9bb54e1f3cd3339e1ebf9'
+            '0e1313f6339f0cc4e2d6560c171753b9a24bda645eba55d3cdb5644b1213937f')
+
+prepare() {
+  cd "${srcdir}/${_repo}-${pkgver}"
+  patch -Np1 -i "${srcdir}/remove-appmenu-import.patch"
+}
 
 build() {
   local _src="$srcdir/$_repo-$pkgver"
