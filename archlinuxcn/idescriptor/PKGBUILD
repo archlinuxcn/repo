@@ -3,8 +3,8 @@
 
 pkgname=idescriptor
 _srcname=iDescriptor
-pkgver=0.2.0
-pkgrel=2
+pkgver=0.3.0
+pkgrel=1
 pkgdesc="A free, open-source, and cross-platform iDevice management tool"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/${_srcname}/${_srcname}"
@@ -48,7 +48,7 @@ source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/iDescriptor/uxplay.git"
 	"git+https://github.com/uncor3/libipatool-go.git"
 	"git+https://github.com/libZQT/ZUpdater.git")
-sha256sums=('554bc489048c4a1a0c93a4c40996021ccc486138a96af5acb6dba0f9766b1246'
+sha256sums=('8f77628776d3f32cfa76bb77dfed37e0f72ea6cee43276dfef9c5c2b62c3736c'
             'SKIP'
             'SKIP'
             'SKIP')
