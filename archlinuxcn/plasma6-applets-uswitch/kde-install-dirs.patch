@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ad0d3a4..bbffeae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,6 +27,7 @@ message("Plugin Id: ${PLUGIN_ID}")
+ message("Version: ${CUR_VERSION}")
+ 
+ if(INSTALL_PLASMOID)
++    include(KDEInstallDirs)
+     # Locate plasma_install_package macro.
+     find_package(Plasma REQUIRED)
+     plasma_install_package(package com.dv.uswitcher)
