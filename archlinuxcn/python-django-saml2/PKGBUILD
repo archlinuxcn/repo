@@ -1,23 +1,23 @@
 _name=djangosaml2
 pkgname=python-django-saml2
-pkgver=1.11.1
-pkgrel=2
+pkgver=1.12.0
+pkgrel=1
 pkgdesc="pysaml2 integration for Django"
 arch=(any)
 url="https://github.com/IdentityPython/djangosaml2"
 license=('Apache 2.0')
 depends=('python-django' 'python-defusedxml' 'python-pysaml2')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/djangosaml2-1.11.1.tar.gz")
-sha256sums=('f4fcbba980e6f3ad5b47f1f2d0f7296bcee4e37e2ee8237e44b28efe77f2d383')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/djangosaml2-1.12.0.tar.gz")
+sha256sums=('41166de18078edb25d42181667bfc2db497c7afd1b8fe854e409d3626ef1938b')
 
 build() {
-  cd "$srcdir/djangosaml2-1.11.1"
+  cd "$srcdir/djangosaml2-1.12.0"
   python3 setup.py build
 }
 
 package() {
-  cd "$srcdir/djangosaml2-1.11.1"
+  cd "$srcdir/djangosaml2-1.12.0"
   python3 setup.py install --root=$pkgdir --optimize=1 --skip-build
 
   # make sure we don't install any world-writable or root-readable-only files
