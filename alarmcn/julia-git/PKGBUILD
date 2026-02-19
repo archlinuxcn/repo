@@ -81,8 +81,6 @@ source=('git+https://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         0001-Disable-upgrade-of-stdlib-package.diff
         0002-Hard-code-7z-and-zstd-path.diff
-        0001-Apply-at-propagate_inbounds-to-a-few-nzrange-related-.diff
-        0002-Add-more-at-inbounds.diff
         download_curl.diff)
 sha512sums=('SKIP'
             '156f0373ec6ae82c168ef98221eaf2b930599f90dff701336e1dc8e21175365994231dbb275fbfd28fcce51f77b5240af556070f28c365452716626e01d15457'
@@ -100,8 +98,6 @@ sha512sums=('SKIP'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '99b91e921e730016e758dba10fb80436c0bb595789c941536d4533fd053caeff1100c06d1813cd0326790c85a988f1c6e282bb185eba7991b0485d529d35ba2c'
             '6184ec0c916cf51a478760dba85d3a140077ec073a49aac1b95d9fd3f46b4ecefad44725729adfc4af576e6940f65ee8205bce153db1e9fe8fb432c6316f90c5'
-            '6cc1a350ad3ddf6e996386da7aea68a1ffe74ef66ddee2f4448c74c04a7584cc92b3d401702286a44388c8421cd1ec511f9d90ffbc757d5e40014b8beedde684'
-            '693702db4d444407316a1b22d8fa98679afcfe5a64301e7edaa84545a108a192f37b5794b9d9484a6352a675bf8a3e9268f4479708eded176abd4f23af56bcf2'
             '5be40dcb72428885c06c8353019bd8fac0ea186a7536cf2bab2554d2724fb3d4a5b0b3f61727428e5cf7906f14a213f08dcb238b5bd10d408d86669e2c93ca78')
 
 _versioned_llvm=
@@ -282,11 +278,6 @@ EOF
     echo > "$f"
   done
   _patch_suitesparse
-  (
-    cd usr/share/julia/stdlib/v*/SparseArrays
-    patch -Np1 --no-backup-if-mismatch < "$srcdir/0001-Apply-at-propagate_inbounds-to-a-few-nzrange-related-.diff"
-    patch -Np1 --no-backup-if-mismatch < "$srcdir/0002-Add-more-at-inbounds.diff"
-  )
   # Try disabling threading when generating precompilations
   # The module initialization code seems to have some bug that is triggered
   # reliably on aarch64 on the build machine.
