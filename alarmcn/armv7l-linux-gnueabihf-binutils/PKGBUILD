@@ -15,7 +15,7 @@ arch=(aarch64 armv7h i686 x86_64)
 url='https://www.gnu.org/software/binutils/'
 license=(GPL)
 depends=(glibc zlib elfutils)
-# makedepends=('elfutils')
+makedepends=(git)
 options=(staticlibs !distcc !ccache)
 if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
   _git_ref="commit=${BASH_REMATCH[1]}"
