@@ -21,8 +21,10 @@ sha512sums=('4c847c6cc90f832e9a9a997f5669a1cfcd6cc736c9a7047248b8b471688172f86ae
 build() {
   cd hypre-${pkgver}/src
 
-  # disable internal superlu and fei for now, not sure yet how to get it to use external superlu
-  CFLAGS="${CFLAGS} -fopenmp" CXXFLAGS="${CXXFLAGS} -fopenmp" LDFLAGS="${LDFLAGS} -lgomp" FFLAGS='' \
+  export FFLAGS=
+  export FCFLAGS=
+
+  CFLAGS="${CFLAGS} -fopenmp" CXXFLAGS="${CXXFLAGS} -fopenmp" LDFLAGS="${LDFLAGS} -lgomp" \
     ./configure \
     --prefix="${pkgdir}/usr" \
     --includedir="${pkgdir}/usr/include/hypre" \
