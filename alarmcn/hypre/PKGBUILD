@@ -22,7 +22,7 @@ build() {
   cd hypre-${pkgver}/src
 
   # disable internal superlu and fei for now, not sure yet how to get it to use external superlu
-  CFLAGS="${CFLAGS} -fopenmp" CXXFLAGS="${CXXFLAGS} -fopenmp" LDFLAGS="${LDFLAGS} -lgomp" \
+  CFLAGS="${CFLAGS} -fopenmp" CXXFLAGS="${CXXFLAGS} -fopenmp" LDFLAGS="${LDFLAGS} -lgomp" FFLAGS='' \
     ./configure \
     --prefix="${pkgdir}/usr" \
     --includedir="${pkgdir}/usr/include/hypre" \
