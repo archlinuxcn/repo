@@ -12,6 +12,8 @@ def pre_build():
   for line in edit_file('PKGBUILD'):
     if line.startswith('arch='):
       line = 'arch=(aarch64 x86_64)'
+    if line.startswith('makedepends='):
+      line = 'makedepends=(tar ' + line.removeprefix('makedepends=(')
     print(line)
   # run_cmd(['updpkgsums'])
 
