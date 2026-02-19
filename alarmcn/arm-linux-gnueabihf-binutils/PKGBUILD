@@ -28,8 +28,7 @@ sha256sums=('5fe101e6fe9d18fdec95962d81ed670fdee5f37e3f48f0bef87bddf862513aa5')
 prepare() {
   mkdir -p binutils-build
 
-  # cd binutils-gdb
-  cd binutils-$pkgver
+  cd binutils-gdb
 
   # Turn off development mode (-Werror, gas run-time checks, date in sonames)
   sed -i '/^development=/s/true/false/' bfd/development.sh
@@ -43,7 +42,7 @@ prepare() {
 build() {
   cd binutils-build
 
-  "$srcdir/binutils-$pkgver/configure" \
+  "$srcdir/binutils-gdb/configure" \
       --prefix=/usr \
       --program-prefix=${_target}- \
       --with-lib-path=/usr/lib/binutils/${_target} \
