@@ -105,8 +105,7 @@ build() {
     --enable-addons \
     --with-arch=x86-64
 
-  # Fills up /tmp on build machine otherwise...
-  make -j1
+  make
 }
 
 package_gcc-libs() {
