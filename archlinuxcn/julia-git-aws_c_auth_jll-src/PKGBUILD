@@ -1,6 +1,6 @@
 pkgname=julia-git-aws_c_auth_jll-src
-pkgver=0.9.5+0
-_commit=28ca1bd8acd47539fba10c501de1b1907a043c95
+pkgver=0.9.6+0
+_commit=298c94e70f81e4c6301aeb0f9a5ef3aff5c3a8f8
 pkgrel=1
 pkgdesc="aws_c_auth_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/aws_c_auth_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git aws-c-auth)
 source=("git+https://github.com/JuliaBinaryWrappers/aws_c_auth_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('1202302db927b5985311efd8709a9152b5bd8684bfe65ad7ab4a75f75e218feb'
+sha256sums=('2587c9cca1039c24cfdb6514bb37e68c788758b59cbf2ff48447b41c4a037b74'
             'f519a62b1d07a640fd98f922dd4b3515bb96ccca01aa3097b91e04bb895f65b2')
 
 build() {
