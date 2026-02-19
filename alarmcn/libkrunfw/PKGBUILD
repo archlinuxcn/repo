@@ -10,7 +10,7 @@ url="https://github.com/containers/libkrunfw"
 arch=(aarch64 x86_64)
 license=('GPL-2.0-only' 'LGPL-2.1-only')
 depends=('glibc')
-makedepends=('bc' 'python-pyelftools' 'cpio')
+makedepends=('bc' 'python-pyelftools' 'cpio' 'tar')
 source=("https://github.com/containers/libkrunfw/archive/refs/tags/v$pkgver/$pkgname-$pkgver.tar.gz"
         "https://cdn.kernel.org/pub/linux/kernel/v${_kver%%.*}.x/linux-${_kver}.tar.xz")
 noextract=("linux-${_kver}.tar.xz")
