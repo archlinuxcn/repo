@@ -1,4 +1,4 @@
-From cd42bf55fa7c472e39fdab5a19af203f12a388bb Mon Sep 17 00:00:00 2001
+From 683e33647eaea0ec456dc2a80ebeb370d459dde2 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 03/10] Clear soname and hard code system lib path
@@ -867,7 +867,7 @@ index f4d11ee65b..447cf65771 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/PCRE2_jll/src/PCRE2_jll.jl b/stdlib/PCRE2_jll/src/PCRE2_jll.jl
-index c6e32bf3e6..da183b153d 100644
+index df53e4d471..da183b153d 100644
 --- a/stdlib/PCRE2_jll/src/PCRE2_jll.jl
 +++ b/stdlib/PCRE2_jll/src/PCRE2_jll.jl
 @@ -9,35 +9,18 @@ export libpcre2_8
@@ -884,7 +884,7 @@ index c6e32bf3e6..da183b153d 100644
 -libpcre2_8_path::String = ""
 -const libpcre2_8 = LazyLibrary(
 -    if Sys.iswindows()
--        BundledLazyLibraryPath("libpcre2-8.dll")
+-        BundledLazyLibraryPath("libpcre2-8-0.dll")
 -    elseif Sys.isapple()
 -        BundledLazyLibraryPath("libpcre2-8.0.dylib")
 -    elseif Sys.islinux() || Sys.isfreebsd()
@@ -1525,5 +1525,5 @@ index af461c6719..e95ace424d 100644
  
  # JLLWrappers API compatibility shims.  Note that not all of these will really make sense.
 -- 
-2.52.0
+2.53.0
 

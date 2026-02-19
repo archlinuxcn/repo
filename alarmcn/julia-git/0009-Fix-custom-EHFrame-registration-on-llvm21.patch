@@ -1,4 +1,4 @@
-From 9416285f6b3972798a9c294d455f0450cae5e743 Mon Sep 17 00:00:00 2001
+From 4922084d8cdce70d0de9aead3a8383ad002a85dd Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 26 Oct 2025 10:28:41 -0400
 Subject: [PATCH 09/10] Fix custom EHFrame registration on llvm21
@@ -8,7 +8,7 @@ Subject: [PATCH 09/10] Fix custom EHFrame registration on llvm21
  1 file changed, 82 insertions(+), 3 deletions(-)
 
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index 43ecd172d1..d7da1bb2e6 100644
+index 9594035ea0..694d0f1c28 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -1223,6 +1223,8 @@ public:
@@ -124,5 +124,5 @@ index 43ecd172d1..d7da1bb2e6 100644
      ObjectLayer.addPlugin(std::make_unique<JLDebuginfoPlugin>());
      ObjectLayer.addPlugin(std::make_unique<JLMemoryUsagePlugin>(&jit_bytes_size));
 -- 
-2.52.0
+2.53.0
 

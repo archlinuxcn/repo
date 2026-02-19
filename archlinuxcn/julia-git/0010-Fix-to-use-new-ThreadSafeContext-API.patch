@@ -1,4 +1,4 @@
-From 5606b4641815573e231466399cbac5fed4d68564 Mon Sep 17 00:00:00 2001
+From 89919ba93657997077d0d7a20ab91fd41341854c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 26 Oct 2025 20:11:49 -0400
 Subject: [PATCH 10/10] Fix to use new ThreadSafeContext API
@@ -1022,10 +1022,10 @@ index 4eb939e15d..098ecede54 100644
          if (F) {
              dump->TSM = wrap(new orc::ThreadSafeModule(std::move(m)));
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index cb5cab4b92..187f4da99c 100644
+index 612ce788b8..cbc85fa578 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -8097,7 +8097,7 @@ const char *jl_generate_ccallable(Module *llvmmod, jl_value_t *nameval, jl_value
+@@ -8134,7 +8134,7 @@ const char *jl_generate_ccallable(Module *llvmmod, jl_value_t *nameval, jl_value
          crt = (jl_value_t*)jl_any_type;
      }
      bool toboxed;
@@ -1034,7 +1034,7 @@ index cb5cab4b92..187f4da99c 100644
      if (toboxed)
          lcrt = JuliaType::get_prjlvalue_ty(lcrt->getContext());
      size_t nargs = jl_nparams(sigt)-1;
-@@ -8480,7 +8480,7 @@ static jl_llvm_functions_t
+@@ -8517,7 +8517,7 @@ static jl_llvm_functions_t
      size_t min_world = src->min_world;
      size_t max_world = src->max_world;
      jl_llvm_functions_t declarations;
@@ -1115,7 +1115,7 @@ index 7f79737a9a..7afe83c305 100644
  
      return jl_pchar_to_string(stream.str().data(), stream.str().size());
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index d7da1bb2e6..ce46eb1f3b 100644
+index 694d0f1c28..d7eb36772f 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -303,8 +303,7 @@ void *jl_jit_abi_converter_impl(jl_task_t *ct, jl_abi_t from_abi,
@@ -1429,5 +1429,5 @@ index 614e8c46de..7fd936143a 100644
  
  Module &jl_codegen_params_t::shared_module() JL_NOTSAFEPOINT {
 -- 
-2.52.0
+2.53.0
 
