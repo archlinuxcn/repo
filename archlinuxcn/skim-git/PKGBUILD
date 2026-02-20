@@ -27,7 +27,7 @@ pkgver() {
 
 build() {
     cd "$srcdir/$pkgname/"
-    cargo build --release --no-default-features --features cli
+    cargo build --release
 }
 
 package() {
