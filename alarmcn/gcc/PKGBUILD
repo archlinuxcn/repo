@@ -71,7 +71,6 @@ fi
 options=(
   !emptydirs
   !lto
-  !buildflags # Workaround arm pacman bug
 )
 _libdir=usr/lib/gcc/$CHOST/${pkgver%%+*}
 source=("git+https://sourceware.org/git/gcc.git#${_git_ref}"
@@ -151,6 +150,10 @@ build() {
   # TODO: properly deal with the build issues resulting from this
   CFLAGS=${CFLAGS/-Werror=format-security/}
   CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
+
+  # Workaround arm pacman bug
+  export FFLAGS=
+  export FCFLAGS=
 
   "$srcdir/gcc/configure" \
     --enable-languages=ada,c,c++,d,fortran,go,lto,m2,objc,obj-c++,rust,cobol \

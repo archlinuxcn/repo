@@ -60,6 +60,8 @@ build() {
   CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
   ASMFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   export ASMFLAGS
+  export FFLAGS=
+  export FCFLAGS=
 
   "$srcdir/gcc/configure" \
     --prefix=/usr \

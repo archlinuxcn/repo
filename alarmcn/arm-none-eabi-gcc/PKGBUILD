@@ -82,6 +82,8 @@ build() {
   # TODO: properly deal with the build issues resulting from this
   CFLAGS=${CFLAGS/-Werror=format-security/}
   CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
+  export FFLAGS=
+  export FCFLAGS=
 
   cd "$srcdir"/build-gcc
   export CFLAGS_FOR_TARGET='-g -Os -ffunction-sections -fdata-sections'
