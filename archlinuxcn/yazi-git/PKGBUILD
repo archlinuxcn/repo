@@ -9,7 +9,7 @@ pkgdesc="Blazing fast terminal file manager written in Rust, based on async I/O.
 url="https://github.com/sxyazi/${_pkgname}"
 arch=("x86_64" "aarch64" "riscv64")
 license=("MIT")
-depends=('glibc' 'libgcc' 'hicolor-icon-theme' 'ttf-nerd-fonts-symbols')
+depends=('glibc' 'libgcc' 'hicolor-icon-theme' 'ttf-nerd-fonts-symbols' 'oniguruma')
 optdepends=(
 	'ttf-nerd-fonts-symbols: for full display of icons'
 	'ffmpeg: for video thumbnails'
@@ -47,12 +47,12 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	YAZI_GEN_COMPLETIONS=true cargo build --frozen --release --all-features
+	YAZI_GEN_COMPLETIONS=true RUSTONIG_DYNAMIC_LIBONIG=1 cargo build --frozen --release --all-features
 }
 
 check() {
 	cd "${_pkgname}/"
-	cargo test --frozen --all-features --workspace
+	RUSTONIG_DYNAMIC_LIBONIG=1 cargo test --frozen --all-features --workspace
 }
 
 package() {
