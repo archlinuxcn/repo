@@ -1,0 +1,50 @@
+version = 1
+
+[[annotations]]
+path = [
+    "PKGBUILD",
+    "README.md",
+    "keys/**",
+    ".SRCINFO",
+    ".gitignore",
+    ".nvchecker.toml",
+    "*.install",
+    "*.sysusers",
+    "*sysusers.conf",
+    "*.tmpfiles",
+    "*tmpfiles.conf",
+    "*.logrotate",
+    "*.pam",
+    "*.service",
+    "*.socket",
+    "*.timer",
+    "*.desktop",
+    "*.hook",
+    "fetch-chromium-release",
+]
+SPDX-FileCopyrightText = "Arch Linux contributors"
+SPDX-License-Identifier = "0BSD"
+
+[[annotations]]
+path = [
+    "PKGBUILD",
+    "README.md",
+    ".gitignore",
+    "aur/**",
+    ".github/**",
+]
+SPDX-FileCopyrightText = "2019-2026 The ungoogled-chromium Authors"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+[[annotations]]
+path = [
+    "chromium-138-nodejs-version-check.patch",
+    "chromium-144-fix-hdr-issue.patch",
+    "chromium-145-fix-SYS_SECCOMP.patch",
+    "compiler-rt-adjust-paths.patch",
+    "increase-fortify-level.patch",
+    "ungoogled-chromium-145-build-with-wasm-rollup.patch",
+    "use-oauth2-client-switches-as-default.patch",
+]
+SPDX-FileCopyrightText = "chromium contributors"
+SPDX-License-Identifier = "BSD-3-Clause"
