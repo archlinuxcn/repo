@@ -3,9 +3,9 @@ _subpkgs=(Plots
           RecipesBase
           RecipesPipeline)
 pkgname=()
-pkgver=1.41.5
-_commit=586b8c63b1c8a0bf21d52874cd53751177f0e69d
-pkgrel=2
+pkgver=1.41.6
+_commit=3165bad4cc30aa83ffb7b76382b3f19ce6674c4f
+pkgrel=1
 pkgdesc="Plots.jl"
 url="https://github.com/JuliaPlots/Plots.jl.git"
 arch=('any')
@@ -13,7 +13,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPlots/Plots.jl.git#commit=$_commit")
-sha256sums=('9a99cfb98381f465743f41859851bec3b5b0266cb3e7cdcc79dda88696c3577a')
+sha256sums=('23d195b4ef677549d110c04a2e7d282f3060357438fcad6cce34b73d7a0e9db2')
 
 _subpackage() {
   local _subpkg=$1
