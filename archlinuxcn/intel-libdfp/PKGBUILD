@@ -16,13 +16,14 @@ prepare() {
   # cd IntelRDFPMathLib${pkgver}
 
   patch -Np1 --no-backup-if-mismatch < "decfp.patch"
+  sed -i -e '1 i #include<fenv.h>' LIBRARY/src/bid_functions.h
 }
 
 build() {
   # cd IntelRDFPMathLib${pkgver}/LIBRARY
   cd LIBRARY
 
-  CFLAGS+=' -fPIC -fsigned-char -D__ENABLE_BINARY80__=0'
+  CFLAGS+=' -fPIC -fsigned-char -D__NO_BINARY80__=1'
 
   # Fake one to make the build system happy
   case "$CARCH" in

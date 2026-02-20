@@ -1,7 +1,7 @@
 #
 
 pkgname=intel-libdfp
-pkgver=20U3
+pkgver=20U4
 pkgrel=1
 pkgdesc='Intel(R) Decimal Floating-Point Math Library'
 arch=(aarch64 armv7h i686 x86_64)
@@ -9,20 +9,21 @@ url='https://www.intel.com/content/www/us/en/developer/articles/tool/intel-decim
 license=('custom')
 source=("https://www.netlib.org/misc/intel/IntelRDFPMathLib${pkgver}.tar.gz"
         decfp.patch)
-sha256sums=('13f6924b2ed71df9b137a7df98706a0dcc3b43c283a0e32f8b6eadca4305136a'
+sha256sums=('1df86132e7a31fd74d784fee1c679b21a088f73a8ec979cfaf784c200392e125'
             '87cbeaf15742c6fc941c89078b2752a8a8d101c6ac54e9e236ec38450f0602af')
 
 prepare() {
   # cd IntelRDFPMathLib${pkgver}
 
   patch -Np1 --no-backup-if-mismatch < "decfp.patch"
+  sed -i -e '1 i #include<fenv.h>' LIBRARY/src/bid_functions.h
 }
 
 build() {
   # cd IntelRDFPMathLib${pkgver}/LIBRARY
   cd LIBRARY
 
-  CFLAGS+=' -fPIC -fsigned-char -D__ENABLE_BINARY80__=0'
+  CFLAGS+=' -fPIC -fsigned-char -D__NO_BINARY80__=1'
 
   # Fake one to make the build system happy
   case "$CARCH" in
