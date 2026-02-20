@@ -7,7 +7,7 @@ pkgname=(
     ttc-wenjinmincho
     ttf-wenjinmincho
 )
-pkgver=2.002
+pkgver=2.003
 pkgrel=1
 pkgdesc='A large Han-ideograph character set Songti(Mincho) font suite.'
 url='https://github.com/takushun-wu/WenJinMincho'
@@ -17,7 +17,7 @@ makedepends=(git)
 source=(
     $pkgbase::git+$url.git#tag=v$pkgver
     )
-b2sums=('76367a4a3eeb1402852fda280a80364bccc1f93790bfa2a0aa9999fa9e1ca709ccb0db0e1e88d8caa7d06a83d7fe0e884957248197778e8ff8a2c038dd56faa8')
+b2sums=('cb1f658a9ea404815e05e27315f9e4d07ea39a07ae9face08fc1522ca1f5bd007b23b9d0d2c17817619dc7c168d5c69c28ea3412f36160805cf1deff8211ce61')
 
 build() {
     cd "$pkgbase"
