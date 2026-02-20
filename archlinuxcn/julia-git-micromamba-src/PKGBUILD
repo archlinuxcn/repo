@@ -1,7 +1,7 @@
 pkgname=julia-git-micromamba-src
-pkgver=0.1.14
-_commit=d934f42495156bbde9e05d4658a75f86b767bd29
-pkgrel=2
+pkgver=0.1.15
+_commit=18d11b327f12fbb345770e76af6f488cb89b0d28
+pkgrel=1
 pkgdesc="MicroMamba.jl"
 url="https://github.com/JuliaPy/MicroMamba.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaPy/MicroMamba.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('377301293babc3aa976913b2956aca661b6f92b227747bbb91dffbb021ff93cb')
 
 package() {
   cd MicroMamba.jl
