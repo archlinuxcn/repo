@@ -7,7 +7,7 @@ pkgdesc="Extract filesystem data from DMG files"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/citruz/${pkgname}"
 license=('MIT')
-depends=('gcc-libs' 'bzip2')
+depends=('bzip2' 'libgcc' 'openssl')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('c2cdea92bcb934aaeea4f1797cf15e85bdb3e7b6da577cc8c974869753d11601')
@@ -15,19 +15,21 @@ sha256sums=('c2cdea92bcb934aaeea4f1797cf15e85bdb3e7b6da577cc8c974869753d11601')
 prepare() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target host-tuple
 }
 
 build() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
+	export OPENSSL_NO_VENDOR=1
 	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
 check() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
+	export OPENSSL_NO_VENDOR=1
 	CFLAGS+=" -ffat-lto-objects" cargo test --frozen --all-features
 }
 
