@@ -7,7 +7,7 @@ pkgdesc="TUI interface for LLMs written in Rust"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/pythops/${pkgname}"
 license=('GPL-3.0-or-later')
-depends=('libgcc' 'zlib')
+depends=('libgcc' 'zlib' 'oniguruma')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('3605fcdff3dbd5d153ed6126e98274994bd00ed83a2a1f5587058d75797257a8')
@@ -20,12 +20,12 @@ prepare() {
 
 build() {
 	cd "${pkgname}-${pkgver}/"
-	cargo build --frozen --release --all-features
+	RUSTONIG_DYNAMIC_LIBONIG=1 cargo build --frozen --release --all-features
 }
 
 check() {
 	cd "${pkgname}-${pkgver}/"
-	cargo test --frozen --all-features
+	RUSTONIG_DYNAMIC_LIBONIG=1 cargo test --frozen --all-features
 }
 
 package() {
