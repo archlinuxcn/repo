@@ -8,7 +8,7 @@
 ## options
 : ${_gwt_version:=2.12.2}
 : ${_java_version:=17}
-: ${_nodeversion:=23}
+: ${_nodeversion:=25}
 : ${_pandocver:=current}
 : ${_soci_version:=4.0.3}
 
@@ -18,11 +18,11 @@
 # dependencies/common/install-copilot-language-server
 : ${_copilot_version:=1.399.0}
 
-: ${_commit:=49fbea7a09a468fc4d1993ca376fd5b971cb58e3}
+: ${_commit:=0e924abb984501b0d66b204ea06b60fc7813275a}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2026.01.0.392
+pkgver=2026.01.1.403
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
