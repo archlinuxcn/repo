@@ -8,8 +8,8 @@
 # Contributor: Nicolas Pouillard <nicolas.pouillard@gmail.com>
 
 pkgname=ocaml-menhir
-pkgver=20240715
-pkgrel=2
+pkgver=20260209
+pkgrel=1
 pkgdesc="Menhir is a LR(1) parser generator for the OCaml."
 arch=(armv7h aarch64 x86_64)
 url="http://cristal.inria.fr/~fpottier/menhir/"
@@ -18,16 +18,16 @@ depends=('ocaml>=4.08.0')
 makedepends=('dune>=2.8.0' 'ocaml-findlib')
 options=(!strip !makeflags)
 source=("https://gitlab.inria.fr/fpottier/menhir/-/archive/${pkgver}/menhir-${pkgver}.tar.gz")
-sha256sums=('dca7b86e81b5dbe24f52c451be00bdbdfede3d9e81317ebe5220aaa3ee33ee42')
+sha256sums=('198fed60926d550b15445579f940ad9182b481c3068c03ec400018c5637b0584')
 
 build() {
   cd "$srcdir/${pkgname/ocaml-/}-$pkgver"
-  dune build -p menhirLib,menhirSdk,menhirCST,menhir @install
+  dune build -p menhirLib,menhirSdk,menhirCST,menhirGLR,menhir @install
 }
 
 package() {
   cd "$srcdir/${pkgname/ocaml-/}-$pkgver"
-  dune install -p menhirLib,menhirSdk,menhirCST,menhir --destdir="${pkgdir}" --prefix="/usr" \
+  dune install -p menhirLib,menhirSdk,menhirCST,menhirGLR,menhir --destdir="${pkgdir}" --prefix="/usr" \
        --libdir="$(ocamlfind printconf destdir)"
 
   install -dm755 "${pkgdir}/usr/share/"
