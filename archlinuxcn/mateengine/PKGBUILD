@@ -15,6 +15,8 @@ depends=(
     'libxext' 
     'libxrender'
     'libxdamage' 
+    'libxrandr'
+    'libxcomposite'
     'libayatana-appindicator'
     'libayatana-appindicator'
     'libdecor'
