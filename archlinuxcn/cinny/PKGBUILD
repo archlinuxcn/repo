@@ -3,7 +3,7 @@
 
 pkgname=(cinny-web)
 pkgbase=cinny
-pkgver=4.10.3
+pkgver=4.10.5
 pkgrel=1
 pkgdesc='Yet another matrix client — web version'
 arch=(any)
@@ -16,7 +16,7 @@ makedepends=(npm yarn)
 source=(
 	cinny-${pkgver}.tar.gz::"https://github.com/cinnyapp/cinny/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha512sums=('8f41ada75e82b8ac4eebf092a01f28fb107e7ba3841b7dc258b741babc2f79412df16f16224198c7730854cc245c1cf79747ca78ea9db7c37d238a6f2584e0f7')
+sha512sums=('6c7bd5867126e7b8769297ce2259b18aad9253040e18fecdf49eaff8054334c35a3c33ce1a23a77d2ff4e75d6507c90cddf8fe7082e7d350d0a452e742e192e2')
 
 function prepare() {
 	NODE_OPTIONS="--max_old_space_size=4096"
