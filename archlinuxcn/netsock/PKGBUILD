@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 pkgname=netsock
 epoch=1
-pkgver=0.1
+pkgver=0.2
 pkgrel=1
 epoch=
 pkgdesc="Per-app firewall for the Portable sandbox"
@@ -27,7 +27,7 @@ checkdepends=()
 
 source=(source::git+https://github.com/Kimiblock/netsock.git#tag=${pkgver})
 
-md5sums=('SKIP')
+md5sums=('9f7febc73783054b1bd05f4cbf548ffe')
 
 function prepare() {
 	cd source
