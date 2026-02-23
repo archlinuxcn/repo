@@ -1,6 +1,6 @@
 pkgname=julia-git-ptrarrays-src
-pkgver=1.3.0
-_commit=ef99c9f337d8b5c8d35f23571ab1a7d8f1c6f0fd
+pkgver=1.4.0
+_commit=8e19270f9e821c1fa64ad15200c8ff91be550319
 pkgrel=1
 pkgdesc="PtrArrays.jl"
 url="https://github.com/LilithHafner/PtrArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/LilithHafner/PtrArrays.jl.git#commit=$_commit")
-sha256sums=('e66847c0be1fe0869b444f3cd19ba85d9ab8772135a957dc44a0172120653218')
+sha256sums=('5f1abe6508d75379d02303c6a26940fa30eef5c76852220b618cec6fe9c0f595')
 
 package() {
   cd PtrArrays.jl
