@@ -12,15 +12,8 @@ _electron=electron38
 depends=("$_electron"
          'bash'
          'glibc'
-         'gcc-libs'
-         'python'
-         'python-defusedxml'
-         'python-numpy'
-         'python-lxml'
-         'python-six'
-         'python-yaml'
-         'python-pillow'
-         'python-playwright')
+         'libgcc'
+         'libstdc++')
 optdepends=('ollama: Use your local LLM')
 makedepends=('npm' 'pnpm' 'python' 'libcrypt.so=1')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
@@ -53,6 +46,14 @@ fi
 
 exec /usr/bin/${_electron} /usr/lib/${pkgname}/app.asar "$@" "\${_USER_FLAGS[@]}"
 EOD
+
+    cd "$pkgname-$pkgver"
+    local _electron_dep=$(npm pkg get devDependencies.electron | tr -d '"^~')
+    local _electron_major=${_electron_dep%%.*}
+    if [ "${_electron/electron/}" != "$_electron_major" ] ; then
+        echo "Error: Incorrect electron version detected. Please change the value of \"_electron\" from \"$_electron\" to \"electron$_electron_major\"."
+        return 1
+    fi
 }
 
 build() {
@@ -71,7 +72,7 @@ build() {
     pnpm build:unpack
 
     find ./dist/linux-unpacked/resources/app.asar.unpacked \
-        -type d \( -name darwin \) -print -exec rm -r {} +
+        -type d \( -name darwin -o -name '*musl*' \) -print -exec rm -r {} +
 }
 
 package() {
@@ -84,5 +85,4 @@ package() {
     cd "${srcdir}/${pkgname}-${pkgver}/dist/linux-unpacked/resources"
     install -Dm644                 app.asar            -t "${pkgdir}/usr/lib/${pkgname}/"
     cp -Pr --no-preserve=ownership app.asar.unpacked      "${pkgdir}/usr/lib/${pkgname}/"
-    cp -Pr --no-preserve=ownership claude-code-plugins    "${pkgdir}/usr/lib/${pkgname}/"
 }
