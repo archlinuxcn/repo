@@ -17,6 +17,7 @@ depends=(
 	'glibc'
 	'gtk3'
 	'libgcc'
+	'libgit2'
 	'libxcb'
 	'libxkbcommon'
 )
@@ -42,6 +43,7 @@ build() {
 	cd "${_pkgname}/"
 	# See https://github.com/lapce/lapce/pull/2374 and https://bugs.archlinux.org/task/78922
 	export RELEASE_TAG_NAME="v${pkgver}"
+	export LIBGIT2_NO_VENDOR=1
 	cargo build --frozen --profile release-lto --all-features
 }
 
