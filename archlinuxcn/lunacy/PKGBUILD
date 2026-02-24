@@ -1,8 +1,6 @@
 # Maintainer: Gavin Luo <lunt.luo#gmail.com>
-# Contributor: smowtenshi <smowtenshi at protonmail dot com>
-# Contributor: Asim Bera <asimbera at outlook dot in>
 
-# Free distribution for non-commercial use, see 
+# Free distribution for non-commercial use, see
 # https://github.com/icons8/lunacy-docs/issues/84#issuecomment-2302582626
 
 pkgname=lunacy
@@ -13,6 +11,8 @@ arch=('x86_64')
 url="https://icons8.com/lunacy"
 license=("LicenseRef-${pkgname}")
 depends=('glibc' 'hicolor-icon-theme' 'fontconfig')
+makedepends=('dpkg')
+options=(!debug)
 conflicts=("${pkgname}-bin")
 
 source=("mime.xml"
@@ -24,10 +24,10 @@ sha256sums=('be1683401bdd1d39df283e8bdceb01704566a753fef3e4da7717827e8ebe2c55'
 sha256sums_x86_64=('543776a813630b27cecb7bd915a55cdc123cce1426cc4231603370b3b0c86027')
 
 package() {
-  bsdtar -xf data.tar.xz -C "${pkgdir}/"
+  dpkg -x lunacy_x86_64_${pkgver}.deb "${pkgdir}/"
 
   install -d "${pkgdir}/usr/bin"
-  ln -srv /opt/icons8/${pkgname}/Lunacy "${pkgdir}"/usr/bin/lunacy
+  ln -svf /opt/icons8/${pkgname}/Lunacy "${pkgdir}"/usr/bin/lunacy
 
   install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
   install -m644 mime.xml    "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
