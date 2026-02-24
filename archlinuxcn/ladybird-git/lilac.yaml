@@ -50,6 +50,10 @@ update_on:
     repo: archlinuxcn
     from_pattern: '^(\d+\.\d+)\..*'
     to_pattern: '\1'
+  - source: alpm
+    alpm: fmt
+    provided: libfmt.so
+    strip_release: true
 
 build_prefix: archlinuxcn-x86_64
 
