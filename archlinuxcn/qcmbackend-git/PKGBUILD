@@ -26,11 +26,14 @@ pkgver() {
 
 prepare() {
 	cd QcmBackend
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target host-tuple
 }
 
 build() {
 	cd QcmBackend
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
 	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
