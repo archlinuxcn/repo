@@ -8,7 +8,7 @@
 # Contributor: maus25 <mirko378@gmail.com>
 
 pkgname=gnome-pomodoro
-pkgver=0.28.1
+pkgver=0.29.0
 pkgrel=1
 pkgdesc='A time management utility for GNOME based on the pomodoro technique!'
 arch=('i686' 'x86_64')
@@ -36,7 +36,7 @@ depends=(
 )
 makedepends=('meson' 'vala' 'gobject-introspection')
 source=("$pkgname-$pkgver.tar.gz::${url}/archive/$pkgver.tar.gz")
-sha256sums=('c4f832b27022ec25768e595e5566a6261ab426a552a9c209074b0596fbf772b9')
+sha256sums=('82f31c1f704e0a5d993b990a4a1160bc9281dc80b359dd9727c89d7157ad3527')
 
 prepare() {
   cd "$srcdir/FocusTimer-$pkgver"
