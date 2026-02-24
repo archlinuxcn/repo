@@ -12,19 +12,14 @@ pkgver=0.28.1
 pkgrel=1
 pkgdesc='A time management utility for GNOME based on the pomodoro technique!'
 arch=('i686' 'x86_64')
-url='https://github.com/gnome-pomodoro/gnome-pomodoro'
-license=('GPL-3.0')
+url='https://github.com/focustimerhq/FocusTimer'
+license=('GPL-3.0-only')
 provides=(
-  'libactions.so'
-  'libdark-theme.so'
   'libgnome-pomodoro.so'
-  'libgnome.so'
-  'libsounds.so'
 )
 replaces=('gnome-shell-pomodoro')
 conflicts=('gnome-shell-pomodoro')
 depends=(
-  'gnome-shell>=40.0'
   'hicolor-icon-theme'
   'glibc'
   'libglib-2.0.so'
@@ -32,29 +27,29 @@ depends=(
   'libgio-2.0.so'
   'gtk3'
   'libcairo.so'
-  'gobject-introspection'
-  'libpeas-1.0.so'
+  'libpeas-2.so'
   'gom'
   'gstreamer'
   'libcanberra.so'
   'libsqlite3.so'
+  'dconf'
 )
-makedepends=('meson' 'vala')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/gnome-pomodoro/gnome-pomodoro/archive/$pkgver.tar.gz")
+makedepends=('meson' 'vala' 'gobject-introspection')
+source=("$pkgname-$pkgver.tar.gz::${url}/archive/$pkgver.tar.gz")
 sha256sums=('c4f832b27022ec25768e595e5566a6261ab426a552a9c209074b0596fbf772b9')
 
 prepare() {
-  cd "$srcdir/gnome-pomodoro-$pkgver"
+  cd "$srcdir/FocusTimer-$pkgver"
 }
 
 build() {
-  cd "$srcdir/gnome-pomodoro-$pkgver"
+  cd "$srcdir/FocusTimer-$pkgver"
   arch-meson build
   meson compile -C build
 }
 
 package() {
-  cd "$srcdir/gnome-pomodoro-$pkgver"
+  cd "$srcdir/FocusTimer-$pkgver"
   meson install -C build --destdir "$pkgdir"
 }
 
