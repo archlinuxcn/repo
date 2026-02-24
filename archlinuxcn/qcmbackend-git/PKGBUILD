@@ -37,6 +37,12 @@ build() {
 	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
 }
 
+check() {
+	cd QcmBackend
+	export RUSTUP_TOOLCHAIN=stable
+	CFLAGS+=" -ffat-lto-objects" cargo test --frozen --all-features --workspace
+}
+
 package() {
 	install -Dm755 QcmBackend/target/release/QcmBackend -t "${pkgdir}/usr/bin/"
 }
