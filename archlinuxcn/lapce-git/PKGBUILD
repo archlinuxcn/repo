@@ -10,7 +10,16 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://lapce.dev"
 _url="https://github.com/${_pkgname}/${_pkgname}"
 license=('Apache-2.0')
-depends=('expat' 'fontconfig' 'freetype2' 'gtk3' 'libxcb' 'libxkbcommon' 'libxkbcommon-x11')
+depends=(
+	'expat'
+	'fontconfig'
+	'freetype2'
+	'glibc'
+	'gtk3'
+	'libgcc'
+	'libxcb'
+	'libxkbcommon'
+)
 makedepends=('git' 'cargo' 'python' 'cmake' 'clang')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
