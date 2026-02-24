@@ -13,3 +13,7 @@ post_build_script: |
 update_on:
   - source: github
     github: hypengw/QcmBackend
+
+  - source: alpm
+    alpm: sqlite
+    provided: libsqlite3.so
