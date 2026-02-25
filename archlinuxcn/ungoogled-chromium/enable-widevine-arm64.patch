@@ -1,0 +1,11 @@
+--- a/third_party/widevine/cdm/widevine.gni	2026-02-15 16:29:15.620518832 +0800
++++ b/third_party/widevine/cdm/widevine.gni	2026-02-15 16:29:43.721371706 +0800
+@@ -27,7 +27,7 @@
+ library_widevine_cdm_available =
+     (is_chromeos &&
+      (target_cpu == "x64" || target_cpu == "arm" || target_cpu == "arm64")) ||
+-    (target_os == "linux" && target_cpu == "x64") ||
++    (target_os == "linux" && (target_cpu == "x64" || target_cpu == "arm64")) ||
+     (target_os == "mac" && (target_cpu == "x64" || target_cpu == "arm64")) ||
+     (target_os == "win" &&
+      (target_cpu == "x86" || target_cpu == "x64" || target_cpu == "arm64"))
