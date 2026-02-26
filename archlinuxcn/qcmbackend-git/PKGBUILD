@@ -35,14 +35,14 @@ build() {
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
-	CFLAGS+=" -ffat-lto-objects" cargo build --frozen --release --all-features
+	cargo build --frozen --release --all-features
 }
 
 check() {
 	cd QcmBackend
 	export RUSTUP_TOOLCHAIN=stable
 	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
-	CFLAGS+=" -ffat-lto-objects" cargo test --frozen --all-features --workspace
+	cargo test --frozen --all-features --workspace
 }
 
 package() {
