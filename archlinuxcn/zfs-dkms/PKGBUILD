@@ -3,7 +3,7 @@
 # Contributor: Iacopo Isimbaldi <isiachi@rhye.it>
 
 pkgname=zfs-dkms
-pkgver=2.4.0
+pkgver=2.4.1
 pkgrel=1
 pkgdesc="Kernel modules for the Zettabyte File System."
 arch=('any')
@@ -14,10 +14,10 @@ provides=("ZFS-MODULE=${pkgver}" "SPL-MODULE=${pkgver}")
 provides+=('zfs')
 source=("https://github.com/zfsonlinux/zfs/releases/download/zfs-${pkgver}/zfs-${pkgver}.tar.gz"{,.asc}
         "0001-only-build-the-module-in-dkms.conf.patch")
-sha256sums=('7bdf13de0a71d95554c0e3e47d5e8f50786c30d4f4b63b7c593b1d11af75c9ee'
+sha256sums=('c17b69770f0023154f578eb8c7536a70f07d6a3bb0bd38f04fa0e8811c3c1390'
             'SKIP'
             '8d5c31f883a906ab42776dcda79b6c89f904d8f356ade0dab5491578a6af55a5')
-b2sums=('f98d940925ba74222ad4976af767bc5c40bdd29bbc0c5eca6ba43a6109f35e773260e946ef01a556732caf44f968e89d296c925602e252af1ece9597753f24d5'
+b2sums=('dc7eedb989297ae13d42c1f7c3b55b393d47f1706a029c38801381675909069c6c2112ca545ac395cb2e7bcbaf225fa79982e3c6f3adeca0d30828b88da0f58b'
         'SKIP'
         '58dc2494e71b50833d44c126b72acad52e9817626542afbc245b7ba82009e8c8252ebde6023592aac42d9942207e7655c0a421da9067fbdd619746ebc372d791')
 validpgpkeys=('4F3BA9AB6D1F8D683DC2DFB56AD860EED4598027'  # Tony Hutter (GPG key for signing ZFS releases) <hutter2@llnl.gov>
