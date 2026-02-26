@@ -1,13 +1,11 @@
 maintainers:
   - github: jaxvanyang
-pre_build_script: |
-  aur_pre_build(maintainers=['jaxvanyang'])
-  update_pkgver_and_pkgrel(_G.newver)
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: |
-  aur_post_build()
+  git_pkgbuild_commit()
   update_aur_repo()
 update_on:
-  - source: aur
   - source: github
     github: pokerth/pokerth
     use_latest_release: true
+    prefix: v
