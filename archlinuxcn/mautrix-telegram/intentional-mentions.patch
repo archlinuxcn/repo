@@ -1,0 +1,70 @@
+From 3d4e8fb69e3c56b0d473383462517758dcad2737 Mon Sep 17 00:00:00 2001
+From: Kris Hu <i@krishu.moe>
+Date: Tue, 26 Aug 2025 02:39:02 +0000
+Subject: [PATCH 1/2] handle `m.mentions` in replies
+
+---
+ mautrix_telegram/portal_util/message_convert.py | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/mautrix_telegram/portal_util/message_convert.py b/mautrix_telegram/portal_util/message_convert.py
+index fe2fbeb..fa9b407 100644
+--- a/mautrix_telegram/portal_util/message_convert.py
++++ b/mautrix_telegram/portal_util/message_convert.py
+@@ -326,6 +326,16 @@ class TelegramMessageConverter:
+             return
+         elif not isinstance(content, TextMessageEventContent) or no_fallback:
+             # Not a text message, just set the reply metadata and return
++            try:
++                event = await self.portal.main_intent.get_event(msg.mx_room, msg.mxid)
++                if event.type == EventType.ROOM_ENCRYPTED and source.bridge.matrix.e2ee:
++                    event = await source.bridge.matrix.e2ee.decrypt(event)
++                prev_mentions = event.content.get("m.mentions", {}).get("user_ids", [])
++                content["m.mentions"] = {
++                    "user_ids": list(set(prev_mentions + [event.sender]))
++                }
++            except Exception as e:
++                self.log.exception(f"Failed to get event for reply: {e}")
+             content.set_reply(msg.mxid)
+             if msg.mx_room != self.portal.mxid:
+                 content.relates_to.in_reply_to["room_id"] = msg.mx_room
+--
+2.50.0
+
+
+From 7e0d88eb05b630d914bd3d33e01cfca62869d640 Mon Sep 17 00:00:00 2001
+From: Kris Hu <i@krishu.moe>
+Date: Wed, 27 Aug 2025 11:08:30 +0800
+Subject: [PATCH 2/2] no need to mention oneself
+
+---
+ mautrix_telegram/portal_util/message_convert.py | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/mautrix_telegram/portal_util/message_convert.py b/mautrix_telegram/portal_util/message_convert.py
+index fa9b407..f144ad8 100644
+--- a/mautrix_telegram/portal_util/message_convert.py
++++ b/mautrix_telegram/portal_util/message_convert.py
+@@ -331,9 +331,17 @@ class TelegramMessageConverter:
+                 if event.type == EventType.ROOM_ENCRYPTED and source.bridge.matrix.e2ee:
+                     event = await source.bridge.matrix.e2ee.decrypt(event)
+                 prev_mentions = event.content.get("m.mentions", {}).get("user_ids", [])
+-                content["m.mentions"] = {
+-                    "user_ids": list(set(prev_mentions + [event.sender]))
+-                }
++                current_sender_mxids: set[str] = set()
++                if (evt.from_id is not None):
++                    current_puppet = await pu.Puppet.get_by_peer(evt.from_id, create=False)
++                    if (current_puppet is not None):
++                        current_sender_mxids.add(current_puppet.mxid)
++                mentions = list(set([event.sender]) -
++                    current_sender_mxids)
++                if len(mentions):
++                    content["m.mentions"] = {
++                        "user_ids": mentions,
++                    }
+             except Exception as e:
+                 self.log.exception(f"Failed to get event for reply: {e}")
+             content.set_reply(msg.mxid)
+--
+2.50.0
