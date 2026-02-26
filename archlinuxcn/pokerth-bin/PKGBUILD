@@ -2,7 +2,7 @@
 pkgname=pokerth-bin
 _pkgname="${pkgname%-bin}"
 pkgver=2.0.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Poker game written in C++/Qt"
 arch=('x86_64')
 url="https://github.com/pokerth/pokerth"
@@ -23,6 +23,7 @@ _pkgsrc="pokerth-linux-binary"
 prepare() {
 	cd "$_pkgsrc"
 	sed -i "s|^Exec=.*|Exec=/opt/$pkgname/pokerth|" share/pokerth.desktop
+	sed -i 's|^SCRIPT_DIR=.*|SCRIPT_DIR="/opt/pokerth-bin"|' pokerth
 }
 
 package() {
@@ -35,4 +36,5 @@ package() {
 	cp -r . "$pkgdir/opt/$pkgname"
 	install -Dm644 -t "$pkgdir/usr/share/applications" share/pokerth.desktop
 	install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" data/data-copyright.txt
+	install -Dm755 -t "$pkgdir/usr/bin" pokerth
 }
