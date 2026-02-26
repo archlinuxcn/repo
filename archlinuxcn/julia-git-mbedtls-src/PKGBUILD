@@ -1,6 +1,6 @@
 pkgname=julia-git-mbedtls-src
-pkgver=1.1.9
-_commit=4c4de151b87778815b34aed53fa211b67dcdce50
+pkgver=1.1.10
+_commit=0c54dfc2fe3ad72b999507b7d5c0b0cc44fd6d11
 pkgrel=1
 pkgdesc="MbedTLS.jl"
 url="https://github.com/JuliaLang/MbedTLS.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLang/MbedTLS.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('cefcdb78ed6271843f347fc4bfb475551043bb815dab722e462fcfd9632a60f4')
 
 package() {
   cd MbedTLS.jl
