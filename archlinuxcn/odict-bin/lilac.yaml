@@ -1,10 +1,12 @@
 maintainers:
   - github: jaxvanyang
-pre_build_script: aur_pre_build(maintainers=['jaxvanyang'])
-post_build: aur_post_build
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
 update_on:
-  - source: aur
   - source: github
     github: TheOpenDictionary/odict
     use_latest_release: true
     include_regex: 'cli/v\d+\.\d+\.\d+'
+    prefix: cli/v
