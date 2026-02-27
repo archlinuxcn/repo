@@ -3,7 +3,7 @@
 pkgname=organicmaps
 pkgver=2026.02.18_5
 _tag="${pkgver%%_*}-${pkgver##*_}-android"
-pkgrel=2
+pkgrel=3
 pkgdesc="Organic Maps: Offline Hike, Bike, Trails and Navigation"
 arch=(x86_64)
 makedepends=(cmake git jq gcc ninja mold)
@@ -14,7 +14,7 @@ license=("Apache-2.0")
 url="https://organicmaps.app"
 _source_url="https://github.com/organicmaps/organicmaps.git"
 source=(organicmaps.desktop)
-sha256sums=('f06ebbe928b6de4ed052fc94811f03ed1640ebb8bcc30f8b19746bb55dbe8530')
+sha256sums=('a60443ee9a909b372f190ec8e1bde880fc2303da5d11261ef218e67c40c35c03')
 conflicts=("${pkgname}-bin" "${pkgname}-git")
 prepare() {
   avail=$(df -P -B 1048576 $srcdir|awk 'NR>1 {print $4}')
