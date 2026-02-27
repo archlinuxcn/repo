@@ -30,7 +30,7 @@ backup=("etc/${pkgname}/config.yaml" "etc/${pkgname}/registration.yaml")
 
 prepare() {
 	cd "${srcdir}/${pkgname}"
-	git apply ../intentional-mentions.patch
+	patch -Np1 < ../intentional-mentions.patch
 	# the author makes liberal usage of max version for requirements without a real need
 	# we'll strip them and re-introduce in the deps/optdeps array if truly necessary
 	# to prevent a nightmare during updates while tracking stable releases
