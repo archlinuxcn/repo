@@ -7,7 +7,7 @@ url="https://www.amuletmc.com/"
 license=(LicenseRef-custom)
 
 arch=(any)
-pkgver=0.10.50
+pkgver=0.10.51
 pkgrel=1
 makedepends=(python-build python-installer python-wheel python-cython-lint python-versioneer git python-packaging)
 
@@ -19,7 +19,7 @@ source=(
 )
 
 sha256sums=('724383fa0a28be2ab92785365b7a3695aae5ee7849fc7841b492da73ce60c829'
-            '72fcccbddaf00c5e4c1dbbbf5e4d3c5fc7dbc7802c25e977148e6b3ce5639e96')
+            '99f86bee6c3a07e121650d079cb25ac8a52ca66336fce49365f93d63eae29f19')
 
 function prepare() {
 	sed -i 's/versioneer-518/versioneer/g' "${srcdir}/Amulet-Map-Editor/pyproject.toml"
