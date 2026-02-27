@@ -4,9 +4,9 @@ pre_build_script: aur_pre_build(maintainers=['Maxteabag'])
 post_build: aur_post_build
 update_on:
   - source: aur
-  - source: github
-    github: Maxteabag/sqlit
-    use_latest_release: true
+  # - source: github
+  #   github: Maxteabag/sqlit
+  #   use_latest_release: true
   - alias: python
 repo_depends:
   - python-textual-fastdatatable
