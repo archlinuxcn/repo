@@ -7,6 +7,6 @@ post_build_script: |
 update_on:
   - source: github
     github: TheOpenDictionary/odict
-    use_latest_release: true
+    use_max_release: true
     include_regex: 'cli/v\d+\.\d+\.\d+'
     prefix: cli/v
