@@ -1,7 +1,7 @@
 # Maintainer: everyx <lunt.luo#gmail.com>
 
 pkgname=sing-box
-pkgver=1.12.23
+pkgver=1.13.0
 pkgrel=1
 
 pkgdesc='The universal proxy platform.'
@@ -10,14 +10,13 @@ url='https://sing-box.sagernet.org/'
 license=("LicenseRef-${pkgname}")
 
 makedepends=('go')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz"
-        "sing-box.rules")
-sha256sums=('58b41bd8d6255c2ddc2ae5eace53171e550c9debaa8e16d89871299055b58b1a'
-            '1365536e1875043b969e2e18d7313ab7c6f7f9f63387f25506bb04362b44f206')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz")
+sha256sums=('6ddc71596dc937873c5aba15a4f2b395c5434265efdc1bd21f4c03d8c5b7f641')
 conflicts=("$pkgname-git" "$pkgname-beta")
 depends=("glibc")
-optdepends=('sing-geosite: sing-geosite database'
-            'sing-geoip: sing-geoip database')
+optdepends=('libcronet.so: NaiveProxy outbound support'
+            'sing-geosite-rule-set: geosite rule sets'
+            'sing-geoip-rule-set: geoip rule sets')
 
 backup=("etc/$pkgname/config.json")
 
@@ -27,25 +26,23 @@ prepare() {
     go mod download -modcacherw
 }
 
-_tags=with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale
+_tags=with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,badlinkname,tfogo_checklinkname0,with_naive_outbound,with_purego
 build(){
     cd "${pkgname}-${pkgver}"
 
     export CGO_CPPFLAGS="${CPPFLAGS}"
     export CGO_CFLAGS="${CFLAGS}"
     export CGO_CXXFLAGS="${CXXFLAGS}"
-    export CGO_LDFLAGS="${LDFLAGS}"
-    export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 
-    go build \
-        -v \
+    go build -v \
         -trimpath \
         -buildmode=pie \
         -mod=readonly \
         -modcacherw \
         -tags "$_tags" \
-        -ldflags "-s -buildid= -X \"github.com/sagernet/sing-box/constant.Version=${pkgver}\" -checklinkname=0
-            -linkmode external -extldflags \"${LDFLAGS}\"" \
+        -ldflags "-linkmode external -extldflags \"${LDFLAGS}\"
+            -s -buildid= -X \"github.com/sagernet/sing-box/constant.Version=${pkgver}\"
+            -X internal/godebug.defaultGODEBUG=multipathtcp=0 -checklinkname=0" \
         ./cmd/sing-box
 
     install -d completions
@@ -60,10 +57,10 @@ package() {
     install -Dm644 LICENSE                                 -t "$pkgdir/usr/share/licenses/$pkgname"
     install -Dm755 "$pkgname"                              -t "$pkgdir/usr/bin"
     install -Dm644 "release/config/config.json"            -t "$pkgdir/etc/$pkgname"
-    install -Dm644 "release/config/$pkgname.service"       -t "$pkgdir/usr/lib/systemd/system"
-    install -Dm644 "release/config/$pkgname@.service"      -t "$pkgdir/usr/lib/systemd/system"
-    install -Dm644 "release/config/$pkgname.sysusers"         "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
     install -Dm644 "release/config/sing-box.rules"         -t "$pkgdir/usr/share/polkit-1/rules.d"
+    install -Dm644 "release/config/sing-box.service"       -t "$pkgdir/usr/lib/systemd/system"
+    install -Dm644 "release/config/sing-box.sysusers"         "$pkgdir/usr/lib/sysusers.d/sing-box.conf"
+    install -Dm644 "release/config/sing-box@.service"      -t "$pkgdir/usr/lib/systemd/system"
     install -Dm644 "release/config/sing-box-split-dns.xml"    "$pkgdir/usr/share/dbus-1/system.d/sing-box-split-dns.conf"
 
     install -Dm644 completions/bash "${pkgdir}/usr/share/bash-completion/completions/${pkgname}.bash"
