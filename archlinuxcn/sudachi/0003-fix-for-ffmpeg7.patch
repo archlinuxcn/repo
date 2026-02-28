@@ -1,0 +1,136 @@
+From 8315dfe4ac0e78438e5237e766f71dbcb548d497 Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Sat, 5 Apr 2025 20:39:02 +0800
+Subject: [PATCH 3/7] fix for ffmpeg7
+
+
+21	66	src/video_core/host1x/ffmpeg/ffmpeg.cpp
+0	3	src/video_core/host1x/ffmpeg/ffmpeg.h
+
+diff --git a/src/video_core/host1x/ffmpeg/ffmpeg.cpp b/src/video_core/host1x/ffmpeg/ffmpeg.cpp
+index a6a991f..5ead726 100644
+--- a/src/video_core/host1x/ffmpeg/ffmpeg.cpp
++++ b/src/video_core/host1x/ffmpeg/ffmpeg.cpp
+@@ -222,22 +222,6 @@ bool DecoderContext::SendPacket(const Packet& packet) {
+     m_temp_frame = std::make_shared<Frame>();
+     m_got_frame = 0;
+ 
+-// Android can randomly crash when calling decode directly, so skip.
+-// TODO update ffmpeg and hope that fixes it.
+-#ifndef ANDROID
+-    if (!m_codec_context->hw_device_ctx && m_codec_context->codec_id == AV_CODEC_ID_H264) {
+-        m_decode_order = true;
+-        auto* codec{ffcodec(m_decoder.GetCodec())};
+-        if (const int ret = codec->cb.decode(m_codec_context, m_temp_frame->GetFrame(),
+-                                             &m_got_frame, packet.GetPacket());
+-            ret < 0) {
+-            LOG_DEBUG(Service_NVDRV, "avcodec_send_packet error {}", AVError(ret));
+-            return false;
+-        }
+-        return true;
+-    }
+-#endif
+-
+     if (const int ret = avcodec_send_packet(m_codec_context, packet.GetPacket()); ret < 0) {
+         LOG_ERROR(HW_GPU, "avcodec_send_packet error: {}", AVError(ret));
+         return false;
+@@ -247,61 +231,32 @@ bool DecoderContext::SendPacket(const Packet& packet) {
+ }
+ 
+ std::shared_ptr<Frame> DecoderContext::ReceiveFrame() {
+-    // Android can randomly crash when calling decode directly, so skip.
+-    // TODO update ffmpeg and hope that fixes it.
+-#ifndef ANDROID
+-    if (!m_codec_context->hw_device_ctx && m_codec_context->codec_id == AV_CODEC_ID_H264) {
+-        m_decode_order = true;
+-        auto* codec{ffcodec(m_decoder.GetCodec())};
+-        int ret{0};
+-
+-        if (m_got_frame == 0) {
+-            Packet packet{{}};
+-            auto* pkt = packet.GetPacket();
+-            pkt->data = nullptr;
+-            pkt->size = 0;
+-            ret = codec->cb.decode(m_codec_context, m_temp_frame->GetFrame(), &m_got_frame, pkt);
+-            m_codec_context->has_b_frames = 0;
++    const auto ReceiveImpl = [&](AVFrame* frame) {
++        if (const int ret = avcodec_receive_frame(m_codec_context, frame); ret < 0) {
++            LOG_ERROR(HW_GPU, "avcodec_receive_frame error: {}", AVError(ret));
++            return false;
+         }
+ 
+-        if (m_got_frame == 0 || ret < 0) {
+-            LOG_ERROR(Service_NVDRV, "Failed to receive a frame! error {}", ret);
++        return true;
++    };
++
++    if (m_codec_context->hw_device_ctx) {
++        Frame intermediate_frame;
++
++        if (!ReceiveImpl(intermediate_frame.GetFrame())) {
+             return {};
+         }
+-    } else
+-#endif
+-    {
+-
+-        const auto ReceiveImpl = [&](AVFrame* frame) {
+-            if (const int ret = avcodec_receive_frame(m_codec_context, frame); ret < 0) {
+-                LOG_ERROR(HW_GPU, "avcodec_receive_frame error: {}", AVError(ret));
+-                return false;
+-            }
+ 
+-            return true;
+-        };
+-
+-        if (m_codec_context->hw_device_ctx) {
+-            // If we have a hardware context, make a separate frame here to receive the
+-            // hardware result before sending it to the output.
+-            Frame intermediate_frame;
+-
+-            if (!ReceiveImpl(intermediate_frame.GetFrame())) {
+-                return {};
+-            }
+-
+-            m_temp_frame->SetFormat(PreferredGpuFormat);
+-            if (const int ret = av_hwframe_transfer_data(m_temp_frame->GetFrame(),
+-                                                         intermediate_frame.GetFrame(), 0);
+-                ret < 0) {
+-                LOG_ERROR(HW_GPU, "av_hwframe_transfer_data error: {}", AVError(ret));
+-                return {};
+-            }
+-        } else {
+-            // Otherwise, decode the frame as normal.
+-            if (!ReceiveImpl(m_temp_frame->GetFrame())) {
+-                return {};
+-            }
++        m_temp_frame->SetFormat(PreferredGpuFormat);
++        if (const int ret = av_hwframe_transfer_data(m_temp_frame->GetFrame(),
++                                                     intermediate_frame.GetFrame(), 0);
++            ret < 0) {
++            LOG_ERROR(HW_GPU, "av_hwframe_transfer_data error: {}", AVError(ret));
++            return {};
++        }
++    } else {
++        if (!ReceiveImpl(m_temp_frame->GetFrame())) {
++            return {};
+         }
+     }
+ 
+diff --git a/src/video_core/host1x/ffmpeg/ffmpeg.h b/src/video_core/host1x/ffmpeg/ffmpeg.h
+index 98b2508..d15b731 100644
+--- a/src/video_core/host1x/ffmpeg/ffmpeg.h
++++ b/src/video_core/host1x/ffmpeg/ffmpeg.h
+@@ -21,9 +21,6 @@ extern "C" {
+ 
+ #include <libavcodec/avcodec.h>
+ #include <libavutil/opt.h>
+-#ifndef ANDROID
+-#include <libavcodec/codec_internal.h>
+-#endif
+ 
+ #if defined(__GNUC__) || defined(__clang__)
+ #pragma GCC diagnostic pop
+-- 
+2.49.0
+
