@@ -6,8 +6,8 @@ pkgname=(
   asusctl
   rog-control-center
 )
-pkgver=6.3.2
-pkgrel=0.1
+pkgver=6.3.4
+pkgrel=1
 pkgdesc="A control daemon, tools, and a collection of crates for interacting with ASUS ROG laptops"
 arch=('x86_64')
 url="https://asus-linux.org"
@@ -26,7 +26,7 @@ makedepends=(
   systemd
 )
 source=("git+https://gitlab.com/asus-linux/asusctl.git#tag=$pkgver")
-b2sums=('4bf6b850e19551426c2011cfb75e880fad1f7161a6f3200748d4dafe9a26d038676c1ba3df8bc68d4b080146e1f78abca07984860c0034c15ce0b742fe34477c')
+b2sums=('5066ebfa7edc27c88513671028847178a5b5fbf8b8113a384ba57961025185e80abf9ad7a0429d4b30be2d2dc5fa8ae023ad97239063fcf6571254e68c35d5d0')
 
 prepare() {
   cd "${pkgbase}"
@@ -57,8 +57,8 @@ build() {
 package_asusctl() {
   pkgdesc="${pkgdesc/tools/CLI tools}"
   depends=(
-    gcc-libs
     glibc
+    libgcc
     libusb
     systemd
     systemd-libs
@@ -87,10 +87,10 @@ package_rog-control-center() {
     asusctl
     fontconfig
     freetype2
-    gcc-libs
     glibc
     hicolor-icon-theme
     libayatana-appindicator
+    libgcc
     libinput
     libxkbcommon
     mesa
