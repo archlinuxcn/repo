@@ -2,8 +2,8 @@
 # Maintainer: Matthias Kurz <m.kurz@irregular.at>
 
 pkgname=asahi-startup-disk
-pkgver=0.1.5
-pkgrel=3
+pkgver=0.1.6
+pkgrel=1
 pkgdesc='Interface to choose the startup volume on Apple Silicon systems'
 arch=('aarch64')
 url="https://crates.io/crates/startup-disk"
@@ -11,7 +11,7 @@ makedepends=('rust')
 depends=('gtk4' 'libadwaita')
 license=('MIT')
 source=("startup-disk-${pkgver}.tar.gz::https://crates.io/api/v1/crates/startup-disk/${pkgver}/download")
-sha256sums=('57e75ccee520233ad2b2eaedc253aff3b17949bbcc2ce0ea5e598db32c93a86f')
+sha256sums=('d47d1f906fe2321c1f6629ba8ff040f17f1a7467f104fc6b746ce911c1e26062')
 
 build() {
   cd startup-disk-${pkgver}
