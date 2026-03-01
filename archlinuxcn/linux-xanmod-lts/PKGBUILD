@@ -40,12 +40,12 @@ if [ "${_compiler}" = "clang" ]; then
 fi
 
 # Choose between the 4 main configs for stable branch. Default x86-64-v1 which use CONFIG_GENERIC_CPU2:
-# Possible values: config_x86-64-v1 (default) / config_x86-64-v2 / config_x86-64-v3
+# Possible values: config_x86-64-v1 / config_x86-64-v2 (default) / config_x86-64-v3
 # This will be overwritten by selecting any option in microarchitecture script
 # Source files: https://gitlab.com/xanmod/linux/-/tree/6.12/CONFIGS/xanmod/gcc?ref_type=heads
-if [ -z ${_config+x} ]; then
-  _config=config_x86-64-v1
-fi
+#if [ -z ${_config+x} ]; then
+  _config=config
+#fi
 
 # Compress modules with ZSTD (to save disk space)
 if [ -z ${_compress_modules+x} ]; then
@@ -72,16 +72,15 @@ fi
 ### IMPORTANT: Do no edit below this line unless you know what you're doing
 
 pkgbase=linux-xanmod-lts
-_major=6.12
-pkgver=${_major}.74
+_major=6.18
+pkgver=${_major}.15
 _branch=6.x
 xanmod=1
 _revision=
-pkgrel=${xanmod}
+pkgrel=$((xanmod + 1))
 pkgdesc='Linux Xanmod - Long Term Support [LTS]'
 url="http://www.xanmod.org/"
 arch=(x86_64)
-
 license=('GPL-2.0-only')
 makedepends=(
   bc
@@ -91,6 +90,9 @@ makedepends=(
   pahole
   perl
   python
+  rust
+  rust-bindgen
+  rust-src
   tar
   xz
 )
@@ -115,10 +117,10 @@ for _patch in ${_patches[@]}; do
     source+=("${_patch}::https://raw.githubusercontent.com/archlinux/svntogit-packages/${_commit}/trunk/${_patch}")
 done
 
-sha256sums=('b1a2562be56e42afb3f8489d4c2a7ac472ac23098f1ef1c1e40da601f54625eb'
+sha256sums=('9106a4605da9e31ff17659d958782b815f9591ab308d03b0ee21aad6c7dced4b'
             'SKIP'
-            '39e90ab586ada899d6e5c438cf48c22978a81ee52e20710a23762777baedefe6'
-            'a8b38eb482eb685944757182c4886404abc12703e5e56ec39c7d61298d17d71f')
+            '6087873eddad2ad04336dbdfd87e28879caee047d6ca0c3c6fad82a684e02f86'
+            'f4acc1760990c54348a029315d1505ccb7c7270cd70a9aeb728bffcced51e767')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
 export KBUILD_BUILD_USER=${KBUILD_BUILD_USER:-makepkg}
@@ -145,8 +147,11 @@ prepare() {
     patch -Np1 < "../$src"
   done
 
+  # Address bug https://gitlab.com/xanmod/linux/-/issues/446
+  sed -i '/^[[:space:]]*default "6" if / s/MEMERALDRAPIDS/MEMERALDRAPIDS || X86_NATIVE_CPU/' arch/x86/Kconfig.cpu
+
   # Applying configuration
-  cp -vf CONFIGS/xanmod/gcc/${_config} .config
+  cp -vf CONFIGS/x86_64/${_config} .config
   # enable LTO_CLANG_THIN
   if [ "${_compiler}" = "clang" ]; then
     scripts/config --disable LTO_CLANG_FULL
@@ -262,6 +267,7 @@ _package() {
   )
   provides=(
     KSMBD-MODULE
+    NTSYNC-MODULE
     VIRTUALBOX-GUEST-MODULES
     WIREGUARD-MODULE
     NTFS3-MODULE
@@ -332,6 +338,14 @@ _package-headers() {
 
   echo "Installing KConfig files..."
   find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
+
+  msg2 "Installing Rust files..."
+  [ -f rust/*.rmeta ] && install -Dt "$builddir/rust" -m644 rust/*.rmeta
+  [ -f rust/*.so ] && install -Dt "$builddir/rust" rust/*.so
+
+  msg2 "Installing unstripped VDSO..."
+  make INSTALL_MOD_PATH="$pkgdir/usr" vdso_install \
+    link=  # Suppress build-id symlinks
 
   msg2 "Removing unneeded architectures..."
   local arch
