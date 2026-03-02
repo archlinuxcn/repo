@@ -2,7 +2,7 @@
 # Contributor: Luis Martinez <luis dot martinez at disroot dot org>
 
 pkgname=fish-pure-prompt
-pkgver=4.15.1
+pkgver=4.16.0
 pkgrel=1
 pkgdesc="Pretty, minimal, and fast prompt for Fish"
 arch=('any')
@@ -12,7 +12,7 @@ groups=('fish-plugins')
 depends=('fish')	# remove >=3 to allow fish-git
 provides=('fish-prompt')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('d8e267d19f3fb10df0ca12a05042e20febabcbac4c73c70329c7b5ec1ae64582')
+sha256sums=('8e2f6b98801e1e3b5446d967f9b6404b3ed4e222fa22ad2f65c5207012c4943b')
 
 package() {
 	cd "pure-$pkgver"
