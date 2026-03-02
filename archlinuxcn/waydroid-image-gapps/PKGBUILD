@@ -5,7 +5,7 @@
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
 pkgname=waydroid-image-gapps
-pkgver=20.0_20250809
+pkgver=20.0_20260302
 _pkgver=${pkgver/_/-}
 pkgrel=1
 pkgdesc="LineageOS-based Android images for Waydroid (with GApps included)"
@@ -18,8 +18,8 @@ conflicts=('waydroid-image')
 _srcprefix="https://sourceforge.net/projects/waydroid/files/images"
 source=("${_srcprefix}/system/lineage/waydroid_x86_64/lineage-${_pkgver}-GAPPS-waydroid_x86_64-system.zip"
 	"${_srcprefix}/vendor/waydroid_x86_64/lineage-${_pkgver}-MAINLINE-waydroid_x86_64-vendor.zip")
-sha256sums=('0c5ef97e6aafa44e1775dd553339bd49991c99c3989550cc74197d6de51f6c4e'
-            '14df3ffc773a30c2c157fa6f97e6c79338990b60ac85d69559bbfb82772650ef')
+sha256sums=('22823ddea6112e08dc4ee07678b5473ce85cf2bde88dfb8f977bb508035f4319'
+            '132b67715f7686d4bd47e4a6715fba3275973c1e6a640b7a2dd1055bcba50108')
 
 package() {
 	install -Dm644 {system,vendor}.img -t "${pkgdir}/usr/share/waydroid-extra/images/"
