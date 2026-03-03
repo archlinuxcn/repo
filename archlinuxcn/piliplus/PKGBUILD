@@ -47,5 +47,5 @@ package() {
 
 	cd assets
 	install -Dm644 images/logo/logo.png "${pkgdir}/usr/share/icons/hicolor/512x512/apps/${pkgname}.png"
-	install -Dm644 "linux/com.example.${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "linux/com.example.${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 }
