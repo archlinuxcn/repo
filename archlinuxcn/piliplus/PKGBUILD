@@ -2,7 +2,7 @@
 
 pkgname=piliplus
 _srcname=PiliPlus
-pkgver=1.1.6
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="A third-party Bilibili client developed in Flutter"
 url="https://github.com/bggRGjQaUbCoE/${_srcname}"
@@ -11,7 +11,7 @@ arch=('x86_64')
 depends=('gtk3' 'mpv' 'libayatana-appindicator')
 makedepends=('git' 'clang' 'cmake' 'ninja' 'fvm' 'patchelf')
 source=("git+${url}.git#tag=${pkgver}")
-sha256sums=('1d9cca6b3ae59aae5aca7c52f3d9fea7f346fe0e684cdb616a1708f34dea78eb')
+sha256sums=('4932c93327ba6927db46104dd1a761d04a48c3f72af5e99e785933fe44c87ddb')
 
 prepare() {
 	cd "${_srcname}/"
