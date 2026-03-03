@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=zen-browser-dark-reader
-pkgver=4.9.122
+pkgver=4.9.123
 pkgrel=1
 pkgdesc='Inverts brightness of web pages and aims to reduce eyestrain while browsing the web. Symlink to the Firefox addon.'
 arch=(any)
@@ -9,7 +9,7 @@ url=https://darkreader.org/
 license=(MIT)
 depends=(firefox-dark-reader)
 source=(https://github.com/darkreader/darkreader.git)
-b2sums=('cbcc4755e0530ddf5221e9da82c27c161f811bc94d02d412d2cf97e521485dd1be1ffb3f59c3d322c21bf047b036d5be548469e26feb64789318d214f23bf1f2')
+b2sums=('738bae3467b6d4325618cf02cc9dd6027cf84be77b47a5d8278058a26e8339c11f5c6bc24f5a040bb64676a147f6f1ed0720561ffcff2806854112d3198cd9fa')
 makedepends=(git)
 
 function package() {
