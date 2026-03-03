@@ -1,7 +1,7 @@
 # Maintainer: Jax Young <jaxvanyang@gmail.com>
 pkgname=pokerth-bin
 _pkgname="${pkgname%-bin}"
-pkgver=2.0.5
+pkgver=2.0.6
 pkgrel=1
 pkgdesc="Poker game written in C++/Qt"
 arch=('x86_64')
@@ -15,7 +15,7 @@ source=(
 	"pokerth.png"
 	"pokerth.svg"
 )
-sha256sums=('6abb761da78529dae4fe6742bff49f05341e798251230ec081661d22f10c1550'
+sha256sums=('0496a7af9879e6c9f892cdfd378f24d11b79d9f4062502dc98b65cfa1b07db43'
             'f35bacd011dce3258b8394b82e28ef605f491c6fac6c2dfc743d403b23fd5eb2'
             '72ff070b9626661a051cc0582a69cd95b41809b6f4f2d8738245d92f3c417bb4')
 _pkgsrc="pokerth-linux-binary"
