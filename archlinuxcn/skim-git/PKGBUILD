@@ -5,7 +5,7 @@ pkgver=3.5.0.r5.gc6527444
 pkgrel=1
 pkgdesc="Fuzzy Finder in rust!"
 arch=('x86_64')
-depends=('bash')
+depends=('bash' 'mimalloc')
 makedepends=('git' 'rust')
 optdepends=("fish: fish keybindings"
             "tmux: fzf-tmux script for launching fzf in a tmux pane"
