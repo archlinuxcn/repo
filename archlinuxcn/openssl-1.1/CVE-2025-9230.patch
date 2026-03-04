@@ -1,0 +1,25 @@
+From: Viktor Dukhovni <openssl-users@dukhovni.org>
+Date: Thu, 11 Sep 2025 18:10:12 +0200
+Subject: kek_unwrap_key(): Fix incorrect check of unwrapped key size
+
+Fixes CVE-2025-9230
+
+The check is off by 8 bytes so it is possible to overread by
+up to 8 bytes and overwrite up to 4 bytes.
+---
+ crypto/cms/cms_pwri.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/crypto/cms/cms_pwri.c b/crypto/cms/cms_pwri.c
+index d5c3c8d399df..33a7ccaa76a3 100644
+--- a/crypto/cms/cms_pwri.c
++++ b/crypto/cms/cms_pwri.c
+@@ -229,7 +229,7 @@ static int kek_unwrap_key(unsigned char *out, size_t *outlen,
+         /* Check byte failure */
+         goto err;
+     }
+-    if (inlen < (size_t)(tmp[0] - 4)) {
++    if (inlen < 4 + (size_t)tmp[0]) {
+         /* Invalid length value */
+         goto err;
+     }

@@ -1,0 +1,27 @@
+From: Andrew Dinh <andrewd@openssl.org>
+Date: Thu, 8 Jan 2026 01:24:30 +0900
+Subject: Add NULL check to PKCS12_item_decrypt_d2i_ex
+
+Address CVE-2025-69421
+
+Add NULL check for oct parameter
+---
+ crypto/pkcs12/p12_decr.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/crypto/pkcs12/p12_decr.c b/crypto/pkcs12/p12_decr.c
+index a5adafa954a3..2e14a49efa04 100644
+--- a/crypto/pkcs12/p12_decr.c
++++ b/crypto/pkcs12/p12_decr.c
+@@ -137,6 +137,11 @@ void *PKCS12_item_decrypt_d2i(const X509_ALGOR *algor, const ASN1_ITEM *it,
+     void *ret;
+     int outlen;
+ 
++    if (oct == NULL) {
++        PKCS12err(PKCS12_F_PKCS12_ITEM_DECRYPT_D2I, ERR_R_PASSED_NULL_PARAMETER);
++        return NULL;
++    }
++
+     if (!PKCS12_pbe_crypt(algor, pass, passlen, oct->data, oct->length,
+                           &out, &outlen, 0)) {
+         PKCS12err(PKCS12_F_PKCS12_ITEM_DECRYPT_D2I,
