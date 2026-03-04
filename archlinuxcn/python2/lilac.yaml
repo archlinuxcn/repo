@@ -10,6 +10,9 @@ pre_build_script: aur_pre_build(maintainers=['micwoj92'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - openssl-1.1
+
 update_on:
   - source: aur
     aur: 
