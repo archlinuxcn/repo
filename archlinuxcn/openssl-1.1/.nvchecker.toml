@@ -1,0 +1,6 @@
+["openssl-1.1"]
+source = 'git'
+git = 'https://github.com/openssl/openssl.git'
+from_pattern = "OpenSSL_1_1_([0-9]+)([a-z]*)"
+to_pattern = "1.1.\\1.\\2"
+include_regex = 'OpenSSL_1_1_[0-9]+[a-z]*'
