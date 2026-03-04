@@ -1,8 +1,8 @@
 diff --git a/src/utils/common.py b/src/utils/common.py
-index d87c13c..9f0056a 100644
+index 2944f5b..649d7d9 100644
 --- a/src/utils/common.py
 +++ b/src/utils/common.py
-@@ -31,17 +31,11 @@ makedirs(str(BASE_PATH / 'endpoints'), exist_ok=True)
+@@ -33,21 +33,13 @@ makedirs(str(BASE_PATH / 'endpoints'), exist_ok=True)
  external = Path(dirname(realpath(__file__))) / 'external'
  arch = '64' * (architecture()[0] == '64bit')
  
@@ -13,10 +13,14 @@ index d87c13c..9f0056a 100644
 -)
 +protoc = '/usr/bin/protoc'
  dex2jar = str(
-     external / 'dex2jar' / ('d2j-dex2jar.' + {'win32': 'bat'}.get(platform, 'sh'))
+     external
+     / 'dex2jar'
+     / ('d2j-dex2jar.' + {'win32': 'bat'}.get(platform, 'sh'))
  )
 -jad = str(
--    external / 'jad' / ('jad' + {'win32': '.exe', 'darwin': '_osx'}.get(platform, ''))
+-    external
+-    / 'jad'
+-    / ('jad' + {'win32': '.exe', 'darwin': '_osx'}.get(platform, ''))
 -)
 +jad = '/usr/bin/jad'
  
