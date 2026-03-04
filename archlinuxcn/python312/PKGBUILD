@@ -1,9 +1,8 @@
 # Maintainer: GalaxySnail <me+aur@glxys.nl>
 # Contributor: Tobias Kunze <r@rixx.de>
-# Maintained at https://github.com/rixx/pkgbuilds, feel free to submit patches
 
 pkgname=python312
-pkgver=3.12.12
+pkgver=3.12.13
 pkgrel=1
 _pybasever=3.12
 _pymajver=3
@@ -15,7 +14,7 @@ depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib')
 makedepends=('bluez-libs' 'mpdecimal' 'gdb' 'tk')
 optdepends=('sqlite' 'mpdecimal: for decimal' 'xz: for lzma' 'tk: for tkinter')
 source=(https://www.python.org/ftp/python/${pkgver}/Python-${pkgver}.tar.xz)
-sha256sums=('fb85a13414b028c49ba18bbd523c2d055a30b56b18b92ce454ea2c51edc656c4')
+sha256sums=('c08bc65a81971c1dd5783182826503369466c7e67374d1646519adf05207b684')
 validpgpkeys=(
     '0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D'  # Ned Deily (Python release signing key) <nad@python.org>
     'E3FF2839C048B25C084DEBE9B26995E310250568'  # Łukasz Langa (GPG langa.pl) <lukasz@langa.pl>
@@ -31,6 +30,10 @@ prepare() {
   # rather than copies shipped in the tarball
   rm -rf Modules/expat
   rm -rf Modules/_decimal/libmpdec
+
+  # use parallel LTO
+  # https://github.com/python/cpython/pull/132258
+  sed -i 's/\(LTOFLAGS=.*\) -flto-partition=none/\1/' configure
 }
 
 build() {
