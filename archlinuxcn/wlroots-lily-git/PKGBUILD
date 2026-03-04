@@ -3,10 +3,11 @@
 # Contributor: Maxim Baz <$pkgname at maximbaz dot com>
 # Contributor: Omar Pakker
 pkgname=wlroots-lily-git
-pkgver=0.18.2.20241219.081711
-pkgrel=2
+_suffixver=0.19
+pkgver=0.19.2.20251104.031626
+pkgrel=3
 license=('MIT')
-pkgdesc='Modular Wayland compositor library (with patches)'
+pkgdesc='Modular Wayland compositor library (with patches, for x86_64_v3)'
 url='https://gitlab.freedesktop.org/lilydjwg/wlroots'
 arch=('x86_64')
 depends=(
@@ -43,8 +44,11 @@ optdepends=(
     'xorg-xwayland-lily: HiDPI Xwayland support, see https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/733'
 )
 provides=(
-    "libwlroots-$(echo "${pkgver}" | grep -o '^[0-9]\+\.[0-9]\+').so"
-    "wlroots=$pkgver}"
+    "libwlroots-$_suffixver.so"
+    "wlroots$_suffixver=$pkgver"
+)
+conflicts=(
+    "wlroots$_suffixver"
 )
 
 pkgver() {
