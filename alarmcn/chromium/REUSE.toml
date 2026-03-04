@@ -21,6 +21,7 @@ path = [
     "*.desktop",
     "*.hook",
     "fetch-chromium-release",
+    "enable-widevine-arm64.patch",
 ]
 SPDX-FileCopyrightText = "Arch Linux contributors"
 SPDX-License-Identifier = "0BSD"
@@ -32,8 +33,14 @@ path = [
     "chromium-145-fix-SYS_SECCOMP.patch",
     "compiler-rt-adjust-paths.patch",
     "increase-fortify-level.patch",
-    "ungoogled-chromium-145-build-with-wasm-rollup.patch",
     "use-oauth2-client-switches-as-default.patch",
 ]
 SPDX-FileCopyrightText = "chromium contributors"
+SPDX-License-Identifier = "BSD-3-Clause"
+
+[[annotations]]
+path = [
+    "ungoogled-chromium-145-build-with-wasm-rollup.patch",
+]
+SPDX-FileCopyrightText = "2015-2026 The ungoogled-chromium Authors"
 SPDX-License-Identifier = "BSD-3-Clause"
