@@ -3,15 +3,15 @@
 
 pkgname=properties-cpp
 pkgdesc="A very simple convenience library for handling properties and signals in C++11"
-pkgver=0.0.3
+pkgver=0.0.4
 _pkgver="$pkgver"-1
 pkgrel=1
 arch=(any)
 url="https://launchpad.net/properties-cpp"
-license=(LGPL3)
+license=(LGPL-3.0-only)
 makedepends=(cmake doxygen graphviz)
-source=("https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/${pkgname}/${_pkgver}/${pkgname}_${pkgver}.orig.tar.gz")
-sha256sums=('62730a43c15dfb8dd28beca8852d7b11f64a6db72f47953bee78b31b9d9b3069')
+source=("https://launchpad.net/ubuntu/+archive/primary/+sourcefiles/${pkgname}/${_pkgver}/${pkgname}_${pkgver}.orig.tar.bz2")
+sha256sums=('572444a88d4709b12adce122ee9ab67690bc72306b8078b4dfebd221e596aaba')
 
 prepare() {
   # don't build tests, would need more dependencies
