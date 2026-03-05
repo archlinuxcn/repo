@@ -1,0 +1,43 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+pkgname=filebrowser
+pkgver=2.61.1
+pkgrel=1
+pkgdesc="Standalone web file manager"
+arch=(x86_64)
+url="https://filebrowser.org/"
+license=(Apache-2.0)
+depends=(glibc)
+makedepends=(git go pnpm)
+source=("git+https://github.com/filebrowser/filebrowser.git#tag=v${pkgver}")
+sha512sums=('dd1a40ef922a7ef6ceac6613b242db49c95cb776f46891c54afe2b917fe95b03ea256b3426cb6c6b6265fe406e60ea1caa345bd52f5327821a2aa2c3dcad5eb5')
+
+build() {
+    cd "$pkgname"
+
+    pushd frontend
+    pnpm install --frozen-lockfile
+    pnpm run build
+    popd
+
+    _commit=$(git describe --long | sed 's/^[^g]*g//')
+    export GOPATH="$srcdir"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    export GOPATH="${srcdir}"
+    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+
+    PATCH_VERSION="'github.com/filebrowser/filebrowser/v2/version.Version=$pkgver'"
+    PATCH_COMMIT="'github.com/filebrowser/filebrowser/v2/version.CommitSHA=$_commit'" 
+    go build \
+        -ldflags "-compressdwarf=false -linkmode external -X $PATCH_VERSION -X $PATCH_COMMIT" \
+        -o $pkgname .
+    }
+
+package() {
+    cd "$pkgname"
+    install -Dm755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
+    install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+}
