@@ -10,7 +10,7 @@ pkgdesc="一个跨平台的划词翻译软件 | A cross-platform software for te
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/pot-app/${_pkgname}"
 license=('GPL-3.0-or-later')
-depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata')
+depends=('webkit2gtk' 'gtk3' 'libayatana-appindicator' 'xdotool' 'libxcb' 'libxrandr' 'tesseract' 'tessdata' 'sqlite' 'zstd')
 makedepends=('git' 'nodejs' 'pnpm' 'cargo' 'dbus')
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
@@ -39,7 +39,7 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	pnpm tauri build -b deb
+	LIBSQLITE3_SYS_USE_PKG_CONFIG=1 ZSTD_SYS_USE_PKG_CONFIG=1 pnpm tauri build -b deb
 }
 
 package() {
