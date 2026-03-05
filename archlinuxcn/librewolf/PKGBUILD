@@ -7,10 +7,10 @@
 pkgname=librewolf
 _pkgname=LibreWolf
 epoch=1
-pkgver=148.0.0_1
+pkgver=148.0_1
 _fixedfirefoxver="${pkgver%_*}" # Version of Firefox this LibreWolf version is based on, but the Firefox patch number is always included
 _librewolfver="${pkgver#*_}"
-_firefoxver="${_fixedfirefoxver%.0}" # Removes ".0" from the end. For "136.0.0" this will result in "136.0" but for "136.0.1" won't do anything.
+_firefoxver="${_fixedfirefoxver%}" # Removes ".0" from the end. For "136.0.0" this will result in "136.0" but for "136.0.1" won't do anything.
 pkgrel=2
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
