@@ -73,7 +73,7 @@ fi
 
 pkgbase=linux-xanmod-edge
 _major=6.19
-pkgver=${_major}.5
+pkgver=${_major}.6
 _branch=6.x
 xanmod=1
 _revision=
@@ -120,8 +120,8 @@ done
 
 sha256sums=('303079a8250b8f381f82b03f90463d12ac98d4f6b149b761ea75af1323521357'
             'SKIP'
-            '1e1d9eb16a3699791bc270416083465bc010995bf4eaea0c30143424d2101517'
-            '252688b672d7a6982c28120a9509d63d8dda230e3a21bafd1177819ca161c88f')
+            '0a9d2a39f5709f5e749e3f74af522576e1764b83ec603a16e38a1739adf95dec'
+            'f4acc1760990c54348a029315d1505ccb7c7270cd70a9aeb728bffcced51e767')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
 export KBUILD_BUILD_USER=${KBUILD_BUILD_USER:-makepkg}
@@ -147,6 +147,9 @@ prepare() {
     msg2 "Applying patch $src..."
     patch -Np1 < "../$src"
   done
+
+  # Address bug https://gitlab.com/xanmod/linux/-/issues/446
+  sed -i '/^[[:space:]]*default "6" if / s/MEMERALDRAPIDS/MEMERALDRAPIDS || X86_NATIVE_CPU/' arch/x86/Kconfig.cpu
 
   # Applying configuration
   cp -vf CONFIGS/x86_64/${_config} .config
@@ -233,7 +236,6 @@ prepare() {
 
   msg2 "make ${_compiler_flags} olddefconfig"
   make ${_compiler_flags} olddefconfig
-  #diff -u CONFIGS/xanmod/gcc/${_config} .config || :
 
   make -s kernelrelease > version
   msg2 "Prepared %s version %s" "$pkgbase" "$(<version)"
