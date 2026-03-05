@@ -1,6 +1,6 @@
 # Maintainer: Zdeněk Biberle <zdenek at biberle dot net>
 pkgname=snx-rs
-pkgver=5.1.0
+pkgver=5.2.2
 pkgrel=1
 pkgdesc="Rust client for Checkpoint VPN tunnels"
 arch=(x86_64)
@@ -10,8 +10,7 @@ depends=(gcc-libs glibc openssl glib2 gdk-pixbuf2 gtk4 sqlite webkitgtk-6.0)
 makedepends=(cargo imagemagick)
 checkdepends=(iproute2)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ancwrd1/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('923920eb9c93a6b59a126d7f89c8f5e5c4f4085a5fe7570292952dd3266ca620')
-_icon_sizes=(16 20 22 24 32 36 40 48 64 72 96 128 192 256)
+sha256sums=('8172936867af736f49f07295d99f1807d25b5d8cdcb75bdad77af8f4d169acb1')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -24,14 +23,6 @@ build() {
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
   cargo build --frozen --release --features mobile-access
-
-  # Make sure that the source icon we're using has the expected size
-  local source_icon=apps/snx-rs-gui/assets/icons/light/network-vpn.png
-  test "$(magick identify -format "%wx%h" "$source_icon")" = 256x256
-  # And now resize it to all the other sizes
-  for size in "${_icon_sizes[@]}" ; do
-    magick "$source_icon" -resize "${size}x$size" "apps/snx-rs-gui/assets/icons/$size.png"
-  done
 }
 
 check() {
@@ -51,7 +42,4 @@ package() {
   install -Dm0755 -t "$pkgdir/usr/bin/" target/release/{snx-rs,snxctl,snx-rs-gui}
   install -Dm0644 -t "$pkgdir/usr/lib/systemd/system/" package/snx-rs.service
   install -Dm0644 -t "$pkgdir/usr/share/applications/" package/snx-rs-gui.desktop
-  for size in "${_icon_sizes[@]}" ; do
-    install -Dm0644 -T "apps/snx-rs-gui/assets/icons/$size.png" "$pkgdir/usr/share/icons/hicolor/${size}x$size/apps/snx-rs-gui.png"
-  done
 }
