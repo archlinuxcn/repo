@@ -52,8 +52,7 @@ cat << EOF
    43) Intel Meteor Lake
    44) Intel Emerald Rapids
 
-   98) Intel-Native optimizations autodetected by GCC
-   99) AMD-Native optimizations autodetected by GCC
+   99) Native optimizations autodetected by GCC
 
     0) Generic x64 (default)
     
@@ -103,8 +102,7 @@ case $answer in
     42) Microarchitecture=CONFIG_MRAPTORLAKE ;;
     43) Microarchitecture=CONFIG_MMETEORLAKE ;;
     44) Microarchitecture=CONFIG_MEMERALDRAPIDS ;;
-    98) Microarchitecture=CONFIG_MNATIVE_INTEL ;;
-    99) Microarchitecture=CONFIG_MNATIVE_AMD ;;
+    99) Microarchitecture=CONFIG_X86_NATIVE_CPU ;;
      *) default=CONFIG_GENERIC_CPU ;;
 esac
 
