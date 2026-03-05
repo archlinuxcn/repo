@@ -17,19 +17,19 @@ _opt_BUILD_PY=1
 # $1 is the complex version, could be 1.4.1.r10629.g7a3e67e
 # $2 is the simple version, always 3 dotted numbers 1.4.1
 _vercmp() {
-  local pla pra rv='0' i
-  IFS='.' read -ra pla <<< "${1##.r*}"
-  IFS='.' read -ra pra <<< "$2"
-  for ((i = 0 ; i < "${#pra[@]}" ; i++ )); do
-    if [ "${pla[i]}" -lt "${pra[i]}" ]; then
-      rv='-1'
+  local _pla _pra _rv='0' _i
+  IFS='.' read -ra _pla <<< "${1##.r*}"
+  IFS='.' read -ra _pra <<< "$2"
+  for ((_i = 0 ; _i < "${#_pra[@]}" ; _i++ )); do
+    if [ "${_pla[_i]}" -lt "${_pra[_i]}" ]; then
+      _rv='-1'
       break
-    elif [ "${pla[i]}" -gt "${pra[i]}" ]; then
-      rv='1'
+    elif [ "${_pla[_i]}" -gt "${_pra[_i]}" ]; then
+      _rv='1'
       break
     fi
   done
-  printf '%s' "${rv}"
+  printf '%s' "${_rv}"
 }
 #_vercmp '1.3.7' '1.4.1'; exit 1
 #_vercmp '1.4.1.r10629.g7a3e67e' '1.4.1'; exit 1
@@ -72,15 +72,31 @@ _opt_NICE='nice -n1'
 # 1.2.7 hwcodec v0.6.0 builtin       (https://github.com/21pages/hwcodec#89879f2f)
 # 1.3.0 hwcodec v0.7.0 vcpkg::ffmpeg (https://github.com/rustdesk-org/hwcodec#6abd1898)
 # restored in 1.4.1
+# To get H264 H265/HEVC rustdesk must be compiled with vcpkg::ffmpeg build modified by rustdesk.
 #
-# To get H264 H265, rustdesk must be compiled with vcpkg::ffmpeg build modified by rustdesk.
-# libva and appropriate libva hardware driver must be installed and rebooted. See optdepends.
-# Client supports all soft codecs and compiled in hardware codecs.
-# Client hardware decode support (VAEntrypointVLD) preferred but not required.
-# Host offers all encode software codecs and only hardware codecs supported by hardware (VAEntrypointEncSlice).
-# Linux host may disable H265 even if supported by hardware. https://github.com/rustdesk/rustdesk/discussions/4095
-# Linux client does support H265, verified by connecting to a Windows host >= Skylake or Android.
-# Use libva-utils::vainfo to list supported hardware codecs VAProfileH264Main or VAProfileHEVCMain
+# Client and host soft codecs VP8 VP9 AV1 supported on all platforms.
+# Client and host hardware codecs H264 H265 require
+#   Install hardware codec library package matched to the CPU or video card. restart rustdesk.
+#   See optdepends for which package to use.
+# Host hardware codecs require
+#   CPU or video card support
+# Use vainfo from libva-utils to list supported hardware codecs.
+#      VAProfileH264Main               : VAEntrypointVLD
+#      VAProfileH264Main               : VAEntrypointEncSlice
+#      VAProfileHEVCMain               : VAEntrypointVLD
+#      VAProfileHEVCMain               : VAEntrypointEncSlice
+# Client requires hardware codec library. Codec decode support (VAEntrypointVLD) is not required.
+# Host requires hardware codec library and hardware encode support (VAEntrypointEncSlice).
+# Linux host may disable H265 even if supported by hardware.
+# https://github.com/rustdesk/rustdesk/discussions/4095
+# Linux client without H265 decode does support H265,
+# verified by connecting to a Windows host >= Skylake or Android.
+
+# H264 and H265 have quality issues affected by both client and host.
+# One client will see heavy pixelation and green rectangles. Another
+# client will be perfect. Switch between different codecs to improve quality.
+# I find the best quality in this order: AV1, VP9, VP8, H264, H265
+
 # https://wiki.archlinux.org/title/Hardware_video_acceleration
 _fn_hwcodec() {
   _opt_hwcodec_py=()
@@ -104,9 +120,9 @@ DLAGENTS="${DLAGENTS[@]/curl /curl -L}"
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.4.5'
+_pkgver='1.4.6'
 pkgver="${_pkgver//-/.}"
-pkgrel=3
+pkgrel=1
 _sfx=''
 #_sfx='-pr1-998b758'
 _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific hbb.
@@ -119,6 +135,7 @@ _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific 
   '1.4.3:20251008-5ed0afde0841659e2fb37ae7acaddc005fa1a8d3'
   '1.4.4:20251117-a86eda749e6fa33c282bab680e6b504d3ad87539'
   '1.4.5:20251117-073403edbf1fffcb3acfe8cbe7582ee873b23398'
+  '1.4.6:20260302-48c37de3e6c4e399af6f51ca20e8e3e1fd037976'
 )
 _pkgverhbb="$(_fn_VCL "${_pkgver}" -eq "${_HBB[@]}")"; unset _HBB; test "$(_vercmp "${_pkgver}" '1.3.7')" -lt 0 -o ! -z "${_pkgverhbb}" || exit 1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -225,8 +242,8 @@ source+=("${_vcs[@]}")
     )
   fi
 ####
-md5sums=('e85ddd2397cb3c4d431c6922997862ce'
-         '5ed04fc39bda6e7f93e5237492e2a263'
+md5sums=('7e97019ef5eb91cb62cbd5bf4ebec65d'
+         '5c2218c15c7912ffe9da8bba179763c5'
          '6acc4b5b14befec55ef84006b60c7ff5'
          'a77a4586f30f77de2eed63e160b3a051'
          '379cfba8479c2a92e05e3b855d1e6901'
@@ -241,8 +258,8 @@ md5sums=('e85ddd2397cb3c4d431c6922997862ce'
          '03485098fb64a000a4f7cd97e468dfff'
          'a3efc04e00cede00296f1a0dc323e8d1'
          'cc8e5418ff0c163228aabbe385ba2596')
-sha256sums=('0bf3b6f1e447bf7c24bbc005df2c6b91a60f05a873a4df8798fb1f711d22faa4'
-            '73f44cefbc27b32f259de84e19a251f196e53d096d15c747197d37d9b79e6ee5'
+sha256sums=('d0004f3880c19aefe2713696f0147efa03fdba5c566a39236b95820a4f24c0d0'
+            '8c5f064135b257e627b7b2ef25c27f746ef9ed57489ae93b58c39251b1858a63'
             '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
             '82757ee1ab6b956a3c601f7db82e2d9ad80dbbcf2ba68c63059f0b529426ccd0'
             '359046f24f8a81b96a198000a1cfd7934c1f4870b2a1306e13f65694cefef68f'
