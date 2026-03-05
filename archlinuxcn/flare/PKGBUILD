@@ -10,7 +10,22 @@ url="https://gitlab.com/schmiddi-on-mobile/${pkgname}"
 arch=("i686" "x86_64" "armv6h" "armv7h" "aarch64")
 license=("AGPL-3.0-or-later")
 makedepends=("blueprint-compiler" "cargo" "meson")
-depends=("libadwaita" "libsecret" "protobuf" "gtksourceview5" "libspelling" "sqlcipher")
+depends=(
+	'dconf'
+	'gdk-pixbuf2'
+	'glib2'
+	'glibc'
+	'gtk4'
+	'gtksourceview5'
+	'hicolor-icon-theme'
+	'libadwaita'
+	'libgcc'
+	'libsecret'
+	'libspelling'
+	'pango'
+	'protobuf'
+	'sqlcipher'
+)
 optdepends=("feedbackd: for vibrating notifications")
 source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('61a407e9772cc137795ef07810f6d06d8e307cf2ed903e8f0f38291e99a5723b')
