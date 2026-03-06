@@ -1,6 +1,6 @@
 # Maintainer:Chenx Dust <chenx_dust@outlook.com>
 pkgname=ez4connect
-pkgver=1.5.5
+pkgver=1.5.6
 pkgrel=1
 pkgdesc="Imporved Qt-based ZJU-Connect GUI"
 arch=("i686" "x86_64" "armv7h" "aarch64" "riscv64")
@@ -14,7 +14,7 @@ _appname='EZ4Connect'
 
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 
-sha256sums=('22345bdeb06383f835a6e313bf478a37a90592b95b5e65fac6735eb35ce8154b')
+sha256sums=('44279112cc6078fa5da961e876fb0d8ecb581ce88644670b0fe01a7a6c6aec3b')
 
 build(){
     cd "${srcdir}"/${_appname}-${pkgver}
