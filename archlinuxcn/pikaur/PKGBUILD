@@ -3,16 +3,16 @@
 
 _pkgname=pikaur
 pkgname="${_pkgname}"
-pkgver=1.33.2
+pkgver=1.33.3
 pkgrel=1
 pkgdesc="AUR helper which asks all questions before installing/building. Inspired by pacaur, yaourt and yay."
 arch=('any')
 url="https://github.com/actionless/pikaur"
-license=('GPL-3.0-only')
+license=('GPL-3.0-or-later')
 source=(
 	"$pkgname-$pkgver.tar.gz"::${url}/archive/"$pkgver".tar.gz
 )
-b2sums=('52004734699ade3f2e487352bb174eb46e934e0aca4ba99b3425cb6e367d1ebae6ab87c283e8cedcf2cb209bb3ce9078d74f2f527dacaaafa354dbfd3b33da59')
+b2sums=('897f30a700cee167cf8ae92f7865871187485e211b1f5657caaa1e808eebab124b0d88914fa54f6ea9315adfffc292c3fa5b40a7c6d4c88566896e7358146733')
 depends=(
 	'pyalpm'
 	'git'
@@ -54,6 +54,6 @@ package() {
 	done
 	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 	install -Dm644 pikaur.1 "${pkgdir}/usr/share/man/man1/${_pkgname}.1"
-	cp -r ./packaging/* "${pkgdir}"
-	cp -r ./dist/* "${pkgdir}"
+	cp -r ./packaging/usr "${pkgdir}"
+	cp -r ./dist/usr "${pkgdir}"
 }
