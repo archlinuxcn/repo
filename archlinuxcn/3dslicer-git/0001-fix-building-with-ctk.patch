@@ -16,7 +16,7 @@ index 3eeb8771d6..d9387990f1 100644
      ${${proj}_EP_ARGS}
      GIT_REPOSITORY "${Slicer_${proj}_GIT_REPOSITORY}"
      GIT_TAG "${Slicer_${proj}_GIT_TAG}"
-+    PATCH_COMMAND git apply ${CMAKE_SOURCE_DIR}/../0001-fix-building-ctk-with-pythonqt.patch && git apply ${CMAKE_SOURCE_DIR}/../0002-fix-undefined-reference-error-when-building-with-qt6.patch
++    PATCH_COMMAND git apply ${CMAKE_SOURCE_DIR}/../0002-fix-undefined-reference-error-when-building-with-qt6.patch
      SOURCE_DIR ${EP_SOURCE_DIR}
      BINARY_DIR ${EP_BINARY_DIR}
      CMAKE_CACHE_ARGS
