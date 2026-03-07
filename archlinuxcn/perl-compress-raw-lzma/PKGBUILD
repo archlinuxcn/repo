@@ -3,7 +3,7 @@
 # Contributor: Asger Hautop Drewsen <asgerdrewsen@gmail.com>
 
 pkgname='perl-compress-raw-lzma'
-pkgver=2.219
+pkgver=2.220
 pkgrel=1
 pkgdesc="Low-Level Perl Interface to lzma compression library"
 _dist=Compress-Raw-Lzma
@@ -13,8 +13,8 @@ license=('GPL-1.0-or-later' 'Artistic-1.0-Perl')
 options=('!emptydirs' 'purge')
 depends=('glibc' 'perl' 'perl-pod-markdown' 'xz')
 source=("https://cpan.metacpan.org/authors/id/P/PM/PMQS/$_dist-$pkgver.tar.gz")
-md5sums=('9436b79123eb8e0645ff8ee98d1a5214')
-sha512sums=('b9c50707a6a1e0e04f79950bc9c118e759bb435734f066e88c191e44d7b8c22af13199817b97b593af413c43050e5a09fe5423d767124d410b1e5ff89d3a9ed1')
+md5sums=('9db6d85bdaf4cc5e7007d03dfd814317')
+sha512sums=('4807740aad797c21306f73451bdc50182ebf5d7e3ec56dd860115ab672637551535f753ec0c2b2a929543c6195688c72d2a1f85b25177920356b875a60a8c73b')
 
 build() {
   cd $_dist-$pkgver
