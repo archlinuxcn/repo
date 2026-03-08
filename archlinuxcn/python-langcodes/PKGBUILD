@@ -1,0 +1,47 @@
+# Maintainer: envolution
+# Contributor: PumpkinCheshire <me at pumpkincheshire dot top>
+# shellcheck shell=bash disable=SC2034,SC2154
+
+pkgname=python-langcodes
+_pkgname=langcodes
+pkgver=3.5.1
+pkgrel=1
+pkgdesc='A toolkit for working with and comparing the standardized codes for languages'
+arch=('any')
+url="https://github.com/georgkrause/langcodes"
+license=(MIT)
+depends=('python')
+makedepends=(
+  'python-installer'
+  'python-build'
+  'python-wheel'
+  'python-pytest'
+  'python-setuptools-scm'
+)
+checkdepends=(
+  # 'python-pytest-cov'
+  # 'python-language-data' #removed until this package is fixed
+)
+source=(
+  "${pkgname}-${pkgver}.tar.gz::https://github.com/georgkrause/langcodes/archive/refs/tags/v${pkgver}.tar.gz"
+)
+b2sums=('91459ba68b27ba90a399c2f9bb08d0aa9b9fc1d39f01b5e8e59abe0275041afd3b974c5e0e01adce7139d3a5f13ff962d121be9603816bbf9b6239e2e42c6ea5')
+
+build() {
+  cd "$_pkgname-$pkgver"
+  export SETUPTOOLS_SCM_PRETEND_VERSION=${pkgver}
+  python -m build --no-isolation --wheel
+}
+
+check() {
+  cd "$_pkgname-$pkgver"
+  # python -m pytest # disabling until python-language-data is updated
+}
+
+package() {
+  cd "$_pkgname-$pkgver"
+  python -m installer --destdir=${pkgdir} dist/*.whl
+  install -Dm644 "LICENSE.txt" -t "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 "README.md" -t "$pkgdir/usr/share/doc/$pkgname"
+}
+# vim:set ts=2 sw=2 et:
