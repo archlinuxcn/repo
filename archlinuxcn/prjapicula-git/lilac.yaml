@@ -4,12 +4,15 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['thotypous'])
+pre_build_script: |
+  aur_pre_build(maintainers=['thotypous'])
+  add_depends(['python-cattrs', 'python-msgspec'])
 
 post_build: aur_post_build
 
 repo_depends:
   - python-crc
+  - python-msgspec
 
 update_on:
   - source: aur
