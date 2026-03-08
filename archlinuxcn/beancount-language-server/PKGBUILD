@@ -14,7 +14,7 @@ depends=(
     'gcc-libs'
 )
 makedepends=('cargo')
-source=($pkgname-$pkgver.tar.gz::https://github.com/polarmutex/${pkgname}/archive/v${pkgver//_/-}.tar.gz)
+source=($pkgname-$pkgver.tar.gz::https://github.com/polarmutex/${pkgname}/archive/${pkgver//_/-}.tar.gz)
 b2sums=('9fd24c6bd7213a45c7287ed955df97a893c475d533dab88bc0129e38d3124427e7f52e7f82aba04f6c00d65ee90ed52ebc86f287e12f82e2540ade0593f36e16')
 options=(!lto)
 
