@@ -28,7 +28,6 @@ conflicts=(
     'cargo-embed'
     'cargo-flash'
     'probe-rs'
-    'rtthost'
 )
 source=(
     "$pkgname::git+https://github.com/probe-rs/probe-rs.git"
@@ -107,7 +106,6 @@ package() {
     _pick probe-rs
     _pick cargo-flash
     _pick cargo-embed
-    _pick rtthost
     # Ensure no files to install.
     rmdir target/release
 
