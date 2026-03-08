@@ -2,7 +2,7 @@
 # Contributor: Gyara <laxect39@gmail.com>
 
 pkgname=beancount-language-server
-pkgver=1.4.1
+pkgver=1.9.2
 pkgrel=1
 pkgdesc="A Language Server Protocol (LSP) for beancount files"
 arch=('x86_64' 'aarch64')
@@ -15,7 +15,7 @@ depends=(
 )
 makedepends=('cargo')
 source=($pkgname-$pkgver.tar.gz::https://github.com/polarmutex/${pkgname}/archive/${pkgver//_/-}.tar.gz)
-b2sums=('9fd24c6bd7213a45c7287ed955df97a893c475d533dab88bc0129e38d3124427e7f52e7f82aba04f6c00d65ee90ed52ebc86f287e12f82e2540ade0593f36e16')
+b2sums=('0abaaaf25c2bef37c61c01a8b162a402d744c5b74b7b7e4a53c2d3c99c140286d2b53541538e018448c798ada82e0e01050464d93453ffcf8bb0561637b86dd4')
 options=(!lto)
 
 prepare() {
