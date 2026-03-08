@@ -4,15 +4,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['Auerhuhn'])
+pre_build_script: aur_pre_build(maintainers=['alllexx88'])
 
 post_build: aur_post_build
 
-repo_makedepends:
-  - python-pyproject-patcher
-  - python-hid-parser
-
 update_on:
   - source: aur
-    aur: python-facedancer
+    aur: python-hid-parser
   - alias: python
