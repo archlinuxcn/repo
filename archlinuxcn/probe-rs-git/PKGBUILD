@@ -103,7 +103,7 @@ package() {
         -not -perm /u+x,g+x,o+x \
         -delete
     # Remove all executable files not for end users.
-    rm target/release/{target-gen,xtask,smoke_tester}
+    rm target/release/{target-gen,xtask,libsmoke_tester_macros.so}
     _pick probe-rs
     _pick cargo-flash
     _pick cargo-embed
