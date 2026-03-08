@@ -3,7 +3,7 @@
 
 _pkgname="prjapicula"
 pkgname="$_pkgname-git"
-pkgver=0.29.r7.g5f7a99c
+pkgver=0.31.r10.g2fef05f
 pkgrel=1
 pkgdesc="Project Apicula bitstream documentation for Gowin FPGAs"
 url="https://github.com/YosysHQ/apicula"
@@ -17,7 +17,7 @@ sha256sums=(
 license=('MIT')
 arch=('x86_64')
 
-depends=(
+depends=("python-cattrs" "python-msgspec"
   'python'
   'python-crc' # AUR
   'python-numpy'
