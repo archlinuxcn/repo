@@ -1,0 +1,48 @@
+# Maintainer: Brian Crescimanno <brian.crescimanno[a]me.com>
+# Inspired by: alba4k <blaskoazzolaaaron[at]gmail.com>
+
+pkgname="hyprshutdown"
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="A graceful shutdown utility for Hyprland"
+arch=('x86_64' 'aarch64')
+url="https://github.com/hyprwm/hyprshutdown"
+license=('BSD-3-Clause')
+
+_pkgsrc="$pkgname-$pkgver"
+
+depends=(
+  glaze
+  hyprtoolkit
+  hyprutils
+  pixman
+  libdrm
+)
+makedepends=(
+  cmake
+  git
+  ninja
+)
+
+provides=("$pkgname")
+
+source=("$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('28b125c6d8406029b59beacb77aa080d5d8905239b1006c94c7307f1997e6819')
+
+build() {
+  local cmake_options=(
+    -B build
+    -S "$_pkgsrc"
+    -G Ninja
+    -W no-dev
+    -D CMAKE_BUILD_TYPE=None
+    -D CMAKE_INSTALL_PREFIX=/usr
+  )
+  cmake "${cmake_options[@]}"
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+  install -Dm644 "$_pkgsrc/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+}

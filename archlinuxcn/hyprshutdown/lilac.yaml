@@ -1,0 +1,21 @@
+maintainers:
+  - github: shinnkka
+    email: shinka@archlinuxcn.org
+
+pre_build_script: aur_pre_build(maintainers=['brianc'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+  - source: alpmfiles
+    pkgname: hyprutils
+    filename: 'usr/lib/libhyprutils\.so\.(\d+)'
+  - source: alpmfiles
+    pkgname: hyprtoolkit
+    filename: 'usr/lib/libhyprtoolkit\.so\.(\d+)'
+  - source: alpmfiles
+    pkgname: pixman
+    filename: 'usr/lib/libpixman-1\.so\.(\d+)'
+  - source: alpmfiles
+    pkgname: libdrm
+    filename: 'usr/lib/libdrm\.so\.(\d+)'
