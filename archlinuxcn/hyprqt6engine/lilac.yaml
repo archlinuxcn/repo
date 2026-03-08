@@ -6,6 +6,14 @@ post_build: aur_post_build
 
 update_on:
   - source: aur
-  - alias:  hyprlang
-  - alias: hyprutils
-  - alias: qt6-base
+  - source: alpmfiles
+    pkgname: hyprlang
+    filename: 'usr/lib/libhyprlang\.so\.(\d+)'
+  - source: alpmfiles
+    pkgname: hyprutils
+    filename: 'usr/lib/libhyprutils\.so\.(\d+)'
+  - source: alpm
+    alpm: qt6-base
+    from_pattern: '^(\d+\.\d+\.\d+)\..*'
+    to_pattern: '\1'
+    strip_release: true
