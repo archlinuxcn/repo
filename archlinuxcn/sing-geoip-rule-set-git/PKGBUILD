@@ -8,7 +8,7 @@ pkgdesc="GeoIP Rule Sets for sing-box"
 arch=(any)
 url="https://github.com/SagerNet/sing-geoip"
 license=(GPL-3.0-or-later)
-
+makedepends=('git')
 source=("${pkgname}::git+${url}")
 sha256sums=('SKIP')
 
