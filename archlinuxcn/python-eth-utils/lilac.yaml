@@ -4,8 +4,6 @@ maintainers:
 
 repo_depends:
   - python-eth-typing
-  - python-eth-hash
-
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 
 post_build: git_pkgbuild_commit
@@ -14,6 +12,6 @@ update_on:
   - source: github
     github: ethereum/eth-utils
     use_max_tag: true
-    include_regex: 'v(\d+.\d+.\d+)'
+    include_regex: v(\d+.\d+.\d+)
     prefix: v
   - alias: python
