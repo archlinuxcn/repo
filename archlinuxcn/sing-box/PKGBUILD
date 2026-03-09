@@ -9,13 +9,12 @@ arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 url='https://sing-box.sagernet.org/'
 license=("LicenseRef-${pkgname}")
 
-makedepends=('go')
+makedepends=('go' 'clang' 'lld')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz")
 sha256sums=('04b72fcd355c36a85eb028f47986894e9cf4dadbea3fee79f6891481cabeb692')
 conflicts=("$pkgname-git" "$pkgname-beta")
 depends=("glibc")
-optdepends=('libcronet.so: NaiveProxy outbound support'
-            'sing-geosite-rule-set: geosite rule sets'
+optdepends=('sing-geosite-rule-set: geosite rule sets'
             'sing-geoip-rule-set: geoip rule sets')
 
 backup=("etc/$pkgname/config.json")
@@ -26,23 +25,27 @@ prepare() {
     go mod download -modcacherw
 }
 
-_tags=with_gvisor,with_quic,with_dhcp,with_wireguard,with_utls,with_acme,with_clash_api,with_tailscale,with_ccm,with_ocm,badlinkname,tfogo_checklinkname0,with_naive_outbound,with_purego
 build(){
     cd "${pkgname}-${pkgver}"
 
     export CGO_CPPFLAGS="${CPPFLAGS}"
     export CGO_CFLAGS="${CFLAGS}"
     export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS} -fuse-ld=lld"
+    export CGO_ENABLED=1
+    export CC=clang
+    export CXX=clang++
+
+    local TAGS=$(cat release/DEFAULT_BUILD_TAGS)
+    local LDFLAGS_SHARED=$(cat release/LDFLAGS)
 
     go build -v \
         -trimpath \
         -buildmode=pie \
         -mod=readonly \
         -modcacherw \
-        -tags "$_tags" \
-        -ldflags "-linkmode external -extldflags \"${LDFLAGS}\"
-            -s -buildid= -X \"github.com/sagernet/sing-box/constant.Version=${pkgver}\"
-            -X internal/godebug.defaultGODEBUG=multipathtcp=0 -checklinkname=0" \
+        -tags "$TAGS" \
+        -ldflags "-linkmode external -X github.com/sagernet/sing-box/constant.Version=${pkgver} ${LDFLAGS_SHARED} -s -buildid=" \
         ./cmd/sing-box
 
     install -d completions
