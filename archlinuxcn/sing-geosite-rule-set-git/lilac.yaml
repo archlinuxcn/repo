@@ -1,0 +1,9 @@
+maintainers:
+  - github: everyx
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: vcs
+    use_max_tag: true
