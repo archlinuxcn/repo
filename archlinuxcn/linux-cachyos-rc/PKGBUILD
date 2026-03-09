@@ -16,7 +16,7 @@
 # 'bore' - select 'Burst-Oriented Response Enhancer'
 # 'bmq' - select 'BMQ Scheduler'
 # 'hardened' - select 'BORE Scheduler hardened' ## kernel with hardened config and hardening patches with the bore scheduler
-# 'cachyos' - select 'CachyOS Default Scheduler (BORE)'
+# 'cachyos' - select 'CachyOS Default Scheduler (EEVDF)'
 # 'eevdf' - select 'EEVDF Scheduler'
 # 'rt' - select EEVDF, but includes a series of realtime patches
 # 'rt-bore' - select Burst-Oriented Response Enhancer, but includes a series of realtime patches
@@ -172,15 +172,16 @@ pkgbase="linux-$_pkgsuffix"
 _major=7.0
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc1
+_rcver=rc3
 pkgver=${_major}.${_rcver}
+_tagrel=1
+pkgrel=1
 #_stable=${_major}.${_minor}
 #_stable=${_major}
 _stable=${_major}-${_rcver}
-_srcname=linux-${_stable}
-#_srcname=linux-${_major}
+_srctag=cachyos-${_major}-${_rcver}-${_tagrel}
+_srcname=${_srctag}
 pkgdesc='Linux BORE + LTO + AutoFDO + Propeller + Cachy Sauce Kernel by CachyOS with other patches and improvements - Release Candidate'
-pkgrel=1
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -208,9 +209,8 @@ _nv_ver=590.48.01
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
-    "https://github.com/torvalds/linux/archive/refs/tags/v${_stable}.tar.gz"
-    "config"
-    "${_patchsource}/all/0001-cachyos-base-all.patch")
+    "https://github.com/CachyOS/linux/releases/download/${_srctag}/${_srctag}.tar.gz"
+    "config")
 
 # LLVM makedepends
 if _is_lto_kernel; then
@@ -232,7 +232,7 @@ fi
 # ZFS support
 if [ "$_build_zfs" = "yes" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=3bf17cf5387fa5e0044a6321e663aead38b45969")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=1c702dda346a59e05cfd3029569bbb1d5d91c54b")
 fi
 
 
@@ -265,7 +265,7 @@ fi
 
 ## List of CachyOS schedulers
 case "$_cpusched" in
-    cachyos|bore|rt-bore|hardened) # CachyOS Scheduler (BORE)
+    bore|rt-bore|hardened) # CachyOS Scheduler (BORE)
         source+=("${_patchsource}/sched/0001-bore-cachy.patch");;&
     bmq) ## Project C Scheduler
         source+=("${_patchsource}/sched/0001-prjc-cachy.patch");;
@@ -803,8 +803,6 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('6aaa9ec55154e904913c1038b14a624606eec5dade2003bffa517c3bf5bb02a935e9b81142b10e86eb0457e1221822a149e79316dbcb0482bbc50c0b05a92b9c'
-        'ae792abb13c35bfd32cd37159beba1a3031acce092b24f74083032fcbfb4701143a771a60549f00960800e370504e0bc0dc81e5ffaeb584cd2ce40cd9ebb18d6'
-        '1a7d7feaea32469194ee4418c226598a8cb0918c6e7ec7f46092f86dcc50b267284f12e58e0d5af52536a21c92d0e67703d40c17ced5ea4f9ec6903c220332ae'
-        'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e'
-        '4abee3fe78bcfee79751396c9c8a4826b7831a0136a95778a416b1450f503de9ae6fb69de9331959368c522dc0dcfe37332c9042606ef50799658a4b3e29075f')
+b2sums=('45420084bee62fe4021572732249886bfb55b3e6614b755aa3b4163b04fba60f5edabae6c72a854aa6197b1f0655a9653a6d8a9cdea8e49fe1b6277b482be774'
+        '2be3604bb8d6dad7cd66f4c88562a2afc0282d278157e570b26837fb9da0f9ebb92527cfd1f1bdcd5cf05cb524ba1cdc3fda7c88988303c78f1b7efd4c428f30'
+        'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')
