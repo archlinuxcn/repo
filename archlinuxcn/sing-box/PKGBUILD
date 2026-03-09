@@ -14,8 +14,8 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/SagerNet/sing-box/archive/v
 sha256sums=('04b72fcd355c36a85eb028f47986894e9cf4dadbea3fee79f6891481cabeb692')
 conflicts=("$pkgname-git" "$pkgname-beta")
 depends=("glibc")
-optdepends=('sing-geosite-rule-set: geosite rule sets'
-            'sing-geoip-rule-set: geoip rule sets')
+optdepends=('sing-geosite-rule-set: GeoSite rule sets'
+            'sing-geoip-rule-set: GeoIP rule sets')
 
 backup=("etc/$pkgname/config.json")
 
@@ -49,9 +49,9 @@ build(){
         ./cmd/sing-box
 
     install -d completions
-    go run ./cmd/sing-box completion bash   > completions/bash
-    go run ./cmd/sing-box completion fish   > completions/fish
-    go run ./cmd/sing-box completion zsh    > completions/zsh
+    ./"$pkgname" completion bash > completions/bash
+    ./"$pkgname" completion fish > completions/fish
+    ./"$pkgname" completion zsh  > completions/zsh
 }
 
 package() {
