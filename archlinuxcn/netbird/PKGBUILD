@@ -11,6 +11,7 @@ pkgrel=1
 url="https://${pkgbase}.io"
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
 license=('BSD-3-Clause')
+depends=('glibc')
 makedepends=('go')
 source=(
 	"${pkgname}-${pkgver}.tar.gz::https://github.com/netbirdio/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
@@ -80,7 +81,7 @@ package_netbird() {
 }
 
 package_netbird-management() {
-	depends=('ca-certificates')
+	depends+=('ca-certificates')
 	pkgdesc="WireGuard-based mesh network: management service"
 	backup=("etc/default/${pkgname}")
 
