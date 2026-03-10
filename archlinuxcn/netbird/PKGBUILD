@@ -50,6 +50,7 @@ build() {
 		-mod=readonly \
 		-modcacherw \
 		-ldflags "-linkmode external -extldflags \"${LDFLAGS}\" -X github.com/netbirdio/${pkgname}/version.version=${pkgver}" \
+		-tags libsqlite3 \
 		./client ./signal ./management
 
 	for bin in client signal management; do
@@ -88,7 +89,7 @@ package_netbird() {
 }
 
 package_netbird-management() {
-	depends+=('ca-certificates')
+	depends+=('ca-certificates' 'sqlite')
 	pkgdesc="WireGuard-based mesh network: management service"
 	backup=("etc/default/${pkgname}")
 
