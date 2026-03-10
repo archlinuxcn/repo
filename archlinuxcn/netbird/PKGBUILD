@@ -25,6 +25,13 @@ sha256sums=('746c6cd08cda78b2ea26cefb473589f06fecbd4e723d94efec39e6647150f390'
 prepare() {
 	cd "${pkgbase}-${pkgver}/"
 	mkdir -p build
+
+	# Fix build with Go 1.26
+	local _old=gvisor.dev/gvisor@v0.0.0-20251031020517-ecfcdd2f171c
+	local _new=gvisor.dev/gvisor@v0.0.0-20260219192049-0f2374377e89
+	go mod edit -replace "${_old}=${_new}"
+	go mod tidy
+
 	go mod download
 }
 
