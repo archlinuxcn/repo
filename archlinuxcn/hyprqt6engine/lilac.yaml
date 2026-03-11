@@ -2,19 +2,23 @@ maintainers:
   - github: shinnkka
     email: shinka@archlinuxcn.org
 
-pre_build_script: aur_pre_build(maintainers=['sola'])
-post_build: aur_post_build
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
 
 update_on:
-  - source: aur
+  - source: github
+    github: hyprwm/hyprqt6engine
+    use_latest_release: true
+    prefix: v
   - source: alpmfiles
     pkgname: hyprlang
     filename: 'usr/lib/libhyprlang\.so\.(\d+)'
   - source: alpmfiles
     pkgname: hyprutils
     filename: 'usr/lib/libhyprutils\.so\.(\d+)'
-  - source: alpm
-    alpm: qt6-base
-    from_pattern: '^(\d+\.\d+\.\d+)\..*'
-    to_pattern: '\1'
-    strip_release: true
+  - source: alpmfiles
+    pkgname: kcolorscheme
+    filename: 'usr/lib/libKF6ColorScheme\.so\.(\d+)'
+  - alias: qt6-base
+  - source: manual
+    manual: 1
