@@ -40,4 +40,7 @@ pkgver() {
 
 package() {
 	DESTDIR="${pkgdir}" USE_NFTABLES=1 make -C "${_pkgname}" install
+
+	# Byte-compile Python files during the packaging process instead of at runtime
+	python -m compileall -o 0 -o 1 -p / -s "${pkgdir}" "${pkgdir}/usr/lib/waydroid/tools/"
 }
