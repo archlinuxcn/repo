@@ -26,8 +26,8 @@ pkgname=(
   qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-pkgver=10.2.0
-pkgrel=3
+pkgver=10.2.1
+pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
 url="https://www.qemu.org/"
@@ -124,6 +124,7 @@ makedepends=(
   virglrenderer
   vte3
   zlib
+  zlib-static  # for qemu-user-static
   zstd
 )
 source=(
@@ -136,7 +137,7 @@ source=(
   $pkgbase-8.1.1-static_regression.patch
   $pkgbase-10.2.0-libnfs6.patch
 )
-sha512sums=('cd910090cf8146fdd30151bded8bebe43d9e7fce8b84d9f87130a99d0bd908f310f4bef5484b53a56c29dd7a08410890d02d0a7ab90ce6af73522ff8ba5b364e'
+sha512sums=('e879272f17c650b4b73659f83bcb08184b8fb58741349afc996f3601412db7245400c4244ffa51b2af65554a20d8efa411db195177f6fa50e9cec4c16098aedc'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
@@ -145,7 +146,7 @@ sha512sums=('cd910090cf8146fdd30151bded8bebe43d9e7fce8b84d9f87130a99d0bd908f310f
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839'
             'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12'
             '7a01af6146658939aa2576eb888df3a1c22f321cfba0a3c6edc0e1c66e1c30d47b800420b328c655c0c1fda549eccf5cfa798441bcea0778249306bbc4f41f13')
-b2sums=('f0522a35221fbb4b2b2703c3a75be663e13a10357816ea60562323481c41bb18a93bf7202697df8a8b8f44e7685299ab3ffdc6bb791d785d8e4146658134d600'
+b2sums=('e805b21747d272fcfa99f9b2e9a7d55f7e9fd7326e5010adebf1c88c74c514dd4ce8850abe5964b80f3e9b9b66d9710d28513b2df715bd67fb4a1cb95d909040'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
