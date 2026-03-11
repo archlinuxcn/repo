@@ -57,17 +57,17 @@ check() {
 
 package() {
 	cd "${_pkgname}/"
-	install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	install -Dm755 target/release/{${_pkgname},ya} -t "${pkgdir}/usr/bin/"
-	install -Dm644 "assets/${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-
-	for r in 16 24 32 48 64 128 256 512; do
-		install -dm755 "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/"
-		magick assets/logo.png -resize "${r}x${r}" "$pkgdir/usr/share/icons/hicolor/${r}x${r}/apps/${_pkgname}.png"
-	done
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 
 	_install_completions "${_pkgname}-boot" "${_pkgname}"
 	_install_completions "${_pkgname}-cli" "ya"
+
+	cd assets
+	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+	for r in 16 24 32 48 64 128 256 512; do
+		install -Dm644 <(magick logo.png -resize "${r}x${r}" -) "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/${_pkgname}.png"
+	done
 }
 
 _install_completions() {
