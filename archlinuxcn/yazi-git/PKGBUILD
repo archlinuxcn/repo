@@ -9,7 +9,7 @@ pkgdesc="Blazing fast terminal file manager written in Rust, based on async I/O.
 url="https://github.com/sxyazi/${_pkgname}"
 arch=("x86_64" "aarch64" "riscv64")
 license=("MIT")
-depends=('glibc' 'hicolor-icon-theme' 'libgcc' 'oniguruma' 'ttf-nerd-fonts-symbols')
+depends=('glibc' 'hicolor-icon-theme' 'jemalloc' 'libgcc' 'oniguruma' 'ttf-nerd-fonts-symbols')
 optdepends=(
 	'ttf-nerd-fonts-symbols: for full display of icons'
 	'ffmpeg: for video thumbnails'
@@ -47,12 +47,19 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	YAZI_GEN_COMPLETIONS=true RUSTONIG_DYNAMIC_LIBONIG=1 cargo build --frozen --release --all-features
+	export YAZI_GEN_COMPLETIONS=true
+	export RUSTONIG_DYNAMIC_LIBONIG=1
+	export JEMALLOC_OVERRIDE=/usr/lib/libjemalloc.so
+	export CARGO_FEATURE_UNPREFIXED_MALLOC_ON_SUPPORTED_PLATFORMS=1
+	cargo build --frozen --release --all-features
 }
 
 check() {
 	cd "${_pkgname}/"
-	RUSTONIG_DYNAMIC_LIBONIG=1 cargo test --frozen --all-features --workspace
+	export RUSTONIG_DYNAMIC_LIBONIG=1
+	export JEMALLOC_OVERRIDE=/usr/lib/libjemalloc.so
+	export CARGO_FEATURE_UNPREFIXED_MALLOC_ON_SUPPORTED_PLATFORMS=1
+	cargo test --frozen --all-features --workspace
 }
 
 package() {
