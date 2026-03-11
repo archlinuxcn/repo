@@ -2,7 +2,7 @@
 
 pkgname=webcamoid
 pkgver=9.3.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Webcamoid is a full featured webcam capture application."
 url='https://webcamoid.github.io/'
 license=('GPL')
@@ -55,7 +55,8 @@ build() {
         -S . \
         -B build \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/usr
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DNOSVTAV1=ON
     make -C build $MAKEFLAGS
 }
 
