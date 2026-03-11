@@ -1,7 +1,7 @@
 # Maintainer: devome <evinedeng@hotmail.com>
 
 pkgname="ddns-go"
-pkgver=6.16.1
+pkgver=6.16.2
 pkgrel=1
 pkgdesc="A simple, easy-to-use ddns service"
 license=('MIT')
@@ -19,7 +19,7 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
         "${pkgname}.user.service"
         "${pkgname}.sysusers"
         "${pkgname}.tmpfiles")
-sha256sums=('e43819a9c3bce096f17a110af741da7fc2fdda1ecba7e043f31b2521a8758c5a'
+sha256sums=('1a92f53e50c8ca81e20c15c6dbaf490544f1a7b7b8c8d1c4c60ad8f1bc890276'
             'adc5116f5b965e642a826dd2ac5680a112b85b89963658dae18242cffb9224dc'
             'f1d7ee4f2ef6c13270ff7e3b9f17a35c5faba76e7601a81cc0ac75da9e27f724'
             '2f94cb5b27c38d98ea758b27709c4fac7b1b78e946c8b1f6c810ab2296708278'
