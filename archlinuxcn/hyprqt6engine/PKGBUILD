@@ -2,7 +2,7 @@
 
 pkgname="hyprqt6engine"
 pkgver=0.1.0
-pkgrel=4
+pkgrel=5
 pkgdesc="QT6 Theme Provider for Hyprland(enable kde support)"
 arch=('x86_64' 'aarch64')
 url="https://github.com/hyprwm/hyprqt6engine"
@@ -25,7 +25,7 @@ makedepends=(
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
   "01-fix-guiprivate-not-found.patch::$url/pull/4.patch")
 sha256sums=('e52692168faa51a53e6f05c12114e79ead76787045668c65d41225a13a318f62'
-  '8dd8537d255be9ed0e04a96eeaa683b7ca54c93f16e98d5ec83c357b99991e03')
+            '8dd8537d255be9ed0e04a96eeaa683b7ca54c93f16e98d5ec83c357b99991e03')
 
 prepare() {
   cd "$pkgname-$pkgver" || return 1
