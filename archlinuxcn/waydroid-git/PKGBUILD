@@ -38,10 +38,6 @@ pkgver() {
 	git -C "${_pkgname}" describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
-prepare() {
-	sed -i '1s/env //' "${_pkgname}/waydroid.py"
-}
-
 package() {
 	DESTDIR="${pkgdir}" USE_NFTABLES=1 make -C "${_pkgname}" install
 }
