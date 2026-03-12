@@ -4,18 +4,18 @@
 # Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 pkgname=fcitx5-mozc-ut
-pkgver=3.33.6089
-pkgrel=2
+pkgver=3.33.6133
+pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input (Fcitx5 module)'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
-depends=('fcitx5' 'mozc>=3.33.6089' 'qt6-base')
+depends=('fcitx5' 'mozc>=3.33.6133' 'qt6-base')
 makedepends=('git' 'mold' 'python')
 optdepends=('fcitx5-configtool')
-provides=('fcitx5-mozc=3.33.6089')
+provides=('fcitx5-mozc=3.33.6133')
 conflicts=('fcitx5-mozc')
-source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=e99761585263feec635b26e0dea1025ae12b25b7'
+source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=da1065bf3b03a825cdca462b8588e387d85549e4'
         'git+https://github.com/abseil/abseil-cpp.git#commit=987c57f325f7fa8472fa84e1f885f7534d391b0d'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=52eb8108c5bdec04579160ae17225d66034bd723'
@@ -23,11 +23,11 @@ source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=e99761585263fe
         'git+https://github.com/hiroyuki-komatsu/japanese-usage-dictionary.git#commit=e5b3425575734c323e1d947009dd74709437b684'
         'git+https://github.com/protocolbuffers/protobuf.git#commit=4fbd1111a292d04746c732573025e3251de0bb9c'
         'git+https://github.com/microsoft/wil.git#commit=fc5dbf55989fe20351c71d038a8d12de4b397a6d'
-        # Use a local copy of Bazel's module repo (https://bcr.bazel.build/)
+        # Bazel module repo (copy of https://bcr.bazel.build/)
         'git+https://github.com/bazelbuild/bazel-central-registry.git#commit=b340ca17233d8a3452184a0bf5f593000cdad9e4'
-        # Prefetch Bazel 8.4.1
+        # Bazel binary
         'https://github.com/bazelbuild/bazel/releases/download/8.4.1/bazel-8.4.1-linux-x86_64'
-        # Prefetch build dependencies
+        # Bazel dependencies
         'https://github.com/abseil/abseil-cpp/releases/download/20250814.0/abseil-cpp-20250814.0.tar.gz'
         'https://github.com/bazelbuild/apple_support/releases/download/1.23.1/apple_support.1.23.1.tar.gz'
         'https://github.com/bazel-contrib/bazel_features/releases/download/v1.30.0/bazel_features-v1.30.0.tar.gz'
@@ -46,6 +46,7 @@ source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=e99761585263fe
         'https://github.com/bazelbuild/rules_shell/releases/download/v0.3.0/rules_shell-v0.3.0.tar.gz'
         'https://github.com/bazelbuild/rules_swift/releases/download/3.1.2/rules_swift.3.1.2.tar.gz'
         'https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz'
+        # Mozc dependencies
         'dictionary.png::https://raw.githubusercontent.com/google/material-design-icons/4.0.0/png/action/chrome_reader_mode/materialiconsoutlined/48dp/1x/outline_chrome_reader_mode_black_48dp.png'
         'dictionary.svg::https://raw.githubusercontent.com/google/material-design-icons/4.0.0/src/action/chrome_reader_mode/materialiconsoutlined/24px.svg'
         'properties.png::https://raw.githubusercontent.com/google/material-design-icons/4.0.0/png/action/settings/materialiconsround/48dp/1x/round_settings_black_48dp.png'
@@ -70,7 +71,7 @@ noextract=('abseil-cpp-20250814.0.tar.gz'
            'rules_shell-v0.3.0.tar.gz'
            'rules_swift.3.1.2.tar.gz'
            'zlib-1.3.1.tar.gz')
-b2sums=('cacc7ca4f8ba12d418295f25e828723113c1b0448226a28f3100451d3127efd9158ac4208c7cda75a421c095d8268a35804709920d313608dbb91e959f685804'
+b2sums=('b69ab0e28df07de0a8e89df86c565354e76f0f685daa1d69f5e03b8a884a148837c182f4b3265b7585a7f833f989663616d5e3086aaf471f9da687ce48c609c4'
         'cccfb46ba1e756948036ffdca21187d5cd8c095357e45f305a88c96b32084ded297717e5c44cf34971bd2fe6e7ea37099dadf564aa775ef0a55a7fbab965270c'
         'eb54c87947561d6d985b3a244860a247a6ae41e5667ed6f4687dc864a3f02bc0b52d111c5b16025e06f44a1db31d7731c42eb38725521512b4c102475aebf585'
         'e8779958a717e8581a0952ea01728852d37b95713b9e92ce3fb4f5bf03e3fe02083c51daa042c231d708c2b775729000b7355f573069c09e1242bbd6f277145d'
@@ -166,10 +167,10 @@ build() {
         --config stable_channel \
         --config release_build \
         --copt '-U_FORTIFY_SOURCE' \
-        $(echo "${CFLAGS}"|xargs -n1 echo "--conlyopt") \
-        $(echo "${CXXFLAGS}"|xargs -n1 echo "--cxxopt") \
+        $(echo "${CFLAGS}" | xargs -n1 echo "--conlyopt") \
+        $(echo "${CXXFLAGS}" | xargs -n1 echo "--cxxopt") \
         --linkopt '-fuse-ld=mold' \
-        $(echo "${LDFLAGS}"|xargs -n1 echo "--linkopt") \
+        $(echo "${LDFLAGS}" | xargs -n1 echo "--linkopt") \
         --subcommands \
         --verbose_failures
 }
