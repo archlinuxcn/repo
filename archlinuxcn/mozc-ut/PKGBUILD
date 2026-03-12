@@ -17,7 +17,7 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname=mozc-ut
-pkgver=3.33.6089.20260213
+pkgver=3.33.6133.20260312
 pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
@@ -28,8 +28,8 @@ makedepends=('git' 'mold' 'python')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=3.33.6089')
-source=('git+https://github.com/google/mozc.git#commit=a99841e37b7459d08e5736c3613a6bcd393c9e92'
+provides=('mozc=3.33.6133')
+source=('git+https://github.com/google/mozc.git#commit=cc288ecf425b98bf71e757defb34d9f1f5bc2733'
         'git+https://github.com/abseil/abseil-cpp.git#commit=987c57f325f7fa8472fa84e1f885f7534d391b0d'
         'git+https://github.com/google/breakpad.git#commit=216cea7bca53fa441a3ee0d0f5fd339a3a894224'
         'git+https://github.com/google/googletest.git#commit=52eb8108c5bdec04579160ae17225d66034bd723'
@@ -40,19 +40,19 @@ source=('git+https://github.com/google/mozc.git#commit=a99841e37b7459d08e5736c36
         # UT dictionary
         'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=9c30e6648ccf459ef364529f21b029932ac6c455'
         'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=69d40eed4e9cf016384d9629920fefa199116ea2'
-        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=5e2db4eccab42652ae29e798b267c0f50f101128'
-        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=f7ad6d689be3c5dc33bef6ae1620bb618a0f12fc'
+        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=44ac6ffeae2c39f8a543f69468007a4cc2096e62'
+        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=8f6864262845425c057dd08a59f0f351a377e30c'
         'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=e33ac4ce808fa4253c6c97bf5178e229a4bfb50f'
-        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=a2e43ea4d2c93ef8730a73df503c046a465294d3'
-        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=3c054fa8e849f6da5b76ec99f8fc28d555ef5c63'
+        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=e2555ebb1b4d17446d5dbe676b28c83dfeee5fd0'
+        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=9d17b1e0c42e250532f03d77ecaa057df41071db'
         'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=384ad926e306d5308839c6dedb63696f11703968'
         'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=6c8307cb6c8a935707fd7c39f5d116300e7b8d87'
-        'https://dumps.wikimedia.org/jawiki/20260201/jawiki-20260201-pages-articles-multistream-index.txt.bz2'
-        # Use a local copy of Bazel's module repo (https://bcr.bazel.build/)
+        'https://dumps.wikimedia.org/jawiki/20260301/jawiki-20260301-pages-articles-multistream-index.txt.bz2'
+        # Bazel module repo (copy of https://bcr.bazel.build/)
         'git+https://github.com/bazelbuild/bazel-central-registry.git#commit=b340ca17233d8a3452184a0bf5f593000cdad9e4'
-        # Prefetch Bazel 8.4.1
+        # Bazel binary
         'https://github.com/bazelbuild/bazel/releases/download/8.4.1/bazel-8.4.1-linux-x86_64'
-        # Prefetch build dependencies
+        # Bazel dependencies
         'https://github.com/abseil/abseil-cpp/releases/download/20250814.0/abseil-cpp-20250814.0.tar.gz'
         'https://github.com/bazelbuild/apple_support/releases/download/1.23.1/apple_support.1.23.1.tar.gz'
         'https://github.com/bazel-contrib/bazel_features/releases/download/v1.30.0/bazel_features-v1.30.0.tar.gz'
@@ -71,10 +71,11 @@ source=('git+https://github.com/google/mozc.git#commit=a99841e37b7459d08e5736c36
         'https://github.com/bazelbuild/rules_shell/releases/download/v0.3.0/rules_shell-v0.3.0.tar.gz'
         'https://github.com/bazelbuild/rules_swift/releases/download/3.1.2/rules_swift.3.1.2.tar.gz'
         'https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz'
+        # Mozc dependencies
         'https://github.com/hiroyuki-komatsu/japanese-usage-dictionary/archive/refs/tags/2025-01-25.zip'
         'https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/33524763837473258e7ba2f14b17fc3a70519831/jigyosyo.zip'
         'https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/33524763837473258e7ba2f14b17fc3a70519831/ken_all.zip')
-noextract=('jawiki-20260201-pages-articles-multistream-index.txt.bz2'
+noextract=('jawiki-20260301-pages-articles-multistream-index.txt.bz2'
            'abseil-cpp-20250814.0.tar.gz'
            'apple_support.1.23.1.tar.gz'
            'bazel_features-v1.30.0.tar.gz'
@@ -96,7 +97,7 @@ noextract=('jawiki-20260201-pages-articles-multistream-index.txt.bz2'
            '2025-01-25.zip'
            'jigyosyo.zip'
            'ken_all.zip')
-b2sums=('374862cb26ac2e866c6bce13e4dc43cd061f4bf641a03745a832240e38fa9557458451edb665d163c29f241dbe7c8a4ad83ba77ffe925d18e165ab180ee1c7ac'
+b2sums=('c0bb232f4d9414f703f85772d24b64fca683b100d040df032a82a234f7d76631e5631dcdafb42bd2f306d08db7ea4c38c2751391ecaebee70498999f652a1fbd'
         'cccfb46ba1e756948036ffdca21187d5cd8c095357e45f305a88c96b32084ded297717e5c44cf34971bd2fe6e7ea37099dadf564aa775ef0a55a7fbab965270c'
         'eb54c87947561d6d985b3a244860a247a6ae41e5667ed6f4687dc864a3f02bc0b52d111c5b16025e06f44a1db31d7731c42eb38725521512b4c102475aebf585'
         'e8779958a717e8581a0952ea01728852d37b95713b9e92ce3fb4f5bf03e3fe02083c51daa042c231d708c2b775729000b7355f573069c09e1242bbd6f277145d'
@@ -106,14 +107,14 @@ b2sums=('374862cb26ac2e866c6bce13e4dc43cd061f4bf641a03745a832240e38fa9557458451e
         '8d105ce08ca103db180ec99c7845eee08d15abcc3e7cfce51d1b565a4ed5942be40aaefbc78e80e09e84c5583640d6a33feed7d3d9ec572c4a9ebf505ea6a7f5'
         '33ebf652dd279f3fe3158f45a2aaf6acfc3d57bc5508b007165496dd5c0ad19f034def1318db487e2f7135c9e62c2a2d7f6ea167c5ee0d678bd188448bbbf791'
         'f585f3d3463e01669eea5568198cd9bf49492a0a1f5fc3afa7ce3fc2ce744ce02e4fe970cc2ab9b40fa287569c66ed8fb8fec6f580042c2fb76850e3cd93da6c'
-        'c4399dac69c80bab116fd9ffd680b930b5211e3dab6be1f4cc240fb5d2a4b16acb611a6f0ae1c283a594d5bde61163692a46d9db442f33395fce92b34d9b1ef4'
-        '092bf2517d1f8b6b6c9b4778ec76ec0334f042a04e16ec4ed717629a4e7a7aef5849699eebc59d4c22c00002d2301445b777be8ca9762cbe6c90158c2bbbd65f'
+        'f6f699dc2c6fa720e2e4fd17ddd910ba3085b6f289888f3082eb8127cc682f869e9da50d6ad958fb324cb614ff9000c002c4038bfaaf693c7b6b47873b55161a'
+        'faa59f310ce78d84e603efc00bf4bba44ea1e670664ae8b2090f7c1fe95a338afec4928a9458059c8a88dc8a8004fea5fb13f68ba912e10daf0b60134cd77705'
         'b2a8a919973d1a74e18b69adf7753cf0cacfa038b3c97bb37c57f6ff0749092e323befd56ae58a3eea637cefe2a3f55280f391d25fd4639dbca3ede2e8472f44'
-        '27eec1206090428bef1bf810f2734bdbac9b546d43a85348f0631dc27aabb9a8d820f45c049c5392e8136bc9744bc88f130ea969433a9c2d416103de7b7def53'
-        '241db1aec847f49dae19ba51e2239e92b6aec32756b52e0933600743c41aeac2ae0a3e62b0ca31294fcd743481b0e5b862e535422802c802b91bb66844bcef0e'
+        '66483f69b7a518b749d4078a9172328165b0872e54f0bc3a8de69cb1770c5ce9c0e7fa2bd6d54cd06be0245b519e496b0946ae490b1ad0cdb5efee97a7f05911'
+        '81e84b16b82ec0ec3215c7b0e4e6c7f4cc1dbc2ca477f175c1742753077da4bb783a9dfd1869b862610bbdd2346e42b983e9f7bcb42cd150ff0cac7635b425b5'
         '3c63f51241bd659e5841f26b11620ce755663aafe2a7c750738bb840df2e50de6b033f6cbf43e8a74258b1d07e86f1487b4caf1954e99354ce8f526ab469623a'
         'afe2917e93aa170b60fe7d6a2d71a43b233b9774f0ab26a291c384766da76aa3bd9c987a8b27b8385bbb05bd1f5b973f0380fa55ddc404b29553564724e1ad23'
-        '51ef710b3dadd11cabeacc5a19d4d4a0ad5eb28576c5a9b888c8051a9df3a68353609b3f05db57c81bdc01cbe91ef918b4e0830de8156bc05ce08755ffdb4cdc'
+        '29f71fcf411bb6484a1dd408cf3299a9dd523f61eddb1e48ec8a9efc93b02c05e4c1e37b93d6a895516b74da6b99a8c994d0f39e974f94ddebd25fe6e3fcdbcd'
         'eb7c908642670c243f3ef1ac34c59029ab631c7ae8eaca3eb0850f68142d8f3e2f8d894896c12229aea320c92c0ed51bf9112e979a61f0c28f5fb6fd8623c02c'
         '50e67de8a5c63f41831a52d5429913185939d6194d0b50d475c554f04c4bc64b4d4ed5e9612a76b4f693d479a58b6e66f46b94f2b2557f24ab4d72c41e4b664c'
         'f60f3604215f64f33fad902637360050061ec62cfa6413cafc4cd3794a1898c7ee67f7b6edf78e5cb7c6b0ed86b8d80338ad4abee3f2664e391c2cfae5997220'
@@ -183,9 +184,9 @@ prepare() {
 
     cd "${srcdir}"/merge-ut-dictionaries/src/merge/
 
-    # Use a dated snapshot for the jawiki dump data
+    # Use a fixed snapshot for the jawiki dump data
     sed -i -e '124,127d' merge_dictionaries.py
-    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20260201|g" merge_dictionaries.py
+    sed -i -e "s|jawiki-[a-z0-9]\{6,8\}|${srcdir}/jawiki-20260301|g" merge_dictionaries.py
 
     # Use our local copy of the Mozc repo
     sed -i -e "65s|os\.path\.exists(f'mozc-{date}.zip')|False|" merge_dictionaries.py
@@ -224,10 +225,10 @@ build() {
         --config stable_channel \
         --config release_build \
         --copt '-U_FORTIFY_SOURCE' \
-        $(echo "${CFLAGS}"|xargs -n1 echo "--conlyopt") \
-        $(echo "${CXXFLAGS}"|xargs -n1 echo "--cxxopt") \
+        $(echo "${CFLAGS}" | xargs -n1 echo "--conlyopt") \
+        $(echo "${CXXFLAGS}" | xargs -n1 echo "--cxxopt") \
         --linkopt '-fuse-ld=mold' \
-        $(echo "${LDFLAGS}"|xargs -n1 echo "--linkopt") \
+        $(echo "${LDFLAGS}" | xargs -n1 echo "--linkopt") \
         --subcommands \
         --verbose_failures
 }
