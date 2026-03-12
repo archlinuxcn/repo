@@ -4,8 +4,6 @@ post_build_script: |
   git_pkgbuild_commit()
 #  update_aur_repo()
 update_on:
-  - source: aur
-    aur: "opa"
   - source: "github"
     github: "open-policy-agent/opa"
     use_latest_release: true
