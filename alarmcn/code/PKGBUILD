@@ -9,7 +9,7 @@ pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
 _electron=electron39
 pkgver=1.111.0
-pkgrel=1
+pkgrel=2
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
 license=('MIT')
@@ -36,7 +36,7 @@ sha512sums=('7216146d43b6158c4ff1a11e41f25fda0c6978659b08aba2b663ebe71ea99e396c1
 
 # Even though we don't officially support other archs, let's
 # allow the user to use this PKGBUILD to compile the package
-# for his architecture
+# for their architecture
 case "$CARCH" in
   i686)
     _vscode_arch=ia32
@@ -80,6 +80,10 @@ prepare() {
       -e '/PKGBUILD/d' \
       -i ../code.sh
   sed "1s|.*|#!/usr/lib/$_electron/electron|" -i ../code.mjs
+
+  # see https://gitlab.archlinux.org/archlinux/packaging/packages/code/-/issues/42
+  sed -r "s/\bsourcemap:\s*[\"'](inline|linked)[\"']/sourcemap: 'external'/" -i \
+    build/next/index.ts
 
   # This patch no longer contains proprietary modifications.
   # See https://github.com/Microsoft/vscode/issues/31168 for details.
@@ -141,6 +145,8 @@ package() {
   # Install resource files
   install -dm 755 "$pkgdir"/usr/lib/$pkgname
   cp -r --no-preserve=ownership --preserve=mode VSCode-linux-$_vscode_arch/resources/app/* "$pkgdir"/usr/lib/$pkgname/
+  # clean up sourcemaps
+  echo "Removed $(find "$pkgdir"/usr/lib/$pkgname -name '*.map' -print -delete | wc -l) sourcemaps"
   chmod -R u=rwX,go=rX "$pkgdir"
   # Replace statically included binary with system copy
   ln -sf /usr/bin/rg "$pkgdir"/usr/lib/code/node_modules/@vscode/ripgrep/bin/rg
