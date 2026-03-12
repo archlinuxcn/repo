@@ -64,13 +64,13 @@ pkgname=(
 #   'google-cloud-cli-component-kubectl'
 #   'google-cloud-cli-component-gsutil'
 # )
-pkgver=559.0.0
+pkgver=560.0.0
 pkgrel=1
 pkgdesc="A core set of command-line tools for the Google Cloud Platform. Includes only gcloud core (with beta and alpha commands), gcloud-crc32c and man pages"
 url="https://cloud.google.com/cli/"
 license=('Apache-2.0')
 arch=('x86_64' 'aarch64')
-depends=('python>=3.9')
+depends=('python>=3.10')
 makedepends=('jq')
 options=('!strip' 'staticlibs' '!zipman' '!debug' '!lto')
 
@@ -86,8 +86,8 @@ source_aarch64=("$pkgbase-$pkgver.orig_aarch64.tar.gz::https://dl.google.com/dl/
 
 sha256sums=('6e88b535c020b0f28c986fdb66918f8c07e4d337e813b77ec2068068f03457f8'
             '6ac95bcc5afa06e9c1e3bd402ecbe1a2092b963d70a8f314215dd4be27e16fc6')
-sha256sums_x86_64=('05860b4e8309d7f9a3e981c294c8e07ebb5778f7d7ed86c10c9f27e8bfc31602')
-sha256sums_aarch64=('83060eb3e306e023ac9ee4cac43172d425ed08091c7f1b4e2050d03594066903')
+sha256sums_x86_64=('3a21344d7047bb936a8f5ac3d95e29844a6daa055df0e20535eb2ce2ea47dd91')
+sha256sums_aarch64=('82907d89c4bf3577c9c55e3514140fe081aa98b505f15927edf5522ca5f24bcf')
 
 prepare() {
   cd "$_extracted_name"
