@@ -1,8 +1,8 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=gnome-shell-extension-autohide-battery
-pkgver=58
-pkgrel=2
+pkgver=59
+pkgrel=1
 pkgdesc="GNOME Shell extension to hide battery icon, if battery is fully charged and AC is connected"
 arch=('any')
 url="https://github.com/ai/autohide-battery"
@@ -11,7 +11,7 @@ depends=('gnome-shell>=45')
 makedepends=()
 _work_dir=autohide-battery-${pkgver}
 source=("${_work_dir}".tar.gz::"${url}"/archive/refs/tags/"${pkgver}".tar.gz)
-b2sums=('dafa9e6dc52808b57d1c74ed76086fc61c7cdfaca09568234a6e7fcfec5ebb54a6aca2a36b6da27f0972c5fc532ed7a9df9afb9ecc9ac86da680323444f20514')
+b2sums=('99e2079f78cc5bcf39f931c0e4e1b3cfd7b3eb00e824f64ff66d2645eea947d640401ac381c3ecf72ddb3cbf97939a7028623c48a8a6e32b5a6834b2a2a29041')
 
 build() {
   cd "${_work_dir}"
