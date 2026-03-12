@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=rime-wanxiang-gram-zh-hans
-pkgver=20260309.103820
+pkgver=20260312.234153
 pkgrel=1
 epoch=2
 pkgdesc="万象词库中文语法模型"
@@ -9,7 +9,7 @@ arch=(any)
 license=('CC-BY-4.0')
 url="https://github.com/amzxyz/RIME-LMDG"
 source=("wanxiang-lts-zh-hans.${pkgver}.gram::${url}/releases/download/LTS/wanxiang-lts-zh-hans.gram")
-sha256sums=('5b6fa55ca3a27979d6dc7d7a5d1809a8c322bed0f6bb30ad75fe7e694dbe48d0')
+sha256sums=('2e5ef3460467eaed3e569a36050c213139e34c7ae8a5bbd55cab327a0d80d017')
 
 package_rime-wanxiang-gram-zh-hans() {
     replaces=(rime-lmdg)
