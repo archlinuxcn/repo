@@ -1,0 +1,76 @@
+#!/usr/bin/bash
+
+########## Section: General ##########
+
+# This is your Application ID, avoid conflict. Should be a reversed DNS name.
+# If the author's DNS domain name contains hyphen/minus characters ('-'), which are not allowed in D-Bus interface names, they should be replaced by underscores. If the DNS domain name contains a digit immediately following a period ('.'), which is also not allowed in interface names), the interface name should add an underscore before that digit. For example, if the owner of 7-zip.org defined an interface for out-of-process plugins, it might be named org._7_zip.Plugin.
+appID="app.xemu.xemu"
+
+# This is a friendly name of an application. It should only contain ASCII characters and not spaces.
+friendlyName="Xemu"
+
+# This is the state directory of your application, which is located under "XDG_DATA_HOME"
+stateDirectory="Xemu_Data"
+
+# This is the target executable to launch
+launchTarget="xemu"
+
+# Takes a boolean value. Terminates the sandbox immediately after the main process exits. Defaults to true. Note that turning this on might affect applications that forks immediately and exits, like Firefox.
+terminateImmediately="true"
+
+########## Section: Output ##########
+
+# A space separated list of denial address sent to netsock. Only effective if netsock is running and listening on /run/netsock/control.sock. IP literals are resolved directly, while strings are mapped to IP addresses by the system resolver. A special string of "private" means private IPs. Note that :53 is allowed regardless to avoid breaking DNS. Defaults to none, meaning sandbox can connect to whatever address.
+networkDeny="private"
+
+# Allow apps to send notifications to the classic Notification endpoint, bypassing portals. Defaults to true.
+allowClassicNotifs="true"
+
+# Enables Network access within the sandbox. Defaults to true.
+bindNetwork="true"
+
+# Use zink for GL -> Vulkan translation
+useZink="false"
+
+# Enable compatibility workarounds for Qt5. Defaults to true.
+qt5Compat="false"
+
+# Takes a boolean value. When true, do not process XAuth files and forces wayland input method on Wayland and vice versa. Generally this should be true when possible.
+waylandOnly="adaptive"
+
+# Expose all GPUs. Takes boolean value, usually used in games.
+gameMode="true"
+
+########## Section: Input ##########
+
+# Takes boolean value. Binds /dev/video* into the sandbox. Required if target application uses /dev/video* interfaces directly instead of v4l2.
+bindCameras="false"
+
+# Takes boolean value. Binds PipeWire socket into the sandbox. Required if target application doesn't use Portals. Please be aware that such operation *will* impact the integrity of host.
+bindPipewire="false"
+
+# Takes boolean value.
+bindInputDevices="true"
+
+########## Section: Portals ##########
+
+# If true, allows the sandboxed application to use the org.freedesktop.portal.Inhibit interface to inhibit certain actions, like suspend and logout
+allowInhibit="true"
+
+# If true, allow apps to register Global Shortcuts via the Portal.
+allowGlobalShortcuts="false"
+
+########## Section: Miscellaneous ##########
+
+# Wake the application using D-Bus calls towards StatusNotifiers. Deprecated.
+dbusWake="false"
+
+# Allow contacting certain endpoints of KDE's JobServer to provide Job status such as downloading, defaults to true
+allowKDEStatus="true"
+
+# Mount the flatpak-info. DO NOT disable unless you know what you are doing!
+mountInfo="true"
+
+########## Environment ##########
+
+# Below you can set envs that will be imported into the application sandbox

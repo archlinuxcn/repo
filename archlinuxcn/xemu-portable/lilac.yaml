@@ -1,0 +1,64 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: github
+    github: xemu-project/xemu
+    use_latest_release: true
+  - source: alpm
+    alpm: curl
+    provided: libcurl.so
+    strip_release: true
+  - source: alpm
+    alpm: libepoxy
+    provided: libepoxy.so
+    strip_release: true
+  - source: alpm
+    alpm: gtk3
+    strip_release: true
+  - source: alpm
+    alpm: glib2
+    strip_release: true
+  - source: alpm
+    alpm: libpcap
+    provided: libpcap.so
+    strip_release: true
+  - source: alpm
+    alpm: libsamplerate
+    provided: libsamplerate.so
+    strip_release: true
+  - source: alpm
+    alpm: libslirp
+    provided: libslirp.so
+    strip_release: true
+  - source: alpm
+    alpm: tomlplusplus
+    provided: libtomlplusplus.so
+    strip_release: true
+  - source: alpm
+    alpm: xxhash
+    provided: libxxhash.so
+    strip_release: true
+  - source: alpm
+    alpm: zlib
+    strip_release: true
+  - source: alpm
+    alpm: sdl2-compat
+    strip_release: true
+  - source: alpm
+    alpm: glslang
+    strip_release: true
+  - source: alpm
+    alpm: glibc
+    strip_release: true
+
+
+repo_depends:
+  - portable
+
+build_prefix: extra-x86_64

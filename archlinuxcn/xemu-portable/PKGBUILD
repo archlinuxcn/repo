@@ -1,0 +1,118 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=xemu-portable
+pkgver=13
+pkgrel=2
+epoch=1
+pkgdesc="The original Xbox emulator sandboxed by Portable."
+arch=('x86_64')
+url="https://github.com/Kraftland/portable"
+license=('GPL-2.0-only')
+groups=()
+provides=(xemu)
+options=(!debug !strip)
+conflicts=("xemu")
+
+optdepends=()
+
+depends=(
+	'gcc-libs'
+	'glibc'
+	'glslang'
+	'hicolor-icon-theme'
+	'sdl2'
+)
+makedepends=(
+	'cmake'
+	'curl'
+	'git'
+	'glib2'
+	'glu'
+	'gtk3'
+	'libepoxy'
+	'libpcap'
+	'libsamplerate'
+	'libslirp'
+	'meson'
+	'nlohmann-json'
+	'python-distlib'
+	'python-yaml'
+	'tomlplusplus>=3.1'
+	'vulkan-headers'
+	'vulkan-icd-loader'
+	'xxhash>=0.8'
+	'zlib'
+)
+
+checkdepends=()
+
+source=(
+	portable-config
+	desktop.file
+	"source::git+https://github.com/xemu-project/xemu.git#tag=v${pkgver}"
+)
+
+
+md5sums=('346bd5445d9704cfffb912a9933012e0'
+         'f7fdec85a4e799a84b6c23fb86292aca'
+         'd5a575ce7ae88bef3316c860a4beab4d')
+
+function prepare() {
+	cd source
+	sed -i '/\[wrap-/a method=cmake' subprojects/{SPIRV-Reflect,VulkanMemoryAllocator,glslang,nv2a_vsh_cpu,volk}.wrap
+	meson subprojects download
+	mkdir -p ../build
+	python scripts/gen-license.py > XEMU_LICENSE
+	# fix bug with cmake subprojects
+	sed -i '/CPU_CFLAGS="-m64"/d' configure
+}
+
+function build() {
+	cd build
+	../source/configure \
+		--audio-drv-list="sdl" \
+		--disable-docs \
+		--disable-download \
+		--disable-werror \
+		--enable-pie \
+		--extra-cflags="-DXBOX=1" \
+		--ninja="$NINJA" \
+		--target-list="i386-softmmu" \
+		-Dbuildtype=plain
+	make qemu-system-i386
+}
+
+function package() {
+	export pkgdir
+	export pkgname
+	export srcdir
+	depends+=(
+		"portable"
+		'libcurl.so'
+		'libepoxy.so'
+		'libgdk-3.so'
+		'libglib-2.0.so'
+		'libgobject-2.0.so'
+		'libgtk-3.so'
+		'libpcap.so'
+		'libsamplerate.so'
+		'libslirp.so'
+		'libtomlplusplus.so'
+		'libxxhash.so'
+		'libz.so'
+	)
+	cd source
+	install -Dm755 ../build/qemu-system-i386 "$pkgdir"/usr/lib/portable/overlay-usr/xemu
+	local size
+	for size in 16 24 32 48 64 128 256 512; do
+		install -Dm644 ui/icons/xemu_${size}x${size}.png "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps/xemu.png
+	done
+	install -Dm644 ui/icons/xemu.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/$_pkgname.svg
+	install -Dm644 XEMU_LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE.txt
+	portable-packer \
+		--distro arch \
+		--mode post \
+		--hash true \
+		--config "${srcdir}/portable-config" \
+		--desktop-file "${srcdir}/desktop.file"
+}
