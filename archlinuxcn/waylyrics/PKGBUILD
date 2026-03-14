@@ -64,6 +64,6 @@ package() {
 		msgfmt "${locale}" -o - | install -Dm644 /dev/stdin "${pkgdir}/usr/share/locale/${mo}"
 	done
 
-	cp -r res/icons/ "${pkgdir}/usr/share/"
+	install -Dm644 "res/icons/hicolor/scalable/apps/${APP_ID}.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
