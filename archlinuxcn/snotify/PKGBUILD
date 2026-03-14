@@ -8,7 +8,10 @@ pkgdesc="Play sounds when receiving a notification."
 arch=("any")
 url="https://github.com/Kimiblock/snotify"
 license=("GPL-2.0-or-later")
-depends=("dbus" "glibc" "pipewire" "pipewire-audio" "pipewire-pulse" "wireplumber")
+depends=("dbus" "glibc" libpulse coreutils)
+optdepends=(
+	"glib2: Do not disturb support for GNOME"
+)
 makedepends=('go' 'git')
 backup=()
 source=("git+https://github.com/Kimiblock/snotify.git#tag=${pkgver}")
