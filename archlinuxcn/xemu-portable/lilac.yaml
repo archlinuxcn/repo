@@ -9,6 +9,7 @@ post_build_script: |
 update_on:
   - source: github
     github: xemu-project/xemu
+    prefix: "v"
     use_latest_release: true
   - source: alpm
     alpm: curl
