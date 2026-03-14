@@ -3,18 +3,19 @@
 
 pkgname=symengine-notcmalloc
 pkgver=0.14.0
-pkgrel=9
+pkgrel=10
 pkgdesc='Fast symbolic manipulation library, written in C++'
 url='http://sympy.org/'
 arch=(aarch64 x86_64)
 license=(MIT)
 depends=(flint
-         gcc-libs
          glibc
          gmp
          gmp-ecm
          gperftools
+         libgcc
          libmpc
+         libstdc++
          llvm-libs
          mpfr
          primesieve)
@@ -30,6 +31,8 @@ sha256sums=('fc1e0aa9f3cbcfdadcf18e69117869c2062302b94931781b53d85866cb1a4df4'
 
 prepare() {
   patch -d symengine -p1 < llvm-shared.patch
+  cd symengine
+  git checkout ea9868e64ced2cd2abb9cdc3ae97d965b892b974 -- symengine/llvm_double.cpp # Fix build with LLVM 22
 }
 
 build() {
