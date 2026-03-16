@@ -42,6 +42,14 @@ fi
 
 exec /usr/bin/${_electron} /usr/lib/${pkgname}/app.asar "$@" "\${_USER_FLAGS[@]}"
 EOD
+
+    cd "$pkgname-$pkgver"
+    local _electron_dep=$(npm pkg get devDependencies.electron | tr -d '"^~')
+    local _electron_major=${_electron_dep%%.*}
+    if [ "${_electron/electron/}" != "$_electron_major" ]; then
+        echo "Error: Incorrect electron version detected. Please change the value of \"_electron\" from \"$_electron\" to \"electron$_electron_major\"."
+        return 1
+    fi
 }
 
 build() {
@@ -62,12 +70,12 @@ build() {
 
 package() {
     install -Dm644 "${pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-    install -Dm755 "${pkgname}.sh"         "${pkgdir}/usr/bin/${pkgname}"
+    install -Dm755 "${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
 
     cd "${srcdir}/${pkgname}-${pkgver}"
-    install -Dm644 ./licenses/*               -t "${pkgdir}/usr/share/licenses/${pkgname}/"
-    install -Dm644 ./resources/icons/icon.png    "${pkgdir}/usr/share/icons/${pkgname}.png"
- 
+    install -Dm644 ./licenses/* -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+    install -Dm644 ./resources/icons/icon.png "${pkgdir}/usr/share/icons/${pkgname}.png"
+
     cd "${srcdir}/${pkgname}-${pkgver}/build/linux-unpacked/resources"
-    install -Dm644                 app.asar          -t "${pkgdir}/usr/lib/${pkgname}/"
+    install -Dm644 app.asar -t "${pkgdir}/usr/lib/${pkgname}/"
 }
