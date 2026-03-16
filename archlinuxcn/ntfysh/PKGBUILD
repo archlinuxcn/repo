@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=ntfysh
-pkgver=2.19.0
+pkgver=2.19.1
 pkgrel=1
 pkgdesc="Send push notifications to your phone or desktop using PUT/POST "
 arch=("x86_64")
@@ -17,7 +17,7 @@ source=(
 	"$pkgname::git+https://github.com/binwiederhier/ntfy.git#tag=v$pkgver"
 	"ntfy.sysusers"
         )
-b2sums=('dbed1caadabda1268f6b4ebbc0dd1cd07fa20852acc06b48d015d6b4f0f32e5a0fc5be437fcf4fefd6e7d703d791cee430fe95097424037f978f80190fc4b697'
+b2sums=('de64723294bccea5454090b94978983f7477c1af9f1e89ee0b86a76296c2909877ae1cebdb11a09629864402948afc545d7a6716b52b0ae7300dda4ceeded38a'
         '958bdfc80eeb8ed62508593a94b379d7c099373a4ed2af3eaeedebdca05519378e2bc20940950db4f848be0575cebe16bcb79b794133e8f4467418f8e34278ca')
 
 build() {
