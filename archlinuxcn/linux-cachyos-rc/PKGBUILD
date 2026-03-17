@@ -172,7 +172,7 @@ pkgbase="linux-$_pkgsuffix"
 _major=7.0
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc3
+_rcver=rc4
 pkgver=${_major}.${_rcver}
 _tagrel=1
 pkgrel=1
@@ -205,7 +205,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=590.48.01
+_nv_ver=595.45.04
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -238,9 +238,7 @@ fi
 
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
-             "${_patchsource}/misc/nvidia/0001-Enable-atomic-kernel-modesetting-by-default.patch"
              "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
-             "${_patchsource}/misc/nvidia/0003-Fix-compile-for-6.19.patch"
              "${_patchsource}/misc/nvidia/0004-HACK-kernel-open-Makefile-Remove-PAHOLE_VARIABLE.patch")
 fi
 
@@ -265,7 +263,7 @@ fi
 
 ## List of CachyOS schedulers
 case "$_cpusched" in
-    bore|rt-bore|hardened) # CachyOS Scheduler (BORE)
+    cachyos|bore|rt-bore|hardened) # CachyOS Scheduler (BORE)
         source+=("${_patchsource}/sched/0001-bore-cachy.patch");;&
     bmq) ## Project C Scheduler
         source+=("${_patchsource}/sched/0001-prjc-cachy.patch");;
@@ -516,9 +514,7 @@ prepare() {
     cat .config > "${basedir}/config-${pkgver}-${pkgrel}${pkgbase#linux}"
 
     if [ "$_build_nvidia_open" = "yes" ]; then
-        patch -Np1 -i "${srcdir}/0001-Enable-atomic-kernel-modesetting-by-default.patch" -d "${srcdir}/${_nv_open_pkg}/kernel-open"
         patch -Np1 -i "${srcdir}/0002-Add-IBT-support.patch" -d "${srcdir}/${_nv_open_pkg}/"
-        patch -Np1 -i "${srcdir}/0003-Fix-compile-for-6.19.patch" -d "${srcdir}/${_nv_open_pkg}/"
         patch -Np1 -i "${srcdir}/0004-HACK-kernel-open-Makefile-Remove-PAHOLE_VARIABLE.patch" -d "${srcdir}/${_nv_open_pkg}/"
     fi
 }
@@ -619,6 +615,7 @@ _package() {
 _package-headers() {
     pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
     depends=('pahole' "${pkgbase}")
+    provides=(LINUX-HEADERS)
 
     if _is_lto_kernel; then
         depends+=(clang llvm lld)
@@ -803,6 +800,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('45420084bee62fe4021572732249886bfb55b3e6614b755aa3b4163b04fba60f5edabae6c72a854aa6197b1f0655a9653a6d8a9cdea8e49fe1b6277b482be774'
-        '2be3604bb8d6dad7cd66f4c88562a2afc0282d278157e570b26837fb9da0f9ebb92527cfd1f1bdcd5cf05cb524ba1cdc3fda7c88988303c78f1b7efd4c428f30'
-        'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')
+b2sums=('944ac7b4be8a6d538173caff3822f0bc9196993c819294c606dcce18b7d48491a3f905b2fa15db5139081d841b1ad2f9e7326fa9cb647018a6ea80a2cdcc6730'
+        '8665e7b381a791d6c0d17c8bc2d5ebefeca7167549c1a0505c19af9e8a7a33fa46a070c2886d30f71748e95d27603a1ccac16bbf4630c1ebfdff899e15c40da2'
+        'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e'
+        '786f91e6946bfb654c95659721ea37a0ad004691cca797132f2a8722e7e8f6514d72d2a3547dbb6f4ebba48a40bd4c333d4632b47c21f593813e738fdf0ba4db')
