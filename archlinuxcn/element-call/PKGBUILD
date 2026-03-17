@@ -5,12 +5,12 @@ pkgdesc="Group calls powered by Matrix"
 url="https://github.com/element-hq/element-call"
 license=("Apache-2.0")
 arch=("any")
-pkgver=0.17.0
+pkgver=0.18.0
 pkgrel=1
 makedepends=("yarn-berry" "liburing" "git" "nodejs")
 depends=()
 source=("git+${url}#tag=v${pkgver}")
-md5sums=('65673b27832549f8f33c5f6a495f2274')
+md5sums=('a948e28e347ab9a861c16b4ac6089050')
 provides=("element-call")
 options=()
 backup=()
