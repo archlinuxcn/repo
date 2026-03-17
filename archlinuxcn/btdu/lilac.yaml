@@ -2,4 +2,8 @@ maintainers:
 - github: lilydjwg
 update_on:
 - source: aur
+- source: alpmfiles
+  pkgname: liblphobos
+  strip_dir: true
+  filename: libphobos2-ldc-shared\.so\.\d+
 post_build: aur_post_build
