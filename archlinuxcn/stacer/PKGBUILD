@@ -4,7 +4,7 @@
 
 pkgname=stacer
 _srcname=Stacer
-pkgver=1.6.2
+pkgver=1.6.3
 pkgrel=1
 pkgdesc="Linux System Optimizer and Monitoring"
 url="https://${pkgname}.quentium.fr/"
@@ -13,7 +13,7 @@ license=('GPL-3.0-or-later')
 depends=('qt6-base' 'qt6-charts' 'qt6-svg' 'hicolor-icon-theme')
 makedepends=('cmake' 'qt6-tools')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/QuentiumYT/${_srcname}/archive/v${pkgver}.tar.gz")
-sha256sums=('d8c693e03735274284d805b74f21065f66ccc75769287f500c1ae52232fb06bd')
+sha256sums=('101832733712337047d55e63ce1558465b4a8cf26f9082f8ebd74d78e6144663')
 
 build() {
 	local cmake_options=(
