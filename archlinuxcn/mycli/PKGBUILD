@@ -1,46 +1,55 @@
-# Maintainer: Wenxuan Zhang <wenxuangm@gmail.com>
+# Maintainer: Miodrag Tokić
+# Contributor: Yuanji <self@gimo.me>
+# Contributor: Aaron Abbott <aabmass at gmail dot com>
 
 pkgname=mycli
 pkgver=1.64.0
-pkgrel=1
-pkgdesc="A Terminal Client for MySQL with AutoCompletion and Syntax Highlighting."
-url="https://github.com/dbcli/mycli"
-arch=(any)
+pkgrel=2
+pkgdesc='A Terminal Client for MySQL with AutoCompletion and Syntax Highlighting'
+arch=('any')
+url='https://github.com/dbcli/mycli'
 license=('BSD-3-Clause')
 depends=(
-	'python'
-	'python-click'
-	'python-cryptography'
-	'python-pygments'
-	'python-prompt_toolkit'
-	'python-pymysql'
-	'python-sqlparse'
-	'python-sqlglot'
-	'python-configobj'
-	'python-cli_helpers'
-	'python-wcwidth'
-	'python-pyperclip'
-	'python-pycryptodomex'
-	'python-pyfzf'
-	'python-rapidfuzz'
-	'python-keyring'
+    'python'
+    'python-click'
+    'python-cryptography'
+    'python-pygments'
+    'python-prompt_toolkit'
+    'python-pymysql'
+    'python-sqlparse'
+    'python-sqlglot'
+    'python-configobj'
+    'python-cli_helpers'
+    'python-wcwidth'
+    'python-pyperclip'
+    'python-pycryptodomex'
+    'python-pyfzf'
+    'python-rapidfuzz'
+    'python-keyring'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-wheel'
+    'python-setuptools'
+    'python-setuptools-scm'
 )
 optdepends=(
-	'python-paramiko: SSH tunneling support'
-	'python-sshtunnel: SSH tunneling support'
+    'python-llm: LLM support'
+    'python-sshtunnel: SSH support'
 )
-makedepends=(python-build python-installer python-wheel python-setuptools python-setuptools-scm)
-source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/$pkgname/$pkgname-$pkgver.tar.gz")
-conflicts=('mycli-git')
-sha256sums=('2f3cb51cd632718896582d2c665c2865c4a25c8ca55ce53939e0b59d84c4e8db')
+options=(!emptydirs)
+source=("$pkgname-$pkgver.tar.gz::https://github.com/dbcli/mycli/archive/v${pkgver}.tar.gz")
+sha256sums=('1d480f3f2206b0f38615376b1665d8ad3c26ab30081e74d6e002adff69b854f1')
 
 build() {
-	cd "$srcdir/${pkgname}-${pkgver}"
-	python -m build --wheel --no-isolation
+    export SETUPTOOLS_SCM_PRETEND_VERSION="$pkgver"
+    cd "$srcdir/$pkgname-$pkgver"
+    python -m build --wheel --no-isolation
 }
 
 package() {
-	cd "$srcdir/${pkgname}-${pkgver}"
-	python -m installer --destdir="$pkgdir" dist/*.whl
-	install -D "LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    cd "$srcdir/$pkgname-$pkgver"
+    install -D -m 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    python -m installer --destdir="$pkgdir" dist/*.whl
 }
