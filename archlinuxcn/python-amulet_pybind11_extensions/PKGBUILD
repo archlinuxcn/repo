@@ -29,4 +29,6 @@ function build() {
 function package() {
 	cd "${srcdir}/Amulet-pybind11-extensions"
 	python setup.py install --root="$pkgdir" --optimize=1
+	install -d "${pkgdir}/usr/include/amulet"
+	cp -r "${srcdir}/Amulet-pybind11-extensions/"src/amulet/pybind11_extensions "${pkgdir}/usr/include/amulet/pybind11_extensions"
 }
