@@ -1,0 +1,19 @@
+maintainers:
+  - github: wfxr
+
+build_prefix: archlinuxcn-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['loonies'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+  - source: github
+    github: dbcli/mycli
+    use_latest_release: true
+  - alias: python
+
+repo_depends:
+  - python-sqlglot
+  - python-pyfzf
