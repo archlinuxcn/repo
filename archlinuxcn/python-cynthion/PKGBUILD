@@ -3,7 +3,7 @@
 pkgname=python-cynthion
 _gitpkgname=cynthion
 pkgver=0.2.4
-pkgrel=2
+pkgrel=3
 pkgdesc='Python package and utilities for the Great Scott Gadgets Cynthion USB Test Instrument'
 arch=('any')
 url='https://github.com/greatscottgadgets/cynthion'
@@ -11,10 +11,11 @@ license=('BSD-3-Clause')
 depends=(
   "cynthion-firmware=${pkgver}"
   'python'
-  'python-amaranth>=0.5'
-  'python-apollo'
-  'python-luna-usb>=0.2'
-  'python-luna-soc>=0.3'
+  'python-amaranth>=0.5.8' # Python 3.14 support
+  'python-amaranth<0.6'
+  'python-apollo-fpga'
+  'python-luna-usb'
+  'python-luna-soc'
   'python-pyfwup'
   'python-pygreat'
   'python-pyusb'
