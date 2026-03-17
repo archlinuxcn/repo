@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=stashpak
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="Build Portable packages with ease."
 arch=("x86_64")
