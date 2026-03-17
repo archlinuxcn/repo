@@ -9,19 +9,14 @@ pre_build_script: aur_pre_build(maintainers=['Auerhuhn'])
 post_build: aur_post_build
 
 repo_depends:
-  - cynthion-firmware-bin
-  - python-amaranth
-  - python-apollo
-  - python-luna-soc
-  - python-luna-usb
-  - python-pyfwup
-  - python-pygreat
-  - python-usb-protocol
-  - python-apollo-fpga
+  - python-pyvcd
 repo_makedepends:
   - python-pyproject-patcher
+  - python-amaranth
+  - python-luna-usb
+  - python-usb-procotol
 
 update_on:
   - source: aur
-    aur: python-cynthion
+    aur: python-apollo-fpga
   - alias: python
