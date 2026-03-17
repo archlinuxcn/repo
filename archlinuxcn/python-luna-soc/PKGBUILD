@@ -3,20 +3,16 @@
 pkgname=python-luna-soc
 _gitpkgname=luna-soc
 pkgver=0.3.2
-pkgrel=3
+pkgrel=4
 pkgdesc='Amaranth HDL libary for building USB-capable SoC designs'
 arch=('any')
 url='https://github.com/greatscottgadgets/luna-soc'
 license=('BSD-3-Clause')
 depends=(
   'python'
-  'python-amaranth>=0.5'
-
-  # Work around undeclared transitive dependency of python-amaranth
-  # See also: https://aur.archlinux.org/packages/python-amaranth#comment-1016100
-  'python-jschon'
-
-  'python-luna-usb>=0.2'
+  'python-amaranth>=0.5.8' # Python 3.14 support
+  'python-amaranth<0.6'
+  'python-luna-usb'
   'python-pyserial'
 )
 makedepends=(
@@ -30,7 +26,7 @@ makedepends=(
   'python-sphinxcontrib-apidoc'
   'python-wheel'
 )
-checkdepends=('python-apollo')
+checkdepends=('python-apollo-fpga')
 optdepends=(
   'python-minerva: to implement SoC designs using a Minerva RISC-V CPU'
 )
