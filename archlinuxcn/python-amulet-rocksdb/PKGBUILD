@@ -1,0 +1,31 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=python-amulet-rocksdb
+pkgdesc="A pybind11 wrapper for RocksDB."
+license=(custom)
+arch=(any)
+pkgver=1.0.1
+pkgrel=1
+url="https://github.com/Amulet-Team/Amulet-RocksDB"
+makedepends=(python-build python-installer python-wheel python-setuptools python-versioneer python-packaging git)
+depends=(python pybind11 python-amulet_pybind11_extensions)
+source=(
+	"source"::"git+$url.git#tag=${pkgver}"
+)
+md5sums=('SKIP')
+
+function prepare() {
+	cd source
+	git clean -fdx
+#	sed -i 's/versioneer-518/versioneer/g' "${srcdir}/Minecraft-Model-Reader-${pkgver}/pyproject.toml"
+}
+
+function build() {
+	cd "source"
+	python -m build --wheel --no-isolation
+}
+
+function package() {
+	cd "source"
+	python -m installer --destdir="${pkgdir}" dist/*.whl
+}
