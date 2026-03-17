@@ -1,0 +1,13 @@
+maintainers:
+  - github: wfxr
+
+pre_build_script: aur_pre_build(maintainers=['onurbbr'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+  - source: github
+    github: nk412/pyfzf
+    use_latest_release: true
+  - alias: python
