@@ -18,6 +18,7 @@ function prepare() {
 	cd source
 	git clean -fdx
 #	sed -i 's/versioneer-518/versioneer/g' "${srcdir}/Minecraft-Model-Reader-${pkgver}/pyproject.toml"
+	sed -i 's|{PYBIND11_REQUIREMENT}||g' requirements.py
 }
 
 function build() {
