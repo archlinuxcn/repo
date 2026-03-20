@@ -1,0 +1,10 @@
+post_install() {
+  openvpn3-admin init-config --write-configs
+  systemctl reload dbus
+}
+
+post_upgrade() {
+  openvpn3-admin init-config --write-configs
+  systemctl reload dbus
+  systemctl restart net.openvpn.v3.netcfg.slice
+}

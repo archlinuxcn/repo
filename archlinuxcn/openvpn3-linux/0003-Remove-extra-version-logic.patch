@@ -1,0 +1,32 @@
+From d98ede9f604b076fee8fc2a513604e6ab4a25d1f Mon Sep 17 00:00:00 2001
+From: RocketDev <ma2014119@outlook.com>
+Date: Fri, 20 Mar 2026 18:07:49 +0800
+Subject: [PATCH] Remove extra version logic
+
+---
+ scripts/get-version | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/scripts/get-version b/scripts/get-version
+index bc3ff070..98c2bb7e 100755
+--- a/scripts/get-version
++++ b/scripts/get-version
+@@ -48,15 +48,6 @@ if [ -e "${PROJECT_ROOT}/.git" ]; then
+ 		PRODVERSION="$(echo ${VERSION} | cut -b2-)"
+ 	fi
+ 
+-        # Changed files from the index which are not staged gets the '+' flag
+-        GIT_FLAGS="$(git --git-dir ${PROJECT_ROOT}/.git diff-files --name-status -r --ignore-submodules --quiet || echo 'm')"
+-        # Changed files which are staged gets the '*' flag
+-        GIT_FLAGS="${GIT_FLAGS}$(git --git-dir ${PROJECT_ROOT}/.git diff-index --cached  --quiet --ignore-submodules HEAD || echo 's')"
+-        if [ -n "${GIT_FLAGS}" ]; then
+-            VERSION="${VERSION}__${GIT_FLAGS}"
+-            PRODVERSION="${PRODVERSION}__${GIT_FLAGS}"
+-        fi
+-
+ elif [ -f "${PROJECT_ROOT}/src/build-version.h" ]; then
+ 	VERSION="$(cat ${PROJECT_ROOT}/src/build-version.h | awk '/define PACKAGE_GUIVERSION/{gsub("\"", ""); print $3}')"
+ 	PRODVERSION="$(echo $VERSION | sed -e 's#/#_#g' -e 's#:#_#g')"
+-- 
+2.53.0
+

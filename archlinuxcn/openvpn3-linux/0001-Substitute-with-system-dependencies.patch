@@ -1,0 +1,110 @@
+From d103fce78a11c6cf15a0bff02b49e2e10a1cbf58 Mon Sep 17 00:00:00 2001
+From: RocketDev <ma2014119@outlook.com>
+Date: Fri, 20 Mar 2026 16:34:42 +0800
+Subject: [PATCH] Substitute with system dependencies
+
+---
+ meson.build                | 13 ++++---------
+ meson_options.txt          |  3 ---
+ src/tests/unit/meson.build |  8 +++-----
+ 3 files changed, 7 insertions(+), 17 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 6477bd72..79db89b5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -26,8 +26,8 @@ dep_systemd = dependency('libsystemd', version: '>218', required: false)
+ dep_tinyxml2 = dependency('tinyxml2')
+ dep_jsoncpp = dependency('jsoncpp')
+ 
+-libfmt = subproject('fmt', default_options: ['header-only=true'])
+-dep_libfmt = libfmt.get_variable('fmt_header_only_dep')
++dep_libfmt = dependency('fmt')
++dep_asio = dependency('asio')
+ 
+ # This is not a link dependency for this project, but we need it
+ # to get the proper paths for policy and service config installation
+@@ -40,6 +40,7 @@ base_dependencies = [
+     dep_selinux,
+     dep_systemd,
+     dep_tinyxml2,
++    dep_asio,
+     dependency('gdbuspp'),
+     dependency('glib-2.0'),
+     dependency('gio-2.0'),
+@@ -75,18 +76,11 @@ if (dep_systemd.found())
+                                      dependencies: dep_systemd)
+ endif
+ 
+-#
+-#  Setup additional include header dirs
+-#
+-asio_inc = get_option('asio_path') / 'include'
+-message ('ASIO library: ' + asio_inc)
+-
+ openvpn3_core_inc = get_option('openvpn3_core_path')
+ message('OpenVPN 3 Core Library: ' + openvpn3_core_inc)
+ 
+ include_dirs = include_directories([
+     openvpn3_core_inc,
+-    asio_inc,
+     'src',
+ ])
+ 
+@@ -135,6 +129,7 @@ build_config = configuration_data({
+     #'OVPN_TINYXML2_HAS_ERROR_STR': dep_tinyxml2.version().version_compare('>= 6.0.0'),
+     'ASIO_STANDALONE': true,
+     'ASIO_NO_DEPRECATED': true,
++    'HAVE_ASIO': dep_asio.found(),
+     'USE_ASIO': true,
+     'USE_OPENSSL': true,
+     'USE_TUN_BUILDER': true,
+diff --git a/meson_options.txt b/meson_options.txt
+index 9084ee78..ac73c5b2 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -26,9 +26,6 @@ option('debug_options', type: 'boolean', value: false,
+ #
+ #  Build environment and related build time options
+ #
+-option('asio_path', type: 'string', value: './vendor/asio/asio',
+-       description: 'Path to the ASIO header files')
+-
+ option('openvpn3_core_path', type: 'string', value: './openvpn3-core',
+        description: 'Path to the OpenVPN 3 Core Library header files')
+ 
+diff --git a/src/tests/unit/meson.build b/src/tests/unit/meson.build
+index cd669178..3ef89323 100644
+--- a/src/tests/unit/meson.build
++++ b/src/tests/unit/meson.build
+@@ -9,9 +9,7 @@
+ #  unit tests
+ #
+ 
+-googletest = subproject('gtest')
+-gtest_deps = googletest.get_variable('gtest_main_dep')
+-gtest_inc = googletest.get_variable('gtest_incdir')
++dep_gtest = dependency('gtest', main: true)
+ 
+ unit_tests = executable(
+            'unit-tests',
+@@ -36,7 +34,7 @@ unit_tests = executable(
+                 '../../netcfg/dns/resolver-settings.cpp',
+                 '../../netcfg/dns/settings-manager.cpp',
+            ],
+-           include_directories: [include_dirs, gtest_inc, '../../..'],
++           include_directories: [include_dirs, '../../..'],
+            link_with: [
+                  common_code,
+                  netcfgmgr_lib,
+@@ -45,7 +43,7 @@ unit_tests = executable(
+            dependencies : [
+                 base_dependencies,
+                 dco_dependencies,
+-                gtest_deps,
++                dep_gtest,
+            ],
+           build_by_default: build_unit_tests,
+ )
+-- 
+2.53.0

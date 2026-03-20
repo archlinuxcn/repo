@@ -1,0 +1,93 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+pkgname=openvpn3-linux
+pkgver=27
+pkgrel=1
+pkgdesc="Next generation OpenVPN implementation"
+arch=(x86_64)
+url="https://codeberg.org/OpenVPN/$pkgname"
+license=(AGPL-3.0-only)
+depends=(
+    glibc
+    libstdc++
+    libgcc
+    abseil-cpp
+    python-pyopenssl
+    python-dbus
+    python-systemd
+    python-gobject
+    # explicit dependencies
+    openssl
+    glib2
+    jsoncpp
+    libcap-ng
+    lz4
+    util-linux-libs
+    polkit
+    tinyxml2
+    systemd-libs
+    fmt
+    # arch enabled dco kernel support
+    libnl
+    protobuf
+    python
+    gdbuspp
+)
+makedepends=(
+    git
+    meson
+    ninja
+    asio
+    bzip2
+    gtest
+    python-docutils
+    python-jinja
+)
+source=(
+    "$pkgname::git+$url.git#tag=v$pkgver?signed"
+    "git+https://github.com/OpenVPN/openvpn3.git"
+    sysuser.conf
+    0001-Substitute-with-system-dependencies.patch
+    0002-Fix-srcdir-reference.patch
+    0003-Remove-extra-version-logic.patch
+)
+b2sums=('a82ef9aafb98279961ab497036bb1a2bffab5385e5664d7111895b7be6b7d84da8857bcbd371c000ec41a1a49be5e6a7a8a4c104b515c7a98a4af89fc3e91be8'
+        'SKIP'
+        '695fbd1a26184871d60ff939ab39b4638bdf4234ce0c567a04ed165bc4fe129bd8c3462bd79b23c1e8916fdf82bfd4faf3496fe391615b0f1e5842b05821c3e2'
+        '08f8a8358f40d6f6e8b4d95a8c5d243b992dd66a5f28124040dd64efa89db6201e29211e5a7a94ac304f06f15e37a82e98cabb7178c4e871c5dec7eb55b4fb6d'
+        'be7345e9ab8ebaf1566798160063034a2096758c94d6f34467aba9b88d81f77c72672b7b7aa66267013c0f2581f890e6e4019de87a3aae8a1e598905cde1db43'
+        '171a5e3832b246dc42009b7b5aed443d70df313a5c4cfa4a03763457387721f48d625867e0bfabf33bd2fb0087b6d469a5c0a86ddfa9594cbb403bc47b7d5ac4')
+validpgpkeys=('690DB606E838182FA8F9018C755A3AB945307622')
+install=openvpn3-linux.install
+
+prepare() {
+    cd "$pkgname"
+    git submodule init
+    git submodule set-url openvpn3-core "$srcdir/openvpn3"
+    git -c protocol.file.allow=always submodule update openvpn3-core
+
+    git apply ../0001-Substitute-with-system-dependencies.patch
+    git apply ../0002-Fix-srcdir-reference.patch
+    git apply ../0003-Remove-extra-version-logic.patch
+}
+
+build() {
+    arch-meson \
+        -Dselinux=disabled \
+        -Dselinux_policy=disabled \
+        -Dbash-completion=enabled \
+        -Dunit_tests=disabled \
+        -Dtest_programs=disabled \
+        build "$pkgname"
+    meson compile -C build
+}
+
+# require dbus
+# check() {
+#     meson test -C build --print-errorlogs
+# }
+
+package() {
+    meson install -C build --destdir "$pkgdir"
+    install -Dm644 sysuser.conf "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
+}
