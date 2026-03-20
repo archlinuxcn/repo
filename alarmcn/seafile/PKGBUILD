@@ -5,8 +5,8 @@
 
 pkgname=seafile
 epoch=1
-pkgver=9.0.16
-pkgrel=2
+pkgver=9.0.17
+pkgrel=1
 pkgdesc='An online file storage and collaboration tool'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://github.com/haiwen/$pkgname"
@@ -35,7 +35,7 @@ source=(
   "seafile-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz"
   "seaf-cli@.service"
 )
-sha256sums=('903ae6ebea40c917614e521f78507de0a4769fd31b5d2cf381f29c37aeee8bb1'
+sha256sums=('a78e4341d480216cce9a6dee1de5f6a3bd02d09695003cc1195b232a705b3351'
             'c37510109c1de64c774896df39aece240c056b54414d2119fca01860211156ba')
 provides=(seafile-client-cli libseafile.so)
 
