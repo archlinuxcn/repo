@@ -1,0 +1,47 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+pkgname=gdbuspp
+pkgver=3
+pkgrel=1
+pkgdesc="glib2 D-Bus wrapper for C++"
+arch=(x86_64)
+url="https://codeberg.org/OpenVPN/$pkgname"
+license=(AGPL-3.0-only)
+depends=(
+    glibc
+    libgcc
+    libstdc++
+    glib2
+)
+makedepends=(
+    git
+    meson
+    ninja
+)
+# checkdepends=(
+#     python-xmltodict
+#     python-dbus
+# )
+provides=('libgdbuspp.so')
+source=(
+    "$pkgname::git+$url.git#tag=v$pkgver?signed"
+)
+b2sums=('b08db177225621dfffb4d79d12063f4812fdade3f0d23dd5821d7393f008cf4e986ffa02257facbff822f5c475d79db93bba52ffa158d2bc5d8f19ed4da6fcbe')
+validpgpkeys=('7ACD56B74144925C6214329757DB9DAB613B8DA1')
+
+build() {
+    export CXXFLAGS="-ffile-prefix-map=..=/usr/src/debug/gdbuspp $CXXFLAGS"
+    arch-meson "$srcdir/build" "$srcdir/$pkgname"
+    cd build
+    meson compile
+}
+
+# test require valid Dbus session
+# check() {
+#     meson test -C build --print-errorlogs
+# }
+
+package() {
+    cd build
+    meson install --destdir "$pkgdir"
+}

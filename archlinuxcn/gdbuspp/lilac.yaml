@@ -1,0 +1,12 @@
+maintainers:
+  - github: RocketMaDev
+    email: RocketDev <marocketbd@gmail.com>
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: gitea
+    gitea: OpenVPN/gdbuspp
+    use_max_tag: true
+    host: codeberg.org
