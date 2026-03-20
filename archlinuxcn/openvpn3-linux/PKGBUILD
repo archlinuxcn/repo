@@ -59,6 +59,7 @@ b2sums=('a82ef9aafb98279961ab497036bb1a2bffab5385e5664d7111895b7be6b7d84da8857bc
         '171a5e3832b246dc42009b7b5aed443d70df313a5c4cfa4a03763457387721f48d625867e0bfabf33bd2fb0087b6d469a5c0a86ddfa9594cbb403bc47b7d5ac4')
 validpgpkeys=('690DB606E838182FA8F9018C755A3AB945307622')
 install=openvpn3-linux.install
+conflicts=(openvpn3)
 
 prepare() {
     cd "$pkgname"
