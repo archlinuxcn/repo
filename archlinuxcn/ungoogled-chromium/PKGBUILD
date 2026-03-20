@@ -10,14 +10,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=146.0.7680.80
-pkgrel=3
+pkgver=146.0.7680.153
+pkgrel=1
 _launcher_ver=8
 _manual_clone=1
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=146.0.7680.80-1
+_uc_ver=146.0.7680.153-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -60,7 +60,6 @@ optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kdialog: support for native dialogs in Plasma'
             'gtk4: for --gtk-version=4 (GTK4 IME might work better on Wayland)'
             'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
-            'kwallet: support for storing passwords in KWallet on Plasma'
             'upower: Battery Status API support')
 provides=("chromium=$pkgver" "chromedriver=$pkgver")
 conflicts=('chromium' 'chromedriver')
@@ -78,7 +77,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
 sha256sums=('2e2f36e3cd1ebc4ad57fd310774a5e5e9db77883d5f9374fedeaabd3c103b819'
-            '00d3d8f6d01e082fc08399332dd5e966d89188ac316bca1010d20fdefb0cd240'
+            '40a35cb7ba357a5928c082a7dc8d2b07b61068b8dc949e183ec40c76c55c4165'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
