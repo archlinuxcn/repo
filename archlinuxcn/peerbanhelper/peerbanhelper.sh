@@ -15,10 +15,11 @@ exec "${JAVA_BIN}" \
   -Dpbh.log.level="${PEERBANHELPER_LOG_LEVEL:-WARN}" \
   -Djdk.attach.allowAttachSelf=true \
   -XX:MaxRAMPercentage="${PEERBANHELPER_MAX_RAM_PERCENT:-85.0}" \
-  -XX:+UseZGC \
   -XX:SoftMaxHeapSize="${PEERBANHELPER_SOFT_MAX_HEAP:-386M}" \
-  -XX:ZUncommitDelay="${PEERBANHELPER_Z_UNCOMMIT_DELAY:-1}" \
-  -XX:+ZGenerational \
+  -XX:+UseG1GC \
+  -XX:G1PeriodicGCInterval="${PEERBANHELPER_G1_PERIODIC_GC_INTERVAL:-60000}" \
+  -XX:MaxHeapFreeRatio="${PEERBANHELPER_MAX_HEAP_FREE_RATIO:-15}" \
+  -XX:MinHeapFreeRatio="${PEERBANHELPER_MIN_HEAP_FREE_RATIO:-5}" \
   -Xss512k \
   -XX:+UseStringDeduplication \
   -XX:-ShrinkHeapInSteps \
