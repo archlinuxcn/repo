@@ -14,10 +14,8 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=("git+https://github.com/nuttyartist/${_pkgname}"
 	'git+https://github.com/b00f/qautostart.git'
-	'git+https://github.com/pbek/qmarkdowntextedit.git'
-	'git+https://github.com/alex-spataru/QSimpleUpdater.git')
+	'git+https://github.com/pbek/qmarkdowntextedit.git')
 sha256sums=('SKIP'
-            'SKIP'
             'SKIP'
             'SKIP')
 
@@ -28,10 +26,11 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+	git rm 3rdParty/QSimpleUpdater
+
 	git submodule init
 	git submodule set-url 3rdParty/qautostart "${srcdir}/qautostart/"
 	git submodule set-url 3rdParty/qmarkdowntextedit "${srcdir}/qmarkdowntextedit/"
-	git submodule set-url 3rdParty/QSimpleUpdater "${srcdir}/QSimpleUpdater/"
 	git -c protocol.file.allow=always submodule update
 }
 
