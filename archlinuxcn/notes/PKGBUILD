@@ -35,18 +35,17 @@ prepare() {
 }
 
 build() {
-	cd "${pkgname}/"
 	cmake -B build \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DUSE_QT_VERSION=6 \
-		-DUPDATE_CHECKER=OFF \
-		-Wno-dev
+		-S "${pkgname}" \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D USE_QT_VERSION=6 \
+		-D UPDATE_CHECKER=OFF \
+		-W no-dev
 
 	cmake --build build
 }
 
 package() {
-	cd "${pkgname}/"
 	DESTDIR="${pkgdir}" cmake --install build
 }
