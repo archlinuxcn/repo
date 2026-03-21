@@ -15,11 +15,13 @@ makedepends=('git' 'cmake')
 source=("git+https://github.com/nuttyartist/notes.git#commit=v${pkgver}"
 	'git+https://github.com/b00f/qautostart.git'
 	'git+https://github.com/pbek/qmarkdowntextedit.git'
-	'git+https://github.com/alex-spataru/QSimpleUpdater.git')
+	'git+https://github.com/alex-spataru/QSimpleUpdater.git'
+	'qt-6.10.patch')
 sha256sums=('a7b0b8af30bec001b2d9fd47af6bac3751b24afeea7a136e3eb0f1ab33da8274'
             'SKIP'
             'SKIP'
-            'SKIP')
+            'SKIP'
+            'd898e0a8bde651cc1af53684d0eba1a45c1243b81cc39a81760ae07aa7f144ad')
 
 prepare() {
 	cd "${pkgname}/"
@@ -29,7 +31,7 @@ prepare() {
 	git submodule set-url 3rdParty/QSimpleUpdater "${srcdir}/QSimpleUpdater"
 	git -c protocol.file.allow=always submodule update
 
-	git cherry-pick -n 1585918af82e9ab03208be00a20816e5599f93f2 # Fix Qt 6.10 build
+	patch -Np1 -i ../qt-6.10.patch
 }
 
 build() {
