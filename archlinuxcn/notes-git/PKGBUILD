@@ -36,18 +36,17 @@ prepare() {
 }
 
 build() {
-	cd "${_pkgname}/"
 	cmake -B build \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DUPDATE_CHECKER=OFF \
-		-DGIT_REVISION=ON
+		-S "${_pkgname}/" \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D UPDATE_CHECKER=OFF \
+		-D GIT_REVISION=ON
 
 	cmake --build build
 }
 
 package() {
-	cd "${_pkgname}/"
 	DESTDIR="${pkgdir}" cmake --install build
 	install -d "${pkgdir}/usr/share/doc/${_pkgname}/"
 	cp docs/* "${pkgdir}/usr/share/doc/${_pkgname}/"
