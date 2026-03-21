@@ -47,6 +47,4 @@ build() {
 
 package() {
 	DESTDIR="${pkgdir}" cmake --install build
-	install -d "${pkgdir}/usr/share/doc/${_pkgname}/"
-	cp docs/* "${pkgdir}/usr/share/doc/${_pkgname}/"
 }
