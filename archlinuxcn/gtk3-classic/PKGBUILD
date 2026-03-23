@@ -8,10 +8,10 @@
 # https://gitlab.archlinux.org/archlinux/packaging/packages/gtk3/-/blob/main/PKGBUILD
 
 pkgname=gtk3-classic
-_tagname=3.24.51-2
+_tagname=3.24.52
 _gtkver="${_tagname%-*}"
 pkgver="${_tagname/-/_}"
-pkgrel=8
+pkgrel=1
 pkgdesc="Patched GTK+3 that provides a more classic experience"
 url="https://github.com/lah7/gtk3-classic"
 arch=(x86_64)
@@ -82,8 +82,8 @@ source=(
   gtk-query-immodules-3.0.hook
   settings.ini
 )
-sha256sums=('6db1bd888646585648d4865953ed4e0ab6b140536e85748f194fa8a8995d8d1b'
-            'f3c87a20b3380b69efa720f412a0fea6ab6edce021f8ffaf5c4531fe1321b24f'
+sha256sums=('26e379370812777470129564f72a5b61533df74f618e865c711856f13da1ef86'
+            'e62514019679f831fcb37f3d294a761c3a6c14f1d346745ad11d70c2be17146e'
             'a0319b6795410f06d38de1e8695a9bf9636ff2169f40701671580e60a108e229'
             '3c7d08538b04692b112d6850935aecd177b10c142df17bbc64a4f83ecb6c7a53')
 
