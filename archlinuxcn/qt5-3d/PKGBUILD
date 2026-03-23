@@ -13,7 +13,6 @@ pkgdesc='C++ and QML APIs for easy inclusion of 3D graphics'
 depends=('qt5-base' 'qt5-declarative')
 makedepends=('git' 'vulkan-headers' 'assimp')
 optdepends=('assimp: assimp import plugin')
-groups=('qt5')
 _pkgfqn=${pkgname/5-/}
 source=(kde-$_pkgfqn::git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit)
 sha256sums=('3d1aa6e17f32bea2ad8fd60d161986d2d9d10a193de1420976023b2f027e252e')
