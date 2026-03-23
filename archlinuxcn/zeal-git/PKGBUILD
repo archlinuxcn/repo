@@ -10,12 +10,12 @@ pkgdesc="A simple documentation browser"
 arch=('i686' 'x86_64')
 url="https://zealdocs.org/"
 license=('GPL-3.0-or-later')
-depends=('libarchive' 'qt5-webengine' 'qt5-x11extras')
+depends=('glibc' 'libgcc' 'libstdc++' 'libarchive' 'libx11' 'libxcb' 'qt6-base' 'qt6-webchannel' 'qt6-webengine' 'sqlite' 'xcb-util-keysyms' 'hicolor-icon-theme')
 makedepends=('cmake' 'extra-cmake-modules' 'git' 'ninja')
 provides=(${_appname})
 conflicts=(${_appname})
 source=("${_appname}::git+https://github.com/zealdocs/${_appname}")
-sha1sums=('SKIP')
+b2sums=('SKIP')
 
 pkgver() {
   cd ${_appname}
