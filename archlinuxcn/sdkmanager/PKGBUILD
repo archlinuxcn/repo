@@ -10,12 +10,18 @@ license=('AGPL-3.0-or-later')
 depends=('python-argcomplete' 'python-requests' 'python-looseversion')
 optdepends=('gnupg')
 makedepends=('python-build' 'python-installer' 'python-setuptools')
+checkdepends=('python-pytest' 'python-defusedxml')
 source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('a92d43014010e5b7e604e48fa20933df896dffa4d3358593bde70751c57cf056')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
 	python -m build --wheel --no-isolation
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	pytest
 }
 
 package() {
