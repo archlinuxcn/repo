@@ -9,17 +9,16 @@ url="https://gitlab.com/fdroid/${pkgname}"
 license=('AGPL-3.0-or-later')
 depends=('python-argcomplete' 'python-requests' 'python-looseversion')
 optdepends=('gnupg')
-makedepends=('python-setuptools')
+makedepends=('python-build' 'python-installer' 'python-setuptools')
 source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('a92d43014010e5b7e604e48fa20933df896dffa4d3358593bde70751c57cf056')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
-	python -m compileall .
-	python -O -m compileall .
+	python -m build --wheel --no-isolation
 }
 
 package() {
 	cd "${pkgname}-${pkgver}/"
-	python setup.py install --root="${pkgdir}" --optimize=1
+	python -m installer --destdir="${pkgdir}" dist/*.whl
 }
