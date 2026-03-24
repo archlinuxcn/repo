@@ -7,8 +7,8 @@ post_build_script: |
 #  update_aur_repo()
 
 update_on:
-  - source: "git"
-    git: "https://github.com/ZebcoWeb/python-steamgriddb.git"
+  - source: "pypi"
+    pypi: "python-steamgriddb"
     prefix: "v"
   - alias: "python"
 build_prefix: extra-x86_64
