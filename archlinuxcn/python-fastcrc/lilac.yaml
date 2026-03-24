@@ -6,17 +6,10 @@ build_prefix: extra-x86_64
 
 pre_build_script: |
   aur_pre_build(maintainers=['thotypous'])
-  add_depends(['python-cattrs'])
 
 post_build: aur_post_build
 
-repo_depends:
-  - python-crc
-  - python-fastcrc
-
 update_on:
   - source: aur
-    aur: prjapicula-git
-  - source: github
-    github: YosysHQ/apicula
+    aur: python-fastcrc
   - alias: python
