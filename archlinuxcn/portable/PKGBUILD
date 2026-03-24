@@ -59,4 +59,6 @@ function package() {
 	export pkgdir
 	cd "${srcdir}/portable"
 	lib/package.sh
+
+	rm "${pkgdir}/usr/bin/portable-packer" || true
 }
