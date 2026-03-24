@@ -1,11 +1,13 @@
-# Maintainer: Jakub Szymański <jakubmateusz@poczta.onet.pl>
+# Maintainer: Julien Virey <julien.virey+aur@gmail.com>
+# Contributor: Jakub Szymański <jakubmateusz@poczta.onet.pl>
+
 pkgname=woeusb-ng
 pkgver=0.2.12
-pkgrel=6
+pkgrel=7
 pkgdesc="Simple tool that enable you to create your own usb stick with Windows installer."
 arch=('any')
 url="https://github.com/WoeUSB/WoeUSB-ng"
-license=('GPL3')
+license=('GPL-3.0-only')
 depends=(
     'parted'
     'dosfstools'
@@ -35,15 +37,18 @@ conflicts=(
 
 source=(
     "$pkgname-$pkgver.tar.gz::https://github.com/WoeUSB/WoeUSB-ng/archive/v$pkgver.tar.gz"
-    "pr79.patch"
+    pr79.patch
+    pr134.patch
 )
 
 sha256sums=('64b9346490e88c627f0034973771620474acb9482bb6a5045c27e52d23987779'
-            '848e56d1b377a46bba6f8c400f7b7aea18aba263f6c795158e219fbad9c87ed6')
+            '848e56d1b377a46bba6f8c400f7b7aea18aba263f6c795158e219fbad9c87ed6'
+            'aab89f72abf4965fe54d063e613fd42f733e280e773b408fc18a467c1da0d163')
 
 prepare() {
     cd WoeUSB-ng-$pkgver
     patch --forward --strip=1 --input="${srcdir}/pr79.patch"
+    patch --forward --strip=1 --input="${srcdir}/pr134.patch"
 }
 
 build() {

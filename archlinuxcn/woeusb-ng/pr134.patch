@@ -1,0 +1,25 @@
+From cc52ffc6aedad12540c2315c9101e4a4b919d4be Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jakub=20Szyma=C5=84ski?= <public@waxy.one>
+Date: Sun, 25 Jan 2026 16:13:08 +0100
+Subject: [PATCH] Implement changes made by pastalian in #134
+
+`\.` is not a valid escape sequence since Python 3.12 and generates a
+warning. It will become an error in a future version.
+https://docs.python.org/3.12/whatsnew/3.12.html#other-language-changes
+---
+ src/WoeUSB/workaround.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/WoeUSB/workaround.py b/src/WoeUSB/workaround.py
+index 79dd021..d9b1183 100644
+--- a/src/WoeUSB/workaround.py
++++ b/src/WoeUSB/workaround.py
+@@ -52,7 +52,7 @@ def support_windows_7_uefi_boot(source_fs_mountpoint, target_fs_mountpoint):
+     :param target_fs_mountpoint:
+     :return:
+     """
+-    grep = subprocess.run(["grep", "--extended-regexp", "--quiet", "^MinServer=7[0-9]{3}\.[0-9]",
++    grep = subprocess.run(["grep", "--extended-regexp", "--quiet", r"^MinServer=7[0-9]{3}\.[0-9]",
+                            source_fs_mountpoint + "/sources/cversion.ini"],
+                           stdout=subprocess.PIPE).stdout.decode("utf-8").strip()
+     if grep == "" and not os.path.isfile(source_fs_mountpoint + "/bootmgr.efi"):
