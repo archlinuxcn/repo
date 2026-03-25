@@ -1,0 +1,19 @@
+maintainers:
+  - github: yuyichao
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - python-amaranth
+  - python-amaranth-stubs
+  - python-dataclasses-json
+
+update_on:
+  - source: github
+    github: kuznia-rdzeni/transactron
+    use_max_tag: true
+    include_regex: 'v(\d+.\d+.\d+)'
+  - alias: python
+  - source: manual
+    manual: 1
