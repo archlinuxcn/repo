@@ -7,7 +7,7 @@ export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=2.4.1
+pkgver=2.5.0
 pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
@@ -46,7 +46,7 @@ source=(
   '0000-fix-wayland-gtk-csd.patch'
 )
 sha256sums=(
-  'edda1512d7520fb3111bcfb0c0832513d985f07ae76fa531c4818fcd3e9ed29f'
+  '80dd23fcf8fecad87be239d2a833e756de83d7752c715f702622d11cc1d2f1f6'
   '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230'
 )
 
@@ -63,6 +63,10 @@ prepare() (
 )
 
 build() {
+  local _units=$(OMP_NUM_THREADS=16 nproc --all)
+  export CARGO_PROFILE_RELEASE_LTO=false
+  export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=$_units
+
   export CFLAGS CXXFLAGS
   CFLAGS+=" -Wno-error=deprecated-literal-operator"
   CXXFLAGS+=" -Wno-error=deprecated-literal-operator"
@@ -82,7 +86,7 @@ build() {
 
   cd "$_pkgsrc"
 
-  : ${_fvm_version=$(grep -Pom1 '(?<=FLUTTER_VERSION=)[0-9\.]+' ".github/workflows/versions.env")}
+  : ${_fvm_version=$(grep -Pom1 'flutter: \K[0-9\.]+' ".tool_versions.yaml")}
 
   fvm install "$_fvm_version"
   fvm use "$_fvm_version" --force
