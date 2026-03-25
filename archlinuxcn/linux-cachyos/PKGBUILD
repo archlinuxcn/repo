@@ -175,7 +175,7 @@ _minor=9
 #_rcver=rc8
 pkgver=${_major}.${_minor}
 _tagrel=1
-pkgrel=1
+pkgrel=2
 #_stable=${_major}.${_minor}
 _stable=${_major}
 #_stablerc=${_major}-${_rcver}
@@ -205,7 +205,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=595.45.04
+_nv_ver=595.58.03
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -286,15 +286,17 @@ prepare() {
     echo "${pkgbase#linux}" > localversion.20-pkgname
 
     local src
-    for src in "${source[@]}"; do
-        src="${src%%::*}"
-        # Skip nvidia patches
-        [[ "$src" == "${_patchsource}"/misc/nvidia/*.patch ]] && continue
-        src="${src##*/}"
+    for patch in "${source[@]}"; do
+        patch="${patch%%::*}"
+        src="${patch##*/}"
         src="${src%.zst}"
         [[ $src = *.patch ]] || continue
         echo "Applying patch $src..."
-        patch -Np1 < "../$src"
+        if [[ "$patch" == "${_patchsource}"/misc/nvidia/* ]]; then
+            patch -Np1 < "../$src" -d "${srcdir}/${_nv_open_pkg}"
+        else
+            patch -Np1 < "../$src"
+        fi
     done
 
     echo "Setting config..."
@@ -511,10 +513,6 @@ prepare() {
     echo "Save configuration for later reuse..."
     local basedir="$(dirname "$(readlink "${srcdir}/config")")"
     cat .config > "${basedir}/config-${pkgver}-${pkgrel}${pkgbase#linux}"
-
-    if [ "$_build_nvidia_open" = "yes" ]; then
-        patch -Np1 -i "${srcdir}/0002-Add-IBT-support.patch" -d "${srcdir}/${_nv_open_pkg}/"
-    fi
 }
 
 _sign_modules() {
@@ -789,7 +787,7 @@ _package-r8125() {
 
     # Blacklist r8169 so that r8125 is used instead
     install -dm755 "${pkgdir}/usr/lib/modprobe.d"
-    echo "blacklist r8169" > "${pkgdir}/usr/lib/modprobe.d/${pkgname}.conf"
+    echo "install r8169 /usr/bin/modprobe r8125 || /usr/bin/modprobe --ignore-install r8169" > "${pkgdir}/usr/lib/modprobe.d/${pkgname}.conf"
 }
 
 pkgname=("$pkgbase")
