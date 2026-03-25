@@ -18,7 +18,7 @@ source=("git+https://github.com/Kimiblock/snotify.git")
 sha256sums=('SKIP')
 
 pkgver() {
-	cd source
+	cd snotify
 	git describe --long | sed -E 's/^v//g;s/([^-]*-g)/r\1/;s/-/./g'
 }
 
