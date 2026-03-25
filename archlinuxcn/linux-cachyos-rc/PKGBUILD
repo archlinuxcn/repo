@@ -64,7 +64,13 @@
 ### Full tickless can give higher performances in various cases but, depending on hardware, lower consistency.
 : "${_tickrate:=full}"
 
-## Choose between full(low-latency), lazy, voluntary or none
+## Choose between full, lazy or dynamic
+# Dynamic allows you to switch between full and lazy at runtime
+# Full: Makes all non-critical kernel code preemptible to reduce latency
+# Lazy: Same as full but instead of preempting immediately it waits for signals from the scheduler
+#       in an attempt to boost throughput.
+#       In practice, this doesn't seem to perform well as both throughput and latency suffer
+#       compared to full.
 : "${_preempt:=full}"
 
 ### Transparent Hugepages
@@ -172,10 +178,10 @@ pkgbase="linux-$_pkgsuffix"
 _major=7.0
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc4
+_rcver=rc5
 pkgver=${_major}.${_rcver}
-_tagrel=1
-pkgrel=1
+_tagrel=2
+pkgrel=2
 #_stable=${_major}.${_minor}
 #_stable=${_major}
 _stable=${_major}-${_rcver}
@@ -205,7 +211,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=595.45.04
+_nv_ver=595.58.03
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -239,7 +245,10 @@ fi
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
              "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
-             "${_patchsource}/misc/nvidia/0004-HACK-kernel-open-Makefile-Remove-PAHOLE_VARIABLE.patch")
+             "${_patchsource}/misc/nvidia/0004-HACK-kernel-open-Makefile-Remove-PAHOLE_VARIABLE.patch"
+             "${_patchsource}/misc/nvidia/0003-fix-dsc-correct-RC-parameter-tables-to-match-VESA-DS.patch"
+             "${_patchsource}/misc/nvidia/0004-fix-dsc-use-bits_per_component-for-flatnessDetThresh.patch"
+             "${_patchsource}/misc/nvidia/0005-fix-dp-add-Bigscreen-Beyond-VR-headset-to-WAR-databa.patch")
 fi
 
 # Use generated AutoFDO Profile
@@ -287,15 +296,17 @@ prepare() {
     echo "${pkgbase#linux}" > localversion.20-pkgname
 
     local src
-    for src in "${source[@]}"; do
-        src="${src%%::*}"
-        # Skip nvidia patches
-        [[ "$src" == "${_patchsource}"/misc/nvidia/*.patch ]] && continue
-        src="${src##*/}"
+    for patch in "${source[@]}"; do
+        patch="${patch%%::*}"
+        src="${patch##*/}"
         src="${src%.zst}"
         [[ $src = *.patch ]] || continue
         echo "Applying patch $src..."
-        patch -Np1 < "../$src"
+        if [[ "$patch" == "${_patchsource}"/misc/nvidia/* ]]; then
+            patch -Np1 < "../$src" -d "${srcdir}/${_nv_open_pkg}"
+        else
+            patch -Np1 < "../$src"
+        fi
     done
 
     echo "Setting config..."
@@ -391,10 +402,9 @@ prepare() {
     # We should not set up the PREEMPT for RT kernels
     if [[ "$_cpusched" != "rt" && "$_cpusched" != "rt-bore" ]]; then
         case "$_preempt" in
-            full) scripts/config -e PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -d PREEMPT_NONE;;
-            lazy) scripts/config -e PREEMPT_DYNAMIC -d PREEMPT -d PREEMPT_VOLUNTARY -e PREEMPT_LAZY -d PREEMPT_NONE;;
-            voluntary) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -e PREEMPT_VOLUNTARY -d PREEMPT_LAZY -d PREEMPT_NONE;;
-            none) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -e PREEMPT_NONE;;
+            full) scripts/config -d PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_LAZY;;
+            lazy) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -e PREEMPT_LAZY;;
+            dynamic) scripts/config -e PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_LAZY;;
             *) _die "The value '$_preempt' is invalid. Choose the correct one again.";;
         esac
 
@@ -512,11 +522,6 @@ prepare() {
     echo "Save configuration for later reuse..."
     local basedir="$(dirname "$(readlink "${srcdir}/config")")"
     cat .config > "${basedir}/config-${pkgver}-${pkgrel}${pkgbase#linux}"
-
-    if [ "$_build_nvidia_open" = "yes" ]; then
-        patch -Np1 -i "${srcdir}/0002-Add-IBT-support.patch" -d "${srcdir}/${_nv_open_pkg}/"
-        patch -Np1 -i "${srcdir}/0004-HACK-kernel-open-Makefile-Remove-PAHOLE_VARIABLE.patch" -d "${srcdir}/${_nv_open_pkg}/"
-    fi
 }
 
 _sign_modules() {
@@ -784,7 +789,7 @@ _package-r8125() {
 
     # Blacklist r8169 so that r8125 is used instead
     install -dm755 "${pkgdir}/usr/lib/modprobe.d"
-    echo "blacklist r8169" > "${pkgdir}/usr/lib/modprobe.d/${pkgname}.conf"
+    echo "install r8169 /usr/bin/modprobe r8125 || /usr/bin/modprobe --ignore-install r8169" > "${pkgdir}/usr/lib/modprobe.d/${pkgname}.conf"
 }
 
 pkgname=("$pkgbase")
@@ -800,7 +805,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('944ac7b4be8a6d538173caff3822f0bc9196993c819294c606dcce18b7d48491a3f905b2fa15db5139081d841b1ad2f9e7326fa9cb647018a6ea80a2cdcc6730'
-        '8665e7b381a791d6c0d17c8bc2d5ebefeca7167549c1a0505c19af9e8a7a33fa46a070c2886d30f71748e95d27603a1ccac16bbf4630c1ebfdff899e15c40da2'
+b2sums=('f49d78d9e0c714ee9343d4668e9a0af35c587c9de001db11d585207771be2a1f7ed0d24154a67886f66310cc80f4a00cd132cbe8570b637983478060981a5321'
+        '63080f26a9fe24e065e7ce6ec3d417af365e5b2e97e942eeb3a8a45ae6f19e933a5eebaa664c164d360dca563e08ff1b7fe69ad9f47984d44b54215246b11139'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e'
         '786f91e6946bfb654c95659721ea37a0ad004691cca797132f2a8722e7e8f6514d72d2a3547dbb6f4ebba48a40bd4c333d4632b47c21f593813e738fdf0ba4db')
