@@ -27,8 +27,6 @@ pkgver() {
 build() {
 	cd "${pkgname}/gui/"
 
-	# https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
-	export NODE_OPTIONS=--openssl-legacy-provider
 	yarn --check-files
 	export OUTPUT_DIR="${srcdir}/${pkgname}/service/server/router/web/"
 	yarn build
