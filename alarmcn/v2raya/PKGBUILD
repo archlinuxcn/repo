@@ -21,8 +21,6 @@ build() {
 	cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
 
 	export OUTPUT_DIR="${srcdir}/${_pkgname}-${pkgver}/service/server/router/web/"
-	# https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
-	export NODE_OPTIONS="--openssl-legacy-provider"
 	yarn cache clean
 	yarn install
 	yarn build
