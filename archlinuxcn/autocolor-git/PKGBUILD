@@ -1,0 +1,38 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=autocolor-git
+pkgver=1.0.r0.gb0ed7ce9
+pkgrel=1
+pkgdesc="Switch themes on colour scheme change"
+arch=("x86_64")
+url="https://github.com/Kimiblock/autoColor"
+license=("GPL-3.0-or-later")
+depends=("glibc" dbus xdg-desktop-portal-impl)
+
+makedepends=('go' 'git')
+backup=()
+source=("source::git+https://github.com/Kimiblock/autoColor.git")
+sha256sums=('SKIP')
+
+function prepare() {
+	cd source
+}
+
+function pkgver() {
+	cd source
+	git describe --long --tags --abbrev=8 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+function build() {
+	cd source
+	go build -trimpath -buildmode=pie -mod=readonly -modcacherw -ldflags "-linkmode external -extldflags \"${LDFLAGS}\""
+}
+
+function check() {
+	cd source
+	go test ./...
+}
+
+function package() {
+	install -vDm755 "${srcdir}/source/top.kimiblock.autoColor" "${pkgdir}/usr/bin/autocolor"
+}
