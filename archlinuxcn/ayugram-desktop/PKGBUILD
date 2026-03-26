@@ -2,7 +2,7 @@
 
 pkgname=ayugram-desktop
 pkgver=6.3.10
-pkgrel=5
+pkgrel=6
 pkgdesc="Desktop Telegram client with good customization and Ghost mode."
 arch=("x86_64" "aarch64")
 url="https://github.com/AyuGram/AyuGramDesktop"
