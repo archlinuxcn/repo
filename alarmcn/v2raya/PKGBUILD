@@ -9,7 +9,7 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/v2rayA/v2rayA"
 license=('AGPL3')
 depends=('glibc')
-makedepends=('git' 'go>=2:1.17.0-1' 'nodejs>=14' 'yarn' 'fnm')
+makedepends=('git' 'go>=2:1.17.0-1' 'nodejs>=14' 'yarn')
 backup=("etc/default/v2raya")
 install="${pkgname}.install"
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
@@ -19,10 +19,6 @@ b2sums=('5c87de29444418a1356ed4e0932c6bdadba3d3192611374f8f645b91146cf1d4e6e9112
 
 build() {
 	cd "${srcdir}"/"${_pkgname}-${pkgver}"/gui/
-
-	fnm install 20.9.0
-	eval "$(fnm env --use-on-cd --shell=bash)"
-	fnm use 20.9.0
 
 	export OUTPUT_DIR="${srcdir}/${_pkgname}-${pkgver}/service/server/router/web/"
 	# https://github.com/webpack/webpack/issues/14532#issuecomment-947012063
