@@ -4,19 +4,32 @@
 
 pkgname=embree
 pkgver=4.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Collection of high-performance ray tracing kernels"
 arch=(aarch64 x86_64)
 url="https://embree.github.io/"
-license=('Apache')
-depends=('gcc-libs' 'glibc' 'intel-tbb')
+license=('Apache-2.0')
+depends=('glibc' 'libgcc' 'libstdc++' 'intel-tbb')
 makedepends=('cmake' 'ispc' 'freeglut' 'libxmu' 'ninja')
 source=(https://github.com/embree/embree/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz)
 sha256sums=('acb517b0ea0f4b442235d5331b69f96192c28da6aca5d5dde0cbe40799638d5c')
 
+# Embree detects actual ISA at runtime but we have to set a high maximum
+# buildtime version as it would otherwise default to the builder processor.
+case "$CARCH" in
+  i*86|x86_64*)
+      _MAX_ISA=NEON2X
+      ;;
+  arm*|aarch64)
+      _MAX_ISA=NEON2X
+      ;;
+  *)
+      # Upstream currently doesn't have any support for non-arm/x86
+      _MAX_ISA=NONE
+      ;;
+esac
+
 build() {
-    # Embree detects actual ISA at runtime but we have to set a high maximum
-    # buildtime version as it would otherwise default to the builder processor.
     cmake \
       -B build \
       -G Ninja \
@@ -25,7 +38,7 @@ build() {
       -DCMAKE_BUILD_TYPE=Release \
       -DEMBREE_ISPC_SUPPORT=ON \
       -DEMBREE_TUTORIALS=OFF \
-      -DEMBREE_MAX_ISA="NEON2X" \
+      -DEMBREE_MAX_ISA="${_MAX_ISA}" \
       -DEMBREE_BACKFACE_CULLING=OFF
     ninja -C build
     # Maybe enable these later once they are out of beta:
