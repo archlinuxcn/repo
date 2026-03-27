@@ -21,12 +21,8 @@ depends=(
     "vulkan-driver"
 )
 makedepends=(
-    'git'
     'npm'
     'nvm'
-    'elfutils'
-    'curl'
-    'gcc'
     'gendesk'
 )
 optdepends=(
@@ -56,6 +52,7 @@ prepare() {
     " -i "${srcdir}/${pkgname}.sh"
     _ensure_local_nvm
     gendesk -q -f -n --pkgname="${pkgname}" --pkgdesc="${pkgdesc}" --categories="Graphics" --name="${_pkgname}" --exec="${pkgname} %U"
+
     cd "${srcdir}/${pkgname}-${pkgver}"
     electronDist="/usr/lib/electron${_electronversion}"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
