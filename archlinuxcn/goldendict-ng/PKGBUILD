@@ -32,13 +32,13 @@ makedepends=('cmake' 'qt6-tools')
 conflicts=('goldendict')
 provides=('goldendict')
 replaces=('goldendict-svn' 'goldendict-git-opt' 'goldendict-webengine-git')
-_commit_id=fce2b872
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-Release.${_commit_id}.tar.gz")
+_commit_hash=fce2b872
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}-Release.${_commit_hash}.tar.gz")
 sha256sums=('1620aa15f2d2d4fcf1b33772dd781d8387841c4d30266ed75f416ff13239a46c')
 
 build() {
 	cmake -B build \
-		-S "${pkgname}-${pkgver}-Release.${_commit_id}" \
+		-S "${pkgname}-${pkgver}-Release.${_commit_hash}" \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DUSE_SYSTEM_TOML=ON
