@@ -15,7 +15,7 @@ sha256sums=('229a56d67ba91812034004e820e51b928909bac89f88bc6013096b3ab4a0257b')
 prepare() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target host-tuple
+	cargo fetch --target host-tuple # --locked
 }
 
 build() {
