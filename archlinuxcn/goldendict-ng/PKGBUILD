@@ -41,7 +41,6 @@ build() {
 		-S "${pkgname}-${pkgver}-Release.${_commit_id}" \
 		-DCMAKE_BUILD_TYPE=None \
 		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DUSE_SYSTEM_FMT=ON \
 		-DUSE_SYSTEM_TOML=ON
 
 	cmake --build build
