@@ -1,8 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<mime-type xmlns="http://www.freedesktop.org/standards/shared-mime-info" type="model/materialx">
-  <comment>MaterialX Shading Network</comment>
-  <icon name="materialx"/>
-  <glob-deleteall/>
-  <glob pattern="*.MTLX"/>
-  <glob pattern="*.mtlx"/>
-</mime-type>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="model/materialx">
+    <comment>MaterialX Shading Network</comment>
+    <icon name="materialx"/>
+    <magic priority="80">
+      <match type="string" offset="0:1024" value="&lt;materialx">
+        <match type="string" offset="1:128" value="version="/>
+      </match>
+    </magic>
+    <root-XML namespaceURI="https://github.com/AcademySoftwareFoundation/MaterialX/blob/main/documents/Specification/MaterialX.Specification.md" localName="materialx"/>
+    <glob-deleteall/>
+    <glob pattern="*.MTLX"/>
+    <glob pattern="*.mtlx"/>
+  </mime-type>
+</mime-info>

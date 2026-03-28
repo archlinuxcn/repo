@@ -4,13 +4,13 @@
 
 pkgname=materialx
 pkgver=1.39.4
-pkgrel=4
+pkgrel=5
 pkgdesc="Open standard for representing rich material and look-development content in computer graphics"
 arch=(aarch64 x86_64)
 url="https://materialx.org/"
 license=('Apache-2.0')
-depends=('glibc' 'gcc-libs' 'glfw' 'libglvnd' 'libx11' 'libxt' 'python'
-         'python-setuptools' 'opencolorio' 'dos2unix' 'zenity')
+depends=('glibc' 'libstdc++' 'libgcc' 'glfw' 'libglvnd' 'libx11' 'libxt' 'python'
+         'python-setuptools' 'opencolorio' 'dos2unix' 'zenity' 'hicolor-icon-theme')
 makedepends=('cmake' 'chrpath' 'libxinerama' 'libxcursor' 'pybind11' 'ninja' 'git')
 source=("git+https://github.com/AcademySoftwareFoundation/MaterialX.git#tag=v${pkgver}"
         "${pkgname}-imgui-node-editor::git+https://github.com/thedmd/imgui-node-editor"
@@ -25,7 +25,7 @@ sha256sums=('a3200358c13f8ce332cb46136a1ec67b2bbf7f22ab6b0e57466c3ab863baaa05'
             'SKIP'
             '88e5ecafa8088b90f799b49c36af59f8462ca7426cdec58215332ee283556ddb'
             '2f2b675540fea39a749f89083a9c341319c1f7b478fbb049a77bd66c29b2ee01'
-            'd9b9426fb94121da052b796542cc74a0c5d7cef06997be70611c25f345553861')
+            'db3315226919914b85370a5793fa7e57f524ee939f9e7c3dd60a260f0f541867')
 
 _pyver=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
 
@@ -96,9 +96,9 @@ package() {
   sed -i 's|python|lib/python'$_pyver'/site-packages/MaterialX|g' ${pkgdir}/usr/lib/cmake/MaterialX/MaterialXConfig.cmake
   sed -i 's|resources|share/materialx/resources|g' ${pkgdir}/usr/lib/cmake/MaterialX/MaterialXConfig.cmake
 
-  mkdir -p ${pkgdir}/usr/share/{applications,mime/model,licenses/$pkgname}
+  mkdir -p ${pkgdir}/usr/share/{applications,licenses/$pkgname}
   cp ${srcdir}/{materialx-grapheditor.desktop,materialx-view.desktop} ${pkgdir}/usr/share/applications
-  install -Dm644 ${srcdir}/materialx.xml ${pkgdir}/usr/share/mime/model/materialx.xml
+  install -Dm644 ${srcdir}/materialx.xml ${pkgdir}/usr/share/mime/packages/materialx.xml
   mv ${pkgdir}/usr/{LICENSE,THIRD-PARTY.md} ${pkgdir}/usr/share/licenses/materialx/
 
   # Remove empty dirs
