@@ -4,7 +4,7 @@
 # Contributor: Giovanni Scafora <giovanni@archlinux.org>
 
 pkgname=wine32
-pkgver=11.4
+pkgver=11.5
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
@@ -12,7 +12,7 @@ _pkgbasever=${pkgver/rc/-rc}
 source=("https://dl.winehq.org/wine/source/11.x/wine-${pkgver}.tar.xz"
         30-win32-aliases.conf
         wine-binfmt.conf)
-sha512sums=('037ba964d80d50f25dafba2a24e334df5fe580998de229b6fd2ce040ef4835a232ebba4370b0d1e070c2d358841b2160b7f1c32af79b530093f19cc0b5edadb1'
+sha512sums=('3f336ed7a0bf30c68c2f0f0f56e0e0886881b794269d87f26aa898eac16549fe17e0c398bb02720473df6be17f64594e3fa74c6f36bf5a65b5ba27c0911be1b6'
             '6e54ece7ec7022b3c9d94ad64bdf1017338da16c618966e8baf398e6f18f80f7b0576edf1d1da47ed77b96d577e4cbb2bb0156b0b11c183a0accf22654b0a2bb'
             'bdde7ae015d8a98ba55e84b86dc05aca1d4f8de85be7e4bd6187054bfe4ac83b5a20538945b63fb073caab78022141e9545685e4e3698c97ff173cf30859e285')
 
