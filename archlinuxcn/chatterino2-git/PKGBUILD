@@ -1,7 +1,7 @@
 # Maintainer: Ckat <ckat@teknik.io>
 pkgname=chatterino2-git
 _pkgname=chatterino2
-pkgver=2.5.5.r2.g6875063
+pkgver=2.5.5.r7.g044c5f2
 pkgrel=1
 pkgdesc='Second installment of the Twitch chat client series "Chatterino", dev/git version'
 arch=('x86_64' 'aarch64')
@@ -20,7 +20,6 @@ source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/pajlada/settings"
         "git+https://github.com/pajlada/signals"
         "git+https://github.com/pajlada/serialize"
-        "git+https://github.com/Chatterino/websocketpp"
         "git+https://github.com/Neargye/magic_enum"
         "git+https://github.com/mackron/miniaudio"
         "git+https://github.com/lua/lua"
@@ -28,7 +27,6 @@ source=("git+https://github.com/Chatterino/chatterino2"
         "git+https://github.com/Chatterino/certify"
         "git+https://github.com/martinmoene/expected-lite")
 md5sums=('SKIP'
-         'SKIP'
          'SKIP'
          'SKIP'
          'SKIP'
@@ -61,7 +59,6 @@ prepare () {
     git config submodule.lib/settings.url "$srcdir/settings"
     git config submodule.lib/signals.url "$srcdir/signals"
     git config submodule.lib/serialize.url "$srcdir/serialize"
-    git config submodule.lib/websocketpp.url "$srcdir/websocketpp"
     git config submodule.lib/miniaudio.url "$srcdir/miniaudio"
     git config submodule.lib/magicenum.url "$srcdir/magicenum"
     git config submodule.lib/sol2.url "$srcdir/sol2"
