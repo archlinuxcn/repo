@@ -10,6 +10,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/KSXGitHub/${_pkgname}"
 license=('Apache-2.0')
 makedepends=('git' 'cargo')
+checkdepends=('squashfs-tools' 'squashfuse')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git")
