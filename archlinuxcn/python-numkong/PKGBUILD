@@ -2,7 +2,7 @@
 
 _pkgname=NumKong
 pkgname=python-numkong
-pkgver=7.2.0
+pkgver=7.2.2
 pkgrel=1
 pkgdesc='A Fast Dot Products & Similarity Metrics for Python using SIMD'
 arch=('x86_64')
@@ -25,7 +25,7 @@ replaces=(
   python-simsimd
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ashvardanian/SimSIMD/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('6a9877e9a98aaae2d0703e3a9972def8722c0fb325d2900fc69d37be6df2581b38348156bef8f51f7200877dda6ecdecdeaa89932ef5f68c23f63c6028db6578')
+sha512sums=('8f5d03df538d4a7c247bdd67c0beb08f09579fd480627bfe5a9ae3c5ae212184ad31221269d60768953dfa7568bb9b3059610f6068a1e721a10deb574b121b0a')
 
 build() {
   cd "${_pkgname}-${pkgver}"
