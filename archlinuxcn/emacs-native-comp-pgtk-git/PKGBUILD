@@ -93,14 +93,14 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-native-comp-pgtk-git"
 fi
-pkgver=31.0.50.181709
+pkgver=31.0.50.181716
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch. AOT&JIT&PGTK enabled."
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/"
 license=('GPL3')
-depends_nox=('gnutls' 'libxml2' 'jansson')
-depends=("${depends_nox[@]}" 'harfbuzz' 'libotf')
+depends_nox=('gnutls' 'libxml2' 'jansson' 'librsvg')
+depends=("${depends_nox[@]}" 'harfbuzz' 'libotf' 'librsvg')
 makedepends=('git')
 provides=('emacs')
 conflicts=('emacs')
