@@ -32,7 +32,7 @@ options=('!strip' '!debug')
 _srcname=linux-amd-drm-next
 source=(
   "$_srcname::git+https://gitlab.freedesktop.org/agd5f/linux#tag=$_tag"
-  config::https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/raw/main/config        # the main kernel config file
+  config::https://gitlab.archlinux.org/archlinux/packaging/packages/linux/-/raw/main/config.x86_64        # the main kernel config file
 )
 sha256sums=('23add6211ed8b694fcc8535052bdaa006d8fb725a58b3de1a92f87b976c105ed'
             '505d823490e964e66ebe5889a3701347b4e4e2faf1772b3964f0360a176eadf8')
