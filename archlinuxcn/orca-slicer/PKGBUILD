@@ -23,7 +23,7 @@ sha256sums=('2c7eea7b1e3757011f2c9520dc1712d789b9182b5c276aba271bf814172b0a52'
 
 build() {
   # cmake 4.x compatibility workaround
-  export CMAKE_POLICY_VERSION_MINIMUM=3.5
+  #export CMAKE_POLICY_VERSION_MINIMUM=3.5
 
   cd "$srcdir/OrcaSlicer-${pkgver}"
 
@@ -65,7 +65,7 @@ package() {
   install -d "$pkgdir/usr/lib/OrcaSlicer/"
   mv "$pkgdir/usr/bin/orca-slicer" "$pkgdir/usr/lib/OrcaSlicer/"
   install -Dm755 ../orca-slicer.sh "$pkgdir/usr/bin/orca-slicer"
-  install -Dm644 doc/*.md -t "$pkgdir/usr/share/doc/OrcaSlicer/"
+  #install -Dm644 doc/*.md -t "$pkgdir/usr/share/doc/OrcaSlicer/"
   install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/OrcaSlicer/LICENSE"
   rm -rf "$pkgdir/usr/LICENSE.txt"
 }
