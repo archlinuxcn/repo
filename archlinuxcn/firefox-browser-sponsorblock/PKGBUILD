@@ -2,7 +2,7 @@
 
 pkgname=(zen-browser-sponsorblock firefox-extension-sponsorblock librewolf-extension-sponsorblock)
 pkgbase=firefox-browser-sponsorblock
-pkgver=6.1.2
+pkgver=6.1.3
 pkgrel=1
 arch=('any')
 url='https://github.com/ajayyy/SponsorBlock'
@@ -11,7 +11,7 @@ groups=('zen-browser-addons')
 pkgdesc='Skip YouTube video sponsors'
 makedepends=('nodejs' 'npm' 'unzip' 'zip' 'git' 'jq')
 source=("source::git+https://github.com/ajayyy/SponsorBlock.git#tag=${pkgver}")
-b2sums=('16f24b5a3312fa31344e1fafcfa06b7e6a9f57845dd461759ddea662a1c593dc357ed22697ef78117655ecb42fcd06b9a4f081fdd290273c46cfb2afe36fdd85')
+b2sums=('bdc90c549c77392cb2452df275f183fb4cef6e90181c3e2d2bded83102ffa7c14bbd930d4cdf8b2ac17cb69678b8f6b2a01e0e97cd51299a72afeb72116db3b0')
 
 function prepare() {
 	cd "${srcdir}/source"
