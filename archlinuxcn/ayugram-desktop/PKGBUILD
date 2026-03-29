@@ -2,7 +2,7 @@
 
 pkgname=ayugram-desktop
 pkgver=6.3.10
-pkgrel=6
+pkgrel=7
 pkgdesc="Desktop Telegram client with good customization and Ghost mode."
 arch=("x86_64" "aarch64")
 url="https://github.com/AyuGram/AyuGramDesktop"
@@ -35,6 +35,7 @@ depends=('abseil-cpp'
          'rnnoise'
          'xxhash')
 makedepends=('boost'
+             'boost-libs'
              'cmake'
              'glib2-devel'
              'gobject-introspection'
