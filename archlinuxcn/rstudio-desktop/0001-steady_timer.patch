@@ -203,10 +203,10 @@ index 1027ec4..7228fb4 100644
     boost::mutex scheduledCommandMutex_;
     std::vector<boost::shared_ptr<ScheduledCommand> > scheduledCommands_;
 diff --git a/src/cpp/core/include/core/http/TcpIpAsyncConnector.hpp b/src/cpp/core/include/core/http/TcpIpAsyncConnector.hpp
-index 63472e4..8c9d752 100644
+index e7b0c23..89ebca1 100644
 --- a/src/cpp/core/include/core/http/TcpIpAsyncConnector.hpp
 +++ b/src/cpp/core/include/core/http/TcpIpAsyncConnector.hpp
-@@ -20,13 +20,15 @@
+@@ -20,10 +20,12 @@
  #include <boost/shared_ptr.hpp>
  #include <boost/enable_shared_from_this.hpp>
  
@@ -215,15 +215,12 @@ index 63472e4..8c9d752 100644
  #include <boost/asio/ip/tcp.hpp>
  #include <boost/asio/placeholders.hpp>
  
- #include <core/http/TcpIpSocketUtils.hpp>
- #include <core/Thread.hpp>
- 
 +#include <chrono>
 +
- // special version of unexpected exception handler which makes
- // sure to call the user's ErrorHandler
- #define CATCH_UNEXPECTED_ASYNC_CONNECTOR_EXCEPTION \
-@@ -82,7 +84,8 @@ public:
+ #include <core/http/TcpIpSocketUtils.hpp>
+ #include <core/http/URL.hpp>
+ #include <core/Thread.hpp>
+@@ -83,7 +85,8 @@ public:
        {
           // start a timer that will cancel any outstanding asynchronous operations
           // when it elapses if the connection operation has not succeeded
@@ -233,7 +230,7 @@ index 63472e4..8c9d752 100644
           pConnectionTimer_->async_wait(boost::bind(&TcpIpAsyncConnector::onConnectionTimeout,
                                                     TcpIpAsyncConnector::shared_from_this(),
                                                     boost::asio::placeholders::error));
-@@ -267,7 +270,7 @@ private:
+@@ -268,7 +271,7 @@ private:
     bool isConnected_;
     bool hasFailed_;
     boost::mutex mutex_;

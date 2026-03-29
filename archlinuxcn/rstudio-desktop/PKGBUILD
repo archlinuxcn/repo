@@ -18,12 +18,12 @@
 # dependencies/common/install-copilot-language-server
 : ${_copilot_version:=1.399.0}
 
-: ${_commit:=0e924abb984501b0d66b204ea06b60fc7813275a}
+: ${_commit:=1d903d3bd61a40d82bf71aad8471a5a388cc1f73}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2026.01.1.403
-pkgrel=2
+pkgver=2026.01.2.418
+pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
 license=('AGPL-3.0-only')
@@ -92,7 +92,7 @@ _source_main() {
   sha256sums=(
     'SKIP'
     'SKIP'
-    'd192d1f7344fcf73bf7ffc404f0a385a1d4fbfd962b701689cd84099d97ab90a'
+    '84473dc04afe7a78117930d6dda37874563cdcb69e1b69c3171d252f5ef75dce'
   )
 }
 
