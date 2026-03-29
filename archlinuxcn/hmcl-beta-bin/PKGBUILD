@@ -2,7 +2,7 @@
 # Maintainer: Jia Yin<yenfeng.shetiko at gmail dot com>
 
 pkgname=hmcl-beta-bin
-pkgver=3.13.0.335
+pkgver=3.13.0.336
 pkgrel=1
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular."
 arch=('any')
@@ -16,7 +16,7 @@ source=("hmcl.desktop"
         "${pkgname}-${pkgver}-${pkgrel}.jar::https://github.com/HMCL-dev/HMCL/releases/download/v${pkgver}/HMCL-${pkgver}.jar")
 sha256sums=('ef5edb4285293c77162374e15f01f3540c7f511f6d9ab5b7244c4b01eb8512de'
             '296914106dac2d07c9ce2bc92a91568830534332e9bf7554ea591f22efa357df'
-            'e7a9d772fb0f9dea3741a1ae0e01dceb20ea3471c8e8047bb996441a2ab76f6f')
+            'd1537706748382411adae95020438feb539768522b3e3e877b14619e1185497b')
 
 noextract=("${pkgname}-${pkgver}-${pkgrel}.jar")
 
