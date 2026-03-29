@@ -23,7 +23,7 @@ sha256sums=('2c7eea7b1e3757011f2c9520dc1712d789b9182b5c276aba271bf814172b0a52'
 
 build() {
   # cmake 4.x compatibility workaround
-  #export CMAKE_POLICY_VERSION_MINIMUM=3.5
+  export CMAKE_POLICY_VERSION_MINIMUM=3.5
 
   cd "$srcdir/OrcaSlicer-${pkgver}"
 
