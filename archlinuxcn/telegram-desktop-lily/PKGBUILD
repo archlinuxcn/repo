@@ -6,6 +6,7 @@
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
 pkgver=6.6.2
+_td_commit=0ae923c493bceb75433de2682ba8ae29cc7bf88d
 pkgrel=5
 pkgdesc="Official Telegram Desktop client with lilydjwg's patch"
 arch=('x86_64')
@@ -16,24 +17,23 @@ depends=(
   'ada'
   'ffmpeg' 'libavfilter.so' 'libavformat.so' 'libavcodec.so' 'libavutil.so'
   'glib2'
+  'glibc'
   'hicolor-icon-theme'
   'hunspell'
   'kcoreaddons'
   'libavif'
   'libdispatch'
+  'libgcc'
   'libheif'
   'libjxl'
+  'libstdc++'
   'libxcomposite'
   'libxdamage'
   'libxrandr'
   'libxtst'
   'libvpx' 'libvpx.so'
   'lz4'
-  'minizip-ng'
-  'zlib'
-  'libstdc++'
-  'glibc'
-  'libgcc'
+  'minizip'
   'openal'
   'openh264' 'libopenh264.so'
   'openssl' 'libcrypto.so' 'libssl.so'
@@ -44,6 +44,7 @@ depends=(
   'qt6-svg'
   'rnnoise'
   'xxhash'
+  'zlib'
 )
 makedepends=(
   'boost'
@@ -62,7 +63,7 @@ makedepends=(
 )
 optdepends=(
   'geoclue: geoinformation support'
-  'geocode-glib-2: geocoding support'
+  'crow-translate: translation provider'
   'webkit2gtk-4.1: embedded browser features provided by webkit2gtk-4.1'
   'webkitgtk-6.0: embedded browser features provided by webkitgtk-6.0 (Wayland only)'
   'xdg-desktop-portal: desktop integration'
@@ -70,10 +71,10 @@ optdepends=(
 provides=('telegram-desktop')
 conflicts=('telegram-desktop')
 replaces=('telegram-desktop-megumifox')
-_td_commit=6d74326c5ce53aeb52496f157f0080d9b8515970
 source=(
   "https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
   "git+https://github.com/tdlib/td.git#tag=${_td_commit}"
+  tdesktop-fix-minizip-includes.patch
   "no-embolded-font.patch"
   "dont-adjust-fontsize.patch"
   "0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
@@ -84,6 +85,7 @@ source=(
 )
 sha512sums=('9e3ea6db52c16d5735f6f0e5d2bbd62356298b26539c3e2502d33bb244aa05a3175d7db72451b385d0092ec2f67c8fa2ece4d387abaa676212a50b97b7d9ba74'
             '6dc6e684a0bf35bb83f6fa6579a0da82d604190b222f2cd2de9b8ef5b93f5f18ac9a8733e2c5cf2a64ed9933b346ea31e26a4bcc0039956280ec2deef9649457'
+            'd9765588e92f154d83b95dc2840207bf22b26b6ca37b4d5cdfdb5e27a00c9e1ebcc9cd475a96bbcc5b02c24f6892320e009f843aa6b172a1820814b952a772eb'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
             'bb0e706b7a2629ba6fae9b7c71cb5a3f292e568f8c8d845aeb2584835c849b232ff9b7886ec931e446d077f249e2587abc70868659a5d08f7d94dc431fa3f914'
@@ -94,6 +96,7 @@ sha512sums=('9e3ea6db52c16d5735f6f0e5d2bbd62356298b26539c3e2502d33bb244aa05a3175
 options=(!debug)
 
 prepare() {
+  patch -Np1 -d tdesktop-$pkgver-full/Telegram/lib_base -i "$srcdir"/tdesktop-fix-minizip-includes.patch
   patch -b -l -d tdesktop-$pkgver-full/Telegram/lib_ui -Np1 -i ${srcdir}/no-embolded-font.patch
   patch -b -l -d tdesktop-$pkgver-full/Telegram/lib_ui -Np1 -i ${srcdir}/dont-adjust-fontsize.patch
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
@@ -106,8 +109,6 @@ prepare() {
 }
 
 build() {
-  CXXFLAGS+=' -ffat-lto-objects'
-
   cmake -S td -B td/build \
     -DCMAKE_BUILD_TYPE=None \
     -DCMAKE_INSTALL_PREFIX="$PWD/td/install" \
