@@ -14,7 +14,7 @@ sha256sums=('b673f6e3cef28d48c5c74803c7e40f92cf9919a45bd0965f8d12cdb5c0b42826')
 prepare() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target host-tuple
 }
 
 build() {
