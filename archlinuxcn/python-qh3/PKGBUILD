@@ -1,0 +1,43 @@
+# Maintainer: haxibami <contact at haxibami dot net>
+# Contributor: Klaus Alexander Seiﬆrup <klaus@seistrup.dk>
+
+pkgname=python-qh3
+_pkgname="${pkgname/python-/}"
+pkgver=1.5.6
+pkgrel=1
+pkgdesc='Lightweight QUIC and HTTP/3 implementation in Python'
+arch=('aarch64' 'x86_64')
+url='https://github.com/jawah/qh3'
+license=('BSD-3-Clause')
+depends=('libgcc' 'glibc' 'python>3.7')
+makedepends=(
+  'clang' 'mold' 'cmake' 'python-build' 'python-installer'
+  'python-maturin' 'python-wheel'
+)
+checkdepends=('python-cryptography' 'python-pytest' 'python-pytest-asyncio' 'python-pytest-mock')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('e20cd9fbd5f520e9c823afbeacb8711c89bc93db4ee7b6662a90622e12c3502d')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  # Note: (GCC +) mold or (Clang +) lld is required to build with LTO
+  export RUSTFLAGS="${RUSTFLAGS} -Clink-arg=-fuse-ld=mold"
+  # export CC=clang CXX=clang++ RUSTFLAGS="${RUSTFLAGS} -Clink-arg=-fuse-ld=lld"
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python -m installer -d tmp_install dist/*.whl
+  local python_version=$(python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+  export PYTHONPATH="${PWD}/tmp_install/usr/lib/python${python_version}/site-packages"
+  # See: https://github.com/jawah/qh3/blob/7145f484d49ca1f7625b7de5ecb49b03525b54b2/.github/workflows/CI.yml#L102
+  rm -fR qh3
+  python -m pytest -v -ra --tb=native --durations=10 --strict-config --strict-markers tests/
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}/" LICENSE
+}
