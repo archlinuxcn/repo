@@ -1,8 +1,8 @@
 # Maintainer: c2h5oh
 
 pkgname="orca-slicer"
-pkgver=2.3.1
-pkgrel=3
+pkgver=2.3.2
+pkgrel=1
 pkgdesc="Orca Slicer is a fork of Bambu Studio. It was previously known as BambuStudio-SoftFever"
 arch=('x86_64')
 url="https://github.com/SoftFever/OrcaSlicer"
@@ -17,7 +17,7 @@ source=(
   "https://github.com/OrcaSlicer/OrcaSlicer/archive/refs/tags/v${pkgver}.tar.gz"
   "orca-slicer.sh"
   )
-sha256sums=('b1b104076395ce14b6b95a9d6a4f952d0f7d14023afe0ee43293fc6af2a93914'
+sha256sums=('2c7eea7b1e3757011f2c9520dc1712d789b9182b5c276aba271bf814172b0a52'
             'c1ca1fadba5f5c088af80f076f911c74fa594e8200cee7be65e4330f43909e7d')
 
 
@@ -25,7 +25,7 @@ build() {
   # cmake 4.x compatibility workaround
   export CMAKE_POLICY_VERSION_MINIMUM=3.5
 
-  cd "$srcdir/OrcaSlicer-release-v${pkgver}"
+  cd "$srcdir/OrcaSlicer-${pkgver}"
 
   # deps
   cmake -S deps \
@@ -60,7 +60,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir/OrcaSlicer-release-v${pkgver}"
+  cd "$srcdir/OrcaSlicer-${pkgver}"
   DESTDIR="$pkgdir" ninja -C build install
   install -d "$pkgdir/usr/lib/OrcaSlicer/"
   mv "$pkgdir/usr/bin/orca-slicer" "$pkgdir/usr/lib/OrcaSlicer/"
