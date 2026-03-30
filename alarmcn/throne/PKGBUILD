@@ -7,7 +7,7 @@ pkgver=1.0.13
 pkgrel=1
 pkgdesc="Qt based cross-platform GUI proxy configuration manager (backend: sing-box)"
 arch=('x86_64' 'aarch64' 'riscv64')
-url="https://github.com/throneproj/${pkgname}"
+url="https://throneproj.github.io"
 license=('GPL-3.0-or-later')
 depends=('qt6-base' 'qt6-charts')
 makedepends=('cmake' 'go' 'qt6-tools' 'protobuf' 'vulkan-headers')
@@ -18,7 +18,7 @@ optdepends=(
 conflicts=('nekoray')
 replaces=('nekoray')
 source=(
-	"${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+	"${pkgname}-${pkgver}.tar.gz::https://github.com/throneproj/${_srcname}/archive/${pkgver}.tar.gz"
 	"https://raw.githubusercontent.com/throneproj/routeprofiles/rule-set/srslist.h"
 	"${pkgname}.sh"
 	"${_srcname}.desktop"
@@ -36,10 +36,10 @@ prepare() {
 	export GOBIN="${srcdir}/bin"
 	export PATH="${PATH}:${GOBIN}"
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-	go install github.com/chai2010/protorpc/protoc-gen-protorpc@latest
+	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 
 	cd gen
-	protoc -I . --go_out=. --protorpc_out=. libcore.proto
+	protoc -I . --go_out=. --go-grpc_out=. libcore.proto
 }
 
 build() {
@@ -57,14 +57,15 @@ build() {
 	export CGO_LDFLAGS="${LDFLAGS}"
 
 	cd core/server
+
 	VERSION_SINGBOX=$(go list -m -f '{{.Version}}' github.com/sagernet/sing-box)
 	go build -o ../../build/ \
 		-buildmode=pie \
 		-trimpath \
-		-ldflags "-linkmode=external -w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}'" \
+		-ldflags "-linkmode=external -w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}' -X 'internal/godebug.defaultGODEBUG=multipathtcp=0' -checklinkname=0" \
 		-mod=readonly \
 		-modcacherw \
-		-tags "with_clash_api,with_gvisor,with_quic,with_wireguard,with_utls,with_dhcp,with_tailscale"
+		-tags "with_clash_api,with_gvisor,with_quic,with_wireguard,with_utls,with_dhcp,with_tailscale,badlinkname,tfogo_checklinkname0"
 }
 
 package() {
@@ -73,5 +74,5 @@ package() {
 
 	cd "${_srcname}-${pkgver}/"
 	install -Dm644 "res/public/${_srcname}.png" -t "${pkgdir}/usr/share/pixmaps/"
-	install -Dm755 build/{Core,Throne} -t "${pkgdir}/usr/lib/${pkgname}/"
+	install -Dm755 build/Throne{,Core} -t "${pkgdir}/usr/lib/${pkgname}/"
 }
