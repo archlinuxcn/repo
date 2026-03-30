@@ -75,5 +75,5 @@ package() {
 
 	cd "${_srcname}-${pkgver}/"
 	install -Dm644 "res/public/${_srcname}.png" -t "${pkgdir}/usr/share/pixmaps/"
-	install -Dm755 build/{Core,Throne} -t "${pkgdir}/usr/lib/${pkgname}/"
+	install -Dm755 build/Throne{,Core} -t "${pkgdir}/usr/lib/${pkgname}/"
 }
