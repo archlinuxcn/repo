@@ -3,7 +3,7 @@
 pkgname=python-apollo-fpga
 _gitpkgname=apollo
 pkgver=1.1.1
-pkgrel=5
+pkgrel=6
 pkgdesc='Microcontroller-based FPGA/JTAG programmer'
 arch=('any')
 url='https://github.com/greatscottgadgets/apollo'
@@ -27,6 +27,7 @@ checkdepends=(
   'python-pytest'
 )
 optdepends=(
+  'gtkwave: to display ILA results interactively'
   'python-amaranth: for flashing'
   'python-luna-usb: to use the flash-fast subcommand'
   'python-pyserial: to connect to an integrated logic analyzer'
