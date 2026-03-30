@@ -14,7 +14,7 @@ makedepends=(
   'clang' 'mold' 'cmake' 'python-build' 'python-installer'
   'python-maturin' 'python-wheel'
 )
-checkdepends=('python-cryptography' 'python-pytest' 'python-pytest-asyncio' 'python-pytest-mock')
+checkdepends=('python-cryptography' 'python-dnspython' 'python-pytest' 'python-pytest-asyncio' 'python-pytest-mock')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('e20cd9fbd5f520e9c823afbeacb8711c89bc93db4ee7b6662a90622e12c3502d')
 
