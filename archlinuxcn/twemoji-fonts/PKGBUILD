@@ -43,8 +43,7 @@ build() {
   cp ../twemoji.toml.tmpl .
   ../build.sh
   nanoemoji twemoji_*.toml
-  cp build/Twemoji-CFF2-COLRv1.otf build/TwemojiALL.ttf
-  maximum_color --bitmaps build/TwemojiALL.ttf
+  maximum_color --bitmaps --output_file build/TwemojiALL.ttf build/Twemoji-CFF2-COLRv1.otf
 }
 
 package_otf-twemoji-colrv0() {
