@@ -57,7 +57,6 @@ build() {
 	export CGO_LDFLAGS="${LDFLAGS}"
 
 	cd core/server
-	go mod tidy # Updates to go.mod needed
 
 	VERSION_SINGBOX=$(go list -m -f '{{.Version}}' github.com/sagernet/sing-box)
 	go build -o ../../build/ \
