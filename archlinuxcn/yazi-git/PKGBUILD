@@ -9,7 +9,7 @@ pkgdesc="Blazing fast terminal file manager written in Rust, based on async I/O.
 url="https://github.com/sxyazi/${_pkgname}"
 arch=("x86_64" "aarch64" "riscv64")
 license=("MIT")
-depends=('glibc' 'hicolor-icon-theme' 'jemalloc' 'libgcc' 'oniguruma' 'ttf-nerd-fonts-symbols')
+depends=('glibc' 'hicolor-icon-theme' 'jemalloc' 'libgcc' 'lua' 'oniguruma' 'ttf-nerd-fonts-symbols')
 optdepends=(
 	'ttf-nerd-fonts-symbols: for full display of icons'
 	'ffmpeg: for video thumbnails'
@@ -42,6 +42,11 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+
+	# Cargo does not provide an option to disable features for all workspace members
+	# Upstream issue: https://github.com/rust-lang/cargo/issues/14866
+	sed -i '/"vendored-lua"/d' yazi-{actor,binding,dds,fm,parser,plugin}/Cargo.toml
+
 	cargo fetch --locked --target host-tuple
 }
 
