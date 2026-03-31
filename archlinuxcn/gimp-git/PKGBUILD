@@ -35,12 +35,14 @@ depends=(
 	'cairo>=1.14.0'
 	'appstream-glib>=0.7.7'
   'gobject-introspection>=1.32.0'
+  'libbacktrace'
 	)
 makedepends=('git' 'intltool>=0.40.1'
              'alsa-lib>=1.0.0' 'libxslt' 'glib-networking'
              'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk' 'appstream'
              'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'glib2-devel' 'cmake'
-             'gjs' 'python-gobject' 'luajit' 'meson' 'xorg-server-xvfb' 'gtk-doc' 'gi-docgen')
+             'gjs' 'python-gobject' 'luajit' 'meson' 'xorg-server-xvfb' 'gtk-doc' 'gi-docgen'
+             'cfitsio' 'python-cairo' 'xdg-utils' 'bash-completion')
 checkdepends=('xorg-server-xvfb')
 optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cups print support'
             'alsa-lib: for MIDI event controller module'
@@ -56,6 +58,9 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
             'zlib: Compression routines'
             'gjs: JavaScript scripting support'
             'luajit: LUA scripting support'
+            'cfitsio: for FITS support'
+            'gvfs: for HTTP/S support (and many other schemes)'
+            'xdg-utils: xdg-email required for sending support email'
             )
 source=('git+https://gitlab.gnome.org/GNOME/gimp.git'
         'linux.gpl')
