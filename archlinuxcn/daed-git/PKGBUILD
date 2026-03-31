@@ -28,7 +28,7 @@ options=(!debug)
 
 pkgver() {
 	cd "${_pkgname}/"
-	git describe --tags --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+	git describe --tags --long --match="v[0-9]*" --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 prepare() {
