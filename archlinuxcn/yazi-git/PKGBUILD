@@ -56,7 +56,7 @@ build() {
 	export RUSTONIG_DYNAMIC_LIBONIG=1
 	export JEMALLOC_OVERRIDE=/usr/lib/libjemalloc.so
 	export CARGO_FEATURE_UNPREFIXED_MALLOC_ON_SUPPORTED_PLATFORMS=1
-	cargo build --frozen --release --all-features
+	cargo build --frozen --release --no-default-features
 }
 
 check() {
@@ -64,7 +64,7 @@ check() {
 	export RUSTONIG_DYNAMIC_LIBONIG=1
 	export JEMALLOC_OVERRIDE=/usr/lib/libjemalloc.so
 	export CARGO_FEATURE_UNPREFIXED_MALLOC_ON_SUPPORTED_PLATFORMS=1
-	cargo test --frozen --all-features --workspace
+	cargo test --frozen --no-default-features --workspace
 }
 
 package() {
