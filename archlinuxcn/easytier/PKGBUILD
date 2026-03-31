@@ -1,4 +1,5 @@
-# Maintainer: bbaa <bbaa@bbaa.moe>
+# Maintainer: DeepChirp <DeepChirp@outlook.com>
+# Contributor: bbaa <bbaa@bbaa.moe>
 # Contributor: cap153 <1536989047@qq.com>
 
 _pkgname=EasyTier
@@ -11,7 +12,7 @@ arch=("x86_64" "aarch64")
 url="https://github.com/EasyTier/EasyTier"
 license=('Apache-2.0')
 depends=('glibc' 'gcc-libs')
-makedepends=('cargo' 'protobuf' 'rust-bindgen' 
+makedepends=('cargo' 'protobuf' 'rust-bindgen'
              'nodejs' 'pnpm') # for embeded web
 source=(
   "$_pkgname-$pkgver.tar.gz::https://github.com/EasyTier/EasyTier/archive/refs/tags/v$pkgver.tar.gz"
