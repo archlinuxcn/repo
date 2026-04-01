@@ -5,14 +5,14 @@
 pkgbase=rocm-llvm
 pkgname=(rocm-llvm rocm-device-libs comgr)
 epoch=2
-pkgver=7.2.0
-pkgrel=2
+pkgver=7.2.1
+pkgrel=1
 arch=(aarch64)
 url='https://rocm.docs.amd.com/en/latest/reference/rocmcc.html'
 makedepends=('git' 'cmake' 'python' 'ninja' 'rocm-core' 'rocm-cmake' 'perl'
              'gcc-libs' 'zlib' 'zstd' 'libffi' 'libedit' 'ncurses' 'libxml2' 'patchelf')
 source=("$pkgbase::git+https://github.com/ROCm/llvm-project#tag=rocm-$pkgver")
-sha256sums=('676db89f6b7b0c954f24ff1eb1c16db769a5c43b826337b9f4fd9f38f7b8af27')
+sha256sums=('cda215d04dfb6ede38c542d4604711d4a4623267df0f3d678491cd9fbcc32fd9')
 options=(staticlibs !lto)
 
 build() {
