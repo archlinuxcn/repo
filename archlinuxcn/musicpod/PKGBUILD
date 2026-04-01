@@ -10,7 +10,6 @@ _pkgname="musicpod"
 pkgname="$_pkgname"
 pkgver=2.15.1
 pkgrel=1
-_flutterver=3.38.10
 pkgdesc="Music, radio, television and podcast player"
 url="https://github.com/ubuntu-flutter-community/musicpod"
 license=('GPL-3.0-or-later')
@@ -54,8 +53,7 @@ build() {
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
 
   cd "$_pkgsrc"
-  fvm install "${_flutterver}"
-  fvm use -f "${_flutterver}"
+  fvm install
 
   fvm flutter --disable-analytics
   #fvm flutter pub upgrade --major-versions
