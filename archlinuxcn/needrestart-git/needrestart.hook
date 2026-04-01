@@ -1,0 +1,10 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = *
+
+[Action]
+Description = Check if daemons need restart after library/binary upgrades
+Depends=needrestart
+When = PostTransaction
+Exec = /usr/bin/needrestart
