@@ -2,7 +2,7 @@
 
 pkgname=portable-packer
 pkgver=0.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Packaging utility for Portable"
 arch=("x86_64")
 url="https://github.com/Kimiblock/stashpak"
@@ -13,6 +13,8 @@ makedepends=('go' 'git')
 backup=()
 source=("source::git+https://github.com/Kimiblock/portable-packer.git#tag=${pkgver}")
 sha256sums=('f4b7b4a8e5d5206f42c8ce2e3a266ff66675609151d137936321fdd6790f8f0d')
+
+conflicts+=("portable<14.99")
 
 function prepare() {
 	cd source

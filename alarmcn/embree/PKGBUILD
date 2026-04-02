@@ -3,8 +3,8 @@
 # Contributor: Lukas Jirkovsky <l.jirkovsky@gmail.com>
 
 pkgname=embree
-pkgver=4.4.0
-pkgrel=2
+pkgver=4.4.1
+pkgrel=1
 pkgdesc="Collection of high-performance ray tracing kernels"
 arch=(aarch64 x86_64)
 url="https://embree.github.io/"
@@ -12,7 +12,7 @@ license=('Apache-2.0')
 depends=('glibc' 'libgcc' 'libstdc++' 'intel-tbb')
 makedepends=('cmake' 'ispc' 'freeglut' 'libxmu' 'ninja')
 source=(https://github.com/embree/embree/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz)
-sha256sums=('acb517b0ea0f4b442235d5331b69f96192c28da6aca5d5dde0cbe40799638d5c')
+sha256sums=('dcf338cc61b636c871ccf370e673bfd380c5ecb71ce49ad50f28e1d4ec9995dc')
 
 # Embree detects actual ISA at runtime but we have to set a high maximum
 # buildtime version as it would otherwise default to the builder processor.
