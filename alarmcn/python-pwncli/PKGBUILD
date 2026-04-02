@@ -1,0 +1,43 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+_pkgbase='pwncli'
+pkgname=python-$_pkgbase-git
+pkgver=v1.6.r15.gcc6b696
+pkgrel=1
+pkgdesc='Do pwn by command line'
+arch=('any')
+url="https://github.com/RoderickChan/$_pkgbase"
+license=(MIT)
+depends=(
+    python
+    python-click
+    python-pwntools
+    python-requests
+    python-pysocks
+    ropper
+)
+makedepends=(
+    git
+    python-build
+    python-setuptools
+    python-installer
+    python-wheel
+)
+source=("git+$url.git")
+b2sums=('SKIP')
+
+pkgver() {
+    cd "$_pkgbase"
+    git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd "$_pkgbase"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "$_pkgbase"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}
