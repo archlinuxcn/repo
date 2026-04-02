@@ -2,7 +2,7 @@
 
 pkgname=thunderbird-portable
 pkgver=149.0.1
-pkgrel=3
+pkgrel=4
 epoch=1
 pkgdesc="Thunderbird sandboxed by portable"
 arch=('any')
@@ -26,7 +26,7 @@ conflicts+=(thunderbird)
 
 
 md5sums=('b4acfc758ffddeb5fbaf5a5eaefa4ec1'
-         '1d7c12414f01b38e33ebf19a70dcd708')
+         'ffac155f887308e05acdc05a0d26cac3')
 
 function package() {
 	depends=(glibc  gtk3  mime-types  dbus  dbus-glib  alsa-lib  nss  hunspell  sqlite
