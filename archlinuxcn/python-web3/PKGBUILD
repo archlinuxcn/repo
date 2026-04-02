@@ -2,7 +2,7 @@
 
 _name=web3.py
 pkgname=python-web3
-pkgver=7.14.1
+pkgver=7.15.0
 pkgrel=1
 pkgdesc="A python interface for interacting with the Ethereum blockchain and ecosystem."
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python python-eth-abi python-eth-account python-eth-keys python-eth-typ
 makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx python-sphinx_rtd_theme)
 #checkdepends=(python-pytest python-pytest-asyncio python-flaky python-eth-tester python-hypothesis python-py-geth)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('5a48cee213c085061ed63882ec1c1bea2e2cd71d66f3355f13c6a3d53c2e7b957b87fcd37c6708eab74abe83bf8c8602c68c35c0f421fa2f0fc326285c668813')
+sha512sums=('8c3eb3b546fa0c463a18735179bcb97fe95957b799c1dacc9fe24bfa91e566e9cd0228dd2026a3b6911e7a6acba686da45c55d0432d76d4d35b64089183bca92')
 
 build() {
   cd $_name-$pkgver
