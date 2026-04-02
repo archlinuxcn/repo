@@ -15,19 +15,15 @@ url="https://github.com/ubuntu-flutter-community/musicpod"
 license=('GPL-3.0-or-later')
 arch=('x86_64' 'aarch64')
 depends=(
-  'glibc'
-  'glib2'
-  'mpv'
-  'cairo'
-  'gdk-pixbuf2'
-  'pango'
-  'libepoxy'
-  'fontconfig'
-  'at-spi2-core'
   'gtk3'
-  'gcc-libs'
   'alsa-lib'
   'libnotify'
+  'libarchive'
+  'libxss'
+  'libxv'
+  'libpulse'
+  'libvdpau'
+  'libva'
 )
 makedepends=(
   'clang'
@@ -51,6 +47,8 @@ sha256sums=('ed4ef5567322de535a8b194126d0ddee7bbd422018df50c1f997bc356071581c')
 
 build() {
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
+  export LDFLAGS="-Wl,-z,relro,-z,now"
+  export LINKFLAGS="$LDFLAGS"
 
   cd "$_pkgsrc"
   fvm install
@@ -58,7 +56,7 @@ build() {
   fvm flutter --disable-analytics
   #fvm flutter pub upgrade --major-versions
   fvm flutter --no-version-check pub get
-  fvm flutter clean && fvm flutter build linux --no-pub --release
+  fvm flutter clean && fvm flutter build linux --release
 }
 
 package() {
