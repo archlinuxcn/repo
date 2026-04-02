@@ -58,6 +58,11 @@ source=(
 )
 sha256sums=('SKIP')
 
+prepare() {
+	cd ladybird
+	sed -i "s|78.2|78.3" Libraries/LibUnicode/CMakeLists.txt || true
+}
+
 pkgver() {
 	cd ladybird
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
