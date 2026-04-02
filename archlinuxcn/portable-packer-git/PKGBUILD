@@ -14,6 +14,8 @@ backup=()
 source=("source::git+https://github.com/Kimiblock/portable-packer.git")
 sha256sums=('SKIP')
 
+conflicts+=("portable<14.99")
+
 function prepare() {
 	cd source
 }
