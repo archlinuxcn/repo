@@ -9,6 +9,7 @@ license=('MPL2')
 depends=(
 	'glslang>=14'
 	'hicolor-icon-theme'
+    'boost-libs'
 	'libx11'
 	'pugixml'
 	'sdl2'
@@ -83,7 +84,6 @@ build() {
 package() {
 		depends+=(
         'libbluetooth.so'
-		'libboost_program_options.so'
 		'libcrypto.so'
 		'libcubeb.so'
 		'libcurl.so'
