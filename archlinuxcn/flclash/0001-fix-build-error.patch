@@ -1,0 +1,26 @@
+From a882bfadf9e75c8cea20759136503ede921e1ee1 Mon Sep 17 00:00:00 2001
+From: Dee HY <dongfengweixiao@hotmail.com>
+Date: Fri, 3 Apr 2026 13:41:47 +0800
+Subject: [PATCH] fix build error
+
+---
+ linux/CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/linux/CMakeLists.txt b/linux/CMakeLists.txt
+index c419eea..c796bda 100644
+--- a/linux/CMakeLists.txt
++++ b/linux/CMakeLists.txt
+@@ -44,6 +44,9 @@ function(APPLY_STANDARD_SETTINGS TARGET)
+   target_compile_options(${TARGET} PRIVATE -Wall -Werror)
+   target_compile_options(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:-O3>")
+   target_compile_definitions(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
++  # FIXME: workaround for tray_manager deprecation issue:
++  # https://github.com/leanflutter/tray_manager/issues/67
++  target_compile_options(${TARGET} PRIVATE -Wno-error=deprecated-declarations) # Allow deprecated warnings
+ endfunction()
+ 
+ # Flutter library and tool build rules.
+-- 
+2.53.0
+
