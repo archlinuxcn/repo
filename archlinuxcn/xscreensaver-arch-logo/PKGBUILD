@@ -5,13 +5,14 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=xscreensaver-arch-logo
-pkgver=6.14
+pkgver=6.15
 pkgrel=1
 pkgdesc="Screen saver and locker for the X Window System with Arch Linux branding"
 url="https://www.jwz.org/${pkgname%%-*}/"
 arch=('x86_64')
 license=('0BSD')
-depends=('glu'
+depends=('fontconfig'
+         'glu'
          'gtk3'
          'libxmu'
          'perl-libwww'
@@ -21,8 +22,11 @@ makedepends=('bc'
              'intltool'
              'libxpm'
              'systemd')
-optdepends=('gdm: for login manager support'
-            'perl-lwp-protocol-https: for MapScroller hack support, per FS #74184')
+optdepends=('fortune-mod: for fortune file support'
+            'gdm: for login manager support'
+            'noto-fonts: recommended fonts package'
+            'perl-lwp-protocol-https: for MapScroller hack support, per FS #74184'
+            'words: for web collage hack support')
 conflicts=('xscreensaver')
 provides=('xscreensaver')
 backup=('etc/pam.d/xscreensaver')
@@ -41,7 +45,7 @@ source=("${pkgname}-${pkgver}.tar.gz::https://www.jwz.org/${pkgname%%-*}/${pkgna
         logo-50.xpm
         logo-180.xpm
         logo-360.xpm)
-sha512sums=('2ef426f7ae862e7b4665014843451410e30dce8dcc16b98e94c58c0a904bba8ab9eb0f561599ea57eb68df49265171507074026784fdbff23fafeb87175e47df'
+sha512sums=('2a01c6c450c85e427cf2194b96d85017d3817d7e76821f36db9f643dd0c0a30b5197d431044c6a451dc3c3d74252b77e25bd8b51203a5f5c23ddef6e1bd02fb6'
             '529ed9b7904631989803a4e1f306a0f3e496e50a123ebbd6ff77058e52aeb1b2328148d8224e54b547faff14e9d591146b9849c5fb9d1063e6db41f295f3074e'
             'a63d93f148500eb8ae4a011286c1e762a38575773381d33fa1c79cb1b94df8bdba54b40c52c5861ab865934f1d3a3a225c1ef5758a698a9e587b0779d76a0a34'
             '4814fa3178d5f37b5422dcfa73b53f94492863e958987590796ea1a5a5df85977033aa2064e2cd6b2b813908751d8f9982e5103b6615d5b60d521d720340483b'
