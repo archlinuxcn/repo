@@ -1,0 +1,113 @@
+# Maintainer: Dee.H.Y <dongfengweixiao at hotmail dot com>
+# Contributor: Mark Wagie <mark dot wagie at proton dot me>
+# This repository is a fork of musicpod-git.
+# Before executing makepkg, you can set FVM_CACHE_PATH to $HOME/fvm or the path specified by the cachePath field in the $HOME/.config/fvm/.fvmrc file.
+
+pkgname=flclash
+pkgver=0.8.92
+pkgrel=1
+pkgdesc="A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free."
+url="https://github.com/chen08209/FlClash"
+license=('GPL-3.0-or-later')
+arch=('x86_64' 'aarch64')
+depends=(
+  'gtk3'
+  'libayatana-appindicator'
+  'libkeybinder3'
+)
+makedepends=(
+  'clang'
+  'cmake'
+  'fvm'
+  'git'
+  'lld'
+  'llvm'
+  'ninja'
+  'patchelf'
+  'rustup'
+  'go'
+  'libayatana-appindicator'
+  'libkeybinder3'
+)
+
+options=('!lto')
+
+_pkgsrc="$pkgname-$pkgver"
+_pkgext="tar.gz"
+source=(
+  "${pkgname}"::"git+https://github.com/chen08209/FlClash.git#tag=v$pkgver"
+  "0001-fix-build-error.patch"
+  "com.follow.clash.desktop"
+)
+sha256sums=('aaf8c535929ecc642637334799f8396301fbc39a3ea25b2c9a8afdabf4a7e34d'
+            'b551c46a1577758c13bdd07868d41e4de817c6184114e1b10d39e04ae572a76a'
+            '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d')
+
+prepare() {
+  cd "$srcdir/$pkgname"
+  git submodule update --init --recursive
+  patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
+}
+
+build() {
+  export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
+
+  # build core
+  cd "${srcdir}/flclash/core"
+  if [ "$CARCH" == "aarch64" ]; then
+    export GOARCH=arm64
+  else
+    export GOARCH=amd64
+  fi
+  export GOOS=linux
+  export CGO_ENABLED=0
+  export TAGS="with_gvisor"
+  go build -ldflags="-w -s" -tags="$TAGS" -o "../libclash/linux/FlClashCore"
+
+  cd "${srcdir}/flclash"
+  fvm install 3.35.7
+  fvm use 3.35.7
+
+  fvm flutter --disable-analytics
+  #fvm flutter pub upgrade --major-versions
+  fvm flutter --no-version-check pub get
+  fvm flutter clean && fvm flutter build linux --release --dart-define=APP_ENV=stable
+}
+
+package() {
+  if [ $CARCH == "aarch64" ]; then
+    FLUTTER_ARCH=arm64
+  else
+    FLUTTER_ARCH=x64
+  fi
+
+  cd "${srcdir}/flclash/build/linux/$FLUTTER_ARCH/release/bundle"
+
+  install -Dm755 "FlClash" "$pkgdir/usr/lib/$pkgname/FlClash"
+  install -Dm755 "FlClashCore" "$pkgdir/usr/lib/$pkgname/FlClashCore"
+  cp --reflink=auto -r lib/ "$pkgdir/usr/lib/$pkgname/"
+  cp --reflink=auto -r data/ "$pkgdir/usr/lib/$pkgname/"
+  # copy libquickjs_c_bridge_plugin.so
+  cp --reflink=auto "../plugins/flutter_js/bundle/lib/libquickjs_c_bridge_plugin.so" "$pkgdir/usr/lib/$pkgname/lib/libquickjs_c_bridge_plugin.so"
+
+  # runpath
+  patchelf --set-rpath '$ORIGIN/lib' "$pkgdir/usr/lib/$pkgname/FlClash"
+  for i in "$pkgdir/usr/lib/$pkgname/lib"/*.so; do
+    [ -z "$(patchelf --print-rpath "$i")" ] && continue
+    patchelf --set-rpath '$ORIGIN' "$i"
+  done
+
+  # symlink
+  install -dm755 "${pkgdir}/usr/bin"
+  ln -sfr "$pkgdir/usr/lib/$pkgname/FlClash" "$pkgdir/usr/bin/${pkgname}"
+
+  # icon
+  install -Dm644 "$srcdir/flclash/assets/images/icon.png" \
+    "$pkgdir/usr/share/pixmaps/$pkgname.png"
+
+  # .desktop file
+  install -Dm644 "$srcdir/com.follow.clash.desktop" "${pkgdir}/usr/share/applications/com.follow.clash.desktop"
+
+  # license
+  install -Dm644 "${srcdir}/flclash/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
