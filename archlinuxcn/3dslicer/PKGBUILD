@@ -116,7 +116,7 @@ build() {
     -GNinja \
     -S "${srcdir}/${_pkgname}" \
     -Wno-dev
-  VERBOSE=1 cmake --build "${srcdir}/build"
+  cmake --build "${srcdir}/build"
 }
 
 package() {
