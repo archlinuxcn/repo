@@ -1,0 +1,63 @@
+https://aur.archlinux.org/packages/qt5-webengine#comment-1059464
+
+magks commented on 2026-02-13 23:52 (UTC) (edited on 2026-02-14 00:11 (UTC) by magks)
+Build fails on glibc 2.43+ with SYS_SECCOMP error
+
+System: Arch Linux with glibc 2.43+r5+g856c426a7534-1
+
+Error: error: expected identifier before numeric constant 224 | #define SYS_SECCOMP 1
+
+Root cause: glibc 2.41+ added SYS_SECCOMP as an enum value in signal.h, conflicting with Chromium's internal definition.
+
+Fix: Apply this patch to undefine the conflicting macro:
+
+glibc-2.41-seccomp-fix.patch:
+
+https://dpaste.com/DCK85GQAB.txt
+
+%diff -pNaru5 a/chromium/sandbox/linux/system_headers/linux_seccomp.h b/chromium/sandbox/linux/system_headers/linux_seccomp.h
+%--- a/chromium/sandbox/linux/system_headers/linux_seccomp.h	2025-04-23 12:00:55.000000000 -0400
+%+++ b/chromium/sandbox/linux/system_headers/linux_seccomp.h	2026-02-15 06:45:57.729996411 -0500
+%@@ -221,7 +221,11 @@ struct seccomp_notif_addfd {
+% #endif
+% 
+% #ifndef SYS_SECCOMP
+% #define SYS_SECCOMP                   1
+% #endif
+%-
+%+// Undefine SYS_SECCOMP to avoid conflicts with glibc 2.41+ which
+%+// defines it as an enum value in signal.h
+%+#ifdef SYS_SECCOMP
+%+#undef SYS_SECCOMP
+%+#endif
+% #endif  // SANDBOX_LINUX_SYSTEM_HEADERS_LINUX_SECCOMP_H_
+
+***
+
+Using the above patch would make it not compile on glibc<2.43 leading to
+compile complaints for those who haven't upgraded.
+
+/usr/include/bits/siginfo-consts.h
+%enum
+%{
+%  SYS_SECCOMP = 1, /* Seccomp triggered.  */
+%#  define SYS_SECCOMP SYS_SECCOMP
+
+glibc 2.42 didn't have SYS_SECCOMP anywhere. glib 2.43 has it as both an
+enum and a define. Add signal.h for the sources that don't already include it.
+
+diff -pNaru5 a/chromium/sandbox/linux/system_headers/linux_seccomp.h b/chromium/sandbox/linux/system_headers/linux_seccomp.h
+--- a/chromium/sandbox/linux/system_headers/linux_seccomp.h	2025-04-23 12:00:55.000000000 -0400
++++ b/chromium/sandbox/linux/system_headers/linux_seccomp.h	2026-02-15 06:51:02.126144699 -0500
+@@ -4,10 +4,11 @@
+ 
+ #ifndef SANDBOX_LINUX_SYSTEM_HEADERS_LINUX_SECCOMP_H_
+ #define SANDBOX_LINUX_SYSTEM_HEADERS_LINUX_SECCOMP_H_
+ 
+ #include <stdint.h>
++#include <signal.h>
+ 
+ #include "build/build_config.h"
+ 
+ #if !defined(OS_NACL_NONSFI)
+ #include <sys/ioctl.h>

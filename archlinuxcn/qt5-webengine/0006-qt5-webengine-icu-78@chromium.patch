@@ -65,9 +65,9 @@ local/qt5-base 5.15.18+kde+r109-2 (qt5)
 local/qt5-webchannel 5.15.17+kde+r3-1 (qt5)
 *   Provides access to QObject or QML objects from HTML clients for seamless integration of Qt applications with HTML/JavaScript clients
 
-diff -pNaru3 a/src/3rdparty/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc b/src/3rdparty/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc
---- a/src/3rdparty/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc	2025-11-11 01:42:16.454081862 -0500
-+++ b/src/3rdparty/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc	2025-11-11 01:49:41.838185933 -0500
+diff -pNaru3 a/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc b/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc
+--- a/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc	2025-11-11 01:42:16.454081862 -0500
++++ b/chromium/third_party/blink/renderer/platform/text/text_break_iterator.cc	2025-11-11 01:49:41.838185933 -0500
 @@ -163,7 +163,7 @@ static const unsigned char kAsciiLineBre
  // clang-format on
  
