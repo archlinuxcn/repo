@@ -43,8 +43,6 @@ sha256sums=('ed4ef5567322de535a8b194126d0ddee7bbd422018df50c1f997bc356071581c'
 
 build() {
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
-  export LDFLAGS="-Wl,-z,relro,-z,now"
-  export LINKFLAGS="$LDFLAGS"
 
   cd "$_pkgsrc"
   fvm install
