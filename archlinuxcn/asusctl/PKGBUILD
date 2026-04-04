@@ -6,7 +6,7 @@ pkgname=(
   asusctl
   rog-control-center
 )
-pkgver=6.3.4
+pkgver=6.3.6
 pkgrel=1
 pkgdesc="A control daemon, tools, and a collection of crates for interacting with ASUS ROG laptops"
 arch=('x86_64')
@@ -26,7 +26,7 @@ makedepends=(
   systemd
 )
 source=("git+https://gitlab.com/asus-linux/asusctl.git#tag=$pkgver")
-b2sums=('5066ebfa7edc27c88513671028847178a5b5fbf8b8113a384ba57961025185e80abf9ad7a0429d4b30be2d2dc5fa8ae023ad97239063fcf6571254e68c35d5d0')
+b2sums=('838bb718a963b9809b6691e06c43375387a0813ed3441ae893d782283e7dad459befdc0063f64fa3ea2b7174065ce0a79c91f9eaeb0f111801e389f01cd33f3f')
 
 prepare() {
   cd "${pkgbase}"
@@ -78,6 +78,7 @@ package_asusctl() {
     install-asusctl \
     install-asusd \
     install-asusd_user \
+    install-asus-shutdown \
     install-data-asusd \
     install-data-asusd_user
 }
