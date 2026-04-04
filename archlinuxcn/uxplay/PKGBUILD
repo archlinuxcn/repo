@@ -3,7 +3,7 @@
 
 pkgname=uxplay
 _srcname=UxPlay
-pkgver=1.73.5
+pkgver=1.73.6
 pkgrel=1
 pkgdesc="AirPlay Unix mirroring server"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -14,7 +14,7 @@ optdepends=('gstreamer-vaapi: GStreamer plugin required for certain GPUs')
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 	"${pkgname}.desktop")
-sha256sums=('736102f38226c91f6547b0980945983d4ed63dba3a26d658ccc1f1e5dd23ba1f'
+sha256sums=('3a1a754bc7ed4b0f72b6237aa4d769238b9c20a71b651bc3fe9ac679e2a67f18'
             '40b9d95f9ca1dd9e88a6dc235cc6c8e9fe0bf14a3c5cd56c4847494ce5badb0b')
 
 build() {
