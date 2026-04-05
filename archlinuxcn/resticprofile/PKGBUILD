@@ -4,7 +4,7 @@
 
 pkgname=resticprofile
 pkgver=0.33.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Configuration profiles manager and scheduler for restic backup"
 arch=("x86_64" "aarch64")
 url="https://github.com/creativeprojects/resticprofile"
@@ -28,7 +28,10 @@ build() {
     LC_ALL=C _build_date="$(date)"
     _commit_hash=$(git rev-parse HEAD)
 
-    go build -o resticprofile -v -ldflags "-X 'main.commit=${_commit_hash}' -X 'main.date=${_build_date}' -X 'main.builtBy=makepkg'"
+    # Use -X to inject build-time information to variables in main.go
+    # https://github.com/creativeprojects/resticprofile/blob/v0.33.0/main.go
+    # https://pkg.go.dev/cmd/link
+    go build -o resticprofile -v -ldflags "-X 'main.version=${pkgver}' -X 'main.commit=${_commit_hash}' -X 'main.date=${_build_date}' -X 'main.builtBy=makepkg'"
 }
 
 package() {
