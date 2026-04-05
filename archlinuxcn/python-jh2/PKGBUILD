@@ -3,8 +3,8 @@
 
 pkgname='python-jh2'
 _srcname='h2'
-pkgver=5.0.10
-pkgrel=2
+pkgver=5.0.11
+pkgrel=1
 pkgdesc='HTTP/2 State-Machine based protocol implementation'
 arch=('aarch64' 'x86_64')
 url='https://github.com/jawah/h2'
@@ -22,7 +22,7 @@ makedepends=(
   'python-wheel'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('ed0e71d96d109c607ec9f97372e5b26c444618608f16f0cfd1fed65880f868ef')
+sha256sums=('9fe909fa5a6b3aafeac08949cc03de3a2059de8b21a98eb7c3c7e17b2e65ba0d')
 
 _srcdir="$_srcname-$pkgver"
 
