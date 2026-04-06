@@ -15,20 +15,20 @@ cd ../linux/src/archlinux-linux
 git clean -xdf
 git fetch --all
 git fetch --tags archlinux
-git co -b lily-6.16 v6.16.4-arch1
+git co -b lily-6.19 v6.19.11-arch1
 
-patch -p1 < ~/cjktty-6.16.patch
+patch -p1 < ~/cjktty-6.19.patch
 git add .
 git commit -m 'apply cjktty patch'
 patch -p1 < ~/cjktty-add-cjk32x32-font-data.patch
 git add .
 git commit -m 'apply cjktty 32x32 font data'
 
-cp ../../config .config
-patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.15.2
+cp ../../config.x86_64 .config
+patch .config ~/archgitrepo/archlinuxcn/linux-lily/config.diff.6.16.4
 make clean oldconfig
-diff -Naur ../../config .config > ../../config.diff.6.16.4
-vim ../../config.diff.6.16.4
+diff -Naur ../../config.x86_64 .config > ../../config.diff.6.19.11
+vim ../../config.diff.6.19.11
 
 cd ../..
 # 升级 gcc
