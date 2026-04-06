@@ -4,7 +4,7 @@
 
 _pkgname=lilac
 pkgname=$_pkgname-git
-pkgver=r1349.ebbf8cf
+pkgver=r1352.82cab9d
 pkgrel=1
 pkgdesc='The build bot for archlinuxcn'
 arch=(any)
@@ -17,6 +17,7 @@ makedepends=(python-setuptools-scm python-psycopg2 python-build python-installer
 optdepends=(
   'smtp-forwarder: for sending error reports'
   'python-psycopg2: for recording build results in a database'
+  'pacfiles: efficient alpmfiles implementation'
 )
 checkdepends=(python-pytest python-pytest-asyncio)
 provides=("$_pkgname=$pkgver")
