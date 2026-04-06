@@ -1,0 +1,45 @@
+# Maintainer: George Hu <integral@archlinux.org>
+
+pkgname=shoes
+pkgver=0.2.7
+pkgrel=1
+pkgdesc="A multi-protocol proxy server written in Rust"
+arch=('x86_64')
+url="https://github.com/cfal/${pkgname}"
+license=('MIT')
+depends=('glibc' 'jemalloc' 'libgcc')
+makedepends=('cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('8d2e63a021f58e09e827f9ec7d606a0583b578c55cad09619d6b7705ccd3a400')
+
+prepare() {
+	cd "${pkgname}-${pkgver}/"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --target host-tuple # --locked
+}
+
+build() {
+	cd "${pkgname}-${pkgver}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	export JEMALLOC_OVERRIDE=/usr/lib/libjemalloc.so
+	export CARGO_FEATURE_UNPREFIXED_MALLOC_ON_SUPPORTED_PLATFORMS=1
+	export CFLAGS+=" -ffat-lto-objects"
+	cargo build --frozen --release --all-features
+}
+
+check() {
+	cd "${pkgname}-${pkgver}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export JEMALLOC_OVERRIDE=/usr/lib/libjemalloc.so
+	export CARGO_FEATURE_UNPREFIXED_MALLOC_ON_SUPPORTED_PLATFORMS=1
+	export CFLAGS+=" -ffat-lto-objects"
+	cargo test --frozen --all-features
+}
+
+package() {
+	cd "${pkgname}-${pkgver}/"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 {CHANGELOG,CONFIG,README}.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+}
