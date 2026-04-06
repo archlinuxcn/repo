@@ -3,7 +3,7 @@
 
 pkgname=sundials-lapack
 epoch=1
-pkgver=7.6.0
+pkgver=7.7.0
 pkgrel=1
 pkgdesc='Suite of nonlinear differential/algebraic equation solvers'
 arch=(armv7h aarch64 x86_64)
@@ -13,7 +13,7 @@ depends=(suitesparse lapack)
 makedepends=(cmake gcc-fortran python)
 provides=("sundials=$pkgver")
 source=(https://github.com/LLNL/sundials/archive/v$pkgver/sundials-$pkgver.tar.gz)
-sha256sums=('3e84f9e162d994d034b214279c1e5df2e2758e97051a466a5788ff9f3ff0b7be')
+sha256sums=('89a1d4252b740f3097bc324f63389cc90e74d808199d22d5499bce27912e1d06')
 
 build() {
   cmake -B build -S sundials-$pkgver \
