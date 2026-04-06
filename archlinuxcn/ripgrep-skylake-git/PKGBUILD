@@ -7,8 +7,12 @@ pkgrel=1
 pkgdesc="A search tool that combines the usability of ag with the raw speed of grep. Git version, optimized for skylake CPUs"
 arch=('x86_64')
 url="https://github.com/BurntSushi/ripgrep"
-license=('MIT' 'UNLICENSE')
-depends=('gcc-libs' 'pcre2')
+license=('MIT OR Unlicense')
+depends=(
+  'glibc'
+  'libgcc'
+  'pcre2'
+)
 makedepends=('cargo-nightly' 'git')
 options=('debug')
 source=("https://github.com/BurntSushi/$pkgname/archive/$pkgver.tar.gz")
@@ -27,7 +31,7 @@ pkgver () {
 build () {
   cd ripgrep
   echo "lto = true" >> Cargo.toml
-  RUSTFLAGS="-C target-cpu=skylake" cargo build --release --features pcre2
+  RUSTFLAGS="-C target-cpu=skylake" cargo build --release --locked --features pcre2
   target/release/rg --generate complete-bash > complete.bash
   target/release/rg --generate complete-zsh > complete.zsh
   target/release/rg --generate complete-fish > complete.fish
