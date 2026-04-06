@@ -2,7 +2,7 @@
 
 pkgname=sing-box-alpha
 _pkgname=sing-box
-pkgver=1.14.0alpha.8
+pkgver=1.14.0alpha.9
 _pkgver=$(echo "${pkgver}" | sed 's/\([0-9]\+\.[0-9]\+.[0-9]\+\)\(alpha\|beta\|rc\)/\1-\2/')
 pkgrel=1
 epoch=1
@@ -16,7 +16,7 @@ depends=('glibc')
 makedepends=('go' 'clang' 'lld')
 
 source=("${_pkgname}-${_pkgver}.tar.gz::https://github.com/SagerNet/sing-box/archive/v${_pkgver}.tar.gz")
-sha256sums=('dd7dd95e5e4d2c7162bea2741355114f3908a8cb8407e9ab8e2cd49c5f98bcff')
+sha256sums=('25b06a6a82e3ef739827194c5a2d44f2e7c57b4df8157f4e94dd03e08eaa95e9')
 
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
