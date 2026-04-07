@@ -1,22 +1,10 @@
 #!/bin/bash
 set -e
 
-# 拼写方案
-declare -A schemas=(
-    # 注释掉的为方案支持不完善
-    [flypy]="小鹤双拼"
-    [mspy]="微软双拼"
-    [zrm]="自然码"
-    [sogou]="搜狗双拼"
-    [abc]="智能ABC"
-    [ziguang]="紫光双拼"
-    # [pyjj]="拼音加加"
-    # [gbpy]="国标双拼"
-    # [lxsq]="乱序17"
-    # [zrlong]="自然龙"
-    # [hxlong]="汉心龙"
-    [pinyin]="全拼"
-)
+# 获取传入的定义字符串
+input_schemas=$1
+# 重新声明（重建 schemas 数组）
+eval "$input_schemas"
 
 src_dir=$(realpath "$PWD"/../)
 dist_dir=$(realpath "${src_dir}"/dist)

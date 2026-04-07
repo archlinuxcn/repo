@@ -12,29 +12,33 @@ license=('CC-BY-4.0')
 
 url="https://github.com/amzxyz/rime_wanxiang"
 source=("${url}/archive/refs/tags/v${_schema_version}.tar.gz"
-        build.sh)
+    build.sh)
 b2sums=('7e94702c742654fe8ece34c8a4a3b94e932018636149cac50a3e0de9c3b5df1493acb26c6b505e292ac626569420ffb63c6d2479e11ce73a3c8f629809949f05'
-        'e1c0a4adf4a6175ac1343c9d94d5deb6d3e134b5258111849cc714893bb1fb70d308ffb900969e510087c59489318678a3e4ad88c8a134f03d90722a1202a672'
-        '963cdebda3e89e30444a7656f1310c8a4ab117e2b49613f8c1a248ce7c0a3e199e7c13ff4cd8879769185b64f00e1e83b12d437539de7a4641b00ca15cb114ea'
-        '1811c56eb3b3c14bbe38e8749bbb30af4c7a100c6af8423b6442a40f0c217f166637ae0f9f1c2d2bb8da464df71394ca9f3e7c82c1ff46f24330d4ff8af58ae5'
-        '8cf4b2dca82960a401d223f266dcf28e911ac3df79d78648a93f7549d61bc19495213309f529128a786ed344e98d79dd465171642bac9abf95eb7cc8c405b868'
-        'c446ce93584f9b7ba44ce0baa4b4164fc91d8516d05baf6e953f4e88e182aa630ebc48811199ed4560419ccd21355d2442c1b981facb1976a334d475f3450284'
-        '430b042d1ebf0caa3ceb4d2db2631f1b6ed920ebbcb78c62c69e996eff70220346fe9c19d2373ccb5b6fe68fb6506dea37c805ee2536c0e28a194073f4f8f6cb'
-        '8ff923d36a9c318a9acb91a26bc70742090e30bf9ac2e6e57d94872946e1b33cbe7b1fcd5f4c1645a3bef951e17fd93766593908b3ce86fd9c860a478bf7b13f'
-        '5877c5c7d92320e8810596c2144fb6174cbfa5fe420971d83f89e31def639cf6bcbce01d280f9952d6e2c5594cb8b2165179404c180941c2f44b45e5252dd94f'
-        'daf7ac9c3e76c7bebcf8f1560f2961325d1236ca9eda54401a985f8ce38475c9b159d823f7b6f340a113b6cc4e1f83fc9bc94533588df844442ef23b4e36123c')
+        '1c101a06e52afabaa5a2619022644ad1093449897b5e03abda85d604c4c9a39fe23248e543ab62b9dcafc5ab829b8dc14d4acd22f509124d25648b5d3bab2f8a'
+        '3924d56adaebf1207f5ade1df00d582f28a206315cf5a7f470a759ed2597b799510fee71d6700d283acc41658a5af7b2225d09a8c659a62a48ca4051646220c7'
+        '1515bbf4013a020cafa50ab8e1574dfe9a47d3265276d3a36014466632fd2a31c9daae4d6cf3714c2678c1399261369cd1816f17edcbd8627e5bbfe01fa417b4'
+        '89291b9607b059c137c9c525c896c8e40e74528e4deef8f611377b0ed0d0f40141ccb6c0397e8dbbcc108a9f13abfb2f6e4a744887a01ec9ba6df2944baa4ae6'
+        '8d7363109a568181f0fc24b794547639e6a2008f5bdc6358debe4ce4d404a0533cd4f92a2b2b9407e79c3b0d269fcfa618f1fc1ed88e8e16c9a6769dc6951a48'
+        '48f2d69675a830ef0aa3f7a857eddefaf556227b2def2dca7be59117946e240c19ac061b2e8078cf593425f24ab0c5190ce4801d2cb68364b9c1450ab7335a3e'
+        'b7c1519baa4199a109f4aee2e4a077b3e659a996634919d68d143e309a31f8b9aadfbc3800c188b8af02a52b7bab7847a6617a86b4b50b7400594aa6e592fd7c'
+        'eb7b3d23cea2d61ce0d441ec4c796fcb1aaf343a7679866d99875270c980ee8896b44e6d69a9ad6b739fb399f5c6e6667850a077dabea31f016ab5ded588c0ea'
+        'dc6c242b17d0dc1a757d8ff51bcf95a1cec06fccb3d63e8ce43497ff85570dd949a811e1d4b395a307cc811889b00c6684538ef53deab1885e58fca1ed797a08'
+        '85ed51a9a871f29f086ee6993f85bb88a52841752086e8493701b3f9224583237fd66db20f5470b5cf80282d9973e8c9b7b8b62a1de4bcedaac019c0e9d4603a'
+        'bb4de5d335b0d8691ae8aaa5af6ce5843595d5df168058f4b8886b825169f6782e996caa9e2007cda7eec5d1ec7e022dd37c4ccc995673ffad7b226cb0480701')
 noextract=()
-makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python" "zip" "rsync")
+makedepends=("librime" "rime-prelude" "rime-essay" "python" "zip" "rsync")
 
 declare -A _dict_filenames=(
-  [base]="base-dicts.zip"
-  [flypy]="pro-flypy-fuzhu-dicts.zip"
-  [hanxin]="pro-hanxin-fuzhu-dicts.zip"
-  [moqi]="pro-moqi-fuzhu-dicts.zip"
-  [tiger]="pro-tiger-fuzhu-dicts.zip"
-  [wubi]="pro-wubi-fuzhu-dicts.zip"
-  [zrm]="pro-zrm-fuzhu-dicts.zip"
-  [shouyou]="pro-shouyou-fuzhu-dicts.zip"
+    [base]="base-dicts.zip"
+    [flypy]="pro-flypy-fuzhu-dicts.zip"
+    [hanxin]="pro-hanxin-fuzhu-dicts.zip"
+    [moqi]="pro-moqi-fuzhu-dicts.zip"
+    [shouyou]="pro-shouyou-fuzhu-dicts.zip"
+    [shyplus]="pro-shyplus-fuzhu-dicts.zip"
+    [tiger]="pro-tiger-fuzhu-dicts.zip"
+    [wubi]="pro-wubi-fuzhu-dicts.zip"
+    [wx]="pro-wx-fuzhu-dicts.zip"
+    [zrm]="pro-zrm-fuzhu-dicts.zip"
 )
 
 for _dict in "${!_dict_filenames[@]}"; do
@@ -53,24 +57,31 @@ declare -A _schemas=(
     [sogou]="搜狗双拼"
     [abc]="智能ABC"
     [ziguang]="紫光双拼"
-    # [pyjj]="拼音加加"
+    [pyjj]="拼音加加"
     # [gbpy]="国标双拼"
     # [lxsq]="乱序17"
+    [pinyin]="全拼"
+    # [wxsp]="万象双拼"
     # [zrlong]="自然龙"
     # [hxlong]="汉心龙"
-    [pinyin]="全拼"
 )
 
 # 辅助码类型
 declare -A _fuzhus=(
-  [zrm]="自然码"
-  [moqi]="墨奇"
-  [flypy]="小鹤"
-  [hanxin]="汉心"
-  [wubi]="五笔前2"
-  [tiger]="虎码首末"
-  [shouyou]="首右"
+    [shouyou]="首右"
+    [zrm]="自然码"
+    [tiger]="虎码首末"
+    [moqi]="墨奇"
+    [shyplus]="首右+"
+    [flypy]="小鹤"
+    [wx]="万象"
+    [wubi]="五笔前2"
+    [hanxin]="汉心"
 )
+
+eval "_build() {
+    bash \"\${srcdir}/build.sh\" '$(declare -p _schemas | sed 's/declare -A _schemas=/declare -A schemas=/')'
+}"
 
 build() {
     cd "${srcdir}/rime_wanxiang-${_schema_version}" || exit 1
@@ -78,7 +89,8 @@ build() {
     msg2 "release building..."
     bash .github/workflows/scripts/release-build.sh >/dev/null
 
-    msg2 "updating dicts..."
+    rm -rf dist/*.zip
+
     for zip_file in "${srcdir}"/*.zip; do
         local tmp_dir
         tmp_dir="${srcdir}"/$(basename "$zip_file" | sed -E "s/pro-//; s/\.zip//;")
@@ -87,6 +99,7 @@ build() {
     done
 
     local _dir && for _dir in dist/*; do
+        msg2 "updating dicts for ${_dir} ..."
         [[ ! -d $_dir ]] && continue
         (
             local target_dir && target_dir=$(realpath "$_dir"/dicts) && rm -rf "${target_dir:?}"/*
@@ -98,11 +111,11 @@ build() {
     done
 
     msg2 "schema building..."
-    bash "${srcdir}"/build.sh
+    _build
 }
 
 _package() {
-    dist_dir=${1//rime-wanxiang-} && dist_dir=${dist_dir//-nightly}
+    dist_dir=${1//rime-wanxiang-/} && dist_dir=${dist_dir//-nightly/}
     cd "${srcdir}/dist/${dist_dir}" || exit 1
     find . -type f -exec install -Dm664 {} "${pkgdir}"/usr/share/rime-data/{} \;
 }
