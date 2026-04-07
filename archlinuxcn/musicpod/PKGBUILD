@@ -5,21 +5,49 @@
 
 pkgname="musicpod"
 pkgver=2.16.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Music, radio, television and podcast player"
 url="https://github.com/ubuntu-flutter-community/musicpod"
 license=('GPL-3.0-or-later')
 arch=('x86_64' 'aarch64')
 depends=(
-  'gtk3'
   'alsa-lib'
-  'libnotify'
+  'at-spi2-core'
+  'cairo'
+  'fontconfig'
+  'freetype2'
+  'fribidi'
+  'gdk-pixbuf2'
+  'glib2'
+  'glibc'
+  'gnutls'
+  'gtk3'
+  'harfbuzz'
+  'lcms2'
   'libarchive'
+  'libdrm'
+  'libepoxy'
+  'libgcc'
+  'libglvnd'
+  'libnotify'
+  'libpulse'
+  'libstdc++'
+  'libunwind'
+  'libva'
+  'libvdpau'
+  'libx11'
+  'libxcb'
+  'libxext'
+  'libxfixes'
+  'libxkbcommon'
+  'libxrandr'
   'libxss'
   'libxv'
-  'libpulse'
-  'libvdpau'
-  'libva'
+  'mesa'
+  'pango'
+  'wayland'
+  'xz'
+  'zlib'
 )
 makedepends=(
   'clang'
