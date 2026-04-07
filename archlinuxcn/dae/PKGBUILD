@@ -19,6 +19,10 @@ source=("${pkgname}-${pkgver}.tar.xz::${url}/releases/download/v${pkgver}/${pkgn
 install="${pkgname}.install"
 sha256sums=('62ceafadd4b3634e01456e0badc6fda2a4c920495a6a7805d66a1f19d88b86fe')
 
+prepare() {
+	sed -i '/^BUILD_ARGS :=/d' Makefile
+}
+
 build() {
 	export CFLAGS="-fno-stack-protector"
 	export CGO_ENABLED=1
@@ -26,8 +30,16 @@ build() {
 	export CGO_CFLAGS="${CFLAGS}"
 	export CGO_CXXFLAGS="${CXXFLAGS}"
 	export CGO_LDFLAGS="${LDFLAGS}"
-	export BUILD_ARGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
-	make VERSION="${pkgver}"
+	export GOPATH="${srcdir}"
+
+	local _ldflags=(
+		"-compressdwarf=false"
+		"-linkmode=external"
+		"-X github.com/daeuniverse/dae/cmd.Version=${pkgver}"
+		"-X github.com/daeuniverse/dae/common/consts.MaxMatchSetLen_=1024"
+	)
+	export BUILD_ARGS="-buildmode=pie -mod=readonly -modcacherw -ldflags=\"${_ldflags[@]}\""
+	make
 }
 
 package() {
