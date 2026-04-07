@@ -1,7 +1,7 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=bilibili-tui
-pkgver=1.0.9
+pkgver=1.0.10
 pkgrel=1
 pkgdesc="A terminal user interface (TUI) client for Bilibili"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('gcc-libs' 'mpv' 'yt-dlp')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/MareDevi/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('1b4bbcef034fe114c52cb5f0cedaa9d376dd4f6e04c8bcfcd57dc4f054d5fde6')
+sha256sums=('883941c32841304ef0599a2bc7729583603b6b14796b586a6c5a7a2b13e64ac9')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
