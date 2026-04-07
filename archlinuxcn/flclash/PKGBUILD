@@ -11,9 +11,18 @@ url="https://github.com/chen08209/FlClash"
 license=('GPL-3.0-or-later')
 arch=('x86_64' 'aarch64')
 depends=(
+  'at-spi2-core'
+  'cairo'
+  'fontconfig'
+  'glib2'
+  'glibc'
   'gtk3'
   'libayatana-appindicator'
+  'libepoxy'
+  'libgcc'
   'libkeybinder3'
+  'libstdc++'
+  'pango'
 )
 makedepends=(
   'clang'
@@ -38,14 +47,27 @@ source=(
   "${pkgname}"::"git+https://github.com/chen08209/FlClash.git#tag=v$pkgver"
   "0001-fix-build-error.patch"
   "com.follow.clash.desktop"
+  "Clash.Meta::git+https://github.com/chen08209/Clash.Meta.git#branch=FlClash"
+  "flutter_distributor::git+https://github.com/chen08209/flutter_distributor.git#branch=FlClash"
+  "tray_manager::git+https://github.com/chen08209/tray_manager.git#branch=main"
+
 )
 sha256sums=('aaf8c535929ecc642637334799f8396301fbc39a3ea25b2c9a8afdabf4a7e34d'
             'b551c46a1577758c13bdd07868d41e4de817c6184114e1b10d39e04ae572a76a'
-            '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d')
+            '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 prepare() {
   cd "$srcdir/$pkgname"
-  git submodule update --init --recursive
+
+  git submodule init
+  git submodule set-url core/Clash.Meta "$srcdir/Clash.Meta"
+  git submodule set-url plugins/flutter_distributor "$srcdir/flutter_distributor"
+  git submodule set-url plugins/tray_manager "$srcdir/tray_manager"
+  git -c protocol.file.allow=always submodule update
+
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
 
   # go mod download
