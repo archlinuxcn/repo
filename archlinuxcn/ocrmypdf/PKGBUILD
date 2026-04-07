@@ -18,8 +18,6 @@ depends=(
 	'python-pillow'
 	'tesseract'
 	'ghostscript'
-	'unpaper'
-	'pngquant'
 	'python-pikepdf'
 	'python-reportlab'
 	'python-pdfminer'
@@ -32,7 +30,11 @@ depends=(
 	'python-uharfbuzz'
 )
 makedepends=('python-setuptools-scm>=7.0.5' 'python-build' 'python-installer' 'python-wheel' 'python-hatchling' 'python-hatch-vcs')
-optdepends=('jbig2enc: Better compression algorithm; results in smaller PDF files')
+optdepends=(
+	'jbig2enc: Better compression algorithm; results in smaller PDF files'
+	'pngquant: support for higher optimization levels'
+	'unpaper: support for cleaning up pagaes before OCR'
+)
 source=("${url}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('f4013df8ce5e6a6670e942999de304f2f0d671a8131bc7e6a1779c071041a587')
 install="${pkgname}.install"
