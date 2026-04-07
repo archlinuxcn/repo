@@ -12,9 +12,9 @@ url="https://github.com/amzxyz/rime_wanxiang"
 source=("${url}/archive/refs/tags/v${pkgver}.tar.gz"
         build.sh)
 b2sums=('2e0ca123a9c497b2f0f73906416ca7dd263b292476ba3a1cbf7fcece151f7c861cf9fb9eb59afb57bace3ef4b06e8ad496aeb0a857044cefd5f35574afa9db71'
-        'e1c0a4adf4a6175ac1343c9d94d5deb6d3e134b5258111849cc714893bb1fb70d308ffb900969e510087c59489318678a3e4ad88c8a134f03d90722a1202a672')
+        '1c0efba79fbe33587c391238d71074c24633f8672260eb692b1937b49bebd6572f0bda76ef069714c0888b41de0b76508ea305c57d80fa48f7edc8c9ee475d9f')
 
-makedepends=("librime" "rime-prelude" "rime-essay" "sed" "python" "zip" "rsync")
+makedepends=("librime" "rime-prelude" "rime-essay" "python" "zip" "rsync")
 
 # 拼写方案
 declare -A _schemas=(
@@ -25,24 +25,31 @@ declare -A _schemas=(
     [sogou]="搜狗双拼"
     [abc]="智能ABC"
     [ziguang]="紫光双拼"
-    # [pyjj]="拼音加加"
+    [pyjj]="拼音加加"
     # [gbpy]="国标双拼"
     # [lxsq]="乱序17"
+    [pinyin]="全拼"
+    # [wxsp]="万象双拼"
     # [zrlong]="自然龙"
     # [hxlong]="汉心龙"
-    [pinyin]="全拼"
 )
 
 # 辅助码类型
 declare -A _fuzhus=(
-  [zrm]="自然码"
-  [moqi]="墨奇"
-  [flypy]="小鹤"
-  [hanxin]="汉心"
-  [wubi]="五笔前2"
-  [tiger]="虎码首末"
   [shouyou]="首右"
+  [zrm]="自然码"
+  [tiger]="虎码首末"
+  [moqi]="墨奇"
+  [shyplus]="首右+"
+  [flypy]="小鹤"
+  [wx]="万象"
+  [wubi]="五笔前2"
+  [hanxin]="汉心"
 )
+
+eval "_build() {
+    bash \"\${srcdir}/build.sh\" '$(declare -p _schemas | sed 's/declare -A _schemas=/declare -A schemas=/')'
+}"
 
 build() {
     cd "${srcdir}/rime_wanxiang-${pkgver}" || exit 1
@@ -51,7 +58,7 @@ build() {
     bash .github/workflows/scripts/release-build.sh >/dev/null
 
     msg2 "schema building..."
-    bash "${srcdir}"/build.sh
+    _build
 }
 
 _package() {
@@ -75,15 +82,13 @@ package_rime-wanxiang-pro-dict() {
 
 package_rime-wanxiang-data() {
     pkgdesc="万象拼音基础数据"
-    depends=(lua librime rime-wanxiang-gram-zh-hans)
-    optdepends=('libnotify: notification support in lua scripts')
+    depends=(librime rime-wanxiang-gram-zh-hans)
     # shellcheck disable=SC2128
     _package "$pkgname"
 }
 package_rime-wanxiang-pro-data() {
     pkgdesc="万象拼音双拼辅助码版基础数据"
-    depends=(lua librime rime-wanxiang-gram-zh-hans)
-    optdepends=('libnotify: notification support in lua scripts')
+    depends=(librime rime-wanxiang-gram-zh-hans)
     conflicts=("$pkgbase-data")
     # shellcheck disable=SC2128
     _package "$pkgname"
@@ -128,7 +133,7 @@ for _schema in "${!_schemas[@]}"; do
     done
     eval "package_${_pkgname}() {
         pkgdesc='万象拼音标准版（${_schema_name}方案）'
-        depends=(${pkgbase}-data '${pkgbase}-dict-${_schema}=${pkgver}')
+        depends=(sh ${pkgbase}-data '${pkgbase}-dict-${_schema}=${pkgver}')
         conflicts=(${_conflicts[*]})
         install='post.install'
         _package ${_pkgname}
@@ -144,7 +149,7 @@ for _schema in "${!_schemas[@]}"; do
         done
         eval "package_${_pkgname}() {
             pkgdesc='万象拼音双拼辅助码版（${_schema_name}方案）'
-            depends=(${pkgbase}-pro-data '${pkgbase}-pro-data-fuzhu=${pkgver}')
+            depends=(sh ${pkgbase}-pro-data '${pkgbase}-pro-data-fuzhu=${pkgver}')
             conflicts=(${_conflicts[*]})
             install='post.install'
             _package ${_pkgname}-zrm-fuzhu
