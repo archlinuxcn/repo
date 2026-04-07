@@ -1,0 +1,26 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+# Contributor: Guillaume Horel <guillaume.horel@gmail.com>
+
+pkgname=python-fpdf2
+_srcname=${pkgname#python-}
+pkgver=2.8.5
+pkgrel=1
+pkgdesc="Simple PDF generation for Python"
+arch=('any')
+url="https://pyfpdf.github.io/${_srcname}/"
+license=('LGPL-3.0-only')
+conflicts=('python-fpdf')
+depends=('python' 'python-pillow' 'python-defusedxml' 'python-fonttools')
+makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/py-pdf/${_srcname}/archive/${pkgver}.tar.gz")
+sha256sums=('f19cd437c7ec5ddab8c1f73901364604a052501431f66675632a0934080170f1')
+
+build() {
+	cd "${_srcname}-${pkgver}/"
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd "${_srcname}-${pkgver}/"
+	python -m installer --destdir="${pkgdir}" dist/*.whl
+}
