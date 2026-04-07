@@ -11,7 +11,7 @@ pkgdesc="Rime input method engine"
 arch=('x86_64')
 url="https://github.com/rime/librime"
 license=('BSD-3-Clause')
-depends=('boost-libs' 'capnproto' 'gcc-libs' 'glibc' 'opencc' 'yaml-cpp' 'leveldb' 'librime-data' 'luajit' 'google-glog' 'marisa')
+depends=('boost-libs' 'capnproto' 'glibc' 'opencc' 'yaml-cpp' 'leveldb' 'librime-data' 'luajit' 'google-glog' 'marisa' 'libstdc++' 'libgcc')
 makedepends=('git' 'cmake' 'boost' 'gtest' 'ninja')
 source=("git+https://github.com/rime/librime.git#tag=$pkgver"
         "git+https://github.com/lotem/librime-octagram.git"
