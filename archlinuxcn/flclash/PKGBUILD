@@ -47,13 +47,18 @@ prepare() {
   cd "$srcdir/$pkgname"
   git submodule update --init --recursive
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
+
+  # go mod download
+  cd "$srcdir/$pkgname/core"
+  export GOPATH="${srcdir}"
+  go mod download -modcacherw
 }
 
 build() {
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
 
   # build core
-  cd "${srcdir}/flclash/core"
+  cd "$srcdir/$pkgname/core"
   if [ "$CARCH" == "aarch64" ]; then
     export GOARCH=arm64
   else
@@ -61,10 +66,11 @@ build() {
   fi
   export GOOS=linux
   export CGO_ENABLED=0
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
   export TAGS="with_gvisor"
-  go build -ldflags="-w -s" -tags="$TAGS" -o "../libclash/linux/FlClashCore"
+  go build -tags="$TAGS" -o "../libclash/linux/FlClashCore"
 
-  cd "${srcdir}/flclash"
+  cd "${srcdir}/$pkgname"
   fvm install 3.35.7
   fvm use 3.35.7
 
@@ -81,7 +87,7 @@ package() {
     FLUTTER_ARCH=x64
   fi
 
-  cd "${srcdir}/flclash/build/linux/$FLUTTER_ARCH/release/bundle"
+  cd "${srcdir}/$pkgname/build/linux/$FLUTTER_ARCH/release/bundle"
 
   install -Dm755 "FlClash" "$pkgdir/usr/lib/$pkgname/FlClash"
   install -Dm755 "FlClashCore" "$pkgdir/usr/lib/$pkgname/FlClashCore"
@@ -102,12 +108,12 @@ package() {
   ln -sfr "$pkgdir/usr/lib/$pkgname/FlClash" "$pkgdir/usr/bin/${pkgname}"
 
   # icon
-  install -Dm644 "$srcdir/flclash/assets/images/icon.png" \
+  install -Dm644 "$srcdir/$pkgname/assets/images/icon.png" \
     "$pkgdir/usr/share/pixmaps/$pkgname.png"
 
   # .desktop file
   install -Dm644 "$srcdir/com.follow.clash.desktop" "${pkgdir}/usr/share/applications/com.follow.clash.desktop"
 
   # license
-  install -Dm644 "${srcdir}/flclash/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+  install -Dm644 "${srcdir}/$pkgname/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
