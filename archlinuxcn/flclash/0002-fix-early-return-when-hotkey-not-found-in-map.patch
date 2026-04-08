@@ -1,0 +1,57 @@
+From fdb376d8e8189346338015eaa3e6dc6215f4ef01 Mon Sep 17 00:00:00 2001
+From: Dee HY <dongfengweixiao@hotmail.com>
+Date: Sun, 18 Jan 2026 18:12:51 +0800
+Subject: [PATCH] fix: early return when hotkey not found in map
+
+Avoid sending events for unregistered hotkeys and passing invalid
+values to keybinder_unbind by returning early when lookup fails.
+---
+ .../linux/hotkey_manager_linux_plugin.cc         | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/packages/hotkey_manager_linux/linux/hotkey_manager_linux_plugin.cc b/packages/hotkey_manager_linux/linux/hotkey_manager_linux_plugin.cc
+index 74fabe2..95fe80b 100644
+--- a/packages/hotkey_manager_linux/linux/hotkey_manager_linux_plugin.cc
++++ b/packages/hotkey_manager_linux/linux/hotkey_manager_linux_plugin.cc
+@@ -32,14 +32,14 @@ G_DEFINE_TYPE(HotkeyManagerLinuxPlugin,
+               g_object_get_type())
+ 
+ void handle_key_down(const char* keystring, void* user_data) {
+-  const char* identifier;
+-
+   std::string val = keystring;
+   auto result = std::find_if(hotkey_id_map.begin(), hotkey_id_map.end(),
+                              [val](const auto& e) { return e.second == val; });
+ 
+-  if (result != hotkey_id_map.end())
+-    identifier = result->first.c_str();
++  if (result == hotkey_id_map.end())
++    return;
++
++  const char* identifier = result->first.c_str();
+ 
+   g_autoptr(FlValue) event_data = fl_value_new_map();
+   fl_value_set_string_take(event_data, "identifier",
+@@ -103,14 +103,16 @@ static FlMethodResponse* hkm_unregister(_HotkeyManagerLinuxPlugin* self,
+                                         FlValue* args) {
+   const char* identifier =
+       fl_value_get_string(fl_value_lookup_string(args, "identifier"));
+-  const char* keystring;
+ 
+   std::string val = identifier;
+   auto result = std::find_if(hotkey_id_map.begin(), hotkey_id_map.end(),
+                              [val](const auto& e) { return e.first == val; });
+ 
+-  if (result != hotkey_id_map.end())
+-    keystring = result->second.c_str();
++  if (result == hotkey_id_map.end())
++    return FL_METHOD_RESPONSE(
++        fl_method_success_response_new(fl_value_new_bool(false)));
++
++  const char* keystring = result->second.c_str();
+ 
+   keybinder_unbind(keystring, handle_key_down);
+   hotkey_id_map.erase(identifier);
+-- 
+2.53.0
+

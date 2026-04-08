@@ -46,39 +46,36 @@ _pkgext="tar.gz"
 source=(
   "${pkgname}"::"git+https://github.com/chen08209/FlClash.git#tag=v$pkgver"
   "0001-fix-build-error.patch"
-  "0002-fix-hotkey-manager.patch"
+  "0002-fix-early-return-when-hotkey-not-found-in-map.patch"
+  "0003-use-local-hotkey_manager.patch"
   "com.follow.clash.desktop"
   "Clash.Meta::git+https://github.com/chen08209/Clash.Meta.git"
   "flutter_distributor::git+https://github.com/chen08209/flutter_distributor.git"
   "tray_manager::git+https://github.com/chen08209/tray_manager.git"
+  "hotkey_manager::git+https://github.com/leanflutter/hotkey_manager.git#branch=main"
 )
 sha256sums=('aaf8c535929ecc642637334799f8396301fbc39a3ea25b2c9a8afdabf4a7e34d'
             'b551c46a1577758c13bdd07868d41e4de817c6184114e1b10d39e04ae572a76a'
-            '611a118c9c0c8674db1048f53923ebff655ba8303df7a6666710bd975512f864'
+            'b2791f04cd6d0752cc5b0746eec6b3b959def21eb21bfc3cf594deef8c8777d0'
+            '2c1b44a63729e8882e6f1e061d018f006450403d968aafd1046b0cdf79e50d90'
             '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP')
 
 prepare() {
-  cd "$srcdir/$pkgname"
+  cd "$srcdir/hotkey_manager"
+  patch -p1 -i "${srcdir}/0002-fix-early-return-when-hotkey-not-found-in-map.patch"
 
+  cd "$srcdir/$pkgname"
   git submodule init
   git config submodule.core/Clash.Meta.url "$srcdir/Clash.Meta"
   git config submodule.plugins/flutter_distributor.url "$srcdir/flutter_distributor"
   git config submodule.plugins/tray_manager.url "$srcdir/tray_manager"
   git -c protocol.file.allow=always submodule update
-
-  export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
-  export PUB_CACHE="$SRCDEST/pub-cache"
-
-  fvm install 3.35.7
-  fvm use 3.35.7
-  fvm flutter --disable-analytics
-  fvm flutter --no-version-check pub get
-
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
-  patch -p1 -d "${srcdir}/$pkgname/linux/flutter/ephemeral/.plugin_symlinks/hotkey_manager_linux" -i "${srcdir}/0002-fix-hotkey-manager.patch"
+  patch -p1 -i "${srcdir}/0003-use-local-hotkey_manager.patch"
 
   # go mod download
   cd "$srcdir/$pkgname/core"
@@ -87,7 +84,6 @@ prepare() {
 }
 
 build() {
-  echo "Build: $FVM_CACHE_PATH"
   # build core
   cd "$srcdir/$pkgname/core"
   if [ "$CARCH" == "aarch64" ]; then
@@ -101,7 +97,13 @@ build() {
   export TAGS="with_gvisor"
   go build -tags="$TAGS" -o "../libclash/linux/FlClashCore"
 
+  export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
   cd "${srcdir}/$pkgname"
+
+  fvm install 3.35.7
+  fvm use 3.35.7
+  fvm flutter --disable-analytics
+  fvm flutter --no-version-check pub get
   fvm flutter build linux --release --dart-define=APP_ENV=stable
 }
 
