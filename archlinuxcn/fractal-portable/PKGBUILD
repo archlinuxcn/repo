@@ -20,7 +20,7 @@ makedepends+=(fractal coreutils)
 checkdepends=()
 
 source=(
-	portable-config
+	config.toml
 	fractal.sh
 	fractal.desktop
 )
@@ -30,34 +30,20 @@ md5sums=('346bd5445d9704cfffb912a9933012e0'
          'f7fdec85a4e799a84b6c23fb86292aca'
          'd5a575ce7ae88bef3316c860a4beab4d')
 
-function prepare() {
-	pacman -Ql fractal >file.list
-}
-
 function package() {
 	depends=("portable")
 	depends+=(dconf  fontconfig  gcc-libs  gdk-pixbuf2  glib2  glibc  	glycin-gtk4  graphene  gst-plugins-bad-libs  gst-plugins-base-libs  gst-plugin-gtk4  gstreamer
                   gtk4  gtksourceview5  hicolor-icon-theme  lcms2  libadwaita  libpipewire  libseccomp  libshumate  openssl  org.freedesktop.secrets  pango  sqlite)
-	while IFS= read -r line; do
-		file="$(echo "$line" | awk '{print $2}')"
-		if [[ -d ${file} ]]; then
-			echo "Omitting Directory"
-		else
-			if [[ -L "${file}" ]]; then
-				mkdir -p "$(dirname "${pkgdir}/${file}")"
-				ln -vsf "$(readlink -f "${file}")" "${pkgdir}/${file}"
-			else
-				install -vDm755 "${file}" "${pkgdir}/${file}"
-			fi
-		fi
-	done < file.list
 	install -vDm755 "${pkgdir}/usr/bin"/* -t "${pkgdir}/usr/lib/portable/overlay-usr"
-	rm -f "${pkgdir}/usr/share/applications"/*
-	rm -f "${pkgdir}/usr/bin"/*
-	rm -rf "${pkgdir}/usr/share/dbus-1"
-	install -Dm644 portable-config \
-		"${pkgdir}/usr/lib/portable/info/org.gnome.Fractal/config"
-	install -Dm755 "fractal.sh" \
-		"${pkgdir}/usr/bin/fractal"
-	install -Dm644 "fractal.desktop" "${pkgdir}/usr/share/applications/org.gnome.Fractal.desktop"
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy fractal \
+		--hash true \
+		--config-ng "${srcdir}/config.toml" \
+		--desktop-file "${srcdir}/fractal.desktop" \
+		--dbus-activation
 }
