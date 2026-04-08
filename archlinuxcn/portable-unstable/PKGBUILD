@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 pkgname=portable-unstable
 epoch=1
-pkgver=16.0.alpha.0
+pkgver=16.0.alpha.1
 pkgrel=1
 epoch=1
 pkgdesc="Fast, private, efficient sandbox for Linux desktop. Unstable beta versions."
@@ -46,7 +46,7 @@ checkdepends=()
 
 source=(portable::git+https://github.com/Kraftland/portable.git#tag=${pkgver})
 
-md5sums=('e4ab410b4f9f785569694cbe34fe0047')
+md5sums=('5c648bc88fddccc34c2f86db1dc5f657')
 
 function build() {
 	cd "${srcdir}/portable"
