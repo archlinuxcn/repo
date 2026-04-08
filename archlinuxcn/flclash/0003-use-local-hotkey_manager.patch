@@ -1,0 +1,27 @@
+From 73ad9c98c66e9549ae51e1d42cb54bda14ae2a4b Mon Sep 17 00:00:00 2001
+From: Dee HY <dongfengweixiao@hotmail.com>
+Date: Wed, 8 Apr 2026 21:49:11 +0800
+Subject: [PATCH] use local hotkey_manager_linux
+
+---
+ pubspec.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index cca65ac..7fbe2c7 100755
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -82,6 +82,10 @@ dev_dependencies:
+ 
+   drift_dev: ^2.29.0
+ 
++dependency_overrides:
++  hotkey_manager_linux:
++    path: ../hotkey_manager/packages/hotkey_manager_linux
++
+ flutter:
+   uses-material-design: true
+   assets:
+-- 
+2.53.0
+
