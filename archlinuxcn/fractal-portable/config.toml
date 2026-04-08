@@ -21,6 +21,16 @@ target = "fractal"
 # arguments holds an array of arguments passed to the application, this is also used when starting secondary instances.
 arguments = []
 
+[busActivation]
+# Whether or not to enable D-Bus activation. Defaults to false.
+enable = true
+
+# target is the same as exec.target.
+target = "fractal"
+
+# arguments is the same as exec.arguments.
+arguments = []
+
 # The processes section defines how Portable tracks tasks.
 [processes]
 # Watch for spawned commands. When all of them exits, automatically terminate the sandbox. Defaults to true.
