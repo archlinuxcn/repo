@@ -64,12 +64,14 @@ prepare() {
   cd "$srcdir/$pkgname"
 
   git submodule init
-  git config submodule.core.Clash.Meta.url "$srcdir/Clash.Meta"
-  git config submodule.plugins.flutter_distributor.url "$srcdir/flutter_distributor"
-  git config submodule.plugins.tray_manager.url "$srcdir/tray_manager"
+  git config submodule.core/Clash.Meta.url "$srcdir/Clash.Meta"
+  git config submodule.plugins/flutter_distributor.url "$srcdir/flutter_distributor"
+  git config submodule.plugins/tray_manager.url "$srcdir/tray_manager"
   git -c protocol.file.allow=always submodule update
 
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
+  export PUB_CACHE="$SRCDEST/pub-cache"
+
   fvm install 3.35.7
   fvm use 3.35.7
   fvm flutter --disable-analytics
@@ -85,6 +87,7 @@ prepare() {
 }
 
 build() {
+  echo "Build: $FVM_CACHE_PATH"
   # build core
   cd "$srcdir/$pkgname/core"
   if [ "$CARCH" == "aarch64" ]; then
