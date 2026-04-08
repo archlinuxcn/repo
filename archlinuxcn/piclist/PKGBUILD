@@ -1,0 +1,92 @@
+# Maintainer: DeepChirp <DeepChirp@outlook.com>
+
+pkgname=piclist
+_pkgname=PicList
+pkgver=3.3.2
+pkgrel=1
+_electronversion=39
+_nodeversion=22
+pkgdesc="A powerful cloud storage and image hosting management tool"
+arch=('x86_64')
+url='https://piclist.cn/'
+_ghurl='https://github.com/Kuingsmile/PicList'
+license=('MIT')
+conflicts=("${pkgname}-git" "${pkgname}-bin" "${pkgname}-appimage")
+provides=("${pkgname}")
+depends=(
+    "electron${_electronversion}"
+    "nodejs"
+    "bash"
+    "hicolor-icon-theme"
+)
+makedepends=(
+    'nvm'
+    'yarn'
+    'gendesk'
+    'git'
+)
+source=(
+    "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
+    "${pkgname}.sh"
+)
+sha256sums=('0e4a03958acfc95a5ccd2019dd7b5b73976eed7f3dd0a39ae21880a4d6247c20'
+            '4b1dc5f32f0295bd672ea0ff12ac63c98256e1e654d864401fb4f1a6d4b3d8f6')
+
+_ensure_local_nvm() {
+    local NVM_DIR="${srcdir}/.nvm"
+    source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
+    nvm install "${_nodeversion}"
+    nvm use "${_nodeversion}"
+}
+
+prepare() {
+    gendesk -q -f -n --pkgname="${pkgname}" --pkgdesc="${pkgdesc}" --categories="Utility;Network" --name="${_pkgname}" --exec="${pkgname} %U"
+
+    _ensure_local_nvm
+
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+
+    sed -e "
+        s/@electronversion@/${_electronversion}/g
+        s/@appname@/${pkgname}/g
+        s/@runname@/app.asar/g
+        s/@cfgdirname@/${_pkgname}/g
+        s/@options@/--ozone-platform-hint=auto/g
+    " -i "${srcdir}/${pkgname}.sh"
+
+    export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+    export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
+    export YARN_CACHE_FOLDER="${srcdir}/.yarn_cache"
+
+    yarn install
+}
+
+build() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+
+    _ensure_local_nvm
+    export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+    export NODE_ENV=production
+    electronDist="/usr/lib/electron${_electronversion}"
+
+    yarn run prebuild
+
+    yarn exec electron-builder -- --linux --dir -c.electronDist="${electronDist}"
+}
+
+package(){
+    install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+
+    install -Dm755 -d "${pkgdir}/usr/lib/${pkgname}"
+    cp -Pr --no-preserve=ownership "${srcdir}/${_pkgname}-${pkgver}/dist_electron/linux-unpacked/resources/"* "${pkgdir}/usr/lib/${pkgname}"
+    rm -rf "${pkgdir}/usr/lib/${pkgname}/app.asar.unpacked/node_modules/@img/"*musl*
+
+    for res in 256 512; do
+        install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/build/icons/${res}x${res}.png" \
+            "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${pkgname}.png"
+    done
+
+    install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
+
+    install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
