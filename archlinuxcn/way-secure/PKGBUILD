@@ -17,6 +17,9 @@ source=(
 
 function prepare() {
 	cd "${pkgname}"
+	git reset --hard
+	git clean -fdx
+	curl -s https://lists.sr.ht/~whynothugo/public-inbox/patches/67617/mbox | git am -3
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --target "$CARCH-unknown-linux-gnu"
 }
