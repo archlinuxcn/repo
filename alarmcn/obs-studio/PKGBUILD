@@ -3,8 +3,8 @@
 # Contributor: Maciek Marciniak <mm2pl at kotmisia.pl>
 
 pkgname=obs-studio
-pkgver=32.1.0
-pkgrel=2
+pkgver=32.1.1
+pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=(aarch64 x86_64)
 url="https://obsproject.com"
@@ -24,7 +24,7 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'xdg-desktop-portal-impl: Wayland window/screen capture'
             )
 source=($pkgname-$pkgver.tar.gz::https://github.com/obsproject/obs-studio/releases/download/$pkgver/OBS-Studio-$pkgver-Sources.tar.gz)
-sha256sums=('e03440278ef0e14232325e5a7068a18c03f358d949ab20e3d29308b7692ad7e2')
+sha256sums=('f4c17e1aa2a00efd8729ed6cfef9308bc6a2b6c583c187d7959eaa72eb2e3676')
 
 build() {
   export CXXFLAGS+=" -Wno-error=deprecated-declarations"
