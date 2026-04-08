@@ -34,7 +34,7 @@ function package() {
 	depends=("portable")
 	depends+=(dconf  fontconfig  gcc-libs  gdk-pixbuf2  glib2  glibc  	glycin-gtk4  graphene  gst-plugins-bad-libs  gst-plugins-base-libs  gst-plugin-gtk4  gstreamer
                   gtk4  gtksourceview5  hicolor-icon-theme  lcms2  libadwaita  libpipewire  libseccomp  libshumate  openssl  org.freedesktop.secrets  pango  sqlite)
-	install -vDm755 "${pkgdir}/usr/bin/fractal" -t "${pkgdir}/usr/lib/portable/overlay-usr"
+	install -vDm755 "/usr/bin/fractal" -t "${pkgdir}/usr/lib/portable/overlay-usr"
 	export pkgdir
 	export pkgname
 	export srcdir
