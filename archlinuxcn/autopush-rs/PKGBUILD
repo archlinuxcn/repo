@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=autopush-rs
-pkgver=1.81.1
+pkgver=1.81.2
 pkgrel=1
 pkgdesc="Push Server in Rust"
 arch=('x86_64')
@@ -13,7 +13,7 @@ depends=('gcc-libs' 'openssl' 'pypy' 'libffi' 'grpc')
 makedepends=('rustup' 'git' 'cmake3' 'python-virtualenv' 'clang')
 options=(!lto)
 source=("git+$url.git#tag=${pkgver}")
-sha256sums=('9593269ba9c5e394facef2c233be7a471a0d7ed5d5483e983b45f353dfdaf994')
+sha256sums=('1b18c67bc2c089622c1f448a2abf404722ed799b731c25ea3a646e5b5752219f')
 
 prepare() {
 	rustup default stable
