@@ -59,11 +59,12 @@ makedepends=(
 	meson
 	ninja
 	git
+	portable-packer
 )
 source=(
 	"Bottles::git+https://github.com/bottlesdevs/Bottles.git#tag=${pkgver}"
 	remove-flatpak-checks.patch
-	portable-config
+	config.toml
 	desktop.file
 )
 sha256sums=('3c9740253c3492a6bf5c6e5fe320b2475cc6b55070d248768968c5eb80404872'
@@ -82,10 +83,6 @@ build() {
 }
 
 package() {
-	install -vDm755 "${srcdir}/portable-config" \
-		"${pkgdir}/usr/lib/portable/info/com.usebottles.bottles/config"
-	install -vDm755 "${srcdir}/start.sh" \
-		"${pkgdir}/usr/bin/bottles-bwrap"
 	cd "${srcdir}/${_pkgname}"
 	DESTDIR="${pkgdir}" ninja -C build install
 	install -d "${pkgdir}/usr/lib"
@@ -96,7 +93,7 @@ package() {
 	portable-packer \
 		--distro arch \
 		--mode post \
-		--config "${srcdir}/portable-config" \
+		--config-ng "${srcdir}/config.toml" \
 		--desktop-file "${srcdir}/desktop.file" \
 		--dbus-activation
 	ln -srf "${pkgdir}/usr/bin/bottles-bwrap" "${pkgdir}/usr/bin/bottles"
