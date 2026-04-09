@@ -5,7 +5,7 @@ _name=Amulet-NBT
 _lowername=${_name,,}
 _pyname=${_lowername/-/_}
 pkgname=python-$_lowername
-pkgver=2.1.6
+pkgver=2.1.7
 pkgrel=1
 epoch=1
 pkgdesc='A Python and Cython library for reading and writing binary NBT and stringified NBT'
@@ -15,7 +15,7 @@ license=('LicenseRef-Amulet-Team-1.0.0')
 depends=('python' 'python-mutf8' 'python-numpy' 'python-amulet_pybind11_extensions' 'python-amulet-zlib' 'python-amulet-io')
 makedepends=('cython' 'git' 'python-build' 'python-installer' 'python-setuptools' 'python-versioneer' 'python-wheel' 'python-amulet-compiler-version' 'python-amulet-compiler-target' 'cmake')
 source=("git+$url.git#tag=${pkgver}")
-sha256sums=('5ccc324530a3ad9599261519df1e1857745db9291d4f173737367b50a7ba1ffc')
+sha256sums=('239cca8ebf42a374a13f2827af3c856d9bf2aabae59d44ef08fe382c9345e938')
 
 prepare() {
 	cd "$_name"
