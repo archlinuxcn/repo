@@ -8,7 +8,7 @@ pkgdesc="A user-friendly, lightweight TUI for disk imaging"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/ifd3f/${_pkgname}"
 license=('GPL-3.0-or-later')
-depends=('gcc-libs')
+depends=('libgcc' 'xz')
 makedepends=('git' 'cargo')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
@@ -23,26 +23,27 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+	sed -i '/^xz2 =/s/"static"//' Cargo.toml
+
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target host-tuple
 }
 
 build() {
 	cd "${_pkgname}/"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
-	RUSTFLAGS="--cfg tracing_unstable" cargo build --release --all-features # --frozen
+	cargo build --frozen --release --all-features
 }
 
 check() {
 	cd "${_pkgname}/"
 	export RUSTUP_TOOLCHAIN=stable
-	RUSTFLAGS="--cfg tracing_unstable" cargo test --all-features # --frozen
+	cargo test --frozen --all-features
 }
 
 package() {
 	cd "${_pkgname}/"
 	install -Dm755 "target/release/${_pkgname}" -t "$pkgdir/usr/bin/"
-	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${_pkgname}/"
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${_pkgname}/"
 }
