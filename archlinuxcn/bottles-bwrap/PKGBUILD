@@ -4,7 +4,7 @@
 
 pkgname=bottles-bwrap
 _pkgname=Bottles
-pkgver=63.0
+pkgver=63.2
 pkgrel=1
 epoch=2
 pkgdesc='Easily manage wine and proton prefix. Sandboxed by portable.'
@@ -67,10 +67,10 @@ source=(
 	config.toml
 	desktop.file
 )
-sha256sums=('3c9740253c3492a6bf5c6e5fe320b2475cc6b55070d248768968c5eb80404872'
-            'a7b694567f942a3ae61db40cf2689e139997415d0b16061e2750f561608f88c0'
-            '15b16b8fdc61e5da2e62c80643351c1cbe981e5df4474564446e159ef7249766'
-            'e8151fe783b4c202c99e206535f6f2b3e025b070d7237cb6f8bbb1f23ad0eb94')
+sha256sums=('b051308770214a4fefc6c596b902419daa07b38c2def24ca2f8791091603122c'
+            '2770f36f98e0a48464a13047a934c92b7eff5a9490a30868b86b90210e97b824'
+            'b5e9e7d9b3fe4e47babeed9c96d3bed5bfef4a399f1fe5e6e8395a7d4c30a6f1'
+            'ea8e990c57bddaa3079f80d7074a6b7939a96cd0cc37de3003a848408e45313a')
 
 function prepare() {
 	patch --forward --directory="${srcdir}/${_pkgname}" --strip=1 --input="${srcdir}/remove-flatpak-checks.patch"
