@@ -87,9 +87,9 @@ package() {
 	DESTDIR="${pkgdir}" ninja -C build install
 	install -d "${pkgdir}/usr/lib"
 	mv ${pkgdir}/usr/bin/ "${pkgdir}/usr/lib/bottles-bwrap"
-	declare -x pkgname
-	declare -x pkgdir
-	declare -x srcdir
+	declare -x -g pkgname
+	declare -x -g pkgdir
+	declare -x -g srcdir
 	portable-packer \
 		--distro arch \
 		--mode post \
