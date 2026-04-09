@@ -8,7 +8,7 @@ pkgdesc="A user-friendly, lightweight TUI for disk imaging"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/ifd3f/${_pkgname}"
 license=('GPL-3.0-or-later')
-depends=('gcc-libs')
+depends=('gcc-libs' 'xz')
 makedepends=('git' 'cargo')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
@@ -23,6 +23,8 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+	sed -i '/^xz2 =/s/"static"//' Cargo.toml
+
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --locked --target host-tuple
 }
