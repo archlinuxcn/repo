@@ -1,4 +1,4 @@
-# Maintainer: DeepChirp <DeepChirp@outlook.com>
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 
 pkgname=piclist
 _pkgname=PicList

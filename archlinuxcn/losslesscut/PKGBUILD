@@ -1,4 +1,4 @@
-# Maintainer: DeepChirp <DeepChirp@outlook.com>
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 # Contributor: zxp19821005 <zxp19821005 at 163 dot com>
 pkgname=losslesscut
 _pkgname=LosslessCut
