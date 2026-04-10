@@ -1,0 +1,73 @@
+# Maintainer: DeepChirp <DeepChirp@outlook.com>
+
+pkgname=mangayomi
+pkgver=0.7.45
+pkgrel=1
+pkgdesc="free and open source application for reading manga, novels, and watching animes"
+url="https://github.com/kodjodevf/${pkgname}"
+license=('Apache-2.0')
+conflicts=("${pkgname}-git" "${pkgname}-bin" "${pkgname}-appimage" "${pkgname}-linux")
+arch=('x86_64')
+depends=('gtk3' 'webkit2gtk-4.1' 'mpv' 'libsoup3' 'libepoxy' 'alsa-lib' 'hicolor-icon-theme' 'cairo' 'pango' 'at-spi2-core' 'fontconfig' 'glib2' 'glibc' 'libstdc++' 'libgcc')
+makedepends=('cmake'
+             'ninja'
+             'clang'
+             'lld'
+             'fvm'
+             'rustup' # `Cargokit` expects to find `rustup`; otherwise, it will throw an error during the build process
+             'pkgconf'
+             'unzip'
+             'patchelf')
+options=("!lto") # Due to differences in LLVM versions, errors occur when using LTO.
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('a41db336f3138180a9943ba3e6d4b312e445f10c977436b418d855af8bb1633c')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+
+    export RUSTUP_HOME="${srcdir}/rustup-home"
+    export CARGO_HOME="${srcdir}/cargo-home"
+    export PATH="${CARGO_HOME}/bin:${PATH}"
+
+    rustup default stable
+
+    fvm use stable
+    fvm flutter --disable-analytics
+    fvm flutter pub get
+
+    cargo install 'flutter_rust_bridge_codegen'
+
+    cd rust
+    cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+
+    # use `gcc` will get error such as `Walloc-size-larger-than`
+    export CC=clang
+    export CXX=clang++
+
+    export RUSTUP_HOME="${srcdir}/rustup-home"
+    export CARGO_HOME="${srcdir}/cargo-home"
+    export PATH="${CARGO_HOME}/bin:${PATH}"
+
+    fvm flutter build linux --no-pub --release
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+
+    install -dm755 "${pkgdir}/opt/${pkgname}"
+    cp -rd --no-preserve=ownership --preserve=mode build/linux/x64/release/bundle/* "${pkgdir}/opt/${pkgname}/"
+
+    install -dm755 "${pkgdir}/usr/bin"
+    ln -s "/opt/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+
+    install -dm755 "${pkgdir}/usr/share/icons"
+    cp -rL --no-preserve=ownership --preserve=mode linux/packaging/icons/* "${pkgdir}/usr/share/icons/"
+
+    install -Dm644 "linux/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+    find "${pkgdir}/opt/${pkgname}/lib" -type f -name "*.so" -exec patchelf --set-rpath '$ORIGIN' {} \;
+}
