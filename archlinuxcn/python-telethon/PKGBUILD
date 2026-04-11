@@ -1,6 +1,6 @@
 pkgname=python-telethon
 pkgver=1.43.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Full-featured Telegram client library for Python 3"
 arch=(any)
 url="https://telethon.dev"
@@ -13,7 +13,7 @@ optdepends=('python-cryptg: alternative crypto library'
             'python-pillow: resize photos for uploading'
             'python-isal: faster zlib and gzip compression')
 source=("https://codeberg.org/Lonami/Telethon/archive/v${pkgver}.tar.gz")
-sha256sums=('2f26099b4f7a52467367eda9a09b6c3723e38e8ea14fd4637ad09c0455fe259a')
+sha256sums=('bf99ddd3b7fb20bf8b5ad95a8e4343cb7825162dfa1491689fab44e0aad2c3a9')
 
 build() {
   cd "$srcdir/telethon"
