@@ -9,10 +9,10 @@ def pre_build():
     makedepends = ['python-setuptools'],
     optdepends = [
       'python-cryptg: alternative crypto library',
-      'python-pysocks: socks proxy support',
       'python-python-socks: socks proxy support',
       'python-hachoir: parse media metadata for uploading',
       'python-pillow: resize photos for uploading',
+      'python-isal: faster zlib and gzip compression',
     ]
   )
 
