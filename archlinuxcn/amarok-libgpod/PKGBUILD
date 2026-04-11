@@ -60,12 +60,11 @@ depends=(ffmpeg
 
 makedepends=(extra-cmake-modules
              kdoctools)
-source=(https://download.kde.org/stable/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz)
+source=(https://download.kde.org/stable/amarok/$pkgver/amarok-$pkgver.tar.xz)
 sha256sums=('aa436b09d3991be48cf37e6f0b71f58aebd5bffaba0fdce7ffd3c2b485d3660b')
-#validpgpkeys=(688C638B2880B8A4F1845C1D563D9DE65F327560) # Tuomas Nurmi <tuomas@suoranaverkossa.fi>
 
 build() {
-  cmake -B build -S $pkgname-$pkgver \
+  cmake -B build -S amarok-$pkgver \
     -DBUILD_TESTING=OFF
   cmake --build build
 }
