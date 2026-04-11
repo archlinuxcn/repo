@@ -3,7 +3,7 @@
 
 pkgname=hmcl-rc-bin
 pkgver=3.12.4
-pkgrel=7
+pkgrel=9
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular."
 arch=('any')
 url="https://github.com/huanghongxun/HMCL"
@@ -14,12 +14,14 @@ conflicts=('hmcl')
 source=("hmcl.desktop"
         "hmcl-launch-script"
         "${pkgname}-${pkgver}-${pkgrel}.jar::https://github.com/HMCL-dev/HMCL/releases/download/v${pkgver}/HMCL-${pkgver}.jar"
-        "icon.png::https://raw.githubusercontent.com/HMCL-dev/HMCL/main/HMCL/src/main/resources/assets/img/icon.png"
-        "icon@2x.png::https://raw.githubusercontent.com/HMCL-dev/HMCL/main/HMCL/src/main/resources/assets/img/icon@2x.png"
-        "icon@4x.png::https://raw.githubusercontent.com/HMCL-dev/HMCL/main/HMCL/src/main/resources/assets/img/icon@4x.png"
-        "icon@8x.png::https://raw.githubusercontent.com/HMCL-dev/HMCL/main/HMCL/src/main/resources/assets/img/icon@8x.png")
+        "${pkgname}-${pkgver}-${pkgrel}.jar::https://github.com/HMCL-dev/HMCL/releases/download/v${pkgver}/HMCL-${pkgver}.jar"
+        "${pkgname}-${pkgver}-${pkgrel}.png::https://raw.githubusercontent.com/HMCL-dev/HMCL/v${pkgver}/HMCL/src/main/resources/assets/img/icon.png"
+        "${pkgname}-${pkgver}-${pkgrel}@2x.png::https://raw.githubusercontent.com/HMCL-dev/HMCL/v${pkgver}/HMCL/src/main/resources/assets/img/icon@2x.png"
+        "${pkgname}-${pkgver}-${pkgrel}@4x.png::https://raw.githubusercontent.com/HMCL-dev/HMCL/v${pkgver}/HMCL/src/main/resources/assets/img/icon@4x.png"
+	"${pkgname}-${pkgver}-${pkgrel}@8x.png::https://raw.githubusercontent.com/HMCL-dev/HMCL/v${pkgver}/HMCL/src/main/resources/assets/img/icon@8x.png")
 sha256sums=('904999db15ae0094dc364913f4aa14f500626bb6b50a37cc8c2090bb9f6ae385'
             'b11eca896b79e206a6991e82b82fb1e9a2a1e3e5ce04757114a37747213a76ab'
+            '0b12ecdeb316fbe14617b595f443086feebd66b9d5d8c69d1070ff34cc97048c'
             '0b12ecdeb316fbe14617b595f443086feebd66b9d5d8c69d1070ff34cc97048c'
             '44c6ac6aa2c55c35826f873dfd3dbf11cb7675f2e88040c64bdea861426aa861'
             '592f4c5bcf636250e6d4cad6b6a45bb49fd01cb346072b1dc9b7ff703fd26fce'
@@ -35,7 +37,7 @@ package() {
 
   # install icons
   local _icon _iconfile
-  for _icon in 32:icon.png 64:icon@2x.png 128:icon@4x.png 256:icon@8x.png; do
+  for _icon in 32:${pkgname}-${pkgver}-${pkgrel}.png 64:${pkgname}-${pkgver}-${pkgrel}@2x.png 128:${pkgname}-${pkgver}-${pkgrel}@4x.png 256:${pkgname}-${pkgver}-${pkgrel}@8x.png; do
     _iconfile=${_icon#*:}
     _icon=${_icon%:*}
     install -Dm644 "${_iconfile}" "${pkgdir}/usr/share/icons/hicolor/${_icon}x${_icon}/apps/${pkgname}.png"
