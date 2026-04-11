@@ -34,9 +34,8 @@ function build() {
 function package() {
 	cd "${srcdir}/${_pkgname}"
 	install -d "${pkgdir}/usr/lib/"
-	cp -a "${srcdir}/${_pkgname}/lib" "${pkgdir}/usr/lib/${_pkgname}"
+	cp -a "${srcdir}/${_pkgname}" "${pkgdir}/usr/lib/"
 	install -Dm600 "${srcdir}/${_pkgname}/config/default.yaml" "${pkgdir}/etc/draupnir/config.yaml"
-	cp -a "${srcdir}/${_pkgname}/node_modules" "${pkgdir}/usr/lib/draupnir"
 	echo '''#!/usr/bin/bash
 	cd /usr/lib/draupnir
 	node --enable-source-maps /usr/lib/draupnir/apps/draupnir/dist/index.js --draupnir-config /etc/draupnir/config.yaml''' >start.sh
