@@ -7,45 +7,42 @@ license=("EUPL-1.2")
 arch=("x86_64" "aarch64")
 pkgver=2.9.6
 pkgrel=2
-makedepends=("rust" "cargo" "git" "blueprint-compiler" "just")
-depends=(libadwaita gtk4 hicolor-icon-theme graphene dconf gcc-libs glib2 glibc)
-source=("git+https://codeberg.org/swsnr/turnon.git#tag=v${pkgver}")
+makedepends=(python-wheel git python-installer python-hatchling python-build blueprint-compiler)
+checkdepends=(
+	'python-pytest'
+	'python-pytest-asyncio'
+)
+depends=(libadwaita gtk4 hicolor-icon-theme graphene dconf gcc-libs glib2 glibc python-gobject python-packaging)
+source=("source::git+https://codeberg.org/swsnr/turnon.git#tag=v${pkgver}")
 md5sums=('a0b947230aa3293b8198b2ae5a9a25d6')
 
 function prepare() {
-	export _app_id=de.swsnr.turnon
-	cd "${srcdir}/turnon"
-	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --target "$CARCH-unknown-linux-gnu"
-	#sed -i 's|@# Compile settings schemas after installation||g' justfile
-	#sed -i 's|glib-compile-schemas --strict '{{DESTPREFIX}}/share/glib-2.0/schemas'||g' justfile
+	cd source
+	git clean -fdx
 }
 
 function build() {
-	export _app_id=de.swsnr.turnon
-	cd "${srcdir}/turnon"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
-	just APPID=de.swsnr.turnon compile
-	env cargo build --release --locked
-#	env make msgfmt
+	cd source
+	python -m build --wheel --skip-dependency-check --no-isolation
 }
 
 function check() {
-	export _app_id=de.swsnr.turnon
-	cd "${srcdir}/turnon"
-	export RUSTUP_TOOLCHAIN=stable
-	env cargo test --frozen --all-features
+	cd source
+	python \
+		-m venv \
+		--clear \
+		--without-pip \
+		--system-site-packages \
+		test-venv
+	test-venv/bin/python -m installer dist/*.whl
+	test-venv/bin/python -m pytest
 }
 
 function package() {
-	export _app_id=de.swsnr.turnon
-	cd "${srcdir}/turnon"
-	#make DESTPREFIX="${pkgdir}/usr" install
-	just APPID=de.swsnr.turnon DESTPREFIX="$pkgdir/usr" install
-	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
-	ln -s "/usr/bin/${_app_id}" "$pkgdir/usr/bin/$pkgname"
-	rm "${pkgdir}/usr/share/glib-2.0/schemas/gschemas.compiled"
+	cd source
+	python -m installer --destdir="${pkgdir}" dist/*.whl
+	ln -s "/usr/bin/de.swsnr.turnon" "${pkgdir}/usr/bin/turnon"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
 
 
