@@ -6,7 +6,7 @@ def pre_build():
     depends_setuptools = False,
     license_file = 'LICENSE',
     pep517 = True,
-    makedepends = ['python-setuptools'],
+    makedepends = ['python-hatchling'],
     optdepends = [
       'python-cryptg: alternative crypto library',
       'python-python-socks: socks proxy support',
