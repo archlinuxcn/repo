@@ -2,19 +2,20 @@
 # Maintainer: heavysink <winstonwu91 at gmail>
 
 pkgname=miktex
-pkgver=25.4
-pkgrel=4
+pkgver=26.2
+pkgrel=1
 pkgdesc="a distribution of the TeX/LaTeX typesetting system"
 arch=('x86_64')
 url="https://miktex.org"
-license=('custom')
+license=('custom:MiKTeX License')
 depends=('apr' 'boost-libs' 'apr-util' 'bzip2' 'cairo' 'expat' 'fontconfig' 'freetype2'
-         'fribidi' 'gd' 'gmp' 'graphite' 'harfbuzz-icu' 'hunspell' 'icu'
+         'fribidi' 'gd' 'gmp' 'graphite' 'hunspell' 'icu'
          'libjpeg' 'log4cxx' 'xz' 'mpfr' 'libmspack' 'openssl' 'pixman' 'libpng'
-         'poppler' 'popt' 'potrace' 'uriparser' 'hicolor-icon-theme' 'zziplib' 'poppler-qt6' 'qt6-declarative' 'qt6-5compat' 'mpfi')
+         'poppler' 'popt' 'potrace' 'uriparser' 'hicolor-icon-theme' 'zziplib' 'poppler-qt6'
+         'qt6-declarative' 'qt6-5compat' 'mpfi')
 makedepends=('cmake' 'coreutils' 'fop' 'sed' 'libxslt' 'qt6-tools' 'boost')
 source=("https://github.com/MiKTeX/miktex/archive/${pkgver}.tar.gz")
-md5sums=('413621d8fd709f32867d0989b8a6feb0')
+md5sums=('7639d606db2387d7099185a992532516')
 options=('!buildflags')
 
 prepare() {
@@ -25,21 +26,20 @@ prepare() {
     sed -i 's/QT5/QT6/g' cmake/modules/FindPOPPLER_QT6.cmake
     sed -i 's/qt5/qt6/g' cmake/modules/FindPOPPLER_QT6.cmake
     sed -i -e '1i #include <cstdint>' Programs/DviWare/dvisvgm/source/libs/woff2/include/woff2/output.h
-    #sed -i 's|tm/packages/|tm/packages|g' CMakeLists.txt
 }
 build() {
     cd "$srcdir/$pkgname-$pkgver"
     [ -d build ] || mkdir build
     cd build
     #export MIKTEX_REPOSITORY=https://mirrors.aliyun.com/CTAN/systems/win32/miktex/tm/packages/
-    cmake -DCMAKE_BUILD_TYPE='None' -DCMAKE_INSTALL_PREFIX=/opt/miktex -DWITH_UI_QT=ON -DUSE_SYSTEM_POPPLER=TRUE -DUSE_SYSTEM_POPPLER_QT=TRUE ..
+    cmake -DCMAKE_BUILD_TYPE='None' -DCMAKE_INSTALL_PREFIX=/opt/miktex -DWITH_UI_QT=ON -DUSE_SYSTEM_POPPLER=TRUE -DUSE_SYSTEM_POPPLER_QT=TRUE -DUSE_SYSTEM_HARFBUZZ=FALSE -DUSE_SYSTEM_HARFBUZZ_ICU=FALSE ..
     make -j2
 }
 
 package() {
     cd "$srcdir/$pkgname-$pkgver/build"
     make DESTDIR="$pkgdir/" install
- 
+
     cd "$srcdir/$pkgname-$pkgver"
     install -vDm644 "README.md"    "${pkgdir}/usr/share/doc/${pkgname}/README.md"
     install -vDm644 "HACKING.md"   "${pkgdir}/usr/share/doc/${pkgname}/HACKING.md"
