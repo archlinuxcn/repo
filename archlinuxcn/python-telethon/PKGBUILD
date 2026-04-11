@@ -16,12 +16,12 @@ source=("https://codeberg.org/Lonami/Telethon/archive/v${pkgver}.tar.gz")
 sha256sums=('2f26099b4f7a52467367eda9a09b6c3723e38e8ea14fd4637ad09c0455fe259a')
 
 build() {
-  cd "$srcdir/telethon-${pkgver}"
+  cd "$srcdir/telethon"
   python -m build --wheel --no-isolation
 }
 
 package() {
-  cd "$srcdir/telethon-${pkgver}"
+  cd "$srcdir/telethon"
   python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
