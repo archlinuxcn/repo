@@ -1,12 +1,14 @@
 # Maintainer: Antonio Rojas <arojas@archlinux.org>
 
-pkgname=amarok
+pkgname=amarok-libgpod
 pkgver=3.3.2
 pkgrel=2
 pkgdesc='Powerful music player that lets you rediscover your music. Built with iPod support.'
 arch=(x86_64)
 license=(GPL-2.0-or-later)
 url='https://apps.kde.org/amarok/'
+provides=(amarok)
+conflicts=(amarok)
 depends=(ffmpeg
          fftw
          glib2
