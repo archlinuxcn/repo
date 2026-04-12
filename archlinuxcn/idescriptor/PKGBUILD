@@ -73,6 +73,8 @@ prepare() {
 }
 
 build() {
+	export CFLAGS+=" -ffat-lto-objects"
+	export CXXFLAGS+=" -ffat-lto-objects"
 	local cmake_options=(
 		-B build
 		-S "${_srcname}"
