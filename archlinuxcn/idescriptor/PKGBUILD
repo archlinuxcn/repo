@@ -47,8 +47,10 @@ makedepends=('git' 'cargo' 'cmake' 'go')
 source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/iDescriptor/uxplay.git"
 	"git+https://github.com/uncor3/libipatool-go.git"
+	"git+https://github.com/uncor3/idevice.git"
 	"git+https://github.com/libZQT/ZUpdater.git")
 sha256sums=('8f77628776d3f32cfa76bb77dfed37e0f72ea6cee43276dfef9c5c2b62c3736c'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP')
@@ -60,6 +62,7 @@ prepare() {
 	git submodule init
 	git config submodule.lib/uxplay.url "${srcdir}/uxplay"
 	git config submodule.lib/ipatool-go.url "${srcdir}/libipatool-go"
+	git config submodule.lib/idevice-rs.url "${srcdir}/idevice"
 	git config submodule.lib/zupdater.url "${srcdir}/ZUpdater"
 	git -c protocol.file.allow=always submodule update
 
