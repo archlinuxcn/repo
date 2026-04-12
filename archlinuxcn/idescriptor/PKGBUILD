@@ -42,6 +42,7 @@ depends=(
 	'gst-plugins-bad'
 	'gst-plugins-ugly'
 	'gst-libav'
+	'sqlite'
 )
 makedepends=('git' 'cargo' 'cmake' 'go')
 source=("git+${url}.git#tag=v${pkgver}"
@@ -78,6 +79,7 @@ prepare() {
 build() {
 	export CFLAGS+=" -ffat-lto-objects"
 	export CXXFLAGS+=" -ffat-lto-objects"
+	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
 	local cmake_options=(
 		-B build
 		-S "${_srcname}"
