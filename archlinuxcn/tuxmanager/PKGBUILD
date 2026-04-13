@@ -2,7 +2,7 @@
 
 pkgname=tuxmanager
 _srcname=TuxManager
-pkgver=1.0.3
+pkgver=1.0.4
 pkgrel=1
 pkgdesc="A Linux Task Manager alternative built with Qt6"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -11,7 +11,7 @@ license=('GPL-3.0-or-later')
 depends=('glibc' 'hicolor-icon-theme' 'libgcc' 'libstdc++' 'qt6-base')
 makedepends=('qt6-tools' 'imagemagick')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('2d7edaa35f955741d35e4bef7c73f2b8bbb453c8c72890a52c048e8421966b2c')
+sha256sums=('634d721139c9042549cd8d41b01feb595c88e81029437cda780faea4a3201b08')
 
 prepare() {
 	sed -i 's/^Icon=.*/Icon=tux-manager/' "${_srcname}-${pkgver}/debian/tux-manager.desktop"
