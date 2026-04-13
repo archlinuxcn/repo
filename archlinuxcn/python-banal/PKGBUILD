@@ -10,12 +10,18 @@ arch=('any')
 url="https://github.com/pudo/${_pkgname}"
 depends=('python')
 makedepends=('python-build' 'python-installer' 'python-hatchling' 'python-wheel')
+checkdepends=('python-pytest')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=('2814ff0d8a92271dadc222afb4e17fc949413b105c20d7cfe5515f941cdda386')
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
 	python -m build --wheel --no-isolation
+}
+
+check() {
+	cd "${_pkgname}-${pkgver}/"
+	pytest
 }
 
 package() {
