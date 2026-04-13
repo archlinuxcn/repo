@@ -28,8 +28,5 @@ package() {
 	cd "${_pkgname}-${pkgver}/"
 	PYTHONHASHSEED=0 python -m installer --destdir="${pkgdir}" dist/*.whl
 	install -Dm644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
-
-	local _site="$(python -c 'import site; print(site.getsitepackages()[0])')"
-	install -d "${pkgdir}/usr/share/licenses/${pkgname}/"
-	ln -s "${_site}/${_pkgname}-${pkgver}.dist-info/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
