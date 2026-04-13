@@ -7,16 +7,15 @@ post_build_script: |
 #  update_aur_repo()
 
 update_on:
-  - source: "aur"
-    aur: "bottles"
-    prefix: "2:"
-    from_pattern: '-.*'
+  - source: aur
+    aur: bottles
+    prefix: '2:'
+    from_pattern: -.*
     to_pattern: ''
-  - alias: "python"
+  - alias: python
 build_prefix: extra-x86_64
 
 repo_depends:
-  - icoextract
   - patool
   - python-fvs
   - python-pathvalidate
