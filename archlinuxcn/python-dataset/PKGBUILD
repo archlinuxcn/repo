@@ -11,7 +11,7 @@ depends=(
 	'python-sqlalchemy'
 	'python-banal'
 )
-makedepends=('python-setuptools')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-hatchling')
 license=('MIT')
 arch=('any')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
@@ -19,10 +19,10 @@ sha256sums=('74c129f38da4f2e72c2708c6abce2217ca8d7e8d5358245ff0ca441bdbec68ea')
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
-	python setup.py build
+	python -m build --wheel --no-isolation
 }
 
 package() {
 	cd "${_pkgname}-${pkgver}/"
-	python setup.py install --root="${pkgdir}" --optimize=1
+	python -m installer --destdir="${pkgdir}" dist/*.whl
 }
