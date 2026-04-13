@@ -10,8 +10,8 @@ arch=('any')
 url="https://github.com/pudo/${_pkgname}"
 depends=('python')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
-source=("${pkgname}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/${_pkgname::1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
-sha256sums=('2fe02c9305f53168441948f4a03dfbfa2eacc73db30db4a93309083cb0e250a5')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('2814ff0d8a92271dadc222afb4e17fc949413b105c20d7cfe5515f941cdda386')
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
