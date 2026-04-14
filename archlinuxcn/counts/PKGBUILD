@@ -1,15 +1,15 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=counts
-pkgver=1.0.6
-pkgrel=3
+pkgver=1.0.7
+pkgrel=1
 pkgdesc="A tool for ad hoc profiling"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/nnethercote/${pkgname}"
 license=('Unlicense')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('4d3394b32afa98b91fd624a9c4df690d07fa1d6559cd87bb82a4bde6131fbc5f')
+sha256sums=('a5685538819838ba2fba0b78d11b5d80e37753b9015735f71f0c2065442fe9d8')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
