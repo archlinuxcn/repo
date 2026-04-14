@@ -1,7 +1,7 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=agsh
-pkgver=0.9.4
+pkgver=0.10.2
 pkgrel=1
 pkgdesc="An agentic shell where you speak human, not bash"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('glibc' 'libgcc' 'sqlite')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('7a3a058e7ca95d14cbcff85ac37cdfb59a39fbb04148d88b30597131f841749b')
+sha256sums=('f41812c180fb510648b280e58d3c0f3cc9512a05be4ea4049f648337cc7809a6')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
