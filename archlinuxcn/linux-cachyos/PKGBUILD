@@ -64,7 +64,13 @@
 ### Full tickless can give higher performances in various cases but, depending on hardware, lower consistency.
 : "${_tickrate:=full}"
 
-## Choose between full(low-latency), lazy, voluntary or none
+## Choose between full, lazy or dynamic
+# Dynamic allows you to switch between full and lazy at runtime
+# Full: Makes all non-critical kernel code preemptible to reduce latency
+# Lazy: Same as full but instead of preempting immediately it waits for signals from the scheduler
+#       in an attempt to boost throughput.
+#       In practice, this doesn't seem to perform well as both throughput and latency suffer
+#       compared to full.
 : "${_preempt:=full}"
 
 ### Transparent Hugepages
@@ -169,18 +175,14 @@ else
 fi
 
 pkgbase="linux-$_pkgsuffix"
-_major=6.19
-_minor=12
+_major=7.0
+_minor=0
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
 _tagrel=2
 pkgrel=1
-#_stable=${_major}.${_minor}
-_stable=${_major}
-#_stablerc=${_major}-${_rcver}
-_srctag=cachyos-${_major}.${_minor}-${_tagrel}
-_srcname=${_srctag}
+_srcname=cachyos-${_major}.${_minor}-${_tagrel}
 pkgdesc='Linux EEVDF + LTO + AutoFDO + Propeller Cachy Sauce Kernel by CachyOS with other patches and improvements.'
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
@@ -190,9 +192,13 @@ license=('GPL-2.0-only')
 options=('!strip' '!debug' '!lto')
 makedepends=(
   bc
+  binutils
   cpio
   gettext
+  glibc
   libelf
+  libgcc
+  openssl
   pahole
   perl
   python
@@ -200,7 +206,9 @@ makedepends=(
   rust-bindgen
   rust-src
   tar
+  xxhash
   xz
+  zlib
   zstd
 )
 
@@ -209,7 +217,7 @@ _nv_ver=595.58.03
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
-    "https://github.com/CachyOS/linux/releases/download/${_srctag}/${_srctag}.tar.gz"
+    "https://github.com/CachyOS/linux/releases/download/${_srcname}/${_srcname}.tar.gz"
     "config")
 
 # LLVM makedepends
@@ -232,13 +240,17 @@ fi
 # ZFS support
 if [ "$_build_zfs" = "yes" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=1c702dda346a59e05cfd3029569bbb1d5d91c54b")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=0829cf892b5d7b3a0e8aa76cc7aca02b84f62557")
 fi
 
 
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
-             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch")
+             "${_patchsource}/misc/nvidia/0002-Add-IBT-support.patch"
+             "${_patchsource}/misc/nvidia/0004-HACK-kernel-open-Makefile-Remove-PAHOLE_VARIABLE.patch"
+             "${_patchsource}/misc/nvidia/0003-fix-dsc-correct-RC-parameter-tables-to-match-VESA-DS.patch"
+             "${_patchsource}/misc/nvidia/0004-fix-dsc-use-bits_per_component-for-flatnessDetThresh.patch"
+             "${_patchsource}/misc/nvidia/0005-fix-dp-add-Bigscreen-Beyond-VR-headset-to-WAR-databa.patch")
 fi
 
 # Use generated AutoFDO Profile
@@ -392,10 +404,9 @@ prepare() {
     # We should not set up the PREEMPT for RT kernels
     if [[ "$_cpusched" != "rt" && "$_cpusched" != "rt-bore" ]]; then
         case "$_preempt" in
-            full) scripts/config -e PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -d PREEMPT_NONE;;
-            lazy) scripts/config -e PREEMPT_DYNAMIC -d PREEMPT -d PREEMPT_VOLUNTARY -e PREEMPT_LAZY -d PREEMPT_NONE;;
-            voluntary) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -e PREEMPT_VOLUNTARY -d PREEMPT_LAZY -d PREEMPT_NONE;;
-            none) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -d PREEMPT_VOLUNTARY -d PREEMPT_LAZY -e PREEMPT_NONE;;
+            full) scripts/config -d PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_LAZY;;
+            lazy) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -e PREEMPT_LAZY;;
+            dynamic) scripts/config -e PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_LAZY;;
             *) _die "The value '$_preempt' is invalid. Choose the correct one again.";;
         esac
 
@@ -463,9 +474,6 @@ prepare() {
         echo "Propeller profile has been found..."
         BUILD_FLAGS+=(CLANG_PROPELLER_PROFILE_PREFIX="${srcdir}/propeller")
     fi
-
-    echo "Enable USER_NS_UNPRIVILEGED"
-    scripts/config -e USER_NS
 
     ### Optionally use running kernel's config
     # code originally by nous; http://aur.archlinux.org/packages.php?ID=40191
@@ -615,7 +623,16 @@ _package() {
 
 _package-headers() {
     pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
-    depends=('pahole' "${pkgbase}")
+    depends=(binutils
+      glibc
+      libelf
+      libgcc
+      openssl
+      pahole
+      xxhash
+      zlib
+      zstd
+     "${pkgbase}")
     provides=(LINUX-HEADERS)
 
     if _is_lto_kernel; then
@@ -803,6 +820,6 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('fcc2e23cd0bc55ad638216e5326b8a823f6091bde09388b9933dda6be37237ffb9193d0bdc6d2540ce7d1bfc21ccb9b4901b86543c2c4c4c3aef761b1069c645'
-        'c5a9e9c21351a31201f790a6c2389938e593d9228043aa031897537d3da17a149886acb2de73fbb7c1e8ffecfd71bf548ca800ee87b02ca306b92bf38a4e74a8'
-        'ea26c88950fc06b6ffab93b30e3beacc7d26571a70262334ca8b001dc7899bf96b47d703fbaa7f4e47765c3dafccc23c58a4d4da2169b8ee50012afcb7a1dd96')
+b2sums=('40fefc434872c4ec8af8c780b2926d959ad74f1a3d94ad454d0f889caa67ab913cac3e5109f28c69c27acc4fc033c6c478128ba799447edbb207252923a63943'
+        'b247fa1ddea7d6124348fa66438715b1eb7afe279fd0d073cf9a366deecd322dbfea3843de0c61356f0d88b242cec42dbb6b2b2344d4ae9042335118c0c31e81'
+        'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')
