@@ -2,7 +2,7 @@
 
 pkgname=python-banal
 _pkgname="${pkgname#python-}"
-pkgver=1.1.0
+pkgver=1.1.2
 pkgrel=1
 pkgdesc="Commons of banal micro-functions for Python."
 license=('MIT')
@@ -12,7 +12,7 @@ depends=('python')
 makedepends=('python-build' 'python-installer' 'python-hatchling' 'python-wheel')
 checkdepends=('python-pytest')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('7d27957e582f20b72708f8db3f104ba3dba35c1d136737313a748b20a4fc06be')
+sha256sums=('4fa13afa462b7c601163fd5fa970c51ee24ebc8291c3fbc0598bdf2c2ed18a68')
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
