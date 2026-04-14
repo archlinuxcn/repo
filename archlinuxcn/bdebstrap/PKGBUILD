@@ -1,0 +1,45 @@
+# Maintainer: Jax Young <jaxvanyang@gmail.com>
+pkgname=bdebstrap
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="YAML config based multi-mirror Debian chroot creation tool"
+arch=('any')
+url="https://github.com/bdrung/bdebstrap"
+license=('ISC')
+depends=('mmdebstrap' 'python-ruamel-yaml' 'python' 'sh')
+makedepends=('python-setuptools' 'pandoc')
+checkdepends=(
+	'python-black'
+	'python-isort'
+	'python-pylint'
+	'flake8'
+	'shellcheck'
+	'mypy'
+	'python-types-setuptools'
+)
+optdepends=(
+	'debian-archive-keyring: Debian PKI support'
+	'ubuntu-keyring: Ubuntu PKI support'
+	'qemu-user-static: foreign-architecture support'
+	'qemu-user-static-binfmt: foreign-architecture support'
+	'arch-test: foreign-architecture support')
+source=(
+	"https://github.com/bdrung/bdebstrap/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz"
+)
+sha256sums=('48e81eb0e6513ec82fdf645dd628b13586191d32786dc09488cffa364fd3798a')
+
+build() {
+	cd "$pkgname-$pkgver"
+	python setup.py build
+}
+
+check() {
+	cd "$pkgname-$pkgver"
+	python -m unittest discover -v
+}
+
+package() {
+	cd "$pkgname-$pkgver"
+	python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
