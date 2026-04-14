@@ -3,7 +3,7 @@
 # Contributor: YuutaW <i@yuuta.moe>
 
 pkgname=rsshub-git
-pkgver=r16435.dd6e4e24f3
+pkgver=r16463.7cb1e37da9
 pkgrel=1
 pkgdesc="Everything is RSSible"
 # The built package bundles native Node.js extensions like OpenCC
@@ -49,6 +49,10 @@ build() {
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true pnpm install --store-dir "${srcdir}/pnpm-store"
 
     pnpm build
+
+    rm -rf node_modules/
+
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true pnpm install --store-dir "${srcdir}/pnpm-store" --prod
 
     rm -rf node_modules/.cache
 }
