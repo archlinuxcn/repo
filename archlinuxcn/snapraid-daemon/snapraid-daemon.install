@@ -1,0 +1,24 @@
+post_install() {
+    if [ -d /run/systemd/system ]; then
+        systemctl daemon-reload >/dev/null || true
+        systemctl enable snapraidd.service >/dev/null || true
+        systemctl restart snapraidd.service >/dev/null || true
+    fi
+}
+
+post_upgrade() {
+    post_install
+}
+
+pre_remove() {
+    if [ -d /run/systemd/system ]; then
+        systemctl --no-reload stop snapraidd.service >/dev/null || true
+        systemctl disable snapraidd.service >/dev/null || true
+    fi
+}
+
+post_remove() {
+    if [ -d /run/systemd/system ]; then
+        systemctl daemon-reload >/dev/null || true
+    fi
+}

@@ -1,0 +1,35 @@
+# Maintainer: Andrea Mazzoleni <amadvance@gmail.com>
+pkgname=snapraid-daemon
+pkgver=1.6
+pkgrel=1
+pkgdesc="A background service with a built-in Web UI that automates SnapRAID operations"
+arch=('x86_64')
+url="https://www.snapraid.it/"
+license=('GPL3')
+depends=('zlib' 'zstd' 'snapraid>=14.1' 'systemd')
+makedepends=('gcc' 'make')
+backup=('etc/snapraidd.conf')
+install="${pkgname}.install"
+source=("https://github.com/amadvance/${pkgname}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('849685564cecdc62f620bb3ee44a0e9a45fdbb756e198a1fff3d829de59b33cb')
+
+build() {
+  cd "$pkgname-$pkgver"
+  ./configure --prefix=/usr --sysconfdir=/etc --with-init-type=none
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+
+  # Add example config and docs
+  install -Dm644 snapraidd.conf.example "$pkgdir/usr/share/doc/$pkgname/snapraidd.conf.example"
+  install -m644 snapraidd.yaml AUTHORS HISTORY README "$pkgdir/usr/share/doc/$pkgname/"
+
+  # Ensure the config exists in /etc
+  install -Dm644 snapraidd.conf.example "$pkgdir/etc/snapraidd.conf"
+
+  # Arch Policy: License must also be in the license directory
+  install -Dm644 LICENSES/GPL-3.0 "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
