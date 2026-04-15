@@ -40,10 +40,10 @@ prepare() {
   sed -i '/^set(VCPKG_ROOT/d' CMakeLists.txt
 
   echo true > build/clone_vcpkg_from_baseline.sh # this script is executed by bash (not using shebang)
-  sed -i '/IMPORTED_TARGET libcrypto++/s/++/pp/' sdk/cmake/modules/sdklib_libraries.cmake
+  sed -i '/IMPORTED_TARGET libcrypto++/s/++/pp/' src/sdk/cmake/modules/sdklib_libraries.cmake
 
   # Fix ICU linking - https://github.com/meganz/sdk/pull/2768
-  patch -Np1 -d "${srcdir}/sdk-${_sdkhash}" -i "${srcdir}/fix-icu-linking.patch"
+  patch -Np1 -d src/sdk -i "${srcdir}/fix-icu-linking.patch"
 
   # Remove hardcoded install paths that break build-time options
   sed -i \
