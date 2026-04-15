@@ -16,10 +16,10 @@ stateDirectory = "Foliate_Data"
 # The exec section defines how the underlying process is started.
 [exec]
 # target defines the program to start.
-target = "env"
+target = "foliate"
 
 # arguments holds an array of arguments passed to the application, this is also used when starting secondary instances.
-arguments = ["gtk4-demo", "--run=video_player"]
+arguments = []
 
 # D-Bus activation works by installing a service under /usr/share/dbus-1/services. It is used by UnifiedPush to process notifications without showing a window. You should modify the activation cmdline to call portable with "--dbus-activation".
 [busActivation]
@@ -65,7 +65,7 @@ filterDest = ["private"]
 # The privacy section defines several device exposure preference. By default, Portable does not allow apps to see physical devices. This includes discrete GPUs when gameMode is off, input devices, cameras, and all other PCI devices.
 [privacy]
 # When false, prevents application from connecting to X server on Wayland. Defaults to true.
-x11 = true
+x11 = false
 
 # When false, prevents application from connecting to legacy notifications endpoint. Defaults to true.
 classicNotifications = true
