@@ -7,13 +7,29 @@ pkgrel=1
 pkgdesc="MEGA Command Line Interactive and Scriptable Application"
 url="https://github.com/meganz/MEGAcmd"
 arch=('x86_64')
-license=('custom')
-depends=('crypto++' 'sqlite' 'c-ares' 'libsodium' 'pcre' 'libuv' 'fuse2')
+license=('LicenseRef-megacmd')
+depends=(
+  'crypto++'
+  'curl'
+  'icu'
+  'libsodium'
+  'libuv'
+  'openssl'
+  'pcre'
+  'readline'
+  'sqlite'
+  'zlib'
+  'fuse2'
+  'libgcc'
+  'libstdc++'
+)
 makedepends=('cmake' 'git')
 source=("git+https://github.com/meganz/MEGAcmd.git#tag=${pkgver}_Linux"
-        "git+https://github.com/meganz/sdk.git")
+        "git+https://github.com/meganz/sdk.git"
+        "fix-icu-linking.patch::https://github.com/meganz/sdk/pull/2768.patch")
 sha512sums=('da7147ccf5b064702f80baee55c62cef99a1c344f026fb4196952998be92a3a2a88a4d4250c33aae13141c2597f12bbebcb0cb047f2ad81c34b8d5ae392c1d57'
-            'SKIP')
+            'SKIP'
+            '2d720030596a9721a2e6ad9d426d3de9a1f2a625438e2b7df0e7363ffb0178097c87d9ee7b4e36ef0277ced78b754564517fd73ca4502a8723fa8132a1b37810')
 
 prepare() {
   cd MEGAcmd
@@ -22,16 +38,26 @@ prepare() {
   git -c protocol.file.allow=always submodule update
 
   sed -i '/^set(VCPKG_ROOT/d' CMakeLists.txt
+
   echo true > build/clone_vcpkg_from_baseline.sh # this script is executed by bash (not using shebang)
   sed -i '/IMPORTED_TARGET libcrypto++/s/++/pp/' sdk/cmake/modules/sdklib_libraries.cmake
+
+  # Fix ICU linking - https://github.com/meganz/sdk/pull/2768
+  patch -Np1 -d "${srcdir}/sdk-${_sdkhash}" -i "${srcdir}/fix-icu-linking.patch"
+
+  # Remove hardcoded install paths that break build-time options
+  sed -i \
+    '/set(CMAKE_INSTALL_LIBDIR "opt\/megacmd\/lib")/d; /set(CMAKE_INSTALL_BINDIR "usr\/bin")/d' \
+    CMakeLists.txt
+
+  # Fix PCRE and ZLib linking
+  sed -i '/target_link_libraries(LMegacmdServer PUBLIC MEGA::SDKlib LMEGAcmdCommonUtils)/a target_link_libraries(LMegacmdServer PUBLIC pcrecpp z)' CMakeLists.txt
 }
 
 build() {
   cd MEGAcmd
 
   mkdir ../builddir
-  # https://github.com/meganz/MEGAcmd/issues/1041
-  export LDFLAGS="-lpcrecpp -lz"
   # -DCMAKE_BUILD_TYPE=None => https://github.com/meganz/sdk/issues/2679
   cmake -B ../builddir -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUSE_FREEIMAGE=no -DUSE_PDFIUM=no -DFULL_REQS=off
   cmake --build ../builddir
@@ -48,12 +74,19 @@ package() {
   rm -rf ${pkgdir}/etc/
   install -Dm644 src/client/megacmd_completion.sh ${pkgdir}/usr/share/bash-completion/completions/${pkgname}
 
+  # Add completions for sub-commands
   for completion_cmd in ${pkgdir}/usr/bin/mega*;
   do
     completion_cmd=$(basename "$completion_cmd")
     ln -s "${pkgname}" "${pkgdir}/usr/share/bash-completion/completions/$completion_cmd"
   done
 
+  # Documentation
+  install -Dm644 README.md UserGuide.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+  install -Dm644 contrib/docs/*.md -t "${pkgdir}/usr/share/doc/${pkgname}/docs/"
+  install -Dm644 contrib/docs/commands/*.md -t "${pkgdir}/usr/share/doc/${pkgname}/docs/commands/"
+
+  # License
   install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
 
