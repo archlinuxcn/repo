@@ -55,23 +55,28 @@ prepare() {
 }
 
 build() {
-  cd MEGAcmd
-
-  mkdir ../builddir
-  # -DCMAKE_BUILD_TYPE=None => https://github.com/meganz/sdk/issues/2679
-  cmake -B ../builddir -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUSE_FREEIMAGE=no -DUSE_PDFIUM=no -DFULL_REQS=off
-  cmake --build ../builddir
+  local cmake_options=(
+    -B build
+    -S MEGAcmd
+    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo # None does not work: https://github.com/meganz/sdk/issues/2679
+    -DUSE_FREEIMAGE=no
+    -DUSE_PDFIUM=no
+    -DFULL_REQS=off
+  )
+  cmake "${cmake_options[@]}"
+  cmake --build build
 }
 
 package() {
+  DESTDIR="${pkgdir}" cmake --install build
   cd MEGAcmd
 
-  DESTDIR="${pkgdir}" cmake --install ../builddir
+  # Remove unnecessary /usr/lib dir containing symlinks
+  rm -rf ${pkgdir}/usr/lib
 
-  rm -rf ${pkgdir}/opt/
-
-  # change completions location
-  rm -rf ${pkgdir}/etc/
+  # Fix completions location (/usr/etc/bash_completions.d/ -> /usr/share/bash-completion/completions)
+  rm -rf ${pkgdir}/usr/etc/
   install -Dm644 src/client/megacmd_completion.sh ${pkgdir}/usr/share/bash-completion/completions/${pkgname}
 
   # Add completions for sub-commands
@@ -82,9 +87,8 @@ package() {
   done
 
   # Documentation
-  install -Dm644 README.md UserGuide.md -t "${pkgdir}/usr/share/doc/${pkgname}/"
+  install -Dm644 README.md UserGuide.md build/megacmd/megacmd.changes -t "${pkgdir}/usr/share/doc/${pkgname}/"
   install -Dm644 contrib/docs/*.md -t "${pkgdir}/usr/share/doc/${pkgname}/docs/"
-  install -Dm644 contrib/docs/commands/*.md -t "${pkgdir}/usr/share/doc/${pkgname}/docs/commands/"
 
   # License
   install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
