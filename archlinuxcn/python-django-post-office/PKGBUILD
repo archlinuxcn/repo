@@ -1,7 +1,7 @@
 _name=django-post-office
 pkgname=python-django-post-office
-pkgver=3.10.1
-pkgrel=2
+pkgver=3.11.1
+pkgrel=1
 pkgdesc="A Django app to monitor and send mail asynchronously, complete with template support."
 arch=(any)
 url="https://github.com/ui/django-post_office"
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('python-django-jsonfield')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools-scm')
 source=("https://github.com/ui/django-post_office/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('ce497d2faed6d502967d06f04fa723af12cca457492924da25f30f4240b04f8e')
+sha256sums=('50d5a2eb8c9cb91b7df4b530fa5b8b822fbb4b98333ff8a24e805a5143b56965')
 
 build() {
   cd "$srcdir/django-post_office-${pkgver}"
