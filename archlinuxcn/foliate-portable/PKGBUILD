@@ -1,0 +1,43 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=foliate-portable
+pkgver=50.3
+pkgrel=1
+epoch=1
+pkgdesc="The eBook reader sandboxed by portable, avoids dGPU wakeups"
+arch=('x86_64')
+url="https://github.com/Kraftland/portable"
+license=('GPL-3.0-or-later')
+groups=()
+provides=(foliate)
+options=(!debug !strip)
+conflicts=(foliate)
+
+optdepends=()
+
+makedepends+=(epiphany)
+
+checkdepends=()
+
+source=(
+	config.toml
+	desktop.file
+)
+
+
+md5sums=('b8cb38d132d285f3984b637a74eb66f1'
+         'fda14d915b1125e15eb9623c33022827')
+function package() {
+	depends+=("portable" gjs  gtk4  libadwaita  webkitgtk-6.0)
+	install -vDm755 /usr/bin/foliate -t "${pkgdir}/usr/lib/portable/overlay-usr"
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy foliate \
+		--hash true \
+		--config-ng "${srcdir}/config.toml" \
+		--desktop-file "${srcdir}/desktop.file"
+}
