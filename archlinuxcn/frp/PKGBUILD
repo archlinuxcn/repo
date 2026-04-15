@@ -4,7 +4,7 @@
 pkgbase='frp'
 pkgname=('frpc' 'frps')
 pkgver=0.68.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 license=('Apache-2.0')
@@ -21,10 +21,10 @@ source=(
 )
 
 sha512sums=('714199ad4e9bfd917574fe4f3535caca430cca040b39ef39f32511356d9ec63b79e1bd97e57cdd0359e5019e64bdacc249d57943da80282b0ce1cfe5b6a8599c'
-            'c9d7c4b24faf7c086a6fd1ca96e345c43fece1dbebe33c8c1bcd8fb12d11c57274d33ad0d197ff874498605ab23d46453890054a643cfa9fec8d8b19e5b0121c'
-            'b90edfeeed262472a09fb39beb9c51894ab4b7d61979e878607b201f8ee9463c5ce656e62713cf2108a1bd1d9cf12146d26e1f97760b3d8a07c5be8bed7e693a'
-            '90d326d7103301c518f84673ea80650adeb18a154c64bc8daf487bdfa6936525fc42fcc8e0db70cc50df9bae6d3dfdeebec79333bf62e3d079aa8453483db395'
-            'b8f9c75893bede053d9d6b1e9e9c596168006d4c92edffa7b2824e7c865e508705c66e879984375e59348b7c83e8438aedff4fab624e06c4e3b25e7ebc5add52')
+  'c9d7c4b24faf7c086a6fd1ca96e345c43fece1dbebe33c8c1bcd8fb12d11c57274d33ad0d197ff874498605ab23d46453890054a643cfa9fec8d8b19e5b0121c'
+  'b90edfeeed262472a09fb39beb9c51894ab4b7d61979e878607b201f8ee9463c5ce656e62713cf2108a1bd1d9cf12146d26e1f97760b3d8a07c5be8bed7e693a'
+  '90d326d7103301c518f84673ea80650adeb18a154c64bc8daf487bdfa6936525fc42fcc8e0db70cc50df9bae6d3dfdeebec79333bf62e3d079aa8453483db395'
+  'b8f9c75893bede053d9d6b1e9e9c596168006d4c92edffa7b2824e7c865e508705c66e879984375e59348b7c83e8438aedff4fab624e06c4e3b25e7ebc5add52')
 
 build() {
   cd "${pkgbase}-${pkgver}"
@@ -42,12 +42,12 @@ _packaging() {
   install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/${1}.toml ${pkgdir}/etc/frp/${1}.toml
   install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/conf/${1}_full_example.toml ${pkgdir}/etc/frp/${1}_full_example.toml
 
-  install -Dm644 ${srcdir}/${1}.service  ${pkgdir}/usr/lib/systemd/system/${1}.service
-  install -Dm644 ${srcdir}/${1}@.service  ${pkgdir}/usr/lib/systemd/system/${1}@.service
+  install -Dm644 ${srcdir}/${1}.service ${pkgdir}/usr/lib/systemd/system/${1}.service
+  install -Dm644 ${srcdir}/${1}@.service ${pkgdir}/usr/lib/systemd/system/${1}@.service
 }
 
 package_frpc() {
-  _name=`echo ${FUNCNAME} | cut -d _ -f 2`
+  _name=$(echo ${FUNCNAME} | cut -d _ -f 2)
   conflicts=('frp')
   backup=("etc/frp/${_name}.toml" "etc/frp/${_name}_full_example.toml")
 
@@ -55,7 +55,7 @@ package_frpc() {
 }
 
 package_frps() {
-  _name=`echo ${FUNCNAME} | cut -d _ -f 2`
+  _name=$(echo ${FUNCNAME} | cut -d _ -f 2)
   conflicts=('frp')
   backup=("etc/frp/${_name}.toml" "etc/frp/${_name}_full_example.toml")
 

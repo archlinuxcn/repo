@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=nobody
+DynamicUser=yes
 Restart=on-failure
 RestartSec=5s
 ExecStart=/usr/bin/frps -c /etc/frp/%i.toml
