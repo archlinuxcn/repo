@@ -14,7 +14,7 @@ conflicts=("${pkgname}-git" "${pkgname}-bin" "${pkgname}-appimage" "${pkgname}-r
 provides=("${pkgname}")
 options=('!debug')
 depends=("electron${_electronversion}" 'libvips' 'libgomp' 'openjpeg2' 'vulkan-driver' 'vulkan-icd-loader' 'bash' 'hicolor-icon-theme')
-makedepends=('npm' 'nodejs-lts-iron' 'patchelf' 'imagemagick' 'librsvg' 'fdupes')
+makedepends=('npm' 'nodejs-lts-iron' 'patchelf' 'imagemagick' 'librsvg')
 source=(
     "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
     "fix-wayland-wmclass.patch"
@@ -59,7 +59,6 @@ build() {
     NODE_ENV=production     npm run tsc
     NODE_ENV=production     npm run build
 
-    fdupes node_modules
     pushd node_modules
 
     # pure frontend UI libraries that already bundled by Next.js
