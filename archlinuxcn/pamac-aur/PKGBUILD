@@ -5,14 +5,14 @@ ENABLE_FAKE_GNOME_SOFTWARE=0
 
 pkgname=pamac-aur
 pkgver=11.7.4
-pkgrel=2
+pkgrel=3
 _pkgfixver=$pkgver
 _pkgfixvercli=11.7.4
 _pkgrelcli=2
 
-_commit='188905011b64f385c72c5c8f795237bf894390fa'
+_commit='d89152fdce6445dacd7cfc653a9eaabff364773b'
 _commitcli='1ce8a93aeeae71244ecec6d257daae5eea3f3fc4'
-sha256sums=('64279615b249aa9d663aa9084b618141dacae83af1a58bc1764cea57b60c77ab'
+sha256sums=('196031277585684d3c90678a768737af9b8f79feda31607e12fe74c5b2d9d87d'
             'e826479979fcc7818385bb146eb1e9f946bb5543489d9a2b671a2ce45ca31a8d')
 
 pkgdesc="A Gtk frontend, Package Manager based on libalpm with AUR and Appstream support"
@@ -37,6 +37,7 @@ if [ "${ENABLE_FAKE_GNOME_SOFTWARE}" = 1 ]; then
   conflicts+=('pamac-gnome-integration' 'pamac-gnome-integration-dev' 'gnome-software')
   define_meson+=' -Denable-fake-gnome-software=true'
 fi
+define_meson+=' -Djemalloc=false'
 
 _srcdir="pamac-$_commit"
 _srcdircli="pamac-cli-$_commitcli"
