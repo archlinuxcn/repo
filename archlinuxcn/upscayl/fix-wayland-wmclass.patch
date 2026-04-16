@@ -1,0 +1,12 @@
+diff --git a/electron/index.ts b/electron/index.ts
+index 64b75fd..7aff20c 100644
+--- a/electron/index.ts
++++ b/electron/index.ts
+@@ -26,6 +26,7 @@ import path from "path";
+ log.initialize({ preload: true });
+ 
+ app.on("ready", async () => {
++  (app as any).setDesktopName("upscayl.desktop");
+   await prepareNext("./renderer");
+ 
+   app.whenReady().then(() => {
