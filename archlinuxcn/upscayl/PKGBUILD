@@ -40,7 +40,7 @@ prepare() {
     # Fix the window title bar icon
     patch -Np1 -i "${srcdir}/fix-wayland-wmclass.patch"
 
-	export npm_config_cache="$srcdir/npm_cache"
+    export npm_config_cache="$srcdir/npm_cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
 
@@ -102,16 +102,16 @@ build() {
     rm -f export/build/icon.icns
 
     find node_modules -name '*.map' -type f -print -delete
-	find node_modules -name '*.ts' -type f -print -delete
-	find node_modules -name Makefile -type f -print -delete
-	find node_modules -name '*.yml' -type f -print -delete
-	find node_modules -name '*.md' -type f -print -delete
+    find node_modules -name '*.ts' -type f -print -delete
+    find node_modules -name Makefile -type f -print -delete
+    find node_modules -name '*.yml' -type f -print -delete
+    find node_modules -name '*.md' -type f -print -delete
 
-	find node_modules -type d -name 'docs' -prune -exec rm -rf {} +
-	find node_modules -type d -name 'test-utils' -prune -exec rm -rf {} +
-	find node_modules -type d -name '__tests__' -prune -exec rm -rf {} +
+    find node_modules -type d -name 'docs' -prune -exec rm -rf {} +
+    find node_modules -type d -name 'test-utils' -prune -exec rm -rf {} +
+    find node_modules -type d -name '__tests__' -prune -exec rm -rf {} +
 
-	find . -type d -empty -print -delete
+    find . -type d -empty -print -delete
 
     NODE_ENV=production     npm exec -c "electron-builder --linux dir -c.electronDist=${electronDist} -c.electronVersion=${SYSTEM_ELECTRON_VERSION}"
 
