@@ -135,6 +135,8 @@ build() {
     find -type d -name 'tests' -prune -exec rm -rf {} +
     find -type d -name '__tests__' -prune -exec rm -rf {} +
 
+    find . -type d -empty -print -delete
+
     popd
 
     NODE_ENV=production     yarn electron-builder --linux dir -c.electronDist="${electronDist}"
