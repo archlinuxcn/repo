@@ -2,8 +2,8 @@
 
 pkgname=kicad-hq
 _name=${pkgname%-hq}
-pkgver=10.0.0
-pkgrel=2
+pkgver=10.0.1
+pkgrel=1
 pkgdesc="Electronic schematic and printed circuit board (PCB) design tools"
 arch=('x86_64')
 url="https://gitlab.com/${pkgname}/${_name}"
@@ -59,7 +59,7 @@ optdepends=(
 	'kicad-library-3d: KiCad 3D model libraries'
 )
 source=("${url}/-/archive/${pkgver}/${_name}-${pkgver}.tar.gz")
-sha256sums=('d11173fd0e39245e57c2e680ddfcda5542aecf423fd6c13f9501228b18b74b84')
+sha256sums=('d5b3e3ab4833f013bef6fdb7a13a8a1b28ec84f5865837c84e366aaa35a48f19')
 
 build() {
 	cmake -B build \
