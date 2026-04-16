@@ -24,7 +24,7 @@ source=(
 sha256sums=('566a7882fb95a8722c00f00a248139e2426fa299ae7cae4fe3f0c35280f5e21e'
             '361a644aef5aed1f5820f26917db04de9ac111bf828894048a99040822472b38'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980'
-            'efa6be3613767cf6c19931b97bb439b97ca7b475491b61770cf40fbd7ca88674')
+            'd047f2ea25b9e93772e450cac1b5e5221ead0f63eb8c42ec3094e2f24e3dad14')
 
 prepare() {
     sed -e "
@@ -102,9 +102,10 @@ build() {
 
     find -name '*.map' -type f -print -delete
     find -name '*.ts' -type f -print -delete
-    find -name Makefile -type f -print -delete
     find -name '*.yml' -type f -print -delete
     find -name '*.md' -type f -print -delete
+    find -name test.js -type f -print -delete
+    find -name Makefile -type f -print -delete
 
     find -type d -name 'docs' -prune -exec rm -rf {} +
     find -type d -name 'test-utils' -prune -exec rm -rf {} +
