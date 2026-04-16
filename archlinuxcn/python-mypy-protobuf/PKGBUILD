@@ -1,5 +1,5 @@
 pkgname=python-mypy-protobuf
-pkgver=4.0.0
+pkgver=5.0.0
 pkgrel=1
 
 pkgdesc='Generate mypy stub files from protobuf specs'
@@ -12,7 +12,7 @@ makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools
 
 source=("source::git+${url}.git#tag=v${pkgver}")
 
-sha256sums=('af114c760e70f3ae5d4f7c302deb4a71aee08ad26402d81034ad4bac06fd780f')
+sha256sums=('386ac35614669e5744b5dae76f62954079af22e444deec4b72250a6c1f88238b')
 
 build() {
 	cd source
