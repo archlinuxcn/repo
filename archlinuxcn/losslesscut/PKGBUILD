@@ -8,47 +8,23 @@ pkgver=3.68.0
 _electronversion=38
 _nodeversion=22
 pkgrel=4
-pkgdesc="The swiss army knife of lossless video/audio editing.Using system-wide ffmpeg.(Use system-wide electron)"
+pkgdesc="The swiss army knife of lossless video/audio editing"
 arch=('x86_64')
 url="https://github.com/mifi/${_reponame}"
 license=('GPL-2.0-only')
-conflicts=(
-    "${pkgname}-git"
-    "${pkgname}-bin"
-)
-provides=(
-    "${pkgname}"
-)
-depends=(
-    "electron${_electronversion}"
-    'ffmpeg'
-)
-makedepends=(
-    'nvm'
-    'npm'
-    'yarn'
-    'jq'
-)
+conflicts=("${pkgname}-git" "${pkgname}-bin")
+depends=("electron${_electronversion}" 'ffmpeg' 'bash' 'hicolor-icon-theme')
+makedepends=('nodejs-lts-jod' 'npm' 'yarn' 'node-gyp' 'imagemagick' 'librsvg')
 source=(
     "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+    "fix-wayland-wmclass.patch"
     "${pkgname}.sh"
 )
 sha256sums=('b4b2e0d4ba06de0243dfa3be5ec964b28f6c694c412487143b9c68d54b94fbb0'
+            '5854853fb487b8c5e659b943b317f7670c2d038839075182ac8db988ddb7ba61'
             '31ad33b633744f5361abd964be306cea53ae1050e760c787115f7eca60045ae6')
-_ensure_local_nvm() {
-    local NVM_DIR="${srcdir}/.nvm"
-    source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
-    nvm install "${_nodeversion}"
-    nvm use "${_nodeversion}"
-}
-_get_electron_version() {
-    _elec_ver=$(jq -r '.devDependencies["electron"] // .dependencies["electron"]' "package.json" | tr -d '^')
-    _main_ver=$(echo "${_elec_ver}" | cut -d. -f1)
-    echo -e "The electron version is: \033[1;31m${_main_ver}\033[0m"
-}
+
 prepare() {
-    cd "${srcdir}/${_reponame}-${pkgver}"
-    _get_electron_version
     sed -i -e "
         s/@electronversion@/${_electronversion}/g
         s/@appname@/${pkgname}/g
@@ -56,11 +32,18 @@ prepare() {
         s/@cfgdirname@/${_pkgname}/g
         s/@options@//g
     " "${srcdir}/${pkgname}.sh"
+
+    cd "${srcdir}/${_reponame}-${pkgver}"
+
+    # Fix the window title bar icon
+    patch -Np1 -i "${srcdir}/fix-wayland-wmclass.patch"
+
+    export npm_config_cache="$srcdir/npm_cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
     HOME="${srcdir}/.electron-gyp"
     mkdir -p "${srcdir}/.electron-gyp"
-    _ensure_local_nvm
+
     find src -type f -exec sed -i "s/process.resourcesPath/\'\/usr\/lib\/${pkgname}\'/g" {} +
     sed -e "
         s/\/app\/bin\/run.sh/${pkgname}/g;
@@ -68,26 +51,118 @@ prepare() {
     " -i "${_appname}.desktop"
     sed -i "s/${_appname}/${pkgname}/g" "${_appname}.appdata.xml"
     sed -i "s/\"electron\": \"[^\"]*\"/\"electron\": \"${SYSTEM_ELECTRON_VERSION}\"/g" package.json
+
     yarn config set --home enableTelemetry 0
-    NODE_ENV=development    yarn add node-gyp
     NODE_ENV=development    yarn install
 }
+
 build() {
     cd "${srcdir}/${_reponame}-${pkgver}"
-    _ensure_local_nvm
+
+    export npm_config_cache="$srcdir/npm_cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export HOME="${srcdir}/.electron-gyp"
     local electronDist="/usr/lib/electron${_electronversion}"
+
     NODE_ENV=production     yarn run build
+
+    find -name '*.map' -type f -print -delete
+
+    pushd node_modules
+
+    # Compilation toolchains, type definitions, and browser compatibility data
+    rm -rf @babel
+    rm -rf @types
+    rm -rf browserslist
+    rm -rf caniuse-lite
+    rm -rf node-gyp
+    rm -rf typescript
+
+    # Linting, AST parsers, code analysis, and their underlying utilities
+    rm -rf @aashutoshrathi
+    rm -rf @eslint
+    rm -rf @humanwhocodes
+    rm -rf acorn
+    rm -rf acorn-jsx
+    rm -rf doctrine
+    rm -rf eslint*
+    rm -rf espree
+    rm -rf esquery
+    rm -rf estraverse
+    rm -rf esutils
+    rm -rf file-entry-cache
+    rm -rf flat-cache
+    rm -rf globals
+    rm -rf graphemer
+    rm -rf hermes-estree
+    rm -rf hermes-parser
+    rm -rf ignore
+    rm -rf jsx-ast-utils
+    rm -rf levn
+    rm -rf optionator
+    rm -rf prelude-ls
+    rm -rf regexp-tree
+    rm -rf text-table
+    rm -rf type-check
+
+    # Testing frameworks and accessibility (A11y) automation testing tools
+    rm -rf aria-query
+    rm -rf axe-core
+    rm -rf axobject-query
+    rm -rf jest*
+    rm -rf mocha*
+
+    # Polyfills and old syntax shims
+    rm -rf es-abstract
+    rm -rf es-iterator-helpers
+    rm -rf *.prototype.*
+
+    find -name '*.gypi' -type f -print -delete
+    find -name '*.ts' -type f -print -delete
+    find -name '*.js.flow' -type f -print -delete
+    find -name '*.cts' -type f -print -delete
+    find -name '*.yml' ! -name '.yarn-state.yml' -type f -print -delete
+    find -name '*.md' -type f -print -delete
+    find -name '*.markdown' -type f -print -delete
+    find -name .editorconfig -type f -print -delete
+    find -name .nycrc -type f -print -delete
+    find -name test.js -type f -print -delete
+    find -name tsconfig.json -type f -print -delete
+    find -name Makefile -type f -print -delete
+
+    find -type d -name 'doc' -prune -exec rm -rf {} +
+    find -type d -name 'docs' -prune -exec rm -rf {} +
+    find -type d -name 'benchmarks' -prune -exec rm -rf {} +
+    find -type d -name 'tests' -prune -exec rm -rf {} +
+    find -type d -name '__tests__' -prune -exec rm -rf {} +
+
+    popd
+
     NODE_ENV=production     yarn electron-builder --linux dir -c.electronDist="${electronDist}"
+
+    for res in 16 32 48 64 128 256 512 1024; do
+        mkdir -p "icons-build/${res}x${res}"
+        magick -background none "src/renderer/src/icon.svg" -resize "${res}x${res}" "icons-build/${res}x${res}/${pkgname}.png"
+    done
 }
+
 package() {
+    cd "${srcdir}/${_reponame}-${pkgver}"
+
     install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
-    install -Dm644 "${_reponame}-${pkgver}/dist/linux-unpacked/resources/app.asar" -t "${pkgdir}/usr/lib/${pkgname}"
-    cp -r "${_reponame}-${pkgver}/dist/linux-unpacked/resources/locales" "${pkgdir}/usr/lib/${pkgname}/"
+
+    install -Dm644 "dist/linux-unpacked/resources/app.asar" -t "${pkgdir}/usr/lib/${pkgname}"
+    cp -r "dist/linux-unpacked/resources/locales" "${pkgdir}/usr/lib/${pkgname}/"
+
     ln -sf "/usr/bin/ffmpeg" "${pkgdir}/usr/lib/${pkgname}/ffmpeg"
     ln -sf "/usr/bin/ffprobe" "${pkgdir}/usr/lib/${pkgname}/ffprobe"
-    install -Dm644 "${_reponame}-${pkgver}/icon-build/app-512.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-    install -Dm644 "${_reponame}-${pkgver}/${_appname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
-    install -Dm644 "${_reponame}-${pkgver}/${_appname}.appdata.xml" "${pkgdir}/usr/share/metainfo/${pkgname}.appdata.xml"
+
+    install -vDm644 "src/renderer/src/icon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+    for res in 16 32 48 64 128 256 512 1024; do
+        install -Dm644 "icons-build/${res}x${res}/${pkgname}.png" \
+            "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${pkgname}.png"
+    done
+
+    install -Dm644 "${_appname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+    install -Dm644 "${_appname}.appdata.xml" "${pkgdir}/usr/share/metainfo/${pkgname}.appdata.xml"
 }

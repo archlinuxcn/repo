@@ -1,0 +1,12 @@
+diff --git a/src/main/index.ts b/src/main/index.ts
+index 9144dda..916330d 100644
+--- a/src/main/index.ts
++++ b/src/main/index.ts
+@@ -50,6 +50,7 @@ remote.initialize();
+ 
+ 
+ app.name = appName;
++app.setDesktopName("losslesscut.desktop");
+ 
+ if (isWindows) {
+   // in order to set the title on OS notifications on Windows, this needs to be set to app.name
