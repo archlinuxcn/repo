@@ -1,9 +1,9 @@
 # Maintainer: Aleksej Kovura <aur-b1a3 at mekboy dot ru>
 
 pkgname=organicmaps
-pkgver=2026.03.12_2
+pkgver=2026.04.07_8
 _tag="${pkgver%%_*}-${pkgver##*_}-android"
-pkgrel=3
+pkgrel=1
 pkgdesc="Organic Maps: Offline Hike, Bike, Trails and Navigation"
 arch=(x86_64)
 makedepends=(cmake git jq gcc ninja mold)
