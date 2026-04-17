@@ -72,6 +72,7 @@ build() {
 	      -D KICAD_BUILD_I18N=ON \
 	      -D KICAD_I18N_UNIX_STRICT_PATH=ON \
 	      -D KICAD_BUILD_QA_TESTS=OFF \
+	      -D KICAD_UPDATE_CHECK=OFF \
 	      -W no-dev
 
 	cmake --build build
