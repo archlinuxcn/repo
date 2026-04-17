@@ -1,0 +1,87 @@
+# Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>    
+# Contributor: Jaja <jaja@mailbox.org>
+# Contributor: floriplum <floriplum@mailbox.org>
+# Contributor: various people submitting to 'chaotic-aur' repo
+# Contributor: barfin (aka RogueGirl) <barfin@protonmail.com>
+
+pkgname=proton-ge-custom-bin
+pkgdesc='A fancy custom distribution of Valves Proton with various patches'
+url='https://github.com/GloriousEggroll/proton-ge-custom'
+pkgver=10.34
+pkgrel=1
+arch=('x86_64')
+_tag="GE-Proton${pkgver//./-}"
+_pkgname="${pkgname//-bin/}"
+license=('BSD-3-Clause AND LGPL-2.1-or-later AND Zlib AND MIT AND MPL-2.0 AND OFL-3.0 AND LicenseRef-STEAMWORKS-SDK-license')
+changelog=changelog.md
+provides=(
+  'proton'
+  "proton-ge-custom=${pkgver}"
+)
+conflicts=(
+  'proton-ge-custom'
+)
+makedepends=(
+  'python-vdf'
+)
+depends=(
+  'python'
+)
+optdepends=(
+  'openal'		'lib32-openal'
+  'vkd3d'		'lib32-vkd3d'
+  # libav support #
+  'libva'		'lib32-libva'
+  'speex'		'lib32-speex'
+  'libtheora'		'lib32-libtheora'
+  'libvdpau'		'lib32-libvdpau'
+  # gstreamer support #
+  'gst-plugins-bad-libs'  'lib32-gst-plugins-base-libs'
+  'libjpeg-turbo'       'lib32-libjpeg-turbo'
+  'graphene'
+  'libgudev'		'lib32-libgudev'
+  'mpg123'		'lib32-mpg123'
+  'libsoup'
+  # other libs #
+  'openssl'		'lib32-openssl'
+  'libusb'		'lib32-libusb'
+  # other #
+  'kdialog: KDE splash dialog support'
+  'zenity: GNOME splash dialog support'
+  'python-kivy: splash dialog support (big picture mode)'
+  'steam: use proton with steam like intended'
+  'vulkan-icd-loader: dxvk dependency'
+  'lib32-vulkan-icd-loader: dxvk dependency for 32bit prefixes'
+  'vulkan-driver: driver to be used by dxvk'
+  'winetricks: protonfixes backend'
+  'xboxdrv: gamepad driver service'
+)
+options=(emptydirs pestrip)
+
+source=(
+  "${pkgname}_${_tag}.tar.gz::${url}/releases/download/${_tag}/${_tag}.tar.gz"
+  'deversionized.py'
+)
+b2sums=('4d7b1aae7768c7d5e3b1efc939da9ab511548f0c24c581edcdd156b4188ace592af172b8ca016a943af5d7162bd37a56098f78ada44ef447a84f66f38969e411'
+        'a07fd87e91df85ca5441396b1e94c94474526bf932389aca9edc60fcd0e8343dc42159577172d66f37e39f6b5fa6efe0929165742f6c4fafb49c3da8112884c1')
+
+build() {
+  pushd "${_tag}"
+    python "${srcdir}/deversionized.py"
+    sed -i 's/^\s+"[A-Z_]+": ".*",\s*$/#&/g' user_settings.sample.py
+  popd
+}
+
+package() {
+  _protondir="usr/share/steam/compatibilitytools.d/${_pkgname}"
+  install -d "${pkgdir}/${_protondir}/"
+  pushd "${_tag}"
+    install -v -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" \
+      LICENSE \
+      LICENSE.OFL \
+      PATENTS.AV1
+    install -v -Dm644 user_settings.sample.py "${pkgdir}/etc/proton/Proton-GE/user_settings.py"
+    cp -v -rf --no-dereference --reflink=auto --preserve=mode,links * "${pkgdir}/${_protondir}"
+    ln -v -s -r "${pkgdir}/etc/proton/Proton-GE/user_settings.py" "${pkgdir}/${_protondir}/user_settings.py"
+  popd
+}
