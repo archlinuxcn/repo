@@ -14,6 +14,7 @@ url='https://www.musl-libc.org/'
 license=('MIT')
 options=('staticlibs' '!lto')
 conflicts=(musl)
+provides=(musl)
 source=(https://www.musl-libc.org/releases/musl-$pkgver.tar.gz{,.asc})
 validpgpkeys=('836489290BB6B70F99FFDA0556BCDB593020450F')
 sha256sums=('d585fd3b613c66151fc3249e8ed44f77020cb5e6c1e635a616d3f9f82460512a'
