@@ -1,50 +1,94 @@
-# Maintainer: Mahdi Sarikhani <mahdisarikhani@outlook.com>
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+# Contributor: Mahdi Sarikhani <mahdisarikhani@outlook.com>
 # Contributor: Anna <morganamilo@gmail.com>
 
 pkgname=superproductivity
-_name=super-productivity
+_reponame=super-productivity
 pkgver=18.1.3
+_electronversion=38
 pkgrel=1
 pkgdesc="An advanced todo list app with timeboxing and time tracking capabilities"
 arch=('x86_64')
 url="https://super-productivity.com"
 license=('MIT')
-_electron=electron38
-depends=('bash' "${_electron}" 'gcc-libs' 'glibc' 'hicolor-icon-theme')
-makedepends=('nvm')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johannesjo/super-productivity/archive/v${pkgver}.tar.gz"
+depends=('bash' "electron${_electronversion}" 'hicolor-icon-theme')
+makedepends=('nodejs-lts-jod' 'npm')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johannesjo/${_reponame}/archive/v${pkgver}.tar.gz"
+        "fix-wayland-icon.patch"
         "${pkgname}.desktop"
         "${pkgname}.sh")
 sha256sums=('15181b472547e34d893604c8d64a9e6a356cabe2624020be1e61f26d4b4aedb2'
-            'a8945d93cacbe189b538da601b3f6ace0588c3b126236e763e8f2010005513bb'
-            'f9ca69e16223b3dcfa0d8ae9dbbff231255482d85f0d72ddcc5033dac890741e')
+            '7faa4450d82737b7b0b15a4ce82b79e1ab1fe3c79c88b4779919d64d454c9d1c'
+            '232835a84d6a54a06c2114a01333dfbe3a29405abc3e598df64a784a99a919c6'
+            '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 
 prepare() {
-    source /usr/share/nvm/init-nvm.sh
-    sed -i "s/@ELECTRON@/${_electron}/" "${pkgname}.sh"
+    sed -e "
+        s/@electronversion@/${_electronversion}/g
+        s/@appname@/${pkgname}/g
+        s/@runname@/app.asar/g
+        s/@cfgdirname@/${_pkgname}/g
+        s/@options@/env ELECTRON_OZONE_PLATFORM_HINT=auto/g
+    " -i "${srcdir}/${pkgname}.sh"
 
-    cd "${_name}-${pkgver}"
+    cd "${srcdir}/${_reponame}-${pkgver}"
+
+    # Fix the window title bar icon
+    patch -Np1 -i "${srcdir}/fix-wayland-icon.patch"
+
+    export npm_config_cache="$srcdir/npm_cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
-    nvm install
-    npm install
+    export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
+
+    NODE_ENV=development    npm ci
 }
 
 build() {
-    cd "${_name}-${pkgver}"
-    npm run build
-    npx electron-builder --linux --dir \
-        -c.electronDist="/usr/lib/${_electron}" \
-        -c.electronVersion="$(cat /usr/lib/${_electron}/version)"
+    cd "${srcdir}/${_reponame}-${pkgver}"
+
+    export npm_config_cache="$srcdir/npm_cache"
+    export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+    export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
+    electronDist="/usr/lib/electron${_electronversion}"
+
+    npm run buildFrontend:prod:es6
+    npm run electron:build
+
+    find .tmp/angular-dist -name '*.map' -type f -delete
+
+    pushd node_modules
+
+    # Mobile Native Bridge Plugin
+    rm -rf @capacitor
+
+    find -name '*.map' -type f -print -delete
+	find -name '*.c' -type f -print -delete
+	find -name '*.h' -type f -print -delete
+	find -name '*.ts' -type f -print -delete
+	find -name '*.cts' -type f -print -delete
+    find -name '*.md' -type f -print -delete
+    find -name test.js -type f -print -delete
+
+    find -type d -name 'Tests' -prune -exec rm -rf {} +
+
+    find . -type d -empty -print -delete
+
+    popd
+
+    NODE_ENV=production     npm exec -c "electron-builder --linux dir -c.electronDist=${electronDist} -c.electronVersion=${SYSTEM_ELECTRON_VERSION}"
 }
 
 package() {
-    cd "${_name}-${pkgver}"
+    cd "${srcdir}/${_reponame}-${pkgver}"
+
     install -Dm644 .tmp/app-builds/linux-unpacked/resources/app.asar -t "${pkgdir}/usr/lib/${pkgname}"
     cp -r .tmp/app-builds/linux-unpacked/resources/app.asar.unpacked "${pkgdir}/usr/lib/${pkgname}"
+
     install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
     install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
     for i in 16 32 48 64 128 256 512 1024; do
         install -Dm644 "build/icons/${i}x${i}.png" "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/${pkgname}.png"
     done
+
     install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }

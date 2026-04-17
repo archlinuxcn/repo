@@ -1,0 +1,13 @@
+diff --git a/electron/main.ts b/electron/main.ts
+index c71cbfd..be026ae 100644
+--- a/electron/main.ts
++++ b/electron/main.ts
+@@ -2,6 +2,8 @@ import { app } from 'electron';
+ import { PROTOCOL_PREFIX } from './protocol-handler';
+ import { startApp } from './start-app';
+
++(app as any).setDesktopName('superproductivity.desktop');
++
+ const IS_MAC = process.platform === 'darwin';
+
+ if (!IS_MAC) {
