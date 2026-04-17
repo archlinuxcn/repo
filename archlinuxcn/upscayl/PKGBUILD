@@ -17,7 +17,7 @@ depends=("electron${_electronversion}" 'libvips' 'libgomp' 'openjpeg2' 'vulkan-d
 makedepends=('npm' 'nodejs-lts-iron' 'patchelf' 'imagemagick' 'librsvg')
 source=(
     "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
-    "fix-wayland-wmclass.patch"
+    "fix-wayland-icon.patch"
     "${pkgname}.sh"
     "${pkgname}.desktop"
 )
@@ -38,7 +38,7 @@ prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
 
     # Fix the window title bar icon
-    patch -Np1 -i "${srcdir}/fix-wayland-wmclass.patch"
+    patch -Np1 -i "${srcdir}/fix-wayland-icon.patch"
 
     export npm_config_cache="$srcdir/npm_cache"
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
