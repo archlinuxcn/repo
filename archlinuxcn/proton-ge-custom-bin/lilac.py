@@ -25,17 +25,20 @@ def fetch_release_body(version: str) -> str:
 
 def _update_changelog(version) -> None:
     changelog = Path("changelog.md")
-    release_body = fetch_release_body(version)
+
+    ver = _G.newver
+    release_body = fetch_release_body(ver)
 
     first = True
     for line in edit_file(str(changelog)):
         if first:
-            print(f"## {version}")
-            print()
-            for bline in release_body.splitlines():
-                print(bline)
-            print()
             first = False
+            if line != f"## {ver}":
+                print(f"## {ver}")
+                print()
+                for bline in release_body.splitlines():
+                    print(bline)
+                print()
         print(line)
 
 def pre_build():
