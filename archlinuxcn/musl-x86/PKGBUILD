@@ -1,0 +1,44 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+# Maintainer:  Sergej Pupykin <arch+pub@sergej.pp.ru>
+# Maintainer:  Eli Schwartz <eschwartz@archlinux.org>
+# Contributor: TJ Vanderpoel <tj@rubyists>
+
+_pkgname=musl
+pkgname=musl-x86
+pkgver=1.2.6
+pkgrel=1
+pkgdesc='Lightweight implementation of C standard library (x86_64 with debug symbols)'
+arch=('x86_64')
+url='https://www.musl-libc.org/'
+license=('MIT')
+options=('staticlibs' '!lto')
+conflicts=(musl)
+source=(https://www.musl-libc.org/releases/musl-$pkgver.tar.gz{,.asc})
+validpgpkeys=('836489290BB6B70F99FFDA0556BCDB593020450F')
+sha256sums=('d585fd3b613c66151fc3249e8ed44f77020cb5e6c1e635a616d3f9f82460512a'
+            'SKIP')
+depends=(bash)
+
+build() {
+  cd $_pkgname-$pkgver
+  ./configure --prefix=/usr/lib/musl \
+    --exec-prefix=/usr \
+    --enable-wrapper=all \
+    CFLAGS="$CFLAGS -ffat-lto-objects"
+  make
+}
+
+package() {
+  cd $_pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+
+  ln -s ./musl-gcc "$pkgdir"/usr/bin/x86_64-linux-musl-gcc
+
+  # configure syslibdir with /lib for PT_INTERP compat, but install to /usr/lib
+  mv "$pkgdir"/lib/ld-musl*.so* "$pkgdir"/usr/lib/
+  rmdir "$pkgdir"/lib
+
+  install -Dm0644 README "$pkgdir"/usr/share/doc/$pkgname/README
+  install -Dm0644 COPYRIGHT "$pkgdir"/usr/share/licenses/$pkgname/COPYRIGHT
+}
