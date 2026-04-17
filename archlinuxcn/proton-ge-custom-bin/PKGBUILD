@@ -68,7 +68,7 @@ b2sums=('4d7b1aae7768c7d5e3b1efc939da9ab511548f0c24c581edcdd156b4188ace592af172b
 build() {
   pushd "${_tag}"
     python "${srcdir}/deversionized.py"
-    sed -i 's/^\s+"[A-Z_]+": ".*",\s*$/#&/g' user_settings.sample.py
+    sed -E -i 's/^\s+"[A-Z_]+": ".*",\s*$/#&/g' user_settings.sample.py
   popd
 }
 
