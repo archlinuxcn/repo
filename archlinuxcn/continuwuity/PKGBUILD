@@ -7,6 +7,7 @@ license=("Apache-2.0")
 arch=("x86_64" "aarch64")
 pkgver=0.5.7_alpha.2
 pkgrel=1
+epoch=1
 makedepends=("rust" "cargo" "git" "clang")
 depends=("gcc-libs" "glibc" "liburing" "jemalloc")
 source=("git+https://forgejo.ellis.link/continuwuation/continuwuity.git#tag=v$(echo ${pkgver} | sed 's|_|-|g')")
