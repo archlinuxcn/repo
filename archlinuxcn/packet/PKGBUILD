@@ -1,6 +1,6 @@
 # Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 pkgname=packet
-pkgver=0.6.0
+pkgver=0.6.1
 pkgrel=1
 pkgdesc="A Quick Share client for Linux"
 arch=('x86_64')
@@ -30,7 +30,7 @@ makedepends=(
 )
 
 source=("git+https://github.com/nozwock/packet.git#tag=$pkgver")
-sha256sums=('b2e8da892e63a4a435346fd7ea79b2be1a4d65efd927b3ca6a84fd87df2787c2')
+sha256sums=('35dae9b816bc34d0ed09c6092855e7af70ba3fa324c92fba7136f8f501de458d')
 
 prepare() {
   cd "$pkgname"
