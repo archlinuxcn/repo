@@ -56,7 +56,7 @@ optdepends=(
   'winetricks: protonfixes backend'
   'xboxdrv: gamepad driver service'
 )
-options=(emptydirs !strip pestrip)
+options=(emptydirs !strip)
 
 source=(
   "${pkgname}_${_tag}.tar.gz::${url}/releases/download/${_tag}/${_tag}.tar.gz"
