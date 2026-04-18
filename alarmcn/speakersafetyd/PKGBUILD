@@ -1,8 +1,8 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=speakersafetyd
-pkgver=1.1.2
-pkgrel=3
+pkgver=2.0.0
+pkgrel=1
 pkgdesc='Asahi Linux speaker safety daemon'
 arch=('aarch64')
 url='http://asahilinux.org'
@@ -14,7 +14,7 @@ source=(
   "speakersafetyd-${pkgver}.tar.gz::https://github.com/AsahiLinux/speakersafetyd/archive/refs/tags/${pkgver}.tar.gz"
   speakersafetyd.sysusers
 )
-sha256sums=('b3ccbbf4c3ee0da537203186f80eb8f3cc16037bf41f4cd0de50b7cd25dd713f'
+sha256sums=('33b557bee7385cf42e6662fa1fa738d20b6aa5805a3169495400271db04d59b3'
             '3eedb6ddce80f888e0c47016c3773776c91942bcd7a08da8740daddf403c6bbb')
 
 build() {
