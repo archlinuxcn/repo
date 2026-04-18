@@ -1,0 +1,48 @@
+From b7a9ada3c10218b68f75b8f51acc11e96eeaf269 Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Thu, 28 Sep 2023 14:16:04 +0300
+Subject: [PATCH 2/4] AUR: Fix hwnd redefinition
+
+---
+ steam_helper/steam.cpp          | 4 ++++
+ vrclient_x64/json_converter.cpp | 2 ++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/steam_helper/steam.cpp b/steam_helper/steam.cpp
+index b318dab1..8ea20f5d 100644
+--- a/steam_helper/steam.cpp
++++ b/steam_helper/steam.cpp
+@@ -34,11 +34,15 @@
+ 
+ #include "ntstatus.h"
+ #define WIN32_NO_STATUS
++extern "C" {
+ #include <windows.h>
++}
+ #include <winsvc.h>
+ #include <winternl.h>
+ #include <shellapi.h>
++extern "C" {
+ #include <shlwapi.h>
++}
+ #include <string.h>
+ #include <stdio.h>
+ #include <limits.h>
+diff --git a/vrclient_x64/json_converter.cpp b/vrclient_x64/json_converter.cpp
+index ce5a49e2..527468ef 100644
+--- a/vrclient_x64/json_converter.cpp
++++ b/vrclient_x64/json_converter.cpp
+@@ -3,8 +3,10 @@
+ 
+ #include "ntstatus.h"
+ #define WIN32_NO_STATUS
++extern "C" {
+ #include "windef.h"
+ #include "winbase.h"
++}
+ 
+ #undef min
+ #undef max
+-- 
+2.53.0
+

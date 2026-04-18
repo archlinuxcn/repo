@@ -1,0 +1,26 @@
+From 713c2ec2f614b3e3ca94be018c79b700bac77cb0 Mon Sep 17 00:00:00 2001
+From: Coelacanthus <uwu@coelacanthus.name>
+Date: Thu, 16 Apr 2026 11:55:36 +0800
+Subject: [PATCH 3/4] Disable Werror
+
+Arch use newer GCC, -Werror will lead to FTBFS.
+---
+ Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index ad685e2c..85a13d4b 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -892,7 +892,7 @@ WINE_SOURCE_ARGS = \
+   --exclude server/request_trace.h \
+ 
+ WINE_AUTOCONF_ARGS = \
+-  --enable-werror \
++  --disable-werror \
+   --with-wayland \
+   --with-mingw=$(MINGW_TYPE) \
+   --with-gstreamer \
+-- 
+2.53.0
+

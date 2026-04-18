@@ -1,0 +1,267 @@
+From 270a3ace75b60498a1fd80f0c1ce0335b51d4a7b Mon Sep 17 00:00:00 2001
+From: Stelios Tsampas <loathingkernel@gmail.com>
+Date: Wed, 26 Apr 2023 14:22:23 +0300
+Subject: [PATCH 1/4] AUR PKGBUILD changes
+
+---
+ Makefile.in                    | 32 +++++++++++++++++++-------------
+ compatibilitytool.vdf.template |  2 +-
+ configure.sh                   |  2 ++
+ make/rules-cargo.mk            |  5 +++--
+ make/rules-cmake.mk            |  1 +
+ make/rules-common.mk           | 11 +++++++++--
+ make/rules-meson.mk            |  5 +++--
+ proton                         |  5 ++---
+ toolmanifest_x86_64.vdf        |  1 -
+ 9 files changed, 40 insertions(+), 24 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index d9581828..ad685e2c 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -51,12 +51,15 @@ DIST_VERSION := $(DST_BASE)/version
+ DEPLOY_DIR := ./deploy
+ REDIST_DIR := ./redist
+ 
+-i386_CFLAGS    := -mstackrealign -march=nocona -mtune=core-avx2 -mfpmath=sse
+-x86_64_CFLAGS  := -mcmodel=small -march=nocona -mtune=core-avx2 -mfpmath=sse
++x86_COMMON_CFLAGS ?= -march=nocona -mtune=core-avx2
++
++i386_CFLAGS    := -mstackrealign $(x86_COMMON_CFLAGS) -mfpmath=sse
++x86_64_CFLAGS  := -mcmodel=small $(x86_COMMON_CFLAGS) -mfpmath=sse
+ aarch64_CFLAGS := -march=armv8.2-a -mtune=cortex-x3
+ arm64ec_CFLAGS := -march=armv8.2-a -mtune=cortex-x3
+ 
+-CFLAGS  = -O2 -fwrapv -fno-strict-aliasing
++CFLAGS ?= -O2 
++CFLAGS += -fwrapv -fno-strict-aliasing
+ CFLAGS += -ggdb -ffunction-sections -fdata-sections -fno-omit-frame-pointer
+ CFLAGS += -ffile-prefix-map=$(CCACHE_BASEDIR)=.
+ 
+@@ -1027,6 +1030,9 @@ DXVK_x86_64_MESON_ARGS = --bindir=$(DXVK_x86_64_DST)/lib/wine/dxvk/x86_64-window
+ DXVK_arm64ec_MESON_ARGS = --bindir=$(DXVK_arm64ec_DST)/lib/wine/dxvk/aarch64-windows
+ DXVK_HOST_DEPENDS = glslang
+ 
++# AVX-enabled builds not supported due to stack alignment issues.
++DXVK_CFLAGS = -mno-avx -mno-avx2
++
+ $(eval $(call rules-source,dxvk,$(SRCDIR)/dxvk))
+ $(eval $(call rules-meson,dxvk,i386,windows))
+ $(eval $(call rules-meson,dxvk,x86_64,windows))
+@@ -1091,6 +1097,9 @@ VKD3D_CFLAGS = -fno-lto
+ VKD3D_LDFLAGS = -static-libgcc $(CROSSLDFLAGS)
+ VKD3D_DEPENDS = vulkan-headers spirv-headers
+ 
++# AVX-enabled builds not supported due to stack alignment issues.
++VKD3D_CFLAGS += -mno-avx -mno-avx2
++
+ VKD3D_i386_LIBDIR = $(VKD3D_i386_DST)/lib
+ VKD3D_x86_64_LIBDIR = $(VKD3D_x86_64_DST)/lib
+ 
+@@ -1423,15 +1432,15 @@ $(FONTS_OBJ)/source-han/%.ttf: $$(%.ttf_CIDFONT) $$(%.ttf_FEATURES) $$(%.ttf_SEQ
+ 	mkdir -p $(FONTS_OBJ)/source-han
+ 	# Do not immediately create the target file, so that make is interrupted
+ 	# it will restart again
+-	afdko makeotfexe -f $($(notdir $@)_CIDFONT) -omitMacNames -ff $($(notdir $@)_FEATURES) \
++	makeotfexe -f $($(notdir $@)_CIDFONT) -omitMacNames -ff $($(notdir $@)_FEATURES) \
+ 		-lic ADOBE -mf $($(notdir $@)_MENUNAMEDB) -r -nS -cs 25 -ch $($(notdir $@)_UNISOURCE) \
+ 		-ci $($(notdir $@)_SEQUENCES) -o $@.tmp
+-	afdko tx -cff +S -no_futile $($(notdir $@)_CIDFONT) $@.cff
++	tx -cff +S -no_futile $($(notdir $@)_CIDFONT) $@.cff
+ 	# sftnedit uses a hardcoded temporary file in the local directory, so we have
+ 	# to run it in a dedicated temporary directory to prevent concurrent instances
+ 	# to step onto each other's feet
+-	(TEMP_DIR=`mktemp -d` && cd $$TEMP_DIR && afdko sfntedit -a CFF=$(abspath $($(notdir $@)).cff) $(abspath $@.tmp) && rm -fr $$TEMP_DIR)
+-	if [ "$(notdir $@)" = "msyh.ttf" ]; then afdko otf2ttf -o $@.tmp.ttf $@.tmp; mv -f $@.tmp.ttf $@.tmp; fi
++	(TEMP_DIR=`mktemp -d` && cd $$TEMP_DIR && sfntedit -a CFF=$(abspath $($(notdir $@)).cff) $(abspath $@.tmp) && rm -fr $$TEMP_DIR)
++	if [ "$(notdir $@)" = "msyh.ttf" ]; then otf2ttf -o $@.tmp.ttf $@.tmp; mv -f $@.tmp.ttf $@.tmp; fi
+ 	mv $@.tmp $@
+ 
+ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+@@ -1441,12 +1450,12 @@ $(FONTS_OBJ)/ume-gothic/%.ttf: $$(%.ttf_FONT) $$(%.ttf_NAMETABLE_PATCH)
+ 	ttx -o $@ -m $($(notdir $@)_FONT) $(FONTS_OBJ)/ume-gothic/$(notdir $(basename $($(notdir $@)_NAMETABLE_PATCH))).ttx
+ 
+ $(simsun.ttc): $(simsun.ttf) $(nsimsun.ttf)
+-	afdko otf2otc -o $@.tmp $^
+-	afdko otf2ttf -o $@ $@.tmp
++	otf2otc -o $@.tmp $^
++	otf2ttf -o $@ $@.tmp
+ 	rm $@.tmp
+ 
+ $(msgothic.ttc): $(msgothic.ttf) $(mspgothic.ttf) $(msuigothic.ttf)
+-	afdko otf2otc -o $@ $^
++	otf2otc -o $@ $^
+ 
+ $(micross.ttf): $(FONTS)/scripts/merge.py $(noto_sans.ttf) $(noto_sans_arabic.ttf) $(noto_sans_armenian.ttf) $(noto_sans_bengali.ttf) $(noto_sans_coptic.ttf) \
+ 		$(noto_sans_georgian.ttf) $(noto_sans_gujarati.ttf) $(noto_sans_hebrew.ttf) $(noto_sans_khmer.ttf) $(noto_sans_tamil.ttf) \
+@@ -1851,9 +1860,6 @@ ifeq ($(CONTAINER_ENGINE),)
+ 	CONTAINER_ENGINE := docker
+ endif
+ 
+-DOCKER_BASE = $(CONTAINER_ENGINE) run --rm -v $(SRC):$(SRC)$(CONTAINER_MOUNT_OPTS) -v $(OBJ):$(OBJ)$(CONTAINER_MOUNT_OPTS) \
+-                -w $(OBJ) -e MAKEFLAGS \
+-                $(DOCKER_OPTS) $(STEAMRT_IMAGE)
+ 
+ .PHONY: dist deploy redist symstore-tarball
+ .DEFAULT dist deploy redist symstore-tarball:
+diff --git a/compatibilitytool.vdf.template b/compatibilitytool.vdf.template
+index 090eff5c..354a9466 100644
+--- a/compatibilitytool.vdf.template
++++ b/compatibilitytool.vdf.template
+@@ -14,7 +14,7 @@
+       "install_path" "."
+ 
+       // For this template, we're going to substitute the display_name key in here, e.g.:
+-      "display_name" "##BUILD_NAME##"
++      "display_name" "##BUILD_NAME## (Unsupported AUR package [native])"
+ 
+       "from_oslist"  "windows"
+       "to_oslist"    "linux"
+diff --git a/configure.sh b/configure.sh
+index 80f4f1ab..a71035da 100755
+--- a/configure.sh
++++ b/configure.sh
+@@ -143,6 +143,7 @@ function configure() {
+     CONTAINER_MOUNT_OPTS=:Z
+   fi
+ 
++  if [ "$arg_container_engine" != "none" ]; then
+   if [[ -n "$arg_container_engine" ]]; then
+     check_container_engine "$arg_container_engine" "$steamrt_image" || die "Specified container engine \"$arg_container_engine\" doesn't work"
+   else
+@@ -155,6 +156,7 @@ function configure() {
+         die "${arg_container_engine:-Container engine discovery} has failed. Please fix your setup."
+     fi
+   fi
++  fi
+ 
+   stat "Using $arg_container_engine."
+ 
+diff --git a/make/rules-cargo.mk b/make/rules-cargo.mk
+index 87f41266..87f27487 100644
+--- a/make/rules-cargo.mk
++++ b/make/rules-cargo.mk
+@@ -14,8 +14,9 @@ $$(OBJ)/.$(1)-$(3)-configure:
+ 
+ $$(OBJ)/.$(1)-$(3)-build:
+ 	@echo ":: building $(1)-$(3)..." >&2
+-	cd $$($(2)_SRC) && env $$($(2)_$(3)_ENV) \
++	+cd $$($(2)_SRC) && env $$($(2)_$(3)_ENV) \
+ 	cargo build $(--quiet?) --release \
++	      --locked --offline --verbose \
+ 	      $$(filter -j%,$$(MAKEFLAGS)) \
+ 	      --target-dir $$($(2)_$(3)_OBJ) \
+ 	      $$($(3)-$(4)_CARGO_ARGS) \
+@@ -42,5 +43,5 @@ aarch64-unix_CARGO_ARGS := --target $(aarch64-unix_CARGO_TARGET)
+ # HACK: forced to gcc-10 because Sniper's (SteamRT) gcc-14 doesn't come with
+ # shared libgcc_s.so and cargo/rustc (?) forces shared linking with that lib.
+ ifeq ($(TARGET_ARCH),x86_64)
+-	CARGO_LINKERS :=  $(foreach a,$(unix_ARCHS),CARGO_TARGET_$(call toupper,$($(a)-unix_CARGO_TARGET))_LINKER="$($(a)-unix_TARGET)-gcc-10")
++	CARGO_LINKERS :=  $(foreach a,$(unix_ARCHS),CARGO_TARGET_$(call toupper,$($(a)-unix_CARGO_TARGET))_LINKER="$($(a)-unix_TARGET)-gcc")
+ endif
+diff --git a/make/rules-cmake.mk b/make/rules-cmake.mk
+index 33a11fe4..9764b2ea 100644
+--- a/make/rules-cmake.mk
++++ b/make/rules-cmake.mk
+@@ -18,6 +18,7 @@ $$(OBJ)/.$(1)-$(3)-configure: $$($(2)_SRC)/CMakeLists.txt
+ 	    -DCMAKE_INSTALL_PREFIX="$$($(2)_$(3)_DST)" \
+ 	    -DCMAKE_INSTALL_LIBDIR="lib/$$($(3)-$(4)_LIBDIR)" \
+ 	    -DCMAKE_BUILD_TYPE=plain \
++	    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+ 	    $$($(3)-$(4)_CMAKE_ARGS) \
+ 	    $$($(2)_CMAKE_ARGS) \
+ 	    $$($(2)_$(3)_CMAKE_ARGS)
+diff --git a/make/rules-common.mk b/make/rules-common.mk
+index a8bceafd..37e4457e 100644
+--- a/make/rules-common.mk
++++ b/make/rules-common.mk
+@@ -114,7 +114,14 @@ $(2)_$(3)-unix_LIBFLAGS = $$(foreach d,$$($(2)_$(3)_DEPS),-Wl,-rpath-link=$$($$(
+ # We also always need to specify the linker for the host architecture - a bunch
+ # of crates build host-native bits via build.rs.
+ 
++
++PKG_CONFIG_PATH_i386 := /usr/lib32/pkgconfig
++PKG_CONFIG_PATH_x86_64 := /usr/lib64/pkgconfig
++
++
+ $(2)_$(3)_ENV = \
++    WINEDEBUG="-all" \
++    WINEDLLOVERRIDES="winemenubuilder=d;" \
+     $$(CARGO_LINKERS) \
+     CCACHE_BASEDIR="$$(CCACHE_BASEDIR)" \
+     STRIP="$$(STRIP)" \
+@@ -128,8 +135,8 @@ $(2)_$(3)_ENV = \
+     PKG_CONFIG="$$($$(HOST_ARCH)-unix_TARGET)-pkg-config" \
+     PATH="$$(call list-join,:,$$(foreach d,$$($(2)_$(3)_HOST_DEPS),$$($$(d)_$$(HOST_ARCH)_BINDIR)),,:):$$$$PATH" \
+     LD_LIBRARY_PATH="$$(call list-join,:,$$(foreach d,$$($(2)_$(3)_HOST_DEPS),$$($$(d)_$$(HOST_ARCH)_LIBDIR)/$$($$(HOST_ARCH)-unix_LIBDIR)),,:)$$$$LD_LIBRARY_PATH" \
+-    PKG_CONFIG_PATH="$$(call list-join,:,$$(foreach d,$$($(2)_$(3)_DEPS),$$($$(d)_$(3)_LIBDIR)/$$($(3)-$(4)_LIBDIR)/pkgconfig))" \
+-    PKG_CONFIG_LIBDIR="/usr/lib/$$($(3)-$(4)_LIBDIR)/pkgconfig:/usr/share/pkgconfig:$$(call list-join,:,$$(foreach d,$$($(2)_$(3)_DEPS),$$($$(d)_$(3)_DST)/share/pkgconfig))" \
++    PKG_CONFIG_PATH="$$(call list-join,:,$$(foreach d,$$($(2)_$(3)_DEPS),$$($$(d)_$(3)_LIBDIR)/$$($(3)-$(4)_LIBDIR)/pkgconfig) $$(PKG_CONFIG_PATH_$(3)))" \
++    PKG_CONFIG_LIBDIR="/usr/lib/$$($(3)-$(4)_LIBDIR)/pkgconfig:$$(PKG_CONFIG_PATH_$(3)):/usr/share/pkgconfig:$$(call list-join,:,$$(foreach d,$$($(2)_$(3)_DEPS),$$($$(d)_$(3)_DST)/share/pkgconfig))" \
+     CMAKE_PREFIX_PATH="$$(call list-join,:,$$(foreach d,$$($(2)_$(3)_DEPS),$$($$(d)_$(3)_DST)))" \
+     CFLAGS="$$($(2)_$(3)_INCFLAGS) $$($(2)_CFLAGS) $$($(3)_CFLAGS) $$(CFLAGS)" \
+     CPPFLAGS="$$($(2)_$(3)_INCFLAGS) $$($(2)_CFLAGS) $$($(3)_CFLAGS) $$(CFLAGS)" \
+diff --git a/make/rules-meson.mk b/make/rules-meson.mk
+index 6a90a63f..ca41706f 100644
+--- a/make/rules-meson.mk
++++ b/make/rules-meson.mk
+@@ -46,10 +46,11 @@ $$(OBJ)/.$(1)-$(3)-configure: $$($(2)_SRC)/meson.build meson-source
+ 	echo "$$$$$(2)_$(3)_MESON_CROSS" | env $$($(2)_$(3)_ENV) sh >"$$($(2)_$(3)_OBJ)/cross.txt"
+ 
+ 	env $$($(2)_$(3)_ENV) \
+-	$$(OBJ)/src-meson/meson.py "$$($(2)_$(3)_OBJ)" "$$($(2)_SRC)" \
++	meson "$$($(2)_$(3)_OBJ)" "$$($(2)_SRC)" \
+ 	      --prefix="$$($(2)_$(3)_DST)" \
+ 	      --libdir="lib/$$($(3)-$(4)_LIBDIR)" \
+ 	      --buildtype=plain \
++	      --wrap-mode=nodownload \
+ 	      --cross-file=$$($(2)_$(3)_OBJ)/cross.txt \
+ 	      $$($(3)-$(4)_MESON_ARGS) \
+ 	      $$($(2)_MESON_ARGS) \
+@@ -61,7 +62,7 @@ $$(OBJ)/.$(1)-$(3)-configure: $$($(2)_SRC)/meson.build meson-source
+ $$(OBJ)/.$(1)-$(3)-build:
+ 	@echo ":: building $(1)-$(3)..." >&2
+ 	+env $$($(2)_$(3)_ENV) \
+-	ninja -C "$$($(2)_$(3)_OBJ)" install
++	ninja -C "$$($(2)_$(3)_OBJ)" install $(-v?)
+ 	touch $$@
+ endif
+ endef
+diff --git a/proton b/proton
+index 1e762b22..5b5e43d6 100755
+--- a/proton
++++ b/proton
+@@ -2371,8 +2371,6 @@ if __name__ == "__main__":
+ 
+     g_proton = Proton(os.path.dirname(sys.argv[0]))
+ 
+-    g_proton.cleanup_legacy_dist()
+-    g_proton.do_steampipe_fixups()
+ 
+     g_compatdata = CompatData(os.environ["STEAM_COMPAT_DATA_PATH"])
+ 
+@@ -2381,7 +2379,8 @@ if __name__ == "__main__":
+     g_session.init_wine()
+ 
+     if g_proton.missing_default_prefix():
+-        g_proton.make_default_prefix()
++        log("Default prefix is missing, something is very wrong.")
++        sys.exit(1)
+ 
+     g_session.init_session(sys.argv[1] != "runinprefix")
+ 
+diff --git a/toolmanifest_x86_64.vdf b/toolmanifest_x86_64.vdf
+index beddcbbb..5404093e 100644
+--- a/toolmanifest_x86_64.vdf
++++ b/toolmanifest_x86_64.vdf
+@@ -2,7 +2,6 @@
+ {
+   "version" "2"
+   "commandline" "/proton %verb%"
+-  "require_tool_appid" "1628350"
+   "use_sessions" "1"
+   "compatmanager_layer_name" "proton"
+ }
+-- 
+2.53.0
+

@@ -1,0 +1,586 @@
+# Maintainer: Coelacanthus <CoelacanthusHex@gmail.com>
+# Contributor: loathingkernel <loathingkernel _a_ gmail _d_ com>
+# Contributor: Jaja <jaja@mailbox.org>
+
+pkgname=proton-ge-custom-opt
+_pkgname=proton-ge-custom
+pkgver=10.34
+_srctag=${pkgver//./-}
+_geckover=2.47.4
+_monover=10.4.1
+_xaliaver=0.4.8
+pkgrel=1
+pkgdesc="Compatibility tool for Steam Play based on Wine and additional components, GloriousEggroll's custom build"
+url="https://github.com/GloriousEggroll/proton-ge-custom"
+arch=(x86_64 x86_64_v3)
+# LTO lead to vkd3d FTBFS
+options=(!staticlibs !lto emptydirs pestrip)
+license=('BSD-3-Clause AND LGPL-2.1-or-later AND Zlib AND MIT AND MPL-2.0 AND OFL-3.0 AND LicenseRef-STEAMWORKS-SDK-license')
+provides=('proton' "proton-ge-custom=${pkgver}")
+conflicts=('proton-ge-custom')
+
+depends=(
+    attr            lib32-attr
+    lcms2           lib32-lcms2
+    libxml2         lib32-libxml2
+    gettext         lib32-gettext
+    gcc-libs        lib32-gcc-libs
+    gtk3            lib32-gtk3
+    glib2           lib32-glib2
+    libpcap         lib32-libpcap
+    lzo             lib32-lzo
+    libxkbcommon    lib32-libxkbcommon
+    #faudio          lib32-faudio
+    #libsoup         lib32-libsoup
+    gnutls          lib32-gnutls
+    dbus            lib32-dbus
+
+    # Gstreamer
+    flac            lib32-flac
+    libva           lib32-libva
+    libvorbis       lib32-libvorbis
+    libvpx          lib32-libvpx
+    openal          lib32-openal
+    opus            lib32-opus
+    orc             lib32-orc
+    libsndfile      lib32-libsndfile
+    speex           lib32-speex
+    libtheora       lib32-libtheora
+    libusb          lib32-libusb
+    libwebp         lib32-libwebp
+
+    libgudev        lib32-libgudev
+    libgcrypt       lib32-libgcrypt
+    libxcb          lib32-libxcb
+    blas            lib32-blas
+    lapack          lib32-lapack
+    wayland         lib32-wayland
+    jsoncpp
+    desktop-file-utils
+    python
+    cabextract
+    #steam-native-runtime
+    
+    # in steam-native-runtime
+    libxcursor      lib32-libxcursor
+    libxrandr       lib32-libxrandr
+    libxdamage      lib32-libxdamage
+    libxi           lib32-libxi
+    libxcomposite   lib32-libxcomposite
+    libxinerama     lib32-libxinerama
+    freetype2       lib32-freetype2
+    glu             lib32-glu
+    libsm           lib32-libsm
+    sdl2            lib32-sdl2
+    fontconfig      lib32-fontconfig
+    libx11          lib32-libx11
+    libxext         lib32-libxext
+    # end
+)
+
+makedepends=(
+    git wget rsync unzip
+    perl perl-json fontforge
+    autoconf meson cmake
+    glslang vulkan-headers libgphoto2 glib2-devel wayland-protocols
+    clang mingw-w64-tools mingw-w64-gcc lld nasm bison flex afdko
+    xorg-server-xvfb strace gdb 
+
+    giflib                lib32-giflib
+    libpng                lib32-libpng
+    gnutls                lib32-gnutls
+    libxcb                lib32-libxcb
+    mpg123                lib32-mpg123
+    v4l-utils             lib32-v4l-utils
+    mesa                  lib32-mesa
+    libxslt               lib32-libxslt
+    #gst-plugins-base-libs lib32-gst-plugins-base-libs
+    vulkan-icd-loader     lib32-vulkan-icd-loader
+    rust                  lib32-rust-libs
+    orc                   lib32-orc
+    libgudev              lib32-libgudev
+    #gsm                   lib32-gsm
+    
+    # in steam-native-runtime
+    #libxrandr        lib32-libxrandr
+    #libxdamage       lib32-libxdamage
+    #libxi            lib32-libxi
+    #libxcomposite    lib32-libxcomposite
+    #libxinerama      lib32-libxinerama
+    libxmu                lib32-libxmu
+    libxft                lib32-libxft
+    libxxf86vm            lib32-libxxf86vm
+    #freetype2        lib32-freetype2
+    #glu              lib32-glu
+    #libsm            lib32-libsm
+    #sdl2             lib32-sdl2
+    #fontconfig       lib32-fontconfig
+    #libva                 lib32-libva
+    #openal                lib32-openal
+    alsa-lib              lib32-alsa-lib
+    libpulse              lib32-libpulse
+    # end
+)
+
+optdepends=(
+    'kdialog: KDE splash dialog support'
+    'zenity: GNOME splash dialog support'
+    'python-kivy: splash dialog support (big picture mode)'
+    'steam: use proton with steam like intended'
+    'vulkan-icd-loader: dxvk dependency'
+    'lib32-vulkan-icd-loader: dxvk dependency for 32bit prefixes'
+    'vulkan-driver: driver to be used by dxvk'
+    'winetricks: protonfixes backend'
+
+    giflib                lib32-giflib
+    libpng                lib32-libpng
+    gnutls                lib32-gnutls
+    mpg123                lib32-mpg123
+    v4l-utils             lib32-v4l-utils
+    libjpeg-turbo         lib32-libjpeg-turbo
+    opencl-icd-loader     lib32-opencl-icd-loader
+    libxslt               lib32-libxslt
+    gtk3                  lib32-gtk3
+    #gst-plugins-base-libs lib32-gst-plugins-base-libs
+    #gsm                   lib32-gsm
+    libgphoto2
+    dosbox
+)
+
+source=(
+    proton-ge-custom::git+https://github.com/gloriouseggroll/proton-ge-custom.git#tag=GE-Proton${_srctag}
+
+    wine::git+https://github.com/ValveSoftware/wine.git
+    wine-staging::git+https://github.com/wine-staging/wine-staging.git
+    dxvk::git+https://github.com/doitsujin/dxvk.git
+    openvr::git+https://github.com/ValveSoftware/openvr.git
+    liberation-fonts::git+https://github.com/liberationfonts/liberation-fonts.git
+    #FAudio::git+https://github.com/FNA-XNA/FAudio.git
+    protonfixes::git+https://github.com/open-wine-components/umu-protonfixes.git
+    gstreamer::git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git
+    #gst-plugins-base::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-base.git
+    #gst-plugins-good::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-good.git
+    #gst-plugins-bad::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad.git
+    #gst-plugins-ugly::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-ugly.git
+    gst-orc::git+https://gitlab.freedesktop.org/gstreamer/orc.git
+    vkd3d-proton::git+https://github.com/HansKristian-Work/vkd3d-proton.git
+    OpenXR-SDK::git+https://github.com/KhronosGroup/OpenXR-SDK.git
+    dxvk-nvapi::git+https://github.com/jp7677/dxvk-nvapi.git
+    vkd3d::git+https://gitlab.winehq.org/wine/vkd3d.git
+    Vulkan-Headers::git+https://github.com/KhronosGroup/Vulkan-Headers.git
+    SPIRV-Headers::git+https://github.com/KhronosGroup/SPIRV-Headers.git
+    #gst-libav::git+https://gitlab.freedesktop.org/gstreamer/gst-libav.git
+    ffmpeg::git+https://git.ffmpeg.org/ffmpeg.git
+    dav1d::git+https://code.videolan.org/videolan/dav1d.git
+    gst-plugins-rs::git+https://gitlab.freedesktop.org/gstreamer/gst-plugins-rs.git
+    graphene::git+https://github.com/ebassi/graphene.git
+    openfst::git+https://github.com/alphacep/openfst.git
+    kaldi::git+https://github.com/alphacep/kaldi.git
+    vosk-api::git+https://github.com/alphacep/vosk-api.git
+    piper::git+https://github.com/shaunren/piper.git
+    libxkbcommon::git+https://github.com/xkbcommon/libxkbcommon.git
+    libxml2::git+https://gitlab.gnome.org/GNOME/libxml2.git
+    wayland-protocols::git+https://gitlab.freedesktop.org/wayland/wayland-protocols.git
+    libpcap::git+https://github.com/the-tcpdump-group/libpcap.git
+    FEX::git+https://github.com/FEX-Emu/FEX.git
+    glslang::git+https://github.com/KhronosGroup/glslang.git
+
+    mingw-directx-headers::git+https://github.com/Joshua-Ashton/mingw-directx-headers.git
+    libdisplay-info::git+https://gitlab.freedesktop.org/JoshuaAshton/libdisplay-info.git
+    Vulkan-Loader::git+https://github.com/KhronosGroup/Vulkan-Loader.git
+    dxil-spirv::git+https://github.com/HansKristian-Work/dxil-spirv.git
+    libmspack::git+https://github.com/kyz/libmspack.git
+    winetricks::git+https://github.com/Winetricks/winetricks.git
+    umu-database::git+https://github.com/Open-Wine-Components/umu-database.git
+    unzip::git+https://salsa.debian.org/sanvila/unzip.git
+    procps-ng::git+https://gitlab.com/procps-ng/procps.git
+    nvapi::git+https://github.com/NVIDIA/nvapi.git
+    vkroots::git+https://github.com/misyltoad/vkroots.git
+    DirectX-Headers::git+https://github.com/microsoft/DirectX-Headers.git
+    SPIRV-Tools::git+https://github.com/KhronosGroup/SPIRV-Tools.git
+    SPIRV-Cross::git+https://github.com/KhronosGroup/SPIRV-Cross.git
+    dxbc-spirv::git+https://github.com/doitsujin/dxbc-spirv.git
+
+    https://dl.winehq.org/wine/wine-gecko/${_geckover}/wine-gecko-${_geckover}-x86{,_64}.tar.xz
+    https://github.com/madewokherd/wine-mono/releases/download/wine-mono-${_monover}/wine-mono-${_monover}-x86.tar.xz
+    https://github.com/madewokherd/xalia/releases/download/xalia-${_xaliaver}/xalia-${_xaliaver}-net48-mono.zip
+    0001-AUR-PKGBUILD-changes.patch
+    0002-AUR-Fix-hwnd-redefinition.patch
+    0003-Disable-Werror.patch
+    #0004-build-Stop-forcing-mno-avx-for-32bit-libraries.patch
+)
+noextract=(
+    wine-gecko-${_geckover}-{x86,x86_64}.tar.xz
+    wine-mono-${_monover}-x86.tar.xz
+    xalia-${_xaliaver}-net48-mono.zip
+)
+
+_make_wrappers () {
+    #     _arch     prefix   gcc    ld             as     strip
+    local _i686=(  "i686"   "-m32" "-melf_i386"   "--32" "elf32-i386")
+    local _x86_64=("x86_64" "-m64" "-melf_x86_64" "--64" "elf64-x86-64")
+    local _opts=(_i686 _x86_64)
+    declare -n _opt
+    for _opt in "${_opts[@]}"; do
+        for l in ar ranlib nm; do
+            ln -s /usr/bin/gcc-$l wrappers/${_opt[0]}-linux-gnu-$l
+        done
+        ln -s /usr/bin/pkg-config wrappers/${_opt[0]}-linux-gnu-pkg-config
+        for t in gcc g++; do
+            install -Dm755 /dev/stdin wrappers/${_opt[0]}-linux-gnu-$t <<EOF
+#!/usr/bin/bash
+$(which ccache 2> /dev/null) /usr/bin/$t ${_opt[1]} "\$@"
+EOF
+        done
+        install -Dm755 /dev/stdin wrappers/${_opt[0]}-linux-gnu-ld <<EOF
+#!/usr/bin/bash
+/usr/bin/ld ${_opt[2]} "\$@"
+EOF
+        install -Dm755 /dev/stdin wrappers/${_opt[0]}-linux-gnu-as <<EOF
+#!/usr/bin/bash
+/usr/bin/as ${_opt[3]} "\$@"
+EOF
+        install -Dm755 /dev/stdin wrappers/${_opt[0]}-linux-gnu-strip <<EOF
+#!/usr/bin/bash
+/usr/bin/strip -F ${_opt[4]} "\$@"
+EOF
+    done
+}
+
+prepare() {
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+
+    # Provide wrappers to compiler tools
+    rm -rf wrappers && mkdir wrappers
+    _make_wrappers
+
+    [ ! -d build ] && mkdir build
+    cd proton-ge-custom
+
+    [ ! -d contrib ] && mkdir -p contrib
+    mv -v "$srcdir"/wine-gecko-${_geckover}-x86{,_64}.tar.xz contrib/
+    mv -v "$srcdir"/wine-mono-${_monover}-x86.tar.xz contrib/
+    mv -v "$srcdir"/xalia-${_xaliaver}-net48-mono.zip contrib/
+
+    _submodules=(
+        wine
+        wine-staging
+        dxvk
+        openvr
+        liberation-fonts::fonts/liberation-fonts
+        protonfixes
+        gstreamer
+        #gst-plugins-base
+        #gst-plugins-good
+        #gst-plugins-bad
+        #gst-plugins-ugly
+        gst-orc
+        vkd3d-proton
+        OpenXR-SDK
+        dxvk-nvapi
+        vkd3d
+        Vulkan-Headers
+        SPIRV-Headers
+        #gst-libav
+        ffmpeg
+        dav1d
+        gst-plugins-rs
+        graphene
+        openfst
+        kaldi
+        vosk-api
+        piper
+        libxkbcommon
+        libxml2
+        wayland-protocols
+        libpcap
+        FEX
+        glslang
+    )
+
+    for submodule in "${_submodules[@]}"; do
+        git submodule init "${submodule#*::}"
+        git submodule set-url "${submodule#*::}" "$srcdir"/"${submodule%::*}"
+        git -c protocol.file.allow=always submodule update "${submodule#*::}"
+    done
+
+    pushd vkd3d-proton
+        for submodule in subprojects/dxil-spirv; do
+            git submodule init "${submodule}"
+            git submodule set-url "${submodule}" "$srcdir"/"${submodule#*/}"
+            git -c protocol.file.allow=always submodule update "${submodule}"
+        done
+        for submodule in khronos/{Vulkan-Headers,SPIRV-Headers}; do
+            git submodule init "${submodule}"
+            git submodule set-url "${submodule}" "$srcdir"/"${submodule#*/}"
+            git -c protocol.file.allow=always submodule update "${submodule}"
+        done
+        pushd subprojects/dxil-spirv
+            git submodule init third_party/spirv-headers
+            git submodule set-url third_party/spirv-headers "$srcdir"/SPIRV-Headers
+            git -c protocol.file.allow=always submodule update third_party/spirv-headers
+            for submodule in third_party/{SPIRV-Tools,SPIRV-Cross}; do
+                git submodule init "${submodule}"
+                git submodule set-url "${submodule}" "$srcdir"/"${submodule#*/}"
+                git -c protocol.file.allow=always submodule update "${submodule}"
+            done
+            for submodule in subprojects/dxbc-spirv; do
+                git submodule init "${submodule}"
+                git submodule set-url "${submodule}" "$srcdir"/"${submodule#*/}"
+                git -c protocol.file.allow=always submodule update "${submodule}"
+                pushd "${submodule}"
+                    git submodule init submodules/spirv_headers
+                    git submodule set-url submodules/spirv_headers "$srcdir"/SPIRV-Headers
+                    git -c protocol.file.allow=always submodule update submodules/spirv_headers
+                popd
+            done
+        popd
+    popd
+
+    pushd protonfixes
+        for submodule in subprojects/{libmspack,winetricks,umu-database,unzip,procps-ng}; do
+            git submodule init "${submodule}"
+            git submodule set-url "${submodule}" "$srcdir"/"${submodule#*/}"
+            git -c protocol.file.allow=always submodule update "${submodule}"
+        done
+    popd
+
+    pushd dxvk-nvapi
+        for submodule in external/{Vulkan-Headers,nvapi,vkroots,DirectX-Headers}; do
+            git submodule init "${submodule}"
+            git submodule set-url "${submodule}" "$srcdir"/"${submodule#*/}"
+            git -c protocol.file.allow=always submodule update "${submodule}"
+        done
+    popd
+    
+    pushd dxvk
+        git submodule init include/vulkan
+        git submodule set-url include/vulkan "$srcdir"/Vulkan-Headers
+        git -c protocol.file.allow=always submodule update include/vulkan
+        
+        git submodule init include/spirv
+        git submodule set-url include/spirv "$srcdir"/SPIRV-Headers
+        git -c protocol.file.allow=always submodule update include/spirv
+        
+        git submodule init include/native/directx
+        git submodule set-url include/native/directx "$srcdir"/mingw-directx-headers
+        git -c protocol.file.allow=always submodule update include/native/directx
+        
+        git submodule init subprojects/libdisplay-info
+        git submodule set-url subprojects/libdisplay-info "$srcdir"/libdisplay-info
+        git -c protocol.file.allow=always submodule update subprojects/libdisplay-info
+        
+        for submodule in subprojects/dxbc-spirv; do
+            git submodule init "${submodule}"
+            git submodule set-url "${submodule}" "$srcdir"/"${submodule#*/}"
+            git -c protocol.file.allow=always submodule update "${submodule}"
+            pushd "${submodule}"
+                git submodule init submodules/spirv_headers
+                git submodule set-url submodules/spirv_headers "$srcdir"/SPIRV-Headers
+                git -c protocol.file.allow=always submodule update submodules/spirv_headers
+            popd
+        done
+    popd
+
+    for submodule in gst-plugins-rs; do
+        pushd $submodule
+            cargo update --locked --workspace
+            cargo fetch --locked --target "i686-unknown-linux-gnu"
+            cargo fetch --locked --target "x86_64-unknown-linux-gnu"
+        popd
+    done
+
+    ./patches/protonprep-valve-staging.sh || true # workaround applied patch
+
+    pushd glslang
+        # Missing <cstdint>
+        git cherry-pick -n e40c14a3e007fac0e4f2e4164fdf14d1712355bd
+    popd
+
+    pushd gstreamer
+        # bool definition conflicts
+        git cherry-pick -n b7357fd316ff10e8a6c10eda84dd262903d505a7
+    popd
+
+    pushd openfst
+        # https://github.com/alphacep/openfst/issues/5
+        sed -i 's/#if defined(__BMI2__)/#if defined(__BMI2__) \&\& defined(__x86_64__)/' src/include/fst/extensions/ngram/nthbit.h
+        sed -i 's/#if !defined(__BMI2__)/#if !(defined(__BMI2__) \&\& defined(__x86_64__))/' src/extensions/ngram/nthbit.cc
+    popd
+
+    patch --verbose -p1 -i "$srcdir"/0001-AUR-PKGBUILD-changes.patch
+    patch --verbose -p1 -i "$srcdir"/0002-AUR-Fix-hwnd-redefinition.patch
+    patch --verbose -p1 -i "$srcdir"/0003-Disable-Werror.patch
+    #patch --verbose -p1 -i "$srcdir"/0004-build-Stop-forcing-mno-avx-for-32bit-libraries.patch
+}
+
+build() {
+    export PATH="$(pwd)/wrappers:$PATH"
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+
+    cd build
+    ROOTLESS_CONTAINER="" \
+    ../proton-ge-custom/configure.sh \
+        --container-engine="none" \
+        --proton-sdk-image="" \
+        --build-name="${_pkgname}"
+
+    # Filter known bad flags before applying optimizations
+    # Filter fstack-protector{ ,-all,-strong} flag for MingW.
+    # https://github.com/Joshua-Ashton/d9vk/issues/476
+    export CFLAGS="${CFLAGS//-fstack-protector*([\-all|\-strong])/}"
+    export CXXFLAGS="${CXXFLAGS//-fstack-protector*([\-all|\-strong])/}"
+  
+    # ICE in i386_pe_seh_unwind_emit
+    # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458
+    export CFLAGS="${CFLAGS//-fstack-clash-protection/}"
+    export CXXFLAGS="${CXXFLAGS//-fstack-clash-protection/}"
+    
+    # MinGW don't support fortified functions at all
+    # https://github.com/msys2/MINGW-packages/issues/5803
+    # https://sourceforge.net/p/mingw-w64/mailman/message/36764708/
+    export CFLAGS="${CFLAGS//-Wp,-D_FORTIFY_SOURCE=3/}"
+    export CXXFLAGS="${CXXFLAGS//-Wp,-D_FORTIFY_SOURCE=3/}"
+  
+    # Doesn't compile without remove these flags as of 4.10
+    export CFLAGS="${CFLAGS//-fno-plt/}"
+    export CXXFLAGS="${CXXFLAGS//-fno-plt/}"
+
+    # Some old code will failed because of this. Like unzip in dxvk-nvapi.
+    export CFLAGS="${CFLAGS//-Werror=format-security/}"
+    export CXXFLAGS="${CXXFLAGS//-Werror=format-security/}"
+
+    # basic optimizations for x86-64-v3
+    export x86_COMMON_CFLAGS+=" -march=x86-64-v3 -mtune=core-avx2"
+    export RUSTFLAGS="-C opt-level=3 -C target-cpu=x86-64-v3"
+    export CFLAGS="${CFLAGS//-march=x86-64 -mtune=generic/}"
+    export CXXFLAGS="${CXXFLAGS//-march=x86-64 -mtune=generic/}"
+  
+    # optimizations from O2 plus some -O3
+    export CFLAGS+=" -O2 -floop-interchange -ftree-loop-distribution"
+    export CXXFLAGS+=" -O2 -floop-interchange -ftree-loop-distribution"
+
+    # speed up compile
+    export CFLAGS+=" -pipe"
+    export CXXFLAGS+=" -pipe"
+    
+    # If using -march=native and the CPU supports AVX, launching a d3d9
+    # game can cause an Unhandled exception. The cause seems to be the
+    # combination of AVX instructions and tree vectorization (implied by O3),
+    # all tested archictures from sandybridge to haswell are affected.
+    # Since Wine 5.16 AVX is supported. Testing showed 32bit applications
+    # crashing with AVX regardless, but 64bit applications worked just fine.
+    # Relevant Wine issues
+    # https://bugs.winehq.org/show_bug.cgi?id=45289
+    # https://bugs.winehq.org/show_bug.cgi?id=43516
+    # AVX is "hard" disabled for 32bit in any case.
+    # AVX2 for 64bit is disabled below.
+    # TODO: Temporarily shut down to observe whether it works normally
+    #export CFLAGS+=" -mno-avx2"
+    #export CXXFLAGS+=" -mno-avx2"
+
+    # MinGW doesn't support all -z arguments
+    export LDFLAGS="${LDFLAGS//-Wl,-z,now/}"
+    export LDFLAGS="${LDFLAGS//-Wl,-z,relro/}"
+    export LDFLAGS="${LDFLAGS//-Wl,-z,pack-relative-relocs/}"
+
+    make CONTAINER=1 dist
+}
+
+package() {
+    cd build
+    local _compatdir="$pkgdir/usr/share/steam/compatibilitytools.d"
+    mkdir -v -p "$_compatdir"
+    cp -v -rf --no-dereference --reflink=auto --preserve=mode,links dist "$_compatdir/${_pkgname}"
+
+    mkdir -v -p "$pkgdir/usr/share/licenses/${_pkgname}"
+    mv -v "$_compatdir/${_pkgname}"/LICENSE{,.OFL} \
+        "$pkgdir/usr/share/licenses/${_pkgname}"
+
+    cd "$_compatdir/${_pkgname}/files"
+    i686-w64-mingw32-strip --strip-unneeded \
+        $(find lib/wine \( -iname fakedlls -or -iname i386-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
+    x86_64-w64-mingw32-strip --strip-unneeded \
+        $(find lib64/wine \( -iname fakedlls -or -iname x86_64-windows \) -prune -false -or -iname "*.dll" -or -iname "*.exe")
+
+    local _geckodir="share/wine/gecko/wine-gecko-${_geckover}"
+    i686-w64-mingw32-strip --strip-unneeded \
+        $(find "$_geckodir"-x86 -iname "*.dll" -or -iname "*.exe")
+    x86_64-w64-mingw32-strip --strip-unneeded \
+        $(find "$_geckodir"-x86_64 -iname "*.dll" -or -iname "*.exe")
+
+    local _monodir="share/wine/mono/wine-mono-${_monover}"
+    i686-w64-mingw32-strip --strip-unneeded \
+        $(find "$_monodir"/lib/mono -iname "*.dll" -or -iname "*.exe")
+    i686-w64-mingw32-strip --strip-unneeded \
+        "$_monodir"/lib/x86/*.dll \
+        $(find "$_monodir" -iname "*x86.dll" -or -iname "*x86.exe")
+    x86_64-w64-mingw32-strip --strip-unneeded \
+        "$_monodir"/lib/x86_64/*.dll \
+        $(find "$_monodir" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
+
+    ## licenses
+    local _licensedir=usr/share/licenses/${pkgname}
+    install -v -Dm644 "${srcdir}/proton-ge-custom/LICENSE" "${pkgdir}/${_licensedir}/LICENSE"
+    install -v -Dm644 "${srcdir}/proton-ge-custom/LICENSE.proton" "${pkgdir}/${_licensedir}/LICENSE.proton"
+    install -v -Dm644 "${srcdir}/proton-ge-custom/wine/LICENSE" "${pkgdir}/${_licensedir}/LICENSE.wine"
+    install -v -Dm644 "${srcdir}/proton-ge-custom/protonfixes/LICENSE" "${pkgdir}/${_licensedir}/LICENSE.protonfixes"
+    install -v -Dm644 "${srcdir}/proton-ge-custom/vkd3d/LICENSE" "${pkgdir}/${_licensedir}/LICENSE.vkd3d"
+    install -v -Dm644 "${srcdir}/proton-ge-custom/dxvk/LICENSE" "${pkgdir}/${_licensedir}/LICENSE.dxvk"
+}
+
+sha256sums=('127017a09c4041c76eb93661ae9dbe3893f764153da2824fcb500d689feb3153'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '2cfc8d5c948602e21eff8a78613e1826f2d033df9672cace87fed56e8310afb6'
+            'fd88fc7e537d058d7a8abf0c1ebc90c574892a466de86706a26d254710a82814'
+            'a16606ef0724202e6a6848ece6e0cbba64d11e2f11aefe744af1d93c6d9f99bb'
+            '438ce1f21c5b4a2f3e6552b45e76db2ba9374ecad730458f31d3a88200f949cd'
+            '1b7233e4de7100ee92ecdad638ea2d953b32ac64529e54d234991a2e2848dc4f'
+            '1faccb0e1dc2a9fb1e5dc3404085c014cd177bc7fe9c19bc2aefb10fec6feb8a'
+            '0c615bb114774146c3f9a4751eb36eb945031d11fbd28c12ca0b79ee6cdd1901')
+
