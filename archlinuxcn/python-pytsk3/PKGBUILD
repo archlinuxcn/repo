@@ -2,7 +2,7 @@
 
 _name=pytsk3
 pkgname=python-${_name}
-pkgver=20260416
+pkgver=20260418
 pkgrel=1
 pkgdesc="Python bindings for The Sleuth Kit (libtsk)"
 arch=(x86_64)
@@ -12,7 +12,7 @@ depends=(gcc-libs glibc python sleuthkit)
 makedepends=(git python-build python-installer python-setuptools python-wheel)
 # Upstream git source is incomplete
 source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
-sha512sums=('f3ae9cbb362a9a0fb83ed8f45bbc7989f4644fdb599e7be461fa5d0a4b7489a5ce2816de7ed639300f77eae9c6b13f7d2bb505efa79d50c9e391e6484bcc371e')
+sha512sums=('440300ea95894e7afcecf670c18dba0054b8fec4c6e9dc69b0ecf210da8ba3b5853e87b29986d6ca8bf87047704fe891dc846af6435fd2491535f95e4a399962')
 
 build() {
   cd $_name-$pkgver
