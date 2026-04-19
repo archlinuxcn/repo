@@ -2,7 +2,7 @@
 pkgname=plasma6-applets-netspeed
 _pkgname=plasma-applet-netspeed-widget
 pkgver=3.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Plasma 6 widget that displays the currently used network bandwidth'
 arch=(any)
 url=https://github.com/dfaust/plasma-applet-netspeed-widget
@@ -26,6 +26,7 @@ build() {
     cmake -B build -S $_pkgname-$pkgver \
         -DCMAKE_BUILD_TYPE='None' \
         -DCMAKE_INSTALL_PREFIX='/usr' \
+		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
         -Wno-dev
     cmake --build build
 }
