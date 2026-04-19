@@ -22,4 +22,8 @@ if [[ -f "${_FLAGS_FILE}" ]]; then
     done < "${_FLAGS_FILE}"
 fi
 cd "${_APPDIR}" || { echo "Failed to change directory to ${_APPDIR}"; exit 1; }
-docs
+if [[ "${EUID}" -ne 0 ]] || [[ "${ELECTRON_RUN_AS_NODE}" ]]; then
+    exec electron@electronversion@ "${_RUNNAME}" ${_OPTIONS} "${_USER_FLAGS[@]}" "$@"
+else
+    exec electron@electronversion@ "${_RUNNAME}" ${_OPTIONS} --no-sandbox "${_USER_FLAGS[@]}" "$@"
+fi
