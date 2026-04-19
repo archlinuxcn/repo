@@ -5,7 +5,7 @@ pkgdesc="Turn on devices in your local network"
 url="https://codeberg.org/swsnr/turnon"
 license=("EUPL-1.2")
 arch=("x86_64" "aarch64")
-pkgver=3.0.2
+pkgver=3.0.3
 pkgrel=1
 makedepends=(python-wheel git python-installer python-hatchling python-build blueprint-compiler)
 checkdepends=(
@@ -14,7 +14,7 @@ checkdepends=(
 )
 depends=(libadwaita gtk4 hicolor-icon-theme graphene dconf gcc-libs glib2 glibc python-gobject python-packaging)
 source=("source::git+https://codeberg.org/swsnr/turnon.git#tag=v${pkgver}")
-md5sums=('19e161071fbfe39cae4483b25ffe97d5')
+md5sums=('cb704c717d3b6d4ab1811a03048ff3b3')
 
 function prepare() {
 	cd source
