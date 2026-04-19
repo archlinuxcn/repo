@@ -2,7 +2,7 @@
 
 pkgbase=rime-wanxiang
 pkgname=(rime-wanxiang-dict rime-wanxiang-pro-dict rime-wanxiang-data rime-wanxiang-pro-data)
-pkgver=15.8.2
+pkgver=15.8.3
 pkgrel=1
 pkgdesc="万象拼音：词库基于AI筛选和语料辅助筛选精干高效，配合全新语法模型，输入不再纠结。"
 arch=(any)
@@ -11,7 +11,7 @@ license=('CC-BY-4.0')
 url="https://github.com/amzxyz/rime_wanxiang"
 source=("${url}/archive/refs/tags/v${pkgver}.tar.gz"
         build.sh)
-b2sums=('eb069ae61cc59cbeef6b79e0fec2865c4aa4176caf8c7de2b344635b1e2db44ee6849bf981ebf60c7c9b848ef47af5f2ecd1c9a22daa3f7e119cbfc5a42436bb'
+b2sums=('1a3a95cf850b5940166a500f11302779877f1c7743162ebcbe9bed1ef0786a0af57c0a67b8f6c5617493063aee8698e5a9560e9f831af57a6cd310711a3f5689'
         '1c101a06e52afabaa5a2619022644ad1093449897b5e03abda85d604c4c9a39fe23248e543ab62b9dcafc5ab829b8dc14d4acd22f509124d25648b5d3bab2f8a')
 
 makedepends=("librime" "rime-prelude" "rime-essay" "python" "zip" "rsync")
