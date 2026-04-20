@@ -4,6 +4,7 @@ maintainers:
 build_prefix: multilib
 
 repo_depends:
+  - lib32-gstreamer
   - lib32-gstreamer: lib32-gst-plugins-base-libs
 
 pre_build_script: aur_pre_build(maintainers=['0xjmz'])
