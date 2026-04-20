@@ -2,6 +2,7 @@
 
 pkgname=waylyrics
 pkgver=0.3.21
+_opencc_rust_ver=1.1.19
 pkgrel=3
 pkgdesc="the furry way to show desktop lyrics"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -15,8 +16,10 @@ optdepends=(
 	"breeze-icons: better tray-icon icons"
 	"xdg-desktop-portal: file dialog to import LRC"
 )
-source=("git+${url}#tag=v${pkgver}")
-sha256sums=('365f4c1cdd94a6eb76d5db68ed1e1405429181cd6d60af5c6d251c9a148d07eb')
+source=("git+${url}#tag=v${pkgver}"
+	"git+https://github.com/magiclen/opencc-rust.git#tag=v${_opencc_rust_ver}")
+sha256sums=('365f4c1cdd94a6eb76d5db68ed1e1405429181cd6d60af5c6d251c9a148d07eb'
+            'e707c10ee848d597f009796ca2be9676a3d0dbb12fde90aa47d00def176280fb')
 options=('!lto')
 
 _features=(--features opencc
@@ -24,9 +27,13 @@ _features=(--features opencc
            --features offline-test)
 
 prepare() {
+	sed -i '/MAX_VERSION/d' opencc-rust/build.rs
+
 	cd "${pkgname}/"
+	echo -e "\n[patch.crates-io]\nopencc-rust = { path = '../opencc-rust' }" >> Cargo.toml
+
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target host-tuple
+	cargo fetch --target host-tuple
 }
 
 build() {
