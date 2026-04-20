@@ -9,12 +9,38 @@ update_on:
     github: rime/librime
     use_max_tag: true
 
-  # - source: alpm
-  #   alpm: luajit
-  #   repo: extra
+  - source: alpm
+    alpm: boost
+    repo: extra
+    from_pattern: '^(\d+\.\d+.\d+).*'
+    to_pattern: '\1'
 
-  # - source: alpm
-  #   alpm: boost-libs
-  #   repo: extra
-  #   from_pattern: '^(\d+)\..*'  
-  #   to_pattern: '\1'
+  - source: alpm
+    alpm: capnproto
+    repo: extra
+    from_pattern: '^(\d+\.\d+.\d+).*'
+    to_pattern: '\1'
+
+  - source: alpm
+    alpm: leveldb
+    repo: extra
+    from_pattern: '^(\d+).*'
+    to_pattern: '\1'
+
+  - source: alpm
+    alpm: marisa
+    repo: extra
+    from_pattern: '^(\d+).*'
+    to_pattern: '\1'
+
+  - source: alpm
+    alpm: opencc
+    repo: extra
+    from_pattern: '^(\d+\.\d+).*'
+    to_pattern: '\1'
+
+  - source: alpm
+    alpm: yaml-cpp
+    repo: extra
+    from_pattern: '^(\d+\.\d+).*'
+    to_pattern: '\1'
