@@ -1,0 +1,40 @@
+# Maintainer: lilydjwg <lilydjwg@gmail.com>
+
+pkgname=python-rtls
+_pkgname="${pkgname/python-/}"
+pkgver=2026.3.29
+pkgrel=1
+pkgdesc="A drop-in replacement for Python's ssl module, backed by rustls"
+arch=('x86_64' 'x86_64_v3' 'aarch64')
+url='https://github.com/jawah/rtls'
+license=('MIT')
+depends=(
+  python-wassima
+)
+makedepends=(
+  python-build
+  python-maturin
+  python-installer
+  python-wheel
+)
+optdepends=(
+  'python-orjson: for speedups'
+)
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('f02f27d6d97938cbf090a53fd415fac832e02f125c1a3d5f783b97b86a54c9c3')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+
+  # or aws_lc_* symbols are undefined
+  export CFLAGS=${CFLAGS/-flto=auto/}
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+
+  install -Dm0644 -t "${pkgdir}/usr/share/licenses/${pkgname}" LICENSE
+}
