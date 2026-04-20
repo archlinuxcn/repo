@@ -2,44 +2,66 @@
 
 pkgname=waylyrics
 pkgver=0.3.21
+_opencc_rust_ver=1.1.19
 pkgrel=1
 pkgdesc="the furry way to show desktop lyrics"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/${pkgname}/${pkgname}"
 license=("MIT")
 depends=(
-	"openssl" "dbus" "gcc-libs" "glib2" "cairo" "dconf" "gtk4" "gettext"
-	"opencc" "hicolor-icon-theme"
+	"openssl" "dbus" "glibc" "libgcc" "glib2" "cairo" "dconf" "gtk4" "opencc"
 )
-makedepends=("cargo")
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('7279ae1e6d25845d3baac08e8d515e7fa44881ad51146d08a25a3477e2388681')
+makedepends=("git" "cargo" "gettext")
+optdepends=(
+	"breeze-icons: better tray-icon icons"
+	"xdg-desktop-portal: file dialog to import LRC"
+)
+source=("git+${url}#tag=v${pkgver}"
+	"git+https://github.com/magiclen/opencc-rust.git#tag=v${_opencc_rust_ver}")
+sha256sums=('365f4c1cdd94a6eb76d5db68ed1e1405429181cd6d60af5c6d251c9a148d07eb'
+            'e707c10ee848d597f009796ca2be9676a3d0dbb12fde90aa47d00def176280fb')
 options=('!lto')
 
+_features=(--features opencc
+           --features action-event
+           --features offline-test)
+
 prepare() {
-	cd "${pkgname}-${pkgver}/"
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	sed -i '/MAX_VERSION/d' opencc-rust/build.rs
+
+	cd "${pkgname}/"
+	echo -e "\n[patch.crates-io]\nopencc-rust = { path = '../opencc-rust' }" >> Cargo.toml
+
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --target host-tuple
 }
 
 build() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
 	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${pkgname}/themes/"
-	cargo build --release --frozen --all-targets --all-features
+	# --all-features introduced dbus/vendored feature, we prefer system dbus here.
+	cargo build --release --frozen "${_features[@]}"
 }
 
 check() {
-	cd "${pkgname}-${pkgver}/"
+	cd "${pkgname}/"
+	export RUSTUP_TOOLCHAIN=stable
 	export WAYLYRICS_THEME_PRESETS_DIR="/usr/share/${pkgname}/themes/"
-	cargo test --release --frozen --all-features
+	cargo test --frozen "${_features[@]}"
 }
 
 package() {
-	cd "${pkgname}-${pkgver}/"
-	local APP_ID=io.github.waylyrics.Waylyrics
+	depends+=("hicolor-icon-theme")
+
+	cd "${pkgname}/"
+	local _app_id=io.github.waylyrics.Waylyrics
 
 	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
-	install -Dm644 "metainfo/${APP_ID}.desktop" -t "${pkgdir}/usr/share/applications/"
-	install -Dm644 "metainfo/${APP_ID}.gschema.xml" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
+	install -Dm644 "metainfo/${_app_id}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "metainfo/${_app_id}.gschema.xml" -t "${pkgdir}/usr/share/glib-2.0/schemas/"
+	install -Dm644 "metainfo/${_app_id}.metainfo.xml" -t "${pkgdir}/usr/share/metainfo/"
 	install -Dm644 themes/*.css -t "${pkgdir}/usr/share/${pkgname}/themes/"
 
 	for locale in locales/*/LC_MESSAGES/waylyrics.po; do
@@ -49,6 +71,6 @@ package() {
 		msgfmt "${locale}" -o - | install -Dm644 /dev/stdin "${pkgdir}/usr/share/locale/${mo}"
 	done
 
-	cp -r res/icons/ "${pkgdir}/usr/share/"
+	install -Dm644 "res/icons/hicolor/scalable/apps/${_app_id}.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
