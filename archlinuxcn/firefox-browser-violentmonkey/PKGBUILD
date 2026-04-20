@@ -2,7 +2,7 @@
 
 pkgname=(zen-browser-violentmonkey firefox-extension-violentmonkey)
 pkgbase=firefox-browser-violentmonkey
-pkgver=2.35.0
+pkgver=2.36.0
 pkgrel=1
 arch=('any')
 url='https://github.com/Violentmonkey/Violentmonkey'
@@ -11,7 +11,7 @@ groups=('zen-browser-addons')
 pkgdesc='Web Extension for saving a faithful copy of a complete web page in a single HTML file'
 makedepends=('nodejs' 'npm' 'unzip' 'zip' 'git' 'jq' 'yarn')
 source=("source::git+https://github.com/Violentmonkey/Violentmonkey.git#tag=v${pkgver}")
-b2sums=('26aa7ef680e95f1269fdf2b62b7b36949830672818fa85efdd1456904cb3171dca75d77a24c67adeee2387d42f01aecfffeff78c2456b78738c690ae059f01dd')
+b2sums=('7102428bbc8ca48c5d57d5189ed0104eb2ed6b855271f8e13cf1fd534095793b55f4066896903ef9544329a327aad75251c5720da2370828b1d707773223f2f5')
 
 prepare() {
   cd "${srcdir}/source"
