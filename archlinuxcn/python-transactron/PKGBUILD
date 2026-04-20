@@ -13,15 +13,11 @@ depends=('python' 'python-amaranth' 'python-amaranth-stubs' 'python-dataclasses-
          'python-tabulate' 'python-networkx')
 makedepends=('git' 'python-build' 'python-installer' 'python-wheel'
              'python-setuptools-scm' 'python-packaging')
-source=("git+https://github.com/kuznia-rdzeni/transactron.git#tag=v${pkgver}"
-        https://github.com/kuznia-rdzeni/transactron/commit/b68ee5ef8ab8a7407b6aebc71864909fe40ad051.patch)
-sha512sums=('114318dd36367f994a16b5eaea3dc88c9dc40e7237bf11e8581ee7c436d6b7e3fa5e2a21a4f1635e713a98cafcf772010dbfbe3e25a802bf7ead87116f78b506'
-            'c510e59a0227501f435a5875732c512b9f345d6d689d235bcb5f74f281487808932be68d97bea1739b5ef36a227a5961e43d368e2b0ebdf4e4c4cb649e1df2ad')
+source=("git+https://github.com/kuznia-rdzeni/transactron.git#tag=v${pkgver}")
+sha512sums=('114318dd36367f994a16b5eaea3dc88c9dc40e7237bf11e8581ee7c436d6b7e3fa5e2a21a4f1635e713a98cafcf772010dbfbe3e25a802bf7ead87116f78b506')
 
 prepare() {
   cd "${_pkgname}"
-
-  patch -Np1 --no-backup-if-mismatch < ../b68ee5ef8ab8a7407b6aebc71864909fe40ad051.patch
 }
 
 build() {
