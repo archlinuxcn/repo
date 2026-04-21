@@ -1,7 +1,7 @@
 # Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 
 pkgname=mangayomi
-pkgver=0.7.55
+pkgver=0.7.60
 pkgrel=1
 pkgdesc="free and open source application for reading manga, novels, and watching animes"
 url="https://github.com/kodjodevf/${pkgname}"
@@ -20,7 +20,7 @@ makedepends=('cmake'
              'patchelf')
 options=("!lto") # Due to differences in LLVM versions, errors occur when using LTO.
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('d6ebc8b4cb13fddab0f69ee3dde33d0f833bb567c46f2cb9aa5973d697f15543')
+sha256sums=('6ff91f7a3f75326342a40710ee0789d054a4776763d66dd7c75bd355e76efe14')
 
 prepare() {
     cd "${pkgname}-${pkgver}"
