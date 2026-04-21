@@ -1,16 +1,15 @@
 # Maintainer: Zdeněk Biberle <zdenek at biberle dot net>
 pkgname=snx-rs
-pkgver=5.3.0
+pkgver=6.0.0
 pkgrel=1
 pkgdesc="Rust client for Checkpoint VPN tunnels"
 arch=(x86_64)
 url=https://github.com/ancwrd1/snx-rs
 license=(AGPL-3.0-only)
-depends=(gcc-libs glibc openssl glib2 gdk-pixbuf2 gtk4 sqlite webkitgtk-6.0)
-makedepends=(cargo imagemagick)
-checkdepends=(iproute2)
+depends=(fontconfig glib2 glibc gtk4 libgcc openssl sqlite webkitgtk-6.0)
+makedepends=(cargo)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ancwrd1/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('2d9f3e326b0011cee9385d219727a10465f3dc571a1d1c0e2f03a82c0a5765fb')
+sha256sums=('87e6d024c2862f3501e142d775eef41f19c9e9296ba8e994e19fcad9ae2fbeaf')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -32,12 +31,6 @@ check() {
 }
 
 package() {
-  # At runtime, libappindicator-sys loads either libayatana-appindicator3.so
-  # or libappindicator3.so to do its thing. These come from the
-  # libayatana-appindicator and libappindicator-gtk3 packages.
-  # Either one works, but as libappindicator-gtk3 seems to be on its way
-  # out, I've chosen to depend on libayatana-appindicator.
-  depends+=(libayatana-appindicator systemd iproute2)
   cd "$pkgname-$pkgver"
   install -Dm0755 -t "$pkgdir/usr/bin/" target/release/{snx-rs,snxctl,snx-rs-gui}
   install -Dm0644 -t "$pkgdir/usr/lib/systemd/system/" package/snx-rs.service
