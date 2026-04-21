@@ -1,7 +1,7 @@
 # Maintainer: Steffen Hansen <steffengrundsoe@gmail.com>
 pkgname=quickemu
 pkgver=4.9.9
-pkgrel=1
+pkgrel=2
 pkgdesc="Quickly create and run optimised Windows, macOS and Linux desktop virtual machines."
 arch=(any)
 url="https://github.com/quickemu-project/quickemu"
@@ -17,11 +17,7 @@ package() {
   cd "$pkgname-$pkgver"
 
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  install -Dm755 chunkcheck "$pkgdir/usr/bin/chunkcheck"
-  install -Dm755 quickemu "$pkgdir/usr/bin/quickemu"
-  install -Dm755 quickget "$pkgdir/usr/bin/quickget"
-  install -Dm755 quickreport "$pkgdir/usr/bin/quickreport"
-
-  install -Dm644 docs/quickget.1 $pkgdir/usr/share/man/man1/quickget.1
-  install -Dm644 docs/quickemu.1 $pkgdir/usr/share/man/man1/quickemu.1
+  install -Dm755 -t "$pkgdir/usr/bin" chunkcheck quickemu quickget quickreport
+  install -Dm644 -t "$pkgdir/usr/share/man/man1" docs/quickemu.1 docs/quickget.1
+  install -Dm644 -t "$pkgdir/usr/share/man/man5" docs/quickemu_conf.5
 }
