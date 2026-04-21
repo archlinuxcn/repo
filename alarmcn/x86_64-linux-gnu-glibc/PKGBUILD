@@ -2,7 +2,7 @@
 
 _target="x86_64-linux-gnu"
 pkgname=${_target}-glibc
-pkgver=2.43+r5+g856c426a7534
+pkgver=2.43+r22+g8362e8ce10b2
 pkgrel=1
 pkgdesc="GNU C Library (${_target})"
 arch=('any')
@@ -21,7 +21,7 @@ else
 fi
 source=("git+https://sourceware.org/git/glibc.git#${_git_ref}"
         sdt.h sdt-config.h)
-sha256sums=('190fbfb7154e78c8347527a1955309390a8317c1525a11f4966968503773706b'
+sha256sums=('189dd24c032112667c5b704ea8449b3bfeae3af0016006c0332e0c7d4fe58d0f'
             '774061aff612a377714a509918a9e0e0aafce708b87d2d7e06b1bd1f6542fe70'
             'cdc234959c6fdb43f000d3bb7d1080b0103f4080f5e67bcfe8ae1aaf477812f0')
 
