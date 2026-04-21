@@ -13,41 +13,42 @@ depends=('gnome-shell>=45')
 makedepends=('git' 'zip')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("$_pkgname"::git+"${url}".git
-       gnome-49-support.patch)
-b2sums=('SKIP'
-        'ea854d94f70790912c469adc0deeeea0508896d56ee6d503e33c0134f74fe0860153ab760c0ea0e969b4000abe06b8e8034119282b8621e1b31eb84012e02ff6')
+source=("$_pkgname"::git+"${url}".git)
+b2sums=('SKIP')
 
 pkgver() {
-  cd "${_pkgname}"
+    cd "${_pkgname}"
 
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  cd "${_pkgname}"
+    cd "${_pkgname}"
 
-  git apply -3 "${srcdir}"/*.patch
+    # git apply -3 "${srcdir}"/*.patch
 
-  ./translate.sh
+    ./translate.sh
 }
 
 build() {
-  cd "${_pkgname}"
+    cd "${_pkgname}"
 
-  ./bundle.sh
+    ./bundle.sh
 }
 
 package() {
-  cd "${_pkgname}"
+    cd "${_pkgname}"
 
-  local _uuid; _uuid=$(grep -Po '(?<="uuid": ")[^"]*' metadata.json)
+    local _uuid
+    _uuid=$(grep -Po '(?<="uuid": ")[^"]*' metadata.json)
 
-  local _ext_dir="$pkgdir/usr/share/gnome-shell/extensions/${_uuid}"; install -d "$_ext_dir"
-  bsdtar --uid 0 --gid 0 -xvf "${_uuid}".zip -C "$_ext_dir"
+    local _ext_dir="$pkgdir/usr/share/gnome-shell/extensions/${_uuid}"
+    install -d "$_ext_dir"
+    bsdtar --uid 0 --gid 0 -xvf "${_uuid}".zip -C "$_ext_dir"
 
-  local _schema_dir="$pkgdir/usr/share/glib-2.0"; install -d "$_schema_dir"
-  rm "${_ext_dir}/schemas/gschemas.compiled" && mv "$_ext_dir/schemas" "$_schema_dir"
+    local _schema_dir="$pkgdir/usr/share/glib-2.0"
+    install -d "$_schema_dir"
+    rm "${_ext_dir}/schemas/gschemas.compiled" && mv "$_ext_dir/schemas" "$_schema_dir"
 
-  mv "$_ext_dir/locale" "$pkgdir/usr/share" 
+    mv "$_ext_dir/locale" "$pkgdir/usr/share"
 }
