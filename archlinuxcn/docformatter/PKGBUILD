@@ -1,8 +1,8 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=docformatter
-pkgver=1.7.7
-pkgrel=3
+pkgver=1.7.8
+pkgrel=1
 pkgdesc="Formats docstrings to follow PEP 257"
 arch=(any)
 url="https://github.com/PyCQA/$pkgname"
@@ -12,7 +12,7 @@ makedepends=(python-build python-installer python-poetry-core python-wheel pytho
 checkdepends=(python-pytest python-mock)
 provides=(python-docformatter)
 source=($pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz)
-sha512sums=('0863846e5b226eb93a2e23b351328aead9ba5dd8ee578d2d1f0529c7c934a26b46086a47f5edf0efe359dd2f21c76d0f6a8ed2064048c103f537d183a667064a')
+sha512sums=('f7f30544a107cf2ecb6968c179e70b810c93822bdd13d04a3b089dff5b8732f8bcdb7a5e9e584e2aa9783ed47b69ee28b69c100a01e309e70602311f0e05d4ea')
 
 build() {
   cd $pkgname-$pkgver
