@@ -1,5 +1,28 @@
 # Change Log
 
+## [0.31.1](https://github.com/eclipse-lemminx/lemminx/milestone/49?closed=1) (April 21, 2026)
+
+### Enhancements
+ * XML Minify support. See [#1773](https://github.com/eclipse-lemminx/lemminx/pull/1774).
+ * Support XPath predicates with wildcards. See [#1762](https://github.com/eclipse-lemminx/lemminx/pull/1762).
+
+### Bug Fixes
+ * Use XMLLanguageClientAPI in XMLServerSocketLauncher. See [#1772](https://github.com/eclipse-lemminx/lemminx/pull/1772).
+ * Do not create document links with zero length range. See [#1761](https://github.com/eclipse-lemminx/lemminx/pull/1761).
+ * Check for dynamic registration in textDocument/typeDefinition and workspace/executeCommand. See [#1748](https://github.com/eclipse-lemminx/lemminx/pull/1748).
+ * Do not format text content of `<style>` and `<script>`. See [#1755](https://github.com/eclipse-lemminx/lemminx/pull/1755).
+
+### Performance
+ * Improve formatting memory. See [#1768](https://github.com/eclipse-lemminx/lemminx/pull/1768).
+ * DOM Memory improvement. See [#1770](https://github.com/eclipse-lemminx/lemminx/pull/1770)
+
+### Other
+ * Use `ProcessHandle` instead of shell script to check for parent process. See [#1753](https://github.com/eclipse-lemminx/lemminx/pull/1753).
+ * docs: complete client configuration. See [#1751](https://github.com/eclipse-lemminx/lemminx/pull/1751).
+
+### Tests
+ * Replace Thread.sleep() with proper synchronization in tests. See [#1773](https://github.com/eclipse-lemminx/lemminx/pull/1773).
+
 ## [0.31.0](https://github.com/eclipse-lemminx/lemminx/milestone/48?closed=1) (May 8, 2025)
 
 ### Enhancements
