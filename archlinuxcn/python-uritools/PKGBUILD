@@ -2,8 +2,8 @@
 
 _name=uritools
 pkgname=python-$_name
-pkgver=6.0.1
-pkgrel=2
+pkgver=6.0.2
+pkgrel=1
 pkgdesc="URI parsing, classification and composition"
 arch=(any)
 url="https://github.com/tkem/$_name"
@@ -12,7 +12,7 @@ depends=(python)
 makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx)
 checkdepends=(python-pytest)
 source=($pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz)
-sha512sums=('959a78428825d19dcd2df0a958073c73f0c7508e8a57443efd78913e96fa2ccae1db717eecc1f7ca58de0690a175989b319d8b59871f56f205c97eb4428f5d01')
+sha512sums=('73b90566a6f908beb977500b9c60f1cb76e0de1ab26e4c422782ec0d6241361eb8761ee947b7168998e40d78b5247acd57bb75ab353c0c945eea9a7e6f04a772')
 
 build() {
   cd $_name-$pkgver
