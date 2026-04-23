@@ -2,7 +2,7 @@
 # Maintainer: cubercsl <2014cais01 at gmail dot com>
 
 pkgname=dae
-pkgver=1.1.0rc1
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=('x86_64' 'aarch64')
@@ -13,7 +13,7 @@ makedepends=('clang' 'go')
 backup=("etc/${pkgname}/config.${pkgname}")
 source=("${pkgname}-${pkgver}.tar.xz::${url}/releases/download/v${pkgver}/${pkgname}-full-src.tar.xz")
 install="${pkgname}.install"
-sha256sums=('62ceafadd4b3634e01456e0badc6fda2a4c920495a6a7805d66a1f19d88b86fe')
+sha256sums=('2a8236f24fc1e60ca350d5e23e94b91fba1746bfc6b6856bb4d8690eff6f9530')
 
 prepare() {
 	sed -i '/^BUILD_ARGS :=/d' Makefile
