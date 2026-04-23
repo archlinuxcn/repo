@@ -3,7 +3,7 @@
 
 pkgname=dae-avx2-bin
 _pkgname=dae
-pkgver=1.1.0rc1
+pkgver=2.0.0rc1
 pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF (with AVX2 CPU optimizations)"
 arch=('x86_64')
@@ -19,7 +19,7 @@ source=(
 	"https://raw.githubusercontent.com/daeuniverse/${_pkgname}/refs/tags/v${pkgver}/install/empty.${_pkgname}"
 )
 install="${pkgname}.install"
-sha256sums=('5cd96c1ebdd1de51a7105e5e221b0564680c143635ad098ee3fb96bab15aef94'
+sha256sums=('85441630d65178266ab7e1a968152cecb74cd2cd37bde4ba0a739e9ca8b3902c'
             '8c3b3e962bc1288394e54122e5da8d4d54994d17af2fd290331c464dc6b75c86')
 
 package() {
