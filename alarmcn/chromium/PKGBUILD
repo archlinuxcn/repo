@@ -5,7 +5,7 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=chromium
-pkgver=147.0.7727.101
+pkgver=147.0.7727.116
 pkgrel=1
 _launcher_ver=8
 _manual_clone=1
@@ -61,6 +61,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-146-drop-unknown-clang-flag.patch
         chromium-146-build-with-wasm-rollup.patch
         chromium-147-revert-clang-no-lifetime-dse-flag.patch
+        chromium-147-rust-1.95-bytemuck.patch
         compiler-rt-adjust-paths.patch
         increase-fortify-level.patch
         enable-widevine-arm64.patch
@@ -73,6 +74,7 @@ sha256sums=('2e2f36e3cd1ebc4ad57fd310774a5e5e9db77883d5f9374fedeaabd3c103b819'
             '24535c314c7e70c52bcf409aaf604728bfc5b5c97e60087e630e1f7233b9e12d'
             '45fa20cc27ef0aa00d654d0bac84bfaa8d8090b5f8aec49cc2e8d7249d3cd7ba'
             'c382830318c5b37826ecf44f3ba9def6be8affdad1bce819ecb83f3222ff4b3a'
+            'b9e6339221efe03540ffb360c161d93604a1fc93a5a1c53e5e9849066f987d05'
             'ec8e49b7114e2fa2d359155c9ef722ff1ba5fe2c518fa48e30863d71d3b82863'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             '9c766b82d1143cb3413fe2057361bd2655e46287eacc2c6d6f8504b4c255647a'
@@ -170,6 +172,8 @@ prepare() {
   patch -Np1 -i ../chromium-145-fix-SYS_SECCOMP.patch
 
   patch -Np1 -i ../chromium-146-build-with-wasm-rollup.patch
+
+  patch -Np1 -i ../chromium-147-rust-1.95-bytemuck.patch
 
   # enable widevine for arm64
   patch -Np1 -i ../enable-widevine-arm64.patch
