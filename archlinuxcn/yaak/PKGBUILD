@@ -1,0 +1,131 @@
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+# Contributor: Jonas Geiler <aur@jonasgeiler.com>
+# Contributor: SoftExpert <softexpert at gmail dot com>
+pkgname=yaak
+pkgver=2026.3.1
+pkgrel=1
+pkgdesc='Fast, offline and Git-friendly API client for HTTP, GraphQL, WebSockets, SSE, and gRPC'
+arch=('x86_64' 'armv7h' 'aarch64')
+url='https://yaak.app/'
+license=('MIT')
+depends=(
+    # As reported by namcap
+    bzip2
+    cairo
+    dbus
+    fontconfig
+    gdk-pixbuf2
+    glib2
+    glibc
+    gtk3
+    hicolor-icon-theme
+    libgcc
+    libsoup3
+    openssl
+    sqlite
+    webkit2gtk-4.1
+    xz
+    zlib
+    # Use system packages
+    nodejs
+    protobuf
+)
+makedepends=(
+    appmenu-gtk-module   # Tauri
+    cargo                # Rust dependencies & Tauri build
+    clang                # LLVM C compiler
+    git                  # Sources
+    libappindicator-gtk3 # Tauri
+    librsvg              # Tauri
+    lld                  # LLVM linker
+    npm                  # Node dependencies & web build
+    rust-wasm            # Yaak
+    wasm-pack            # Yaak
+)
+provides=("${pkgname}-app")
+conflicts=("${pkgname}-app-beta" "${pkgname}-appimage" "${pkgname}-bin" "${pkgname}-git")
+source=("${pkgname}::git+https://github.com/mountain-loop/yaak.git#tag=v${pkgver}")
+b2sums=('0398303364d940912ebe10e0aa755ac312189cbbd4bc33f1e9cca393596caddf04af8bb5f0fdcc61b7cf666fc7f602a044c18e1863dcf5cd92901899dceeef89')
+
+_setup_env() {
+    export YAAK_VERSION="${pkgver}"
+    export TAURI_APP_PATH="${srcdir}/${pkgname}/crates-tauri/"
+    export CI=true
+
+    # Used for dynamic linking
+    export OPENSSL_NO_VENDOR=1
+    export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+
+    # https://github.com/briansmith/ring/issues/1444#issuecomment-1763272308
+    # So we use Clang instead of GCC.
+    export CC="$(command -v clang)"
+    export AR="$(command -v llvm-ar)"
+    export NM="$(command -v llvm-nm)"
+    export RANLIB="$(command -v llvm-ranlib)"
+    local _LD_LLD="$(command -v ld.lld)"
+
+    local _rust_target=$(rustc -vV | awk '/host:/ {print $2}')
+    local _rust_target_env=$(echo "${_rust_target}" | tr 'a-z-' 'A-Z_')
+
+    export CARGO_TARGET_${_rust_target_env}_LINKER="${CC}"
+    # Merge existing makepkg defaults and inject our LLVM linkage flags
+    export CARGO_TARGET_${_rust_target_env}_RUSTFLAGS="${RUSTFLAGS} -Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
+    # Unset global RUSTFLAGS so we do not break WebAssembly cross-compilation
+    unset RUSTFLAGS
+
+    export RUSTDOCFLAGS="-Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
+
+    export CARGO_PROFILE_RELEASE_LTO=thin
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+}
+
+prepare() {
+    cd "${srcdir}/${pkgname}"
+
+    # Avoid downloading Node.js and Protoc
+    echo "console.log('Skipped NodeJS download for Arch Linux');" > scripts/vendor-node.cjs
+    mkdir -p crates-tauri/yaak-app/vendored/node
+    touch crates-tauri/yaak-app/vendored/node/yaaknode
+
+    echo "console.log('Skipped Protoc download for Arch Linux');" > scripts/vendor-protoc.cjs
+    mkdir -p crates-tauri/yaak-app/vendored/protoc
+    touch crates-tauri/yaak-app/vendored/protoc/yaakprotoc
+    mkdir -p crates-tauri/yaak-app/vendored/protoc/include/google
+    ln -sf "/usr/include/google/protobuf" "crates-tauri/yaak-app/vendored/protoc/include/google/protobuf"
+
+    # Install NPM dependencies
+    npm ci
+}
+
+build() {
+    cd "${srcdir}/${pkgname}"
+    _setup_env
+
+    npm run replace-version
+    npm run tauri build -- --bundles deb
+
+    # Fix .desktop file
+    sed -e 's|Name=yaak|Name=Yaak|' \
+        -e 's|Categories=|Categories=Development;Network;WebDevelopment;|' \
+        -e '$aGenericName=API Client' \
+        -i "target/release/bundle/deb/yaak_${pkgver}_"*/data/usr/share/applications/${pkgname}.desktop
+}
+
+check() {
+    cd "${srcdir}/${pkgname}"
+    _setup_env
+
+    npm test
+}
+
+package() {
+    cp -a "${srcdir}/${pkgname}/target/release/bundle/deb/yaak_${pkgver}_"*/data/usr/ "${pkgdir}/usr/"
+
+    ln -sf "/usr/bin/node" "${pkgdir}/usr/lib/${pkgname}/vendored/node/yaaknode"
+
+    ln -sf "/usr/bin/protoc" "${pkgdir}/usr/lib/${pkgname}/vendored/protoc/yaakprotoc"
+    mkdir -p "${pkgdir}/usr/lib/${pkgname}/vendored/protoc/include/google"
+    ln -sf "/usr/include/google/protobuf" "${pkgdir}/usr/lib/${pkgname}/vendored/protoc/include/google/protobuf"
+
+    install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
