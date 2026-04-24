@@ -2,8 +2,8 @@
 
 pkgname=python-rtls
 _pkgname="${pkgname/python-/}"
-pkgver=2026.3.29
-pkgrel=2
+pkgver=2026.4.24
+pkgrel=1
 pkgdesc="A drop-in replacement for Python's ssl module, backed by rustls"
 arch=('x86_64' 'x86_64_v3' 'aarch64')
 url='https://github.com/jawah/rtls'
@@ -21,7 +21,7 @@ optdepends=(
   'python-orjson: for speedups'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('f02f27d6d97938cbf090a53fd415fac832e02f125c1a3d5f783b97b86a54c9c3')
+sha256sums=('8a1cdea1040c477fa565d8251cc16e29f693dd37d1028a7821e68b72d4a2446a')
 
 build() {
   cd "${_pkgname}-${pkgver}"
