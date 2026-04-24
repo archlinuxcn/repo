@@ -16,14 +16,14 @@
 : ${_quarto:=false}
 
 # dependencies/common/install-copilot-language-server
-: ${_copilot_version:=1.399.0}
+: ${_copilot_version:=1.459.0}
 
-: ${_commit:=1d903d3bd61a40d82bf71aad8471a5a388cc1f73}
+: ${_commit:=57f8932a2d8c5a4a8c0d30ad918ec77f9f2dacaa}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2026.01.2.418
-pkgrel=2
+pkgver=2026.04.0.526
+pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
 license=('AGPL-3.0-only')
@@ -87,12 +87,10 @@ _source_main() {
   source=(
     "rstudio-$pkgver-${_commit::7}.$_pkgext"::"https://github.com/rstudio/rstudio/archive/$_commit.$_pkgext"
     "quarto"::"git+https://github.com/quarto-dev/quarto.git#branch=${_quarto_branch}"
-    '0001-steady_timer.patch'
   )
   sha256sums=(
     'SKIP'
     'SKIP'
-    '84473dc04afe7a78117930d6dda37874563cdcb69e1b69c3171d252f5ef75dce'
   )
 }
 
@@ -179,17 +177,12 @@ prepare() (
   # Suppress _FORTIFY_SOURCE mismatch warnings
   sed -e 's/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=3/' -i src/cpp/CMakeLists.txt
 
-  # fix for Boost 1.89
-  sed -e 's/^\s*system$//' -i src/cpp/CMakeLists.txt
-
-  patch -Np1 -F100 -i ../0001-steady_timer.patch
-
   # fix npm/node paths
   sed -E -e 's&set\(RSTUDIO_NODE_PATH .*\)&set(RSTUDIO_NODE_PATH "/usr/bin")&' \
     -e 's&(set\((RSTUDIO_INSTALLED_NODE_VERSION|RSTUDIO_NODE_VERSION)) "\S+"&\1 "'${_node_version}'"&' \
     -i cmake/globals.cmake
 
-  install -dm755 dependencies/common/node
+  mkdir -p dependencies/common/node
   ln -sfT "$NVM_DIR/versions/node/v$_node_version" \
     dependencies/common/node/"${_node_version}-installed"
 
