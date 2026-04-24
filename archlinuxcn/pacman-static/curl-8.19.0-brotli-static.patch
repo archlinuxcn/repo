@@ -1,0 +1,19 @@
+diff -rauN curl-8.19.0/configure.ac curl-8.19.0-brotli-static-patch/configure.ac
+--- curl-8.19.0/configure.ac	2026-03-11 07:47:06.000000000 +0100
++++ curl-8.19.0-brotli-static-patch/configure.ac	2026-04-24 09:55:57.567719499 +0200
+@@ -1536,6 +1536,15 @@
+         version=`$PKGCONFIG --modversion libbrotlidec`
+       fi
+ 
++      CURL_CHECK_PKGCONFIG(libbrotlienc)
++
++      if test "$PKGCONFIG" != "no"; then
++        LIB_BROTLI=`$PKGCONFIG --libs-only-l libbrotlienc`
++        LD_BROTLI=`$PKGCONFIG --libs-only-L libbrotlienc`
++        CPP_BROTLI=`$PKGCONFIG --cflags-only-I libbrotlienc`
++        version=`$PKGCONFIG --modversion libbrotlienc`
++      fi
++
+       CURL_CHECK_PKGCONFIG(libbrotlicommon)
+ 
+       if test "$PKGCONFIG" != "no"; then

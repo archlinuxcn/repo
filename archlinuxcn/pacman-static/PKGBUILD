@@ -4,19 +4,20 @@
 
 pkgname=pacman-static
 pkgver=7.1.0.r9.g54d9411
-_nghttp2_ver=1.68.1
+_nghttp2_ver=1.69.0
 _curlver=8.19.0
 _sslver=3.6.2
+_brotliver=1.2.0
 _zlibver=1.3.2
 _xzver=5.8.3
 _bzipver=1.0.8
 _zstdver=1.5.7
-_libarchive_ver=3.8.6
+_libarchive_ver=3.8.7
 _gpgerrorver=1.59
 _libassuanver=3.0.0
 _gpgmever=2.0.1
 _libseccompver=2.6.0
-pkgrel=21
+pkgrel=22
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=54d94116164b0b2202c6061c4a59c6f3e70820d8
@@ -25,7 +26,7 @@ arch=('i486' 'i686' 'pentium4' 'x86_64' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://www.archlinux.org/pacman/"
 license=('GPL-2.0-or-later')
 depends=('pacman')
-makedepends=('meson' 'musl' 'kernel-headers-musl' 'git' 'gperf')
+makedepends=('meson' 'cmake' 'musl' 'kernel-headers-musl' 'git' 'gperf')
 options=('!emptydirs' '!lto')
 
 # pacman
@@ -38,7 +39,8 @@ validpgpkeys=('6645B0A8C7005E78DB1D7864F99FFE0FEAE999BD'  # Allan McRae <allan@a
 # nghttp2
 source+=("https://github.com/nghttp2/nghttp2/releases/download/v$_nghttp2_ver/nghttp2-$_nghttp2_ver.tar.xz")
 # curl
-source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc})
+source+=("https://curl.haxx.se/download/curl-${_curlver}.tar.gz"{,.asc}
+         "curl-8.19.0-brotli-static.patch")
 validpgpkeys+=('27EDEAF22F3ABCEB50DB9A125CC908FDB71E12C2') # Daniel Stenberg
 # openssl
 source+=("https://github.com/openssl/openssl/releases/download/openssl-${_sslver}/openssl-${_sslver}.tar.gz"{,.asc}
@@ -54,6 +56,8 @@ validpgpkeys+=('8657ABB260F056B1E5190839D9C4D26D0E604491'  # Matt Caswell <matt@
               '7953AC1FBC3DC8B3B292393ED5E9E43F7DF9EE8C'   # Matt Caswell <matt@openssl.org>
               'A21FAB74B0088AA361152586B8EF1A6BA9DA2D5C'   # Tom?? Mr?z <tm@t8m.info>
               'EFC0A467D613CB83C7ED6D30D894E2CE8B3D79F5')  # OpenSSL security team key
+# brotli
+source+=("git+https://github.com/google/brotli#tag=v${_brotliver}")
 # zlib
 source+=("https://zlib.net/zlib-${_zlibver}.tar.gz"{,.asc})
 validpgpkeys+=('5ED46A6721D365587791E2AA783FCD8E58BCAFBA') # Mark Adler <madler@alumni.caltech.edu>
@@ -88,13 +92,15 @@ validpgpkeys+=('7100AADFAE6E6E940D2E0AD655E45A5AE8CA7C8A' # Paul Moore <paul@pau
 sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b21b2d2de7233eefae70edb8ddd8fc4d4c750bda1ba0235489bc427396c04ba'
             '1a108c4384b6104e627652488659de0b1ac3330640fc3250f0a283af7c5884daab187c1efc024b2545262da1911d2b0b7b0d5e4e5b68bb98db25a760c9f1fb1a'
             '7ca20c2ab350f72552544004b37c5c920ae32b852e7f5315b8b29ee8acb86ca8e1f9f9678792842723908e3cb894f63904af8488cb4d49066a3dba5fc14518aa'
-            'd41d3422127d3190feedcd738bc477c00fa74068afbd5a08d84e954aaf20e172ea593a11db21cd70ddc63fe9550dab42cee55605d75dd4bca0f24ac1cd4b75d7'
+            '31858cfd4a85995d006753c40393a7c23d2bfdd54fdb355757bef1a72b42177d31fff958e9e765a19d83e949eac77998e2bbe933b9390d1f2a1365506f5f6271'
             '745572f0cb9096ff88f737392d1ac25052fc8cff6c35bd09f970301e5e211e3b113f6c184ab2a5ae8c64ab989a9b1fdd6cbcb5d85a0b01d525706124c3ec1e4b'
             'SKIP'
+            'c9fa1e8b3e684f260e51ace59654dff4e45c97f986313a10c205cb22c69186569a2c2ec0e98e2f5c3beb8bdea480dc6fa4e2408bcc6e83566b77490193f5c8e4'
             '46549ed4d6b0160adfa3e1406bc16f3083a7f3c85bdda289c1dbebd0db91433c39855dae765787ec68157faffba4cdb05a0600af4652e3e35da939e0bad8ef1e'
             'SKIP'
             'b1873dbb7a49460b007255689102062756972de5cc2d38b12cc9f389b6be412da6797579b1acd3717a8cd2ee118fd9801b94e55f063d4328f050f0876a5eb53c'
             'b5887ea77417fae49b6cb1e9fa782d3021f268d5219701d87a092235964f73fa72a31428b630445517f56f2bb69dcbbb24119ef9dbf8b4e40a753369a9f9a16f'
+            '36b8fadb3e5de540746eea19c758234095fafc0a4a687bd70fc70b0f74036c03cf9c70a7339aa1626f1197b5ac707bf5b01e393f6cd26c90b78519529724871a'
             '70963771ea5d763614278a69b474f09b7d237ef8f53b675a10fe31d9923aeef601504b35d7ebd1b1e7f347e9ebb048e6b3b47fffdf137e7bdc7e8d5eb4ec4692'
             'SKIP'
             '47f7d0cdd200c0db0bee0cf5d1419993d02219ee7c52dc3ea017a9b6af5c2dc5c0d80eab485715f2eb7016829ad14963e836bf07b32b11b9743fd933df2476d0'
@@ -108,7 +114,7 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
             'SKIP'
             'ad19169594b6048b11df9311080e179232ff03def08f377e7d7536a3a91e12f722cbae93e80364b73db013152b327bc3457ec9a9ddea9c660d74f389f6ab8837'
             'SKIP'
-            '783c5768de2273493d3de377339a134929f412613e19468cee84c0f90301febe818f77252cd886d524e40b7df6356a239208d3ca58f595da0201bcb6030b1044'
+            '0673accf9ac6ede2d1c7e68419d00898f35e43130c5ec6b5fcdea85d174d8b0cc56d1d609bd5533370c3cca5f6ddd5b59fc153f2dadea2b4b5c2421a574ea352'
             'SKIP'
             '34d33f96df79b4e6bb3112bc01d5991fb8045e2af43568f8a6bf02481c0e9295c71987ee17ef49d1fc32a870632acc2c233a851316ecfc9a212095868de24e33')
 
@@ -178,13 +184,49 @@ prepare() {
 build() {
     export PKG_CONFIG_PATH="${srcdir}"/temp/usr/lib/pkgconfig
     export PATH="${srcdir}/temp/usr/bin:${PATH}"
-    
+
+    # xz
+    cd "${srcdir}"/xz
+    ./autogen.sh --no-po4a --no-doxygen
+    ./configure --prefix="${srcdir}"/temp/usr \
+                --disable-shared
+    cd src/liblzma
+    make
+    make install
+
+    # bzip2
+    cd "${srcdir}"/bzip2-${_bzipver}
+    sed -i "s|-O2|${CFLAGS}|g;s|CC=gcc|CC=${CC}|g" Makefile
+    make libbz2.a
+    install -Dvm644 bzlib.h "${srcdir}"/temp/usr/include/
+    install -Dvm644 libbz2.a "${srcdir}"/temp/usr/lib/
+
+    # zstd
+    cd "${srcdir}"/zstd-${_zstdver}/lib
+    make libzstd.a
+    make PREFIX="${srcdir}"/temp/usr install-pc install-static install-includes
+
+    # brotli
+    cd "${srcdir}"/brotli
+    cmake -S . -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX="${srcdir}"/temp/usr \
+        -DBUILD_SHARED_LIBS=False
+    cmake --build .
+    cmake --install .
+
+    # zlib
+    cd "${srcdir}/"zlib-${_zlibver}
+    ./configure --prefix="${srcdir}"/temp/usr \
+                --static
+    make libz.a
+    make install
+
     # openssl
     cd "${srcdir}"/openssl-${_sslver}
     case ${CARCH} in
         x86_64)
             openssltarget='linux-x86_64'
-            optflags='enable-ec_nistp_64_gcc_128'
+            optflags='enable-ktls enable-ec_nistp_64_gcc_128'
             ;;
         pentium4)
             openssltarget='linux-elf'
@@ -212,45 +254,23 @@ build() {
             ;;
 	esac
 
-    # mark stack as non-executable: http://bugs.archlinux.org/task/12434
     ./Configure --prefix="${srcdir}"/temp/usr \
                 --openssldir=/etc/ssl \
                 --libdir=lib \
-                -static \
+                --with-brotli-include="${srcdir}"/temp/usr/include \
+                --with-brotli-lib="${srcdir}"/temp/usr/lib \
+                --with-zlib-include="${srcdir}"/temp/usr/include \
+                --with-zlib-lib="${srcdir}"/temp/usr/lib \
+                --with-zstd-include="${srcdir}"/temp/usr/include \
+                --with-zstd-lib="${srcdir}"/temp/usr/lib \
+                no-shared \
                 no-ssl3-method \
+                enable-brotli enable-zlib enable-zstd \
                 ${optflags} \
                 "${openssltarget}" \
                 "-Wa,--noexecstack ${CPPFLAGS} ${CFLAGS} ${LDFLAGS}"
     make build_libs
     make install_dev
-
-    # xz
-    cd "${srcdir}"/xz
-    ./autogen.sh --no-po4a --no-doxygen
-    ./configure --prefix="${srcdir}"/temp/usr \
-                --disable-shared
-    cd src/liblzma
-    make
-    make install
-
-    # bzip2
-    cd "${srcdir}"/bzip2-${_bzipver}
-    sed -i "s|-O2|${CFLAGS}|g;s|CC=gcc|CC=${CC}|g" Makefile
-    make libbz2.a
-    install -Dvm644 bzlib.h "${srcdir}"/temp/usr/include/
-    install -Dvm644 libbz2.a "${srcdir}"/temp/usr/lib/
-
-    # zstd
-    cd "${srcdir}"/zstd-${_zstdver}/lib
-    make libzstd.a
-    make PREFIX="${srcdir}"/temp/usr install-pc install-static install-includes
-
-    # zlib
-    cd "${srcdir}/"zlib-${_zlibver}
-    ./configure --prefix="${srcdir}"/temp/usr \
-                --static
-    make libz.a
-    make install
 
     # libarchive
     cd "${srcdir}"/libarchive-${_libarchive_ver}
@@ -276,13 +296,17 @@ build() {
 
     # curl
     cd "${srcdir}"/curl-${_curlver}
-    # c-ares is not detected via pkg-config :(
+    # see https://github.com/curl/curl/issues/17678, we just enable brotli for now for
+    # openssl with brotli support to link
+    patch -Np1 < "${srcdir}"/curl-8.19.0-brotli-static.patch
+    autoreconf -if
     ./configure --prefix="${srcdir}"/temp/usr \
                 --disable-shared \
                 --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
                 --enable-{ipv6,threaded-resolver} \
                 --disable-{dict,gopher,imap,ldap,ldaps,manual,pop3,rtsp,smb,smtp,telnet,tftp} \
-                --without-{brotli,libidn2,librtmp,libssh2,libpsl,gssapi,nghttp3,ngtcp2} \
+                --with-brotli \
+                --without-{libidn2,librtmp,libssh2,libpsl,gssapi,nghttp3,ngtcp2} \
                 --disable-libcurl-option \
                 --with-openssl
     make -C lib
