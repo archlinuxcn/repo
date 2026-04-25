@@ -1,5 +1,5 @@
 pkgname=ashpd-demo
-pkgver=0.12.2
+pkgver=0.13.0
 epoch=1
 pkgrel=1
 pkgdesc='Play with the portals'
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('gtk4' 'libadwaita' 'libshumate' xdg-desktop-portal)
 makedepends=('git' 'ninja' 'meson' 'rust' libpipewire clang)
 source=("git+https://github.com/bilelmoussaoui/ashpd.git#tag=${pkgver}")
-sha256sums=('4ccb39809e3b6c2ca2bcd3bf376a816e68c80d2d48e6611197dad613a7442df0')
+sha256sums=('62b58a396959267ab885996f8657c771ccee6b61f731dd59bc8dbe7876d37d50')
 
 build() {
 	cd ashpd/demo/client
