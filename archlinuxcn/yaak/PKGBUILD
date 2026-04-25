@@ -34,23 +34,29 @@ makedepends=(
     appmenu-gtk-module   # Tauri
     cargo                # Rust dependencies & Tauri build
     clang                # LLVM C compiler
-    git                  # Sources
+    imagemagick          # Icon
     libappindicator-gtk3 # Tauri
     librsvg              # Tauri
     lld                  # LLVM linker
+    llvm                 # LLVM tools
     npm                  # Node dependencies & web build
     rust-wasm            # Yaak
     wasm-pack            # Yaak
 )
 provides=("${pkgname}-app")
 conflicts=("${pkgname}-app-beta" "${pkgname}-appimage" "${pkgname}-bin" "${pkgname}-git")
-source=("${pkgname}::git+https://github.com/mountain-loop/yaak.git#tag=v${pkgver}")
-b2sums=('0398303364d940912ebe10e0aa755ac312189cbbd4bc33f1e9cca393596caddf04af8bb5f0fdcc61b7cf666fc7f602a044c18e1863dcf5cd92901899dceeef89')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/v${pkgver}.tar.gz"
+        "${pkgname}.desktop")
+b2sums=('9aff257ebb34f5c8a1b91738427bfa36182f901cf1e85feba16906501b703bf851f57960268eac17d03b592bb6f064f02e3497bfb1871b5cc6eb543ae0fce6a3'
+        '033a4bad9ec877d123768435ece838b58b188497ec56fc9684549320c6311abb3294261946e0b1ee4efbde2b3104c813f486dc706d88025e46a80383e864e46e')
 
 _setup_env() {
     export YAAK_VERSION="${pkgver}"
-    export TAURI_APP_PATH="${srcdir}/${pkgname}/crates-tauri/"
+    export TAURI_APP_PATH="${srcdir}/${pkgname}-${pkgver}/crates-tauri/"
     export CI=true
+
+    export npm_config_cache="${srcdir}/npm_cache"
+    export CARGO_HOME="${srcdir}/cargo_home"
 
     # Used for dynamic linking
     export OPENSSL_NO_VENDOR=1
@@ -80,7 +86,7 @@ _setup_env() {
 }
 
 prepare() {
-    cd "${srcdir}/${pkgname}"
+    cd "${srcdir}/${pkgname}-${pkgver}"
 
     # Avoid downloading Node.js and Protoc
     echo "console.log('Skipped NodeJS download for Arch Linux');" > scripts/vendor-node.cjs
@@ -93,39 +99,56 @@ prepare() {
     mkdir -p crates-tauri/yaak-app/vendored/protoc/include/google
     ln -sf "/usr/include/google/protobuf" "crates-tauri/yaak-app/vendored/protoc/include/google/protobuf"
 
-    # Install NPM dependencies
     npm ci
 }
 
 build() {
-    cd "${srcdir}/${pkgname}"
+    cd "${srcdir}/${pkgname}-${pkgver}"
     _setup_env
 
     npm run replace-version
-    npm run tauri build -- --bundles deb
+    npm run tauri build
 
-    # Fix .desktop file
-    sed -e 's|Name=yaak|Name=Yaak|' \
-        -e 's|Categories=|Categories=Development;Network;WebDevelopment;|' \
-        -e '$aGenericName=API Client' \
-        -i "target/release/bundle/deb/yaak_${pkgver}_"*/data/usr/share/applications/${pkgname}.desktop
+    local icon_src="crates-tauri/yaak-app/icons/icon.png"
+    mkdir -p "${srcdir}/icons-build"
+    for res in 16 24 32 48 64 128 256 512 1024; do
+        magick "${icon_src}" -resize "${res}x${res}" "${srcdir}/icons-build/yaak-app-${res}.png"
+    done
 }
 
 check() {
-    cd "${srcdir}/${pkgname}"
+    cd "${srcdir}/${pkgname}-${pkgver}"
     _setup_env
 
     npm test
+    cargo test --release --all --exclude yaak-cli
 }
 
 package() {
-    cp -a "${srcdir}/${pkgname}/target/release/bundle/deb/yaak_${pkgver}_"*/data/usr/ "${pkgdir}/usr/"
+    cd "${srcdir}/${pkgname}-${pkgver}"
 
+    install -Dm755 "target/release/${pkgname}-app" "${pkgdir}/usr/bin/${pkgname}-app"
+
+    mkdir -p "${pkgdir}/usr/lib/${pkgname}/"
+    cp -r "target/release/static" "${pkgdir}/usr/lib/${pkgname}/"
+
+    mkdir -p "${pkgdir}/usr/lib/${pkgname}/vendored"
+    cp -r "target/release/vendored/plugins" "${pkgdir}/usr/lib/${pkgname}/vendored/"
+    cp -r "target/release/vendored/plugin-runtime" "${pkgdir}/usr/lib/${pkgname}/vendored/"
+
+    mkdir -p "${pkgdir}/usr/lib/${pkgname}/vendored/node"
     ln -sf "/usr/bin/node" "${pkgdir}/usr/lib/${pkgname}/vendored/node/yaaknode"
 
-    ln -sf "/usr/bin/protoc" "${pkgdir}/usr/lib/${pkgname}/vendored/protoc/yaakprotoc"
     mkdir -p "${pkgdir}/usr/lib/${pkgname}/vendored/protoc/include/google"
+    ln -sf "/usr/bin/protoc" "${pkgdir}/usr/lib/${pkgname}/vendored/protoc/yaakprotoc"
     ln -sf "/usr/include/google/protobuf" "${pkgdir}/usr/lib/${pkgname}/vendored/protoc/include/google/protobuf"
 
-    install -Dm644 "${srcdir}/${pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    for res in 16 24 32 48 64 128 256 512 1024; do
+        local target_dir="${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps"
+        install -Dm644 "${srcdir}/icons-build/yaak-app-${res}.png" "${target_dir}/yaak-app.png"
+    done
+
+    install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
