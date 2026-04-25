@@ -2,11 +2,6 @@ maintainers:
   - github: Integral-Tech
     email: integral@archlinuxcn.org
 
-pre_build_script: |
-  run_cmd(['git', 'clean', '-xdf', '.'])
-  aur_pre_build(maintainers=['ptr1337','sir_lucjan'])
-  run_cmd(['updpkgsums'])
-
 post_build: aur_post_build
 
 update_on:
