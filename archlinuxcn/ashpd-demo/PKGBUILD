@@ -2,7 +2,7 @@ pkgname=ashpd-demo
 pkgver=0.12.2
 epoch=1
 pkgrel=1
-pkgdesc='asph-demo'
+pkgdesc='Play with the portals'
 arch=('x86_64')
 url='https://github.com/bilelmoussaoui/ashpd'
 license=('MIT')
@@ -12,15 +12,15 @@ source=("git+https://github.com/bilelmoussaoui/ashpd.git#tag=${pkgver}")
 sha256sums=('4ccb39809e3b6c2ca2bcd3bf376a816e68c80d2d48e6611197dad613a7442df0')
 
 build() {
-  cd ashpd/ashpd-demo
-  meson setup \
-    -Dprefix=/usr \
-    -Dbuildtype=release \
-    build
-  ninja -C build
+	cd demo/client
+	meson setup \
+		-Dprefix=/usr \
+		-Dbuildtype=release \
+		build
+	ninja -C build
 }
 
 package() {
-  cd ashpd/ashpd-demo
-  DESTDIR="$pkgdir" ninja -C build install
+	cd demo/client
+	DESTDIR="$pkgdir" ninja -C build install
 }
