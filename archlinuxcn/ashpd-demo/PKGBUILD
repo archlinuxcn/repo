@@ -12,7 +12,7 @@ source=("git+https://github.com/bilelmoussaoui/ashpd.git#tag=${pkgver}")
 sha256sums=('4ccb39809e3b6c2ca2bcd3bf376a816e68c80d2d48e6611197dad613a7442df0')
 
 build() {
-	cd demo/client
+	cd ashpd/demo/client
 	meson setup \
 		-Dprefix=/usr \
 		-Dbuildtype=release \
@@ -21,6 +21,6 @@ build() {
 }
 
 package() {
-	cd demo/client
+	cd ashpd/demo/client
 	DESTDIR="$pkgdir" ninja -C build install
 }
