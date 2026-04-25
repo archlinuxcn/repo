@@ -62,6 +62,7 @@ sha256sums=('SKIP')
 prepare() {
 	cd ladybird
 	sed -i "s|78.2|78.3|g" Libraries/LibUnicode/CMakeLists.txt || true
+	sed -i "s|78.2|78.3|g" Meta/CMake/check_for_dependencies.cmake || true
 }
 
 pkgver() {
