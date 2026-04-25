@@ -3,6 +3,10 @@
 from lilaclib import *
 
 def pre_build():
+    run_cmd(['git', 'clean', '-xdf', '.'])
+    aur_pre_build(maintainers=['ptr1337','sir_lucjan'])
+    run_cmd(['updpkgsums'])
+
     for line in edit_file('PKGBUILD'):
         if '${_processor_opt:=}' in line:
             line = line.replace('_processor_opt:=', '_processor_opt:=generic')
