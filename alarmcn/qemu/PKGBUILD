@@ -26,8 +26,8 @@ pkgname=(
   qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-pkgver=10.2.2
-pkgrel=4
+pkgver=11.0.0
+pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
 url="https://www.qemu.org/"
@@ -135,26 +135,23 @@ source=(
   65-kvm.rules
   99-qemu-guest-agent.rules
   $pkgbase-8.1.1-static_regression.patch
-  $pkgbase-10.2.0-libnfs6.patch
 )
-sha512sums=('c5409530505c2d1e69a80f1750e377261cea8fee42516a0a89d0343b19d55f9d33579cef181d7cc04d51519e50a55dff1b89175e7685bb803468c8ce03929591'
+sha512sums=('3a047385374cce2fc0d58abbe0d52531ca629f3d25d60b107e1c97372e7ed9caaa5337719d140d0f936b0425d872c0fd77048ef2c13d89295a4c1e650d9daa60'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
             '87c3175aeecbb84852f9aea91fd775af13c21340eef8047520d78550ef72d3d1935a396bb843fc571db8fcb5ca2154d8a135dcca04ca0dfeba3191b16a5a402c'
             'bdf05f99407491e27a03aaf845b7cc8acfa2e0e59968236f10ffc905e5e3d5e8569df496fd71c887da2b5b8d1902494520c7da2d3a8258f7fd93a881dd610c99'
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839'
-            'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12'
-            '7a01af6146658939aa2576eb888df3a1c22f321cfba0a3c6edc0e1c66e1c30d47b800420b328c655c0c1fda549eccf5cfa798441bcea0778249306bbc4f41f13')
-b2sums=('810efae886e5ba56900882455cc8714923378e34995dceaec8177ba5cc7f922547b7cbf68f7ac3804e498b3b4b3895165646c81ff9ad50b09c8286e8b2293a72'
+            'c7d086a951e9a378434ea95a843a4b01f0eb2ae430135a81365147cf6806a7ba1b49014a3aa66904970853ba84a4a28dbaded7bccb99a0bc3730572c80fb8b12')
+b2sums=('0491536e7f5d9767afe3a8b96cfed10cbddd5afc56e630f05d866fc916be1fbc4795b25c77f4105fcb69ca836345e8f67bbb07a3afb0b8e67dc382ccd7e70ca1'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
         '3c8e365b9dbba8ca06e8be0b99f2e6393a8ad0019a3c6fddc2d7806b454fafd65e99a0a1dbedf55b86e982c2e7b2825e67f4d28a61d8078795cae499956e98f6'
         '3559fe9c4f744194939770047a0a02d07ff791c845a80726d0bc7b8c4801ed5f11150e7d5adab813844b3dab1cf38c3a5a87fb6efbb8fc9dccdda9fa56409ed8'
         'a9a2bdfeeb44eb86cbe88ac7c65f72800bdb2fd5cecb02f3a258cf9470b52832180aab43c89d481f7fd4d067342a9a27dd6c8a94d625b95d6e2b912e47d274e7'
-        '209ec05e161d157aaa08a9fcbea45cf87aa22fe9360f9b3c477a78a274e4ecee989c16121f9e6b7765bb479c9db718c98db047c27fd426c127c4c95e28877a16'
-        '18f05db5082752daef3c98f7fc996cd4ffc4ba5c282704997a40b916d3984bb999ed2bc6c66ff04f03834b1c6ff6474988b85e3752e5409bf8b3149f6986661b')
+        '209ec05e161d157aaa08a9fcbea45cf87aa22fe9360f9b3c477a78a274e4ecee989c16121f9e6b7765bb479c9db718c98db047c27fd426c127c4c95e28877a16')
 validpgpkeys=('CEACC9E15534EBABB82D3FA03353C9CEF108B584') # Michael Roth <flukshun@gmail.com>
 
 _qemu_system_deps=(
@@ -288,12 +285,8 @@ prepare() {
   # fix crash with static binaries: https://gitlab.com/qemu-project/qemu/-/issues/1913
   patch -Np1 -d $pkgbase-$pkgver -i ../$pkgbase-8.1.1-static_regression.patch
 
-  # support libnfs 6 (LIBNFS_API_V2)
-  patch -Np1 -d $pkgbase-$pkgver -i ../$pkgbase-10.2.0-libnfs6.patch
-
   # extract licenses for TCG
   sed -n '1,23p' $pkgbase-$pkgver/tcg/tcg-internal.h > tcg.LICENSE.MIT.txt
-  sed -n '1,23p' $pkgbase-$pkgver/tcg/arm/tcg-target.c.inc > tcg-arm.LICENSE.MIT.txt
   sed -n '1,23p' $pkgbase-$pkgver/tcg/tci/tcg-target.h > tci.LICENSE.MIT.txt
 
   # extract licenses for audio
@@ -449,7 +442,7 @@ package_qemu-common() {
   (
     # create man page symlinks for all system emulators
     cd "$pkgdir/usr/share/man/man1"
-    for _name in qemu-system-{aarch64,alpha,arm,avr,hppa,i386,loongarch64,m68k,microblaze{,el},mips{,64,64el,el},or1k,ppc{,64},riscv{32,64},rx,s390x,sh4{,eb},sparc{,64},tricore,x86_64,xtensa{,eb}}; do
+    for _name in qemu-system-{aarch64,alpha,arm,avr,hppa,i386,loongarch64,m68k,microblaze,mips{,64,64el,el},or1k,ppc{,64},riscv{32,64},rx,s390x,sh4{,eb},sparc{,64},tricore,x86_64,xtensa{,eb}}; do
       ln -sv $pkgbase.1.gz "$pkgdir/usr/share/man/man1/$_name.1.gz"
     done
   )
@@ -540,8 +533,8 @@ package_qemu-common() {
     _pick qemu-system-m68k usr/bin/qemu-system-m68k
     _pick qemu-system-m68k usr/share/man/man1/qemu-system-m68k.1*
 
-    _pick qemu-system-microblaze usr/bin/qemu-system-microblaze{,el}
-    _pick qemu-system-microblaze usr/share/man/man1/qemu-system-microblaze{,el}.1*
+    _pick qemu-system-microblaze usr/bin/qemu-system-microblaze
+    _pick qemu-system-microblaze usr/share/man/man1/qemu-system-microblaze.1*
 
     _pick qemu-system-microblaze-firmware usr/share/qemu/dtb/petalogix-*.dtb
 
@@ -594,13 +587,13 @@ package_qemu-common() {
     _pick qemu-system-x86 usr/bin/qemu-system-{i386,x86_64}
     _pick qemu-system-x86 usr/share/man/man1/qemu-system-{i386,x86_64}.1*
 
-    _pick qemu-system-x86-firmware usr/share/qemu/{kvmvapic,linuxboot,multiboot{,_dma},pvh}.bin
+    _pick qemu-system-x86-firmware usr/share/qemu/{kvmvapic,{linuxboot,multiboot}_dma,pvh}.bin
     _pick qemu-system-x86-firmware usr/share/qemu/qboot.rom
 
     _pick qemu-system-xtensa usr/bin/qemu-system-xtensa{,eb}
     _pick qemu-system-xtensa usr/share/man/man1/qemu-system-xtensa{,eb}.1*
 
-    _pick qemu-tests usr/lib/qemu/accel-qtest-*.so
+    _pick qemu-tests usr/lib/qemu/accel-qtest.so
 
     _pick qemu-tools usr/bin/{elf2dmp,qemu-{edid,keymap}}
     _pick qemu-tools usr/share/qemu/trace-events-all
@@ -628,7 +621,7 @@ package_qemu-common() {
     fi
   )
 
-  # remove files provided by edk2-{aarch64,arm,ovmf}
+  # remove files provided by edk2-{aarch64,ovmf,riscv}
   rm -fv "$pkgdir/usr/share/$pkgbase/"edk2-*
   rm -frv "$pkgdir/usr/share/$pkgbase/firmware"
 
