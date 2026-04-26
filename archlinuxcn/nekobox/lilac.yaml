@@ -1,0 +1,13 @@
+maintainers:
+  - github: qr243vbi
+    email: qr243vbi@atomicmail.io
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: qr243vbi/nekobox
+    use_latest_release: true
+
+  - alias: qt6-base
