@@ -1,7 +1,7 @@
 # Maintainer: Denis Yantarev <denis dot yantarev at gmail dot com>
 
 pkgname=bstring
-pkgver=1.0.3
+pkgver=1.1.0
 pkgrel=1
 pkgdesc='Better String Library'
 url='https://mike.steinert.ca/bstring'
@@ -9,13 +9,13 @@ license=('BSD-3-Clause')
 
 source=("https://github.com/msteinert/bstring/releases/download/v${pkgver}/bstring-${pkgver}.tar.xz")
 
-md5sums=('1ec10bf5543ac08e791e4a1160119cfc')
+md5sums=('72e6920f00587346da233ede274f5d6a')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
-makedepends=()
+makedepends=('meson')
 
-depends=()
+depends=('glibc')
 
 optdepends=()
 
@@ -25,18 +25,19 @@ backup=()
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}" || exit 1
-  autoreconf -i
-  ./configure --prefix=/usr
-  make
+  meson setup -Dprefix=/usr build
+  meson compile -C build
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}" || exit 1
-  mkdir -p ${pkgdir}/usr/lib/pkgconfig "${pkgdir}/usr/include/bstring"
-  install -m 0644 ./bstring/.libs/libbstring.so "${pkgdir}/usr/lib/"
-  ln -s libbstring.so "${pkgdir}/usr/lib/libbstring.so.0"
-  ln -s libbstring.so "${pkgdir}/usr/lib/libbstring.so.0.1.0"
-  install -m 0644 ./bstring/{bstraux,bstrlib}.h "${pkgdir}/usr/include/bstring/"
-  install -m 0644 ./bstring.pc "${pkgdir}/usr/lib/pkgconfig/"
+  mkdir -p "${pkgdir}/usr/"{include,lib/pkgconfig,share/licenses/bstring}
+  install -m 0644 "./build/bstring/libbstring.so.${pkgver}" "${pkgdir}/usr/lib/"
+  ln -s "libbstring.so.${pkgver}" "${pkgdir}/usr/lib/libbstring.so"
+  ln -s "libbstring.so.${pkgver}" "${pkgdir}/usr/lib/libbstring.so.${pkgver%%.*}"
+  ln -s "libbstring.so.${pkgver}" "${pkgdir}/usr/lib/libbstring.so.${pkgver%.*}"
+  install -m 0644 ./bstring/{bstraux,bstrlib}.h "${pkgdir}/usr/include/"
+  install -m 0644 ./build/meson-private/bstring.pc "${pkgdir}/usr/lib/pkgconfig/"
+  install -m 0644 ./COPYING "${pkgdir}/usr/share/licenses/bstring/"
 }
 
