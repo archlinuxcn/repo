@@ -2,16 +2,17 @@
 # Contributor: Andrea Mazzoleni <amadvance@gmail.com>
 
 pkgname=snapraid-daemon
-pkgver=1.7
-pkgrel=1
+pkgver=1.8
+pkgrel=0
 pkgdesc="A background service with a built-in Web UI that automates SnapRAID operations"
 arch=('x86_64')
 url="https://www.snapraid.it/"
 license=('GPL-3.0-or-later')
 depends=('glibc' 'zlib' 'zstd' 'snapraid>=14.1')
+makedepends=('zip')
 backup=('etc/snapraidd.conf')
 source=("https://github.com/amadvance/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
-b2sums=('6b9e266ac33810a4fae8f3a6738e7b44918af1c7e1b815cd5a9dbad7ae9d32d7a669e01c2ef3f211e3d55bdf16199f252e04f37cd5bd1c9c2af5a0229b3917a1')
+b2sums=('26e90b1541bd8eaf2eebab906054d80530e7f18af20bd895d686442d3665305fe1e8c2ce082f267107bc88f26c8352495e5da2e102bb42c5b329d22d0637328e')
 
 build() {
   cd "$pkgname-$pkgver"
@@ -26,5 +27,6 @@ package() {
   install -Dm644 AUTHORS "$pkgdir/usr/share/doc/$pkgname/AUTHORS"
   install -Dm644 HISTORY "$pkgdir/usr/share/doc/$pkgname/HISTORY"
   install -Dm644 README "$pkgdir/usr/share/doc/$pkgname/README"
+  install -Dm644 commander.zip "$pkgdir/usr/share/snapraidd/commander.zip"
   install -Dm644 snapraidd.conf.example "$pkgdir/etc/snapraidd.conf"
 }
