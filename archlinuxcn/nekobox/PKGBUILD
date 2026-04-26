@@ -11,12 +11,10 @@ makedepends=('bash' 'gcc-libs' 'glibc' 'libx11' 'qt6-base' 'qt6-declarative' 'th
 source=("https://github.com/qr243vbi/nekobox/releases/download/${pkgver}/nekobox-unified-source-${pkgver}.tar.xz")
 sha256sums=('SKIP')
 
-nekobox_source_directory="nekobox-unified-source-${pkgver}"
-
 build() {
     export NEKOBOX_QT_BUILD=$PWD/build
     export NEKOBOX_CORE_BUILD=$PWD/build_go
-    pushd "${nekobox_source_directory}"
+    pushd "nekobox-unified-source-${pkgver}"
 
     export CGO_CPPFLAGS="${CPPFLAGS}"
     export CGO_CFLAGS="${CFLAGS}"
@@ -25,17 +23,8 @@ build() {
     export GOARCH=""
     export GOOS=linux
 
-    if [[ -d "core/server/vendor" ]]
-    then
-      export GO_MOD_TIDY=OFF
-    else
-      export GO_MOD_TIDY=ON
-    fi
-
-
     cmake -B "${NEKOBOX_CORE_BUILD}" -S ./core \
-        -D SKIP_UPDATER=ON \
-        -D GO_MOD_TIDY="${GO_MOD_TIDY}"
+        -D SKIP_UPDATER=ON
     
     cmake -B "${NEKOBOX_QT_BUILD}" -S . \
         -D BUILD_GO_PARTS=OFF \
@@ -51,67 +40,16 @@ build() {
     popd
 }
 
-packagecore() {
+package_nekobox-core() {
     depends=('gcc-libs' 'glibc')
     provides=('sing-box')
     conflicts=('sing-box')
     DESTDIR="${pkgdir}/usr/libexec" cmake --install "${NEKOBOX_CORE_BUILD}"
 }
 
-packageapp() {
-    depends=('acl' 'bash' 'gcc-libs' 'glibc' 'libx11' 'qt6-base' 'qt6-declarative' "$1" 'thrift' 'boost-libs' 'lmdb')
+package_nekobox() {
+    depends=('acl' 'bash' 'gcc-libs' 'glibc' 'libx11' 'qt6-base' 'qt6-declarative' 'nekobox-core' 'thrift' 'boost-libs' 'lmdb')
     provides=('nekoray')
     conflicts=('nekoray')
     DESTDIR="${pkgdir}" cmake --install "${NEKOBOX_QT_BUILD}"
 }
-
-clearsources(){
-    unset source ||:
-    unset sha256sums ||:
-    typeset -a "source" ||:
-    typeset -a "sha256sums" ||:
-}
-
-if [[ "${#source[@]}" == "0" || "${#source[0]}" == "" || "${NEKOBOX_BRANCH}" != "" ]]
-then
-nekobox_source_directory="nekobox-git"
-pkgname=(nekobox-git nekobox-core-git)
-clearsources
-
-package_nekobox-core-git() {
-    packagecore
-}
-package_nekobox-git() {
-    packageapp 'nekobox-core-git'
-}
-prepare() {
-    local BRANCH="${NEKOBOX_BRANCH:-main}"
-    local REPO="qr243vbi/nekobox"
-
-    if [[ -d "${nekobox_source_directory}" ]]
-    then
-        pushd "${nekobox_source_directory}"
-        git pull
-        popd
-    else
-        git clone --recurse-submodules --depth 1 --single-branch --branch "${BRANCH}" https://github.com/"${REPO}" "${nekobox_source_directory}"
-    fi
-}
-pkgver(){
-    local BRANCH="${NEKOBOX_BRANCH:-main}"
-    local REPO="qr243vbi/nekobox"
-    local LATEST_TAG=$(curl -s "https://api.github.com/repos/$REPO/releases/latest" | jq -r '.tag_name')
-    local COMMIT_TIMESTAMP=$(curl -s "https://api.github.com/repos/$REPO/commits/$BRANCH" | jq -r '.commit.committer.date' | xargs -I{} date -d "{}" +%s)
-    local SHORT_SHA=$(curl -s "https://api.github.com/repos/$REPO/commits/$BRANCH" | jq -r '.sha[0:7]')
-    local VERSION_STRING="${LATEST_TAG}.git${COMMIT_TIMESTAMP}.${SHORT_SHA}"
-    echo $VERSION_STRING
-}
-else
-package_nekobox-core() {
-    packagecore
-}
-
-package_nekobox() {
-    packageapp 'nekobox-core'
-}
-fi
