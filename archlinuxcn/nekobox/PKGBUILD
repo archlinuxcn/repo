@@ -24,7 +24,8 @@ build() {
     export GOOS=linux
 
     cmake -B "${NEKOBOX_CORE_BUILD}" -S ./core \
-        -D SKIP_UPDATER=ON
+        -D SKIP_UPDATER=ON \
+        -D GO_MOD_TIDY=OFF
     
     cmake -B "${NEKOBOX_QT_BUILD}" -S . \
         -D BUILD_GO_PARTS=OFF \
