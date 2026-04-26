@@ -44,7 +44,7 @@ package_nekobox-core() {
     depends=('gcc-libs' 'glibc')
     provides=('sing-box')
     conflicts=('sing-box')
-    DESTDIR="${pkgdir}/usr/libexec" cmake --install "${NEKOBOX_CORE_BUILD}"
+    DESTDIR="${pkgdir}" cmake --install "${NEKOBOX_CORE_BUILD}"
 }
 
 package_nekobox() {
