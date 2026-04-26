@@ -3,7 +3,7 @@
 # Contributor: hexchain <arch at hexchain.org>
 
 pkgname=libkrun
-pkgver=1.17.4
+pkgver=1.18.0
 pkgrel=1
 pkgdesc="A dynamic library providing Virtualization-based process isolation capabilities"
 url='https://github.com/containers/libkrun'
@@ -11,13 +11,17 @@ arch=(aarch64 x86_64)
 license=('Apache-2.0')
 makedepends=('cargo' 'patchelf' 'clang')
 depends=('glibc' 'gcc-libs' 'libkrunfw' 'pipewire' 'virglrenderer')
-source=("https://github.com/containers/libkrun/archive/refs/tags/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('2708a3c207c5493ee02de1781836c2511e54eb280633fcc7058fee983a6c2fe3')
+source=("https://github.com/containers/libkrun/archive/refs/tags/v$pkgver/$pkgname-$pkgver.tar.gz"
+        "$pkgname-bump-libspa0.9.patch::https://github.com/containers/libkrun/pull/652.patch")
+sha256sums=('3aad8087049c77424b2675ba08fe7b53708000e6df242d606e45af731f8a62cd'
+            '1e2c53c43f3bce6601770e6e60399ccdf1fd49d10f59f0b419e549edbebcd921')
 
 prepare() {
   cd "$pkgname-$pkgver"
 
   cargo fetch --locked --target "$(rustc --print host-tuple)"
+
+  patch -Np1 -i "$srcdir/$pkgname-bump-libspa0.9.patch"
 }
 
 build() {
