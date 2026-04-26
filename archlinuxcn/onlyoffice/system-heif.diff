@@ -1,0 +1,35 @@
+--- ./core/Common/3dParty/heif/heif.pri.orig	2025-10-15 16:51:29.093102753 +0200
++++ ./core/Common/3dParty/heif/heif.pri	2025-10-15 16:53:29.420901515 +0200
+@@ -7,9 +7,6 @@
+ 
+ HEIF_BUILD_PATH = $$PWD/libheif/build/$$HEIF_BUILDS_PLATFORM_PREFIX/$$CORE_BUILDS_CONFIGURATION_PREFIX
+ 
+-INCLUDEPATH += \
+-	$$PWD/libheif/libheif/api \
+-	$$HEIF_BUILD_PATH				# for heif_version.h
+ 
+ core_windows {
+ 	core_debug {
+@@ -28,10 +25,10 @@
+ 	# we need to wrap x265 and de265 libraries in `whole-archive` flags to avoid "undefined symbol" errors when later linking with graphics.so
+ 	LIBS += \
+ 		-Wl,--whole-archive \
+-		-L$$PWD/x265_git/build/$$HEIF_BUILDS_PLATFORM_PREFIX/$$CORE_BUILDS_CONFIGURATION_PREFIX -lx265 \
+-		-L$$PWD/libde265/build/$$HEIF_BUILDS_PLATFORM_PREFIX/$$CORE_BUILDS_CONFIGURATION_PREFIX/libde265 -lde265 \
++		-lx265 \
++		-lde265 \
+ 		-Wl,--no-whole-archive \
+-		-L$$HEIF_BUILD_PATH/libheif -lheif
++		-lheif
+ }
+ 
+ core_mac | core_ios {
+--- ./core/DesktopEditor/raster/heif/heif.h.orig	2025-10-15 16:58:02.350920099 +0200
++++ ./core/DesktopEditor/raster/heif/heif.h	2025-10-15 16:58:20.922361288 +0200
+@@ -1,5 +1,5 @@
+ #include "../BgraFrame.h"
+-#include "../../Common/3dParty/heif/libheif/libheif/api/libheif/heif.h"
++#include <libheif/heif.h>
+ #include "../../UnicodeConverter/UnicodeConverter.h"
+ 
+ namespace NSHeif {

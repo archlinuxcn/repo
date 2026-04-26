@@ -1,0 +1,15 @@
+--- win-linux/src/cthemes.cpp.orig	2026-03-04 12:07:29.342499324 +0800
++++ win-linux/src/cthemes.cpp	2026-03-04 12:08:19.790960001 +0800
+@@ -1,9 +1,11 @@
+-
+ #include "cthemes.h"
+ #ifdef Q_OS_LINUX
++# pragma push_macro("signals")
++# undef signals
+ # include <gtk/gtk.h>
+ # include <gio/gio.h>
+ # include <glib.h>
++# pragma pop_macro("signals")
+ # include "cascapplicationmanagerwrapper.h"
+ #endif
+ #include "defines.h"

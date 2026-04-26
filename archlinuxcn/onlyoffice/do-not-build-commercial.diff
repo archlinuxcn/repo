@@ -1,0 +1,11 @@
+--- ./scripts/package_desktop.py.orig	2025-10-16 08:03:56.924611074 +0200
++++ ./scripts/package_desktop.py	2025-10-16 08:06:13.538722991 +0200
+@@ -329,7 +329,7 @@
+ def make_linux():
+   utils.set_cwd("desktop-apps/win-linux/package/linux")
+ 
+-  for edition in ["opensource", "commercial"]:
++  for edition in ["opensource"]:
+     utils.log_h2("desktop " + edition + " build")
+     make_args = [t["make"] for t in branding.desktop_make_targets]
+     if edition == "commercial":

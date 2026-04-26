@@ -1,0 +1,10 @@
+--- ./core/PdfFile/SrcWriter/Utils.cpp.orig	2025-10-15 17:00:46.463347770 +0200
++++ ./core/PdfFile/SrcWriter/Utils.cpp	2025-10-15 17:01:33.634053101 +0200
+@@ -30,6 +30,7 @@
+  *
+  */
+ #include "Utils.h"
++#include <limits>
+ #include <vector>
+ #include <ctime>
+ #include <cwctype>

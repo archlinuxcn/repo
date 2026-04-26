@@ -1,0 +1,12 @@
+diff --git a/scripts/base.py b/scripts/base.py
+index d029c8d..449df43 100644
+--- a/scripts/base.py
++++ b/scripts/base.py
+@@ -540,6 +540,7 @@ def get_ssh_base_url():
+   return cur_origin[:ind+12]
+ 
+ def git_update(repo, is_no_errors=False, is_current_dir=False, git_owner=""):
++  return
+   print("[git] update: " + repo)
+   owner = git_owner if git_owner else "ONLYOFFICE"
+   url = "https://github.com/" + owner + "/" + repo + ".git"
