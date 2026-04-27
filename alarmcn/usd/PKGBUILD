@@ -7,7 +7,7 @@
 pkgname='usd'
 pkgbase=usd
 pkgver=26.05
-pkgrel=1
+pkgrel=2
 arch=(aarch64 x86_64)
 url='https://openusd.org'
 pkgdesc='3D VFX pipeline interchange file format'
@@ -16,6 +16,9 @@ depends=(alembic # libAlembic.so
          draco # libdraco.so
          embree # libembree4.so
          glew
+         libgcc
+         libstdc++
+         glibc
          imath # libImath-3_1.so
          jemalloc libjemalloc.so
          libglvnd libGL.so
