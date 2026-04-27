@@ -41,6 +41,7 @@ depends=(
   libxfixes
   libxkbcommon
   libxrender
+  lua
   mesa
   muparser
   opengl-driver
