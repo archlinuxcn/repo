@@ -9,7 +9,7 @@ post_build_script: |
 update_on:
   - source: "github"
     github: "vitejs/vite"
-    include_prereleases: false
+    use_max_tag: true
     include_regex: "v.*"
     prefix: "v"
 build_prefix: extra-x86_64
