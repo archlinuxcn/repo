@@ -2,7 +2,7 @@
 
 pkgname=qmlmaterial
 _srcname=QmlMaterial
-pkgver=0.1.5
+pkgver=0.1.6
 pkgrel=1
 pkgdesc="Material Design 3 for QML"
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=('qt6-base' 'qt6-declarative' 'qt6-shadertools')
 makedepends=('git' 'git-lfs' 'cmake')
 provides=('libqml_material.so')
 source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('27ddc19338c8b619df6d42201e7697e821392b73765a246876274baa68757ccc')
+sha256sums=('dbd2550836048f35ec748e12eec6b5a5b9cc749d3beae5e779dc8d0a1d7b267f')
 
 prepare() {
 	cd "${_srcname}/"
