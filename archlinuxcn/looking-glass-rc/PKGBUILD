@@ -42,7 +42,7 @@ package_looking-glass-rc() {
 	depends=('binutils' 'fontconfig' 'gcc-libs' 'glibc' 'gmp' 'libegl' 'libgl'
 		'libpipewire' 'libpulse' 'libsamplerate' 'libx11' 'libxcursor'
 		'libxfixes' 'libxi' 'libxinerama' 'libxkbcommon' 'libxpresent'
-		'libxss' 'nettle' 'wayland' 'zlib' 'zstd')
+		'libxss' 'nettle' 'wayland' 'zlib' 'zstd' 'libsframe.so')
 	provides=("${_pkgname}")
 	conflicts=("${_pkgname}")
 	cd "${srcdir}/${_lgdir}/client/build"
