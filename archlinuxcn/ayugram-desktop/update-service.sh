@@ -16,14 +16,17 @@ do
     source_line=${source_line%%*( )} # Remove tailing space
     shopt -u extglob
     declare filename="${source_line%%::*}" url="${source_line#*::}" service_params
-    declare -a params
-    params=("$(jq -rc --null-input '$ARGS.named' --arg '@name' 'url' --arg '#text' "$url")")
-    if [[ -n "$filename" ]]
+    if [[ "$url" = *://* ]]
     then
-        params+=("$(jq -rc --null-input '$ARGS.named' --arg '@name' 'filename' --arg '#text' "$filename")")
+        declare -a params
+        params=("$(jq -rc --null-input '$ARGS.named' --arg '@name' 'url' --arg '#text' "$url")")
+        if [[ -n "$filename" ]]
+        then
+            params+=("$(jq -rc --null-input '$ARGS.named' --arg '@name' 'filename' --arg '#text' "$filename")")
+        fi
+        service_params="$(jq -rc --null-input '$ARGS.positional' --jsonargs "${params[@]}")"
+        services+=("$(jq -rc --null-input '$ARGS.named' --arg '@name' 'download_url' --argjson 'param' "$service_params")")
     fi
-    service_params="$(jq -rc --null-input '$ARGS.positional' --jsonargs "${params[@]}")"
-    services+=("$(jq -rc --null-input '$ARGS.named' --arg '@name' 'download_url' --argjson 'param' "$service_params")")
 done < <(grep source .SRCINFO | sort -u | cut -d = -f 2)
 
 services_string="$(jq -rc --null-input '$ARGS.positional' --jsonargs "${services[@]}")"

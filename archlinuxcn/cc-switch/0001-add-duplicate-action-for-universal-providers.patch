@@ -1,0 +1,151 @@
+From f48dda6cad13f92d2ad14899d909455121ba6ec3 Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Tue, 28 Apr 2026 15:43:42 +0800
+Subject: [PATCH] feat(universal-provider): add duplicate action for universal
+ providers
+
+Signed-off-by: Hu Butui <hot123tea123@gmail.com>
+---
+ .../universal/UniversalProviderCard.tsx       | 13 +++++++-
+ .../universal/UniversalProviderPanel.tsx      | 30 +++++++++++++++++++
+ src/i18n/locales/en.json                      |  3 ++
+ src/i18n/locales/ja.json                      |  3 ++
+ src/i18n/locales/zh.json                      |  3 ++
+ 5 files changed, 51 insertions(+), 1 deletion(-)
+
+diff --git a/src/components/universal/UniversalProviderCard.tsx b/src/components/universal/UniversalProviderCard.tsx
+index b75bb2ef..4ec21a50 100644
+--- a/src/components/universal/UniversalProviderCard.tsx
++++ b/src/components/universal/UniversalProviderCard.tsx
+@@ -1,5 +1,5 @@
+ import { useTranslation } from "react-i18next";
+-import { Edit2, Trash2, RefreshCw, Globe } from "lucide-react";
++import { Edit2, Trash2, RefreshCw, Globe, Copy } from "lucide-react";
+ import { Button } from "@/components/ui/button";
+ import { ProviderIcon } from "@/components/ProviderIcon";
+ import type { UniversalProvider } from "@/types";
+@@ -9,6 +9,7 @@ interface UniversalProviderCardProps {
+   onEdit: (provider: UniversalProvider) => void;
+   onDelete: (id: string) => void;
+   onSync: (id: string) => void;
++  onDuplicate: (provider: UniversalProvider) => void;
+ }
+ 
+ export function UniversalProviderCard({
+@@ -16,6 +17,7 @@ export function UniversalProviderCard({
+   onEdit,
+   onDelete,
+   onSync,
++  onDuplicate,
+ }: UniversalProviderCardProps) {
+   const { t } = useTranslation();
+ 
+@@ -53,6 +55,15 @@ export function UniversalProviderCard({
+           >
+             <RefreshCw className="h-4 w-4" />
+           </Button>
++          <Button
++            variant="ghost"
++            size="icon"
++            className="h-8 w-8"
++            onClick={() => onDuplicate(provider)}
++            title={t("universalProvider.duplicate", { defaultValue: "复制" })}
++          >
++            <Copy className="h-4 w-4" />
++          </Button>
+           <Button
+             variant="ghost"
+             size="icon"
+diff --git a/src/components/universal/UniversalProviderPanel.tsx b/src/components/universal/UniversalProviderPanel.tsx
+index 0a81a8ac..6db97dc4 100644
+--- a/src/components/universal/UniversalProviderPanel.tsx
++++ b/src/components/universal/UniversalProviderPanel.tsx
+@@ -165,6 +165,35 @@ export function UniversalProviderPanel() {
+     [providers],
+   );
+ 
++  // 复制供应商
++  const handleDuplicate = useCallback(
++    async (provider: UniversalProvider) => {
++      const duplicated: UniversalProvider = {
++        ...JSON.parse(JSON.stringify(provider)),
++        id: crypto.randomUUID(),
++        name: `${provider.name} copy`,
++        createdAt: Date.now(),
++      };
++      try {
++        await universalProvidersApi.upsert(duplicated);
++        toast.success(
++          t("universalProvider.duplicated", {
++            defaultValue: "统一供应商已复制",
++          }),
++        );
++        loadProviders();
++      } catch (error) {
++        console.error("Failed to duplicate universal provider:", error);
++        toast.error(
++          t("universalProvider.duplicateError", {
++            defaultValue: "复制统一供应商失败",
++          }),
++        );
++      }
++    },
++    [loadProviders, t],
++  );
++
+   // 打开编辑
+   const handleEdit = useCallback((provider: UniversalProvider) => {
+     setEditingProvider(provider);
+@@ -235,6 +264,7 @@ export function UniversalProviderPanel() {
+               onEdit={handleEdit}
+               onDelete={handleDeleteClick}
+               onSync={handleSyncClick}
++              onDuplicate={handleDuplicate}
+             />
+           ))}
+         </div>
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 766e018b..c7cf709f 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -2291,6 +2291,9 @@
+     }
+   },
+   "universalProvider": {
++    "duplicate": "Duplicate",
++    "duplicated": "Universal provider duplicated",
++    "duplicateError": "Failed to duplicate universal provider",
+     "title": "Universal Provider",
+     "description": "Universal providers manage Claude, Codex, and Gemini configurations simultaneously. Changes are automatically synced to all enabled apps.",
+     "add": "Add Universal Provider",
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index a4e8e412..fa7fe5d5 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -2291,6 +2291,9 @@
+     }
+   },
+   "universalProvider": {
++    "duplicate": "複製",
++    "duplicated": "統合プロバイダーを複製しました",
++    "duplicateError": "統合プロバイダーの複製に失敗しました",
+     "title": "統合プロバイダー",
+     "description": "統合プロバイダーは Claude、Codex、Gemini の設定を同時に管理します。変更は有効なすべてのアプリに自動的に同期されます。",
+     "add": "統合プロバイダーを追加",
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index ae148fe8..9f744365 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -2291,6 +2291,9 @@
+     }
+   },
+   "universalProvider": {
++    "duplicate": "复制",
++    "duplicated": "统一供应商已复制",
++    "duplicateError": "复制统一供应商失败",
+     "title": "统一供应商",
+     "description": "统一供应商可以同时管理 Claude、Codex 和 Gemini 的配置。修改后会自动同步到所有启用的应用。",
+     "add": "添加统一供应商",
+-- 
+2.54.0
+

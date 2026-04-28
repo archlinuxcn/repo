@@ -2,22 +2,29 @@
 
 pkgname=cherry-studio
 _name="Cherry Studio"
-pkgver=1.7.19
+pkgver=1.9.3
 pkgrel=1
-pkgdesc='🍒 Cherry Studio is a desktop client that supports for multiple LLM providers'
+pkgdesc='Cherry Studio is a desktop client that supports for multiple LLM providers'
 arch=(x86_64)
 url=https://github.com/CherryHQ/cherry-studio
 license=(AGPL-3.0-only)
-_electron=electron38
+_electron=electron41
 depends=("$_electron"
          'bash'
          'glibc'
          'libgcc'
-         'libstdc++')
+         'libstdc++'
+         'libxtst'
+         'alsa-lib'
+         'libxfixes'
+         'libevdev'
+         'python'
+         'wayland'
+         'libx11')
 optdepends=('ollama: Use your local LLM')
-makedepends=('npm' 'pnpm' 'python' 'libcrypt.so=1')
+makedepends=('npm' 'pnpm' 'libcrypt.so=1')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-b2sums=('88c51bc1ddd3534f7450f74bace178ecb6c2f47f32c6ddf2e56333e80daa45d482719c2c498a82c41e8309f028ef7ea92bc0bd3f5feee077c4b9e0a9678b9bb9')
+b2sums=('91d802a99617320e212ac8bd23d245e36c11010e3f233385094126cb47d0c2c45cca2726e60a9408d59150a1f3075a0e70649cb14566464c5fe8eb0be42f8444')
 
 prepare() {
     cat >"${pkgname}.desktop" <<EOD
@@ -73,6 +80,11 @@ build() {
 
     find ./dist/linux-unpacked/resources/app.asar.unpacked \
         -type d \( -name darwin -o -name '*musl*' \) -print -exec rm -r {} +
+
+    if [[ $CARCH != "arm64" ]]; then
+        find ./dist/linux-unpacked/resources/app.asar.unpacked \
+            -type d \( -name arm64-linux \) -print -exec rm -r {} +
+    fi
 }
 
 package() {

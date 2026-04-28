@@ -2,13 +2,13 @@
 
 pkgname=redlib-git
 _pkgname=${pkgname%-git}
-pkgver=0.36.0.r39.gba98178
+pkgver=0.36.0.r56.ga4d36e9
 pkgrel=1
 pkgdesc="Private front-end for Reddit"
 url="https://github.com/${_pkgname}-org/${_pkgname}"
 license=('AGPL-3.0-or-later')
 arch=('x86_64' 'aarch64' 'riscv64')
-makedepends=('git' 'cargo')
+makedepends=('git' 'cargo' 'clang' 'cmake')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 backup=("etc/${_pkgname}.conf")

@@ -11,7 +11,7 @@ pkgname=("${pkgbase}"
 epoch=1
 pkgver=B7
 _pkgver=$(echo "$pkgver" | sed 's/\([A-Z]\+[0-9]\+\)\(rc\)/\1-\2/')
-pkgrel=2
+pkgrel=4
 pkgdesc="An extremely low latency KVMFR (KVM FrameRelay) implementation for guests with VGA PCI Passthrough. (Candidate Version)"
 url="https://looking-glass.io/"
 arch=('x86_64')
@@ -42,7 +42,7 @@ package_looking-glass-rc() {
 	depends=('binutils' 'fontconfig' 'gcc-libs' 'glibc' 'gmp' 'libegl' 'libgl'
 		'libpipewire' 'libpulse' 'libsamplerate' 'libx11' 'libxcursor'
 		'libxfixes' 'libxi' 'libxinerama' 'libxkbcommon' 'libxpresent'
-		'libxss' 'nettle' 'wayland' 'zlib' 'zstd')
+		'libxss' 'nettle' 'wayland' 'zlib' 'zstd' 'libsframe.so')
 	provides=("${_pkgname}")
 	conflicts=("${_pkgname}")
 	cd "${srcdir}/${_lgdir}/client/build"

@@ -7,7 +7,7 @@ license=("Apache-2.0")
 arch=("any")
 pkgver=0.19.1
 pkgrel=1
-makedepends=("yarn-berry" "liburing" "git" "nodejs")
+makedepends=("git" "pnpm" "nodejs-vite")
 depends=()
 source=("git+${url}#tag=v${pkgver}")
 md5sums=('736d762dab97ba704e9545682f20e606')
@@ -17,12 +17,12 @@ backup=()
 
 function prepare() {
 	cd element-call
-	yarn
+	pnpm i
 }
 
 function build() {
 	cd element-call
-	yarn build
+	pnpm build
 }
 
 function package() {

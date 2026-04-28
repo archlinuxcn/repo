@@ -6,8 +6,8 @@
 
 pkgbase=linux-mainline
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v7.0
-pkgver=7.0
+_tag=v7.1-rc1
+pkgver=7.1rc1
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)
@@ -15,10 +15,14 @@ url="https://kernel.org/"
 license=(GPL-2.0-only)
 makedepends=(
   bc
+  binutils
   cpio
   gettext
   git
+  glibc
   libelf
+  libgcc
+  openssl
   pahole
   perl
   python
@@ -26,7 +30,10 @@ makedepends=(
   rust-bindgen
   rust-src
   tar
+  xxhash
   xz
+  zlib
+  zstd
 
   # htmldocs
   graphviz
@@ -42,15 +49,15 @@ options=(
 _srcname=linux-mainline
 source=(
   "$_srcname::git+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git#tag=$_tag"
-  config         # the main kernel config file
+  config.x86_64         # the main kernel config file
 )
 validpgpkeys=(
   ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
-sha256sums=('d461386a5d4f20c7dee8b4fe4e4fb3bef524146a38da458d1763cac864818e17'
-            '3061f542f99dd8dec161029e31dce15281cd99ec68e8403312d135ed13787dfd')
+sha256sums=('b462088c6e30bb1ad6c05217b52421efa581dfcd542f8515fbbf03ed2f4a263e'
+            '3a0d5641f9a65d6425823ce0dbf75ec102fbd9c4c8cfbdaac6dc6da864184e3e')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
@@ -74,9 +81,9 @@ prepare() {
   done
 
   echo "Setting config..."
-  cp ../config .config
+  cp ../config.$CARCH .config
   make olddefconfig
-  diff -u ../config .config || :
+  diff -u ../config.$CARCH .config || :
 
   make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
@@ -97,6 +104,7 @@ _package() {
     kmod
   )
   optdepends=(
+    "$pkgbase-headers: headers and scripts for building modules"
     'linux-firmware: firmware images needed for some devices'
     'scx-scheds: to use sched-ext schedulers'
     'wireless-regdb: to set the correct wireless channels of your country'
@@ -133,29 +141,48 @@ _package() {
 
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
-  depends=(pahole)
+  depends=(
+    binutils
+    glibc
+    libelf
+    libgcc
+    openssl
+    pahole
+    xxhash
+    zlib
+    zstd
+  )
+  provides=(LINUX-HEADERS)
 
   cd $_srcname
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
+
+  local karch
+  case $CARCH in
+    x86_64) karch=x86 ;;
+    *) echo "Unknown CARCH $CARCH"; exit 1 ;;
+  esac
 
   echo "Installing build files..."
   install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
     localversion.* version vmlinux tools/bpf/bpftool/vmlinux.h
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
-  install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
+  install -Dt "$builddir/arch/$karch" -m644 arch/$karch/Makefile
   cp -t "$builddir" -a scripts
   ln -srt "$builddir" "$builddir/scripts/gdb/vmlinux-gdb.py"
 
-  # required when STACK_VALIDATION is enabled
-  install -Dt "$builddir/tools/objtool" tools/objtool/objtool
+  if [[ $(scripts/config -s CONFIG_HAVE_STACK_VALIDATION) = y ]]; then
+    install -Dt "$builddir/tools/objtool" tools/objtool/objtool
+  fi
 
-  # required when DEBUG_INFO_BTF_MODULES is enabled
-  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+  if [[ $(scripts/config -s CONFIG_DEBUG_INFO_BTF_MODULES) = y ]]; then
+    install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+  fi
 
   echo "Installing headers..."
   cp -t "$builddir" -a include
-  cp -t "$builddir/arch/x86" -a arch/x86/include
-  install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
+  cp -t "$builddir/arch/$karch" -a arch/$karch/include
+  install -Dt "$builddir/arch/$karch/kernel" -m644 arch/$karch/kernel/asm-offsets.s
 
   install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
   install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
@@ -175,8 +202,10 @@ _package-headers() {
   find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
 
   echo "Installing Rust files..."
-  install -Dt "$builddir/rust" -m644 rust/*.rmeta
-  install -Dt "$builddir/rust" rust/*.so
+  if [[ $(scripts/config -s CONFIG_RUST) = y ]]; then
+    install -Dt "$builddir/rust" -m644 rust/*.rmeta
+    install -Dt "$builddir/rust" rust/*.so
+  fi
 
   echo "Installing unstripped VDSO..."
   make INSTALL_MOD_PATH="$pkgdir/usr" vdso_install \
@@ -185,7 +214,7 @@ _package-headers() {
   echo "Removing unneeded architectures..."
   local arch
   for arch in "$builddir"/arch/*/; do
-    [[ $arch = */x86/ ]] && continue
+    [[ $arch = */$karch/ ]] && continue
     echo "Removing $(basename "$arch")"
     rm -r "$arch"
   done
