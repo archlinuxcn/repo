@@ -1,0 +1,107 @@
+From 666d88e31578265b65ea5f58af8d16f0c5189986 Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Tue, 28 Apr 2026 15:43:42 +0800
+Subject: [PATCH] feat(universal-provider): add duplicate action for universal
+ providers
+
+Signed-off-by: Hu Butui <hot123tea123@gmail.com>
+---
+ .../universal/UniversalProviderCard.tsx       | 13 +++++++-
+ .../universal/UniversalProviderPanel.tsx      | 31 +++++++++++++++++++
+ 2 files changed, 43 insertions(+), 1 deletion(-)
+
+diff --git a/src/components/universal/UniversalProviderCard.tsx b/src/components/universal/UniversalProviderCard.tsx
+index b75bb2ef..4ec21a50 100644
+--- a/src/components/universal/UniversalProviderCard.tsx
++++ b/src/components/universal/UniversalProviderCard.tsx
+@@ -1,5 +1,5 @@
+ import { useTranslation } from "react-i18next";
+-import { Edit2, Trash2, RefreshCw, Globe } from "lucide-react";
++import { Edit2, Trash2, RefreshCw, Globe, Copy } from "lucide-react";
+ import { Button } from "@/components/ui/button";
+ import { ProviderIcon } from "@/components/ProviderIcon";
+ import type { UniversalProvider } from "@/types";
+@@ -9,6 +9,7 @@ interface UniversalProviderCardProps {
+   onEdit: (provider: UniversalProvider) => void;
+   onDelete: (id: string) => void;
+   onSync: (id: string) => void;
++  onDuplicate: (provider: UniversalProvider) => void;
+ }
+ 
+ export function UniversalProviderCard({
+@@ -16,6 +17,7 @@ export function UniversalProviderCard({
+   onEdit,
+   onDelete,
+   onSync,
++  onDuplicate,
+ }: UniversalProviderCardProps) {
+   const { t } = useTranslation();
+ 
+@@ -53,6 +55,15 @@ export function UniversalProviderCard({
+           >
+             <RefreshCw className="h-4 w-4" />
+           </Button>
++          <Button
++            variant="ghost"
++            size="icon"
++            className="h-8 w-8"
++            onClick={() => onDuplicate(provider)}
++            title={t("universalProvider.duplicate", { defaultValue: "复制" })}
++          >
++            <Copy className="h-4 w-4" />
++          </Button>
+           <Button
+             variant="ghost"
+             size="icon"
+diff --git a/src/components/universal/UniversalProviderPanel.tsx b/src/components/universal/UniversalProviderPanel.tsx
+index 0a81a8ac..6702d27e 100644
+--- a/src/components/universal/UniversalProviderPanel.tsx
++++ b/src/components/universal/UniversalProviderPanel.tsx
+@@ -165,6 +165,36 @@ export function UniversalProviderPanel() {
+     [providers],
+   );
+ 
++  // 复制供应商
++  const handleDuplicate = useCallback(
++    async (provider: UniversalProvider) => {
++      const duplicated: UniversalProvider = {
++        ...JSON.parse(JSON.stringify(provider)),
++        id: crypto.randomUUID(),
++        name: `${provider.name} copy`,
++        createdAt: Date.now(),
++      };
++      try {
++        await universalProvidersApi.upsert(duplicated);
++        await universalProvidersApi.sync(duplicated.id);
++        toast.success(
++          t("universalProvider.duplicated", {
++            defaultValue: "统一供应商已复制并同步",
++          }),
++        );
++        loadProviders();
++      } catch (error) {
++        console.error("Failed to duplicate universal provider:", error);
++        toast.error(
++          t("universalProvider.duplicateError", {
++            defaultValue: "复制统一供应商失败",
++          }),
++        );
++      }
++    },
++    [loadProviders, t],
++  );
++
+   // 打开编辑
+   const handleEdit = useCallback((provider: UniversalProvider) => {
+     setEditingProvider(provider);
+@@ -235,6 +265,7 @@ export function UniversalProviderPanel() {
+               onEdit={handleEdit}
+               onDelete={handleDeleteClick}
+               onSync={handleSyncClick}
++              onDuplicate={handleDuplicate}
+             />
+           ))}
+         </div>
+-- 
+2.54.0
+
