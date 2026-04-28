@@ -1,5 +1,5 @@
 # Maintainer: Zen Wen <zen.8841@gmail.com>
-# Maintainer: Jingbei Li <i@jingbei.li>
+# Contributor: Jingbei Li <i@jingbei.li>
 # Contributor: Lev Velykoivanenko <velykoivanenko dot lev at gmail dot com>
 # Contributor: Flávio Zavan <flavio dot zavan at gmail dot com>
 # Contributor: pingplug
@@ -13,20 +13,20 @@ pkgbase=python-dlib
 [[ $_build_cpu -eq 1 ]] && pkgname+=('python-dlib')
 [[ $_build_cuda -eq 1 ]] && pkgname+=('python-dlib-cuda')
 _pkgname=dlib
-pkgver=20.0
-pkgrel=4
+pkgver=20.0.1
+pkgrel=1
 pkgdesc="Dlib is a general purpose cross-platform C++ library designed using contract programming and modern C++ techniques."
 arch=('x86_64')
 url="http://www.dlib.net/"
 license=('BSL-1.0')
-depends=('cblas' 'ffmpeg' 'giflib' 'lapack' 'libjpeg-turbo' 'libjxl' 'libpng' 'libx11')
+depends=('cblas' 'giflib' 'lapack' 'libjpeg-turbo' 'libjxl' 'libpng' 'libx11')
 makedepends=('boost' 'cmake' 'python-setuptools' 'sqlite')
 [[ $_build_cuda -eq 1 ]] && makedepends+=('ccache-ext' 'cuda' 'cudnn')
 optdepends=('sqlite')
 #source=("$url/files/${_pkgname}-${pkgver}.tar.bz2")
 #source=("https://pypi.io/packages/source/${_pkgname:0:1}/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
 source=("https://github.com/davisking/dlib/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('705749801c7896f5c19c253b6be639f4cef2c1831a9606955f01b600b3d86d80')
+sha256sums=('dab5b4ec4b68bd7dc128a1fb7900723f89d2da107e44cd5def7d38fc57252a9d')
 [[ $_build_cuda -eq 1 ]] && options=(!lto)
 
 prepare() {
@@ -36,13 +36,12 @@ prepare() {
 
 build_python-dlib() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-  python setup.py build --no DLIB_USE_CUDA --no USE_SSE4_INSTRUCTIONS --no USE_AVX_INSTRUCTIONS
+  DLIB_USE_CUDA=OFF python setup.py build
 }
 
 build_python-dlib-cuda() {
   cd "${srcdir}/${_pkgname}-${pkgver}-cuda"
-  python setup.py build \
-    --set CUDA_NVCC_EXECUTABLE=/usr/lib/ccache/bin/nvcc-ccache
+  DLIB_USE_CUDA=ON python setup.py build
 }
 
 build() {
