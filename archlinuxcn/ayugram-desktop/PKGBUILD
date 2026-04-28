@@ -1,8 +1,8 @@
 # Use environment variable MAKEPKG_AYUGRAM_API_ID and MAKEPKG_AYUGRAM_API_HASH to override default values
 
 pkgname=ayugram-desktop
-pkgver=6.3.10
-pkgrel=8
+pkgver=6.7.8
+pkgrel=1
 pkgdesc="Desktop Telegram client with good customization and Ghost mode."
 arch=("x86_64" "aarch64")
 url="https://github.com/AyuGram/AyuGramDesktop"
@@ -11,15 +11,24 @@ depends=('abseil-cpp'
          'ada'
          'ffmpeg'
          'glib2'
+         'glibc'
          'hicolor-icon-theme'
          'hunspell'
          'kcoreaddons'
          'libavif'
          'libdispatch'
+         'libgcc'
          'libheif'
+         'libjpeg-turbo'
          'libjxl'
+         'libpipewire'
+         'libstdc++'
+         'libxcb'
          'libxcomposite'
          'libxdamage'
+         'libxext'
+         'libxfixes'
+         'libxkbcommon'
          'libxrandr'
          'libxtst'
          'lz4'
@@ -29,11 +38,13 @@ depends=('abseil-cpp'
          'openssl'
          'pipewire'
          'protobuf'
+         'qt6-base'
          'qt6-imageformats'
          'qt6-svg'
          'qt6-wayland'
          'rnnoise'
-         'xxhash')
+         'xxhash'
+         'zlib')
 makedepends=('boost'
              'boost-libs'
              'cmake'
@@ -47,152 +58,21 @@ makedepends=('boost'
              'range-v3'
              'tl-expected')
 optdepends=('geoclue: geoinformation support'
-            'geocode-glib-2: geocoding support'
+            'crow-translate: translation provider'
             'webkit2gtk-4.1: embedded browser features provided by webkit2gtk-4.1'
             'webkitgtk-6.0: embedded browser features provided by webkitgtk-6.0 (Wayland only)'
             'xdg-desktop-portal: desktop integration')
-_tdlib_commit=6d74326c5ce53aeb52496f157f0080d9b8515970
-source=("AyuGram-$pkgver.tar.gz::https://github.com/AyuGram/AyuGramDesktop/archive/refs/tags/v$pkgver.tar.gz"
+_tdlib_commit=51743dfd01dff6179e2d8f7095729caa4e2222e9
+source=("AyuGram-$pkgver-full.tar.gz::https://github.com/AyuGram/AyuGramDesktop/releases/download/v$pkgver/AyuGramDesktop-$pkgver-full.tar.gz"
         "td-$_tdlib_commit.tar.gz::https://github.com/tdlib/td/archive/$_tdlib_commit.tar.gz"
         "0001-force-minizip-includes.diff")
-declare -Ag _modules_name_map=([cmake]=https://github.com/desktop-app/cmake_helpers/archive/ba366ade3e70c64d1dd854382abd74f532ba41a1.tar.gz
-                               [cmake/external/glib/cppgir]=https://gitlab.com/mnauw/cppgir/-/archive/2a7d9cef68202a29d5e8a679ce9519c76eb26dc3/cppgir-2a7d9cef68202a29d5e8a679ce9519c76eb26dc3.tar.gz
-                               [cmake/external/glib/cppgir/expected-lite]=https://github.com/martinmoene/expected-lite/archive/95b9cb015fa17baa749c2b396b335906e1596a9e.tar.gz
-                               [Telegram/codegen]=https://github.com/desktop-app/codegen/archive/1c919609d4573f2be91dafef923f8f9e2c08cdff.tar.gz
-                               [Telegram/lib_base]=https://github.com/desktop-app/lib_base/archive/444ab33475734485dcc183a5fb86875c134fac8b.tar.gz
-                               [Telegram/lib_crl]=https://github.com/desktop-app/lib_crl/archive/a41edfcfa8c04057deb8a1a38fca145248a9421a.tar.gz
-                               [Telegram/lib_icu]=https://github.com/AyuGram/lib_icu/archive/fd92c3184598c4e64c10c1961a3c767d43b10b5c.tar.gz
-                               [Telegram/lib_lottie]=https://github.com/desktop-app/lib_lottie/archive/99d8cc4d1820960fbcdafc574f1894073b14b75a.tar.gz
-                               [Telegram/lib_qr]=https://github.com/desktop-app/lib_qr/archive/6fdf60461444ba150e13ac36009c0ffce72c4c83.tar.gz
-                               [Telegram/lib_rpl]=https://github.com/desktop-app/lib_rpl/archive/c57cccffb01d85570decd7fccb88419c9a682e63.tar.gz
-                               [Telegram/lib_spellcheck]=https://github.com/desktop-app/lib_spellcheck/archive/476bb43025449ccbd815a14895e9321695a1a177.tar.gz
-                               [Telegram/lib_storage]=https://github.com/desktop-app/lib_storage/archive/ccdc72548a5065b5991b4e06e610d76bc4f6023e.tar.gz
-                               [Telegram/lib_tl]=https://github.com/AyuGram/lib_tl/archive/6a1bf6bb45ba803d2a9be76db8aead45cb4732d5.tar.gz
-                               [Telegram/lib_ui]=https://github.com/AyuGram/lib_ui/archive/b1710a65b73a09937d4cfef3f84cb39b5848ad5d.tar.gz
-                               [Telegram/lib_webrtc]=https://github.com/desktop-app/lib_webrtc/archive/553102f8c244609253720e7a03c2ea2d3c7fee8e.tar.gz
-                               [Telegram/lib_webview]=https://github.com/desktop-app/lib_webview/archive/55ea11759711d377216eae6c45dad0bc49b67398.tar.gz
-                               [Telegram/ThirdParty/GSL]=https://github.com/desktop-app/GSL/archive/87f9d768866548b5b86e72be66c60c5abd4d9b37.tar.gz
-                               [Telegram/ThirdParty/QR]=https://github.com/nayuki/QR-Code-generator/archive/720f62bddb7226106071d4728c292cb1df519ceb.tar.gz
-                               [Telegram/ThirdParty/cld3]=https://github.com/google/cld3/archive/b48dc46512566f5a2d41118c8c1116c4f96dc661.tar.gz
-                               [Telegram/ThirdParty/dispatch]=https://github.com/apple/swift-corelibs-libdispatch/archive/886ca22f659c53dae66a40ee8266c7aae9bb97cd.tar.gz
-                               [Telegram/ThirdParty/expected]=https://github.com/TartanLlama/expected/archive/292eff8bd8ee230a7df1d6a1c00c4ea0eb2f0362.tar.gz
-                               [Telegram/ThirdParty/fcitx5-qt]=https://github.com/fcitx/fcitx5-qt/archive/c743b12e6780edf1dcfe9071531c80f050cacb95.tar.gz
-                               [Telegram/ThirdParty/hime]=https://github.com/hime-ime/hime/archive/9b3e6f9ab59d1fe4d9de73d3bf0fed7789f921c5.tar.gz
-                               [Telegram/ThirdParty/hunspell]=https://github.com/hunspell/hunspell/archive/22c3381e2066bed616250d373fc5c935598b564a.tar.gz
-                               [Telegram/ThirdParty/kcoreaddons]=https://github.com/KDE/kcoreaddons/archive/fd84da51b554eac25e35b1e3f373edaab3029b15.tar.gz
-                               [Telegram/ThirdParty/kimageformats]=https://github.com/KDE/kimageformats/archive/df82311a1081e576c4ac020204578bb8a81b21ec.tar.gz
-                               [Telegram/ThirdParty/libprisma]=https://github.com/desktop-app/libprisma/archive/23b0d70f9709da9b38561d5706891a134d18df76.tar.gz
-                               [Telegram/ThirdParty/lz4]=https://github.com/lz4/lz4/archive/5ff839680134437dbf4678f3d0c7b371d84f4964.tar.gz
-                               [Telegram/ThirdParty/nimf]=https://github.com/hamonikr/nimf/archive/498ec7ffab3ac140c2469638a14451788f03e798.tar.gz
-                               [Telegram/ThirdParty/range-v3]=https://github.com/ericniebler/range-v3/archive/a81477931a8aa2ad025c6bda0609f38e09e4d7ec.tar.gz
-                               [Telegram/ThirdParty/range-v3/doc/gh-pages]=https://github.com/ericniebler/range-v3/archive/2dae74bb693e42d850fb0adcc9045c5b71fbdeae.tar.gz
-                               [Telegram/ThirdParty/rlottie]=https://github.com/desktop-app/rlottie/archive/8c69fc20cf2e150db304311f1233a4b55a8892d7.tar.gz
-                               [Telegram/ThirdParty/tgcalls]=https://github.com/TelegramMessenger/tgcalls/archive/24876ebca7da10f92dc972225734337f9e793054.tar.gz
-                               [Telegram/ThirdParty/xdg-desktop-portal]=https://github.com/flatpak/xdg-desktop-portal/archive/23a76c392170dbbd26230f85ef56c3a57e52b857.tar.gz
-                               [Telegram/ThirdParty/xxHash]=https://github.com/Cyan4973/xxHash/archive/bbb27a5efb85b92a0486cf361a8635715a53f6ba.tar.gz)
 
-_get_source_name_string() {
-    local host filename name commit
-    host=$(echo "$1" | cut -d / -f 3)
-    name=$(echo "$1" | cut -d / -f 5)
-    filename=${1##*/}
-    commit=${filename%%.*}
-    case "$host" in
-        gitlab.com)
-            # It contains $name in $commit
-            echo "$commit"
-            ;;
-        *)
-            echo "$name-$commit"
-            ;;
-    esac
-}
-
-_fill_gitmodules_recursively() {
-    local gitmodule
-    find "${1:-.}" -type f -name .gitmodules | while read -r gitmodule
-    do
-        if [[ "$gitmodule" =~ ^\.\/ ]]
-        then
-            gitmodule=${gitmodule#*\.\/}
-        fi
-        local prefix
-        prefix=$(dirname "$gitmodule")"/"
-        if [[ "$prefix" =~ ^\.\/ ]]
-        then
-            prefix=${prefix#*\.\/}
-        fi
-        echo "Parsing $gitmodule to fill submodules..."
-        local p
-        grep path "$gitmodule" | awk '{print $3}' | while read -r p
-        do
-            p=${p%$'\r'} # Remove control characters
-            if [[ -n "$p" ]]
-            then
-                local target url name commit fname
-                target="$prefix$p"
-                url="${_modules_name_map[$target]}"
-                fname=$(_get_source_name_string "$url")
-                echo "Filling $target with $srcdir/$fname..."
-                cp -r "$srcdir/$fname/." "$target"
-                _fill_gitmodules_recursively "$target"
-            fi
-        done
-    done
-}
-declare _source_str _uri
-for _uri in "${_modules_name_map[@]}"
-do
-    _source_str="$(_get_source_name_string "$_uri").tar.gz::$_uri"
-    if [[ "${source[*]/$_source_str/}" == "${source[*]}" ]]
-    then
-        source+=("$_source_str")
-    fi
-done
-unset _source_str _uri
-
-sha256sums=('ebeec29f6ad1adf1cfa1d5dc242f13dba48404b645d75e953e57148e533733f3'
-            '9e1c088fbea876b8a6b85b8478abc2facd05e380874a55d7ea687213e4ca3110'
-            '1ff58d023daa8882e952d2322c7b119e31f98ddecea32473bd8079d93295e7b6'
-            'd0d4ea2fddcbc7d10ace2c37309feb09da87e8ce7ced6ce73592da1359f4765f'
-            '532228c09f448562244ef6d62f951504e0ce302e8f11a2edfd0cc9e18420dff6'
-            '8e5187a8624cf780a5b0d0aad7852152d58b8de2e666d6c797674cbcd2e1172a'
-            'cbc1f4bf8c28ffeb89852eda7056ff6aa80d49cb45736a583c931d5ceeccdcdd'
-            '3e7253b2cc31bdf68fa50d105715158e649812e5ad6b4f1f6e5fd1e89b3ffdfd'
-            '5639bab527e395cf57a2227763364ecc2ce8a7ba82aa6f16a377223a1bd14334'
-            '90e233f16f56a55c73906947650f54e92fdf78e24801d8cfaab3a58681c6637c'
-            'e54e7c0aa2467d365f235db5b1bcc1919098ade89b9b3637a78bf7b875cf3b6f'
-            'e2c04c132dc0289b6916e201050eced9f693bb2d5dc0cab0bd5d2a8489644519'
-            '8569c9bf5495b19b76ce6e2e53f40604c8618429ce728bf73b2406d1382fdc94'
-            '716fbe4fc85ecd36488afbbc635b59b5ab6aba5ed3b69d4a32a46eae5a453d38'
-            '11b926f9605b258c35bd9ed806a10cab7ef5edd673ad53a014427b1c71d24a9e'
-            'b838912f5fdc830eaab68d5def68734ede1f6025f2c5791184773db1a4333129'
-            'fe3b18aecb849029b6af94922be0c25eee1b7b86565b1c8350692ed776cf42fb'
-            'eda5df4249051db521c32fb54a8e1864c4f1e50222e431028ba0cad169621ea9'
-            'dd9b92f8bb26cf5eb543d4e9c5c1c62e17449588caa9eaf2500db09b5f3aed25'
-            'e2f2ed20b148a2c80c4002113cef093f92f6ede7af73c9b354d30733ac27df11'
-            '612b5d89f58a578240b28a1304ffb0d085686ebe0137adf175ed0e3382b7ed58'
-            '1548e2d35bf8de4cfeee5ae2f618b0194a12fb6c7d5d07fa9821d329aecda58b'
-            '8ee41f70a64a6347cf2d391a80a503fd5b14950b1b986e286d54a423a0687ec3'
-            '09cdc50332f1be12b51b22c686b00d9cb4063a4e58db74317106a47c68395720'
-            'ead420df1d83cf9b0319c961fa1237184c0418f20978b974911275558eac50b1'
-            'd80795686f3e58448c7b76830bb5c40847b7eaae1996c28f0422a029b66c2bb0'
-            'aba69c97d466e82a13ae6c1d52628c7f7ec8f85c5224f8634fa26a313ebcc95f'
-            '2eaf5f6976f4c990ea2c2f8f8cd0f4ec22a935f799d6f901f10088845707a946'
-            '52a2e052beb67492225a38213108f1d7edd1940fd025cad3a4ae28c57d428419'
-            '41641c1a7e927662a6722a1d7df4c5f60d67fed9cc1f555b6be7d13d14542a68'
-            '6b9b7d0cd3dce4e327b9376716a798269443be2566e0a411816f13dec1007a16'
-            '2f2b036a60265a62b459432c77d90bb9016cd87b50385d27ab36acc08b991107'
-            'f75e843a2b4a8a0e8e0e4547d3066b51a3fe39d33c9bbdeb65c2f1b51786ed0e'
-            '2736d6f36f9f90323f2a0ed6fa59f52b8be71f50939708dffb0eb9f8155bbde1'
-            '91a0344bdb5fe62b2dd284ddc8509356d431d987c0df19cc8247029da6d9b353'
-            'c71bc9c584374f7f5dbe8bd71610b0cb9ab7862bc70a81bdd59c258d91e2e3ec'
-            '7238a966ee6b93fdbf2669736ddd35a6103967eb9d5369af8b740bff2401615c'
-            '0bb1ac2b495bf7056a57a1b9bd6020007041eb7b6cc85467ae55d0eb5c8254e8')
+sha256sums=('0a2b8b74313ce3e15d2585c2d8bc4aea1cb5055a3145877e3aa8605fd8bce733'
+            'f2c6b92533ba41a024b9fdb86d346c8bfc876d5961738ad463effbd844d61405'
+            '1ff58d023daa8882e952d2322c7b119e31f98ddecea32473bd8079d93295e7b6')
 
 prepare() {
-    cd "$srcdir/AyuGramDesktop-$pkgver"
-    _fill_gitmodules_recursively
+    cd "$srcdir/AyuGramDesktop-$pkgver-full"
     #/usr/bin/ld: /usr/lib/libprotobuf-lite.so: undefined reference to symbol '_ZN4absl12lts_2023080212log_internal17MakeCheckOpStringIllEEPNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEET_T0_PKc'
     #/usr/bin/ld: /usr/lib/libabsl_log_internal_check_op.so.2308.0.0: error adding symbols: DSO missing from command line
     #collect2: error: ld returned 1 exit status
@@ -207,7 +87,6 @@ prepare() {
     patch -Np1 -d Telegram/lib_base -i "$srcdir/0001-force-minizip-includes.diff"
 }
 build() {
-    CXXFLAGS+=' -ffat-lto-objects'
     cmake -B td-$_tdlib_commit/build -S td-$_tdlib_commit \
         -DCMAKE_BUILD_TYPE=None \
         -DCMAKE_INSTALL_PREFIX="$PWD/td-$_tdlib_commit/install" \
@@ -217,7 +96,7 @@ build() {
     cmake --install td-$_tdlib_commit/build  
     # https://github.com/AyuGram/AyuGramDesktop/blob/dev/docs/building-linux.md#building-the-project
     # for API_ID and API_HASH
-    cmake -B build -S AyuGramDesktop-$pkgver -G Ninja \
+    cmake -B build -S "AyuGramDesktop-$pkgver-full" -G Ninja \
         -DCMAKE_INSTALL_PREFIX="/usr" \
         -DCMAKE_BUILD_TYPE=Release \
         -DTDESKTOP_API_ID="${MAKEPKG_AYUGRAM_API_ID:-2040}" \
