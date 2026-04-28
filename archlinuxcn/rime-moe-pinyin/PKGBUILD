@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=rime-moe-pinyin
-pkgver=5.0.1
+pkgver=5.1
 pkgrel=1
 pkgdesc="moeOS RIME 全拼方案. 简洁, 现代."
 arch=('any')
@@ -11,7 +11,7 @@ depends=("rime-pinyin-moegirl" "rime-pinyin-zhwiki")
 provides=('rime-moe-pinyin')
 source=(
 	pinyin::"git+https://github.com/Kimiblock/moeOS-pinyin.git#tag=${pkgver}")
-sha256sums=('9ce6ea934b06ddbf44416a9022510e97bf21812cca212d1859372c17e5b0c8f2')
+sha256sums=('0e5706f2f7ecfee3987edcb1e59b7c239719545629c0efd2cc421ecdca419927')
 makedepends=("git" "git-lfs")
 
 function prepare() {
