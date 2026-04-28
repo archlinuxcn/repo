@@ -49,7 +49,7 @@ package_nekobox-core() {
 }
 
 package_nekobox() {
-    depends=('acl' 'bash' 'gcc-libs' 'glibc' 'libx11' 'qt6-base' 'qt6-declarative' 'nekobox-core' 'thrift' 'boost-libs' 'lmdb')
+    depends=('acl' 'bash' 'gcc-libs' 'glibc' 'libx11' 'qt6-base' 'qt6-declarative' 'nekobox-core' 'thrift' 'boost-libs' 'lmdb' 'cpr')
     provides=('nekoray')
     conflicts=('nekoray')
     DESTDIR="${pkgdir}" cmake --install "${NEKOBOX_QT_BUILD}"
