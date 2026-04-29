@@ -38,7 +38,7 @@ build() {
 
     for i in "${NEKOBOX_CORE_BUILD}" "${NEKOBOX_QT_BUILD}"
     do
-        cmake --build "${i}" -j "$(nproc)" -v
+        cmake --build "${i}" -v
     done
 
     popd
