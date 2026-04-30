@@ -5,8 +5,8 @@
 # Contributor: TuxSpirit <tuxspirit AT archlinux DOT fr>
 
 pkgname=rar
-pkgver=7.20
-__pkgver=720
+pkgver=7.21
+__pkgver=721
 pkgrel=1
 pkgdesc="A command-line port of the rar compression utility."
 url="https://www.rarlab.com"
@@ -19,7 +19,7 @@ provides=('unrar')
 source=('rar.1')
 source+=("https://www.rarlab.com/rar/rarlinux-x64-${__pkgver}.tar.gz")
 sha512sums=('d78fb6d77a3e2c088cdf0586b6346c0025fb18be04f79cc6c081e49a05ba48347d55e1ff62c753c13377e2985978cf0bfdb6c60496a1e298974c70687194b3b6'
-            '1d3816156ee08ecf286f853b2d3d5b7cd0008e3ed05e228bd94c92a409ede4cd8388883a52b9e00c3c54496720ff507ebc6c29d8a4aa106f3a9f65cb7298f435')
+            'f198a0868448aef33a1cdc318397b14c360895ebcf4d8beee1df10c5788fb0127d8560713099b02c938c4ce911446abf445a3d31e205aabaf119fc485f31cfc3')
 
 
 package() {
