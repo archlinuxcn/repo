@@ -37,6 +37,8 @@ build() {
 }
 
 check() {
+    # avoid "Too many open files" in test setting_set_and_get_race_condition
+    ulimit -n 3000
 	cd "$srcdir/$_pname-$pkgver"
 	export RUSTUP_TOOLCHAIN=stable
 	# shellcheck disable=SC2046
