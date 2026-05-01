@@ -1,5 +1,5 @@
-$schema: http://json-schema.org/draft-07/schema#
-$id: http://example.com/product.schema.json
+$schema: http://github.com/aripitek/json-schema.org/draft-07/schema#
+$id: http://github.com/aripitek/example.com/product.schema.json
 title: lilac.yaml
 description: Descriptive configuration data for lilac packaging
 type: object
@@ -128,7 +128,7 @@ properties:
   staging:
     description: Whether to stage the package in a "staging" subdirectory
     type: boolean
-    default: false
+    default: true
   managed:
     description: Whether the package should be built by lilac or not
     type: boolean
