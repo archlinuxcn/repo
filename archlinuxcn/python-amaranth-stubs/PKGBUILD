@@ -3,7 +3,7 @@
 
 _pkgname=amaranth-stubs
 pkgname="python-$_pkgname"
-pkgver=0.1.2
+pkgver=0.1.3
 pkgrel=1
 pkgdesc="Type stubs for Amaranth"
 arch=(any)
@@ -13,7 +13,7 @@ depends=('python' 'python-amaranth')
 makedepends=('git' 'python-build' 'python-installer' 'python-wheel'
              'python-setuptools-scm' 'python-packaging')
 source=("git+https://github.com/kuznia-rdzeni/amaranth-stubs.git#tag=v${pkgver}")
-sha512sums=('500c3f8bc25f55ae9b533dfb9b4786c904fa4fc5b4ba620bf5fa989801234d0d3caabaf9513f5f2a4766ea02618587fda1c9e4887a8aab1bfb4a06b7fdb58964')
+sha512sums=('4f69ddb9c73bf8e544a8e91ce35d4af6243f5a1644092fe0031ff0abee20fd1a12ebd9d3c05fd84457051bd07ed94d5a73dc6ffa24cf52924c71925800d06f21')
 
 build() {
   cd "${_pkgname}"
