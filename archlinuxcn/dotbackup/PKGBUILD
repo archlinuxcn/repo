@@ -1,7 +1,7 @@
 # Maintainer: Jax Young <jaxvanyang@gmail.com>
 pkgname=dotbackup
 _name="$pkgname.rs"
-pkgver=2.1.0
+pkgver=2.2.0
 pkgrel=1
 pkgdesc='Dotfile backup utility'
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('gcc-libs' 'glibc')
 makedepends=('cargo' 'just' 'scdoc')
 source=("$_name-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('6a3b54932044c8dbc3f5fa4c7cb2b2a6d1d90d46c11168b74234e757c93f553b')
+sha256sums=('ee0a5e562f3fa08495988bb53a8f8b9ce6d692140f7dae628c2eb4699ee320bb')
 
 prepare() {
 	cd "$_name-$pkgver"
