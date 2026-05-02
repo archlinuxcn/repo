@@ -45,7 +45,7 @@ package() {
 	install -vDm755 scripts/autokey.py "${pkgdir}/usr/bin/autokey"
 	install -vDm755 "target/release/autoconnect" "${pkgdir}/usr/bin/autoconnect"
 	install -vDm755 "target/release/autoendpoint" -t "${pkgdir}/usr/bin/"
-	install -vDm644
+	install -vDm644 \
 		-t "${pkgdir}/usr/share/doc/${pkgname}" \
 		configs/autoconnect.toml.sample \
 		configs/autoendpoint.toml.sample
