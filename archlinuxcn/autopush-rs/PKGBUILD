@@ -9,28 +9,48 @@ provides=('autopush' 'autopush-rs' 'sunup-server')
 conflicts=('autopush' 'autopush-rs' 'sunup-server')
 url="https://github.com/mozilla-services/autopush-rs"
 license=('MPL-2.0')
-depends=('gcc-libs' 'openssl' 'pypy' 'libffi' 'grpc')
-makedepends=('rustup' 'git' 'cmake3' 'python-virtualenv' 'clang')
+depends=('libgcc' 'glibc' 'openssl' 'grpc' 'zstd' 'python' 'python-cryptography')
+makedepends=('cargo' 'git' 'clang')
+optdepends+=(redis google-cloud-cli postgresql)
 options=(!lto)
 source=("git+$url.git#tag=${pkgver}")
 sha256sums=('32cbe50a0bbad5b20589627689df98d1e9a6d92650bb7d93eb25e6f65c2ded3f')
 
 prepare() {
-	rustup default stable
+	export RUSTUP_TOOLCHAIN=stable
 	cd "$srcdir/autopush-rs"
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target host-tuple
 }
 
 build() {
+	export RUSTUP_TOOLCHAIN=stable
+	export ZSTD_SYS_USE_PKG_CONFIG=1
+	export GRPCIO_SYS_USE_PKG_CONFIG=1
+	CXXFLAGS+=" -include assert.h -DGPR_ASSERT=assert"
 	cd "$srcdir/autopush-rs"
 	export CARGO_TARGET_DIR=target
-	cargo build --frozen --release --target-dir target
+	cargo build --frozen --release --all-features
 }
 
 package() {
 	cd "$srcdir/autopush-rs"
-	install -Dm755 "target/release/autoconnect" "$pkgdir/usr/bin/autoconnect"
-	install -Dm755 "target/release/autoendpoint" -t "$pkgdir/usr/bin/"
+	find \
+		target/release \
+		-maxdepth 1 \
+		-executable \
+		-type f \
+		-exec \
+		install -vDm755 -t "${pkgdir}/usr/bin" {}
+	install -vDm755 scripts/autokey.py "${pkgdir}/usr/bin/autokey"
+	install -vDm755 "target/release/autoconnect" "${pkgdir}/usr/bin/autoconnect"
+	install -vDm755 "target/release/autoendpoint" -t "${pkgdir}/usr/bin/"
+	install -vDm644
+		-t "${pkgdir}/usr/share/doc/${pkgname}" \
+		configs/autoconnect.toml.sample \
+		configs/autoendpoint.toml.sample
+	sed -i \
+		'1 i #!/usr/bin/python' \
+		"${pkgdir}/usr/bin/autokey"
 
 	# These are missing
 	#install -Dm755 "target/release/endpoint_diagnostic" -t "$pkgdir/usr/bin/"
