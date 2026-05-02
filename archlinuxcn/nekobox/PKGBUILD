@@ -1,7 +1,7 @@
 # Maintainer: qr243vbi
 
 pkgname=(nekobox nekobox-core)
-pkgver=5.11.1
+pkgver=5.11.3
 pkgrel=1
 pkgdesc="Cross-platform GUI proxy utility (Empowered by sing-box)"
 arch=('x86_64' 'aarch64' 'riscv64' 'pentium4' 'i686' 'armv7h')
@@ -15,44 +15,21 @@ source=("https://github.com/qr243vbi/nekobox/releases/download/${pkgver}/nekobox
 sha256sums=('d24345198ef9b824b5bda2d97c93028af935a14929c0e6398245a4602eba40b9')
 
 build() {
-    export NEKOBOX_QT_BUILD=$PWD/build
-    export NEKOBOX_CORE_BUILD=$PWD/build_go
-    pushd "nekobox-unified-source-${pkgver}"
-
-    export CGO_CPPFLAGS="${CPPFLAGS}"
-    export CGO_CFLAGS="${CFLAGS}"
-    export CGO_CXXFLAGS="${CXXFLAGS}"
-    export CGO_LDFLAGS="${LDFLAGS}"
-    export GOARCH=""
-    export GOOS=linux
-
-    cmake -B "${NEKOBOX_CORE_BUILD}" -S ./core \
-        -D SKIP_UPDATER=ON \
-        -D GO_MOD_TIDY=OFF
-    
-    cmake -B "${NEKOBOX_QT_BUILD}" -S . \
-        -D BUILD_GO_PARTS=OFF \
-        -D SKIP_UPDATER=ON \
-        -D "NKR_DEFAULT_VERSION=${pkgver}" \
-        -W no-dev -GNinja
-
-    for i in "${NEKOBOX_CORE_BUILD}" "${NEKOBOX_QT_BUILD}"
-    do
-        cmake --build "${i}" -v
-    done
-
-    popd
+    export BUILD=$PWD/build
+    cd "nekobox-unified-source-${pkgver}"
+    cmake -B "${BUILD}" -S . -D "NKR_DEFAULT_VERSION=${pkgver}" 
+    cmake --build "${BUILD}"
 }
 
 package_nekobox-core() {
     provides=('sing-box')
     conflicts=('sing-box')
-    DESTDIR="${pkgdir}" cmake --install "${NEKOBOX_CORE_BUILD}"
+    DESTDIR="${pkgdir}" cmake --install "${BUILD}" --component core
 }
 
 package_nekobox() {
     depends+=('acl' 'bash' 'libx11' 'qt6-base' 'qt6-declarative' 'nekobox-core' 'thrift' 'boost-libs' 'lmdb' 'cpr')
     provides=('nekoray')
     conflicts=('nekoray')
-    DESTDIR="${pkgdir}" cmake --install "${NEKOBOX_QT_BUILD}"
+    DESTDIR="${pkgdir}" cmake --install "${BUILD}" --component gui
 }
