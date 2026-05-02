@@ -40,7 +40,7 @@ package() {
 		-executable \
 		-type f \
 		-exec \
-		install -vDm755 -t "${pkgdir}/usr/bin" {}
+		install -vDm755 -t "${pkgdir}/usr/bin" {} +
 	install -vDm755 scripts/autokey.py "${pkgdir}/usr/bin/autokey"
 	install -vDm755 "target/release/autoconnect" "${pkgdir}/usr/bin/autoconnect"
 	install -vDm755 "target/release/autoendpoint" -t "${pkgdir}/usr/bin/"
