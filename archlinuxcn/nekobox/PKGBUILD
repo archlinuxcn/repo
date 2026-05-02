@@ -11,14 +11,19 @@ makedepends=('boost' 'pkgconfig' 'ccache' 'ninja' 'jq' 'curl' 'coreutils' 'cmake
 depends=('gcc-libs' 'glibc')
 
 
-source=("https://github.com/qr243vbi/nekobox/releases/download/${pkgver}/nekobox-unified-source-${pkgver}.tar.xz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/qr243vbi/${pkgname}/archive/${pkgver}.tar.gz")
 sha256sums=('d24345198ef9b824b5bda2d97c93028af935a14929c0e6398245a4602eba40b9')
 
 build() {
-    export BUILD=$PWD/build
-    cd "nekobox-unified-source-${pkgver}"
-    cmake -B "${BUILD}" -S . -D "NKR_DEFAULT_VERSION=${pkgver}" 
-    cmake --build "${BUILD}"
+    cd "${pkgname}-${pkgver}/"
+    
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+    
+    cmake -B build -S . -D "NKR_DEFAULT_VERSION=${pkgver}" -DCMAKE_BUILD_TYPE=Release
+    cmake --build build 
 }
 
 package_nekobox-core() {
