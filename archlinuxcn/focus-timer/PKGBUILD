@@ -1,0 +1,46 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=focus-timer
+pkgver=1.0
+pkgrel=1
+pkgdesc='A time management utility for GNOME based on the pomodoro technique!'
+arch=('i686' 'x86_64')
+url='https://github.com/focustimerhq/FocusTimer'
+license=('GPL-3.0-only')
+replaces=('gnome-pomodoro')
+conflicts=('gnome-pomodoro')
+depends=(
+    'hicolor-icon-theme'
+    'glibc'
+    'libglib-2.0.so'
+    'libgobject-2.0.so'
+    'libgio-2.0.so'
+    'gtk4'
+    'libpeas-2.so'
+    'gom'
+    'gstreamer'
+    'libsqlite3.so'
+    'dconf'
+    'libadwaita'
+    'pango'
+    'graphene'
+    'json-glib'
+)
+makedepends=('meson' 'vala' 'gobject-introspection')
+source=("$pkgname-$pkgver.tar.gz::${url}/archive/$pkgver.tar.gz")
+sha256sums=('1d8d6adcb83d74ae5c05a9caa988bf5dd0c2876af83d3df3588d27f2ee5cf9ab')
+
+prepare() {
+    cd "$srcdir/FocusTimer-$pkgver"
+}
+
+build() {
+    cd "$srcdir/FocusTimer-$pkgver"
+    arch-meson build
+    meson compile -C build
+}
+
+package() {
+    cd "$srcdir/FocusTimer-$pkgver"
+    meson install -C build --destdir "$pkgdir"
+}
