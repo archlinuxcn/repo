@@ -11,11 +11,11 @@ makedepends=('boost' 'pkgconfig' 'ccache' 'ninja' 'jq' 'curl' 'coreutils' 'cmake
 depends=('gcc-libs' 'glibc')
 
 
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/qr243vbi/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('d24345198ef9b824b5bda2d97c93028af935a14929c0e6398245a4602eba40b9')
+source=("nekobox-${pkgver}.tar.gz::https://github.com/qr243vbi/nekobox/archive/${pkgver}.tar.gz")
+sha256sums=('56c01e85b46df302b01b2741964443bc438696ad84bb57e89b20a0ce8fb7f217')
 
 build() {
-    cd "${pkgname}-${pkgver}/"
+    cd "nekobox-${pkgver}/"
     
 	export CGO_CPPFLAGS="${CPPFLAGS}"
 	export CGO_CFLAGS="${CFLAGS}"
