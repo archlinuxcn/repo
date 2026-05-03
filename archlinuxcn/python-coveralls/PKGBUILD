@@ -5,18 +5,18 @@
 pkgname=python-coveralls
 _pkg="${pkgname#python-}"
 _repo="$_pkg-python"
-pkgver=4.0.1
+pkgver=4.1.0
 pkgrel=1
 pkgdesc="Python integration with coveralls.io"
 url="https://github.com/thekevjames/coveralls-python"
 arch=('any')
 license=('MIT')
-depends=('python-coverage' 'python-docopt' 'python-requests')
+depends=('python-coverage' 'python-typer' 'python-requests')
 optdepends=('python-yaml')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-poetry-core')
 checkdepends=('git' 'python-pytest' 'python-responses')
 source=("$_repo-$pkgver.tar.gz::https://github.com/TheKevJames/$_repo/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('066f5e775359dda1c8e4b152f49ce6e2ea1f1e36738c08333af1bb3abc697bf5')
+sha256sums=('c1e8e3da7704df6cde5cd5dee6b72da79a8101687b44b5b09e55f6baa870c915')
 
 build() {
 	cd "$_repo-$pkgver"
