@@ -2,7 +2,7 @@
 
 pkgname=ayugram-desktop
 pkgver=6.7.8
-pkgrel=2
+pkgrel=3
 pkgdesc="Desktop Telegram client with good customization and Ghost mode."
 arch=("x86_64" "aarch64")
 url="https://github.com/AyuGram/AyuGramDesktop"
@@ -65,26 +65,20 @@ optdepends=('geoclue: geoinformation support'
 _tdlib_commit=51743dfd01dff6179e2d8f7095729caa4e2222e9
 source=("AyuGram-$pkgver-full.tar.gz::https://github.com/AyuGram/AyuGramDesktop/releases/download/v$pkgver/AyuGramDesktop-$pkgver-full.tar.gz"
         "td-$_tdlib_commit.tar.gz::https://github.com/tdlib/td/archive/$_tdlib_commit.tar.gz"
-        "0001-force-minizip-includes.diff")
+        "0001-force-minizip-includes.diff"
+        "0002-fix-missing-cstdint.diff")
 
 sha256sums=('c8de66c5568dfc3e4e309275cc858e84a61f781fe93ed967290c31b70c770b00'
             'f2c6b92533ba41a024b9fdb86d346c8bfc876d5961738ad463effbd844d61405'
-            '1ff58d023daa8882e952d2322c7b119e31f98ddecea32473bd8079d93295e7b6')
+            '1ff58d023daa8882e952d2322c7b119e31f98ddecea32473bd8079d93295e7b6'
+            '566920c751e0f599411ff914649ffbf1f19e26a0ead368d9c4a18cbf760406e1')
 
 prepare() {
     cd "$srcdir/AyuGramDesktop-$pkgver-full"
-    #/usr/bin/ld: /usr/lib/libprotobuf-lite.so: undefined reference to symbol '_ZN4absl12lts_2023080212log_internal17MakeCheckOpStringIllEEPNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEET_T0_PKc'
-    #/usr/bin/ld: /usr/lib/libabsl_log_internal_check_op.so.2308.0.0: error adding symbols: DSO missing from command line
-    #collect2: error: ld returned 1 exit status
-    #
-    #https://github.com/telegramdesktop/tdesktop/issues/26489#issuecomment-1627535022
-    sed -i 's/find_package(protobuf REQUIRED)/find_package(protobuf REQUIRED CONFIG)/' \
-        Telegram/ThirdParty/cld3/CMakeLists.txt
-    #https://github.com/telegramdesktop/tdesktop/issues/26489#issuecomment-1627555107
-    #CMAKE_BUILD_TYPE must match libtg_owt's
-
     # minizip seems setting its include directory to /usr/include in pkg-config script...
     patch -Np1 -d Telegram/lib_base -i "$srcdir/0001-force-minizip-includes.diff"
+    # uint8_t, uint_64_t, etc.
+    patch -Np1 -d Telegram/ThirdParty/tgcalls -i "$srcdir/0002-fix-missing-cstdint.diff"
 }
 build() {
     cmake -B td-$_tdlib_commit/build -S td-$_tdlib_commit \
