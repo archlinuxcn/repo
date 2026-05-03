@@ -1,0 +1,27 @@
+# Maintainer: Hu Butui <hot123tea123@gmail.com>
+# Contributor: Michał Wojdyła < micwoj9292 at gmail dot com >
+pkgname=python-cmap
+_pkgname=${pkgname#python-}
+pkgver=0.7.2
+pkgrel=2
+pkgdesc='Scientific colormaps for python, with only numpy dependency'
+arch=('any')
+url='https://github.com/pyapp-kit/cmap'
+license=('BSD-3-Clause')
+depends=('python-numpy')
+makedepends=('python-build' 'python-hatch-vcs' 'python-installer')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pyapp-kit/cmap//archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('4895f54f91807687ebfc27b488c6da4092e8caa66224b89127e51e66516f5f20')
+
+build() {
+  cd "${_pkgname}-${pkgver}"
+  SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver \
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python -m installer --destdir=${pkgdir} dist/*.whl
+  install -Dm644 LICENSES/BSD-3-Clause.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+# vim:set ts=2 sw=2 et:

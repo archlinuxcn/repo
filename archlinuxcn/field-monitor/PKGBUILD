@@ -5,15 +5,16 @@ pkgdesc="Remote-desktop client designed for the GNOME platform. Access virtual m
 url="https://github.com/theCapypara/field-monitor"
 license=("GPL-3.0-or-later")
 arch=("x86_64")
-pkgver=49.1
+pkgver=50.0
 pkgrel=1
 makedepends=("rust" "cargo" "git" "blueprint-compiler" "meson" "libvirt" "libvirt-glib" "blueprint-compiler" "bubblewrap")
-depends=(libadwaita gtk4 hicolor-icon-theme dconf gcc-libs glib2 glibc spice-gtk spice-protocol phodav python-pyparsing libcacard spice freerdp2 vte4 json-c libtirpc gtk-vnc)
+depends=(libadwaita gtk4 hicolor-icon-theme dconf gcc-libs glib2 glibc spice-gtk spice-protocol phodav python-pyparsing libcacard spice gcr-4 freerdp vte4 json-c libtirpc gtk-vnc)
 source=("git+https://github.com/theCapypara/field-monitor#tag=v${pkgver}")
-sha256sums=('781897cc978fa5283f8ccb2127786df92a37353ac4bc7a14a1650da87adc8b14')
+sha256sums=('64534f2fee55dcbea43167c7c4d14975fbcbee5376763ae2b824770afe873983')
 options=()
 
 function prepare() {
+	export CFLAGS+=" -ffat-lto-objects"
 	export RUSTUP_TOOLCHAIN=stable
 	export RUSTFLAGS="${RUSTFLAGS} --remap-path-prefix $srcdir=src"
 	cd field-monitor
@@ -21,6 +22,7 @@ function prepare() {
 }
 
 function build() {
+	export CFLAGS+=" -ffat-lto-objects"
 	export RUSTUP_TOOLCHAIN=stable
 	export RUSTFLAGS="${RUSTFLAGS} --remap-path-prefix $srcdir=src"
 	#export RUST_BACKTRACE=1
@@ -29,6 +31,7 @@ function build() {
 }
 
 function check() {
+	export CFLAGS+=" -ffat-lto-objects"
 	export RUSTUP_TOOLCHAIN=stable
 	export RUSTFLAGS="${RUSTFLAGS} --remap-path-prefix $srcdir=src"
 	meson test -C build --no-rebuild --print-errorlogs

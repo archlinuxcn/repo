@@ -1,6 +1,6 @@
 # Maintainer: Zdeněk Biberle <zdenek at biberle dot net>
 pkgname=snx-rs
-pkgver=6.0.3
+pkgver=6.0.4
 pkgrel=1
 pkgdesc="Rust client for Checkpoint VPN tunnels"
 arch=(x86_64)
@@ -9,7 +9,7 @@ license=(AGPL-3.0-only)
 depends=(fontconfig glib2 glibc gtk4 hicolor-icon-theme libgcc openssl sqlite webkitgtk-6.0)
 makedepends=(cargo)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ancwrd1/$pkgname/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('47a4fd785dca27cf3b986726c41462f43a91d002d075a974df97e0f455e463ac')
+sha256sums=('90e3be33d641cd6ab2df8c6c70189e7fd339bd447cf752b9cc51567cd14e2abf')
 
 prepare() {
   cd "$pkgname-$pkgver"

@@ -2,7 +2,7 @@
 
 pkgname=cc-switch
 pkgver=3.14.1
-pkgrel=5
+pkgrel=6
 pkgdesc='All-in-One assistant tool for Claude Code, Codex, OpenCode, openclaw & Gemini CLI'
 arch=('x86_64')
 url='https://github.com/farion1231/cc-switch'
@@ -31,7 +31,7 @@ source=(
   '0001-add-duplicate-action-for-universal-providers.patch'
 )
 sha256sums=('e06791b370b5c8782d3ed46a4d3137ac6beb82b55318ceba609bc82f73a5c30d'
-            '77aa5b370055d0073583d7fe4b63bdb831a5624d98c50cb873022d2229459566')
+            '740f08b26e55c1d88bd96b8cac7e641af7fb3b9f13ee3114758fde02e06399e7')
 
 prepare() {
   export RUSTUP_TOOLCHAIN=stable

@@ -3,7 +3,7 @@
 # Contributor: Andrew Eikum
 
 pkgname=faudio
-pkgver=26.04
+pkgver=26.05
 pkgrel=1
 pkgdesc="XAudio2 reimplementation"
 arch=(aarch64 x86_64)
@@ -12,7 +12,7 @@ license=('Zlib')
 depends=('sdl3')
 makedepends=('cmake')
 source=($url/archive/$pkgver/$pkgname-$pkgver.tar.gz)
-sha512sums=('4d24a750f3222aad36bf93e74f82726c2904bad7aa4254833dfa40c68bf6161442660bc7ba04de90fd98f2799ac6f0ebfb40fc9694ef79e8db79417403769876')
+sha512sums=('523298017bfbcea2739a18406ed6860e45713049b503558e91f5e6de98993c6e6654c7358bc861a9337d74a12a0cd89f5ecac49ae9734b4856384062a64c79d0')
 
 build() {
   cmake -B build -S FAudio-$pkgver --fresh \

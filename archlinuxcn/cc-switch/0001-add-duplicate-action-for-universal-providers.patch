@@ -1,4 +1,4 @@
-From f48dda6cad13f92d2ad14899d909455121ba6ec3 Mon Sep 17 00:00:00 2001
+From c8da31099694de557685b0ec911b7df47b139a14 Mon Sep 17 00:00:00 2001
 From: Hu Butui <hot123tea123@gmail.com>
 Date: Tue, 28 Apr 2026 15:43:42 +0800
 Subject: [PATCH] feat(universal-provider): add duplicate action for universal
@@ -7,11 +7,11 @@ Subject: [PATCH] feat(universal-provider): add duplicate action for universal
 Signed-off-by: Hu Butui <hot123tea123@gmail.com>
 ---
  .../universal/UniversalProviderCard.tsx       | 13 +++++++-
- .../universal/UniversalProviderPanel.tsx      | 30 +++++++++++++++++++
- src/i18n/locales/en.json                      |  3 ++
- src/i18n/locales/ja.json                      |  3 ++
- src/i18n/locales/zh.json                      |  3 ++
- 5 files changed, 51 insertions(+), 1 deletion(-)
+ .../universal/UniversalProviderPanel.tsx      | 31 +++++++++++++++++++
+ src/i18n/locales/en.json                      |  4 +++
+ src/i18n/locales/ja.json                      |  4 +++
+ src/i18n/locales/zh.json                      |  4 +++
+ 5 files changed, 55 insertions(+), 1 deletion(-)
 
 diff --git a/src/components/universal/UniversalProviderCard.tsx b/src/components/universal/UniversalProviderCard.tsx
 index b75bb2ef..4ec21a50 100644
@@ -57,10 +57,10 @@ index b75bb2ef..4ec21a50 100644
              variant="ghost"
              size="icon"
 diff --git a/src/components/universal/UniversalProviderPanel.tsx b/src/components/universal/UniversalProviderPanel.tsx
-index 0a81a8ac..6db97dc4 100644
+index 0a81a8ac..22eddd92 100644
 --- a/src/components/universal/UniversalProviderPanel.tsx
 +++ b/src/components/universal/UniversalProviderPanel.tsx
-@@ -165,6 +165,35 @@ export function UniversalProviderPanel() {
+@@ -165,6 +165,36 @@ export function UniversalProviderPanel() {
      [providers],
    );
  
@@ -75,9 +75,10 @@ index 0a81a8ac..6db97dc4 100644
 +      };
 +      try {
 +        await universalProvidersApi.upsert(duplicated);
++        await universalProvidersApi.sync(duplicated.id);
 +        toast.success(
-+          t("universalProvider.duplicated", {
-+            defaultValue: "统一供应商已复制",
++          t("universalProvider.duplicatedAndSynced", {
++            defaultValue: "统一供应商已复制并同步",
 +          }),
 +        );
 +        loadProviders();
@@ -96,7 +97,7 @@ index 0a81a8ac..6db97dc4 100644
    // 打开编辑
    const handleEdit = useCallback((provider: UniversalProvider) => {
      setEditingProvider(provider);
-@@ -235,6 +264,7 @@ export function UniversalProviderPanel() {
+@@ -235,6 +265,7 @@ export function UniversalProviderPanel() {
                onEdit={handleEdit}
                onDelete={handleDeleteClick}
                onSync={handleSyncClick}
@@ -105,43 +106,46 @@ index 0a81a8ac..6db97dc4 100644
            ))}
          </div>
 diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
-index 766e018b..c7cf709f 100644
+index 2be8c8b0..05ae01ae 100644
 --- a/src/i18n/locales/en.json
 +++ b/src/i18n/locales/en.json
-@@ -2291,6 +2291,9 @@
+@@ -2294,6 +2294,10 @@
      }
    },
    "universalProvider": {
 +    "duplicate": "Duplicate",
 +    "duplicated": "Universal provider duplicated",
++    "duplicatedAndSynced": "Universal provider duplicated and synced",
 +    "duplicateError": "Failed to duplicate universal provider",
      "title": "Universal Provider",
      "description": "Universal providers manage Claude, Codex, and Gemini configurations simultaneously. Changes are automatically synced to all enabled apps.",
      "add": "Add Universal Provider",
 diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
-index a4e8e412..fa7fe5d5 100644
+index c62e506e..69201b48 100644
 --- a/src/i18n/locales/ja.json
 +++ b/src/i18n/locales/ja.json
-@@ -2291,6 +2291,9 @@
+@@ -2294,6 +2294,10 @@
      }
    },
    "universalProvider": {
 +    "duplicate": "複製",
 +    "duplicated": "統合プロバイダーを複製しました",
++    "duplicatedAndSynced": "統合プロバイダーを複製して同期しました",
 +    "duplicateError": "統合プロバイダーの複製に失敗しました",
      "title": "統合プロバイダー",
      "description": "統合プロバイダーは Claude、Codex、Gemini の設定を同時に管理します。変更は有効なすべてのアプリに自動的に同期されます。",
      "add": "統合プロバイダーを追加",
 diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
-index ae148fe8..9f744365 100644
+index 30430c83..1f7ec760 100644
 --- a/src/i18n/locales/zh.json
 +++ b/src/i18n/locales/zh.json
-@@ -2291,6 +2291,9 @@
+@@ -2294,6 +2294,10 @@
      }
    },
    "universalProvider": {
 +    "duplicate": "复制",
 +    "duplicated": "统一供应商已复制",
++    "duplicatedAndSynced": "统一供应商已复制并同步",
 +    "duplicateError": "复制统一供应商失败",
      "title": "统一供应商",
      "description": "统一供应商可以同时管理 Claude、Codex 和 Gemini 的配置。修改后会自动同步到所有启用的应用。",

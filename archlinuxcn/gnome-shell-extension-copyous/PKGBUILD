@@ -2,43 +2,41 @@
 
 pkgname="gnome-shell-extension-copyous"
 _uuid=copyous@boerdereinar.dev
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 pkgdesc="Modern Clipboard Manager for GNOME"
 arch=('any')
 url="https://github.com/boerdereinar/copyous"
-license=('GPL-3.0+')
-depends=('gnome-shell>=48'
-         'libgda6'
-         'gsound')
-makedepends=('pnpm' 'git')
+license=('GPL-3.0-or-later')
+depends=('gnome-shell>=48' 'libgda6' 'gsound' 'dconf')
+makedepends=('pnpm' 'git' 'jq')
 source=("${pkgver}::git+${url}.git#tag=v${pkgver}")
-b2sums=('e93fe63a86623915119573b4542c65b42434a1258185661132f5596dd03d79f249a830f8ac09e468ac3553c98e1807f2aabff7f4cf1ca9f1291ffb88fc421e08')
+b2sums=('d1842ffaaebf772920c4d79cc649e06e4acc91e3492bb8f58d96502fc8484721c0ed450e0ca2183eaa8518a8f0d23a57700384d12234dccd462a83f3b4c90235')
 
 prepare() {
-  cd "${srcdir}/${pkgver}"
+    cd "${srcdir}/${pkgver}"
 
-  git submodule update --init --recursive --depth=1
+    git submodule update --init --recursive --depth=1
 }
 
 build() {
-  cd "${srcdir}/${pkgver}"
+    cd "${srcdir}/${pkgver}"
 
-  pnpm install --ignore-scripts
-  env RELEASE=1 make build
+    pnpm install --ignore-scripts
+    env RELEASE=1 make build
 }
 
 package() {
-  cd "${srcdir}/${pkgver}"
+    cd "${srcdir}/${pkgver}"
 
-  local extdir="${pkgdir}"/usr/share/gnome-shell/extensions/"${_uuid}"
+    local extdir="${pkgdir}"/usr/share/gnome-shell/extensions/"${_uuid}"
 
-  install -dm755 "${extdir}"
+    install -dm755 "${extdir}"
 
-  bsdtar xf "dist/"*.zip -C "${extdir}"
+    bsdtar xf "dist/"*.zip -C "${extdir}"
 
-  install -Dm644 "${extdir}"/schemas/*.gschema.xml -t "${pkgdir}"/usr/share/glib-2.0/schemas/
-  rm -rf "${extdir}"/schemas
+    install -Dm644 "${extdir}"/schemas/*.gschema.xml -t "${pkgdir}"/usr/share/glib-2.0/schemas/
+    rm -rf "${extdir}"/schemas
 
-  mv "${extdir}/locale" "${pkgdir}"/usr/share/
+    mv "${extdir}/locale" "${pkgdir}"/usr/share/
 }
