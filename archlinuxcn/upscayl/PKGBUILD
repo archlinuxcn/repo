@@ -11,7 +11,6 @@ url='https://upscayl.org/'
 _ghurl='https://github.com/upscayl/upscayl'
 license=('AGPL-3.0-only')
 conflicts=("${pkgname}-git" "${pkgname}-bin" "${pkgname}-appimage" "${pkgname}-rpm-bin" "${pkgname}-ncnn" "${pkgname}-ncnn-bin")
-provides=("${pkgname}")
 options=('!debug')
 depends=("electron${_electronversion}" 'libvips' 'libgomp' 'openjpeg2' 'vulkan-driver' 'vulkan-icd-loader' 'bash' 'hicolor-icon-theme')
 makedepends=('npm' 'nodejs-lts-iron' 'patchelf' 'imagemagick' 'librsvg')
