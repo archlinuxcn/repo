@@ -10,7 +10,6 @@ arch=('x86_64')
 url='https://piclist.cn/'
 _ghurl='https://github.com/Kuingsmile/PicList'
 license=('MIT')
-conflicts=("${pkgname}-git" "${pkgname}-bin" "${pkgname}-appimage")
 depends=("electron${_electronversion}" 'bash' 'hicolor-icon-theme')
 makedepends=('nodejs-lts-jod' 'npm' 'yarn' 'git')
 source=("${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"

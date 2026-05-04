@@ -11,7 +11,6 @@ pkgdesc="The swiss army knife of lossless video/audio editing"
 arch=('x86_64')
 url="https://github.com/mifi/${_reponame}"
 license=('GPL-2.0-only')
-conflicts=("${pkgname}-git" "${pkgname}-bin")
 depends=("electron${_electronversion}" 'ffmpeg' 'bash' 'hicolor-icon-theme')
 makedepends=('nodejs-lts-jod' 'npm' 'yarn' 'node-gyp' 'imagemagick' 'librsvg')
 source=(

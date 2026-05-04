@@ -44,7 +44,6 @@ makedepends=(
     wasm-pack            # Yaak
 )
 provides=("${pkgname}-app")
-conflicts=("${pkgname}-app-beta" "${pkgname}-appimage" "${pkgname}-bin" "${pkgname}-git")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}.desktop")
 b2sums=('9aff257ebb34f5c8a1b91738427bfa36182f901cf1e85feba16906501b703bf851f57960268eac17d03b592bb6f064f02e3497bfb1871b5cc6eb543ae0fce6a3'
