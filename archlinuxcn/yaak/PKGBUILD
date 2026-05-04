@@ -72,11 +72,9 @@ _setup_env() {
     local _rust_target=$(rustc -vV | awk '/host:/ {print $2}')
     local _rust_target_env=$(echo "${_rust_target}" | tr 'a-z-' 'A-Z_')
 
+    # Only change the linker for binary files so we do not break WebAssembly cross-compilation
     export CARGO_TARGET_${_rust_target_env}_LINKER="${CC}"
-    # Merge existing makepkg defaults and inject our LLVM linkage flags
     export CARGO_TARGET_${_rust_target_env}_RUSTFLAGS="${RUSTFLAGS} -Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
-    # Unset global RUSTFLAGS so we do not break WebAssembly cross-compilation
-    unset RUSTFLAGS
 
     export RUSTDOCFLAGS="-Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
 
