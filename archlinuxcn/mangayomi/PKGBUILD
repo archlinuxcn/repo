@@ -14,7 +14,6 @@ makedepends=('cmake'
              'lld'
              'fvm'
              'rustup' # `Cargokit` expects to find `rustup`; otherwise, it will throw an error during the build process
-             'pkgconf'
              'unzip'
              'patchelf')
 options=("!lto") # Due to differences in LLVM versions, errors occur when using LTO.
