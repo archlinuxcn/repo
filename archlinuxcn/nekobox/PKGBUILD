@@ -22,7 +22,7 @@ build() {
 	export CGO_LDFLAGS="${LDFLAGS}"
     
     cmake -B "$srcdir/build" -S . -D "NKR_DEFAULT_VERSION=${pkgver}" -DCMAKE_BUILD_TYPE=Release
-    cmake --build build 
+    cmake --build "$srcdir/build" 
 }
 
 package_nekobox-core() {
