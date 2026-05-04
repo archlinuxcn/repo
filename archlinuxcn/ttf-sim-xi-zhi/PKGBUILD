@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgbase=ttf-sim-xi-zhi
-pkgname=('ttf-sim-xi-hei' 'ttf-sim-xi-hei-plus' 'ttf-sim-zhi-song' 'ttf-sim-zhi-song-plus')
+pkgname=('ttf-sim-xi-hei' 'ttf-sim-zhi-song')
 pkgver=1.027.2
 pkgrel=1
 pkgdesc='新晰黑体＆新致宋体：「霞鹜新晰黑」「霞鹜新致宋」兼容 Windows 内置「黑体」「宋体」度量数据和字符集的版本，基于 IPA Gothic、IPA Mincho 衍生。'
@@ -9,59 +9,41 @@ url='https://github.com/lxgw/SimXiZhi'
 arch=('any')
 license=('IPA')
 source=(SimXiHei-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimXiHei.ttf
-        SimXiHeiPlus-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimXiHeiPlus.ttf
-        SimZhiSong-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimZhiSong.ttf
-        SimZhiSongPlus-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimZhiSongPlus.ttf
-        LICENSE-"${pkgver}"::https://raw.githubusercontent.com/lxgw/SimXiZhi/refs/tags/v1.026/IPA_Font_License_Agreement_v1.0.txt)
-b2sums=('0d4bb39f4f72d266cb6cb35667f33a45eb305f95c28bf89733170d3a67eaf5038e5e57f96edb347aaa8fe873edee1aa9c95c0532881018b11d601b131a26b4be'
-        '306e2e4d3234721e9a1eeb3b54225ab66396fc8d7dba76d361fd76b01646faeb74e8f47ade98b4e9d181e5e81e4cc7bc830e54093a1859b21a049ef4e6e7435e'
-        '97e9d6fb15857e232e872a11eaef087e01773c8d505de3d0fe1c76c841ad875b2ad9cf32e4f03374d72f97699631fab7691ad500c729dbc37556dab62f77c389'
-        'c9092e4706c85e2b6eb095b67c15871b0cd95d0997f6b09388699607d5580ac29beab67bfd538098496fd8cd3fc86fdf07da6b9c3cce8bea017bf3f8f0381e17'
-        'ccb79bec5d352b18591f925ddbbaf6d86a6274bfbbea318e126690e5b52ee8be80d2deb99ab7e5b5b1194e2b8c8ee47464713b89e75c629dd462f1a80691e38d')
-
-declare -A _font_family=(
-    [SimXiHei]='SimXiHei'
-    [SimXiHeiPlus]='SimXiHei Plus'
-    [SimZhiSong]='SimZhiSong'
-    [SimZhiSongPlus]='SimZhiSong Plus'
-)
+    SimZhiSong-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimZhiSong.ttf
+    LICENSE-"${pkgver}"::https://raw.githubusercontent.com/lxgw/SimXiZhi/refs/tags/v1.026/IPA_Font_License_Agreement_v1.0.txt)
+b2sums=('56bb9cd6552062e6106fb9454a70738daf76126e8bf358c880c93878aa7e67d0af080911f65dca0d86ff992dc8c4a9c20d8e8d1e5f2e38d9318b002c55cd56cc'
+    'fa13ee84264e27122497f2b87dfebe4059199318100088254b2564d4415a5ce630bde0f01d126f2f6f853b087cfb438d4d6d2dd15fc14f3055abb47a9583becd'
+    'ccb79bec5d352b18591f925ddbbaf6d86a6274bfbbea318e126690e5b52ee8be80d2deb99ab7e5b5b1194e2b8c8ee47464713b89e75c629dd462f1a80691e38d')
 
 declare -A _alias_map=(
     [SimXiHei]='SimHei 黑体'
-    [SimXiHeiPlus]='SimHei 黑体'
     [SimZhiSong]='SimSun 宋体'
-    [SimZhiSongPlus]='SimSun 宋体'
 )
 
 for _pkgname in "${pkgname[@]}"; do
     case "${_pkgname}" in
-        "ttf-sim-xi-hei")
-            _desc='新晰黑体：「霞鹜新晰黑」兼容 Windows 内置「黑体」度量数据和字符集的版本，基于 IPA Gothic 衍生。'
-            ;;
-        "ttf-sim-xi-hei-plus")
-            _desc='新晰黑体＋：「霞鹜新晰黑」兼容 Windows 内置「黑体」度量数据和字符集的版本，基于 IPA Gothic 衍生，并将字汇扩充至 GB 18030-2022 实现级别 2，同时保持 GBK 向下兼容。'
-            ;;
-        "ttf-sim-zhi-song")
-            _desc='新致宋体：「霞鹜新致宋」兼容 Windows 内置「宋体」度量数据和字符集的版本，基于 IPA Mincho 衍生。'
-            ;;
-        "ttf-sim-zhi-song-plus")
-            _desc='新致宋体＋：「霞鹜新致宋」兼容 Windows 内置「宋体」度量数据和字符集的版本，基于 IPA Mincho 衍生，并将字汇扩充至 GB 18030-2022 实现级别 2，同时保持 GBK 向下兼容。'
-            ;;
+    "ttf-sim-xi-hei")
+        _desc='新晰黑体：「霞鹜新晰黑」兼容 Windows 内置「黑体」度量数据和字符集的版本，基于 IPA Gothic 衍生。'
+        ;;
+    "ttf-sim-zhi-song")
+        _desc='新致宋体：「霞鹜新致宋」兼容 Windows 内置「宋体」度量数据和字符集的版本，基于 IPA Mincho 衍生。'
+        ;;
     esac
 
-    _fontname=$(sed -r 's/(^|-)(\w)/\U\2/g' <<< "${_pkgname//ttf-/}")
+    _fontname=$(sed -r 's/(^|-)(\w)/\U\2/g' <<<"${_pkgname//ttf-/}")
     _aliases=${_alias_map[$_fontname]}
-    _family=${_font_family[$_fontname]}
+    _family=$_fontname
 
     eval "package_${_pkgname}() {
         pkgdesc='${_desc}'
+        replaces=('${_pkgname}-plus')
         _package '${_fontname}' '${_family}' '${_aliases}'
     }"
 done
 
 _package() {
     local fontname=$1
-    install -Dm644 "${srcdir}/${fontname}-${pkgver}".ttf   "${pkgdir}"/usr/share/fonts/TTF/"${fontname}".ttf
+    install -Dm644 "${srcdir}/${fontname}-${pkgver}".ttf "${pkgdir}"/usr/share/fonts/TTF/"${fontname}".ttf
     install -Dm644 "${srcdir}/LICENSE-${pkgver}" "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 
     mkdir -p "${pkgdir}"/usr/share/fontconfig/conf.avail
@@ -70,16 +52,15 @@ _package() {
     local family=$2
     read -ra aliases <<<"$3"
 
-    cat <<EOF > "${config_file}"
+    cat <<EOF >"${config_file}"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
 <fontconfig>
     <description>Replace Windows built-in "${aliases[0]}" with font "${family}"</description>
 EOF
 
-
     for alias in "${aliases[@]}"; do
-        cat <<EOF >> "${config_file}"
+        cat <<EOF >>"${config_file}"
     <match target="pattern">
         <test qual="any" name="family"><string>${alias}</string></test>
         <edit name="family" mode="assign" binding="same"><string>${family}</string></edit>
@@ -87,6 +68,5 @@ EOF
 EOF
     done
 
-
-    echo "</fontconfig>" >> "${config_file}"
+    echo "</fontconfig>" >>"${config_file}"
 }
