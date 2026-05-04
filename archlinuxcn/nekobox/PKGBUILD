@@ -21,19 +21,19 @@ build() {
 	export CGO_CXXFLAGS="${CXXFLAGS}"
 	export CGO_LDFLAGS="${LDFLAGS}"
     
-    cmake -B build -S . -D "NKR_DEFAULT_VERSION=${pkgver}" -DCMAKE_BUILD_TYPE=Release
+    cmake -B "$srcdir/build" -S . -D "NKR_DEFAULT_VERSION=${pkgver}" -DCMAKE_BUILD_TYPE=Release
     cmake --build build 
 }
 
 package_nekobox-core() {
     provides=('sing-box')
     conflicts=('sing-box')
-    DESTDIR="${pkgdir}" cmake --install "${BUILD}" --component core
+    DESTDIR="${pkgdir}" cmake --install "$srcdir/build" --component core
 }
 
 package_nekobox() {
     depends+=('acl' 'bash' 'libx11' 'qt6-base' 'qt6-declarative' 'nekobox-core' 'thrift' 'boost-libs' 'lmdb' 'cpr')
     provides=('nekoray')
     conflicts=('nekoray')
-    DESTDIR="${pkgdir}" cmake --install "${BUILD}" --component gui
+    DESTDIR="${pkgdir}" cmake --install "$srcdir/build" --component gui
 }
