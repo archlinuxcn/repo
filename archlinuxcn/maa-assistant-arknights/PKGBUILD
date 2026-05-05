@@ -95,6 +95,7 @@ build() {
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         -DCMAKE_INSTALL_PREFIX="$pkgdir"/usr
         -DMAA_VERSION="v$_pkgver"
+        -DMAA_HASH_VERSION="v$_pkgver" # taken from ci workflow
         -Dfastdeploy_SOURCE_DIR="$srcdir"/FastDeploy-"$_fastdeploy_ref"
         -Dfastdeploy_BINARY_DIR="$srcdir"/build-FastDeploy
     )
