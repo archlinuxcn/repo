@@ -1,5 +1,6 @@
 # Maintainer: Horror Proton <https://github.com/horror-proton>
 # Maintainer: Cryolitia <cryolitia at gmail dot com>
+# Maintainer: CommDServ <commdserv at outlook dot com>
 
 # shellcheck disable=SC2034 disable=SC2164
 
@@ -27,7 +28,7 @@ md5sums=('2fc85c4939bd709f62315dabf27d550a'
 
 if ((WITH_CUDA)); then
     pkgname+=(maa-assistant-arknights-cuda)
-    makedepends+=(cuda)
+    makedepends+=(cuda gcc13)
 fi
 
 prepare() {
@@ -113,8 +114,8 @@ build() {
             -DCUDA_ARCH_NAME=Auto
         )
         
-        cmake -B build-cuda -S "MaaAssistantArknights" "${_cmake_flags[@]}"
-        cmake --build build-cuda
+        NVCC_CCBIN=g++-13 cmake -B build-cuda -S "MaaAssistantArknights" "${_cmake_flags[@]}"
+        NVCC_CCBIN=g++-13 cmake --build build-cuda
     fi
 }
 
