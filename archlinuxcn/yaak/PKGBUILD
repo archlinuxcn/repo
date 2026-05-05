@@ -120,7 +120,7 @@ check() {
     _setup_env
 
     npm test
-    cargo test --release --all --exclude yaak-cli
+    cargo test --frozen --all --exclude yaak-cli
 }
 
 package() {
