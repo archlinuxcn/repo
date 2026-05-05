@@ -7,7 +7,7 @@ pkgname=(qt6-base-24hms)
 
 _pkgver=6.11.0
 pkgver=${_pkgver/-/}
-pkgrel=2.4
+pkgrel=3.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -113,6 +113,7 @@ prepare() {
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
 
   git -C $_pkgfn cherry-pick -n 8b54513cdcf62047376a5d27d784ad68a8f235bf # Fix qdbus crashes
+  git -C $_pkgfn cherry-pick -n 1466f88633b2c29a6159a0c2eacd0c0d6601aa5e # Fix crashes when loading invalid glyphs
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24hms.patch

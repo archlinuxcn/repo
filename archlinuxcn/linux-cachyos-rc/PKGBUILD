@@ -65,7 +65,6 @@
 : "${_tickrate:=full}"
 
 ## Choose between full, lazy or dynamic
-# Dynamic allows you to switch between full and lazy at runtime
 # Full: Makes all non-critical kernel code preemptible to reduce latency
 # Lazy: Same as full but instead of preempting immediately it waits for signals from the scheduler
 #       in an attempt to boost throughput.
@@ -178,10 +177,10 @@ pkgbase="linux-$_pkgsuffix"
 _major=7.1
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc1
+_rcver=rc2
 pkgver=${_major}.${_rcver}
-_tagrel=2
-pkgrel=2
+_tagrel=1
+pkgrel=1
 #_stable=${_major}.${_minor}
 #_stable=${_major}
 _stable=${_major}-${_rcver}
@@ -407,9 +406,8 @@ prepare() {
     # We should not set up the PREEMPT for RT kernels
     if [[ "$_cpusched" != "rt" && "$_cpusched" != "rt-bore" ]]; then
         case "$_preempt" in
-            full) scripts/config -d PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_LAZY;;
-            lazy) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -e PREEMPT_LAZY;;
-            dynamic) scripts/config -e PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_LAZY;;
+            full) scripts/config -e PREEMPT -d PREEMPT_LAZY;;
+            lazy) scripts/config -d PREEMPT -e PREEMPT_LAZY;;
             *) _die "The value '$_preempt' is invalid. Choose the correct one again.";;
         esac
 
@@ -816,6 +814,6 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('c06d41134766233158368b699dd03e89e9adbe3be7762c1278c1e0f58cd948b10b03ec9e7dfe154a5e8f6e3d80736b6e1ac9f592d85f765a66a1bc580070be1d'
-        '2489dc698b9656960745b282ac0292ce35fb2572b863e35f6707a6ee149397118bf50f6bc1d3a4e4694e4be8a23c51d5f0c15f515041c5f3fd3c2e6fc36d787f'
+b2sums=('6a76eaf0faf8bcf3283153a6abcd25aa0b62cdcc6ad0a8364859b0cf5db7063108244ddaf8cdd76efe634d539be2d833ba69022d244d6a0cae8c0616b825b226'
+        '3f4afd2643d5248805e28baac898c224c2db41c0ebaea118dea6ceeb81a12329062a9068a409aaf793631cc71005fd9047f198d2d572ef449d41ee338d757ff7'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')

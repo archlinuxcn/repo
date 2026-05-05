@@ -9,7 +9,6 @@ arch=('x86_64' 'aarch64')
 url="https://github.com/deweizhu/bookget"
 license=('GPL-3.0-only')
 provides=(${pkgname})
-conflicts=("${pkgname%}-git" "${pkgname%}-bin")
 depends=(glibc)
 optdepends=('dezoomify-rs: Zoomable image downloader for Google Arts & Culture, Zoomify, IIIF, and others')
 makedepends=(go)

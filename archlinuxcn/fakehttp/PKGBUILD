@@ -12,7 +12,6 @@ url="https://github.com/${_author}/${_reponame}"
 license=('GPL-3.0-only')
 depends=('glibc' 'libmnl' 'libnfnetlink' 'libnetfilter_queue' 'nftables')
 makedepends=('make')
-conflicts=("${pkgname%}-git" "${pkgname%}-bin")
 install=${pkgname}.install
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz"
         "${pkgname}.service"

@@ -1,0 +1,36 @@
+diff --git a/tgcalls/DirectConnectionChannel.h b/tgcalls/DirectConnectionChannel.h
+index 50a41fc..b855dc7 100644
+--- a/tgcalls/DirectConnectionChannel.h
++++ b/tgcalls/DirectConnectionChannel.h
+@@ -4,6 +4,7 @@
+ #include <functional>
+ #include <memory>
+ #include <vector>
++#include <cstdint>
+ 
+ namespace tgcalls {
+ 
+diff --git a/tgcalls/third-party/json11.cpp b/tgcalls/third-party/json11.cpp
+index c9cfbf8..22e4cfc 100644
+--- a/tgcalls/third-party/json11.cpp
++++ b/tgcalls/third-party/json11.cpp
+@@ -24,6 +24,7 @@
+ #include <cmath>
+ #include <cstdlib>
+ #include <cstdio>
++#include <cstdint>
+ #include <limits>
+ 
+ namespace json11 {
+diff --git a/tgcalls/v2/SignalingConnection.h b/tgcalls/v2/SignalingConnection.h
+index 3e95cb8..2b769df 100644
+--- a/tgcalls/v2/SignalingConnection.h
++++ b/tgcalls/v2/SignalingConnection.h
+@@ -2,6 +2,7 @@
+ #define TGCALLS_SIGNALING_CONNECTION_H_
+ 
+ #include <memory>
++#include <cstdint>
+ #include <vector>
+ 
+ namespace webrtc {
