@@ -2,8 +2,8 @@
 # Contributor: Joffrey <j-off@live.fr>
 
 pkgname=python-cas
-pkgver=1.7.1
-pkgrel=2
+pkgver=1.7.2
+pkgrel=1
 pkgdesc='Python utilities to implement Central Authentication Service protocol'
 arch=('any')
 url='https://github.com/python-cas/python-cas'
@@ -12,7 +12,7 @@ depends=('python-lxml' 'python-requests' 'python-six')
 makedepends=('python-build' 'python-installer' 'python-setuptools'
              'python-sphinx' 'python-wheel')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('2b557199389b2ab0c46273e484a8c78c54c22466c88ea1a472b5aecb6e63980f')
+sha256sums=('79253d0b661f347375bb91d06072c42e9edb1e4944051b4452a897945f402a21')
 
 build() {
   cd "$pkgname-$pkgver"
