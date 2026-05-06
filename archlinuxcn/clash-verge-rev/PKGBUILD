@@ -70,9 +70,10 @@ _package_service() {
 	echo "==> Starting ${FUNCNAME[0]}()..."
 
 	pushd target/release
+	local _res_dir="${srcdir}/${pkgname}-${pkgver}/src-tauri/resources"
 	local _suffix="${CARCH}-unknown-linux-gnu"
-	install -Dm755 "${_pkgname}-service" "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-${_suffix}"
-	install -Dm755 clash-verge-service-install "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-install-${_suffix}"
-	install -Dm755 clash-verge-service-uninstall "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-uninstall-${_suffix}"
+	install -Dm755 "${_pkgname}-service" "${_res_dir}/${_pkgname}-service-${_suffix}"
+	install -Dm755 "${_pkgname}-service-install" "${_res_dir}/${_pkgname}-service-install-${_suffix}"
+	install -Dm755 "${_pkgname}-service-uninstall" "${_res_dir}/${_pkgname}-service-uninstall-${_suffix}"
 	popd
 }
