@@ -12,7 +12,7 @@ license=('GPL-3.0-or-later')
 depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'mihomo')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-makedepends=('pnpm' 'cargo' 'jq' 'moreutils')
+makedepends=('pnpm' 'rust' 'jq' 'moreutils')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
 	"${_pkgname}-service-ipc.tar.gz::https://github.com/${pkgname}/${_pkgname}-service-ipc/archive/${CARCH}-unknown-linux-gnu.tar.gz")
 sha512sums=('aed1c5a8636c93c049480a225ac5f2bbe02fb77c8569ef572d0c6af71297d3f3485a83767361de0927345b1141ce98027f046bba6266854dfb07398cee960567'
