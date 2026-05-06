@@ -36,6 +36,7 @@ build() {
 	export CFLAGS+=" -ffat-lto-objects"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
+	export AWS_LC_SYS_NO_JITTER_ENTROPY=1
 	_build_service
 	_package_service
 
