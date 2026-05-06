@@ -42,7 +42,6 @@ build() {
 	popd
 
 	cd "${pkgname}-${pkgver}/"
-	install -d ./src-tauri/sidecar/
 
 	# Use empty files as placeholders
 	touch ./src-tauri/sidecar/verge-mihomo{,-alpha}-${CARCH}-unknown-linux-gnu
@@ -70,10 +69,10 @@ _package_service() {
 	echo "==> Starting ${FUNCNAME[0]}()..."
 
 	pushd target/release
-	local _res_dir="${srcdir}/${pkgname}-${pkgver}/src-tauri/resources"
+	local _sidecar_dir="${srcdir}/${pkgname}-${pkgver}/src-tauri/sidecar"
 	local _suffix="${CARCH}-unknown-linux-gnu"
-	install -Dm755 "${_pkgname}-service" "${_res_dir}/${_pkgname}-service-${_suffix}"
-	install -Dm755 "${_pkgname}-service-install" "${_res_dir}/${_pkgname}-service-install-${_suffix}"
-	install -Dm755 "${_pkgname}-service-uninstall" "${_res_dir}/${_pkgname}-service-uninstall-${_suffix}"
+	install -Dm755 "${_pkgname}-service" "${_sidecar_dir}/${_pkgname}-service-${_suffix}"
+	install -Dm755 "${_pkgname}-service-install" "${_sidecar_dir}/${_pkgname}-service-install-${_suffix}"
+	install -Dm755 "${_pkgname}-service-uninstall" "${_sidecar_dir}/${_pkgname}-service-uninstall-${_suffix}"
 	popd
 }
