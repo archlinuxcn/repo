@@ -28,7 +28,7 @@ prepare() {
 	pnpm i
 
 	cd src-tauri
-	cargo fetch --locked --target $(rustc --print host-tuple)
+	cargo fetch --locked --target host-tuple
 }
 
 build() {
@@ -57,7 +57,7 @@ package() {
 
 _prepare_service() {
 	echo "==> Starting ${FUNCNAME[0]}()..."
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target host-tuple
 }
 
 _build_service() {
