@@ -32,15 +32,16 @@ prepare() {
 }
 
 build() {
-	cd "${_pkgname}-service-ipc-${CARCH}-unknown-linux-gnu/"
+	pushd "${_pkgname}-service-ipc-${CARCH}-unknown-linux-gnu/"
 	export CFLAGS+=" -ffat-lto-objects"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 	export AWS_LC_SYS_NO_JITTER_ENTROPY=1
 	_build_service
 	_package_service
+	popd
 
-	cd "../${pkgname}-${pkgver}/"
+	cd "${pkgname}-${pkgver}/"
 	install -d ./src-tauri/sidecar/
 
 	# Use empty files as placeholders
