@@ -6,10 +6,13 @@ path = [
     "README.md",
     "keys/**",
     ".SRCINFO",
+    ".gitignore",
     ".nvchecker.toml",
     "*.install",
     "*.sysusers",
+    "*sysusers.conf",
     "*.tmpfiles",
+    "*tmpfiles.conf",
     "*.logrotate",
     "*.pam",
     "*.service",
@@ -17,12 +20,14 @@ path = [
     "*.timer",
     "*.desktop",
     "*.hook",
-    ".gitignore",
 ]
 SPDX-FileCopyrightText = "Arch Linux contributors"
 SPDX-License-Identifier = "0BSD"
 
 [[annotations]]
-path = ["usd-find-dependency-OpenGL.patch"]
+path = [
+    "usd-find-dependency-OpenGL.patch",
+    "usd-fix-oneapi-tbb.patch",
+]
 SPDX-FileCopyrightText = "usd contributors"
 SPDX-License-Identifier = "Apache-2.0"
