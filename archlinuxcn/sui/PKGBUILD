@@ -1,16 +1,16 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=sui
-pkgver=1.64.2
-pkgrel=2
+pkgver=1.71.1
+pkgrel=1
 pkgdesc='Sui, a next-generation smart contract platform with high throughput, low latency, and an asset-oriented programming model powered by the Move programming language.'
 url='https://sui.io'
 arch=(x86_64)
 license=(Apache-2.0)
-depends=(glibc gcc-libs)
+depends=(glibc libgcc libstdc++)
 makedepends=(git cargo clang)
 source=(git+https://github.com/MystenLabs/$pkgname#tag=mainnet-v$pkgver)
-sha512sums=('65d6da3419d441b65545775b9c9d4d35bd40179082e5d0768583d1c1364188c3e8ad7cd74aed1268a6ebafa1f9d0c62aa5334c3c8ef86f802ffeb0be3e6933e2')
+sha512sums=('6e0aac365d788cb046195ac0ffbc885796364b9c1ebd8739573661d1148228989e4134767f928d50d32dd3e86b6e6301ac27a67894eccf29c921187225c6a250')
 # https://github.com/briansmith/ring/issues/1444
 options=(!lto)
 
@@ -33,7 +33,6 @@ build() {
     # sui
     sui-bridge
     sui-bridge-cli
-    sui-data-ingestion
     sui-faucet
     sui-node
     sui-test-validator
@@ -50,7 +49,7 @@ build() {
 package() {
   cd $pkgname
 
-  binarys=(sui sui-bridge sui-bridge-cli sui-data-ingestion sui-faucet sui-node sui-test-validator sui-tool)
+  binarys=(sui sui-bridge sui-bridge-cli sui-faucet sui-node sui-test-validator sui-tool)
   for binary in "${binarys[@]}"; do
     install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/$binary"
   done
