@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0050140b9f..80821b40e9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -184,9 +184,14 @@ if (WITH_SYSTEM_PROVIDED_3PARTY)
+   find_package(gflags REQUIRED)
+
+   find_package(expat CONFIG REQUIRED)
+-  find_package(jansson CONFIG REQUIRED)
++  find_package(PkgConfig REQUIRED)
++  pkg_check_modules(PKG_JANSSON REQUIRED IMPORTED_TARGET jansson)
++  add_library(jansson::jansson ALIAS PkgConfig::PKG_JANSSON)
+   find_package(pugixml REQUIRED)
+   find_package(utf8cpp REQUIRED)
++  find_package(Boost REQUIRED)
++  find_package(GTest REQUIRED)
++  find_package(Protobuf REQUIRED)
+ endif()
+
+ find_package(ZLIB REQUIRED)

@@ -1,71 +1,117 @@
-# Maintainer: Aleksej Kovura <aur-b1a3 at mekboy dot ru>
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+# Contributor: Aleksej Kovura <aur-b1a3 at mekboy dot ru>
 
 pkgname=organicmaps
 pkgver=2026.04.07_8
-_tag="${pkgver%%_*}-${pkgver##*_}-android"
+_pkgver=2026.04.07-8-android
 pkgrel=1
-pkgdesc="Organic Maps: Offline Hike, Bike, Trails and Navigation"
-arch=(x86_64)
-makedepends=(cmake git jq gcc ninja mold)
-depends=(mesa libglvnd freetype2 sqlite icu qt6-svg qt6-base zlib libpng glibc
-  qt6-positioning gcc-libs harfbuzz libxrandr libxi libxcursor hicolor-icon-theme libxinerama python)
-optdepends=("ccache: faster re-compilation" "qt6-wayland: for Wayland users")
-license=("Apache-2.0")
+pkgdesc="A privacy-focused offline maps & GPS app for hiking, cycling, biking, and driving"
+arch=('x86_64')
+# Reference: https://github.com/organicmaps/organicmaps/blob/master/docs/INSTALL.md
+depends=('glibc' 'hicolor-icon-theme' 'libxcursor' 'libxi' 'libxinerama' 'libxrandr' 'libgcc' 'libglvnd' 'libstdc++' 'mesa' 'python' 'qt6-base' 'qt6-positioning' 'qt6-svg' 'sqlite' 'zlib'
+         # WITH_SYSTEM_PROVIDED_3PARTY
+         'icu' 'freetype2' 'harfbuzz' 'gflags' 'expat' 'jansson' 'pugixml' 'protobuf')
+makedepends=('cmake' 'ninja' 'git' 'jq' 'vulkan-headers' 'imagemagick' 'librsvg'
+             # WITH_SYSTEM_PROVIDED_3PARTY
+             'utf8cpp' 'boost' 'fast_float' 'glm')
+# checkdepends=('gtest' 'xorg-server-xvfb')
+optdepends=('qt6-wayland: for Wayland users')
+license=('Apache-2.0')
 url="https://organicmaps.app"
-_source_url="https://github.com/organicmaps/organicmaps.git"
-source=(organicmaps.desktop)
-sha256sums=('a60443ee9a909b372f190ec8e1bde880fc2303da5d11261ef218e67c40c35c03')
-conflicts=("${pkgname}-bin" "${pkgname}-git")
+source=("git+https://github.com/organicmaps/organicmaps.git#tag=${_pkgver}"
+        "organicmaps.desktop"
+        "0001-root-cmake-system-3party.patch"
+        "0002-drape-tests-private.patch"
+        "0003-fix-linker-flags.patch")
+sha256sums=('SKIP'
+            '122b3213c1faddb5d982657222715b60b7f9d21ef85a3d4882438f8f43d6d187'
+            '6e2b8eb7bdf3e5f760dd3000232db2cba31a13f0492989de7e52392da980e734'
+            'c50bf415a0a32802fa0534ee95b79196d9262bde29cc97c5ef31f38b00b53074'
+            '0439c1d7f98a878511e3d318dc51964dd627270165968bbbcd676536fd520794')
+
 prepare() {
-  avail=$(df -P -B 1048576 $srcdir|awk 'NR>1 {print $4}')
-  if [ $avail -le 5120 ]; then
-    printf "need at least 5 GiB of free space\n"
-    exit 1
-  fi
-  src_url=$_source_url
-  if [ -n "$SOURCE_URL_REWRITER" ]; then
-    src_url=$($SOURCE_URL_REWRITER $_source_url)
-    case $src_url in
-      file://*)
-        git -C ${src_url#file://} fetch --depth=1 origin "$_tag"
-        ;;
-    esac
-  fi
-  if [ ! -d $pkgname ]; then
-    git clone --depth=1 --single-branch -b "$_tag" --filter=blob:limit=128k \
-      $src_url $pkgname
-  fi
-  if [ -n "$SOURCE_URL_REWRITER" ]; then
-    for submodule_path in $(git -C $pkgname submodule status|
-        awk '/icu/ || /harfbuzz/ || /expat/ {print $2}');
-    do
-      pin_commit=$(git -C $pkgname submodule status --cached $submodule_path|
-        awk '{sub("^-",""); print $1}')
-      remote=$(git -C $pkgname config --file=.gitmodules submodule.${submodule_path}.url)
-      local_remote=$($SOURCE_URL_REWRITER $remote)
-      case "$local_remote" in
-        file://*)
-          git -C ${local_remote#file://} fetch --depth=1 origin "$pin_commit"
-          git -C $pkgname submodule set-url $submodule_path "$local_remote"
-          ;;
-      esac
+    cd "$pkgname"
+
+    # Arch Linux uses Autotools for jansson, which doesn't generate CMake config files.
+    # Replace the CONFIG find_package with pkg-config to dynamically link the system library.
+    # Also add missing find_package when using system libraries.
+    patch -p1 -i "$srcdir/0001-root-cmake-system-3party.patch"
+
+    # CMake >= 3.0 forbids mixing plain and keyword signatures for target_link_libraries.
+    # Force the PRIVATE keyword in drape_tests to resolve the configuration conflict.
+    patch -p1 -i "$srcdir/0002-drape-tests-private.patch"
+
+    # Use the system's linker flags to prevent them from being overwritten.
+    # Fix LDFLAGS overwriting and "Could NOT find Threads" errors.
+    patch -p1 -i "$srcdir/0003-fix-linker-flags.patch"
+
+    # Unbundle outdated Protobuf generated headers/sources.
+    # We must manually regenerate them using the system's protoc to prevent version mismatches.
+    while read -r proto_file; do
+        protoc -I. --cpp_out=. "$proto_file"
+    done < <(find libs -name "*.proto")
+
+    # See `if (NOT WITH_SYSTEM_PROVIDED_3PARTY)` in CMakeLists.txt
+    local _disabled_submodules=(
+        "3party/boost"
+        "3party/expat"
+        "3party/jansson/jansson"
+        "3party/gflags"
+        "3party/pugixml/pugixml"
+        "3party/protobuf/protobuf"
+        "3party/freetype/freetype"
+        "3party/icu/icu"
+        "3party/harfbuzz/harfbuzz"
+        "3party/fast_float"
+        "3party/glm"
+    )
+    for sub in "${_disabled_submodules[@]}"; do
+        git config "submodule.${sub}.update" none
     done
-  fi
-  cd $pkgname
-  git -c protocol.file.allow=always submodule update --init --recursive --depth=1
-  rm -f 3party/boost/b2
-  bash ./configure.sh
+
+    git -c protocol.file.allow=always submodule update --init --recursive --depth=1
 }
+
 build() {
-  cd $pkgname
-  env CFLAGS="-fuse-ld=mold" CXXFLAGS="-fuse-ld=mold" CC=gcc CXX=g++ \
-    tools/unix/build_omim.sh -n $(nproc) -c -r desktop
+    cd "$pkgname"
+
+    # Reference: tools/unix/build_omim.sh
+    cmake -B build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWITH_SYSTEM_PROVIDED_3PARTY=ON \
+        -DSKIP_QT_GUI=OFF
+
+    cmake --build build
+
+    for res in 16 32 48 64 128 256 512 1024; do
+        mkdir -p "icons-build/${res}x${res}"
+        magick -background none "android/.idea/icon.svg" -resize "${res}x${res}" "icons-build/${res}x${res}/${pkgname}.png"
+    done
 }
+
+# check() {
+#     cd "$pkgname/build"
+#
+#     xvfb-run -a ctest --output-on-failure
+# }
+
 package() {
- install -dm755 "$pkgdir/usr/share/${pkgname}"
- cp -Lr "${pkgname}/data" "$pkgdir/usr/share/${pkgname}/"
- install -dm777 "$pkgdir/usr/share/${pkgname}/data/$(jq '.v' $pkgname/data/countries.txt)"
- install -Dm644 "${pkgname}/android/.idea/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
- install -Dm755 "omim-build-release/OMaps" "$pkgdir/usr/bin/OMaps"
- install -Dm644 "organicmaps.desktop" -t "$pkgdir/usr/share/applications"
+    cd "$pkgname"
+
+    install -Dm755 "build/OMaps" "$pkgdir/usr/bin/OMaps"
+
+    install -dm755 "$pkgdir/usr/share/${pkgname}"
+    cp -Lr data "$pkgdir/usr/share/${pkgname}/"
+    rm -rf "$pkgdir/usr/share/${pkgname}/data/test_data"
+    local _data_version=$(jq -r '.v' data/countries.txt)
+    install -dm755 "$pkgdir/usr/share/${pkgname}/data/$_data_version"
+
+    install -Dm644 "android/.idea/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+    for res in 16 32 48 64 128 256 512 1024; do
+        install -Dm644 "icons-build/${res}x${res}/${pkgname}.png" \
+            "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${pkgname}.png"
+    done
+
+    install -Dm644 "$srcdir/organicmaps.desktop" -t "$pkgdir/usr/share/applications"
 }
