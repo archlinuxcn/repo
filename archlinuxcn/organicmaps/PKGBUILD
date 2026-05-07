@@ -14,7 +14,7 @@ depends=('glibc' 'hicolor-icon-theme' 'libxcursor' 'libxi' 'libxinerama' 'libxra
 makedepends=('cmake' 'ninja' 'git' 'jq' 'vulkan-headers' 'imagemagick' 'librsvg'
              # WITH_SYSTEM_PROVIDED_3PARTY
              'utf8cpp' 'boost' 'fast_float' 'glm')
-# checkdepends=('gtest' 'xorg-server-xvfb')
+# checkdepends=('gtest')
 optdepends=('qt6-wayland: for Wayland users')
 license=('Apache-2.0')
 url="https://organicmaps.app"
@@ -93,7 +93,7 @@ build() {
 # check() {
 #     cd "$pkgname/build"
 #
-#     xvfb-run -a ctest --output-on-failure
+#     ctest -L "omim-test" --output-on-failure
 # }
 
 package() {
