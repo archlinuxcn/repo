@@ -60,12 +60,11 @@
 ### Running with a 1000HZ, 750Hz, 600 Hz, 500Hz, 300Hz, 250Hz and 100Hz tick rate
 : "${_HZ_ticks:=1000}"
 
-## Choose between perodic, idle or full
+## Choose between periodic, idle or full
 ### Full tickless can give higher performances in various cases but, depending on hardware, lower consistency.
 : "${_tickrate:=full}"
 
-## Choose between full, lazy or dynamic
-# Dynamic allows you to switch between full and lazy at runtime
+## Choose between full or lazy
 # Full: Makes all non-critical kernel code preemptible to reduce latency
 # Lazy: Same as full but instead of preempting immediately it waits for signals from the scheduler
 #       in an attempt to boost throughput.
@@ -176,7 +175,7 @@ fi
 
 pkgbase="linux-$_pkgsuffix"
 _major=7.0
-_minor=3
+_minor=4
 #_minorc=$((_minor+1))
 #_rcver=rc8
 pkgver=${_major}.${_minor}
@@ -390,7 +389,7 @@ prepare() {
 
     ### Select tick type
     case "$_tickrate" in
-        perodic) scripts/config -d NO_HZ_IDLE -d NO_HZ_FULL -d NO_HZ -d NO_HZ_COMMON -e HZ_PERIODIC;;
+        periodic) scripts/config -d NO_HZ_IDLE -d NO_HZ_FULL -d NO_HZ -d NO_HZ_COMMON -e HZ_PERIODIC;;
         idle) scripts/config -d HZ_PERIODIC -d NO_HZ_FULL -e NO_HZ_IDLE  -e NO_HZ -e NO_HZ_COMMON;;
         full) scripts/config -d HZ_PERIODIC -d NO_HZ_IDLE -d CONTEXT_TRACKING_FORCE -e NO_HZ_FULL_NODEF -e NO_HZ_FULL -e NO_HZ -e NO_HZ_COMMON -e CONTEXT_TRACKING;;
         *) _die "The value '$_tickrate' is invalid. Choose the correct one again.";;
@@ -403,9 +402,8 @@ prepare() {
     # We should not set up the PREEMPT for RT kernels
     if [[ "$_cpusched" != "rt" && "$_cpusched" != "rt-bore" ]]; then
         case "$_preempt" in
-            full) scripts/config -d PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_LAZY;;
-            lazy) scripts/config -d PREEMPT_DYNAMIC -d PREEMPT -e PREEMPT_LAZY;;
-            dynamic) scripts/config -e PREEMPT_DYNAMIC -e PREEMPT -d PREEMPT_LAZY;;
+            full) scripts/config -e PREEMPT -d PREEMPT_LAZY;;
+            lazy) scripts/config -d PREEMPT -e PREEMPT_LAZY;;
             *) _die "The value '$_preempt' is invalid. Choose the correct one again.";;
         esac
 
@@ -819,6 +817,6 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('d6ab08acd91f405f36205070cdebab99d244e439ca00d823c4068aeba583818dd3c1fdc0d0b3836406ecb1a93b611c637533b50ae96e9bda3153682bbb9f33bd'
-        'bd404bba9f1d30d7a82e7d147e11d34e28a75d00f511e1e5cbfea51a33f814eb492c28a4f0bda87546d5c81b980dce69bdd7ac5f02860f4d3c003b2073f2aa9f'
+b2sums=('5e20b744416a1550ea784ac7a5ca55107a5a2360a23d8cb16ef0e6cba7721dc7d9efc4c58a5bcdc9f5900dd0b3411545fce7412ea51c7312f45dafa25c093071'
+        '7bb5113dbc67e8e2ce5c5473ae1b08973af5adba0a6a14c64a213bb116e5a172d40b7c274b85ad15553511484ee1f120e0372251e242c6f87ce6920235f0c136'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')
