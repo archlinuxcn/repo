@@ -1,10 +1,12 @@
+# Maintainer: Dee.H.Y <dongfengweixiao at hotmail dot com>
+
+_pkgname="ImageGlass"
 pkgname="imageglass"
-_pkgver="10.0.0.314-beta-1"
-pkgver=${_pkgver//-/_}
+pkgver=10.0.0.314_beta_1
 pkgrel=1
 pkgdesc="lightweight, versatile image viewer"
 url="https://imageglass.org"
-license=('GPL-3.0-only')
+license=('custom')
 arch=('x86_64')
 
 depends=(
@@ -18,17 +20,18 @@ makedepends=(
   'git'
 )
 
-options=('!strip' '!debug')
 _pkgsrc="$pkgname-$pkgver"
 _pkgext="tar.gz"
 source=(
-  "${pkgname}"::"git+https://github.com/d2phap/ImageGlass.git#tag=$_pkgver"
+  "$_pkgsrc.$_pkgext"::"https://github.com/d2phap/ImageGlass/archive/refs/tags/${pkgver//_/-}.$_pkgext"
   'imageglass.desktop'
+  'igconfig.default.json'
 )
-sha256sums=('72c1473abea880eaa50de0435a0a9a1d0ac12ed6c14cbf6467ae6c1c62844926'
-            'b31814a355395b002b8bd2dedc9107f5c288a56998df6e9894379900b6a7c560')
+sha256sums=('211de2b00b9039d739ebc2347f9ac5d7aeb4546e367da6ed41058c63ad3e81ba'
+            'b31814a355395b002b8bd2dedc9107f5c288a56998df6e9894379900b6a7c560'
+            '21fbac2e5dceccc8b5f1515a7c6621e3bf7ea06479c73f665f7474ad7479e816')
 build() {
-  cd "$srcdir/${pkgname}/v10/"
+  cd "$srcdir/${_pkgname}-${pkgver//_/-}/v10/"
   dotnet publish ImageGlass.Linux/ImageGlass.Linux.csproj \
     -c Release \
     -r linux-x64 \
@@ -41,16 +44,20 @@ build() {
 }
 
 package() {
-  cd "$srcdir/${pkgname}/v10/artifacts/publish/linux-x64"
+  cd "$srcdir/${_pkgname}-${pkgver//_/-}/v10/artifacts/publish/linux-x64"
   for file in ImageGlass libHarfBuzzSharp.so libSkiaSharp.so Magick.Native-Q8-OpenMP-x64.dll.so; do
     install -Dm755 "$file" "$pkgdir/usr/lib/$pkgname/$file"
   done
   install -dm755 "$pkgdir/usr/bin"
   ln -s "/usr/lib/$pkgname/ImageGlass" "$pkgdir/usr/bin/$pkgname"
   # copy resources
-  cp -r "$srcdir/${pkgname}/v10/assets/resources/"* "$pkgdir/usr/lib/$pkgname/"
+  cp -r "$srcdir/${_pkgname}-${pkgver//_/-}/v10/assets/resources/"* "$pkgdir/usr/lib/$pkgname/"
   # install desktop file and icon
   install -Dm644 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
-  install -Dm644 "$srcdir/${pkgname}/v10/assets/Logo.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
-  install -Dm644 "$srcdir/${pkgname}/v10/assets/Logo512.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname/$pkgname.png"
+  install -Dm644 "$srcdir/${_pkgname}-${pkgver//_/-}/v10/assets/Logo.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
+  install -Dm644 "$srcdir/${_pkgname}-${pkgver//_/-}/v10/assets/Logo512.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname/$pkgname.png"
+  # install default config file
+  install -Dm644 "$srcdir/igconfig.default.json" "$pkgdir/usr/lib/$pkgname/igconfig.default.json"
+  # install license
+  install -Dm644 "$srcdir/${_pkgname}-${pkgver//_/-}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
