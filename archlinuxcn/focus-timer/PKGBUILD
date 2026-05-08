@@ -26,6 +26,7 @@ depends=(
     'graphene'
     'json-glib'
 )
+optdepends=('gnome-shell-extension-focus-timer: GNOME Shell integration')
 makedepends=('meson' 'vala' 'gobject-introspection')
 source=("$pkgname-$pkgver.tar.gz::${url}/archive/$pkgver.tar.gz")
 sha256sums=('53acb5d33010d80054293738e983716e1326166efc720dafc3dba1d1a2d0fce3')
