@@ -2,83 +2,82 @@
 # Co-Maintainer: Misaka13514 <Misaka13514 at gmail dot com>
 
 pkgname=lceda-pro
+_pkgname=lceda-pro
 pkgver=3.2.131
 pkgrel=1
 pkgdesc="免费、专业、强大的国产PCB设计工具"
-arch=(x86_64)
+arch=("x86_64" "aarch64")
 url="https://pro.lceda.cn/"
-license=(LicenseRef-LCEDA-Proprietary)
-depends=(alsa-lib
-         bash
-         coreutils
-         electron
-         gcc-libs
-         glibc
-         gtk3
-         hicolor-icon-theme
-         libpulse
-         nss)
-makedepends=(aria2)
-install=${pkgname}.install
-source=("${pkgname}.install")
-sha256sums=('afba3c6712227a37c08783b3cc1a97ae71e90dc2f575409213d2773372220697')
+license=("LicenseRef-LCEDA-Proprietary")
+depends=("electron" "libnotify" "libappindicator-gtk3")
+makedepends=("curl")
+provides=("$_pkgname")
+conflicts=("$_pkgname" "$_pkgname-git" "$_pkgname-bin")
+install=$pkgname.install
+source=("$pkgname.install"
+        "$_pkgname.sh")
+source_x86_64=("$_pkgname-x86_64-$pkgver.zip::https://image.lceda.cn/files/lceda-pro-linux-x64-$pkgver.zip")
+source_aarch64=("$_pkgname-aarch64-$pkgver.zip::https://image.lceda.cn/files/lceda-pro-linux-arm64-$pkgver.zip")
+sha256sums=('afba3c6712227a37c08783b3cc1a97ae71e90dc2f575409213d2773372220697'
+            'f29ad4605c3a1ed682802639fbb43f7cbd2989be52717514c1a8f53e36f6fef4')
+sha256sums_x86_64=('898b58471ed8a756c8afd5d2a2cc8bd78439d412a7ba296cc065eb98c6b593ad')
+sha256sums_aarch64=('4dbe742065be0f7ef38830614123bd9e6e3db026ab8c5ee0a65c7f7492927be4')
 
 prepare() {
-    aria2c --max-concurrent-downloads=10 --max-connection-per-server=10 --split=10 https://lceda.cn/page/legal --out=LICENSE
-    aria2c --max-concurrent-downloads=10 --max-connection-per-server=10 --split=10 https://image.lceda.cn/files/${pkgname}-linux-x64-${pkgver}.zip
-    bsdtar --extract --file ${pkgname}-linux-x64-${pkgver}.zip --directory .
+    curl -sSfL -o "LICENSE-$pkgver.html" "https://lceda.cn/page/legal"
 }
 
 package() {
-    # electron file
-    install -dm0755 "${pkgdir}/usr/lib/${pkgname}/"
+    install -Dm755 "$srcdir/$_pkgname.sh" "$pkgdir/usr/bin/$_pkgname"
+    install -Dm644 "$srcdir/LICENSE-$pkgver.html" "$pkgdir/usr/share/licenses/$pkgname/LICENSE.html"
 
-    cd ${srcdir}/${pkgname}/
-    cp -r resources ${pkgdir}/usr/lib/${pkgname}
-    chmod -R u=rwX,go=rX ${pkgdir}/usr/lib/${pkgname}
+    cd "$srcdir/$_pkgname"
+    if [ -f "EasyEDA-Distribution-License.txt" ]; then
+        install -Dm644 "EasyEDA-Distribution-License.txt" "$pkgdir/usr/share/licenses/$pkgname/EasyEDA-DLA.txt"
+    elif [ -f "嘉立创EDA软件安装最终用户许可协议（EULA）.pdf" ]; then
+        install -Dm644 "嘉立创EDA软件安装最终用户许可协议（EULA）.pdf" "$pkgdir/usr/share/licenses/$pkgname/LCEDA-EULA.pdf"
+    elif [ -f "LCEDA-Distribution-License.txt" ]; then
+        install -Dm644 "LCEDA-Distribution-License.txt" "$pkgdir/usr/share/licenses/$pkgname/EasyEDA-DLA.txt"
+    fi
+
+    install -dm755 "$pkgdir/usr/lib/$_pkgname"
+    cp -dpr --no-preserve=ownership resources "$pkgdir/usr/lib/$_pkgname"
+    if [ -d "locales" ]; then
+        cp -dpr --no-preserve=ownership locales "$pkgdir/usr/lib/$_pkgname"
+    fi
 
     # icon
     local _icon
     for _icon in 16 32 64 128 256 512; do
-        install -Dm0644 icon/icon_${_icon}x${_icon}.png \
-                        ${pkgdir}/usr/share/icons/hicolor/${_icon}x${_icon}/apps/${pkgname}.png
+        if [ -f "icon/icon_${_icon}x${_icon}.png" ]; then
+            install -Dm644 "icon/icon_${_icon}x${_icon}.png"                            "$pkgdir/usr/share/icons/hicolor/${_icon}x${_icon}/apps/$_pkgname.png"
+        fi
     done
-    if [ -f icon/icon_512x512@2x.png ]; then
-        install -Dm644 icon/icon_512x512@2x.png \
-                       ${pkgdir}/usr/share/icons/hicolor/1024x1024/apps/${pkgname}.png
+    if [ -f "icon/icon_512x512@2x.png" ]; then
+        install -Dm644 "icon/icon_512x512@2x.png"                        "$pkgdir/usr/share/icons/hicolor/1024x1024/apps/$_pkgname.png"
     fi
 
     # desktop entry
-    if [ -f lceda-pro.dkt ]; then
-        install -Dm0644 lceda-pro.dkt \
-                       ${pkgdir}/usr/share/applications/${pkgname}.desktop
-
-        sed -i 's|/opt/lceda-pro/icon/icon_128x128.png|lceda-pro|g' \
-            ${pkgdir}/usr/share/applications/${pkgname}.desktop
-        sed -i 's|/opt/lceda-pro/||g' \
-            ${pkgdir}/usr/share/applications/${pkgname}.desktop
+    if [ -f "$_pkgname.dkt" ]; then
+        install -Dm644 "$_pkgname.dkt" "$pkgdir/usr/share/applications/$_pkgname.desktop"
+        sed -E -i "s|^Exec=.*|Exec=$_pkgname %f|g" "$pkgdir/usr/share/applications/$_pkgname.desktop"
+        sed -E -i "s|^Icon=.*|Icon=$_pkgname|g" "$pkgdir/usr/share/applications/$_pkgname.desktop"
     else
-        install -Dm644 /dev/stdin $pkgdir/usr/share/applications/${pkgname}.desktop << "EOF"
+        install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/$_pkgname.desktop" << "DESKTOP_EOF"
 [Desktop Entry]
 Categories=Development;Electronics;
-Comment=免费、强大、易用的在线电路设计软件
-Exec=lceda-pro %f
-Keywords=PCB;LCEDA;嘉立创EDA;LC;EDA
+Comment=免费、专业、强大的国产PCB设计工具
+Exec=$_pkgname %f
+Keywords=PCB;EDA;
 GenericName=嘉立创EDA(专业版)
-Icon=lceda-pro
+Icon=$_pkgname
 Name=嘉立创EDA(专业版)
 Type=Application
-Name[en_US]=LCEDA Pro
-MimeType=application/eprj
-EOF
+MimeType=application/eprj;application/eprj2;application/eprj3;
+DESKTOP_EOF
     fi
 
-    # lceda-pro file
-    install -Dm0755 /dev/stdin ${pkgdir}/usr/bin/${pkgname} << EOF
-#!/bin/sh
-
-exec electron /usr/lib/lceda-pro/resources/app/ "\$@"
-EOF
-    # LICENSE
-    install -Dm0644 ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+    # fix permissions
+    find "$pkgdir/usr/lib/$_pkgname/" -type d -exec chmod 755 {} +
+    find "$pkgdir/usr/lib/$_pkgname/" -type f -exec chmod 644 {} +
 }
