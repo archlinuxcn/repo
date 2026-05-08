@@ -1,3 +1,6 @@
+
+edit by Amit
+
 Arch Linux Chinese Community Repository
 ====
 
