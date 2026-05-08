@@ -56,7 +56,7 @@ function package() {
     soundtouch
     wayland
     xcb-util-cursor
-    kddockwidgets-qt6)
+    kddockwidgets)
 	while IFS= read -r line; do
 		file="$(echo "$line" | awk '{print $2}')"
 		if [[ -d ${file} ]]; then
