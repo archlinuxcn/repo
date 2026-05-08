@@ -45,7 +45,7 @@ prepare() {
 
 	# Cargo does not provide an option to disable features for all workspace members
 	# Upstream issue: https://github.com/rust-lang/cargo/issues/14866
-	sed -i '/"vendored-lua"/d' yazi-{actor,binding,dds,fm,parser,plugin}/Cargo.toml
+	find -name Cargo.toml -type f -exec sed -i '/"vendored-lua"/d' {} +
 
 	cargo fetch --locked --target host-tuple
 }
