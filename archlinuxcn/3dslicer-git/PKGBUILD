@@ -57,9 +57,12 @@ provides=(3dslicer=${pkgver})
 conflicts=(3dslicer)
 source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git"
         "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
+        "0001-ENH-Add-pip-target-fallback-for-read-only-site-packages.patch"
 )
 sha512sums=('SKIP'
-            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
+            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
+            '7870c6172dd4af00b9b9cd87a28d224cb8c5360717b98f1fdc2df2bab3bda0a6bcd8530fa0c2b6e25f90a88aa4b5f35cafe79eda77a154abced0fa09e70e0bed'
+)
 
 pkgver() {
   cd "${srcdir}/${_pkgname}"
@@ -80,6 +83,7 @@ prepare() {
     --pkgdesc "${pkgdesc}" \
     --startupnotify \
     --custom="StartupWMClass=Slicer"
+  patch -d ${_pkgname} -p1 -i ${srcdir}/0001-ENH-Add-pip-target-fallback-for-read-only-site-packages.patch
 }
 
 build() {
