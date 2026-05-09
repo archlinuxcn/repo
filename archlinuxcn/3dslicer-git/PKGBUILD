@@ -77,7 +77,7 @@ pkgver() {
 prepare() {
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${_pkgname} \
-    --categories "Graphics;MedicalSoftware;Science;" \
+    --categories "Science;MedicalSoftware;Education;MedicalSoftware" \
     --exec "Slicer" \
     --icon "${_pkgname}" \
     --pkgdesc "${pkgdesc}" \
