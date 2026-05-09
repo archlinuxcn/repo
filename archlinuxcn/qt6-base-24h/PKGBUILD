@@ -7,7 +7,7 @@ pkgname=(qt6-base-24h)
 
 _pkgver=6.11.0
 pkgver=${_pkgver/-/}
-pkgrel=3.4
+pkgrel=4.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -20,7 +20,6 @@ depends=(libicui18n.so brotli
          double-conversion
          fontconfig
          freetype2
-         gcc-libs
          glib2
          glibc
          harfbuzz
@@ -29,6 +28,7 @@ depends=(libicui18n.so brotli
          libb2
          libcups
          libdrm
+         libgcc
          libgl
          libice
          libinput
@@ -36,6 +36,7 @@ depends=(libicui18n.so brotli
          libpng
          libproxy
          libsm
+         libstdc++
          liburing
          libx11
          libxcb
@@ -145,6 +146,7 @@ build() {
     -DFEATURE_system_sqlite=ON \
     -DFEATURE_system_xcb_xinput=ON \
     -DFEATURE_no_direct_extern_access=$_no_direct_extern_access \
+    -DFEATURE_mimetype_database=OFF \
     -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON \
     -DCMAKE_MESSAGE_LOG_LEVEL=STATUS
   cmake --build build
