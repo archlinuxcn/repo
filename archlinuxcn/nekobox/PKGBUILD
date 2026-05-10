@@ -10,7 +10,7 @@ license=('GPL-3.0-or-later')
 makedepends=('boost' 'pkgconfig' 'ccache' 'ninja' 'jq' 'coreutils' 'git' 'cmake' 'gendesk' 'go' 'qt6-tools' 'vulkan-headers' 'cpio' 'patchelf')
 depends=('acl' 'bash' 'gcc-libs' 'glibc' 'libx11' 'qt6-base' 'qt6-declarative' 'thrift' 'boost-libs' 'lmdb' 'cpr' 'rocksdb' 'yaml-cpp' 'curl')
 
-source=("https://github.com/qr243vbi/nekobox/archive/refs/tags/5.11.13.tar.gz")
+source=("https://github.com/qr243vbi/nekobox/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=("2d88c1d910e062b4a75184dbc7f64cfb91799e9f0d3740a7a7436fc95b30aba7")
 
 build() {
