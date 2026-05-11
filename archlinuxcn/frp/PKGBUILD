@@ -4,13 +4,13 @@
 pkgbase='frp'
 pkgname=('frpc' 'frps')
 pkgver=0.68.1
-pkgrel=4
+pkgrel=5
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 license=('Apache-2.0')
 url="https://github.com/fatedier/frp"
 depends=('glibc')
-makedepends=('go')
+makedepends=('go' 'npm')
 
 source=(
   "${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
@@ -21,14 +21,25 @@ source=(
 )
 
 sha512sums=('714199ad4e9bfd917574fe4f3535caca430cca040b39ef39f32511356d9ec63b79e1bd97e57cdd0359e5019e64bdacc249d57943da80282b0ce1cfe5b6a8599c'
-            '32f62f961f4f6c4fa192c511b5c5217b296a926e16b2da665c2164729fe0ec0ce3d0ed3c4e223469bbf85bc1d9592b2e1d934712cbbf8e2818fd82dd3f747c3b'
-            'f1376736a8fa81d2a4dcf9252789ba34fb890a7df241148809b4f1fdc92f47db78397d49b61555f9bad6e5007422cc984c1713ef0604c52efb16d148476e182f'
-            'd4e39337ec4cc5c53408f9d9c1a703f09a35a6011de16c289361843ca9d219ed8393c1c24b90fbbb5ad5c0df7eee7d3ac88f93d0be80e6a2e8bca55f5045dae4'
-            '9bfed0ca61558cbe889e1a6d51bdac682f24ad8294b15cc2913706f09defa330aaaa78deec44375966e699a65f77951c706ee18186eddf189a20f8372222f6aa')
+  '32f62f961f4f6c4fa192c511b5c5217b296a926e16b2da665c2164729fe0ec0ce3d0ed3c4e223469bbf85bc1d9592b2e1d934712cbbf8e2818fd82dd3f747c3b'
+  'f1376736a8fa81d2a4dcf9252789ba34fb890a7df241148809b4f1fdc92f47db78397d49b61555f9bad6e5007422cc984c1713ef0604c52efb16d148476e182f'
+  'd4e39337ec4cc5c53408f9d9c1a703f09a35a6011de16c289361843ca9d219ed8393c1c24b90fbbb5ad5c0df7eee7d3ac88f93d0be80e6a2e8bca55f5045dae4'
+  '9bfed0ca61558cbe889e1a6d51bdac682f24ad8294b15cc2913706f09defa330aaaa78deec44375966e699a65f77951c706ee18186eddf189a20f8372222f6aa')
 
 build() {
   cd "${pkgbase}-${pkgver}"
-  make build
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+
+  make frpc-web
+  make frps-web
+
+  go build -ldflags="-s -w -linkmode=external -buildid=''" -tags "frpc" -o bin/frpc ./cmd/frpc
+  go build -ldflags="-s -w -linkmode=external -buildid=''" -tags "frps" -o bin/frps ./cmd/frps
 }
 
 check() {
