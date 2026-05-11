@@ -1,8 +1,17 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0050140b9f..92522eb9ea 100644
+index 926628f933..ccf9f17d2e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -109,20 +109,6 @@ endif()
+@@ -100,29 +100,12 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+   endif()
+ elseif (${CMAKE_BUILD_TYPE} MATCHES "Rel")
+   add_definitions(-DRELEASE)
+-  if (NOT MSVC)
+-    add_compile_options(-O3)
+-  endif()
+ else()
+   message(FATAL_ERROR "Unknown build type: " ${CMAKE_BUILD_TYPE})
+ endif()
 
  message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 
