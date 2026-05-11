@@ -15,11 +15,11 @@ depends=('bash' "electron${_electronversion}" 'hicolor-icon-theme')
 makedepends=('nodejs-lts-jod' 'npm')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johannesjo/${_reponame}/archive/v${pkgver}.tar.gz"
         "fix-wayland-icon.patch"
-        "${pkgname}.desktop"
+        "com.super_productivity.SuperProductivity.desktop"
         "${pkgname}.sh")
 sha256sums=('51ab22a9d91fd2dc18545e84f37b7c93fe7b9e3cdb0e9bdcb0458bd159d055b1'
             '7faa4450d82737b7b0b15a4ce82b79e1ab1fe3c79c88b4779919d64d454c9d1c'
-            '232835a84d6a54a06c2114a01333dfbe3a29405abc3e598df64a784a99a919c6'
+            'd652455706696e8081d0a6f8d0bd72f4604e60f83ecfbe1939e3d1d8225e7656'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 
 prepare() {
@@ -85,7 +85,7 @@ package() {
     cp -r .tmp/app-builds/linux-unpacked/resources/app.asar.unpacked "${pkgdir}/usr/lib/${pkgname}"
 
     install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
-    install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm644 "${srcdir}/com.super_productivity.SuperProductivity.desktop" -t "${pkgdir}/usr/share/applications"
     for i in 16 32 48 64 128 256 512 1024; do
         install -Dm644 "build/icons/${i}x${i}.png" "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/${pkgname}.png"
     done
