@@ -12,7 +12,7 @@ arch=('x86_64')
 url="https://github.com/mifi/${_reponame}"
 license=('GPL-2.0-only')
 depends=("electron${_electronversion}" 'ffmpeg' 'bash' 'hicolor-icon-theme')
-makedepends=('nodejs-lts-jod' 'npm' 'yarn' 'node-gyp' 'imagemagick' 'librsvg')
+makedepends=('nodejs-lts-jod' 'npm' 'yarn' 'node-gyp' 'librsvg')
 source=(
     "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
     "fix-wayland-icon.patch"
@@ -142,7 +142,7 @@ build() {
 
     for res in 16 32 48 64 128 256 512 1024; do
         mkdir -p "icons-build/${res}x${res}"
-        magick -background none "src/renderer/src/icon.svg" -resize "${res}x${res}" "icons-build/${res}x${res}/${pkgname}.png"
+        rsvg-convert -w "${res}" -h "${res}" "src/renderer/src/icon.svg" -o "icons-build/${res}x${res}/${pkgname}.png"
     done
 }
 
