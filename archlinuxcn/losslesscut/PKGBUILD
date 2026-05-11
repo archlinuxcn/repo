@@ -163,6 +163,6 @@ package() {
             "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${pkgname}.png"
     done
 
-    install -Dm644 "${_appname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
-    install -Dm644 "${_appname}.appdata.xml" "${pkgdir}/usr/share/metainfo/${pkgname}.appdata.xml"
+    install -Dm644 "${_appname}.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm644 "${_appname}.appdata.xml" -t "${pkgdir}/usr/share/metainfo"
 }
