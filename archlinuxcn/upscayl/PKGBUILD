@@ -18,12 +18,12 @@ source=(
     "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
     "fix-wayland-icon.patch"
     "${pkgname}.sh"
-    "${pkgname}.desktop"
+    "org.upscayl.Upscayl.desktop"
 )
 sha256sums=('566a7882fb95a8722c00f00a248139e2426fa299ae7cae4fe3f0c35280f5e21e'
             '361a644aef5aed1f5820f26917db04de9ac111bf828894048a99040822472b38'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980'
-            'd047f2ea25b9e93772e450cac1b5e5221ead0f63eb8c42ec3094e2f24e3dad14')
+            '4bb0fa353938c7ac79a004c7c4d1e1c82424f02b54e0a70296bd9145e9f2fd4e')
 
 prepare() {
     sed -e "
@@ -141,8 +141,8 @@ package(){
     rm -f "${pkgdir}/usr/lib/${pkgname}/128x128.png"
     rm -f "${pkgdir}/usr/lib/${pkgname}/512x512.png"
 
-    install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
-    install -Dm644 "flatpak/org.${pkgname}.${_pkgname}.metainfo.xml" "${pkgdir}/usr/share/metainfo/${pkgname}.metainfo.xml"
+    install -Dm644 "${srcdir}/org.upscayl.Upscayl.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm644 "flatpak/org.upscayl.Upscayl.metainfo.xml" -t "${pkgdir}/usr/share/metainfo"
 
     # Disable update
     rm -f "${pkgdir}/usr/lib/${pkgname}/app-update.yml"
