@@ -13,7 +13,7 @@ license=('AGPL-3.0-only')
 conflicts=("${pkgname}-ncnn" "${pkgname}-ncnn-bin")
 options=('!debug')
 depends=("electron${_electronversion}" 'libvips' 'libgomp' 'openjpeg2' 'vulkan-driver' 'vulkan-icd-loader' 'bash' 'hicolor-icon-theme')
-makedepends=('npm' 'nodejs-lts-iron' 'patchelf' 'imagemagick' 'librsvg')
+makedepends=('npm' 'nodejs-lts-iron' 'patchelf' 'librsvg')
 source=(
     "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
     "fix-wayland-icon.patch"
@@ -121,7 +121,7 @@ build() {
 
     for res in 16 32 48 64 128 256 512 1024; do
         mkdir -p "icons-build/${res}x${res}"
-        magick -background none "renderer/public/logo.svg" -resize "${res}x${res}" "icons-build/${res}x${res}/${pkgname}.png"
+        rsvg-convert -w "${res}" -h "${res}" "renderer/public/logo.svg" -o "icons-build/${res}x${res}/${pkgname}.png"
     done
 }
 
