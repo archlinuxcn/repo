@@ -25,7 +25,7 @@ prepare() {
 
 build() {
     cd "nekobox-${pkgver}/"
-    
+    GOPATH="${srcdir}"
     cmake -B "$srcdir/build" -S . \
         -D "NKR_DEFAULT_VERSION=${pkgver}" \
         -D "PROGRAMPREFIX=/usr/lib/nekobox"
