@@ -20,19 +20,13 @@ makedepends+=(pcsx2-git)
 checkdepends=()
 
 source=(
-	portable-config
-	pcsx2.sh
+	config.toml
 	pcsx2.desktop
 )
 
 
 md5sums=('cd10f9dee36fead58407f4f3cbaacffc'
-         '14f762dc90c98f1c3ab833e77bc91480'
          '55887c2268b68d846de62a3187c9f1da')
-
-function prepare() {
-	pacman -Ql pcsx2-git >file.list
-}
 
 function package() {
 	depends=("portable"
@@ -57,25 +51,12 @@ function package() {
     wayland
     xcb-util-cursor
     kddockwidgets)
-	while IFS= read -r line; do
-		file="$(echo "$line" | awk '{print $2}')"
-		if [[ -d ${file} ]]; then
-			echo "Omitting Directory"
-		else
-			if [[ -L "${file}" ]]; then
-				mkdir -p "$(dirname "${pkgdir}/${file}")"
-				ln -vsf "$(readlink -f "${file}")" "${pkgdir}/${file}"
-			else
-				install -vDm755 "${file}" "${pkgdir}/${file}"
-			fi
-		fi
-	done < file.list
-	install -vDm755 "${pkgdir}/usr/bin/pcsx2-qt" -t "${pkgdir}/usr/lib/portable/overlay-usr/"
-	rm -f "${pkgdir}/usr/share/applications"/*
-	rm -f "${pkgdir}/usr/bin"/*
-	install -Dm644 portable-config \
-		"${pkgdir}/usr/lib/portable/info/net.pcsx2.app/config"
-	install -Dm755 "pcsx2.sh" \
-		"${pkgdir}/usr/bin/pcsx2-portable"
-	install -Dm644 "pcsx2.desktop" "${pkgdir}/usr/share/applications/net.pcsx2.app.desktop"
+
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy pcsx2-git \
+		--hash true \
+		--config-ng "${srcdir}/config.toml" \
+		--desktop-file "${srcdir}/pcsx2.desktop"
 }
