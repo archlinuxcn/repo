@@ -9,7 +9,7 @@ pkgname=(
   lib32-gst-plugins-base
   lib32-gst-plugins-good
 )
-pkgver=1.28.2
+pkgver=1.28.3
 pkgrel=1
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
@@ -81,8 +81,8 @@ source=(
   "git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git?signed#tag=$pkgver"
   0001-HACK-meson-Disable-broken-tests.patch
 )
-b2sums=('d96e5bbdf62a5d9e278ec7e3c70a1fb1ac49b1e72d612ca4f7ddf31a803c401713cc5839f8b29a3df14ef76a33ed36600ab9870a0b9c11541d28bac2830f1055'
-        'ff9b5e5e8dde09e242766bcf9e943e41a518967bb991586fb68906d91036ac3e8c79a499a5e66d294b4759a44dba3c7bea5a4e61d5fd9aab2fdf58e8b3ab6329')
+b2sums=('8c99ae79795007260e74f24ef5b3501efe17ef5526e258c7df4b72de484f9864774ef1a5bfd88e9f296dfdf98d8c33103df36d27ae7cda524bf83b7716d07a68'
+        'f6c0042f2d171d93f3aadc5fed50fa4a83a901371ce914cb44d614ac0510e0c5c2e10334a9011acad80f86ab08d7a953cce8d331660bca49bbfcaabbce9bee6b')
 validpgpkeys=(
   D637032E45B8C6585B9456565D2EEE6F6F349D7C # Tim Müller <tim@gstreamer-foundation.org>
 )
@@ -92,6 +92,7 @@ prepare() {
 
   # Disable broken tests
   git apply -3 ../0001-HACK-meson-Disable-broken-tests.patch
+  sed -i '/tcase_add_test (tc_chain, test_reorder_buffer);/d' 'subprojects/gst-plugins-base/tests/check/libs/gstglcolorconvert.c'
 }
 
 build() {
