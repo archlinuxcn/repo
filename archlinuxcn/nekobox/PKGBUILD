@@ -20,7 +20,7 @@ build() {
 }
 
 package_nekobox-core() {
-	depends=('libstdc++' 'libgcc' 'glibc' 'bash')
+	depends=('glibc' 'bash')
     provides=('sing-box')
     conflicts=('sing-box')
     DESTDIR="${pkgdir}" cmake --install "$srcdir/build" --component core
