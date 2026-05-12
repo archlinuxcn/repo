@@ -8,14 +8,14 @@ arch=('x86_64' 'aarch64' 'riscv64' 'pentium4' 'i686' 'armv7h')
 url="https://github.com/qr243vbi/nekobox"
 license=('GPL-3.0-or-later')
 makedepends=('boost' 'pkgconfig' 'ccache' 'ninja' 'jq' 'coreutils' 'git' 'cmake' 'gendesk' 'go' 'qt6-tools' 'vulkan-headers' 'cpio' 'patchelf')
-depends=('acl' 'bash' 'hicolor-icon-theme' 'libstdc++' 'libgcc' 'glibc' 'libx11' 'qt6-base' 'qt6-declarative' 'thrift' 'boost-libs' 'lmdb' 'cpr' 'rocksdb' 'yaml-cpp' 'curl')
+depends=('acl' 'bash' 'hicolor-icon-theme' 'libstdc++' 'libgcc' 'glibc' 'libx11' 'qt6-base' 'qt6-declarative' 'thrift' 'boost-libs' 'lmdb' 'cpr' 'leveldb' 'yaml-cpp' 'curl')
 
 source=("https://github.com/qr243vbi/nekobox/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=("59ca51e39d4e5beb6724844dda81e64b38b0b41666cdafaea9e138ff91bfaa25")
 
 build() {
     cd "nekobox-${pkgver}/"
-    cmake -B "$srcdir/build" -S . -D "NKR_DEFAULT_VERSION=${pkgver}"
+    cmake -B "$srcdir/build" -S . -D "NKR_DEFAULT_VERSION=${pkgver}" -D "PROGRAMPREFIX=/usr/lib/nekobox"
     cmake --build "$srcdir/build" 
 }
 
