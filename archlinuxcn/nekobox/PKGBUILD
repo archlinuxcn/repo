@@ -19,9 +19,9 @@ sha256sums=("8fc16ab484ca0a3e086f6087ac4414cc0d77abacf1a43a7aac9810fe58855142")
 build() {
     cd "nekobox-${pkgver}/"
     # 
-    sed -i 's/-mod=mod/-mod=readonly/g;' "$srcdir/core/CMakeLists.txt" 
-    sed -i 's/\(-buildmode=pie\) \(-buildvcs=false\)/\1 -modcacherw \2/g;' "$srcdir/core/CMakeLists.txt" 
-    sed -i 's/\(multipathtcp=0\) \(-checklinkname=0\)/\1 -compressdwarf=false -linkmode=external \2/g;' "$srcdir/core/CMakeLists.txt" 
+    sed -i 's/-mod=mod/-mod=readonly/g;' "core/CMakeLists.txt" 
+    sed -i 's/\(-buildmode=pie\) \(-buildvcs=false\)/\1 -modcacherw \2/g;' "core/CMakeLists.txt" 
+    sed -i 's/\(multipathtcp=0\) \(-checklinkname=0\)/\1 -compressdwarf=false -linkmode=external \2/g;' "core/CMakeLists.txt" 
     
     cmake -B "$srcdir/build" -S . \
         -D "NKR_DEFAULT_VERSION=${pkgver}" \
