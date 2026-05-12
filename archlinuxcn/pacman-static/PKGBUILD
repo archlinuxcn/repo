@@ -5,7 +5,7 @@
 pkgname=pacman-static
 pkgver=7.1.0.r9.g54d9411
 _nghttp2_ver=1.69.0
-_curlver=8.19.0
+_curlver=8.20.0
 _sslver=3.6.2
 _brotliver=1.2.0
 _zlibver=1.3.2
@@ -13,11 +13,11 @@ _xzver=5.8.3
 _bzipver=1.0.8
 _zstdver=1.5.7
 _libarchive_ver=3.8.7
-_gpgerrorver=1.59
+_gpgerrorver=1.61
 _libassuanver=3.0.0
 _gpgmever=2.0.1
 _libseccompver=2.6.0
-pkgrel=24
+pkgrel=25
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=54d94116164b0b2202c6061c4a59c6f3e70820d8
@@ -93,7 +93,7 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
             '1a108c4384b6104e627652488659de0b1ac3330640fc3250f0a283af7c5884daab187c1efc024b2545262da1911d2b0b7b0d5e4e5b68bb98db25a760c9f1fb1a'
             '7ca20c2ab350f72552544004b37c5c920ae32b852e7f5315b8b29ee8acb86ca8e1f9f9678792842723908e3cb894f63904af8488cb4d49066a3dba5fc14518aa'
             '31858cfd4a85995d006753c40393a7c23d2bfdd54fdb355757bef1a72b42177d31fff958e9e765a19d83e949eac77998e2bbe933b9390d1f2a1365506f5f6271'
-            '745572f0cb9096ff88f737392d1ac25052fc8cff6c35bd09f970301e5e211e3b113f6c184ab2a5ae8c64ab989a9b1fdd6cbcb5d85a0b01d525706124c3ec1e4b'
+            '0d8798d854a32d86ec260fdfabbcf983521a56589d8e5963543a88119e57d231c4a5f3e64737cff61845d837684c73ef58eff92f9c921ef03d87c1d37531e6bf'
             'SKIP'
             'c9fa1e8b3e684f260e51ace59654dff4e45c97f986313a10c205cb22c69186569a2c2ec0e98e2f5c3beb8bdea480dc6fa4e2408bcc6e83566b77490193f5c8e4'
             '46549ed4d6b0160adfa3e1406bc16f3083a7f3c85bdda289c1dbebd0db91433c39855dae765787ec68157faffba4cdb05a0600af4652e3e35da939e0bad8ef1e'
@@ -108,7 +108,7 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
             'SKIP'
             '2af02be3df319556b65403450acc55964d971fe263fed87dea823fb264a862db807a2a3d89358564277a83e5b303302cc677f66b5e523e3d224120b884e5ef1b'
             'SKIP'
-            '86a2b4f94928e88aab23c84e0febb702453617edf3cddf45d0ed9ea817007085a6d132214fd2c855d816ec296514401157e89dab2790aea1edf5c376ea7e1f56'
+            '3e59eb52d061709fd8dfe56a4b36d2d5b49dd5e0c90c283899669d6a355286cb3a3f851631f8456c78c48b652bb31a4c1f8b081ccdf87e5db64b313d141a7670'
             'SKIP'
             '7c5c95c1b85bef2d4890c068a5a8ea8a1fe0d8def6ab09e5f34fc2746d8808bbb0fc168e3bd66d52ee5ed799dcf9f258f4125cda98c8384f6411bcad8d8b3139'
             'SKIP'
@@ -120,21 +120,24 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
 
 export LDFLAGS="$LDFLAGS -static"
 export CC=musl-gcc
-export CXX=musl-gcc
 
 # https://www.openwall.com/lists/musl/2014/11/05/3
 # fstack-protector and musl do not get along but only on i686
 if [[ $CARCH = i686 || $CARCH = pentium4 || $CARCH = i486 ]]; then
     # silly build systems have configure checks or buildtime programs that don't CFLAGS but do do CC
     export CC="musl-gcc -fno-stack-protector"
-    export CXX="musl-gcc -fno-stack-protector"
     export CFLAGS="${CFLAGS/-fstack-protector-strong/}"
-    export CXXFLAGS="${CXXFLAGS/-fstack-protector-strong/}"
 fi
 
 # to enable func64 interface in musl for 64-bit file system functions
 export CFLAGS+=' -D_LARGEFILE64_SOURCE'
-export CXXFLAGS+=' -D_LARGEFILE64_SOURCE'
+
+# GCC 16 added -latomic_asneeded which musl-gcc's search path doesn't cover
+GCC_MAJOR=$(gcc -dumpversion | cut -d. -f1)
+if test "${GCC_MAJOR}" -ge 16; then
+    export CC+=' -fno-link-libatomic'
+    export CFLAGS+=' -fno-link-libatomic'
+fi
 
 # keep using xz-compressed packages, because one use of the package is to
 # recover on systems with broken zstd support in libarchive
