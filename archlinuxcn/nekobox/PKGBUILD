@@ -11,7 +11,7 @@ makedepends=('boost' 'pkgconfig' 'ccache' 'ninja' 'jq' 'coreutils' 'sed'
 'git' 'cmake' 'gendesk' 'go' 'qt6-tools' 'vulkan-headers' 'cpio' 'patchelf')
 depends=('acl' 'bash' 'hicolor-icon-theme' 'libstdc++' 'libgcc' 'glibc' 
 'libx11' 'qt6-base' 'qt6-declarative' 'thrift' 'boost-libs' 'lmdb' 'cpr' 
-'leveldb' 'yaml-cpp' 'curl')
+'leveldb' 'yaml-cpp')
 
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
 sha256sums=("8fc16ab484ca0a3e086f6087ac4414cc0d77abacf1a43a7aac9810fe58855142")
@@ -25,7 +25,11 @@ prepare() {
 
 build() {
     cd "nekobox-${pkgver}/"
-    GOPATH="${srcdir}"
+    export GOPATH="${srcdir}"  
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
     cmake -B "$srcdir/build" -S . \
         -D "NKR_DEFAULT_VERSION=${pkgver}" \
         -D "PROGRAMPREFIX=/usr/lib/nekobox"
