@@ -1,7 +1,7 @@
 # Maintainer: qr243vbi
 
 pkgname=(nekobox nekobox-core)
-pkgver=5.11.14
+pkgver=5.11.15
 pkgrel=1
 pkgdesc="Cross-platform GUI proxy utility (Empowered by sing-box)"
 arch=('x86_64' 'aarch64' 'riscv64' 'pentium4' 'i686' 'armv7h')
@@ -14,7 +14,7 @@ depends=('acl' 'bash' 'hicolor-icon-theme' 'libstdc++' 'libgcc' 'glibc'
 'leveldb' 'yaml-cpp')
 
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=("8fc16ab484ca0a3e086f6087ac4414cc0d77abacf1a43a7aac9810fe58855142")
+sha256sums=("e4a27f415cebe80466bd19be2e9fb560dd03c641e3774f69aadd63f1b941beaf")
 
 prepare() {
     local reg='s/-mod=mod/-mod=readonly/g;'
