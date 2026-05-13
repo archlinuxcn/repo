@@ -4,7 +4,7 @@
 
 pkgname=ctre
 _srcname=compile-time-regular-expressions
-pkgver=3.10.0
+pkgver=3.11.0
 pkgrel=1
 pkgdesc="Compile Time Regular Expression in C++"
 url="https://compile-time.re"
@@ -12,7 +12,7 @@ arch=('any')
 license=('Apache-2.0')
 makedepends=('cmake')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/hanickadot/${_srcname}/archive/v${pkgver}.tar.gz")
-sha256sums=('b17e6c9a6cc0cea65132f62a6c699cefed952721063569d6339eb3ca471045e6')
+sha256sums=('7d4b30d0bdd8864a47cceb2ab8e7c4d1846f0ec62383f8c45122435d32f19530')
 
 build() {
 	cmake -B build -S "${_srcname}-${pkgver}" -DCMAKE_INSTALL_PREFIX=/usr

@@ -3,7 +3,7 @@
 pkgname=upscayl
 _pkgname=Upscayl
 pkgver=2.15.0
-pkgrel=6
+pkgrel=9
 _electronversion=39
 pkgdesc="A free and open source AI Image Upscaler App"
 arch=('x86_64')
@@ -13,17 +13,17 @@ license=('AGPL-3.0-only')
 conflicts=("${pkgname}-ncnn" "${pkgname}-ncnn-bin")
 options=('!debug')
 depends=("electron${_electronversion}" 'libvips' 'libgomp' 'openjpeg2' 'vulkan-driver' 'vulkan-icd-loader' 'bash' 'hicolor-icon-theme')
-makedepends=('npm' 'nodejs-lts-iron' 'patchelf' 'imagemagick' 'librsvg')
+makedepends=('npm' 'nodejs-lts-iron' 'patchelf' 'librsvg')
 source=(
     "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
     "fix-wayland-icon.patch"
     "${pkgname}.sh"
-    "${pkgname}.desktop"
+    "org.upscayl.Upscayl.desktop"
 )
 sha256sums=('566a7882fb95a8722c00f00a248139e2426fa299ae7cae4fe3f0c35280f5e21e'
-            '361a644aef5aed1f5820f26917db04de9ac111bf828894048a99040822472b38'
+            '35ff313548466001317dbe0f0f1dac7c667aa753bdd2dbbce8f1074a846710c1'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980'
-            'd047f2ea25b9e93772e450cac1b5e5221ead0f63eb8c42ec3094e2f24e3dad14')
+            '4bb0fa353938c7ac79a004c7c4d1e1c82424f02b54e0a70296bd9145e9f2fd4e')
 
 prepare() {
     sed -e "
@@ -121,7 +121,7 @@ build() {
 
     for res in 16 32 48 64 128 256 512 1024; do
         mkdir -p "icons-build/${res}x${res}"
-        magick -background none "renderer/public/logo.svg" -resize "${res}x${res}" "icons-build/${res}x${res}/${pkgname}.png"
+        rsvg-convert -w "${res}" -h "${res}" "renderer/public/logo.svg" -o "icons-build/${res}x${res}/${pkgname}.png"
     done
 }
 
@@ -141,8 +141,8 @@ package(){
     rm -f "${pkgdir}/usr/lib/${pkgname}/128x128.png"
     rm -f "${pkgdir}/usr/lib/${pkgname}/512x512.png"
 
-    install -Dm644 "${srcdir}/${pkgname}.desktop" -t "${pkgdir}/usr/share/applications"
-    install -Dm644 "flatpak/org.${pkgname}.${_pkgname}.metainfo.xml" "${pkgdir}/usr/share/metainfo/${pkgname}.metainfo.xml"
+    install -Dm644 "${srcdir}/org.upscayl.Upscayl.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm644 "flatpak/org.upscayl.Upscayl.metainfo.xml" -t "${pkgdir}/usr/share/metainfo"
 
     # Disable update
     rm -f "${pkgdir}/usr/lib/${pkgname}/app-update.yml"

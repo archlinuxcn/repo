@@ -1,7 +1,7 @@
 # Maintainer: Coelacanthus <coelacanthus@archlinuxcn.org>
 
 pkgname=subrandr
-pkgver=1.2.0
+pkgver=1.3.0
 pkgrel=1
 pkgdesc="A subtitle rendering library which aims to render SRV3 (YouTube) subtitles and WebVTT subtitles accurately."
 url="https://github.com/afishhh/subrandr"
@@ -26,7 +26,7 @@ provides=(
 source=(
     "$pkgname-$pkgver.tar.gz::https://github.com/afishhh/subrandr/archive/refs/tags/v$pkgver.tar.gz"
 )
-b2sums=('d7e9b6874bd5f2898f03bbf56e6bf3ecfbb378bfb12b78f21e4e3ef98b9a4f9a105a5540e98aea7ef702d3a89e06bcfd042503b3c5ed964cb32146804120509c')
+b2sums=('c70aff932edbcf300c805b4cf68bacddc1e7ece25823c7c6413da4da2a8ab82c1d23cae2558507ef4f9844b759bd35b798eeeb382b780495e3c5765b52fdd5b2')
 
 prepare() {
     cd "$pkgname-$pkgver"

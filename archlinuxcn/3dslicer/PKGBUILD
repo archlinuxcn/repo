@@ -3,7 +3,7 @@
 _pkgname=3dslicer
 pkgname=3dslicer
 pkgver=5.10.0
-pkgrel=7
+pkgrel=8
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
 url='https://www.slicer.org'
@@ -62,7 +62,7 @@ sha512sums=('c3d91fdd02292c5231389baec26827a5e2503a2c5ba0bf226c7ef383e12fb11cf5b
 prepare() {
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${_pkgname} \
-    --categories "Graphics;MedicalSoftware;Science;" \
+    --categories "Science;MedicalSoftware;Education;MedicalSoftware" \
     --exec "Slicer" \
     --icon "${_pkgname}" \
     --pkgdesc "${pkgdesc}" \

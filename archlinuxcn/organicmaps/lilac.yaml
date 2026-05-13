@@ -2,9 +2,21 @@ maintainers:
   - github: DeepChirp
     email: deepchirp@archlinuxcn.org
 
-pre_build_script: aur_pre_build(maintainers=['Aleksej'])
-post_build: aur_post_build
+pre_build_script: |
+  newver = _G.newver
+  new_pkgver = newver.replace('-android', '').replace('-', '_')
+
+  for line in edit_file('PKGBUILD'):
+    if line.startswith('_pkgver='):
+      line = f'_pkgver={newver}'
+    print(line)
+
+  update_pkgver_and_pkgrel(new_pkgver)
+
+post_build_script: git_pkgbuild_commit()
 
 update_on:
-  - source: aur
-    aur: organicmaps
+  - source: github
+    github: organicmaps/organicmaps
+    use_latest_release: true
+    include_regex: '^\d{4}\.\d{2}\.\d{2}-\d+-android$'

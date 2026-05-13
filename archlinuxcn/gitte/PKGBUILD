@@ -1,0 +1,43 @@
+# Maintainer: George Hu <integral@archlinux.org>
+
+pkgname=gitte
+_srcname=Gitte
+pkgver=0.2.0
+pkgrel=2
+pkgdesc="A GTK4/libadwaita Git client for the GNOME desktop"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://codeberg.org/ckruse/${_srcname}"
+license=('AGPL-3.0-or-later')
+depends=(
+	'dconf'
+	'glib2'
+	'glibc'
+	'graphene'
+	'gtk4'
+	'hicolor-icon-theme'
+	'libadwaita'
+	'libgcc'
+	'libgit2'
+	'libssh2'
+	'openssl'
+	'pango'
+	'xz'
+	'zlib'
+)
+makedepends=('cargo' 'git' 'meson' 'ninja')
+source=("git+${url}.git#tag=${pkgver}")
+sha256sums=('551ec61235b0a548da315407f20aaf10f1ee6865ca9d36c9ac713185255848c6')
+
+build() {
+	export LIBSSH2_SYS_USE_PKG_CONFIG=1
+	meson setup --prefix=/usr --libexecdir=lib --buildtype=release build "${_srcname}"
+	meson compile -C build
+}
+
+check() {
+	meson test -C build --print-errorlogs
+}
+
+package() {
+	meson install -C build --no-rebuild --destdir "${pkgdir}"
+}

@@ -1,0 +1,20 @@
+--- a/pxr/base/work/workTBB/dispatcher_impl.h
++++ b/pxr/base/work/workTBB/dispatcher_impl.h
+@@ -14,6 +14,7 @@
+ // the TBB version header in a way that works in all TBB versions.
+ #include <tbb/blocked_range.h>
+ #include <tbb/concurrent_vector.h>
++#include <tbb/version.h>
+ #if TBB_INTERFACE_VERSION_MAJOR >= 12
+ #include <tbb/task_group.h>
+ #else
+--- a/pxr/base/work/workTBB/detachedTask_impl.h
++++ b/pxr/base/work/workTBB/detachedTask_impl.h
+@@ -8,6 +8,7 @@
+ #define PXR_BASE_WORK_TBB_DETACHED_TASK_IMPL_H
+
+ #include <tbb/blocked_range.h>
++#include <tbb/version.h>
+ #include "pxr/base/work/workTBB/dispatcher_impl.h"
+ #include "pxr/base/work/api.h"
+

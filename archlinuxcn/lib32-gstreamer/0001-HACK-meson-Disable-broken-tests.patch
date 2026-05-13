@@ -9,13 +9,12 @@ Subject: [PATCH] HACK: meson: Disable broken tests
  subprojects/gst-plugins-bad/tests/check/elements/lc3.c     | 3 ---
  subprojects/gst-plugins-bad/tests/check/meson.build        | 1 -
  subprojects/gst-plugins-bad/tests/validate/meson.build     | 7 -------
- .../gst-plugins-base/tests/check/libs/gstglcolorconvert.c  | 1 -
  subprojects/gst-plugins-base/tests/check/meson.build       | 1 -
  subprojects/gst-plugins-base/tests/validate/meson.build    | 1 -
  subprojects/gst-plugins-good/tests/check/elements/flvmux.c | 1 -
  .../gst-plugins-good/tests/check/elements/mpegaudioparse.c | 1 -
  subprojects/gst-python/meson.build                         | 1 -
- 11 files changed, 21 deletions(-)
+ 10 files changed, 20 deletions(-)
 
 diff --git a/subprojects/gst-editing-services/tests/check/meson.build b/subprojects/gst-editing-services/tests/check/meson.build
 index 1348d1209343..f9a2c421a6f6 100644
@@ -24,7 +23,7 @@ index 1348d1209343..f9a2c421a6f6 100644
 @@ -150,7 +150,5 @@ if build_gir
      env.set('GST_PLUGIN_PATH_1_0', [meson.global_build_root()] + pluginsdirs)
      env.set('GI_TYPELIB_PATH', meson.current_build_dir() / '..' / '..' / 'ges')
- 
+
 -    test('pythontests', runtests, args: ['--pyunittest-dir', meson.current_source_dir(), 'pyunittest', '--dump-on-failure'],
 -         env: env)
    endif
@@ -34,7 +33,7 @@ index d9ef8f7a0738..4d8b18eca1fd 100644
 --- a/subprojects/gst-plugins-bad/tests/check/elements/curlhttpsrc.c
 +++ b/subprojects/gst-plugins-bad/tests/check/elements/curlhttpsrc.c
 @@ -919,14 +919,12 @@ curlhttpsrc_suite (void)
- 
+
    suite_add_tcase (s, tc_chain);
    tcase_add_test (tc_chain, test_first_buffer_has_offset);
 -  tcase_add_test (tc_chain, test_redirect_yes);
@@ -45,7 +44,7 @@ index d9ef8f7a0738..4d8b18eca1fd 100644
    tcase_add_test (tc_chain, test_cookies);
    tcase_add_test (tc_chain, test_multiple_http_requests);
 -  tcase_add_test (tc_chain, test_range_get);
- 
+
    return s;
  }
 diff --git a/subprojects/gst-plugins-bad/tests/check/elements/lc3.c b/subprojects/gst-plugins-bad/tests/check/elements/lc3.c
@@ -54,13 +53,13 @@ index 07d79d1765c4..85b95fb0ef7e 100644
 +++ b/subprojects/gst-plugins-bad/tests/check/elements/lc3.c
 @@ -354,9 +354,6 @@ lc3_suite (void)
    TCase *tc_chain = tcase_create ("general");
- 
+
    suite_add_tcase (s, tc_chain);
 -  tcase_add_test (tc_chain, test_48k_8ch_10000us);
 -  tcase_add_test (tc_chain, test_48k_8ch_7500us);
 -  tcase_add_test (tc_chain, test_24k_4ch_10000us);
    tcase_add_test (tc_chain, test_dec_plc);
- 
+
    return s;
 diff --git a/subprojects/gst-plugins-bad/tests/check/meson.build b/subprojects/gst-plugins-bad/tests/check/meson.build
 index 8170f358ba88..0a9a99de50a8 100644
@@ -80,7 +79,7 @@ index 25eedac14829..6dd292ea670a 100644
 +++ b/subprojects/gst-plugins-bad/tests/validate/meson.build
 @@ -4,19 +4,12 @@ if not gst_tester.found()
  endif
- 
+
  tests = [
 -    {'path': 'opencv/cvtracker'},
      {'path': 'testsrcbin/caps_spec'},
@@ -96,20 +95,8 @@ index 25eedac14829..6dd292ea670a 100644
 -    {'path': 'pitch/change_pitch_properties', 'skip': not soundtouch_dep.found()},
 -    {'path': 'pitch/reverse.change_pitch_properties', 'skip': not soundtouch_dep.found()},
  ]
- 
+
  env = environment()
-diff --git a/subprojects/gst-plugins-base/tests/check/libs/gstglcolorconvert.c b/subprojects/gst-plugins-base/tests/check/libs/gstglcolorconvert.c
-index c1c6cef90ea9..2bb9ffb0026c 100644
---- a/subprojects/gst-plugins-base/tests/check/libs/gstglcolorconvert.c
-+++ b/subprojects/gst-plugins-base/tests/check/libs/gstglcolorconvert.c
-@@ -467,7 +467,6 @@ gst_gl_color_convert_suite (void)
- 
-   suite_add_tcase (s, tc_chain);
-   tcase_add_checked_fixture (tc_chain, setup, teardown);
--  tcase_add_test (tc_chain, test_reorder_buffer);
-   tcase_add_test (tc_chain, test_meta);
-   tcase_add_test (tc_chain, test_passthrough);
-   /* FIXME add YUV <--> RGB conversion tests */
 diff --git a/subprojects/gst-plugins-base/tests/check/meson.build b/subprojects/gst-plugins-base/tests/check/meson.build
 index c5b3a2470744..c1a85621f867 100644
 --- a/subprojects/gst-plugins-base/tests/check/meson.build
@@ -139,7 +126,7 @@ index 28bee56f9ecb..949c184b3793 100644
 --- a/subprojects/gst-plugins-good/tests/check/elements/flvmux.c
 +++ b/subprojects/gst-plugins-good/tests/check/elements/flvmux.c
 @@ -1740,7 +1740,6 @@ flvmux_suite (void)
- 
+
    tcase_add_test (tc_chain, test_speex_streamable);
    tcase_add_test (tc_chain, test_increasing_timestamp_when_pts_none);
 -  tcase_add_test (tc_chain, test_video_caps_late);
@@ -155,7 +142,7 @@ index db2075a450c7..65692304bfc8 100644
    tcase_add_test (tc_chain, test_parse_skip_garbage);
    tcase_add_test (tc_chain, test_parse_detect_stream);
 -  tcase_add_test (tc_chain, test_parse_gapless_and_skip_padding_samples);
- 
+
    return s;
  }
 diff --git a/subprojects/gst-python/meson.build b/subprojects/gst-python/meson.build
@@ -168,5 +155,5 @@ index f7993802711a..38f8113f059b 100644
  if not get_option('tests').disabled()
 -  subdir('testsuite')
  endif
- 
+
  # This makes "import gi" load or overrides, see gi/__init__.py

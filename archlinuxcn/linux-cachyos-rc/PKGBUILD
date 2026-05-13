@@ -60,7 +60,7 @@
 ### Running with a 1000HZ, 750Hz, 600 Hz, 500Hz, 300Hz, 250Hz and 100Hz tick rate
 : "${_HZ_ticks:=1000}"
 
-## Choose between perodic, idle or full
+## Choose between periodic, idle or full
 ### Full tickless can give higher performances in various cases but, depending on hardware, lower consistency.
 : "${_tickrate:=full}"
 
@@ -177,7 +177,7 @@ pkgbase="linux-$_pkgsuffix"
 _major=7.1
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc2
+_rcver=rc3
 pkgver=${_major}.${_rcver}
 _tagrel=1
 pkgrel=1
@@ -393,7 +393,7 @@ prepare() {
 
     ### Select tick type
     case "$_tickrate" in
-        perodic) scripts/config -d NO_HZ_IDLE -d NO_HZ_FULL -d NO_HZ -d NO_HZ_COMMON -e HZ_PERIODIC;;
+        periodic) scripts/config -d NO_HZ_IDLE -d NO_HZ_FULL -d NO_HZ -d NO_HZ_COMMON -e HZ_PERIODIC;;
         idle) scripts/config -d HZ_PERIODIC -d NO_HZ_FULL -e NO_HZ_IDLE  -e NO_HZ -e NO_HZ_COMMON;;
         full) scripts/config -d HZ_PERIODIC -d NO_HZ_IDLE -d CONTEXT_TRACKING_FORCE -e NO_HZ_FULL_NODEF -e NO_HZ_FULL -e NO_HZ -e NO_HZ_COMMON -e CONTEXT_TRACKING;;
         *) _die "The value '$_tickrate' is invalid. Choose the correct one again.";;
@@ -814,6 +814,6 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('6a76eaf0faf8bcf3283153a6abcd25aa0b62cdcc6ad0a8364859b0cf5db7063108244ddaf8cdd76efe634d539be2d833ba69022d244d6a0cae8c0616b825b226'
+b2sums=('6a25a75f928dd55b3543b5c4f178d6c784a06d13c9eb0fc0253d0bb0c77f78abbcd02108e84d385e0e5d1a8e650433184939ebb3f8e67d0cd045fa381a54358d'
         '3f4afd2643d5248805e28baac898c224c2db41c0ebaea118dea6ceeb81a12329062a9068a409aaf793631cc71005fd9047f198d2d572ef449d41ee338d757ff7'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')

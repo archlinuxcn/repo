@@ -1,0 +1,25 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=gnome-shell-extension-focus-timer
+pkgver=1
+pkgrel=6
+pkgdesc='GNOME Shell integration for the Focus Timer app'
+arch=('any')
+url="https://github.com/focustimerhq/gnome-shell-extension-focus-timer"
+license=('GPL-3.0-only')
+depends=('gnome-shell>=48' 'dconf' 'focus-timer')
+makedepends=('meson')
+source=("${pkgver}.tar.gz"::"${url}/archive/refs/tags/${pkgver}.tar.gz")
+b2sums=('16a55ca30421bd2f52821dcc3980832f095aa11e8288ca3dcc098cc01cfb0a8fb45a7c6a3cd5b3b8de335a7caf15d1073ba3d65a8f9d22c4d0ec56c2cfae3159')
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    arch-meson build
+    ninja -C build
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+
+    DESTDIR="$pkgdir" ninja -C build install
+}

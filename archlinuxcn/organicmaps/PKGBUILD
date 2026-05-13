@@ -1,71 +1,166 @@
-# Maintainer: Aleksej Kovura <aur-b1a3 at mekboy dot ru>
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+# Contributor: Aleksej Kovura <aur-b1a3 at mekboy dot ru>
 
 pkgname=organicmaps
-pkgver=2026.04.07_8
-_tag="${pkgver%%_*}-${pkgver##*_}-android"
-pkgrel=1
-pkgdesc="Organic Maps: Offline Hike, Bike, Trails and Navigation"
-arch=(x86_64)
-makedepends=(cmake git jq gcc ninja mold)
-depends=(mesa libglvnd freetype2 sqlite icu qt6-svg qt6-base zlib libpng glibc
-  qt6-positioning gcc-libs harfbuzz libxrandr libxi libxcursor hicolor-icon-theme libxinerama python)
-optdepends=("ccache: faster re-compilation" "qt6-wayland: for Wayland users")
-license=("Apache-2.0")
+pkgver=2026.05.08_4
+_pkgver=2026.05.08-4-android
+pkgrel=2
+pkgdesc="A privacy-focused offline maps & GPS app for hiking, cycling, biking, and driving"
+arch=('x86_64')
+# Reference: https://github.com/organicmaps/organicmaps/blob/master/docs/INSTALL.md
+depends=('glibc' 'hicolor-icon-theme' 'libxcursor' 'libxi' 'libxinerama' 'libxrandr' 'libgcc' 'libglvnd' 'libstdc++' 'mesa' 'python' 'qt6-base' 'qt6-positioning' 'qt6-svg' 'sqlite' 'zlib'
+         # WITH_SYSTEM_PROVIDED_3PARTY
+         'expat' 'freetype2' 'gflags' 'harfbuzz' 'icu' 'jansson' 'protobuf' 'pugixml')
+makedepends=('cmake' 'ninja' 'git' 'jq' 'librsvg'
+             # WITH_SYSTEM_PROVIDED_3PARTY
+             'boost' 'fast_float' 'glm' 'gtest' 'utf8cpp' 'vulkan-headers')
+optdepends=('qt6-wayland: for Wayland users')
+license=('Apache-2.0' 'LicenseRef-OrganicMapsData')
 url="https://organicmaps.app"
-_source_url="https://github.com/organicmaps/organicmaps.git"
-source=(organicmaps.desktop)
-sha256sums=('a60443ee9a909b372f190ec8e1bde880fc2303da5d11261ef218e67c40c35c03')
-conflicts=("${pkgname}-bin" "${pkgname}-git")
+source=("$pkgname::git+https://github.com/organicmaps/organicmaps.git#tag=${_pkgver}"
+        "git+https://github.com/organicmaps/osmctools.git"
+        "git+https://github.com/organicmaps/kothic.git"
+        "git+https://github.com/organicmaps/just_gtfs.git"
+        "git+https://github.com/thisistherk/fast_obj"
+        "git+https://github.com/glfw/glfw.git"
+        "git+https://github.com/dpogue/CMake-MetalShaderSupport.git"
+        "git+https://github.com/ocornut/imgui"
+        "git+https://github.com/organicmaps/glaze"
+        "git+https://github.com/organicmaps/twine.git"
+        "0001-root-cmake-system-3party.patch"
+        "0002-drape-tests-private.patch"
+        "0003-fix-cmake-flags.patch")
+sha256sums=('33f54a8623dae1d809d57e05ea45683dc9a147d8cde8e247547a4f50a5fa4b39'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            '6e2b8eb7bdf3e5f760dd3000232db2cba31a13f0492989de7e52392da980e734'
+            'c50bf415a0a32802fa0534ee95b79196d9262bde29cc97c5ef31f38b00b53074'
+            '336f5f03629178e1c033f8f620c5b5d8c0c7f6b8b08ad5521d8061765f362469')
+
 prepare() {
-  avail=$(df -P -B 1048576 $srcdir|awk 'NR>1 {print $4}')
-  if [ $avail -le 5120 ]; then
-    printf "need at least 5 GiB of free space\n"
-    exit 1
-  fi
-  src_url=$_source_url
-  if [ -n "$SOURCE_URL_REWRITER" ]; then
-    src_url=$($SOURCE_URL_REWRITER $_source_url)
-    case $src_url in
-      file://*)
-        git -C ${src_url#file://} fetch --depth=1 origin "$_tag"
-        ;;
-    esac
-  fi
-  if [ ! -d $pkgname ]; then
-    git clone --depth=1 --single-branch -b "$_tag" --filter=blob:limit=128k \
-      $src_url $pkgname
-  fi
-  if [ -n "$SOURCE_URL_REWRITER" ]; then
-    for submodule_path in $(git -C $pkgname submodule status|
-        awk '/icu/ || /harfbuzz/ || /expat/ {print $2}');
-    do
-      pin_commit=$(git -C $pkgname submodule status --cached $submodule_path|
-        awk '{sub("^-",""); print $1}')
-      remote=$(git -C $pkgname config --file=.gitmodules submodule.${submodule_path}.url)
-      local_remote=$($SOURCE_URL_REWRITER $remote)
-      case "$local_remote" in
-        file://*)
-          git -C ${local_remote#file://} fetch --depth=1 origin "$pin_commit"
-          git -C $pkgname submodule set-url $submodule_path "$local_remote"
-          ;;
-      esac
+    cd "$pkgname"
+
+    # Arch Linux uses Autotools for jansson, which doesn't generate CMake config files.
+    # Replace the CONFIG find_package with pkg-config to dynamically link the system library.
+    # Also add missing find_package when using system libraries.
+    patch -p1 -i "$srcdir/0001-root-cmake-system-3party.patch"
+
+    # CMake >= 3.0 forbids mixing plain and keyword signatures for target_link_libraries.
+    # Force the PRIVATE keyword in drape_tests to resolve the configuration conflict.
+    patch -p1 -i "$srcdir/0002-drape-tests-private.patch"
+
+    # Use the system's flags to prevent them from being overwritten.
+    # Fix LDFLAGS overwriting and "Could NOT find Threads" errors.
+    patch -p1 -i "$srcdir/0003-fix-cmake-flags.patch"
+
+    # Unbundle outdated Protobuf generated headers/sources.
+    # We must manually regenerate them using the system's protoc to prevent version mismatches.
+    while read -r proto_file; do
+        protoc -I. --cpp_out=. "$proto_file"
+    done < <(find libs -name "*.proto")
+
+    # See `if (NOT WITH_SYSTEM_PROVIDED_3PARTY)` in CMakeLists.txt
+    local _disabled_submodules=(
+        "3party/boost"
+        "3party/expat"
+        "3party/fast_float"
+        "3party/freetype/freetype"
+        "3party/gflags"
+        "3party/googletest"
+        "3party/glm"
+        "3party/harfbuzz/harfbuzz"
+        "3party/icu/icu"
+        "3party/jansson/jansson"
+        "3party/protobuf/protobuf"
+        "3party/pugixml/pugixml"
+        "3party/utfcpp"
+        "3party/Vulkan-Headers"
+    )
+    for sub in "${_disabled_submodules[@]}"; do
+        git config "submodule.${sub}.update" none
     done
-  fi
-  cd $pkgname
-  git -c protocol.file.allow=always submodule update --init --recursive --depth=1
-  rm -f 3party/boost/b2
-  bash ./configure.sh
+
+    git submodule init
+
+    git config --file .gitmodules --get-regexp url | while read -r key url; do
+        local path="${key#submodule.}"
+        path="${path%.url}"
+
+        local folder=$(basename "${url%.git}")
+
+        if [[ -d "$srcdir/$folder" ]]; then
+            git config "submodule.$path.url" "$srcdir/$folder"
+        fi
+    done
+
+    git -c protocol.file.allow=always submodule update
+
+    sed -i '/-data_path/! s|^Exec=OMaps|Exec=OMaps -data_path /usr/share/organicmaps/data|' qt/res/linux/app.organicmaps.desktop.desktop
 }
+
 build() {
-  cd $pkgname
-  env CFLAGS="-fuse-ld=mold" CXXFLAGS="-fuse-ld=mold" CC=gcc CXX=g++ \
-    tools/unix/build_omim.sh -n $(nproc) -c -r desktop
+    cd "$pkgname"
+
+    # Reference: tools/unix/build_omim.sh
+    local cmake_options=(
+        -B build
+        -G Ninja
+        -D CMAKE_BUILD_TYPE=Release # `CMakeLists.txt` enforces type checking, so `None` cannot be used here; however, we have previously removed O3 via patch
+        # Override CMake's default behavior to strip the built-in -O3 flag
+        -D CMAKE_C_FLAGS_RELEASE="-DNDEBUG"
+        -D CMAKE_CXX_FLAGS_RELEASE="-DNDEBUG"
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D WITH_SYSTEM_PROVIDED_3PARTY=ON
+        -D SKIP_QT_GUI=OFF
+        -D SKIP_TESTS=OFF # Used for `check` phase
+        -D SKIP_TOOLS=ON
+    )
+    cmake "${cmake_options[@]}"
+
+    cmake --build build
+
+    for res in 16 32 48 64 128 256 512 1024; do
+        mkdir -p "icons-build/${res}x${res}"
+        rsvg-convert -w "${res}" -h "${res}" "android/.idea/icon.svg" -o "icons-build/${res}x${res}/${pkgname}.png"
+    done
 }
+
+check() {
+    cd "$pkgname"
+
+    # From `build-cmake.yaml` "Run tests"
+    # In addition, the following tests were also disabled:
+    # - base_tests: `is_finite` logic fails due to `-ffast-math`
+    # - osm_auth_tests: `server_api_test` fails due to no network access
+    ctest -j --test-dir build --stop-on-failure --output-on-failure -E "drape_tests|drape_frontend_tests|generator_integration_tests|opening_hours_integration_tests|opening_hours_supported_features_tests|routing_benchmarks|routing_integration_tests|routing_quality_tests|search_quality_tests|storage_integration_tests|shaders_tests|world_feed_integration_tests|base_tests|osm_auth_tests"
+}
+
 package() {
- install -dm755 "$pkgdir/usr/share/${pkgname}"
- cp -Lr "${pkgname}/data" "$pkgdir/usr/share/${pkgname}/"
- install -dm777 "$pkgdir/usr/share/${pkgname}/data/$(jq '.v' $pkgname/data/countries.txt)"
- install -Dm644 "${pkgname}/android/.idea/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
- install -Dm755 "omim-build-release/OMaps" "$pkgdir/usr/bin/OMaps"
- install -Dm644 "organicmaps.desktop" -t "$pkgdir/usr/share/applications"
+    cd "$pkgname"
+
+    install -Dm755 "build/OMaps" "$pkgdir/usr/bin/OMaps"
+
+    install -dm755 "$pkgdir/usr/share/${pkgname}"
+    cp -Lr data "$pkgdir/usr/share/${pkgname}/"
+    rm -rf "$pkgdir/usr/share/${pkgname}/data/test_data"
+    local _data_version=$(jq -r '.v' data/countries.txt)
+    install -dm755 "$pkgdir/usr/share/${pkgname}/data/$_data_version"
+
+    install -Dm644 "android/.idea/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+    for res in 16 32 48 64 128 256 512 1024; do
+        install -Dm644 "icons-build/${res}x${res}/${pkgname}.png" \
+            "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${pkgname}.png"
+    done
+
+    install -Dm644 qt/res/linux/app.organicmaps.desktop.desktop -t "$pkgdir/usr/share/applications"
+
+    install -Dm644 LICENSE NOTICE DATA_LICENSE.txt -t "$pkgdir/usr/share/licenses/$pkgname/"
+    install -Dm644 packaging/app.organicmaps.desktop.metainfo.xml -t "$pkgdir/usr/share/metainfo/"
 }

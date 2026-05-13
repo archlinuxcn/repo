@@ -4,13 +4,13 @@
 pkgbase='frp'
 pkgname=('frpc' 'frps')
 pkgver=0.68.1
-pkgrel=4
+pkgrel=6
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 license=('Apache-2.0')
 url="https://github.com/fatedier/frp"
 depends=('glibc')
-makedepends=('go')
+makedepends=('go' 'npm')
 
 source=(
   "${pkgbase}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
@@ -28,7 +28,18 @@ sha512sums=('714199ad4e9bfd917574fe4f3535caca430cca040b39ef39f32511356d9ec63b79e
 
 build() {
   cd "${pkgbase}-${pkgver}"
-  make build
+
+  export CGO_CPPFLAGS="${CPPFLAGS}"
+  export CGO_CFLAGS="${CFLAGS}"
+  export CGO_CXXFLAGS="${CXXFLAGS}"
+  export CGO_LDFLAGS="${LDFLAGS}"
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+
+  make frpc-web
+  make frps-web
+
+  go build -ldflags="-s -w -linkmode=external -buildid=''" -tags "frpc" -o bin/frpc ./cmd/frpc
+  go build -ldflags="-s -w -linkmode=external -buildid=''" -tags "frps" -o bin/frps ./cmd/frps
 }
 
 check() {

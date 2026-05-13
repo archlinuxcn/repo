@@ -1,5 +1,6 @@
 # Maintainer: Horror Proton <https://github.com/horror-proton>
 # Maintainer: Cryolitia <cryolitia at gmail dot com>
+# Maintainer: CommDServ <commdserv at outlook dot com>
 
 # shellcheck disable=SC2034 disable=SC2164
 
@@ -7,7 +8,7 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=6.9.0
+_pkgver=6.9.5
 pkgver=${_pkgver//-/}
 pkgrel=1
 _pkgdesc="An Arknights assistant"
@@ -21,13 +22,13 @@ source=("git+$url.git#tag=v${_pkgver}"
 "git+https://github.com/MaaXYZ/MaaUtils.git"
 "FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaXYZ/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
 install="${_pkgname}.install"
-md5sums=('551f08aca7ce473e2e36353f884d5425'
+md5sums=('4a72a73390b43c6e3a6f58084eec7589'
          'SKIP'
          '4555f8dce0cec02022356d50c8f2275c')
 
 if ((WITH_CUDA)); then
     pkgname+=(maa-assistant-arknights-cuda)
-    makedepends+=(cuda)
+    makedepends+=(cuda gcc13)
 fi
 
 prepare() {
@@ -94,6 +95,7 @@ build() {
         -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         -DCMAKE_INSTALL_PREFIX="$pkgdir"/usr
         -DMAA_VERSION="v$_pkgver"
+        -DMAA_HASH_VERSION="v$_pkgver" # taken from ci workflow
         -Dfastdeploy_SOURCE_DIR="$srcdir"/FastDeploy-"$_fastdeploy_ref"
         -Dfastdeploy_BINARY_DIR="$srcdir"/build-FastDeploy
     )
@@ -113,8 +115,8 @@ build() {
             -DCUDA_ARCH_NAME=Auto
         )
         
-        cmake -B build-cuda -S "MaaAssistantArknights" "${_cmake_flags[@]}"
-        cmake --build build-cuda
+        NVCC_CCBIN=g++-13 cmake -B build-cuda -S "MaaAssistantArknights" "${_cmake_flags[@]}"
+        NVCC_CCBIN=g++-13 cmake --build build-cuda
     fi
 }
 

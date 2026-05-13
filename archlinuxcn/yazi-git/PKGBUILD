@@ -3,7 +3,7 @@
 
 pkgname=yazi-git
 _pkgname=yazi
-pkgver=26.1.22.r95.g10fc76d
+pkgver=26.5.6.r5.gfde5633
 pkgrel=1
 pkgdesc="Blazing fast terminal file manager written in Rust, based on async I/O."
 url="https://github.com/sxyazi/${_pkgname}"
@@ -45,7 +45,7 @@ prepare() {
 
 	# Cargo does not provide an option to disable features for all workspace members
 	# Upstream issue: https://github.com/rust-lang/cargo/issues/14866
-	sed -i '/"vendored-lua"/d' yazi-{actor,binding,dds,fm,parser,plugin}/Cargo.toml
+	find -name Cargo.toml -type f -exec sed -i '/"vendored-lua"/d' {} +
 
 	cargo fetch --locked --target host-tuple
 }

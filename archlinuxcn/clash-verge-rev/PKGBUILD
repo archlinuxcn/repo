@@ -3,8 +3,9 @@
 
 pkgname=clash-verge-rev
 _pkgname=${pkgname%-rev}
-pkgver=2.4.6
-pkgrel=1
+pkgver=2.4.7
+_ipc_ver=2.3.0
+pkgrel=2
 pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://github.com/${pkgname}/${pkgname}"
@@ -12,14 +13,14 @@ license=('GPL-3.0-or-later')
 depends=('webkit2gtk-4.1' 'gtk3' 'libayatana-appindicator' 'mihomo')
 conflicts=("${_pkgname}")
 provides=("${_pkgname}")
-makedepends=('pnpm' 'cargo' 'jq' 'moreutils')
-source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
-	"${_pkgname}-service-ipc.tar.gz::https://github.com/${pkgname}/${_pkgname}-service-ipc/archive/refs/tags/${CARCH}-unknown-linux-gnu.tar.gz")
-sha512sums=('aed1c5a8636c93c049480a225ac5f2bbe02fb77c8569ef572d0c6af71297d3f3485a83767361de0927345b1141ce98027f046bba6266854dfb07398cee960567'
-            'fccbc1a25697e60cdb190593266f7f68295f15d6524c016cf7837ea20ed54d66226c3eef5366d7ce58145de0d93ca05184db643dac53eab6f3bc988be888b244')
+makedepends=('pnpm' 'rust' 'jq' 'moreutils')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
+        "${_pkgname}-service-ipc-${_ipc_ver}.tar.gz::https://github.com/${pkgname}/${_pkgname}-service-ipc/archive/v${_ipc_ver}.tar.gz")
+sha512sums=('7bb62dc57a04a524bebcfa7e8c9cbb3c0ec4c4158494148c360abad9dfeaed4df4beaaa13afd851efe131583613d0a07783a7ccb2ff1c3f575ce38522ff64786'
+            '5c9e316fcd1a8cdf59833be0596cbfb49c7d61445a04ed4cbbc9b5054c37b5f15a53e841c1d4c74b7eae8ff2582172d88e213a1ed3e1eabe6d06437ea4976de9')
 
 prepare() {
-	pushd "${_pkgname}-service-ipc-${CARCH}-unknown-linux-gnu/"
+	pushd "${_pkgname}-service-ipc-${_ipc_ver}/"
 	_prepare_service
 	popd
 
@@ -28,19 +29,20 @@ prepare() {
 	pnpm i
 
 	cd src-tauri
-	cargo fetch --locked --target $(rustc --print host-tuple)
+	cargo fetch --locked --target host-tuple
 }
 
 build() {
-	cd "${_pkgname}-service-ipc-${CARCH}-unknown-linux-gnu/"
+	pushd "${_pkgname}-service-ipc-${_ipc_ver}/"
 	export CFLAGS+=" -ffat-lto-objects"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
+	export AWS_LC_SYS_NO_JITTER_ENTROPY=1
 	_build_service
 	_package_service
+	popd
 
-	cd "../${pkgname}-${pkgver}/"
-	install -d ./src-tauri/sidecar/
+	cd "${pkgname}-${pkgver}/"
 
 	# Use empty files as placeholders
 	touch ./src-tauri/sidecar/verge-mihomo{,-alpha}-${CARCH}-unknown-linux-gnu
@@ -56,7 +58,7 @@ package() {
 
 _prepare_service() {
 	echo "==> Starting ${FUNCNAME[0]}()..."
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	cargo fetch --locked --target host-tuple
 }
 
 _build_service() {
@@ -68,9 +70,10 @@ _package_service() {
 	echo "==> Starting ${FUNCNAME[0]}()..."
 
 	pushd target/release
+	local _sidecar_dir="${srcdir}/${pkgname}-${pkgver}/src-tauri/sidecar"
 	local _suffix="${CARCH}-unknown-linux-gnu"
-	install -Dm755 "${_pkgname}-service" "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-${_suffix}"
-	install -Dm755 clash-verge-service-install "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-install-${_suffix}"
-	install -Dm755 clash-verge-service-uninstall "${srcdir}/${pkgname}-${pkgver}/src-tauri/resources/${_pkgname}-service-uninstall-${_suffix}"
+	install -Dm755 "${_pkgname}-service" "${_sidecar_dir}/${_pkgname}-service-${_suffix}"
+	install -Dm755 "${_pkgname}-service-install" "${_sidecar_dir}/${_pkgname}-service-install-${_suffix}"
+	install -Dm755 "${_pkgname}-service-uninstall" "${_sidecar_dir}/${_pkgname}-service-uninstall-${_suffix}"
 	popd
 }

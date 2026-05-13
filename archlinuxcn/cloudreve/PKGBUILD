@@ -3,7 +3,7 @@
 pkgname=cloudreve
 arch=('x86_64')
 backup=("etc/cloudreve/config.ini")
-pkgver=4.15.0
+pkgver=4.16.0
 pkgrel=1
 pkgdesc="Self-hosted file management and sharing system, supports multiple storage providers"
 url=https://github.com/cloudreve/Cloudreve
@@ -11,7 +11,7 @@ license=("GPL-3.0-only")
 #depends=("")
 source=("git+https://github.com/cloudreve/Cloudreve.git#tag=${pkgver}" "cloudreve.service" "config.ini")
 makedepends=("go" "git" "goreleaser" "yarn" "zip")
-sha256sums=('d87a083b80ca5f3a7433536c5ae6b84492112c3153389c46b6974a529e3795c3'
+sha256sums=('33e2191c68b94a04e7c0bf3a1d48cb94679eb63dee22c1b3991f85ebeb153e73'
             '5e78a6bc0624c39ca1fb5e7733ffa8472d41540dab2e009871504c82469d0384'
             '3145bf311d7ae94a1f00a8c78df08240fa95668d1a8eb3981ffd7fca3b70535a')
 provides=("cloudreve")

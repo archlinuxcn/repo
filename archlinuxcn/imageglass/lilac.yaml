@@ -1,0 +1,12 @@
+maintainers:
+  - github: dongfengweixiao
+    email: Dee.H.Y <dongfengweixiao@hotmail.com>
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.replace('-', '_'))
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: d2phap/ImageGlass
+    use_max_tag: true
+    include_regex: '^10\..*beta.*'

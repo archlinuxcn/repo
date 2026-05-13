@@ -6,7 +6,7 @@ index 64b75fd..7aff20c 100644
  log.initialize({ preload: true });
  
  app.on("ready", async () => {
-+  (app as any).setDesktopName("upscayl.desktop");
++  (app as any).setDesktopName("org.upscayl.Upscayl.desktop");
    await prepareNext("./renderer");
  
    app.whenReady().then(() => {
