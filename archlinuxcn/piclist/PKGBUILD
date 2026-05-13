@@ -2,8 +2,8 @@
 
 pkgname=piclist
 _pkgname=PicList
-pkgver=3.3.2
-pkgrel=3
+pkgver=3.4.0
+pkgrel=1
 _electronversion=39
 pkgdesc="A powerful cloud storage and image hosting management tool"
 arch=('x86_64')
@@ -15,7 +15,7 @@ makedepends=('nodejs-lts-jod' 'npm' 'yarn' 'git')
 source=("${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}.desktop"
         "${pkgname}.sh")
-sha256sums=('0e4a03958acfc95a5ccd2019dd7b5b73976eed7f3dd0a39ae21880a4d6247c20'
+sha256sums=('6b59a4d63d37e0926452f696602407396bcc8ffac49853afeffffd16c131c270'
             '96792576ff904881c2d58e6b7a4aa06aff9d7fa07e950d603c45edda7c4b4de2'
             '4b1dc5f32f0295bd672ea0ff12ac63c98256e1e654d864401fb4f1a6d4b3d8f6')
 
