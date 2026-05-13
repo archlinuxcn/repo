@@ -1,0 +1,51 @@
+# Maintainer: qr243vbi
+
+pkgname=(nekobox nekobox-core)
+pkgver=5.11.15
+pkgrel=1
+pkgdesc="Cross-platform GUI proxy utility (Empowered by sing-box)"
+arch=('x86_64' 'aarch64' 'riscv64' 'pentium4' 'i686' 'armv7h')
+url="https://github.com/qr243vbi/nekobox"
+license=('GPL-3.0-or-later')
+makedepends=('boost' 'pkgconfig' 'ccache' 'ninja' 'jq' 'coreutils' 'sed'
+'git' 'cmake' 'gendesk' 'go' 'qt6-tools' 'vulkan-headers' 'cpio' 'patchelf')
+depends=('acl' 'bash' 'hicolor-icon-theme' 'libstdc++' 'libgcc' 'glibc' 
+'libx11' 'qt6-base' 'qt6-declarative' 'thrift' 'boost-libs' 'lmdb' 'cpr' 
+'leveldb' 'yaml-cpp')
+
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=("e4a27f415cebe80466bd19be2e9fb560dd03c641e3774f69aadd63f1b941beaf")
+
+prepare() {
+    local reg='s/-mod=mod/-mod=readonly/g;'
+    reg="${reg}s/\(-buildmode=pie\) \(-buildvcs=false\)/\1 -modcacherw \2/g;"
+    reg="${reg}s/-w -s/-compressdwarf=false -linkmode=external/g;" 
+    sed -i "${reg}" "nekobox-${pkgver}/core/CMakeLists.txt" 
+}
+
+build() {
+    cd "nekobox-${pkgver}/"
+    export GOPATH="${srcdir}"  
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    cmake -B "$srcdir/build" -S . \
+        -D "NKR_DEFAULT_VERSION=${pkgver}" \
+        -D "PROGRAMPREFIX=/usr/lib/nekobox"
+    cmake --build "$srcdir/build" 
+}
+
+package_nekobox-core() {
+    depends=('glibc' 'bash')
+    provides=('sing-box')
+    conflicts=('sing-box')
+    DESTDIR="${pkgdir}" cmake --install "$srcdir/build" --component core
+}
+
+package_nekobox() {
+    depends+=('nekobox-core')
+    provides=('nekoray')
+    conflicts=('nekoray')
+    DESTDIR="${pkgdir}" cmake --install "$srcdir/build" --component gui
+}
