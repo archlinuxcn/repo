@@ -2,8 +2,8 @@
 # Maintainer: heavysink <winstonwu91 at gmail>
 
 pkgname=miktex
-pkgver=26.2
-pkgrel=2
+pkgver=26.5
+pkgrel=1
 pkgdesc="a distribution of the TeX/LaTeX typesetting system"
 arch=('x86_64')
 url="https://miktex.org"
@@ -15,7 +15,7 @@ depends=('apr' 'boost-libs' 'apr-util' 'bzip2' 'cairo' 'expat' 'fontconfig' 'fre
          'qt6-declarative' 'qt6-5compat' 'mpfi')
 makedepends=('cmake' 'coreutils' 'fop' 'sed' 'libxslt' 'qt6-tools' 'boost')
 source=("https://github.com/MiKTeX/miktex/archive/${pkgver}.tar.gz")
-md5sums=('7639d606db2387d7099185a992532516')
+md5sums=('a7483979b0aa6c3812bd1c6e650e00d8')
 options=('!buildflags')
 
 prepare() {
