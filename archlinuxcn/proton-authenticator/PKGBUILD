@@ -2,7 +2,7 @@
 
 pkgname=proton-authenticator
 pkgver=1.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc='2FA app from Proton to securely sync and backup 2FA codes'
 arch=(x86_64)
 url='https://proton.me/authenticator'
@@ -34,6 +34,7 @@ prepare() {
         applications/authenticator/tools/build.sh
 
     export YARN_CACHE_FOLDER="$srcdir/.yarn-cache"
+    export SENTRYCLI_SKIP_DOWNLOAD=1
     yarn install
 
     cd applications/authenticator/src-tauri
