@@ -29,6 +29,7 @@ source=("git+${url}.git#tag=${pkgver}")
 sha256sums=('551ec61235b0a548da315407f20aaf10f1ee6865ca9d36c9ac713185255848c6')
 
 build() {
+	export CFLAGS+=" -ffat-lto-objects"
 	export LIBSSH2_SYS_USE_PKG_CONFIG=1
 	meson setup --prefix=/usr --libexecdir=lib --buildtype=release build "${_srcname}"
 	meson compile -C build
