@@ -8,11 +8,11 @@ pkgname=nginx-mod-lua
 _modname="${pkgname#nginx-mod-}"
 pkgver=0.10.30.rC1
 _upstream_ver=${pkgver/.r/R}
-pkgrel=3
+pkgrel=4
 _ndkver=0.3.4
 pkgdesc='Lua script engine module for nginx'
 arch=('x86_64')
-depends=("nginx=1.30.0" 'luajit' 'lua-resty-core' 'pcre')
+depends=("nginx=1.30.1" 'luajit' 'lua-resty-core' 'pcre')
 makedepends=('nginx-src')
 url="https://github.com/openresty/lua-nginx-module"
 license=('BSD-2-Clause')
