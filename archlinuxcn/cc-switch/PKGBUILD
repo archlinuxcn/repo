@@ -28,18 +28,18 @@ makedepends=(
 )
 source=(
   "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
-  '0001.patch'
-  '0002.patch'
+  "0001-feat-universal-provider-Auto-sync-after-adding.patch"
+  "0002-feat-universal-provider-Add-one-click-sync-all-providers.patch"
 )
 sha256sums=('e06791b370b5c8782d3ed46a4d3137ac6beb82b55318ceba609bc82f73a5c30d'
-            '2c3be9d41f8d094d2b6f364597d5c54497a7cc5d50aa1e71a36d9e29153b024b'
-            '3f78733b689e45df7d1db90298ab21aebc7e3e8695f4bcd97c585d3e2ea7f86e')
+            'b62e6c6c077ce39b3b23274302215ff7714501ef0056ca1c9522b7dd6ff51bb2'
+            '252cea0ad0e11f93a2d1b963a1be9a95ebe8704c9dbffe3c8c07c749db2e9b5d')
 
 prepare() {
   export RUSTUP_TOOLCHAIN=stable
   cd "${pkgname}-${pkgver}"
-  patch -Np1 -i "${srcdir}/0001.patch"
-  patch -Np1 -i "${srcdir}/0002.patch"
+  patch -p1 -i "${srcdir}/0001-feat-universal-provider-Auto-sync-after-adding.patch"
+  patch -p1 -i "${srcdir}/0002-feat-universal-provider-Add-one-click-sync-all-providers.patch"
   cargo fetch --locked --target host-tuple --manifest-path src-tauri/Cargo.toml
 }
 

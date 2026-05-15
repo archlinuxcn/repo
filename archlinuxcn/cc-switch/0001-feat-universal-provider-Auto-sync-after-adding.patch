@@ -1,0 +1,70 @@
+From 099344c7d9559ac1070475c2915ff677b1633631 Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Sun, 3 May 2026 11:54:11 +0800
+Subject: [PATCH 1/2] feat(universal-provider): Auto-sync after adding and drop
+ unused addSuccess i18n key
+
+Signed-off-by: Hu Butui <hot123tea123@gmail.com>
+---
+ src/components/providers/AddProviderDialog.tsx | 5 +++--
+ src/i18n/locales/en.json                       | 1 -
+ src/i18n/locales/ja.json                       | 1 -
+ src/i18n/locales/zh.json                       | 1 -
+ 4 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/src/components/providers/AddProviderDialog.tsx b/src/components/providers/AddProviderDialog.tsx
+index 3ee783e3..74043a91 100644
+--- a/src/components/providers/AddProviderDialog.tsx
++++ b/src/components/providers/AddProviderDialog.tsx
+@@ -59,9 +59,10 @@ export function AddProviderDialog({
+     async (provider: UniversalProvider) => {
+       try {
+         await universalProvidersApi.upsert(provider);
++        await universalProvidersApi.sync(provider.id);
+         toast.success(
+-          t("universalProvider.addSuccess", {
+-            defaultValue: "统一供应商添加成功",
++          t("universalProvider.addedAndSynced", {
++            defaultValue: "统一供应商已添加并同步",
+           }),
+         );
+         setUniversalFormOpen(false);
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 94700a7e..a4b45800 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -2387,7 +2387,6 @@
+     "addedAndSynced": "Universal provider added and synced",
+     "updated": "Universal provider updated",
+     "deleted": "Universal provider deleted",
+-    "addSuccess": "Universal provider added successfully",
+     "addFailed": "Failed to add universal provider",
+     "hint": "Cross-app unified config, auto-sync to Claude/Codex/Gemini",
+     "manage": "Manage",
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index 09c0da0f..b35e10cb 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -2387,7 +2387,6 @@
+     "addedAndSynced": "統合プロバイダーを追加して同期しました",
+     "updated": "統合プロバイダーを更新しました",
+     "deleted": "統合プロバイダーを削除しました",
+-    "addSuccess": "統合プロバイダーを追加しました",
+     "addFailed": "統合プロバイダーの追加に失敗しました",
+     "hint": "クロスアプリ統合設定。Claude/Codex/Gemini に自動同期します",
+     "manage": "管理",
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index 9de20490..104df2d6 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -2387,7 +2387,6 @@
+     "addedAndSynced": "统一供应商已添加并同步",
+     "updated": "统一供应商已更新",
+     "deleted": "统一供应商已删除",
+-    "addSuccess": "统一供应商添加成功",
+     "addFailed": "统一供应商添加失败",
+     "hint": "跨应用统一配置，自动同步到 Claude/Codex/Gemini",
+     "manage": "管理",
+-- 
+2.54.0
+
