@@ -1,16 +1,16 @@
 # Maintainer: ZeekoZhu <vaezt@outlook.com>
 
 pkgname=rime-sbxlm
-pkgver=20260101
+pkgver=20260425
 pkgrel=1
 pkgdesc='声笔系列码配置'
 arch=(any)
-url="https://github.com/sbsrf/home"
-source=('sbxlm-init' "${pkgname}-${pkgver}.zip::${url}/releases/download/${pkgver}/sbsrf.zip" "LICENSE::https://raw.githubusercontent.com/sbsrf/sbsrf/refs/heads/main/LICENSE")
+url="https://github.com/sbsrf/sbsrf"
+source=('sbxlm-init' "${pkgname}-${pkgver}.zip::${url}/releases/download/${pkgver}/sbsrf4librime1.16.x.zip" "LICENSE::https://raw.githubusercontent.com/sbsrf/sbsrf/refs/heads/main/LICENSE")
 noextract=("${pkgname}-${pkgver}.zip" "${pkgname}-${pkgver}-src.zip")
 license=('BSD-3-Clause')
 sha256sums=('ddd93d18c5ecd40df142666df06d8588d4c345d662c38e31ea22402c3308549f'
-            'bc77afd8249b190e01f85ece51d1c071a5967e7795f908f565a7dae9c763ae2f'
+            '67e25ea8489d8e0245557f61801d1bba42df4e84ec74b0b7aa481d7d9e44e94d'
             'e8bba20f18930bbae7c6635befa38b75a86d92da72a8afe3712de5966ef57fee')
 makedepends=('unzip')
 optdepends=('librime' 'fcitx5-rime')
@@ -26,7 +26,7 @@ prepare () {
 
 package() {
   mkdir -p $pkgdir/usr/share/sbxlm/
-  mv $srcdir/assets/default.custom.yaml $pkgdir/usr/share/sbxlm
+  mv $srcdir/assets/default.yaml $pkgdir/usr/share/sbxlm/default.custom.yaml
   mkdir -p $pkgdir/usr/bin
   cp sbxlm-init $pkgdir/usr/bin
   mkdir -p $pkgdir/usr/share/rime-data/
