@@ -5,9 +5,9 @@
 pkgbase=qt6-base-24h
 pkgname=(qt6-base-24h)
 
-_pkgver=6.11.0
+_pkgver=6.11.1
 pkgver=${_pkgver/-/}
-pkgrel=4.4
+pkgrel=1.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -101,16 +101,13 @@ sha256sums=(
       '8c1599167d7ed0b326f6bc19ea8a93be584ae8144570104be3584d0c4eae677f'
       'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      '2223c075e95d86f8dbf6395b025a74d996c418f094453c903290e3c2663fbed2'
+      '2eafe504fae873d20f206b5661e2e10506879455cb2d370f42c5bb72ccf7a8a1'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-
-  git -C $_pkgfn cherry-pick -n 8b54513cdcf62047376a5d27d784ad68a8f235bf # Fix qdbus crashes
-  git -C $_pkgfn cherry-pick -n 1466f88633b2c29a6159a0c2eacd0c0d6601aa5e # Fix crashes when loading invalid glyphs
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
