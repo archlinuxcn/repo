@@ -1,0 +1,139 @@
+From 05675004475ba202338627d9f514e0802e0d673a Mon Sep 17 00:00:00 2001
+From: Hu Butui <hot123tea123@gmail.com>
+Date: Sun, 3 May 2026 11:54:33 +0800
+Subject: [PATCH 2/2] =?UTF-8?q?=E5=A2=9E=E5=8A=A0=E4=B8=80=E9=94=AE?=
+ =?UTF-8?q?=E5=90=8C=E6=AD=A5=E4=BE=9B=E5=BA=94=E5=95=86=E7=9A=84=E5=8A=9F?=
+ =?UTF-8?q?=E8=83=BD?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Hu Butui <hot123tea123@gmail.com>
+---
+ .../universal/UniversalProviderPanel.tsx      | 49 ++++++++++++++++++-
+ src/i18n/locales/en.json                      |  4 ++
+ src/i18n/locales/ja.json                      |  4 ++
+ src/i18n/locales/zh.json                      |  4 ++
+ 4 files changed, 60 insertions(+), 1 deletion(-)
+
+diff --git a/src/components/universal/UniversalProviderPanel.tsx b/src/components/universal/UniversalProviderPanel.tsx
+index 22eddd92..75ddf6aa 100644
+--- a/src/components/universal/UniversalProviderPanel.tsx
++++ b/src/components/universal/UniversalProviderPanel.tsx
+@@ -1,6 +1,7 @@
+ import { useState, useCallback, useEffect } from "react";
+ import { useTranslation } from "react-i18next";
+-import { Layers } from "lucide-react";
++import { Layers, RefreshCw } from "lucide-react";
++import { Button } from "@/components/ui/button";
+ import { toast } from "sonner";
+ import { ConfirmDialog } from "@/components/ConfirmDialog";
+ import { UniversalProviderCard } from "./UniversalProviderCard";
+@@ -165,6 +166,32 @@ export function UniversalProviderPanel() {
+     [providers],
+   );
+ 
++  // 同步所有供应商
++  const [syncingAll, setSyncingAll] = useState(false);
++  const handleSyncAll = useCallback(async () => {
++    const ids = Object.keys(providers);
++    if (ids.length === 0) return;
++
++    setSyncingAll(true);
++    try {
++      await Promise.all(ids.map((id) => universalProvidersApi.sync(id)));
++      toast.success(
++        t("universalProvider.syncedAll", {
++          defaultValue: "已同步所有统一供应商到各应用",
++        }),
++      );
++    } catch (error) {
++      console.error("Failed to sync all universal providers:", error);
++      toast.error(
++        t("universalProvider.syncAllError", {
++          defaultValue: "同步所有统一供应商失败",
++        }),
++      );
++    } finally {
++      setSyncingAll(false);
++    }
++  }, [providers, t]);
++
+   // 复制供应商
+   const handleDuplicate = useCallback(
+     async (provider: UniversalProvider) => {
+@@ -227,6 +254,26 @@ export function UniversalProviderPanel() {
+         <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+           {providerList.length}
+         </span>
++        {providerList.length > 0 && (
++          <Button
++            variant="outline"
++            size="sm"
++            className="ml-auto"
++            disabled={syncingAll}
++            onClick={handleSyncAll}
++          >
++            <RefreshCw
++              className={`mr-1.5 h-3.5 w-3.5 ${syncingAll ? "animate-spin" : ""}`}
++            />
++            {syncingAll
++              ? t("universalProvider.syncingAll", {
++                  defaultValue: "同步中...",
++                })
++              : t("universalProvider.syncAll", {
++                  defaultValue: "同步所有",
++                })}
++          </Button>
++        )}
+       </div>
+ 
+       {/* 描述 */}
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index a8f7a49a..095b5c23 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -2335,6 +2335,10 @@
+     "syncConfirmTitle": "Sync Universal Provider",
+     "syncConfirmDescription": "Syncing \"{{name}}\" will overwrite the associated provider configurations in Claude, Codex, and Gemini. Do you want to continue?",
+     "syncConfirm": "Sync",
++    "syncAll": "Sync All",
++    "syncingAll": "Syncing...",
++    "syncedAll": "All universal providers synced to apps",
++    "syncAllError": "Failed to sync all universal providers",
+     "saveAndSync": "Save & Sync",
+     "savedAndSynced": "Saved and synced to all apps",
+     "saveAndSyncError": "Failed to save and sync",
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index cf5be261..988d8e52 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -2335,6 +2335,10 @@
+     "syncConfirmTitle": "統合プロバイダーを同期",
+     "syncConfirmDescription": "「{{name}}」を同期すると、Claude、Codex、Gemini の関連プロバイダー設定が上書きされます。続行しますか？",
+     "syncConfirm": "同期",
++    "syncAll": "すべて同期",
++    "syncingAll": "同期中...",
++    "syncedAll": "すべての統合プロバイダーをアプリに同期しました",
++    "syncAllError": "すべての統合プロバイダーの同期に失敗しました",
+     "saveAndSync": "保存して同期",
+     "savedAndSynced": "すべてのアプリに保存・同期されました",
+     "saveAndSyncError": "保存と同期に失敗しました",
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index 6b8dfb73..b222c096 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -2335,6 +2335,10 @@
+     "syncConfirmTitle": "同步统一供应商",
+     "syncConfirmDescription": "同步 \"{{name}}\" 将会覆盖 Claude、Codex 和 Gemini 中关联的供应商配置。确定要继续吗？",
+     "syncConfirm": "同步",
++    "syncAll": "同步所有",
++    "syncingAll": "同步中...",
++    "syncedAll": "已同步所有统一供应商到各应用",
++    "syncAllError": "同步所有统一供应商失败",
+     "saveAndSync": "保存并同步",
+     "savedAndSynced": "已保存并同步到所有应用",
+     "saveAndSyncError": "保存并同步失败",
+-- 
+2.54.0
+
