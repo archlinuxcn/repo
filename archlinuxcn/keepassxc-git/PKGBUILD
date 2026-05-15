@@ -1,4 +1,4 @@
-# Maintainer: Chih-Hsuan Yen <yan12125@gmail.com>
+# Maintainer: Chih-Hsuan Yen <base64_decode("eXUzYWN0eHQydHR0ZmlteEBjaHllbi5jYwo=")>
 # Contributor: Daniel Landau <daniel@landau.fi>
 # Contributor: Maxqia <contrib@maxqia.com>
 
@@ -10,17 +10,17 @@
 
 pkgname=keepassxc-git
 _gitname=keepassxc
-pkgver=2.7.1.r656.g703855bec
+pkgver=2.7.1.r657.g7c7ca4575
 pkgrel=1
 pkgdesc="Cross-platform community-driven port of KeePass Password Safe"
 arch=('i686' 'x86_64')
 url="https://github.com/keepassxreboot/keepassxc"
 license=('GPL2')
-depends=('qt5-base' 'qt5-x11extras' 'qt5-translations' 'qt5-imageformats'
+depends=('qt6-base' 'qt6-translations' 'qt6-imageformats'
          'libxtst' 'shared-mime-info' 'hicolor-icon-theme' 'desktop-file-utils'
-         'libusb' 'pcsclite' 'qt5-svg' 'qrencode' 'minizip'
+         'libusb' 'pcsclite' 'qt6-svg' 'qrencode' 'minizip'
          'zlib' 'botan' 'argon2')
-makedepends=('git' 'intltool' 'cmake' 'qt5-tools' 'asciidoctor')
+makedepends=('git' 'intltool' 'cmake' 'qt6-tools' 'asciidoctor')
 checkdepends=('xorg-server-xvfb' 'xclip')
 provides=('org.freedesktop.secrets' "keepassxc=$pkgver")
 conflicts=('keepassxc')
