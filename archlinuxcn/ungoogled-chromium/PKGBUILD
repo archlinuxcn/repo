@@ -10,14 +10,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=147.0.7727.137
-pkgrel=1
+pkgver=148.0.7778.167
+pkgrel=3
 _launcher_ver=8
 _manual_clone=1
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=147.0.7727.137-1
+_uc_ver=148.0.7778.167-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -72,19 +72,23 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-146-drop-unknown-clang-flag.patch
         chromium-147-revert-clang-no-lifetime-dse-flag.patch
         chromium-147-rust-1.95-bytemuck.patch
+        chromium-148-revert-clang-fsanitize-return-flag-1.patch
+        chromium-148-revert-clang-fsanitize-return-flag-2.patch
         compiler-rt-adjust-paths.patch
         increase-fortify-level.patch
         enable-widevine-arm64.patch
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
 sha256sums=('2e2f36e3cd1ebc4ad57fd310774a5e5e9db77883d5f9374fedeaabd3c103b819'
-            '88736ee761d1f1a54c46faa8c49d2bd24699d4c1ee4670c98ea6def02b68a433'
+            '16006bae1ec831a5cca59db79d8a111f5d72aad0f0126f4d44d2d3d1941b1bc0'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
-            '24535c314c7e70c52bcf409aaf604728bfc5b5c97e60087e630e1f7233b9e12d'
+            '4bf6baedb6d9a84b98a85584981f4d2db1ea91f5596f44d700027b8cdbf1ecbb'
             'c382830318c5b37826ecf44f3ba9def6be8affdad1bce819ecb83f3222ff4b3a'
             'b9e6339221efe03540ffb360c161d93604a1fc93a5a1c53e5e9849066f987d05'
+            '2c0d0407ff7d4d607cf4f4b56aef4913df1bcbacb630d85c06a4a125fd0dceab'
+            '7836f666b78b85ac4a05cc9403df74c80d17f18a7f2a29d489848c76db919128'
             'ec8e49b7114e2fa2d359155c9ef722ff1ba5fe2c518fa48e30863d71d3b82863'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             '9c766b82d1143cb3413fe2057361bd2655e46287eacc2c6d6f8504b4c255647a'
@@ -106,7 +110,7 @@ declare -gA _system_libs=(
   [flac]=flac
   [fontconfig]=fontconfig
   [freetype]=freetype2
-  [harfbuzz-ng]=harfbuzz
+  [harfbuzz]=harfbuzz
   #[icu]=icu
   #[jsoncpp]=jsoncpp  # needs libstdc++
   #[libaom]=aom
@@ -163,8 +167,12 @@ prepare() {
   # Increase _FORTIFY_SOURCE level to match Arch's default flags
   patch -Np1 -i ../increase-fortify-level.patch
 
-  # Fix issue about missing compiler flag, can be dropped when arch has LLVM 23
-  # clang++: error: unknown argument: '-fsanitize-ignore-for-ubsan-feature=array-bounds'
+  # clang 22 lacks -fsanitize-ignore-for-ubsan-feature, which is needed to use
+  # -fsanitize=array-bounds without triggering UBSan feature detection. Without
+  # feature detection suppression, V8 compiles in __sanitizer_set_death_callback
+  # calls that require the UBSan runtime, which is not linked in a trap-mode
+  # build. Drop the entire sanitize_c_array_bounds cflags block.
+  # Can be dropped when arch has LLVM 23.
   patch -Np1 -i ../chromium-146-drop-unknown-clang-flag.patch
 
   # Causes a build failure with our clang version
@@ -180,6 +188,10 @@ prepare() {
 
   # https://crbug.com/456677057
   patch -Np1 -i ../glibc-2.42-baud-rate-fix.patch
+
+  # Causes a build failure with our clang version
+  patch -Np1 -i ../chromium-148-revert-clang-fsanitize-return-flag-1.patch
+  patch -Np1 -i ../chromium-148-revert-clang-fsanitize-return-flag-2.patch
 
   if (( !_system_clang )); then
     # Use prebuilt rust as system rust cannot be used due to the error:
@@ -202,9 +214,15 @@ prepare() {
     -f "$_ungoogled_repo/domain_substitution.list" -c domainsubcache.tar.gz ./
 
   # Link to system tools required by the build
-  mkdir -p third_party/node/linux/node-linux-x64/bin third_party/jdk/current/bin
+  mkdir -p third_party/node/linux/node-linux-x64/bin \
+           third_party/rust-toolchain/bin \
+           third_party/jdk/current/bin \
+           third_party/gperf/cipd/bin
+
   ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
+  ln -s /usr/bin/rustc third_party/rust-toolchain/bin/
   ln -s /usr/bin/java third_party/jdk/current/bin/
+  ln -s /usr/bin/gperf third_party/gperf/cipd/bin/
 
   # Remove bundled libraries for which we will use the system copies; this
   # *should* do what the remove_bundled_libraries.py script does, with the
