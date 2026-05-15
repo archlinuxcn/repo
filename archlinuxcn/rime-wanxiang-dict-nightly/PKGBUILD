@@ -10,7 +10,7 @@ pkgdesc="万象词库——每日构建版"
 arch=(any)
 license=('CC-BY-4.0')
 
-url="https://github.com/amzxyz/rime_wanxiang"
+url="https://github.com/amzxyz/rime-wanxiang"
 source=("${url}/archive/refs/tags/v${_schema_version}.tar.gz"
     build.sh)
 b2sums=('22afd6c5e626bbae09d919875249a5497f5993efc588c23de913fd4c32890b8269ba512fa9e2093f7aa66d680ae5f731be74c504577623d318a778f22b3db290'
@@ -84,7 +84,7 @@ eval "_build() {
 }"
 
 build() {
-    cd "${srcdir}/rime_wanxiang-${_schema_version}" || exit 1
+    cd "${srcdir}/rime-wanxiang-${_schema_version}" || exit 1
 
     msg2 "release building..."
     bash .github/workflows/scripts/release-build.sh >/dev/null
