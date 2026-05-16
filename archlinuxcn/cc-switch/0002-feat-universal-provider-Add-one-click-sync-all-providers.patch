@@ -1,4 +1,4 @@
-From c7da2d11bb3564977a480c1a4f53632f73c08302 Mon Sep 17 00:00:00 2001
+From 108a1c99cde1d2c95433c443b215983cc41d41ac Mon Sep 17 00:00:00 2001
 From: Hu Butui <hot123tea123@gmail.com>
 Date: Sun, 3 May 2026 11:54:33 +0800
 Subject: [PATCH 2/2] feat(universal-provider): Add one-click sync-all
@@ -28,7 +28,7 @@ index 22eddd92..75ddf6aa 100644
 @@ -165,6 +166,32 @@ export function UniversalProviderPanel() {
      [providers],
    );
-
+ 
 +  // 同步所有供应商
 +  const [syncingAll, setSyncingAll] = useState(false);
 +  const handleSyncAll = useCallback(async () => {
@@ -55,10 +55,10 @@ index 22eddd92..75ddf6aa 100644
 +    }
 +  }, [providers, t]);
 +
-   // 打开编辑
-   const handleEdit = useCallback((provider: UniversalProvider) => {
-     setEditingProvider(provider);
-@@ -197,6 +224,26 @@ export function UniversalProviderPanel() {
+   // 复制供应商
+   const handleDuplicate = useCallback(
+     async (provider: UniversalProvider) => {
+@@ -227,6 +254,26 @@ export function UniversalProviderPanel() {
          <span className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
            {providerList.length}
          </span>
@@ -83,13 +83,13 @@ index 22eddd92..75ddf6aa 100644
 +          </Button>
 +        )}
        </div>
-
+ 
        {/* 描述 */}
 diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
-index a4b45800..1f225840 100644
+index ce32651a..ef69ff6f 100644
 --- a/src/i18n/locales/en.json
 +++ b/src/i18n/locales/en.json
-@@ -2321,6 +2321,10 @@
+@@ -2414,6 +2414,10 @@
      "syncConfirmTitle": "Sync Universal Provider",
      "syncConfirmDescription": "Syncing \"{{name}}\" will overwrite the associated provider configurations in Claude, Codex, and Gemini. Do you want to continue?",
      "syncConfirm": "Sync",
@@ -101,10 +101,10 @@ index a4b45800..1f225840 100644
      "savedAndSynced": "Saved and synced to all apps",
      "saveAndSyncError": "Failed to save and sync",
 diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
-index b35e10cb..371fbd05 100644
+index 8bd19090..553a65c3 100644
 --- a/src/i18n/locales/ja.json
 +++ b/src/i18n/locales/ja.json
-@@ -2321,6 +2321,10 @@
+@@ -2414,6 +2414,10 @@
      "syncConfirmTitle": "統合プロバイダーを同期",
      "syncConfirmDescription": "「{{name}}」を同期すると、Claude、Codex、Gemini の関連プロバイダー設定が上書きされます。続行しますか？",
      "syncConfirm": "同期",
@@ -116,10 +116,10 @@ index b35e10cb..371fbd05 100644
      "savedAndSynced": "すべてのアプリに保存・同期されました",
      "saveAndSyncError": "保存と同期に失敗しました",
 diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
-index 104df2d6..087f9f2e 100644
+index e53fc418..d704e3eb 100644
 --- a/src/i18n/locales/zh.json
 +++ b/src/i18n/locales/zh.json
-@@ -2321,6 +2321,10 @@
+@@ -2414,6 +2414,10 @@
      "syncConfirmTitle": "同步统一供应商",
      "syncConfirmDescription": "同步 \"{{name}}\" 将会覆盖 Claude、Codex 和 Gemini 中关联的供应商配置。确定要继续吗？",
      "syncConfirm": "同步",
@@ -130,6 +130,6 @@ index 104df2d6..087f9f2e 100644
      "saveAndSync": "保存并同步",
      "savedAndSynced": "已保存并同步到所有应用",
      "saveAndSyncError": "保存并同步失败",
---
+-- 
 2.54.0
 
