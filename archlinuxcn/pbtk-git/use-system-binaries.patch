@@ -1,8 +1,8 @@
 diff --git a/src/pbtk/utils/common.py b/src/pbtk/utils/common.py
-index 2944f5b..649d7d9 100644
---- a/src/utils/common.py
-+++ b/src/utils/common.py
-@@ -33,21 +33,13 @@ makedirs(str(BASE_PATH / 'endpoints'), exist_ok=True)
+index 68feb64..bdbeeef 100644
+--- a/src/pbtk/utils/common.py
++++ b/src/pbtk/utils/common.py
+@@ -34,21 +34,13 @@ makedirs(str(BASE_PATH / 'endpoints'), exist_ok=True)
  external = Path(dirname(realpath(__file__))) / 'external'
  arch = '64' * (architecture()[0] == '64bit')
  
