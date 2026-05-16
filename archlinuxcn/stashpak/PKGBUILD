@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=stashpak
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Build Portable packages with ease."
 arch=("x86_64")
@@ -14,7 +14,7 @@ optdepends=(
 makedepends=('go' 'git')
 backup=()
 source=("source::git+https://github.com/Kimiblock/stashpak.git#tag=${pkgver}")
-sha256sums=('ad064386ed1beea8003eae5206f2ed30b6d81995d27496bce7f7520c3b29e598')
+sha256sums=('22a300bf0dc30bb0290c5589aea48f1c1ff590f393f40be4137dec176eb8f395')
 
 function prepare() {
 	cd source
