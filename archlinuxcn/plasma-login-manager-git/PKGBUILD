@@ -1,6 +1,7 @@
 # Maintainer: Rocket Aaron
 # Contributor: huyz
 
+
 pkgname=plasma-login-manager-git
 _pkgname=plasma-login-manager
 pkgver=6.5.90.r108.g31647c9
@@ -9,32 +10,36 @@ pkgdesc='Plasma Login Manager (git version)'
 url='https://invent.kde.org/plasma/plasma-login-manager'
 arch=(x86_64)
 license=(GPL-2.0-or-later)
-depends=(
-    kpackage
-    layer-shell-qt
-    qt6-declarative
-    libplasma
-    kdbusaddons
-    kio
-    kconfig
-    kwindowsystem
-    kirigami
-    plasma-workspace
-    kcoreaddons
-    qt6-base
-    kservice
-    kauth
-    kcmutils
-    ki18n
-)
+depends=(glibc
+         kauth
+         kcmutils
+         kconfig
+         kcoreaddons
+         kdbusaddons
+         ki18n
+         kio
+         kirigami
+         kpackage
+         kservice
+         kwindowsystem
+         layer-shell-qt
+         libkscreen
+         libplasma
+         libstdc++
+         libxau
+         pam
+         plasma-workspace
+         qt6-5compat
+         qt6-base
+         qt6-declarative
+         sh
+         systemd-libs)
 makedepends=(extra-cmake-modules
-    cmake
-    ninja
-    git)
-source=('git+https://invent.kde.org/plasma/plasma-login-manager.git/'
-        'PROJECT_DEP_VERSION.patch')
-sha256sums=('SKIP'
-            'd7f17a4f4cf26a369c0e355c4a519de3df15d55715354579ae2f721edacc3bdc')
+             ninja
+             git
+             qt6-tools)
+source=('git+https://invent.kde.org/plasma/plasma-login-manager.git/')
+sha256sums=('SKIP')
 provides=(${_pkgname})
 conflicts=(${_pkgname})
 
@@ -46,7 +51,7 @@ pkgver() {
 prepare() {
     cd $_pkgname
     # allow build for older version of plasma
-    patch -Np1 -i $srcdir/PROJECT_DEP_VERSION.patch
+    sed -i 's/set(PROJECT_DEP_VERSION "[0-9.]*")/set(PROJECT_DEP_VERSION "6.0.0")/' CMakeLists.txt
 }
 
 build() {
