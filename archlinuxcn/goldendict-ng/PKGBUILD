@@ -38,10 +38,9 @@ sha256sums=('4220f7b18df79adbeb1893f2cfb2b85fda1be37d68f68437c87a053ddb16efd2')
 
 build() {
 	cmake -B build \
-		-S "${pkgname}-${pkgver}-Release.${_commit_hash}" \
-		-DCMAKE_BUILD_TYPE=None \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DUSE_SYSTEM_TOML=ON
+		-S "${pkgname}-${pkgver}" \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr
 
 	cmake --build build
 }
