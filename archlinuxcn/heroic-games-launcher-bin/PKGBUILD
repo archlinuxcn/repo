@@ -3,8 +3,8 @@
 
 pkgname=heroic-games-launcher-bin
 epoch=3
-_pkgver=2.21.0
-pkgver=2.21.0
+_pkgver=2.22.0
+pkgver=2.22.0
 pkgrel=1
 pkgdesc="HGL, a Native alternative Linux Launcher for Epic Games"
 arch=('x86_64')
@@ -16,7 +16,7 @@ depends=('fuse2' 'gawk' 'python-wheel' 'python-setuptools')
 _filename=heroic-${_pkgver}-linux-x64.pacman
 source=("$url/releases/download/v${_pkgver}/${_filename}")
 noextract=("${_filename}")
-md5sums=('abc8f93a95cbe4280160aac52014ea92')
+md5sums=('90bb2cfc3380f2f99eed02ecb18a1982')
 options=(!strip)
 
 package() {
