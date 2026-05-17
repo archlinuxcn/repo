@@ -1,8 +1,8 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=agsh
-pkgver=0.22.1
-pkgrel=2
+pkgver=0.23.0
+pkgrel=1
 pkgdesc="A general-purpose AI agent runtime"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://docs.${pkgname}.sh"
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('glibc' 'libgcc' 'sqlite')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('2c21e1949b1110ece58c0dced6156c6d5271a97f2949522f4aa7cf8a5b223731')
+sha256sums=('26869a7da11a47c9638891434a015a0693fd03fa749a63fb3c206b41a46231dc')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
