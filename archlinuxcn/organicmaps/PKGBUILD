@@ -13,7 +13,8 @@ depends=('glibc' 'hicolor-icon-theme' 'libxcursor' 'libxi' 'libxinerama' 'libxra
          'expat' 'freetype2' 'gflags' 'harfbuzz' 'icu' 'jansson' 'protobuf' 'pugixml')
 makedepends=('cmake' 'ninja' 'git' 'jq' 'librsvg'
              # WITH_SYSTEM_PROVIDED_3PARTY
-             'boost' 'fast_float' 'glm' 'gtest' 'utf8cpp' 'vulkan-headers')
+             'boost' 'fast_float' 'glm' 'utf8cpp' 'vulkan-headers')
+checkdepends=('gtest')
 optdepends=('qt6-wayland: for Wayland users')
 license=('Apache-2.0' 'LicenseRef-OrganicMapsData')
 url="https://organicmaps.app"
@@ -40,7 +41,7 @@ sha256sums=('33f54a8623dae1d809d57e05ea45683dc9a147d8cde8e247547a4f50a5fa4b39'
             'SKIP'
             'SKIP'
             'SKIP'
-            '6e2b8eb7bdf3e5f760dd3000232db2cba31a13f0492989de7e52392da980e734'
+            'c191a60ab8357c20d3a74e3d7952c669365c6d1b12848f5e6cbd0cbe430bccef'
             'c50bf415a0a32802fa0534ee95b79196d9262bde29cc97c5ef31f38b00b53074'
             '336f5f03629178e1c033f8f620c5b5d8c0c7f6b8b08ad5521d8061765f362469')
 
@@ -119,7 +120,7 @@ build() {
         -D CMAKE_INSTALL_PREFIX=/usr
         -D WITH_SYSTEM_PROVIDED_3PARTY=ON
         -D SKIP_QT_GUI=OFF
-        -D SKIP_TESTS=OFF # Used for `check` phase
+        -D SKIP_TESTS=ON
         -D SKIP_TOOLS=ON
     )
     cmake "${cmake_options[@]}"
@@ -135,6 +136,22 @@ build() {
 check() {
     cd "$pkgname"
 
+    local cmake_options=(
+        -B build
+        -G Ninja
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_C_FLAGS_RELEASE="-DNDEBUG"
+        -D CMAKE_CXX_FLAGS_RELEASE="-DNDEBUG"
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D WITH_SYSTEM_PROVIDED_3PARTY=ON
+        -D SKIP_QT_GUI=OFF
+        -D SKIP_TESTS=OFF
+        -D SKIP_TOOLS=ON
+    )
+    cmake "${cmake_options[@]}"
+
+    cmake --build build
+
     # From `build-cmake.yaml` "Run tests"
     # In addition, the following tests were also disabled:
     # - base_tests: `is_finite` logic fails due to `-ffast-math`
@@ -147,11 +164,54 @@ package() {
 
     install -Dm755 "build/OMaps" "$pkgdir/usr/bin/OMaps"
 
-    install -dm755 "$pkgdir/usr/share/${pkgname}"
-    cp -Lr data "$pkgdir/usr/share/${pkgname}/"
-    rm -rf "$pkgdir/usr/share/${pkgname}/data/test_data"
+    local _datadir="$pkgdir/usr/share/${pkgname}/data"
+    install -dm755 "$_datadir"
+
+    cp -r data/fonts "$_datadir/"
+    cp -r data/symbols "$_datadir/"
+    cp -r data/vulkan_shaders "$_datadir/"     # Required for Vulkan rendering on Linux
+    cp -r data/countries-strings "$_datadir/"  # Geographic translations
+    cp -r data/sound-strings "$_datadir/"      # Navigation voice translations
+    cp -r data/search-icons "$_datadir/"       # UI icons for search results
+
+    # Essential Configuration & Metadata
+    install -Dm644 data/generator/timezone/timezone_info.json "$_datadir/generator/timezone/timezone_info.json"
+    install -Dm644 data/countries.txt "$_datadir/"
+    install -Dm644 data/countries_meta.txt "$_datadir/"
+    install -Dm644 data/classificator.txt "$_datadir/"
+    install -Dm644 data/types.txt "$_datadir/"
+    install -Dm644 data/hierarchy.txt "$_datadir/"
+    install -Dm644 data/languages.txt "$_datadir/"
+    install -Dm644 data/editor.config "$_datadir/"
+    install -Dm644 data/categories.txt "$_datadir/"
+    install -Dm644 data/categories_brands.txt "$_datadir/"
+    install -Dm644 data/categories_cuisines.txt "$_datadir/"
+
+    # Compiled Drawing Rules
+    install -Dm644 data/drules_proto_default_light.bin "$_datadir/"
+    install -Dm644 data/drules_proto_default_dark.bin "$_datadir/"
+    install -Dm644 data/drules_proto_outdoors_light.bin "$_datadir/"
+    install -Dm644 data/drules_proto_outdoors_dark.bin "$_datadir/"
+    install -Dm644 data/drules_proto_vehicle_light.bin "$_datadir/"
+    install -Dm644 data/drules_proto_vehicle_dark.bin "$_datadir/"
+
+    # Geometry, Colors & Core Maps
+    install -Dm644 data/packed_polygons.bin "$_datadir/"
+    install -Dm644 data/colors.txt "$_datadir/"
+    install -Dm644 data/patterns.txt "$_datadir/"
+    install -Dm644 data/transit_colors.txt "$_datadir/"
+    install -Dm644 data/World.mwm "$_datadir/"
+    install -Dm644 data/WorldCoasts.mwm "$_datadir/"
+
+    # UI, Legal & Help Text
+    install -Dm644 data/welcome.html "$_datadir/"
+    install -Dm644 data/copyright.html "$_datadir/"
+    install -Dm644 data/faq.html "$_datadir/"
+    install -Dm644 data/wikipedia.css "$_datadir/"
+    install -Dm644 data/opening_hours_how_to_edit.html "$_datadir/"
+
     local _data_version=$(jq -r '.v' data/countries.txt)
-    install -dm755 "$pkgdir/usr/share/${pkgname}/data/$_data_version"
+    install -dm755 "$_datadir/$_data_version"
 
     install -Dm644 "android/.idea/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
     for res in 16 32 48 64 128 256 512 1024; do
