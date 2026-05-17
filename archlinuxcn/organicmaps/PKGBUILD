@@ -172,16 +172,12 @@ package() {
     cp -r data/vulkan_shaders "$_datadir/"     # Required for Vulkan rendering on Linux
     cp -r data/countries-strings "$_datadir/"  # Geographic translations
     cp -r data/sound-strings "$_datadir/"      # Navigation voice translations
-    cp -r data/search-icons "$_datadir/"       # UI icons for search results
 
     # Essential Configuration & Metadata
     install -Dm644 data/generator/timezone/timezone_info.json "$_datadir/generator/timezone/timezone_info.json"
     install -Dm644 data/countries.txt "$_datadir/"
-    install -Dm644 data/countries_meta.txt "$_datadir/"
     install -Dm644 data/classificator.txt "$_datadir/"
     install -Dm644 data/types.txt "$_datadir/"
-    install -Dm644 data/hierarchy.txt "$_datadir/"
-    install -Dm644 data/languages.txt "$_datadir/"
     install -Dm644 data/editor.config "$_datadir/"
     install -Dm644 data/categories.txt "$_datadir/"
     install -Dm644 data/categories_brands.txt "$_datadir/"
@@ -203,12 +199,9 @@ package() {
     install -Dm644 data/World.mwm "$_datadir/"
     install -Dm644 data/WorldCoasts.mwm "$_datadir/"
 
-    # UI, Legal & Help Text
+    # UI & Legal
     install -Dm644 data/welcome.html "$_datadir/"
     install -Dm644 data/copyright.html "$_datadir/"
-    install -Dm644 data/faq.html "$_datadir/"
-    install -Dm644 data/wikipedia.css "$_datadir/"
-    install -Dm644 data/opening_hours_how_to_edit.html "$_datadir/"
 
     local _data_version=$(jq -r '.v' data/countries.txt)
     install -dm755 "$_datadir/$_data_version"
