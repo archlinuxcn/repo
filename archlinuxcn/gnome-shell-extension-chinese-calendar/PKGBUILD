@@ -1,0 +1,36 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=gnome-shell-extension-chinese-calendar
+_shortname=${pkgname#gnome-shell-extension-}
+pkgver=1.2
+pkgrel=1
+pkgdesc='展示中国农历和节假日信息的gnome-shell扩展'
+arch=('any')
+url="https://github.com/tigertall/chinese-calendar"
+license=('MIT')
+depends=('gnome-shell>=45' 'dconf')
+makedepends=('npm' 'gettext' 'zip')
+source=("${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.gz")
+b2sums=('b360e2735b89eab89d0eeb2b741c854a2b023a0828ddf0f5cd86cf07bebc6bc0a01222adf244b4e123fefa2016d3dd1e467a557f6147f2a9681982e4188f5f0c')
+
+build() {
+    cd "${_shortname}-${pkgver}"
+    npm install --cache "${srcdir}/npm-cache"
+    npm run build
+
+    rm -rf "${srcdir}/dist" && unzip -d "${srcdir}/dist" chinese-calendar.zip
+}
+
+package() {
+    cd "${srcdir}/dist"
+
+    uuid=$(grep -oP '"uuid":\s*"\K[^"\s]+' "metadata.json")
+
+    find "schemas" -type f -exec install -Dvm644 {} "${pkgdir}/usr/share/glib-2.0/{}" \;
+    find "locale"  -type f -exec install -Dvm644 {} "${pkgdir}/usr/share/{}" \;
+
+    install -Dvm644 *.{js,json,css} -t "${pkgdir}/usr/share/gnome-shell/extensions/${uuid}/"
+
+    install -Dvm644 "LICENSE"   "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dvm644 "README.md" "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+}
