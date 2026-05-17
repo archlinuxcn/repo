@@ -47,6 +47,7 @@ source=(
   "0002-fix-early-return-when-hotkey-not-found-in-map.patch"
   "0003-use-local-hotkey_manager.patch"
   "0004-fix-silent-launching.patch"
+  "0005-update-yaml_writer-ref.patch"
   "com.follow.clash.desktop"
   "Clash.Meta::git+https://github.com/chen08209/Clash.Meta.git"
   "flutter_distributor::git+https://github.com/chen08209/flutter_distributor.git"
@@ -58,6 +59,7 @@ sha256sums=('aaf8c535929ecc642637334799f8396301fbc39a3ea25b2c9a8afdabf4a7e34d'
             'b2791f04cd6d0752cc5b0746eec6b3b959def21eb21bfc3cf594deef8c8777d0'
             '2c1b44a63729e8882e6f1e061d018f006450403d968aafd1046b0cdf79e50d90'
             'bd47657615b3f0925407af1ee5841121374e7c4e4db3b84df3625a9da9820222'
+            '099b63d151a147ade81d6a16f8e72488bfe5d55ca91fe024ccc7c5a65baafc74'
             '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d'
             'SKIP'
             'SKIP'
@@ -78,6 +80,7 @@ prepare() {
   patch -p1 -i "${srcdir}/0003-use-local-hotkey_manager.patch"
   # https://github.com/chen08209/FlClash/pull/1912
   patch -p1 -i "${srcdir}/0004-fix-silent-launching.patch"
+  patch -p1 -i "${srcdir}/0005-update-yaml_writer-ref.patch"
 
   # go mod download
   cd "$srcdir/$pkgname/core"
