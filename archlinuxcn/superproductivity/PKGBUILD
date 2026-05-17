@@ -4,22 +4,22 @@
 
 pkgname=superproductivity
 _reponame=super-productivity
-pkgver=18.5.0
-_electronversion=38
+pkgver=18.6.0
+_electronversion=41
 pkgrel=1
 pkgdesc="An advanced todo list app with timeboxing and time tracking capabilities"
 arch=('x86_64')
 url="https://super-productivity.com"
 license=('MIT')
 depends=('bash' "electron${_electronversion}" 'hicolor-icon-theme')
-makedepends=('nodejs-lts-jod' 'npm')
+makedepends=('nodejs-lts-jod' 'npm' 'rust')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johannesjo/${_reponame}/archive/v${pkgver}.tar.gz"
         "fix-wayland-icon.patch"
         "com.super_productivity.SuperProductivity.desktop"
         "${pkgname}.sh")
-sha256sums=('51ab22a9d91fd2dc18545e84f37b7c93fe7b9e3cdb0e9bdcb0458bd159d055b1'
-            '7faa4450d82737b7b0b15a4ce82b79e1ab1fe3c79c88b4779919d64d454c9d1c'
+sha256sums=('ba3fd2c85fb49f3e3ac9c5ecac0808f5827173fd1c96910db6ca8aa9a2aad57e'
             'd652455706696e8081d0a6f8d0bd72f4604e60f83ecfbe1939e3d1d8225e7656'
+            '232835a84d6a54a06c2114a01333dfbe3a29405abc3e598df64a784a99a919c6'
             '291f50480f5a61bc9c68db7d44cd0412071128706baa868a9cb854f8779a1980')
 
 prepare() {
@@ -82,7 +82,6 @@ package() {
     cd "${srcdir}/${_reponame}-${pkgver}"
 
     install -Dm644 .tmp/app-builds/linux-unpacked/resources/app.asar -t "${pkgdir}/usr/lib/${pkgname}"
-    cp -r .tmp/app-builds/linux-unpacked/resources/app.asar.unpacked "${pkgdir}/usr/lib/${pkgname}"
 
     install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
     install -Dm644 "${srcdir}/com.super_productivity.SuperProductivity.desktop" -t "${pkgdir}/usr/share/applications"
