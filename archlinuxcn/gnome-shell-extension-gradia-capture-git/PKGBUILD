@@ -1,0 +1,45 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=gnome-shell-extension-gradia-capture-git
+_pkgname=${pkgname%-git}
+pkgver=r71.9e44149
+pkgrel=1
+pkgdesc='Enhances the GNOME built-in screenshot tool with the annotation features you would expect.'
+arch=('any')
+url="https://github.com/AlexanderVanhee/gradia-capture"
+license=('GPL-3.0-only')
+depends=('gnome-shell>=49' 'dconf')
+makedepends=('git')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("${_pkgname}"::git+"${url}".git)
+b2sums=('SKIP')
+
+pkgver() {
+    cd "${_pkgname}"
+
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "${_pkgname}"
+
+    ./build.sh
+
+    rm -rf "${srcdir}/dist" && mkdir ${srcdir}/dist
+    bsdtar --uid 0 --gid 0 -C "${srcdir}/dist" -xvf gradia-integration@alexandervanhee.github.io.shell-extension.zip
+}
+
+package() {
+    cd "${srcdir}/dist"
+
+    _uuid=$(grep -oP '"uuid":\s*"\K[^"]+' metadata.json)
+
+    find "schemas" -type f -exec install -Dvm644 {} "${pkgdir}/usr/share/glib-2.0/{}" \;
+    install -Dvm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+    find . -type f \
+        ! -path "./schemas/*" \
+        ! -path "./LICENSE" \
+        -exec install -Dvm644 {} "${pkgdir}/usr/share/gnome-shell/extensions/${_uuid}/{}" \;
+}
