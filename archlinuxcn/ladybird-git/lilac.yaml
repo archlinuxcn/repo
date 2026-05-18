@@ -7,49 +7,49 @@ post_build_script: |
 #  update_aur_repo()
 
 update_on:
-  - source: "github"
-    github: "LadybirdBrowser/ladybird"
+  - source: github
+    github: LadybirdBrowser/ladybird
   - source: alpm
     alpm: ffmpeg
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: libglvnd
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: curl
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: qt6-base
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: icu
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: sqlite
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: libxml2
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: zlib
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: brotli
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: angle
     repo: archlinuxcn
-    from_pattern: '^(\d+\.\d+)\..*'
-    to_pattern: '\1'
+    from_pattern: ^(\d+\.\d+)\..*
+    to_pattern: \1
   - source: alpm
     alpm: fmt
     provided: libfmt.so
@@ -60,6 +60,5 @@ build_prefix: extra-x86_64
 repo_depends:
   - angle
 #  - simdutf
-  - cpptrace
   - libpng-apng
   - skia-static
