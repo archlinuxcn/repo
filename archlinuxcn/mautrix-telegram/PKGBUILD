@@ -8,7 +8,7 @@ depends=(libolm glibc libstdc++)
 makedepends=(go 'git')
 optdepends=()
 license=('AGPL-3.0-only')
-arch=('any')
+arch=('x86_64' 'aarch64')
 source=("${pkgname}::git+${url}#tag=v${pkgver}" "${pkgname}.service")
 sha256sums=('6b80d47a6d397afbf9a1ea8064c4a552c5be9848906187e9b3a0dc71dcfbccfb'
             '1a010a61402bfadaf3c2f67421ebf94835b35b9cc572d162935554e55e624499')
