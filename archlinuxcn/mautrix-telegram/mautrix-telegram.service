@@ -10,7 +10,7 @@ LoadCredential=config.yaml:/etc/mautrix-telegram/config.yaml
 LoadCredential=registration.yaml:/etc/mautrix-telegram/registration.yaml
 
 DynamicUser=yes
-ExecStart=bash -c "ln -sfr ${CREDENTIALS_DIRECTORY}/* /var/tmp && python -m mautrix_telegram -c /var/tmp/config.yaml"
+ExecStart=/usr/bin/mautrix-telegram -c "${CREDENTIALS_DIRECTORY}/config.yaml"
 Restart=always
 StateDirectory=Mautrix-Telegram
 StateDirectoryMode=0700
