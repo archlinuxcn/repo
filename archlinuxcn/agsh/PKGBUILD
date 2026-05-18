@@ -9,6 +9,7 @@ url="https://docs.${pkgname}.sh"
 license=('MIT')
 depends=('glibc' 'libgcc' 'sqlite')
 makedepends=('cargo')
+optdepends=('bubblewrap: sandbox support')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${pkgver}.tar.gz")
 sha256sums=('26869a7da11a47c9638891434a015a0693fd03fa749a63fb3c206b41a46231dc')
 
