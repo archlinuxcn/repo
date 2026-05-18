@@ -4,10 +4,10 @@ pkgver=0.15.3
 pkgrel=7
 pkgdesc="Matrix-Telegram hybrid puppeting/relaybot bridge"
 url="https://github.com/tulir/mautrix-telegram"
-depends=(libolm)
+depends=(libolm glibc libstdc++)
 makedepends=(go 'git')
 optdepends=()
-license=('AGPLv3')
+license=('AGPL-3.0-only')
 arch=('any')
 source=("${pkgname}::git+${url}#tag=v${pkgver}" "${pkgname}.service")
 sha256sums=('6b80d47a6d397afbf9a1ea8064c4a552c5be9848906187e9b3a0dc71dcfbccfb'
