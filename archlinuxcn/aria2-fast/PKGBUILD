@@ -53,5 +53,5 @@ package() {
 		"${pkgdir}/usr/share/bash-completion/completions"
 
 	rm -rf "${pkgdir}/usr/share/doc/${_pkgname}/bash_completion"
-	install -Dm644 {COPYING,LICENSE.OpenSSL} -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+	install -Dm644 LICENSE.OpenSSL -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
