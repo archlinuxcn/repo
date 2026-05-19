@@ -4,7 +4,7 @@
 _pkgname="prjapicula"
 pkgname="$_pkgname-git"
 pkgver=0.32.r5.gf4a0b4a
-pkgrel=1
+pkgrel=2
 pkgdesc="Project Apicula bitstream documentation for Gowin FPGAs"
 url="https://github.com/YosysHQ/apicula"
 _pkgsrc="apicula"
@@ -46,10 +46,14 @@ pkgver() {
     | sed -E 's/^[^0-9]*//;s/([^-]*-g)/r\1/;s/-/./g'
 }
 
-prepare() {
-  _fuzzerver=$(cat "$_pkgsrc/GWVERSION")
+_set_fuzzer_vars() {
+  _fuzzerver=$(cat "$srcdir/$_pkgsrc/GWVERSION")
   _fuzzer="fuzzer-$_fuzzerver"
   _fuzzerimg="docker.io/pepijndevos/apicula:$_fuzzerver"
+}
+
+prepare() {
+  _set_fuzzer_vars
   apptainer pull -F $_fuzzer.sif docker://$_fuzzerimg
   apptainer sif dump 4 $_fuzzer.sif >$_fuzzer.squashfs
   mkdir -p $_fuzzer
@@ -58,6 +62,7 @@ prepare() {
 
 build() {
   cd "$_pkgsrc"
+  _set_fuzzer_vars
   LD_LIBRARY_PATH="$srcdir/$_fuzzer/usr/lib/x86_64-linux-gnu" \
     GOWINHOME="$srcdir/$_fuzzer/usr/src/gowin" \
     make
