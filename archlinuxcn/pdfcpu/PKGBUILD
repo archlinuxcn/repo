@@ -54,7 +54,7 @@ package() {
 
     install -Dm755 ./build/"$pkgname" -t "$pkgdir/usr/bin"
 
-    install -Dm644 completions/bash "$pkgdir/usr/share/bash-completion/completions/$pkgname.bash"
+    install -Dm644 completions/bash "$pkgdir/usr/share/bash-completion/completions/$pkgname"
     install -Dm644 completions/fish "$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
     install -Dm644 completions/zsh  "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
 }

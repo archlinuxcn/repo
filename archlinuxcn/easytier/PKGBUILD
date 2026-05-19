@@ -111,7 +111,7 @@ package_easytier-core() {
     install -Dm755 "target/release/easytier-core" -t "$pkgdir/usr/bin"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/easytier/LICENSE"
 
-    install -Dm644 completions/core-bash   "$pkgdir/usr/share/bash-completion/completions/$pkgname.bash"
+    install -Dm644 completions/core-bash   "$pkgdir/usr/share/bash-completion/completions/$pkgname"
     install -Dm644 completions/core-fish   "$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
     install -Dm644 completions/core-zsh    "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
     install -Dm644 completions/core-nu     "$pkgdir/usr/share/nushell/vendor/autoload/$pkgname.nu"
@@ -124,7 +124,7 @@ package_easytier-cli() {
     install -Dm755 "target/release/easytier-cli" -t "$pkgdir/usr/bin"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/easytier/LICENSE-cli"
 
-    install -Dm644 completions/cli-bash   "$pkgdir/usr/share/bash-completion/completions/$pkgname.bash"
+    install -Dm644 completions/cli-bash   "$pkgdir/usr/share/bash-completion/completions/$pkgname"
     install -Dm644 completions/cli-fish   "$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
     install -Dm644 completions/cli-zsh    "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
     install -Dm644 completions/cli-nu     "$pkgdir/usr/share/nushell/vendor/autoload/$pkgname.nu"
