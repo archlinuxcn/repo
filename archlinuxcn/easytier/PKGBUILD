@@ -11,8 +11,8 @@ pkgdesc="A simple, decentralized mesh VPN with WireGuard support."
 arch=("x86_64" "aarch64")
 url="https://github.com/EasyTier/EasyTier"
 license=('LGPL-3.0-only')
-depends=('glibc' 'gcc-libs' 'libsqlite3.so')
-makedepends=('cargo' 'protobuf' 'rust-bindgen' 'clang' 'llvm' 'lld'
+depends=('glibc' 'libgcc')
+makedepends=('cargo' 'protobuf' 'rust-bindgen' 'clang' 'llvm' 'lld' 'libsqlite3.so'
              'nodejs' 'pnpm') # for embeded web
 source=(
     "$_pkgname-$pkgver.tar.gz::https://github.com/EasyTier/EasyTier/archive/refs/tags/v$pkgver.tar.gz"
@@ -57,6 +57,20 @@ build() {
     export CARGO_TARGET_DIR=target
 
     cargo build --frozen --release --features=embed
+
+    install -d completions
+
+    ./target/release/easytier-core --gen-autocomplete bash   > completions/core-bash
+    ./target/release/easytier-core --gen-autocomplete fish   > completions/core-fish
+    ./target/release/easytier-core --gen-autocomplete zsh    > completions/core-zsh
+    ./target/release/easytier-core --gen-autocomplete nu     > completions/core-nu
+    ./target/release/easytier-core --gen-autocomplete elvish > completions/core-elvish
+
+    ./target/release/easytier-cli    gen-autocomplete bash   > completions/cli-bash
+    ./target/release/easytier-cli    gen-autocomplete fish   > completions/cli-fish
+    ./target/release/easytier-cli    gen-autocomplete zsh    > completions/cli-zsh
+    ./target/release/easytier-cli    gen-autocomplete nu     > completions/cli-nu
+    ./target/release/easytier-cli    gen-autocomplete elvish > completions/cli-elvish
 }
 
 # some tests require root privileges
@@ -92,20 +106,34 @@ package_easytier-core() {
     install -dm755 "$pkgdir/var/lib/easytier"
     install -Dm644 "easytier.service" "$pkgdir/usr/lib/systemd/system/easytier.service"
     install -Dm644 "config.toml" "$pkgdir/etc/easytier/config.toml"
+
     cd "$_pkgname-$pkgver"
-    install -Dm755 "target/release/easytier-core" "$pkgdir/usr/bin/easytier-core"
+    install -Dm755 "target/release/easytier-core" -t "$pkgdir/usr/bin"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/easytier/LICENSE"
+
+    install -Dm644 completions/core-bash   "$pkgdir/usr/share/bash-completion/completions/$pkgname.bash"
+    install -Dm644 completions/core-fish   "$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
+    install -Dm644 completions/core-zsh    "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
+    install -Dm644 completions/core-nu     "$pkgdir/usr/share/nushell/vendor/autoload/$pkgname.nu"
+    install -Dm644 completions/core-elvish "$pkgdir/usr/share/elvish/lib/$pkgname.elv"
 }
 
 
 package_easytier-cli() {
     cd "$_pkgname-$pkgver"
-    install -Dm755 "target/release/easytier-cli" "$pkgdir/usr/bin/easytier-cli"
+    install -Dm755 "target/release/easytier-cli" -t "$pkgdir/usr/bin"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/easytier/LICENSE-cli"
+
+    install -Dm644 completions/cli-bash   "$pkgdir/usr/share/bash-completion/completions/$pkgname.bash"
+    install -Dm644 completions/cli-fish   "$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
+    install -Dm644 completions/cli-zsh    "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
+    install -Dm644 completions/cli-nu     "$pkgdir/usr/share/nushell/vendor/autoload/$pkgname.nu"
+    install -Dm644 completions/cli-elvish "$pkgdir/usr/share/elvish/lib/$pkgname.elv"
 }
 
 package_easytier-web() {
+    depends+=('libsqlite3.so')
     cd "$_pkgname-$pkgver"
-    install -Dm755 "target/release/easytier-web" "$pkgdir/usr/bin/easytier-web"
+    install -Dm755 "target/release/easytier-web" -t "$pkgdir/usr/bin"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/easytier/LICENSE-web"
 }
