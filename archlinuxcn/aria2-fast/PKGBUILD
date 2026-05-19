@@ -16,14 +16,23 @@ depends=('gnutls' 'libxml2' 'sqlite' 'c-ares' 'ca-certificates' 'libssh2')
 checkdepends=('cppunit')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=("https://github.com/${_pkgname}/${_pkgname}/releases/download/release-${pkgver}/${_pkgname}-${pkgver}.tar.xz" "${pkgname}.patch")
+source=(
+	"https://github.com/${_pkgname}/${_pkgname}/releases/download/release-${pkgver}/${_pkgname}-${pkgver}.tar.xz"
+	"${pkgname}.patch"
+	"nettle-4.patch"
+)
 sha256sums=('60a420ad7085eb616cb6e2bdf0a7206d68ff3d37fb5a956dc44242eb2f79b66b'
-            'd4cd567e98a009c2c24b77d5f4eb42ce3b0576af9315eee475a778f71a7786d2')
+            'd4cd567e98a009c2c24b77d5f4eb42ce3b0576af9315eee475a778f71a7786d2'
+            'a1968322a46b4d3f0c116d3bac6c94b200458263f5bf4ca06fae2df186ff1f52')
+
+prepare() {
+	cd "${_pkgname}-${pkgver}"
+	patch -p1 -i "../${pkgname}.patch"
+	patch -p1 -i "../nettle-4.patch"
+}
 
 build() {
 	cd "${_pkgname}-${pkgver}/"
-
-	patch -Np1 <"../${pkgname}.patch"
 
 	./configure \
 		--prefix=/usr \
