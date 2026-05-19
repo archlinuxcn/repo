@@ -152,7 +152,7 @@ package_gcc() {
   install -m755 -t "$pkgdir/${_libdir}/" gcc/{cc1,cc1plus,collect2,lto1}
 
   make -C $_target/libgcc DESTDIR="${pkgdir}" install
-  rm "${pkgdir}"/usr/${_target}/lib/libgcc_s.so*
+  rm "${pkgdir}"/usr/${_target}/lib/libgcc_s{,_asneeded}.so*
 
   make -C $_target/libstdc++-v3/src DESTDIR="${pkgdir}" install
   make -C $_target/libstdc++-v3/include DESTDIR="${pkgdir}" install

@@ -159,7 +159,7 @@ package_gcc() {
 
   make -C $_target/libgcc DESTDIR="${pkgdir}" install
   make -C $_target/32/libgcc DESTDIR="${pkgdir}" install
-  rm "${pkgdir}"/usr/${_target}/lib{,32}/libgcc_s.so*
+  rm "${pkgdir}"/usr/${_target}/lib{,32}/libgcc_s{,_asneeded}.so*
 
   make -C $_target/libstdc++-v3/src DESTDIR="${pkgdir}" install
   make -C $_target/libstdc++-v3/include DESTDIR="${pkgdir}" install
