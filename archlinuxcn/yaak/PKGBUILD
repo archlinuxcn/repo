@@ -80,7 +80,7 @@ _setup_env() {
 
     export RUSTDOCFLAGS="-Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
 
-    export CARGO_PROFILE_RELEASE_LTO=thin
+    export CARGO_PROFILE_RELEASE_LTO=true
     export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
 }
 
