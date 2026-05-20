@@ -12,7 +12,7 @@ arch=('x86_64')
 url="https://super-productivity.com"
 license=('MIT')
 depends=('bash' "electron${_electronversion}" 'hicolor-icon-theme')
-makedepends=('nodejs-lts-jod' 'npm' 'rust')
+makedepends=('nodejs-lts-jod' 'npm' 'cargo')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johannesjo/${_reponame}/archive/v${pkgver}.tar.gz"
         "fix-wayland-icon.patch"
         "com.super_productivity.SuperProductivity.desktop"
