@@ -1,0 +1,13 @@
+diff --git a/scripts/core_common/modules/v8_89.py b/scripts/core_common/modules/v8_89.py
+index 65650d6..0a377bf 100644
+--- a/scripts/core_common/modules/v8_89.py
++++ b/scripts/core_common/modules/v8_89.py
+@@ -121,7 +121,7 @@ def make_args(args, platform, is_64=True, is_debug=False):
+       if "1" == config.option("use-clang"):
+         linux_clang = True
+       else:
+-        args_copy.append("use_sysroot=false")
++        args_copy.append("use_sysroot=true")
+ 
+   if platform == "linux_arm64":
+     if "" != config.option("sysroot"):
