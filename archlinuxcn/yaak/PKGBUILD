@@ -1,6 +1,7 @@
 # Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 # Contributor: Jonas Geiler <aur@jonasgeiler.com>
 # Contributor: SoftExpert <softexpert at gmail dot com>
+
 pkgname=yaak
 pkgver=2026.3.1
 pkgrel=4
@@ -20,12 +21,13 @@ depends=(
     gtk3
     hicolor-icon-theme
     libgcc
+    libgit2
     libsoup3
-    libsqlite3.so
     openssl
+    sqlite
     webkit2gtk-4.1
     xz
-    zlib
+    zstd
     # Use system packages
     nodejs
     protobuf
@@ -46,8 +48,8 @@ makedepends=(
 provides=("${pkgname}-app")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}.desktop")
-b2sums=('9aff257ebb34f5c8a1b91738427bfa36182f901cf1e85feba16906501b703bf851f57960268eac17d03b592bb6f064f02e3497bfb1871b5cc6eb543ae0fce6a3'
-        '033a4bad9ec877d123768435ece838b58b188497ec56fc9684549320c6311abb3294261946e0b1ee4efbde2b3104c813f486dc706d88025e46a80383e864e46e')
+sha256sums=('93a05eeffdc99907459e97e0541b654071ffe6cdc126784fbfaba4bbb03b09aa'
+            'b5253f91709a9816b90b8a9948ba00cb8829b5153c5bddcad16903b57453b524')
 
 _setup_env() {
     export YAAK_VERSION="${pkgver}"
@@ -58,8 +60,10 @@ _setup_env() {
     export CARGO_HOME="${srcdir}/cargo_home"
 
     # Used for dynamic linking
-    export OPENSSL_NO_VENDOR=1
+    export LIBGIT2_NO_VENDOR=1
     export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+    export OPENSSL_NO_VENDOR=1
+    export ZSTD_SYS_USE_PKG_CONFIG=1
 
     # https://github.com/briansmith/ring/issues/1444#issuecomment-1763272308
     # So we use Clang instead of GCC.
