@@ -3,7 +3,7 @@
 
 pkgname=clash-verge-rev
 _pkgname=${pkgname%-rev}
-pkgver=2.5.0
+pkgver=2.5.1
 _ipc_ver=2.3.0
 pkgrel=1
 pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
@@ -16,7 +16,7 @@ provides=("${_pkgname}")
 makedepends=('pnpm' 'rust' 'jq' 'moreutils')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "${_pkgname}-service-ipc-${_ipc_ver}.tar.gz::https://github.com/${pkgname}/${_pkgname}-service-ipc/archive/v${_ipc_ver}.tar.gz")
-sha512sums=('a4374effe5e98f105bedb56855ec1ac7a7eba312db68d5ed4de7117fa07061d8fd5eaf026b2a57931813ba5fbe5191c7b106a21175609c7322bb42cb2b9f1c20'
+sha512sums=('4a180cec12e1925f8fe41e1bc6a0c639081880be712921da35f27792d3f45fb23bf49ea4ce80ac40d85b9ff3de9102ad5dad151cd8bdc305bf70bd022a5adc22'
             '5c9e316fcd1a8cdf59833be0596cbfb49c7d61445a04ed4cbbc9b5054c37b5f15a53e841c1d4c74b7eae8ff2582172d88e213a1ed3e1eabe6d06437ea4976de9')
 
 prepare() {
