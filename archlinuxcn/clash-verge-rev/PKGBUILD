@@ -63,7 +63,7 @@ _prepare_service() {
 
 _build_service() {
 	echo "==> Starting ${FUNCNAME[0]}()..."
-	cargo build --frozen --release --all-features
+	cargo build --frozen --release --features standalone
 }
 
 _package_service() {
