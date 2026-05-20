@@ -9,7 +9,7 @@ pkgname=(
   # gtk-update-icon-cache
 )
 pkgver=4.22.4
-pkgrel=3
+pkgrel=4
 epoch=1
 pkgdesc="GObject-based multi-platform GUI toolkit, with lilydjwg's patches"
 url="https://www.gtk.org/"
@@ -127,8 +127,8 @@ _pick() {
 
 package_gtk4-lily() {
   optdepends=('evince: Default print preview command')
-  provides=(libgtk-4.so)
-    gtk4=$pkgver
+  provides=(libgtk-4.so gtk4=$pkgver)
+  conflicts=(gtk4)
 
   meson install -C build --destdir "$pkgdir"
 
@@ -157,74 +157,3 @@ END
   _pick guic usr/bin/gtk4-update-icon-cache
   _pick guic usr/share/man/man1/gtk4-update-icon-cache.1
 }
-
-package_gtk4-lily-demos() {
-  pkgdesc+=" (demo applications)"
-  depends=(
-    cairo
-    dconf
-    fontconfig
-    fribidi
-    gdk-pixbuf2
-    glib2
-    glibc
-    graphene
-    gst-plugins-bad-libs
-    gst-plugins-base-libs
-    gstreamer
-    gtk4
-    harfbuzz
-    hicolor-icon-theme
-    libcloudproviders
-    libcolord
-    libcups
-    libepoxy
-    libgcc
-    libjpeg-turbo
-    libpng
-    libtiff
-    libx11
-    libxcursor
-    libxdamage
-    libxext
-    libxfixes
-    libxi
-    libxinerama
-    libxkbcommon
-    libxrandr
-    pango
-    tinysparql
-    vulkan-icd-loader
-    wayland
-  )
-  mv demo/* "$pkgdir"
-}
-
-package_gtk4-lily-docs() {
-  pkgdesc+=" (documentation)"
-  depends=()
-  mv docs/* "$pkgdir"
-}
-
-package_gtk-update-icon-cache() {
-  pkgdesc="GTK icon cache updater"
-  depends=(
-    bash
-    gdk-pixbuf2
-    glib2
-    glibc
-    hicolor-icon-theme
-    librsvg
-  )
-
-  mv guic/* "$pkgdir"
-
-  ln -sr "$pkgdir"/usr/bin/gtk{4,}-update-icon-cache
-  ln -sr "$pkgdir"/usr/share/man/man1/gtk{4,}-update-icon-cache.1
-
-  install -Dt "$pkgdir/usr/share/libalpm/hooks" -m644 gtk-update-icon-cache.hook
-  install -D gtk-update-icon-cache.script \
-    "$pkgdir/usr/share/libalpm/scripts/gtk-update-icon-cache"
-}
-
-# vim:set sw=2 sts=-1 et:
