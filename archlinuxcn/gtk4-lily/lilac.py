@@ -50,9 +50,10 @@ def pre_build():
       line = line.replace('gtk4', 'gtk4-lily')
     elif state == 'package':
       if line.strip().startswith('provides='):
-        line += '\n    gtk4=$pkgver'
-      elif line.strip().startswith('conflicts='):
-        line = line.replace(')', ' gtk4)')
+        line = line.replace(')', ' gtk4=$pkgver') + '\n  conflicts=(gtk4)'
+      elif line.strip() == '}':
+        print(line)
+        break
 
     print(line)
 
