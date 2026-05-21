@@ -56,7 +56,6 @@ sha256sums=('f0da5c20de2c7414cd1ce75b1f161ab2252855314453cd328e4c7b50827d9cd6'
 
 _setup_env() {
     export YAAK_VERSION="${pkgver}"
-    export TAURI_APP_PATH="${srcdir}/${pkgname}-${pkgver}/crates-tauri/"
     export CI=true
 
     export npm_config_cache="${srcdir}/npm_cache"
@@ -86,6 +85,9 @@ _setup_env() {
     unset RUSTFLAGS
 
     export RUSTDOCFLAGS="-Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
 
     export CARGO_PROFILE_RELEASE_LTO=true
     export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
