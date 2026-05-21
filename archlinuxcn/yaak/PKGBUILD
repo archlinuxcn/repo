@@ -3,6 +3,8 @@
 # Contributor: SoftExpert <softexpert at gmail dot com>
 
 pkgname=yaak
+_appid=app.yaak.Yaak
+_appname=yaak-app-client
 pkgver=2026.4.0
 pkgrel=1
 pkgdesc='Fast, offline and Git-friendly API client for HTTP, GraphQL, WebSockets, SSE, and gRPC'
@@ -46,11 +48,11 @@ makedepends=(
     rust-wasm            # Yaak
     wasm-pack            # Yaak
 )
-provides=("${pkgname}-app")
+provides=("yaak-app" "yaak-app-client")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/v${pkgver}.tar.gz"
-        "${pkgname}.desktop")
+        "${_appid}.desktop")
 sha256sums=('f0da5c20de2c7414cd1ce75b1f161ab2252855314453cd328e4c7b50827d9cd6'
-            'b5253f91709a9816b90b8a9948ba00cb8829b5153c5bddcad16903b57453b524')
+            '228dc02b9ffecef06195e67d5d7d70b1fd64546682ced382cb448f35039997f8')
 
 _setup_env() {
     export YAAK_VERSION="${pkgver}"
@@ -90,55 +92,57 @@ _setup_env() {
 }
 
 prepare() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${pkgname}-${pkgver}"
 
     # Avoid downloading Node.js and Protoc
     echo "console.log('Skipped NodeJS download for Arch Linux');" > scripts/vendor-node.cjs
-    mkdir -p crates-tauri/yaak-app/vendored/node
-    touch crates-tauri/yaak-app/vendored/node/yaaknode
+    mkdir -p crates-tauri/${_appname}/vendored/node
+    touch crates-tauri/${_appname}/vendored/node/yaaknode
 
     echo "console.log('Skipped Protoc download for Arch Linux');" > scripts/vendor-protoc.cjs
-    mkdir -p crates-tauri/yaak-app/vendored/protoc
-    touch crates-tauri/yaak-app/vendored/protoc/yaakprotoc
-    mkdir -p crates-tauri/yaak-app/vendored/protoc/include/google
-    ln -sf "/usr/include/google/protobuf" "crates-tauri/yaak-app/vendored/protoc/include/google/protobuf"
+    mkdir -p crates-tauri/${_appname}/vendored/protoc
+    touch crates-tauri/${_appname}/vendored/protoc/yaakprotoc
+    mkdir -p crates-tauri/${_appname}/vendored/protoc/include/google
+    ln -sf "/usr/include/google/protobuf" "crates-tauri/${_appname}/vendored/protoc/include/google/protobuf"
 
     npm ci
 }
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${pkgname}-${pkgver}"
     _setup_env
 
     npm run replace-version
-    npm run tauri build
+    pushd crates-tauri/${_appname}
+    npx tauri build
+    popd
 
-    local icon_src="crates-tauri/yaak-app/icons/icon.png"
+    local icon_src="crates-tauri/${_appname}/icons/icon.png"
     mkdir -p "${srcdir}/icons-build"
     for res in 16 24 32 48 64 128 256 512 1024; do
-        magick "${icon_src}" -resize "${res}x${res}" "${srcdir}/icons-build/yaak-app-${res}.png"
+        magick "${icon_src}" -resize "${res}x${res}" "${srcdir}/icons-build/${_appname}-${res}.png"
     done
 }
 
 check() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${pkgname}-${pkgver}"
     _setup_env
 
     npm test
-    cargo test --frozen --all --exclude yaak-cli
+    cargo test --frozen -p ${_appname}
 }
 
 package() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${pkgname}-${pkgver}"
 
-    install -Dm755 "target/release/${pkgname}-app" "${pkgdir}/usr/bin/${pkgname}-app"
+    install -Dm755 "target/release/${_appname}" -t "${pkgdir}/usr/bin"
 
     mkdir -p "${pkgdir}/usr/lib/${pkgname}/"
-    cp -r "target/release/static" "${pkgdir}/usr/lib/${pkgname}/"
+    cp -r "crates-tauri/${_appname}/static" "${pkgdir}/usr/lib/${pkgname}/"
 
     mkdir -p "${pkgdir}/usr/lib/${pkgname}/vendored"
-    cp -r "target/release/vendored/plugins" "${pkgdir}/usr/lib/${pkgname}/vendored/"
-    cp -r "target/release/vendored/plugin-runtime" "${pkgdir}/usr/lib/${pkgname}/vendored/"
+    cp -r "crates-tauri/${_appname}/vendored/plugins" "${pkgdir}/usr/lib/${pkgname}/vendored/"
+    cp -r "crates-tauri/${_appname}/vendored/plugin-runtime" "${pkgdir}/usr/lib/${pkgname}/vendored/"
 
     mkdir -p "${pkgdir}/usr/lib/${pkgname}/vendored/node"
     ln -sf "/usr/bin/node" "${pkgdir}/usr/lib/${pkgname}/vendored/node/yaaknode"
@@ -149,10 +153,12 @@ package() {
 
     for res in 16 24 32 48 64 128 256 512 1024; do
         local target_dir="${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps"
-        install -Dm644 "${srcdir}/icons-build/yaak-app-${res}.png" "${target_dir}/yaak-app.png"
+        install -Dm644 "${srcdir}/icons-build/${_appname}-${res}.png" "${target_dir}/${_appname}.png"
     done
 
-    install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+    install -Dm644 "flatpak/${_appid}.metainfo.xml" -t "${pkgdir}/usr/share/metainfo"
 
-    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    install -Dm644 "${srcdir}/${_appid}.desktop" -t "${pkgdir}/usr/share/applications"
+
+    install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
 }
