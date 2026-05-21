@@ -87,7 +87,7 @@ _setup_env() {
     export RUSTDOCFLAGS="-Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
 
     export RUSTUP_TOOLCHAIN=stable
-    export CARGO_TARGET_DIR="${srcdir}/${pkgname}-${pkgver}/target"
+    export CARGO_TARGET_DIR=target
 
     export CARGO_PROFILE_RELEASE_LTO=true
     export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
@@ -137,7 +137,7 @@ check() {
 package() {
     cd "${pkgname}-${pkgver}"
 
-    install -Dm755 "target/release/${_appname}" -t "${pkgdir}/usr/bin"
+    install -Dm755 "crates-tauri/${_appname}/target/release/${_appname}" -t "${pkgdir}/usr/bin"
 
     mkdir -p "${pkgdir}/usr/lib/${pkgname}/"
     cp -r "crates-tauri/${_appname}/static" "${pkgdir}/usr/lib/${pkgname}/"
