@@ -3,8 +3,8 @@
 # Contributor: SoftExpert <softexpert at gmail dot com>
 
 pkgname=yaak
-pkgver=2026.3.1
-pkgrel=5
+pkgver=2026.4.0
+pkgrel=1
 pkgdesc='Fast, offline and Git-friendly API client for HTTP, GraphQL, WebSockets, SSE, and gRPC'
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://yaak.app/'
@@ -36,6 +36,7 @@ makedepends=(
     appmenu-gtk-module   # Tauri
     cargo                # Rust dependencies & Tauri build
     clang                # LLVM C compiler
+    git                  # Web build
     imagemagick          # Icon
     libappindicator-gtk3 # Tauri
     librsvg              # Tauri
@@ -48,7 +49,7 @@ makedepends=(
 provides=("${pkgname}-app")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}.desktop")
-sha256sums=('93a05eeffdc99907459e97e0541b654071ffe6cdc126784fbfaba4bbb03b09aa'
+sha256sums=('f0da5c20de2c7414cd1ce75b1f161ab2252855314453cd328e4c7b50827d9cd6'
             'b5253f91709a9816b90b8a9948ba00cb8829b5153c5bddcad16903b57453b524')
 
 _setup_env() {
