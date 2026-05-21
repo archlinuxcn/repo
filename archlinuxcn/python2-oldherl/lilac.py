@@ -7,7 +7,7 @@ from lilaclib import *
 g = SimpleNamespace()
 
 def pre_build():
-  aur_pre_build(maintainers=['micwoj92','andreas_baumann'])
+  aur_pre_build(name='python2', maintainers=['micwoj92','andreas_baumann'])
 
   for line in edit_file('PKGBUILD'):
     if line.startswith('pkgname='):
