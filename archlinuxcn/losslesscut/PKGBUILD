@@ -1,8 +1,9 @@
 # Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 # Contributor: zxp19821005 <zxp19821005 at 163 dot com>
+
 pkgname=losslesscut
 _pkgname=LosslessCut
-_appname="no.mifi.${pkgname}"
+_appid="no.mifi.losslesscut"
 _reponame=lossless-cut
 pkgver=3.68.0
 _electronversion=38
@@ -45,9 +46,8 @@ prepare() {
     find src -type f -exec sed -i "s/process.resourcesPath/\'\/usr\/lib\/${pkgname}\'/g" {} +
     sed -e "
         s/\/app\/bin\/run.sh/${pkgname}/g;
-        s/${_appname}/${pkgname}/g
-    " -i "${_appname}.desktop"
-    sed -i "s/${_appname}/${pkgname}/g" "${_appname}.appdata.xml"
+        s/${_appid}/${pkgname}/g
+    " -i "${_appid}.desktop"
     sed -i "s/\"electron\": \"[^\"]*\"/\"electron\": \"${SYSTEM_ELECTRON_VERSION}\"/g" package.json
 
     yarn config set --home enableTelemetry 0
@@ -163,6 +163,6 @@ package() {
             "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${pkgname}.png"
     done
 
-    install -Dm644 "${_appname}.desktop" -t "${pkgdir}/usr/share/applications"
-    install -Dm644 "${_appname}.appdata.xml" -t "${pkgdir}/usr/share/metainfo"
+    install -Dm644 "${_appid}.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm644 "${_appid}.appdata.xml" -t "${pkgdir}/usr/share/metainfo"
 }

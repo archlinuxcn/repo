@@ -1,7 +1,9 @@
 # Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 # Contributor: zxp19821005 <zxp19821005 at 163 dot com>
+
 pkgname=upscayl
 _pkgname=Upscayl
+_appid=org.upscayl.Upscayl
 pkgver=2.15.0
 pkgrel=9
 _electronversion=39
@@ -18,7 +20,7 @@ source=(
     "${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
     "fix-wayland-icon.patch"
     "${pkgname}.sh"
-    "org.upscayl.Upscayl.desktop"
+    "${_appid}.desktop"
 )
 sha256sums=('566a7882fb95a8722c00f00a248139e2426fa299ae7cae4fe3f0c35280f5e21e'
             '35ff313548466001317dbe0f0f1dac7c667aa753bdd2dbbce8f1074a846710c1'
@@ -141,8 +143,8 @@ package(){
     rm -f "${pkgdir}/usr/lib/${pkgname}/128x128.png"
     rm -f "${pkgdir}/usr/lib/${pkgname}/512x512.png"
 
-    install -Dm644 "${srcdir}/org.upscayl.Upscayl.desktop" -t "${pkgdir}/usr/share/applications"
-    install -Dm644 "flatpak/org.upscayl.Upscayl.metainfo.xml" -t "${pkgdir}/usr/share/metainfo"
+    install -Dm644 "${srcdir}/${_appid}.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm644 "flatpak/${_appid}.metainfo.xml" -t "${pkgdir}/usr/share/metainfo"
 
     # Disable update
     rm -f "${pkgdir}/usr/lib/${pkgname}/app-update.yml"
