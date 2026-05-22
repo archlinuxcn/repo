@@ -7,7 +7,8 @@ arch=('aarch64' 'armv7h' 'i686' 'x86_64')
 url="https://github.com/mamba-org/mamba"
 license=('MIT')
 depends=('libarchive.so' 'libcurl.so' 'libsolv' 'fmt' 'simdjson'
-         'libspdlog.so' 'libyaml-cpp.so' 'libreproc.so' 'libreproc++.so')
+         'libspdlog.so' 'libyaml-cpp.so' 'libreproc.so' 'libreproc++.so'
+         'libmsgpack-c.so')
 makedepends=('gtest' 'termcolor' 'cmake' 'cli11' 'nlohmann-json'
              'ghc-filesystem' 'tl-expected' 'python')
 source=(micromamba-${pkgver}.tar.gz::https://github.com/mamba-org/mamba/archive/refs/tags/${pkgver}.tar.gz)
