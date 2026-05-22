@@ -2,33 +2,47 @@
 # Contributor: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
-pkgver=2.4.5
+pkgver=2.8.0
 pkgrel=1
-_rusty_v8_ver=137.2.1
+_rusty_v8_ver=149.0.0
 pkgdesc="A secure runtime for JavaScript and TypeScript"
 arch=(aarch64 x86_64)
-url="https://deno.land"
+url="https://deno.com"
 license=('MIT')
-options=('!lto')
-depends=('gcc-libs')
-makedepends=('git' 'python' 'rust' 'nodejs' 'gn' 'ninja' 'clang' 'lld' 'cmake' 'protobuf')
+depends=('dbus' 'lcms2' 'libffi' 'libgcc' 'sqlite' 'zlib' 'zstd')
+makedepends=('git' 'python' 'rust' 'rust-bindgen' 'nodejs' 'gn' 'ninja' 'clang' 'lld' 'cmake' 'protobuf')
 source=("git+https://github.com/denoland/deno.git#tag=v$pkgver"
         "git+https://github.com/denoland/rusty_v8.git#tag=v$_rusty_v8_ver"
         "compiler-rt-adjust-paths.patch")
-sha512sums=('ab1bd764134ee24cfad4a2371b8a5c53541796a432e4d442eacd313c800a60589dad79edbdaf0c667f708f4a758d395602a431c11f26537d0235ba973bcc8524'
-            '142efe6e2fa93b41174d00a19228fbed214385e5b0e736507a2e7e723e0c2caac1a2cb29477072fffea709aef7415c7640bb3dbb623ebe503817036679883acb'
-            '3bd395d9bc3c34c1fc11787e322d058ef758b606b1c06897fab1e979e13711d33c0a7f4877d89df5897780a2db8de7210a6076ef023680ef6979a80609018ed3')
+sha512sums=('e0568f9a6cf56050bfb6c9f5db9fd588c65938f86e00daf7dc8ea05e11fdd76e62549b669e8fc0e8de171b91fdaa64c30751ec0b04cec3b21b08d8bfa8a8c803'
+            '153fba2da6620a629dd46ee16f70d6f480e7b9817aebc1761e639e68369a631386b611527b7674eacd6fd4d971feb7fb2e4aac9b3a49a98920f260b807f37ef4'
+            '8a782d68a6140f739f00d3eb341d742584ee0be80e85e89bc1540a21d15ad8b75274672ebd02e1e4fd1925ed9ca68b05142388e795dff81b0a864d38f5514253')
 
 prepare() {
   cd rusty_v8
   git config -f .gitmodules submodule.v8.shallow true
   git submodule update --init --recursive
 
+  sed -i '/download_rust_toolchain();/d' build.rs
+
+  # Drop flags rejected by the clang++ invoked in our build environment.
+  sed -i \
+    -e '/-fno-lifetime-dse/d' \
+    -e '/-fdiagnostics-show-inlining-chain/d' \
+    build/config/compiler/BUILD.gn
+  sed -i '/-fsanitize-ignore-for-ubsan-feature=/d' build/config/sanitizers/sanitizers.gni
+
   # https://github.com/denoland/rusty_v8/issues/1587
   patch -Np1 -i ../compiler-rt-adjust-paths.patch
 
   cd ../deno
   echo -e "\n[patch.crates-io]\nv8 = { path = '../rusty_v8' }" >> Cargo.toml
+  sed -i \
+    -e '/default = \["upgrade", "__vendored_zlib_ng"\]/d' \
+    -e '/^keyring =/s/, "vendored"//' \
+    cli/Cargo.toml
+
+  cargo fetch --target host-tuple
 }
 
 build() {
@@ -38,11 +52,17 @@ build() {
   export CFLAGS="${CFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
   export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
-  local _clang_version=$(clang --version | grep -m1 version | sed 's/.* \([0-9]\+\).*/\1/')
+  local _clang_version=$(clang -dumpversion | cut -d '.' -f 1)
+  local _rustc_version=$(rustc --version)
   local _extra_gn_args=(
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
     "clang_version=\"$_clang_version\""
+    'rust_sysroot_absolute="/usr"'
+    'rust_bindgen_root="/usr"'
+    "rustc_version=\"$_rustc_version\""
+    'use_system_libffi=true'
+    'v8_enable_temporal_support=false'
   )
 
   export CC=clang CXX=clang++ AR=ar NM=nm
@@ -51,7 +71,12 @@ build() {
   export GN=/usr/bin/gn NINJA=/usr/bin/ninja
   export EXTRA_GN_ARGS="${_extra_gn_args[@]}"
 
-  cargo build --release
+  export LCMS2_LIB_DIR=/usr/lib
+  export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+  export ZSTD_SYS_USE_PKG_CONFIG=1
+  export CARGO_FEATURE_SYSTEM=1 # Use system-provided libffi
+
+  cargo build --frozen --release
 }
 
 check() {
