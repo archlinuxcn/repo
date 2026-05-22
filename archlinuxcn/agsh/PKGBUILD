@@ -1,7 +1,7 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=agsh
-pkgver=0.26.1
+pkgver=0.26.2
 pkgrel=1
 pkgdesc="A general-purpose AI agent runtime"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -11,7 +11,7 @@ depends=('glibc' 'libgcc' 'sqlite')
 makedepends=('cargo')
 optdepends=('bubblewrap: sandbox support')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('747e8d5b4bd5a802c42f5e469eb2485d678e4cb6a6d32d5eadb0bc91994c636c')
+sha256sums=('a904ff48c4db19c227639de339cc4a45b747f3b313723a21141a41de1eab2658')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
