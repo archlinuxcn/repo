@@ -71,8 +71,6 @@ _patches=(
   0006-Disable-UCX-signal-handler.patch
   0007-julia-git-Better-support-for-loading-packages-from-s.patch
   0008-Reduce-likelyhood-of-symbol-conflict.patch
-  0009-Fix-custom-EHFrame-registration-on-llvm21.patch
-  0010-Fix-to-use-new-ThreadSafeContext-API.patch
 )
 source=('git+https://github.com/JuliaLang/julia'
         "${_patches[@]}"
@@ -91,8 +89,6 @@ sha512sums=('SKIP'
             'ccc527ee7ad768336e319c8ed2a3b24068bbe8c5eabefb213c7241f89233cf5a7f6a8740cb37a6777cec77a88b7077d5335f2c3f3de6212cb41c5da77bd59fb2'
             'b4bfea3c2aaa9811b28e2105e9d43ac043a5ad1efce2233da4f84b0742173659f4d31388f8b06aa08d90ccb5c10096b6a79d30f2bb134db989b377445036bcb3'
             '6e772d062165baf3a1bd6f0dea54f987173a233972f779f133c14d361f916d5822a4318e83262d1fbce6e98c03604cf13df5023eb0190ecbb3c010153f08ec40'
-            '4d44fea1332346beb6da5b96824d6ae0f8ac525750f86bd1d52b1965178bba255341889085fb3c0974f2057efaa13779bcaad5c7b0ac5ca441e40299798a1e0f'
-            'd8b434908405b7a7c6a11279df668ce86309f7fe0eb5c0c3704c39d72aa0017eec8ff3bb179d49d682e627815d44ef550d7a7916a32f7265eb94c65c197fe447'
             '997f22456f175c6cc03b2dd407b7584df514bc4c91602ef011b93d8b558f7c587b4e216535e573f6063f3a606f88c48dee3041a5122a7dbf0bee6d1bc8df15b4'
             'a668a9bd01cec8f53f457d9124107a230260c79fd57cbce4c4bf80e3451758d8e67263faa3f9d8b3da0c10bffbe29e4032106881ebe682c7f66414d8989638be'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
