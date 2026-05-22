@@ -1,10 +1,10 @@
-From 683e33647eaea0ec456dc2a80ebeb370d459dde2 Mon Sep 17 00:00:00 2001
+From 29b53dcd6e02323c9723911e167cc6d04467fb68 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
-Subject: [PATCH 03/10] Clear soname and hard code system lib path
+Subject: [PATCH 3/8] Clear soname and hard code system lib path
 
 ---
- .../src/CompilerSupportLibraries_jll.jl       | 153 ++---------
+ .../src/CompilerSupportLibraries_jll.jl       | 150 ++---------
  stdlib/GMP_jll/src/GMP_jll.jl                 |  45 +---
  stdlib/LLD_jll/src/LLD_jll.jl                 |  63 +----
  .../src/LLVMLibUnwind_jll.jl                  |  17 +-
@@ -25,10 +25,10 @@ Subject: [PATCH 03/10] Clear soname and hard code system lib path
  .../src/libblastrampoline_jll.jl              |  24 +-
  stdlib/nghttp2_jll/src/nghttp2_jll.jl         |  30 +--
  stdlib/p7zip_jll/src/p7zip_jll.jl             |  30 +--
- 21 files changed, 150 insertions(+), 895 deletions(-)
+ 21 files changed, 150 insertions(+), 892 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-index 9a0729c50d..1a5c0e2855 100644
+index 9aec22b58b..8526b75387 100644
 --- a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 +++ b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 @@ -10,127 +10,24 @@ export libgfortran, libstdcxx, libgomp, libatomic, libgcc_s
@@ -174,15 +174,7 @@ index 9a0729c50d..1a5c0e2855 100644
  
  # Conform to LazyJLLWrappers API
  function eager_mode()
-@@ -142,31 +39,11 @@ function eager_mode()
-     if @isdefined libquadmath
-         dlopen(libquadmath)
-     end
--    if @isdefined libssp
--        dlopen(libssp)
--    end
-     dlopen(libgfortran)
-     dlopen(libstdcxx)
+@@ -148,23 +45,6 @@ function eager_mode()
  end
  is_available() = true
  
@@ -190,10 +182,10 @@ index 9a0729c50d..1a5c0e2855 100644
 -    global libatomic_path = string(libatomic.path)
 -    global libgcc_s_path = string(libgcc_s.path)
 -    global libgomp_path = string(libgomp.path)
--    if @isdefined libquadmath_path
+-    @static if @isdefined libquadmath_path
 -        global libquadmath_path = string(libquadmath.path)
 -    end
--    if @isdefined libssp_path
+-    @static if @isdefined libssp_path
 -        global libssp_path = string(libssp.path)
 -    end
 -    global libgfortran_path = string(libgfortran.path)
