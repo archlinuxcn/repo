@@ -12,11 +12,11 @@ pkgname=(
   qemu-headless-git
   qemu-arch-extra-git
   qemu-headless-arch-extra-git
-  qemu-block-{iscsi,gluster}-git
+  qemu-block-iscsi-git
   qemu-guest-agent-git
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
-pkgver=11.0.0.r1074.g343a88cb02
+pkgver=11.0.0.r1188.gf5a2438405
 pkgrel=1
 epoch=28
 arch=(i686 x86_64)
@@ -29,6 +29,7 @@ makedepends=(
   brltty
   bzip2
   cairo
+  capstone
   curl
   cdrtools
   dtc
@@ -37,7 +38,6 @@ makedepends=(
   gdk-pixbuf2
   git
   glib2
-  glusterfs
   gnutls
   gtk3
   jack
@@ -258,8 +258,7 @@ package_qemu-headless-git() {
 _package() {
   optdepends+=('ovmf: Tianocore UEFI firmware for qemu'
                'samba: SMB/CIFS server support'
-               'qemu-block-iscsi-git: iSCSI block support'
-               'qemu-block-gluster-git: glusterfs block support')
+               'qemu-block-iscsi-git: iSCSI block support')
   install=qemu.install
   options=(!strip !emptydirs)
 
@@ -279,7 +278,7 @@ _package() {
   chmod u+s qemu/qemu-bridge-helper
 
   # remove split block modules
-  rm qemu/block-{iscsi,gluster}.so
+  rm qemu/block-iscsi.so
 
   cd ../bin
 
@@ -421,15 +420,6 @@ package_qemu-block-iscsi-git() {
   provides=(qemu-block-iscsi)
 
   install -vDm 755 "$srcdir/$_gitname/build-full/block-iscsi.so" -t "$pkgdir/usr/lib/qemu/"
-}
-
-package_qemu-block-gluster-git() {
-  pkgdesc="QEMU GlusterFS block module. Git version."
-  depends=(glibc glusterfs)
-  conflicts=(qemu-block-gluster)
-  provides=(qemu-block-gluster)
-
-  install -vDm 755 "$srcdir/$_gitname/build-full/block-gluster.so" -t "$pkgdir/usr/lib/qemu/"
 }
 
 package_qemu-guest-agent-git() {
