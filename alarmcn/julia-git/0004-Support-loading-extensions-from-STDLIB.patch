@@ -1,17 +1,17 @@
-From 4dd1824c26e7688b54e94e967076f6b751b295e2 Mon Sep 17 00:00:00 2001
+From f7ab7156c91b4eb2b7044ebbe872628a5a9e4da5 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
-Subject: [PATCH 04/10] Support loading extensions from STDLIB
+Subject: [PATCH 4/8] Support loading extensions from STDLIB
 
 ---
  base/loading.jl | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 48 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index 18adf2f1a6..62ad17d18d 100644
+index 6b97141c9b..6489e0a78c 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
-@@ -1338,6 +1338,34 @@ end
+@@ -1343,6 +1343,34 @@ end
  
  # look for an entry-point for `pkg` and return its path if UUID matches
  function implicit_manifest_uuid_load_spec(dir::String, pkg::PkgId)::Union{Nothing, PkgLoadSpec}
@@ -46,7 +46,7 @@ index 18adf2f1a6..62ad17d18d 100644
      path, project_file = entry_point_and_project_file(dir, pkg.name)
      if project_file === nothing
          pkg.uuid === nothing || return nothing
-@@ -1647,11 +1675,31 @@ const EXT_PRIMED = Dict{PkgId,Vector{PkgId}}() # Extension -> Parent + Triggers
+@@ -1652,11 +1680,31 @@ const EXT_PRIMED = Dict{PkgId,Vector{PkgId}}() # Extension -> Parent + Triggers
  const EXT_DORMITORY = Dict{PkgId,Vector{ExtensionId}}() # Trigger -> Extensions that can be triggered by it
  const EXT_DORMITORY_FAILED = ExtensionId[]
  

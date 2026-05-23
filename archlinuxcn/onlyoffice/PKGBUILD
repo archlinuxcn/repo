@@ -2,8 +2,8 @@
 # Contributor: Daniel Bermond <dbermond@archlinux.org>
 # Contributor: Mikalai Ramanovich < narod.ru: nikolay.romanovich >
 pkgname=onlyoffice
-pkgver=9.3.1
-pkgrel=2
+pkgver=9.4.0
+pkgrel=1
 pkgdesc="An office suite that combines text, spreadsheet and presentation editors allowing to create, view and edit local documents"
 arch=(x86_64)
 url="https://www.onlyoffice.com/desktop.aspx"
@@ -45,24 +45,26 @@ options=(
 )
 _url=https://github.com/ONLYOFFICE
 # The tag used for indirect sumodules
-_tag=v9.3.1.9
+_tag=v9.4.0.130
 # ICU: scripts/core_common/modules/icu.py
 _icu_major=74
 _icu_minor=2
 source=(
     # Source
     "git+${_url}/DesktopEditors#tag=v$pkgver"
-    "$pkgname-core::git+${_url}/core#commit=7043b3609328e917a4791aec8f3e8fca3225120f"
-    "$pkgname-desktop-apps::git+${_url}/desktop-apps#commit=bc46371aa062a7718cd90268e94c3d2b10ce3c51"
-    "$pkgname-desktop-sdk::git+${_url}/desktop-sdk#commit=6bd2051287a496ac1504214caca69a5729625696"
-    "$pkgname-dictionaries::git+${_url}/dictionaries#commit=d3223bbb777883db66ac3cd249f71c6ebdc992c7"
-    "$pkgname-sdkjs::git+${_url}/sdkjs#commit=aa78926242b3da023255d9c7e9180e5a3294167b"
-    "$pkgname-web-apps::git+${_url}/web-apps#commit=1c8ca9987876bada73c0bde21367da09c0e1ed83"
+    "$pkgname-core::git+${_url}/core#tag=$_tag"
+    "$pkgname-desktop-apps::git+${_url}/desktop-apps#tag=$_tag"
+    "$pkgname-desktop-sdk::git+${_url}/desktop-sdk#tag=$_tag"
+    "$pkgname-dictionaries::git+${_url}/dictionaries#tag=$_tag"
+    "$pkgname-sdkjs::git+${_url}/sdkjs#tag=$_tag"
+    "$pkgname-web-apps::git+${_url}/web-apps#tag=$_tag"
     "$pkgname-sdkjs-forms::git+${_url}/sdkjs-forms#tag=$_tag"
     "$pkgname-build_tools::git+${_url}/build_tools#tag=$_tag"
     "$pkgname-core-fonts::git+${_url}/core-fonts#tag=$_tag"
     "$pkgname-document-templates::git+${_url}/document-templates#tag=$_tag"
     "onlyoffice.github.io::git+${_url}/onlyoffice.github.io"
+    # CEF
+    "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/cef/5414/linux_64/cef_binary.7z"
     # V8
     "git+https://chromium.googlesource.com/chromium/tools/depot_tools.git#commit=8dde9800ee2b8326ab11a87abd67d3bd9f8c8773"
     "git+https://github.com/v8/v8#tag=9.0.257.43" # 9.0-lkgr
@@ -84,19 +86,23 @@ source=(
     "do-not-build-commercial.diff"
     system-heif{,-0}.diff
     "fix-QDesktopWidget-include.diff"
+    "Ancient-V8-Use-Sysroot.diff"
+    "no-js-download-at-build-time.diff"
 )
-sha256sums=('980a6e953dd1b2612b7b77856f6b59b896aa166bd89b67fc9ba7731475cb608b'
-            '9c61aa21383e8452ea8782a83a79168cb43798e79b3573631cacfe2439f5e237'
-            '98c6c0e50544a5a340e88763177c563466c5ec83b704947b48594e9e3298ec92'
-            'dcc813babd24f0e2cfb6fd6c70d9bddcf483b52111184e10e3f6b0c4286e9ec6'
+noextract=('cef_binary.7z')
+sha256sums=('2256c94f02290da096069260d2f4c4bb5482632128873c623cd25f754f77dc5e'
+            'a3f86bf5410c9a8158dcab4490e792895a8abc1c4eec2eb7d94bf18bc7c696c4'
+            'f8abe86c14eb3bbcafd0b29aa9480ea27761343dcf35ab0dfe8e52167e0abee8'
+            '5fc99b98887b45cf00db54a7caf6189d280234813de4147c186499b31b6952bc'
             '62dc945a78f38ab87e9d0a1a0cfefe0ddee29ba9de4e48468f7047d0aac4e645'
-            'c76faf2261a11cc241e67414029db03764d8bf2eef6df90de6d5c17598207c06'
-            '80db20deff266435d281273baac4efa123119d0fe73a5af65f61ab9952ea30a3'
-            'd9d7de2e5721cdde754fd4daa96bc2baafafcf53e1c3785fd1ee716c3a19ae85'
-            'd7a36d4b0667e6b6415f09d969f73c1ae358168bfb397adf8730b3050d6329ac'
+            'ad165bbe35b192de560a96f9ef96ad83615fce37ce3509484a1d9df236bb5fdc'
+            'c37790310c7e7e3af6f7a8bb98de0b61dae351eaf32843557ede750792e793eb'
+            '73fd76bab5919773c049ef502ac0f43af1f6424ddbeec7286dba86452709c915'
+            '06f1bb22167fa6a19ee2d348c3529a558f62f566bd06043b3ff319737af22c5b'
             '55c1d70a8bdd8f818af8e4c784bfc03f0569fcb863cc6797f888b749153ed720'
-            '1a9ddf334ee246bcd4f412475f91dd2a70408521998f358dbcae18976f861e56'
+            '4d9bf0039261bb531663603171b63a4a5339c4c0644e9859991d78ddbf446573'
             'SKIP'
+            'dff9aa53c147fd0c6a03f57e17aef10b0cee3fe7c4dc18b3b1a8a7a20bf0a145'
             'cd7a982bf79eae86a8b7727193e2a9feccd1388cd0cc474b8d786ac6dc695cfe'
             '8cd5a305b9ce85066094963a5d28ad221f9598b9e98e569bf47c61f570c2988b'
             '1370503ff352608f587486324bde040a9038f4cbf2d21085f821121dd49dbede'
@@ -109,14 +115,16 @@ sha256sums=('980a6e953dd1b2612b7b77856f6b59b896aa166bd89b67fc9ba7731475cb608b'
             'b3e040f0551dc469d91d23487e05bdb7123d2a3e50c5180c44be868a6f42ecbf'
             'a3561d1f18a61c404c8f9f9ed51484b2e19e3caaee86b71b1cabe3c7ccd0053a'
             '222dab12468f27b2bc1cc098ad2e4ca5bff8df845939f5cba2efff2165eafbcd'
-            'f824db52d68fe7dd6e48ad4f3316e2036ce2096f66c1ae08278e0725219bc8ea'
+            'fbf4c2800bc885063525ee8a50cfb870d7f44166584fd131f4bed8a762538c28'
             'a062edfcca4fc2103f5d7eeffeb22539de4a633eddd3ba4ed555ac1976be5176'
             'cb87384ce721ac15a82d254efe8662be0eb9011c122edfcb1caa07194fbae697'
             '8761a41683733f8c297fda55485126e895b1271aefd0f834078eb417878afbb0'
             'b7bce5799d2f52026795169e40d6a3b436bb8c481d769cc8ff9df19a7e9e29cd'
             'c328fbadbb34f6fd59b79b2be188877ae2652a932d1b003548632c261f88a9c6'
             'e3af225ba3945e1430d4dbc2a4049e3ff3e114f5e73616624e430eed813b744f'
-            '7849b1895a7b99479b2a78a8f009a3e670b0588a5bad150168506a4e41d03e69')
+            '7849b1895a7b99479b2a78a8f009a3e670b0588a5bad150168506a4e41d03e69'
+            'a542aa3d89568b50dd37a3b844dda230da3e04adf655ee8d67f56b066c2bdde5'
+            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
 
 
 _set_flags() {
@@ -164,8 +172,11 @@ prepare() {
     patch -Np1 -i ../0001-Dynamically-link-libstdc-in-icu.patch
     # Do not build commerical edition
     patch -Np0 -i ../do-not-build-commercial.diff
-    # Use https when download CEF
-    sed -i 's|http://|https://|' ./scripts/core_common/modules/cef.py
+    # Use V8 sysroot for building the bundled ancient V8
+    # libstdc++ in GCC 16 is no longer compatible with it.
+    patch -Np1 -i ../Ancient-V8-Use-Sysroot.diff
+    # Don't download JS resource at build time
+    patch -Np1 -i ../no-js-download-at-build-time.diff
 
     # We manually update the sources, so --update 0
     ./configure.py --module desktop --update 0 --qt-dir "$(realpath tools/linux/system_qt)"
@@ -199,6 +210,10 @@ EOF
         v8/third_party/llvm-build/Release+Asserts/lib/libstdc++.so.6
     patch -Np1 -d v8 < "$srcdir/v8-89-fix-cstdint.diff"
 
+    # Move CEF into the expected place
+    mkdir -p "$srcdir"/core/Common/3dParty/cef/linux_64
+    mv "$srcdir"/cef_binary.7z "$srcdir"/core/Common/3dParty/cef/linux_64/
+
     # We need to apply the patches after the update
     cd "$srcdir"
     patch -Np0 -i system-heif.diff
@@ -210,7 +225,7 @@ EOF
     patch -Np1 -d core < use-fpermissive.diff
     dos2unix core/Common/OfficeFileFormatChecker2.cpp
     patch -Np0 -d core < fix-limits-include.diff
-    patch -Np0 -d desktop-apps < fix-glib-qt-macro-collision.diff
+    patch -Np1 -d desktop-apps < fix-glib-qt-macro-collision.diff
     # patch -Np1 -d desktop-apps < package-add-dir-target.diff
     # pragma (end)?region breaks if-else-if. Is this a gcc bug?
     sed -Ei '/pragma (end)?region/d' core/MsBinaryFile/XlsFile/Format/Logic/Biff_structures/StringPtgParser.cpp 

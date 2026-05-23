@@ -1,37 +1,60 @@
-# Maintainer: Marco Rubin <marco.rubin@protonmail.com>
 # Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+# Contributor: Marco Rubin <marco.rubin@protonmail.com>
 # Contributor: Noel Kuntze <noel.kuntze at thermi dot consulting>
 # Contributor: Mikael Eriksson <mikael_eriksson@miffe.org>
 # Contributor: Stephan Eisvogel <eisvogel at embinet dot de
 
 pkgname=pdfcpu
 pkgver=0.12.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A PDF processor written in Go.'
-arch=(x86_64)
+arch=('x86_64' 'aarch64' 'armv7h')
 url='https://github.com/hhrutter/pdfcpu'
 license=('Apache-2.0')
 depends=('glibc')
-makedepends=(go)
-source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-b2sums=('dffcb923da9902cd36dd257f63674e5786c36f19cc22c8d6df97be6c3215db01baca88c187b09c0d07f739100c58a5443d54893fe2e0e44dfc81f73d3f8bd84b')
+makedepends=('go')
+source=("$pkgname-$pkgver.tar.gz::${url}/archive/v$pkgver.tar.gz")
+sha256sums=('a15d61b50e432b90b435e59728fde241fdcb745eba06f437cbf106aafc7ff2d0')
+
+prepare(){
+    cd "$pkgname-$pkgver"
+
+    export GOPATH="${srcdir}"
+    go mod download -modcacherw
+
+    mkdir -p build/
+}
 
 build() {
-    cd $pkgname-$pkgver/cmd/pdfcpu
-    export CGO_CPPFLAGS="$CPPFLAGS"
-    export CGO_CFLAGS="$CFLAGS"
-    export CGO_CXXFLAGS="$CXXFLAGS"
-    export CGO_LDFLAGS="$LDFLAGS"
+    cd "$pkgname-$pkgver"
+
+    export GOPATH="${srcdir}"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
     export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
-    go build -buildvcs=false
+
+    go build -o build ./cmd/${pkgname}
+
+    install -d completions
+    ./build/"$pkgname" completion bash > completions/bash
+    ./build/"$pkgname" completion fish > completions/fish
+    ./build/"$pkgname" completion zsh  > completions/zsh
 }
 
 check() {
-    cd $pkgname-$pkgver
-    ./coverage.sh
+    cd "$pkgname-$pkgver"
+
+    go test ./...
 }
 
 package() {
-    cd $pkgname-$pkgver/cmd/pdfcpu
-    install -Dm755 pdfcpu "$pkgdir/usr/bin/$pkgname"
+    cd "$pkgname-$pkgver"
+
+    install -Dm755 ./build/"$pkgname" -t "$pkgdir/usr/bin"
+
+    install -Dm644 completions/bash "$pkgdir/usr/share/bash-completion/completions/$pkgname"
+    install -Dm644 completions/fish "$pkgdir/usr/share/fish/vendor_completions.d/$pkgname.fish"
+    install -Dm644 completions/zsh  "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
 }

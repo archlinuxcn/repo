@@ -4,6 +4,7 @@
 
 pkgname=superproductivity
 _reponame=super-productivity
+_appid=com.super_productivity.SuperProductivity
 pkgver=18.6.0
 _electronversion=41
 pkgrel=2
@@ -12,10 +13,10 @@ arch=('x86_64')
 url="https://super-productivity.com"
 license=('MIT')
 depends=('bash' "electron${_electronversion}" 'hicolor-icon-theme')
-makedepends=('nodejs-lts-jod' 'npm' 'rust')
+makedepends=('nodejs-lts-jod' 'npm' 'cargo')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johannesjo/${_reponame}/archive/v${pkgver}.tar.gz"
         "fix-wayland-icon.patch"
-        "com.super_productivity.SuperProductivity.desktop"
+        "${_appid}.desktop"
         "${pkgname}.sh")
 sha256sums=('ba3fd2c85fb49f3e3ac9c5ecac0808f5827173fd1c96910db6ca8aa9a2aad57e'
             'd652455706696e8081d0a6f8d0bd72f4604e60f83ecfbe1939e3d1d8225e7656'
@@ -84,7 +85,7 @@ package() {
     install -Dm644 .tmp/app-builds/linux-unpacked/resources/app.asar -t "${pkgdir}/usr/lib/${pkgname}"
 
     install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
-    install -Dm644 "${srcdir}/com.super_productivity.SuperProductivity.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm644 "${srcdir}/${_appid}.desktop" -t "${pkgdir}/usr/share/applications"
     for i in 16 32 48 64 128 256 512 1024; do
         install -Dm644 "build/icons/${i}x${i}.png" "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/${pkgname}.png"
     done

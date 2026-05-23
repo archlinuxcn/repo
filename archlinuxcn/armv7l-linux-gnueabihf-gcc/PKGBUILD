@@ -10,7 +10,7 @@ _pkgname=(gcc gcc-libs gcc-fortran gcc-objc)
 pkgver=16.1.1+r12+g301eb08fa2c5
 _gccver=${pkgver%%+*}
 _majorver=${_gccver%%.*}
-pkgrel=1
+pkgrel=2
 pkgdesc="The GNU Compiler Collection (${_target})"
 arch=(armv7h aarch64 i686 x86_64)
 license=(GPL LGPL FDL custom)
@@ -152,7 +152,7 @@ package_gcc() {
   install -m755 -t "$pkgdir/${_libdir}/" gcc/{cc1,cc1plus,collect2,lto1}
 
   make -C $_target/libgcc DESTDIR="${pkgdir}" install
-  rm "${pkgdir}"/usr/${_target}/lib/libgcc_s.so*
+  rm "${pkgdir}"/usr/${_target}/lib/libgcc_s{,_asneeded}.so*
 
   make -C $_target/libstdc++-v3/src DESTDIR="${pkgdir}" install
   make -C $_target/libstdc++-v3/include DESTDIR="${pkgdir}" install

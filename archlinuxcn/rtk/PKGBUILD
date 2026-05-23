@@ -1,0 +1,55 @@
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+# Contributor: Benigno B. Junior <benignobjunior@gmail.com>
+
+pkgname=rtk
+pkgver=0.41.0
+pkgrel=1
+pkgdesc='CLI proxy that reduces LLM token consumption by 60-90% on common dev commands'
+arch=('x86_64' 'aarch64')
+url='https://github.com/rtk-ai/rtk'
+license=('Apache-2.0')
+depends=('glibc' 'libgcc' 'sqlite')
+makedepends=('cargo')
+checkdepends=('git')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('be980a33ef44990bd02bde2a1d42ef90dfbfc42b34f7460a1dd489971b8c0c35')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target host-tuple
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+
+    export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+
+    export CARGO_PROFILE_RELEASE_LTO=true
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+
+    cargo build --frozen --release --all-features
+}
+
+check() {
+    cd "${pkgname}-${pkgver}"
+
+    export RUSTUP_TOOLCHAIN=stable
+
+    export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+
+    export CARGO_PROFILE_RELEASE_LTO=true
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+
+    cargo test --frozen --all-features
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+
+    install -Dm755 target/release/$pkgname -t "$pkgdir/usr/bin/"
+}

@@ -8,7 +8,7 @@ pkgname=code
 pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
 _electron=electron39
-pkgver=1.119.0
+pkgver=1.121.0
 pkgrel=1
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
@@ -27,12 +27,12 @@ source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
         'clipath.patch'
         # Originally taken from https://github.com/termux/termux-packages/raw/0974620c52e72d0c80bcc8a42bad482555f629e8/x11-packages/code-oss/0009-openvsx-extension-signature.patch
         '0009-openvsx-extension-signature.patch')
-sha512sums=('b9db4c4aa77d23ec00a00b5e82248d4761f5c550e6abc502e96743834bdf39e874d4c8bc522c553cafe9ada485e470f69c011c90e5d63d7d70ad4e337f94a2ae'
+sha512sums=('692297e3edd6dd5f7ef291044973b74e196753bbb520d4d27b1689853ba735422c1bae64cc29166cb29ab8903fefa5ed284124426a0a8fa14e2a66a50cdf7ada'
             '793f9ff6306e3992ac89802d98110cba288ea1181a901467333293b7d76182ef9792c2a39ff49d9347a18a174b1f42bc58862091dff583f4146c2704eea28033'
             '937299c6cb6be2f8d25f7dbc95cf77423875c5f8353b8bd6cd7cc8e5603cbf8405b14dbf8bd615db2e3b36ed680fc8e1909410815f7f8587b7267a699e00ab37'
             'b1aa0d7c5b3e3e8ba1172822d75ea38e90efc431b270e0b4ca9e45bf9c0be0f60922c8618969ef071b5b6dbd9ac9f030294f1bf49bcc28c187b46d113dca63a7'
             'e570b30cd470190aa56596913478d5fb8ba265a0f8c9d1408ea2118612cc69a360cc55e4523c3dc9c65f73e3dea53fc6620c97f6592fb9f86c3aca51ad3d9744'
-            'f3d6a93ad0630ece0285dad30aacc3a4ec24ab4b3886c60268d6568ff20f1eeeb758217e82d47b03880da73372723047824786aa1daf37c94e8d25610e664cd2')
+            'bfd1a1feb9e6250e086c5a8513f325a2623e6724c094f2125f0c6fb36b88d8416745bd5f5e21a7f6e82bc45104d8ea0050210a7ba46befcb99f39052bf7ece13')
 
 # Even though we don't officially support other archs, let's
 # allow the user to use this PKGBUILD to compile the package
@@ -140,6 +140,7 @@ build() {
   export ELECTRON_SKIP_BINARY_DOWNLOAD=1 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
   export XDG_CACHE_HOME="$srcdir"
   npm install --cpu=$_vscode_arch
+  npm add -S "node-ovsx-sign@~1.2.0"
   npm run gulp \
        --openssl-legacy-provider \
        vscode-linux-${_vscode_arch}-min

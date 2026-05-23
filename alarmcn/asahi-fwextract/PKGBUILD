@@ -3,7 +3,7 @@
 
 _name=asahi-installer
 pkgname=asahi-fwextract
-pkgver=0.8.0
+pkgver=0.8.1
 pkgrel=1
 pkgdesc='Asahi Linux firmware extractor'
 arch=('any')
@@ -11,8 +11,8 @@ url='http://asahilinux.org'
 license=('MIT')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AsahiLinux/${_name}/archive/refs/tags/v${pkgver}.tar.gz")
 install=asahi-fwextract.install
-sha256sums=('53d683a671ee829638e9a95cd5a488864c76b54ec12e23505f8da4c8eadd6912')
-b2sums=('f35a7980f55213e6e50e024c99e7bdf2c2d402f39e5943afe08d68385167f7eff45620b579a2c462846908aae8349bbe15be81292e0cbb9fe6e8cec82dfa6a8f')
+sha256sums=('672b508f7903f3e000e4d6ddde158bf6df15a01b6495250a1b42602fef3fcfae')
+b2sums=('ac71bab4528c0c729e42f7f10ce11306f43649586a057d86f43affef01df42d8b3582f4a2991f9acbba3ce27e76ee68829d60fbc24b4b02f71db494df6976f60')
 depends=(python "asahi-scripts>=20230606-1" lzfse)
 makedepends=(python-build python-installer python-wheel python-setuptools)
 
