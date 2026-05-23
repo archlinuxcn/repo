@@ -5,7 +5,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=cloudreve
-Restart=on-faliure
+Restart=on-failure
 RestartSec=3
 ExecStartPre=cp /usr/lib/cloudreve/cloudreve /var/lib/cloudreve/cr
 ExecStart=/var/lib/cloudreve/cr
