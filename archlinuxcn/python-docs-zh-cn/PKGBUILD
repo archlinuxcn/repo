@@ -1,0 +1,24 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+# Contributor: Morten Linderud <foxboron@archlinux.org>
+# Contributor: Robin Candau <antiz@archlinux.org>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Rohan Dhruva (rohandhruva at gmail dot com)
+
+pkgname=python-docs-zh-cn
+pkgver=3.14
+pkgrel=1
+pkgdesc="Set of HTML documentation for python (zh-cn version)"
+url="https://www.python.org/doc"
+arch=('any')
+license=('PSF-2.0')
+options=('docs')
+source=("${pkgname}-${pkgver}.tar.bz2::https://docs.python.org/zh-cn/${pkgver}/archives/python-${pkgver}-docs-html.tar.bz2")
+sha256sums=('9ec23e99e7c52e7b573a0338f6cd4bd60db565e879d11eda3c8c196955eea576')
+provides=('python-docs')
+makedepends=('rsync')
+
+package() {
+	cd "python-${pkgver}-docs-html"
+    install -dm 755 "${pkgdir}/usr/share/doc/python/html-zh-cn"
+    rsync -r * --chmod=D755,F644 "${pkgdir}/usr/share/doc/python/html-zh-cn/"
+}
