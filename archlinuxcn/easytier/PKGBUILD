@@ -7,7 +7,7 @@ pkgbase=easytier
 pkgname=($pkgbase $pkgbase-core $pkgbase-cli $pkgbase-web)
 pkgver=2.6.4
 pkgrel=4
-pkgdesc="A simple, decentralized mesh VPN with WireGuard support."
+pkgdesc="A simple, decentralized mesh VPN with WireGuard support"
 arch=('x86_64' 'aarch64' 'armv7h' 'loongarch64' 'riscv64' 'mipsel' 'mips64el')
 url="https://github.com/EasyTier/EasyTier"
 license=('LGPL-3.0-only')
@@ -15,7 +15,7 @@ depends=('glibc' 'libgcc' 'zstd')
 makedepends=('cargo' 'protobuf' 'rust-bindgen' 'clang' 'llvm' 'lld' 'sqlite'
              'nodejs' 'pnpm') # for embeded web
 source=(
-    "$_pkgname-$pkgver.tar.gz::https://github.com/EasyTier/EasyTier/archive/refs/tags/v$pkgver.tar.gz"
+    "$_pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
     "easytier.service"
     "config.toml")
 sha256sums=('352c0866da709415a837405a6ce4f51b8dfae27e5d5c1da1fb4d8f7338e46795'
@@ -80,11 +80,11 @@ build() {
 }
 
 package_easytier() {
-    pkgdesc="A simple, decentralized mesh VPN with WireGuard support."
     depends=('easytier-core' 'easytier-cli' 'easytier-web')
 }
 
 package_easytier-core() {
+    pkgdesc+=" - Core daemon"
     backup=('etc/easytier/config.toml')
 
     install -dm755 "$pkgdir/var/lib/easytier"
@@ -103,6 +103,8 @@ package_easytier-core() {
 }
 
 package_easytier-cli() {
+    pkgdesc+=" - Command-line interface"
+
     cd "$_pkgname-$pkgver"
     install -Dm755 "target/release/easytier-cli" -t "$pkgdir/usr/bin"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/easytier/LICENSE-cli"
@@ -115,7 +117,9 @@ package_easytier-cli() {
 }
 
 package_easytier-web() {
+    pkgdesc+=" - Web management interface"
     depends+=('sqlite')
+
     cd "$_pkgname-$pkgver"
     install -Dm755 "target/release/easytier-web" -t "$pkgdir/usr/bin"
     install -Dm644 "LICENSE" "$pkgdir/usr/share/licenses/easytier/LICENSE-web"

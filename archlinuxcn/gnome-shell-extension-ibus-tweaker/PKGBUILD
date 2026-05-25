@@ -2,7 +2,7 @@
 
 pkgname=gnome-shell-extension-ibus-tweaker
 pkgver=50.1
-pkgrel=1
+pkgrel=2
 pkgdesc="GNOME Shell extension to tweak IBus font, input mode, clipboard history, etc."
 arch=('any')
 url="https://github.com/tuberry/ibus-tweaker"
@@ -13,14 +13,17 @@ source=("${pkgname}-${pkgver}.tar.gz::https://github.com/tuberry/ibus-tweaker/ar
 b2sums=('747fb44d0e6192ce91c2bf2d006e23df249159c6e5c6218af5dddbac38ad1db8515ad10827e5271ae570d1a726ebbfc090f68377fd918552b87637aca261c61f')
 
 build() {
-  cd "ibus-tweaker-${pkgver}"
- 
-  meson setup build -Dlocaledir="${pkgdir}/usr/share" -Ddatadir="${pkgdir}/usr/share" -Dtarget=system
+    cd "ibus-tweaker-${pkgver}"
+
+    meson setup build \
+        -Dlocaledir="${pkgdir}/usr/share/locale/" \
+        -Ddatadir="${pkgdir}/usr/share/" \
+        -Dtarget=system
 }
 
 package() {
-  cd "ibus-tweaker-${pkgver}"
-  
-  meson install -C build
-  rm "${pkgdir}/usr/share/glib-2.0/schemas/gschemas.compiled"
+    cd "ibus-tweaker-${pkgver}"
+
+    meson install -C build
+    rm "${pkgdir}/usr/share/glib-2.0/schemas/gschemas.compiled"
 }
