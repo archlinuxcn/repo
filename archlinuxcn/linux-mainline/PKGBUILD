@@ -6,8 +6,8 @@
 
 pkgbase=linux-mainline
 #pkgbase=linux-custom       # Build kernel with a different name
-_tag=v7.1-rc4
-pkgver=7.1rc4
+_tag=v7.1-rc5
+pkgver=7.1rc5
 pkgrel=1
 pkgdesc="Linux Mainline"
 arch=(x86_64)
@@ -56,7 +56,7 @@ validpgpkeys=(
   647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
   83BC8889351B5DEBBB68416EB8AC08600F108CDF  # Jan Alexander Steffens (heftig)
 )
-sha256sums=('e46632c664cd80af9ab29551f30d906563d5bd2ea5769f1cab12970eeebf480e'
+sha256sums=('6510c9da4c47872618bc78c1b026978adcc2921cc8633b9156c6031b450ce428'
             '3a0d5641f9a65d6425823ce0dbf75ec102fbd9c4c8cfbdaac6dc6da864184e3e')
 
 export KBUILD_BUILD_HOST=archlinux
