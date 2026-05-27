@@ -1,11 +1,12 @@
-# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Maintainer: Zen Wen <zen.8841@gmail.com>
+# Contributor: Felix Yan <felixonmars@archlinux.org>
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt5-webchannel
-_basever=5.15.18
-pkgver=5.15.18+kde+r3
-pkgrel=2
-_commit=2a157921861e651f43456cb7941b250c89feb736
+_basever=5.15.19
+pkgver=5.15.19
+pkgrel=1
+_commit=4d9f25e1c49a202df6956fb1c0fed9f898433a54
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
@@ -14,7 +15,7 @@ depends=('qt5-declarative')
 makedepends=('git')
 _pkgfqn=${pkgname/5-/}
 source=(kde-$_pkgfqn::git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit)
-sha256sums=('fdff50abd1a3c5de03657f229caba43e68522911ade28ad0f6d6e53bc7517dde')
+sha256sums=('fea40dc28a291daf2d1864dcc92f2fe3577b142fc1df4b8c276a429336e5f2b7')
 
 pkgver() {
   cd kde-$_pkgfqn
