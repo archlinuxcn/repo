@@ -27,6 +27,7 @@ optdepends=('curl: apache, ascent, curl, nginx, and write_http plugins'
             'postgresql-libs: postgresql plugin'
             'python: python plugin'
             'rrdtool: rrdtool and rrdcached plugins'
+            'hiredis': 'redis plugin'
             'lm_sensors: lm_sensors and sensors plugins'
             'libvirt: libvirt plugin'
             'libxml2: ascent and libvirt plugins'
@@ -73,6 +74,7 @@ build() {
 		--sysconfdir=/etc \
 		--localstatedir=/var \
 		--sbindir=/usr/bin \
+		--enable-redis \
 		--disable-werror \
 		--with-perl-bindings='INSTALLDIRS=vendor' \
 
