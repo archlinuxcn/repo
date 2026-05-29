@@ -8,24 +8,24 @@ url='https://cmusphinx.github.io'
 license=('BSD-2-Clause' 'BSD-3-Clause' 'MIT')
 depends=('glibc' libpulse)
 makedepends=(git 'cmake' 'cython' 'gst-plugins-base-libs' 'ninja' 'python-build' 'python-installer' 'python-scikit-build-core' 'python-sounddevice')
-source=("source::git+https://github.com/cmusphinx/pocketsphinx.git#tag=v${pkgver}")
+source=("git-source::git+https://github.com/cmusphinx/pocketsphinx.git#tag=v${pkgver}")
 sha256sums=('6ec6c28a84574abc7a74ceaf8fb914cb674a9a5db3e6c679d691a1a152863bbd')
 
 build() {
-	cd source
+	cd git-source
 	cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS=ON -DBUILD_GSTREAMER=ON
 	cmake --build build
 	python -m build --wheel --no-isolation
 }
 
 package_pocketsphinx() {
-	cd source
+	cd git-source
 	optdepends=('gst-plugins-base-libs: GStreamer plugin')
 	DESTDIR="$pkgdir" cmake --install build
 	install -vDm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgbase}/"
 }
 package_python-pocketsphinx() {
-	cd source
+	cd git-source
 	depends+=('python' 'python-sounddevice')
 	python -m installer --destdir="${pkgdir}" dist/*.whl
 	install -vDm644 LICENSE -t "$pkgdir/usr/share/licenses/python-$pkgbase/"
