@@ -4,41 +4,62 @@
 # Based on extra/chromium, with ungoogled-chromium patches
 
 # Maintainer: Christian Heusel <gromit@archlinux.org>
+# Maintainer: Jonathan Grotelüschen <tippfehlr@archlinux.org>
 # Contributor: Evangelos Foutras <foutrelis@archlinux.org>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=148.0.7778.178
+pkgver=148.0.7778.215
 pkgrel=1
 _launcher_ver=8
 _manual_clone=1
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=148.0.7778.178-1
+_uc_ver=148.0.7778.215-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
 license=('BSD-3-Clause')
 depends=(
   'alsa-lib'
+  'at-spi2-core'
+  'cairo'
   'dbus'
   'desktop-file-utils'
+  'expat'
+  'glib2'
+  'glibc'
   'gtk3'
   'hicolor-icon-theme'
   'libcups'
   'libffi'
+  'libgcc'
   'libgcrypt'
   'libpulse'
+  'libstdc++'
   'libva'
+  'libx11'
+  'libxcb'
+  'libxcomposite'
+  'libxdamage'
+  'libxext'
+  'libxfixes'
+  'libxkbcommon'
+  'libxrandr'
   'libxss'
+  'mesa'
+  'nspr'
   'nss'
+  'pango'
   'pciutils'
   'systemd'
+  'systemd-libs'
   'ttf-liberation'
   'xdg-utils'
+  'zlib'
 )
 makedepends=(
   'clang'
@@ -59,7 +80,8 @@ makedepends=(
 optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kdialog: support for native dialogs in Plasma'
             'gtk4: for --gtk-version=4 (GTK4 IME might work better on Wayland)'
-            'org.freedesktop.secrets: password storage backend on GNOME / Xfce'
+            'qt6-base: Qt support'
+            'org.freedesktop.secrets: password storage backend on GNOME, KDE and Xfce'
             'upower: Battery Status API support')
 provides=("chromium=$pkgver" "chromedriver=$pkgver")
 conflicts=('chromium' 'chromedriver')
@@ -80,7 +102,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
 sha256sums=('2e2f36e3cd1ebc4ad57fd310774a5e5e9db77883d5f9374fedeaabd3c103b819'
-            '39ce1309e8808f00f846b368c5b34fd469f4f5335730fd629c00b23fc808c4d4'
+            '803473e73f50507218774e0853111167f52cf3286d098eb21fd89d70a3ab211d'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
@@ -105,7 +127,7 @@ fi
 # Keys are the names in the above script; values are the dependencies in Arch
 declare -gA _system_libs=(
   [brotli]=brotli
-  #[dav1d]=dav1d
+  [dav1d]=dav1d
   #[ffmpeg]=ffmpeg    # YouTube playback stopped working in Chromium 120
   [flac]=flac
   [fontconfig]=fontconfig

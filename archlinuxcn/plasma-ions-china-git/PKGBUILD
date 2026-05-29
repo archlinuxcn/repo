@@ -2,19 +2,25 @@
 # Contributor: arenekosreal
 
 _pkgname=plasma-ions-china
+_kdeplasma_addons_version=6.5.5
 pkgname="${_pkgname}-git"
-pkgver=0.0.0.r149.g5d4d358
-pkgrel=1
+pkgver=0.1.0.r0.g5d4d358
+pkgrel=2
 pkgdesc="A collection of ions for Chinese users."
 arch=(x86_64)
-depends=(qt6-base kdeplasma-addons)
+url=https://github.com/arenekosreal/plasma-ions-china
+license=(GPL-3.0-or-later)
+depends=(libstdc++ glibc qt6-base kdeplasma-addons kcoreaddons ki18n)
 makedepends=(extra-cmake-modules cmake git)
-source=("git+https://github.com/arenekosreal/plasma-ions-china")
-sha256sums=('SKIP')
+source=("git+https://github.com/arenekosreal/plasma-ions-china"
+        "kdeplasma-addons-$_kdeplasma_addons_version.tar.gz::https://download.kde.org/stable/plasma/$_kdeplasma_addons_version/kdeplasma-addons-$_kdeplasma_addons_version.tar.xz")
+noextract=("kdeplasma-addons-$_kdeplasma_addons_version.tar.gz")
+sha256sums=('SKIP'
+            '32b69b987258998b95017cf08aba1d85b986303bd59e1bbc600ed12e2184f5cb')
 
 pkgver() {
     cd "${srcdir}/${_pkgname}"
-    echo "0.0.0.r$(git rev-list --count HEAD).g$(git rev-parse --short HEAD)"
+    git describe --tags --long | sed "s/v//;s/-/.r/;s/-/./g"
 }
 
 build() {
@@ -22,7 +28,7 @@ build() {
         -B build
         -S "${srcdir}/${_pkgname}"
         -D CMAKE_BUILD_TYPE=None
-        -D PlasmaWeather_ROOT="${srcdir}/${_pkgname}"
+        -D EXTERNAL_PROJECT_URL_KDEPLASMA_ADDONS="file://$srcdir/kdeplasma-addons-$_kdeplasma_addons_version.tar.gz"
     )
     cmake "${cmake_options[@]}"
     cmake --build build

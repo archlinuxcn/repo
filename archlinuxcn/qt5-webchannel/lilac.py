@@ -2,7 +2,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build('qt5-webchannel', maintainers=['arojas'])
+    aur_pre_build('qt5-webchannel', maintainers=['arojas', 'zen'])
 
     for line in edit_file('PKGBUILD'):
 

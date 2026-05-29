@@ -4,7 +4,7 @@
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
 _system="20.0-20260403"
-_vendor="20.0-20260403"
+_vendor="20.0-20260428"
 
 _system_x86="20.0-20260403"
 _vendor_x86="20.0-20260403"
@@ -60,7 +60,7 @@ package() {
 }
 
 sha256sums_x86_64=('811ab2dd7ad1b0b4964bddf020fa450275ea1af2d5b0ac10d5ceced0ac1908a3'
-                   '24cc7e0d9e28b4ff32b4f097f2fc816a4552ac2070b2422afb28d39ac78d426b')
+                   'cba35433ffca73ed349e096b1daec495b3204e01c0e541c4203671e6d648e874')
 sha256sums_i686=('2f1f8d96bc43b7c2ad0718c893c9d019e27e481c90316b9aefd50adbb7bf16cb'
                  '03f1dfc41b0f37471843c1f2ecb72bc635e8ddf6ecd80b2c41ec6ef8ebe303a7')
 sha256sums_armv7h=('cff0ccc2fbaf875bb06501c507dfc90f8b5a26aabb0e677ca48e754b914c3309'

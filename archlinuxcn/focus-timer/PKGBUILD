@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=focus-timer
-pkgver=1.1.1
+pkgver=1.1.2
 pkgrel=1
 pkgdesc='A time management utility for GNOME based on the pomodoro technique!'
 arch=('i686' 'x86_64')
@@ -29,7 +29,7 @@ depends=(
 optdepends=('gnome-shell-extension-focus-timer: GNOME Shell integration')
 makedepends=('meson' 'vala' 'gobject-introspection')
 source=("$pkgname-$pkgver.tar.gz::${url}/archive/$pkgver.tar.gz")
-sha256sums=('53acb5d33010d80054293738e983716e1326166efc720dafc3dba1d1a2d0fce3')
+sha256sums=('726ae7e87ba7b488c7fcb472a6f95469ccae3a32bfbfe15954a68de6d35f5977')
 
 prepare() {
     cd "$srcdir/FocusTimer-$pkgver"

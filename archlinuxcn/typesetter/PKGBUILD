@@ -5,12 +5,12 @@ pkgdesc="A minimalist, local-first Typst editor."
 url="https://codeberg.org/haydn/typesetter"
 license=("GPL-3.0-or-later")
 arch=("x86_64")
-pkgver=0.13.1
+pkgver=0.13.2
 pkgrel=1
 makedepends=("rust" "cargo" "git" "blueprint-compiler" "meson" "libvirt" "libvirt-glib" "blueprint-compiler")
 depends=(libadwaita gtk4 hicolor-icon-theme dconf gcc-libs glib2 glibc gtksourceview5 libspelling pango gdk-pixbuf2 openssl cairo)
 source=("source::git+https://codeberg.org/haydn/typesetter.git#tag=v${pkgver}")
-sha256sums=('5ab6c24cb8f3e6448240a51d422e79097c33e78fc9ded72f3e00b79df37b1feb')
+sha256sums=('cfaf1657c7b3bfb2c069cd497cde3431a264bce273fc8b8c261bf14a3e293885')
 options=(!lto)
 
 function prepare() {

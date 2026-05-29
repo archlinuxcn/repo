@@ -1,0 +1,37 @@
+# Maintainer: Jonathan Grotelüschen <tippfehlr@archlinux.org>
+
+pkgname=ocx
+pkgver=2.0.11
+pkgrel=2
+pkgdesc="OpenCode extension manager with portable, isolated profiles. Your setup, anywhere."
+arch=(any)
+url="https://github.com/kdcokenny/ocx"
+license=(MIT)
+depends=(bun)
+makedepends=(git)
+source=("git+$url#tag=v$pkgver")
+sha256sums=('e81a781f06da0bc62c700e047b64638292efd953dd7a3aa0bb6e73ec4da210d1')
+
+prepare() {
+	cd $pkgname
+	bun install --frozen-lockfile
+}
+
+build() {
+	cd $pkgname/packages/cli
+	bun run build
+}
+
+check() {
+	cd $pkgname
+	bun run check
+	bun run test
+}
+
+package() {
+	cd $pkgname
+	install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
+
+	cd packages/cli
+	install -Dm755 dist/index.js "$pkgdir/usr/bin/ocx"
+}

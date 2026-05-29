@@ -2,7 +2,7 @@
 
 _pkgname=xone
 pkgname=xone-dkms-git
-pkgver=0.5.7.r9.gf2aa9fe
+pkgver=0.5.8.r0.gf2aa9fe
 pkgrel=1
 pkgdesc='Modern Linux driver for Xbox One and Xbox Series X|S controllers'
 arch=('x86_64')
@@ -34,6 +34,6 @@ package() {
   cp -r ${srcdir}/$_pkgname/* "${pkgdir}/usr/src/${_pkgname}-${pkgver}"
 
   echo "* Blacklisting xpad module..."
-  install -D -m 644 install/modprobe.conf "${pkgdir}/etc/modprobe.d/xone-blacklist.conf"
+  install -D -m 644 install/modprobe.conf "${pkgdir}/usr/lib/modprobe.d/xone-blacklist.conf"
 }
 

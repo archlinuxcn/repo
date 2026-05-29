@@ -64,7 +64,7 @@ pkgname=(
 #   'google-cloud-cli-component-kubectl'
 #   'google-cloud-cli-component-gsutil'
 # )
-pkgver=569.0.0
+pkgver=570.0.0
 pkgrel=1
 pkgdesc="A core set of command-line tools for the Google Cloud Platform. Includes only gcloud core (with beta and alpha commands), gcloud-crc32c and man pages"
 url="https://cloud.google.com/cli/"
@@ -86,8 +86,8 @@ source_aarch64=("$pkgbase-$pkgver.orig_aarch64.tar.gz::https://dl.google.com/dl/
 
 sha256sums=('6e88b535c020b0f28c986fdb66918f8c07e4d337e813b77ec2068068f03457f8'
             '6ac95bcc5afa06e9c1e3bd402ecbe1a2092b963d70a8f314215dd4be27e16fc6')
-sha256sums_x86_64=('25f7d77234e765ce4d73fa197e1785002e42f94253736fb67b8295d2ab6f5330')
-sha256sums_aarch64=('4a3a2a4a311366135614e129cb665df915cba4c48f49e5a77438f2ed17c5026d')
+sha256sums_x86_64=('f0999f96710708d4181bd091b4768b8692e8c4e2e11e51870ee005096e24bb86')
+sha256sums_aarch64=('3415f33e4ebead046b3c8be79dad23ad20d69475bc45b34fa746c7ea25b4ad5f')
 
 prepare() {
   cd "$_extracted_name"
@@ -95,9 +95,9 @@ prepare() {
   if [ "$_package_bundled_python" = false ]; then
     # relax forced 'core' dependency on bundled-python3-unix
     sed -i '/bundled-python3-unix/d' .install/core*.snapshot.json
-    if ls .install/bundled-python3-* 1> /dev/null 2>&1; then
+    if ls .install/bundled-python3-* 1>/dev/null 2>&1; then
       mkdir -p "$srcdir/bundledpython/.install"
-      mv platform/bundledpythonunix     $srcdir/bundledpython/
+      mv platform/bundledpythonunix $srcdir/bundledpython/
       mv .install/bundled-python3-unix* $srcdir/bundledpython/.install/
     fi
   fi
@@ -114,7 +114,7 @@ package_google-cloud-cli() {
     'google-cloud-cli-bq: BigQuery Command Line Tool'
     'google-cloud-cli-gsutil: Cloud Storage Command Line Tool. Not the recommended CLI for Cloud Storage')
   install=$pkgbase.install
-  backup=( 'etc/profile.d/google-cloud-cli.sh' )
+  backup=('etc/profile.d/google-cloud-cli.sh')
 
   sdir="${srcdir}/${_extracted_name}"
   ddir="${pkgdir}/opt/${pkgbase}"
@@ -131,23 +131,24 @@ package_google-cloud-cli() {
 
   # remove components
   rm -rf "$ddir/platform/gsutil"
-  rm -f  "$ddir/.install/gsutil"*
-  rm -f  "$ddir/bin/gsutil"
-  rm -f  "$ddir/data/cli/gsutil.json"
+  rm -f "$ddir/.install/gsutil"*
+  rm -f "$ddir/bin/gsutil"
+  rm -f "$ddir/data/cli/gsutil.json"
 
   rm -rf "$ddir/platform/bq"
-  rm -f  "$ddir/.install/bq"*
-  rm -f  "$ddir/bin/bq"
-  rm -f  "$ddir/data/cli/bq.json"
+  rm -f "$ddir/.install/bq"*
+  rm -f "$ddir/bin/bq"
+  rm -f "$ddir/data/cli/bq.json"
 
   install -D -m 0644 "${srcdir}/${source[0]}" \
     "${pkgdir}/etc/profile.d/google-cloud-cli.sh"
 
   if [ "$_force_budled_python" = true ]; then
-    { echo "export CLOUDSDK_PYTHON=${_bundled_py_bin}"
+    {
+      echo "export CLOUDSDK_PYTHON=${_bundled_py_bin}"
       echo "export CLOUDSDK_GSUTIL_PYTHON=${_bundled_py_bin}"
       echo "export CLOUDSDK_BQ_PYTHON=${_bundled_py_bin}"
-    } >> "${pkgdir}/etc/profile.d/google-cloud-cli.sh"
+    } >>"${pkgdir}/etc/profile.d/google-cloud-cli.sh"
   fi
 
   ln -rsT "${ddir}/completion.bash.inc" \
@@ -160,10 +161,9 @@ package_google-cloud-cli() {
 
   install -d -m 0755 "${pkgdir}/usr/bin"
   for bin in gcloud \
-             gcloud-crc32c \
-             docker-credential-gcloud \
-             git-credential-gcloud.sh \
-             ; do
+    gcloud-crc32c \
+    docker-credential-gcloud \
+    git-credential-gcloud.sh; do
     ln -rsT "${ddir}/bin/${bin}" \
       "${pkgdir}/usr/bin/${bin}"
   done
@@ -184,12 +184,12 @@ _package_helper() {
   ddir="${pkgdir}/opt/${pkgbase}"
   install -d -m 0755 "${ddir}/"{bin,.install,platform}
   install -d -m 0755 "${pkgdir}/usr/bin"
-  cp -r              "${sdir}/platform/${c}"         "${ddir}/platform/"
-  install -D -m 0644 "${sdir}/.install/${c}"*     -t "${ddir}/.install"
-  install -D -m 0755 "${sdir}/bin/${c}"              "${ddir}/bin/${c}"
+  cp -r "${sdir}/platform/${c}" "${ddir}/platform/"
+  install -D -m 0644 "${sdir}/.install/${c}"* -t "${ddir}/.install"
+  install -D -m 0755 "${sdir}/bin/${c}" "${ddir}/bin/${c}"
   install -D -m 0644 "${sdir}/data/cli/${c}.json" -t "${ddir}/data/cli"
   ln -rsT "${ddir}/bin/${c}" \
-        "${pkgdir}/usr/bin/${c}"
+    "${pkgdir}/usr/bin/${c}"
 }
 
 package_google-cloud-cli-bq() {
@@ -209,9 +209,9 @@ package_google-cloud-cli-gsutil() {
   conflicts=('gsutil')
   #depends+=('google-cloud-cli-bundled-python3-unix')
   optdepends=("python-crcmod: verify the integrity of GCS object contents"
-  "google-cloud-cli-bundled-python3-unix: bundled python to use if system python is not compatible")
+    "google-cloud-cli-bundled-python3-unix: bundled python to use if system python is not compatible")
   c=${pkgname#google-cloud-cli-} # component
-  backup=( "etc/profile.d/google-cloud-cli-gsutil.sh" )
+  backup=("etc/profile.d/google-cloud-cli-gsutil.sh")
   _package_helper
 
   # _bundled_py_bin="${ddir:${#pkgdir}}/platform/bundledpythonunix/bin/python3"
@@ -227,7 +227,7 @@ package_google-cloud-cli-bundled-python3-unix() {
   c=${pkgname#google-cloud-cli-} # component
   install -d -m 0755 "${ddir}"/{.install,platform} && cd "${ddir}"
   mv "$srcdir"/bundledpython/bundledpythonunix platform/
-  mv "$srcdir"/bundledpython/.install/"${c}"*  .install/
+  mv "$srcdir"/bundledpython/.install/"${c}"* .install/
 }
 
 package_google-cloud-cli-component-gke-gcloud-auth-plugin() {
@@ -241,16 +241,16 @@ package_google-cloud-cli-component-gke-gcloud-auth-plugin() {
   cd "$_extracted_name"
 
   # allow updater for component
-  cat <<< "$(jq '.disable_updater = false' < lib/googlecloudsdk/core/config.json)" > lib/googlecloudsdk/core/config.json
+  cat <<<"$(jq '.disable_updater = false' <lib/googlecloudsdk/core/config.json)" >lib/googlecloudsdk/core/config.json
 
-  bin/gcloud -q components install "${c}" > /dev/null 2>&1
+  bin/gcloud -q components install "${c}" >/dev/null 2>&1
 
-  mv .install/"${c}"*  "${ddir}/.install"
-  mv bin/"${c}"*       "${ddir}/bin"
+  mv .install/"${c}"* "${ddir}/.install"
+  mv bin/"${c}"* "${ddir}/bin"
   ln -rsT "${ddir}/bin/${c}" \
-        "${pkgdir}/usr/bin/${c}"
+    "${pkgdir}/usr/bin/${c}"
 
   # turn off updater
-  cat <<< "$(jq '.disable_updater = true' < lib/googlecloudsdk/core/config.json)" > lib/googlecloudsdk/core/config.json
+  cat <<<"$(jq '.disable_updater = true' <lib/googlecloudsdk/core/config.json)" >lib/googlecloudsdk/core/config.json
 
 }

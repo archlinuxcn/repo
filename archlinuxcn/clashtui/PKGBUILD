@@ -6,12 +6,12 @@ pkgdesc="Mihomo (Clash.Meta) TUI Client"
 url="https://github.com/JohanChane/clashtui"
 license=("MIT")
 arch=("x86_64" "aarch64")
-pkgver=0.2.3
-pkgrel=3
+pkgver=0.3.1
+pkgrel=1
 makedepends=("rust" "git")
 depends=("gcc-libs" "glibc" "mihomo")
 source=("source::git+https://github.com/JohanChane/clashtui.git#tag=v${pkgver}")
-md5sums=('2c9657e0241ece3c94a5f1ab723660f0')
+md5sums=('e5faf2caa12fadb30baa1c2a148bf3f9')
 provides=("clashtui")
 options=(!lto)
 

@@ -2,13 +2,13 @@
 
 pkgname=beancount
 pkgdesc='Double-Entry Accounting from Text Files'
-pkgver=3.2.0
-pkgrel=2
+pkgver=3.2.3
+pkgrel=1
 arch=('i686' 'x86_64' 'armv7h')
 url="http://furius.ca/beancount/"
 license=('GPL')
 source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-b2sums=('4f6caa0b68c84e3e90556569eda3ef47005db326f9e01db31338a0630dd8a7fb844d496bceaaee757b45779c20e7561427cc52c35b74542d71c6209098b493f3')
+b2sums=('e4d1cc71bd6b57962b3c97c93d52f55ce120683e1ee4d8f44aeb394c437eb1392062f1973fcb1b08272c4ff22ef320865eb4022299a98c23b696247f4d1b1655')
 depends=("python" "python-click" "python-dateutil" "python-regex")
 conflicts=("beancount-hg")
 makedepends=(python-setuptools)
@@ -16,7 +16,9 @@ makedepends=("python-build" "python-installer" "python-wheel" "meson-python")
 
 build() {
   cd "${pkgname}-${pkgver}"
-  python -m build --wheel --no-isolation
+  # Upstream lists PyPI's flex-bin/bison-bin wrappers as PEP 517 build
+  # requirements; Arch uses flex and bison from base-devel instead.
+  python -m build --wheel --no-isolation --skip-dependency-check
 }
 
 package() {

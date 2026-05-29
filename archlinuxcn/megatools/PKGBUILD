@@ -4,7 +4,7 @@
 # Contributor: Ondrej Jirman <megous@megous.com>
 
 pkgname=megatools
-pkgver=1.11.5
+pkgver=1.12.0
 pkgrel=1
 pkgdesc='CLI for MEGA'
 arch=(x86_64)
@@ -13,7 +13,7 @@ license=(GPL-2.0-only)
 depends=(curl glib2)
 makedepends=(asciidoc docbook2x git meson)
 source=(git+https://xff.cz/git/megatools?signed#tag=${pkgver})
-sha256sums=('556e28ac708ac2192d5c6c9c8479c802193afc2d43c6d76b5590b459e0821482')
+sha256sums=('cc141f1b501283ea3bfc1955acad09142649565809e3db1ddf3c48f64960d961')
 validpgpkeys=(EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED) # Ondrej Jirman <megous@megous.com>
 
 build() {
