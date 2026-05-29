@@ -2,7 +2,7 @@
 
 pkgname=custota-tool
 _srcname=Custota
-pkgver=5.23
+pkgver=6.1
 pkgrel=1
 pkgdesc="Android A/B OTA updater app for custom OTA servers"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ url="https://github.com/chenxiaolong/${_srcname}"
 license=('GPL-3.0-or-later')
 makedepends=('git' 'cargo')
 source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('4ee90921b717737d77a7204c2375a09726c3c655cf309ff0e8b4108fe7cea37c')
+sha256sums=('e7b7b527f769e55ca51d9a6088163a49b77ba8a3399171f1dd822595de8118a9')
 
 prepare() {
 	cd "${_srcname}/${pkgname}/"
