@@ -7,8 +7,8 @@ arch=('i686' 'x86_64')
 url='https://cmusphinx.github.io'
 license=('BSD-2-Clause' 'BSD-3-Clause' 'MIT')
 depends=('glibc' libpulse)
-makedepends=('cmake' 'cython' 'gst-plugins-base-libs' 'ninja' 'python-build' 'python-installer' 'python-scikit-build-core' 'python-sounddevice')
-source=("source::https://github.com/cmusphinx/pocketsphinx.git#tag=v${pkgver}")
+makedepends=(git 'cmake' 'cython' 'gst-plugins-base-libs' 'ninja' 'python-build' 'python-installer' 'python-scikit-build-core' 'python-sounddevice')
+source=("source::git+https://github.com/cmusphinx/pocketsphinx.git#tag=v${pkgver}")
 sha256sums=('6ec6c28a84574abc7a74ceaf8fb914cb674a9a5db3e6c679d691a1a152863bbd')
 
 build() {
