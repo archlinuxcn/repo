@@ -1,0 +1,51 @@
+--- a/code/nusmv/addons_core/compass/sigref/sigrefWrite.c
++++ b/code/nusmv/addons_core/compass/sigref/sigrefWrite.c
+@@ -534,7 +534,7 @@
+ 
+   DDMgr_ptr dd = BddEnc_get_dd_manager(enc);
+ 
+-  fprintf(file, SIGREF_HEADER);
++  fprintf(file, "%s", SIGREF_HEADER);
+   fprintf(file, "\n<%s ", MODEL_TAG);
+   fprintf(file, MODEL_FM, MODEL_TYPE);
+   fprintf(file, ">\n");
+--- a/code/nusmv/core/cinit/cinitData.c
++++ b/code/nusmv/core/cinit/cinitData.c
+@@ -466,7 +466,7 @@
+     else {
+       const char* preps_fmt = "Warning: there are no available preprocessors";
+       preps_tmp = ALLOC(char, strlen(preps_fmt) + 1);
+-      sprintf(preps_tmp, preps_fmt);
++      sprintf(preps_tmp, "%s", preps_fmt);
+     }
+ 
+     tmp = ALLOC(char, strlen(fmt) + strlen(preps_tmp) + 1);
+--- a/code/nusmv/core/hrc/dumpers/HrcDumper_private.h
++++ b/code/nusmv/core/hrc/dumpers/HrcDumper_private.h
+@@ -121,13 +121,13 @@
+ #define _HRC_DUMP_STR(x)          \
+   {                               \
+     hrc_dumper_dump_indent(self); \
+-    fprintf(self->fout, x);       \
++    fprintf(self->fout, "%s", x);       \
+   }
+ 
+ #define _HRC_DUMP_STR_NL(x)                                           \
+   {                                                                   \
+     hrc_dumper_dump_indent(self);                                     \
+-    fprintf(self->fout, x);                                           \
++    fprintf(self->fout, "%s", x);                                           \
+     hrc_dumper_nl(self);                                              \
+   }
+ 
+--- a/code/nusmv/core/hrc/dumpers/HrcDumperXml_private.h
++++ b/code/nusmv/core/hrc/dumpers/HrcDumperXml_private.h
+@@ -92,7 +92,7 @@
+ #define _HRC_DUMP_STR_NL(x)                                           \
+   {                                                                   \
+     hrc_dumper_dump_indent(self);                                     \
+-    fprintf(self->fout, x);                                           \
++    fprintf(self->fout, "%s", x);                                           \
+     if (self->use_indentation) {                                      \
+       hrc_dumper_nl(self);                                            \
+     }                                                                 \
