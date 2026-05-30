@@ -1,0 +1,53 @@
+# Maintainer: Yurzi <yurzi@foxmail.com>
+
+pkgname=nusmv
+_pkgname=NuSMV
+pkgver=2.7.1
+pkgrel=2
+pkgdesc="A new symbolic model checker"
+arch=('i686' 'x86_64')
+url="http://nusmv.fbk.eu/index.html"
+license=('LGPL2.1')
+depends=('libxml2' 'libedit')
+makedepends=('python' 'flex' 'bison' 'meson')
+optdepends=('perl: for scripts in /usr/share/nusmv/contrib/')
+source=("http://nusmv.fbk.eu/distrib/${pkgver}/${_pkgname}-${pkgver}.tar.xz"
+        '01-fix-format-security.patch'
+        '02-fix-function-pointer-casts.patch'
+        '03-fix-cudd-subproject-patch.patch')
+sha256sums=('f1e11931f71d98aa9b84181eed67db584d7111100c2e967c904a31c15f823f60'
+            'f5dd296a54dd3c7467fc2a2e66bd678469fffed5f21e3b00fddf1360548388c3'
+            'ab600a1082e70ad86de870297610f4c14e80b238c4289d793a6e4a52dc8e6eaa'
+            '464e951de8fbad1251bae7d39339fa46b29b5242e0f7d1df64da6190f92fc027')
+
+prepare() {
+	cd "$srcdir/$_pkgname-$pkgver/"
+
+	# Fix format-security "error: format not a string literal"
+	patch -Np1 -i "$srcdir/01-fix-format-security.patch"
+	# Fix mismatched function-pointer cast prototypes
+	patch -Np1 -i "$srcdir/02-fix-function-pointer-casts.patch"
+	# Fix the same casts inside the bundled cudd subproject patch
+	patch -Np1 -i "$srcdir/03-fix-cudd-subproject-patch.patch"
+}
+
+build() {
+	cd "$srcdir/$_pkgname-$pkgver/"
+
+	meson setup build
+	meson compile -C build
+}
+
+package() {
+	cd "$srcdir/$_pkgname-$pkgver/"
+
+	meson install --destdir "$pkgdir" -C build
+	find "$pkgdir" -type f -name "*.a" -print0 | xargs -0 rm
+	for d in bin share include lib; do
+		mv "$pkgdir/usr/local/$d" "$pkgdir/usr/"
+	done
+	rmdir "$pkgdir/usr/local"
+
+	# Lowercase symlink
+	ln -s "/usr/bin/NuSMV" "$pkgdir/usr/bin/$pkgname"
+}

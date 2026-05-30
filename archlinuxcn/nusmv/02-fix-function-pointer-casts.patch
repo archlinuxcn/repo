@@ -1,0 +1,64 @@
+--- a/code/nusmv/core/dag/dagManager.c
++++ b/code/nusmv/core/dag/dagManager.c
+@@ -154,7 +154,7 @@
+ 
+   /* Free vertices table and vertices list. */
+   st_free_table(dagManager -> vTable);
+-  lsDestroy(dagManager -> gcList, (void (*)()) NULL);
++  lsDestroy(dagManager -> gcList, (void (*)(void *)) NULL);
+ 
+   FREE(dagManager -> dag_DfsClean);
+ 
+@@ -225,10 +225,10 @@
+   st_delete(v -> dag -> vTable, (char**) &v, (char**) &vTemp);
+ 
+   /* If deallocating functions are provided, use them on data and gRef. */
+-  if (freeData != (void (*)()) NULL) {
++  if (freeData != (void (*)(void *)) NULL) {
+     (*freeData)(v -> data);
+   }
+-  if (freeGen != (void (*)()) NULL) {
++  if (freeGen != (void (*)(void *)) NULL) {
+     /* here was freeData, very likely a bug */
+     (*freeGen)(v -> gRef);
+   }
+--- a/code/nusmv/core/dd/dd.c
++++ b/code/nusmv/core/dd/dd.c
+@@ -1089,7 +1089,7 @@
+   DdNode * result;
+ 
+   result = Cudd_addApply(dd->dd,
+-                         (CUDD_VALUE_TYPE (*)(DdManager*, DD_AOP, DdNode*, DdNode*))op,
++                         (CUDD_VALUE_TYPE (*)())op,
+                          (DdNode *)f,
+                          (DdNode *)g,
+                          ENV_OBJECT(dd)->environment);
+@@ -1108,7 +1108,7 @@
+   add_ptr _true = add_true(dd);
+   DdNode * result;
+ 
+-  result = Cudd_addApply(dd->dd, (CUDD_VALUE_TYPE (*)(DdManager*, DD_AOP, DdNode*, DdNode*))op, (DdNode *)f, (DdNode *) _true, env);
++  result = Cudd_addApply(dd->dd, (CUDD_VALUE_TYPE (*)())op, (DdNode *)f, (DdNode *) _true, env);
+   common_error(errmgr, result, "add_monadic_apply: result = NULL");
+   Cudd_Ref(result);
+ 
+@@ -1127,7 +1127,7 @@
+   cube = Cudd_BddToAdd(dd->dd, (DdNode *)b);
+   common_error(errmgr, cube, "add_exist_abstract: cube = NULL");
+ 
+-  result = Cudd_addAbstract(dd->dd, (CUDD_VALUE_TYPE (*)(CUDD_VALUE_TYPE))node_plus, (DdNode *)a, (DdNode *)cube,
++  result = Cudd_addAbstract(dd->dd, (CUDD_VALUE_TYPE (*)())node_plus, (DdNode *)a, (DdNode *)cube,
+                             ENV_OBJECT(dd)->environment);
+   common_error(errmgr, result, "add_exist_abstract: result = NULL");
+ 
+--- a/code/nusmv/shell/cmd/cmd.c
++++ b/code/nusmv/shell/cmd/cmd.c
+@@ -175,7 +175,7 @@
+     }
+   }
+   array_free(all_cmd);
+-  avl_free_table(white, (void (*)()) 0, (void (*)()) 0);
++  avl_free_table(white, (void (*)(char *)) 0, (void (*)(char *)) 0);
+ }
+ 
+ boolean Cmd_CommandDefined(NuSMVEnv_ptr env, const char* name)
