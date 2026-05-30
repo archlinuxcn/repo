@@ -1,0 +1,95 @@
+From 3b5d3dd4e34874755f95c6a6d6967891dcb3b055 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 29 May 2026 19:43:41 -0400
+Subject: [PATCH 11/14] Include fixes for LLVM 22
+
+llvm/Analysis/ScalarEvolution.h needs to be explicitly included now and it exists pre-LLVM 5.0 so we can just include it unconditionally
+---
+ src/aotcompile.cpp    | 6 +++++-
+ src/jitlayers.h       | 9 +++++++--
+ src/llvm-simdloop.cpp | 1 +
+ src/pipeline.cpp      | 6 +++++-
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/src/aotcompile.cpp b/src/aotcompile.cpp
+index c1ee4d5cc4..5bdd4afd08 100644
+--- a/src/aotcompile.cpp
++++ b/src/aotcompile.cpp
+@@ -22,7 +22,11 @@
+ #include <llvm/IR/Verifier.h>
+ #include <llvm/Transforms/Utils/ModuleUtils.h>
+ #include <llvm/Passes/PassBuilder.h>
+-#include <llvm/Passes/PassPlugin.h>
++#if JL_LLVM_VERSION >= 220000
++#  include <llvm/Plugins/PassPlugin.h>
++#else
++#  include <llvm/Passes/PassPlugin.h>
++#endif
+ #if defined(USE_POLLY)
+ #include <polly/RegisterPasses.h>
+ #include <polly/LinkAllPasses.h>
+diff --git a/src/jitlayers.h b/src/jitlayers.h
+index 41ca7ec473..593fcdfdfa 100644
+--- a/src/jitlayers.h
++++ b/src/jitlayers.h
+@@ -1,5 +1,7 @@
+ // This file is a part of Julia. License is MIT: https://julialang.org/license
+ 
++#include "llvm-version.h"
++
+ #include "llvm/ADT/SmallSet.h"
+ #include <llvm/ADT/MapVector.h>
+ #include <llvm/ADT/StringSet.h>
+@@ -19,7 +21,11 @@
+ #include <llvm/ExecutionEngine/JITEventListener.h>
+ 
+ #include <llvm/Passes/PassBuilder.h>
+-#include <llvm/Passes/PassPlugin.h>
++#if JL_LLVM_VERSION >= 220000
++#  include <llvm/Plugins/PassPlugin.h>
++#else
++#  include <llvm/Passes/PassPlugin.h>
++#endif
+ #include <llvm/Passes/StandardInstrumentations.h>
+ 
+ #include <llvm/Target/TargetMachine.h>
+@@ -28,7 +34,6 @@
+ #include "julia_internal.h"
+ #include "platform.h"
+ #include "llvm-codegen-shared.h"
+-#include "llvm-version.h"
+ #include <stack>
+ #include <queue>
+ #include <tuple>
+diff --git a/src/llvm-simdloop.cpp b/src/llvm-simdloop.cpp
+index 3faa9d9728..565d1bb6e3 100644
+--- a/src/llvm-simdloop.cpp
++++ b/src/llvm-simdloop.cpp
+@@ -21,6 +21,7 @@
+ #include <llvm/Analysis/LoopPass.h>
+ #include <llvm/Analysis/OptimizationRemarkEmitter.h>
+ #include <llvm/Analysis/MemorySSA.h>
++#include <llvm/Analysis/ScalarEvolution.h>
+ #include <llvm/IR/Instructions.h>
+ #include <llvm/IR/Metadata.h>
+ #include <llvm/IR/Verifier.h>
+diff --git a/src/pipeline.cpp b/src/pipeline.cpp
+index 17324b2296..d52ce1dc47 100644
+--- a/src/pipeline.cpp
++++ b/src/pipeline.cpp
+@@ -24,7 +24,11 @@
+ #include <llvm/IR/Verifier.h>
+ #include <llvm/Transforms/IPO/InferFunctionAttrs.h>
+ #include <llvm/Passes/PassBuilder.h>
+-#include <llvm/Passes/PassPlugin.h>
++#if JL_LLVM_VERSION >= 220000
++#  include <llvm/Plugins/PassPlugin.h>
++#else
++#  include <llvm/Passes/PassPlugin.h>
++#endif
+ 
+ // NewPM needs to manually include all the pass headers
+ #include <llvm/Transforms/AggressiveInstCombine/AggressiveInstCombine.h>
+-- 
+2.53.0
+

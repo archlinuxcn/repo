@@ -1,0 +1,48 @@
+From 04028b1b46b498dbebdafd0167a7451f8e617f22 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 29 May 2026 19:37:57 -0400
+Subject: [PATCH 10/14] Return type changes in LLVM 22
+
+---
+ src/codegen.cpp   | 2 +-
+ src/jitlayers.cpp | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index 21ac366145..b460154ac4 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -10515,7 +10515,7 @@ extern "C" void jl_init_llvm(void)
+ #endif
+ 
+     // Parse command line flags after initialization
+-    StringMap<cl::Option*> &llvmopts = cl::getRegisteredOptions();
++    auto &llvmopts = cl::getRegisteredOptions();
+ 
+     // Register time-trace options if not already present (e.g., when loaded as plugin by opt)
+     if (!llvmopts.lookup("time-trace")) {
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index a308d59fde..982d2b0b75 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -1048,7 +1048,7 @@ public:
+ };
+ #else
+ namespace JLEHFrames {
+-    static orc::shared::CWrapperFunctionResult
++    static auto
+     registerEHFrameSectionAllocAction(const char *ArgData, size_t ArgSize) {
+         using namespace llvm::orc::shared;
+         return WrapperFunction<SPSError(SPSExecutorAddrRange)>::handle(
+@@ -1056,7 +1056,7 @@ namespace JLEHFrames {
+             .release();
+     }
+ 
+-    static orc::shared::CWrapperFunctionResult
++    static auto
+     deregisterEHFrameSectionAllocAction(const char *ArgData, size_t ArgSize) {
+         using namespace llvm::orc::shared;
+         return WrapperFunction<SPSError(SPSExecutorAddrRange)>::handle(
+-- 
+2.53.0
+

@@ -1,0 +1,30 @@
+From 78161ed95160491151a56a0c201d40badb755060 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 29 May 2026 19:52:45 -0400
+Subject: [PATCH 13/14] New argument for cl::ParseCommandLineOptions
+
+---
+ src/codegen.cpp | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index b460154ac4..bec831a199 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -10531,7 +10531,12 @@ extern "C" void jl_init_llvm(void)
+     }
+ 
+     const char *const argv[1] = {"julia"};
+-    cl::ParseCommandLineOptions(1, argv, "", nullptr, "JULIA_LLVM_ARGS");
++    cl::ParseCommandLineOptions(1, argv, "",
++                                /*Errs=*/nullptr,
++#if JL_LLVM_VERSION >= 220000
++                                /*VFS=*/nullptr,
++#endif
++                                "JULIA_LLVM_ARGS");
+ 
+     // Set preferred non-default options
+     cl::Option *clopt;
+-- 
+2.53.0
+

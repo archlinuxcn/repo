@@ -1,0 +1,60 @@
+From 4aa529e73e76019dfe29599c23d093636bedd1a1 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 29 May 2026 20:09:35 -0400
+Subject: [PATCH 14/14] Fix debug info registration plugins
+
+---
+ src/jitlayers.cpp | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index 982d2b0b75..71335b85b9 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -13,7 +13,11 @@
+ #include <llvm/Analysis/TargetTransformInfo.h>
+ #include <llvm/ExecutionEngine/Orc/CompileUtils.h>
+ #include <llvm/ExecutionEngine/Orc/ExecutionUtils.h>
+-#include <llvm/ExecutionEngine/Orc/DebugObjectManagerPlugin.h>
++#if JL_LLVM_VERSION >= 220000
++#  include <llvm/ExecutionEngine/Orc/Debugging/ELFDebugObjectPlugin.h>
++#else
++#  include <llvm/ExecutionEngine/Orc/DebugObjectManagerPlugin.h>
++#endif
+ #if JL_LLVM_VERSION >= 210000
+ #  include <llvm/ExecutionEngine/Orc/SelfExecutorProcessControl.h>
+ #endif
+@@ -2112,9 +2116,11 @@ void JuliaOJIT::enableJITDebuggingSupport()
+ {
+     orc::SymbolMap GDBFunctions;
+     addAbsoluteToMap(GDBFunctions,llvm_orc_registerJITLoaderGDBAllocAction);
++#if JL_LLVM_VERSION < 220000
+     auto registerJITLoaderGDBWrapper = addAbsoluteToMap(GDBFunctions,llvm_orc_registerJITLoaderGDBWrapper);
+-    cantFail(JD.define(orc::absoluteSymbols(GDBFunctions)));
+     (void)registerJITLoaderGDBWrapper;
++#endif
++    cantFail(JD.define(orc::absoluteSymbols(GDBFunctions)));
+     if (TM->getTargetTriple().isOSBinFormatMachO()) {
+         auto RegisterSym = cantFail(
+             safelookup(ES, {&JD}, ES.intern("_llvm_orc_registerJITLoaderGDBAllocAction")));
+@@ -2123,8 +2129,16 @@ void JuliaOJIT::enableJITDebuggingSupport()
+     }
+ #ifndef _COMPILER_ASAN_ENABLED_ // TODO: Fix duplicated sections spam #51794
+     else if (TM->getTargetTriple().isOSBinFormatELF()) {
++#if JL_LLVM_VERSION < 220000
+         //EPCDebugObjectRegistrar doesn't take a JITDylib, so we have to directly provide the call address
+-        ObjectLayer.addPlugin(std::make_unique<orc::DebugObjectManagerPlugin>(ES, std::make_unique<orc::EPCDebugObjectRegistrar>(ES, registerJITLoaderGDBWrapper)));
++        auto plugin = std::make_unique<orc::DebugObjectManagerPlugin>(ES, std::make_unique<orc::EPCDebugObjectRegistrar>(ES, registerJITLoaderGDBWrapper));
++#else
++        Error Err = Error::success();
++        auto plugin = std::make_unique<orc::ELFDebugObjectPlugin>(
++            ES, /*RequireDebugSections=*/true, /*AutoRegisterCode=*/true, Err);
++        cantFail(Err);
++#endif
++        ObjectLayer.addPlugin(std::move(plugin));
+     }
+ #endif
+ }
+-- 
+2.53.0
+
