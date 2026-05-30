@@ -7,7 +7,7 @@ url="https://github.com/mwilliamson/funk"
 license=(BSD-2-Clause)
 makedepends+=(git 'python-build' 'python-installer' 'python-setuptools' 'python-wheel')
 depends=(python-installer python python-precisely)
-source=("$source::https://github.com/mwilliamson/funk#tag=${pkgver}")
+source=("source::git+https://github.com/mwilliamson/funk#tag=${pkgver}")
 sha256sums=('fc33c7731bfbf84a8dff735c88b00de8ac02210f28f70f0e123396d5a23aa737')
 
 build() {
