@@ -1,0 +1,31 @@
+pkgname=python-precisely
+_pkgname=precisely
+pkgver=0.1.9
+pkgrel=3
+pkgdesc="write precise assertions so you only test the behaviour you’re really interested in"
+arch=(any)
+url="https://github.com/mwilliamson/python-precisely"
+license=(BSD-2-Clause)
+depends=(
+  python
+)
+makedepends=(
+  python-build
+  python-setuptools
+  python-installer
+  python-wheel
+)
+depends=(python)
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mwilliamson/python-precisely/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('0a73036e4439ef617ab163d11c27cefa69db45082bcf60181e737d4ffe764b79')
+
+build() {
+  cd "$pkgname-$pkgver"
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}
