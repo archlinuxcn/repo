@@ -1,0 +1,36 @@
+From e1e9d110ec96c77f751114f4e16e0364f4d61d3b Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 29 May 2026 19:47:51 -0400
+Subject: [PATCH 12/14] Remove UseBlockFrequencyInfo argument from
+ createFunctionToLoopPassAdaptor
+
+Remove in LLVM 22 and the default value for this argument has always been false ever since it was added
+
+https://github.com/llvm/llvm-project/commit/df8956442feda0171fda79393778f698eb0385cf
+---
+ src/pipeline.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/pipeline.cpp b/src/pipeline.cpp
+index d52ce1dc47..44df4c9f6a 100644
+--- a/src/pipeline.cpp
++++ b/src/pipeline.cpp
+@@ -541,13 +541,13 @@ static void buildVectorPipeline(FunctionPassManager &FPM, PassBuilder *PB, Optim
+         LPM.addPass(LoopRotatePass());
+         LPM.addPass(LoopIdiomRecognizePass());
+         LPM.addPass(LoopDeletionPass());
+-        FPM.addPass(createFunctionToLoopPassAdaptor(std::move(LPM), /*UseMemorySSA=*/false, /*UseBlockFrequencyInfo=*/false));
++        FPM.addPass(createFunctionToLoopPassAdaptor(std::move(LPM), /*UseMemorySSA=*/false));
+         FPM.addPass(LoopDistributePass());
+         FPM.addPass(InjectTLIMappings());
+         FPM.addPass(LoopVectorizePass());
+         FPM.addPass(LoopLoadEliminationPass());
+         FPM.addPass(SimplifyCFGPass(aggressiveSimplifyCFGOptions()));
+-        FPM.addPass(createFunctionToLoopPassAdaptor(LICMPass(LICMOptions()), /*UseMemorySSA=*/true, /*UseBlockFrequencyInfo=*/false));
++        FPM.addPass(createFunctionToLoopPassAdaptor(LICMPass(LICMOptions()), /*UseMemorySSA=*/true));
+         FPM.addPass(EarlyCSEPass());
+         FPM.addPass(CorrelatedValuePropagationPass());
+         FPM.addPass(InstCombinePass());
+-- 
+2.53.0
+

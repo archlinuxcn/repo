@@ -5,8 +5,8 @@
 # Contributor: ValHue <vhuelamo at gmail dot com>
 
 pkgname=flacon
-pkgver=12.0.0
-pkgrel=4
+pkgver=13.0.1
+pkgrel=1
 pkgdesc="An Audio File Encoder. Extracts audio tracks from an audio CD image to separate tracks."
 arch=('i686' 'x86_64' 'aarch64')
 url="https://${pkgname}.github.io"
@@ -25,7 +25,7 @@ optdepends=('flac: For FLAC support'
 	'wavpack: For WavPack support'
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('78199ff925b7cd0ffeb628d47909ca4172f8ff0d8fd8192bb537e0c012e6f4c6')
+sha256sums=('e275686b0daee87c9e016777cb38ebc88275d0108d07693b17e37bc182e36848')
 
 prepare() {
 	mkdir -p "${pkgname}-${pkgver}/build/"

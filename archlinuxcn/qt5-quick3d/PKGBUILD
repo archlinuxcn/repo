@@ -2,10 +2,10 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=qt5-quick3d
-_basever=5.15.18
-pkgver=5.15.18+kde+r1
+_basever=5.15.19
+pkgver=5.15.19+kde+r1
 pkgrel=1
-_commit=47a325358078b72016081a86be628411df2728a9
+_commit=4e85bd063c726f015dc8afb05834de7a71bf6a1b
 arch=('x86_64')
 url='https://www.qt.io'
 license=('GPL3')
@@ -16,7 +16,7 @@ optdepends=('assimp: assimp import plugin')
 _pkgfqn=${pkgname/5-/}
 source=(kde-$_pkgfqn::git+https://invent.kde.org/qt/qt/$_pkgfqn#commit=$_commit
         qt5-quick3d-assimp-5.1.patch)
-sha256sums=('25d252c34007d0bdb7344bfd971024a7e768750d7945761bc78b8de5afd19846'
+sha256sums=('0174580cc4b0cf3d2b978bb3607f5ab354452ea8ff75dbcf6202dca2326b4077'
             '57a3ac54c46f86d1f99ce20653bb34215cbd65fbd36f7ee802360336e88f268e')
 
 pkgver() {

@@ -2,7 +2,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build('qt5-quick3d', maintainers=['arojas'])
+    aur_pre_build('qt5-quick3d', maintainers=['arojas', 'andreas_baumann'])
 
     for line in edit_file('PKGBUILD'):
 
