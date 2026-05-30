@@ -1,19 +1,19 @@
-From 73ad9c98c66e9549ae51e1d42cb54bda14ae2a4b Mon Sep 17 00:00:00 2001
+From 3ca14fa6b5e834874a9e1293377e8a9b6655efa9 Mon Sep 17 00:00:00 2001
 From: Dee HY <dongfengweixiao@hotmail.com>
 Date: Wed, 8 Apr 2026 21:49:11 +0800
 Subject: [PATCH] use local hotkey_manager_linux
 
 ---
- pubspec.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+ pubspec.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/pubspec.yaml b/pubspec.yaml
-index cca65ac..7fbe2c7 100755
+index 15ac08ea..8cc2e3db 100755
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -82,6 +82,10 @@ dev_dependencies:
- 
-   drift_dev: ^2.29.0
+@@ -99,6 +99,10 @@ dev_dependencies:
+   test: ^1.30.0
+   mocktail: ^1.0.4
  
 +dependency_overrides:
 +  hotkey_manager_linux:
