@@ -9,9 +9,9 @@
 pkgname=python-selenium
 _pkgname="${pkgname#python-}"
 pkgver=4.44.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Python language bindings for Selenium WebDriver"
-arch=(x86_64)
+arch=(x86_64 aarch64)
 url="https://github.com/SeleniumHQ/selenium"
 license=(Apache-2.0)
 depends=(
