@@ -1,4 +1,4 @@
-From 4aa529e73e76019dfe29599c23d093636bedd1a1 Mon Sep 17 00:00:00 2001
+From 07f8fe27b90e38e7c5c2fc9cb0be35855a1cd858 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Fri, 29 May 2026 20:09:35 -0400
 Subject: [PATCH 14/14] Fix debug info registration plugins
@@ -8,7 +8,7 @@ Subject: [PATCH 14/14] Fix debug info registration plugins
  1 file changed, 17 insertions(+), 3 deletions(-)
 
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index 982d2b0b75..71335b85b9 100644
+index 982d2b0b75..f3b56c4df1 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -13,7 +13,11 @@
@@ -49,7 +49,7 @@ index 982d2b0b75..71335b85b9 100644
 +        Error Err = Error::success();
 +        auto plugin = std::make_unique<orc::ELFDebugObjectPlugin>(
 +            ES, /*RequireDebugSections=*/true, /*AutoRegisterCode=*/true, Err);
-+        cantFail(Err);
++        cantFail(std::move(Err));
 +#endif
 +        ObjectLayer.addPlugin(std::move(plugin));
      }
