@@ -49,7 +49,7 @@ build() {
   # fix for static link
   unset CFLAGS CXXFLAGS LDFLAGS
   cd "${pkgname}-${pkgver}"
-  pnpm install --frozen-lockfile
+  pnpm install --frozen-lockfile --ignore-scripts
   pnpm tauri build --no-bundle
 }
 
