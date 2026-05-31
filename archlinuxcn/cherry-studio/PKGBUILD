@@ -2,7 +2,7 @@
 
 pkgname=cherry-studio
 _name="Cherry Studio"
-pkgver=1.9.7
+pkgver=1.9.8
 pkgrel=1
 pkgdesc='Cherry Studio is a desktop client that supports for multiple LLM providers'
 arch=(x86_64)
@@ -24,7 +24,7 @@ depends=("$_electron"
 optdepends=('ollama: Use your local LLM')
 makedepends=('npm' 'pnpm' 'libcrypt.so=1')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-b2sums=('9de3009ee402ee6c23b6f2fa60d3b45704e6c22d5432226c21dbbe55659440a614b59da95b69d7ae93d6d39fd19d47810287a4b9ff4a7b31a3bca8857d2c5c64')
+b2sums=('c2fca81287956f2b326558335753afcebd76ca9309418483e377b8c68e92961043b4c234ac4cc77907ba738ebf0747e4989e7287dd974193a69f6da44d338c84')
 
 prepare() {
     cat >"${pkgname}.desktop" <<EOD
