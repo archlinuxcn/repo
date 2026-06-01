@@ -2,7 +2,7 @@
 # Contributor: Matthias Kurz <m dot kurz at irregular dot at>
 
 pkgname=zotero
-pkgver=9.0.2
+pkgver=9.0.4
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
@@ -10,7 +10,7 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch' 'tar')
-_tag=af805e269892621153714702b950f587a4f88375 # git rev-parse $pkgver
+_tag=7d2a0503a5e9174f5ac344b5f61b7b494aabdc11 # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
@@ -28,7 +28,7 @@ source=("zotero.desktop"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            '87e59f347eb99fa9913301c877fba8b46ba7b65386b08ff3e8c86787939279a4'
+            '5d5af6d013c4d0a141ae6f9f1c8f769ad582742877ae508a1f90749cc87b308f'
             'SKIP'
             'SKIP'
             'SKIP'
