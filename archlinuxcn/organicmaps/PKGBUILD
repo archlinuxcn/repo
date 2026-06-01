@@ -2,23 +2,24 @@
 # Contributor: Aleksej Kovura <aur-b1a3 at mekboy dot ru>
 
 pkgname=organicmaps
-pkgver=2026.05.08_4
-_pkgver=2026.05.08-4-android
-pkgrel=4
+_appid=app.organicmaps.desktop
+pkgver=2026.05.27_11
+_pkgver=2026.05.27-11-android
+pkgrel=1
 pkgdesc="A privacy-focused offline maps & GPS app for hiking, cycling, biking, and driving"
 arch=('x86_64')
 # Reference: https://github.com/organicmaps/organicmaps/blob/master/docs/INSTALL.md
-depends=('glibc' 'hicolor-icon-theme' 'libxcursor' 'libxi' 'libxinerama' 'libxrandr' 'libgcc' 'libglvnd' 'libstdc++' 'mesa' 'python' 'qt6-base' 'qt6-positioning' 'qt6-svg' 'sqlite' 'zlib'
+depends=('glibc' 'hicolor-icon-theme' 'libxcursor' 'libxi' 'libxinerama' 'libxrandr' 'libgcc' 'libglvnd' 'libstdc++' 'qt6-base' 'qt6-positioning' 'qt6-svg' 'zlib'
          # WITH_SYSTEM_PROVIDED_3PARTY
-         'expat' 'freetype2' 'gflags' 'harfbuzz' 'icu' 'jansson' 'protobuf' 'pugixml')
-makedepends=('cmake' 'ninja' 'git' 'jq' 'librsvg'
+         'expat' 'freetype2' 'gflags' 'harfbuzz' 'icu' 'protobuf' 'pugixml')
+makedepends=('cmake' 'ninja' 'git' 'jq' 'librsvg' 'python'
              # WITH_SYSTEM_PROVIDED_3PARTY
-             'boost' 'fast_float' 'glm' 'utf8cpp' 'vulkan-headers')
+             'boost' 'fast_float' 'glaze' 'glm' 'utf8cpp' 'vulkan-headers')
 checkdepends=('gtest')
 optdepends=('qt6-wayland: for Wayland users')
-license=('Apache-2.0' 'LicenseRef-OrganicMapsData')
+license=('Apache-2.0 AND LicenseRef-OrganicMapsData')
 url="https://organicmaps.app"
-source=("$pkgname::git+https://github.com/organicmaps/organicmaps.git#tag=${_pkgver}"
+source=("${pkgname}::git+https://github.com/organicmaps/organicmaps.git#tag=${_pkgver}"
         "git+https://github.com/organicmaps/osmctools.git"
         "git+https://github.com/organicmaps/kothic.git"
         "git+https://github.com/organicmaps/just_gtfs.git"
@@ -26,12 +27,11 @@ source=("$pkgname::git+https://github.com/organicmaps/organicmaps.git#tag=${_pkg
         "git+https://github.com/glfw/glfw.git"
         "git+https://github.com/dpogue/CMake-MetalShaderSupport.git"
         "git+https://github.com/ocornut/imgui"
-        "git+https://github.com/organicmaps/glaze"
         "git+https://github.com/organicmaps/twine.git"
-        "0001-root-cmake-system-3party.patch"
-        "0002-drape-tests-private.patch"
-        "0003-fix-cmake-flags.patch")
-sha256sums=('33f54a8623dae1d809d57e05ea45683dc9a147d8cde8e247547a4f50a5fa4b39'
+        "0001-build-respect-WITH_SYSTEM_PROVIDED_3PARTY-for-glaze.patch"
+        "0002-build-do-not-hardcode-compile-and-link-flags.patch"
+        "0003-build-guard-test-support-and-quality-libraries.patch")
+sha256sums=('cbf12eb077051938253b15781b8902e761b457bf55630e30a714b605acc058b4'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -40,31 +40,31 @@ sha256sums=('33f54a8623dae1d809d57e05ea45683dc9a147d8cde8e247547a4f50a5fa4b39'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            'c191a60ab8357c20d3a74e3d7952c669365c6d1b12848f5e6cbd0cbe430bccef'
-            'c50bf415a0a32802fa0534ee95b79196d9262bde29cc97c5ef31f38b00b53074'
-            '336f5f03629178e1c033f8f620c5b5d8c0c7f6b8b08ad5521d8061765f362469')
+            '3b61965aef2a420af87686e815f9a67b78768a961f7d622b22da3fd278647725'
+            '7caa11f1fdfa3db8e9abf3f83c34c34d6f070fd89a5fe2a5d3439e623c9b2909'
+            'ed4bb6d8cad4717a38c5a5e5f509b6d3ae7e4bcd542bb40cfc206efb2874022c')
 
 prepare() {
-    cd "$pkgname"
+    cd "${pkgname}"
 
-    # Arch Linux uses Autotools for jansson, which doesn't generate CMake config files.
-    # Replace the CONFIG find_package with pkg-config to dynamically link the system library.
-    # Also add missing find_package when using system libraries.
-    patch -p1 -i "$srcdir/0001-root-cmake-system-3party.patch"
-
-    # CMake >= 3.0 forbids mixing plain and keyword signatures for target_link_libraries.
-    # Force the PRIVATE keyword in drape_tests to resolve the configuration conflict.
-    patch -p1 -i "$srcdir/0002-drape-tests-private.patch"
+    # Use system's glaze instead of the bundled one.
+    # However, upstream doesn't accept this patch because they think some distributions don't have a recent enough glaze version.
+    # https://github.com/organicmaps/organicmaps/pull/12811
+    patch -p1 -i "${srcdir}/0001-build-respect-WITH_SYSTEM_PROVIDED_3PARTY-for-glaze.patch"
 
     # Use the system's flags to prevent them from being overwritten.
     # Fix LDFLAGS overwriting and "Could NOT find Threads" errors.
-    patch -p1 -i "$srcdir/0003-fix-cmake-flags.patch"
+    # https://github.com/organicmaps/organicmaps/pull/12790
+    patch -p1 -i "${srcdir}/0002-build-do-not-hardcode-compile-and-link-flags.patch"
+
+    # Guard test support and quality assessment libraries.
+    # Skip them when BUILD_TESTING and SKIP_TOOLS are disabled to prevent compilation errors caused by broken transitive dependencies.
+    patch -p1 -i "${srcdir}/0003-build-guard-test-support-and-quality-libraries.patch"
 
     # Unbundle outdated Protobuf generated headers/sources.
     # We must manually regenerate them using the system's protoc to prevent version mismatches.
     while read -r proto_file; do
-        protoc -I. --cpp_out=. "$proto_file"
+        protoc -I. --cpp_out=. "${proto_file}"
     done < <(find libs -name "*.proto")
 
     # See `if (NOT WITH_SYSTEM_PROVIDED_3PARTY)` in CMakeLists.txt
@@ -74,11 +74,11 @@ prepare() {
         "3party/fast_float"
         "3party/freetype/freetype"
         "3party/gflags"
+        "3party/glaze"
         "3party/googletest"
         "3party/glm"
         "3party/harfbuzz/harfbuzz"
         "3party/icu/icu"
-        "3party/jansson/jansson"
         "3party/protobuf/protobuf"
         "3party/pugixml/pugixml"
         "3party/utfcpp"
@@ -94,10 +94,10 @@ prepare() {
         local path="${key#submodule.}"
         path="${path%.url}"
 
-        local folder=$(basename "${url%.git}")
+        local _folder=$(basename "${url%.git}")
 
-        if [[ -d "$srcdir/$folder" ]]; then
-            git config "submodule.$path.url" "$srcdir/$folder"
+        if [[ -d "${srcdir}/${_folder}" ]]; then
+            git config "submodule.$path.url" "${srcdir}/${_folder}"
         fi
     done
 
@@ -107,7 +107,7 @@ prepare() {
 }
 
 build() {
-    cd "$pkgname"
+    cd "${pkgname}"
 
     # Reference: tools/unix/build_omim.sh
     local cmake_options=(
@@ -119,8 +119,8 @@ build() {
         -D CMAKE_CXX_FLAGS_RELEASE="-DNDEBUG"
         -D CMAKE_INSTALL_PREFIX=/usr
         -D WITH_SYSTEM_PROVIDED_3PARTY=ON
+        -D BUILD_TESTING=OFF
         -D SKIP_QT_GUI=OFF
-        -D SKIP_TESTS=ON
         -D SKIP_TOOLS=ON
     )
     cmake "${cmake_options[@]}"
@@ -134,7 +134,7 @@ build() {
 }
 
 check() {
-    cd "$pkgname"
+    cd "${pkgname}"
 
     local cmake_options=(
         -B build
@@ -144,8 +144,8 @@ check() {
         -D CMAKE_CXX_FLAGS_RELEASE="-DNDEBUG"
         -D CMAKE_INSTALL_PREFIX=/usr
         -D WITH_SYSTEM_PROVIDED_3PARTY=ON
+        -D BUILD_TESTING=ON
         -D SKIP_QT_GUI=OFF
-        -D SKIP_TESTS=OFF
         -D SKIP_TOOLS=ON
     )
     cmake "${cmake_options[@]}"
@@ -160,60 +160,60 @@ check() {
 }
 
 package() {
-    cd "$pkgname"
+    cd "${pkgname}"
 
-    install -Dm755 "build/OMaps" "$pkgdir/usr/bin/OMaps"
+    install -Dm755 "build/OMaps" -t "${pkgdir}/usr/bin"
 
-    local _datadir="$pkgdir/usr/share/${pkgname}/data"
-    install -dm755 "$_datadir"
+    local _datadir="${pkgdir}/usr/share/${pkgname}/data"
+    install -dm755 "${_datadir}"
 
-    cp -r data/fonts "$_datadir/"
-    cp -r data/symbols "$_datadir/"
-    cp -r data/vulkan_shaders "$_datadir/"     # Required for Vulkan rendering on Linux
-    cp -r data/countries-strings "$_datadir/"  # Geographic translations
-    cp -r data/sound-strings "$_datadir/"      # Navigation voice translations
+    cp -r data/fonts "${_datadir}/"
+    cp -r data/symbols "${_datadir}/"
+    cp -r data/vulkan_shaders "${_datadir}/"     # Required for Vulkan rendering on Linux
+    cp -r data/countries-strings "${_datadir}/"  # Geographic translations
+    cp -r data/sound-strings "${_datadir}/"      # Navigation voice translations
 
     # Essential Configuration & Metadata
-    install -Dm644 data/generator/timezone/timezone_info.json "$_datadir/generator/timezone/timezone_info.json"
-    install -Dm644 data/countries.txt "$_datadir/"
-    install -Dm644 data/classificator.txt "$_datadir/"
-    install -Dm644 data/types.txt "$_datadir/"
-    install -Dm644 data/editor.config "$_datadir/"
-    install -Dm644 data/categories.txt "$_datadir/"
-    install -Dm644 data/categories_brands.txt "$_datadir/"
-    install -Dm644 data/categories_cuisines.txt "$_datadir/"
+    install -Dm644 data/generator/timezone/timezone_info.json "${_datadir}/generator/timezone/timezone_info.json"
+    install -Dm644 data/countries.txt "${_datadir}/"
+    install -Dm644 data/classificator.txt "${_datadir}/"
+    install -Dm644 data/types.txt "${_datadir}/"
+    install -Dm644 data/editor.config "${_datadir}/"
+    install -Dm644 data/categories.txt "${_datadir}/"
+    install -Dm644 data/categories_brands.txt "${_datadir}/"
+    install -Dm644 data/categories_cuisines.txt "${_datadir}/"
 
     # Compiled Drawing Rules
-    install -Dm644 data/drules_proto_default_light.bin "$_datadir/"
-    install -Dm644 data/drules_proto_default_dark.bin "$_datadir/"
-    install -Dm644 data/drules_proto_outdoors_light.bin "$_datadir/"
-    install -Dm644 data/drules_proto_outdoors_dark.bin "$_datadir/"
-    install -Dm644 data/drules_proto_vehicle_light.bin "$_datadir/"
-    install -Dm644 data/drules_proto_vehicle_dark.bin "$_datadir/"
+    install -Dm644 data/drules_proto_default_light.bin "${_datadir}/"
+    install -Dm644 data/drules_proto_default_dark.bin "${_datadir}/"
+    install -Dm644 data/drules_proto_outdoors_light.bin "${_datadir}/"
+    install -Dm644 data/drules_proto_outdoors_dark.bin "${_datadir}/"
+    install -Dm644 data/drules_proto_vehicle_light.bin "${_datadir}/"
+    install -Dm644 data/drules_proto_vehicle_dark.bin "${_datadir}/"
 
     # Geometry, Colors & Core Maps
-    install -Dm644 data/packed_polygons.bin "$_datadir/"
-    install -Dm644 data/colors.txt "$_datadir/"
-    install -Dm644 data/patterns.txt "$_datadir/"
-    install -Dm644 data/transit_colors.txt "$_datadir/"
-    install -Dm644 data/World.mwm "$_datadir/"
-    install -Dm644 data/WorldCoasts.mwm "$_datadir/"
+    install -Dm644 data/packed_polygons.bin "${_datadir}/"
+    install -Dm644 data/colors.txt "${_datadir}/"
+    install -Dm644 data/patterns.txt "${_datadir}/"
+    install -Dm644 data/transit_colors.txt "${_datadir}/"
+    install -Dm644 data/World.mwm "${_datadir}/"
+    install -Dm644 data/WorldCoasts.mwm "${_datadir}/"
 
     # UI & Legal
-    install -Dm644 data/welcome.html "$_datadir/"
-    install -Dm644 data/copyright.html "$_datadir/"
+    install -Dm644 data/welcome.html "${_datadir}/"
+    install -Dm644 data/copyright.html "${_datadir}/"
 
     local _data_version=$(jq -r '.v' data/countries.txt)
-    install -dm755 "$_datadir/$_data_version"
+    install -dm755 "${_datadir}/$_data_version"
 
-    install -Dm644 "android/.idea/icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
+    install -Dm644 "android/.idea/icon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
     for res in 16 32 48 64 128 256 512 1024; do
         install -Dm644 "icons-build/${res}x${res}/${pkgname}.png" \
             "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps/${pkgname}.png"
     done
 
-    install -Dm644 qt/res/linux/app.organicmaps.desktop.desktop -t "$pkgdir/usr/share/applications"
+    install -Dm644 qt/res/linux/${_appid}.desktop -t "${pkgdir}/usr/share/applications"
 
-    install -Dm644 LICENSE NOTICE DATA_LICENSE.txt -t "$pkgdir/usr/share/licenses/$pkgname/"
-    install -Dm644 packaging/app.organicmaps.desktop.metainfo.xml -t "$pkgdir/usr/share/metainfo/"
+    install -Dm644 LICENSE NOTICE DATA_LICENSE.txt -t "${pkgdir}/usr/share/licenses/$pkgname/"
+    install -Dm644 packaging/${_appid}.metainfo.xml -t "${pkgdir}/usr/share/metainfo/"
 }

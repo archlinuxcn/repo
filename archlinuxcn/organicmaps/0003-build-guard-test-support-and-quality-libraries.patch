@@ -1,0 +1,57 @@
+From ba20c2421cf92a21705e6f6bf61bb626d533568a Mon Sep 17 00:00:00 2001
+From: DeepChirp <DeepChirp@outlook.com>
+Date: Mon, 1 Jun 2026 16:44:50 +0800
+Subject: [PATCH] [build] guard test support and quality libraries
+
+Skip building test support and quality assessment libraries when both
+BUILD_TESTING and SKIP_TOOLS are disabled. This prevents compilation
+errors caused by broken transitive dependencies from other correctly
+skipped test support targets.
+---
+ libs/routing/CMakeLists.txt | 2 +-
+ libs/search/CMakeLists.txt  | 2 +-
+ libs/transit/CMakeLists.txt | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/libs/routing/CMakeLists.txt b/libs/routing/CMakeLists.txt
+index 6d7e93c205..7ecb3a2502 100644
+--- a/libs/routing/CMakeLists.txt
++++ b/libs/routing/CMakeLists.txt
+@@ -205,7 +205,7 @@ target_link_libraries(${PROJECT_NAME}
+     opening_hours
+ )
+ 
+-if (PLATFORM_DESKTOP)
++if (PLATFORM_DESKTOP AND (NOT SKIP_TOOLS OR BUILD_TESTING))
+   add_subdirectory(routing_quality)
+   add_subdirectory(routes_builder)
+ endif()
+diff --git a/libs/search/CMakeLists.txt b/libs/search/CMakeLists.txt
+index 549062ec6c..15ea594a83 100644
+--- a/libs/search/CMakeLists.txt
++++ b/libs/search/CMakeLists.txt
+@@ -178,7 +178,7 @@ target_link_libraries(${PROJECT_NAME}
+     openlocationcode
+ )
+ 
+-if(PLATFORM_DESKTOP)
++if(PLATFORM_DESKTOP AND (NOT SKIP_TOOLS OR BUILD_TESTING))
+   add_subdirectory(search_tests_support)
+   add_subdirectory(search_quality)
+ endif()
+diff --git a/libs/transit/CMakeLists.txt b/libs/transit/CMakeLists.txt
+index 2017231cdf..0d6a78813c 100644
+--- a/libs/transit/CMakeLists.txt
++++ b/libs/transit/CMakeLists.txt
+@@ -29,7 +29,7 @@ target_link_libraries(${PROJECT_NAME}
+     indexer
+ )
+ 
+-if (PLATFORM_DESKTOP)
++if (PLATFORM_DESKTOP AND (NOT SKIP_TOOLS OR BUILD_TESTING))
+     add_subdirectory(world_feed)
+ endif()
+ 
+-- 
+2.54.0
+
