@@ -2,7 +2,7 @@
 
 _npmname=vite
 pkgname=nodejs-$_npmname
-pkgver=8.0.14
+pkgver=8.0.15
 pkgrel=1
 pkgdesc="Next generation frontend tooling. It's fast!"
 arch=(aarch64 x86_64)
@@ -13,7 +13,7 @@ makedepends=('npm')
 source=("https://registry.npmjs.org/$_npmname/-/$_npmname-$pkgver.tgz"
         "${_npmname}-LICENSE::https://raw.githubusercontent.com/vitejs/vite/56eb869a67551a257d20cba00016ea59b1e1a2c4/LICENSE")
 noextract=($_npmname-$pkgver.tgz)
-sha512sums=('b3804927ee72d6960be8eb70e7514785525084f9ee4629ca8a0eb883fd7e11435a26c77780229d0f7d483c5becc14816f7feb4413f681476d91db40ae6299cc7'
+sha512sums=('aa9825951c6b2eac2c30019174b86c12bf5b7a968e424d6bc47d714f67280572da101fdb7e4a908f58fb44cc7031f9d8aef3b566714c8b05fec015609ecca7d2'
             '6d9074936683997b5f01e7ca64d88b4242be94a5bb151405654d3d4845cae7c2e4286d1b546b79b26c59866f56fe68b068c68f62f1cd465019fbb6de9abc9957')
 
 package() {
