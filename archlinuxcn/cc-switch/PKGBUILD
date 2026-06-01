@@ -1,7 +1,7 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 pkgname=cc-switch
-pkgver=3.16.0
+pkgver=3.16.1
 pkgrel=1
 pkgdesc='All-in-One assistant tool for Claude Code, Codex, OpenCode, openclaw & Gemini CLI'
 arch=('x86_64')
@@ -31,7 +31,7 @@ source=(
   "0001-feat-universal-provider-Auto-sync-after-adding.patch"
   "0002-feat-universal-provider-Add-one-click-sync-all-providers.patch"
 )
-sha256sums=('27b51d93c2aa1cefc3beb192c448d4266e95b186e69f430bb843a6ebdb03e9a8'
+sha256sums=('d47edef009fdbed53f1a0171b39f7674aa1ac4cffd54c3954f9d51d967c33908'
             '9686d576fd9dd596edf805507e0f8752abd3fa8a6ca85664afcd1582188b04e7'
             '333ef252456975051f0163c9b8bcf37fadec3a43bc05f192cb4ec87b2761b3f6')
 
