@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 # Contributor: HurricanePootis <hurricanepootis@protonmail.com>
 pkgname=an-anime-game-launcher-bwrap
-pkgver=3.19.5
+pkgver=3.19.6
 pkgrel=1
 pkgdesc="A Launcher for a specific anime game with auto-patching, discord rpc and time tracking"
 arch=('x86_64')
@@ -20,8 +20,8 @@ source=("git+$url.git"
 	"config.toml"
 	"desktop.file")
 sha256sums=('SKIP'
-            '4acf6359feeeb0b191cdad9534f2ff8af9b5dcfc0835b65002799bc4ca919017'
-            'f2bc03c3d06aac59d568381fe0babf13dc9aa4ab99a0bb04b696918475561ccd')
+            '63c483fadb3f25adf254f11d64d1a3ea0dc43eebac950fe0c036010a3366352b'
+            'bd7626b79160696218abc22c4633b0c13f3c8647b183ceb7b30f75a22b969beb')
 
 prepare() {
 	cd "$srcdir/an-anime-game-launcher"
