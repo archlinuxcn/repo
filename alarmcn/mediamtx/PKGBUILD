@@ -1,7 +1,7 @@
 # Maintainer: database64128 <free122448@hotmail.com>
 
 pkgname=mediamtx
-pkgver=1.18.2
+pkgver=1.19.0
 pkgrel=1
 pkgdesc="Ready-to-use RTSP / RTMP / LL-HLS / WebRTC server and proxy that allows to read, publish and proxy video and audio streams"
 arch=('x86_64' 'aarch64')
@@ -15,7 +15,7 @@ source=(
     "$pkgname@.service"
 )
 b2sums=(
-    'f241c8351404480b9dbba888a58132f374c8dc2380fae51de12c191598336c0ad5fdadcbea19d9531f30557e717ee9f1a0cf03e5e18277d3bd277f305ee3f0d3'
+    '505f409cec12995a0e7931338c115b836b899cff0c1451e5565c2677e2af801816fd4887f3341979777506bd20a67def4073b34796b23b982a21a5d1dbe0a99e'
     '636b7c89aec0e54a471464d013fd13fd83bebb21c3ebef9c0259fdea21185e3317ced09ef1c821ed253a62c3825f00cced19e42cdd175d1ddaecdef9800eeb4f'
     '280cab48cc4d513d20952c82aab7474b9eb474dcb37a2b9d559a7caa8cd5ab6527a293c77b8ab7c64f02564c42c91b7141756020adef8ddb54316e8fcea6d0bf'
 )
