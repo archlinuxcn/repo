@@ -18,7 +18,7 @@ sha512sums=('SKIP'
 
 pkgver() {
   cd "$srcdir/mosh"
-  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^mosh\.//'
+  git describe --abbrev=8 | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^mosh\.//'
 }
 
 prepare() {
