@@ -7,4 +7,6 @@ def pre_build():
     for line in edit_file('PKGBUILD'):
         if line.startswith('license='):
             line = "license=('LGPL-3.0-or-later')"
+        if line.startswith('depends='):
+            line = line.replace('dotnet-runtime-10.0', 'dotnet-runtime>=10.0')
         print(line)
