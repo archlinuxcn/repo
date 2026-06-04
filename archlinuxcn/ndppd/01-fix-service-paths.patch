@@ -1,0 +1,17 @@
+Use Arch-standard runtime paths in the systemd unit.
+
+Upstream ships /usr/sbin and /var/run; Arch uses /usr/bin and /run.
+Also let systemd create /run/ndppd via RuntimeDirectory= so the pidfile
+directory exists on a fresh boot (ndppd does not create it itself).
+
+--- a/ndppd.service
++++ b/ndppd.service
+@@ -5,5 +5,6 @@
+ [Service]
+-ExecStart=/usr/sbin/ndppd -d -p /var/run/ndppd/ndppd.pid
++ExecStart=/usr/bin/ndppd -d -p /run/ndppd/ndppd.pid
+ Type=forking
+-PIDFile=/var/run/ndppd/ndppd.pid
++PIDFile=/run/ndppd/ndppd.pid
++RuntimeDirectory=ndppd
+
