@@ -1,0 +1,27 @@
+ kevinlpowell commented on 2026-04-15 04:01 (UTC) (edited on 2026-04-15 04:04 (UTC) by kevinlpowell)
+
+The build errors from the scrap dependency are due to an old version of bindgen that is not compatible with Clang22. There's no need to install an outdated version of Clang as a workaround. Just update the requested version of bindgen to latest (0.72.1) like so: (and don't forget to "updpkgsums")
+
+diff -ur a/Cargo.toml b/Cargo.toml
+--- a/Cargo.toml   2026-03-04 20:30:40.000000000 -0800
++++ b/Cargo.toml   2026-04-14 20:52:35.970758354 -0700
+@@ -211,6 +211,7 @@
+ # This allows building and running on systems without libxdo installed (e.g., Wayland-only)
+ [patch.crates-io]
+ libxdo-sys = { path = "libs/libxdo-sys-stub" }
++bindgen = { git = "https://github.com/rust-lang/rust-bindgen", tag = "v0.72.1" }
+ 
+ [package.metadata.winres]
+ LegalCopyright = "Copyright © 2025 Purslane Ltd. All rights reserved."
+diff -ur a/libs/scrap/Cargo.toml b/libs/scrap/Cargo.toml
+--- a/libs/scrap/Cargo.toml    2026-03-04 20:30:40.000000000 -0800
++++ b/libs/scrap/Cargo.toml    2026-04-14 20:52:35.969638453 -0700
+@@ -48,7 +48,7 @@
+ 
+ [build-dependencies]
+ target_build_utils = "0.3"
+-bindgen = "0.65"
++bindgen = "0.72.1"
+ pkg-config = { version = "0.3.27", optional = true }
+ 
+ [target.'cfg(target_os = "linux")'.dependencies]
