@@ -1,0 +1,47 @@
+# Maintainer: qr243vbi
+
+pkgname=quickjs-ng
+_reponame=quickjs
+pkgver=0.15.1
+pkgrel=1
+pkgdesc="Small and embeddable JavaScript engine"
+url="https://quickjs-ng.github.io/quickjs"
+arch=('x86_64' 'aarch64' 'riscv64' 'pentium4' 'i686' 'armv7h')
+license=('MIT')
+options=(!strip staticlibs)
+conflicts=('quickjs')
+depends=('glibc' 'libgcc')
+makedepends=('cmake' 'gcc')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/quickjs-ng/${_reponame}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('c4e813951b7c46845096a948e978c620b11ab4cf5fd622ca09c727ec31f42623')
+
+build() {
+    cd "${_reponame}-${pkgver}"
+
+    # shared lib
+    cmake -B build-shared \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DQJS_BUILD_LIBC=ON \
+        -DBUILD_SHARED_LIBS=ON
+    cmake --build build-shared
+    cmake --build build-shared --target qjsc
+
+    # static lib
+    cmake -B build-static \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DQJS_BUILD_LIBC=ON \
+        -DBUILD_SHARED_LIBS=OFF
+    cmake --build build-static
+    cmake --build build-static --target qjsc
+}
+
+package() {
+    cd "${_reponame}-${pkgver}"
+
+    # shared lib
+    DESTDIR="${pkgdir}" cmake --build build-shared --target install
+
+    # static lib
+    install -Dm644 build-static/libqjs.a "${pkgdir}/usr/lib/libqjs.a"
+    install -Dm644 ./LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
