@@ -5,14 +5,9 @@ maintainers:
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
 
-repo_depends:
-  - cpr
-  - quickjs-ng
-
 update_on:
   - source: github
-    github: qr243vbi/nekobox
+    github: quickjs-ng/quickjs
     use_latest_release: true
+    prefix: v
 
-  - alias: qt6-base
-  - alias: boost
