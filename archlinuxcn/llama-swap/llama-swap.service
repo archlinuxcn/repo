@@ -1,0 +1,23 @@
+[Unit]
+Description=Model swapping for llama.cpp (or any local OpenAPI compatible server)
+
+[Service]
+DynamicUser=yes
+
+# %p - Prefix name = llama-swap
+StateDirectory=%p
+
+# %S - State directory = /var/lib
+WorkingDirectory=%S/%p
+Environment=HOME=%S/%p
+
+Restart=on-failure
+RestartSec=3
+StartLimitBurst=3
+StartLimitInterval=30
+
+# %E - Configuration directory root = /etc
+ExecStart=/usr/bin/llama-swap -config %E/llama-swap/config.yaml -watch-config -listen 127.0.0.1:12434
+
+[Install]
+WantedBy=multi-user.target
