@@ -1,6 +1,6 @@
 pkgname=python-funk
 pkgver=0.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc="mocking framework influenced heavily by JMock"
 arch=(any)
 url="https://github.com/mwilliamson/funk"
@@ -8,7 +8,7 @@ license=(BSD-2-Clause)
 makedepends+=(git 'python-build' 'python-setuptools' 'python-wheel')
 depends=(python-installer python python-precisely)
 source=("source::git+https://github.com/mwilliamson/funk#tag=${pkgver}")
-sha256sums=('fc33c7731bfbf84a8dff735c88b00de8ac02210f28f70f0e123396d5a23aa737')
+sha256sums=('0fcafc8c49bd445d6dd80dab43f1e6ac805b3467c7a1a89908cdb46ba9a294e7')
 
 build() {
 	cd source

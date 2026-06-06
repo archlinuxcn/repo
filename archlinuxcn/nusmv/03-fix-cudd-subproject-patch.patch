@@ -1,0 +1,47 @@
+--- a/subprojects/packagefiles/cudd-2.4.1+0001-nusmv.patch
++++ b/subprojects/packagefiles/cudd-2.4.1+0001-nusmv.patch
+@@ -1267,7 +1267,7 @@
+ +    }
+ +
+ +    /* Check cache */
+-+    res = cuddCacheLookup2(dd,(DdNode * (*)())op,f,g);
+++    res = cuddCacheLookup2(dd,(DD_CTFP)op,f,g);
+ +    if (res != NULL) return(res);
+ +
+ +    /* Recursive Step */
+@@ -1310,7 +1310,7 @@
+ +    cuddDeref(E);
+ +
+ +    /* Store result */
+-+    cuddCacheInsert2(dd,(DdNode * (*)())op,f,g,res);
+++    cuddCacheInsert2(dd,(DD_CTFP)op,f,g,res);
+ +
+ +    return(res);
+ +
+@@ -1938,7 +1938,7 @@
+ +        return(res);
+ +    }
+ +
+-+    if ((res = cuddCacheLookup2(manager, (DdNode * (*)())(((char*)op)+1), f, cube)) != NULL) {
+++    if ((res = cuddCacheLookup2(manager, (DD_CTFP)(((char*)op)+1), f, cube)) != NULL) {
+ +	return(res);
+ +    }
+ +
+@@ -1967,7 +1967,7 @@
+ +	Cudd_RecursiveDeref(manager,res2);
+ +	/* function/void pointer arithmetics is illegal, allowed by
+ +         * gcc extension */
+-+	cuddCacheInsert2(manager, (DdNode * (*)())(((char*)op)+1), f, cube, res);
+++	cuddCacheInsert2(manager, (DD_CTFP)(((char*)op)+1), f, cube, res);
+ +	cuddDeref(res);
+ +        return(res);
+ +    } else { /* if (cuddI(manager,f->index) < cuddI(manager,cube->index)) */
+@@ -1989,7 +1989,7 @@
+ +	cuddDeref(res1);
+ +	cuddDeref(res2);
+ +	/* pointer arithmetic illegal as a gcc extension */
+-+	cuddCacheInsert2(manager, (DdNode * (*)())(((char*)op)+1), f, cube, res);
+++	cuddCacheInsert2(manager, (DD_CTFP)(((char*)op)+1), f, cube, res);
+ +        return(res);
+ +    }
+ +

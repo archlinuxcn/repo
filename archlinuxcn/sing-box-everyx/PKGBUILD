@@ -3,8 +3,8 @@
 _pkgname=sing-box
 pkgname=sing-box-everyx
 pkgdesc="The universal proxy platform (with everyx's patches)."
-pkgver=1.13.12
-pkgrel=2
+pkgver=1.13.13
+pkgrel=1
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 url='https://sing-box.sagernet.org/'
 license=("LicenseRef-${_pkgname}")
@@ -18,7 +18,7 @@ source=(
     0001-Fix-DNS-router-reset-when-network-changed.patch
     0002-Fix-network-initialization-during-system-boot.patch
 )
-sha256sums=('08f3f7295130b76a60c1cb6565b89da6c4ce98d7bdea8852973a5d2e3c6de3b7'
+sha256sums=('c9e6d8ef9eab65f950442341e446c25dcfdeb491ba809475358b8ce1f0584194'
             'd30e4d1a956272d289bae98fd03dc801f4776d5bdce848b5359ebc191759cdab'
             'f899b6677ae61e9c400c15484f27a244d8c823c06d663d95bccffc2c476aecbb')
 depends=("glibc")

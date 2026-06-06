@@ -1,0 +1,69 @@
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+# Contributor: BGME <i@bgme.me>
+
+pkgname=ruffle
+_appid=rs.ruffle.Ruffle
+pkgver=0.2.0
+pkgrel=2
+pkgdesc="A Flash Player emulator written in Rust"
+url="https://ruffle.rs/"
+arch=("x86_64")
+license=("MIT OR Apache-2.0")
+depends=('alsa-lib' 'glibc' 'libgcc' 'libstdc++' 'hicolor-icon-theme' 'systemd-libs')
+makedepends=('cargo' 'clang' 'cmake' 'gcc' 'git' 'java-environment' 'librsvg')
+options=("!lto")
+source=("${pkgname}::git+https://github.com/ruffle-rs/ruffle.git#tag=v${pkgver}")
+sha256sums=('180d700c4e9bc2b346651c83331ad43a9b3abf356e0637cb021f3aecaf0530e6')
+
+prepare() {
+    cd "${pkgname}"
+
+    export RUSTUP_TOOLCHAIN=stable
+
+    cargo fetch --locked --target host-tuple
+}
+
+build() {
+    cd "${pkgname}"
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+
+    export CARGO_PROFILE_RELEASE_LTO=true
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+
+    # TODO: use `--profile dist` when `Cargo.toml` is updated
+    # https://github.com/ruffle-rs/ruffle/commit/6b53abf411521bbe7f05feab9238b4b1e318365d
+    cargo build --package ruffle_desktop --frozen --release --all-features
+
+    for res in 16 32 48 64 128 256 512 1024; do
+        mkdir -p "icons-build/${res}x${res}"
+        rsvg-convert -w "${res}" -h "${res}" "desktop/packages/linux/${_appid}.svg" -o "icons-build/${res}x${res}/${_appid}.png"
+    done
+}
+
+check() {
+    cd "${pkgname}"
+
+    export RUSTUP_TOOLCHAIN=stable
+
+    export CARGO_PROFILE_RELEASE_LTO=true
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+
+    cargo test --package ruffle_desktop --frozen --all-features
+}
+
+package() {
+    cd "${pkgname}"
+
+    install -Dm 755 "target/release/ruffle_desktop" "${pkgdir}/usr/bin/ruffle"
+    install -Dm 644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}"
+    install -Dm 644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -Dm 644 "desktop/packages/linux/${_appid}.desktop" -t "${pkgdir}/usr/share/applications"
+    install -Dm 644 "desktop/packages/linux/${_appid}.metainfo.xml" -t "${pkgdir}/usr/share/metainfo"
+
+    install -Dm 644 "desktop/packages/linux/${_appid}.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps"
+    for res in 16 32 48 64 128 256 512 1024; do
+        install -Dm644 "icons-build/${res}x${res}/${_appid}.png" -t "${pkgdir}/usr/share/icons/hicolor/${res}x${res}/apps"
+    done
+}

@@ -2,7 +2,7 @@
 # Contributor: Benigno B. Junior <benignobjunior@gmail.com>
 
 pkgname=rtk
-pkgver=0.42.0
+pkgver=0.42.3
 pkgrel=1
 pkgdesc='CLI proxy that reduces LLM token consumption by 60-90% on common dev commands'
 arch=('x86_64' 'aarch64')
@@ -12,7 +12,7 @@ depends=('glibc' 'libgcc' 'sqlite')
 makedepends=('cargo')
 checkdepends=('git')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('1ffb58ad4f50f88359299e2e4b3ac0d840cd7ccfb2fb0fdc51b833fa4e972dd4')
+sha256sums=('9afd0b11a60100cd73b9b6bc8407d9bda86ea5c40529b60429db56efaa3ee7eb')
 
 prepare() {
     cd "${pkgname}-${pkgver}"
@@ -29,9 +29,6 @@ build() {
 
     export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
 
-    export CARGO_PROFILE_RELEASE_LTO=true
-    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
-
     cargo build --frozen --release --all-features
 }
 
@@ -41,9 +38,6 @@ check() {
     export RUSTUP_TOOLCHAIN=stable
 
     export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
-
-    export CARGO_PROFILE_RELEASE_LTO=true
-    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
 
     cargo test --frozen --all-features
 }

@@ -1,5 +1,17 @@
+From 884ef00d41485d113abe52301dee71ff6ed9461f Mon Sep 17 00:00:00 2001
+From: DeepChirp <DeepChirp@outlook.com>
+Date: Mon, 1 Jun 2026 16:02:48 +0800
+Subject: [PATCH] [build] do not hardcode compile and link flags
+
+Hardcoding `-O3` and specific linkers (`-fuse-ld=...`) overrides
+user- or toolchain-provided flags (e.g., via `CMAKE_CXX_FLAGS` or
+`LDFLAGS`). Remove them to respect the external build environment.
+---
+ CMakeLists.txt | 17 -----------------
+ 1 file changed, 17 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 926628f933..ccf9f17d2e 100644
+index 45f54ca676..5be37f77bf 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -100,29 +100,12 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
@@ -12,9 +24,9 @@ index 926628f933..ccf9f17d2e 100644
  else()
    message(FATAL_ERROR "Unknown build type: " ${CMAKE_BUILD_TYPE})
  endif()
-
+ 
  message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
-
+ 
 -if (PLATFORM_LINUX OR PLATFORM_ANDROID)
 -  find_program(LLD_FOUND ld.lld)
 -  if (LLD_FOUND)
@@ -29,6 +41,9 @@ index 926628f933..ccf9f17d2e 100644
 -  endif()
 -endif()
 -
- if (NOT SKIP_TESTS)
-   enable_testing()
-   # Enables ctest -T memcheck with valgrind
+ if (NOT PYTHON_VERSION)
+   # FDroid build server has 3.5.3 Python installed.
+   set(PYTHON_VERSION 3.5)
+-- 
+2.54.0
+

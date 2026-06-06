@@ -1,0 +1,13 @@
+maintainers:
+  - github: cryolitia
+    email: Cryolitia <cryolitia@gmail.com>
+
+build_prefix: extra-x86_64
+
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
+update_on:
+  - source: aur
+    aur: utterly-nord-plasma

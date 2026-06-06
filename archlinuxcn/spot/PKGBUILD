@@ -1,0 +1,39 @@
+# Maintainer: Yurzi <yurzi@foxmail.com>
+
+pkgname=spot
+pkgver=2.15.1
+pkgrel=2
+pkgdesc="A platform for LTL and ω-automata manipulation (C++ library, CLI tools, and Python bindings)"
+arch=('x86_64')
+url="https://spot.lre.epita.fr/"
+license=('GPL-3.0-only')
+depends=('gcc-libs' 'sh' 'libtool' 'python')
+makedepends=('gcc' 'make' 'swig' 'python')
+optdepends=(
+  'graphviz: for displaying automata with dot/xdot'
+  'doxygen: for generating documentation'
+  'texlive-core: for latex output support in some tools'
+  'ipython: for IPython/Jupyter notebook integration')
+source=("https://www.lrde.epita.fr/dload/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('65013a2edf3f314854d7619888145f52c8dd36bfd27894d9db9b272d9a16ce4b')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+
+  ./configure \
+    --prefix=/usr \
+    --disable-static \
+    --enable-python
+
+  make
+}
+
+check() {
+  cd "${pkgname}-${pkgver}"
+  make check
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  make DESTDIR="$pkgdir/" install
+}

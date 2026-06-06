@@ -1,8 +1,8 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 pkgname=cc-switch
-pkgver=3.15.0
-pkgrel=3
+pkgver=3.16.1
+pkgrel=1
 pkgdesc='All-in-One assistant tool for Claude Code, Codex, OpenCode, openclaw & Gemini CLI'
 arch=('x86_64')
 url='https://github.com/farion1231/cc-switch'
@@ -31,7 +31,7 @@ source=(
   "0001-feat-universal-provider-Auto-sync-after-adding.patch"
   "0002-feat-universal-provider-Add-one-click-sync-all-providers.patch"
 )
-sha256sums=('fc5fa3941dff278d61dd2e48c5c005508fb31beedc506e37a9306be024ef651b'
+sha256sums=('d47edef009fdbed53f1a0171b39f7674aa1ac4cffd54c3954f9d51d967c33908'
             '9686d576fd9dd596edf805507e0f8752abd3fa8a6ca85664afcd1582188b04e7'
             '333ef252456975051f0163c9b8bcf37fadec3a43bc05f192cb4ec87b2761b3f6')
 
@@ -49,7 +49,7 @@ build() {
   # fix for static link
   unset CFLAGS CXXFLAGS LDFLAGS
   cd "${pkgname}-${pkgver}"
-  pnpm install --frozen-lockfile
+  pnpm install --frozen-lockfile --ignore-scripts
   pnpm tauri build --no-bundle
 }
 

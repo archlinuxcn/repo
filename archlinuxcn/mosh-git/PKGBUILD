@@ -1,7 +1,7 @@
 pkgname=mosh-git
 epoch=1
 pkgver=1.4.0.r39.gdecd9b70
-pkgrel=2
+pkgrel=3
 pkgdesc='Mobile shell, surviving disconnects with local echo and line editing. Git version'
 arch=(x86_64 aarch64)
 url='https://mosh.org/'
@@ -18,7 +18,7 @@ sha512sums=('SKIP'
 
 pkgver() {
   cd "$srcdir/mosh"
-  git describe | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^mosh\.//'
+  git describe --abbrev=8 | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^mosh\.//'
 }
 
 prepare() {

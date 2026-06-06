@@ -1,0 +1,45 @@
+# Maintainer: Rocka <rocka@archlinuxcn.org>
+
+_pkgname=kirigami-app-components
+pkgname=kirigami-app-components-git
+pkgver=1.0.0.r8.g09b2277
+pkgrel=2
+pkgdesc='Kirigami addons and modules necessary to do a full featured KDE application'
+arch=(x86_64)
+url='https://invent.kde.org/libraries/kirigami-app-components'
+license=(GPL-2.0-or-later)
+depends=(glibc
+         kconfig
+         kcoreaddons
+         kguiaddons
+         ki18n
+         kirigami
+         kitemmodels
+         libstdc++
+         qt6-base
+         qt6-declarative)
+makedepends=(extra-cmake-modules
+             git)
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/${_pkgname}"
+  git describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  local cmake_options=(
+    -B build
+    -S "${srcdir}/${_pkgname}"
+    -DBUILD_TESTING=OFF
+  )
+  cmake "${cmake_options[@]}"
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
