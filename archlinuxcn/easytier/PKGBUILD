@@ -17,14 +17,20 @@ makedepends=('cargo' 'protobuf' 'rust-bindgen' 'sqlite'
 options=("!lto") # https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20
 source=(
     "${_pkgname}-${pkgver}.tar.gz::https://github.com/EasyTier/EasyTier/archive/refs/tags/v${pkgver}.tar.gz"
+    "0001-build-update-pnpm-config-for-v11-compatibility.patch"
     "easytier.service"
     "config.toml")
 sha256sums=('352c0866da709415a837405a6ce4f51b8dfae27e5d5c1da1fb4d8f7338e46795'
+            '70049779ad48f5257ecf36a5c92ed92c86e1f5f9e6a74650fe716ffb98a09803'
             'dd9e71f35055e2442187b630a6ff0c519d6f0bb5d0e206d0cb43e36759ab47fc'
             '05518beea8b047d5e9b9adb14f26f85a91e4eea81ead7eeb4743f8978e1fd842')
 
 prepare() {
     cd "${_pkgname}-${pkgver}"
+
+    # Fix `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH` and `ERR_PNPM_IGNORED_BUILDS` on pnpm v11.0.0+.
+    # https://github.com/EasyTier/EasyTier/pull/2322
+    patch -Np1 -i "${srcdir}/0001-build-update-pnpm-config-for-v11-compatibility.patch"
 
     export PNPM_HOME="$srcdir/.pnpm-home"
     export npm_config_store_dir="$srcdir/.pnpm-store"
