@@ -6,13 +6,39 @@ post_build_script: |
   git_pkgbuild_commit()
 
 update_on:
-  - source: "alpm"
-    alpm: "telegram-desktop"
-    #repo: "archlinuxcn"
-    from_pattern: '-.*'
-    to_pattern: ''
+  - source: github
+    github: telegramdesktop/tdesktop
+    branch: dev
+    use_latest_release: true
+  # - source: manual
+  #   manual: v5.13.1
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    from_pattern: ^(\d+\.\d+\.\d+)\..*
+    to_pattern: \1
+    alpm: qt6-base
+    strip_release: true
+  - alias: protobuf
+  - source: alpm
+    alpm: abseil-cpp
+    strip_release: true
+  - source: alpm
+    alpm: libvpx
+    provided: libvpx.so
+  - alias: libssl
+  - alias: libcrypto
+  - source: alpm
+    alpm: openh264
+    provided: libopenh264.so
+  - source: alpmfiles
+    pkgname: ada
+    filename: 'usr/lib/libada\.so\.(\d+)'
+
 
 repo_depends:
   - portable
+  - telegram-desktop-lily
 
 build_prefix: archlinuxcn-x86_64
