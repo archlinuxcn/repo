@@ -8,7 +8,7 @@ pkgdesc="sign and stamp PDF files"
 arch=(any)
 url="https://github.com/MatthiasValvekens/${_name}"
 license=(MIT)
-depends=(python python-asn1crypto python-qrcode python-tzlocal python-pyhanko-certvalidator python-click python-requests python-pyyaml python-cryptography python-uharfbuzz python-python-pkcs11 python-pillow python-barcode python-aiohttp python-oscrypto python-fonttools python-xsdata python-defusedxml python-dateutil)
+depends=(python python-asn1crypto python-qrcode python-tzlocal python-pyhanko-certvalidator python-requests python-pyyaml python-cryptography python-uharfbuzz python-python-pkcs11 python-pillow python-barcode python-aiohttp python-oscrypto python-fonttools python-xsdata python-defusedxml python-dateutil python-lxml python-signxml)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-requests-mock certomancer python-freezegun python-pytest-asyncio python-defusedxml python-certomancer-csc-dummy python-pytest-aiohttp)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
@@ -16,27 +16,28 @@ sha512sums=('c1153f94cebc34053f159e441be72a5ca9052491adf607b6e5aa398da06c0e73bb4
 
 prepare() {
   cd pyHanko-$pkgver
-  cat >> pyproject.toml << EOF
-[tool.setuptools]
-packages = ["pkgs", "internal"]
-EOF
+  sed -i "s/^version = .*/version = \"$pkgver\"/" pkgs/${_name}/pyproject.toml
+  sed -i \
+    -e "s/^__version__ = .*/__version__ = '$pkgver'/" \
+    -e "s/^__version_info__ = .*/__version_info__ = (${pkgver//./, })/" \
+    pkgs/${_name}/src/pyhanko/version/__init__.py
 }
 
 build() {
-  cd pyHanko-$pkgver
+  cd pyHanko-$pkgver/pkgs/${_name}
   python -m build --wheel --no-isolation
 }
 
 check(){
-  cd pyHanko-$pkgver
+  cd pyHanko-$pkgver/pkgs/${_name}
   python -m venv --system-site-packages test-env
   test-env/bin/python -m installer dist/*.whl
-  # test_simple_text_stamp_on_page_with_leaky_graphics_state fails, need investigation
-  test-env/bin/python -m pytest -vv pyhanko_tests || true
+  PYTHONPATH="$srcdir/pyHanko-$pkgver/internal/common-test-utils/src" \
+    test-env/bin/python -m pytest -vv tests
 }
 
 package() {
-  cd pyHanko-$pkgver
+  cd pyHanko-$pkgver/pkgs/${_name}
   python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
   install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
