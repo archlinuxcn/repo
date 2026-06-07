@@ -1,0 +1,47 @@
+# Maintainer: Rocket Aaron <rocka@archlinuxcn.org>
+
+_pkgname=keysmith
+pkgname=keysmith-git
+pkgver=24.01.90.r315.g3f593f7
+pkgrel=1
+pkgdesc='OTP client for Plasma Mobile and Desktop (git version)'
+url='https://invent.kde.org/utilities/keysmith'
+arch=(x86_64)
+license=(GPL-2.0-or-later LGPL-2.0-or-later)
+depends=(glibc
+         kconfig
+         kcoreaddons
+         kdbusaddons
+         ki18n
+         kirigami
+         kirigami-addons
+         kwindowsystem
+         libsodium
+         libstdc++
+         openssl
+         prison
+         qqc2-desktop-style
+         qt6-base
+         qt6-declarative
+         qt6-multimedia)
+makedepends=(extra-cmake-modules
+             git)
+provides=(keysmith)
+conflicts=(keysmith)
+source=("git+${url}.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$_pkgname"
+  git describe --long --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+  cmake -B build -S "$_pkgname" \
+    -DBUILD_TESTING=OFF
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
