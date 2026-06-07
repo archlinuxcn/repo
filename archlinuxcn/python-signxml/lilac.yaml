@@ -1,0 +1,14 @@
+maintainers:
+  - github: Xeonacid
+    email: h.dwwwwww@gmail.com
+
+build_prefix: extra-x86_64
+
+pre_build_script: aur_pre_build(maintainers=['lapsus'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: python-signxml
+  - alias: python
