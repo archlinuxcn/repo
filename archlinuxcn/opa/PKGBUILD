@@ -3,7 +3,7 @@
 # Prior Maintainer: David Birks <david@birks.dev>
 
 pkgname=opa
-pkgver=1.17.0
+pkgver=1.17.1
 pkgrel=1
 pkgdesc='Command-line utility and REPL for Open Policy Agent'
 arch=(x86_64)
@@ -11,7 +11,7 @@ url='https://github.com/open-policy-agent/opa'
 license=(Apache)
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/open-policy-agent/opa/archive/v$pkgver.tar.gz")
-sha256sums=('1582958d1b03d7bc7c44812e49e4cce606f6509fd7bf9950d05f1c95425ccd11')
+sha256sums=('38b73b62a9198aa7f1818bfdee16153da2cfa6c0cef1bfebebc458a263ae6a9c')
 
 build() {
   cd "$pkgname-$pkgver"
