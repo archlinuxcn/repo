@@ -1,0 +1,54 @@
+pkgname=('hyprland-plugin-borders-plus-plus' 'hyprland-plugin-csgo-vulkan-fix' 'hyprland-plugin-hyprbars' 'hyprland-plugin-hyprfocus')
+pkgbase='hyprland-plugins'
+pkgver='0.55.2'
+pkgrel=3
+pkgdesc='Official plugins for Hyprland'
+arch=('x86_64' 'aarch64')
+url='https://github.com/hyprwm/hyprland-plugins'
+license=('BSD')
+depends=("hyprland=$pkgver")
+makedepends=('git' 'cmake' 'hyprland')
+source=("$pkgbase::git+https://github.com/hyprwm/hyprland-plugins.git#commit=3aa21f2e0ca72412f1b434c3126f8f1fec3c716c")
+sha256sums=('SKIP')
+
+build() {
+  cd "$srcdir/$pkgbase"
+
+  for package in ${pkgname[@]}; do
+    plugin=${package##hyprland-plugin-}
+
+    make -C "$plugin" all
+  done
+}
+
+package_hyprland-plugin-borders-plus-plus() {
+  pkgdesc="A Hyprland plugin that adds one or two additional borders to your windows"
+
+  cd "$srcdir/$pkgbase/borders-plus-plus"
+  install -Dm755 borders-plus-plus.so "$pkgdir/usr/lib/libhyprbordersplusplus.so"
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/hyprland-plugin-borders-plus-plus/LICENSE"
+}
+
+package_hyprland-plugin-csgo-vulkan-fix() {
+  pkgdesc="A Hyprland plugin that fixes custom resolutions on CS:GO with -vulkan"
+
+  cd "$srcdir/$pkgbase/csgo-vulkan-fix"
+  install -Dm755 csgo-vulkan-fix.so "$pkgdir/usr/lib/libhyprcsgo.so"
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/hyprland-plugin-csgo-vulkan-fix/LICENSE"
+}
+
+package_hyprland-plugin-hyprbars() {
+  pkgdesc="A Hyprland plugin that adds simple title bars to windows"
+
+  cd "$srcdir/$pkgbase/hyprbars"
+  install -Dm755 hyprbars.so "$pkgdir/usr/lib/libhyprbars.so"
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/hyprland-plugin-hyprbars/LICENSE"
+}
+
+package_hyprland-plugin-hyprfocus() {
+  pkgdesc="A Hyprland plugin that adds a flashfocus"
+
+  cd "$srcdir/$pkgbase/hyprfocus"
+  install -Dm755 hyprfocus.so "$pkgdir/usr/lib/libhyprfocus.so"
+  install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/hyprland-plugin-hyprfocus/LICENSE"
+}
