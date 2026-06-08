@@ -1,7 +1,7 @@
 pkgname=('hyprland-plugin-borders-plus-plus' 'hyprland-plugin-csgo-vulkan-fix' 'hyprland-plugin-hyprbars' 'hyprland-plugin-hyprfocus')
 pkgbase='hyprland-plugins'
-pkgver='0.55.2'
-pkgrel=3
+pkgver=None
+pkgrel=1
 pkgdesc='Official plugins for Hyprland'
 arch=('x86_64' 'aarch64')
 url='https://github.com/hyprwm/hyprland-plugins'
@@ -9,7 +9,7 @@ license=('BSD')
 depends=("hyprland")
 makedepends=('git' 'cmake' 'hyprland')
 source=("$pkgbase::git+https://github.com/hyprwm/hyprland-plugins.git#commit=3aa21f2e0ca72412f1b434c3126f8f1fec3c716c")
-sha256sums=('SKIP')
+sha256sums=('18ec95f12d9fc04708f8016239e1298bc07c678f5e66bee62fbf6ce5b9545134')
 
 build() {
   cd "$srcdir/$pkgbase"
