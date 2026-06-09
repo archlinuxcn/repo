@@ -3,9 +3,6 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-repo_depends:
-  - java-openjfx
-
 pre_build_script: |
   import re
   # upstream 4.x tags carry an -alpha suffix (e.g. 4.0.0-alpha); strip it for pkgver

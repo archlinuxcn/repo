@@ -2,11 +2,15 @@
 
 pkgname="recaf"
 pkgver=4.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='A modern Java bytecode editor'
 url='https://github.com/Col-E/Recaf'
 license=('MIT')
-arch=('any')
+# We bundle Recaf's own JavaFX (org.openjfx 23.0.2, pulled by its Gradle build)
+# into the all.jar instead of depending on the now-unmaintained java-openjfx.
+# The bundled JavaFX carries platform-specific native libraries, so this is no
+# longer arch-independent.
+arch=('x86_64')
 
 # Recaf 4.0.0-alpha pins its Jasm dependency to an unreleased JitPack snapshot
 # commit. JitPack's build of that commit errored, so the artifact is unavailable
@@ -15,7 +19,7 @@ arch=('any')
 _jasm_commit=c5a2c9050312497f53378f8c6a397ec3d3f02ef6
 _jasm_ver=c5a2c90503
 
-depends=('java-environment>=25' 'java-openjfx>=24' 'ttf-font')
+depends=('java-environment>=25' 'ttf-font')
 makedepends=('jdk25-openjdk' 'gradle' 'git')
 
 conflicts=("$pkgname-bin" "$pkgname-git")
@@ -59,10 +63,14 @@ build() {
   # Build Recaf against the JDK 25 LTS. Recaf's Gradle build selects the JDK via a
   # toolchain (languageVersion=$TARGET_VERSION, default 22) and won't auto-download
   # a missing JDK, so the matching JDK must be installed and pointed at explicitly.
+  #
+  # Do NOT pass -Dskip_jfx_bundle=true: leaving it unset makes recaf-ui's Gradle
+  # build (via the org.openjfx plugin) bundle JavaFX into the all.jar, so we no
+  # longer rely on the system java-openjfx package.
   cd "$srcdir/Recaf-$pkgver-alpha"
   export TARGET_VERSION=25
   JAVA_HOME="/usr/lib/jvm/java-25-openjdk" gradle --no-daemon \
-    assemble -x compileTestJava -Dskip_jfx_bundle=true
+    assemble -x compileTestJava
 }
 
 package() {
