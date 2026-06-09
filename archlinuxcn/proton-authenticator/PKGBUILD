@@ -1,8 +1,8 @@
 # Maintainer: AlphaLynx <alphalynx at alphalynx dot dev>
 
 pkgname=proton-authenticator
-pkgver=1.1.5
-pkgrel=2
+pkgver=1.1.6
+pkgrel=1
 pkgdesc='2FA app from Proton to securely sync and backup 2FA codes'
 arch=(x86_64)
 url='https://proton.me/authenticator'
@@ -18,9 +18,9 @@ depends=(cairo
          libgcc
          webkit2gtk-4.1)
 makedepends=(cargo git nodejs-lts-jod yarn)
-source=($pkgname-$pkgver.tar.gz::https://github.com/ProtonMail/WebClients/archive/refs/tags/proton-authenticator@1.1.5.tar.gz
+source=($pkgname-$pkgver.tar.gz::https://github.com/ProtonMail/WebClients/archive/refs/tags/proton-authenticator@$pkgver.tar.gz
         $pkgname.desktop)
-b2sums=('5517a797143fef200e0d9bef4061696e14b93c42fd43702bd4fc76d70408521cd73e56d8762a2a903788710c8373ae754c916e4f4910b25acaade05639cc5355'
+b2sums=('cb59b76ac33608de888702d90680c3d39ed255b352906673311cba9d33a8d3079a48282ae65461b1e3b9f8b39e357a77acf868019db556c7fdef907046ffa065'
         '2d31d11d97e4a8163b199eed52d920d6ef68bb51e91aa6270e00350a3f9f8f4d265a1dfc995eb6a6e3a4a7ba4a52c49dfe66da32c146f36a5c2c44b68bcda531')
 
 prepare() {
