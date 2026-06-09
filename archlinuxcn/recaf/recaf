@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/usr/bin/env sh
+set -eu
 
 exec java -cp "/usr/lib/jvm/default-runtime/lib/*:/usr/share/java/recaf/*" --module-path="/usr/share/java/java-openjfx" --add-modules=javafx.base,javafx.controls,javafx.graphics,javafx.media --enable-native-access=javafx.graphics,javafx.media -Djava.library.path="/usr/lib/java-openjfx" "software.coley.recaf.Main" "$@"
