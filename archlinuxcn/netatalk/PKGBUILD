@@ -5,7 +5,7 @@
 # Contributor: Farhan Yousaf <farhany at xaviya dot com>
 
 pkgname=netatalk
-pkgver=4.4.3
+pkgver=4.5.0
 pkgrel=1
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
@@ -13,12 +13,12 @@ license=('GPL-2.0-or-later')
 
 source=("https://github.com/Netatalk/${pkgname}/releases/download/${pkgname}-${pkgver//./-}/${pkgname}-${pkgver}.tar.xz")
 
-md5sums=('2809abff9aa05932152103904a3732ea')
+md5sums=('d5578640a87c5366f0ec0b948aa1dcbe')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
 makedepends=('cmark'
-             'meson'
+             'meson>=0.62'
              'unicode-character-database')
 
 depends=('acl'
@@ -33,12 +33,13 @@ depends=('acl'
          'libgcrypt'
          'libxcrypt'
          'pam'
-         'perl'
-         'perl-net-dbus')
+         'perl')
 
-optdepends=('localsearch: AFP Spotlight support'
+optdepends=('localsearch: AFP Spotlight support (localsearch backend)'
+            'dconf: AFP Spotlight support (localsearch backend)'
+            'tinysparql: AFP Spotlight support (localsearch backend)'
+            'xapian-core: AFP Spotlight support (xapian backend)'
             'talloc: AFP Spotlight support'
-            'tinysparql: AFP Spotlight support'
             'avahi>=0.6: Automatic service discovery support'
             'krb5: Kerberos user authentication support'
             'mariadb-libs: MySQL CNID backend support'
@@ -55,6 +56,7 @@ replaces=('netatalk-ddp'
 backup=('etc/afp.conf'
         'etc/atalkd.conf'
         'etc/extmap.conf'
+        'etc/macipgw.conf'
         'etc/papd.conf'
         'etc/pam.d/netatalk')
 
@@ -64,7 +66,6 @@ build() {
     --localstatedir /var/lib \
     -Dwith-appletalk=true \
     -Dwith-bdb-version=5.3 \
-    -Dwith-dbus-sysconf-path=/usr/share/dbus-1/system.d \
     -Dwith-docs=man \
     -Dwith-dtrace=false \
     -Dwith-init-hooks=false \

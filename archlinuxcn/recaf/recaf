@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+set -eu
+
+# recaf.jar is the shadow "-all" jar: it bundles JavaFX (classes + native libs)
+# and sets Main-Class / Enable-Native-Access in its manifest, so just run it.
+exec java -jar "/usr/share/java/recaf/recaf.jar" "$@"

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Remove legacy patches that Millennium used to use prior to JUL/6/2025
+remove_deprecated_patches() {
+    if test -f "/usr/bin/steam.millennium.bak"; then
+        if grep -q "LD_PRELOAD" /usr/bin/steam.millennium.bak; then
+            printf '#!/bin/sh\nexec /usr/lib/steam/steam "$@"\n' > /usr/bin/steam
+        else
+            mv /usr/bin/steam.millennium.bak /usr/bin/steam
+        fi
+    else
+        # Check /usr/bin/steam directly if backup doesn't exist
+        if test -f "/usr/bin/steam" && grep -q "LD_PRELOAD" /usr/bin/steam; then
+            printf '#!/bin/sh\nexec /usr/lib/steam/steam "$@"\n' > /usr/bin/steam
+        fi
+    fi
+}
+
+for_each_steam_user() {
+    local callback="$1"
+    getent passwd | while IFS=: read -r _ _ uid _ _ home _; do
+        [ "$uid" -ge 1000 ] || continue
+        [ -d "$home/.local/share/Steam" ] || continue
+        "$callback" "$home"
+    done
+}
+
+link_millennium() {
+    local home="$1"
+    local steam="$home/.local/share/Steam"
+
+    ln -sf /usr/lib/millennium/libmillennium_bootstrap_x86.so   "$steam/ubuntu12_32/libXtst.so.6"
+    ln -sf /usr/lib/millennium/libmillennium_bootstrap_hhx64.so "$steam/ubuntu12_64/libXtst.so.6"
+}
+
+unlink_millennium() {
+    local home="$1"
+    local steam="$home/.local/share/Steam"
+
+    rm -f "$steam/ubuntu12_32/libXtst.so.6"
+    rm -f "$steam/ubuntu12_64/libXtst.so.6"
+    rm -f "$home/.steam/steam/.cef-enable-remote-debugging"
+}
+
+post_install() {
+    remove_deprecated_patches
+    for_each_steam_user link_millennium
+}
+
+post_upgrade() {
+    post_install
+}
+
+post_remove() {
+    for_each_steam_user unlink_millennium
+}

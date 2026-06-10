@@ -1,0 +1,18 @@
+maintainers:
+  - github: SilverRainZ
+    email: Shengyu Zhang <la@archlinuxcn.org>
+
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+repo_depends:
+  - sherpa-onnx
+
+update_on:
+  - source: github
+    github: xifan2333/fcitx5-vinput
+    use_latest_release: true

@@ -1,0 +1,92 @@
+# Maintainer: devome <evinedeng@hotmail.com>
+
+pkgbase=sherpa-onnx
+pkgname=("${pkgbase}" "python-${pkgbase}")
+pkgver=1.13.2
+pkgrel=1
+pkgdesc="Speech-to-text, text-to-speech, speaker diarization, speech enhancement, source separation, and VAD using next-gen Kaldi with onnxruntime without Internet connection."
+arch=("x86_64" "aarch64" "arm" "riscv64")
+url="https://github.com/k2-fsa/${pkgbase}"
+license=("Apache-2.0")
+depends=("jack" "onnxruntime" "protobuf")
+makedepends=("cargs" "cmake" "ninja" "pybind11" "python-build" "python-installer" "python-setuptools" "python-wheel")
+source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+        "asio-asio-1-24-0.tar.gz::https://github.com/chriskohlhoff/asio/archive/refs/tags/asio-1-24-0.tar.gz"
+        "eigen-5.0.1.tar.gz::https://gitlab.com/libeigen/eigen/-/archive/5.0.1/eigen-5.0.1.tar.gz"
+        "espeak-ng-f6fed6c58b5e0998b8e68c6610125e2d07d595a7.zip::https://github.com/csukuangfj/espeak-ng/archive/f6fed6c58b5e0998b8e68c6610125e2d07d595a7.zip"
+        "hclust-cpp-2026-02-25.tar.gz::https://github.com/csukuangfj/hclust-cpp/archive/refs/tags/2026-02-25.tar.gz"
+        "json-3.12.0.tar.gz::https://github.com/nlohmann/json/archive/refs/tags/v3.12.0.tar.gz"
+        "kaldi-decoder-0.3.0.tar.gz::https://github.com/k2-fsa/kaldi-decoder/archive/refs/tags/v0.3.0.tar.gz"
+        "kaldi-native-fbank-1.22.3.tar.gz::https://github.com/csukuangfj/kaldi-native-fbank/archive/refs/tags/v1.22.3.tar.gz"
+        "openfst-1.8.5-2026-04-11.tar.gz::https://github.com/csukuangfj/openfst/archive/refs/tags/v1.8.5-2026-04-11.tar.gz"
+        "piper-phonemize-78a788e0b719013401572d70fef372e77bff8e43.zip::https://github.com/csukuangfj/piper-phonemize/archive/78a788e0b719013401572d70fef372e77bff8e43.zip"
+        "pa_stable_v190700_20210406.tgz::http://files.portaudio.com/archives/pa_stable_v190700_20210406.tgz"
+        "simple-sentencepiece-0.7.tar.gz::https://github.com/pkufool/simple-sentencepiece/archive/refs/tags/v0.7.tar.gz"
+        "websocketpp-b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip::https://github.com/zaphoyd/websocketpp/archive/b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip")
+sha256sums=('9f64f8ee121d751af26fe04863333b22458d2de870e98bb7d3eedf7491ac52e4'
+            'cbcaaba0f66722787b1a7c33afe1befb3a012b5af3ad7da7ff0f6b8c9b7a8a5b'
+            'e9c326dc8c05cd1e044c71f30f1b2e34a6161a3b6ecf445d56b53ff1669e3dec'
+            '70cbf4050e7a014aae19140b05e57249da4720f56128459fbe3a93beaf971ae6'
+            '8f14e024c709d73afb40ae69cb22de4b73dba67cbce40f2e518813da8139ab56'
+            '4b92eb0c06d10683f7447ce9406cb97cd4b453be18d7279320f7b2f025c10187'
+            'b9f34cfb4fd3b1344100eead79ef4d37aa15962274b9e3056de345021f76a1b0'
+            '9176cc66fc7ce1edf85cf355b06e320c57db6297df74277f575183468893cf61'
+            '57fbc4b950ae81b1a0e1e298af15652da968a6723a592b7874e9b4027a80a5b4'
+            '89641a46489a4898754643ce57bda9c9b54b4ca46485fdc02bf0dc84b866645d'
+            '47efbf42c77c19a05d22e627d42873e991ec0c1357219c0d74ce6a2948cb2def'
+            '1748a822060a35baa9f6609f84efc8eb54dc0e74b9ece3d82367b7119fdc75af'
+            '1385135ede8191a7fbef9ec8099e3c5a673d48df0c143958216cd1690567f583')
+noextract=( $(echo "${source[@]:1}" | sed -E 's|:\S+||g') )
+
+prepare() {
+    cd "${pkgbase}-${pkgver}"
+    for file in ${noextract[@]}; do
+        ln -sf ../"${file}" "${file}"
+    done
+    sed -i "s|include(cargs)|find_package(Cargs CONFIG REQUIRED)|" c-api-examples/CMakeLists.txt
+    echo 'find_package(pybind11 REQUIRED)' > cmake/pybind11.cmake
+}
+
+build() {
+    local base_args=(
+        --compile-no-warning-as-error
+        -Wno-dev
+        -G Ninja
+        -DCMAKE_BUILD_TYPE=Release
+        -DSHERPA_ONNX_USE_PRE_INSTALLED_ONNXRUNTIME_IF_AVAILABLE=ON
+    )
+
+    cd "${pkgbase}-${pkgver}"
+    CFLAGS="${CFLAGS} -Wno-error=format-security" \
+    CXXFLAGS="${CXXFLAGS} -Wno-error=format-security" \
+    cmake "${base_args[@]}" \
+        -Bbuild_bin \
+        -DBUILD_SHARED_LIBS=ON \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DSHERPA_ONNX_ENABLE_BINARY=ON \
+        -DSHERPA_ONNX_ENABLE_PYTHON=OFF
+    cmake --build build_bin
+    
+    CFLAGS="${CFLAGS} -Wno-error=format-security" \
+    CXXFLAGS="${CXXFLAGS} -Wno-error=format-security" \
+    SHERPA_ONNX_CMAKE_ARGS="${base_args[@]} -DSHERPA_ONNX_ENABLE_BINARY=OFF" python -m build --wheel --no-isolation
+}
+
+package_sherpa-onnx() {
+    provides=("${pkgname}=${pkgver}")
+
+    cd "${pkgbase}-${pkgver}"
+    DESTDIR="${pkgdir}" cmake --install build_bin
+    install -Dm644 {README,CHANGELOG}.md -t "${pkgdir}/usr/share/doc/${pkgname}"
+    rm -rf "${pkgdir}/usr/share/vim"        "${pkgdir}/usr/lib/pkgconfig/espeak-ng.pc"
+    mv "${pkgdir}/usr/sherpa-onnx.pc"       "${pkgdir}/usr/lib/pkgconfig"
+}
+
+package_python-sherpa-onnx() {
+    pkgdesc+=" (Python bindings)"
+    depends=("python-click" "python-onnxruntime" "${pkgbase}=${pkgver}")
+
+    cd "${pkgbase}-${pkgver}"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+    install -Dm644 {README,CHANGELOG}.md -t "${pkgdir}/usr/share/doc/${pkgname}"
+}

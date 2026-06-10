@@ -1,0 +1,38 @@
+From 4ba5a81080663045a9634b253d94fa8abc270cc9 Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Wed, 10 Jun 2026 12:40:31 +0800
+Subject: [PATCH 2/2] don't adjust font size based on metrics
+
+---
+ ui/style/style_core_font.cpp | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/ui/style/style_core_font.cpp b/ui/style/style_core_font.cpp
+index 7cb3e8f..6945cca 100644
+--- a/ui/style/style_core_font.cpp
++++ b/ui/style/style_core_font.cpp
+@@ -186,7 +186,7 @@ struct Metrics {
+ 	copy.setFamily(basic);
+ 	const auto basicMetrics = QFontMetricsF(copy);
+ 
+-	static const auto Full = u"bdfghijklpqtyBDFGHIJKLPQTY1234567890[]{}()"_q;
++	static const auto Full = u"bdfghijklpqtyBDFGHIJKLPQTY1234567890[]{}()你好"_q;
+ 
+ 	// I tried to choose height in such way that
+ 	// - normal fonts won't be too large,
+@@ -324,10 +324,10 @@ struct Metrics {
+ 	const auto metrics = ComputeMetrics(font, adjust);
+ 
+ 	if (monospace || !(flags & FontFlag::SubOrSuper)) {
+-		font.setPixelSize(metrics.pixelSize);
++                // font.setPixelSize(metrics.pixelSize);
+ 	} else {
+ 		font.setPixelSize(
+-			int(base::SafeRound(metrics.pixelSize * kSubSuperMultiplier)));
++			int(base::SafeRound(size * kSubSuperMultiplier)));
+ 	}
+ 	if (!monospace) {
+ 		font.setWeight((flags & FontFlag::Bold)
+-- 
+2.54.0
+
