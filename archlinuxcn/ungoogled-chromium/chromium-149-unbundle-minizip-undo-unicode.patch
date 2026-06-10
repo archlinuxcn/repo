@@ -1,0 +1,27 @@
+From cb758be9a99d13cfa903432fae0864a1656e2c49 Mon Sep 17 00:00:00 2001
+From: LN Liberda <lauren@selfisekai.rocks>
+Date: Thu, 7 May 2026 09:45:32 +0200
+Subject: [PATCH] unbundle/minizip: Ignore Unicode Path Extra Field
+
+The fields come from chromium's patches on minizip
+---
+ third_party/zlib/google/zip_reader.cc | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/third_party/zlib/google/zip_reader.cc b/third_party/zlib/google/zip_reader.cc
+index 002a1e3ed01d3..88f075ec7739a 100644
+--- a/third_party/zlib/google/zip_reader.cc
++++ b/third_party/zlib/google/zip_reader.cc
+@@ -307,12 +307,6 @@ bool ZipReader::OpenEntry() {
+   DCHECK(path_in_zip[info.size_filename] == '\0');
+   entry_.path_in_original_encoding = path_in_zip.data();
+ 
+-  if (info.size_utf8_filename > 0) {
+-    // Use the Info-ZIP Unicode Path Extra Field if present.
+-    DCHECK(info.utf8_filename[info.size_utf8_filename] == '\0');
+-    entry_.path_in_original_encoding = info.utf8_filename;
+-  }
+-
+   // Convert path from original encoding to Unicode.
+   std::u16string path_in_utf16;
+   const char* const encoding = encoding_.empty() ? "UTF-8" : encoding_.c_str();

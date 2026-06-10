@@ -3,8 +3,8 @@
 
 pkgname=gapless
 _name=g4music
-pkgver=4.6
-pkgrel=12
+pkgver=4.6.1
+pkgrel=1
 pkgdesc="Play your music elegantly (AKA: G4Music)"
 arch=('aarch64' 'x86_64')
 url="https://gitlab.gnome.org/neithern/g4music"
@@ -28,7 +28,7 @@ optdepends=('gst-plugins-bad: "bad" plugin libraries'
 provides=("${_name}")
 conflicts=("${_name}")
 source=(source::git+"${url}.git#tag=v${pkgver}")
-b2sums=('500e56a7cd8a8601ee49588b350951b3021bd52ff1e4e6d730645f754318a59622a31192c006cfeedc3aadbae6edff7f25b1d2d4e7fd3b8e0e47c41b9a474eb8')
+b2sums=('314c61efcfa4eb9fa16c609ffbba464d88320fee26c06dc631cf435f8efa511941f80c8ff2bcc8739819cfe2a980297136281914da2f503e60c991bae3dfaa23')
 
 build() {
   arch-meson "source" build

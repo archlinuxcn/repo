@@ -4,13 +4,13 @@
 
 pkgname=libkrun
 pkgver=1.18.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A dynamic library providing Virtualization-based process isolation capabilities"
 url='https://github.com/containers/libkrun'
 arch=(aarch64 x86_64)
 license=('Apache-2.0')
 makedepends=('cargo' 'patchelf' 'clang')
-depends=('glibc' 'gcc-libs' 'libkrunfw' 'pipewire' 'virglrenderer')
+depends=('glibc' 'libgcc' 'zstd' 'bzip2' 'libkrunfw' 'libpipewire' 'virglrenderer')
 source=("https://github.com/containers/libkrun/archive/refs/tags/v$pkgver/$pkgname-$pkgver.tar.gz")
 sha256sums=('483f5579006d59212b9942b9ca39f03c6305940129d99925ecc979b1e6754711')
 

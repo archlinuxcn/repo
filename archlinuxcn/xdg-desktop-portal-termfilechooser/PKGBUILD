@@ -1,6 +1,6 @@
 # Maintainer: shinka <shinnkka1@gmail.com>
 pkgname=xdg-desktop-portal-termfilechooser
-pkgver=1.4.0
+pkgver=1.4.1
 pkgrel=1
 pkgdesc='xdg-desktop-portal backend for your favorite terminal file chooser (hunkyburrito fork)'
 url="https://github.com/hunkyburrito/xdg-desktop-portal-termfilechooser"
@@ -20,7 +20,7 @@ optdepends=(
 source=(
   "${pkgname}-${pkgver}.tar.gz::$url/archive/v${pkgver}.tar.gz"
 )
-sha512sums=('a490563ac4f78bf94784894595215f6eb7eaeaedb761f6b54649c2034d4ebec7e8808a1dc23e090d9effe27657a2c4a9de0d89c7baf76549da4fd7a5c294a0b5')
+sha512sums=('b66d561fed77b7793fff2c48b843a4cc41347801cefb8fa262605762c4a7504615ab4cc27120fe38fbb5ea860bb0843e10c7187ed5c2dc4d17e01ff71fe8d5db')
 conflicts=(xdg-desktop-portal-termfilechooser)
 
 build() {

@@ -1,0 +1,32 @@
+From 45e056a5da653bb019191ef152224721ac791e06 Mon Sep 17 00:00:00 2001
+From: DeepChirp <DeepChirp@outlook.com>
+Date: Thu, 28 May 2026 19:46:46 +0800
+Subject: [PATCH] fix(linux): set desktop name to fix icon on Wayland
+
+Explicitly set the desktop name using `app.setDesktopName()`.
+
+Under Wayland, compositors rely on the `app_id` matching the
+`.desktop` file name to resolve and display the correct application
+icon. Without this, the application falls back to a generic default
+icon. This change ensures the correct identifier is passed, fixing the
+missing icon issue on Wayland sessions.
+---
+ electron/main.ts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/electron/main.ts b/electron/main.ts
+index c71cbfd57..e55778b90 100644
+--- a/electron/main.ts
++++ b/electron/main.ts
+@@ -2,6 +2,8 @@ import { app } from 'electron';
+ import { PROTOCOL_PREFIX } from './protocol-handler';
+ import { startApp } from './start-app';
+ 
++(app as any).setDesktopName('com.super_productivity.SuperProductivity.desktop');
++
+ const IS_MAC = process.platform === 'darwin';
+ 
+ if (!IS_MAC) {
+-- 
+2.54.0
+

@@ -1,0 +1,106 @@
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+# Contributor: Mahdi Sarikhani <mahdisarikhani@outlook.com>
+# Contributor: Anna <morganamilo@gmail.com>
+
+pkgname=super-productivity
+_appid=com.super_productivity.SuperProductivity
+pkgver=18.9.1
+_electronversion=41
+pkgrel=1
+pkgdesc="An advanced todo list app with timeboxing and time tracking capabilities"
+arch=('x86_64')
+url="https://super-productivity.com"
+license=('MIT')
+depends=('bash' "electron${_electronversion}" 'glibc' 'hicolor-icon-theme' 'libgcc')
+makedepends=('cargo' 'nodejs-lts-jod' 'npm')
+provides=('superproductivity')
+conflicts=('superproductivity')
+replaces=('superproductivity')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/johannesjo/${pkgname}/archive/v${pkgver}.tar.gz"
+        "0001-fix-linux-set-desktop-name-to-fix-icon-on-Wayland.patch"
+        "${_appid}.desktop"
+        "${pkgname}.sh")
+sha256sums=('91981e9676aeb9ebd74be121b4b4f131fb5d0e7bcff79d2dd7fe61bb7e0aa6bb'
+            '73aae23b6d8f18ba553dff5283f80e657b8e3060aa1c7642ae71abac09823b08'
+            'e310fa4c0749b8568b9516fe96f285ec1d1d05f8371795a7ef30733c4620f98d'
+            '01ddd1a8a63ec2dea24e666828e7800857d69a4a46f16c302be27458f5847fd0')
+
+prepare() {
+    sed -e "
+        s/@electronversion@/${_electronversion}/g
+        s/@appname@/${pkgname}/g
+        s/@runname@/app.asar/g
+        s/@cfgdirname@/${pkgname}/g
+        s/@options@/--ozone-platform-hint=auto/g
+    " -i "${srcdir}/${pkgname}.sh"
+
+    cd "${pkgname}-${pkgver}"
+
+    # Fix the window title bar icon
+    patch -Np1 -i "${srcdir}/0001-fix-linux-set-desktop-name-to-fix-icon-on-Wayland.patch"
+
+    export npm_config_cache="$srcdir/npm_cache"
+    export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+    export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
+
+    NODE_ENV=development npm ci
+
+    pushd electron/wayland-idle-helper
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo fetch --locked --target host-tuple
+    popd
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+
+    export npm_config_cache="$srcdir/npm_cache"
+    export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+    export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
+    electronDist="/usr/lib/electron${_electronversion}"
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+
+    npm run buildFrontend:prod:es6
+    npm run electron:build
+
+    # clean up sourcemaps
+    find .tmp/angular-dist -name '*.map' -type f -delete
+    find node_modules -name '*.map' -type f -print -delete
+
+    # delete test and example cases
+    find node_modules -name test.js -type f -print -delete
+    find electron -name '*.test.cjs' -type f -print -delete
+    find node_modules -name example.js -type f -print -delete
+
+    # delete source code
+    rm -rf electron/wayland-idle-helper
+
+    # clean up build scripts
+    rm -f electron/tsconfig.electron.json
+    rm -rf electron/scripts
+
+    # delete licenses and docs
+    find node_modules -iname 'license' -type f -print -delete
+    find node_modules -iname 'license.txt' -type f -print -delete
+    find node_modules -iname 'readme*' -type f -print -delete
+    find node_modules -iname '*.md' -type f -print -delete
+
+    NODE_ENV=production npm exec -c "electron-builder --linux dir -c.electronDist=${electronDist} -c.electronVersion=${SYSTEM_ELECTRON_VERSION}"
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+
+    install -Dm644 .tmp/app-builds/linux-unpacked/resources/app.asar -t "${pkgdir}/usr/lib/${pkgname}"
+
+    install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+    install -Dm644 "${srcdir}/${_appid}.desktop" -t "${pkgdir}/usr/share/applications"
+    for i in 16 32 48 64 128 256 512 1024; do
+        install -Dm644 "build/icons/${i}x${i}.png" "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/${pkgname}.png"
+    done
+
+    install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}

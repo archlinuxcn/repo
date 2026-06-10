@@ -1,0 +1,25 @@
+From 1771913503b94f0c7f077e484c5ab75f48e287bd Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Wed, 10 Jun 2026 12:37:50 +0800
+Subject: [PATCH 1/2] don't use embolded font
+
+---
+ ui/style/style_core_font.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ui/style/style_core_font.cpp b/ui/style/style_core_font.cpp
+index 5324f1e..7cb3e8f 100644
+--- a/ui/style/style_core_font.cpp
++++ b/ui/style/style_core_font.cpp
+@@ -338,7 +338,7 @@ struct Metrics {
+ 			if (!style.isEmpty() && !style.startsWith(
+ 					"Semibold",
+ 					Qt::CaseInsensitive)) {
+-				font.setBold(true);
++				font.setBold(false);
+ 			}
+ 		}
+ 
+-- 
+2.54.0
+

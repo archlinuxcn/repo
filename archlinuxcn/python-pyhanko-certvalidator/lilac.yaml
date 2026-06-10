@@ -11,8 +11,6 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: github
-    github: MatthiasValvekens/certvalidator
-    use_max_tag: true
-    prefix: v
+  - source: pypi
+    pypi: pyhanko-certvalidator
   - alias: python

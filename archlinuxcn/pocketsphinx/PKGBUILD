@@ -1,7 +1,7 @@
 pkgbase=pocketsphinx
 pkgname=(pocketsphinx python-pocketsphinx)
-pkgver=5.1.0
-pkgrel=2
+pkgver=5.1.1
+pkgrel=1
 pkgdesc='A small speech recognizer'
 arch=('i686' 'x86_64')
 url='https://cmusphinx.github.io'
@@ -9,7 +9,7 @@ license=('BSD-2-Clause' 'BSD-3-Clause' 'MIT')
 depends=('glibc' libpulse)
 makedepends=(git 'cmake' 'cython' 'gst-plugins-base-libs' 'ninja' 'python-build' 'python-installer' 'python-scikit-build-core' 'python-sounddevice')
 source=("git-source::git+https://github.com/cmusphinx/pocketsphinx.git#tag=v${pkgver}")
-sha256sums=('c43ec55fbcdfe903b0287fc00cf70872cf3f32749512c160c2013edf2361ff02')
+sha256sums=('ad90ef9b77e5db27d05aa0c82b032581fd3254f4866938898456ad4e93c04417')
 
 build() {
 	cd git-source

@@ -6,8 +6,8 @@ pkgname=yaak
 _appid=app.yaak.Yaak
 _appname=yaak-app-client
 pkgver=2026.4.0
-pkgrel=2
-pkgdesc='Fast, offline and Git-friendly API client for HTTP, GraphQL, WebSockets, SSE, and gRPC'
+pkgrel=3
+pkgdesc='A fast, secure, and offline API client'
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://yaak.app/'
 license=('MIT')
@@ -25,6 +25,7 @@ depends=(
     libgcc
     libgit2
     libsoup3
+    libssh2
     openssl
     sqlite
     webkit2gtk-4.1
@@ -37,17 +38,15 @@ depends=(
 makedepends=(
     appmenu-gtk-module   # Tauri
     cargo                # Rust dependencies & Tauri build
-    clang                # LLVM C compiler
     git                  # Web build
     imagemagick          # Icon
     libappindicator-gtk3 # Tauri
     librsvg              # Tauri
-    lld                  # LLVM linker
-    llvm                 # LLVM tools
     npm                  # Node dependencies & web build
     rust-wasm            # Yaak
     wasm-pack            # Yaak
 )
+options=("!lto") # https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20
 provides=("yaak-app" "yaak-app-client")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/v${pkgver}.tar.gz"
         "${_appid}.desktop")
@@ -58,33 +57,13 @@ _setup_env() {
     export YAAK_VERSION="${pkgver}"
     export CI=true
 
-    export npm_config_cache="${srcdir}/npm_cache"
-    export CARGO_HOME="${srcdir}/cargo_home"
-
     # Used for dynamic linking
     export LIBGIT2_NO_VENDOR=1
     export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+    export LIBSSH2_SYS_USE_PKG_CONFIG=1
     export OPENSSL_NO_VENDOR=1
     export ZSTD_SYS_USE_PKG_CONFIG=1
 
-    # https://github.com/briansmith/ring/issues/1444#issuecomment-1763272308
-    # So we use Clang instead of GCC.
-    export CC="$(command -v clang)"
-    export AR="$(command -v llvm-ar)"
-    export NM="$(command -v llvm-nm)"
-    export RANLIB="$(command -v llvm-ranlib)"
-    local _LD_LLD="$(command -v ld.lld)"
-
-    local _rust_target=$(rustc -vV | awk '/host:/ {print $2}')
-    local _rust_target_env=$(echo "${_rust_target}" | tr 'a-z-' 'A-Z_')
-
-    export CARGO_TARGET_${_rust_target_env}_LINKER="${CC}"
-    # Merge existing makepkg defaults and inject our LLVM linkage flags
-    export CARGO_TARGET_${_rust_target_env}_RUSTFLAGS="${RUSTFLAGS} -Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
-    # Unset global RUSTFLAGS so we do not break WebAssembly cross-compilation
-    unset RUSTFLAGS
-
-    export RUSTDOCFLAGS="-Clinker=${CC} -Clink-arg=-fuse-ld=${_LD_LLD}"
 
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
