@@ -40,7 +40,7 @@ JIT=         # Enable native just-in-time compilation with libgccjit available
                   #    (setq native-compile-prune-cache t)
                   # to delete old versions.
 
-AOT=              # Compile all elisp files provided by upstream.
+AOT=         # Compile all elisp files provided by upstream.
 
 TRAMPOLINES=      # Compile jitted elisp files with trampolines.
 
@@ -51,11 +51,11 @@ GPM=              # Mouse support in Linux console using gpmd.
 NOTKIT=           # Use no toolkit widgets. Like B&W Twm (001d sk00l).
                   # Bitmap fonts only, 1337!
                
-PGTK=             # Use native GTK3 build. Supports Wayland, yay! Still
+PGTK=        # Use native GTK3 build. Supports Wayland, yay! Still
                   # has some problems if running under Xorg. Remember,
                   # this is my personal build file!
 
-GTK3=        # GTK3 old windowing interface.
+GTK3=             # GTK3 old windowing interface.
 
 LUCID=            # Use the lucid, a.k.a athena, toolkit. Like XEmacs, sorta.
                   #
@@ -93,7 +93,7 @@ if [[ $CLI == "YES" ]] ; then
 else
   pkgname="emacs-git"
 fi
-pkgver=32.0.50.182500
+pkgver=32.0.50.182527
 pkgrel=1
 pkgdesc="GNU Emacs. Development master branch."
 arch=('x86_64')
@@ -104,7 +104,7 @@ depends=("${depends_nox[@]}" 'harfbuzz' 'libotf' 'librsvg')
 makedepends=('git')
 provides=('emacs')
 conflicts=('emacs')
-source=("emacs-git::git+https://git.savannah.gnu.org/git/emacs.git"
+source=("emacs-git::git+https://https.git.savannah.gnu.org/git/emacs.git"
         "nemacs")
 options=(!strip)
 install=emacs-git.install
@@ -347,9 +347,6 @@ if [[ $NOGZ == "YES" ]]; then
   _conf+=( '--without-compress-install' );
 fi
 
-# ctags/etags may be provided by other packages, e.g, universal-ctags
-_conf+=('--program-transform-name=s/\([ec]tags\)/\1.emacs/')
-
 ################################################################################
 
 ################################################################################
@@ -391,10 +388,10 @@ package() {
 
   make DESTDIR="$pkgdir/" install
 
-  install -D -m 755 "$srcdir"/nemacs "$pkgdir"/usr/bin/nemacs
+  if [[ ! $CLI == "YES" ]]; then
+  install -D -m 755 "$srcdir"/nemacs "$pkgdir"/usr/bin/nemacs;
+  fi
   
-  #if [[ ! $CLI == "YES" ]]; then
-
   # Install optional documentation formats
   if [[ $DOCS_HTML == "YES" ]]; then make DESTDIR="$pkgdir/" install-html; fi
   if [[ $DOCS_PDF == "YES" ]]; then make DESTDIR="$pkgdir/" install-pdf; fi
