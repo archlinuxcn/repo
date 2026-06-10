@@ -9,5 +9,5 @@ post_build_script: |
 update_on:
   - source: "git"
     github: "https://gitlab.gnome.org/GNOME/mutter.git"
-    exclude_regex: '.beta|.rc|.alpha'
+    exclude_regex: '.*(\.beta|\.rc|\.alpha)'
 build_prefix: extra-x86_64
