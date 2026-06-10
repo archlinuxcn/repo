@@ -25,10 +25,16 @@ depends=(
   'libdispatch'
   'libgcc'
   'libheif'
+  'libjpeg-turbo' 'libjpeg.so'
   'libjxl'
+  'libpipewire' 'libpipewire-0.3.so'
   'libstdc++'
+  'libxcb'
   'libxcomposite'
   'libxdamage'
+  'libxext'
+  'libxfixes'
+  'libxkbcommon'
   'libxrandr'
   'libxtst'
   'libvpx' 'libvpx.so'
@@ -74,7 +80,6 @@ replaces=('telegram-desktop-megumifox')
 source=(
   "https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
   "git+https://github.com/tdlib/td.git#tag=${_td_commit}"
-  tdesktop-fix-minizip-includes.patch
   "no-embolded-font.patch"
   "dont-adjust-fontsize.patch"
   "0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
@@ -85,7 +90,6 @@ source=(
 )
 sha512sums=('a733992a12268ee4d429ed383f63182c12e3a5d61d78e0f31cbfc705a5a36cb872a2f2dfb6c76d50a22ed46d141b9c13f80da4ab94286fe35b339ca685d954e3'
             'bd299ce4cc85fac7567cefca9392820d97d9663560ebc990ba5d1b73f92f01ef43b1fe29c89082105679223b8a3bfb40c364266b9a6021ec001ab91452e810e1'
-            'd9765588e92f154d83b95dc2840207bf22b26b6ca37b4d5cdfdb5e27a00c9e1ebcc9cd475a96bbcc5b02c24f6892320e009f843aa6b172a1820814b952a772eb'
             '1c5ace38926fe8e2c2dfec6b0d9073c77031fc15b60220ffcad626a0f933d6d71d31bdb7e1ccb8bfaa76c1d0338ddd2193a2e75ac1623dd66bbc8e3ee9be4885'
             'a5cc0b821d493333ee71957e71be51fb753bb3c0b97ca44b63ee1f2c93fa5ea2d8dda0560a37cbe55bb9dd17b557ab8e95725cafe32e6bec1989bcd3f42945c6'
             'bb0e706b7a2629ba6fae9b7c71cb5a3f292e568f8c8d845aeb2584835c849b232ff9b7886ec931e446d077f249e2587abc70868659a5d08f7d94dc431fa3f914'
@@ -96,7 +100,6 @@ sha512sums=('a733992a12268ee4d429ed383f63182c12e3a5d61d78e0f31cbfc705a5a36cb872a
 options=(!debug)
 
 prepare() {
-  patch -Np1 -d tdesktop-$pkgver-full/Telegram/lib_base -i "$srcdir"/tdesktop-fix-minizip-includes.patch
   patch -b -l -d tdesktop-$pkgver-full/Telegram/lib_ui -Np1 -i ${srcdir}/no-embolded-font.patch
   patch -b -l -d tdesktop-$pkgver-full/Telegram/lib_ui -Np1 -i ${srcdir}/dont-adjust-fontsize.patch
   patch -b -l -d tdesktop-$pkgver-full/ -Np1 -i ${srcdir}/0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch
