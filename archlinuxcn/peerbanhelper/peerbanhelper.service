@@ -4,6 +4,8 @@ After=network.target
 
 [Service]
 User=peerbanhelper
+LogsDirectory=peerbanhelper
+StateDirectory=peerbanhelper
 WorkingDirectory=/usr/share/java/peerbanhelper
 ExecStart=/usr/bin/peerbanhelper
 SuccessExitStatus=143

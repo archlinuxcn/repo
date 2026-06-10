@@ -1,6 +1,5 @@
 #!/bin/sh
 # Wrapper to start PeerBanHelper with the packaged layout.
-set -euo pipefail
 
 APP_DIR=/usr/share/java/peerbanhelper
 JAVA_BIN=${PEERBANHELPER_JAVA_BIN:-/usr/bin/java}
@@ -24,6 +23,6 @@ exec "${JAVA_BIN}" \
   -XX:+UseStringDeduplication \
   -XX:-ShrinkHeapInSteps \
   ${PEERBANHELPER_JAVA_OPTS:-} \
-  -jar "${APP_DIR}/PeerBanHelper.jar" \
+  -jar "${APP_DIR}/peerbanhelper.jar" \
   ${PEERBANHELPER_OPTS:-} \
   "$@"

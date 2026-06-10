@@ -1,48 +1,49 @@
 # Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 # Contributor: Jisu-Woniu <jswn@jswn9945.xyz>
 
-_repo=PeerBanHelper
 pkgname=peerbanhelper
 pkgver=9.3.14
-pkgrel=2
-pkgdesc="A tool to auto ban peers on the Bittorrent network."
+pkgrel=3
+pkgdesc="A tool to auto ban peers on the Bittorrent network"
 arch=('any')
 url="https://github.com/PBH-BTN/PeerBanHelper"
-license=('GPL-3.0-only')
+license=('GPL-3.0-or-later')
 depends=('java-runtime>=25' 'sh')
 makedepends=('git' 'java-environment>=25' 'nodejs' 'pnpm')
-source=("${_repo}::git+https://github.com/PBH-BTN/PeerBanHelper.git#tag=v${pkgver}" # If we use the tarball, the git commit information is missing, and a warning will appear in the version information of the WebUI.
-        "peerbanhelper.sh"
+source=("${pkgname}::git+https://github.com/PBH-BTN/PeerBanHelper.git#tag=v${pkgver}" # Use git source to show commit hash in WebUI
+        "${pkgname}.sh"
         "${pkgname}.sysusers"
         "${pkgname}.tmpfiles"
         "${pkgname}.service")
 sha256sums=('be1cbd82a12b258cb34cdf97f9f6e7604af7972296bb6721b9c217993b5e69fc'
-            '65cc7bb87d8a22512e613463b7ab7ab80c23c624fed257679fd153f44bcaee86'
+            'a416eeaccf6747b678c118795eb6d70815d75c091627239fc7e8dfc3c850e019'
             '394ee8f74dd630f375c34cf5160059078516033b0867ad43b1c43377b4104bde'
-            '3fb27c63d4d00ca6ac182784fa22bf60bfd856b42601ba1d404e78070c59e437'
-            '4a84cc592ef1b5e22077ed2b2324f8aff4adfa6d037c982b4bd27d0818db8391')
+            '5ecff7c76c8b24ed23176fd00bb6a2c242d3e7d7242f3d46b55a05f099ec6d4a'
+            '5fd05e499bcb94796ad6ef4017648f2d53f0f604111dc6fc47623bfd17e482a7')
 
 build() {
-    cd "${_repo}"
-    bash ./build.sh
+    cd "${pkgname}"
+
+    pushd webui
+    pnpm install --frozen-lockfile
+    pnpm run build
+    popd
+
+    cp -r webui/dist src/main/resources/static
+    ./gradlew clean build --no-daemon
 }
 
 package() {
-  cd "${_repo}"
+    cd "${pkgname}"
 
-  install -Dm755 "build/libs/${_repo}.jar" "${pkgdir}/usr/share/java/${pkgname}/${_repo}.jar"
-  install -Dm644 build/libraries/*.jar -t "${pkgdir}/usr/share/java/${pkgname}/libraries"
+    install -Dm644 "build/libs/PeerBanHelper.jar" "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
+    install -Dm644 build/libraries/*.jar -t "${pkgdir}/usr/share/java/${pkgname}/libraries"
 
-  install -Dm755 "${srcdir}/peerbanhelper.sh" "${pkgdir}/usr/bin/peerbanhelper"
-  install -Dm 644 "${srcdir}"/${pkgname}.sysusers "${pkgdir}"/usr/lib/sysusers.d/${pkgname}.conf
-  install -Dm 644 "${srcdir}"/${pkgname}.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/${pkgname}.conf
-  install -Dm 644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+    install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+    install -Dm644 "${srcdir}"/${pkgname}.sysusers "${pkgdir}"/usr/lib/sysusers.d/${pkgname}.conf
+    install -Dm644 "${srcdir}"/${pkgname}.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/${pkgname}.conf
+    install -Dm644 "${srcdir}/${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system"
 
-  install -Dm 644 "pkg/deb/etc/peerbanhelper/config.yml" "${pkgdir}/usr/share/peerbanhelper/defaults/config.yml"
-  install -Dm 644 "pkg/deb/etc/peerbanhelper/profile.yml" "${pkgdir}/usr/share/peerbanhelper/defaults/profile.yml"
-
-  # disable checking updates
-  # touch "${pkgdir}/usr/share/java/${pkgname}/disable-update-check.txt"
-
-  install -Dm 644 "pkg/deb/usr/share/doc/${pkgname}/copyright" "${pkgdir}/usr/share/doc/${pkgname}/copyright"
+    install -Dm644 "pkg/deb/etc/peerbanhelper/config.yml" -t "${pkgdir}/usr/share/peerbanhelper/defaults"
+    install -Dm644 "pkg/deb/etc/peerbanhelper/profile.yml" -t "${pkgdir}/usr/share/peerbanhelper/defaults"
 }
