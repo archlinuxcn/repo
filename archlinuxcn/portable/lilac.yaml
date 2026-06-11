@@ -22,6 +22,11 @@ update_on:
   - source: alpm
     alpm: systemd-libs
     provided: libudev.so
+  - source: alpm
+    alpm: glibc
+  - source: alpm
+    alpm: libgcc
+    provided: libgcc_s.so
 
 repo_depends:
   - portable-packer
