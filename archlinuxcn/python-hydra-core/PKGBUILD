@@ -2,8 +2,8 @@
 
 _pkgname=hydra
 pkgname=python-hydra-core
-pkgver=1.3.2
-pkgrel=5
+pkgver=1.3.3
+pkgrel=1
 pkgdesc='A framework for elegantly configuring complex applications'
 arch=('any')
 url='https://hydra.cc'
@@ -20,7 +20,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/facebookresearch/hydra/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('09e700ed9ec043d6f4fc8be4475a513ccb9a7eb1bfa5f42b31785995b83c229f14191e222c445cc2de96611d42fec18e9b5c09a8da4e5c5a29b7be2e2e1cb66e')
+sha512sums=('889b75ed76dc147cfe1161fe92eff20e22f3229adbd6b3489795afae184d3d32e1f0499872d94a6eab985b4cba3d67ce4b6bd5f6e932041bb133cf4c53c08eb4')
 
 prepare() {
   # use system antlr4
