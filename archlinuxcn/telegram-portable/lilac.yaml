@@ -6,12 +6,11 @@ post_build_script: |
   git_pkgbuild_commit()
 
 update_on:
-  - source: github
-    github: telegramdesktop/tdesktop
-    branch: dev
-    use_latest_release: true
-  # - source: manual
-  #   manual: v5.13.1
+  - source: alpm
+    alpm: telegram-portable
+    repo: archlinuxcn
+    from_pattern: '-.*'
+    to_pattern: ''
   - source: alpm
     alpm: ffmpeg
     provided: libavcodec.so
