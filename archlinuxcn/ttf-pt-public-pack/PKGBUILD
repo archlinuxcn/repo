@@ -3,14 +3,19 @@
 pkgbase=ttf-pt-public-pack
 pkgname=('ttf-pt-astra-sans' 'ttf-pt-astra-serif' 'ttf-pt-mono' 'ttf-pt-root_ui' 'ttf-pt-sans' 'ttf-pt-serif')
 pkgver=2024.09.02
-pkgrel=3
+pkgrel=4
 epoch=1
 arch=('any')
-url='https://www.paratype.ru'
+url='https://www.paratype.com'
 license=('custom:OFL')
-source=("PT-Public-Pack.ottt.zip"::"https://api.paratype.com/api/editions/ofl/download/59384")
-DLAGENTS=('https::/usr/bin/curl -gqb "" -fLC - --retry 3 --retry-delay 3 -o %o %u --referer https://www.paratype.com/ --user-agent Mozilla')
-sha256sums=('SKIP')
+source=("ttf-pt-astra-sans.zip::https://api.paratype.com/api/download/ofl/pack/3759"
+        "ttf-pt-astra-serif.zip::https://api.paratype.com/api/download/ofl/pack/3760"
+        "ttf-pt-mono.zip::https://api.paratype.com/api/download/ofl/pack/3763"
+        "ttf-pt-root_ui.zip::https://api.paratype.com/api/download/ofl/pack/3758"
+        "ttf-pt-sans.zip::https://api.paratype.com/api/download/ofl/pack/3762"
+        "ttf-pt-serif.zip::https://api.paratype.com/api/download/ofl/pack/3761")
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+#DLAGENTS=('https::/usr/bin/curl -gqb "" -fLC - --retry 3 --retry-delay 3 -o %o %u --referer https://www.paratype.com/ --user-agent Mozilla')
 
 package_ttf-pt-astra-sans() {
   pkgdesc='A sans-serif font designed to be metrically equivalent to Times New Roman'
@@ -30,6 +35,7 @@ package_ttf-pt-astra-serif() {
 
 package_ttf-pt-mono() {
   pkgdesc='A monospace font for use in forms, tables, worksheets and other scenarios where equal character widths are advantageous'
+  optdepends=('ttf-ptcode: Ligatures font for PT Mono')
   provides=('ttf-font' 'ttf-pt-mono')
   conflicts=('ttf-pt-mono' 'ttf-paratype')
   install -Dm644 $srcdir/PT/PT/PT-Mono/*.ttf -t $pkgdir/usr/share/fonts/paratype/pt-mono
