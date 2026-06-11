@@ -1,0 +1,29 @@
+# Post-install helpers for noctalia-greeter-git
+
+_greeter_setup() {
+  if [[ ! -x /usr/bin/noctalia-greeter-apply-appearance ]]; then
+    return 0
+  fi
+
+  NOCTALIA_GREETER_SESSION_BIN=/usr/bin/noctalia-greeter-session \
+    /usr/share/noctalia-greeter/setup_greeter_system.sh || true
+}
+
+_greetd_hint() {
+  echo ""
+  echo "==> greetd should use: command = \"/usr/bin/noctalia-greeter-session\""
+  echo "==> Full config block: sudo noctalia-greeter-print-greetd-config"
+  echo ""
+}
+
+post_install() {
+  _greeter_setup
+  _greetd_hint
+}
+
+post_upgrade() {
+  _greeter_setup
+  echo ""
+  echo "==> noctalia-greeter has been updated; restart greetd if it is already configured."
+  _greetd_hint
+}
