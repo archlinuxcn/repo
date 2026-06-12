@@ -177,9 +177,9 @@ pkgbase="linux-$_pkgsuffix"
 _major=7.1
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc4
+_rcver=rc7
 pkgver=${_major}.${_rcver}
-_tagrel=1
+_tagrel=2
 pkgrel=1
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -216,12 +216,17 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=595.71.05
+_nv_ver=610.43.02
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
-    "https://github.com/CachyOS/linux/releases/download/${_srctag}/${_srctag}.tar.gz"
-    "config")
+    "https://github.com/CachyOS/linux/releases/download/${_srctag}/${_srctag}.tar.gz"{,.asc}
+    "config"
+)
+validpgpkeys=(
+  E18447AC260021D31F3FF6C4C8A2A4774B8B63C4  # Eric Naim <dnaim@cachyos.org>
+  E8B9AA39F054E30E8290D492C3C4820857F654FE  # Peter Jung <admin@ptr1337.dev>
+)
 
 # LLVM makedepends
 if _is_lto_kernel; then
@@ -248,11 +253,7 @@ fi
 
 
 if [ "$_build_nvidia_open" = "yes" ]; then
-    source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
-             "${_patchsource}/misc/nvidia/0001-Add-IBT-support.patch"
-             "${_patchsource}/misc/nvidia/0002-fix-dsc-correct-RC-parameter-tables-to-match-VESA-DS.patch"
-             "${_patchsource}/misc/nvidia/0003-fix-dsc-use-bits_per_component-for-flatnessDetThresh.patch"
-             "${_patchsource}/misc/nvidia/0004-fix-dp-add-Bigscreen-Beyond-VR-headset-to-WAR-databa.patch")
+    source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz")
 fi
 
 # Use generated AutoFDO Profile
@@ -814,6 +815,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('2bca9c138d84b20f41ef525fc1951c03ca91d98aeabd291e36551bda01d5cf553f4df066e693264be27ce3f7d832f644daeba06001d2e163e5885ed6c9a84205'
-        '3f4afd2643d5248805e28baac898c224c2db41c0ebaea118dea6ceeb81a12329062a9068a409aaf793631cc71005fd9047f198d2d572ef449d41ee338d757ff7'
+b2sums=('0639bf941749d1d956e2afa1f8075d7bbafa0262ab86f11f3d90181a5884cada9980736b6e82f3718f146767de77ba3eac3c3202fe5086494109277e63e6bc26'
+        'SKIP'
+        '74ec907cbafb6dc0971ceb700d2e39ace932474aac92d7b73a39df30cbb673070e42b8770ce6c52570275c2310bc374f082363a6ba6cad443998da5a2ed74cd0'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')
