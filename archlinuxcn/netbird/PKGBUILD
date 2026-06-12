@@ -6,7 +6,7 @@ pkgbase=netbird
 pkgname=(
 	${pkgbase}{,-{management,signal}}
 )
-pkgver=0.72.3
+pkgver=0.72.4
 pkgrel=1
 url="https://${pkgbase}.io"
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64' 'riscv64')
@@ -17,7 +17,7 @@ source=(
 	"${pkgname}-${pkgver}.tar.gz::https://github.com/netbirdio/${pkgname}/archive/refs/tags/v${pkgver}.tar.gz"
 	${pkgbase}{,-{management,signal}}.env
 )
-sha256sums=('e93b1af632059ac5218ee16b97672fc4dd5980510d6d853049767c7bacadcdea'
+sha256sums=('a4a2e999e57586210ccb59b5e60ba9283055cbd23de2b5b3cd34e1c1a42a42b0'
             '128e36e1f814a12886f3122a1809a404be17f81481275b6624e66937941f5269'
             '7d31d7847f5a25bca81def470f7fc5a277c3064e5a0ad71a3f19a29202537315'
             '80cd7b6a22087a83c1332c15693d8a18b780ef5ecf3fbc562af28d1a623eef3b')
