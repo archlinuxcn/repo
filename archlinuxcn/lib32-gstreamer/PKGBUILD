@@ -9,7 +9,7 @@ pkgname=(
   lib32-gst-plugins-base
   lib32-gst-plugins-good
 )
-pkgver=1.28.3
+pkgver=1.28.4
 pkgrel=1
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
@@ -81,7 +81,7 @@ source=(
   "git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git?signed#tag=$pkgver"
   0001-HACK-meson-Disable-broken-tests.patch
 )
-b2sums=('8c99ae79795007260e74f24ef5b3501efe17ef5526e258c7df4b72de484f9864774ef1a5bfd88e9f296dfdf98d8c33103df36d27ae7cda524bf83b7716d07a68'
+b2sums=('3a8a3d89bfc9be8b2b1cbd24b6e7e1dbea25c4619045dd97df4631b94ad5d59d9ac54ffc54eccdec10b0195aee87e0dadd8f560e5cdc499dee99b033d141f7e9'
         'f6c0042f2d171d93f3aadc5fed50fa4a83a901371ce914cb44d614ac0510e0c5c2e10334a9011acad80f86ab08d7a953cce8d331660bca49bbfcaabbce9bee6b')
 validpgpkeys=(
   D637032E45B8C6585B9456565D2EEE6F6F349D7C # Tim Müller <tim@gstreamer-foundation.org>
@@ -133,8 +133,7 @@ build() {
     -D ugly=disabled
   )
 
-  # https://gitlab.freedesktop.org/gstreamer/gstreamer/-/issues/3197
-  export GI_SCANNER_DISABLE_CACHE=1
+  export RUSTUP_TOOLCHAIN=stable
 
   arch-meson gstreamer build "${meson_options[@]}"
   meson compile -C build
@@ -146,6 +145,7 @@ check() (
 
   export CK_TIMEOUT_MULTIPLIER=5
   export NO_AT_BRIDGE=1 GTK_A11Y=none
+  export RUSTUP_TOOLCHAIN=stable
 
   # Flaky due to timeouts
   xvfb-run -s "-nolisten local" \
