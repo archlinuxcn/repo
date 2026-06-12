@@ -3,8 +3,8 @@
 # Contributor: Robert Tari <robert at tari dot in>
 
 pkgname=libayatana-appindicator-glib
-pkgver=2.0.1
-pkgrel=2
+pkgver=2.0.2
+pkgrel=1
 pkgdesc="Ayatana Application Indicators Shared Library (GLib-2.0 reimplementation, 100% GTK-free, 100% dbusmenu-free)"
 arch=('x86_64')
 url="https://github.com/AyatanaIndicators/libayatana-appindicator-glib"
@@ -12,7 +12,7 @@ license=("GPL-3.0-or-later")
 makedepends=("cmake-extras" "gi-docgen" "gobject-introspection" "vala" "glib2-devel")
 depends=("glibc" "glib2" "libgcc")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AyatanaIndicators/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('670e58fa2d89a3d0532745986ec3d7ca8fd90f3db830041f69a91fb7eb75c406')
+sha256sums=('f52840bb3a315db88d6531c974048017651fb8557d53af296c3beeeec7262264')
 
 build() {
   cmake \
