@@ -37,6 +37,10 @@ import (
 	// naive proxy
 	_ "github.com/caddyserver/forwardproxy"
 
+	// cache
+	_ "github.com/darkweak/souin/plugins/caddy"
+	_ "github.com/darkweak/storages/simplefs/caddy"
+
 	// ip sources
 	_ "github.com/WeidiDeng/caddy-cloudflare-ip"
 	_ "github.com/xcaddyplugins/caddy-trusted-cloudfront"
