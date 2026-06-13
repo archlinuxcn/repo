@@ -26,38 +26,43 @@ source=("eden-v${pkgver}.tar.gz::https://git.eden-emu.dev/eden-emu/eden/archive/
 sha256sums=('a43ea2886b75204438f691a4ddfad99e88b508e30431978dd13fba1c22440d19'
             '777dd9aefb9427ed08a642b02998f32c5ac120e5d32611d8f21cf1f4e68cee57')
 
-# prepare() {
-
-# }
+prepare() {
+	cd "$srcdir"
+	echo "v$pkgver" > eden/GIT-TAG
+	echo "v$pkgver" > eden/GIT-RELEASE
+}
 
 build() {
-	# set -x
+	set -x
 	cd "$srcdir"
     # taken from https://github.com/Eden-CI/Workflow/blob/fa45c6ee9191105d36859e07cc0719e7c1bdf67b/.ci/build/targets.sh#L102
 	export CXXFLAGS="${CXXFLAGS} -fprofile-use=$(pwd)/eden.profdata -Wno-backend-plugin -Wno-profile-instr-unprofiled -Wno-profile-instr-out-of-date"
-	# use clang because PGO profile data is clang format
-	cmake -B build -S eden -GNinja \
-		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DCMAKE_BUILD_TYPE=None \
-		-DUSE_DISCORD_PRESENCE=ON \
-		-DCPM_USE_LOCAL_PACKAGES=ON \
-		-DYUZU_USE_BUNDLED_FFMPEG=OFF \
-		-DDiscordRPC_FORCE_BUNDLED=ON \
-		-Dxbyak_FORCE_BUNDLED=ON \
-		-DYUZU_USE_BUNDLED_QT=OFF \
-		-DENABLE_QT_TRANSLATION=ON \
-		-DYUZU_USE_QT_MULTIMEDIA=ON \
-		-DYUZU_USE_QT_WEB_ENGINE=ON \
-		-Dhttplib_FORCE_BUNDLED=ON \
-		-DTITLE_BAR_FORMAT_RUNNING="eden | ${pkgver} {}" \
-		-DTITLE_BAR_FORMAT_IDLE="eden ${pkgver} {}" \
-		-DYUZU_TESTS=OFF \
-		-DDYNARMIC_TESTS=OFF \
-		-DBUILD_TESTING=OFF \
-		-DCMAKE_C_COMPILER="clang" \
-		-DCMAKE_CXX_COMPILER="clang++" \
-		-DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+
+	local cmake_flags=(
+		-DCMAKE_INSTALL_PREFIX=/usr
+		-DCMAKE_BUILD_TYPE=None
+		-DUSE_DISCORD_PRESENCE=ON
+		-DCPM_USE_LOCAL_PACKAGES=ON
+		-DYUZU_USE_BUNDLED_FFMPEG=OFF
+		-DDiscordRPC_FORCE_BUNDLED=ON
+		-Dxbyak_FORCE_BUNDLED=ON
+		-DYUZU_USE_BUNDLED_QT=OFF
+		-DENABLE_QT_TRANSLATION=ON
+		-DYUZU_USE_QT_MULTIMEDIA=ON
+		-DYUZU_USE_QT_WEB_ENGINE=ON
+		-Dhttplib_FORCE_BUNDLED=ON
+		-DYUZU_TESTS=OFF
+		-DDYNARMIC_TESTS=OFF 
+		-DBUILD_TESTING=OFF 
 		-Wno-dev
+
+		# use clang because PGO profile data is clang format
+		-DCMAKE_C_COMPILER="clang" 
+		-DCMAKE_CXX_COMPILER="clang++" 
+		-DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld"
+	)
+
+	cmake -B build -S eden --fresh -GNinja "${cmake_flags[@]}"
 	cmake --build build
 }
 package() {
