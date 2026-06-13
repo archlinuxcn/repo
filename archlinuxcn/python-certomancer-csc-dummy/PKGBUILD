@@ -1,17 +1,17 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
-_name=certomancer-csc-dummy
-pkgname=python-${_name}
-pkgver=0.4.1
-pkgrel=2
+_name=certomancer_csc_dummy
+pkgname=python-certomancer-csc-dummy
+pkgver=0.4.2
+pkgrel=1
 pkgdesc="A Certomancer-based demo CSC server for integration tests"
 arch=(any)
 url="https://github.com/MatthiasValvekens/${_name}"
 license=(MIT)
 depends=(python python-asn1crypto python-cryptography certomancer python-aiohttp python-pae)
 makedepends=(python-build python-installer python-setuptools python-wheel)
-source=(${_name}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
-sha512sums=('b1cb976debb2ad063c18a45e961235fa0a24a1f1f26e26e296326ec1c106656e1bd4557e677bf8b4023277f5906a33f51b5eb83207cde72916d7c2f445b31b55')
+source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
+sha512sums=('4d34402e1d4e13a4089282bc95e3fa8c4867f1377404de29544828eb64c8e7e3adb0212215640a0dda3d8a41f0651f5b3e2b9a5cbea841ab6f9f0c97f4b36e90')
 
 build() {
   cd $_name-$pkgver

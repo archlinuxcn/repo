@@ -11,7 +11,6 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: github
-    github: MatthiasValvekens/certomancer-csc-dummy
-    use_max_tag: true
+  - source: pypi
+    pypi: certomancer_csc_dummy
   - alias: python
