@@ -6,7 +6,7 @@
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
 pkgver=6.9.1
-_td_commit=0ae923c493bceb75433de2682ba8ae29cc7bf88d
+_td_commit=51743dfd01dff6179e2d8f7095729caa4e2222e9
 pkgrel=1
 pkgdesc="Official Telegram Desktop client with lilydjwg's patch"
 arch=('x86_64')
@@ -80,7 +80,7 @@ conflicts=('telegram-desktop')
 replaces=('telegram-desktop-megumifox')
 source=(
   "https://github.com/telegramdesktop/tdesktop/releases/download/v${pkgver}/tdesktop-${pkgver}-full.tar.gz"
-  "git+https://github.com/tdlib/td.git#tag=${_td_commit}"
+  "git+https://github.com/tdlib/td.git#commit=${_td_commit}"
   "0001-don-t-use-embolded-font.patch"
   "0002-don-t-adjust-font-size-based-on-metrics.patch"
   "0001-add-TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME-back.patch"
@@ -90,7 +90,7 @@ source=(
   "hide_proxy_icon_byenv.patch"
 )
 sha512sums=('e9f7d4d0db3ea11a34595afd37c3a17dced20c37c5ce0f37ed9996f053cbbfa183245f09c6e7980255a0961394f3e6e198b1f06eb74ef1ce4561c22aa1fb4ed8'
-            'bd299ce4cc85fac7567cefca9392820d97d9663560ebc990ba5d1b73f92f01ef43b1fe29c89082105679223b8a3bfb40c364266b9a6021ec001ab91452e810e1'
+            'd622b8f3580ee49415546d025c4ba45f5b2de50b315fc379dc57c0427c5f815c7cc3820cca937c12182ee461641bb61f87ebc99b6c74a1a666cea9a08f0f41a0'
             '7056767917a549e8f9a0605ed9134b20c923f0678fe0d2fc19b23587918e922d4e79d0852ec5c480fc4e45d0cadf945707719dc20813bafbeaf639e353dd4638'
             '419d91e0d289f52ef8397c26645cf2eb2698b2cb668cef2684b412f235c09c138db615404d8bfebbe7bfb46e639784615cc803dd6d2f285169df003208436cab'
             'bb0e706b7a2629ba6fae9b7c71cb5a3f292e568f8c8d845aeb2584835c849b232ff9b7886ec931e446d077f249e2587abc70868659a5d08f7d94dc431fa3f914'
