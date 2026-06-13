@@ -1,0 +1,74 @@
+# Most of this PKGBUILD are from AUR:
+# https://aur.archlinux.org/packages/eden
+
+# Maintainer: gfrank227 [at] gmail [dot] com
+# Maintainer: HurricanePooits <hurricanepootis@protonmail.com>
+# Contributor: rcf <ryan.farley@gmx.com>
+pkgname=eden-pgo
+pkgver=0.2.1
+pkgrel=2
+pkgdesc="Nintendo Switch emulator forked from yuzu. (with PGO)"
+arch=('x86_64' 'aarch64')
+url=https://eden-emulator.github.io/
+license=('GPL-3.0-or-later')
+depends=('enet' 'fmt' 'opus' 'lz4' 'zlib' 'zstd' 'libusb' 'openssl' 'glibc'
+	 'qt6-webengine' 'brotli' 'hicolor-icon-theme' 'qt6-base' 'sdl2'
+	 'ffmpeg' 'boost-libs' 'quazip-qt6' 'cubeb' 'qt6-charts'
+	 'qt6-multimedia' 'libgcc' 'libstdc++' )
+makedepends=('cmake' 'catch2' 'boost' 'wireless_tools' 'vulkan-headers' 'vulkan-utility-libraries'
+	     'nlohmann-json' 'ninja' 'gamemode' 'renderdoc'
+	     'qt6-tools' 'nasm' 'opencl-headers' 'clang' 'lld')
+optdepends=('gamemode: Gamemoded support')
+conflicts=('eden-bin' 'eden-git' 'eden-preview-bin' 'eden-beta' 'eden')
+options=('!debug')
+source=("eden-v${pkgver}.tar.gz::https://git.eden-emu.dev/eden-emu/eden/archive/v${pkgver}.tar.gz"
+"https://github.com/Eden-CI/PGO/releases/latest/download/eden.profdata")
+sha256sums=('a43ea2886b75204438f691a4ddfad99e88b508e30431978dd13fba1c22440d19'
+            '777dd9aefb9427ed08a642b02998f32c5ac120e5d32611d8f21cf1f4e68cee57')
+
+# prepare() {
+
+# }
+
+build() {
+	set -x
+	cd "$srcdir"
+	export CXXFLAGS="${CXXFLAGS} -fprofile-use=$(pwd)/eden.profdata -Wno-backend-plugin -Wno-profile-instr-unprofiled -Wno-profile-instr-out-of-date"
+	# use clang because PGO profile data is clang format
+	cmake -B build -S $pkgname -GNinja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=None \
+		-DUSE_DISCORD_PRESENCE=ON \
+		-DCPM_USE_LOCAL_PACKAGES=ON \
+		-DYUZU_USE_BUNDLED_FFMPEG=OFF \
+		-DDiscordRPC_FORCE_BUNDLED=ON \
+		-Dxbyak_FORCE_BUNDLED=ON \
+		-DYUZU_USE_BUNDLED_QT=OFF \
+		-DENABLE_QT_TRANSLATION=ON \
+		-DYUZU_USE_QT_MULTIMEDIA=ON \
+		-DYUZU_USE_QT_WEB_ENGINE=ON \
+		-Dhttplib_FORCE_BUNDLED=ON \
+		-DTITLE_BAR_FORMAT_RUNNING="eden | ${pkgver} {}" \
+		-DTITLE_BAR_FORMAT_IDLE="eden ${pkgver} {}" \
+		-DYUZU_TESTS=OFF \
+		-DDYNARMIC_TESTS=OFF \
+		-DBUILD_TESTING=OFF \
+		-DCMAKE_C_COMPILER="clang" \
+		-DCMAKE_CXX_COMPILER="clang++" \
+		-DCMAKE_EXE_LINKER_FLAGS="-fuse-ld=lld" \
+		-Wno-dev
+	cmake --build build
+}
+package() {
+	cd "$srcdir"
+	DESTDIR="$pkgdir/" cmake --install build
+	install -Dm644 "$srcdir/$pkgname/dist/72-yuzu-input.rules" "$pkgdir/usr/lib/udev/rules.d/72-eden-input.rules"
+	sed -i 's/KERNEL==/ACTION!="remove", KERNEL==/' "$pkgdir/usr/lib/udev/rules.d/72-eden-input.rules" # systemd 258 fix
+	cd "$srcdir/$pkgname/LICENSES"
+	for file in *.txt;
+	do
+		install -Dm644 $file "$pkgdir/usr/share/licenses/$pkgname/$file"
+	done
+}
+
+
