@@ -63,12 +63,12 @@ build() {
 package() {
 	cd "$srcdir"
 	DESTDIR="$pkgdir/" cmake --install build
-	install -Dm644 "$srcdir/$pkgname/dist/72-yuzu-input.rules" "$pkgdir/usr/lib/udev/rules.d/72-eden-input.rules"
+	install -Dm644 "$srcdir/eden/dist/72-yuzu-input.rules" "$pkgdir/usr/lib/udev/rules.d/72-eden-input.rules"
 	sed -i 's/KERNEL==/ACTION!="remove", KERNEL==/' "$pkgdir/usr/lib/udev/rules.d/72-eden-input.rules" # systemd 258 fix
-	cd "$srcdir/$pkgname/LICENSES"
+	cd "$srcdir/eden/LICENSES"
 	for file in *.txt;
 	do
-		install -Dm644 $file "$pkgdir/usr/share/licenses/$pkgname/$file"
+		install -Dm644 $file "$pkgdir/usr/share/licenses/eden/$file"
 	done
 }
 
