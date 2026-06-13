@@ -1,7 +1,7 @@
 # Maintainer: graysky <therealgraysky AT protonmail DOT com>
 
 pkgname=modprobed-db
-pkgver=2.48
+pkgver=2.50
 pkgrel=1
 pkgdesc='Keeps track of EVERY kernel module ever used - useful for make localmodconfig'
 arch=('any')
@@ -12,7 +12,7 @@ replaces=('modprobed_db')
 conflicts=('modprobed_db')
 url="https://wiki.archlinux.org/index.php/Modprobed-db"
 source=("$pkgname-$pkgver.tar.gz::https://github.com/graysky2/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('746635f2cfbe977e715981b3e7db2fb6c8fc406cecc1ebaee1a9fa7582adafa9')
+sha256sums=('8cd9b490896a5e1e3eddf9c5a7dd771de8627965ffad0ca6426d25c886d904ee')
 install=readme.install
 
 build() {
