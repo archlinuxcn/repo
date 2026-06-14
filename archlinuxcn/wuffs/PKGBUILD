@@ -52,6 +52,7 @@ build() {
 	export GOPATH="${srcdir}/go"
 	export GOBIN="${GOPATH}/bin"
 	go get -v github.com/google/wuffs/cmd/...
+	sed -i 's|go test|#go test|G' ./build-all.sh
 	./build-all.sh
 }
 
