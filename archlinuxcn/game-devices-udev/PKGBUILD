@@ -8,7 +8,7 @@ url='https://codeberg.org/fabiscafe/game-devices-udev'
 arch=('any')
 license=('MIT')
 depends=('udev')
-makedepends=('git')
+makedepends=('git' 'meson')
 provides=('nintendo-udev')
 source=(
 	"git+${url}.git#tag=$pkgver"
@@ -17,12 +17,15 @@ source=(
 b2sums=('2f7838777d0d5b7914b632d7592063552935980be822f44071b53a7a48eec289cd6727b048c9b6b2681d87396dc9b6dfd8f6aaf672a502185186f791f7ab9233'
         '8d743c155fda8136438fdce80dfc8bfc0db511268ec401aebf7450c507999c4db98f5fe3b86ecdae81e07951b340fc0c161ac61d28e01fe335d9f51a8c0d5a40')
 
+build() {
+	arch-meson $pkgname build
+	meson compile -C build
+}
+
 package() {
 	install -vDm644 "${srcdir}/${pkgname}/LICENSE" \
 		-t "${pkgdir}/usr/share/licenses/${pkgname}"
-	install -vdm755 "${pkgdir}/usr/lib/udev/rules.d"
-	cp "${srcdir}/${pkgname}"/*.rules \
-		"${pkgdir}/usr/lib/udev/rules.d/"
+	meson install -C build --destdir "${pkgdir}"
 	install -vDm644 "${srcdir}/uinput.conf" \
 		"${pkgdir}/usr/lib/modules-load.d/uinput.conf"
 }
