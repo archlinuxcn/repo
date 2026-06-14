@@ -51,6 +51,7 @@ build() {
 	cd source
 	export GOPATH="${srcdir}/go"
 	export GOBIN="${GOPATH}/bin"
+	go get -v github.com/google/wuffs/cmd/...
 	./build-all.sh
 }
 
