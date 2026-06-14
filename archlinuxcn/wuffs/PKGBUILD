@@ -1,12 +1,12 @@
 pkgbase="wuffs"
 
 pkgname=(
-	"${_pkgbase}-lib"
-	"${_pkgbase}-examples"
-	"${_pkgbase}-fuzzers"
-	"${_pkgbase}-lang"
-	"${_pkgbase}-docs"
-	"${_pkgbase}-license"
+	"wuffs-lib"
+	"wuffs-examples"
+	"wuffs-fuzzers"
+	"wuffs-lang"
+	"wuffs-docs"
+	"wuffs-license"
 )
 
 pkgdesc="A memory-safe programming language, and a standard library, for Wrangling Untrusted File Formats Safely. Wrangling includes parsing, decoding and encoding. Example file formats include images, audio, video, fonts and compressed archives."
@@ -19,8 +19,8 @@ arch=(
 )
 url="https://github.com/google/wuffs"
 license=(
-  "MIT"
-  "Apache-2.0"
+	"MIT"
+	"Apache-2.0"
 )
 makedepends=(
 	'gcc'
