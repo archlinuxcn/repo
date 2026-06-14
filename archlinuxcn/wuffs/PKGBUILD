@@ -223,7 +223,7 @@ package_wuffs-license() {
 	cd source
 	install -vDm644 \
 		-t "${pkgdir}/usr/share/licenses/wuffs" \
-		LICENSE LICENSE-APACHE LICENSE-MIT
+		LICENSE*
 	ln -srf \
 		"${pkgdir}/usr/share/licenses/wuffs" \
 		"${pkgdir}/usr/share/licenses"/wuffs-license
