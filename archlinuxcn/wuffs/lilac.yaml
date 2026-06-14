@@ -1,0 +1,36 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: "git"
+    git: "https://github.com/google/wuffs.git"
+    exclude_regex: '.*(\.beta|\.rc|\.alpha)'\
+    include_regex: 'v.*'
+    prefix: "v"
+  - source: "alpm"
+    alpm: "sdl2"
+    strip_release: true
+  - source: "alpm"
+    alpm: "sdl2_image"
+    strip_release: true
+  - source: "alpm"
+    alpm: "xcb-util-image"
+    strip_release: true
+  - source: "alpm"
+    alpm: "xcb-util-renderutil"
+    strip_release: true
+  - source: "alpm"
+    alpm: "lz4"
+    strip_release: true
+  - source: "alpm"
+    alpm: "zlib"
+    strip_release: true
+  - source: "alpm"
+    alpm: "zstd"
+    strip_release: true
+build_prefix: extra-x86_64
