@@ -3,8 +3,8 @@
 
 pkgname=ruffle
 _appid=rs.ruffle.Ruffle
-pkgver=0.2.0
-pkgrel=2
+pkgver=0.3.0
+pkgrel=1
 pkgdesc="A Flash Player emulator written in Rust"
 url="https://ruffle.rs/"
 arch=("x86_64")
@@ -13,7 +13,7 @@ depends=('alsa-lib' 'glibc' 'libgcc' 'libstdc++' 'hicolor-icon-theme' 'systemd-l
 makedepends=('cargo' 'clang' 'cmake' 'gcc' 'git' 'java-environment' 'librsvg')
 options=("!lto")
 source=("${pkgname}::git+https://github.com/ruffle-rs/ruffle.git#tag=v${pkgver}")
-sha256sums=('180d700c4e9bc2b346651c83331ad43a9b3abf356e0637cb021f3aecaf0530e6')
+sha256sums=('4e8ebe2b041d72fc5d9560434e7c2599e9977f8565ea915a2d42ea36dd0a57a4')
 
 prepare() {
     cd "${pkgname}"
