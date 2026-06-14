@@ -2,7 +2,7 @@
 # Contributor: repsac
 
 pkgname=llama-swap
-pkgver=v224 # renovate: datasource=github-releases depName=mostlygeek/llama-swap
+pkgver=v225 # renovate: datasource=github-releases depName=mostlygeek/llama-swap
 pkgrel=1
 pkgdesc="Model swapping for llama.cpp (or any local OpenAPI compatible server)"
 arch=(x86_64 aarch64)
@@ -25,7 +25,7 @@ source=(
   "git+$url.git#tag=$pkgver"
   llama-swap.service
 )
-sha256sums=('7dfdb03974ba82c2f683f173129a270ec9f0c09840d97f90332b11805f88e0c5'
+sha256sums=('6c7d08fab20a523ba19dbb75f36b010f1e9b4493d035e8198b16581702ef69e0'
             '8f247fec3e347c212006415e23260a4851ccc435ea3fe0b2c7eaed12b49c406c')
 
 prepare() {
