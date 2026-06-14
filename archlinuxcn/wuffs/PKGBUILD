@@ -172,7 +172,7 @@ package_wuffs-lang() {
 	)
 	provides=(
 		"dumbindent=${pkgver}"
-		"handsum=${pkgver}"
+		#"handsum=${pkgver}"
 		"ractool=${pkgver}"
 		"wuffs=${pkgver}"
 		"wuffs-c=${pkgver}"
@@ -187,7 +187,7 @@ package_wuffs-lang() {
 	export GOBIN="${GOPATH}/bin"
 	install -Dvm755 \
 		-t "${pkgdir}/usr/bin" \
-		"${GOBIN}"/{dumbindent,handsum,ractool,wuffs,wuffs-c,wuffsfmt}
+		"${GOBIN}"/{dumbindent,ractool,wuffs,wuffs-c,wuffsfmt}
 	install -vdm644 \
 		"${pkgdir}/usr/share/licenses"
 	ln -srf \
