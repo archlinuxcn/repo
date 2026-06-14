@@ -204,10 +204,8 @@ package_wuffs-docs() {
 	install -Dvm644 \
 		-t "${pkgdir}/usr/share/doc/wuffs" \
 		AUTHORS \
-		BUILD.md \
-		CONTRIBUTING.md \
-		CONTRIBUTORS \
-		README.md
+		*.md \
+		CONTRIBUTORS
 	cp -r \
 		doc \
 		"${pkgdir}/usr/share/doc/wuffs"/
