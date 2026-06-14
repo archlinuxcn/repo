@@ -2,7 +2,7 @@ pkgbase="wuffs"
 
 pkgname=(
 	"wuffs-lib"
-	"wuffs-examples"
+	#"wuffs-examples"
 	"wuffs-fuzzers"
 	"wuffs-lang"
 	"wuffs-docs"
@@ -55,7 +55,19 @@ build() {
 	export PATH="/usr/bin:${GOPATH}/bin"
 	sed -i 's|go test|#go test|g' ./build-all.sh
 	sed -i 's|wuffs bench|#wuffs bench|g' ./build-all.sh
-	./build-all.sh
+	#./build-all.sh
+
+	CC=${CC:-gcc}
+	CXX=${CXX:-g++}
+	go install github.com/google/wuffs/cmd/...
+	go test    github.com/google/wuffs/...
+	wuffs gen
+	WARNING_FLAGS="-Wall -Werror -Wpedantic -Wcast-qual -Wcast-align -Wpointer-arith -Wfloat-equal -Wundef -Wvla -Wconversion -Wshadow -Wredundant-decls -Wunused-const-variable"
+	C_WARNING_FLAGS="$WARNING_FLAGS -Wstrict-prototypes -Wold-style-definition"
+	CXX_WARNING_FLAGS="$WARNING_FLAGS"
+	wuffs genlib -skipgen
+	wuffs test   -skipgen -mimic
+	./build-fuzz.s
 }
 
 package_wuffs-lib() {
