@@ -71,7 +71,7 @@ function package() {
 		--mode copy telegram-desktop-lily \
 		--hash true \
 		--config "${srcdir}/portable-config" \
-		--desktop-file "${srcdir}/desktop.file"
+		--desktop-file "${srcdir}/telegram-desktop.desktop"
 
 
 	install -Dm755 "${pkgdir}/usr/bin/Telegram" -t "${pkgdir}/usr/lib/portable/overlay-usr"
