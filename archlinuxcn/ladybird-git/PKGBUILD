@@ -53,7 +53,7 @@ depends=(
 	mimalloc
 	wuffs-lib
 )
-makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip libpng-apng rust cargo)
+makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip libpng-apng rust)
 options=('!lto' '!staticlibs' '!emptydirs' '!debug')
 source=(
 	"git+$url"
