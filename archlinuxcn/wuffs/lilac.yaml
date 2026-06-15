@@ -9,7 +9,7 @@ post_build_script: |
 update_on:
   - source: "git"
     git: "https://github.com/google/wuffs.git"
-    exclude_regex: '.*(\-beta|\-rc|\-alpha)'
+    exclude_regex: '.*(\-beta|\-rc|\-alpha).*'
     include_regex: 'v.*'
     prefix: "v"
   - source: "alpm"
