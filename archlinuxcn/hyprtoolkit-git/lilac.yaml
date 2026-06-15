@@ -19,5 +19,9 @@ update_on:
   - source: github
     github: hyprwm/hyprtoolkit
 
+  - source: alpm
+    alpm: abseil-cpp
+    strip_release: true
+
 update_on_build:
   - pkgbase: hyprutils-git
