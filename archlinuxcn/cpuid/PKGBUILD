@@ -1,0 +1,31 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+# Maintainer: Uffe Jakobsen <uffe@uffe.org>
+# Past Maintainer: Jianing Yang <jianingy.yang @gmail.com>
+# Contributor: David Zaragoza <david@zaragoza.com.ve>
+
+pkgname=cpuid
+pkgver=20260503
+pkgrel=1
+pkgdesc="Linux tool to dump x86 CPUID information about the CPU(s)"
+url="https://www.etallen.com/cpuid.html"
+license=('GPL-2.0-only')
+arch=('x86_64')
+depends=('glibc' 'perl')
+conflicts=('msr-tools')   # extra/msr-tools seems to have /usr/bin/cpuid
+source=("https://www.etallen.com/$pkgname/${pkgname}-${pkgver}.src.tar.gz")
+sha256sums=('8ee10fb48d4aa20c484a75d6852883710286ed2975c314bda6d0b0383908cbfe')
+
+build()
+{
+  cd "${pkgname}-${pkgver}"
+  # pod2man: /usr/bin/core_perl/ is not always in path - minimize error reports by setting PATH
+  PATH=${PATH}:/usr/bin/core_perl/
+  make
+}
+
+package()
+{
+  cd "${pkgname}-${pkgver}"
+  make BUILDROOT=${pkgdir} INSTALL_STRIP= install
+}

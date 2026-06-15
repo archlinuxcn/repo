@@ -2,7 +2,7 @@
 # Contributor: Cooper Pierce <cppierce@andrew.cmu.edu>
 
 pkgname=millet
-pkgver=0.15.1
+pkgver=0.15.2
 pkgrel=1
 pkgdesc="Language server implementation for Standard ML"
 arch=('x86_64')
@@ -14,7 +14,7 @@ depends=(
 )
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tgz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('7dab277f33ea46dd0cbc07d60b9fda81e361a3b0a0fe9b2d6de03f1b7747926109318657012d7492e0137a6a0ce23acb848d30b47749dad4b7ec4aee14a8aeeb')
+b2sums=('e8784a50266c18723ada24f240ed9a667e4c81e9ef352c630ca49576a5cad8d27c8db02cfd9dd26360a57df1ddbc7cf667166f427e9ae84b12e6feb33e03c56d')
 
 prepare() {
   cd "$pkgname-$pkgver"
