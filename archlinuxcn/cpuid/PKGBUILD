@@ -8,12 +8,12 @@ pkgname=cpuid
 pkgver=20260503
 pkgrel=1
 pkgdesc="Linux tool to dump x86 CPUID information about the CPU(s)"
-url="http://www.etallen.com/cpuid.html"
+url="https://www.etallen.com/cpuid.html"
 license=('GPL-2.0-only')
 arch=('x86_64')
 depends=('glibc' 'perl')
 conflicts=('msr-tools')   # extra/msr-tools seems to have /usr/bin/cpuid
-source=("http://www.etallen.com/$pkgname/${pkgname}-${pkgver}.src.tar.gz")
+source=("https://www.etallen.com/$pkgname/${pkgname}-${pkgver}.src.tar.gz")
 sha256sums=('8ee10fb48d4aa20c484a75d6852883710286ed2975c314bda6d0b0383908cbfe')
 
 build()
