@@ -85,6 +85,9 @@ package_wuffs-lib() {
 	install -vDm644 \
 		-t "${pkgdir}/usr/include" \
 		release/c/*.c gen/c/*.c
+	install -vDm644 \
+		-t "${pkgdir}/usr/include/wuffs" \
+		release/c/*.c gen/c/*.c
 	install -vDm755 \
 		-t "${pkgdir}/usr/lib" \
 		gen/lib/c/gcc-dynamic/libwuffs.so
