@@ -3,19 +3,22 @@
 
 _target=arm-none-eabi
 pkgname=$_target-binutils
-pkgver=2.43
-pkgrel=2
+pkgver=2.46.1
+pkgrel=1
 pkgdesc='A set of programs to assemble and manipulate binary and object files for the ARM EABI (bare-metal) target'
 arch=(aarch64 x86_64)
 url='https://www.gnu.org/software/binutils/'
 license=(GPL)
 depends=(zlib libelf)
 source=(https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.bz2{,.sig})
-sha1sums=('9b0b465bf52fdbb677bd67ba64424842e297ebcd'
+sha1sums=('bf552a22c05c452734a9007f3c833f35961b6f69'
           'SKIP')
-sha256sums=('fed3c3077f0df7a4a1aa47b080b8c53277593ccbb4e5e78b73ffb4e3f265e750'
+sha256sums=('324ed40ada2633a28eaa5d104ca5db165fd3cc3162cc1d48a7b7fa9c932da439'
             'SKIP')
-validpgpkeys=('3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F') # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
+validpgpkeys=(
+	'3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F' # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
+	'5EF3A41171BB77E6110ED2D01F3D03348DB1A3E2' # "Sam James <sam@cmpct.info>"
+)
 
 prepare() {
   cd binutils-$pkgver
