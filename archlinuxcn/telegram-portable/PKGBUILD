@@ -53,7 +53,7 @@ makedepends+=(telegram-desktop-lily)
 checkdepends=()
 
 source=(
-	portable-config
+	config.toml
 	telegram-desktop.desktop
 )
 
@@ -70,11 +70,9 @@ function package() {
 		--distro arch \
 		--mode copy telegram-desktop-lily \
 		--hash true \
-		--config "${srcdir}/portable-config" \
+		--config-ng "${srcdir}/config.toml" \
 		--desktop-file "${srcdir}/telegram-desktop.desktop"
 
-
-	install -Dm755 "${pkgdir}/usr/bin/Telegram" -t "${pkgdir}/usr/lib/portable/overlay-usr"
 	ln -sf /usr/bin/telegram-desktop-portable "${pkgdir}/usr/bin/Telegram"
 	ln -sf /usr/bin/telegram-desktop-portable "${pkgdir}/usr/bin/telegram-desktop"
 	ln -sf \
