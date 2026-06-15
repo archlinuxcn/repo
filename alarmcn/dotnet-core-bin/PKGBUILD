@@ -10,9 +10,9 @@ pkgname=(
   'dotnet-targeting-pack-bin'
   'aspnet-targeting-pack-bin'
  )
-pkgver=10.0.8.sdk300
-_runtimever=10.0.8
-_sdkver=10.0.300
+pkgver=10.0.9.sdk301
+_runtimever=10.0.9
+_sdkver=10.0.301
 _short_ver=10.0
 pkgrel=1
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -24,9 +24,9 @@ source_armv7h=("https://builds.dotnet.microsoft.com/dotnet/Sdk/${_sdkver}/dotnet
 source_aarch64=("https://builds.dotnet.microsoft.com/dotnet/Sdk/${_sdkver}/dotnet-sdk-${_sdkver}-linux-arm64.tar.gz")
 source_x86_64=("https://builds.dotnet.microsoft.com/dotnet/Sdk/${_sdkver}/dotnet-sdk-${_sdkver}-linux-x64.tar.gz")
 sha512sums=('768151c7179fb6a126b3de9cae01e363e8894f6fab384b1e2c5066c2adca4578638983b1b62aea10dd18045e6d6e8f8ea13280481134de94f004a118919b2c06')
-sha512sums_armv7h=('2411df6660a56029f9995aefa0b2bb66c5e4928227b62e9facfe8e232efea944c424fa300f6d5f05633eb2aa52a716b3176c42f9bc89f34f4d2a59fa4a80b8bc')
-sha512sums_aarch64=('b503fe0cac8f8748d1ae67af40bc9157456cc0f93c8264e3bc52cc52a12fbbbc3a16e905d8528214f29337d7349859bb08de99b1e1406da92723b071b3f45ce5')
-sha512sums_x86_64=('a0c404c1a2f85d70e32392ce297eb388c0310c519521b538a031a895469444c67f347d4f9ca1f8441f525967a89c9b75e2cd1676da486f95118cf4025c38d904')
+sha512sums_armv7h=('0f7542b0c780a93f7dc6d03c1a09f1cc358781c9ab78d736751a8e6e62e39037e6fa06fe9533b09fd8cb21b756b60a80fd88072017125144860768f0d2df6d4b')
+sha512sums_aarch64=('4ee438b363cb8468930d50b6bdc738a375e2f33b25bfd0c8dcb55853dda7f0fb187693e0f49dfc31556e68320b961a50dcf3b74c1f25abe3a5bd916db607db99')
+sha512sums_x86_64=('cfbeec3a3a1d3ad3e168e37a77c4cc26c23125acd84a86d014047da3ecffce4c368a9acac4d7c950a047fa3d98989ce8aea69f8e5842cb6d330e8911e1c335a7')
 
 package_dotnet-host-bin() {
   pkgdesc='A generic driver for the .NET Core Command Line Interface (binary)'
