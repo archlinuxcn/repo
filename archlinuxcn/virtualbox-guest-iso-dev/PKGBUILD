@@ -2,8 +2,8 @@
 
 pkgname=virtualbox-guest-iso-dev
 epoch=1
-_pkgver=7.2.97-174081
-pkgver=7.2.97.174081
+_pkgver=7.2.97-174212
+pkgver=7.2.97.174212
 pkgrel=1
 pkgdesc='The official VirtualBox Guest Additions ISO image for virtualbox dev version'
 arch=('any')
@@ -16,7 +16,7 @@ conflicts=('virtualbox-additions' 'virtualbox-iso-additions')
 noextract=(VBoxGuestAdditions_$pkgver.iso)
 source=("https://www.virtualbox.org/download/testcase/VBoxGuestAdditions_$_pkgver.iso"
         'license')
-sha256sums=('cfacfdaca0e0379ebf1abf2fbd1fc0040cb226ecd3912e3e350f221a4812c6d7'
+sha256sums=('4af50673c3d9789eb8b038bb8fd82805ea9868ae19f295952801729df64ac284'
             'fbe9cd6288037bff44716642ee4bea9c42c2d60eb5ed86cb48fa95147d9e8623')
 
 package() {
