@@ -4,14 +4,14 @@
 
 pkgname=neovim-git
 _pkgname=${pkgname%-git}
-pkgver=0.12.0.r847.gfd4655ea3a
+pkgver=0.12.0.r955.gc10a827289
 pkgrel=1
 pkgdesc="Fork of Vim aiming to improve user experience, plugins, and GUIs."
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url="https://${_pkgname}.io"
 backup=('etc/xdg/nvim/sysinit.vim')
 license=('Apache-2.0 AND LicenseRef-vim')
-depends=('libluv' 'libtermkey' 'libuv' 'libvterm>=0.3' 'luajit' 'msgpack-c' 'unibilium' 'tree-sitter-git' 'libutf8proc-git')
+depends=('libluv' 'libuv' 'libvterm>=0.3' 'luajit' 'msgpack-c' 'unibilium' 'tree-sitter-git' 'libutf8proc-git')
 makedepends=('cmake' 'git' 'ninja' 'lua51-mpack' 'lua51-lpeg')
 optdepends=('python2-neovim: for Python 2 plugin support (see :help provider-python)'
 	'python-neovim: for Python 3 plugin support (see :help provider-python)'
