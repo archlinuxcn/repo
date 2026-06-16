@@ -1,7 +1,7 @@
 # Maintainer: Yuzu <aur at vitayuzu dot day>
 _npmname=@sourcegraph/amp
 pkgname=ampcode
-pkgver=0.0.1781576161_g57e58a
+pkgver=0.0.1781601196_gacc35e
 pkgrel=1
 pkgdesc="The frontier coding agent from Sourcegraph."
 arch=('x86_64')
@@ -14,7 +14,7 @@ conflicts=('amp')
 _archive="${pkgname}-${pkgver}"
 source=("${_archive}.tgz::https://registry.npmjs.org/${_npmname}/-/amp-${pkgver//_/-}.tgz")
 noextract=("${_archive}.tgz")
-sha256sums=('de259b935912312b10c3f7bdee00eefa2740000d39629b9c777dc85f54119aba')
+sha256sums=('37cbf07efa200e85f14068f04b0f9f7253f99fc852e4ba83756f04ee9068ae65')
 
 package() {
     npm install -g --prefix "${pkgdir}/usr" \
