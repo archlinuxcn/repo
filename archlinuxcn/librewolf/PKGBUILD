@@ -6,11 +6,11 @@
 
 pkgname=librewolf
 _pkgname=LibreWolf
-epoch=2
-pkgver=148.0.2_2
+epoch=1
+pkgver=152.0.0_1
 _fixedfirefoxver="${pkgver%_*}" # Version of Firefox this LibreWolf version is based on, but the Firefox patch number is always included
 _librewolfver="${pkgver#*_}"
-_firefoxver="${_fixedfirefoxver%}" # Removes ".0" from the end. For "136.0.0" this will result in "136.0" but for "136.0.1" won't do anything.
+_firefoxver="${_fixedfirefoxver%.0}" # Removes ".0" from the end. For "136.0.0" this will result in "136.0" but for "136.0.1" won't do anything.
 pkgrel=1
 pkgdesc="Community-maintained fork of Firefox, focused on privacy, security and freedom."
 url="https://librewolf.net/"
@@ -67,10 +67,10 @@ makedepends=(
   python-setuptools
   rust
   unzip
-  'wasi-compiler-rt'
-  'wasi-libc++'
-  'wasi-libc++abi'
-  'wasi-libc'
+  wasi-compiler-rt
+  wasi-libc++
+  wasi-libc++abi
+  wasi-libc
   yasm
   zip
   ) # pciutils: only to avoid some PGO warning(?)
@@ -107,16 +107,12 @@ options=(
 install='librewolf.install'
 source=(
   https://codeberg.org/api/packages/librewolf/generic/librewolf-source/$_firefoxver-$_librewolfver/librewolf-$_firefoxver-$_librewolfver.source.tar.gz{,.sig}
-  https://gitlab.archlinux.org/archlinux/packaging/packages/firefox/-/raw/fdd14cc14c10c23980b7d707e8f98af4a6d17577/0003-Patch-glsl-optimizer-to-build-with-glibc-2.43.patch
-  https://gitlab.archlinux.org/archlinux/packaging/packages/firefox/-/raw/d82490f5db9d55f3e5e61b640c6618ab209aa06b/0004-Fix-sandbox-to-build-with-glibc-2.43.patch
   $pkgname.desktop
   "default192x192.png"
 )
 
-sha256sums=('659e320b09ab5a71a05c3183e0f0592ea79d707f377fb8c301233e299183876c'
+sha256sums=('3a0aec18870f19e960d665f7beae2168a20748ad43ab77692d69ef411df649ce'
             'SKIP'
-            '83857f3531688885b62be0b06583f6815f236edbc43a942830395ec3cbdc7934'
-            '8d2182ae8660474ac567482fe6658af77f3b402314e361c846528ae171586245'
             '3d6ac59ae9d5ba4c9fe15f95c1338fa68214dec6119f8432336403e3be50f8ae'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
 
@@ -144,6 +140,9 @@ export CXX='clang++'
 ac_add_options --with-app-name=${pkgname}
 
 export MOZ_APP_REMOTINGNAME=${pkgname}
+
+# Langauge packs
+ac_add_options --with-l10n-base=$PWD/lw/l10n
 
 # System libraries
 ac_add_options --with-system-nspr
@@ -194,10 +193,7 @@ fi
   export LDFLAGS+=" -Wl,--no-keep-memory"
 
   # upstream Arch fixes
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=1999625
-  patch -Np1 -i ../0003-Patch-glsl-optimizer-to-build-with-glibc-2.43.patch
-  # https://bugzilla.mozilla.org/show_bug.cgi?id=2016618
-  patch -Np1 -i ../0004-Fix-sandbox-to-build-with-glibc-2.43.patch
+
 }
 
 
