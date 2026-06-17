@@ -2,6 +2,6 @@ from lilaclib import *
 import subprocess
 
 def pre_build():
-    aur_pre_build(maintainers=['staticnull'])
+    aur_pre_build(maintainers=['noureddinex'])
 
-    subprocess.run(["sh", "setffver.sh"])
+#    subprocess.run(["sh", "setffver.sh"])
