@@ -6,13 +6,10 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver.replace("-","_"))
+pre_build_script: aur_pre_build(maintainers=['lsf'])
 
-post_build: git_pkgbuild_commit
-
-time_limit_hours: 4
+post_build: aur_post_build
 
 update_on:
-  - source: vcs
-    vcs: git+https://codeberg.org/librewolf/source
-    use_max_tag: true
+  - source: aur
+    aur: 
