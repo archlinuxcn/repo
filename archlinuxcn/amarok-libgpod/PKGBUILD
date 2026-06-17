@@ -1,8 +1,8 @@
 # Maintainer: Antonio Rojas <arojas@archlinux.org>
 
 pkgname=amarok-libgpod
-pkgver=3.3.2
-pkgrel=3
+pkgver=3.3.3
+pkgrel=1
 pkgdesc='Powerful music player that lets you rediscover your music. Built with iPod support.'
 arch=(x86_64)
 license=(GPL-2.0-or-later)
@@ -61,7 +61,7 @@ depends=(ffmpeg
 makedepends=(extra-cmake-modules
              kdoctools)
 source=(https://download.kde.org/stable/amarok/$pkgver/amarok-$pkgver.tar.xz)
-sha256sums=('aa436b09d3991be48cf37e6f0b71f58aebd5bffaba0fdce7ffd3c2b485d3660b')
+sha256sums=('68e9e83d7d8c0cbdd470958e768815f573d61f3ce32be7bc1b87fb56d622436e')
 
 build() {
   cmake -B build -S amarok-$pkgver \
