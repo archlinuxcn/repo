@@ -116,7 +116,6 @@ _optdeps=(
   'twolame: TwoLAME mpeg2 encoder plugin'
   'zvbi: VBI/Teletext/webcam/v4l2 capture/decoding'
   'libaribcaption: Caption decoder/renderer library for handling ARIB STD-B24 based TV broadcast captions'
-  'davs2: Open-Source decoder of AVS2-P2/IEEE1857.4 video coding standard'
   'shine: Super fast fixed-point MP3 encoder'
   'libcddb: CDDB plugin'
   'libvncserver: VNC server plugin'
@@ -323,7 +322,7 @@ package_vlc-git() {
     "libvlc=${pkgver%.g*}"
     vlc-cli
     vlc-gui-{ncurses,qt,skins2}
-    vlc-plugin-{a52dec,aalib,alsa,aom,archive,aribb24,aribb25,ass,avahi,bluray,caca,cddb,chromecast,dav1d,dbus,dbus-screensaver,dca,dvb,dvd,faad2,ffmpeg,firewire,flac,fluidsynth,freetype,gme,gnutls,gstreamer,inflate,jack,journal,jpeg,kate,kwallet,libsecret,lirc,live555,mad,matroska,mdns,modplug,mpeg2,mpg123,mtp,musepack,nfs,notify,ogg,opus,png,pulse,quicksync,samplerate,sdl,sftp,shout,smb,soxr,speex,srt,svg,tag,theora,twolame,udev,upnp,vorbis,vpx,x264,x265,xml,zvbi,davs2,shine,cddb}
+    vlc-plugin-{a52dec,aalib,alsa,aom,archive,aribb24,aribb25,ass,avahi,bluray,caca,cddb,chromecast,dav1d,dbus,dbus-screensaver,dca,dvb,dvd,faad2,ffmpeg,firewire,flac,fluidsynth,freetype,gme,gnutls,gstreamer,inflate,jack,journal,jpeg,kate,kwallet,libsecret,lirc,live555,mad,matroska,mdns,modplug,mpeg2,mpg123,mtp,musepack,nfs,notify,ogg,opus,png,pulse,quicksync,samplerate,sdl,sftp,shout,smb,soxr,speex,srt,svg,tag,theora,twolame,udev,upnp,vorbis,vpx,x264,x265,xml,zvbi,shine,cddb}
     vlc-plugins-{all,base,extra,video-output,visualization}
   )
   conflicts=(
@@ -331,7 +330,7 @@ package_vlc-git() {
     libvlc
     vlc-cli
     vlc-gui-{ncurses,qt,skins2}
-    vlc-plugin-{a52dec,aalib,alsa,aom,archive,aribb24,aribb25,ass,avahi,bluray,caca,cddb,chromecast,dav1d,dbus,dbus-screensaver,dca,dvb,dvd,faad2,ffmpeg,firewire,flac,fluidsynth,freetype,gme,gnutls,gstreamer,inflate,jack,journal,jpeg,kate,kwallet,libsecret,lirc,live555,mad,matroska,mdns,modplug,mpeg2,mpg123,mtp,musepack,nfs,notify,ogg,opus,png,pulse,quicksync,samplerate,sdl,sftp,shout,smb,soxr,speex,srt,svg,tag,theora,twolame,udev,upnp,vorbis,vpx,x264,x265,xml,zvbi,davs2,shine,cddb}
+    vlc-plugin-{a52dec,aalib,alsa,aom,archive,aribb24,aribb25,ass,avahi,bluray,caca,cddb,chromecast,dav1d,dbus,dbus-screensaver,dca,dvb,dvd,faad2,ffmpeg,firewire,flac,fluidsynth,freetype,gme,gnutls,gstreamer,inflate,jack,journal,jpeg,kate,kwallet,libsecret,lirc,live555,mad,matroska,mdns,modplug,mpeg2,mpg123,mtp,musepack,nfs,notify,ogg,opus,png,pulse,quicksync,samplerate,sdl,sftp,shout,smb,soxr,speex,srt,svg,tag,theora,twolame,udev,upnp,vorbis,vpx,x264,x265,xml,zvbi,shine,cddb}
     vlc-plugins-{all,base,extra,video-output,visualization}
   )
 
