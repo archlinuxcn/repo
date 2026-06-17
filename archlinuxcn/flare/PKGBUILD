@@ -31,8 +31,12 @@ source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha256sums=('f9da30375142894df11b7b1fb9d32c3a97e2d8d84170f233e73f0f4cc3686cc6')
 
 build() {
+	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+	export CFLAGS+=" -ffat-lto-objects"
+	export CARGO_PROFILE_RELEASE_LTO=true
+	export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
 	arch-meson "${pkgname}-${pkgver}" build
-	LIBSQLITE3_SYS_USE_PKG_CONFIG=1 CFLAGS+=" -ffat-lto-objects" meson compile -C build
+	meson compile -C build
 }
 
 check() {
