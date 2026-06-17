@@ -38,8 +38,13 @@ pkgver() {
 }
 
 build() {
+	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+	export CFLAGS+=" -ffat-lto-objects"
+	export CARGO_PROFILE_RELEASE_LTO=true
+	export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+
 	arch-meson "${_pkgname}" build
-	LIBSQLITE3_SYS_USE_PKG_CONFIG=1 CFLAGS+=" -ffat-lto-objects" meson compile -C build
+	meson compile -C build
 }
 
 check() {
