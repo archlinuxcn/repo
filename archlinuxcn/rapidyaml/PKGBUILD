@@ -1,0 +1,106 @@
+# Maintainer: Brian Thompson <brianrobt@pm.me>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: xiretza <xiretza+aur@xiretza.xyz>
+# Maintainer: SecByShresth <Shresthpaul133@gmail.com>
+
+pkgbase=rapidyaml
+pkgname=('rapidyaml' 'python-rapidyaml')
+pkgver=0.11.1
+pkgrel=3
+arch=('x86_64')
+url="https://github.com/biojppm/rapidyaml"
+license=('MIT')
+
+makedepends=(
+  'cmake'
+  'git'
+  'ninja'
+  'swig'
+  'python'
+)
+
+depends=('libgcc' 'libstdc++' 'glibc')
+provides=()
+
+source=(
+  "rapidyaml::git+https://github.com/biojppm/rapidyaml.git#tag=v${pkgver}"
+  "c4core::git+https://github.com/biojppm/c4core.git"
+  "c4core-cmake::git+https://github.com/biojppm/cmake.git"
+  "git+https://github.com/biojppm/debugbreak.git"
+  "git+https://github.com/fastfloat/fast_float.git"
+)
+
+b2sums=('bb64f292e31c94dadb13b9168dfa77eb4519c218a9a4c0f9c61a1e3fccfa78e0c31494214f8023564a3af3bd80d9ef7b6a966c0285230752fd65b96af583f388'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP')
+
+prepare() {
+  cd rapidyaml
+
+  git submodule init
+  git config submodule.extern/c4core.url "${srcdir}/c4core"
+  git -c protocol.file.allow=always submodule update
+
+  cd ext/c4core
+  git submodule init
+  git config submodule.cmake.url "${srcdir}/c4core-cmake"
+  git config submodule.extern/debugbreak.url "${srcdir}/debugbreak"
+  git config submodule.src/c4/ext/fast_float.url "${srcdir}/fast_float"
+  git -c protocol.file.allow=always submodule update
+
+  cd ../..
+}
+
+build() {
+  cmake -B build -S rapidyaml -G Ninja \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_C_FLAGS="$CFLAGS -DNDEBUG" \
+    -DCMAKE_CXX_FLAGS="$CXXFLAGS -DNDEBUG" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_SHARED_LIBS=ON \
+    -DRYML_DEV=OFF \
+    -DRYML_BUILD_API=ON \
+    -DRYML_LANG_PYTHON=ON \
+    -DRYML_DEFAULT_CALLBACKS=ON \
+    -DRYML_DEFAULT_CALLBACK_USES_EXCEPTIONS=ON
+
+  cmake --build build
+}
+
+package_rapidyaml() {
+  pkgdesc="A fast YAML parser and emitter for C++"
+  provides=('rapidyaml' 'libryml.so')
+
+  DESTDIR="${pkgdir}" cmake --install build
+
+  mv "${pkgdir}/usr/_ryml.so" "${srcdir}/_ryml.so"
+  mv "${pkgdir}/usr/ryml.py" "${srcdir}/ryml.py"
+
+  install -Dm644 rapidyaml/LICENSE.txt \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python-rapidyaml() {
+  pkgdesc="Python bindings for rapidyaml (via SWIG)"
+  depends=('python' 'rapidyaml')
+  provides=('python-rapidyaml')
+
+  _pyver=$(python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+  _pydir="${pkgdir}/usr/lib/python${_pyver}/site-packages/rapidyaml"
+
+  install -d "${_pydir}"
+
+  if [[ -f "${srcdir}/_ryml.so" && -f "${srcdir}/ryml.py" ]]; then
+    mv "${srcdir}/_ryml.so" "${_pydir}/"
+    mv "${srcdir}/ryml.py" "${_pydir}/"
+    touch "${_pydir}/__init__.py"
+  else
+    echo "ERROR: Could not find Python binding files in temporary location."
+    return 1
+  fi
+
+  install -Dm644 rapidyaml/LICENSE.txt \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

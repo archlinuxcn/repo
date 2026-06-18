@@ -1,0 +1,77 @@
+From: Arnaud Rebillout <arnaudr@debian.org>
+Date: Fri, 5 Jun 2026 17:13:30 +0700
+Subject: Add test/smime-certs/smrsa3-{cert,key}.pem
+
+Add test/smime-certs/smrsa3-{cert,key}.pem, introduced in upstream
+commit 1304fff45aed53c66728ffdd819e1e44156df252, cherry picked from
+commit ffed597882baf2f07274e7eaa8f3c4fa9fa74ac1.
+
+This is needed for the test 'Must not crash on malformed cms inputs with
+RSA key' (coming in next commit). Actually only smrsa3-key.pem is
+needed it seems, but it doesn't hurt to have both files.
+---
+ test/smime-certs/smrsa3-cert.pem                | 21 +++++++++++++++++++++
+ test/smime-certs/{smrsa3.pem => smrsa3-key.pem} | 21 ---------------------
+ 2 files changed, 21 insertions(+), 21 deletions(-)
+ create mode 100644 test/smime-certs/smrsa3-cert.pem
+ copy test/smime-certs/{smrsa3.pem => smrsa3-key.pem} (57%)
+
+diff --git a/test/smime-certs/smrsa3-cert.pem b/test/smime-certs/smrsa3-cert.pem
+new file mode 100644
+index 000000000000..70004acb8698
+--- /dev/null
++++ b/test/smime-certs/smrsa3-cert.pem
+@@ -0,0 +1,21 @@
++-----BEGIN CERTIFICATE-----
++MIIDeTCCAmGgAwIBAgIUIDyc//j/LoNDesZTGbPBoVarv4EwDQYJKoZIhvcNAQEL
++BQAwRDELMAkGA1UEBhMCVUsxFjAUBgNVBAoMDU9wZW5TU0wgR3JvdXAxHTAbBgNV
++BAMMFFRlc3QgUy9NSU1FIFJTQSBSb290MCAXDTIyMDYwMjE1MzMxM1oYDzIxMjIw
++NTA5MTUzMzEzWjBFMQswCQYDVQQGEwJVSzEWMBQGA1UECgwNT3BlblNTTCBHcm91
++cDEeMBwGA1UEAwwVVGVzdCBTL01JTUUgRUUgUlNBICMzMIIBIjANBgkqhkiG9w0B
++AQEFAAOCAQ8AMIIBCgKCAQEA+QP7d56K4/9eu7aChtWILYNxvqWeDcJeWvX5Z5vC
++XUjFuUxBD9U0rw1SBLgFYu8aqAJ+oXsqaGjJARifgKEqPUe7pnYYatr55lhTbHR+
++qA88p1V4sclEaPNWKzd7J/V3eeYr04kqWV5XYhAq9k9AWLzsNIePe2z7OoGPS6oK
++wRzWFRd5RYXTpmFr/tqknbYvtYFd7duKb9QqytgHV+RKXXeY0fnjZ7frLmaqDwtI
++U3DY7MyS3Hw2BVx72vQXBNA364HGEpqEgVOdzI7et0wpSumaFXDye714xUR53L7N
++f3fp3PQXS/RbBiNXs7KUsHCR6nsdsIKO+sg66gxOLNt6zwIDAQABo2AwXjAMBgNV
++HRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHQ4EFgQUN9pGq/UFS3o50rTi
++V+AYgAk+3R4wHwYDVR0jBBgwFoAUFcETIWviVV+nah1XINbP86lzZFkwDQYJKoZI
++hvcNAQELBQADggEBAGcOh380/6aJqMpYBssuf2CB3DX/hGKdvEF7fF8iNSfl5HHq
++112kHl3MhbL9Th/safJq9sLDJqjXRNdVCUJJbU4YI2P2gsi04paC0qxWxMLtzQLd
++CE7ki2xH94Fuu/dThbpzZBABROO1RrdI24GDGt9t4Gf0WVkobmT/zNlwGppKTIB2
++iV/Ug30iKr/C49UzwUIa+XXXujkjPTmGSnrKwVQNxQh81rb+iTL7GEnNuqDsatHW
++ZyLS2SaVdG5tMqDkITPMDGjehUzJcAbVc8Bv4m8Ukuov3uDj2Doc6MxlvrVkV0AE
++BcSCb/bWQJJ/X4LQZlx9cMk4NINxV9UeFPZOefg=
++-----END CERTIFICATE-----
+diff --git a/test/smime-certs/smrsa3.pem b/test/smime-certs/smrsa3-key.pem
+similarity index 57%
+copy from test/smime-certs/smrsa3.pem
+copy to test/smime-certs/smrsa3-key.pem
+index 980d3af3b4c9..216d70b61b74 100644
+--- a/test/smime-certs/smrsa3.pem
++++ b/test/smime-certs/smrsa3-key.pem
+@@ -26,24 +26,3 @@ Add0mctGgmZ1l5vq81eWe3wjM8wgfJgaD3Q3gwx2ABUX/R+OsVWSh4o5ZR86sYoz
+ TviknBHF8GeDLjpT49+04fEaz336J2JOptF9zIpz7ZK1nrOEjzaZGtumReVjUP7X
+ fNcb5iDYqZRzD8ixBbLxUw==
+ -----END PRIVATE KEY-----
+------BEGIN CERTIFICATE-----
+-MIIDeTCCAmGgAwIBAgIUIDyc//j/LoNDesZTGbPBoVarv4EwDQYJKoZIhvcNAQEL
+-BQAwRDELMAkGA1UEBhMCVUsxFjAUBgNVBAoMDU9wZW5TU0wgR3JvdXAxHTAbBgNV
+-BAMMFFRlc3QgUy9NSU1FIFJTQSBSb290MCAXDTIyMDYwMjE1MzMxM1oYDzIxMjIw
+-NTA5MTUzMzEzWjBFMQswCQYDVQQGEwJVSzEWMBQGA1UECgwNT3BlblNTTCBHcm91
+-cDEeMBwGA1UEAwwVVGVzdCBTL01JTUUgRUUgUlNBICMzMIIBIjANBgkqhkiG9w0B
+-AQEFAAOCAQ8AMIIBCgKCAQEA+QP7d56K4/9eu7aChtWILYNxvqWeDcJeWvX5Z5vC
+-XUjFuUxBD9U0rw1SBLgFYu8aqAJ+oXsqaGjJARifgKEqPUe7pnYYatr55lhTbHR+
+-qA88p1V4sclEaPNWKzd7J/V3eeYr04kqWV5XYhAq9k9AWLzsNIePe2z7OoGPS6oK
+-wRzWFRd5RYXTpmFr/tqknbYvtYFd7duKb9QqytgHV+RKXXeY0fnjZ7frLmaqDwtI
+-U3DY7MyS3Hw2BVx72vQXBNA364HGEpqEgVOdzI7et0wpSumaFXDye714xUR53L7N
+-f3fp3PQXS/RbBiNXs7KUsHCR6nsdsIKO+sg66gxOLNt6zwIDAQABo2AwXjAMBgNV
+-HRMBAf8EAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHQ4EFgQUN9pGq/UFS3o50rTi
+-V+AYgAk+3R4wHwYDVR0jBBgwFoAUFcETIWviVV+nah1XINbP86lzZFkwDQYJKoZI
+-hvcNAQELBQADggEBAGcOh380/6aJqMpYBssuf2CB3DX/hGKdvEF7fF8iNSfl5HHq
+-112kHl3MhbL9Th/safJq9sLDJqjXRNdVCUJJbU4YI2P2gsi04paC0qxWxMLtzQLd
+-CE7ki2xH94Fuu/dThbpzZBABROO1RrdI24GDGt9t4Gf0WVkobmT/zNlwGppKTIB2
+-iV/Ug30iKr/C49UzwUIa+XXXujkjPTmGSnrKwVQNxQh81rb+iTL7GEnNuqDsatHW
+-ZyLS2SaVdG5tMqDkITPMDGjehUzJcAbVc8Bv4m8Ukuov3uDj2Doc6MxlvrVkV0AE
+-BcSCb/bWQJJ/X4LQZlx9cMk4NINxV9UeFPZOefg=
+------END CERTIFICATE-----

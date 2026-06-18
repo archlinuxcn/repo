@@ -3,11 +3,11 @@
 
 pkgname=flare-git
 _pkgname=${pkgname%-git}
-pkgver=0.20.6.r1.g9c2848c
-pkgrel=1
+pkgver=0.21.0.beta.1.r0.g34aa4c6
+pkgrel=2
 pkgdesc="Chat with your friends on Signal"
 url="https://gitlab.com/schmiddi-on-mobile/${_pkgname}"
-arch=("i686" "x86_64" "armv6h" "armv7h" "aarch64")
+arch=('x86_64' 'aarch64')
 license=("AGPL-3.0-or-later")
 makedepends=("git" "blueprint-compiler" "cargo" "meson")
 depends=(
@@ -38,8 +38,13 @@ pkgver() {
 }
 
 build() {
+	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+	export CFLAGS+=" -ffat-lto-objects"
+	export CARGO_PROFILE_RELEASE_LTO=true
+	export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+
 	arch-meson "${_pkgname}" build
-	LIBSQLITE3_SYS_USE_PKG_CONFIG=1 CFLAGS+=" -ffat-lto-objects" meson compile -C build
+	meson compile -C build
 }
 
 check() {

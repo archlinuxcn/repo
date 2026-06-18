@@ -1,48 +1,92 @@
-# Maintainer: Mark Wagie <mark dot wagie at tutanota dot com>
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
 # Contributor: Victor Fuentes <hyruleterminatriforce@gmail.com>
 # Contributor: Filipe Laíns (FFY00) <lains@archlinux.org>
 # Contributor: Michael DeGuzis <mdeguzis@gmail.com>
 # Contributor: Frederik “Freso” S. Olesen <freso.dk@gmail.com>
 # Contributor: Maxime Gauduin <alucryd@archlinux.org>
 pkgname=lutris-git
-pkgver=0.5.22.r262.gcf3dd08f7
+pkgver=0.5.22.r299.ga69bfe2
 pkgrel=1
-pkgdesc='Open Gaming Platform'
+pkgdesc="Open Gaming Platform"
 arch=('any')
-url='https://lutris.net/'
-license=('GPL3')
-depends=('dbus-python' 'cabextract' 'curl' 'glib2' 'gtk3' 'mesa-utils'
-         'p7zip' 'psmisc' 'python-distro' 'python-evdev' 'python-gobject' 'python-lxml'
-         'python-pillow' 'python-requests' 'python-yaml' 'unzip'
-         'webkit2gtk' 'xorg-xrandr')
-makedepends=('git' 'meson')
-checkdepends=('appstream-glib')
+url="https://lutris.net"
+license=('GPL-3.0-only')
+depends=(
+  '7zip'
+  'cabextract'
+  'curl'
+  'glib2'
+  'glib-networking'
+  'gnome-desktop'
+  'gtk3'
+  'hicolor-icon-theme'
+  'libnotify'
+  'mesa-utils'
+  'pciutils'
+  'psmisc'
+  'python-cairo'
+  'python-certifi'
+  'python-dbus'
+  'python-distro'
+  'python-gobject'
+  'python-lxml'
+  'python-moddb'
+  'python-pillow'
+  'python-requests'
+  'python-setproctitle'
+  'python-urllib3'
+  'python-yaml'
+  'unzip'
+  'webkit2gtk-4.1'
+  'xdg-desktop-portal-impl'
+  'xdg-utils'
+  'xorg-xrandr'
+)
+makedepends=(
+  'git'
+  'meson'
+)
+checkdepends=(
+  'appstream-glib'
+#  'pciutils'
+#  'python-nose2'
+#  'procps-ng'
+#  'vulkan-tools'
+#  'xorg-server-xvfb'
+)
 optdepends=(
+  'fluidsynth: For games that have MIDI music'
   'gamemode: Allows games to request a temporary set of optimisations'
   'gamescope: Draw the game window isolated from your desktop'
-  'gnome-desktop: Get display and resolution using GnomeDesktop'
   'gvfs: GVFS backend'
   'innoextract: Extract Inno Setup installers'
   'lib32-gamemode: Allows games to request a temporary set of optimisations'
   'lib32-glibc: for 32bit games support'
+  'lib32-gnutls: Required to login to some game platforms (e.g. Ubisoft Connect, EA Origin and GOG)'
   "lib32-mangohud: Display the games' FPS + other information"
-  'lib32-vkd3d: Vulkan 3D support'
+  'lib32-mesa-libgl: OpenGL support'
+  'lib32-vkd3d: DirectX 12 support'
   'lib32-vulkan-icd-loader: Vulkan support'
-  'linux-steam-integration: start Steam with LSI'
+  'libayatana-appindicator: Tray icon support'
   "mangohud: Display the games' FPS + other information"
-  'vkd3d: Vulkan 3D support'
+  'python-evdev: Controller support'
+  'python-pefile: Extract icons from Windows executables'
+  'python-pypresence: Discord Rich Presence integration'
+  'umu-launcher: For running games through Proton'
+  'vkd3d: DirectX 12 support'
   'vulkan-icd-loader: Vulkan support'
-  'wine: easiest way to get all the libraries missing from the Lutris runtime'
-  'winetricks: use system winetricks'
-  'xorg-xgamma: Restore gamma on game exit')
+  'vulkan-tools: Vulkan support'
+  'wine: Easiest way to get all the libraries missing from the Lutris runtime'
+  'winetricks: Use system winetricks'
+)
 provides=("${pkgname%-git}")
 conflicts=("${pkgname%-git}")
 source=('git+https://github.com/lutris/lutris.git')
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "$srcdir/${pkgname%-git}"
-  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  cd "${pkgname%-git}"
+  git describe --long --tags --abbrev=7 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
 build() {
@@ -51,9 +95,15 @@ build() {
 }
 
 check() {
-  appstream-util validate-relax --nonet build/net.lutris.Lutris.metainfo.xml
+  meson test -C build --no-rebuild --print-errorlogs
+
+  cd "${pkgname%-git}"
+
+  # Tests pass in chroot, but touch files in user diretory
+#  python -m venv --clear --without-pip --system-site-packages test-env
+#  xvfb-run test-env/bin/python -m nose2 --exclude-ci
 }
 
 package() {
-  meson install -C build --destdir "$pkgdir"
+  meson install -C build --no-rebuild --destdir "$pkgdir"
 }

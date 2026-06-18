@@ -3,13 +3,15 @@
 
 pkgname=scummvm-git
 _pkgname=scummvm
-pkgver=r174500.8dde5c814ee
-pkgrel=1
+pkgver=r174571.172ee997cd3
+pkgrel=2
 pkgdesc="A 'virtual machine' for several classic graphical point-and-click adventure games. - git version"
 arch=('i686' 'x86_64')
 url="http://www.scummvm.org"
 license=('GPL')
-depends=('libpng' 'libtheora' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libvorbis' 'libmad' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec' 'gtk3' 'glew' 'libspeechd' 'giflib' 'freetype2' 'libgl' 'glu' 'libvpx' 'libmikmod' 'readline')
+depends=('libpng' 'libtheora' 'sdl2' 'sdl2_net' 'fluidsynth' 'flac' 'faad2' 'libvorbis' 'libmad' 'freetype2'
+         'libgl' 'glu' 'libjpeg-turbo' 'libmpeg2' 'curl' 'a52dec' 'giflib' 'glew' 'libspeechd' 'gtk3' 'sndio'
+         'glib2' 'libstdc++' 'zlib' 'hicolor-icon-theme' 'sonivox' 'libvpx' 'libmpcdec' 'libmikmod')
 makedepends=('git' 'mesa')
 conflicts=('scummvm')
 provides=('scummvm')
@@ -24,8 +26,11 @@ pkgver() {
  
 build() {
   cd "$srcdir/$_pkgname"
- 
+
+  sed -i 's/debug(line.c_str());/debug("%s", line.c_str());/g' engines/nancy/action/puzzle/sortpuzzle.cpp
+
   ./configure  --enable-release \
+              --disable-debug \
               --prefix=/usr \
               --enable-all-engines \
               --enable-text-console

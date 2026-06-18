@@ -5,7 +5,7 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=2.7.230.r0.g5cb7abf10c
+pkgver=2.7.419.r2.gcd9530eec3
 pkgrel=1
 pkgdesc='PlayStation 2 emulator'
 arch=(x86_64)
@@ -15,10 +15,10 @@ license=(
 )
 
 depends=(
-    alsa-lib
+    dbus
     ffmpeg
     hicolor-icon-theme
-    libaio
+    curl
     libbacktrace
     libglvnd
     libpcap
@@ -26,15 +26,23 @@ depends=(
     libxi
     libxrandr
     qt6-base
-    qt6-svg
-    plutovg
+    freetype2
+    glibc
+    libgcc
+    libjpeg-turbo
+    libstdc++
+    libwebp
+    libx11
+    lz4
+    systemd-libs
+    zlib
+    zstd
     plutosvg
+    plutovg
     sdl3
     shaderc
-    soundtouch
-    wayland
-    xcb-util-cursor
-    kddockwidgets-qt6
+    kddockwidgets
+    rapidyaml
 )
 makedepends=(
     7zip
@@ -57,6 +65,7 @@ optdepends=(
     'libpipewire: Pipewire support'
     'libpulse: Pulseaudio support'
     'qt6-wayland: Wayland support'
+    'noto-fonts: System font support'
 )
 provides=(${pkgname%-git})
 conflicts=(${pkgname%-git})

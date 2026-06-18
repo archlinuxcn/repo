@@ -1,0 +1,29 @@
+From: Igor Ustinov <igus@openssl.foundation>
+Date: Thu, 21 May 2026 08:36:54 +0200
+Subject: Fix potential NULL dereference processing CMS PasswordRecipientInfo
+
+Avoid NULL dereferencing when keyDerivationAlgorithm is absent
+in CMS PasswordRecipientInfo.
+
+Fixes CVE-2026-42766
+---
+ crypto/cms/cms_pwri.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/crypto/cms/cms_pwri.c b/crypto/cms/cms_pwri.c
+index e848b4090140..452007dcc818 100644
+--- a/crypto/cms/cms_pwri.c
++++ b/crypto/cms/cms_pwri.c
+@@ -340,6 +340,12 @@ int cms_RecipientInfo_pwri_crypt(CMS_ContentInfo *cms, CMS_RecipientInfo *ri,
+ 
+     /* Finish password based key derivation to setup key in "ctx" */
+ 
++    if (algtmp == NULL) {
++        CMSerr(CMS_F_CMS_RECIPIENTINFO_PWRI_CRYPT,
++               CMS_R_INVALID_KEY_ENCRYPTION_PARAMETER);
++        ERR_add_error_data(1, "Missing KeyDerivationAlgorithm");
++        goto err;
++    }
+     if (EVP_PBE_CipherInit(algtmp->algorithm,
+                            (char *)pwri->pass, pwri->passlen,
+                            algtmp->parameter, kekctx, en_de) < 0) {

@@ -1,7 +1,7 @@
 # Maintainer: Carlos Aznarán <caznaranl@uni.pe>
 _base=sentence-transformers
 pkgname=python-${_base}
-pkgver=5.5.1
+pkgver=5.6.0
 pkgrel=1
 pkgdesc="Embeddings, Retrieval, and Reranking"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python-transformers python-tqdm python-pytorch python-scikit-learn
 makedepends=(python-build python-installer python-setuptools python-wheel)
 # checkdepends=(python-pytest)
 source=(${_base}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('8ee894f9910b29b0523f9abf5d6ebeb0cf8792a6cbc4efa8169002e59c085b1a2e82fa6225d6d9d9733eff394c1dc2620a39b5f35889db77265b6b028b411c45')
+sha512sums=('821eea3357142fd4e07fd6ef52e8a92f1a02ff537177c5d85af480da2bbf170a2ba022fc921bcafbc6dd4d8bdca99ae8e1fda87df2206c5ddb7c2381f5a01473')
 
 build() {
   cd ${_base}-${pkgver}

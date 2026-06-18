@@ -8,8 +8,8 @@
 pkgname=gimp-git
 _pkgname=${pkgname%-git}
 epoch=2
-pkgver=57458.63164794406
-pkgrel=1
+pkgver=58334.3d020399543
+pkgrel=2
 pkgdesc="GNU Image Manipulation Program (non-conflicting git version)"
 arch=('i686' 'x86_64')
 url="https://www.gimp.org"
@@ -39,7 +39,7 @@ depends=(
 	)
 makedepends=('git' 'intltool>=0.40.1'
              'alsa-lib>=1.0.0' 'libxslt' 'glib-networking'
-             'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk' 'appstream'
+             'alsa-lib' 'curl' 'ghostscript' 'libxpm' 'webkit2gtk-4.1' 'appstream'
              'libheif' 'libwebp' 'libmng' 'iso-codes' 'aalib' 'zlib' 'glib2-devel' 'cmake'
              'gjs' 'python-gobject' 'luajit' 'meson' 'xorg-server-xvfb' 'gtk-doc' 'gi-docgen'
              'cfitsio' 'python-cairo' 'xdg-utils' 'bash-completion')
@@ -49,7 +49,7 @@ optdepends=('gutenprint: for sophisticated printing only as gimp has built-in cu
             'curl: for URI support'
             'ghostscript: for postscript support'
             'libxpm: XPM support'
-            'webkit2gtk: HTML renderer and web content engine'
+            'webkit2gtk-4.1: HTML renderer and web content engine'
             'libheif: HEIF support'
             'libwebp: WebP support'
             'libmng: MNG support'

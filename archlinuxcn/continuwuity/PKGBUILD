@@ -5,13 +5,13 @@ pkgdesc="a very cool, featureful fork of conduit (rust matrix homeserver)"
 url="https://forgejo.ellis.link/continuwuation/continuwuity"
 license=("Apache-2.0")
 arch=("x86_64" "aarch64")
-pkgver=0.5.9
+pkgver=26.6.0_alpha.1
 pkgrel=1
 epoch=1
 makedepends=("rust" "cargo" "git" "clang")
 depends=("gcc-libs" "glibc" "liburing" "jemalloc")
 source=("git+https://forgejo.ellis.link/continuwuation/continuwuity.git#tag=v$(echo ${pkgver} | sed 's|_|-|g')")
-sha256sums=('5aabf7fe8d744cb5a128b72d69f770deb7781d16bcc618a78ba654e0d9db9a71')
+sha256sums=('ed4f77fd90322d3eed2e52d14b624fc52af38fccbf039550b6ffac9deaa324c6')
 provides=("conduwuit" "continuwuity")
 conflicts=("conduwuit" "continuwuity")
 options=(!lto)
