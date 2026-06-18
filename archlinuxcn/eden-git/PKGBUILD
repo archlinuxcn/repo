@@ -1,0 +1,65 @@
+# Maintainer: gfrank227 [at] gmail [dot] com
+# Maintainer: HurricanePootis <hurricanepootis@protonmail.com>
+# Contributor: crueter <crueter at crueter dot x y z>
+# Contributor: rcf <ryan.farley@gmx.com>
+_pkgname=eden
+pkgname=$_pkgname-git
+epoch=1
+pkgver=0.2.0.r89.g5219b9f
+pkgrel=1
+pkgdesc="Nintendo Switch emulator forked from yuzu."
+arch=('x86_64' 'aarch64')
+url=https://eden-emulator.github.io/
+license=('GPL-3.0-or-later')
+provides=('eden')
+conflicts=('eden' 'eden-beta' 'eden-bin' 'eden-preview-bin')
+depends=('libusb' 'libva' 'qt6-webengine' 'brotli' 'qt6-charts' 'hicolor-icon-theme'
+	'qt6-base' 'sdl3' 'quazip-qt6' 'qt6-multimedia' 'fmt' 'boost-libs' 'opus' 'libdrm'
+	'enet' 'cubeb' 'game-devices-udev' 'zlib' 'openssl' 'libx11' 'libgcc'
+	'libstdc++' 'lz4' 'glibc' 'zstd' 'cpp-httplib' 'cpp-jwt'
+)
+makedepends=('git' 'cmake' 'catch2' 'boost' 'spirv-headers' 'vulkan-headers'
+	     'vulkan-utility-libraries' 'nlohmann-json' 'ninja' 'gamemode'
+	     'renderdoc' 'qt6-tools' 'nasm' 'opencl-headers' 'doxygen')
+optdepends=('gamemode: Gamemoded support')
+options=(!debug)
+source=("git+https://git.eden-emu.dev/eden-emu/eden.git")
+sha256sums=('SKIP')
+pkgver() {
+	cd "$_pkgname"
+	git describe --long --tags --abbrev=7 | sed 's/^v//;s/-\(rc[0-9]*\)/\1/;s/\([^-]*-g\)/r\1/;s/-/./g;s/.git//'
+}
+build() {
+	cd "$srcdir"
+	cmake -B build -S $_pkgname -GNinja \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=None \
+		-DUSE_DISCORD_PRESENCE=ON \
+		-DYUZU_USE_BUNDLED_FFMPEG=ON \
+		-DYUZU_USE_BUNDLED_SDL3=OFF \
+		-DDiscordRPC_FORCE_BUNDLED=ON \
+		-DYUZU_USE_BUNDLED_QT=OFF \
+		-Dxbyak_FORCE_BUNDLED=ON \
+		-DENABLE_QT=ON \
+		-DENABLE_QT_TRANSLATION=ON \
+		-DYUZU_USE_QT_MULTIMEDIA=ON \
+		-DYUZU_USE_QT_WEB_ENGINE=ON \
+		-DTITLE_BAR_FORMAT_RUNNING="eden | ${pkgver} {}" \
+		-DTITLE_BAR_FORMAT_IDLE="eden ${pkgver} {}" \
+		-DYUZU_TESTS=OFF \
+		-DDYNARMIC_TESTS=OFF \
+		-DBUILD_TESTING=OFF \
+		-Wno-dev
+	cmake --build build
+}
+package() {
+	cd "$srcdir"
+	DESTDIR="$pkgdir/" cmake --install build
+	cd "$srcdir/$_pkgname/LICENSES"
+	for file in *.txt;
+	do
+		install -Dm644 $file "$pkgdir/usr/share/licenses/$pkgname/$file"
+	done
+}
+
+
