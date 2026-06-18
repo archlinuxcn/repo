@@ -1,0 +1,22 @@
+--- a/sdl/fontmng.c	2026-06-18 12:27:31.071956545 +0800
++++ b/sdl/fontmng.c	2026-06-18 12:27:31.075745604 +0800
+@@ -9,7 +9,7 @@
+ #if USE_SDL >= 3 
+ #include <SDL3_ttf/SDL_ttf.h>
+ #elif USE_SDL == 2 
+-#include <SDL2_ttf/SDL_ttf.h>
++#include <SDL2/SDL_ttf.h>
+ #elif USE_SDL == 1 
+ #include <SDL_ttf/SDL_ttf.h>
+ #endif
+--- a/x/fontmng.c	2026-06-18 12:27:31.071956545 +0800
++++ b/x/fontmng.c	2026-06-18 12:27:31.075809895 +0800
+@@ -13,7 +13,7 @@
+ #if USE_SDL >= 3
+ #include	<SDL3_ttf/SDL_ttf.h>
+ #elif USE_SDL == 2
+-#include	<SDL2_ttf/SDL_ttf.h>
++#include	<SDL2/SDL_ttf.h>
+ #elif USE_SDL == 1
+ #include	<SDL_ttf/SDL_ttf.h>
+ #endif
