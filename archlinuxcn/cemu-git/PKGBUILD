@@ -3,7 +3,7 @@ _pkgname=cemu
 pkgname=$_pkgname-git
 epoch=1
 pkgver=2.6.r241.g079a4af
-pkgrel=4
+pkgrel=5
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://cemu.info/"
@@ -14,6 +14,7 @@ depends=(
 	'hicolor-icon-theme'
 	'libx11'
 	'pugixml'
+	'sdl2-compat'
 	'sdl3>=3.4.2'
 	'wxwidgets-gtk3-git'
 )
