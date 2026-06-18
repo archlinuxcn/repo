@@ -105,7 +105,7 @@ package_wxwidgets-common-git() {
 
   DESTDIR="${pkgdir}" cmake --install build-gtk3
   rm -r "${pkgdir}"/usr/{bin/wx-config,lib/{cmake,wx,libwx_gtk*}}
-  mv "${pkgdir}"/usr/bin/wxrc "${pkgdir}"/usr/bin/wxrc-3.3
+  rm "${pkgdir}"/usr/bin/wxrc
   install -Dm644 wxWidgets/wxwin.m4 -t "${pkgdir}"/usr/share/aclocal/wxwin-3.3.m4
 # Install translations
   make DESTDIR="${pkgdir}" -C wxWidgets locale_install
