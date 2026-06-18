@@ -1,0 +1,55 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 977f48b7..d449b1f2 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -227,6 +227,7 @@ if(ENABLE_SDL)
+ endif()
+ 
+ if(UNIX AND NOT APPLE)
++	target_link_libraries(CemuBin PRIVATE ${CMAKE_DL_LIBS})
+ 	# due to nasm output some linkers will make stack executable
+ 	# cemu does not require this so we explicity disable it
+ 	target_link_options(CemuBin PRIVATE -z noexecstack)
+diff --git a/src/main.cpp b/src/main.cpp
+index 9b9e04c2..10b1bd3c 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -35,6 +35,10 @@
+ #include <SDL3/SDL_main.h>
+ #endif
+ 
++#if BOOST_OS_LINUX && defined(HAS_SDL)
++#include <dlfcn.h>
++#endif
++
+ #if BOOST_OS_LINUX
+ #define _putenv(__s) putenv((char*)(__s))
+ #include <sys/sysinfo.h>
+@@ -265,6 +269,15 @@ int main(int argc, char* argv[])
+ #else
+ 
+ int BreathOfTheWildChildProcessMain();
++void PreloadSDL3()
++{
++#if BOOST_OS_LINUX && defined(HAS_SDL)
++	static void* sdl3Handle = dlopen("libSDL3.so.0", RTLD_NOW | RTLD_GLOBAL);
++	if (!sdl3Handle)
++		cemuLog_log(LogType::Force, "Failed to preload SDL3: {}", dlerror());
++#endif
++}
++
+ int main(int argc, char *argv[])
+ {
+ #if BOOST_OS_LINUX && defined(ENABLE_VULKAN)
+@@ -272,6 +285,11 @@ int main(int argc, char *argv[])
+ 		return BreathOfTheWildChildProcessMain();
+ #endif
+ 
++#ifdef HAS_SDL
++	PreloadSDL3();
++	SDL_SetMainReady();
++#endif
++
+ #if BOOST_OS_LINUX || BOOST_OS_BSD
+     XInitThreads();
+ #endif
