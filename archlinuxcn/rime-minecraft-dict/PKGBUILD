@@ -1,6 +1,6 @@
 # Maintainer: Kimiblock Moe
 pkgname=rime-minecraft-dict
-pkgver=26.1
+pkgver=26.2
 pkgrel=1
 pkgdesc="Minecraft dict for RIME"
 arch=('any')
@@ -11,7 +11,7 @@ makedepends=("git")
 provides=('rime-minecraft-dict')
 conflicts=('rime-minecraft-dict')
 source=("git+https://github.com/Kimiblock/rime-minecraft-dict.git#tag=${pkgver}")
-sha256sums=('caea56161b216c0985708b2eeb746313da3bcadd88aa9339836cc7574fed758a')
+sha256sums=('5cb28424f6e5880ef50f2de02dfb7f84402122bc8361998ffa789a3a244b3be2')
 
 function package(){
 	install -Dm644 "${srcdir}/rime-minecraft-dict/minecraft_en.dict.yaml" \
