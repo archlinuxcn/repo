@@ -7,8 +7,8 @@ pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
 arch=('x86_64')
 url='https://tamlok.github.io/vnote/'
 license=('MIT')
-depends=(qt6-webengine qt6-svg qt6-webchannel qt6-5compat)
-makedepends=(git cmake qt6-tools clang lld)
+depends=(qt6-webengine qt6-svg qt6-webchannel qt6-5compat qtkeychain-qt6)
+makedepends=(git cmake qt6-tools clang lld vulkan-headers)
 provides=('vnote')
 conflicts=('vnote')
 source=("git+https://github.com/vnotex/vnote.git")
@@ -29,12 +29,14 @@ build() {
   export CC=/usr/bin/clang CXX=/usr/bin/clang++
   export LD="/usr/bin/lld"
   export LDFLAGS="-fuse-ld=lld"
+  export CXXFLAGS+=" -I/usr/include/qt6keychain"
 
   cmake -B build -S "vnote" -Wno-dev \
     -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
     -DUSE_LD_GOLD=OFF \
     -DCMAKE_BUILD_TYPE=None \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DVNOTE_BUILD_TESTS=OFF
 
   cmake --build build
 }
