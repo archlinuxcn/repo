@@ -1,18 +1,20 @@
 # Maintainer: erk <v at erk dot io>
 pkgname=vnote-git
-pkgver=2939.eb536fa2
+pkgver=2940.6f87c1fb
 epoch=3
-pkgrel=2
+pkgrel=1
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
 arch=('x86_64')
 url='https://tamlok.github.io/vnote/'
 license=('MIT')
-depends=(qt6-webengine qt6-svg qt6-webchannel qt6-5compat qtkeychain-qt6)
+depends=(qt6-webengine qt6-svg qt6-webchannel qt6-5compat qtkeychain-qt6 cmark)
 makedepends=(git cmake qt6-tools clang lld vulkan-headers)
 provides=('vnote')
 conflicts=('vnote')
-source=("git+https://github.com/vnotex/vnote.git")
-sha256sums=(SKIP)
+source=("git+https://github.com/vnotex/vnote.git"
+        "vtextedit-system-cmark.patch")
+sha256sums=('SKIP'
+            '346636ee23a174003ab19af2522b8f1d608f7c6ec408351eb0f3ba1348a08aa4')
 
 gitname="vnote"
 
@@ -24,6 +26,7 @@ pkgver() {
 prepare() {
     cd "$srcdir/$gitname"
     git submodule update --init --recursive
+    patch -d libs/vtextedit -Np1 -i "$srcdir/vtextedit-system-cmark.patch"
 }
 build() {
   export CC=/usr/bin/clang CXX=/usr/bin/clang++
