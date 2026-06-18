@@ -4,10 +4,11 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build: vcs_update
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
 
 post_build: git_pkgbuild_commit
 
 update_on:
   - source: github
-    github: coslyk/moonplayer 
+    github: coslyk/moonplayer
+    use_latest_tag: true
