@@ -3,19 +3,26 @@
 # Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Christian Hesse <mail@eworm.de>
 
-# Follow the development branch for the current GA (General Availability) release
+# Follows the development branch for the current GA (General Availability) release
 
 pkgbase=mariadb-git
-pkgname=('mariadb-libs-git' 'mariadb-clients-git' 'mariadb-git' 'mytop-git')
+pkgname=(
+  'mariadb-libs-git'
+  'mariadb-clients-git'
+  'mariadb-git'
+  'mytop-git'
+  'mariadb-pam-git')
 pkgdesc='Fast SQL database server, derived from MySQL'
-pkgver=12.3.1.r11.gbdbd63e
+_pkgver=12.3
+pkgver=12.3.2.r5.g8fd382a
 pkgrel=1
 arch=('x86_64')
 license=('GPL-2.0-only')
 url='https://mariadb.org/'
 makedepends=('git' 'boost' 'bzip2' 'cmake' 'cracklib' 'curl' 'jemalloc' 'judy' 'krb5' 'liburing'
              'libxcrypt' 'libxml2' 'lz4' 'openssl' 'pcre2' 'systemd' 'zlib' 'zstd' 'xz')
-source=("mariadb::git+https://github.com/MariaDB/server.git"
+validpgpkeys=('177F4010FE56CA3336300305F1656F24C74CD1D8') # MariaDB Signing Key <signing-key@mariadb.org>
+source=("mariadb::git+https://github.com/MariaDB/server.git#branch=${_pkgver}?signed"
         'git+https://github.com/MariaDB/mariadb-connector-c.git'
         'git+https://github.com/facebook/rocksdb.git'
         'git+https://github.com/codership/wsrep-lib.git'
@@ -30,7 +37,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'b7ff48d98b6ac075b0067b25015f1f034f5d7d573d2a40d9470a755a7f635e28')
+            '966d0854d4aa09dc08b8c1f0cbc65806ca09543ed9a41a3714d400cca49e0adb')
 
 pkgver() {
   cd mariadb/
@@ -135,10 +142,21 @@ check() {
 
 package_mariadb-libs-git() {
   pkgdesc='MariaDB libraries'
-  depends=('liburing' 'libxcrypt' 'libcrypt.so' 'openssl' 'pcre2' 'zlib' 'zstd')
+  depends=('liburing' 'liburing.so'
+           'libxcrypt' 'libcrypt.so'
+           'openssl' 'libcrypto.so' 'libssl.so'
+           'pcre2' 'libpcre2-8.so'
+           'zlib' 'libz.so'
+           'zstd' 'libzstd.so')
   optdepends=('krb5: for gssapi authentication')
-  conflicts=(mariadb-libs 'libmysqlclient' 'libmariadbclient' 'mariadb-connector-c')
-  provides=('libmariadbclient' 'mariadb-connector-c' 'libmariadb.so' 'libmariadbd.so')
+  conflicts=(mariadb-libs
+             'libmysqlclient'
+             'libmariadbclient'
+             'mariadb-connector-c')
+  provides=('libmariadbclient'
+            'mariadb-connector-c'
+            'libmariadb.so'
+            'libmariadbd.so')
 
   cd build
 
@@ -164,7 +182,8 @@ package_mariadb-libs-git() {
 
 package_mariadb-clients-git() {
   pkgdesc='MariaDB client tools'
-  depends=("mariadb-libs-git=${pkgver}" 'jemalloc' 'ncurses')
+  depends=("mariadb-libs-git=${pkgver}"
+           'ncurses' 'libncursesw.so')
   conflicts=('mariadb-clients' 'mysql-clients')
   provides=("mysql-clients=${pkgver}")
 
@@ -189,20 +208,27 @@ package_mariadb-git() {
           'etc/my.cnf.d/provider_lzma.cnf'
           'etc/my.cnf.d/s3.cnf'
           'etc/my.cnf.d/server.cnf'
-          'etc/my.cnf.d/spider.cnf'
-          'etc/security/user_map.conf')
+          'etc/my.cnf.d/spider.cnf')
   install=mariadb.install
-  depends=("mariadb-clients-git=${pkgver}" 'bzip2' 'coreutils' 'libxml2' 'lz4'
-           'systemd-libs' 'zstd')
+  depends=("mariadb-clients-git=${pkgver}"
+           'bzip2' 'libbz2.so'
+           'coreutils'
+           'jemalloc'
+           'libxml2' 'libxml2.so'
+           'lz4' 'liblz4.so'
+           'systemd-libs' 'libsystemd.so'
+           'zstd' 'libzstd.so')
   optdepends=('cracklib: for cracklib plugin'
               'curl: for ha_s3 plugin'
               'galera: for MariaDB cluster with Galera WSREP'
               'judy: for Open Query GRAPH (OQGraph) computation engine'
+              'mariadb-pam: for PAM authentication'
               'perl-dbd-mariadb: for mariadb-hotcopy, mariadb-convert-table-format and mariadb-setpermission'
               'python-mysqlclient: for myrocks_hotbackup'
               'xz: lzma provider')
   conflicts=('mariadb' 'mysql')
-  provides=("mariadb-server=${pkgver}" "mysql=${pkgver}")
+  provides=("mariadb-server=${pkgver}"
+            "mysql=${pkgver}")
   options=('emptydirs')
 
   cd build
@@ -246,8 +272,15 @@ package_mariadb-git() {
     rm "${pkgdir}"/usr/bin/"$(basename "${bin}")" "${pkgdir}"/usr/share/man/man1/"$(basename "${bin}")".1
   done
 
-  # provided by mytop
+  # provided by mariadb-pam
+  install -d -m0755 "${srcdir}"/mariadb-pam/usr/lib/{mysql/plugin,security}/ "${srcdir}"/mariadb-pam/etc/security/
+  mv usr/lib/mysql/plugin/auth_pam* "${srcdir}"/mariadb-pam/usr/lib/mysql/plugin/
+  mv usr/lib/security/pam_user_map.so "${srcdir}"/mariadb-pam/usr/lib/security/
+  mv etc/security/user_map.conf "${srcdir}"/mariadb-pam/etc/security/
+
+  # provided by mariadb-mytop
   rm usr/bin/mytop
+  rm usr/share/man/man1/mytop.1
 
   # not needed
   rm -r usr/{mariadb-test,sql-bench}
@@ -256,10 +289,25 @@ package_mariadb-git() {
 
 package_mytop-git() {
   pkgdesc='Top clone for MariaDB'
-  depends=('perl' 'perl-dbd-mariadb' 'perl-term-readkey')
+  depends=('perl'
+           'perl-dbd-mariadb'
+           'perl-term-readkey')
   conflicts=('mytop')
   provides=("mytop=${pkgver}")
 
+  install -D -m0755 build/scripts/mytop "${pkgdir}"/usr/bin/mytop
+  install -D -m0755 mariadb/man/mytop.1 "${pkgdir}"/usr/share/man/man1/mytop.1
+}
 
-  install -D -m0755 build/scripts/mytop "$pkgdir"/usr/bin/mytop
+package_mariadb-pam-git() {
+  pkgdesc='MariaDB PAM support'
+  depends=("mariadb=${pkgver}"
+           'pam' 'libpam.so')
+  conflicts=('mariadb-pam')
+  provides=("mariadb-pam=${pkgver}")
+  backup=('etc/security/user_map.conf')
+
+  mv mariadb-pam/{etc,usr}/ "${pkgdir}"/
+  # make auth_pam_tool setuid!
+  chmod 4755 "${pkgdir}"/usr/lib/mysql/plugin/auth_pam_tool_dir/auth_pam_tool
 }
