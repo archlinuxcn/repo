@@ -1,0 +1,293 @@
+diff --git a/pcsxr/libpcsxcore/cdriso.c b/pcsxr/libpcsxcore/cdriso.c
+index 4d6c337..b2341bd 100644
+--- a/pcsxr/libpcsxcore/cdriso.c
++++ b/pcsxr/libpcsxcore/cdriso.c
+@@ -181,7 +181,6 @@ int get_compressed_cdda_track_length(const char* filepath) {
+ 	int seconds = -1;
+ #ifdef ENABLE_CCDDA
+ 	av_log_set_level(AV_LOG_QUIET);
+-	av_register_all();
+ 
+ 	AVFormatContext * inAudioFormat = NULL;
+ 	inAudioFormat = avformat_alloc_context();
+@@ -196,40 +195,45 @@ int get_compressed_cdda_track_length(const char* filepath) {
+ 
+ #ifdef ENABLE_CCDDA
+ 
+-int decode_packet(int *got_frame, AVPacket pkt, int audio_stream_idx, AVFrame* frame, AVCodecContext* audio_dec_ctx, void* buf, int* size, SwrContext* swr) {
++int decode_packet(int *got_frame, AVPacket *pkt, int audio_stream_idx, AVFrame* frame, AVCodecContext* audio_dec_ctx, void* buf, int* size, SwrContext* swr) {
+ 	int ret = 0;
+-	int decoded = pkt.size;
+ 	*got_frame = 0;
+ 
+-	if (pkt.stream_index == audio_stream_idx) {
+-		ret = avcodec_decode_audio4(audio_dec_ctx, frame, got_frame, &pkt);
++	if (pkt == NULL || pkt->stream_index == audio_stream_idx) {
++		ret = avcodec_send_packet(audio_dec_ctx, pkt);
+ 		if (ret < 0) {
+ 			SysPrintf(_("Error decoding audio frame\n"));
+ 			return ret;
+ 		}
+ 
+-		/* Some audio decoders decode only part of the packet, and have to be
+-		 * called again with the remainder of the packet data.
+-		 * Sample: fate-suite/lossless-audio/luckynight-partial.shn
+-		 * Also, some decoders might over-read the packet. */
++		while (ret >= 0) {
++			uint8_t *out[] = { (uint8_t *)buf + *size };
++			int out_samples;
+ 
+-		decoded = FFMIN(ret, pkt.size);
++			ret = avcodec_receive_frame(audio_dec_ctx, frame);
++			if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF)
++				return 0;
++			if (ret < 0) {
++				SysPrintf(_("Error decoding audio frame\n"));
++				return ret;
++			}
+ 
+-		if (*got_frame) {
+-			size_t unpadded_linesize = frame->nb_samples * av_get_bytes_per_sample(frame->format);
+-			swr_convert(swr, (uint8_t**)&buf, frame->nb_samples, (const uint8_t **)frame->data, frame->nb_samples);
+-			(*size)+=(unpadded_linesize*2);
++			*got_frame = 1;
++			out_samples = swr_convert(swr, out, frame->nb_samples, (const uint8_t **)frame->data, frame->nb_samples);
++			if (out_samples < 0)
++				return out_samples;
++			*size += out_samples * 2 * av_get_bytes_per_sample(AV_SAMPLE_FMT_S16);
++			av_frame_unref(frame);
+ 		}
+ 	}
+-	return decoded;
++	return 0;
+ }
+ 
+ int open_codec_context(int *stream_idx, AVFormatContext *fmt_ctx, enum AVMediaType type) {
+ 	int ret, stream_index;
+ 	AVStream *st;
+ 	AVCodecContext *dec_ctx = NULL;
+-	AVCodec *dec = NULL;
+-	AVDictionary *opts = NULL;
++	const AVCodec *dec = NULL;
+ 
+ 	ret = av_find_best_stream(fmt_ctx, type, -1, -1, NULL, 0);
+ 
+@@ -241,13 +245,17 @@ int open_codec_context(int *stream_idx, AVFormatContext *fmt_ctx, enum AVMediaTy
+ 		stream_index = ret;
+ 		st = fmt_ctx->streams[stream_index];
+ 
+-		dec_ctx = st->codec;
+-		dec = avcodec_find_decoder(dec_ctx->codec_id);
++		dec = avcodec_find_decoder(st->codecpar->codec_id);
+ 		if (!dec) {
+ 			SysPrintf(_("Failed to find %s codec\n"),
+ 					av_get_media_type_string(type));
+ 			return AVERROR(EINVAL);
+ 		}
++		dec_ctx = avcodec_alloc_context3(dec);
++		if (!dec_ctx)
++			return AVERROR(ENOMEM);
++		if ((ret = avcodec_parameters_to_context(dec_ctx, st->codecpar)) < 0)
++			return ret;
+ 		/* Init the decoders, with or without reference counting */
+ 		if ((ret = avcodec_open2(dec_ctx, dec, NULL)) < 0) {
+ 			SysPrintf(_("Failed to open %s codec\n"),
+@@ -255,22 +263,22 @@ int open_codec_context(int *stream_idx, AVFormatContext *fmt_ctx, enum AVMediaTy
+ 			return ret;
+ 		}
+ 		*stream_idx = stream_index;
++		fmt_ctx->streams[stream_index]->priv_data = dec_ctx;
+ 	}
+ 	return 0;
+ }
+ 
+ int decode_compressed_cdda_track(char* buf, char* src_filename, int* size) {
+ 	AVFormatContext *fmt_ctx = NULL;
+-	AVCodecContext *audio_dec_ctx;
++	AVCodecContext *audio_dec_ctx = NULL;
+ 	AVStream *audio_stream = NULL;
+ 	int audio_stream_idx = -1;
+ 	AVFrame *frame = NULL;
+-	AVPacket pkt;
+-	SwrContext *resample_context;
++	AVPacket *pkt = NULL;
++	SwrContext *resample_context = NULL;
++	AVChannelLayout out_ch_layout = AV_CHANNEL_LAYOUT_STEREO;
+ 	int ret = 0, got_frame;
+ 
+-	av_register_all();
+-
+ 	if (avformat_open_input(&fmt_ctx, src_filename, NULL, NULL) < 0) {
+ 		SysPrintf(_("Could not open source file %s\n"), src_filename);
+ 		return -1;
+@@ -284,7 +292,7 @@ int decode_compressed_cdda_track(char* buf, char* src_filename, int* size) {
+ 
+ 	if (open_codec_context(&audio_stream_idx, fmt_ctx, AVMEDIA_TYPE_AUDIO) >= 0) {
+ 		audio_stream = fmt_ctx->streams[audio_stream_idx];
+-		audio_dec_ctx = audio_stream->codec;
++		audio_dec_ctx = audio_stream->priv_data;
+ 	}
+ 
+ 	if (!audio_stream) {
+@@ -301,12 +309,12 @@ int decode_compressed_cdda_track(char* buf, char* src_filename, int* size) {
+ 		ret = -1;
+ 		goto end;
+ 	}
+-	av_opt_set_int(resample_context, "in_channel_layout",  audio_dec_ctx->channel_layout, 0);
+-	av_opt_set_int(resample_context, "out_channel_layout", AV_CH_LAYOUT_STEREO,  0);
+-	av_opt_set_int(resample_context, "in_sample_rate",     audio_dec_ctx->sample_rate, 0);
+-	av_opt_set_int(resample_context, "out_sample_rate",    44100, 0);
+-	av_opt_set_sample_fmt(resample_context, "in_sample_fmt",  audio_dec_ctx->sample_fmt, 0);
+-	av_opt_set_sample_fmt(resample_context, "out_sample_fmt", AV_SAMPLE_FMT_S16,  0);
++	if (swr_alloc_set_opts2(&resample_context, &out_ch_layout, AV_SAMPLE_FMT_S16, 44100,
++			&audio_dec_ctx->ch_layout, audio_dec_ctx->sample_fmt, audio_dec_ctx->sample_rate, 0, NULL) < 0) {
++		SysPrintf(_("Could not allocate resample context"));
++		ret = -1;
++		goto end;
++	}
+ 	if (swr_init(resample_context) < 0)
+ 	{
+ 		SysPrintf(_("Could not open resample context"));
+@@ -322,36 +330,32 @@ int decode_compressed_cdda_track(char* buf, char* src_filename, int* size) {
+ 		goto end;
+ 	}
+ 
+-	/* initialize packet, set data to NULL, let the demuxer fill it */
+-	av_init_packet(&pkt);
+-	pkt.data = NULL;
+-	pkt.size = 0;
++	pkt = av_packet_alloc();
++	if (!pkt) {
++		ret = AVERROR(ENOMEM);
++		goto end;
++	}
+ 
+ 	/* read frames from the file */
+-	while (av_read_frame(fmt_ctx, &pkt) >= 0) {
+-		AVPacket orig_pkt = pkt;
+-		do {
+-			ret = decode_packet(&got_frame, pkt, audio_stream_idx, frame, audio_dec_ctx, buf+(*size), size, resample_context);
+-			if (ret < 0)
+-				break;
+-			pkt.data += ret;
+-			pkt.size -= ret;
+-		} while (pkt.size > 0);
+-		av_packet_unref(&orig_pkt);
++	while (av_read_frame(fmt_ctx, pkt) >= 0) {
++		ret = decode_packet(&got_frame, pkt, audio_stream_idx, frame, audio_dec_ctx, buf, size, resample_context);
++		av_packet_unref(pkt);
++		if (ret < 0)
++			break;
+ 	}
+ 
+ 	/* flush cached frames */
+-	pkt.data = NULL;
+-	pkt.size = 0;
+ 	do {
+-		decode_packet(&got_frame, pkt, audio_stream_idx, frame, audio_dec_ctx, buf+(*size), size, resample_context);
++		ret = decode_packet(&got_frame, NULL, audio_stream_idx, frame, audio_dec_ctx, buf, size, resample_context);
+ 	} while (got_frame);
+ 
+ end:
+ 	swr_free(&resample_context);
+-	avcodec_close(audio_dec_ctx);
++	if (audio_dec_ctx != NULL)
++		avcodec_free_context(&audio_dec_ctx);
+ 	avformat_close_input(&fmt_ctx);
+ 	av_frame_free(&frame);
++	av_packet_free(&pkt);
+ 	return ret < 0;
+ }
+ #endif
+diff --git a/pcsxr/plugins/dfcdrom/cdr.h b/pcsxr/plugins/dfcdrom/cdr.h
+index 293d04e..9ff2058 100644
+--- a/pcsxr/plugins/dfcdrom/cdr.h
++++ b/pcsxr/plugins/dfcdrom/cdr.h
+@@ -227,7 +227,7 @@ void lba_to_msf(unsigned int s, unsigned char *msf);
+ void DecodeRawSubData(unsigned char *subbuffer);
+ unsigned short calcCrc(unsigned char *d, int len);
+ 
+-int OpenCdHandle();
++int OpenCdHandle(const char *dev);
+ void CloseCdHandle();
+ int IsCdHandleOpen();
+ long GetTN(unsigned char *buffer);
+diff --git a/pcsxr/gui/Config.c b/pcsxr/gui/Config.c
+index a30fdce..48e1f37 100644
+--- a/pcsxr/gui/Config.c
++++ b/pcsxr/gui/Config.c
+@@ -71,7 +71,7 @@ static boolean GetValueb(char *src, char *name) {
+ #define SetValueb(name, var) \
+ 	fprintf(f, "%s = %d\n", name, (var) ? 1 : 0);
+ 
+-int LoadConfig(PcsxConfig *Conf) {
++int LoadConfig(void) {
+ 	struct stat buf;
+ 	FILE *f;
+ 	int size;
+diff --git a/pcsxr/gui/Linux.h b/pcsxr/gui/Linux.h
+index 5559c72..7bd7e4d 100644
+--- a/pcsxr/gui/Linux.h
++++ b/pcsxr/gui/Linux.h
+@@ -46,7 +46,7 @@ extern int StatesC;
+ char cfgfile[MAXPATHLEN];	/* ADB Comment this out - make a local var, or at least use gchar funcs */
+ char cfgfile_basename[MAXPATHLEN];	/* ADB Comment this out - make a local var, or at least use gchar funcs */
+ 
+-int LoadConfig();
++int LoadConfig(void);
+ void SaveConfig();
+ 
+ void StartGui();
+diff --git a/pcsxr/gui/GtkGui.c b/pcsxr/gui/GtkGui.c
+index 819f080..d3ce6db 100644
+--- a/pcsxr/gui/GtkGui.c
++++ b/pcsxr/gui/GtkGui.c
+@@ -51,7 +51,7 @@ void OnEmu_Reset();
+ void OnEmu_Shutdown();
+ void OnEmu_SwitchImage();
+ void OnHelp_Help();
+-void OnHelp_About();
++void OnHelp_About(GtkWidget *widget, gpointer user_data);
+ void OnDestroy();
+ void OnFile_Exit();
+ 
+diff --git a/pcsxr/gui/ConfDlg.c b/pcsxr/gui/ConfDlg.c
+index 0acf025..c0ab5a8 100644
+--- a/pcsxr/gui/ConfDlg.c
++++ b/pcsxr/gui/ConfDlg.c
+@@ -106,7 +106,7 @@ void ConfigurePlugins() {
+ 		return;
+ 	}
+ 
+-	UpdatePluginsBIOS_UpdateGUI(builder);
++	UpdatePluginsBIOS_UpdateGUI();
+ 
+ 	ConfDlg = GTK_WIDGET(gtk_builder_get_object(builder, "ConfDlg"));
+ 	
+@@ -222,7 +222,7 @@ void OnConf_Net(GtkWidget *widget, gpointer user_data) {
+ 
+ 	UpdatePluginsBIOS();
+ 
+-	FindNetPlugin(builder);
++	FindNetPlugin();
+ 
+ 	builder = gtk_builder_new();
+ 	if (!gtk_builder_add_from_resource(builder, "/org/pcsxr/gui/pcsxr.ui", NULL)) {
+@@ -487,7 +487,7 @@ static void OnPluginPath_Changed(GtkWidget *wdg, gpointer data) {
+ 	strcpy(Config.PluginsDir, path);
+ 
+     UpdatePluginsBIOS();
+-	UpdatePluginsBIOS_UpdateGUI(data);
++	UpdatePluginsBIOS_UpdateGUI();
+ 
+ 	g_free(path);
+ }
+@@ -503,7 +503,7 @@ static void OnBiosPath_Changed(GtkWidget *wdg, gpointer data) {
+ 	strcpy(Config.BiosDir, foldername);
+ 
+ 	UpdatePluginsBIOS();
+-	UpdatePluginsBIOS_UpdateGUI(data);
++	UpdatePluginsBIOS_UpdateGUI();
+ 
+ 	g_free(foldername);
+ }
