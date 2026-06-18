@@ -2,14 +2,14 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=wxwidgets-gtk2
-pkgver=3.2.8
+pkgver=3.2.10
 pkgrel=1
 arch=(x86_64)
 url='https://wxwidgets.org'
 license=(custom:wxWindows)
 makedepends=(cmake gst-plugins-base glu libnotify qt5-base sdl2 libmspack gtk2)
 source=(https://github.com/wxWidgets/wxWidgets/releases/download/v$pkgver/wxWidgets-$pkgver.tar.bz2)
-sha256sums=('c74784904109d7229e6894c85cfa068f1106a4a07c144afd78af41f373ee0fe6')
+sha256sums=('d66e929569947a4a5920699539089a9bda83a93e5f4917fb313a61f0c344b896')
 
 build() {
   cmake -B build-gtk2 -S wxWidgets-$pkgver \
@@ -36,7 +36,7 @@ package_wxwidgets-gtk2() {
   provides=(wxgtk wxgtk2 wxwidgets)
 
   DESTDIR="$pkgdir" cmake --install build-gtk2
-  rm -r "$pkgdir"/usr/{include,lib/cmake,lib/libwx_base*,bin/wxrc*}
+  rm -r "$pkgdir"/usr/{include,lib/cmake,lib/libwx_base*,bin/wxrc*,share/locale/*/LC_MESSAGES/wxstd*}
   mv "$pkgdir"/usr/bin/wx-config{,-gtk2} # Conflicts with wx-gtk3
 
   install -Dm644 wxWidgets-$pkgver/docs/licence.txt "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
