@@ -27,6 +27,7 @@ source=("git+https://source.hodakov.me/hdkv/yuzu.git"
   0001-fix-fmt11.patch
   0002-fix-mem.patch
   0003-fix-flow-block-init.patch
+  0004-fix-renderdoc-api-typedef.patch
 )
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
 sha256sums=('SKIP'
@@ -41,13 +42,15 @@ sha256sums=('SKIP'
   '557c41d8eb5c29387a9d496db87c4aeb4f2ac8a2b6d5f60e869a8cade26e679c'
   '826576b7254cf8df058caef607af8ef996a18bbb4d0cbff12b12ee08e5c4ae6b'
   'dfb01cd56f73bae21113e73328405b337b7c8643b17018eb757bad04d5a23538'
-  '0c6179c1459d70b72eebbf616e1f88b1f647662ef508e911209934bace38aa27')
+  '0c6179c1459d70b72eebbf616e1f88b1f647662ef508e911209934bace38aa27'
+  '6f289821a56a8d62957279dd7d82589948017661c5c71525754605707ffe89d2')
 
 prepare() {
   cd $srcdir/yuzu
   patch --strip=1 --binary -i ../0001-fix-fmt11.patch
   patch --strip=1 --binary -i ../0002-fix-mem.patch
   patch --strip=1 --binary -i ../0003-fix-flow-block-init.patch
+  patch --strip=1 --binary -i ../0004-fix-renderdoc-api-typedef.patch
 
   cd $srcdir
   cp -rf ${srcdir}/tz-2024b/* "${srcdir}/tzdb_to_nx/externals/tz/tz/"

@@ -1,0 +1,26 @@
+diff --git a/src/core/tools/renderdoc.cpp b/src/core/tools/renderdoc.cpp
+index 947fa6c..ec6c6d8 100755
+--- a/src/core/tools/renderdoc.cpp
++++ b/src/core/tools/renderdoc.cpp
+@@ -1,8 +1,6 @@
+ // SPDX-FileCopyrightText: Copyright 2023 yuzu Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+-#include <renderdoc_app.h>
+-
+ #include "common/assert.h"
+ #include "common/dynamic_library.h"
+ #include "core/tools/renderdoc.h"
+diff --git a/src/core/tools/renderdoc.h b/src/core/tools/renderdoc.h
+index 0e5e43d..590a35d 100755
+--- a/src/core/tools/renderdoc.h
++++ b/src/core/tools/renderdoc.h
+@@ -3,7 +3,7 @@
+ 
+ #pragma once
+ 
+-struct RENDERDOC_API_1_6_0;
++#include <renderdoc_app.h>
+ 
+ namespace Tools {
+ 
