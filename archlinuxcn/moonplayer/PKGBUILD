@@ -1,0 +1,45 @@
+# Maintainer: hzy068808 at gmail.com
+# Contributor: a304yuanyuan at gmail.com
+# Contributor: rob.til.freedman@googlemail.com
+
+pkgname=moonplayer
+pkgver=4.3
+pkgrel=25
+pkgdesc="A qt font-end for mplayer with the abilities of watching and downloading videos from chinese network"
+arch=('i686' 'x86_64')
+url="https://github.com/coslyk/moonplayer"
+license=('GPL-3.0-or-later')
+depends=('python' 'qt6-declarative' 'mpv')
+makedepends=('cmake' 'git' 'qt6-tools' 'clang')
+source=(
+	git+https://github.com/coslyk/moonplayer.git#tag=v$pkgver
+	qt6-native-interface.patch
+	)
+sha1sums=('SKIP'
+          'f00950949b2e6bac10f9a80bc8cebb2f3aead213')
+
+prepare() {
+  cd $srcdir/$pkgname
+  patch -Np1 -i ../qt6-native-interface.patch
+  git submodule update --init --recursive
+}
+
+build() {
+	cd $srcdir/$pkgname
+  mkdir build
+  cd build
+
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+	make
+}
+
+package() {
+	cd $srcdir/$pkgname/build
+
+	make DESTDIR="${pkgdir}" install
+
+	cd $pkgdir/usr/share
+
+	mv icons pixmaps
+}
