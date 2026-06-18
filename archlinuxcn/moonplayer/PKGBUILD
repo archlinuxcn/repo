@@ -4,7 +4,7 @@
 
 pkgname=moonplayer
 pkgver=4.3
-pkgrel=25
+pkgrel=26
 pkgdesc="A qt font-end for mplayer with the abilities of watching and downloading videos from chinese network"
 arch=('i686' 'x86_64')
 url="https://github.com/coslyk/moonplayer"
@@ -15,7 +15,7 @@ source=(
 	git+https://github.com/coslyk/moonplayer.git#tag=v$pkgver
 	qt6-native-interface.patch
 	)
-sha1sums=('SKIP'
+sha1sums=('cfc6c528f6d4c5efbe86ab44a2c5f81c779ca987'
           'f00950949b2e6bac10f9a80bc8cebb2f3aead213')
 
 prepare() {
