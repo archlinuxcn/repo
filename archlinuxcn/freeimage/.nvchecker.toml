@@ -1,0 +1,6 @@
+[freeimage]
+source = 'regex'
+url = "https://freeimage.sourceforge.io/download.html"
+regex = 'FreeImage(\d*)\.zip'
+from_pattern = '(\d)(\d\d)(\d)'
+to_pattern = '\1.\2.\3'
