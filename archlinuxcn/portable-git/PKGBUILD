@@ -10,10 +10,11 @@ url="https://github.com/Kraftland/portable"
 license=(GPL-3.0-or-later)
 provides=(portable)
 groups=()
-options=(!debug !strip)
+options=(!strip)
 conflicts=(portable)
 
 depends=(
+	libseccomp
 	"libnotify"
 	pipewire
 	"coreutils"
