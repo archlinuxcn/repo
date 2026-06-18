@@ -53,9 +53,8 @@ conflicts=("$_pkgname")
 source=(
 	"$_pkgname::git+https://github.com/cemu-project/Cemu.git"
 	'imgui::git+https://github.com/ocornut/imgui.git'
-	'0001-linux-preload-sdl3.patch'
 )
-b2sums=('SKIP' 'SKIP' 'SKIP')
+b2sums=('SKIP' 'SKIP')
 
 pkgver() {
 	cd $_pkgname
@@ -66,7 +65,6 @@ prepare() {
 	cd $_pkgname
 	git config submodule.dependencies/imgui.url ../imgui
 	git -c protocol.file.allow=always submodule update
-	patch -Np1 -i ../0001-linux-preload-sdl3.patch
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
 }
