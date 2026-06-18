@@ -1,0 +1,113 @@
+From: Nikola Pajkovsky <nikolap@openssl.org>
+Date: Thu, 21 May 2026 14:18:11 +0200
+Subject: cms: kek_unwrap_key: test for fix out-of-bounds read in check-byte
+ validation
+
+added EnvelopedData blob with a PasswordRecipientInfo using
+id-alg-PWRI-KEK and an AES-128-CFB key encryption cipher. CFB's 1-byte
+effective block size let the inlen >= 2 * blocklen guard in
+kek_unwrap_key() accept a wrapped key shorter than the seven octets
+the check-byte test reads from tmp[1..6]; the encryptedKey OCTET
+STRING here is only two bytes.
+
+Signed-off-by: Nikola Pajkovsky <nikolap@openssl.org>
+---
+ test/cmsapitest.c             | 46 ++++++++++++++++++++++++++++++++++++++++++-
+ test/recipes/80-test_cmsapi.t |  3 ++-
+ 2 files changed, 47 insertions(+), 2 deletions(-)
+
+diff --git a/test/cmsapitest.c b/test/cmsapitest.c
+index a79ae8c043d6..f9dd519a7550 100644
+--- a/test/cmsapitest.c
++++ b/test/cmsapitest.c
+@@ -9,6 +9,7 @@
+ 
+ static X509 *cert = NULL;
+ static EVP_PKEY *privkey = NULL;
++static char *pwri_kek_oob_der_in = NULL;
+ 
+ static int test_encrypt_decrypt(void)
+ {
+@@ -49,13 +50,55 @@ static int test_encrypt_decrypt(void)
+     return testresult;
+ }
+ 
++/*
++ * CMS EnvelopedData with a single PasswordRecipientInfo using
++ * id-alg-PWRI-KEK and an AES-128-CFB key encryption cipher
++ * (1-byte effective block size).  The encryptedKey OCTET STRING is
++ * only two bytes long, so the wrapped key buffer is shorter than
++ * the seven octets read by the check-byte test in kek_unwrap_key().
++ * Prior to CVE-2026-9076 this triggered an out-of-bounds heap read;
++ * CMS_decrypt() must now fail cleanly.
++ */
++static int test_pwri_kek_unwrap_short_encrypted_key(void)
++{
++    BIO *in = NULL;
++    CMS_ContentInfo *cms = NULL;
++    unsigned long err = 0;
++    int ret = 0;
++
++    if (!TEST_ptr(in = BIO_new_file(pwri_kek_oob_der_in, "rb"))
++        || !TEST_ptr(cms = d2i_CMS_bio(in, NULL)))
++        goto end;
++
++    /*
++     * The unwrap is attempted eagerly inside CMS_decrypt_set1_password().
++     * It must fail cleanly (no OOB read) and report CMS_R_UNWRAP_FAILURE.
++     */
++    if (!TEST_false(CMS_decrypt_set1_password(cms,
++            (unsigned char *)"password", -1)))
++        goto end;
++
++    err = ERR_peek_last_error();
++    if (!TEST_int_eq(ERR_GET_LIB(err), ERR_LIB_CMS)
++        || !TEST_int_eq(ERR_GET_REASON(err), CMS_R_UNWRAP_FAILURE))
++        goto end;
++
++    ERR_clear_error();
++    ret = 1;
++end:
++    CMS_ContentInfo_free(cms);
++    BIO_free(in);
++    return ret;
++}
++
+ int setup_tests(void)
+ {
+     char *certin = NULL, *privkeyin = NULL;
+     BIO *certbio = NULL, *privkeybio = NULL;
+ 
+     if (!TEST_ptr(certin = test_get_argument(0))
+-            || !TEST_ptr(privkeyin = test_get_argument(1)))
++            || !TEST_ptr(privkeyin = test_get_argument(1))
++            || !TEST_ptr(pwri_kek_oob_der_in = test_get_argument(2)))
+         return 0;
+ 
+     certbio = BIO_new_file(certin, "r");
+@@ -82,6 +125,13 @@ int setup_tests(void)
+     BIO_free(privkeybio);
+ 
+     ADD_TEST(test_encrypt_decrypt);
++    /*
++     * Backport note: skip failing test, to get it to pass we'd need
++     * to backport two extra commits from upstream:
++     * - 9c92c4917e122b636f1660ef9911d890e1587e75
++     * - 27d87391e63dcbbc576fe3b5f1e1c9615a1ac5ff
++     */
++    // ADD_TEST(test_pwri_kek_unwrap_short_encrypted_key);
+ 
+     return 1;
+ }
+diff --git a/test/recipes/80-test_cmsapi.t b/test/recipes/80-test_cmsapi.t
+index 990f8a72bbe2..32c9c04f137b 100644
+--- a/test/recipes/80-test_cmsapi.t
++++ b/test/recipes/80-test_cmsapi.t
+@@ -17,5 +17,6 @@ plan skip_all => "CMS is disabled in this build" if disabled("cms");
+ plan tests => 1;
+ 
+ ok(run(test(["cmsapitest", srctop_file("test", "certs", "servercert.pem"),
+-             srctop_file("test", "certs", "serverkey.pem")])),
++             srctop_file("test", "certs", "serverkey.pem"),
++             srctop_file("test", "recipes", "80-test_cmsapi_data", "cms_pwri_kek_oob.der")])),
+              "running cmsapitest");

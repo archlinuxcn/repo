@@ -1,0 +1,29 @@
+From: Tomas Mraz <tomas@openssl.foundation>
+Date: Mon, 6 Apr 2026 22:09:20 +0200
+Subject: 80-test_cms.t: Accept success in malformed RSA decryption
+
+The decryption of the malformed encrypted message might succeed
+with some probability. We accept that as the testcase tries to
+trigger a crash which does not happen.
+
+Reviewed-by: Eugene Syromiatnikov <esyr@openssl.org>
+Reviewed-by: Nikola Pajkovsky <nikolap@openssl.org>
+MergeDate: Tue Apr  7 07:16:44 2026
+(cherry picked from commit 7b5ece69dee3fb78fcd2618df3bce5064a04c6dc)
+---
+ test/recipes/80-test_cms.t | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/recipes/80-test_cms.t b/test/recipes/80-test_cms.t
+index 19f72397a5f2..d3ad6ed3f8b6 100644
+--- a/test/recipes/80-test_cms.t
++++ b/test/recipes/80-test_cms.t
+@@ -639,7 +639,7 @@ my $smrsacert = catfile($smdir, "smrsa3.pem");
+ my $smrsakey = catfile($smdir, "smrsa3-key.pem");
+ 
+ # Test case for CVE-2026-28390
+-with({ exit_checker => sub { return shift == 4; } },
++with({ exit_checker => sub { my $ret = shift; return $ret == 4 || $ret == 0; } },
+     sub {
+         ok(run(app(["openssl", "cms", "-decrypt", "-in", $smcont_malformed, "-inform",
+                    "DER", "-recip", $smrsacert, "-inkey", $smrsakey, "-out", "{output}.cms"])),

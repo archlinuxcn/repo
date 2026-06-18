@@ -1,0 +1,51 @@
+From: Nikola Pajkovsky <nikolap@openssl.org>
+Date: Thu, 21 May 2026 11:53:09 +0200
+Subject: cms: kek_unwrap_key: Fix out-of-bounds read in check-byte validation
+
+the check-byte test in kek_unwrap_key() reads tmp[1] through tmp[6]
+unconditionally, so the decrypted buffer must hold at least seven
+octets. The pre-decryption size check enforces inlen >= 2 * blocklen,
+which yields the required seven octets only when blocklen >= 4. For
+a KEK cipher with a smaller block size, inlen can be as small as
+2 * blocklen and the check-byte read overruns the inlen-sized tmp
+allocation.
+
+Reject blocklen < 4 in the early sanity check. All block ciphers
+appropriate for CMS PasswordRecipientInfo key wrapping have a block
+size of at least 8 octets (DES/3DES = 8, AES = 16), so this only
+forbids ciphers that would not be valid KEK choices anyway, and the
+existing inlen >= 2 * blocklen check then guarantees the seven-octet
+lower bound the check-byte test relies on.
+
+Fixes CVE-2026-9076
+Signed-off-by: Nikola Pajkovsky <nikolap@openssl.org>
+---
+ crypto/cms/cms_pwri.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/crypto/cms/cms_pwri.c b/crypto/cms/cms_pwri.c
+index 9f98840244ea..e848b4090140 100644
+--- a/crypto/cms/cms_pwri.c
++++ b/crypto/cms/cms_pwri.c
+@@ -177,14 +177,18 @@ static int kek_unwrap_key(unsigned char *out, size_t *outlen,
+                           const unsigned char *in, size_t inlen,
+                           EVP_CIPHER_CTX *ctx)
+ {
+-    size_t blocklen = EVP_CIPHER_CTX_block_size(ctx);
++    int blocklen = EVP_CIPHER_CTX_block_size(ctx);
+     unsigned char *tmp;
+     int outl, rv = 0;
+-    if (inlen < 2 * blocklen) {
++
++    if (blocklen < 4)
++        return 0;
++
++    if (inlen < 2 * (size_t)blocklen) {
+         /* too small */
+         return 0;
+     }
+-    if (inlen % blocklen) {
++    if (inlen > INT_MAX || inlen % blocklen) {
+         /* Invalid size */
+         return 0;
+     }
