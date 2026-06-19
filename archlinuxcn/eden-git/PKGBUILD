@@ -31,6 +31,10 @@ pkgver() {
 }
 build() {
 	cd "$srcdir"
+    export CXXFLAGS+=' -Wno-switch -include algorithm -include bit -include cctype -include cerrno'
+    export CXXFLAGS+=' -include cmath -include cstddef -include cstdint -include cstdio'
+    export CXXFLAGS+=' -include cstdlib -include cstring -include functional -include limits -include memory'
+    export CXXFLAGS+=' -include type_traits -include utility -include fmt/format.h'
 	cmake -B build -S $_pkgname -GNinja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=None \
