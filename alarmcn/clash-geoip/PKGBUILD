@@ -5,7 +5,8 @@
 _githubname="Loyalsoldier/geoip"
 
 pkgname=clash-geoip
-pkgver=202605210051
+changelog=clash-geoip.changelog
+pkgver=202606182327
 pkgrel=1
 pkgdesc="GeoIP files for Clash"
 arch=(any)
@@ -14,7 +15,7 @@ license=(CC-BY-SA-4.0 GPL-3.0-or-later)
 source=(
     "${pkgname}-${pkgver}.mmdb::${url}/releases/download/${pkgver}/Country.mmdb"
 )
-sha256sums=('12bb95152b349818de5d5166d9866e99dcc9979fafc74add7a86a6325bda4d32')
+sha256sums=('3cdca3b21dc247ad62df291d36b5117b054089cd006e4342bde37e0c2cd0e7f3')
 
 package() {
     install -Dm0644 "${pkgname}-${pkgver}.mmdb" "${pkgdir}/etc/clash/Country.mmdb"
