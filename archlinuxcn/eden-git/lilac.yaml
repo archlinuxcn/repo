@@ -15,5 +15,11 @@ repo_depends:
   - cpp-jwt
 
 update_on:
+  - source: alpm
+    alpm: fmt
+    repo: extra
+  - source: alpm
+    alpm: openssl
+  - alias: boost
   - source: vcs
-    vcs: 
+    vcs:  
