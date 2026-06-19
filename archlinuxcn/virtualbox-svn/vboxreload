@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# vboxreload: shortcut to reload virtualbox host modules
+#
+# Copyright © 2016 Sébastien Luttringer
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+(( UID > 0 )) && { echo 'You must be root' >&2; exit 1; }
+
+modules=(vboxnetadp vboxnetflt vboxdrv)
+
+echo -n 'Unloading modules: '
+for _m in "${modules[@]}"; do
+  lsmod|grep -q "$_m" && rmmod "$_m" && echo -n "$_m "
+done
+echo
+
+echo -n 'Loading modules: '
+for _m in "${modules[@]}"; do
+  modprobe "$_m" && echo -n "$_m "
+done
+echo
+
+# vim:set ts=2 sw=2 ai et:

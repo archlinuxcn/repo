@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# arg 1:  the new package version
+post_install() {
+  EXTPACK="/usr/share/virtualbox/extensions/VNC-${1%%-*}.vbox-extpack"
+  ACCEPT="$(bsdtar --to-stdout -xf "${EXTPACK}" ./ExtPack-license.txt | sha256sum | head --bytes=64)"
+  VBoxManage extpack install "${EXTPACK}" --accept-license="${ACCEPT}" >/dev/null
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+pre_upgrade() {
+  pre_remove "$2"
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+  post_install "$1"
+}
+
+# arg 1:  the old package version
+pre_remove() {
+  VBoxManage extpack uninstall 'VNC' >/dev/null
+}
+
+# vim:set ts=2 sw=2 ft=sh et:
