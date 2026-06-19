@@ -29,6 +29,7 @@ source=("git+https://source.hodakov.me/hdkv/yuzu.git"
   0003-fix-flow-block-init.patch
   0004-fix-renderdoc-api-typedef.patch
   0005-fix-gcc16-cstring-includes.patch
+  0006-fix-dynamic-library-cstring-include.patch
 )
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
 sha256sums=('SKIP'
@@ -45,7 +46,8 @@ sha256sums=('SKIP'
   'dfb01cd56f73bae21113e73328405b337b7c8643b17018eb757bad04d5a23538'
   '0c6179c1459d70b72eebbf616e1f88b1f647662ef508e911209934bace38aa27'
   '6f289821a56a8d62957279dd7d82589948017661c5c71525754605707ffe89d2'
-  '649fdf0f93f21e00cb3839f937983afe24b245b2d08a8221e7e8c32d52942cd7')
+  '649fdf0f93f21e00cb3839f937983afe24b245b2d08a8221e7e8c32d52942cd7'
+  '2bd236772b58ef4c4aab76a71b9fe59282266b2748dc52ba380ddfa6c6cb3830')
 
 prepare() {
   cd $srcdir/yuzu
@@ -54,6 +56,7 @@ prepare() {
   patch --strip=1 --binary -i ../0003-fix-flow-block-init.patch
   patch --strip=1 --binary -i ../0004-fix-renderdoc-api-typedef.patch
   patch --strip=1 --binary -i ../0005-fix-gcc16-cstring-includes.patch
+  patch --strip=1 --binary -i ../0006-fix-dynamic-library-cstring-include.patch
 
   cd $srcdir
   cp -rf ${srcdir}/tz-2024b/* "${srcdir}/tzdb_to_nx/externals/tz/tz/"
