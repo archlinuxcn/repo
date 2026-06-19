@@ -4,7 +4,7 @@ pkgname=duckstation-git
 _pkgname=duckstation
 pkgver=0.1.r11455.g1cce275db
 pkgdesc='A Sony PlayStation (PSX) emulator, focusing on playability, speed, and long-term maintainability (git version)'
-pkgrel=2
+pkgrel=3
 arch=(x86_64 aarch64)
 url=https://github.com/stenzek/duckstation
 license=(CC-BY-NC-ND-4.0)
@@ -119,6 +119,13 @@ prepare() {
     # Upstream explicitly refuses Arch Linux build environments.
     sed -i 's/ID=arch/ID=unsupported-arch/g' \
         "$srcdir/duckstation/CMakeModules/DuckStationBuildSummary.cmake"
+
+    # Don't force the xdg-desktop-portal Qt platform theme on KDE/GNOME: it
+    # fails to register over D-Bus (and pops an empty warning dialog) unless
+    # xdg-desktop-portal and a matching backend are installed and running,
+    # which isn't guaranteed on Arch.
+    sed -i '/setenv("QT_QPA_PLATFORMTHEME", "xdgdesktopportal", true);/d' \
+        "$srcdir/duckstation/src/duckstation-qt/qthost.cpp"
 }
 
 build() {
