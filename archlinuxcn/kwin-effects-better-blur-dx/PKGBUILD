@@ -3,7 +3,7 @@
 
 pkgname=kwin-effects-better-blur-dx
 pkgver=2.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Fork of the Plasma 6 blur effect with additional features (including force blur) and bug fixes."
 arch=(x86_64)
 url="https://github.com/xarblu/kwin-effects-better-blur-dx"
@@ -29,7 +29,7 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
 install="${pkgname}.install"
 sha256sums=('e039cdfce81d93761bcf2baeade9d1b2ba83a899ec2954ddf62760a758bf7905'
             '0600845de31431cfe870c477d800ae76354ed711d3212857a83437e942112c61'
-            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
+            '3c76155e0bb3fdd7f4ed84b70165063d96a7535ccef86b4e8ae642e42dc4f865')
 
 prepare() {
     cd "${pkgname}-${pkgver}"
