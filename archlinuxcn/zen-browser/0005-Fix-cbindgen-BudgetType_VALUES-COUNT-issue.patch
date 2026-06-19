@@ -1,0 +1,10 @@
+--- a/gfx/wr/webrender/src/texture_cache.rs
++++ b/gfx/wr/webrender/src/texture_cache.rs
+@@ -275,7 +275,7 @@ impl BudgetType {
+     pub const COUNT: usize = 7;
+ 
+-    pub const VALUES: [BudgetType; BudgetType::COUNT] = [
++    pub const VALUES: [BudgetType; 7] = [
+         BudgetType::SharedColor8Linear,
+         BudgetType::SharedColor8Nearest,
+         BudgetType::SharedColor8Glyphs,
