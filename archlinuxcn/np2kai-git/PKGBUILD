@@ -1,30 +1,42 @@
 # Maintainer: Gustavo Alvarez Lopez <sl1pkn07@gmail.com>
 
 pkgname=np2kai-git
-pkgver=1082.02b08de
-pkgrel=2
+pkgver=1158.e2dc9046
+pkgrel=1
 pkgdesc="Neko Project II Kai, a PC-9801 emulator. (GIT version)"
 arch=('x86_64')
 url='http://domisan.sakura.ne.jp/article/np2kai/np2kai.html'
 license=('MIT')
-depends=('gtk2'
-         'sdl2_mixer'
-         'sdl2_ttf'
-         )
-makedepends=('git'
-             'cmake'
-             'nasm'
-             'ninja'
-             )
+depends=(
+  'glibc'
+  'libgcc' 'libgcc_s.so'
+  'libstdc++' 'libstdc++.so'
+  'libcdio'
+  'libpng'
+  'sdl3'
+  'sdl3_ttf'
+  'wxwidgets-gtk3'
+)
+makedepends=(
+  'git'
+  'cmake'
+  'nasm'
+  'ninja'
+)
 conflicts=('np2kai')
 provides=('np2kai')
-source=('git+https://github.com/AZO234/NP2kai.git'
-        'git+https://github.com/aminosbh/sdl2-cmake-modules.git'
-        )
-sha256sums=('SKIP'
-            'SKIP'
-            )
-options=('debug')
+source=(
+  'git+https://github.com/AZO234/NP2kai.git'
+  '0001-cmake-use-selected-sdl-version-for-wx.patch'
+  '0002-fix-video-filter-default-initializer.patch'
+  '0003-use-arch-sdl2-ttf-include-path.patch'
+)
+sha256sums=(
+  'SKIP'
+  '3ccae90ffeaec978f35948b129ab9ee92b0f168443b103f14a74a151c1528307'
+  '7c00588800c51a1ada7d272e46c1c93637bdc52995aabc47241e8e4f3a818254'
+  '5de1c118aa121fd424679ad0904e90c50e16fd971df04fd63da06af37c3127fa'
+)
 
 pkgver() {
   cd NP2kai
@@ -33,10 +45,10 @@ pkgver() {
 
 prepare() {
   cd NP2kai
-    git config submodule.cmake/sdl2-cmake-modules.url "${srcdir}/sdl2-cmake-modules"
-    git -c protocol.file.allow=always submodule update --init \
-      cmake/sdl2-cmake-modules
-    sed 's|no-incompatible-function-pointer-types|no-incompatible-pointer-types -Wno-implicit-int|g' -i CMakeLists.txt
+
+  patch -Np1 -i ../0001-cmake-use-selected-sdl-version-for-wx.patch
+  patch -Np1 -i ../0002-fix-video-filter-default-initializer.patch
+  patch -Np1 -i ../0003-use-arch-sdl2-ttf-include-path.patch
 }
 
 build() {
@@ -49,17 +61,17 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_MANDIR=/usr/share/man/man1 \
-    -DBUILD_X=ON \
+    -DBUILD_WX=ON \
+    -DBUILD_X=OFF \
     -DBUILD_SDL=ON \
     -DBUILD_I286=ON \
     -DBUILD_HAXM=ON \
-    -DUSE_X=ON \
+    -DUSE_SDL=3 \
     -DUSE_HAXM=OFF \
-    -DUSE_SDL=OFF \
-    -DUSE_SDL_MIXER=ON \
-    -DUSE_SDL_TTF=ON \
     -DUSE_ASYNCCPU=ON \
     -DUSE_VST3SDK=OFF \
+    -DCMAKE_C_FLAGS="-Wno-implicit-function-declaration -Wno-incompatible-pointer-types -Wno-int-conversion" \
+    -DCMAKE_CXX_FLAGS="-fno-sized-deallocation" \
     -G Ninja
 
   cmake --build build

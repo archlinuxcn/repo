@@ -3,26 +3,45 @@
 
 pkgname=kwin-effects-better-blur-dx
 pkgver=2.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Fork of the Plasma 6 blur effect with additional features (including force blur) and bug fixes."
 arch=(x86_64)
 url="https://github.com/xarblu/kwin-effects-better-blur-dx"
 license=(GPL-3.0-or-later)
-depends=(kio knotifications kwin kcrash kglobalaccel)
-makedepends=(git extra-cmake-modules qt6-tools)
+depends=(glibc
+         libstdc++
+         libepoxy
+         libxcb
+         qt6-base
+         kcoreaddons
+         kconfig
+         ki18n
+         kwidgetsaddons
+         kdecoration
+         kcmutils
+         kwin)
+makedepends=(extra-cmake-modules
+             vulkan-headers)
 replaces=(kwin-effects-forceblur)
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+        'plasma-6.7.patch::https://github.com/xarblu/kwin-effects-better-blur-dx/commit/3d80e7c4d2d2b31b6fb03b54b69c964821bad365.patch'
         "${pkgname}.install")
 install="${pkgname}.install"
 sha256sums=('e039cdfce81d93761bcf2baeade9d1b2ba83a899ec2954ddf62760a758bf7905'
+            '0600845de31431cfe870c477d800ae76354ed711d3212857a83437e942112c61'
             '3c76155e0bb3fdd7f4ed84b70165063d96a7535ccef86b4e8ae642e42dc4f865')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    patch -Np1 -i "${srcdir}/plasma-6.7.patch"
+}
 
 build() {
     cmake -S "${pkgname}-${pkgver}" -B build \
-        -DCMAKE_INSTALL_PREFIX=/usr 
+        -DCMAKE_INSTALL_PREFIX=/usr
     cmake --build build
 }
 
 package() {
-    DESTDIR="$pkgdir" cmake --install build
+    DESTDIR="${pkgdir}" cmake --install build
 }

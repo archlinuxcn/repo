@@ -1,0 +1,14 @@
+diff --git a/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibGuestCtrl.cpp b/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibGuestCtrl.cpp
+index 6ad7df3e..2f12c277 100644
+--- a/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibGuestCtrl.cpp
++++ b/src/VBox/Additions/common/VBoxGuest/lib/VBoxGuestR3LibGuestCtrl.cpp
+@@ -162,6 +162,9 @@ static int vbglR3GuestCtrlMsgWaitFor(uint32_t idClient, uint32_t *pidMsg, uint32
+  */
+ DECL_NO_INLINE(static, bool) vbglR3GuestCtrlDetectPeekGetCancelSupport(uint32_t idClient)
+ {
++
++    return false;
++
+     /*
+      * Seems we get VINF_SUCCESS back from the host if we try unsupported
+      * guest control functions, so we need to supply some random message

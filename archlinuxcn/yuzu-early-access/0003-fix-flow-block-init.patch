@@ -1,0 +1,13 @@
+diff --git a/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp b/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
+index f2753b5..fa0889d 100755
+--- a/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
++++ b/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
+@@ -976,7 +976,7 @@ private:
+     Environment& env;
+     IR::AbstractSyntaxList& syntax_list;
+     bool uses_demote_to_helper{};
+-    const Flow::Block dummy_flow_block;
++    const Flow::Block dummy_flow_block{};
+ };
+ } // Anonymous namespace
+ 

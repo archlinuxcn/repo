@@ -1,0 +1,36 @@
+diff --git a/src/common/host_memory.cpp b/src/common/host_memory.cpp
+index 2c486acd1..8a9ffd332 100755
+--- a/src/common/host_memory.cpp
++++ b/src/common/host_memory.cpp
+@@ -27,6 +27,7 @@
+ 
+ #endif // ^^^ Linux ^^^
+ 
++#include <cstring>
+ #include <mutex>
+ #include <random>
+ 
+diff --git a/src/common/tiny_mt.h b/src/common/tiny_mt.h
+index 0684d5eb4..21c145865 100755
+--- a/src/common/tiny_mt.h
++++ b/src/common/tiny_mt.h
+@@ -4,6 +4,7 @@
+ #pragma once
+ 
+ #include <array>
++#include <cstring>
+ 
+ #include "common/alignment.h"
+ #include "common/common_types.h"
+diff --git a/src/common/uuid.cpp b/src/common/uuid.cpp
+index 13fa9f479..5226d4eba 100755
+--- a/src/common/uuid.cpp
++++ b/src/common/uuid.cpp
+@@ -2,6 +2,7 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+ #include <bit>
++#include <cstring>
+ #include <optional>
+ #include <random>
+ 

@@ -4,7 +4,7 @@ _pkgname=yuzu
 pkgname=$_pkgname-early-access
 epoch=2
 pkgver=4176
-pkgrel=26
+pkgrel=29
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
@@ -26,6 +26,11 @@ source=("git+https://source.hodakov.me/hdkv/yuzu.git"
   "tz-2024b.tar.gz::https://github.com/eggert/tz/archive/refs/tags/2024b.tar.gz"
   0001-fix-fmt11.patch
   0002-fix-mem.patch
+  0003-fix-flow-block-init.patch
+  0004-fix-renderdoc-api-typedef.patch
+  0005-fix-gcc16-cstring-includes.patch
+  0006-fix-dynamic-library-cstring-include.patch
+  0007-fix-fmt-format-includes.patch
 )
 options=('!buildflags') #[heavysink] Disable _FORTIFY_SOURCE for temporary fix for Bayonetta 3
 sha256sums=('SKIP'
@@ -39,12 +44,22 @@ sha256sums=('SKIP'
   'c65c870a733fad6f9c78bec7d1720ae0aa3059d482f545b6fe6fe017e11cf623'
   '557c41d8eb5c29387a9d496db87c4aeb4f2ac8a2b6d5f60e869a8cade26e679c'
   '826576b7254cf8df058caef607af8ef996a18bbb4d0cbff12b12ee08e5c4ae6b'
-  'dfb01cd56f73bae21113e73328405b337b7c8643b17018eb757bad04d5a23538')
+  'dfb01cd56f73bae21113e73328405b337b7c8643b17018eb757bad04d5a23538'
+  '0c6179c1459d70b72eebbf616e1f88b1f647662ef508e911209934bace38aa27'
+  '6f289821a56a8d62957279dd7d82589948017661c5c71525754605707ffe89d2'
+  '649fdf0f93f21e00cb3839f937983afe24b245b2d08a8221e7e8c32d52942cd7'
+  '2bd236772b58ef4c4aab76a71b9fe59282266b2748dc52ba380ddfa6c6cb3830'
+  '9495fc2bed26614cea1abd7afd1a715b057b053bedc4ac2478a6bc479fea5ff2')
 
 prepare() {
   cd $srcdir/yuzu
   patch --strip=1 --binary -i ../0001-fix-fmt11.patch
   patch --strip=1 --binary -i ../0002-fix-mem.patch
+  patch --strip=1 --binary -i ../0003-fix-flow-block-init.patch
+  patch --strip=1 --binary -i ../0004-fix-renderdoc-api-typedef.patch
+  patch --strip=1 --binary -i ../0005-fix-gcc16-cstring-includes.patch
+  patch --strip=1 --binary -i ../0006-fix-dynamic-library-cstring-include.patch
+  patch --strip=1 --binary -i ../0007-fix-fmt-format-includes.patch
 
   cd $srcdir
   cp -rf ${srcdir}/tz-2024b/* "${srcdir}/tzdb_to_nx/externals/tz/tz/"
@@ -80,7 +95,12 @@ prepare() {
   perl -0777 -i.original -pe 's/(\s*target_compile_options\(video_core PRIVATE\s*-Wno-sign-conversion)/$1\n        -msse4.1/igs' src/video_core/CMakeLists.txt
 }
 build() {
-  export CXXFLAGS+=' -Wno-switch'
+  # This frozen source tree relies heavily on transitive standard-library and fmt includes.
+  # GCC 16 and fmt 12 no longer expose several of those declarations indirectly.
+  export CXXFLAGS+=' -Wno-switch -include algorithm -include bit -include cctype -include cerrno'
+  export CXXFLAGS+=' -include cmath -include cstddef -include cstdint -include cstdio'
+  export CXXFLAGS+=' -include cstdlib -include cstring -include functional -include limits -include memory'
+  export CXXFLAGS+=' -include type_traits -include utility -include fmt/format.h'
 
   local cmake_args=(
     -GNinja

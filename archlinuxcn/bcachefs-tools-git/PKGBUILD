@@ -2,7 +2,7 @@
 
 pkgname=bcachefs-tools-git
 _pkgname=${pkgname%-git}
-pkgver=1.38.6.r2.g77aec40
+pkgver=1.38.6.r34.g27ee0ae
 pkgrel=1
 epoch=1
 pkgdesc="BCacheFS filesystem utilities"
@@ -31,6 +31,7 @@ makedepends=(
 	clang
 	llvm
 	pkgconf
+	rust-bindgen
 	valgrind
 )
 source=("git+https://github.com/koverstreet/${_pkgname}.git")

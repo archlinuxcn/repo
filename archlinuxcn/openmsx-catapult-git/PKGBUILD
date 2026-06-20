@@ -1,54 +1,65 @@
 # Contributor: Tom < reztho at archlinux dot us >
 pkgname=openmsx-catapult-git
-pkgver=1025.c2231ed
-pkgrel=1
-pkgdesc="Front-end for openMSX: the MSX emulator that aims for perfection."
-arch=('i686' 'x86_64')
-url="http://openmsx.org"
-license=('GPL')
-depends=('libxml2' 'wxwidgets-gtk2' 'zlib' 'libjpeg' 'libpng' 'libtiff')
-makedepends=('python' 'git')
-optdepends=('openmsx')
-source=("git+https://github.com/openMSX/wxcatapult.git")
-provides=("openmsx-catapult")
-conflicts=("openmsx-catapult")
+epoch=1
+pkgver=405.86aa495
+pkgrel=2
+pkgdesc="External GUI for openMSX"
+arch=('any')
+url="https://openmsx.org/"
+license=('GPL-2.0-only')
+depends=('openmsx' 'python-pyqt5')
+makedepends=('git')
+provides=('openmsx-catapult')
+conflicts=('openmsx-catapult')
+source=('git+https://github.com/openMSX/catapult.git')
+sha256sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/wxcatapult"
+  cd catapult
   printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+prepare() {
+  cd catapult
+  sed -i "s|^docDir = .*|docDir = '/usr/share/doc/openmsx'|" src/custom.py
+}
+
 build() {
-  cd "${srcdir}/wxcatapult"
-
-  # Catapult uses wxwidgets-gtk2
-  sed -i 's@wx-config@wx-config-gtk2@' build/probe.mk
-  sed -i 's@wx-config@wx-config-gtk2@' build/main.mk
-
-  # Changing some default configurations...
-  sed -i 's@SYMLINK_FOR_BINARY:=true@SYMLINK_FOR_BINARY:=false@' build/custom.mk
-  sed -i 's@/opt/openMSX-Catapult@/usr/share/openmsx-catapult@' build/custom.mk
-  sed -i 's@/opt/openMSX/bin/openmsx@/usr/bin/openmsx@' build/custom.mk
-  sed -i 's@/opt/openMSX/share@/usr/share/openmsx@' build/custom.mk
-  echo 'INSTALL_DOC_DIR:=/usr/share/doc/openmsx-catapult' >> build/custom.mk
-  echo 'INSTALL_SHARE_DIR:=/usr/share/openmsx-catapult' >> build/custom.mk
-  echo 'INSTALL_BINARY_DIR:=/usr/bin' >> build/custom.mk
-
-  # Compiling
-  make
+  cd catapult
+  make build
 }
 
 package() {
-  cd "${srcdir}/wxcatapult"
+  cd catapult
 
-  mkdir -p "${pkgdir}/usr/share/applications"
-  make DESTDIR="${pkgdir}" install
+  install -d "${pkgdir}/usr/share/openmsx-catapult"
+  cp -a derived/. "${pkgdir}/usr/share/openmsx-catapult/"
+  install -m 644 tools/*.db "${pkgdir}/usr/share/openmsx-catapult/"
 
-  # Fixing the .desktop file
-  sed -i 's@/usr/share/openmsx-catapult/bin/catapult@/usr/bin/catapult@' \
-  "${pkgdir}/usr/share/applications/openMSX-Catapult.desktop"
-  sed -i 's@/usr/share/openmsx-catapult/doc/@/usr/share/doc/openmsx-catapult/@' \
-  "${pkgdir}/usr/share/applications/openMSX-Catapult.desktop"
+  install -Dm644 README "${pkgdir}/usr/share/doc/openmsx-catapult/README"
+  install -Dm644 AUTHORS "${pkgdir}/usr/share/doc/openmsx-catapult/AUTHORS"
+  install -Dm644 ChangeLog "${pkgdir}/usr/share/doc/openmsx-catapult/ChangeLog"
+  cp -a doc/. "${pkgdir}/usr/share/doc/openmsx-catapult/"
+
+  install -Dm644 GPL "${pkgdir}/usr/share/licenses/${pkgname}/GPL"
+  install -Dm644 res/logo.png "${pkgdir}/usr/share/pixmaps/openmsx-catapult.png"
+
+  install -d "${pkgdir}/usr/bin"
+  cat > "${pkgdir}/usr/bin/openmsx-catapult" <<'EOF'
+#!/bin/sh
+cd /usr/share/openmsx-catapult || exit 1
+exec python3 catapult.py "$@"
+EOF
+  chmod 755 "${pkgdir}/usr/bin/openmsx-catapult"
+
+  install -Dm644 /dev/stdin "${pkgdir}/usr/share/applications/openmsx-catapult.desktop" <<'EOF'
+[Desktop Entry]
+Type=Application
+Name=openMSX Catapult
+Comment=External GUI for openMSX
+Exec=openmsx-catapult
+Icon=openmsx-catapult
+Terminal=false
+Categories=Game;Emulator;
+EOF
 }
-
-md5sums=('SKIP')

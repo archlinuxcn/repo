@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Jan Alexander Steffens (heftig)" <heftig@archlinux.org>
+Date: Sun, 15 Mar 2026 18:09:13 +0100
+Subject: [PATCH] Use wasm32-wasip1 target
+
+wasm32-wasi is deprecated and causes an error from Clang 22.
+---
+ build/moz.configure/toolchain.configure | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/moz.configure/toolchain.configure b/build/moz.configure/toolchain.configure
+index 47061339da91..a054b84b2ab9 100644
+--- a/build/moz.configure/toolchain.configure
++++ b/build/moz.configure/toolchain.configure
+@@ -1119,7 +1119,7 @@ def compiler_wrapper(wrapper, ccache):
+ 
+ @dependable
+ def wasm():
+-    return split_triplet("wasm32-wasi", allow_wasi=True)
++    return split_triplet("wasm32-wasip1", allow_wasi=True)
+ 
+ 
+ @template

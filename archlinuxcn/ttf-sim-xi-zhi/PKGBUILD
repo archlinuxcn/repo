@@ -2,7 +2,7 @@
 
 pkgbase=ttf-sim-xi-zhi
 pkgname=('ttf-sim-xi-hei' 'ttf-sim-zhi-song')
-pkgver=1.101
+pkgver=1.102
 pkgrel=1
 pkgdesc='新晰黑体＆新致宋体：「霞鹜新晰黑」「霞鹜新致宋」兼容 Windows 内置「黑体」「宋体」度量数据和字符集的版本，基于 IPA Gothic、IPA Mincho 衍生。'
 url='https://github.com/lxgw/SimXiZhi'
@@ -11,8 +11,8 @@ license=('IPA')
 source=(SimXiHei-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimXiHei.ttf
     SimZhiSong-"${pkgver}".ttf::"${url}"/releases/download/v"${pkgver}"/SimZhiSong.ttf
     LICENSE-"${pkgver}"::https://raw.githubusercontent.com/lxgw/SimXiZhi/refs/tags/v1.026/IPA_Font_License_Agreement_v1.0.txt)
-b2sums=('eafc079a37ec495d847160faaab77b1fc704905a3936f666f443f0f5b52ad55da5b1710f3700f92d44a85349d6b296149d806ed396394686c0abcfe790ee4b3f'
-        '8d287927af652d48b901ff70f7789924387b10b4e239120e9541630aa86b848ce397ff9370a89a79ac2e755e25bfe35b96742fe24121b6696067706b60030dc5'
+b2sums=('6714500059fc40149721bc463f1312adac0c551d334c6845ae913762e261204ed78fbe50f858a0a873e2b1211c465bc441bd353341bc23eab0003fedfc719357'
+        'b30f53480b56201fead399036985a96c64d852bd854d58e7158590b6b02ad0cb89a3ab048dcf1327b6bf050a6ea6adcc4a049e6812b0208fbe5e4a33f18e59d1'
         'ccb79bec5d352b18591f925ddbbaf6d86a6274bfbbea318e126690e5b52ee8be80d2deb99ab7e5b5b1194e2b8c8ee47464713b89e75c629dd462f1a80691e38d')
 
 declare -A _alias_map=(

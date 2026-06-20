@@ -1,0 +1,41 @@
+diff --git a/src/platform/graphics_linux.cpp b/src/platform/graphics_linux.cpp
+index a293e19..07a788c 100644
+--- a/src/platform/graphics_linux.cpp
++++ b/src/platform/graphics_linux.cpp
+@@ -18,7 +18,7 @@
+ #include <mpv/client.h>
+ #include <QSettings>
+ #include <QGuiApplication>
+-#include <qpa/qplatformnativeinterface.h>
++#include <QtGui/qguiapplication_platform.h>
+ #include "../mpvObject.h"
+ 
+ 
+@@ -70,8 +70,11 @@ void* Graphics::x11Display()
+ {
+     if (QGuiApplication::platformName() == QLatin1String("xcb"))  // is x11
+     {
+-        Q_ASSERT(QGuiApplication::platformNativeInterface() != nullptr);
+-        return QGuiApplication::platformNativeInterface()->nativeResourceForWindow(QByteArrayLiteral("display"), nullptr);
++#if QT_CONFIG(xcb)
++        auto *native = qGuiApp->nativeInterface<QNativeInterface::QX11Application>();
++        Q_ASSERT(native != nullptr);
++        return native->display();
++#endif
+     }
+     return nullptr;
+ }
+@@ -81,8 +84,11 @@ void* Graphics::waylandDisplay()
+ {
+     if (QGuiApplication::platformName() != QLatin1String("xcb")) // is not x11
+     {
+-        Q_ASSERT(QGuiApplication::platformNativeInterface() != nullptr);
+-        return QGuiApplication::platformNativeInterface()->nativeResourceForWindow(QByteArrayLiteral("display"), nullptr);
++#if QT_CONFIG(wayland)
++        auto *native = qGuiApp->nativeInterface<QNativeInterface::QWaylandApplication>();
++        Q_ASSERT(native != nullptr);
++        return native->display();
++#endif
+     }
+     return nullptr;
+ }

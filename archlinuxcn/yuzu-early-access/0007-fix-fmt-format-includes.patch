@@ -1,0 +1,60 @@
+diff --git a/src/common/settings.cpp b/src/common/settings.cpp
+index 52a20ea61..140b39c13 100755
+--- a/src/common/settings.cpp
++++ b/src/common/settings.cpp
+@@ -14,7 +14,7 @@
+ #include <functional>
+ #include <string_view>
+ #include <type_traits>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "common/assert.h"
+ #include "common/fs/fs_util.h"
+diff --git a/src/common/settings_setting.h b/src/common/settings_setting.h
+index 0b18ca5ec..579f51618 100755
+--- a/src/common/settings_setting.h
++++ b/src/common/settings_setting.h
+@@ -3,6 +3,7 @@
+ 
+ #pragma once
+ 
++#include <algorithm>
+ #include <limits>
+ #include <map>
+ #include <optional>
+@@ -10,7 +11,7 @@
+ #include <string>
+ #include <typeindex>
+ #include <typeinfo>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include "common/common_types.h"
+ #include "common/settings_common.h"
+ #include "common/settings_enums.h"
+diff --git a/src/common/time_zone.cpp b/src/common/time_zone.cpp
+index 8c8afecae..36c523a08 100755
+--- a/src/common/time_zone.cpp
++++ b/src/common/time_zone.cpp
+@@ -8,7 +8,7 @@
+ #include <sstream>
+ #include <stdexcept>
+ #include <fmt/chrono.h>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ 
+ #include "common/logging/log.h"
+ #include "common/time_zone.h"
+diff --git a/src/yuzu/configuration/shared_widget.cpp b/src/yuzu/configuration/shared_widget.cpp
+index 85f4f7655..956b44431 100755
+--- a/src/yuzu/configuration/shared_widget.cpp
++++ b/src/yuzu/configuration/shared_widget.cpp
+@@ -33,7 +33,7 @@
+ #include <QVariant>
+ #include <QtCore/qglobal.h>
+ #include <QtCore/qobjectdefs.h>
+-#include <fmt/core.h>
++#include <fmt/format.h>
+ #include <qglobal.h>
+ #include <qnamespace.h>
+ 
