@@ -1,0 +1,27 @@
+# Maintainer: Rocket Aaron <rocka@archlinuxcn.org>
+
+pkgbase=ttf-roboto-android
+pkgname=(ttf-roboto-android{,-vf})
+pkgver=3.016
+pkgrel=1
+pkgdesc="Google's signature family of fonts (Android Variant)"
+arch=('any')
+url='https://github.com/googlefonts/roboto-3-classic'
+license=('OFL-1.1')
+provides=('ttf-font' 'ttf-roboto')
+source=(
+  "$url/releases/download/v$pkgver/Roboto_v$pkgver.zip"
+  "$pkgname-$pkgver-OFL.txt::${url}/raw/v$pkgver/OFL.txt"
+)
+b2sums=('1b6f940d94a5cd76b352118716a91c1e5b57bdcc36a9b54658015b9774a5122669fd8850ee98d07054a1058cc9ac8565f9d2d34f86e67c6afad231cf3dee26ff'
+        '28a65c7a81ad3cdaea9bac928db1abca14ce8561da22f487aeefb6b53487cfd214c3ad8ba2d9fa595bf3224529dafc1687b462a099316bd333a1f2151b525a06')
+
+package_ttf-roboto-android() {
+  install -Dm644 "android/static/"*.ttf -t "${pkgdir}/usr/share/fonts/TTF"
+  install -Dm644 "${pkgbase}-${pkgver}-OFL.txt" "${pkgdir}/usr/share/licenses/${pkgname}/OFL.txt"
+}
+
+package_ttf-roboto-android-vf() {
+  install -Dm644 "android/Roboto["*"].ttf" "${pkgdir}/usr/share/fonts/TTF/Roboto-VF.ttf" 
+  install -Dm644 "${pkgbase}-${pkgver}-OFL.txt" "${pkgdir}/usr/share/licenses/${pkgname}/OFL.txt"
+}
