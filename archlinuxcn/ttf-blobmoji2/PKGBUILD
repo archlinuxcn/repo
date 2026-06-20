@@ -1,0 +1,20 @@
+# Maintainer: Rocket Aaron <rocka@archlinuxcn.org>
+
+pkgname=ttf-blobmoji2
+pkgver=17r1
+pkgrel=1
+pkgdesc='Fork of googlefonts/noto-emoji updated to use C1710/blobmoji (font name is Noto Color Emoji)'
+arch=(any)
+url='https://github.com/DavidBerdik/blobmoji2'
+license=('OFL-1.1')
+provides=(emoji-font)
+conflicts=(noto-fonts-emoji)
+source=("${pkgname}-${pkgver}.ttf::${url}/releases/download/blobmoji-${pkgver}/NotoColorEmoji.ttf"
+        "${pkgname}-${pkgver}-LICENSE::${url}/raw/blobmoji-${pkgver}/LICENSE")
+b2sums=('9477eb9a0389e06ed47f051f32cd622908d95a2cd9062727db87f029adba7e629196933c08059f2ab47d90b61088d2f6c8e175dee6965b9b2369215115d61937'
+        '9587c1579c053aa5e4ddc29b74f80080eadf17fa944ef31a010c6f9e874945338bfa98f1848e5ca348cd23a3e56d7d0dff2402e02cb36c22c250442e408e6f2b')
+
+package() {
+  install -Dm644 "${pkgname}-${pkgver}.ttf" "${pkgdir}/usr/share/fonts/TTF/NotoColorEmoji.ttf"
+  install -Dm644 "${pkgname}-${pkgver}-LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
