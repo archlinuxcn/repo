@@ -1,0 +1,19 @@
+# Maintainer: Rocket Aaron <rocka@archlinuxcn.org>
+
+pkgname=ttf-noto-serif-vf
+pkgdesc='Google Noto Serif font (Variable weight and width, TTF)'
+pkgver=2.015
+pkgrel=0.1
+provides=(ttf-font)
+arch=(any)
+url='https://github.com/notofonts/latin-greek-cyrillic'
+license=('OFL-1.1')
+source=("${url}/releases/download/NotoSerif-v${pkgver}/NotoSerif-v${pkgver}.zip")
+b2sums=('d0b6e674878481b5c93969742e93818dea1a72c3dc092bc4da4f075974abd8494ee2395b701125758d0375a1eb5f482f2ac714481a3efebacbca5f06d92e7ede')
+
+package() {
+  install -Dm644 NotoSerif/unhinted/variable-ttf/NotoSerif[wdth,wght].ttf "${pkgdir}/usr/share/fonts/TTF/NotoSerif-VF.ttf"
+  install -Dm644 NotoSerif/unhinted/variable-ttf/NotoSerif-Italic[wdth,wght].ttf "${pkgdir}/usr/share/fonts/TTF/NotoSerif-Italic-VF.ttf"
+
+  install -Dm644 OFL.txt -t "${pkgdir}/licenses/${pkgname}/"
+}
