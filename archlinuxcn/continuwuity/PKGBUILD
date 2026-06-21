@@ -6,12 +6,12 @@ url="https://forgejo.ellis.link/continuwuation/continuwuity"
 license=("Apache-2.0")
 arch=("x86_64" "aarch64")
 pkgver=0.5.10
-pkgrel=1
+pkgrel=2
 epoch=2
 makedepends=("rust" "cargo" "git" "clang")
 depends=("gcc-libs" "glibc" "liburing" "jemalloc")
 source=("git+https://forgejo.ellis.link/continuwuation/continuwuity.git#tag=v$(echo ${pkgver} | sed 's|_|-|g')")
-sha256sums=('ed4f77fd90322d3eed2e52d14b624fc52af38fccbf039550b6ffac9deaa324c6')
+sha256sums=('6b9a4988f446141a33b54a83d4952bc28a9cd5b8ff44fc7203d3897ff54aed58')
 provides=("conduwuit" "continuwuity")
 conflicts=("conduwuit" "continuwuity")
 options=(!lto)
