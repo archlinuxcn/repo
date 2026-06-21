@@ -1,0 +1,22 @@
+# Maintainer: Rocket Aaron <rocka@archlinuxcn.org>
+
+pkgname=ttf-roboto-flex
+pkgver=3.200
+pkgrel=2
+pkgdesc="Upgrades Roboto to become a more powerful typeface system"
+arch=('any')
+url='https://github.com/googlefonts/roboto-flex'
+license=('OFL-1.1')
+provides=('ttf-font')
+source=(
+  "${pkgname}-${pkgver}.zip::${url}/releases/download/${pkgver}/roboto-flex-fonts.zip"
+  "${pkgname}-${pkgver}-OFL.txt::${url}/raw/$pkgver/OFL.txt"
+)
+b2sums=('720c16684657798f8c9cc989694ce6888d08c710c4ab67465eec5b1a512d5e4058d55d366496d50b1965ecda1249c0686b3deac83a1beae978e8d8d155e717d4'
+        '23053955269e9114353b974fc957a26a3cbe80327faf91e42f9a1ff9201033d1b1c14ca2a60f9c8f7a392472f1a040eedbf58f884013a494743fc474d37d225e')
+
+package() {
+  install -Dm644 roboto-flex-fonts/fonts/variable/RobotoFlex*.ttf "${pkgdir}/usr/share/fonts/TTF/RobotoFlex.ttf"
+  install -Dm644 "${pkgname}-${pkgver}-OFL.txt" "${pkgdir}/usr/share/licenses/${pkgname}/OFL.txt"
+}
+
