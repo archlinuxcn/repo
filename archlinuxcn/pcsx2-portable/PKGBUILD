@@ -52,6 +52,9 @@ function package() {
     xcb-util-cursor
     kddockwidgets)
 
+	export srcdir
+	export pkgdir
+	export pkgname
 	portable-packer \
 		-v \
 		--distro arch \

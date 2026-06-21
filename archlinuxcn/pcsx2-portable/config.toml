@@ -38,7 +38,7 @@ background = true
 inhibitSuspend = true
 
 # Whether or not to expose all GPUs and prefer discrete graphics card. By default, Portable blocks any GPU except the integrated one to improve user experience and power consumption on hybrid systems.
-gameMode = false
+gameMode = true
 
 # Enables access to the Kernel-based Virtual Machine.
 virtualization = true
@@ -65,23 +65,17 @@ x11 = false
 # When false, prevents application from connecting to legacy notifications endpoint. Defaults to true.
 classicNotifications = true
 
-# When true, exposes camera devices in the sandbox. Defaults to false.
-cameras = false
-
-# When true, allows application to connect to PipeWire server. Note that a proxy is set up to prevent privileged actions. Defaults to false.
-pipeWire = false
-
 # When true, allows application to receive Input events, particularly useful for Games. Defaults to false.
 input = true
 
 # Do not use. May break apps.
 [advanced]
 zink = false
-qt5Compat = true
+qt5Compat = false
 mprisName = []
 trayWake = false
 kDEStatus = true
 flatpakInfo = true
 
 # Enables landlock for additional protection, breaks many apps.
-landlock = false
+lockdown = false
