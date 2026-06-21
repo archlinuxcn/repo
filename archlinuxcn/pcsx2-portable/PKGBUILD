@@ -30,10 +30,10 @@ md5sums=('cd10f9dee36fead58407f4f3cbaacffc'
 
 function package() {
 	depends=("portable"
-    alsa-lib
+    dbus
     ffmpeg
     hicolor-icon-theme
-    libaio
+    curl
     libbacktrace
     libglvnd
     libpcap
@@ -41,16 +41,23 @@ function package() {
     libxi
     libxrandr
     qt6-base
-    qt6-wayland
-    qt6-svg
-    plutovg
+    freetype2
+    glibc
+    libgcc
+    libjpeg-turbo
+    libstdc++
+    libwebp
+    libx11
+    lz4
+    systemd-libs
+    zlib
+    zstd
     plutosvg
+    plutovg
     sdl3
     shaderc
-    soundtouch
-    wayland
-    xcb-util-cursor
-    kddockwidgets)
+    kddockwidgets
+    rapidyaml)
 
 	export srcdir
 	export pkgdir
