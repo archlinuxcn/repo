@@ -2,7 +2,7 @@
 
 _name=signxml
 pkgname=python-signxml
-pkgver=4.5.1
+pkgver=5.0.0
 pkgrel=1
 pkgdesc="Python XML Signature and XAdES library"
 arch=(any)
@@ -13,7 +13,7 @@ makedepends=(python-build python-installer python-hatchling python-hatch-vcs)
 checkdepends=(python-pytest)
 optdepends=('python-pyinstaller: collect signxml data files when freezing apps')
 source=(${_name}-${pkgver}.tar.gz::https://files.pythonhosted.org/packages/source/s/signxml/signxml-${pkgver}.tar.gz)
-sha256sums=('6378d16cfd79cffc1761b75532e3ce3465ecd0c3a81890398813913d75a0b88a')
+sha256sums=('dc73352919d9650278c970ee71227886ad5c457f7514a0e5b3de76b89dda1875')
 
 latestver() {
   curl -fsSL 'https://pypi.org/pypi/signxml/json' | jq -r '.info.version'
