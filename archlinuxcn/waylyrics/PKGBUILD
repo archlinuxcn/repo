@@ -68,7 +68,7 @@ package() {
 		echo "Installing locale $locale..."
 		mo=${locale/#locales\//} # */LC_MESSAGES/waylyrics.po
 		mo=${mo/%.po/.mo}        # */LC_MESSAGES/waylyrics.mo
-		msgfmt "${locale}" -o - | install -Dm644 /dev/stdin "${pkgdir}/usr/share/locale/${mo}"
+		install -Dm644 <(msgfmt "${locale}" -o -) "${pkgdir}/usr/share/locale/${mo}"
 	done
 
 	install -Dm644 "res/icons/hicolor/scalable/apps/${_app_id}.svg" -t "${pkgdir}/usr/share/icons/hicolor/scalable/apps/"
