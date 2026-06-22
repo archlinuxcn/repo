@@ -1,29 +1,28 @@
 # Maintainer: Yuzu <aur at vitayuzu dot day>
-_npmname=@sourcegraph/amp
+
 pkgname=ampcode
 pkgver=0.0.1782062050_gbe2b79
 pkgrel=1
-pkgdesc="The frontier coding agent from Sourcegraph."
+pkgdesc="The frontier coding agent."
 arch=('x86_64')
 url="https://ampcode.com"
 license=('LicenseRef-Amp-Commercial-License')
-depends=('nodejs' 'ripgrep' 'gcc-libs' 'glibc')
-makedepends=('npm')
+depends=('gcc-libs' 'glibc')
 provides=('amp')
 conflicts=('amp')
-_archive="${pkgname}-${pkgver}"
-source=("${_archive}.tgz::https://registry.npmjs.org/${_npmname}/-/amp-${pkgver//_/-}.tgz")
-noextract=("${_archive}.tgz")
-sha256sums=('a9ac528be07e646815bebd77751d2f619cc40ad1b5ce5257175b9a49bc8a4271')
+options=("!strip")
+_upstream_ver=${pkgver/_/-}
+_archive="cli-linux-x64-${_upstream_ver}.tgz"
+source=("${_archive}::https://registry.npmjs.org/@ampcode/cli-linux-x64/-/${_archive}")
+sha512sums=('f10537acf1cbd6ecafbd43e7cdfe46458a5f8bb8e310029b50db929e50e4e6c8eebd830d4b4e6e74f8d40f35f2919ed46945fd7efa587f016393375f93f63812')
 
 package() {
-    npm install -g --prefix "${pkgdir}/usr" \
-        --cache "${srcdir}/npm-cache" \
-        "${_archive}.tgz"
-
-    find "${pkgdir}/usr" -type d -exec chmod 755 {} +
-    chown -R root:root "${pkgdir}"
-
-    install -Dm644 "${pkgdir}/usr/lib/node_modules/${_npmname}/LICENSE.md" \
+    install -Dm755 "${srcdir}/package/amp" \
+        "${pkgdir}/usr/bin/amp"
+ 
+    install -Dm644 "${srcdir}/package/LICENSE.md" \
         "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+ 
+    install -Dm644 "${srcdir}/package/README.md" \
+        "${pkgdir}/usr/share/doc/${pkgname}/README.md"
 }
