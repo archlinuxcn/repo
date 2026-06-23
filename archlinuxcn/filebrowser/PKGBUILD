@@ -1,7 +1,7 @@
 # Maintainer: RocketDev <ma2014119@outlook.com>
 
 pkgname=filebrowser
-pkgver=2.63.15
+pkgver=2.63.16
 pkgrel=1
 pkgdesc="Standalone web file manager"
 arch=(x86_64)
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(glibc)
 makedepends=(git go pnpm)
 source=("git+https://github.com/filebrowser/filebrowser.git#tag=v${pkgver}")
-sha512sums=('5659794163e9e5128685e4330ac34996d75ae30f54e83aa5d6720e5b900c15da299d240c0b544022b3b2b305b6d46f285ad9f43e416fe4cfb931448245d40d5b')
+sha512sums=('afefb472710b305b88323cf65210ce765442b11ce72f60243992038a8ffd5f4ed45021fc649c98e4669452198a5c876fd08f7c4272680e62b0c10593348b775f')
 
 build() {
     cd "$pkgname"
