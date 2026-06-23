@@ -2,7 +2,7 @@
 
 pkgname=gnome-shell-extension-chinese-calendar
 _shortname=${pkgname#gnome-shell-extension-}
-pkgver=1.3
+pkgver=1.4
 pkgrel=1
 pkgdesc='展示中国农历和节假日信息的gnome-shell扩展'
 arch=('any')
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('gnome-shell>=45' 'dconf')
 makedepends=('npm' 'gettext' 'zip')
 source=("${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('c52575460d8b3eda4817e3906b1fff5d2ede5e56d7c70070828e8bc158c56617d3086f7f429d4351e0f13141d564b63b03fee3f5c6b8439e284110e34dd52ecf')
+b2sums=('e8433d66d91217f27c9f5c446e15b1b4e8b078240813143904b44b1c99da89e30b6171f6909ac48b5d910f86e7722036f5100ee971176f6285ed6029842d4c0e')
 
 build() {
     cd "${_shortname}-${pkgver}"
