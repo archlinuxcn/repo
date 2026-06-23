@@ -1,0 +1,90 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+# Python site-packages path for model installation
+_site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+
+_runtime_deps=(
+    'python-pyclipper>=1.2.0'
+    'python-opencv>=4.5.1.48'
+    'python-numpy>=1.19.5' 'python-numpy<3.0.0'
+    'python-six>=1.15.0'
+    'python-shapely>2.0.4'
+    'python-yaml'
+    'python-pillow'
+    'python-tqdm'
+    'python-omegaconf>2.2.1'
+    'python-requests'
+    'python-colorlog'
+)
+
+pkgbase=python-rapidocr
+pkgname=(
+    python-rapidocr
+    python-rapidocr-models-onnx
+)
+pkgver=3.8.4
+pkgrel=1
+pkgdesc='Awesome OCR multiple programing languages toolkits based on ONNX Runtime, OpenVINO, MNN, PaddlePaddle, TensorRT and PyTorch.'
+url='https://github.com/RapidAI/RapidOCR'
+arch=('any')
+license=('Apache-2.0')
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-wheel'
+    'python-setuptools>=77'
+    'python-setuptools-scm>=8'
+    'python-onnxruntime'
+    "${_runtime_deps[@]}"
+)
+source=(
+    "${pkgbase}-${pkgver}.tar.gz::https://github.com/RapidAI/RapidOCR/archive/v${pkgver}.tar.gz"
+)
+b2sums=('56e313f692823a1bd8b799bb3cb9d48980cd215dc0e23d1dba4e960e2c3c67282c994981a0383cae2b8c5344d1db74aa2a1a457e2122d42717c32c45e015af48')
+
+prepare() {
+    cd "${srcdir}/RapidOCR-${pkgver}/python"
+
+    python tools/prepare_wheel_assets.py
+}
+
+build() {
+    cd "${srcdir}/RapidOCR-${pkgver}/python"
+    SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver python -m build --wheel --no-isolation
+}
+
+check() {
+    cd "${srcdir}/RapidOCR-${pkgver}/python/build/lib"
+    PYTHONPATH="$PWD" python -m rapidocr.main check
+}
+
+package_python-rapidocr() {
+    pkgdesc='Awesome OCR toolkit (without models)'
+    depends=("${_runtime_deps[@]}")
+    optdepends=(
+        'python-rapidocr-models-onnx: default ONNX models'
+        'python-onnxruntime: ONNX runtime (default)'
+        'python-openvino: OpenVINO runtime'
+        'python-paddlepaddle: PaddlePaddle runtime'
+        'python-tensorflow: TensorRT runtime'
+        'python-mnn: MNN runtime'
+        'python-pytorch: PyTorch runtime'
+    )
+
+    cd "${srcdir}/RapidOCR-${pkgver}/python"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+
+    # Remove models from main package
+    rm -rf "${pkgdir}/${_site_packages}/rapidocr/models/"
+}
+
+package_python-rapidocr-models-onnx() {
+    pkgdesc='Default ONNX models for python-rapidocr'
+    arch=('any')
+    license=('Apache-2.0')
+
+    cd "${srcdir}/RapidOCR-${pkgver}/python"
+
+    install -dm755 "${pkgdir}/${_site_packages}/rapidocr/models/"
+    cp -a rapidocr/models/*.onnx "${pkgdir}/${_site_packages}/rapidocr/models/"
+}
