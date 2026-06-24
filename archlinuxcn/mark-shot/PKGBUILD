@@ -1,7 +1,7 @@
 # Maintainer: jswysnemc <snemc@qq.com>
 pkgname=mark-shot
-pkgver=0.1.30
-pkgrel=2
+pkgver=0.1.31
+pkgrel=1
 pkgdesc='Qt 6 Wayland screenshot selection and annotation tool'
 arch=('x86_64' 'aarch64')
 url='https://github.com/jswysnemc/mark-shot'
@@ -11,8 +11,10 @@ makedepends=('cmake' 'ninja' 'pkgconf' 'git')
 optdepends=(
     'xdg-desktop-portal: portal-based screenshot and screencast backend'
     'xclip: X11 clipboard backend'
+    'python-rapidocr: preferred OCR backend'
+    'python-pillow: image processing for code scanning'
+    'python-zxing-cpp: preferred QR/barcode scanning backend'
     'tesseract: fallback OCR backend'
-    'tesseract-data-chi_sim: simplified Chinese OCR data for tesseract'
 )
 source=("${pkgname}-${pkgver}::git+${url}.git#tag=v${pkgver}")
 sha256sums=('SKIP')
