@@ -12,14 +12,19 @@ source=("$url/archive/v$pkgver.tar.gz")
 sha256sums=('f999410626913ffca47bae0c5d3d8b549ccae82bbbb7569ce02aa2b8c7f32860')
 options=(debug)
 _pkgdir="Millennium"
+
+prepare() {
+  cd "$srcdir"
+  mv "$_pkgdir-$pkgver" "$_pkgdir"
+}
 build() {
-  cd "$srcdir/$_pkgdir-$pkgver"
+  cd "$srcdir/$_pkgdir"
   cmake --preset linux-arch-pkgbuild
   cmake --build build
 }
 
 package() {
-  cd "$srcdir/$_pkgdir-$pkgver"
+  cd "$srcdir/$_pkgdir"
   install -d "$pkgdir/usr/lib/millennium"
   install -m755 build/libmillennium_x86.so "$pkgdir/usr/lib/millennium/"
   install -m755 build/libmillennium_hhx64.so "$pkgdir/usr/lib/millennium/"
