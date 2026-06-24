@@ -10,8 +10,7 @@ arch=('x86_64' 'aarch64')
 license=('GPL')
 depends=('libcap')
 makedepends=('ncurses')
-optdepends=('perl: perl bindings'
-            'ncurses: noping CLI tool')
+optdepends=('ncurses: noping CLI tool')
 source=("${url}files/${pkgname}-${pkgver}.tar.bz2"
         'ncursesw.patch' 'format.patch')
 sha256sums=('eb38aa93f93e8ab282d97e2582fbaea88b3f889a08cbc9dbf20059c3779d5cd8'
@@ -37,7 +36,7 @@ prepare() {
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	./configure --prefix=/usr --with-perl-bindings='INSTALLDIRS=vendor'
+	./configure --prefix=/usr --with-perl-bindings=no
 	make
 }
 
