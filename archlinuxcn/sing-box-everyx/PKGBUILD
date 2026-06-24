@@ -15,12 +15,14 @@ conflicts=("${_pkgname}" "${_pkgname}-git" "${_pkgname}-alpha")
 makedepends=('go' 'clang' 'lld')
 source=(
     "${_pkgname}-${pkgver}.tar.gz::https://github.com/SagerNet/sing-box/archive/v$pkgver.tar.gz"
-    0001-Fix-DNS-router-reset-when-network-changed.patch
-    0002-Fix-network-initialization-during-system-boot.patch
+    '0001-1a11b30.patch::https://github.com/SagerNet/sing-box/commit/1a11b30ea211c56967fcb556a24555b601c40809.patch'
+    '0002-563f6ae.patch::https://github.com/SagerNet/sing-box/commit/563f6aee6774156a68d95d7e256b7514249c77ed.patch'
 )
-sha256sums=('c9e6d8ef9eab65f950442341e446c25dcfdeb491ba809475358b8ce1f0584194'
-            'd30e4d1a956272d289bae98fd03dc801f4776d5bdce848b5359ebc191759cdab'
-            'f899b6677ae61e9c400c15484f27a244d8c823c06d663d95bccffc2c476aecbb')
+sha256sums=(
+    '38d6570738445c07497423dd05ac2a62276f00d9259f765bc843cac3365df324'
+    '5679efc64e75400fcc4bff146c02c2b9b528a68f7043194851b3cee0c876c26c'
+    '447729f3542dbf6a0666708994f7eca5a7c0e5b29cf0d7077a9bfffae4e7ffe8'
+)
 depends=("glibc")
 optdepends=('sing-geosite-rule-set: GeoSite rule sets' 'sing-geoip-rule-set: GeoIP rule sets')
 
