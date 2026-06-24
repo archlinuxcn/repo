@@ -3,7 +3,7 @@
 pkgname=steamguard-cli
 _pkgname=steamguard
 pkgver=0.18.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A linux utility for generating 2FA codes for Steam and managing Steam trade confirmations."
 arch=('x86_64')
 url='https://github.com/dyc3/steamguard-cli'
@@ -15,6 +15,7 @@ options=(!lto)
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
+    export RUSTUP_TOOLCHAIN=stable
     cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
 }
 

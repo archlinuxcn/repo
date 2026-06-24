@@ -1,0 +1,14 @@
+maintainers:
+  - github: SilverRainZ
+    email: Shengyu Zhang <la@archlinuxcn.org>
+
+pre_build_script: aur_pre_build(maintainers=['m3thodic'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: nordic-theme-git
+  - source: github
+    github: EliverLara/Nordic
+    branch: master

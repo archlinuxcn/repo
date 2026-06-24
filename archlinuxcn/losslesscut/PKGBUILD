@@ -5,8 +5,8 @@ pkgname=losslesscut
 _pkgname=LosslessCut
 _appid="no.mifi.losslesscut"
 pkgver=3.69.0
-_electronversion=38
-pkgrel=1
+_electronversion=42
+pkgrel=2
 pkgdesc="The swiss army knife of lossless video/audio editing"
 arch=('x86_64')
 url="https://losslesscut.app/"
@@ -14,7 +14,7 @@ license=('GPL-2.0-only')
 depends=("electron${_electronversion}" 'ffmpeg' 'bash' 'hicolor-icon-theme')
 makedepends=('git' 'nodejs-lts-jod' 'npm' 'yarn' 'node-gyp' 'librsvg')
 source=(
-    "${pkgname}::git+https://github.com/mifi/lossless-cut.git#tag=v${pkgver}?signed"
+    "${pkgname}::git+https://github.com/mifi/lossless-cut.git?signed#tag=v${pkgver}"
     "fix-wayland-icon.patch"
     "${pkgname}.sh"
 )
