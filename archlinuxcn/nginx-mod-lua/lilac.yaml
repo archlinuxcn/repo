@@ -5,9 +5,12 @@ update_on:
   github: openresty/lua-nginx-module
   use_max_tag: true
   prefix: v
-  exclude_regex: '.*rc.*'
 - source: alpm
   alpm: nginx
   strip_release: true
+- source: github
+  github: openresty/lua-resty-core
+  use_max_tag: true
+  prefix: v
 repo_depends:
 - lua-resty-core

@@ -1,7 +1,9 @@
+import os, re
+
 from lilaclib import *
 
 def pre_build():
-  newver = _G.newver.replace('R', '.r')
+  newver = _G.newver.lower()
   update_pkgver_and_pkgrel(newver)
 
 def post_build():
