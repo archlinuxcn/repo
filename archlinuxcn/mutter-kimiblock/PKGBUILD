@@ -102,10 +102,10 @@ b2sums=('2987b5e207f0a12e94b035d5b913b8a76bc291be41a71669e977ead0f93cfbb3219c97a
 
 prepare() {
   cd mutter
-  #git apply ../4872.patch
+  git apply ../4872.patch
   git apply ../5096.patch
   git apply ../5116.patch
-  git apply ../5131.patch
+  #git apply ../5131.patch
 }
 
 build() {
