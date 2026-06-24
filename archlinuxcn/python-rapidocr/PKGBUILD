@@ -60,9 +60,11 @@ check() {
 
 package_python-rapidocr() {
     pkgdesc='Awesome OCR toolkit (without models)'
-    depends=("${_runtime_deps[@]}")
+    depends=(
+        "${_runtime_deps[@]}"
+        'python-rapidocr-models'
+    )
     optdepends=(
-        'python-rapidocr-models-onnx: default ONNX models'
         'python-onnxruntime: ONNX runtime (default)'
         'python-openvino: OpenVINO runtime'
         'python-paddlepaddle: PaddlePaddle runtime'
@@ -82,6 +84,7 @@ package_python-rapidocr-models-onnx() {
     pkgdesc='Default ONNX models for python-rapidocr'
     arch=('any')
     license=('Apache-2.0')
+    provides=('python-rapidocr-models')
 
     cd "${srcdir}/RapidOCR-${pkgver}/python"
 
