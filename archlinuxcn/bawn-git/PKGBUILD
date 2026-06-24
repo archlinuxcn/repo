@@ -1,0 +1,45 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=bawn-git
+pkgver=0.0.1.r0.g161277a3
+pkgrel=1
+pkgdesc='Bawn is a transient Portable sandbox generator'
+url='https://github.com/Kimiblock/bawn'
+license=(GPL-3.0-or-later)
+makedepends=('cargo' 'git')
+arch=('i686' 'x86_64' 'armv6h' 'armv7h')
+source=(git+https://github.com/Kimiblock/bawn.git)
+sha256sums=('SKIP')
+depends=(glibc libgcc)
+
+function pkgver() {
+	cd bawn
+	git describe --long --tags --abbrev=8 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+	cd bawn
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target host-tuple
+}
+
+build() {
+	cd bawn
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo build --frozen --release --all-features
+}
+
+check() {
+	cd bawn
+	export RUSTUP_TOOLCHAIN=stable
+	cargo test --frozen --all-features
+}
+
+package() {
+	package+=(portable)
+	cd bawn
+	install -Dm0755 -t "$pkgdir/usr/bin/" "target/release/bawn"
+	# for custom license, e.g. MIT
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
