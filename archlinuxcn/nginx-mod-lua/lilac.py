@@ -4,7 +4,7 @@ def pre_build():
   depends_nginx_re = re.compile(
     r'''^(depends=.*?)['"]?nginx[^'") ]*['"]?''')
   # lua-resty-core has strict version requirement on nginx-mod-lua
-  depends_restycore_re = re.compile( r"'lua-resty-core[^']+'")
+  depends_restycore_re = re.compile( r"'lua-resty-core[^']*'")
 
   nginx_ver = _G.newvers[1]
   newver = _G.newver.lower()
