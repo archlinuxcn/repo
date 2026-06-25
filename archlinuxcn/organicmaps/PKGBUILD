@@ -156,7 +156,8 @@ check() {
     # In addition, the following tests were also disabled:
     # - base_tests: `is_finite` logic fails due to `-ffast-math`
     # - osm_auth_tests: `server_api_test` fails due to no network access
-    ctest -j --test-dir build --stop-on-failure --output-on-failure -E "drape_tests|drape_frontend_tests|generator_integration_tests|opening_hours_integration_tests|opening_hours_supported_features_tests|routing_benchmarks|routing_integration_tests|routing_quality_tests|search_quality_tests|storage_integration_tests|shaders_tests|world_feed_integration_tests|base_tests|osm_auth_tests"
+    # - countries_names_tests: Unable to read system language, therefore can't find `localize.json`
+    ctest -j --test-dir build --stop-on-failure --output-on-failure -E "drape_tests|drape_frontend_tests|generator_integration_tests|opening_hours_integration_tests|opening_hours_supported_features_tests|routing_benchmarks|routing_integration_tests|routing_quality_tests|search_quality_tests|storage_integration_tests|shaders_tests|world_feed_integration_tests|base_tests|osm_auth_tests|countries_names_tests"
 }
 
 package() {
