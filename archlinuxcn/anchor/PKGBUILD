@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=anchor
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=1
 pkgdesc='⚓ Solana Sealevel Framework'
 arch=(x86_64)
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(cargo gcc-libs glibc nodejs yarn)
 makedepends=(git)
 source=("git+https://github.com/solana-foundation/$pkgname.git#tag=v$pkgver")
-sha256sums=('247e1e2dcfa0de2f82acf8821bbc74fea898bf1ca8a7b55f2d157006e66c8f7d')
+sha256sums=('4c980212614373e1040f1d697bc7fc1216b4ee54f7fb9fae9db3e635d7c12a04')
 options=(!lto)
 
 prepare() {
