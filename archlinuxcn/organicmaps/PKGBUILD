@@ -185,12 +185,9 @@ package() {
     install -Dm644 data/categories_cuisines.txt "${_datadir}/"
 
     # Compiled Drawing Rules
-    install -Dm644 data/drules_proto_default_light.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_default_dark.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_outdoors_light.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_outdoors_dark.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_vehicle_light.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_vehicle_dark.bin "${_datadir}/"
+    install -Dm644 data/drules_default.bin "${_datadir}/"
+    install -Dm644 data/drules_outdoors.bin "${_datadir}/"
+    install -Dm644 data/drules_vehicle.bin "${_datadir}/"
 
     # Geometry, Colors & Core Maps
     install -Dm644 data/packed_polygons.bin "${_datadir}/"
