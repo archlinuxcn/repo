@@ -6,7 +6,7 @@
 
 pkgname=ffmpeg-lily
 pkgver=8.1.2
-pkgrel=6
+pkgrel=7
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video (with AMD HEVC VAAPI alignment patch)'
 arch=(x86_64)
@@ -212,7 +212,8 @@ build() {
     --enable-shared \
     --enable-vapoursynth \
     --enable-version3 \
-    --enable-vulkan
+    --enable-vulkan \
+    --disable-decoder=magicyuv # pixelsmash
   make
   make tools/qt-faststart
   make doc/ff{mpeg,play}.1
