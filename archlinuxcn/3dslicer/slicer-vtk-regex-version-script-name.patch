@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Butui Hu <hot123tea123@gmail.com>
+Date: Thu, 25 Jun 2026 00:00:00 +0800
+Subject: [PATCH] COMP: Name VTK regex linker version script
+
+GNU ld rejects combining an anonymous linker version script with another
+version script that defines named version nodes. VTK's bundled libtiff uses
+libtiff.map with LIBTIFF_* nodes, so Slicer's global VTK regex-hiding script
+must use a named node as well.
+---
+ SuperBuild/vtk-hide-stdcxx-regex.ver | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/SuperBuild/vtk-hide-stdcxx-regex.ver b/SuperBuild/vtk-hide-stdcxx-regex.ver
+index 3d8e62b..f54b18f 100644
+--- a/SuperBuild/vtk-hide-stdcxx-regex.ver
++++ b/SuperBuild/vtk-hide-stdcxx-regex.ver
+@@ -16,8 +16,19 @@
+  * Marking these libstdc++ internals "local" makes each VTK library bind its
+  * own matching copy and stop participating in interposition. Every other VTK
+  * symbol keeps its default (global) binding. This mirrors the symbol-control
+- * approach already used by Libs/krb5-gssapi-stub/gssapi_krb5.ver.
++ * approach already used by Libs/krb5-gssapi-stub/gssapi_krb5.ver.
++ *
++ * This version node must be named. GNU ld rejects combining an anonymous
++ * version script with another script that defines named version nodes. Some
++ * VTK third-party libraries, such as bundled libtiff, add their own version
++ * scripts, so using an anonymous node here breaks those links with:
++ *
++ *   anonymous version tag cannot be combined with other version tags
++ *
++ * Do not add a global pattern here; keeping it absent preserves the default
++ * global binding for symbols not matched by the local patterns below.
+  */
++SLICER_VTK_REGEX_HIDE
+ {
+   local:
+     _ZNSt8__detail*;     /* std::__detail::  _Scanner / _Compiler / _Executor   */
+-- 
+2.50.0

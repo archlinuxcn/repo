@@ -3,9 +3,9 @@
 
 pkgname=organicmaps
 _appid=app.organicmaps.desktop
-pkgver=2026.05.27_11
-_pkgver=2026.05.27-11-android
-pkgrel=3
+pkgver=2026.06.24_16
+_pkgver=2026.06.24-16-android
+pkgrel=2
 pkgdesc="A privacy-focused offline maps & GPS app for hiking, cycling, biking, and driving"
 arch=('x86_64')
 # Reference: https://github.com/organicmaps/organicmaps/blob/master/docs/INSTALL.md
@@ -31,7 +31,7 @@ source=("${pkgname}::git+https://github.com/organicmaps/organicmaps.git#tag=${_p
         "0001-build-respect-WITH_SYSTEM_PROVIDED_3PARTY-for-glaze.patch"
         "0002-build-do-not-hardcode-compile-and-link-flags.patch"
         "0003-build-guard-test-support-and-quality-libraries.patch")
-sha256sums=('cbf12eb077051938253b15781b8902e761b457bf55630e30a714b605acc058b4'
+sha256sums=('57ee26f1b19b27a426208f5c3a0da3ef6c0f224f82394f3c2d816868b5017088'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -40,8 +40,8 @@ sha256sums=('cbf12eb077051938253b15781b8902e761b457bf55630e30a714b605acc058b4'
             'SKIP'
             'SKIP'
             'SKIP'
-            '3b61965aef2a420af87686e815f9a67b78768a961f7d622b22da3fd278647725'
-            '7caa11f1fdfa3db8e9abf3f83c34c34d6f070fd89a5fe2a5d3439e623c9b2909'
+            'ca79329e3614981c1ff1753e736baab876bb96692bea5008c1c318d8bea00b3c'
+            'aa0f3396e483198f827f3d7584e89027a2ae3741510444f3412bd8eeffce904e'
             'ed4bb6d8cad4717a38c5a5e5f509b6d3ae7e4bcd542bb40cfc206efb2874022c')
 
 prepare() {
@@ -156,7 +156,8 @@ check() {
     # In addition, the following tests were also disabled:
     # - base_tests: `is_finite` logic fails due to `-ffast-math`
     # - osm_auth_tests: `server_api_test` fails due to no network access
-    ctest -j --test-dir build --stop-on-failure --output-on-failure -E "drape_tests|drape_frontend_tests|generator_integration_tests|opening_hours_integration_tests|opening_hours_supported_features_tests|routing_benchmarks|routing_integration_tests|routing_quality_tests|search_quality_tests|storage_integration_tests|shaders_tests|world_feed_integration_tests|base_tests|osm_auth_tests"
+    # - map_tests: Unable to read system language, therefore can't find `localize.json`
+    ctest -j --test-dir build --stop-on-failure --output-on-failure -E "drape_tests|drape_frontend_tests|generator_integration_tests|opening_hours_integration_tests|opening_hours_supported_features_tests|routing_benchmarks|routing_integration_tests|routing_quality_tests|search_quality_tests|storage_integration_tests|shaders_tests|world_feed_integration_tests|base_tests|osm_auth_tests|map_tests"
 }
 
 package() {
@@ -175,7 +176,7 @@ package() {
 
     # Essential Configuration & Metadata
     install -Dm644 data/generator/timezone/timezone_info.json "${_datadir}/generator/timezone/timezone_info.json"
-    install -Dm644 data/countries.txt "${_datadir}/"
+    install -Dm644 data/countries.json "${_datadir}/"
     install -Dm644 data/classificator.txt "${_datadir}/"
     install -Dm644 data/types.txt "${_datadir}/"
     install -Dm644 data/editor.config "${_datadir}/"
@@ -184,12 +185,9 @@ package() {
     install -Dm644 data/categories_cuisines.txt "${_datadir}/"
 
     # Compiled Drawing Rules
-    install -Dm644 data/drules_proto_default_light.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_default_dark.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_outdoors_light.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_outdoors_dark.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_vehicle_light.bin "${_datadir}/"
-    install -Dm644 data/drules_proto_vehicle_dark.bin "${_datadir}/"
+    install -Dm644 data/drules_default.bin "${_datadir}/"
+    install -Dm644 data/drules_outdoors.bin "${_datadir}/"
+    install -Dm644 data/drules_vehicle.bin "${_datadir}/"
 
     # Geometry, Colors & Core Maps
     install -Dm644 data/packed_polygons.bin "${_datadir}/"
@@ -203,7 +201,7 @@ package() {
     install -Dm644 data/welcome.html "${_datadir}/"
     install -Dm644 data/copyright.html "${_datadir}/"
 
-    local _data_version=$(jq -r '.v' data/countries.txt)
+    local _data_version=$(jq -r '.v' data/countries.json)
     install -dm755 "${_datadir}/$_data_version"
 
     install -Dm644 "android/.idea/icon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"

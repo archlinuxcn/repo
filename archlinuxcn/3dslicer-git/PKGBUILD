@@ -2,7 +2,7 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer-git
-pkgver=5.10.0.r343.2080f7fc4c
+pkgver=5.12.0.r1.d3d3bc46c3
 pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
@@ -58,10 +58,12 @@ conflicts=(3dslicer)
 source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git"
         "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
         "0001-ENH-Add-pip-target-fallback-for-read-only-site-packages.patch"
+        "slicer-vtk-regex-version-script-name.patch"
 )
 sha512sums=('SKIP'
             '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
             '7870c6172dd4af00b9b9cd87a28d224cb8c5360717b98f1fdc2df2bab3bda0a6bcd8530fa0c2b6e25f90a88aa4b5f35cafe79eda77a154abced0fa09e70e0bed'
+            '3ac8a9e98953ddbffa28dcac5f67156670e24a190433e580e00691856f805602a995104c0e6bdf388289b9a2d0ba6e6a19b4bbea89da71a19d080e8dd7981307'
 )
 
 pkgver() {
@@ -84,6 +86,7 @@ prepare() {
     --startupnotify \
     --custom="StartupWMClass=Slicer"
   patch -d ${_pkgname} -p1 -i ${srcdir}/0001-ENH-Add-pip-target-fallback-for-read-only-site-packages.patch
+  patch -d "${srcdir}/${_pkgname}" -p1 -i "${srcdir}/slicer-vtk-regex-version-script-name.patch"
 }
 
 build() {

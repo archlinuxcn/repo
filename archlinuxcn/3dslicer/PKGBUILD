@@ -2,8 +2,8 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer
-pkgver=5.10.0
-pkgrel=8
+pkgver=5.12.0
+pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
 url='https://www.slicer.org'
@@ -55,9 +55,11 @@ makedepends=(
 options=(!emptydirs !strip)
 source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
         "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
+        "slicer-vtk-regex-version-script-name.patch"
 )
-sha512sums=('c3d91fdd02292c5231389baec26827a5e2503a2c5ba0bf226c7ef383e12fb11cf5b7925d9689a359428bc6a55431140b1b0aa43c1f0a8270256d12c1e47ad8ea'
-            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014')
+sha512sums=('e23d2b699fab1c4b919fcd3b1f8c8c2bc082834ee07542dddc2491f7433752e4687f0713553bfb6a052e1ed0d4ea8dee3dbf55ca56df22bf2eccea299b02d248'
+            '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
+            '3ac8a9e98953ddbffa28dcac5f67156670e24a190433e580e00691856f805602a995104c0e6bdf388289b9a2d0ba6e6a19b4bbea89da71a19d080e8dd7981307')
 
 prepare() {
   echo "Creating desktop file"
@@ -68,6 +70,7 @@ prepare() {
     --pkgdesc "${pkgdesc}" \
     --startupnotify \
     --custom="StartupWMClass=Slicer"
+  git -C "${srcdir}/${_pkgname}" apply "${srcdir}/slicer-vtk-regex-version-script-name.patch"
 }
 
 build() {
