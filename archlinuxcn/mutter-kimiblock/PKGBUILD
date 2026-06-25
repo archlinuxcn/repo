@@ -108,6 +108,7 @@ prepare() {
 
   git apply ../5131.patch
   git apply ../5137.patch
+  patch -Np1 <../egl.patch
 }
 
 build() {
