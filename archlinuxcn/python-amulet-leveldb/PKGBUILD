@@ -5,14 +5,14 @@ pkgdesc="A Cython wrapper for Mojang's modified LevelDB library."
 url="https://github.com/Amulet-Team/Amulet-LevelDB"
 license=("LicenseRef-Amulet-Team-License")
 arch=(any)
-pkgver=1.0.6
+pkgver=1.0.7
 pkgrel=1
 makedepends=(python-portalocker python-leveldb python-setuptools git python-versioneer cython gcc-libs glibc zlib)
 depends=(python python-portalocker python-leveldb cython gcc-libs glibc zlib)
 source=(
 	"git+https://github.com/Amulet-Team/Amulet-LevelDB.git#tag=${pkgver}"
 )
-md5sums=('c4ec5f869ff42f07ed5d43b7bd3bcb53')
+md5sums=('07b3bfe3cb0df953b3150a86bece66a2')
 
 function prepare() {
 	cd "${srcdir}/Amulet-LevelDB"
