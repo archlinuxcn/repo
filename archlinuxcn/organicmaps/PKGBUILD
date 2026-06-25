@@ -176,7 +176,7 @@ package() {
 
     # Essential Configuration & Metadata
     install -Dm644 data/generator/timezone/timezone_info.json "${_datadir}/generator/timezone/timezone_info.json"
-    install -Dm644 data/countries.txt "${_datadir}/"
+    install -Dm644 data/countries.json "${_datadir}/"
     install -Dm644 data/classificator.txt "${_datadir}/"
     install -Dm644 data/types.txt "${_datadir}/"
     install -Dm644 data/editor.config "${_datadir}/"
@@ -204,7 +204,7 @@ package() {
     install -Dm644 data/welcome.html "${_datadir}/"
     install -Dm644 data/copyright.html "${_datadir}/"
 
-    local _data_version=$(jq -r '.v' data/countries.txt)
+    local _data_version=$(jq -r '.v' data/countries.json)
     install -dm755 "${_datadir}/$_data_version"
 
     install -Dm644 "android/.idea/icon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
