@@ -3,8 +3,8 @@
 _pkgname=sing-box
 pkgname=sing-box-everyx
 pkgdesc="The universal proxy platform (with everyx's patches)."
-pkgver=1.13.13
-pkgrel=2
+pkgver=1.13.14
+pkgrel=1
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 url='https://sing-box.sagernet.org/'
 license=("LicenseRef-${_pkgname}")
@@ -18,7 +18,7 @@ source=(
     '0001-1a11b30.patch::https://github.com/SagerNet/sing-box/commit/1a11b30ea211c56967fcb556a24555b601c40809.patch'
     '0002-563f6ae.patch::https://github.com/SagerNet/sing-box/commit/563f6aee6774156a68d95d7e256b7514249c77ed.patch'
 )
-sha256sums=('c9e6d8ef9eab65f950442341e446c25dcfdeb491ba809475358b8ce1f0584194'
+sha256sums=('d18294eb00128743b1dbf1d5f4f01902bdfd59a2d2858cda809abe5351a9cd40'
             '5679efc64e75400fcc4bff146c02c2b9b528a68f7043194851b3cee0c876c26c'
             '447729f3542dbf6a0666708994f7eca5a7c0e5b29cf0d7077a9bfffae4e7ffe8')
 depends=("glibc")
