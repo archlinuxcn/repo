@@ -1,0 +1,38 @@
+# Maintainer: Mark Wagie <mark dot wagie at proton dot me>
+pkgname=cine
+pkgver=1.6.0
+pkgrel=1
+pkgdesc="Video Player for Linux"
+arch=('any')
+url="https://github.com/diegopvlk/Cine"
+license=('GPL-3.0-or-later')
+depends=(
+  'dconf'
+  'glib2'
+  'gtk4'
+  'hicolor-icon-theme'
+  'libadwaita'
+  'pango'
+  'python3'
+  'python-gobject'
+  'python-mpv'
+)
+makedepends=(
+  'blueprint-compiler'
+  'meson'
+)
+source=("Cine-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('70717966a491506d5bf6f0f7d93e99d96e24b9c66b8c0820a73cccdd5ccd16b5')
+
+build() {
+  arch-meson "Cine-$pkgver" build
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --no-rebuild --print-errorlogs
+}
+
+package() {
+  meson install -C build --no-rebuild --destdir "$pkgdir"
+}
