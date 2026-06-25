@@ -1,31 +1,35 @@
-From 884ef00d41485d113abe52301dee71ff6ed9461f Mon Sep 17 00:00:00 2001
+From 507283a37deb011e3c527022938831ac8cc09579 Mon Sep 17 00:00:00 2001
 From: DeepChirp <DeepChirp@outlook.com>
-Date: Mon, 1 Jun 2026 16:02:48 +0800
+Date: Thu, 25 Jun 2026 14:24:43 +0800
 Subject: [PATCH] [build] do not hardcode compile and link flags
 
 Hardcoding `-O3` and specific linkers (`-fuse-ld=...`) overrides
 user- or toolchain-provided flags (e.g., via `CMAKE_CXX_FLAGS` or
 `LDFLAGS`). Remove them to respect the external build environment.
 ---
- CMakeLists.txt | 17 -----------------
- 1 file changed, 17 deletions(-)
+ CMakeLists.txt | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 45f54ca676..5be37f77bf 100644
+index d32429e298..ad238d405a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -100,29 +100,12 @@ if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-   endif()
- elseif (${CMAKE_BUILD_TYPE} MATCHES "Rel")
-   add_definitions(-DRELEASE)
--  if (NOT MSVC)
--    add_compile_options(-O3)
--  endif()
- else()
-   message(FATAL_ERROR "Unknown build type: " ${CMAKE_BUILD_TYPE})
- endif()
+@@ -100,12 +100,6 @@ add_compile_definitions(
+   $<$<CONFIG:Debug>:DEBUG>
+   $<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>:RELEASE>
+ )
+-if (NOT MSVC)
+-  add_compile_options(
+-    $<$<CONFIG:Debug>:-fno-omit-frame-pointer>
+-    $<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>:-O3>
+-  )
+-endif()
  
- message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
+ # For single-config generators we can still validate CMAKE_BUILD_TYPE early.
+ get_property(_is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+@@ -118,20 +112,6 @@ else()
+   message(STATUS "Multi-config generator: build type selected per-build (Debug/Release/RelWithDebInfo/MinSizeRel)")
+ endif()
  
 -if (PLATFORM_LINUX OR PLATFORM_ANDROID)
 -  find_program(LLD_FOUND ld.lld)

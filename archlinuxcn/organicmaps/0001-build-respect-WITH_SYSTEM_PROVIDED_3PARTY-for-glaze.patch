@@ -1,6 +1,6 @@
-From 85419bd3d728cab3244badec73812efa3a60ffb9 Mon Sep 17 00:00:00 2001
+From 5d2853aa079c2a2a5e606c9f8e69a8eecda80d56 Mon Sep 17 00:00:00 2001
 From: DeepChirp <DeepChirp@outlook.com>
-Date: Mon, 1 Jun 2026 15:54:15 +0800
+Date: Thu, 25 Jun 2026 14:17:20 +0800
 Subject: [PATCH] [build] respect WITH_SYSTEM_PROVIDED_3PARTY for glaze
 
 Use find_package for glaze when WITH_SYSTEM_PROVIDED_3PARTY is
@@ -11,10 +11,10 @@ enabled, and only build the bundled version otherwise.
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/3party/CMakeLists.txt b/3party/CMakeLists.txt
-index c802251db8..4e4f0e0ced 100644
+index 0160603c82..53d1669788 100644
 --- a/3party/CMakeLists.txt
 +++ b/3party/CMakeLists.txt
-@@ -39,6 +39,7 @@ if (NOT WITH_SYSTEM_PROVIDED_3PARTY)
+@@ -37,6 +37,7 @@ if (NOT WITH_SYSTEM_PROVIDED_3PARTY)
    add_subdirectory(freetype)
    add_subdirectory(icu)
    add_subdirectory(harfbuzz)
@@ -22,19 +22,19 @@ index c802251db8..4e4f0e0ced 100644
  
    add_library(utf8cpp INTERFACE)
    add_library(utf8cpp::utf8cpp ALIAS utf8cpp)
-@@ -47,7 +48,6 @@ endif()
- 
+@@ -46,7 +47,6 @@ endif()
  add_subdirectory(agg)
+ add_subdirectory(BLAKE3/c)
  add_subdirectory(bsdiff-courgette)
 -add_subdirectory(glaze)
  add_subdirectory(minizip)
  add_subdirectory(open-location-code)
  add_subdirectory(opening_hours)
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 45f54ca676..5315c790b7 100644
+index d32429e298..13172f64b8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -192,6 +192,7 @@ if (WITH_SYSTEM_PROVIDED_3PARTY)
+@@ -201,6 +201,7 @@ if (WITH_SYSTEM_PROVIDED_3PARTY)
  
    find_package(expat CONFIG REQUIRED)
  
