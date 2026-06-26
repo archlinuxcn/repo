@@ -92,7 +92,7 @@ source=(
   5116.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5116.patch
   5096.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5096.patch
   5131.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5131.patch
-  5138.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5138.patch
+  5133.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5133.patch
   egl.patch
 )
 b2sums=('2987b5e207f0a12e94b035d5b913b8a76bc291be41a71669e977ead0f93cfbb3219c97aeb2475a97906e989353eb309abb2b80f683cc41074a042b81467e3a8c'
@@ -110,9 +110,9 @@ prepare() {
   git apply ../5096.patch
   git apply ../5116.patch
 
-  git apply ../5131.patch
+  #git apply ../5131.patch
   git apply ../5137.patch
-  #git apply ../5138.patch
+  git apply ../5133.patch
   patch -Np1 <../egl.patch
 }
 
