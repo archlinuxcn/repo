@@ -118,7 +118,7 @@ prepare() {
 
 build() {
   local meson_options=(
-    -D docs=true
+    -D docs=false
     -D egl_device=true
     -D installed_tests=false
     -D tests=disabled
