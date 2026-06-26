@@ -159,6 +159,5 @@ package_mutter-kimiblock() {
   _pick devkit "$pkgdir"/usr/share/icons/hicolor/scalable/apps/org.gnome.Mutter.Mdk.svg
   _pick devkit "$pkgdir"/usr/share/icons/hicolor/symbolic/apps/org.gnome.Mutter.Mdk-symbolic.svg
 
-  _pick docs "$pkgdir"/usr/share/mutter-*/doc
-  provides+=($(ls "${pkgdir}/usr/lib" | grep 'libmutter-' | grep '.so'))
+	provides+=($(ls "${pkgdir}/usr/lib" | grep 'libmutter-' | grep '.so'))
 }
