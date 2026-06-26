@@ -17,8 +17,8 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname=mozc-ut
-pkgver=3.33.6239.20260625
-pkgrel=2
+pkgver=3.34.6239.20260626
+pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
 url='https://github.com/google/mozc'
@@ -28,9 +28,9 @@ makedepends=('git' 'python')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=3.33.6239')
+provides=('mozc=3.34.6239')
 conflicts=('mozc')
-source=('git+https://github.com/google/mozc.git#commit=291c72fcb648fcb6e7500a0dac512aef6a860fbc'
+source=('git+https://github.com/google/mozc.git#commit=76887c679e1e4f156102e4bc62ea9cf9174678a3'
         # UT dictionary
         'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=15c1c64502b43e31d328012860376c03c3eaf633'
         'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=08e033f4558b7a0b03d8ad6920216d9473f15627'
@@ -77,6 +77,7 @@ source=('git+https://github.com/google/mozc.git#commit=291c72fcb648fcb6e7500a0da
         'https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/621d059fbcbfae17bfca15b439692bae934268c3/jigyosyo.zip'
         'https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/621d059fbcbfae17bfca15b439692bae934268c3/ken_all.zip')
 noextract=('jawiki-20260601-pages-articles-multistream-index.txt.bz2'
+           'bazel-9.0.2-linux-x86_64'
            'abseil-cpp-20260107.1.tar.gz'
            'apple_support.2.4.0.tar.gz'
            'v1.10.0.tar.gz'
@@ -105,7 +106,7 @@ noextract=('jawiki-20260601-pages-articles-multistream-index.txt.bz2'
            '2025-01-25.zip'
            'jigyosyo.zip'
            'ken_all.zip')
-b2sums=('9bb288ba4915ddb1e04845099d24d6027dbcc59d2ac43f94ebff302f70a0916f4cbdf3952390738c8c716bc01aac464c74c2d03d90406d26fd453103ef2097b0'
+b2sums=('f55e3633cf0e688d9bbb4701b3bdefdd62b857ddf0866fcba525c3ab6c4666f338d17f59438b3f8121a63d5a294968fbddade4a4a8f850041ea8ad6882120cea'
         '84150b8d743335d4b2801d15b74640380da0cfb95815bfc32a98f48f0fc7ac25b98ab417afee715c87a70dd8127568bd999e8e6a2c17da09d2a560fcdba030d3'
         'f320adaf559ad3b51cb323c19f1ac0155f33f1b59939bfc34577f429cfc64d589271c5b6a9fe481fa7be6b97e7043832b0b7bf339e0559a836fa5a1b62101f5d'
         'e9555a886657f237a55552f8f8aec769f0522cb54b4765f805ec1cd06dc80d8e8f735c35099132471bb46bda8219cf2991f6357b2cca5df24ff38f63c5d8f331'
@@ -178,18 +179,15 @@ prepare() {
 
     cd "${srcdir}"/merge-ut-dictionaries/src/merge/
 
-    # Use a fixed snapshot for the jawiki dump data
-    sed -i -e "169s|jawiki_index_file = .*|jawiki_index_file = '${srcdir}/jawiki-20260601-pages-articles-multistream-index.txt.bz2'|" merge_dictionaries.py
-    sed -i -e '152,168d' merge_dictionaries.py
-
-    # Use our local copy of the Mozc repo
-    sed -i -e "s|mozc-master/src/data/dictionary_oss|${srcdir}/mozc/src/data/dictionary_oss|g" merge_dictionaries.py
-    sed -i -e "84s|ZipFile(f'mozc-{date_str}\.zip')|open('merge_dictionaries\.py')|" merge_dictionaries.py
-    sed -i -e '86s|zip_ref\.||' merge_dictionaries.py
-    sed -i -e "96s|zip_ref\.namelist()|os\.listdir(path='${srcdir}/mozc/src/data/dictionary_oss')|" merge_dictionaries.py
-    sed -i -e '104s|zip_ref\.||' merge_dictionaries.py
-    sed -i -e '89,90d;80,83d;67,79d' merge_dictionaries.py
-    sed -i -e '7i import os' merge_dictionaries.py
+    # Use fixed local snapshots for the Mozc repo and the jawiki dump data
+    sed -i -e "s|mozc-master/src/data/dictionary_oss|${srcdir}/mozc/src/data/dictionary_oss|g ;
+               84s|ZipFile(f'mozc-{date_str}\.zip') as zip_ref|open('merge_dictionaries\.py') as dummy_ref| ;
+               86s|zip_ref\.|| ;
+               96s|zip_ref\.namelist()|os\.listdir(path='${srcdir}/mozc/src/data/dictionary_oss')| ;
+               104s|zip_ref\.|| ;
+               169s|jawiki_index_file = .*|jawiki_index_file = '${srcdir}/jawiki-20260601-pages-articles-multistream-index.txt.bz2'| ;
+               152,168d;89,90d;80,83d;67,79d ;
+               7i import os" merge_dictionaries.py
 
     # Compile the UT dictionary
     printf '\nCompiling the UT dictionary...\n\n'
