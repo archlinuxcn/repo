@@ -1,0 +1,64 @@
+# Maintainer: Kiri <kiri@vern.cc> 
+# Contributor: Titouan (Stalone) S. <stalone@boxph.one>
+# Contributor: Igor Dyatlov <dyatlov.igor@protonmail.com>
+# Contributor: Mark (yochananmarqos) Wagie <mark.wagie@proton.me>
+
+pkgname=authenticator
+_pkgname=Authenticator
+pkgver=4.3.1
+pkgrel=1
+pkgdesc="Generate Two-Factor Codes"
+arch=('x86_64')
+url="https://gitlab.gnome.org/World/Authenticator"
+license=('GPL-3.0-or-later')
+depends=('glib2'
+         'gtk4'
+         'libadwaita'
+         'zbar'
+         'gstreamer' 
+         'gst-plugins-base-libs'
+         'libpipewire'
+         'gcc-libs'
+         'hicolor-icon-theme'
+         'glibc'
+         'openssl'
+         'sqlite'
+         'graphene'
+         'pango'
+         'gdk-pixbuf2'
+         'cairo'
+         'dconf')
+makedepends=('meson'
+             'cargo'
+             'clang'
+             'llvm')
+checkdepends=('appstream-glib'
+              'reuse')
+source=("${url}/-/archive/${pkgver}/${_pkgname}-${pkgver}.tar.gz")
+options=('!lto')
+sha512sums=("8eb3f2e5317960dcf63a1af05e0c3e431b148125dc405aa809acd78d72c4265659e8652ef46098708b1838e3146f4a03112d18e699fa2067bacb2beaa32ff0e0")
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target "$CARCH-unknown-linux-gnu"
+}
+
+build() {
+  local meson_options=(
+    --buildtype release
+  )
+
+  export RUSTUP_TOOLCHAIN=stable
+  arch-meson ${_pkgname}-${pkgver} build "${meson_options[@]}"
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs || :
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+}
+
