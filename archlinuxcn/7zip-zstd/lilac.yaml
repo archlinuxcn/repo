@@ -1,0 +1,10 @@
+maintainers:
+  - github: RocketMaDev
+    email: RocketDev <marocketbd@gmail.com>
+
+pre_build_script: aur_pre_build(maintainers=['Qimeng'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: 7zip-zstd
