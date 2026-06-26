@@ -3,7 +3,7 @@
 # Contributor: hexchain <arch at hexchain.org>
 
 pkgname=libkrun
-pkgver=1.19.1
+pkgver=1.19.2
 pkgrel=1
 pkgdesc="A dynamic library providing Virtualization-based process isolation capabilities"
 url='https://github.com/containers/libkrun'
@@ -12,7 +12,7 @@ license=('Apache-2.0')
 makedepends=('cargo' 'patchelf' 'clang')
 depends=('glibc' 'libgcc' 'zstd' 'bzip2' 'libkrunfw' 'libpipewire' 'virglrenderer')
 source=("https://github.com/containers/libkrun/archive/refs/tags/v$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('303d765096fc28a7c31184a262fa8a9ed759c1ab6f156fe9b037b2d3f4931e25')
+sha256sums=('3a8c3f6b3d6a97dcb34350382368af48b361a8b3c69e98db5779430c1e926c0d')
 
 prepare() {
   cd "$pkgname-$pkgver"
