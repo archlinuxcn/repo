@@ -1,7 +1,7 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=servo
-pkgver=0.2.0
+pkgver=0.3.0
 pkgrel=1
 pkgdesc='Parallel Browser Project: web browser written in Rust'
 arch=(x86_64 i686)
@@ -37,7 +37,7 @@ makedepends=(clang
 options=('!lto') # lto breaks linking
 backup=("etc/profile.d/$pkgname".{csh,sh})
 source=("$pkgname::git+$url.git#tag=v$pkgver")
-sha256sums=('6f4a0a78b8d67bc89953173c7fa8706be4f5200bf9ced2f31985bd87d2040186')
+sha256sums=('155367af370f2bdb8bb8c418c75b82867e3231e2e9b898ed2e16753ee64426f0')
 
 prepare() {
 	cd "$pkgname"
