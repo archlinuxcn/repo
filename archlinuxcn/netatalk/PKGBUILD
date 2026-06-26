@@ -6,7 +6,7 @@
 
 pkgname=netatalk
 pkgver=4.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Open-source implementation of the Apple Filing Protocol'
 url='https://netatalk.io'
 license=('GPL-2.0-or-later')
@@ -69,6 +69,7 @@ build() {
     -Dwith-docs=man \
     -Dwith-dtrace=false \
     -Dwith-init-hooks=false \
+    -Dwith-install-hooks=false \
     -Dwith-lockfile-path=/run \
     -Dwith-overwrite=true \
     -Dwith-spooldir=/var/spool/netatalk
