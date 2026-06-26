@@ -4,18 +4,18 @@
 # Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 pkgname=fcitx5-mozc-ut
-pkgver=3.33.6239
-pkgrel=1
+pkgver=3.34.6239
+pkgrel=2
 pkgdesc='The Open Source edition of Google Japanese Input (Fcitx5 module)'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
-depends=('fcitx5' 'mozc>=3.33.6239' 'qt6-base')
-makedepends=('git' 'python')
-optdepends=('fcitx5-configtool')
-provides=('fcitx5-mozc=3.33.6239')
+depends=('fcitx5' 'mozc>=3.34.6239' 'qt6-base')
+makedepends=('git')
+optdepends=('fcitx5-configtool: configuration applet')
+provides=('fcitx5-mozc=3.34.6239' 'mozc-engine-module')
 conflicts=('fcitx5-mozc')
-source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=767a4de6912092ea16098d8ce14943249e74bad1'
+source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=35898ee6c4f7424ae73000bbd754510d7ab772d0'
         # Bazel module repo (copy of https://bcr.bazel.build/)
         'git+https://github.com/bazelbuild/bazel-central-registry.git#commit=b0cb0e8ec70689252e3b35f109ffa4a32329b900'
         # Bazel binary
@@ -53,7 +53,8 @@ source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=767a4de6912092
         'properties.svg::https://raw.githubusercontent.com/google/material-design-icons/4.0.0/src/action/settings/materialiconsround/24px.svg'
         'tool.png::https://raw.githubusercontent.com/google/material-design-icons/4.0.0/png/action/build/materialicons/48dp/1x/baseline_build_black_48dp.png'
         'tool.svg::https://raw.githubusercontent.com/google/material-design-icons/4.0.0/src/action/build/materialicons/24px.svg')
-noextract=('abseil-cpp-20260107.1.tar.gz'
+noextract=('bazel-9.0.2-linux-x86_64'
+           'abseil-cpp-20260107.1.tar.gz'
            'apple_support.2.4.0.tar.gz'
            'v1.10.0.tar.gz'
            'bazel_features-v1.42.1.tar.gz'
@@ -78,7 +79,7 @@ noextract=('abseil-cpp-20260107.1.tar.gz'
            'rules_swift.3.5.0.tar.gz'
            'tar.bzl-v0.5.1.tar.gz'
            'zlib-1.3.1.tar.gz')
-b2sums=('f855527046777361e432bea52d49f2ddaa25b71cc7c1a33bcc383880acdead8d4a6c11058efac3c43ef1f45a51091853d56ae7f9698c95147542585929494225'
+b2sums=('907420f4311313e2c7621229f63878b97d47a3631efbbbceb62103024435c6bd6d7d2864ed5f8054bd37e03f6e21e0a02f1f41242304eb74b6d41d6e6e26d5e0'
         '0fa68a06d930796445f215ecb16a7dba7bf9cae1004318c766269fd403ba3a44bc46035672949fc3731cf9cf778630291a078fda98ef46dce1f1c27f08b02bbb'
         '83457d476468763e9e94ce6ea3ee7abf9ad123887e24c304067993922f0b4430786da797c27bf5b15acba57a30c5c7472fd0ff285089368b9b51ce085f33c254'
         '1c0814eefb6181a82437128c9d3c08dec0540c2353b8a317204c49b1510b311173897de4a737da6f0cc034bf1b23717dea54f0338e3794f6a56f7292f53937bc'
@@ -168,11 +169,11 @@ build() {
 package() {
     cd mozc-fcitx/src
 
-    install -Dm755 -t "${pkgdir}"/usr/lib/fcitx5                    bazel-bin/unix/fcitx5/fcitx5-mozc.so
-    install -Dm644 -t "${pkgdir}"/usr/share/fcitx5/addon            unix/fcitx5/mozc-addon.conf
-    install -Dm644 -t "${pkgdir}"/usr/share/fcitx5/inputmethod      unix/fcitx5/mozc.conf
+    install -Dm755 bazel-bin/unix/fcitx5/fcitx5-mozc.so "${pkgdir}"/usr/lib/fcitx5/fcitx5-mozc.so
+    install -Dm644 unix/fcitx5/mozc-addon.conf          "${pkgdir}"/usr/share/fcitx5/addon/mozc.conf
+    install -Dm644 unix/fcitx5/mozc.conf                "${pkgdir}"/usr/share/fcitx5/inputmethod/mozc.conf
 
-    install -Dm644 -t "${pkgdir}"/usr/share/licenses/"${pkgname}"   LICENSE
+    install -Dm644 LICENSE                              "${pkgdir}"/usr/share/licenses/"${pkgname}"/LICENSE
 
     for pofile in unix/fcitx5/po/*.po
     do
