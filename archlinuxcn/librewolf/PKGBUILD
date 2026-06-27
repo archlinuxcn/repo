@@ -7,7 +7,7 @@
 pkgname=librewolf
 _pkgname=LibreWolf
 epoch=1
-pkgver=152.0.1_2
+pkgver=152.0.2_1
 _fixedfirefoxver="${pkgver%_*}" # Version of Firefox this LibreWolf version is based on, but the Firefox patch number is always included
 _librewolfver="${pkgver#*_}"
 _firefoxver="${_fixedfirefoxver%.0}" # Removes ".0" from the end. For "136.0.0" this will result in "136.0" but for "136.0.1" won't do anything.
@@ -111,7 +111,7 @@ source=(
   "default192x192.png"
 )
 
-sha256sums=('c399f73e61158937d3484cc5d87f35c8266c3e707f1d42116650c4827bfc57cc'
+sha256sums=('2db000606af1acb50e857a57f744d2ae40325d0d81a6bb6ba648422b9114b625'
             'SKIP'
             '3d6ac59ae9d5ba4c9fe15f95c1338fa68214dec6119f8432336403e3be50f8ae'
             '959c94c68cab8d5a8cff185ddf4dca92e84c18dccc6dc7c8fe11c78549cdc2f1')
