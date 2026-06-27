@@ -1,0 +1,92 @@
+# Maintainer: Johannes Löthberg <johannes@kyriasis.com>
+# Maintainer: Alexander Epaneshnikov <alex19ep@archlinux.org>
+# Contributor: Ivan Shapovalov <intelfx@intelfx.name>
+
+pkgname=matrix-synapse-unstable
+pkgver=1.155.0rc1
+pkgrel=1
+pkgdesc="Matrix reference homeserver"
+url="https://github.com/element-hq/synapse"
+provides+=(matrix-synapse)
+conflicts+=(matrix-synapse)
+arch=('x86_64')
+license=('AGPL-3.0-or-later')
+depends=('gcc-libs' 'glibc' 'libwebp' 'python' 'python-ijson' 'python-jsonschema' 'python-twisted'
+         'python-pyopenssl' 'python-yaml' 'python-pyasn1' 'python-pynacl'
+         'python-bcrypt' 'python-immutabledict'
+         'python-pillow' 'python-pysaml2' 'python-pydantic'
+         'python-systemd' 'python-unpaddedbase64' 'python-canonicaljson'
+         'python-signedjson' 'python-pymacaroons'
+         'python-service-identity' 'python-msgpack'
+         'python-phonenumbers' 'python-prometheus_client'
+         'python-attrs' 'python-netaddr' 'python-sortedcontainers'
+         'python-treq' 'python-idna' 'python-jinja' 'python-matrix-common'
+         'python-bleach' 'python-typing_extensions' 'python-python-multipart' 'systemd' python-pyrsistent python-pyparsing python-maturin)
+makedepends=(git python-build python-installer python-wheel python-poetry-core python-setuptools-rust)
+checkdepends=('python-pip' 'python-authlib' 'python-pyjwt' 'python-lxml' 'python-parameterized'
+              'python-txredisapi' 'python-hiredis' 'postgresql' 'python-pyicu')
+optdepends=('perl: sync_room_to_group.pl'
+            'python-psycopg2: PostgreSQL support'
+            'python-lxml: URL previewing'
+            'python-psutil: metrics'
+            'python-pyjwt: jwt'
+            'python-txredisapi: redis'
+            'python-hiredis'
+            'python-pyicu: Improve user search for international display names'
+            'python-authlib: OpenID SSO support')
+options=(!lto)
+source=("$pkgname::git+https://github.com/element-hq/synapse.git#tag=v$pkgver"
+        "$pkgname-fix-worker-test-race.patch"
+        'generic_worker.yaml.example'
+        'synapse.service'
+        'synapse.target'
+        'synapse-worker@.service'
+        'sysusers-synapse.conf'
+        'tmpfiles-synapse.conf'
+        'override-hardened.conf')
+sha256sums=('0179905cfe78348a013720b4a3db912d0bbcea7e2b78db77c5162eb215028397'
+            '751d0cb122b3c17cb4a2142461ac99bbaec798f1e4b357dd41ec4041e5623d35'
+            'f67334856609997eac26939d77cfc520e78e98d3755543ab730d83a0f362a35e'
+            '74af0bc2f57e5ced1a44f2438922d420cbb7defedae784cac02ef125f276a2ed'
+            '408527271e1250beb20531f140b91201ed464e42f7eb3f47f02967a2ac23a661'
+            'c9657c201ad89985c8c915bfa0ea7517a412071736b4d9545d8f6474fddc44e2'
+            '574175c27a4f07d4ce6a676d86b697c82c36b796442d0955881da588b6f4bb65'
+            '65588c8c64dfb84cab831cd8d028a295d753cf7322dd63053e8488466047b45f'
+            '086a7e95235afac128df9d2ea981e3c50d08e08c9132087063bb354bc9063d93')
+backup=('etc/synapse/log_config.yaml')
+
+prepare() {
+	cd $pkgname
+
+	# Required to make synapse work with lxml 6.0
+	git cherry-pick --no-commit 4555f61db5d6caf3cbbe03dfd3051e72c1b9c221
+
+	# Required to make synapse work with prometheus_client 0.24
+	git cherry-pick --no-commit 8b36740bad82d421b4e93f2b78611eb6958c36e9
+
+	# allow any poetry-core to be used
+	sed 's/poetry-core>=2.0.0,<=2.1.3/poetry-core>=1.1.0/' -i pyproject.toml
+	sed 's/setuptools_rust>=1.3,<=1.11.1/setuptools_rust>=1.3.0/' -i pyproject.toml
+
+  patch -Np1 < ../$pkgname-fix-worker-test-race.patch
+}
+
+build() {
+	cd $pkgname
+	python -m build --wheel --no-isolation
+}
+
+package() {
+	cd $pkgname
+	python -m installer --destdir="$pkgdir" dist/*.whl
+
+	install -vdm755 -o 198 -g 198 "$pkgdir"/etc/synapse
+	install -vDm644 contrib/systemd/log_config.yaml "$pkgdir"/etc/synapse/log_config.yaml
+	install -vDm644 "$srcdir"/generic_worker.yaml.example "$pkgdir"/etc/synapse/workers/generic_worker.yaml.example
+
+	install -vDm644 "$srcdir/override-hardened.conf" -t "$pkgdir/usr/lib/systemd/system/synapse.service.d"
+	install -vDm644 "$srcdir/override-hardened.conf" -t "$pkgdir/usr/lib/systemd/system/synapse-worker@.service.d"
+	install -vDm644 -t "$pkgdir"/usr/lib/systemd/system/ "$srcdir"/synapse{,-worker@}.service "$srcdir"/synapse.target
+	install -vDm644 "$srcdir"/sysusers-synapse.conf "$pkgdir"/usr/lib/sysusers.d/synapse.conf
+	install -vDm644 "$srcdir"/tmpfiles-synapse.conf "$pkgdir"/usr/lib/tmpfiles.d/synapse.conf
+}
