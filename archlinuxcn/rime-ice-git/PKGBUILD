@@ -15,7 +15,7 @@ pkgname=(
     ${_pkgbase}-double-pinyin-jiajia-git
 )
 
-pkgver=r971.08e5594
+pkgver=r976.80d213e
 pkgrel=1
 pkgdesc="Rime 配置：雾凇拼音 | 长期维护的简体词库"
 arch=("any")
@@ -202,7 +202,7 @@ _patch_algebra() {
     for _f in "${_schemas_to_patch[@]}"; do
         _patch_f="${_install_base}/${_f}.schema.yaml"
         if [ -f "${_patch_f}" ]; then
-            sed -i "{
+            sed -i "/^\s*algebra:/,/^[^[:space:]]/ {
                 s/^\(\s*\)\(__include.*\)$/\1# \2/;          # 注释掉未注释的行
                 s/^\(\s*\)#\s*\([^#]*${_algebra}.*\)$/\1\2/; # 启用当前的方案
             }" "${_patch_f}"
