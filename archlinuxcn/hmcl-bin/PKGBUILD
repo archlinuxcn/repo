@@ -9,7 +9,7 @@
 # Contributor: Bot-wxt1221 <3264117476@qq.com>
 
 pkgname=hmcl-bin
-pkgver=3.15.1
+pkgver=3.15.2
 pkgrel=1
 install=hmcl-bin.install
 pkgdesc="A Minecraft Launcher which is multi-functional, cross-platform and popular."
@@ -30,7 +30,7 @@ source=("hmcl.desktop"
         "hmcl-bin.install")
 sha256sums=('9a561081f8f3ece3da114afd4f6d90565ca0e04716eef4ea88c6b4306566ae9b'
             'fe8c663bd3aaee7c70dff4da75781a078993c665e5492883d708e46658e6c0ec'
-            '52feb0dd71324a8aac2829995668839067e67ab7ad1dfbe9c05998309cf49afe'
+            'ad3f91aee2cccff0d395848e32fe03e9908e56ddfa8aacb1e36bfc79ae1749d3'
             '44c6ac6aa2c55c35826f873dfd3dbf11cb7675f2e88040c64bdea861426aa861'
             '592f4c5bcf636250e6d4cad6b6a45bb49fd01cb346072b1dc9b7ff703fd26fce'
             '91a67409bb46a5105eb713956e4061621b7a4542ef0de52952287a995993c6d0'
