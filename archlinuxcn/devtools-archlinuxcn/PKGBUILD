@@ -5,8 +5,8 @@
 _pkgname=devtools
 pkgname=devtools-archlinuxcn
 epoch=1
-pkgver=1.5.0
-pkgrel=2
+pkgver=1.5.1
+pkgrel=1
 _tag=$pkgver-archlinuxcn1
 _upstream_pkgrel=1
 pkgdesc='Tools for Arch Linux package maintainers, archlinuxcn fork'
@@ -55,9 +55,9 @@ provides=("devtools=$pkgver-$pkgrel")
 conflicts=("devtools")
 source=("$pkgname::git+https://github.com/archlinuxcn/devtools.git#tag=$_tag"
         "ssh_allowed_signers")
-sha256sums=('ad28c6604539a2f52779a379e234f2aa4e8df109c0e9c99d0806c2c2fdf78872'
+sha256sums=('4ae7139a2d1813301fdf7cf8c16e5ef8183505194100f9ad47290a8f948c3df2'
             'b83e8c654e3af93d6bb173db51d59f2f422fc5c777efe4253b26cfbaba6f0943')
-b2sums=('1372f345809edb9a16ffa8f7e2ec1594fbb86121a506e82908b17a4253787f287c607ef5df4703c94b9296557c0b665cc3bbcd7248cd40709ff9c891440d8a49'
+b2sums=('71cb07fcc0985003083aab3a6746d3d9be14589eda0c67ea201d67707cbe7d280eb758fc27c2e1a931a5b29cfb96d75af9cf9ce45d80478f7ab9650406d1dc66'
         '6c9fab6619bcc3ab0d1bf0944a6dc53296caa1a2dccb0cf833957c5820f3f47bae44d26ed85edf294b4efffb18b59773cfb7f89ea961c582556b4a28ee1f9d0c')
 
 # XXX: move to verify() when devtools supports it
