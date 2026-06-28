@@ -34,6 +34,6 @@ check() {
 
 package() {
   cd "${pkgname}-${pkgver}"
-  install target/release/nix-user-chroot -t "${pkgdir}/usr/bin/"
-  install LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+  install -Dm755 target/release/nix-user-chroot -t "${pkgdir}/usr/bin/"
+  install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
