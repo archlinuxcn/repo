@@ -1,6 +1,6 @@
 # Maintainer: Qi Meng <qi_meng0206@outlook.com>
 pkgname=7zip-zstd
-pkgver=26.01
+pkgver=26.02
 pkgrel=1
 _pkgver=1.5.7-R1
 _srcname="7-Zip-zstd-${pkgver}-v${_pkgver}"
@@ -14,7 +14,7 @@ provides=('p7zip' '7zip')
 conflicts=('p7zip' '7zip')
 replaces=('p7zip')
 source=("${url}/archive/refs/tags/v${pkgver}-v${_pkgver}.tar.gz")
-sha256sums=('9be0a1c58e493571f4bf99911feb53d3a557b147fb93f84621785a33e6eda5e3')
+sha256sums=('bf226fe3ca98383bc085ff0215758625d488b02da229b4df0ac5962f05bc97b0')
 
 prepare() {
   cd "$_srcname"
