@@ -11,6 +11,7 @@ license=('Apache-2.0')
 depends=('glibc' 'libgcc' 'sqlite')
 makedepends=('cargo')
 checkdepends=('git')
+options=("!lto")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('59c3864751715913c040732d216bf07114fb803158ebff8fe44ad7b23c3f5fc2')
 
