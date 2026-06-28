@@ -18,9 +18,8 @@ url="https://$_mainpkgname.org"
 license=('GPL-2.0-or-later')
 depends=(
 	# Based on the repo package
-	'bluez-libs' 'bzip2' 'enet' 'gcc-libs' 'glibc' 'hidapi' 'libavcodec.so'
-	'libavformat.so' 'libavutil.so' 'libcurl.so' 'libfmt.so' 'libgl'
-	'libsfml-network.so' 'libsfml-system.so' 'libspng.so' 'libswscale.so'
+	'bluez-libs' 'bzip2' 'enet' 'gcc-libs' 'glibc' 'hidapi' 'libcurl.so' 'libfmt.so' 'libgl'
+	'libsfml-network.so' 'libsfml-system.so' 'libspng.so' 'libswscale.so' 'ffmpeg'
 	'libusb-1.0.so' 'libx11' 'libxi' 'libxrandr' 'lz4' 'lzo' 'mbedtls2' 'pugixml'
 	'sdl3' 'sfml' 'speexdsp' 'xxhash' 'xz' 'zstd'
 	# Additional dependencies to replace vendored deps
