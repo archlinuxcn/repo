@@ -3,7 +3,7 @@
 
 pkgname=nix-user-chroot
 pkgver=2.1.1
-pkgrel=0.1
+pkgrel=1
 pkgdesc="Run and install nix as user without root permissions."
 url="https://github.com/nix-community/nix-user-chroot"
 arch=(x86_64)
@@ -11,7 +11,7 @@ license=(MIT)
 makedepends=(cargo)
 checkdepends=(busybox)
 source=("${url}/archive/refs/tags/${pkgver}.tar.gz")
-b2sums=(c50aec043dfd2ebdbc0b859893a721645793a381fd5b79fb29d0c501991b661c2726431ddf82566fbc2da90b380f23c49f35e9d2d981d409895d814692fb2aa2)
+b2sums=('a350fad114a5587a158163c933b7132ff8d09a57ea9b7a43714bd13507e0eaefa1035a0b0f5df92d2362cf918132f69e8d6075996ef18c6f0e4d09a56207a496')
 
 build() {
   cd "${pkgname}-${pkgver}"
