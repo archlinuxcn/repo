@@ -36,7 +36,7 @@ optdepends=('perl: sync_room_to_group.pl'
             'python-authlib: OpenID SSO support')
 options=(!lto)
 source=("$pkgname::git+https://github.com/element-hq/synapse.git#tag=v$pkgver"
-        "$pkgname-fix-worker-test-race.patch"
+        "matrix-synapse-fix-worker-test-race.patch"
         'generic_worker.yaml.example'
         'synapse.service'
         'synapse.target'

@@ -1,0 +1,34 @@
+# To configure workers please refer to:
+# https://github.com/matrix-org/synapse/blob/master/docs/workers.md
+
+# The type of the worker. A generic_worker can handle a part of the
+# client/federation API requests, taking some load from the master
+# process.
+# If used, the reverse proxy has to be configured accordingly.
+worker_app: synapse.app.generic_worker
+
+# The name of the worker. Must be unique among all workers.
+worker_name: worker1
+
+# The replication listener on the main synapse process.
+worker_replication_host: '127.0.0.1'
+worker_replication_http_port: 9093
+
+
+worker_listeners:
+ - type: http
+   bind_address: '127.0.0.1'
+   port: 8083
+
+# Uncomment the following to make this worker respect the
+# X-Forwarded-For header set by your reverse proxy.
+#   x_forwarded: true
+
+# Because a generic_worker handles client and federation API requests
+# it needs the client and federation resources.
+   resources:
+     - names:
+       - client
+       - federation
+
+worker_log_config: /etc/synapse/log_config.yaml

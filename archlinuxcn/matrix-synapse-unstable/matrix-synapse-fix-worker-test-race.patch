@@ -1,0 +1,25 @@
+diff --git i/tests/server.py w/tests/server.py
+index 30337f3e38..af15160c78 100644
+--- i/tests/server.py
++++ w/tests/server.py
+@@ -1157,9 +1157,17 @@ def setup_test_homeserver(
+ 
+             database = DatabaseConnectionConfig("master", database_config)
+             config.database.databases = [database]
+-            prepare_database(
+-                PREPPED_SQLITE_DB_CONN, create_engine(database_config), config
+-            )
++            # Temporarily clear worker_app for template preparation, as the
++            # template is shared across all tests (including worker tests).
++            # Workers cannot initialize an empty database.
++            original_worker_app = config.worker.worker_app
++            config.worker.worker_app = None
++            try:
++                prepare_database(
++                    PREPPED_SQLITE_DB_CONN, create_engine(database_config), config
++                )
++            finally:
++                config.worker.worker_app = original_worker_app
+ 
+         database_config["_TEST_PREPPED_CONN"] = PREPPED_SQLITE_DB_CONN
+ 

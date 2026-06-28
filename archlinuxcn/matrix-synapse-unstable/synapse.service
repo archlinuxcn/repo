@@ -1,0 +1,23 @@
+[Unit]
+Description=Synapse Matrix homeserver (master)
+After=network-online.target
+Wants=network-online.target
+PartOf=synapse.target
+ReloadPropagatedFrom=synapse.target
+
+[Service]
+Type=notify
+User=synapse
+Group=synapse
+SyslogIdentifier=synapse
+Environment=LANG=en_US.UTF-8
+WorkingDirectory=/var/lib/synapse
+ExecStart=/usr/bin/python3 -m synapse.app.homeserver --config-path=/etc/synapse/homeserver.yaml
+ExecReload=/usr/bin/kill -HUP $MAINPID
+ExecStop=/usr/bin/synctl stop /etc/synapse/homeserver.yaml
+EnvironmentFile=-/etc/default/synapse
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target synapse.target

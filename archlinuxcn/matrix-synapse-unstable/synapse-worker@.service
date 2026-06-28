@@ -1,0 +1,22 @@
+[Unit]
+Description=Synapse Matrix homeserver (%i)
+AssertPathExists=/etc/synapse/workers/%i.yaml
+PartOf=synapse.target
+ReloadPropagatedFrom=synapse.target
+After=synapse.service
+
+[Service]
+Type=notify
+User=synapse
+Group=synapse
+SyslogIdentifier=synapse-%i
+Environment=LANG=en_US.UTF-8
+WorkingDirectory=/var/lib/synapse
+ExecStart=/usr/bin/python3 -m synapse.app.generic_worker --config-path=/etc/synapse/homeserver.yaml --config-path=/etc/synapse/workers/%i.yaml
+ExecReload=/bin/kill -HUP $MAINPID
+EnvironmentFile=-/etc/default/synapse
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=synapse.target
