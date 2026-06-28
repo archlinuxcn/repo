@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=7.0.13
+pkgver=7.1.2
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -43,9 +43,9 @@ source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${_basever}-gnu/
         "http://linux-libre.fsfla.org/pub/linux-libre/releases/${pkgver}-gnu/patch-${_basever}-gnu-${pkgver}-gnu.bz2"{,.sign}
         'https://repo.parabola.nu/other/linux-libre/logos/logo_linux_'{clut224.ppm,vga16.ppm,mono.pbm}{,.sig})
 source_x86_64=('config.x86_64')
-sha256sums=('9128326b995ab707f2fbf9908cdb0ec5dc539603154f71229bb9ba7e5ea87a66'
+sha256sums=('079be5a42b106bce2d53a6c746c381a678df1c289a432682cc05e5e88ddc347a'
             'SKIP'
-            '1d02d0d94ebf1bee4fa50784678c0e74a7eb75fd1cbf4c4c4154fb5bb58b3cb2'
+            '111b3c1c11e49e06a24736dc1daf768f11ae3d25c67a3baf6616fd48a9513802'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -53,10 +53,10 @@ sha256sums=('9128326b995ab707f2fbf9908cdb0ec5dc539603154f71229bb9ba7e5ea87a66'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP')
-sha256sums_x86_64=('e817cca88a74a0b07d028cc7d18bf407677ce7e20ca701b389b9ddb3107eae31')
-b2sums=('953d77c902d1518b0b478e38359c5fc383e61592536421743d860800cd3195258052f4c5ccac5d3b8a60625e4c9fe81f37c3d0c67549699813609de2cf3dc008'
+sha256sums_x86_64=('4de69b94d96fbe807409e0396ca6494a398a7b704918bb7d23595131ca199194')
+b2sums=('90d77b4eed1538a549c7f5d72f9ccc4523ebf9bfe6fb6bdc25181832eeaf0249d67a5cc83aa79f8d4ed155c988ebce81bc2cc06487f8c718893441043214762e'
         'SKIP'
-        '9ab0e78335c92a2ea1c2a257708f0c2836b42333fa48c9400eedebfd57d22915e9afe45a7358abbf0f04a13ea984fa3a96cb3d969ec6445975018601154a7f74'
+        '5b8b4af77240806135d523768fe8f4032bf06ac83d69177f1f7753fd4684306c104d6ee03bab1b6c76b04bd1881c13cdeffc88786fba84712ac027e42079d3a2'
         'SKIP'
         '73fee2ae5cb1ffd3e6584e56da86a8b1ff6c713aae54d77c0dab113890fc673dc5f300eb9ed93fb367b045ece8fa80304ff277fe61665eccf7b7ce24f0c045eb'
         'SKIP'
@@ -64,7 +64,7 @@ b2sums=('953d77c902d1518b0b478e38359c5fc383e61592536421743d860800cd3195258052f4c
         'SKIP'
         '580911af9431c066bbc072fd22d5e2ef65f12d8358cec5ff5a4f1b7deebb86cef6b5c1ad631f42350af72c51d44d2093c71f761234fb224a8b9dbb3b64b8201d'
         'SKIP')
-b2sums_x86_64=('9f90b2ae005730c57523815c06f3f23c10725ab48d93ea327b793cfe4923b3b8c2effabdacde34a464d997e2dd7081708f2a7f8d37044c05b46f5ad316ec493f')
+b2sums_x86_64=('5b83c9813f7fcd4ef308a8e9bc6f9f12436f10b349b9209166cbb3cd5c2a3d0e1b3c6284fbb640b2753512bcd3e88a09a6c2d2024c3241c9541d61cb95ff18ef')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
