@@ -88,6 +88,8 @@ source=(
   # Mutter tags use SSH signatures which makepkg doesn't understand
   "git+$url.git#tag=${pkgver/[a-z]/.&}"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
+  pango.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5102.patch
+
   5137.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5137.patch
   5116.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5116.patch
   5096.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5096.patch
@@ -113,6 +115,9 @@ prepare() {
   #git apply ../5131.patch
   #git apply ../5137.patch
   git apply ../5133.patch
+
+  git apply ../5102.patch
+
   patch -Np1 <../egl.patch
 }
 
