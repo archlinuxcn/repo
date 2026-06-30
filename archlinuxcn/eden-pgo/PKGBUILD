@@ -14,7 +14,7 @@ license=('GPL-3.0-or-later')
 depends=('enet' 'fmt' 'opus' 'lz4' 'zlib' 'zstd' 'libusb' 'openssl' 'glibc'
 	 'qt6-webengine' 'brotli' 'hicolor-icon-theme' 'qt6-base' 'sdl2'
 	 'ffmpeg' 'boost-libs' 'quazip-qt6' 'cubeb' 'qt6-charts'
-	 'qt6-multimedia' 'libgcc' 'libstdc++' )
+	 'qt6-multimedia' 'libgcc' 'libstdc++' 'cpp-httplib' )
 makedepends=('cmake' 'catch2' 'boost' 'wireless_tools' 'vulkan-headers' 'vulkan-utility-libraries'
 	     'nlohmann-json' 'ninja' 'gamemode' 'renderdoc'
 	     'qt6-tools' 'nasm' 'opencl-headers' 'clang' 'lld')
@@ -50,7 +50,6 @@ build() {
 		-DENABLE_QT_TRANSLATION=ON
 		-DYUZU_USE_QT_MULTIMEDIA=ON
 		-DYUZU_USE_QT_WEB_ENGINE=ON
-		-Dhttplib_FORCE_BUNDLED=ON
 		-DYUZU_TESTS=OFF
 		-DDYNARMIC_TESTS=OFF 
 		-DBUILD_TESTING=OFF 
