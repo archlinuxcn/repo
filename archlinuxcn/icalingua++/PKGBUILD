@@ -2,7 +2,7 @@
 
 pkgname=icalingua++
 _pkgname=icalingua
-pkgver=2.12.28
+pkgver=2.26.0
 pkgrel=1
 pkgdesc='A branch of deleted Icalingua, with limited support'
 license=('AGPL-3.0-or-later')
@@ -20,8 +20,8 @@ source_x86_64=("app-x86_64-${pkgver}.asar::${url}/releases/download/v${pkgver//_
 source_aarch64=("app-aarch64-${pkgver}.asar::${url}/releases/download/v${pkgver//_/-}/app-arm64.asar")
 sha256sums=('43da1c99b7a6aee974c20da3bcf925b660dff4ba44a447c86066c84c8bc95fbd'
             '33a02b61af9cd48abd332b6a13964c939649c7ec089bc1a1aca4014bbb8785d2')
-sha256sums_aarch64=('b3454448e567f600366b4aedb6a93e1b52fd8e256f0160899b45b6e194315766')
-sha256sums_x86_64=('94d97340f0d75d536e69c89cd41623580e6c18b44b95c19545aa873e6677658b')
+sha256sums_aarch64=('b1f88322bc257c0a2fda3dc385001c70f714d34ec4cbd0ca0e71c4faaea640a6')
+sha256sums_x86_64=('18bb40c9c3ecfdc50e06246567b7ed59982a0a11b854ca0188ecc9c289553f7f')
 
 prepare() {
 	asar ef "app-${CARCH}-${pkgver}.asar" "dist/electron/static/icons/512x512.png"
