@@ -64,14 +64,13 @@ package_python-rapidocr() {
         "${_runtime_deps[@]}"
         'python-rapidocr-models'
     )
-    optdepends=(
-        'python-onnxruntime: ONNX runtime (default)'
-        'python-openvino: OpenVINO runtime'
-        'python-paddlepaddle: PaddlePaddle runtime'
-        'python-tensorflow: TensorRT runtime'
-        'python-mnn: MNN runtime'
-        'python-pytorch: PyTorch runtime'
-    )
+    # optdepends=(
+    #     'python-openvino: OpenVINO runtime'
+    #     'python-paddlepaddle: PaddlePaddle runtime'
+    #     'python-tensorflow: TensorRT runtime'
+    #     'python-mnn: MNN runtime'
+    #     'python-pytorch: PyTorch runtime'
+    # )
 
     cd "${srcdir}/RapidOCR-${pkgver}/python"
     python -m installer --destdir="$pkgdir" dist/*.whl
@@ -84,6 +83,7 @@ package_python-rapidocr-models-onnx() {
     pkgdesc='Default ONNX models for python-rapidocr'
     arch=('any')
     license=('Apache-2.0')
+    depends=('python-onnxruntime')
     provides=('python-rapidocr-models')
 
     cd "${srcdir}/RapidOCR-${pkgver}/python"
