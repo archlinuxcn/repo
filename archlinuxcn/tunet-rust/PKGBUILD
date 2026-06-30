@@ -16,7 +16,7 @@ options=('!lto')
 prepare() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --locked --target $(rustc --print host-tuple)
+	cargo fetch --target $(rustc --print host-tuple) # --locked
 }
 
 build() {
