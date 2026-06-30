@@ -95,6 +95,7 @@ source=(
   5096.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5096.patch
   5131.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5131.patch
   5079.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5079.patch
+  4921.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4921.patch
   egl.patch
 )
 b2sums=('2987b5e207f0a12e94b035d5b913b8a76bc291be41a71669e977ead0f93cfbb3219c97aeb2475a97906e989353eb309abb2b80f683cc41074a042b81467e3a8c'
@@ -118,6 +119,9 @@ prepare() {
   git apply ../5079.patch
 
   git apply ../pango.patch
+
+  echo "4921"
+  git apply ../4921.patch
 
   patch -Np1 <../egl.patch
 }
