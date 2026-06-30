@@ -33,7 +33,7 @@ prepare() {
 }
 
 build() {
-	set -x
+	# set -x
 	cd "$srcdir"
     # taken from https://github.com/Eden-CI/Workflow/blob/fa45c6ee9191105d36859e07cc0719e7c1bdf67b/.ci/build/targets.sh#L102
 	export CXXFLAGS="${CXXFLAGS} -fprofile-use=$(pwd)/eden.profdata -Wno-backend-plugin -Wno-profile-instr-unprofiled -Wno-profile-instr-out-of-date"
@@ -54,6 +54,9 @@ build() {
 		-DDYNARMIC_TESTS=OFF 
 		-DBUILD_TESTING=OFF 
 		-Wno-dev
+
+		# FIXME: compile failed on system's fmt 12.2, use bundled as a workaround
+		-Dfmt_FORCE_BUNDLED=ON
 
 		# use clang because PGO profile data is clang format
 		-DCMAKE_C_COMPILER="clang" 
