@@ -174,10 +174,10 @@ else
 fi
 
 pkgbase="linux-$_pkgsuffix"
-_major=7.1
+_major=7.2
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc7
+_rcver=rc1
 pkgver=${_major}.${_rcver}
 _tagrel=2
 pkgrel=1
@@ -248,12 +248,13 @@ fi
 # ZFS support
 if [ "$_build_zfs" = "yes" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=6330a45b06d20125de679aae5f63ba14082671ef")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=c681af76c5a6a15caada25eb13090e41218c7831")
 fi
 
 
 if [ "$_build_nvidia_open" = "yes" ]; then
-    source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz")
+    source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
+             "${_patchsource}/misc/nvidia/0001-make-Add-support-for-7.2-Kernel.patch")
 fi
 
 # Use generated AutoFDO Profile
@@ -815,7 +816,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('0639bf941749d1d956e2afa1f8075d7bbafa0262ab86f11f3d90181a5884cada9980736b6e82f3718f146767de77ba3eac3c3202fe5086494109277e63e6bc26'
+b2sums=('78e0b19f3fed607b345bdf45dadc25d7a157e4309d5024d6f4c117bda1b8209cbcc0294f23a14b4b670331af84e19194a2bde4e973db99f6374193ee17043dab'
         'SKIP'
-        '74ec907cbafb6dc0971ceb700d2e39ace932474aac92d7b73a39df30cbb673070e42b8770ce6c52570275c2310bc374f082363a6ba6cad443998da5a2ed74cd0'
+        '11e2c34da05a56c1b82eba77e45fa2312918d258d9bc2e6b4dfaecf608a80af0fb1cbedc5332de92a69a8e244913c2adb49ddcd924e76e29828bcca40065dc18'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')

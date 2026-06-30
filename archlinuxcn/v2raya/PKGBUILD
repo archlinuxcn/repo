@@ -3,7 +3,7 @@
 
 pkgname=v2raya
 _pkgname=v2rayA
-pkgver=2.4.4
+pkgver=2.4.6
 epoch=1
 pkgrel=1
 pkgdesc="A web GUI client of Project V which supports VMess, VLESS, SS, SSR, Trojan and Pingtunnel protocols"
@@ -15,7 +15,7 @@ makedepends=('git' 'go' 'nodejs-lts-jod' 'yarn')
 backup=("etc/default/v2raya")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
         "v2raya.default")
-b2sums=('ade9174cc1b58771cca5068aee1b2e9002c9431f8a42e67e9d487d3c7e5cb72fafa59f28cee3c5f0989a0a8384cf0f52d595b31adc656547bc8e4d27110ef160'
+b2sums=('e1bea46f820682784ff0d3d7c7715b38704332e857316e87e20848138627876d2fe441f3ec4e0b3926c42f71293d6f91f2e53bf3809061b09fe401c767db4c1c'
         '3a7be361041f2eda3fe36bb69268c316caf307bf3ec4f5d7b05bd994dd27032b2fc812d7776a669db471dda61594cc3f4fb98570e1abfe29758e1f4b8aea94b6')
 
 build() {
