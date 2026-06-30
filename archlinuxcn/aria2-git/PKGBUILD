@@ -30,6 +30,10 @@ pkgver() {
 
 prepare() {
 	cd "${_pkgname}/"
+
+	# Fix build against Nettle 4.0
+	git cherry-pick -n be1caa2db4912df28d4d9236beb64e7a17b8cdfe
+
 	autoreconf -i
 }
 
