@@ -94,7 +94,6 @@ source=(
   5116.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5116.patch
   5096.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5096.patch
   5131.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5131.patch
-  5079.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5079.patch
   4921.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4921.patch
   egl.patch
 )
@@ -116,7 +115,6 @@ prepare() {
 
   git apply ../5131.patch
   git apply ../5137.patch
-  git apply ../5079.patch
 
   git apply ../pango.patch
 
