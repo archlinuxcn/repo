@@ -2,8 +2,8 @@
 
 pkgname=odict-bin
 _pkgname="${pkgname%-bin}"
-pkgver=3.2.2
-pkgrel=2
+pkgver=3.3.0
+pkgrel=1
 pkgdesc="Lightning-fast dictionary file format and toolchain"
 arch=('x86_64')
 url="https://github.com/TheOpenDictionary/odict"
@@ -13,7 +13,7 @@ provides=("$_pkgname")
 conflicts=("$_pkgname")
 _tarball_name="$_pkgname-cli-x86_64-unknown-linux-gnu"
 source=("$_tarball_name-$pkgver.tar.xz::https://github.com/TheOpenDictionary/odict/releases/download/cli%2Fv$pkgver/$_tarball_name.tar.xz")
-sha256sums=('e6c5f0329c03e9ff8e68b7982a92eff4a4b3ad863cc0b00f3960cac458d4c2c5')
+sha256sums=('654ef25768a79784612c8c29ed06f77090b696dbb69b77435cfbd0f0c1cb99b2')
 
 check() {
 	cd "$_tarball_name"
