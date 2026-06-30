@@ -2,8 +2,8 @@
 # Contributor: William Turner <willtur.will@gmail.com>
 
 pkgname=afdko
-pkgver=4.0.3
-pkgrel=3
+pkgver=5.0.1
+pkgrel=1
 pkgdesc='Adobe Font Development Kit for OpenType'
 arch=(x86_64)
 url="https://github.com/adobe-type-tools/$pkgname"
@@ -27,27 +27,21 @@ depends=(gcc-libs
          python
          "${_pydeps[@]/#/python-}")
 makedepends=(cmake
+             cython
              git # Upstream Issue: https://github.com/adobe-type-tools/afdko/issues/1407
              ninja
              python-{build,installer,wheel}
-             python-scikit-build
+             python-scikit-build-core
              python-setuptools-scm)
 checkdepends=(python-pytest)
 conflicts=(spot-client)
 _archive="$pkgname-$pkgver"
 source=("$url/releases/download/$pkgver/$_archive.tar.gz")
-sha256sums=('5feed7c2468e25b25fce0479c04af07f4ed2680bc9251bb4c4aef9ec2fba5720')
-
-prepare () {
-	cd "$_archive"
-	sed -i '/"wheel",/d;/"cmake",/d;/"ninja"/d;s/"scikit-build",/"scikit-build"/' pyproject.toml
-	sed -i -e 's/==/>=/g;s/,<=[0-9.]\+//' requirements.txt
-	sed -i -E "/'(wheel|cmake|ninja)',?$/d" setup.py
-}
+sha256sums=('083b504a1cd865e8bfbb42134a34318ce42ef5130daebfc5b0e2f2fb444326c5')
 
 build() {
 	cd "$_archive"
-	CMAKE_POLICY_VERSION_MINIMUM=3.5 python -m build -wn
+	python -m build -wn
 }
 
 check() {
