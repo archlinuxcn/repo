@@ -1,12 +1,13 @@
 pkgname=pandoc-bin
 pkgver=3.10
-pkgrel=1
+pkgrel=2
 pkgdesc="Conversion between documentation formats"
 url="https://pandoc.org"
 license=("GPL-2.0-or-later")
 arch=('x86_64' 'aarch64')
 conflicts=("pandoc-cli")
 provides=("pandoc=$pkgver" "pandoc-cli=$pkgver")
+options=(!debug !strip)
 optdepends=(
   'pandoc-crossref: for numbering figures, equations, tables and cross-references to them with pandoc-crossref filter'
   'texlive-context: for pdf output using context engine'
