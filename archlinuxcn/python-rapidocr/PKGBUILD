@@ -61,6 +61,7 @@ check() {
 package_python-rapidocr() {
     pkgdesc='Awesome OCR toolkit (without models)'
     depends=(
+        'python'
         "${_runtime_deps[@]}"
         'python-rapidocr-models'
     )
