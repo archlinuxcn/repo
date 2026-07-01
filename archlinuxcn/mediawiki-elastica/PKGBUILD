@@ -1,14 +1,14 @@
 _name=Elastica
 pkgname=mediawiki-elastica
-pkgver=20260213
+pkgver=20260701
 pkgrel=1
 pkgdesc="MediaWiki extension that provides base elasticsearch functionality"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:Elastica"
 license=(''GPL'')
-depends=('mediawiki>=1.45' 'mediawiki<1.46')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/Elastica-REL1_45-95694d8.tar.gz")
-sha256sums=('03e414e94f78ac85879338cb7733d38f1fbdfb0286e2dcef7e5bcd3a56c8228a')
+depends=('mediawiki>=1.46' 'mediawiki<1.47')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/Elastica-REL1_46-f35c8d9.tar.gz")
+sha256sums=('7e1fff71aca8388c9836e856d7d377fb03af48116d388e626bf2678c9d8e5927')
 
 build() {
   true
