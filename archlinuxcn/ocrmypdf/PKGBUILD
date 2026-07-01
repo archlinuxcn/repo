@@ -6,7 +6,7 @@
 # Contributor: Integral <integral@member.fsf.org>
 
 pkgname=ocrmypdf
-pkgver=17.7.0
+pkgver=17.8.0
 pkgrel=1
 pkgdesc="A tool to add an OCR text layer to scanned PDF files, allowing them to be searched"
 url="https://github.com/${pkgname}/OCRmyPDF"
@@ -36,7 +36,7 @@ optdepends=(
 	'unpaper: support for cleaning up pagaes before OCR'
 )
 source=("${url}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('c0a351910e8fee09bdbfee6cc7ba0299b9d561bba42afbbf4df29edcc7d58bc6')
+sha256sums=('c36d9e53c93ef3c3fd41f283cffce20626ee39a7cc0ff4c2bf484a03634a114c')
 install="${pkgname}.install"
 
 build() {
