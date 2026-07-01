@@ -1,14 +1,14 @@
 _name=RevisionSlider
 pkgname=mediawiki-revisionslider
-pkgver=20260213
+pkgver=20260701
 pkgrel=1
 pkgdesc="MediaWiki extension that adds a slider interface to the diff view allowing to easily move between revisions"
 arch=(any)
 url="https://www.mediawiki.org/wiki/Extension:RevisionSlider"
 license=(''GPL'')
-depends=('mediawiki>=1.45' 'mediawiki<1.46')
-source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/RevisionSlider-REL1_45-837fe84.tar.gz")
-sha256sums=('3dc461c3dc4baa44b8a8850a0eeb840dbe7e5925f43fcc99a5aeeb87f6ed78c7')
+depends=('mediawiki>=1.46' 'mediawiki<1.47')
+source=("$_name-$pkgver-$pkgrel.tar.gz::https://extdist.wmflabs.org/dist/extensions/RevisionSlider-REL1_46-431365f.tar.gz")
+sha256sums=('ffe7fd02a3ca60038ad4ea7f72434facb94cc4afee718f51897e0b8360e89182')
 
 build() {
   true
