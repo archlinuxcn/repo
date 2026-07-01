@@ -58,12 +58,12 @@ build() {
     cargo build --locked --release -p yaak-cli
 }
 
-# check() {
-#     cd "yaak-${pkgname}-${pkgver}"
-#     _setup_env
+check() {
+    cd "yaak-${pkgname}-${pkgver}"
+    _setup_env
 
-#     cargo test --frozen -p yaak-cli
-# }
+    cargo test --frozen -p yaak-cli
+}
 
 package() {
     cd "yaak-${pkgname}-${pkgver}"
