@@ -7,7 +7,7 @@
 # Contributor : Patrick McCarty  <pnorcks at gmail dot com>
 
 pkgname=osc
-pkgver=1.27.1
+pkgver=1.27.2
 pkgrel=1
 pkgdesc="Command line client for the openSUSE Build Service"
 arch=('any')
@@ -23,7 +23,7 @@ optdepends=('obs-build: required to run local builds'
 	'python-distro: Linux OS platform information API'
 )
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('8667597ebfc52e1ee0eb50d4fd5d6afc40b6001ea11c8b7ff252f9d3f27f5912')
+sha256sums=('0b4da761f3788a6f457955d7ff62aad4c49facccfe93be1cde5b6f61f70acb0d')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
