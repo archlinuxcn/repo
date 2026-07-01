@@ -17,7 +17,7 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname=mozc-ut
-pkgver=3.34.6239.20260626
+pkgver=3.34.6239.20260701
 pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
@@ -30,7 +30,7 @@ optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'emacs-mozc: Emacs integration')
 provides=('mozc=3.34.6239')
 conflicts=('mozc')
-source=('git+https://github.com/google/mozc.git#commit=76887c679e1e4f156102e4bc62ea9cf9174678a3'
+source=('git+https://github.com/google/mozc.git#commit=04733c92daf891a3f3d67ba85c69fa9cc64032ba'
         # UT dictionary
         'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=15c1c64502b43e31d328012860376c03c3eaf633'
         'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=08e033f4558b7a0b03d8ad6920216d9473f15627'
@@ -74,8 +74,8 @@ source=('git+https://github.com/google/mozc.git#commit=76887c679e1e4f156102e4bc6
         'https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz'
         # Mozc dependencies
         'https://github.com/hiroyuki-komatsu/japanese-usage-dictionary/archive/refs/tags/2025-01-25.zip'
-        'https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/621d059fbcbfae17bfca15b439692bae934268c3/jigyosyo.zip'
-        'https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/621d059fbcbfae17bfca15b439692bae934268c3/ken_all.zip')
+        'jigyosyo-20260403.zip::https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/621d059fbcbfae17bfca15b439692bae934268c3/jigyosyo.zip'
+        'ken_all-20260403.zip::https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/621d059fbcbfae17bfca15b439692bae934268c3/ken_all.zip')
 noextract=('jawiki-20260601-pages-articles-multistream-index.txt.bz2'
            'bazel-9.0.2-linux-x86_64'
            'abseil-cpp-20260107.1.tar.gz'
@@ -104,9 +104,9 @@ noextract=('jawiki-20260601-pages-articles-multistream-index.txt.bz2'
            'tar.bzl-v0.5.1.tar.gz'
            'zlib-1.3.1.tar.gz'
            '2025-01-25.zip'
-           'jigyosyo.zip'
-           'ken_all.zip')
-b2sums=('f55e3633cf0e688d9bbb4701b3bdefdd62b857ddf0866fcba525c3ab6c4666f338d17f59438b3f8121a63d5a294968fbddade4a4a8f850041ea8ad6882120cea'
+           'jigyosyo-20260403.zip'
+           'ken_all-20260403.zip')
+b2sums=('54b0fc991e390c68b3a7de3fd48005ab33f3745983f958ff5c01c105f2d085787e02a7008763f5547ba8b9c704d68d1d1a6af61192774349eda7b0bfc718f7ec'
         '84150b8d743335d4b2801d15b74640380da0cfb95815bfc32a98f48f0fc7ac25b98ab417afee715c87a70dd8127568bd999e8e6a2c17da09d2a560fcdba030d3'
         'f320adaf559ad3b51cb323c19f1ac0155f33f1b59939bfc34577f429cfc64d589271c5b6a9fe481fa7be6b97e7043832b0b7bf339e0559a836fa5a1b62101f5d'
         'e9555a886657f237a55552f8f8aec769f0522cb54b4765f805ec1cd06dc80d8e8f735c35099132471bb46bda8219cf2991f6357b2cca5df24ff38f63c5d8f331'
@@ -176,6 +176,9 @@ prepare() {
     # Tamachi Phonetic Kanji Alphabet: MIT
     printf '6. Tamachi Phonetic Kanji Library\n\n' >> LICENSE
     sed -n 660,666p data/installer/credits_en.html >> LICENSE
+
+    sed -i -e "366s|jigyosyo.zip|jigyosyo-20260403.zip| ;
+               373s|ken_all.zip|ken_all-20260403.zip|" MODULE.bazel
 
     cd "${srcdir}"/merge-ut-dictionaries/src/merge/
 
