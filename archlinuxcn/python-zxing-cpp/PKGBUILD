@@ -1,0 +1,40 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=python-zxing-cpp
+pkgver=3.0.2
+pkgrel=1
+pkgdesc='Python bindings for zxing-cpp.'
+url='https://github.com/zxing-cpp/zxing-cpp'
+arch=('x86_64')
+license=('Apache-2.0')
+_name=${pkgname#python-}-${pkgver}
+source=("${_name}.tar.gz::${url}/releases/download/v${pkgver}/${_name}.tar.gz")
+b2sums=('b4db9279ca82951a2450bc1d97601e3bd0d560739280f7ab78d6b5572948ef979caaf461ec08e487f413bb06ea5433249735993a5c468f10ff94341a1ce16251')
+depends=('python')
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-wheel'
+    'python-setuptools>=77'
+    'cmake>=3.18'
+    'pybind11'
+)
+
+prepare() {
+    cd "${srcdir}/${_name}/wrappers/python"
+    sed -i \
+        -e 's/"pybind11\[global\]"/"pybind11"/' \
+        -e '/"cmake>=3.18"/d' \
+        -e 's/^version = ".*"/version = "'"$pkgver"'"/' \
+        pyproject.toml
+}
+
+build() {
+    cd "${srcdir}/${_name}/wrappers/python"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "${srcdir}/${_name}/wrappers/python"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+}
