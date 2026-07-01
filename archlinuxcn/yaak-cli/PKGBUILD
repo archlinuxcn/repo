@@ -1,0 +1,72 @@
+# Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
+
+pkgname=yaak-cli
+pkgver=0.6.2
+pkgrel=1
+pkgdesc='A fast, secure, and offline API client (CLI)'
+arch=('x86_64' 'armv7h' 'aarch64')
+url='https://yaak.app/'
+license=('MIT')
+depends=(
+    bzip2
+    dbus
+    glibc
+    libgcc
+    openssl
+    sqlite
+    xz
+    zstd
+)
+makedepends=(
+    cargo
+    npm
+)
+options=("!lto") # https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('61ac2d03e374af55618c952091383a438cd9d40caeb233fe4fcea4becb5bc637')
+
+_setup_env() {
+    export YAAK_CLI_VERSION="${pkgver}"
+    export CI=true
+    export SKIP_WASM_BUILD=1
+
+    export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+    export OPENSSL_NO_VENDOR=1
+    export ZSTD_SYS_USE_PKG_CONFIG=1
+
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+
+    export CARGO_PROFILE_RELEASE_LTO=true
+    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+}
+
+prepare() {
+    cd "yaak-${pkgname}-${pkgver}"
+
+    npm ci
+    cargo fetch --locked --target host-tuple
+}
+
+build() {
+    cd "yaak-${pkgname}-${pkgver}"
+    _setup_env
+
+    npm run build
+    npm run vendor:vendor-plugins
+    cargo build --locked --release -p yaak-cli
+}
+
+# check() {
+#     cd "yaak-${pkgname}-${pkgver}"
+#     _setup_env
+
+#     cargo test --frozen -p yaak-cli
+# }
+
+package() {
+    cd "yaak-${pkgname}-${pkgver}"
+
+    install -Dm755 "target/release/yaak" -t "${pkgdir}/usr/bin"
+    install -Dm644 "LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}"
+}
