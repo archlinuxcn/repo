@@ -1,0 +1,32 @@
+# Maintainer: SkyNetX007 <skynetx007@proton.me>
+pkgname=process-compose-bin
+_pkgname=${pkgname%-bin}
+pkgver=1.90.0
+pkgrel=1
+pkgdesc="Process Compose is a simple and flexible scheduler and orchestrator to manage non-containerized applications."
+arch=('x86_64' 'aarch64')
+url="https://github.com/F1bonacc1/process-compose"
+license=('Apache-2.0')
+provides=('process-compose')
+conflicts=('process-compose')
+options=('!debug')
+source_x86_64=("${pkgname}-${pkgver}-amd64.tar.gz::${url}/releases/download/v${pkgver}/process-compose_linux_amd64.tar.gz")
+source_aarch64=("${pkgname}-${pkgver}-arm64.tar.gz::${url}/releases/download/v${pkgver}/process-compose_linux_arm64.tar.gz")
+
+sha256sums_x86_64=('bdc90c6d4ad796ab0af0e0be2bea1a9d38d51b8c94912c4039136aa2046a6e1e')
+sha256sums_aarch64=('593e89c081f888c0e1d8b4d57c9d0afedfa5c29b63d2ce365d6cba82dbaa4db4')
+
+package() {
+        cd "${srcdir}"
+        install -Dm755 process-compose "${pkgdir}/usr/bin/${_pkgname}"
+        install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+        install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+
+        mkdir -p "${pkgdir}/usr/share/bash-completion/completions"
+        mkdir -p "${pkgdir}/usr/share/zsh/site-functions"
+        mkdir -p "${pkgdir}/usr/share/fish/vendor_completions.d"
+
+        ./process-compose completion bash > "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
+        ./process-compose completion zsh > "${pkgdir}/usr/share/zsh/site-functions/_${_pkgname}"
+        ./process-compose completion fish > "${pkgdir}/usr/share/fish/vendor_completions.d/${_pkgname}.fish"
+}
