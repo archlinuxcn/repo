@@ -1,0 +1,16 @@
+post_install() {
+  _m78_set_capabilities
+}
+
+post_upgrade() {
+  _m78_set_capabilities
+}
+
+_m78_set_capabilities() {
+  if command -v setcap >/dev/null 2>&1; then
+    setcap 'cap_net_admin,cap_net_bind_service,cap_net_raw=+ep' /usr/lib/mqiba/mqibaCore 2>/dev/null || \
+      echo 'm78-bin: 警告：无法为 /usr/lib/mqiba/mqibaCore 设置网络 capability，网络增强功能可能需要提权。'
+  else
+    echo 'm78-bin: 警告：未找到 setcap，网络增强功能可能需要提权。'
+  fi
+}

@@ -1,0 +1,77 @@
+# Maintainer: zxzxzx258 <25838226+zxzxzx258@users.noreply.github.com>
+pkgname=m78-bin
+pkgver=3.0.0
+_buildver=2026041016
+pkgrel=1
+pkgdesc='M78 官方二进制客户端'
+arch=('x86_64')
+url='https://appdownload.m78node.com/download.php'
+license=('custom')
+makedepends=('patchelf')
+depends=(
+  'gtk3'
+  'hicolor-icon-theme'
+  'java-runtime-headless'
+  'libkeybinder3'
+  'libayatana-appindicator'
+  'libcap'
+  'libx11'
+  'libxcomposite'
+  'libxcursor'
+  'libxdamage'
+  'libxfixes'
+  'libxi'
+  'libxinerama'
+  'libxrandr'
+  'libxrender'
+  'sqlite'
+  'xdg-utils'
+)
+provides=('mqiba')
+conflicts=('mqiba')
+replaces=('mqiba')
+install='m78-bin.install'
+source=(
+  'm78-3.0.0-linux-amd64.deb::https://appdownload.m78node.com/download.php?f=linux_deb'
+  'm78-3.0.0-linux-amd64.rpm::https://appdownload.m78node.com/download.php?f=linux_rpm'
+  'mqiba-wrapper'
+)
+sha256sums=(
+  '2df141685a8738a0f7df6824982d68dd11649b44b990b7efe270f7ffd4ea208c'
+  '27c368aa7a6fa0d40a543e663b505ce2b0906e312ee9debb989a22aa72ad387e'
+  'b7a138bac3d85e5e871dbe424d3d138f3cf4ba055260d674ebd23864daf30501'
+)
+
+prepare() {
+  rm -rf deb-archive deb-root rpm-root
+  mkdir -p deb-archive deb-root rpm-root
+
+  bsdtar -xf "${srcdir}/m78-3.0.0-linux-amd64.deb" -C "${srcdir}/deb-archive"
+  bsdtar -xf "${srcdir}/deb-archive/data.tar.zst" -C "${srcdir}/deb-root"
+  bsdtar -xf "${srcdir}/m78-3.0.0-linux-amd64.rpm" -C "${srcdir}/rpm-root"
+}
+
+package() {
+  install -dm755 "${pkgdir}/usr/bin"
+  install -dm755 "${pkgdir}/usr/lib"
+  install -dm755 "${pkgdir}/usr/share"
+
+  cp -dr --no-preserve=ownership "${srcdir}/deb-root/usr/share/mqiba" "${pkgdir}/usr/lib/"
+  cp -dr --no-preserve=ownership "${srcdir}/deb-root/usr/share/applications" "${pkgdir}/usr/share/"
+  sed -i 's/^Keywords=.*/Keywords=M78;Network;Utility;/' "${pkgdir}/usr/share/applications/mqiba.desktop"
+
+  if [[ -d "${srcdir}/deb-root/usr/share/icons" ]]; then
+    cp -dr --no-preserve=ownership "${srcdir}/deb-root/usr/share/icons" "${pkgdir}/usr/share/"
+  fi
+
+  if [[ -f "${srcdir}/rpm-root/usr/share/pixmaps/mqiba.png" ]]; then
+    install -Dm644 "${srcdir}/rpm-root/usr/share/pixmaps/mqiba.png" "${pkgdir}/usr/share/pixmaps/mqiba.png"
+  fi
+
+  install -Dm755 "${srcdir}/mqiba-wrapper" "${pkgdir}/usr/bin/mqiba"
+
+  find "${pkgdir}/usr/lib/mqiba/lib" -type f -name '*.so' -exec patchelf --set-rpath '$ORIGIN' {} +
+  chmod 755 "${pkgdir}/usr/lib/mqiba/mqiba" "${pkgdir}/usr/lib/mqiba/mqibaCore"
+  find "${pkgdir}/usr/lib/mqiba" -type d -exec chmod 755 {} +
+  find "${pkgdir}/usr/lib/mqiba" -type f ! -path '*/mqiba' ! -path '*/mqibaCore' -exec chmod 644 {} +
+}

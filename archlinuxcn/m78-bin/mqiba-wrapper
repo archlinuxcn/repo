@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+JVM_LIB_PATHS="/usr/lib/jvm/default-runtime/lib/server:/usr/lib/jvm/java-21-openjdk/lib/server"
+APP_LIB_PATH="/usr/lib/mqiba/lib"
+
+if [ -n "${LD_LIBRARY_PATH:-}" ]; then
+  export LD_LIBRARY_PATH="${APP_LIB_PATH}:${JVM_LIB_PATHS}:${LD_LIBRARY_PATH}"
+else
+  export LD_LIBRARY_PATH="${APP_LIB_PATH}:${JVM_LIB_PATHS}"
+fi
+
+exec /usr/lib/mqiba/mqiba "$@"
