@@ -1,9 +1,9 @@
 # Maintainer: zxzxzx258 <zxzxzx258@gmail.com>
 pkgname=m78-bin
-pkgver=3.0.0
-_buildver=2026041016
+pkgver=3.1.5
+_buildver=2026070610
 pkgrel=1
-pkgdesc='M78 官方二进制客户端'
+pkgdesc='M78 代理客户端官方二进制重打包'
 arch=('x86_64')
 url='https://appdownload.m78node.com/download.php'
 license=('custom')
@@ -32,23 +32,20 @@ conflicts=('mqiba')
 replaces=('mqiba')
 install='m78-bin.install'
 source=(
-  'm78-3.0.0-linux-amd64.deb::https://appdownload.m78node.com/download.php?f=linux_deb'
-  'm78-3.0.0-linux-amd64.rpm::https://appdownload.m78node.com/download.php?f=linux_rpm'
+  'm78-3.1.5-linux-amd64.deb::https://appdownload.m78node.com/download.php?f=linux_deb'
   'mqiba-wrapper'
 )
 sha256sums=(
-  '2df141685a8738a0f7df6824982d68dd11649b44b990b7efe270f7ffd4ea208c'
-  '27c368aa7a6fa0d40a543e663b505ce2b0906e312ee9debb989a22aa72ad387e'
+  '2e49cf49d92c7061716c98eb110797ce7d29a29d22b145dd9f0640adcf7825ab'
   'b7a138bac3d85e5e871dbe424d3d138f3cf4ba055260d674ebd23864daf30501'
 )
 
 prepare() {
-  rm -rf deb-archive deb-root rpm-root
-  mkdir -p deb-archive deb-root rpm-root
+  rm -rf deb-archive deb-root
+  mkdir -p deb-archive deb-root
 
-  bsdtar -xf "${srcdir}/m78-3.0.0-linux-amd64.deb" -C "${srcdir}/deb-archive"
+  bsdtar -xf "${srcdir}/m78-3.1.5-linux-amd64.deb" -C "${srcdir}/deb-archive"
   bsdtar -xf "${srcdir}/deb-archive/data.tar.zst" -C "${srcdir}/deb-root"
-  bsdtar -xf "${srcdir}/m78-3.0.0-linux-amd64.rpm" -C "${srcdir}/rpm-root"
 }
 
 package() {
@@ -62,10 +59,6 @@ package() {
 
   if [[ -d "${srcdir}/deb-root/usr/share/icons" ]]; then
     cp -dr --no-preserve=ownership "${srcdir}/deb-root/usr/share/icons" "${pkgdir}/usr/share/"
-  fi
-
-  if [[ -f "${srcdir}/rpm-root/usr/share/pixmaps/mqiba.png" ]]; then
-    install -Dm644 "${srcdir}/rpm-root/usr/share/pixmaps/mqiba.png" "${pkgdir}/usr/share/pixmaps/mqiba.png"
   fi
 
   install -Dm755 "${srcdir}/mqiba-wrapper" "${pkgdir}/usr/bin/mqiba"
