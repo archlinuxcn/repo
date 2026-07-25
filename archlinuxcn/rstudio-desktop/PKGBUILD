@@ -18,11 +18,11 @@
 # dependencies/common/install-copilot-language-server
 : ${_copilot_version:=1.520.0}
 
-: ${_commit:=5c876cede63cf1ab4cfb57228c0f29ffb5059d9a}
+: ${_commit:=49299327da3b03a79e7aa615c2388bcd05a1261a}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2026.07.0.139
+pkgver=2026.07.1.147
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
@@ -76,9 +76,6 @@ if [[ "${_quarto::1}" == "t" ]]; then
   makedepends+=('quarto') # AUR
 fi
 
-provides=("$_pkgname")
-conflicts=("$_pkgname")
-
 options=('!emptydirs' '!debug' '!strip')
 
 _source_main() {
@@ -114,6 +111,9 @@ _source_soci() {
       -G Ninja
       -DCMAKE_BUILD_TYPE=None
       -DCMAKE_INSTALL_PREFIX='/usr'
+      -DBUILD_SHARED_LIBS=OFF
+      -Wno-author
+
       -DSOCI_TESTS=OFF
       -DSOCI_CXX11=ON
       -DSOCI_EMPTY=OFF
@@ -125,8 +125,6 @@ _source_soci() {
       -DWITH_ORACLE=OFF
       -DWITH_FIREBIRD=OFF
       -DWITH_ODBC=OFF
-      -DBUILD_SHARED_LIBS=OFF
-      -Wno-dev
     )
 
     cmake "${_opts_soci[@]}"
@@ -307,7 +305,7 @@ build() (
     -G Ninja
     -DCMAKE_BUILD_TYPE=None
     -DBUILD_TESTING=OFF
-    -Wno-dev
+    -Wno-author
 
     -DQUARTO_ENABLED=${_quarto}
     -DRSTUDIO_DISABLE_CHECK_FOR_UPDATES=ON

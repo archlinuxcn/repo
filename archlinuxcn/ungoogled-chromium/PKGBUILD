@@ -11,14 +11,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=150.0.7871.128
+pkgver=150.0.7871.181
 pkgrel=1
 _launcher_ver=8
 _manual_clone=1
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=150.0.7871.128-1
+_uc_ver=150.0.7871.181-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -105,7 +105,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
 sha256sums=('e2654fa7c37ddc20af98f91089ad580e347ca9c526f8de8e625fe1b1cf3d98c6'
-            '05a29765278d46432619390857e0d119afe08e2a8c9f06cb0c5270badd241b71'
+            'eda41e7953d0202f5d3d2872a9f13cb699e76b1fc957a91723eaeb3bec946e27'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'

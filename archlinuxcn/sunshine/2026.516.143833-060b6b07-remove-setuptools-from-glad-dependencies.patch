@@ -1,0 +1,53 @@
+diff --git a/cmake/dependencies/glad.cmake b/cmake/dependencies/glad.cmake
+--- a/cmake/dependencies/glad.cmake
++++ b/cmake/dependencies/glad.cmake
+@@ -21,8 +21,8 @@ include_guard(GLOBAL)
+ #
+ # GLAD_SKIP_PIP_INSTALL is a hard override for environments where pip cannot run
+ # at all (e.g. Flatpak, Homebrew). When OFF (the default) the code below checks
+-# whether jinja2+setuptools are importable and pip-installs them if they are not.
+-# When ON the caller is responsible for supplying a Python that already has jinja2,
++# whether jinja2 is importable and pip-installs it if it is not. When ON the caller
++# is responsible for supplying a Python that already has jinja2,
+ # typically via -DPython_EXECUTABLE=/path/to/venv/python.
+ option(GLAD_SKIP_PIP_INSTALL
+         "Hard-skip pip install of jinja2 even if it is not importable. \
+@@ -105,11 +105,11 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/third-party/glad/cmake" glad2-cmake)
+ unset(CMAKE_POLICY_VERSION_MINIMUM)
+ 
+ if(NOT GLAD_SKIP_PIP_INSTALL)
+-    # Check whether jinja2 and pkg_resources (setuptools) are already importable.
+-    # pkg_resources is provided by setuptools, which is no longer bundled with Python 3.12+
+-    # on several distros (Debian Trixie, Arch Linux, COPR, FreeBSD, etc.).
++    # Check whether jinja2 is already importable. Supported Python versions use
++    # importlib.metadata and importlib.resources in glad, so setuptools' legacy
++    # pkg_resources module is not required by the generator.
+     execute_process(
+-            COMMAND "${Python_EXECUTABLE}" -c "import jinja2; import pkg_resources"
++            COMMAND "${Python_EXECUTABLE}" -c "import jinja2"
+             RESULT_VARIABLE _glad_deps_import_result
+             OUTPUT_QUIET
+             ERROR_QUIET
+@@ -117,7 +117,7 @@ if(NOT GLAD_SKIP_PIP_INSTALL)
+     )
+ 
+     if(NOT _glad_deps_import_result EQUAL 0)
+-        message(STATUS "glad: jinja2 or setuptools not found in ${Python_EXECUTABLE}, installing via pip...")
++        message(STATUS "glad: jinja2 not found in ${Python_EXECUTABLE}, installing via pip...")
+ 
+         # Some system Python installations (e.g. FreeBSD ports) ship without pip.
+         # Try to bootstrap it via ensurepip before falling back to the pip install.
+@@ -149,12 +149,11 @@ if(NOT GLAD_SKIP_PIP_INSTALL)
+                 COMMAND "${Python_EXECUTABLE}" -m pip install
+                     --upgrade
+                     --requirement "${CMAKE_SOURCE_DIR}/third-party/glad/requirements.txt"
+-                    "setuptools<81"
+                     --quiet
+                 COMMAND_ERROR_IS_FATAL ANY
+         )
+     else()
+-        message(STATUS "glad: jinja2 and setuptools already available in ${Python_EXECUTABLE}, skipping pip install")
++        message(STATUS "glad: jinja2 already available in ${Python_EXECUTABLE}, skipping pip install")
+     endif()
+ endif()
+ 

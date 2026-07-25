@@ -2,22 +2,21 @@
 
 _name=uritools
 pkgname=python-$_name
-pkgver=6.0.2
-pkgrel=1
+pkgver=6.1.3
+pkgrel=2
 pkgdesc="URI parsing, classification and composition"
 arch=(any)
 url="https://github.com/tkem/$_name"
 license=(MIT)
 depends=(python)
-makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx)
+makedepends=(python-build python-installer python-setuptools python-wheel python-setuptools-scm)
 checkdepends=(python-pytest)
 source=($pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz)
-sha512sums=('73b90566a6f908beb977500b9c60f1cb76e0de1ab26e4c422782ec0d6241361eb8761ee947b7168998e40d78b5247acd57bb75ab353c0c945eea9a7e6f04a772')
+sha512sums=('2e168331796a3545bcb39d8e26a91039ff566d8fb4faf6fe7255762bb940e3134cc1a3bbb380e8611139c260879baa332b1253544d178227e763360c2997f582')
 
 build() {
   cd $_name-$pkgver
   python -m build --wheel --no-isolation
-  sphinx-build -b man docs/ docs/_build/man/
 }
 
 check(){
@@ -30,7 +29,6 @@ check(){
 package() {
   cd $_name-$pkgver
   python -m installer --destdir="$pkgdir" dist/*.whl
-  install -Dm644 docs/_build/man/$_name.1 -t "$pkgdir/usr/share/man/man1"
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
   install -Dm644 README.rst -t "$pkgdir/usr/share/doc/$pkgname"
 }

@@ -10,7 +10,7 @@ _use_cuda=true
 
 pkgname='sunshine'
 pkgver=2026.516.143833
-pkgrel=1
+pkgrel=3
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
@@ -65,7 +65,6 @@ makedepends=("cuda"
   'nodejs'
   'npm'
   'python-jinja'  # required by the glad OpenGL/EGL loader generator
-  'python-setuptools'  # required for glad OpenGL/EGL loader generated, v2.0.0
   'shaderc'
 )
 
@@ -80,8 +79,14 @@ optdepends=(
 provides=()
 conflicts=()
 
-source=("$pkgname::git+https://github.com/LizardByte/Sunshine.git#commit=${_commit}")
-sha256sums=('SKIP')
+source=(
+  "$pkgname::git+https://github.com/LizardByte/Sunshine.git#commit=${_commit}"
+  '2026.516.143833-060b6b07-remove-setuptools-from-glad-dependencies.patch'
+)
+sha256sums=(
+  'SKIP'
+  '06a78d624975887541e2b0013b3085e798195e334fdb05d35caf4bbad818ddde'
+)
 
 # Options Handling
 if [[ "${_use_cuda::1}" == "d" ]] && pacman -Qi cuda &> /dev/null; then
@@ -116,6 +121,9 @@ fi
 prepare() {
     cd "$pkgname"
     git submodule update --recursive --init
+
+    # Backport https://github.com/LizardByte/Sunshine/commit/060b6b07d376e9ef4c4ce4a5c6d648d08fe0eab9
+    patch -Np1 -i "${srcdir}/2026.516.143833-060b6b07-remove-setuptools-from-glad-dependencies.patch"
 }
 
 build() {
@@ -167,9 +175,13 @@ build() {
       _cmake_options+=(-DBUILD_TESTS=OFF)
     fi
 
+    if [[ -z "${GITHUB_ACTIONS}" ]]; then
+      _appstreamcli_arguments=(--no-net)
+    fi
+
     cmake "${_cmake_options[@]}"
 
-    appstreamcli validate "build/dev.lizardbyte.app.Sunshine.metainfo.xml"
+    appstreamcli validate "${_appstreamcli_arguments[@]}" "build/dev.lizardbyte.app.Sunshine.metainfo.xml"
     appstream-util validate "build/dev.lizardbyte.app.Sunshine.metainfo.xml"
     desktop-file-validate "build/dev.lizardbyte.app.Sunshine.desktop"
     desktop-file-validate "build/dev.lizardbyte.app.Sunshine.terminal.desktop"

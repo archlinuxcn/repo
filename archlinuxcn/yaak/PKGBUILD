@@ -5,8 +5,8 @@
 pkgname=yaak
 _appid=app.yaak.Yaak
 _appname=yaak-app-client
-pkgver=2026.4.0
-pkgrel=3
+pkgver=2026.5.0
+pkgrel=2
 pkgdesc='A fast, secure, and offline API client'
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://yaak.app/'
@@ -50,7 +50,7 @@ options=("!lto") # https://gitlab.archlinux.org/archlinux/packaging/packages/pac
 provides=("yaak-app" "yaak-app-client")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/v${pkgver}.tar.gz"
         "${_appid}.desktop")
-sha256sums=('f0da5c20de2c7414cd1ce75b1f161ab2252855314453cd328e4c7b50827d9cd6'
+sha256sums=('a3e4e08716093f96c0f8c97c3b50bbdcfb5ccceaa93f908e1b9dfc5663090b1a'
             '228dc02b9ffecef06195e67d5d7d70b1fd64546682ced382cb448f35039997f8')
 
 _setup_env() {
@@ -63,7 +63,6 @@ _setup_env() {
     export LIBSSH2_SYS_USE_PKG_CONFIG=1
     export OPENSSL_NO_VENDOR=1
     export ZSTD_SYS_USE_PKG_CONFIG=1
-
 
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
@@ -110,7 +109,7 @@ check() {
     _setup_env
 
     npm test
-    cargo test --frozen -p ${_appname}
+    cargo test --frozen -p ${_appname} --features wry
 }
 
 package() {

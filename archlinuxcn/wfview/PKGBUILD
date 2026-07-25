@@ -2,8 +2,8 @@
 # Contributor: FuzzyCheese
 # shellcheck shell=bash disable=SC2034,SC2154
 pkgname=wfview
-pkgver=2.11
-pkgrel=4
+pkgver=2.23
+pkgrel=2
 pkgdesc="Interface for Icom transceivers"
 arch=('i686' 'x86_64')
 url="https://wfview.org/"
@@ -26,7 +26,7 @@ depends=(
 )
 
 source=("https://gitlab.com/eliggett/wfview/-/archive/v$pkgver/wfview-v$pkgver.tar.gz")
-md5sums=('cbd4c4fec0a6bf922ccdc71e4a2ebe88')
+md5sums=('5e552a5e24d65e2cb75bf62c835d3492')
 
 prepare() {
   sed -i '/^linux:QMAKE_POST_LINK += echo; echo; echo "Run install.sh as root from the build directory to install."; echo; echo;$/s/^/#/' ${srcdir}/wfview-v$pkgver/wfview.pro

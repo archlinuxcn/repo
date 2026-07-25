@@ -1,7 +1,7 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=meka
-pkgver=0.33.1
+pkgver=0.34.0
 pkgrel=1
 pkgdesc="A general-purpose AI agent harness"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -13,7 +13,7 @@ optdepends=('bubblewrap: sandbox support')
 provides=('agsh')
 replaces=('agsh')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/k4yt3x/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('bb68300c9422daf57275d5e6ad4b3c063c356f5ab4ed13a08a4588e5b698fa1d')
+sha256sums=('522e9328a18679f90f252bec578c57aba69b9e235e3ebc985219573498cce5f0')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"

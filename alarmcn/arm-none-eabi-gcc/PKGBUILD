@@ -3,20 +3,20 @@
 
 _target=arm-none-eabi
 pkgname=$_target-gcc
-pkgver=14.2.0
-pkgrel=2
+pkgver=16.1.0
+pkgrel=1
 #_snapshot=8-20180427
 pkgdesc='The GNU Compiler Collection - cross compiler for ARM EABI (bare-metal) target'
 arch=(aarch64 x86_64)
 url='https://gcc.gnu.org/'
 license=(GPL LGPL FDL)
 depends=($_target-binutils zlib libmpc libisl zstd)
-makedepends=(gmp mpfr $_target-newlib tar)
+makedepends=(gmp mpfr $_target-newlib)
 optdepends=('arm-none-eabi-newlib: Standard C library optimized for embedded systems')
 options=(!emptydirs !lto)
 source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz{,.sig})
         #ftp://gcc.gnu.org/pub/gcc/snapshots/$_snapshot/gcc-$_snapshot.tar.xz
-sha256sums=('a7b39bc69cbf9e25826c5a60ab26477001f7c08d85cec04bc0e29cabed6f3cc9'
+sha256sums=('50efb4d94c3397aff3b0d61a5abd748b4dd31d9d3f2ab7be05b171d36a510f79'
             'SKIP')
 validpgpkeys=(33C235A34C46AA3FFB293709A328C3A2C3C45C06  # Jakub Jelinek <jakub@redhat.com>
               D3A93CAD751C2AF4F8C7AD516C35B99309B5FA62  # Jakub Jelinek <jakub@redhat.com>
@@ -82,8 +82,6 @@ build() {
   # TODO: properly deal with the build issues resulting from this
   CFLAGS=${CFLAGS/-Werror=format-security/}
   CXXFLAGS=${CXXFLAGS/-Werror=format-security/}
-  export FFLAGS=
-  export FCFLAGS=
 
   cd "$srcdir"/build-gcc
   export CFLAGS_FOR_TARGET='-g -Os -ffunction-sections -fdata-sections'

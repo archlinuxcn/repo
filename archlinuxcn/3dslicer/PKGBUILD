@@ -2,7 +2,7 @@
 
 _pkgname=3dslicer
 pkgname=3dslicer
-pkgver=5.12.2
+pkgver=5.12.3
 pkgrel=1
 pkgdesc='A free, open source and multi-platform software package widely used for medical, biomedical, and related imaging research'
 arch=('x86_64')
@@ -57,7 +57,7 @@ source=("${_pkgname}::git+https://github.com/Slicer/Slicer.git#tag=v${pkgver}"
         "${_pkgname}.svg::https://www.slicer.org/assets/img/3D-Slicer-Mark.svg"
         "slicer-vtk-regex-version-script-name.patch"
 )
-sha512sums=('652f3f078c1bdb24a6d275a6d7b4984e91ece432d315ffb91b36e06620bf7f6e85edc441d138d2660db23d6709192ef89600303a447a23b2026edc6fcd08005b'
+sha512sums=('59c7b30f7757050df5863179f486da5bc0d9404c52f72ebe3ba37da8f1e925a95a0facf1a96a02f4a126e540c3aa08e776f5c500e5c638f481cb7d4663bb7386'
             '3422d244f819a7ec4c475d3d8a90c79fcb73738920c0830b100c6342ca24d5be607ba60ee3d91892402036a0adf31d5ab7c8fc83f451121a7b537f7de5306014'
             '3ac8a9e98953ddbffa28dcac5f67156670e24a190433e580e00691856f805602a995104c0e6bdf388289b9a2d0ba6e6a19b4bbea89da71a19d080e8dd7981307')
 

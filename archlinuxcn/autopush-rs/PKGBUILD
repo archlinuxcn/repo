@@ -2,8 +2,8 @@
 # Contributor: arenekosreal
 
 pkgname=autopush-rs
-pkgver=1.82.2
-pkgrel=2
+pkgver=1.82.3
+pkgrel=1
 pkgdesc="Push Server in Rust"
 arch=('x86_64')
 provides=('autopush' 'autopush-rs' 'sunup-server')
@@ -15,7 +15,7 @@ makedepends=('rust' 'git' 'clang')
 optdepends+=(redis google-cloud-cli postgresql)
 options=(!lto)
 source=("git+$url.git#tag=${pkgver}")
-sha256sums=('245c79e3ba340af3d1caffb5872c7a821381b5ca4cf29c89f4e6d77755708540')
+sha256sums=('62f4f2604a0182dd8588a4fc9d06137630df7bd017e518804526f39d1d104c33')
 
 prepare() {
 	export RUSTUP_TOOLCHAIN=stable
