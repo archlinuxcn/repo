@@ -21,6 +21,8 @@ pkgver() {
 
 prepare() {
   cd PRoot
+
+  sed -i '1i #include "tracee/mem.h"' src/tracee/tracee.c
 }
 
 build() {
