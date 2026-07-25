@@ -7,7 +7,7 @@
 pkgname=proton-ge-custom-bin
 pkgdesc='A fancy custom distribution of Valves Proton with various patches'
 url='https://github.com/GloriousEggroll/proton-ge-custom'
-pkgver=11.2
+pkgver=11.3
 pkgrel=1
 arch=('x86_64')
 _tag="GE-Proton${pkgver//./-}"
@@ -44,7 +44,7 @@ source=(
   "${pkgname}_${_tag}.tar.gz::${url}/releases/download/${_tag}/${_tag}.tar.gz"
   'deversionized.py'
 )
-b2sums=('9f806a095156ae33f2dabb5373d21e0f6d2bdc8aaa43d64cc254278f33d441eb5210d8e32bd55482fdcdc80a5914184e171157fb99c29eac21c2c101b40a1ce9'
+b2sums=('9f18ec34dc5bf1114b01e3b28239dacf84a73e7409018fc5f0dec6612e1ca6108287c2d31afe4e3c372874422b127bc9a9b4c49a651485f6f382c1d549d0eb40'
         'a07fd87e91df85ca5441396b1e94c94474526bf932389aca9edc60fcd0e8343dc42159577172d66f37e39f6b5fa6efe0929165742f6c4fafb49c3da8112884c1')
 
 build() {
