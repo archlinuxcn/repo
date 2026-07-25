@@ -1,3 +1,98 @@
+## GE-Proton11-2
+
+Note:
+
+I did not have enough time to do thorough regression testing for video playback after making recent changes, however several games that had video playback issues in 11-1 have since been fixed. Many of the VR related issues have also been fixed. I wanted to get this release out because it contains important fixes for allowing Marvel Rivals and Diablo IV to run correctly.
+
+• Scope
+
+  Game Fixes
+
+  - Star Citizen: repaired WineOpenXR Vulkan integration and external VR support.
+  - VRChat: fixed remote HLS/YouTube playback, audio, seeking, reloading, and consecutive queued videos.
+  - Witch on the Holy Night: fixed embedded bytestream video playback.
+  - FAVORITE visual novels: fixed black-screen video with audio.
+  - Deadly Premonition: fixed hanging, timing, and allocator-backed video output.
+  - GTA San Andreas: fixed MPEG videos displaying black and corrected audio/video synchronization.
+  - Yakuza 5 Remastered: fixed startup video crashes and ignored no-op decoder format changes.
+  - Riddle Joker: fixed green padding bars in video output.
+  - Dragon’s Dogma 2: fixed green video padding bars.
+  - Cyberpunk 2077 / issues #567 and #588: reduced audio delays and fixed a null-handling failure.
+  - Killing Floor 3: added real decoder format propagation and Winsock address validation.
+  - MapleStory: fixed startup failures involving accessibility settings and CharPrevA/CharPrevExA null pointers.
+  - LimeLight Lemonade Jam: added the missing GetFileVersionInfoByHandle compatibility stub.
+  - Gears 2 Hollow installer: added ICU forwarding DLL support.
+  - Battle.net and Warframe: added --in-process-gpu handling for Wine Wayland launchers.
+  - Battle.net: fixed Wine Wayland white-screen behavior.
+  - Issue #551: preserved the real OpenGL GPU/device description reported by wined3d.
+  - Issue #610: added a secur32 fallback for the older GnuTLS shipped by SteamRT4.
+  - Issue #638: added layered-window extended-style handling.
+  - Issue #605: added long-running PulseAudio timestamp-wrap and starvation recovery. 
+  - Imported upstream fix for Diablo IV
+  - Imported upstream fix for Marvel Rivals
+
+  Media Rework
+
+  - Rebased the FFmpeg/winedmo video stack onto newer Wine.
+  - Added remote HLS URL support.
+  - Improved media-session state transitions, seeking, replay, stream completion, and decoder format changes.
+  - Added codec-aligned padding initialization and legacy Quartz output handling.
+  - Improved audio clock recovery, starvation handling, and long-running stream timing.
+  - Removed duplicate or obsolete media patches after upstream changes.
+
+  Controller Support
+
+  - Added wired USB haptics for:
+      - DualShock 4
+      - DualSense
+      - DualSense Edge
+    , tested confirmed working in stellar blade and spider-man remastered
+
+  - Added controller mono-speaker/effect-audio output., tested confirmed working in spider-man remastered
+  - Added PulseAudio routing to the correct Sony controller speaker profile., tested confirmed working in spider-man remastered
+  - Fixed hotplugging and switching among DS4, DualSense, and DualSense Edge., tested confirmed working in spider-man remastered
+  - Added fresh endpoint registration, stale endpoint cleanup, stream retargeting, stable endpoint IDs, and
+    duplicate udev-device filtering.
+
+  - Fixed controller speaker routing after repeated disconnects, reconnects, and model changes., tested confirmed working in spider-man remastered
+  - Standardized the controller implementation on PulseAudio instead of direct ALSA endpoint exposure.
+
+  Graphics And Scaling
+
+  - Added complete OptiScaler download, injection, and Protonfixes integration.
+  - Added FSR4/FFX4 version selection and updated AMD scaler support.
+  - Updated AMD amdxc/FSR4 support through the newer EM-11 patchset.
+  - Added NVIDIA compatibility libraries:
+      - NVAPI
+      - CUDA
+      - NVENC
+      - NVML
+      - OptiX
+
+  - Added Vulkan layers and corrected their missing submodule definitions.
+  - Updated DXVK, DXVK-NVAPI, VKD3D-Proton, D7VK, Vulkan headers, and FEX.
+
+  Wine And Wayland
+
+  - Updated to newer bleeding-edge Wine revisions.
+  - Rebased the EM-11 Wine Wayland patchset.
+  - Improved layered windows, fractional scaling, pointer warping, keyboard mappings, IME handling, popup windows,
+    exclusive fullscreen, monitor placement, surface caching, and window restoration.
+
+  - Removed deprecated dw-proton patches already superseded by EM-11 or upstream Wine.
+
+  Build And Release
+
+  - Fixed AArch64 builds by packaging missing SteamRT4 libraries, including bzip2.
+  - Fixed README download scripts to select the correct x86_64 or AArch64 archive and checksum.
+  - Fixed the AArch64 archive-name regular expression.
+  - Imported newer upstream Proton build, Docker, and launcher-script changes.
+  - Restored prefix creation after an imported Proton-script regression.
+  - Fixed missing NVIDIA and Vulkan-layer submodule URLs.
+  - Prevented release automation from failing when a release already exists.
+  - Expanded the compatibility-report issue template.
+  - Cleaned duplicate scaler, hotfix, and obsolete patch references.
+
 ## GE-Proton11-1
 
 The long awaited video rework and Proton 11 rebase is finally done! GE-Proton11-1 is now available!
