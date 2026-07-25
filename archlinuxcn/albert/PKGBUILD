@@ -4,7 +4,7 @@
 # Contributor: Manuel Schneider  <manuelschneid3r at googles mail>
 
 pkgname=albert
-pkgver=35.0.0
+pkgver=35.1.0
 pkgrel=1
 pkgdesc="A sophisticated standalone keyboard launcher"
 arch=('x86_64')
@@ -25,7 +25,7 @@ depends=(
 )
 makedepends=('cmake' 'qt6-tools')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}launcher/${pkgname}/releases/download/v${pkgver}/v${pkgver}.tar.gz")
-sha512sums=('ac5251a5ebdf3609c2968af36ba199e6cf201e6f3db96c72b48d763d37f6043ef9efbbff1e76b023b7fad630eff83c21ad25c2f4f9bd63b2d0f3eba97e665213')
+sha512sums=('a0eaadef90b0524f9e0eb6a2bd6f41e49e11846b6a0ca73ed178122aadbfd1402204a688060be18d6ede59fd07af8729604a72c218feda1f1fb600b188c12a23')
 
 build() {
 	cmake -B build \
