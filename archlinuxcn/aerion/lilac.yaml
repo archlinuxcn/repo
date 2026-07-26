@@ -1,0 +1,15 @@
+maintainers:
+  - github: SilverRainZ
+    email: Shengyu Zhang <la@archlinuxcn.org>
+
+repo_depends:
+  - wails
+
+pre_build_script: |
+  aur_pre_build(maintainers=['fermino'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: aerion
