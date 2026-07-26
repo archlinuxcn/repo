@@ -3,8 +3,8 @@
 # Maintainer: Zhanibek Adilbekov <zhanibek.adilbekov@pm.me>
 # shellcheck disable=SC2034,2164,2154
 pkgname=auto-cpufreq
-pkgver=3.0.0
-pkgrel=3
+pkgver=3.1.0
+pkgrel=1
 pkgdesc="Automatic CPU speed & power optimizer"
 arch=('any')
 url="https://github.com/AdnanHodzic/auto-cpufreq"
@@ -29,7 +29,7 @@ prepare() {
 
 }
 
-sha256sums=('401c0e92a9bc312583ed39db5a9111ddaa409f8d43f89663057c1fab59559225'
+sha256sums=('c843a90f59ce47bcfc320bfc8b75044946cfd2f02b714fb10d06a911dcf78bc5'
             '8ff1c82788f7cb6bf06151e6632aa4006eb09337daf03faa4866d23075b39e1b'
             '227d85df7f71187c87e24388104f0127b13a680c1e859a90a14864a0d29e1fdf'
             '9c06cba2d936aa325fac8f4306ef77e4f5e33ec4703112bb8352097d0b13abfe')
@@ -51,10 +51,10 @@ package() {
 	install -Dm644 scripts/org.auto-cpufreq.pkexec.policy -t "$pkgdir/usr/share/polkit-1/actions/"
 	install -Dm644 images/icon.png "$pkgdir/usr/share/pixmaps/auto-cpufreq.png"
 	install -Dm644 images/icon.png -t "$pkgdir/usr/share/$pkgname/"
-	
+
 	mkdir -p $pkgdir/usr/share/$pkgname/scripts/
 	mkdir -p $pkgdir/opt/auto-cpufreq/
-	
+
 	install -Dm755 scripts/auto-cpufreq-install.sh "$pkgdir/usr/share/$pkgname/scripts/"
 	install -Dm755 scripts/auto-cpufreq-remove.sh "$pkgdir/usr/share/$pkgname/scripts/"
 	install -Dm644 $srcdir/auto-cpufreq.service "$pkgdir/usr/lib/systemd/system/$pkgname.service"
