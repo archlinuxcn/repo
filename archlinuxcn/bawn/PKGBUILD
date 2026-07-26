@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=bawn
-pkgver=0.0.2
+pkgver=0.0.3
 pkgrel=1
 pkgdesc='Bawn is a transient Portable sandbox generator'
 url='https://github.com/Kimiblock/bawn'
@@ -9,7 +9,7 @@ license=(GPL-3.0-or-later)
 makedepends=('cargo' 'git')
 arch=('i686' 'x86_64' 'armv6h' 'armv7h')
 source=(git+https://github.com/Kimiblock/bawn.git#tag=${pkgver})
-sha256sums=('c1498fcbec4c0f227466f4434b768e78d43860a75e7b57a69991b4870eab60e1')
+sha256sums=('09af46924bc9fbc938ed793351945810c8e5b1fcd05acc2ee4117ead8c32045c')
 depends=(glibc libgcc)
 
 prepare() {
