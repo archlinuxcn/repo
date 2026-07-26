@@ -3,7 +3,7 @@
 pkgname=tunet-rust
 pkgver=0.11.0
 pkgrel=1
-pkgdesc="A Tsinghua University network authentication client for Linux, written in Rust. 清华大学校园网 Rust 客户端"
+pkgdesc="A Rust-based client for network authentication at Tsinghua University | 清华大学校园网 Rust 客户端"
 url="https://github.com/Berrysoft/${pkgname}"
 arch=('x86_64' 'aarch64')
 license=('MIT')
@@ -15,16 +15,20 @@ options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
-	cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target $(rustc --print host-tuple)
 }
 
 build() {
 	cd "${pkgname}-${pkgver}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
 	cargo build --frozen --release --workspace --exclude native
 }
 
 check() {
 	cd "${pkgname}-${pkgver}/"
+	export RUSTUP_TOOLCHAIN=stable
 	cargo test --frozen --all-features --workspace --exclude native
 }
 
@@ -32,7 +36,7 @@ package() {
 	cd "${pkgname}-${pkgver}/"
 
 	# Binaries
-	install -Dm755 target/release/tunet{,-{gui,service}} -t "${pkgdir}/usr/bin/"
+	install -Dm755 target/release/tunet -t "${pkgdir}/usr/bin/"
 
 	# Desktop file
 	install -Dm644 "tunet/io.github.berrysoft.tunet.desktop" -t "${pkgdir}/usr/share/applications/"
