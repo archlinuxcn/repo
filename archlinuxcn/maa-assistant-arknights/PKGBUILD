@@ -8,7 +8,7 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=6.14.0-beta.1
+_pkgver=6.14.2
 pkgver=${_pkgver//-/}
 pkgrel=1
 _pkgdesc="An Arknights assistant"
@@ -22,7 +22,7 @@ source=("git+$url.git#tag=v${_pkgver}"
 "git+https://github.com/MaaXYZ/MaaUtils.git"
 "FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaXYZ/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
 install="${_pkgname}.install"
-md5sums=('ba5e7c964b7bae7834e1ec17cc17f0ef'
+md5sums=('SKIP'
          'SKIP'
          '4555f8dce0cec02022356d50c8f2275c')
 
@@ -33,6 +33,14 @@ fi
 
 prepare() {
     sed -e 's/35 50 52 60 61 70//g;' -i "${srcdir}/FastDeploy-${_fastdeploy_ref}/cmake/cuda.cmake"
+    # opencv5
+    sed -e '1i #include <opencv2/geometry.hpp>' \
+        -i "${srcdir}/FastDeploy-${_fastdeploy_ref}/fastdeploy/vision/ocr/ppocr/utils/"{ocr_utils.h,ocr_postprocess_op.h} \
+        -i "${srcdir}/MaaAssistantArknights/src/MaaUtils/include/MaaUtils/NoWarningCV.hpp"
+    sed -e 's/cv::BRISK/cv::xfeatures2d::BRISK/g;' \
+        -e 's/cv::KAZE/cv::xfeatures2d::KAZE/g;' \
+        -e 's/cv::AKAZE/cv::xfeatures2d::AKAZE/g;' \
+        -i "${srcdir}/MaaAssistantArknights/src/MaaCore/Vision/FeatureMatcher.cpp"
 
     cd "${srcdir}/MaaAssistantArknights"
 
@@ -42,7 +50,7 @@ prepare() {
 
     sed -e '/^find_package(fast/s/^/# /;' \
         -e '/maadeps/s/^/# /;' \
-        -e 's/imgproc/imgproc calib3d videoio xfeatures2d/' \
+        -e 's/imgproc/imgproc calib videoio xfeatures2d/' \
         -e 's/COMPONENTS system/COMPONENTS process/'\
         -i CMakeLists.txt -i src/MaaUtils/MaaUtils.cmake
 
