@@ -36,7 +36,7 @@ package() {
 	cd "${pkgname}-${pkgver}/"
 
 	# Binaries
-	install -Dm755 target/release/tunet{,-{gui,service}} -t "${pkgdir}/usr/bin/"
+	install -Dm755 target/release/tunet -t "${pkgdir}/usr/bin/"
 
 	# Desktop file
 	install -Dm644 "tunet/io.github.berrysoft.tunet.desktop" -t "${pkgdir}/usr/share/applications/"
