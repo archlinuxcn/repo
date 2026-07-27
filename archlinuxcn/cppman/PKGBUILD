@@ -2,7 +2,7 @@
 # Contributor: motte <ettom22 at hotmail dot com>
 # Contributor: Wei-Ning Huang <aitjcize@gmail.com>
 pkgname=cppman
-pkgver=0.6.2
+pkgver=0.6.3
 pkgrel=1
 pkgdesc="C++ 98/11/14/17/20 manual pages for Linux, with source from cplusplus.com and cppreference.com."
 arch=("any")
@@ -17,7 +17,7 @@ optdepends=(
 )
 
 source=("$pkgname-$pkgver.tar.gz::https://github.com/aitjcize/cppman/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('151ae3afe40eadb92e1b371e8547a897db88821aeee3bf7dff052ab790ac8e5d')
+sha256sums=('65c9f0b2c89f0f68ed2acdb4cdeb62a6b40e18ce980691dc0b656651da678dbe')
 
 build() {
     cd $pkgname-$pkgver
