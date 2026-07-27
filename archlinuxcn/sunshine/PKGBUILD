@@ -10,7 +10,7 @@ _use_cuda=true
 
 pkgname='sunshine'
 pkgver=2026.516.143833
-pkgrel=3
+pkgrel=4
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
@@ -31,6 +31,7 @@ fi
 depends=(
   'avahi'
   'curl'
+  'gcc-libs'
   'libayatana-appindicator'
   'libcap'
   'libdrm'
@@ -82,10 +83,12 @@ conflicts=()
 source=(
   "$pkgname::git+https://github.com/LizardByte/Sunshine.git#commit=${_commit}"
   '2026.516.143833-060b6b07-remove-setuptools-from-glad-dependencies.patch'
+  '2026.516.143833-3377f7a7-link-shared-libstdcxx-with-gcc-15.patch'
 )
 sha256sums=(
   'SKIP'
   '06a78d624975887541e2b0013b3085e798195e334fdb05d35caf4bbad818ddde'
+  '63f86f6ffd6d9f3da35353109fa4a4df9a900a791f70b29cafc8e464b870337d'
 )
 
 # Options Handling
@@ -124,6 +127,9 @@ prepare() {
 
     # Backport https://github.com/LizardByte/Sunshine/commit/060b6b07d376e9ef4c4ce4a5c6d648d08fe0eab9
     patch -Np1 -i "${srcdir}/2026.516.143833-060b6b07-remove-setuptools-from-glad-dependencies.patch"
+
+    # Backport the GCC 15+ linking fix from https://github.com/LizardByte/Sunshine/commit/3377f7a73f8768518430f4c771987153fcd77b77
+    patch -Np1 -i "${srcdir}/2026.516.143833-3377f7a7-link-shared-libstdcxx-with-gcc-15.patch"
 }
 
 build() {
