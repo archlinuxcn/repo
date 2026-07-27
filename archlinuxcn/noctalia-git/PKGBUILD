@@ -2,7 +2,7 @@
 
 pkgname=noctalia-git
 _pkgname=noctalia
-pkgver=5.0.0.r4871.g74fbc3443
+pkgver=5.0.0.r4878.gdf40cac49
 pkgrel=2
 pkgdesc='A sleek, customizable desktop shell crafted for Wayland'
 arch=('x86_64' 'aarch64')
@@ -20,6 +20,7 @@ depends=(
   'glibc'
   'jemalloc'
   'libglvnd'
+  'libjxl'
   'libpipewire'
   'libqalculate'
   'librsvg'
@@ -63,7 +64,6 @@ build() {
   CXXFLAGS+=" -Wno-unused-result"
   arch-meson "${_pkgname}" build-release \
     -Db_ndebug=true \
-    -Dnative_optimizations=true \
     -Dtests=disabled
   meson compile -C build-release
 }
