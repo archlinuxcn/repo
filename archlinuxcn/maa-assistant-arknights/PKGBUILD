@@ -28,19 +28,11 @@ md5sums=('SKIP'
 
 if ((WITH_CUDA)); then
     pkgname+=(maa-assistant-arknights-cuda)
-    makedepends+=(cuda gcc13)
+    makedepends+=(cuda)
 fi
 
 prepare() {
     sed -e 's/35 50 52 60 61 70//g;' -i "${srcdir}/FastDeploy-${_fastdeploy_ref}/cmake/cuda.cmake"
-    # opencv5
-    sed -e '1i #include <opencv2/geometry.hpp>' \
-        -i "${srcdir}/FastDeploy-${_fastdeploy_ref}/fastdeploy/vision/ocr/ppocr/utils/"{ocr_utils.h,ocr_postprocess_op.h} \
-        -i "${srcdir}/MaaAssistantArknights/src/MaaUtils/include/MaaUtils/NoWarningCV.hpp"
-    sed -e 's/cv::BRISK/cv::xfeatures2d::BRISK/g;' \
-        -e 's/cv::KAZE/cv::xfeatures2d::KAZE/g;' \
-        -e 's/cv::AKAZE/cv::xfeatures2d::AKAZE/g;' \
-        -i "${srcdir}/MaaAssistantArknights/src/MaaCore/Vision/FeatureMatcher.cpp"
 
     cd "${srcdir}/MaaAssistantArknights"
 
@@ -90,6 +82,15 @@ _EOF
         -i src/MaaCore/Config/Roguelike/RoguelikeMapConfig.h
     #sed -e '24i #include <cstring>' \
     #    -i src/MaaCore/./Utils/ExceptionStacktrace.hpp
+
+    # opencv5
+    sed -e '1i #include <opencv2/geometry.hpp>' \
+        -i "${srcdir}/FastDeploy-${_fastdeploy_ref}/fastdeploy/vision/ocr/ppocr/utils/"{ocr_utils.h,ocr_postprocess_op.h} \
+        -i "${srcdir}/MaaAssistantArknights/src/MaaUtils/include/MaaUtils/NoWarningCV.hpp"
+    sed -e 's/cv::BRISK/cv::xfeatures2d::BRISK/g;' \
+        -e 's/cv::KAZE/cv::xfeatures2d::KAZE/g;' \
+        -e 's/cv::AKAZE/cv::xfeatures2d::AKAZE/g;' \
+        -i "${srcdir}/MaaAssistantArknights/src/MaaCore/Vision/FeatureMatcher.cpp"
 }
 
 build() {
@@ -123,8 +124,9 @@ build() {
             -DCUDA_ARCH_NAME=Auto
         )
         
-        NVCC_CCBIN=g++-13 cmake -B build-cuda -S "MaaAssistantArknights" "${_cmake_flags[@]}"
-        NVCC_CCBIN=g++-13 cmake --build build-cuda
+        source /etc/profile # for variables in /etc/profile.d/cuda.sh
+        cmake -B build-cuda -S "MaaAssistantArknights" "${_cmake_flags[@]}"
+        cmake --build build-cuda
     fi
 }
 
