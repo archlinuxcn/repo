@@ -2,7 +2,7 @@
 
 _pkgname=StringZilla
 pkgname=python-stringzilla
-pkgver=5.0.5
+pkgver=5.0.6
 pkgrel=1
 pkgdesc='SIMD-accelerated string search, sort, hashes, fingerprints, & edit distances'
 arch=('x86_64')
@@ -19,7 +19,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/ashvardanian/StringZilla/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('36c7317303d084e5ce3199fe431d355c5639a4cdaa10a0eb56b1ffa5224cb8e435f259dbac4361d362bc467eee68d558d64de6aa555ffbd656e96039a689d99a')
+sha512sums=('8048ac0455c6a85b6abd7684ba25a29af7aad9b72c2422b748db447d679439350fd7a061352b5061ad92c9b333c564c04dd6a93406bced1bf12c5748d3d479e0')
 
 build() {
   cd "${_pkgname}-${pkgver}"
