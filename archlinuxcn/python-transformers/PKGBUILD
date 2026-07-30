@@ -34,6 +34,13 @@ optdepends=(
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/transformers/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('518bad2585b160ddb7f4ab55ce250f067cd56eaaca6fa832d622f6e6257ddb2497463203ec7e592bc6274c04c6838c2b1630fc5eefb157e88b607d6b8f91d2b2')
 
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  sed -i -E '/tokenizers/ s/,<=[^",]+//g' \
+    setup.py \
+    src/transformers/dependency_versions_table.py
+}
+
 build() {
   cd "${_pkgname}-${pkgver}"
   python setup.py build
