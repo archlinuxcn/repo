@@ -7,7 +7,7 @@ pkgrel=1
 pkgdesc='State-of-the-art Machine Learning for Pytorch, TensorFlow, and JAX'
 arch=('any')
 url='https://github.com/huggingface/transformers'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-av
   python-accelerate
@@ -24,7 +24,9 @@ depends=(
   python-yaml
 )
 makedepends=(
-  python-setuptools
+  python-build
+  python-installer
+  python-wheel
 )
 optdepends=(
   python-pytorch
@@ -43,11 +45,11 @@ prepare() {
 
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:
