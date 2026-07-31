@@ -1,0 +1,27 @@
+# Maintainer: Dee.H.Y <dongfengweixiao at hotmail dot com>
+
+pkgname=vcsi
+pkgver=7.0.17
+pkgrel=1
+pkgdesc="Create video contact sheets, thumbnails"
+arch=(any)
+url="https://github.com/amietn/vcsi"
+license=('MIT')
+depends=(python ffmpeg python-numpy python-pillow python-jinja python-texttable ttf-dejavu python-parsedatetime python-setuptools)
+makedepends=(python-installer uv)
+options=(!emptydirs)
+_pkgsrc="$pkgname-$pkgver"
+_pkgext="tar.gz"
+source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
+sha256sums=('5a3c4a9ada7d864c6699fbe9f1a09fc955d1ace29c12026b3f45d8f773e39748')
+
+build() {
+  cd "$_pkgsrc"
+  uv build
+}
+
+package() {
+  cd "$_pkgsrc"
+  python -m installer --destdir="${pkgdir}" dist/*.whl
+}
+
