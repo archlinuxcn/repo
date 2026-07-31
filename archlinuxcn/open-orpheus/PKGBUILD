@@ -1,0 +1,100 @@
+pkgname=open-orpheus
+pkgver=0.16.1
+pkgrel=1
+pkgdesc="An open-source implementation of Netease Cloud Music's Orpheus browser host"
+arch=('x86_64')
+url="https://github.com/YUCLing/open-orpheus"
+license=('MIT')
+_electronver=43
+_npmver=43.1.0
+depends=(
+  'electron43'
+  'gtk3'
+  'libnotify'
+  'nss'
+  'xdg-utils'
+  'at-spi2-core'
+  'libdrm'
+  'mesa'
+  'libxcb'
+)
+optdepends=(
+  'kde-cli-tools: KDE integration'
+)
+makedepends=(
+  'nodejs>=24'
+  'pnpm'
+  'rust'
+  'rust-wasm'
+  'wasm-bindgen'
+  'libarchive'
+  'git'
+)
+source=(
+  "$pkgname-$pkgver.tar.gz::https://github.com/YUCLing/open-orpheus/archive/refs/tags/v$pkgver.tar.gz"
+  "open-orpheus.sh"
+  "open-orpheus.desktop"
+)
+sha256sums=('aaad6804c864ca6691be37a8119ece57baf5a8a65661d2c4d67ea5e87b18524a'
+  '1af66959f8bd34896684c154d9169cdbad94b5ec08e107c4652ba5473e8d6ded'
+  'de9b00ee7e7025cbcadda8cd16b63aa4092fb905803d0e6f4f570ab8461a5f5c')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+  grep -q "\"electron\": \"$_npmver\"" package.json ||
+    (
+      echo "Electron version mismatch in package.json"
+      exit 1
+    )
+
+  # Skip Electron's postinstall, which would download Electron from GitHub;
+  # we build and run against the system Electron instead.
+  sed -i 's/electron: true/electron: false/' pnpm-workspace.yaml
+
+  # Make electron-forge package from a local zip of the system Electron
+  # instead of downloading it. ELECTRON_ZIP_DIR is read from the environment.
+  sed -i 's|^  packagerConfig: {$|  packagerConfig: {\n    electronZipDir: process.env.ELECTRON_ZIP_DIR,|' forge.config.ts
+
+  # Create the Electron zip that electron-packager will extract. Entry names
+  # must not be prefixed with "./" (extract-zip rejects those).
+  zipdir="$srcdir/electron-zip"
+  mkdir -p "$zipdir"
+  (
+    cd "/usr/lib/electron$_electronver"
+    find . -mindepth 1 -print | sed 's|^\./||' |
+      bsdtar --format=zip -cf "$zipdir/electron-v$_npmver-linux-x64.zip" -T -
+  )
+
+  export ELECTRON_ZIP_DIR="$zipdir"
+  export ELECTRON_OVERRIDE_DIST_PATH="/usr/lib/electron$_electronver"
+  pnpm install --frozen-lockfile
+
+  # Pre-seed the electron npm package so `require('electron')` resolves to
+  # the system binary instead of trying to download it.
+  mkdir -p node_modules/electron/dist
+  printf '%s' "$_npmver" >node_modules/electron/dist/version
+  printf 'electron' >node_modules/electron/path.txt
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  export ELECTRON_ZIP_DIR="$srcdir/electron-zip"
+  export ELECTRON_OVERRIDE_DIST_PATH="/usr/lib/electron$_electronver"
+
+  # Native modules (Rust napi + wasm) then the Forge package.
+  pnpm run build:modules
+  pnpm run package
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -dm755 "$pkgdir/usr/lib/$pkgname/resources"
+  cp -r out/"$pkgname"-linux-*/resources/app.asar "$pkgdir/usr/lib/$pkgname/resources/"
+  cp -r out/"$pkgname"-linux-*/resources/app.asar.unpacked "$pkgdir/usr/lib/$pkgname/resources/"
+
+  install -Dm755 "$srcdir/open-orpheus.sh" "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 "$srcdir/open-orpheus.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 assets/icon_256.png "$pkgdir/usr/share/icons/hicolor/256x256/apps/$pkgname.png"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
