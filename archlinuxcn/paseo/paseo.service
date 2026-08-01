@@ -1,0 +1,17 @@
+[Unit]
+Description=Paseo Daemon (session-scoped)
+Documentation=https://paseo.sh
+# Deliberately has no [Install]/WantedBy: never auto-pull at login — binding to
+# a login target (default.target / graphical-session.target) races gnome-shell
+# and can crash the session. Start it imperatively from an XDG autostart entry
+# once the graphical session is up (see the package's post_install notes), so
+# it inherits DISPLAY/WAYLAND_DISPLAY from the systemd --user manager env.
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/paseo-daemon-session
+# Restart=always: closing the desktop app sends the daemon a clean websocket
+# shutdown; that must not take the session daemon down with it. A manual
+# `systemctl --user stop` or logout still stops it.
+Restart=always
+RestartSec=5

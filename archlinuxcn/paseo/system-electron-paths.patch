@@ -1,0 +1,93 @@
+diff --git a/packages/desktop/src/daemon/package-paths.ts b/packages/desktop/src/daemon/package-paths.ts
+index 3652962..137a96b 100644
+--- a/packages/desktop/src/daemon/package-paths.ts
++++ b/packages/desktop/src/daemon/package-paths.ts
+@@ -47,5 +47,5 @@ export function findPackageRootFromResolvedPath(input: {
+ }
+ 
+ export function resolvePackagedAsarPath(): string {
+-  return path.join(process.resourcesPath, "app.asar");
++  return "/usr/lib/paseo";
+ }
+diff --git a/packages/desktop/src/daemon/runtime-paths.ts b/packages/desktop/src/daemon/runtime-paths.ts
+index 70c9840..385ef25 100644
+--- a/packages/desktop/src/daemon/runtime-paths.ts
++++ b/packages/desktop/src/daemon/runtime-paths.ts
+@@ -28,13 +28,7 @@ function resolveServerPackageInfo(): PackageInfo {
+ }
+ 
+ export function resolvePackagedNodeEntrypointRunnerPath(): string {
+-  return path.join(
+-    process.resourcesPath,
+-    "app.asar.unpacked",
+-    "dist",
+-    "daemon",
+-    "node-entrypoint-runner.js",
+-  );
++  return "/usr/lib/paseo/packages/desktop/dist/daemon/node-entrypoint-runner.js";
+ }
+ 
+ export function resolveDaemonRunnerEntrypoint(): NodeEntrypointSpec {
+diff --git a/packages/desktop/src/features/auto-updater.ts b/packages/desktop/src/features/auto-updater.ts
+index 92ad1b2..17c1fe6 100644
+--- a/packages/desktop/src/features/auto-updater.ts
++++ b/packages/desktop/src/features/auto-updater.ts
+@@ -131,7 +131,8 @@ class ElectronAppUpdateRuntime implements AppUpdateRuntime {
+ 
+ const appUpdateService = createAppUpdateService({
+   runtime: new ElectronAppUpdateRuntime(),
+-  isPackaged: () => app.isPackaged,
++  // Distro package: updates come from pacman, not electron-updater.
++  isPackaged: () => false,
+   now: () => Date.now(),
+   bucket: async () => bucketFromStagingUserId(await getStagingUserId()),
+   reportCheckError: (error) => {
+diff --git a/packages/desktop/src/integrations/cli-install/install.ts b/packages/desktop/src/integrations/cli-install/install.ts
+index cc113da..605bc15 100644
+--- a/packages/desktop/src/integrations/cli-install/install.ts
++++ b/packages/desktop/src/integrations/cli-install/install.ts
+@@ -24,7 +24,8 @@ export async function installCli(): Promise<InstallStatus> {
+   const installSourcePath = resolveCliInstallSourcePath({
+     platform: process.platform,
+     isPackaged: app.isPackaged,
+-    executablePath: app.getPath("exe"),
++    // Distro package: the launcher in PATH, not the raw Electron binary.
++    executablePath: "/usr/bin/paseo",
+     shimPath,
+     appImagePath: process.env.APPIMAGE,
+   });
+diff --git a/packages/desktop/src/integrations/skills/paths.ts b/packages/desktop/src/integrations/skills/paths.ts
+index cc74235..b86928a 100644
+--- a/packages/desktop/src/integrations/skills/paths.ts
++++ b/packages/desktop/src/integrations/skills/paths.ts
+@@ -4,7 +4,7 @@ import { app } from "electron";
+ 
+ export function getBundledSkillsDir(): string {
+   if (app.isPackaged) {
+-    return path.join(process.resourcesPath, "skills");
++    return "/usr/lib/paseo/skills";
+   }
+   return path.join(__dirname, "..", "..", "..", "..", "..", "skills");
+ }
+diff --git a/packages/desktop/src/main.ts b/packages/desktop/src/main.ts
+index 4f4cded..4529449 100644
+--- a/packages/desktop/src/main.ts
++++ b/packages/desktop/src/main.ts
+@@ -324,7 +324,7 @@ function getPreloadPath(): string {
+ 
+ function getAppDistDir(): string {
+   if (app.isPackaged) {
+-    return path.join(process.resourcesPath, "app-dist");
++    return "/usr/lib/paseo/packages/app/dist";
+   }
+ 
+   return path.resolve(__dirname, "../../app/dist");
+@@ -338,7 +338,7 @@ function getWindowIconCandidates(): string[] {
+         path.join(process.resourcesPath, "icon.png"),
+       ];
+     }
+-    return [path.join(process.resourcesPath, "icon.png")];
++    return ["/usr/lib/paseo/packages/desktop/assets/icon.png"];
+   }
+   if (process.platform === "win32") {
+     return [

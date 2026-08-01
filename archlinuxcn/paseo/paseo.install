@@ -1,0 +1,45 @@
+post_install() {
+    cat <<'EOF'
+==> The Paseo desktop app starts its own daemon (with your full shell env and
+    DISPLAY) when launched, so no setup is needed for normal use.
+
+==> Optional: to keep the daemon running in the background without the app
+    (the app and CLI then attach to it), start it from your graphical session
+    via an XDG autostart entry. Starting it this way — once the session is up —
+    gives it DISPLAY/WAYLAND_DISPLAY and avoids racing gnome-shell at login.
+    Create ~/.config/autostart/paseo-daemon.desktop with:
+
+        [Desktop Entry]
+        Type=Application
+        Name=Paseo Daemon
+        Exec=systemctl --user start paseo.service
+        NoDisplay=true
+        X-GNOME-Autostart-enabled=true
+
+    The shipped paseo.service is session-scoped (static, Restart=always) and is
+    meant to be started this way. Do NOT `systemctl --user enable` it: it has no
+    [Install] section on purpose, and binding it to a login target races
+    gnome-shell. `loginctl enable-linger` is not needed — the daemon is tied to
+    your graphical session.
+
+==> Note: this source build skips the prebuilt sherpa-onnx/onnxruntime
+    speech binaries (same as upstream's nix package); local voice
+    features degrade gracefully when unavailable.
+EOF
+}
+
+post_upgrade() {
+    # Earlier releases shipped paseo.service with WantedBy=default.target and
+    # told users to `systemctl --user enable` it. The unit is now static
+    # (started via XDG autostart instead), so a leftover enable symlink is both
+    # stale and harmful — it would auto-pull the session daemon at login and
+    # race gnome-shell. Tell the user to remove it.
+    if [ -e "${HOME:-/root}/.config/systemd/user/default.target.wants/paseo.service" ]; then
+        cat <<'EOF'
+==> paseo.service is now session-scoped (static) and must be started via an XDG
+    autostart entry, not enabled. Remove the stale enable symlink:
+        systemctl --user disable paseo.service
+    Then see the autostart snippet in the package notes to run it at login.
+EOF
+    fi
+}
