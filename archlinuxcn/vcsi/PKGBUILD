@@ -1,0 +1,52 @@
+# Maintainer: Dee.H.Y <dongfengweixiao at hotmail dot com>
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+pkgname=vcsi
+pkgver=7.0.17
+pkgrel=2
+pkgdesc="Create video contact sheets, thumbnails"
+arch=(any)
+url="https://github.com/amietn/vcsi"
+license=('MIT')
+depends=(
+    python
+    python-pillow
+    python-numpy
+    python-jinja
+    python-texttable
+    python-parsedatetime
+
+    ffmpeg
+)
+optdepends=("ttf-dejavu: Fallback font")
+makedepends=(
+    git
+    python-build
+    python-installer
+    python-wheel
+    python-hatchling
+)
+checkdepends=(
+    python-pytest
+    python-pytest-cov
+)
+source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
+b2sums=('959afb06232f9da1840895d6452ad28676d46b5b9c9d90e590c2842d8145f62472cb6d54f36b53174ce5d54fcd5e78ed28d5b7d2cbacbd094bff55c25dcbebc9')
+
+build() {
+    cd "$pkgname"
+    python -m build --wheel --no-isolation
+}
+
+check() {
+    cd "$pkgname"
+    python -m venv --system-site-packages .venv
+    .venv/bin/python -m installer dist/*.whl
+    .venv/bin/python -m pytest tests
+}
+
+package() {
+    cd "$pkgname"
+    python -m installer --destdir="${pkgdir}" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}

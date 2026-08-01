@@ -2,7 +2,7 @@
 
 _pkgname="ImageGlass"
 pkgname="imageglass"
-pkgver=10.0.2.66_beta_2
+pkgver=10.0.3.720_rc
 pkgrel=2
 pkgdesc="lightweight, versatile image viewer"
 url="https://imageglass.org"
@@ -27,7 +27,7 @@ source=(
   'imageglass.desktop'
   'igconfig.default.json'
 )
-sha256sums=('be3b2210d130a97d1e084d5937bac1e11ce5fc471166b790df33e8cd0268a2b1'
+sha256sums=('8e8afde82438e37853252ac5229c4c1905c7d73d161b28db815b8ab0c091725a'
             'b31814a355395b002b8bd2dedc9107f5c288a56998df6e9894379900b6a7c560'
             '21fbac2e5dceccc8b5f1515a7c6621e3bf7ea06479c73f665f7474ad7479e816')
 build() {
@@ -54,11 +54,11 @@ package() {
   install -dm755 "$pkgdir/usr/bin"
   ln -s "/usr/lib/$pkgname/ImageGlass" "$pkgdir/usr/bin/$pkgname"
   # copy resources
-  cp -r "$srcdir/${_pkgname}-${pkgver//_/-}/source/_assets/_app/"* "$pkgdir/usr/lib/$pkgname/"
+  cp -r "$srcdir/${_pkgname}-${pkgver//_/-}/source/__assets/__app/"* "$pkgdir/usr/lib/$pkgname/"
   # install desktop file and icon
   install -Dm644 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
-  install -Dm644 "$srcdir/${_pkgname}-${pkgver//_/-}/source/_assets/Logo.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
-  install -Dm644 "$srcdir/${_pkgname}-${pkgver//_/-}/source/_assets/Logo512.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname/$pkgname.png"
+  install -Dm644 "$srcdir/${_pkgname}-${pkgver//_/-}/source/__assets/logo_c.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
+  install -Dm644 "$srcdir/${_pkgname}-${pkgver//_/-}/source/__assets/logo_c_512.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname/$pkgname.png"
   # install default config file
   install -Dm644 "$srcdir/igconfig.default.json" "$pkgdir/usr/lib/$pkgname/igconfig.default.json"
   # install license

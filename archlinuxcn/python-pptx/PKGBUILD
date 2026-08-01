@@ -1,0 +1,47 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+pkgname=python-pptx
+pkgver=1.0.2
+pkgrel=2
+pkgdesc='Create Open XML PowerPoint documents in Python'
+arch=(any)
+url="https://github.com/scanny/python-pptx"
+license=(MIT)
+depends=(
+    'python'
+    'python-pillow'
+    'python-xlsxwriter'
+    'python-lxml'
+    'python-typing_extensions'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-wheel'
+    'python-setuptools'
+)
+checkdepends=(
+    'python-pytest'
+    'python-pyparsing' # not listed in pyprojects but used
+)
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('d65b0e2f8d3fd9905d7841731d37c402e3c54fe3e0042fce7cc15f2d27e3de6516ed4e33bd9cb3a1bf7253f734b92bf8047e7dc5117a9a59400b58c312e1a56f')
+
+
+build() {
+    cd "$pkgname-$pkgver"
+    python -m build --wheel --no-isolation
+}
+
+check() {
+    cd "$pkgname-$pkgver"
+    python -m venv --system-site-packages .venv
+    .venv/bin/python -m installer dist/*.whl
+    .venv/bin/python -m pytest -p no:warnings tests
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}

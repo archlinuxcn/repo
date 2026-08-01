@@ -1,8 +1,8 @@
 # Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 
 pkgname=yaak-cli
-pkgver=0.7.0
-pkgrel=2
+pkgver=0.7.1
+pkgrel=1
 pkgdesc='A fast, secure, and offline API client (CLI)'
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://yaak.app/'
@@ -24,7 +24,7 @@ makedepends=(
 )
 options=("!lto") # https://gitlab.archlinux.org/archlinux/packaging/packages/pacman/-/issues/20
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('7f369bc0b1f9982598c47188c3cebfc182db3de395d43f642f7b9448f4a9eafc')
+sha256sums=('5ab3e78c7cddf0d028c2d390e847dea26bc6c39eae7802a4d5fb75192d207c03')
 
 _setup_env() {
     export YAAK_CLI_VERSION="${pkgver}"

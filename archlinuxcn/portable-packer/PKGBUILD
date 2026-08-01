@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=portable-packer
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="Packaging utility for Portable"
 arch=("x86_64")
@@ -12,7 +12,7 @@ depends=("glibc" coreutils desktop-file-utils git)
 makedepends=('go' 'git')
 backup=()
 source=("source::git+https://github.com/Kimiblock/portable-packer.git#tag=${pkgver}")
-sha256sums=('37bbc6ed66659555ae55dfff8154a507a78851e9c98cb534bfa80cca5f92fcc7')
+sha256sums=('356726ffdb34d0150aa87e1980d1538a0b1cb95043e2488b2cadd4b6e1a71626')
 
 conflicts+=("portable<14.99")
 

@@ -1,7 +1,7 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=servo
-pkgver=0.3.0
+pkgver=0.4.0
 pkgrel=1
 pkgdesc='Parallel Browser Project: web browser written in Rust'
 arch=(x86_64 i686)
@@ -34,22 +34,34 @@ makedepends=(clang
              python-virtualenv
              rust
              uv)
-options=('!lto') # lto breaks linking
 backup=("etc/profile.d/$pkgname".{csh,sh})
-source=("$pkgname::git+$url.git#tag=v$pkgver")
-sha256sums=('155367af370f2bdb8bb8c418c75b82867e3231e2e9b898ed2e16753ee64426f0')
+source=("$pkgname::git+$url.git#tag=$pkgver")
+sha256sums=('3936fe51a1a24d2a4ac72c33848c1f72f148282e579dfc32d83df2331027287d')
+
+_srcenv() {
+	cd "$pkgname"
+	export CARGO_HOME="$srcdir"
+	export CARGO_PROFILE_RELEASE_DEBUG=2
+	export CARGO_PROFILE_RELEASE_STRIP=false
+	export CARGO_PROFILE_RELEASE_LTO=true
+	export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+	export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	CFLAGS+=' -ffat-lto-objects'
+	CXXFLAGS+=' -ffat-lto-objects'
+	RUSTFLAGS+=" --remap-path-prefix $PWD=/"
+}
 
 prepare() {
-	cd "$pkgname"
+	_srcenv
 	echo 'export PATH=$PATH:/opt/servo' > "$pkgname.sh"
 	echo 'setenv PATH ${PATH}:/opt/servo' > "$pkgname.csh"
 	cargo fetch --locked --target host-tuple
 }
 
 build() {
-	cd "$pkgname"
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
+	_srcenv
 	./mach build --release
 }
 

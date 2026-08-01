@@ -1,8 +1,8 @@
 # Maintainer: KokaKiwi <kokakiwi+aur [at] kokakiwi.net>
 
 pkgname=php-luasandbox
-pkgver=4.1.3
-pkgrel=2
+pkgver=4.1.4
+pkgrel=1
 pkgdesc='PHP extension that provides a sandboxed environment to run Lua scripts in'
 arch=('i686' 'x86_64')
 url='https://www.mediawiki.org/wiki/LuaSandbox'
@@ -10,8 +10,8 @@ license=('MIT')
 depends=('php' 'lua51')
 backup=('etc/php/conf.d/luasandbox.ini')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/wikimedia/mediawiki-php-luasandbox/archive/refs/tags/$pkgver.tar.gz")
-sha256sums=('b373705508fa3fe5a6f09c05c223b7c281dd29069b34b4f0e57ca30301ab01d8')
-b2sums=('0fb682e2e5b4431dac95b3fadb126c361ca3b921ee4a4aa039fba29569f8d371659a0ca6852ec7caf29f0d0cd547a583c331bd2870e7dfaa45f66f8f9026607a')
+sha256sums=('154571b700b7534a083b002df583e0da95450b1a39f8685f50aa4cafded8e28a')
+b2sums=('0de8a9cfd46a5d5b5c8d617b6e36ae49e82a3a11d62117dddc150f0d44e46d4b881c7d30f50eb49657170300c74a7ebff22a260d65e11ad7461d15f00d3abe3d')
 
 build() {
   cd "mediawiki-php-luasandbox-$pkgver"

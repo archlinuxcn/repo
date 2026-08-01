@@ -1,0 +1,45 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+pkgname=python-typst
+pkgver=0.15.0
+pkgrel=2
+pkgdesc='Python binding to typst'
+arch=(x86_64)
+url="https://github.com/messense/typst-py"
+license=(MIT)
+depends=(
+    'python'
+    'openssl'
+    'glibc'
+    'libgcc'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-wheel'
+    'python-maturin'
+)
+checkdepends=(
+    'python-pytest'
+)
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+b2sums=('13589ece683d9d298cdff3c2f808b859a3305b82736da5ad889994c7fa2685c4b2f331b894730756c33ee44d1e7641ab7c1c7c58242d5fba045dfcaf2deac838')
+
+_pkgdir="typst-py-$pkgver"
+build() {
+    cd "$_pkgdir"
+    OPENSSL_NO_VENDOR=1 python -m build --wheel --no-isolation
+}
+
+check() {
+    cd "$_pkgdir"
+    python -m venv --system-site-packages .venv
+    .venv/bin/python -m installer dist/*.whl
+    .venv/bin/python -m pytest tests
+}
+
+package() {
+    cd "$_pkgdir"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}

@@ -1,0 +1,37 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+
+pkgname=python-touying
+pkgver=0.14.4
+pkgrel=2
+pkgdesc='Export presentation slides in various formats for Touying.'
+arch=(any)
+url="https://github.com/touying-typ/touying-exporter"
+license=(MIT)
+depends=(
+    'python'
+    'python-jinja'
+    'python-pillow'
+    'python-pptx'
+    'python-typst'
+)
+makedepends=(
+    'python-build'
+    'python-installer'
+    'python-wheel'
+    'python-setuptools'
+)
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/$pkgver.tar.gz")
+b2sums=('935b53f8da36e9eb777282157591f19a5920e791f8e1c446d7eaea961b3564b8415f9d30c9a9a6e70b7044f2dac94735963b558f3a79c58e7769e174a84cda75')
+
+
+_pkgdir="touying-exporter-$pkgver"
+build() {
+    cd "$_pkgdir"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "$_pkgdir"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+    install -Dm0644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE
+}

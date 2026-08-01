@@ -3,7 +3,7 @@
 
 _target=arm-none-eabi
 pkgname=$_target-binutils
-pkgver=2.46.1
+pkgver=2.47
 pkgrel=1
 pkgdesc='A set of programs to assemble and manipulate binary and object files for the ARM EABI (bare-metal) target'
 arch=(aarch64 x86_64)
@@ -11,9 +11,9 @@ url='https://www.gnu.org/software/binutils/'
 license=(GPL)
 depends=(zlib libelf)
 source=(https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.bz2{,.sig})
-sha1sums=('bf552a22c05c452734a9007f3c833f35961b6f69'
+sha1sums=('5b1deae7fe38d8334d3df4cbded074e86032a21d'
           'SKIP')
-sha256sums=('324ed40ada2633a28eaa5d104ca5db165fd3cc3162cc1d48a7b7fa9c932da439'
+sha256sums=('3068128c75cda9f898ccb4211d360246e8e195ffcc9dfb655b23ae23a54800e8'
             'SKIP')
 validpgpkeys=(
 	'3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F' # Nick Clifton (Chief Binutils Maintainer) <nickc@redhat.com>
@@ -31,6 +31,7 @@ build() {
   ./configure --target=$_target \
               --with-sysroot=/usr/$_target \
               --prefix=/usr \
+              --disable-werror \
               --enable-multilib \
               --enable-interwork \
               --with-gnu-as \

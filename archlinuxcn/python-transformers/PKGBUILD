@@ -3,11 +3,11 @@
 _pkgname=transformers
 pkgname=python-transformers
 pkgver=5.14.1
-pkgrel=1
+pkgrel=2
 pkgdesc='State-of-the-art Machine Learning for Pytorch, TensorFlow, and JAX'
 arch=('any')
 url='https://github.com/huggingface/transformers'
-license=('Apache')
+license=('Apache-2.0')
 depends=(
   python-av
   python-accelerate
@@ -24,7 +24,9 @@ depends=(
   python-yaml
 )
 makedepends=(
-  python-setuptools
+  python-build
+  python-installer
+  python-wheel
 )
 optdepends=(
   python-pytorch
@@ -34,13 +36,20 @@ optdepends=(
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/transformers/archive/refs/tags/v${pkgver}.tar.gz")
 sha512sums=('518bad2585b160ddb7f4ab55ce250f067cd56eaaca6fa832d622f6e6257ddb2497463203ec7e592bc6274c04c6838c2b1630fc5eefb157e88b607d6b8f91d2b2')
 
+prepare() {
+  cd "${_pkgname}-${pkgver}"
+  sed -i -E '/tokenizers/ s/,<=[^",]+//g' \
+    setup.py \
+    src/transformers/dependency_versions_table.py
+}
+
 build() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py build
+  python -m build --wheel --no-isolation
 }
 
 package() {
   cd "${_pkgname}-${pkgver}"
-  python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  python -m installer --destdir="${pkgdir}" dist/*.whl
 }
 # vim:set ts=2 sw=2 et:

@@ -2,8 +2,8 @@
 
 _name=pyhanko
 pkgname=python-$_name
-pkgver=0.35.2
-pkgrel=2
+pkgver=0.36.2
+pkgrel=1
 pkgdesc="sign and stamp PDF files"
 arch=(any)
 url="https://github.com/MatthiasValvekens/$_name"
@@ -12,11 +12,10 @@ depends=(python python-asn1crypto python-qrcode python-tzlocal python-pyhanko-ce
 makedepends=(git python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-requests-mock certomancer python-freezegun python-pytest-asyncio python-defusedxml python-certomancer-csc-dummy python-pytest-aiohttp)
 source=(git+$url.git#tag=v$pkgver)
-sha256sums=('a627e804d22a5287995fb69c338d94c5d4989964daf5ab0eca60443cc8c044ed')
+sha256sums=('c1ed8f2ca9b63bf75894b1265933a77ad35216ad1975f64285eebbeb52d54bd2')
 
 prepare() {
   cd $_name
-  git cherry-pick -n 88850292e6f3f60d4b98ea325606822d94ec8d99 bd1dbf745751e8d64894d404468a1958a6d35a1a
   sed -i "s/^version = .*/version = \"$pkgver\"/" pkgs/$_name/pyproject.toml
   sed -i \
     -e "s/^__version__ = .*/__version__ = '$pkgver'/" \

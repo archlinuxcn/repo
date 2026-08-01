@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=tunet-rust
-pkgver=0.11.1
+pkgver=0.12.0
 pkgrel=1
 pkgdesc="A Rust-based client for network authentication at Tsinghua University | 清华大学校园网 Rust 客户端"
 url="https://github.com/Berrysoft/${pkgname}"
@@ -10,13 +10,13 @@ license=('MIT')
 depends=('openssl' 'curl' 'freetype2' 'hicolor-icon-theme' 'qt6-base')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('8e3ef776d9220dea9a0b86ec21cc3f44e9110c583b9bc778fdbb1704250e5c0b')
+sha256sums=('c5301ed53584cca6bec27dae7c1b11beaca770be80044d20ead088b5e8ad30ca')
 options=('!lto')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
-	cargo fetch --target $(rustc --print host-tuple) # --locked
+	cargo fetch --locked --target $(rustc --print host-tuple)
 }
 
 build() {
@@ -36,7 +36,7 @@ package() {
 	cd "${pkgname}-${pkgver}/"
 
 	# Binaries
-	install -Dm755 target/release/tunet{,-{gui,service}} -t "${pkgdir}/usr/bin/"
+	install -Dm755 target/release/tunet -t "${pkgdir}/usr/bin/"
 
 	# Desktop file
 	install -Dm644 "tunet/io.github.berrysoft.tunet.desktop" -t "${pkgdir}/usr/share/applications/"

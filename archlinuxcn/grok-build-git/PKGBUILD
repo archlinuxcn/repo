@@ -1,0 +1,57 @@
+# Maintainer: Xeonacid <xeonacid@archlinuxcn.org>
+
+pkgname=grok-build-git
+_pkgname=${pkgname%-git}
+pkgver=0.2.117.r17.ga422116
+pkgrel=1
+pkgdesc="SpaceXAI's terminal-based AI coding agent"
+arch=(x86_64 aarch64)
+url='https://github.com/xai-org/grok-build'
+license=(Apache-2.0)
+depends=(glibc libgcc zlib)
+makedepends=(cargo clang cmake git protobuf)
+provides=(grok "$_pkgname")
+conflicts=(grok "$_pkgname")
+options=(!lto)
+source=("git+$url.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $_pkgname
+  local version
+  version=$(sed -n 's/^version = "\([0-9.]*\)"/\1/p' crates/codegen/xai-grok-version/Cargo.toml | head -n1)
+  printf '%s.r%s.g%s' "$version" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+prepare() {
+  cd $_pkgname
+  export RUSTUP_TOOLCHAIN=stable
+  cargo fetch --locked --target host-tuple
+}
+
+build() {
+  cd $_pkgname
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  export PROTOC=/usr/bin/protoc
+  cargo build --frozen --release -p xai-grok-pager-bin
+}
+
+check() {
+  cd $_pkgname
+  export RUSTUP_TOOLCHAIN=stable
+  export PROTOC=/usr/bin/protoc
+  cargo test --frozen --workspace || true
+}
+
+package() {
+  cd $_pkgname
+  install -Dm755 target/release/xai-grok-pager "$pkgdir/usr/bin/grok"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$pkgname"
+  "$pkgdir/usr/bin/grok" completions bash |
+    install -Dm644 /dev/stdin "$pkgdir/usr/share/bash-completion/completions/grok"
+  "$pkgdir/usr/bin/grok" completions zsh |
+    install -Dm644 /dev/stdin "$pkgdir/usr/share/zsh/site-functions/_grok"
+  "$pkgdir/usr/bin/grok" completions fish |
+    install -Dm644 /dev/stdin "$pkgdir/usr/share/fish/vendor_completions.d/grok.fish"
+}

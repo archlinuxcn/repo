@@ -9,7 +9,7 @@ pkgname=(
   lib32-gst-plugins-base
   lib32-gst-plugins-good
 )
-pkgver=1.28.4
+pkgver=1.28.5
 pkgrel=1
 pkgdesc="Multimedia graph framework (32-bit)"
 url="https://gstreamer.freedesktop.org/"
@@ -81,7 +81,7 @@ source=(
   "git+https://gitlab.freedesktop.org/gstreamer/gstreamer.git?signed#tag=$pkgver"
   0001-HACK-meson-Disable-broken-tests.patch
 )
-b2sums=('3a8a3d89bfc9be8b2b1cbd24b6e7e1dbea25c4619045dd97df4631b94ad5d59d9ac54ffc54eccdec10b0195aee87e0dadd8f560e5cdc499dee99b033d141f7e9'
+b2sums=('af4c921e40f58cd61d62dfc1420dfd4d9c0b678f8c17f9504b5f3b6fdbdbd81139a9e5c4397453795ab9fd57f6212f3eee672fc27ad37a4c2f241560dec5c1cd'
         'f6c0042f2d171d93f3aadc5fed50fa4a83a901371ce914cb44d614ac0510e0c5c2e10334a9011acad80f86ab08d7a953cce8d331660bca49bbfcaabbce9bee6b')
 validpgpkeys=(
   D637032E45B8C6585B9456565D2EEE6F6F349D7C # Tim Müller <tim@gstreamer-foundation.org>
@@ -96,6 +96,7 @@ prepare() {
 }
 
 build() {
+  export RUSTFLAGS="${RUSTFLAGS// -C link-arg=-Wl,--icf=safe/}"
   local meson_options=(
     --cross-file lib32
     --libexecdir lib32
