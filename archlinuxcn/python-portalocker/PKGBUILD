@@ -12,12 +12,16 @@ license=('BSD-3-Clause')
 makedepends=(
   python-build
   python-installer
-  python-setuptools
-  python-setuptools-scm
   python-wheel
+  python-uv-build
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/wolph/portalocker/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('adb706f5a29bbcf1ab518f68461d49030ee74589d10555f025ce764caf725699')
+
+prepare() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  sed -i "s/'uv_build[^']*'/'uv_build'/" pyproject.toml
+}
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
