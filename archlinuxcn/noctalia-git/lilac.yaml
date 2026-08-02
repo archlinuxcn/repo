@@ -5,16 +5,12 @@ maintainers:
 build_prefix: extra-x86_64
 
 pre_build_script: |
-  aur_pre_build(maintainers=['noctalia-dev'])
   update_pkgrel()
   vcs_update()
 
 post_build_script: |
   git_pkgbuild_commit()
-  aur_post_build()
 
 update_on:
-  - source: aur
-    aur: noctalia-git
   - source: github
     github: noctalia-dev/noctalia
