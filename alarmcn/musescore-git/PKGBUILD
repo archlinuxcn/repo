@@ -3,9 +3,9 @@
 # Maintainer: Yichao Yu <yyc1992@gmail.com>
 
 pkgname=musescore-git
-_realver=2.0.4
-pkgver=47386.5f17e01be98
-pkgrel=1
+_realver=5.0.0
+pkgver=48584.4822c0fb60
+pkgrel=0
 epoch=1
 pkgdesc="A music score editor - git-version"
 arch=(aarch64 i686 x86_64)
@@ -13,17 +13,22 @@ url="http://www.musescore.org/en/"
 license=('GPL')
 depends=(shared-mime-info alsa-lib zlib freetype2 libvorbis libopusenc flac
          qt6-base qt6-networkauth qt6-declarative qt6-svg qt6-tools qt6-5compat
-         qt6-scxml portaudio libpulse libsndfile libogg gcc-libs portmidi)
-makedepends=('cmake' 'doxygen' 'git' 'lame' 'xxd')
+         qt6-scxml portaudio libpulse libsndfile libogg gcc-libs portmidi
+         liblouis)
+makedepends=('cmake' 'doxygen' 'git' 'lame' 'xxd' 'vulkan-headers')
 optdepends=('jack')
 conflicts=("musescore" 'mscore' 'musescore-svn')
 provides=("musescore=${_realver}" 'musescore-svn')
 replaces=('musescore-svn')
 source=('git+https://github.com/musescore/MuseScore.git'
-  'mime.xml'
-  '0001-Do-not-force-fusion-style.patch'
-  '0001-framework-Do-not-hard-code-Fusion-style.patch')
+        'git+https://github.com/musescore/muse_framework.git'
+        'git+https://github.com/musescore/muse_deps.git'
+        'mime.xml'
+        '0001-Do-not-force-fusion-style.patch'
+        '0001-framework-Do-not-hard-code-Fusion-style.patch')
 sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
             '85304aa6d5847542a7d31c010e82abda3872c471a625b64471e4e33a0b43b39d'
             '53662b02251dfb275fa0abcc37816ee0a21c7a301f5ba5c71f2b3dbe139853d7'
             '44d320ba802b0bb731eb13d0f9393f14dbdae8c3f3a0341c4c625cfdc2d03f18')
@@ -38,31 +43,18 @@ pkgver() {
 prepare() {
   cd MuseScore
 
+  git submodule init
+
+  git config submodule.muse_framework.url "$srcdir/muse_framework"
+  git config submodule.muse_deps.url "$srcdir/muse_deps"
+  git -c protocol.file.allow=always submodule update
+
   # Upstream add hard coded Fusion theme and they refuse to change it.
   patch -Np1 < ../0001-Do-not-force-fusion-style.patch
 
   (
     cd muse
     patch -Np1 < ../../0001-framework-Do-not-hard-code-Fusion-style.patch
-  )
-
-  (cd muse/framework/audio
-   rm -rf thirdparty/lame/*/
-   cat > thirdparty/lame/CMakeLists.txt <<EOF
-add_library(lame INTERFACE)
-target_link_libraries(lame INTERFACE libmp3lame.so)
-target_include_directories(lame INTERFACE /usr/include/lame)
-EOF
-   rm -rf thirdparty/opusenc/*/
-   echo > thirdparty/opusenc/CMakeLists.txt
-   rm -rf thirdparty/opus/*/
-   echo > thirdparty/opus/CMakeLists.txt
-   rm -rf thirdparty/flac/*/
-   cat > thirdparty/flac/CMakeLists.txt <<EOF
-add_library(flac INTERFACE)
-target_link_libraries(flac INTERFACE libFLAC.so)
-target_link_libraries(flac INTERFACE libFLAC++.so)
-EOF
   )
 }
 
@@ -84,19 +76,31 @@ build() {
   CFLAGS+=' -I/usr/include/opus'
   CXXFLAGS+=' -I/usr/include/opus'
   export CFLAGS
-  export CXXFLAGS+=" -fPIC -std=gnu++11 -Wno-unused-local-typedefs -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-unused-function -Wno-invalid-pch"
+  export CXXFLAGS+=" -fPIC -Wno-unused-local-typedefs -Wno-unused-parameter -Wno-maybe-uninitialized -Wno-unused-function -Wno-invalid-pch"
   mkdir -p build.release
   cd build.release
   cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_SKIP_RPATH=On \
-    -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC" \
-    -DBUILD_UNIT_TESTS=Off \
-    -DBUILD_CRASHPAD_CLIENT=Off \
-    -DMUSESCORE_BUILD_CONFIG=release \
-    -DUSE_SYSTEM_FREETYPE=On \
-    -DMUSESCORE_BUILD_MODE=release \
-    -DMUE_BUILD_UNIT_TESTS=Off
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_SKIP_RPATH=On \
+        -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC" \
+        -DBUILD_CRASHPAD_CLIENT=Off \
+        -DMUSESCORE_BUILD_CONFIG=release \
+        -DMUSESCORE_BUILD_MODE=release \
+        -DBUILD_UNIT_TESTS=Off \
+        -DMUSE_ENABLE_UNIT_TESTS=Off \
+        -DMUE_BUILD_UNIT_TESTS=Off \
+        -DEXTDEPS_OVERRIDE_OGG=SYSTEM \
+        -DEXTDEPS_OVERRIDE_VORBIS=SYSTEM \
+        -DEXTDEPS_OVERRIDE_FLAC=SYSTEM \
+        -DEXTDEPS_OVERRIDE_OPUS=SYSTEM \
+        -DEXTDEPS_OVERRIDE_LIBSNDFILE=SYSTEM \
+        -DEXTDEPS_OVERRIDE_LIBLOUIS=SYSTEM \
+        -DEXTDEPS_OVERRIDE_ZLIB=SYSTEM \
+        -DEXTDEPS_OVERRIDE_LIBPNG=SYSTEM \
+        -DEXTDEPS_OVERRIDE_FREETYPE=SYSTEM \
+        -DEXTDEPS_OVERRIDE_HARFBUZZ=SYSTEM \
+        -DEXTDEPS_OVERRIDE_LAME=SYSTEM \
+        -DEXTDEPS_OVERRIDE_OPUSENC=SYSTEM
   make
 }
 
@@ -105,11 +109,7 @@ package() {
 
   make DESTDIR="$pkgdir" install
   install -Dm644 "$srcdir/mime.xml" \
-    "$pkgdir/usr/share/mime/packages/x-musescore.xml"
-  # ln -s mscore "$pkgdir/usr/bin/musescore"
-  # install -dm755 "$pkgdir/usr/share/mscore-2.0/manual"
-  # mv share/manual/plugins/* \
-  #   "$pkgdir/usr/share/mscore-2.0/manual/plugins"
+          "$pkgdir/usr/share/mime/packages/x-musescore.xml"
   rm -rf "$pkgdir/usr/include/kddockwidgets"
   rm -rf "$pkgdir/usr/lib/cmake/KDDockWidgets"
   rm -rf "$pkgdir/usr/lib/libkddockwidgets.a"
