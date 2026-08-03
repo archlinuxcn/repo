@@ -1,0 +1,31 @@
+#
+
+pkgname=fdk-aac
+pkgver=2.0.3
+pkgrel=0
+pkgdesc='A standalone library of the Fraunhofer FDK AAC code from Android.'
+arch=('x86_64' 'aarch64')
+url="https://sourceforge.net/projects/opencore-amr/"
+license=('custom')
+makedepends=(cmake)
+provides=(libfdk-aac.so)
+source=("https://github.com/mstorsjo/fdk-aac/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('e25671cd96b10bad896aa42ab91a695a9e573395262baed4e4a2ff178d6a3a78')
+
+build() {
+    cd fdk-aac-${pkgver}
+
+    cmake -B build \
+          -DCMAKE_BUILD_TYPE=None \
+          -DBUILD_PROGRAMS=On \
+          -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build
+}
+
+package() {
+    cd fdk-aac-${pkgver}
+
+    DESTDIR="${pkgdir}" cmake --install build
+
+    install -Dm644 NOTICE -t "${pkgdir}"/usr/share/licenses/${pkgname}
+}
