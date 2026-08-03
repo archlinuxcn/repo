@@ -5,8 +5,8 @@
 # Contributor: Darren Wu <$(base64 --decode <<<'ZGFycmVuMTk5NzA4MTBAZ21haWwuY29tCg==')>
 
 pkgname=yosys-git
-pkgrel=1
-pkgver=0.64+215.r17124.54866d154
+pkgrel=0
+pkgver=0.67.r17605.468ba27d9
 pkgdesc='A framework for RTL synthesis'
 arch=('armv7h' 'aarch64' 'x86_64' 'i686')
 url='https://yosyshq.net/yosys/'
@@ -14,7 +14,8 @@ license=('custom:ISC')
 provides=("yosys=$pkgver")
 conflicts=("yosys")
 depends=('bash' 'tcl' 'libffi' 'protobuf') # boost-libs python (added in package())
-makedepends=('git' 'boost' 'clang' 'python' 'pybind11' 'python-cxxheaderparser' 'uv')
+makedepends=('git' 'boost' 'cmake' 'clang' 'python'
+             'pybind11' 'python-cxxheaderparser')
 optdepends=('graphviz: Schematics display support'
             'xdot: Display netlists'
             'yices: default solver for yosys-smtbmc'
@@ -27,7 +28,14 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd yosys
-  printf "%s.r%s.%s" "$(make echo-yosys-ver)" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  _yosys_ver=$(
+    cmake -DCMAKE_MODULE_PATH=${PWD}/cmake -P /dev/stdin 2>&1 <<EOF
+include(YosysVersionData)
+message("\${YOSYS_VERSION_MAJOR}.\${YOSYS_VERSION_MINOR}")
+EOF
+  )
+
+  printf "%s.r%s.%s" "${_yosys_ver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
@@ -37,39 +45,31 @@ prepare() {
   git submodule update
 }
 
-_make() {
-  make \
-    PREFIX="/usr" \
-    CONFIG=gcc \
-    ENABLE_TCL=1 \
-    ENABLE_ABC=1 \
-    ENABLE_GLOB=1 \
-    ENABLE_PLUGINS=1 \
-    ENABLE_LIBYOSYS=1 \
-    ENABLE_PROTOBUF=1 \
-    ENABLE_ZLIB=1 \
-    ENABLE_PYOSYS=1 \
-    ABCPULL=0 \
-    ABCREV=default \
-    BOOST_PYTHON_LIB="-lpython3 -lboost_python3" $@
-}
-
 build() {
   cd yosys
 
-  _make
-}
+  cmake . -B build -DCMAKE_BUILD_TYPE=None \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DBUILD_TESTING=Off \
+        -Wno-author \
+        -DYOSYS_INSTALL_DRIVER=ON \
+        -DYOSYS_INSTALL_LIBRARY=ON \
+        -DYOSYS_INSTALL_PYTHON=ON \
+        -DYOSYS_WITH_PYTHON=ON \
+        -DYOSYS_ENABLE_TCL=On \
+        -DYOSYS_ENABLE_ABC=On \
+        -DYOSYS_ENABLE_GLOB=On \
+        -DYOSYS_ENABLE_PLUGINS=On \
+        -DYOSYS_ENABLE_ZLIB=On \
+        -DYOSYS_ENABLE_PYTHON=On
 
-# check() {
-#   cd yosys
-#   _make test
-# }
+  make -C build
+}
 
 package() {
   cd yosys
 
-  # disable stripping in the makefile - duplicated effort and makes debug packages impossible
-  _make STRIP=':' PREFIX="/usr" PYTHON_PREFIX="${pkgdir}/usr" DESTDIR="${pkgdir}" install
+  make install DESTDIR="${pkgdir}"
 
   install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
