@@ -21,10 +21,12 @@ provides=("musescore=${_realver}" 'musescore-svn')
 replaces=('musescore-svn')
 source=('git+https://github.com/musescore/MuseScore.git'
   'mime.xml'
-  '0001-Do-not-force-fusion-style.patch')
-md5sums=('SKIP'
-         '969696178e56de36f9af37d7da61baaa'
-         '855e0c1c5394bbe15273ba61fd8a6501')
+  '0001-Do-not-force-fusion-style.patch'
+  '0001-framework-Do-not-hard-code-Fusion-style.patch')
+sha256sums=('SKIP'
+            '85304aa6d5847542a7d31c010e82abda3872c471a625b64471e4e33a0b43b39d'
+            '53662b02251dfb275fa0abcc37816ee0a21c7a301f5ba5c71f2b3dbe139853d7'
+            '44d320ba802b0bb731eb13d0f9393f14dbdae8c3f3a0341c4c625cfdc2d03f18')
 options=(strip debug)
 
 pkgver() {
@@ -39,7 +41,12 @@ prepare() {
   # Upstream add hard coded Fusion theme and they refuse to change it.
   patch -Np1 < ../0001-Do-not-force-fusion-style.patch
 
-  (cd src/framework/audio
+  (
+    cd muse
+    patch -Np1 < ../../0001-framework-Do-not-hard-code-Fusion-style.patch
+  )
+
+  (cd muse/framework/audio
    rm -rf thirdparty/lame/*/
    cat > thirdparty/lame/CMakeLists.txt <<EOF
 add_library(lame INTERFACE)

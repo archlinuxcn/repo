@@ -1,0 +1,34 @@
+From 9e2174b0676afa4a91104aa575dad2b058208939 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 3 Aug 2026 14:55:15 -0400
+Subject: [PATCH] [framework] Do not hard code Fusion style
+
+---
+ framework/ui/view/widgetstyle.cpp | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/framework/ui/view/widgetstyle.cpp b/framework/ui/view/widgetstyle.cpp
+index e4e4f7848..a597a27ea 100644
+--- a/framework/ui/view/widgetstyle.cpp
++++ b/framework/ui/view/widgetstyle.cpp
+@@ -86,8 +86,16 @@ static void drawRoundedRect(QPainter* painter, const QRectF& rect, const qreal r
+     painter->restore();
+ }
+ 
++static QString _get_style_name()
++{
++    auto style = QApplication::style();
++    if (style)
++        return style->objectName();
++    return "Fusion";
++}
++
+ WidgetStyle::WidgetStyle(std::shared_ptr<ThemeApi> t)
+-    : QProxyStyle(QStyleFactory::create("Fusion")), m_theme(t)
++    : QProxyStyle(QStyleFactory::create(_get_style_name())), m_theme(t)
+ {
+ }
+ 
+-- 
+2.53.0
+
