@@ -1,0 +1,76 @@
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Maintainer: Fabian Bornschein <fabiscafe@archlinux.org>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+# Contributor: Jaroslav Lichtblau <dragonlord@aur.archlinux.org>
+# Contributor: Adam Hani Schakaki (krzd) <krzd@krzd.net>
+
+pkgbase=gsettings-desktop-schemas-unstable
+pkgname=(
+  gsettings-desktop-schemas-unstable
+  gsettings-system-schemas-unstable
+)
+pkgver=50.1
+pkgrel=1
+pkgdesc="GSettings schemas for GNOME: unstable versions"
+url="https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas"
+arch=(any)
+license=(LGPL-2.1-or-later)
+makedepends=(
+  adwaita-fonts
+  dconf
+  git
+  glib2-devel
+  gobject-introspection
+  meson
+)
+source=("git+$url.git#tag=${pkgver/[a-z]/.&}")
+b2sums=('5d8f8f3783ce6ad061dd588c38da4a4fa5be25f3e2ebb7db59266a379618e6ab7daf794db036713d42e842e81e5372f65749fb5157e13bf9050e530c1af8313f')
+
+prepare() {
+  cd gsettings-desktop-schemas
+}
+
+build() {
+  arch-meson gsettings-desktop-schemas build
+  meson compile -C build
+}
+
+check() {
+  meson test -C build --print-errorlogs
+}
+
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+  done
+}
+
+package_gsettings-desktop-schemas-unstable() {
+  provides+=(gsettings-desktop-schemas)
+  pkgdesc+=" desktop components"
+  depends=(
+    "gsettings-system-schemas=$pkgver-$pkgrel"
+    adwaita-fonts
+    dconf
+  )
+
+  meson install -C build --destdir "$pkgdir"
+
+  cd "$pkgdir"
+  _pick system usr/share/glib-2.0/schemas/org.gnome.desktop.enums.xml
+  _pick system usr/share/glib-2.0/schemas/org.gnome.system.*.gschema.xml
+}
+
+package_gsettings-system-schemas-unstable() {
+  provides+=(gsettings-system-schemas)
+  pkgdesc+=" system components"
+  depends=(dconf)
+
+  mv system/* "$pkgdir"
+}
+
+# vim:set sw=2 sts=-1 et:
