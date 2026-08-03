@@ -7,8 +7,8 @@ pkgbase=mutter-kimiblock-unstable
 pkgname=(
 	mutter-kimiblock-unstable
 )
-pkgver=51.alpha
-pkgrel=14
+pkgver=51.beta
+pkgrel=1
 pkgdesc="Window manager and compositor for GNOME, unstable version with patches picked from Kimiblock"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -96,15 +96,11 @@ source=(
 
   4921.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/4921.patch
 )
-b2sums=('28ff38c686ebafdc5c69511df1b6948932d4c21d7c147b0c43a3909f14d2a3baafac78e4d5ac58e05bd8ce5781f9b1b0f2ecb6d0179afdcf6a048ee7c7e1caf6'
+b2sums=('e0cfc1c074ff82f7a9a72acb73dfe2a3c95e84b1735afd308a325e9c3ad5b91da3b20f64a842faa45e903eff111a13f75b1ccde4a707c946666ac31000599420'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
-        'c22712309a972cb9199faf4a1756e972172cdd452247d8a084781b042673fa8030f69787c0d15966a3043981ea6175b2bcd4b61823731b1ec5dc3b685e814481'
-        'eb1a8acf089cf50a2a043cfd421e080b27749df9530bd90e6f8a46368ea1a2dfee6cf7395815103e768bd15c25078d65e8c22b885cf3e60ed1e7b5c98ac9cd66'
         'af82aa14e4ab031622292960bcd1cac96f07e6af4d0da47b7e9e4b8648ac1a4adec18694a6c798a8b1794b6357a11ae8e9ac2fff1eec94e18a176bd6576ac507'
         '2c1394bf2e39cbe4f184d4f359842d1b439d62fcaf8de6d37a07be0a069b97454152f93bb91a187a411f60e15cce1c738702d3cdc33a689ac4c9644eda433b99'
-        '6526db9002f4ab64bb8ec09b09dc96ef87aa04cd11a914c6dc625114b224b966f63fc3f8a3afa538e7590f6dedfe8fdd2f7802a839b215f9ebef12e25ae0dcb0'
-        '0946345f682550a17e6d4d4ff6c6954dc1f0977cdab3260b8bab713b194c11df44da7fd3aa227385baa96500fa775147bb6eba1d047ab1cdb5bc3a9a5e75ee42'
-        'ab4b3c1bee02ee71f43dd38c94df502670e4ccb252d26f7f8fb0b005de8a0b176d5c4c92cfc5935d36b63c9444bde884a374b9fc4a1eb0ebf02c07729c4f60ab')
+        'c38c600a2231e6129d8ab7ae2e8468f0063fcd16cbd2c1845c214ade4e036864131cd3481cbe86fb5bedaac228f8dc858e91f33a3c090bfdb5ddb68b2f70bfc1')
 
 prepare() {
   cd mutter
