@@ -127,11 +127,6 @@ prepare() {
   # Fix build with CUDA 13
   sed -i 's|sm_50|sm_75|' build_files/build_environment/cmake/osl.cmake intern/cycles/kernel/CMakeLists.txt
 
-  # Fix build with ffmpeg 8
-  git cherry-pick -n \
-    ebfad2c071d712d126a5c3d93ebed8a226821feb \
-    f5f30131131025a24be93eced7d04f9d96cf5cbf
-
   # Fix build with opencolorio 2.5.0
   git cherry-pick -n 98e400c3ae2fef75d2550a5fc1370d6e97ec9560
 
