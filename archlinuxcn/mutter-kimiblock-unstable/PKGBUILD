@@ -89,7 +89,6 @@ source=(
   "git+$url.git#tag=${pkgver}"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
 
-  5137.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5137.patch
   5133.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5133.patch
 
   5157.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5157.patch
@@ -109,9 +108,6 @@ b2sums=('28ff38c686ebafdc5c69511df1b6948932d4c21d7c147b0c43a3909f14d2a3baafac78e
 
 prepare() {
   cd mutter
-
-	echo 5137
-  git apply ../5137.patch
 
   #git apply ../5133.patch
 
