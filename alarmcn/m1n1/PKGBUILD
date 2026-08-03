@@ -7,7 +7,7 @@ pkgdesc='Asahi Linux bootloader'
 arch=('aarch64')
 url='http://asahilinux.org'
 license=('MIT')
-makedepends=(git imagemagick)
+makedepends=(git imagemagick rust cargo)
 source=(
   "git+https://github.com/AsahiLinux/m1n1#tag=v${pkgver}"
 )
