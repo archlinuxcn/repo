@@ -14,7 +14,7 @@ license=('GPL')
 depends=(shared-mime-info alsa-lib zlib freetype2 libvorbis libopusenc flac
          qt6-base qt6-networkauth qt6-declarative qt6-svg qt6-tools qt6-5compat
          qt6-scxml portaudio libpulse libsndfile libogg gcc-libs portmidi
-         liblouis)
+         liblouis fdk-aac pugixml utf8cpp)
 makedepends=('cmake' 'doxygen' 'git' 'lame' 'xxd' 'vulkan-headers')
 optdepends=('jack')
 conflicts=("musescore" 'mscore' 'musescore-svn')
@@ -89,18 +89,7 @@ build() {
         -DBUILD_UNIT_TESTS=Off \
         -DMUSE_ENABLE_UNIT_TESTS=Off \
         -DMUE_BUILD_UNIT_TESTS=Off \
-        -DEXTDEPS_OVERRIDE_OGG=SYSTEM \
-        -DEXTDEPS_OVERRIDE_VORBIS=SYSTEM \
-        -DEXTDEPS_OVERRIDE_FLAC=SYSTEM \
-        -DEXTDEPS_OVERRIDE_OPUS=SYSTEM \
-        -DEXTDEPS_OVERRIDE_LIBSNDFILE=SYSTEM \
-        -DEXTDEPS_OVERRIDE_LIBLOUIS=SYSTEM \
-        -DEXTDEPS_OVERRIDE_ZLIB=SYSTEM \
-        -DEXTDEPS_OVERRIDE_LIBPNG=SYSTEM \
-        -DEXTDEPS_OVERRIDE_FREETYPE=SYSTEM \
-        -DEXTDEPS_OVERRIDE_HARFBUZZ=SYSTEM \
-        -DEXTDEPS_OVERRIDE_LAME=SYSTEM \
-        -DEXTDEPS_OVERRIDE_OPUSENC=SYSTEM
+        -DEXTDEPS_OVERRIDE_ALL=SYSTEM
   make
 }
 
