@@ -53,7 +53,7 @@ package_gsettings-desktop-schemas-unstable() {
   provides+=(gsettings-desktop-schemas)
   pkgdesc+=" desktop components"
   depends=(
-    "gsettings-system-schemas=$pkgver-$pkgrel"
+    "gsettings-system-schemas-unstable=$pkgver-$pkgrel"
     adwaita-fonts
     dconf
   )
