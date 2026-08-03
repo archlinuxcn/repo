@@ -23,7 +23,7 @@ makedepends=(
   gobject-introspection
   meson
 )
-source=("git+$url.git#tag=${pkgver/[a-z]/.&}")
+source=("git+$url.git#tag=${pkgver}")
 b2sums=('5d8f8f3783ce6ad061dd588c38da4a4fa5be25f3e2ebb7db59266a379618e6ab7daf794db036713d42e842e81e5372f65749fb5157e13bf9050e530c1af8313f')
 
 prepare() {
