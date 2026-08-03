@@ -92,7 +92,6 @@ source=(
   5133.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5133.patch
 
   5157.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5157.patch
-  5159.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5159.patch
   5169.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5169.patch
   5153.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5153.patch
 )
@@ -113,10 +112,6 @@ prepare() {
 
 	echo 5157
   git apply ../5157.patch
-
-	echo 5159
-  # eglgears drift
-  git apply ../5159.patch
 
   echo 5169
   git apply ../5169.patch
