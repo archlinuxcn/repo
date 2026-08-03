@@ -14,7 +14,7 @@ license=('custom:ISC')
 provides=("yosys=$pkgver")
 conflicts=("yosys")
 depends=('bash' 'tcl' 'libffi' 'protobuf') # boost-libs python (added in package())
-makedepends=('git' 'boost' 'cmake' 'clang' 'python'
+makedepends=('git' 'boost' 'cmake' 'ninja' 'clang' 'python'
              'pybind11' 'python-cxxheaderparser')
 optdepends=('graphviz: Schematics display support'
             'xdot: Display netlists'
@@ -22,7 +22,6 @@ optdepends=('graphviz: Schematics display support'
             'cvc4: alternative solver for yosys-smtbmc'
             'z3: alternative solver for yosys-smtbmc')
 options=('!lto') # getting SIGSEGV when running the tests with LTO
-# checkdepends=('iverilog')
 source=('git+https://github.com/YosysHQ/yosys.git')
 sha512sums=('SKIP')
 
@@ -49,6 +48,7 @@ build() {
   cd yosys
 
   cmake . -B build -DCMAKE_BUILD_TYPE=None \
+        -G Ninja \
         -DCMAKE_INSTALL_PREFIX='/usr' \
         -DBUILD_TESTING=Off \
         -Wno-author \
@@ -63,13 +63,13 @@ build() {
         -DYOSYS_ENABLE_ZLIB=On \
         -DYOSYS_ENABLE_PYTHON=On
 
-  make -C build
+  cmake --build build
 }
 
 package() {
   cd yosys
 
-  make install DESTDIR="${pkgdir}"
+  DESTDIR="${pkgdir}" cmake --install build
 
   install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
