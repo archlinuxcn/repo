@@ -87,7 +87,7 @@ makedepends=(
 source=(
   # Mutter tags use SSH signatures which makepkg doesn't understand
   "git+$url.git#tag=${pkgver}"
-  "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
+  "git+https://gitlab.gnome.org/GNOME/gvdb.git"
 
   5133.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5133.patch
 
