@@ -3,24 +3,28 @@
 # it under the terms of the CC0 1.0 License.
 
 pkgname=qdl
-pkgver=2.6
+pkgver=2.8
 pkgrel=1
 pkgdesc="Tool to communicate with Qualcomm System On a Chip bootroms to install or execute code"
 arch=(armv7h aarch64 i686 x86_64)
 url='https://github.com/linux-msm/qdl'
-license=('BSD3')
-depends=(libxml2.so zlib xz libicui18n.so libicuuc.so libicudata.so libusb-1.0.so)
+license=('BSD-3-Clause')
+depends=(libxml2.so libzip.so xz libicui18n.so libicuuc.so libicudata.so libusb-1.0.so)
+makedepends=(git meson ninja cmake help2man)
 source=("https://github.com/andersson/${pkgname}/archive/v${pkgver}.tar.gz")
-sha512sums=('cc408faf16e531534f2ee3dc84d99f15b988ebae78ee44b45790f6db113bd98356dcb28a2a744be7d9560749b6a27310d3fd8625fad2986b6f4844c7b839a5e3')
+sha512sums=('08253666baf0de51d9dd182e3b0503fd838b084d66a019c0972a95c67e939406995b4e0b1659a9fff89d60a8eb916265523f5fe231c3faef2b45a0b785f37a04')
 
 build(){
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make CFLAGS="$CFLAGS -include stdlib.h $(pkgconf libusb-1.0 --cflags) -O2 -Wall -g $(xml2-config --cflags)"
+  cd ${pkgname}-${pkgver}
+
+  arch-meson . build -D tests=disabled -D nbdkit=disabled
+  meson compile -C build
 }
 
 package(){
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make prefix="/usr" DESTDIR="${pkgdir}" install
+  cd ${pkgname}-${pkgver}
+
+  meson install -C build --destdir "$pkgdir"
 
   # Package license
   install -d "${pkgdir}/usr/share/licenses/${pkgname}/"

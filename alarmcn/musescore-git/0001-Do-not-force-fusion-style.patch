@@ -1,47 +1,24 @@
-From 90d97c45dc3f53db32e5e04e0e1f8769d1669c9c Mon Sep 17 00:00:00 2001
+From f1f76f26f235b0ec4ab8eb63a37bcd75475435ef Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 13 Jul 2022 09:08:18 -0400
 Subject: [PATCH] Do not force fusion style
 
 ---
- src/app/main.cpp                  |  1 -
- src/framework/ui/api/themeapi.cpp | 10 +++++++++-
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ src/app/main.cpp | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/src/app/main.cpp b/src/app/main.cpp
-index acc4ad4146..1b446f5ec4 100644
+index 32651d6430..b4fc503b50 100644
 --- a/src/app/main.cpp
 +++ b/src/app/main.cpp
-@@ -90,7 +90,6 @@ int main(int argc, char** argv)
+@@ -87,7 +87,6 @@ int main(int argc, char** argv)
  
      app_init_qrc();
  
 -    qputenv("QT_STYLE_OVERRIDE", "Fusion");
      qputenv("QML_DISABLE_DISK_CACHE", "true");
  
- #ifdef Q_OS_LINUX
-diff --git a/src/framework/ui/api/themeapi.cpp b/src/framework/ui/api/themeapi.cpp
-index 380c372a4f..b980ee2b37 100644
---- a/src/framework/ui/api/themeapi.cpp
-+++ b/src/framework/ui/api/themeapi.cpp
-@@ -502,8 +502,16 @@ void ThemeApi::notifyAboutThemeChanged()
- // QStyle
- // ====================================================
- 
-+static QString _get_style_name()
-+{
-+    auto style = QApplication::style();
-+    if (style)
-+        return style->objectName();
-+    return "Fusion";
-+}
-+
- ProxyStyle::ProxyStyle(ThemeApi* t)
--    : QProxyStyle(QStyleFactory::create("Fusion")), m_theme(t)
-+    : QProxyStyle(QStyleFactory::create(_get_style_name())), m_theme(t)
- {
- }
- 
+     // HACK: Workaround for crash #28840. This disables the incremental GC
 -- 
-2.45.2
+2.53.0
 

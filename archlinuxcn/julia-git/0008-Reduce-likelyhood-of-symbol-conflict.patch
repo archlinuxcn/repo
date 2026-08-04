@@ -1,17 +1,17 @@
-From 080d393d03c3efbafeca023fd9e2b399246ef650 Mon Sep 17 00:00:00 2001
+From 9732371d453f8041ff55bfb76c94effadcce245c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 24 Aug 2025 19:28:22 -0400
-Subject: [PATCH 08/14] Reduce likelyhood of symbol conflict
+Subject: [PATCH 8/9] Reduce likelyhood of symbol conflict
 
 ---
  base/docs/Docs.jl | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/base/docs/Docs.jl b/base/docs/Docs.jl
-index 5b60115742..c097cd757a 100644
+index 71c4491555..abb31995a5 100644
 --- a/base/docs/Docs.jl
 +++ b/base/docs/Docs.jl
-@@ -75,7 +75,7 @@ export doc, hasdoc, undocumented_names
+@@ -74,7 +74,7 @@ export doc, hasdoc, undocumented_names
  # Basic API / Storage
  
  const modules = Module[]
