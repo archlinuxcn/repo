@@ -1,7 +1,7 @@
-From bfa5171ef76fc2e8658e5c86a4c1ca3a1ec4080a Mon Sep 17 00:00:00 2001
+From 910d6cdeae0944715474625d653d9ea7950fbf9d Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
-Subject: [PATCH 03/14] Clear soname and hard code system lib path
+Subject: [PATCH 3/9] Clear soname and hard code system lib path
 
 ---
  .../src/CompilerSupportLibraries_jll.jl       | 150 ++---------
@@ -28,7 +28,7 @@ Subject: [PATCH 03/14] Clear soname and hard code system lib path
  21 files changed, 150 insertions(+), 892 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-index 9aec22b58b..8526b75387 100644
+index 9aec22b58b..7a47a973b0 100644
 --- a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 +++ b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 @@ -10,127 +10,24 @@ export libgfortran, libstdcxx, libgomp, libatomic, libgcc_s
@@ -167,7 +167,7 @@ index 9aec22b58b..8526b75387 100644
 +const libgcc_s = LazyLibrary(libgcc_s_path)
 +const libgfortran_path = "/usr/lib/libgfortran.so"
 +const libgfortran = LazyLibrary(libgfortran_path)
-+const libstdcxx_path = "/usr/lib/libstd++.so"
++const libstdcxx_path = "/usr/lib/libstdc++.so"
 +const libstdcxx = LazyLibrary(libstdcxx_path)
 +const libgomp_path = "/usr/lib/libgomp.so"
 +const libgomp = LazyLibrary(libgomp_path)
@@ -264,7 +264,7 @@ index 12a3fc21bd..7ecd0c91e3 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/LLD_jll/src/LLD_jll.jl b/stdlib/LLD_jll/src/LLD_jll.jl
-index 9b8365dddc..7c6a4cebc9 100644
+index 208964c0cc..48ddff5efe 100644
 --- a/stdlib/LLD_jll/src/LLD_jll.jl
 +++ b/stdlib/LLD_jll/src/LLD_jll.jl
 @@ -5,16 +5,15 @@
@@ -1227,7 +1227,7 @@ index a52168bf24..b27161814e 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/Zstd_jll/src/Zstd_jll.jl b/stdlib/Zstd_jll/src/Zstd_jll.jl
-index 30481a12e0..8dfa2fb405 100644
+index 1fbfd18446..5139d08ed4 100644
 --- a/stdlib/Zstd_jll/src/Zstd_jll.jl
 +++ b/stdlib/Zstd_jll/src/Zstd_jll.jl
 @@ -13,29 +13,14 @@ export libzstd, zstd, zstdmt

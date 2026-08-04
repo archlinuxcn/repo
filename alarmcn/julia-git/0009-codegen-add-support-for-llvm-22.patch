@@ -1,0 +1,344 @@
+From d919ba7970703320ccfd2f41a81e14084bb74049 Mon Sep 17 00:00:00 2001
+From: Jameson Nash <vtjnash@gmail.com>
+Date: Wed, 29 Jul 2026 15:12:45 +0000
+Subject: [PATCH 9/9] codegen: add support for llvm-22
+
+---
+ src/Makefile                         |  6 ++++--
+ src/clangsa/GCChecker.h              |  4 ++++
+ src/clangsa/GCCheckerPropagation.cpp | 15 +++++++++++++++
+ src/codegen.cpp                      |  2 +-
+ src/disasm.cpp                       | 14 ++++++++++----
+ src/jitlayers.cpp                    | 24 ++++++++++++++++++++++--
+ src/jitlayers.h                      |  9 +++++++--
+ src/julia_threads.h                  |  2 +-
+ src/llvm-alloc-opt.cpp               | 12 ++++++++++--
+ src/llvm-late-gc-lowering.cpp        | 18 ++++++++++++++++--
+ src/support/analyzer_annotations.h   |  7 +++++--
+ 11 files changed, 95 insertions(+), 18 deletions(-)
+
+diff --git a/src/Makefile b/src/Makefile
+index 8292c7bbe2..15b21e35ad 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -765,16 +765,18 @@ SA_EXCEPTIONS-gc-stock.c                    := -Xanalyzer -analyzer-config -Xana
+  # these need to be annotated (and possibly fixed)
+ SKIP_GC_CHECK := codegen.cpp rtutils.c
+ 
++CLANGSA_GC_CHECKERS := core,julia.GCChecker,apiModeling,unix.cstring.CStringModeling,unix.DynamicMemoryModeling,nullability.NullPassedToNonnull,nullability.NullReturnedFromNonnull
++
+ # make sure LLVM's invariant information is not discarded with -DNDEBUG
+ clang-sagc-%: JCPPFLAGS_COMMON += -UNDEBUG
+ clang-sagc-%: $(SRCDIR)/%.c $(GCCHECKER_PLUGIN) .FORCE | analyzegc-deps-check
+ 	@$(call PRINT_ANALYZE, $(build_depsbindir)/clang -D__clang_gcanalyzer__ --analyze -Xanalyzer -analyzer-werror -Xanalyzer -analyzer-output=text --analyzer-no-default-checks \
+-		-Xclang -load -Xclang $(GCCHECKER_PLUGIN) -Xclang -analyzer-checker=core$(COMMA)julia.GCChecker \
++		-Xclang -load -Xclang $(GCCHECKER_PLUGIN) -Xclang -analyzer-checker=$(CLANGSA_GC_CHECKERS) \
+ 		$(SA_EXCEPTIONS-$(notdir $<)) \
+ 		$(CLANG_TOOLING_C_FLAGS) -fcolor-diagnostics -x c $<)
+ clang-sagc-%: $(SRCDIR)/%.cpp $(GCCHECKER_PLUGIN) .FORCE | analyzegc-deps-check
+ 	@$(call PRINT_ANALYZE, $(build_depsbindir)/clang -D__clang_gcanalyzer__ --analyze -Xanalyzer -analyzer-werror -Xanalyzer -analyzer-output=text --analyzer-no-default-checks \
+-		-Xclang -load -Xclang $(GCCHECKER_PLUGIN) -Xclang -analyzer-checker=core$(COMMA)julia.GCChecker \
++		-Xclang -load -Xclang $(GCCHECKER_PLUGIN) -Xclang -analyzer-checker=$(CLANGSA_GC_CHECKERS) \
+ 		$(SA_EXCEPTIONS-$(notdir $<)) \
+ 		$(CLANG_TOOLING_CXX_FLAGS) -fcolor-diagnostics -x c++ $<)
+ 
+diff --git a/src/clangsa/GCChecker.h b/src/clangsa/GCChecker.h
+index b21a7330ad..029929a397 100644
+--- a/src/clangsa/GCChecker.h
++++ b/src/clangsa/GCChecker.h
+@@ -337,7 +337,11 @@ public:
+   void checkPostStmt(const UnaryOperator *UO, CheckerContext &C) const;
+   void checkDerivingExpr(const Expr *Result, const Expr *Parent,
+                          CheckerContext &C) const;
++#if LLVM_VERSION_MAJOR >= 22
++  void checkBind(SVal Loc, SVal Val, const Stmt *S, bool AtDeclInit, CheckerContext &) const;
++#else
+   void checkBind(SVal Loc, SVal Val, const Stmt *S, CheckerContext &) const;
++#endif
+   void checkLocation(SVal Loc, bool IsLoad, const Stmt *S,
+                      CheckerContext &) const;
+ 
+diff --git a/src/clangsa/GCCheckerPropagation.cpp b/src/clangsa/GCCheckerPropagation.cpp
+index 2664fee69f..b9f01b2658 100644
+--- a/src/clangsa/GCCheckerPropagation.cpp
++++ b/src/clangsa/GCCheckerPropagation.cpp
+@@ -537,6 +537,15 @@ bool GCChecker::isSafepoint(const CallEvent &Call, CheckerContext &C) const {
+       if (Decl && declHasAnnotation(Decl, "julia_not_safepoint"))
+         notSafepoint = true;
+       if (Callee) {
++#if LLVM_VERSION_MAJOR >= 22
++        // Clang 22 removed ElaboratedType; a typedef'd type is now a
++        // TypedefType directly, with no elaborated wrapper to unpeel.
++        if (const TypedefType *TDT =
++                dyn_cast<TypedefType>(Callee->getType())) {
++          if (declHasAnnotation(TDT->getDecl(), "julia_not_safepoint"))
++            notSafepoint = true;
++        } else if (isa<CXXPseudoDestructorExpr>(Callee)) {
++#else
+         if (const ElaboratedType *ET =
+                 dyn_cast<ElaboratedType>(Callee->getType())) {
+           if (const TypedefType *TDT =
+@@ -545,6 +554,7 @@ bool GCChecker::isSafepoint(const CallEvent &Call, CheckerContext &C) const {
+               notSafepoint = true;
+           }
+         } else if (isa<CXXPseudoDestructorExpr>(Callee)) {
++#endif
+           // A pseudo-destructor is an expression that looks like a member
+           // access to a destructor of a scalar type. It has no run-time
+           // semantics beyond evaluating the base expression (which would have
+@@ -1791,8 +1801,13 @@ bool GCChecker::evalCall(const CallEvent &Call, CheckerContext &C) const {
+   return false;
+ }
+ 
++#if LLVM_VERSION_MAJOR >= 22
++void GCChecker::checkBind(SVal LVal, SVal RVal, const clang::Stmt *S,
++                          bool /*AtDeclInit*/, CheckerContext &C) const {
++#else
+ void GCChecker::checkBind(SVal LVal, SVal RVal, const clang::Stmt *S,
+                           CheckerContext &C) const {
++#endif
+   auto State = C.getState();
+   const MemRegion *R = LVal.getAsRegion();
+   if (!R) {
+diff --git a/src/codegen.cpp b/src/codegen.cpp
+index d4984b24e3..ba339d0715 100644
+--- a/src/codegen.cpp
++++ b/src/codegen.cpp
+@@ -10477,7 +10477,7 @@ jl_code_info_t *jl_get_method_ir(jl_code_instance_t *ci)
+ void emit_always_inline(jl_codegen_output_t &out,
+                         unique_function<jl_code_info_t *(jl_code_instance_t *)> get_src)
+ {
+-    SmallVector<std::pair<jl_code_instance_t *, jl_invoke_api_t>> queue;
++    SmallVector<std::pair<jl_code_instance_t *, std::underlying_type_t<jl_invoke_api_t>>> queue;
+     // We don't want to define externally-visible functions for CodeInstances
+     // that are here for inlining only, so we'll restore the original ci_funcs
+     // map after emitting everything necessary for inlining.
+diff --git a/src/disasm.cpp b/src/disasm.cpp
+index 26b95fdb16..f82a192367 100644
+--- a/src/disasm.cpp
++++ b/src/disasm.cpp
+@@ -877,7 +877,7 @@ static void jl_dump_asm_internal(
+     const char *features = target.cpu_features;
+ 
+     std::string err;
+-    const Target *TheTarget = TargetRegistry::lookupTarget(TheTriple.str(), err);
++    const Target *TheTarget = TargetRegistry::lookupTarget("", TheTriple, err);
+ 
+     // Set up required helpers and streamer
+     SourceMgr SrcMgr;
+@@ -885,15 +885,21 @@ static void jl_dump_asm_internal(
+     MCTargetOptions Options;
+     Options.AsmVerbose = true;
+     Options.MCUseDwarfDirectory = MCTargetOptions::EnableDwarfDirectory;
++#if JL_LLVM_VERSION >= 220000
++    const Triple &TripleArg = TheTriple;
++#else
++    // LLVM < 22 only has the (deprecated in 22) string-taking overloads of these
++    std::string TripleArg = TheTriple.str();
++#endif
+     std::unique_ptr<MCAsmInfo> MAI(
+-        TheTarget->createMCAsmInfo(*TheTarget->createMCRegInfo(TheTriple.str()), TheTriple.str(), Options));
++        TheTarget->createMCAsmInfo(*TheTarget->createMCRegInfo(TripleArg), TripleArg, Options));
+     assert(MAI && "Unable to create target asm info!");
+ 
+-    std::unique_ptr<MCRegisterInfo> MRI(TheTarget->createMCRegInfo(TheTriple.str()));
++    std::unique_ptr<MCRegisterInfo> MRI(TheTarget->createMCRegInfo(TripleArg));
+     assert(MRI && "Unable to create target register info!");
+ 
+     std::unique_ptr<llvm::MCSubtargetInfo> STI(
+-      TheTarget->createMCSubtargetInfo(TheTriple.str(), cpu, features));
++      TheTarget->createMCSubtargetInfo(TripleArg, cpu, features));
+     assert(STI && "Unable to create subtarget info!");
+ 
+     MCContext Ctx(TheTriple, MAI.get(), MRI.get(), STI.get(), &SrcMgr);
+diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
+index dbf874ec79..07bee4f783 100644
+--- a/src/jitlayers.cpp
++++ b/src/jitlayers.cpp
+@@ -14,7 +14,11 @@
+ #include <llvm/Analysis/TargetTransformInfo.h>
+ #include <llvm/ExecutionEngine/Orc/CompileUtils.h>
+ #include <llvm/ExecutionEngine/Orc/ExecutionUtils.h>
++#if JL_LLVM_VERSION < 220000
+ #include <llvm/ExecutionEngine/Orc/DebugObjectManagerPlugin.h>
++#else
++#include <llvm/ExecutionEngine/Orc/Debugging/ELFDebugObjectPlugin.h>
++#endif
+ #if JL_LLVM_VERSION >= 210000
+ #  include <llvm/ExecutionEngine/Orc/SelfExecutorProcessControl.h>
+ #endif
+@@ -2118,9 +2122,11 @@ void JuliaOJIT::enableJITDebuggingSupport()
+ {
+     orc::SymbolMap GDBFunctions;
+     addAbsoluteToMap(GDBFunctions,llvm_orc_registerJITLoaderGDBAllocAction);
++#if JL_LLVM_VERSION < 220000
+     auto registerJITLoaderGDBWrapper = addAbsoluteToMap(GDBFunctions,llvm_orc_registerJITLoaderGDBWrapper);
+-    cantFail(JD.define(orc::absoluteSymbols(GDBFunctions)));
+     (void)registerJITLoaderGDBWrapper;
++#endif
++    cantFail(JD.define(orc::absoluteSymbols(GDBFunctions)));
+     if (TM->getTargetTriple().isOSBinFormatMachO()) {
+         auto RegisterSym = cantFail(
+             safelookup(ES, {&JD}, ES.intern("_llvm_orc_registerJITLoaderGDBAllocAction")));
+@@ -2129,8 +2135,22 @@ void JuliaOJIT::enableJITDebuggingSupport()
+     }
+ #ifndef _COMPILER_ASAN_ENABLED_ // TODO: Fix duplicated sections spam #51794
+     else if (TM->getTargetTriple().isOSBinFormatELF()) {
++#if JL_LLVM_VERSION < 220000
++        // LLVM 22 replaces DebugObjectManagerPlugin/EPCDebugObjectRegistrar with
++        // ELFDebugObjectPlugin, which resolves the GDB registration action itself
++        // from the ExecutorProcessControl bootstrap symbols.
+         //EPCDebugObjectRegistrar doesn't take a JITDylib, so we have to directly provide the call address
+         ObjectLayer.addPlugin(std::make_unique<orc::DebugObjectManagerPlugin>(ES, std::make_unique<orc::EPCDebugObjectRegistrar>(ES, registerJITLoaderGDBWrapper)));
++#else
++        // TODO: Use AutoRegisterCode = false may give more performance.
++        Error Err = Error::success();
++        auto DebugPlugin = std::make_unique<orc::ELFDebugObjectPlugin>(
++            ES, /*RequireDebugSections*/false, /*AutoRegisterCode*/true, Err);
++        if (Err)
++            ES.reportError(std::move(Err));
++        else
++            ObjectLayer.addPlugin(std::move(DebugPlugin));
++#endif
+     }
+ #endif
+ }
+@@ -2356,7 +2376,7 @@ bool JuliaOJIT::linkOutput(orc::MaterializationResponsibility &MR, MemoryBufferR
+             continue;
+         }
+         JL_GC_PROMISE_ROOTED(CI);
+-        auto Dest = linkCallTarget(MR, CI, API, EquivMap);
++        auto Dest = linkCallTarget(MR, CI, static_cast<jl_invoke_api_t>(API), EquivMap);
+         if (!Dest)
+             return false;
+         if (auto *DestSym = findLinkGraphSymbolByName(G, Dest);
+diff --git a/src/jitlayers.h b/src/jitlayers.h
+index 6b3de497a0..bb5a882bf3 100644
+--- a/src/jitlayers.h
++++ b/src/jitlayers.h
+@@ -410,7 +410,10 @@ private:
+ 
+ struct jl_linker_info_t {
+     DenseMap<jl_code_instance_t *, jl_codeinst_funcs_t<orc::SymbolStringPtr>> ci_funcs;
+-    DenseMap<std::pair<jl_code_instance_t *, jl_invoke_api_t>, orc::SymbolStringPtr>
++    // Key on the enum's underlying integer type: LLVM's DenseMapInfo requires
++    // sentinel keys outside the key's value range, which an unfixed C enum
++    // (jl_invoke_api_t) cannot represent (see LLVM 22 DenseMapInfo<Enum>).
++    DenseMap<std::pair<jl_code_instance_t *, std::underlying_type_t<jl_invoke_api_t>>, orc::SymbolStringPtr>
+         call_targets;
+     DenseMap<void *, orc::SymbolStringPtr> global_targets;
+ };
+@@ -456,7 +459,9 @@ public:
+ 
+ public:
+     // outputs
+-    DenseMap<std::pair<jl_code_instance_t *, jl_invoke_api_t>, jl_codegen_call_target_t>
++    // See the note on jl_linker_info_t::call_targets: keyed on the enum's
++    // underlying integer type so DenseMapInfo has valid sentinel keys.
++    DenseMap<std::pair<jl_code_instance_t *, std::underlying_type_t<jl_invoke_api_t>>, jl_codegen_call_target_t>
+         call_targets;
+     DenseMap<jl_code_instance_t *, jl_llvm_functions_t> ci_funcs;
+     SmallVector<std::pair<jl_code_instance_t *, GlobalVariable *>, 0> external_fns;
+diff --git a/src/julia_threads.h b/src/julia_threads.h
+index 605e1c73e3..48c571d0a3 100644
+--- a/src/julia_threads.h
++++ b/src/julia_threads.h
+@@ -166,7 +166,7 @@ typedef struct _jl_tls_states_t {
+     struct _jl_task_t *root_task;
+     struct _jl_timing_block_t *timing_stack;
+     // This is the location of our copy_stack
+-    void *stackbase;
++    void *JL_NONNULL stackbase;
+     size_t stacksize;
+     // Temp storage for exception thrown in signal handler. Not rooted.
+     struct _jl_value_t *sig_exception;
+diff --git a/src/llvm-alloc-opt.cpp b/src/llvm-alloc-opt.cpp
+index a3f07f03e4..214def0c9e 100644
+--- a/src/llvm-alloc-opt.cpp
++++ b/src/llvm-alloc-opt.cpp
+@@ -428,7 +428,11 @@ void Optimizer::insertLifetimeEnd(Value *ptr, Constant *sz, Instruction *insert)
+         }
+         break;
+     }
+-#if JL_LLVM_VERSION >= 200000
++#if JL_LLVM_VERSION >= 220000
++    // LLVM 22 dropped the size operand from the lifetime intrinsics.
++    (void)sz;
++    CallInst::Create(pass.lifetime_end, {ptr}, "", insert->getIterator());
++#elif JL_LLVM_VERSION >= 200000
+     CallInst::Create(pass.lifetime_end, {sz, ptr}, "", insert->getIterator());
+ #else
+     CallInst::Create(pass.lifetime_end, {sz, ptr}, "", insert);
+@@ -437,7 +441,11 @@ void Optimizer::insertLifetimeEnd(Value *ptr, Constant *sz, Instruction *insert)
+ 
+ void Optimizer::insertLifetime(Value *ptr, Constant *sz, Instruction *orig)
+ {
+-#if JL_LLVM_VERSION >= 200000
++#if JL_LLVM_VERSION >= 220000
++    // LLVM 22 dropped the size operand from the lifetime intrinsics.
++    (void)sz;
++    CallInst::Create(pass.lifetime_start, {ptr}, "", orig->getIterator());
++#elif JL_LLVM_VERSION >= 200000
+     CallInst::Create(pass.lifetime_start, {sz, ptr}, "", orig->getIterator());
+ #else
+     CallInst::Create(pass.lifetime_start, {sz, ptr}, "", orig);
+diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
+index 309916001d..30a3bbbb40 100644
+--- a/src/llvm-late-gc-lowering.cpp
++++ b/src/llvm-late-gc-lowering.cpp
+@@ -182,8 +182,15 @@ static std::pair<Value*,int> FindBaseValue(const State &S, Value *V, bool UseCac
+                 // so we don't need to lift these operations, but we do need to check if it's loaded and continue walking the base pointer
+                 if (auto VTy = dyn_cast<VectorType>(II->getType())) {
+                     if (hasLoadedTy(VTy->getElementType())) {
++#if JL_LLVM_VERSION >= 220000
++                        // LLVM 22 dropped the alignment operand from masked.load/gather,
++                        // shifting mask and passthrough down by one.
++                        Value *Mask = II->getArgOperand(1);
++                        Value *Passthrough = II->getArgOperand(2);
++#else
+                         Value *Mask = II->getOperand(2);
+                         Value *Passthrough = II->getOperand(3);
++#endif
+                         if (!isa<Constant>(Mask) || !cast<Constant>(Mask)->isAllOnesValue()) {
+                             assert(isa<UndefValue>(Passthrough) && "unimplemented");
+                             (void)Passthrough;
+@@ -1218,9 +1225,16 @@ State LateLowerGCFrame::LocalScan(Function &F) {
+                             if (CountTrackedPointers(VTy->getElementType()).count) {
+                                 // LLVM sometimes tries to materialize these operations with undefined pointers in our non-integral address space.
+                                 // Hopefully LLVM didn't already propagate that information and poison our users. Set those to NULL now.
+-                                Value *passthru = II->getArgOperand(3);
++                                // LLVM 22 dropped the alignment operand from masked.load/gather,
++                                // shifting the passthrough operand from index 3 down to 2.
++#if JL_LLVM_VERSION >= 220000
++                                unsigned passthruIdx = 2;
++#else
++                                unsigned passthruIdx = 3;
++#endif
++                                Value *passthru = II->getArgOperand(passthruIdx);
+                                 if (isa<UndefValue>(passthru)) {
+-                                    II->setArgOperand(3, Constant::getNullValue(passthru->getType()));
++                                    II->setArgOperand(passthruIdx, Constant::getNullValue(passthru->getType()));
+                                 }
+                             }
+                             if (hasLoadedTy(VTy->getElementType())) {
+diff --git a/src/support/analyzer_annotations.h b/src/support/analyzer_annotations.h
+index 6989a74024..301b4630df 100644
+--- a/src/support/analyzer_annotations.h
++++ b/src/support/analyzer_annotations.h
+@@ -38,8 +38,11 @@
+ //   JL_NONNULL  Mark a pointer (argument, field, or return value) that is never
+ //               NULL. On Clang with the nullability feature it expands to the
+ //               real `_Nonnull` qualifier (the analyzer then flags passing or
+-//               storing NULL where a non-null pointer is required); on every
+-//               other compiler `_Nonnull`, and hence JL_NONNULL, is nothing.
++//               storing NULL where a non-null pointer is required, and assumes
++//               a value loaded from it is not NULL, which also avoids false
++//               positives on paths where the analyzer has lost track of the
++//               field's value); on every other compiler `_Nonnull`, and hence
++//               JL_NONNULL, is nothing.
+ //
+ // -- Safepoint annotations (on function prototypes) --
+ //
+-- 
+2.53.0
+
