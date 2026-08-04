@@ -2,7 +2,7 @@
 # Maintainer: Matthias Kurz <m.kurz@irregular.at>
 
 pkgname=asahi-wifisync
-pkgver=0.2.3
+pkgver=0.2.4
 pkgrel=1
 pkgdesc='Tool to sync Wifi passwords with macos on ARM Macs'
 arch=('aarch64')
@@ -10,9 +10,9 @@ url="https://crates.io/crates/asahi-wifisync"
 makedepends=('rust' 'cargo-license')
 license=('MIT')
 source=(
-  "asahi-wifisync-${pkgver}.tar.gz::https://crates.io/api/v1/crates/asahi-wifisync/${pkgver}/download"
+  "asahi-wifisync-${pkgver}.tar.gz::https://static.crates.io/crates/asahi-wifisync/asahi-wifisync-${pkgver}.crate"
 )
-sha256sums=('9104ac5567261c2d7a69575cbd51c03c0f86a9d6c9970d97a2b31324d86a3149')
+sha256sums=('225e574df65b7ee17ac70854623dcec9ef29687735d17cc2d0de69ad5e03bcf1')
 
 build() {
   cd asahi-wifisync-${pkgver}

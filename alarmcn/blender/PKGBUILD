@@ -123,19 +123,6 @@ prepare() {
   git remote add network-origin https://projects.blender.org/blender/blender
   git lfs fetch network-origin
   git lfs checkout
-
-  # Fix build with CUDA 13
-  sed -i 's|sm_50|sm_75|' build_files/build_environment/cmake/osl.cmake intern/cycles/kernel/CMakeLists.txt
-
-  # Fix build with ffmpeg 8
-  git cherry-pick -n \
-    ebfad2c071d712d126a5c3d93ebed8a226821feb \
-    f5f30131131025a24be93eced7d04f9d96cf5cbf
-
-  # Fix build with opencolorio 2.5.0
-  git cherry-pick -n 98e400c3ae2fef75d2550a5fc1370d6e97ec9560
-
-  git cherry-pick -n d92f498ed80ef44b00fca7617aeaab093cd0f7f7
 }
 
 _get_pyver() {
@@ -146,9 +133,7 @@ build() {
   # This should fix #13.
   export CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS/}
   CXXFLAGS+=' --param=max-vartrack-size=640000000'
-
-  # Fix numpy discovery
-  sed -i "s|core/include|_core/include|g" blender/CMakeLists.txt
+  CXXFLAGS+=' -Wno-error=format-security'
 
   local cmake_options=(
     -B build
@@ -165,6 +150,8 @@ build() {
     -D WITH_CYCLES_OSL=ON
     -D WITH_INSTALL_PORTABLE=OFF
     -D WITH_PYTHON_INSTALL=OFF
+    -D WITH_SYSTEM_GFLAGS=ON
+    -D WITH_SYSTEM_GLOG=ON
     -G Ninja
     -S "$pkgname"
     -W no-dev

@@ -1,11 +1,11 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=uboot-asahi
-_ver=2025.10
+_ver=2026.04
 _asahirel=2
 
 pkgver=${_ver}.asahi${_asahirel}
-pkgrel=7
+pkgrel=1
 pkgdesc='U-Boot for Apple Silicon Macs'
 _commit_id=asahi-v${_ver}-${_asahirel}
 _srcname=u-boot-${_commit_id}
@@ -16,8 +16,8 @@ makedepends=( bc imagemagick )
 source=(
   "u-boot-${_commit_id}.tar.gz::https://github.com/AsahiLinux/u-boot/archive/${_commit_id}.tar.gz"
 )
-sha256sums=('899895de62aeef3d6c7360133396089bdf85ac09490429b2b3f69a4dfdfcb415')
-b2sums=('50f8233ced5927267a3b345e89927223ba811523830c61c05e8641693b79aa4dbe3bf5abde1cdf932b159141540d40be0aa01baeeba8e1843c85205a0a64c3bc')
+sha256sums=('b3cdcc467afbf6737ad7c87d174daa8eb0dcc212feb275ee56c406c1e084768c')
+b2sums=('6eb37d1ffb03a0bd71b69b4e11e266ce4c3183bb1d7360ec2b18c87d94af83c1bac86be8225b14cff3a7af5359fe668f36850db79c1974dd44514929308dd1fd')
 
 prepare() {
   cd "${srcdir}/$_srcname"
@@ -35,5 +35,5 @@ package() {
   tgtdir="$pkgdir/usr/lib/asahi-boot"
 
   install -Dt "$tgtdir" -m644 "$_srcname/u-boot-nodtb.bin"
-  install -Dt "$tgtdir/dtb" -m644 "$_srcname/arch/arm/dts/"t[86]*.dtb
+  install -Dt "$tgtdir/dtb" -m644 "$_srcname/dts/upstream/src/arm64/apple/"t[86]*.dtb
 }
