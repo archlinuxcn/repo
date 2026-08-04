@@ -16,7 +16,7 @@ index a83a900ee6..d4984b24e3 100644
      bool jl_using_gdb_jitevents = false;
      // Register GDB event listener
 -#if defined(JL_DEBUG_BUILD)
-+#if defined(JL_DEBUG_BUILD) || 1
++#if defined(JL_DEBUG_BUILD) && 0
      jl_using_gdb_jitevents = true;
  #endif
      const char *jit_gdb = getenv("ENABLE_GDBLISTENER");

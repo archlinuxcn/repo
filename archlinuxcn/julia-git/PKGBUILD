@@ -82,7 +82,7 @@ source=('git+https://github.com/JuliaLang/julia'
         0002-Hard-code-7z-and-zstd-path.diff
         download_curl.diff)
 sha512sums=('SKIP'
-            'ccd6845d4b4017101f1bee011c757846204ea0c707d9479d124b62c15a73dd2f6084a703cb6c1f687d71ceb06cf47a3029a5b97f9d7155ca51039c28859b56d2'
+            '720f023992273bd1b4304f38df5722dc2849bf5ecd0916e54a5f36287a82beef1a497319ea8093582ab300f573301b93a83682355819f942b6191fdc7c92ac7d'
             '98ae0dfd73c0f106f9de3c5576f738e956f1b0157299d9d679bb02904adb48d1383ae260c800a746b9188f934cc19cecc013278758d62557675f273140498e55'
             '1d0a183752c4b99e7e7d76de887d59165acb5e38a033f88bc57a24477f20e68e4a290b98d51d1207c2e75a7fd28fca515cb149b45b4460775390f40c36a8a4b5'
             '960957e43b429b9998857e2eb43e57b635fb9201864c16b6d21c12f04b0a8f63a6715540fdc48230d5a551df35fe969f80ea926f5db5f3b670ef07121970ed8e'
@@ -153,7 +153,7 @@ julia_opts=(prefix=/usr sysconfdir=/etc
 
 _x86_target='generic,opt_size;haswell,clone_all,-rdrnd;skylake,base(1),-rdrnd,-rdseed,-rtm;cannonlake,base(1),-rdrnd,-rdseed,-rtm'
 _arm_target='armv7-a;armv7-a,neon;armv7-a,neon,vfp4'
-_aa64_target='generic;armv8.2-a;apple-m1,clone_all'
+_aa64_target='generic;generic,v8.2a;apple-m1,clone_all'
 
 case "$CARCH" in
   x86_64)
@@ -334,6 +334,7 @@ build_in() {
   # so I'm just going to create this missing symlink
   ln -sf /usr/lib/libgcc_s.so.1 usr/lib/julia/
   ln -sf /usr/lib/libstdc++.so.6 usr/lib/
+  ln -sf /usr/lib/libatomic.so usr/lib/
   # if [[ "$CARCH" = x86_64 ]]; then
 
   # Currently only the x86 build machine
