@@ -26,8 +26,7 @@ build() {
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DSlopeCraft_vectorize=ON \
-		-Wno-dev \
-		-DSlopeCraft_GPU_API="OpenCL"
+		-Wno-dev
 
 	cmake --build build --parallel
 }
