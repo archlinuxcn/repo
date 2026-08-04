@@ -144,7 +144,7 @@ _gencrates() {
 for _crate in "${!_crates[@]}"; do
   _ver="${_crates[$_crate]}"
   source+=(
-    "$_crate-$_ver.tar.gz::https://crates.io/api/v1/crates/$_crate/$_ver/download"
+    "$_crate-$_ver.tar.gz::https://static.crates.io/crates/$_crate/$_crate-$_ver.crate"
   )
 done
 
