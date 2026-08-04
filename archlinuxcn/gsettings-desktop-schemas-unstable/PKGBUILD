@@ -11,7 +11,7 @@ pkgname=(
 )
 pkgver=51.alpha
 pkgrel=1
-pkgdesc="GSettings schemas for GNOME: unstable versions"
+pkgdesc="GSettings schemas for GNOME: unstable version"
 url="https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas"
 arch=(any)
 license=(LGPL-2.1-or-later)
@@ -51,6 +51,7 @@ _pick() {
 
 package_gsettings-desktop-schemas-unstable() {
   provides+=(gsettings-desktop-schemas)
+  conflicts+=(gsettings-desktop-schemas)
   pkgdesc+=" desktop components"
   depends=(
     "gsettings-system-schemas-unstable=$pkgver-$pkgrel"
@@ -67,10 +68,9 @@ package_gsettings-desktop-schemas-unstable() {
 
 package_gsettings-system-schemas-unstable() {
   provides+=(gsettings-system-schemas)
+  conflicts+=(gsettings-system-schemas)
   pkgdesc+=" system components"
   depends=(dconf)
 
   mv system/* "$pkgdir"
 }
-
-# vim:set sw=2 sts=-1 et:
