@@ -26,8 +26,8 @@ makedepends=()
 source=()
 noextract=()
 for _name in "${pkgname[@]}"; do
-  source+=(https://mirrors.kernel.org/archlinux/extra/os/x86_64/${_name}-${pkgver}-${_upstream_pkgrel}-any.pkg.tar.zst)
-  noexxtract+=(${_name}-${pkgver}-${_upstream_pkgrel}-any.pkg.tar.zst)
+  source+=(${_name}-${pkgver}-${_upstream_pkgrel}-any.tar.zst::https://mirrors.kernel.org/archlinux/extra/os/x86_64/${_name}-${pkgver}-${_upstream_pkgrel}-any.pkg.tar.zst)
+  noexxtract+=(${_name}-${pkgver}-${_upstream_pkgrel}-any.tar.zst)
   eval "package_$_name() {
     _package $_name
   }"
@@ -47,7 +47,7 @@ _package() {
   mkdir unpack-$_name
   cd unpack-$_name
 
-  bsdtar xf ../${_name}-${pkgver}-${_upstream_pkgrel}-any.pkg.tar.zst
+  bsdtar xf ../${_name}-${pkgver}-${_upstream_pkgrel}-any.tar.zst
 
   rm .BUILDINFO .MTREE
 
