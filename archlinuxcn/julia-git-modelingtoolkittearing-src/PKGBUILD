@@ -1,0 +1,18 @@
+pkgname=julia-git-modelingtoolkittearing-src
+pkgver=1.15.0
+_commit=bef68a451cd9ba546747a0114faec46b3f3f9d20
+pkgrel=1
+pkgdesc="ModelingToolkitTearing.jl"
+url="https://github.com/JuliaComputing/StateSelection.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaComputing/StateSelection.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StateSelection.jl/lib/ModelingToolkitTearing
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ModelingToolkitTearing "${pkgdir}" "${pkgname}" julia-git
+}

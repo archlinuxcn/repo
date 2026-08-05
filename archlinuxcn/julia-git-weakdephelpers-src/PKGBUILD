@@ -1,0 +1,18 @@
+pkgname=julia-git-weakdephelpers-src
+pkgver=0.1.1
+_commit=c62a758e50c296b490910aee55610e64769f7fd5
+pkgrel=1
+pkgdesc="WeakDepHelpers.jl"
+url="https://github.com/QuantumSavory/WeakDepHelpers.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuantumSavory/WeakDepHelpers.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd WeakDepHelpers.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh WeakDepHelpers "${pkgdir}" "${pkgname}" julia-git
+}

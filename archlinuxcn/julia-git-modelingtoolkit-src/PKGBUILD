@@ -14,5 +14,7 @@ sha256sums=('7d5854f358c8b1cf1c8c5400cb2f341b7f499aaf4d93fbd8436340bf469551a5')
 package() {
   cd ModelingToolkit.jl
 
+  rm -rf lib
+
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ModelingToolkit "${pkgdir}" "${pkgname}" julia-git
 }
