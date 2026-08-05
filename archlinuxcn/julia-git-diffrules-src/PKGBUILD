@@ -1,7 +1,7 @@
 pkgname=julia-git-diffrules-src
-pkgver=1.15.1
-_commit=8842177391b07dcd8234ac7612b9ca8ca72d28e0
-pkgrel=3
+pkgver=1.16.0
+_commit=264a534bf1945691b183fed5d33cb225b064b91c
+pkgrel=1
 pkgdesc="DiffRules.jl"
 url="https://github.com/JuliaDiff/DiffRules.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDiff/DiffRules.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('75698edf74604d169145ef6d5b819ef3af02dedc069c83b6ef3338f2afc6b892')
 
 package() {
   cd DiffRules.jl
