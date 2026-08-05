@@ -62,7 +62,9 @@ build() {
                       zaxpy zcopy zgemm zgemv zgesvd zlarfg zungqr zunmqr zscal \
                       zswap ztrsv ztrsm ztrtrs dznrm2
     do
-      FFLAGS+=("-D${sym}=${sym}_64")
+      FFLAGS+=" -D${sym}=${sym}_64"
+      CFLAGS+=" -D${sym}_=${sym}_64_"
+      CXXFLAGS+=" -D${sym}_=${sym}_64_"
     done
     export FFLAGS
 
