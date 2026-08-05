@@ -1,7 +1,7 @@
 pkgname=julia-git-crayons-src
-pkgver=4.1.1
-_commit=417e3af6f3c28168553c662f605255b8e1fe1f14
-pkgrel=3
+pkgver=4.2.0
+_commit=102a6dce281152252049e8055c48c9b235629838
+pkgrel=1
 pkgdesc="Crayons.jl"
 url="https://github.com/KristofferC/Crayons.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/KristofferC/Crayons.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('f9b05c5959f71543540e190730927e0933ae6f6f3190bc7ac71a19da1ac493a0')
 
 package() {
   cd Crayons.jl
