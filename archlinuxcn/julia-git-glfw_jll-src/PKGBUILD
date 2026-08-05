@@ -1,6 +1,6 @@
 pkgname=julia-git-glfw_jll-src
-pkgver=3.4.1+0
-_commit=922b1dbd5ccde5ca1aa52ddd7efdc8df4b4c511f
+pkgver=3.4.1+1
+_commit=5acd930f1a3a6e148895fad65033ce52361250da
 pkgrel=1
 pkgdesc="GLFW_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/GLFW_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git glfw)
 source=("git+https://github.com/JuliaBinaryWrappers/GLFW_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('b8a6379bfe36b4eed3b5cbeaa9f77bcca4a867223066a1f43e47bfb5609b0e0e'
+sha256sums=('364fc6ec086d3eef25aae66e68d179e7a5d23edd36924244ea4b912e99359c89'
             '4165ea68c4b45f8c6025dafc8d545bd18ee6d263aa5f3eec979d9c02aad28851')
 
 build() {
