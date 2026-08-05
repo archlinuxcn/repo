@@ -1,26 +1,18 @@
-From 597e86b9d0cadc0ace47b0dc4967e702fa6cfe4b Mon Sep 17 00:00:00 2001
+From 260c08d52bcf41ff4dc2f45a5c92dcc476421ab8 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 30 Oct 2023 17:17:47 -0400
 Subject: [PATCH] Patch for ArchLinux package
 
 ---
- src/C/context.jl | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ src/C/context.jl   | 9 ---------
+ src/Utils/Utils.jl | 2 +-
+ 2 files changed, 1 insertion(+), 10 deletions(-)
 
 diff --git a/src/C/context.jl b/src/C/context.jl
-index 8d2714c5..5da0cdfb 100644
+index 6ccdab89..e31f7290 100644
 --- a/src/C/context.jl
 +++ b/src/C/context.jl
-@@ -49,7 +49,7 @@ function init_context()
-         end
-     else
-         # Find Python executable
--        exe_path = get(ENV, "JULIA_PYTHONCALL_EXE", "")
-+        exe_path = get(ENV, "JULIA_PYTHONCALL_EXE", "/usr/bin/python")
-         if exe_path == "" || exe_path == "@CondaPkg"
-             if CondaPkg.backend() == :Null
-                 exe_path = Sys.which("python")
-@@ -103,15 +103,6 @@ function init_context()
+@@ -180,15 +180,6 @@ function init_context()
              end
          end
  
@@ -36,6 +28,19 @@ index 8d2714c5..5da0cdfb 100644
          CTX.exe_path = exe_path
  
          # For calling Python with UTF-8 IO
+diff --git a/src/Utils/Utils.jl b/src/Utils/Utils.jl
+index a26b3198..0033f6ee 100644
+--- a/src/Utils/Utils.jl
++++ b/src/Utils/Utils.jl
+@@ -14,7 +14,7 @@ checkpref(::Type{String}, x) = error("invalid preference of type $(type(x)), exp
+ checkpref(::Type{String}, x::AbstractString) = convert(String, x)
+ 
+ # Specific preference functions
+-getpref_exe() = getpref(String, "exe", "JULIA_PYTHONCALL_EXE", "")
++getpref_exe() = getpref(String, "exe", "JULIA_PYTHONCALL_EXE", "/usr/bin/python")
+ getpref_lib() = getpref(String, "lib", "JULIA_PYTHONCALL_LIB", nothing)
+ getpref_pickle() = getpref(String, "pickle", "JULIA_PYTHONCALL_PICKLE", "pickle")
+ 
 -- 
-2.51.0
+2.53.0
 
