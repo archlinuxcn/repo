@@ -11,10 +11,19 @@ depends=(julia-git)
 source=("git+https://github.com/luchr/ODEInterface.jl.git#commit=$_commit")
 sha256sums=('884fbfcc63cd3c7ded76adb8edd9b9621574ef76b6a12c419c255209700d8760')
 
+prepare() {
+  rm -rf bin
+  mkdir bin
+  cat > bin/gfortran <<EOF
+exec /usr/bin/gfortran -ftrampoline-impl=heap -Wl,-z,noexecstack -g -O2 -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug} $FFLAGS "\$@"
+EOF
+  chmod +x bin/gfortran
+}
+
 build() {
   cd ODEInterface.jl
 
-  ODEINTERFACE_IGNORE_JLL=1 julia deps/build.jl
+  PATH="${srcdir}/bin:${PATH}" ODEINTERFACE_IGNORE_JLL=1 julia deps/build.jl
 }
 
 package() {
