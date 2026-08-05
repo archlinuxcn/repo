@@ -1,6 +1,6 @@
 pkgname=julia-git-ordinarydiffeqcore-src
-pkgver=2.3.0
-_commit=68f58ced0d0b4417ad9e13c5459a402e4fc1b456
+pkgver=3.33.1
+_commit=d71071baaf4c9fc3c6fc9dfc5f64dd81fd53a1c2
 pkgrel=1
 pkgdesc="OrdinaryDiffEqCore.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('bf9ce0a44d5020d943faca77c4aad74ffa16bfe4867503f2139330e27213fb26')
+sha256sums=('be2713b1a4eba8a799965274a56d48900ef7c5816de8c30e1e4fb15bd6c12545')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/OrdinaryDiffEqCore
