@@ -1,6 +1,6 @@
 pkgname=julia-git-automa-src
-pkgver=1.1.0
-_commit=b08d53b7940af2b81c780f50a98205a0a4e60cf6
+pkgver=1.2.0
+_commit=dd1ff134b420f0f19c195d340bbc962e330cdf60
 pkgrel=1
 pkgdesc="Automa.jl"
 url="https://github.com/BioJulia/Automa.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/BioJulia/Automa.jl.git#commit=$_commit")
-sha256sums=('96b21eee84120b142b6b648e1133ee3715a55cd43514f1ba67a2c35676ba15dd')
+sha256sums=('3335606d76995b69fb822241200b0557b063c6108e71f37501fa33cb2152a41f')
 
 package() {
   cd Automa.jl
