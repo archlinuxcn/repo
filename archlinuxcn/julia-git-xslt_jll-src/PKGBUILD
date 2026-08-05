@@ -1,7 +1,7 @@
 pkgname=julia-git-xslt_jll-src
-pkgver=1.1.43+0
-_commit=c8311aea7da5b9d78f7c8bda99cbf45620c498c6
-pkgrel=2
+pkgver=1.1.45+0
+_commit=14810354278d514dff672efd805d7a6ece2b1b54
+pkgrel=1
 pkgdesc="XSLT_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/XSLT_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libxslt)
 source=("git+https://github.com/JuliaBinaryWrappers/XSLT_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('6452efb9bd6fc58626a4926144d6f325dec78ea111d46bbf13560075846aef45'
+sha256sums=('15ddb249b100420b03935ddb68cd984ad04f7950ebfa2a85204f103c3fa82b78'
             '37a9b43e67473f136071e0e1af10683811b10d0049648f6129c3387106d00931')
 
 build() {
