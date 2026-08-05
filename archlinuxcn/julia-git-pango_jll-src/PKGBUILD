@@ -1,6 +1,6 @@
 pkgname=julia-git-pango_jll-src
-pkgver=1.57.0+0
-_commit=3c44dd03e733c31b3225c12200e60e748aed861d
+pkgver=1.57.1+0
+_commit=0d9e30175bb6e6c59f2dc80f02ff72af7ddab7be
 pkgrel=1
 pkgdesc="Pango_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Pango_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git pango)
 source=("git+https://github.com/JuliaBinaryWrappers/Pango_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('2c881a2b862365ec213a83dad3189dab92f505ec66451d44bf5182e0c4897c56'
+sha256sums=('8be5142aeffcec59b6f81c64f745ba972dc1377a7b3b18c51915156d1af512f2'
             '4c0564a71dc94ae436254265d39d67aef982bac71c9af56b97fed4d4414b20c6')
 
 build() {
