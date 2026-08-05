@@ -1,0 +1,18 @@
+pkgname=julia-git-sass-src
+pkgver=0.2.0
+_commit=80950376e7293df84246bcac608f58f89466b147
+pkgrel=1
+pkgdesc="Sass.jl"
+url="https://github.com/piever/Sass.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/piever/Sass.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Sass.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Sass "${pkgdir}" "${pkgname}" julia-git
+}

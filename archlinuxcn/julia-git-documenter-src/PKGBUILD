@@ -1,0 +1,18 @@
+pkgname=julia-git-documenter-src
+pkgver=1.17.0
+_commit=f0aada416f4a8771ff8b2ac6ba1c9d046018ef72
+pkgrel=1
+pkgdesc="Documenter.jl"
+url="https://github.com/JuliaDocs/Documenter.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDocs/Documenter.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Documenter.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Documenter "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-clang_unified_jll-src
+pkgver=0.1.6+0
+_commit=f15585e3774c6bd117a8da8500fbb8e3fcd9510c
+pkgrel=1
+pkgdesc="Clang_unified_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Clang_unified_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git clang)
+source=("git+https://github.com/JuliaBinaryWrappers/Clang_unified_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('0019c5e096a3fef1ebf5e64e0d874d4a89b5eddcb7ee53d55c3ba9b3887f4eee'
+            '95770c49718f23d957659820e7fd066c35b41bbf3c0d24ba9894d84f900c8c7a')
+
+build() {
+  cd Clang_unified_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Clang_unified_jll ../jll.toml
+}
+
+package() {
+  cd Clang_unified_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Clang_unified_jll "${pkgdir}" "${pkgname}" julia-git
+}

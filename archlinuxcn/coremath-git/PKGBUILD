@@ -1,0 +1,77 @@
+#
+
+pkgname=coremath-git
+pkgver=0.0.3718.07cf01e1
+pkgrel=1
+pkgdesc='CORE-MATH Mission: provide on-the-shelf open-source mathematical functions with correct rounding that can be integrated into current mathematical libraries'
+arch=(aarch64 armv7h i686 x86_64)
+url='https://core-math.gitlabpages.inria.fr/'
+license=('MIT')
+makedepends=(git)
+source=('git+https://gitlab.inria.fr/core-math/core-math.git')
+sha1sums=('SKIP')
+provides=('coremath')
+conflicts=('coremath')
+
+pkgver() {
+  cd core-math
+
+  echo "0.0.$(git rev-list --count HEAD).$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd core-math
+
+  # Collect source files for each precision
+  # binary64: src/binary128/{name}/{name}.c     → cr_{name}q(double)
+  # binary64: src/binary64/{name}/{name}.c     → cr_{name}(double)
+  # binary32: src/binary32/{name}/{name}f.c    → cr_{name}f(float)
+  # binary16: src/binary16/{name}/{name}f16.c  → cr_{name}f16(_Float16)
+  SRCS=()
+  # for d in src/binary128/*/; do
+  #   fname=$(basename "$d")
+  #   src="$d/${fname}q.c"
+  #   [ -f "$src" ] && SRCS+=("$src")
+  # done
+  for d in src/binary64/*/; do
+    fname=$(basename "$d")
+    src="$d/${fname}.c"
+    [ -f "$src" ] && SRCS+=("$src")
+  done
+  for d in src/binary32/*/; do
+    fname=$(basename "$d")
+    src="$d/${fname}f.c"
+    [ -f "$src" ] && SRCS+=("$src")
+  done
+  for d in src/binary16/*/; do
+    fname=$(basename "$d")
+    src="$d/${fname}f16.c"
+    [ -f "$src" ] && SRCS+=("$src")
+  done
+
+  # Compile all source files into object files
+  mkdir -p build
+  LIBS=()
+  for src in "${SRCS[@]}"; do
+    fname=$(basename "$src" .c)
+    # Rename as_compoundf_special in binary16's compoundf16.c to avoid
+    # symbol collision with binary32's compoundf.c (upstream bug: both
+    # define this non-static helper with the same name)
+    EXTRA=""
+    if [[ "$src" == *binary16/compound* ]]; then
+      EXTRA="-Das_compoundf_special=as_compoundf16_special"
+    fi
+    gcc -O2 ${CFLAGS} ${EXTRA} -fPIC -I. -c "$src" -o "build/${fname}.o"
+    LIBS+=("build/${fname}.o")
+  done
+
+  # Link all object files into a shared library
+  g++ ${LDFLAGS} -shared -o build/libcoremath.so "${LIBS[@]}" -lm
+}
+
+package() {
+  cd core-math
+
+  mkdir -p "${pkgdir}/usr/lib/"
+  install -Dm755 build/libcoremath.so "${pkgdir}/usr/lib/"
+}

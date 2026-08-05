@@ -1,0 +1,18 @@
+pkgname=julia-git-ansicoloredprinters-src
+pkgver=0.0.1
+_commit=30560b4f7da024dbef51cde8d83dd75bd5a0e3e3
+pkgrel=1
+pkgdesc="ANSIColoredPrinters.jl"
+url="https://github.com/JuliaDocs/ANSIColoredPrinters.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDocs/ANSIColoredPrinters.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd ANSIColoredPrinters.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ANSIColoredPrinters "${pkgdir}" "${pkgname}" julia-git
+}

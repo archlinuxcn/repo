@@ -1,0 +1,18 @@
+pkgname=julia-git-gumbo-src
+pkgver=0.8.3
+_commit=78f07cb32ecafbabbdf5e785cba399a0c2dd9f35
+pkgrel=1
+pkgdesc="Gumbo.jl"
+url="https://github.com/JuliaWeb/Gumbo.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaWeb/Gumbo.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Gumbo.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Gumbo "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,26 @@
+pkgname=julia-git-spirv2clc_jll-src
+pkgver=0.2.0+4
+_commit=451e41238b35688d1f52d77c49fb214a6e3584e0
+pkgrel=1
+pkgdesc="spirv2clc_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/spirv2clc_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git spirv2clc)
+source=("git+https://github.com/JuliaBinaryWrappers/spirv2clc_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('feaf6b7eba715623641f093168473fde1b75fec5e4f052a89f08ca7ea6c59b16'
+            '4c011eb961e6cdb64ceac6c301913f18e1c24b9c8ea88af3b44e2431664f0575')
+
+build() {
+  cd spirv2clc_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl spirv2clc_jll ../jll.toml
+}
+
+package() {
+  cd spirv2clc_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh spirv2clc_jll "${pkgdir}" "${pkgname}" julia-git
+}
