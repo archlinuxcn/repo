@@ -1,6 +1,6 @@
 pkgname=julia-git-odeinterface-src
-pkgver=0.5.1
-_commit=9c837b18dc363d95676ac3c87c2744fa611e1c4d
+pkgver=0.5.2
+_commit=7df331313c72e4aa213febedcd527ee4dc654d1f
 pkgrel=1
 pkgdesc="ODEInterface.jl"
 url="https://github.com/luchr/ODEInterface.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/luchr/ODEInterface.jl.git#commit=$_commit")
-sha256sums=('e5fd325d8162c80d8be0b989d691c662a4710b74bf3d6548a753bef1db609d43')
+sha256sums=('884fbfcc63cd3c7ded76adb8edd9b9621574ef76b6a12c419c255209700d8760')
 
 package() {
   cd ODEInterface.jl
