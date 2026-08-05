@@ -1,7 +1,7 @@
 pkgname=julia-git-smallcollections-src
 pkgver=0.6.2
 _commit=cccc6cfe166d4169b9a716247338d4fd529af43d
-pkgrel=1
+pkgrel=2
 pkgdesc="SmallCollections.jl"
 url="https://github.com/matthias314/SmallCollections.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/matthias314/SmallCollections.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('fd72c81d1e62d16c1b8dcc5a37a41c80447b5257c095178a22bfa3ee2f66785b')
 
 package() {
   cd SmallCollections.jl
