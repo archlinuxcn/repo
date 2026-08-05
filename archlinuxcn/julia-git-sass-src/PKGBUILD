@@ -1,7 +1,7 @@
 pkgname=julia-git-sass-src
 pkgver=0.2.0
 _commit=80950376e7293df84246bcac608f58f89466b147
-pkgrel=1
+pkgrel=2
 pkgdesc="Sass.jl"
 url="https://github.com/piever/Sass.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/piever/Sass.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('17b5b375667267a9e5058657d244ff554b36aa91bfbe0c52627ce94641e4e2b8')
 
 package() {
   cd Sass.jl
