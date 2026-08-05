@@ -1,7 +1,7 @@
 pkgname=julia-git-terminalloggers-src
-pkgver=0.1.7
-_commit=e76a904c1753fa7caee5547ad73ef83e35c5ae7f
-pkgrel=2
+pkgver=0.1.8
+_commit=f2fe7dbfe0585bb442574491e42e8eaf51d08296
+pkgrel=1
 pkgdesc="TerminalLoggers.jl"
 url="https://github.com/JuliaLogging/TerminalLoggers.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLogging/TerminalLoggers.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('eda4c6e90327f23632dd43ad7c3a1ef8bca4fe3dc4127a2c423c9fbacbc743c6')
 
 package() {
   cd TerminalLoggers.jl
