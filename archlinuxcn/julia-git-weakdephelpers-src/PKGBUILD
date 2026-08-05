@@ -1,7 +1,7 @@
 pkgname=julia-git-weakdephelpers-src
 pkgver=0.1.1
 _commit=c62a758e50c296b490910aee55610e64769f7fd5
-pkgrel=1
+pkgrel=2
 pkgdesc="WeakDepHelpers.jl"
 url="https://github.com/QuantumSavory/WeakDepHelpers.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumSavory/WeakDepHelpers.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('e563aef5a7f58c15dd60354810d1856ef3335f816b5fb0d3c693a06592d99334')
 
 package() {
   cd WeakDepHelpers.jl
