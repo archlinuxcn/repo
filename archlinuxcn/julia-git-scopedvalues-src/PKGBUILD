@@ -1,6 +1,6 @@
 pkgname=julia-git-scopedvalues-src
-pkgver=1.5.0
-_commit=f9e856f32713d95a13db08d1e7b58c52ce9f707c
+pkgver=1.6.2
+_commit=cbb4ef69c4af0f36b7bd71856702e0231c1edcaa
 pkgrel=1
 pkgdesc="ScopedValues.jl"
 url="https://github.com/vchuravy/ScopedValues.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/vchuravy/ScopedValues.jl.git#commit=$_commit")
-sha256sums=('d694ae104ab983f366f8cde0deea876ca41fc19bd1313f9729bb32572ed6579d')
+sha256sums=('71399bde0dd6c5761a26a32c11b49256ae8c23f5f0eff3ba31ec95d6c95e5f46')
 
 package() {
   cd ScopedValues.jl
