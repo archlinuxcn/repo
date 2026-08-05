@@ -1,6 +1,6 @@
 pkgname=julia-git-imagesegmentation-src
-pkgver=1.9.0
-_commit=38d49a3406464767052d20023ec8a11e51903782
+pkgver=1.10.0
+_commit=c6ba02673db9f29095d2d9915f21566d2d9f9830
 pkgrel=1
 pkgdesc="ImageSegmentation.jl"
 url="https://github.com/JuliaImages/ImageSegmentation.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaImages/ImageSegmentation.jl.git#commit=$_commit")
-sha256sums=('a5a61c23dfee2b5ff25f2fce738df81417d9def563057d9621f8e879371c5a07')
+sha256sums=('5ed0fcbf11288dbd6318ccd6ab0bc5ffd6cd6a4debc8e6318ad6b9ec4c397e73')
 
 package() {
   cd ImageSegmentation.jl
