@@ -1,6 +1,6 @@
 pkgname=julia-git-qeccore-src
-pkgver=0.1.2
-_commit=7269847dd3df8e1c7322aac16b0c363b4181118e
+pkgver=0.1.3
+_commit=6f4049fca6cf480aad8bdf36e1338d936c438022
 pkgrel=1
 pkgdesc="QECCore.jl"
 url="https://github.com/QuantumSavory/QuantumClifford.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumSavory/QuantumClifford.jl.git#commit=$_commit")
-sha256sums=('6d832444b195d6096333cdc21043335f09c173a3924881a8f96cfc539c43a569')
+sha256sums=('97863a0fd527823488a9e645a9f641dc69bf03c7fc5e9c8b5e0becd7d6faec7a')
 
 package() {
   cd QuantumClifford.jl/lib/QECCore
