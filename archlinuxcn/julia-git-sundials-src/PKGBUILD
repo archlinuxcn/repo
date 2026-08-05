@@ -1,6 +1,6 @@
 pkgname=julia-git-sundials-src
-pkgver=5.1.0
-_commit=1cff2a4544de08a8b6bea8970621511afd22383b
+pkgver=6.3.0
+_commit=0b2107c4862efd49bf782895ca15abf21763b32d
 pkgrel=1
 pkgdesc="Sundials.jl"
 url="https://github.com/SciML/Sundials.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/Sundials.jl.git#commit=$_commit")
-sha256sums=('22267e94179179e77fecb3092876afaa8925aa61b32d063875c5246efa796869')
+sha256sums=('71ff98a150eb56e8e8eba3989d38f165d6234ec9c987bca37641a0b8be7b460e')
 
 package() {
   cd Sundials.jl
