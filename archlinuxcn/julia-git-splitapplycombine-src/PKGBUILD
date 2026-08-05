@@ -1,7 +1,7 @@
 pkgname=julia-git-splitapplycombine-src
-pkgver=1.2.3
-_commit=cddb98658d573b11c73af67d179f65c4ca70adf9
-pkgrel=2
+pkgver=1.3.0
+_commit=cb5ec539a47d1b6ab08af95f12c3610e49851438
+pkgrel=1
 pkgdesc="SplitApplyCombine.jl"
 url="https://github.com/JuliaData/SplitApplyCombine.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/SplitApplyCombine.jl.git#commit=$_commit")
-sha256sums=('5dd616e25f4f846a19232d5aced4ebd8ccae4cc2e2bcbecfdbfae3906fca1ce3')
+sha256sums=('2550b1d1d851048ed3372e786138893249a9422018938a89309b89ec841c23b7')
 
 package() {
   cd SplitApplyCombine.jl
