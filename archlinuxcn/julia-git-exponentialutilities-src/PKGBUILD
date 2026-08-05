@@ -1,6 +1,6 @@
 pkgname=julia-git-exponentialutilities-src
-pkgver=1.30.0
-_commit=6b0bb93319324bce501004a33fbfb909f890f01f
+pkgver=1.31.0
+_commit=e326369463f2aee36f82b0b9eacbd8c835bde647
 pkgrel=1
 pkgdesc="ExponentialUtilities.jl"
 url="https://github.com/SciML/ExponentialUtilities.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/ExponentialUtilities.jl.git#commit=$_commit")
-sha256sums=('176a05e7ac1f3a49db935d64e46b952ea3fddfb17bcf483d812e13bad19ccb4f')
+sha256sums=('c2f15c6f6de45109d5282fdd3fbbb11537c5c316a187879970bfe90e6cc5fd4f')
 
 package() {
   cd ExponentialUtilities.jl
