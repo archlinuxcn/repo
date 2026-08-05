@@ -1,6 +1,6 @@
 pkgname=julia-git-respecializeparams-src
-pkgver=0.1.2
-_commit=276a7b73a441857a40c3b4a8e2f30cd02a07b347
+pkgver=1.2.0
+_commit=bf980c4988421731641ba7b10f7b4893d0f7965f
 pkgrel=1
 pkgdesc="RespecializeParams.jl"
 url="https://github.com/SciML/RespecializeParams.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/RespecializeParams.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('a154b4eda820bbd558bb31471f605e9608946888ecbccc7919121d77f2ff784d')
 
 package() {
   cd RespecializeParams.jl
