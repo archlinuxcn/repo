@@ -1,6 +1,6 @@
 pkgname=julia-git-krylovkit-src
-pkgver=0.9.5
-_commit=a39cc4f88f5f7a0935aae52a60372b1d0825773b
+pkgver=0.10.4
+_commit=6c0cc8b15be4cca29e45a09019432b415624b0b5
 pkgrel=1
 pkgdesc="KrylovKit.jl"
 url="https://github.com/Jutho/KrylovKit.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Jutho/KrylovKit.jl.git#commit=$_commit")
-sha256sums=('6ce69084f198d9106d52aa77406a2bb6903ccdb21ffcf3ba452fc202a78375cc')
+sha256sums=('c1d239cab6f659ad18698be189e16afed72c2ba5e5abe31bca71b92872009a4a')
 
 package() {
   cd KrylovKit.jl
