@@ -1,6 +1,6 @@
 pkgname=julia-git-quasimontecarlo-src
-pkgver=0.3.10
-_commit=9f1c40df351538793bad96e0093018018fb19c4d
+pkgver=0.3.11
+_commit=8395f88329c605d1f6d519a2c8a1a6e61332f770
 pkgrel=1
 pkgdesc="QuasiMonteCarlo.jl"
 url="https://github.com/SciML/QuasiMonteCarlo.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/QuasiMonteCarlo.jl.git#commit=$_commit")
-sha256sums=('2660f6cc1162e382d0a507d346bc7cd589edac27c9de3f5b2b897d819d08be34')
+sha256sums=('041b78853020598251b07b0fc8e5bbf91ca7a2e59d985847c86830c39ce70250')
 
 package() {
   cd QuasiMonteCarlo.jl
