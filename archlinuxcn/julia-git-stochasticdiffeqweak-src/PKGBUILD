@@ -1,7 +1,7 @@
 pkgname=julia-git-stochasticdiffeqweak-src
 pkgver=1.1.0
 _commit=61d07fc7f4ca5da8d433fde7d6323370d2fd7b92
-pkgrel=1
+pkgrel=2
 pkgdesc="StochasticDiffEqWeak.jl"
 url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('3fa6c1c19fcc39a582b8f655a1a9de33580bdb2b32f96306a556c2404911dab4')
 
 package() {
   cd OrdinaryDiffEq.jl/lib/StochasticDiffEqWeak
