@@ -3,11 +3,16 @@
 from types import SimpleNamespace
 
 from lilaclib import *
+import os
 
 g = SimpleNamespace()
 
 def pre_build():
   g.files = download_official_pkgbuild('edk2-ovmf')
+
+  for f in g.files:
+    if f != 'PKGBUILD':
+      os.remove(f)
 
   for line in edit_file('PKGBUILD'):
     if line.startswith('arch='):
@@ -84,6 +89,8 @@ _package() {
         ;;
     esac
   done < .PKGINFO
+  rm .PKGINFO
+  mv * "${pkgdir}"
 }
 """)
   run_protected(["updpkgsums"])
