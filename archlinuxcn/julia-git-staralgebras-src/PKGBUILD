@@ -1,0 +1,18 @@
+pkgname=julia-git-staralgebras-src
+pkgver=0.3.0
+_commit=c1e156d72cbd7612c460159490c1770173d7e1aa
+pkgrel=1
+pkgdesc="StarAlgebras.jl"
+url="https://github.com/JuliaAlgebra/StarAlgebras.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaAlgebra/StarAlgebras.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd StarAlgebras.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StarAlgebras "${pkgdir}" "${pkgname}" julia-git
+}
