@@ -1,7 +1,7 @@
-_name=django-formtools
+_name=django_formtools
 pkgname=python-django-formtools
-pkgver=2.5.1
-pkgrel=5
+pkgver=2.7
+pkgrel=0
 pkgdesc="A set of high-level abstractions for Django forms"
 arch=(any)
 url="https://django-formtools.readthedocs.io/en/latest/"
@@ -13,7 +13,7 @@ makedepends=('python-build'
              'python-setuptools'
              'python-setuptools-scm')
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name}/${_name}-${pkgver}.tar.gz")
-sha256sums=('47cb34552c6efca088863d693284d04fc36eaaf350eb21e1a1d935e0df523c93')
+sha256sums=('52b30c08571108023937e4b5d96a5cc35282ff0a2e51630aeea00e27d723d3ac')
 
 build() {
   cd ${_name}-${pkgver}
