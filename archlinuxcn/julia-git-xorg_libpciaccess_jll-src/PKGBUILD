@@ -1,7 +1,7 @@
 pkgname=julia-git-xorg_libpciaccess_jll-src
-pkgver=0.18.1+0
-_commit=cd1ccfbcb3bc8a077c705991f9f9d8b97d466098
-pkgrel=2
+pkgver=0.19.0+0
+_commit=2fe727d5da75aa01b4aa37b38960fcd8e1934fc1
+pkgrel=1
 pkgdesc="Xorg_libpciaccess_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libpciaccess_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libpciaccess)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libpciaccess_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('1577f2641e253c3b16fac3eb6626eb4de6708cb8cf6517a8a72602215e84486d'
+sha256sums=('80809895e1aa407905f400712b0eb9c149a5d06bf9d2120f7d80d8d27ce114d9'
             '9273b488e278f6892696793c011800093b1f6a0cb9aeb5504c17fd2136a5d6dc')
 
 build() {
