@@ -1,0 +1,26 @@
+pkgname=julia-git-libsass_jll-src
+pkgver=3.6.6+0
+_commit=d98e162c27914b7679693793be33fe8eff25fbff
+pkgrel=1
+pkgdesc="libsass_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libsass_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libsass)
+source=("git+https://github.com/JuliaBinaryWrappers/libsass_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('1bf966d7132f506e529c561ac1698974639d60a7d5b0270e18ad1665a9264f9b'
+            'f87d908f4dc247c621fbb8dbaa9e5c1e6474a2a99378fbd3791ce13583eb1dfe')
+
+build() {
+  cd libsass_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libsass_jll ../jll.toml
+}
+
+package() {
+  cd libsass_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libsass_jll "${pkgdir}" "${pkgname}" julia-git
+}
