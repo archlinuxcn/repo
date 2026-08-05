@@ -1,7 +1,7 @@
 pkgname=julia-git-integrals-src
 pkgver=5.4.6
 _commit=982444ed497e74c406a5faef3763ac091d50af2a
-pkgrel=1
+pkgrel=2
 pkgdesc="Integrals.jl"
 url="https://github.com/SciML/Integrals.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/Integrals.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('d3c97ee177c3d6de24036366349425c85aa1198b665139c23f30625d684ca4e6')
 
 package() {
   cd Integrals.jl
