@@ -1,6 +1,6 @@
 pkgname=julia-git-matrixequations-src
-pkgver=2.5.6
-_commit=e4eb7c70a78263a7311695355e83779c4a82ad5d
+pkgver=2.6.2
+_commit=7a8c6116271f72ccd9b3e5b98d10f416d1ef5292
 pkgrel=1
 pkgdesc="MatrixEquations.jl"
 url="https://github.com/andreasvarga/MatrixEquations.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/andreasvarga/MatrixEquations.jl.git#commit=$_commit")
-sha256sums=('e8155f480a349723e4471b3cadd5638ff5343924bacb58026d7e49ad513f59f3')
+sha256sums=('e98bb3a86a6afe276bf60f545221b6c4294d1bcfb4cb20a2ea5959ac100bf5c5')
 
 package() {
   cd MatrixEquations.jl
