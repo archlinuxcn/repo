@@ -1,7 +1,7 @@
 pkgname=julia-git-muladdmacro-src
-pkgver=0.2.4
-_commit=c26875586167063461e623d1f197109959a50178
-pkgrel=2
+pkgver=0.2.7
+_commit=513466be53fb18d95fa7d5dc91fb01bf52f55e2b
+pkgrel=1
 pkgdesc="MuladdMacro.jl"
 url="https://github.com/SciML/MuladdMacro.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/MuladdMacro.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('cc3e23bdcb1591e422e73ff8161d59256e7667bef97e9c8dc041d3a62c933c96')
 
 package() {
   cd MuladdMacro.jl
