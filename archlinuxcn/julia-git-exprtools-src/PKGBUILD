@@ -1,7 +1,7 @@
 pkgname=julia-git-exprtools-src
-pkgver=0.1.10
-_commit=23d4aa68e5cb015957fdfb523143fefad4cfef0c
-pkgrel=2
+pkgver=0.1.11
+_commit=8f91b887066c345da8f8362a4112488253cd1e33
+pkgrel=1
 pkgdesc="ExprTools.jl"
 url="https://github.com/invenia/ExprTools.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/invenia/ExprTools.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('c78f67914b71ced8345904d09715db468bc2c3b37e61301932cb833059834971')
 
 package() {
   cd ExprTools.jl
