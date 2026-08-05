@@ -1,6 +1,6 @@
 pkgname=julia-git-tables-src
-pkgver=1.12.1
-_commit=06abc194d0cb0d245859d163258a6d5723898c9d
+pkgver=1.13.0
+_commit=805007a0036f6a015fcf44362267a50991f68525
 pkgrel=1
 pkgdesc="Tables.jl"
 url="https://github.com/JuliaData/Tables.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/Tables.jl.git#commit=$_commit")
-sha256sums=('ed5d001d4594a747c09ee3a816a2d49e1328e5f0ba6b55f2264b872bd8433bba')
+sha256sums=('795a60399b5d587f544755c8f94abcf84620749e61157512f4b25aa5b4f66de4')
 
 package() {
   cd Tables.jl
