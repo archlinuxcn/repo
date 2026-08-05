@@ -1,6 +1,6 @@
 pkgname=julia-git-mathoptiis-src
-pkgver=0.1.2
-_commit=8b17520300b783791737a0487172c22f88c97cb9
+pkgver=0.2.0
+_commit=934988eb25766243ff4c14254583b34b6e72627d
 pkgrel=1
 pkgdesc="MathOptIIS.jl"
 url="https://github.com/jump-dev/MathOptIIS.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jump-dev/MathOptIIS.jl.git#commit=$_commit")
-sha256sums=('99c72969245a456cc4abb51be70a46a85b30382cb62da01bd954916cc55b588e')
+sha256sums=('0f3ff166aa19497d3bf1ed2a82c4415767d461b449b6d71a551dda7b22d0c27b')
 
 package() {
   cd MathOptIIS.jl
