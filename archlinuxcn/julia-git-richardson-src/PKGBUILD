@@ -1,7 +1,7 @@
 pkgname=julia-git-richardson-src
-pkgver=1.4.2
-_commit=49c5e794241db47dbf4e6ed6fe02cc0984c1f093
-pkgrel=2
+pkgver=1.4.3
+_commit=060fa1a3a6a7e08fb9f6329030f74ff450c772b3
+pkgrel=1
 pkgdesc="Richardson.jl"
 url="https://github.com/JuliaMath/Richardson.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/Richardson.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('98f718978b5d7d7f23961ab2187386120267fb0323c2a76e5b584d3ad66171a0')
 
 package() {
   cd Richardson.jl
