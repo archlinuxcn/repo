@@ -1,6 +1,6 @@
 pkgname=julia-git-specialfunctions-src
-pkgver=2.8.1
-_commit=c9ff36085c9008b9bdaa457e745f459a1827e52e
+pkgver=2.8.2
+_commit=42ec04a84bd165c217182c65c10dbdcc2577fca7
 pkgrel=1
 pkgdesc="SpecialFunctions.jl"
 url="https://github.com/JuliaMath/SpecialFunctions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/SpecialFunctions.jl.git#commit=$_commit")
-sha256sums=('dbb823fee7af02655046daa091e2b9be4e5cc2c10a7394e1e9159d96734e7fc1')
+sha256sums=('09842aacf25f0e1a0f3d148763d13430fa3c0d16c2ac41edc7173ea35ccdbec2')
 
 package() {
   cd SpecialFunctions.jl
