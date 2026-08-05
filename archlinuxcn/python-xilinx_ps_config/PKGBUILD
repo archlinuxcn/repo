@@ -1,0 +1,29 @@
+#
+
+_pkgname=xilinx_ps_config
+pkgname="python-$_pkgname"
+pkgver=0.1.0
+pkgrel=0
+pkgdesc="Xilinx PS boot loader/config generator"
+arch=(any)
+url="https://github.com/yuyichao/xilinx_ps_config"
+license=('BSD-2-Clause')
+depends=('python')
+makedepends=('git' 'python-build' 'python-installer' 'python-wheel'
+             'python-packaging' 'python-setuptools-scm')
+source=("git+https://github.com/yuyichao/xilinx_ps_config.git#tag=v${pkgver}")
+sha512sums=('6887ff220ecdec857e624e06bcae8fc965c26f913d3468e8ec638a5769b849aacc10349bceaf5973e56767bece63e8a5b14e7f3615fc55ee0b3629d45c50f569')
+
+build() {
+  cd "${_pkgname}"
+
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}"
+
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  # install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
