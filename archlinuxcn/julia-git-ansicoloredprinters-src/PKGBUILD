@@ -1,7 +1,7 @@
 pkgname=julia-git-ansicoloredprinters-src
 pkgver=0.0.1
 _commit=30560b4f7da024dbef51cde8d83dd75bd5a0e3e3
-pkgrel=1
+pkgrel=2
 pkgdesc="ANSIColoredPrinters.jl"
 url="https://github.com/JuliaDocs/ANSIColoredPrinters.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDocs/ANSIColoredPrinters.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('e83fdfe8233eb6cd4bc520cce512cd051d652c0543373f78b57f1f8e12b648a5')
 
 package() {
   cd ANSIColoredPrinters.jl
