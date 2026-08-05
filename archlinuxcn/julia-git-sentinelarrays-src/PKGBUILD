@@ -1,6 +1,6 @@
 pkgname=julia-git-sentinelarrays-src
-pkgver=1.4.9
-_commit=443e648bfcaa056247ce996dd1a89ee5ee7bca72
+pkgver=1.4.10
+_commit=a6204f5abfbcecda22d0af9f1e899cc4ed917e52
 pkgrel=1
 pkgdesc="SentinelArrays.jl"
 url="https://github.com/JuliaData/SentinelArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/SentinelArrays.jl.git#commit=$_commit")
-sha256sums=('21e984d6dadd679c5e88abfd98854d88cfdfb0b91beb4bd319707e88cf14bf3c')
+sha256sums=('fae3ee8d7cd2cdd106a640e7afed35c2ede1a555d18d52bf60a1234909607172')
 
 package() {
   cd SentinelArrays.jl
