@@ -12,7 +12,7 @@ source=("git+https://github.com/JuliaPlots/UnicodePlots.jl.git#commit=$_commit")
 sha256sums=('b61d3e949cdadebc826ba2722b838ada4f5db1b56cfde24f1fa7d7534d5aa982')
 
 package() {
-  cd UnicodePlots.jl
+  cd UnicodePlots.jl/UnicodePlots/
 
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh UnicodePlots "${pkgdir}" "${pkgname}" julia-git
 }
