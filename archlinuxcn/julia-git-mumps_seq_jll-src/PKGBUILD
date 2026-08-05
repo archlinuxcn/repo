@@ -1,6 +1,6 @@
 pkgname=julia-git-mumps_seq_jll-src
-pkgver=500.800.200+0
-_commit=7fc41cf6bf01c60b3ff4a8ee396ee795acd38d09
+pkgver=500.900.0+0
+_commit=38acdeefbf5f67a8ed3096387e8c7170e349d9d6
 pkgrel=1
 pkgdesc="MUMPS_seq_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/MUMPS_seq_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git mumps-seq)
 source=("git+https://github.com/JuliaBinaryWrappers/MUMPS_seq_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('074e922a6bec3d9d47ae8d7de16cf0f1a1c4f45183e7ab03dfe9f34314ee7d5e'
+sha256sums=('e01d36e68019fd3efa5c52203c6d2929dca2a9c989472935acedd90d998a65b5'
             '246eae931b5582ea5889ff528c2d876fd7023a075105f473663bbb26625a0625')
 
 build() {
