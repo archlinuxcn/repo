@@ -1,7 +1,7 @@
 pkgname=julia-git-rmath_jll-src
-pkgver=0.5.1+0
-_commit=79445e250c294c3501dbef35e1322724c1fcd82f
-pkgrel=2
+pkgver=0.5.2+0
+_commit=a7f42b8109da30acb298a7ba8f56d58840fab4d9
+pkgrel=1
 pkgdesc="Rmath_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Rmath_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git rmath-julia)
 source=("git+https://github.com/JuliaBinaryWrappers/Rmath_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('fb7814a9809255277209c106e87602015c06b8d39a8c01ec423610e00f946194'
+sha256sums=('c28d8f51f469911bc9c60014635f06f69d72dce7fac39e9722f5f7f1079c66bd'
             '98619edca1ea46d3630f835f089fcf207a2061b93197a6e8bd80f9354ac50ca5')
 
 build() {
