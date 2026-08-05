@@ -13,16 +13,6 @@ def pre_build():
     line = line.replace('AMDGPU;NVPTX;X86', 'AMDGPU;NVPTX;AArch64')
     if line.startswith('arch='):
       line = 'arch=(aarch64)'
-    if line.startswith('prepare()'):
-      print('source+=(0001-Fix-char-array-initializer.patch)')
-      print("""prepare() {
-  (cd rocm-llvm/
-  patch -Np1 -i "$srcdir/0001-Fix-char-array-initializer.patch")
-  _prepare
-}
-""")
-      print(f"_{line}")
-      continue
     if line.startswith('build()'):
       print(line)
       print("    CXXFLAGS+=' -Wno-error -Wno-narrowing'")
