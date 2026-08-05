@@ -1,6 +1,6 @@
 pkgname=julia-git-scimlpublic-src
-pkgver=1.0.1
-_commit=3c991028acb2e01658f16ec4b8be7153698e047a
+pkgver=1.2.4
+_commit=bad0282d6d2cf4acf32d8038717df68fbc6ed935
 pkgrel=1
 pkgdesc="SciMLPublic.jl"
 url="https://github.com/SciML/SciMLPublic.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/SciMLPublic.jl.git#commit=$_commit")
-sha256sums=('95e142d1c82b523027844dd035ba151ee3974b548755590014102acd5d0d61c9')
+sha256sums=('a4fb98e322ad455aa289f15547613a25e7b84e5d8d3fa81fbc65e1480f536bb7')
 
 package() {
   cd SciMLPublic.jl
