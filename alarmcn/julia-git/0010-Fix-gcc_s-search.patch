@@ -1,0 +1,25 @@
+From 4fb3d3204bf0f9354f1eebcbb4573c32ea5993d5 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 5 Aug 2026 00:49:20 -0400
+Subject: [PATCH 10/11] Fix gcc_s search
+
+---
+ base/linking.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/base/linking.jl b/base/linking.jl
+index dda8442515..afdc662da8 100644
+--- a/base/linking.jl
++++ b/base/linking.jl
+@@ -203,7 +203,7 @@ function link_image_cmd(path, out)
+         libc           = _find_loaded(r"/libc\.so\.\d+$")                       # system libc
+         ld_linux       = _find_loaded(r"/ld-(?:linux|musl|elf)[^/]*\.so\.\d+$") # system ld
+         libc_nonshared = _find_static("libc_nonshared.a")
+-        append!(LIBS,     String["-lgcc", "--as-needed", "-lgcc_s", "-latomic", "-lopenlibm", "--no-as-needed", libc])
++        append!(LIBS,     String["-lgcc", "--as-needed", _find_loaded(r"libgcc_s\."), "-latomic", "-lopenlibm", "--no-as-needed", libc])
+         isfile(libc_nonshared) && push!(LIBS, libc_nonshared)
+         append!(LIBS,     String["--as-needed", ld_linux, "--no-as-needed"])
+         append!(crtbegin, String[_find_static("crti.o"), _find_static("crtbeginS.o")])
+-- 
+2.53.0
+
