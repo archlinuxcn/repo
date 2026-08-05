@@ -1,7 +1,7 @@
 pkgname=julia-git-montecarlointegration-src
 pkgver=0.2.0
 _commit=3da3baedde56512423185e6c6ebdd81a56ee27bd
-pkgrel=1
+pkgrel=2
 pkgdesc="MonteCarloIntegration.jl"
 url="https://github.com/ranjanan/MonteCarloIntegration.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/ranjanan/MonteCarloIntegration.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('5f41ef0dec547252f4128cd4fa862b118ef801cb45062d19e32b8c4b916520ee')
 
 package() {
   cd MonteCarloIntegration.jl
