@@ -1,7 +1,7 @@
 pkgname=julia-git-llvm-src
 pkgver=9.11.0
 _commit=7632757ea65c7b93069c6620d80e3bae204d7424
-pkgrel=1
+pkgrel=2
 pkgdesc="LLVM.jl"
 url="https://github.com/maleadt/LLVM.jl.git"
 arch=('any')
@@ -10,7 +10,8 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit"
         0001-Remove-deleted-pass.patch)
-sha256sums=('194dc901e6d9e2f37a65e4d33a908af0f8e8876ed4d88f2737b2ed79643e9f46')
+sha256sums=('194dc901e6d9e2f37a65e4d33a908af0f8e8876ed4d88f2737b2ed79643e9f46'
+            '45ae569bfbbfa6d012bf698b2f41b0fce9998cba65f9c4963a7dc65bca0a06a4')
 
 prepare() {
   cd LLVM.jl
