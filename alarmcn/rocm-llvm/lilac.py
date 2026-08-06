@@ -4,6 +4,9 @@ from types import SimpleNamespace
 
 from lilaclib import *
 
+# Somehow this can consume >100G disk space
+build_args = ['-r', os.path.expanduser('~/chroots')]
+
 g = SimpleNamespace()
 
 def pre_build():
