@@ -1,0 +1,31 @@
+From 4b933f005518196d99e0dd86646adcaee6cc1bff Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Wed, 5 Aug 2026 21:35:17 -0400
+Subject: [PATCH] Hardcode git path
+
+---
+ src/git_function.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/git_function.jl b/src/git_function.jl
+index 7e5114d..6afdcb5 100644
+--- a/src/git_function.jl
++++ b/src/git_function.jl
+@@ -1,6 +1,5 @@
+ using OpenSSH_jll: OpenSSH_jll
+ using Git_LFS_jll: Git_LFS_jll
+-using JLLWrappers: pathsep, LIBPATH_env
+ 
+ """
+     git()
+@@ -22,6 +21,7 @@ julia> run(git(["clone", "https://github.com/JuliaRegistries/General"]))
+ to bypass the parsing of the command string.
+ """
+ function git(; adjust_PATH::Bool = true, adjust_LIBPATH::Bool = true)
++    return `/usr/bin/git`
+     path = split(get(ENV, "PATH", ""), pathsep)
+     libpath = split(get(ENV, LIBPATH_env, ""), pathsep)
+     
+-- 
+2.53.0
+
