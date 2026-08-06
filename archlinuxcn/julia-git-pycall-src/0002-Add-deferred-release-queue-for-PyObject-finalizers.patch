@@ -1,4 +1,4 @@
-From 9645912a4a8366790a3def87c9dbe5ac2d370ad7 Mon Sep 17 00:00:00 2001
+From 1d46523bc9f1920e3fe5b6a2330e0b5763680211 Mon Sep 17 00:00:00 2001
 From: Cody Tapscott <topolarity@tapscott.me>
 Date: Wed, 11 Mar 2026 12:15:26 -0400
 Subject: [PATCH 2/3] Add deferred "release" queue for PyObject finalizers
@@ -7,12 +7,12 @@ This is required to avoid deadlocking in the GC as it executes
 finalizers.
 ---
  src/PyCall.jl   |  8 ++---
- src/gc.jl       | 83 +++++++++++++++++++++++++++++++++++++++++++++++++
+ src/gc.jl       | 87 +++++++++++++++++++++++++++++++++++++++++++++++++
  src/gil.jl      | 10 +++++-
  src/pybuffer.jl |  8 ++---
  src/pyinit.jl   |  6 ----
- test/gil.jl     | 47 ++++++++++++++++++++++------
- 6 files changed, 134 insertions(+), 28 deletions(-)
+ test/gil.jl     | 47 ++++++++++++++++++++------
+ 6 files changed, 138 insertions(+), 28 deletions(-)
 
 diff --git a/src/PyCall.jl b/src/PyCall.jl
 index 17c3f58..f2623f5 100644
@@ -41,7 +41,7 @@ index 17c3f58..f2623f5 100644
  end
  
 diff --git a/src/gc.jl b/src/gc.jl
-index e000cc3..32d18e4 100644
+index e000cc3..0fff360 100644
 --- a/src/gc.jl
 +++ b/src/gc.jl
 @@ -11,6 +11,8 @@
@@ -53,7 +53,7 @@ index e000cc3..32d18e4 100644
  const pycall_gc = Dict{PyPtr,Any}()
  
  function weakref_callback(callback::PyPtr, wo::PyPtr)
-@@ -43,3 +45,84 @@ function pyembed(po::PyObject, jo::Any)
+@@ -43,3 +45,88 @@ function pyembed(po::PyObject, jo::Any)
      pycall_gc[wo] = jo
      return po
  end
@@ -83,8 +83,12 @@ index e000cc3..32d18e4 100644
 +function _defer_Py_DecRef(o::PyObject)
 +    lock(_deferred_queue_lock)
 +    try
-+        push!(_deferred_Py_DecRef, getfield(o, :o))
-+        atomic_add!(_deferred_count, 1)
++        ptr = getfield(o, :o)
++        if ptr !== PyPtr_NULL
++            push!(_deferred_Py_DecRef, ptr)
++            atomic_add!(_deferred_count, 1)
++            setfield!(o, :o, PyPtr_NULL)
++        end
 +    finally
 +        unlock(_deferred_queue_lock)
 +    end
