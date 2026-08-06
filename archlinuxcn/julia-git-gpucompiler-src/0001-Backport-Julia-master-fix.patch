@@ -1,0 +1,29 @@
+From c378aecf012fafb338fac39c79b6d4ef10955cc0 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 6 Aug 2026 16:34:27 -0400
+Subject: [PATCH] Backport Julia master fix
+
+---
+ src/jlgen.jl | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/jlgen.jl b/src/jlgen.jl
+index 8db65c8..e3ae3cf 100644
+--- a/src/jlgen.jl
++++ b/src/jlgen.jl
+@@ -837,7 +837,11 @@ function compile_method_instance(@nospecialize(job::CompilerJob))
+                 push!(codeinfos, ci::CodeInstance)
+                 push!(codeinfos, src::CodeInfo)
+             end
+-            @ccall jl_emit_native(codeinfos::Vector{Any}, ts_mod::LLVM.API.LLVMOrcThreadSafeModuleRef, Ref(params)::Ptr{Base.CodegenParams}, #=extern linkage=# false::Cint)::Ptr{Cvoid}
++            if VERSION >= v"1.14.0-DEV.2641"
++                @ccall jl_emit_native(codeinfos::Vector{Any}, C_NULL::Ptr{Cvoid}, ts_mod::LLVM.API.LLVMOrcThreadSafeModuleRef, Ref(params)::Ptr{Base.CodegenParams}, #=extern linkage=# false::Cint)::Ptr{Cvoid}
++            else
++                @ccall jl_emit_native(codeinfos::Vector{Any}, ts_mod::LLVM.API.LLVMOrcThreadSafeModuleRef, Ref(params)::Ptr{Base.CodegenParams}, #=extern linkage=# false::Cint)::Ptr{Cvoid}
++            end
+         elseif VERSION >= v"1.12.0-DEV.1667"
+             ccall(:jl_create_native, Ptr{Cvoid},
+                 (Vector{MethodInstance}, LLVM.API.LLVMOrcThreadSafeModuleRef, Ptr{Base.CodegenParams}, Cint, Cint, Cint, Csize_t, Ptr{Cvoid}),
+-- 
+2.55.0
+
