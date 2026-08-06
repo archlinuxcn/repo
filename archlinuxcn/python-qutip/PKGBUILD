@@ -26,6 +26,10 @@ sha256sums=('9bd6ace7dcbd4fda06b6ddc6e6f035bb17c9048b59db7cd9580610a99fb4cdcc')
 build() {
   cd qutip-$pkgver
 
+  # For https://github.com/python/cpython/issues/151547
+  export CC=gcc
+  export CXX=g++
+
   python setup.py build
 }
 

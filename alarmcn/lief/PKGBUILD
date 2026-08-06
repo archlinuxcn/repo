@@ -31,6 +31,11 @@ prepare() {
 
 build() {
   cd LIEF
+
+  # For https://github.com/python/cpython/issues/151547
+  export CC=gcc
+  export CXX=g++
+
   mkdir -p build
   CFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
   CXXFLAGS+=" -ffile-prefix-map=${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
