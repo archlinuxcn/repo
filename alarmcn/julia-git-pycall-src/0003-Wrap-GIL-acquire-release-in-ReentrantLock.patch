@@ -1,0 +1,100 @@
+From 45ba68e95a6de8d25110a02cd55488472320a69c Mon Sep 17 00:00:00 2001
+From: Cody Tapscott <topolarity@tapscott.me>
+Date: Wed, 11 Mar 2026 17:09:41 -0400
+Subject: [PATCH 3/3] Wrap GIL acquire / release in `ReentrantLock`
+
+Required to avoid starving the scheduler or deadlocking against the GC.
+---
+ src/gil.jl  | 16 ++++++++++++++++
+ test/gil.jl | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+
+diff --git a/src/gil.jl b/src/gil.jl
+index 1ec3709..ce8f355 100644
+--- a/src/gil.jl
++++ b/src/gil.jl
+@@ -2,6 +2,20 @@
+ 
+ const _GIL_owner = Threads.Atomic{UInt}(0)
+ 
++# It is not legal for Julia code to spin directly on "foreign" locks such as
++# the GIL, since this can mean never making progress toward:
++#
++#   * GC safepoints, which causes deadlocks when other threads initiate a GC
++#     and wait forever for all threads to "stop".
++#
++#   * yield() points, which can starve the scheduler and also lead to deadlocks
++#     since Tasks waiting for the GIL can block other Tasks ready to make
++#     progress from being scheduled.
++#
++# Instead we are required to hold a Julia-side lock that is GC-aware + scheduler-
++# aware whenever we hold the foreign GIL, preventing these deadlocks.
++const _jl_gil = ReentrantLock()
++
+ # Forward declare deferred destructors
+ function _defer_Py_DecRef end
+ function _defer_PyBuffer_Release end
+@@ -9,6 +23,7 @@ function _defer_PyBuffer_Release end
+ # Acquires the GIL.
+ # This lock can be re-acquired if already held by the OS thread (it is re-entrant).
+ function GIL_lock()
++    lock(_jl_gil)
+     state = ccall((@pysym :PyGILState_Ensure), Cint, ())
+     _GIL_owner[] = objectid(current_task())
+     return state
+@@ -19,6 +34,7 @@ end
+ function GIL_unlock(state::Cint)
+     _GIL_owner[] = UInt(0)
+     ccall((@pysym :PyGILState_Release), Cvoid, (Cint,), state)
++    unlock(_jl_gil)
+ end
+ 
+ # Quickly check whether this task holds the GIL.
+diff --git a/test/gil.jl b/test/gil.jl
+index c1e3301..439578e 100644
+--- a/test/gil.jl
++++ b/test/gil.jl
+@@ -39,4 +39,40 @@ using Base.Threads
+         @test isempty(PyCall._deferred_Py_DecRef)
+     end
+ 
++    @testset "GIL + GC safepoint deadlock" begin
++        done = Threads.Atomic{Bool}(false)
++
++        # If not protected by a (GC-aware) Julia-level lock, it is possible
++        # to deadlock with the GC + GIL:
++        #   1. Task A holds the GIL
++        #   2. Task B waits to access the GIL
++        #   3. Task A triggers GC
++        #   4. Task B never reaches a safepoint, due to waiting for the GIL.
++        task1 = Threads.@spawn begin
++            while !done[]
++                PyCall.@with_GIL begin
++                    for _ in 1:10_000
++                        PyObject(0)
++                    end
++                end
++            end
++        end
++
++        task2 = Threads.@spawn begin
++            while !done[]
++                PyCall.@with_GIL begin
++                    for _ in 1:10_000
++                        PyObject(0)
++                    end
++                end
++                GC.gc(true)
++            end
++        end
++
++        result = timedwait(() -> istaskdone(task1) || istaskdone(task2), 3.0)
++        done[] = true
++        timedwait(() -> istaskdone(task1) && istaskdone(task2), 5.0)
++        @test result === :timed_out
++    end
++
+ end
+-- 
+2.53.0
+
