@@ -7,8 +7,8 @@
 
 _ocamlname='lwt'
 pkgname="ocaml-$_ocamlname"
-pkgver='6.1.0'
-pkgrel='2'
+pkgver='6.1.2'
+pkgrel='1'
 pkgdesc='A library for cooperative threads in OCaml'
 arch=('x86_64' 'aarch64')
 url="https://github.com/ocsigen/$_ocamlname"
@@ -29,7 +29,7 @@ makedepends=(
 )
 options=('!strip')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-b2sums=('b46a6a6d23e81b4d96b9e6a7944ebd1b492674cfc7f63a79e8b0776550dea7df922e26288d659ecc781d7d81fd27e931f74090793f43e9fa7faa511427bd32d0')
+b2sums=('b3c1ccc97ea56f08f0ba02a1db2108fe744ea4c7b574abfce69e0472959a051f3d45c31cbbc61978770a0818e692b7c45c9f8fe97c568329f62929517caf9f9d')
 
 prepare()
 {
@@ -38,12 +38,6 @@ prepare()
 	# This test breaks for some people but not for others, see comments from
 	# oriba, crave and pha-qu on the AUR page
 	sed -i '/test_mcast "mcast-join-loop"/d' 'test/unix/test_mcast.ml'
-
-	# OCaml 5.5 exposes get_sockaddr as a compatibility macro. Lwt's redundant
-	# declaration collides with that macro; the declaration from socketaddr.h
-	# is sufficient.
-	sed -i '/^extern void get_sockaddr(/,+1d' \
-		src/unix/unix_c/unix_recv_send_utils.h
 }
 
 build()
