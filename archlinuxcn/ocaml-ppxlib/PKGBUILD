@@ -2,8 +2,8 @@
 # Contributor: Jakob Gahde <j5lx@fmail.co.uk>
 _projectname='ppxlib'
 pkgname="ocaml-$_projectname"
-pkgver=0.37.0
-pkgrel=2
+pkgver=0.38.0
+pkgrel=1
 pkgdesc='Utilities for working with Jane Street AST constructs'
 arch=('x86_64' 'aarch64')
 url="https://github.com/ocaml-ppx/$_projectname"
@@ -15,7 +15,7 @@ source=(
 	"$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz"
 	'remove-stdlib-shims-dep.diff'
 )
-b2sums=('c1d1f3bed43e04377d094c758c751a887b280fdd3c7139392b0855672714f0e76de6fff566e8cc98ec5972b4228c7bfb46af580dec182dbe202b7b5bd55e420b'
+b2sums=('d5504fddd17d39f6e633c5b3b41d9ceead884925265b3bf6fb4ed80bfa99201d18ffcf9030bb6be30f5bbe2c8a664329ea01a7c0cc32c3b08043145d9fbf2f90'
         '5fd7037dfe4cc3f250fa42cc2fc84427a36394f04a6fef646856c7e9bf2a918b36eebfd204741a26a8a89215bf304410b6f74e060305d9b25ce0bdc6e277f463')
 
 _sourcedirectory="$_projectname-$pkgver"
