@@ -6,7 +6,15 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['meadow'])
+pre_build_script: |
+  aur_pre_build(maintainers=['meadow'])
+  for line in edit_file('PKGBUILD'):
+    print(line)
+    if 'test_mcast "mcast-join-loop"' in line:
+      print('')
+      print('\t# OCaml 5.5 exposes get_sockaddr as a compatibility macro. Lwt\'s redundant')
+      print('\t# declaration collides with that macro; socketaddr.h is sufficient.')
+      print("\tsed -i '/^extern void get_sockaddr(/,+1d' src/unix/unix_c/unix_recv_send_utils.h")
 
 post_build: aur_post_build
 
