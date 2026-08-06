@@ -1,14 +1,14 @@
-From 943c1b35bae4ca6f23d8c9cb1b6054349815f472 Mon Sep 17 00:00:00 2001
+From 11f8c991d90507f9fa5f09ff2c7fad9ed59e48b3 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
 Subject: [PATCH 04/11] Support loading extensions from STDLIB
 
 ---
- base/loading.jl | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ base/loading.jl | 51 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index 10e3420015..cc91335fbe 100644
+index fec5c81f2d..9640830392 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
 @@ -1343,6 +1343,34 @@ end
@@ -46,7 +46,7 @@ index 10e3420015..cc91335fbe 100644
      path, project_file = entry_point_and_project_file(dir, pkg.name)
      if project_file === nothing
          pkg.uuid === nothing || return nothing
-@@ -1652,11 +1680,31 @@ const EXT_PRIMED = Dict{PkgId,Vector{PkgId}}() # Extension -> Parent + Triggers
+@@ -1701,11 +1729,34 @@ const EXT_PRIMED = Dict{PkgId,Vector{PkgId}}() # Extension -> Parent + Triggers
  const EXT_DORMITORY = Dict{PkgId,Vector{ExtensionId}}() # Trigger -> Extensions that can be triggered by it
  const EXT_DORMITORY_FAILED = ExtensionId[]
  
@@ -56,13 +56,16 @@ index 10e3420015..cc91335fbe 100644
 +        project_file = normpath(joinpath(pkgdir, proj))
 +        isfile_casesensitive(project_file) || continue
 +        entry = parsed_toml(project_file)
-+        weakdeps = get(entry, "weakdeps", nothing)::Union{Nothing, Vector{String}, Dict{String,Any}}
 +        extensions = get(entry, "extensions", nothing)::Union{Nothing, Dict{String, Any}}
-+        # Require STDLIB weakdeps to include the UUIDs
-+        if weakdeps isa Dict{String, Any} && extensions !== nothing
-+            _insert_extension_triggers(pkg, extensions, weakdeps)
-+            return true
++        if extensions === nothing
++            continue
 +        end
++        # Require STDLIB weakdeps to include the UUIDs
++        weakdeps = get(Dict{String, Any}, entry, "weakdeps")::Dict{String,Any}
++        deps = get(Dict{String, Any}, entry, "deps")::Dict{String,Any}
++        total_deps = merge(weakdeps, deps)
++        _insert_extension_triggers(pkg, extensions, total_deps)
++        return true
 +    end
 +    return false
 +end

@@ -1,4 +1,4 @@
-From 787cdbc5a95d4aa3be2f25fcd50320d56b93a870 Mon Sep 17 00:00:00 2001
+From 27cfe539e2daf922ea93460a7f48ed0a6e73105c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 3 Oct 2023 19:00:59 -0400
 Subject: [PATCH 05/11] [julia-git] add a safeguard for bad unwinding
@@ -8,7 +8,7 @@ Subject: [PATCH 05/11] [julia-git] add a safeguard for bad unwinding
  1 file changed, 2 insertions(+)
 
 diff --git a/src/stackwalk.c b/src/stackwalk.c
-index 79a15ecdd8..95520a7e82 100644
+index a0a0ad3274..9650d15bf4 100644
 --- a/src/stackwalk.c
 +++ b/src/stackwalk.c
 @@ -292,6 +292,8 @@ JL_DLLEXPORT jl_value_t *jl_backtrace_from_here(int returnsp, int skip)
