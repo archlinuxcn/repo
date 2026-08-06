@@ -31,6 +31,7 @@ depends=(
   'boost-libs'
   'ceres-solver'
   'draco'  # seems to use static lib and should probably only be makedepends
+  'eigen'
   'embree'
   'expat'
   'ffmpeg'
@@ -198,6 +199,7 @@ build() {
 
   if [[ $CARCH == "aarch64" ]]; then
     cmake_options+=(
+      -D WITH_CYCLES_DEVICE_HIPRT=OFF
       -D WITH_CYCLES_HIP_BINARIES=OFF
       -D WITH_CYCLES_HIPRT_BINARIES=OFF
       -D WITH_CYCLES_ONEAPI_BINARIES=OFF
