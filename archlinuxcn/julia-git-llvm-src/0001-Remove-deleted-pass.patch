@@ -1,0 +1,28 @@
+From df4f5c13da524900a492adf1073d51300bf60ccc Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 6 Aug 2026 16:06:36 -0400
+Subject: [PATCH] Remove deleted pass
+
+https://github.com/llvm/llvm-project/commit/f2fe4718aa162f05adf9ef09fce86fd076cf2706
+---
+ src/newpm.jl | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/newpm.jl b/src/newpm.jl
+index f2e91cfe..9bf55d26 100644
+--- a/src/newpm.jl
++++ b/src/newpm.jl
+@@ -539,7 +539,9 @@ end
+ @module_pass "mergefunc" MergeFunctionsPass
+ @module_pass "name-anon-globals" NameAnonGlobalPass
+ @module_pass "no-op-module" NoOpModulePass
+-@module_pass "objc-arc-apelim" ObjCARCAPElimPass
++@static if version() < v"22"
++    @module_pass "objc-arc-apelim" ObjCARCAPElimPass
++end
+ @module_pass "partial-inliner" PartialInlinerPass
+ @module_pass "pgo-icall-prom" PGOIndirectCallPromotion
+ @module_pass "pgo-instr-gen" PGOInstrumentationGen
+-- 
+2.53.0
+
