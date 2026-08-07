@@ -102,7 +102,6 @@ package_zfs-utils-rc-poscat() {
 
   # cleanup
   ## empty files
-  rm -rv "$pkgdir"/etc/sudoers.d
   rm -rv "$pkgdir"/usr/lib/modules-load.d
   ## debian/ubuntu specific
   rm -rv "$pkgdir"/usr/share/initramfs-tools
