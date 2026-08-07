@@ -1,0 +1,33 @@
+From ac4d694e69811e1eda0ece222413a5a7b2836d21 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 7 Aug 2026 14:04:08 -0400
+Subject: [PATCH] Remove unnecessary rule for hvcat_fill!
+
+The new version in base should be type stable now
+---
+ src/internal_rules/core.jl | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/internal_rules/core.jl b/src/internal_rules/core.jl
+index 5aeca8fc..82030bd1 100644
+--- a/src/internal_rules/core.jl
++++ b/src/internal_rules/core.jl
+@@ -486,6 +486,7 @@ function EnzymeRules.reverse(
+     return ntuple(Returns(nothing), Val(2 + length(args)))
+ end
+ 
++if isdefined(Base, :hvcat_fill!)
+ # Force a rule around hvcat_fill as it is type unstable if the tuple is not of the same type (e.g., int, float, int, float)
+ function EnzymeRules.augmented_primal(
+     config::EnzymeRules.RevConfig,
+@@ -547,6 +548,7 @@ function EnzymeRules.reverse(
+     end
+     return (nothing, nothing)
+ end
++end
+ 
+ function EnzymeRules.forward(config, ::Const{typeof(Base.finalizer)}, _, f::Const, o)
+     f = f.val
+-- 
+2.53.0
+
