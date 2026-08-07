@@ -4,8 +4,8 @@
 
 _pkgname=rasterio
 pkgname=python-rasterio
-pkgver=1.5.0
-pkgrel=2
+pkgver=1.5.1
+pkgrel=1
 pkgdesc="Fast and direct raster I/O for use with Numpy and SciPy"
 url="https://github.com/rasterio/rasterio"
 license=('LicenseRef-rasterio')
@@ -16,17 +16,17 @@ depends=(
   glibc
   python-affine
   python-attrs
+  python-certifi
   python-click
-  python-click-plugins
-  python-cligj
   python-numpy
-  python-setuptools
+  python-pyparsing
   python-snuggs
 )
 makedepends=(
+  cython
   python-build
   python-installer
-  cython
+  python-setuptools
   python-wheel
 )
 optdepends=('ipython: for ipython support'
@@ -34,7 +34,7 @@ optdepends=('ipython: for ipython support'
   'python-matplotlib: for plotting support'
   'python-swiftclient: for OpenStack support')
 source=(${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
-sha512sums=('a3fcf0b34133cbbab07d00bafb2047a5cd99e5ca84601f79249afc79abd97f9505a9832d4b535e57ba7d1131e283872ffe85757051e73d562734e44b8d215129')
+sha512sums=('894106fa8c452fbe297a53c30e0d7ff080379788e1ef5e4996d751c34f403eafec802ef0ba86639243ce82ac235f7e383d43246eef0856075a1f743f60ce12f6')
 
 build() {
   cd ${_pkgname}-${pkgver}
