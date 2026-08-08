@@ -90,7 +90,7 @@ source=(
   "git+$url.git#tag=${pkgver}"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
 
-  5133.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5133.patch
+  5129.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5129.patch
 
   5157.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5157.patch
 
@@ -110,8 +110,11 @@ prepare() {
 	echo 5157 # Merged but not yet in 50.beta
 	git apply ../5157.patch
 
-	#echo 4921
+	#echo 4921 # FBOs for NVIDIA
 	#git apply ../4921.patch
+
+	echo 5129 # defer HW cursor support initialization
+	git apply ../5129.patch
 }
 
 build() {
