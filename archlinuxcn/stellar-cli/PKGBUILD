@@ -13,8 +13,6 @@ source=(git+https://github.com/stellar/$pkgname#tag=v$pkgver
         stellar-cli-gcc16-directory-iterator.patch::https://github.com/WebAssembly/binaryen/commit/6a78bf0af57dbff8f9d6a77b2527eb0ebb5b73e9.patch?full_index=1)
 sha512sums=('e798c8f290c75e084bb16e5028df312d146b7cc357f3d6119a6a9eb71f6076683e8c48b595b764dc63b19f83e28f8d7f536ee66b442415b9fa0bf2b0348fb277'
             'd9c4a1f387a402fffabb01a7a2a30599aad0693bde6be511175b1a869de91a492bd127b9713f088770e06246a117f5f3b7af7f61e1b510e112b827695e42bdbb')
-# https://github.com/briansmith/ring/issues/1444
-options=(!lto)
 
 prepare() {
   cd $pkgname
@@ -33,6 +31,8 @@ build() {
   cd $pkgname
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
+  CFLAGS+=' -ffat-lto-objects'
+  CXXFLAGS+=' -ffat-lto-objects'
   cargo build --frozen --release -p stellar-cli
   local _completion="target/release/stellar completion"
   $_completion --shell bash > "completions/stellar"
