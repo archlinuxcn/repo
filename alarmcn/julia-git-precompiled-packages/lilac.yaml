@@ -38,6 +38,9 @@ repo_depends:
   - spral
   - libisoband
   - tracy
+  - mbedtls2
+  - spirv2clc-git
+  - coremath-git
 
   - julia-git-clang_jll-src
   - julia-git-enzyme_jll-src
@@ -100,6 +103,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-animations-src
   - alias: alpm-lilac
+    alpm: julia-git-ansicoloredprinters-src
+  - alias: alpm-lilac
     alpm: julia-git-aqua-src
   - alias: alpm-lilac
     alpm: julia-git-arnoldimethod-src
@@ -121,6 +126,8 @@ update_on:
     alpm: julia-git-atomix-src
   - alias: alpm-lilac
     alpm: julia-git-attr_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-autohashequals-src
   - alias: alpm-lilac
     alpm: julia-git-automa-src
   - alias: alpm-lilac
@@ -170,6 +177,10 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-bijections-src
   - alias: alpm-lilac
+    alpm: julia-git-binaryheaps-src
+  - alias: alpm-lilac
+    alpm: julia-git-bipartitegraphs-src
+  - alias: alpm-lilac
     alpm: julia-git-bitbasis-src
   - alias: alpm-lilac
     alpm: julia-git-bitflags-src
@@ -196,8 +207,6 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-bloqadeode-src
   - alias: alpm-lilac
-    alpm: julia-git-bloqadeschema-src
-  - alias: alpm-lilac
     alpm: julia-git-bloqadewaveforms-src
   - alias: alpm-lilac
     alpm: julia-git-blosc-src
@@ -223,8 +232,6 @@ update_on:
     alpm: julia-git-boundaryvaluediffeqshooting-src
   - alias: alpm-lilac
     alpm: julia-git-bracketingnonlinearsolve-src
-  - alias: alpm-lilac
-    alpm: julia-git-braket-src
   - alias: alpm-lilac
     alpm: julia-git-branchandprune-src
   - alias: alpm-lilac
@@ -282,6 +289,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-clang-src
   - alias: alpm-lilac
+    alpm: julia-git-clang_unified_jll-src
+  - alias: alpm-lilac
     alpm: julia-git-cliquetrees-src
   - alias: alpm-lilac
     alpm: julia-git-codecbase-src
@@ -335,6 +344,10 @@ update_on:
     alpm: julia-git-conjugategradients-src
   - alias: alpm-lilac
     alpm: julia-git-consoleprogressmonitor-src
+  - alias: alpm-lilac
+    alpm: julia-git-coremath-src
+  - alias: alpm-lilac
+    alpm: julia-git-coremath_jll-src
   - alias: alpm-lilac
     alpm: julia-git-covarianceestimation-src
   - alias: alpm-lilac
@@ -454,6 +467,10 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-docstringextensions-src
   - alias: alpm-lilac
+    alpm: julia-git-documenter-src
+  - alias: alpm-lilac
+    alpm: julia-git-documentertools-src
+  - alias: alpm-lilac
     alpm: julia-git-domainsets-src
   - alias: alpm-lilac
     alpm: julia-git-dsp-src
@@ -572,11 +589,17 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-fribidi_jll-src
   - alias: alpm-lilac
+    alpm: julia-git-functionmaps-src
+  - alias: alpm-lilac
     alpm: julia-git-functionwrappers-src
   - alias: alpm-lilac
     alpm: julia-git-functionwrapperswrappers-src
   - alias: alpm-lilac
     alpm: julia-git-functors-src
+  - alias: alpm-lilac
+    alpm: julia-git-gabs-src
+  - alias: alpm-lilac
+    alpm: julia-git-gamma-src
   - alias: alpm-lilac
     alpm: julia-git-garishprint-src
   - alias: alpm-lilac
@@ -585,6 +608,8 @@ update_on:
     alpm: julia-git-genericlinearalgebra-src
   - alias: alpm-lilac
     alpm: julia-git-genericschur-src
+  - alias: alpm-lilac
+    alpm: julia-git-genqo-src
   - alias: alpm-lilac
     alpm: julia-git-geoformattypes-src
   - alias: alpm-lilac
@@ -595,6 +620,12 @@ update_on:
     alpm: julia-git-ghostscript_jll-src
   - alias: alpm-lilac
     alpm: julia-git-giflib_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-git-src
+  - alias: alpm-lilac
+    alpm: julia-git-git_lfs_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-git_jll-src
   - alias: alpm-lilac
     alpm: julia-git-githubactions-src
   - alias: alpm-lilac
@@ -643,6 +674,10 @@ update_on:
     alpm: julia-git-gsl-src
   - alias: alpm-lilac
     alpm: julia-git-gsl_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-gumbo-src
+  - alias: alpm-lilac
+    alpm: julia-git-gumbo_jll-src
   - alias: alpm-lilac
     alpm: julia-git-h5zbitshuffle-src
   - alias: alpm-lilac
@@ -760,6 +795,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-integralarrays-src
   - alias: alpm-lilac
+    alpm: julia-git-integrals-src
+  - alias: alpm-lilac
     alpm: julia-git-interfaces-src
   - alias: alpm-lilac
     alpm: julia-git-interpolations-src
@@ -842,13 +879,13 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-lame_jll-src
   - alias: alpm-lilac
-    alpm: julia-git-languageserver-src
-  - alias: alpm-lilac
     alpm: julia-git-lapack_jll-src
   - alias: alpm-lilac
     alpm: julia-git-latticerules-src
   - alias: alpm-lilac
     alpm: julia-git-layoutpointers-src
+  - alias: alpm-lilac
+    alpm: julia-git-lazilyinitializedfields-src
   - alias: alpm-lilac
     alpm: julia-git-lazyarrays-src
   - alias: alpm-lilac
@@ -880,11 +917,17 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-libarchive_jll-src
   - alias: alpm-lilac
+    alpm: julia-git-libdrm_jll-src
+  - alias: alpm-lilac
     alpm: julia-git-libiconv_jll-src
   - alias: alpm-lilac
     alpm: julia-git-librsvg_jll-src
   - alias: alpm-lilac
+    alpm: julia-git-libsass_jll-src
+  - alias: alpm-lilac
     alpm: julia-git-libtracyclient_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-libva_jll-src
   - alias: alpm-lilac
     alpm: julia-git-libzip_jll-src
   - alias: alpm-lilac
@@ -966,6 +1009,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-marchingcubes-src
   - alias: alpm-lilac
+    alpm: julia-git-markdownast-src
+  - alias: alpm-lilac
     alpm: julia-git-mat-src
   - alias: alpm-lilac
     alpm: julia-git-match-src
@@ -1002,7 +1047,13 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-modelingtoolkit-src
   - alias: alpm-lilac
+    alpm: julia-git-modelingtoolkitbase-src
+  - alias: alpm-lilac
+    alpm: julia-git-modelingtoolkittearing-src
+  - alias: alpm-lilac
     alpm: julia-git-mods-src
+  - alias: alpm-lilac
+    alpm: julia-git-montecarlointegration-src
   - alias: alpm-lilac
     alpm: julia-git-montecarlomeasurements-src
   - alias: alpm-lilac
@@ -1125,6 +1176,8 @@ update_on:
     alpm: julia-git-openjpeg_jll-src
   - alias: alpm-lilac
     alpm: julia-git-openmpi_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-openssh_jll-src
   - alias: alpm-lilac
     alpm: julia-git-openssl-src
   - alias: alpm-lilac
@@ -1294,6 +1347,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-ptrarrays-src
   - alias: alpm-lilac
+    alpm: julia-git-pureklu-src
+  - alias: alpm-lilac
     alpm: julia-git-pyplot-src
   - alias: alpm-lilac
     alpm: julia-git-pythoncall-src
@@ -1309,6 +1364,8 @@ update_on:
     alpm: julia-git-qt6declarative_jll-src
   - alias: alpm-lilac
     alpm: julia-git-qt6shadertools_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-qt6svg_jll-src
   - alias: alpm-lilac
     alpm: julia-git-qt6wayland_jll-src
   - alias: alpm-lilac
@@ -1350,6 +1407,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-readonlyarrays-src
   - alias: alpm-lilac
+    alpm: julia-git-readonlydicts-src
+  - alias: alpm-lilac
     alpm: julia-git-realdot-src
   - alias: alpm-lilac
     alpm: julia-git-recipesbase-src
@@ -1366,11 +1425,15 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-regiontrees-src
   - alias: alpm-lilac
+    alpm: julia-git-registryinstances-src
+  - alias: alpm-lilac
     alpm: julia-git-relocatablefolders-src
   - alias: alpm-lilac
     alpm: julia-git-requires-src
   - alias: alpm-lilac
     alpm: julia-git-resettablestacks-src
+  - alias: alpm-lilac
+    alpm: julia-git-respecializeparams-src
   - alias: alpm-lilac
     alpm: julia-git-resumablefunctions-src
   - alias: alpm-lilac
@@ -1399,6 +1462,8 @@ update_on:
     alpm: julia-git-runtimegeneratedfunctions-src
   - alias: alpm-lilac
     alpm: julia-git-s2n_tls_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-sass-src
   - alias: alpm-lilac
     alpm: julia-git-sccnonlinearsolve-src
   - alias: alpm-lilac
@@ -1454,6 +1519,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-sixel-src
   - alias: alpm-lilac
+    alpm: julia-git-smallcollections-src
+  - alias: alpm-lilac
     alpm: julia-git-snappy_jll-src
   - alias: alpm-lilac
     alpm: julia-git-sobol-src
@@ -1464,6 +1531,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-sparsebandedmatrices-src
   - alias: alpm-lilac
+    alpm: julia-git-sparsecolumnpivotedqr-src
+  - alias: alpm-lilac
     alpm: julia-git-sparseconnectivitytracer-src
   - alias: alpm-lilac
     alpm: julia-git-sparseinversesubset-src
@@ -1473,6 +1542,8 @@ update_on:
     alpm: julia-git-sparsematrixcolorings-src
   - alias: alpm-lilac
     alpm: julia-git-sparspak-src
+  - alias: alpm-lilac
+    alpm: julia-git-spirv2clc_jll-src
   - alias: alpm-lilac
     alpm: julia-git-spirv_llvm_backend_jll-src
   - alias: alpm-lilac
@@ -1504,6 +1575,10 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-stackviews-src
   - alias: alpm-lilac
+    alpm: julia-git-staralgebras-src
+  - alias: alpm-lilac
+    alpm: julia-git-stateselection-src
+  - alias: alpm-lilac
     alpm: julia-git-static-src
   - alias: alpm-lilac
     alpm: julia-git-staticarrayinterface-src
@@ -1511,8 +1586,6 @@ update_on:
     alpm: julia-git-staticarrays-src
   - alias: alpm-lilac
     alpm: julia-git-staticarrayscore-src
-  - alias: alpm-lilac
-    alpm: julia-git-staticlint-src
   - alias: alpm-lilac
     alpm: julia-git-statsapi-src
   - alias: alpm-lilac
@@ -1525,6 +1598,28 @@ update_on:
     alpm: julia-git-steadystatediffeq-src
   - alias: alpm-lilac
     alpm: julia-git-stochasticdiffeq-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqcore-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqhighorder-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqiif-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqimplicit-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqleaping-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqlevyarea-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqloworder-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqmilstein-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqrock-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqrode-src
+  - alias: alpm-lilac
+    alpm: julia-git-stochasticdiffeqweak-src
   - alias: alpm-lilac
     alpm: julia-git-stridearrayscore-src
   - alias: alpm-lilac
@@ -1568,11 +1663,11 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-symbolics-src
   - alias: alpm-lilac
-    alpm: julia-git-symbolserver-src
-  - alias: alpm-lilac
     alpm: julia-git-symdict-src
   - alias: alpm-lilac
     alpm: julia-git-symengine-src
+  - alias: alpm-lilac
+    alpm: julia-git-symplecticmatrices-src
   - alias: alpm-lilac
     alpm: julia-git-sympycore-src
   - alias: alpm-lilac
@@ -1687,6 +1782,8 @@ update_on:
     alpm: julia-git-wayland_jll-src
   - alias: alpm-lilac
     alpm: julia-git-weakcachesets-src
+  - alias: alpm-lilac
+    alpm: julia-git-weakdephelpers-src
   - alias: alpm-lilac
     alpm: julia-git-weakrefstrings-src
   - alias: alpm-lilac

@@ -1,22 +1,18 @@
 pkgname=julia-git-symengine-src
-pkgver=0.12.0
-_commit=c9b6048481c3aa47c7088f08fabc24ee3f9f4c70
-pkgrel=2
+pkgver=0.13.2
+_commit=20ef925ca2c1c51689d422226568b340c2abef6c
+pkgrel=1
 pkgdesc="SymEngine.jl"
 url="https://github.com/symengine/SymEngine.jl.git"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/symengine/SymEngine.jl.git#commit=$_commit"
-        symutils-ext.patch)
-sha256sums=('bf02af98945cd4b3307a7484bd977dacc4e710091ecea1e9accf64828c42718b'
-            'e774f056deae2cf3fe7c5b26499078bc8b2403d659c7440c439e27790acbf566')
+source=("git+https://github.com/symengine/SymEngine.jl.git#commit=$_commit")
+sha256sums=('45795784efd2f30461b6dc06d59a4003836ca383d2bf0d1298bc3487aca26216')
 
 prepare() {
   cd SymEngine.jl
-
-  patch -Np1 --no-backup-if-mismatch < "../symutils-ext.patch"
 }
 
 package() {

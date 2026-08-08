@@ -1,6 +1,6 @@
 pkgname=julia-git-luxor-src
-pkgver=4.3.0
-_commit=09b5dd4fb609c4336e58f41b88b481c0379d8670
+pkgver=4.5.0
+_commit=3f1e46985a940ca4b1bb8179b983d566d990f3ca
 pkgrel=1
 pkgdesc="Luxor.jl"
 url="https://github.com/JuliaGraphics/Luxor.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphics/Luxor.jl.git#commit=$_commit")
-sha256sums=('bc5173e70bd4ae8c6d1ac3e6b2e54dc741e4fe671f02c924cd3b108ceeb7a9a8')
+sha256sums=('f7d70ecf5715cd3c242c8b8798650d68857ac777934b1fdb34d1b2cb0a983c9a')
 
 package() {
   cd Luxor.jl

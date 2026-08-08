@@ -1,0 +1,18 @@
+pkgname=julia-git-autohashequals-src
+pkgver=2.2.0
+_commit=20d38a84e5d7f1a14cac4f017f38c4543edba494
+pkgrel=2
+pkgdesc="AutoHashEquals.jl"
+url="https://github.com/JuliaServices/AutoHashEquals.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaServices/AutoHashEquals.jl.git#commit=$_commit")
+sha256sums=('eca36e55f0f51fb8334578b8f2511cb17396d2d4a4931c101bdd97a3da61f9cb')
+
+package() {
+  cd AutoHashEquals.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh AutoHashEquals "${pkgdir}" "${pkgname}" julia-git
+}

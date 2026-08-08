@@ -1,0 +1,26 @@
+pkgname=julia-git-openssh_jll-src
+pkgver=10.4.1+0
+_commit=37bcc7b1fff354d66edd214ad0e9d96cb8706e8a
+pkgrel=2
+pkgdesc="OpenSSH_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/OpenSSH_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git openssh)
+source=("git+https://github.com/JuliaBinaryWrappers/OpenSSH_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('ea801c30f1b1dd38e76288ef0539a7add3fd46f43449123f27f649f37edc6944'
+            '04e880b1371e824140b0599b050ac85876922458e46edd794a421e78f1f613ab')
+
+build() {
+  cd OpenSSH_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl OpenSSH_jll ../jll.toml
+}
+
+package() {
+  cd OpenSSH_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh OpenSSH_jll "${pkgdir}" "${pkgname}" julia-git
+}

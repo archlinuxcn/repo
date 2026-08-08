@@ -1,7 +1,7 @@
 pkgname=liblemon_jll
-pkgver=1.3.3+0
-_src_commit=c2f1a05b88546ce88f5922cd8b45f67d2fd964c7
-pkgrel=21
+pkgver=1.3.6+0
+_src_commit=f7729426c45f9bc893178875fca2ac0b2f9b22db
+pkgrel=2
 pkgdesc="CxxWrap.jl wrapper for lemon"
 url="https://github.com/JuliaBinaryWrappers/LEMON_jll.jl.git"
 arch=('aarch64' 'x86_64')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git cmake)
 depends=(julia-git coin-or-lemon libcxxwrap_julia)
 source=("https://raw.githubusercontent.com/JuliaPackaging/Yggdrasil/${_src_commit}/L/LEMON/bundled/cxxwrap/lemoncxxwrap.cpp")
-sha256sums=('c5603bf05bd8968c1736b0e73003b8969306e4809fa1c3e6778e2dd075e02e94')
+sha256sums=('952c1b41509b34fc79b182203578e5c304dda3289d563d4a196473600ad9c7b1')
 # LTO breaks unique linkage of guard variable
 options=('!lto')
 

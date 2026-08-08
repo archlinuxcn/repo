@@ -1,7 +1,7 @@
 pkgname=julia-git-functionwrapperswrappers-src
-pkgver=0.1.3
-_commit=f89b556107afb8e5edc3a941f598fb3b3a173383
-pkgrel=2
+pkgver=1.12.1
+_commit=3878f36dea43654428011d57a8c8cca523fdfbc1
+pkgrel=1
 pkgdesc="FunctionWrappersWrappers.jl"
 url="https://github.com/chriselrod/FunctionWrappersWrappers.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/chriselrod/FunctionWrappersWrappers.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('1c6084de248f5ce99b5a6adde3ef9041f41ed45c47a9f51851d04c4d088dc3bd')
 
 package() {
   cd FunctionWrappersWrappers.jl

@@ -1,0 +1,18 @@
+pkgname=julia-git-respecializeparams-src
+pkgver=1.2.0
+_commit=bf980c4988421731641ba7b10f7b4893d0f7965f
+pkgrel=1
+pkgdesc="RespecializeParams.jl"
+url="https://github.com/SciML/RespecializeParams.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/RespecializeParams.jl.git#commit=$_commit")
+sha256sums=('a154b4eda820bbd558bb31471f605e9608946888ecbccc7919121d77f2ff784d')
+
+package() {
+  cd RespecializeParams.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh RespecializeParams "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-documentertools-src
+pkgver=0.1.21
+_commit=d740c4021a94fb8335506100acfc67ff19dd52c8
+pkgrel=2
+pkgdesc="DocumenterTools.jl"
+url="https://github.com/JuliaDocs/DocumenterTools.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaDocs/DocumenterTools.jl.git#commit=$_commit")
+sha256sums=('86c2084d6ac179f221084e4406163cede875a85123206d7bbcb4b5182368e800')
+
+package() {
+  cd DocumenterTools.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DocumenterTools "${pkgdir}" "${pkgname}" julia-git
+}

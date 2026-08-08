@@ -1,0 +1,18 @@
+pkgname=julia-git-modelingtoolkitbase-src
+pkgver=1.42.2
+_commit=8165e3f4e47a1702ca14fb1fb35d029bc11b4b0a
+pkgrel=2
+pkgdesc="ModelingToolkitBase.jl"
+url="https://github.com/SciML/ModelingToolkit.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/ModelingToolkit.jl.git#commit=$_commit")
+sha256sums=('3d42b1850e3153c38dde4ecd6f8489f26965bda9c1a12c3e3c481f0da09643a0')
+
+package() {
+  cd ModelingToolkit.jl/lib/ModelingToolkitBase
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh ModelingToolkitBase "${pkgdir}" "${pkgname}" julia-git
+}

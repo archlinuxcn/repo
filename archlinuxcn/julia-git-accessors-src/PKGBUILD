@@ -1,6 +1,6 @@
 pkgname=julia-git-accessors-src
-pkgver=0.1.43
-_commit=4603471383ab0641f8e28c1e90771974374585c6
+pkgver=0.1.45
+_commit=c01e7e1c15413e76e9d1fe18487844945953cacf
 pkgrel=1
 pkgdesc="Accessors.jl"
 url="https://github.com/JuliaObjects/Accessors.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaObjects/Accessors.jl.git#commit=$_commit")
-sha256sums=('3fc248dd5549ae10fc57253bc514b4d11157cfe638a80da28bc892c626f4e808')
+sha256sums=('42e9f94f55273c6789ee18d0d38213f96b90093c7735f990598960257ef1acfd')
 
 package() {
   cd Accessors.jl

@@ -1,0 +1,61 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=spirv2clc-git
+pkgver=0.0.61.ab5cd93
+pkgrel=1
+pkgdesc="Experimental OpenCL SPIR-V to OpenCL C translator"
+arch=(aarch64 i686 x86_64)
+url="https://github.com/kpet/spirv2clc"
+license=('Apache-2.0')
+depends=()
+makedepends=('git' 'cmake' 'ninja')
+provides=(spirv2clc)
+conflicts=(spirv2clc)
+source=('git+https://github.com/kpet/spirv2clc.git'
+        'git+https://github.com/KhronosGroup/OpenCL-Headers.git'
+        'git+https://github.com/KhronosGroup/SPIRV-Headers.git'
+        'git+https://github.com/KhronosGroup/SPIRV-Tools.git')
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+options=(debug)
+
+pkgver() {
+  cd spirv2clc
+
+  echo "0.0.$(git rev-list --count main).$(git rev-parse --short main)"
+}
+
+prepare() {
+  cd spirv2clc
+
+  git submodule init
+
+  git config submodule.opencl-headers.url "$srcdir/OpenCL-Headers"
+  git config submodule.spirv-headers.url "$srcdir/SPIRV-Headers"
+  git config submodule.spirv-tools.url "$srcdir/SPIRV-Tools"
+  git -c protocol.file.allow=always submodule update
+
+  sed -i -e 's/cmake_minimum_required(VERSION 3.0)/cmake_minimum_required(VERSION 3.0...4.2)/' CMakeLists.txt
+
+  echo "install(TARGETS spirv2clc DESTINATION bin)" >> tools/CMakeLists.txt
+}
+
+build() {
+  cd spirv2clc
+
+  mkdir -p build
+  cmake . -G Ninja -B build \
+        -DCMAKE_BUILD_TYPE=None \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_SHARED_LIBS=On
+  cmake --build build
+}
+
+package() {
+  cd spirv2clc
+  DESTDIR="$pkgdir" cmake --install build
+
+  rm -rf "${pkgdir}"/usr/include/{spirv,spirv-tools}
+}

@@ -10,6 +10,10 @@ pre_build_script: aur_pre_build(maintainers=['trya'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - gtk2
+  - lib32-gtk2
+
 update_on:
   - source: aur
     aur: kega-fusion

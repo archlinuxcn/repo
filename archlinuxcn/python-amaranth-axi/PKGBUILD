@@ -1,0 +1,39 @@
+#
+
+_pkgname=amaranth-axi
+pkgname="python-$_pkgname"
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Amaranth support for AXI bus"
+arch=(any)
+url="https://github.com/yuyichao/amaranth-axi"
+license=('BSD-2-Clause')
+depends=('python' 'python-amaranth' 'python-transactron')
+makedepends=('git' 'python-build' 'python-installer' 'python-wheel'
+             'python-packaging' 'python-hatchling' 'python-hatch-vcs')
+source=("git+https://github.com/yuyichao/amaranth-axi.git#tag=v${pkgver}"
+        "git+https://github.com/ZipCPU/wb2axip")
+sha512sums=('af2d965c104db38e4b5bd44f0d9c4bb12efbe8726e3c20d3e63f54126ab955211dc5ac4d1d7d63cf12916d07c423ebde84fe683721b1c63452374992462b9836'
+            'SKIP')
+
+prepare() {
+  cd "${_pkgname}"
+
+  git submodule init
+  git config submodule.thirdparty/wb2axip.url "$srcdir/wb2axip"
+  git -c protocol.file.allow=always submodule update
+}
+
+build() {
+  cd "${_pkgname}"
+
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}"
+
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

@@ -1,7 +1,7 @@
 pkgname=julia-git-qt6declarative_jll-src
-pkgver=6.8.2+1
-_commit=b596a75fd2eee3f4851feb1cc6e8e1bf60ee1ec9
-pkgrel=2
+pkgver=6.10.2+2
+_commit=d7cdbfa88edd522708906b8a84ee3d5706ea935e
+pkgrel=1
 pkgdesc="Qt6Declarative_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Qt6Declarative_jll.jl.git"
 arch=('any')
@@ -10,8 +10,8 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git qt6-declarative)
 source=("git+https://github.com/JuliaBinaryWrappers/Qt6Declarative_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('cb94b727f6925250168bce4ae1e6dd9403c97b5cca432f9758298eaa7e478a40'
-            '6fbef4984d706a0a67d28ae2308e8ee14fa0e41e8428682adabdcd1b5b3bffda')
+sha256sums=('9262fd22922d466ca603eaa55ec02f8f8b5e86ec3104b234c057d60e536b76ce'
+            '50a5cce1c62705dee5b9d252a77e40f578bfc4b40d0262f7bc46af1eee50d54c')
 
 build() {
   cd Qt6Declarative_jll.jl

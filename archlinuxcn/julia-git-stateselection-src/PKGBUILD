@@ -1,0 +1,18 @@
+pkgname=julia-git-stateselection-src
+pkgver=1.11.0
+_commit=3c62726c21996c9293c45cbf6f157416db1a7c31
+pkgrel=2
+pkgdesc="StateSelection.jl"
+url="https://github.com/JuliaComputing/StateSelection.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaComputing/StateSelection.jl.git#commit=$_commit")
+sha256sums=('78c6ed95ebba91300696df0ded7c03c095db66d7f401c2d66797363ecbda6147')
+
+package() {
+  cd StateSelection.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StateSelection "${pkgdir}" "${pkgname}" julia-git
+}

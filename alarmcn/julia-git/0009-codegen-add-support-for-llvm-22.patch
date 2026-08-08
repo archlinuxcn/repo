@@ -1,7 +1,7 @@
-From d919ba7970703320ccfd2f41a81e14084bb74049 Mon Sep 17 00:00:00 2001
+From 2628dd59664b2768af344cd5f02afc484027f83d Mon Sep 17 00:00:00 2001
 From: Jameson Nash <vtjnash@gmail.com>
 Date: Wed, 29 Jul 2026 15:12:45 +0000
-Subject: [PATCH 9/9] codegen: add support for llvm-22
+Subject: [PATCH 09/11] codegen: add support for llvm-22
 
 ---
  src/Makefile                         |  6 ++++--
@@ -18,10 +18,10 @@ Subject: [PATCH 9/9] codegen: add support for llvm-22
  11 files changed, 95 insertions(+), 18 deletions(-)
 
 diff --git a/src/Makefile b/src/Makefile
-index 8292c7bbe2..15b21e35ad 100644
+index 7398a14da9..4d06db230e 100644
 --- a/src/Makefile
 +++ b/src/Makefile
-@@ -765,16 +765,18 @@ SA_EXCEPTIONS-gc-stock.c                    := -Xanalyzer -analyzer-config -Xana
+@@ -767,16 +767,18 @@ SA_EXCEPTIONS-gc-stock.c                    := -Xanalyzer -analyzer-config -Xana
   # these need to be annotated (and possibly fixed)
  SKIP_GC_CHECK := codegen.cpp rtutils.c
  
@@ -101,10 +101,10 @@ index 2664fee69f..b9f01b2658 100644
    const MemRegion *R = LVal.getAsRegion();
    if (!R) {
 diff --git a/src/codegen.cpp b/src/codegen.cpp
-index d4984b24e3..ba339d0715 100644
+index d91e926bd5..d604d672ef 100644
 --- a/src/codegen.cpp
 +++ b/src/codegen.cpp
-@@ -10477,7 +10477,7 @@ jl_code_info_t *jl_get_method_ir(jl_code_instance_t *ci)
+@@ -10659,7 +10659,7 @@ jl_code_info_t *jl_get_method_ir(jl_code_instance_t *ci)
  void emit_always_inline(jl_codegen_output_t &out,
                          unique_function<jl_code_info_t *(jl_code_instance_t *)> get_src)
  {
@@ -152,7 +152,7 @@ index 26b95fdb16..f82a192367 100644
  
      MCContext Ctx(TheTriple, MAI.get(), MRI.get(), STI.get(), &SrcMgr);
 diff --git a/src/jitlayers.cpp b/src/jitlayers.cpp
-index dbf874ec79..07bee4f783 100644
+index a1c4556275..5f292a78b2 100644
 --- a/src/jitlayers.cpp
 +++ b/src/jitlayers.cpp
 @@ -14,7 +14,11 @@
@@ -167,7 +167,7 @@ index dbf874ec79..07bee4f783 100644
  #if JL_LLVM_VERSION >= 210000
  #  include <llvm/ExecutionEngine/Orc/SelfExecutorProcessControl.h>
  #endif
-@@ -2118,9 +2122,11 @@ void JuliaOJIT::enableJITDebuggingSupport()
+@@ -2125,9 +2129,11 @@ void JuliaOJIT::enableJITDebuggingSupport()
  {
      orc::SymbolMap GDBFunctions;
      addAbsoluteToMap(GDBFunctions,llvm_orc_registerJITLoaderGDBAllocAction);
@@ -180,7 +180,7 @@ index dbf874ec79..07bee4f783 100644
      if (TM->getTargetTriple().isOSBinFormatMachO()) {
          auto RegisterSym = cantFail(
              safelookup(ES, {&JD}, ES.intern("_llvm_orc_registerJITLoaderGDBAllocAction")));
-@@ -2129,8 +2135,22 @@ void JuliaOJIT::enableJITDebuggingSupport()
+@@ -2136,8 +2142,22 @@ void JuliaOJIT::enableJITDebuggingSupport()
      }
  #ifndef _COMPILER_ASAN_ENABLED_ // TODO: Fix duplicated sections spam #51794
      else if (TM->getTargetTriple().isOSBinFormatELF()) {
@@ -203,7 +203,7 @@ index dbf874ec79..07bee4f783 100644
      }
  #endif
  }
-@@ -2356,7 +2376,7 @@ bool JuliaOJIT::linkOutput(orc::MaterializationResponsibility &MR, MemoryBufferR
+@@ -2363,7 +2383,7 @@ bool JuliaOJIT::linkOutput(orc::MaterializationResponsibility &MR, MemoryBufferR
              continue;
          }
          JL_GC_PROMISE_ROOTED(CI);
@@ -213,10 +213,10 @@ index dbf874ec79..07bee4f783 100644
              return false;
          if (auto *DestSym = findLinkGraphSymbolByName(G, Dest);
 diff --git a/src/jitlayers.h b/src/jitlayers.h
-index 6b3de497a0..bb5a882bf3 100644
+index 47af9acda6..abb46a2132 100644
 --- a/src/jitlayers.h
 +++ b/src/jitlayers.h
-@@ -410,7 +410,10 @@ private:
+@@ -419,7 +419,10 @@ private:
  
  struct jl_linker_info_t {
      DenseMap<jl_code_instance_t *, jl_codeinst_funcs_t<orc::SymbolStringPtr>> ci_funcs;
@@ -228,7 +228,7 @@ index 6b3de497a0..bb5a882bf3 100644
          call_targets;
      DenseMap<void *, orc::SymbolStringPtr> global_targets;
  };
-@@ -456,7 +459,9 @@ public:
+@@ -465,7 +468,9 @@ public:
  
  public:
      // outputs
@@ -240,10 +240,10 @@ index 6b3de497a0..bb5a882bf3 100644
      DenseMap<jl_code_instance_t *, jl_llvm_functions_t> ci_funcs;
      SmallVector<std::pair<jl_code_instance_t *, GlobalVariable *>, 0> external_fns;
 diff --git a/src/julia_threads.h b/src/julia_threads.h
-index 605e1c73e3..48c571d0a3 100644
+index 24ec348c2d..6e2d48c9a2 100644
 --- a/src/julia_threads.h
 +++ b/src/julia_threads.h
-@@ -166,7 +166,7 @@ typedef struct _jl_tls_states_t {
+@@ -215,7 +215,7 @@ typedef struct _jl_tls_states_t {
      struct _jl_task_t *root_task;
      struct _jl_timing_block_t *timing_stack;
      // This is the location of our copy_stack
@@ -283,7 +283,7 @@ index a3f07f03e4..214def0c9e 100644
  #else
      CallInst::Create(pass.lifetime_start, {sz, ptr}, "", orig);
 diff --git a/src/llvm-late-gc-lowering.cpp b/src/llvm-late-gc-lowering.cpp
-index 309916001d..30a3bbbb40 100644
+index c9a75759de..690cb08509 100644
 --- a/src/llvm-late-gc-lowering.cpp
 +++ b/src/llvm-late-gc-lowering.cpp
 @@ -182,8 +182,15 @@ static std::pair<Value*,int> FindBaseValue(const State &S, Value *V, bool UseCac

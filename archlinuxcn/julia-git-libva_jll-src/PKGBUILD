@@ -1,0 +1,26 @@
+pkgname=julia-git-libva_jll-src
+pkgver=2.23.0+0
+_commit=1092decfe5034b8849a8e0094cbfe82b86c9f857
+pkgrel=2
+pkgdesc="libva_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libva_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libva)
+source=("git+https://github.com/JuliaBinaryWrappers/libva_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('afce2b6a6a6a39d6716a122f403c98b80d72213d026339c3da04b889a739cd98'
+            '612d2a5af9e7c518cd30750b63d5f6c235d99951c3d94d0000a9d8edf318817e')
+
+build() {
+  cd libva_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libva_jll ../jll.toml
+}
+
+package() {
+  cd libva_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libva_jll "${pkgdir}" "${pkgname}" julia-git
+}

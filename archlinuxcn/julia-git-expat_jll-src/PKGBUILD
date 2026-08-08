@@ -1,7 +1,7 @@
 pkgname=julia-git-expat_jll-src
-pkgver=2.7.3+0
-_commit=68e9ac3502b18f40e32f3d1a0c77eb130ec86e22
-pkgrel=2
+pkgver=2.8.2+0
+_commit=bbebca5145a5fe4dd8800f958c79fde6d9f61614
+pkgrel=1
 pkgdesc="Expat_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Expat_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git expat)
 source=("git+https://github.com/JuliaBinaryWrappers/Expat_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('415cd94efa0703e2be71ea84172a5a61cf3e191afa1657ad53ad2ad4dcfb114a'
+sha256sums=('d77f4bd03309a7eb578dac8b9b325e1aab40b6fd2d3a4249b50dd11fb860f5ca'
             'd1b6ce7ea168075da85e67446bac6b1ad69b0375293b178423ba5e0515124031')
 
 build() {

@@ -1,6 +1,6 @@
 pkgname=julia-git-moshi-src
-pkgver=0.3.7
-_commit=0127b4c75998c6cd4c063fdfbe0287e8db5662f4
+pkgver=0.3.12
+_commit=dff7f45190ec95befa0a8ded21dddf1e2661d96e
 pkgrel=1
 pkgdesc="Moshi.jl"
 url="https://github.com/Roger-luo/Moshi.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Roger-luo/Moshi.jl.git#commit=$_commit")
-sha256sums=('aea6d6417b559d429e84b828554b204770f0100cc61304f0a4c0645fd02c2046')
+sha256sums=('6fb0ff55c2c61d15173568d14927225b81640ba49a5087a9151f48891271ce11')
 
 package() {
   cd Moshi.jl

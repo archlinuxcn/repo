@@ -1,6 +1,6 @@
 pkgname=julia-git-commonsolve-src
-pkgver=0.2.6
-_commit=7a969513dd383eef73e72f11c38f153cae74fd55
+pkgver=0.2.13
+_commit=d152ac7cc5c036415d452b0bfb8de39ddd805f6f
 pkgrel=1
 pkgdesc="CommonSolve.jl"
 url="https://github.com/SciML/CommonSolve.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/CommonSolve.jl.git#commit=$_commit")
-sha256sums=('27a53c36ec8b6c08a0b8291b4a132f0dde6639c36baaff268603af240c42f9ba')
+sha256sums=('b124a1050b48ed9403f4539ce2df480ad1f4998e8055b5d9430c42c7d987681b')
 
 package() {
   cd CommonSolve.jl

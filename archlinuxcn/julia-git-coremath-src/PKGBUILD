@@ -1,0 +1,18 @@
+pkgname=julia-git-coremath-src
+pkgver=0.1.0
+_commit=8f9ff4339e3f8a816fb8875fdce1922eaa6efa39
+pkgrel=2
+pkgdesc="CoreMath.jl"
+url="https://github.com/JuliaIntervals/CoreMath.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaIntervals/CoreMath.jl.git#commit=$_commit")
+sha256sums=('ed70c4199aedf62903a2867c88dc76419cc0715b0fedabaa0fdcde2347922986')
+
+package() {
+  cd CoreMath.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CoreMath "${pkgdir}" "${pkgname}" julia-git
+}

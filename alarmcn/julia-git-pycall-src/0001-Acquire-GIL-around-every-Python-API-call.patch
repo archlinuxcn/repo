@@ -1,0 +1,647 @@
+From 5583414c4d301b64f6c2cdf870ae5b03765abed3 Mon Sep 17 00:00:00 2001
+From: Cody Tapscott <topolarity@tapscott.me>
+Date: Tue, 10 Mar 2026 13:22:35 -0400
+Subject: [PATCH 1/3] Acquire GIL around every Python API call
+
+Majority of the API is covered by updating the `@pycheck(v/n)` macros.
+The rest is covered manually by `@with_GIL`. Care should be taken to
+avoid yielding to the Julia scheduler, which could cause task migration
+and lead to deadlocks.
+---
+ benchmarks/pywrapfn.jl |  2 +-
+ src/PyCall.jl          | 48 ++++++++++++++++++---------------
+ src/conversions.jl     | 34 +++++++++++------------
+ src/exception.jl       | 27 ++++++++++---------
+ src/gil.jl             | 61 ++++++++++++++++++++++++++++++++++++++++++
+ src/pybuffer.jl        | 12 +++++----
+ src/pyfncall.jl        |  4 +--
+ src/pyinit.jl          | 10 ++++++-
+ src/pyiterator.jl      |  4 +--
+ src/pytype.jl          |  6 ++---
+ test/gil.jl            | 15 +++++++++++
+ test/runtests.jl       |  1 +
+ 12 files changed, 158 insertions(+), 66 deletions(-)
+ create mode 100644 src/gil.jl
+ create mode 100644 test/gil.jl
+
+diff --git a/benchmarks/pywrapfn.jl b/benchmarks/pywrapfn.jl
+index 9fd2149..46aacd1 100644
+--- a/benchmarks/pywrapfn.jl
++++ b/benchmarks/pywrapfn.jl
+@@ -81,7 +81,7 @@ See check_pyargsptr(nargs::Int) above
+ """
+ function check_pyargsptr(pf::PyWrapFn{N, RT}) where {N, RT}
+     if unsafe_load(pf.pyargsptr).ob_refcnt > 1
+-        pydecref_(pf.pyargsptr)
++        pydecref_(pf.pyargsptr, pf)
+         pf.pyargsptr =
+             @pycheckn ccall((@pysym :PyTuple_New), PyPtr, (Int,), nargs)
+     end
+diff --git a/src/PyCall.jl b/src/PyCall.jl
+index 7b97815..17c3f58 100644
+--- a/src/PyCall.jl
++++ b/src/PyCall.jl
+@@ -36,6 +36,7 @@ import Base.Iterators: filter
+ 
+ include(joinpath(dirname(@__FILE__), "..", "deps","depsutils.jl"))
+ include("startup.jl")
++include("gil.jl")
+ 
+ """
+ Python executable used by PyCall in the current process.
+@@ -114,23 +115,26 @@ it is equivalent to a `PyNULL()` object.
+ """
+ ispynull(o::PyObject) = o ≛ PyPtr_NULL
+ 
+-function pydecref_(o::Union{PyPtr,PyObject})
+-    _finalized[] || ccall(@pysym(:Py_DecRef), Cvoid, (PyPtr,), o)
+-    return o
++function pydecref_(ptr::PyPtr, o)
++    if ptr !== PyPtr_NULL && !_finalized[]
++        GC.@preserve o begin
++            @with_GIL ccall(@pysym(:Py_DecRef), Cvoid, (PyPtr,), ptr)
++        end
++    end
+ end
+ 
+ function pydecref(o::PyObject)
+-    pydecref_(o)
++    pydecref_(getfield(o, :o), o)
+     setfield!(o, :o, PyPtr_NULL)
+     return o
+ end
+ 
+-function pyincref_(o::Union{PyPtr,PyObject})
+-    ccall((@pysym :Py_IncRef), Cvoid, (PyPtr,), o)
++function pyincref_(o::PyPtr)
++    @with_GIL ccall((@pysym :Py_IncRef), Cvoid, (PyPtr,), o)
+     return o
+ end
+ 
+-pyincref(o::PyObject) = pyincref_(o)
++pyincref(o::PyObject) = (pyincref_(getfield(o, :o)); o)
+ 
+ # doing an incref *before* creating a PyObject may safer in the
+ # case of borrowed references, to ensure that no exception or interrupt
+@@ -165,13 +169,13 @@ function Base.copy!(dest::PyObject, src::PyObject)
+ end
+ 
+ pyisinstance(o::PyObject, t::PyObject) =
+-  !ispynull(t) && ccall((@pysym :PyObject_IsInstance), Cint, (PyPtr,PyPtr), o, t) == 1
++  !ispynull(t) && @with_GIL(ccall((@pysym :PyObject_IsInstance), Cint, (PyPtr,PyPtr), o, t)) == 1
+ 
+ pyisinstance(o::PyObject, t::Union{Ptr{Cvoid},PyPtr}) =
+-  t != C_NULL && ccall((@pysym :PyObject_IsInstance), Cint, (PyPtr,PyPtr), o, t) == 1
++  t != C_NULL && @with_GIL(ccall((@pysym :PyObject_IsInstance), Cint, (PyPtr,PyPtr), o, t)) == 1
+ 
+ pyquery(q::Ptr{Cvoid}, o::PyObject) =
+-  ccall(q, Cint, (PyPtr,), o) == 1
++  @with_GIL(ccall(q, Cint, (PyPtr,), o)) == 1
+ 
+ # conversion to pass PyObject as ccall arguments:
+ unsafe_convert(::Type{PyPtr}, po::PyObject) = PyPtr(po)
+@@ -240,10 +244,10 @@ function pystring(o::PyObject)
+     if ispynull(o)
+         return "NULL"
+     else
+-        s = ccall((@pysym :PyObject_Repr), PyPtr, (PyPtr,), o)
++        s = @with_GIL ccall((@pysym :PyObject_Repr), PyPtr, (PyPtr,), o)
+         if (s == C_NULL)
+             pyerr_clear()
+-            s = ccall((@pysym :PyObject_Str), PyPtr, (PyPtr,), o)
++            s = @with_GIL ccall((@pysym :PyObject_Str), PyPtr, (PyPtr,), o)
+             if (s == C_NULL)
+                 pyerr_clear()
+                 return string(PyPtr(o))
+@@ -281,7 +285,7 @@ function hash(o::PyObject, salt::UInt)
+         # since on 64-bit Windows the Python 2.x hash is only 32 bits
+         hash(unsafe_pyjlwrap_to_objref(o), salt)
+     else
+-        h = ccall((@pysym :PyObject_Hash), Py_hash_t, (PyPtr,), o)
++        h = @with_GIL ccall((@pysym :PyObject_Hash), Py_hash_t, (PyPtr,), o)
+         if h == -1 # error
+             pyerr_clear()
+             return hash(PyPtr(o), salt)
+@@ -297,7 +301,7 @@ end
+ 
+ function _getproperty(o::PyObject, s::Union{AbstractString,Symbol})
+     ispynull(o) && throw(ArgumentError("ref of NULL PyObject"))
+-    p = ccall((@pysym :PyObject_GetAttrString), PyPtr, (PyPtr, Cstring), o, s)
++    p = @with_GIL ccall((@pysym :PyObject_GetAttrString), PyPtr, (PyPtr, Cstring), o, s)
+     if p == C_NULL && pyerr_occurred()
+         e = PyError("PyObject_GetAttrString")
+         if PyPtr(e.T) != @pyglobalobjptr(:PyExc_AttributeError)
+@@ -334,7 +338,7 @@ setproperty!(o::PyObject, s::AbstractString, v) = _setproperty!(o,s,v)
+ 
+ function _setproperty!(o::PyObject, s::Union{Symbol,AbstractString}, v)
+     ispynull(o) && throw(ArgumentError("assign of NULL PyObject"))
+-    p = ccall((@pysym :PyObject_SetAttrString), Cint, (PyPtr, Cstring, PyPtr), o, s, PyObject(v))
++    p = @with_GIL ccall((@pysym :PyObject_SetAttrString), Cint, (PyPtr, Cstring, PyPtr), o, s, PyObject(v))
+     if p == -1 && pyerr_occurred()
+         e = PyError("PyObject_SetAttrString")
+         if PyPtr(e.T) != @pyglobalobjptr(:PyExc_AttributeError)
+@@ -370,8 +374,8 @@ function pyhasproperty(o::PyObject, s::Union{Symbol,AbstractString})
+     if ispynull(o)
+         throw(ArgumentError("hasproperty of NULL PyObject"))
+     end
+-    return 1 == ccall((@pysym :PyObject_HasAttrString), Cint,
+-                      (PyPtr, Cstring), o, s)
++    return 1 == @with_GIL(ccall((@pysym :PyObject_HasAttrString), Cint,
++                                (PyPtr, Cstring), o, s))
+ end
+ hasproperty(o::PyObject, s::Symbol) = pyhasproperty(o, s)
+ hasproperty(o::PyObject, s::AbstractString) = pyhasproperty(o, s)
+@@ -480,7 +484,7 @@ end
+ function _pyimport(name::AbstractString)
+     cookie = ActivatePyActCtx()
+     try
+-        return PyObject(ccall((@pysym :PyImport_ImportModule), PyPtr, (Cstring,), name))
++        return @with_GIL PyObject(ccall((@pysym :PyImport_ImportModule), PyPtr, (Cstring,), name))
+     finally
+         DeactivatePyActCtx(cookie)
+     end
+@@ -685,7 +689,7 @@ string otherwise.
+ """
+ function anaconda_conda()
+     # Anaconda Python seems to always include "Anaconda" in the version string.
+-    if conda || !occursin("conda", unsafe_string(ccall(@pysym(:Py_GetVersion), Ptr{UInt8}, ())))
++    if conda || !occursin("conda", unsafe_string(@with_GIL ccall(@pysym(:Py_GetVersion), Ptr{UInt8}, ())))
+         return ""
+     end
+     aconda = joinpath(dirname(pyprogramname), "conda")
+@@ -770,7 +774,7 @@ include("pyfncall.jl")
+ # for now we can define "get".
+ 
+ function get(o::PyObject, returntype::TypeTuple, k, default)
+-    r = ccall((@pysym :PyObject_GetItem), PyPtr, (PyPtr,PyPtr), o,PyObject(k))
++    r = @with_GIL ccall((@pysym :PyObject_GetItem), PyPtr, (PyPtr,PyPtr), o,PyObject(k))
+     if r == C_NULL
+         pyerr_clear()
+         default
+@@ -787,7 +791,7 @@ get(o::PyObject, k, default) = get(o, PyAny, k, default)
+ get(o::PyObject, k) = get(o, PyAny, k)
+ 
+ function delete!(o::PyObject, k)
+-    e = ccall((@pysym :PyObject_DelItem), Cint, (PyPtr, PyPtr), o, PyObject(k))
++    e = @with_GIL ccall((@pysym :PyObject_DelItem), Cint, (PyPtr, PyPtr), o, PyObject(k))
+     if e == -1
+         pyerr_clear() # delete! ignores errors in Julia
+     end
+@@ -942,7 +946,7 @@ function get_real_method(obj, name)
+         return nothing
+     end
+ 
+-    ccall((@pysym :PyCallable_Check), Cint, (PyPtr,), m) == 1 && return m
++    @with_GIL(ccall((@pysym :PyCallable_Check), Cint, (PyPtr,), m)) == 1 && return m
+ 
+     return nothing
+ end
+diff --git a/src/conversions.jl b/src/conversions.jl
+index 6ef17b7..b6ab7e2 100644
+--- a/src/conversions.jl
++++ b/src/conversions.jl
+@@ -204,8 +204,8 @@ function convert(tt::Type{T}, o::PyObject) where T<:Tuple
+     end
+     ntuple((i ->
+             convert(tuptype(T, isva, i),
+-                    PyObject(ccall((@pysym :PySequence_GetItem), PyPtr,
+-                                   (PyPtr, Int), o, i-1)))),
++                    PyObject(@with_GIL ccall((@pysym :PySequence_GetItem), PyPtr,
++                                             (PyPtr, Int), o, i-1)))),
+            len)
+ end
+ 
+@@ -327,7 +327,7 @@ function py2array(T, A::Array{TA,N}, o::PyObject,
+             error("dimension mismatch in py2array")
+         end
+         s = stride(A, dim)
+-        for j = 0:len-1
++        @with_GIL for j = 0:len-1
+             A[i+j*s] = convert(T, PyObject(ccall((@pysym :PySequence_GetItem),
+                                                  PyPtr, (PyPtr, Int), o, j)))
+         end
+@@ -338,7 +338,7 @@ function py2array(T, A::Array{TA,N}, o::PyObject,
+             error("dimension mismatch in py2array")
+         end
+         s = stride(A, dim)
+-        for j = 0:len-1
++        @with_GIL for j = 0:len-1
+             py2array(T, A, PyObject(ccall((@pysym :PySequence_GetItem),
+                                        PyPtr, (PyPtr, Int), o, j)),
+                      dim+1, i+j*s)
+@@ -357,13 +357,13 @@ function pyarray_dims(o::PyObject, forcelist=true)
+     if len == 0
+         return (0,)
+     end
+-    dims0 = pyarray_dims(PyObject(ccall((@pysym :PySequence_GetItem),
+-                                        PyPtr, (PyPtr, Int), o, 0)),
++    dims0 = pyarray_dims(PyObject(@with_GIL(ccall((@pysym :PySequence_GetItem),
++                                                  PyPtr, (PyPtr, Int), o, 0))),
+                          false)
+     if isempty(dims0) # not a nested sequence
+         return (len,)
+     end
+-    for j = 1:len-1
++    @with_GIL for j = 1:len-1
+         dims = pyarray_dims(PyObject(ccall((@pysym :PySequence_GetItem),
+                                            PyPtr, (PyPtr, Int), o, j)),
+                             false)
+@@ -389,7 +389,7 @@ function py2array(T, o::PyObject)
+ end
+ 
+ function py2vector(T, o::PyObject)
+-    len = ccall((@pysym :PySequence_Size), Int, (PyPtr,), o)
++    len = @with_GIL ccall((@pysym :PySequence_Size), Int, (PyPtr,), o)
+     if len < 0 || # not a sequence
+        len+1 < 0  # object pretending to be a sequence of infinite length
+         pyerr_clear()
+@@ -416,7 +416,7 @@ include("numpy.jl")
+ function is_mapping_object(o::PyObject)
+     pyisinstance(o, @pyglobalobj :PyDict_Type) ||
+     (pyquery((@pyglobal :PyMapping_Check), o) &&
+-      ccall((@pysym :PyObject_HasAttrString), Cint, (PyPtr,Ptr{UInt8}), o, "items") == 1)
++      @with_GIL(ccall((@pysym :PyObject_HasAttrString), Cint, (PyPtr,Ptr{UInt8}), o, "items")) == 1)
+ end
+ 
+ """
+@@ -453,13 +453,13 @@ convert(::Type{PyDict}, o::PyObject) = PyDict(o)
+ convert(::Type{PyDict{K,V}}, o::PyObject) where {K,V} = PyDict{K,V}(o)
+ unsafe_convert(::Type{PyPtr}, d::PyDict) = PyPtr(d.o)
+ 
+-haskey(d::PyDict{K,V,true}, key) where {K,V} = 1 == ccall(@pysym(:PyDict_Contains), Cint, (PyPtr, PyPtr), d, PyObject(key))
++haskey(d::PyDict{K,V,true}, key) where {K,V} = 1 == @with_GIL(ccall(@pysym(:PyDict_Contains), Cint, (PyPtr, PyPtr), d, PyObject(key)))
+ keys(::Type{T}, d::PyDict{K,V,true}) where {T,K,V} = convert(Vector{T}, PyObject(@pycheckn ccall((@pysym :PyDict_Keys), PyPtr, (PyPtr,), d)))
+ values(::Type{T}, d::PyDict{K,V,true}) where {T,K,V} = convert(Vector{T}, PyObject(@pycheckn ccall((@pysym :PyDict_Values), PyPtr, (PyPtr,), d)))
+ 
+ keys(::Type{T}, d::PyDict{K,V,false}) where {T,K,V} = convert(Vector{T}, pycall(d.o["keys"], PyObject))
+ values(::Type{T}, d::PyDict{K,V,false}) where {T,K,V} = convert(Vector{T}, pycall(d.o["values"], PyObject))
+-haskey(d::PyDict{K,V,false}, key) where {K,V} = 1 == ccall(@pysym(:PyMapping_HasKey), Cint, (PyPtr, PyPtr), d, PyObject(key))
++haskey(d::PyDict{K,V,false}, key) where {K,V} = 1 == @with_GIL(ccall(@pysym(:PyMapping_HasKey), Cint, (PyPtr, PyPtr), d, PyObject(key)))
+ 
+ similar(d::PyDict{K,V}) where {K,V} = Dict{pyany_toany(K),pyany_toany(V)}()
+ eltype(::Type{PyDict{K,V}}) where {K,V} = Pair{pyany_toany(K),pyany_toany(V)}
+@@ -496,12 +496,12 @@ function pop!(d::PyDict, k, default)
+ end
+ 
+ function delete!(d::PyDict{K,V,true}, k) where {K,V}
+-    e = ccall(@pysym(:PyDict_DelItem), Cint, (PyPtr, PyPtr), d, PyObject(k))
++    e = @with_GIL ccall(@pysym(:PyDict_DelItem), Cint, (PyPtr, PyPtr), d, PyObject(k))
+     e == -1 && pyerr_clear() # delete! ignores errors in Julia
+     return d
+ end
+ function delete!(d::PyDict{K,V,false}, k) where {K,V}
+-    e = ccall(@pysym(:PyObject_DelItem), Cint, (PyPtr, PyPtr), d, PyObject(k))
++    e = @with_GIL ccall(@pysym(:PyObject_DelItem), Cint, (PyPtr, PyPtr), d, PyObject(k))
+     e == -1 && pyerr_clear() # delete! ignores errors in Julia
+     return d
+ end
+@@ -534,9 +534,9 @@ end
+ 
+ function Base.iterate(d::PyDict{K,V,true}, itr=PyDict_Iterator(Ref{PyPtr}(), Ref{PyPtr}(), Ref(0), 0, length(d))) where {K,V}
+     itr.i >= itr.len && return nothing
+-    if 0 == ccall((@pysym :PyDict_Next), Cint,
+-                    (PyPtr, Ref{Int}, Ref{PyPtr}, Ref{PyPtr}),
+-                    d, itr.pa, itr.ka, itr.va)
++    if 0 == @with_GIL(ccall((@pysym :PyDict_Next), Cint,
++                            (PyPtr, Ref{Int}, Ref{PyPtr}, Ref{PyPtr}),
++                            d, itr.pa, itr.ka, itr.va))
+         error("unexpected end of PyDict_Next")
+     end
+     ko = pyincref(itr.ka[]) # PyDict_Next returns
+@@ -725,7 +725,7 @@ function pysequence_query(o::PyObject)
+     # problems
+     if pyisinstance(o, @pyglobalobj :PyTuple_Type)
+         len = length(o)
+-        return typetuple(pytype_query(PyObject(ccall((@pysym :PySequence_GetItem), PyPtr, (PyPtr,Int), o,i-1)), PyAny) for i = 1:len)
++        return typetuple(pytype_query(PyObject(@with_GIL(ccall((@pysym :PySequence_GetItem), PyPtr, (PyPtr,Int), o,i-1))), PyAny) for i = 1:len)
+     elseif pyisinstance(o, pyxrange[])
+         return AbstractRange
+     elseif ispybytearray(o)
+diff --git a/src/exception.jl b/src/exception.jl
+index a874694..2e16ebd 100644
+--- a/src/exception.jl
++++ b/src/exception.jl
+@@ -51,11 +51,12 @@ end
+ 
+ # like pyerror(msg) but type-stable: always returns PyError
+ function PyError(msg::AbstractString)
+-    ptype, pvalue, ptraceback = Ref{PyPtr}(), Ref{PyPtr}(), Ref{PyPtr}()
+-    # equivalent of passing C pointers &exc[1], &exc[2], &exc[3]:
+-    ccall((@pysym :PyErr_Fetch), Cvoid, (Ref{PyPtr},Ref{PyPtr},Ref{PyPtr}), ptype, pvalue, ptraceback)
+-    ccall((@pysym :PyErr_NormalizeException), Cvoid, (Ref{PyPtr},Ref{PyPtr},Ref{PyPtr}), ptype, pvalue, ptraceback)
+-    return PyError(msg, PyObject(ptype[]), PyObject(pvalue[]), PyObject(ptraceback[]))
++    return @with_GIL begin
++        ptype, pvalue, ptraceback = Ref{PyPtr}(), Ref{PyPtr}(), Ref{PyPtr}()
++        ccall((@pysym :PyErr_Fetch), Cvoid, (Ref{PyPtr},Ref{PyPtr},Ref{PyPtr}), ptype, pvalue, ptraceback)
++        ccall((@pysym :PyErr_NormalizeException), Cvoid, (Ref{PyPtr},Ref{PyPtr},Ref{PyPtr}), ptype, pvalue, ptraceback)
++        PyError(msg, PyObject(ptype[]), PyObject(pvalue[]), PyObject(ptraceback[]))
++    end
+ end
+ 
+ # replace the message from another error
+@@ -66,10 +67,10 @@ PyError(msg::AbstractString, e::PyError) =
+ # Conversion of Python exceptions into Julia exceptions
+ 
+ # whether a Python exception has occurred
+-pyerr_occurred() = ccall((@pysym :PyErr_Occurred), PyPtr, ()) != C_NULL
++pyerr_occurred() = @with_GIL ccall((@pysym :PyErr_Occurred), PyPtr, ()) != C_NULL
+ 
+ # call to discard Python exceptions
+-pyerr_clear() = ccall((@pysym :PyErr_Clear), Cvoid, ())
++pyerr_clear() = @with_GIL ccall((@pysym :PyErr_Clear), Cvoid, ())
+ 
+ function pyerr_check(msg::AbstractString, val::Any)
+     pyerr_occurred() && throw(pyerror(msg))
+@@ -99,13 +100,13 @@ end
+ 
+ # Macros for common pyerr_check("Foo", ccall((@pysym :Foo), ...)) pattern.
+ macro pycheck(ex)
+-    :(pyerr_check($(string(callsym(ex))), $(esc(ex))))
++    :(pyerr_check($(string(callsym(ex))), @with_GIL($(esc(ex)))))
+ end
+ 
+ # Macros to check that ccall((@pysym :Foo), ...) returns value != bad
+ macro pycheckv(ex, bad)
+     quote
+-        val = $(esc(ex))
++        val = @with_GIL($(esc(ex)))
+         if val == $(esc(bad))
+             _handle_error($(string(callsym(ex))))
+         end
+@@ -223,14 +224,14 @@ function pyraise(e, bt = nothing)
+     eT = typeof(e)
+     pyeT = haskey(pyexc, eT) ? pyexc[eT] : pyexc[Exception]
+     err = PyJlError(e, bt)
+-    ccall((@pysym :PyErr_SetObject), Cvoid, (PyPtr, PyPtr),
+-          pyeT, PyObject(err))
++    @with_GIL ccall((@pysym :PyErr_SetObject), Cvoid, (PyPtr, PyPtr),
++                    pyeT, PyObject(err))
+ end
+ 
+ # Second argument allows for backtraces passed to `pyraise` to be ignored.
+ function pyraise(e::PyError, ::Vector = [])
+-    ccall((@pysym :PyErr_Restore), Cvoid, (PyPtr, PyPtr, PyPtr),
+-          e.T, e.val, e.traceback)
++    @with_GIL ccall((@pysym :PyErr_Restore), Cvoid, (PyPtr, PyPtr, PyPtr),
++                    e.T, e.val, e.traceback)
+     # refs were stolen
+     setfield!(e.T, :o, PyPtr_NULL)
+     setfield!(e.val, :o, PyPtr_NULL)
+diff --git a/src/gil.jl b/src/gil.jl
+new file mode 100644
+index 0000000..5b7fb5e
+--- /dev/null
++++ b/src/gil.jl
+@@ -0,0 +1,61 @@
++# GIL management functionality
++
++const _GIL_owner = Threads.Atomic{UInt}(0)
++
++# Acquires the GIL.
++# This lock can be re-acquired if already held by the OS thread (it is re-entrant).
++function GIL_lock()
++    state = ccall((@pysym :PyGILState_Ensure), Cint, ())
++    _GIL_owner[] = objectid(current_task())
++    return state
++end
++
++# Releases the GIL.
++# Argument is the state from a corresponding `GIL_lock()` call.
++function GIL_unlock(state::Cint)
++    _GIL_owner[] = UInt(0)
++    ccall((@pysym :PyGILState_Release), Cvoid, (Cint,), state)
++end
++
++# Quickly check whether this task holds the GIL.
++#
++# If true, the current task is guaranteed to be holding the GIL.
++# May return false even if the GIL is currently held.
++function GIL_held()
++    return _GIL_owner[] == objectid(current_task())
++end
++
++"""
++    @with_GIL expr
++
++Execute `expr` while holding the Python GIL. Safe to nest (re-entrant).
++
++!!! warning "Illegal to yield to the Julia scheduler"
++
++    GIL-locked code MUST NOT access any Julia-side locks or I/O or call
++    `yield()`. This is required to avoid task-migration, which would
++    leave the GIL held on an "old" OS thread and unable to be released.
++
++    This condition may be relaxed in the future if
++    [https://github.com/JuliaLang/julia/issues/52108](https://github.com/JuliaLang/julia/issues/52108)
++    is resolved.
++"""
++macro with_GIL(expr)
++    # TODO:
++    #   If OS thread pinning is eventually supported in Julia
++    #   (c.f. https://github.com/JuliaLang/julia/issues/52108),
++    #   replace this with a yield-safe version
++    quote
++        if GIL_held()
++            # Fast path: GIL already held on this OS thread, just run directly
++            $(esc(expr))
++        else
++            local _state = GIL_lock()
++            try
++                $(esc(expr))
++            finally
++                GIL_unlock(_state)
++            end
++        end
++    end
++end
+diff --git a/src/pybuffer.jl b/src/pybuffer.jl
+index a2cec72..02daf38 100644
+--- a/src/pybuffer.jl
++++ b/src/pybuffer.jl
+@@ -47,7 +47,9 @@ the python c-api function `PyObject_GetBuffer()`, unless o.obj is a PyPtr(C_NULL
+ function pydecref(o::PyBuffer)
+     # note that PyBuffer_Release sets o.obj to NULL, and
+     # is a no-op if o.obj is already NULL
+-    _finalized[] || ccall(@pysym(:PyBuffer_Release), Cvoid, (Ref{PyBuffer},), o)
++    if !_finalized[]
++        @with_GIL ccall(@pysym(:PyBuffer_Release), Cvoid, (Ref{PyBuffer},), o)
++    end
+     o
+ end
+ 
+@@ -96,8 +98,8 @@ end
+ Base.strides(b::PyBuffer) = ((stride(b,i) for i in 1:b.buf.ndim)...,)
+ 
+ iscontiguous(b::PyBuffer) =
+-    1 == ccall((@pysym :PyBuffer_IsContiguous), Cint,
+-               (Ref{PyBuffer}, Cchar), b, 'A')
++    1 == @with_GIL(ccall((@pysym :PyBuffer_IsContiguous), Cint,
++                         (Ref{PyBuffer}, Cchar), b, 'A'))
+ 
+ #############################################################################
+ # pybuffer constant values from Include/object.h
+@@ -131,8 +133,8 @@ function isbuftype!(o::Union{PyObject,PyPtr}, b::PyBuffer)
+     # PyObject_CheckBuffer is defined in a header file here: https://github.com/python/cpython/blob/ef5ce884a41c8553a7eff66ebace908c1dcc1f89/Include/abstract.h#L510
+     # so we can't access it easily. It basically just checks if PyObject_GetBuffer exists
+     # So we'll just try call PyObject_GetBuffer and check for success/failure
+-    ret = ccall((@pysym :PyObject_GetBuffer), Cint,
+-                     (PyPtr, Any, Cint), o, b, PyBUF_ND_STRIDED)
++    ret = @with_GIL ccall((@pysym :PyObject_GetBuffer), Cint,
++                          (PyPtr, Any, Cint), o, b, PyBUF_ND_STRIDED)
+     if ret != 0
+         pyerr_clear()
+     end
+diff --git a/src/pyfncall.jl b/src/pyfncall.jl
+index 11e8128..e32e713 100644
+--- a/src/pyfncall.jl
++++ b/src/pyfncall.jl
+@@ -28,7 +28,7 @@ function _pycall!(ret::PyObject, o::Union{PyObject,PyPtr}, args, nargs::Int=leng
+         end
+         return __pycall!(ret, pyargsptr, o, kw) #::PyObject
+     finally
+-        pydecref_(pyargsptr)
++        pydecref_(pyargsptr, nothing)
+     end
+ end
+ 
+@@ -42,7 +42,7 @@ function __pycall!(ret::PyObject, pyargsptr::PyPtr, o::Union{PyObject,PyPtr},
+     disable_sigint() do
+         retptr = @pycheckn ccall((@pysym :PyObject_Call), PyPtr, (PyPtr,PyPtr,PyPtr), o,
+                         pyargsptr, kw)
+-        pydecref_(ret)
++        pydecref_(getfield(ret, :o), ret)
+         setfield!(ret, :o, retptr)
+     end
+     return ret #::PyObject
+diff --git a/src/pyinit.jl b/src/pyinit.jl
+index b3371a4..1b79045 100644
+--- a/src/pyinit.jl
++++ b/src/pyinit.jl
+@@ -109,7 +109,7 @@ end
+ 
+ #########################################################################
+ 
+-const _finalized = Ref(false)
++const _finalized = Threads.Atomic{Bool}(false)
+ # This flag is set via `Py_AtExit` to avoid calling `pydecref_` after
+ # Python is finalized.
+ 
+@@ -117,10 +117,12 @@ function _set_finalized()
+     # This function MUST NOT invoke any Python APIs.
+     # https://docs.python.org/3/c-api/sys.html#c.Py_AtExit
+     _finalized[] = true
++    _GIL_owner[] = UInt(0)
+     return nothing
+ end
+ 
+ function Py_Finalize()
++    GIL_lock()
+     pygui_stop_all()
+     ccall(@pysym(:Py_Finalize), Cvoid, ())
+ end
+@@ -129,6 +131,7 @@ function __init__()
+     # Clear out global states.  This is required only for PyCall
+     # AOT-compiled into system image.
+     _finalized[] = false
++    _GIL_owner[] = UInt(0)
+     empty!(_namespaces)
+     empty!(eventloops)
+     global npy_initialized = false
+@@ -265,6 +268,11 @@ function __init__()
+         end
+     end
+ 
++    # Release the GIL so that any Julia thread can acquire it.
++    # After this point, all Python C API calls must go through
++    # @with_GIL or @pycheck, @pycheckn, etc.
++    ccall((@pysym :PyEval_SaveThread), Ptr{Cvoid}, ())
++
+     # Configure finalization steps.
+     #
+     # * In julia/PyCall, `julia` needs to call `Py_Finalize` to
+diff --git a/src/pyiterator.jl b/src/pyiterator.jl
+index 85c909a..f788047 100644
+--- a/src/pyiterator.jl
++++ b/src/pyiterator.jl
+@@ -149,12 +149,12 @@ end
+ # Broadcasting: if the object is iterable, return collect(o), and otherwise
+ #               return o.
+ function Base.Broadcast.broadcastable(o::PyObject)
+-    iter = ccall((@pysym :PyObject_GetIter), PyPtr, (PyPtr,), o)
++    iter = @with_GIL ccall((@pysym :PyObject_GetIter), PyPtr, (PyPtr,), o)
+     if iter == C_NULL
+         pyerr_clear()
+         return Ref(o)
+     else
+-        ccall(@pysym(:Py_DecRef), Cvoid, (PyPtr,), iter)
++        @with_GIL ccall(@pysym(:Py_DecRef), Cvoid, (PyPtr,), iter)
+         return collect(o)
+     end
+ end
+diff --git a/src/pytype.jl b/src/pytype.jl
+index e2df195..7673afb 100644
+--- a/src/pytype.jl
++++ b/src/pytype.jl
+@@ -313,7 +313,7 @@ function PyTypeObject!(init::Function, t::PyTypeObject, name::AbstractString, ba
+         t.tp_new = @pyglobal :PyType_GenericNew
+     end
+     @pycheckz ccall((@pysym :PyType_Ready), Cint, (Ref{PyTypeObject},), t)
+-    ccall((@pysym :Py_IncRef), Cvoid, (Any,), t)
++    @with_GIL ccall((@pysym :Py_IncRef), Cvoid, (Any,), t)
+     return t
+ end
+ 
+@@ -416,7 +416,7 @@ function pyjlwrap_type!(init::Function, to::PyTypeObject, name::AbstractString)
+         # We want tp_base to be a pointer to the C-like PyTypeObject struct.
+         # This is equivalent to the jl_value_t* in Julia (see JuliaLang/julia#31473).
+         t.tp_base = pointer_from_objref(jlWrapType)
+-        ccall((@pysym :Py_IncRef), Cvoid, (Ref{PyTypeObject},), jlWrapType)
++        @with_GIL ccall((@pysym :Py_IncRef), Cvoid, (Ref{PyTypeObject},), jlWrapType)
+         init(t)
+     end
+ end
+@@ -451,7 +451,7 @@ function pyjlwrap_new(x::Any)
+     pyjlwrap_new(jlWrapType, x)
+ end
+ 
+-is_pyjlwrap(o::PyObject) = jlWrapType.tp_new != C_NULL && ccall((@pysym :PyObject_IsInstance), Cint, (PyPtr, Ref{PyTypeObject}), o, jlWrapType) == 1
++is_pyjlwrap(o::PyObject) = jlWrapType.tp_new != C_NULL && @with_GIL(ccall((@pysym :PyObject_IsInstance), Cint, (PyPtr, Ref{PyTypeObject}), o, jlWrapType)) == 1
+ 
+ ################################################################
+ # Fallback conversion: if we don't have a better conversion function,
+diff --git a/test/gil.jl b/test/gil.jl
+new file mode 100644
+index 0000000..d50cd9b
+--- /dev/null
++++ b/test/gil.jl
+@@ -0,0 +1,15 @@
++using Test, PyCall
++using Base.Threads
++
++@testset "GIL / multi-threading" begin
++    o = PyObject(randn(3,3))
++    t = Threads.@spawn begin
++        # Test that accessing `PyObject` across threads / tasks
++        # does not immediately segfault (GIL is acquired correctly).
++        iob = IOBuffer()
++        println(iob, propertynames(o))
++        str = String(take!(iob))
++        return length(str)
++    end
++    @test fetch(t) != 0
++end
+diff --git a/test/runtests.jl b/test/runtests.jl
+index a5b6a5d..e573bb4 100644
+--- a/test/runtests.jl
++++ b/test/runtests.jl
+@@ -856,6 +856,7 @@ end
+ 
+ include("test_pyfncall.jl")
+ include("testpybuffer.jl")
++include("gil.jl")
+ if lowercase(get(ENV, "JULIA_PKGEVAL", "false")) != "true"
+     include("test_venv.jl")
+     include("test_build.jl")
+-- 
+2.53.0
+

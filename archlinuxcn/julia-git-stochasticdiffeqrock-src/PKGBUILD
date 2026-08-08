@@ -1,0 +1,18 @@
+pkgname=julia-git-stochasticdiffeqrock-src
+pkgver=1.1.0
+_commit=dff8c6229ce6f8934e9d500dfffea1aba681a074
+pkgrel=2
+pkgdesc="StochasticDiffEqROCK.jl"
+url="https://github.com/SciML/OrdinaryDiffEq.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/OrdinaryDiffEq.jl.git#commit=$_commit")
+sha256sums=('3587d2562c1624572fd417b4fddc22620a8294d104eb1f6cbc2e8c31dbeb08c5')
+
+package() {
+  cd OrdinaryDiffEq.jl/lib/StochasticDiffEqROCK
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh StochasticDiffEqROCK "${pkgdir}" "${pkgname}" julia-git
+}

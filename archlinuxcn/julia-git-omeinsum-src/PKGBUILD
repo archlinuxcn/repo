@@ -1,6 +1,6 @@
 pkgname=julia-git-omeinsum-src
-pkgver=0.8.8
-_commit=cd8d6219a876ca2d68cceb5e001e42132bdd92eb
+pkgver=0.9.4
+_commit=909efd689e2687c4947248acd266c5f9b44f8f17
 pkgrel=1
 pkgdesc="OMEinsum.jl"
 url="https://github.com/under-Peter/OMEinsum.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/under-Peter/OMEinsum.jl.git#commit=$_commit")
-sha256sums=('3ad4d49e53d28b012ca517d12617cb3dc31072a047ee5dbb59b9aee3e6319f0f')
+sha256sums=('f8f8a89a91f850824ccdb569b9c3143bf65da20af30fae4ef7b293645ba57121')
 
 package() {
   cd OMEinsum.jl

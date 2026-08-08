@@ -1,0 +1,26 @@
+pkgname=julia-git-git_jll-src
+pkgver=2.55.0+0
+_commit=7b63cc3603eda581498e8d0c5e8a6e48f7682378
+pkgrel=2
+pkgdesc="Git_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Git_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git git)
+source=("git+https://github.com/JuliaBinaryWrappers/Git_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('dcb1021de2ec0b97636dfcb6ded399e11d9024d88db84acda2907e47f6a35b19'
+            '25c3c6ff6d8eaea4ee709681637fdd64b2c6ee27138a440d8989c455db0bdb7e')
+
+build() {
+  cd Git_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Git_jll ../jll.toml
+}
+
+package() {
+  cd Git_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Git_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,6 +1,6 @@
 pkgname=julia-git-loraine-src
-pkgver=0.2.5
-_commit=904a4d60a3be3848c219aee6c8be4c2e74873652
+pkgver=0.2.8
+_commit=2f2bdf737ab4e43f97fb806a050e0a5de6d13fe6
 pkgrel=1
 pkgdesc="Loraine.jl"
 url="https://github.com/kocvara/Loraine.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/kocvara/Loraine.jl.git#commit=$_commit")
-sha256sums=('71ddaadb0bd6498757cb699507aebae0fbb3e6f837d2bc39bb2c939c34623cf7')
+sha256sums=('79aaecc74553bb49e5bf2277d22469712291a2cf92f54a294de7b9f6644be6a1')
 
 package() {
   cd Loraine.jl

@@ -1,0 +1,18 @@
+pkgname=julia-git-functionmaps-src
+pkgver=0.1.2
+_commit=3284de866ed3fc2f7fffc6ef7bf18a8ba5c3cbc6
+pkgrel=2
+pkgdesc="FunctionMaps.jl"
+url="https://github.com/JuliaApproximation/FunctionMaps.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaApproximation/FunctionMaps.jl.git#commit=$_commit")
+sha256sums=('7b7fd3a98242b609e6c2aa36663808d1b09fc3dd2a54cd73b0ff49c75307ab0c')
+
+package() {
+  cd FunctionMaps.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh FunctionMaps "${pkgdir}" "${pkgname}" julia-git
+}

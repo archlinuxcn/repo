@@ -1,0 +1,29 @@
+#
+
+_pkgname=amaranth-zynq
+pkgname="python-$_pkgname"
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Amaranth Zynq support"
+arch=(any)
+url="https://github.com/yuyichao/amaranth-zynq"
+license=('BSD-2-Clause')
+depends=('python' 'python-amaranth' 'python-amaranth-axi')
+makedepends=('git' 'python-build' 'python-installer' 'python-wheel'
+             'python-packaging' 'python-setuptools-scm')
+source=("git+https://github.com/yuyichao/amaranth-zynq.git#tag=v${pkgver}")
+sha512sums=('241cf6468638c7fe191c108517486bf9bd9b4be45389f4e01ea5163ec3dde000b63beb6c0669f6961f7e7fe5a1b24c137076f6aeea5f5802a59abd4d179b4782')
+
+build() {
+  cd "${_pkgname}"
+
+  python -m build --wheel --no-isolation
+}
+
+package() {
+  cd "${_pkgname}"
+
+  python -m installer --destdir="$pkgdir" dist/*.whl
+
+  install -Dm 644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

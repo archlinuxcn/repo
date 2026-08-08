@@ -1,0 +1,18 @@
+pkgname=julia-git-genqo-src
+pkgver=1.2.0
+_commit=9972dbb59fd41a46b5d79917b02a6cb8c664a6b6
+pkgrel=2
+pkgdesc="Genqo.jl"
+url="https://github.com/QuantumSavory/Genqo.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuantumSavory/Genqo.jl.git#commit=$_commit")
+sha256sums=('d1d2dae70b409827e930eaf95274113a26554922e48006dad8f7c3856051cc13')
+
+package() {
+  cd Genqo.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Genqo "${pkgdir}" "${pkgname}" julia-git
+}

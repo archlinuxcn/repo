@@ -1,6 +1,6 @@
 pkgname=julia-git-libaec_jll-src
-pkgver=1.1.5+0
-_commit=f1a0ee9dda3f0165a560d5b5801df4158aa4edff
+pkgver=1.1.7+0
+_commit=f0f73a1cb9c577268e0c35ddaa4cae117a335ebc
 pkgrel=1
 pkgdesc="libaec_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libaec_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libaec)
 source=("git+https://github.com/JuliaBinaryWrappers/libaec_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('9e962d06cf3e8f9f66a0447971dd2ed897505b85eafa3e16150e2588e75cf6bb'
+sha256sums=('e56b5039283fbaaaaefbb32ff934c47161a0036803e2dbbe3bd9cd291097f7aa'
             '9610b27a7c7f30a572fa061d11e77fecdae32ddd366af216e62683dcabcccaa2')
 
 build() {

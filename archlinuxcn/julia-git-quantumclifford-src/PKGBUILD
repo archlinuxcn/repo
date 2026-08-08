@@ -1,6 +1,6 @@
 pkgname=julia-git-quantumclifford-src
-pkgver=0.10.1
-_commit=c68580dd04fc0b93d0ca8ee03734b138dbac7971
+pkgver=0.11.5
+_commit=2b6cee1f2db6b2c781c4b0d168b9c07b10d47888
 pkgrel=1
 pkgdesc="QuantumClifford.jl"
 url="https://github.com/QuantumSavory/QuantumClifford.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/QuantumSavory/QuantumClifford.jl.git#commit=$_commit")
-sha256sums=('098df802fa396689701914f8eb96f1ce458d21b0b086b367cf2e69c5dd1cdf4c')
+sha256sums=('03edfbccadabb38201a2a22f1efb33935011be7e232386c056d6c683ec417062')
 
 package() {
   cd QuantumClifford.jl

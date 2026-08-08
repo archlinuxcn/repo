@@ -1,0 +1,22 @@
+From 5b5a0f4d605c89b8c94384b6623c2a74f1a34e8c Mon Sep 17 00:00:00 2001
+From: Em Chu <61633163+mlechu@users.noreply.github.com>
+Date: Wed, 10 Jun 2026 20:57:17 -0700
+Subject: [PATCH] Syntax fix: callable type instead of tuple assignment (#647)
+
+---
+ src/scaling/scaling.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/scaling/scaling.jl b/src/scaling/scaling.jl
+index cb420ff8..1f02f7a9 100644
+--- a/src/scaling/scaling.jl
++++ b/src/scaling/scaling.jl
+@@ -93,7 +93,7 @@ end
+     sitp(xis...)
+ end
+ 
+-(sitp::ScaledInterpolation{T,1}, x::Number, y::Int) where {T} = y == 1 ? sitp(x) : Base.throw_boundserror(sitp, (x, y))
++(sitp::ScaledInterpolation{T,1})(x::Number, y::Int) where {T} = y == 1 ? sitp(x) : Base.throw_boundserror(sitp, (x, y))
+ 
+ @inline function (itp::ScaledInterpolation{T,N})(x::Vararg{Union{Number,AbstractVector},N}) where {T,N}
+     [itp(i...) for i in Iterators.product(x...)]

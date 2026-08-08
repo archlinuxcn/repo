@@ -2,8 +2,8 @@ pkgbase=julia-git-gpuarrays-src
 _subpkgs=(GPUArraysCore
           JLArrays)
 pkgname=(julia-git-gpuarrays-src)
-pkgver=11.4.1
-_commit=94196c15b02ef7876542f165a89a184d4f37e8e9
+pkgver=11.5.8
+_commit=263c68c98dc2d1e1906b9a9d7c584e63ef94067e
 pkgrel=1
 pkgdesc="GPUArrays.jl"
 url="https://github.com/JuliaGPU/GPUArrays.jl.git"
@@ -12,7 +12,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGPU/GPUArrays.jl.git#commit=$_commit")
-sha256sums=('d20a65ead358f3f5bb27ccd64d35ac6be64062af6b11bb239988f26a265adf6b')
+sha256sums=('c50b199f634ce6de1614c80c8af22849608e0c189de1efc7a0a0d63c1cb8ec29')
 
 package_julia-git-gpuarrays-src() {
   cd GPUArrays.jl

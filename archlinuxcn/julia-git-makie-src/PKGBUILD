@@ -1,6 +1,6 @@
 pkgname=julia-git-makie-src
-pkgver=0.24.8
-_commit=f9b432dd4409e51962a4d331a74db6f3faab06b4
+pkgver=0.24.13
+_commit=f34d62d4fbe49ed9604e7571f22ae78f31cd7083
 pkgrel=1
 pkgdesc="Makie.jl"
 url="https://github.com/MakieOrg/Makie.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts wget)
 depends=(julia-git)
 source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit")
-sha256sums=('a25ec0644da73187df99b9b7e06351b352a62b8ad03c1dd7990316b4f342d1b4')
+sha256sums=('a7cf1fd5c8c4ad0e48bd5a36c5869a5de8d2dd8caff57c9d7162531c9572f17a')
 
 build() {
   cd Makie.jl/Makie

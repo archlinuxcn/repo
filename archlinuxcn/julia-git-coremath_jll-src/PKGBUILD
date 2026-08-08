@@ -1,0 +1,26 @@
+pkgname=julia-git-coremath_jll-src
+pkgver=0.1.0+0
+_commit=4ee5c7979b705948c1d9eb2e32d25716f7413c24
+pkgrel=2
+pkgdesc="CoreMath_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/CoreMath_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git coremath)
+source=("git+https://github.com/JuliaBinaryWrappers/CoreMath_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('c08fe0eb28cd24cef33f718cab836b99539c114365b45d34d7359d860f3a3bfd'
+            '81de1e8c5e5d801d20a8eda38021834a319e918c3a597464b8d004786e5da96e')
+
+build() {
+  cd CoreMath_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl CoreMath_jll ../jll.toml
+}
+
+package() {
+  cd CoreMath_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh CoreMath_jll "${pkgdir}" "${pkgname}" julia-git
+}

@@ -1,0 +1,18 @@
+pkgname=julia-git-sparsecolumnpivotedqr-src
+pkgver=2.1.6
+_commit=1d2d836e8261f2b222f79de1e9f179680fc506ac
+pkgrel=1
+pkgdesc="SparseColumnPivotedQR.jl"
+url="https://github.com/SciML/SparseColumnPivotedQR.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/SciML/SparseColumnPivotedQR.jl.git#commit=$_commit")
+sha256sums=('b123758528a8306dae77bf6c191b8c57bf2901453b407c6715d70b7c5180d454')
+
+package() {
+  cd SparseColumnPivotedQR.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh SparseColumnPivotedQR "${pkgdir}" "${pkgname}" julia-git
+}

@@ -3,12 +3,12 @@ shopt -s extglob
 
 pkgbase="zfs-linux-lts-poscat"
 pkgname=("zfs-utils-poscat" "zfs-linux-lts-poscat" "zfs-linux-lts-poscat-headers")
-_kernelver=6.18.35-1
+_kernelver=6.18.42-1
 _extramodules="${_kernelver}-lts"
 _sd_zfs_commit="dece62d"
 
-pkgver=2.4.2
-pkgrel=8
+pkgver=2.4.3
+pkgrel=1
 makedepends=(
   "linux-lts-headers=${_kernelver}"
   "libunwind"
@@ -25,7 +25,7 @@ source=(
   'zfs.initcpio.hook'
   'zfs.initcpio.zfsencryptssh.install'
 )
-sha256sums=('7e260d0e6af295bea4c5e241cac0a1aef07b58d8dd8035f7898ade3b1bbec78f'
+sha256sums=('1f08f2d154f5189b5f1382848a32667b3d34066145b474c49cd3d41a5fba59a7'
             '3dcc79915e41c5326135f2c3a8787fd2abfc2fc50c349327ef41222440ba2c4a'
             '2f09c742287f4738c7c09a9669f8055cd63d3b9474cd1f6d9447152d11a1b913'
             '15b5acea44225b4364ec6472a08d3d48666d241fe84c142e1171cd3b78a5584f'
@@ -101,7 +101,6 @@ package_zfs-utils-poscat() {
 
   # cleanup
   ## empty files
-  rm -rv "$pkgdir"/etc/sudoers.d
   rm -rv "$pkgdir"/usr/lib/modules-load.d
   ## debian/ubuntu specific
   rm -rv "$pkgdir"/usr/share/initramfs-tools

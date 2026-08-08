@@ -1,6 +1,6 @@
 pkgname=julia-git-glob-src
-pkgver=1.4.0
-_commit=552feef9de499d1617de391b18e3106a39b3a77a
+pkgver=1.5.0
+_commit=d787ab4250fc6bad31b95a2da371045e81b906c8
 pkgrel=1
 pkgdesc="Glob.jl"
 url="https://github.com/vtjnash/Glob.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/vtjnash/Glob.jl.git#commit=$_commit")
-sha256sums=('1a850c394d02d1c7c63023f359b50d54143b3c8ed3229bb9fd4340779f25990c')
+sha256sums=('a0d337e3849d2934c821925d0d07cea09ff4200cf5f31146e146f856d3eacb3d')
 
 package() {
   cd Glob.jl

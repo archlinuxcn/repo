@@ -8,8 +8,8 @@
 # fine with them.
 
 pkgname=blender
-pkgver=5.0.1
-pkgrel=3
+pkgver=5.2.0
+pkgrel=1
 epoch=17
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=(aarch64 x86_64)
@@ -29,13 +29,15 @@ depends=(
   'alembic'
   'bash'
   'boost-libs'
+  'ceres-solver'
   'draco'  # seems to use static lib and should probably only be makedepends
+  'eigen'
   'embree'
   'expat'
   'ffmpeg'
   'fftw'
+  'fmt'
   'freetype2'
-  'gcc-libs'
   'glew'
   'glibc'
   'gmp'
@@ -45,11 +47,13 @@ depends=(
   'jemalloc'
   'level-zero-loader'  # dlopen'ed
   'libepoxy'
+  'libgcc'
   'libharu'
   'libjpeg-turbo'
   'libpng'
   'libsndfile'
   'libspnav'
+  'libstdc++'
   'libtiff'
   'libwebp'
   'libx11'
@@ -99,22 +103,33 @@ makedepends=(
   'llvm'
   'mesa'
   'ninja'
-  'sse2neon'
   'subversion'
   'wayland-protocols'
   'vulkan-headers'
 )
+
+makedepends_aarch64=(
+  'sse2neon'
+)
+
 optdepends=('cuda: Cycles renderer CUDA support'
             'intel-compute-runtime: Cycles renderer Intel OneAPI support'
+            'intel-level-zero-raytracing-support: Cycles renderer Intel OneAPI Raytracing Support'
             'hip-runtime-amd: Cycles renderer AMD ROCm support'
             'hiprt: Ray tracing AMD ROCm support'
             'libdecor: wayland support')
 # We're using !lto here as otherwise we get stuff such as FS#77557
 options=('!lto')
 source=("git+https://projects.blender.org/blender/blender.git#tag=v$pkgver"
-        https://developer.download.nvidia.com/redist/optix/v8.0/OptiX-8.0-Include.zip)
-sha512sums=('9b85c75440a64e10a5d3acb35eeb0b82c7cf6ac4dc0a1b80f5ca3a4d400636c0bdf6285e398b0fec222c6fa72103ab893b0f751554f09ad222cb463edbd20bbf'
-            '5502d9df847de12badc702c0444bd4f1f7620460b2235026df2c3133da1e04c148af0f1fc7f345e9a0c009c32f905f66c8d427743445e8864d3a797cdce6a483')
+        blender-hip-update.patch
+        blender-fix-oneapi-2026-atomic-address-space.patch::https://raw.githubusercontent.com/intel/llvm/20a7095cba72ace59f7c8a64711ec4b51f01f030/devops/actions/blender/blender-build/patches/Fix-build.patch
+        https://developer.download.nvidia.com/redist/optix/v8.0/OptiX-8.0-Include.zip
+        ffmpeg-9.patch)
+sha512sums=('e113ddf9deb48ff1d53ddd7137677f6fd661b8315363fd55189a5b4fc44fe5a0f1cb46ba24a733939f97836edaec09900acc4486893e455bc526057c3a0bd31b'
+            '77d202e2033a2e5c26adcc5340da6fbd7f859a8b237b37f9be7f08fbbb99173a67462f1b0aa0dce31967cd8c465b6341628567ace1e477b81a1b75c2383357ca'
+            '17b15a7e2ea7e89e22a35325104e6a047253242f820815fa499a1010a0caa90b5a7c0a67b4434e24d472d09c767d34a6524e769ca8f1da13728dec89ed9267c0'
+            '5502d9df847de12badc702c0444bd4f1f7620460b2235026df2c3133da1e04c148af0f1fc7f345e9a0c009c32f905f66c8d427743445e8864d3a797cdce6a483'
+            'ee67438e0c868eda0616ae444631ccbbce4484c37097875df037fb5db5341be13f1a9e886ba5a1cb514ef2764080542b90cf8d30942a4bf138a9b15e42b378a1')
 
 prepare() {
   cd "$pkgname"
@@ -123,6 +138,15 @@ prepare() {
   git remote add network-origin https://projects.blender.org/blender/blender
   git lfs fetch network-origin
   git lfs checkout
+
+  patch -Np1 -i "$srcdir"/blender-hip-update.patch
+  patch -Np1 -i "$srcdir"/blender-fix-oneapi-2026-atomic-address-space.patch
+  patch -Np1 -i ../ffmpeg-9.patch
+
+  # TODO Dirty hack / workaround to fix faulty manpage generation.. arguably an upstream issue.
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/blender/-/issues/19
+  sed -i "/blender_help = subprocess/i\    blender_env = {\"LD_LIBRARY_PATH\": \"${pkgdir}/usr/share/blender/lib\"}" \
+    doc/manpage/blender.1.py
 }
 
 _get_pyver() {
@@ -135,19 +159,27 @@ build() {
   CXXFLAGS+=' --param=max-vartrack-size=640000000'
   CXXFLAGS+=' -Wno-error=format-security'
 
+  # In general, we want to list all real archs (sm_XX) and the latest virtual arch (compute_XX) for future PTX compatibility.
+  # Valid values can be discovered from nvcc --help
+  local cuda_archs="sm_75;sm_80;sm_86;sm_87;sm_88;sm_89;sm_90;sm_100;sm_103;sm_110;sm_120;sm_121;compute_121"
+
   local cmake_options=(
     -B build
     -C "$pkgname/build_files/cmake/config/blender_release.cmake"
     -D CMAKE_BUILD_TYPE=Release
     -D CMAKE_INSTALL_PREFIX=/usr
     -D WITH_LINKER_MOLD=ON
+    -D CUDA_HOST_COMPILER="$NVCC_CCBIN"
+    -D CYCLES_CUDA_BINARIES_ARCH="$cuda_archs"
+    -D HIP_ROOT_DIR=/opt/rocm
+    -D HIPRT_INCLUDE_DIR=/opt/rocm/include
+    -D HIPRT_COMPILER_PARALLEL_JOBS=8
     -D OCLOC_INSTALL_DIR=/usr
     -D OPTIX_ROOT_DIR="$srcdir"
     -D PYTHON_VERSION="$(_get_pyver)"
-    # -D SYCL_CPP_FLAGS=--verbose  # for debugging
-    -D SYCL_OFFLINE_COMPILER_PARALLEL_JOBS=8
     -D USD_ROOT_DIR=/usr
     -D WITH_CYCLES_OSL=ON
+    -D WITH_CYCLES_PARALLEL_DEVICE_KERNEL_BUILD=ON
     -D WITH_INSTALL_PORTABLE=OFF
     -D WITH_PYTHON_INSTALL=OFF
     -D WITH_SYSTEM_GFLAGS=ON
@@ -157,6 +189,23 @@ build() {
     -W no-dev
   )
 
+  if [[ $CARCH == "x86_64" ]]; then
+    cmake_options+=(
+      -D SYCL_ROOT_DIR=/opt/intel/oneapi/compiler/latest
+      -D SYCL_CPP_FLAGS="--verbose"  # for debugging
+      -D SYCL_OFFLINE_COMPILER_PARALLEL_JOBS=8
+    )
+  fi
+
+  if [[ $CARCH == "aarch64" ]]; then
+    cmake_options+=(
+      -D WITH_CYCLES_DEVICE_HIPRT=OFF
+      -D WITH_CYCLES_HIP_BINARIES=OFF
+      -D WITH_CYCLES_HIPRT_BINARIES=OFF
+      -D WITH_CYCLES_ONEAPI_BINARIES=OFF
+    )
+  fi
+
   cmake "${cmake_options[@]}"
   cmake --build build
 }
@@ -165,11 +214,16 @@ package() {
   DESTDIR="${pkgdir}" cmake --install build
   cd "$pkgname"
 
-  install -Dm755 release/bin/blender-softwaregl "${pkgdir}/usr/bin/blender-softwaregl"
   python -m compileall "${pkgdir}/usr/share/blender"
   python -O -m compileall "${pkgdir}/usr/share/blender"
 
   install -Dm644 release/freedesktop/org.blender.Blender.metainfo.xml "${pkgdir}/usr/share/metainfo/org.blender.Blender.metainfo.xml"
+
+  # Move OneAPI AOT lib to proper place
+  mkdir -p "${pkgdir}"/usr/lib/
+  if [[ -f "${pkgdir}"/usr/share/blender/lib/libcycles_kernel_oneapi_aot.so ]]; then
+    mv "${pkgdir}"/usr/share/blender/lib/libcycles_kernel_oneapi_aot.so "${pkgdir}"/usr/lib/
+  fi
 
   install -vDm 644 doc/license/{BSD-{2,3}-Clause,MIT,Zlib}-license.txt -t "$pkgdir/usr/share/licenses/$pkgname/"
 }

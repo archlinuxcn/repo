@@ -1,6 +1,6 @@
 pkgname=julia-git-structarrays-src
-pkgver=0.7.2
-_commit=a7a0d16cfdf9de7f7087ad7b2148de1eb0893c86
+pkgver=0.7.3
+_commit=4a1e271029b3c562bcff5056f1a861a24a76eb3e
 pkgrel=1
 pkgdesc="StructArrays.jl"
 url="https://github.com/JuliaArrays/StructArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/StructArrays.jl.git#commit=$_commit")
-sha256sums=('7a20fb313202ceed39c6414c743a1e69aeb6eabe36712e3b99dc9632e0941af3')
+sha256sums=('2223b92c1b19960c00c95f3321296735e683b2ab368eef5481efb70b000e5b73')
 
 package() {
   cd StructArrays.jl

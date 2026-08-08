@@ -1,0 +1,285 @@
+From 1d46523bc9f1920e3fe5b6a2330e0b5763680211 Mon Sep 17 00:00:00 2001
+From: Cody Tapscott <topolarity@tapscott.me>
+Date: Wed, 11 Mar 2026 12:15:26 -0400
+Subject: [PATCH 2/3] Add deferred "release" queue for PyObject finalizers
+
+This is required to avoid deadlocking in the GC as it executes
+finalizers.
+---
+ src/PyCall.jl   |  8 ++---
+ src/gc.jl       | 87 +++++++++++++++++++++++++++++++++++++++++++++++++
+ src/gil.jl      | 10 +++++-
+ src/pybuffer.jl |  8 ++---
+ src/pyinit.jl   |  6 ----
+ test/gil.jl     | 47 ++++++++++++++++++++------
+ 6 files changed, 138 insertions(+), 28 deletions(-)
+
+diff --git a/src/PyCall.jl b/src/PyCall.jl
+index 17c3f58..f2623f5 100644
+--- a/src/PyCall.jl
++++ b/src/PyCall.jl
+@@ -77,7 +77,7 @@ mutable struct PyObject
+     o::PyPtr # the actual PyObject*
+     function PyObject(o::PyPtr)
+         po = new(o)
+-        finalizer(pydecref, po)
++        finalizer(_defer_Py_DecRef, po)
+         return po
+     end
+ end
+@@ -116,10 +116,8 @@ it is equivalent to a `PyNULL()` object.
+ ispynull(o::PyObject) = o ≛ PyPtr_NULL
+ 
+ function pydecref_(ptr::PyPtr, o)
+-    if ptr !== PyPtr_NULL && !_finalized[]
+-        GC.@preserve o begin
+-            @with_GIL ccall(@pysym(:Py_DecRef), Cvoid, (PyPtr,), ptr)
+-        end
++    GC.@preserve o begin
++        @with_GIL ccall(@pysym(:Py_DecRef), Cvoid, (PyPtr,), ptr)
+     end
+ end
+ 
+diff --git a/src/gc.jl b/src/gc.jl
+index e000cc3..0fff360 100644
+--- a/src/gc.jl
++++ b/src/gc.jl
+@@ -11,6 +11,8 @@
+ #      when po is deallocated, and this callback function removes
+ #      jo from pycall_gc so that Julia can garbage-collect it.
+ 
++using Base.Threads: atomic_add!, atomic_sub!, Atomic, SpinLock
++
+ const pycall_gc = Dict{PyPtr,Any}()
+ 
+ function weakref_callback(callback::PyPtr, wo::PyPtr)
+@@ -43,3 +45,88 @@ function pyembed(po::PyObject, jo::Any)
+     pycall_gc[wo] = jo
+     return po
+ end
++
++# Deferred `finalizer` / destructor queue(s):
++#
++#   * In a `finalizer` context, it is unsafe to take the GIL since it
++#     can cause deadlocks such as:
++#
++#       1. Task A holds the GIL and waits for Task B to finish something
++#       2. Task B enters GC and tries runs finalizers
++#       3. Task B cannot acquire the GIL and Task A is stuck waiting on B
++#
++#   * To work around this, we defer any GIL-requiring operations to run
++#     at the end of next `@with_GIL` block.
++
++const _deferred_count = Atomic{Int}(0)
++const _deferred_Py_DecRef = Vector{PyPtr}()
++const _deferred_PyBuffer_Release = Vector{PyBuffer}()
++
++# Since it is illegal for finalizers to `yield()` to the Julia scheduler, this
++# lock MUST be a `SpinLock` or similar. Most other locks in `Base` implicitly
++# yield.
++const _deferred_queue_lock = SpinLock()
++
++# Defers a `Py_DecRef(o)` call to be performed later, when the GIL is available
++function _defer_Py_DecRef(o::PyObject)
++    lock(_deferred_queue_lock)
++    try
++        ptr = getfield(o, :o)
++        if ptr !== PyPtr_NULL
++            push!(_deferred_Py_DecRef, ptr)
++            atomic_add!(_deferred_count, 1)
++            setfield!(o, :o, PyPtr_NULL)
++        end
++    finally
++        unlock(_deferred_queue_lock)
++    end
++    return
++end
++
++# Defers a `PyBuffer_Release(o)` call to be performed later, when the GIL is available
++function _defer_PyBuffer_Release(o::PyBuffer)
++    lock(_deferred_queue_lock)
++    try
++        push!(_deferred_PyBuffer_Release, o)
++        atomic_add!(_deferred_count, 1)
++    finally
++        unlock(_deferred_queue_lock)
++    end
++    return
++end
++
++# Called at the end of every `@with_GIL` block, this performs any deferred destruction
++# operations from finalizers that could not be done immediately due to not holding the GIL
++@noinline function _drain_release_queues()
++    lock(_deferred_queue_lock)
++
++    nobj = length(_deferred_Py_DecRef)
++    nbuf = length(_deferred_PyBuffer_Release)
++    atomic_sub!(_deferred_count, nobj + nbuf)
++
++    if nobj != 0
++        Py_DecRefs = copy(_deferred_Py_DecRef)
++        empty!(_deferred_Py_DecRef)
++    end
++
++    if nbuf != 0
++        PyBuffer_Releases = copy(_deferred_PyBuffer_Release)
++        empty!(_deferred_PyBuffer_Release)
++    end
++
++    unlock(_deferred_queue_lock)
++
++    if nobj != 0
++        for o in Py_DecRefs
++            ccall(@pysym(:Py_DecRef), Cvoid, (PyPtr,), o)
++        end
++    end
++
++    if nbuf != 0
++        for o in PyBuffer_Releases
++            ccall(@pysym(:PyBuffer_Release), Cvoid, (Ref{PyBuffer},), o)
++        end
++    end
++
++    return nothing
++end
+diff --git a/src/gil.jl b/src/gil.jl
+index 5b7fb5e..1ec3709 100644
+--- a/src/gil.jl
++++ b/src/gil.jl
+@@ -2,6 +2,10 @@
+ 
+ const _GIL_owner = Threads.Atomic{UInt}(0)
+ 
++# Forward declare deferred destructors
++function _defer_Py_DecRef end
++function _defer_PyBuffer_Release end
++
+ # Acquires the GIL.
+ # This lock can be re-acquired if already held by the OS thread (it is re-entrant).
+ function GIL_lock()
+@@ -52,7 +56,11 @@ macro with_GIL(expr)
+         else
+             local _state = GIL_lock()
+             try
+-                $(esc(expr))
++                local val = $(esc(expr))
++                if _deferred_count[] != 0
++                    _drain_release_queues()
++                end
++                val
+             finally
+                 GIL_unlock(_state)
+             end
+diff --git a/src/pybuffer.jl b/src/pybuffer.jl
+index 02daf38..a5f35fc 100644
+--- a/src/pybuffer.jl
++++ b/src/pybuffer.jl
+@@ -32,7 +32,7 @@ mutable struct PyBuffer
+         b = new(Py_buffer(C_NULL, PyPtr_NULL, 0, 0,
+                           0, 0, C_NULL, C_NULL, C_NULL, C_NULL,
+                           C_NULL, C_NULL, C_NULL))
+-        finalizer(pydecref, b)
++        finalizer(_defer_PyBuffer_Release, b)
+         return b
+     end
+ end
+@@ -45,11 +45,7 @@ It is an error to call this function on a PyBuffer that was not obtained via
+ the python c-api function `PyObject_GetBuffer()`, unless o.obj is a PyPtr(C_NULL)
+ """
+ function pydecref(o::PyBuffer)
+-    # note that PyBuffer_Release sets o.obj to NULL, and
+-    # is a no-op if o.obj is already NULL
+-    if !_finalized[]
+-        @with_GIL ccall(@pysym(:PyBuffer_Release), Cvoid, (Ref{PyBuffer},), o)
+-    end
++    @with_GIL ccall(@pysym(:PyBuffer_Release), Cvoid, (Ref{PyBuffer},), o)
+     o
+ end
+ 
+diff --git a/src/pyinit.jl b/src/pyinit.jl
+index 1b79045..eae3def 100644
+--- a/src/pyinit.jl
++++ b/src/pyinit.jl
+@@ -109,14 +109,9 @@ end
+ 
+ #########################################################################
+ 
+-const _finalized = Threads.Atomic{Bool}(false)
+-# This flag is set via `Py_AtExit` to avoid calling `pydecref_` after
+-# Python is finalized.
+-
+ function _set_finalized()
+     # This function MUST NOT invoke any Python APIs.
+     # https://docs.python.org/3/c-api/sys.html#c.Py_AtExit
+-    _finalized[] = true
+     _GIL_owner[] = UInt(0)
+     return nothing
+ end
+@@ -130,7 +125,6 @@ end
+ function __init__()
+     # Clear out global states.  This is required only for PyCall
+     # AOT-compiled into system image.
+-    _finalized[] = false
+     _GIL_owner[] = UInt(0)
+     empty!(_namespaces)
+     empty!(eventloops)
+diff --git a/test/gil.jl b/test/gil.jl
+index d50cd9b..c1e3301 100644
+--- a/test/gil.jl
++++ b/test/gil.jl
+@@ -1,15 +1,42 @@
+ using Test, PyCall
+ using Base.Threads
+ 
+-@testset "GIL / multi-threading" begin
+-    o = PyObject(randn(3,3))
+-    t = Threads.@spawn begin
+-        # Test that accessing `PyObject` across threads / tasks
+-        # does not immediately segfault (GIL is acquired correctly).
+-        iob = IOBuffer()
+-        println(iob, propertynames(o))
+-        str = String(take!(iob))
+-        return length(str)
++@testset "GIL" begin
++
++    @testset "basic multi-threading" begin
++        o = PyObject(randn(3,3))
++        t = Threads.@spawn begin
++            # Test that accessing `PyObject` across threads / tasks
++            # does not immediately segfault (GIL is acquired correctly).
++            iob = IOBuffer()
++            println(iob, propertynames(o))
++            str = String(take!(iob))
++            return length(str)
++        end
++        @test fetch(t) != 0
++    end
++
++    @testset "finalizer deadlock" begin
++        # Test that we avoid finalizer deadlocks like this:
++        #   1. Task A holds the GIL
++        #   2. Task B triggers a PyObject finalizer (e.g. via GC)
++        #   3. Task A waits on Task B
++        #   4. Task B cannot complete GC and Task A cannot advance -> deadlock
++
++        o = PyObject(42)
++        PyCall.pyincref(o)
++
++        PyCall.@with_GIL begin
++            t = Threads.@spawn begin
++                finalize(o)
++                return true
++            end
++            result = timedwait(() -> istaskdone(t), 5.0)
++            @test result === :ok
++            @test fetch(t) === true
++            @test !isempty(PyCall._deferred_Py_DecRef)
++        end
++        @test isempty(PyCall._deferred_Py_DecRef)
+     end
+-    @test fetch(t) != 0
++
+ end
+-- 
+2.53.0
+

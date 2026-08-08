@@ -1,8 +1,11 @@
 maintainers:
   - github: oldherl
 update_on:
+  - source: github
+    github: indilib/indi-3rdparty
+    use_latest_release: true
+    include_regex: '^v.*'
+    prefix: v
   - source: alpm
     strip_release: true
     alpm: libindi
-  - source: manual
-    manual: 3

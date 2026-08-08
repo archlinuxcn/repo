@@ -1,0 +1,26 @@
+pkgname=julia-git-libdrm_jll-src
+pkgver=2.4.134+0
+_commit=73ac263d0ce6400affa124980a190ac3059751c2
+pkgrel=2
+pkgdesc="libdrm_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/libdrm_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git libdrm)
+source=("git+https://github.com/JuliaBinaryWrappers/libdrm_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('bf359a41f05a24f9f6deed294e6821b98f6b10d758a3ba5323fd4e4d19120cf1'
+            '8bc6489681b5e5476c016ec38ac6d28417cd7082f2d42a625e9fdaf95f60bb3f')
+
+build() {
+  cd libdrm_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl libdrm_jll ../jll.toml
+}
+
+package() {
+  cd libdrm_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh libdrm_jll "${pkgdir}" "${pkgname}" julia-git
+}

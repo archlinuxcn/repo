@@ -5,6 +5,7 @@ _jlpackages=(
 ###=== JLPKG_JLNAME_LIST {{
   ADTypes
   AMD
+  ANSIColoredPrinters
   ASL_jll
   AWS
   AWSS3
@@ -34,6 +35,7 @@ _jlpackages=(
   ArrowTypes
   Atomix
   Attr_jll
+  AutoHashEquals
   Automa
   AxisAlgorithms
   AxisArrays
@@ -46,6 +48,8 @@ _jlpackages=(
   BenchmarkTools
   Bessels
   Bijections
+  BinaryHeaps
+  BipartiteGraphs
   BitBasis
   BitFlags
   BitIntegers
@@ -59,7 +63,6 @@ _jlpackages=(
   BloqadeLattices
   BloqadeMIS
   BloqadeODE
-  BloqadeSchema
   BloqadeWaveforms
   Blosc
   Blosc_jll
@@ -73,7 +76,6 @@ _jlpackages=(
   BoundaryValueDiffEqMIRKN
   BoundaryValueDiffEqShooting
   BracketingNonlinearSolve
-  Braket
   BranchAndPrune
   BufferedStreams
   Bzip2_jll
@@ -113,6 +115,7 @@ _jlpackages=(
   CircularArrays
   Clang
   Clang_jll
+  Clang_unified_jll
   CliqueTrees
   CloseOpenIntervals
   Clp
@@ -155,6 +158,8 @@ _jlpackages=(
   ConstructionBase
   Contour
   CoordinateTransformations
+  CoreMath
+  CoreMath_jll
   CovarianceEstimation
   CpuId
   Crayons
@@ -190,6 +195,8 @@ _jlpackages=(
   Distances
   Distributions
   DocStringExtensions
+  Documenter
+  DocumenterTools
   DomainSets
   DynamicPolynomials
   DynamicQuantities
@@ -248,6 +255,7 @@ _jlpackages=(
   FreeTypeAbstraction
   FreqTables
   FriBidi_jll
+  FunctionMaps
   FunctionWrappers
   FunctionWrappersWrappers
   Functors
@@ -262,10 +270,13 @@ _jlpackages=(
   GR_jll
   GSL
   GSL_jll
+  Gabs
+  Gamma
   GarishPrint
   GaussQuadrature
   GenericLinearAlgebra
   GenericSchur
+  Genqo
   GeoFormatTypes
   GeoInterface
   GeometryBasics
@@ -273,8 +284,11 @@ _jlpackages=(
   Gettext_jll
   Ghostscript_jll
   Giflib_jll
+  Git
   GitHub
   GitHubActions
+  Git_LFS_jll
+  Git_jll
   Glib_jll
   Glob
   Graphics
@@ -284,6 +298,8 @@ _jlpackages=(
   GridLayoutBase
   Grisu
   Groebner
+  Gumbo
+  Gumbo_jll
   H5Zbitshuffle
   H5Zblosc
   H5Zbzip2
@@ -344,6 +360,7 @@ _jlpackages=(
   InlineStrings
   IntegerMathUtils
   IntegralArrays
+  Integrals
   IntelOpenMP_jll
   Interfaces
   Interpolations
@@ -397,10 +414,10 @@ _jlpackages=(
   LaTeXStrings
   LabelledArrays
   LambertW
-  LanguageServer
   Latexify
   LatticeRules
   LayoutPointers
+  LazilyInitializedFields
   LazyArrays
   LazyModules
   LeastSquaresOptim
@@ -458,6 +475,7 @@ _jlpackages=(
   ManualMemory
   MappedArrays
   MarchingCubes
+  MarkdownAST
   Match
   MathOptIIS
   MathOptInterface
@@ -476,7 +494,10 @@ _jlpackages=(
   Missings
   Mocking
   ModelingToolkit
+  ModelingToolkitBase
+  ModelingToolkitTearing
   Mods
+  MonteCarloIntegration
   MonteCarloMeasurements
   MosaicViews
   Moshi
@@ -527,6 +548,7 @@ _jlpackages=(
   OpenEXR_jll
   OpenJpeg_jll
   OpenMPI_jll
+  OpenSSH_jll
   OpenSSL
   OpenSpecFun_jll
   Optim
@@ -609,6 +631,7 @@ _jlpackages=(
   ProgressMeter
   ProtoBuf
   PtrArrays
+  PureKLU
   PyCall
   PyPlot
   PythonCall
@@ -618,6 +641,7 @@ _jlpackages=(
   Qt6Base_jll
   Qt6Declarative_jll
   Qt6ShaderTools_jll
+  Qt6Svg_jll
   Qt6Wayland_jll
   QuadGK
   QuantumClifford
@@ -638,6 +662,7 @@ _jlpackages=(
   RationalRoots
   Ratios
   ReadOnlyArrays
+  ReadOnlyDicts
   RealDot
   RecipesBase
   RecipesPipeline
@@ -646,9 +671,11 @@ _jlpackages=(
   Reexport
   Referenceables
   RegionTrees
+  RegistryInstances
   RelocatableFolders
   Requires
   ResettableStacks
+  RespecializeParams
   ResumableFunctions
   Retry
   ReverseDiff
@@ -671,6 +698,7 @@ _jlpackages=(
   SPIRV_LLVM_Translator_unified_jll
   SPIRV_Tools_jll
   SPRAL_jll
+  Sass
   SciMLBase
   SciMLJacobianOperators
   SciMLLogging
@@ -696,12 +724,14 @@ _jlpackages=(
   SimpleUnPack
   SimpleWeightedGraphs
   Sixel
+  SmallCollections
   Sobol
   SodiumSeal
   SoftGlobalScope
   SolverCore
   SortingAlgorithms
   SparseBandedMatrices
+  SparseColumnPivotedQR
   SparseConnectivityTracer
   SparseInverseSubset
   SparseMatricesCSR
@@ -712,17 +742,29 @@ _jlpackages=(
   SplittablesBase
   StableRNGs
   StackViews
+  StarAlgebras
+  StateSelection
   Static
   StaticArrayInterface
   StaticArrays
   StaticArraysCore
-  StaticLint
   StatsAPI
   StatsBase
   StatsFuns
   StatsModels
   SteadyStateDiffEq
   StochasticDiffEq
+  StochasticDiffEqCore
+  StochasticDiffEqHighOrder
+  StochasticDiffEqIIF
+  StochasticDiffEqImplicit
+  StochasticDiffEqLeaping
+  StochasticDiffEqLevyArea
+  StochasticDiffEqLowOrder
+  StochasticDiffEqMilstein
+  StochasticDiffEqROCK
+  StochasticDiffEqRODE
+  StochasticDiffEqWeak
   StrideArraysCore
   Strided
   StridedViews
@@ -744,12 +786,12 @@ _jlpackages=(
   SymEngine_jll
   SymPyCore
   SymPyPythonCall
-  SymbolServer
   SymbolicAnalysis
   SymbolicIndexingInterface
   SymbolicLimits
   SymbolicUtils
   Symbolics
+  SymplecticMatrices
   TSVD
   TZJData
   TableTraits
@@ -804,6 +846,7 @@ _jlpackages=(
   WGLMakie
   Wayland_jll
   WeakCacheSets
+  WeakDepHelpers
   WeakRefStrings
   WeakValueDicts
   WebP
@@ -878,13 +921,16 @@ _jlpackages=(
   libass_jll
   libcxxwrap_julia_jll
   libdecor_jll
+  libdrm_jll
   libevdev_jll
   libevent_jll
   libfdk_aac_jll
   libinput_jll
   libpng_jll
+  libsass_jll
   libsixel_jll
   libsodium_jll
+  libva_jll
   libvorbis_jll
   libwebp_jll
   libzip_jll
@@ -894,13 +940,14 @@ _jlpackages=(
   pixi_jll
   s2n_tls_jll
   snappy_jll
+  spirv2clc_jll
   x264_jll
   x265_jll
   xkbcommon_jll
 ###=== }} JLPKG_JLNAME_LIST
 )
 pkgname=()
-pkgver=20260226.053226
+pkgver=20260807.214749
 pkgrel=1
 pkgdesc="Precompiled packages for julia-git"
 # This is against the official recommendation but

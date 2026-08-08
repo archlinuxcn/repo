@@ -1,6 +1,6 @@
 pkgname=julia-git-leastsquaresoptim-src
-pkgver=0.8.8
-_commit=f6a30d7fbae8ab9d384c58c8b956334b2be3d5b8
+pkgver=0.8.10
+_commit=c9a498727a1d4483478a09c07c26d887a28ff240
 pkgrel=1
 pkgdesc="LeastSquaresOptim.jl"
 url="https://github.com/matthieugomez/LeastSquaresOptim.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/matthieugomez/LeastSquaresOptim.jl.git#commit=$_commit")
-sha256sums=('d8604fcebcdd87a8f5f70fb1f0df7e06d2928b634f7c8b9214856c58039cc69b')
+sha256sums=('75cfe04c466cf068fb8564af907edfd2eaa49c169cb72bffdc393c6f6a652c07')
 
 package() {
   cd LeastSquaresOptim.jl

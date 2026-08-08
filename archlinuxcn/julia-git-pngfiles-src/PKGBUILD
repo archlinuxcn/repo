@@ -1,6 +1,6 @@
 pkgname=julia-git-pngfiles-src
-pkgver=0.4.4
-_commit=1eccacd75c16ead209389305f54108eb6fda1fdf
+pkgver=0.4.5
+_commit=912fccf374fca06dbb96fe643ba01710cf808d18
 pkgrel=1
 pkgdesc="PNGFiles.jl"
 url="https://github.com/JuliaIO/PNGFiles.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/PNGFiles.jl.git#commit=$_commit")
-sha256sums=('bff9e5c8e18b336338b181b72e18f2c60799d6f74143595dc29b5824cf0405bc')
+sha256sums=('f65897f656bd0d95c977df2e09aea9f309e9151f2aa1beccf256517cca5d0e87')
 
 package() {
   cd PNGFiles.jl

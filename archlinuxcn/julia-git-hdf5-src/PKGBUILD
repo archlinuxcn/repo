@@ -5,8 +5,8 @@ _subpkgs=(H5Zbitshuffle
           H5Zlz4
           H5Zzstd)
 pkgname=(julia-git-hdf5-src)
-pkgver=0.17.2
-_commit=c41a3d250306c3172cc0619e2d0e0704841082a7
+pkgver=0.17.3
+_commit=b86360f0a536d79b5ed1746de8745d92100a9bb8
 pkgrel=1
 pkgdesc="HDF5.jl"
 url="https://github.com/JuliaIO/HDF5.jl.git"
@@ -15,7 +15,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/HDF5.jl.git#commit=$_commit")
-sha256sums=('f589c00aa7b6a15e46ea6884054eb4f8bc933167d77219f01061585763757948')
+sha256sums=('cd998c3f7e52e44aedea5167e24a743d8eaee300248ed6d43aad6784973f80f9')
 
 package_julia-git-hdf5-src() {
   cd HDF5.jl

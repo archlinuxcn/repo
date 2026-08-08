@@ -1,0 +1,18 @@
+pkgname=julia-git-gabs-src
+pkgver=1.3.8
+_commit=5f4a3103744043a67547e4e5694eca9926f58cae
+pkgrel=2
+pkgdesc="Gabs.jl"
+url="https://github.com/QuantumSavory/Gabs.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/QuantumSavory/Gabs.jl.git#commit=$_commit")
+sha256sums=('eddd52046d9199736fdabb0df01009fbebb932ffa7b5a15cc3657590ac12e8c7')
+
+package() {
+  cd Gabs.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Gabs "${pkgdir}" "${pkgname}" julia-git
+}

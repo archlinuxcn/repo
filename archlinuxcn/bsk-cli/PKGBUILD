@@ -1,0 +1,47 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=bsk-cli
+pkgver=0.1.9
+pkgrel=2
+pkgdesc="BrowserSkill CLI — let AI agents drive your browser through a local bsk daemon and the built-in agent skill"
+arch=('x86_64' 'aarch64')
+url="https://github.com/Tencent/BrowserSkill"
+license=('MIT')
+# aws-lc-sys/ring C code inherits CFLAGS via the cc crate; with the default
+# makepkg lto option (-flto in CFLAGS) its GCC-LTO objects fail to link with
+# the lld linker used in the build environment (undefined aws_lc_* symbols).
+# See Arch Rust package guidelines: "disable the lto option" for crates that
+# bundle C/C++ code such as ring.
+options=('!lto')
+depends=('glibc' 'gcc-libs')
+makedepends=('cargo')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Tencent/BrowserSkill/archive/refs/tags/cli-v${pkgver}.tar.gz")
+b2sums=('de5886506a19ac2f942cc5f62b4c77295522cb334921db6dcce45f71db2584cf40540e961411cd80825af3d3517b7229d38cc89d103153496927e6305d2b73e5')
+
+prepare() {
+    cd "BrowserSkill-cli-v${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "${CARCH}-unknown-linux-gnu"
+}
+
+build() {
+    cd "BrowserSkill-cli-v${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release --all-features
+}
+
+check() {
+    cd "BrowserSkill-cli-v${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    # upstream skill_install harness tests mutate HERMES_HOME and race under
+    # cargo's default parallel threads; serialize to honor the test's own
+    # "not in parallel" SAFETY assumption (flake is in upstream, not here)
+    cargo test --frozen --all-features -- --test-threads=1
+}
+
+package() {
+    cd "BrowserSkill-cli-v${pkgver}"
+    install -Dm0755 -t "${pkgdir}/usr/bin/" "target/release/bsk"
+    install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

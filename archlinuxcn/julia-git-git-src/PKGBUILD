@@ -1,0 +1,26 @@
+pkgname=julia-git-git-src
+pkgver=1.5.0
+_commit=eb038049fdc4fc7da8410d3e8d5af5bfbe235248
+pkgrel=3
+pkgdesc="Git.jl"
+url="https://github.com/JuliaVersionControl/Git.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaVersionControl/Git.jl.git#commit=$_commit"
+        0001-Hardcode-git-path.patch)
+sha256sums=('deeb5be2952a0dfc5fcf792b3167e5e1ccc4ff6ec2acd82759cadcd757d99688'
+            '0dda4bb1315b6435463fe86aaec865c1a94865ba8e49501c11a5ba4a9a7bd11f')
+
+prepare() {
+  cd Git.jl
+
+  patch -Np1 --no-backup-if-mismatch < "../0001-Hardcode-git-path.patch"
+}
+
+package() {
+  cd Git.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Git "${pkgdir}" "${pkgname}" julia-git
+}

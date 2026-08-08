@@ -1,0 +1,26 @@
+pkgname=julia-git-qt6svg_jll-src
+pkgver=6.10.2+0
+_commit=e4beea41e26701ecd2604f793797eb849740841f
+pkgrel=2
+pkgdesc="Qt6Svg_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/Qt6Svg_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git qt6-svg)
+source=("git+https://github.com/JuliaBinaryWrappers/Qt6Svg_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('2350382aceb0afd2e3e5fe43352f3f48d5dfc64a0bf7b981e2d4c2ee268ac425'
+            'ad2fdc54f80374bb982623fcb491383fe67e685f042c08d88464edaf661f09a0')
+
+build() {
+  cd Qt6Svg_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl Qt6Svg_jll ../jll.toml
+}
+
+package() {
+  cd Qt6Svg_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Qt6Svg_jll "${pkgdir}" "${pkgname}" julia-git
+}

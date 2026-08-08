@@ -1,0 +1,44 @@
+From: Arch Linux contributors
+Subject: [compiler-rt][sanitizer] Remove linux/scc.h
+
+linux/scc.h was dropped from the kernel UAPI headers and is no longer
+shipped by linux-api-headers >= 7.1, so building sanitizer_common fails
+with "fatal error: 'linux/scc.h' file not found".
+
+struct_scc_modem_sz and struct_scc_stat_sz are not referenced by the
+ioctl interceptors, so they can be removed along with the include.
+
+Backport of llvm/llvm-project commit 3dc4fd6dd ("[compiler-rt][sanitizer]
+Remove linux/scc.h", #194116), adjusted to apply on the ROCm fork, which
+predates the reindentation of that include block.
+
+--- a/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp
++++ b/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.cpp
+@@ -157,7 +157,6 @@
+ #include <linux/lp.h>
+ #include <linux/mroute.h>
+ #include <linux/mroute6.h>
+-#include <linux/scc.h>
+ #include <linux/serial.h>
+ #include <sys/msg.h>
+ #include <sys/ipc.h>
+@@ -532,8 +531,6 @@
+   unsigned struct_kbsentry_sz = sizeof(struct kbsentry);
+   unsigned struct_mtconfiginfo_sz = sizeof(struct mtconfiginfo);
+   unsigned struct_nr_parms_struct_sz = sizeof(struct nr_parms_struct);
+-  unsigned struct_scc_modem_sz = sizeof(struct scc_modem);
+-  unsigned struct_scc_stat_sz = sizeof(struct scc_stat);
+   unsigned struct_serial_multiport_struct_sz
+       = sizeof(struct serial_multiport_struct);
+   unsigned struct_serial_struct_sz = sizeof(struct serial_struct);
+--- a/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.h
++++ b/compiler-rt/lib/sanitizer_common/sanitizer_platform_limits_posix.h
+@@ -1119,8 +1119,6 @@
+ extern unsigned struct_kbsentry_sz;
+ extern unsigned struct_mtconfiginfo_sz;
+ extern unsigned struct_nr_parms_struct_sz;
+-extern unsigned struct_scc_modem_sz;
+-extern unsigned struct_scc_stat_sz;
+ extern unsigned struct_serial_multiport_struct_sz;
+ extern unsigned struct_serial_struct_sz;
+ extern unsigned struct_sockaddr_ax25_sz;

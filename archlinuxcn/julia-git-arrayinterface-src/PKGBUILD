@@ -1,6 +1,6 @@
 pkgname=julia-git-arrayinterface-src
-pkgver=7.22.0
-_commit=477b14448bb95f6f5250b2ad171a7047d38fdbbb
+pkgver=7.28.1
+_commit=bba033cb7fc32777cd3df95b7605eccff1675504
 pkgrel=1
 pkgdesc="ArrayInterface.jl"
 url="https://github.com/JuliaArrays/ArrayInterface.jl"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/ArrayInterface.jl#commit=$_commit")
-md5sums=('abb22e4cbc6bfbcc08d1b5ad66901dd4')
+md5sums=('1ab4a6edfd797a75c9e37e1f7b4ebf79')
 
 package() {
   cd ArrayInterface.jl
