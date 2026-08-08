@@ -107,11 +107,11 @@ prepare() {
 
   #git apply ../5133.patch
 
-	echo 5157
-  git apply ../5157.patch
+	echo 5157 # Merged but not yet in 50.beta
+	git apply ../5157.patch
 
-  echo 4921
-  git apply ../4921.patch
+	#echo 4921
+	#git apply ../4921.patch
 }
 
 build() {
