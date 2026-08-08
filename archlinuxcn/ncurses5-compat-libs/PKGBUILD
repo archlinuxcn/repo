@@ -1,4 +1,4 @@
-# Maintainer: Michał Wojdyła < micwoj9292 at gmail dot com >
+# Contributor: Michał Wojdyła < micwoj9292 at gmail dot com >
 # Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
 # Contributor: Mateusz Gozdek <mgozdekof@gmail.com>
 # Contributor: Allan McRae <allan@archlinux.org>
@@ -7,7 +7,7 @@
 pkgname=ncurses5-compat-libs
 _pkgname=ncurses
 pkgver=6.6
-pkgrel=1
+pkgrel=2
 pkgdesc='System V Release 4.0 curses emulation library, ABI 5'
 arch=(i686 x86_64)
 url='https://invisible-island.net/ncurses/ncurses.html'
@@ -15,7 +15,7 @@ license=(MIT)
 depends=(glibc gcc-libs sh)
 provides=(libtinfo5)
 conflicts=(libtinfo5)
-source=(https://ftp.gnu.org/pub/gnu/ncurses/ncurses-$pkgver.tar.gz{,.sig})
+source=(https://invisible-island.net/archives/ncurses/ncurses-$pkgver.tar.gz{,.asc})
 sha256sums=('355b4cbbed880b0381a04c46617b7656e362585d52e9cf84a67e2009b749ff11'
             'SKIP')
 validpgpkeys=('19882D92DDA4C400C22C0D56CC2AF4472167BE03')  # Thomas Dickey
