@@ -9,8 +9,7 @@ post_build_script: |
 update_on:
   - source: "alpm"
     alpm: "firefox"
-    from_pattern: '-.*'
-    to_pattern: ''
+    strip_release: true
 
 repo_depends:
   - portable-packer
