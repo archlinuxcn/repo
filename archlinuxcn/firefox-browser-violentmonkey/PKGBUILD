@@ -9,20 +9,20 @@ url='https://github.com/Violentmonkey/Violentmonkey'
 license=('MIT')
 groups=('zen-browser-addons')
 pkgdesc='Web Extension for saving a faithful copy of a complete web page in a single HTML file'
-makedepends=('nodejs' 'npm' 'unzip' 'zip' 'git' 'jq' 'yarn')
+makedepends=('nodejs' 'npm' 'unzip' 'zip' 'git' 'jq' 'pnpm')
 source=("source::git+https://github.com/Violentmonkey/Violentmonkey.git#tag=v${pkgver}")
 b2sums=('6448b8afa5276f2940b60621a51c3c5701a94ef41aade376a1e377d83debc42d74a995a1546f4eec16a18e4240b31dda315214b207408fc2251c386c183bd541')
 
 prepare() {
-  cd "${srcdir}/source"
-  yarn
+	cd "${srcdir}/source"
+	pnpm install --frozen-lockfile
 }
 
 build() {
-    cd "${srcdir}/source"
-    yarn build
-    cd dist
-    zip ../addon.zip -r .
+	cd "${srcdir}/source"
+	pnpm build
+	cd dist
+	zip ../addon.zip -r .
 }
 
 package_firefox-extension-violentmonkey() {
