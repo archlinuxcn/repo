@@ -3,7 +3,7 @@
 _pkgname=sing-box
 pkgname=sing-box-everyx
 pkgdesc="The universal proxy platform (with everyx's patches)."
-pkgver=1.13.16
+pkgver=1.13.18
 pkgrel=1
 arch=('i686' 'pentium4' 'x86_64' 'arm' 'armv7h' 'armv6h' 'aarch64')
 url='https://sing-box.sagernet.org/'
@@ -19,10 +19,10 @@ source=(
     '0002-cee193b.patch::https://github.com/SagerNet/sing-box/commit/cee193b0883a07899604bf24ce33420e6202d983.patch'
     '0003-8ba1ce2.patch::https://github.com/SagerNet/sing-box/commit/8ba1ce27b4d21bff87115f2a692c7f39ce46a18d.patch'
 )
-sha256sums=('5d8201669387d0caded7a22c71682b3c025afef7bac8704cceabed52ea8bde5d'
-            'b02dc749288b97dcb233c87699abd12ee6d0e6edcc263fe694ab56f5a2e8c186'
-            '9c7a3291fa0ae10e0cbd8e0664398412e561e141e5a13ffb4f42fefa6a3ac750'
-            'bd8994c8753253abccfd030335aac24ab755a1ab5f33996da2c19176be286687')
+sha256sums=('e41ed9d7adecd7597c1d5cc91818366a9538d94b41c244225ac40ac948c643f5'
+            '9e729e534d0597d675a4e76e05fef3451dd8be3bbdfa04f630fe7413fab64a8f'
+            'f425653b0f301ba9c7105a47e763566e48b70bff791738636ba37eb49393ac40'
+            'ee077a0d3dfb6bd49e9484f60400801d44fd956dde4bf0a8ba1023692d64550b')
 depends=("glibc")
 optdepends=('sing-geosite-rule-set: GeoSite rule sets' 'sing-geoip-rule-set: GeoIP rule sets')
 
