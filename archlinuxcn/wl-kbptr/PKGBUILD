@@ -2,15 +2,22 @@
 # Contributor: Clément Martinez <me at moverest dot xyz>
 pkgname=wl-kbptr
 pkgver=0.4.1
-pkgrel=2
+pkgrel=3
 url="https://github.com/moverest/wl-kbptr"
 pkgdesc="Control the mouse pointer with the keyboard on Wayland"
 arch=('x86_64')
 license=('GPL-3.0-only')
 depends=('cairo' 'wayland' 'libxkbcommon' 'opencv' 'pixman')
 makedepends=('meson' 'wayland-protocols')
-source=("https://github.com/moverest/wl-kbptr/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('03ac52afa42d7aa88f909f96b2c0e57f5706a11d5d0ff451f6052927571e0624')
+source=("https://github.com/moverest/wl-kbptr/archive/refs/tags/v$pkgver.tar.gz"
+        '104.patch')
+sha256sums=('03ac52afa42d7aa88f909f96b2c0e57f5706a11d5d0ff451f6052927571e0624'
+            '56e43cdcee53d73738349f50b00f2d8eed02ddbdcfcbd7a17418e7843a61b553')
+
+prepare() {
+    cd "$pkgname-$pkgver"
+    patch -p1 < ../104.patch
+}
 
 build() {
     arch-meson "$pkgname-$pkgver" build -Dopencv=enabled
