@@ -12,7 +12,7 @@ from lilaclib import *
 #post_build = aur_post_build
 
 def pre_build():
-    aur_pre_build()
+    aur_pre_build(maintainers=['Salama'])
     for line in edit_file('PKGBUILD'):
         if "java-environment>=" in line:
             line = line.replace("java-environment>=8","jdk8-openjdk")
