@@ -3,7 +3,9 @@ maintainers:
 
 pre_build_script: |
   update_pkgrel()
-  update_pkgver_and_pkgrel(_G.newver)
+
+  #  update_pkgver_and_pkgrel(_G.newver)
+
 post_build_script: |
   git_pkgbuild_commit()
 #  update_aur_repo()
@@ -11,7 +13,7 @@ post_build_script: |
 update_on:
   - source: "alpm"
     alpm: "firefox"
-    strip_release: true
+    #strip_release: true
   - source: "alpm"
     alpm: "ffmpeg"
     provided: "libavcodec.so"

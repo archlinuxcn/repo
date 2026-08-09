@@ -28,6 +28,11 @@ source=(
 md5sums=('ef9fbe1934606aeda2c6e94cac620723'
          '690d9e3d3104e1b668487a82e3f9889f')
 
+function pkgver() {
+	export LC_ALL=C
+	pacman -Q firefox | grep -oP '(?<=:)[^-]+'
+}
+
 function package() {
 	depends=( "ffmpeg" "portable"
 alsa-lib  at-spi2-core  bash  cairo  dbus  ffmpeg  fontconfig  freetype2  gcc-libs  gdk-pixbuf2
