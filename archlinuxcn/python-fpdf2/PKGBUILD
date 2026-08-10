@@ -3,7 +3,7 @@
 
 pkgname=python-fpdf2
 _srcname=${pkgname#python-}
-pkgver=2.8.7
+pkgver=2.8.8
 pkgrel=1
 pkgdesc="Simple PDF generation for Python"
 arch=('any')
@@ -13,7 +13,7 @@ conflicts=('python-fpdf')
 depends=('python' 'python-pillow' 'python-defusedxml' 'python-fonttools')
 makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/py-pdf/${_srcname}/archive/${pkgver}.tar.gz")
-sha256sums=('cabfa24a1daffc3ab6ed02ca2203b64cee33af573725bab46c133c79f42546c5')
+sha256sums=('bb449d5b06f7a8ab5442d291ee2c40207be6d31317df0d331a81bb096d66a2e4')
 
 build() {
 	cd "${_srcname}-${pkgver}/"
