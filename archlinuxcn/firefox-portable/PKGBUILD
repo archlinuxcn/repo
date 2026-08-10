@@ -34,10 +34,40 @@ function pkgver() {
 }
 
 function package() {
-	depends=("ffmpeg" "portable"
-alsa-lib  at-spi2-core  bash  cairo  dbus  ffmpeg  fontconfig  freetype2  gcc-libs  gdk-pixbuf2
-glib2  glibc  gtk3  hicolor-icon-theme  libpulse  libx11  libxcb  libxcomposite  libxdamage
-libxext  libxfixes  libxrandr  libxss  libxt  mime-types  nspr  nss  pango  ttf-font)
+	depends=(
+		"ffmpeg"
+		"portable"
+		alsa-lib
+		at-spi2-core
+		bash
+		cairo
+		dbus
+		ffmpeg
+		fontconfig
+		freetype2
+		gdk-pixbuf2
+		glib2
+		glibc
+		gtk3
+		hicolor-icon-theme
+		libgcc
+		libpulse
+		libstdc++
+		libx11
+		libxcb
+		libxcomposite
+		libxdamage
+		libxext
+		libxfixes
+		libxrandr
+		libxss
+		libxt
+		mime-types
+		nspr
+		nss
+		pango
+		ttf-font
+	)
 
 	export pkgdir
 	export pkgname
