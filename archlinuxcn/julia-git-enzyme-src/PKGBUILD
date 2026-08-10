@@ -1,7 +1,7 @@
 pkgname=julia-git-enzyme-src
-pkgver=0.13.198
-_commit=59156d05545488a1b06182a48514d540834fd5fb
-pkgrel=2
+pkgver=0.13.199
+_commit=4cbb77e558b77af2c99e17cdcf21b84f1186d6f7
+pkgrel=1
 pkgdesc="Enzyme.jl"
 url="https://github.com/EnzymeAD/Enzyme.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/EnzymeAD/Enzyme.jl.git#commit=$_commit"
         0001-Remove-unnecessary-rule-for-hvcat_fill.patch)
-sha256sums=('65557ed3629da53c76c05178c99c98bf8175bce2064584ea116574495d24b9bc'
+sha256sums=('a87606608170f5f9bd2b63a45414cbaf5c117827de693be4d40f2863112f7160'
             'c2cb54ab09370aed8b43993687aae4d5a673344fd2260224286379446964e61e')
 
 prepare() {
