@@ -1,6 +1,6 @@
 pkgname=julia-git-structutils-src
-pkgver=2.8.3
-_commit=82102dfda311871534253511d1c31c9252e2fe80
+pkgver=2.8.5
+_commit=8ede2299c46edbb94314d3fd34beb1698f27e251
 pkgrel=1
 pkgdesc="StructUtils.jl"
 url="https://github.com/JuliaServices/StructUtils.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaServices/StructUtils.jl.git#commit=$_commit")
-sha256sums=('5529a31ae5db46328923ff2a9a8155b6e26404b6824dd0fa572523798fe6cc2a')
+sha256sums=('2789f0b721b5461482102021c5fad2940410ae1899d85d2e8da84b904e22e04a')
 
 package() {
   cd StructUtils.jl
