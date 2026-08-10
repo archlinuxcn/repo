@@ -2,8 +2,8 @@
 
 _pkgname=pyvcd
 pkgname=python-$_pkgname
-pkgver=0.4.1
-pkgrel=3
+pkgver=0.4.2
+pkgrel=1
 pkgdesc='Python package for writing Value Change Dump (VCD) files'
 arch=('any')
 url='https://github.com/SanDisk-Open-Source/pyvcd'
@@ -12,7 +12,7 @@ depends=('python')
 makedepends=('python-setuptools-scm' 'python-setuptools' 'python-build'
              'python-installer' 'python-wheel')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha512sums=('3ae5e965bde0fc5e70b8b5f0b5fddd9019f9e545949c987177ff2bc7749df2efaf579990c36c0f8eb550892389995c1e0345b9654061030e3a00700c2f1bd382')
+sha512sums=('b2aa03524f4322db0db8a8391ad1864e88667e51e48d6c6b2f8306c1f76c51e36475436f99c27d2f128beca6c58658d2b1cddf0d6a17a931ff4303ef0376fb8f')
 
 export SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver
 
