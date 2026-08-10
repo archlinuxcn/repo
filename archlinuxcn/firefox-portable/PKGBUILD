@@ -30,11 +30,11 @@ md5sums=('ef9fbe1934606aeda2c6e94cac620723'
 
 function pkgver() {
 	export LC_ALL=C
-	pacman -Q firefox | grep -oP '(?<=:)[^-]+'
+	pacman -Si firefox | grep Version | awk '{print $NF}' | cut -d'-' -f1
 }
 
 function package() {
-	depends=( "ffmpeg" "portable"
+	depends=("ffmpeg" "portable"
 alsa-lib  at-spi2-core  bash  cairo  dbus  ffmpeg  fontconfig  freetype2  gcc-libs  gdk-pixbuf2
 glib2  glibc  gtk3  hicolor-icon-theme  libpulse  libx11  libxcb  libxcomposite  libxdamage
 libxext  libxfixes  libxrandr  libxss  libxt  mime-types  nspr  nss  pango  ttf-font)
