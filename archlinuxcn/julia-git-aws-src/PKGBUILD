@@ -1,6 +1,6 @@
 pkgname=julia-git-aws-src
-pkgver=1.98.1
-_commit=9920f9cda3016b3f15b5d8ba22ae05056fd06d36
+pkgver=1.99.0
+_commit=dd2ed27c8d5efe70e17551e60173733f54601903
 pkgrel=1
 pkgdesc="AWS.jl"
 url="https://github.com/JuliaCloud/AWS.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaCloud/AWS.jl.git#commit=$_commit")
-sha256sums=('74cf44e00b644c497414cdb2aef8960f2f1f307574cc70c8d4aab086759290f8')
+sha256sums=('fea77685d5d560ffd6f0b15f77626a3e38c92f4284f1bad084c96aa0d9c8fd8b')
 
 package() {
   cd AWS.jl
