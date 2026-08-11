@@ -8,14 +8,19 @@ url="https://github.com/akirco/pigma"
 license=('Apache-2.0')
 depends=('alsa-lib' 'libgcc')
 makedepends=('cargo' 'git')
-source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('SKIP')
+source=(
+    "$pkgname::git+${url}.git#tag=v${pkgver}"
+    "y7dl::git+https://github.com/akirco/y7dl.git"
+)
+sha256sums=('SKIP' 'SKIP')
 options=('!lto')
 
 prepare() {
     cd "${pkgname}/"
-    git submodule update --init --recursive
     rm -f .cargo/config.toml
+    git submodule init
+    git -c protocol.file.allow=always submodule set-url crates/y7dl "$srcdir/y7dl"
+    git -c protocol.file.allow=always submodule update crates/y7dl
     export RUSTUP_TOOLCHAIN=stable
     cargo fetch --locked --target "$(rustc --print host-tuple)"
 }
