@@ -57,7 +57,7 @@ package() {
 	install -Dm644 "logo.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/tunet.png"
 
 	# Service
-	install -Dm644 "tunet-service/tunet@.service" -t "${pkgdir}/usr/lib/systemd/system/"
+	install -Dm644 tunet-service/tunet{,-dbus}.service -t "${pkgdir}/usr/lib/systemd/user/"
 
 	# License
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
