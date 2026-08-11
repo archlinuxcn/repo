@@ -1,0 +1,17 @@
+# Maintainer: akirco <earlfx@163.com>
+pkgname=pigma-bin
+pkgver=0.2.6
+pkgrel=1
+pkgdesc="A netease cloud music client"
+arch=('x86_64')
+url="https://github.com/akirco/pigma"
+license=('Apache-2.0')
+depends=('alsa-lib' 'gcc-libs')
+provides=("${pkgname%-bin}")
+conflicts=("${pkgname%-bin}")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/releases/download/v${pkgver}/pigma-$CARCH-unknown-linux-gnu.tar.gz")
+sha256sums=('1629b9adb39b3fe31d6a99e3e5872744e620c6400db508db137f747e91a513cc')
+
+package() {
+    install -Dm755 "${srcdir}/pigma" "${pkgdir}/usr/bin/pigma"
+}
