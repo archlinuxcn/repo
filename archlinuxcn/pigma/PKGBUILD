@@ -9,7 +9,7 @@ license=('Apache-2.0')
 depends=('alsa-lib' 'glibc' 'libgcc')
 makedepends=('cargo' 'git')
 source=(
-    "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+    "$pkgname::git+${url}.git#tag=v${pkgver}"
     "y7dl::git+https://github.com/akirco/y7dl.git"
 )
 sha256sums=('316cff13b28ba7711089dfc802dfea19b33102bbfadbad2a4c5df8325496b41a'
@@ -17,29 +17,30 @@ sha256sums=('316cff13b28ba7711089dfc802dfea19b33102bbfadbad2a4c5df8325496b41a'
 options=('!lto')
 
 prepare() {
-    cd "${pkgname}-${pkgver}/"
+    cd "${pkgname}/"
     rm -f .cargo/config.toml
-    rm -rf "crates/y7dl"
-    mv "$srcdir/y7dl" "crates/y7dl"
+    git submodule init
+    git -c protocol.file.allow=always submodule set-url crates/y7dl "$srcdir/y7dl"
+    git -c protocol.file.allow=always submodule update crates/y7dl
     export RUSTUP_TOOLCHAIN=stable
     cargo fetch --locked --target "$(rustc --print host-tuple)"
 }
 
 build() {
-    cd "${pkgname}-${pkgver}/"
+    cd "${pkgname}/"
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
     cargo build --frozen --release --all-features
 }
 
 check() {
-    cd "${pkgname}-${pkgver}/"
+    cd "${pkgname}/"
     export RUSTUP_TOOLCHAIN=stable
     cargo test --frozen --all-features
 }
 
 package() {
-    cd "${pkgname}-${pkgver}/"
+    cd "${pkgname}/"
     install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
     install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 }
