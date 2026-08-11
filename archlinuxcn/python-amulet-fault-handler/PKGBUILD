@@ -39,7 +39,7 @@ function build() {
 }
 
 function package() {
-	"${srcdir}/source"
+	cd "${srcdir}/source"
 	#python setup.py install --root="$pkgdir" --optimize=1
 	python -m installer --destdir="$pkgdir" dist/*.whl
 }
