@@ -1,14 +1,16 @@
 [Unit]
-Description=A high performance web server and a reverse proxy server
+Description=OpenResty - A Fast and Scalable Web Platform by Extending NGINX with Lua
 After=syslog.target network.target
 
 [Service]
 Type=forking
-PIDFile=/run/openresty.pid
-ExecStartPre=/opt/openresty/nginx/sbin/nginx -t -q -g 'pid /run/openresty.pid; daemon on; master_process on;'
-ExecStart=/opt/openresty/nginx/sbin/nginx -g 'pid /run/openresty.pid; daemon on; master_process on;'
-ExecReload=/opt/openresty/nginx/sbin/nginx -g 'pid /run/openresty.pid; daemon on; master_process on;' -s reload
-ExecStop=/opt/openresty/nginx/sbin/nginx -g 'pid /run/openresty.pid;' -s quit
+PIDFile=/run/openresty/nginx.pid
+RuntimeDirectory=openresty
+LogsDirectory=openresty
+ExecStartPre=/opt/openresty/nginx/sbin/nginx -t -q
+ExecStart=/opt/openresty/nginx/sbin/nginx
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s QUIT $MAINPID
 
 [Install]
 WantedBy=multi-user.target
