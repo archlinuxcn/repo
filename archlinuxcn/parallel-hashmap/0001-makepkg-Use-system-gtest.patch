@@ -1,0 +1,33 @@
+From 9f9289177e1298a57d7b1957db3a065aab6d8e9c Mon Sep 17 00:00:00 2001
+From: KokaKiwi <kokakiwi+git@kokakiwi.net>
+Date: Sat, 21 Sep 2024 18:20:18 +0200
+Subject: [PATCH] makepkg: Use system gtest
+
+---
+ CMakeLists.txt | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7396052..e9c5744 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -95,14 +95,8 @@ endif()
+ 
+ if (PHMAP_BUILD_TESTS)
+ 
+-    if (NOT PHMAP_GTEST_LIBS)
+-        include(cmake/DownloadGTest.cmake)
+-
+-        check_target(gtest)
+-        check_target(gtest_main)
+-        check_target(gmock)
+-        set(PHMAP_GTEST_LIBS gmock_main)
+-    endif()
++    find_package(GTest REQUIRED)
++    set(PHMAP_GTEST_LIBS GTest::gtest GTest::gtest_main GTest::gmock)
+ 
+     enable_testing()
+ 
+-- 
+2.46.1
+

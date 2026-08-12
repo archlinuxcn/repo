@@ -2,7 +2,7 @@
 
 pkgname=tunet-rust-git
 _pkgname=tunet-rust
-pkgver=0.12.0.r0.gb84e531
+pkgver=0.12.0.r9.g9727f20
 pkgrel=1
 pkgdesc="A Rust-based client for network authentication at Tsinghua University | 清华大学校园网 Rust 客户端"
 url="https://github.com/Berrysoft/tunet-rust"
@@ -57,7 +57,7 @@ package() {
 	install -Dm644 "logo.png" "${pkgdir}/usr/share/icons/hicolor/256x256/apps/tunet.png"
 
 	# Service
-	install -Dm644 "tunet-service/tunet@.service" -t "${pkgdir}/usr/lib/systemd/system/"
+	install -Dm644 tunet-service/tunet{,-dbus}.service -t "${pkgdir}/usr/lib/systemd/user/"
 
 	# License
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"

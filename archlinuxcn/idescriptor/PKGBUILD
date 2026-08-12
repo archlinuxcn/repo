@@ -44,36 +44,25 @@ depends=(
 	'gst-libav'
 	'sqlite'
 )
-makedepends=('git' 'cargo' 'cmake' 'go')
+makedepends=('git' 'cargo' 'cmake')
 source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/iDescriptor/uxplay.git"
-	"git+https://github.com/uncor3/libipatool-go.git"
-	"git+https://github.com/uncor3/idevice.git"
-	"git+https://github.com/libZQT/ZUpdater.git")
+	"git+https://github.com/uncor3/idevice.git")
 sha256sums=('32c780ac4d8667f24d8b73eac2d00fca55c445b838ac96efa105bcf732f79929'
-            'SKIP'
-            'SKIP'
             'SKIP'
             'SKIP')
 
 prepare() {
 	cd "${_srcname}/"
-	git rm lib/win-ifuse
 
 	git submodule init
 	git config submodule.lib/uxplay.url "${srcdir}/uxplay"
-	git config submodule.lib/ipatool-go.url "${srcdir}/libipatool-go"
 	git config submodule.lib/idevice-rs.url "${srcdir}/idevice"
-	git config submodule.lib/zupdater.url "${srcdir}/ZUpdater"
 	git -c protocol.file.allow=always submodule update
 
 	pushd src/rust
 	cargo fetch --locked --target host-tuple
 	popd
-
-	cd lib/ipatool-go
-	export GOPATH="${srcdir}"
-	go mod download -modcacherw -x
 }
 
 build() {

@@ -1,7 +1,7 @@
 # Maintainer: George Hu <integral@archlinux.org>
 
 pkgname=kelivo
-pkgver=1.1.17
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="A Flutter LLM Chat Client"
 arch=('x86_64')
@@ -30,7 +30,7 @@ source=(
 	"${pkgname}-${pkgver}.tar.gz::https://github.com/Chevey339/${pkgname}/archive/v${pkgver}.tar.gz"
 	"com.psyche.${pkgname}.desktop"
 )
-sha256sums=('8fa8ad50063c4cb3c83d2d1e48d4326b54bca39ae664faa45537a5db37764c2e'
+sha256sums=('6ecbf35b5edf0276a1bc998c77a2fd72209cfa9ca0c678f394e66ecd80ba7c45'
             'ecae7320d7a984c40804ff8c3e075ce45ff302052f94ba61abc1103b825f6bcd')
 
 prepare() {
