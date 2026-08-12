@@ -40,7 +40,9 @@ depends=(
 	'gst-plugins-bad'
 	'gst-libav'
 	'hicolor-icon-theme'
+	'libssh2'
 	'sqlite'
+	'zstd'
 )
 optdepends=('ifuse: use ifuse provided by libimobiledevice instead of Rust implementation')
 makedepends=('git' 'cargo' 'cmake')
@@ -67,7 +69,9 @@ build() {
 	cd "${_srcname}/"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
+	export LIBSSH2_SYS_USE_PKG_CONFIG=1
 	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+	export ZSTD_SYS_USE_PKG_CONFIG=1
 	export CFLAGS+=" -ffat-lto-objects"
 	export CXXFLAGS+=" -ffat-lto-objects"
 	cargo build --release --features package_manager
