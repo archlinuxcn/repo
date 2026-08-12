@@ -3,7 +3,7 @@
 
 pkgname=idescriptor
 _srcname=iDescriptor
-pkgver=0.5.0
+pkgver=0.6.1
 pkgrel=1
 pkgdesc="A free, open-source, and cross-platform iDevice management tool"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -47,7 +47,7 @@ makedepends=('git' 'cargo' 'cmake')
 source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/iDescriptor/uxplay.git"
 	"git+https://github.com/uncor3/idevice.git")
-sha256sums=('32c780ac4d8667f24d8b73eac2d00fca55c445b838ac96efa105bcf732f79929'
+sha256sums=('e3bacca4647f927a0f7772c51fe46b45dac9c5d321f95d459d6e6549dc1d539d'
             'SKIP'
             'SKIP')
 
