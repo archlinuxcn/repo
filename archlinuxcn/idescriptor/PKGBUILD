@@ -10,18 +10,12 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/${_srcname}/${_srcname}"
 license=('AGPL-3.0-or-later')
 depends=(
-	'libimobiledevice>=1.4.0'
-	'libtatsu>=1.0.5'
-	'libimobiledevice-glue'
-	'libirecovery'
 	'libplist'
 	'usbmuxd'
 	'libusbmuxd'
 	'openssl'
 	'libssh'
 	'libusb'
-	'pugixml'
-	'qrencode'
 	'libheif'
 	'libzip'
 	'qt6-base'
@@ -30,20 +24,25 @@ depends=(
 	'qt6-serialport'
 	'qt6-positioning'
 	'qt6-location'
-	'qtermwidget'
 	'avahi'
 	'libsecret'
 	'org.freedesktop.secrets'
 	'ffmpeg'
-	'ifuse'
 	'gstreamer'
 	'gst-plugins-base-libs'
+	'qt6-declarative'
+	'qt6-5compat'
+	'qt6-multimedia'
+	'qt6-svg'
+	'gst-plugin-qmlgl'
+	'gst-plugin-qml6'
 	'gst-plugins-good'
 	'gst-plugins-bad'
-	'gst-plugins-ugly'
 	'gst-libav'
+	'hicolor-icon-theme'
 	'sqlite'
 )
+optdepends=('ifuse: use ifuse provided by libimobiledevice instead of Rust implementation')
 makedepends=('git' 'cargo' 'cmake')
 source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/iDescriptor/uxplay.git"
