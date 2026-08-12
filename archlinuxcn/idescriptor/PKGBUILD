@@ -60,29 +60,30 @@ prepare() {
 	git config submodule.lib/idevice-rs.url "${srcdir}/idevice"
 	git -c protocol.file.allow=always submodule update
 
-	pushd src/rust
+	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --locked --target host-tuple
-	popd
 }
 
 build() {
+	cd "${_srcname}/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
 	export CFLAGS+=" -ffat-lto-objects"
 	export CXXFLAGS+=" -ffat-lto-objects"
-	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
-	local cmake_options=(
-		-B build
-		-S "${_srcname}"
-		-D CMAKE_BUILD_TYPE=None
-		-D CMAKE_INSTALL_PREFIX=/usr
-		-D PACKAGE_MANAGER_MANAGED=ON
-		-D ENABLE_RECOVERY_DEVICE_SUPPORT=ON
-		-D NO_MARCH_NATIVE=ON
-	)
-
-	cmake "${cmake_options[@]}"
-	cmake --build build
+	cargo build --release --features package_manager
 }
 
 package() {
-	DESTDIR="${pkgdir}" cmake --install build
+	cd "${_srcname}/"
+	local _app_id="io.github.${pkgname}.${_srcname}"
+
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm644 "${_app_id}.desktop" -t "${pkgdir}/usr/share/applications/"
+	install -Dm644 "${_app_id}.metainfo.xml" -t "${pkgdir}/usr/share/metainfo/"
+
+	for r in 16 32 256 512; do
+		install -Dm644 "packaging/shared/resources/app-icon/icon-${r}.png" \
+			"${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/${_app_id}.png"
+	done
 }
