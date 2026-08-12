@@ -44,9 +44,11 @@ depends=(
 )
 optdepends=('ifuse: use ifuse provided by libimobiledevice instead of Rust implementation')
 makedepends=('git' 'cargo' 'cmake')
-source=("git+${url}.git#tag=v${pkgver}"
-	"git+https://github.com/iDescriptor/uxplay.git"
-	"git+https://github.com/uncor3/idevice.git")
+source=(
+	"git+${url}.git#tag=v${pkgver}"
+	"git+https://github.com/${_srcname}/uxplay.git"
+	"git+https://github.com/uncor3/idevice.git"
+)
 sha256sums=('e3bacca4647f927a0f7772c51fe46b45dac9c5d321f95d459d6e6549dc1d539d'
             'SKIP'
             'SKIP')
