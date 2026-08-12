@@ -1,19 +1,30 @@
 # Maintainer:
 # Contributor: Patrick Northon <northon_patrick3@yahoo.ca>
 
+: ${_use_sodeps:=false}
+
 : ${_install_path:=usr/lib}
 
 _pkgname="localsend"
 pkgname="$_pkgname"
-pkgver=1.17.0
-pkgrel=3
+pkgver=1.18.1
+pkgrel=1
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
 license=('Apache-2.0')
 arch=('x86_64' 'aarch64')
 
 depends=(
+  'at-spi2-core'
+  'cairo'
+  'fontconfig'
+  'gdk-pixbuf2'
+  'glib2'
+  'gtk3'
+  'hicolor-icon-theme'
   'libayatana-appindicator'
+  'libepoxy'
+  'pango'
 )
 makedepends=(
   'clang'
@@ -32,13 +43,17 @@ options=('!lto')
 _pkgsrc="$_pkgname-$pkgver"
 _pkgext="tar.gz"
 source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
-sha256sums=('921c5843947580ae1b64d0d3a6edeefb9e07e8a917d0830af6a47d42e40de264')
+sha256sums=('555a73c39e2cfc01ee8cf0033ae11610725829d8289aa9c4794446241d9de2b0')
 
 prepare() {
-  sed -E 's&^(channel) = .*$&\1 = "stable"&' -i "$_pkgsrc/app/rust-toolchain.toml"
+  sed -E 's&^(channel) = .*$&\1 = "stable"&' -i "$_pkgsrc/packages/localsend_isolates/rust-toolchain.toml"
 }
 
 build() (
+  local _units=$(($(nproc) > 16 ? $(nproc) : 16))
+  export CARGO_PROFILE_RELEASE_LTO=false
+  export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=$_units
+
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
 
   export CXXFLAGS+=' -Wno-error=deprecated-declarations'
@@ -53,6 +68,23 @@ build() (
 )
 
 package() {
+  if [[ "${_use_sodeps::1}" == "t" ]]; then
+    eval "depends=(
+      libatk-1.0.so
+      libcairo.so
+      libepoxy.so
+      libfontconfig.so
+      libgdk-3.so
+      libgdk_pixbuf-2.0.so
+      libgio-2.0.so
+      libglib-2.0.so
+      libgobject-2.0.so
+      libgtk-3.so
+      libpango-1.0.so
+      libpangocairo-1.0.so
+    )"
+  fi
+
   local _arch="x64"
   if [[ "${CARCH::1}" == "a" ]]; then
     _arch="arm64"
@@ -62,8 +94,8 @@ package() {
 
   # files
   install -Dm755 "localsend_app" "$pkgdir/$_install_path/$_pkgname/$_pkgname"
-  cp --reflink=auto -r lib/ "$pkgdir/$_install_path/$_pkgname/"
-  cp --reflink=auto -r data/ "$pkgdir/$_install_path/$_pkgname/"
+  cp -r lib/ "$pkgdir/$_install_path/$_pkgname/"
+  cp -r data/ "$pkgdir/$_install_path/$_pkgname/"
 
   # runpath
   patchelf --set-rpath '$ORIGIN/lib' "$pkgdir/$_install_path/$_pkgname/$_pkgname"
@@ -73,11 +105,11 @@ package() {
   done
 
   # symlink
-  install -dm755 "${pkgdir}/usr/bin"
+  mkdir -pm755 "${pkgdir}/usr/bin"
   ln -sfr "$pkgdir/$_install_path/$_pkgname/$_pkgname" "$pkgdir/usr/bin/${_pkgname}"
 
   # icon
-  install -Dm644 "$srcdir/$_pkgsrc/app/build/flutter_assets/assets/img/logo-512.png" "$pkgdir/usr/share/pixmaps/$_pkgname.png"
+  install -Dm644 "$srcdir/$_pkgsrc/app/build/flutter_assets/assets/img/logo-512.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$_pkgname.png"
 
   # launcher
   install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/$_pkgname.desktop" << END
