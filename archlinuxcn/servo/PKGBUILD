@@ -2,7 +2,7 @@
 
 pkgname=servo
 pkgver=0.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Parallel Browser Project: web browser written in Rust'
 arch=(x86_64 i686)
 url=https://github.com/servo/servo
@@ -35,7 +35,7 @@ makedepends=(clang
              rust
              uv)
 backup=("etc/profile.d/$pkgname".{csh,sh})
-source=("$pkgname::git+$url.git#tag=$pkgver")
+source=("$pkgname::git+$url.git#tag=v$pkgver")
 sha256sums=('3936fe51a1a24d2a4ac72c33848c1f72f148282e579dfc32d83df2331027287d')
 
 _srcenv() {
