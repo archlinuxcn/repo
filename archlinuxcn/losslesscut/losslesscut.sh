@@ -2,7 +2,6 @@
 set -e
 _APPDIR="/usr/lib/@appname@"
 _RUNNAME="${_APPDIR}/@runname@"
-_OPTIONS="@options@"
 export PATH="${_APPDIR}:${PATH}"
 export LD_LIBRARY_PATH="${_APPDIR}/swiftshader:${_APPDIR}/lib:${LD_LIBRARY_PATH}"
 export ELECTRON_IS_DEV=0
@@ -31,9 +30,8 @@ if [[ "${_WAYLAND_OPTION}" == true ]]; then
     echo "Forcing Wayland"
     flags+=("--enable-features=UseOzonePlatform,WaylandWindowDecorations,VaapiVideoDecodeLinuxGL" "--ozone-platform=wayland")
 fi
-cd "${_APPDIR}"
 if [[ "${EUID}" -ne 0 ]] || [[ "${ELECTRON_RUN_AS_NODE}" ]]; then
-    exec electron@electronversion@ "${_RUNNAME}" "${_OPTIONS}" "${flags[@]}" "$@" || exit $?
+    exec electron@electronversion@ "${_RUNNAME}" "${flags[@]}" "$@" || exit $?
 else
-    exec electron@electronversion@ "${_RUNNAME}" "${_OPTIONS}" --no-sandbox "${flags[@]}" "$@" || exit $?
+    exec electron@electronversion@ "${_RUNNAME}" --no-sandbox "${flags[@]}" "$@" || exit $?
 fi
