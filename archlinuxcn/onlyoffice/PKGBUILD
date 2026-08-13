@@ -3,7 +3,7 @@
 # Contributor: Mikalai Ramanovich < narod.ru: nikolay.romanovich >
 pkgname=onlyoffice
 pkgver=9.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An office suite that combines text, spreadsheet and presentation editors allowing to create, view and edit local documents"
 arch=(x86_64)
 url="https://www.onlyoffice.com/desktop.aspx"
@@ -27,6 +27,7 @@ makedepends=(
     grunt-cli
     cmake
     p7zip
+    patchelf
     # v8
     ninja
     # grunt
@@ -64,7 +65,7 @@ source=(
     "$pkgname-document-templates::git+${_url}/document-templates#tag=$_tag"
     "onlyoffice.github.io::git+${_url}/onlyoffice.github.io"
     # CEF
-    "https://github.com/ONLYOFFICE-data/build_tools_data/raw/refs/heads/master/cef/5414/linux_64/cef_binary.7z"
+    "cef_5414.tar.bz2::https://cef-builds.spotifycdn.com/cef_binary_109.1.18%2Bgf1c41e4%2Bchromium-109.0.5414.120_linux64_minimal.tar.bz2"
     # V8
     "git+https://chromium.googlesource.com/chromium/tools/depot_tools.git#commit=8dde9800ee2b8326ab11a87abd67d3bd9f8c8773"
     "git+https://github.com/v8/v8#tag=9.0.257.43" # 9.0-lkgr
@@ -102,7 +103,7 @@ sha256sums=('2256c94f02290da096069260d2f4c4bb5482632128873c623cd25f754f77dc5e'
             '55c1d70a8bdd8f818af8e4c784bfc03f0569fcb863cc6797f888b749153ed720'
             '4d9bf0039261bb531663603171b63a4a5339c4c0644e9859991d78ddbf446573'
             'SKIP'
-            'dff9aa53c147fd0c6a03f57e17aef10b0cee3fe7c4dc18b3b1a8a7a20bf0a145'
+            'ba4b9ca37cb777b256fdf5e18c9bdbc66ebf060367e8542398676b42bbbc0e59'
             'cd7a982bf79eae86a8b7727193e2a9feccd1388cd0cc474b8d786ac6dc695cfe'
             '8cd5a305b9ce85066094963a5d28ad221f9598b9e98e569bf47c61f570c2988b'
             '1370503ff352608f587486324bde040a9038f4cbf2d21085f821121dd49dbede'
@@ -210,9 +211,14 @@ EOF
         v8/third_party/llvm-build/Release+Asserts/lib/libstdc++.so.6
     patch -Np1 -d v8 < "$srcdir/v8-89-fix-cstdint.diff"
 
-    # Move CEF into the expected place
+    # Convert official CEF distribution tarball to the format used by Onlyoffice.
+    cd "$srcdir"
+    mkdir -p cef_binary
+    # Onlyoffice uses Release/ and Resources/
+    tar -C cef_binary -xf cef_5414.tar.bz2 --strip-components=1 --wildcards '*/Release' '*/Resources'
+    # Place expected cef_binary.7z into the expected place
     mkdir -p "$srcdir"/core/Common/3dParty/cef/linux_64
-    mv "$srcdir"/cef_binary.7z "$srcdir"/core/Common/3dParty/cef/linux_64/
+    7z a "$srcdir"/core/Common/3dParty/cef/linux_64/cef_binary.7z cef_binary/
 
     # We need to apply the patches after the update
     cd "$srcdir"
@@ -273,6 +279,18 @@ package() {
     # Symlink for backward compatibility
     ln -s onlyoffice-desktopeditors "$pkgdir"/usr/bin/desktopeditors
     cp -r opt "$pkgdir"
+
+    # Official CEF 109 resolves malloc_usable_size via RTLD_NEXT. Make CEF a
+    # direct, early dependency so libc follows it in the ELF loader link map.
+    local _desktopeditors="$pkgdir/opt/onlyoffice/desktopeditors/DesktopEditors"
+    if patchelf --print-needed "$_desktopeditors" | grep -Fxq libcef.so; then
+        patchelf --remove-needed libcef.so "$_desktopeditors"
+    fi
+    patchelf --add-needed libcef.so "$_desktopeditors"
+    [[ $(patchelf --print-needed "$_desktopeditors" | head -n 1) == libcef.so ]] || {
+        error 'failed to place libcef.so first in DesktopEditors DT_NEEDED entries'
+        return 1
+    }
 
     # We are using system Qt5 and icu
     rm "$pkgdir"/opt/onlyoffice/desktopeditors/libQt5*
