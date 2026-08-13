@@ -1,5 +1,5 @@
 pkgname=pandoc-bin
-pkgver=3.10.1
+pkgver=3.10.2
 pkgrel=1
 pkgdesc="Conversion between documentation formats"
 url="https://pandoc.org"
@@ -25,9 +25,9 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/jgm/pandoc/archive/${pkgver
 source_x86_64=("https://github.com/jgm/pandoc/releases/download/${pkgver}/pandoc-${pkgver}-linux-amd64.tar.gz")
 source_aarch64=("https://github.com/jgm/pandoc/releases/download/${pkgver}/pandoc-${pkgver}-linux-arm64.tar.gz")
 
-sha256sums=('faee98f42ed1592b2feb8da7fdfa87a23b679ca27ff883e06030f89c25c91ba9')
-sha256sums_x86_64=('72948bf5784f560d5ad1876709daca27e0667f262da727bb33f77b58e52df2f5')
-sha256sums_aarch64=('cd3963da375793a4804c65ae538b4f7b9c23f87cac7f6c74a1cf5e2fff7e8d59')
+sha256sums=('ec4c5d36e355785802601986637369ada24079ac20af6c0ee85c79502d77b3f0')
+sha256sums_x86_64=('c7edd535941c48be6a362081a748272837de81ae11777202d9c341d3d8261c9a')
+sha256sums_aarch64=('1c4d69f2a092bd47cb180e58a4aab7b9637101ced928252458c7d41a7f7fa71d')
 
 package() {
   cd "${srcdir}/pandoc-${pkgver}"
