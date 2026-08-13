@@ -22,7 +22,7 @@ depends=(
     'yara' 'libyara.so'
     'file' 'libmagic.so'
     'libglvnd' # needed in runtime
-    'glibc' 'gcc-libs' 'bash'
+    'glibc' 'libstdc++' 'libgcc' 'bash'
     'libxrandr' # needed in runtime
     'fontconfig'
     'capstone'
@@ -85,7 +85,14 @@ prepare() {
             git submodule set-url external/"$name" "$srcdir/$name"
             git -c protocol.file.allow=always submodule update external/"$name"
         done
+        git cherry-pick -n aa03bdebac4f270f2f29de4815c27032ba6a6155 # Fix/archlinux fmt (#241)
     popd
+
+    pushd lib/external/disassembler
+        git cherry-pick -n be603f7efa3fd57a441d5ebd1155eec68faf2291 # fix: archlinux build
+    popd
+
+    git cherry-pick -n 7f9f7289400029b0c6eceae373e215e5eb3ebaee # build: archlinux and MSVC (#2766)
 }
 
 build() {
