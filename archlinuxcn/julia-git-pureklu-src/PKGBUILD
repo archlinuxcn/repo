@@ -1,6 +1,6 @@
 pkgname=julia-git-pureklu-src
-pkgver=1.4.0
-_commit=4844a208338238a804a843c827fbe0f0db723dd0
+pkgver=1.4.1
+_commit=a08e84ba095e23d0f84a4244ba2a8f41aeee2175
 pkgrel=1
 pkgdesc="PureKLU.jl"
 url="https://github.com/SciML/PureKLU.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/PureKLU.jl.git#commit=$_commit")
-sha256sums=('4f936646ebad3c462e3de0cca6d70f4629db8d4dace4b090207b2d1b882994e7')
+sha256sums=('8f8ca5900463f5ba628d985b50f3913e788ce719fa4f6a0ac8fed855f719415a')
 
 package() {
   cd PureKLU.jl
