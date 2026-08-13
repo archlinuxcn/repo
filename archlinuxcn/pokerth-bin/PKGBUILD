@@ -1,8 +1,8 @@
 # Maintainer: Jax Young <jaxvanyang@gmail.com>
 pkgname=pokerth-bin
 _pkgname="${pkgname%-bin}"
-pkgver=2.1.6
-pkgrel=2
+pkgver=2.1.7
+pkgrel=1
 pkgdesc="Poker game written in C++/Qt"
 arch=('x86_64')
 url="https://github.com/pokerth/pokerth"
@@ -16,7 +16,7 @@ source=(
 	"pokerth.svg"
 	"pokerth.desktop"
 )
-sha256sums=('cfcd9dd1845a8f21091e9319d8c5620e2a31ab084984c898228bab9a016c7249'
+sha256sums=('8eef85a6140ed5c34003f56ce08fc53713449e302f38a836293c792b763682e7'
             'f35bacd011dce3258b8394b82e28ef605f491c6fac6c2dfc743d403b23fd5eb2'
             '72ff070b9626661a051cc0582a69cd95b41809b6f4f2d8738245d92f3c417bb4'
             '8bbfb9db5be8bca7ed20b703251afa336f4445bd79e7b049b028aff0e788bb57')
