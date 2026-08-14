@@ -1,10 +1,14 @@
-post_install(){
-  cat<<'EOL'
-Please add a following line to the ~/.bashrc or ~/.zshrc :
-export PATH=/opt/openresty/bin:$PATH
-EOL
-
+pre_upgrade() {
+  echo "==> IMPORTANT: Configuration files are moving from /opt/openresty/nginx/conf/ to /etc/openresty/"
+  echo "    Back up any customizations before the upgrade completes."
+  echo "    Your modified nginx.conf will be saved as nginx.conf.pacsave at the old location."
 }
-post_upgrade(){
-  post_install
+
+post_upgrade() {
+  # Remove empty directory created by package versions older than 1.31.1.1-2
+  [[ -d /var/lib/openresty ]] && rmdir --ignore-fail-on-non-empty /var/lib/openresty
+  echo "==> Logs have moved to /var/log/openresty/; old logs in /opt/openresty/nginx/logs/ can be removed manually."
+  echo "==> PID file has moved to /run/openresty/nginx.pid (was /run/openresty.pid)."
+  echo "==> Configuration files have moved from /opt/openresty/nginx/conf/ to /etc/openresty/."
+  echo "    Check /opt/openresty/nginx/conf/ for *.pacsave files to migrate your customizations."
 }

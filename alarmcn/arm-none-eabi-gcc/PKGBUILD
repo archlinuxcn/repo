@@ -3,7 +3,7 @@
 
 _target=arm-none-eabi
 pkgname=$_target-gcc
-pkgver=16.1.0
+pkgver=16.2.0
 pkgrel=1
 #_snapshot=8-20180427
 pkgdesc='The GNU Compiler Collection - cross compiler for ARM EABI (bare-metal) target'
@@ -16,7 +16,7 @@ optdepends=('arm-none-eabi-newlib: Standard C library optimized for embedded sys
 options=(!emptydirs !lto)
 source=(https://ftp.gnu.org/gnu/gcc/gcc-$pkgver/gcc-$pkgver.tar.xz{,.sig})
         #ftp://gcc.gnu.org/pub/gcc/snapshots/$_snapshot/gcc-$_snapshot.tar.xz
-sha256sums=('50efb4d94c3397aff3b0d61a5abd748b4dd31d9d3f2ab7be05b171d36a510f79'
+sha256sums=('e6738e29597f733270731aa90600f37ffdc045079dfc27ec7e8192cc81085c3e'
             'SKIP')
 validpgpkeys=(33C235A34C46AA3FFB293709A328C3A2C3C45C06  # Jakub Jelinek <jakub@redhat.com>
               D3A93CAD751C2AF4F8C7AD516C35B99309B5FA62  # Jakub Jelinek <jakub@redhat.com>

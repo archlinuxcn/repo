@@ -4,16 +4,16 @@
 _name=condense_json
 
 pkgname=python-condense-json
-pkgver=0.1.3
-pkgrel=2
+pkgver=1.1
+pkgrel=1
 pkgdesc="Python function for condensing JSON using replacement strings"
 
 arch=("x86_64")
 license=("Apache-2.0")
 url='https://pypi.org/project/condense-json/'
 
-source=("https://files.pythonhosted.org/packages/94/b3/d784cbc05556192ea1e798cae96363835d649fe7420ff030190789645be1/condense_json-0.1.3.tar.gz")
-sha256sums=('25fe8d434fdafd849e8d98f21a3e18f96ae2d6dbc2c17565f29e4843d039d2bc')
+source=("https://files.pythonhosted.org/packages/source/${_name::1}/${_name//-/_}/${_name//-/_}-$pkgver.tar.gz")
+sha256sums=('c455b54bbbab89a69f598b09f2003a89b738df20d30e6aa341c495401ec5b349')
 
 depends=()
 makedepends=(
@@ -23,6 +23,7 @@ makedepends=(
   "python-wheel"
 )
 checkdepends=(
+    "python-hypothesis"
     "python-pytest"
 )
 

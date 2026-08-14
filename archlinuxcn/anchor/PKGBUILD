@@ -2,7 +2,7 @@
 
 pkgname=anchor
 pkgver=1.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc='⚓ Solana Sealevel Framework'
 arch=(x86_64)
 url='https://www.anchor-lang.com'

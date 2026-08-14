@@ -5,7 +5,7 @@
 # Contributor: Hans Janssen <hans@janserv.xs4all.nl>
 
 pkgname=flightgear-data
-pkgver=2024.1.6
+pkgver=2024.1.7
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc="Base-Data for the opensource flight-simulator."
@@ -14,7 +14,7 @@ license=('GPL')
 url="http://www.flightgear.org/"
 options=('!strip')
 source=("https://gitlab.com/flightgear/fgdata/-/archive/${pkgver}/fgdata-${pkgver}.tar.gz")
-sha256sums=('c857f6b837b3d94e8001d989f991da00c1f6c387f7c617c435a821d1f41a9311')
+sha256sums=('9637b3c3c3de86835dd7aa08a2e8d727e35993d99271e9bab74099d4cf6d3e66')
 
 package() {
   mkdir -p "$pkgdir"/usr/share/flightgear

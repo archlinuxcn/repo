@@ -16,5 +16,6 @@ update_on:
   - source: alpm
     alpm: nvidia-utils
     strip_release: true
-  - source: alpm-lilac
-    alpm: linux-cachyos
+
+update_on_build:
+  - pkgbase: linux-cachyos

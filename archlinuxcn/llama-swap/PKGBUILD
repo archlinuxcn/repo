@@ -2,7 +2,7 @@
 # Contributor: repsac
 
 pkgname=llama-swap
-pkgver=v245 # renovate: datasource=github-releases depName=mostlygeek/llama-swap
+pkgver=v249 # renovate: datasource=github-releases depName=mostlygeek/llama-swap
 pkgrel=1
 pkgdesc="Model swapping for llama.cpp (or any local OpenAPI compatible server)"
 arch=(x86_64 aarch64)
@@ -25,12 +25,12 @@ source=(
   "git+$url.git#tag=$pkgver"
   llama-swap.service
 )
-sha256sums=('9ed0c93035a8b8f857a1e2022b1e9d07af287da5f38ad49d9ff4599107cbcc26'
+sha256sums=('11caf5b70e7e634933de258d001626d1cd41277daf636a630612755d65b8243f'
             '8f247fec3e347c212006415e23260a4851ccc435ea3fe0b2c7eaed12b49c406c')
 
 build() {
   cd "$pkgname"
-
+  
   case "$CARCH" in
     x86_64)
       make linux-amd64
@@ -40,15 +40,16 @@ build() {
       ;;
   esac
 }
+
 package() {
   cd "$pkgname"
-
+  
   _binary_name=""
   case "$CARCH" in
     x86_64) _binary_name="llama-swap-linux-amd64" ;;
     aarch64) _binary_name="llama-swap-linux-arm64" ;;
   esac
-
+  
   install -Dm644 -t "$pkgdir/usr/share/licenses/$pkgname" LICENSE.md
   install -Dm644 -t "$pkgdir/etc/llama-swap" config.example.yaml
   install -Dm644 -t "$pkgdir/usr/lib/systemd/system" ../llama-swap.service

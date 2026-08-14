@@ -6,7 +6,7 @@ _pkgname=LosslessCut
 _appid="no.mifi.losslesscut"
 pkgver=3.69.0
 _electronversion=42
-pkgrel=2
+pkgrel=3
 pkgdesc="The swiss army knife of lossless video/audio editing"
 arch=('x86_64')
 url="https://losslesscut.app/"
@@ -21,7 +21,7 @@ source=(
 validpgpkeys=('1DB3130F9B5EEF992F2742C125AB36E3E81CBC26') # Mikael Finstad <finstaden@gmail.com>
 sha256sums=('8c0d0443f98eecdaea64f3002acc86cc57f1d5bec2f30a7066994ddc6e38c12a'
             '305ce3d79e36b8a13fe03d8e64caa05270f6f0b81ae5cb7ed0ebd2b56d7c0e95'
-            '31ad33b633744f5361abd964be306cea53ae1050e760c787115f7eca60045ae6')
+            '49e9e2aa088c35d7fdb8b5328914c3ef9694c43e3bcbba2c86384e2a140d0576')
 
 prepare() {
     sed -i -e "
@@ -29,7 +29,6 @@ prepare() {
         s/@appname@/${pkgname}/g
         s/@runname@/app.asar/g
         s/@cfgdirname@/${_pkgname}/g
-        s/@options@//g
     " "${srcdir}/${pkgname}.sh"
 
     cd "${pkgname}"
@@ -48,7 +47,6 @@ prepare() {
         s/\/app\/bin\/run.sh/${pkgname}/g;
         s/${_appid}/${pkgname}/g
     " -i "${_appid}.desktop"
-    sed -i "s/\"electron\": \"[^\"]*\"/\"electron\": \"${SYSTEM_ELECTRON_VERSION}\"/g" package.json
 
     yarn config set --home enableTelemetry 0
     NODE_ENV=development    yarn install
@@ -138,7 +136,7 @@ build() {
 
     popd
 
-    NODE_ENV=production     yarn electron-builder --linux dir -c.electronDist="${electronDist}"
+    NODE_ENV=production     yarn electron-builder --linux dir -c.electronDist="${electronDist}" -c.electronVersion="${SYSTEM_ELECTRON_VERSION}"
 
     for res in 16 32 48 64 128 256 512 1024; do
         mkdir -p "icons-build/${res}x${res}"

@@ -177,7 +177,7 @@ pkgbase="linux-$_pkgsuffix"
 _major=7.2
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc4
+_rcver=rc7
 pkgver=${_major}.${_rcver}
 _tagrel=1
 pkgrel=1
@@ -216,7 +216,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=610.43.03
+_nv_ver=610.57.04
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -254,7 +254,6 @@ fi
 
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
-             "${_patchsource}/misc/nvidia/0001-make-Add-support-for-7.2-Kernel.patch"
              "${_patchsource}/misc/nvidia/0002-fix-dsc-correct-RC-parameter-tables-to-match-VESA-DS.patch"
              "${_patchsource}/misc/nvidia/0003-fix-dp-add-Bigscreen-Beyond-VR-headset-to-WAR-databa.patch")
 fi
@@ -818,7 +817,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('c7c6069c2423c68036c1eb630be26aef9aedda4dbf5ee8fc3db612aab090463ea8742347bde339978603a435b20c297040e8e9ccd73e4552f3b8072b07cabcd7'
+b2sums=('4354ef8f8879f4e640f703d5cecaf7d2be95d869a0a2735bd4537b2f338da7c702592139efcde8d47784c1eeec8a59d181890b3c1d375d50c31e55fa06ef955e'
         'SKIP'
-        '3e0736c62f0ee45f47026ec9116352a2a411f484295ab416a1dedae44ea85bed8a3c3eadbc0fd7c21d99877112b331d27b55a8d01c6bbbc8cddae2145f5d922d'
+        '98e05ffa987bbb73b80fae47c5b93a17842bd46e79368dba8567dc76f4c67102ee4148e26d93e4939a6c14c4449d2eb76917939acdf9254a430170ad9b153af1'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')
