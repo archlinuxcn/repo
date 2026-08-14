@@ -111,9 +111,7 @@ b2sums=('e0cfc1c074ff82f7a9a72acb73dfe2a3c95e84b1735afd308a325e9c3ad5b91da3b20f6
         '5afdfd5b8454855a8d95b064aa2f8d2f32e1e4dfea21356a0a5947328f4c6d1851ab76040b45d3eb01d7ff6238448dc0d8d0664f9645174b6ff0e86147a1cbd9')
 
 prepare() {
-  cd mutter
-
-  #git apply ../5133.patch
+	cd mutter
 
 	echo 5157 # Merged but not yet in 50.beta
 	git apply ../5157.patch
@@ -130,8 +128,8 @@ prepare() {
 	echo 5219 # Handle cross GPU buffer scanout
 	git apply ../5219.patch
 
-	echo 5242 # Segfault
-	git apply ../5242.patch
+	#echo 5242 # Segfault
+	#git apply ../5242.patch
 }
 
 build() {
