@@ -81,7 +81,7 @@ package() {
 	cd "${_srcname}/"
 	local _app_id="io.github.${pkgname}.${_srcname}"
 
-	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
+	install -Dm755 "target/release/${pkgname}" "${pkgdir}/usr/bin/${_srcname}"
 	install -Dm644 "${_app_id}.desktop" -t "${pkgdir}/usr/share/applications/"
 	install -Dm644 "${_app_id}.metainfo.xml" -t "${pkgdir}/usr/share/metainfo/"
 
