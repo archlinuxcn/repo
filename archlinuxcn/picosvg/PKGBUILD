@@ -1,8 +1,8 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=picosvg
-pkgver=0.22.3
-pkgrel=3
+pkgver=0.23.0
+pkgrel=1
 pkgdesc='CLI tool to simplify SVG files, intended for use as part of a font build'
 arch=(any)
 url="https://github.com/googlefonts/$pkgname"
@@ -17,7 +17,7 @@ makedepends=(python-{build,installer,wheel}
 checkdepends=(python-pytest)
 _archive="$pkgname-$pkgver"
 source=("https://files.pythonhosted.org/packages/source/${pkgname::1}/$pkgname/$_archive.tar.gz")
-sha256sums=('4395efc32a00e89454395fcbbe3ee2731e9cee7aa3be0f5ae9f96418d0696778')
+sha256sums=('a3616d5eb3ee810e74a931ffa68e2c36cd06a2eef24400a97dc07c0e6cc5eb4c')
 
 build() {
 	cd "$_archive"
