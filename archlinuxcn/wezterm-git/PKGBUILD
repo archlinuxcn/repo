@@ -6,12 +6,15 @@
 : ${CARGO_TARGET_DIR:=target}
 : ${RUSTUP_TOOLCHAIN:=stable}
 export CARGO_HOME CARGO_TARGET_DIR RUSTUP_TOOLCHAIN
+export LIBSSH2_SYS_USE_PKG_CONFIG=1
+
+: ${_skip_tests=e2e::} # space separated substrings
 
 _pkgname="wezterm"
 pkgname="$_pkgname-git"
 pkgdesc="A GPU-accelerated cross-platform terminal emulator and multiplexer"
 pkgver=20260812.070121.fe3006ae
-pkgrel=1
+pkgrel=2
 url="https://github.com/wezterm/wezterm"
 license=("MIT")
 arch=("x86_64" "i686")
@@ -41,8 +44,8 @@ makedepends=(
 optdepends=(
   'ncurses: for wezterm terminfo database'
   'noto-fonts-emoji: for default fonts'
-  'python-nautilus: WezTerm context menu in Nautilus'
   'ttf-nerd-fonts-symbols-mono: for default fonts'
+  'python-nautilus: WezTerm context menu in Nautilus'
 )
 
 provides=("$_pkgname")
@@ -59,7 +62,7 @@ prepare() {
   git submodule update --init --recursive --depth=1
 
   sed -i 's/"vendored-fonts", //' wezterm-gui/Cargo.toml
-  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+  cargo fetch --locked --target host-tuple
 }
 
 pkgver() {
@@ -74,12 +77,17 @@ pkgver() {
 
 build() {
   cd "$_pkgsrc"
-  LIBSSH2_SYS_USE_PKG_CONFIG=1 cargo build --frozen --release --features distro-defaults
+  cargo build --frozen --release --features distro-defaults
 }
 
 check() {
+  local _cargo_options=(--)
+  for i in ${_skip_tests}; do
+    _cargo_options+=(--skip "$i")
+  done
+
   cd "$_pkgsrc"
-  LIBSSH2_SYS_USE_PKG_CONFIG=1 cargo test --frozen --release -- --skip "e2e::sftp"
+  cargo test --frozen --release "${_cargo_options[@]}"
 }
 
 package() {

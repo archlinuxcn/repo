@@ -5,8 +5,8 @@
 pkgname=yaak
 _appid=app.yaak.Yaak
 _appname=yaak-app-client
-pkgver=2026.5.0
-pkgrel=2
+pkgver=2026.6.0
+pkgrel=1
 pkgdesc='A fast, secure, and offline API client'
 arch=('x86_64' 'armv7h' 'aarch64')
 url='https://yaak.app/'
@@ -50,7 +50,7 @@ options=("!lto") # https://gitlab.archlinux.org/archlinux/packaging/packages/pac
 provides=("yaak-app" "yaak-app-client")
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mountain-loop/yaak/archive/refs/tags/v${pkgver}.tar.gz"
         "${_appid}.desktop")
-sha256sums=('a3e4e08716093f96c0f8c97c3b50bbdcfb5ccceaa93f908e1b9dfc5663090b1a'
+sha256sums=('efcfb8e7364e72c80a89ba923fb43f8516aa86a415291b2499fa7c2d4da67761'
             '228dc02b9ffecef06195e67d5d7d70b1fd64546682ced382cb448f35039997f8')
 
 _setup_env() {
