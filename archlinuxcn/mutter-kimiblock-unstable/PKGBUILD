@@ -117,8 +117,8 @@ prepare() {
 	echo 5157 # Merged but not yet in 50.beta
 	git apply ../5157.patch
 
-	echo 4921 # FBOs for NVIDIA
-	git apply ../4921.patch
+	#echo 4921 # FBOs for NVIDIA
+	#git apply ../4921.patch
 
 	echo 5129 # defer HW cursor support initialization
 	git apply ../5129.patch
@@ -129,8 +129,8 @@ prepare() {
 	echo 5219 # Handle cross GPU buffer scanout
 	git apply ../5219.patch
 
-	echo 5242 # Segfault
-	git apply ../5242.patch
+	#echo 5242 # Segfault
+	#git apply ../5242.patch
 }
 
 build() {
