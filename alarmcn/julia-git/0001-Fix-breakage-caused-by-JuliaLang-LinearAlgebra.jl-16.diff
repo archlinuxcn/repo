@@ -1,0 +1,58 @@
+From 60ff2bfb35177c8068ad4415c5067d5d5a88ae06 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 17 Aug 2026 14:52:41 -0400
+Subject: [PATCH] Fix breakage caused by JuliaLang/LinearAlgebra.jl#1668
+
+---
+ src/linalg.jl | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/src/linalg.jl b/src/linalg.jl
+index 69e2a0d..27f80c9 100644
+--- a/src/linalg.jl
++++ b/src/linalg.jl
+@@ -4,6 +4,14 @@ using LinearAlgebra: AbstractTriangular, StridedMaybeAdjOrTransMat, UpperOrLower
+     RealHermSymComplexHerm, HermOrSym, checksquare, sym_uplo, wrap
+ using Random: rand!
+ 
++if isdefined(LinearAlgebra, :_uppercase)
++    const _uppercase = LinearAlgebra._uppercase
++    const _isuppercase = LinearAlgebra._isuppercase
++else
++    const _uppercase = uppercase
++    const _isuppercase = isuppercase
++end
++
+ _fix_size(M, nrow, ncol) = M
+ 
+ # An immutable fixed size wrapper for matrices to work around
+@@ -90,7 +98,7 @@ end
+     spdensemul!(C, tA, 'N', A, B, alpha, beta)
+ 
+ Base.@constprop :aggressive function spdensemul!(C, tA, tB, A, B, alpha, beta)
+-    tA_uc, tB_uc = uppercase(tA), uppercase(tB)
++    tA_uc, tB_uc = _uppercase(tA), _uppercase(tB)
+     if tA_uc == 'N'
+         _spmatmul!(C, A, wrap(B, tB), alpha, beta)
+     elseif tA_uc == 'T'
+@@ -98,7 +106,7 @@ Base.@constprop :aggressive function spdensemul!(C, tA, tB, A, B, alpha, beta)
+     elseif tA_uc == 'C'
+         _At_or_Ac_mul_B!(adjoint, C, A, wrap(B, tB), alpha, beta)
+     elseif tA_uc in ('S', 'H')
+-        rangefun = isuppercase(tA) ? nzrangeup : nzrangelo
++        rangefun = _isuppercase(tA) ? nzrangeup : nzrangelo
+         diagop = tA_uc == 'S' ? identity : real
+         odiagop = tA_uc == 'S' ? transpose : adjoint
+         T = eltype(C)
+@@ -452,7 +460,7 @@ end
+ 
+ Base.@constprop :aggressive function generic_matmatmul!(C::SparseMatrixCSCUnion2, tA, tB, A::SparseMatrixCSCUnion2,
+                             B::SparseMatrixCSCUnion2, alpha::Number, beta::Number)
+-    tA_uc, tB_uc = uppercase(tA), uppercase(tB)
++    tA_uc, tB_uc = _uppercase(tA), _uppercase(tB)
+     Anew, ta = tA_uc in ('S', 'H') ? (wrap(A, tA), oftype(tA, 'N')) : (A, tA)
+     Bnew, tb = tB_uc in ('S', 'H') ? (wrap(B, tB), oftype(tB, 'N')) : (B, tB)
+     @stable_muladdmul _generic_matmatmul!(C, ta, tb, Anew, Bnew, MulAddMul(alpha, beta))
+-- 
+2.53.0
+

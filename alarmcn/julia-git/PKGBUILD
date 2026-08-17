@@ -84,6 +84,7 @@ source=('git+https://github.com/JuliaLang/julia'
         arch-source-translate.cpp
         0001-Disable-upgrade-of-stdlib-package.diff
         0002-Hard-code-7z-and-zstd-path.diff
+        0001-Fix-breakage-caused-by-JuliaLang-LinearAlgebra.jl-16.diff
         download_curl.diff)
 sha512sums=('SKIP'
             'e05e3114f8f50e5131316a6284d1a39c10c7f8f8f69b148651e376ed4c783cb97d4143de8cdeed7ccc61e61efc6b3cd23c399e0c46491daa457ad77ea3865efd'
@@ -104,6 +105,7 @@ sha512sums=('SKIP'
             'c2da7461c53e56293d35581cb4aa2500ef9a98e52a354bfa9271f44bd768ed77c5b362e304e0ab467fb286d2198f3e28cf91089e8773ebcfc85e294223a12f0e'
             '99b91e921e730016e758dba10fb80436c0bb595789c941536d4533fd053caeff1100c06d1813cd0326790c85a988f1c6e282bb185eba7991b0485d529d35ba2c'
             '6184ec0c916cf51a478760dba85d3a140077ec073a49aac1b95d9fd3f46b4ecefad44725729adfc4af576e6940f65ee8205bce153db1e9fe8fb432c6316f90c5'
+            'cb336fbad6697d8a887feae0a9e8524435c4e49c319ad984f70c186897ce895fd7e897f717912755e4dae5a0ec7790501c1cf358828f49cc3f02e6192a455d47'
             '5be40dcb72428885c06c8353019bd8fac0ea186a7536cf2bab2554d2724fb3d4a5b0b3f61727428e5cf7906f14a213f08dcb238b5bd10d408d86669e2c93ca78')
 
 _versioned_llvm=
@@ -278,6 +280,11 @@ EOF
   (
     cd usr/share/julia/stdlib/v*/Downloads
     patch -Np0 --no-backup-if-mismatch < "$srcdir/download_curl.diff"
+  )
+  (
+    cd usr/share/julia/stdlib/v*/SparseArrays
+
+    patch -Np1 --no-backup-if-mismatch < "$srcdir/0001-Fix-breakage-caused-by-JuliaLang-LinearAlgebra.jl-16.diff"
   )
   for f in usr/share/julia/stdlib/v*/*/*Artifacts.toml; do
     echo "Clearing $f"
