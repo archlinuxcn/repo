@@ -1,6 +1,6 @@
 pkgname=julia-git-latexstrings-src
-pkgver=1.4.0
-_commit=d344f9536391ee76fd14b7b62483b6a4bccf1b4d
+pkgver=1.4.1
+_commit=8abdd9a91b7d531c5a6bd8dfb7e63ec814617358
 pkgrel=1
 pkgdesc="LaTeXStrings.jl"
 url="https://github.com/stevengj/LaTeXStrings.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/stevengj/LaTeXStrings.jl.git#commit=$_commit")
-sha256sums=('3225f02dd6f298194bb08bfd1d3a5545ff915b875408ad6dc84a13c80d96663d')
+sha256sums=('99d41f14a0369796717ccc882576dbbeab34591d668fd26e41f226888ac4de00')
 
 package() {
   cd LaTeXStrings.jl
