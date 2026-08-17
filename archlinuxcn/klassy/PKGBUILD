@@ -5,7 +5,7 @@ _pkgname=klassy
 pkgbase="${_pkgname}"
 pkgname=("${_pkgname}"
          "${_pkgname}-qt5")
-pkgver=6.5.3
+pkgver=6.7
 pkgrel=1
 pkgdesc='Highly customizable binary Window Decoration, Application Style and Global Theme plugin for recent versions of the KDE Plasma desktop.'
 arch=(x86_64)
@@ -40,7 +40,7 @@ makedepends=(extra-cmake-modules
              kirigami2
              kwindowsystem5)
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('bd734d0998179cc51cd8606c7a5f0013c646d4bf08bb875a5ff7cfdc96e707aa')
+sha256sums=('e6fa56f72ec390764051fb5905ea44d96bb48b072dda6273f31d4fe40fd414ef')
 
 build() {
   cmake -B build -S "${_pkgname}-${pkgver}" \
