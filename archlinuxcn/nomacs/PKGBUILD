@@ -3,7 +3,7 @@
 # Contributor: speps <speps at aur dot archlinux dot org>
 
 pkgname=nomacs
-pkgver=3.23.2
+pkgver=3.23.3
 pkgrel=1
 epoch=1
 pkgdesc="A Qt image viewer"
@@ -17,6 +17,7 @@ depends=(
     libgcc
     libglvnd
     libraw
+    libstdc++
     libtiff
     opencv      #libopencv_imgproc.so
     qt6-base
@@ -26,7 +27,8 @@ depends=(
 makedepends=(
     cmake
     git
-    #gtest # for tests
+    gtest # for tests
+    ninja
     python
     qt6-tools
     vulkan-headers
@@ -36,7 +38,7 @@ optdepends=(
     'qt6-imageformats: support additional image formats'
     )
 source=("git+https://github.com/nomacs/nomacs.git#tag=${pkgver}")
-b2sums=('ccfd20c66feea7411ad78623f0966d74d94f0012a96186e36616fbea3ff45505bf35459eed50d64be5e40b038acfae6c634a545133c62d4a92e12d33bc53e552')
+b2sums=('ef320f1a517a093f66155d5cb860f9828477e7e3dd2ac6abb70fca186e0d0204b4cf742831d5b443d39578b1ebb26906c6590872040690e8654584a67f56bf96')
 
 build() {
   # Disable warning Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
@@ -45,8 +47,9 @@ build() {
 
   local _flags=(
     -DQT_VERSION_MAJOR=6
-    -DUSE_SYSTEM_QUAZIP=ON
+    -DENABLE_QUAZIP=ON
     -DENABLE_TRANSLATIONS=ON
+    -GNinja
   )
 
   cmake -B build -S "nomacs/ImageLounge" -Wno-author \
@@ -57,10 +60,9 @@ build() {
   cmake --build build
 }
 
-#check() {
-  #ctest --test-dir build --output-on-failure
-  # tests not built despite nomacs "tests ................................................. YES" ?
-#}
+check() {
+  ninja -C build check
+}
 
 package() {
   DESTDIR="${pkgdir}" cmake --install build
