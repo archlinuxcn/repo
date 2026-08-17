@@ -1,6 +1,6 @@
 pkgname=julia-git-codeczlib-src
-pkgver=0.7.8
-_commit=da9ec40d696d03334c29f4caefcda2b8f6b3abeb
+pkgver=0.7.9
+_commit=d2486f22b32c4748562e83af67720626984c3129
 pkgrel=1
 pkgdesc="CodecZlib.jl"
 url="https://github.com/JuliaIO/CodecZlib.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/CodecZlib.jl.git#commit=$_commit")
-sha256sums=('b78028d134c834df5857ce7aaf5dba3fd30ad15f67f31cd9f6159d53c1e81c5c')
+sha256sums=('2b709d7081ca26b37b4971b1ad6c3c64f28186ebc5b03f2d174b9ff599be1616')
 
 package() {
   cd CodecZlib.jl
