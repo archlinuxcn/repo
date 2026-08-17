@@ -78,7 +78,7 @@ prepare() {
   patch -p1 -d ${srcdir}/${_pkgname} -i ${srcdir}/0001-fix-building-with-ctk.patch
   echo "Creating desktop file"
   gendesk -f -n --pkgname ${_pkgname} \
-    --categories "Graphics;MedicalSoftware;Science;" \
+    --categories "Science;MedicalSoftware;Education;MedicalSoftware" \
     --exec "Slicer" \
     --icon "${_pkgname}" \
     --pkgdesc "${pkgdesc}" \
