@@ -1,6 +1,6 @@
 pkgname=julia-git-pixi_jll-src
-pkgver=0.63.2+0
-_commit=6e1a8cd44d7b3570092d877e6120db0913108a7d
+pkgver=0.76.2+0
+_commit=3335e1a5f50b6dc2712dd0cb4465b71c54b3879b
 pkgrel=1
 pkgdesc="pixi_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/pixi_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts pixi)
 depends=(julia-git)
 source=("git+https://github.com/JuliaBinaryWrappers/pixi_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('e6c85cb323380e5326a1cc1b3cc4b6759f7b55e87f8c4089674fe05a6d2770ea'
+sha256sums=('032a0c2ad15157291d31c12c81107eb5e00e74c89bc2e04b9dcf63bd9b30c988'
             'dfb387fc41549b83a54e73fb5fca1fbe6b566cc238546ffd8a7074420d0d4902')
 
 build() {
