@@ -29,7 +29,7 @@ build() {
     rm ../tzjfile-tzdata.tar.gz
   )
 
-  sed -i -e 's|artifact"tzjdata"|joinpath(@__DIR__, "../tzjdata")|' src/TZJData.jl
+  sed -i -e 's|Artifacts.artifact_path(_ARTIFACT_HASH)|joinpath(@__DIR__, "../tzjdata")|' src/TZJData.jl
 }
 
 package() {
