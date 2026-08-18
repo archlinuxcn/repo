@@ -2,13 +2,13 @@
 
 pkgbase=sherpa-onnx
 pkgname=("${pkgbase}" "python-${pkgbase}")
-pkgver=1.13.5
+pkgver=1.13.6
 pkgrel=1
 pkgdesc="Speech-to-text, text-to-speech, speaker diarization, speech enhancement, source separation, and VAD using next-gen Kaldi with onnxruntime without Internet connection."
 arch=("x86_64" "aarch64" "arm" "riscv64")
 url="https://github.com/k2-fsa/${pkgbase}"
 license=("Apache-2.0")
-depends=("jack" "onnxruntime" "protobuf")
+depends=("jack" "onnxruntime")
 makedepends=("cargs" "cmake" "ninja" "pybind11" "python-build" "python-installer" "python-setuptools" "python-wheel")
 source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
         "asio-asio-1-24-0.tar.gz::https://github.com/chriskohlhoff/asio/archive/refs/tags/asio-1-24-0.tar.gz"
@@ -25,7 +25,7 @@ source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
         "piper-phonemize-f3ff95afc03640bc1399e113e83361192a2fafb4.zip::https://github.com/csukuangfj/piper-phonemize/archive/f3ff95afc03640bc1399e113e83361192a2fafb4.zip"
         "simple-sentencepiece-0.7.tar.gz::https://github.com/pkufool/simple-sentencepiece/archive/refs/tags/v0.7.tar.gz"
         "websocketpp-b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip::https://github.com/zaphoyd/websocketpp/archive/b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip")
-sha256sums=('99f520db7364a06be0c174a385d03f9ccdbfe08f61146055229e4a990e285262'
+sha256sums=('78f5d10f957d2de1867a1e08395e9ec2ec388911c853dd141887396667f3ff34'
             'cbcaaba0f66722787b1a7c33afe1befb3a012b5af3ad7da7ff0f6b8c9b7a8a5b'
             'e9c326dc8c05cd1e044c71f30f1b2e34a6161a3b6ecf445d56b53ff1669e3dec'
             'e4e262cbe34f7fe21f91f1ba3397f2728e1f30eafbae7853f2b753a9ed13f0dd'
@@ -50,6 +50,7 @@ prepare() {
     sed -i "s|include(cargs)|find_package(Cargs CONFIG REQUIRED)|" c-api-examples/CMakeLists.txt
     sed -i "s|^    .$|    lib/pkgconfig|g" CMakeLists.txt
     echo 'find_package(pybind11 REQUIRED)' > cmake/pybind11.cmake
+    echo "After upgrading onnxruntime, you need to rebuild ${pkgbase}."
 }
 
 build() {
@@ -83,7 +84,7 @@ package_sherpa-onnx() {
 
 package_python-sherpa-onnx() {
     pkgdesc+=" (Python bindings)"
-    depends=("python-click" "python-onnxruntime")
+    depends=("alsa-lib" "onnxruntime" "pypinyin" "python-click" "python-onnxruntime" "python-sentencepiece")
 
     cd "${pkgbase}-${pkgver}"
     python -m installer --destdir="${pkgdir}" dist/*.whl
