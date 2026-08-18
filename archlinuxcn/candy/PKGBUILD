@@ -1,14 +1,14 @@
 # Maintainer: lanthora <lanthora@outlook.com>
 
 pkgname=candy
-pkgver=6.1.9
-pkgrel=2
+pkgver=6.1.11
+pkgrel=1
 pkgdesc="A tool for creating and managing a virtual network implemented in C++"
 url="https://github.com/lanthora/candy"
 license=('MIT')
 arch=('x86_64' 'aarch64' 'armv7h' 'riscv64' 'loong64')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/lanthora/candy/archive/refs/tags/v$pkgver.tar.gz" )
-sha256sums=('ca8178fb8e384d8c3af4b3b37b2db8a78432d6392e156faa508eb9a27f6f2751')
+sha256sums=('2d0895ffbc79cc598f484a70e0786d465adca04b8af1562b3cf40ac18ccc55b5')
 makedepends=('cmake' 'ninja' 'pkgconf' 'gcc' 'git')
 depends=('glibc' 'gcc-libs' 'openssl' 'poco')
 backup=('etc/candy.cfg')
