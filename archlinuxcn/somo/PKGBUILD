@@ -4,7 +4,7 @@
 _pkgauthor=theopfr
 _pkgname=somo
 pkgname=${_pkgname}
-pkgver=1.3.3
+pkgver=1.3.4
 pkgrel=1
 pkgdesc='A human-friendly alternative to netstat for socket and port monitoring'
 
@@ -21,7 +21,7 @@ depends=('glibc' 'libgcc')
 options=('!debug' '!strip')
 
 source=("${_pkgname}-${pkgver}.tgz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('011ff1fe6e4e973c59526fd5c50d2cdd040d1517f26a321e21807b658047377a')
+sha256sums=('3181a1bdc990bd26d7efe3e546d411cc9464203ca85b683e0b3647ba893cf7ab')
 
 prepare() {
     cd "${pkgname}-${pkgver}" || exit
