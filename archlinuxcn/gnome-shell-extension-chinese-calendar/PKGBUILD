@@ -2,7 +2,7 @@
 
 pkgname=gnome-shell-extension-chinese-calendar
 _shortname=${pkgname#gnome-shell-extension-}
-pkgver=1.4
+pkgver=1.5
 pkgrel=1
 pkgdesc='展示中国农历和节假日信息的gnome-shell扩展'
 arch=('any')
@@ -10,21 +10,31 @@ url="https://github.com/tigertall/chinese-calendar"
 license=('MIT')
 depends=('gnome-shell>=45' 'dconf')
 makedepends=('npm' 'gettext' 'zip')
-source=("${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('e8433d66d91217f27c9f5c446e15b1b4e8b078240813143904b44b1c99da89e30b6171f6909ac48b5d910f86e7722036f5100ee971176f6285ed6029842d4c0e')
+
+_get_uuid() {
+    grep -oP '"uuid":\s*"\K[^"\s]+' "$1/metadata.json"
+}
+
+source=("${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.gz"
+        '0001-fix-lockfile.patch'::'https://github.com/tigertall/chinese-calendar/pull/11.patch')
+b2sums=('43a554e91b92befd6bed4167e05e3fd5ecedf02532dabdf7a731b6021ec9e69647bf95e40b22f5aecd31d1931a6a2554ae2f5ad490402712f48ce1a8f11bd6db'
+        'c0b6729bfa1985906c86dd42188b7f21b4feff448e8f92c2ee4cca512d6c8baf1dd7f6c9188449c4c9067166301db58704c536a41650c1a1e0a250b207cef2ed')
 
 build() {
     cd "${_shortname}-${pkgver}"
+    patch -Np1 -i "$srcdir/0001-fix-lockfile.patch"
+
     npm install --cache "${srcdir}/npm-cache"
     npm run build
 
-    rm -rf "${srcdir}/dist" && unzip -d "${srcdir}/dist" chinese-calendar.zip
+    uuid=$(_get_uuid .)
+    rm -rf "${srcdir}/dist" && unzip -d "${srcdir}/dist" "${uuid}.zip"
 }
 
 package() {
     cd "${srcdir}/dist"
 
-    uuid=$(grep -oP '"uuid":\s*"\K[^"\s]+' "metadata.json")
+    uuid=$(_get_uuid .)
 
     find "schemas" -type f -exec install -Dvm644 {} "${pkgdir}/usr/share/glib-2.0/{}" \;
     find "locale" -type f -exec install -Dvm644 {} "${pkgdir}/usr/share/{}" \;
