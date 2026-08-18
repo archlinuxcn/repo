@@ -1,0 +1,5 @@
+# lilac 构建配置
+# 自动跟随 GitHub release 更新
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
+    update_checksums()
