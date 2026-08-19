@@ -3,7 +3,7 @@
 
 pkgname=jdownloader2
 pkgver=latest
-pkgrel=22
+pkgrel=23
 pkgdesc='Download manager, written in Java, for one-click hosting sites like Rapidshare and MEGA. Uses its own updater'
 arch=('any')
 url='https://jdownloader.org/'
@@ -15,7 +15,8 @@ depends=(
 	'libarchive'
 	'libxi'
 	'libxtst'
-	'ttf-font')
+	'ttf-font'
+)
 optdepends=('phantomjs: needed for some remote capture solving')
 install='jdownloader.install'
 source=(
