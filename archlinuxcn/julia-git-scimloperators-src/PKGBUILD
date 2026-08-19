@@ -1,6 +1,6 @@
 pkgname=julia-git-scimloperators-src
-pkgver=1.26.1
-_commit=ea37e1e07055fa0afe50ad989187f378bbb55352
+pkgver=1.27.0
+_commit=c9daee083fc3887e4751ef8ee2bf38e4967e6895
 pkgrel=1
 pkgdesc="SciMLOperators.jl"
 url="https://github.com/SciML/SciMLOperators.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/SciMLOperators.jl.git#commit=$_commit")
-sha256sums=('529782071d9f8d4d31327e10f68ac8051fc6e115019f7c6ea8384b0d0a583405')
+sha256sums=('8f967ba6a97162d732d49f66618f15296664042347bfe5593fc3defea3d772e5')
 
 package() {
   cd SciMLOperators.jl

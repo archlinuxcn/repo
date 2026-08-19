@@ -1,8 +1,8 @@
 # Maintainer: Cryolitia PukNgae <cryolitia@archlinuxcn.org>
 
 pkgname=edl-ng
-pkgver=1.5.0
-pkgrel=2
+pkgver=1.6.0
+pkgrel=1
 pkgdesc="A modern, user-friendly tool for interacting with Qualcomm devices in Emergency Download (EDL) mode."
 arch=('x86_64')
 url="https://github.com/strongtz/edl-ng"
@@ -10,8 +10,8 @@ license=( 'MIT' )
 depends=(glibc libusb)
 makedepends=(git dotnet-sdk-9.0)
 source=("$pkgname::git+$url#tag=v$pkgver")
-sha512sums=('98af40031587c7253895ef1ddd59549647964c92a6a61aa7f2003a24d8e1888a227a472a622f78ffa03d1216a5c18af0b09d433d669f67a0edcc988864839295')
-b2sums=('a93d081d2c0a4697fa6c9000dc660ca8d06246f6d764db5373a5779514a5de9d2f27bef8d37a6fbc53593bab89ace6c77c014499e648dc46c4b00e0be1e49387')
+sha512sums=('106f02092ca6fb4640e397e8c549de8fb9f77fdf467340640427f790350374fcb18808a36f1e654242db33304484dc6823199c4f807e4848ed0479a31e6a20f3')
+b2sums=('591680fd439c4292c3efe222c39412541a6c2644e3a33073b3e4dc317ed6b8b2d79dd20bf5ae529fa224bef8973f535c61aeb9ccdebab48d3041c13a4abcdad0')
 
 prepare() {
   cd "$pkgname"

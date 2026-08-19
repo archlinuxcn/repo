@@ -1,7 +1,7 @@
 # Maintainer: OpenSorcerer <alex cat fossfed dog eu>
 pkgname=xcaddy
-pkgver=0.4.6
-pkgrel=2
+pkgver=0.4.7
+pkgrel=1
 pkgdesc="Build Caddy with plugins"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 url="https://github.com/caddyserver/xcaddy"
@@ -9,7 +9,7 @@ license=('Apache-2.0')
 depends=('go' 'glibc')
 makedepends=('git')
 source=("git+$url.git#tag=v$pkgver")
-sha512sums=('d87797a47c31b3484d141e6d02eff6d9e39c3c887bb6322f6dddb7c7c8634bf22255e14b448278a0906056f688a219b6fcdd47a5f025e7fd8a9a52ec348b810e')
+sha512sums=('b89316c04676e650e8b861d6322d396303da09e663fd98432db138c4c9ead4a6d58b5dbff2fdb103587656d86f818c64345fcd792155d250e677eae91c14424d')
 
 build() {
     cd "$pkgname"

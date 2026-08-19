@@ -1,7 +1,7 @@
 # Maintainer: Yuzu <aur at vitayuzu dot day>
 
 pkgname=ampcode
-pkgver=0.0.1786752172_g5bf5f5
+pkgver=0.0.1787112648_gd35a66
 pkgrel=1
 pkgdesc="The frontier coding agent."
 arch=('x86_64')
@@ -14,7 +14,7 @@ options=("!strip")
 _upstream_ver=${pkgver/_/-}
 _archive="cli-linux-x64-${_upstream_ver}.tgz"
 source=("${_archive}::https://registry.npmjs.org/@ampcode/cli-linux-x64/-/${_archive}")
-sha512sums=('0eea4fa0f5a7927c18f22deee5fa83bc2fb220bba72d535797a6037a273d28cb76627f6760afb35b14042447a4feb414f2820f766b2c1482aeb82da46eb87636')
+sha512sums=('1a09474d7b598b4bd1daa235d0315eff5188dc15ed1769aad37ba5b587a964c7981dcd2d5ae910478c346b114d14b07d6e22a6a90cf262e0ec11a3caf9d46fcc')
 
 package() {
     install -Dm755 "${srcdir}/package/amp" \

@@ -2,7 +2,7 @@
 
 pkgname=python-dicomweb-client
 _pkgname=dicomweb-client
-pkgver=0.61.1
+pkgver=0.61.2
 pkgrel=1
 pkgdesc='Python client for DICOMweb RESTful services'
 arch=(any)
@@ -26,7 +26,7 @@ makedepends=(
 )
 
 source=("${_pkgname}::git+https://github.com/ImagingDataCommons/dicomweb-client.git#tag=v${pkgver}")
-sha512sums=('ab7bfbfc4556a904e71391bdc8d336d1c4b14efa15b9d10d2b082fa7589a75fa3ad30cd74637063044ba54e36ca7f83ecbca79ee9a15a45e1130bc7a64eb31be')
+sha512sums=('29cca04aa4ef27222c64b6b1865f5d987fbc481f2e82d66538dfd9e475591a46cc5132fb6bb61f72fcc7e38c281264ae30e16236597889714a1532d1e41dcb47')
 
 
 build() {

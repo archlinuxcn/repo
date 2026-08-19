@@ -2,7 +2,7 @@
 # Contributor: Dan Johansen <strit@manjaro.org>
 
 pkgname=box64
-pkgver=0.4.2
+pkgver=0.4.4
 pkgrel=1
 pkgdesc='Linux Userspace x86_64 Emulator with a twist'
 arch=('x86_64' 'aarch64' 'riscv64' 'powerpc64le')
@@ -10,11 +10,12 @@ url='https://github.com/ptitSeb/box64'
 license=('MIT')
 install="box64.install"
 depends=('gcc-libs')
+optdepends=('gl4es: OpenGL 2 for GLES 2 devices')
 makedepends=('git' 'cmake' 'python')
 options=('!strip')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/ptitSeb/${pkgname}/archive/v${pkgver}.tar.gz"
         "box64.install")
-sha256sums=('c9d0db8a02fb9d586f3892caf83908cc92fbe3eb9a871cd868286cc932690d5e'
+sha256sums=('99c6de4f509e46ab1de15df740d0e0ea338a7790efa3f67510dfbb975cc24029'
             '7e94518dbd11121f150a51b64f4c0ec11f844a83f7b15205d28c1de63de699f2')
 
 build() {
@@ -22,16 +23,16 @@ build() {
     if [[ $CARCH == "aarch64" ]]; then
         name="$(LC_ALL=C lscpu | grep Model)"
         exargs=""
-        if [ -n "$(echo $name | grep RK3588)" ]; then
-              exargs="-DRK3588=1"
+        if [ -n "$(echo $name | grep RK3588)"  -o `lspci | grep RK3588 | wc -l` -gt 0 ]; then
+              exargs="-DRK3588=ON"
         elif [ -n "$(echo $name | grep RK3399)" ]; then
-              exargs="-DRK3399=1"
+              exargs="-DRK3399=ON"
         elif [ -n "$(echo $name | grep 'Cortex-A53')" ]; then
-              exargs="-DRPI3ARM64=1"
+              exargs="-DRPI3ARM64=ON"
         elif [ -n "$(echo $name | grep 'Cortex-A72')" ]; then
-              exargs="-DRPI4ARM64=1"
+              exargs="-DRPI4ARM64=ON"
         elif [ -n "$(echo $name | grep 'Cortex-A76')" ]; then
-              exargs="-DRPI5ARM64=1"
+              exargs="-DRPI5ARM64=ON"
         fi
         cmake -B build -S . \
               $exargs \

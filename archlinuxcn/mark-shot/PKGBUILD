@@ -1,6 +1,6 @@
 # Maintainer: jswysnemc <snemc@qq.com>
 pkgname=mark-shot
-pkgver=0.1.47
+pkgver=0.1.48
 pkgrel=1
 pkgdesc='Qt 6 Wayland screenshot selection and annotation tool'
 arch=('x86_64' 'aarch64')

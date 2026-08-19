@@ -1,6 +1,6 @@
 # Maintainer: BrainDamage
 pkgname=mautrix-telegram
-pkgver=0.2607.0
+pkgver=0.2608.0
 pkgrel=1
 pkgdesc="Matrix-Telegram hybrid puppeting/relaybot bridge"
 url="https://github.com/tulir/mautrix-telegram"
@@ -10,7 +10,7 @@ optdepends=()
 license=('AGPL-3.0-only')
 arch=('x86_64' 'aarch64')
 source=("${pkgname}::git+${url}#tag=v${pkgver}" "${pkgname}.service")
-sha256sums=('64a8d6d38237e9b6ed1b416ae45bea08d46ed134bf811e111cc71f25e32b0f06'
+sha256sums=('7b67c448ab04753af5f5e4d7c24f6511b01955786f1135676234574a528aa9e0'
             '6e006c52add0c373cb9e409a61eb72dec2ed7f5a1e3cc35eadfec3bdf1fc3d9d')
 backup=("etc/${pkgname}/config.yaml" "etc/${pkgname}/registration.yaml")
 

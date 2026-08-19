@@ -4,7 +4,7 @@
 
 pkgname=resticprofile
 pkgver=0.33.1
-pkgrel=1
+pkgrel=3
 pkgdesc="Configuration profiles manager and scheduler for restic backup"
 arch=("x86_64" "aarch64")
 url="https://github.com/creativeprojects/resticprofile"
@@ -48,4 +48,5 @@ package() {
 
     install -Dm644 contrib/completion/bash-completion.sh "${pkgdir}/usr/share/bash-completion/completions/resticprofile"
     install -Dm644 contrib/completion/zsh-completion.sh "${pkgdir}/usr/share/zsh/site-functions/_resticprofile"
+    install -Dm644 contrib/completion/fish-completion.fish "${pkgdir}/usr/share/fish/vendor_completions.d/resticprofile.fish"
 }

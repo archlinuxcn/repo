@@ -3,8 +3,8 @@
 # Contributor: Nick Cao <nickcao@nichi.co>
 
 pkgname=ranet
-pkgver=0.13.0
-pkgrel=2
+pkgver=0.14.0
+pkgrel=1
 pkgdesc="ranet, acronym for redundant array of networks, forms full mesh IPSec VPN"
 arch=('x86_64' 'aarch64')
 url="https://github.com/NickCao/ranet"
@@ -16,7 +16,7 @@ depends=(
 )
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/NickCao/ranet/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('9acefb3a34c57baa0b1d67154f354b004dad239e7dc4127e00d05549cfaf322e171eab39959bdd4497cdac66f89b219ed1be91ce170fa36ba1bad23f7d3d0e76')
+b2sums=('601924ef9edb5dde3341f2ca2302b9c9214c9a5fb042f76db1a38b04fd020523a9fb73f43663e54a69e5f425253ec0b096beea917dcf3e48bdd5230f2c6f8ad6')
 
 prepare() {
   cd "$pkgname-$pkgver"
