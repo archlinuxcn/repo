@@ -1,6 +1,11 @@
 # Maintainer:
 # Contributor: Patrick Northon <northon_patrick3@yahoo.ca>
 
+: ${CARGO_HOME:=$SRCDEST/cargo-home}
+: ${CARGO_TARGET_DIR:=target}
+: ${RUSTUP_TOOLCHAIN:=stable}
+export CARGO_HOME CARGO_TARGET_DIR RUSTUP_TOOLCHAIN
+
 : ${_use_sodeps:=false}
 
 : ${_install_path:=usr/lib}
@@ -8,7 +13,7 @@
 _pkgname="localsend"
 pkgname="$_pkgname"
 pkgver=1.18.1
-pkgrel=1
+pkgrel=2
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
 license=('Apache-2.0')
@@ -27,6 +32,7 @@ depends=(
   'pango'
 )
 makedepends=(
+  'cargo'
   'clang'
   'cmake'
   'fvm'
@@ -35,7 +41,6 @@ makedepends=(
   'llvm'
   'ninja'
   'patchelf'
-  'rustup'
 )
 
 options=('!lto')
@@ -45,31 +50,67 @@ _pkgext="tar.gz"
 source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
 sha256sums=('555a73c39e2cfc01ee8cf0033ae11610725829d8289aa9c4794446241d9de2b0')
 
-prepare() {
-  sed -E 's&^(channel) = .*$&\1 = "stable"&' -i "$_pkgsrc/packages/localsend_isolates/rust-toolchain.toml"
-}
+_rust_setup() {
+  if [ -n "$_arch" ]; then
+    return
+  fi
 
-build() (
+  # bypass Cargokit rustup requirement to use system toolchain
+  if ! pacman -Qs rustup &> /dev/null; then
+    install -Dm755 /dev/stdin fakebin/rustup << END
+#!/usr/bin/env true
+END
+  fi
+
+  if [ -e "$srcdir/fakebin" ]; then
+    export PATH="$srcdir/fakebin:$PATH"
+  fi
+
+  _arch="x64"
+  if [[ "${CARCH::1}" == "a" ]]; then
+    _arch="arm64"
+  fi
+
   local _units=$(($(nproc) > 16 ? $(nproc) : 16))
   export CARGO_PROFILE_RELEASE_LTO=false
   export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=$_units
+}
+
+prepare() {
+  _rust_setup
+
+  cd "$_pkgsrc"
+  cargo fetch --locked --target host-tuple
+}
+
+build() {
+  _rust_setup
 
   export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
-
   export CXXFLAGS+=' -Wno-error=deprecated-declarations'
 
-  cd "$_pkgsrc/app"
+  cd "$_pkgsrc"
+  cargo build --frozen --release --all-features
+
+  # copy isolate for flutter to find
+  local _isolates="app/build/linux/$_arch/release/plugins/rust_lib_localsend_app"
+  mkdir -p "$_isolates"
+  cp "$srcdir/$_pkgsrc/$CARGO_TARGET_DIR/release/librust_lib_localsend_app.so" "$_isolates/"
+
+  cd "app"
   fvm install
 
   fvm flutter --disable-analytics
   #fvm flutter pub upgrade --major-versions
   fvm flutter --no-version-check pub get
   fvm flutter build linux --no-pub --release
-)
+}
 
 package() {
+  _rust_setup
+
   if [[ "${_use_sodeps::1}" == "t" ]]; then
-    eval "depends=(
+    eval "depends+=(
       libatk-1.0.so
       libcairo.so
       libepoxy.so
@@ -85,28 +126,31 @@ package() {
     )"
   fi
 
-  local _arch="x64"
-  if [[ "${CARCH::1}" == "a" ]]; then
-    _arch="arm64"
-  fi
+  # cli, server
+  install -Dm755 "$_pkgsrc/$CARGO_TARGET_DIR/release"/{localsend-cli,server} -t "$pkgdir/$_install_path/$_pkgname/"
 
+  # app, lib, data
   cd "$_pkgsrc/app/build/linux/$_arch/release/bundle"
-
-  # files
-  install -Dm755 "localsend_app" "$pkgdir/$_install_path/$_pkgname/$_pkgname"
+  install -Dm755 "localsend_app" -t "$pkgdir/$_install_path/$_pkgname"
   cp -r lib/ "$pkgdir/$_install_path/$_pkgname/"
   cp -r data/ "$pkgdir/$_install_path/$_pkgname/"
 
   # runpath
-  patchelf --set-rpath '$ORIGIN/lib' "$pkgdir/$_install_path/$_pkgname/$_pkgname"
+  for i in "$pkgdir/$_install_path/$_pkgname"/*; do
+    if [ -f "$i" ] && readelf -h "$i" &> /dev/null; then
+      patchelf --set-rpath '$ORIGIN/lib' "$i"
+    fi
+  done
   for i in "$pkgdir/$_install_path/$_pkgname/lib"/*.so; do
-    [ -z "$(patchelf --print-rpath "$i")" ] && continue
-    patchelf --set-rpath '$ORIGIN' "$i"
+    if [ -f "$i" ] && readelf -h "$i" &> /dev/null; then
+      patchelf --set-rpath '$ORIGIN' "$i"
+    fi
   done
 
   # symlink
   mkdir -pm755 "${pkgdir}/usr/bin"
-  ln -sfr "$pkgdir/$_install_path/$_pkgname/$_pkgname" "$pkgdir/usr/bin/${_pkgname}"
+  ln -sfr "$pkgdir/$_install_path/$_pkgname/${_pkgname}_app" "$pkgdir/usr/bin/${_pkgname}"
+  ln -sfr "$pkgdir/$_install_path/$_pkgname/${_pkgname}-cli" "$pkgdir/usr/bin/${_pkgname}-cli"
 
   # icon
   install -Dm644 "$srcdir/$_pkgsrc/app/build/flutter_assets/assets/img/logo-512.png" "$pkgdir/usr/share/icons/hicolor/512x512/apps/$_pkgname.png"
