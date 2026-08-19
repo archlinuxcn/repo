@@ -2,7 +2,7 @@
 # Contributor: Matthias Kurz <m dot kurz at irregular dot at>
 
 pkgname=zotero
-pkgver=9.0.6
+pkgver=10.0.0
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
@@ -10,12 +10,12 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch' 'tar')
-_tag=eabf364f2bad0cd03883e5898ce85619c3d6be21 # git rev-parse $pkgver
+_tag=d3f1ccf3380fde351854d849977c55467f4609a6 # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
         "zotero-styles::git+https://github.com/zotero/bundled-styles.git"
-        "zotero-pdf-worker::git+https://github.com/zotero/pdf-worker.git"
+        "zotero-document-worker::git+https://github.com/zotero/document-worker.git"
         "zotero-note-editor::git+https://github.com/zotero/note-editor.git"
         "zotero-reader::git+https://github.com/zotero/reader.git"
         "zotero-schema::git+https://github.com/zotero/zotero-schema.git"
@@ -26,9 +26,11 @@ source=("zotero.desktop"
         "zotero-libreoffice-integration::git+https://github.com/zotero/zotero-libreoffice-integration.git"
         "zotero-pdf-js::git+https://github.com/zotero/pdf.js.git"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
+        "zotero-structured-document-text::git+https://github.com/zotero/structured-document-text.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            '3b1551174ae216ae0ba8aae1fd1c4b031d1228677eb21e988196d07b12d765bc'
+            'c27b78ea4f6fef7a2f46ae64759ba6c2316aac95cca4324079f90ad4b6ae2d6c'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -60,7 +62,7 @@ prepare() {
   git submodule deinit --force app/modules/zotero-word-for-mac-integration app/modules/zotero-word-for-windows-integration
   git config submodule.translators.url "$srcdir/zotero-translators"
   git config submodule.styles.url "$srcdir/zotero-styles"
-  git config submodule.pdf-worker.url "$srcdir/zotero-pdf-worker"
+  git config submodule.document-worker.url "$srcdir/zotero-document-worker"
   git config submodule.note-editor.url "$srcdir/zotero-note-editor"
   git config submodule.reader.url "$srcdir/zotero-reader"
   git config submodule.resource/schema/global.url "$srcdir/zotero-schema"
@@ -82,16 +84,18 @@ prepare() {
   cd "$srcdir/zotero-client/reader"
   git submodule init
   # Stupid hack because of sometimes dangling commits
-  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" b0d511c4947bc32127bd7aa1a2b834e3bd0baa64
+  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" f57fc80d1c07e4cdc50a767ae0b500b5272123b4
   git config submodule.pdfjs/pdf.js.url "$srcdir/zotero-pdf-js"
   git config submodule.epubjs/epub.js.url "$srcdir/zotero-epub-js"
+  git config submodule.structured-document-text.url "$srcdir/zotero-structured-document-text"
   git -c protocol.file.allow=always submodule update
 
-  cd "$srcdir/zotero-client/pdf-worker"
+  cd "$srcdir/zotero-client/document-worker"
   git submodule init
   # Ditto
-  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 7cb304b6707d2c861f992612e9aced228555a7f3
+  git -C "$srcdir/zotero-pdf-js" fetch "https://github.com/zotero/pdf.js.git" 553a34b3010f7826b50b321350e08ebf14a5bd0d
   git config submodule.pdf.js.url "$srcdir/zotero-pdf-js"
+  git config submodule.structured-document-text.url "$srcdir/zotero-structured-document-text"
   git -c protocol.file.allow=always submodule update
 }
 
@@ -102,7 +106,7 @@ build() {
     _NODE_OPTIONS="$_NODE_OPTIONS --no-experimental-webstorage"
   fi
   NODE_OPTIONS="$_NODE_OPTIONS" npm run build
-  app/scripts/dir_build -q -p l
+  app/scripts/dir_build -p l
   if [[ "$CARCH" == "aarch64" ]]; then
     mv "$srcdir/zotero-client/app/staging/Zotero_linux-arm64" "$srcdir/zotero-client/app/staging/Zotero_linux-aarch64"
   fi
