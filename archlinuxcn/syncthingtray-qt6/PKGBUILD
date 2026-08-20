@@ -30,7 +30,7 @@ _cfg=qt6
 pkgname=syncthingtray-$_cfg
 _name=${pkgname%-$_cfg}
 pkgver=2.1.4
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64' 'armv6h' 'armv7h' 'aarch64')
 pkgdesc='Tray application for Syncthing (using Qt 6)'
 license=(GPL-2.0-or-later)
@@ -93,7 +93,8 @@ check() {
   cd "$srcdir/${PROJECT_DIR_NAME:-$_reponame-$pkgver}"
   # https://github.com/syncthing/syncthing/issues/8785
   export HOME="$(mktemp -p "$PWD" -d testhome.XXX)"
-  export QT_QPA_PLATFORM=offscreen
+  # https://github.com/Martchus/syncthingtray/issues/455
+  export QT_QPA_PLATFORM=offscreen QT_QPA_PLATFORMTHEME=
   export SYNCTHING_PORT=$(ephemeral_port)
   export SYNCTHING_TEST_TIMEOUT_FACTOR=3
   ninja check || ninja check
