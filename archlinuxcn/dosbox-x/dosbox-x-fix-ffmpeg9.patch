@@ -1,0 +1,43 @@
+From 18062c0ffb33db35fa52ce937ce25223140c0293 Mon Sep 17 00:00:00 2001
+From: maron2000 <68574602+maron2000@users.noreply.github.com>
+Date: Thu, 13 Aug 2026 18:02:16 +0900
+Subject: [PATCH] Fix build error on FFmpeg 9
+
+---
+ src/hardware/hardware.cpp | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/src/hardware/hardware.cpp b/src/hardware/hardware.cpp
+index 79de484d2a..8cf82a3446 100644
+--- a/src/hardware/hardware.cpp
++++ b/src/hardware/hardware.cpp
+@@ -1288,10 +1288,27 @@ void CAPTURE_AddImage(Bitu width, Bitu height, Bitu bpp, Bitu pitch, Bitu flags,
+ 			#else
+ 			ffmpeg_aud_ctx->ch_layout = AV_CHANNEL_LAYOUT_STEREO;
+ 			#endif
+-
++#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(61, 13, 100)
++            // Legacy support for FFmpeg not supporting avcodec_get_supported_config()
+ 			if (ffmpeg_aud_codec->sample_fmts != NULL)
+ 				ffmpeg_aud_ctx->sample_fmt = (ffmpeg_aud_codec->sample_fmts)[0];
+-			else
++#else
++            // For FFmpeg supporting avcodec_get_supported_config()
++            const enum AVSampleFormat* formats = NULL;
++
++            const int ret = avcodec_get_supported_config(
++                NULL,
++                ffmpeg_aud_codec,
++                AV_CODEC_CONFIG_SAMPLE_FORMAT,
++                0,
++                reinterpret_cast<const void**>(&formats),
++                NULL
++            );
++
++            if(ret >= 0 && formats != NULL)
++                ffmpeg_aud_ctx->sample_fmt = formats[0];
++#endif
++            else
+ 				ffmpeg_aud_ctx->sample_fmt = AV_SAMPLE_FMT_FLT;
+ 
+ 			if (avcodec_open2(ffmpeg_aud_ctx,ffmpeg_aud_codec,NULL) < 0) {
