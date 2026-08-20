@@ -39,6 +39,10 @@ function package() {
 	libarchive  libportal  libportal-gtk4  libsecret  libsoup3  libxml2  nettle  pango  sqlite  webkitgtk-6.0
 	)
 
+	export pkgdir
+	export pkgname
+	export srcdir
+
 	portable-packer \
 		-v \
 		--distro arch \
