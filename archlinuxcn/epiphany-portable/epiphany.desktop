@@ -333,7 +333,7 @@ Keywords[uz]=web;veb;browser;brauzer;internet;epiphany;
 Keywords[zh_CN]=web;browser;internet;epiphany;网络;浏览器;互联网;
 Keywords[zh_TW]=web;browser;internet;epiphany;網頁;瀏覽器;網際網路;
 Keywords=web;browser;internet;epiphany;
-Exec=env _portableConfig="org.gnome.Epiphany" portable -- %U
+Exec=epiphany-portable %U
 StartupNotify=true
 Terminal=false
 Type=Application
@@ -407,7 +407,7 @@ Name[uz]=Yangi oyna
 Name[zh_CN]=新建窗口
 Name[zh_TW]=新視窗
 Name=New Window
-Exec=env _portableConfig="org.gnome.Epiphany" portable -- --new-window %U
+Exec=epiphany-portable --new-window %U
 
 [Desktop Action Incognito]
 Name[af]=Nuwe privaatvenster
@@ -471,4 +471,4 @@ Name[uz@cyrillic]=Янги инкогнито ойна
 Name[zh_CN]=新建无痕窗口
 Name[zh_TW]=新隱密視窗
 Name=New Incognito Window
-Exec=env _portableConfig="org.gnome.Epiphany" portable -- --incognito-mode %U
+Exec=epiphany-portable --incognito-mode %U
