@@ -5,14 +5,14 @@ pkgdesc="A Python and C++ wrapper around zlib"
 url="https://github.com/Amulet-Team/Amulet-zlib"
 license=("LicenseRef-Amulet-Team-License")
 arch=(x86_64)
-pkgver=1.0.11a0
+pkgver=1.0.11a1
 pkgrel=1
 makedepends=(python-setuptools git python-wheel python-amulet-compiler-version python-packaging python-versioneer cmake)
 depends=(python pybind11 python-amulet_pybind11_extensions)
 source=(
 	"git+https://github.com/Amulet-Team/Amulet-zlib.git#tag=${pkgver}"
 )
-md5sums=('2226ae6106b56700a3e09af66662f054')
+md5sums=('e2a76056509bba0a3ea414ac35efe195')
 
 function prepare() {
 	cd "${srcdir}/Amulet-zlib"

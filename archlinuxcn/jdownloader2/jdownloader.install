@@ -7,9 +7,6 @@ post_install() {
 		chmod g+s "/opt/JDownloader"
 		setfacl -d -m u::rwx,g::rwx,o::rx "/opt/JDownloader"
 	fi
-	xdg-icon-resource forceupdate --theme hicolor &>/dev/null
-	update-desktop-database -q
-	update-mime-database /usr/share/mime
 	echo "Don't forget: You have to run 'JDownloaderHeadless' multiple times manually until you've configured MyJdownloader settings"
 }
 

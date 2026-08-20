@@ -1,6 +1,6 @@
 pkgname=julia-git-sparsebandedmatrices-src
-pkgver=1.3.4
-_commit=c319992ca718066cca86b18f4d57150aafe2bb9a
+pkgver=1.4.0
+_commit=cf1034d86f333f7f1c52eafa65d283da400d26ed
 pkgrel=1
 pkgdesc="SparseBandedMatrices.jl"
 url="https://github.com/SciML/SparseBandedMatrices.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/SparseBandedMatrices.jl.git#commit=$_commit")
-sha256sums=('dd00966013d90b25c937537f6d1988fe6b9192c043071158ac716012a8fd70c1')
+sha256sums=('fd4c537e78a560d7b2ca068072137344c0a7704b6c6b039962721e0463a6a964')
 
 package() {
   cd SparseBandedMatrices.jl
