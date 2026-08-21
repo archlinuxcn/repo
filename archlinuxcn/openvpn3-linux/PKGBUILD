@@ -73,6 +73,7 @@ prepare() {
 }
 
 build() {
+    export CXXFLAGS="$CXXFLAGS -Wno-unused-result"
     arch-meson \
         -Dselinux=disabled \
         -Dselinux_policy=disabled \
