@@ -6,14 +6,17 @@
 : ${RUSTUP_TOOLCHAIN:=stable}
 export CARGO_HOME CARGO_TARGET_DIR RUSTUP_TOOLCHAIN
 
+: ${FVM_CACHE_PATH:=$SRCDEST/fvm-cache}
+export FVM_CACHE_PATH
+
 : ${_use_sodeps:=false}
 
 : ${_install_path:=usr/lib}
 
 _pkgname="localsend"
 pkgname="$_pkgname"
-pkgver=1.18.1
-pkgrel=2
+pkgver=1.18.2
+pkgrel=1
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
 license=('Apache-2.0')
@@ -48,7 +51,7 @@ options=('!lto')
 _pkgsrc="$_pkgname-$pkgver"
 _pkgext="tar.gz"
 source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext")
-sha256sums=('555a73c39e2cfc01ee8cf0033ae11610725829d8289aa9c4794446241d9de2b0')
+sha256sums=('4425dfcf2e016d6540ea44941deb4ba6568201cc47d7f08753606e6e4b2769cd')
 
 _rust_setup() {
   if [ -n "$_arch" ]; then
@@ -86,7 +89,6 @@ prepare() {
 build() {
   _rust_setup
 
-  export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
   export CXXFLAGS+=' -Wno-error=deprecated-declarations'
 
   cd "$_pkgsrc"
@@ -136,14 +138,15 @@ package() {
   cp -r data/ "$pkgdir/$_install_path/$_pkgname/"
 
   # runpath
-  for i in "$pkgdir/$_install_path/$_pkgname"/*; do
+  for i in "$pkgdir/$_install_path/$_pkgname"{,/lib}/*; do
     if [ -f "$i" ] && readelf -h "$i" &> /dev/null; then
-      patchelf --set-rpath '$ORIGIN/lib' "$i"
-    fi
-  done
-  for i in "$pkgdir/$_install_path/$_pkgname/lib"/*.so; do
-    if [ -f "$i" ] && readelf -h "$i" &> /dev/null; then
-      patchelf --set-rpath '$ORIGIN' "$i"
+      if [[ "$i" =~ /lib/[^/]+$ ]]; then
+        printf 'Setting rpath to $ORIGIN for %s ...\n' "${i##*/}"
+        patchelf --set-rpath '$ORIGIN' "$i"
+      else
+        printf 'Setting rpath to $ORIGIN/lib for %s ...\n' "${i##*/}"
+        patchelf --set-rpath '$ORIGIN/lib' "$i"
+      fi
     fi
   done
 
