@@ -39,9 +39,11 @@ makedepends=(
     ninja
     asio
     bzip2
-    gtest
     python-docutils
     python-jinja
+)
+checkdepends=(
+    gtest
 )
 source=(
     "$pkgname::git+$url.git#tag=v$pkgver?signed"
@@ -87,10 +89,9 @@ build() {
     meson compile -C build
 }
 
-# require dbus
-# check() {
-#     meson test -C build --print-errorlogs
-# }
+check() {
+    meson test -C build --print-errorlogs --suite standalone --suite unit
+}
 
 package() {
     meson install -C build --destdir "$pkgdir"
