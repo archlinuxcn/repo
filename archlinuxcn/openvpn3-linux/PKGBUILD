@@ -1,8 +1,8 @@
 # Maintainer: RocketDev <ma2014119@outlook.com>
 
 pkgname=openvpn3-linux
-pkgver=27
-pkgrel=3
+pkgver=27.1
+pkgrel=1
 pkgdesc="Next generation OpenVPN implementation"
 arch=(x86_64)
 url="https://codeberg.org/OpenVPN/$pkgname"
@@ -50,13 +50,15 @@ source=(
     0001-Substitute-with-system-dependencies.patch
     0002-Fix-srcdir-reference.patch
     0003-Remove-extra-version-logic.patch
+    0004-Fix-target-dependency-graph.patch
 )
-b2sums=('a82ef9aafb98279961ab497036bb1a2bffab5385e5664d7111895b7be6b7d84da8857bcbd371c000ec41a1a49be5e6a7a8a4c104b515c7a98a4af89fc3e91be8'
+b2sums=('75e7a39312817e1ba0c177a36dc11c8e1e09c73de59224a0a9a8ce7c9d972642e7b40e9ab06e74757bda03a13b9135446b0f8b7f87953dd3881a874ab68062a8'
         'SKIP'
         '695fbd1a26184871d60ff939ab39b4638bdf4234ce0c567a04ed165bc4fe129bd8c3462bd79b23c1e8916fdf82bfd4faf3496fe391615b0f1e5842b05821c3e2'
         '08f8a8358f40d6f6e8b4d95a8c5d243b992dd66a5f28124040dd64efa89db6201e29211e5a7a94ac304f06f15e37a82e98cabb7178c4e871c5dec7eb55b4fb6d'
         'be7345e9ab8ebaf1566798160063034a2096758c94d6f34467aba9b88d81f77c72672b7b7aa66267013c0f2581f890e6e4019de87a3aae8a1e598905cde1db43'
-        '171a5e3832b246dc42009b7b5aed443d70df313a5c4cfa4a03763457387721f48d625867e0bfabf33bd2fb0087b6d469a5c0a86ddfa9594cbb403bc47b7d5ac4')
+        '171a5e3832b246dc42009b7b5aed443d70df313a5c4cfa4a03763457387721f48d625867e0bfabf33bd2fb0087b6d469a5c0a86ddfa9594cbb403bc47b7d5ac4'
+        '870dcc54fb64e3343763dfc2991ca77f931b1ed6801e123676f327fd2712067030f52b9805bef741726e8d581d83e932f17f864a0e9673057d88596197d1f38b')
 validpgpkeys=('690DB606E838182FA8F9018C755A3AB945307622' 'F554A3687412CFFEBDEFE0A312F5F7B42F2B01E7')
 install=openvpn3-linux.install
 conflicts=(openvpn3)
@@ -70,11 +72,11 @@ prepare() {
     git apply ../0001-Substitute-with-system-dependencies.patch
     git apply ../0002-Fix-srcdir-reference.patch
     git apply ../0003-Remove-extra-version-logic.patch
+    git apply ../0004-Fix-target-dependency-graph.patch
 }
 
 build() {
     export CXXFLAGS="$CXXFLAGS -Wno-unused-result"
-    export PYTHONPATH="$PYTHONPATH:$srcdir/build/src/python/openvpn3"
     arch-meson \
         -Dselinux=disabled \
         -Dselinux_policy=disabled \

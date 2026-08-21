@@ -1,0 +1,38 @@
+From 22197a05f33a09331bb6b04dfafa3730c8c73e79 Mon Sep 17 00:00:00 2001
+From: RocketDev <ma2014119@outlook.com>
+Date: Fri, 21 Aug 2026 16:56:56 +0800
+Subject: [PATCH] Fix target dependency graph
+
+---
+ src/python/openvpn3/meson.build       | 2 +-
+ src/shell/bash-completion/meson.build | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/python/openvpn3/meson.build b/src/python/openvpn3/meson.build
+index 3299cb0e..01756d14 100644
+--- a/src/python/openvpn3/meson.build
++++ b/src/python/openvpn3/meson.build
+@@ -16,7 +16,7 @@ gen_py_consts = executable('gen-py-constants',
+         include_directories: [include_dirs, '../../..'],
+ )
+ 
+-custom_target(
++python_constants = custom_target(
+         'python-constants',
+         output: 'constants.py',
+         command: gen_py_consts,
+diff --git a/src/shell/bash-completion/meson.build b/src/shell/bash-completion/meson.build
+index c6b30c10..8a43ee24 100644
+--- a/src/shell/bash-completion/meson.build
++++ b/src/shell/bash-completion/meson.build
+@@ -9,6 +9,7 @@ bashcompl_dir = get_option('datadir') / 'bash-completion/completions'
+ 
+ custom_target(
+     'bash-completion-openvpn2',
++    depends: python_constants,
+     command: [
+                 find_program('gen-openvpn2-completion.py'),
+                 '--python-source-dir',
+-- 
+2.55.0
+
