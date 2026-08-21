@@ -12,7 +12,7 @@ pkgdesc="Free, open source software for live streaming and recording (with webso
 arch=("i686" "x86_64")
 url="https://obsproject.com/"
 license=("GPL-2.0-or-later")
-depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls' 'rnnoise' 'pciutils'
+depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11' 'mbedtls3' 'rnnoise' 'pciutils'
 	'qt6-svg' 'curl' 'jack' 'gtk-update-icon-cache' 'pipewire' 'libxcomposite'
 	'libdatachannel')
 makedepends=('git' 'cmake' 'extra-cmake-modules' 'libfdk-aac' 'x264' 'swig' 'python' 'luajit' 'sndio' 'ffnvcodec-headers' 'uthash' 'nlohmann-json' 'ffnvcodec-headers' 'asio' 'websocketpp' 'qrcodegencpp-cmake' 'simde')
@@ -46,10 +46,17 @@ prepare() {
 }
 
 build() {
+	# mbedtls 4 not supported yet
+	# https://github.com/obsproject/obs-studio/issues/13601
+
 	cmake -B build \
 		-S "${_pkgname}/" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=None \
+		-DMbedTLS_INCLUDE_DIR="/usr/include/mbedtls3" \
+		-DMbedtls_LIBRARY="/usr/lib/mbedtls3/libmbedtls.so" \
+		-DMbedcrypto_LIBRARY="/usr/lib/mbedtls3/libmbedcrypto.so" \
+		-DMbedx509_LIBRARY="/usr/lib/mbedtls3/libmbedx509.so" \
 		-DENABLE_BROWSER=OFF \
 		-DENABLE_WEBSOCKET=ON \
 		-DENABLE_VST=ON \
