@@ -1,8 +1,6 @@
 maintainers:
-  - github: heavysink
-    email: winstonwu91@gmail.com
-  - github: Kimiblock
-    email: kimiblock@icloud.com
+- github: Kimiblock
+  email: kimiblock@icloud.com
 
 build_prefix: extra-x86_64
 
@@ -12,25 +10,25 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: github
-    github: Kraftland/portable
-    use_latest_release: true
+- source: github
+  github: Kraftland/portable
+  use_latest_release: true
     #use_max_tag: true
-    from_pattern: '-'
-    to_pattern: '_'
-    exclude_regex: "beta*"
-  - source: alpm
-    alpm: systemd-libs
-    provided: libudev.so
-  - source: alpm
-    alpm: glibc
-  - source: alpm
-    alpm: libgcc
-    provided: libgcc_s.so
-  - source: alpm
-    alpm: libseccomp
-    provided: libseccomp.so
-    strip_release: true
+  from_pattern: '-'
+  to_pattern: _
+  exclude_regex: beta*
+- source: alpm
+  alpm: systemd-libs
+  provided: libudev.so
+- source: alpm
+  alpm: glibc
+- source: alpm
+  alpm: libgcc
+  provided: libgcc_s.so
+- source: alpm
+  alpm: libseccomp
+  provided: libseccomp.so
+  strip_release: true
 
 repo_depends:
-  - portable-packer
+- portable-packer

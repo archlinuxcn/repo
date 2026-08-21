@@ -1,7 +1,5 @@
 maintainers:
-  - github: CoelacanthusHex
-    email: coelacanthus@archlinuxcn.org
-  - github: Kimiblock
+- github: Kimiblock
 
 build_prefix: extra-x86_64
 
@@ -13,9 +11,9 @@ post_build_script: |
 
 
 update_on:
-  - source: aur
-    aur: cgproxy-git
-  - source: alpm
-    alpm: libbpf
-    provided: libbpf.so
+- source: aur
+  aur: cgproxy-git
+- source: alpm
+  alpm: libbpf
+  provided: libbpf.so
 

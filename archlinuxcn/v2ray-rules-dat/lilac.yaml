@@ -1,8 +1,6 @@
 maintainers:
-  - github: DeepChirp
-    email: deepchirp@archlinuxcn.org
-  - github: hour-keeper
-
+- github: DeepChirp
+  email: deepchirp@archlinuxcn.org
 build_prefix: extra-x86_64
 
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
@@ -11,6 +9,6 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: github
-    github: Loyalsoldier/v2ray-rules-dat
-    use_max_tag: true
+- source: github
+  github: Loyalsoldier/v2ray-rules-dat
+  use_max_tag: true
