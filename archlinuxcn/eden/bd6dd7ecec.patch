@@ -1,0 +1,26 @@
+From bd6dd7ecec299f98fbde7598f48156370b80fd8f Mon Sep 17 00:00:00 2001
+From: crueter <crueter@eden-emu.dev>
+Date: Sat, 25 Apr 2026 20:50:11 +0200
+Subject: [PATCH] [maxwell] Fix Flow::Block comp error (#3882)
+
+Signed-off-by: crueter <crueter@eden-emu.dev>
+Reviewed-on: https://git.eden-emu.dev/eden-emu/eden/pulls/3882
+Reviewed-by: Lizzie <lizzie@eden-emu.dev>
+Reviewed-by: MaranBr <maranbr@eden-emu.dev>
+---
+ .../frontend/maxwell/structured_control_flow.cpp                | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp b/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
+index eaf1d88f2e..eaf81f023d 100644
+--- a/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
++++ b/src/shader_recompiler/frontend/maxwell/structured_control_flow.cpp
+@@ -979,7 +979,7 @@ private:
+     Environment& env;
+     IR::AbstractSyntaxList& syntax_list;
+     bool uses_demote_to_helper{};
+-    const Flow::Block dummy_flow_block;
++    const Flow::Block dummy_flow_block{};
+ };
+ } // Anonymous namespace
+ 
