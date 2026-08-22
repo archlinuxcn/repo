@@ -4,7 +4,7 @@
 
 pkgname=zen-browser
 pkgver=1.21.10b
-pkgrel=1
+pkgrel=2
 pkgdesc='Firefox-based web browser built from upstream release source snapshot'
 url='https://zen-browser.app'
 arch=('x86_64')
@@ -189,6 +189,9 @@ package() {
   cd "$srcdir/$_srcroot"
 
   DESTDIR="$pkgdir" ./mach install
+
+  # Upstream installs a generic Firefox launcher that conflicts with firefox.
+  rm -f "$pkgdir/usr/bin/firefox"
 
   local _launcher='zen-browser'
   local _appdir="$pkgdir/usr/lib/$_launcher"

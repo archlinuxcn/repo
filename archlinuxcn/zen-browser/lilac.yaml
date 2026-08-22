@@ -6,7 +6,15 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['noureddinex'])
+pre_build_script: |
+  aur_pre_build(maintainers=['noureddinex'])
+  for line in edit_file('PKGBUILD'):
+    print(line)
+    if line.strip() == 'DESTDIR="$pkgdir" ./mach install':
+      print()
+      print('  # Upstream installs a generic Firefox launcher that conflicts with firefox.')
+      print('  rm -f "$pkgdir/usr/bin/firefox"')
+  update_pkgrel()
 
 post_build: aur_post_build
 
