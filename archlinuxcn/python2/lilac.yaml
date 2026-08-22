@@ -6,7 +6,20 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['andreas_baumann'])
+pre_build_script: |
+  aur_pre_build(maintainers=['andreas_baumann'])
+  for line in edit_file('PKGBUILD'):
+    if line.strip() == 'local -x TZ=UTC':
+      print(line)
+      print('  local xvfb_run="${srcdir}/xvfb-run-python2"')
+      print('  cp /usr/bin/xvfb-run "$xvfb_run"')
+      print("  sed -i 's/^kill \\$XVFBPID$/kill $XVFBPID 2>\\/dev\\/null || true/' \"$xvfb_run\"")
+    else:
+      print(line.replace(
+        'xvfb-run "${srcdir}/Python-${pkgver}/python"',
+        '"$xvfb_run" "${srcdir}/Python-${pkgver}/python"',
+      ))
+  update_pkgrel()
 
 post_build: aur_post_build
 
