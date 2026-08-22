@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts wget)
 depends=(julia-git)
-source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit")
-sha256sums=('a7cf1fd5c8c4ad0e48bd5a36c5869a5de8d2dd8caff57c9d7162531c9572f17a')
+source=("git+https://github.com/MakieOrg/Makie.jl.git#commit=$_commit"
+        0001-Fix-for-Julia-master.patch)
+sha256sums=('a7cf1fd5c8c4ad0e48bd5a36c5869a5de8d2dd8caff57c9d7162531c9572f17a'
+            '722814c013204ff906014f86b3378cd80fd1f3520eace816efe0c9009ed9925e')
+
+prepare() {
+  cd Makie.jl
+
+  patch -Np1 --no-backup-if-mismatch < ../0001-Fix-for-Julia-master.patch
+}
 
 build() {
   cd Makie.jl/Makie
