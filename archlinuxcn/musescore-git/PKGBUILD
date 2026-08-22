@@ -15,7 +15,7 @@ depends=(shared-mime-info alsa-lib zlib freetype2 libvorbis libopusenc flac
          qt6-base qt6-networkauth qt6-declarative qt6-svg qt6-tools qt6-5compat
          qt6-scxml portaudio libpulse libsndfile libogg gcc-libs portmidi
          liblouis fdk-aac pugixml utf8cpp)
-makedepends=('cmake' 'doxygen' 'git' 'lame' 'xxd' 'vulkan-headers')
+makedepends=('cmake' 'doxygen' 'git' 'lame' 'xxd' 'vulkan-headers' 'nlohmann-json')
 optdepends=('jack')
 conflicts=("musescore" 'mscore' 'musescore-svn')
 provides=("musescore=${_realver}" 'musescore-svn')
