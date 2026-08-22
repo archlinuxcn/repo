@@ -4,7 +4,7 @@
 
 pkgname=deadbeef
 pkgver=1.10.3
-pkgrel=8
+pkgrel=9
 pkgdesc="Modular GTK audio player for GNU/Linux"
 arch=(x86_64 i686 pentium4 armv7h aarch64)
 url="https://deadbeef.sourceforge.io/"
@@ -47,7 +47,8 @@ sha512sums=('0d464c6586deb91fa5009b3b7cb70bd0814901946ebdb848156ee5e6828a4a6eb35
 build () {
   cd "${pkgname}-${pkgver}"
   export CC=clang CXX=clang++
-  ./configure --prefix=/usr --disable-gtk2
+  # deadbeef-mpris2-plugin provides this plugin as a separate package.
+  enable_mpris=no ./configure --prefix=/usr --disable-gtk2
   make
 }
 
