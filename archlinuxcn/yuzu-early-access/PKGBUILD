@@ -4,12 +4,12 @@ _pkgname=yuzu
 pkgname=$_pkgname-early-access
 epoch=2
 pkgver=4176
-pkgrel=30
+pkgrel=32
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
 license=('GPL2')
-depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'enet' 'libinih' 'discord-rpc' 'cpp-httplib' 'enet')
+depends=('boost-libs' 'shared-mime-info' 'hicolor-icon-theme' 'sdl2' 'qt5-base' 'qt5-multimedia' 'qt5-webengine' 'libxkbcommon-x11' 'fmt' 'libzip' 'opus' 'libfdk-aac' 'lz4' 'openssl' 'zstd' 'cubeb' 'enet' 'libinih' 'discord-rpc')
 makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'vulkan-utility-libraries' 'ninja' 'graphviz' 'doxygen' 'boost' 'catch2' 'nlohmann-json' 'rapidjson' 'qt5-tools' 'desktop-file-utils' 'robin-map' 'cpp-jwt' 'vulkan-headers' 'spirv-headers' 'dos2unix' 'clang' 'python' 'renderdoc' 'gamemode' 'perl' 'yasm' 'python-jsonschema' 'python-jinja' 'patch')
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
@@ -23,6 +23,7 @@ source=("git+https://source.hodakov.me/hdkv/yuzu.git"
   git+https://github.com/brofield/simpleini.git#commit=382ddbb
   ffmpeg::git+https://github.com/FFmpeg/FFmpeg.git#commit=9c1294e
   git+https://github.com/herumi/xbyak.git#commit=a1ac375
+  cpp-httplib::git+https://github.com/yhirose/cpp-httplib.git#tag=v0.12.6
   "tz-2024b.tar.gz::https://github.com/eggert/tz/archive/refs/tags/2024b.tar.gz"
   0001-fix-fmt11.patch
   0002-fix-mem.patch
@@ -42,6 +43,7 @@ sha256sums=('SKIP'
   '7f3093ae65cf462079e33599ccf8eba2369c25a4573229835a2481016104f9d8'
   '6efb40bae04b4af99682e33bd4aee285d5b0ff6a7964c42a0cd4579f6ac942f7'
   'c65c870a733fad6f9c78bec7d1720ae0aa3059d482f545b6fe6fe017e11cf623'
+  'SKIP'
   '557c41d8eb5c29387a9d496db87c4aeb4f2ac8a2b6d5f60e869a8cade26e679c'
   '826576b7254cf8df058caef607af8ef996a18bbb4d0cbff12b12ee08e5c4ae6b'
   'dfb01cd56f73bae21113e73328405b337b7c8643b17018eb757bad04d5a23538'
@@ -63,7 +65,7 @@ prepare() {
 
   cd $srcdir
   cp -rf ${srcdir}/tz-2024b/* "${srcdir}/tzdb_to_nx/externals/tz/tz/"
-  for pro in {sirit,libadrenotools,simpleini,mbedtls,dynarmic,xbyak}; do
+  for pro in {sirit,libadrenotools,simpleini,mbedtls,dynarmic,xbyak,cpp-httplib}; do
     if [ -d $srcdir/yuzu/externals/${pro} ]; then
       cp -rf ${srcdir}/${pro}/* $srcdir/yuzu/externals/${pro}
     else
