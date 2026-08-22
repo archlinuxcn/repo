@@ -5,8 +5,8 @@
 # Contributor: Themaister <maister@archlinux.us>
 
 pkgname=pcsx2-git
-pkgver=2.7.515.r1.gc3df2360fc
-pkgrel=1
+pkgver=2.7.524.r0.g3e29183a37
+pkgrel=2
 pkgdesc='PlayStation 2 emulator'
 arch=(x86_64)
 url=https://github.com/PCSX2/pcsx2
@@ -74,12 +74,18 @@ options=(!lto)
 source=(
     git+https://github.com/PCSX2/pcsx2.git
     git+https://github.com/PCSX2/pcsx2_patches.git
+    0001-support-ffmpeg-8-codec-config-api.patch
 )
 install=pcsx2-git.install
 
 pkgver() {
     cd pcsx2
     git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^v//'
+}
+
+prepare() {
+    cd pcsx2
+    patch -Np1 -i ../0001-support-ffmpeg-8-codec-config-api.patch
 }
 
 build() 
@@ -121,4 +127,5 @@ package() {
 sha256sums=(
     'SKIP'
     'SKIP'
+    '783e57311b68f55d19cd9e01ccba7c1a69cf2aac824a3562447fe1d017dc20d0'
 )
