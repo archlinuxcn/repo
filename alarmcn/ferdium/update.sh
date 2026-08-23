@@ -8,6 +8,7 @@
 set -e
 
 rm -rf ferdium-*.pkg.tar.zst
+updpkgsums
 makepkg
 makepkg --printsrcinfo > .SRCINFO
 newversion=$(grep pkgver .SRCINFO | awk -F= '{print $2}' | sed -e 's/ //g')
