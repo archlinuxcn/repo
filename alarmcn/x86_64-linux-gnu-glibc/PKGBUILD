@@ -19,7 +19,7 @@ if [[ "$pkgver" =~ \+g([0-9a-f]*)$ ]]; then
 else
   _git_ref="tag=glibc-${pkgver}"
 fi
-source=("git+https://sourceware.org/git/glibc.git#${_git_ref}"
+source=("glibc::git+https://forge.sourceware.org/glibc/glibc-mirror#${_git_ref}"
         sdt.h sdt-config.h)
 sha256sums=('189dd24c032112667c5b704ea8449b3bfeae3af0016006c0332e0c7d4fe58d0f'
             '774061aff612a377714a509918a9e0e0aafce708b87d2d7e06b1bd1f6542fe70'
