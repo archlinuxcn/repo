@@ -7,10 +7,10 @@ _projectname=electron
 _major=41
 _pkgname="${_projectname}${_major}"
 pkgname="${_pkgname}"-bin
-_subver="4.1"
+_subver="10.6"
 _pkgver="${_major}.${_subver}"
 pkgver="${_pkgver/-/.}"
-pkgrel=0
+pkgrel=1
 pkgdesc="Build cross platform desktop apps with web technologies — prebuilt"
 arch=(
     'aarch64'
@@ -52,12 +52,12 @@ source_x86_64=(
     "${_pkgname}-chromedriver-${pkgver}-x86_64.zip::${_ghurl}/releases/download/v${_pkgver}/chromedriver-v${_pkgver}-linux-x64.zip"
     "${_pkgname}-${pkgver}-x86_64.zip::${_ghurl}/releases/download/v${_pkgver}/electron-v${_pkgver}-linux-x64.zip"
 )
-sha256sums_aarch64=('c9f666e0a2736378273545277e3fe00decfa856ff4701928c51adfeacd81b5a4'
-                    '9e2b5cfbd387e138f06c7bb19b399bb3ee487dbb4110215df097d94e80431892')
-sha256sums_armv7h=('2aaefcc5bd00d2ce61378c9f064e83f03177848526a057922dfef0cddbb0d49c'
-                   '2875860d6b7cb2e8a0142fb87f9f7be50a382a87a24bf15a0861f20ba53dc400')
-sha256sums_x86_64=('7d66ef37dd8ac3dd9a80baf28193e686d97abddcd7229a47f021ec824259679e'
-                   '79d4efd69f0ccf1fc11891ea5075329c7b3faddad79a08d9fb395bbd63169acf')
+sha256sums_aarch64=('8676949b061c58d5e4454f392d5f91206f807f556d993c5ac2c58ab0dc53f372'
+                    '9dbb040d575c33f8b2d2ab944e429979b01b5261c0240cff4749892be1bc56ea')
+sha256sums_armv7h=('e7191ce892fad4cca3c302faa389e1e469402765b58ce5508969f8a5ee813b48'
+                   'c96c2107073136a1fe7619e09dab07a14d7f4acde9a28d04993e67e69a156d15')
+sha256sums_x86_64=('652465ce0057fb670c5e7d4ee126fb5d6043d1c1bf9152901ac85231a5ffdbbb'
+                   'a27291d502b16170fe49d14beab68c4d9a1040192500e1643a9ab0b11274f075')
 package() {
     install -Dm755 -d "${pkgdir}/usr/"{bin,lib/"${_pkgname}"}
     find "${srcdir}" -mindepth 1 -maxdepth 1 -type f ! -name "*.zip" ! -name "LICENSE*" -exec cp -r --no-preserve=ownership --preserve=mode -t "${pkgdir}/usr/lib/${_pkgname}/." {} +
