@@ -2,18 +2,18 @@
 
 _name=eth-keyfile
 pkgname=python-${_name}
-pkgver=0.9.1
-pkgrel=2
+pkgver=0.10.0
+pkgrel=1
 pkgdesc="Tools for handling the encrypted keyfile format used to store private keys."
 arch=(any)
 url="https://github.com/ethereum/${_name}"
 license=(MIT)
 depends=(python python-pycryptodome python-eth-typing python-eth-keys python-eth-utils python-py_ecc)
-makedepends=(git python-build python-installer python-setuptools python-wheel)
+makedepends=(git python-build python-installer python-setuptools python-setuptools-scm python-wheel)
 checkdepends=(python-pytest)
 source=(git+$url.git#tag=v$pkgver
         git+https://github.com/ethereum/tests.git)
-sha512sums=('8e3d89ac5576113e189a01cd09975d7e3b0bcb4ab171eca34e2bd305633ced6f1aaf9c090e6491d8a86f541b0b61e73ddcf6aaec9fae02a0ffe28209ade61658'
+sha512sums=('8338e97b2f75dc39c405049c1b516e8f8edb18504dccfa613ad620bc21c32f4095ce0eed146b03d0429b895aaf478665c308d2c76a1ad2c5f6c9a7b428b95147'
             'SKIP')
 
 prepare() {
@@ -28,7 +28,7 @@ build() {
   python -m build --wheel --no-isolation
 }
 
-check(){
+check() {
   cd $_name
   python -m venv --system-site-packages test-env
   test-env/bin/python -m installer dist/*.whl
