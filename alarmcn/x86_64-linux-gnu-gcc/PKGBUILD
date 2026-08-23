@@ -132,6 +132,8 @@ package_gcc-libs() {
     make -C $_target/32/$lib DESTDIR="${pkgdir}" install-toolexeclibLTLIBRARIES
   done
 
+  make -C $_target/libatomic DESTDIR="${pkgdir}" install-asneeded
+  make -C $_target/32/libatomic DESTDIR="${pkgdir}" install-asneeded
   make -C $_target/libobjc DESTDIR="${pkgdir}" install-libs
   make -C $_target/32/libobjc DESTDIR="${pkgdir}" install-libs
 
