@@ -2,7 +2,7 @@
 
 pkgname=owlink-git
 pkgver=0.0.0.r45.da255a7
-pkgrel=2
+pkgrel=3
 pkgdesc='An open Apple Wireless Direct Link (AWDL) implementation written in C'
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
 url=https://owlink.org/
@@ -15,12 +15,12 @@ source=(
   "$pkgname::git+https://github.com/seemoo-lab/owl.git#branch=master"
   "git+https://github.com/google/googletest.git"
   "git+https://github.com/radiotap/radiotap-library.git"
+  'googletest-cstdint.patch'
 )
-sha512sums=(
-  'SKIP'
-  'SKIP'
-  'SKIP'
-)
+sha512sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            '64f135eb7675cc97ea2b6906c37f5bfe91d9e2d0025f96967bf7998339e488e2f97c9bb4c5ce301c51d05cc606aa4f58b1ff802110024c38639d2dcb8e40644a')
 
 pkgver() {
   cd "$pkgname"
@@ -35,12 +35,13 @@ prepare() {
   git config submodule.googletest.url $srcdir/googletest
   git config submodule.radiotap.url $srcdir/radiotap-library
   git -c protocol.file.allow=always submodule update --init
+  git -C googletest apply "$srcdir/googletest-cstdint.patch"
 }
 
 build() {
   cd "$pkgname"
   mkdir build -p && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_POLICY_VERSION_MINIMUM=3.5 ..
   make
 }
 
