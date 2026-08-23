@@ -1,8 +1,8 @@
 # Maintainer: Aaron Keesing <agkphysics at gmail dot com>
 
 pkgname=zotero
-pkgver=9.0.6
-pkgrel=1
+pkgver=10.0.0
+pkgrel=0
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
 url="https://github.com/zotero/zotero"
@@ -13,7 +13,7 @@ source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=$pkgver"
         "zotero-translators::git+https://github.com/zotero/translators.git"
         "zotero-styles::git+https://github.com/zotero/bundled-styles.git"
-        "zotero-pdf-worker::git+https://github.com/zotero/pdf-worker.git"
+        "zotero-document-worker::git+https://github.com/zotero/document-worker.git"
         "zotero-note-editor::git+https://github.com/zotero/note-editor.git"
         "zotero-reader::git+https://github.com/zotero/reader.git"
         "zotero-schema::git+https://github.com/zotero/zotero-schema.git"
@@ -25,7 +25,7 @@ source=("zotero.desktop"
         "zotero-epub-js::git+https://github.com/zotero/epub.js.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            '3b1551174ae216ae0ba8aae1fd1c4b031d1228677eb21e988196d07b12d765bc'
+            'c27b78ea4f6fef7a2f46ae64759ba6c2316aac95cca4324079f90ad4b6ae2d6c'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -55,7 +55,7 @@ prepare() {
   git submodule init
   git config submodule.translators.url "$srcdir/zotero-translators"
   git config submodule.styles.url "$srcdir/zotero-styles"
-  git config submodule.pdf-worker.url "$srcdir/zotero-pdf-worker"
+  git config submodule.document-worker.url "$srcdir/zotero-document-worker"
   git config submodule.note-editor.url "$srcdir/zotero-note-editor"
   git config submodule.reader.url "$srcdir/zotero-reader"
   git config submodule.resource/schema/global.url "$srcdir/zotero-schema"
@@ -79,7 +79,7 @@ prepare() {
   git config submodule.epubjs/epub.js.url "$srcdir/zotero-epub-js"
   git -c protocol.file.allow=always submodule update
 
-  cd "$srcdir/zotero-client/pdf-worker"
+  cd "$srcdir/zotero-client/document-worker"
   git submodule init
   git -c protocol.file.allow=always submodule update
 }
@@ -87,7 +87,7 @@ prepare() {
 build() {
   cd "$srcdir/zotero-client"
   NODE_OPTIONS=--openssl-legacy-provider npm run build
-  app/scripts/dir_build -q -a $_zotero_arch
+  app/scripts/dir_build -a $_zotero_arch
 }
 
 package() {
