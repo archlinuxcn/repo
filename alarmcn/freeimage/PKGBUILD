@@ -37,6 +37,9 @@ prepare() {
 }
 
 build() {
+  CFLAGS+=' -fPIC'
+  CXXFLAGS+=' -fPIC'
+
   cd FreeImage
   sh gensrclist.sh
   sh genfipsrclist.sh

@@ -3,13 +3,13 @@
 
 _pkgname=hypseus-singe
 pkgname=$_pkgname-git
-pkgver=2.12.0.r0.gdac37bc
+pkgver=3.0.1.r1.gb1bebb8
 pkgrel=1
 pkgdesc="A drop-in replacement to daphne, to play laserdisc arcade games on a PC."
 arch=('x86_64' 'aarch64')
 url="https://github.com/DirtBagXon/hypseus-singe"
 license=('GPL3')
-depends=('zlib' 'sdl2_mixer' 'sdl2_image' 'sdl2_ttf' 'libvorbis' 'libzip')
+depends=('zlib' 'sdl3_mixer' 'sdl3_image' 'sdl3_ttf' 'libvorbis' 'libzip')
 makedepends=('git' 'cmake')
 provides=("$_pkgname")
 conflicts=("$_pkgname")
