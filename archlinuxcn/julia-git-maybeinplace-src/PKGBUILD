@@ -1,6 +1,6 @@
 pkgname=julia-git-maybeinplace-src
-pkgver=0.1.7
-_commit=60dde56791d27b747de3390806116a38a4b7fe40
+pkgver=0.1.8
+_commit=74d0f124ebaef01d79b921744155d0367c90ae8c
 pkgrel=1
 pkgdesc="MaybeInplace.jl"
 url="https://github.com/avik-pal/MaybeInplace.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/avik-pal/MaybeInplace.jl.git#commit=$_commit")
-sha256sums=('c471434f16133e3c0319bb4f85ab4a9d3836ba8e556894db0b6a4c9040606513')
+sha256sums=('0d8ac039a1598ad74dfcce6ef31d05b1a322654f1905f2a944f199bcbd4a9f6d')
 
 package() {
   cd MaybeInplace.jl
