@@ -1,6 +1,6 @@
 pkgname=julia-git-ellipsisnotation-src
-pkgver=1.11.0
-_commit=10f221e1b07e17dc5885bfd08b31e066c8a6310a
+pkgver=1.12.0
+_commit=65fda2b20367ebd8baa6bc1dd1d4f772dd6def12
 pkgrel=1
 pkgdesc="EllipsisNotation.jl"
 url="https://github.com/SciML/EllipsisNotation.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/EllipsisNotation.jl.git#commit=$_commit")
-sha256sums=('e40c234f04d2526a82d8df06664855ffcbcc6ef33e1db91e8b7b81ea9ffa2951')
+sha256sums=('ad993362a4559b6d075be19efd032129c5c520ea6706cf8b2c004b60d382dbf3')
 
 package() {
   cd EllipsisNotation.jl
