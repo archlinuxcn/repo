@@ -1,6 +1,6 @@
 pkgname=julia-git-runtimegeneratedfunctions-src
-pkgver=0.5.24
-_commit=d7fdff8d643ac814f6173bcece311e31140c7b11
+pkgver=0.5.25
+_commit=8bfd8f49ded991e8d6f4065fc261a762b15412be
 pkgrel=1
 pkgdesc="RuntimeGeneratedFunctions.jl"
 url="https://github.com/SciML/RuntimeGeneratedFunctions.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/RuntimeGeneratedFunctions.jl.git#commit=$_commit")
-sha256sums=('b612165a098f0a0c1d5e4f8e70a10424ddbc7befeea382471e467ba8fbaca6b7')
+sha256sums=('39babd78ce665fe30168256e5ba27471df226b26f4c450f6f6f5c35f5e8d8cea')
 
 package() {
   cd RuntimeGeneratedFunctions.jl
