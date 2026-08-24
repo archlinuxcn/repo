@@ -44,7 +44,7 @@ prepare() {
 }
 
 build() {
-	arch-meson "${_pkgname}/" build
+	meson setup --prefix=/usr --buildtype=release "${_pkgname}" build
 	meson compile -C build
 }
 
