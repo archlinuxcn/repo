@@ -15,8 +15,10 @@ conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 source=("git+${url}.git"
 	"git+https://gitlab.com/${_pkgname}-devs/gng.git"
+	"git+https://gitlab.com/${_pkgname}-devs/graph-widget.git"
 	"git+https://gitlab.com/${_pkgname}-devs/app-detection.git")
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP')
 options=('!lto')
@@ -30,6 +32,7 @@ prepare() {
 	cd "${_pkgname}/"
 	git submodule init
 	git config submodule.subprojects/magpie.url "${srcdir}/gng"
+	git config submodule.subprojects/graph-widget.url "${srcdir}/graph-widget"
 	git -c protocol.file.allow=always submodule update
 
 	cd subprojects/magpie
@@ -41,12 +44,12 @@ prepare() {
 }
 
 build() {
-	arch-meson "${_pkgname}/" build
+	meson setup --prefix=/usr --buildtype=release "${_pkgname}" build
 	meson compile -C build
 }
 
 check() {
-	meson test -C build --print-errorlogs || :
+	meson test -C build --print-errorlogs
 }
 
 package() {
