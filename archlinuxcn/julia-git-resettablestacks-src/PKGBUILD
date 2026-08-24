@@ -1,6 +1,6 @@
 pkgname=julia-git-resettablestacks-src
-pkgver=1.3.0
-_commit=49b817e52e81c178d8e4dc6befd95da510d60741
+pkgver=1.4.0
+_commit=2864d38b811e2b74506e2dfb3cf9050cbcf06e5d
 pkgrel=1
 pkgdesc="ResettableStacks.jl"
 url="https://github.com/SciML/ResettableStacks.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/ResettableStacks.jl.git#commit=$_commit")
-sha256sums=('51cf832c296ffa1983c1ae4cb12a1f3574d4cff43654b2ae136c81fe5141b13e')
+sha256sums=('6b9b637a76a10f4ce2deac3b50a64b1c793aa2271ab5e7da6e79d8188d8c35ed')
 
 package() {
   cd ResettableStacks.jl
