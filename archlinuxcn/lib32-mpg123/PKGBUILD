@@ -10,9 +10,8 @@ url='https://mpg123.de/'
 arch=('x86_64')
 license=('LGPL-2.1-only')
 depends=('lib32-alsa-lib' 'mpg123')
-makedepends=('lib32-sdl2' 'lib32-jack2' 'lib32-libpulse')
+makedepends=('lib32-jack2' 'lib32-libpulse')
 optdepends=(
-  'lib32-sdl2: for sdl audio support'
   'lib32-jack: for jack audio support'
   'lib32-libpulse: for pulse audio support'
 )
@@ -35,7 +34,7 @@ build() {
     --prefix=/usr \
     --libdir=/usr/lib32 \
     --enable-int-quality \
-    --with-audio="alsa oss sdl jack pulse"
+    --with-audio="alsa oss jack pulse"
   # https://bugzilla.gnome.org/show_bug.cgi?id=655517
   sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
