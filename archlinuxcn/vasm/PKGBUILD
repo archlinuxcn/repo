@@ -7,25 +7,27 @@
 #
 
 pkgname="vasm"
-pkgver="2.0d"
+pkgver="2.0f"
 _pkgver=${pkgver/./_}
 pkgrel=0
-pkgdesc="Portable and retargetable 6502 6800 6809 arm c16x jagrisc m68k pdp11 ppc qnice test tr3200 vidcore x86 z80 assembler."
-arch=('i686' 'x86_64')
+pkgdesc="Portable and retargetable 6502 6800 6809 arm c16x hans jagrisc m68k pdp11 ppc qnice spc700 sweet16 test tr3200 unsp vidcore x86 z80 assembler."
+arch=("i686" "x86_64")
 url="http://sun.hasenbraten.de/vasm/"
-license=('custom')
-depends=('glibc')
-#makedepends=('texinfo')
+license=("'LicenseRef-vasm")
+depends=("glibc")
+#makedepends=("texinfo")
 #source=(http://sun.hasenbraten.de/vasm/release/vasm.tar.gz) # latest unversioned source url
 #source=(http://server.owl.de/~frank/tags/${pkgname}${_pkgver}.tar.gz)
 source=(http://phoenix.owl.de/tags/${pkgname}${_pkgver}.tar.gz)
-sha256sums=("a818b0cef018c3b88be998de2c15ece83303cbe4a15f0b391c0203710b262f2e")
+sha256sums=("c84b2de1cbb87831795fe64a85c5d9a7002a766e3a7c30b0a2d7d5e99d878f49")
 
 # TODO: dynamic lists based on dirs below vasm/cpus, vasm/syntax, vasm/output_*.c/.h
+# http://sun.hasenbraten.de/vasm/release/vasm_41.html#Interface
 #CPU_LIST="6502 6800 6809 arm c16x jagrisc m68k pdp11 ppc qnice test tr3200 vidcore x86 z80"
-CPU_LIST="6502 6800 6809 arm c16x hans jagrisc m68k pdp11 ppc qnice spc700 test tr3200 unsp vidcore x86 z80"
+CPU_LIST="6502 6800 6809 arm c16x hans jagrisc m68k pdp11 ppc qnice spc700 sweet16 test tr3200 unsp vidcore x86 z80"
 SYNTAX_LIST="std madmac mot oldstyle" # test
-OUTPUT_LIST="aout bin cdef elf errors hunk ihex srec test tos vobj xfile"
+# output_list is not currently used
+OUTPUT_LIST="aout aof bin cdef coff dri elf errors gst hans hunk hunkexe ihex o65 o65exe pap srec test tos vobj woz xfile"
 
 prepare()
 {
@@ -35,8 +37,11 @@ prepare()
 build()
 {
   cd "${srcdir}/${pkgname}"
+
+  #
   echo "CPU_LIST: ${CPU_LIST}"
   echo "SYNTAX_LIST: ${SYNTAX_LIST}"
+  #
   for CPU in ${CPU_LIST}; do
     for SYNTAX in ${SYNTAX_LIST}; do
       echo "CPU=${CPU} SYNTAX=${SYNTAX}:"
@@ -51,9 +56,12 @@ build()
 package()
 {
   cd "${srcdir}/${pkgname}"
+
+  #
   mkdir -p "${pkgdir}/usr/bin"
   echo "CPU_LIST: ${CPU_LIST}"
   echo "SYNTAX_LIST: ${SYNTAX_LIST}"
+  #
   for CPU in ${CPU_LIST}; do
     for SYNTAX in ${SYNTAX_LIST}; do
       echo "CPU=${CPU} SYNTAX=${SYNTAX}:"
@@ -62,6 +70,7 @@ package()
     done
   done
 
+  # some users report texi problems (1.8i)
   #mkdir -p "${pkgdir}/usr/share/doc/vasm/"
   #install -m644 doc/vasm.pdf "${pkgdir}/usr/share/doc/vasm/"
 }
