@@ -9,7 +9,7 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2606.r323.g123d32248e4
+pkgver=2606.r325.g26d5cd38bd
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -85,6 +85,10 @@ prepare() {
 
 	# Get rid of glslang version, as it's used as an exact match (ABI v16 is compatible, see https://github.com/dolphin-emu/dolphin/pull/13974/files/cdfb389509b560b4a70661571d12edcebfb77fdf#r2384216168)
     sed -i 's/15.0/16.0/g' "$srcdir/$_sourcedirectory/CMakeLists.txt"
+
+	# Avoid aarch64 build failures while recursively copying the test data.
+	sed -i 's/-E copy_directory /-E create_symlink /' \
+		"$srcdir/$_sourcedirectory/Source/UnitTests/CMakeLists.txt"
 }
 
 pkgver() {
