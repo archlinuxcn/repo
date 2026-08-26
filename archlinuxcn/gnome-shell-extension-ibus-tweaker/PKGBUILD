@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=gnome-shell-extension-ibus-tweaker
-pkgver=50.2
+pkgver=51.0
 pkgrel=1
 pkgdesc="GNOME Shell extension to tweak IBus font, input mode, clipboard history, etc."
 arch=('any')
@@ -10,7 +10,7 @@ license=('GPL-3.0-or-later')
 depends=('gnome-shell>=49')
 makedepends=('meson' 'sassc')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/tuberry/ibus-tweaker/archive/refs/tags/${pkgver}.tar.gz")
-b2sums=('135f25db5bfe07f9ada4363fa2ab6ba2d40aa6cc84807309cf1bad85b4549528f2a7bda7a7f8917486b792042310281d74ca61c05faec4f956e03e03f628d981')
+b2sums=('47d2768a2b14d11cf6349715587d19eda77497c428b8fc64d98c1db7135d10903b7db0b549eea794aa597f7dbfebbe2cc50f46b5d334e8550cb6b9ae65ba71b8')
 
 build() {
     cd "ibus-tweaker-${pkgver}"
