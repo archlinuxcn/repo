@@ -1,6 +1,6 @@
 # Maintainer: Misaka13514 <Misaka13514 at gmail dot com>
 pkgname=fscan
-pkgver=2.2.0
+pkgver=2.2.1
 _pkgver=${pkgver//_/-}
 pkgrel=1
 pkgdesc="An intranet comprehensive scanning tool"
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz"::"$url/archive/v$_pkgver.tar.gz")
-sha256sums=('0543d6e5ead79ce0dfbbebf0875edb7cb6d2611e415731b9e97bfbc74f1e73d5')
+sha256sums=('ee9007ff29dad31fcf8afd0c4b8d3427e36927f92078163a7cda1fcdd1156d9e')
 
 prepare() {
     cd "$pkgname-$_pkgver"
