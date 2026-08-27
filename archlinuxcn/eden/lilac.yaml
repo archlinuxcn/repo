@@ -6,6 +6,9 @@ pre_build_script: aur_pre_build(maintainers=['username227'])
 
 post_build: aur_post_build
 
+repo_depends:
+  - cubeb-git
+
 update_on:
   - source: aur
     aur: eden

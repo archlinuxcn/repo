@@ -13,3 +13,11 @@ repo_depends:
 
 update_on:
   - source: aur
+  - source: alpm
+    alpm: boost-libs
+    provided: libboost_filesystem.so
+
+update_on_build:
+  - pkgbase: c++utilities
+  - pkgbase: qtutilities-qt6
+  - pkgbase: qtforkawesome-qt6

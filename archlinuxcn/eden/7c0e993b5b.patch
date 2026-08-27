@@ -1,0 +1,70 @@
+From 7c0e993b5b905224fd4d290485deaee30c685f0d Mon Sep 17 00:00:00 2001
+From: crueter <crueter@eden-emu.dev>
+Date: Fri, 19 Jun 2026 22:50:46 +0200
+Subject: [PATCH] [*] Fix compilation on fmt 12.2.0 (#4107)
+
+Signed-off-by: crueter <crueter@eden-emu.dev>
+Reviewed-on: https://git.eden-emu.dev/eden-emu/eden/pulls/4107
+Reviewed-by: Lizzie <lizzie@eden-emu.dev>
+Reviewed-by: MaranBr <maranbr@eden-emu.dev>
+---
+ src/common/dynamic_library.cpp | 8 ++++++++
+ src/common/logging.h           | 2 +-
+ src/common/settings_setting.h  | 6 ++----
+ 3 files changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/src/common/dynamic_library.cpp b/src/common/dynamic_library.cpp
+index 566fbed631..462faa673d 100644
+--- a/src/common/dynamic_library.cpp
++++ b/src/common/dynamic_library.cpp
+@@ -1,7 +1,15 @@
++// SPDX-FileCopyrightText: Copyright 2026 Eden Emulator Project
++// SPDX-License-Identifier: GPL-3.0-or-later
++
+ // SPDX-FileCopyrightText: 2019 Dolphin Emulator Project
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
+ #include <string>
++
++#ifndef _WIN32
++#include <cstring>
++#endif
++
+ #include <utility>
+ 
+ #include <fmt/ranges.h>
+diff --git a/src/common/logging.h b/src/common/logging.h
+index eabc683f63..2d5a2cfa93 100644
+--- a/src/common/logging.h
++++ b/src/common/logging.h
+@@ -89,7 +89,7 @@ void FmtLogMessageImpl(Class log_class, Level log_level, const char* filename, u
+ 
+ template <typename... Args>
+ void FmtLogMessage(Class log_class, Level log_level, const char* filename, unsigned int line_num, const char* function, fmt::format_string<Args...> format, const Args&... args) {
+-    FmtLogMessageImpl(log_class, log_level, filename, line_num, function, format, fmt::make_format_args(args...));
++    FmtLogMessageImpl(log_class, log_level, filename, line_num, function, format.get(), fmt::make_format_args(args...));
+ }
+ 
+ /// Implements a log message filter which allows different log classes to have different minimum
+diff --git a/src/common/settings_setting.h b/src/common/settings_setting.h
+index 9b6ec76d62..0a9243cc0d 100644
+--- a/src/common/settings_setting.h
++++ b/src/common/settings_setting.h
+@@ -6,15 +6,13 @@
+ 
+ #pragma once
+ 
++#include <algorithm>
+ #include <limits>
+-#include <map>
+ #include <optional>
+ #include <stdexcept>
+ #include <string>
+ #include <type_traits>
+-#include <typeindex>
+-#include <typeinfo>
+-#include <fmt/core.h>
++#include <fmt/ranges.h>
+ #include "common/common_types.h"
+ #include "common/settings_common.h"
+ #include "common/settings_enums.h"

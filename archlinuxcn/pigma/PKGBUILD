@@ -1,6 +1,6 @@
 # Maintainer: akirco <earlfx@163.com>
 pkgname=pigma
-pkgver=0.2.12
+pkgver=0.2.13
 pkgrel=1
 pkgdesc="A netease cloud music client"
 arch=('x86_64' 'aarch64')
@@ -12,7 +12,7 @@ source=(
     "$pkgname::git+${url}.git#tag=v${pkgver}"
     "y7dl::git+https://github.com/akirco/y7dl.git"
 )
-sha256sums=('0cc3e279078220c63be60901c2dd58da11a9036d10033bf6381287df474e8a7c'
+sha256sums=('8ed66d60251896c0c41ceb2f2e3ce90939c96b72e3b69a082eb500fdf409d574'
             'SKIP')
 options=('!lto')
 

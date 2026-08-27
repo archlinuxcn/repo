@@ -1,0 +1,488 @@
+diff --git a/src/common/settings.h b/src/common/settings.h
+index 3e14a40a09..be9c080bc6 100644
+--- a/src/common/settings.h
++++ b/src/common/settings.h
+@@ -336,7 +336,7 @@ struct Values {
+         RendererBackend::Vulkan,
+ #endif
+         "backend", Category::Renderer};
+-    SwitchableSetting<int> vulkan_device{linkage, 0, "vulkan_device", Category::Renderer, Specialization::RuntimeList};
++    SwitchableSetting<u32> vulkan_device{linkage, 0, "vulkan_device", Category::Renderer, Specialization::RuntimeList};
+ 
+     // Graphics Settings
+     ResolutionScalingInfo resolution_info{};
+@@ -661,8 +661,8 @@ struct Values {
+                                       false,   true, &custom_rtc_enabled};
+     SwitchableSetting<s64, true> custom_rtc_offset{linkage,
+                                                    0,
+-                                                   (std::numeric_limits<int>::min)(),
+-                                                   (std::numeric_limits<int>::max)(),
++                                                   (std::numeric_limits<s64>::min)(),
++                                                   (std::numeric_limits<s64>::max)(),
+                                                    "custom_rtc_offset",
+                                                    Category::System,
+                                                    Specialization::Countable,
+@@ -751,7 +751,7 @@ struct Values {
+ 
+     Setting<std::string> touch_device{linkage, "min_x:100,min_y:50,max_x:1800,max_y:850",
+                                       "touch_device", Category::Controls};
+-    Setting<int> touch_from_button_map_index{linkage, 0, "touch_from_button_map",
++    Setting<u32> touch_from_button_map_index{linkage, 0, "touch_from_button_map",
+                                              Category::Controls};
+     std::vector<TouchFromButtonMap> touch_from_button_maps;
+ 
+diff --git a/src/common/settings_enums.h b/src/common/settings_enums.h
+index da142e8e1c..a71cf2141c 100644
+--- a/src/common/settings_enums.h
++++ b/src/common/settings_enums.h
+@@ -145,8 +145,8 @@ ENUM(ConfirmStop, Ask_Always, Ask_Based_On_Game, Ask_Never);
+ ENUM(FullscreenMode, Borderless, Exclusive);
+ ENUM(NvdecEmulation, Off, Cpu, Gpu);
+ ENUM(ResolutionSetup, Res1_4X, Res1_2X, Res3_4X, Res1X, Res5_4X, Res3_2X, Res2X, Res3X, Res4X, Res5X, Res6X, Res7X, Res8X);
+-ENUM(ScalingFilter, NearestNeighbor, Bilinear, Bicubic, Gaussian, Lanczos, ScaleForce, Fsr, Area, ZeroTangent, BSpline, Mitchell, Spline1, Mmpx, MaxEnum);
+-ENUM(AntiAliasing, None, Fxaa, Smaa, MaxEnum);
++ENUM(ScalingFilter, NearestNeighbor, Bilinear, Bicubic, Gaussian, Lanczos, ScaleForce, Fsr, Area, ZeroTangent, BSpline, Mitchell, Spline1, Mmpx, Sgsr, SgsrEdge);
++ENUM(AntiAliasing, None, Fxaa, Smaa);
+ ENUM(AspectRatio, R16_9, R4_3, R21_9, R16_10, Stretch);
+ ENUM(ConsoleMode, Handheld, Docked);
+ ENUM(AppletMode, HLE, LLE);
+diff --git a/src/common/settings_setting.h b/src/common/settings_setting.h
+index 076aceef29..9b6ec76d62 100644
+--- a/src/common/settings_setting.h
++++ b/src/common/settings_setting.h
+@@ -11,6 +11,7 @@
+ #include <optional>
+ #include <stdexcept>
+ #include <string>
++#include <type_traits>
+ #include <typeindex>
+ #include <typeinfo>
+ #include <fmt/core.h>
+@@ -101,7 +102,15 @@ public:
+      * @param val The desired value
+      */
+     virtual void SetValue(const Type& val) {
+-        Type temp{ranged ? std::clamp(val, minimum, maximum) : val};
++        // Enums have a maximal range which they're allowed
++        Type temp{};
++        if constexpr (std::is_enum_v<Type>) {
++            auto const r_min = std::underlying_type_t<Type>(0);
++            auto const r_max = std::underlying_type_t<Type>(EnumMetadata<Type>::GetLast());
++            temp = Type(std::clamp(std::underlying_type_t<Type>(val), r_min, r_max));
++        } else {
++            temp = ranged ? std::clamp(val, this->minimum, this->maximum) : val;
++        }
+         std::swap(value, temp);
+     }
+ 
+@@ -129,7 +138,7 @@ protected:
+         } else if constexpr (std::is_floating_point_v<Type>) {
+             return fmt::format("{:f}", value_);
+         } else if constexpr (std::is_enum_v<Type>) {
+-            return std::to_string(u32(value_));
++            return std::to_string(std::underlying_type_t<Type>(value_));
+         } else {
+             return std::to_string(value_);
+         }
+@@ -371,7 +380,15 @@ public:
+      * @param val The new value
+      */
+     void SetValue(const Type& val) override final {
+-        Type temp{ranged ? std::clamp(val, this->minimum, this->maximum) : val};
++        // Enums have a maximal range which they're allowed
++        Type temp{};
++        if constexpr (std::is_enum_v<Type>) {
++            auto const r_min = std::underlying_type_t<Type>(0);
++            auto const r_max = std::underlying_type_t<Type>(EnumMetadata<Type>::GetLast());
++            temp = Type(std::clamp(std::underlying_type_t<Type>(val), r_min, r_max));
++        } else {
++            temp = ranged ? std::clamp(val, this->minimum, this->maximum) : val;
++        }
+         if (use_global) {
+             std::swap(this->value, temp);
+         } else {
+diff --git a/src/frontend_common/config.cpp b/src/frontend_common/config.cpp
+index d8ab044b2d..b44a146b38 100644
+--- a/src/frontend_common/config.cpp
++++ b/src/frontend_common/config.cpp
+@@ -238,33 +238,27 @@ void Config::ReadControlValues() {
+ void Config::ReadMotionTouchValues() {
+     Settings::values.touch_from_button_maps.clear();
+     int num_touch_from_button_maps = BeginArray(std::string("touch_from_button_maps"));
+-
+     if (num_touch_from_button_maps > 0) {
+         for (int i = 0; i < num_touch_from_button_maps; ++i) {
+             SetArrayIndex(i);
+-
+             Settings::TouchFromButtonMap map;
+             map.name = ReadStringSetting(std::string("name"), std::string("default"));
+-
+-            const int num_touch_maps = BeginArray(std::string("entries"));
+-            map.buttons.reserve(num_touch_maps);
++            int const num_touch_maps = BeginArray(std::string("entries"));
++            map.buttons.resize(num_touch_maps);
+             for (int j = 0; j < num_touch_maps; j++) {
+                 SetArrayIndex(j);
+-                std::string touch_mapping = ReadStringSetting(std::string("bind"));
+-                map.buttons.emplace_back(std::move(touch_mapping));
++                map.buttons[j] = ReadStringSetting(std::string("bind"));
+             }
+             EndArray(); // entries
+             Settings::values.touch_from_button_maps.emplace_back(std::move(map));
+         }
+     } else {
+-        Settings::values.touch_from_button_maps.emplace_back(
+-            Settings::TouchFromButtonMap{"default", {}});
++        Settings::values.touch_from_button_maps.emplace_back(Settings::TouchFromButtonMap{"default", {}});
+         num_touch_from_button_maps = 1;
+     }
+     EndArray(); // touch_from_button_maps
+ 
+-    Settings::values.touch_from_button_map_index = std::clamp(
+-        Settings::values.touch_from_button_map_index.GetValue(), 0, num_touch_from_button_maps - 1);
++    Settings::values.touch_from_button_map_index = (std::min)(Settings::values.touch_from_button_map_index.GetValue(), u32(num_touch_from_button_maps - 1));
+ }
+ 
+ void Config::ReadCoreValues() {
+@@ -501,15 +495,12 @@ void Config::SaveMotionTouchValues() {
+     BeginArray(std::string("touch_from_button_maps"));
+     for (std::size_t p = 0; p < Settings::values.touch_from_button_maps.size(); ++p) {
+         SetArrayIndex(int(p));
+-        WriteStringSetting(std::string("name"), Settings::values.touch_from_button_maps[p].name,
+-                           std::make_optional(std::string("default")));
+-
++        WriteStringSetting(std::string("name"), Settings::values.touch_from_button_maps[p].name, std::make_optional(std::string("default")));
+         BeginArray(std::string("entries"));
+         for (std::size_t q = 0; q < Settings::values.touch_from_button_maps[p].buttons.size();
+              ++q) {
+             SetArrayIndex(int(q));
+-            WriteStringSetting(std::string("bind"),
+-                               Settings::values.touch_from_button_maps[p].buttons[q]);
++            WriteStringSetting(std::string("bind"), Settings::values.touch_from_button_maps[p].buttons[q]);
+         }
+         EndArray(); // entries
+     }
+@@ -638,8 +629,7 @@ void Config::SaveDisabledAddOnValues() {
+         BeginArray(std::string("disabled"));
+         for (std::size_t j = 0; j < elem.second.size(); ++j) {
+             SetArrayIndex(int(j));
+-            WriteStringSetting(std::string("d"), elem.second[j],
+-                               std::make_optional(std::string("")));
++            WriteStringSetting(std::string("d"), elem.second[j], std::make_optional(std::string("")));
+         }
+         EndArray(); // disabled
+         ++i;
+@@ -733,21 +723,18 @@ s64 Config::ReadIntegerSetting(const std::string& key, const std::optional<s64>
+     std::string full_key = GetFullKey(key, false);
+     if (!default_value.has_value()) {
+         try {
+-            return std::stoll(
+-                std::string(config->GetValue(GetSection().c_str(), full_key.c_str(), "0")));
++            return std::stoll(std::string(config->GetValue(GetSection().c_str(), full_key.c_str(), "0")));
+         } catch (...) {
+             return 0;
+         }
+     }
+ 
+     s64 result = 0;
+-    if (config->GetBoolValue(GetSection().c_str(),
+-                             std::string(full_key).append("\\default").c_str(), true)) {
++    if (config->GetBoolValue(GetSection().c_str(), std::string(full_key).append("\\default").c_str(), true)) {
+         result = default_value.value();
+     } else {
+         try {
+-            result = std::stoll(std::string(config->GetValue(
+-                GetSection().c_str(), full_key.c_str(), ToString(default_value.value()).c_str())));
++            result = std::stoll(std::string(config->GetValue(GetSection().c_str(), full_key.c_str(), ToString(default_value.value()).c_str())));
+         } catch (...) {
+             result = default_value.value();
+         }
+@@ -919,14 +906,12 @@ void Config::ReadSettingGeneric(Settings::BasicSetting* const setting) {
+ 
+     bool use_global = true;
+     if (setting->Switchable() && !global) {
+-        use_global =
+-            ReadBooleanSetting(std::string(key).append("\\use_global"), std::make_optional(true));
++        use_global = ReadBooleanSetting(std::string(key).append("\\use_global"), std::make_optional(true));
+         setting->SetGlobal(use_global);
+     }
+ 
+     if (global || !use_global) {
+-        const bool is_default =
+-            ReadBooleanSetting(std::string(key).append("\\default"), std::make_optional(true));
++        const bool is_default = ReadBooleanSetting(std::string(key).append("\\default"), std::make_optional(true));
+         if (!is_default) {
+             setting->LoadString(ReadStringSetting(key, default_value));
+         } else {
+@@ -1050,10 +1035,9 @@ std::string Config::GetFullKey(const std::string& key, bool skipArrayIndex) {
+ 
+ int Config::BeginArray(const std::string& array) {
+     array_stack.push_back(ConfigArray{AdjustKey(array), 0, 0});
+-    const int size = config->GetLongValue(GetSection().c_str(),
+-                                          GetFullKey(std::string("size"), true).c_str(), 0);
+-    array_stack.back().size = size;
+-    return size;
++    const int size = config->GetLongValue(GetSection().c_str(), GetFullKey(std::string("size"), true).c_str(), 0);
++    array_stack.back().size = (std::max)(0, size);
++    return array_stack.back().size;
+ }
+ 
+ void Config::EndArray() {
+@@ -1071,7 +1055,7 @@ void Config::EndArray() {
+         // Edge-case where the first array created doesn't have a name
+         config->SetValue(GetSection().c_str(), std::string("size").c_str(), ToString(size).c_str());
+     } else {
+-        const auto key = GetFullKey(std::string("size"), true);
++        auto const key = GetFullKey(std::string("size"), true);
+         config->SetValue(GetSection().c_str(), key.c_str(), ToString(size).c_str());
+     }
+ 
+diff --git a/src/input_common/drivers/udp_client.cpp b/src/input_common/drivers/udp_client.cpp
+index fc216e3c9f..7566e6040c 100644
+--- a/src/input_common/drivers/udp_client.cpp
++++ b/src/input_common/drivers/udp_client.cpp
+@@ -31,8 +31,10 @@ public:
+     using clock = std::chrono::system_clock;
+ 
+     explicit Socket(const std::string& host, u16 port, SocketCallback callback_)
+-        : callback(std::move(callback_)), timer(io_context),
+-          socket(io_context, udp::endpoint(udp::v4(), 0)), client_id(Common::Random::Random32(0)) {
++        : callback(std::move(callback_)), timer(io_context)
++        , socket(io_context, udp::endpoint(udp::v4(), 0))
++        , client_id(Common::Random::Random32(0))
++    {
+         boost::system::error_code ec{};
+         auto ipv4 = boost::asio::ip::make_address_v4(host, ec);
+         if (ec.value() != boost::system::errc::success) {
+@@ -353,8 +355,13 @@ PadIdentifier UDPClient::GetPadIdentifier(std::size_t pad_index) const {
+ }
+ 
+ Common::UUID UDPClient::GetHostUUID(const std::string& host) const {
+-    const auto ip = boost::asio::ip::make_address_v4(host);
+-    const auto hex_host = fmt::format("00000000-0000-0000-0000-0000{:06x}", ip.to_uint());
++    boost::system::error_code ec{};
++    auto ip = boost::asio::ip::make_address_v4(host, ec);
++    if (ec.value() != boost::system::errc::success) {
++        LOG_ERROR(Input, "Invalid IPv4 address \"{}\" provided", host);
++        ip = boost::asio::ip::address_v4{};
++    }
++    auto const hex_host = fmt::format("00000000-0000-0000-0000-0000{:06x}", ip.to_uint());
+     return Common::UUID{hex_host};
+ }
+ 
+diff --git a/src/qt_common/config/uisettings.h b/src/qt_common/config/uisettings.h
+index 4549a36345..d1e365553d 100644
+--- a/src/qt_common/config/uisettings.h
++++ b/src/qt_common/config/uisettings.h
+@@ -207,12 +207,11 @@ struct Values {
+ 
+     // Game List
+     Setting<bool> show_add_ons{linkage, true, "show_add_ons", Category::UiGameList};
+-    Setting<u32> game_icon_size{linkage, 64, "game_icon_size", Category::UiGameList};
+-    Setting<u32> folder_icon_size{linkage, 48, "folder_icon_size", Category::UiGameList};
++    Setting<u32, true> game_icon_size{linkage, 64, 8, 512, "game_icon_size", Category::UiGameList};
++    Setting<u32, true> folder_icon_size{linkage, 48, 8, 512, "folder_icon_size", Category::UiGameList};
+     Setting<u8> row_1_text_id{linkage, 3, "row_1_text_id", Category::UiGameList};
+     Setting<u8> row_2_text_id{linkage, 2, "row_2_text_id", Category::UiGameList};
+-    Setting<Settings::GameListMode> game_list_mode{linkage, Settings::GameListMode::TreeView,
+-                                                   "game_list_mode", Category::UiGameList};
++    Setting<Settings::GameListMode> game_list_mode{linkage, Settings::GameListMode::TreeView, "game_list_mode", Category::UiGameList};
+     Setting<bool> show_game_name{linkage, true, "show_game_name", Category::UiGameList};
+ 
+     std::atomic_bool is_game_list_reload_pending{false};
+diff --git a/src/video_core/renderer_vulkan/renderer_vulkan.cpp b/src/video_core/renderer_vulkan/renderer_vulkan.cpp
+index 010cfd225d..30a39ef81e 100644
+--- a/src/video_core/renderer_vulkan/renderer_vulkan.cpp
++++ b/src/video_core/renderer_vulkan/renderer_vulkan.cpp
+@@ -89,11 +89,10 @@ std::string BuildCommaSeparatedExtensions(
+ 
+ } // Anonymous namespace
+ 
+-Device CreateDevice(const vk::Instance& instance, const vk::InstanceDispatch& dld,
+-                    VkSurfaceKHR surface) {
++Device CreateDevice(const vk::Instance& instance, const vk::InstanceDispatch& dld, VkSurfaceKHR surface) {
+     const std::vector<VkPhysicalDevice> devices = instance.EnumeratePhysicalDevices();
+-    const s32 device_index = Settings::values.vulkan_device.GetValue();
+-    if (device_index < 0 || device_index >= static_cast<s32>(devices.size())) {
++    const u32 device_index = Settings::values.vulkan_device.GetValue();
++    if (device_index >= u32(devices.size())) {
+         LOG_ERROR(Render_Vulkan, "Invalid device index {}!", device_index);
+         throw vk::Exception(VK_ERROR_INITIALIZATION_FAILED);
+     }
+diff --git a/src/yuzu/configuration/configure_motion_touch.cpp b/src/yuzu/configuration/configure_motion_touch.cpp
+index d1bcac12aa..2083315c03 100644
+--- a/src/yuzu/configuration/configure_motion_touch.cpp
++++ b/src/yuzu/configuration/configure_motion_touch.cpp
+@@ -94,11 +94,10 @@ void ConfigureMotionTouch::SetConfiguration() {
+     const Common::ParamPackage touch_param(Settings::values.touch_device.GetValue());
+ 
+     touch_from_button_maps = Settings::values.touch_from_button_maps;
+-    for (const auto& touch_map : touch_from_button_maps) {
++    for (const auto& touch_map : touch_from_button_maps)
+         ui->touch_from_button_map->addItem(QString::fromStdString(touch_map.name));
+-    }
+-    ui->touch_from_button_map->setCurrentIndex(
+-        Settings::values.touch_from_button_map_index.GetValue());
++    if (auto const index = Settings::values.touch_from_button_map_index.GetValue(); int(index) < ui->touch_from_button_map->count())
++        ui->touch_from_button_map->setCurrentIndex(index);
+ 
+     min_x = touch_param.Get("min_x", 100);
+     min_y = touch_param.Get("min_y", 50);
+diff --git a/src/yuzu/game/game_list.cpp b/src/yuzu/game/game_list.cpp
+index 63267ddec6..521c5607f5 100644
+--- a/src/yuzu/game/game_list.cpp
++++ b/src/yuzu/game/game_list.cpp
+@@ -183,7 +183,7 @@ void GameList::ResetViewMode() {
+         tree_view->setVisible(false);
+         break;
+     default:
+-        break;
++        UNREACHABLE();
+     }
+ 
+     auto view = m_currentView->viewport();
+@@ -196,10 +196,8 @@ void GameList::ResetViewMode() {
+ 
+     auto scroller = QScroller::scroller(view);
+     QScrollerProperties props;
+-    props.setScrollMetric(QScrollerProperties::HorizontalOvershootPolicy,
+-                          QScrollerProperties::OvershootAlwaysOff);
+-    props.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy,
+-                          QScrollerProperties::OvershootAlwaysOff);
++    props.setScrollMetric(QScrollerProperties::HorizontalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
++    props.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
+     scroller->setScrollerProperties(props);
+ 
+     if (m_isTreeMode != newTreeMode) {
+diff --git a/src/yuzu/main_window.cpp b/src/yuzu/main_window.cpp
+index 4c53ef1221..0160b74e24 100644
+--- a/src/yuzu/main_window.cpp
++++ b/src/yuzu/main_window.cpp
+@@ -1088,10 +1088,9 @@ void MainWindow::InitializeWidgets() {
+     aa_status_button->setFocusPolicy(Qt::NoFocus);
+     connect(aa_status_button, &QPushButton::clicked, [&] {
+         auto aa_mode = Settings::values.anti_aliasing.GetValue();
+-        aa_mode = static_cast<Settings::AntiAliasing>(static_cast<u32>(aa_mode) + 1);
+-        if (aa_mode == Settings::AntiAliasing::MaxEnum) {
+-            aa_mode = Settings::AntiAliasing::None;
+-        }
++        aa_mode = Settings::AntiAliasing(u32(aa_mode) + 1);
++        if (u32(aa_mode) > u32(Settings::EnumMetadata<Settings::AntiAliasing>::GetLast()))
++            aa_mode = Settings::EnumMetadata<Settings::AntiAliasing>::GetFirst();
+         Settings::values.anti_aliasing.SetValue(aa_mode);
+         aa_status_button->setChecked(true);
+         UpdateAAText();
+@@ -3623,10 +3622,9 @@ void MainWindow::OnIncreaseVolume() {
+ 
+ void MainWindow::OnToggleAdaptingFilter() {
+     auto filter = Settings::values.scaling_filter.GetValue();
+-    filter = static_cast<Settings::ScalingFilter>(static_cast<u32>(filter) + 1);
+-    if (filter == Settings::ScalingFilter::MaxEnum) {
+-        filter = Settings::ScalingFilter::NearestNeighbor;
+-    }
++    filter = Settings::ScalingFilter(u32(filter) + 1);
++    if (u32(filter) > u32(Settings::EnumMetadata<Settings::ScalingFilter>::GetLast()))
++        filter = Settings::EnumMetadata<Settings::ScalingFilter>::GetFirst();
+     Settings::values.scaling_filter.SetValue(filter);
+     filter_status_button->setChecked(true);
+     UpdateFilterText();
+diff --git a/tools/README.md b/tools/README.md
+index 367a00f246..d4f5aa1baa 100644
+--- a/tools/README.md
++++ b/tools/README.md
+@@ -28,6 +28,8 @@ Tools for Eden and other subprojects. When adding new scripts please use `#!/bin
+ - `clang-format.sh`: Runs `clang-format` on the entire codebase.
+     * Requires: clang
+ - `find-unused-strings.sh`: Find any unused strings in the Android app (XML -> Kotlin).
++- `cpp-lint.sh`: Homemade dumb C++ linter.
++- `fuzzsettings.cpp`: Fuzz settings files.
+ 
+ ## Android
+ It's recommended to run these scritps after almost any Android change, as they are relatively fast and important both for APK bloat and CI.
+diff --git a/tools/fuzzsettings.cpp b/tools/fuzzsettings.cpp
+new file mode 100644
+index 0000000000..e9685ce9f4
+--- /dev/null
++++ b/tools/fuzzsettings.cpp
+@@ -0,0 +1,63 @@
++// SPDX-FileCopyrightText: Copyright 2026 Eden Emulator Project
++// SPDX-License-Identifier: GPL-3.0-or-later
++
++#include <cstdio>
++#include <cstdlib>
++#include <cctype>
++#include <cstring>
++#include <ctime>
++#include <string>
++#include <string_view>
++
++int main(int argc, char *argv[]) {
++    std::srand(unsigned(std::time(nullptr)));
++
++    FILE *fp = std::fopen(argv[1], "rt");
++    if (fp) {
++        char line[BUFSIZ];
++        while (std::fgets(line, sizeof(line), fp)) {
++            if (line[0] == '[') {
++                std::printf("%s", line);
++            } else if (std::isspace(line[0])) {
++                std::printf("%s", line);
++            } else {
++                char *p = std::strchr(line, '=');
++                if (std::strstr(line, "\\default") == nullptr) {
++                    // not default
++                    *p = '\0';
++                    std::string new_line{line};
++                    std::string value{p + 1};
++                    if (value == "true" || value == "false") {
++                        new_line += std::string{} + "=TreufLAlse857874FJJakshjryiu475" + '\n';
++                    } else if (std::isdigit(value[0])) {
++                        if (new_line == "size"
++                        || std::strstr(new_line.c_str(), "entries\\size") != nullptr
++                        || std::strstr(new_line.c_str(), "\\size")) {
++                            new_line += "=-1\n";
++                        } else {
++                            new_line += '=' + std::to_string(int(std::rand())) + '\n';
++                        }
++                    } else {
++                        std::string_view const cset{"03832///1/1/.1/1./1./1./1.1/.1194573290uwmgjouidyhiomHMNIODASJK,POF MSHDVLJPOIuksdtpsunmghns"};
++                        std::string rst{"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"};
++                        for (size_t i = 0; i < rst.size(); ++i)
++                            rst[i] = cset[std::rand() % cset.size()];
++
++                        //new_line += "=\"" + rst + "\"";
++                        new_line += "=" + value;
++                    }
++                    std::printf("%s", new_line.c_str());
++                } else {
++                    // yes default
++                    *p = '\0';
++                    std::string new_line{line};
++                    std::string value{p + 1};
++                    new_line += "=false\n";
++                    std::printf("%s", new_line.c_str());
++                }
++            }
++        }
++        std::fclose(fp);
++    }
++    return 0;
++}
+diff --git a/tools/fuzzsettings.sh b/tools/fuzzsettings.sh
+new file mode 100755
+index 0000000000..7cf613dc3d
+--- /dev/null
++++ b/tools/fuzzsettings.sh
+@@ -0,0 +1,12 @@
++#!/bin/sh -ex
++
++# SPDX-FileCopyrightText: Copyright 2026 Eden Emulator Project
++# SPDX-License-Identifier: GPL-3.0-or-later
++
++ROOTDIR=$(CDPATH='' cd -- "$(dirname -- "$0")/" && pwd)
++
++touch "$2"
++
++c++ "$ROOTDIR/fuzzsettings.cpp" -o fuzzsettings
++./fuzzsettings "$1" >"$2"
++rm fuzzsettings

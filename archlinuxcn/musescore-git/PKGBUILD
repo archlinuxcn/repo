@@ -4,7 +4,7 @@
 
 pkgname=musescore-git
 _realver=5.0.0
-pkgver=48659.106e63b078a
+pkgver=48824.5decb273dd1
 pkgrel=1
 epoch=1
 pkgdesc="A music score editor - git-version"
@@ -14,8 +14,8 @@ license=('GPL')
 depends=(shared-mime-info alsa-lib zlib freetype2 libvorbis libopusenc flac
          qt6-base qt6-networkauth qt6-declarative qt6-svg qt6-tools qt6-5compat
          qt6-scxml portaudio libpulse libsndfile libogg gcc-libs portmidi
-         liblouis fdk-aac pugixml utf8cpp)
-makedepends=('cmake' 'doxygen' 'git' 'lame' 'xxd' 'vulkan-headers')
+         liblouis fdk-aac pugixml utf8cpp json-schema-validator)
+makedepends=('cmake' 'doxygen' 'git' 'lame' 'xxd' 'vulkan-headers' 'nlohmann-json')
 optdepends=('jack')
 conflicts=("musescore" 'mscore' 'musescore-svn')
 provides=("musescore=${_realver}" 'musescore-svn')
@@ -83,12 +83,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_SKIP_RPATH=On \
         -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-fPIC" \
-        -DBUILD_CRASHPAD_CLIENT=Off \
-        -DMUSESCORE_BUILD_CONFIG=release \
-        -DMUSESCORE_BUILD_MODE=release \
-        -DBUILD_UNIT_TESTS=Off \
         -DMUSE_ENABLE_UNIT_TESTS=Off \
-        -DMUE_BUILD_UNIT_TESTS=Off \
         -DEXTDEPS_OVERRIDE_ALL=SYSTEM
   make
 }

@@ -1,7 +1,7 @@
 pkgname=julia-git-binaryheaps-src
-pkgver=1.0.4
-_commit=b96c3f91d936239e88fd9701a0daf9823861c55f
-pkgrel=2
+pkgver=1.1.0
+_commit=943cf220918b8d1b07e64b9ca7c3c72288c7cdb1
+pkgrel=1
 pkgdesc="BinaryHeaps.jl"
 url="https://github.com/SciML/BinaryHeaps.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/BinaryHeaps.jl.git#commit=$_commit")
-sha256sums=('c305bb71253ad3aefd1f5fc4bc269bc1cc65ca22fa5a751417fc58830d2b01a4')
+sha256sums=('e638b2173b7e2a8eaf8587a95207368e5618cf7a094bf7c0bf30b237c8a54b5f')
 
 package() {
   cd BinaryHeaps.jl

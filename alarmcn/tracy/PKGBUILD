@@ -2,7 +2,7 @@
 # Maintainer: Angelo Theodorou <encelo at gmail dot com>
 
 pkgname=tracy
-pkgver=0.14.0
+pkgver=0.14.1
 pkgrel=1
 pkgdesc="Real-time, nanosecond resolution frame profiler"
 arch=('aarch64' 'i686' 'x86_64')
@@ -17,7 +17,7 @@ options=('!lto' 'staticlibs')
 provides=('tracy' "libTracyClient.so")
 conflicts=('tracy')
 source=("git+$url#tag=v$pkgver")
-sha256sums=('108eb8cb44e246ac844060aa5577f3883d638cfd9c9baaecfb3e604ffe557a48')
+sha256sums=('bc775b055994555eabd2ac41e40c115891c2a07fe7701a616ecde5fdd43e24a3')
 
 build() {
   cd tracy

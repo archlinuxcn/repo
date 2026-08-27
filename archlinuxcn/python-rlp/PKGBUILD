@@ -2,34 +2,36 @@
 
 _name=rlp
 pkgname=python-${_name}
-pkgver=4.1.0
+pkgver=5.0.0
 pkgrel=2
 pkgdesc="The python RLP serialization library"
 arch=(any)
 url="https://github.com/ethereum/pyrlp"
 license=(MIT)
 depends=(python python-eth-utils)
-makedepends=(python-build python-installer python-setuptools python-wheel python-sphinx python-sphinx_rtd_theme)
+makedepends=(git python-build python-installer python-setuptools python-setuptools-scm python-wheel python-sphinx python-sphinx_rtd_theme)
 checkdepends=(python-pytest python-hypothesis)
 optdepends=('python-rusty-rlp: improve pyrlp performance with a rust based')
-source=(${_name}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz)
-sha512sums=('b664c5fa6364d0e76f40d309fd0a45bae4c3609f1b0f29281c7cf662f901c2d1ad2d3bc4d25ff10290fc6e2333bb97896ee2c3eec543ab388a47b3e1f605f069')
+source=(git+$url.git#tag=v$pkgver)
+sha512sums=('66a89d30373c7df192e2c5df892e075d873ceb2ed26aa88dc0599ba42247f82965f4997d8794753b1e83ec09e5d5dde7cf01196b78c0a0b2292c268b486ceefa')
 
 build() {
-  cd pyrlp-$pkgver
+  cd pyrlp
   python -m build --wheel --no-isolation
-  make -C docs man
+  python -m installer --destdir=tmp_install dist/*.whl
+  local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+  PYTHONPATH="$PWD/tmp_install$site_packages" make -C docs man
 }
 
-check(){
-  cd pyrlp-$pkgver
+check() {
+  cd pyrlp
   python -m venv --system-site-packages test-env
   test-env/bin/python -m installer dist/*.whl
   test-env/bin/python -m pytest -vv --showlocals tests/
 }
 
 package() {
-  cd pyrlp-$pkgver
+  cd pyrlp
   python -m installer --destdir="$pkgdir" dist/*.whl
   install -Dm644 docs/_build/man/rlp.1 -t "$pkgdir/usr/share/man/man1"
   install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"

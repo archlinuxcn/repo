@@ -1,0 +1,13 @@
+maintainers:
+  - github: heavysink
+    email: winstonwu91@gmail.com
+
+build_prefix: multilib
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver, updpkgsums=True)
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: httpheader
+    url: https://sourceforge.net/projects/mpg123/files/latest/download
+    regex: 'mpg123-(.*)\.tar\.bz2'

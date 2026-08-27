@@ -3,8 +3,8 @@
 
 _name=mutf8
 pkgname=python-$_name
-pkgver=1.0.6
-pkgrel=10
+pkgver=1.1.0
+pkgrel=1
 pkgdesc='MUTF-8 encoder/decoder'
 arch=('x86_64')
 url="https://github.com/TkTech/$_name"
@@ -14,7 +14,7 @@ makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel
 checkdepends=('python-pytest')
 # tests directory isn't in pypi sdist
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('c7a86f00bc8d313b9ce184375c944bf5be771127283d82a8d2becf33cc84e1c7')
+sha256sums=('282ad4dc0953883338755740e8b49eb17c52c3bc243c0de71ab162a045373685')
 
 build() {
   cd "$_name-$pkgver"

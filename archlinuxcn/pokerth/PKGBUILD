@@ -5,7 +5,7 @@
 
 pkgname=pokerth
 pkgver=2.1.7
-pkgrel=1
+pkgrel=2
 
 pkgdesc="Client to online Poker game written in C++/Qt"
 arch=('x86_64')

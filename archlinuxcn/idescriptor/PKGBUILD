@@ -3,8 +3,8 @@
 
 pkgname=idescriptor
 _srcname=iDescriptor
-pkgver=0.6.1
-pkgrel=4
+pkgver=0.6.2
+pkgrel=1
 pkgdesc="A free, open-source, and cross-platform iDevice management tool"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/${_srcname}/${_srcname}"
@@ -48,7 +48,7 @@ source=(
 	"git+https://github.com/${_srcname}/uxplay.git"
 	"git+https://github.com/uncor3/idevice.git"
 )
-sha256sums=('e3bacca4647f927a0f7772c51fe46b45dac9c5d321f95d459d6e6549dc1d539d'
+sha256sums=('40d5216741555d5d5a33250cac1139f1f1ca3a2f6734f9aff22cd0172ba3993b'
             'SKIP'
             'SKIP')
 
@@ -80,7 +80,7 @@ package() {
 	cd "${_srcname}/"
 	local _app_id="io.github.${pkgname}.${_srcname}"
 
-	install -Dm755 "target/release/${pkgname}" "${pkgdir}/usr/bin/${_srcname}"
+	install -Dm755 "target/release/${pkgname}" -t "${pkgdir}/usr/bin/"
 	install -Dm644 "${_app_id}.desktop" -t "${pkgdir}/usr/share/applications/"
 	install -Dm644 "${_app_id}.metainfo.xml" -t "${pkgdir}/usr/share/metainfo/"
 

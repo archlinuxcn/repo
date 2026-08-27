@@ -1,0 +1,28 @@
+From 7174133527ea62bb41190fc2182862fe4e0b69fe Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 22 Aug 2026 13:06:37 -0400
+Subject: [PATCH] Fix for Julia master
+
+writefixed stops accepting negative precision.
+
+Ref https://github.com/JuliaLang/julia/pull/62797
+---
+ Makie/src/tick_format.jl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makie/src/tick_format.jl b/Makie/src/tick_format.jl
+index 399808f54..a1ae0feae 100644
+--- a/Makie/src/tick_format.jl
++++ b/Makie/src/tick_format.jl
+@@ -28,7 +28,7 @@ function _plain_label_precision(xs)
+         e10min = min(e10min, e10)
+         e10max = max(e10max, e10)
+     end
+-    return min(-e10min, -e10max + 16)
++    return max(min(-e10min, -e10max + 16), 0)
+ end
+ 
+ # Uniform precision (in fractional digits) for scientific notation across `xs`.
+-- 
+2.53.0
+

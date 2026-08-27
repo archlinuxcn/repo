@@ -1,7 +1,7 @@
 # Maintainer: Gustavo Alvarez Lopez <sl1pkn07@gmail.com>
 
 pkgname=np2kai-git
-pkgver=1158.e2dc9046
+pkgver=1171.d1a40352
 pkgrel=1
 pkgdesc="Neko Project II Kai, a PC-9801 emulator. (GIT version)"
 arch=('x86_64')
@@ -29,13 +29,11 @@ source=(
   'git+https://github.com/AZO234/NP2kai.git'
   '0001-cmake-use-selected-sdl-version-for-wx.patch'
   '0002-fix-video-filter-default-initializer.patch'
-  '0003-use-arch-sdl2-ttf-include-path.patch'
 )
 sha256sums=(
   'SKIP'
   '3ccae90ffeaec978f35948b129ab9ee92b0f168443b103f14a74a151c1528307'
   '7c00588800c51a1ada7d272e46c1c93637bdc52995aabc47241e8e4f3a818254'
-  '5de1c118aa121fd424679ad0904e90c50e16fd971df04fd63da06af37c3127fa'
 )
 
 pkgver() {
@@ -48,7 +46,6 @@ prepare() {
 
   patch -Np1 -i ../0001-cmake-use-selected-sdl-version-for-wx.patch
   patch -Np1 -i ../0002-fix-video-filter-default-initializer.patch
-  patch -Np1 -i ../0003-use-arch-sdl2-ttf-include-path.patch
 }
 
 build() {

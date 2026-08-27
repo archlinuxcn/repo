@@ -6,9 +6,9 @@
 
 pkgname=freeimage
 pkgver=3.18.0
-pkgrel=24
+pkgrel=25
 pkgdesc="Library project for developers who would like to support popular graphics image formats"
-arch=('x86_64' 'aarch64')
+arch=("aarch64" "x86_64")
 license=('GPL-3.0-only' 'LicenseRef-FreeImage')
 url="http://freeimage.sourceforge.net/"
 depends=('libjpeg-turbo' 'openexr' 'openjpeg2' 'libwebp' 'libraw' 'libtiff' 'jxrlib')
@@ -37,6 +37,9 @@ prepare() {
 }
 
 build() {
+  CFLAGS+=' -fPIC'
+  CXXFLAGS+=' -fPIC'
+
   cd FreeImage
   sh gensrclist.sh
   sh genfipsrclist.sh

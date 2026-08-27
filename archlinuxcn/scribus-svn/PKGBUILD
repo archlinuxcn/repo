@@ -4,7 +4,7 @@
 # Maintainer: Miguel Revilla Rodríguez <yo at miguelrevilla.com>
 
 pkgname=scribus-svn
-pkgver=27773
+pkgver=27785
 pkgrel=1
 pkgdesc="A desktop publishing program - Version from SVN"
 arch=('i686' 'x86_64')
@@ -40,6 +40,7 @@ depends=(	boost-libs
 			poppler
 			python
             python-pillow
+			qt-advanced-docking-system
 			qt6-5compat
 			qt6-base
 			qt6-declarative
@@ -65,7 +66,14 @@ pkgver() {
 prepare() {
   cd ${_svnmod}/Scribus
 
-  # Nothing done here. Keeping for future needs.
+  # Link the repository package instead of installing Scribus' bundled copy.
+  sed -i \
+    '/^add_subdirectory(Qt-Advanced-Docking-System)$/d' \
+    scribus/third_party/CMakeLists.txt
+  sed -i \
+    -e '/^target_link_libraries(${EXE_NAME} PUBLIC qtadvanceddocking-qt${QT_VERSION_MAJOR})$/i find_package(qtadvanceddocking-qt6 CONFIG REQUIRED)' \
+    -e 's/target_link_libraries(${EXE_NAME} PUBLIC qtadvanceddocking-qt${QT_VERSION_MAJOR})/target_link_libraries(${EXE_NAME} PUBLIC ads::qtadvanceddocking-qt6)/' \
+    scribus/CMakeLists.txt
 }
 
 build() {
