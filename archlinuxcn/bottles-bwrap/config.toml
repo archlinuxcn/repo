@@ -16,10 +16,12 @@ stateDirectory = "Bottles_Data"
 # The exec section defines how the underlying process is started.
 [exec]
 # target defines the program to start.
-target = "/usr/lib/bottles-bwrap/bottles"
+target = "bottles"
 
 # arguments holds an array of arguments passed to the application, this is also used when starting secondary instances.
 arguments = []
+
+overlay = true
 
 # D-Bus activation works by installing a service under /usr/share/dbus-1/services. It is used by UnifiedPush to process notifications without showing a window. You should modify the activation cmdline to call portable with "--dbus-activation".
 [busActivation]

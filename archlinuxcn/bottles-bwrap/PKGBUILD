@@ -14,34 +14,33 @@ license=(GPL-3.0-only)
 provides+=(bottles)
 conflicts+=(bottles)
 depends=(
-	cabextract
-	dconf
-	gtk4
-	gtksourceview5
-	hicolor-icon-theme
-	icoextract
-	imagemagick
-	libadwaita
-	libportal-gtk4
-	p7zip
-	patool
-	python
-	python-chardet
-	python-fvs
-	python-gobject
-	python-markdown
-	python-orjson
-	python-pathvalidate
-	python-pycurl
-	python-requests
-	python-steamgriddb
-	python-yaml
-	python-yara
-	webkit2gtk-4.1
-	xorg-xdpyinfo
-	vkbasalt-cli
-	portable
-	gamemode
+  cabextract
+  fvs2
+  gamemode
+  gtk4
+  gtksourceview5
+  hicolor-icon-theme
+  icoextract
+  libadwaita
+  libportal-gtk4
+  patool
+  python
+  python-cairo
+  python-certifi
+  python-chardet
+  python-charset-normalizer
+  python-gobject
+  python-idna
+  python-markdown
+  python-pathvalidate
+  python-pefile
+  python-pycurl
+  python-requests
+  python-urllib3
+  python-yaml
+  python-yara
+  vkbasalt-cli
+  portable
 )
 
 optdepends=(
@@ -55,12 +54,37 @@ optdepends=(
 	wine
 )
 makedepends=(
-	blueprint-compiler
-	meson
-	ninja
-	git
+  appstream-glib
+  blueprint-compiler
+  desktop-file-utils
+  gettext
+  glib2-devel
+  meson
 	portable-packer
 )
+
+optdepends=(
+  '7zip: extract 7z archives'
+  'gamescope: gamescope session integration'
+  'imagemagick: icon/image conversion'
+  'lib32-alsa-lib: 32-bit ALSA for downloaded runners'
+  'lib32-fontconfig: 32-bit font rendering for downloaded runners'
+  'lib32-glibc: 32-bit support for downloaded runners'
+  'lib32-gnutls: 32-bit TLS for downloaded runners'
+  'lib32-libglvnd: 32-bit OpenGL/X11 for downloaded runners'
+  'lib32-libpulse: 32-bit PulseAudio for downloaded runners'
+  'lib32-vulkan-driver: 32-bit Vulkan driver (DXVK) for downloaded runners'
+  'lib32-vulkan-icd-loader: 32-bit Vulkan loader (DXVK) for downloaded runners'
+  'mangohud: performance overlay'
+  'python-pysocks: SOCKS proxy support'
+  'umu-launcher: manage UMU Launcher prefixes'
+  'vmtouch: preload bottle files into memory'
+  'vulkan-tools: vkcube test / Vulkan info'
+  'wine: use system installed wine as runner for bottles'
+  'xorg-xdpyinfo: display info detection'
+  'xterm: fallback terminal for "Run executable in terminal"'
+)
+
 source=(
 	"Bottles::git+https://github.com/bottlesdevs/Bottles.git#tag=${pkgver}"
 	remove-flatpak-checks.patch
@@ -73,20 +97,29 @@ sha256sums=('c4193396c10a8903c70953858328e1b54938c81b2fafe523c167e7dc50d41e89'
             'ea8e990c57bddaa3079f80d7074a6b7939a96cd0cc37de3003a848408e45313a')
 
 function prepare() {
-	patch --forward --directory="${srcdir}/${_pkgname}" --strip=1 --input="${srcdir}/remove-flatpak-checks.patch"
+	cd Bottles
+
+	grep -q "fs.is_file('/' + '.flatpak-info')" bottles/frontend/meson.build
+	sed -i "s|fs.is_file('/' + '.flatpak-info')|fs.is_file(meson.current_source_dir() / 'meson.build')|" \
+		bottles/frontend/meson.build
+
+	grep -q '^import os$' bottles/frontend/bottles.py bottles/frontend/cli/cli.py
+	sed -i '/^import os$/a os.environ.setdefault("CPAK_CONTAINER_ID", "1")' \
+		bottles/frontend/bottles.py bottles/frontend/cli/cli.py
+
+	grep -q 'return "FLATPAK_ID" in os.environ or is_cpak()' bottles/backend/globals.py
+	sed -i 's|return "FLATPAK_ID" in os.environ or is_cpak()|return False|' \
+		bottles/backend/globals.py
 }
 
 build() {
-	cd "${srcdir}/${_pkgname}"
-	meson setup --prefix='/usr' build
-	ninja -C build
+	arch-meson Bottles build
+	meson compile -C build
 }
 
 package() {
 	cd "${srcdir}/${_pkgname}"
-	DESTDIR="${pkgdir}" ninja -C build install
-	install -d "${pkgdir}/usr/lib"
-	mv ${pkgdir}/usr/bin/ "${pkgdir}/usr/lib/bottles-bwrap"
+	meson install -C build --destdir "${pkgdir}"
 	declare -x -g pkgname
 	declare -x -g pkgdir
 	declare -x -g srcdir
