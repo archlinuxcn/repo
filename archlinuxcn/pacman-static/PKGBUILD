@@ -17,7 +17,7 @@ _gpgerrorver=1.61
 _libassuanver=3.0.0
 _gpgmever=2.1.2
 _libseccompver=2.6.0
-pkgrel=43
+pkgrel=44
 # use annotated tag and patch level commit from release branch (can be empty for no patches)
 _git_tag=7.1.0
 _git_patch_level_commit=54d94116164b0b2202c6061c4a59c6f3e70820d8
@@ -118,6 +118,15 @@ sha512sums=('512c5096c82e00730c884e5d4d452928a66d35b42a831a2b4b8b17af9215140d6b2
             'f37425417a9e3fdc194a2b892137452ddba6601c69e822598692d4d776c573a90e70aac4598d47c915615facc45d0c83fc46c24856ddf04afd7494b63bb9f137'
             'SKIP'
             '34d33f96df79b4e6bb3112bc01d5991fb8045e2af43568f8a6bf02481c0e9295c71987ee17ef49d1fc32a870632acc2c233a851316ecfc9a212095868de24e33')
+# i486/armv6h can't checksum a git source (see memory/pacman-static.md)
+case "${CARCH}" in
+	i486|armv6h)
+		sha512sums[0]='SKIP'
+		sha512sums[11]='SKIP'
+		sha512sums[14]='SKIP'
+		sha512sums[27]='SKIP'
+		;;
+esac
 
 export LDFLAGS="$LDFLAGS -static"
 export CC=musl-gcc
@@ -149,7 +158,7 @@ prepare() {
 
     # apply patch level commits on top of annotated tag for pacman
     if [[ -n ${_git_patch_level_commit} ]]; then
-        if [[ v${_git_tag} != $(git describe --tags --abbrev=0 "${_git_patch_level_commit}") ]] then
+        if [[ v${_git_tag} != $(git describe --tags --abbrev=0 "${_git_patch_level_commit}") ]]; then
             error "patch level commit ${_git_patch_level_commit} is not a descendant of v${_git_tag}"
             exit 1
         fi
