@@ -1,13 +1,6 @@
-From ad7e52aec2d9f1c3e4b5a6d7e8f9a0b1c2d3e4f5 Mon Sep 17 00:00:00 2001
-From: nlsdt <xsfx0313@163.com>
-Date: Tue, 18 Aug 2026 22:35:10 +0800
-Subject: [PATCH 0002/2] fix(linux): 禁用 Impeller 提升稳定性（PiliPlus #2569）
+From: nlsdt <nlsdt@archlinuxcn.org>
+Subject: [PATCH 0002/2] fix(linux): 禁用 Impeller 提升稳定性
 
-Flutter 3.47 起 Linux 平台默认启用 Impeller，与 media_kit 视频纹理释放
-存在生命周期竞态：播放后返回时 raster 线程在 Impeller 绘制命令遍历中
-访问已释放纹理导致 NULL 解引用 SEGV（PiliNara #253 / PiliPlus #2569）。
-
-临时修复：仅 Linux 平台显式关闭 Impeller，回退原有渲染后端。
 ---
  linux/runner/my_application.cc | 3 +++
  1 file changed, 3 insertions(+)
