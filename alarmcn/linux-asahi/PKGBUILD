@@ -1,7 +1,7 @@
 # AArch64 Apple Silicon (Asahi Linux)
 # Maintainer: Janne Grunau <j@jannau.net>
 
-pkgver=7.1.9.asahi1
+pkgver=7.1.10.asahi1
 pkgrel=1
 
 [[ $pkgver =~ ([.0-9]+)\.asahi([0-9]+) ]]
@@ -27,9 +27,9 @@ source=(
   https://github.com/AsahiLinux/linux/archive/${_commit_id}.tar.gz
   config         # the main kernel config file
 )
-sha256sums=('a6dd5b9b2445a982d29b07a83965592378c8f1f962605c6453e3a8a6310ed67e'
+sha256sums=('495dae427c1fae91b291fbfb68beb07c7f23d1bb0365a2d91a0deee7472ce4a5'
             'a14a693ee9f0f14e5f3d2b23c54a9970b967766bd7a6641b4ac6c47837c75d37')
-b2sums=('4c2a7d3b73801addad61216fbdb10d6df97aa841db19024c8a4bdcbd6a4b0bb8709da4650b42542d1d8e51abec5550fdc7a483e65504e1253c331ae4d67ff9ef'
+b2sums=('9bc165100f0d574a0a966700852a881350400a40a8f40d96777e47a563c12d3d1034a233256ee7cd5f5e77321b5d263ba484d19aa01181fa057950a684d0de45'
         'd0784c466ef2449cf4535bc72f3450cdd8242c53dcf6bc1d727de4ba178df0c72f31e7a7507bd75d913e28d32287987736472ede0f096c8117fa6fd9b97d6edc')
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
