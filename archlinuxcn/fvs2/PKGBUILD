@@ -9,10 +9,12 @@ url='https://github.com/fvs-lab/fvs2'
 license=('MIT')
 depends=('glibc')
 makedepends=('go' 'git')
+
 source=(
 	"source::git+$url#tag=v${pkgver}"
-	"core::git+https://github.com/fvs-lab/core#tag=v${_corever}"
+	"core::git+https://github.com/fvs-lab/core.git#tag=v${_corever}"
 )
+
 sha256sums=('1dc0c1cf3343f7ef69f48f2f08bec31d4994f714f87a6c09f157be8e4144e7fa'
             '070b9961fbb5b9ab8b51be4b8fe7c7c7119c97054be82cdd55889a68b2aacd59')
 
