@@ -19,7 +19,7 @@ makedepends=(cmake git $_clang llvm-julia-git)
 source=("https://github.com/EnzymeAD/Enzyme/archive/v${pkgver}.tar.gz"
         0001-fix-gsl64-patching-script.patch)
 sha256sums=('5eb0365b5e66309d5b604e538fdf8f4307cb93b3dd41d118c5b85e2997487b3f'
-            '34644e0e64dae1b6ca5567373176fc9431b3ca7c4a87071a2e25e292215ab56b')
+            'fd61b1630c80085bd4aceefe64af193b31aea45fe9909ff182ab718bd72744b3')
 
 prepare() {
   cd Enzyme-$pkgver
