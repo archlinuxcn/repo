@@ -4,7 +4,7 @@ pkgname=pilinara
 _pkgname=pilinara
 _srcname=PiliNara
 pkgver=2.1.0.2
-pkgrel=4
+pkgrel=5
 url="https://github.com/Starfallan/PiliNara"
 pkgdesc="PiliPlus 的第三方Fork版本，做了一些自用改动"
 arch=('x86_64')
@@ -19,8 +19,8 @@ source_x86_64=("${_srcname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}
                "0001-fix-refresh-layout-semantics.patch"
                "0002-linux-disable-impeller.patch")
 sha256sums_x86_64=('fb2a24ab8af178a21e04af40ec0fc55efff2f8034da11fcb7f9f830e29c0241d'
-                   'bafcecdf440e34392e8baafd07249a8a980706ee1c49017bc1ad5ff839fa9baa'
-                   '5f7ef4e3dcb51a286b64a42de80b508b882b73ffa3ca676cdffecb56ca29da2d')
+                   '07cfdb6cdddee6886a205803b7acc3d31f97b1be136b7243de971893aaec38a9'
+                   'e637efd802b6c02767ff0d8b4b7ca5ea8c035138a6ed328fb5e08a53fab89bf3')
 
 prepare() {
   cd "${_srcname}-${pkgver}/"
