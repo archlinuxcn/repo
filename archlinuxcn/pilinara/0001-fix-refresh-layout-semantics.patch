@@ -1,0 +1,58 @@
+From 2c988d2df6f2d3b2c1c6e1c2a0e7a5c8e0f1a2b3 Mon Sep 17 00:00:00 2001
+From: nlsdt <xsfx0313@163.com>
+Date: Tue, 18 Aug 2026 21:08:40 +0800
+Subject: [PATCH 0001/2] fix(refresh): 修复 RenderRefreshLayout 布局协议违规导致的语义树断言风暴
+
+- setter 在动画 tick 中直接调用 _layoutIndicator()/indicator.layout() 违反
+  Flutter 布局协议（layout 只能在 flushLayout 阶段执行），且未 markNeedsLayout
+- performLayout 中 _layoutIndicator() 被 heightFactor/scaleFactor 条件跳过，
+  初始状态下 indicator 永不布局（_needsLayout=true）但语义遍历仍包含它
+- 后果：debug 下 flushSemantics 断言风暴（40万+/帧）、100% CPU、界面卡顿，
+  断言抛异常打断 drawFrame 收尾导致 _needToReportFirstFrame 永不重置
+- 修复：setter 改 markNeedsLayout + markNeedsSemanticsUpdate，performLayout
+  无条件布局 indicator（已验证：断言归零，CPU 100%→40%）
+
+临时修复，仅此一项，不含其他开发改进。
+---
+ lib/common/widgets/refresh_layout.dart | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/lib/common/widgets/refresh_layout.dart b/lib/common/widgets/refresh_layout.dart
+index 691e9fa62..f7eab6fce 100644
+--- a/lib/common/widgets/refresh_layout.dart
++++ b/lib/common/widgets/refresh_layout.dart
+@@ -62,8 +62,8 @@ class RenderRefreshLayout extends RenderBox
+       return;
+     }
+     _heightFactor = value;
+-    _layoutIndicator();
+-    markNeedsPaint();
++    markNeedsLayout();
++    markNeedsSemanticsUpdate();
+   }
+ 
+   double _scaleFactor = 0;
+@@ -73,8 +73,8 @@ class RenderRefreshLayout extends RenderBox
+       return;
+     }
+     _scaleFactor = value;
+-    _layoutIndicator();
+-    markNeedsPaint();
++    markNeedsLayout();
++    markNeedsSemanticsUpdate();
+   }
+ 
+   void _scaleListener() {
+@@ -103,9 +103,7 @@ class RenderRefreshLayout extends RenderBox
+     final body = this.body..layout(constraints);
+     setOffset(body, .zero);
+ 
+-    if (heightFactor > 0 && scaleFactor > 0) {
+-      _layoutIndicator();
+-    }
++    _layoutIndicator();
+   }
+ 
+   void _layoutIndicator() {
+-- 
+2.39.3
