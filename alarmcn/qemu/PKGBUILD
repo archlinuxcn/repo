@@ -26,7 +26,7 @@ pkgname=(
   qemu-vmsr-helper
   qemu-{base,desktop,emulators-full,full}
 )
-pkgver=11.1.0
+pkgver=11.1.1
 pkgrel=1
 pkgdesc="A generic and open source machine emulator and virtualizer"
 arch=(aarch64 x86_64)
@@ -133,13 +133,13 @@ source=(
   qemu-sysusers.conf
   99-qemu-guest-agent.rules
 )
-sha512sums=('17009c49b1a4f35b150f98c7c3955cb44bf9c63593f124276b328da97568f600724b8f26759fbac88e96e814bda389491713e34b3aae53fa515277f5a868ea5a'
+sha512sums=('f30b36800b44ac0370e63341a8c5591019648a78d5929e18b0177873c0b6e4a0cbbddc069337cb06a3b5d20d15779c9b9786d0a92073c421fb07ae14a67d4646'
             'SKIP'
             '7b412ffa5dcda47b0a4ec9e2c5e5e1d9eaaaf0a087b7ea3ead3e706ba4c9cafb919beadd088a0299b6f7aab753b81a5eafb545b4842ee5f26646d16544dd02a7'
             '6e838773d63ae0ffdffe2b891bf611d8f5f3c67a9bc4cbbedf8363c150c2c9971c8e44d92270bc581af40eb0ece02192760bcdd6aee229fff55635f3a4825afa'
             '87c3175aeecbb84852f9aea91fd775af13c21340eef8047520d78550ef72d3d1935a396bb843fc571db8fcb5ca2154d8a135dcca04ca0dfeba3191b16a5a402c'
             '93b905046fcea8a0a89513b9259c222494ab3b91319dde23baebcb40dc17376a56661b159b99785d6e816831974a0f3cbd7b2f7d89e5fc3c258f88f4492f3839')
-b2sums=('bdcbd99067718c13186ed5f63bf6a7434e5f3acd455410ec029a0bbed45eb0fdcc9f9a3474af33e4e159137f2cf66b704998eda2c386297d73957fe26fba9722'
+b2sums=('86f3094c0e43af8ccb822c79cb17bd1c15450c261164a7b0e106cec8fe057f5d7159a0bc163d63d013f27963bd698d05c34465fb7a2b906f48b8c49d01d9bc44'
         'SKIP'
         'b1eca364aa60f130ff5e649f5d004d3fcb75356d3421a4542efdfc410d39b40d9434d15e1dd7bbdbd315cb72b5290d3ea5f77f9c41961a5601cd28ef7bbe72e8'
         '2102e4a34e11e406e9606c97e026e7b92e887e296a7f77b9cede1b37119d0df33735f3588628167b2b8e32244c196c491bfab623e2caddac9014d445aa2a6d98'
@@ -1247,7 +1247,7 @@ package_qemu-desktop() {
 package_qemu-emulators-full() {
   pkgdesc="All QEMU user mode and system emulators"
   depends=(
-    qemu-system-{aarch64,alpha,arm,avr,hppa,loongarch64,m68k,microblaze,mips,or1k,ppc,riscv,rx,s390x,sh4,sparc,tricore,x86,xtensa}=$pkgver-$pkgrel
+    qemu-system-{aarch64,alpha,arm,avr,hexagon,hppa,loongarch64,m68k,microblaze,mips,or1k,ppc,riscv,rx,s390x,sh4,sparc,tricore,x86,xtensa}=$pkgver-$pkgrel
     qemu-user=$pkgver-$pkgrel
   )
   _install_licenses
