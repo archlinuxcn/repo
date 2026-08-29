@@ -10,7 +10,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
 pkgver=113712
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 _vbox_arch='amd64'
 url='https://www.virtualbox.org'
@@ -302,7 +302,7 @@ package_virtualbox-guest-utils-svn() {
     source "VirtualBox/env.sh"
     pushd "VirtualBox/out/linux.${_vbox_arch}/release/bin/additions"
     install -d "$pkgdir/usr/bin"
-    install -m0755 VBoxAudioTest VBoxClient VBoxControl VBoxDRMClient VBoxService vboxwl "$pkgdir/usr/bin"
+    install -m0755 VBoxAudioTest VBoxClient VBoxControl VBoxDRMClient VBoxService "$pkgdir/usr/bin"
     install -m0755 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/98vboxadd-xclient \
         "$pkgdir"/usr/bin/VBoxClient-all
     install -m0644 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/vboxclient.desktop \
