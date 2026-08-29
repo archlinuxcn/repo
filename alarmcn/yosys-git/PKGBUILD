@@ -27,14 +27,10 @@ sha512sums=('SKIP')
 
 pkgver() {
   cd yosys
-  _yosys_ver=$(
-    cmake -DCMAKE_MODULE_PATH=${PWD}/cmake -P /dev/stdin 2>&1 <<EOF
-include(YosysVersionData)
-message("\${YOSYS_VERSION_MAJOR}.\${YOSYS_VERSION_MINOR}")
-EOF
-  )
+  _yosys_maj=$(sed -n -e 's/.*(YOSYS_VERSION_MAJOR *\(.*\))/\1/p' cmake/YosysVersionData.cmake)
+  _yosys_min=$(sed -n -e 's/.*(YOSYS_VERSION_MINOR *\(.*\))/\1/p' cmake/YosysVersionData.cmake)
 
-  printf "%s.r%s.%s" "${_yosys_ver}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "%s.r%s.%s" "${_yosys_maj}.${_yosys_min}" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
