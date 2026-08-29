@@ -1,0 +1,26 @@
+# Maintainer: sinofp <sinofp@tuta.io>
+
+SCALA_MAJOR_VERSION=2.12
+SCALA_MAJOR_VERSION_TRIMMED=$(echo ${SCALA_MAJOR_VERSION} | tr -d .)
+
+pkgname=almond-$SCALA_MAJOR_VERSION_TRIMMED
+pkgver=0.10.9
+pkgrel=1
+pkgdesc="A Scala $SCALA_MAJOR_VERSION kernel for Jupyter"
+arch=('any')
+url="https://almond.sh/"
+license=('BSD')
+depends=('jupyter' 'java-runtime')
+source=('cs::https://git.io/coursier-cli-linux' 'https://raw.githubusercontent.com/almond-sh/almond/master/LICENSE')
+md5sums=('SKIP' 'bd87e89adb3554daa4d95415cfa95da9')
+
+package() {
+	chmod +x cs
+
+	export COURSIER_CACHE="$pkgdir/usr/share/almond/coursier/v1"
+	export COURSIER_JVM_CACHE="$pkgdir/usr/share/almond/coursier/jvm"
+	./cs launch --fork almond:$pkgver --scala $SCALA_MAJOR_VERSION -- --install --display-name "Scala $SCALA_MAJOR_VERSION" --id scala$SCALA_MAJOR_VERSION_TRIMMED --jupyter-path "$pkgdir/usr/share/jupyter/kernels/"
+
+	sed -i "s|$pkgdir||g" "$pkgdir/usr/share/jupyter/kernels/scala$SCALA_MAJOR_VERSION_TRIMMED/kernel.json"
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
