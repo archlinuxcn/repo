@@ -1,0 +1,38 @@
+From c1d100f95beb87a0bf1a6d82afa6cfd78d95f7ad Mon Sep 17 00:00:00 2001
+From: 1F616EMO <root@1f616emo.xyz>
+Date: Sat, 29 Aug 2026 23:32:41 +0800
+Subject: [PATCH] Skip custom nvenc version checks
+
+---
+ src/codec_query/nvenc.c | 14 --------------
+ 1 file changed, 14 deletions(-)
+
+diff --git a/src/codec_query/nvenc.c b/src/codec_query/nvenc.c
+index 7707556..30d7c75 100644
+--- a/src/codec_query/nvenc.c
++++ b/src/codec_query/nvenc.c
+@@ -13,21 +13,7 @@
+ #define NVENCAPI_VERSION_470 (NVENCAPI_MAJOR_VERSION_470 | (NVENCAPI_MINOR_VERSION_470 << 24))
+ #define NVENCAPI_STRUCT_VERSION_CUSTOM(nvenc_api_version, struct_version)  ((uint32_t)(nvenc_api_version) | ((struct_version)<<16) | (0x7 << 28))
+ 
+-#define NVENCAPI_PACKED_VERSION(major, minor) (((major) << 4) | (minor))
+-
+-#if defined(GSR_FFMPEG_STATIC)
+-#define FFMPEG_REQUIRED_NVENC_API_VERSION 0
+-#elif LIBAVCODEC_VERSION_MAJOR >= 63
+-#define FFMPEG_REQUIRED_NVENC_API_VERSION NVENCAPI_PACKED_VERSION(13, 1)
+-#elif LIBAVCODEC_VERSION_MAJOR >= 62
+-#define FFMPEG_REQUIRED_NVENC_API_VERSION NVENCAPI_PACKED_VERSION(13, 0)
+-#elif LIBAVCODEC_VERSION_MAJOR >= 61
+-#define FFMPEG_REQUIRED_NVENC_API_VERSION NVENCAPI_PACKED_VERSION(12, 2)
+-#elif LIBAVCODEC_VERSION_MAJOR >= 60
+-#define FFMPEG_REQUIRED_NVENC_API_VERSION NVENCAPI_PACKED_VERSION(12, 0)
+-#else
+ #define FFMPEG_REQUIRED_NVENC_API_VERSION 0
+-#endif
+ 
+ static void* open_nvenc_library(void) {
+     dlerror(); /* clear */
+-- 
+2.55.0
+
