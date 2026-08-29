@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaGPU/OpenCL.jl.git#commit=$_commit")
-sha256sums=('032847577015256f92c8141087c9c4cbfe74c5a064bf93817e924f2928e8756d')
+source=("git+https://github.com/JuliaGPU/OpenCL.jl.git#commit=$_commit"
+        0001-Fix-loading-on-julia-master.patch)
+sha256sums=('032847577015256f92c8141087c9c4cbfe74c5a064bf93817e924f2928e8756d'
+            'a8335af6905c3c8b1c7e63008cd2741b91240145ba5eb842a971b1217461cb11')
+
+prepare() {
+  cd OpenCL.jl
+
+  patch -Np1 --no-backup-if-mismatch < ../0001-Fix-loading-on-julia-master.patch
+}
 
 package() {
   cd OpenCL.jl
