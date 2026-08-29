@@ -1,4 +1,4 @@
-From 769ddc115079ab8db485bf3b5d7fd36f2ec5ff7b Mon Sep 17 00:00:00 2001
+From d5c22f86efe4503e0d7936856494c808ad0191d2 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 5 Aug 2026 00:49:20 -0400
 Subject: [PATCH 9/9] Fix gcc_s search
@@ -21,5 +21,5 @@ index dda8442515..afdc662da8 100644
          append!(LIBS,     String["--as-needed", ld_linux, "--no-as-needed"])
          append!(crtbegin, String[_find_static("crti.o"), _find_static("crtbeginS.o")])
 -- 
-2.53.0
+2.55.0
 
