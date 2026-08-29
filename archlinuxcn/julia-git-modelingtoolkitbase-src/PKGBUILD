@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/SciML/ModelingToolkit.jl.git#commit=$_commit")
-sha256sums=('3d42b1850e3153c38dde4ecd6f8489f26965bda9c1a12c3e3c481f0da09643a0')
+source=("git+https://github.com/SciML/ModelingToolkit.jl.git#commit=$_commit"
+        32e7b22bd1f2fb0c8cd204c058260efa69c28ffa.patch)
+sha256sums=('3d42b1850e3153c38dde4ecd6f8489f26965bda9c1a12c3e3c481f0da09643a0'
+            '72cce00a5a0660d3dd44094896753b430c8bdbf03404e40e3daa93b56ce426c3')
+
+prepare() {
+  cd ModelingToolkit.jl
+
+  patch -Np1 --no-backup-if-mismatch < ../32e7b22bd1f2fb0c8cd204c058260efa69c28ffa.patch
+}
 
 package() {
   cd ModelingToolkit.jl/lib/ModelingToolkitBase
