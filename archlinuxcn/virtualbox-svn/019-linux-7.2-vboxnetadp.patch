@@ -1,0 +1,69 @@
+From 67c76e3f5a74d025ee9fa950ae2472c7f8bf5c65 Mon Sep 17 00:00:00 2001
+From: Vadim Galitsyn <vadim.galitsyn@oracle.com>
+Date: Mon, 6 Jul 2026 13:24:13 +0000
+Subject: [PATCH] Linux: vboxnetadp: Add initial support for kernel 7.2,
+ bugref:11119
+
+The kernel no longer declares strncpy for modules in Linux 7.2.  Use
+strscpy on new kernels while retaining strncpy for older kernels and the
+other supported host platforms.
+---
+ src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdp.c          | 2 +-
+ src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdpInternal.h  | 10 ++++++++++
+ src/VBox/HostDrivers/VBoxNetAdp/linux/VBoxNetAdp-linux.c | 4 ++--
+ 3 files changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdp.c b/src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdp.c
+--- a/src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdp.c
++++ b/src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdp.c
+@@ -129,7 +129,7 @@ int vboxNetAdpCreate(PVBOXNETADP *ppNew, const char *pcszName)
+             {
+                 Log(("vboxNetAdpCreate: using name: %s\n", pcszName));
+                 pThis->iUnit = vboxNetAdpGetUnitByName(pcszName);
+-                strncpy(pThis->szName, pcszName, sizeof(pThis->szName) - 1);
++                vboxNetAdpStrncpy(pThis->szName, pcszName, sizeof(pThis->szName) - 1);
+                 pThis->szName[sizeof(pThis->szName) - 1] = '\0';
+             }
+             else
+diff --git a/src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdpInternal.h b/src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdpInternal.h
+--- a/src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdpInternal.h
++++ b/src/VBox/HostDrivers/VBoxNetAdp/VBoxNetAdpInternal.h
+@@ -163,5 +163,15 @@ DECLHIDDEN(PVBOXNETADP) vboxNetAdpFindByName(const char *pszName);
+ DECLHIDDEN(void) vboxNetAdpComposeMACAddress(PVBOXNETADP pThis, PRTMAC pMac);
+ 
++# if defined(RT_OS_LINUX)
++#  if RTLNX_VER_MIN(7,2,0)
++#   define vboxNetAdpStrncpy strscpy
++#  else  /* 7.2.0 */
++#   define vboxNetAdpStrncpy strncpy
++#  endif /* < 7.2.0 */
++# else /* !RT_OS_LINUX */
++#  define vboxNetAdpStrncpy strncpy
++# endif
++
+ 
+ /**
+  * This is called to perform OS-specific structure initializations.
+diff --git a/src/VBox/HostDrivers/VBoxNetAdp/linux/VBoxNetAdp-linux.c b/src/VBox/HostDrivers/VBoxNetAdp/linux/VBoxNetAdp-linux.c
+--- a/src/VBox/HostDrivers/VBoxNetAdp/linux/VBoxNetAdp-linux.c
++++ b/src/VBox/HostDrivers/VBoxNetAdp/linux/VBoxNetAdp-linux.c
+@@ -342,7 +342,7 @@ int vboxNetAdpOsCreate(PVBOXNETADP pThis, PCRTMAC pMACAddress)
+             err = register_netdev(pNetDev);
+             if (!err)
+             {
+-                strncpy(pThis->szName, pNetDev->name, sizeof(pThis->szName));
++                vboxNetAdpStrncpy(pThis->szName, pNetDev->name, sizeof(pThis->szName));
+                 pThis->szName[sizeof(pThis->szName) - 1] = '\0';
+                 pThis->u.s.pNetDev = pNetDev;
+                 Log2(("vboxNetAdpOsCreate: pThis=%p pThis->szName = %p\n", pThis, pThis->szName));
+@@ -465,7 +465,7 @@ static long VBoxNetAdpLinuxIOCtlUnlocked(struct file *pFilp, unsigned int uCmd,
+             }
+ 
+             Assert(strlen(pAdp->szName) < sizeof(Req.szName));
+-            strncpy(Req.szName, pAdp->szName, sizeof(Req.szName) - 1);
++            vboxNetAdpStrncpy(Req.szName, pAdp->szName, sizeof(Req.szName) - 1);
+             Req.szName[sizeof(Req.szName) - 1] = '\0';
+ 
+             if (RT_UNLIKELY(copy_to_user((void *)ulArg, &Req, sizeof(Req))))
+-- 
+2.51.0
