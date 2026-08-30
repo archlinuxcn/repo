@@ -1,12 +1,11 @@
 From: nlsdt <nlsdt@archlinuxcn.org>
-Subject: [PATCH 0001/2] fix(refresh): 修复 RefreshLayout 布局协议违规
+Subject: [PATCH] fix(refresh): 修复 RefreshLayout 布局协议违规
 
 ---
- lib/common/widgets/refresh_layout.dart | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ lib/common/widgets/refresh_layout.dart | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/lib/common/widgets/refresh_layout.dart b/lib/common/widgets/refresh_layout.dart
-index 691e9fa62..f7eab6fce 100644
 --- a/lib/common/widgets/refresh_layout.dart
 +++ b/lib/common/widgets/refresh_layout.dart
 @@ -62,8 +62,8 @@ class RenderRefreshLayout extends RenderBox
@@ -31,16 +30,3 @@ index 691e9fa62..f7eab6fce 100644
    }
  
    void _scaleListener() {
-@@ -103,9 +103,7 @@ class RenderRefreshLayout extends RenderBox
-     final body = this.body..layout(constraints);
-     setOffset(body, .zero);
- 
--    if (heightFactor > 0 && scaleFactor > 0) {
--      _layoutIndicator();
--    }
-+    _layoutIndicator();
-   }
- 
-   void _layoutIndicator() {
--- 
-2.39.3
