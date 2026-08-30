@@ -1,0 +1,22 @@
+# Maintainer: nlsdt <nlsdt@archlinuxcn.org>
+pkgname=simple-http-server
+pkgver=0.8.0
+pkgrel=1
+pkgdesc="Simple static file server with directory listing, upload, basic auth, range requests, compression, CORS, SPA fallback, and optional PKCS#12 HTTPS support"
+arch=('x86_64' 'aarch64')
+url="https://github.com/TheWaWaR/simple-http-server"
+license=('MIT')
+makedepends=('cargo' 'git')
+source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
+sha256sums=('SKIP')
+
+build() {
+  cd "${pkgname}"
+  cargo build --release --locked
+}
+
+package() {
+  cd "${pkgname}"
+  install -Dm755 "target/release/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
