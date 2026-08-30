@@ -1,14 +1,14 @@
 # Maintainer: nlsdt <nlsdt@archlinuxcn.org>
 pkgname=simple-http-server
 pkgver=0.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Simple static file server with directory listing, upload, basic auth, range requests, compression, CORS, SPA fallback, and optional PKCS#12 HTTPS support"
 arch=('x86_64' 'aarch64')
 url="https://github.com/TheWaWaR/simple-http-server"
 license=('MIT')
 makedepends=('cargo' 'git')
 source=("${pkgname}::git+${url}.git#tag=v${pkgver}")
-sha256sums=('SKIP')
+sha256sums=('d907d33290bea9c0d248fac9e65b85709bb3b59579331f8f68764ba90be1d87b')
 
 build() {
   cd "${pkgname}"
