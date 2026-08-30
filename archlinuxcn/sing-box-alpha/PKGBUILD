@@ -2,7 +2,7 @@
 
 pkgname=sing-box-alpha
 _pkgname=sing-box
-pkgver=1.14.0rc.4
+pkgver=1.14.0rc.5
 _pkgver=$(echo "${pkgver}" | sed 's/\([0-9]\+\.[0-9]\+.[0-9]\+\)\(alpha\|beta\|rc\)/\1-\2/')
 pkgrel=1
 epoch=1
@@ -18,7 +18,7 @@ optdepends=('sing-geosite-rule-set: GeoSite rule sets'
 makedepends=('go' 'clang' 'lld')
 
 source=("${_pkgname}-${_pkgver}.tar.gz::https://github.com/SagerNet/sing-box/archive/v${_pkgver}.tar.gz")
-sha256sums=('7d30e1c5fd812cc2b43d88802632126cd969490381f7754d6739fd5810f67c68')
+sha256sums=('18dc5e658fa3121bbe1b7d719a789fa5c95464e9970a35b6db80376f2638b083')
 
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
