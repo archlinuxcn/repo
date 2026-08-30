@@ -1,6 +1,6 @@
 pkgname=pandoc-bin
 pkgver=3.11
-pkgrel=1
+pkgrel=2
 pkgdesc="Conversion between documentation formats"
 url="https://pandoc.org"
 license=("GPL-2.0-or-later")
@@ -36,8 +36,13 @@ package() {
   cp -R bin share "${pkgdir}/usr"
   cp -R data citeproc "${pkgdir}/usr/share/pandoc/"
   cp COPYRIGHT MANUAL.txt "${pkgdir}/usr/share/pandoc/"
+
   bin/pandoc --completion=bash | \
     install -Dm644 /dev/stdin "$pkgdir"/usr/share/bash-completion/completions/pandoc
+  bin/pandoc --completion=zsh | \
+    install -Dm644 /dev/stdin "$pkgdir"/usr/share/zsh/site-functions/_pandoc
+  bin/pandoc --completion=fish | \
+    install -Dm644 /dev/stdin "$pkgdir"/usr/share/fish/vendor_completions.d/pandoc.fish
 }
 
 # vim: set ts=2 sw=2 et
