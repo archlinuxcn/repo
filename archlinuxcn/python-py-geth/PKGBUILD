@@ -2,7 +2,7 @@
 
 _name=py-geth
 pkgname=python-${_name}
-pkgver=7.0.0
+pkgver=7.0.1
 pkgrel=2
 pkgdesc="Python wrapping for running Go-Ethereum as a subprocess"
 arch=(any)
@@ -10,9 +10,9 @@ url="https://github.com/ethereum/${_name}"
 license=(MIT)
 depends=(go-ethereum python python-pydantic python-requests python-semantic-version python-typing_extensions)
 makedepends=(git python-build python-installer python-setuptools python-setuptools-scm python-wheel)
-checkdepends=(python-pytest python-flaky)
+checkdepends=(go python-pytest python-flaky)
 source=(git+$url.git#tag=v$pkgver)
-sha512sums=('f0ca7bea3ed4a7b1bc8800e1f129cc05b246282ff9577148bec9ce25ea1488e534715dd4826f5cd2b54be1ef860a2f07c06af9735fb2b727ab7ea78e4a2cd3ee')
+sha512sums=('e83d4c90d897c3a9f32a38456bbba36e987b20365d36718374f9a4c351d111b2a456341704a4dc931a420bda9580390aa6e5e4dacd8fd3178cd73ff54ff915c8')
 
 build() {
   cd $_name
