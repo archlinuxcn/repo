@@ -19,10 +19,7 @@ prepare() {
 	fvm install
 	fvm flutter --disable-analytics
 	fvm flutter --no-version-check pub get
-}
 
-build() {
-	cd "${_srcname}/"
 	local _sdk _scripts
 	_sdk="$(readlink -f .fvm/flutter_sdk)"
 	_scripts="${PWD}/lib/scripts"
@@ -58,6 +55,10 @@ build() {
 			git -C "${_material}" apply "${_mp}"
 		done
 	fi
+}
+
+build() {
+	cd "${_srcname}/"
 
 	printf "补丁应用完成, 开始构建...\n"
 	if fvm flutter build linux --no-pub --release \
