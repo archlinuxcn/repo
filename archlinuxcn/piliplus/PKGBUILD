@@ -42,7 +42,6 @@ prepare() {
 	local _pubcache _material _mp
 	_pubcache="${PUB_CACHE:-${HOME}/.pub-cache}/hosted/pub.dev"
 	rm -rf "${_pubcache}"/material_ui-*
-	fvm flutter pub get
 	_material="$(ls -d "${_pubcache}"/material_ui-* 2>/dev/null | sort -V | tail -1)"
 	if [[ -z "${_material}" ]]; then
 		printf "警告: 未找到 material_ui, 跳过其补丁。\n"
