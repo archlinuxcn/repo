@@ -1,6 +1,6 @@
 pkgname=julia-git-bipartitegraphs-src
-pkgver=0.1.12
-_commit=398f7180794499a16bbf7fe46258272988908281
+pkgver=0.1.13
+_commit=c0ea429c529c8c63da7ba2db7654bca21b52a93a
 pkgrel=1
 pkgdesc="BipartiteGraphs.jl"
 url="https://github.com/SciML/BipartiteGraphs.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/SciML/BipartiteGraphs.jl.git#commit=$_commit")
-sha256sums=('14c36b8976d9f56264d5ae1099a62dc8c527f7ce62a22d281218edc03847714b')
+sha256sums=('13cb2be3ecac220e5bc452bcba3f456b8a6f1405fad4fc663e0ea94e81a9713b')
 
 package() {
   cd BipartiteGraphs.jl
