@@ -3,7 +3,6 @@
 # Contributor: lotation <xlapsiu@gmail.com>
 
 pkgname=bottles-bwrap
-_pkgname=Bottles
 pkgver=64.1
 pkgrel=1
 epoch=2
@@ -118,7 +117,6 @@ build() {
 }
 
 package() {
-	cd "${srcdir}/${_pkgname}"
 	meson install -C build --destdir "${pkgdir}"
 	declare -x -g pkgname
 	declare -x -g pkgdir
