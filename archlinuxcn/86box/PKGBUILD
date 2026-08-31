@@ -1,6 +1,6 @@
 pkgname=86box
 pkgver=6.0
-pkgrel=1
+pkgrel=2
 pkgdesc='An emulator for classic IBM PC clones'
 arch=('x86_64')
 url='https://github.com/86Box/86Box'
@@ -53,10 +53,8 @@ source=(
 	"source::git+${url}.git#tag=v${pkgver}"
 	"assets::git+https://github.com/86Box/assets.git#tag=v${pkgver}"
 )
-sha512sums=(
-	7c85d3713b73e818b89252474400a6470890648c2b89e8a03309dd2b654b0b25e02664776bc0ccfe821539ee832f0816ec8b222df7a8d137c4f44692aa3b4ca0
-	6b7efda202f262aa19f8dc005ce1c9742b5920a198cdb3765da43cbae99537bf6ad1649f3adf91030817db04d669087334b4c8a1ac4683eb6eb8ce83f087c4b2
-)
+sha512sums=('8a4c1fb124a17e16df8c5adadd523da86f9b1d64028ee0bd5a1e56af869ce9bf5cbc0d030bd8c8643723983a45f391af0df321188e34daae9ed8186c40110a48'
+            '5b99107cc8542f6ffdba0cdb0833d1c0f1dcfcc9b46c4edf4b00acca49b470132bfd5c2d7f00c2c4899da905991d2b7f7c427aa860530465630e657972745335')
 
 build() {
 	LDFLAGS='-z now -z shstk' \
