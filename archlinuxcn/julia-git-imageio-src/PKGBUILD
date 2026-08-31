@@ -1,6 +1,6 @@
 pkgname=julia-git-imageio-src
-pkgver=0.6.9
-_commit=e14cb1971c991a7447358ba1dd9c541c8813341e
+pkgver=0.6.10
+_commit=76df82e5bbdca046de1dde321cb85ce2c0627f28
 pkgrel=1
 pkgdesc="ImageIO.jl"
 url="https://github.com/JuliaIO/ImageIO.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/ImageIO.jl.git#commit=$_commit")
-sha256sums=('8b6509b254d9b24ff090fa7938b252368c4f05fc6aa7212a1fa888227eadf251')
+sha256sums=('8f66c5a892ec4b2bae4e77e78ddb7192fecb8944c6317a35a2a78b4a9640092e')
 
 package() {
   cd ImageIO.jl
