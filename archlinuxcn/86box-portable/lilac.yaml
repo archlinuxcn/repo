@@ -1,22 +1,19 @@
 maintainers:
   - github: Kimiblock
 
-pre_build_script: update_pkgrel()
-
-# update_pkgver_and_pkgrel(_G.newver)
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 
 post_build_script: |
   git_pkgbuild_commit()
 #  update_aur_repo()
 
 update_on:
-  - source: "alpm"
-    alpm: "86box"
-    repo: "archlinuxcn"
-    #strip_release: true
+  - source: github
+    github: 86Box/86Box
+    use_latest_release: true
+    prefix: v
 
 build_prefix: archlinuxcn-x86_64
 
 repo_depends:
-  - 86box
   - portable-packer

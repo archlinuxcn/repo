@@ -13,53 +13,103 @@ provides=(86box)
 options=(!debug !strip)
 conflicts=("86box")
 
-optdepends=()
+depends=(
+	'portable'
+	'fluidsynth'
+	'hicolor-icon-theme'
+	'libserialport'
+	'libslirp'
+	'openal'
+	'qt6-base'
+	'rtmidi'
+	'sdl2'
+	'freetype2'
+	'gcc-libs'
+	'glib2'
+	'glibc'
+	'libevdev'
+	'libglvnd'
+	'libpng'
+	'libsndfile'
+	'libx11'
+	'libxcb'
+	'libxext'
+	'libxi'
+	'libxkbcommon-x11'
+	'libxkbcommon'
+	'zlib'
+)
 
-makedepends+=(86box portable-packer)
+makedepends=(
+	'cmake'
+	'extra-cmake-modules'
+	'ninja'
+	'qt6-tools'
+	'vde2'
+	'vulkan-headers'
+	'git'
+)
+optdepends=(
+	'86box-roms: ROM files'
+	'discord-game-sdk: Discord Rich Presence'
+	'ghostscript: Printing with Generic PostScript Printer'
+	'libpcap: Networking not limited to TCP/IP'
+)
+options=(
+	'!buildflags'
+)
 
 checkdepends=()
 
 source=(
 	config.toml
 	desktop.file
+
+	"source::git+${url}.git#tag=v${pkgver}"
+	"assets::git+https://github.com/86Box/assets.git#tag=v${pkgver}"
 )
 
 
 md5sums=('SKIP'
          '67906c0629e5ee4e1fef7634e3fda431')
 
-function pkgver() {
-	export LC_ALL=C
-	pacman -Qi 86box | grep Version | awk '{print $NF}' | cut -d'-' -f1
+build() {
+	LDFLAGS='-z now -z shstk' \
+		cmake \
+		-S"source" \
+		-Bbuild \
+		--preset \
+		regular \
+		--toolchain \
+		"cmake/flags-gcc-${CARCH}.cmake" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DUSE_QT6=on
+	cmake \
+		--build \
+		build
 }
 
 function package() {
-	depends=(
-		"portable"
-		'fluidsynth'
-		'hicolor-icon-theme'
-		'libserialport'
-		'libslirp'
-		'openal'
-		'qt6-base'
-		'rtmidi'
-		'sdl2'
-		'freetype2'
-		'gcc-libs'
-		'glib2'
-		'glibc'
-		'libevdev'
-		'libglvnd'
-		'libpng'
-		'libsndfile'
-		'libx11'
-		'libxcb'
-		'libxext'
-		'libxi'
-		'libxkbcommon-x11'
-		'libxkbcommon'
-		'zlib'
-	)
+	DESTDIR="${pkgdir}" \
+		cmake \
+		--build \
+		"${srcdir}/build" \
+		--target install
+	for i in 16x16 20x20 24x24 32x32 48x48 64x64 72x72 128x128 256x256; do
+		install \
+			-vDm644 \
+			"${srcdir}/source/src/unix/assets/${i}/net.86box.86Box.png" \
+			-t \
+			"${pkgdir}/usr/share/icons/hicolor/${i}/apps"
+	done
+
+	install \
+		-d \
+		"${pkgdir}/usr/share/86Box/assets"
+	cp \
+		-a \
+		"${srcdir}/assets/sounds" \
+		"${pkgdir}/usr/share/86Box/assets"
 
 	export pkgdir
 	export pkgname
@@ -67,7 +117,7 @@ function package() {
 	portable-packer \
 		-v \
 		--distro arch \
-		--mode copy 86box \
+		--mode post \
 		--hash true \
 		--config-ng "${srcdir}/config.toml" \
 		--desktop-file "${srcdir}/desktop.file"
