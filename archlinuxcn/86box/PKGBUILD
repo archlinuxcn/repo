@@ -1,0 +1,96 @@
+pkgname=86box
+pkgver=6.0
+pkgrel=1
+pkgdesc='An emulator for classic IBM PC clones'
+arch=('x86_64')
+url='https://github.com/86Box/86Box'
+license=('GPL-2.0-or-later' 'CC-BY-4.0')
+depends=(
+	'fluidsynth'
+	'hicolor-icon-theme'
+	'libserialport'
+	'libslirp'
+	'openal'
+	'qt6-base'
+	'rtmidi'
+	'sdl2'
+	'freetype2'
+	'gcc-libs'
+	'glib2'
+	'glibc'
+	'libevdev'
+	'libglvnd'
+	'libpng'
+	'libsndfile'
+	'zlib'
+)
+
+makedepends=(
+	'cmake'
+	'extra-cmake-modules'
+	'ninja'
+	'qt6-tools'
+	'vde2'
+	'vulkan-headers'
+	'git'
+)
+optdepends=(
+	'86box-roms: ROM files'
+	'discord-game-sdk: Discord Rich Presence'
+	'ghostscript: Printing with Generic PostScript Printer'
+	'libpcap: Networking not limited to TCP/IP'
+)
+options=(
+	'!buildflags'
+)
+source=(
+	"source::git+${url}.git#tag=v{pkgver}"
+	"assets::git+https://github.com/86Box#tag=v${pkgver}"
+)
+sha512sums=(
+	7c85d3713b73e818b89252474400a6470890648c2b89e8a03309dd2b654b0b25e02664776bc0ccfe821539ee832f0816ec8b222df7a8d137c4f44692aa3b4ca0
+	6b7efda202f262aa19f8dc005ce1c9742b5920a198cdb3765da43cbae99537bf6ad1649f3adf91030817db04d669087334b4c8a1ac4683eb6eb8ce83f087c4b2
+)
+
+build() {
+	LDFLAGS='-z now -z shstk' \
+		cmake \
+		-S"source" \
+		-Bbuild \
+		--preset \
+		regular \
+		--toolchain \
+		"cmake/flags-gcc-${CARCH}.cmake" \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DUSE_QT6=on
+	cmake \
+		--build \
+		build
+}
+
+package() {
+	DESTDIR="${pkgdir}" \
+		cmake \
+		--build \
+		"${srcdir}/build" \
+		--target install
+	for i in 16x16 20x20 24x24 32x32 48x48 64x64 72x72 128x128 256x256; do
+		install \
+			-vDm644 \
+			"${srcdir}/source/src/unix/assets/${i}/net.86box.86Box.png" \
+			-t \
+			"${pkgdir}/usr/share/icons/hicolor/${i}/apps"
+	done
+
+	install \
+		-vDm644 \
+		"${srcdir}/source/src/unix/assets/net.86box.86Box.desktop" \
+		"${pkgdir}/usr/share/applications/net.86box.86Box.desktop"
+	install \
+		-d \
+		"${pkgdir}/usr/share/86Box/assets"
+	cp \
+		-a \
+		"${srcdir}/assets/sounds" \
+		"${pkgdir}/usr/share/86Box/assets"
+}
