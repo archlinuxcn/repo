@@ -60,7 +60,6 @@ prepare() {
 build() {
 	cd "${_srcname}/"
 
-	printf "补丁应用完成, 开始构建...\n"
 	if fvm flutter build linux --no-pub --release \
 		--dart-define pili.name="$(grep -m1 '^version:' pubspec.yaml | sed -E 's/^version:[[:space:]]*([0-9.]+).*/\1/')" \
 		--dart-define pili.code="$(git rev-list --count HEAD)" \
