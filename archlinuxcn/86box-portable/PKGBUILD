@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=86box-portable
-pkgver=1
+pkgver=6.0
 pkgrel=1
 epoch=1
 pkgdesc="86Box sandboxed by portable"
@@ -70,8 +70,10 @@ source=(
 )
 
 
-md5sums=('SKIP'
-         '67906c0629e5ee4e1fef7634e3fda431')
+md5sums=('c47943c9d67ff1ad1d2787e7325f8f35'
+         '67906c0629e5ee4e1fef7634e3fda431'
+         'd0e3a36660b2169e81b17889ebffd95f'
+         '3f4d5a973129a686037b9db4629a2c31')
 
 build() {
 	LDFLAGS='-z now -z shstk' \
