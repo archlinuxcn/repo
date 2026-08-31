@@ -1,6 +1,6 @@
 pkgname=julia-git-chunkcodeclibblosc-src
-pkgver=0.3.1
-_commit=8740d51107f742a94675aa9633dfade4666ad9c6
+pkgver=0.4.0
+_commit=ac51be36c631129e746d5a5128ef174754b8a3d2
 pkgrel=1
 pkgdesc="ChunkCodecLibBlosc.jl"
 url="https://github.com/JuliaIO/ChunkCodecs.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/ChunkCodecs.jl.git#commit=$_commit")
-sha256sums=('05530ed0fad5470455cebfa4eeba7c6558df235a633d26e24cfad478895d9554')
+sha256sums=('1d780a083489bfe474c0515acd95786e98847eb72e148e2e66ec031799ff91ec')
 
 package() {
   cd ChunkCodecs.jl/LibBlosc

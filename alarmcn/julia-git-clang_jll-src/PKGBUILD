@@ -1,6 +1,6 @@
 pkgname=julia-git-clang_jll-src
-pkgver=22.1.8+0
-_commit=4749ca19082823f8e7f80e8a1233e7b7d8a5adf6
+pkgver=22.1.8+1
+_commit=ad168893140499943725d289290370f1f7ca08e8
 pkgrel=1
 pkgdesc="Clang_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Clang_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git clang)
 source=("git+https://github.com/JuliaBinaryWrappers/Clang_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('06659a9207d3595d7702a931fbaf50f73050dfafeea386d76c5b6369c3603c02'
+sha256sums=('b5fb00d07279a1c24cbb124bb48d66a65e1441b819c389c54595df2a4f0b04d6'
             'beb5666225f8699fb0cee2f25608a249c29b0cad9a737b7faf64605d06d40535')
 
 build() {

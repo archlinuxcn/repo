@@ -1,0 +1,41 @@
+From df974a0f6059da22ce74e37b4f25541869650213 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 29 Aug 2026 10:29:30 -0400
+Subject: [PATCH] Fix loading on julia master
+
+Ref https://github.com/JuliaLang/julia/pull/62842
+---
+ src/device/quirks.jl | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/src/device/quirks.jl b/src/device/quirks.jl
+index 25b3c06..bb82bf5 100644
+--- a/src/device/quirks.jl
++++ b/src/device/quirks.jl
+@@ -10,6 +10,10 @@ end
+     @print_and_throw "This operation requires a complex input to return a complex result"
+ @device_override @noinline Base.Math.throw_exp_domainerror(x) =
+     @print_and_throw "Exponentiation yielding a complex result requires a complex argument"
++@static if isdefined(Base.Math, :throw_finite_domainerror)
++    @device_override @noinline Base.Math.throw_finite_domainerror(f::Symbol, x) =
++        @print_and_throw f "(x) is only defined for finite x."
++end
+ 
+ # intfuncs.jl
+ @device_override @noinline Base.throw_domerr_powbysq(::Any, p) =
+@@ -34,8 +38,10 @@ end
+     @print_and_throw "Out-of-bounds array access"
+ 
+ # trig.jl
+-@device_override @noinline Base.Math.sincos_domain_error(x) =
+-    @print_and_throw "sincos(x) is only defined for finite x."
++@static if isdefined(Base.Math, :sincos_domain_error)
++    @device_override @noinline Base.Math.sincos_domain_error(x) =
++        @print_and_throw "sincos(x) is only defined for finite x."
++end
+ 
+ # diagonal.jl
+ # XXX: remove when we have malloc
+-- 
+2.55.0
+

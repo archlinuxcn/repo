@@ -1,6 +1,6 @@
 pkgname=julia-git-term-src
-pkgver=2.0.8
-_commit=8b89bd47b7c56ebd60bb995ce578f19aa8c82505
+pkgver=2.1.0
+_commit=ea61c19f8734787cd8198126dd10038e3ff5fa9a
 pkgrel=1
 pkgdesc="Term.jl"
 url="https://github.com/FedeClaudi/Term.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FedeClaudi/Term.jl.git#commit=$_commit")
-sha256sums=('627624fcf3e81a42012580227e31bf6280d252bf2ec417d745d6fff83abb27b5')
+sha256sums=('aeef406dd5f9a9379ed2e0eae2f775a2aaac5677d9571ff430563f6bd3219d97')
 
 package() {
   cd Term.jl

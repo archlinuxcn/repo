@@ -1,0 +1,58 @@
+From 32e7b22bd1f2fb0c8cd204c058260efa69c28ffa Mon Sep 17 00:00:00 2001
+From: Chris Rackauckas - Beep Boop Edition <admin@chrisrackauckas.com>
+Date: Thu, 27 Aug 2026 10:24:01 +0000
+Subject: [PATCH] fix: use the typed `ImmutableDict` constructor in
+ `shift2term` (#5035)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+`Base.ImmutableDict(d, k, v)` has no method in Base; it only worked because
+SymbolicUtils pirated it, and SymbolicUtils v4.46.0 removed that method.
+Lowering a shift on an array variable that already carries metadata — which
+is what a second `shift2term` on an already-lowered term does — therefore
+threw a `MethodError`.
+
+
+
+Claude-Session: https://claude.ai/code/session_01C73qSfpoV1bHGbknXLX9Q2
+
+Co-authored-by: ChrisRackauckas-Claude <accounts@chrisrackauckas.com>
+Co-authored-by: Claude <noreply@anthropic.com>
+---
+ lib/ModelingToolkitBase/src/variables.jl       |  2 +-
+ lib/ModelingToolkitBase/test/variable_utils.jl | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/lib/ModelingToolkitBase/src/variables.jl b/lib/ModelingToolkitBase/src/variables.jl
+index 089e2a9369..0e7a53adbf 100644
+--- a/lib/ModelingToolkitBase/src/variables.jl
++++ b/lib/ModelingToolkitBase/src/variables.jl
+@@ -300,7 +300,7 @@ function shift2term(var::SymbolicT)
+                     if metadata === nothing
+                         metadata = Base.ImmutableDict{DataType, Any}(VariableUnshifted, unshifted)
+                     elseif metadata isa Base.ImmutableDict{DataType, Any}
+-                        metadata = Base.ImmutableDict(metadata, VariableUnshifted, unshifted)
++                        metadata = Base.ImmutableDict{DataType, Any}(metadata, VariableUnshifted, unshifted)
+                     end
+                     return BSImpl.Term{VartypeT}(getindex, newargs; type, shape, metadata)
+                 end
+diff --git a/lib/ModelingToolkitBase/test/variable_utils.jl b/lib/ModelingToolkitBase/test/variable_utils.jl
+index a167130cfa..c0cf578351 100644
+--- a/lib/ModelingToolkitBase/test/variable_utils.jl
++++ b/lib/ModelingToolkitBase/test/variable_utils.jl
+@@ -245,3 +245,14 @@ end
+     )
+     @test haskey(dd, bu)
+ end
++
++@testset "`shift2term` on an already-shifted array variable" begin
++    @independent_variables tt
++    @variables arr(tt)[1:2]
++    Sh = ModelingToolkitBase.Shift
++    # the first lowering attaches `VariableUnshifted`, so the second one takes the
++    # branch that merges a new key into the existing metadata
++    once = ModelingToolkitBase.shift2term(unwrap(Sh(tt, -1)(arr[1])))
++    twice = ModelingToolkitBase.shift2term(unwrap(Sh(tt, -1)(once)))
++    @test isequal(twice, ModelingToolkitBase.shift2term(unwrap(Sh(tt, -2)(arr[1]))))
++end

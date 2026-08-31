@@ -1,4 +1,4 @@
-From f7932c9d831d6de4f133d66219e822bd895a1fad Mon Sep 17 00:00:00 2001
+From 48fdb5b3b0afd96d3590767e5c72d1105568c9ad Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 24 Aug 2025 19:28:22 -0400
 Subject: [PATCH 8/9] Reduce likelyhood of symbol conflict
@@ -8,7 +8,7 @@ Subject: [PATCH 8/9] Reduce likelyhood of symbol conflict
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/base/docs/Docs.jl b/base/docs/Docs.jl
-index 71c4491555..abb31995a5 100644
+index 272c385615..cc410854b5 100644
 --- a/base/docs/Docs.jl
 +++ b/base/docs/Docs.jl
 @@ -74,7 +74,7 @@ export doc, hasdoc, undocumented_names
@@ -21,5 +21,5 @@ index 71c4491555..abb31995a5 100644
  
  function meta(m::Module; autoinit::Bool=true)
 -- 
-2.53.0
+2.55.0
 

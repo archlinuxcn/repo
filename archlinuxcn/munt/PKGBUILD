@@ -4,7 +4,7 @@
 pkgbase=munt
 pkgname=(munt munt-qt munt-daemon munt-smf2wav)
 pkgdesc='Software synthesizer emulating pre-GM MIDI devices such as the Roland MT-32, CM-32L, CM-64 and LAPC-I'
-pkgver=2.7.3
+pkgver=2.8.2
 _tag="libmt32emu_${pkgver//./_}"
 pkgrel=1
 arch=(i686 x86_64 aarch64)
@@ -13,7 +13,7 @@ license=('GPL-2.0 OR LGPL-2.1')
 makedepends=(cmake qt6-multimedia portaudio)
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/munt/munt/archive/refs/tags/$_tag.tar.gz"
         munt-daemon.service)
-b2sums=('16dcb0e5e2e81ae045f6429627508f746eb6496abf135f725727046578f8d67c7cd803086bf81557880ee684a7ac6f738449c3d58fbbdcdf8f637e4497116582'
+b2sums=('24430d9eedf97bfd817c840f53bf6683315cd4e85c64d4ebc002a63a3f9e09a7eaad27148580ab3a837618727748fea04be4fbee8c7c030cf4f7d17f53f89e36'
         '40a006d8138ff0492e3fef89a5b7d74a5d255259da08f575e989ac569ff5a181351b06e175fcf846d68aeca97cd5a1dec2c128037f760db2046850f5ca3641d8')
 
 build () {

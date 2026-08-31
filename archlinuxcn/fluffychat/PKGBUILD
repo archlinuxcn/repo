@@ -1,4 +1,4 @@
-# Maintainer:
+# Maintainer: aur.chaotic.cx
 # Contributor: The one with the braid <info@braid.business>
 
 : ${FVM_CACHE_PATH:=$SRCDEST/fvm-cache}
@@ -7,7 +7,7 @@ export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=2.5.1
+pkgver=2.9.4
 pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
@@ -45,10 +45,8 @@ source=(
   "$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext"
   '0000-fix-wayland-gtk-csd.patch'
 )
-sha256sums=(
-  '498c4390bec4c4244f58f9ecb39002f607d23abea900ced921f7a33eee56fa9d'
-  '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230'
-)
+sha256sums=('2164dd6728f7e65835742e6bb413e1fbe224aff205e12061e7339dcc3febd6e3'
+  '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230')
 
 prepare() (
   for src in "${source[@]}"; do
@@ -70,6 +68,9 @@ build() {
   export CFLAGS CXXFLAGS
   CFLAGS+=" -Wno-error=deprecated-literal-operator"
   CXXFLAGS+=" -Wno-error=deprecated-literal-operator"
+
+  # fix missing include
+  export CXXFLAGS+=" -include cstdint"
 
   # fix incompatible flags on ARM
   if [ "${CARCH::1}" != "x" ]; then
@@ -114,7 +115,7 @@ package() {
   install -Dm644 "$_pkgsrc/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
 
   # icon
-  install -Dm644 "$_pkgsrc/assets/favicon.png" "$pkgdir/usr/share/pixmaps/$_pkgname.png"
+  install -Dm644 "$_pkgsrc/assets/logo/vector/logo_standalone.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/$_pkgname.png"
 
   # launcher
   install -Dm644 /dev/stdin "$pkgdir/usr/share/applications/$_pkgname.desktop" << END

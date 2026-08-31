@@ -2,8 +2,8 @@
 # Contributor: Michael Schubert <mschu.dev at gmail>
 
 pkgname=symengine-notcmalloc
-pkgver=0.14.0
-pkgrel=11
+pkgver=0.15.0
+pkgrel=1
 pkgdesc='Fast symbolic manipulation library, written in C++'
 url='http://sympy.org/'
 arch=(aarch64 x86_64)
@@ -24,16 +24,8 @@ makedepends=(boost
              cmake
              git
              llvm)
-source=(git+https://github.com/symengine/symengine#tag=v$pkgver
-        llvm-shared.patch)
-sha256sums=('fc1e0aa9f3cbcfdadcf18e69117869c2062302b94931781b53d85866cb1a4df4'
-            '3b2eb5bad4c2a2dc4f3a32e56c40df86c009bf9c1005759e0cb349f5256ee947')
-
-prepare() {
-  patch -d symengine -p1 < llvm-shared.patch
-  cd symengine
-  git checkout ea9868e64ced2cd2abb9cdc3ae97d965b892b974 -- symengine/llvm_double.cpp # Fix build with LLVM 22
-}
+source=(git+https://github.com/symengine/symengine#tag=v$pkgver)
+sha256sums=('e66a3ba7a1e3955cd6c3a4303bfc40f80818536f96b16690df20b8f7481ff40c')
 
 build() {
   cmake -B build -S symengine \
@@ -49,8 +41,8 @@ build() {
     -DWITH_MPC=ON \
     -DWITH_PRIMESIEVE=ON \
     -DWITH_BOOST=ON \
-    -DWITH_COTIRE=OFF \
-    -DWITH_SYSTEM_CEREAL=ON
+    -DWITH_SYSTEM_CEREAL=ON \
+    -DWITH_LLVM_DYLIB=ON
   cmake --build build
 }
 

@@ -1,6 +1,6 @@
 pkgname=julia-git-bandedmatrices-src
-pkgver=1.11.0
-_commit=4c4a5adeac2fb1f48934d215e35866d0e0b1d0f0
+pkgver=1.12.0
+_commit=15ca6e09270ad9c0d0ae86966b1977869f5e68e7
 pkgrel=1
 pkgdesc="BandedMatrices.jl"
 url="https://github.com/JuliaLinearAlgebra/BandedMatrices.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/BandedMatrices.jl.git#commit=$_commit")
-sha256sums=('edf2b2d80c6d9639307f6d31585686019214d371644607daf789ad87ce536f8b')
+sha256sums=('f65eb6943c3c80010e88e7d1e553cc67361f323fba5f33a3c974e052ac8d33a1')
 
 package() {
   cd BandedMatrices.jl

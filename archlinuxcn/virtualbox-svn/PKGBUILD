@@ -9,7 +9,7 @@ pkgname=('virtualbox-svn'
          'virtualbox-guest-utils-svn'
          'virtualbox-guest-utils-nox-svn'
          'virtualbox-ext-vnc-svn')
-pkgver=113240
+pkgver=113712
 pkgrel=3
 arch=('x86_64')
 _vbox_arch='amd64'
@@ -75,6 +75,7 @@ source=('VirtualBox::svn+https://www.virtualbox.org/svn/vbox/trunk'
         '012-vbglR3GuestCtrlDetectPeekGetCancelSupport.patch'
         '013-support-building-from-dkms.patch'
         '018-upate-xclient-script.patch'
+        '019-linux-7.2-vboxnetadp.patch'
         '0020-python-3-12.patch')
 options=(!debug)
 
@@ -91,6 +92,11 @@ prepare() {
     local filename
     for filename in "${source[@]}"; do
         if [[ "$filename" =~ \.patch$ ]]; then
+            if [[ "${filename##*/}" == 019-linux-7.2-vboxnetadp.patch ]] &&
+                    patch --batch --dry-run --reverse -p1 -i "$srcdir/${filename##*/}" &>/dev/null; then
+                echo "Skipping patch ${filename##*/} (already applied upstream)"
+                continue
+            fi
             echo "Applying patch ${filename##*/}"
             patch --batch --forward -p1 -i "$srcdir/${filename##*/}"
         fi
@@ -296,7 +302,7 @@ package_virtualbox-guest-utils-svn() {
     source "VirtualBox/env.sh"
     pushd "VirtualBox/out/linux.${_vbox_arch}/release/bin/additions"
     install -d "$pkgdir/usr/bin"
-    install -m0755 VBoxAudioTest VBoxClient VBoxControl VBoxDRMClient VBoxService vboxwl "$pkgdir/usr/bin"
+    install -m0755 VBoxAudioTest VBoxClient VBoxControl VBoxDRMClient VBoxService "$pkgdir/usr/bin"
     install -m0755 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/98vboxadd-xclient \
         "$pkgdir"/usr/bin/VBoxClient-all
     install -m0644 -D "$srcdir"/VirtualBox/src/VBox/Additions/x11/Installer/vboxclient.desktop \
@@ -370,5 +376,6 @@ sha256sums=('SKIP'
             '615e4ec8896ee13549e28c52e700bd52f9ccf7de4dccb33c2b96bf574a2edb47'
             '81900e13d36630488accd8c0bfd2ceb69563fb2c4f0f171caba1cca59d438024'
             '00f68b86d32a1fada900c2da8dad2ab4215106cd58004f049bded99727cda2ff'
-            'b6193d22ee7c1726ea4d468b18640454b8e4f2784479073a0044e45dca4e516d'
+            '3d790cb7c7ca0860d87d220c5aa047124bc6ba3697a01b511fa096e53e20ba78'
+            'cba1f2f9f6170e40ca9bddcbffc45feb1169811c707b885090c1b3aae3f1e6cd'
             'ddb2092a5a000aa6ef854796f39dcdf86e72c06d53b24bac3835350571182df6')

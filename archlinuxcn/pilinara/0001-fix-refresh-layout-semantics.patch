@@ -1,0 +1,32 @@
+From: nlsdt <nlsdt@archlinuxcn.org>
+Subject: [PATCH] fix(refresh): 修复 RefreshLayout 布局协议违规
+
+---
+ lib/common/widgets/refresh_layout.dart | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/lib/common/widgets/refresh_layout.dart b/lib/common/widgets/refresh_layout.dart
+--- a/lib/common/widgets/refresh_layout.dart
++++ b/lib/common/widgets/refresh_layout.dart
+@@ -62,8 +62,8 @@ class RenderRefreshLayout extends RenderBox
+       return;
+     }
+     _heightFactor = value;
+-    _layoutIndicator();
+-    markNeedsPaint();
++    markNeedsLayout();
++    markNeedsSemanticsUpdate();
+   }
+ 
+   double _scaleFactor = 0;
+@@ -73,8 +73,8 @@ class RenderRefreshLayout extends RenderBox
+       return;
+     }
+     _scaleFactor = value;
+-    _layoutIndicator();
+-    markNeedsPaint();
++    markNeedsLayout();
++    markNeedsSemanticsUpdate();
+   }
+ 
+   void _scaleListener() {
