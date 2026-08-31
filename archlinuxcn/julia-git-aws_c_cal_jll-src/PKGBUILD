@@ -1,7 +1,7 @@
 pkgname=julia-git-aws_c_cal_jll-src
-pkgver=0.9.13+0
-_commit=4981b1255d29c7517a68ccb7b947d4c658fbd553
-pkgrel=2
+pkgver=1.0.0+0
+_commit=4f5a6b8a6eaa9fff51af03e923d606d1c9b5e646
+pkgrel=1
 pkgdesc="aws_c_cal_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/aws_c_cal_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git aws-c-cal)
 source=("git+https://github.com/JuliaBinaryWrappers/aws_c_cal_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('f44da13ee70091ce3358e476f533284971400f1dcafd6eaad4f32fc9345bcb52'
+sha256sums=('9b90febd6f57e2ddab2bd412a21924f480edbc50d201757d20bef5b0554fa829'
             '1af6039f95dbdfe75b38b9ce07970aac68a6c1802829debf3b4c18b4bba355db')
 
 build() {
