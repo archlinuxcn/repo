@@ -174,12 +174,12 @@ else
 fi
 
 pkgbase="linux-$_pkgsuffix"
-_major=7.2
+_major=7.3
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc7
+_rcver=rc1
 pkgver=${_major}.${_rcver}
-_tagrel=1
+_tagrel=2
 pkgrel=1
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -248,14 +248,16 @@ fi
 # ZFS support
 if [ "$_build_zfs" = "yes" ]; then
     makedepends+=(git)
-    source+=("git+https://github.com/cachyos/zfs.git#commit=c681af76c5a6a15caada25eb13090e41218c7831")
+    source+=("git+https://github.com/cachyos/zfs.git#commit=71a9f9578616a90c3c14bb59629fb4d31bfd68d1")
 fi
 
 
 if [ "$_build_nvidia_open" = "yes" ]; then
     source+=("https://download.nvidia.com/XFree86/${_nv_open_pkg%"-$_nv_ver"}/${_nv_open_pkg}.tar.xz"
-             "${_patchsource}/misc/nvidia/0002-fix-dsc-correct-RC-parameter-tables-to-match-VESA-DS.patch"
-             "${_patchsource}/misc/nvidia/0003-fix-dp-add-Bigscreen-Beyond-VR-headset-to-WAR-databa.patch")
+             "${_patchsource}/misc/nvidia/0001-fix-dsc-correct-RC-parameter-tables-to-match-VESA-DS.patch"
+             "${_patchsource}/misc/nvidia/0002-fix-dp-add-Bigscreen-Beyond-VR-headset-to-WAR-databa.patch"
+             "${_patchsource}/misc/nvidia/0003-Pass-dmem_cgroup_init-to-dmem_cgroup_register_region.patch")
+
 fi
 
 # Use generated AutoFDO Profile
@@ -817,7 +819,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('4354ef8f8879f4e640f703d5cecaf7d2be95d869a0a2735bd4537b2f338da7c702592139efcde8d47784c1eeec8a59d181890b3c1d375d50c31e55fa06ef955e'
+b2sums=('bb1cf7db258d33ae90af247cf8c4f7f93cd785559d80b45283d765cccba52f75d670d7ce0f6374d4097b58b22563686da51dd49316052e092eff4ae58625879e'
         'SKIP'
-        '98e05ffa987bbb73b80fae47c5b93a17842bd46e79368dba8567dc76f4c67102ee4148e26d93e4939a6c14c4449d2eb76917939acdf9254a430170ad9b153af1'
+        '1f78f7c94d7c0642e20a75852c025b73157d224143d30bdf0a4779f04281960663aac4c9a69a1239b852f77041e404dbd50d12fbfe8c35bdbdd6175d73a2ed68'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')
