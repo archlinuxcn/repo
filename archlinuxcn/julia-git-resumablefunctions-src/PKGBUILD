@@ -8,8 +8,16 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaDynamics/ResumableFunctions.jl.git#commit=$_commit")
-sha256sums=('1a8ab4146b9260a8a1e90a642699dfc5fc03e8900a7d38bbff604327bcab8c8c')
+source=("git+https://github.com/JuliaDynamics/ResumableFunctions.jl.git#commit=$_commit"
+        resumablefunctions-163.patch)
+sha256sums=('1a8ab4146b9260a8a1e90a642699dfc5fc03e8900a7d38bbff604327bcab8c8c'
+            '3e5c4ee0cbfd0c704458cba95aaf7b317ce51c45dae855af08ddafda5652bc3a')
+
+prepare() {
+  cd ResumableFunctions.jl
+
+  patch -Np1 --no-backup-if-mismatch < ../resumablefunctions-163.patch
+}
 
 package() {
   cd ResumableFunctions.jl
