@@ -1,0 +1,74 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=86box-portable
+pkgver=1
+pkgrel=1
+epoch=1
+pkgdesc="86Box sandboxed by portable"
+arch=('x86_64')
+url="https://github.com/Kraftland/portable"
+license=('GPL-2.0-or-later' 'CC-BY-4.0')
+groups=()
+provides=(86box)
+options=(!debug !strip)
+conflicts=("86box")
+
+optdepends=()
+
+makedepends+=(86box portable-packer)
+
+checkdepends=()
+
+source=(
+	config.toml
+	desktop.file
+)
+
+
+md5sums=('ef9fbe1934606aeda2c6e94cac620723'
+         '690d9e3d3104e1b668487a82e3f9889f')
+
+function pkgver() {
+	export LC_ALL=C
+	pacman -Si 86box | grep Version | awk '{print $NF}' | cut -d'-' -f1
+}
+
+function package() {
+	depends=(
+		"portable"
+		'fluidsynth'
+		'hicolor-icon-theme'
+		'libserialport'
+		'libslirp'
+		'openal'
+		'qt6-base'
+		'rtmidi'
+		'sdl2'
+		'freetype2'
+		'gcc-libs'
+		'glib2'
+		'glibc'
+		'libevdev'
+		'libglvnd'
+		'libpng'
+		'libsndfile'
+		'libx11'
+		'libxcb'
+		'libxext'
+		'libxi'
+		'libxkbcommon-x11'
+		'libxkbcommon'
+		'zlib'
+	)
+
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy 86box \
+		--hash true \
+		--config-ng "${srcdir}/config.toml" \
+		--desktop-file "${srcdir}/desktop.file"
+}

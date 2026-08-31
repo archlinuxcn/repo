@@ -1,0 +1,140 @@
+# This is a Portable configuration, using TOML 1.1.0
+# For syntax, check https://toml.io/en/v1.1.0
+
+# The metadata section contains information of your sandbox.
+[metadata]
+# This is your Application ID, avoid conflict. Should be a reversed DNS name.
+# If the author's DNS domain name contains hyphen/minus characters ('-'), which are not allowed in D-Bus interface names, they should be replaced by underscores. If the DNS domain name contains a digit immediately following a period ('.'), which is also not allowed in interface names), the interface name should add an underscore before that digit. For example, if the owner of 7-zip.org defined an interface for out-of-process plugins, it might be named org._7_zip.Plugin.
+# Previously appID.
+sandbox_id = "net._86box._86Box"
+
+# This is a display name of an application. It should only contain ASCII characters and not spaces.
+# Previously friendlyName.
+display_name = "86Box"
+
+# This is the state directory of your application, relative to "XDG_DATA_HOME".
+# Previously stateDirectory.
+state_directory = "86Box"
+
+# The exec section defines how the underlying process is started.
+[exec]
+# target defines the executable to start.
+# It is recommended to not use the full path, as the Overlay feature will automatically merge
+# 	application binaries with the underlying OS /usr/bin.
+target = "env"
+
+# arguments holds an array of arguments passed to the application, this is also used when starting secondary instances.
+arguments = ["86Box"]
+
+# When enabled, lays the app private binaries on top /usr/bin, see doc/packager/08-binaries.md for more details. Requires the specific overlay directory to exist.
+overlay = true
+
+# The system section controls general system-level permission.
+[system]
+# Whether or not an application can call Inhibit Portal to prevent suspend, log out or more.
+# Defaults to false.
+# Previously inhibitSuspend.
+allow_inhibit = true
+
+# An unsigned integer ranging from 0 to 100.
+# Specifies the "max" value of cgroup's cpu.uclamp property. This influences
+# 	frequency selection of schedutil and Energy / Capacity Aware scheduling on Heterogeneous CPUs.
+# Lower value yields more energy efficiency, while higher trades efficiency
+# 	for performance.
+# Defaults to 100, i.e. unlimited.
+# Previously uclamp.
+uclamp_max = 15
+
+# A TOML slice that accepts string values.
+# Current possible values are: (dgpu, input, camera, kvm).
+#------------------------------------------------------------------------------#
+## dgpu (previously gamemode): Expose all GPUs and prefer discrete graphics card.
+## By default,
+## 	Portable blocks any GPU except the boot display
+## 	to improve user experience and power consumption on hybrid systems.
+## This is now available even when Power Profile is set to Power Saver.
+#------------------------------------------------------------------------------#
+## kvm: Enables access to the Kernel-based Virtual Machine (/dev/kvm), if any.
+#------------------------------------------------------------------------------#
+## camera: Enables access to physical camera devices. Modern applications should
+## 	talk with Portals instead, while legacy ones may still need device node
+## 	access.
+#------------------------------------------------------------------------------#
+## input: Allows applications to receive Input events.
+## In addition, the kernel uinput device is made available for Steam Input.
+## It is intended for Games to make use of Controllers,
+## 	but said permission might introduce input snooping if file permissions
+## 	for keyboards and mouses are messed up.
+#------------------------------------------------------------------------------#
+# Previously deviceAllow.
+device_allow = []
+
+# The network section defines behaviour of Portable's network firewall.
+[network]
+# Whether or not an application can use network interfaces. Defaults to true.
+enable = true
+
+# The privacy section defines several security and privacy preference.
+[privacy]
+# Lockdown is a set of rules
+# 	that aims to reduce the attack surface within a sandbox.
+# It contains many additional protections
+
+# Previously lockdown (bool)
+[privacy.lockdown_options]
+# System call filtering in whitelist rather than blacklist
+# 	prevents non-native system calls to be made
+# 	(e.g. X86 on X86_64 systems)
+seccomp_whitelist = true
+# Landlock as another layer of filesystem security,
+# 	blocks reparent of /, effectively prevents manipulation of mount points
+landlock = true
+
+# When false, prevents application from connecting to X server on Wayland. Defaults to true.
+# Previously x11.
+x11_compat = false
+
+# When false, prevents application from connecting to legacy notifications endpoint.
+# Defaults to true.
+# Previously classicNotifications.
+classic_notif = false
+
+# Advanced configurations.
+# Changing from the default may break applications or increase the attack surface.
+# It is recommended to leave these fields as-is.
+[advanced]
+# Use the zink OpenGL to Vulkan bridge on NVIDIA graphics.
+# May be used to mitigate rendering issues, but it comes with a performance hit.
+# Previously zink.
+use_zink = false
+
+# Applies workaround for Qt applications to use the XDG Desktop Portal.
+# May break theming.
+# Previously qt5Compat.
+qt5_compat = false
+
+# New applications SHOULD NOT use this.
+# A vector of extra MPRIS bus names to allow the application to own.
+# By default, Portable allows application to own org.mpris.MediaPlayer2.sandbox_id.
+# This is the default for newer applications.
+# For legacy applications,
+# 	specifying this allows owning "org.mpris.MediaPlayer2.<name>".
+# Previously mprisName.
+mpris_names = []
+
+# Wake the application via the StatusNotifierItem (system tray).
+# Previously trayWake.
+tray_wake = false
+
+# Allow the application to register status progression on KDE Plasma.
+# Previously kDEStatus.
+allow_kde_status = false
+
+# Mount a generated Flatpak Info to create a "Flatpak environment" for the sandbox.
+# Applications may not use XDG Desktop Portal without this.
+# Previously flatpakInfo.
+flatpak_env = true
+
+# Allows debugging syscalls to be made inside the sandbox. This has the potential to be exploited.
+# Previously debugging.
+allow_debug = false
