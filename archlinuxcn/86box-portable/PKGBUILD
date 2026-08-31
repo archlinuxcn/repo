@@ -30,7 +30,7 @@ md5sums=('18ea28557574d280af02d8374112934a'
 
 function pkgver() {
 	export LC_ALL=C
-	pacman -Si 86box | grep Version | awk '{print $NF}' | cut -d'-' -f1
+	pacman -Qi 86box | grep Version | awk '{print $NF}' | cut -d'-' -f1
 }
 
 function package() {
