@@ -30,7 +30,7 @@ md5sums=('SKIP'
 
 function pkgver() {
 	export LC_ALL=C
-	pacman -Si 86box | grep Version | awk '{print $NF}' | cut -d'-' -f1
+	pacman -Qi 86box | grep Version | awk '{print $NF}' | cut -d'-' -f1
 }
 
 function package() {
