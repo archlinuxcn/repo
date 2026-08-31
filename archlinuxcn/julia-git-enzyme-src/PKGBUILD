@@ -9,15 +9,18 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/EnzymeAD/Enzyme.jl.git#commit=$_commit"
-        0001-Remove-unnecessary-rule-for-hvcat_fill.patch)
+        0001-Remove-unnecessary-rule-for-hvcat_fill.patch
+        0001-Fix-jit-lookup-on-master.patch)
 sha256sums=('a87606608170f5f9bd2b63a45414cbaf5c117827de693be4d40f2863112f7160'
-            'c2cb54ab09370aed8b43993687aae4d5a673344fd2260224286379446964e61e')
+            'c2cb54ab09370aed8b43993687aae4d5a673344fd2260224286379446964e61e'
+            'f41afe5269abb121df41af223ab61e89a4d9031dd7336bca7741c4c260ce56e8')
 
 prepare() {
   cd Enzyme.jl
 
   sed -i 's/GlobalMethods/methodtable/g' src/rules/jitrules.jl
   patch -Np1 --no-backup-if-mismatch < ../0001-Remove-unnecessary-rule-for-hvcat_fill.patch
+  patch -Np1 --no-backup-if-mismatch < ../0001-Fix-jit-lookup-on-master.patch
 }
 
 package() {
