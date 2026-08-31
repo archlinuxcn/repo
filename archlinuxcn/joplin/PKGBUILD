@@ -8,10 +8,10 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.6.15
+pkgver=3.6.16
 groups=('joplin')
 pkgrel=1
-_electronVersion=41
+_electronVersion=42
 depends=("electron${_electronVersion}" "nodejs>20" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64' 'aarch64')
@@ -25,7 +25,7 @@ source=(
 )
 sha256sums=('9223cc816f8175ddaf8839f9357d2bd1c4831692504927c98d8e1eefa7df796e'
             'f485c089904d91750d137d4413297676446e0068892cb08e20bee928bcac516c'
-            '8ed300da2e71effb5550cee66e5e77d082d8dcf93c2914c5d1cb6fac58e6ffbc')
+            'f88de7ccc464dcab925966e35ffa4a061551593749589ef74ce4683977df8c35')
 
 _setup_env() {
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
@@ -103,7 +103,9 @@ package_joplin() {
     # Install the package
     cd "${srcdir}/joplin-${pkgver}/packages/app-cli/build"
     npm pack
-    npm install -g --install-links --prefix "${pkgdir}/usr" *.tgz
+    npm install -g --install-links --prefix "${pkgdir}/usr" \
+        --allow-scripts=keytar,sharp,sqlite3 \
+        *.tgz
 
     # Fix permissions set by npm
     chown -R root:root "${pkgdir}"
