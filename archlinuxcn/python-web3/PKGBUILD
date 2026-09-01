@@ -10,9 +10,14 @@ url="https://github.com/ethereum/${_name}"
 license=(MIT)
 depends=(python python-eth-abi python-eth-account python-eth-hash python-eth-keys python-eth-typing python-eth-utils python-hexbytes python-aiohttp python-pydantic python-requests python-typing_extensions python-websockets python-pyunormalize python-toolz python-rlp python-idna)
 makedepends=(git python-build python-installer python-setuptools python-setuptools-scm python-wheel python-sphinx python-sphinx_rtd_theme)
-#checkdepends=(python-pytest python-pytest-asyncio python-flaky python-eth-tester python-hypothesis python-py-geth)
+checkdepends=(python-pytest python-pytest-asyncio python-pytest-mock python-flaky python-eth-tester python-hypothesis python-py-geth python-cached-property)
+# Pin the geth binary to the version of tests/integration/geth-*-fixture.zip (CI GETH_VERSION).
+_geth_ver=1.16.5
+_geth_commit=737ffd1b
 source=(git+$url.git#tag=v$pkgver)
+source_x86_64=(https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-$_geth_ver-$_geth_commit.tar.gz)
 sha512sums=('8a875884a7c63655b7509d526680103a0b61a0bcdc55e210b78c56a34f57faf0c5b26c855f491dad7a06826aa23f10e12f556c56830777cb7a2621e606ba7d75')
+sha512sums_x86_64=('42107edff14375da632d8b8d0682630f6d20018ed7fb75706f5613b69a4f7ca110ac5a7836b40da8df2c3b5b1d6a14287d137131eadf3a2ccbd6e38372f3b140')
 
 build() {
   cd $_name
@@ -23,12 +28,20 @@ build() {
 }
 
 # Very slow
-# check() {
-#   cd $_name
-#   python -m venv --system-site-packages test-env
-#   test-env/bin/python -m installer dist/*.whl
-#   test-env/bin/python -m pytest -vv --showlocals tests/
-# }
+check() {
+  cd $_name
+  python -m venv --system-site-packages test-env
+  test-env/bin/python -m installer dist/*.whl
+  # Beacon tests need a live consensus client; upstream CI does not run them.
+  local pytest_args=(tests/core tests/ens tests/integration/test_ethereum_tester.py)
+  # go-ethereum tests pin a geth fixture zip; use the matching official binary.
+  local geth_bin="$srcdir/geth-linux-amd64-$_geth_ver-$_geth_commit/geth"
+  if [[ -x $geth_bin ]]; then
+    export GETH_BINARY=$geth_bin
+    pytest_args+=(tests/integration/go_ethereum)
+  fi
+  test-env/bin/python -m pytest -vv --showlocals "${pytest_args[@]}"
+}
 
 package() {
   cd $_name
