@@ -1,0 +1,43 @@
+From 26112b8b7266e5a19a995a9d3a00977f1eb19f6b Mon Sep 17 00:00:00 2001
+From: Keno Fischer <Keno@users.noreply.github.com>
+Date: Thu, 25 Jun 2026 23:29:03 +0000
+Subject: [PATCH] compat: Support upcoming TypeEgal FSMI wrappers
+
+The Base PR JuliaLang/julia#62001 is expected to spell exact closed type-object dispatch keys as Core.TypeEgal. Accept Core.TypeEq and Core.TypeEgal generated-function dispatch wrappers when they are available, while preserving the existing Type{Type{T}} path on older Julia versions.
+
+A <:T-style signature would also accept the new spelling, as discussed in Ferrite-FEM/Tensors.jl#249. The structural unwrap used here asks slightly less of the compiler, since it avoids solving the extra subtype relation in this generated-function helper path.
+
+AI disclosure: This commit was prepared with assistance from generative AI. The resulting PR should be checked carefully by a maintainer before merging.
+
+Co-authored-by: OpenAI Codex <codex@openai.com>
+---
+ src/utils.jl | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/src/utils.jl b/src/utils.jl
+index 127c6de..63d1144 100755
+--- a/src/utils.jl
++++ b/src/utils.jl
+@@ -169,11 +169,20 @@ function code_typed_by_method(method::Method, @nospecialize(tt::Type), world::UI
+   return frame.linfo, ci
+ end
+ 
+-function (fsmi_generator::FSMIGenerator)(world::UInt, source, typed_fsmitype, fsmitype::Type{Type{T_}}, fargtypes) where T_
++if isdefined(Core, :TypeEgal)
++    function (fsmi_generator::FSMIGenerator)(world::UInt, source, typed_fsmitype, fsmitype::Union{Core.TypeEq, Core.TypeEgal}, fargtypes)
++        _generate_fsmi(fsmi_generator, world, source, typed_fsmitype, Base.type_parameter(fsmitype), fargtypes)
++    end
++else
++    function (fsmi_generator::FSMIGenerator)(world::UInt, source, typed_fsmitype, fsmitype::Type{Type{T_}}, fargtypes) where T_
++        _generate_fsmi(fsmi_generator, world, source, typed_fsmitype, T_, fargtypes)
++    end
++end
++
++function _generate_fsmi(fsmi_generator::FSMIGenerator, world::UInt, source, typed_fsmitype, T, fargtypes)
+     @nospecialize
+     # get typed code of the inference function evaluated in get_slots
+     # using the concrete argument types
+-    T = T_
+     m = fsmi_generator.m
+     stub = Core.GeneratedFunctionStub(identity, Core.svec(:var"#self#", :fsmi, :fargs), Core.svec())
+     fargtypes = Tuple{fargtypes...} # convert (types...) to Tuple{types...}

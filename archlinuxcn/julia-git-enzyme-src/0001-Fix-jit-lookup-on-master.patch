@@ -1,0 +1,62 @@
+From 78bc4094cfc3809dcf45e2fbe20102b775516240 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Mon, 31 Aug 2026 07:54:10 -0400
+Subject: [PATCH] Fix jit lookup on master
+
+In https://github.com/EnzymeAD/Enzyme.jl/pull/3102, addition JITDylib is passed to the LLVM.jl API to satisfy the API change. However, [as at-wsmoses pointed out](https://github.com/EnzymeAD/Enzyme.jl/pull/3102) the JITDylib passed in for lookup is a fresh one, which does not include the jitted function, causing the lookup to fail on recent julia version.
+
+There are still two uses of `JIT.lookup` in `src/compiler/validations.jl` that does not pass in the `JITDylib` explicitly but those are looking up internal symbols AFAICT so it is probably fine. The current version also keeps all explicit use of JITDylib to the `orcv2.jl` file which seems to be the intention.
+---
+ src/compiler.jl       | 6 +++---
+ src/compiler/orcv2.jl | 6 +++++-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/src/compiler.jl b/src/compiler.jl
+index 12f0c47a..d4594170 100644
+--- a/src/compiler.jl
++++ b/src/compiler.jl
+@@ -7142,8 +7142,8 @@ function _link(@nospecialize(job::CompilerJob{<:EnzymeTarget}), mod::LLVM.Module
+     end
+ 
+     # Now invoke the JIT
+-    jitted_mod = JIT.add!(mod)
+-    adjoint_addr = JIT.lookup(adjoint_name)
++    jit_dylib = JIT.add!(mod)
++    adjoint_addr = JIT.lookup(jit_dylib, adjoint_name)
+ 
+     adjoint_ptr = pointer(adjoint_addr)
+     if adjoint_ptr === C_NULL
+@@ -7157,7 +7157,7 @@ function _link(@nospecialize(job::CompilerJob{<:EnzymeTarget}), mod::LLVM.Module
+     if primal_name isa Nothing
+         primal_ptr = C_NULL
+     else
+-        primal_addr = JIT.lookup(primal_name)
++        primal_addr = JIT.lookup(jit_dylib, primal_name)
+         primal_ptr = pointer(primal_addr)
+         if primal_ptr === C_NULL
+             throw(
+diff --git a/src/compiler/orcv2.jl b/src/compiler/orcv2.jl
+index 79f076b2..1457edf5 100644
+--- a/src/compiler/orcv2.jl
++++ b/src/compiler/orcv2.jl
+@@ -302,7 +302,7 @@ function add!(mod)
+     jd = LLVM.JITDylib(lljit)
+     tsm = move_to_threadsafe(mod)
+     LLVM.add!(lljit, jd, tsm)
+-    return nothing
++    return jd
+ end
+ 
+ function lookup(name)
+@@ -310,4 +310,8 @@ function lookup(name)
+     LLVM.lookup(lljit, JITDylib(lljit), name)
+ end
+ 
++function lookup(jd::JITDylib, name)
++    LLVM.lookup(jit[].jit, jd, name)
++end
++
+ end # module
+-- 
+2.55.0
+

@@ -27,11 +27,7 @@ prepare() {
 	cd "${_srcname}/"
 	fvm install
 	fvm flutter --disable-analytics
-	fvm flutter --no-version-check pub get
-}
 
-build() {
-	cd "${_srcname}/"
 	local _sdk _scripts
 	_sdk="$(readlink -f .fvm/flutter_sdk)"
 	_scripts="${PWD}/lib/scripts"
@@ -54,7 +50,7 @@ build() {
 	local _pubcache _material _mp
 	_pubcache="${PUB_CACHE:-${HOME}/.pub-cache}/hosted/pub.dev"
 	rm -rf "${_pubcache}"/material_ui-*
-	fvm flutter pub get
+	fvm flutter --no-version-check pub get
 	_material="$(ls -d "${_pubcache}"/material_ui-* 2>/dev/null | sort -V | tail -1)"
 	if [[ -z "${_material}" ]]; then
 		printf "警告: 未找到 material_ui, 跳过其补丁。\n"
@@ -67,8 +63,11 @@ build() {
 			git -C "${_material}" apply "${_mp}"
 		done
 	fi
+}
 
-	printf "补丁应用完成, 开始构建...\n"
+build() {
+	cd "${_srcname}/"
+
 	if fvm flutter build linux --no-pub --release \
 		--dart-define pili.name="$(grep -m1 '^version:' pubspec.yaml | sed -E 's/^version:[[:space:]]*([0-9.]+).*/\1/')" \
 		--dart-define pili.code="$(git rev-list --count HEAD)" \
