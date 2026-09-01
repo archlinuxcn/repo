@@ -15,7 +15,7 @@ _pkgdesc="An Arknights assistant"
 arch=(x86_64)
 url="https://github.com/MaaAssistantArknights/MaaAssistantArknights"
 license=('AGPL-3.0-only')
-depends=(opencv onnxruntime)
+depends=(opencv onnxruntime nlohmann-json)
 makedepends=(boost eigen git cmake)
 _fastdeploy_ref=e962983da6daba7d0c12f6bf5f8ff7173be70982
 source=("git+$url.git#tag=v${_pkgver}"
@@ -86,7 +86,9 @@ _EOF
     # opencv5
     sed -e '1i #include <opencv2/geometry.hpp>' \
         -i "${srcdir}/FastDeploy-${_fastdeploy_ref}/fastdeploy/vision/ocr/ppocr/utils/"{ocr_utils.h,ocr_postprocess_op.h} \
-        -i "${srcdir}/MaaAssistantArknights/src/MaaUtils/include/MaaUtils/NoWarningCV.hpp"
+        -i "${srcdir}/MaaAssistantArknights/src/MaaUtils/include/MaaUtils/NoWarningCV.hpp" \
+        -i "${srcdir}/MaaAssistantArknights/src/MaaCore/Vision/Roguelike/BlackFlow/EdgeDetector.cpp"
+
     sed -e 's/cv::BRISK/cv::xfeatures2d::BRISK/g;' \
         -e 's/cv::KAZE/cv::xfeatures2d::KAZE/g;' \
         -e 's/cv::AKAZE/cv::xfeatures2d::AKAZE/g;' \
