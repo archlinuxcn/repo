@@ -14,10 +14,10 @@ checkdepends=(python-pytest python-pytest-asyncio python-pytest-mock python-flak
 # Pin the geth binary to the version of tests/integration/geth-*-fixture.zip (CI GETH_VERSION).
 _geth_ver=1.16.5
 _geth_commit=737ffd1b
-source=(git+$url.git#tag=v$pkgver)
-source_x86_64=(https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-$_geth_ver-$_geth_commit.tar.gz)
-sha512sums=('8a875884a7c63655b7509d526680103a0b61a0bcdc55e210b78c56a34f57faf0c5b26c855f491dad7a06826aa23f10e12f556c56830777cb7a2621e606ba7d75')
-sha512sums_x86_64=('42107edff14375da632d8b8d0682630f6d20018ed7fb75706f5613b69a4f7ca110ac5a7836b40da8df2c3b5b1d6a14287d137131eadf3a2ccbd6e38372f3b140')
+source=(git+$url.git#tag=v$pkgver
+        https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-$_geth_ver-$_geth_commit.tar.gz)
+sha512sums=('8a875884a7c63655b7509d526680103a0b61a0bcdc55e210b78c56a34f57faf0c5b26c855f491dad7a06826aa23f10e12f556c56830777cb7a2621e606ba7d75'
+            '42107edff14375da632d8b8d0682630f6d20018ed7fb75706f5613b69a4f7ca110ac5a7836b40da8df2c3b5b1d6a14287d137131eadf3a2ccbd6e38372f3b140')
 
 build() {
   cd $_name
