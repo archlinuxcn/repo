@@ -1,0 +1,26 @@
+post_install() {
+  # Enable NVIDIA Services at first installation
+  # The services are mandatory, see under systemd configuration
+  # https://download.nvidia.com/XFree86/Linux-x86_64/560.35.03/README/powermanagement.html#SystemdConfigur74e29
+  # This is also an requirement to have sleep working together with PreserveAllocations
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/nvidia-utils/-/commit/55644f78820fd382fbdf283b1fd7f08e6b7c22d7
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/nvidia-utils/-/merge_requests/16
+  systemctl enable nvidia-resume nvidia-hibernate nvidia-suspend
+}
+
+post_upgrade() {
+  # Only enable the services for the 560.35.03-16 version
+  # This avoids, that the services are automatically enabled in every upgrade
+  if (( $(vercmp $2 560.35.03-16) < 0)); then
+    for service in nvidia-resume nvidia-hibernate nvidia-suspend; do
+        if ! systemctl is-enabled --quiet $service; then
+            echo "Enabling $service..."
+            systemctl enable $service
+        fi
+    done
+  fi
+}
+
+post_remove() {
+  systemctl disable nvidia-resume nvidia-hibernate nvidia-suspend
+}

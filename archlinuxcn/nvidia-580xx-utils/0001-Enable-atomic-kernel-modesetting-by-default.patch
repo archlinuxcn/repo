@@ -1,0 +1,43 @@
+From 60d1ddc17835226ec67ed1bc1c28524e3bb6e151 Mon Sep 17 00:00:00 2001
+From: Peter Jung <admin@ptr1337.dev>
+Date: Sun, 20 Apr 2025 18:13:22 +0200
+Subject: [PATCH 1/8] Enable atomic kernel modesetting by default
+
+This is required for proper functionality under Wayland. fbdev has been default enabled since 570 so that
+hunk can be removed from this patch.
+
+Signed-off-by: Peter Jung <admin@ptr1337.dev>
+---
+ nvidia-drm/nvidia-drm-linux.c        | 2 +-
+ nvidia-drm/nvidia-drm-os-interface.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git an/nvidia-drm/nvidia-drm-linux.c b/nvidia-drm/nvidia-drm-linux.c
+index 3cb1815d..209cb469 100644
+--- a/nvidia-drm/nvidia-drm-linux.c
++++ b/nvidia-drm/nvidia-drm-linux.c
+@@ -31,7 +31,7 @@
+ 
+ MODULE_PARM_DESC(
+     modeset,
+-    "Enable atomic kernel modesetting (1 = enable, 0 = disable (default))");
++    "Enable atomic kernel modesetting (1 = enable (default), 0 = disable)");
+ module_param_named(modeset, nv_drm_modeset_module_param, bool, 0400);
+ 
+ #if defined(NV_DRM_FBDEV_AVAILABLE)
+diff --git a/nvidia-drm/nvidia-drm-os-interface.c b/nvidia-drm/nvidia-drm-os-interface.c
+index 7617476d..f22afd77 100644
+--- a/nvidia-drm/nvidia-drm-os-interface.c
++++ b//nvidia-drm/nvidia-drm-os-interface.c
+@@ -41,7 +41,7 @@
+ #include <drm/drmP.h>
+ #endif
+ 
+-bool nv_drm_modeset_module_param = false;
++bool nv_drm_modeset_module_param = true;
+ bool nv_drm_fbdev_module_param = true;
+ 
+ void *nv_drm_calloc(size_t nmemb, size_t size)
+-- 
+2.49.0.391.g4bbb303af6
+
