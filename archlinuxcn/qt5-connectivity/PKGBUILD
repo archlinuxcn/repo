@@ -4,9 +4,9 @@
 pkgname=qt5-connectivity
 _basever=5.15.19
 pkgver=5.15.19
-pkgrel=1
+pkgrel=2
 _commit=7e29434e06372efbb2127d0ef41538ff9aec1597
-arch=('x86_64')
+arch=('x86_64' 'aarch64')
 url='https://www.qt.io'
 license=('GPL3' 'LGPL3' 'FDL' 'custom')
 pkgdesc='Provides access to Bluetooth hardware'
