@@ -45,6 +45,12 @@ enable = true
 
 # The privacy section defines several device exposure preference. By default, Portable does not allow apps to see physical devices. This includes discrete GPUs when gameMode is off, input devices, cameras, and all other PCI devices.
 [privacy]
+# When false, prevents application from connecting to X server on Wayland. Defaults to true.
+x11 = true
+
+# When false, prevents application from connecting to legacy notifications endpoint. Defaults to true.
+classicNotifications = false
+
 # Lockdown is a set of rules
 # 	that aims to reduce the attack surface within a sandbox.
 # It contains many additional protections
@@ -57,12 +63,6 @@ seccomp_whitelist = false
 # Landlock as another layer of filesystem security,
 # 	blocks reparent of /, effectively prevents manipulation of mount points
 landlock = true
-
-# When false, prevents application from connecting to X server on Wayland. Defaults to true.
-x11 = true
-
-# When false, prevents application from connecting to legacy notifications endpoint. Defaults to true.
-classicNotifications = false
 
 # Do not use. May break apps.
 [advanced]
