@@ -23,6 +23,7 @@ _features=(--features action-event
            --features offline-test)
 
 prepare() {
+	cd "${pkgname}/"
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --target host-tuple
 }
