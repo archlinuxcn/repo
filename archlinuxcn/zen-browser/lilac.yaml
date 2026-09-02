@@ -10,6 +10,16 @@ pre_build_script: |
   aur_pre_build(maintainers=['noureddinex'])
   for line in edit_file('PKGBUILD'):
     print(line)
+    if line.strip() == 'patch -Np1 -i "$srcdir/0005-Fix-cbindgen-BudgetType_VALUES-COUNT-issue.patch"':
+      print()
+      print('  # Rust 1.98 adds an OpenEmbedded target that makes Firefox\'s target')
+      print('  # detection ambiguous. Prefer Rust\'s generic target for config.guess\'s')
+      print('  # "pc" vendor, as fixed upstream in Mozilla bug 2053518.')
+      print("  [[ $(grep -Fc 'c.target.vendor == host_or_target.vendor' \\")
+      print('    build/moz.configure/rust.configure) == 1 ]]')
+      print('  sed -i \\')
+      print('    \'s/c.target.vendor == host_or_target.vendor/c.target.vendor == ("unknown" if host_or_target.vendor == "pc" else host_or_target.vendor)/\' \\')
+      print('    build/moz.configure/rust.configure')
     if line.strip() == 'DESTDIR="$pkgdir" ./mach install':
       print()
       print('  # Upstream installs a generic Firefox launcher that conflicts with firefox.')
