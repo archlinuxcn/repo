@@ -64,6 +64,7 @@ sha256sums=('SKIP')
 prepare() {
 	cd ladybird
 	sed -i "s|78.2|78.3|g" Libraries/LibUnicode/CMakeLists.txt || true
+	sed -e '79i add_cxx_compile_options(-Wno-restrict)' -i Meta/CMake/compile_options.cmake
 }
 
 pkgver() {
