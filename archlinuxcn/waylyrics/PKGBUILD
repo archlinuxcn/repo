@@ -23,7 +23,7 @@ _features=(--features action-event
            --features offline-test)
 
 prepare() {
-    export RUSTUP_TOOLCHAIN=stable
+	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --target host-tuple
 }
 
