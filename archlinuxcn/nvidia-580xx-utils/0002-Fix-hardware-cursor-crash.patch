@@ -1,0 +1,43 @@
+diff --git a/nvidia-drm/nvidia-drm-fb.c b/nvidia-drm/nvidia-drm-fb.c
+index 05506435..d6f38ee8 100644
+--- a/nvidia-drm/nvidia-drm-fb.c
++++ b/nvidia-drm/nvidia-drm-fb.c
+@@ -141,7 +141,6 @@ static int nv_drm_framebuffer_init(struct drm_device *dev,
+     struct NvKmsKapiCreateSurfaceParams params = { };
+     struct nv_drm_gem_object *nv_gem;
+     struct drm_framebuffer *fb = &nv_fb->base;
+-    bool non_scanout_mem_backed = false;
+     uint32_t i;
+     int ret;
+ 
+@@ -163,10 +162,6 @@ static int nv_drm_framebuffer_init(struct drm_device *dev,
+             params.planes[i].memory = nv_gem->pMemory;
+             params.planes[i].offset = fb->offsets[i];
+             params.planes[i].pitch = fb->pitches[i];
+-
+-            if (!nvKms->isVidmem(nv_gem->pMemory) && nv_dev->hasVideoMemory) {
+-                non_scanout_mem_backed = true;
+-            }
+         }
+     }
+     params.height = fb->height;
+@@ -233,15 +228,10 @@ static int nv_drm_framebuffer_init(struct drm_device *dev,
+ 
+     /* Create NvKmsKapiSurface */
+ 
+-    if (non_scanout_mem_backed) {
+-        /* Do not register drm_framebuffer against nvkms */
+-        nv_fb->pSurface = NULL;
+-    } else {
+-        nv_fb->pSurface = nvKms->createSurface(nv_dev->pDevice, &params);
+-        if (nv_fb->pSurface == NULL) {
+-            NV_DRM_DEV_DEBUG_DRIVER(nv_dev, "Failed to create NvKmsKapiSurface");
+-            goto fail;
+-        }
++    nv_fb->pSurface = nvKms->createSurface(nv_dev->pDevice, &params);
++    if (nv_fb->pSurface == NULL) {
++        NV_DRM_DEV_DEBUG_DRIVER(nv_dev, "Failed to create NvKmsKapiSurface");
++        goto fail;
+     }
+ 
+     return 0;

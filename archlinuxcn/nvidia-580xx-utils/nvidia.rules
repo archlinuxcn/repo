@@ -1,0 +1,9 @@
+# Device nodes are created by nvidia-modprobe, which is called by the nvidia DDX.
+# In case the DDX is not started, the device nodes are never created, so call
+# nvidia-modprobe in the udev rules to cover the Wayland/EGLStream and compute
+# case without a started display. In the case where vfio-pci is used
+# nvidia-modprobe should not be invoked.
+ACTION=="add|bind", ATTR{vendor}=="0x10de", ATTR{class}=="0x03[0-9]*", \
+    DRIVER=="nvidia", TEST!="/dev/nvidia-uvm", \
+    RUN+="/usr/bin/nvidia-modprobe", \
+    RUN+="/usr/bin/nvidia-modprobe -c0 -u"

@@ -2,7 +2,7 @@
 
 _name=asn1tools
 pkgname=python-${_name}
-pkgver=0.168.0
+pkgver=0.169.0
 pkgrel=1
 pkgdesc="ASN.1 parsing, encoding and decoding."
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python python-pyparsing python-bitstruct python-prompt_toolkit python-d
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
-sha512sums=('7ebcdcdc4f551048e318955c92bcb3a24c8df360655fc624b9d1ca6ceefe2e890111723e54f4becaa0f1cb2b59f0b375ef15bcacc3e53b41fe6aed4cf7223011')
+sha512sums=('37a7a3587ad9f16cd24b4e68eab3f0b747aa54e71ab792d2bb5101a6e6e2d5adbe85bca6f67fb37a9bfd2ff07fb2fa9c5e527a5529defb54f728e57a1874c6d8')
 
 build() {
   cd $_name-$pkgver
