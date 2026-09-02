@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=waylyrics
-pkgver=0.4.0
+pkgver=0.4.2
 _opencc_rust_ver=2.0.0
 pkgrel=1
 pkgdesc="the furry way to show desktop lyrics"
@@ -18,7 +18,7 @@ optdepends=(
 )
 source=("git+${url}#tag=v${pkgver}"
 	"git+https://github.com/magiclen/opencc-rust.git#tag=v${_opencc_rust_ver}")
-sha256sums=('90a53d39e6328925f85b73f7fc7b1caae52a5cd3d2f0c387b1093d70f12368ac'
+sha256sums=('722363cb2169b598e6f2af3ba1b610124f0488a97552d63ece322fa17e7acfbc'
             '2c26a40b3708a359cb3f464d33ef12c6e84f8525cd58b36016539af73a678155')
 options=('!lto')
 
