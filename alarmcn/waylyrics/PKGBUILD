@@ -1,8 +1,8 @@
 # Maintainer: Integral <integral@member.fsf.org>
 
 pkgname=waylyrics
-pkgver=0.4.2
-pkgrel=2
+pkgver=0.4.3
+pkgrel=1
 pkgdesc="the furry way to show desktop lyrics"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/${pkgname}/${pkgname}"
@@ -16,7 +16,7 @@ optdepends=(
 	"xdg-desktop-portal: file dialog to import LRC"
 )
 source=("git+${url}#tag=v${pkgver}")
-sha256sums=('722363cb2169b598e6f2af3ba1b610124f0488a97552d63ece322fa17e7acfbc')
+sha256sums=('408d85f0df113957c99c18a341f12627e310a972c7d8ed388d2dd256f8701035')
 options=('!lto')
 
 _features=(--features action-event
