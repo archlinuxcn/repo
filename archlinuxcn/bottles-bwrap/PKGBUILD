@@ -125,7 +125,6 @@ package() {
 		--distro arch \
 		--mode post \
 		--config-ng "${srcdir}/config.toml" \
-		--desktop-file "${srcdir}/desktop.file" \
-		--dbus-activation
+		--desktop-file "${srcdir}/desktop.file"
 	ln -srf "${pkgdir}/usr/bin/bottles-bwrap" "${pkgdir}/usr/bin/bottles"
 }
