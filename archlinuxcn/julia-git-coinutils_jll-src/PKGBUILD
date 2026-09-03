@@ -1,6 +1,6 @@
 pkgname=julia-git-coinutils_jll-src
-pkgver=200.1100.1300+0
-_commit=1ce813043a8708c83258ff4d738e0a0c8f31bb58
+pkgver=200.1100.1300+1
+_commit=cc7e601cb89740878faf238e34f9d1a20daff12b
 pkgrel=1
 pkgdesc="CoinUtils_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/CoinUtils_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git coin-or-coinutils)
 source=("git+https://github.com/JuliaBinaryWrappers/CoinUtils_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('d92c1980c0732ded5fea019b3f197f786ccf681f3b955ca63120ef86c49fac75'
+sha256sums=('a2aada2ed1ce627b1d1a94ca8fbefe7f72b230873cbd22fbf5142659b3c9d99e'
             'ad7a021a57f5497594cd3a2e3e69ea511efcf604e4ca6e29ee7e8d379f305320')
 
 build() {
