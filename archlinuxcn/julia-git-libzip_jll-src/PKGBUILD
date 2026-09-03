@@ -1,7 +1,7 @@
 pkgname=julia-git-libzip_jll-src
-pkgver=1.11.3+0
-_commit=9ae877b045f6a7106d9fe83e88f9f7eb1227e7f2
-pkgrel=2
+pkgver=1.11.4+0
+_commit=d9ad346664dc4b1f6b00c3febe0d13d3116d789c
+pkgrel=1
 pkgdesc="libzip_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libzip_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libzip)
 source=("git+https://github.com/JuliaBinaryWrappers/libzip_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('546abdc50226d97ee7999474cd1030f9d162e159f89fcb7f1f4f840cbc4bb200'
+sha256sums=('5b0b85fd1e2e829072d02f6ccee243ad6cdc7ce1a7ecffd2dce3acea152dbcca'
             '2445f402f61138bc2b929795be81a9892629ae128f1007a6a6c2f418d59b670a')
 
 build() {
