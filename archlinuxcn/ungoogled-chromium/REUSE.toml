@@ -52,7 +52,7 @@ path = [
     "use-oauth2-client-switches-as-default.patch",
     "chromium-150-revert-avx-flag-change.patch",
     "chromium-150-fix-ar-unbundle.patch",
-    "chromium-151-dont-depends-on-histograms.xml-if-it-is-not-git-checkout.patch",
+    "chromium-152-fix-gn-no-public_inputs.patch",
 ]
 SPDX-FileCopyrightText = "chromium contributors"
 SPDX-License-Identifier = "BSD-3-Clause"
@@ -81,13 +81,16 @@ SPDX-License-Identifier = "BSD-2-Clause"
 path = [
     "chromium-149-drop-unknown-clang-flag.patch",
     "chromium-149-use-of-undeclared-identifier-ERROR.patch",
+    "chromium-152-crubit.patch",
+    "chromium-152-dawn-llvm-22.patch",
 ]
 SPDX-FileCopyrightText = "2003-2026 Nixpkgs/NixOS contributors"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
 path = [
-    "chromium-149-unbundle-minizip-undo-unicode.patch"
+    "chromium-152-unbundle-minizip-undo-unicode.patch",
+    "chromium-152-unbundle-opus-devtools.patch",
 ]
 SPDX-FileCopyrightText = "LN Liberda <lauren@selfisekai.rocks>"
 

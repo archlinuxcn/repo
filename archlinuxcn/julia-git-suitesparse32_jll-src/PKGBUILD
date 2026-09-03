@@ -1,6 +1,6 @@
 pkgname=julia-git-suitesparse32_jll-src
-pkgver=7.12.1+0
-_commit=a6fb2e9a32f71312c7c06660e199439f8c727e40
+pkgver=7.12.1+1
+_commit=c3a0e05fdc538a3d8c14c759cba835343040f67b
 pkgrel=1
 pkgdesc="SuiteSparse32_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/SuiteSparse32_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git suitesparse)
 source=("git+https://github.com/JuliaBinaryWrappers/SuiteSparse32_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('a002c58d93e2371ed30f03125765f195507327646f289b14161c288a91745097'
+sha256sums=('f493521233f6e9feef1e952888fe694c10e98900093513aad78c5041422c51eb'
             '1c57a8f14522ff97df83b36a05beca864e8e21832c0c083b031cc4afad2495db')
 
 build() {

@@ -1,7 +1,7 @@
 pkgname=julia-git-showoff-src
-pkgver=1.0.3
-_commit=66105cbbb72a1da39764e2c029c12c3456df39cd
-pkgrel=2
+pkgver=1.1.1
+_commit=0b1034dbd6bb2e28aa5697cfb51fed74c072de8c
+pkgrel=1
 pkgdesc="Showoff.jl"
 url="https://github.com/JuliaGraphics/Showoff.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphics/Showoff.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('4437512f93c362793fc70e417b92f69424087b0748867f8080d2e0900c2a942c')
 
 package() {
   cd Showoff.jl

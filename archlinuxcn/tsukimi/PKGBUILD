@@ -1,0 +1,45 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+# Contributor: Jonathan Grotelüschen <tippfehlr@archlinux.org>
+# Contributor: Eikano <lcuoin@gmail.com>
+# Contributor: Merrkry <merrkry@tsubasa.moe>
+
+pkgname=tsukimi
+pkgver=26.8.4
+pkgrel=2
+pkgdesc="A simple third-party GTK4 Emby/Jellyfin client"
+arch=('x86_64')
+url="https://github.com/tsukinaha/${pkgname}"
+license=('GPL-3.0-or-later')
+depends=(
+	'dconf'
+	'fontconfig'
+	'glib2'
+	'glibc'
+	'graphene'
+	'gstreamer'
+	'gtk4'
+	'hicolor-icon-theme'
+	'lcms2'
+	'libadwaita'
+	'libgcc'
+	'libseccomp'
+	'mpv'
+	'pango'
+)
+makedepends=('cargo' 'meson' 'blueprint-compiler')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('2efba2e68fac15cb6685b080227653778e6c5c5165d35ea2bb3757a6198a9a2b')
+options=('!lto')
+
+build() {
+	arch-meson "${pkgname}-${pkgver}" build
+	meson compile -C build
+}
+
+check() {
+	meson test -C build --print-errorlogs
+}
+
+package() {
+	meson install -C build --no-rebuild --destdir "${pkgdir}"
+}

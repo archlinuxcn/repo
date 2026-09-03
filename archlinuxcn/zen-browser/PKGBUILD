@@ -4,7 +4,7 @@
 
 pkgname=zen-browser
 pkgver=1.21.15b
-pkgrel=2
+pkgrel=3
 pkgdesc='Firefox-based web browser built from upstream release source snapshot'
 url='https://zen-browser.app'
 arch=('x86_64')
@@ -87,11 +87,13 @@ source=(
   "$pkgname.desktop"
   '0004-Use-wasm32-wasip1-target.patch'
   '0005-Fix-cbindgen-BudgetType_VALUES-COUNT-issue.patch'
+  'rust-1.98-target-detection.patch::https://github.com/mozilla-firefox/firefox/commit/1ecaa12836a69896dd6702fb5ed5e13979399371.patch'
 )
 sha256sums=('fd3f5af8e8c36f60307b6715e2d71d573443ccb12abd9cbe8dbce8d0bef28643'
             'af16fec9a88cbfffee34a6a4eb5b3074931477fcefee252840d77cf146568851'
             '28b086f5492d8e6731fe0dfe34a2e4c6d4d502a9eefa15a31e44b5788cf4df89'
-            '0d24f2a45fa0f7fe108a91a50ae55708f66899b0229df7722fb87962f7a2a243')
+            '0d24f2a45fa0f7fe108a91a50ae55708f66899b0229df7722fb87962f7a2a243'
+            'ee1605e6fffc3bb62a9d58544f90fcdd5403e70e01496e350cfeb6ec77c9b6ce')
 noextract=("$_srcroot-$pkgver.tar.zst")
 
 prepare() {
@@ -103,15 +105,9 @@ prepare() {
 
   patch -Np1 -i "$srcdir/0004-Use-wasm32-wasip1-target.patch"
   patch -Np1 -i "$srcdir/0005-Fix-cbindgen-BudgetType_VALUES-COUNT-issue.patch"
-
-  # Rust 1.98 adds an OpenEmbedded target that makes Firefox's target
-  # detection ambiguous. Prefer Rust's generic target for config.guess's
-  # "pc" vendor, as fixed upstream in Mozilla bug 2053518.
-  [[ $(grep -Fc 'c.target.vendor == host_or_target.vendor' \
-    build/moz.configure/rust.configure) == 1 ]]
-  sed -i \
-    's/c.target.vendor == host_or_target.vendor/c.target.vendor == ("unknown" if host_or_target.vendor == "pc" else host_or_target.vendor)/' \
-    build/moz.configure/rust.configure
+  # Mozilla bug 2053518: disambiguate the generic Rust targets from the
+  # OpenEmbedded targets added in Rust 1.98.
+  patch -Np1 -i "$srcdir/rust-1.98-target-detection.patch"
 
   cat >"$srcdir/mozconfig" <<EOF
 ac_add_options --enable-application=browser

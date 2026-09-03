@@ -5,7 +5,7 @@
 
 pkgname=tailscale-git
 _pkgname=tailscale
-pkgver=1.103.183+t91d10d38a
+pkgver=1.103.189+t16dacb0c5
 pkgrel=1
 pkgdesc="A mesh VPN that makes it easy to connect your devices, wherever they are. (GIT version)"
 arch=("x86_64")
@@ -20,11 +20,6 @@ source=("git+https://github.com/tailscale/$_pkgname.git")
 sha256sums=('SKIP')
 
 options=(!lto)
-
-prepare() {
-    cd "${_pkgname}"
-    go mod vendor
-}
 
 pkgver() {
   cd "${_pkgname}"
@@ -60,6 +55,10 @@ build() {
     export CGO_CXXFLAGS="${CXXFLAGS}"
     export CGO_LDFLAGS="${LDFLAGS}"
     export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+    # proxy.golang.org occasionally resets multiplexed module downloads.
+    # Avoid HTTP/2 here; only the dependencies of the packaged commands are
+    # fetched now that the unused vendor tree is no longer generated.
+    export GODEBUG="${GODEBUG:+$GODEBUG,}http2client=0"
 
     # The version stamp flags mirror build_dist.sh. However, we have to
     # duplicate that logic since we also want to set -linkmode=external, and Go
