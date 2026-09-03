@@ -2,7 +2,7 @@
 # Contributor: Trevor Mosey <trevor dot mosey at gmail dot com>
 
 pkgname=flyctl
-pkgver=0.4.97
+pkgver=0.4.99
 pkgrel=1
 pkgdesc="Command line tools for fly.io services"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -11,7 +11,7 @@ license=("Apache-2.0")
 makedepends=('go')
 checkdepends=('ruby-rake')
 source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('ef2f3b99222c4f47bd4256dd7f134a8447595ef476918fa9dc3f6492ee76291a')
+sha256sums=('9ce4d5f7fc1865b631636e53fe249f8021134ffec419c777102f0f8b5d641c1e')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
