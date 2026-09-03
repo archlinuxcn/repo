@@ -6,7 +6,7 @@
 
 pkgname=ffmpeg-nv13.0
 pkgver=9.0.1
-pkgrel=4
+pkgrel=5
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video (with Nvidias codec APIs version 13.0)'
 arch=(x86_64)
@@ -109,7 +109,6 @@ optdepends=(
   'onevpl-intel-gpu: Intel QuickSync support'
 )
 provides=(
-  ffmpeg=$epoch:$pkgver
   libavcodec.so
   libavdevice.so
   libavfilter.so
@@ -117,6 +116,7 @@ provides=(
   libavutil.so
   libswresample.so
   libswscale.so
+  ffmpeg=$epoch:$pkgver
 )
 conflicts=(ffmpeg)
 source=(

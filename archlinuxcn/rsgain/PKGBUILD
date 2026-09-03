@@ -1,8 +1,8 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=rsgain
-pkgver=3.7
-pkgrel=17
+pkgver=3.8
+pkgrel=1
 pkgdesc="A simple, but powerful ReplayGain 2.0 tagging utility"
 arch=('x86_64')
 url="https://github.com/complexlogic/rsgain?tab=readme-ov-file"
@@ -11,7 +11,7 @@ depends=(libebur128 taglib ffmpeg fmt libinih gcc-libs)
 source=(
 	"${pkgname}"::"git+https://github.com/complexlogic/rsgain.git#tag=v${pkgver}"
 )
-sha256sums=('5e03fa75372c1006812652cda1d4dfa65a571ec1844c36497fd84adb40233e7f')
+sha256sums=('6211e6a5c2bb30441e49f98c46e9762dd3851b89f0e176c043b3273bf0a6ed47')
 makedepends=("git" "cmake")
 
 build() {

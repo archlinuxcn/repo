@@ -4,8 +4,8 @@
 # Patches: xx55tt, viktoracoric, Mailaender, jlocash
 
 pkgname=pokerth
-pkgver=2.1.7
-pkgrel=3
+pkgver=2.1.8
+pkgrel=1
 
 pkgdesc="Client to online Poker game written in C++/Qt"
 arch=('x86_64')
@@ -29,7 +29,7 @@ makedepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pokerth/pokerth/archive/refs/tags/v${pkgver}.tar.gz")
-md5sums=('0a3e1b514a258f25ccc4a72627d6201d')
+md5sums=('fc055c8e26922d57c7ebb527a7cd6b8b')
 
 build() {
   local cmake_options=(

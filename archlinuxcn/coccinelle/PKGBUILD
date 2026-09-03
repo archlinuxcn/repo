@@ -9,8 +9,8 @@
 # Contributor: Vladimir Kirillov <proger@wilab.org.ua>
 
 pkgname=coccinelle
-pkgver=1.3.2
-pkgrel=3
+pkgver=1.3.3
+pkgrel=1
 pkgdesc="C source code matching and transformation engine"
 arch=('x86_64')
 url="https://coccinelle.gitlabpages.inria.fr/website/"
@@ -42,7 +42,7 @@ optdepends=(
 source=(
     "$pkgname-$pkgver.tar.gz::https://github.com/coccinelle/${pkgname}/archive/${pkgver}.tar.gz"
 )
-b2sums=('e17f50648b884863ea702399f9f608a99cf54457960f019dea789a097efdbe066f60b19c0b2a243339ca8fb5b2629b3ee6359099b4f9faa4cca085cda24fcecb')
+b2sums=('f262dab352fc39999d8b6e5329aefd8db75a7b8bda0ebe1600d1d574f9aa0d6aa674f59fee12b7f482bb6080285106b5db054cd8da9b5879ef2bbdf5129125dc')
 options=('!strip')
 
 build() {

@@ -1,5 +1,11 @@
 maintainers:
-- github: Emojigit
+  - github: Emojigit
+
+build_prefix: archlinuxcn-x86_64
+
+repo_depends:
+  - ffnvcodec-headers13.0
+
 update_on:
-- source: alpm
-  alpm: ffmpeg
+  - source: alpm
+    alpm: ffmpeg

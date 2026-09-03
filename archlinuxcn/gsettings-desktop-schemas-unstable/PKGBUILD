@@ -9,7 +9,7 @@ pkgname=(
   gsettings-desktop-schemas-unstable
   gsettings-system-schemas-unstable
 )
-pkgver=51.beta
+pkgver=51.rc
 pkgrel=1
 pkgdesc="GSettings schemas for GNOME: unstable version"
 url="https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas"
@@ -24,7 +24,7 @@ makedepends=(
   meson
 )
 source=("git+$url.git#tag=${pkgver}")
-b2sums=('4c83b8ece3c6a1ba2f061ce0111bcb73fd6723c06fb4fd52d12bcb855fa1041068892c0f30528a048557e268fa8f33d8cfda6ea429a4ce85c00a4d2d24be6acc')
+b2sums=('6fdc148ec20c265638b208bbc81f8ad68e75a1932864fa0117cd5bfd7fc6004582b926ab6151b7d2a89eb78a6f30b8825c427c7936930017e9d472c8e2948b52')
 
 prepare() {
   cd gsettings-desktop-schemas
