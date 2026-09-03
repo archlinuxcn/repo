@@ -3,7 +3,7 @@
 # Contributor: Daniel Larsson <znixen@live.se>
 
 pkgname=patool
-pkgver=4.0.6
+pkgver=4.0.7
 pkgrel=1
 pkgdesc="portable command line archive file manager"
 arch=('any')
@@ -19,7 +19,7 @@ optdepends=(
 	"zstd: extracting ZSTANDARD files"
 )
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/wummel/${pkgname}/archive/${pkgver}.tar.gz")
-sha256sums=('57d4295afac3cdea13d9adda1a24cac8344bf57eeed4c10a2ae5d6a5f7217eb6')
+sha256sums=('70a02b703cdf23b3f8f34a12d8fdb8f9d7707f86c2ede8bda71aa1c1b7cd5c09')
 
 build() {
 	cd "${pkgname}-${pkgver}/"
