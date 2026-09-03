@@ -86,11 +86,15 @@ makedepends=(
   cmake
 )
 source=(
-  # Mutter tags use SSH signatures which makepkg doesn't understand
-  "git+$url.git#tag=${pkgver}"
-  "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
+	# Mutter tags use SSH signatures which makepkg doesn't understand
+	"git+$url.git#tag=${pkgver}"
+	"git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
 
-  5129.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5129.patch
+	5129.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5129.patch
+
+	5285.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5285.patch
+
+	5258.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5258.patch
 )
 b2sums=('e0cfc1c074ff82f7a9a72acb73dfe2a3c95e84b1735afd308a325e9c3ad5b91da3b20f64a842faa45e903eff111a13f75b1ccde4a707c946666ac31000599420'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
@@ -106,6 +110,12 @@ prepare() {
 
 	echo 5129 # defer HW cursor support initialization
 	git apply ../5129.patch
+
+	echo 5258
+	git apply ../5258.patch
+
+	echo 5285
+	git apply ../5285.patch
 }
 
 build() {
