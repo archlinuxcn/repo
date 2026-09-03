@@ -8,22 +8,44 @@ build_prefix: extra-x86_64
 
 pre_build_script: |
   aur_pre_build(maintainers=['noureddinex'])
+  in_source = False
+  in_sha256sums = False
+  patch_source_added = False
+  patch_checksum_added = False
+  patch_command_added = False
+  launcher_fix_added = False
   for line in edit_file('PKGBUILD'):
+    if line.startswith('source=('):
+      in_source = True
+    elif in_source and line.strip() == ')':
+      print('  \'rust-1.98-target-detection.patch::https://github.com/mozilla-firefox/firefox/commit/1ecaa12836a69896dd6702fb5ed5e13979399371.patch\'')
+      in_source = False
+      patch_source_added = True
+
+    if line.startswith('sha256sums=('):
+      in_sha256sums = True
+    if in_sha256sums and line.rstrip().endswith("')"):
+      print(line.rstrip()[:-1])
+      print("            'ee1605e6fffc3bb62a9d58544f90fcdd5403e70e01496e350cfeb6ec77c9b6ce')")
+      in_sha256sums = False
+      patch_checksum_added = True
+      continue
+
     print(line)
     if line.strip() == 'patch -Np1 -i "$srcdir/0005-Fix-cbindgen-BudgetType_VALUES-COUNT-issue.patch"':
-      print()
-      print('  # Rust 1.98 adds an OpenEmbedded target that makes Firefox\'s target')
-      print('  # detection ambiguous. Prefer Rust\'s generic target for config.guess\'s')
-      print('  # "pc" vendor, as fixed upstream in Mozilla bug 2053518.')
-      print("  [[ $(grep -Fc 'c.target.vendor == host_or_target.vendor' \\")
-      print('    build/moz.configure/rust.configure) == 1 ]]')
-      print('  sed -i \\')
-      print('    \'s/c.target.vendor == host_or_target.vendor/c.target.vendor == ("unknown" if host_or_target.vendor == "pc" else host_or_target.vendor)/\' \\')
-      print('    build/moz.configure/rust.configure')
+      print('  # Mozilla bug 2053518: disambiguate the generic Rust targets from the')
+      print('  # OpenEmbedded targets added in Rust 1.98.')
+      print('  patch -Np1 -i "$srcdir/rust-1.98-target-detection.patch"')
+      patch_command_added = True
     if line.strip() == 'DESTDIR="$pkgdir" ./mach install':
       print()
       print('  # Upstream installs a generic Firefox launcher that conflicts with firefox.')
       print('  rm -f "$pkgdir/usr/bin/firefox"')
+      launcher_fix_added = True
+  assert patch_source_added
+  assert patch_checksum_added
+  assert patch_command_added
+  assert launcher_fix_added
   update_pkgrel()
 
 post_build: aur_post_build
