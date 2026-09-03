@@ -1,0 +1,150 @@
+From 8dab8b761385b7946588232e4e2a8c116f9293c3 Mon Sep 17 00:00:00 2001
+From: Philip Pfaffe <pfaffe@chromium.org>
+Date: Thu, 09 Jul 2026 05:06:16 -0700
+Subject: [PATCH] Revert "Expose TypeScript files to dependent targets"
+
+This reverts commit 9482fa06243e2941e1b7797ac9f9773f86500453.
+
+Reason for revert: Getting `copy.gni:29:21: Assignment had no effect` in local builds on tip of tree.
+
+Failure Link: N/A
+
+Original change's description:
+> Expose TypeScript files to dependent targets
+>
+> Use `public_inputs` in GN build templates to propagate `.ts` files to
+> dependent targets. This ensures that remote execution environments for
+> TypeScript compilations have access to all necessary directly or
+> indirectly imported source files.
+>
+> Specific changes include:
+> * Filtering and exposing `*.ts` files in `copy.gni` and
+>   `devtools_pre_built.gni`.
+> * Exposing the entrypoint file in `devtools_entrypoint.gni`.
+> * Filtering and exposing `*.ts` and specific legacy `.js` files
+>   (`ahem.js`, `ARIAProperties.js`, `SupportedCSSProperties.js`) in
+>   `typescript.gni`.
+> * Applying minor formatting fixes to `forward_variables_from` calls.
+>
+> Ref: https://gn.googlesource.com/gn/+/refs/heads/main/docs/reference.md#var_public_inputs
+> Bug: 513105742
+> Change-Id: Ibe4e0be27ea0d9d7c3e8309219f0f822a55b9bb5
+> Reviewed-on: https://chromium-review.googlesource.com/c/devtools/devtools-frontend/+/8064364
+> Reviewed-by: Simon Zünd <szuend@chromium.org>
+> Commit-Queue: Takuto Ikuta <tikuta@chromium.org>
+> Reviewed-by: Michael Achenbach <machenbach@chromium.org>
+
+Bug: 513105742
+No-Presubmit: true
+No-Tree-Checks: true
+No-Try: true
+Change-Id: Ia4882d1ae1bb5e45aaef4bb831cd2a10eda1ac69
+Reviewed-on: https://chromium-review.googlesource.com/c/devtools/devtools-frontend/+/8069251
+Auto-Submit: Philip Pfaffe <pfaffe@chromium.org>
+Commit-Queue: Michael Achenbach <machenbach@chromium.org>
+Reviewed-by: Michael Achenbach <machenbach@chromium.org>
+---
+
+diff --git a/scripts/build/ninja/copy.gni b/scripts/build/ninja/copy.gni
+index d6d71a6..a03d647 100644
+--- a/scripts/build/ninja/copy.gni
++++ b/scripts/build/ninja/copy.gni
+@@ -25,9 +25,6 @@
+       string_join(",", sources),
+     ]
+ 
+-    # Expose ts files to dependent targets.
+-    public_inputs = filter_include(sources, [ "*.ts" ])
+-
+     outputs = []
+     foreach(_input, sources) {
+       outputs += [ "$target_gen_dir/$_input" ]
+diff --git a/scripts/build/ninja/devtools_entrypoint.gni b/scripts/build/ninja/devtools_entrypoint.gni
+index 6bee3ef..cedcbb4 100644
+--- a/scripts/build/ninja/devtools_entrypoint.gni
++++ b/scripts/build/ninja/devtools_entrypoint.gni
+@@ -35,13 +35,7 @@
+     _ts_library_target_name = _entrypoint_target_name + "-typescript"
+ 
+     ts_library(_ts_library_target_name) {
+-      forward_variables_from(invoker,
+-                             [
+-                               "deps",
+-                               "es_target",
+-                               "es_libs",
+-                               "inputs",
+-                             ])
++      forward_variables_from(invoker, ["deps", "es_target", "es_libs", "inputs"])
+ 
+       sources = [ invoker.entrypoint ]
+     }
+@@ -110,19 +104,14 @@
+     }
+ 
+     ts_library(_prebundle_target_name) {
+-      forward_variables_from(invoker,
+-                             [
+-                               "deps",
+-                               "es_target",
+-                               "es_libs",
+-                               "inputs",
+-                             ])
++      forward_variables_from(invoker, ["deps", "es_target", "es_libs", "inputs"])
+ 
+       sources = [ _copy_output_file_name ]
+ 
+       rootdir = target_gen_dir
+ 
+       public_deps = [ ":$_copy_target_name" ]
++
+     }
+ 
+     bundle(_bundle_target_name) {
+@@ -197,9 +186,6 @@
+   node_action(target_name) {
+     script = "scripts/build/ninja/generate-tsconfig.js"
+ 
+-    # Expose ts files to dependent targets.
+-    public_inputs = [ invoker.entrypoint ]
+-
+     args = [
+              rebase_path(_generated_tsconfig_location, root_build_dir),
+              rebase_path(invoker.entrypoint, root_build_dir),
+diff --git a/scripts/build/ninja/devtools_pre_built.gni b/scripts/build/ninja/devtools_pre_built.gni
+index 1f38b18..3d76a75 100644
+--- a/scripts/build/ninja/devtools_pre_built.gni
++++ b/scripts/build/ninja/devtools_pre_built.gni
+@@ -17,9 +17,6 @@
+ 
+     public_deps = invoker.deps
+ 
+-    # Expose ts files to dependent targets.
+-    public_inputs = filter_include(sources, [ "*.ts" ])
+-
+     _copy_src = rebase_path(get_path_info(target_name, "dir"), root_build_dir)
+     _copy_dest = rebase_path(target_gen_dir, root_build_dir)
+ 
+diff --git a/scripts/build/typescript/typescript.gni b/scripts/build/typescript/typescript.gni
+index b0d1367..a6f4c04 100644
+--- a/scripts/build/typescript/typescript.gni
++++ b/scripts/build/typescript/typescript.gni
+@@ -212,19 +212,6 @@
+     output_files = [ "$target_gen_dir/$target_name-tsconfig.json" ]
+ 
+     if (defined(sources)) {
+-      # Expose ts files to dependent targets.
+-      public_inputs =
+-          filter_include(sources,
+-                         [
+-                           "*.ts",
+-
+-                           # TODO: Migrate the files below to TypeScript
+-                           # and remove them from this list.
+-                           "*ahem.js",
+-                           "*ARIAProperties.js",
+-                           "*SupportedCSSProperties.js",
+-                         ])
+-
+       args += [ "--sources" ] + rebase_path(sources, root_build_dir)
+ 
+       foreach(src, sources) {
