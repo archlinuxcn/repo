@@ -1,8 +1,0 @@
-/var/log/openresty/*.log {
-	missingok
-	sharedscripts
-	compress
-	postrotate
-		test -r /run/openresty/nginx.pid && kill -USR1 `cat /run/openresty/nginx.pid`
-	endscript
-}
