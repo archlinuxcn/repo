@@ -1,0 +1,140 @@
+# Maintainer: Bin Jin <bjin@protonmail.com>
+
+pkgname=oh-my-pi
+pkgver=18.1.10
+pkgrel=1
+pkgdesc="A coding agent with the IDE wired in"
+arch=('x86_64')
+url="https://omp.sh/"
+license=('MIT')
+depends=('gcc-libs' 'glibc' 'oniguruma' 'opus' 'pcre2' 'zstd')
+makedepends=('bun' 'cargo' 'git')
+optdepends=(
+    'alsa-lib: ALSA fallback for live voice, STT, and TTS'
+    'at-spi2-core: Linux accessibility backend for the computer tool'
+    'chromium: system browser for the browser tool'
+    'git: repository integration and isolated task worktrees'
+    'julia: Julia eval backend'
+    'libpulse: PulseAudio/PipeWire-Pulse client backend for live voice, STT, and TTS'
+    'python: Python 3.10+ eval backend'
+    'sshfs: mount SSH remote workspaces'
+    'xdg-desktop-portal: Wayland ScreenCast and RemoteDesktop portals for the computer tool'
+    'xdg-desktop-portal-impl: compositor-specific backend for Wayland computer tool portals'
+)
+options=('!lto' '!strip')
+source=(
+    "${pkgname}::git+https://github.com/can1357/oh-my-pi.git#tag=v${pkgver}"
+    "use-system-opus.patch"
+    "skip-native-embed-for-aur.patch"
+)
+sha256sums=('SKIP'
+            'd2e7b386c2655e053199113216023d128d6f1e8866547d84dfe1647d376e07a9'
+            'a81209715174b5413d5743ec4b461ffd71b1a1fc37bd4a7dcde23c27e35bc62f'
+)
+
+_variants=('baseline:x86-64-v2' 'modern:x86-64-v3')
+_cargo_features=()
+_enable_wayland_screencast=1
+
+if (( _enable_wayland_screencast )); then
+    depends+=('libpipewire')
+    makedepends+=('clang')
+    _cargo_features=(--features wayland-pipewire)
+fi
+
+prepare() {
+    cd "${srcdir}/${pkgname}"
+
+    patch -p1 -i "${srcdir}/skip-native-embed-for-aur.patch"
+    patch -p1 -i "${srcdir}/use-system-opus.patch"
+
+    RUSTUP_TOOLCHAIN=stable cargo fetch --locked --target x86_64-unknown-linux-gnu
+
+    # tree-sitter's vendored array.h type-puns every Array(T)* through a generic
+    # Array* whose contents member is void*. _array__grow may realloc and store
+    # the new contents through the punned type, so under -fstrict-aliasing
+    # (implied by -O2) GCC keeps the pre-realloc pointer in a register and the
+    # tree-sitter-haskell scanner writes into the freed block; glibc aborts with
+    # "corrupted size vs. prev_size" on the next allocation. Fixed upstream in
+    # tree-sitter 0.26.4 (tree-sitter/tree-sitter@ed6e42c), but the grammar
+    # crates vendor their own pre-fix copy of the header.
+    #
+    # cc-rs spawns the compiler from each crate's build script, so
+    # CARGO_PKG_NAME selects which crates get the flag.
+    local _cc
+    _cc=$(command -v "${CC:-cc}")
+    cat >"${srcdir}/cc-tree-sitter" <<EOF
+#!/bin/sh
+case \${CARGO_PKG_NAME-} in
+*tree-sitter*) set -- "\$@" -fno-strict-aliasing ;;
+esac
+exec ${_cc} "\$@"
+EOF
+    chmod +x "${srcdir}/cc-tree-sitter"
+}
+
+_build_native() {
+    local _variant="$1" _target_cpu="$2"
+
+    RUSTC_BOOTSTRAP=1 \
+    RUSTFLAGS="-Ctarget-cpu=${_target_cpu}" \
+    CC="${srcdir}/cc-tree-sitter" \
+    LIBOPUS_STATIC=0 \
+    PCRE2_SYS_STATIC=0 \
+    ZSTD_SYS_USE_PKG_CONFIG=1 \
+    RUSTONIG_SYSTEM_LIBONIG=1 \
+        cargo build --frozen --profile ci --package pi-natives "${_cargo_features[@]}"
+
+    install -Dm755 target/ci/libpi_natives.so \
+        "packages/natives/native/pi_natives.linux-x64-${_variant}.node"
+}
+
+build() {
+    cd "${srcdir}/${pkgname}"
+
+    export CARGO_TARGET_DIR=target
+    export RUSTUP_TOOLCHAIN=stable
+
+    bun install --frozen-lockfile
+    local _variant
+    for _variant in "${_variants[@]}"; do
+        _build_native "${_variant%%:*}" "${_variant##*:}"
+    done
+    RELEASE_TARGETS='linux-x64' bun run ci:release:build-binaries
+}
+
+_install_completions() {
+    local _omp_bin="$1"
+    local _completion_dir="${srcdir}/completions"
+    local _runtime_dir="${srcdir}/completion-runtime"
+
+    rm -rf "${_completion_dir}" "${_runtime_dir}"
+    mkdir -p "${_completion_dir}" "${_runtime_dir}/home" "${_runtime_dir}/xdg"
+
+    env HOME="${_runtime_dir}/home" XDG_DATA_HOME="${_runtime_dir}/xdg" \
+        "${_omp_bin}" completions bash >"${_completion_dir}/omp.bash"
+    env HOME="${_runtime_dir}/home" XDG_DATA_HOME="${_runtime_dir}/xdg" \
+        "${_omp_bin}" completions zsh >"${_completion_dir}/_omp"
+    env HOME="${_runtime_dir}/home" XDG_DATA_HOME="${_runtime_dir}/xdg" \
+        "${_omp_bin}" completions fish >"${_completion_dir}/omp.fish"
+
+    install -Dm644 "${_completion_dir}/omp.bash" "${pkgdir}/usr/share/bash-completion/completions/omp"
+    install -Dm644 "${_completion_dir}/_omp" "${pkgdir}/usr/share/zsh/site-functions/_omp"
+    install -Dm644 "${_completion_dir}/omp.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/omp.fish"
+}
+
+package() {
+    cd "${srcdir}/${pkgname}"
+
+    install -Dm755 "packages/coding-agent/binaries/omp-linux-x64" \
+        "${pkgdir}/usr/lib/${pkgname}/omp"
+    local _variant
+    for _variant in "${_variants[@]}"; do
+        install -Dm755 "packages/natives/native/pi_natives.linux-x64-${_variant%%:*}.node" \
+            "${pkgdir}/usr/lib/${pkgname}/pi_natives.linux-x64-${_variant%%:*}.node"
+    done
+    install -dm755 "${pkgdir}/usr/bin"
+    ln -s "../lib/${pkgname}/omp" "${pkgdir}/usr/bin/omp"
+    _install_completions "${pkgdir}/usr/bin/omp"
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
