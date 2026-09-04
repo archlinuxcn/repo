@@ -2,7 +2,7 @@
 
 pkgname=oh-my-pi
 pkgver=18.1.10
-pkgrel=1
+pkgrel=2
 pkgdesc="A coding agent with the IDE wired in"
 arch=('x86_64')
 url="https://omp.sh/"
@@ -27,10 +27,9 @@ source=(
     "use-system-opus.patch"
     "skip-native-embed-for-aur.patch"
 )
-sha256sums=('SKIP'
+sha256sums=('dc78be49bb68dad5eda08ea17863034543927cf9f2fcfa917891de0b915b5429'
             'd2e7b386c2655e053199113216023d128d6f1e8866547d84dfe1647d376e07a9'
-            'a81209715174b5413d5743ec4b461ffd71b1a1fc37bd4a7dcde23c27e35bc62f'
-)
+            'a81209715174b5413d5743ec4b461ffd71b1a1fc37bd4a7dcde23c27e35bc62f')
 
 _variants=('baseline:x86-64-v2' 'modern:x86-64-v3')
 _cargo_features=()
