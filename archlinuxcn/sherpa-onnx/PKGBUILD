@@ -3,7 +3,7 @@
 pkgbase=sherpa-onnx
 pkgname=("${pkgbase}" "python-${pkgbase}")
 pkgver=1.13.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Speech-to-text, text-to-speech, speaker diarization, speech enhancement, source separation, and VAD using next-gen Kaldi with onnxruntime without Internet connection."
 arch=("x86_64" "aarch64" "arm" "riscv64")
 url="https://github.com/k2-fsa/${pkgbase}"
@@ -21,7 +21,7 @@ source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz
         "kaldifst-1.8.0.tar.gz::https://github.com/k2-fsa/kaldifst/archive/refs/tags/v1.8.0.tar.gz"
         "kissfft-febd4caeed32e33ad8b2e0bb5ea77542c40f18ec.zip::https://github.com/mborgerding/kissfft/archive/febd4caeed32e33ad8b2e0bb5ea77542c40f18ec.zip"
         "openfst-1.8.5-2026-07-09.tar.gz::https://github.com/csukuangfj/openfst/archive/refs/tags/v1.8.5-2026-07-09.tar.gz"
-        "pa_stable_v190700_20210406.tgz::http://files.portaudio.com/archives/pa_stable_v190700_20210406.tgz"
+        "pa_stable_v190700_20210406.tgz::https://hf-mirror.com/csukuangfj/sherpa-onnx-cmake-deps/resolve/main/pa_stable_v190700_20210406.tgz"
         "piper-phonemize-f3ff95afc03640bc1399e113e83361192a2fafb4.zip::https://github.com/csukuangfj/piper-phonemize/archive/f3ff95afc03640bc1399e113e83361192a2fafb4.zip"
         "simple-sentencepiece-0.7.tar.gz::https://github.com/pkufool/simple-sentencepiece/archive/refs/tags/v0.7.tar.gz"
         "websocketpp-b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip::https://github.com/zaphoyd/websocketpp/archive/b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip")
