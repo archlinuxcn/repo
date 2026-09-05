@@ -3,8 +3,8 @@
 # Contributor: xifan2333 <xifan233@163.com>
 
 pkgname=fcitx5-vinput
-pkgver=2.3.13
-pkgrel=2
+pkgver=2.3.14
+pkgrel=1
 pkgdesc='Offline voice input addon for Fcitx5 with optional OpenAI-compatible postprocess'
 arch=('x86_64')
 url='https://github.com/xifan2333/fcitx5-vinput'
@@ -13,7 +13,7 @@ options=(!debug !lto)
 depends=('curl' 'fcitx5' 'libarchive' 'openssl' 'pipewire' 'qt6-base' 'sherpa-onnx')
 makedepends=('clang' 'cli11' 'cmake' 'mold' 'ninja' 'nlohmann-json' 'pkgconf' 'qt6-tools')
 source=("${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('cdd92f9c2c0361a0534b8d6ed5682fbebb70f32878c2883b55dadc76d5586d68')
+sha256sums=('aecdc9fd38be5c67d73296585debe578e6109232b1ba3ff54378cdef51447f15')
 provides=("${pkgname}")
 
 build() {
