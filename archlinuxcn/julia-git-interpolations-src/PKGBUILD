@@ -8,15 +8,11 @@ arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
-source=("git+https://github.com/JuliaMath/Interpolations.jl.git#commit=$_commit"
-        5b5a0f4d605c89b8c94384b6623c2a74f1a34e8c.patch)
-sha256sums=('041a3925226c9c142dad970520d482b834af007833a51825e50106547663f209'
-            'f797cfb72678490bfcc8eae3c339df604e08a13a15cf9935909bd382c89aedbd')
+source=("git+https://github.com/JuliaMath/Interpolations.jl.git#commit=$_commit")
+sha256sums=('041a3925226c9c142dad970520d482b834af007833a51825e50106547663f209')
 
 prepare() {
   cd Interpolations.jl
-
-  patch -Np1 --no-backup-if-mismatch < ../5b5a0f4d605c89b8c94384b6623c2a74f1a34e8c.patch
 }
 
 package() {
