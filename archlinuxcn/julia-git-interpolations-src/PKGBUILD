@@ -1,7 +1,7 @@
 pkgname=julia-git-interpolations-src
-pkgver=0.15.1
-_commit=c66a77e59b73d6131f04ff28f12c6f11bca93010
-pkgrel=2
+pkgver=0.15.2
+_commit=40fa2e796dd3a8e89d76f917ae0cddfbc9d2e170
+pkgrel=1
 pkgdesc="Interpolations.jl"
 url="https://github.com/JuliaMath/Interpolations.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/Interpolations.jl.git#commit=$_commit")
-sha256sums=('041a3925226c9c142dad970520d482b834af007833a51825e50106547663f209')
+sha256sums=('2eb1935b9175c91cf707e3a56f6ce44915dd70ea759f043000019eb23ebf4e8b')
 
 prepare() {
   cd Interpolations.jl
