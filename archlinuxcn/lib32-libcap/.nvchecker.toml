@@ -1,0 +1,6 @@
+[lib32-libcap]
+source = "git"
+git = "https://git.kernel.org/pub/scm/libs/libcap/libcap.git"
+include_regex = 'libcap-([\d.]+)'
+exclude_regex = 'libcap-(20070813|20071031)'
+prefix = "libcap-"
