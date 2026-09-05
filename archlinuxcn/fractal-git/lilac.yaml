@@ -1,0 +1,14 @@
+maintainers:
+  - github: Kimiblock
+
+update_on:
+  - source: git
+    git: https://gitlab.gnome.org/World/fractal.git
+    use_commit: true
+    lilac_throttle: 7d
+  - source: alpm
+    alpm: libadwaita
+    provided: libadwaita-1.so
+  - source: alpm
+    alpm: libshumate
+    provided: libshumate-1.0.so
