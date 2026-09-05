@@ -17,7 +17,7 @@ pkgname=(
 )
 pkgdesc="A generic and open source machine emulator and virtualizer. Git version."
 pkgver=11.1.0.r1168.gff1d2d19d7
-pkgrel=1
+pkgrel=2
 epoch=29
 arch=(i686 x86_64)
 license=(GPL-2.0-or-later LGPL-2.1-or-later)
@@ -165,7 +165,7 @@ package_qemu-git() {
     libcacard
     libcap-ng libcap-ng.so
     libepoxy
-    libjpeg libjpeg.so
+    libjpeg-turbo libjpeg.so
     libnfs
     libpng
     libpulse libpulse.so
@@ -222,7 +222,7 @@ package_qemu-headless-git() {
     libbpf libbpf.so
     libcacard
     libcap-ng libcap-ng.so
-    libjpeg libjpeg.so
+    libjpeg-turbo libjpeg.so
     libnfs
     libpng
     libsasl
@@ -342,7 +342,7 @@ package_qemu-arch-extra-git() {
     libaio
     libbpf libbpf.so
     glib2 libgio-2.0.so libglib-2.0.so libgobject-2.0.so libgmodule-2.0.so
-    libjpeg libjpeg.so
+    libjpeg-turbo libjpeg.so
     libpng
     libsasl
     libseccomp libseccomp.so
@@ -383,7 +383,7 @@ package_qemu-headless-arch-extra-git() {
     libaio
     libbpf libbpf.so
     glib2 libgio-2.0.so libglib-2.0.so libgobject-2.0.so libgmodule-2.0.so
-    libjpeg libjpeg.so
+    libjpeg-turbo libjpeg.so
     libpng
     libsasl
     libseccomp libseccomp.so
