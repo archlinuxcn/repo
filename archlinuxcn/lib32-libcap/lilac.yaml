@@ -3,11 +3,10 @@ maintainers:
     email: Rocket Ma <marocketbd@gmail.com>
 
 build_prefix: multilib
-repo_depends:
-  - lib32-libcap
 
+pre_build_script: aur_pre_build(maintainers=['Orion-zhen'])
 post_build: aur_post_build
 
 update_on:
   - source: aur
-    aur: lib32-gstreamer
+    aur: lib32-libcap
