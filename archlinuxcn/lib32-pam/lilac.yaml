@@ -3,12 +3,10 @@ maintainers:
     email: Rocket Ma <marocketbd@gmail.com>
 
 build_prefix: multilib
-repo_depends:
-  - lib32-pam
 
-pre_build_script: aur_pre_build(maintainers=['Orion-zhen'])
+pre_build_script: aur_pre_build(maintainers=['Refreeze5911', 'FLWC'])
 post_build: aur_post_build
 
 update_on:
   - source: aur
-    aur: lib32-libcap
+    aur: lib32-pam
