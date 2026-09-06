@@ -11,8 +11,10 @@ repo_depends:
   - electron41-bin
 
 update_on:
-  - source: httpheader
-    url: https://www.notion.so/desktop/windows/download
-    regex: \%20(\d+\.\d+\.\d+)\.exe
+  - source: manual
+    manual: 7.32.0
+  # - source: httpheader
+  #   url: https://www.notion.so/desktop/windows/download
+  #   regex: \%20(\d+\.\d+\.\d+)\.exe
   - source: manual
     manual: 1
