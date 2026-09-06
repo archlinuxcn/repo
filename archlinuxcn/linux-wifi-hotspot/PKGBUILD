@@ -23,11 +23,6 @@ install="${pkgname}.install"
 source=("git+${url}.git#tag=v${pkgver}")
 sha256sums=('648414d5ea809e9a7eacacbcebca61c8d61fd01d86677d23340501c817b8587c')
 
-prepare() {
-	cd "${pkgname}/"
-	git cherry-pick -n a3fce4b3ee9371eeb7b300fa7e9f291d93986db3
-}
-
 build() {
 	make -C "${pkgname}/"
 }
