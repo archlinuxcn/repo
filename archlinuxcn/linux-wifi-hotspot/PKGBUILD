@@ -3,8 +3,8 @@
 # Contributor: Dimitris Kiziridis <ragouel at outlook dot com>
 
 pkgname=linux-wifi-hotspot
-pkgver=4.7.2
-pkgrel=2
+pkgver=5.0.0
+pkgrel=1
 epoch=1
 pkgdesc="Feature-rich wifi hotspot creator"
 arch=('x86_64' 'aarch64')
@@ -21,7 +21,7 @@ conflicts=('wihotspot' 'create_ap')
 backup=('etc/create_ap.conf')
 install="${pkgname}.install"
 source=("git+${url}.git#tag=v${pkgver}")
-sha256sums=('648414d5ea809e9a7eacacbcebca61c8d61fd01d86677d23340501c817b8587c')
+sha256sums=('16e4dfd68b05b4be82080d32068259dd7f5662aecdbbe5b126d404b0960dc75d')
 
 build() {
 	make -C "${pkgname}/"
