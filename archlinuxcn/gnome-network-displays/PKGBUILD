@@ -1,6 +1,6 @@
 pkgname=gnome-network-displays
 pkgver=0.99.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Screencasting for GNOME. Supports the Miracast and Chromecast protocols."
 arch=('x86_64')
 url="https://gitlab.gnome.org/GNOME/gnome-network-displays"
@@ -33,7 +33,7 @@ makedepends=(
 )
 
 source=("source::git+https://gitlab.gnome.org/GNOME/gnome-network-displays.git#tag=${pkgver}")
-sha256sums=('b6314d25be7589c621b106c1712b00277c9b4d01d4796a78e987f10c0c1d1400')
+sha256sums=('8442486710b1521036a76f66336a543dddfe74cb5e6754183bfd347b633af688')
 
 prepare() {
 	cd source
