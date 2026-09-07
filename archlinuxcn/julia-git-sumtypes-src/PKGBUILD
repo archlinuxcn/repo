@@ -1,6 +1,6 @@
 pkgname=julia-git-sumtypes-src
-pkgver=0.5.8
-_commit=e19953704737e6fabd03977f45f8d55d1f34abdc
+pkgver=0.5.9
+_commit=7e590c3b966a966c454832ff108b7aadfa8d5ebd
 pkgrel=1
 pkgdesc="SumTypes.jl"
 url="https://github.com/MasonProtter/SumTypes.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/MasonProtter/SumTypes.jl.git#commit=$_commit")
-sha256sums=('14faa3dc768777124cdbaf9353c6f63106335b7414b3c1ab43feff42d9c17671')
+sha256sums=('866cfc7d8110168aae474a1bf16ea8a3c8925613ea3d021c54ffad2d89e2fc9e')
 
 package() {
   cd SumTypes.jl

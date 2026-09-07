@@ -1,0 +1,20 @@
+maintainers:
+  - github: RocketMaDev
+    email: Rocket Ma <marocketbd@gmail.com>
+
+build_prefix: multilib
+
+repo_depends:
+  - lib32-audit
+  - lib32-libnsl
+  - lib32-libtirpc
+
+repo_makedepends:
+  - lib32-flex
+
+pre_build_script: aur_pre_build(maintainers=['Refreeze5911', 'FLWC'])
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: lib32-pam

@@ -2,16 +2,20 @@ maintainers:
   - github: RocketMaDev
     email: marocketbd@gmail.com
 
-build_prefix: multilib-archlinuxcn
+build_prefix: multilib
 
 pre_build_script: aur_pre_build(maintainers=['shira'])
-
 post_build: aur_post_build
 
 repo_depends:
+  - lib32-gstreamer: lib32-gst-plugins-base-libs
+  - lib32-gstreamer
   - lib32-mpg123
   - lib32-orc
   - lib32-libwebp
+  - lib32-libpcap
+  - lib32-libvdpau
+  - lib32-libcap # recursive dep for lib32-gstreamer
 
 update_on:
   - source: aur

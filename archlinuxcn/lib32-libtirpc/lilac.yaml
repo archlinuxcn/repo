@@ -1,0 +1,16 @@
+maintainers:
+  - github: RocketMaDev
+    email: Rocket Ma <marocketbd@gmail.com>
+
+build_prefix: multilib
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: git
+    git: "git://git.linux-nfs.org/projects/steved/libtirpc.git"
+    ignored: "0.0.10"
+    exclude_regex: ".*(rc).*"
+    from_pattern: 'libtirpc-(\d+)-(\d+)-(\d+)'
+    to_pattern: '\1.\2.\3'

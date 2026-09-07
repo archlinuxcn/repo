@@ -1,7 +1,7 @@
 # Maintainer: Amin Vakil <info AT aminvakil DOT com>
 
 pkgname=pi
-pkgver=0.84.4
+pkgver=0.85.1
 pkgrel=1
 pkgdesc="AI coding agent for the terminal — minimal, extensible and optimized for tool use"
 arch=('x86_64' 'aarch64')
@@ -17,8 +17,8 @@ optdepends=(
 
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
         "pi-ai-${pkgver}.tgz::https://registry.npmjs.org/@earendil-works/pi-ai/-/pi-ai-${pkgver}.tgz")
-sha256sums=('bf359dd0ded49fd29a884f38240a56d3dbfa7dac3b1c1a9c93112124c75bf72a'
-            'dfd3c929cee5a7387199a0a24dfc1be2096f1ea8f59ffb8285198a0ed01ebf93')
+sha256sums=('386ca94fcf67ff26d2fa517d520414b9d8d338f4d0e2f7fe8c7121d8d6f3f326'
+            'af7d11986179445ce6fe88b37d57de22f823c0ffd3a65cae31c555b7f5e99253')
 
 prepare() {
   rm -rf "${srcdir}/${pkgname}-${pkgver}/packages/ai/src/providers/data"
@@ -51,7 +51,7 @@ package() {
 
   # Copy all necessary files for all packages except coding-agent
   local _pkg
-  for _pkg in ai agent tui telemetry protocol client; do
+  for _pkg in ai agent tui telemetry protocol client chord server; do
     install -dm755 "$pkgdir/$mod_dir/packages/$_pkg"
     cp -a "packages/$_pkg/dist" "packages/$_pkg/package.json" "packages/$_pkg/README.md" \
       "$pkgdir/$mod_dir/packages/$_pkg/"

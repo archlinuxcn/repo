@@ -7,17 +7,22 @@
 pkgname=code
 pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
-_electron=electron39
-pkgver=1.121.0
+_electron=electron42
+pkgver=1.136.1
 pkgrel=1
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
 license=('MIT')
-depends=($_electron 'libsecret' 'libx11' 'libxkbfile' 'ripgrep')
+depends=(
+  $_electron
+  'libsecret'
+  'libx11'
+  'libxkbfile'
+  'ripgrep')
 optdepends=('bash-completion: Bash completions'
             'zsh-completions: ZSH completitons'
             'x11-ssh-askpass: SSH authentication')
-makedepends=(tar 'git' 'nodejs-lts-jod' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq')
+makedepends=(tar 'git' 'nodejs-lts-krypton' 'npm' 'python' 'desktop-file-utils' 'zip' 'jq')
 provides=('vscode')
 options=('!strip' '!debug')
 source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
@@ -27,7 +32,7 @@ source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
         'clipath.patch'
         # Originally taken from https://github.com/termux/termux-packages/raw/0974620c52e72d0c80bcc8a42bad482555f629e8/x11-packages/code-oss/0009-openvsx-extension-signature.patch
         '0009-openvsx-extension-signature.patch')
-sha512sums=('692297e3edd6dd5f7ef291044973b74e196753bbb520d4d27b1689853ba735422c1bae64cc29166cb29ab8903fefa5ed284124426a0a8fa14e2a66a50cdf7ada'
+sha512sums=('520d2b628cabdb7f14d7b494f233f4779f600aa062287e65f9ef0438a1b0b4c8d6f34af2055924e67ce499ec2827b32edb242d034bbb02c0ba9c292cbf82dc74'
             '793f9ff6306e3992ac89802d98110cba288ea1181a901467333293b7d76182ef9792c2a39ff49d9347a18a174b1f42bc58862091dff583f4146c2704eea28033'
             '937299c6cb6be2f8d25f7dbc95cf77423875c5f8353b8bd6cd7cc8e5603cbf8405b14dbf8bd615db2e3b36ed680fc8e1909410815f7f8587b7267a699e00ab37'
             'b1aa0d7c5b3e3e8ba1172822d75ea38e90efc431b270e0b4ca9e45bf9c0be0f60922c8618969ef071b5b6dbd9ac9f030294f1bf49bcc28c187b46d113dca63a7'
@@ -132,7 +137,7 @@ prepare() {
 
   # upstream has a compatibility issue with npm but it doesn't affect packaging
   # so remove the check
-  sed -i '/Please use npm version < 11.2.0./{n;d}' build/npm/preinstall.ts
+  sed -i '/Please use npm version < 12.0.0./{n;d}' build/npm/preinstall.ts
 }
 
 build() {
@@ -142,19 +147,22 @@ build() {
   npm install --cpu=$_vscode_arch
   npm add -S "node-ovsx-sign@~1.2.0"
   npm run gulp \
-       --openssl-legacy-provider \
        vscode-linux-${_vscode_arch}-min
 }
 
 package() {
+  local _useless_copy
+
   # Install resource files
   install -dm 755 "$pkgdir"/usr/lib/$pkgname
   cp -r --no-preserve=ownership --preserve=mode VSCode-linux-$_vscode_arch/resources/app/* "$pkgdir"/usr/lib/$pkgname/
   # clean up sourcemaps
   echo "Removed $(find "$pkgdir"/usr/lib/$pkgname -name '*.map' -print -delete | wc -l) sourcemaps"
   chmod -R u=rwX,go=rX "$pkgdir"
-  # Replace statically included binary with system copy
-  ln -sf /usr/bin/rg "$pkgdir"/usr/lib/code/node_modules/@vscode/ripgrep/bin/rg
+
+  # Replace included ripgrep with system copy
+  # The package includes quite a few so just detect and replace
+  find "$pkgdir" -name rg -print0 | xargs --null --replace ln -vsf /usr/bin/rg {}
 
   # Install binary
   install -Dm 755 code.sh "$pkgdir"/usr/bin/code-oss
