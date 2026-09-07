@@ -1,0 +1,73 @@
+maintainers:
+  - github: Kimiblock
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: |
+  git_pkgbuild_commit()
+#  update_aur_repo()
+
+update_on:
+  - source: "git"
+    git: "https://gitlab.gnome.org/GNOME/gnome-network-displays.git"
+  - source: "alpm"
+    alpm: "avahi"
+    strip_release: true
+  - source: "alpm"
+    alpm: "dnsmasq"
+    strip_release: true
+  - source: "alpm"
+    alpm: "gst-plugin-pipewire"
+    strip_release: true
+  - source: "alpm"
+    alpm: "gst-plugins-bad"
+    strip_release: true
+  - source: "alpm"
+    alpm: "gst-plugins-good"
+    strip_release: true
+  - source: "alpm"
+    alpm: "gst-plugins-ugly"
+    strip_release: true
+  - source: "alpm"
+    alpm: "gst-rtsp-server"
+    strip_release: true
+  - source: "alpm"
+    alpm: "gstreamer"
+    strip_release: true
+  - source: "alpm"
+    alpm: "gtk4"
+    provided: "libgtk-4.so"
+    strip_release: true
+  - source: "alpm"
+    alpm: "json-glib"
+    provided: "libjson-glib-1.0.so"
+    strip_release: true
+  - source: "alpm"
+    alpm: "libadwaita"
+    provided: "libadwaita-1.so"
+    strip_release: true
+  - source: "alpm"
+    alpm: "libnm"
+    provided: "libnm.so"
+    strip_release: true
+  - source: "alpm"
+    alpm: "libportal"
+    provided: "libportal.so"
+    strip_release: true
+  - source: "alpm"
+    alpm: "libportal-gtk4"
+    provided: "libportal-gtk4.so"
+    strip_release: true
+  - source: "alpm"
+    alpm: "libpulse"
+    provided: "libpulse.so"
+    strip_release: true
+  - source: "alpm"
+    alpm: "libsoup3"
+    provided: "libsoup-3.0.so"
+    strip_release: true
+  - source: "alpm"
+    alpm: "protobuf-c"
+    provided: "libprotobuf-c.so"
+    strip_release: true
+
+build_prefix: extra-x86_64

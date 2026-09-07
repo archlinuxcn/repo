@@ -1,0 +1,56 @@
+pkgname=gnome-network-displays
+pkgver=0.99.0
+pkgrel=1
+pkgdesc="Screencasting for GNOME. Supports the Miracast and Chromecast protocols."
+arch=('x86_64')
+url="https://gitlab.gnome.org/GNOME/gnome-network-displays"
+license=('GPL-3.0-or-later')
+depends=(
+	'avahi'
+	'dnsmasq'
+	'gst-plugin-pipewire'
+	'gst-plugins-bad'
+	'gst-plugins-good'
+	'gst-plugins-ugly'
+	'gst-rtsp-server'
+	'gstreamer'
+	'gtk4'
+	'json-glib'
+	'libadwaita'
+	'libnm'
+	'libportal'
+	'libportal-gtk4'
+	'libpulse'
+	'libsoup3'
+	'networkmanager'
+	'protobuf-c'
+	'xdg-desktop-portal'
+)
+makedepends=(
+	'glib2-devel'
+	'meson'
+	'git'
+)
+
+source=("source::git+https://gitlab.gnome.org/GNOME/gnome-network-displays.git#tag=${pkgver}")
+sha256sums=('b6314d25be7589c621b106c1712b00277c9b4d01d4796a78e987f10c0c1d1400')
+
+prepare() {
+	cd source
+
+	# Remove hardcoded libexec path
+	sed -i 's/libexec/lib/g' src/nd-systemd-helpers.c src/meson.build
+}
+
+build() {
+	arch-meson source build
+	meson compile -C build
+}
+
+check() {
+	meson test -C build --no-rebuild --print-errorlogs
+}
+
+package() {
+	meson install -C build --no-rebuild --destdir "${pkgdir}"
+}
