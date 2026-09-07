@@ -1,6 +1,6 @@
 pkgname=julia-git-unitful-src
-pkgver=1.28.0
-_commit=51f55a123bdfd4875a714a55754dfda845e7be0a
+pkgver=1.29.0
+_commit=550d5f11dcb0918cc5e159dfa806145e76d50846
 pkgrel=1
 pkgdesc="Unitful.jl"
 url="https://github.com/PainterQubits/Unitful.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/PainterQubits/Unitful.jl.git#commit=$_commit")
-sha256sums=('349954d39d6da9de9520bb5033d46eec71eaae3f2023ae74a2a0fe7b613cefce')
+sha256sums=('97c567f2046883ed83fc051e234f9e15646d68c07a6aa9c089fcfa9a27f4ac39')
 
 package() {
   cd Unitful.jl
