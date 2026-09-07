@@ -1,6 +1,6 @@
 pkgname=julia-git-amd-src
-pkgver=0.5.3
-_commit=5e4274f22398e2d64c4f037f77c60353ca53c2ab
+pkgver=0.5.4
+_commit=d9f1a8f75d23da30fe91ccee7c232a0a69243f70
 pkgrel=1
 pkgdesc="AMD.jl"
 url="https://github.com/JuliaSmoothOptimizers/AMD.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSmoothOptimizers/AMD.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('9575730775d719720e251e5c419b0bb4448f9f76cd5ade0ee89c8c8558ae38ab')
 
 package() {
   cd AMD.jl
