@@ -20,7 +20,7 @@ sha256sums=('eb38aa93f93e8ab282d97e2582fbaea88b3f889a08cbc9dbf20059c3779d5cd8'
 install=install
 
 prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${srcdir}/liboping-liboping-${pkgver}"
 
 	# Setting capabilities/setuid is futile in fakeroot.
 	# (We do that in the install script.)
@@ -36,12 +36,12 @@ prepare() {
 }
 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${srcdir}/liboping-liboping-${pkgver}"
 	./configure --prefix=/usr --with-perl-bindings=no
 	make
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${srcdir}/liboping-liboping-${pkgver}"
 	make DESTDIR="${pkgdir}" install
 }
