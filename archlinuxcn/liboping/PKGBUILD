@@ -21,6 +21,7 @@ install=install
 
 prepare() {
 	cd "${srcdir}/liboping-liboping-${pkgver}"
+        autoreconf --warnings=all --install
 
 	# Setting capabilities/setuid is futile in fakeroot.
 	# (We do that in the install script.)
@@ -32,7 +33,6 @@ prepare() {
 
 	# Be serious.
 	sed '/-Wall -Werror/d' -i src/Makefile.*
-        autoreconf --warnings=all --install
 }
 
 build() {
