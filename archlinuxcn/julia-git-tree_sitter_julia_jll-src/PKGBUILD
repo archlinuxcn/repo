@@ -1,0 +1,27 @@
+pkgname=julia-git-tree_sitter_julia_jll-src
+pkgver=0.25.0+0
+_commit=d8c6bff4e3d372e54f18377584c982b48f928b98
+pkgrel=1
+pkgdesc="tree_sitter_julia_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/tree_sitter_julia_jll.jl.git"
+arch=('any')
+license=('MIT')
+# TODO: Add dependency on the libraries
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaBinaryWrappers/tree_sitter_julia_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('c9766e412b0d40c2cdc326e127e32cb356c3eaa5f9d6a0446cc7e7cf021a401d'
+            '21cca276e0a23f1281ecf541e173ba87b6e2681051a3d6305071eadc7b280719')
+
+build() {
+  cd tree_sitter_julia_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl tree_sitter_julia_jll ../jll.toml
+}
+
+package() {
+  cd tree_sitter_julia_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh tree_sitter_julia_jll "${pkgdir}" "${pkgname}" julia-git
+}
