@@ -6,7 +6,7 @@
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
 pkgver=7.2.5
-_td_commit=022d60202e446ad1287b9fb68e687c8a0760788b
+_td_commit=bc9c263e2bfee06aaab41e82db51a103376030bc
 pkgrel=2
 pkgdesc="Official Telegram Desktop client with lilydjwg's patch"
 arch=('x86_64')
@@ -50,6 +50,7 @@ depends=(
   'qt6-imageformats'
   'qt6-svg'
   'rnnoise'
+  'tlottie'
   'xxhash'
   'zlib'
 )
@@ -133,10 +134,7 @@ build() {
     -DTDESKTOP_API_ID=611335 \
     -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
     -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON
-  # try again for gio erorrs like this:
-  # /build/telegram-desktop-lily/src/build/gen/gio/_enums.hpp:3: error: unterminated #ifndef
-  # 3 | #ifndef _GI_GIO__ENUMS_HPP_
-  cmake --build build || cmake --build build
+  cmake --build build
 }
 
 package() {
