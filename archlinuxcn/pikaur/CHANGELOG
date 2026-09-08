@@ -2533,3 +2533,14 @@ Sat Mar 7 17:17:50 2026 +0100
     *  2026-02-02 6be06c3b summoner Translation: Create hungarian hu.po (#907)
     *  2026-01-21 bdcdce04 actionless feat(config: PikaurConfigItem): improve error messages
     *  2026-01-21 4adf309a Wuzzy chore(locale): update German translation (#904)
+
+
+Mon Sep 7 08:23:54 2026 +0200
+-------------------------------------------------
+1.34            Release 1.34
+    
+    Notable changes:
+    *  2026-09-05 207f212f actionless fix(install_cli: _find_extra_aur_build_deps): regenerate srcinfo before reading, in case pkgbuild was edited outside (fixes: #920)
+    *  2026-09-03 4768ab9d actionless feat(help_cli): in --help output show <placeholder>s for args which allow values to be set
+    *  2026-09-03 b56378d4 actionless feat(privilege, config, args): allow `*` for preserving all env vars in --preserve-env flag and misc.PreserveEnv config
+    *  2026-09-03 b6fb48f8 actionless fix(install_cli: get_package_builds): index cloned pkgbuild by pkgbase instead of pkgname (fixes: #917, #918)

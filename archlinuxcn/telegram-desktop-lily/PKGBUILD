@@ -5,8 +5,8 @@
 
 pkgname=telegram-desktop-lily
 _pkgname=telegram-desktop
-pkgver=7.2.5
-_td_commit=022d60202e446ad1287b9fb68e687c8a0760788b
+pkgver=7.2.7
+_td_commit=bc9c263e2bfee06aaab41e82db51a103376030bc
 pkgrel=1
 pkgdesc="Official Telegram Desktop client with lilydjwg's patch"
 arch=('x86_64')
@@ -50,6 +50,7 @@ depends=(
   'qt6-imageformats'
   'qt6-svg'
   'rnnoise'
+  'tlottie'
   'xxhash'
   'zlib'
 )
@@ -91,8 +92,8 @@ source=(
   "0004-don-t-ask-which-program-to-use-when-opening-a-file-w.patch"
   "hide_proxy_icon_byenv.patch"
 )
-sha512sums=('75e876a550eb0815db7448ef19e955b1161391710a46ed17fa71d1258eee6c1a1db520ceb48c623f44f9b76ed579cfb8f7ff9701cd0d700168cfd329267e4e7e'
-            '45ef8f69708c46aef8e8d0301b8710467a208e43a9ebb5918152b49d24f9d6c8b69ca9a94f19c4e401f44e8d60706cd840832ce442ca1a839df942a7b88afde2'
+sha512sums=('3e1c267b2fbdd440d65f2c4082ad3c98b8e1b352000ec1f562fc5515d86334587ad3761778c5e5910140db3b6e7435b9655cd5aecac664a009d6e994c6583605'
+            '12d3b77dbb2a7b7deaef0e173626b9d16acfbdde5b1df4bd58a70a7541a5d8032f25ecbc14604b0e47aa3d6d76704c56409d432717412c6046efebd0ab6180f1'
             '7056767917a549e8f9a0605ed9134b20c923f0678fe0d2fc19b23587918e922d4e79d0852ec5c480fc4e45d0cadf945707719dc20813bafbeaf639e353dd4638'
             '419d91e0d289f52ef8397c26645cf2eb2698b2cb668cef2684b412f235c09c138db615404d8bfebbe7bfb46e639784615cc803dd6d2f285169df003208436cab'
             'bb0e706b7a2629ba6fae9b7c71cb5a3f292e568f8c8d845aeb2584835c849b232ff9b7886ec931e446d077f249e2587abc70868659a5d08f7d94dc431fa3f914'
@@ -133,10 +134,7 @@ build() {
     -DTDESKTOP_API_ID=611335 \
     -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
     -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON
-  # try again for gio erorrs like this:
-  # /build/telegram-desktop-lily/src/build/gen/gio/_enums.hpp:3: error: unterminated #ifndef
-  # 3 | #ifndef _GI_GIO__ENUMS_HPP_
-  cmake --build build || cmake --build build
+  cmake --build build
 }
 
 package() {

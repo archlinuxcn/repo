@@ -6,11 +6,11 @@
 : "${_support_headless_testing:=false}"
 _use_cuda=true
 
-: "${_commit:=14ffa6fdaa53f7b51512be2b3d24f3939695403c}"
+: "${_commit:=cb72dffa3233c5815cd5ba88f09f049dd679ba75}"
 
 pkgname='sunshine'
-pkgver=2026.516.143833
-pkgrel=4
+pkgver=2026.906.222525
+pkgrel=1
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
@@ -32,12 +32,13 @@ depends=(
   'avahi'
   'curl'
   'gcc-libs'
+  'gtk3'
+  'hicolor-icon-theme'
   'libayatana-appindicator'
   'libcap'
   'libdrm'
   'libevdev'
   'libmfx'
-  'libnotify'
   'libpipewire'
   'libpulse'
   'libva'
@@ -50,6 +51,8 @@ depends=(
   'numactl'
   'openssl'
   'opus'
+  'qt6-base'
+  'qt6-svg'
   'udev'
   'vulkan-icd-loader'
   'which'
@@ -71,6 +74,7 @@ makedepends=("cuda"
 
 checkdepends=(
   'gcovr'
+  'imagemagick'
 )
 
 optdepends=(
@@ -80,16 +84,8 @@ optdepends=(
 provides=()
 conflicts=()
 
-source=(
-  "$pkgname::git+https://github.com/LizardByte/Sunshine.git#commit=${_commit}"
-  '2026.516.143833-060b6b07-remove-setuptools-from-glad-dependencies.patch'
-  '2026.516.143833-3377f7a7-link-shared-libstdcxx-with-gcc-15.patch'
-)
-sha256sums=(
-  'SKIP'
-  '06a78d624975887541e2b0013b3085e798195e334fdb05d35caf4bbad818ddde'
-  '63f86f6ffd6d9f3da35353109fa4a4df9a900a791f70b29cafc8e464b870337d'
-)
+source=("$pkgname::git+https://github.com/LizardByte/Sunshine.git#commit=${_commit}")
+sha256sums=('SKIP')
 
 # Options Handling
 if [[ "${_use_cuda::1}" == "d" ]] && pacman -Qi cuda &> /dev/null; then
@@ -123,18 +119,12 @@ fi
 
 prepare() {
     cd "$pkgname"
-    git submodule update --recursive --init
-
-    # Backport https://github.com/LizardByte/Sunshine/commit/060b6b07d376e9ef4c4ce4a5c6d648d08fe0eab9
-    patch -Np1 -i "${srcdir}/2026.516.143833-060b6b07-remove-setuptools-from-glad-dependencies.patch"
-
-    # Backport the GCC 15+ linking fix from https://github.com/LizardByte/Sunshine/commit/3377f7a73f8768518430f4c771987153fcd77b77
-    patch -Np1 -i "${srcdir}/2026.516.143833-3377f7a7-link-shared-libstdcxx-with-gcc-15.patch"
+    git submodule update --recursive --init --depth 1
 }
 
 build() {
     export BRANCH="master"
-    export BUILD_VERSION="2026.516.143833"
+    export BUILD_VERSION="2026.906.222525"
     export COMMIT="${_commit}"
 
     export CC="gcc${_gcc_env_suffix}"
@@ -182,7 +172,7 @@ build() {
     fi
 
     if [[ -z "${GITHUB_ACTIONS}" ]]; then
-      _appstreamcli_arguments=(--no-net)
+	    _appstreamcli_arguments=(--no-net)
     fi
 
     cmake "${_cmake_options[@]}"
@@ -201,7 +191,9 @@ check() {
       export CXX="g++${_gcc_env_suffix}"
 
       cd "${srcdir}/build/tests"
-      ./test_sunshine --gtest_color=yes --gtest_output=xml:test_results.xml
+      # Do not silently upload misleading coverage if the gcov runtime cannot
+      # write profile data, such as when its version differs from the compiler.
+      GCOV_EXIT_AT_ERROR=1 ./test_sunshine --gtest_color=yes --gtest_output=xml:test_results.xml
 
       # Generate coverage report
       # Run gcovr from the build directory (where all .gcda/.gcno files are)

@@ -5,7 +5,7 @@
 
 pkgname=mutter-everyx
 pkgver=50.4
-pkgrel=2
+pkgrel=3
 pkgdesc="Window manager and compositor for GNOME (with patches picked from everyx)"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -80,6 +80,7 @@ makedepends=(
   python-docutils
   sysprof
   wayland-protocols
+  libadwaita
 )
 source=(
   # Mutter tags use SSH signatures which makepkg doesn't understand
@@ -100,7 +101,7 @@ prepare() {
 build() {
   local meson_options=(
     -D docs=false
-    -D devkit=disabled
+    -D devkit=enabled
     -D egl_device=true
     -D installed_tests=false
     -D tests=disabled
@@ -122,10 +123,16 @@ package() {
   provides+=(libmutter-18.so)
   optdepends=(
     'bash-completion: Bash completions for gdctl'
+    'mutter-devkit: Mutter SDK, "MDK"'
   )
 
   meson install -C build --destdir "$pkgdir"
 
+  rm "$pkgdir"/usr/lib/mutter-devkit
+  rm "$pkgdir"/usr/share/applications/org.gnome.Mutter.Mdk.desktop
+  rm "$pkgdir"/usr/share/icons/hicolor/scalable/apps/org.gnome.Mutter.Mdk.Devel.svg
+  rm "$pkgdir"/usr/share/icons/hicolor/scalable/apps/org.gnome.Mutter.Mdk.svg
+  rm "$pkgdir"/usr/share/icons/hicolor/symbolic/apps/org.gnome.Mutter.Mdk-symbolic.svg
 
 }
 

@@ -36,21 +36,33 @@ def pre_build():
                 continue
             print(line)
             continue
-        if state == 'skip':                 # 丢弃 mutter-devkit / mutter-docs 子包函数
+        if state == 'mkdep':                # makedepends 末尾追加 libadwaita(devkit 硬依赖)
+            if s == ')':
+                state = None
+                if not g.mkdep_has_adwaita:
+                    print('  libadwaita')
+                print(line)
+                continue
+            if s == 'libadwaita':
+                g.mkdep_has_adwaita = True
+            print(line)
+            continue
+        if state == 'skip':                 # 丢弃 mutter-devkit / mutter-docs 子包函数与 _pick helper
             if line == '}':
                 state = None
             continue
-        if state == 'pm':                   # 主包函数: 改名, 删 _pick 行与 devkit optdepends
+        if state == 'pm':                   # 主包函数: 改名; _pick devkit 转 rm(不打包客户端, 与官方 mutter 文件等价)
             if line == '}':
                 state = None
                 print(line)
                 continue
-            if s.startswith('_pick '):
+            if s.startswith('_pick devkit'):
+                print(line.replace('_pick devkit ', 'rm ', 1))
                 continue
-            if "'mutter-devkit:" in line:
+            if s.startswith('_pick docs'):
                 continue
             if s.startswith('provides=(') and not s.startswith('provides+=('):
-                # 官方用 = 赋值会覆盖顶层 provides+=(mutter), 改为叠加
+                # 官方用 = 赋值会覆盖顶层 provides, 改为叠加
                 print(line.replace('provides=(', 'provides+=(', 1))
                 continue
             print(line)
@@ -68,10 +80,15 @@ def pre_build():
             line = line[:-1] + ' (with patches picked from everyx)"'
             print(line)
             continue
-        if line == 'arch=(x86_64)':         # 顶替官方 mutter: 提供/冲突
+        if line == 'arch=(x86_64)':         # 顶替官方 mutter: 提供/冲突(与官方 mutter-devkit 无文件重叠, 可共存)
             print(line)
             print('provides+=(mutter)')
             print('conflicts+=(mutter)')
+            continue
+        if line.startswith('makedepends=('):
+            g.mkdep_has_adwaita = False
+            state = 'mkdep'
+            print(line)
             continue
         if line.startswith('source=('):
             state = 'source'
@@ -85,12 +102,12 @@ def pre_build():
             print(line)
             print('  git apply -3 ../5122.patch')
             continue
-        if '-D docs=true' in line:          # 只留主体, 关闭 docs 与 devkit(MDK) 构建
+        if '-D docs=true' in line:          # 关 docs, 开 devkit(MDK); 单包: devkit 文件随主包
             print(line.replace('docs=true', 'docs=false'))
-            print('    -D devkit=disabled')
+            print('    -D devkit=enabled')
             continue
         if line.startswith('_pick() {'):
-            state = 'skip'   # 死代码: 单包不再拆子包, 丢弃 _pick helper
+            state = 'skip'   # 死代码: 单包不拆子包, 丢弃 _pick helper
             continue
         if line.startswith('package_mutter-devkit()') or line.startswith('package_mutter-docs()'):
             state = 'skip'
