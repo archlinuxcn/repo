@@ -1,7 +1,7 @@
 pkgname=julia-git-highlights-src
-pkgver=0.5.3
-_commit=715e1a235d30257a2df7f1637c8a186449623121
-pkgrel=2
+pkgver=0.6.2
+_commit=3a58fa643155606bf629dd4be6573db6e7bbb81c
+pkgrel=1
 pkgdesc="Highlights.jl"
 url="https://github.com/JuliaDocs/Highlights.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts wget)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDocs/Highlights.jl.git#commit=$_commit")
-sha256sums=('cde46e2d2bf7604db2ef4dfb4fe688f8200efc73981cabfd908ac01cc5d5a1ce')
+sha256sums=('42d6b50cebc7b77569ac370272198455637ca061d65f330dfc59c635a8e5ddb7')
 
 build() {
   cd Highlights.jl
