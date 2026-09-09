@@ -2,7 +2,7 @@
 # Contributor: jzbor <zborof at posteo dot de>
 pkgname=python-accelerate
 _name=${pkgname#python-}
-pkgver=1.14.0
+pkgver=1.15.0
 pkgrel=1
 pkgdesc="Train and use PyTorch models with multi-GPU, TPU, mixed-precision"
 arch=(any)
@@ -29,7 +29,7 @@ backup=()
 options=()
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 noextract=()
-sha512sums=('4f63f2d2e5963d2f81fb1863d75f16380cc74fb180f58305f340a0b70db8557a6ad42883988347de259b5136b19c912ae5402ef1d2e0b834fbec40b58172da08')
+sha512sums=('d48e6ccd3b0956e6d2c189bcbb25b8901c443af1c1d5f2acf1ef82272742e47c6ad9bb9e1e89bdf7e996d1525a30feef85f17d24dd2983ad0fcba35610402217')
 validpgpkeys=()
 
 build() {
