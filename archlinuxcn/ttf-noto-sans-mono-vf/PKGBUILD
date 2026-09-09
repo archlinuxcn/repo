@@ -1,0 +1,18 @@
+# Maintainer: Rocket Aaron <rocka@archlinuxcn.org>
+
+pkgname=ttf-noto-sans-mono-vf
+pkgdesc='Google Noto Sans Mono font (Variable weight and width, TTF)'
+pkgver=2.014
+pkgrel=0.1
+provides=(ttf-font)
+arch=(any)
+url='https://github.com/notofonts/latin-greek-cyrillic'
+license=('OFL-1.1')
+source=("${url}/releases/download/NotoSansMono-v${pkgver}/NotoSansMono-v${pkgver}.zip")
+b2sums=('c7078e43e350b1ae19e6ed83bd2ffa87253bb876175159d9dae0646865155f8b5aaf57246a598831957c6c995f70f90a9ef5db5b95dbd21e6de63129d48c0869')
+
+package() {
+  install -Dm644 NotoSansMono/unhinted/variable/NotoSansMono[wdth,wght].ttf "${pkgdir}/usr/share/fonts/TTF/NotoSansMono-VF.ttf"
+
+  install -Dm644 OFL.txt -t "${pkgdir}/licenses/${pkgname}/"
+}
