@@ -2,7 +2,7 @@
 from lilaclib import *
 
 def pre_build():
-    aur_pre_build(maintainers="petronny")
+    aur_pre_build(maintainers=['petronny', 'AutoUpdateBot'])
 
 post_build = aur_post_build
 
