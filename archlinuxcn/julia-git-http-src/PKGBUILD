@@ -1,6 +1,6 @@
 pkgname=julia-git-http-src
-pkgver=1.11.0
-_commit=a380230d583daf14d5698e7b260f716d1bff89d5
+pkgver=2.6.7
+_commit=769b91712d390a3910916c1afd449f200480bc06
 pkgrel=1
 pkgdesc="HTTP.jl"
 url="https://github.com/JuliaWeb/HTTP.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaWeb/HTTP.jl.git#commit=$_commit")
-sha256sums=('d186d6c84147f219b79639e966c6defd3851991376d203c227dec7c9d581b2ff')
+sha256sums=('7f85120bf89c6498dd05f481a77c4e52f71390626f65d3e7b20f1f9fc37c5dd0')
 
 package() {
   cd HTTP.jl

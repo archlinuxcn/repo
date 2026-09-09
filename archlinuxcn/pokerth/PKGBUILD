@@ -5,18 +5,18 @@
 
 pkgname=pokerth
 pkgver=2.1.8
-pkgrel=1
-
+pkgrel=2
 pkgdesc="Client to online Poker game written in C++/Qt"
 arch=('x86_64')
 url="http://www.pokerth.net/"
 license=('AGPL-3.0-only' 'LicenseRef-custom')
 depends=(
+   'boost-libs'
+   'openssl'
+   'protobuf'
    'qt6-base'
    'qt6-declarative'
    'qt6-multimedia'
-   'boost-libs'
-   'protobuf'
 )
 
 makedepends=(
@@ -31,6 +31,13 @@ makedepends=(
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pokerth/pokerth/archive/refs/tags/v${pkgver}.tar.gz")
 md5sums=('fc055c8e26922d57c7ebb527a7cd6b8b')
 
+prepare() {
+  sed -i \
+    -e 's|QT_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt6/plugins[[:space:]]*||' \
+    -e 's|QML_IMPORT_PATH=/usr/lib/x86_64-linux-gnu/qt6/qml[[:space:]]*||' \
+    "$srcdir/$pkgname-$pkgver"/pokerth{,_qml}.desktop
+}
+
 build() {
   local cmake_options=(
     -B build
@@ -40,7 +47,7 @@ build() {
     -DCMAKE_BUILD_TYPE:STRING=None
     -DCMAKE_C_FLAGS="${CFLAGS} -DNDEBUG"
     -DCMAKE_CXX_FLAGS="${CXXFLAGS} -DNDEBUG"
-    -Wno-dev
+    -Wno-author
   )
   cmake "${cmake_options[@]}"
   cmake --build build --target all --
@@ -54,7 +61,10 @@ package() {
   install -Dm644 docs/pokerth.1 "${pkgdir}/usr/share/man/man1/pokerth.1"
   mkdir -p "${pkgdir}/usr/share/doc/${pkgname}"
   install -Dm644 docs/gui_styling_howto.txt "${pkgdir}/usr/share/doc/pokerth/"
+  install -Dm644 docs/qml_client_keyboard_shortcuts.md "${pkgdir}/usr/share/doc/pokerth/"
+  install -Dm644 docs/server_activity_schema.sql "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/server_setup_howto.txt "${pkgdir}/usr/share/doc/pokerth/"
+  install -Dm644 docs/third_party_services.md "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 data/data-copyright.txt "${pkgdir}/usr/share/licenses/pokerth/LICENSE"
   install -Dm644 pokerth.svg "${pkgdir}/usr/share/icons/hicolor/scalable/apps/pokerth.svg"
 

@@ -1,7 +1,7 @@
 pkgname=julia-git-treesitter-src
 pkgver=0.2.3
 _commit=bf9e8785c2506e39cf9e29719029761ae5a5ed7a
-pkgrel=1
+pkgrel=2
 pkgdesc="TreeSitter.jl"
 url="https://github.com/MichaelHatherly/TreeSitter.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/MichaelHatherly/TreeSitter.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('de6e1a57c637be79a2780114bd4b3fb7e5887b50a5481ef256b1f667efaaab72')
 
 package() {
   cd TreeSitter.jl
