@@ -1,6 +1,6 @@
 pkgname=julia-git-exponentialaction-src
-pkgver=0.2.10
-_commit=960e489ed9fcc698f351f535014e1b97b31c692a
+pkgver=0.2.11
+_commit=cf58f57406991dfd3b552e727eecbea2e4210fb1
 pkgrel=1
 pkgdesc="ExponentialAction.jl"
 url="https://github.com/sethaxen/ExponentialAction.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/sethaxen/ExponentialAction.jl.git#commit=$_commit")
-sha256sums=('85b8464bf2f4a68b0d84549698cf137fab40d9ae9d46784b17fc3610007eb0a8')
+sha256sums=('8123cb702721df8359c47ea0ff829798e53fcb66556a5a5b95c4018569f35117')
 
 package() {
   cd ExponentialAction.jl
