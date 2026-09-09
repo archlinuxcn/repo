@@ -90,8 +90,6 @@ source=(
 	"git+$url.git#tag=${pkgver}"
 	"git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
 
-	5129.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5129.patch
-
 	5285.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5285.patch
 
 	5258.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5258.patch
@@ -107,9 +105,6 @@ b2sums=('d2c5bc40b4bee5693719a08d073e34d63cf81161b5cc9a66a2dc298b9d696d12992d3d0
 
 prepare() {
 	cd mutter
-
-	echo 5129 # defer HW cursor support initialization
-	git apply ../5129.patch
 
 	echo 5258
 	git apply ../5258.patch
