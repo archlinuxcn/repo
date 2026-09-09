@@ -8,7 +8,7 @@ pkgname=code
 pkgdesc='The Open Source build of Visual Studio Code (vscode) editor'
 # Important: Remember to check https://github.com/microsoft/vscode/wiki/How-to-Contribute#prerequisites for target node version
 _electron=electron42
-pkgver=1.136.1
+pkgver=1.136.2
 pkgrel=1
 arch=(aarch64 x86_64)
 url='https://github.com/microsoft/vscode'
@@ -32,7 +32,7 @@ source=(vscode::"git+https://github.com/microsoft/vscode.git#tag=$pkgver"
         'clipath.patch'
         # Originally taken from https://github.com/termux/termux-packages/raw/0974620c52e72d0c80bcc8a42bad482555f629e8/x11-packages/code-oss/0009-openvsx-extension-signature.patch
         '0009-openvsx-extension-signature.patch')
-sha512sums=('520d2b628cabdb7f14d7b494f233f4779f600aa062287e65f9ef0438a1b0b4c8d6f34af2055924e67ce499ec2827b32edb242d034bbb02c0ba9c292cbf82dc74'
+sha512sums=('e381bab1aa73206f378686042b4154f6daf3986daad6e9528974e34609021b28a37276b0179613f3444f56c39f47f0fa7fcbd72ee7ceef51493079eb01d83b47'
             '793f9ff6306e3992ac89802d98110cba288ea1181a901467333293b7d76182ef9792c2a39ff49d9347a18a174b1f42bc58862091dff583f4146c2704eea28033'
             '937299c6cb6be2f8d25f7dbc95cf77423875c5f8353b8bd6cd7cc8e5603cbf8405b14dbf8bd615db2e3b36ed680fc8e1909410815f7f8587b7267a699e00ab37'
             'b1aa0d7c5b3e3e8ba1172822d75ea38e90efc431b270e0b4ca9e45bf9c0be0f60922c8618969ef071b5b6dbd9ac9f030294f1bf49bcc28c187b46d113dca63a7'
