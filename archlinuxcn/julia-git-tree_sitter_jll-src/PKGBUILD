@@ -1,0 +1,26 @@
+pkgname=julia-git-tree_sitter_jll-src
+pkgver=0.25.10+0
+_commit=6e54f9d052bbf152b20b2f345700f9bedfec457a
+pkgrel=1
+pkgdesc="tree_sitter_jll.jl"
+url="https://github.com/JuliaBinaryWrappers/tree_sitter_jll.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git tree-sitter)
+source=("git+https://github.com/JuliaBinaryWrappers/tree_sitter_jll.jl.git#commit=$_commit"
+        jll.toml)
+sha256sums=('8daecdba1566a44911ee7a358c64adce8c74b0e61339dce44450e8f760b94eb5'
+            'acf574c9d4911624cd4f2f40f2705edae0fe69875770b20456af7ee95470df58')
+
+build() {
+  cd tree_sitter_jll.jl
+
+  julia /usr/lib/julia/julia-gen-jll.jl tree_sitter_jll ../jll.toml
+}
+
+package() {
+  cd tree_sitter_jll.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh tree_sitter_jll "${pkgdir}" "${pkgname}" julia-git
+}

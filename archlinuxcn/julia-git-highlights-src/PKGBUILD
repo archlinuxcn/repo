@@ -11,6 +11,25 @@ depends=(julia-git)
 source=("git+https://github.com/JuliaDocs/Highlights.jl.git#commit=$_commit")
 sha256sums=('cde46e2d2bf7604db2ef4dfb4fe688f8200efc73981cabfd908ac01cc5d5a1ce')
 
+build() {
+  cd Highlights.jl
+
+  local url
+  url=$(sed -ne '/url *= *".*"/{s/ *url *= *"\(.*\)" */\1/p;q}' Artifacts.toml)
+
+  wget -O gogh.tar.gz "$url"
+
+  (
+    rm -rf Gogh/
+    mkdir Gogh/
+    cd Gogh/
+    tar xf ../gogh.tar.gz
+    rm ../gogh.tar.gz
+  )
+
+  sed -i -e 's|Artifacts.artifact"Gogh"|joinpath(@__DIR__, "../Gogh")|' src/themes.jl
+}
+
 package() {
   cd Highlights.jl
 

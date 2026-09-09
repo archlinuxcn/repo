@@ -3,24 +3,25 @@
 
 pkgname=liboping
 pkgver=1.10.0
-pkgrel=19
+pkgrel=20
 pkgdesc='C library to generate ICMP echo requests, better known as "ping packets"'
-url='https://noping.cc/'
+url='https://github.com/octo/liboping'
 arch=('x86_64' 'aarch64')
-license=('GPL')
+license=('LGPL-2.1-or-later')
 depends=('libcap')
 makedepends=('ncurses')
 optdepends=('ncurses: noping CLI tool')
-source=("${url}files/${pkgname}-${pkgver}.tar.bz2"
+source=("$url/archive/refs/tags/${pkgname}-${pkgver}.tar.gz"
         'ncursesw.patch' 'format.patch')
-sha256sums=('eb38aa93f93e8ab282d97e2582fbaea88b3f889a08cbc9dbf20059c3779d5cd8'
+sha256sums=('4988418e53fde6840550f778415fbd912372e9bf52510b9608f4f56c2e088d5e'
             '64db954250e7cd4f77ed28d0d4f3deb1525ebe4145c6b20caafc2459c8b1c780'
             '1975ebcfeb24e9269f49d23075295866b62511e500574f2c86d562e18f01dda7')
 
 install=install
 
 prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${srcdir}/liboping-liboping-${pkgver}"
+        autoreconf --warnings=all --install
 
 	# Setting capabilities/setuid is futile in fakeroot.
 	# (We do that in the install script.)
@@ -35,12 +36,12 @@ prepare() {
 }
 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${srcdir}/liboping-liboping-${pkgver}"
 	./configure --prefix=/usr --with-perl-bindings=no
 	make
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd "${srcdir}/liboping-liboping-${pkgver}"
 	make DESTDIR="${pkgdir}" install
 }

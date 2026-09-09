@@ -6,8 +6,8 @@
 
 pkgname=lib32-libpcap
 _name=${pkgname/*-/}
-pkgver=1.10.6
-pkgrel=2
+pkgver=1.10.7
+pkgrel=1
 pkgdesc="A system-independent interface for user-level packet capture (32-bit)"
 arch=(x86_64)
 url="http://www.tcpdump.org/"
@@ -26,8 +26,8 @@ makedepends=(
 provides=(libpcap.so)
 options=(!staticlibs)
 source=(git+$_url?signed#tag=$_name-$pkgver)
-sha512sums=('2eefea34a799a8332460f1f367c9089c2392d1e1f4618553911e5905873c213b62c21c8f684d30c3a6d357ec58662faf2d7b9d8486196a5236feeec77f61b6de')
-b2sums=('1a8c4cfe387b1636d121355e730ad373e53e995885a68756d9655ca99665fc82d1a9be63e81fe55395928bd22d1ced89a5eb77150d45659c91d6c976ce83a8c0')
+sha512sums=('c89694cc2b5eb2ff3402f153ebaa917118789c4c251e8705ce2bb093fce9728edd7d31de0593209285fe9559c3f532609019e6a2e7c1f4bf5a80478903570b50')
+b2sums=('7eae899ef89317bc43df4dc31e1d56e95feb064aa7ce3f26224aa1f79d1bf49bf54e7b3560be880046e610e291a349c5a9d84536ff4b3a5a9f774d69c9e3660e')
 validpgpkeys=('1F166A5742ABB9E0249A8D30E089DEF1D9C15D0D') # The Tcpdump Group (Package signing key) <release@tcpdump.org>
 
 prepare() {

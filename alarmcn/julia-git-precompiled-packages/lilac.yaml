@@ -37,6 +37,7 @@ repo_depends:
   - spral
   - libisoband
   - tracy
+  - tree-sitter-julia
   - mbedtls2
   - spirv2clc-git
   - coremath-git
@@ -1430,6 +1431,8 @@ update_on:
   - alias: alpm-lilac
     alpm: julia-git-requires-src
   - alias: alpm-lilac
+    alpm: julia-git-reseau-src
+  - alias: alpm-lilac
     alpm: julia-git-resettablestacks-src
   - alias: alpm-lilac
     alpm: julia-git-respecializeparams-src
@@ -1713,6 +1716,12 @@ update_on:
     alpm: julia-git-transcodingstreams-src
   - alias: alpm-lilac
     alpm: julia-git-transducers-src
+  - alias: alpm-lilac
+    alpm: julia-git-treesitter-src
+  - alias: alpm-lilac
+    alpm: julia-git-tree_sitter_jll-src
+  - alias: alpm-lilac
+    alpm: julia-git-tree_sitter_julia_jll-src
   - alias: alpm-lilac
     alpm: julia-git-treeviews-src
   - alias: alpm-lilac

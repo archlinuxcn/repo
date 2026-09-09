@@ -1,0 +1,37 @@
+# Maintainer: Chocobo1 <chocobo1 AT archlinux DOT net>
+
+pkgname=tree-sitter-julia
+pkgver=0.25.0
+pkgrel=2
+pkgdesc="Julia grammar for tree-sitter"
+arch=('aarch64' 'i686' 'x86_64')
+url="https://github.com/tree-sitter/tree-sitter-julia"
+license=('MIT')
+# groups=('tree-sitter-grammars')
+makedepends=('nodejs' 'tree-sitter-cli' 'cmake')
+provides=('libtree-sitter-julia.so')
+source=("$pkgname-$pkgver-src.tar.gz::https://github.com/tree-sitter/tree-sitter-julia/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('5ab5fefc1459cff08efa28aeacf028c6e812d9f7552a758fda8c0d65c2abae54')
+
+
+build() {
+  cd "$pkgname-$pkgver"
+
+  rm -rf build
+  mkdir build
+  cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  make VERBOSE=1
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  make -C build DESTDIR="$pkgdir" install
+  install -Dm644 "LICENSE" -t "$pkgdir/usr/share/licenses/tree-sitter-julia"
+  install -Dm644 "README.md" -t "$pkgdir/usr/share/doc/tree-sitter-julia"
+
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/neovim/-/blob/390a730f1f0e85d48b3e49c69421cc7baeb3e00d/PKGBUILD#L74-76
+  install -d "$pkgdir/usr/lib/tree_sitter"
+  ln -s "/usr/lib/libtree-sitter-julia.so" "$pkgdir/usr/lib/tree_sitter/julia.so"
+}

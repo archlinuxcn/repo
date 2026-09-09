@@ -1,0 +1,18 @@
+pkgname=julia-git-reseau-src
+pkgver=1.4.1
+_commit=a0bea022bcdcbafb50d05a1c7d2674a1bcbecad8
+pkgrel=1
+pkgdesc="Reseau.jl"
+url="https://github.com/JuliaServices/Reseau.jl.git"
+arch=('any')
+license=('MIT')
+makedepends=(git julia-pkg-scripts)
+depends=(julia-git)
+source=("git+https://github.com/JuliaServices/Reseau.jl.git#commit=$_commit")
+sha256sums=('SKIP')
+
+package() {
+  cd Reseau.jl
+
+  JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh Reseau "${pkgdir}" "${pkgname}" julia-git
+}
