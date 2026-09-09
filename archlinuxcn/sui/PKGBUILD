@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=sui
-pkgver=1.78.1
+pkgver=1.79.1
 pkgrel=1
 pkgdesc='Sui, a next-generation smart contract platform with high throughput, low latency, and an asset-oriented programming model powered by the Move programming language.'
 url='https://sui.io'
@@ -10,7 +10,7 @@ license=(Apache-2.0)
 depends=(glibc libgcc libstdc++)
 makedepends=(git cargo clang)
 source=(git+https://github.com/MystenLabs/$pkgname#tag=mainnet-v$pkgver)
-sha512sums=('d8836ce00a0d0495f1b449d31dfeed17435e675da30d332e7eda99f6423c4ccc37a62ba21cad7ad104a12d8f3f1165f35452f398ada1b7ccd1ac1b66670d6725')
+sha512sums=('1e0ecbfe6563c785c658ad06986b74b28cbd29321b99bf62f5d5d844a9c9bb597d637a209b1bfaecdc9bc249320f08dc0f8cc1138b30370747a78675c9897ad4')
 # https://github.com/briansmith/ring/issues/1444
 options=(!lto)
 
