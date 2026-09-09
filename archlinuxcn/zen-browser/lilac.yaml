@@ -26,7 +26,7 @@ pre_build_script: |
       in_sha256sums = True
     if in_sha256sums and line.rstrip().endswith("')"):
       print(line.rstrip()[:-1])
-      print("            'ee1605e6fffc3bb62a9d58544f90fcdd5403e70e01496e350cfeb6ec77c9b6ce')")
+      print("            'f0067ae0dde14dcbacb490b1d59d64708701145a47bfe2b1ae2b157863e59db7')")
       in_sha256sums = False
       patch_checksum_added = True
       continue
