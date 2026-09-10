@@ -64,7 +64,7 @@ pkgname=(
 #   'google-cloud-cli-component-kubectl'
 #   'google-cloud-cli-component-gsutil'
 # )
-pkgver=583.0.0
+pkgver=584.0.0
 pkgrel=1
 pkgdesc="A core set of command-line tools for the Google Cloud Platform. Includes only gcloud core (with beta and alpha commands), gcloud-crc32c and man pages"
 url="https://cloud.google.com/cli/"
@@ -86,8 +86,8 @@ source_aarch64=("$pkgbase-$pkgver.orig_aarch64.tar.gz::https://dl.google.com/dl/
 
 sha256sums=('6e88b535c020b0f28c986fdb66918f8c07e4d337e813b77ec2068068f03457f8'
             '6ac95bcc5afa06e9c1e3bd402ecbe1a2092b963d70a8f314215dd4be27e16fc6')
-sha256sums_x86_64=('d34c5a3d2bd31e1259b5d8f7f15091ee9e59ae1b3ec9323ad41dcd0a5021bdc4')
-sha256sums_aarch64=('a00eb3c87ebffdf19816932e885495f6eb856ef6736225617b6780bb73e1c980')
+sha256sums_x86_64=('da12ffa5b3221b92faea66131c8f3979cd7893eab5a3a665dfdc2d26af44716a')
+sha256sums_aarch64=('e074ab9d2eb50b862b328df4b89935d47ca6efcf55839e81ea216db6a32ec46a')
 
 prepare() {
   cd "$_extracted_name"
