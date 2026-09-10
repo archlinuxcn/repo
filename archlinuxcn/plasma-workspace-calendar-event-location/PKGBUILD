@@ -1,13 +1,13 @@
-# Maintainer: Young Lord <ly-niko@qq.com>
-# Based on the official plasma-workspace package, plus the Digital Clock agenda
-# location patch (EventDataDecorator.location + agenda subtitle). Requires the
-# upstream kdeclarative location API (KF >= 6.27).
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: Alexey D. <lq07829icatm at rambler.ru>
 
 pkgname=plasma-workspace-calendar-event-location
 pkgver=6.7.5
-_dirver=$(echo "$pkgver" | cut -d. -f1-3)
-pkgrel=1
-pkgdesc='KDE Plasma Workspace (with calendar event location in the Digital Clock agenda)'
+_dirver=$(echo $pkgver | cut -d. -f1-3)
+pkgrel=2
+pkgdesc='KDE Plasma Workspace'
 arch=(x86_64)
 url='https://kde.org/plasma-desktop/'
 license=(LGPL-2.0-or-later)
@@ -90,7 +90,6 @@ depends=(accountsservice
          ocean-sound-theme
          plasma-activities
          plasma-activities-stats
-         plasma-integration
          prison
          qt6-5compat
          qt6-base
@@ -118,7 +117,32 @@ makedepends=(baloo
              networkmanager-qt
              plasma-wayland-protocols
              qcoro)
-optdepends=('appmenu-gtk-module: global menu support for some GTK3 applications'
+provides=("plasma-workspace=$pkgver")
+conflicts=('plasma-workspace')
+source=(https://download.kde.org/stable/plasma/$_dirver/plasma-workspace-$pkgver.tar.xz{,.sig} 0001-calendar-event-location.patch)
+sha256sums=('94ab21e2243b7876f65c315f1e545081c6437f5bd0a041ca4fb6c2533ae874c9'
+            'SKIP'
+            '67d42d95af431cd63c2de82b9c75c9015ccc0d67f9e9377f59ff868b8cd9ec6f')
+validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
+              '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'  # Bhushan Shah <bshah@kde.org>
+              'D07BD8662C56CB291B316EB2F5675605C74E02CF'  # David Edmundson <davidedmundson@kde.org>
+              '1FA881591C26B276D7A5518EEAAF29B42A678C20') # Marco Martin <notmart@gmail.com>
+
+prepare() {
+  cd "$srcdir"/plasma-workspace-$pkgver
+  patch -Np1 -i "$srcdir"/0001-calendar-event-location.patch
+}
+
+build() {
+  cmake -B build -S plasma-workspace-$pkgver \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib \
+    -DGLIBC_LOCALE_GEN=OFF \
+    -DBUILD_TESTING=OFF
+  cmake --build build
+}
+
+package() {
+  optdepends=('appmenu-gtk-module: global menu support for some GTK3 applications'
             'baloo: Baloo search runner'
             'discover: manage applications installation from the launcher'
             'kdepim-addons: displaying PIM events in the calendar'
@@ -128,35 +152,13 @@ optdepends=('appmenu-gtk-module: global menu support for some GTK3 applications'
             'plasma-workspace-wallpapers: additional wallpapers'
             'plasma5-integration: use Plasma settings in Qt5 applications'
             'xdg-desktop-portal-gtk: sync font settings to Flatpak apps')
-# Drop-in replacement for the official plasma-workspace package.
-provides=("plasma-workspace=$pkgver")
-conflicts=('plasma-workspace')
-# The upstream tarball is named plasma-workspace-<ver>, independently of pkgname.
-source=(https://download.kde.org/stable/plasma/$_dirver/plasma-workspace-$pkgver.tar.xz{,.sig}
-        0001-calendar-event-location.patch)
-validpgpkeys=('E0A3EB202F8E57528E13E72FD7574483BB57B18D'  # Jonathan Esk-Riddell <jr@jriddell.org>
-              '0AAC775BB6437A8D9AF7A3ACFE0784117FBCE11D'  # Bhushan Shah <bshah@kde.org>
-              'D07BD8662C56CB291B316EB2F5675605C74E02CF'  # David Edmundson <davidedmundson@kde.org>
-              '1FA881591C26B276D7A5518EEAAF29B42A678C20') # Marco Martin <notmart@gmail.com>
-sha256sums=('94ab21e2243b7876f65c315f1e545081c6437f5bd0a041ca4fb6c2533ae874c9'
-            'SKIP'
-            '67d42d95af431cd63c2de82b9c75c9015ccc0d67f9e9377f59ff868b8cd9ec6f')
+  depends+=(plasma-integration) # Declare runtime dependency here to avoid dependency cycles at build time
+  conflicts+=(plasma-wayland-session)
+  replaces=(plasma-wayland-session)
 
-prepare() {
-  cd "plasma-workspace-$pkgver"
-  patch -Np1 -i "$srcdir/0001-calendar-event-location.patch"
-}
-
-build() {
-  cmake -B build -S "plasma-workspace-$pkgver" \
-    -DCMAKE_INSTALL_LIBEXECDIR=lib \
-    -DGLIBC_LOCALE_GEN=OFF \
-    -DBUILD_TESTING=OFF
-  cmake --build build
-}
-
-package() {
   DESTDIR="$pkgdir" cmake --install build
-  # plasmax11.desktop is shipped by the separate plasma-x11-session package.
+
   rm -r "$pkgdir"/usr/share/xsessions/plasmax11.desktop
 }
+
+

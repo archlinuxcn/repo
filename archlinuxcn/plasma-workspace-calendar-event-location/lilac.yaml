@@ -1,11 +1,6 @@
 maintainers:
   - github: Young-Lord
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver)
-post_build_script: git_pkgbuild_commit()
-
-# Rebuild whenever the official plasma-workspace package is updated.
 update_on:
   - source: alpm
     alpm: plasma-workspace
-    strip_release: true
