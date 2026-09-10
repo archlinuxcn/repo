@@ -3,20 +3,20 @@
 
 pkgname=yacd-meta
 _pkgname=Yacd-meta
-pkgver=0.3.8
-pkgrel=2
+pkgver=0.4.0
+pkgrel=0.1
 pkgdesc="Yet Another Clash Dashboard"
 arch=('any')
 url="https://github.com/MetaCubeX/Yacd-meta"
 license=('MIT')
-makedepends=('pnpm')
+makedepends=('bun')
 source=("${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('0e7e72edb35b5da448d2d6a5c324e9d1d8ca354e1466692f93163208ea76a1a5')
+sha256sums=('14d667a500d83d47d7f129e1140ab15ec17ee8785fb99c8f03ac5b30a19ca945')
 
 build() {
     cd "${_pkgname}-${pkgver}"
-    pnpm install
-    pnpm build
+    bun install --frozen-lockfile
+    bun run build
 }
 
 package() {
