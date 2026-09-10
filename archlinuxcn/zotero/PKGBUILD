@@ -2,7 +2,7 @@
 # Contributor: Matthias Kurz <m dot kurz at irregular dot at>
 
 pkgname=zotero
-pkgver=10.0.0
+pkgver=10.0.1
 pkgrel=1
 pkgdesc="A free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
@@ -10,7 +10,7 @@ url="https://github.com/zotero/zotero"
 license=('AGPL-3.0-or-later')
 depends=('dbus-glib' 'gtk3' 'nss' 'libxt')
 makedepends=('npm' 'git' 'zip' 'unzip' 'perl' 'python>=3' 'curl' 'wget' 'rsync' 'nodejs' 'patch' 'tar')
-_tag=d3f1ccf3380fde351854d849977c55467f4609a6 # git rev-parse $pkgver
+_tag=fe9c87c562a22862a5fd2fc22512646efd3f879f # git rev-parse $pkgver
 source=("zotero.desktop"
         "zotero-client::git+https://github.com/zotero/zotero.git#tag=${_tag}"
         "zotero-translators::git+https://github.com/zotero/translators.git"
@@ -29,7 +29,7 @@ source=("zotero.desktop"
         "zotero-structured-document-text::git+https://github.com/zotero/structured-document-text.git"
         "disable-updater.patch")
 sha256sums=('eab76db7a56a4d9aaa17baaf240b82fcf57944a4ddf8ef1b58cc64182426cedc'
-            'c27b78ea4f6fef7a2f46ae64759ba6c2316aac95cca4324079f90ad4b6ae2d6c'
+            'c9c58c6abb2e7887a090a7ab312c6b1df97d472da90582b919bd3a415ac2594f'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -105,7 +105,7 @@ build() {
   if (( $(vercmp "$(node --version)" "25.2.0") >= 0 )); then
     _NODE_OPTIONS="$_NODE_OPTIONS --no-experimental-webstorage"
   fi
-  NODE_OPTIONS="$_NODE_OPTIONS" npm run build
+  NODE_OPTIONS="$_NODE_OPTIONS" npm run --allow-git=root build
   app/scripts/dir_build -p l
   if [[ "$CARCH" == "aarch64" ]]; then
     mv "$srcdir/zotero-client/app/staging/Zotero_linux-arm64" "$srcdir/zotero-client/app/staging/Zotero_linux-aarch64"
