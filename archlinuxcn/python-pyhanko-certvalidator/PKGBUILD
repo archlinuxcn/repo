@@ -2,7 +2,7 @@
 
 _name=pyhanko_certvalidator
 pkgname=python-pyhanko-certvalidator
-pkgver=0.32.0
+pkgver=0.32.1
 pkgrel=1
 pkgdesc="Python library for validating X.509 certificates and paths"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python python-asn1crypto python-oscrypto python-cryptography python-uri
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-freezegun python-pytest-asyncio)
 source=(https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz)
-sha512sums=('c78d602532931f7d027e6291231633b48d0502b8b55af9fe6e2c35ca8048a51f9f2b63735750ec7a2eb2e4afbef416b7851ae6d586d7101f82e1531d6c619cf6')
+sha512sums=('0c4b89a1cacb96ee522164e9f129e9c2e9c72a91e84fd414a1b635668974b24b5f309250cda722860b0b32074a068f8bdc2cba51f765ad3686d84a935fd33dc7')
 
 build() {
   cd $_name-$pkgver
