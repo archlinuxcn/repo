@@ -5,13 +5,13 @@
 
 pkgname=libsdrplay
 pkgver=3.15.2
-pkgrel=4
+pkgrel=5
 pkgdesc="Modules for the SDRplay receiver"
-arch=('aarch64' 'x86_64')
+arch=('armv7h' 'aarch64' 'x86_64')
 url="http://www.sdrplay.com"
-license=('custom:EULA')
+license=('LicenseRef-sdrplay')
 depends=('libusb>=1.0')
-source=("http://www.sdrplay.com/software/SDRplay_RSP_API-Linux-${pkgver}.run"
+source=("SDRplay_RSP_API-Linux-${pkgver}.run::https://sdrplay.com/download/hardware-api-linux/?wpdmdl=1906"
 		"sdrplay.service"
 		"66-sdrplay.rules"
 		"20-sdrplay.hwdb")
@@ -32,8 +32,9 @@ package() {
 
 	CARCH_=$CARCH
     case ${CARCH} in
-     x86_64) CARCH_="amd64" ;;
-     aarch64)   CARCH_="arm64" ;;
+     armv7h)  CARCH_="armhf" ;;
+     x86_64)  CARCH_="amd64" ;;
+     aarch64) CARCH_="arm64" ;;
     esac
 	
 	msg2 "Getting API version..."
