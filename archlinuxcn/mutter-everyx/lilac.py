@@ -7,7 +7,6 @@ g = SimpleNamespace()
 # patch 清单, 元素为 source 中的完整条目(名称::URL 或本地文件名)
 _PATCHES = [
     '5122.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5122.patch',
-    'fix-startup-notify.patch',
 ]
 
 def pre_build():
