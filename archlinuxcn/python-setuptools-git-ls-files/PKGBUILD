@@ -2,8 +2,8 @@
 
 pkgname=python-setuptools-git-ls-files
 _pyname=${pkgname#python-}
-pkgver=0.1.2
-pkgrel=10
+pkgver=0.1.1
+pkgrel=1
 pkgdesc='A plugin for setuptools that finds all git tracked files, including submodules'
 arch=(any)
 url="https://github.com/anthrotype/${_pyname//-/_}"
@@ -16,7 +16,8 @@ source=(
 	"https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz"
 	py314.patch
 )
-sha256sums=('7d612087430dc912f0dca7a35c99bf791b2f86b7fa5a40c5a562192947c86efa')
+sha256sums=('e91d103d8e4deb57f744e08231325e609e5aaa71be604401906f35d20f78851a'
+            '818269658d1b2ab6aaab4f862f3faad6941270df1eb18700fb79389d3249dba5')
 
 build() {
 	cd "$_archive"
