@@ -48,7 +48,7 @@ b2sums=('9f18ec34dc5bf1114b01e3b28239dacf84a73e7409018fc5f0dec6612e1ca6108287c2d
         'a07fd87e91df85ca5441396b1e94c94474526bf932389aca9edc60fcd0e8343dc42159577172d66f37e39f6b5fa6efe0929165742f6c4fafb49c3da8112884c1')
 
 build() {
-  pushd "${_tag}"
+  pushd "${_tag}-${CARCH}"
     python "${srcdir}/deversionized.py"
     sed -E -i 's/^\s+"[A-Z_]+": ".*",\s*$/#&/g' user_settings.sample.py
   popd
@@ -57,7 +57,7 @@ build() {
 package() {
   _protondir="usr/share/steam/compatibilitytools.d/${_pkgname}"
   install -d "${pkgdir}/${_protondir}/"
-  pushd "${_tag}"
+  pushd "${_tag}-${CARCH}"
     install -v -Dm644 -t "${pkgdir}/usr/share/licenses/${pkgname}" \
       LICENSE \
       LICENSE.OFL \
