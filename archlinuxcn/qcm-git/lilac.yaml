@@ -12,8 +12,10 @@ post_build_script: |
 
 repo_depends:
   - cubeb-git
-  - qcmbackend-git
   - qmlmaterial-git
+
+repo_makedepends:
+  - lito
 
 update_on:
   - source: github
@@ -26,6 +28,3 @@ update_on:
     alpm: ffmpeg
     provided: libavformat.so
     strip_release: true
-
-update_on_build:
-  - pkgbase: qcmbackend-git
