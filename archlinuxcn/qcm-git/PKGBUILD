@@ -83,5 +83,5 @@ build() {
 }
 
 package() {
-	lito -C Qcm install --profile plain --prefix "${pkgdir}/usr"
+	lito -C Qcm install --profile plain --prefix "${pkgdir}/usr" --no-build
 }
