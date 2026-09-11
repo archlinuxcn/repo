@@ -74,6 +74,7 @@ END
 
 build() {
 	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+	export CFLAGS+=" -ffat-lto-objects"
 	lito -C Qcm build --frozen --profile plain --use-env-flags
 }
 
