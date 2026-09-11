@@ -99,6 +99,8 @@ source=(
 	5310.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5310.patch
 
 	5302.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5302.patch
+
+	5231.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5231.patch
 )
 b2sums=('d2c5bc40b4bee5693719a08d073e34d63cf81161b5cc9a66a2dc298b9d696d12992d3d003b2b929cc5d56357f82ad659871537d2946a02a94420096ad42cbd86'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
@@ -124,6 +126,9 @@ prepare() {
 
 	echo 5302
 	git apply ../5302.patch
+
+	echo 5231
+	git apply ../5231.patch
 }
 
 build() {
