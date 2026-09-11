@@ -28,8 +28,9 @@ makedepends=(
 	'git'
 	'git-lfs'
 	'clang'
+	'lito'
 	'lld'
-	'cmake'
+	'llvm'
 	'ninja'
 	'asio'
 	'pegtl'
@@ -40,13 +41,11 @@ provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=(
 	"git+${url}.git"
-	"git+https://github.com/hypengw/rstd.git"
 	"git+https://github.com/hypengw/ncrequest.git"
-	"git+https://github.com/hypengw/kstore.git"
+	"git+https://github.com/hypengw/QExtra.git"
 	"git+https://github.com/ilqvya/random.git"
 )
 sha256sums=('SKIP'
-            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP')
@@ -55,22 +54,27 @@ pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
-build() {
-	cmake -B build \
-		-S Qcm \
-		-G Ninja \
-		-D CMAKE_BUILD_TYPE=None \
-		-D CMAKE_INSTALL_PREFIX=/usr \
-		-D FETCHCONTENT_FULLY_DISCONNECTED=ON \
-		-D FETCHCONTENT_SOURCE_DIR_RSTD="${srcdir}/rstd" \
-		-D FETCHCONTENT_SOURCE_DIR_NCREQUEST="${srcdir}/ncrequest" \
-		-D FETCHCONTENT_SOURCE_DIR_KSTORE="${srcdir}/kstore" \
-		-D FETCHCONTENT_SOURCE_DIR_RANDOM="${srcdir}/random" \
-		-D CMAKE_CXX_COMPILER=clang++ # Require clang 20+ to build
+prepare() {
+	cd Qcm
+	mkdir -p .lito
+	cat >.lito/config.toml <<END
+[patch."https://github.com/hypengw/ncrequest.git"]
+path = "../ncrequest"
 
-	cmake --build build
+[patch."https://github.com/hypengw/QExtra.git"]
+path = "../QExtra"
+
+[patch."https://github.com/ilqvya/random.git"]
+path = "../random"
+END
+
+	lito fetch --all-features
+}
+
+build() {
+	lito -C Qcm build --frozen --profile plain --use-env-flags
 }
 
 package() {
-	DESTDIR="${pkgdir}" cmake --install build
+	lito -C Qcm install --profile plain --prefix "${pkgdir}/usr"
 }
