@@ -4,11 +4,17 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['alerque'])
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
 
-post_build: aur_post_build
+post_build_script: |
+    git_pkgbuild_commit()
+    update_aur_repo()
+
 
 update_on:
-  - source: aur
-    aur: python-setuptools-git-ls-files
+  - source: github
+    github: anthrotype/setuptools_git_ls_files
+    use_max_tag: true
+    prefix: v
   - alias: python

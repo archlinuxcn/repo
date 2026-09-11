@@ -12,11 +12,15 @@ depends=(python)
 makedepends=(python-{build,installer,wheel}
              python-setuptools-scm)
 _archive="${_pyname//-/_}-$pkgver"
-source=("https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz")
+source=(
+	"https://files.pythonhosted.org/packages/source/${_pyname::1}/$_pyname/$_archive.tar.gz"
+	py314.patch
+)
 sha256sums=('7d612087430dc912f0dca7a35c99bf791b2f86b7fa5a40c5a562192947c86efa')
 
 build() {
 	cd "$_archive"
+	patch -Np1 -i ../py314.patch
 	python -m build -wn
 }
 
