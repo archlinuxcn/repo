@@ -1,3 +1,158 @@
+## GE-Proton11-6
+
+  Wine-Wayland Changes
+
+  - Updated the Wine bleeding-edge base twice and imported/rebased the latest EM11 Wine-Wayland series: 3e5f91eb
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/3e5f91eb114f17d81eef001d3bcee0e69243bb00), 0c63e181
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/0c63e18158bb5316c2b7eec210b7c85157870920), 061e2df3
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/061e2df331dc1e035ecc62d0ea5ad0aec90ee6e1), 09b1a374
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/09b1a3747e3f6ad0b32d6de676a1aa1c804fe237). Original EM11/Wine authorship remains preserved in each patch.
+
+  - Imported Wine-Wineland’s 58-patch cross-process DMA-BUF child-rendering series in eb556a34
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/eb556a3470b02a8c2745abf167dd0601a8d3e89a). This covers GDI, OpenGL and Vulkan child windows, CEF launchers, popups, menus,
+    clipping, shaped windows, frame throttling and producer lifecycle.
+
+  - That series is primarily by Erhan Bilgili (nanomatters). It includes a present-wait follow-up by Etaash Mathamsetty, a fallback-context change based on work by Paul Gofman, and final
+    integration fixes by Thomas Crider (GloriousEggroll).
+
+  - Added StatusNotifierItem tray icons and native context menus from Erhan Bilgili, plus host desktop notifications and edge placement: f6424475
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/f64244754aa0c0e1830f046282b9a098617e1289), with corrected credit in 4334eeec
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/4334eeeca8fb44d4850320d70a99c41285f0a802).
+
+  - Enabled simultaneous availability of winewayland.drv and winex11.drv, selected per process through WINE_GRAPHICS_DRIVER. Added PROTON_USE_X11_EXCLUSIVE for user-selected X11 executables.
+    Native child rendering later superseded the broad launcher fallback and removed obsolete --in-process-gpu workarounds in 326b36f3
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/326b36f3b422a3e145c2fb602c4cddbf2f97d053).
+
+  - Fixed unsupported DDB cursor conversion and Steam desktop virtual-controller filtering in 0a9c71a0
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/0a9c71a0635b4ce9c84e1c630bacfc620554093b).
+
+  - Removed a redundant packed-code split lock that delayed Ubisoft Connect startup by minutes: 80261c9d
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/80261c9d617391a33eec877b93353db54b933d9e).
+
+  - Closed: #696 Deadlock cursor (https://github.com/GloriousEggroll/proton-ge-custom/issues/696) via 0a9c71a0; #706 launcher rendering
+    (https://github.com/GloriousEggroll/proton-ge-custom/issues/706) via f6424475, subsequently replaced by native child rendering in eb556a34.
+
+  PS5 Controller Changes
+
+  - Reworked DualShock 4, DualSense and DualSense Edge audio/haptic routing, endpoint identity, profile switching and hotplug lifecycle.
+  - Added reliable Death Stranding Director’s Cut BB audio, haptics, adaptive triggers and environmental controller effects, then extended the path to Death Stranding 2: deddac88
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/deddac88465a7ce94af17bfe2e70718ac040764e), ce9e5f73
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/ce9e5f739400e2e1e58d4eec1a58212d2ac45d0c), a8c99cea
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/a8c99cea57d2b8181b14a094f9bc4808b6e1fbd6).
+
+  - Fixed controller audio and haptics across Direct/Default profile transitions and prevented Wine from forcing a profile after reconnect: 8acb1f8d
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/8acb1f8d3f64062055b5ec78879d5f369892a409), 196d71dc
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/196d71dce8e4f82835b27979aff19333a7e071e9) for #697 (https://github.com/GloriousEggroll/proton-ge-custom/issues/697).
+
+  - Fixed simultaneous-controller publication and routed speaker effects to the physical controller generating the action: 35298cb1
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/35298cb1fd1376ca96430c52d53b965da842dacb), 241ad98c
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/241ad98c33281257d8f179754727f7f2addd7680). This closed #702 (https://github.com/GloriousEggroll/proton-ge-custom/issues/702).
+
+  - Added DS4-v2-to-DS4-v1 spoofing, including direct DS5/Edge-to-DS4-v1 behavior: 251f376c (https://github.com/GloriousEggroll/proton-ge-custom/commit/251f376cc735db513fe1b541f36d772c93ca879f),
+    resolving #699 (https://github.com/GloriousEggroll/proton-ge-custom/issues/699).
+
+  - Generalized hatswitch and XInput translation based on foriequal0’s #700 proposal (https://github.com/GloriousEggroll/proton-ge-custom/issues/700): 0fdd9b74
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/0fdd9b74b7fad38fb1c483d74efc738bb02c9e59).
+
+  - Expanded standalone Steam Input fallback support for Horizon Zero Dawn and God of War Ragnarok, including native-Steam-Input gating, controller-profile detection and hotplug updates: 45fd5aff
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/45fd5affd90d6c38c860a8f2fad9b27e07fc53fc).
+
+  - Added/fixed presets for Detroit, RDR2, Death Stranding, God of War, HZD, Dune Awakening, Grandia I/II, Lunar, Crash, A Hat in Time, Yakuza 0, Wolfenstein II, Batman Arkham Knight, Little
+    Nightmares, Spyro, Greedfall, Dark Souls Remastered, Sekiro, RE Revelations 2, SF6, Monster Hunter Rise and Lightning Returns.
+
+  - Closed: #689 Sekiro (https://github.com/GloriousEggroll/proton-ge-custom/issues/689) via 6b00f049
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/6b00f049dd6ae94f60b9364fe1557a59a0eaf458); #704 Lightning Returns (https://github.com/GloriousEggroll/proton-ge-custom/issues/704)
+    via 6efe1e2e (https://github.com/GloriousEggroll/proton-ge-custom/commit/6efe1e2ed5ef48d20bfb4c563b439baee5bc4046); #714 Dark Souls Remastered
+    (https://github.com/GloriousEggroll/proton-ge-custom/issues/714) via bf13e556 (https://github.com/GloriousEggroll/proton-ge-custom/commit/bf13e556a1d54c9469b9badfd7ef670301576ff2).
+
+  - Controller preset contributors: Ritaku02 through PR #701 (https://github.com/GloriousEggroll/proton-ge-custom/pull/701), and cocsolvi for RDR2 through PR #688
+    (https://github.com/GloriousEggroll/proton-ge-custom/pull/688).
+
+  Video Rework Changes
+
+  - Added correct MFT drain completion, callbacks outside the sink lock, fragmented Annex-B H.264 assembly, allocator orientation handling and safe allocator shutdown.
+  - Fixed #662 Lords of the Fallen (https://github.com/GloriousEggroll/proton-ge-custom/issues/662) via 00eb0cc3
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/00eb0cc3b697e65574eac6a5d1bb5bd8cf2bef60), #646 Grandia II (https://github.com/GloriousEggroll/proton-ge-custom/issues/646) via
+    cf9d278e (https://github.com/GloriousEggroll/proton-ge-custom/commit/cf9d278eb38f45bc7bb0f6fd89393a55d538526e), #653 Girls’ Frontline 2
+    (https://github.com/GloriousEggroll/proton-ge-custom/issues/653) via d2e8cc0c (https://github.com/GloriousEggroll/proton-ge-custom/commit/d2e8cc0c6bf6af0eda87365cf62d4968b13a4f85), and #606
+    Ys: Memories of Celceta (https://github.com/GloriousEggroll/proton-ge-custom/issues/606) via e6e49177
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/e6e49177273ad6f97e1a7461e85ec51e63328992).
+
+  - Fixed Grandia’s Sult Ruins video through H.264 display-dimension probing and discard-packet handling: 0cec7112
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/0cec711257644f796b820bd31d690ec5197cd9de).
+
+  - Added progressive Googlevideo URL handling, live-HLS timestamp/range semantics, autoplay, scrub/pause correction, RGB32 alpha filling, cross-device frame transfer and system-memory live-video
+    delivery for VRChat.
+
+  - Final AVPro finite-video and livestream fix closed #682 (https://github.com/GloriousEggroll/proton-ge-custom/issues/682): 88af6673
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/88af667340f311b380357da1f46bb25e1ec30938). Earlier foundation: db7964a2
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/db7964a286f07c9fb9fdfee2d8265c7f931a554c), 966ad8be
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/966ad8be364a757dd9ba9c2c88c733e42091c84d).
+
+  - Fixed the serial rtworkq item leak reported in #715 (https://github.com/GloriousEggroll/proton-ge-custom/issues/715): 96ff006b
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/96ff006b1f55aeac1e678955fcef6cb7b835af9e).
+
+  - #703 Atomic Heart (https://github.com/GloriousEggroll/proton-ge-custom/issues/703) and #713 RoboCop (https://github.com/GloriousEggroll/proton-ge-custom/issues/713) were closed after
+    latest-git validation; GitHub does not record narrower one-to-one commits. Their relevant generic fixes are the fragmented-H.264 work in d2e8cc0c and RGB32-alpha work introduced in db7964a2.
+
+  Overlay Changes
+
+  - Added Steam overlay support under Wine-Wayland, then moved Vulkan interception into a standalone vkroots implicit Vulkan layer: 2f8d3d2c
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/2f8d3d2c4489bdd8ae9c4d034b2a7ec52801c01f), 439a9368
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/439a9368dec9dbb2735b878de27223ea5332fca8).
+
+  - Removed overlay-specific code from winewayland.drv and moved the shared focus/input bridge into lsteamclient, supporting both native Vulkan and native OpenGL without Zink: 9f394d23
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/9f394d2393521155e0109bc5de7e520cd425c75d), f5549ef1
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/f5549ef16e1c172585092216c7007de5bf3dee41).
+
+  - Added launcher controller support, mouse capture, relative pointer handling, keyboard/text input, controller navigation, overlay focus, cursor forwarding and suppression of game input while
+    the overlay is active.
+
+  - Added OpenGL overlay support under both Wine-X11 and Wine-Wayland: 185681b4 (https://github.com/GloriousEggroll/proton-ge-custom/commit/185681b42d9758b572852f7aa66fa186d5e6b1b1), f5549ef1.
+  - Fixed overlay text fields and input pass-through, closing #709 (https://github.com/GloriousEggroll/proton-ge-custom/issues/709): e9dc5298
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/e9dc52989147636daa7827c1a9f80dd893c1bf08).
+
+  - Thaylor Santos moved layered-overlay shape readback off the present path, added MIT-SHM/direct scans and configurable sampling, fixing #712
+    (https://github.com/GloriousEggroll/proton-ge-custom/issues/712): a21fac45 (https://github.com/GloriousEggroll/proton-ge-custom/commit/a21fac45a2d10d98dece7ace8321795a61def861), merged as PR
+    #716 (https://github.com/GloriousEggroll/proton-ge-custom/pull/716).
+
+  Miscellaneous Changes
+
+  - Corrected Wine syscall-dispatch address gating for Marvel Rivals and related EAC/EOS launch failures: 157acdc0
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/157acdc085825d5f8934d79f782a3740e929c163). This fixed #686 (https://github.com/GloriousEggroll/proton-ge-custom/issues/686) and
+    duplicate reports #694 (https://github.com/GloriousEggroll/proton-ge-custom/issues/694), #698 (https://github.com/GloriousEggroll/proton-ge-custom/issues/698), #707
+    (https://github.com/GloriousEggroll/proton-ge-custom/issues/707), plus #710 (https://github.com/GloriousEggroll/proton-ge-custom/issues/710).
+
+  - Fixed FreeArc installers with effective-range allocation retry and WoW64 top-down reservation: 9c5aac7f
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/9c5aac7fe834ee236502a81397112355a2e3cae3), 09aa68c1
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/09aa68c1f0da95d47929cd5528cd3ebcc48372f9). The reservation backport is authored by Alexandre Julliard.
+
+  - Added a prefix-directory repair for KDE Ark bug 524702 (https://bugs.kde.org/show_bug.cgi?id=524702): 37b3e449
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/37b3e449ab15c296412e8193a1b0586f38e6219b).
+
+  - Added native-DLL preference based on version resources, authored upstream by Alexandre Julliard: 02d368d2
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/02d368d2a2d3deecaebbb078db124466b3f0f20c).
+
+  - Added missing NtGdiDdDDIQueryAdapterInfo cases by Marcos Vega through PR #690 (https://github.com/GloriousEggroll/proton-ge-custom/pull/690): 20087755
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/20087755ce2df45840958eb82fe9f3947361ecfb).
+
+  - Fixed PROTON_NVIDIA_LIBS NVAPI path handling for #673 (https://github.com/GloriousEggroll/proton-ge-custom/issues/673): c0f82381
+    (https://github.com/GloriousEggroll/proton-ge-custom/commit/c0f82381d38054d8329fab51612b458a3603c0a4).
+
+  - Added bounded VKD3D present waits during swapchain teardown, Hero Plus WoW64 handling and a minor pso2_hack correction.
+  - Updated Wine, DXVK to 3.1, VKD3D, VKD3D-Proton, D7VK, DXVK-NVAPI, FEX and protonfixes.
+  - Improved AArch64 builds: Steam support in FEX by Arkadiusz Hiler, CPU-topology derivation from process affinity by Paul Gofman, plus GE integration fixes.
+  - Corrected x86_64 release tarball matching by feelbadinc through PR #685 (https://github.com/GloriousEggroll/proton-ge-custom/pull/685).
+  - Corrected the README’s HDR/Wayland guidance and documented the Sony-controller, Steam Input fallback, DS4-v1 spoofing, X11-exclusive and ASLR options.
+
+  Merged Pull Requests
+
+  - #685 (https://github.com/GloriousEggroll/proton-ge-custom/pull/685), x86_64 installer matching, by feelbadinc.
+  - #688 (https://github.com/GloriousEggroll/proton-ge-custom/pull/688), RDR2 DualSense-to-DS4 preset, by cocsolvi.
+  - #690 (https://github.com/GloriousEggroll/proton-ge-custom/pull/690), adapter-query implementations, by Marcos Vega.
+  - #701 (https://github.com/GloriousEggroll/proton-ge-custom/pull/701), expanded Sony spoofing presets, by Ritaku02.
+  - #716 (https://github.com/GloriousEggroll/proton-ge-custom/pull/716), layered-overlay performance fix, by Thaylor Santos.
+
 ## GE-Proton11-3
 
 GE-Proton11-3:
