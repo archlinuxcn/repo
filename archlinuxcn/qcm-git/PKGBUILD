@@ -75,7 +75,10 @@ END
 
 build() {
 	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
-	export CFLAGS+=" -ffat-lto-objects"
+	CFLAGS+=" -ffat-lto-objects"
+
+	# https://github.com/llvm/llvm-project/issues/121709
+	CXXFLAGS="${CXXFLAGS//-Wp,-D_FORTIFY_SOURCE=3/}"
 	lito -C Qcm build --frozen --profile plain --use-env-flags
 }
 
