@@ -1,0 +1,49 @@
+# Maintainer: Integral <integral@archlinuxcn.org>
+# Contributor: Zhang Hua <zhanghua.00@qq.com>
+
+# Check CMakeLists.txt
+_rstd_commit=7b45034d8e833398da6bff834b652a1dc40a6a4f
+_luato_commit=9ad07ca2604022319c0178b7f5543220baf87050
+_licrypto_commit=18345239cc68869646a6522e6e258a4eba3dec20
+
+pkgname=lito
+pkgver=0.8.1
+pkgrel=2
+pkgdesc="Module-first C++ build tool with manifest"
+arch=('x86_64' 'aarch64' 'riscv64')
+url="https://github.com/litocpp/${pkgname}"
+license=('MIT OR Apache-2.0')
+depends=('glibc' 'lua' 'zstd')
+makedepends=('clang' 'cmake' 'git' 'libc++' 'lld' 'llvm' 'ninja')
+source=("git+${url}.git#tag=v${pkgver}"
+	"git+https://github.com/litocpp/rstd.git#commit=${_rstd_commit}"
+	"git+https://github.com/litocpp/luato.git#commit=${_luato_commit}"
+	"git+https://github.com/litocpp/licrypto.git#commit=${_licrypto_commit}")
+sha256sums=('ecb5bf871d3072bffeb59df4f2e3434c154224a2112ecdf6b78e66523f0e7405'
+            '1ef9ae9b5924d77a13699c48eb1cfe99b606cc893cfd55d91603cc2ca34be783'
+            '0e7de62fac442c248334e98434b478ab230dd1fe94692cb43ec6f7b6e2a7fe36'
+            '99481a98d86eb2b4bd9c2f755463fd163bfff58b3fc65281f8d66b88741a36d1')
+
+build() {
+	# ld.lld: error: undefined symbol: open(char const*, int pass_dynamic_object_size1, unsigned int)
+	CXXFLAGS="${CXXFLAGS//-Wp,-D_FORTIFY_SOURCE=3/}"
+
+	cmake -B build \
+		-S "${pkgname}" \
+		-G Ninja \
+		-D CMAKE_BUILD_TYPE=None \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		-D CMAKE_C_COMPILER=clang \
+		-D CMAKE_CXX_COMPILER=clang++ \
+		-D FETCHCONTENT_FULLY_DISCONNECTED=ON \
+		-D FETCHCONTENT_SOURCE_DIR_RSTD="${srcdir}/rstd" \
+		-D FETCHCONTENT_SOURCE_DIR_LUATO="${srcdir}/luato" \
+		-D FETCHCONTENT_SOURCE_DIR_LICRYPTO="${srcdir}/licrypto" \
+		-D LITO_USE_SYSTEM_ZSTD=ON
+
+	cmake --build build
+}
+
+package() {
+	DESTDIR="${pkgdir}" cmake --install build
+}

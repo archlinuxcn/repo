@@ -1,0 +1,18 @@
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+  git_pkgbuild_commit()
+  update_aur_repo()
+
+update_on:
+  - source: github
+    github: notofonts/latin-greek-cyrillic
+    use_max_release: true
+    # NotoSansMono-v2.014
+    prefix: NotoSansMono-v
+    include_regex: '^NotoSansMono-v(\d+)(\.(\d)+)*$'
+
+maintainers:
+  - github: rocka
+    email: Rocka <rocka@archlinuxcn.org>

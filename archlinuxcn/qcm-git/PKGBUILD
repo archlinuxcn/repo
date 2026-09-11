@@ -45,21 +45,15 @@ source=(
 	"git+https://github.com/hypengw/ncrequest.git"
 	"git+https://github.com/hypengw/kstore.git"
 	"git+https://github.com/ilqvya/random.git"
-	"fix-kdsingleapplication.patch"
 )
 sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            '08a3aa14c098044dd4a129a292558df4ecfaf7bbeec0b295e5d8009c5939c422')
+            'SKIP')
 
 pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
-}
-
-prepare() {
-	patch -d Qcm -Np1 -i ../fix-kdsingleapplication.patch
 }
 
 build() {

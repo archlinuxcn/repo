@@ -4,9 +4,10 @@ from lilaclib import *
 
 g = SimpleNamespace()
 
-# MR 5122: wayland/text-input: Fix cursor location update for v1 clients
-# b2sum 用 SKIP: MR 会持续更新(由 everyx 维护), 不固定校验
-_MR5122 = 'https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5122.patch'
+# patch 清单, 元素为 source 中的完整条目(名称::URL 或本地文件名)
+_PATCHES = [
+    '5122.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5122.patch',
+]
 
 def pre_build():
     g.files = download_official_pkgbuild('mutter')
@@ -19,19 +20,21 @@ def pre_build():
             if s == ')':
                 state = None
             continue
-        if state == 'source':               # source 末尾追加 5122.patch
+        if state == 'source':               # source 末尾追加全部 patch 条目
             if s == ')':
                 state = None
-                print('  "5122.patch::%s"' % _MR5122)
+                for entry in _PATCHES:
+                    print(f'  "{entry}"')
                 print(line)
                 continue
             print(line)
             continue
-        if state == 'b2sums':               # b2sums 末尾追加(与 source 顺序对齐)
+        if state == 'b2sums':               # b2sums 末尾追加与 patch 数量一致的 SKIP
             if line.rstrip().endswith(')'):
                 state = None
                 print(line[:-1])
-                print('        SKIP')
+                for _ in _PATCHES:
+                    print('        SKIP')
                 print(')')
                 continue
             print(line)
@@ -98,9 +101,10 @@ def pre_build():
             state = 'b2sums'
             print(line)
             continue
-        if s == 'cd mutter':                # prepare() 内应用 patch
+        if s == 'cd mutter':                # prepare() 内逐一应用 patch
             print(line)
-            print('  git apply -3 ../5122.patch')
+            for entry in _PATCHES:
+                print(f'  git apply -3 ../{entry.split("::", 1)[0]}')
             continue
         if '-D docs=true' in line:          # 关 docs, 开 devkit(MDK); 单包: devkit 文件随主包
             print(line.replace('docs=true', 'docs=false'))

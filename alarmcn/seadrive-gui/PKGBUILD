@@ -1,7 +1,7 @@
 # Maintainer: c0gnitivefl0w
 
 pkgname=seadrive-gui
-pkgver=3.0.24
+pkgver=3.0.25
 pkgrel=1
 pkgdesc="GUI part of seadrive"
 arch=('i686' 'x86_64' 'armv7h' 'armv6h' 'aarch64')
@@ -11,7 +11,7 @@ depends=(qt6-base qt6-5compat qt6-webengine libgobject-2.0.so libglib-2.0.so
          jansson libsearpc sqlite)
 makedepends=(git cmake qt6-tools)
 source=("git+https://github.com/haiwen/seadrive-gui#tag=v${pkgver}")
-sha256sums=('bd7d3ba4b620e8e27572ea14ece1817000361fdf8f6d5c978babfd77320ccf93')
+sha256sums=('a50f6a302ffbf62018f78bb75a3a210d1d2cc842dd4c9ac327d3f5078396fa1a')
 
 prepare() {
   mkdir bin
