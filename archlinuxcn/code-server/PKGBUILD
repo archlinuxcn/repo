@@ -6,7 +6,7 @@
 # Contributor: Anmol <anmol@coder.com>
 
 pkgname=code-server
-pkgver=4.136.2
+pkgver=4.137.0
 pkgrel=1
 pkgdesc="VS Code in the browser"
 arch=("x86_64" "aarch64")
@@ -26,8 +26,8 @@ source_aarch64=(
 )
 sha512sums=('7040df09c7404a56dbbb32e09d04ead3b622773520feae19c6710656cef46ca5d79b1972bfebb931e309e495d041b9938cd6a51c39fc0f8f6133dfe711be9280'
             'ab8e679c05f6184f163dccf0651e8c1fac22a29ae583148f8c93b6930ece27cdff45a48b425e8b15b8c8ce749015680a3ae8225b7e8037979ff3d228f396f629')
-sha512sums_x86_64=('17167315cbe91de65d6731f1f1c2a1f650a99e594f29b46c58b21ddc76dc23372c021ba1ca4f347ebd2ee3d50f421ed8466460fb1bb454fcb09f791556928e0f')
-sha512sums_aarch64=('b9dcb4f7759e19ed7a52f998eeca991b1371e8a778d7c97bacd2196662884867d429d3b8e94b1bb68e1862d0f16ee45e25b76f792867e248ac8b0b5eee0ea7b8')
+sha512sums_x86_64=('6da135f766c076eea26172f9e3395c55499c865fb709b5ff605ed3d833b6ce1303a5fa4c5da1546e07039e240cd25fc58026fea5fc6e76ace192fb8e5d136ab1')
+sha512sums_aarch64=('c97e341c7af088d2fbb5232d1eaca24516b9e0ffa4c0697a7aabe43e937970a9abf783d499d5fd814b464bb5f7d10e7a34a31359a0fec82cbde5329baed8b144')
 package() {
   if [[ ${CARCH} == x86_64 ]]; then
     release_name+=-amd64
