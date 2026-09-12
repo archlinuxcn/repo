@@ -40,6 +40,9 @@ if [[ -f \${FLAT_FILE} ]]; then
     mapfile -t _USER_FLAGS < <(sed 's/#.*//' "\${FLAT_FILE}" | tr '\n' ' ')
 fi
 
+# electron-log 靠工作目录向上找 package.json 推断应用名
+cd "/usr/lib/${pkgname}"
+
 exec /usr/bin/${_electron} /usr/lib/${pkgname}/app.asar "$@" "\${_USER_FLAGS[@]}"
 EOD
 
@@ -81,4 +84,6 @@ package() {
 
     cd "${srcdir}/${pkgname}-${pkgver}/build/linux-unpacked/resources"
     install -Dm644 app.asar -t "${pkgdir}/usr/lib/${pkgname}/"
+    # 供 electron-log 确定应用名(与启动器的 cd 配合), 内容即上游 package.json
+    install -Dm644 "${srcdir}/${pkgname}-${pkgver}/package.json" "${pkgdir}/usr/lib/${pkgname}/package.json"
 }
