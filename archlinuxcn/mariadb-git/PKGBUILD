@@ -13,7 +13,7 @@ pkgname=(
   'mytop-git'
   'mariadb-pam-git')
 pkgdesc='Fast SQL database server, derived from MySQL'
-pkgver=13.0.1.r749.ga5525ff
+pkgver=13.2.0.r206014.g6f18dc2
 pkgrel=1
 arch=('x86_64')
 license=('GPL-2.0-only')
@@ -35,11 +35,16 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            '966d0854d4aa09dc08b8c1f0cbc65806ca09543ed9a41a3714d400cca49e0adb')
+            '8385802036e845294f430dc507090edf6b16fc833caf1455066baa95a1887ba7')
 
 pkgver() {
   cd mariadb/
-  git describe --long --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/^mariadb.//'
+  # Merged release tags can make git describe report an older version.
+  local MYSQL_VERSION_MAJOR MYSQL_VERSION_MINOR MYSQL_VERSION_PATCH
+  source VERSION
+  printf '%s.%s.%s.r%s.g%s\n' \
+    "$MYSQL_VERSION_MAJOR" "$MYSQL_VERSION_MINOR" "$MYSQL_VERSION_PATCH" \
+    "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
 }
 
 prepare() {
@@ -266,7 +271,7 @@ package_mariadb-git() {
   rm usr/lib/mysql/plugin/{auth_gssapi_client,caching_sha2_password,client_ed25519,dialog,mysql_clear_password,parsec,sha256_password,zstd}.so
 
   # provided by mariadb-clients
-  for bin in $(find "${pkgdir}/../${pkgbase}-clients/usr/bin/" ! -type d); do
+  for bin in $(find "${pkgdir}/../mariadb-clients-git/usr/bin/" ! -type d); do
     rm "${pkgdir}"/usr/bin/"$(basename "${bin}")" "${pkgdir}"/usr/share/man/man1/"$(basename "${bin}")".1
   done
 
@@ -299,7 +304,7 @@ package_mytop-git() {
 
 package_mariadb-pam-git() {
   pkgdesc='MariaDB PAM support'
-  depends=("mariadb=${pkgver}"
+  depends=("mariadb-git=${pkgver}"
            'pam' 'libpam.so')
   conflicts=('mariadb-pam')
   provides=("mariadb-pam=${pkgver}")
