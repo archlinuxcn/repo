@@ -1,15 +1,15 @@
-diff --cc software/glasgow/hardware/toolchain.py
-index 2e6e485f,9c875a05..00000000
---- i/software/glasgow/hardware/toolchain.py
-+++ w/software/glasgow/hardware/toolchain.py
-@@@ -463,9 -365,8 +463,9 @@@ def find_toolchain(tools=_ALL_TOOLS, *
-      if sys.platform == "emscripten":
-          available_toolchains["js"]      = Toolchain(map(JsTool,     tools))
-      else:
-+         available_toolchains["system"]  = Toolchain(map(SystemTool, tools))
- +        available_toolchains["nix"]     = Toolchain(map(NixTool,    tools))
-          available_toolchains["builtin"] = Toolchain(map(WasmTool,   tools))
--         available_toolchains["system"]  = Toolchain(map(SystemTool, tools))
-  
-      kinds = os.environ.get(env_var_name, ",".join(available_toolchains.keys())).split(",")
-      for kind in kinds:
+diff --git c/software/glasgow/hardware/toolchain.py i/software/glasgow/hardware/toolchain.py
+index 2e6e485f..f874228c 100644
+--- c/software/glasgow/hardware/toolchain.py
++++ i/software/glasgow/hardware/toolchain.py
+@@ -463,9 +463,9 @@ def find_toolchain(tools=_ALL_TOOLS, *, quiet: Literal[False] = False) -> Toolch
+     if sys.platform == "emscripten":
+         available_toolchains["js"]      = Toolchain(map(JsTool,     tools))
+     else:
++        available_toolchains["system"]  = Toolchain(map(SystemTool, tools))
+         available_toolchains["nix"]     = Toolchain(map(NixTool,    tools))
+         available_toolchains["builtin"] = Toolchain(map(WasmTool,   tools))
+-        available_toolchains["system"]  = Toolchain(map(SystemTool, tools))
+ 
+     kinds = os.environ.get(env_var_name, ",".join(available_toolchains.keys())).split(",")
+     for kind in kinds:
