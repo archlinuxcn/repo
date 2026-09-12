@@ -8,7 +8,7 @@ pkgdesc='一个基于 Electron 的音乐软件'
 arch=(x86_64)
 url=https://github.com/lyswhut/lx-music-desktop
 license=('Apache-2.0 AND LicenseRef-LXMusicAddition')
-_electron=electron40
+_electron=electron42
 depends=("$_electron" 'bash')
 makedepends=('nodejs' 'npm' 'python' 'git')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
@@ -60,7 +60,10 @@ build() {
 
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export NPM_CACHE_DIR=${srcdir}/.npmcache
-    HOME="$srcdir/.electron-gyp" npm install
+    # npm 12 默认禁用 git 依赖与依赖的安装脚本(allow-git=none / allowScripts 策略);
+    # 五个 git 依赖均为本项目 package.json 直接声明, 故 allow-git=root;
+    # better-sqlite3 需跑安装脚本产出 build/Release, 否则上游 postinstall 会失败
+    HOME="$srcdir/.electron-gyp" npm install --allow-git=root --dangerously-allow-all-scripts
 
     export NODE_ENV=production
     export ELECTRON_DIST=/usr/lib/"$_electron"
