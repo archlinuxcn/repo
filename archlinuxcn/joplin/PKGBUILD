@@ -8,11 +8,11 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.6.16
+pkgver=3.7.18
 groups=('joplin')
 pkgrel=1
 _electronVersion=42
-depends=("electron${_electronVersion}" "nodejs>20" "libvips")
+depends=("electron${_electronVersion}" "nodejs>=22" "libvips")
 optdepends=('libappindicator-gtk3: for tray icon')
 arch=('x86_64' 'aarch64')
 makedepends=('npm' 'git' 'rsync' 'python-setuptools' 'libxcrypt-compat' 'corepack')
@@ -25,7 +25,7 @@ source=(
 )
 sha256sums=('9223cc816f8175ddaf8839f9357d2bd1c4831692504927c98d8e1eefa7df796e'
             'f485c089904d91750d137d4413297676446e0068892cb08e20bee928bcac516c'
-            'f88de7ccc464dcab925966e35ffa4a061551593749589ef74ce4683977df8c35')
+            '60eb34872a61efce325034ab1a052a0d37f9f0028b037d5482b1e649d8d63c4f')
 
 _setup_env() {
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
@@ -67,6 +67,8 @@ build() {
     # Pack the app-cli package
     cd "${srcdir}/joplin-${pkgver}/packages/app-cli"
     npx gulp build
+    # Fix: MODULE_NOT_FOUND error in tests after commit 25a93ff
+    ln -s ../build app/build
 
     # Pack the app-desktop electron package
     cd "${srcdir}/joplin-${pkgver}/packages/app-desktop"
@@ -120,7 +122,11 @@ package_joplin-desktop() {
 
     cd "${srcdir}/joplin-${pkgver}/packages/app-desktop"
     mkdir -p "${pkgdir}/usr/lib"
-    cp -vr dist/linux-unpacked/resources "${pkgdir}/usr/lib/${pkgname}"
+    if [[ "$CARCH" == "aarch64" ]]; then
+        cp -vr dist/linux-arm64-unpacked/resources "${pkgdir}/usr/lib/${pkgname}"
+    else
+        cp -vr dist/linux-unpacked/resources "${pkgdir}/usr/lib/${pkgname}"
+    fi
 
     # Install icons
     while read -r size; do
