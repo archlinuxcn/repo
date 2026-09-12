@@ -4,7 +4,7 @@
 _pkgauthor=theopfr
 _pkgname=somo
 pkgname=${_pkgname}
-pkgver=1.3.4
+pkgver=1.4.0
 pkgrel=1
 pkgdesc='A human-friendly alternative to netstat for socket and port monitoring'
 
@@ -18,29 +18,33 @@ conflicts=("${pkgname}"{-git,-bin})
 makedepends=('cargo')
 depends=('glibc' 'libgcc')
 
-options=('!debug' '!strip')
+options=('!debug' '!lto' '!strip')
 
 source=("${_pkgname}-${pkgver}.tgz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('3181a1bdc990bd26d7efe3e546d411cc9464203ca85b683e0b3647ba893cf7ab')
+sha256sums=('b084d1617055f39f17e3ae08fe1fdba023b43f8f928c8edf53af0f8ce8a2b14a')
+
+_target="target"
+_toolchain="stable"
+_bin="${_target}/release/${_pkgname}"
 
 prepare() {
     cd "${pkgname}-${pkgver}" || exit
 
-    export RUSTUP_TOOLCHAIN=stable
+    export RUSTUP_TOOLCHAIN=${_toolchain}
     cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
 }
 
 build() {
     cd "${pkgname}-${pkgver}" || exit
 
-    export RUSTUP_TOOLCHAIN=stable
-    export CARGO_TARGET_DIR=target
+    export CARGO_TARGET_DIR=${_target}
+    export RUSTUP_TOOLCHAIN=${_toolchain}
     cargo build --frozen --release --all-features
 
     mkdir -p completions
-    ./"target/release/${_pkgname}" generate-completions bash > "completions/${_pkgname}.bash"
-    ./"target/release/${_pkgname}" generate-completions zsh > "completions/${_pkgname}.zsh"
-    ./"target/release/${_pkgname}" generate-completions fish > "completions/${_pkgname}.fish"
+    ./"${_bin}" generate-completions bash > "completions/${_pkgname}.bash"
+    ./"${_bin}" generate-completions zsh > "completions/${_pkgname}.zsh"
+    ./"${_bin}" generate-completions fish > "completions/${_pkgname}.fish"
 }
 
 check() {
@@ -53,7 +57,7 @@ check() {
 package() {
     cd "${pkgname}-${pkgver}" || exit
 
-    install -Dm0755 "target/release/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+    install -Dm0755 "${_bin}" "${pkgdir}/usr/bin/${_pkgname}"
 
     install -D -m644 "completions/${_pkgname}.bash" "${pkgdir}/usr/share/bash-completion/completions/${_pkgname}"
     install -D -m644 "completions/${_pkgname}.zsh" "${pkgdir}/usr/share/zsh/site-functions/_${_pkgname}"
