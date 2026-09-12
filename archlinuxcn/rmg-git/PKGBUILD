@@ -26,6 +26,10 @@ pkgver()
 
 prepare()
 {
+    # Use mupen64plus-core's SDL2_net backend until SDL3_net is packaged.
+    sed -i -e 's/REQUIRED sdl3-net/REQUIRED SDL2_net/' \
+           -e 's/-DUSE_SDL3NET //g' \
+           "$srcdir/${_pkgname}/Source/3rdParty/CMakeLists.txt"
     mkdir -p "$srcdir/${_pkgname}/build"
 }
 
