@@ -30,6 +30,7 @@ depends=(
   'libpipewire' 'libpipewire-0.3.so'
   'libsrtp' 'libsrtp2.so'
   'libstdc++'
+  'libvpx' 'libvpx.so'
   'libxcb'
   'libxcomposite'
   'libxdamage'
@@ -38,14 +39,13 @@ depends=(
   'libxkbcommon'
   'libxrandr'
   'libxtst'
-  'libvpx' 'libvpx.so'
   'lz4'
   'minizip'
   'openal'
   'openh264' 'libopenh264.so'
   'openssl' 'libcrypto.so' 'libssl.so'
+  'opus' 'libopus.so'
   'pipewire'
-  'protobuf' 'libprotobuf-lite.so'
   'qt6-base=6.11.2'
   'qt6-imageformats'
   'qt6-svg'
@@ -130,7 +130,7 @@ build() {
     -DCMAKE_VERBOSE_MAKEFILE=ON \
     -DCMAKE_INSTALL_PREFIX="/usr" \
     -Dtde2e_DIR="$PWD/td/install/lib/cmake/tde2e" \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=None \
     -DTDESKTOP_API_ID=611335 \
     -DTDESKTOP_API_HASH=d524b414d21f4d37f08684c1df41ac9c \
     -DTDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME=ON
