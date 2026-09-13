@@ -1,0 +1,56 @@
+# Maintainer: nlsdt <nlsdt@archlinuxcn.org>
+
+pkgname=protonplus
+pkgver=0.6.8
+pkgrel=1
+pkgdesc="A modern compatibility tools manager"
+arch=('x86_64' 'aarch64')
+url="https://github.com/Vysp3r/ProtonPlus"
+license=('GPL-3.0-or-later')
+
+depends=(
+  'glibc'
+  'gtk4'
+  'json-glib'
+  'libadwaita'
+  'libarchive'
+  'libgee'
+  'libnotify'
+  'libsoup3'
+  'sdl3'
+  'glib-networking'
+)
+
+makedepends=(
+  'meson'
+  'vala'
+  'gettext'
+)
+
+checkdepends=(
+  'dbus'
+)
+
+optdepends=(
+  'gamemode: enable GameMode integration'
+  'gamescope: use gamescope as the launch wrapper'
+  'mangohud: show the MangoHud performance overlay'
+  'protontricks: manage Proton prefixes with Winetricks'
+  'scopebuddy: companion utility for gamescope'
+)
+
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('9635706b4649032add033fcedf6db8dcbafe20c63789523c10a4764cb08fd2c7')
+
+build() {
+  arch-meson "ProtonPlus-${pkgver}" build
+  meson compile -C build
+}
+
+check() {
+  dbus-run-session -- meson test -C build --no-rebuild --print-errorlogs
+}
+
+package() {
+  DESTDIR="$pkgdir" meson install -C build --no-rebuild
+}
