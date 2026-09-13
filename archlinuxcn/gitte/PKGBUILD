@@ -19,7 +19,6 @@ depends=(
 	'libadwaita'
 	'libgcc'
 	'libgit2'
-	'libssh2'
 	'openssl'
 	'pango'
 	'xz'
@@ -31,7 +30,6 @@ sha256sums=('bbcd2db7c26e957e95c86411614fc3b73214d214cc5e4eeaa53e46211ceacfc0')
 
 build() {
 	export CFLAGS+=" -ffat-lto-objects"
-	export LIBSSH2_SYS_USE_PKG_CONFIG=1
 	meson setup --prefix=/usr --libexecdir=lib --buildtype=release build "${_srcname}"
 	meson compile -C build
 }
