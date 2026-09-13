@@ -2,7 +2,7 @@
 pkgname=v2rayn
 _name=v2rayN
 pkgver=7.24.9
-pkgrel=1
+pkgrel=2
 pkgdesc="A GUI client for Windows, Linux and macOS, support Xray and sing-box and others"
 arch=('x86_64')
 url="https://github.com/2dust/v2rayN"
@@ -45,11 +45,9 @@ source=(
   "GlobalHotKeys-${_ghk_commit}.tar.gz::${_ghk_url}/archive/${_ghk_commit}.tar.gz"
   io.github.2dust.v2rayN.desktop
 )
-sha256sums=(
-  'd4bbdaedd41366c3ce813819df8e144b876fd11dbf043169e921eb0a8d0fecf6'
-  'ff1570772692ae1a92d046d3848cb78a16ce4936ba82a3796b0b42fa2c750f95'
-  '625b26066ed16cf2573d84e662cfde0772aaad61d477454d6c49af47690c27c5'
-)
+sha256sums=('d4bbdaedd41366c3ce813819df8e144b876fd11dbf043169e921eb0a8d0fecf6'
+            'ff1570772692ae1a92d046d3848cb78a16ce4936ba82a3796b0b42fa2c750f95'
+            '625b26066ed16cf2573d84e662cfde0772aaad61d477454d6c49af47690c27c5')
 
 prepare() {
   # 解压 GlobalHotKeys
