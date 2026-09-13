@@ -2,10 +2,10 @@
 # Contributor: Mark Wagie <mark dot wagie at proton dot me>
 # This repository is a fork of musicpod-git.
 # Before executing makepkg, you can set FVM_CACHE_PATH to $HOME/fvm or the path specified by the cachePath field in the $HOME/.config/fvm/.fvmrc file.
-_flutter_version=3.44.4
+_flutter_version=3.47.1
 
 pkgname=flclash
-pkgver=0.8.96
+pkgver=0.8.97
 pkgrel=1
 pkgdesc="A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free."
 url="https://github.com/chen08209/FlClash"
@@ -21,7 +21,7 @@ depends=(
   'libayatana-appindicator'
   'libepoxy'
   'libgcc'
-  'libkeybinder3'
+  # 'libkeybinder3'
   'libstdc++'
   'pango'
 )
@@ -45,36 +45,35 @@ _pkgext="tar.gz"
 source=(
   "${pkgname}"::"git+https://github.com/chen08209/FlClash.git#tag=v$pkgver"
   "0001-fix-build-error.patch"
-  "0002-fix-early-return-when-hotkey-not-found-in-map.patch"
-  "0003-use-local-hotkey_manager.patch"
   "com.follow.clash.desktop"
+  "window_manager::git+https://github.com/chen08209/window_manager.git"
+  "launch_at_startup::git+https://github.com/chen08209/launch_at_startup.git"
+  "yaml_writer::git+https://github.com/chen08209/yaml_writer.git"  
   "Clash.Meta::git+https://github.com/chen08209/Clash.Meta.git"
   "flutter_distributor::git+https://github.com/chen08209/flutter_distributor.git"
   "tray_manager::git+https://github.com/chen08209/tray_manager.git"
-  "hotkey_manager::git+https://github.com/leanflutter/hotkey_manager.git"
 )
-sha256sums=('663f2e33403b4862d5d7b7dd0a3cce64037d3bb5de4ede903ff723321c8b2ce9'
+sha256sums=('1df134396441d8dc695b35f572d906d50c8ed5d8a285ea8afcaed0393bdd2fe4'
             'b551c46a1577758c13bdd07868d41e4de817c6184114e1b10d39e04ae572a76a'
-            'b2791f04cd6d0752cc5b0746eec6b3b959def21eb21bfc3cf594deef8c8777d0'
-            '8e1575e2c5b6a6580e86385d4e85dcac25771c497e04c70be3491ee7dab3293e'
             '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP')
 
 prepare() {
-  cd "$srcdir/hotkey_manager"
-  patch -p1 -i "${srcdir}/0002-fix-early-return-when-hotkey-not-found-in-map.patch"
-
   cd "$srcdir/$pkgname"
   git submodule init
+  git config submodule.core/window_manager.url "$srcdir/window_manager"
+  git config submodule.core/launch_at_startup.url "$srcdir/launch_at_startup"
+  git config submodule.core/yaml_writer.url "$srcdir/yaml_writer"
   git config submodule.core/Clash.Meta.url "$srcdir/Clash.Meta"
   git config submodule.plugins/flutter_distributor.url "$srcdir/flutter_distributor"
   git config submodule.plugins/tray_manager.url "$srcdir/tray_manager"
   git -c protocol.file.allow=always submodule update
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
-  patch -p1 -i "${srcdir}/0003-use-local-hotkey_manager.patch"
 
   # go mod download
   cd "$srcdir/$pkgname/core"
@@ -119,8 +118,6 @@ package() {
   install -Dm755 "FlClashCore" "$pkgdir/usr/lib/$pkgname/FlClashCore"
   cp --reflink=auto -r lib/ "$pkgdir/usr/lib/$pkgname/"
   cp --reflink=auto -r data/ "$pkgdir/usr/lib/$pkgname/"
-  # copy libquickjs_c_bridge_plugin.so
-  cp --reflink=auto "../plugins/flutter_js/bundle/lib/libquickjs_c_bridge_plugin.so" "$pkgdir/usr/lib/$pkgname/lib/libquickjs_c_bridge_plugin.so"
 
   # runpath
   patchelf --set-rpath '$ORIGIN/lib' "$pkgdir/usr/lib/$pkgname/FlClash"
