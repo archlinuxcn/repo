@@ -1,0 +1,119 @@
+# Maintainer: nlsdt <nlsdt@archlinuxcn.org>
+pkgname=v2rayn
+_name=v2rayN
+pkgver=7.24.9
+pkgrel=1
+pkgdesc="A GUI client for Windows, Linux and macOS, support Xray and sing-box and others"
+arch=('x86_64')
+url="https://github.com/2dust/v2rayN"
+license=('GPL-3.0-only')
+
+_geodir=/usr/share/v2ray
+_ghk_url=https://github.com/2dust/GlobalHotKeys
+_ghk_commit=162d401dfe0140b41d1fa349b9aadb4060e739b1
+
+depends=(
+  'bash'
+  'brook'
+  'clash-geoip'
+  'fontconfig'
+  'glibc'
+  'hysteria'
+  'icu'
+  'libgcc'
+  'libstdc++'
+  'mihomo'
+  'naiveproxy'
+  'openssl'
+  'sing-box'
+  'v2ray'
+  'v2ray-domain-list-community'
+  'v2ray-geoip'
+  'xdg-utils'
+  'xray'
+)
+optdepends=(
+  'sudo: run core with elevated privileges'
+  'lttng-ust2.12: CoreCLR tracing'
+)
+conflicts=('v2rayn-bin')
+makedepends=('dotnet-sdk>=10.0')
+options=('!lto')
+
+source=(
+  "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz"
+  "GlobalHotKeys-${_ghk_commit}.tar.gz::${_ghk_url}/archive/${_ghk_commit}.tar.gz"
+  io.github.2dust.v2rayN.desktop
+)
+sha256sums=(
+  'd4bbdaedd41366c3ce813819df8e144b876fd11dbf043169e921eb0a8d0fecf6'
+  'ff1570772692ae1a92d046d3848cb78a16ce4936ba82a3796b0b42fa2c750f95'
+  '625b26066ed16cf2573d84e662cfde0772aaad61d477454d6c49af47690c27c5'
+)
+
+prepare() {
+  # 解压 GlobalHotKeys
+  mkdir -p "${srcdir}/${_name}-${pkgver}/v2rayN/GlobalHotKeys"
+  bsdtar -xf "${srcdir}/GlobalHotKeys-${_ghk_commit}.tar.gz" \
+    -C "${srcdir}/${_name}-${pkgver}/v2rayN/GlobalHotKeys" \
+    --strip-components=1
+}
+
+build() {
+  cd "${srcdir}/${_name}-${pkgver}/v2rayN"
+
+  case "${CARCH}" in
+    aarch64) _rid=linux-arm64 ;;
+    *)       _rid=linux-x64 ;;
+  esac
+
+  dotnet publish v2rayN.Desktop/v2rayN.Desktop.csproj \
+    --configuration Release \
+    --runtime "${_rid}" \
+    -p:PublishSingleFile=false \
+    -p:SelfContained=true \
+    --output build
+
+  test -x "build/${_name}"
+}
+
+package() {
+  cd "${srcdir}/${_name}-${pkgver}/v2rayN"
+
+  # 安装应用本体
+  install -d "${pkgdir}/usr/lib/${pkgname}"
+  cp -a build/. "${pkgdir}/usr/lib/${pkgname}/"
+
+  # 链接内核
+  local _bindir="${pkgdir}/usr/lib/${pkgname}/bin"
+  for c in xray sing_box mihomo v2fly_v5 hysteria2 naiveproxy brook; do
+    install -d "${_bindir}/${c}"
+  done
+  ln -s /usr/bin/xray       "${_bindir}/xray/xray"
+  ln -s /usr/bin/sing-box   "${_bindir}/sing_box/sing-box"
+  ln -s /usr/bin/mihomo     "${_bindir}/mihomo/mihomo"
+  ln -s /usr/bin/v2ray      "${_bindir}/v2fly_v5/v2ray"
+  ln -s /usr/bin/hysteria   "${_bindir}/hysteria2/hysteria"
+  ln -s /usr/bin/naiveproxy "${_bindir}/naiveproxy/naiveproxy"
+  ln -s /usr/bin/brook      "${_bindir}/brook/brook"
+
+  # 链接 geo 文件
+  ln -s "${_geodir}/geoip.dat"   "${_bindir}/geoip.dat"
+  ln -s "${_geodir}/geosite.dat" "${_bindir}/geosite.dat"
+  ln -s /etc/clash/Country.mmdb  "${_bindir}/Country.mmdb"
+
+  # 创建启动器
+  install -d "${pkgdir}/usr/bin"
+  ln -s "/usr/lib/${pkgname}/${_name}" "${pkgdir}/usr/bin/${pkgname}"
+
+  # 安装桌面项
+  install -Dm644 "${srcdir}/io.github.2dust.v2rayN.desktop" \
+    "${pkgdir}/usr/share/applications/io.github.2dust.v2rayN.desktop"
+
+  # 安装图标
+  install -Dm644 "v2rayN.Desktop/v2rayN.png" \
+    "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+  # 安装许可协议
+  install -Dm644 ../LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
