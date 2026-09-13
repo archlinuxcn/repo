@@ -5,7 +5,7 @@
 
 pkgname=mutter-everyx
 pkgver=50.4
-pkgrel=5
+pkgrel=6
 pkgdesc="Window manager and compositor for GNOME (with patches picked from everyx)"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -87,15 +87,18 @@ source=(
   "git+$url.git#tag=${pkgver/[a-z]/.&}"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
   "5122.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5122.patch"
+  "5179-50.4.patch"
 )
 b2sums=('5a03f66f1717f78a1964f62549876890f38bb8c43c4d0f7da59f1621baa8a372202805e5260fb5c6aeefee3e6f516fac501ebc27bb9b9cbe9bade5bbd200fbf9'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
+        SKIP
         SKIP
 )
 
 prepare() {
   cd mutter
   git apply -3 ../5122.patch
+  git apply -3 ../5179-50.4.patch
 }
 
 build() {
