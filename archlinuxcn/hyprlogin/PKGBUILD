@@ -1,6 +1,6 @@
 pkgname=hyprlogin
-pkgver=0.2.0
-pkgrel=4
+pkgver=0.3.0
+pkgrel=1
 pkgdesc='Work-in-progress greetd greeter forked from hyprlock'
 arch=('x86_64')
 url='https://github.com/AuthenticSm1les/hyprlogin'
@@ -32,20 +32,14 @@ optdepends=(
 )
 backup=('etc/hyprlogin/hyprlogin.conf')
 options=(!debug)
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
-  "01-fix-hyprutils-upgrade.patch::$url/pull/7.patch")
-sha256sums=('53d8f158bbcda40bfd65e4b5cd4ec749aed26ca846d8264b365fc70fffec194f'
-            'd6c78eb3cf47ce34ba39f1e774bcd6953c17d8c5327e3e31ac83f7dfaef99a98')
-
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('b12662f13d9dd55a87ddd6acbb8693f19bee005e775a9c501fcac6265302a40b')
 prepare() {
   local staged_src="$srcdir/hyprlogin-src"
   rm -rf "$staged_src"
   mkdir -p "$staged_src"
   tar -xf "$srcdir/$pkgname-$pkgver.tar.gz" -C "$staged_src" --strip-components=1
-  cd "$staged_src"
-  patch -Np1 -i ../01-fix-hyprutils-upgrade.patch
 }
-
 build() {
   local staged_src="$srcdir/hyprlogin-src"
   local build_dir="$srcdir/hyprlogin-build"
