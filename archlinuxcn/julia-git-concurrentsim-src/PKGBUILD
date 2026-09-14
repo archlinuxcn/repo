@@ -1,6 +1,6 @@
 pkgname=julia-git-concurrentsim-src
-pkgver=1.5.1
-_commit=85a52e6d35f80bde7dd9366a51a0d074d8fe6814
+pkgver=1.5.2
+_commit=b70eba35e1bcfaa1e6260566749a34d5e2d44d4a
 pkgrel=1
 pkgdesc="ConcurrentSim.jl"
 url="https://github.com/JuliaDynamics/ConcurrentSim.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDynamics/ConcurrentSim.jl.git#commit=$_commit")
-sha256sums=('cb1e18948d754f62247d72849625dbc22dfcd5edacb905bed31888b7e58933d9')
+sha256sums=('a510cdbc3602cac521195c7e9cf7f4b9984c1b22472bbb93c55b87c807ee53d4')
 
 package() {
   cd ConcurrentSim.jl
