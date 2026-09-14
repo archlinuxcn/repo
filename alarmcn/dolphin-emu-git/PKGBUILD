@@ -109,6 +109,7 @@ build() {
 		-DCMAKE_INSTALL_PREFIX='/usr' \
 		-DDISTRIBUTOR='aur.archlinux.org/packages/dolphin-emu-git' \
 		-DENABLE_AUTOUPDATE=OFF \
+		-DENABLE_NOGUI=ON \
 		-DUSE_SYSTEM_LIBS=ON \
 		-DUSE_SYSTEM_LIBMGBA=OFF \
 		-Wno-dev
