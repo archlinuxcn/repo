@@ -1,0 +1,25 @@
+maintainers:
+  - github: kiri2002
+    email: kiri@vern.cc
+
+build_prefix: extra-x86_64
+
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver.strip('v'))
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+repo_depends:
+ - python-cloudscraper
+ - python-colorthief
+ - python-curl-cffi
+ - python-dateparser
+ - python-pure-protobuf
+ - python-rarfile
+
+
+update_on:
+  - source: git
+    git: https://codeberg.org/valos/Komikku
+    use_max_tag: true
