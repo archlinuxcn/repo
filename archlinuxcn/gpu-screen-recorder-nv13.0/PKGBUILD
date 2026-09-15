@@ -1,0 +1,72 @@
+# Maintainer: Peter Jung <ptr1337@archlinux.org>
+# Contributor: dec05eba <dec05eba@protonmail.com>
+
+pkgname=gpu-screen-recorder-nv13.0
+pkgver=6.0.2
+pkgrel=1
+pkgdesc='A shadowplay-like screen recorder for Linux. The fastest screen recorder for Linux (with Nvidias codec APIs version 13.0)'
+arch=('x86_64')
+url="https://git.dec05eba.com/gpu-screen-recorder"
+license=('GPL-3.0-only')
+install=gpu-screen-recorder.install
+makedepends=(
+  meson
+  vulkan-headers
+  git
+)
+depends=(
+  bash
+  glibc
+  libstdc++
+  libgcc
+  ffmpeg-nv13.0
+  libglvnd
+  libxcomposite
+  libxrandr
+  libxfixes
+  libxdamage
+  libx11
+  libpulse
+  libva
+  libdrm
+  libcap
+  wayland
+  libpipewire
+  dbus
+  libjpeg-turbo
+)
+optdepends=(
+    'nvidia-utils: Required to record your screen on NVIDIA'
+    'libxnvctrl: Required when using the -oc option to overclock the NVIDIA GPU to workaround NVIDIA p2 state bug'
+    'mesa: Required to record your screen on AMD/Intel'
+    'libva-mesa-driver: Required to record your screen on AMD'
+    'libva-intel-driver: Required to record your screen on Intel G45 and HD Graphics family'
+    'intel-media-driver: Required to record your screen on Intel Broadwell or later iGPUs or Intel Arc'
+    'linux-firmware-intel: Required to record your screen on Intel Skylake or later iGPUs'
+)
+provides=(gpu-screen-recorder=$pkgver)
+conflicts=(gpu-screen-recorder)
+source=(
+  $pkgname::git+https://repo.dec05eba.com/gpu-screen-recorder#tag=$pkgver
+  '0001-Skip-custom-nvenc-version-checks.patch'
+)
+sha512sums=(
+  '3c9b13162717d014612c899172d195588dc4b45e7ba40d3164be7eb1bc4679d6aacc45379b3c2bf6c09faeec54697eb32c11f8fbb0997e417af8362a92ce3a1f'
+  '1bda2fb2b0aab4bd52d904db69b27ea2cd9be6686a8bc3a0975bc83f8213dfff5bfdc739baaf15d660f907a71732883a9589e1f060ba168a6ba10dbaa02828b3'
+)
+
+prepare () {
+  cd "$srcdir"/$pkgname
+  git apply -3 ../0001-Skip-custom-nvenc-version-checks.patch
+}
+
+build() {
+  cd "$srcdir"/$pkgname
+  arch-meson build -Dsystemd=true -Dffmpeg_static=false --buildtype=release -Dstrip=true
+  meson compile -C build
+}
+
+package() {
+  cd "$srcdir"/$pkgname
+  meson install -C build --destdir "$pkgdir"
+}
