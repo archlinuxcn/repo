@@ -6,10 +6,10 @@
 : "${_support_headless_testing:=false}"
 _use_cuda=true
 
-: "${_commit:=cb72dffa3233c5815cd5ba88f09f049dd679ba75}"
+: "${_commit:=63d35f702ee9e362e43263742981836ec0710384}"
 
 pkgname='sunshine'
-pkgver=2026.906.222525
+pkgver=2026.914.233613
 pkgrel=1
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
@@ -124,7 +124,7 @@ prepare() {
 
 build() {
     export BRANCH="master"
-    export BUILD_VERSION="2026.906.222525"
+    export BUILD_VERSION="2026.914.233613"
     export COMMIT="${_commit}"
 
     export CC="gcc${_gcc_env_suffix}"
