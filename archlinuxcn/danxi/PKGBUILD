@@ -2,12 +2,12 @@
 
 pkgname=danxi
 pkgver=1.5.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Maybe the best all-rounded service app for Fudan University students | 可能是复旦学生最好的第三方校园服务 APP"
 url="https://github.com/DanXi-Dev/DanXi"
 license=('GPL-3.0-or-later')
 arch=('x86_64')
-depends=('gtk3' 'libsecret' 'gnome-keyring' 'wpewebkit')
+depends=('gtk3' 'libsecret' 'org.freedesktop.secrets' 'wpewebkit')
 makedepends=('git' 'clang' 'cmake' 'ninja' 'fvm' 'imagemagick' 'patchelf')
 source=("git+${url}.git#tag=v${pkgver}")
 sha256sums=('f087a0a4f071e74565e873ef6819c8e414a37a2ce7b2be6adaafeb0a08ce5f19')
