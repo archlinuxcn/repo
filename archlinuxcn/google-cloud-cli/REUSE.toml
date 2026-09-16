@@ -6,10 +6,13 @@ path = [
     "README.md",
     "keys/**",
     ".SRCINFO",
+    ".gitignore",
     ".nvchecker.toml",
     "*.install",
     "*.sysusers",
+    "*sysusers.conf",
     "*.tmpfiles",
+    "*tmpfiles.conf",
     "*.logrotate",
     "*.pam",
     "*.service",
@@ -19,8 +22,7 @@ path = [
     "*.hook",
     "lilac.yaml",
     "lilac.py",
-    "valid-repos-riscv64.sh",
-    "z-archriscv-qemu-riscv64.conf",
+    "google-cloud-cli.sh",
     "*.sh",
     "*.conf",
     "*.1",
@@ -31,10 +33,7 @@ SPDX-License-Identifier = "0BSD"
 
 [[annotations]]
 path = [
-    "fortran-riscv64.patch",
-    "makepkg-riscv64.patch",
-    "pacman-extra-riscv64.patch",
-    "sogrep-riscv64.patch",
+    "0003-add-compdef-to-zsh-completion.patch",
 ]
-SPDX-FileCopyrightText = "devtools-riscv64 contributors"
-SPDX-License-Identifier = "GPL-3.0-or-later"
+SPDX-FileCopyrightText = "google-cloud-cli contributors"
+SPDX-License-Identifier = "Apache-2.0"
