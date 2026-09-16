@@ -4,8 +4,8 @@
 # Patches: xx55tt, viktoracoric, Mailaender, jlocash
 
 pkgname=pokerth
-pkgver=2.1.8
-pkgrel=2
+pkgver=2.1.9
+pkgrel=1
 pkgdesc="Client to online Poker game written in C++/Qt"
 arch=('x86_64')
 url="http://www.pokerth.net/"
@@ -29,7 +29,7 @@ makedepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pokerth/pokerth/archive/refs/tags/v${pkgver}.tar.gz")
-md5sums=('fc055c8e26922d57c7ebb527a7cd6b8b')
+md5sums=('1f6adbc55d09a0e9ae857df86a0ac0ae')
 
 prepare() {
   sed -i \
@@ -62,9 +62,12 @@ package() {
   mkdir -p "${pkgdir}/usr/share/doc/${pkgname}"
   install -Dm644 docs/gui_styling_howto.txt "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/qml_client_keyboard_shortcuts.md "${pkgdir}/usr/share/doc/pokerth/"
+  install -Dm644 docs/server_activity_add_client_platform.sql "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/server_activity_schema.sql "${pkgdir}/usr/share/doc/pokerth/"
+  install -Dm644 docs/server_live_stats_schema.sql "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/server_setup_howto.txt "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/third_party_services.md "${pkgdir}/usr/share/doc/pokerth/"
+  install -Dm644 docs/widget_client_keyboard_shortcuts.md "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 data/data-copyright.txt "${pkgdir}/usr/share/licenses/pokerth/LICENSE"
   install -Dm644 pokerth.svg "${pkgdir}/usr/share/icons/hicolor/scalable/apps/pokerth.svg"
 
