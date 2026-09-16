@@ -1,11 +1,11 @@
 # Maintainer: Integral <integral@member.fsf.org>
 # Contributor: Kimiblock Zhou <pn3535 at icloud dot com>
 
-# See third_party/CMakeLists.txt
-_rstd_commit=7eb8b411258b4a886231b8b87f7b5a472b6712e1
-_ncrequest_commit=b919f0ad9a85dc006392ebf8802eb4c7df7584a2
-_kstore_commit=d6f32d1a04be01328e1e528c0539e37b359c87e3
-_random_commit=6983466aadd1173627b362ff1a297527d9842531
+# See lito.lock
+_ncrequest_commit=cdaca8b5c523906fc0c9ed58cd5f2c7981b5a255
+_qextra_commit=68f752fd38e3d7a923bf36d621f4a94be7b26fd8
+_random_commit=567e9c62df20f19adbda0e12fa4d88b2b49a7d1c
+_wavsen_commit=ad8a0f6dab8bf280c0be2836cdf6f22416d8b1d1
 
 pkgname=qcm
 pkgver=1.3.4
@@ -31,9 +31,11 @@ depends=(
 makedepends=(
 	'git'
 	'git-lfs'
+	'cargo'
 	'clang'
+	'lito'
 	'lld'
-	'cmake'
+	'llvm'
 	'ninja'
 	'asio'
 	'pegtl'
@@ -43,33 +45,41 @@ optdepends=('qcm-ncm-plugin: Netease Cloud Music plugin')
 replaces=('qcmbackend')
 source=(
 	"git+${url}.git#tag=v${pkgver}"
-	"git+https://github.com/hypengw/rstd.git#commit=${_rstd_commit}"
 	"git+https://github.com/hypengw/ncrequest.git#commit=${_ncrequest_commit}"
-	"git+https://github.com/hypengw/kstore.git#commit=${_kstore_commit}"
+	"git+https://github.com/hypengw/QExtra.git#commit=${_qextra_commit}"
 	"git+https://github.com/ilqvya/random.git#commit=${_random_commit}"
+	"git+https://github.com/hypengw/wavsen.git#commit=${_wavsen_commit}"
 )
-sha256sums=('2f922f2a59099eecc84d843e24573efcd4d6bdf98919832bf4c0950ffd3301ba'
-            'b709892b52b12b505cc8e6d04b01c5673ea6a468fb4209adac10e7ae50d2530a'
-            'c4e8c54feeddee23f759c732c467e5a215b253a63c6ab3876b6078eda9682abf'
-            '446da38faf1035aea96aef837923ee4c79c4d95a24c51c182d6d6d8edfb9e44a'
-            'd406c0f56460103047a15aab701e64993c0457e95ee61217f02effb5113db65e')
+sha256sums=('6cca08f3c04287557e436161bd08de2db3c0f791b60abc8b086e5fd0cdf85369'
+            'e0b29a7179d1f35b76ca2582003c0a97c20b1a30b8e2e24cd95b025e7bfabfca'
+            '2b2d0a9f7031c88656fde765e7118960486db25aff5ceff43d71a1c3737643ac'
+            '0fec05e02154c94be675e16905fd0aad0d641bfeab96b006535cff508b905180'
+            '6b739d364463672474652916f3b57c0b191d5dbbdce20433d1f17cff9220b3ac')
+
+prepare() {
+	cd Qcm
+	mkdir -p .lito
+	cat >.lito/config.toml <<END
+[patch."https://github.com/hypengw/ncrequest.git"]
+path = "../ncrequest"
+
+[patch."https://github.com/hypengw/QExtra.git"]
+path = "../QExtra"
+
+[patch."https://github.com/ilqvya/random.git"]
+path = "../random"
+
+[patch."https://github.com/hypengw/wavsen.git"]
+path = "../wavsen"
+END
+
+	lito fetch --all-features
+}
 
 build() {
-	cmake -B build \
-		-S Qcm \
-		-G Ninja \
-		-D CMAKE_BUILD_TYPE=None \
-		-D CMAKE_INSTALL_PREFIX=/usr \
-		-D FETCHCONTENT_FULLY_DISCONNECTED=ON \
-		-D FETCHCONTENT_SOURCE_DIR_RSTD="${srcdir}/rstd" \
-		-D FETCHCONTENT_SOURCE_DIR_NCREQUEST="${srcdir}/ncrequest" \
-		-D FETCHCONTENT_SOURCE_DIR_KSTORE="${srcdir}/kstore" \
-		-D FETCHCONTENT_SOURCE_DIR_RANDOM="${srcdir}/random" \
-		-D CMAKE_CXX_COMPILER=clang++ # Require clang 20+ to build
-
-	cmake --build build
+	lito -C Qcm build --frozen --profile plain --use-env-flags
 }
 
 package() {
-	DESTDIR="${pkgdir}" cmake --install build
+	lito -C Qcm install --profile plain --prefix "${pkgdir}/usr" --no-build
 }
