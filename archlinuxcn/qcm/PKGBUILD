@@ -26,7 +26,6 @@ depends=(
 	'ffmpeg'
 	'cubeb'
 	'kdsingleapplication'
-	'qcmbackend'
 	'qmlmaterial'
 )
 makedepends=(
@@ -41,6 +40,7 @@ makedepends=(
 	'vulkan-headers'
 )
 optdepends=('qcm-ncm-plugin: Netease Cloud Music plugin')
+replaces=('qcmbackend')
 source=(
 	"git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/hypengw/rstd.git#commit=${_rstd_commit}"
