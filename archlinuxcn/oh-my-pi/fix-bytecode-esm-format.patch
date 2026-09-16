@@ -1,0 +1,46 @@
+diff --git a/packages/coding-agent/scripts/compile-binary.ts b/packages/coding-agent/scripts/compile-binary.ts
+index ac6f28db3e..4b44c1bafc 100644
+--- a/packages/coding-agent/scripts/compile-binary.ts
++++ b/packages/coding-agent/scripts/compile-binary.ts
+@@ -46,6 +46,11 @@ export async function compileCodingAgent(options: CodingAgentCompileOptions): Pr
+ 				"process.env.PI_TINY_TRANSFORMERS_VERSION": JSON.stringify(options.transformersVersion),
+ 				"process.env.PI_DOCS_EMBED": JSON.stringify((await buildDocsIndexPayload()).payload),
+ 			},
++			// `bytecode` defaults the chunk to cjs, where Bun inlines the
++			// `import.meta` paths as the build tree's own (oven-sh/bun#39715) and
++			// prints every other reference verbatim into a plain script
++			// (oven-sh/bun#38200), which JSC then refuses to compile.
++			format: "esm",
+ 			// Precompiled bytecode skips parsing the ~20 MB bundle at boot:
+ 			// `omp --version` 256 ms -> 30 ms on M4 Max (+52 MB binary).
+ 			// Bytecode rejects top-level await in the bundle graph.
+@@ -72,8 +77,13 @@ export async function compileCodingAgent(options: CodingAgentCompileOptions): Pr
+ 			},
+ 			throw: false,
+ 		});
+-		if (!output.success) {
+-			throw new Error(`Coding-agent binary bundle failed:\n${output.logs.map(log => log.message).join("\n")}`);
++		// A failed bytecode pass only logs at error level: `success` stays true
++		// and the unusable executable is still written.
++		const errors = output.logs.filter(log => log.level === "error");
++		if (!output.success || errors.length > 0) {
++			throw new Error(
++				`Coding-agent binary bundle failed:\n${(errors.length > 0 ? errors : output.logs).map(log => log.message).join("\n")}`,
++			);
+ 		}
+ 	} finally {
+ 		if (previousCodesignSetting === undefined) {
+diff --git a/scripts/ci-release-build-binaries.ts b/scripts/ci-release-build-binaries.ts
+index d6d20efe5d..4b938033ec 100644
+--- a/scripts/ci-release-build-binaries.ts
++++ b/scripts/ci-release-build-binaries.ts
+@@ -152,6 +152,9 @@ async function buildBinary(target: BinaryTarget): Promise<void> {
+ 		outfile: path.join(repoRoot, target.outfile),
+ 		transformersVersion,
+ 		target: target.target,
++		// Only a Bun of the same build can load the bytecode this one emits, so
++		// a rebuild against its own Bun overrides the release runtime here.
++		executablePath: Bun.env.BUN_COMPILE_EXECUTABLE_PATH || undefined,
+ 		minifyIdentifiers: true,
+ 		skipBuiltinCodesign: shouldAdhocSignDarwinBinary(target),
+ 	});
