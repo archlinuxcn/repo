@@ -17,12 +17,14 @@ backup=()
 
 function prepare() {
 	cd element-call
-	pnpm i --pm-on-fail=warn
+	pnpm install --frozen-lockfile --ignore-pnpmfile
 }
 
 function build() {
 	cd element-call
-	pnpm build --pm-on-fail=warn
+	export NODE_OPTIONS="--max-old-space-size=4096"
+
+	pnpm run build:full:production
 }
 
 function package() {
