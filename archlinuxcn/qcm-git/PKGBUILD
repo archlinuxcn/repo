@@ -39,6 +39,7 @@ makedepends=(
 	'vulkan-headers'
 )
 optdepends=('qcm-ncm-plugin-git: Netease Cloud Music plugin')
+replaces=('qcmbackend-git')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
 source=(
