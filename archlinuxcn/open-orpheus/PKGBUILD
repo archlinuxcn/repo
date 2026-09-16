@@ -1,13 +1,17 @@
 pkgname=open-orpheus
-pkgver=0.16.2
-pkgrel=2
+pkgver=0.17.1
+pkgrel=1
 pkgdesc="An open-source implementation of Netease Cloud Music's Orpheus browser host"
 arch=('x86_64')
 url="https://github.com/YUCLing/open-orpheus"
 license=('MIT')
-_electronver=43
+_electronver=44
 depends=(
-  'electron43'
+  'electron44'
+  'freetype2'
+  'glibc'
+  'libgcc'
+  'hicolor-icon-theme'
   'gtk3'
   'libnotify'
   'nss'
@@ -26,17 +30,23 @@ makedepends=(
   'rust'
   'rust-wasm'
   'wasm-bindgen'
+  'cargo-zigbuild'
   'libarchive'
-  'git'
 )
+# The native modules are cross-built with cargo-zigbuild, which uses zig's
+# clang as the C compiler. zig rejects makepkg's `-flto=auto` (added to
+# CFLAGS/CXXFLAGS/LDFLAGS when the `lto` option is on), which breaks the
+# bundled sqlite3 in libsqlite3-sys. Rust LTO (Cargo.toml [profile.release])
+# is unaffected by this makepkg option.
+options=('!lto')
 source=(
   "$pkgname-$pkgver.tar.gz::https://github.com/YUCLing/open-orpheus/archive/refs/tags/v$pkgver.tar.gz"
   "open-orpheus.sh"
   "open-orpheus.desktop"
 )
-sha256sums=('b79d1d98f8bac00cc4a23d43e120d1e46711194db53fc8a00159e9e1f3a51ebb'
-            '1af66959f8bd34896684c154d9169cdbad94b5ec08e107c4652ba5473e8d6ded'
-            'de9b00ee7e7025cbcadda8cd16b63aa4092fb905803d0e6f4f570ab8461a5f5c')
+sha256sums=('4db4cd38beac45776160faf88df24195e600c5d26efadfdbae33d86154e1b01f'
+  '1af66959f8bd34896684c154d9169cdbad94b5ec08e107c4652ba5473e8d6ded'
+  'de9b00ee7e7025cbcadda8cd16b63aa4092fb905803d0e6f4f570ab8461a5f5c')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -93,11 +103,15 @@ build() {
   RUSTFLAGS="${RUSTFLAGS//-Clink-arg=-Wl,--icf=safe/}"
   export RUSTFLAGS
 
+  export CFLAGS="${CFLAGS//-mtune=generic/}"
+  export CXXFLAGS="${CXXFLAGS//-mtune=generic/}"
+
   # Native modules (Rust napi + wasm) then the Forge package.
   pnpm run build:modules
 
   RUSTFLAGS="$ORIGINAL_RUSTFLAGS"
   export RUSTFLAGS
+
   pnpm run package
 }
 
