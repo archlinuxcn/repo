@@ -9,7 +9,7 @@ _noguipkgname="$_projectname-emu-nogui"
 _toolpkgname="$_projectname-emu-tool"
 pkgbase="$_mainpkgname-git"
 pkgname=("$pkgbase" "$_noguipkgname-git" "$_toolpkgname-git")
-pkgver=2606.r364.ga2efdf1197
+pkgver=2606.r368.g9611279be5
 pkgrel=1
 pkgdesc='A Gamecube / Wii emulator'
 _pkgdescappend=' - git version'
@@ -110,6 +110,7 @@ build() {
 		-DCMAKE_INSTALL_PREFIX='/usr' \
 		-DDISTRIBUTOR='aur.archlinux.org/packages/dolphin-emu-git' \
 		-DENABLE_AUTOUPDATE=OFF \
+		-DENABLE_NOGUI=ON \
 		-DUSE_SYSTEM_LIBS=ON \
 		-DUSE_SYSTEM_LIBMGBA=OFF \
         -DUSE_SYSTEM_MBEDTLS=OFF \

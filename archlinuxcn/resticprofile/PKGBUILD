@@ -4,7 +4,7 @@
 
 pkgname=resticprofile
 pkgver=0.33.1
-pkgrel=3
+pkgrel=5
 pkgdesc="Configuration profiles manager and scheduler for restic backup"
 arch=("x86_64" "aarch64")
 url="https://github.com/creativeprojects/resticprofile"
@@ -15,6 +15,12 @@ makedepends=("go" "git")
 options=(!lto)
 source=("git+https://github.com/creativeprojects/resticprofile.git#tag=v$pkgver")
 sha256sums=('4b423bd35674bd9e8f7d8e63d5f586c1e6b357c8d83dd30724036763ac4645c7')
+
+prepare() {
+    cd resticprofile
+    export GOPATH="${srcdir}"
+    go mod download -modcacherw
+}
 
 build() {
     cd resticprofile

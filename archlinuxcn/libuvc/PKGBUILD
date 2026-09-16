@@ -3,16 +3,16 @@
 # Based on AUR3 PKGBUILD by Ken Tossell <ken@tossell.net>
 
 pkgname=libuvc
-pkgver=0.0.7
-pkgrel=5
+pkgver=0.0.8
+pkgrel=1
 pkgdesc="a cross-platform library for USB video devices"
 arch=('i686' 'x86_64' 'aarch64')
 url='https://libuvc.github.io/libuvc/'
 license=('BSD-3-Clause')
-depends=('glibc' 'libusb' 'libjpeg-turbo')
-makedepends=('cmake')
+depends=(glibc)
+makedepends=(cmake libusb libjpeg-turbo)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/libuvc/libuvc/archive/v$pkgver.tar.gz")
-sha256sums=('7c6ba79723ad5d0ccdfbe6cadcfbd03f9f75b701d7ba96631eb1fd929a86ee72')
+sha256sums=('abe134716f4c53fe60db2004b42adf6af60e64e45808135acfa4311454371ece')
 
 options=(staticlibs)
 
@@ -26,6 +26,8 @@ build() {
 }
 
 package() {
+    depends+=(libusb libusb-1.0.so
+              libjpeg-turbo libjpeg.so)
     DESTDIR="${pkgdir}" cmake --install build
     install -DTm 644 "$srcdir/libuvc-$pkgver/LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

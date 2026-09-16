@@ -90,13 +90,12 @@ diff --git a/support-files/tmpfiles.conf.in b/support-files/tmpfiles.conf.in
 index 6a2a28b59a3..0c5fe5a1e13 100644
 --- a/support-files/tmpfiles.conf.in
 +++ b/support-files/tmpfiles.conf.in
-@@ -10,7 +10,11 @@
+@@ -7,6 +7,10 @@
  # * innodb_temp_data_file_path
  # * rocksdb_tmpdir
  # etc.
 -# It shouldn't be used for datadir which is why it
 -# may be disabled.
- @DISABLE_RUNDATADIR@d @INSTALL_RUNDATADIR@ 0755 @MYSQLD_USER@ @MYSQLD_USER@ -
  @DISABLE_MYSQL_UNIX_ADDRDIR@d @MYSQL_UNIX_ADDRDIR@ 0755 @MYSQLD_USER@ root -
 +
 +# Create the data directory

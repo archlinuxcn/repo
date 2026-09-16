@@ -1,6 +1,6 @@
 pkgname=julia-git-libgpg_error_jll-src
-pkgver=1.60.0+0
-_commit=ea3af9cc241d932531065000c5d1abf5a711fcf7
+pkgver=1.61.0+0
+_commit=4eb7887b40b056a9b85645fd6b34554c0c56fb0b
 pkgrel=1
 pkgdesc="Libgpg_error_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Libgpg_error_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libgpg-error)
 source=("git+https://github.com/JuliaBinaryWrappers/Libgpg_error_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('5f34f3fc0912da6aa9f29a115b6f307dc2eef1f422c1962d39f0098701f46224'
+sha256sums=('341e3c035f251cf161f51c1d813a64f75ad410ae17ec06203a48e1c5b2e9c468'
             '9796bc91867ccdc32afcc0308e672932e1982a8060668e4dbcd753e6cab2ec1b')
 
 build() {

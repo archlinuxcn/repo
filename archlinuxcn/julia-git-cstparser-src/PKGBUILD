@@ -1,6 +1,6 @@
 pkgname=julia-git-cstparser-src
-pkgver=3.5.0
-_commit=815f371254fadba9f1dd25bba2f4b09a1c00cab7
+pkgver=3.5.1
+_commit=88501ab856e7d0a442eba4ef961870f16d59d0f9
 pkgrel=1
 pkgdesc="CSTParser.jl"
 url="https://github.com/julia-vscode/CSTParser.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/julia-vscode/CSTParser.jl.git#commit=$_commit")
-sha256sums=('5ac5d360496374ce0229b2bbdc0e71159671a3f9c72ba6aebfb30823f3d19f70')
+sha256sums=('eaacff4d66185f883ab2dee604ca059a5af280a8e9786d6250f711548e20a5ed')
 
 package() {
   cd CSTParser.jl

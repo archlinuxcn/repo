@@ -1,6 +1,6 @@
 pkgname=julia-git-delaunaytriangulation-src
-pkgver=1.6.6
-_commit=29cf338ec2b93b89a1310da6eedae7e399b004da
+pkgver=1.6.7
+_commit=cd7e0f5084b6081255d565e14efc274f5aa96df5
 pkgrel=1
 pkgdesc="DelaunayTriangulation.jl"
 url="https://github.com/JuliaGeometry/DelaunayTriangulation.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGeometry/DelaunayTriangulation.jl.git#commit=$_commit")
-sha256sums=('dc6daa5b1ba659fd85c4035e83ef549bc9f3a88c22f1ef1a4c827c6a372d7672')
+sha256sums=('a90b0479c888f2531319c699052259de85136bdb88606db15ee1f1a8511f7c87')
 
 package() {
   cd DelaunayTriangulation.jl

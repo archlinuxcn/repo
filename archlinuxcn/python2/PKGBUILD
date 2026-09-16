@@ -7,7 +7,7 @@
 
 pkgname=python2
 pkgver=2.7.18
-pkgrel=19
+pkgrel=20
 _pybasever=2.7
 pkgdesc="A high-level scripting language"
 arch=('x86_64' 'aarch64' 'i686' 'pentium4')
@@ -23,7 +23,7 @@ conflicts=('python<3')
 _gentoo_patches="python-gentoo-patches-${pkgver}_p16"
 source=("https://www.python.org/ftp/python/${pkgver%rc?}/Python-${pkgver}.tar.xz"{,.asc}
         mtime-workaround.patch
-        "https://dev.gentoo.org/~mgorny/dist/python/$_gentoo_patches.tar.xz")
+        "https://www.mirrorservice.org/sites/www.ibiblio.org/gentoo/pub/proj/python/patchsets/2.7/$_gentoo_patches.tar.xz")
 sha512sums=('a7bb62b51f48ff0b6df0b18f5b0312a523e3110f49c3237936bfe56ed0e26838c0274ff5401bda6fc21bf24337477ccac49e8026c5d651e4b4cafb5eb5086f6c'
             'SKIP'
             '4e761cfd57791e8b72ecdf84c2e03875bf074311130eea5b8e97409fa304fa3468dbd359a511c4e9978e686e662c58054b4174d3e73f845fa9ded2e83a3a8076'

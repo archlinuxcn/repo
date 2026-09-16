@@ -1,0 +1,38 @@
+diff --git i/setup.py w/setup.py
+index 8cd1a6c..be0e8b7 100644
+--- i/setup.py
++++ w/setup.py
+@@ -1,4 +1,32 @@
+-from pkg_resources import DistributionNotFound, load_entry_point, working_set
++try:
++    from pkg_resources import DistributionNotFound, load_entry_point, working_set
++except ImportError:
++    # setuptools 82+ 已移除 pkg_resources，提供最小兼容实现
++    import sys
++    from importlib.metadata import entry_points
++
++    class DistributionNotFound(Exception):
++        pass
++
++    def load_entry_point(dist, group, name):
++        """从已安装的发行版中加载入口点；找不到则抛出 DistributionNotFound。"""
++        try:
++            eps = entry_points(group=group)
++        except TypeError:
++            # Python < 3.10 的旧 API
++            eps = entry_points().get(group, [])
++        for ep in eps:
++            if ep.name == name:
++                return ep.load()
++        raise DistributionNotFound(f"{group}:{name} not found in {dist}")
++
++    class _WorkingSet:
++        def add_entry(self, entry):
++            if entry not in sys.path:
++                sys.path.insert(0, entry)
++
++    working_set = _WorkingSet()
++
+ import setuptools
+ from shutil import rmtree
+ 
