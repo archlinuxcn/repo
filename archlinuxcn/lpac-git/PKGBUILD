@@ -13,11 +13,6 @@ depends=(
   cjson
 )
 makedepends=(
-  cmake
-  git
-  ninja
-)
-makedepends=(
   curl
   cmake
   git
@@ -25,6 +20,9 @@ makedepends=(
   libqmi
   libmbim
   ninja
+)
+checkdepends=(
+  criterion
 )
 optdepends=(
   'pcsclite: PC/SC support'
@@ -58,6 +56,11 @@ build() {
   )
   cmake -S . -B build "${cmake_options[@]}"
   ninja -C build
+}
+
+check() {
+  cd "$srcdir/$pkgname"
+  ctest --parallel --output-on-failure --test-dir build
 }
 
 package() {
