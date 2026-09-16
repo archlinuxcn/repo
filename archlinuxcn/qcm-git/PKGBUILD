@@ -47,8 +47,10 @@ source=(
 	"git+https://github.com/hypengw/ncrequest.git"
 	"git+https://github.com/hypengw/QExtra.git"
 	"git+https://github.com/ilqvya/random.git"
+	"git+https://github.com/hypengw/wavsen.git"
 )
 sha256sums=('SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP')
@@ -69,6 +71,9 @@ path = "../QExtra"
 
 [patch."https://github.com/ilqvya/random.git"]
 path = "../random"
+
+[patch."https://github.com/hypengw/wavsen.git"]
+path = "../wavsen"
 END
 
 	lito fetch --all-features
