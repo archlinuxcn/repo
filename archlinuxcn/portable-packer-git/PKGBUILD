@@ -16,25 +16,36 @@ sha256sums=('SKIP')
 
 conflicts+=("portable<14.99")
 
-function prepare() {
-	cd source
-}
-
 function pkgver() {
 	cd source
 	git describe --long --tags --abbrev=8 | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
 }
 
+function prepare() {
+	cd source
+	export RUSTUP_TOOLCHAIN=stable
+	cargo fetch --locked --target host-tuple
+}
+
 function build() {
 	cd source
-	go build -trimpath -buildmode=pie -mod=readonly -modcacherw -ldflags "-linkmode external -extldflags \"${LDFLAGS}\""
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	cargo build --frozen --release
 }
 
 function check() {
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
 	cd source
-	go test ./...
+	cargo test --frozen
 }
 
 function package() {
-	install -vDm755 "${srcdir}/source/packer" "${pkgdir}/usr/bin/portable-packer"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
+	install \
+		-vDm755 \
+		"${srcdir}/source/target/release/portable-packer" \
+		"${pkgdir}/usr/bin/portable-packer"
 }
