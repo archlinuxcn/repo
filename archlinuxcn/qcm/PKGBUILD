@@ -47,18 +47,12 @@ source=(
 	"git+https://github.com/hypengw/ncrequest.git#commit=${_ncrequest_commit}"
 	"git+https://github.com/hypengw/kstore.git#commit=${_kstore_commit}"
 	"git+https://github.com/ilqvya/random.git#commit=${_random_commit}"
-	"fix-kdsingleapplication.patch"
 )
 sha256sums=('2f922f2a59099eecc84d843e24573efcd4d6bdf98919832bf4c0950ffd3301ba'
             'b709892b52b12b505cc8e6d04b01c5673ea6a468fb4209adac10e7ae50d2530a'
             'c4e8c54feeddee23f759c732c467e5a215b253a63c6ab3876b6078eda9682abf'
             '446da38faf1035aea96aef837923ee4c79c4d95a24c51c182d6d6d8edfb9e44a'
-            'd406c0f56460103047a15aab701e64993c0457e95ee61217f02effb5113db65e'
-            '08a3aa14c098044dd4a129a292558df4ecfaf7bbeec0b295e5d8009c5939c422')
-
-prepare() {
-	patch -d Qcm -Np1 -i ../fix-kdsingleapplication.patch
-}
+            'd406c0f56460103047a15aab701e64993c0457e95ee61217f02effb5113db65e')
 
 build() {
 	cmake -B build \
