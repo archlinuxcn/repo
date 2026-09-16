@@ -6,10 +6,13 @@ path = [
     "README.md",
     "keys/**",
     ".SRCINFO",
+    ".gitignore",
     ".nvchecker.toml",
     "*.install",
     "*.sysusers",
+    "*sysusers.conf",
     "*.tmpfiles",
+    "*tmpfiles.conf",
     "*.logrotate",
     "*.pam",
     "*.service",
@@ -19,22 +22,13 @@ path = [
     "*.hook",
     "lilac.yaml",
     "lilac.py",
-    "valid-repos-riscv64.sh",
-    "z-archriscv-qemu-riscv64.conf",
-    "*.sh",
-    "*.conf",
-    "*.1",
-    "ChangeLog",
 ]
 SPDX-FileCopyrightText = "Arch Linux contributors"
 SPDX-License-Identifier = "0BSD"
 
 [[annotations]]
 path = [
-    "fortran-riscv64.patch",
-    "makepkg-riscv64.patch",
-    "pacman-extra-riscv64.patch",
-    "sogrep-riscv64.patch",
+    "Add-get_cffi_distribution_license_files.patch",
 ]
-SPDX-FileCopyrightText = "devtools-riscv64 contributors"
-SPDX-License-Identifier = "GPL-3.0-or-later"
+SPDX-FileCopyrightText = "python-coincurve contributors"
+SPDX-License-Identifier = "Apache-2.0 AND MIT"
