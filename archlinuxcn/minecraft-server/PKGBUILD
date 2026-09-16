@@ -3,8 +3,8 @@
 # Contributer: sowieso <sowieso@dukun.de>
 
 pkgname=minecraft-server
-pkgver=26.2
-_nonce=823e2250d24b3ddac457a60c92a6a941943fcd6a
+pkgver=26.3
+_nonce=33680f5f2ac32864d6d7cf5e56a705fdb3e05f4c
 pkgrel=1
 _mng_ver=1.0.4
 pkgdesc="Minecraft server unit files, script, and jar"
@@ -21,7 +21,7 @@ install="${pkgname}.install"
 source=("minecraft_server.${pkgver}n${_nonce:0:8}.jar"::"https://launcher.mojang.com/v1/objects/${_nonce}/server.jar"
 	"minecraft-server-${_mng_ver}.tar.gz"::"https://github.com/Edenhofer/minecraft-server/archive/refs/tags/v${_mng_ver}.tar.gz")
 noextract=("minecraft_server.${pkgver}.jar")
-sha512sums=('a7d6df49426295102c6ae8fc1453af64d463e4dd8523c870466dd0410d12a998aec464fdb7bbf99889c80fc72aaac26a55bc675d2e32f49ede0e1839ecaf4592'
+sha512sums=('b72752ccbf9be62d4ec6aa9c7c2f53c6842a8f1eb0ce418256150f5993abea65f859af7d7c30df12c5a1f2831250458df06831e1db10501015501452ad260968'
             'dd4d68ca061c97a1e3cb5c0bb68439f7d8d45b15092344f3c4dbd4f7f39fef433d566670ad440970061007d93055183b570c7bf98f09c111ecdf8ab0f208f556')
 
 _game="minecraft"
