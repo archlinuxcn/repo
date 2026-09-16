@@ -6,8 +6,8 @@ pkgname=(
         ttf-lastresort
         ttf-lastresort-he
 )
-pkgver=17.000
-pkgrel=11
+pkgver=18.000
+pkgrel=1
 pkgdesc="Unicode last resort fallback font."
 arch=('any')
 url="https://github.com/unicode-org/last-resort-font"
@@ -20,7 +20,7 @@ makedepends=(
 source=(
         "git+https://github.com/unicode-org/last-resort-font.git#tag=$pkgver"
 )
-b2sums=('cbe37e92a7a81d5e10c0aa2d2f7a70bad9786a4cdbbbcda13d1f3b26aa8ce63cc1e55691e081d50a65482b20002c6828126e5cff96d103c92c2095daffe59477')
+b2sums=('7a55b882c133a52a3163c71645abda1e41ac6d537cebc497db41fab1ba0358fe5df4045744e6743316d222dcfe23d3a9335e77e0fd619c9ca9e32af13511840d')
 
 build() {
         cd last-resort-font
