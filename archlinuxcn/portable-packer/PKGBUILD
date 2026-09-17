@@ -24,6 +24,7 @@ function prepare() {
 
 function build() {
 	cd source
+	git submodule update --init --recursive
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
 	cargo build --frozen --release

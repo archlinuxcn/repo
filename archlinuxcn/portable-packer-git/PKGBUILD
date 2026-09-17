@@ -23,6 +23,7 @@ function pkgver() {
 
 function prepare() {
 	cd source
+	git submodule update --init --recursive
 	export RUSTUP_TOOLCHAIN=stable
 	cargo fetch --locked --target host-tuple
 }
