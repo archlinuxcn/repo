@@ -1,6 +1,6 @@
 pkgname=julia-git-s2n_tls_jll-src
-pkgver=1.7.9+0
-_commit=07410e99050d1fbcf9fe0df9baa0f24ca6753d8e
+pkgver=1.7.10+0
+_commit=5dc105353250f8936a40339bd25a0e3515928afb
 pkgrel=1
 pkgdesc="s2n_tls_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/s2n_tls_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git s2n-tls)
 source=("git+https://github.com/JuliaBinaryWrappers/s2n_tls_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('89a0d409222df86686db24a2d66450766c9aacd8fb776bbccbe40253ee5f6bd9'
+sha256sums=('5558abe0e9b1b2af59f76f9cd155593dc00be513bf431f49750bb7fd4d7d39a7'
             '1740397b192b01a431132f41ebdfd704f2cc464f445246a1368c60a2362bedcc')
 
 build() {
