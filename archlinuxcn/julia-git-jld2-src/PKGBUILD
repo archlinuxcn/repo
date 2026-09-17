@@ -1,6 +1,6 @@
 pkgname=julia-git-jld2-src
-pkgver=0.6.6
-_commit=ac27a8972e4d253a8a1347fa8ddad51de85769df
+pkgver=0.6.7
+_commit=1907776a87fbfa4dc0730284d3e33db063ac0966
 pkgrel=1
 pkgdesc="JLD2.jl"
 url="https://github.com/JuliaIO/JLD2.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/JLD2.jl.git#commit=$_commit")
-sha256sums=('20ae2e322f5e89e3f255377d5cefd95d450e578a620c505e84d4ad7e136f7e90')
+sha256sums=('71c3363b315998ef225c0f036858cfbaf0fe9ed35b163a60ebda026695240acd')
 
 package() {
   cd JLD2.jl
