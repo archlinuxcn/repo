@@ -1,6 +1,6 @@
 pkgname=julia-git-staticarrays-src
-pkgver=1.9.20
-_commit=8935f7091f8376314e482eb6c8c29d478b9ba38b
+pkgver=1.9.21
+_commit=37a3c92ca0e0e3171a93c48474141de4c129922b
 pkgrel=1
 pkgdesc="StaticArrays.jl"
 url="https://github.com/JuliaArrays/StaticArrays.jl"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/StaticArrays.jl#commit=$_commit")
-md5sums=('1dc9fba9adbd1b2466959f4959f65c56')
+md5sums=('800783b68a5e8e5e3183e4910707dc7f')
 
 package() {
   cd StaticArrays.jl

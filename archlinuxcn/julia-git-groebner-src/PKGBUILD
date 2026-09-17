@@ -1,6 +1,6 @@
 pkgname=julia-git-groebner-src
-pkgver=0.10.9
-_commit=cebce0f462fac923fd7cce3f61a29606da33e7bc
+pkgver=0.10.10
+_commit=e8f712d6e6507b00a373532b7829af85fa4e3218
 pkgrel=1
 pkgdesc="Groebner.jl"
 url="https://github.com/sumiya11/Groebner.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/sumiya11/Groebner.jl.git#commit=$_commit")
-sha256sums=('aabdc10652a76f44bd4b58397abbbe4528c9a836c14d519bd7e48fa9e2fcb5c6')
+sha256sums=('02ebdcade6e6dbe1e29c99f6510e6b327ec16078eb20df759e0791997a41b228')
 
 package() {
   cd Groebner.jl
