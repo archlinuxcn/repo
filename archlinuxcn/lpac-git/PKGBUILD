@@ -2,7 +2,7 @@
 # Contributor: Peter Cai <peter@typeblog.net>
 
 pkgname=lpac-git
-pkgver=2.3.0.r109.g3ff3559
+pkgver=2.3.0.r115.gc7c8d4f
 pkgrel=1
 pkgdesc="Local Profile Agent (LPA) for eSIM cards via PC/SC readers, or AT / APDU commands over stdio."
 arch=(x86_64 aarch64 armv7h)
@@ -13,11 +13,6 @@ depends=(
   cjson
 )
 makedepends=(
-  cmake
-  git
-  ninja
-)
-makedepends=(
   curl
   cmake
   git
@@ -25,6 +20,9 @@ makedepends=(
   libqmi
   libmbim
   ninja
+)
+checkdepends=(
+  criterion
 )
 optdepends=(
   'pcsclite: PC/SC support'
@@ -58,6 +56,11 @@ build() {
   )
   cmake -S . -B build "${cmake_options[@]}"
   ninja -C build
+}
+
+check() {
+  cd "$srcdir/$pkgname"
+  ctest --parallel --output-on-failure --test-dir build
 }
 
 package() {
