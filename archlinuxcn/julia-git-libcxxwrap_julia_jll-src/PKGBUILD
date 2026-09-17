@@ -1,6 +1,6 @@
 pkgname=julia-git-libcxxwrap_julia_jll-src
-pkgver=0.14.10+1
-_commit=267053d2a75e656187150afd0b8a069bc8321ca7
+pkgver=0.14.10+2
+_commit=0841403eceab9b0e4ad3fbb8766c45388417f4a0
 pkgrel=1
 pkgdesc="libcxxwrap_julia_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libcxxwrap_julia_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libcxxwrap_julia)
 source=("git+https://github.com/JuliaBinaryWrappers/libcxxwrap_julia_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('8351b4010d106c9afe8968688af86a0a390c5e65e05a0ba273460531392a1d21'
+sha256sums=('ce20206a8710a5ffa4d54f14c1c370aefce8549630a4da3607ddb6090ea371d0'
             '060d7eaf22c63514773d0d8d19f74a26f5d880032716a51e082d3603483d08d9')
 
 build() {
