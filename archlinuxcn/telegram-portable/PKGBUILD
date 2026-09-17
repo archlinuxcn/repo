@@ -80,8 +80,8 @@ function package() {
 		--config-ng "${srcdir}/config.toml" \
 		--desktop-file "${srcdir}/telegram-desktop.desktop"
 
-	ln -sf /usr/bin/telegram-desktop-portable "${pkgdir}/usr/bin/Telegram"
-	ln -sf /usr/bin/telegram-desktop-portable "${pkgdir}/usr/bin/telegram-desktop"
+	ln -sf /usr/bin/telegram-portable "${pkgdir}/usr/bin/Telegram"
+	ln -sf /usr/bin/telegram-portable "${pkgdir}/usr/bin/telegram-desktop"
 	ln -sf \
 		/usr/share/applications/org.telegram.desktop.desktop \
 		"${pkgdir}/usr/share/applications/telegram-desktop.desktop"
