@@ -1,6 +1,6 @@
 pkgname=julia-git-tzjdata-src
-pkgver=1.6.0+2025c
-_commit=a40557de71721332fe1fb9dd490390b6c6000d11
+pkgver=1.7.0+2026a
+_commit=89326c78b5ab26b3c91193dce1929108cbdb94e4
 pkgrel=1
 pkgdesc="TZJData.jl"
 url="https://github.com/JuliaTime/TZJData.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts wget)
 depends=(julia-git)
 source=("git+https://github.com/JuliaTime/TZJData.jl.git#commit=$_commit")
-sha256sums=('665ef675c927ee3d54a598da37f04e2f3f7fb6ddabc14a45d44d0922928b92b1')
+sha256sums=('1de8d546f395acec55fbc33b00acee8ab1b86954d403111f5b9d119734ad1b30')
 
 build() {
   cd TZJData.jl
