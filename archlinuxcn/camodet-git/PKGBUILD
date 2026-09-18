@@ -58,6 +58,7 @@ function pkgver() {
 function prepare() {
 	cd camodet
 	sed -i '1i #include <opencv2/imgproc.hpp>' camodet.cpp
+	sed -i 's/\bcontourArea\b/cv::contourArea/g' camodet.cpp
 }
 
 function build() {
