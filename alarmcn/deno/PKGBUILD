@@ -2,7 +2,7 @@
 # Contributor: Metal A-wing <1 at 233 dot email>
 
 pkgname=deno
-pkgver=2.9.5
+pkgver=2.9.7
 pkgrel=1
 _rusty_v8_ver=150.4.0
 pkgdesc="A secure runtime for JavaScript and TypeScript"
@@ -13,17 +13,21 @@ depends=('dbus' 'lcms2' 'libffi' 'libgcc' 'sqlite' 'wayland' 'zlib' 'zstd')
 makedepends=('git' 'python' 'rust' 'rust-bindgen' 'nodejs' 'gn' 'ninja' 'clang' 'lld' 'cmake' 'protobuf')
 source=("git+https://github.com/denoland/deno.git#tag=v$pkgver"
         "git+https://github.com/denoland/rusty_v8.git#tag=v$_rusty_v8_ver"
-        "compiler-rt-adjust-paths.patch")
-sha512sums=('5f6091f10c6804ee7c8a846dba7d7ba8af188f85b2bb5cb4cc6ba3524598817607c3cf4b9c714965fa906e457a499166b3c1b6884b81c8d584183836532cd671'
+        "compiler-rt-adjust-paths.patch"
+        "deno-2.9.6-rust-system.patch")
+sha512sums=('ef295c7d65c21aeccc8527fdbf3d0d0d2fcdcc833dd548f353ea6658214c17674ece711c4410c27aa1d85f851ffbe63c81056e9d388f866cacd9718f7031f6ff'
             'ae0d6d585cf7ba0172930d09e3d7a2d4bb5d748409e86b44dfa5a12741a51aab138ab12ca8327ac6a36506b9caf6a20fed20f0efd5b7fdf145bd8fdca20f5ed0'
-            '8a782d68a6140f739f00d3eb341d742584ee0be80e85e89bc1540a21d15ad8b75274672ebd02e1e4fd1925ed9ca68b05142388e795dff81b0a864d38f5514253')
+            '8a782d68a6140f739f00d3eb341d742584ee0be80e85e89bc1540a21d15ad8b75274672ebd02e1e4fd1925ed9ca68b05142388e795dff81b0a864d38f5514253'
+            '658e32634fc7463f79099d19e2e54ef59318811209d1e5f7adf5caae9b57ad06dfe9bbe41d272c47d92cd0ad1c746cc0e04775c495c8e120cbd62c88239d1945')
 
 prepare() {
   cd rusty_v8
   git config -f .gitmodules submodule.v8.shallow true
   git submodule update --init --recursive
 
+  # Use system-provided Rust toolchain for V8 build
   sed -i '/download_rust_toolchain();/d' build.rs
+  patch -Np1 -i ../deno-2.9.6-rust-system.patch
 
   # Drop flags rejected by the clang++ invoked in our build environment.
   sed -i \
@@ -54,7 +58,7 @@ build() {
   export CXXFLAGS="${CXXFLAGS/_FORTIFY_SOURCE=3/_FORTIFY_SOURCE=2}"
 
   local _clang_version=$(clang -dumpversion | cut -d '.' -f 1)
-  local _rustc_version=$(rustc --version)
+  local _rustc_version=$(rustc --version | awk '{ print $2 ;}')
   local _extra_gn_args=(
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
     'host_toolchain="//build/toolchain/linux/unbundle:default"'
@@ -62,8 +66,8 @@ build() {
     'rust_sysroot_absolute="/usr"'
     'rust_bindgen_root="/usr"'
     "rustc_version=\"$_rustc_version\""
+    'use_sysroot=false'
     'use_system_libffi=true'
-    'v8_enable_temporal_support=false'
   )
 
   export CC=clang CXX=clang++ AR=/usr/bin/ar NM=nm
@@ -77,6 +81,7 @@ build() {
   export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
   export ZSTD_SYS_USE_PKG_CONFIG=1
   export CARGO_FEATURE_SYSTEM=1 # Use system-provided libffi
+  export RUSTC_BOOTSTRAP=1
 
   cargo build --frozen --release
 }

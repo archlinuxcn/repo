@@ -1,0 +1,62 @@
+diff --git a/build/config/rust.gni b/build/config/rust.gni
+index 8eb111065..53fafd984 100644
+--- a/build/config/rust.gni
++++ b/build/config/rust.gni
+@@ -442,8 +442,10 @@ rustc_wrapper_inputs = [
+   "//build/rust/gni_impl/rustc_wrapper.py",
+ ]
+ 
+-if (host_os == "win") {
+-  rustc_wrapper_inputs += [ "//third_party/rust-toolchain/bin/rustc.exe" ]
+-} else {
+-  rustc_wrapper_inputs += [ "//third_party/rust-toolchain/bin/rustc" ]
++if (use_chromium_rust_toolchain) {
++  if (host_os == "win") {
++    rustc_wrapper_inputs += [ "//third_party/rust-toolchain/bin/rustc.exe" ]
++  } else {
++    rustc_wrapper_inputs += [ "//third_party/rust-toolchain/bin/rustc" ]
++  }
+ }
+diff --git a/build/rust/cargo_crate.gni b/build/rust/cargo_crate.gni
+index 4b07ea131..22e897e08 100644
+--- a/build/rust/cargo_crate.gni
++++ b/build/rust/cargo_crate.gni
+@@ -463,10 +463,12 @@ template("cargo_crate") {
+         rustc_print_cfg_path,
+       ]
+ 
+-      if (host_os == "win") {
+-        inputs += [ "//third_party/rust-toolchain/bin/rustc.exe" ]
+-      } else {
+-        inputs += [ "//third_party/rust-toolchain/bin/rustc" ]
++      if (use_chromium_rust_toolchain) {
++        if (host_os == "win") {
++          inputs += [ "//third_party/rust-toolchain/bin/rustc.exe" ]
++        } else {
++          inputs += [ "//third_party/rust-toolchain/bin/rustc" ]
++        }
+       }
+ 
+       build_script_target = ":${_build_script_name}($rust_macro_toolchain)"
+diff --git a/build/rust/std/BUILD.gn b/build/rust/std/BUILD.gn
+index 105a1d52a..977bd4c58 100644
+--- a/build/rust/std/BUILD.gn
++++ b/build/rust/std/BUILD.gn
+@@ -268,10 +268,14 @@ if (toolchain_has_rust) {
+       out_libdir = rebase_path(target_out_dir, root_build_dir)
+       out_depfile = rebase_path(depfile, root_build_dir)
+ 
+-      if (host_os == "win") {
+-        inputs = [ "//third_party/rust-toolchain/bin/rustc.exe" ]
++      if (use_chromium_rust_toolchain) {
++        if (host_os == "win") {
++          inputs = [ "//third_party/rust-toolchain/bin/rustc.exe" ]
++        } else {
++          inputs = [ "//third_party/rust-toolchain/bin/rustc" ]
++        }
+       } else {
+-        inputs = [ "//third_party/rust-toolchain/bin/rustc" ]
++        inputs = []
+       }
+ 
+       # For the rustc sysroot we must include even the rlibs we don't pass to

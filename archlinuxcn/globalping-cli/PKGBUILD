@@ -2,7 +2,7 @@
 
 pkgname=globalping-cli 
 pkgdesc="A simple CLI tool to run networking commands remotely from hundreds of globally distributed servers "
-pkgver=1.5.2
+pkgver=1.6.0
 pkgrel=1
 arch=("x86_64")
 url="https://github.com/jsdelivr/globalping-cli"
@@ -13,7 +13,7 @@ makedepends=("go")
 source=(
     "${pkgname}-${pkgver}.tar.gz::https://github.com/jsdelivr/globalping-cli/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha256sums=('c2875a55232c53e0a796df163b4517dc2d976a41bb902f8acad7f6e24d7d124f')
+sha256sums=('9228d8f6f270f3a515a681e14d14baa545095f131e1d3b6f3b4f047f859e7eea')
 
 provides=("globalping-cli")
 
