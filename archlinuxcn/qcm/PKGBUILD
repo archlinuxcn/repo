@@ -53,7 +53,6 @@ source=(
 	"git+https://github.com/hypengw/wavsen.git#commit=${_wavsen_commit}"
 	"git+https://github.com/litocpp/vvk.git#commit=${_vvk_commit}"
 	"git+https://github.com/litocpp/rstd.git#tag=v${_rstd_version}"
-	"0001-allow-system-dependencies.diff::https://github.com/hypengw/Qcm/pull/61.diff"
 )
 sha256sums=('6cca08f3c04287557e436161bd08de2db3c0f791b60abc8b086e5fd0cdf85369'
             'e0b29a7179d1f35b76ca2582003c0a97c20b1a30b8e2e24cd95b025e7bfabfca'
@@ -61,11 +60,14 @@ sha256sums=('6cca08f3c04287557e436161bd08de2db3c0f791b60abc8b086e5fd0cdf85369'
             '0fec05e02154c94be675e16905fd0aad0d641bfeab96b006535cff508b905180'
             '6b739d364463672474652916f3b57c0b191d5dbbdce20433d1f17cff9220b3ac'
             'f49079a367c7759207d56d49789f5f7c0bfa99b1a3d204566aeceddd9f097b67'
-            'ebf0fd9b60d85a7f465992a75b581b7141bfd2102d8c4f752dada017dc2b74a7'
-            'b16e0681c994ac8e0d26df8e91b7d9cf8760829e2a9c7c474a8eb02df455cb8d')
+            'ebf0fd9b60d85a7f465992a75b581b7141bfd2102d8c4f752dada017dc2b74a7')
 
 prepare() {
 	cd Qcm
+
+	# Allow using system dependencies
+	git cherry-pick -n d82610e55acf942f271bd92d3d495aa218148aed
+
 	mkdir -p .lito
 	cat >.lito/config.toml <<END
 [patch."https://github.com/hypengw/ncrequest.git"]
@@ -95,7 +97,7 @@ source = "installed"
 [tools.cmake.overrides.VulkanMemoryAllocator]
 source = "installed"
 END
-	patch -Np1 -i ../0001-allow-system-dependencies.diff
+
 	lito fetch --all-features
 }
 
