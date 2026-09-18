@@ -27,6 +27,7 @@ path = [
     "chromium-148-revert-clang-fsanitize-return-flag-1.patch",
     "chromium-148-revert-clang-fsanitize-return-flag-2.patch",
     "glibc-2.42-baud-rate-fix.patch",
+    "chromium-153-iamf-tools-unbundled-opus.patch"
 ]
 SPDX-FileCopyrightText = "Arch Linux contributors"
 SPDX-License-Identifier = "0BSD"
@@ -57,11 +58,14 @@ path = [
 SPDX-FileCopyrightText = "chromium contributors"
 SPDX-License-Identifier = "BSD-3-Clause"
 
-# [[annotations]]
-# path = [
-# ]
-# SPDX-FileCopyrightText = "2015-2026 The ungoogled-chromium Authors"
-# SPDX-License-Identifier = "BSD-3-Clause"
+[[annotations]]
+path = [
+    "chromium-153-hermetic-python.patch",
+    "chromium-153-typescript.patch",
+    "chromium-153-crubit.patch",
+]
+SPDX-FileCopyrightText = "2015-2026 The ungoogled-chromium Authors"
+SPDX-License-Identifier = "BSD-3-Clause"
 
 [[annotations]]
 path = [
@@ -82,7 +86,6 @@ path = [
     "chromium-149-drop-unknown-clang-flag.patch",
     "chromium-149-use-of-undeclared-identifier-ERROR.patch",
     "chromium-152-crubit.patch",
-    "chromium-152-dawn-llvm-22.patch",
 ]
 SPDX-FileCopyrightText = "2003-2026 Nixpkgs/NixOS contributors"
 SPDX-License-Identifier = "MIT"

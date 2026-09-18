@@ -11,21 +11,20 @@ index 7df3e18c4c..1d253318a6 100644
        } else {
          # Combine after https://github.com/llvm/llvm-project/pull/192241
          cflags += [ "/clang:-fdiagnostics-show-inlining-chain" ]
-@@ -1578,7 +1578,7 @@ config("clang_warning_suppression") {
+@@ -1590,7 +1590,7 @@ config("clang_warning_suppression") {
  # See also: https://crbug.com/40891132#comment10
  ubsan_hardening("c_array_bounds") {
    sanitizer = "array-bounds"
--  condition = !(is_asan && target_cpu == "x86") && !is_wasm
+-  condition = !(is_asan && target_cpu == "x86")
 +  condition = false
- 
+
    # Because we've enabled array-bounds sanitizing we also want to suppress
    # the related warning about "unsafe-buffer-usage-in-static-sized-array",
-@@ -1592,7 +1592,7 @@ ubsan_hardening("c_array_bounds") {
+@@ -1604,6 +1604,7 @@ ubsan_hardening("c_array_bounds") {
  # `NOTREACHED()` at the end of such functions.
  ubsan_hardening("return") {
    sanitizer = "return"
--  condition = !is_wasm
 +  condition = false
  }
- 
+
  config("rustc_revision") {
