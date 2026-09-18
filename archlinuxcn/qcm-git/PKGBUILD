@@ -46,8 +46,12 @@ source=(
 	"git+https://github.com/hypengw/QExtra.git"
 	"git+https://github.com/ilqvya/random.git"
 	"git+https://github.com/hypengw/wavsen.git"
+	"git+https://github.com/litocpp/vvk.git"
+	"git+https://github.com/litocpp/rstd.git"
 )
 sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
@@ -72,6 +76,21 @@ path = "../random"
 
 [patch."https://github.com/hypengw/wavsen.git"]
 path = "../wavsen"
+
+[patch."https://github.com/litocpp/rstd.git"]
+path = "../rstd"
+
+[patch."https://github.com/litocpp/vvk.git"]
+path = "../vvk"
+
+[tools.cmake.overrides.qml_material]
+source = "installed"
+
+[tools.cmake.overrides.KDSingleApplication]
+source = "installed"
+
+[tools.cmake.overrides.VulkanMemoryAllocator]
+source = "installed"
 END
 
 	lito fetch --all-features
