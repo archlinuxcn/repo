@@ -10,32 +10,31 @@ arch=('x86_64')
 url="https://github.com/hypengw/Qcm"
 license=('GPL-2.0-or-later')
 depends=(
+	'glibc'
+	'libstdc++'
+	'libgcc'
 	'qt6-base'
 	'qt6-declarative'
-	'qt6-shadertools'
 	'qt6-grpc'
 	'qt6-websockets'
 	'hicolor-icon-theme'
-	'curl'
 	'openssl'
-	'dbus'
 	'ffmpeg'
 	'kdsingleapplication'
 	'qmlmaterial-git'
 	'sqlite'
 )
 makedepends=(
-	'corrosion'
 	'git'
-	'git-lfs'
+	'cargo'
 	'clang'
 	'lito'
 	'lld'
 	'llvm'
+	'cmake'
 	'ninja'
-	'asio'
-	'pegtl'
 	'vulkan-headers'
+	'vulkan-memory-allocator'
 )
 optdepends=('qcm-ncm-plugin-git: Netease Cloud Music plugin')
 replaces=('qcmbackend-git')
