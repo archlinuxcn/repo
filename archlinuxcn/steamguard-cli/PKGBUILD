@@ -3,7 +3,7 @@
 pkgname=steamguard-cli
 _pkgname=steamguard
 pkgver=0.18.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A linux utility for generating 2FA codes for Steam and managing Steam trade confirmations."
 arch=('x86_64')
 url='https://github.com/dyc3/steamguard-cli'
@@ -28,6 +28,7 @@ build() {
     # completion
     "target/release/$_pkgname" completion --shell bash >"$srcdir/$pkgname-$pkgver/$pkgname"
     "target/release/$_pkgname" completion --shell zsh >"$srcdir/$pkgname-$pkgver/_$_pkgname"
+    "target/release/$_pkgname" completion --shell fish >"$srcdir/$pkgname-$pkgver/$_pkgname.fish"
 }
 
 check() {
@@ -42,4 +43,5 @@ package() {
     install -Dm0755 "target/release/$_pkgname" "$pkgdir/usr/bin/$_pkgname"
     install -Dm0644 "$pkgname" "$pkgdir/usr/share/bash-completion/completions/$_pkgname"
     install -Dm0644 -t "$pkgdir/usr/share/zsh/site-functions/" "_$_pkgname"
+    install -Dm0644 -t "$pkgdir/usr/share/fish/vendor_completions.d" "$_pkgname.fish"
 }
