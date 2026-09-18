@@ -55,6 +55,11 @@ function pkgver() {
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
+function prepare() {
+	cd camodet
+	sed -i '1i #include <opencv2/imgproc.hpp>' camodet.cpp
+}
+
 function build() {
 	cmake -B build -S "camodet" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
