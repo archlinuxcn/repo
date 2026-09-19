@@ -22,7 +22,7 @@ options=('!lto')
 
 pkgver() {
   cd "$_pkgname"
-  git describe --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
+  git describe --tags '--exclude=lilydjwg*' | sed -E 's/([^-]*-g)/r\1/;s/-/./g;s/^v//'
 }
 
 prepare() {
