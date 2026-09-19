@@ -1,0 +1,34 @@
+From 2bbc2f726e1eed6eb54e6afff8dc0f2cc8bc3ee9 Mon Sep 17 00:00:00 2001
+From: q234 rty <q23456yuiop@gmail.com>
+Date: Sat, 19 Sep 2026 17:24:51 +0800
+Subject: [PATCH 3/3] Add support for setting font weight via
+ TELEGRAM_DESKTOP_UI_FONT_WEIGHT
+
+---
+ ui/style/style_core_font.cpp | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/ui/style/style_core_font.cpp b/ui/style/style_core_font.cpp
+index 0316d79..173c3a8 100644
+--- a/ui/style/style_core_font.cpp
++++ b/ui/style/style_core_font.cpp
+@@ -335,6 +335,7 @@ struct Metrics {
+ 	const auto monospace = (flags & FontFlag::Monospace) != 0;
+ 	const auto system = !monospace && (family == SystemFontTag());
+ 	const auto overriden = !monospace && !system && !family.isEmpty();
++	const auto fontWeight = qEnvironmentVariable("TELEGRAM_DESKTOP_UI_FONT_WEIGHT").toInt();
+ 	if (monospace) {
+ 		font.setFamily(MonospaceFont());
+ 	} else if (system) {
+@@ -357,7 +358,7 @@ struct Metrics {
+ 	if (!monospace) {
+ 		font.setWeight((flags & FontFlag::Bold)
+ 			? QFont::DemiBold
+-			: QFont::Normal);
++			: (fontWeight ? QFont::Weight(fontWeight) : QFont::Normal));
+ 		if (font.bold()) {
+ 			const auto style = QFontInfo(font).styleName();
+ 			if (!style.isEmpty() && !style.startsWith(
+-- 
+2.55.0
+
