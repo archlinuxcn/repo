@@ -12,9 +12,11 @@ conflicts=(mosh)
 provides=(mosh)
 options=(!emptydirs)
 source=("git+https://github.com/mobile-shell/mosh"
-        cursor_style.patch)
+        cursor_style.patch
+        0001-bind-to-MOSH_CPORT.patch)
 sha512sums=('SKIP'
-            'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e')
+            'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e'
+            'd291a1e93cf15be1f3b8a1d8be186034f3d0bfa29b86588735cbe49d61de7767ee8fc01acd0210cc4b361ee8b240024d7016c786a71834e5e715d4d1df42e2d5')
 
 pkgver() {
   cd "$srcdir/mosh"
@@ -24,6 +26,7 @@ pkgver() {
 prepare() {
   cd "$srcdir/mosh"
   patch -Np1 < ../cursor_style.patch
+  patch -Np1 < ../0001-bind-to-MOSH_CPORT.patch
 }
 
 build() {
