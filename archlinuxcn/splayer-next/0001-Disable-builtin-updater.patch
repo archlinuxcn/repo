@@ -1,0 +1,38 @@
+--- a/electron/main/services/updater.ts
++++ b/electron/main/services/updater.ts
+@@ -2,13 +2,15 @@
+ import { shell } from "electron";
+ import { sendToMain } from "@main/utils/broadcast";
+ import { store } from "@main/store";
+-import { isDev, isMac, isPortable, isAppX } from "@main/utils/config";
++import { isDev, isLinux, isMac, isPortable, isAppX } from "@main/utils/config";
+ import { updaterLog } from "@main/utils/logger";
+ import type { UpdateEvent, UpdateMeta } from "@shared/types/update";
+ import type { UpdateChannel } from "@shared/types/settings";
+ 
+ const { autoUpdater } = electronUpdater;
+ 
++const updaterDisabled = isLinux && !process.env.APPIMAGE;
++
+ /**
+  * 是否支持内置下载安装
+  * AppX 由 Store 管理更新，Mac/Portable 无自动安装能力
+@@ -117,6 +119,7 @@
+  * @param allowDowngrade - 是否明确允许本次检查安装更低版本
+  */
+ const runCheck = (manual: boolean, allowDowngrade?: boolean): void => {
++  if (updaterDisabled) return;
+   if (currentCheck) {
+     pendingCheck = {
+       manual: manual || pendingCheck?.manual === true,
+@@ -188,6 +191,10 @@
+   autoUpdater.autoInstallOnAppQuit = true;
+   applyChannel();
+   bindEvents();
++  if (updaterDisabled) {
++    updaterLog.info("检测到发行版安装，已禁用内置更新器");
++    return;
++  }
+   if (isDev) {
+     autoUpdater.forceDevUpdateConfig = true;
+     updaterLog.info("开发模式，仅支持手动检查更新");
