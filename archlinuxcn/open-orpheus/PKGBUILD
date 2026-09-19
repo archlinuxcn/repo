@@ -1,6 +1,6 @@
 pkgname=open-orpheus
 pkgver=0.17.1
-pkgrel=2
+pkgrel=3
 pkgdesc="An open-source implementation of Netease Cloud Music's Orpheus browser host"
 arch=('x86_64')
 url="https://github.com/YUCLing/open-orpheus"
@@ -45,8 +45,8 @@ source=(
   "open-orpheus.desktop"
 )
 sha256sums=('4db4cd38beac45776160faf88df24195e600c5d26efadfdbae33d86154e1b01f'
-            '1af66959f8bd34896684c154d9169cdbad94b5ec08e107c4652ba5473e8d6ded'
-            'de9b00ee7e7025cbcadda8cd16b63aa4092fb905803d0e6f4f570ab8461a5f5c')
+  '8b4d4e8ec5ba7e7fc3666a07571635127427809b86ed37172a5c33f98aa2f522'
+  'de9b00ee7e7025cbcadda8cd16b63aa4092fb905803d0e6f4f570ab8461a5f5c')
 
 prepare() {
   cd "$pkgname-$pkgver"
