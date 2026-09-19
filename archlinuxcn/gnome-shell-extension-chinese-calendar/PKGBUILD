@@ -15,14 +15,11 @@ _get_uuid() {
     grep -oP '"uuid":\s*"\K[^"\s]+' "$1/metadata.json"
 }
 
-source=("${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.gz"
-        '0001-fix-lockfile.patch'::'https://github.com/tigertall/chinese-calendar/pull/11.patch')
-b2sums=('43a554e91b92befd6bed4167e05e3fd5ecedf02532dabdf7a731b6021ec9e69647bf95e40b22f5aecd31d1931a6a2554ae2f5ad490402712f48ce1a8f11bd6db'
-        'c0b6729bfa1985906c86dd42188b7f21b4feff448e8f92c2ee4cca512d6c8baf1dd7f6c9188449c4c9067166301db58704c536a41650c1a1e0a250b207cef2ed')
+source=("${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.gz")
+b2sums=('43a554e91b92befd6bed4167e05e3fd5ecedf02532dabdf7a731b6021ec9e69647bf95e40b22f5aecd31d1931a6a2554ae2f5ad490402712f48ce1a8f11bd6db')
 
 build() {
     cd "${_shortname}-${pkgver}"
-    patch -Np1 -i "$srcdir/0001-fix-lockfile.patch"
 
     npm install --cache "${srcdir}/npm-cache"
     npm run build
