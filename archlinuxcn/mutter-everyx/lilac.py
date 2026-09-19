@@ -6,8 +6,10 @@ g = SimpleNamespace()
 
 # patch 清单, 元素为 source 中的完整条目(名称::URL 或本地文件名)
 _PATCHES = [
-    '5122.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5122.patch',
     '5179-50.4.patch',
+    'fe6bda5a34626a0963879362c56b5c67c76f9b25.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/fe6bda5a34626a0963879362c56b5c67c76f9b25.patch',
+    'f5bbc00f456cd3b06e76e80281e239fe27abf58a.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/f5bbc00f456cd3b06e76e80281e239fe27abf58a.patch',
+    'fdc0e67361cec52a568dbc1cabdf8effcaf7aa79.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/fdc0e67361cec52a568dbc1cabdf8effcaf7aa79.patch',
 ]
 
 def pre_build():
