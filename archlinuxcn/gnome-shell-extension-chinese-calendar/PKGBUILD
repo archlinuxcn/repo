@@ -2,8 +2,8 @@
 
 pkgname=gnome-shell-extension-chinese-calendar
 _shortname=${pkgname#gnome-shell-extension-}
-pkgver=1.5
-pkgrel=2
+pkgver=1.6
+pkgrel=1
 pkgdesc='展示中国农历和节假日信息的gnome-shell扩展'
 arch=('any')
 url="https://github.com/tigertall/chinese-calendar"
@@ -16,7 +16,7 @@ _get_uuid() {
 }
 
 source=("${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('43a554e91b92befd6bed4167e05e3fd5ecedf02532dabdf7a731b6021ec9e69647bf95e40b22f5aecd31d1931a6a2554ae2f5ad490402712f48ce1a8f11bd6db')
+b2sums=('5fac6597cb337008ffcf3e40e1e570d073009f9b1380bb0d581468b2d9f62c9ea97d0166d4050504e6b61d5eb7c22d39917340610a6005fb43f5818a22e03646')
 
 build() {
     cd "${_shortname}-${pkgver}"
