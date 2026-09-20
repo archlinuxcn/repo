@@ -40,22 +40,8 @@ optdepends=('qcm-ncm-plugin-git: Netease Cloud Music plugin')
 replaces=('qcmbackend-git')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=(
-	"git+${url}.git"
-	"git+https://github.com/hypengw/ncrequest.git"
-	"git+https://github.com/hypengw/QExtra.git"
-	"git+https://github.com/ilqvya/random.git"
-	"git+https://github.com/hypengw/wavsen.git"
-	"git+https://github.com/litocpp/vvk.git"
-	"git+https://github.com/litocpp/rstd.git"
-)
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+source=("git+${url}.git")
+sha256sums=('SKIP')
 
 pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
@@ -65,24 +51,6 @@ prepare() {
 	cd Qcm
 	mkdir -p .lito
 	cat >.lito/config.toml <<END
-[patch."https://github.com/hypengw/ncrequest.git"]
-path = "../ncrequest"
-
-[patch."https://github.com/hypengw/QExtra.git"]
-path = "../QExtra"
-
-[patch."https://github.com/ilqvya/random.git"]
-path = "../random"
-
-[patch."https://github.com/hypengw/wavsen.git"]
-path = "../wavsen"
-
-[patch."https://github.com/litocpp/rstd.git"]
-path = "../rstd"
-
-[patch."https://github.com/litocpp/vvk.git"]
-path = "../vvk"
-
 [tools.cmake.overrides.qml_material]
 source = "installed"
 
