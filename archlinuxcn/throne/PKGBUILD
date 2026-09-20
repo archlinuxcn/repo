@@ -32,7 +32,7 @@ prepare() {
 	cd "${_srcname}-${pkgver}/"
 	cp "${srcdir}/srslist.h" .
 
-	cd core/server
+	cd core
 	export GOBIN="${srcdir}/bin"
 	export PATH="${PATH}:${GOBIN}"
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
@@ -56,10 +56,10 @@ build() {
 	export CGO_CXXFLAGS="${CXXFLAGS}"
 	export CGO_LDFLAGS="${LDFLAGS}"
 
-	cd core/server
+	cd core
 
 	VERSION_SINGBOX=$(go list -m -f '{{.Version}}' github.com/sagernet/sing-box)
-	go build -o ../../build/ \
+	go build -o ../build \
 		-buildmode=pie \
 		-trimpath \
 		-ldflags "-linkmode=external -w -s -X 'github.com/sagernet/sing-box/constant.Version=${VERSION_SINGBOX}' -X 'internal/godebug.defaultGODEBUG=multipathtcp=0' -checklinkname=0" \
