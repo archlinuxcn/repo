@@ -1,0 +1,36 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=gnome-shell-extension-auto-power-profile
+_shortname=${pkgname#gnome-shell-extension-}
+pkgver=34
+pkgrel=2
+pkgdesc='Automatically switch between power profiles based on power supply'
+arch=('any')
+url='https://github.com/dmy3k/auto-power-profile'
+license=('GPL-3.0-or-later')
+depends=('gnome-shell' 'power-profiles-daemon')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+b2sums=('170e5056699878573a68b61b898dec70f51a42a0744fb34961b389d1d28e2b09bfbdcd5b24385417125a0f0c1b4cced756f70502e6d5b7d2e0d757115f3b7905')
+
+build() {
+    cd "${_shortname}-${pkgver}"
+
+    make build
+}
+
+package() {
+    cd "${_shortname}-${pkgver}"
+
+    local _uuid='auto-power-profile@dmy3k.github.io'
+    local _ext_dir="${pkgdir}/usr/share/gnome-shell/extensions/${_uuid}"
+
+    install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+
+    install -d "${_ext_dir}"
+    bsdtar -xf "${_uuid}.shell-extension.zip" -C "${_ext_dir}"
+
+    install -Dm644 "${_ext_dir}/schemas/"*.gschema.xml -t "${pkgdir}/usr/share/glib-2.0/schemas/"
+    rm -rf "${_ext_dir}/schemas"
+
+    mv "${_ext_dir}/locale" "${pkgdir}/usr/share/locale"
+}
