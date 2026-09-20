@@ -3,7 +3,7 @@
 
 pkgname=lceda-pro
 _pkgname=lceda-pro
-pkgver=3.2.203
+pkgver=4.1.60
 pkgrel=1
 pkgdesc="免费、专业、强大的国产PCB设计工具"
 arch=("x86_64" "aarch64")
@@ -20,8 +20,8 @@ source_x86_64=("$_pkgname-x86_64-$pkgver.zip::https://image.lceda.cn/files/lceda
 source_aarch64=("$_pkgname-aarch64-$pkgver.zip::https://image.lceda.cn/files/lceda-pro-linux-arm64-$pkgver.zip")
 sha256sums=('afba3c6712227a37c08783b3cc1a97ae71e90dc2f575409213d2773372220697'
             'f29ad4605c3a1ed682802639fbb43f7cbd2989be52717514c1a8f53e36f6fef4')
-sha256sums_x86_64=('c89f17a95d9828f39ce743afb6b322e43c2b897ddae5d47479ac6c1071d719ed')
-sha256sums_aarch64=('9560b73d80a6dfe3182489e3c51c81a37189f6aeb9a0ffeeb9ba753dc061c381')
+sha256sums_x86_64=('089c1ea941ddf44836ff4c0465b2885837fd4ebe1ef2b138cb43d3d8237280ff')
+sha256sums_aarch64=('79c4a781f764700c2c9305cb72a1c325945763d77f3a34da60c3f84e53ecf068')
 
 prepare() {
     curl -sSfL -o "LICENSE-$pkgver.html" "https://lceda.cn/page/legal"
