@@ -8,7 +8,6 @@ g = SimpleNamespace()
 _PATCHES = [
     '5179-50.4.patch',
     'fe6bda5a34626a0963879362c56b5c67c76f9b25.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/fe6bda5a34626a0963879362c56b5c67c76f9b25.patch',
-    'f5bbc00f456cd3b06e76e80281e239fe27abf58a.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/f5bbc00f456cd3b06e76e80281e239fe27abf58a.patch',
     'fdc0e67361cec52a568dbc1cabdf8effcaf7aa79.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/fdc0e67361cec52a568dbc1cabdf8effcaf7aa79.patch',
 ]
 
