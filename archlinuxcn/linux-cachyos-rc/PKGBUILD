@@ -177,9 +177,9 @@ pkgbase="linux-$_pkgsuffix"
 _major=7.3
 _minor=0
 #_minorc=$((_minor+1))
-_rcver=rc1
+_rcver=rc4
 pkgver=${_major}.${_rcver}
-_tagrel=2
+_tagrel=1
 pkgrel=1
 #_stable=${_major}.${_minor}
 #_stable=${_major}
@@ -216,7 +216,7 @@ makedepends=(
 )
 
 _patchsource="https://raw.githubusercontent.com/cachyos/kernel-patches/master/${_major}"
-_nv_ver=610.57.04
+_nv_ver=615.71.09
 _nv_pkg="NVIDIA-Linux-x86_64-${_nv_ver}"
 _nv_open_pkg="NVIDIA-kernel-module-source-${_nv_ver}"
 source=(
@@ -819,7 +819,7 @@ for _p in "${pkgname[@]}"; do
     }"
 done
 
-b2sums=('bb1cf7db258d33ae90af247cf8c4f7f93cd785559d80b45283d765cccba52f75d670d7ce0f6374d4097b58b22563686da51dd49316052e092eff4ae58625879e'
+b2sums=('85b3bc90caae69258af87f9f90722e526925daddf04079bb87f85cc52a5fa9a64bc5da3070526708e8f9800f805a8cbf9ee68d69058c6e815b8daac077e3c623'
         'SKIP'
-        '1f78f7c94d7c0642e20a75852c025b73157d224143d30bdf0a4779f04281960663aac4c9a69a1239b852f77041e404dbd50d12fbfe8c35bdbdd6175d73a2ed68'
+        '63a34e61c50d9a914f9b95089b48db4c394d908cc3dd33f2c2addc818268e478c810c8a7406181dbf6be6af54c0d04d6cccdfd4e2faf3314a4f542e97cbb4d85'
         'c992567bd7dd8553432be496ffa1c17e2f5ebe9c7edb51945cf977e1b742dd6517c210d8843bb82744ca705efd07f8027cd7dde41b50215ebd707a34aa81462e')
