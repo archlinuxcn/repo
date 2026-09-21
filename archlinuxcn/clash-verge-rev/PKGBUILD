@@ -15,9 +15,14 @@ conflicts=("${_pkgname}")
 provides=("${_pkgname}")
 makedepends=('pnpm' 'rust' 'jq' 'moreutils')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
-        "${_pkgname}-service-ipc-${_ipc_ver}.tar.gz::https://github.com/${pkgname}/${_pkgname}-service-ipc/archive/v${_ipc_ver}.tar.gz")
+	"${_pkgname}-service-ipc-${_ipc_ver}.tar.gz::https://github.com/${pkgname}/${_pkgname}-service-ipc/archive/v${_ipc_ver}.tar.gz"
+	https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/{Country.mmdb,geo{ip,site}.dat}
+)
 sha512sums=('80c09433a6ac6e4743d9822fd810dc609d92b002ce9aadd13dba3459ee8b09814cf5957be8eb9ffc6066d6fc4f9b3f93468ef431419a0beea845c84bb381e25a'
-            '436affca4969822d3ba234a22bbcc14574d930d7acce7728995c4ebef1189ec076e4e9a07fa55398ab2932d8df2998e585bca5a2da5f00e43692d441655161b9')
+            '436affca4969822d3ba234a22bbcc14574d930d7acce7728995c4ebef1189ec076e4e9a07fa55398ab2932d8df2998e585bca5a2da5f00e43692d441655161b9'
+            'a5402e5d295f56dd5a09783dca99b689c8ea1744436d1fdddb78291d25c769c85c40950c5fa8476747bf8afbe9c758ff0f27d8e15b93883631226993877f9a4a'
+            '995a7c62b1afdfb1c3541c749ff04375428ebfdee1f05d569ee742cc6dc5a5de30daf640411e1599d57ef64736bd8a8fda1d1e9c2b7c099fa499c27c013ced30'
+            '0740e3558432db745817d67e288e3d0f385c154a644e5f62a7f3c9ddccf523faece5fb04ddf027f1dc038383f25a176bf20959c541507f7b5b851a9fe43ce249')
 
 prepare() {
 	pushd "${_pkgname}-service-ipc-${_ipc_ver}/"
@@ -43,6 +48,7 @@ build() {
 	popd
 
 	cd "${pkgname}-${pkgver}/"
+	install -Dm644 ${srcdir}/{Country.mmdb,geo{ip,site}.dat} -t ./src-tauri/resources
 
 	# Use empty files as placeholders
 	touch ./src-tauri/sidecar/verge-mihomo{,-alpha}-${CARCH}-unknown-linux-gnu
