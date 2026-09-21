@@ -3,7 +3,7 @@
 
 pkgname=blockbench
 pkgver=5.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A low-poly 3D model editor'
 arch=(x86_64 armv7h)
 url='https://blockbench.net'
@@ -28,7 +28,19 @@ sha256sums=('de9276957f703de1787afccdd9fd87b6e3bfed787c24f8eb4cdd1184375fb01f'
 prepare() {
   cd "${pkgname}"
 
+  node -e "
+    const fs = require('fs');
+    const pkg = JSON.parse(fs.readFileSync('package.json'));
+    pkg.allowScripts = {
+      '@parcel/watcher': true,
+      'electron-winstaller': true,
+      'esbuild': true
+    };
+    fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+  "
+
   npm install
+  rm -rf node_modules/electron-color-picker
 }
 
 build() {
@@ -37,6 +49,7 @@ build() {
   _electronDist=/usr/lib/${_electron}
   _electronVersion=$(cat ${_electronDist}/version)
 
+  npm run build-electron
   npm run publish-linux -- --linux --x64 --dir
 }
 
