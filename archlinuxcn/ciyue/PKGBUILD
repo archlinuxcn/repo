@@ -2,7 +2,7 @@
 
 pkgname=ciyue
 _srcname=Ciyue
-pkgver=1.23.0
+pkgver=1.23.2
 pkgrel=1
 pkgdesc="A simple mdict dictionary with Android/Windows/Linux support"
 url="https://mumulhl.eu.org/${_srcname}"
@@ -13,7 +13,7 @@ makedepends=('clang' 'cmake' 'fvm' 'git' 'ninja' 'patchelf')
 source=("git+https://github.com/mumu-lhl/${_srcname}.git#tag=v${pkgver}"
 	"git+https://github.com/hunspell/hunspell.git"
 	"${pkgname}.desktop")
-sha256sums=('ded27415fa95cad158802db3aed0afee560d3e1f1f903e87ef222b1bdb7e485e'
+sha256sums=('1cfa2dee914587cd93d60c166e0ee953a0e673f11c92329b6e5589128a2baa23'
             'SKIP'
             '5a6214e368452ed4be188b7e74395f7f0e34f3101d109b7e814d6ac0a291b1cc')
 
