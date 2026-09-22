@@ -9,14 +9,20 @@ url="https://mumulhl.eu.org/${_srcname}"
 license=('MIT')
 arch=('x86_64')
 depends=('gtk3' 'gstreamer' 'gst-plugins-base' 'libkeybinder3' 'libayatana-appindicator' 'wpewebkit')
-makedepends=('clang' 'cmake' 'ninja' 'fvm' 'patchelf')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mumu-lhl/${_srcname}/archive/refs/tags/v${pkgver}.tar.gz"
+makedepends=('clang' 'cmake' 'fvm' 'git' 'ninja' 'patchelf')
+source=("git+https://github.com/mumu-lhl/${_srcname}.git#tag=v${pkgver}"
+	"git+https://github.com/hunspell/hunspell.git"
 	"${pkgname}.desktop")
-sha256sums=('785ec35fe90402165f75fa4179c3d4641e9c8b7dacd06185c27f261983e47b6d'
+sha256sums=('ded27415fa95cad158802db3aed0afee560d3e1f1f903e87ef222b1bdb7e485e'
+            'SKIP'
             '5a6214e368452ed4be188b7e74395f7f0e34f3101d109b7e814d6ac0a291b1cc')
 
 prepare() {
-	cd "${_srcname}-${pkgver}/"
+	cd "${_srcname}/"
+	git submodule init
+	git config submodule.packages/hunspell_ffi/third_party/hunspell.url "${srcdir}/hunspell"
+	git -c protocol.file.allow=always submodule update
+
 	fvm install stable
 	fvm use stable -f
 	fvm flutter --disable-analytics
@@ -24,12 +30,12 @@ prepare() {
 }
 
 build() (
-	cd "${_srcname}-${pkgver}/"
+	cd "${_srcname}/"
 	fvm flutter build linux --no-pub --release
 )
 
 package() {
-	cd "${_srcname}-${pkgver}/"
+	cd "${_srcname}/"
 
 	pushd build/linux/x64/common/release
 	install -Dm755 "bundle/${pkgname}" -t "${pkgdir}/usr/lib/${pkgname}/"
