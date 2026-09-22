@@ -4,7 +4,7 @@ pkgname=python-amulet-rocksdb
 pkgdesc="A pybind11 wrapper for RocksDB."
 license=(custom)
 arch=(any)
-pkgver=1.0.5
+pkgver=1.0.6
 pkgrel=1
 options+=(lto)
 url="https://github.com/Amulet-Team/Amulet-RocksDB"
@@ -13,7 +13,7 @@ depends=(python pybind11 python-amulet_pybind11_extensions)
 source=(
 	"source"::"git+$url.git#tag=${pkgver}"
 )
-md5sums=('965c611d773fcda50796f1d045f20fc9')
+md5sums=('2de335301e14846583889dff0b405a97')
 
 function prepare() {
 	cd source
