@@ -2,7 +2,7 @@
 
 pkgname=(zen-browser-single-file firefox-extension-single-file)
 pkgbase=firefox-browser-single-file
-pkgver=1.26.3
+pkgver=1.26.4
 pkgrel=1
 arch=('any')
 url='https://github.com/gildas-lormeau/SingleFile'
@@ -11,7 +11,7 @@ groups=('zen-browser-addons')
 pkgdesc='Web Extension for saving a faithful copy of a complete web page in a single HTML file'
 makedepends=('nodejs' 'npm' 'unzip' 'zip' 'git' 'jq')
 source=("source::git+https://github.com/gildas-lormeau/SingleFile.git#tag=v${pkgver}")
-b2sums=('f68b37413b0fd0fdbd6926b5743c1bd1352939b9665f7a4ecca45c2d9ef02e68659d0702e2d7bf58feeb91781ff9439fe634cc4f76be53cc1f7e87fb838e2079')
+b2sums=('5fb53fdb2f60e0322a096e2025ac1fb33dc3ca8d402a0b7a027c7afbbe41f4766fc5c82210ddac819c0b71bf22fc8ca5183ef7f46231233d20bb9e3e91dcb060')
 
 prepare() {
   cd "${srcdir}/source"
