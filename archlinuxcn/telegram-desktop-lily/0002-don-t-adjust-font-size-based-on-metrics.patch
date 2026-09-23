@@ -1,17 +1,17 @@
-From 4ba5a81080663045a9634b253d94fa8abc270cc9 Mon Sep 17 00:00:00 2001
+From a062330a765a27b832921883950fe175db404cdf Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Wed, 10 Jun 2026 12:40:31 +0800
-Subject: [PATCH 2/2] don't adjust font size based on metrics
+Subject: [PATCH 2/3] don't adjust font size based on metrics
 
 ---
  ui/style/style_core_font.cpp | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/ui/style/style_core_font.cpp b/ui/style/style_core_font.cpp
-index 7cb3e8f..6945cca 100644
+index 91d19e9..0316d79 100644
 --- a/ui/style/style_core_font.cpp
 +++ b/ui/style/style_core_font.cpp
-@@ -186,7 +186,7 @@ struct Metrics {
+@@ -211,7 +211,7 @@ struct Metrics {
  	copy.setFamily(basic);
  	const auto basicMetrics = QFontMetricsF(copy);
  
@@ -20,7 +20,7 @@ index 7cb3e8f..6945cca 100644
  
  	// I tried to choose height in such way that
  	// - normal fonts won't be too large,
-@@ -324,10 +324,10 @@ struct Metrics {
+@@ -349,10 +349,10 @@ struct Metrics {
  	const auto metrics = ComputeMetrics(font, adjust);
  
  	if (monospace || !(flags & FontFlag::SubOrSuper)) {
@@ -34,5 +34,5 @@ index 7cb3e8f..6945cca 100644
  	if (!monospace) {
  		font.setWeight((flags & FontFlag::Bold)
 -- 
-2.54.0
+2.55.0
 

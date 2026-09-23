@@ -11,11 +11,11 @@ post_build_script: |
   update_aur_repo()
 
 repo_depends:
-  - cubeb-git
   - qmlmaterial-git
 
 repo_makedepends:
   - lito
+  - vulkan-memory-allocator-git
 
 update_on:
   - source: github

@@ -4,7 +4,6 @@ maintainers:
 update_on:
   - source: github
     github: telegramdesktop/tdesktop
-    branch: dev
     use_latest_release: true
   # - source: manual
   #   manual: v5.13.1
@@ -16,13 +15,15 @@ update_on:
     to_pattern: \1
     alpm: qt6-base
     strip_release: true
-  - alias: protobuf
   - source: alpm
     alpm: abseil-cpp
     strip_release: true
   - source: alpm
     alpm: libvpx
     provided: libvpx.so
+  - source: alpm
+    alpm: opus
+    provided: libopus.so
   - alias: libssl
   - alias: libcrypto
   - source: alpm

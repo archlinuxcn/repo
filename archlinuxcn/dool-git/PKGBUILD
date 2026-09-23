@@ -27,4 +27,5 @@ package() {
   cd "$_pkgname"
 
   make DESTDIR="$pkgdir" install
+  ln -sf ../share/dool/dool.py "${pkgdir}/usr/bin/dool"
 }

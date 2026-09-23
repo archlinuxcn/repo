@@ -2,21 +2,27 @@
 
 pkgname=ciyue
 _srcname=Ciyue
-pkgver=1.23.0
+pkgver=1.23.2
 pkgrel=1
 pkgdesc="A simple mdict dictionary with Android/Windows/Linux support"
 url="https://mumulhl.eu.org/${_srcname}"
 license=('MIT')
 arch=('x86_64')
 depends=('gtk3' 'gstreamer' 'gst-plugins-base' 'libkeybinder3' 'libayatana-appindicator' 'wpewebkit')
-makedepends=('clang' 'cmake' 'ninja' 'fvm' 'patchelf')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/mumu-lhl/${_srcname}/archive/refs/tags/v${pkgver}.tar.gz"
+makedepends=('clang' 'cmake' 'fvm' 'git' 'ninja' 'patchelf')
+source=("git+https://github.com/mumu-lhl/${_srcname}.git#tag=v${pkgver}"
+	"git+https://github.com/hunspell/hunspell.git"
 	"${pkgname}.desktop")
-sha256sums=('785ec35fe90402165f75fa4179c3d4641e9c8b7dacd06185c27f261983e47b6d'
+sha256sums=('1cfa2dee914587cd93d60c166e0ee953a0e673f11c92329b6e5589128a2baa23'
+            'SKIP'
             '5a6214e368452ed4be188b7e74395f7f0e34f3101d109b7e814d6ac0a291b1cc')
 
 prepare() {
-	cd "${_srcname}-${pkgver}/"
+	cd "${_srcname}/"
+	git submodule init
+	git config submodule.packages/hunspell_ffi/third_party/hunspell.url "${srcdir}/hunspell"
+	git -c protocol.file.allow=always submodule update
+
 	fvm install stable
 	fvm use stable -f
 	fvm flutter --disable-analytics
@@ -24,14 +30,14 @@ prepare() {
 }
 
 build() (
-	cd "${_srcname}-${pkgver}/"
+	cd "${_srcname}/"
 	fvm flutter build linux --no-pub --release
 )
 
 package() {
-	cd "${_srcname}-${pkgver}/"
+	cd "${_srcname}/"
 
-	pushd build/linux/x64/common/release
+	pushd build/linux/x64/release
 	install -Dm755 "bundle/${pkgname}" -t "${pkgdir}/usr/lib/${pkgname}/"
 	cmake -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr/lib/${pkgname}" .
 	cmake -P cmake_install.cmake

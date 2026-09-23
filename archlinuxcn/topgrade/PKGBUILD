@@ -2,7 +2,7 @@
 # Co-Maintainer: Thomas Schoenauer <t.schoenauer@hgs-wt.at>
 # Contributor: Roey Darwish Dror <roey.ghost@gmail.com>
 pkgname=topgrade
-pkgver=17.11.0
+pkgver=17.12.1
 pkgrel=1
 pkgdesc="Upgrade all the things"
 arch=('x86_64' 'aarch64')
@@ -11,7 +11,7 @@ license=('GPL-3.0-or-later')
 depends=('libgcc')
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/topgrade-rs/topgrade/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('d93647cb5978e1d7e0100e2fcca5fdf0186b7aa742267ac34ebc384550518b33')
+sha256sums=('12beb81a0405c049920148d58747cdc5d406a68825eb955a95ad9bc989bd38bc')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -21,6 +21,7 @@ prepare() {
 
 build() {
   cd "$pkgname-$pkgver"
+  CFLAGS+=" -ffat-lto-objects"
   export RUSTUP_TOOLCHAIN=stable
   export CARGO_TARGET_DIR=target
   cargo build --frozen --release

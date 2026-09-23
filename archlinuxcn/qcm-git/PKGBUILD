@@ -3,57 +3,45 @@
 
 pkgname=qcm-git
 _pkgname=${pkgname%-git}
-pkgver=1.3.5.r0.g70a1c40
+pkgver=1.3.5.r2.g24be634
 pkgrel=1
 pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
 url="https://github.com/hypengw/Qcm"
 license=('GPL-2.0-or-later')
 depends=(
+	'glibc'
+	'libstdc++'
+	'libgcc'
 	'qt6-base'
 	'qt6-declarative'
-	'qt6-shadertools'
 	'qt6-grpc'
 	'qt6-websockets'
 	'hicolor-icon-theme'
-	'curl'
 	'openssl'
-	'dbus'
 	'ffmpeg'
-	'cubeb-git'
 	'kdsingleapplication'
 	'qmlmaterial-git'
 	'sqlite'
 )
 makedepends=(
-	'corrosion'
 	'git'
-	'git-lfs'
+	'cargo'
 	'clang'
 	'lito'
 	'lld'
 	'llvm'
+	'cmake'
 	'ninja'
-	'asio'
-	'pegtl'
 	'vulkan-headers'
+	'vulkan-memory-allocator'
 )
 optdepends=('qcm-ncm-plugin-git: Netease Cloud Music plugin')
 replaces=('qcmbackend-git')
 provides=("${_pkgname}")
 conflicts=("${_pkgname}")
-source=(
-	"git+${url}.git"
-	"git+https://github.com/hypengw/ncrequest.git"
-	"git+https://github.com/hypengw/QExtra.git"
-	"git+https://github.com/ilqvya/random.git"
-	"git+https://github.com/hypengw/wavsen.git"
-)
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
+source=("git+${url}.git")
+sha256sums=('SKIP')
 
 pkgver() {
 	git -C Qcm describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
@@ -63,17 +51,14 @@ prepare() {
 	cd Qcm
 	mkdir -p .lito
 	cat >.lito/config.toml <<END
-[patch."https://github.com/hypengw/ncrequest.git"]
-path = "../ncrequest"
+[tools.cmake.overrides.qml_material]
+source = "installed"
 
-[patch."https://github.com/hypengw/QExtra.git"]
-path = "../QExtra"
+[tools.cmake.overrides.KDSingleApplication]
+source = "installed"
 
-[patch."https://github.com/ilqvya/random.git"]
-path = "../random"
-
-[patch."https://github.com/hypengw/wavsen.git"]
-path = "../wavsen"
+[tools.cmake.overrides.VulkanMemoryAllocator]
+source = "installed"
 END
 
 	lito fetch --all-features

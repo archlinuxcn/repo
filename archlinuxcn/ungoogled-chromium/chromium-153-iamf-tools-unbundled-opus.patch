@@ -1,0 +1,76 @@
+third_party/iamf_tools (new in 153) includes the vendored copy of Opus via
+relative "include/opus.h"-style paths that only resolve when
+//third_party/opus/src is the real bundled Opus checkout. With Opus
+unbundled (system libopus via build/linux/unbundle/opus.gn's shim_headers
+target), that directory doesn't contain a real "include/" subtree, so the
+compile fails with:
+
+  fatal error: 'include/opus.h' file not found
+
+Use the same full "third_party/opus/src/include/..." style path that other
+in-tree consumers (e.g. third_party/opus/tests/opus_benchmark.cc) use, which
+resolves correctly against both the shim headers and a real bundled Opus
+checkout, since root src is always on the include path.
+
+--- a/third_party/iamf_tools/src/iamf/cli/codec/opus_decoder.cc
++++ b/third_party/iamf_tools/src/iamf/cli/codec/opus_decoder.cc
+@@ -30,8 +30,8 @@
+ #include "iamf/obu/decoder_config/opus_decoder_config.h"
+ #include "iamf/obu/substream_channel_count.h"
+ #include "iamf/obu/types.h"
+-#include "include/opus.h"
+-#include "include/opus_types.h"
++#include "third_party/opus/src/include/opus.h"
++#include "third_party/opus/src/include/opus_types.h"
+
+ namespace iamf_tools {
+
+--- a/third_party/iamf_tools/src/iamf/cli/codec/opus_decoder.h
++++ b/third_party/iamf_tools/src/iamf/cli/codec/opus_decoder.h
+@@ -23,7 +23,7 @@
+ #include "iamf/cli/codec/decoder_base.h"
+ #include "iamf/obu/decoder_config/opus_decoder_config.h"
+ #include "iamf/obu/substream_channel_count.h"
+-#include "include/opus.h"
++#include "third_party/opus/src/include/opus.h"
+
+ namespace iamf_tools {
+
+--- a/third_party/iamf_tools/src/iamf/cli/codec/opus_encoder.cc
++++ b/third_party/iamf_tools/src/iamf/cli/codec/opus_encoder.cc
+@@ -32,9 +32,9 @@
+ #include "iamf/common/utils/validation_utils.h"
+ #include "iamf/obu/decoder_config/opus_decoder_config.h"
+ #include "iamf/obu/substream_channel_count.h"
+-#include "include/opus.h"
+-#include "include/opus_defines.h"
+-#include "include/opus_types.h"
++#include "third_party/opus/src/include/opus.h"
++#include "third_party/opus/src/include/opus_defines.h"
++#include "third_party/opus/src/include/opus_types.h"
+
+ namespace iamf_tools {
+
+--- a/third_party/iamf_tools/src/iamf/cli/codec/opus_encoder.h
++++ b/third_party/iamf_tools/src/iamf/cli/codec/opus_encoder.h
+@@ -22,8 +22,8 @@
+ #include "iamf/obu/codec_config.h"
+ #include "iamf/obu/decoder_config/opus_decoder_config.h"
+ #include "iamf/obu/substream_channel_count.h"
+-#include "include/opus.h"
+-#include "include/opus_defines.h"
++#include "third_party/opus/src/include/opus.h"
++#include "third_party/opus/src/include/opus_defines.h"
+
+ namespace iamf_tools {
+
+--- a/third_party/iamf_tools/src/iamf/cli/codec/opus_utils.cc
++++ b/third_party/iamf_tools/src/iamf/cli/codec/opus_utils.cc
+@@ -3,7 +3,7 @@
+ #include "absl/status/status.h"
+ #include "absl/strings/str_cat.h"
+ #include "absl/strings/string_view.h"
+-#include "include/opus_defines.h"
++#include "third_party/opus/src/include/opus_defines.h"
+
+ namespace iamf_tools {

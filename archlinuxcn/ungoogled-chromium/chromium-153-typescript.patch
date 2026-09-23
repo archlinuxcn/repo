@@ -1,0 +1,31 @@
+TypeScript became a build dependency (added in crrev.com/c/7861311, enabled in
+crrev.com/c/8104602). Work around it for a system build:
+
+  * Disable the native TypeScript compiler (tsgo) for the WebUI; the JS-based
+    compiler bundled with the checkout still works.
+  * DevTools already removed that flag (crrev.com/c/8193297), so point its
+    typescript.py helper at the system tsc binary (from the 'typescript' package).
+
+Credit: https://github.com/ungoogled-software/ungoogled-chromium/pull/3946
+
+--- a/ui/webui/webui_features.gni
++++ b/ui/webui/webui_features.gni
+@@ -33,7 +33,7 @@
+
+   # Enable the native TypeScript compiler (tsgo) instead of the JS-based one.
+   # TODO(crbug.com/423789047): Remove this flag once fully committed to v7.
+-  use_typescript_go = true
++  use_typescript_go = false
+ }
+
+ if (enable_cast_receiver || is_cast_android || is_castos) {
+--- a/third_party/devtools-frontend/src/third_party/typescript/typescript.py
++++ b/third_party/devtools-frontend/src/third_party/typescript/typescript.py
+@@ -10,6 +10,7 @@
+
+
+ def GetBinaryPath():
++    return "/usr/bin/tsc"
+     if platform.machine() == 'arm64':
+         darwin_path = 'mac-arm64'
+     else:

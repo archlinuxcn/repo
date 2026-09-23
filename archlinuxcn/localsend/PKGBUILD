@@ -16,7 +16,7 @@ export FVM_CACHE_PATH
 _pkgname="localsend"
 pkgname="$_pkgname"
 pkgver=1.18.2
-pkgrel=1
+pkgrel=2
 pkgdesc="An open source cross-platform alternative to AirDrop"
 url="https://github.com/localsend/localsend"
 license=('Apache-2.0')
@@ -168,6 +168,7 @@ Exec=$_pkgname
 Icon=$_pkgname
 Terminal=false
 Categories=Utility;Network;
+StartupWMClass=Org.localsend.localsend_app
 END
 
   # license
