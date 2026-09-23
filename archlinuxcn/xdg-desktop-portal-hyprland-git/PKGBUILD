@@ -27,6 +27,7 @@ makedepends=(
 	'cmake'
 	'wayland'
 	'wayland-protocols'
+	'hyprland-protocols'
 )
 optdepends=('grim: required for the screenshot portal to function'
 	'slurp: support for interactive mode for the screenshot portal')
@@ -47,7 +48,9 @@ pkgver() {
 prepare() {
 	cd "${_pkgname}/"
 
-	git rm subprojects/sdbus-cpp # Use sdbus-cpp from [extra]
+	# Use hyprland-protocols and sdbus-cpp from [extra]
+	git rm subprojects/{hyprland-protocols,sdbus-cpp}
+
 	git submodule init
 	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
 	git -c protocol.file.allow=always submodule update
