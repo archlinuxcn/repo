@@ -34,10 +34,8 @@ optdepends=('grim: required for the screenshot portal to function'
 provides=("${_pkgname}" "xdg-desktop-portal-impl" "xdg-desktop-portal-wlr")
 conflicts=("${_pkgname}" "xdg-desktop-portal-wlr")
 source=("git+${url}.git"
-	"git+https://github.com/hyprwm/hyprland-protocols.git"
 	"hyprland-portals.conf")
 sha256sums=('SKIP'
-            'SKIP'
             '20bc215211f16a361086d59fa051df7337d95f91c695a29d8c5d23d40407fad5')
 
 pkgver() {
@@ -50,10 +48,6 @@ prepare() {
 
 	# Use hyprland-protocols and sdbus-cpp from [extra]
 	git rm subprojects/{hyprland-protocols,sdbus-cpp}
-
-	git submodule init
-	git config submodule.subprojects/hyprland-protocols.url "${srcdir}/hyprland-protocols"
-	git -c protocol.file.allow=always submodule update
 }
 
 build() {
