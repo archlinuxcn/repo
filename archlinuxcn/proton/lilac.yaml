@@ -6,9 +6,7 @@ maintainers:
 
 build_prefix: multilib
 
-pre_build_script: aur_pre_build(maintainers=['loathingkernel'])
-
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 time_limit_hours: 4
 
@@ -18,5 +16,6 @@ repo_depends:
   - afdko
 
 update_on:
-  - source: aur
-    aur: 
+  # Removed from AUR; maintain the existing recipe locally.
+  - source: manual
+    manual: 2:9.0.4.3-2

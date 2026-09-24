@@ -6,10 +6,9 @@ maintainers:
 
 build_prefix: extra-x86_64
 
-pre_build_script: aur_pre_build(maintainers=['5donuts'])
-
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: ttf-mplus
+  # Removed from AUR; maintain the existing recipe locally.
+  - source: manual
+    manual: TESTFLIGHT_063a-1

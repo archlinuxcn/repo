@@ -11,5 +11,5 @@ post_build_script: |
   update_aur_repo()
 
 update_on:
-  - source: vcs
-    vcs:
+  - source: cmd
+    cmd: svn info --non-interactive --show-item revision https://www.virtualbox.org/svn/vbox/trunk

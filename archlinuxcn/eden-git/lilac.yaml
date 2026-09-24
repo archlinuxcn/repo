@@ -19,12 +19,13 @@ update_on:
     repo: extra
   - source: alpm
     alpm: cpp-httplib
-    repo: archlinuxcn
+    repo: extra
   - source: alpm
     alpm: cpp-jwt
     repo: archlinuxcn
   - source: alpm
     alpm: openssl
   - alias: boost
-  - source: vcs
-    vcs:
+  - source: git
+    git: https://git.eden-emu.dev/eden-emu/eden.git
+    use_commit: true
