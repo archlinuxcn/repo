@@ -1,7 +1,7 @@
 # Maintainer: RocketDev <ma2014119@outlook.com>
 
 pkgname=deepseek-harness
-pkgver=0.1.7.rc1
+pkgver=0.1.7.rc2
 _npmver=$(sed -E 's/\.([a-z]+)([0-9]+)$/-\1.\2/' <<< "$pkgver")
 pkgrel=1
 pkgdesc="An open-source agent harness developed by DeepSeek AI"
@@ -21,7 +21,7 @@ makedepends=("npm")
 options=('!strip')
 source=("$pkgname-$pkgver.tgz::https://registry.npmjs.org/@deepseek-ai/dsh/-/dsh-${_npmver}.tgz")
 noextract=("$pkgname-$pkgver.tgz")
-b2sums=('d50356a1aaece12e4278f55458e213ea55a0904b6336e9858cc64b96e5fb1e369f7dd8a2a7dbde6c27e1c0ddd073adb895664fb27ccd44fff91814a8c3095ba7')
+b2sums=('a08de13dcea8d88642d656b1473d72f27f85c4daee201b7ab45713bd2b9af8945458696d5e5dfef0472b569cd8e9da328c7d3fd99c9cc78a9d13cb24062142a5')
 
 package() {
     npm install -g --prefix "$pkgdir/usr" --cache "$srcdir/npm-cache" \
