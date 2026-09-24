@@ -42,3 +42,7 @@ update_on:
 - source: alpm
   alpm: libwebp
   provided: libwebpdemux.so
+- source: alpmfiles
+  pkgname: openexr
+  strip_dir: true
+  filename: 'libOpenEXRCore-[^.]+\.so\.\d+'
