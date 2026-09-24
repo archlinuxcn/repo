@@ -24,19 +24,8 @@ source=(
 	firefox.desktop
 )
 
-
-md5sums=('ef9fbe1934606aeda2c6e94cac620723'
-         '690d9e3d3104e1b668487a82e3f9889f')
-
-function pkgver() {
-	export LC_ALL=C
-	pacman -Si firefox | grep Version | awk '{print $NF}' | cut -d'-' -f1
-}
-
-function package() {
 	depends=(
 		"ffmpeg"
-		"portable"
 		alsa-lib
 		at-spi2-core
 		bash
@@ -67,7 +56,20 @@ function package() {
 		nss
 		pango
 		ttf-font
+		onnxruntime
 	)
+
+
+md5sums=('ef9fbe1934606aeda2c6e94cac620723'
+         '690d9e3d3104e1b668487a82e3f9889f')
+
+function pkgver() {
+	export LC_ALL=C
+	pacman -Si firefox | grep Version | awk '{print $NF}' | cut -d'-' -f1
+}
+
+function package() {
+	depends+=("portable")
 
 	export pkgdir
 	export pkgname
