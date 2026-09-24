@@ -7,5 +7,6 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - source: cmd
-    cmd: curl -fsSL "https://download.eclipse.org/eclipse/downloads/data.json" | jq -r '(.releases | map(select(.status=="success")) | first // .[0]) | .label
+  - source: jq
+    url: https://download.eclipse.org/eclipse/downloads/data.json
+    filter: '(.releases | (map(select(.status == "success")) | first) // .[0]) | .label'

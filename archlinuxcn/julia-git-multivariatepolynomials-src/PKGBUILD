@@ -1,6 +1,6 @@
 pkgname=julia-git-multivariatepolynomials-src
-pkgver=0.5.19
-_commit=d69960438e7ed03e1b3a8944981d2a9b362b76c4
+pkgver=0.5.20
+_commit=7acc822d1b98f013c022d9961ffd72ee3605a43f
 pkgrel=1
 pkgdesc="MultivariatePolynomials.jl"
 url="https://github.com/JuliaAlgebra/MultivariatePolynomials.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaAlgebra/MultivariatePolynomials.jl.git#commit=$_commit")
-sha256sums=('5b662cf24515e7231f0c1b6c7a8e5023eebfcc8054c147d2742a9474f1c04899')
+sha256sums=('be64bd64e64ea7fee77faff694cb5c2f11997f0d12724cd15265e14fd6e11bba')
 
 package() {
   cd MultivariatePolynomials.jl

@@ -6,10 +6,9 @@ maintainers:
 
 build_prefix: multilib
 
-pre_build_script: aur_pre_build(maintainers=['heavysink'])
-
-post_build: aur_post_build
+post_build: git_pkgbuild_commit
 
 update_on:
-  - source: aur
-    aur: lib32-wxgtk3 
+  # Removed from AUR; maintain the existing recipe locally.
+  - source: manual
+    manual: 3.0.5.1-4

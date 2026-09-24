@@ -151,7 +151,7 @@ _pkgname='rustdesk'
 pkgname="${_pkgname}"
 _pkgver='1.4.9'
 pkgver="${_pkgver//-/.}"
-pkgrel=1
+pkgrel=2
 _sfx=''
 #_sfx='-pr1-998b758'
 _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific hbb.
@@ -171,7 +171,7 @@ _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific 
 )
 _pkgverhbb="$(_fn_VCL "${_pkgver}" -eq "${_HBB[@]}")"; unset _HBB; test "$(_vercmp "${_pkgver}" '1.3.7')" -lt 0 -o ! -z "${_pkgverhbb}" || exit 1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
-arch=('x86_64')
+arch=(aarch64 x86_64)
 url='https://rustdesk.com/'
 _giturl='https://github.com/rustdesk/rustdesk'
 _giturlhbb='https://github.com/rustdesk/hbb_common'
@@ -526,6 +526,10 @@ EOF
 
   cd "${_srcdir}"
   _mod_py
+  if [ "${CARCH}" = 'aarch64' ]; then
+    rm -rf "${srcdir}/flutter/bin/cache"
+    sed -e 's:build/linux/x64/:build/linux/arm64/:g' -i 'build.py'
+  fi
   if rmdir 'libs/hbb_common'; then
     pushd 'libs' > /dev/null
     test -d "${srcdir}/${_srcdirhb}"
@@ -628,7 +632,11 @@ package() {
   cd "${_srcdir}"
 
     install -d "${pkgdir}/usr/lib/"
-    cp -pr 'flutter/build/linux/x64/release/bundle' "${pkgdir}/usr/lib/"
+    local _flarch=x64
+    if [ "${CARCH}" = 'aarch64' ]; then
+      _flarch=arm64
+    fi
+    cp -pr "flutter/build/linux/${_flarch}/release/bundle" "${pkgdir}/usr/lib/"
     mv "${pkgdir}/usr/lib/"{bundle,${_pkgname}}
       install -d "${pkgdir}/usr/bin/"
       ln -s -t "${pkgdir}/usr/bin/" "/usr/lib/${_pkgname}/${_pkgname}"

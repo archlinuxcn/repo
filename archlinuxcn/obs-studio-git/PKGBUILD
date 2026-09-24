@@ -5,7 +5,7 @@
 
 pkgname=obs-studio-git
 _pkgname=${pkgname%-git}
-pkgver=32.2.1.r65.g57bfcf1
+pkgver=32.2.1.r107.gbdf6dbe
 pkgrel=1
 epoch=5
 pkgdesc="Free, open source software for live streaming and recording (with websocket support)"
@@ -53,6 +53,7 @@ build() {
 		-S "${_pkgname}/" \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=None \
+		-DMbedTLS_DIR="/usr/lib/mbedtls3/cmake/MbedTLS" \
 		-DMbedTLS_INCLUDE_DIR="/usr/include/mbedtls3" \
 		-DMbedtls_LIBRARY="/usr/lib/mbedtls3/libmbedtls.so" \
 		-DMbedcrypto_LIBRARY="/usr/lib/mbedtls3/libmbedcrypto.so" \

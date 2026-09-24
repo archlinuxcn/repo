@@ -27,5 +27,6 @@ update_on:
   - source: alpm
     alpm: openssl
   - alias: boost
-  - source: vcs
-    vcs:
+  # The mirror contains the frozen EA-4176 source; keep dependency rebuilds above.
+  - source: manual
+    manual: 4176

@@ -2,7 +2,7 @@
 # Contributor: Guillaume Hayot <ghayot@postblue.info>
 
 pkgname=gnome-shell-extension-gsconnect
-pkgver=72
+pkgver=73
 pkgrel=1
 pkgdesc="KDE Connect implementation with GNOME Shell integration"
 arch=('any')
@@ -15,7 +15,7 @@ optdepends=('evolution-data-server: Contacts integration (Evolution)'
             'gsound: Themed sound effects'
             'python-nautilus: Nautilus integration')
 source=(https://github.com/GSConnect/"${pkgname}"/archive/v"${pkgver}".tar.gz)
-b2sums=('8d83a2f4624f0db3da25ba7e625f110a1a8142370a2ebe96dac51d59762067147c27de125a62163e1ed545bb04f75607b36896214dc43ad78177441171e97673')
+b2sums=('7b17ec43b696b6fb949fde9463b935f3a5bc0bbd94cab3289e719d0c11ebc9d9fdec6bb434007aaf4df7fe7795fb249a8faaf6bf258fbe24080f4394e6020620')
 
 build() {
   arch-meson -Dinstalled_tests=false -Dfirewalld=true ${pkgname}-${pkgver} build

@@ -1,6 +1,6 @@
 pkgname=julia-git-mustache-src
-pkgver=1.0.21
-_commit=ac45b1bfa1b95b040b5aa8acc496608031c276fa
+pkgver=1.1.0
+_commit=ad42d6610e313c07d324f911d5039a3ba54de7c4
 pkgrel=1
 pkgdesc="Mustache.jl"
 url="https://github.com/jverzani/Mustache.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jverzani/Mustache.jl.git#commit=$_commit")
-sha256sums=('2533b9433817e8bc8b6e75a5b5bbe9742132c5e0c06fd180f162eff93996949f')
+sha256sums=('d2dfd356cd35e1b2a1671bc395ac7dc9280205b80becc8a3ed8b468c2c8d0a51')
 
 package() {
   cd Mustache.jl
