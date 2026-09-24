@@ -1,7 +1,7 @@
 pkgname=julia-git-giflib_jll-src
-pkgver=5.2.3+0
-_commit=61c0f659d2e3e1d0f9c04655a7531d7f15746126
-pkgrel=2
+pkgver=6.1.3+0
+_commit=4bec440a6abc6bff37d3c90834c62df7c5e53ff3
+pkgrel=1
 pkgdesc="Giflib_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Giflib_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git giflib)
 source=("git+https://github.com/JuliaBinaryWrappers/Giflib_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('d07fd58ef12ee82bcd6050824674334de7a0880162f7d94ee07188315741f6e8'
+sha256sums=('8156d4df12b41dd670c5d3d126a4c339252462670f130f9a36c263e800f844f3'
             '05e01c82246f84e5bd2c27f8f15dfcaf242d7dc49b70a6a400742bf3f6be695a')
 
 build() {
