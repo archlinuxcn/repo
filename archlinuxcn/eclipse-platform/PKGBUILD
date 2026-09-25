@@ -5,14 +5,14 @@
 # Contributor: Jesus Jerez <jhuss@archlinux.org.ve>
 
 pkgname=eclipse-platform
-pkgver=4.38
-_pkgbuild="202512010920"
+pkgver=4.41
+_pkgbuild="202608281142"
 pkgrel=1
 pkgdesc="A minimal installation suitable for complete per-user customization with the built-in Eclipse package manager"
 url="https://www.eclipse.org"
 arch=("x86_64")
 license=("EPL")
-depends=("java-runtime>=11" "unzip" "webkit2gtk")
+depends=("java-runtime>=21" "unzip" "webkit2gtk-4.1")
 optdepends=()
 conflicts=("eclipse-common")
 provides=("eclipse=$pkgver")
@@ -24,7 +24,7 @@ source=(
   "eclipse.desktop"
 )
 
-sha512sums=('e498da6b1203409a9902760d29d6d91f37fa0fa2622cb3b75af517c21ab8dec191439868a4da6a00e6c4829aba9c4f65ef61a6f629dd75e258f609e0de6ead7c'
+sha512sums=('dd4e732816280fb596f1c279f355e2e531668f98c896845ab21d268e3cab30233980bfdd9e5de7b5757f7098194f5dfe8a63b43b9e7da506382a60ee9be84048'
             '5d0068de0b134468d6a9f0c2be1ac7a8253152cac9e9561ba32c0bc11bb503dbcc7dba64ff3989179c3276bac9153bae46205d86978442a067837eb8677c384d'
             '44b1427e884dc455726ef93276c800f7f0079c5008dd67e55084bb73f4b9e095397f126230ecdc506cb576a5747d18e216f531bf99876a0f9457d8cd5abed9d2')
 
