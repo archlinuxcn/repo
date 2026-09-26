@@ -27,7 +27,7 @@ package() {
     install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 
     install -d "${_ext_dir}"
-    bsdtar -xf "${_uuid}.shell-extension.zip" -C "${_ext_dir}"
+    bsdtar --uid 0 --gid 0 -xf "${_uuid}.shell-extension.zip" -C "${_ext_dir}"
 
     install -Dm644 "${_ext_dir}/schemas/"*.gschema.xml -t "${pkgdir}/usr/share/glib-2.0/schemas/"
     rm -rf "${_ext_dir}/schemas"
