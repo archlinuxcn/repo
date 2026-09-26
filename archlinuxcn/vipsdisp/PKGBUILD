@@ -1,0 +1,42 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=vipsdisp
+pkgver=4.1.4
+pkgrel=1
+pkgdesc="Tiny libvips / GTK 4 image viewer"
+arch=('x86_64' 'aarch64')
+url="https://github.com/libvips/vipsdisp"
+license=('MIT')
+depends=(
+  'cairo'
+  'dconf'
+  'glib2'
+  'glibc'
+  'gtk4'
+  'hicolor-icon-theme'
+  'libgcc'
+  'libvips>=8.17'
+)
+optdepends=(
+  'imagemagick: for additional image formats via magick module'
+  'libheif: for HEIF/HEIC/AVIF image support'
+  'libjxl: for JPEG-XL image support'
+  'openslide: for digital pathology / whole-slide image support'
+  'poppler-glib: for PDF document rendering'
+)
+makedepends=(
+  'glib2-devel'
+  'meson'
+)
+source=("$pkgname-$pkgver.tar.xz::$url/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz")
+sha256sums=('c9d29b371782b550512e36abbe9191c105837ea34af5514958e55284a86a09f3')
+
+build() {
+  arch-meson "$pkgname-$pkgver" build
+  meson compile -C build
+}
+
+package() {
+  meson install -C build --destdir="$pkgdir"
+  install -Dm644 "$pkgname-$pkgver/LICENCE.txt" -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
