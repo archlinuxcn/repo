@@ -33,7 +33,7 @@ package() {
 
     install -dm755 "${extdir}"
 
-    bsdtar xf "dist/"*.zip -C "${extdir}"
+    bsdtar --uid 0 --gid 0 -xf "dist/"*.zip -C "${extdir}"
 
     install -Dm644 "${extdir}"/schemas/*.gschema.xml -t "${pkgdir}"/usr/share/glib-2.0/schemas/
     rm -rf "${extdir}"/schemas
