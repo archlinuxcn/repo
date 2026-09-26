@@ -1,0 +1,37 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=gnome-shell-extension-window-nativizer
+pkgver=0.7.0
+pkgrel=1
+pkgdesc='Seamlessly nativize non-native applications into the GNOME desktop'
+arch=('any')
+url='https://github.com/everyx/gnome-shell-extension-window-nativizer'
+license=('GPL-2.0-or-later')
+depends=('gnome-shell>=50' 'dconf')
+makedepends=('gnome-shell' 'gettext' 'pnpm')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+b2sums=('7e8eb34b47c66830a15cc4c1e38ab955b2270c85691a8ee4c0def5c9e89cea6f981383eb2834bf3580f83f36e1311ebac737ab18f7f2218e0f1881bc7f1b581f')
+
+build() {
+    cd "${pkgname}-${pkgver}"
+
+    pnpm install --prod --ignore-scripts
+    pnpm run pack
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+
+    local _uuid='window-nativizer@everyx.github.io'
+    local _ext_dir="${pkgdir}/usr/share/gnome-shell/extensions/${_uuid}"
+
+    install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+
+    install -d "${_ext_dir}"
+    bsdtar --uid 0 --gid 0 -xf "dist/${_uuid}.shell-extension.zip" -C "${_ext_dir}"
+
+    install -Dm644 "${_ext_dir}/schemas/"*.gschema.xml -t "${pkgdir}/usr/share/glib-2.0/schemas/"
+    rm -rf "${_ext_dir}/schemas"
+
+    mv "${_ext_dir}/locale" "${pkgdir}/usr/share/locale"
+}
