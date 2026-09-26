@@ -2,7 +2,7 @@
 
 _pkgname=amaranth-axi
 pkgname="python-$_pkgname"
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="Amaranth support for AXI bus"
 arch=(any)
@@ -13,7 +13,7 @@ makedepends=('git' 'python-build' 'python-installer' 'python-wheel'
              'python-packaging' 'python-hatchling' 'python-hatch-vcs')
 source=("git+https://github.com/yuyichao/amaranth-axi.git#tag=v${pkgver}"
         "git+https://github.com/ZipCPU/wb2axip")
-sha512sums=('af2d965c104db38e4b5bd44f0d9c4bb12efbe8726e3c20d3e63f54126ab955211dc5ac4d1d7d63cf12916d07c423ebde84fe683721b1c63452374992462b9836'
+sha512sums=('4c9e00f5e5d47f68dd3b9d035fd8ce43ce8b440bde2202181865bb99dc5122b076eaac69c532b02bf81e168d06b53d56ad83ec9001de75b08e526411392dba30'
             'SKIP')
 
 prepare() {
