@@ -13,7 +13,7 @@ fi
 _pkgname="ryujinx-git"
 pkgname="$_pkgname"
 pkgver=4402.e3fba4e32
-pkgrel=1
+pkgrel=2
 pkgdesc="Experimental Nintendo Switch Emulator written in C#"
 url="https://ryujinx.app"
 license=('MIT')
@@ -33,14 +33,15 @@ makedepends=(
 options=('!strip' '!debug')
 
 _source_ryujinx() {
-  _pkgsrc="ryujinx"
+  # Use a distinct cache name for this remote; "ryujinx" may cache the old one.
+  _pkgsrc="ryubing"
   _pkgext="tar.gz"
-  source=("ryujinx::git+https://git.ryujinx.app/projects/Ryubing.git")
+  source=("$_pkgsrc::git+https://git.ryujinx.app/projects/Ryubing.git")
   sha256sums=('SKIP')
 }
 
 pkgver() {
-	cd "$srcdir/ryujinx"
+	cd "$srcdir/$_pkgsrc"
 	printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
