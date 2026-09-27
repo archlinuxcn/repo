@@ -12,7 +12,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/greshake/${_pkgname}"
 license=('GPL-3.0-or-later')
 depends=('libpipewire' 'libpulse' 'lm_sensors' 'notmuch-runtime')
-makedepends=('git' 'clang' 'cargo' 'pandoc')
+makedepends=('git' 'clang' 'cmake' 'cargo' 'pandoc')
 optdepends=('alsa-utils: for the volume block'
 	'bluez: for the bluetooth block'
 	'fakeroot: for the pacman block to show pending updates'
