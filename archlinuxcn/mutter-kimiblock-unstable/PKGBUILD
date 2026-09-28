@@ -91,6 +91,9 @@ source=(
 	"git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
 
 	5331.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5331.patch
+
+	# ScreenCast performance
+	5358.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5358.patch
 )
 b2sums=('3c7e7159e70b09b91325335c4d13bb0ff51a161e430a0a63c65f380d5d31927cc8812cfb32b38b4964741c65c34ba12decc81274c7f556e7225d4255778689d8'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
@@ -101,6 +104,9 @@ prepare() {
 
 	echo 5331
 	git apply ../5331.patch
+
+	echo 5358
+	git apply ../5358.patch
 }
 
 build() {
