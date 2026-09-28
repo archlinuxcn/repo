@@ -1,6 +1,6 @@
 pkgname=julia-git-fillarrays-src
-pkgver=1.17.0
-_commit=7b96cc2496edeae45649883d246138461e16b903
+pkgver=1.17.1
+_commit=8f439215fd8228103759045e657e35344112da1d
 pkgrel=1
 pkgdesc="FillArrays.jl"
 url="https://github.com/JuliaArrays/FillArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/FillArrays.jl.git#commit=$_commit")
-sha256sums=('4f79c22c4be57ac47911fb1a66d1d5f2a2054db3bceb7891f93509baab152a9a')
+sha256sums=('d30b596f93aec2151f5d7e906ea3f38de54bd0d8fb2f909f0497999ae9c81349')
 
 package() {
   cd FillArrays.jl
