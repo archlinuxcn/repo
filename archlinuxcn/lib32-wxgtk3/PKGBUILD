@@ -3,7 +3,7 @@
 
 pkgname=lib32-wxgtk3
 pkgver=3.0.5.1
-pkgrel=4
+pkgrel=5
 pkgdesc='GTK+ implementation of wxWidgets API for GUI'
 arch=(x86_64)
 url=https://wxwidgets.org
@@ -11,12 +11,11 @@ license=(custom:wxWindows)
 depends=(
   lib32-expat
   lib32-gtk3
-  lib32-libjpeg
+  lib32-libjpeg-turbo
   lib32-libpng
   lib32-libsm
   lib32-libtiff
   lib32-zlib
-  wxgtk3
 )
 makedepends=(
   git
@@ -37,6 +36,10 @@ prepare() {
 
   patch -Np1 -i ../make-abicheck-non-fatal.patch
 
+  # Declare exit() in the zlib and PNG probes for modern C compilers.
+  sed -i -E '/#include <(zlib|png).h>/a\                        #include <stdlib.h>' configure.in
+  # Autoconf no longer initializes EGREP indirectly; it selects utility Makefiles.
+  sed -i '/^AC_INIT/a AC_PROG_EGREP' configure.in
   ./autogen.sh
 }
 
@@ -47,7 +50,8 @@ build() {
   export CXX='g++ -m32'
   export PKG_CONFIG_PATH=/usr/lib32/pkgconfig
   export CFLAGS="-I/usr/include/libtiff32 $CFLAGS"
-  export CXXFLAGS="-I/usr/include/libtiff32 $CXXFLAGS"
+  # wxWidgets 3.0 uses ostream overloads removed in C++20.
+  export CXXFLAGS="-I/usr/include/libtiff32 $CXXFLAGS -std=gnu++17"
 
   ./configure \
     --prefix=/usr \
@@ -68,13 +72,13 @@ build() {
 
 package() {
   make DESTDIR="${pkgdir}" -C wxWidgets install
-  rm -rf "${pkgdir}"/usr/{bin/{wx-config,wxrc},include,share}
+  # Keep the 3.0 headers for wx-config32 now that wxgtk3 is unavailable.
+  rm -rf "${pkgdir}"/usr/{bin/{wx-config,wxrc},share}
   mv "${pkgdir}"/usr/bin/wxrc{,32}-3.0
   ln -s /usr/bin/wxrc32-3.0 "${pkgdir}"/usr/bin/wxrc32
   ln -s /usr/lib32/wx/config/gtk3-unicode-3.0 "${pkgdir}"/usr/bin/wx-config32
 
-  install -dm 755 "${pkgdir}"/usr/share/licenses
-  ln -s wxgtk3 "${pkgdir}"/usr/share/licenses/lib32-wxgtk3
+  install -Dm644 wxWidgets/docs/licence.txt "${pkgdir}"/usr/share/licenses/lib32-wxgtk3/LICENSE
 }
 
 # vim: ts=2 sw=2 et:
