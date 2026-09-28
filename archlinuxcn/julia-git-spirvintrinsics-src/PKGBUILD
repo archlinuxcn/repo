@@ -1,6 +1,6 @@
 pkgname=julia-git-spirvintrinsics-src
-pkgver=1.1.0
-_commit=cf2ec4017865577587858fe236cbf6a698a84b97
+pkgver=1.1.2
+_commit=cb5e702d057a62cf9661fea6fbcc1c4b5b1ffefb
 pkgrel=1
 pkgdesc="SPIRVIntrinsics.jl"
 url="https://github.com/JuliaGPU/OpenCL.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGPU/OpenCL.jl.git#commit=$_commit")
-sha256sums=('c044da721d8d75d46382a4fd80e27373e104da85db3e8cbaad03bd94e8d696ec')
+sha256sums=('0a0b4ffa389a00eb7a9ae2078b094a4f4430e88b5409886c9cdce0448efebb8e')
 
 package() {
   cd OpenCL.jl/lib/intrinsics
