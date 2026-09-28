@@ -1,8 +1,8 @@
 # Maintainer: RocketDev <ma2014119@outlook.com>
 _pkgbase='qt-themes'
 pkgname=python-$_pkgbase
-pkgver=0.4.0
-pkgrel=2
+pkgver=0.4.1
+pkgrel=1
 pkgdesc='A collection of themes for Qt in Python'
 arch=('any')
 url='https://github.com/beatreichenbach/qt-themes'
@@ -20,7 +20,7 @@ makedepends=(
 source=(
     "$_pkgbase-$pkgver.tar.gz::https://github.com/beatreichenbach/qt-themes/archive/v$pkgver.tar.gz"
 )
-b2sums=('b37935424946c9a14b2da73d60887e73d52c819b64c46f5e115e2f5f1e75ee9b35d1cec0cc3225a866a613d8fdeaf0ac8d6d878c19633d5b83e6096fa4c9229f')
+b2sums=('d6d94f1e778f68d88c86facd92ddcaf6a19d34fa93388269a8b02ca5ce84f94fffd5ecb184aa31e8193e65ee97a9ccef109de2140038b3f039f96fb98b89e2f5')
 
 build() {
     cd "$srcdir/$_pkgbase-$pkgver"
