@@ -6,6 +6,9 @@ pre_build_script: |
 post_build_script: |
   aur_post_build()
 
+repo_depends:
+  - haskell-strict-concurrency
+
 update_on:
   - source: aur
     aur: bsc
@@ -19,5 +22,6 @@ update_on:
     alpm: haskell-regex-compat
   - source: alpm
     alpm: haskell-split
-  - source: alpm
-    alpm: haskell-strict-concurrency
+
+update_on_build:
+  - pkgbase: haskell-strict-concurrency
