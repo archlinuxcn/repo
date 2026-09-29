@@ -1,0 +1,39 @@
+# Maintainer: Jia Yin<yenfeng.shetiko at gmail dot com>
+
+pkgname=sing-box-for-linux-bin
+pkgver=1.14.2
+pkgrel=3
+pkgdesc="Linux client for sing-box, The universal proxy platform."
+arch=('x86_64' 'aarch64' )
+url="https://sing-box.sagernet.org/"
+license=("GPL-3.0-or-later" "LicenseRef-${pkgname}-exception")
+depends=('c-ares'
+	'ffmpeg'
+	'gtk3'
+	'libevent' 
+	'libvpx'
+	'libxslt'
+	'libxss'
+	'minizip'
+	'nss'
+	're2'
+	'snappy'
+	'libnotify'
+	'libappindicator-gtk3'
+	'polkit'
+)
+install=sing-box-for-linux-bin.install
+provides=("sing-box-for-linux")
+conflicts=("sing-box-for-linux")
+source=("LicenseRef-${pkgname}-${pkgver}-${pkgrel}-exception::https://raw.githubusercontent.com/SagerNet/sing-box/v${pkgver}/LICENSE")
+source_x86_64=("SFL-${pkgname}-${pkgver}-${pkgrel}-x64.pkg.tar.zst::https://github.com/SagerNet/sing-box/releases/download/v${pkgver}/SFL-${pkgver}-x64.pkg.tar.zst")
+source_aarch64=("SFL-${pkgname}-${pkgver}-${pkgrel}-aarch64.pkg.tar.zst::https://github.com/SagerNet/sing-box/releases/download/v${pkgver}/SFL-${pkgver}-aarch64.pkg.tar.zst")
+
+sha512sums=('35b76843c30240d073dbffade3cc76f569e01b273974d2a7110fcb41fca76b22c0be04da0aac33157083f188ebf69177e1f5a158f08327c4d235996877b53ab4')
+sha512sums_x86_64=('894aff1fe3b47b047200f60373f1eaf4464ea14f7b6707a906b041f3e75134ed7a24c59437cb0dba2e5b5e0ab4c63bcd186285159e489e73ef3417d3246f11bd')
+sha512sums_aarch64=('7c993f6552454965476d9131b9593edd76e8f1198e5b6f07c8b8cef2f77ee4fbaef4b11976363ff499ef29307568ab33b0f635ab63dfe6be983a93d917004396')
+
+package() {
+    install -Dm644 LicenseRef-${pkgname}-${pkgver}-${pkgrel}-exception -t "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    cp -r {usr,opt} $pkgdir
+}

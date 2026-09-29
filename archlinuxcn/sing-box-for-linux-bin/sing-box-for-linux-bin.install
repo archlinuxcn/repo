@@ -1,0 +1,19 @@
+post_install() {
+  # Thanks to @Misaka13514
+  case "$LANG" in
+    zh_CN*|zh_TW*|zh_HK*|zh_SG*|zh*)
+	if [ ! -r /run/sing-box.socket ] ;then
+		echo -e "systemd 服务未启动，请运行\nsystemctl enable --now sing-box-daemon.service"
+	fi
+	;;
+    *)
+	if [ ! -r /run/sing-box.socket ] ;then
+		echo -e "systemd service is not runing, please run\nsystemctl enable --now sing-box-daemon.service"
+	fi
+	;;
+  esac
+
+}
+post_upgrade() {
+  post_install
+}
