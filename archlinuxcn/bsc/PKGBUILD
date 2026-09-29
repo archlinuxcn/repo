@@ -1,0 +1,62 @@
+# Maintainer: Vekhir <vekhir AT yahoo DOT com>
+# Contributor: Jiuyang Liu <liujiuyang1994@gmail.com>
+# Contributor: Paulo Matias <matias@ufscar.br>
+
+pkgname=bsc
+pkgver=2026.07
+pkgrel=2
+pkgdesc='Bluespec Compiler (BSC)'
+arch=('x86_64')
+url='https://github.com/B-Lang-org/bsc'
+license=('BSD-3-Clause')
+depends=('haskell-old-time' 'haskell-syb' 'haskell-regex-compat' 'haskell-split'
+         'haskell-strict-concurrency')
+makedepends=('git' 'gperf' 'ghc' 'tcl' 'texlive-latexextra' 'texlive-fontsextra')
+checkdepends=('dejagnu' 'iverilog' 'pkg-config' 'systemc' 'tcsh' 'time')
+optdepends=('tcl: bluesim and bluetcl')
+source=("git+https://github.com/b-lang-org/bsc.git#tag=$pkgver"
+        "git+https://github.com/SRI-CSL/yices2.git#commit=f705557b7d33d866eb1b47b5471f97189eb31cc4")
+sha256sums=('5dc7794ef10d5f0ecb42f3029f0e32e47d88b7ca770919ad645c99a654174c08'
+            '7b2e722085456721b8127606a9b209aa6c4ad6b67bd0558cd09cfeda12281971')
+_prefix="/opt/bsc"
+
+prepare() {
+  cd "$srcdir/bsc"
+  git submodule init
+  git config submodule.externals/vendor/yices/v2.6/yices2.url "$srcdir/yices2"
+  git submodule update
+}
+
+build(){
+  # prevent static lib mangling with LTO (pacman#150, bsc#704)
+  CXXFLAGS+=" -ffat-lto-objects"
+
+  cd "$srcdir/bsc"
+  make GHC="ghc -dynamic" GHCJOBS=4 GHCRTSFLAGS='+RTS -A128m -RTS' install-src
+  make install-doc
+}
+
+check() {
+  cd "$srcdir/bsc"
+  # Currently failing due to https://github.com/B-Lang-org/bsc/issues/949
+  # Requires https://gitlab.archlinux.org/archlinux/packaging/packages/systemc/-/merge_requests/1
+  make check-suite-parallel || echo "Tests failed"
+}
+
+package() {
+  cd "$srcdir/bsc"
+  install -d "${pkgdir}${_prefix}"
+  cp -dr --preserve=mode,timestamp ./inst/* "${pkgdir}${_prefix}"
+
+  install -d "${pkgdir}/usr/bin"
+  local _prog
+  for _prog in bsc bluetcl; do
+    sed -i "s,^BINDIR=.*$,BINDIR=${_prefix}/bin," "${pkgdir}${_prefix}/bin/${_prog}"
+    ln -s "${_prefix}/bin/${_prog}" "${pkgdir}/usr/bin"
+  done
+
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  install -d "${pkgdir}/usr/share/vim/vimfiles"
+  cp -dr --preserve=mode,timestamp ./util/vim/{ftdetect,indent,syntax} "${pkgdir}/usr/share/vim/vimfiles"
+}
