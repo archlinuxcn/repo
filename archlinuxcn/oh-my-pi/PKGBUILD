@@ -1,9 +1,9 @@
 # Maintainer: Bin Jin <bjin@protonmail.com>
 
 pkgname=oh-my-pi
-pkgver=18.3.2
+pkgver=18.4.3
 pkgrel=1
-pkgdesc="A coding agent with the IDE wired in"
+pkgdesc="Coding agent with the IDE wired in"
 arch=('x86_64')
 url="https://omp.sh/"
 license=('MIT')
@@ -30,9 +30,10 @@ source=(
     "https://static.crates.io/crates/opus/opus-${_opus_ver}.crate"
     "skip-native-embed-for-aur.patch"
 )
-sha256sums=('3836298f99406e7e065a59dc3053d4de6f5e4f05c746ef256773d7103a593ec1'
+sha256sums=('2a3fd53b53bff9d2cb191473a2b1f3d9ab9c4956097ad58c96dad0f583bf28be'
             '33718946cc77d4032911d4efe03a66dbcbfbd2bb16c3da06aaeadcc637c32216'
-            'b2fe93ad7ef36869d660cc0ec9a0a0e7196370035efd86b32901101aff2920d1')
+            'b2fe93ad7ef36869d660cc0ec9a0a0e7196370035efd86b32901101aff2920d1'
+)
 
 _variants=('baseline:x86-64-v2' 'modern:x86-64-v3')
 _cargo_features=()
@@ -122,6 +123,15 @@ _build_native() {
 
     install -Dm755 "${_target_dir}/ci/libpi_natives.so" \
         "packages/natives/native/pi_natives.linux-x64-${_variant}.node"
+    # The crate links an empty release-stamp slot; upstream's build-bindings.ts
+    # fills it post-link, and the loader rejects an addon without it. Stamp the
+    # copy so the cargo artifact (and its fingerprint) stays untouched.
+    bun scripts/stamp-native-version.ts \
+        "packages/natives/native/pi_natives.linux-x64-${_variant}.node"
+}
+
+_build_id() {
+    readelf -n "$1" | sed -n 's/.*Build ID: //p'
 }
 
 build() {
@@ -129,34 +139,20 @@ build() {
 
     export RUSTUP_TOOLCHAIN=stable
 
-    # Embed the system bun as the runtime: JSC bytecode only loads in the Bun
-    # build that emitted it, and the release script's `bun-linux-x64-baseline`
-    # target would bake in a downloaded runtime that silently reparses the
-    # bundle on every start. Bun reuses `<target>-v<version>` from its install
-    # cache instead of downloading, so seed a private cache with a symlink.
-    local _bun=/usr/bin/bun
-    local _bun_cache="${srcdir}/bun-runtime-cache"
-    mkdir -p "${_bun_cache}"
-    ln -sfn "${_bun}" "${_bun_cache}/bun-linux-x64-baseline-v$("${_bun}" --version)"
-
     bun install --frozen-lockfile
     local _variant
     for _variant in "${_variants[@]}"; do
         _build_native "${_variant%%:*}" "${_variant##*:}"
     done
-    BUN_INSTALL_CACHE_DIR="${_bun_cache}" RELEASE_TARGETS='linux-x64' \
-        bun run ci:release:build-binaries
 
-    # Fail loudly if the seeded runtime ever stops landing (e.g. upstream
-    # changes the release target): Bun would download a foreign runtime that
-    # silently rejects the bytecode. Both buns report the same `--revision`,
-    # but the template's ELF Build ID is carried into the output verbatim, so
-    # it identifies the embedded runtime.
-    local _want _got
-    _want=$(readelf -n "${_bun}" | sed -n 's/.*Build ID: //p')
-    _got=$(readelf -n packages/coding-agent/binaries/omp-linux-x64 | sed -n 's/.*Build ID: //p')
-    if [[ -z $_want || $_got != "$_want" ]]; then
-        error "compiled omp does not embed ${_bun} (Build ID: ${_got:-none})"
+    unset CROSS_TARGET
+    bun --cwd=packages/coding-agent run build
+    # JSC bytecode only loads in the Bun build that emitted it; make sure the
+    # embedded runtime is the system bun, not a downloaded or foreign one.
+    local _want
+    _want=$(_build_id /usr/bin/bun)
+    if [[ -z $_want || $(_build_id packages/coding-agent/dist/omp) != "$_want" ]]; then
+        error "compiled omp does not embed /usr/bin/bun"
         return 1
     fi
 }
@@ -184,7 +180,7 @@ _install_completions() {
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
 
-    install -Dm755 "packages/coding-agent/binaries/omp-linux-x64" \
+    install -Dm755 "packages/coding-agent/dist/omp" \
         "${pkgdir}/usr/lib/${pkgname}/omp"
     local _variant
     for _variant in "${_variants[@]}"; do
