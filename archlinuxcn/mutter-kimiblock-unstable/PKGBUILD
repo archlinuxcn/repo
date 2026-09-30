@@ -90,7 +90,7 @@ source=(
 	"git+$url.git#tag=${pkgver}"
 	"git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
 
-	5331.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5331.patch
+	5363.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5363.patch
 
 	# ScreenCast performance
 	5358.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5358.patch
@@ -103,8 +103,8 @@ b2sums=('3c7e7159e70b09b91325335c4d13bb0ff51a161e430a0a63c65f380d5d31927cc8812cf
 prepare() {
 	cd mutter
 
-	echo 5331
-	git apply ../5331.patch
+	echo 5363
+	git apply ../5363.patch
 
 	echo 5358
 	git apply ../5358.patch
