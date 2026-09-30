@@ -2,7 +2,7 @@
 
 pkgname=sing-box-for-linux-bin
 pkgver=1.14.2
-pkgrel=3
+pkgrel=5
 pkgdesc="Linux client for sing-box, The universal proxy platform."
 arch=('x86_64' 'aarch64' )
 url="https://sing-box.sagernet.org/"
@@ -35,5 +35,5 @@ sha512sums_aarch64=('7c993f6552454965476d9131b9593edd76e8f1198e5b6f07c8b8cef2f77
 
 package() {
     install -Dm644 LicenseRef-${pkgname}-${pkgver}-${pkgrel}-exception -t "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-    cp -r {usr,opt} $pkgdir
+    find . -mindepth 1 -maxdepth 1 -type d -exec cp -r "{}" "${pkgdir}" \;
 }
