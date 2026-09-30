@@ -3,7 +3,7 @@
 
 pkgname=yacd-meta
 _pkgname=Yacd-meta
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Yet Another Clash Dashboard"
 arch=('any')
@@ -11,7 +11,7 @@ url="https://github.com/MetaCubeX/Yacd-meta"
 license=('MIT')
 makedepends=('bun')
 source=("${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('7039dcb35f8cdb3a5eab072cceaa94addc4c52df8bd976c5ee7e6e2bf58620e7')
+sha256sums=('17f2d4856313d93e4575e1114beb7d4a67aa0c47a42833c5c2f6d6eb79c4c339')
 
 build() {
     cd "${_pkgname}-${pkgver}"
