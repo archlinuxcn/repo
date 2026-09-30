@@ -1,0 +1,121 @@
+From a419aeb7f3ea0e732e14d79dcb8104e5a16f5b1e Mon Sep 17 00:00:00 2001
+From: DeepChirp <DeepChirp@outlook.com>
+Date: Wed, 30 Sep 2026 15:50:08 +0800
+Subject: [PATCH] [build] respect WITH_SYSTEM_PROVIDED_3PARTY for 3party
+
+Use find_package to locate system-provided blake3, glaze, minizip-ng,
+and glfw3 when WITH_SYSTEM_PROVIDED_3PARTY is enabled.
+---
+ 3party/CMakeLists.txt         | 14 ++++++++------
+ 3party/minizip/CMakeLists.txt |  7 +++++++
+ 3party/minizip/minizip.hpp    |  4 ++--
+ CMakeLists.txt                |  4 ++++
+ libs/coding/blake3.hpp        |  2 +-
+ 5 files changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/3party/CMakeLists.txt b/3party/CMakeLists.txt
+index 8fe9dd43ff..9f984d85b2 100644
+--- a/3party/CMakeLists.txt
++++ b/3party/CMakeLists.txt
+@@ -43,6 +43,8 @@ if (NOT WITH_SYSTEM_PROVIDED_3PARTY)
+   add_subdirectory(freetype)
+   add_subdirectory(icu)
+   add_subdirectory(harfbuzz)
++  add_subdirectory(BLAKE3/c)
++  add_subdirectory(glaze)
+ 
+   add_library(utf8cpp INTERFACE)
+   add_library(utf8cpp::utf8cpp ALIAS utf8cpp)
+@@ -86,9 +88,7 @@ if (NOT WITH_SYSTEM_PROVIDED_3PARTY)
+   endif()
+ endif()
+ 
+-add_subdirectory(BLAKE3/c)
+ add_subdirectory(bsdiff-courgette)
+-add_subdirectory(glaze)
+ add_subdirectory(minizip)
+ add_subdirectory(open-location-code)
+ add_subdirectory(stb_image)
+@@ -107,10 +107,12 @@ if (PLATFORM_DESKTOP)
+   set(GLFW_BUILD_WAYLAND OFF CACHE BOOL "")
+   # Disable ARC for glfw and re-enable after it because it's globally set in the root CMakeLists.txt
+   set(CMAKE_OBJC_FLAGS "")
+-  add_subdirectory(glfw)
+-  set_target_properties(glfw PROPERTIES UNITY_BUILD OFF)
+-  set_target_properties(glfw PROPERTIES XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC NO)
+-  set(CMAKE_OBJC_FLAGS -fobjc-arc)
++  if (NOT WITH_SYSTEM_PROVIDED_3PARTY)
++    add_subdirectory(glfw)
++    set_target_properties(glfw PROPERTIES UNITY_BUILD OFF)
++    set_target_properties(glfw PROPERTIES XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC NO)
++    set(CMAKE_OBJC_FLAGS -fobjc-arc)
++  endif()
+ 
+   add_subdirectory(imgui)
+ endif()
+diff --git a/3party/minizip/CMakeLists.txt b/3party/minizip/CMakeLists.txt
+index 9155391baf..8348ea1069 100644
+--- a/3party/minizip/CMakeLists.txt
++++ b/3party/minizip/CMakeLists.txt
+@@ -1,5 +1,10 @@
+ project(minizip)
+ 
++if (WITH_SYSTEM_PROVIDED_3PARTY)
++  add_library(${PROJECT_NAME} minizip.cpp minizip.hpp)
++  target_link_libraries(${PROJECT_NAME} PUBLIC MINIZIP::minizip-ng)
++else()
++
+ # This target is a thin C++ wrapper (unzip::/zip:: namespaces, see minizip.hpp)
+ # around minizip-ng's classic "compat" API. minizip-ng lives in the submodule
+ # 3party/minizip-ng; here we compile only the sources needed for ZIP read/write
+@@ -70,3 +75,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE
+ target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:Clang,AppleClang,GNU>:-Wno-unused-value>)
+ 
+ target_link_libraries(${PROJECT_NAME} PUBLIC ZLIB::ZLIB)
++
++endif()
+diff --git a/3party/minizip/minizip.hpp b/3party/minizip/minizip.hpp
+index 595b850b76..7e8482f072 100644
+--- a/3party/minizip/minizip.hpp
++++ b/3party/minizip/minizip.hpp
+@@ -5,8 +5,8 @@
+ // first defines ZLIB_H_/ZLIB_H and short-circuits that probe.
+ #include "zlib.h"
+ 
+-#include "3party/minizip-ng/compat/unzip.h"
+-#include "3party/minizip-ng/compat/zip.h"
++#include <unzip.h>
++#include <zip.h>
+ 
+ #include <array>
+ #include <cstdint>
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e6e30deabf..d35b289c3e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -212,6 +212,10 @@ if (WITH_SYSTEM_PROVIDED_3PARTY)
+ 
+   find_package(expat CONFIG REQUIRED)
+ 
++  find_package(blake3 REQUIRED)
++  find_package(glaze REQUIRED)
++  find_package(minizip-ng REQUIRED)
++  find_package(glfw3 REQUIRED)
+   find_package(pugixml REQUIRED)
+   find_package(utf8cpp REQUIRED)
+   find_package(Boost REQUIRED)
+diff --git a/libs/coding/blake3.hpp b/libs/coding/blake3.hpp
+index d4129783b0..86a6c7faf6 100644
+--- a/libs/coding/blake3.hpp
++++ b/libs/coding/blake3.hpp
+@@ -1,6 +1,6 @@
+ #pragma once
+ 
+-#include "3party/BLAKE3/c/blake3.h"
++#include <blake3.h>
+ 
+ #include <array>
+ #include <cstddef>
+-- 
+2.55.0
+

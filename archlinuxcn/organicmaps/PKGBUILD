@@ -3,63 +3,91 @@
 
 pkgname=organicmaps
 _appid=app.organicmaps.desktop
-pkgver=2026.08.27_18
-_pkgver=2026.08.27-18-android
-pkgrel=3
+pkgver=2026.09.29_32
+_pkgver=2026.09.29-32-android
+pkgrel=1
 pkgdesc="A privacy-focused offline maps & GPS app for hiking, cycling, biking, and driving"
 arch=('x86_64')
 # Reference: https://github.com/organicmaps/organicmaps/blob/master/docs/INSTALL.md
-depends=('glibc' 'hicolor-icon-theme' 'libxcursor' 'libxi' 'libxinerama' 'libxrandr' 'libgcc' 'libglvnd' 'libstdc++' 'qt6-base' 'qt6-positioning' 'qt6-svg' 'zlib'
-         # WITH_SYSTEM_PROVIDED_3PARTY
-         'expat' 'freetype2' 'gflags' 'harfbuzz' 'icu' 'protobuf' 'pugixml')
-makedepends=('cmake' 'ninja' 'git' 'jq' 'librsvg' 'python'
-             # WITH_SYSTEM_PROVIDED_3PARTY
-             'boost' 'fast_float' 'glaze' 'glm' 'utf8cpp' 'vulkan-headers')
+depends=(
+    'glibc'
+    'hicolor-icon-theme'
+    'libxcursor'
+    'libxi'
+    'libxinerama'
+    'libxrandr'
+    'libgcc'
+    'libglvnd'
+    'libstdc++'
+    'qt6-base'
+    'qt6-positioning'
+    'qt6-svg'
+    'zlib'
+    # WITH_SYSTEM_PROVIDED_3PARTY
+    'expat'
+    'freetype2'
+    'gflags'
+    'harfbuzz'
+    'icu'
+    'libblake3'
+    'minizip-ng'
+    'pugixml'
+)
+makedepends=(
+    'cmake'
+    'ninja'
+    'git'
+    'jq'
+    'librsvg'
+    'python'
+    # WITH_SYSTEM_PROVIDED_3PARTY
+    'boost'
+    'fast_float'
+    'glaze'
+    'glfw'
+    'glm'
+    'protobuf'
+    'utf8cpp'
+    'vulkan-headers'
+    'zlib-ng'
+)
 checkdepends=('gtest')
-optdepends=('qt6-wayland: for Wayland users')
 license=('Apache-2.0 AND LicenseRef-OrganicMapsData')
 url="https://organicmaps.app"
-source=("${pkgname}::git+https://github.com/organicmaps/organicmaps.git#tag=${_pkgver}"
-        "git+https://github.com/organicmaps/osmctools.git"
-        "git+https://github.com/organicmaps/kothic.git"
-        "git+https://github.com/organicmaps/just_gtfs.git"
-        "git+https://github.com/thisistherk/fast_obj"
-        "git+https://github.com/glfw/glfw.git"
-        "git+https://github.com/dpogue/CMake-MetalShaderSupport.git"
-        "git+https://github.com/ocornut/imgui"
-        "git+https://github.com/organicmaps/twine.git"
-        "0001-build-respect-WITH_SYSTEM_PROVIDED_3PARTY-for-glaze.patch"
-        "0002-build-do-not-hardcode-compile-and-link-flags.patch"
-        "0003-build-guard-test-support-and-quality-libraries.patch")
-sha256sums=('f301c008a7fa3f30e3adb147ab0048aa2194e557ce44607ab5bd031d1c79bae8'
+source=(
+    "${pkgname}::git+https://github.com/organicmaps/organicmaps.git#tag=${_pkgver}"
+    "git+https://github.com/organicmaps/osmctools.git"
+    "git+https://github.com/organicmaps/kothic.git"
+    "git+https://github.com/thisistherk/fast_obj"
+    "git+https://github.com/dpogue/CMake-MetalShaderSupport.git"
+    "git+https://github.com/ocornut/imgui"
+    "git+https://github.com/organicmaps/twine.git"
+    "0001-build-do-not-hardcode-compile-and-link-flags.patch"
+    "0002-build-respect-WITH_SYSTEM_PROVIDED_3PARTY-for-3party.patch"
+)
+sha256sums=('99a3585aa36e00905e97c4204a0b28eb483fc2b42d02f597fd94a9e20945c439'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
-            'SKIP'
-            'SKIP'
-            'ca79329e3614981c1ff1753e736baab876bb96692bea5008c1c318d8bea00b3c'
-            '1d5375fb74424c029c588cb9938c34b002cfc7dd2833bb62485d35cfe3f33005'
-            'ed4bb6d8cad4717a38c5a5e5f509b6d3ae7e4bcd542bb40cfc206efb2874022c')
+            '7295472f9f974347df8fb85a3a48756410fc418cf2a33e7d267a4ba0935ff8fa'
+            'f8c4fa55ae4af5a9fcad08ee01b4dc5fc98fe99f2a4f30a37273012e349fcd19')
 
 prepare() {
     cd "${pkgname}"
 
-    # Use system's glaze instead of the bundled one.
-    # However, upstream doesn't accept this patch because they think some distributions don't have a recent enough glaze version.
-    # https://github.com/organicmaps/organicmaps/pull/12811
-    patch -p1 -i "${srcdir}/0001-build-respect-WITH_SYSTEM_PROVIDED_3PARTY-for-glaze.patch"
-
     # Use the system's flags to prevent them from being overwritten.
     # Fix LDFLAGS overwriting and "Could NOT find Threads" errors.
     # https://github.com/organicmaps/organicmaps/pull/12790
-    patch -p1 -i "${srcdir}/0002-build-do-not-hardcode-compile-and-link-flags.patch"
+    patch -p1 -i "${srcdir}/0001-build-do-not-hardcode-compile-and-link-flags.patch"
 
-    # Guard test support and quality assessment libraries.
-    # Skip them when BUILD_TESTING and SKIP_TOOLS are disabled to prevent compilation errors caused by broken transitive dependencies.
-    patch -p1 -i "${srcdir}/0003-build-guard-test-support-and-quality-libraries.patch"
+    # Use system's libraries instead of the bundled one.
+    # However, upstream doesn't accept this patch.
+    # They believe that some distributions have older libraries.
+    # https://github.com/organicmaps/organicmaps/pull/12811
+    patch -p1 -i "${srcdir}/0002-build-respect-WITH_SYSTEM_PROVIDED_3PARTY-for-3party.patch"
 
     # Unbundle outdated Protobuf generated headers/sources.
     # We must manually regenerate them using the system's protoc to prevent version mismatches.
@@ -69,20 +97,24 @@ prepare() {
 
     # See `if (NOT WITH_SYSTEM_PROVIDED_3PARTY)` in CMakeLists.txt
     local _disabled_submodules=(
-        "3party/boost"
+        "3party/BLAKE3"
+        "3party/boost_headers"
         "3party/expat"
         "3party/fast_float"
         "3party/freetype/freetype"
         "3party/gflags"
         "3party/glaze"
+        "3party/glfw"
         "3party/googletest"
         "3party/glm"
         "3party/harfbuzz/harfbuzz"
         "3party/icu/icu"
+        "3party/minizip-ng"
         "3party/protobuf/protobuf"
         "3party/pugixml/pugixml"
         "3party/utfcpp"
         "3party/Vulkan-Headers"
+        "3party/zlib-ng"
     )
     for sub in "${_disabled_submodules[@]}"; do
         git config "submodule.${sub}.update" none
@@ -118,8 +150,9 @@ build() {
         -D CMAKE_C_FLAGS_RELEASE="-DNDEBUG"
         -D CMAKE_CXX_FLAGS_RELEASE="-DNDEBUG"
         -D CMAKE_INSTALL_PREFIX=/usr
+        -D CMAKE_UNITY_BUILD=OFF
         -D WITH_SYSTEM_PROVIDED_3PARTY=ON
-        -D BUILD_TESTING=OFF
+        -D BUILD_TESTING=ON
         -D SKIP_QT_GUI=OFF
         -D SKIP_TOOLS=ON
     )
@@ -136,34 +169,18 @@ build() {
 check() {
     cd "${pkgname}"
 
-    local cmake_options=(
-        -B build
-        -G Ninja
-        -D CMAKE_BUILD_TYPE=Release
-        -D CMAKE_C_FLAGS_RELEASE="-DNDEBUG"
-        -D CMAKE_CXX_FLAGS_RELEASE="-DNDEBUG"
-        -D CMAKE_INSTALL_PREFIX=/usr
-        -D WITH_SYSTEM_PROVIDED_3PARTY=ON
-        -D BUILD_TESTING=ON
-        -D SKIP_QT_GUI=OFF
-        -D SKIP_TOOLS=ON
-    )
-    cmake "${cmake_options[@]}"
-
-    cmake --build build
-
     # From `build-cmake.yaml` "Run tests"
     # In addition, the following tests were also disabled:
     # - base_tests: `is_finite` logic fails due to `-ffast-math`
     # - osm_auth_tests: `server_api_test` fails due to no network access
     # - map_tests: Unable to read system language, therefore can't find `localize.json`
-    ctest -j --test-dir build --stop-on-failure --output-on-failure -E "drape_tests|drape_frontend_tests|generator_integration_tests|opening_hours_integration_tests|opening_hours_supported_features_tests|routing_benchmarks|routing_integration_tests|routing_quality_tests|search_quality_tests|storage_integration_tests|shaders_tests|world_feed_integration_tests|base_tests|osm_auth_tests|map_tests"
+    ctest -j --test-dir build --stop-on-failure --output-on-failure -E "drape_tests|drape_frontend_tests|generator_integration_tests|opening_hours_integration_tests|opening_hours_supported_features_tests|routing_benchmarks|routing_integration_tests|routing_quality_tests|search_quality_tests|storage_integration_tests|shaders_tests|world_feed_integration_tests|base_tests|osm_auth_tests|map_tests|routing_common_tests"
 }
 
 package() {
     cd "${pkgname}"
 
-    install -Dm755 "build/OMaps" -t "${pkgdir}/usr/bin"
+    install -Dm755 "build/OrganicMaps" -t "${pkgdir}/usr/bin"
 
     local _datadir="${pkgdir}/usr/share/${pkgname}/data"
     install -dm755 "${_datadir}"
@@ -200,9 +217,6 @@ package() {
     # UI & Legal
     install -Dm644 data/welcome.html "${_datadir}/"
     install -Dm644 data/copyright.html "${_datadir}/"
-
-    local _data_version=$(jq -r '.v' data/countries.json)
-    install -dm755 "${_datadir}/$_data_version"
 
     install -Dm644 "android/.idea/icon.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/${pkgname}.svg"
     for res in 16 32 48 64 128 256 512 1024; do
