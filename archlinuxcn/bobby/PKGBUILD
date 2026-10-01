@@ -1,0 +1,32 @@
+pkgname=bobby
+pkgver=51.0.1
+pkgrel=1
+pkgdesc="Browse SQLite database files"
+arch=('x86_64' 'aarch64')
+url="https://github.com/hbons/Bobby"
+license=('GPL-3.0-or-later')
+depends=('gcc-libs' 'glibc' 'gtk4' 'libadwaita' 'sqlite')
+makedepends=('cargo' 'meson' 'ninja' 'git')
+source=(
+	"source::git+https://github.com/hbons/Bobby.git#tag=v${pkgver}"
+)
+
+sha256sums=('11bab7ef85f6b2f1a197050bfbac8511e60417d59d03b990a008185b64feae8c')
+
+prepare() {
+	cd source
+	sed -i 's/rusqlite = { version = "0.37.0", features = \["bundled"\] }/rusqlite = "0.37.0"/' Cargo.toml
+}
+
+build() {
+	arch-meson source build
+	ninja -C build
+}
+
+check() {
+	meson test -C build --print-errorlogs
+}
+
+package() {
+	DESTDIR="${pkgdir}" ninja -C build install
+}
