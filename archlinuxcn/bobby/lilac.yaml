@@ -8,7 +8,8 @@ post_build_script: |
 
 update_on:
   - source: "git"
-    git: "https://gitlab.gnome.org/GNOME/mutter.git"
+    git: "https://github.com/hbons/Bobby"
+    prefix: v
   - source: "alpm"
     alpm: "sqlite"
     provided: libsqlite3.so
