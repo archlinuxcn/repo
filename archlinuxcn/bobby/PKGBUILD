@@ -1,6 +1,6 @@
 pkgname=bobby
 pkgver=51.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Browse SQLite database files"
 arch=('x86_64' 'aarch64')
 url="https://github.com/hbons/Bobby"
@@ -11,7 +11,7 @@ source=(
 	"source::git+https://github.com/hbons/Bobby.git#tag=v${pkgver}"
 )
 
-sha256sums=('11bab7ef85f6b2f1a197050bfbac8511e60417d59d03b990a008185b64feae8c')
+sha256sums=('a5f118517e6e6ebd2e056afb82183c673c58fe0e624d0d28ed7c627ced84a023')
 
 prepare() {
 	cd source
