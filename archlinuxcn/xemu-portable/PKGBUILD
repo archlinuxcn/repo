@@ -21,7 +21,6 @@ depends=(
 	'glslang'
 	'hicolor-icon-theme'
 	'sdl2'
-	portable
 )
 makedepends=(
 	'cmake'
@@ -48,7 +47,7 @@ makedepends=(
 checkdepends=()
 
 source=(
-	portable-config
+	config.toml
 	desktop.file
 	"source::git+https://github.com/xemu-project/xemu.git#tag=v${pkgver}"
 )
@@ -102,8 +101,9 @@ function package() {
 		'libxxhash.so'
 		'libz.so'
 	)
+
 	cd source
-	install -Dm755 ../build/qemu-system-i386 "$pkgdir"/usr/lib/portable/overlay-usr/xemu
+	install -Dm755 ../build/qemu-system-i386 "$pkgdir"/usr/bin/xemu
 	local size
 	for size in 16 24 32 48 64 128 256 512; do
 		install -Dm644 ui/icons/xemu_${size}x${size}.png "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps/xemu.png
@@ -114,6 +114,6 @@ function package() {
 		--distro arch \
 		--mode post \
 		--hash true \
-		--config "${srcdir}/portable-config" \
+		--config-ng "${srcdir}/config.toml" \
 		--desktop-file "${srcdir}/desktop.file"
 }
