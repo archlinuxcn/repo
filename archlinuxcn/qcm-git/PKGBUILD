@@ -21,7 +21,6 @@ depends=(
 	'openssl'
 	'ffmpeg'
 	'kdsingleapplication'
-	'qmlmaterial-git'
 	'sqlite'
 )
 makedepends=(
@@ -51,9 +50,6 @@ prepare() {
 	cd Qcm
 	mkdir -p .lito
 	cat >.lito/config.toml <<END
-[tools.cmake.overrides.qml_material]
-source = "installed"
-
 [tools.cmake.overrides.KDSingleApplication]
 source = "installed"
 
