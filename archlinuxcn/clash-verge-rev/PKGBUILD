@@ -4,8 +4,8 @@
 pkgname=clash-verge-rev
 _pkgname=${pkgname%-rev}
 pkgver=2.5.6
-_ipc_ver=2.7.5
-pkgrel=3
+_ipc_ver=2.7.4
+pkgrel=4
 pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
 url="https://github.com/${pkgname}/${pkgname}"
@@ -19,10 +19,10 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
 	https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/{Country.mmdb,geo{ip,site}.dat}
 )
 sha512sums=('27288656661e2887f4eb0fc1e59e1ca288be95af79b8a73c729b8a96f897e06705d69a5b1711308a4c9008aaec1663fb32675f44798b3f0c94be72911ce4f7ce'
-            'd8f47e40dea07192f55d5c912694fd7124b93d71647c433904f9f1564098dd6bc0b8ba7178b74575bfa21ac123aa6d820f34377f550aa4b8f52f317fbcbc5dff'
-            '76ee007cb219cc410019b911a3122f9350f8541a1dccddca25b556b73ecd81f4cdc12dacdf130bd2f7897382d12dd6fb143b326c4ca800959d05ebc9f797fdcd'
-            'a95613562a1f586f8edc3ca695bc1329ec91a8c85ea70a0045808ba60ab6d17cf1f80c91e45e1f7da02cdbfdce9d36d1b6ede971f84957765bca36badc8d367b'
-            '9f24c55471cd2e36929fcb223c5e3f434d74b4ed4e2150bd95f5d51b607457c8387a33ed691b4580a4f2c987c13eedffeb4f78fbdb5d8ecf0139e60fada98ef7')
+            '99af310d318694ab6818696e0426ccc9517a2191125668013aa2524a9922bf2134de7f762fa69fd95060206d3cb4574005dc5af579b0a7ff4c4f6b0bf3b315ff'
+            'c8cc6032d20a4a1097873007ab68ebee114302cdb9b5b4bdb726e8938634d4140207cdb88f57a2db87137770620c01f889ddc472f47055f6b453117a4e7ab0c5'
+            'a31ca8f7291022260be7295a213aee97dee7970b183694b0f57b923cfc2d562a54c6135a0421cae7ea2c116dcbbb6cffe62951ce0e94899519361a767cdc8228'
+            '94c2030429642635ce11c05177cffdc48d81548d4f6c32b9666800b84fbb3a733838d3e0887bc91389aa9706f2402bfd8ea634327edafb5d9c6f8d3bcef7ee0d')
 
 prepare() {
 	pushd "${_pkgname}-service-ipc-${_ipc_ver}/"
