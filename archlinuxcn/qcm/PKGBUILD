@@ -34,6 +34,7 @@ depends=(
 )
 makedepends=(
 	'git'
+	'git-lfs'
 	'cargo'
 	'clang'
 	'lito'
@@ -66,6 +67,12 @@ sha256sums=('6cca08f3c04287557e436161bd08de2db3c0f791b60abc8b086e5fd0cdf85369'
             'ebf0fd9b60d85a7f465992a75b581b7141bfd2102d8c4f752dada017dc2b74a7')
 
 prepare() {
+	pushd QmlMaterial
+	git lfs install --local
+	git remote add network-origin "https://github.com/hypengw/QmlMaterial.git"
+	git lfs pull network-origin
+	popd
+
 	cd Qcm
 
 	# Allow using system dependencies
