@@ -1,0 +1,72 @@
+--- a/src/org.kde.KWin.xml	2026-05-12 18:26:46.000000000 +0800
++++ b/src/org.kde.KWin.xml	2026-06-01 19:00:42.451971220 +0800
+@@ -41,6 +41,11 @@
+         <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+         <arg name="showing" type="b" direction="in"/>
+     </method>
++    <method name="setOutputDpmsMode">
++        <arg name="name" type="s" direction="in"/>
++        <arg name="on" type="b" direction="in"/>
++        <arg type="b" direction="out"/>
++    </method>
+     <signal name="showingDesktopChanged">
+         <arg name="showing" type="b" direction="out"/>
+     </signal>
+--- a/src/dbusinterface.h	2026-05-12 18:26:46.000000000 +0800
++++ b/src/dbusinterface.h	2026-06-01 19:00:47.500970503 +0800
+@@ -85,6 +85,16 @@
+      */
+     QVariantMap getWindowInfo(const QString &uuid);
+ 
++    /**
++     * Sets DPMS mode on the specified output by name.
++     * This turns the screen off/on without changing the desktop layout.
++     *
++     * @param name The output name (e.g. "eDP-1", "HDMI-A-1", "DP-6").
++     * @param on true to turn the screen on, false to turn it off.
++     * @return true if the output was found and the change was applied, false otherwise.
++     */
++    bool setOutputDpmsMode(const QString &name, bool on);
++
+     Q_NOREPLY void showDesktop(bool show);
+ 
+ Q_SIGNALS:
+--- a/src/dbusinterface.cpp	2026-05-12 18:26:46.000000000 +0800
++++ b/src/dbusinterface.cpp	2026-06-01 19:00:54.454969245 +0800
+@@ -16,6 +16,8 @@
+ // kwin
+ #include "compositor.h"
+ #include "core/output.h"
++#include "core/outputbackend.h"
++#include "core/outputconfiguration.h"
+ #include "core/renderbackend.h"
+ #include "debug_console.h"
+ #include "kwinadaptor.h"
+@@ -222,6 +224,27 @@
+     Q_EMIT showingDesktopChanged(show);
+ }
+ 
++bool DBusInterface::setOutputDpmsMode(const QString &name, bool on)
++{
++    auto *backend = kwinApp()->outputBackend();
++    if (!backend) {
++        return false;
++    }
++    BackendOutput *output = backend->findOutput(name);
++    if (!output) {
++        return false;
++    }
++
++    OutputConfiguration config;
++    config.source = OutputConfiguration::Source::System;
++    config.changeSet(output)->dpmsMode = on ? BackendOutput::DpmsMode::On : BackendOutput::DpmsMode::Off;
++
++    // Call backend directly instead of Workspace::applyOutputConfiguration,
++    // because the workspace method overrides dpmsMode on ALL outputs with
++    // the global m_dpms state. For per-output DPMS we bypass that.
++    return backend->applyOutputChanges(config) == OutputConfigurationError::None;
++}
++
+ CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)
+     : QObject(parent)
+     , m_compositor(parent)
