@@ -1,0 +1,27 @@
+From ee3ada468352db1bf0b750132f7651951405557c Mon Sep 17 00:00:00 2001
+From: Dee HY <dongfengweixiao@hotmail.com>
+Date: Sat, 3 Oct 2026 22:50:21 +0800
+Subject: [PATCH] =?UTF-8?q?=E8=AE=BE=E7=BD=AE=20rust=5Fapi=20name?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ plugins/rust_api/rust/Cargo.toml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/plugins/rust_api/rust/Cargo.toml b/plugins/rust_api/rust/Cargo.toml
+index 195cd3f9..76a2ba09 100644
+--- a/plugins/rust_api/rust/Cargo.toml
++++ b/plugins/rust_api/rust/Cargo.toml
+@@ -5,6 +5,7 @@ edition = "2021"
+ 
+ [lib]
+ crate-type = ["cdylib", "staticlib"]
++name = "rust_api"
+ 
+ [dependencies]
+ flutter_rust_bridge = "=2.13.0"
+-- 
+2.56.0
+
