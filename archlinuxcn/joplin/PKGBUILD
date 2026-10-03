@@ -8,7 +8,7 @@
 pkgbase=joplin
 pkgname=('joplin' 'joplin-desktop')
 pkgdesc="A note taking and to-do application with synchronization capabilities"
-pkgver=3.7.18
+pkgver=3.7.21
 groups=('joplin')
 pkgrel=1
 _electronVersion=42
@@ -23,9 +23,9 @@ source=(
     "joplin-desktop.desktop"
     "joplin-${pkgver}.tar.gz::https://github.com/laurent22/joplin/archive/v${pkgver}.tar.gz"
 )
-sha256sums=('9223cc816f8175ddaf8839f9357d2bd1c4831692504927c98d8e1eefa7df796e'
-            'f485c089904d91750d137d4413297676446e0068892cb08e20bee928bcac516c'
-            '60eb34872a61efce325034ab1a052a0d37f9f0028b037d5482b1e649d8d63c4f')
+sha256sums=('3f87fe0167806c86495fab78483cce83d60262bc2289e5ff24a9a9039e8454b2'
+            'fb9a5185e3b523a5f52b0eeec6def781782ad0e6b64e5db13300396b835a55b4'
+            'd868a2f9a48937c514b6b39486e88f473b4477085035f75d22542800c1fdd083')
 
 _setup_env() {
     export YARN_CACHE_FOLDER="${srcdir}/yarn-cache"
@@ -53,16 +53,20 @@ build() {
     rm -r packages/{app-mobile,app-clipper,server,doc-builder}
     # Fix: Build error due to removal of app-mobile
     sed -i '/app-mobile\//d' packages/tools/gulp/tasks/buildScriptIndexes.js
-
     # Fix: joplin-plugin-freehand-drawing complains "not in a git directory"
     git init
+    # Fix: "Open secondary app instance" not working with system electron
+    sed -i "s#bridge().electronApp().electronApp().getPath('exe')#'/usr/bin/joplin-desktop'#" \
+        packages/app-desktop/bridge.ts
+    sed -i '/const nextArg/a if (arg === "/usr/lib/joplin-desktop/app.asar") { argv.splice(0, 2); continue; }' \
+        packages/lib/utils/processStartFlags.ts
 
     corepack install
     npx yarn install
 
     # Replace npm dependencies with local ones
     cd "packages"
-    sed -i -E 's_"@joplin/(\w+)": .*_"@joplin/\1": "file://'$PWD'/\1",_g' */package.json
+    sed -i -E 's_"@joplin/([^"]+)": .*_"@joplin/\1": "file://'$PWD'/\1",_g' */package.json
 
     # Pack the app-cli package
     cd "${srcdir}/joplin-${pkgver}/packages/app-cli"
