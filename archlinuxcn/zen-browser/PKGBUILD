@@ -3,8 +3,8 @@
 # Contributor: StaticNullException <aurcontact@teto.party>
 
 pkgname=zen-browser
-pkgver=1.21.15b
-pkgrel=5
+pkgver=1.23b
+pkgrel=3
 pkgdesc='Firefox-based web browser built from upstream release source snapshot'
 url='https://zen-browser.app'
 arch=('x86_64')
@@ -87,13 +87,11 @@ source=(
   "$pkgname.desktop"
   '0004-Use-wasm32-wasip1-target.patch'
   '0005-Fix-cbindgen-BudgetType_VALUES-COUNT-issue.patch'
-  'rust-1.98-target-detection.patch::https://github.com/mozilla-firefox/firefox/commit/1ecaa12836a69896dd6702fb5ed5e13979399371.patch'
 )
-sha256sums=('fd3f5af8e8c36f60307b6715e2d71d573443ccb12abd9cbe8dbce8d0bef28643'
+sha256sums=('c2a2f7853f939f1a5f510c885d450564e5bcf6957453c1ff3adb0ea595b872aa'
             'af16fec9a88cbfffee34a6a4eb5b3074931477fcefee252840d77cf146568851'
             '28b086f5492d8e6731fe0dfe34a2e4c6d4d502a9eefa15a31e44b5788cf4df89'
-            '0d24f2a45fa0f7fe108a91a50ae55708f66899b0229df7722fb87962f7a2a243'
-            'f0067ae0dde14dcbacb490b1d59d64708701145a47bfe2b1ae2b157863e59db7')
+            '0d24f2a45fa0f7fe108a91a50ae55708f66899b0229df7722fb87962f7a2a243')
 noextract=("$_srcroot-$pkgver.tar.zst")
 
 prepare() {
@@ -105,9 +103,6 @@ prepare() {
 
   patch -Np1 -i "$srcdir/0004-Use-wasm32-wasip1-target.patch"
   patch -Np1 -i "$srcdir/0005-Fix-cbindgen-BudgetType_VALUES-COUNT-issue.patch"
-  # Mozilla bug 2053518: disambiguate the generic Rust targets from the
-  # OpenEmbedded targets added in Rust 1.98.
-  patch -Np1 -i "$srcdir/rust-1.98-target-detection.patch"
 
   cat >"$srcdir/mozconfig" <<EOF
 ac_add_options --enable-application=browser
