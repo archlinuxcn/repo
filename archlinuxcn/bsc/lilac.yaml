@@ -1,0 +1,27 @@
+maintainers:
+  - github: poscat0x04
+
+pre_build_script: |
+  aur_pre_build(maintainers=['Vekhir'])
+post_build_script: |
+  aur_post_build()
+
+repo_depends:
+  - haskell-strict-concurrency
+
+update_on:
+  - source: aur
+    aur: bsc
+  - source: alpm
+    alpm: ghc-libs
+  - source: alpm
+    alpm: haskell-old-time
+  - source: alpm
+    alpm: haskell-syb
+  - source: alpm
+    alpm: haskell-regex-compat
+  - source: alpm
+    alpm: haskell-split
+
+update_on_build:
+  - pkgbase: haskell-strict-concurrency

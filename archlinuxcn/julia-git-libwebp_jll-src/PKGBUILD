@@ -1,16 +1,16 @@
 pkgname=julia-git-libwebp_jll-src
-pkgver=1.6.0+0
-_commit=cce49f398327b2b497abf1b920fc44b64d2663f6
-pkgrel=3
+pkgver=1.6.1+0
+_commit=e79122e7f7f40641b5ad7acfec7ec70142362c52
+pkgrel=1
 pkgdesc="libwebp_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/libwebp_jll.jl.git"
 arch=('any')
 license=('MIT')
 makedepends=(git julia-pkg-scripts)
-depends=(julia-git libwebp)
+depends=(julia-git libwebp libwebp-utils)
 source=("git+https://github.com/JuliaBinaryWrappers/libwebp_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('c4f8242792a1715204c621d706186d56a9db881506ed01029b86ef82ed296bec'
+sha256sums=('ec0e7eb02ae05b85b2c03f18bbd8d541c7b876a0baad89cec3c38ce1b133aa81'
             'ac1a7f802576726ddac20254a04d7b57fe07f5f158e61bfebb74b5b6fb024f0e')
 
 build() {

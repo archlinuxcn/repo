@@ -1,7 +1,7 @@
 # Maintainer: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=servo
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc='Parallel Browser Project: web browser written in Rust'
 arch=(x86_64 i686)
@@ -36,20 +36,20 @@ makedepends=(clang
              uv)
 backup=("etc/profile.d/$pkgname".{csh,sh})
 source=("$pkgname::git+$url.git#tag=v$pkgver")
-sha256sums=('d78ee3eeb80823c09e56a3c82d01f90465c38e521e81b14d886ce2e7beba3035')
+sha256sums=('8b0c24a7f5896d96fc1cdf96b357f2a17c420748f66bbdcce317ef8274bc3834')
 
 _srcenv() {
 	cd "$pkgname"
 	export CARGO_HOME="$srcdir"
 	export CARGO_PROFILE_RELEASE_DEBUG=2
 	export CARGO_PROFILE_RELEASE_STRIP=false
-	export CARGO_PROFILE_RELEASE_LTO=true
+	export CARGO_PROFILE_RELEASE_LTO=thin
 	export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
 	export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
-	CFLAGS+=' -ffat-lto-objects'
-	CXXFLAGS+=' -ffat-lto-objects'
+	CFLAGS+=' -fno-lto'
+	CXXFLAGS+=' -fno-lto'
 	RUSTFLAGS+=" --remap-path-prefix $PWD=/"
 }
 

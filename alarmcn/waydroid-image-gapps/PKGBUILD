@@ -3,17 +3,17 @@
 # Contributer: Danct12 <danct12@disroot.org>
 # Contributor: Bart Ribbers <bribbers@disroot.org>
 
-_system="20.0-20260403"
-_vendor="20.0-20260428"
+_system="20.0-20260927"
+_vendor="20.0-20260927"
 
-_system_x86="20.0-20260403"
-_vendor_x86="20.0-20260403"
+_system_x86="20.0-20260927"
+_vendor_x86="20.0-20260927"
 
-_system_arm64="20.0-20260403"
-_vendor_arm64="20.0-20260403"
+_system_arm64="20.0-20260927"
+_vendor_arm64="20.0-20260927"
 
-_system_arm="20.0-20260402"
-_vendor_arm="20.0-20260403"
+_system_arm="20.0-20260926"
+_vendor_arm="20.0-20260927"
 
 _all=(
   "$_system"
@@ -59,11 +59,11 @@ package() {
   install -Dm644 "$srcdir"/*.img -t "$pkgdir/usr/share/waydroid-extra/images"
 }
 
-sha256sums_x86_64=('811ab2dd7ad1b0b4964bddf020fa450275ea1af2d5b0ac10d5ceced0ac1908a3'
-                   'cba35433ffca73ed349e096b1daec495b3204e01c0e541c4203671e6d648e874')
-sha256sums_i686=('2f1f8d96bc43b7c2ad0718c893c9d019e27e481c90316b9aefd50adbb7bf16cb'
-                 '03f1dfc41b0f37471843c1f2ecb72bc635e8ddf6ecd80b2c41ec6ef8ebe303a7')
-sha256sums_armv7h=('cff0ccc2fbaf875bb06501c507dfc90f8b5a26aabb0e677ca48e754b914c3309'
-                   'b81703ff498af328ffe39354a8d9956be51a184fa319e2648964910d35ba9673')
-sha256sums_aarch64=('c5e557605887664ab1da6c17ff0032317735a0425b8055ee9073fdbcd00899c2'
-                    '1e6d33d464277ea3964e4658001c8882f21325616d6bcc66d473bc9ee1e246c7')
+sha256sums_x86_64=('1d79df0b17ab8f79d66fd3b5f94500cc02f1abe149cf8caa391380092ede6e2a'
+                   'd911b8353f6c807b94790b1c41c67e863a9f3dcd1cf3ec0232351398235afd7a')
+sha256sums_i686=('7313b2a9a720c87a561c8de5b7566e4302b97963901a8a6b355c1c3ba88742f0'
+                 '99af2f69d5fd2c1f2d3830183f6de9689375833ac082e16cc5c9a94cd953990e')
+sha256sums_armv7h=('97df844650a19089c33936b1e2d1c79a9443118d75c7cc22dce1d6ef160d788c'
+                   '335c710902148cf6f4edac5e7ab464f1af536deb460eb81facd31b9557cec1e7')
+sha256sums_aarch64=('a892171f65209078d44f4b85151143665d89ffecf0e6e1c189908937fca155e8'
+                    '20a49c11961a5ac7295320f578764eeab3c982b217f1bfde7473adfc22e747ae')

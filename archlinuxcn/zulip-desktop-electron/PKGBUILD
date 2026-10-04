@@ -3,9 +3,9 @@
 # Contributor: Mark Wagie <mark dot wagie at tutanota dot com>
 # Contributor: aspen <aspen@aspenuwu.me>
 pkgname=zulip-desktop-electron
-pkgver=5.12.4
+pkgver=5.13.2
 pkgrel=1
-_electronversion=43
+_electronversion=44
 pkgdesc="Real-time team chat based on the email threading model"
 arch=('x86_64')
 url="https://zulip.com"
@@ -18,13 +18,13 @@ source=(
   "${pkgname%-*}-$pkgver.tar.gz::https://github.com/zulip/zulip-desktop/archive/v$pkgver.tar.gz"
   "Zulip.desktop"
   "${pkgname%-*}.sh.in")
-sha256sums=('2db95b7fe239dde54470d269150185118515ee232ef52684345db55a42c9edfd'
-  '8f3440dc9195c6763de16f8b13409a5c130bdf417015e7e27bb64fdb227f4f10'
-  '70ed0f08158c6ea8ef99dbbe360861e2c63911c2fadc74c0154bd6567abc8979')
+sha256sums=('88018db9d0019d8a4ff1ad5f67741115d0abed8f9a0d0387eed75cdc00a1cfbb'
+            '8f3440dc9195c6763de16f8b13409a5c130bdf417015e7e27bb64fdb227f4f10'
+            '70ed0f08158c6ea8ef99dbbe360861e2c63911c2fadc74c0154bd6567abc8979')
 
 prepare() {
   source /usr/share/nvm/init-nvm.sh
-  nvm install 22.19.0
+  nvm install 24.21.0
 }
 
 build() {

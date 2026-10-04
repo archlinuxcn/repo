@@ -1,6 +1,6 @@
-From 507283a37deb011e3c527022938831ac8cc09579 Mon Sep 17 00:00:00 2001
+From 7943bdb4a2839b0badc633147df22f8c3dfa7030 Mon Sep 17 00:00:00 2001
 From: DeepChirp <DeepChirp@outlook.com>
-Date: Thu, 25 Jun 2026 14:24:43 +0800
+Date: Wed, 30 Sep 2026 14:40:31 +0800
 Subject: [PATCH] [build] do not hardcode compile and link flags
 
 Hardcoding `-O3` and specific linkers (`-fuse-ld=...`) overrides
@@ -11,10 +11,10 @@ user- or toolchain-provided flags (e.g., via `CMAKE_CXX_FLAGS` or
  1 file changed, 20 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d32429e298..ad238d405a 100644
+index e6e30deabf..cc06f844bd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -100,12 +100,6 @@ add_compile_definitions(
+@@ -101,12 +101,6 @@ add_compile_definitions(
    $<$<CONFIG:Debug>:DEBUG>
    $<$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>:RELEASE>
  )
@@ -27,7 +27,7 @@ index d32429e298..ad238d405a 100644
  
  # For single-config generators we can still validate CMAKE_BUILD_TYPE early.
  get_property(_is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-@@ -118,20 +112,6 @@ else()
+@@ -119,20 +113,6 @@ else()
    message(STATUS "Multi-config generator: build type selected per-build (Debug/Release/RelWithDebInfo/MinSizeRel)")
  endif()
  
@@ -35,19 +35,19 @@ index d32429e298..ad238d405a 100644
 -  find_program(LLD_FOUND ld.lld)
 -  if (LLD_FOUND)
 -    message(STATUS "Using ld.lld linker")
--    set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=lld")
+-    add_link_options(-fuse-ld=lld)
 -  else()
 -    find_program(GOLD_FOUND ld.gold)
 -    if (GOLD_FOUND)
 -      message(STATUS "Using ld.gold")
--      set(CMAKE_EXE_LINKER_FLAGS "-fuse-ld=gold")
+-      add_link_options(-fuse-ld=gold)
 -    endif()
 -  endif()
 -endif()
 -
- if (NOT PYTHON_VERSION)
-   # FDroid build server has 3.5.3 Python installed.
-   set(PYTHON_VERSION 3.5)
+ set(OMIM_OPTIMIZED_CONFIG "$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>")
+ if (MSVC)
+   add_compile_options("$<$<AND:$<COMPILE_LANGUAGE:C,CXX>,${OMIM_OPTIMIZED_CONFIG}>:/Gy;/Gw>")
 -- 
-2.54.0
+2.55.0
 

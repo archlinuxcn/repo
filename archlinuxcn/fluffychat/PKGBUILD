@@ -7,8 +7,8 @@ export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=2.9.4
-pkgrel=2
+pkgver=2.10.0
+pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
 license=('AGPL-3.0-only')
@@ -16,6 +16,7 @@ arch=('x86_64' 'aarch64')
 
 depends=(
   'gtk3'
+  'libpulse'  # flutter_webrtc
   'libsecret' # flutter_secure_storage
   'openssl'   # sqlite encryption
   'webkit2gtk-4.1'
@@ -45,8 +46,10 @@ source=(
   "$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext"
   '0000-fix-wayland-gtk-csd.patch'
 )
-sha256sums=('2164dd6728f7e65835742e6bb413e1fbe224aff205e12061e7339dcc3febd6e3'
-  '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230')
+sha256sums=(
+  'e3176ad89c55f9d98a357d74936d339fcb40d5523bf6d870b6c629435643cfb3'
+  '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230'
+)
 
 prepare() (
   for src in "${source[@]}"; do
@@ -61,27 +64,34 @@ prepare() (
 )
 
 build() {
-  local _units=$(OMP_NUM_THREADS=16 nproc --all)
+  local _units=$(($(nproc) > 16 ? $(nproc) : 16))
   export CARGO_PROFILE_RELEASE_LTO=false
   export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=$_units
 
-  export CFLAGS CXXFLAGS
-  CFLAGS+=" -Wno-error=deprecated-literal-operator"
-  CXXFLAGS+=" -Wno-error=deprecated-literal-operator"
+  export CC=clang
+  export CXX=clang++
 
-  # fix missing include
-  export CXXFLAGS+=" -include cstdint"
+  export CFLAGS CXXFLAGS
+  local f _flags=(
+    -Wno-error=unused-but-set-global
+  )
+  for f in "${_flags[@]}"; do
+    CFLAGS+=" ${f}"
+    CXXFLAGS+=" ${f}"
+  done
 
   # fix incompatible flags on ARM
   if [ "${CARCH::1}" != "x" ]; then
-    local _unwanted=(
+    local _regex _unwanted=(
       -fstack-protector-strong
       -fstack-clash-protection
     )
 
-    for i in "${_unwanted[@]}"; do
-      CFLAGS=$(sed -E -e "s&${i}&&g" -e 's&\s+& &g' <<< "$CFLAGS")
-      CXXFLAGS=$(sed -E -e "s&${i}&&g" -e 's&\s+& &g' <<< "$CXXFLAGS")
+    for f in "${_unwanted[@]}"; do
+      _regex="s&\s+& &g;"
+      _regex+="s&${f}&&g;"
+      CFLAGS=$(sed -E -e "$_regex" <<< "$CFLAGS")
+      CXXFLAGS=$(sed -E -e "$_regex" <<< "$CXXFLAGS")
     done
   fi
 
@@ -99,16 +109,16 @@ build() {
 }
 
 package() {
-  pushd "$_pkgsrc"/build/linux/*/release
+  pushd "$_pkgsrc"/build/linux/*/release &> /dev/null
   cmake -DCMAKE_INSTALL_PREFIX="/usr/lib/$_pkgname" .
   DESTDIR="$pkgdir" cmake -P cmake_install.cmake
-  popd
+  popd &> /dev/null
 
   # rpath
   patchelf --set-rpath '$ORIGIN' "$pkgdir/usr/lib/$_pkgname/lib"/*.so
 
   # symlink
-  install -dm755 "$pkgdir/usr/bin"
+  mkdir -pm755 "$pkgdir/usr/bin"
   ln -s "/usr/lib/$_pkgname/$_pkgname" "$pkgdir/usr/bin/$_pkgname"
 
   # license

@@ -4,7 +4,7 @@
 pkgname=qcm-git
 _pkgname=${pkgname%-git}
 pkgver=1.3.5.r2.g24be634
-pkgrel=1
+pkgrel=2
 pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
 url="https://github.com/hypengw/Qcm"
@@ -16,12 +16,12 @@ depends=(
 	'qt6-base'
 	'qt6-declarative'
 	'qt6-grpc'
+	'qt6-shadertools'
 	'qt6-websockets'
 	'hicolor-icon-theme'
 	'openssl'
 	'ffmpeg'
 	'kdsingleapplication'
-	'qmlmaterial-git'
 	'sqlite'
 )
 makedepends=(
@@ -51,9 +51,6 @@ prepare() {
 	cd Qcm
 	mkdir -p .lito
 	cat >.lito/config.toml <<END
-[tools.cmake.overrides.qml_material]
-source = "installed"
-
 [tools.cmake.overrides.KDSingleApplication]
 source = "installed"
 

@@ -1,6 +1,6 @@
 pkgname=julia-git-blockbandedmatrices-src
-pkgver=0.13.7
-_commit=7f4bcdb520ba2328e0d717cf8c2a148d9c539017
+pkgver=0.13.8
+_commit=5e1f04b29491b3aa0f487b36ac2469f113d347fc
 pkgrel=1
 pkgdesc="BlockBandedMatrices.jl"
 url="https://github.com/JuliaLinearAlgebra/BlockBandedMatrices.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaLinearAlgebra/BlockBandedMatrices.jl.git#commit=$_commit")
-sha256sums=('0f53d113622083d1680bfb2e1e9a91666b4ed28231053d2888c63b4ff5a08186')
+sha256sums=('f1e36879de8026bc2863e383f8328bed9e2be131f5a02f8f795a6c0f658622d5')
 
 package() {
   cd BlockBandedMatrices.jl

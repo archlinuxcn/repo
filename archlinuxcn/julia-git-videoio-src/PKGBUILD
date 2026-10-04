@@ -1,6 +1,6 @@
 pkgname=julia-git-videoio-src
-pkgver=1.9.1
-_commit=9f5724ec2f934294282110723119ed2dad2b4b6f
+pkgver=1.10.0
+_commit=2752ec3adabf3d82d53104ef162c40f0881bfab1
 pkgrel=1
 pkgdesc="VideoIO.jl"
 url="https://github.com/JuliaIO/VideoIO.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/VideoIO.jl.git#commit=$_commit")
-sha256sums=('16f6f714148de6935ce11ba2c8ef3035eb7bdd7905f08e2917ffba866e642eda')
+sha256sums=('f8c93d6310afff966cdbdde2a33a9056396980c1fb7f40d3410cea7adec2ff9d')
 
 prepare() {
   cd VideoIO.jl

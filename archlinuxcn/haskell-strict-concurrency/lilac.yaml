@@ -2,15 +2,12 @@ maintainers:
   - github: poscat0x04
 
 pre_build_script: |
-  aur_pre_build(maintainers=['Martchus'])
+  aur_pre_build(maintainers=['thotypous'])
 post_build_script: |
   aur_post_build()
 
-repo_depends:
-  - qtutilities-qt6
-
 update_on:
   - source: aur
-
-update_on_build:
-  - pkgbase: qtutilities-qt6
+    aur: sv2v
+  - source: alpm
+    alpm: ghc-libs

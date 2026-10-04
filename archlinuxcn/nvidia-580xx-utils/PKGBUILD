@@ -8,7 +8,7 @@
 pkgbase=nvidia-580xx-utils
 pkgname=('nvidia-580xx-utils' 'opencl-nvidia-580xx' 'nvidia-580xx-dkms')
 pkgver=580.178.04
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url="http://www.nvidia.com/"
 license=('custom')
@@ -120,7 +120,7 @@ package_nvidia-580xx-dkms() {
 
 package_nvidia-580xx-utils() {
     pkgdesc="NVIDIA drivers utilities (580xx)"
-    depends=('libglvnd' 'egl-wayland' 'egl-gbm' 'egl-x11')
+    depends=('libglvnd' 'egl-wayland' 'egl-wayland2' 'egl-gbm' 'egl-x11')
     optdepends=(
         'nvidia-580xx-settings: configuration tool'
         'xorg-server: Xorg support'
@@ -296,6 +296,10 @@ package_nvidia-580xx-utils() {
 
     # Lists NVIDIA driver files for container runtimes like nvidia-container-toolkit
     install -Dm644 sandboxutils-filelist.json "${pkgdir}/usr/share/nvidia/files.d/sandboxutils-filelist.json"
+
+    # Work around reversed EGL external platform priorities in NVIDIA 580xx drivers.
+    install -dm755 "${pkgdir}/usr/share/egl/egl_external_platform.d"
+    ln -s 09_nvidia_wayland2.json "${pkgdir}/usr/share/egl/egl_external_platform.d/11_nvidia_wayland2.json"
 
     create_links
 }

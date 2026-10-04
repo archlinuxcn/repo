@@ -8,22 +8,23 @@
 ## options
 : ${_gwt_version:=2.12.2}
 : ${_java_version:=17}
-: ${_nodeversion:=25}
-: ${_pandocver:=current}
+: ${_mathjax_version:=2.7.9}
+: ${_node_version:=25}
+: ${_pandoc_version:=current}
 : ${_soci_version:=4.0.3}
 
 : ${_quarto_branch:=release/rstudio-cranberry-hibiscus}
 : ${_quarto:=false}
 
 # dependencies/common/install-copilot-language-server
-: ${_copilot_version:=1.520.0}
+: ${_copilot_version:=1.531.0}
 
-: ${_commit:=49299327da3b03a79e7aa615c2388bcd05a1261a}
+: ${_commit:=870df5ed7859c758db7aed6f510a3edca3c74bd7}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2026.07.1.147
-pkgrel=2
+pkgver=2026.09.0.174
+pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
 license=('AGPL-3.0-only')
@@ -40,7 +41,7 @@ depends=(
   'libboost_thread.so'          # boost-libs
   'libcups'
   'libyaml-cpp.so' # yaml-cpp
-  'mathjax2'
+  'mathjax'
   'nspr'
   'nss'
   'pandoc'
@@ -78,78 +79,39 @@ fi
 
 options=('!emptydirs' '!debug' '!strip')
 
-_source_main() {
-  _pkgsrc="rstudio-$_commit"
-  local _pkgext="tar.gz"
-  source=(
-    "rstudio-$pkgver-${_commit::7}.$_pkgext"::"https://github.com/rstudio/rstudio/archive/$_commit.$_pkgext"
-    "quarto"::"git+https://github.com/quarto-dev/quarto.git#branch=${_quarto_branch}"
-  )
-  sha256sums=(
-    'SKIP'
-    'SKIP'
-  )
-}
+_pkgsrc="rstudio-$_commit"
+_pkgsrc_mathjax="MathJax-$_mathjax_version"
+_pkgext="tar.gz"
 
-_source_gwt() {
-  _pkgext_gwt="tar.gz"
-  noextract+=("gwt-${_gwt_version}.$_pkgext_gwt")
-  source+=("https://rstudio-buildtools.s3.us-east-1.amazonaws.com/gwt/gwt-${_gwt_version}.$_pkgext_gwt")
-  sha256sums+=('27284accdad05ff8919a7ac6dc5f939a511a90842a35f6393517506d74809e76')
-}
+_copilot_js="copilot-language-server-js-${_copilot_version}"
+_copilot_url="https://github.com/github/copilot-language-server-release"
 
-_source_soci() {
-  local _pkgext_soci="tar.gz"
-  source+=("soci-$_soci_version.$_pkgext_soci"::"https://github.com/SOCI/soci/archive/refs/tags/v$_soci_version.$_pkgext_soci")
-  sha256sums+=('4b1ff9c8545c5d802fbe06ee6cd2886630e5c03bf740e269bb625b45cf934928')
+noextract=(
+  "${_copilot_js}.zip"
+  "${_pkgsrc_mathjax}.${_pkgext}"
+  "gwt-${_gwt_version}.${_pkgext}"
+)
 
-  _build_soci() (
-    echo "Building SOCI..."
-    local _opts_soci=(
-      -B "soci-$_soci_version/build"
-      -S "soci-$_soci_version"
-      -G Ninja
-      -DCMAKE_BUILD_TYPE=None
-      -DCMAKE_INSTALL_PREFIX='/usr'
-      -DBUILD_SHARED_LIBS=OFF
-      -Wno-author
+source=(
+  "rstudio-$pkgver-${_commit::7}.$_pkgext"::"https://github.com/rstudio/rstudio/archive/$_commit.$_pkgext"
+  "quarto"::"git+https://github.com/quarto-dev/quarto.git#branch=${_quarto_branch}"
 
-      -DSOCI_TESTS=OFF
-      -DSOCI_CXX11=ON
-      -DSOCI_EMPTY=OFF
-      -DWITH_BOOST=ON
-      -DWITH_POSTGRESQL=ON
-      -DWITH_SQLITE3=ON
-      -DWITH_DB2=OFF
-      -DWITH_MYSQL=OFF
-      -DWITH_ORACLE=OFF
-      -DWITH_FIREBIRD=OFF
-      -DWITH_ODBC=OFF
-    )
+  "https://rstudio-buildtools.s3.us-east-1.amazonaws.com/gwt/gwt-${_gwt_version}.$_pkgext"
+  "soci-$_soci_version.$_pkgext"::"https://github.com/SOCI/soci/archive/refs/tags/v$_soci_version.$_pkgext"
+  "$_pkgsrc_mathjax.$_pkgext"::"https://github.com/mathjax/MathJax/archive/refs/tags/$_mathjax_version.$_pkgext"
 
-    cmake "${_opts_soci[@]}"
-    cmake --build "soci-$_soci_version/build"
-  )
-}
-
-_source_copilot() {
-  _copilot_js="copilot-language-server-js-${_copilot_version}"
-
-  noextract+=("${_copilot_js}.zip")
-
-  local _copilot_url="https://github.com/github/copilot-language-server-release"
-  source+=("$_copilot_url/releases/download/${_copilot_version}/copilot-language-server-linux-x64-${_copilot_version}.zip"
-    "$_copilot_url/releases/download/${_copilot_version}/${_copilot_js}.zip")
-  sha256sums+=(
-    'SKIP'
-    'SKIP'
-  )
-}
-
-_source_main
-_source_gwt
-_source_soci
-_source_copilot
+  "$_copilot_url/releases/download/${_copilot_version}/copilot-language-server-linux-x64-${_copilot_version}.zip"
+  "$_copilot_url/releases/download/${_copilot_version}/${_copilot_js}.zip"
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+  '27284accdad05ff8919a7ac6dc5f939a511a90842a35f6393517506d74809e76'
+  '4b1ff9c8545c5d802fbe06ee6cd2886630e5c03bf740e269bb625b45cf934928'
+  'c9167279c87da044f2ff910ad573a02ce90354cb59440ae568eb86e1630f65df'
+  'SKIP'
+  'SKIP'
+)
 
 _nvm_env() {
   export HOME="$SRCDEST/node-home"
@@ -157,8 +119,8 @@ _nvm_env() {
 
   # set up nvm
   source /usr/share/nvm/init-nvm.sh || [[ $? != 1 ]]
-  nvm install $_nodeversion
-  nvm use $_nodeversion
+  nvm install $_node_version
+  nvm use $_node_version
 
   _npm_path="$(which npm | sed -E 's&/[^/]+$&&')"
   _node_version=$(echo "$_npm_path" | sed -E 's&^\S+/v([0-9\.]+)/\S+$&\1&')
@@ -170,10 +132,14 @@ prepare() (
 
   cd "$_pkgsrc"
   # Do not use outdated version name of pandoc
-  sed -E -e '/PANDOC_VERSION/s/"[0-9\.]+"/"'${_pandocver}'"/' -i cmake/globals.cmake
+  sed -E -e '/PANDOC_VERSION/s/"[0-9\.]+"/"'${_pandoc_version}'"/' -i cmake/globals.cmake
 
   # Suppress _FORTIFY_SOURCE mismatch warnings
   sed -e 's/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=3/' -i src/cpp/CMakeLists.txt
+
+  # Prevent Boost.URL 1.92 linker error
+  sed -E -e 's&([Cc]\+\+)17&\120&g' -i src/cpp/CMakeLists.txt
+  sed -E -e 's&(CMAKE_CXX_STANDARD) 17&\1 20&' -i cmake/compiler.cmake
 
   # fix npm/node paths
   sed -E -e 's&set\(RSTUDIO_NODE_PATH .*\)&set(RSTUDIO_NODE_PATH "/usr/bin")&' \
@@ -209,13 +175,17 @@ prepare() (
 
   # bundled deps
   cd "$srcdir/$_pkgsrc/dependencies"
-  install -d pandoc/${_pandocver}
-  ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/pandoc
+  mkdir -p pandoc/${_pandoc_version}
+  ln -sfT /usr/bin/pandoc pandoc/${_pandoc_version}/pandoc
 
   ln -sfT /usr/share/myspell/dicts dictionaries
-  ln -sfT /usr/share/mathjax2 mathjax-27
+  ln -sfT /usr/share/mathjax mathjax-4
 
   ln -sfT "$srcdir/soci-$_soci_version" "soci-$_soci_version"
+
+  # mathjax 2.7
+  mkdir -p mathjax-27
+  bsdtar -C mathjax-27 --strip-components 1 -xf "$srcdir/$_pkgsrc_mathjax.$_pkgext"
 
   # copilot
   install -Dm755 "$srcdir/copilot-language-server" -t "copilot-language-server"
@@ -227,38 +197,59 @@ prepare() (
 
   # GWT
   mkdir -p common/gwtproject
-  cd common/gwtproject
-  bsdtar -xf "$srcdir/gwt-$_gwt_version.$_pkgext_gwt"
+  bsdtar -C common/gwtproject -xf "$srcdir/gwt-$_gwt_version.$_pkgext"
 )
 
-build() (
-  export JAVA_HOME=/usr/lib/jvm/java-${_java_version:?}-openjdk
-  export PATH="$JAVA_HOME/bin:$PATH"
+_build_soci() (
+  echo "Building SOCI..."
+  local _opts_soci=(
+    -B "soci-$_soci_version/build"
+    -S "soci-$_soci_version"
+    -G Ninja
+    -DCMAKE_BUILD_TYPE=None
+    -DCMAKE_INSTALL_PREFIX='/usr'
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DBUILD_SHARED_LIBS=OFF
+    -Wno-author
 
-  export CMAKE_POLICY_VERSION_MINIMUM=3.5
+    -DSOCI_TESTS=OFF
+    -DSOCI_CXX11=ON
+    -DSOCI_EMPTY=OFF
+    -DWITH_BOOST=ON
+    -DWITH_POSTGRESQL=ON
+    -DWITH_SQLITE3=ON
+    -DWITH_DB2=OFF
+    -DWITH_MYSQL=OFF
+    -DWITH_ORACLE=OFF
+    -DWITH_FIREBIRD=OFF
+    -DWITH_ODBC=OFF
+  )
 
-  _nvm_env
+  cmake "${_opts_soci[@]}"
+  cmake --build "soci-$_soci_version/build"
+)
 
-  echo "Building soci..."
-  _build_soci
-
+_setup_quarto() {
   # Quarto set up
   if (pacman -Q quarto > /dev/null 2> /dev/null); then
     _quarto="ON"
     echo "Quarto is installed, linking for build"
-    cd "$srcdir/$_pkgsrc/dependencies"
-    install -d quarto/bin/tools
+    pushd "$srcdir/$_pkgsrc/dependencies" &> /dev/null
+    mkdir -p quarto/bin/tools
     ln -sfT /usr/bin/quarto quarto/bin/quarto
     ln -sfT /usr/bin/pandoc quarto/bin/tools/pandoc
+    popd &> /dev/null
   else
     _quarto="OFF"
     echo "Quarto is not installed, using Pandoc"
-    cd "$srcdir/$_pkgsrc/dependencies"
-    install -d pandoc/${_pandocver}/bin/tools
-    ln -sfT /usr/bin/pandoc pandoc/${_pandocver}/bin/tools/pandoc
+    pushd "$srcdir/$_pkgsrc/dependencies" &> /dev/null
+    mkdir -p "pandoc/${_pandoc_version}/bin/tools"
+    ln -sfT /usr/bin/pandoc "pandoc/${_pandoc_version}/bin/tools/pandoc"
+    popd &> /dev/null
   fi
+}
 
-  cd "${srcdir}"
+_setup_rpkg() {
   echo "Downloading and installing R packages..."
   export R_LIBS_USER="$srcdir/$_pkgsrc/dependencies/R"
   _JOBS="$(grep -oP -- "-j\s*\K[0-9]+" <<< "${MAKEFLAGS}")" || _JOBS="1"
@@ -271,11 +262,22 @@ build() (
     xml2
     yaml
   )
-  for RPKG in ${RPACKAGES[*]}; do
+  for RPKG in "${RPACKAGES[@]}"; do
     RINSTALLCMD="if("'!'"require($RPKG, quietly = TRUE)) { options(Ncpus = ${_JOBS} ); install.packages('$RPKG', lib='$R_LIBS_USER', repos='https://cran.rstudio.com/') }"
     echo "> $RINSTALLCMD"
     Rscript -e "$RINSTALLCMD"
   done
+}
+
+build() (
+  export JAVA_HOME=/usr/lib/jvm/java-${_java_version:?}-openjdk
+  export PATH="$JAVA_HOME/bin:$PATH"
+
+  _nvm_env
+  _build_soci
+
+  _setup_quarto
+  _setup_rpkg
 
   export RSTUDIO_TOOLS_ROOT="$srcdir/$_pkgsrc/dependencies"
   export RSTUDIO_NODE_PATH=/usr/
@@ -317,6 +319,7 @@ build() (
     -DRSTUDIO_USE_SYSTEM_YAML_CPP=ON
   )
 
+  echo "Building RStudio..."
   cmake "${_opts_rstudio[@]}"
   cmake --build build
 )

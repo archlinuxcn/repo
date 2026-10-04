@@ -1,0 +1,67 @@
+# Maintainer: Tobias Frilling <aur@ckafi.addy.io>
+
+# shellcheck shell=bash
+pkgname=zig-master-bin
+pkgver=0.18.0dev.2+faa537cf9
+pkgrel=1
+pkgdesc="A general-purpose programming language and toolchain for maintaining robust, optimal, and reusable software (master release)"
+arch=('aarch64' 'armv7h' 'i686' 'loong64' 'powerpc64le' 'riscv64' 'x86_64')
+url="https://ziglang.org/"
+license=('MIT')
+provides=('zig-master' 'zig-unstable')
+conflicts=('zig')
+replaces=('zig-nightly-bin')
+makedepends=('minisign')
+options=('!strip')
+
+_master_version=${pkgver/dev/-dev}
+
+source_aarch64=("https://ziglang.org/builds/zig-aarch64-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-aarch64-linux-${_master_version}.tar.xz.minisig")
+sha256sums_aarch64=('73a7614217390e8de0c3eada0564dcce658687cecef604bd43f9afcb5882710f'
+                    '1a868af0835733944a8b8aaa41096436908516537d88803940a69ccad9323568')
+sha256sums_armv7h=('37a86af4f2902c89b1ff5eb52be3898825d630c34681aec0feb8430c093589e2'
+                   '544ac2dcdd844861693d33a13cdcaaf1b2bc1025bdac5ccb5eaaa8d6f9ee3ab8')
+sha256sums_i686=('a77c8dbb7836f02c7eb348a2f9e40f154a811f67c9a079d655e94ff550426ace'
+                 '2b3d9992ddd227274330227bb7360e5df4c23f896192a0d9f14bb459f7474fdc')
+sha256sums_loong64=('3c354e99e23fec68f243b97d504f669cb30c151f0f6327528615a0c390a10f01'
+                    'df58d5c89ea214696a333f5ebbac2a7a3e3b0f9ca50e75044115190a2bb905a9')
+sha256sums_powerpc64le=('c76882e09cb0101b54ff08e57b822a4727f357022294b5cf7f0c939fd448c51d'
+                        '8a9ad84bbfb33293436d5799aa0538cfbd60670a0f66f63f726a272aed670cfa')
+sha256sums_riscv64=('369077fa4cc54ac7b941fbd583034469d8d89f25764f615484818622ea4f3643'
+                    'd3f64778424c54f6da10616d0959846def1368de49228e3a41866ad5a985e6a2')
+sha256sums_x86_64=('46e2618bc970b50deed2f63e1e30f9f00a37600e29c5cc875fd5dc94371f9370'
+                   'cfd308f1a9d3379bd5c4afcb9447c6e700c8a0a785e8e5543fbd9cc31b892e5e')
+source_armv7h=("https://ziglang.org/builds/zig-arm-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-arm-linux-${_master_version}.tar.xz.minisig")
+source_i686=("https://ziglang.org/builds/zig-x86-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-x86-linux-${_master_version}.tar.xz.minisig")
+source_loong64=("https://ziglang.org/builds/zig-loongarch64-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-loongarch64-linux-${_master_version}.tar.xz.minisig")
+source_powerpc64le=("https://ziglang.org/builds/zig-powerpc64le-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-powerpc64le-linux-${_master_version}.tar.xz.minisig")
+source_riscv64=("https://ziglang.org/builds/zig-riscv64-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-riscv64-linux-${_master_version}.tar.xz.minisig")
+source_x86_64=("https://ziglang.org/builds/zig-x86_64-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-x86_64-linux-${_master_version}.tar.xz.minisig")
+
+_archive() {
+    local source_array="source_${CARCH}[0]"
+    local source_url="${!source_array}"
+    basename "$source_url"
+}
+
+# Check signatures in the chroot, after minisign is installed.
+prepare() {
+    minisign -q -V \
+        -P "RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U" \
+        -m "$(_archive)"
+}
+
+package() {
+    local tarball=$(_archive)
+    cd "${srcdir}/${tarball%.tar.*}" || return
+
+    install -D zig "${pkgdir}/usr/bin/zig"
+
+    install -d "${pkgdir}/usr/lib/zig"
+    cp -a lib/* "${pkgdir}/usr/lib/zig/"
+
+    install -d "${pkgdir}/usr/share/doc/zig"
+    cp -a doc/* "${pkgdir}/usr/share/doc/zig"
+
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

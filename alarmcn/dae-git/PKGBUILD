@@ -2,7 +2,7 @@
 
 pkgname=dae-git
 _pkgname=${pkgname%-git}
-pkgver=2.1.1.r6.gb59e375
+pkgver=2.1.1.r9.ge3fee8f
 pkgrel=1
 pkgdesc="A Linux lightweight and high-performance transparent proxy solution based on eBPF."
 arch=('x86_64' 'aarch64')
@@ -27,7 +27,7 @@ sha256sums=('SKIP'
 
 pkgver() {
 	cd "${_pkgname}/"
-	git describe --long --tags --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
+	git describe --long --abbrev=7 | sed 's/\([^-]*-g\)/r\1/;s/-/./g;s/v//'
 }
 
 prepare() {

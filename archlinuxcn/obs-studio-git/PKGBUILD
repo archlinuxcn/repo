@@ -5,7 +5,7 @@
 
 pkgname=obs-studio-git
 _pkgname=${pkgname%-git}
-pkgver=33.0.0beta4.r0.g50530ce
+pkgver=33.0.0beta6.r0.gcffa83b
 pkgrel=1
 epoch=5
 pkgdesc="Free, open source software for live streaming and recording (with websocket support)"
@@ -41,8 +41,6 @@ prepare() {
 	git submodule init
 	git config submodule.plugins/obs-websocket.url "${srcdir}/obs-websocket/"
 	git -c protocol.file.allow=always submodule update
-
-	git cherry-pick -n 26dfacbd4f5217258a2f1c5472a544c65a182d10 # Fix Qt 6.10 build
 }
 
 build() {

@@ -1,6 +1,26 @@
 #!/usr/bin/env sh
 set -eu
 
-# recaf.jar is the shadow "-all" jar: it bundles JavaFX (classes + native libs)
-# and sets Main-Class / Enable-Native-Access in its manifest, so just run it.
-exec java -jar "/usr/share/java/recaf/recaf.jar" "$@"
+# SourceSolver uses javac internals (e.g. EndPosTable, absent in JDK 27).
+# Accept any vendor's full JDK 25, not a JRE or a newer system default.
+is_jdk25() {
+  [ -n "$1" ] && [ -x "$1/bin/java" ] && [ -x "$1/bin/javac" ] &&
+    [ -x "$1/bin/javap" ] || return 1
+
+  version_info=$("$1/bin/java" -XshowSettings:properties -version 2>&1) || return 1
+  printf '%s\n' "$version_info" |
+    grep -Eq '^[[:space:]]*java\.specification\.version[[:space:]]*=[[:space:]]*25[[:space:]]*$' || return 1
+  "$1/bin/javap" --module jdk.compiler com.sun.tools.javac.tree.EndPosTable >/dev/null 2>&1
+}
+
+# Prefer a compatible JAVA_HOME, then Arch's default, then other installed JDKs.
+for java_home in "${JAVA_HOME:-}" /usr/lib/jvm/default /usr/lib/jvm/*; do
+  if is_jdk25 "$java_home"; then
+    export JAVA_HOME="$java_home"
+    # The shadow jar bundles JavaFX and declares Main-Class / Enable-Native-Access.
+    exec "$JAVA_HOME/bin/java" -jar "/usr/share/java/recaf/recaf.jar" "$@"
+  fi
+done
+
+printf '%s\n' 'Recaf requires a full JDK 25 with javac EndPosTable support. Install a java-environment=25 provider or set JAVA_HOME to a compatible JDK.' >&2
+exit 1

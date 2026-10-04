@@ -1,7 +1,7 @@
 # Maintainer: Hector Martin <marcan@marcan.st>
 
 pkgname=m1n1
-pkgver=1.6.1
+pkgver=2.0.0
 pkgrel=1
 pkgdesc='Asahi Linux bootloader'
 arch=('aarch64')
@@ -11,8 +11,8 @@ makedepends=(git imagemagick rustup cargo)
 source=(
   "git+https://github.com/AsahiLinux/m1n1#tag=v${pkgver}"
 )
-sha256sums=('1b3ad7e15776f1bc91578907d4890d770a33c8125fd4a179fd078c64dfed2488')
-b2sums=('8b11cb95f1876e32de8e9b1eeeda784d4c1d93711ea7de4b7e718c32059e79dc51ea063055e9fd0a71eb18f6323659b13aef628636ed84d87f44cb31559e2e20')
+sha256sums=('b0b89778fb94039e940eda803f4b41a5193e89fb08d45ddee3815451872641a0')
+b2sums=('0450d4138ddcfc860af15428c12c1cc0e2217528d642df6b9e02d683002c35b83271f8b128db6cfd53102fc8ae17f9cb07a670a15a197bec4f4bbadb6b40d5f2')
 
 prepare() {
   cd m1n1

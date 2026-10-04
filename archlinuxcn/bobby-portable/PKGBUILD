@@ -1,0 +1,57 @@
+# Maintainer: Kimiblock Moe
+
+pkgname=bobby-portable
+pkgver=1.0
+pkgrel=1
+epoch=1
+pkgdesc="Bobby sandboxed by portable"
+arch=('x86_64')
+url="https://github.com/Kraftland/portable"
+license=('GPL-3.0-or-later')
+groups=()
+provides=(bobby)
+options=(!debug !strip)
+conflicts=(bobby)
+
+optdepends=()
+
+makedepends+=(bobby portable-packer)
+
+checkdepends=()
+
+source=(
+	config.toml
+	bobby.desktop
+)
+
+depends=(
+	'gcc-libs'
+	'glibc'
+	'gtk4'
+	'libadwaita'
+	'sqlite'
+)
+
+
+md5sums=('SKIP'
+         'SKIP')
+
+function pkgver() {
+	export LC_ALL=C
+	pacman -Si bobby | grep Version | awk '{print $NF}' | cut -d'-' -f1
+}
+
+function package() {
+	depends+=("portable")
+
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy bobby \
+		--hash true \
+		--config-ng "${srcdir}/config.toml" \
+		--desktop-file "${srcdir}/bobby.desktop"
+}

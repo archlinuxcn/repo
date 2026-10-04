@@ -4,7 +4,7 @@ _pkgname=yuzu
 pkgname=$_pkgname-early-access
 epoch=2
 pkgver=4176
-pkgrel=36
+pkgrel=38
 pkgdesc="An experimental open-source Nintendo Switch emulator/debugger (early access version)"
 arch=('i686' 'x86_64')
 url="https://yuzu-emu.org/"
@@ -14,7 +14,8 @@ makedepends=('llvm' 'git' 'glslang' 'cmake' 'vulkan-memory-allocator' 'vulkan-ut
 optdepends=('qt5-wayland: for Wayland support')
 provides=('yuzu')
 conflicts=('yuzu')
-source=("git+https://source.hodakov.me/hdkv/yuzu.git"
+# Frozen early-access version 4176 (tag EA-4176).
+source=("yuzu::git+https://git.zajc.tel/mirror/pineapple-src.git#commit=d32620fe796f9cd90e8e5660deb0fc8f4decd61f"
   git+https://github.com/lioncash/dynarmic.git#commit=ba8192d
   git+https://github.com/yuzu-mirror/sirit.git#commit=ab75463
   git+https://github.com/yuzu-mirror/mbedtls.git#commit=8c88150
