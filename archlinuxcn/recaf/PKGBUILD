@@ -2,7 +2,7 @@
 
 pkgname="recaf"
 pkgver=4.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc='A modern Java bytecode editor'
 url='https://github.com/Col-E/Recaf'
 license=('MIT')
@@ -19,7 +19,8 @@ arch=('x86_64')
 _jasm_commit=c5a2c9050312497f53378f8c6a397ec3d3f02ef6
 _jasm_ver=c5a2c90503
 
-depends=('java-environment>=25' 'ttf-font')
+# Pin the Java major version, not the vendor: SourceSolver uses javac internals.
+depends=('java-environment=25' 'ttf-font')
 makedepends=('jdk25-openjdk' 'gradle' 'git')
 
 conflicts=("$pkgname-bin" "$pkgname-git")
@@ -35,7 +36,7 @@ source=(
 sha256sums=('ef3dc4884802173816ac104d61f56e58ff86d2f094cf369385795a2e6d569478'
             '33fd83b42f7ba75be1633b3562b1d4de79a411aed126af689d02106efe1ff3b6'
             'a98659971ead7e75b30f8d4ef8c27d13338c6187a49fee181379e74b89d4a16f'
-            '6991aa0bd7b735d6a29abedf8f11040e016ba988e8f6cd195cba5a57cc1d470f'
+            'cc592b60a68d4312363d0de78b3a808bc18d16eb97aab87673c726a1baca60fb'
             '5ffc7c63deb1935ffe19298a15b525bcc08a1e7e9de7146ea5785b21b12045d4')
 
 prepare() {
