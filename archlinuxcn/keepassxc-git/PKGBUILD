@@ -10,8 +10,8 @@
 
 pkgname=keepassxc-git
 _gitname=keepassxc
-pkgver=2.7.1.r724.gdfdd561fc
-pkgrel=1
+pkgver=2.8.0beta1.r0.g9e0f57a4a
+pkgrel=2
 pkgdesc="Cross-platform community-driven port of KeePass Password Safe"
 arch=('i686' 'x86_64')
 url="https://github.com/keepassxreboot/keepassxc"
@@ -31,7 +31,7 @@ md5sums=('SKIP')
 
 pkgver() {
     cd "${_gitname}"
-    git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+    git describe --long | sed 's/\([^-]*-g\)/r\1/;s/-beta/beta/;s/-/./g'
 }
 
 build() {

@@ -1,6 +1,6 @@
 pkgname=julia-git-lazyarrays-src
-pkgver=2.13.1
-_commit=eca778020c0df14a329977100f172fc7f0c5d5ac
+pkgver=2.14.1
+_commit=771700b288df8058ef5c097d59906fb2a2a2c6da
 pkgrel=1
 pkgdesc="LazyArrays.jl"
 url="https://github.com/JuliaArrays/LazyArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/LazyArrays.jl.git#commit=$_commit")
-sha256sums=('905c1154312708372b08dc69022fb1e864dd0cf9ba828972941ce79f050da77c')
+sha256sums=('1fc5487cef32f22b8ac813f05d0e80f240ba61a357b72acedac06d1d2828ab97')
 
 prepare() {
   cd LazyArrays.jl

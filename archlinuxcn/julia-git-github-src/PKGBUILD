@@ -1,6 +1,6 @@
 pkgname=julia-git-github-src
-pkgver=5.13.0
-_commit=537a609a9742385cec1c164dbae57895f5e01c13
+pkgver=5.14.0
+_commit=3539b540f1f261a67f54223f84c577ee40057fd2
 pkgrel=1
 pkgdesc="GitHub.jl"
 url="https://github.com/JuliaWeb/GitHub.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaWeb/GitHub.jl.git#commit=$_commit")
-sha256sums=('729870fcf5e2068f9b2c714a6458bb68926587f5314ba00982791495fa3e953a')
+sha256sums=('ad95c582fb92492650df74d343e2e0867cc18aba833138a84933c026607a5fc4')
 
 package() {
   cd GitHub.jl
