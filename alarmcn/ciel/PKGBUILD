@@ -2,7 +2,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 pkgname=ciel
 _pkgname=${pkgname}-rs
-pkgver=3.11.1
+pkgver=3.11.2
 pkgrel=1
 pkgdesc="A tool for controlling multi-layer file systems and containers."
 arch=('i686' 'x86_64' 'aarch64')
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('systemd' 'dbus' 'openssl' 'libssh2' 'libgit2' 'xz' 'squashfs-tools' 'glibc' 'systemd-libs' 'zlib' 'gcc-libs' 'bash')
 makedepends=('rust' 'make' 'gcc')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/AOSC-Dev/${_pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('b3f5d3d7be1f678a5c0a88313b95d3ffefec752b49d471176fe7aba0e04f90c5')
+sha256sums=('f7e8a7c00c25c954590d8c1f5236cc566e867f768a60569bdd1472220e1c9652')
 
 prepare() {
     cd ${_pkgname}-${pkgver}
