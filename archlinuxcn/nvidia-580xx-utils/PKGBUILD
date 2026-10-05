@@ -8,7 +8,7 @@
 pkgbase=nvidia-580xx-utils
 pkgname=('nvidia-580xx-utils' 'opencl-nvidia-580xx' 'nvidia-580xx-dkms')
 pkgver=580.178.04
-pkgrel=3
+pkgrel=4
 arch=('x86_64')
 url="http://www.nvidia.com/"
 license=('custom')
@@ -24,6 +24,7 @@ source=('nvidia-drm-outputclass.conf'
         "https://download.nvidia.com/XFree86/Linux-x86_64/${pkgver}/${_pkg}.run"
         '0001-Enable-atomic-kernel-modesetting-by-default.patch'
         '0002-Fix-hardware-cursor-crash.patch'
+        'kwin-580xx-override.conf'
         'limit-vram-usage')
 
 sha256sums=(
@@ -36,6 +37,7 @@ sha256sums=(
     '5975a86ee45bffcb626f51ae33d1169b108186a2ea47ad651e72f13fa4b6d6f9'
     '163c57160cc1033020680f638b44ebd94b496152dcd8951e87d5077d4d5c2009'
     'c1a1cf05dd12efd67858180461ad97a6ebe206b55b56df207854b322ce734613'
+    '8441344d09b36bc736d1ec25a403546dd16b00ac6666358843636d12f62e933e'
     'b14f7a65359c05c373ddfc750cd4cf086a48e815489d93ad5cbe1dbf84bf8f5a'
 )
 
@@ -297,9 +299,9 @@ package_nvidia-580xx-utils() {
     # Lists NVIDIA driver files for container runtimes like nvidia-container-toolkit
     install -Dm644 sandboxutils-filelist.json "${pkgdir}/usr/share/nvidia/files.d/sandboxutils-filelist.json"
 
-    # Work around reversed EGL external platform priorities in NVIDIA 580xx drivers.
-    install -dm755 "${pkgdir}/usr/share/egl/egl_external_platform.d"
-    ln -s 09_nvidia_wayland2.json "${pkgdir}/usr/share/egl/egl_external_platform.d/11_nvidia_wayland2.json"
+    # Fix plasmashell crash caused by FD leak
+    # See: https://github.com/NVIDIA/egl-wayland/issues/196
+    install -Dm644 "${srcdir}/kwin-580xx-override.conf" "${pkgdir}/usr/lib/systemd/user/plasma-kwin_wayland.service.d/kwin-580xx-override.conf"
 
     create_links
 }
