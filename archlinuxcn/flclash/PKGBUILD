@@ -62,9 +62,12 @@ prepare() {
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
 
   _rust_version=$(sed -n 's/^channel = "\([^"]*\)"/\1/p' "$srcdir/$pkgname/plugins/rust_api/rust/rust-toolchain.toml")
-  _flutter_version=$(sed -n "s/^[[:space:]]*FLUTTER_VERSION:[[:space:]]*'\([^']*\)'/\1/p" "$srcdir/$pkgname/.github/workflows/build.yaml")
   rustup toolchain install "$_rust_version" --profile minimal
   rustup default "$_rust_version"
+
+  _flutter_version=$(sed -n "s/^[[:space:]]*FLUTTER_VERSION:[[:space:]]*'\([^']*\)'/\1/p" "$srcdir/$pkgname/.github/workflows/build.yaml")
+  export FVM_CACHE_PATH="$srcdir/fvm-cache"
+  fvm install $_flutter_version
 
   # go mod download
   cd "$srcdir/$pkgname/core"
@@ -86,10 +89,7 @@ build() {
   export TAGS="with_gvisor"
   go build -tags="$TAGS" -o "../libclash/linux/FlClashCore"
 
-  export FVM_CACHE_PATH="$SRCDIR/fvm-cache"
   cd "${srcdir}/$pkgname"
-
-  fvm install $_flutter_version
   fvm use $_flutter_version
   fvm flutter --disable-analytics
   fvm flutter --no-version-check pub get
