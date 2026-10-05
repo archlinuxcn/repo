@@ -30,13 +30,11 @@ source=(
   "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
   "0002-feat-universal-provider-Add-one-click-sync-all-providers.patch"
 )
-sha256sums=('6d86cbafddd41299a2be364fe8ad2457941a8c33202ba252fbeeae8b6057b207'
-            '333ef252456975051f0163c9b8bcf37fadec3a43bc05f192cb4ec87b2761b3f6')
+sha256sums=('6d86cbafddd41299a2be364fe8ad2457941a8c33202ba252fbeeae8b6057b207')
 
 prepare() {
   export RUSTUP_TOOLCHAIN=stable
   cd "${pkgname}-${pkgver}"
-  patch -p1 -i "${srcdir}/0002-feat-universal-provider-Add-one-click-sync-all-providers.patch"
   cargo fetch --locked --target host-tuple --manifest-path src-tauri/Cargo.toml
 }
 
