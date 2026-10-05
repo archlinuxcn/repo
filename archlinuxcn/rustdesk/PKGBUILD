@@ -149,7 +149,7 @@ DLAGENTS="${DLAGENTS[@]/curl /curl -L}"
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.4.9'
+_pkgver='1.5.0'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
 _sfx=''
@@ -168,6 +168,7 @@ _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific 
   '1.4.7:20260601-df6badca5bf81b4e9836256cf8e31c993ad70dd1'
   '1.4.8:20260604-387603f47cbb15c0d3dc3d67ae3396d3eb707daf'
   '1.4.9:20260702-7e1c392c62d39c364127307cd408421dd5f8cfb0'
+  '1.5.0:20260925-94ec710894ecd548b4fe174ef781eca5c1a318c0'
 )
 _pkgverhbb="$(_fn_VCL "${_pkgver}" -eq "${_HBB[@]}")"; unset _HBB; test "$(_vercmp "${_pkgver}" '1.3.7')" -lt 0 -o ! -z "${_pkgverhbb}" || exit 1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -176,8 +177,9 @@ url='https://rustdesk.com/'
 _giturl='https://github.com/rustdesk/rustdesk'
 _giturlhbb='https://github.com/rustdesk/hbb_common'
 license=('AGPL-3.0-only')
-_dpr=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libappindicator-gtk3' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire') # from res/PKGBUILD/depends
+#_dpr=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libappindicator-gtk3' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire') # from res/PKGBUILD/depends
 #_dpr=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libvdpau' 'libappindicator-gtk3' 'pam' 'gst-plugins-base' 'gst-plugin-pipewire') # from res/PKGBUILD/depends
+_dpr=('gtk3' 'xdotool' 'libxcb' 'libxfixes' 'alsa-lib' 'libva' 'libappindicator-gtk3' 'gst-plugins-base' 'gst-plugin-pipewire')
 depends=("${_dpr[@]}" 'pulse-native-provider' 'gst-plugins-base-libs')
 depends+=('hicolor-icon-theme' 'xdg-utils')
 depends+=('xdg-user-dirs')
@@ -202,7 +204,7 @@ _patches=(
   '0000-disable-update-check@rustdesk.patch'
   #'0001-extended_text-drop-version-for-flutter.3.22.3@rustdesk.patch' # https://github.com/rustdesk/rustdesk/blob/master/.github/workflows/bridge.yml#L77
   '0002-screen_retriever@rustdesk.patch'
-  '0004-bindgen@rustdesk.patch' # kevinlpowell
+  #'0004-bindgen@rustdesk.patch' # kevinlpowell eliminated in 1.5.0
 )
 install="${pkgname}.install"
 _srcdir="${pkgname}-${_pkgver}"
@@ -226,15 +228,16 @@ if :; then
     '1.3.6:#commit=20241115-b2cb0da531c2f1f740045bfe7c4dac59f0b2b69c'
     '1.3.8:#commit=20250113-6f29f12e82a8293156836ad81cc9bf5af41fe836'
     '1.4.2:#commit=20250827-120deac3062162151622ca4860575a33844ba10b' # date comes from commit (tig)
+    '1.5.0:#commit=20260729-9e593bb18ea69cc5095e012465dcd675a822ed0d'
   )
   _opt_VCPKG_COMMIT_ID="$(_fn_VCL "${_pkgver}" -ge "${_VCL[@]}")"; unset _VCL
   #source+=("git+https://github.com/microsoft/vcpkg${_opt_VCPKG_COMMIT_ID}")
   _srcdirvc="vcpkg-${_opt_VCPKG_COMMIT_ID##*-}"
   source+=("vcpkg-${_opt_VCPKG_COMMIT_ID##*=}.tgz::https://github.com/microsoft/vcpkg/archive/${_opt_VCPKG_COMMIT_ID##*-}.tar.gz")
-  _meaver='1.8.2'
-  _pcfver='2.5.1'
-  _aomver='10aece4157eb79315da205f39e19bf6ab3ee30d0'
-  _jpgver='3.1.1'
+  _meaver='1.9.0'
+  _pcfver='3.0.3'
+  _aomver='03087864cf4bea6abb0d28f95cf7843511413d8f'
+  _jpgver='3.2.0'
   _yuvver='0faf8dd0e004520a61a603a4d2996d5ecc80dc3f'
   _wbmver='1.15.2'
   _xipver='1.5.2'
@@ -251,7 +254,7 @@ if :; then
   )
   unset _meaver _pcfver _aomver _jpgver _yuvver _wbmver _xipver
   if [ "${#_opt_hwcodec_vc[@]}" -ne 0 ]; then
-    _ffmver='7.1'
+    _ffmver='7.1.1'
     _vcs+=("ffmpeg-ffmpeg-n${_ffmver}.tar.gz::https://github.com/FFmpeg/FFmpeg/archive/refs/tags/n${_ffmver}.tar.gz")
     unset _ffmver
   fi
@@ -278,38 +281,36 @@ source+=("${_vcs[@]}")
     )
   fi
 ####
-md5sums=('befab3c858c685ae8bdbfc80f58a1a51'
-         '8a51b7d11596bb9e87eb5224e5967eac'
+md5sums=('ababb766c2c6ff58ab3e221681821286'
+         'e8c45043899e4f8b1ef4d82a3db8f536'
          '6acc4b5b14befec55ef84006b60c7ff5'
          'a77a4586f30f77de2eed63e160b3a051'
-         '54a30a570a89caa701d9c0b139b39170'
          '379cfba8479c2a92e05e3b855d1e6901'
-         '56b134202b1ea88389d24d1c99635f6a'
-         '7887064dc9ce1cf7ae1c869bacd8e27e'
-         '7745ca9bd6d05af8af0afd209375e209'
-         '9b056bb94ba70d6ec3f5901544239268'
-         '4cc83d985db61e64bfa352388bb447ec'
+         'f40cae9f445b22a00901678b72b320c0'
+         '31921523e3f3c70c9c06666d65676a1a'
+         '1efa96e6c35d1715dc6a7f83fd473953'
+         '13758576960f88c56b4bac6995715f6d'
+         '47d465f8ba76031a6717afc70c91eaf3'
          'f2f3868524b82915da3700267d116cdf'
          '4c7a93808c12b359733430c8377b7fcf'
          '557a08d88aa605ee6cf4156686ce4cc2'
-         '03485098fb64a000a4f7cd97e468dfff'
+         '5f8157e206bc430cbed92fb62144f30b'
          'a3efc04e00cede00296f1a0dc323e8d1'
          'cc8e5418ff0c163228aabbe385ba2596')
-sha256sums=('1769fcc51751aab91bc0cfa691723722f51d3693ce3ddea3d92cfb1c319100e0'
-            'e108a197f00ae5b77a810a213d391469f8659ef51d7c975d858e5c1e0e22a899'
+sha256sums=('52ef6e8e97a531faf572ad6b2df3daa3159f0043396ff44fc5c5673dd0ca3544'
+            '93ed115cc3186cc818259afc2399eb217b5469aaf5300548d033b142118666d3'
             '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
             '82757ee1ab6b956a3c601f7db82e2d9ad80dbbcf2ba68c63059f0b529426ccd0'
-            '976944c6c163ed0810207f54bb4b5d5cf41aa4e4673133f188e0b0ada5eafc8e'
             '359046f24f8a81b96a198000a1cfd7934c1f4870b2a1306e13f65694cefef68f'
-            'f3b1ec711fa1ba291efd75e27983898a37be15760dfe129a406448fa7377b31d'
-            '6b878fb0f6f0318cbd54e13539f89a1a8305791668e8e93ffd59d82722888dac'
-            '79721badcad1987dead9c3609eb4877ab9b58821c06bdacb824f2c8897c11f2a'
-            '2399c0f128ef148a785c139d631a204458b1715bb2cfb54acc65613c22d89d5c'
-            '304165ae11e64ab752e9cfc07c37bfdc87abd0bfe4bc699e59f34036d9c84f72'
+            'e9255b62719c659f224fcc639b1bf4a6226e4996ad3fb006e18e1533cad77725'
+            '12ca5979a3a625c8944e093c17c32c4c2bd03a48c8877354d88a7077860ef740'
+            '90bb12369d296f2e0bea14832b421c4ba40d442e1519758e6e1e7855afab3149'
+            'ef335682ac9b46bedcdaa1469879eb15d9c86581ba40ee1ede1722121c2e863e'
+            '980dd81f425082aa6d7c9e47fef27554ce7a9ffc8e2f6e863b97d263c5c50858'
             '73a4ecb598cd6824cb7a0a0d934d81b866e2762acd8eb465e1510063b4649659'
             '26fcd3db88045dee380e581862a6ef106f49b74b6396ee95c2993a260b4636aa'
             '9480e329e989f70d69886ded470c7f8cfe6c0667cc4196d4837ac9e668fb7404'
-            '7ddad2d992bd250a6c56053c26029f7e728bebf0f37f80cf3f8a0e6ec706431a'
+            'f117507dc501f2a6c11f9241d8d0c3213846cfad91764361af37befd6b6c523d'
             'a7c82f551a9eae018e078f6bb186171e5a77920d35a3d75a61d9a593d0a9e4ae'
             '5c1494e79024de228a9f383c8e52e45b042cd0cf24f4b0f47ee4d5448938b336')
 _vcs=("${_vcs[@]%%::*}")
