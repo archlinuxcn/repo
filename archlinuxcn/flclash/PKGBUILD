@@ -86,7 +86,7 @@ build() {
   export TAGS="with_gvisor"
   go build -tags="$TAGS" -o "../libclash/linux/FlClashCore"
 
-  export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
+  export FVM_CACHE_PATH="$SRCDIR/fvm-cache"
   cd "${srcdir}/$pkgname"
 
   fvm install $_flutter_version
@@ -107,6 +107,8 @@ package() {
 
   install -Dm755 "FlClash" "$pkgdir/usr/lib/$pkgname/FlClash"
   install -Dm755 "FlClashCore" "$pkgdir/usr/lib/$pkgname/FlClashCore"
+  install -Dm755 "FlClashHelperService" "$pkgdir/usr/lib/$pkgname/FlClashHelperService"
+  install -Dm755 "manifest.json" "$pkgdir/usr/lib/$pkgname/manifest.json"
   cp --reflink=auto -r lib/ "$pkgdir/usr/lib/$pkgname/"
   cp --reflink=auto -r data/ "$pkgdir/usr/lib/$pkgname/"
 
