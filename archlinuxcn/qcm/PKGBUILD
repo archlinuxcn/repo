@@ -65,6 +65,7 @@ sha256sums=('6cca08f3c04287557e436161bd08de2db3c0f791b60abc8b086e5fd0cdf85369'
             '6b739d364463672474652916f3b57c0b191d5dbbdce20433d1f17cff9220b3ac'
             'f49079a367c7759207d56d49789f5f7c0bfa99b1a3d204566aeceddd9f097b67'
             'ebf0fd9b60d85a7f465992a75b581b7141bfd2102d8c4f752dada017dc2b74a7')
+options=('!lto') # Linking fails with LLVM 23 when LTO is enabled
 
 prepare() {
 	pushd QmlMaterial
