@@ -23,6 +23,7 @@ sha256sums=('3486cc068b9786b87e8e59f85f17d760454b7cd968109f3eef541cef3e6bf2fa'
             '3862e32000e060a3e810f59c5c491b0edce3ba5e32928e29a752f61db400bc10'
             '255e260360f8a29c42e33e10549a1bc2caea8cabd568eb7ad81d08b38526e7c3'
             '99481a98d86eb2b4bd9c2f755463fd163bfff58b3fc65281f8d66b88741a36d1')
+options=('!lto') # Linking fails with LLVM 23 when LTO is enabled
 
 build() {
 	# ld.lld: error: undefined symbol: open(char const*, int pass_dynamic_object_size1, unsigned int)
