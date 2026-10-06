@@ -9,6 +9,7 @@ url="https://github.com/cfal/${pkgname}"
 license=('MIT')
 depends=('glibc' 'jemalloc' 'libgcc')
 makedepends=('cargo')
+checkdepends=('sing-box')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('8d2e63a021f58e09e827f9ec7d606a0583b578c55cad09619d6b7705ccd3a400')
 
