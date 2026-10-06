@@ -8,7 +8,7 @@ def pre_build():
     update_pkgver_and_pkgrel(_G.newver)
 
     with urlopen(f"https://raw.githubusercontent.com/clash-verge-rev/clash-verge-rev/v{_G.newver}/src-tauri/Cargo.toml") as response:
-        config = tomllib.loads(response.read().decode())
+        config = tomllib.load(response)
 
     ipc_ver = config['dependencies']['clash_verge_service_ipc']['version']
 
