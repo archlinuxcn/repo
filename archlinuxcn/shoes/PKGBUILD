@@ -24,6 +24,7 @@ build() {
 	export CARGO_TARGET_DIR=target
 	export JEMALLOC_OVERRIDE=/usr/lib/libjemalloc.so
 	export CARGO_FEATURE_UNPREFIXED_MALLOC_ON_SUPPORTED_PLATFORMS=1
+	export AWS_LC_SYS_NO_JITTER_ENTROPY=1
 	export CFLAGS+=" -ffat-lto-objects"
 	cargo build --frozen --release --all-features
 }
