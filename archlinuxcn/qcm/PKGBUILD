@@ -46,7 +46,6 @@ makedepends=(
 	'cmake'
 	'ninja'
 	'vulkan-headers'
-	'vulkan-memory-allocator'
 )
 optdepends=('qcm-ncm-plugin: Netease Cloud Music plugin')
 replaces=('qcmbackend')
@@ -103,9 +102,6 @@ path = "../rstd"
 path = "../vvk"
 
 [tools.cmake.overrides.KDSingleApplication]
-source = "installed"
-
-[tools.cmake.overrides.VulkanMemoryAllocator]
 source = "installed"
 END
 
