@@ -3,7 +3,7 @@
 
 pkgname=fish-pure-prompt
 pkgver=4.19.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Pretty, minimal, and fast prompt for Fish"
 arch=('any')
 url="https://github.com/pure-fish/pure"
@@ -12,7 +12,7 @@ groups=('fish-plugins')
 depends=('fish')	# remove >=3 to allow fish-git
 provides=('fish-prompt')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('6a38a8784d985b15c1446ae28850e9315a2d92865a556f5e530f6aa06ee1f57e')
+sha256sums=('45549030ce393db21beceb01e332adfe5a5c890fe6d83d4f02e1f54c75f4fa23')
 
 package() {
 	cd "pure-$pkgver"
