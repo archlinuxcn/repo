@@ -17,6 +17,33 @@ optdepends=()
 
 makedepends+=(epiphany)
 
+depends=(
+	  cairo
+	  dconf
+	  gcr-4
+	  gdk-pixbuf2
+	  glib2
+	  glibc
+	  gmp
+	  gstreamer
+	  gtk4
+	  hicolor-icon-theme
+	  json-glib
+	  libadwaita
+	  libarchive
+	  libgcc
+	  libportal
+	  libportal-gtk4
+	  libpwquality
+	  libsecret
+	  libsoup3
+	  libxml2
+	  nettle
+	  pango
+	  sqlite
+	  webkitgtk-6.0
+)
+
 checkdepends=()
 
 source=(
@@ -28,15 +55,8 @@ source=(
 md5sums=('7ef5a217c97d3a66fccaa1b132128e9d'
          '5029cf5125d7d443180d9f3682a17a33')
 
-function prepare() {
-	pacman -Ql epiphany >file.list
-}
-
 function package() {
-	depends=("portable"
-	cairo  dconf  gcc-libs  gcr-4  gdk-pixbuf2  glib2  glibc  gmp  gstreamer  gtk4  hicolor-icon-theme  json-glib  libadwaita
-	libarchive  libportal  libportal-gtk4  libsecret  libsoup3  libxml2  nettle  pango  sqlite  webkitgtk-6.0
-	)
+	depends+=("portable")
 
 	export pkgdir
 	export pkgname
