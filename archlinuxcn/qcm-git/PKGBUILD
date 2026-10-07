@@ -34,7 +34,6 @@ makedepends=(
 	'cmake'
 	'ninja'
 	'vulkan-headers'
-	'vulkan-memory-allocator'
 )
 optdepends=('qcm-ncm-plugin-git: Netease Cloud Music plugin')
 replaces=('qcmbackend-git')
@@ -52,9 +51,6 @@ prepare() {
 	mkdir -p .lito
 	cat >.lito/config.toml <<END
 [tools.cmake.overrides.KDSingleApplication]
-source = "installed"
-
-[tools.cmake.overrides.VulkanMemoryAllocator]
 source = "installed"
 END
 
