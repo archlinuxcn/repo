@@ -1,14 +1,17 @@
 # Maintainer: Integral <integral@member.fsf.org>
 # Contributor: Kimiblock Zhou <pn3535 at icloud dot com>
 
+# Fix build with lito 0.8.5
+_qcm_commit=69643b0ec91600f45a45142c71be35bb2ff87ac6
+
 # See lito.lock
-_ncrequest_commit=cdaca8b5c523906fc0c9ed58cd5f2c7981b5a255
-_qextra_commit=68f752fd38e3d7a923bf36d621f4a94be7b26fd8
-_qmlmaterial_commit=0b9af089b2dcc082b1a2564c9f19489c8c85a7b9
+_ncrequest_commit=40d40224842a080039d2a76710fbedb20ee002ac
+_qextra_commit=650cb670c15c2f34a9cf0dedd52447df7b56e761
+_qmlmaterial_commit=98b8acd3e0bd57ca0710f2712e4dfa3fcef13113
 _random_commit=567e9c62df20f19adbda0e12fa4d88b2b49a7d1c
-_wavsen_commit=ad8a0f6dab8bf280c0be2836cdf6f22416d8b1d1
-_vvk_commit=117626d9bfc6c1de0f2957f7fa42b47935bb6af8
-_rstd_version=0.1.3
+_wavsen_commit=bd8a72e0f68fabc42f3d123623787398ed28dbe4
+_vvk_version=0.1.0
+_rstd_version=0.1.7
 
 pkgname=qcm
 pkgver=1.3.5
@@ -48,24 +51,24 @@ makedepends=(
 optdepends=('qcm-ncm-plugin: Netease Cloud Music plugin')
 replaces=('qcmbackend')
 source=(
-	"git+${url}.git#tag=v${pkgver}"
+	#"git+${url}.git#tag=v${pkgver}"
+	"git+${url}.git#commit=${_qcm_commit}"
 	"git+https://github.com/hypengw/ncrequest.git#commit=${_ncrequest_commit}"
 	"git+https://github.com/hypengw/QExtra.git#commit=${_qextra_commit}"
 	"git+https://github.com/hypengw/QmlMaterial.git#commit=${_qmlmaterial_commit}"
 	"git+https://github.com/ilqvya/random.git#commit=${_random_commit}"
 	"git+https://github.com/hypengw/wavsen.git#commit=${_wavsen_commit}"
-	"git+https://github.com/litocpp/vvk.git#commit=${_vvk_commit}"
+	"git+https://github.com/litocpp/vvk.git#tag=v${_vvk_version}"
 	"git+https://github.com/litocpp/rstd.git#tag=v${_rstd_version}"
 )
-sha256sums=('6cca08f3c04287557e436161bd08de2db3c0f791b60abc8b086e5fd0cdf85369'
-            'e0b29a7179d1f35b76ca2582003c0a97c20b1a30b8e2e24cd95b025e7bfabfca'
-            '2b2d0a9f7031c88656fde765e7118960486db25aff5ceff43d71a1c3737643ac'
-            '625937a789bbe00f04c38a871c280eadc7107aa64746e220451c9e12bee34a39'
+sha256sums=('95dfe3440b23e00453742a18b33e4290e14de963381ae862faeeff457a85f0cc'
+            '4d769781149aa7b321e7345e921e88cfc71e2598bffe0d5ceeb04e72f13371b1'
+            '554a0e04a20a36614d6527a24cfff5491326dfd4a60905939d550449b7ef5b0e'
+            'fc7ebd991227221d63597cc67bcf1ae7e2db03ae8bd6975aabf4a9f54ad2f218'
             '0fec05e02154c94be675e16905fd0aad0d641bfeab96b006535cff508b905180'
-            '6b739d364463672474652916f3b57c0b191d5dbbdce20433d1f17cff9220b3ac'
-            'f49079a367c7759207d56d49789f5f7c0bfa99b1a3d204566aeceddd9f097b67'
-            'ebf0fd9b60d85a7f465992a75b581b7141bfd2102d8c4f752dada017dc2b74a7')
-options=('!lto') # Linking fails with LLVM 23 when LTO is enabled
+            '04856be2a686da2afb0c9972f76aeff89c32abeb535135553b062e1c05d99a2c'
+            'f99a7c4993b7f00ba1d23b5c8777c7d924eae41cea17fca2ad032bc9e073568a'
+            '499ce8606108d11a59f5d8b322b75cf3e8fe3e7e9f71eb4e81529f379eed7ade')
 
 prepare() {
 	pushd QmlMaterial
@@ -75,9 +78,6 @@ prepare() {
 	popd
 
 	cd Qcm
-
-	# Allow using system dependencies
-	git cherry-pick -n d82610e55acf942f271bd92d3d495aa218148aed
 
 	mkdir -p .lito
 	cat >.lito/config.toml <<END
