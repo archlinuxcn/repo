@@ -6,6 +6,6 @@ Operation = Remove
 Target = usr/lib/gtk-3.0/3.0.0/immodules/*.so
 
 [Action]
-Description = Probing GTK3 input method modules...
+Description = Updating GTK 3 input method module cache...
 When = PostTransaction
 Exec = /usr/bin/gtk-query-immodules-3.0 --update-cache

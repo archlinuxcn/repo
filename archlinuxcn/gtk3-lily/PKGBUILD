@@ -8,7 +8,7 @@ pkgname=(
   # gtk3-docs
 )
 pkgver=3.24.52
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="GObject-based multi-platform GUI toolkit, with lilydjwg's patches"
 url="https://www.gtk.org/"
@@ -65,11 +65,13 @@ makedepends=(
 source=(
   "git+https://gitlab.gnome.org/GNOME/gtk.git#tag=$pkgver"
   gtk-query-immodules-3.0.hook
+  gtk-remove-immodules-cache.hook
   0001-Allow-disabling-legacy-Tracker-search.patch
   0001-wayland-im-notify-wayland-after-set_cursor_location.patch
   0001-inhibit-hex-check.patch)
 b2sums=('b351d0e48b074ea0b6d75dd8b47bd5ff5897dce01b2c69894a5d20fff0205b8cfc4603ce556331fdf3afe4f0380c58212ebac7cd832c9b6d3fd05cbf822250d8'
-        '8e6a3906126749c6d853f582e3802254cdbba099c6af7190ad576eff6ea5425404a72b1b36950a87e3afdac82295cfe246003172c3e0341a73bd931a36f3b407'
+        '920c797546da3a6698c86fe53872be8ccaec627cb687b163e144f65d1a6ad7cb80d2e6f53a7ba26b91642cedec5432c3f1d4ec41f8d972fb6098580b31cb43a5'
+        'bec30b4a00a885b03a49d49c8cdd3be2c9c81a375478fd4358e823845f292b410e033ddf728fb52aef4a3e99bfed3ce657131f17d8d68ae0d0d32c5621a85939'
         '72075b7a95b61dacae009310f5884ea4474c2fd248f5cb65d6cc5fdfe2c0e55ea6f954f77d818ff27f531fba61baca13d178b93310a95459e629a9ec11b053c0'
         '2718db7adc07ee2df86b6dacbfb7638217b2cb76c5f5acde4ce9bd7a4617989744326069670b6cc4e5aff59fac410db9b60db7f07dd2a2e36a40b7a3b0d2d8b9'
         '9b7bf67ff3f5398bec57ca405c33757c14721d012aaa465df3f629b1d685b2183850e91ff6b1e879ec927b6d710806790a0302e2307e782eb7d64eb34dd71820')
@@ -113,7 +115,8 @@ _pick() {
 package_gtk3-lily() {
   depends+=(gtk-update-icon-cache)
   optdepends=(
-    'evince: Default print preview command'
+    'papers: default print previewer'
+    'evince: legacy print previewer'
   )
   provides=(
     gtk3=$pkgver
@@ -124,7 +127,6 @@ package_gtk3-lily() {
   )
   conflicts=(gtk3-print-backends gtk3)
   replaces=("gtk3-print-backends<=3.22.26-1")
-  install=gtk3.install
 
   meson install -C build --destdir "$pkgdir"
 
@@ -135,7 +137,7 @@ gtk-theme-name = Adwaita
 gtk-font-name = Adwaita Sans 11
 END
 
-  install -Dm644 gtk-query-immodules-3.0.hook -t "$pkgdir/usr/share/libalpm/hooks"
+  install -Dm644 gtk-*.hook -t "$pkgdir/usr/share/libalpm/hooks"
 
   cd "$pkgdir"
 
