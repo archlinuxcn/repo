@@ -1,27 +1,48 @@
 # Maintainer: DeepChirp <deepchirp@archlinuxcn.org>
 
 pkgname=mangayomi
-pkgver=0.8.3
+pkgver=0.9.8
 pkgrel=1
 pkgdesc="free and open source application for reading manga, novels, and watching animes"
 url="https://github.com/kodjodevf/${pkgname}"
 license=('Apache-2.0')
 arch=('x86_64')
-depends=('gtk3' 'webkit2gtk-4.1' 'mpv' 'libsoup3' 'libepoxy' 'alsa-lib' 'hicolor-icon-theme' 'cairo' 'pango' 'at-spi2-core' 'fontconfig' 'glib2' 'glibc' 'libstdc++' 'libgcc')
-makedepends=('cmake'
-             'ninja'
-             'clang'
-             'lld'
-             'fvm'
-             'rustup' # `Cargokit` expects to find `rustup`; otherwise, it will throw an error during the build process
-             'unzip'
-             'patchelf')
+depends=(
+    'alsa-lib'
+    'at-spi2-core'
+    'cairo'
+    'fontconfig'
+    'glib2'
+    'glibc'
+    'gtk3'
+    'hicolor-icon-theme'
+    'libepoxy'
+    'libgcc'
+    'libsecret'
+    'libsoup3'
+    'libstdc++'
+    'mpv'
+    'pango'
+    'webkit2gtk-4.1'
+)
+makedepends=(
+    'clang'
+    'cmake'
+    'fvm'
+    'lld'
+    'ninja'
+    'patchelf'
+    'rustup' # `Cargokit` expects to find `rustup`; otherwise, it will throw an error during the build process
+    'unzip'
+)
 options=("!lto") # Due to differences in LLVM versions, errors occur when using LTO.
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('1c7a771ca085939c437357c8b3361f4da8823f57fb505d7f30954d5b763abac6')
+sha256sums=('9397be6fd09c3282e52f7047ead77379e60b8b436715ca7feef1e60310c4c7af')
 
 prepare() {
     cd "${pkgname}-${pkgver}"
+
+    sed -i 's/ -Werror//' linux/CMakeLists.txt
 
     export RUSTUP_HOME="${srcdir}/rustup-home"
     export CARGO_HOME="${srcdir}/cargo-home"
