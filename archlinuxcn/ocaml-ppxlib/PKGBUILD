@@ -2,8 +2,8 @@
 # Contributor: Jakob Gahde <j5lx@fmail.co.uk>
 _projectname='ppxlib'
 pkgname="ocaml-$_projectname"
-pkgver=0.38.0
-pkgrel=3
+pkgver=0.39.0
+pkgrel=1
 pkgdesc='Utilities for working with Jane Street AST constructs'
 arch=('x86_64' 'aarch64')
 url="https://github.com/ocaml-ppx/$_projectname"
@@ -13,19 +13,10 @@ makedepends=('dune>=3.8.0')
 options=('!strip')
 source=(
 	"$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz"
-	'remove-stdlib-shims-dep.diff'
 )
-b2sums=('d5504fddd17d39f6e633c5b3b41d9ceead884925265b3bf6fb4ed80bfa99201d18ffcf9030bb6be30f5bbe2c8a664329ea01a7c0cc32c3b08043145d9fbf2f90'
-        '5fd7037dfe4cc3f250fa42cc2fc84427a36394f04a6fef646856c7e9bf2a918b36eebfd204741a26a8a89215bf304410b6f74e060305d9b25ce0bdc6e277f463')
+b2sums=('1719c5f6266d46aba36f2dd92d6bd9d16961ec85d108ce577b833e3ee0ef2ded71ca132b4caeb670ea5ef913fb50ce51bea6c940783188a1a67ae8ec02644433')
 
 _sourcedirectory="$_projectname-$pkgver"
-
-prepare() {
-	cd "$srcdir/$_sourcedirectory/"
-
-	# Remove stdlib-shims dependency, as we're always running on OCaml >= 4.08.0
-	patch --forward -p1 < '../remove-stdlib-shims-dep.diff'
-}
 
 build() {
 	cd "$srcdir/$_sourcedirectory/"
