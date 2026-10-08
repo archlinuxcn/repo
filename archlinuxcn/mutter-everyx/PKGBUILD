@@ -4,8 +4,8 @@
 # Contributor: Michael Kanis <mkanis_at_gmx_dot_de>
 
 pkgname=mutter-everyx
-pkgver=50.5
-pkgrel=4
+pkgver=51.0
+pkgrel=1
 pkgdesc="Window manager and compositor for GNOME (with patches picked from everyx)"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -86,12 +86,12 @@ source=(
   # Mutter tags use SSH signatures which makepkg doesn't understand
   "git+$url.git#tag=${pkgver/[a-z]/.&}"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
-  "5179-50.4.patch"
-  "da78d1e402a6033509e6aa49615ea62e9c9fd716.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/da78d1e402a6033509e6aa49615ea62e9c9fd716.patch"
-  "d6e6b25bef7b856ac3b717bea0668a2f8e5a38ad.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/d6e6b25bef7b856ac3b717bea0668a2f8e5a38ad.patch"
-  "b2611796f328e8888bf7d45f8b4ba6d48a01d23e.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/b2611796f328e8888bf7d45f8b4ba6d48a01d23e.patch"
+  "5179.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5179.patch"
+  "1b169970bfd4da9f4dba87083e49e2b9740264cb.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/1b169970bfd4da9f4dba87083e49e2b9740264cb.patch"
+  "e68cf2168d3267e5d519787af521ed63cd9bb086.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e68cf2168d3267e5d519787af521ed63cd9bb086.patch"
+  "434500b28e78b810c654899d5a7235ce64be45c3.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/434500b28e78b810c654899d5a7235ce64be45c3.patch"
 )
-b2sums=('1809a54d355194538db6128a91867799dc96c191e761c39e9952b54ace0868648dd62459f7eb047c21bc51e03377336563bdfc53876197ae53e0a74e94cd18c3'
+b2sums=('3c7e7159e70b09b91325335c4d13bb0ff51a161e430a0a63c65f380d5d31927cc8812cfb32b38b4964741c65c34ba12decc81274c7f556e7225d4255778689d8'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
         SKIP
         SKIP
@@ -101,20 +101,18 @@ b2sums=('1809a54d355194538db6128a91867799dc96c191e761c39e9952b54ace0868648dd6245
 
 prepare() {
   cd mutter
-  git apply -3 ../5179-50.4.patch
-  git apply -3 ../da78d1e402a6033509e6aa49615ea62e9c9fd716.patch
-  git apply -3 ../d6e6b25bef7b856ac3b717bea0668a2f8e5a38ad.patch
-  git apply -3 ../b2611796f328e8888bf7d45f8b4ba6d48a01d23e.patch
+  git apply -3 ../5179.patch
+  git apply -3 ../1b169970bfd4da9f4dba87083e49e2b9740264cb.patch
+  git apply -3 ../e68cf2168d3267e5d519787af521ed63cd9bb086.patch
+  git apply -3 ../434500b28e78b810c654899d5a7235ce64be45c3.patch
 }
 
 build() {
   local meson_options=(
     -D docs=false
     -D devkit=enabled
-    -D egl_device=true
     -D installed_tests=false
     -D tests=disabled
-    -D wayland_eglstream=true
   )
 
   CFLAGS="${CFLAGS/-O2/-O3} -fno-semantic-interposition"
@@ -129,13 +127,13 @@ build() {
 
 
 package() {
-  provides+=(libmutter-18.so)
+  provides+=(libmutter-51.so)
   optdepends=(
     'bash-completion: Bash completions for gdctl'
     'mutter-devkit: Mutter SDK, "MDK"'
   )
 
-  meson install -C build --destdir "$pkgdir"
+  meson install -C build --no-rebuild --destdir "$pkgdir"
 
   rm "$pkgdir"/usr/lib/mutter-devkit
   rm "$pkgdir"/usr/share/applications/org.gnome.Mutter.Mdk.desktop
