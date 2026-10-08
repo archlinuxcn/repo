@@ -6,10 +6,10 @@ g = SimpleNamespace()
 
 # patch 清单, 元素为 source 中的完整条目(名称::URL 或本地文件名)
 _PATCHES = [
-    '5179-50.4.patch',
-    'da78d1e402a6033509e6aa49615ea62e9c9fd716.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/da78d1e402a6033509e6aa49615ea62e9c9fd716.patch',
-    'd6e6b25bef7b856ac3b717bea0668a2f8e5a38ad.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/d6e6b25bef7b856ac3b717bea0668a2f8e5a38ad.patch',
-    'b2611796f328e8888bf7d45f8b4ba6d48a01d23e.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/b2611796f328e8888bf7d45f8b4ba6d48a01d23e.patch',
+    '5179.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5179.patch',
+    '1b169970bfd4da9f4dba87083e49e2b9740264cb.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/1b169970bfd4da9f4dba87083e49e2b9740264cb.patch',
+    'e68cf2168d3267e5d519787af521ed63cd9bb086.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e68cf2168d3267e5d519787af521ed63cd9bb086.patch',
+    '434500b28e78b810c654899d5a7235ce64be45c3.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/434500b28e78b810c654899d5a7235ce64be45c3.patch',
 ]
 
 def pre_build():
