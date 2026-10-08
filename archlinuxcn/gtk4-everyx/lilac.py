@@ -6,13 +6,12 @@ from lilaclib import *
 g = SimpleNamespace()
 
 _PATCHES = [
-    'everyx-280065f977ab1032db58f35538fdd8f9d4419503.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/280065f977ab1032db58f35538fdd8f9d4419503.patch',
-    'everyx-64b9e82ba888000ac3ae5d9332f4e428acfa5dff.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/64b9e82ba888000ac3ae5d9332f4e428acfa5dff.patch',
-    'everyx-080024237eb63ccca982ad4c866ea93974e0d1e4.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/080024237eb63ccca982ad4c866ea93974e0d1e4.patch',
-    'everyx-db10c5661143b0035a61bd198b9f130b51f9d8a5.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/db10c5661143b0035a61bd198b9f130b51f9d8a5.patch',
-    'everyx-e75432c039f628b4a3085a822b5b1e5171a9b2a9.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/e75432c039f628b4a3085a822b5b1e5171a9b2a9.patch',
-    'everyx-8c4cdd8b6950e0424fdf67b1542dd54002a374f5.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/8c4cdd8b6950e0424fdf67b1542dd54002a374f5.patch',
-    'everyx-0ccfedb9234d744098746bce6544c8ed110419db.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/0ccfedb9234d744098746bce6544c8ed110419db.patch',
+    'everyx-7dc40511032f3ce20c5465556ee6a5935622ae8a.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/7dc40511032f3ce20c5465556ee6a5935622ae8a.patch',
+    'everyx-959c3c4a544792fae29122074251dc366396e454.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/959c3c4a544792fae29122074251dc366396e454.patch',
+    'everyx-9e142f9a65fad25bea26e8f9c8da67c492c382a7.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/9e142f9a65fad25bea26e8f9c8da67c492c382a7.patch',
+    'everyx-76ec6461552648a0a4f9224d7e5a458c74999319.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/76ec6461552648a0a4f9224d7e5a458c74999319.patch',
+    'everyx-fba7287a450f118a56bf3e9cb13c1d4975a6ec5b.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/fba7287a450f118a56bf3e9cb13c1d4975a6ec5b.patch',
+    'everyx-6005bdabfdb71939c25da030fcdbf9a50f50ee9c.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/6005bdabfdb71939c25da030fcdbf9a50f50ee9c.patch',
 ]
 
 
