@@ -2,7 +2,7 @@
 
 pkgname="gnome-shell-extension-grand-theft-focus"
 _uuid=grand-theft-focus@zalckos.github.com
-pkgver=11
+pkgver=12
 pkgrel=1
 pkgdesc="GNOME extension. Removes the 'Window is ready' notification and brings the window into focus instead."
 arch=('any')
@@ -10,7 +10,7 @@ url="https://github.com/zalckos/GrandTheftFocus"
 license=('AGPL-3.0')
 depends=('gnome-shell>=45')
 source=("${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('2855072bc36b9ab4866301007a4934d126bb2eb9913dbc947d274b9bd1fe6b35099a3ee2bde849f1f13c64fac41f15aa7cef84d0cea79f253d60965e58b90694')
+b2sums=('a55a83ad5f849db3d4e7538e4d5cb2860d251b9404a90b588c3c3c20aad8366566a0db7a0e33ed7eeea91b3ad806334bac444d37becb37ec48ba3357a0d240b0')
 
 package() {
   cd "${srcdir}/GrandTheftFocus-${pkgver}"
