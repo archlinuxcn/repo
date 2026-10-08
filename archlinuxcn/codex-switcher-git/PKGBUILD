@@ -4,7 +4,7 @@
 pkgname=codex-switcher-git
 _pkgname=codex-switcher
 pkgver=0.2.20.r7.ga25af87
-pkgrel=2
+pkgrel=3
 pkgdesc='A multi-account manager for OpenAI Codex CLI'
 arch=('x86_64')
 url='https://github.com/Lampese/codex-switcher'
@@ -38,7 +38,8 @@ build() {
 
     # Build Tauri app (release mode, skip bundling — we install manually)
     cd src-tauri
-    cargo build --release
+    # Embed the frontend instead of connecting to the Vite development server.
+    cargo build --release --locked --features tauri/custom-protocol
 }
 
 package() {
