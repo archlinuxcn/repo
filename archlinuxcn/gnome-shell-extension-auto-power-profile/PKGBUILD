@@ -2,15 +2,15 @@
 
 pkgname=gnome-shell-extension-auto-power-profile
 _shortname=${pkgname#gnome-shell-extension-}
-pkgver=34
-pkgrel=4
+pkgver=35
+pkgrel=1
 pkgdesc='Automatically switch between power profiles based on power supply'
 arch=('any')
 url='https://github.com/dmy3k/auto-power-profile'
 license=('GPL-3.0-or-later')
 depends=('gnome-shell' 'power-profiles-daemon')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('170e5056699878573a68b61b898dec70f51a42a0744fb34961b389d1d28e2b09bfbdcd5b24385417125a0f0c1b4cced756f70502e6d5b7d2e0d757115f3b7905')
+b2sums=('c7a66fad92d8ab2be14b6ed22b516cc14e9e49f277eb5c9639c087719c865cdd49ba62b70154566f81df96418f95985e340bb467308e7d5c2716eaee46f08fb4')
 
 build() {
     cd "${_shortname}-${pkgver}"
