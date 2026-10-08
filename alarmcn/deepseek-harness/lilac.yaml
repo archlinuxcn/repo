@@ -1,0 +1,13 @@
+maintainers:
+  - github: RocketMaDev
+    email: Rocket Ma <marocketbd@gmail.com>
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
+
+update_on:
+  - source: jq
+    url: 'https://registry.npmjs.org/@deepseek-ai/dsh'
+    filter: '.versions | keys[]'
+    from_pattern: '(\d+\.\d+\.\d+)-([a-z]+)\.(\d+)'
+    to_pattern: '\1.\2\3'
