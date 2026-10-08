@@ -2,7 +2,7 @@
 # Maintainer: Fabian Bornschein <fabiscafe@archlinux.org>
 
 pkgname=gtk4-everyx
-pkgver=4.22.5
+pkgver=4.24.1
 pkgrel=1
 epoch=1
 pkgdesc="GObject-based multi-platform GUI toolkit, with everyx's patches"
@@ -79,15 +79,14 @@ source=(
   "git+https://gitlab.gnome.org/GNOME/gtk.git#tag=$pkgver"
   gtk-update-icon-cache.{hook,script}
   gtk4-querymodules.{hook,script}
-  "everyx-280065f977ab1032db58f35538fdd8f9d4419503.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/280065f977ab1032db58f35538fdd8f9d4419503.patch"
-  "everyx-64b9e82ba888000ac3ae5d9332f4e428acfa5dff.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/64b9e82ba888000ac3ae5d9332f4e428acfa5dff.patch"
-  "everyx-080024237eb63ccca982ad4c866ea93974e0d1e4.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/080024237eb63ccca982ad4c866ea93974e0d1e4.patch"
-  "everyx-db10c5661143b0035a61bd198b9f130b51f9d8a5.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/db10c5661143b0035a61bd198b9f130b51f9d8a5.patch"
-  "everyx-e75432c039f628b4a3085a822b5b1e5171a9b2a9.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/e75432c039f628b4a3085a822b5b1e5171a9b2a9.patch"
-  "everyx-8c4cdd8b6950e0424fdf67b1542dd54002a374f5.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/8c4cdd8b6950e0424fdf67b1542dd54002a374f5.patch"
-  "everyx-0ccfedb9234d744098746bce6544c8ed110419db.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/0ccfedb9234d744098746bce6544c8ed110419db.patch"
+  "everyx-7dc40511032f3ce20c5465556ee6a5935622ae8a.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/7dc40511032f3ce20c5465556ee6a5935622ae8a.patch"
+  "everyx-959c3c4a544792fae29122074251dc366396e454.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/959c3c4a544792fae29122074251dc366396e454.patch"
+  "everyx-9e142f9a65fad25bea26e8f9c8da67c492c382a7.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/9e142f9a65fad25bea26e8f9c8da67c492c382a7.patch"
+  "everyx-76ec6461552648a0a4f9224d7e5a458c74999319.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/76ec6461552648a0a4f9224d7e5a458c74999319.patch"
+  "everyx-fba7287a450f118a56bf3e9cb13c1d4975a6ec5b.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/fba7287a450f118a56bf3e9cb13c1d4975a6ec5b.patch"
+  "everyx-6005bdabfdb71939c25da030fcdbf9a50f50ee9c.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/6005bdabfdb71939c25da030fcdbf9a50f50ee9c.patch"
 )
-b2sums=('684f63d57139bc15ee2d314e3ecb768f175400baa096f8312ed0c7d5096c9119c1c992a4c8d1f3893c975c8ae0b169bfb4f9d6f6b74b868d61996ea70542b734'
+b2sums=('824667f399ee085521f149f5ed2bffeb52a72034dc59f25fc88beeefb567a37e70f30ec911e39a9b5b29ca8961795555c46d50a3b1d4e8dd5d9dd0b2e021ef5b'
         '136bdb410c46daf769175e8e8837286576391797a4762b8cf388217e893dd6c5087c5c91c347cbdf7d3e9dcd2c978c2fb275b5af1f3425c9f7979fbc65a81324'
         '6bcd839ef82296d864587e0cc7acc0145bdea8e5235af304747cf3c0e564c2757cc67c0373dc044bec83dccfc57dc899546c2fccea96cff2bba22f09978a3814'
         'dd589bd1ad2b13f0e06f6899776a083f20a1aac24d4308d666ffd0d1cff38457b8257b8366f92e767b4233b3d86b6b54fa50339faf84c4801a824986366dce30'
@@ -98,18 +97,16 @@ b2sums=('684f63d57139bc15ee2d314e3ecb768f175400baa096f8312ed0c7d5096c9119c1c992a
         SKIP
         SKIP
         SKIP
-        SKIP
 )
 
 prepare() {
   cd gtk
-  git apply -3 ../everyx-280065f977ab1032db58f35538fdd8f9d4419503.patch
-  git apply -3 ../everyx-64b9e82ba888000ac3ae5d9332f4e428acfa5dff.patch
-  git apply -3 ../everyx-080024237eb63ccca982ad4c866ea93974e0d1e4.patch
-  git apply -3 ../everyx-db10c5661143b0035a61bd198b9f130b51f9d8a5.patch
-  git apply -3 ../everyx-e75432c039f628b4a3085a822b5b1e5171a9b2a9.patch
-  git apply -3 ../everyx-8c4cdd8b6950e0424fdf67b1542dd54002a374f5.patch
-  git apply -3 ../everyx-0ccfedb9234d744098746bce6544c8ed110419db.patch
+  git apply -3 ../everyx-7dc40511032f3ce20c5465556ee6a5935622ae8a.patch
+  git apply -3 ../everyx-959c3c4a544792fae29122074251dc366396e454.patch
+  git apply -3 ../everyx-9e142f9a65fad25bea26e8f9c8da67c492c382a7.patch
+  git apply -3 ../everyx-76ec6461552648a0a4f9224d7e5a458c74999319.patch
+  git apply -3 ../everyx-fba7287a450f118a56bf3e9cb13c1d4975a6ec5b.patch
+  git apply -3 ../everyx-6005bdabfdb71939c25da030fcdbf9a50f50ee9c.patch
 }
 
 build() {
@@ -144,10 +141,10 @@ _pick() {
 }
 
 package() {
-  optdepends=('evince: Default print preview command')
+  optdepends=('papers: default print previewer')
   provides+=(libgtk-4.so)
 
-  meson install -C build --destdir "$pkgdir"
+  meson install -C build --no-rebuild --destdir "$pkgdir"
 
   install -Dm644 /dev/stdin "$pkgdir/usr/share/gtk-4.0/settings.ini" <<END
 [Settings]
