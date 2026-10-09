@@ -7,7 +7,7 @@ from lilaclib import *
 
 def pre_build():
     run_cmd(["rm", "-rf", "go-for-it-git"])
-    aur_pre_build()
+    aur_pre_build(maintainers=['btd1337'])
     for line in edit_file('PKGBUILD'):
         if line.startswith('makedepends'):
             line = "makedepends=('vala' 'git' 'cmake' 'intltool')"
