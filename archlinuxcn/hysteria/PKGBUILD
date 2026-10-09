@@ -2,7 +2,7 @@
 
 _pkgbase=hysteria
 pkgname=$_pkgbase
-pkgver=2.12.3
+pkgver=2.13.0
 pkgrel=1
 pkgdesc='A powerful, lightning fast and censorship resistant proxy'
 arch=('x86_64')
