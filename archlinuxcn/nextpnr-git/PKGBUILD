@@ -8,7 +8,7 @@
 
 _pkgname="nextpnr"
 pkgname="$_pkgname-git"
-pkgver=0.11.1.r48.g6f71bc2
+pkgver=0.11.1.r54.g861c57b
 pkgrel=1
 pkgdesc='Portable FPGA place and route tool'
 url='https://github.com/YosysHQ/nextpnr'
@@ -52,6 +52,9 @@ prepare() {
 
   # fix for Boost 1.89
   sed -E -e 's&\bsystem\b&&g' -i CMakeLists.txt bba/CMakeLists.txt
+
+  # SB_FILTER_50NS (1e6050d) added 2 bels to UP5K without updating the test
+  sed -E -e 's&ASSERT_EQ\(bel_count, 5438\)&ASSERT_EQ(bel_count, 5440)&' -i ice40/tests/up5k.cc
 }
 
 build() {
