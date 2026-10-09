@@ -63,8 +63,8 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
     elif line.startswith('sha256sums=('):
       line = line.replace('=(', f'''=(
       '{variant_sha256}'
-      8e21c0a5d4c5b05b9a235dcde7b9ddb1217181183b37d42e472753999a7f65d7
-      bae52d3f395be34c444d9f0e9368ad9f900269818c93e247f207c502a1d6b48e
+      08b8eaf92c5c6e220e97c8af5f4154f2e8690012831eff6bf5fd603241eba096
+      57d7d1ec398e96ecf758d578a366667f2c89b538c245196ee71028986cf82e3a
       'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
       ''')
