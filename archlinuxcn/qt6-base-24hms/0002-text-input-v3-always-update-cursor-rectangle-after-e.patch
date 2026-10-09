@@ -1,4 +1,4 @@
-From b549c6708f9efcc7268e1947e715da3fda39f490 Mon Sep 17 00:00:00 2001
+From 8c56e1a20d1fbfa94148cfa16008e64577620519 Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Tue, 25 Mar 2025 16:23:57 +0800
 Subject: [PATCH 2/2] text input v3: always update cursor rectangle after enter
@@ -18,10 +18,10 @@ request.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp b/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
-index 3e9f2cafbfd..8b6d4ba2d97 100644
+index 133d8f96531..d85b3fee283 100644
 --- a/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
 +++ b/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
-@@ -290,7 +290,7 @@ void QWaylandTextInputv3::updateState(Qt::InputMethodQueries queries, uint32_t f
+@@ -410,7 +410,7 @@ void QWaylandTextInputv3::updateState(Qt::InputMethodQueries queries, uint32_t f
          const QRect &nativeRect = QHighDpi::toNativePixels(windowRect, QGuiApplication::focusWindow());
          const QMargins margins = window->clientSideMargins();
          const QRect &surfaceRect = nativeRect.translated(margins.left(), margins.top());
@@ -31,5 +31,5 @@ index 3e9f2cafbfd..8b6d4ba2d97 100644
              m_cursorRect = surfaceRect;
              needsCommit = true;
 -- 
-2.51.0
+2.56.0
 
