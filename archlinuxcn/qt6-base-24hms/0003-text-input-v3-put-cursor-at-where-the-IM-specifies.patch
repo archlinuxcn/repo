@@ -1,0 +1,26 @@
+From bb590c065db1303da1e34993d9753e0377693d15 Mon Sep 17 00:00:00 2001
+From: lilydjwg <lilydjwg@gmail.com>
+Date: Fri, 9 Oct 2026 19:11:03 +0800
+Subject: [PATCH 1/2] text-input-v3: put cursor at where the IM specifies
+
+---
+ src/plugins/platforms/wayland/qwaylandtextinputv3.cpp | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp b/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
+index d85b3fee283..4425cc2ccc3 100644
+--- a/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
++++ b/src/plugins/platforms/wayland/qwaylandtextinputv3.cpp
+@@ -226,8 +226,7 @@ void QWaylandTextInputv3::zwp_text_input_v3_done(uint32_t serial)
+                                                     0,
+                                                     0); // hide cursor
+             attributes.append(attribute);
+-        } else if (m_pendingPreeditString.cursorBegin != 0 ||
+-                m_pendingPreeditString.cursorEnd != 0) {
++        } else {
+             // Current supported cursor shape is just line.
+             // It means, cursorEnd and cursorBegin are the same.
+             QInputMethodEvent::Attribute attribute1(QInputMethodEvent::Cursor,
+-- 
+2.56.0
+

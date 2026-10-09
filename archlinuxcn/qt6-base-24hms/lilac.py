@@ -56,6 +56,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       oldherl{variant}.patch
       0001-text-input-v3-use-dashed-underline-instead-of-solid-.patch
       0002-text-input-v3-always-update-cursor-rectangle-after-e.patch
+      0003-text-input-v3-put-cursor-at-where-the-IM-specifies.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/47/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       ''')
@@ -65,6 +66,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
       '{variant_sha256}'
       08b8eaf92c5c6e220e97c8af5f4154f2e8690012831eff6bf5fd603241eba096
       57d7d1ec398e96ecf758d578a366667f2c89b538c245196ee71028986cf82e3a
+      e0ce8b9f7a0cb5253a6c8836c18fdf207d1304fc5f69ae358ec2ec49ff9b8a3d
       'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
       ''')
@@ -78,6 +80,7 @@ conflicts=(qt6-base ''' + conflict_string + ")" # remove official groups
   patch -p1 -i ../oldherl{variant}.patch
   patch -p1 -i ../0001-text-input-v3-use-dashed-underline-instead-of-solid-.patch
   patch -p1 -i ../0002-text-input-v3-always-update-cursor-rectangle-after-e.patch
+  patch -p1 -i ../0003-text-input-v3-put-cursor-at-where-the-IM-specifies.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
