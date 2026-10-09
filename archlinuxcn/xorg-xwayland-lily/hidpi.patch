@@ -1,8 +1,7 @@
-diff --git a/hw/xwayland/xwayland-output.c b/hw/xwayland/xwayland-output.c
-index f75591500..10c165ea6 100644
---- a/hw/xwayland/xwayland-output.c
-+++ b/hw/xwayland/xwayland-output.c
-@@ -192,6 +192,13 @@ update_screen_size(struct xwl_screen *xwl_screen, int width, int height)
+diff '--color=auto' -Naur xwayland-24.1.14-orig/hw/xwayland/xwayland-output.c xwayland-24.1.14/hw/xwayland/xwayland-output.c
+--- xwayland-24.1.14-orig/hw/xwayland/xwayland-output.c	2026-10-07 09:40:58.000000000 +0800
++++ xwayland-24.1.14/hw/xwayland/xwayland-output.c	2026-10-09 18:17:25.355809663 +0800
+@@ -192,6 +192,13 @@
      if (xwl_screen_get_height(xwl_screen) != height)
          xwl_screen->height = height;
  
@@ -16,7 +15,7 @@ index f75591500..10c165ea6 100644
      if (xwl_screen->root_clip_mode == ROOT_CLIP_FULL)
          SetRootClip(xwl_screen->screen, ROOT_CLIP_NONE);
  
-@@ -615,14 +622,15 @@ maybe_update_fullscreen_state(struct xwl_output *xwl_output)
+@@ -620,14 +627,15 @@
      }
  }
  
@@ -34,20 +33,22 @@ index f75591500..10c165ea6 100644
  
      /* Clear out the "done" received flags */
      xwl_output->wl_output_done = FALSE;
-@@ -641,10 +649,10 @@ apply_output_change(struct xwl_output *xwl_output)
+@@ -646,12 +654,12 @@
      }
      if (xwl_output->randr_output) {
          /* Build a fresh modes array using the current refresh rate */
 -        randr_modes = output_get_rr_modes(xwl_output, mode_width, mode_height, &count);
 +        randr_modes = output_get_rr_modes(xwl_output, mode_width * scale, mode_height * scale, &count);
-         RROutputSetModes(xwl_output->randr_output, randr_modes, count, 1);
-         RRCrtcNotify(xwl_output->randr_crtc, randr_modes[0],
--                     xwl_output->x, xwl_output->y,
-+                     xwl_output->x * scale, xwl_output->y * scale,
-                      xwl_output->rotation, NULL, 1, &xwl_output->randr_output);
+ 
+         if (count > 0) {
+             RROutputSetModes(xwl_output->randr_output, randr_modes, count, 1);
+             RRCrtcNotify(xwl_output->randr_crtc, randr_modes[0],
+-                         xwl_output->x, xwl_output->y,
++                         xwl_output->x * scale, xwl_output->y * scale,
+                          xwl_output->rotation, NULL, 1, &xwl_output->randr_output);
+         }
          /* RROutputSetModes takes ownership of the passed in modes, so we only
-          * have to free the pointer array.
-@@ -738,7 +746,7 @@ output_handle_done(void *data, struct wl_output *wl_output)
+@@ -746,7 +754,7 @@
       */
      if (xwl_output->xdg_output_done || !xwl_output->xdg_output ||
          zxdg_output_v1_get_version(xwl_output->xdg_output) >= 3)
@@ -56,7 +57,7 @@ index f75591500..10c165ea6 100644
  }
  
  static void
-@@ -806,7 +814,7 @@ xdg_output_handle_done(void *data, struct zxdg_output_v1 *xdg_output)
+@@ -814,7 +822,7 @@
  
      if (xwl_output->wl_output_done &&
          zxdg_output_v1_get_version(xdg_output) < 3)
@@ -65,7 +66,7 @@ index f75591500..10c165ea6 100644
  }
  
  static void
-@@ -942,6 +950,8 @@ xwl_output_create(struct xwl_screen *xwl_screen, uint32_t id,
+@@ -952,6 +960,8 @@
      RROutputSetConnection(xwl_output->randr_output,
                            connected ? RR_Connected : RR_Disconnected);
  
@@ -74,22 +75,20 @@ index f75591500..10c165ea6 100644
      /* We want the output to be in the list as soon as created so we can
       * use it when binding to the xdg-output protocol...
       */
-diff --git a/hw/xwayland/xwayland-output.h b/hw/xwayland/xwayland-output.h
-index 0d36f459a..123d01380 100644
---- a/hw/xwayland/xwayland-output.h
-+++ b/hw/xwayland/xwayland-output.h
-@@ -121,4 +121,6 @@ void xwl_output_set_window_randr_emu_props(struct xwl_screen *xwl_screen,
+diff '--color=auto' -Naur xwayland-24.1.14-orig/hw/xwayland/xwayland-output.h xwayland-24.1.14/hw/xwayland/xwayland-output.h
+--- xwayland-24.1.14-orig/hw/xwayland/xwayland-output.h	2026-10-07 09:40:58.000000000 +0800
++++ xwayland-24.1.14/hw/xwayland/xwayland-output.h	2026-10-09 18:16:18.329749624 +0800
+@@ -121,4 +121,6 @@
  
  void xwl_screen_init_xdg_output(struct xwl_screen *xwl_screen);
  
 +void xwl_output_apply_changes(struct xwl_output *xwl_output);
 +
  #endif /* XWAYLAND_OUTPUT_H */
-diff --git a/hw/xwayland/xwayland-present.c b/hw/xwayland/xwayland-present.c
-index 60427cca0..0e12215e3 100644
---- a/hw/xwayland/xwayland-present.c
-+++ b/hw/xwayland/xwayland-present.c
-@@ -911,6 +911,7 @@ xwl_present_flip(present_vblank_ptr vblank, RegionPtr damage)
+diff '--color=auto' -Naur xwayland-24.1.14-orig/hw/xwayland/xwayland-present.c xwayland-24.1.14/hw/xwayland/xwayland-present.c
+--- xwayland-24.1.14-orig/hw/xwayland/xwayland-present.c	2026-10-07 09:40:58.000000000 +0800
++++ xwayland-24.1.14/hw/xwayland/xwayland-present.c	2026-10-09 18:16:18.329823414 +0800
+@@ -918,6 +918,7 @@
  
      /* We can flip directly to the main surface (full screen window without clips) */
      wl_surface_attach(xwl_window->surface, buffer, 0, 0);
@@ -97,11 +96,10 @@ index 60427cca0..0e12215e3 100644
  
      if (xorg_list_is_empty(&xwl_present_window->frame_callback_list)) {
          xorg_list_add(&xwl_present_window->frame_callback_list,
-diff --git a/hw/xwayland/xwayland-screen.c b/hw/xwayland/xwayland-screen.c
-index 4b575667a..ff536883a 100644
---- a/hw/xwayland/xwayland-screen.c
-+++ b/hw/xwayland/xwayland-screen.c
-@@ -44,6 +44,8 @@
+diff '--color=auto' -Naur xwayland-24.1.14-orig/hw/xwayland/xwayland-screen.c xwayland-24.1.14/hw/xwayland/xwayland-screen.c
+--- xwayland-24.1.14-orig/hw/xwayland/xwayland-screen.c	2026-10-07 09:40:58.000000000 +0800
++++ xwayland-24.1.14/hw/xwayland/xwayland-screen.c	2026-10-09 18:16:18.329948355 +0800
+@@ -43,6 +43,8 @@
  #include <inputstr.h>
  #include <xacestr.h>
  #include <xserver_poll.h>
@@ -110,7 +108,7 @@ index 4b575667a..ff536883a 100644
  
  #include "xwayland-cursor.h"
  #include "xwayland-screen.h"
-@@ -53,6 +55,7 @@
+@@ -52,6 +54,7 @@
  #include "xwayland-pixmap.h"
  #include "xwayland-present.h"
  #include "xwayland-shm.h"
@@ -118,7 +116,7 @@ index 4b575667a..ff536883a 100644
  #ifdef XWL_HAS_EI
  #include "xwayland-xtest.h"
  #endif
-@@ -121,6 +124,12 @@ xwl_screen_has_resolution_change_emulation(struct xwl_screen *xwl_screen)
+@@ -120,6 +123,12 @@
      return xwl_screen->rootless && xwl_screen_has_viewport_support(xwl_screen);
  }
  
@@ -131,11 +129,10 @@ index 4b575667a..ff536883a 100644
  /* Return the output @ 0x0, falling back to the first output in the list */
  struct xwl_output *
  xwl_screen_get_first_output(struct xwl_screen *xwl_screen)
-@@ -159,6 +168,38 @@ xwl_screen_get_height(struct xwl_screen *xwl_screen)
-     return round(xwl_screen->height);
+@@ -159,25 +168,62 @@
  }
  
-+static void
+ static void
 +xwl_screen_set_global_scale_from_property(struct xwl_screen *screen,
 +                                          PropertyPtr prop)
 +{
@@ -167,10 +164,10 @@ index 4b575667a..ff536883a 100644
 +    }
 +}
 +
- static void
++static void
  xwl_property_callback(CallbackListPtr *pcbl, void *closure,
                        void *calldata)
-@@ -166,19 +207,24 @@ xwl_property_callback(CallbackListPtr *pcbl, void *closure,
+ {
      ScreenPtr screen = closure;
      PropertyStateRec *rec = calldata;
      struct xwl_screen *xwl_screen;
@@ -200,8 +197,8 @@ index 4b575667a..ff536883a 100644
 +    }
  }
  
- #define readOnlyPropertyAccessMask (DixReadAccess |\
-@@ -718,8 +764,14 @@ void xwl_surface_damage(struct xwl_screen *xwl_screen,
+ #ifdef XACE
+@@ -725,8 +771,14 @@
  {
      if (wl_surface_get_version(surface) >= WL_SURFACE_DAMAGE_BUFFER_SINCE_VERSION)
          wl_surface_damage_buffer(surface, x, y, width, height);
@@ -217,7 +214,7 @@ index 4b575667a..ff536883a 100644
  }
  
  void
-@@ -851,10 +903,34 @@ xwl_screen_update_global_surface_scale(struct xwl_screen *xwl_screen)
+@@ -858,10 +910,34 @@
      return (xwl_screen->global_surface_scale != old_scale);
  }
  
@@ -252,7 +249,7 @@ index 4b575667a..ff536883a 100644
      struct xwl_screen *xwl_screen;
      Pixel red_mask, blue_mask, green_mask;
      int ret, bpc, green_bpc, i;
-@@ -891,6 +967,7 @@ xwl_screen_init(ScreenPtr pScreen, int argc, char **argv)
+@@ -898,6 +974,7 @@
  #ifdef XWL_HAS_GLAMOR
      xwl_screen->glamor = XWL_GLAMOR_DEFAULT;
  #endif
@@ -260,7 +257,7 @@ index 4b575667a..ff536883a 100644
  
      for (i = 1; i < argc; i++) {
          if (strcmp(argv[i], "-rootless") == 0) {
-@@ -1163,6 +1240,12 @@ xwl_screen_init(ScreenPtr pScreen, int argc, char **argv)
+@@ -1168,6 +1245,12 @@
      if (xwl_screen->allow_commits_prop == BAD_RESOURCE)
          return FALSE;
  
@@ -272,12 +269,11 @@ index 4b575667a..ff536883a 100644
 +
      AddCallback(&PropertyStateCallback, xwl_property_callback, pScreen);
      AddCallback(&RootWindowFinalizeCallback, xwl_root_window_finalized_callback, pScreen);
-     XaceRegisterCallback(XACE_PROPERTY_ACCESS, xwl_access_property_callback, pScreen);
-diff --git a/hw/xwayland/xwayland-screen.h b/hw/xwayland/xwayland-screen.h
-index 0800fb392..2ed4b3aca 100644
---- a/hw/xwayland/xwayland-screen.h
-+++ b/hw/xwayland/xwayland-screen.h
-@@ -139,6 +139,7 @@ struct xwl_screen {
+ #ifdef XACE
+diff '--color=auto' -Naur xwayland-24.1.14-orig/hw/xwayland/xwayland-screen.h xwayland-24.1.14/hw/xwayland/xwayland-screen.h
+--- xwayland-24.1.14-orig/hw/xwayland/xwayland-screen.h	2026-10-07 09:40:58.000000000 +0800
++++ xwayland-24.1.14/hw/xwayland/xwayland-screen.h	2026-10-09 18:16:18.330069635 +0800
+@@ -140,6 +140,7 @@
      struct glamor_context *glamor_ctx;
  
      Atom allow_commits_prop;
@@ -285,7 +281,7 @@ index 0800fb392..2ed4b3aca 100644
  
      /* The preferred GLVND vendor. If NULL, "mesa" is assumed. */
      const char *glvnd_vendor;
-@@ -181,5 +182,7 @@ int xwl_screen_get_next_output_serial(struct xwl_screen * xwl_screen);
+@@ -182,5 +183,7 @@
  void xwl_screen_lost_focus(struct xwl_screen *xwl_screen);
  Bool xwl_screen_update_global_surface_scale(struct xwl_screen *xwl_screen);
  Bool xwl_screen_should_use_fractional_scale(struct xwl_screen *xwl_screen);
@@ -293,11 +289,10 @@ index 0800fb392..2ed4b3aca 100644
 +void xwl_screen_set_global_scale( struct xwl_screen *xwl_screen, int32_t scale);
  
  #endif /* XWAYLAND_SCREEN_H */
-diff --git a/hw/xwayland/xwayland-window.c b/hw/xwayland/xwayland-window.c
-index 05f45e16f..56e4338be 100644
---- a/hw/xwayland/xwayland-window.c
-+++ b/hw/xwayland/xwayland-window.c
-@@ -1317,7 +1317,8 @@ xwl_create_root_surface(struct xwl_window *xwl_window)
+diff '--color=auto' -Naur xwayland-24.1.14-orig/hw/xwayland/xwayland-window.c xwayland-24.1.14/hw/xwayland/xwayland-window.c
+--- xwayland-24.1.14-orig/hw/xwayland/xwayland-window.c	2026-10-07 09:40:58.000000000 +0800
++++ xwayland-24.1.14/hw/xwayland/xwayland-window.c	2026-10-09 18:16:18.330196085 +0800
+@@ -1356,7 +1356,8 @@
      }
  
      wl_region_add(region, 0, 0,
@@ -307,7 +302,7 @@ index 05f45e16f..56e4338be 100644
      wl_surface_set_opaque_region(xwl_window->surface, region);
      wl_region_destroy(region);
  
-@@ -1955,6 +1956,7 @@ xwl_window_attach_buffer(struct xwl_window *xwl_window)
+@@ -2049,6 +2050,7 @@
      }
  
      wl_surface_attach(xwl_window->surface, buffer, 0, 0);
