@@ -7,7 +7,7 @@ pkgname=(qt6-base-24hms)
 
 _pkgver=6.12.0
 pkgver=${_pkgver/-/}
-pkgrel=2.4
+pkgrel=3
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -94,6 +94,7 @@ source=(
       oldherl-24hms.patch
       0001-text-input-v3-use-dashed-underline-instead-of-solid-.patch
       0002-text-input-v3-always-update-cursor-rectangle-after-e.patch
+      0003-text-input-v3-put-cursor-at-where-the-IM-specifies.patch
       'https://build.archlinuxcn.org/~oldherl/files/cldr/47/core.zip'
       'https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab'
       git+https://code.qt.io/qt/$_pkgfn#tag=v$_pkgver
@@ -103,6 +104,7 @@ sha256sums=(
       '0c845268bde9718fbd76ad759b8a51352a5fddd30dbd76aaa7d4dbf5ea010151'
       08b8eaf92c5c6e220e97c8af5f4154f2e8690012831eff6bf5fd603241eba096
       57d7d1ec398e96ecf758d578a366667f2c89b538c245196ee71028986cf82e3a
+      e0ce8b9f7a0cb5253a6c8836c18fdf207d1304fc5f69ae358ec2ec49ff9b8a3d
       'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
       'd97ef157dc50bdf0425337e9adede8135ab508a4ab2f1abae7e9cfc42c5f86db'
@@ -120,6 +122,7 @@ prepare() {
   patch -p1 -i ../oldherl-24hms.patch
   patch -p1 -i ../0001-text-input-v3-use-dashed-underline-instead-of-solid-.patch
   patch -p1 -i ../0002-text-input-v3-always-update-cursor-rectangle-after-e.patch
+  patch -p1 -i ../0003-text-input-v3-put-cursor-at-where-the-IM-specifies.patch
   cd util/locale_database
   echo "This is slow. It takes about 4 minutes on my desktop."
   ./cldr2qlocalexml.py ../../../ > ./24h.xml
