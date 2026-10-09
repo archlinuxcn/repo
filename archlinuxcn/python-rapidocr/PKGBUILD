@@ -22,7 +22,7 @@ pkgname=(
     python-rapidocr
     python-rapidocr-models-onnx
 )
-pkgver=3.9.2
+pkgver=3.10.0
 pkgrel=1
 pkgdesc='Awesome OCR multiple programing languages toolkits based on ONNX Runtime, OpenVINO, MNN, PaddlePaddle, TensorRT and PyTorch.'
 url='https://github.com/RapidAI/RapidOCR'
@@ -40,7 +40,7 @@ makedepends=(
 source=(
     "${pkgbase}-${pkgver}.tar.gz::https://github.com/RapidAI/RapidOCR/archive/v${pkgver}.tar.gz"
 )
-b2sums=('cf5a1b6bd85802bb194777e58a53f20791713630226b76dcd22110c3155a97e6cc37f427a1e88907bd5ed49577bcf410a1b08bf048de7c0b39a97e423d3e6953')
+b2sums=('a0a10a98fa7d6c5f396423852470329a0f867c5d9d389de39f2a25c6cb9e9472ea1220151ae8e50ab733a1080e2a410cfa04e137d3c4544a919f83bc65f70ff0')
 
 prepare() {
     cd "${srcdir}/RapidOCR-${pkgver}/python"
