@@ -1,7 +1,13 @@
-diff --git a/packages/natives/scripts/embed-native.ts b/packages/natives/scripts/embed-native.ts
-index e04c39afc2..37a4c3a127 100644
---- a/packages/natives/scripts/embed-native.ts
-+++ b/packages/natives/scripts/embed-native.ts
-@@ -159 +159 @@ async function main(): Promise<void> {
--	if (process.argv.includes("--reset")) {
-+	if (true) {
+diff --git a/packages/coding-agent/scripts/build-binary.ts b/packages/coding-agent/scripts/build-binary.ts
+index 746c00f..7339643 100644
+--- a/packages/coding-agent/scripts/build-binary.ts
++++ b/packages/coding-agent/scripts/build-binary.ts
+@@ -90,7 +90,7 @@ async function main(): Promise<void> {
+ 			entrypoint: path.join(packageDir, "src", "cli.ts"),
+ 			outfile: outputPath,
+ 			transformersVersion,
+-			native: crossBuild ?? { platform: process.platform, arch: process.arch },
++			native: null,
+ 			target: crossBuild?.target,
+ 			executablePath: Bun.env.BUN_COMPILE_EXECUTABLE_PATH || undefined,
+ 			skipBuiltinCodesign: shouldAdhocSign,

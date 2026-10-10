@@ -1,0 +1,15 @@
+diff --git a/crates/pi-ast/src/language/grammar.rs b/crates/pi-ast/src/language/grammar.rs
+--- a/crates/pi-ast/src/language/grammar.rs
++++ b/crates/pi-ast/src/language/grammar.rs
+@@ -116,5 +116,11 @@
+ fn module_path(file: &str) -> Option<PathBuf> {
++	// Package-owned grammars take precedence over the writable download cache.
++	let packaged = PathBuf::from("/usr/share/oh-my-pi/grammars").join(file);
++	if packaged.is_file() {
++		return Some(packaged);
++	}
++
+ 	let dir = GRAMMAR_DIR.read().unwrap_or_else(PoisonError::into_inner);
+ 	Some(dir.as_ref()?.join(file)).filter(|path| path.is_file())
+ }
+ 
