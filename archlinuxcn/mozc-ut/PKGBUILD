@@ -17,7 +17,7 @@ ENABLED_DICTIONARIES=(
 )
 
 pkgname=mozc-ut
-pkgver=3.34.6239.20260701
+pkgver=3.34.6345.20261010
 pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input bundled with the UT dictionary'
 arch=('x86_64')
@@ -28,26 +28,27 @@ makedepends=('git' 'python')
 optdepends=('fcitx5-mozc-ut: Fcitx5 integration'
             'ibus-mozc: IBus integration'
             'emacs-mozc: Emacs integration')
-provides=('mozc=3.34.6239')
+provides=('mozc=3.34.6345')
 conflicts=('mozc')
-source=('git+https://github.com/google/mozc.git#commit=04733c92daf891a3f3d67ba85c69fa9cc64032ba'
+source=('git+https://github.com/google/mozc.git#commit=18e76511af9371a9a4409b1d13c3e30884b53e9c'
         # UT dictionary
-        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=15c1c64502b43e31d328012860376c03c3eaf633'
-        'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=08e033f4558b7a0b03d8ad6920216d9473f15627'
-        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=d7279ba285fd5ddfe158b0bfd0c4fcda1f7b08c3'
-        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=b50cabaecaf32c03d102db55fc5d0b98e334ec9e'
+        'git+https://github.com/utuhiro78/merge-ut-dictionaries.git#commit=6239884099ddc0c4d5bb1453b20441121d20593e'
+        'git+https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git#commit=e7230d7f6d9b72cb656a1eb23d2ccdb7c70d141f'
+        'git+https://github.com/utuhiro78/mozcdic-ut-edict2.git#commit=8fe8f7918baf513c3d7e243807dfcda2d5c30139'
+        'git+https://github.com/utuhiro78/mozcdic-ut-jawiki.git#commit=57af6adefedab262c295c4bfff71a89902cbe05c'
         'git+https://github.com/utuhiro78/mozcdic-ut-neologd.git#commit=d8307abf02b830b185c9320822cffa0d0787c54e'
-        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=5896ebef5f39d5772f4575fa05eb24436ce5a5f1'
-        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=6f9d9bda14f0bd2c10c1563d2aed9150ea95095c'
+        'git+https://github.com/utuhiro78/mozcdic-ut-personal-names.git#commit=b557dd4c1548cc7c2164d5f8b14170c40cbb6f81'
+        'git+https://github.com/utuhiro78/mozcdic-ut-place-names.git#commit=98cf8e9d7731695a52e5bc72ed633933c71d1913'
         'git+https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git#commit=7c02e535bd6d999a715a53b58c3366f2401bfb7f'
-        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=7def3da408b1854801bd5b559273f9fb8001ef5b'
-        'https://dumps.wikimedia.org/jawiki/20260601/jawiki-20260601-pages-articles-multistream-index.txt.bz2'
+        'git+https://github.com/utuhiro78/mozcdic-ut-sudachidict.git#commit=c686771bada1d59e9b105c81b29e6ac1a239cb54'
+        'https://dumps.wikimedia.org/jawiki/20261001/jawiki-20261001-pages-articles-multistream-index.txt.bz2'
         # Bazel module repo (copy of https://bcr.bazel.build/)
         'git+https://github.com/bazelbuild/bazel-central-registry.git#commit=b0cb0e8ec70689252e3b35f109ffa4a32329b900'
         # Bazel binary
         'https://github.com/bazelbuild/bazel/releases/download/9.0.2/bazel-9.0.2-linux-x86_64'
         # Bazel dependencies
         'https://github.com/abseil/abseil-cpp/releases/download/20260107.1/abseil-cpp-20260107.1.tar.gz'
+        'https://github.com/abseil/abseil-py/archive/refs/tags/v2.1.0.tar.gz'
         'https://github.com/bazelbuild/apple_support/releases/download/2.4.0/apple_support.2.4.0.tar.gz'
         'https://github.com/bats-core/bats-core/archive/v1.10.0.tar.gz'
         'https://github.com/bazel-contrib/bazel_features/releases/download/v1.42.1/bazel_features-v1.42.1.tar.gz'
@@ -76,9 +77,10 @@ source=('git+https://github.com/google/mozc.git#commit=04733c92daf891a3f3d67ba85
         'https://github.com/hiroyuki-komatsu/japanese-usage-dictionary/archive/refs/tags/2025-01-25.zip'
         'jigyosyo-20260403.zip::https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/621d059fbcbfae17bfca15b439692bae934268c3/jigyosyo.zip'
         'ken_all-20260403.zip::https://github.com/hiroyuki-komatsu/japanpost_zipcode/raw/621d059fbcbfae17bfca15b439692bae934268c3/ken_all.zip')
-noextract=('jawiki-20260601-pages-articles-multistream-index.txt.bz2'
+noextract=('jawiki-20261001-pages-articles-multistream-index.txt.bz2'
            'bazel-9.0.2-linux-x86_64'
            'abseil-cpp-20260107.1.tar.gz'
+           'v2.1.0.tar.gz'
            'apple_support.2.4.0.tar.gz'
            'v1.10.0.tar.gz'
            'bazel_features-v1.42.1.tar.gz'
@@ -106,20 +108,21 @@ noextract=('jawiki-20260601-pages-articles-multistream-index.txt.bz2'
            '2025-01-25.zip'
            'jigyosyo-20260403.zip'
            'ken_all-20260403.zip')
-b2sums=('54b0fc991e390c68b3a7de3fd48005ab33f3745983f958ff5c01c105f2d085787e02a7008763f5547ba8b9c704d68d1d1a6af61192774349eda7b0bfc718f7ec'
-        '84150b8d743335d4b2801d15b74640380da0cfb95815bfc32a98f48f0fc7ac25b98ab417afee715c87a70dd8127568bd999e8e6a2c17da09d2a560fcdba030d3'
-        'f320adaf559ad3b51cb323c19f1ac0155f33f1b59939bfc34577f429cfc64d589271c5b6a9fe481fa7be6b97e7043832b0b7bf339e0559a836fa5a1b62101f5d'
-        'e9555a886657f237a55552f8f8aec769f0522cb54b4765f805ec1cd06dc80d8e8f735c35099132471bb46bda8219cf2991f6357b2cca5df24ff38f63c5d8f331'
-        '55a45669af70fa125127f27298f161180e7e6c4869611f6dc7a89416f0e82ed99453bdf87f674f5cd860acd174ab0ee14d3551d02fc1c2aa6ee8c38abb993a92'
+b2sums=('3a70979fb269fe21ae5bf4b2e614ada49be7132340e8cd4f2fdf0c1163d7223479b98e0e1193fde00ede88626353914ca0850deb00d52eb7eaf55c5f7d1ff4fd'
+        '33b59af8f62b51e8bdfb6eb993acab17778d77984eb2aef04592bc53e5f85775c49eae6f279b2a51ac5e35496856c40112692afeb2715b59538e611dbedbcd25'
+        'a910518b0de8764f2dfbcaa3495b7c7f3047ec85381e5905cd63ee88c3dec1f286844d057b9e3c679b9ec3fbc68e3336806e8ffeb2daad8c8899faef6929bf92'
+        'b71a5f768eeaab515a94df468a16ea23458b52ae0c5879cd4f79b2132aee0fe1b34538f3dcd191882d5b590ef3388760cb302438b6e405ed3b2f1701889141b3'
+        '2dcb24900f9eb294251a6400601ff5773c11429c19d8c685a3d2a3c3b720e5ff345f42a62e6ae830ea2b65b5669450e23d3ed1424efa27400110c02185ccc153'
         '2eca0fd11c44091b2cf0a59de232a8d9b30e6c0a16cb4ece11d8a9f54457fe14b7ec9dd58aa1e67828df113d83a46b077a80b683333dc23a28617fbb3fe13fd0'
-        '83746b7d3b3cfe66e5f3b931abaf907fd37071a003d22e4d0cb065f91f554f33533104ed3b4dbe58840cdcb438dfa69882ea099fcfbfd0e8df0cf28417ae60a7'
-        'a93db79ae5e75ede45217f6a3feaf2982f2c948dfe4a0695854339f6baceda1358bf98f6118c4b7291fe2a11670e4e0e4c4164328fa03e9bad6aa7fd20bf54a5'
+        '06f9c928afc3770d9b7b9617cac9b8324716cecea84bfa129a5b81d721fdbc9623bce8fbe6e3d61ad9c56f95a9b0cd4168a1df36edd5912d8f87862d2b621cde'
+        '32ecefb38b332be3ff5b5952dda1131bcb9c4f5d9033951874f781da1f3db451dbb313144ad8caa48a0d1826d8dba0b8a191d6496be8e6fecbb1c3a4593a4869'
         '1add7e57200df1899f48e0a0ba03351523c121eee95068aa7e332c3a3967089d78c4146ffd4528f0513b2228fbd2cfb72661b41427a6e3330b275edb83e23bbd'
-        '602388543678e45d4703e6165d718265a2a9e1a6f4c5359aa090ccd6eaa901d2f329da72814fc0064e9b08b936f70a0291d29da09b5d1ef68aa272058f589d44'
-        'cd4c02ee67d98084b6e4909eea77ca464d3cca838595538c5219710927aa42630fa67110f45297252c11f8e8c84d5a3c346a378b848d86ca14b4eb84505c1f74'
+        'b47dd34b68ce2bfcd670dc4b74b055b9a6e40f8d6d5564d2ea4025d3a7e21556db81d7ed655db6f7a5cb83f017ba98d65b7b587c6b125d4de1216da3b17aaec0'
+        'f8cb97b22032d0d8f2b46f75370647c5bd0761407c731f8bd4669007a10a9b7ed212b70274067d620c7f77c5da0fd30a3e16534a6f8b8bbe386f61523119e240'
         '0fa68a06d930796445f215ecb16a7dba7bf9cae1004318c766269fd403ba3a44bc46035672949fc3731cf9cf778630291a078fda98ef46dce1f1c27f08b02bbb'
         '83457d476468763e9e94ce6ea3ee7abf9ad123887e24c304067993922f0b4430786da797c27bf5b15acba57a30c5c7472fd0ff285089368b9b51ce085f33c254'
         '1c0814eefb6181a82437128c9d3c08dec0540c2353b8a317204c49b1510b311173897de4a737da6f0cc034bf1b23717dea54f0338e3794f6a56f7292f53937bc'
+        '85232156e722cb874e29e1f92513b24836553476d5ff379e8df32d307ca21709b5869edd80a3bb7fe757ae585bb45df21c89ae6f2218147a5812f171d946e094'
         '3b6fc965bc2b129fbf65308cfd0c64177fe6cb51ca1f1a96dcd99023e973ed8199a5f457849070b85eed2bfd9248d74a2280cb1dcf33103700483b3b8b499e7c'
         '4d9e07f4b3da1cfadfd0ecbe00d611bc9a6ff8a6b55dba58e8ba4647e10265564d0cd64eb82a2b3ba483bc307b909f25913416057dc54ba8224c92cbff39c70e'
         '28eb673ec695ab77ff067e20479edaba4d423b3f7f66dc00c1d30eee9a89ddc808aa1fa5e1167b679eb21ca4be941186171e79da24520d8391048b689aaac8ce'
@@ -153,6 +156,9 @@ prepare() {
 
     cd mozc/src
 
+    # Temp fix for Qt 6.12
+    sed -i -e 's|::mozc::gui::DictionaryContentTableWidget|mozc::gui::DictionaryContentTableWidget|g' ./gui/dictionary_tool/dictionary_tool.ui
+
     # Mozc: BSD-3-Clause
     printf '1. Mozc\n\n' > LICENSE
     sed -n 67,94p data/installer/credits_en.html >> LICENSE
@@ -177,8 +183,9 @@ prepare() {
     printf '6. Tamachi Phonetic Kanji Library\n\n' >> LICENSE
     sed -n 660,666p data/installer/credits_en.html >> LICENSE
 
-    sed -i -e "366s|jigyosyo.zip|jigyosyo-20260403.zip| ;
-               373s|ken_all.zip|ken_all-20260403.zip|" MODULE.bazel
+    # Use fixed local snapshots for the zip code data
+    sed -i -e "389s|jigyosyo.zip|jigyosyo-20260403.zip| ;
+               396s|ken_all.zip|ken_all-20260403.zip|" MODULE.bazel
 
     cd "${srcdir}"/merge-ut-dictionaries/src/merge/
 
@@ -188,7 +195,7 @@ prepare() {
                86s|zip_ref\.|| ;
                96s|zip_ref\.namelist()|os\.listdir(path='${srcdir}/mozc/src/data/dictionary_oss')| ;
                104s|zip_ref\.|| ;
-               169s|jawiki_index_file = .*|jawiki_index_file = '${srcdir}/jawiki-20260601-pages-articles-multistream-index.txt.bz2'| ;
+               169s|jawiki_index_file = .*|jawiki_index_file = '${srcdir}/jawiki-20261001-pages-articles-multistream-index.txt.bz2'| ;
                152,168d;89,90d;80,83d;67,79d ;
                7i import os" merge_dictionaries.py
 
