@@ -1,0 +1,33 @@
+From f946353a1899eb0e56a2b5f3dac45b412716854c Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Sat, 3 May 2025 17:03:55 +0800
+Subject: [PATCH] fix for boost 1.88.0
+
+
+2	2	src/core/debugger/debugger.cpp
+
+diff --git a/src/core/debugger/debugger.cpp b/src/core/debugger/debugger.cpp
+index e86aae8..af3f71c 100644
+--- a/src/core/debugger/debugger.cpp
++++ b/src/core/debugger/debugger.cpp
+@@ -6,7 +6,7 @@
+ #include <thread>
+ 
+ #include <boost/asio.hpp>
+-#include <boost/process/async_pipe.hpp>
++#include <boost/process/v1/async_pipe.hpp>
+ 
+ #include "common/logging/log.h"
+ #include "common/polyfill_thread.h"
+@@ -326,7 +326,7 @@ private:
+ 
+     struct ConnectionState {
+         boost::asio::ip::tcp::socket client_socket;
+-        boost::process::async_pipe signal_pipe;
++        boost::process::v1::async_pipe signal_pipe;
+ 
+         SignalInfo info;
+         Kernel::KScopedAutoObject<Kernel::KThread> active_thread;
+-- 
+2.49.0
+

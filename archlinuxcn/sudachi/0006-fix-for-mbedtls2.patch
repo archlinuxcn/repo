@@ -1,0 +1,80 @@
+From 3b417405c2300086c38c57a468b8fb9f2166ab20 Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Sat, 5 Apr 2025 22:59:21 +0800
+Subject: [PATCH 6/7] fix for mbedtls2
+
+
+2	8	externals/CMakeLists.txt
+2	2	src/CMakeLists.txt
+1	1	src/sudachi/CMakeLists.txt
+1	1	src/sudachi_cmd/CMakeLists.txt
+
+diff --git a/externals/CMakeLists.txt b/externals/CMakeLists.txt
+index 00615d7..7bf34ba 100644
+--- a/externals/CMakeLists.txt
++++ b/externals/CMakeLists.txt
+@@ -40,13 +40,8 @@ endif()
+ add_subdirectory(glad)
+ 
+ # mbedtls
+-add_subdirectory(mbedtls)
+-target_include_directories(mbedtls PUBLIC ./mbedtls/include)
+-if (NOT MSVC)
+-    target_compile_options(mbedcrypto PRIVATE
+-        -Wno-unused-but-set-variable
+-        -Wno-string-concatenation)
+-endif()
++set(ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:/usr/lib/mbedtls2/pkgconfig")
++pkg_check_modules(MbedTLS REQUIRED IMPORTED_TARGET GLOBAL mbedtls mbedcrypto)
+ 
+ # MicroProfile
+ add_library(microprofile INTERFACE)
+@@ -322,4 +317,3 @@ if (ARCHITECTURE_arm64 AND NOT TARGET sse2neon)
+     add_library(sse2neon INTERFACE)
+     target_include_directories(sse2neon INTERFACE sse2neon)
+ endif()
+-
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index a0eec56..aba1704 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -2,8 +2,8 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ 
+ # Enable modules to include each other's files
+-include_directories(.)
+-
++include_directories(. ${MbedTLS_INCLUDE_DIRS})
++link_directories(${MbedTLS_LIBRARY_DIRS})
+ # CMake seems to only define _DEBUG on Windows
+ set_property(DIRECTORY APPEND PROPERTY
+     COMPILE_DEFINITIONS $<$<CONFIG:Debug>:_DEBUG> $<$<NOT:$<CONFIG:Debug>>:NDEBUG>)
+diff --git a/src/sudachi/CMakeLists.txt b/src/sudachi/CMakeLists.txt
+index f0a1cdf..dd19f11 100644
+--- a/src/sudachi/CMakeLists.txt
++++ b/src/sudachi/CMakeLists.txt
+@@ -384,7 +384,7 @@ endif()
+ target_link_libraries(sudachi PRIVATE common core input_common frontend_common network video_core)
+ target_link_libraries(sudachi PRIVATE Boost::headers glad Qt${QT_MAJOR_VERSION}::Widgets)
+ target_link_libraries(sudachi PRIVATE ${PLATFORM_LIBRARIES} Threads::Threads)
+-
++target_link_libraries(sudachi PRIVATE mbedtls mbedcrypto)
+ target_link_libraries(sudachi PRIVATE Vulkan::Headers)
+ if (NOT WIN32)
+     target_include_directories(sudachi PRIVATE ${Qt${QT_MAJOR_VERSION}Gui_PRIVATE_INCLUDE_DIRS})
+diff --git a/src/sudachi_cmd/CMakeLists.txt b/src/sudachi_cmd/CMakeLists.txt
+index c5a7ce5..5f9fc57 100644
+--- a/src/sudachi_cmd/CMakeLists.txt
++++ b/src/sudachi_cmd/CMakeLists.txt
+@@ -29,7 +29,7 @@ add_executable(sudachi-cmd
+ )
+ 
+ target_link_libraries(sudachi-cmd PRIVATE common core input_common frontend_common)
+-target_link_libraries(sudachi-cmd PRIVATE glad)
++target_link_libraries(sudachi-cmd PRIVATE glad mbedtls mbedcrypto)
+ if (MSVC)
+     target_link_libraries(sudachi-cmd PRIVATE getopt)
+ endif()
+-- 
+2.49.0
+
