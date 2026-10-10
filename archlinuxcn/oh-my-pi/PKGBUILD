@@ -1,13 +1,13 @@
 # Maintainer: Bin Jin <bjin@protonmail.com>
 
 pkgname=oh-my-pi
-pkgver=18.6.1
+pkgver=18.8.5
 pkgrel=1
 pkgdesc="Coding agent with the IDE wired in"
 arch=('x86_64')
 url="https://omp.sh/"
 license=('MIT')
-depends=('gcc-libs' 'glibc' 'oniguruma' 'opus' 'pcre2' 'zstd')
+depends=('gcc-libs' 'glibc' 'icu' 'oniguruma' 'opus' 'pcre2' 'zstd')
 makedepends=('bun' 'cargo')
 optdepends=(
     'alsa-lib: ALSA fallback for live voice, STT, and TTS'
@@ -30,9 +30,9 @@ source=(
     "https://static.crates.io/crates/opus/opus-${_opus_ver}.crate"
     "skip-native-embed-for-aur.patch"
 )
-sha256sums=('d4689c4d2843e0403a0a87a14cad110c57b69b45f1a38c974683c6ac5039d5e9'
+sha256sums=('97005bd0000364a4f2959448600d4a13ac70cfe782e34fef0bba352d10c17947'
             '33718946cc77d4032911d4efe03a66dbcbfbd2bb16c3da06aaeadcc637c32216'
-            'b2fe93ad7ef36869d660cc0ec9a0a0e7196370035efd86b32901101aff2920d1')
+            'ee9666142eb12eed7994e3f6393bd548a18c2ffe436b996fdcf0707cee301958')
 
 _variants=('baseline:x86-64-v2' 'modern:x86-64-v3')
 _cargo_features=()
