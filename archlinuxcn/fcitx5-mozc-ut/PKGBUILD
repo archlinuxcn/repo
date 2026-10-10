@@ -4,24 +4,25 @@
 # Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 pkgname=fcitx5-mozc-ut
-pkgver=3.34.6239
-pkgrel=2
+pkgver=3.34.6345
+pkgrel=1
 pkgdesc='The Open Source edition of Google Japanese Input (Fcitx5 module)'
 arch=('x86_64')
 url='https://github.com/fcitx/mozc'
 license=('Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND GPL-2.0-or-later AND MIT AND NAIST-2003 AND Unicode-3.0 AND LicenseRef-Okinawa-Dictionary')
-depends=('fcitx5' 'mozc>=3.34.6239' 'qt6-base')
+depends=('fcitx5' 'mozc>=3.34.6345' 'qt6-base')
 makedepends=('git')
 optdepends=('fcitx5-configtool: configuration applet')
-provides=('fcitx5-mozc=3.34.6239' 'mozc-engine-module')
+provides=('fcitx5-mozc=3.34.6345' 'mozc-engine-module')
 conflicts=('fcitx5-mozc')
-source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=35898ee6c4f7424ae73000bbd754510d7ab772d0'
+source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=13ef96d765703805f57f7b1e6cd238e959640282'
         # Bazel module repo (copy of https://bcr.bazel.build/)
         'git+https://github.com/bazelbuild/bazel-central-registry.git#commit=b0cb0e8ec70689252e3b35f109ffa4a32329b900'
         # Bazel binary
         'https://github.com/bazelbuild/bazel/releases/download/9.0.2/bazel-9.0.2-linux-x86_64'
         # Bazel dependencies
         'https://github.com/abseil/abseil-cpp/releases/download/20260107.1/abseil-cpp-20260107.1.tar.gz'
+        'https://github.com/abseil/abseil-py/archive/refs/tags/v2.1.0.tar.gz'
         'https://github.com/bazelbuild/apple_support/releases/download/2.4.0/apple_support.2.4.0.tar.gz'
         'https://github.com/bats-core/bats-core/archive/v1.10.0.tar.gz'
         'https://github.com/bazel-contrib/bazel_features/releases/download/v1.42.1/bazel_features-v1.42.1.tar.gz'
@@ -55,6 +56,7 @@ source=('mozc-fcitx::git+https://github.com/fcitx/mozc.git#commit=35898ee6c4f742
         'tool.svg::https://raw.githubusercontent.com/google/material-design-icons/4.0.0/src/action/build/materialicons/24px.svg')
 noextract=('bazel-9.0.2-linux-x86_64'
            'abseil-cpp-20260107.1.tar.gz'
+           'v2.1.0.tar.gz'
            'apple_support.2.4.0.tar.gz'
            'v1.10.0.tar.gz'
            'bazel_features-v1.42.1.tar.gz'
@@ -79,10 +81,11 @@ noextract=('bazel-9.0.2-linux-x86_64'
            'rules_swift.3.5.0.tar.gz'
            'tar.bzl-v0.5.1.tar.gz'
            'zlib-1.3.1.tar.gz')
-b2sums=('907420f4311313e2c7621229f63878b97d47a3631efbbbceb62103024435c6bd6d7d2864ed5f8054bd37e03f6e21e0a02f1f41242304eb74b6d41d6e6e26d5e0'
+b2sums=('2cb9b99382d6edb6c54742b7131ae97b97716f12653a71860797062ef2fcfd366ab0dffb0d0fb0d85a76d392f107569159c2a4a030747270c14fa2e8d4cb5f29'
         '0fa68a06d930796445f215ecb16a7dba7bf9cae1004318c766269fd403ba3a44bc46035672949fc3731cf9cf778630291a078fda98ef46dce1f1c27f08b02bbb'
         '83457d476468763e9e94ce6ea3ee7abf9ad123887e24c304067993922f0b4430786da797c27bf5b15acba57a30c5c7472fd0ff285089368b9b51ce085f33c254'
         '1c0814eefb6181a82437128c9d3c08dec0540c2353b8a317204c49b1510b311173897de4a737da6f0cc034bf1b23717dea54f0338e3794f6a56f7292f53937bc'
+        '85232156e722cb874e29e1f92513b24836553476d5ff379e8df32d307ca21709b5869edd80a3bb7fe757ae585bb45df21c89ae6f2218147a5812f171d946e094'
         '3b6fc965bc2b129fbf65308cfd0c64177fe6cb51ca1f1a96dcd99023e973ed8199a5f457849070b85eed2bfd9248d74a2280cb1dcf33103700483b3b8b499e7c'
         '4d9e07f4b3da1cfadfd0ecbe00d611bc9a6ff8a6b55dba58e8ba4647e10265564d0cd64eb82a2b3ba483bc307b909f25913416057dc54ba8224c92cbff39c70e'
         '28eb673ec695ab77ff067e20479edaba4d423b3f7f66dc00c1d30eee9a89ddc808aa1fa5e1167b679eb21ca4be941186171e79da24520d8391048b689aaac8ce'
