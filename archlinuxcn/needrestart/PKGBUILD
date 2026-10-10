@@ -44,4 +44,7 @@ package() {
 
 	install -Dm444 "${srcdir}/needrestart.hook" \
 		"${pkgdir}/usr/share/libalpm/hooks/needrestart.hook"
+
+	# Install man page not included in `make install`
+	install -Dm644 "man/needrestart.1" "${pkgdir}/usr/share/man/man1/needrestart.1"
 }
