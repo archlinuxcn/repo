@@ -1,6 +1,6 @@
 pkgname=ez4connect-portable
 pkgver=1.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Imporved Qt-based ZJU-Connect GUI, sandboxed by Portable to improve security."
 arch=("x86_64")
 url='https://github.com/chenx-dust/EZ4Connect'
@@ -17,7 +17,9 @@ source=(
 	config.toml
 )
 
-sha256sums=('SKIP')
+sha256sums=('ef2865ce56413c0a3ec234004ec5c23bf73d336f20830e8d551f13b74f036f88'
+            '823ef021c548d81922c750385b8ad9f601c6c5130ee261faedee078bf333c204'
+            '98e1dfaab34f8db3dca741365acff03faf7fc550e7758de1bf32237a6690f124')
 
 build(){
 	cd source
