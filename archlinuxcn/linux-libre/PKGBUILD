@@ -9,7 +9,7 @@
 # Contributor (Parabola): Luke R. <g4jc@openmailbox.org>
 
 pkgbase=linux-libre
-pkgver=7.2.8
+pkgver=7.2.9
 pkgrel=1
 pkgdesc='Linux Libre'
 url='https://linux-libre.fsfla.org/'
@@ -45,7 +45,7 @@ source=("https://linux-libre.fsfla.org/pub/linux-libre/releases/${_basever}-gnu/
 source_x86_64=('config.x86_64')
 sha256sums=('235b6a5e23a8beadd6a35c28a92e59e04075cdbbdfa234ac84408706b8662638'
             'SKIP'
-            'bb131b457f41c7059a24bfa0a701d55403df6baaaca6d252d0a4212c492fdf5f'
+            '10c37d1c90b4f5155fa7b79a1c840b384d2ede0d764055e54e94010ca4baf08b'
             'SKIP'
             'bfd4a7f61febe63c880534dcb7c31c5b932dde6acf991810b41a939a93535494'
             'SKIP'
@@ -53,10 +53,10 @@ sha256sums=('235b6a5e23a8beadd6a35c28a92e59e04075cdbbdfa234ac84408706b8662638'
             'SKIP'
             '13bd7a8d9ed6b6bc971e4cd162262c5a20448a83796af39ce394d827b0e5de74'
             'SKIP')
-sha256sums_x86_64=('a4595f8805641c08322931a19cab366027447d2be297a3885ff7fc769a69b3cc')
+sha256sums_x86_64=('2d5dcf6576b5f58f4794a3fc6d29c285757ae618c9b2aa087df07257978701be')
 b2sums=('2009ed4bec5643a4166790cf98cee098fc092732c41b8e8f356c02b0addb5a35300bdc0f5db9cbd2f96b45100653b3f18bc299f6b1d5524d5b15347efa57ff43'
         'SKIP'
-        'acb6529371560e1961d75a8ae21ff1f5c68223c81ec090b06c78253f1f7077aa69f6cbace2aff7d6baa3986989360c3a077b9cbe56a2cb523c0fe2e96a2df9c9'
+        '174fc0f4914d7d38ecaa5927e9fbbdc1e5d37268c4466615a62f3f90e5b808ac67db178655f78869a4bf5cb1138ed35a6afd18719fee7ed1034104bec359ecde'
         'SKIP'
         '73fee2ae5cb1ffd3e6584e56da86a8b1ff6c713aae54d77c0dab113890fc673dc5f300eb9ed93fb367b045ece8fa80304ff277fe61665eccf7b7ce24f0c045eb'
         'SKIP'
@@ -64,7 +64,7 @@ b2sums=('2009ed4bec5643a4166790cf98cee098fc092732c41b8e8f356c02b0addb5a35300bdc0
         'SKIP'
         '580911af9431c066bbc072fd22d5e2ef65f12d8358cec5ff5a4f1b7deebb86cef6b5c1ad631f42350af72c51d44d2093c71f761234fb224a8b9dbb3b64b8201d'
         'SKIP')
-b2sums_x86_64=('cdbc9e6d70f136f860dcd7f824806af1852a25060b6ae68266b42d89c6d77848cda9b616c5c676a610cc6405b5eebdc4765ee7a88cd0cb8885f0ca2af7b65a6f')
+b2sums_x86_64=('630b205008179fc430cda55cffb66dffa213b4c2bf50fa250aadeed0bc724522879fe2b4ccdd4f4a0094be722e06994f3cb052e99f25712041a10b7e4181a565')
 validpgpkeys=('474402C8C582DAFBE389C427BCB7CF877E7D47A7'  # Alexandre Oliva
               '6DB9C4B4F0D8C0DC432CF6E4227CA7C556B2BA78') # David P.
 
