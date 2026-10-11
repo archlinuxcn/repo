@@ -19,9 +19,9 @@ function pkgver() {
 
 build() {
 	cd "$srcdir/ink-$pkgver"
-
+	export CFLAGS="${CFLAGS} -std=gnu17"
 	./configure --prefix=/usr
-	make -std=gnu17
+	make
 }
 
 package() {
