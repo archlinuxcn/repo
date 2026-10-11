@@ -1,0 +1,55 @@
+pkgname=ez4connect-portable
+pkgver=1.9.1
+pkgrel=1
+pkgdesc="Imporved Qt-based ZJU-Connect GUI, sandboxed by Portable to improve security."
+arch=("x86_64")
+url='https://github.com/chenx-dust/EZ4Connect'
+license=('GPL-3.0-or-later')
+depends=('hicolor-icon-theme' 'qt6-base>6.8.0' 'qt6-5compat>=6.8.0' 'qt6-webengine>=6.8.0' 'qt6-svg>=6.8.0' "portable")
+makedepends=('make' 'qt6-tools' 'gcc' 'cmake' 'extra-cmake-modules' 'git' 'zju-connect-bin')
+provides=('ez4connect')
+conflicts=('ez4connect')
+_appname='EZ4Connect'
+
+source=(
+	"source::git+${url}#tag=v${pkgver}"
+	desktop.file
+	config.toml
+)
+
+sha256sums=('SKIP')
+
+build(){
+	cd source
+	mkdir -p build
+	cmake -DNIGHTLY_BUILD=OFF -DREL_VER=${pkgver} -S . -B build
+	cmake --build build --target ${_appname}
+}
+package() {
+	cd source
+
+	install \
+		-vDm755 \
+		"/usr/bin/zju-connect" \
+		-t "${pkgdir}/usr/bin"
+
+	install \
+		-vDm755 \
+		"build/${_appname}" \
+		"${pkgdir}/usr/bin/ez4connect"
+	install \
+		-vDm644 \
+		"resource/icon.png" \
+		"${pkgdir}/usr/share/icons/hicolor/scalable/apps/EZ4Connect.png"
+
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy firefox \
+		--hash true \
+		--config-ng "${srcdir}/config.toml" \
+		--desktop-file "${srcdir}/firefox.desktop"
+}
