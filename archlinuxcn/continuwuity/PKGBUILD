@@ -10,7 +10,7 @@ pkgver=26.9.1
 pkgrel=1
 epoch=2
 makedepends=("rust" "cargo" "git" "clang")
-depends=("gcc-libs" "glibc" "liburing" "jemalloc" "zstd")
+depends=("libgcc" "libstdc++" "gcc-libs" "glibc" "liburing" "jemalloc" "zstd")
 source=("git+https://forgejo.ellis.link/continuwuation/continuwuity.git#tag=v$(echo ${pkgver} | sed 's|_|-|g')")
 sha256sums=('e54f48a70cf4f7646bc2242c98c347c906cc140274782adec12694cef089cb03')
 provides=("conduwuit" "continuwuity")
