@@ -48,8 +48,8 @@ package() {
 	portable-packer \
 		-v \
 		--distro arch \
-		--mode copy firefox \
+		--mode post \
 		--hash true \
 		--config-ng "${srcdir}/config.toml" \
-		--desktop-file "${srcdir}/firefox.desktop"
+		--desktop-file "${srcdir}/desktop.file"
 }
