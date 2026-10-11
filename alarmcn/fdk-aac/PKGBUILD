@@ -1,7 +1,7 @@
 #
 
 pkgname=fdk-aac
-pkgver=2.0.3
+pkgver=3.0.0
 pkgrel=1
 pkgdesc='A standalone library of the Fraunhofer FDK AAC code from Android.'
 arch=('x86_64' 'aarch64')
@@ -10,7 +10,7 @@ license=('custom')
 makedepends=(cmake)
 provides=(libfdk-aac.so)
 source=("https://github.com/mstorsjo/fdk-aac/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('e25671cd96b10bad896aa42ab91a695a9e573395262baed4e4a2ff178d6a3a78')
+sha256sums=('8538ea8f0f9915e460c106a13e1866a9e13c7ee48c1b67d0b2cf7b4e8159bd1a')
 
 build() {
     cd fdk-aac-${pkgver}
