@@ -18,10 +18,10 @@ function pkgver() {
 }
 
 build() {
-  cd "$srcdir/ink-$pkgver"
+	cd "$srcdir/ink-$pkgver"
 
-  ./configure --prefix=/usr
-  make
+	./configure --prefix=/usr
+	make -std=gnu17
 }
 
 package() {
