@@ -2,14 +2,14 @@
 # Contributor: Eric Bélanger <eric@archlinux.org>
 
 pkgname=wxwidgets-gtk2
-pkgver=3.2.11
+pkgver=3.2.12
 pkgrel=1
 arch=(x86_64)
 url='https://wxwidgets.org'
 license=(custom:wxWindows)
 makedepends=(cmake gst-plugins-base glu libnotify qt5-base sdl2 libmspack gtk2)
 source=(https://github.com/wxWidgets/wxWidgets/releases/download/v$pkgver/wxWidgets-$pkgver.tar.bz2)
-sha256sums=('6a129015bce2e914e4bf61ec4411854ad962801d47e92f2eb8340adb6a90af08')
+sha256sums=('a62719bb5e1dcc41c1a6fc1eecd499c7ee8521f70402c7b1bb3342a1e16344e0')
 
 build() {
   cmake -B build-gtk2 -S wxWidgets-$pkgver \
