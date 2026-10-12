@@ -18,7 +18,7 @@ post_install() {
         return 1
     fi
     # Then copy assets
-    v2raya_backup=/etc/v2raya.old.pacold
+    v2raya_backup=/etc/v2raya.old
     timestamp=''
     if [ -e "$v2raya_backup" ]; then
         timestamp=$(date +%s)
@@ -30,8 +30,8 @@ post_install() {
     printf "\x1b[33m"
     cat << EOF
 /////////////////////////////////////////////////
-//    !! Old v2raya assets detected !!         //
-// Old assets moved to /etc/v2raya.old.pacold  //
+//     !! Old v2raya assets detected !!        //
+//    Old assets moved to /etc/v2raya.old      //
 //  Please start new v2raya service manually!  //
 EOF
     test $timestamp && cat << EOF
