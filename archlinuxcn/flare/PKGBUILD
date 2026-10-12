@@ -2,7 +2,7 @@
 # Contributor: Julian <juliannfairfax@protonmail.com>
 
 pkgname=flare
-pkgver=0.22.3
+pkgver=0.22.4
 pkgrel=1
 epoch=1
 pkgdesc="Chat with your friends on Signal"
@@ -28,7 +28,7 @@ depends=(
 )
 optdepends=("feedbackd: for vibrating notifications")
 source=("${url}/-/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('d7936b4fa1102151d100d58a8373bcf5fa87d0236a62c64de33584e57fd69208')
+sha256sums=('68285ed6b2da776cc6bb3e72ff7fecdaac14a2ddae64903f9b1d756a45459684')
 
 build() {
 	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
