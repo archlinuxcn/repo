@@ -88,8 +88,8 @@ diff -rupN FreeImage/Makefile.gnu FreeImage-new/Makefile.gnu
 -# LibJXR
 -CXXFLAGS += -D__ANSI__
 -CXXFLAGS += $(INCLUDE)
-+override CFLAGS += $(INCLUDE) -D__ANSI__ -I/usr/include/jxrlib $(shell pkg-config --cflags OpenEXR libopenjp2 libraw libpng libtiff-4 libwebp libwebpmux zlib)
-+override LDFLAGS += -ljpeg -ljpegxr -ljxrglue $(shell pkg-config --libs OpenEXR libopenjp2 libraw libpng libtiff-4 libwebp libwebpmux zlib)
++override CFLAGS += $(INCLUDE) $(shell pkg-config --cflags OpenEXR libopenjp2 libraw libpng libtiff-4 libwebp libwebpmux zlib libjxr)
++override LDFLAGS += -ljpeg $(shell pkg-config --libs OpenEXR libopenjp2 libraw libpng libtiff-4 libwebp libwebpmux zlib libjxr)
  
  ifeq ($(shell sh -c 'uname -m 2>/dev/null || echo not'),x86_64)
 -	CFLAGS += -fPIC
