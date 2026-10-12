@@ -1,7 +1,7 @@
 # Maintainer: Zdeněk Biberle <zdenek at biberle dot net>
 pkgbase=snx-rs
 pkgname=(snx-rs-headless snx-rs)
-pkgver=6.4.1
+pkgver=6.5.0
 pkgrel=1
 pkgdesc="Rust client for Checkpoint VPN tunnels"
 arch=(x86_64)
@@ -9,7 +9,7 @@ url=https://github.com/ancwrd1/snx-rs
 license=(AGPL-3.0-only)
 makedepends=(cargo gtk4 webkitgtk-6.0)
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/ancwrd1/$pkgbase/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('0af86dc45830d724b84bd0fdb077084a4c00cfcf4e8a76e3fe78daed30a68658')
+sha256sums=('1c5007d87bef9b3186b3fb85879ff74d6b2a7dcb180a994f5174db194a2303aa')
 
 prepare() {
   cd "$pkgbase-$pkgver"
@@ -32,8 +32,8 @@ check() {
 
 package_snx-rs-headless() {
   depends=(glibc libgcc openssl sqlite)
-  conflicts=("snx-rs<${pkgver}-${pkgrel}")
-  replaces=("snx-rs<${pkgver}-${pkgrel}")
+  conflicts=("snx-rs<6.0.6-2")
+  replaces=("snx-rs<6.0.6-2")
 
   cd "$pkgbase-$pkgver"
   install -Dm0755 -t "$pkgdir/usr/bin/" target/release/{snx-rs,snxctl}
