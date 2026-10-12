@@ -1,0 +1,48 @@
+--- a/third_party/devtools-frontend/src/front_end/core/host/DispatchHttpRequestClient.ts
++++ b/third_party/devtools-frontend/src/front_end/core/host/DispatchHttpRequestClient.ts
+@@ -14,7 +14,7 @@ export enum ErrorType {
+ }
+ 
+ export class DispatchHttpRequestError extends Error {
+-  constructor(readonly type: ErrorType, readonly response?: DispatchHttpRequestResult, options?: ErrorOptions) {
++  constructor(readonly type: ErrorType, readonly response?: DispatchHttpRequestResult | undefined, options?: ErrorOptions) {
+     super(undefined, options);
+   }
+ }
+--- a/third_party/devtools-frontend/src/scripts/build/esbuild.js
++++ b/third_party/devtools-frontend/src/scripts/build/esbuild.js
+@@ -19,9 +19,9 @@ process.env.GODEBUG = 'asyncpreemptoff=1
+ // esbuild module uses binary in this path.
+ const binaryName = os.type() === 'Windows_NT' ? 'esbuild.exe' : 'esbuild';
+ process.env.ESBUILD_BINARY_PATH = path.join(
+-    devtoolsRootPath(),
+-    'third_party',
+-    'esbuild',
++    '/',
++    'usr',
++    'bin',
+     binaryName,
+ );
+ // This needs to be after the ESBUILD_BINARY_PATH is set
+--- a/third_party/devtools-frontend/src/scripts/build/ninja/bundle.gni
++++ b/third_party/devtools-frontend/src/scripts/build/ninja/bundle.gni
+@@ -35,7 +35,7 @@ template("bundle") {
+       devtools_location_prepend + "scripts/devtools_paths.js",
+     ]
+ 
+-    _esbuild = devtools_location_prepend + "third_party/esbuild/esbuild"
++    _esbuild = "/usr/bin/esbuild"
+     if (host_os == "win") {
+       inputs += [ _esbuild + ".exe" ]
+     } else {
+--- a/third_party/devtools-frontend/src/scripts/build/typescript/typescript.gni
++++ b/third_party/devtools-frontend/src/scripts/build/typescript/typescript.gni
+@@ -190,7 +190,7 @@ template("legacy_ts_library") {
+ 
+     if (devtools_skip_typecheck) {
+       args += [ "--use-esbuild" ]
+-      _esbuild = devtools_location_prepend + "third_party/esbuild/esbuild"
++      _esbuild = "/usr/bin/esbuild"
+       if (host_os == "win") {
+         inputs += [ _esbuild + ".exe" ]
+       } else {

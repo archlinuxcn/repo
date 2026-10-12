@@ -1,0 +1,32 @@
+--- a/third_party/devtools-frontend/src/scripts/build/typescript/typescript_vars.gni
++++ b/third_party/devtools-frontend/src/scripts/build/typescript/typescript_vars.gni
+@@ -6,7 +6,7 @@ import("//build/toolchain/rbe.gni")
+ import("../ninja/vars.gni")
+ 
+ if (host_os == "linux") {
+-  tsc_binary = "//third_party/typescript/linux-amd64/src/lib/tsc"
++  tsc_binary = "/usr/bin/tsc"
+ } else if (host_os == "win") {
+   tsc_binary = "//third_party/typescript/windows-amd64/src/lib/tsc.exe"
+ } else if (host_os == "mac") {
+--- a/third_party/devtools-frontend/src/third_party/typescript/typescript.py
++++ b/third_party/devtools-frontend/src/third_party/typescript/typescript.py
+@@ -10,6 +10,7 @@ import os
+ 
+ 
+ def GetBinaryPath():
++    return "/usr/bin/tsc"
+     if platform.machine() == 'arm64':
+         darwin_path = 'mac-arm64'
+     else:
+--- a/ui/webui/webui_features.gni
++++ b/ui/webui/webui_features.gni
+@@ -33,7 +33,7 @@ declare_args() {
+ 
+   # Enable the native TypeScript compiler (tsgo) instead of the JS-based one.
+   # TODO(crbug.com/423789047): Remove this flag once fully committed to v7.
+-  use_typescript_go = true
++  use_typescript_go = false
+ }
+ 
+ if (enable_cast_receiver || is_cast_android || is_castos) {

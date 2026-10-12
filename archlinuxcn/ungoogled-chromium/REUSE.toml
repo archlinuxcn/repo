@@ -52,8 +52,9 @@ path = [
     "increase-fortify-level.patch",
     "use-oauth2-client-switches-as-default.patch",
     "chromium-150-revert-avx-flag-change.patch",
-    "chromium-150-fix-ar-unbundle.patch",
-    "chromium-152-fix-gn-no-public_inputs.patch",
+    "chromium-154-fix-gn-no-public_inputs.patch",
+    "chromium-152-unbundle-minizip-undo-unicode.patch",
+    "chromium-152-unbundle-opus-devtools.patch",
 ]
 SPDX-FileCopyrightText = "chromium contributors"
 SPDX-License-Identifier = "BSD-3-Clause"
@@ -61,8 +62,10 @@ SPDX-License-Identifier = "BSD-3-Clause"
 [[annotations]]
 path = [
     "chromium-153-hermetic-python.patch",
-    "chromium-153-typescript.patch",
-    "chromium-153-crubit.patch",
+    "chromium-154-typescript.patch",
+    "chromium-154-fix-gn-no-public_inputs.patch",
+    "chromium-154-use-system-esbuild.patch",
+    "chromium-154-remove-private_verification_tokens.patch",
 ]
 SPDX-FileCopyrightText = "2015-2026 The ungoogled-chromium Authors"
 SPDX-License-Identifier = "BSD-3-Clause"
@@ -85,7 +88,7 @@ SPDX-License-Identifier = "BSD-2-Clause"
 path = [
     "chromium-149-drop-unknown-clang-flag.patch",
     "chromium-149-use-of-undeclared-identifier-ERROR.patch",
-    "chromium-152-crubit.patch",
+    "chromium-154-crubit.patch",
 ]
 SPDX-FileCopyrightText = "2003-2026 Nixpkgs/NixOS contributors"
 SPDX-License-Identifier = "MIT"
@@ -96,5 +99,4 @@ path = [
     "chromium-152-unbundle-opus-devtools.patch",
 ]
 SPDX-FileCopyrightText = "LN Liberda <lauren@selfisekai.rocks>"
-
 SPDX-License-Identifier = "BSD-3-Clause"

@@ -11,14 +11,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=153.0.8010.52
+pkgver=154.0.8037.97
 pkgrel=1
 _launcher_ver=8
 _manual_clone=1
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=153.0.8010.52-1
+_uc_ver=154.0.8037.97-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -64,6 +64,7 @@ depends=(
 makedepends=(
   'clang'
   'compiler-rt'
+  'esbuild'
   'git'
   'gn'
   'go'
@@ -79,6 +80,7 @@ makedepends=(
   'rust-bindgen'
   'rust'
   'typescript'
+  'vulkan-headers'
 )
 optdepends=('pipewire: WebRTC desktop sharing under Wayland'
             'kdialog: support for native dialogs in Plasma'
@@ -99,20 +101,22 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-149-drop-unknown-clang-flag.patch
         chromium-149-use-of-undeclared-identifier-ERROR.patch
         chromium-150-revert-avx-flag-change.patch
-        chromium-152-fix-gn-no-public_inputs.patch
         chromium-152-unbundle-minizip-undo-unicode.patch
         chromium-152-unbundle-opus-devtools.patch
         chromium-153-hermetic-python.patch
         chromium-153-iamf-tools-unbundled-opus.patch
-        chromium-153-typescript.patch
-        chromium-153-crubit.patch
+        chromium-154-use-system-esbuild.patch
+        chromium-154-fix-gn-no-public_inputs.patch
+        chromium-154-typescript.patch
+        chromium-154-crubit.patch
+        chromium-154-remove-private_verification_tokens.patch
         compiler-rt-adjust-paths.patch
         increase-fortify-level.patch
         enable-widevine-arm64.patch
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
 sha256sums=('645f64566cfbb780747430d53ff3656f03639f89fed9544c1eadd4c17e7b1c82'
-            'c98a3a5c243471522d8aefc079f62bdcbc7b953e34dc6187197e4abff03a0a94'
+            '489509cd6f3a00ae7c2e56f3484da62b7d153c086899edf263ffd7e0c95e2b74'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
@@ -121,13 +125,15 @@ sha256sums=('645f64566cfbb780747430d53ff3656f03639f89fed9544c1eadd4c17e7b1c82'
             '1b5190fa030850cf30a97dc90e35b31f3097243c88743fbfaedbd64ea80f1327'
             '951514535be65f0e2f84e82305d96292be1da353c1427ba1048ea24be70003c4'
             '5f6ccb7b945c8a13c690493723bad816b36f2f25792d47e677b56f8200907e60'
-            '50115642099ac131f40c419cbd12ed72e352538002d4bdc11ab657335891d03b'
             '890e5d98088ef1c7c075a551442f03385d1db266cad8a65576704a22720683f9'
             '3276453f2ce655b6286476f48d4df837be952d9447afa46583f79ec71f2288c3'
             'ebf74154266d0b6d6cc957c413f845052c5fcfce7745befb8821595cdf3f7d49'
             '2ab9fbe653829ce692f83ee780aad07e8c83a6686e51ab9459ad736cfa2850ee'
-            '44c86a7c26d726559d5bd06a64f81e6bcced7ab4dc949c899e4fd2c64ff37a16'
-            'a20e615fa03713e464fc3f2966c84e2130b6d942a4c8b5919ba0bf8320d39ed4'
+            '017e32d7c92a2c3d672e0535d52a27be1b805aa4dfe7d29cb1c1552460ccad64'
+            '7f39267af6bd60cc19244ca43684e18a0bb441b197fa1627ca4c4d97fbc759ca'
+            'd061cf4aeba21b1d2edabc28afd38106246b99aa5ec699e1b9ee5ca8b76d8a23'
+            'a82147f07982d49b0744c53c5fc038d4de1ef7d9a828b6280abbb49462b623eb'
+            '0cc5f7c7ccf0927c0bbfdb9e797dc5b1f4c9f021e8a01d943121d3ee4e6416bf'
             'ec8e49b7114e2fa2d359155c9ef722ff1ba5fe2c518fa48e30863d71d3b82863'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             '5ee4bb69379ac0cea7946c9f8f4ca9e20e0a9e4ee2ee9121eb0ebbb94dd7e928'
@@ -238,9 +244,6 @@ prepare() {
   # Credit: https://github.com/ungoogled-software/ungoogled-chromium/pull/3837
   patch -Np1 -i ../chromium-150-revert-avx-flag-change.patch
 
-  # Just the reverted commit 8dab8b761385b7946588232e4e2a8c116f9293c3
-  patch -Np1 -i "$srcdir/chromium-152-fix-gn-no-public_inputs.patch" -d third_party/devtools-frontend/src
-
   patch -Np1 -i ../chromium-152-unbundle-minizip-undo-unicode.patch
 
   patch -Np1 -i ../chromium-152-unbundle-opus-devtools.patch
@@ -254,12 +257,21 @@ prepare() {
   # for the unbundled system Opus build
   patch -Np1 -i ../chromium-153-iamf-tools-unbundled-opus.patch
 
+  patch -Np1 -i ../chromium-154-use-system-esbuild.patch
+
+  patch -Np1 -i ../chromium-154-fix-gn-no-public_inputs.patch
+
   # Work around TypeScript becoming a build dependency: disable tsgo for the
   # WebUI and point devtools at the system tsc binary
-  # https://github.com/ungoogled-software/ungoogled-chromium/pull/3946
-  patch -Np1 -i ../chromium-153-typescript.patch
+  # https://github.com/ungoogled-software/ungoogled-chromium/pull/3966
+  patch -Np1 -i ../chromium-154-typescript.patch
 
-  patch -Np1 -i ../chromium-153-crubit.patch
+  patch -Np1 -i ../chromium-154-crubit.patch
+
+  patch -Np1 -i ../chromium-154-remove-private_verification_tokens.patch
+
+  rm -rf third_party/devtools-frontend/src/node_modules/esbuild/
+  ln -s /usr/lib/node_modules/esbuild/ third_party/devtools-frontend/src/node_modules/esbuild
 
   if (( !_system_clang )); then
     # Use prebuilt rust as system rust cannot be used due to the error:
@@ -286,7 +298,7 @@ prepare() {
            third_party/rust-toolchain/bin \
            third_party/jdk/current/bin \
            third_party/gperf/cipd/bin \
-           third_party/dawn/tools/golang/linux-amd64/bin
+           third_party/dawn/tools/golang/linux-amd64/bin \
 
   ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
   ln -s /usr/bin/java third_party/jdk/current/bin/
@@ -444,7 +456,9 @@ package() {
   sed -i \
     -e 's/@@MENUNAME/Chromium/g' \
     -e 's/@@PACKAGE/chromium/g' \
-    -e 's/@@usr_bin_symlink_name/chromium/g' \
+    -e 's/@@desktop_exec/chromium/g' \
+    -e 's/@@desktop_icon/chromium/g' \
+    -e 's/@@startup_wm_class/chromium/g' \
     -e 's|@@uri_scheme|x-scheme-handler/chromium;|g' \
     -e 's/@@extra_desktop_entries//g' \
     "$pkgdir/usr/share/applications/chromium.desktop" \
