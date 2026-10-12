@@ -1,0 +1,46 @@
+post_install() {
+    # Test if found assets from v2raya 2.5.0+
+    test ! -f /etc/v2raya/v2raya.db && return 0
+
+    # Is systemd available?
+    if ! systemd-detect-virt --chroot && systemd-notify --booted; then
+        try_systemctl=systemctl
+    else
+        try_systemctl=:
+    fi
+
+    # First shutdown new v2raya
+    $try_systemctl is-active --quiet v2raya &>/dev/null && $try_systemctl stop v2raya
+    # Exit if v2raya process still found
+    if pgrep -x v2raya &>/dev/null; then
+        printf "\x1b[33m%s\n\x1b[0m" \
+            "Failed to stop v2raya process! Please backup new v2raya assets manually!"
+        return 1
+    fi
+    # Then copy assets
+    v2raya_backup=/etc/v2raya.new
+    timestamp=''
+    if [ -e "$v2raya_backup" ]; then
+        timestamp=$(date +%s)
+        mv $v2raya_backup $v2raya_backup.$timestamp || return 1
+    fi
+    mv /etc/v2raya $v2raya_backup || return 1
+    install -dm750 /etc/v2raya || return 1
+
+    printf "\x1b[33m"
+    cat << EOF
+/////////////////////////////////////////////////
+//      !! New v2raya assets detected !!       //
+//     New assets moved to /etc/v2raya.new     //
+//  Please start old v2raya service manually!  //
+EOF
+    test $timestamp && cat << EOF
+// Prior backup moved to $v2raya_backup.$timestamp //
+EOF
+    cat << EOF
+/////////////////////////////////////////////////
+EOF
+    printf "\x1b[0m"
+
+    return 0
+}
