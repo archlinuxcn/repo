@@ -1,0 +1,80 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+# Contributor: Dct Mei <dctxmei@yandex.com>
+
+pkgname=v2raya-next
+pkgver=2.5.9
+pkgrel=1
+pkgdesc="A web GUI client of Project V (with vibe-coded upstream updates)"
+arch=(x86_64)
+url="https://github.com/v2rayA/v2rayA"
+license=(AGPL-3.0-only)
+depends=(glibc hicolor-icon-theme)
+makedepends=(git go nodejs yarn)
+source=("$pkgname::git+$url.git#tag=v$pkgver"
+        "39-v2raya-restart.hook")
+b2sums=('8c146dfb0ff2bed0e1363486b12d0d34213ae803f1b820b09279d6edfc76a8ec6cb70e61401e5259fc19e5bf914dc48e4cc69395e52a6b3467d47ef5416f73e4'
+        '1e963c1d7b7865e6dc7897d1521420b20e13860632158824cc02ac0c8bd67b81c7cb45779b1f700eb31342b04326d76826507a86b9c4c99d89da720a71cf61aa')
+backup=("etc/default/v2raya")
+conflicts=(v2raya)
+install="backup-old.install"
+
+prepare() {
+    cd "$pkgname"
+    export YARN_CACHE_FOLDER="$srcdir/yarn-cache"
+    export GOPATH="$srcdir"
+    export YARN_IGNORE_ENGINES=true
+
+    pushd gui
+        yarn install --frozen-lockfile
+    popd
+
+    pushd service
+        go mod download -modcacherw
+    popd
+
+    pushd core
+        go mod download -modcacherw
+    popd
+}
+
+build() {
+    cd "$pkgname"
+
+    pushd gui
+        OUTPUT_DIR="../service/server/router/web" yarn run build
+    popd
+
+    export GOFLAGS="-buildmode=pie -mod=readonly -modcacherw"
+    export CGO_CPPFLAGS="${CPPFLAGS}"
+    export CGO_CXXFLAGS="${CXXFLAGS}"
+    export CGO_CFLAGS="${CFLAGS}"
+    export CGO_LDFLAGS="${LDFLAGS}"
+    _ldflags="-compressdwarf=false -linkmode external"
+    pushd service
+        go build -ldflags "-X github.com/v2rayA/v2rayA/conf.Version=$pkgver $_ldflags" -o v2raya
+        ./v2raya --report config | fold -sw78 | sed -E '1,6d;s/^([^#].+)/# \1/' > v2raya.conf
+    popd
+
+    pushd core
+        go build -ldflags "-X main.Version=$pkgver $_ldflags" -o v2raya_core ./main
+    popd
+}
+
+package() {
+    depends+=('v2ray-domain-list-community' 'v2ray-geoip')
+
+    cd "$pkgname"
+    install -Dm 644 LICENSE -t "$pkgdir/usr/share/licenses/v2raya/"
+    install -Dm 644 service/v2raya.conf "$pkgdir/etc/default/v2raya"
+    install -D service/v2raya -t "$pkgdir/usr/bin/"
+    install -D core/v2raya_core -t "$pkgdir/usr/bin/"
+    install -dm 750 "$pkgdir/etc/v2raya/"
+    install -dm 755 "$pkgdir/usr/share/v2raya/"
+    ln -sf /usr/share/v2ray/geoip.dat "$pkgdir"/usr/share/v2raya/geoip.dat
+    ln -sf /usr/share/v2ray/geosite.dat "$pkgdir"/usr/share/v2raya/geosite.dat
+    install -Dm 644 install/universal/v2raya.desktop -t "$pkgdir/usr/share/applications/"
+    install -Dm 644 install/universal/v2raya.service -t "$pkgdir/usr/lib/systemd/system/"
+    install -Dm 644 install/universal/v2raya-lite.service -t "$pkgdir/usr/lib/systemd/user/"
+    install -Dm 644 gui/public/img/icons/android-chrome-512x512.png "$pkgdir/usr/share/icons/hicolor/512x512/apps/v2raya.png"
+    install -Dm 644 "$srcdir/39-v2raya-restart.hook" -t "$pkgdir/usr/share/libalpm/hooks/"
+}

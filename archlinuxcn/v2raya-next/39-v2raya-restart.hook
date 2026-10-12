@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Path
+Target = usr/bin/v2raya
+
+[Action]
+Description = Restarting v2rayA on demand...
+Depends = systemd
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/systemd-hook restart v2raya.service
