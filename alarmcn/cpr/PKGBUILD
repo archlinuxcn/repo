@@ -5,7 +5,7 @@
 # Contributor: Mark Wagie <mark dot wagie at proton dot me>
 
 pkgname=cpr
-pkgver=1.15.0
+pkgver=1.15.1
 pkgrel=1
 pkgdesc="C++ Requests: Curl for People, a spiritual port of Python Requests."
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -15,7 +15,7 @@ depends=('curl')
 makedepends=('cmake' 'gtest')
 provides=("lib${pkgname}.so")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('dfd98b3a176a1f9ec20cbfe985d65426c1c9d4439411348cd5567ac2f075ec92')
+sha256sums=('c2fc62a030c4ca5d7c3517e8068531297f938bf4ab52bf951d4fc9bbc9222716')
 
 build() {
 	cmake -B build -S "${pkgname}-${pkgver}" \
