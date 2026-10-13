@@ -2,7 +2,7 @@
 # shellcheck disable=SC2154
 # Author: Patrick Brisbin <pbrisbin@gmail.com>
 pkgname=downgrade
-pkgver=12.0.3
+pkgver=12.0.4
 pkgrel=1
 pkgdesc="Bash script for downgrading one or more packages to a version in your cache or the A.L.A."
 arch=('any')
@@ -18,4 +18,4 @@ package() {
 
   make DESTDIR="$pkgdir" PREFIX=/usr install
 }
-sha256sums=('94591a763d95242b8f19543bc4b6b3101922d8544c3f4e157b2fa60a50089067')
+sha256sums=('6049701f233ecbc39a1b0b4c7921c1433dda12a1545b55f6264f60867abf84ba')
