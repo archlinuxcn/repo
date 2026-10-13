@@ -2,7 +2,7 @@
 
 pkgname=piclist
 _pkgname=PicList
-pkgver=3.5.0
+pkgver=3.6.0
 pkgrel=1
 _electronversion=39
 pkgdesc="A powerful cloud storage and image hosting management tool"
@@ -11,11 +11,11 @@ url='https://piclist.cn/'
 _ghurl='https://github.com/Kuingsmile/PicList'
 license=('MIT')
 depends=("electron${_electronversion}" 'bash' 'hicolor-icon-theme')
-makedepends=('nodejs-lts-jod' 'npm' 'yarn' 'git')
+makedepends=('nodejs-lts-jod' 'pnpm' 'npm' 'git')
 source=("${pkgname}-${pkgver}.tar.gz::${_ghurl}/archive/refs/tags/v${pkgver}.tar.gz"
         "${pkgname}.desktop"
         "${pkgname}.sh")
-sha256sums=('b535afcb13bdcf80d44820a2edb3ce8dbf24f108b80a1311a9e3a9d4636b9694'
+sha256sums=('287c46c4c8842ef977775599a63914fd1e6c39134f4e908a58a614d329b9f22c'
             '96792576ff904881c2d58e6b7a4aa06aff9d7fa07e950d603c45edda7c4b4de2'
             '4b1dc5f32f0295bd672ea0ff12ac63c98256e1e654d864401fb4f1a6d4b3d8f6')
 
@@ -33,10 +33,14 @@ prepare() {
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export NODE_ENV=development
     export SYSTEM_ELECTRON_VERSION="$(electron${_electronversion} -v | sed 's/v//g')"
-    export YARN_CACHE_FOLDER="${srcdir}/.yarn_cache"
+    export PNPM_HOME="${srcdir}/.pnpm"
+    pnpm config set store-dir "${srcdir}/.pnpm-store"
 
-    yarn config set --home enableTelemetry 0
-    yarn install
+    pnpm install --shamefully-hoist
+
+    # Workaround for ESM compatibility
+    find node_modules -path '*/signal-exit/index.js' -exec sed -i '$a module.exports.onExit = module.exports;' {} +
+    find node_modules -path '*/brace-expansion/index.js' -exec sed -i '$a module.exports.expand = module.exports;' {} +
 }
 
 build() {
@@ -44,14 +48,15 @@ build() {
 
     export ELECTRON_SKIP_BINARY_DOWNLOAD=1
     export NODE_ENV=production
-    export YARN_CACHE_FOLDER="${srcdir}/.yarn_cache"
+    export PNPM_HOME="${srcdir}/.pnpm"
     electronDist="/usr/lib/electron${_electronversion}"
 
-    yarn run prebuild
+    pnpm run build:app
 
     pushd node_modules
 
-    rm -rf @img/*musl*
+    rm -rf @img/*linux-arm64* @img/*darwin* @img/*win32* @img/*musl*
+    rm -rf @resvg/*linux-arm64* @resvg/*darwin* @resvg/*win32*
 
     find -name '*.map' -type f -print -delete
     find -name '*.ts' -type f -print -delete
@@ -68,7 +73,7 @@ build() {
 
     popd
 
-    yarn electron-builder --linux dir -c.electronDist="${electronDist}"
+    pnpm exec electron-builder --linux dir -c.electronDist="${electronDist}" -c.electronVersion="${SYSTEM_ELECTRON_VERSION}"
 }
 
 package(){
@@ -76,6 +81,8 @@ package(){
 
     install -Dm755 -d "${pkgdir}/usr/lib/${pkgname}"
     cp -Pr --no-preserve=ownership "${srcdir}/${_pkgname}-${pkgver}/dist_electron/linux-unpacked/resources/"* "${pkgdir}/usr/lib/${pkgname}"
+    rm -rf "${pkgdir}/usr/lib/${pkgname}/plugin-runtime/npm"
+    ln -sf "/usr/lib/node_modules/npm" "${pkgdir}/usr/lib/${pkgname}/plugin-runtime/npm"
 
     for res in 256 512; do
         install -Dm644 "${srcdir}/${_pkgname}-${pkgver}/build/icons/${res}x${res}.png" \
