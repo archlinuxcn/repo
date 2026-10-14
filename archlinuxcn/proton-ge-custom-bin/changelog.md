@@ -1,3 +1,115 @@
+## GE-Proton11-9
+
+# Hotfix release:
+
+# GE-Proton11-9
+
+  ## Video Playback
+  - Added a fix for Crimson Desert getting stuck after selecting Play or starting a new game due to
+  looping menu-video playback. Affects both Wine-Wayland and XWayland.
+
+  ## Rendering and HDR
+  - Added automatic HDR detection for DX11/DXVK and DX12/VKD3D-Proton with Wine-Wayland or Gamescope.
+  - `PROTON_ENABLE_HDR=1` and `PROTON_USE_HDR=1` are no longer required. HDR must still be enabled in
+  the desktop or Gamescope.
+  - Corrected a Wine-Wayland detection regression that incorrectly reported HDR displays as SDR,
+  affecting Dragon's Dogma 2 and other games on compositors without optional Windows-specific color-
+  management extensions.
+  - Preserved SDR fallback when HDR is unavailable or disabled.
+  - Retained legacy HDR overrides. Use `DXVK_NO_HDR=1` to disable HDR reporting.
+  - Updated the README with automatic HDR setup instructions.
+
+# Pre-hotfix changelog:
+
+# GE-Proton11-8
+
+  Changes since GE-Proton11-7.
+
+  ## Component Updates
+  - Updated Wine bleeding-edge, DXVK, VKD3D-Proton, VKD3D, D7VK, DXVK-NVAPI, DXVK-IGDext, FEX,
+  lsteamclient, wineopenxr and protonfixes.
+  - Rebased the downstream patch stack and removed patches superseded upstream.
+
+  ## Controllers
+  - Added automatic PlayStation-to-XInput fallback when Steam Input is disabled, including
+  appropriate controller identity and button origins for supported games. Native controller
+  handling and real Steam Input take priority.
+  - Removed most (now obsolete) game-specific Sony fallback overrides; improved compatibility with Grandia I/
+  II, Lunar, Sky, God of War Ragnarok and Horizon Zero Dawn.
+  - Fixed Diablo IV's startup DualSense detection and added DualSense Edge compatibility.
+  - Fixed Castlevania Anniversary Collection controller replacement and late connection.
+  - Improved DS4 speaker audio, Sony controller hotplugging, Death Stranding speaker switching
+  and Monster Hunter Wilds haptics. Addressed audio initialization races and expensive
+  controller polling.
+  - Added Switch Pro/compatible controller XInput support and corrected Dynasty Warriors 8
+  DualSense mappings.
+
+  ## Steam Overlay
+  - Fixed Guide-button overlay not closing under Wine-Wayland, including Labwc and Warframe.
+  - Improved overlay cursor ownership and visibility; fixed a Wine-Wayland clipboard-related
+  World of Warcraft crash.
+
+  ## Wayland and Windowing
+  - Fixed fullscreen Alt+Tab restoration in Guild Wars Reforged
+  - Fixed startup/minimize recovery for Deadlock on Niri. Added cross-driver suppression of the 
+  transient minimized-window white rectangle. ([#781](https://github.com/GloriousEggroll/proton-ge-custom/issues/781), [#762]
+  (https://github.com/GloriousEggroll/proton-ge-custom/issues/762))
+  - Improved Battle.net tray-menu rendering, positioning, keyboard focus, cursor handling and
+  tray recovery.
+  - Fixed Warframe's missing launcher settings dialog and disappearing cursor.
+  - Fixed Touhou 11's unwanted fixed-window resizing 
+  - Fixed Zenless Zone Zero launcher window being mistaken for a tray menu.
+  - Improved GNOME direct-scanout compatibility, Vulkan surface opacity metadata and cursor
+  confinement updates.
+  - Preserved Assassin's Creed DX10 fullscreen mode across Alt+Tab.
+
+  ## Video Playback
+  - Improved VRChat YouTube, HTTP MP4, HLS, MPEG-TS and RTSP playback, including URL
+  compatibility, playlists, seeking, pause/resume, audio synchronization and periodic
+  streaming stalls.
+  - Enabled AV1 decoding through dav1d.
+  - Fixed Resident Evil 4 video corruption and improved intro playback performance
+  - Fixed WUCHANG skill-preview videos. ([#775](https://github.com/GloriousEggroll/proton-ge-custom/
+  issues/775), [#787](https://github.com/GloriousEggroll/proton-ge-custom/issues/787))
+  - Added playback fixes for Borderlands 3, Saku Saku, Fairy Fencer F Advent Dark Force,
+  SHUFFLE! Essence+, Hatsumira, Colin McRae Rally 3 and One Piece: Pirate Warriors 4.
+  - Fixed interrupted music in T4C Neerya and an audio-sample memory leak affecting Apple
+  Jack.
+  - Fixed Way of the Samurai 4 movie-skipping crashes.
+  - Improved King of Fighters XIII and Taito Type X2 movie compatibility, added DirectDraw
+  video-overlay emulation, and fixed a seeking deadlock affecting SNK Heroines.
+
+  ## Rendering and HDR
+  - Added reported-working StarCraft II GPU-hang workaround. ([#790](https://github.com/
+  GloriousEggroll/proton-ge-custom/issues/790))
+  - Fixed Meridian: New World's dark lighting and scrolling flicker through Wine-Mono/FNA
+  stencil-state fixes.
+  - Fixed Le Mans Ultimate initialization and HUD/text rendering through Direct2D
+  improvements. ([#777](https://github.com/GloriousEggroll/proton-ge-custom/issues/777))
+  - Enabled Warframe's DX11 HDR detection and added SDR fallback when HDR is requested but
+  unavailable on the output.
+
+  ## Protonfixes
+  - Project Torque: corrected .NET dependencies and disabled Xalia to prevent startup
+  problems.
+  - The Witcher 3: hid Wine exports to restore graphics features disabled by the game's Wine
+  detection.
+  - Added or updated fixes for A Way Out, Way of the Samurai 4, Ceville, Kanvas Launcher and
+  the original Call of Duty's non-Steam release.
+  - Updated the UMU database and fixed the unzip dependency URL.
+
+  ## Other Changes
+  - Added opt-in Bluetooth LE support for applications such as Zwift and Rouvy using
+  `PROTON_ENABLE_WINEBTH=1`.
+  - Fixed unsafe timing-source selection, process-exit hangs, Richard Burns Rally's exit
+  crash, and serial-port probing that disrupted Sinden lightguns.
+  - Added SHA-256 certificate-property support for MTA and corrected incomplete TLS-record
+  handling.
+  - Restored ARM64 DXVK-NVAPI builds, enabled FEX disk caching by default, and updated
+  upstream game/launcher compatibility fixes.
+  - Expanded controller documentation and replaced obsolete RDNA3-specific FSR4 guidance with
+  `PROTON_FSR4_UPGRADE`.
+
 ## GE-Proton11-8
 
 # GE-Proton11-8
