@@ -44,3 +44,17 @@ EOF
 
     return 0
 }
+
+post_upgrade() {
+    if [ $(vercmp $2 "2:2.2.7.5-5") -lt 0 ]; then
+        cat << EOF
+///////////////////////////////////////////////
+// Latest v2raya is packaged as v2raya-next. //
+// You may switch to that package, but note  //
+// that the global config is not compatible, //
+// so it will be backed up during package    //
+// installation.                             //
+///////////////////////////////////////////////
+EOF
+    fi
+}

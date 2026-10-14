@@ -4,12 +4,12 @@ repo_depends:
 # pre_build_script: |
 #     update_pkgver_and_pkgrel(_G.newver)
 
-# post_build_script: |
-#     git_pkgbuild_commit()
+post_build_script: |
+    git_pkgbuild_commit()
 
 update_on:
   - source: manual
-    manual: 1
+    manual: 2
   # - source: github
   #   github: v2rayA/v2rayA
   #   prefix: v
