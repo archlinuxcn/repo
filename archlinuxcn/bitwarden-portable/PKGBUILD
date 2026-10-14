@@ -9,7 +9,7 @@ license=(GPL-3.0-or-later)
 groups=()
 options=(!debug !strip)
 
-makedepends+=(git)
+makedepends+=(git portable-packer)
 
 depends=(
 	"portable"
@@ -28,36 +28,28 @@ makedepends+=(
 checkdepends=()
 
 source=(
-	portable-config
-	start.sh
+	config.toml
 	desktop.file
-	)
+)
 
-function prepare() {
-	pacman -Ql bitwarden >file.list
+function pkgver() {
+	export LC_ALL=C
+	pacman -Si bitwarden | grep Version | awk '{print $NF}' | cut -d'-' -f1
 }
 
 function package() {
-	while IFS= read -r line; do
-		file="$(echo "$line" | awk '{print $2}')"
-		if [[ -d ${file} ]]; then
-			echo "Omitting Directory"
-		else
-			install -Dm755 "${file}" "${pkgdir}/${file}"
-		fi
-	done < file.list
-	install -Dm755 \
-		portable-config \
-		"${pkgdir}/usr/lib/portable/info/com.bitwarden.desktop/config"
-	rm "${pkgdir}/usr/share/applications"/*
-	rm "${pkgdir}/usr/bin"/*
-	install -Dm755 \
-		"${srcdir}/start.sh" \
-		"${pkgdir}/usr/bin/bitwarden"
-	install -Dm644 \
-		"${srcdir}/desktop.file" \
-		"${pkgdir}/usr/share/applications/com.bitwarden.desktop.desktop"
+	export pkgdir
+	export pkgname
+	export srcdir
+	portable-packer \
+		-v \
+		--distro arch \
+		--mode copy bitwarden \
+		--hash true \
+		--config-ng "${srcdir}/config.toml" \
+		--desktop-file "${srcdir}/desktop.file"
 }
-sha256sums=('d644465673a1cc9129890fd40f9f35c64b5c41af4371b323fb76e41b4a1175c7'
-            'ea40d1cfc92687162bd430c1daa030e6deefd8a45ccfb5ccc7ce2ccd014f7654'
-            'e0804985439a2798667326c15d176c79a9c186bda5a4843636a3a61a90a8c366')
+sha256sums=(
+	'SKIP'
+	'SKIP'
+)
