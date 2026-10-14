@@ -7,7 +7,7 @@ pkgname=(qt6-base-24h)
 
 _pkgver=6.12.0
 pkgver=${_pkgver/-/}
-pkgrel=2.4
+pkgrel=3.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -111,6 +111,7 @@ prepare() {
 
   git -C $_pkgfn cherry-pick -n e320c929207aaea0d4c8fb2cd29b16de6cbd2b2c # Fix QtWebEngine detection in cmake
   git -C $_pkgfn cherry-pick -n 032643f99e090e0304ef935c2ee11c109d55c8a1 # Fix build with md4c 0.6
+  git -C $_pkgfn cherry-pick -n 6b7ee05def510c333fbb8944ae669b72a48367f3 # Fix tab scrolling with mouse wheel
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
