@@ -1,0 +1,14 @@
+#!/bin/sh
+
+post_install() {
+  echo ":: This package, due to the way it is built and packaged, is officially UNSUPPORTED"
+  echo "   by Valve. Please do not bother them if something doesn't run with it."
+  echo ""
+  echo "   If games with anti-cheat refuse to run or connect to servers when using"
+  echo "   this package please use the Steam Linux Runtime versions from our repository"
+  echo "   https://github.com/CachyOS/proton-cachyos/releases"
+  echo ""
+  echo "   If something does NOT run with this package, but DOES run with the same official"
+  echo "   version, installed according to upstream instructions, feel free to report it through"
+  echo "   the issues in our repository - https://github.com/CachyOS/proton-cachyos"
+}
