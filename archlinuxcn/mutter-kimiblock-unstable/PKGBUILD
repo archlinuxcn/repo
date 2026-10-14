@@ -7,8 +7,8 @@ pkgbase=mutter-kimiblock-unstable
 pkgname=(
 	mutter-kimiblock-unstable
 )
-pkgver=51.0
-pkgrel=19
+pkgver=51.1
+pkgrel=1
 pkgdesc="Window manager and compositor for GNOME, unstable version with patches picked from Kimiblock"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -96,11 +96,10 @@ source=(
 	# ScreenCast performance
 	5358.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5358.patch
 )
-b2sums=('3c7e7159e70b09b91325335c4d13bb0ff51a161e430a0a63c65f380d5d31927cc8812cfb32b38b4964741c65c34ba12decc81274c7f556e7225d4255778689d8'
+b2sums=('0064caf6a85d9cb42d9544ad2dab31ef158a957d20d5a99aabe27f40986f128714f97a5cbe970c1aba1cb9c86f0b94f2f279a22072bbfefb9c0c7e715d7a411f'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
-        'b44159cd578c6e7e4a45bc8cd51e3af7f31cdea233f8038a7920feaef25326bdcb69527d50a4d9c030fcd5ee96a745bae79d89b7d7e5f3bc27fe064080dd844c'
-        '5f07244f01d9e75b65c8a075d717ce51152f0337c5747802d577b624166442d405e30f6dc018ae1b55fbcd1d4dc3f9f3f975bf08709125a45b2a3b0aba5323d5'
-        '49c1a5fedc9e549a23384a21ad73fa18031a4ee86b997f8442fd7b9a0c5c4250901a0722f488443d00ad454a09129099f225f818ec339875f20ad3fc49e7bb65')
+        'bce8b943d7fabb439c362d1a9c0b1fa10ebebbe4ec5510670f2b2658276d855330a3077c0f9994843d820f892cabc837fee704bfb73ca72bc270b31c5818780a'
+        '5f07244f01d9e75b65c8a075d717ce51152f0337c5747802d577b624166442d405e30f6dc018ae1b55fbcd1d4dc3f9f3f975bf08709125a45b2a3b0aba5323d5')
 
 prepare() {
 	cd mutter
