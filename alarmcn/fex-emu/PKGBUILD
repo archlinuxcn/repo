@@ -91,7 +91,8 @@ build() {
     -DBUILD_TESTING=Off \
     -DUSE_LINKER=lld \
     -DENABLE_LTO=On \
-    -DTUNE_CPU=apple-m1
+    -DTUNE_ARCH=generic \
+    -DTUNE_CPU=none
   ninja -C build
 }
 
