@@ -1,0 +1,37 @@
+# Maintainer: RocketDev <ma2014119@outlook.com>
+# Contributor: nfnty
+
+pkgname=tini
+pkgdesc='A tiny but valid init for containers'
+pkgver=0.19.0
+pkgrel=1
+arch=('x86_64')
+url="https://github.com/krallin/${pkgname}"
+license=('MIT')
+depends=('glibc')
+makedepends=('cmake')
+source=(
+    "$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
+    "0001-Fix-build-flags.patch"
+)
+sha512sums=('1fa85b56e2c6085ea474f251928e7a40510d92aeef60b3c145b0496969c1b5df86835d143cb91ef5b4bf4da63fa8a56947cc39a4276e4b72faa57276d432b292'
+            '34da9a267e08c7c0a16e353eac70d5978a54c3e4dcf3331e99453fb38047458fa29f098b87a9caf9b7355a22a5e3ad418649bd0ff9500937f6e2a63a6a89da31')
+
+prepare() {
+    cd $pkgname-$pkgver
+    patch -p1 < ../0001-Fix-build-flags.patch
+}
+
+build() {
+    cmake -S $pkgname-$pkgver -B build \
+        -Wno-author \
+        -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+        -DCMAKE_INSTALL_PREFIX='/usr' \
+        -DCMAKE_BUILD_TYPE=None
+    cmake --build build
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+    install -Dm 644 $pkgname-$pkgver/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

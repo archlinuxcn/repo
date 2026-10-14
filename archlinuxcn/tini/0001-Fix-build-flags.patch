@@ -1,0 +1,56 @@
+From 8371e43fd8ccd53c2e1bbbe19b5338c91268827a Mon Sep 17 00:00:00 2001
+From: RocketDev <ma2014119@outlook.com>
+Date: Thu, 15 Oct 2026 01:08:06 +0800
+Subject: [PATCH] Fix build flags
+
+---
+ CMakeLists.txt | 23 +----------------------
+ 1 file changed, 1 insertion(+), 22 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 16d693d..d2232fb 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -36,25 +36,7 @@ else()
+   set(tini_VERSION_GIT "")
+ endif()
+ 
+-# Flags
+-include(CheckCSourceCompiles)
+-
+-check_c_source_compiles("
+-#ifndef _FORTIFY_SOURCE
+-#error \"Not defined: _FORTIFY_SOURCE\"
+-#endif
+-int main(void)                                                                                                              {
+-  return 0;
+-}
+-" HAS_BUILTIN_FORTIFY)
+-
+-# Flags
+-if(NOT HAS_BUILTIN_FORTIFY)
+-	add_definitions(-D_FORTIFY_SOURCE=2)
+-endif()
+-
+-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99 -Werror -Wextra -Wall -pedantic-errors -O2 -fstack-protector --param=ssp-buffer-size=4 -Wformat")
+-set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bsymbolic-functions -Wl,-z,relro -Wl,-s")
++set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bsymbolic-functions")
+ 
+ # Build
+ 
+@@ -81,12 +63,9 @@ include_directories ("${PROJECT_BINARY_DIR}")
+ 
+ add_executable (tini src/tini.c)
+ 
+-add_executable (tini-static src/tini.c)
+-set_target_properties (tini-static PROPERTIES LINK_FLAGS "-Wl,--no-export-dynamic -static")
+ 
+ # Installation
+ install (TARGETS tini DESTINATION bin)
+-install (TARGETS tini-static DESTINATION bin)
+ 
+ # Packaging
+ include (InstallRequiredSystemLibraries)
+-- 
+2.56.0
+
