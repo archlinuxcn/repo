@@ -35,6 +35,12 @@ archpkg = "bzip2"
 source = "archpkg"
 archpkg = "zstd"
 
+# EXCEPTION (2026-10-15): our bundled _libarchive_ver is intentionally
+# ahead of this archpkg baseline right now (3.8.10 vs Arch's 3.8.9-1) --
+# we track libarchive's own upstream releases directly for this bump,
+# not Arch's repackage cadence. Expected to self-resolve once Arch
+# repackages libarchive 3.8.10; not a regression, don't "fix" by
+# reverting to 3.8.9.
 [libarchive]
 source = "archpkg"
 archpkg = "libarchive"
