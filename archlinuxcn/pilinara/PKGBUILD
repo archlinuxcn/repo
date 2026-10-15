@@ -8,7 +8,7 @@ url="https://github.com/Starfallan/PiliNara"
 pkgdesc="PiliPlus 的第三方Fork版本，做了一些自用改动"
 arch=('x86_64')
 license=('GPL-3.0-or-later')
-depends=('gtk3' 'mpv' 'libayatana-appindicator' 'webkit2gtk-4.1')
+depends=('gtk3' 'mpv' 'webkit2gtk-4.1')
 makedepends=('clang' 'cmake' 'git' 'ninja' 'fvm' 'patchelf')
 provides=('pilinara')
 conflicts=('pilinara-bin' 'pilinara-git')
@@ -21,6 +21,7 @@ sha256sums_x86_64=('07a59ed5c42db2beda246ab5cc42455f1c7383d4885149c569bad99b26e7
 
 prepare() {
   cd "${_pkgname}/"
+
   printf "正在生成编译参数...\n"
   local _vername _vercode _verhash _buildtime
   _vername="$(grep -m1 '^version:' pubspec.yaml | sed -E 's/^version:[[:space:]]*([0-9.]+).*/\1/')"
@@ -30,28 +31,29 @@ prepare() {
   printf '{"pili.name":"%s","pili.code":%s,"pili.hash":"%s","pili.time":%s}\n' \
     "${_vername}" "${_vercode}" "${_verhash}" "${_buildtime}" > pili_release.json
   sed -i "s/^version:.*/version: ${_vername}+${_vercode}/" pubspec.yaml
+
   # 回归补丁
   patch -Np1 < "${srcdir}/0001-fix-refresh-layout-semantics.patch"
+
   fvm install
   fvm flutter --disable-analytics
-  fvm flutter --no-version-check pub get
-}
 
-build() {
-  cd "${_pkgname}/"
   local _sdk _scripts
   _sdk="$(readlink -f .fvm/flutter_sdk)"
   _scripts="${PWD}/lib/scripts"
 
-  printf "正在运行 Flutter SDK 补丁...\n"
-  git -C "${_sdk}" reset --hard HEAD
+  # 修补 flutter SDK
   local _patches=(modal_barrier text_selection mouse_cursor image_anim
                   layout_builder navigation_drawer popup_menu fab
                   null_safety_for_selectable_region selectable_region
                   editable_text text_field scroll_position scrollable
                   scrollable_gesture draggable_scrollable_sheet scaffold
-                  text text_painter sliver refresh_indicator)
+                  text text_painter sliver refresh_indicator double_tap_gesture)
+
+  printf "正在应用 Flutter 引擎补丁...\n"
+  git -C "${_sdk}" reset --hard HEAD
   for _patch in "${_patches[@]}"; do
+    [[ -f "${_scripts}/${_patch}.patch" ]] || continue
     git -C "${_sdk}" apply "${_scripts}/${_patch}.patch"
   done
 
@@ -59,7 +61,7 @@ build() {
   local _pubcache _material _mp
   _pubcache="${PUB_CACHE:-${HOME}/.pub-cache}/hosted/pub.dev"
   rm -rf "${_pubcache}"/material_ui-*
-  fvm flutter pub get
+  fvm flutter --no-version-check pub get
   _material="$(ls -d "${_pubcache}"/material_ui-* 2>/dev/null | sort -V | tail -1)"
   if [[ -z "${_material}" ]]; then
     printf "警告: 未找到 material_ui, 跳过其补丁。\n"
@@ -72,8 +74,14 @@ build() {
       git -C "${_material}" apply "${_mp}"
     done
   fi
+}
 
-  printf "补丁应用完成, 开始构建...\n"
+build() {
+  cd "${_pkgname}/"
+
+  local _sdk
+  _sdk="$(readlink -f .fvm/flutter_sdk)"
+
   if fvm flutter build linux --no-pub --release --dart-define-from-file=pili_release.json; then
     git -C "${_sdk}" reset --hard HEAD
   else
