@@ -33,8 +33,8 @@ package() {
 
     install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/extramodules" -m644 nvidia/${pkgver}/${_kernver}/${CARCH}/module/*.ko.zst
 
-    # # compress each module individually
-    # find "$pkgdir" -name '*.ko' -exec zstd --rm -19 {} +
+    # compress each module individually
+    find "$pkgdir" -name '*.ko' -exec zstd --rm -19 {} +
 
     install -Dm644 /usr/share/licenses/nvidia-open-dkms/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
