@@ -1,0 +1,15 @@
+maintainers:
+  - github: moyigeek
+    email: moyi@archlinuxcn.org
+
+pre_build_script: |
+    update_pkgver_and_pkgrel(_G.newver)
+
+post_build_script: |
+    git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: hust-open-atom-club/atomgit-cli
+    prefix: v
+    use_latest_release: true
