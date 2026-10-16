@@ -5,13 +5,13 @@
 ##
 ## The following variables can be customized at build time. Use env or export to change at your wish
 ##
-##   Example: env _microarchitecture=98 use_numa=n use_tracers=n makepkg -sc
+##   Example: env _microarchitecture=99 use_numa=n use_tracers=n makepkg -sc
 ##
 ## Look inside 'choose-gcc-optimization.sh' to choose your microarchitecture
 ## Valid numbers between: 0 to 99
 ## Default is: 0 => generic
-## Good option if your package is for one machine: 98 (Intel native) or 99 (AMD native)
-if [ -z ${_microarchitecture+x} ]; then
+## Good option if your package is for one machine: 99 (Native optimizations autodetected by GCC)
+if [[ -z "$_microarchitecture" ]]; then
   _microarchitecture=0
 fi
 
@@ -19,7 +19,7 @@ fi
 ## Archlinux and Xanmod enable it by default.
 ## Set variable "use_numa" to: n to disable (possibly increase performance)
 ##                             y to enable  (stock default)
-if [ -z ${use_numa+x} ]; then
+if [[ -z "$use_numa" ]]; then
   use_numa=y
 fi
 
@@ -28,14 +28,14 @@ fi
 ## Stock Archlinux has this enabled.
 ## Set variable "use_tracers" to: n to disable (possibly increase performance, XanMod default)
 ##                                y to enable  (Archlinux default)
-if [ -z ${use_tracers+x} ]; then
+if [[ -z "$use_tracers" ]]; then
   use_tracers=n
 fi
 
 # Unique compiler supported upstream is GCC
 ## Choose between GCC and CLANG config (default is GCC)
 ## Use the environment variable "_compiler=clang"
-if [ "${_compiler}" = "clang" ]; then
+if [[ "$_compiler" == clang ]]; then
   _compiler_flags="CC=clang HOSTCC=clang LLVM=1 LLVM_IAS=1"
 fi
 
@@ -43,12 +43,12 @@ fi
 # Possible values: config_x86-64-v1 / config_x86-64-v2 (default) / config_x86-64-v3
 # This will be overwritten by selecting any option in microarchitecture script
 # Source files: https://gitlab.com/xanmod/linux/-/tree/6.12/CONFIGS/xanmod/gcc?ref_type=heads
-#if [ -z ${_config+x} ]; then
+#if [[ -z "$_config" ]]; then
   _config=config
 #fi
 
 # Compress modules with ZSTD (to save disk space)
-if [ -z ${_compress_modules+x} ]; then
+if [[ -z "$_compress_modules" ]]; then
   _compress_modules=n
 fi
 
@@ -60,12 +60,12 @@ fi
 # This PKGBUILD read the database kept if it exists
 #
 # More at this wiki page ---> https://wiki.archlinux.org/index.php/Modprobed-db
-if [ -z ${_localmodcfg} ]; then
+if [[ -z "$_localmodcfg" ]]; then
   _localmodcfg=n
 fi
 
 # Tweak kernel options prior to a build via nconfig
-if [ -z ${_makenconfig} ]; then
+if [[ -z "$_makenconfig" ]]; then
   _makenconfig=n
 fi
 
@@ -73,7 +73,7 @@ fi
 
 pkgbase=linux-xanmod-edge
 _major=7.2
-pkgver=${_major}.10
+pkgver=${_major}.11
 _branch=7.x
 xanmod=1
 _revision=
@@ -85,9 +85,13 @@ arch=(x86_64)
 license=(GPL-2.0-only)
 makedepends=(
   bc
+  binutils
   cpio
   gettext
+  glibc
   libelf
+  libgcc
+  openssl
   pahole
   perl
   python
@@ -95,11 +99,11 @@ makedepends=(
   rust-bindgen
   rust-src
   tar
+  xxhash
   xz
 )
-if [ "${_compiler}" = "clang" ]; then
-  makedepends+=(clang llvm lld)
-fi
+[[ "${_compiler}" == clang ]] && makedepends+=(clang llvm lld)
+
 options=('!strip')
 _srcname="linux-${pkgver}-xanmod${xanmod}"
 
@@ -114,13 +118,13 @@ validpgpkeys=(
 # Archlinux patches
 _commit="ec9e9a4219fe221dec93fa16fddbe44a34933d8d"
 _patches=()
-for _patch in ${_patches[@]}; do
+for _patch in "${_patches[@]}"; do
     source+=("${_patch}::https://raw.githubusercontent.com/archlinux/svntogit-packages/${_commit}/trunk/${_patch}")
 done
 
 sha256sums=('f9fef3d14c0df53819026f4be74459835c2a0b0dcbf5b5bbd9ea19f0829402b3'
             'SKIP'
-            '107f68edf4d77c9d77704c2efe3ff7c2e70e92c1bb5db3b68d540c103ba754e5'
+            '5dd64d0bd44f0575b38c9c3a2f9dd2f147434a782a57968d6c6869c7d6fff5e4'
             'f4acc1760990c54348a029315d1505ccb7c7270cd70a9aeb728bffcced51e767')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
@@ -131,7 +135,7 @@ prepare() {
   cd linux-${_major}
 
   # Apply Xanmod patch
-  patch -Np1 -i ../patch-${pkgver}-xanmod${xanmod}${_revision}
+  patch -Np1 -i ../"patch-${pkgver}-xanmod${xanmod}${_revision}"
 
   msg2 "Setting version..."
   echo "-$pkgrel" > localversion.10-pkgrel
@@ -143,7 +147,7 @@ prepare() {
     src="${src%%::*}"
     src="${src##*/}"
     src="${src%.zst}"
-    [[ $src = *.patch ]] || continue
+    [[ $src == *.patch ]] || continue
     msg2 "Applying patch $src..."
     patch -Np1 < "../$src"
   done
@@ -154,7 +158,7 @@ prepare() {
   # Applying configuration
   cp -vf CONFIGS/x86_64/${_config} .config
   # enable LTO_CLANG_THIN
-  if [ "${_compiler}" = "clang" ]; then
+  if [[ "$_compiler" == clang ]]; then
     scripts/config --disable LTO_CLANG_FULL
     scripts/config --enable LTO_CLANG_THIN
   fi
@@ -171,22 +175,23 @@ prepare() {
   scripts/config --enable CONFIG_ANDROID_BINDER_IPC
 
   # User set. See at the top of this file
-  if [ "$use_tracers" = "y" ]; then
+  if [[ "$use_tracers" == "y" ]]; then
     msg2 "Enabling CONFIG_FTRACE only if we are not compiling with clang..."
-    if [ "${_compiler}" = "gcc" ] || [ "${_compiler}q" = "q" ]; then
+    if [[ "$_compiler" == gcc || -z "$_compiler" ]]; then
       scripts/config --enable CONFIG_FTRACE \
                      --enable CONFIG_FUNCTION_TRACER \
                      --enable CONFIG_STACK_TRACER
     fi
   fi
 
-  if [ "$use_numa" = "n" ]; then
+  if [[ "$use_numa" == n ]]; then
     msg2 "Disabling NUMA..."
     scripts/config --disable CONFIG_NUMA
   fi
 
   # Compress modules by default (following Arch's kernel)
-  if [ "$_compress_modules" = "y" ]; then
+  if [[ "$_compress_modules" == y ]]; then
+    msg2 "Compressing modues with ZSTD..."
     scripts/config --enable CONFIG_MODULE_COMPRESS
     scripts/config --enable CONFIG_MODULE_COMPRESS_ZSTD
   fi
@@ -198,8 +203,8 @@ prepare() {
 
   # Let's user choose microarchitecture optimization in GCC
   # Use default microarchitecture only if we have not choosen another microarchitecture
-  if [ "$_microarchitecture" -ne "0" ]; then
-    ../choose-gcc-optimization.sh $_microarchitecture
+  if (( _microarchitecture != 0 )); then
+    ../choose-gcc-optimization.sh "$_microarchitecture"
   fi
 
   # This is intended for the people that want to build this package with their own config
@@ -207,7 +212,7 @@ prepare() {
   # If we detect partial file with scripts/config commands, we execute as a script
   # If not, it's a full config, will be replaced
   for _myconfig in "${SRCDEST}/myconfig" "${HOME}/.config/linux-xanmod/myconfig" "${XDG_CONFIG_HOME}/linux-xanmod/myconfig" ; do
-    if [ -f "${_myconfig}" ] && [ "$(wc -l <"${_myconfig}")" -gt "0" ]; then
+    if [[ -f "$_myconfig" && "$(wc -l <"${_myconfig}")" -gt 0 ]]; then
       if grep -q 'scripts/config' "${_myconfig}"; then
         # myconfig is a partial file. Executing as a script
         msg2 "Applying myconfig..."
@@ -224,10 +229,12 @@ prepare() {
 
   ### Optionally load needed modules for the make localmodconfig
   # See https://aur.archlinux.org/packages/modprobed-db
-  if [ "$_localmodcfg" = "y" ]; then
-    if [ -f $HOME/.config/modprobed.db ]; then
+  if [[ "$_localmodcfg" == "y" ]]; then
+    [[ -f $HOME/.config/modprobed.db ]] && local _modprobedpath="$HOME/.config/modprobed.db"
+    [[ -f ${XDG_DATA_HOME:-$HOME/.local/share}/modprobed-db/modprobed.db ]] && local _modprobedpath="${XDG_DATA_HOME:-$HOME/.local/share}/modprobed-db/modprobed.db"
+    if [[ -n "$_modprobedpath" ]]; then
       msg2 "Running Steven Rostedt's make localmodconfig now"
-      yes "" | make ${_compiler_flags} LSMOD=$HOME/.config/modprobed.db localmodconfig
+      yes "" | make ${_compiler_flags} LSMOD="$_modprobedpath" localmodconfig
     else
       msg2 "No modprobed.db data found"
       exit 1
@@ -240,7 +247,7 @@ prepare() {
   make -s kernelrelease > version
   msg2 "Prepared %s version %s" "$pkgbase" "$(<version)"
 
-  if [ "$_makenconfig" = "y" ]; then
+  if [[ "$_makenconfig" == "y" ]]; then
     make ${_compiler_flags} nconfig
   fi
 
@@ -249,7 +256,7 @@ prepare() {
 }
 
 build() {
-  cd linux-${_major}
+  cd "linux-${_major}"
   make ${_compiler_flags} all
   make -C tools/bpf/bpftool vmlinux.h feature-clang-bpf-co-re=1
 }
@@ -262,6 +269,7 @@ _package() {
     kmod
   )
   optdepends=(
+    "$pkgbase-headers: headers and scripts for building modules"
     'linux-firmware: firmware images needed for some devices'
     'scx-scheds: to use sched-ext schedulers'
     'wireless-regdb: to set the correct wireless channels of your country'
@@ -278,7 +286,7 @@ _package() {
     wireguard-arch
   )
 
-  cd linux-${_major}
+  cd "linux-${_major}"
   local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
 
   msg2 "Installing boot image..."
@@ -299,29 +307,47 @@ _package() {
 
 _package-headers() {
   pkgdesc="Headers and scripts for building modules for the $pkgdesc kernel"
-  depends=(pahole)
+  depends=(
+    binutils
+    glibc
+    libelf
+    libgcc
+    openssl
+    pahole
+    xxhash
+    zlib
+    zstd
+  )
 
-  cd linux-${_major}
+  cd "linux-${_major}"
   local builddir="$pkgdir/usr/lib/modules/$(<version)/build"
+
+  local karch
+  case "$CARCH" in
+    x86_64) karch=x86 ;;
+    *) echo "Unknown CARCH $CARCH"; exit 1 ;;
+  esac
 
   msg2 "Installing build files..."
   install -Dt "$builddir" -m644 .config Makefile Module.symvers System.map \
     localversion.* version vmlinux tools/bpf/bpftool/vmlinux.h
   install -Dt "$builddir/kernel" -m644 kernel/Makefile
-  install -Dt "$builddir/arch/x86" -m644 arch/x86/Makefile
+  install -Dt "$builddir/arch/$karch" -m644 arch/$karch/Makefile
   cp -t "$builddir" -a scripts
   ln -srt "$builddir" "$builddir/scripts/gdb/vmlinux-gdb.py"
 
-  # required when STACK_VALIDATION is enabled
-  install -Dt "$builddir/tools/objtool" tools/objtool/objtool
+  if [[ $(scripts/config -s CONFIG_HAVE_STACK_VALIDATION) == y ]]; then
+    install -Dt "$builddir/tools/objtool" tools/objtool/objtool
+  fi
 
-  # required when DEBUG_INFO_BTF_MODULES is enabled
-  install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+  if [[ $(scripts/config -s CONFIG_DEBUG_INFO_BTF_MODULES) == y ]]; then
+    install -Dt "$builddir/tools/bpf/resolve_btfids" tools/bpf/resolve_btfids/resolve_btfids
+  fi
 
   msg2 "Installing headers..."
   cp -t "$builddir" -a include
-  cp -t "$builddir/arch/x86" -a arch/x86/include
-  install -Dt "$builddir/arch/x86/kernel" -m644 arch/x86/kernel/asm-offsets.s
+  cp -t "$builddir/arch/$karch" -a arch/$karch/include
+  install -Dt "$builddir/arch/$karch/kernel" -m644 arch/$karch/kernel/asm-offsets.s
 
   install -Dt "$builddir/drivers/md" -m644 drivers/md/*.h
   install -Dt "$builddir/net/mac80211" -m644 net/mac80211/*.h
@@ -340,9 +366,11 @@ _package-headers() {
   echo "Installing KConfig files..."
   find . -name 'Kconfig*' -exec install -Dm644 {} "$builddir/{}" \;
 
-  msg2 "Installing Rust files..."
-  [ -f rust/*.rmeta ] && install -Dt "$builddir/rust" -m644 rust/*.rmeta
-  [ -f rust/*.so ] && install -Dt "$builddir/rust" rust/*.so
+  if [[ $(scripts/config -s CONFIG_RUST) == y ]]; then
+    echo "Installing Rust files..."
+    install -Dt "$builddir/rust" -m644 rust/*.rmeta
+    install -Dt "$builddir/rust" rust/*.so
+  fi
 
   msg2 "Installing unstripped VDSO..."
   make INSTALL_MOD_PATH="$pkgdir/usr" vdso_install \
@@ -351,7 +379,7 @@ _package-headers() {
   msg2 "Removing unneeded architectures..."
   local arch
   for arch in "$builddir"/arch/*/; do
-    [[ $arch = */x86/ ]] && continue
+    [[ $arch == */$karch/ ]] && continue
     echo "Removing $(basename "$arch")"
     rm -r "$arch"
   done
