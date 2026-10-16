@@ -9,7 +9,7 @@ from lilaclib import *
 
 def pre_build():
     version = _G.newver
-    url = f"https://raw.githubusercontent.com/jswysnemc/mark-shot/{version}/packaging/aur/PKGBUILD"
+    url = f"https://raw.githubusercontent.com/jswysnemc/mark-shot/{version}/qt/packaging/aur/PKGBUILD"
     with urlopen(url) as r:
         pkgbuild = r.read().decode("utf-8")
     with open("PKGBUILD", "w") as f:
