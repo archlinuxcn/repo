@@ -2,7 +2,7 @@
 
 _name=xsdata
 pkgname=python-${_name}
-pkgver=26.2
+pkgver=26.10
 pkgrel=1
 pkgdesc="Naive XML & JSON Bindings for python"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python python-typing_extensions python-click python-click-default-group
 makedepends=(git python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-pytest-benchmark)
 source=(git+${url}.git#tag=v${pkgver})
-sha512sums=('3bb5c55b865697c38db431173cd083fc9e5fa2537a37cad67d274312d438424bd58301c18a08728f7079bfa7cc391ba6085b56ae49f08d3079e8f44633171adc')
+sha512sums=('e51642ecb7b4679c683a9644e3ec39195951fb45708c11a37706ed924e6bcd8783425915e11cf3cbd9b9dda49f0ca99287a268ffb6b2bb773440348c0c54ddff')
 
 build() {
   cd $_name
