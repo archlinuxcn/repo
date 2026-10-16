@@ -45,6 +45,7 @@ depends=(
 )
 makedepends=(
   cython
+  pkgconf
   python-build
   python-installer
   python-setuptools
@@ -54,26 +55,12 @@ source=("${_name}-${pkgver}.tar.gz::https://github.com/cgohlke/imagecodecs/archi
 )
 sha256sums=('64f3c5789d28e338e6cd3ede471e15ea92d23820bb233b33b32c55845e4cf722')
 
-prepare() {
-  cd "${srcdir}/${_name}-${pkgver}"
-  # jxrlib ships JXRGlue.h including JXRVersion.h but never installs it
-  # (same bug worked around in freeimage). Generate the missing header.
-  if [[ ! -f /usr/include/jxrlib/JXRVersion.h ]]; then
-    cat > imagecodecs/JXRVersion.h <<'EOF'
-#ifndef JXRVERSION_H
-#define JXRVERSION_H
-#define JXR_VERSION_MAJOR 1
-#define JXR_VERSION_MINOR 4
-#define JXR_VERSION_PATCH 4
-#define JXR_MAKEVERSION(major, minor, patch) (((major) << 16) | ((minor) << 8) | (patch))
-#define JXR_VERSION JXR_MAKEVERSION(JXR_VERSION_MAJOR, JXR_VERSION_MINOR, JXR_VERSION_PATCH)
-#endif
-EOF
-  fi
-}
-
 build() {
   cd "${srcdir}/${_name}-${pkgver}"
+  # jxrlib installs its headers under /usr/include/libjxr/* (subdirectories),
+  # but setup.py hardcodes the old flat /usr/include/jxrlib path. Feed the
+  # correct include flags from its pkg-config file (distutils honors CPPFLAGS).
+  export CPPFLAGS="${CPPFLAGS} $(pkg-config --cflags libjxr)"
   python -m build --wheel --no-isolation --skip-dependency-check
 }
 
