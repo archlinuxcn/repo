@@ -3,7 +3,7 @@
 
 pkgname=deno
 pkgver=2.9.7
-pkgrel=1
+pkgrel=2
 _rusty_v8_ver=150.4.0
 pkgdesc="A secure runtime for JavaScript and TypeScript"
 arch=(aarch64 x86_64)
@@ -28,13 +28,6 @@ prepare() {
   # Use system-provided Rust toolchain for V8 build
   sed -i '/download_rust_toolchain();/d' build.rs
   patch -Np1 -i ../deno-2.9.6-rust-system.patch
-
-  # Drop flags rejected by the clang++ invoked in our build environment.
-  sed -i \
-    -e '/-fno-lifetime-dse/d' \
-    -e '/-fdiagnostics-show-inlining-chain/d' \
-    build/config/compiler/BUILD.gn
-  sed -i '/-fsanitize-ignore-for-ubsan-feature=/d' build/config/sanitizers/sanitizers.gni
 
   # https://github.com/denoland/rusty_v8/issues/1587
   patch -Np1 -i ../compiler-rt-adjust-paths.patch
