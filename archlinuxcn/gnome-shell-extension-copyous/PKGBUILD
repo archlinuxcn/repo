@@ -9,7 +9,7 @@ arch=('any')
 url="https://github.com/boerdereinar/copyous"
 license=('GPL-3.0-or-later')
 depends=('gnome-shell>=48' 'libgda6' 'gsound' 'dconf')
-makedepends=('pnpm' 'git' 'jq')
+makedepends=('nodejs' 'pnpm' 'git' 'jq')
 source=("${pkgver}::git+${url}.git#tag=v${pkgver}")
 b2sums=('3ce7c3a4cb9866c255423104e1c641a56cfab7b7c9b2fe92690cb98b81d7a9f4e97a41f15f1a8ad52bb952fbf8371076283c6d5f8f145e9ec78bc89675ed4a56')
 
