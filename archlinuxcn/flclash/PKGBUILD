@@ -4,8 +4,8 @@
 # Before executing makepkg, you can set FVM_CACHE_PATH to $HOME/fvm or the path specified by the cachePath field in the $HOME/.config/fvm/.fvmrc file.
 
 pkgname=flclash
-pkgver=0.8.99
-pkgrel=4
+pkgver=0.9.0
+pkgrel=1
 pkgdesc="A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free."
 url="https://github.com/chen08209/FlClash"
 license=('GPL-3.0-or-later')
@@ -43,13 +43,11 @@ _pkgext="tar.gz"
 source=(
   "${pkgname}"::"git+https://github.com/chen08209/FlClash.git#tag=v$pkgver"
   "0001-fix-build-error.patch"
-  "0002-cache.patch"
   "com.follow.clash.desktop"
   "Clash.Meta::git+https://github.com/chen08209/Clash.Meta.git"
 )
-sha256sums=('9196a879eb3e28f2b4a271da7f67d517cbb3d8e774c8120962df2192977f0cba'
+sha256sums=('126eb13a9239604c683fecc9c10adf0ebbfdf82981b205d4bec1b29343825f9f'
             'b551c46a1577758c13bdd07868d41e4de817c6184114e1b10d39e04ae572a76a'
-            'c4605f79186211ae454be0aa0b85e76ab886f9112ac1d19d09d2b202f36708c1'
             '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d'
             'SKIP')
 
@@ -58,7 +56,6 @@ prepare() {
   git submodule init
   git config submodule.core/Clash.Meta.url "$srcdir/Clash.Meta"
   git -c protocol.file.allow=always submodule update
-  patch -p1 -i "${srcdir}/0002-cache.patch"
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
 
   _rust_version=$(sed -n 's/^channel = "\([^"]*\)"/\1/p' "$srcdir/$pkgname/plugins/rust_api/rust/rust-toolchain.toml")
