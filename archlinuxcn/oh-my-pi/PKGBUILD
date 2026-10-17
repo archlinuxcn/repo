@@ -1,7 +1,7 @@
 # Maintainer: Bin Jin <bjin@protonmail.com>
 
 pkgname=oh-my-pi
-pkgver=18.11.2
+pkgver=18.11.3
 pkgrel=1
 pkgdesc="Coding agent with the IDE wired in"
 arch=('x86_64')
@@ -40,7 +40,7 @@ source=(
     "skip-native-embed-for-aur.patch"
     "system-grammars-for-aur.patch"
 )
-sha256sums=('5201f37eaf63e8167ce7fb7a65aad6c83cf3202f6298f3e02039a75f211eddb3'
+sha256sums=('a414e210d784c9c29fc0d4c1b27909ab003f5332c0fa0c41271d92fb3133cd3a'
             '33718946cc77d4032911d4efe03a66dbcbfbd2bb16c3da06aaeadcc637c32216'
             'd60c5282c2eebcde70c70b67d49b3fb8105c15d232d29851c68d858a9195acb6'
             '724888738f0e886693d8a6aa6cfd5f6dba9a98122353e4636a9ca946ae1fa9e7')
