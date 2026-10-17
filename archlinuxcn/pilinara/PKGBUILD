@@ -2,7 +2,7 @@
 
 pkgname=pilinara
 _pkgname=pilinara
-pkgver=2.1.6
+pkgver=2.6.1.1
 pkgrel=1
 url="https://github.com/Starfallan/PiliNara"
 pkgdesc="PiliPlus 的第三方Fork版本，做了一些自用改动"
@@ -16,7 +16,7 @@ options=('!debug')
 
 source_x86_64=("${_pkgname}::git+${url}.git#tag=${pkgver}"
                "0001-fix-refresh-layout-semantics.patch")
-sha256sums_x86_64=('8b87d3ad577b7abf810f3550b19256a92c25955848f533133434c94e7ae1fd89'
+sha256sums_x86_64=('ecab478713fee9f3821684b07de8b557c9058fd4a587c10cc352fca4a5425b87'
                    '75d7a11411bbb713665e0c3eb1ed6a666b1641bb95fe3dd5c4b89aaeebe08906')
 
 prepare() {
