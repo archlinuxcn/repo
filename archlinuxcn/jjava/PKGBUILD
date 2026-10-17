@@ -1,0 +1,33 @@
+_tag=1.0-a8
+pkgver=1.0.a8
+
+pkgname=jjava
+pkgrel=1
+pkgdesc="Java Jupyter Kernel by DFLib, fork of SpencerPark IJava"
+arch=(x86_64)
+url="https://dflib.org/"
+license=(Apache-2.0)
+depends=("java-environment>=11" "jupyter-notebook" "python")
+makedepends=("git" "maven" "python-build" "python-installer")
+
+# build extracts version info from git
+# tarball does not work
+source=("jjava::git+https://github.com/dflib/jjava.git#tag=$_tag")
+sha256sums=(SKIP)
+
+build() {
+	cd jjava
+	mvn clean package -DskipTests -U
+	python -m build
+}
+
+check() {
+	cd jjava
+	mvn test
+}
+
+package() {
+	cd jjava
+	python -m installer --destdir="$pkgdir" dist/*.whl
+	jupyter-kernelspec install ./kernelspec/java --prefix="$pkgdir/usr"
+}
