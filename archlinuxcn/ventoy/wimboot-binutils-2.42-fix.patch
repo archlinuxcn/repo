@@ -1,0 +1,29 @@
+Adapted from:
+https://github.com/ipxe/wimboot/commit/47efa60cee9d2cb702b0cd53b71d7ef46cb30735
+
+diff -ur wimboot-2.7.3.orig/src/callback.S wimboot-2.7.3/src/callback.S
+--- wimboot-2.7.3.orig/src/callback.S	2021-05-01 00:17:29.000000000 +1000
++++ wimboot-2.7.3/src/callback.S	2024-02-18 08:14:04.221954249 +1100
+@@ -47,8 +47,8 @@
+ /** Paging bit in CR0 */
+ #define CR0_PG 0x80000000
+ 
+-	.arch	i386
+ 	.code32
++	.arch	i386
+ 
+ 	/* Call an arbitrary real-mode function */
+ 	.section ".text", "ax", @progbits
+diff -ur wimboot-2.7.3.orig/src/startup.S wimboot-2.7.3/src/startup.S
+--- wimboot-2.7.3.orig/src/startup.S	2021-05-01 00:17:29.000000000 +1000
++++ wimboot-2.7.3/src/startup.S	2024-02-18 08:02:39.764209085 +1100
+@@ -31,8 +31,8 @@
+ #define KC_CMD 0x64
+ #define KC_CMD_RESET 0xfe
+ 
+-	.arch	i386
+ 	.code32
++	.arch	i386
+ 
+ 	/* Startup code */
+ 	.section ".text", "ax", @progbits
