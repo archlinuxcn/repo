@@ -1,0 +1,87 @@
+# Maintainer: Dee.H.Y <dongfengweixiao at hotmail dot com>
+
+pkg_identifier="io.github.dongfengweixiao.calculator"
+pkgname="calculator"
+pkgver=0.0.2
+pkgrel=1
+pkgdesc="Implemented with Flutter, using Microsoft's calculation engine as the core."
+url="https://github.com/dongfengweixiao/calculator"
+license=('GPL-3.0-or-later')
+arch=('x86_64' 'aarch64')
+depends=(
+  'at-spi2-core'
+  'cairo'
+  'fontconfig'
+  'gdk-pixbuf2'
+  'glib2'
+  'glibc'
+  'gtk3'
+  'libepoxy'
+  'libgcc'
+  'libkeybinder3'
+  'libstdc++'
+  'pango'
+)
+makedepends=(
+  'clang'
+  'cmake'
+  'fvm'
+  'git'
+  'lld'
+  'llvm'
+  'ninja'
+  'patchelf'
+  'rustup'
+)
+
+options=('!lto')
+
+_pkgsrc="$pkgname-$pkgver"
+_pkgext="tar.gz"
+source=("$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext" "io.github.dongfengweixiao.calculator.desktop")
+sha256sums=('8068cc3e8410af93e3298eb91e44397264210bdd33c335fd306d25b6ecd1b52d'
+            'c99258b18af737736f7afd60a474a7cd4a347255fe9c76ae6e87b3a0bddf841e')
+
+build() {
+  export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
+
+  cd "$_pkgsrc"
+  fvm install 3.38.10
+
+  fvm flutter --disable-analytics
+  #fvm flutter pub upgrade --major-versions
+  fvm flutter --no-version-check pub get
+  fvm flutter clean && fvm flutter build linux --release
+}
+
+package() {
+  if [ $CARCH == "aarch64" ]; then
+    FLUTTER_ARCH=arm64
+  else
+    FLUTTER_ARCH=x64
+  fi
+
+  cd "$_pkgsrc/build/linux/$FLUTTER_ARCH/release/bundle"
+
+  install -Dm755 "calculator" "$pkgdir/usr/lib/$pkg_identifier/$pkgname"
+  cp --reflink=auto -r lib/ "$pkgdir/usr/lib/$pkg_identifier/"
+  cp --reflink=auto -r data/ "$pkgdir/usr/lib/$pkg_identifier/"
+
+  # runpath
+  patchelf --set-rpath '$ORIGIN/lib' "$pkgdir/usr/lib/$pkg_identifier/$pkgname"
+  for i in "$pkgdir/usr/lib/$pkg_identifier/lib"/*.so; do
+    [ -z "$(patchelf --print-rpath "$i")" ] && continue
+    patchelf --set-rpath '$ORIGIN' "$i"
+  done
+
+  # symlink
+  install -dm755 "${pkgdir}/usr/bin"
+  ln -sfr "$pkgdir/usr/lib/$pkg_identifier/$pkgname" "$pkgdir/usr/bin/${pkg_identifier}"
+
+  # icon
+  install -Dm644 "$srcdir/$_pkgsrc/assets/logo.png" \
+    "$pkgdir/usr/share/pixmaps/$pkg_identifier.png"
+
+  # .desktop file
+  install -Dm644 "$srcdir/$pkg_identifier.desktop" "${pkgdir}/usr/share/applications/$pkg_identifier.desktop"
+}
