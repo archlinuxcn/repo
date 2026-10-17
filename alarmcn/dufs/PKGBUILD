@@ -1,7 +1,7 @@
 # Maintainer: Puqns67 <me@puqns67.icu>
 
 pkgname='dufs'
-pkgver=0.46.0
+pkgver=0.47.0
 pkgrel=1
 pkgdesc='A distinctive utility file server that supports static serving, uploading, searching, accessing control, webdav...'
 arch=('x86_64' 'aarch64')
@@ -19,7 +19,7 @@ source=("${pkgname}-${pkgver}.tar.gz"::"${url}/archive/refs/tags/v${pkgver}.tar.
         "${pkgname}-tmpfiles.conf"
         "${pkgname}-config.yaml")
 
-b2sums=('4f981d74ff8bc3d927fdb443463cf19fd483d862f28481d33fbe07b9fbb9e35a3482b2a50c738650b7fc9e879bfc358829ed5a7c8fa2c6bc6dbe037eca66cd2c'
+b2sums=('1beb48ac628af319b6731cd7d3a3a1d4bf72d874a862ee45ead39a0134f01410dc51c636648ca389ae90361f6dacc5c70b592e961e804d2273af03fae7b5422f'
         '5929a74b6898709884df766c94e6a0c30d18e632aece2a36d57bc41f05c5a8d23da036a6a0773fb7c13df7f149c001abfaab647a09593b84e85cb13026eb11a2'
         '004aaa2c669860830ee63ad413b4eec224863f30a2087fa1ea9079ab517576ad95609e6daddfeab7a2c2821290f081545d03ad31e5b27cb4e9e6cc37c9040284'
         '4a647e5365e8e4d101470960cd72317b29dae68cff2331031aeccfc8bf860e72662febbda6673ddde09944555847a3b4598b3f3389fc6e67bccf9d08ab8cca4e'
