@@ -16,7 +16,7 @@ build() {
     cd "${pkgname}-${pkgver}"
 
     pnpm install --prod --ignore-scripts
-    pnpm run install:ext
+    pnpm run build
 }
 
 package() {
