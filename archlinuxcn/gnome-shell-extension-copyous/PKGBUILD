@@ -2,7 +2,7 @@
 
 pkgname="gnome-shell-extension-copyous"
 _uuid=copyous@boerdereinar.dev
-pkgver=2.1.1
+pkgver=2.1.2
 pkgrel=1
 pkgdesc="Modern Clipboard Manager for GNOME"
 arch=('any')
@@ -11,7 +11,7 @@ license=('GPL-3.0-or-later')
 depends=('gnome-shell>=48' 'libgda6' 'gsound' 'dconf')
 makedepends=('nodejs' 'pnpm' 'git' 'jq')
 source=("${pkgver}::git+${url}.git#tag=v${pkgver}")
-b2sums=('c1096eff812e4157e20f1b4138ef7d75f7cd8d690cfaf658e80e1ba95915f8da35e5d045da30dd6fb8784f9b840d7da02fa8fb6322c779f0abcb5b082f00a27d')
+b2sums=('2eaca9475e7da780f523e141ba011e01de433cb4db6f797e4a69f101e0a76d6fe231526c2a57f408cfad1e6b35b1f3232c464b0f2645865556225913b6bfd4cc')
 
 prepare() {
     cd "${srcdir}/${pkgver}"
