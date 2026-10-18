@@ -1,7 +1,7 @@
 # Maintainer: Jax Young <jaxvanyang@gmail.com>
 pkgname=modcrawl
-pkgver=0.5.2
-pkgrel=2
+pkgver=0.6.2
+pkgrel=1
 pkgdesc="Detect, inspect, and analyze Minecraft mods and plugins from JARs"
 arch=('x86_64')
 url="https://github.com/SirCesarium/modcrawl"
@@ -11,7 +11,7 @@ makedepends=(cargo zstd cbindgen)
 provides=("lib$pkgname")
 options=(!lto)
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('abad292c166c08d53e54707b1e6b6b584217c834891a83d0eb5b55e46f41258f')
+sha256sums=('03c72aa0536ddb32b29192eb183d5ccfad16708eb77b6a69ed21d51cd53b7717')
 
 prepare() {
 	cd "$pkgname-$pkgver"
