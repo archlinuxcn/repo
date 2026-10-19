@@ -2,7 +2,7 @@
 
 _pkgname=pyvcd
 pkgname=python-$_pkgname
-pkgver=0.5.0
+pkgver=0.5.1
 pkgrel=1
 pkgdesc='Python package for writing Value Change Dump (VCD) files'
 arch=('any')
@@ -11,7 +11,7 @@ license=('MIT')
 depends=('python')
 makedepends=('python-build' 'python-installer' 'python-wheel' 'python-uv-build')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
-sha512sums=('6fa71267a611c8a9814a0a8e6c3efc32ed5a0c5d6fd32750b2718fc16058636fbffc0a43324ecced142b9d5f8e8381a2dc612378a19c096d96df8c697bd8d286')
+sha512sums=('89aa4bff9a754111d8e125a8a2bbf0ff3ee8d5dbd693ef0e6bf5da9c84c746a18beace282c6de9d910beb898cb9f2e6bc5f880c45051d146c39dfae5a389d1c9')
 
 export SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver
 
