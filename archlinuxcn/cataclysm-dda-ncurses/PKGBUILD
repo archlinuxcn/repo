@@ -4,11 +4,11 @@
 # Contributor: Fernando Carmona Varo <ferkiwi @t gmail dot com>
 pkgname=cataclysm-dda-ncurses
 pkgver=0.I
-pkgrel=1
+pkgrel=2
 pkgdesc="A post-apocalyptic roguelike (ncurses only)"
 arch=('x86_64')
 url="https://cataclysmdda.org/"
-license=('CC-BY-NC-SA-3.0')
+license=('CC-BY-SA-3.0')
 depends=('ncurses' 'libbacktrace' 'gettext' 'zlib' 'glibc' 'libgcc' 'libstdc++')
 makedepends=('astyle')
 conflicts=('cataclysm-dda' 'cataclysm-dda-git' 'cataclysm-dda-ncurses-bin')
