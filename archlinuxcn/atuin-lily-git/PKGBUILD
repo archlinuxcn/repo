@@ -33,7 +33,7 @@ prepare() {
 
 build() {
   cd "$_pkgname"
-  LIBSQLITE3_SYS_USE_PKG_CONFIG=1 cargo build --release --frozen --all-features
+  LIBSQLITE3_SYS_USE_PKG_CONFIG=1 cargo build --release --frozen --no-default-features --features client,sync,daemon
   for sh in 'bash' 'fish' 'zsh'; do
     "target/release/$__pkgname" gen-completions -s "$sh" -o completions/
   done
