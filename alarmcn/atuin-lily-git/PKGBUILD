@@ -4,7 +4,8 @@
 # Contributor: Caleb Maclennan <caleb@alerque.com>
 # Contributor: Ellie Huxtable <e@elm.sh>
 
-pkgname=atuin-lily-git
+pkgbase=atuin-lily-git
+pkgname=(atuin-lily-git atuin-server-lily-git)
 _pkgname=atuin-lily
 __pkgname=atuin
 pkgver=18.23.0.r44.g81e65760
@@ -21,8 +22,6 @@ optdepends=('bash-preexec: bash integration')
 source=("${_pkgname}::git+https://github.com/lilydjwg/atuin.git")
 sha256sums=('SKIP')
 options=('!lto')
-conflicts=('atuin')
-provides=('atuin')
 
 pkgver() {
   cd "$_pkgname"
@@ -37,20 +36,35 @@ prepare() {
 
 build() {
   cd "$_pkgname"
-  LIBSQLITE3_SYS_USE_PKG_CONFIG=1 cargo build --release --frozen --all-features
+  LIBSQLITE3_SYS_USE_PKG_CONFIG=1 cargo build --release --frozen --no-default-features --features client,sync,daemon
   for sh in 'bash' 'fish' 'zsh'; do
     "target/release/$__pkgname" gen-completions -s "$sh" -o completions/
   done
 }
 
-package() {
+package_atuin-lily-git() {
+  optdepends=('bash-preexec: bash integration'
+              'atuin-server-lily-git: sync server')
+  conflicts=('atuin')
+  provides=('atuin')
+  local _pdir="atuin-lily-git"
   cd "$_pkgname"
   install -Dm755 "target/release/$__pkgname" -t "$pkgdir/usr/bin"
-  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$_pkgname"
-  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$_pkgname"
-  install -Dm644 "completions/$__pkgname.bash" "${pkgdir}/usr/share/bash-completion/completions/$_pkgname"
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$_pdir"
+  install -Dm644 README.md -t "$pkgdir/usr/share/doc/$_pdir"
+  install -Dm644 "completions/$__pkgname.bash" "${pkgdir}/usr/share/bash-completion/completions/$__pkgname"
   install -Dm644 "completions/$__pkgname.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d"
   install -Dm644 "completions/_$__pkgname" -t "${pkgdir}/usr/share/zsh/site-functions"
+}
+
+package_atuin-server-lily-git() {
+  pkgdesc="Magical shell history (sync server; lilydjwg's fork)"
+
+  local _pdir="atuin-server-lily-git"
+  cd "$_pkgname"
+  install -Dm755 "target/release/$__pkgname-server" -t "$pkgdir/usr/bin"
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$_pdir"
+  install -Dm644 README.md crates/atuin-server/server.toml -t "$pkgdir/usr/share/doc/$_pdir"
   install -Dm644 systemd/atuin-server.service -t "$pkgdir"/usr/lib/systemd/system/
   install -Dm644 systemd/atuin-server.sysusers -t "$pkgdir"/usr/lib/sysusers.d/
 }
