@@ -6,7 +6,7 @@
 _pkgname=ImHex
 pkgname=${_pkgname,,}
 pkgver=1.38.1
-pkgrel=4
+pkgrel=5
 pkgdesc='A Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM'
 url='https://imhex.werwolv.net'
 license=('GPL-2.0-only')
@@ -101,7 +101,7 @@ build() {
         -Wno-dev \
         -D CMAKE_BUILD_TYPE=None \
         -D CMAKE_INSTALL_PREFIX=/usr \
-        -D CMAKE_SKIP_RPATH=ON \
+        -D CMAKE_SKIP_RPATH=OFF \
         -D IMHEX_OFFLINE_BUILD=ON \
         -D IMHEX_IGNORE_BAD_CLONE=ON \
         -D IMHEX_STRIP_RELEASE=OFF \
