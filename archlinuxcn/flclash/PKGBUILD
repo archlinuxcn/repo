@@ -61,6 +61,7 @@ prepare() {
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
 
   _rust_version=$(sed -n 's/^channel = "\([^"]*\)"/\1/p' "$srcdir/$pkgname/plugins/rust_api/rust/rust-toolchain.toml")
+  export RUSTUP_HOME="$srcdir/rustup"
   rustup toolchain install "$_rust_version" --profile minimal
   rustup default "$_rust_version"
 
