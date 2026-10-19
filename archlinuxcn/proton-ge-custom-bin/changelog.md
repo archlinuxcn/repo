@@ -1,3 +1,45 @@
+## GE-Proton11-11
+
+# GE-Proton11-11
+
+Hotfix Release
+
+Changes since GE-Proton11-10.
+
+## Video Playback
+
+- Fixed games freezing when a video is skipped or closed while MPEG-1 audio is playing through
+DirectShow (deadlock in the MPEG audio decoder, a regression since GE-Proton11-8)
+([#865](https://github.com/GloriousEggroll/proton-ge-custom/issues/865)).
+- Fixed MPEG-1 videos played through AMStream showing upside down (a regression since GE-Proton11-1)
+([#863](https://github.com/GloriousEggroll/proton-ge-custom/issues/863)).
+- Fixed heap corruption and crashes from video frames that are converted or scaled, e.g. Target Bravo:
+Operation G.H.O.S.T. crashing when entering stage select
+([#864](https://github.com/GloriousEggroll/proton-ge-custom/pull/864), thanks @aderumier).
+
+## Rendering and HDR
+
+- Fixed Easy Anti-Cheat kicking Star Citizen with "Violation 8 - Untrusted system file"
+(`StarCitizen_Launcher.exe`, error 30033) since GE-Proton11-7. The same issue affects Hunt: Showdown
+(`hunt.exe`) when launched outside Steam. VKD3D-Proton no longer reads the parent process's executable
+to detect Unreal Engine games ([#858](https://github.com/GloriousEggroll/proton-ge-custom/issues/858),
+[vkd3d-proton#3348](https://github.com/HansKristian-Work/vkd3d-proton/issues/3348)).
+- Removed the Star Citizen native AMD AGS override added in GE-Proton11-10. It was not the cause of the
+EAC violation.
+- Space Marine 2 was also reported broken in 11-10, but worked when tested with the above mentioned changes.
+
+## Protonfixes
+
+- Star Citizen: install .NET 4.8 for the new RSI Launcher.
+- Windows version fixes (`win10`, `win7`, etc.) are now re-applied when a later winetricks install
+changes the Windows version. Previously a failed or partial .NET install could leave a prefix on
+Windows XP.
+- Added fixes for the BepInEx, MelonLoader and FrostyModManager mod loaders.
+- Call of Duty (2003): fixed the game fix not running.
+- Ceville: respect `PROTON_USE_XALIA` if it is already set.
+- Removed the unused `amdxcffx64` winetricks verb and updated the umu database.
+
+
 ## GE-Proton11-9
 
 # Hotfix release:
