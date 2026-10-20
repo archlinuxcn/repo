@@ -1,4 +1,4 @@
-From 3dd129ca7ee5b5c55b3be441fef24b5d0d898315 Mon Sep 17 00:00:00 2001
+From b792c94a6b1b6b4151a4e2cfb65e9e2b987e054d Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Sun, 19 Jul 2020 09:40:32 -0400
 Subject: [PATCH 2/9] Fix source file paths
@@ -11,10 +11,10 @@ Subject: [PATCH 2/9] Fix source file paths
  4 files changed, 26 insertions(+), 2 deletions(-)
 
 diff --git a/base/sysimg.jl b/base/sysimg.jl
-index 8466400948..13a9fb34d9 100644
+index c72e5ac160..f223725a62 100644
 --- a/base/sysimg.jl
 +++ b/base/sysimg.jl
-@@ -124,6 +124,13 @@ let
+@@ -131,6 +131,13 @@ let
  
          print_time("Stdlibs total", tot_time_stdlib)
      end
@@ -29,10 +29,10 @@ index 8466400948..13a9fb34d9 100644
      # Clear global state
      empty!(Core.ARGS)
 diff --git a/base/sysinfo.jl b/base/sysinfo.jl
-index 68104e1d6e..08a73245eb 100644
+index a956262ae6..bf25b64f5f 100644
 --- a/base/sysinfo.jl
 +++ b/base/sysinfo.jl
-@@ -48,7 +48,7 @@ A string containing the full path to the directory containing the `stdlib` packa
+@@ -49,7 +49,7 @@ A string containing the full path to the directory containing the `stdlib` packa
  global STDLIB::String = "$BINDIR/$DATAROOTDIR/julia/stdlib/v$(VERSION.major).$(VERSION.minor)" # for bootstrap
  # In case STDLIB change after julia is built, the variable below can be used
  # to update cached method locations to updated ones.
@@ -59,10 +59,10 @@ index a81908b96a..4c463db143 100644
          write(io, filename)
          write(io, UInt64(sizeof(src)))
 diff --git a/src/ast.c b/src/ast.c
-index cdae313edb..024fca1208 100644
+index 4db743bb5f..5270bb7b6e 100644
 --- a/src/ast.c
 +++ b/src/ast.c
-@@ -757,6 +757,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
+@@ -727,6 +727,18 @@ static value_t julia_to_scm_(fl_context_t *fl_ctx, jl_value_t *v, int check_vali
      return julia_to_scm_noalloc2(fl_ctx, v, check_valid);
  }
  
@@ -81,7 +81,7 @@ index cdae313edb..024fca1208 100644
  // Parse `text` starting at 0-based `offset` and attributing the content to
  // `filename`. Return an svec of (parsed_expr, final_offset)
  JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
-@@ -782,6 +794,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
+@@ -752,6 +764,7 @@ JL_DLLEXPORT jl_value_t *jl_fl_parse(const char *text, size_t text_len,
      fl_context_t *fl_ctx = &ctx->fl;
      value_t fl_text = cvalue_static_cstrn(fl_ctx, text, text_len);
      fl_gc_handle(fl_ctx, &fl_text);

@@ -1,4 +1,4 @@
-From 20381537b5518d64f85d60641a4024515e5dfebc Mon Sep 17 00:00:00 2001
+From a522d514ee420908232ddf6cd46afadaa7bb041a Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Mon, 26 May 2025 23:20:16 -0400
 Subject: [PATCH 6/9] Disable UCX signal handler
@@ -8,10 +8,10 @@ Subject: [PATCH 6/9] Disable UCX signal handler
  1 file changed, 2 insertions(+)
 
 diff --git a/src/init.c b/src/init.c
-index 0a517ea2e8..79cd201954 100644
+index 6b495d8221..54f2a77438 100644
 --- a/src/init.c
 +++ b/src/init.c
-@@ -685,6 +685,8 @@ static void init_global_mutexes(void) JL_NOTSAFEPOINT {
+@@ -691,6 +691,8 @@ static void init_global_mutexes(void) JL_NOTSAFEPOINT {
  
  JL_DLLEXPORT void jl_init_(jl_image_buf_t sysimage)
  {

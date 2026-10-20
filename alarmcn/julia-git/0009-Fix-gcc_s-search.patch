@@ -1,4 +1,4 @@
-From d5c22f86efe4503e0d7936856494c808ad0191d2 Mon Sep 17 00:00:00 2001
+From 0819276d42b12c408f9b6e7806b5374cee7ee650 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 5 Aug 2026 00:49:20 -0400
 Subject: [PATCH 9/9] Fix gcc_s search
@@ -8,11 +8,11 @@ Subject: [PATCH 9/9] Fix gcc_s search
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/base/linking.jl b/base/linking.jl
-index dda8442515..afdc662da8 100644
+index 043ad3e4c9..e6eaf4d92d 100644
 --- a/base/linking.jl
 +++ b/base/linking.jl
-@@ -203,7 +203,7 @@ function link_image_cmd(path, out)
-         libc           = _find_loaded(r"/libc\.so\.\d+$")                       # system libc
+@@ -207,7 +207,7 @@ function link_image_cmd(path, out)
+         libc           = _find_loaded(r"/(?:libc|ld-musl-[^/]+)\.so\.\d+$")     # system libc
          ld_linux       = _find_loaded(r"/ld-(?:linux|musl|elf)[^/]*\.so\.\d+$") # system ld
          libc_nonshared = _find_static("libc_nonshared.a")
 -        append!(LIBS,     String["-lgcc", "--as-needed", "-lgcc_s", "-latomic", "-lopenlibm", "--no-as-needed", libc])

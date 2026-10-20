@@ -1,4 +1,4 @@
-From c1876c12522b04807a4018f8c6d09ec56588974c Mon Sep 17 00:00:00 2001
+From 3ed2a2292da18cad2bff5322d274cc6a9863d164 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/9] Clear soname and hard code system lib path
@@ -1368,7 +1368,7 @@ index aabfbd5327..bbabb635fc 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
-index 0b550b24d5..840999b5db 100644
+index 23c9b41c6b..c7a58060a3 100644
 --- a/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
 +++ b/stdlib/libblastrampoline_jll/src/libblastrampoline_jll.jl
 @@ -10,9 +10,9 @@ export libblastrampoline
@@ -1384,8 +1384,8 @@ index 0b550b24d5..840999b5db 100644
  
  # Because LBT needs to have a weak-dependence on OpenBLAS (or any other BLAS)
  # we must manually construct a list of which modules and libraries we're going
-@@ -31,16 +31,9 @@ function add_dependency!(mod::Module, lib::LazyLibrary, on_load_callback::Functi
-     push!(on_load_callbacks, on_load_callback)
+@@ -35,16 +35,9 @@ function add_dependency!(mod::Module, lib::LazyLibrary, on_load_callback = nothi
+     return nothing
  end
  
 -libblastrampoline_path::String = ""
@@ -1401,9 +1401,9 @@ index 0b550b24d5..840999b5db 100644
 -    end,
 +    libblastrampoline_path,
      dependencies = LazyLibrary[],
-     on_load_callback = libblastrampoline_on_load_callback
+     on_load_callback = LBTOnLoadCallback()
  )
-@@ -56,13 +49,6 @@ is_available() = true
+@@ -60,13 +53,6 @@ is_available() = true
  # JLLWrappers path compatibility accessor
  get_libblastrampoline_path() = libblastrampoline_path
  
