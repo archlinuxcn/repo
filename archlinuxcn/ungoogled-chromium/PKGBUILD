@@ -11,14 +11,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=155.0.8059.79
+pkgver=155.0.8059.84
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=155.0.8059.79-1
+_uc_ver=155.0.8059.84-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -97,6 +97,7 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-138-nodejs-version-check.patch
         chromium-145-fix-SYS_SECCOMP.patch
         chromium-147-rust-1.95-bytemuck.patch
+        chromium-147-simdutf-8.0-base-char.patch
         chromium-149-use-of-undeclared-identifier-ERROR.patch
         chromium-150-revert-avx-flag-change.patch
         chromium-152-unbundle-minizip-undo-unicode.patch
@@ -104,7 +105,6 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-153-hermetic-python.patch
         chromium-153-iamf-tools-unbundled-opus.patch
         chromium-154-typescript.patch
-        chromium-155-fix-gn-no-public_inputs.patch
         chromium-155-crubit.patch
         chromium-155-remove-private_verification_tokens.patch
         chromium-155-isolatedDeclarations.patch
@@ -114,12 +114,13 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         enable-widevine-arm64.patch
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
-sha256sums=('fcb5be44f1f5916ac23309c706146819c792c0d0e9c1a8220b7fbc046d79f15e'
-            '22040dedc442fa21c44b73bf5ac5cf9d191d1e1802eca3a60b6f9abb52659d28'
+sha256sums=('2063834f528029ad02a6a3de6d229c3e8b19bc43864be397944cbda18d7ee680'
+            '555c7547de4d7f82dbe54d943b7f47d7b6e693b7b92a6e86dec0eac98e8092a5'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
             'b9e6339221efe03540ffb360c161d93604a1fc93a5a1c53e5e9849066f987d05'
+            '80e445d7a5cbd61d1252ecf46c5eaf0fb4a5e63bd1b9c976261df778a4586640'
             '951514535be65f0e2f84e82305d96292be1da353c1427ba1048ea24be70003c4'
             '5f6ccb7b945c8a13c690493723bad816b36f2f25792d47e677b56f8200907e60'
             '890e5d98088ef1c7c075a551442f03385d1db266cad8a65576704a22720683f9'
@@ -127,7 +128,6 @@ sha256sums=('fcb5be44f1f5916ac23309c706146819c792c0d0e9c1a8220b7fbc046d79f15e'
             'ebf74154266d0b6d6cc957c413f845052c5fcfce7745befb8821595cdf3f7d49'
             '2ab9fbe653829ce692f83ee780aad07e8c83a6686e51ab9459ad736cfa2850ee'
             'd061cf4aeba21b1d2edabc28afd38106246b99aa5ec699e1b9ee5ca8b76d8a23'
-            '81a9014afff7e2a836c2ba2da69a9023d42d2f69a46cb91a0504642c480f6cc7'
             '85217fbc43f075068167643f0357e3df19a46805efd81a3eae00f966e04290eb'
             'd42a5a72c1b085d2623b00caad958f18a6970dbed27558ce7b564e0468f3e252'
             'c5aaccfb1f5d6738bfe7e360d6af0bd22f0a1cf4104c28b66cb78e0ff3e9ae08'
@@ -149,6 +149,7 @@ fi
 declare -gA _system_libs=(
   [brotli]=brotli
   [dav1d]=dav1d
+  [double-conversion]=double-conversion
   #[ffmpeg]=ffmpeg    # YouTube playback stopped working in Chromium 120
   [flac]=flac
   [fontconfig]=fontconfig
@@ -169,6 +170,7 @@ declare -gA _system_libs=(
   [openh264]=openh264
   [opus]=opus
   #[re2]=re2          # needs libstdc++
+  [simdutf]=simdutf
   #[snappy]=snappy    # needs libstdc++
   #[woff2]=woff2      # needs libstdc++
   [zlib]=minizip
@@ -231,6 +233,9 @@ prepare() {
   # Credit: https://github.com/ungoogled-software/ungoogled-chromium/pull/3837
   patch -Np1 -i ../chromium-150-revert-avx-flag-change.patch
 
+  # To unbundle simdutf
+  patch -Np1 -i ../chromium-147-simdutf-8.0-base-char.patch
+
   patch -Np1 -i ../chromium-152-unbundle-minizip-undo-unicode.patch
 
   patch -Np1 -i ../chromium-152-unbundle-opus-devtools.patch
@@ -248,8 +253,6 @@ prepare() {
   # WebUI and point devtools at the system tsc binary
   # https://github.com/ungoogled-software/ungoogled-chromium/pull/3966
   patch -Np1 -i ../chromium-154-typescript.patch
-
-  patch -Np1 -i ../chromium-155-fix-gn-no-public_inputs.patch
 
   patch -Np1 -i ../chromium-155-crubit.patch
 
@@ -300,9 +303,16 @@ prepare() {
   # added benefit of not having to list all the remaining libraries
   local _lib
   for _lib in ${_unwanted_bundled_libs[@]}; do
-    find "third_party/$_lib" -type f \
-      \! -path "third_party/$_lib/chromium/*" \
-      \! -path "third_party/$_lib/google/*" \
+    # Most bundled libraries live under `third_party/<lib>`, but
+    # `double-conversion` is located under `base/third_party/double_conversion`
+    local _dir="third_party/$_lib"
+    if [[ ! -d "${_dir}" ]]; then
+      _dir="base/third_party/${_lib//-/_}"
+    fi
+
+    find "$_dir" -type f \
+      \! -path "$_dir/chromium/*" \
+      \! -path "$_dir/google/*" \
       \! -path "third_party/harfbuzz-ng/utils/hb_scoped.h" \
       \! -regex '.*\.\(gn\|gni\|isolate\)' \
       -delete

@@ -1,0 +1,26 @@
+From a2f732bb38e4cfd18b768d08ef1f2d9ce6f230c5 Mon Sep 17 00:00:00 2001
+From: LN Liberda <lauren@selfisekai.rocks>
+Date: Sun, 15 Mar 2026 05:30:36 +0100
+Subject: [PATCH] base: cast uint8_t into char for simdutf
+
+This is needed to build with simdutf >=8.0
+---
+ base/simdutf_shim.cc | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/base/simdutf_shim.cc b/base/simdutf_shim.cc
+index 81c5cc6aff5c8..88262066e53a0 100644
+--- a/base/simdutf_shim.cc
++++ b/base/simdutf_shim.cc
+@@ -14,7 +14,10 @@ size_t simdutf_base64_length_from_binary(size_t length) {
+ 
+ size_t simdutf_binary_to_base64(std::span<const uint8_t> input,
+                                 std::span<char> binary_output) {
+-  return simdutf::binary_to_base64(input, binary_output);
++  return simdutf::binary_to_base64(
++      std::span<const char>(reinterpret_cast<const char*>(input.data()),
++                            input.size()),
++      binary_output);
+ }
+ 
+ }  // namespace base::internal
