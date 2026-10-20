@@ -2,7 +2,7 @@
 # Maintainer: Matthias Kurz <m.kurz@irregular.at>
 
 pkgname=tiny-dfr
-pkgver=0.3.7
+pkgver=0.3.8
 pkgrel=1
 pkgdesc='Apple silicon touch bar input / display daemon'
 arch=('aarch64')
@@ -11,7 +11,7 @@ license=('MIT' 'APACHE')
 makedepends=('rust')
 depends=('pango' 'libinput' 'gdk-pixbuf2' 'librsvg')
 source=("tiny-dfr-${pkgver}.tar.gz::https://static.crates.io/crates/tiny-dfr/tiny-dfr-${pkgver}.crate")
-sha512sums=('af8ac6116c80cf7e87f06158c0917af4faad1804531666bd21d8382d729b969cc8902e0e1b9e78e628f4bda4f54ae942a36ce64d8388edb0db2b6ce167214cb7')
+sha512sums=('01f4f2cc9519f20225a5497dc01769c50000dcdc64f41f7c170460405869eb1079fd99cbc508a7c0b87763f9c586168d6f249303103b7ceeb9099867cf61fcd3')
 
 prepare() {
   cd tiny-dfr-$pkgver
