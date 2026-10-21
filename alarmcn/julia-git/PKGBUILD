@@ -241,7 +241,17 @@ prepare() {
 
   for p in cc c++ gcc g++; do
     cat > bin/$p <<EOF
-exec /usr/bin/$p "\${@/#-O0/-Og}" -fasynchronous-unwind-tables -ffile-prefix-map="${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
+#!/bin/bash
+args=()
+for arg in "\${@}"; do
+    if [[ \$arg == -O0 ]]; then
+       arg=-Og
+    elif [[ \$arg == -isystem/usr/include ]]; then
+       arg=-I/usr/include
+    fi
+    args=("\${args[@]}" "\${arg}")
+done
+exec /usr/bin/$p "\${args[@]}" -fasynchronous-unwind-tables -ffile-prefix-map="${srcdir}=${DBGSRCDIR:-/usr/src/debug}"
 EOF
     chmod +x bin/$p
   done
