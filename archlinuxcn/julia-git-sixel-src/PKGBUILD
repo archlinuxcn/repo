@@ -1,6 +1,6 @@
 pkgname=julia-git-sixel-src
-pkgver=0.1.5
-_commit=c6f43bd15a66b27461e9d9ad35a2f7dabae38fb1
+pkgver=0.1.6
+_commit=16ea8fb055da2ea717f93a45a298c9359a69c798
 pkgrel=1
 pkgdesc="Sixel.jl"
 url="https://github.com/JuliaIO/Sixel.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/Sixel.jl.git#commit=$_commit")
-sha256sums=('edaa5c5aad7d09365d79b0ea5f2b49dac6ece62cbecc108eb236bb19d4105af7')
+sha256sums=('6251cdc4d347b92ca9c9769bbe7eb766f7ed617bf969bdd6180dc0faac60cca6')
 
 package() {
   cd Sixel.jl
