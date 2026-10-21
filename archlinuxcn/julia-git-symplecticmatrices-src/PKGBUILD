@@ -1,6 +1,6 @@
 pkgname=julia-git-symplecticmatrices-src
-pkgver=0.1.2
-_commit=1726ddb8ac9fc3b47fee9df5eec72a2de3a7c0dc
+pkgver=0.1.3
+_commit=7c0c8e74590efec29a82941d12400f2ed5f647fc
 pkgrel=1
 pkgdesc="SymplecticMatrices.jl"
 url="https://github.com/apkille/SymplecticMatrices.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/apkille/SymplecticMatrices.jl.git#commit=$_commit")
-sha256sums=('1fa05c0a87762bf0746a1eabbed971f9d547be130b0aad657e6ec69428084740')
+sha256sums=('30a037b55cab5401d54eed624798e1c23f22c6662d4aa8e598d3a848dbaee539')
 
 package() {
   cd SymplecticMatrices.jl
