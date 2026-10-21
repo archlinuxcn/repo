@@ -1,6 +1,6 @@
 pkgname=julia-git-spirv2clc_jll-src
-pkgver=0.2.1+0
-_commit=439d835e5374036e8fb881e5f55c942334d36bcf
+pkgver=0.2.5+0
+_commit=f2c054f6d511a907b4a7ef09e69b2c02db18b118
 pkgrel=1
 pkgdesc="spirv2clc_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/spirv2clc_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git spirv2clc)
 source=("git+https://github.com/JuliaBinaryWrappers/spirv2clc_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('6c247acb1fcd464dac96172ea4d4e838705232e3fde794c1bbbb798cf73d9d1f'
+sha256sums=('3adf02641f779d505ff1e86a33a3c11b6e1ecf0fb872cdbec687f5a5cf569203'
             '4c011eb961e6cdb64ceac6c301913f18e1c24b9c8ea88af3b44e2431664f0575')
 
 build() {
