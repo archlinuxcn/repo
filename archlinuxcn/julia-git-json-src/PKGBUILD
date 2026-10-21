@@ -1,6 +1,6 @@
 pkgname=julia-git-json-src
-pkgver=1.10.0
-_commit=a69c082751529014ceeac89a2b803dd4d79945eb
+pkgver=1.11.0
+_commit=f6f81549ca36f3e5f01c0114dcbb5d295dbce804
 pkgrel=1
 pkgdesc="JSON.jl"
 url="https://github.com/JuliaIO/JSON.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIO/JSON.jl.git#commit=$_commit")
-sha256sums=('5178c505913deb49862b142f677e5392acf4f35f387db575003cc5cae080176f')
+sha256sums=('5f1187172603db724aa16f7405f2a1b0e3bf512e21e7ae56a98748e78cf7a1d0')
 
 package() {
   cd JSON.jl
