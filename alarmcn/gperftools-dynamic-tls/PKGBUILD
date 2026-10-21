@@ -7,7 +7,7 @@
 # Contributor: Jan Rüegg <rggjan@gmail.com>
 
 pkgname=gperftools-dynamic-tls
-pkgver=2.18.1
+pkgver=2.19
 pkgrel=1
 pkgdesc='Fast, multi-threaded malloc and nifty performance analysis tools'
 arch=(aarch64 x86_64)
@@ -24,11 +24,11 @@ makedepends=(
   git
 )
 source=("git+https://github.com/gperftools/gperftools.git#tag=gperftools-$pkgver")
-b2sums=(c34297c71106df8ffa7111c7f9530b25c883492f24604da45e223487ca3eaadc7a670683eff1e6a81c237573ffd347de3986e7146fb15cbcd5a0263d5cbeada3)
+b2sums=(df374ad3d8972d8d796c7fe5efaa10fe4f3ed0a354355400f90223dec35bb862ad36337e25d51f8417cec9b7a2551067f6357afc6823977bfdddb6b596c1f8eb)
 
 _prepare() {
   cd gperftools
-  autoreconf -fi
+  autoreconf -fiv
 }
 
 prepare() {
@@ -45,8 +45,9 @@ build() {
     --sysconfdir=/etc \
     --localstatedir=/var \
     --enable-frame-pointers \
-    --enable-libunwind
-  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+    --enable-libunwind \
+    --disable-aw-backtrace
+#  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
 }
 
