@@ -1,6 +1,6 @@
 pkgname=julia-git-juniper-src
-pkgver=0.9.4
-_commit=a4f9855906afef58fd14442b79612e663caf18e8
+pkgver=0.9.5
+_commit=1e36839403a6656ae52b1c786d22246daa17e6e7
 pkgrel=1
 pkgdesc="Juniper.jl"
 url="https://github.com/lanl-ansi/Juniper.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/lanl-ansi/Juniper.jl.git#commit=$_commit")
-sha256sums=('16d1d82f1db8b65a7151489ad51eff33a97d59e3f20efdf4030a30da8b395d0a')
+sha256sums=('4832866fe3b8d5aa4d2657b39a39ca9ba389e503035af1f3d7bbf98420eb9571')
 
 package() {
   cd Juniper.jl
