@@ -1,6 +1,6 @@
 pkgname=julia-git-loopvectorization-src
-pkgver=0.12.174
-_commit=06749be5edd2c9a2a3bdd41d2adbe009f77d6873
+pkgver=0.12.175
+_commit=fea1e1c1f3252806dfab90d4f38481e29d33022f
 pkgrel=1
 pkgdesc="LoopVectorization.jl"
 url="https://github.com/JuliaSIMD/LoopVectorization.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSIMD/LoopVectorization.jl.git#commit=$_commit")
-sha256sums=('8e66715b75e644c1810bfdd971487d5f095aeb31af29b4fbce022b100ccc2b08')
+sha256sums=('cbab5d527f9efb922fe4a12688b3b18a6f839e0254ebf9811cb4beaf47d35a6c')
 
 # prepare() {
 #   cd LoopVectorization.jl
