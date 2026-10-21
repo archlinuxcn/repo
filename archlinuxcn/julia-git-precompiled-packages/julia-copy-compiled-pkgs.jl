@@ -1,22 +1,31 @@
 #!/usr/bin/julia
 
+const has_syntax_ver = isdefined(Base, :PkgLoadSpec)
+const has_edition = isdefined(Base, :project_get_edition)
+const SyntaxVersion = has_edition ? Tuple{Int,Int} : VersionNumber
+
 struct PkgInfo
     name::String
-    syntax_ver::VersionNumber
+    syntax_ver::SyntaxVersion
     sources::Dict{String,String}
     deps::Vector{String}
     weakdeps::Vector{String}
 end
 
-const has_syntax_ver = isdefined(Base, :PkgLoadSpec)
+@static if has_edition
+    get_syntax_version(d) = Base.project_get_edition(d)
+elseif has_syntax_ver
+    get_syntax_version(d) = Base.project_get_syntax_version(d)
+else
+    get_syntax_version(d) = VERSION
+end
 
 @static if has_syntax_ver
-    import Base: project_get_syntax_version, PkgLoadSpec
+    import Base: PkgLoadSpec
     stale_cachefile(src, syntax_ver, cachepath) =
         Base.stale_cachefile(PkgLoadSpec(src, syntax_ver), cachepath,
                              ignore_loaded=true)
 else
-    project_get_syntax_version(d) = VERSION
     stale_cachefile(src, syntax_ver, cachepath) =
         Base.stale_cachefile(src, cachepath, ignore_loaded=true)
 end
@@ -51,7 +60,7 @@ function pkg_info(srcdir, pkg, d)
     deps = read_deps(d, "deps")
     weakdeps = read_deps(d, "weakdeps")
     setdiff!(deps, weakdeps)
-    return PkgInfo(pkg, project_get_syntax_version(d), sources, deps, weakdeps)
+    return PkgInfo(pkg, get_syntax_version(d), sources, deps, weakdeps)
 end
 
 function get_pkginfo(stdlib_dir, pkg)
