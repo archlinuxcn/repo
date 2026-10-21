@@ -1,6 +1,6 @@
 pkgname=julia-git-manifoldsbase-src
-pkgver=2.6.0
-_commit=b16e9d6f305a68385135092055cb8698d6c69e89
+pkgver=2.6.2
+_commit=27f5273bb3b9a81e919af526e9e0fbbc97f23ba8
 pkgrel=1
 pkgdesc="ManifoldsBase.jl"
 url="https://github.com/JuliaManifolds/ManifoldsBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaManifolds/ManifoldsBase.jl.git#commit=$_commit")
-sha256sums=('a936136d36558750b8495e88fde02dbee7dc2d2e7ed139ccd25a83d9d61094f2')
+sha256sums=('89032e0a51a8e37204437d5d1e70bd6bf12dd611a56806876a3d02fb63b8d564')
 
 package() {
   cd ManifoldsBase.jl
