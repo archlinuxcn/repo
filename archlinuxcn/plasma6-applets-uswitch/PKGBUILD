@@ -4,8 +4,8 @@ _repo=uswitch
 pkgname=plasma6-applets-uswitch
 # TODO remove this when new version releases
 _ref=c10cb79d1c1a1e1983e1cda62f6284b827fbabc8
-pkgver=1.3.0
-pkgrel=5
+pkgver=2.1.0
+pkgrel=1
 pkgdesc='Modified version of User Switch plasmoid'
 url="https://gitlab.com/divinae/uswitch"
 license=('GPL-3.0-only')
