@@ -1,7 +1,7 @@
 pkgname=julia-git-tree_sitter_jll-src
-pkgver=0.25.10+0
-_commit=6e54f9d052bbf152b20b2f345700f9bedfec457a
-pkgrel=2
+pkgver=0.26.9+0
+_commit=4ae5aeeb1846efb0585737544272aa77c0273759
+pkgrel=1
 pkgdesc="tree_sitter_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/tree_sitter_jll.jl.git"
 arch=('any')
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git tree-sitter)
 source=("git+https://github.com/JuliaBinaryWrappers/tree_sitter_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('8daecdba1566a44911ee7a358c64adce8c74b0e61339dce44450e8f760b94eb5'
+sha256sums=('f5f0a5d879864b994a174d4e1ca28c16b75a810d8bf58cad8c61aac08e233222'
             'acf574c9d4911624cd4f2f40f2705edae0fe69875770b20456af7ee95470df58')
 
 build() {
