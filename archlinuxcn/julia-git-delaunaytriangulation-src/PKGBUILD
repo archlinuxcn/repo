@@ -12,7 +12,7 @@ source=("git+https://github.com/JuliaGeometry/DelaunayTriangulation.jl.git#commi
 sha256sums=('a90b0479c888f2531319c699052259de85136bdb88606db15ee1f1a8511f7c87')
 
 package() {
-  cd DelaunayTriangulation.jl
+  cd DelaunayTriangulation.jl/DelaunayTriangulation
 
   JULIA_INSTALL_SRCPKG=1 . /usr/lib/julia/julia-install-pkg.sh DelaunayTriangulation "${pkgdir}" "${pkgname}" julia-git
 }
