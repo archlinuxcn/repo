@@ -1,4 +1,4 @@
-From 33bd0fc28d93f2d58f599689dbcf5573c7d0d79e Mon Sep 17 00:00:00 2001
+From b80c87c0e12abf46f1bffc05ba60ed0ea79e44b8 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 30 Aug 2023 09:28:03 -0400
 Subject: [PATCH 4/9] Support loading extensions from STDLIB
@@ -8,7 +8,7 @@ Subject: [PATCH 4/9] Support loading extensions from STDLIB
  1 file changed, 51 insertions(+)
 
 diff --git a/base/loading.jl b/base/loading.jl
-index 56c2268157..76ffb25787 100644
+index 56c2268157..574a26ec71 100644
 --- a/base/loading.jl
 +++ b/base/loading.jl
 @@ -1330,6 +1330,34 @@ end
@@ -34,7 +34,7 @@ index 56c2268157..76ffb25787 100644
 +            if exts !== nothing
 +                if pkg.name in keys(exts)
 +                    return PkgLoadSpec(find_ext_path(pkgdir, pkg.name),
-+                                       project_get_syntax_version(d))
++                                       project_get_edition(d))
 +                end
 +            end
 +        end
