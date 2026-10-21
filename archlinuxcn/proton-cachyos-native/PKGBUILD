@@ -2,7 +2,7 @@
 # Maintainer: loathingkernel <loathingkernel _a_ gmail _d_ com>
 
 pkgname=proton-cachyos-native
-_srctag=11.0-20261014
+_srctag=11.0-20261015
 _commit=
 pkgver=${_srctag//-/.}
 _geckover=2.47.4
@@ -10,7 +10,7 @@ _monover=11.3.0
 _xaliaver=0.5.0
 _zludaver=v7-preview.15
 _zludasha=86ec0a9
-pkgrel=2
+pkgrel=1
 epoch=1
 
 source=(
@@ -352,7 +352,7 @@ package() {
         $(find "${_monodir}" -iname "*x86_64.dll" -or -iname "*x86_64.exe")
 }
 
-b2sums=('643b5396241257181c74afdaeb229f995fa43c76af837bb310785bc43fec60d305bb2757775ebfe87dbf078148a1f6fcf6a6595f1221d29d9a7594bb65c35236'
+b2sums=('d55b53d0c81283038fadc4074ca590f0bc7dfbfd458a58589dbeda11c07dac58171fc403ca8611af0ad2b9f4f39bb064902970a1ca6065b865eaef214738db08'
         '2a73c12585b502ae11188482cbc9fb1f45f95bfe4383a7615011104b132f4845f9813d01fb40277e1934fab5f1b35ab40b4f4a66a9967463dd1d666a666904e9'
         '62856a88266b4757602c0646e024f832974a93f03b9df253fd4895d4f11a41b435840ad8f7003ec85a0d8087dec15f2e096dbfb4b01ebe4d365521e48fd0c5c0'
         '230b9094049fc8b0c5600c44ad9514541f4bb21a75a0fd32e5025aa4c267f3b1d0032929d215688ed8ebe6c1b3ade93e3643272305f6f81b734d376cdea257c2'
