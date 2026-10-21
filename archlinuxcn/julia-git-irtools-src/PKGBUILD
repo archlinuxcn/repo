@@ -1,6 +1,6 @@
 pkgname=julia-git-irtools-src
-pkgver=0.4.20
-_commit=b642cc112f4e3eaab92337d447dfbbe06d8be1b4
+pkgver=0.4.21
+_commit=8ffa08cc78719403bf39e850cfe3df58dafd03ed
 pkgrel=1
 pkgdesc="IRTools.jl"
 url="https://github.com/FluxML/IRTools.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/FluxML/IRTools.jl.git#commit=$_commit")
-sha256sums=('0cb3286440ed06835f83d711bd0a270d7f71b445529849f1805e91f159476205')
+sha256sums=('8dd1819c0a98ff2fe736e1f2af3d3a34dccf0c2bd4ec770d77cc0bbccf5b9492')
 
 package() {
   cd IRTools.jl
