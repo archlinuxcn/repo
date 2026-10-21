@@ -1,27 +1,24 @@
 #
 
 pkgname=intel-libdfp
-pkgver=20U4
-pkgrel=2
+pkgver=20U5
+pkgrel=0
 pkgdesc='Intel(R) Decimal Floating-Point Math Library'
 arch=(aarch64 armv7h i686 x86_64)
 url='https://www.intel.com/content/www/us/en/developer/articles/tool/intel-decimal-floating-point-math-library.html'
 license=('custom')
-source=("https://www.netlib.org/misc/intel/IntelRDFPMathLib${pkgver}.tar.gz"
-        decfp.patch)
-sha256sums=('1df86132e7a31fd74d784fee1c679b21a088f73a8ec979cfaf784c200392e125'
-            '87cbeaf15742c6fc941c89078b2752a8a8d101c6ac54e9e236ec38450f0602af')
+source=("https://www.netlib.org/misc/intel/IntelRDFPMathLib${pkgver}.tar.gz")
+sha256sums=('85dafd70f0fe2a8da218ade4233fca9d3228b0b04cd6d8527f7499926be01037')
 
 prepare() {
-  # cd IntelRDFPMathLib${pkgver}
+  cd IntelRDFPMathLib${pkgver}
 
-  patch -Np1 --no-backup-if-mismatch < "decfp.patch"
+  find LIBRARY -iname '*.h' -exec sed -i -e 's/BID_ALIGN([^()]*) *__attribute__ *((aligned(.*)))/BID_ALIGN(n)/' {} \;
   sed -i -e '1 i #include<fenv.h>' LIBRARY/src/bid_functions.h
 }
 
 build() {
-  # cd IntelRDFPMathLib${pkgver}/LIBRARY
-  cd LIBRARY
+  cd IntelRDFPMathLib${pkgver}/LIBRARY
 
   CFLAGS+=' -fPIC -fsigned-char -D__NO_BINARY80__=1'
 
@@ -48,7 +45,7 @@ build() {
 }
 
 package() {
-  # cd IntelRDFPMathLib${pkgver}
+  cd IntelRDFPMathLib${pkgver}
 
   mkdir -p "${pkgdir}/usr/lib/"
   install -Dm755 LIBRARY/libbid-intel.so "${pkgdir}/usr/lib/"
