@@ -133,6 +133,10 @@ package_llvm-julia-git() {
   # Remove clang-* binary (provided by clang package)
   rm -f "$pkgdir"/${_llvm_prefix}/bin/clang*
 
+  # Remove lit files
+  rm -f "$pkgdir"/${_llvm_prefix}/bin/lit
+  rm -rf "$pkgdir"/${_llvm_prefix}/lib/python*/site-packages/lit
+
   if [[ -n $_versioned_llvm ]]; then
     # Create versioned symlinks from /usr/bin/ to /usr/lib/llvm${_versioned_llvm}/bin/
     install -d "$pkgdir/usr/bin"
