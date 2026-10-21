@@ -1,7 +1,7 @@
 pkgname=julia-git-cpuid-src
-pkgver=0.3.1
-_commit=df5fa0b9a02914b460b91b7d34434e527b67a41c
-pkgrel=2
+pkgver=0.3.3
+_commit=1772214526ccba43ff4f61bdf98d7e5ea9f54398
+pkgrel=1
 pkgdesc="CpuId.jl"
 url="https://github.com/m-j-w/CpuId.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/m-j-w/CpuId.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('a2d3833083e7e649ac81ba8a9e8258d4690f2891592a69014aad6c7f15cafcae')
 
 package() {
   cd CpuId.jl
