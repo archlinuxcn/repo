@@ -7,14 +7,18 @@ url="https://github.com/maleadt/LLVM.jl.git"
 arch=(aarch64 armv7h x86_64)
 license=('MIT')
 makedepends=(git cmake llvm-julia-git)
-source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit")
-sha256sums=('c0b35f53b5066ef26f0b19050d40f63cabc57ec6f46abf88ccd1f1216b09848b')
+source=("git+https://github.com/maleadt/LLVM.jl.git#commit=$_commit"
+        LLVM.jl-v9.13.2-llvm23.patch)
+sha256sums=('c0b35f53b5066ef26f0b19050d40f63cabc57ec6f46abf88ccd1f1216b09848b'
+            '7662ad64f39d87daa13bc6513c03d50bc0891f002ab7f27976524c2a4f123554')
 options=('debug')
 
 _versioned_llvm=
 
 prepare() {
   cd LLVM.jl
+
+  patch -Np1 --no-backup-if-mismatch < "../LLVM.jl-v9.13.2-llvm23.patch"
 }
 
 build() {
