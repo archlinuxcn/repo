@@ -2,7 +2,7 @@
 
 pkgname=servo
 pkgver=0.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Parallel Browser Project: web browser written in Rust'
 arch=(x86_64 i686)
 url=https://github.com/servo/servo
@@ -41,16 +41,20 @@ sha256sums=('60cc48954ed8e12ffee988fe56f5c6abeb4adbd06b735149384a95eba2925b67')
 _srcenv() {
 	cd "$pkgname"
 	export CARGO_HOME="$srcdir"
-	export CARGO_PROFILE_RELEASE_DEBUG=2
-	export CARGO_PROFILE_RELEASE_STRIP=false
-	export CARGO_PROFILE_RELEASE_LTO=thin
-	export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+	if check_option debug y; then
+		export CARGO_PROFILE_RELEASE_DEBUG=2
+		export CARGO_PROFILE_RELEASE_STRIP=false
+	fi
+	if check_option lto y; then
+		export CARGO_PROFILE_RELEASE_LTO=thin
+		export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+	fi
 	export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
-	export RUSTUP_TOOLCHAIN=stable
-	export CARGO_TARGET_DIR=target
 	CFLAGS+=' -fno-lto'
 	CXXFLAGS+=' -fno-lto'
 	RUSTFLAGS+=" --remap-path-prefix $PWD=/"
+	export RUSTUP_TOOLCHAIN=stable
+	export CARGO_TARGET_DIR=target
 }
 
 prepare() {
