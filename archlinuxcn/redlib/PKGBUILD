@@ -1,7 +1,7 @@
 # Maintainer: fossdd <fossdd@pwned.life>
 
 pkgname=redlib
-pkgver=0.36.0
+pkgver=0.40.0
 pkgrel=1
 pkgdesc="Private front-end for Reddit"
 url="https://github.com/${pkgname}-org/${pkgname}"
@@ -10,7 +10,7 @@ arch=('x86_64' 'aarch64' 'riscv64')
 makedepends=('cargo' 'clang' 'cmake' 'git')
 backup=("etc/${pkgname}.conf")
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.zip")
-sha256sums=('cb5f474d2b38bfd5b14587af20459447f433188f72db1cd8f22178aecf753b0c')
+sha256sums=('956e4172dcb784c525639e9445cbde02397fdb361647a25cab10b05f915f7368')
 options=('!lto')
 
 prepare() {
