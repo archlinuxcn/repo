@@ -1,6 +1,6 @@
 pkgname=julia-git-freetype2_jll-src
-pkgver=2.14.3+1
-_commit=9388d7eb3972b88023ecd6be40c937791457dae2
+pkgver=2.15.0+0
+_commit=61f9e9c3d9ce036cd32911dc60730a52919f55d7
 pkgrel=1
 pkgdesc="FreeType2_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/FreeType2_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git freetype2)
 source=("git+https://github.com/JuliaBinaryWrappers/FreeType2_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('6b3aef5df8a2b4230081545fe7af404f4de8cbfcaebac988b3cd534908a9d839'
+sha256sums=('0263efea18886bcb693115a33d15c1fdfdbaafa145f17cff5738e899dff7b385'
             'bd75e0ff06636407cbfb8dfd0426437d45e22b38a3471d4a66a51711d01098e5')
 
 build() {
