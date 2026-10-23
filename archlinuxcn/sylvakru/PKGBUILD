@@ -1,0 +1,99 @@
+# Maintainer: Dee.H.Y <dongfengweixiao at hotmail dot com>
+
+pkgname="sylvakru"
+pkgver=3.0.0
+pkgrel=1
+pkgdesc="A cross-platform music player for local and self-hosted libraries, built with Flutter."
+url="https://github.com/AfalpHy/sylvakru"
+license=('Apache-2.0')
+arch=('x86_64' 'aarch64')
+_flutterver=3.41.7
+depends=(
+  'at-spi2-core'
+  'cairo'
+  'fontconfig'
+  'glib2'
+  'glibc'
+  'gtk3'
+  'libayatana-appindicator'
+  'libepoxy'
+  'libgcc'
+  'libstdc++'
+  'pango'
+)
+makedepends=(
+  'clang'
+  'cmake'
+  'fvm'
+  'lld'
+  'llvm'
+  'ninja'
+  'patchelf'
+  'rustup'
+)
+
+_pkgsrc="$pkgname-$pkgver"
+_pkgext="tar.gz"
+source=(
+  "$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext"
+  "com.afalphy.sylvakru.desktop"
+  "0001-fix-build-error.patch"
+)
+sha256sums=(
+  '1f568f2d4bf0d60a7c9350f6f60e06dd9c0c2761c68a67f6f359a8f8a58475f0'
+  'd3c495fb546e70d6b809ef61e57b45b8e87e8c123c9d8cf0306a05b8c1cf2b64'
+  '95d19cfe5055e70df99559bc0a79df399abd615be8de7ef599d3a19904edb1e8'
+)
+
+prepare() {
+  cd "$_pkgsrc"
+  patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
+}
+
+build() {
+  export FVM_CACHE_PATH="$SRCDEST/fvm-cache"
+
+  cd "$_pkgsrc"
+  fvm install $_flutterver
+  fvm use $_flutterver
+
+  fvm flutter --disable-analytics
+  #fvm flutter pub upgrade --major-versions
+  fvm flutter --no-version-check pub get
+  fvm flutter clean && fvm flutter build linux --release
+}
+
+package() {
+  if [ $CARCH == "aarch64" ]; then
+    FLUTTER_ARCH=arm64
+  else
+    FLUTTER_ARCH=x64
+  fi
+
+  cd "$_pkgsrc/build/linux/$FLUTTER_ARCH/release/bundle"
+
+  install -Dm755 "Sylvakru" "$pkgdir/usr/lib/$pkgname/$pkgname"
+  cp --reflink=auto -r lib/ "$pkgdir/usr/lib/$pkgname/"
+  cp --reflink=auto -r data/ "$pkgdir/usr/lib/$pkgname/"
+
+  # runpath
+  patchelf --set-rpath '$ORIGIN/lib' "$pkgdir/usr/lib/$pkgname/$pkgname"
+  for i in "$pkgdir/usr/lib/$pkgname/lib"/*.so; do
+    [ -z "$(patchelf --print-rpath "$i")" ] && continue
+    patchelf --set-rpath '$ORIGIN' "$i"
+  done
+
+  # symlink
+  install -dm755 "${pkgdir}/usr/bin"
+  ln -sfr "$pkgdir/usr/lib/$pkgname/$pkgname" "$pkgdir/usr/bin/${pkgname}"
+
+  # icon
+  install -Dm644 "$srcdir/$_pkgsrc/app_icons/win_linux.png" \
+    "$pkgdir/usr/share/pixmaps/$pkgname.png"
+
+  # .desktop file
+  install -Dm644 "$srcdir/com.afalphy.sylvakru.desktop" "${pkgdir}/usr/share/applications/com.afalphy.sylvakru.desktop"
+
+  # license
+  install -Dm644 "$srcdir/$_pkgsrc/LICENSE" -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
