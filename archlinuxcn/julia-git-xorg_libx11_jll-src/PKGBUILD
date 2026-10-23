@@ -1,6 +1,6 @@
 pkgname=julia-git-xorg_libx11_jll-src
-pkgver=1.8.13+0
-_commit=1c3dda27bb08892a9e19e9cd3da442f6ae484c9e
+pkgver=1.8.14+0
+_commit=9e3023cefa988205659518e99376684e9f77eeee
 pkgrel=1
 pkgdesc="Xorg_libX11_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Xorg_libX11_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libx11)
 source=("git+https://github.com/JuliaBinaryWrappers/Xorg_libX11_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('3952a6950882243d4477cc3c5102b0054d6ff38caf236f3d40f1e86cf343e328'
+sha256sums=('3eaf819edf94b93ca2b4e8e2823a412e4340c2b35508f253f85fa51ec6f80091'
             '2dc2544b9d233b0be62cc086a9fb0084d538849bfe574c6dde6aec4987875b97')
 
 build() {
