@@ -1,0 +1,30 @@
+# This generated the initial database for pacman-ps
+DB_DIR="/var/cache/pacman-ps"
+post_install() {
+  # If the database exists, just update it and keep existing entries
+  if [ -f "${DB_DIR}/files.db" ]; then
+    pacman -Ql | sort -u -k 2,2 - "${DB_DIR}/files.db" > "${DB_DIR}/files-temp.db"
+    rm "${DB_DIR}/files.db"
+  # Otherwise create it
+  else
+    mkdir -p "${DB_DIR}"
+    pacman -Ql | sort -u -k 2,2 -  > ${DB_DIR}/files-temp.db
+  fi
+  mv "${DB_DIR}/files-temp.db" "${DB_DIR}/files.db"
+  printf "Created initial database at %s/files.db\n" "${DB_DIR}"
+}
+
+# On package upgrade if the database doesn't exist, create it
+post_upgrade() {
+  if [ ! -f "${DB_DIR}/files.db" ]; then
+    printf "Can't find database at %s/files.db\nGenerating one" "${DB_DIR}"
+    pacman -Ql | sort -u -k 2,2 - > ${DB_DIR}/files-temp.db
+  fi
+}
+
+# This removes the initial database for pacman-ps if it exists
+post_remove() {
+  if [ -d "${DB_DIR}" ]; then
+    rm -rf "${DB_DIR}"
+  fi
+}
