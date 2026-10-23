@@ -1,7 +1,7 @@
 pkgname=julia-git-densityinterface-src
-pkgver=0.4.0
-_commit=e71eb2ded6f3320d66a6d7efc615e3e60dddb58f
-pkgrel=2
+pkgver=1.0.0
+_commit=2a5e20c01ea12c9d0c567ba81f7a527fbf1cf7ad
+pkgrel=1
 pkgdesc="DensityInterface.jl"
 url="https://github.com/JuliaMath/DensityInterface.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/DensityInterface.jl.git#commit=$_commit")
-sha256sums=('SKIP')
+sha256sums=('bcbc4bb420f7016703a4e0748024f11109065f3650f788f565c088c8b646b8c4')
 
 package() {
   cd DensityInterface.jl
