@@ -1,7 +1,7 @@
 # Maintainer: Kyle McNally <kyle@kmcnally.net>
 # Contributor: John Williams <jwilliams4200 liamg reverse&remove moc>
 pkgname=snapraid
-pkgver=15.0
+pkgver=15.1
 pkgrel=1
 pkgdesc="tool for Snapshot RAID: generate parity files, maintain checksums on data, restore lost data"
 arch=('x86_64' 'i686')
@@ -13,7 +13,7 @@ optdepends=(
   'snapraid-daemon: daemon for SnapRAID ux/ui'
 )
 source=("https://github.com/amadvance/${pkgname}/releases/download/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('ceba44e15566386d923d6895ecab81f7437848b03a4cf9585c02d3636197ce19')
+sha256sums=('fb2d6a9cf9c8ea30c6962f4a48764dc9012fe61d6e23f40a8d959dadea02278b')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
