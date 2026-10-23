@@ -1,0 +1,70 @@
+# Maintainer: zhicheng233
+
+pkgname=(moonlight-vplus)
+pkgver=6.3.7
+pkgrel=1
+pkgdesc="Moonlight V+ for PC is an enhanced desktop client based on moonlight-stream/moonlight-qt, designed to work closely with Foundation Sunshine."
+arch=(
+    'x86_64'
+    'aarch64'
+)
+url="https://github.com/qiin2333/moonlight-qt"
+license=('GPL-3.0-or-later')
+depends=(
+    'ffmpeg'
+    'libdrm'
+    'libva'
+    'libvdpau'
+    'libxkbcommon'
+    'libglvnd'
+    'libegl'
+    'opus'
+    'sdl2'
+    'sdl2_ttf'
+    'openssl'
+    'qt6-base'
+    'qt6-declarative'
+    'qt6-svg'
+    'qt6-wayland'
+)
+
+makedepends=(
+    'git'
+    'qt6-tools'
+    'vulkan-headers'
+)
+source=(
+    "git+https://github.com/qiin2333/moonlight-qt.git#tag=v${pkgver}"
+    "moonlight-vplus.desktop"
+)
+sha256sums=(
+    'SKIP'
+    'SKIP'
+)
+
+prepare() {
+    cd "$srcdir/moonlight-qt"
+
+    git submodule update --init --recursive
+}
+
+build() {
+    cd "moonlight-qt"
+    qmake6 moonlight-qt.pro
+    make
+}
+
+package_moonlight-vplus() {
+    pkgdesc="Moonlight V+ for PC"
+
+    cd "moonlight-qt"
+
+    install -Dm755 app/moonlight \
+        "$pkgdir/usr/bin/moonlight-vplus"
+
+    install -Dm644 app/moonlight_wix.png \
+        "$pkgdir/usr/share/icons/hicolor/64x64/apps/moonlight-vplus.png"
+
+    install -Dm644 "$srcdir/moonlight-vplus.desktop" \
+        "$pkgdir/usr/share/applications/moonlight-vplus.desktop"
+}
