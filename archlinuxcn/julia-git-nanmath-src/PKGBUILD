@@ -1,6 +1,6 @@
 pkgname=julia-git-nanmath-src
-pkgver=1.1.4
-_commit=2361ed028119d2b16e3fb973ecc753d0f31d5061
+pkgver=1.1.5
+_commit=a2db7ec8a9e167e916d7b3f1dea76204a2295963
 pkgrel=1
 pkgdesc="NaNMath.jl"
 url="https://github.com/JuliaMath/NaNMath.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/NaNMath.jl.git#commit=$_commit")
-sha256sums=('104988317eb92db060a257c635492e9cc6fe28928eece82694ad1fdb8d0a659e')
+sha256sums=('58fdb1591240d57db98a38d0ed8d77ab5b5d9f056c08a371e47d756c43432b26')
 
 package() {
   cd NaNMath.jl
