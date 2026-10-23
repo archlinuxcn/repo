@@ -2,7 +2,7 @@
 
 _name=bitstruct
 pkgname=python-${_name}
-pkgver=8.23.0
+pkgver=8.24.0
 pkgrel=1
 pkgdesc="Python bit pack/unpack package."
 arch=(x86_64)
@@ -12,7 +12,7 @@ depends=(glibc python)
 makedepends=(python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest)
 source=(${_name}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz)
-sha512sums=('67887526c8955218f4c35dddce9ad31d1070dde525632dfe7659f7155836faf1f956d2dea7e7681cebd7c931eb0cd2e9215744dd069e1ec6a2146ca0db0e829c')
+sha512sums=('133c7841e07b9bb5be26a45e7c18860737d7cc61d3a281ba78bafd346923457974c6eb13cd82e182bf269463c1b6869d869ecf6def6c3dd5f800c4b817993f8e')
 
 build() {
   cd $_name-$pkgver
