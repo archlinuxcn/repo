@@ -5,8 +5,8 @@
 
 pkgname=uefitool
 _pkgname=UEFITool
-pkgver=A75
-pkgrel=2
+pkgver=A76
+pkgrel=1
 epoch=2
 pkgdesc="UEFI firmware image viewer and editor and utilities"
 arch=('armv7h' 'aarch64' 'i686' 'x86_64')
@@ -18,7 +18,7 @@ provides=('uefipatch')
 conflicts=('uefipatch')
 replaces=('uefipatch')
 source=("${_pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
-sha256sums=('f624ac80cdd716ed5e071d46f1516c84ce99b44fd5ce72663903c0a569c40770')
+sha256sums=('46298af3490c8c7700b83da58648f0683f09e04a61c006d5c2fe62954d4360bf')
 
 build() {
 	cmake -B build \
