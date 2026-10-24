@@ -1,7 +1,7 @@
 # Maintainer: Kimiblock Moe
 
 pkgname=jellyfin-mpv-shim-portable
-pkgver=1
+pkgver=3.3.0
 pkgrel=1
 epoch=1
 pkgdesc="Cast media from Jellyfin Mobile and Web apps to MPV, sandboxed by portable"
@@ -47,10 +47,9 @@ depends=(
 )
 
 
-md5sums=(
-	'SKIP'
-	'SKIP'
-)
+md5sums=('c8de0f2fb631bbd095fe88b63759ad56'
+         '8f618c4b3ae46327779c7f9b2d2be6d8'
+         'e83e526a42c71a1eff2dff61cc6724da')
 
 function prepare() {
 	cd source
