@@ -2,8 +2,8 @@
 # Contributor: Daniel Bermond <dbermond@archlinux.org>
 # Contributor: Mikalai Ramanovich < narod.ru: nikolay.romanovich >
 pkgname=onlyoffice
-pkgver=9.4.0
-pkgrel=2
+pkgver=10.0.0
+pkgrel=1
 pkgdesc="An office suite that combines text, spreadsheet and presentation editors allowing to create, view and edit local documents"
 arch=(x86_64)
 url="https://www.onlyoffice.com/desktop.aspx"
@@ -12,7 +12,7 @@ depends=(
     'curl' 'gtk3' 'alsa-lib' 'libpulse' 'gstreamer' 'gst-plugins-base-libs'
     'gst-plugins-ugly' 'libxss' 'nss' 'nspr' 'ttf-dejavu' 'ttf-liberation'
     'ttf-carlito' 'desktop-file-utils' 'hicolor-icon-theme'    
-    'qt5-base' 'qt5-multimedia' 'qt5-x11extras' 'qt5-svg' 'libnotify'
+    'qt5-base' 'qt5-multimedia' 'qt5-x11extras' 'qt5-svg' 'libnotify' 'libcups'
     # System libraries introduced via patch
     'libheif' 
 )
@@ -21,7 +21,9 @@ makedepends=(
     dos2unix
     nasm
     # build_tools/tools/linux/deps.py
-    nodejs-lts-iron
+    # Upstream is still using 20.x (and 16.x, WTF 🫪).
+    # But 20.x has been removed from extra repo
+    nodejs-lts-jod
     npm
     yarn
     grunt-cli
@@ -45,8 +47,8 @@ options=(
     '!lto'
 )
 _url=https://github.com/ONLYOFFICE
-# The tag used for indirect sumodules
-_tag=v9.4.0.130
+# The tag used for component repositories (official Linux release build)
+_tag=v10.0.0.169
 # ICU: scripts/core_common/modules/icu.py
 _icu_major=74
 _icu_minor=2
@@ -84,24 +86,24 @@ source=(
     "fix-glib-qt-macro-collision.diff"
     "no-git-update.diff"
     fix-limits-include{,-1}.diff
-    "do-not-build-commercial.diff"
     system-heif{,-0}.diff
     "fix-QDesktopWidget-include.diff"
     "Ancient-V8-Use-Sysroot.diff"
     "no-js-download-at-build-time.diff"
+    "fix-pdf-object-guard-constructor.diff"
 )
 noextract=('cef_binary.7z')
-sha256sums=('2256c94f02290da096069260d2f4c4bb5482632128873c623cd25f754f77dc5e'
-            'a3f86bf5410c9a8158dcab4490e792895a8abc1c4eec2eb7d94bf18bc7c696c4'
-            'f8abe86c14eb3bbcafd0b29aa9480ea27761343dcf35ab0dfe8e52167e0abee8'
-            '5fc99b98887b45cf00db54a7caf6189d280234813de4147c186499b31b6952bc'
+sha256sums=('42d2be34054a0cb7e3c6af2a608f889d8a8500d7df438225434d2e995e55c1b4'
+            '41517ddbbebd2194b3b0ddda3934e82f028df901c4b89b13f27a5019b5077e90'
+            '97f0565edf5150a7b1a167d290d89dfb779bed2c5debdafb9c95f3cf3a81dd10'
+            '39c75e816f910451aff2443128685a0cd28aef343df14be3577d19cf67f7c66d'
             '62dc945a78f38ab87e9d0a1a0cfefe0ddee29ba9de4e48468f7047d0aac4e645'
-            'ad165bbe35b192de560a96f9ef96ad83615fce37ce3509484a1d9df236bb5fdc'
-            'c37790310c7e7e3af6f7a8bb98de0b61dae351eaf32843557ede750792e793eb'
-            '73fd76bab5919773c049ef502ac0f43af1f6424ddbeec7286dba86452709c915'
-            '06f1bb22167fa6a19ee2d348c3529a558f62f566bd06043b3ff319737af22c5b'
+            'b1aa12bc9c825fda38d2afd1620d60a43557a4213445de392d7970a746a12bff'
+            '5c653d4596fc056b2d3fb893d813c7f6178966403f8c6641c3e795175db88805'
+            '72ee0c6623ac60db8ca06fb1cac11d9d25b60c84e4dc86d4ba22698c3508a209'
+            'c10a11f9004537a33beac9d024e6ba94be73456e3827dc9ce8679ebea24c31dc'
             '55c1d70a8bdd8f818af8e4c784bfc03f0569fcb863cc6797f888b749153ed720'
-            '4d9bf0039261bb531663603171b63a4a5339c4c0644e9859991d78ddbf446573'
+            '444c54a34ab2961ee6543abcccde8bb878028e671073a2679fd6e70598f8d546'
             'SKIP'
             'ba4b9ca37cb777b256fdf5e18c9bdbc66ebf060367e8542398676b42bbbc0e59'
             'cd7a982bf79eae86a8b7727193e2a9feccd1388cd0cc474b8d786ac6dc695cfe'
@@ -113,19 +115,19 @@ sha256sums=('2256c94f02290da096069260d2f4c4bb5482632128873c623cd25f754f77dc5e'
             'bdcf095fd46fb47f2992510078c46cef2b0084000ff4a0c4f956efb0db7e4d57'
             '0f7acc17b78eaeb338f098088ee11356045a53af6698c79ada45fa261c8d18fe'
             '95e107a7c2a895866e8a1d4c89bb4dbed50027fff9e5b9ab513c556537554eef'
-            'b3e040f0551dc469d91d23487e05bdb7123d2a3e50c5180c44be868a6f42ecbf'
+            'a867f38030dff76e0aa0cefd0e2f7aacb17c366b0fc533e037f17b300196383a'
             'a3561d1f18a61c404c8f9f9ed51484b2e19e3caaee86b71b1cabe3c7ccd0053a'
             '222dab12468f27b2bc1cc098ad2e4ca5bff8df845939f5cba2efff2165eafbcd'
             'fbf4c2800bc885063525ee8a50cfb870d7f44166584fd131f4bed8a762538c28'
             'a062edfcca4fc2103f5d7eeffeb22539de4a633eddd3ba4ed555ac1976be5176'
             'cb87384ce721ac15a82d254efe8662be0eb9011c122edfcb1caa07194fbae697'
             '8761a41683733f8c297fda55485126e895b1271aefd0f834078eb417878afbb0'
-            'b7bce5799d2f52026795169e40d6a3b436bb8c481d769cc8ff9df19a7e9e29cd'
-            'c328fbadbb34f6fd59b79b2be188877ae2652a932d1b003548632c261f88a9c6'
+            '2689c4fd1b505f7c46d101e49bfe3b80a8b6691292fc56d4c50fbf31974298ec'
             'e3af225ba3945e1430d4dbc2a4049e3ff3e114f5e73616624e430eed813b744f'
             '7849b1895a7b99479b2a78a8f009a3e670b0588a5bad150168506a4e41d03e69'
             'a542aa3d89568b50dd37a3b844dda230da3e04adf655ee8d67f56b066c2bdde5'
-            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
+            'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+            'f98c8d1e37c3a5aafdb6fd7eb7e33c3e18e9cfdc5d0cc162c75e802a0f6eb7d3')
 
 
 _set_flags() {
@@ -171,8 +173,6 @@ prepare() {
     patch -Np1 -i ../0004-Only-build-tar.patch
     # Dyn linking system libs for vendored ICU
     patch -Np1 -i ../0001-Dynamically-link-libstdc-in-icu.patch
-    # Do not build commerical edition
-    patch -Np0 -i ../do-not-build-commercial.diff
     # Use V8 sysroot for building the bundled ancient V8
     # libstdc++ in GCC 16 is no longer compatible with it.
     patch -Np1 -i ../Ancient-V8-Use-Sysroot.diff
@@ -229,6 +229,8 @@ EOF
     patch -Np1 -d core < 0001-Disable-static-linking-of-libstdc.patch
     # Fix some compile error
     patch -Np1 -d core < use-fpermissive.diff
+    # Emit the PDF object guard constructor despite xpdf's GCC interface pragma.
+    patch -Np1 -d core < fix-pdf-object-guard-constructor.diff
     dos2unix core/Common/OfficeFileFormatChecker2.cpp
     patch -Np0 -d core < fix-limits-include.diff
     patch -Np1 -d desktop-apps < fix-glib-qt-macro-collision.diff
@@ -268,7 +270,8 @@ build() {
 
 package() {
     cd build_tools
-    ./make_package.py -P linux_x86_64 -T desktop -V "$pkgver" -B "$pkgrel"
+    ./make_package.py -P linux_x86_64 -T desktop -V "$pkgver" -B "$pkgrel" \
+        --package-edition opensource --branding onlyoffice
     cd ../desktop-apps/package/tar
     tar xf onlyoffice-desktopeditors-"$pkgver"-"$pkgrel"-"$CARCH".tar.xz
     rm -f *.tar.xz

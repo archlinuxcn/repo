@@ -1,0 +1,26 @@
+Define the guard constructor out of line so GCC emits it in Object.cc.
+With xpdf's #pragma interface, the in-class defaulted constructor is left
+undefined in libPdfFile.so, causing the x2t link to fail.
+
+--- a/PdfFile/lib/xpdf/Object.h
++++ b/PdfFile/lib/xpdf/Object.h
+@@ -233,7 +233,7 @@
+ struct CObjectGuard
+ {
+ 	Object o;
+-	CObjectGuard() = default;
++	CObjectGuard();
+ 	~CObjectGuard() { o.free(); }
+ 	CObjectGuard(const CObjectGuard&) = delete;
+ 	CObjectGuard& operator=(const CObjectGuard&) = delete;
+--- a/PdfFile/lib/xpdf/Object.cc
++++ b/PdfFile/lib/xpdf/Object.cc
+@@ -21,6 +21,8 @@
+ #include "Stream.h"
+ #include "XRef.h"
+ 
++CObjectGuard::CObjectGuard() = default;
++
+ //------------------------------------------------------------------------
+ // Object
+ //------------------------------------------------------------------------

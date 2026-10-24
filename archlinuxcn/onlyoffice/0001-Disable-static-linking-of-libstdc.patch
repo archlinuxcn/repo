@@ -8,18 +8,17 @@ Subject: [PATCH] Disable static linking of libstdc++
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Common/base.pri b/Common/base.pri
-index 8e240dfcf5..b5702a17ef 100644
 --- a/Common/base.pri
 +++ b/Common/base.pri
-@@ -459,7 +459,7 @@ enable_cpp_17 {
- core_linux {
- core_static_link_libstd {
- 	!core_linux_clang {
--		QMAKE_LFLAGS += -static-libstdc++ -static-libgcc
-+		# QMAKE_LFLAGS += -static-libstdc++ -static-libgcc
- 	} else {
- 		# TODO: add libc++abi?
- 	}
+@@ -563,7 +563,7 @@
+ 	core_release {
+ 		core_static_link_libstd {
+ 			!core_linux_clang {
+-				QMAKE_LFLAGS += -static-libstdc++ -static-libgcc
++				# QMAKE_LFLAGS += -static-libstdc++ -static-libgcc
+ 			} else {
+ 				# TODO: add libc++abi?
+ 			}
 -- 
 2.49.0
 
