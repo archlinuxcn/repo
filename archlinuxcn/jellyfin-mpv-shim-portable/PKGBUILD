@@ -61,6 +61,7 @@ function prepare() {
 }
 
 function build() {
+	cd source
 	python -m build --wheel --no-isolation
 }
 
