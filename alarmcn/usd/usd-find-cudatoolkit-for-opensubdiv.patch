@@ -1,0 +1,12 @@
+diff --git a/cmake/defaults/Packages.cmake b/cmake/defaults/Packages.cmake
+index 7f3d1a2ae..23077b79d 100644
+--- a/cmake/defaults/Packages.cmake
++++ b/cmake/defaults/Packages.cmake
+@@ -240,6 +240,7 @@ if (PXR_BUILD_IMAGING)
+     endif()
+     # --Opensubdiv
+     set(OPENSUBDIV_USE_GPU ${PXR_BUILD_GPU_SUPPORT})
++    find_package(CUDAToolkit QUIET)
+     find_package(OpenSubdiv 3 CONFIG)
+     if(OpenSubdiv_DIR)
+         # Found in CONFIG mode.
