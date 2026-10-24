@@ -1,0 +1,125 @@
+--- a/third_party/devtools-frontend/src/front_end/core/host/DispatchHttpRequestClient.ts
++++ b/third_party/devtools-frontend/src/front_end/core/host/DispatchHttpRequestClient.ts
+@@ -14,7 +14,7 @@ export enum ErrorType {
+ }
+ 
+ export class DispatchHttpRequestError extends Error {
+-  constructor(readonly type: ErrorType, readonly response?: DispatchHttpRequestResult, options?: ErrorOptions) {
++  constructor(readonly type: ErrorType, readonly response?: DispatchHttpRequestResult | undefined, options?: ErrorOptions) {
+     super(undefined, options);
+   }
+ }
+--- a/third_party/devtools-frontend/src/front_end/ui/legacy/ARIAUtils.ts
++++ b/third_party/devtools-frontend/src/front_end/ui/legacy/ARIAUtils.ts
+@@ -420,7 +420,7 @@ export class LiveAnnouncer {
+     element.textContent = Platform.StringUtilities.trimEndWithMaxLength(announcedMessage, 10000);
+   }
+ 
+-  static getOrCreateAnnouncerElement(container: HTMLElement = document.body, role: AnnouncerRole, opts?: {
++  static getOrCreateAnnouncerElement(container: undefined | HTMLElement = document.body, role: AnnouncerRole, opts?: {
+     force: boolean,
+   }): HTMLElement {
+     const existingAnnouncerElement = LiveAnnouncer.#announcerElementsByRole[role].get(container);
+--- a/third_party/devtools-frontend/src/front_end/ui/legacy/Widget.ts
++++ b/third_party/devtools-frontend/src/front_end/ui/legacy/Widget.ts
+@@ -84,7 +84,7 @@ export type WidgetFactory<WidgetT extend
+ export type InferWidgetTFromFactory<F> = F extends WidgetFactory<infer WidgetT>? WidgetT : never;
+ 
+ export class WidgetConfig<WidgetT extends AnyWidget> {
+-  constructor(readonly widgetClass: WidgetFactory<WidgetT>, readonly widgetParams?: Partial<WidgetT>) {
++  constructor(readonly widgetClass: WidgetFactory<WidgetT>, readonly widgetParams?: Partial<WidgetT> | undefined) {
+   }
+ }
+ 
+--- a/third_party/chromium-bidi/src/bidiMapper/CommandProcessor.ts
++++ b/third_party/chromium-bidi/src/bidiMapper/CommandProcessor.ts
+@@ -101,3 +101,3 @@
+     userContextStorage: UserContextStorage,
+-    parser: BidiCommandParameterParser = new BidiNoOpParser(),
++    parser: undefined | BidiCommandParameterParser = new BidiNoOpParser(),
+     initConnection: (options: MapperOptions) => Promise<void>,
+--- a/third_party/chromium-bidi/src/bidiMapper/modules/script/ChannelProxy.ts
++++ b/third_party/chromium-bidi/src/bidiMapper/modules/script/ChannelProxy.ts
+@@ -16,7 +16,7 @@
+  *
+  */
+ 
+-import {Protocol} from 'devtools-protocol';
++// import {Protocol} from 'devtools-protocol';
+ 
+ import {ChromiumBidi, Script} from '../../../protocol/protocol.js';
+ import {LogType, type LoggerFn} from '../../../utils/log.js';
+@@ -118,7 +118,7 @@
+         contextId: realm.executionContextId,
+         serializationOptions: {
+           serialization:
+-            Protocol.Runtime.SerializationOptionsSerialization.IdOnly,
++            'idOnly',
+         },
+       },
+     );
+@@ -148,7 +148,7 @@
+         executionContextId: realm.executionContextId,
+         serializationOptions: {
+           serialization:
+-            Protocol.Runtime.SerializationOptionsSerialization.IdOnly,
++            'idOnly',
+         },
+       },
+     );
+@@ -181,7 +181,7 @@
+             executionContextId: realm.executionContextId,
+             serializationOptions: {
+               serialization:
+-                Protocol.Runtime.SerializationOptionsSerialization.Deep,
++                'deep',
+               maxDepth:
+                 this.#properties.serializationOptions?.maxObjectDepth ??
+                 undefined,
+@@ -254,7 +254,7 @@
+         awaitPromise: true,
+         serializationOptions: {
+           serialization:
+-            Protocol.Runtime.SerializationOptionsSerialization.IdOnly,
++            'idOnly',
+         },
+       },
+     );
+--- a/third_party/chromium-bidi/src/bidiMapper/modules/script/Realm.ts
++++ b/third_party/chromium-bidi/src/bidiMapper/modules/script/Realm.ts
+@@ -13,7 +13,7 @@
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  */
+-import {Protocol} from 'devtools-protocol';
++import type {Protocol} from 'devtools-protocol';
+ 
+ import type {CdpClient} from '../../../cdp/CdpClient.js';
+ import {
+@@ -215,7 +215,7 @@
+         expression,
+         awaitPromise,
+         serializationOptions: Realm.#getSerializationOptions(
+-          Protocol.Runtime.SerializationOptionsSerialization.Deep,
++          'deep' as any,
+           serializationOptions,
+         ),
+         userGesture: userActivation,
+@@ -279,7 +279,7 @@
+         arguments: [argument],
+         serializationOptions: {
+           serialization:
+-            Protocol.Runtime.SerializationOptionsSerialization.Deep,
++            'deep',
+         },
+         executionContextId: this.executionContextId,
+       });
+@@ -419,7 +419,7 @@
+           awaitPromise,
+           arguments: thisAndArgumentsList,
+           serializationOptions: Realm.#getSerializationOptions(
+-            Protocol.Runtime.SerializationOptionsSerialization.Deep,
++            'deep' as any,
+             serializationOptions,
+           ),
+           executionContextId: this.executionContextId,

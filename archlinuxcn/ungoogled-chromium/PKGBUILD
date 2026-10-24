@@ -5,20 +5,21 @@
 
 # Maintainer: Christian Heusel <gromit@archlinux.org>
 # Maintainer: Jonathan Grotelüschen <tippfehlr@archlinux.org>
+# Maintainer: DeepChirp <deepchirp@archlinux.org>
 # Contributor: Evangelos Foutras <foutrelis@archlinux.org>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=155.0.8059.84
+pkgver=156.0.8078.47
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=155.0.8059.84-1
+_uc_ver=156.0.8078.47-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -104,18 +105,19 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-152-unbundle-opus-devtools.patch
         chromium-153-hermetic-python.patch
         chromium-153-iamf-tools-unbundled-opus.patch
-        chromium-154-typescript.patch
-        chromium-155-crubit.patch
-        chromium-155-remove-private_verification_tokens.patch
-        chromium-155-isolatedDeclarations.patch
         chromium-155-use-system-esbuild.patch
+        chromium-156-crubit.patch
+        chromium-156-remove-private_verification_tokens.patch
+        chromium-156-revert-gn-check-includes.patch
+        chromium-156-typescript.patch
+        chromium-156-isolatedDeclarations.patch
         compiler-rt-adjust-paths.patch
         increase-fortify-level.patch
         enable-widevine-arm64.patch
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
-sha256sums=('2063834f528029ad02a6a3de6d229c3e8b19bc43864be397944cbda18d7ee680'
-            '555c7547de4d7f82dbe54d943b7f47d7b6e693b7b92a6e86dec0eac98e8092a5'
+sha256sums=('28432028890ef70e1f2e9db880c500907ad1b04f5ae6b655a3f394b9f2eaa705'
+            'acf73f8fab3fa7a4977f54e4e51b206eaf6cc425c2294ecc4dc8023fd093bd2d'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
@@ -127,11 +129,12 @@ sha256sums=('2063834f528029ad02a6a3de6d229c3e8b19bc43864be397944cbda18d7ee680'
             '3276453f2ce655b6286476f48d4df837be952d9447afa46583f79ec71f2288c3'
             'ebf74154266d0b6d6cc957c413f845052c5fcfce7745befb8821595cdf3f7d49'
             '2ab9fbe653829ce692f83ee780aad07e8c83a6686e51ab9459ad736cfa2850ee'
-            'd061cf4aeba21b1d2edabc28afd38106246b99aa5ec699e1b9ee5ca8b76d8a23'
-            '85217fbc43f075068167643f0357e3df19a46805efd81a3eae00f966e04290eb'
-            'd42a5a72c1b085d2623b00caad958f18a6970dbed27558ce7b564e0468f3e252'
-            'c5aaccfb1f5d6738bfe7e360d6af0bd22f0a1cf4104c28b66cb78e0ff3e9ae08'
             'ded2abcb912ac4b6ad139e56384eea8f3b470cf57ecb0baa2c2d042df7575a23'
+            '0c8bd7769496ab71116cd73ac17c096b0979fa70fb2e76676f76d34c7424449e'
+            '8170368b531a0ae70071da054db4a09a6902b8b7854083d5505570f86a73e644'
+            'c666f9b009d3a2c737501d714689677e6d474982695966651fe7cdbcbc6e5815'
+            '946d4f70daeb446b911197bca804983d305c0ee809bc5507d05451bd07fe9523'
+            'f6aefbd3f70dbda9242cf815a1dca56af729632166bc57e5067755b119cc95de'
             'ec8e49b7114e2fa2d359155c9ef722ff1ba5fe2c518fa48e30863d71d3b82863'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             '5ee4bb69379ac0cea7946c9f8f4ca9e20e0a9e4ee2ee9121eb0ebbb94dd7e928'
@@ -249,18 +252,20 @@ prepare() {
   # for the unbundled system Opus build
   patch -Np1 -i ../chromium-153-iamf-tools-unbundled-opus.patch
 
+  patch -Np1 -i ../chromium-155-use-system-esbuild.patch
+
+  patch -Np1 -i ../chromium-156-crubit.patch
+
+  patch -Np1 -i ../chromium-156-remove-private_verification_tokens.patch
+
+  patch -Np1 -i ../chromium-156-revert-gn-check-includes.patch
+
+  patch -Np1 -i ../chromium-156-isolatedDeclarations.patch
+
   # Work around TypeScript becoming a build dependency: disable tsgo for the
   # WebUI and point devtools at the system tsc binary
   # https://github.com/ungoogled-software/ungoogled-chromium/pull/3966
-  patch -Np1 -i ../chromium-154-typescript.patch
-
-  patch -Np1 -i ../chromium-155-crubit.patch
-
-  patch -Np1 -i ../chromium-155-isolatedDeclarations.patch
-
-  patch -Np1 -i ../chromium-155-remove-private_verification_tokens.patch
-
-  patch -Np1 -i ../chromium-155-use-system-esbuild.patch
+  patch -Np1 -i ../chromium-156-typescript.patch
 
   rm -rf third_party/devtools-frontend/src/node_modules/esbuild/
   ln -s /usr/lib/node_modules/esbuild/ third_party/devtools-frontend/src/node_modules/esbuild

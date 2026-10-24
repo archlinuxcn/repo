@@ -1,0 +1,610 @@
+--- a/.gn
++++ b/.gn
+@@ -469,10 +469,3 @@ expand_directory_allowlist =
+       "//components/policy/BUILD.gn",
+     ]
+ 
+-# Entries in the allowlist should have a justification for why we need them. New
+-# entries should in this list should be reviewed by a member of the chrome build
+-# team.
+-# entries in this list should be reviewed by a member of the chrome build team.
+-allow_circular_includes_from_allowlist =
+-    allow_circular_includes_from_untriaged + project_bedrock_circular_includes +
+-    []
+--- a/base/allocator/partition_allocator/src/partition_alloc/BUILD.gn
++++ b/base/allocator/partition_allocator/src/partition_alloc/BUILD.gn
+@@ -289,7 +289,6 @@ component("raw_ptr") {
+   configs -= partition_alloc_remove_configs
+   configs += partition_alloc_add_configs
+   configs += [ ":dependants_extra_warnings" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ if (is_clang_or_gcc) {
+--- a/base/numerics/BUILD.gn
++++ b/base/numerics/BUILD.gn
+@@ -30,7 +30,6 @@ source_set("numerics") {
+     "safe_math.h",
+     "wrapping_math.h",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("unittests") {
+--- a/build/rust/rust_bindgen_generator.gni
++++ b/build/rust/rust_bindgen_generator.gni
+@@ -101,7 +101,6 @@ template("rust_bindgen_generator") {
+     # script's args and are populated using deps and configs.
+     forward_variables_from(invoker,
+                            TESTONLY_AND_VISIBILITY + [
+-                                 "check_includes_strict",
+                                  "configs",
+                                  "deps",
+                                  "public_configs",
+--- a/build/strict_deps_failures.gni
++++ b/build/strict_deps_failures.gni
+@@ -10,16 +10,8 @@
+ 
+ # TODO(crbug.com/555455099): Remove this once we've finished the migration and
+ # have no remaining usages.
+-# Set this flag when check_includes_strict is failing for a reason that hasn't
+-# been triaged yet.
+ CHECK_INCLUDES_STRICT_UNTRIAGED = false
+ 
+-# TODO(crbug.com/555455099): Remove this once we've finished the migration and
+-# have no remaining usages.
+-# Set this when check_includes_strict is failing due to public headers including
+-# private headers.
+-CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE = false
+-
+ # A list of directories for which strict_deps is enabled.
+ CHECK_INCLUDES_STRICT_ALLOWLIST = [
+   # keep-sorted: start
+--- a/chrome/browser/default_browser/BUILD.gn
++++ b/chrome/browser/default_browser/BUILD.gn
+@@ -70,7 +70,6 @@ source_set("default_browser") {
+   } else {
+     sources += [ "default_browser_monitor_stub.cc" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("test_support") {
+--- a/chrome/browser/media/prefs/BUILD.gn
++++ b/chrome/browser/media/prefs/BUILD.gn
+@@ -33,7 +33,6 @@ source_set("prefs") {
+     "//base",
+     "//chrome/common:constants",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("unit_tests") {
+--- a/chrome/browser/preloading/search_preload/BUILD.gn
++++ b/chrome/browser/preloading/search_preload/BUILD.gn
+@@ -35,7 +35,6 @@ source_set("search_preload") {
+     "//components/pref_registry",
+     "//components/search_engines",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("feature") {
+--- a/chrome/browser/shortcuts/BUILD.gn
++++ b/chrome/browser/shortcuts/BUILD.gn
+@@ -86,7 +86,6 @@ source_set("shortcuts") {
+     ]
+     deps += [ "//chrome/browser:shell_integration_linux" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("test_support") {
+--- a/chrome/browser/sync_file_system/BUILD.gn
++++ b/chrome/browser/sync_file_system/BUILD.gn
+@@ -158,7 +158,6 @@ source_set("sync_file_system") {
+     "//third_party/leveldatabase",
+     "//url",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("test_support") {
+--- a/chrome/browser/ui/lens/BUILD.gn
++++ b/chrome/browser/ui/lens/BUILD.gn
+@@ -183,7 +183,6 @@ if (!is_android) {
+         "//pdf/mojom",
+       ]
+     }
+-    check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+   }
+ 
+   source_set("impl") {
+--- a/chrome/browser/ui/page_action/BUILD.gn
++++ b/chrome/browser/ui/page_action/BUILD.gn
+@@ -50,7 +50,6 @@ if (!is_android) {
+       "//ui/actions:actions_headers",
+       "//ui/base",
+     ]
+-    check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+   }
+ 
+   source_set("page_action_impl") {
+--- a/chrome/browser/ui/startup/default_browser_prompt/BUILD.gn
++++ b/chrome/browser/ui/startup/default_browser_prompt/BUILD.gn
+@@ -45,7 +45,6 @@ source_set("default_browser_prompt") {
+   ]
+ 
+   deps = [ "//chrome/browser/default_browser" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("impl") {
+--- a/chrome/browser/web_applications/locks/BUILD.gn
++++ b/chrome/browser/web_applications/locks/BUILD.gn
+@@ -16,7 +16,6 @@ source_set("partitioned_lock_manager") {
+     "partitioned_lock_manager.cc",
+   ]
+   public_deps = [ "//base" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("partitioned_lock_manager_unit_tests") {
+--- a/chrome/services/system_signals/BUILD.gn
++++ b/chrome/services/system_signals/BUILD.gn
+@@ -52,7 +52,6 @@ source_set("system_signals") {
+ 
+     deps += [ "//components/device_signals/core/system_signals/posix" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("unit_tests") {
+--- a/components/bookmarks/browser/BUILD.gn
++++ b/components/bookmarks/browser/BUILD.gn
+@@ -109,7 +109,6 @@ static_library("browser") {
+   if (is_ios) {
+     sources += [ "bookmark_node_data_ios.cc" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ static_library("test_support") {
+--- a/components/feed/core/v2/BUILD.gn
++++ b/components/feed/core/v2/BUILD.gn
+@@ -148,7 +148,6 @@ if (use_blink) {
+       "//components/feed/core/proto:proto_ios_shared_v2",
+       "//components/feed/core/proto:proto_v2",
+     ]
+-    check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+   }
+ 
+   source_set("test_helpers") {
+--- a/components/global_media_controls/BUILD.gn
++++ b/components/global_media_controls/BUILD.gn
+@@ -92,7 +92,6 @@ component("global_media_controls") {
+   # TODO(crbug.com/40031409): Fix code that adds exit-time destructors and
+   # enable the diagnostic by removing this line.
+   configs += [ "//build/config/compiler:no_exit_time_destructors" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("unit_tests") {
+--- a/components/metrics/BUILD.gn
++++ b/components/metrics/BUILD.gn
+@@ -390,7 +390,6 @@ if (!is_cronet_build || is_ios) {
+         "motherboard_metrics_provider.h",
+       ]
+     }
+-    check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+   }
+ 
+   static_library("test_support") {
+--- a/components/persistent_cache/BUILD.gn
++++ b/components/persistent_cache/BUILD.gn
+@@ -62,7 +62,6 @@ component("persistent_cache") {
+     ":test_support",
+     ":unit_tests",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ static_library("test_support") {
+--- a/components/sqlite_vfs/BUILD.gn
++++ b/components/sqlite_vfs/BUILD.gn
+@@ -58,7 +58,6 @@ component("sqlite_vfs") {
+   }
+ 
+   defines = [ "IS_SQLITE_VFS_IMPL" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ if (use_blink && !is_android) {
+--- a/content/browser/indexed_db/BUILD.gn
++++ b/content/browser/indexed_db/BUILD.gn
+@@ -125,7 +125,6 @@ source_set("indexed_db") {
+     ":*",
+     "//content/test/*",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("indexed_db_fuzzer_support") {
+--- a/content/public/common/BUILD.gn
++++ b/content/public/common/BUILD.gn
+@@ -48,7 +48,6 @@ component("result_codes") {
+   deps = [ "//base" ]
+ 
+   configs += [ "//content:content_implementation" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ # This target allows other targets to depend on content_descriptors.h which is
+@@ -108,7 +107,6 @@ source_set("static_switches") {
+     "//media:media_buildflags",
+     "//tools/v8_context_snapshot:buildflags",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ # This target allowing depending on content_switches without depending on the
+@@ -135,7 +133,6 @@ source_set("switches") {
+   if (enable_ipc_fuzzer) {
+     configs += [ "//tools/ipc_fuzzer:ipc_fuzzer_config" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ # This target allows you to use the content MainFunctionParams struct and
+@@ -151,7 +148,6 @@ source_set("static_main_function_params"
+   public_deps = [ "//base" ]
+ 
+   public_configs = [ ":static_switches_defines" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ # Target for depending on main_function_params.h. This can be included without
+@@ -168,7 +164,6 @@ component("main_function_params") {
+   deps = [ "//base" ]
+ 
+   configs += [ "//content:content_implementation" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("memory_consumer_update") {
+--- a/device/bluetooth/public/cpp/BUILD.gn
++++ b/device/bluetooth/public/cpp/BUILD.gn
+@@ -21,5 +21,4 @@ component("features") {
+   ]
+   deps = [ "//base" ]
+   defines = [ "BLUETOOTH_FEATURES_IMPLEMENTATION" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+--- a/device/gamepad/public/cpp/BUILD.gn
++++ b/device/gamepad/public/cpp/BUILD.gn
+@@ -57,5 +57,4 @@ component("switches") {
+   ]
+   public_deps = [ "//base" ]
+   defines = [ "GAMEPAD_FEATURES_IMPLEMENTATION" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+--- a/mojo/core/BUILD.gn
++++ b/mojo/core/BUILD.gn
+@@ -148,7 +148,6 @@ source_set("impl_for_embedder") {
+     configs -= [ "//build/config/compiler:default_optimization" ]
+     configs += [ "//build/config/compiler:optimize_max" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("driver_for_ipcz_tests") {
+--- a/pdf/BUILD.gn
++++ b/pdf/BUILD.gn
+@@ -460,7 +460,6 @@ if (enable_pdf) {
+       "//ui/gfx/range",
+       "//v8",
+     ]
+-    check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+   }
+ 
+   source_set("pdf_test_utils") {
+--- a/remoting/proto/BUILD.gn
++++ b/remoting/proto/BUILD.gn
+@@ -62,7 +62,6 @@ source_set("internal_structs") {
+   # TODO(crbug.com/40031409): Fix code that adds exit-time destructors and
+   # enable the diagnostic by removing this line.
+   configs += [ "//build/config/compiler:no_exit_time_destructors" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("internal_stubs") {
+--- a/services/device/public/cpp/BUILD.gn
++++ b/services/device/public/cpp/BUILD.gn
+@@ -29,7 +29,6 @@ component("device_features") {
+       "//services/device/public/java:device_feature_list_jni",
+     ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("test_support") {
+--- a/skia/BUILD.gn
++++ b/skia/BUILD.gn
+@@ -632,7 +632,6 @@ component("skia") {
+   # TODO(crbug.com/40031409): Fix code that adds exit-time destructors and
+   # enable the diagnostic by removing this line.
+   configs += [ "//build/config/compiler:no_exit_time_destructors" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ component("skia_switches") {
+--- a/third_party/abseil-cpp/absl/container/BUILD.gn
++++ b/third_party/abseil-cpp/absl/container/BUILD.gn
+@@ -753,7 +753,6 @@ absl_source_set("btree") {
+     "//third_party/abseil-cpp/absl/strings:string_view",
+     "//third_party/abseil-cpp/absl/types:compare",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_source_set("btree_test_common") {
+@@ -864,7 +863,6 @@ absl_source_set("chunked_queue") {
+     "//third_party/abseil-cpp/absl/base:hardening",
+     "//third_party/abseil-cpp/absl/base:iterator_traits_internal",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("chunked_queue_test") {
+--- a/third_party/abseil-cpp/absl/crc/BUILD.gn
++++ b/third_party/abseil-cpp/absl/crc/BUILD.gn
+@@ -53,7 +53,6 @@ absl_source_set("crc32c") {
+     "//third_party/abseil-cpp/absl/strings:str_format",
+     "//third_party/abseil-cpp/absl/strings:string_view",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("crc32c_test") {
+--- a/third_party/abseil-cpp/absl/functional/BUILD.gn
++++ b/third_party/abseil-cpp/absl/functional/BUILD.gn
+@@ -16,7 +16,6 @@ absl_source_set("any_invocable") {
+     "//third_party/abseil-cpp/absl/meta:type_traits",
+     "//third_party/abseil-cpp/absl/utility",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("any_invocable_test") {
+@@ -46,7 +45,6 @@ absl_source_set("bind_back") {
+     "//third_party/abseil-cpp/absl/container:compressed_tuple",
+     "//third_party/abseil-cpp/absl/utility",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("bind_back_test") {
+@@ -66,7 +64,6 @@ absl_source_set("bind_front") {
+     "//third_party/abseil-cpp/absl/meta:type_traits",
+     "//third_party/abseil-cpp/absl/utility",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("bind_front_test") {
+@@ -87,7 +84,6 @@ absl_source_set("function_ref") {
+     "//third_party/abseil-cpp/absl/meta:type_traits",
+     "//third_party/abseil-cpp/absl/utility",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("function_ref_test") {
+--- a/third_party/abseil-cpp/absl/hash/BUILD.gn
++++ b/third_party/abseil-cpp/absl/hash/BUILD.gn
+@@ -29,7 +29,6 @@ absl_source_set("hash") {
+     "//third_party/abseil-cpp/absl/types:variant",
+     "//third_party/abseil-cpp/absl/utility",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_source_set("hash_testing") {
+--- a/third_party/abseil-cpp/absl/status/BUILD.gn
++++ b/third_party/abseil-cpp/absl/status/BUILD.gn
+@@ -41,7 +41,6 @@ absl_source_set("status") {
+     "//third_party/abseil-cpp/absl/types:source_location",
+     "//third_party/abseil-cpp/absl/types:span",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("status_test") {
+@@ -79,7 +78,6 @@ absl_source_set("statusor") {
+     "//third_party/abseil-cpp/absl/types:variant",
+     "//third_party/abseil-cpp/absl/utility",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("statusor_test") {
+@@ -174,7 +172,6 @@ absl_source_set("status_matchers") {
+     "//third_party/googletest:gmock",
+     "//third_party/googletest:gtest",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("status_matchers_test") {
+--- a/third_party/abseil-cpp/absl/strings/BUILD.gn
++++ b/third_party/abseil-cpp/absl/strings/BUILD.gn
+@@ -85,7 +85,6 @@ absl_source_set("strings") {
+     # :string_view.
+     ":string_view",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_source_set("internal") {
+@@ -434,7 +433,6 @@ absl_source_set("cord") {
+     "//third_party/abseil-cpp/absl/types:optional",
+     "//third_party/abseil-cpp/absl/types:span",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_source_set("cordz_handle") {
+@@ -1022,7 +1020,6 @@ absl_source_set("generic_printer") {
+     "//third_party/abseil-cpp/absl/log/internal:container",
+     "//third_party/abseil-cpp/absl/meta:requires",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("generic_printer_test") {
+--- a/third_party/abseil-cpp/absl/types/BUILD.gn
++++ b/third_party/abseil-cpp/absl/types/BUILD.gn
+@@ -47,7 +47,6 @@ absl_source_set("span") {
+     "//third_party/abseil-cpp/absl/hash:weakly_mixed_integer",
+     "//third_party/abseil-cpp/absl/meta:type_traits",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ absl_test("span_test") {
+@@ -78,7 +77,6 @@ absl_source_set("any_span") {
+     "//third_party/abseil-cpp/absl/base:throw_delegate",
+     "//third_party/abseil-cpp/absl/meta:type_traits",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ # any_span_test is not ported because relies on RTTI
+--- a/third_party/federated_compute/BUILD.gn
++++ b/third_party/federated_compute/BUILD.gn
+@@ -328,7 +328,6 @@ source_set("fl_runner") {
+     "//third_party/protobuf:timestamp_proto",
+     "//third_party/re2",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("confidential_compute_crypto_test_util") {
+--- a/third_party/harfbuzz/BUILD.gn
++++ b/third_party/harfbuzz/BUILD.gn
+@@ -23,7 +23,6 @@ if (use_system_harfbuzz) {
+ 
+   component("harfbuzz") {
+     public_configs = [ ":harfbuzz_from_pkgconfig" ]
+-    check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+   }
+ } else {
+   import("//build/rust/cargo_crate.gni")
+@@ -39,7 +38,6 @@ if (use_system_harfbuzz) {
+       "no-doc-comments",
+     ]
+     configs = [ ":harfbuzz_config" ]
+-    check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+   }
+ 
+   cargo_crate("harfbuzz_rust") {
+@@ -576,7 +574,6 @@ if (use_system_harfbuzz) {
+       public += [ "src/src/hb-glib.h" ]
+       sources += [ "src/src/hb-glib.cc" ]
+     }
+-    check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+   }
+ }
+ 
+--- a/third_party/ipcz/src/BUILD.gn
++++ b/third_party/ipcz/src/BUILD.gn
+@@ -97,7 +97,6 @@ source_set("reference_drivers") {
+   if (is_fuchsia) {
+     public_deps += [ "//third_party/fuchsia-sdk/sdk/pkg/zx" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("util") {
+@@ -215,7 +214,6 @@ source_set("impl") {
+   ]
+   public_configs = [ ":ipcz_include_dir" ]
+   configs += [ ":ipcz_include_src_dir" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ source_set("ipcz_sources") {
+--- a/third_party/private-join-and-compute/src/BUILD.gn
++++ b/third_party/private-join-and-compute/src/BUILD.gn
+@@ -61,5 +61,4 @@ component("ec_commutative_cipher") {
+   ]
+ 
+   public_configs = [ ":private_join_and_compute_config" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+--- a/third_party/sqlite/BUILD.gn
++++ b/third_party/sqlite/BUILD.gn
+@@ -260,7 +260,6 @@ component("chromium_sqlite3") {
+   }
+ 
+   deps = [ "//third_party/icu" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ # Similar to component("chromium_sqlite") above, but uses the developer tools
+@@ -340,7 +339,6 @@ source_set("dev_sqlite3") {
+   }
+ 
+   deps = [ "//third_party/icu" ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ config("sqlite_export") {
+--- a/ui/aura/BUILD.gn
++++ b/ui/aura/BUILD.gn
+@@ -175,7 +175,6 @@ component("aura") {
+     public += [ "screen_ozone.h" ]
+     sources += [ "screen_ozone.cc" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ static_library("test_support") {
+--- a/ui/events/BUILD.gn
++++ b/ui/events/BUILD.gn
+@@ -37,7 +37,6 @@ static_library("dom_keycode_converter")
+   if (!is_ios) {
+     deps += [ "//ipc:param_traits" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ static_library("dom_keyboard_layout") {
+--- a/ui/gl/init/BUILD.gn
++++ b/ui/gl/init/BUILD.gn
+@@ -78,5 +78,4 @@ component("init") {
+       "gl_initializer_ios.cc",
+     ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+--- a/ui/views/BUILD.gn
++++ b/ui/views/BUILD.gn
+@@ -1042,7 +1042,6 @@ component("views") {
+   if (use_ozone) {
+     deps += [ "//ui/ozone" ]
+   }
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ if (is_win || is_mac || is_linux || is_chromeos) {
+--- a/ui/wm/public/BUILD.gn
++++ b/ui/wm/public/BUILD.gn
+@@ -39,7 +39,6 @@ component("public") {
+     "//ui/aura",
+     "//ui/base",
+   ]
+-  check_includes_strict = CHECK_INCLUDES_STRICT_PUBLIC_INCLUDES_PRIVATE
+ }
+ 
+ static_library("test_support") {

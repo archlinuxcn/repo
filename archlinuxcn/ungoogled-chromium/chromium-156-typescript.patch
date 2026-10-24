@@ -1,0 +1,248 @@
+--- a/third_party/devtools-frontend/src/scripts/build/typescript/typescript_vars.gni
++++ b/third_party/devtools-frontend/src/scripts/build/typescript/typescript_vars.gni
+@@ -6,7 +6,7 @@ import("//build/toolchain/rbe.gni")
+ import("../ninja/vars.gni")
+ 
+ if (host_os == "linux") {
+-  tsc_binary = "//third_party/typescript/linux-amd64/src/lib/tsc"
++  tsc_binary = "/usr/bin/tsc"
+ } else if (host_os == "win") {
+   tsc_binary = "//third_party/typescript/windows-amd64/src/lib/tsc.exe"
+ } else if (host_os == "mac") {
+--- a/third_party/devtools-frontend/src/third_party/typescript/typescript.py
++++ b/third_party/devtools-frontend/src/third_party/typescript/typescript.py
+@@ -10,6 +10,7 @@ import os
+ 
+ 
+ def GetBinaryPath():
++    return "/usr/bin/tsc"
+     if platform.machine() == 'arm64':
+         darwin_path = 'mac-arm64'
+     else:
+--- a/ui/webui/webui_features.gni
++++ b/ui/webui/webui_features.gni
+@@ -33,7 +33,7 @@ declare_args() {
+ 
+   # Enable the native TypeScript compiler (tsgo) instead of the JS-based one.
+   # TODO(crbug.com/423789047): Remove this flag once fully committed to v7.
+-  use_typescript_go = true
++  use_typescript_go = false
+ }
+ 
+ if (enable_cast_receiver || is_cast_android || is_castos) {
+
+--- a/tools/typescript/ts_definitions.gni
++++ b/tools/typescript/ts_definitions.gni
+@@ -3,7 +3,11 @@
+ # found in the LICENSE file.
+ 
+ import("//third_party/node/node.gni")
+-import("//third_party/typescript/tsgo.gni")
++import("//ui/webui/webui_features.gni")
++
++if (use_typescript_go) {
++  import("//third_party/typescript/tsgo.gni")
++}
+ 
+ assert(is_chromeos)
+ 
+@@ -20,9 +24,12 @@ template("ts_definitions") {
+                            ])
+ 
+     inputs = [
+-               "//package.json",
+-               "//tools/typescript/tsconfig_definitions_base.json",
+-             ] + tsgo_inputs
++      "//package.json",
++      "//tools/typescript/tsconfig_definitions_base.json",
++    ]
++    if (use_typescript_go) {
++      inputs += tsgo_inputs
++    }
+     outputs = [ "$target_gen_dir/tsconfig_definitions.json" ]
+ 
+     root_dir = "."
+@@ -52,6 +59,10 @@ template("ts_definitions") {
+              "--js_files",
+            ] + js_files
+ 
++    if (use_typescript_go) {
++      args += [ "--use_typescript_go" ]
++    }
++
+     if (defined(deps)) {
+       args += [ "--deps" ]
+ 
+--- a/tools/typescript/ts_definitions.py
++++ b/tools/typescript/ts_definitions.py
+@@ -13,8 +13,9 @@ _CWD = os.getcwd()
+ _HERE_DIR = os.path.dirname(__file__)
+ _SRC_DIR = os.path.normpath(os.path.join(_HERE_DIR, '..', '..'))
+ 
+-sys.path.append(os.path.join(_SRC_DIR, 'third_party', 'typescript'))
+-import typescript
++sys.path.append(os.path.join(_SRC_DIR, 'third_party', 'node'))
++import node
++import node_modules
+ 
+ 
+ _TSCONFIG_BASE = 'tsconfig_definitions_base.json'
+@@ -40,6 +41,7 @@ def main(argv):
+   parser.add_argument('--root_dir', required=True)
+   parser.add_argument('--js_files', nargs='*', required=True)
+   parser.add_argument('--path_mappings', nargs='*')
++  parser.add_argument('--use_typescript_go', action='store_true')
+   args = parser.parse_args(argv)
+ 
+   with open(
+@@ -81,9 +83,22 @@ def main(argv):
+       if os.path.exists(to_delete):
+         os.remove(to_delete)
+ 
+-  stdout = typescript.RunTypeScript(
+-    ['--project', os.path.join(args.gen_dir, _TSCONFIG_GEN)]
+-  )
++  stdout = None
++  if args.use_typescript_go:
++    sys.path.append(os.path.join(_SRC_DIR, 'third_party', 'typescript'))
++    import typescript
++
++    stdout = typescript.RunTypeScript(
++      ['--project', os.path.join(args.gen_dir, _TSCONFIG_GEN)]
++    )
++  else:
++    stdout = node.RunNode(
++      [
++        node_modules.PathToTypescript(),
++        '--project',
++        os.path.join(args.gen_dir, _TSCONFIG_GEN),
++      ]
++    )
+ 
+   # Verify that that no unexpected .d.ts files were generated.
+   lines = stdout.splitlines()
+--- a/tools/typescript/ts_library.gni
++++ b/tools/typescript/ts_library.gni
+@@ -3,7 +3,11 @@
+ # found in the LICENSE file.
+ 
+ import("//third_party/node/node.gni")
+-import("//third_party/typescript/tsgo.gni")
++import("//ui/webui/webui_features.gni")
++
++if (use_typescript_go) {
++  import("//third_party/typescript/tsgo.gni")
++}
+ 
+ template("ts_library") {
+   node(target_name) {
+@@ -21,11 +25,14 @@ template("ts_library") {
+                            ])
+ 
+     inputs = [
+-               "//package.json",
+-               "//tools/typescript/path_utils.py",
+-               "//tools/typescript/tsconfig_base.json",
+-               "//tools/typescript/validate_tsconfig.py",
+-             ] + tsgo_inputs
++      "//package.json",
++      "//tools/typescript/path_utils.py",
++      "//tools/typescript/tsconfig_base.json",
++      "//tools/typescript/validate_tsconfig.py",
++    ]
++    if (use_typescript_go) {
++      inputs += tsgo_inputs
++    }
+ 
+     outputs = [ "$target_gen_dir/tsconfig_$target_name.json" ]
+ 
+@@ -77,6 +84,10 @@ template("ts_library") {
+       target_name,
+     ]
+ 
++    if (use_typescript_go) {
++      args += [ "--use_typescript_go" ]
++    }
++
+     if (defined(in_files)) {
+       args += [ "--in_files" ] + in_files
+     }
+--- a/tools/typescript/ts_library.py
++++ b/tools/typescript/ts_library.py
+@@ -15,8 +15,9 @@ _CWD = os.getcwd()
+ _HERE_DIR = os.path.dirname(__file__)
+ _SRC_DIR = os.path.normpath(os.path.join(_HERE_DIR, '..', '..'))
+ 
+-sys.path.append(os.path.join(_SRC_DIR, 'third_party', 'typescript'))
+-import typescript
++sys.path.append(os.path.join(_SRC_DIR, 'third_party', 'node'))
++import node
++import node_modules
+ 
+ from path_utils import isInAshFolder, getTargetPath
+ from validate_tsconfig import (
+@@ -70,6 +71,7 @@ def main(argv):
+   )
+   parser.add_argument('--enable_source_maps', action='store_true')
+   parser.add_argument('--output_suffix', required=True)
++  parser.add_argument('--use_typescript_go', action='store_true')
+   args = parser.parse_args(argv)
+ 
+   root_dir = os.path.relpath(args.root_dir, args.gen_dir)
+@@ -305,9 +307,21 @@ def main(argv):
+             os.remove(to_check)
+ 
+   try:
+-    typescript.RunTypeScript(
+-      ['--project', os.path.join(args.gen_dir, tsconfig_file)]
+-    )
++    if args.use_typescript_go:
++      sys.path.append(os.path.join(_SRC_DIR, 'third_party', 'typescript'))
++      import typescript
++
++      typescript.RunTypeScript(
++        ['--project', os.path.join(args.gen_dir, tsconfig_file)]
++      )
++    else:
++      node.RunNode(
++        [
++          node_modules.PathToTypescript(),
++          '--project',
++          os.path.join(args.gen_dir, tsconfig_file),
++        ]
++      )
+   finally:
+     if args.composite:
+       # `.tsbuildinfo` is generated by TypeScript for incremenetal compilation
+@@ -327,13 +341,24 @@ def main(argv):
+ 
+   # Invoke the TS compiler again, with the --listFilesOnly flag, to detect any
+   # files that are used by the build, but not properly declared as dependencies.
+-  out = typescript.RunTypeScript(
+-    [
+-      '--project',
+-      os.path.join(args.gen_dir, tsconfig_file),
+-      '--listFilesOnly',
+-    ]
+-  )
++  out = None
++  if args.use_typescript_go:
++    out = typescript.RunTypeScript(
++      [
++        '--project',
++        os.path.join(args.gen_dir, tsconfig_file),
++        '--listFilesOnly',
++      ]
++    )
++  else:
++    out = node.RunNode(
++      [
++        node_modules.PathToTypescript(),
++        '--project',
++        os.path.join(args.gen_dir, tsconfig_file),
++        '--listFilesOnly',
++      ]
++    )
+ 
+   files_list = out.split('\n')
+   definitions_files = list(filter(lambda f: f.endswith('.d.ts'), files_list))
