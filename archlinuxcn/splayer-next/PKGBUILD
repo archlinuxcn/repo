@@ -2,8 +2,8 @@
 
 pkgname=splayer-next
 _pkgname=SPlayer-Next
-pkgver=1.1.0
-pkgrel=2
+pkgver=1.2.0
+pkgrel=1
 pkgdesc="Cross-platform desktop music player with rich lyric support and wide audio format compatibility"
 arch=('x86_64' 'aarch64')
 url="https://github.com/SPlayer-Dev/SPlayer-Next"
@@ -38,8 +38,8 @@ source=(
   '0001-Disable-builtin-updater.patch'
   'top.imsyy.splayer_next.desktop'
 )
-sha256sums=('248b814590e45e81856573de8b6b435515d42648c8b9b00a0fe3e0135ca64f00'
-            '72a7a31955318e3d2b6b1ad070f46f5ef5f6862c9fb47a5b6ceacdedbf4f62f9'
+sha256sums=('ff8e5b7259a434cd3854bed3e73ba9926f31076d2b962fa469648977d33afac6'
+            'fc87c1223f89603c5be1e991ba9c589469c4cd677e789ec3bd34cee8c4c7176d'
             'f9530b38c0222ce185bb2dfcd9f5c6ece6fdadb3ba7a0eb10a41846be8b7b632')
 
 prepare() {
