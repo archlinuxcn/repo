@@ -3,8 +3,10 @@
 
 pkgbase=wxgtk-git
 pkgname=(wxwidgets-gtk3-git wxwidgets-qt5-git wxwidgets-common-git)
-pkgver=3.3.4.rc1.r0.g6a42a4b999
+pkgver=3.3.4rc1.r0.g6a42a4b999
 pkgrel=1
+# Supersede the published .rc version, which sorts after the final release.
+epoch=1
 pkgdesc="GTK+3 implementation of wxWidgets API for GUI, without conflict of official wxGTK"
 arch=(x86_64)
 url="https://github.com/wxWidgets/wxWidgets"
@@ -25,7 +27,7 @@ sha256sums=('SKIP'
 
 pkgver() {
   cd wxWidgets
-  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g;s/\.rc/rc/'
 }
 
 prepare() {
