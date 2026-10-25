@@ -11,7 +11,7 @@
 
 pkgname=retroarch-git
 pkgver=1.22.2.r9731.429f606221
-pkgrel=1
+pkgrel=2
 epoch=3
 _gitname=RetroArch
 pkgdesc='Reference frontend for the libretro API (Git-latest)'
@@ -23,7 +23,7 @@ license=('GPL')
 depends=('alsa-lib' 'gcc-libs' 'glibc' 'libdrm' 'libgl' 'libpulse' 'libusb'
          'libx11' 'libxcb' 'libxext' 'libxinerama' 'libxkbcommon' 'libxv'
          'libxxf86vm' 'mesa' 'openal' 'sdl2' 'wayland' 'zlib'
-         'libass' 'ffmpeg' 
+         'libass' 'ffmpeg' 'glslang' 'spirv-cross'
          'freetype2' 'systemd-libs'
 	 'nvidia-cg-toolkit' 'perl-net-dbus')
 makedepends=('git' 'vulkan-icd-loader')
@@ -35,28 +35,13 @@ optdepends=('libretro-overlays-git: Collection of overlays'
 	    'xdg-utils-git: Includes updated screensaver suspend fixes'
 	    'qt5-base: For the new WIMP interface')
 backup=('etc/retroarch.cfg')
-source=('git+https://github.com/libretro/RetroArch.git'
-        'git+https://github.com/KhronosGroup/glslang.git'
-        'git+https://github.com/KhronosGroup/SPIRV-Cross.git')
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP')
+source=('git+https://github.com/libretro/RetroArch.git')
+sha256sums=('SKIP')
 
 pkgver() {
 
   cd $_gitname
   printf "%s" "$(git describe --first-parent --long --tags | sed 's/v//g;s/\([^-]*-\)g/r\1/;s/-/./g')"
-
-}
-
-prepare() {
-
-  cd $_gitname
-
-  git submodule init deps/{glslang/glslang,SPIRV-Cross}
-  git config submodule.glslang.url ../glslang
-  git config submodule.SPIRV-Cross.url ../SPIRV-Cross
-  git submodule update deps/{glslang/glslang,SPIRV-Cross}
 
 }
 
@@ -66,6 +51,8 @@ build() {
 
   ./configure \
     --prefix='/usr' \
+    --enable-glslang \
+    --enable-spirv_cross \
     --disable-jack \
     --disable-oss 
   make clean
