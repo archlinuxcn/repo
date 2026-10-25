@@ -2,13 +2,13 @@
 pkgname=vnote-git
 pkgver=3685.3a9ac5b2
 epoch=3
-pkgrel=1
+pkgrel=2
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
 arch=('x86_64')
 url='https://tamlok.github.io/vnote/'
 license=('MIT')
 depends=(qt6-webengine qt6-svg qt6-webchannel qt6-5compat qtkeychain-qt6 cmark)
-makedepends=(git cmake qt6-tools clang lld vulkan-headers)
+makedepends=(git cmake qt6-tools clang lld vulkan-headers rust)
 provides=('vnote')
 conflicts=('vnote')
 source=("git+https://github.com/vnotex/vnote.git"
