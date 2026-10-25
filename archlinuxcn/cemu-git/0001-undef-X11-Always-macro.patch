@@ -1,0 +1,11 @@
+diff --git a/src/Common/unix/platform.h b/src/Common/unix/platform.h
+--- a/src/Common/unix/platform.h
++++ b/src/Common/unix/platform.h
+@@ -39,6 +39,7 @@ inline uint32_t GetExceptionError()
+ #undef Status
+ #undef Success
+ #undef ClientMessage
++#undef Always // Conflicts with wxInfoBarBase::ShowButton::Always in wxWidgets 3.3.
+ 
+ // placeholder
+ uint32_t GetTickCount();

@@ -3,7 +3,7 @@ _pkgname=cemu
 pkgname=$_pkgname-git
 epoch=1
 pkgver=2.6.r356.gaa20e2f
-pkgrel=1
+pkgrel=2
 pkgdesc="Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://cemu.info/"
@@ -53,8 +53,10 @@ conflicts=("$_pkgname")
 source=(
 	"$_pkgname::git+https://github.com/cemu-project/Cemu.git"
 	'imgui::git+https://github.com/ocornut/imgui.git'
+	'0001-undef-X11-Always-macro.patch'
 )
-b2sums=('SKIP' 'SKIP')
+b2sums=('SKIP' 'SKIP'
+        'c8d3601b642097956e6961ddeb58e0fecd4f4a7189b14960094a3ad82e9e9755bfeb4f24368aff9a5438f57b64fc61b412f1ef85e5744879bc9b4716351e50d0')
 
 pkgver() {
 	cd $_pkgname
@@ -65,6 +67,7 @@ prepare() {
 	cd $_pkgname
 	git config submodule.dependencies/imgui.url ../imgui
 	git -c protocol.file.allow=always submodule update
+	patch -Np1 -i "$srcdir/0001-undef-X11-Always-macro.patch"
 	sed -i '/CMAKE_INTERPROCEDURAL_OPTIMIZATION/d' CMakeLists.txt
 	sed -i '/FMT_HEADER_ONLY/d' src/Common/precompiled.h
 }
