@@ -2,13 +2,13 @@
 _pkgname=ly
 pkgname="$_pkgname"-git
 pkgver=1.5.0.rc1.r37.g4e0f23f
-pkgrel=1
+pkgrel=2
 pkgdesc="TUI display manager"
 arch=(i686 x86_64 aarch64)
 url="https://codeberg.org/fairyglade/ly.git"
 license=('WTFPL')
 depends=(pam glibc libxcb)
-makedepends=(git zig-master-bin)
+makedepends=(git 'zig>=0.17.0' 'zig<0.18')
 optdepends=('xorg-xauth: for X server sessions')
 conflicts=(ly)
 provides=(ly)
@@ -35,4 +35,3 @@ package() {
 
     install -Dm644 license.md "$pkgdir/usr/share/licenses/$pkgname/WTFPL"
 }
-
