@@ -7,7 +7,7 @@ export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=2.10.0
+pkgver=2.11.3
 pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
@@ -47,7 +47,7 @@ source=(
   '0000-fix-wayland-gtk-csd.patch'
 )
 sha256sums=(
-  'e3176ad89c55f9d98a357d74936d339fcb40d5523bf6d870b6c629435643cfb3'
+  'a14c282daf2ddbe20713fdbcc3c5978cefa3e4d80bbe60bef4a32dcee3b59fdc'
   '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230'
 )
 
@@ -97,7 +97,7 @@ build() {
 
   cd "$_pkgsrc"
 
-  : ${_fvm_version=$(grep -Pom1 'flutter: \K[0-9\.]+' ".tool_versions.yaml")}
+  : ${_fvm_version=$(grep -Pom1 '"flutter": "\K[0-9\.]+' ".fvmrc")}
 
   fvm install "$_fvm_version"
   fvm use "$_fvm_version" --force
