@@ -4,7 +4,7 @@
 
 pkgname=zen-browser
 pkgver=1.23b
-pkgrel=3
+pkgrel=5
 pkgdesc='Firefox-based web browser built from upstream release source snapshot'
 url='https://zen-browser.app'
 arch=('x86_64')
@@ -156,31 +156,10 @@ build() {
 
   ulimit -n 4096
 
-  echo 'Building instrumented browser...'
-  cat >.mozconfig "$srcdir/mozconfig" - <<'EOF'
-ac_add_options --enable-profile-generate=cross
-EOF
-  ./mach build --priority normal
-
-  echo 'Profiling instrumented browser...'
-  ./mach package
-  LLVM_PROFDATA=llvm-profdata JARLOG_FILE="$PWD/jarlog" \
-    dbus-run-session \
-    xvfb-run -s '-screen 0 1920x1080x24 -nolisten local' \
-    ./mach python build/pgo/profileserver.py
-
-  test -s merged.profdata
-  test -s jarlog
-
-  echo 'Removing instrumented browser...'
-  ./mach clobber objdir
-
+  # The instrumented browser crashes during PGO profile initialization.
   echo 'Building optimized browser...'
   cat >.mozconfig "$srcdir/mozconfig" - <<EOF
 ac_add_options --enable-lto=cross,full
-ac_add_options --enable-profile-use=cross
-ac_add_options --with-pgo-profile-path=${PWD@Q}/merged.profdata
-ac_add_options --with-pgo-jarlog=${PWD@Q}/jarlog
 EOF
   ./mach build --priority normal
 }

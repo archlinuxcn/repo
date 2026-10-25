@@ -7,7 +7,23 @@ maintainers:
 build_prefix: extra-x86_64
 
 pre_build_script: |
+  import re
+  from pathlib import Path
+
   aur_pre_build(maintainers=['noureddinex'])
+  # Keep the build fix when refreshing the recipe from AUR.
+  pkgbuild = Path('PKGBUILD')
+  text = pkgbuild.read_text()
+  text, count = re.subn(
+    r"  echo 'Building instrumented browser\.\.\.'\n.*?(?=  echo 'Building optimized browser\.\.\.')",
+    '  # The instrumented browser crashes during PGO profile initialization.\n',
+    text, flags=re.S)
+  assert count == 1
+  text = re.sub(
+    r'^ac_add_options --(?:enable-profile-use|with-pgo-profile-path|with-pgo-jarlog)=.*\n',
+    '', text, flags=re.M)
+  pkgbuild.write_text(text)
+
   launcher_fix_added = False
   for line in edit_file('PKGBUILD'):
     print(line)
