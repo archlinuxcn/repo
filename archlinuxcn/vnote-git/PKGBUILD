@@ -2,19 +2,21 @@
 pkgname=vnote-git
 pkgver=3685.3a9ac5b2
 epoch=3
-pkgrel=2
+pkgrel=3
 pkgdesc="A Vim-inspired note-taking application, especially for Markdown."
 arch=('x86_64')
 url='https://tamlok.github.io/vnote/'
 license=('MIT')
 depends=(qt6-webengine qt6-svg qt6-webchannel qt6-5compat qtkeychain-qt6 cmark)
-makedepends=(git cmake qt6-tools clang lld vulkan-headers rust)
+makedepends=(git cmake qt6-tools clang lld vulkan-headers rust python 'cargo-about>=0.8.4')
 provides=('vnote')
 conflicts=('vnote')
 source=("git+https://github.com/vnotex/vnote.git"
-        "vtextedit-system-cmark.patch")
+        "vtextedit-system-cmark.patch"
+        "typst-notices-system-deps.patch")
 sha256sums=('SKIP'
-            '346636ee23a174003ab19af2522b8f1d608f7c6ec408351eb0f3ba1348a08aa4')
+            '346636ee23a174003ab19af2522b8f1d608f7c6ec408351eb0f3ba1348a08aa4'
+            '0a592319b7fb576e1a97fc7b6db7ae818c7e32b9b8311075a08cdb1d74bcee44')
 
 gitname="vnote"
 
@@ -27,6 +29,9 @@ prepare() {
     cd "$srcdir/$gitname"
     git submodule update --init --recursive
     patch -d libs/vtextedit -Np1 -i "$srcdir/vtextedit-system-cmark.patch"
+    patch -Np1 -i "$srcdir/typst-notices-system-deps.patch"
+    # The notices inventory also covers dependencies for non-host targets.
+    (cd libs/vtextedit/tools/typst-backend && cargo fetch --locked)
 }
 build() {
   export CC=/usr/bin/clang CXX=/usr/bin/clang++
@@ -42,6 +47,7 @@ build() {
     -DVNOTE_BUILD_TESTS=OFF
 
   cmake --build build
+  cmake --build build --target prepare_typst_notices
 }
 package() {
     cd "$srcdir/build"

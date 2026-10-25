@@ -1,0 +1,51 @@
+--- a/package/prepare-typst-notices.py
++++ b/package/prepare-typst-notices.py
+@@ -28,8 +28,7 @@
+ import tempfile
+ 
+ 
+-CARGO = ["cargo", "+1.99.0"]
+-ABOUT_VERSION = "cargo-about 0.9.2"
++CARGO = ["cargo"]
+ NOTICE_PREFIXES = ("LICENSE", "COPYING", "NOTICE", "OFL")
+ 
+ 
+@@ -163,7 +162,7 @@
+         output.write(text.encode("utf-8"))
+ 
+     emit("Typst library dependency notices\n")
+-    emit("Generated with cargo-about 0.9.2 using locked, offline dependencies.\n")
++    emit("Generated with cargo-about using locked, offline dependencies.\n")
+     emit("Includes the shipped Windows, Linux and both macOS architectures.\n\n")
+     emit("CRATE INVENTORY\n===============\n\n")
+     for identifier in sorted(crates, key=lambda package_id: crate_key(packages[package_id])):
+@@ -234,14 +233,12 @@
+         file_bytes(manifest.with_name("Cargo.lock"), "backend Cargo.lock")
+         config = Path(__file__).resolve().with_name("typst-about.toml")
+         file_bytes(config, "checked-in cargo-about configuration")
+-        outputs = qt_attributions(args.qt_prefix.resolve(), args.qt_version)
++        # Qt is supplied by Arch dependencies, with their own notices.
++        outputs = {}
+         outputs["LICENSE.vtextedit-typst"] = file_bytes(
+             manifest.parents[2] / "COPYING.LESSER", "vtextedit Typst library LGPL license"
+         )
+ 
+-        version = run(CARGO + ["about", "--version"], manifest.parent).strip()
+-        if version != ABOUT_VERSION:
+-            raise ValueError(f"Required {ABOUT_VERSION}; found {version!r}")
+         # No host filter: metadata must cover the union selected by the four-target
+         # about.toml, including non-host sources provisioned by the build-time fetch.
+         metadata = json.loads(run(CARGO + [
+--- a/src/Packaging.cmake
++++ b/src/Packaging.cmake
+@@ -28,9 +28,7 @@
+         --output-dir "${VX_TYPST_NOTICES_DIR}"
+     BYPRODUCTS "${VX_TYPST_NOTICES_DIR}/LICENSE.typst-dependencies"
+                "${VX_TYPST_NOTICES_DIR}/LICENSE.vtextedit-typst"
+-               "${VX_TYPST_NOTICES_DIR}/qtpdf-${QT_VERSION}.spdx.json"
+-               "${VX_TYPST_NOTICES_DIR}/qtwebengine-chromium-pdf-${QT_VERSION}.spdx.json"
+-    COMMENT "Preparing Typst and Qt PDF runtime attribution"
++    COMMENT "Preparing Typst runtime attribution"
+     VERBATIM
+ )
+ 
