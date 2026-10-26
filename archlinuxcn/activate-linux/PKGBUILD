@@ -1,0 +1,46 @@
+# Maintainer: nlsdt <nlsdt@archlinuxcn.org>
+
+pkgname=activate-linux
+pkgver=1.2.0
+pkgrel=1
+pkgdesc='The "Activate Windows" watermark ported to Linux, with Wayland and X11 backends'
+arch=('x86_64')
+url='https://github.com/MrGlockenspiel/activate-linux'
+license=('GPL-3.0-only')
+depends=(
+  'cairo'
+  'hicolor-icon-theme'
+  'libconfig'
+  'libx11'
+  'libxext'
+  'libxfixes'
+  'libxinerama'
+  'libxrandr'
+  'pango'
+  'wayland'
+)
+makedepends=(
+  'gcc'
+  'make'
+  'pkgconf'
+  'wayland-protocols'
+)
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('5c1ab8dc9ddfc3984398f410cd5cf6169609650659d9474b88b1d852a1c3c32b')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  make
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+
+  # v1.2.0 的 install 规则里 man page 漏了 DESTDIR，这里显式指定 MANDIR
+  make install DESTDIR="${pkgdir}" PREFIX=/usr MANDIR="${pkgdir}/usr/share/man"
+
+  install -Dm644 res/activate-linux.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm644 res/activate-linux.png "${pkgdir}/usr/share/icons/hicolor/128x128/apps/${pkgname}.png"
+  install -Dm644 example.cfg "${pkgdir}/usr/share/doc/${pkgname}/example.cfg"
+  install -Dm644 LICENSE.md "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.md"
+}
