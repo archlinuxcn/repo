@@ -3,8 +3,8 @@
 
 _pkgname=probe-cli
 pkgname=ooniprobe-cli
-pkgver=3.29.1
-_pkgver=3.29.1
+pkgver=3.31.0
+_pkgver=3.31.0
 pkgrel=1
 pkgdesc='Next generation OONI Probe CLI'
 arch=('x86_64')
@@ -13,21 +13,18 @@ license=('GPL-3.0-or-later')
 depends=('glibc')
 makedepends=('go')
 source=("${_pkgname}-${_pkgver}.tar.gz::https://github.com/ooni/${_pkgname}/archive/refs/tags/v${_pkgver}.tar.gz")
-sha256sums=('b32e40dc306b70e0c2d122a909df78ca0100f796229b7949003ee169e0bfe782')
-sha512sums=('03548f976e0338817eaf8139d72fc3e9c2d02126347cd1f13d1d3184ebcefb9c9bdb83486eedf4ef0098f34a787e9a19e95fa85cab316773fc10c86a7ac84e9e')
+sha256sums=('0c7aab87ef755c5c5454ba81df7fb800249fd3a26d1e7e77043be766e19013a0')
+sha512sums=('8b65ab6c80954fb525b45ca01adf48bb19f2beec25df868d43430f380418059dd3eb403de61cc3a826223a57a2014e9ec1efa57f77f0fb8d115be93b43abd289')
 
 build() {
   cd "${_pkgname}-${_pkgver}"
-  GOVERSION=$(cat GOVERSION)
-  export GOTOOLCHAIN=go${GOVERSION}
-
   export CGO_ENABLED=1
   export CGO_LDFLAGS="$LDFLAGS"
   export CGO_CFLAGS="$CFLAGS"
   export CGO_CPPFLAGS="$CPPFLAGS"
   export CGO_CXXFLAGS="$CXXFLAGS"
   export GOFLAGS='-ldflags=-linkmode=external -buildmode=pie -trimpath -modcacherw'
-  go build ./cmd/ooniprobe
+  make CLI/ooniprobe
 }
 
 package() {
