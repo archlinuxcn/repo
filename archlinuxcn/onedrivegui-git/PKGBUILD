@@ -10,7 +10,7 @@ arch=('any')
 url="https://github.com/bpozdena/${_pkgname}"
 license=("GPL-3.0-or-later")
 depends=("pyside6" "python-requests" "onedrive-abraunegg" "qt6-webengine")
-makedepends=("git")
+makedepends=("git" "python-build" "python-installer" "python-setuptools")
 conflicts=("onedrivegui")
 provides=("onedrivegui")
 source=("git+${url}.git")
@@ -21,16 +21,12 @@ pkgver() {
 	git describe --tags --long | sed 's/v//;s/-/.r/;s/-/./g'
 }
 
+build() {
+	cd "${_pkgname}/"
+	python -m build --wheel --no-isolation
+}
+
 package() {
-	cd "${_pkgname}/src/"
-	install -d "${pkgdir}/usr/lib/${_pkgname}/"
-	cp -a * "${pkgdir}/usr/lib/${_pkgname}/"
-	chmod +x "${pkgdir}/usr/lib/${_pkgname}/${_pkgname}.py"
-
-	cd resources
-	install -Dm644 "images/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/48x48/apps/"
-	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
-
-	install -d "${pkgdir}/usr/bin/"
-	ln -sf "/usr/lib/${_pkgname}/${_pkgname}.py" "${pkgdir}/usr/bin/${_pkgname}"
+	cd "${_pkgname}/"
+	python -m installer --destdir="${pkgdir}" dist/*.whl
 }
