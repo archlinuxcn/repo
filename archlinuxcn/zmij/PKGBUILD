@@ -1,0 +1,36 @@
+# Maintainer: nlsdt <nlsdt@archlinuxcn.org>
+
+pkgname=zmij
+pkgver=1.2
+pkgrel=1
+pkgdesc='Fast double-to-string conversion library'
+arch=(x86_64 aarch64)
+url='https://github.com/vitaut/zmij'
+license=(MIT)
+makedepends=(cmake ninja)
+options=(staticlibs !lto)
+source=("${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('13e11c9309fab358d5b6f656050e4f3efa1d20ecf15958ae9055382d07b0268f')
+
+build() {
+  cmake \
+    -B build \
+    -S "${pkgname}-${pkgver}" \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DZMIJ_EXAMPLE=OFF \
+    -GNinja \
+    -Wno-dev
+  cmake --build build
+}
+
+check() {
+  ctest --test-dir build --output-on-failure
+}
+
+package() {
+  DESTDIR="${pkgdir}" cmake --install build
+  install -Dm644 "${pkgname}-${pkgver}/LICENSE" -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
