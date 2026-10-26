@@ -42,6 +42,7 @@ depends=(
   ttf-font
 )
 makedepends=(
+  cargo
   cbindgen
   clang
   diffutils
@@ -54,7 +55,6 @@ makedepends=(
   nodejs
   onnxruntime
   python
-  rustup
   unzip
   wasi-compiler-rt
   wasi-libc
