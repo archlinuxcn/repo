@@ -2,7 +2,7 @@
 
 _pkgname=transformers
 pkgname=python-transformers
-pkgver=5.20.2
+pkgver=5.21
 pkgrel=1
 pkgdesc='State-of-the-art Machine Learning for Pytorch, TensorFlow, and JAX'
 arch=('any')
@@ -34,7 +34,7 @@ optdepends=(
 )
 
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/huggingface/transformers/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('7f2de1a8456039c3e0e0849f7d3612f93e50f8acb4af81ae87555da0127e562491845dad1ba133968df3cfb6b29fb1f62a1440078b290f328528306a4538090d')
+sha512sums=('6d4ed5b6f38c699525a9c2623feb30257c376a85d1f9446625e253654fb148548fe1c31a00b69de63fc1ebd5ed30314c325c9e4d30ea14ae28b6667779bb186c')
 
 prepare() {
   cd "${_pkgname}-${pkgver}"
