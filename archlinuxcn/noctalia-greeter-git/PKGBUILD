@@ -4,24 +4,27 @@ pkgname=noctalia-greeter-git
 _pkgname=noctalia-greeter
 pkgver=1.7.0.r308.gdbace1c83
 pkgrel=1
-pkgdesc="Greetd greeter for Noctalia"
+pkgdesc="Minimal greetd greeter matching the look and feel of Noctalia Shell"
 arch=('x86_64' 'aarch64')
 url="https://github.com/noctalia-dev/noctalia-greeter"
-license=('MIT')
-options=('!debug')
-install=noctalia-greeter-git.install
+license=('MIT AND (Apache-2.0 OR MIT)')
 depends=(
+  'bash'
   'cairo'
   'dbus'
   'fontconfig'
   'freetype2'
+  'gcc-libs'
   'glib2'
   'glibc'
   'greetd'
   'libglvnd'
+  'libinput'
+  'libjxl'
   'librsvg'
   'libwebp'
   'libxkbcommon'
+  'libxml2'
   'pango'
   'tomlplusplus'
   'wayland'
@@ -30,22 +33,32 @@ depends=(
 makedepends=(
   'git'
   'meson'
-  'ninja'
   'nlohmann-json'
-  'pkgconf'
   'stb'
   'wayland-protocols'
 )
 optdepends=(
-  'noctalia-git: Wallpaper and palette sync from Noctalia'
+  'noctalia: wallpaper and palette sync from Noctalia Shell'
+  'polkit: authorize appearance sync from Noctalia Shell'
+  'xorg-xinit: start X11 sessions'
 )
-provides=('noctalia-greeter')
+provides=('noctalia-greeter' 'greetd-greeter')
 conflicts=('noctalia-greeter')
-source=("git+${url}.git#branch=main")
-sha256sums=('SKIP')
+# Revision recorded in third_party/wuffs/wuffs-v0.4.c.
+_wuffs_commit=a14745aa458fd2b2785034efa04eab3c7b5b91e0
+source=(
+  "git+${url}.git#branch=main"
+  "LICENSE-WUFFS-MIT::https://raw.githubusercontent.com/google/wuffs/${_wuffs_commit}/LICENSE-MIT"
+  "LICENSE-WUFFS-APACHE::https://raw.githubusercontent.com/google/wuffs/${_wuffs_commit}/LICENSE-APACHE"
+)
+sha256sums=(
+  'SKIP'
+  'bb811a4b485eac3caeb8bdc58bbafb355fbcb6116010a7ea9179e5c70b0bc878'
+  '0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594'
+)
 
 pkgver() {
-  cd "${_pkgname}"
+  cd "${_pkgname}" || return
 
   local version
   version="$(sed -n "s/^  version: '\([^']*\)',/\1/p" meson.build)"
@@ -53,15 +66,22 @@ pkgver() {
 }
 
 build() {
-  CXXFLAGS+=" -Wno-unused-result"
   arch-meson "${_pkgname}" build-release \
     -Db_ndebug=true
   meson compile -C build-release
+}
+
+check() {
+  meson test -C build-release --print-errorlogs
 }
 
 package() {
   meson install -C build-release --destdir "${pkgdir}"
 
   install -Dm644 "${_pkgname}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 LICENSE-WUFFS-{MIT,APACHE} -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+  sed -n '/^\/\/ Copyright .*The Wuffs Authors/,/^\/\/ SPDX-License-Identifier:/p' \
+    "${_pkgname}/third_party/wuffs/wuffs-v0.4.c" | sed 's|^// *||' \
+    >"${pkgdir}/usr/share/licenses/${pkgname}/NOTICE-WUFFS"
   install -Dm644 "${_pkgname}/README.md" "${pkgdir}/usr/share/doc/${pkgname}/README.md"
 }
