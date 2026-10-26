@@ -14,16 +14,16 @@ conflicts=(ladybird)
 provides=(ladybird)
 depends=(
 	curl
-	fmt
 	dbus
+	libedit
 	fast_float
 	ffmpeg
 	harfbuzz
 	icu
 	libavif
 	libgl
+	vulkan-icd-loader
 	libjpeg-turbo
-	libjxl
 	libtiff
 	libtommath
 	libwebp
@@ -48,14 +48,16 @@ depends=(
 
 	libpng-apng # Should be AUR apng variant
 	simdjson
+	simdutf
 	angle
 	opendht
 	cpptrace
 	mimalloc
 	wuffs-lib
+	vulkan-memory-allocator
 	zmij
 )
-makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip libpng-apng rust)
+makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static tar unzip zip rust glslang vulkan-headers)
 options=('!lto' '!staticlibs' '!emptydirs' '!debug')
 source=(
 	"git+$url"
@@ -64,8 +66,9 @@ sha256sums=('SKIP')
 
 prepare() {
 	cd ladybird
+	sed -e 's/\(lib[a-z]*\)-ladybird)/\1)/' -i Meta/CMake/check_for_dependencies.cmake
 	sed -i "s|78.2|78.3|g" Libraries/LibUnicode/CMakeLists.txt || true
-	sed -e '79i add_cxx_compile_options(-Wno-restrict)' -i Meta/CMake/compile_options.cmake
+	echo 'add_cxx_compile_options(-Wno-restrict)' >> Meta/CMake/compile_options.cmake
 	sed -e 's/mi_heap_get_default/mi_heap_main/' -i AK/kmalloc.cpp
 }
 
@@ -84,7 +87,7 @@ build() {
 		-S ladybird \
 		-DENABLE_CI_BASELINE_CPU=ON \
 		-DBUILD_SHARED_LIBS=OFF \
-		-DLADYBIRD_CACHE_DIR=Build/caches \
+		-DLADYBIRD_CACHE_DIR="${srcdir}/build/Build/caches" \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX='/usr' \
 		-DENABLE_INSTALL_HEADERS=OFF \
@@ -118,5 +121,5 @@ package() {
 	install -Dm644 ladybird/LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 	patchelf --set-rpath /usr/lib/angle:/usr/lib/ladybird "${pkgdir}/usr/bin/Ladybird"
 	#install -vDm644 "${pkgdir}/opt/ladybird/${RELATIVE_DESKTOP_FILE_PATH}" "${pkgdir}/${RELATIVE_DESKTOP_FILE_PATH}"
-	rm -f "${srcdir}/usr/COMMIT"
+	rm -f "${pkgdir}/usr/COMMIT"
 }
