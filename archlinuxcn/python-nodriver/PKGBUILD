@@ -3,7 +3,7 @@
 
 pkgname=python-nodriver
 _name=nodriver
-pkgver=0.50.6
+pkgver=0.50.99
 pkgrel=1
 pkgdesc='Successor of Undetected-Chromedriver. Providing a blazing fast framework for web automation, webscraping, bots and any other creative ideas which are normally hindered by annoying anti bot systems like Captcha / CloudFlare / Imperva / hCaptcha'
 arch=('any')
@@ -12,7 +12,7 @@ license=('AGPL-3.0-only')
 depends=('python-mss' 'python-deprecated' 'python-websockets')
 makedepends=('python-build' 'python-installer' 'python-wheel' python-setuptools)
 source=("https://files.pythonhosted.org/packages/source/${_name::1}/$_name/$_name-$pkgver.tar.gz")
-sha256sums=('ea3918af54c1417f1a4bca12a023c8d7dd75673486494190c90022ad36625f3b')
+sha256sums=('baf8de532bf1e78c9298ab7ea56ea6a586a904290ce6b9ee7dd9ba6f40373211')
 
 build() {
 	cd $_name-$pkgver
