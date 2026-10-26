@@ -29,4 +29,12 @@ build() {
 package() {
 	cd "${_pkgname}/"
 	python -m installer --destdir="${pkgdir}" dist/*.whl
+
+	cd src/onedrive_gui/resources
+	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
+
+	cd images/hicolor
+	for r in 16 24 32 48 64 96 128 256; do
+		install -Dm644 "${r}x${r}/apps/${_pkgname}.png" -t "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/"
+	done
 }
