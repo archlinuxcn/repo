@@ -13,7 +13,7 @@ _pkgname=caddy
 pkgver=2.11.7
 _gitcommit=v2.11.7
 _distcommit=c3bd5625cf080742f58985f98d878e70ccba6bfd
-pkgrel=5
+pkgrel=6
 pkgdesc='Fast web server with automatic HTTPS'
 url='https://caddyserver.com'
 arch=('x86_64')
@@ -46,6 +46,11 @@ pkgver() {
 }
 
 prepare() {
+  # Fix build failed on caddy v2.11.7
+  pushd forwardproxy
+  git revert -n e747854e78743dba85c039b38ed185fb11d93667
+  popd
+
   mkdir ${_pkgname}
   cd ${_pkgname}
   cp ../main.go .
