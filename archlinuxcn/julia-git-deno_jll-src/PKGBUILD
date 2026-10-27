@@ -1,6 +1,6 @@
 pkgname=julia-git-deno_jll-src
-pkgver=2.9.7+0
-_commit=054c9cdd8847b62f10c0b79d884145f97e315716
+pkgver=2.9.8+0
+_commit=e58fda64433e291d9f824c7f2980e61403e243f8
 pkgrel=1
 pkgdesc="Deno_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Deno_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git deno)
 source=("git+https://github.com/JuliaBinaryWrappers/Deno_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('53d83ce2173c952af351de4ff98aa7ab83d7853b2d643f4c4c22459143faeb57'
+sha256sums=('92aba8312643b7cd0d38943487d5755e7dfec966f45960424358b154d39a7da0'
             '7ffdf30c2bf9d4e291662f06519f9ac17d6ee5dd84c8632cd3e10d8c305917f7')
 
 build() {
