@@ -3,12 +3,12 @@
 
 pkgname=wails
 pkgver=3.0.0 # renovate: datasource=github-tags depName=wailsapp/wails
-pkgrel=1
+pkgrel=2
 pkgdesc="Create desktop apps using Go and Web Technologies"
 arch=(x86_64)
 url="https://github.com/wailsapp/wails"
 license=(MIT)
-depends=('glibc' 'npm' 'gtk3')
+depends=('glibc' 'npm' 'gtk4' 'webkitgtk-6.0')
 makedepends=('go')
 optdepends=('docker')
 source=($url/archive/v$pkgver/$pkgname-$pkgver.tar.gz)
@@ -21,23 +21,23 @@ prepare() {
 }
 
 build() {
-  cd $pkgname-$pkgver/v2
+  cd $pkgname-$pkgver/v3
   export CGO_CPPFLAGS="${CPPFLAGS}"
   export CGO_CFLAGS="${CFLAGS}"
   export CGO_CXXFLAGS="${CXXFLAGS}"
   export CGO_LDFLAGS="${LDFLAGS}"
   export GOFLAGS="-buildmode=pie -trimpath -ldflags=-linkmode=external -mod=readonly -modcacherw"
 
-  go build -o build/ ./cmd/wails
+  go build -o build/wails ./cmd/wails3
 }
 
 #check() {
-#  cd $pkgname-$pkgver/v2
+#  cd $pkgname-$pkgver/v3
 #  go test ./...
 #}
 
 package() {
-  install -vDm 755 $pkgname-$pkgver/v2/build/$pkgname -t "$pkgdir/usr/bin/"
+  install -vDm 755 $pkgname-$pkgver/v3/build/wails -t "$pkgdir/usr/bin/"
   install -vDm 644 $pkgname-$pkgver/{CHANGELOG,CONTRIBUTORS,README}.md -t "$pkgdir/usr/share/doc/$pkgname/"
   install -vDm 644 $pkgname-$pkgver/LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
 }
