@@ -4,7 +4,7 @@
 # Before executing makepkg, you can set FVM_CACHE_PATH to $HOME/fvm or the path specified by the cachePath field in the $HOME/.config/fvm/.fvmrc file.
 
 pkgname=flclash
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free."
 url="https://github.com/chen08209/FlClash"
@@ -38,7 +38,7 @@ makedepends=(
   'go'
 )
 
-options=('!lto' '!strip')
+options=('!lto' '!strip' '!debug')
 
 _pkgsrc="$pkgname-$pkgver"
 _pkgext="tar.gz"
@@ -48,12 +48,17 @@ source=(
   "com.follow.clash.desktop"
   "Clash.Meta::git+https://github.com/chen08209/Clash.Meta.git"
 )
-sha256sums=('6e1e375f6c7965975aa08be207aeb80168610c03fb6af8a184b39ebc1abe51b5'
+sha256sums=('fdb05e178bfebbca27d15e198b46616f7160a8092181d02fe89a475455bac756'
             'b551c46a1577758c13bdd07868d41e4de817c6184114e1b10d39e04ae572a76a'
             '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d'
             'SKIP')
 
 prepare() {
+  export HOME="$srcdir/home"
+  export RUSTUP_HOME="$HOME/.rustup"
+  export CARGO_HOME="$HOME/.cargo"
+  mkdir -p "$HOME"
+
   cd "$srcdir/$pkgname"
   git submodule init
   git config submodule.core/Clash.Meta.url "$srcdir/Clash.Meta"
@@ -61,7 +66,6 @@ prepare() {
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
 
   _rust_version=$(sed -n 's/^channel = "\([^"]*\)"/\1/p' "$srcdir/$pkgname/plugins/rust_api/rust/rust-toolchain.toml")
-  export RUSTUP_HOME="$srcdir/rustup"
   rustup toolchain install "$_rust_version" --profile minimal
   rustup default "$_rust_version"
 
@@ -76,6 +80,11 @@ prepare() {
 }
 
 build() {
+  export HOME="$srcdir/home"
+  export RUSTUP_HOME="$HOME/.rustup"
+  export CARGO_HOME="$HOME/.cargo"
+  export FVM_CACHE_PATH="$srcdir/fvm-cache"
+
   # build core
   cd "$srcdir/$pkgname/core"
   if [ "$CARCH" == "aarch64" ]; then
