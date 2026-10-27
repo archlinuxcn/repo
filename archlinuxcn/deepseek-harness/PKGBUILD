@@ -17,7 +17,7 @@ depends=(
     nodejs
 )
 optdepends=("pnpm: Plugin manager")
-makedepends=("npm")
+makedepends=("npm" "rdfind")
 options=('!strip')
 source=("$pkgname-$pkgver.tgz::https://registry.npmjs.org/@deepseek-ai/dsh/-/dsh-${_npmver}.tgz")
 noextract=("$pkgname-$pkgver.tgz")
@@ -25,13 +25,30 @@ b2sums=('b9e69c3da6ab6bc9c13a6e59dc7445f9f45b1c0e5924c796cf969d0e39120a8e0b84bdf
 
 package() {
     npm install -g --prefix "$pkgdir/usr" --cache "$srcdir/npm-cache" \
+        --os=linux --cpu=x64 --libc=glibc \
         --no-fund \
         --no-audit \
         --allow-scripts=@deepseek-ai/dsh-subprocess-local,koffi,node-pty,@google/genai,protobufjs \
         $pkgname-$pkgver.tgz
     install -d "$pkgdir/usr/share/licenses/$pkgname"
     ln -sf /usr/lib/node_modules/@deepseek-ai/dsh/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    find "$pkgdir/usr" -type f -name rg -exec ln -sf /usr/bin/rg '{}' \;
-    find "$pkgdir/usr" -type d -exec chmod 755 {} +
+    _dsh_loc="$pkgdir/usr/lib/node_modules/@deepseek-ai"
+    find "$_dsh_loc" -type d -exec chmod 755 {} +
     chown -R root:root "$pkgdir"
+
+    # Deduplicate files
+    rdfind -makehardlinks true "$_dsh_loc"
+    # Use system rg
+    find "$_dsh_loc" -type f -name rg -exec ln -sf /usr/bin/rg '{}' \;
+    # Remove non-native libraries
+    find "$_dsh_loc" -type d \( \
+            -name 'win32*' -or \
+            -name 'darwin*' -or \
+            -name 'linux-arm64' -or \
+            -name 'musl*' -or \
+            -path '*/node-pty/third_party' \
+        \) -prune -exec rm -rv -- {} +
+    # Strip unsafe RUNPATH
+    find "$_dsh_loc" -type f -name sherpa-onnx.node \
+        -exec patchelf --set-rpath '$ORIGIN' '{}' \;
 }
