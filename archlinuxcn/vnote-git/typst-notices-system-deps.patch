@@ -6,7 +6,7 @@
  
 -CARGO = ["cargo", "+1.99.0"]
 -ABOUT_VERSION = "cargo-about 0.9.2"
-+CARGO = ["cargo"]
++CARGO = ["/usr/bin/cargo"]
  NOTICE_PREFIXES = ("LICENSE", "COPYING", "NOTICE", "OFL")
  
  
@@ -36,6 +36,18 @@
          # No host filter: metadata must cover the union selected by the four-target
          # about.toml, including non-host sources provisioned by the build-time fetch.
          metadata = json.loads(run(CARGO + [
+@@ -255,8 +252,9 @@
+             staging = Path(temporary)
+             about_json = staging / "cargo-about.json"
+             # A file also avoids cargo-about's PowerShell-ancestor stdout guard.
+-            run(CARGO + [
+-                "about", "generate", "--locked", "--offline", "--fail", "--format", "json",
++            # cargo subcommands prefer $CARGO_HOME/bin over the system package.
++            run([
++                "/usr/bin/cargo-about", "generate", "--locked", "--offline", "--fail", "--format", "json",
+                 "--config", str(config), "--manifest-path", str(manifest),
+                 "--output-file", str(about_json),
+             ], manifest.parent)
 --- a/src/Packaging.cmake
 +++ b/src/Packaging.cmake
 @@ -28,9 +28,7 @@
