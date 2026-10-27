@@ -1,6 +1,6 @@
 pkgname=julia-git-aws_c_compression_jll-src
-pkgver=1.0.0+0
-_commit=a1275af33e95b789cacfce8278b3c86ce8d8849c
+pkgver=1.0.0+1
+_commit=1a44ae0025fbe39290de79453baad9a412b4bc04
 pkgrel=1
 pkgdesc="aws_c_compression_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/aws_c_compression_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git aws-c-compression)
 source=("git+https://github.com/JuliaBinaryWrappers/aws_c_compression_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('bb3cc07e0e5c3d9793d4b5ab71d9f264977ea905103e392f36bb522d5ab740ab'
+sha256sums=('4ba2136c63b44ce7c5adaceba33ad9d714cf650be3282a528ef83407ddcf1336'
             'aeae744c817b4448c55212ce41d3ae489ac7b8f6d1b5aba4f24130ec7a76758c')
 
 build() {
