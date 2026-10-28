@@ -1,0 +1,14 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+# Triggers only; the versions and split package lists actually used are read
+# from the official PKGBUILDs in lilac.py.
+update_on:
+  - source: archpkg
+    archpkg: mesa
+  - source: archpkg
+    archpkg: lib32-mesa
+  - source: manual
+    manual: 1
