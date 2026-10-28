@@ -51,7 +51,9 @@ md5sums=('SKIP')
 prepare() {
   cd "$srcdir/deadbeef"
   # skip osx/deps and external/apbuild submodules
-  git -c submodule."osx/deps".update=none -c submodule."external/apbuild".update=none submodule update --init --recursive
+  git -c submodule."osx/deps".update=none -c submodule."external/apbuild".update=none \
+    -c submodule."external/googletest".url=https://github.com/DeaDBeeF-Player/googletest.git \
+    submodule update --init --recursive
 }
 
 build() {
