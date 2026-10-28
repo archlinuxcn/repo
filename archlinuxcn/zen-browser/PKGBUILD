@@ -120,13 +120,14 @@ ac_add_options --disable-bootstrap
 ac_add_options --with-wasi-sysroot=/usr/share/wasi-sysroot
 
 # Branding
+ac_add_options --with-app-name=zen
+ac_add_options --with-app-basename=Zen
 ac_add_options --with-branding=browser/branding/release
 ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
 ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
 export MOZILLA_OFFICIAL=1
-export MOZ_APP_REMOTINGNAME=zen-browser
 
 # System libraries
 ac_add_options --with-system-nspr
@@ -169,16 +170,14 @@ package() {
 
   DESTDIR="$pkgdir" ./mach install
 
-  # Upstream installs a generic Firefox launcher that conflicts with firefox.
-  rm -f "$pkgdir/usr/bin/firefox"
+  rm -f "$pkgdir/usr/bin/firefox" "$pkgdir/usr/bin/zen"
 
   local _launcher='zen-browser'
   local _appdir="$pkgdir/usr/lib/$_launcher"
   local _size
 
-  if [[ -d "$pkgdir/usr/lib/firefox" && ! -d "$_appdir" ]]; then
-    mv "$pkgdir/usr/lib/firefox" "$_appdir"
-    ln -sf firefox "$_appdir/zen"
+  if [[ -d "$pkgdir/usr/lib/zen" && ! -d "$_appdir" ]]; then
+    mv "$pkgdir/usr/lib/zen" "$_appdir"
   fi
 
   install -Dm755 /dev/stdin "$pkgdir/usr/bin/$_launcher" <<'EOF'
