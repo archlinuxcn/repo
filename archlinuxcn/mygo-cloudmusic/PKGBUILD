@@ -1,0 +1,44 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=mygo-cloudmusic
+pkgver=0.1.20
+pkgrel=1
+pkgdesc='Third-party NetEase Cloud Music desktop client, drawn natively without a web view'
+arch=('x86_64')
+url='https://github.com/egoist/mygo-cloudmusic'
+license=('AGPL-3.0-only')
+depends=('cairo' 'gdk-pixbuf2' 'glib2' 'gtk3' 'libsecret' 'pango')
+optdepends=(
+  'gtk-layer-shell: notch player'
+  'libayatana-appindicator: tray icon'
+  'libdbusmenu-gtk3: icons in the tray menu'
+  'libx11: global media hotkeys'
+)
+makedepends=('go')
+options=('!debug')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('f1ce102a2805ba9655e3b320b9a00f37e5410e9c272add273ba814b7170a14ae')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  export GOPATH="$srcdir"
+  go mod download -modcacherw
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  export GOPATH="$srcdir"
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+  export MYGO_LDFLAGS="-bindnow"
+  go tool mygo build -platform linux/amd64
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm755 "build/linux-amd64/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 "build/linux-amd64/$pkgname.desktop" \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 "website/public/favicon.svg" \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
