@@ -1,7 +1,7 @@
 # Maintainer: zhicheng233
 
 pkgname=(moonlight-vplus)
-pkgver=6.3.7
+pkgver=6.5.3
 pkgrel=1
 pkgdesc="Moonlight V+ for PC is an enhanced desktop client based on moonlight-stream/moonlight-qt, designed to work closely with Foundation Sunshine."
 arch=(
@@ -18,14 +18,19 @@ depends=(
     'libxkbcommon'
     'libglvnd'
     'libegl'
+    'libplacebo'
+    'libx11'
+    'libxcb'
     'opus'
     'sdl2'
     'sdl2_ttf'
     'openssl'
     'qt6-base'
     'qt6-declarative'
+    'qt6-multimedia'
     'qt6-svg'
     'qt6-wayland'
+    'wayland'
 )
 
 makedepends=(
