@@ -6,7 +6,7 @@
 # https://github.com/rstudio/rstudio
 
 ## options
-: ${_gwt_version:=2.12.2}
+: ${_gwt_version:=2.13.1-montauk-daisy}
 : ${_java_version:=17}
 : ${_mathjax_version:=2.7.9}
 : ${_node_version:=25}
@@ -17,13 +17,13 @@
 : ${_quarto:=false}
 
 # dependencies/common/install-copilot-language-server
-: ${_copilot_version:=1.531.0}
+: ${_copilot_version:=1.551.2}
 
-: ${_commit:=870df5ed7859c758db7aed6f510a3edca3c74bd7}
+: ${_commit:=fbc1d3d26be4a6c32e3a43ac8871fbef8fe274e0}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2026.09.0.174
+pkgver=2026.10.0.233
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
@@ -106,7 +106,7 @@ source=(
 sha256sums=(
   'SKIP'
   'SKIP'
-  '27284accdad05ff8919a7ac6dc5f939a511a90842a35f6393517506d74809e76'
+  '0bcd8b33d2be7136a1b119e818f47b7930ffa9ec5a0564a5211f44bfeade8a3e'
   '4b1ff9c8545c5d802fbe06ee6cd2886630e5c03bf740e269bb625b45cf934928'
   'c9167279c87da044f2ff910ad573a02ce90354cb59440ae568eb86e1630f65df'
   'SKIP'
@@ -136,10 +136,6 @@ prepare() (
 
   # Suppress _FORTIFY_SOURCE mismatch warnings
   sed -e 's/D_FORTIFY_SOURCE=2/D_FORTIFY_SOURCE=3/' -i src/cpp/CMakeLists.txt
-
-  # Prevent Boost.URL 1.92 linker error
-  sed -E -e 's&([Cc]\+\+)17&\120&g' -i src/cpp/CMakeLists.txt
-  sed -E -e 's&(CMAKE_CXX_STANDARD) 17&\1 20&' -i cmake/compiler.cmake
 
   # fix npm/node paths
   sed -E -e 's&set\(RSTUDIO_NODE_PATH .*\)&set(RSTUDIO_NODE_PATH "/usr/bin")&' \
