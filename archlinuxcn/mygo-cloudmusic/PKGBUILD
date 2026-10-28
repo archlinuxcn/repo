@@ -9,10 +9,12 @@ url='https://github.com/egoist/mygo-cloudmusic'
 license=('AGPL-3.0-only')
 depends=('cairo' 'gdk-pixbuf2' 'glib2' 'gtk3' 'libsecret' 'pango')
 optdepends=(
+  'alsa-lib: ALSA output, when PulseAudio is unavailable'
   'gtk-layer-shell: notch player'
   'libayatana-appindicator: tray icon'
   'libdbusmenu-gtk3: icons in the tray menu'
-  'libx11: global media hotkeys'
+  'libpulse: PulseAudio or PipeWire output'
+  'xdg-desktop-portal: global media hotkeys on Wayland'
 )
 makedepends=('go')
 options=('!debug')
