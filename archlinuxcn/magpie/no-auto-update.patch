@@ -1,0 +1,11 @@
+Stop magpie asking upstream's feed for a newer version by itself: this
+package is always behind that feed, and the update it would install
+replaces /usr/bin/magpie behind pacman's back.
+
+--- a/internal/gui/update.go
++++ b/internal/gui/update.go
+@@ -123,3 +123,3 @@
+ func updateDue(s settings.Settings, last, now time.Time) bool {
+-	return !s.NoAutoUpdate && now.Sub(last) >= time.Duration(s.UpdateEvery)*time.Minute
++	return false
+ }

@@ -1,0 +1,56 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgname=magpie
+pkgver=0.1.1815
+pkgrel=1
+pkgdesc='One place to pick every AI coding agent model'
+arch=('x86_64' 'aarch64')
+url='https://usemagpie.ai'
+license=('MIT')
+depends=('gtk3' 'webkit2gtk-4.1')
+makedepends=('go')
+conflicts=('magpie-bin' 'magpie-git')
+options=('!debug')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/yetone/magpie/archive/refs/tags/v$pkgver.tar.gz"
+        no-auto-update.patch)
+sha256sums=('06d5207e93e91f5c58ebaae4803f46b9ba9239a4db6e0bf1700415105d771157'
+            'bc210da9950142064c1f360fbc263aff99bca67a6ee031c7de5afad0ddc37a06')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  export GOPATH="$srcdir"
+  patch -Np1 -i ../no-auto-update.patch
+  go mod download -modcacherw
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  export GOPATH="$srcdir"
+  export GOFLAGS="-buildmode=pie -trimpath -mod=readonly -modcacherw"
+  export CGO_CFLAGS="$CFLAGS"
+  export CGO_LDFLAGS="$LDFLAGS"
+  go build -tags 'production gtk3' \
+    -ldflags "-s -w -X main.version=v$pkgver -extldflags \"$LDFLAGS\"" \
+    -o "$pkgname" .
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 build/icon/magpie.svg \
+    "$pkgdir/usr/share/icons/hicolor/scalable/apps/$pkgname.svg"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -d "$pkgdir/usr/share/applications"
+  cat > "$pkgdir/usr/share/applications/$pkgname.desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Name=magpie
+Comment=Every agent's model. One place.
+Exec=$pkgname %u
+Icon=$pkgname
+StartupWMClass=$pkgname
+Categories=Development;Utility;
+MimeType=x-scheme-handler/magpie;
+Terminal=false
+EOF
+}
