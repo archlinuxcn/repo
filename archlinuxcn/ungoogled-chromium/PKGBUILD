@@ -12,14 +12,14 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=156.0.8078.47
+pkgver=156.0.8078.73
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=156.0.8078.47-1
+_uc_ver=156.0.8078.73-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -116,8 +116,8 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         enable-widevine-arm64.patch
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
-sha256sums=('28432028890ef70e1f2e9db880c500907ad1b04f5ae6b655a3f394b9f2eaa705'
-            'acf73f8fab3fa7a4977f54e4e51b206eaf6cc425c2294ecc4dc8023fd093bd2d'
+sha256sums=('cfdf8def1207b81af1231e5170bf849896cd353e72220ca05d93432e31551d59'
+            'd93b1e40e3ce0a1a3a96d107240f1367fe5336b87fbe55a18af82e337d7cc85c'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
