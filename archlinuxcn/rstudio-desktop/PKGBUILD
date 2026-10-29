@@ -19,11 +19,11 @@
 # dependencies/common/install-copilot-language-server
 : ${_copilot_version:=1.551.2}
 
-: ${_commit:=fbc1d3d26be4a6c32e3a43ac8871fbef8fe274e0}
+: ${_commit:=0b06695c24e10f6de6b9166c35ae24804c21f95f}
 
 _pkgname="rstudio-desktop"
 pkgname="$_pkgname"
-pkgver=2026.10.0.233
+pkgver=2026.10.1.239
 pkgrel=1
 pkgdesc="A powerful and productive integrated development environment (IDE) for R programming language"
 url="https://github.com/rstudio/rstudio"
@@ -131,6 +131,12 @@ prepare() (
   #npm install yarn
 
   cd "$_pkgsrc"
+
+  # Regenerate lockfile
+  pushd "src/node/desktop" &> /dev/null
+  npm install --package-lock-only --ignore-scripts
+  popd &> /dev/null
+
   # Do not use outdated version name of pandoc
   sed -E -e '/PANDOC_VERSION/s/"[0-9\.]+"/"'${_pandoc_version}'"/' -i cmake/globals.cmake
 
