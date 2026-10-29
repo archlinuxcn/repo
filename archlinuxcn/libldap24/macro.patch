@@ -1,0 +1,27 @@
+diff -urN openldap-2.4.59-orig/build/openldap.m4 openldap-2.4.59/build/openldap.m4
+--- openldap-2.4.59-orig/build/openldap.m4	2024-05-15 14:32:32.154631107 -0400
++++ openldap-2.4.59/build/openldap.m4	2024-05-15 14:33:28.685763054 -0400
+@@ -777,6 +777,7 @@
+ #include <sys/types.h>
+ #include <regex.h>
+ static char *pattern, *string;
++int
+ main()
+ {
+ 	int rc;
+diff -urN openldap-2.4.59-orig/configure.in openldap-2.4.59/configure.in
+--- openldap-2.4.59-orig/configure.in	2024-05-15 14:32:32.164631310 -0400
++++ openldap-2.4.59/configure.in	2024-05-15 14:33:04.815300032 -0400
+@@ -1465,10 +1465,8 @@
+ 				dnl save the flags
+ 				AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+ #include <pthread.h>
+-#ifndef NULL
+-#define NULL (void*)0
+-#endif
+-]], [[pthread_detach(NULL);]])],[ol_cv_func_pthread_detach=yes],[ol_cv_func_pthread_detach=no])
++pthread_t thread;
++]], [[pthread_detach(thread);]])],[ol_cv_func_pthread_detach=yes],[ol_cv_func_pthread_detach=no])
+ 			])
+ 
+ 			if test $ol_cv_func_pthread_detach = no ; then
