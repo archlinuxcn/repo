@@ -1,6 +1,6 @@
 pkgname=julia-git-missings-src
-pkgver=1.2.0
-_commit=2a8903ab442c7cfe39db422ca9af2444149b0678
+pkgver=1.2.1
+_commit=8874d2c19b5c6134ead2f25543da2cded4814690
 pkgrel=1
 pkgdesc="Missings.jl"
 url="https://github.com/JuliaData/Missings.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/Missings.jl.git#commit=$_commit")
-sha256sums=('20acf93810861d4c9d672990346839bdd853cf645c490d2d1856f3e2ddd15a96')
+sha256sums=('6f62abf29cd4144c56fdc69df9a73ee147d0be86468f386c05e17135e32dfc78')
 
 package() {
   cd Missings.jl
