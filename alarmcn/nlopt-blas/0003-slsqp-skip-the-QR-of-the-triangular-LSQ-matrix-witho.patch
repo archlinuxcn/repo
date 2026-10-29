@@ -1,0 +1,287 @@
+From ebe15d1afdb9fd1c6066caba2a4dfa4eb34c40b2 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 29 Oct 2026 17:35:27 -0400
+Subject: [PATCH 3/3] slsqp: skip the QR of the triangular LSQ matrix without
+ constraints
+
+Without inequality constraints, LSEI solves its least-squares problem
+with DGELSY, and without equality constraints the matrix it passes is
+the upper triangular LSQ matrix built by LSQ.  Its QR factorization
+leaves it unchanged (every reflector is the identity), but LAPACK's
+blocked DGEQRF still multiplies the zeros: O(n^3) per iteration, 40% of
+the run time on a dense unconstrained problem with n = 800.
+
+lsq_triangular does the remaining steps of DGELSY directly: the same
+incremental condition estimate (DLAIC1) for the rank and the same DTRSM
+solve, so the result is bit-identical.  DGELSY is still called whenever
+it would do something else (rescaling of A or b, or rank deficiency for
+the minimum-norm solution).  Triangularity follows from the problem
+structure (no equality constraints); debug builds assert it.
+
+On a dense unconstrained quadratic with n = 800 this cuts the time per
+evaluation with OpenBLAS from 8.5 ms to 1.7 ms; all evaluated points are
+bit-identical.  DLAIC1 is now also taken from the BLAS/LAPACK library,
+and the built-in DLAIC1 and DTRSM gain the Fortran calling convention
+and the left-side solve needed for this.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ CMakeLists.txt              |   2 +-
+ src/algs/slsqp/README       |   7 ++-
+ src/algs/slsqp/slsqp.c      | 105 +++++++++++++++++++++++++++++++++---
+ src/algs/slsqp/slsqp_blas.h |  39 ++++++++++----
+ 4 files changed, 136 insertions(+), 17 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 174d641..7ae77fc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,7 +144,7 @@ if (_blas_candidates)
+     set (_decls)
+     set (_calls)
+     foreach (_r daxpy dscal dnrm2 ddot dgemv dtpmv dtpsv dtrsm dtrsv dgelsy dgeqr2 dgerq2
+-                dlarf dlarfgp dlartgp dorm2r dormr2)
++                dlaic1 dlarf dlarfgp dlartgp dorm2r dormr2)
+       string (APPEND _decls "char ${_r}${_suffix}(void);\n")
+       string (APPEND _calls "  ${_r}${_suffix}();\n")
+     endforeach ()
+diff --git a/src/algs/slsqp/README b/src/algs/slsqp/README
+index c578cc8..eb27382 100644
+--- a/src/algs/slsqp/README
++++ b/src/algs/slsqp/README
+@@ -57,7 +57,12 @@ backing off from non-finite trial points, no iteration limit) and two
+ further changes: unbounded variables are passed to the subproblem as
+ NaN bounds, as SciPy does, and the least-squares solve without
+ inequality constraints marks all columns as fixed for DGELSY
+-explicitly instead of relying on leftover workspace contents.
++explicitly instead of relying on leftover workspace contents.  When that
++least-squares matrix is already upper triangular (no equality
++constraints), DGELSY's O(n^3) QR factorization, whose reflectors are all
++the identity, is skipped: the rank estimate (DLAIC1) and triangular solve
++of DGELSY are done directly, with bit-identical results, and DGELSY is
++still used whenever it would rescale or the matrix is rank deficient.
+ 
+ The BLAS/LAPACK library is chosen at configure time with the CMake
+ option NLOPT_BLAS: AUTO (default; use one if found), ON (require one),
+diff --git a/src/algs/slsqp/slsqp.c b/src/algs/slsqp/slsqp.c
+index dbf2a49..e9d6233 100644
+--- a/src/algs/slsqp/slsqp.c
++++ b/src/algs/slsqp/slsqp.c
+@@ -10,6 +10,7 @@
+    (bound clamping, non-finite line-search steps, no iteration limit, gradient at
+    the first line-search trial point) were carried over. */
+ 
++#include <assert.h>
+ #include <math.h>
+ #include <stddef.h>
+ #include <stdint.h>
+@@ -70,6 +71,7 @@ void   SLSQP_BLAS(dtrsv)(const char* uplo, const char* trans, const char* diag,
+ void   SLSQP_BLAS(dgelsy)(const blas_int* m, const blas_int* n, const blas_int* nrhs, double* a, const blas_int* lda, double* b, const blas_int* ldb, blas_int* jpvt, const double* rcond, blas_int* rank, double* work, const blas_int* lwork, blas_int* info);
+ void   SLSQP_BLAS(dgeqr2)(const blas_int* m, const blas_int* n, double* a, const blas_int* lda, double* tau, double* work, blas_int* info);
+ void   SLSQP_BLAS(dgerq2)(const blas_int* m, const blas_int* n, double* a, const blas_int* lda, double* tau, double* work, blas_int* info);
++void   SLSQP_BLAS(dlaic1)(const blas_int* job, const blas_int* j, const double* x, const double* sest, const double* w, const double* gamma, double* sestpr, double* s, double* c);
+ void   SLSQP_BLAS(dlarf)(const char* side, const blas_int* m, const blas_int* n, const double* v, const blas_int* incv, const double* tau, double* c, const blas_int* ldc, double* work);
+ void   SLSQP_BLAS(dlarfgp)(const blas_int* n, double* alpha, double* x, const blas_int* incx, double* tau);
+ void   SLSQP_BLAS(dlartgp)(const double* f, const double* g, double* cs, double* sn, double* r);
+@@ -978,6 +980,89 @@ lsq(
+ }
+ 
+ 
++/*
++ * Least squares problem min |A*x - b| for an A that is upper triangular (zero
++ * below the diagonal), as the LSQ matrix is when there are no equality
++ * constraints.  DGELSY with all columns fixed leaves such an A unchanged in its
++ * QR factorization (every reflector is the identity), but still spends O(m*n^2)
++ * on it, and LAPACK's blocked QR does not skip the zeros.  This does the
++ * remaining steps of DGELSY directly, with the same rank estimation and the same
++ * triangular solve, so the result is the same.  Returns 0 without modifying b
++ * if DGELSY would rescale A or b, or if A is rank deficient (for the
++ * minimum-norm solution); the caller then calls DGELSY.
++ *
++ * A is (m x n) with leading dimension m, b is (m), work is at least 2*n.  Only
++ * the upper triangle of A is read (the rest is checked in debug builds).
++ */
++static int
++lsq_triangular(blas_int m, blas_int n, const double* restrict a, double* restrict b,
++               double rcond, blas_int* rank, double* restrict work)
++{
++    // DGELSY's scaling thresholds: DLAMCH('S')/DLAMCH('P') and its inverse.
++    const double smlnum = 2.2250738585072014e-308/2.220446049250313e-16;
++    const double bignum = 1.0/smlnum;
++    blas_int one = 1, imax = 1, imin = 2;
++    double anrm = 0.0, bnrm = 0.0, smax, smin, done = 1.0;
++    double* restrict xmin = work;
++    double* restrict xmax = &work[n];
++
++    if ((m < n) || (n == 0)) { return 0; }
++#ifndef NDEBUG
++    for (blas_int j = 0; j < n; j++)
++    {
++        for (blas_int i = j + 1; i < m; i++) { assert(a[i + j*m] == 0.0); }
++    }
++#endif
++    for (blas_int j = 0; j < n; j++)
++    {
++        for (blas_int i = 0; i <= j; i++)
++        {
++            double v = fabs(a[i + j*m]);
++            if (!(v <= bignum)) { return 0; }
++            if (v > anrm) { anrm = v; }
++        }
++    }
++    if (anrm < smlnum) { return 0; }
++    for (blas_int i = 0; i < m; i++)
++    {
++        double v = fabs(b[i]);
++        if (!(v <= bignum)) { return 0; }
++        if (v > bnrm) { bnrm = v; }
++    }
++    if ((bnrm > 0.0) && (bnrm < smlnum)) { return 0; }
++
++    // Incremental condition estimation, as in DGELSY.
++    smax = fabs(a[0]);
++    smin = smax;
++    if (smax == 0.0) { return 0; }
++    xmin[0] = 1.0;
++    xmax[0] = 1.0;
++    *rank = 1;
++    while (*rank < n)
++    {
++        blas_int i = *rank;
++        double sminpr, smaxpr, s1, c1, s2, c2;
++        SLSQP_BLAS(dlaic1)(&imin, &i, xmin, &smin, &a[i*m], &a[i + i*m], &sminpr, &s1, &c1);
++        SLSQP_BLAS(dlaic1)(&imax, &i, xmax, &smax, &a[i*m], &a[i + i*m], &smaxpr, &s2, &c2);
++        if (!(smaxpr*rcond <= sminpr)) { return 0; }
++        for (blas_int k = 0; k < i; k++)
++        {
++            xmin[k] *= s1;
++            xmax[k] *= s2;
++        }
++        xmin[i] = c1;
++        xmax[i] = c2;
++        smin = sminpr;
++        smax = smaxpr;
++        (*rank)++;
++    }
++
++    // Q^T*b = b, solve R*x = b.
++    SLSQP_BLAS(dtrsm)("L", "U", "N", "N", &n, &one, &done, a, &m, b, &m);
++    return 1;
++}
++
++
+ /*
+  * Solve equality and inequality constrained least squares problem (LSEI)
+  *      min |A*x - b|, subject to E*x = f, G*x >= h.
+@@ -1092,14 +1177,22 @@ lsei(blas_int ma, blas_int me, blas_int mg, blas_int n,
+         double* restrict wb_orig = &lsi_scratch[lwork];
+         for (int64_t i = 0; i < ma; i++) { wb_orig[i] = wb[i]; }
+ 
+-        // Mark all columns as fixed so that dgelsy uses the (blocked) QR
+-        // without column pivoting, which is about twice as fast here. scipy
+-        // gets the same behavior implicitly, except on the first call, since
+-        // jw still holds the permutation from the previous call.
+-        for (int64_t i = 0; i < nvars; i++) { jw[i] = 1; }
+         blas_int krank = 0;
+         t = sqrt(epsmach);
+-        SLSQP_BLAS(dgelsy)(&ma, &nvars, &one, a2, &ma, wb, &ma, jw, &t, &krank, lsi_scratch, &lwork, &info);
++        // Without equality constraints A is still the upper triangular LSQ
++        // matrix (built by lsq; the RQ transformation above is empty).
++        if ((me == 0) && lsq_triangular(ma, nvars, a2, wb, t, &krank, lsi_scratch))
++        {
++            // Same result as dgelsy below, including the permutation.
++            for (int64_t i = 0; i < nvars; i++) { jw[i] = i + 1; }
++        } else {
++            // Mark all columns as fixed so that dgelsy uses the (blocked) QR
++            // without column pivoting, which is about twice as fast here. scipy
++            // gets the same behavior implicitly, except on the first call, since
++            // jw still holds the permutation from the previous call.
++            for (int64_t i = 0; i < nvars; i++) { jw[i] = 1; }
++            SLSQP_BLAS(dgelsy)(&ma, &nvars, &one, a2, &ma, wb, &ma, jw, &t, &krank, lsi_scratch, &lwork, &info);
++        }
+ 
+         // Copy the solution to x
+         for (int64_t i = 0; i < nvars; i++) { x[i] = wb[i]; }
+diff --git a/src/algs/slsqp/slsqp_blas.h b/src/algs/slsqp/slsqp_blas.h
+index 1faf64c..bb741bc 100644
+--- a/src/algs/slsqp/slsqp_blas.h
++++ b/src/algs/slsqp/slsqp_blas.h
+@@ -221,7 +221,7 @@ slsqp_dtrsv(const char* uplo, const char* trans, const char* diag, const blas_in
+     }
+ }
+ 
+-/* side = "R", uplo = "U", transa = "N": solve X*A = alpha*B */
++/* uplo = "U", transa = "N", side = "L" or "R": solve A*X = alpha*B or X*A = alpha*B */
+ static void
+ slsqp_dtrsm(const char* side, const char* uplo, const char* transa, const char* diag,
+             const blas_int* m, const blas_int* n, const double* alpha, const double* a,
+@@ -229,9 +229,29 @@ slsqp_dtrsm(const char* side, const char* uplo, const char* transa, const char*
+ {
+     blas_int mm = *m, nn = *n, la = *lda, lb = *ldb;
+     int nounit = slsqp_lsame(diag, 'N');
+-    (void)side; (void)uplo; (void)transa;
++    (void)uplo; (void)transa;
+ 
+     if ((mm == 0) || (nn == 0)) { return; }
++    if (slsqp_lsame(side, 'L'))
++    {
++        for (blas_int j = 0; j < nn; j++)
++        {
++            if (*alpha != 1.0)
++            {
++                for (blas_int i = 0; i < mm; i++) { b[i + j*lb] *= *alpha; }
++            }
++            for (blas_int k = mm - 1; k >= 0; k--)
++            {
++                if (b[k + j*lb] != 0.0)
++                {
++                    if (nounit) { b[k + j*lb] /= a[k + k*la]; }
++                    double temp = b[k + j*lb];
++                    for (blas_int i = 0; i < k; i++) { b[i + j*lb] -= temp*a[i + k*la]; }
++                }
++            }
++        }
++        return;
++    }
+     for (blas_int j = 0; j < nn; j++)
+     {
+         if (*alpha != 1.0)
+@@ -552,16 +572,17 @@ slsqp_dormr2(const char* side, const char* trans, const blas_int* m, const blas_
+ /* Incremental condition estimation (DLAIC1); job 1 = largest, 2 = smallest
+    singular value. */
+ static void
+-slsqp_dlaic1(int job, blas_int j, const double* x, double sest, const double* w, double gamma,
+-             double* sestpr, double* s, double* c)
++slsqp_dlaic1(const blas_int* job, const blas_int* j, const double* x, const double* sestp,
++             const double* w, const double* gammap, double* sestpr, double* s, double* c)
+ {
+     const double eps = SLSQP_DLAMCH_E;
++    const double sest = *sestp, gamma = *gammap;
+     blas_int one = 1;
+-    double alpha = slsqp_ddot(&j, x, &one, w, &one);
++    double alpha = slsqp_ddot(j, x, &one, w, &one);
+     double absalp = fabs(alpha), absgam = fabs(gamma), absest = fabs(sest);
+     double s1, s2, tmp, b, t, zeta1, zeta2, sine, cosine, norma, test;
+ 
+-    if (job == 1) {
++    if (*job == 1) {
+         if (sest == 0.0) {
+             s1 = fmax(absgam, absalp);
+             if (s1 == 0.0) {
+@@ -715,10 +736,10 @@ slsqp_dgelsy(const blas_int* m, const blas_int* n, const blas_int* nrhs, double*
+     *rank = 1;
+     while (*rank < mn)
+     {
+-        blas_int i = *rank;
++        blas_int i = *rank, imax = 1, imin = 2;
+         double sminpr, smaxpr, s1, c1, s2, c2;
+-        slsqp_dlaic1(2, i, xmin, smin, &a[i*ld], a[i + i*ld], &sminpr, &s1, &c1);
+-        slsqp_dlaic1(1, i, xmax, smax, &a[i*ld], a[i + i*ld], &smaxpr, &s2, &c2);
++        slsqp_dlaic1(&imin, &i, xmin, &smin, &a[i*ld], &a[i + i*ld], &sminpr, &s1, &c1);
++        slsqp_dlaic1(&imax, &i, xmax, &smax, &a[i*ld], &a[i + i*ld], &smaxpr, &s2, &c2);
+         if (!(smaxpr*(*rcond) <= sminpr)) { break; }
+         for (blas_int k = 0; k < i; k++)
+         {
+-- 
+2.56.0
+

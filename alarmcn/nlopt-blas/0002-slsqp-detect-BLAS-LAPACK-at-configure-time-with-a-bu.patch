@@ -1,0 +1,1097 @@
+From 951f8e35cfaa5016458f304af82c7c6c33fc81bc Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 29 Oct 2026 17:17:30 -0400
+Subject: [PATCH 2/3] slsqp: detect BLAS/LAPACK at configure time, with a
+ built-in fallback
+
+New CMake option NLOPT_BLAS (case-insensitive): AUTO (default) uses a
+BLAS/LAPACK found by FindLAPACK if it provides the routines SLSQP needs,
+ON requires one, OFF never uses one, and any other value is passed as
+the library list (names, paths or flags) to link against.  The Fortran
+symbol suffix ("_64_", "_64", "_" or none) is found by test-linking all
+17 routines, without running anything, so this works when
+cross-compiling; a "64" suffix means 64-bit integers.  Libraries that
+provide both interfaces get the one matching the pointer size.  The
+libraries are added to Libs.private in nlopt.pc.
+
+Without a BLAS/LAPACK, slsqp_blas.h provides plain C ports of the
+reference BLAS/LAPACK 3.12 routines that SLSQP calls (pointer-sized
+integers), restricted to the arguments used: DGELSY without column
+pivoting (SLSQP fixes all columns) and with the basic instead of the
+minimum-norm solution when rank deficient (SLSQP then stops with an
+error and uses only the rank).  Compared with OpenBLAS on random inputs
+they agree to rounding and make the same rank decisions.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ CMakeLists.txt                 |  99 ++++-
+ doc/docs/NLopt_Algorithms.md   |   2 +-
+ doc/docs/NLopt_Installation.md |  14 +
+ src/algs/slsqp/COPYRIGHT       |  53 +++
+ src/algs/slsqp/README          |  17 +-
+ src/algs/slsqp/slsqp.c         |  24 +-
+ src/algs/slsqp/slsqp_blas.h    | 747 +++++++++++++++++++++++++++++++++
+ 7 files changed, 938 insertions(+), 18 deletions(-)
+ create mode 100644 src/algs/slsqp/slsqp_blas.h
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 341bfa4..174d641 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -99,6 +99,93 @@ if (M_LIBRARY)
+   set (LIBS_PRIVATE "-lm")
+ endif()
+ 
++# BLAS/LAPACK used by SLSQP: AUTO uses one if found, ON requires one, OFF uses
++# the built-in reference routines; anything else is the name or path of the
++# library (or a list of them, e.g. "blas;lapack") to use.
++set (NLOPT_BLAS AUTO CACHE STRING "BLAS/LAPACK for SLSQP: AUTO, ON, OFF, or library name(s)/path(s)")
++set_property (CACHE NLOPT_BLAS PROPERTY STRINGS AUTO ON OFF)
++# The keywords are case-insensitive.
++string (TOUPPER "${NLOPT_BLAS}" _blas_mode)
++if (_blas_mode MATCHES "^(1|ON|YES|TRUE|Y)$")
++  set (_blas_mode ON)
++elseif (_blas_mode MATCHES "^(0|OFF|NO|FALSE|N|)$")
++  set (_blas_mode OFF)
++elseif (NOT _blas_mode STREQUAL "AUTO")
++  set (_blas_mode LIBRARY)
++endif ()
++set (NLOPT_BLAS_LIBRARIES)
++set (_blas_candidates)
++if (NOT _blas_mode STREQUAL "OFF")
++  if (_blas_mode STREQUAL "AUTO" OR _blas_mode STREQUAL "ON")
++    find_package (LAPACK QUIET)
++    if (LAPACK_FOUND)
++      set (_blas_candidates "${LAPACK_LIBRARIES}")
++    endif ()
++  else ()
++    set (_blas_candidates "${NLOPT_BLAS}")
++  endif ()
++endif ()
++if (_blas_candidates)
++  # Find the symbol naming convention under which all routines SLSQP calls link,
++  # preferring the interface with integers of the platform's pointer size for
++  # libraries that provide both (e.g. MKL, libblastrampoline).
++  string (MD5 _blas_hash "${_blas_candidates}")
++  set (CMAKE_REQUIRED_LIBRARIES ${_blas_candidates})
++  if (M_LIBRARY)
++    list (APPEND CMAKE_REQUIRED_LIBRARIES ${M_LIBRARY})
++  endif ()
++  set (CMAKE_REQUIRED_QUIET ON)
++  if (CMAKE_SIZEOF_VOID_P EQUAL 4)
++    set (_blas_suffixes _ "" _64_ _64)
++  else ()
++    set (_blas_suffixes _64_ _64 _ "")
++  endif ()
++  foreach (_suffix IN LISTS _blas_suffixes)
++    set (_decls)
++    set (_calls)
++    foreach (_r daxpy dscal dnrm2 ddot dgemv dtpmv dtpsv dtrsm dtrsv dgelsy dgeqr2 dgerq2
++                dlarf dlarfgp dlartgp dorm2r dormr2)
++      string (APPEND _decls "char ${_r}${_suffix}(void);\n")
++      string (APPEND _calls "  ${_r}${_suffix}();\n")
++    endforeach ()
++    string (MAKE_C_IDENTIFIER "NLOPT_BLAS_${_blas_hash}${_suffix}" _var)
++    check_c_source_compiles ("${_decls}int main(void) {\n${_calls}  return 0;\n}\n" ${_var})
++    if (${_var})
++      set (NLOPT_BLAS_LIBRARIES ${_blas_candidates})
++      set (NLOPT_BLAS_SUFFIX "${_suffix}")
++      break ()
++    endif ()
++  endforeach ()
++  unset (CMAKE_REQUIRED_LIBRARIES)
++  unset (CMAKE_REQUIRED_QUIET)
++  if (NOT NLOPT_BLAS_LIBRARIES AND NOT _blas_mode STREQUAL "AUTO")
++    message (FATAL_ERROR "NLOPT_BLAS: cannot link the BLAS/LAPACK routines needed by SLSQP from ${_blas_candidates}")
++  elseif (NOT NLOPT_BLAS_LIBRARIES)
++    message (STATUS "Cannot link the BLAS/LAPACK routines needed by SLSQP from ${_blas_candidates}")
++  endif ()
++elseif (_blas_mode STREQUAL "ON")
++  message (FATAL_ERROR "NLOPT_BLAS: BLAS/LAPACK not found")
++endif ()
++if (NLOPT_BLAS_LIBRARIES)
++  # Integer size from the symbol names: "64" suffixes denote 64-bit integers.
++  if (NLOPT_BLAS_SUFFIX MATCHES "64")
++    set (NLOPT_BLAS_INT int64_t)
++  else ()
++    set (NLOPT_BLAS_INT int)
++  endif ()
++  message (STATUS "SLSQP BLAS/LAPACK: ${NLOPT_BLAS_LIBRARIES} (symbol suffix \"${NLOPT_BLAS_SUFFIX}\", ${NLOPT_BLAS_INT} integers)")
++  # For nlopt.pc: paths and flags as they are, bare names as -l<name>.
++  foreach (_lib IN LISTS NLOPT_BLAS_LIBRARIES)
++    if (_lib MATCHES "^-" OR _lib MATCHES "/")
++      set (LIBS_PRIVATE "${LIBS_PRIVATE} ${_lib}")
++    else ()
++      set (LIBS_PRIVATE "${LIBS_PRIVATE} -l${_lib}")
++    endif ()
++  endforeach ()
++else ()
++  message (STATUS "SLSQP BLAS/LAPACK: built-in reference routines")
++endif ()
++
+ if (NOT DEFINED HAVE_FPCLASSIFY)
+   message(STATUS "Looking for fpclassify")
+   file (WRITE ${PROJECT_BINARY_DIR}/fpclassify.c "#include <math.h>\n")
+@@ -172,7 +259,7 @@ set (NLOPT_SOURCES
+   src/algs/auglag/auglag.c src/algs/auglag/auglag.h
+   src/algs/bobyqa/bobyqa.c src/algs/bobyqa/bobyqa.h
+   src/algs/isres/isres.c src/algs/isres/isres.h
+-  src/algs/slsqp/slsqp.c src/algs/slsqp/slsqp.h
++  src/algs/slsqp/slsqp.c src/algs/slsqp/slsqp.h src/algs/slsqp/slsqp_blas.h
+   src/algs/esch/esch.c src/algs/esch/esch.h
+   src/api/general.c src/api/options.c src/api/optimize.c src/api/deprecated.c src/api/nlopt-internal.h src/api/nlopt.h src/api/f77api.c src/api/f77funcs.h src/api/f77funcs_.h ${PROJECT_BINARY_DIR}/nlopt.hpp
+   src/util/mt19937ar.c src/util/sobolseq.c src/util/soboldata.h src/util/timer.c src/util/stop.c src/util/nlopt-util.h src/util/redblack.c src/util/redblack.h src/util/qsort_r.c src/util/rescale.c
+@@ -232,13 +319,11 @@ endif ()
+ if (M_LIBRARY)
+   target_link_libraries (${nlopt_lib} PRIVATE ${M_LIBRARY})
+ endif ()
+-# SLSQP calls BLAS/LAPACK; for now this must be an ILP64 build with the
+-# "64_" symbol suffix (e.g. libblas64 from OpenBLAS)
+-find_library (NLOPT_BLAS64_LIBRARY NAMES blas64)
+-if (NOT NLOPT_BLAS64_LIBRARY)
+-  message (FATAL_ERROR "ILP64 BLAS/LAPACK (libblas64) not found")
++if (NLOPT_BLAS_LIBRARIES)
++  target_link_libraries (${nlopt_lib} PRIVATE ${NLOPT_BLAS_LIBRARIES})
++  target_compile_definitions (${nlopt_lib} PRIVATE NLOPT_HAVE_BLAS
++                              NLOPT_BLAS_SUFFIX=${NLOPT_BLAS_SUFFIX} NLOPT_BLAS_INT=${NLOPT_BLAS_INT})
+ endif ()
+-target_link_libraries (${nlopt_lib} PRIVATE ${NLOPT_BLAS64_LIBRARY})
+ set_target_properties (${nlopt_lib} PROPERTIES SOVERSION ${SO_MAJOR})
+ set_target_properties (${nlopt_lib} PROPERTIES VERSION "${SO_MAJOR}.${SO_MINOR}.${SO_PATCH}")
+ if (NLOPT_CXX)
+diff --git a/doc/docs/NLopt_Algorithms.md b/doc/docs/NLopt_Algorithms.md
+index 43388a9..0893e29 100644
+--- a/doc/docs/NLopt_Algorithms.md
++++ b/doc/docs/NLopt_Algorithms.md
+@@ -353,7 +353,7 @@ The Fortran code was obtained from the SciPy project, who are responsible for [o
+ 
+ The code was modified for inclusion in NLopt by S. G. Johnson in 2010, with the following changes. The code was converted to C and manually cleaned up. It was modified to be re-entrant (preserving the reverse-communication interface but explicitly saving the state in a data structure). The reverse-communication interface was wrapped with an NLopt-style interface, with NLopt stopping conditions. The inexact line search was modified to evaluate the functions including gradients for the first step, since this removes the need to evaluate the function+gradient a second time for the same point in the common case when the inexact line search concludes after a single step; this is motivated by the fact that NLopt's interface combines the function and gradient computations. Since roundoff errors sometimes pushed SLSQP's parameters slightly outside the bound constraints (not allowed by NLopt), we added checks to force the parameters within the bounds. We fixed [a bug](http://projects.scipy.org/scipy/ticket/1231) in the LSEI subroutine (use of uninitialized variables) for the case where the number of equality constraints equals the dimension of the problem. The LSQ subroutine was modified to handle infinite lower/upper bounds (in which case those constraints are omitted).
+ 
+-The algorithm (main iteration and subproblem solvers) was later replaced by a port of SciPy's C rewrite of the same code ([scipy/scipy#22524](https://github.com/scipy/scipy/pull/22524)), which follows the same iterates but uses BLAS/LAPACK for the dense linear algebra, with the NLopt modifications above carried over. It currently requires an ILP64 BLAS/LAPACK library.
++The algorithm (main iteration and subproblem solvers) was later replaced by a port of SciPy's C rewrite of the same code ([scipy/scipy#22524](https://github.com/scipy/scipy/pull/22524)), which follows the same iterates but uses BLAS/LAPACK for the dense linear algebra, with the NLopt modifications above carried over. A BLAS/LAPACK library is used if one is found at configure time (see the `NLOPT_BLAS` option in the [installation instructions](NLopt_Installation.md)); otherwise NLopt uses built-in C versions of the few routines needed.
+ 
+ The `NLOPT_LD_SLSQP` algorithm supports the following internal parameters, which can be specified using the [`nlopt_set_param` API](NLopt_Reference.md#algorithm-specific-parameters):
+ 
+diff --git a/doc/docs/NLopt_Installation.md b/doc/docs/NLopt_Installation.md
+index a2c67cf..bb78631 100644
+--- a/doc/docs/NLopt_Installation.md
++++ b/doc/docs/NLopt_Installation.md
+@@ -178,6 +178,20 @@ however, it will disable algorithms implemented in C++ (StoGO and AGS algorithms
+ 
+ The resulting library has the *same* interface as the ordinary NLopt library, and can *still* be called from ordinary C, C++, and Fortran programs. However, one no longer has to link with the C++ standard libraries, which can sometimes be convenient for non-C++ programs, and allows libnlopt to be compatible with multiple C++ compilers simultaneously.
+ 
++BLAS/LAPACK
++-----------
++
++The SLSQP algorithm uses BLAS/LAPACK for its dense linear algebra if a library is found at configure time, and otherwise falls back to built-in implementations of the few routines it needs. This is controlled by the `NLOPT_BLAS` option:
++
++```sh
++cmake -DNLOPT_BLAS=AUTO ..       # default: use BLAS/LAPACK if found
++cmake -DNLOPT_BLAS=ON ..         # require BLAS/LAPACK
++cmake -DNLOPT_BLAS=OFF ..        # always use the built-in routines
++cmake -DNLOPT_BLAS=openblas ..   # use this library (a name, a path, or a list such as "blas;lapack")
++```
++
++The keywords are case-insensitive, and the usual CMake boolean spellings (`YES`/`NO`, `TRUE`/`FALSE`, `1`/`0`) work too. With `AUTO` and `ON`, the library is located with CMake's `FindLAPACK` (so `BLA_VENDOR` can be used to choose one). The Fortran symbol suffix (`_64_`, `_64`, `_` or none) is detected from the library; libraries with a `64` suffix are assumed to use 64-bit integers. If a library provides both interfaces, the one matching the platform's pointer size is used (32-bit integers on 32-bit platforms, 64-bit otherwise); the built-in routines likewise use pointer-sized integers. Detection only compiles and links test programs (it does not run them), so it also works when cross-compiling. An ILP64 library whose symbols have no `64` suffix is therefore not supported; it would be called with 32-bit integers.
++
+ LGPL solvers
+ ------------
+ 
+diff --git a/src/algs/slsqp/COPYRIGHT b/src/algs/slsqp/COPYRIGHT
+index 1aa3192..0515444 100644
+--- a/src/algs/slsqp/COPYRIGHT
++++ b/src/algs/slsqp/COPYRIGHT
+@@ -62,3 +62,56 @@ C      permissions@acm.org
+ C      212.869.7440 ext. 652
+ C      Fax. 212.869.0481
+ C      ------
++
++------------------------------------------------------------------------
++slsqp_blas.h contains C ports of reference BLAS/LAPACK 3.12 routines,
++distributed under the following license:
++
++Copyright (c) 1992-2023 The University of Tennessee and The University
++                        of Tennessee Research Foundation.  All rights
++                        reserved.
++Copyright (c) 2000-2023 The University of California Berkeley. All
++                        rights reserved.
++Copyright (c) 2006-2023 The University of Colorado Denver.  All rights
++                        reserved.
++
++$COPYRIGHT$
++
++Additional copyrights may follow
++
++$HEADER$
++
++Redistribution and use in source and binary forms, with or without
++modification, are permitted provided that the following conditions are
++met:
++
++- Redistributions of source code must retain the above copyright
++  notice, this list of conditions and the following disclaimer.
++
++- Redistributions in binary form must reproduce the above copyright
++  notice, this list of conditions and the following disclaimer listed
++  in this license in the documentation and/or other materials
++  provided with the distribution.
++
++- Neither the name of the copyright holders nor the names of its
++  contributors may be used to endorse or promote products derived from
++  this software without specific prior written permission.
++
++The copyright holders provide no reassurances that the source code
++provided does not infringe any patent, copyright, or any other
++intellectual property rights of third parties.  The copyright holders
++disclaim any liability to any recipient for claims brought against
++recipient by any third party for infringement of that parties
++intellectual property rights.
++
++THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+diff --git a/src/algs/slsqp/README b/src/algs/slsqp/README
+index 021dbba..c578cc8 100644
+--- a/src/algs/slsqp/README
++++ b/src/algs/slsqp/README
+@@ -57,9 +57,20 @@ backing off from non-finite trial points, no iteration limit) and two
+ further changes: unbounded variables are passed to the subproblem as
+ NaN bounds, as SciPy does, and the least-squares solve without
+ inequality constraints marks all columns as fixed for DGELSY
+-explicitly instead of relying on leftover workspace contents.  The
+-code currently requires an ILP64 BLAS/LAPACK with the "64_" symbol
+-suffix (see SLSQP_BLAS in slsqp.c).
++explicitly instead of relying on leftover workspace contents.
++
++The BLAS/LAPACK library is chosen at configure time with the CMake
++option NLOPT_BLAS: AUTO (default; use one if found), ON (require one),
++OFF, or the name(s) or path(s) of the library to use.  The symbol
++convention is detected from the library ("_64_", "_64", "_" or no
++suffix) by test-linking, without running anything; a "64" suffix implies
++64-bit integers, and no suffix 32-bit ones.  For libraries providing
++both, the interface with pointer-sized integers is preferred (32-bit on
++32-bit platforms).  Without a BLAS/LAPACK,
++slsqp_blas.h provides plain C ports (with pointer-sized integers) of the
++reference BLAS/LAPACK 3.12 routines that are needed, restricted to the arguments used here
++(DGELSY without column pivoting and without the minimum-norm solution
++for rank-deficient problems, which SLSQP treats as a failure anyway).
+ 
+ Two algorithm parameters (nlopt_set_param) control the remaining
+ differences from the original algorithm:
+diff --git a/src/algs/slsqp/slsqp.c b/src/algs/slsqp/slsqp.c
+index 9b7e409..dbf2a49 100644
+--- a/src/algs/slsqp/slsqp.c
++++ b/src/algs/slsqp/slsqp.c
+@@ -5,11 +5,13 @@
+    The f2c translation of the algorithm (main iteration, LSQ, LSEI, LSI, LDP, NNLS and the
+    LDL' update) was later replaced by SciPy's C rewrite of the same routines
+    (Ilhan Polat, scipy/scipy#22524, BSD license), which delegates the dense linear
+-   algebra to BLAS/LAPACK.  The NLopt-specific changes of the original translation
++   algebra to BLAS/LAPACK (or to the built-in versions in slsqp_blas.h when NLopt is
++   configured without one).  The NLopt-specific changes of the original translation
+    (bound clamping, non-finite line-search steps, no iteration limit, gradient at
+    the first line-search trial point) were carried over. */
+ 
+ #include <math.h>
++#include <stddef.h>
+ #include <stdint.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -48,12 +50,13 @@
+ 
+ /***************************** BLAS/LAPACK *******************************/
+ 
+-/* For now this assumes an ILP64 BLAS/LAPACK with the "64_" symbol suffix,
+-   e.g. /usr/lib/libblas64.so (OpenBLAS) on Arch Linux. */
+-typedef int64_t blas_int;
+-#ifndef SLSQP_BLAS
+-#  define SLSQP_BLAS(name) name##_64_
+-#endif
++#ifdef NLOPT_HAVE_BLAS
++/* External BLAS/LAPACK found by CMake (NLOPT_BLAS option), with Fortran
++   symbol names name##NLOPT_BLAS_SUFFIX and NLOPT_BLAS_INT integers. */
++typedef NLOPT_BLAS_INT blas_int;
++#define SLSQP_PASTE2(a, b) a##b
++#define SLSQP_PASTE(a, b) SLSQP_PASTE2(a, b)
++#define SLSQP_BLAS(name) SLSQP_PASTE(name, NLOPT_BLAS_SUFFIX)
+ 
+ void   SLSQP_BLAS(daxpy)(const blas_int* n, const double* alpha, const double* x, const blas_int* incx, double* y, const blas_int* incy);
+ void   SLSQP_BLAS(dscal)(const blas_int* n, const double* alpha, double* x, const blas_int* incx);
+@@ -72,6 +75,13 @@ void   SLSQP_BLAS(dlarfgp)(const blas_int* n, double* alpha, double* x, const bl
+ void   SLSQP_BLAS(dlartgp)(const double* f, const double* g, double* cs, double* sn, double* r);
+ void   SLSQP_BLAS(dorm2r)(const char* side, const char* trans, const blas_int* m, const blas_int* n, const blas_int* k, const double* a, const blas_int* lda, const double* tau, double* c, const blas_int* ldc, double* work, blas_int* info);
+ void   SLSQP_BLAS(dormr2)(const char* side, const char* trans, const blas_int* m, const blas_int* n, const blas_int* k, const double* a, const blas_int* lda, const double* tau, double* c, const blas_int* ldc, double* work, blas_int* info);
++#else
++/* Built-in reference implementations, with pointer-sized integers (32-bit on
++   32-bit platforms). */
++typedef ptrdiff_t blas_int;
++#define SLSQP_BLAS(name) slsqp_##name
++#include "slsqp_blas.h"
++#endif
+ 
+ /********************************* NNLS ***********************************/
+ 
+diff --git a/src/algs/slsqp/slsqp_blas.h b/src/algs/slsqp/slsqp_blas.h
+new file mode 100644
+index 0000000..1faf64c
+--- /dev/null
++++ b/src/algs/slsqp/slsqp_blas.h
+@@ -0,0 +1,747 @@
++/* Built-in implementations of the BLAS/LAPACK routines used by slsqp.c, for
++   builds without an external BLAS/LAPACK (CMake option NLOPT_BLAS).
++
++   These are plain C ports of the reference BLAS and LAPACK 3.12 routines,
++   restricted to the arguments that slsqp.c passes (noted per routine).
++   Vector increments must be positive.  They are only included by slsqp.c,
++   with blas_int and SLSQP_BLAS(name) == slsqp_##name defined there.
++
++   Reference BLAS/LAPACK:
++   Copyright (c) 1992-2023 The University of Tennessee and The University
++                           of Tennessee Research Foundation.  All rights
++                           reserved.
++   Copyright (c) 2000-2023 The University of California Berkeley. All
++                           rights reserved.
++   Copyright (c) 2006-2023 The University of Colorado Denver.  All rights
++                           reserved.
++   (modified BSD license, see COPYRIGHT) */
++
++#ifndef SLSQP_BLAS_H
++#define SLSQP_BLAS_H
++
++/* Machine constants as returned by DLAMCH. */
++#define SLSQP_DLAMCH_E 1.1102230246251565e-16   /* eps (rounding) = 2^-53 */
++#define SLSQP_DLAMCH_P 2.220446049250313e-16    /* eps*base = 2^-52 */
++#define SLSQP_DLAMCH_S 2.2250738585072014e-308  /* safe minimum = 2^-1022 */
++
++static int slsqp_lsame(const char* ca, char cb) { return (ca[0] == cb) || (ca[0] == cb + ('a' - 'A')); }
++
++/******************************** BLAS 1 *********************************/
++
++static void
++slsqp_daxpy(const blas_int* n, const double* alpha, const double* x, const blas_int* incx, double* y, const blas_int* incy)
++{
++    if ((*n <= 0) || (*alpha == 0.0)) { return; }
++    for (blas_int i = 0; i < *n; i++) { y[i*(*incy)] += (*alpha)*x[i*(*incx)]; }
++}
++
++static void
++slsqp_dscal(const blas_int* n, const double* alpha, double* x, const blas_int* incx)
++{
++    for (blas_int i = 0; i < *n; i++) { x[i*(*incx)] *= *alpha; }
++}
++
++static double
++slsqp_ddot(const blas_int* n, const double* x, const blas_int* incx, const double* y, const blas_int* incy)
++{
++    double dtemp = 0.0;
++    for (blas_int i = 0; i < *n; i++) { dtemp += x[i*(*incx)]*y[i*(*incy)]; }
++    return dtemp;
++}
++
++/* Blue's algorithm, as in the reference DNRM2 (BLAS 3.10). */
++static double
++slsqp_dnrm2(const blas_int* n, const double* x, const blas_int* incx)
++{
++    const double maxn = 1.7976931348623157e308;
++    const double tsml = ldexp(1.0, -511), tbig = ldexp(1.0, 486);
++    const double ssml = ldexp(1.0, 537), sbig = ldexp(1.0, -538);
++    double abig = 0.0, amed = 0.0, asml = 0.0, scl = 1.0, sumsq = 0.0;
++    int notbig = 1;
++
++    if (*n <= 0) { return 0.0; }
++    for (blas_int i = 0; i < *n; i++)
++    {
++        double ax = fabs(x[i*(*incx)]);
++        if (ax > tbig) {
++            abig += (ax*sbig)*(ax*sbig);
++            notbig = 0;
++        } else if (ax < tsml) {
++            if (notbig) { asml += (ax*ssml)*(ax*ssml); }
++        } else {
++            amed += ax*ax;
++        }
++    }
++    if (abig > 0.0) {
++        if ((amed > 0.0) || (amed > maxn) || (amed != amed)) { abig += (amed*sbig)*sbig; }
++        scl = 1.0/sbig;
++        sumsq = abig;
++    } else if (asml > 0.0) {
++        if ((amed > 0.0) || (amed > maxn) || (amed != amed)) {
++            double ymin, ymax;
++            amed = sqrt(amed);
++            asml = sqrt(asml)/ssml;
++            if (asml > amed) { ymin = amed; ymax = asml; } else { ymin = asml; ymax = amed; }
++            scl = 1.0;
++            sumsq = ymax*ymax*(1.0 + (ymin/ymax)*(ymin/ymax));
++        } else {
++            scl = 1.0/ssml;
++            sumsq = asml;
++        }
++    } else {
++        scl = 1.0;
++        sumsq = amed;
++    }
++    return scl*sqrt(sumsq);
++}
++
++/******************************** BLAS 2/3 *******************************/
++
++/* trans = "N" or "T" */
++static void
++slsqp_dgemv(const char* trans, const blas_int* m, const blas_int* n, const double* alpha,
++            const double* a, const blas_int* lda, const double* x, const blas_int* incx,
++            const double* beta, double* y, const blas_int* incy)
++{
++    blas_int leny = slsqp_lsame(trans, 'N') ? *m : *n;
++
++    if ((*m == 0) || (*n == 0) || ((*alpha == 0.0) && (*beta == 1.0))) { return; }
++    if (*beta != 1.0)
++    {
++        if (*beta == 0.0) {
++            for (blas_int i = 0; i < leny; i++) { y[i*(*incy)] = 0.0; }
++        } else {
++            for (blas_int i = 0; i < leny; i++) { y[i*(*incy)] *= *beta; }
++        }
++    }
++    if (*alpha == 0.0) { return; }
++    if (slsqp_lsame(trans, 'N')) {
++        // y += alpha*A*x
++        for (blas_int j = 0; j < *n; j++)
++        {
++            double temp = (*alpha)*x[j*(*incx)];
++            for (blas_int i = 0; i < *m; i++) { y[i*(*incy)] += temp*a[i + j*(*lda)]; }
++        }
++    } else {
++        // y += alpha*A^T*x
++        for (blas_int j = 0; j < *n; j++)
++        {
++            double temp = 0.0;
++            for (blas_int i = 0; i < *m; i++) { temp += a[i + j*(*lda)]*x[i*(*incx)]; }
++            y[j*(*incy)] += (*alpha)*temp;
++        }
++    }
++}
++
++/* Packed lower triangular matrix, column-major: A(i,j), i >= j. */
++#define SLSQP_TP_L(ap, n, i, j) ((ap)[(j)*(n) - ((j)*((j) - 1))/2 + (i) - (j)])
++
++/* uplo = "L", trans = "N" or "T" */
++static void
++slsqp_dtpmv(const char* uplo, const char* trans, const char* diag, const blas_int* n,
++            const double* ap, double* x, const blas_int* incx)
++{
++    blas_int nn = *n, inc = *incx;
++    int nounit = slsqp_lsame(diag, 'N');
++    (void)uplo;
++
++    if (slsqp_lsame(trans, 'N')) {
++        // x := L*x
++        for (blas_int j = nn - 1; j >= 0; j--)
++        {
++            double temp = x[j*inc];
++            if (temp != 0.0)
++            {
++                for (blas_int i = nn - 1; i > j; i--) { x[i*inc] += temp*SLSQP_TP_L(ap, nn, i, j); }
++                if (nounit) { x[j*inc] *= SLSQP_TP_L(ap, nn, j, j); }
++            }
++        }
++    } else {
++        // x := L^T*x
++        for (blas_int j = 0; j < nn; j++)
++        {
++            double temp = x[j*inc];
++            if (nounit) { temp *= SLSQP_TP_L(ap, nn, j, j); }
++            for (blas_int i = j + 1; i < nn; i++) { temp += SLSQP_TP_L(ap, nn, i, j)*x[i*inc]; }
++            x[j*inc] = temp;
++        }
++    }
++}
++
++/* uplo = "L", trans = "N" */
++static void
++slsqp_dtpsv(const char* uplo, const char* trans, const char* diag, const blas_int* n,
++            const double* ap, double* x, const blas_int* incx)
++{
++    blas_int nn = *n, inc = *incx;
++    int nounit = slsqp_lsame(diag, 'N');
++    (void)uplo; (void)trans;
++
++    // Solve L*x = b
++    for (blas_int j = 0; j < nn; j++)
++    {
++        if (x[j*inc] != 0.0)
++        {
++            if (nounit) { x[j*inc] /= SLSQP_TP_L(ap, nn, j, j); }
++            double temp = x[j*inc];
++            for (blas_int i = j + 1; i < nn; i++) { x[i*inc] -= temp*SLSQP_TP_L(ap, nn, i, j); }
++        }
++    }
++}
++
++/* uplo = "U", trans = "N" or "T" */
++static void
++slsqp_dtrsv(const char* uplo, const char* trans, const char* diag, const blas_int* n,
++            const double* a, const blas_int* lda, double* x, const blas_int* incx)
++{
++    blas_int nn = *n, ld = *lda, inc = *incx;
++    int nounit = slsqp_lsame(diag, 'N');
++    (void)uplo;
++
++    if (slsqp_lsame(trans, 'N')) {
++        // Solve U*x = b
++        for (blas_int j = nn - 1; j >= 0; j--)
++        {
++            if (x[j*inc] != 0.0)
++            {
++                if (nounit) { x[j*inc] /= a[j + j*ld]; }
++                double temp = x[j*inc];
++                for (blas_int i = j - 1; i >= 0; i--) { x[i*inc] -= temp*a[i + j*ld]; }
++            }
++        }
++    } else {
++        // Solve U^T*x = b
++        for (blas_int j = 0; j < nn; j++)
++        {
++            double temp = x[j*inc];
++            for (blas_int i = 0; i < j; i++) { temp -= a[i + j*ld]*x[i*inc]; }
++            if (nounit) { temp /= a[j + j*ld]; }
++            x[j*inc] = temp;
++        }
++    }
++}
++
++/* side = "R", uplo = "U", transa = "N": solve X*A = alpha*B */
++static void
++slsqp_dtrsm(const char* side, const char* uplo, const char* transa, const char* diag,
++            const blas_int* m, const blas_int* n, const double* alpha, const double* a,
++            const blas_int* lda, double* b, const blas_int* ldb)
++{
++    blas_int mm = *m, nn = *n, la = *lda, lb = *ldb;
++    int nounit = slsqp_lsame(diag, 'N');
++    (void)side; (void)uplo; (void)transa;
++
++    if ((mm == 0) || (nn == 0)) { return; }
++    for (blas_int j = 0; j < nn; j++)
++    {
++        if (*alpha != 1.0)
++        {
++            for (blas_int i = 0; i < mm; i++) { b[i + j*lb] *= *alpha; }
++        }
++        for (blas_int k = 0; k < j; k++)
++        {
++            double akj = a[k + j*la];
++            if (akj != 0.0)
++            {
++                for (blas_int i = 0; i < mm; i++) { b[i + j*lb] -= akj*b[i + k*lb]; }
++            }
++        }
++        if (nounit)
++        {
++            double temp = 1.0/a[j + j*la];
++            for (blas_int i = 0; i < mm; i++) { b[i + j*lb] *= temp; }
++        }
++    }
++}
++
++/******************************** LAPACK *********************************/
++
++static double
++slsqp_dlapy2(double x, double y)
++{
++    int x_is_nan = (x != x), y_is_nan = (y != y);
++    if (x_is_nan) { return x; }
++    if (y_is_nan) { return y; }
++    double xabs = fabs(x), yabs = fabs(y);
++    double w = (xabs > yabs ? xabs : yabs), z = (xabs < yabs ? xabs : yabs);
++    if ((z == 0.0) || (w > 1.7976931348623157e308)) { return w; }
++    return w*sqrt(1.0 + (z/w)*(z/w));
++}
++
++/* Apply H = I - tau*v*v^T to the (m x n) matrix C from the left (side "L") or
++   the right (side "R"). v[one_at*incv], if one_at >= 0, is taken to be 1. */
++static void
++slsqp_larf(int left, blas_int m, blas_int n, const double* v, blas_int incv, blas_int one_at,
++           double tau, double* c, blas_int ldc, double* work)
++{
++    blas_int lastv;
++
++    if (tau == 0.0) { return; }
++    // Look for the last non-zero entry of v.
++    lastv = (left ? m : n);
++    while ((lastv > 0) && (lastv - 1 != one_at) && (v[(lastv - 1)*incv] == 0.0)) { lastv--; }
++#define SLSQP_V(i) ((i) == one_at ? 1.0 : v[(i)*incv])
++    if (left) {
++        // work = C(0:lastv, :)^T*v; C -= tau*v*work^T
++        for (blas_int j = 0; j < n; j++)
++        {
++            double temp = 0.0;
++            for (blas_int i = 0; i < lastv; i++) { temp += c[i + j*ldc]*SLSQP_V(i); }
++            work[j] = temp;
++        }
++        for (blas_int j = 0; j < n; j++)
++        {
++            if (work[j] != 0.0)
++            {
++                double temp = -tau*work[j];
++                for (blas_int i = 0; i < lastv; i++) { c[i + j*ldc] += SLSQP_V(i)*temp; }
++            }
++        }
++    } else {
++        // work = C(:, 0:lastv)*v; C -= tau*work*v^T
++        for (blas_int i = 0; i < m; i++) { work[i] = 0.0; }
++        for (blas_int j = 0; j < lastv; j++)
++        {
++            double temp = SLSQP_V(j);
++            for (blas_int i = 0; i < m; i++) { work[i] += temp*c[i + j*ldc]; }
++        }
++        for (blas_int j = 0; j < lastv; j++)
++        {
++            double vj = SLSQP_V(j);
++            if (vj != 0.0)
++            {
++                double temp = -tau*vj;
++                for (blas_int i = 0; i < m; i++) { c[i + j*ldc] += work[i]*temp; }
++            }
++        }
++    }
++#undef SLSQP_V
++}
++
++static void
++slsqp_dlarf(const char* side, const blas_int* m, const blas_int* n, const double* v,
++            const blas_int* incv, const double* tau, double* c, const blas_int* ldc, double* work)
++{
++    slsqp_larf(slsqp_lsame(side, 'L'), *m, *n, v, *incv, -1, *tau, c, *ldc, work);
++}
++
++/* Generate an elementary reflector H with H*(alpha; x) = (beta; 0). */
++static void
++slsqp_dlarfg(blas_int n, double* alpha, double* x, blas_int incx, double* tau)
++{
++    blas_int nm1 = n - 1, knt = 0;
++    double xnorm, beta, safmin, scal;
++
++    if (n <= 1) { *tau = 0.0; return; }
++    xnorm = slsqp_dnrm2(&nm1, x, &incx);
++    if (xnorm == 0.0) { *tau = 0.0; return; }
++    beta = -copysign(slsqp_dlapy2(*alpha, xnorm), *alpha);
++    safmin = SLSQP_DLAMCH_S/SLSQP_DLAMCH_E;
++    if (fabs(beta) < safmin)
++    {
++        double rsafmn = 1.0/safmin;
++        do {
++            knt++;
++            slsqp_dscal(&nm1, &rsafmn, x, &incx);
++            beta *= rsafmn;
++            *alpha *= rsafmn;
++        } while ((fabs(beta) < safmin) && (knt < 20));
++        xnorm = slsqp_dnrm2(&nm1, x, &incx);
++        beta = -copysign(slsqp_dlapy2(*alpha, xnorm), *alpha);
++    }
++    *tau = (beta - *alpha)/beta;
++    scal = 1.0/(*alpha - beta);
++    slsqp_dscal(&nm1, &scal, x, &incx);
++    for (blas_int j = 0; j < knt; j++) { beta *= safmin; }
++    *alpha = beta;
++}
++
++/* As dlarfg, but with beta >= 0. */
++static void
++slsqp_dlarfgp(const blas_int* n, double* alpha, double* x, const blas_int* incx, double* tau)
++{
++    blas_int nm1 = *n - 1, knt = 0;
++    double xnorm, beta, smlnum, savealpha, scal;
++
++    if (*n <= 0) { *tau = 0.0; return; }
++    xnorm = slsqp_dnrm2(&nm1, x, incx);
++    if (xnorm <= SLSQP_DLAMCH_P*fabs(*alpha)) {
++        if (*alpha >= 0.0) {
++            *tau = 0.0;
++        } else {
++            *tau = 2.0;
++            for (blas_int j = 0; j < nm1; j++) { x[j*(*incx)] = 0.0; }
++            *alpha = -*alpha;
++        }
++        return;
++    }
++    beta = copysign(slsqp_dlapy2(*alpha, xnorm), *alpha);
++    smlnum = SLSQP_DLAMCH_S/SLSQP_DLAMCH_E;
++    if (fabs(beta) < smlnum)
++    {
++        double bignum = 1.0/smlnum;
++        do {
++            knt++;
++            slsqp_dscal(&nm1, &bignum, x, incx);
++            beta *= bignum;
++            *alpha *= bignum;
++        } while ((fabs(beta) < smlnum) && (knt < 20));
++        xnorm = slsqp_dnrm2(&nm1, x, incx);
++        beta = copysign(slsqp_dlapy2(*alpha, xnorm), *alpha);
++    }
++    savealpha = *alpha;
++    *alpha += beta;
++    if (beta < 0.0) {
++        beta = -beta;
++        *tau = -*alpha/beta;
++    } else {
++        *alpha = xnorm*(xnorm/(*alpha));
++        *tau = *alpha/beta;
++        *alpha = -*alpha;
++    }
++    if (fabs(*tau) <= smlnum) {
++        if (savealpha >= 0.0) {
++            *tau = 0.0;
++        } else {
++            *tau = 2.0;
++            for (blas_int j = 0; j < nm1; j++) { x[j*(*incx)] = 0.0; }
++            beta = -savealpha;
++        }
++    } else {
++        scal = 1.0/(*alpha);
++        slsqp_dscal(&nm1, &scal, x, incx);
++    }
++    for (blas_int j = 0; j < knt; j++) { beta *= smlnum; }
++    *alpha = beta;
++}
++
++/* Plane rotation with r >= 0. */
++static void
++slsqp_dlartgp(const double* f, const double* g, double* cs, double* sn, double* r)
++{
++    const double safmn2 = ldexp(1.0, -484), safmx2 = ldexp(1.0, 484);
++    double f1 = *f, g1 = *g, scale;
++    int count = 0;
++
++    if (*g == 0.0) {
++        *cs = copysign(1.0, *f);
++        *sn = 0.0;
++        *r = fabs(*f);
++        return;
++    }
++    if (*f == 0.0) {
++        *cs = 0.0;
++        *sn = copysign(1.0, *g);
++        *r = fabs(*g);
++        return;
++    }
++    scale = fmax(fabs(f1), fabs(g1));
++    if (scale >= safmx2) {
++        do {
++            count++;
++            f1 *= safmn2;
++            g1 *= safmn2;
++            scale = fmax(fabs(f1), fabs(g1));
++        } while ((scale >= safmx2) && (count < 20));
++        *r = sqrt(f1*f1 + g1*g1);
++        *cs = f1/(*r);
++        *sn = g1/(*r);
++        for (int i = 0; i < count; i++) { *r *= safmx2; }
++    } else if (scale <= safmn2) {
++        do {
++            count++;
++            f1 *= safmx2;
++            g1 *= safmx2;
++            scale = fmax(fabs(f1), fabs(g1));
++        } while (scale <= safmn2);
++        *r = sqrt(f1*f1 + g1*g1);
++        *cs = f1/(*r);
++        *sn = g1/(*r);
++        for (int i = 0; i < count; i++) { *r *= safmn2; }
++    } else {
++        *r = sqrt(f1*f1 + g1*g1);
++        *cs = f1/(*r);
++        *sn = g1/(*r);
++    }
++    if (*r < 0.0)
++    {
++        *cs = -*cs;
++        *sn = -*sn;
++        *r = -*r;
++    }
++}
++
++/* QR factorization, A = Q*R. */
++static void
++slsqp_dgeqr2(const blas_int* m, const blas_int* n, double* a, const blas_int* lda,
++             double* tau, double* work, blas_int* info)
++{
++    blas_int mm = *m, nn = *n, ld = *lda, k = (mm < nn ? mm : nn);
++
++    *info = 0;
++    for (blas_int i = 0; i < k; i++)
++    {
++        slsqp_dlarfg(mm - i, &a[i + i*ld], &a[(i + 1 < mm ? i + 1 : mm - 1) + i*ld], 1, &tau[i]);
++        if (i < nn - 1)
++        {
++            slsqp_larf(1, mm - i, nn - i - 1, &a[i + i*ld], 1, 0, tau[i], &a[i + (i + 1)*ld], ld, work);
++        }
++    }
++}
++
++/* RQ factorization, A = R*Q. */
++static void
++slsqp_dgerq2(const blas_int* m, const blas_int* n, double* a, const blas_int* lda,
++             double* tau, double* work, blas_int* info)
++{
++    blas_int mm = *m, nn = *n, ld = *lda, k = (mm < nn ? mm : nn);
++
++    *info = 0;
++    for (blas_int i = k - 1; i >= 0; i--)
++    {
++        // Row mm-k+i, reflector over columns 0 .. nn-k+i
++        blas_int r = mm - k + i, c = nn - k + i;
++        slsqp_dlarfg(c + 1, &a[r + c*ld], &a[r], ld, &tau[i]);
++        slsqp_larf(0, r, c + 1, &a[r], ld, c, tau[i], a, ld, work);
++    }
++}
++
++/* side = "L", trans = "T": C := Q^T*C with Q from dgeqr2. */
++static void
++slsqp_dorm2r(const char* side, const char* trans, const blas_int* m, const blas_int* n,
++             const blas_int* k, const double* a, const blas_int* lda, const double* tau,
++             double* c, const blas_int* ldc, double* work, blas_int* info)
++{
++    blas_int ld = *lda;
++    (void)side; (void)trans;
++
++    *info = 0;
++    if ((*m == 0) || (*n == 0) || (*k == 0)) { return; }
++    for (blas_int i = 0; i < *k; i++)
++    {
++        slsqp_larf(1, *m - i, *n, &a[i + i*ld], 1, 0, tau[i], &c[i], *ldc, work);
++    }
++}
++
++/* trans = "T", side = "L" or "R": C := Q^T*C or C*Q^T with Q from dgerq2. */
++static void
++slsqp_dormr2(const char* side, const char* trans, const blas_int* m, const blas_int* n,
++             const blas_int* k, const double* a, const blas_int* lda, const double* tau,
++             double* c, const blas_int* ldc, double* work, blas_int* info)
++{
++    blas_int kk = *k, ld = *lda;
++    (void)trans;
++
++    *info = 0;
++    if ((*m == 0) || (*n == 0) || (kk == 0)) { return; }
++    if (slsqp_lsame(side, 'L')) {
++        for (blas_int i = 0; i < kk; i++)
++        {
++            blas_int mi = *m - kk + i + 1;
++            slsqp_larf(1, mi, *n, &a[i], ld, mi - 1, tau[i], c, *ldc, work);
++        }
++    } else {
++        for (blas_int i = kk - 1; i >= 0; i--)
++        {
++            blas_int ni = *n - kk + i + 1;
++            slsqp_larf(0, *m, ni, &a[i], ld, ni - 1, tau[i], c, *ldc, work);
++        }
++    }
++}
++
++/* Incremental condition estimation (DLAIC1); job 1 = largest, 2 = smallest
++   singular value. */
++static void
++slsqp_dlaic1(int job, blas_int j, const double* x, double sest, const double* w, double gamma,
++             double* sestpr, double* s, double* c)
++{
++    const double eps = SLSQP_DLAMCH_E;
++    blas_int one = 1;
++    double alpha = slsqp_ddot(&j, x, &one, w, &one);
++    double absalp = fabs(alpha), absgam = fabs(gamma), absest = fabs(sest);
++    double s1, s2, tmp, b, t, zeta1, zeta2, sine, cosine, norma, test;
++
++    if (job == 1) {
++        if (sest == 0.0) {
++            s1 = fmax(absgam, absalp);
++            if (s1 == 0.0) {
++                *s = 0.0; *c = 1.0; *sestpr = 0.0;
++            } else {
++                *s = alpha/s1;
++                *c = gamma/s1;
++                tmp = sqrt((*s)*(*s) + (*c)*(*c));
++                *s /= tmp;
++                *c /= tmp;
++                *sestpr = s1*tmp;
++            }
++        } else if (absgam <= eps*absest) {
++            *s = 1.0; *c = 0.0;
++            tmp = fmax(absest, absalp);
++            s1 = absest/tmp;
++            s2 = absalp/tmp;
++            *sestpr = tmp*sqrt(s1*s1 + s2*s2);
++        } else if (absalp <= eps*absest) {
++            s1 = absgam; s2 = absest;
++            if (s1 <= s2) { *s = 1.0; *c = 0.0; *sestpr = s2; }
++            else { *s = 0.0; *c = 1.0; *sestpr = s1; }
++        } else if ((absest <= eps*absalp) || (absest <= eps*absgam)) {
++            s1 = absgam; s2 = absalp;
++            if (s1 <= s2) {
++                tmp = s1/s2;
++                *s = sqrt(1.0 + tmp*tmp);
++                *sestpr = s2*(*s);
++                *c = (gamma/s2)/(*s);
++                *s = copysign(1.0, alpha)/(*s);
++            } else {
++                tmp = s2/s1;
++                *c = sqrt(1.0 + tmp*tmp);
++                *sestpr = s1*(*c);
++                *s = (alpha/s1)/(*c);
++                *c = copysign(1.0, gamma)/(*c);
++            }
++        } else {
++            zeta1 = alpha/absest;
++            zeta2 = gamma/absest;
++            b = (1.0 - zeta1*zeta1 - zeta2*zeta2)*0.5;
++            *c = zeta1*zeta1;
++            if (b > 0.0) { t = (*c)/(b + sqrt(b*b + (*c))); }
++            else { t = sqrt(b*b + (*c)) - b; }
++            sine = -zeta1/t;
++            cosine = -zeta2/(1.0 + t);
++            tmp = sqrt(sine*sine + cosine*cosine);
++            *s = sine/tmp;
++            *c = cosine/tmp;
++            *sestpr = sqrt(t + 1.0)*absest;
++        }
++    } else {
++        if (sest == 0.0) {
++            *sestpr = 0.0;
++            if (fmax(absgam, absalp) == 0.0) { sine = 1.0; cosine = 0.0; }
++            else { sine = -gamma; cosine = alpha; }
++            s1 = fmax(fabs(sine), fabs(cosine));
++            *s = sine/s1;
++            *c = cosine/s1;
++            tmp = sqrt((*s)*(*s) + (*c)*(*c));
++            *s /= tmp;
++            *c /= tmp;
++        } else if (absgam <= eps*absest) {
++            *s = 0.0; *c = 1.0; *sestpr = absgam;
++        } else if (absalp <= eps*absest) {
++            s1 = absgam; s2 = absest;
++            if (s1 <= s2) { *s = 0.0; *c = 1.0; *sestpr = s1; }
++            else { *s = 1.0; *c = 0.0; *sestpr = s2; }
++        } else if ((absest <= eps*absalp) || (absest <= eps*absgam)) {
++            s1 = absgam; s2 = absalp;
++            if (s1 <= s2) {
++                tmp = s1/s2;
++                *c = sqrt(1.0 + tmp*tmp);
++                *sestpr = absest*(tmp/(*c));
++                *s = -(gamma/s2)/(*c);
++                *c = copysign(1.0, alpha)/(*c);
++            } else {
++                tmp = s2/s1;
++                *s = sqrt(1.0 + tmp*tmp);
++                *sestpr = absest/(*s);
++                *c = (alpha/s1)/(*s);
++                *s = -copysign(1.0, gamma)/(*s);
++            }
++        } else {
++            zeta1 = alpha/absest;
++            zeta2 = gamma/absest;
++            norma = fmax(1.0 + zeta1*zeta1 + fabs(zeta1*zeta2), fabs(zeta1*zeta2) + zeta2*zeta2);
++            test = 1.0 + 2.0*(zeta1 - zeta2)*(zeta1 + zeta2);
++            if (test >= 0.0) {
++                b = (zeta1*zeta1 + zeta2*zeta2 + 1.0)*0.5;
++                *c = zeta2*zeta2;
++                t = (*c)/(b + sqrt(fabs(b*b - (*c))));
++                sine = zeta1/(1.0 - t);
++                cosine = -zeta2/t;
++                *sestpr = sqrt(t + 4.0*eps*eps*norma)*absest;
++            } else {
++                b = (zeta2*zeta2 + zeta1*zeta1 - 1.0)*0.5;
++                *c = zeta1*zeta1;
++                if (b >= 0.0) { t = -(*c)/(b + sqrt(b*b + (*c))); }
++                else { t = b - sqrt(b*b + (*c)); }
++                sine = -zeta1/t;
++                cosine = -zeta2/(1.0 + t);
++                *sestpr = sqrt(1.0 + t + 4.0*eps*eps*norma)*absest;
++            }
++            tmp = sqrt(sine*sine + cosine*cosine);
++            *s = sine/tmp;
++            *c = cosine/tmp;
++        }
++    }
++}
++
++/* Least squares solution of A*X = B via QR with the rank determined as in
++   DGELSY.  slsqp.c marks all columns as fixed (jpvt != 0), so there is no
++   column pivoting.  Unlike DGELSY, A and B are not rescaled (Householder QR
++   is scale invariant short of overflow), and for rank < n the basic solution
++   (zeros in the trailing components) is returned instead of the minimum norm
++   one; slsqp.c only uses the rank in that case (mode 7). */
++static void
++slsqp_dgelsy(const blas_int* m, const blas_int* n, const blas_int* nrhs, double* a,
++             const blas_int* lda, double* b, const blas_int* ldb, blas_int* jpvt,
++             const double* rcond, blas_int* rank, double* work, const blas_int* lwork,
++             blas_int* info)
++{
++    blas_int mm = *m, nn = *n, ld = *lda, mn = (mm < nn ? mm : nn);
++    double* tau = work;
++    double* xmin = &work[mn];
++    double* xmax = &work[2*mn];
++    double smax, smin;
++    (void)lwork;
++
++    *info = 0;
++    *rank = 0;
++    if ((mn == 0) || (*nrhs == 0)) { return; }
++    for (blas_int i = 0; i < nn; i++) { jpvt[i] = i + 1; }
++
++    slsqp_dgeqr2(m, n, a, lda, tau, &work[mn], info);
++
++    // Determine the rank using incremental condition estimation.
++    xmin[0] = 1.0;
++    xmax[0] = 1.0;
++    smax = fabs(a[0]);
++    smin = smax;
++    if (smax == 0.0)
++    {
++        for (blas_int j = 0; j < *nrhs; j++)
++        {
++            for (blas_int i = 0; i < (mm > nn ? mm : nn); i++) { b[i + j*(*ldb)] = 0.0; }
++        }
++        return;
++    }
++    *rank = 1;
++    while (*rank < mn)
++    {
++        blas_int i = *rank;
++        double sminpr, smaxpr, s1, c1, s2, c2;
++        slsqp_dlaic1(2, i, xmin, smin, &a[i*ld], a[i + i*ld], &sminpr, &s1, &c1);
++        slsqp_dlaic1(1, i, xmax, smax, &a[i*ld], a[i + i*ld], &smaxpr, &s2, &c2);
++        if (!(smaxpr*(*rcond) <= sminpr)) { break; }
++        for (blas_int k = 0; k < i; k++)
++        {
++            xmin[k] *= s1;
++            xmax[k] *= s2;
++        }
++        xmin[i] = c1;
++        xmax[i] = c2;
++        smin = sminpr;
++        smax = smaxpr;
++        (*rank)++;
++    }
++
++    // B := Q^T*B, solve R(0:rank, 0:rank)*X = B(0:rank) and zero the rest.
++    slsqp_dorm2r("L", "T", m, nrhs, &mn, a, lda, tau, b, ldb, &work[mn], info);
++    for (blas_int j = 0; j < *nrhs; j++)
++    {
++        blas_int one = 1;
++        slsqp_dtrsv("U", "N", "N", rank, a, lda, &b[j*(*ldb)], &one);
++        for (blas_int i = *rank; i < nn; i++) { b[i + j*(*ldb)] = 0.0; }
++    }
++}
++
++#undef SLSQP_TP_L
++
++#endif /* SLSQP_BLAS_H */
+-- 
+2.56.0
+

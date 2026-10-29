@@ -1,0 +1,52 @@
+# Maintainer: Bruno Pagani <archange@archlinux.org>
+
+pkgname=nlopt-blas
+pkgver=2.11.0
+pkgrel=0
+pkgdesc='Nonlinear optimization library'
+arch=(aarch64 x86_64)
+url='https://nlopt.readthedocs.io/en/latest/'
+license=(LGPL-2.1-or-later)
+depends=(glibc libgcc libstdc++ blas64 lapack64)
+makedepends=(cmake python-numpy octave guile swig)
+optdepends=('python-numpy: to use with python')
+provides=("nlopt=$pkgver")
+conflicts=(nlopt)
+source=(https://github.com/stevengj/nlopt/archive/v${pkgver}/nlopt-${pkgver}.tar.gz
+        0001-slsqp-replace-the-f2c-core-with-a-port-of-SciPy-s-BL.patch
+        0002-slsqp-detect-BLAS-LAPACK-at-configure-time-with-a-bu.patch
+        0003-slsqp-skip-the-QR-of-the-triangular-LSQ-matrix-witho.patch)
+sha256sums=('53e552d83e9294d67db37f0f4a23f15933a9ef698485301a18b98b40004cf0de'
+            '9d85da036be4b49d798ee978026bdb3549d43bb1a40a214d7566b3431ce73b0e'
+            '4086008dcf30ea0acaa212f873add05d54c00089ba25178906858bda417c3090'
+            '1b54bc810e36ffb10391cb517e6e5715f6eeedf02bb8f1ea1493687c085d6ee3')
+
+prepare() {
+  cd nlopt-$pkgver
+
+  patch -Np1 --no-backup-if-mismatch < "../0001-slsqp-replace-the-f2c-core-with-a-port-of-SciPy-s-BL.patch"
+  patch -Np1 --no-backup-if-mismatch < "../0002-slsqp-detect-BLAS-LAPACK-at-configure-time-with-a-bu.patch"
+  patch -Np1 --no-backup-if-mismatch < "../0003-slsqp-skip-the-QR-of-the-triangular-LSQ-matrix-witho.patch"
+
+  # Fix build with octave 10+
+  sed \
+    -e 's|CMAKE_CXX_STANDARD 11|CMAKE_CXX_STANDARD 17|' \
+    -i CMakeLists.txt
+}
+
+build() {
+    local cmake_options=(
+    -B build
+    -S nlopt-$pkgver
+    -D CMAKE_INSTALL_PREFIX=/usr
+    -D NLOPT_BLAS="blas64;lapack64"
+  )
+
+  cmake "${cmake_options[@]}"
+
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
