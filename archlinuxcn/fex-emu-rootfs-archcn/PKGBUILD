@@ -1,0 +1,40 @@
+# Maintainer: Yichao Yu
+
+# x86_64 Arch Linux rootfs image for FEX-Emu, built weekly by
+# https://github.com/yuyichao/archcn-fex-emu-rootfs from binary packages
+# (core/extra/multilib/archlinuxcn). It contains no mesa drivers, those come
+# from the mesa-fex-emu-overlay-* packages.
+#
+# Nothing is compiled: download + decompress, hence arch=(any).
+
+pkgname=fex-emu-rootfs-archcn
+pkgver=20261029
+pkgrel=1
+pkgdesc='Arch Linux x86_64 rootfs image for FEX-Emu'
+arch=(any)
+url='https://github.com/yuyichao/archcn-fex-emu-rootfs'
+# Aggregate of the Arch Linux packages listed in pkglist, their licenses are
+# in /usr/share/licenses inside the image.
+license=('LicenseRef-custom')
+makedepends=(zstd)
+optdepends=('fex-emu: run x86 programs with this rootfs'
+            'muvm: run x86 programs in a microVM with this rootfs'
+            'mesa-fex-emu-overlay-x86_64: GPU drivers (required by muvm)'
+            'mesa-fex-emu-overlay-i386: 32-bit GPU drivers (required by muvm)')
+conflicts=(fex-emu-rootfs-arch)
+options=(!strip !debug)
+source=("$pkgname-$pkgver.erofs.zst::$url/releases/download/$pkgver/default.erofs.zst"
+        "$pkgname-$pkgver.pkglist::$url/releases/download/$pkgver/pkglist.txt")
+noextract=("$pkgname-$pkgver.erofs.zst")
+sha256sums=('0b92f127f63d139479af3db042a32edc346303c512cee5b791fdbc5964a1330d'
+            '8a35c45a49f49b16889c2d09a38f597b0324b0ee1012508e23938347234e53a5')
+
+prepare() {
+  zstd -d -f "$pkgname-$pkgver.erofs.zst" -o default.erofs
+}
+
+package() {
+  install -Dpm0644 default.erofs "$pkgdir/usr/share/fex-emu/RootFS/default.erofs"
+  # Kept out of RootFS/ so that it's not mistaken for a rootfs.
+  install -Dpm0644 "$pkgname-$pkgver.pkglist" "$pkgdir/usr/share/doc/$pkgname/pkglist.txt"
+}
