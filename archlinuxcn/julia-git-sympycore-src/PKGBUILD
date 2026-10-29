@@ -1,6 +1,6 @@
 pkgname=julia-git-sympycore-src
-pkgver=0.3.3
-_commit=e16a94cfd109308dfb2aee63e81fdee846c21bc6
+pkgver=0.3.4
+_commit=bc9f354a8d0e22b2647ae5ae84ae93344caea464
 pkgrel=1
 pkgdesc="SymPyCore.jl"
 url="https://github.com/jverzani/SymPyCore.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jverzani/SymPyCore.jl.git#commit=$_commit")
-sha256sums=('347f2894bbfed0dda36ed95d107841fa6a3bf04cd423ed5c92b963abf0b49e5c')
+sha256sums=('034fc2a765c1cb5814c6a5fb74351e6b82c458f9b7ff4007e3537ba4eb0f211c')
 
 package() {
   cd SymPyCore.jl
