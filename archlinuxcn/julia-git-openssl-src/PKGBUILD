@@ -1,6 +1,6 @@
 pkgname=julia-git-openssl-src
-pkgver=1.7.1
-_commit=a6511cc36be188c3e47d6b87d3f354c9d82b5b44
+pkgver=1.9.0
+_commit=381615e3caf132eddb966b3aa53f6f34a154d138
 pkgrel=1
 pkgdesc="OpenSSL.jl"
 url="https://github.com/JuliaWeb/OpenSSL.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaWeb/OpenSSL.jl.git#commit=$_commit")
-sha256sums=('8ac6480ef45ebfdd2a0a912c037e3486d4eec16bb689914691733edf12bae8e1')
+sha256sums=('8eee1194a7331b209c40b0bd114b2197d2aea50acfd8298fd503df8b72664031')
 
 package() {
   cd OpenSSL.jl
