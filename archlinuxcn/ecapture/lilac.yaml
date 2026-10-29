@@ -1,15 +1,12 @@
 maintainers:
-  - github: yingziwu
-    email: i@bgme.me
+  - github: RocketMaDev
+    email: Rocket Ma <marocketbd@gmail.com>
 
-build_prefix: extra-x86_64
-
-pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'), updpkgsums=True)
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build: git_pkgbuild_commit
 
 update_on:
 - source: github
   github: gojue/ecapture
   use_latest_release: true
-- source: manual
-  manual: 1.0
+  prefix: v
