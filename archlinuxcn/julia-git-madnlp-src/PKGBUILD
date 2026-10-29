@@ -1,6 +1,6 @@
 pkgname=julia-git-madnlp-src
-pkgver=0.10.3
-_commit=f221e1b8a49d9ed9e4bb8978374b621bb51212eb
+pkgver=0.11.0
+_commit=439af6c9d7b17bf1c2e3ec7aa688cf94502586c9
 pkgrel=1
 pkgdesc="MadNLP.jl"
 url="https://github.com/MadNLP/MadNLP.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/MadNLP/MadNLP.jl.git#commit=$_commit")
-sha256sums=('795b1a3c1e7fba4e5a38cd997888644d7b2c6dd1d348c8d5ea47f2432a292c49')
+sha256sums=('e207b774ff06ea35ce63dc4f9be10f6858116db4f58d3179df421008bfb7b308')
 
 package() {
   cd MadNLP.jl
