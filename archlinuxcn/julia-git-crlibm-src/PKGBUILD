@@ -1,6 +1,6 @@
 pkgname=julia-git-crlibm-src
-pkgver=1.0.2
-_commit=1167e5328720feb80192e7111c1933c5f0c2efac
+pkgver=1.1.0
+_commit=9c7670ed19404a2f2b3cdecb4e065a2a1872d077
 pkgrel=1
 pkgdesc="CRlibm.jl"
 url="https://github.com/JuliaIntervals/CRlibm.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaIntervals/CRlibm.jl.git#commit=$_commit")
-sha256sums=('9a1903cf4528ed62bf29c084542289fb357a2c09e87ee9ce5934df1c53447321')
+sha256sums=('c1c68a719f16a7e40b85601264eb3fbd5747e4876411c9bf6e471178b6bd042e')
 
 package() {
   cd CRlibm.jl
