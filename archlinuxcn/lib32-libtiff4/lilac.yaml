@@ -1,0 +1,16 @@
+#
+
+maintainers:
+  - github: yuyichao
+
+build_prefix: multilib
+
+pre_build_script: aur_pre_build(maintainers=['stickynotememo', 'City-busz'])
+
+post_build: aur_post_build
+
+update_on:
+  - source: aur
+    aur: lib32-libtiff4
+  - source: manual
+    manual: 1
