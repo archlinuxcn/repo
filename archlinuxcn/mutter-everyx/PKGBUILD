@@ -91,7 +91,7 @@ source=(
   "e68cf2168d3267e5d519787af521ed63cd9bb086.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e68cf2168d3267e5d519787af521ed63cd9bb086.patch"
   "434500b28e78b810c654899d5a7235ce64be45c3.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/434500b28e78b810c654899d5a7235ce64be45c3.patch"
   "f45985091f1b32785051789a0fc85f4aff7c95fb.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/f45985091f1b32785051789a0fc85f4aff7c95fb.patch"
-  "e113aeeaeeebe4aad4621e02d04462c79ec98c43.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e113aeeaeeebe4aad4621e02d04462c79ec98c43.patch"
+  "23f57438b858d09852662b70f1b3190ef940bb1b.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/23f57438b858d09852662b70f1b3190ef940bb1b.patch"
 )
 b2sums=('0064caf6a85d9cb42d9544ad2dab31ef158a957d20d5a99aabe27f40986f128714f97a5cbe970c1aba1cb9c86f0b94f2f279a22072bbfefb9c0c7e715d7a411f'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
@@ -110,7 +110,7 @@ prepare() {
   git apply -3 ../e68cf2168d3267e5d519787af521ed63cd9bb086.patch
   git apply -3 ../434500b28e78b810c654899d5a7235ce64be45c3.patch
   git apply -3 ../f45985091f1b32785051789a0fc85f4aff7c95fb.patch
-  git apply -3 ../e113aeeaeeebe4aad4621e02d04462c79ec98c43.patch
+  git apply -3 ../23f57438b858d09852662b70f1b3190ef940bb1b.patch
 }
 
 build() {

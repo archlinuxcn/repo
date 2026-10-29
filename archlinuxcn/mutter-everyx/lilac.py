@@ -11,7 +11,7 @@ _PATCHES = [
     'e68cf2168d3267e5d519787af521ed63cd9bb086.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e68cf2168d3267e5d519787af521ed63cd9bb086.patch',
     '434500b28e78b810c654899d5a7235ce64be45c3.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/434500b28e78b810c654899d5a7235ce64be45c3.patch',
     'f45985091f1b32785051789a0fc85f4aff7c95fb.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/f45985091f1b32785051789a0fc85f4aff7c95fb.patch',
-    'e113aeeaeeebe4aad4621e02d04462c79ec98c43.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e113aeeaeeebe4aad4621e02d04462c79ec98c43.patch',
+    '23f57438b858d09852662b70f1b3190ef940bb1b.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/23f57438b858d09852662b70f1b3190ef940bb1b.patch',
 ]
 
 def pre_build():
