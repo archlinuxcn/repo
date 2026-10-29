@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@archlinuxcn.org>
 
 pkgname=bin-cpuflags-x86
-pkgver=1.0.9
+pkgver=1.0.10
 pkgrel=1
 pkgdesc="A small CLI tool to detect CPU flags (instruction sets) of X86 binaries"
 arch=('x86_64')
@@ -10,7 +10,7 @@ license=('MIT')
 depends=('gcc-libs')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
-sha256sums=('3399370f67afc6afc971a6b541aa569dc8d72397beea7524c0c678028aee32a6')
+sha256sums=('1222619740fbb52cc87ff91a22f2a24106181c88bab52e3d780f39eedf7d2001')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
