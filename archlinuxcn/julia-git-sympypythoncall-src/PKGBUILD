@@ -1,7 +1,7 @@
 pkgname=julia-git-sympypythoncall-src
-pkgver=0.5.1
-_commit=83833a1655f7fe8817307be7f56cee611d514e49
-pkgrel=3
+pkgver=0.5.3
+_commit=000f09d490c6bec984a73364cdaeeba081268edd
+pkgrel=1
 pkgdesc="SymPyPythonCall.jl"
 url="https://github.com/jverzani/SymPyPythonCall.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git python-sympy)
 source=("git+https://github.com/jverzani/SymPyPythonCall.jl.git#commit=$_commit")
-sha256sums=('e9c16e5edc7fd105f3bb9679250d32ebf67f00f9354832576d296bf81d2abdc6')
+sha256sums=('b8bf137564c8fbcb880937dc63979be784f7e4b9b7e0718df38587de433de163')
 
 package() {
   cd SymPyPythonCall.jl
