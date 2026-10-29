@@ -1,6 +1,6 @@
 pkgname=julia-git-gputoolbox-src
-pkgver=3.4.3
-_commit=7a7521c5f6d26544e8e697ebaa818f1d031a605e
+pkgver=3.5.0
+_commit=d3f9872ea529819939bd6c4b7ddb7a51543acd62
 pkgrel=1
 pkgdesc="GPUToolbox.jl"
 url="https://github.com/JuliaGPU/GPUToolbox.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGPU/GPUToolbox.jl.git#commit=$_commit")
-sha256sums=('1d81cc3cd3d0ffeb4c1695a0159c346dd4e81f2a031b78fa9c4d79ea2aa95fc7')
+sha256sums=('cf90cc39a314d60f13d90477bb006347e62bdd5589c1b401837054c40628f286')
 
 package() {
   cd GPUToolbox.jl
