@@ -1,6 +1,6 @@
 pkgname=julia-git-jpegturbo_jll-src
-pkgver=3.2.0+1
-_commit=def28d9d0032f12ee3aac23d2997b8e2169eb865
+pkgver=3.2.1+0
+_commit=1e43c0b755b9c626e5a255968353011961708968
 pkgrel=1
 pkgdesc="JpegTurbo_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/JpegTurbo_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git libjpeg-turbo)
 source=("git+https://github.com/JuliaBinaryWrappers/JpegTurbo_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('67e8773f43b3b0a6e4e34d5c4ad129c661e125a4001ba2c73804a2be18bc748d'
+sha256sums=('64d71f69c23de346508e67cc9c978a931642daf9a350c0ce02c2a19d087fceac'
             'b2282c2efc7ceff71e6c81a458b543aa595017d93274cc91fec632fa5581c50f')
 
 build() {
