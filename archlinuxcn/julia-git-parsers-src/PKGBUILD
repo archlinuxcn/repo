@@ -1,6 +1,6 @@
 pkgname=julia-git-parsers-src
-pkgver=2.8.8
-_commit=4266c12eeb2b74acbaee36646b6226e3ffc5ef57
+pkgver=2.8.10
+_commit=33861216b05f6c45febb6aa860866e628aaa7c28
 pkgrel=1
 pkgdesc="Parsers.jl"
 url="https://github.com/JuliaData/Parsers.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/Parsers.jl.git#commit=$_commit")
-sha256sums=('9b57fdf2fcc8834b4c62a6f479f3076b51e51059df4d555b023ba1312719ca82')
+sha256sums=('c5896d7c4cb5a44e0306f125fef03f19225ca787fca4f056295a92c65a0beaa5')
 
 package() {
   cd Parsers.jl
