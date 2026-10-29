@@ -1,6 +1,6 @@
 pkgname=julia-git-reseau-src
-pkgver=1.6.1
-_commit=05cc7e4fa1e8b0b43a2db71a8115b510c55a76f1
+pkgver=1.6.3
+_commit=1f33b27c3418c79d7e703390769748ceebe18114
 pkgrel=1
 pkgdesc="Reseau.jl"
 url="https://github.com/JuliaServices/Reseau.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaServices/Reseau.jl.git#commit=$_commit")
-sha256sums=('005139bc8602e525ee28b42480ae08e670484dbbbda08869c26c574f84ccbeed')
+sha256sums=('5da5fcd68b32e3ffa49ae57d9154dc7e4f758b227b4cf4cf2fc7c49db73e949d')
 
 package() {
   cd Reseau.jl
