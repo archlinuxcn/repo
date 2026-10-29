@@ -1,0 +1,11 @@
+post_install() {
+  cat <<'EOF'
+==> To use this rootfs with FEX-Emu directly (without muvm), enable
+    fex-emu-rootfs.service, which stacks the rootfs and the overlay images
+    (mesa-fex-emu-overlay-*) at /run/fex-emu/rootfs:
+      systemctl enable --now fex-emu-rootfs.service
+    and set RootFS to /run/fex-emu/rootfs in ~/.config/fex-emu/Config.json
+    (e.g. with FEXConfig) or with the FEX_ROOTFS environment variable.
+    muvm stacks the images itself and doesn't need any of this.
+EOF
+}

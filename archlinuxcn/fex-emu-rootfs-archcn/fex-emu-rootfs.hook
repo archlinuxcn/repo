@@ -1,0 +1,12 @@
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/share/fex-emu/RootFS/default.erofs
+Target = usr/share/fex-emu/overlays/*.erofs
+
+[Action]
+Description = Restacking the FEX-Emu rootfs...
+When = PostTransaction
+Exec = /usr/bin/systemctl try-restart fex-emu-rootfs.service

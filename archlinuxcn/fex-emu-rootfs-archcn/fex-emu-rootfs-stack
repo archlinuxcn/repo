@@ -1,0 +1,54 @@
+#!/bin/bash
+# Stack the FEX-Emu rootfs image and the overlay images (e.g. mesa) at
+# /run/fex-emu/rootfs to use FEX-Emu without muvm. This mirrors what muvm does
+# in its guest: the overlays are stacked in sorted order on top of the rootfs.
+
+set -euo pipefail
+
+datadir=/usr/share/fex-emu
+rundir=/run/fex-emu
+target=$rundir/rootfs
+
+stop() {
+  local dir
+  # Lazy unmount so that a restart works while FEX-Emu processes are running.
+  for dir in "$target" "$rundir"/layers/*/; do
+    dir=${dir%/}
+    if mountpoint -q "$dir"; then
+      umount -l "$dir"
+    fi
+    if [[ -d $dir ]]; then
+      rmdir "$dir"
+    fi
+  done
+}
+
+start() {
+  stop
+
+  local img layer layers=()
+  for img in "$datadir/RootFS/default.erofs" "$datadir"/overlays/*.erofs; do
+    [[ -f $img ]] || continue
+    layer=$rundir/layers/$(basename "$img" .erofs)
+    mkdir -p "$layer"
+    mount -t erofs -o ro "$img" "$layer"
+    # overlayfs takes the top layer first
+    layers=("$layer" "${layers[@]}")
+  done
+
+  mkdir -p "$target"
+  if (( ${#layers[@]} == 1 )); then
+    mount --bind -o ro "${layers[0]}" "$target"
+  else
+    mount -t overlay overlay -o "lowerdir=$(IFS=:; echo "${layers[*]}")" "$target"
+  fi
+}
+
+case ${1-} in
+  start) start ;;
+  stop) stop ;;
+  *)
+    echo "Usage: $0 start|stop" >&2
+    exit 1
+    ;;
+esac

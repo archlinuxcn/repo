@@ -3,7 +3,9 @@
 # x86_64 Arch Linux rootfs image for FEX-Emu, built weekly by
 # https://github.com/yuyichao/archcn-fex-emu-rootfs from binary packages
 # (core/extra/multilib/archlinuxcn). It contains no mesa drivers, those come
-# from the mesa-fex-emu-overlay-* packages.
+# from the mesa-fex-emu-overlay-* packages. muvm stacks the overlays on top of
+# the rootfs itself; for FEX-Emu without muvm, fex-emu-rootfs.service does the
+# same at /run/fex-emu/rootfs.
 #
 # Nothing is compiled: download + decompress, hence arch=(any).
 
@@ -23,11 +25,18 @@ optdepends=('fex-emu: run x86 programs with this rootfs'
             'mesa-fex-emu-overlay-i386: 32-bit GPU drivers (required by muvm)')
 conflicts=(fex-emu-rootfs-arch)
 options=(!strip !debug)
+install=$pkgname.install
 source=("$pkgname-$pkgver.erofs.zst::$url/releases/download/$pkgver/default.erofs.zst"
-        "$pkgname-$pkgver.pkglist::$url/releases/download/$pkgver/pkglist.txt")
+        "$pkgname-$pkgver.pkglist::$url/releases/download/$pkgver/pkglist.txt"
+        fex-emu-rootfs-stack
+        fex-emu-rootfs.service
+        fex-emu-rootfs.hook)
 noextract=("$pkgname-$pkgver.erofs.zst")
 sha256sums=('0b92f127f63d139479af3db042a32edc346303c512cee5b791fdbc5964a1330d'
-            '8a35c45a49f49b16889c2d09a38f597b0324b0ee1012508e23938347234e53a5')
+            '8a35c45a49f49b16889c2d09a38f597b0324b0ee1012508e23938347234e53a5'
+            'aecbf6338ab86a0a130cc2c3d21728de3c3583d62b5779d7ddfd1580d137891c'
+            '6c908fd7ea0c62593dbad690394449102e6ec07f59dd794d4de5b3017444a0c9'
+            '44d607d9cb8cb9436f4ba69d4bbce6e23ff41ed733b3d45d4332d3bce92dda31')
 
 prepare() {
   zstd -d -f "$pkgname-$pkgver.erofs.zst" -o default.erofs
@@ -37,4 +46,9 @@ package() {
   install -Dpm0644 default.erofs "$pkgdir/usr/share/fex-emu/RootFS/default.erofs"
   # Kept out of RootFS/ so that it's not mistaken for a rootfs.
   install -Dpm0644 "$pkgname-$pkgver.pkglist" "$pkgdir/usr/share/doc/$pkgname/pkglist.txt"
+
+  install -Dm0755 fex-emu-rootfs-stack -t "$pkgdir/usr/lib/fex-emu-rootfs/"
+  install -Dm0644 fex-emu-rootfs.service -t "$pkgdir/usr/lib/systemd/system/"
+  # Restack when the rootfs or an overlay image changes
+  install -Dm0644 fex-emu-rootfs.hook -t "$pkgdir/usr/share/libalpm/hooks/"
 }
