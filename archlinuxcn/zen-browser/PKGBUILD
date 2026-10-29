@@ -1,10 +1,10 @@
 # Maintainer: NourEddine Y.
+# Contributor: hiruocha <hiruocha[at]outlook[dot]com>
 # Contributor: Oskar Gerlciz Kowalczuk
 # Contributor: StaticNullException <aurcontact@teto.party>
-
 pkgname=zen-browser
-pkgver=1.23b
-pkgrel=6
+pkgver=1.23.4b
+pkgrel=2
 pkgdesc='Firefox-based web browser built from upstream release source snapshot'
 url='https://zen-browser.app'
 arch=('x86_64')
@@ -42,6 +42,7 @@ depends=(
   ttf-font
 )
 makedepends=(
+  cargo
   cbindgen
   clang
   diffutils
@@ -54,7 +55,6 @@ makedepends=(
   nodejs
   onnxruntime
   python
-  rustup
   unzip
   wasi-compiler-rt
   wasi-libc
@@ -65,6 +65,7 @@ makedepends=(
   zip
 )
 optdepends=(
+  'hunspell-dictionary: Spell checking'
   'libnotify: Notification integration'
   'networkmanager: Location detection via available WiFi networks'
   'onnxruntime: Local machine learning features such as smart tab groups'
@@ -78,38 +79,36 @@ options=(
   !makeflags
 )
 
-_srcroot='zen-source'
 # Keep versioned GitHub release URLs here. Do not switch this to /latest/ in an
 # AUR package; use .nvchecker.toml or update-zen-browser-release.sh to refresh
 # pkgver and checksums deterministically.
 source=(
-  "$_srcroot-$pkgver.tar.zst::https://github.com/zen-browser/desktop/releases/download/$pkgver/zen.source.tar.zst"
+  "zen-source-$pkgver.tar.zst::https://github.com/zen-browser/desktop/releases/download/$pkgver/zen.source.tar.zst"
   "$pkgname.desktop"
   '0004-Use-wasm32-wasip1-target.patch'
   '0005-Fix-cbindgen-BudgetType_VALUES-COUNT-issue.patch'
 )
-sha256sums=('c2a2f7853f939f1a5f510c885d450564e5bcf6957453c1ff3adb0ea595b872aa'
+sha256sums=('a14da36b6aa101a59794c7f7e29e3a00c1be0c5e0e53d9f6c05a06e1cb631064'
             'af16fec9a88cbfffee34a6a4eb5b3074931477fcefee252840d77cf146568851'
             '28b086f5492d8e6731fe0dfe34a2e4c6d4d502a9eefa15a31e44b5788cf4df89'
             '0d24f2a45fa0f7fe108a91a50ae55708f66899b0229df7722fb87962f7a2a243')
-noextract=("$_srcroot-$pkgver.tar.zst")
 
 prepare() {
-  rm -rf "$srcdir/$_srcroot"
-  mkdir -p "$srcdir/$_srcroot" "$srcdir/mozbuild"
-  bsdtar -xf "$srcdir/$_srcroot-$pkgver.tar.zst" -C "$srcdir/$_srcroot"
-
-  cd "$srcdir/$_srcroot"
+  cd "$srcdir"
+  rm -f "$srcdir/.mozconfig" "$srcdir/mozconfig"
 
   patch -Np1 -i "$srcdir/0004-Use-wasm32-wasip1-target.patch"
   patch -Np1 -i "$srcdir/0005-Fix-cbindgen-BudgetType_VALUES-COUNT-issue.patch"
 
-  cat >"$srcdir/mozconfig" <<EOF
+  cat >"$srcdir/zen-mozconfig" <<EOF
 ac_add_options --enable-application=browser
 mk_add_options MOZ_OBJDIR=${PWD@Q}/obj
 
 ac_add_options --prefix=/usr
 ac_add_options --enable-release
+ac_add_options --disable-debug
+ac_add_options --disable-debug-symbols
+ac_add_options --disable-debug-js-modules
 ac_add_options --enable-hardening
 ac_add_options --enable-optimize
 # encoding_rs simd-accel opts out of Rust's stable compatibility story and
@@ -120,13 +119,14 @@ ac_add_options --disable-bootstrap
 ac_add_options --with-wasi-sysroot=/usr/share/wasi-sysroot
 
 # Branding
-ac_add_options --enable-official-branding
+ac_add_options --with-app-name=zen
+ac_add_options --with-app-basename=Zen
+ac_add_options --with-branding=browser/branding/release
 ac_add_options --enable-update-channel=release
 ac_add_options --with-distribution-id=org.archlinux
 ac_add_options --with-unsigned-addon-scopes=app,system
 ac_add_options --allow-addon-sideload
 export MOZILLA_OFFICIAL=1
-export MOZ_APP_REMOTINGNAME=zen-browser
 
 # System libraries
 ac_add_options --with-system-nspr
@@ -142,7 +142,7 @@ EOF
 }
 
 build() {
-  cd "$srcdir/$_srcroot"
+  cd "$srcdir"
 
   export MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=pip
   export MOZBUILD_STATE_PATH="$srcdir/mozbuild"
@@ -158,27 +158,28 @@ build() {
 
   # The instrumented browser crashes during PGO profile initialization.
   echo 'Building optimized browser...'
-  cat >.mozconfig "$srcdir/mozconfig" - <<EOF
-ac_add_options --enable-lto=cross,full
+  cat >"$srcdir/mozconfig" "$srcdir/zen-mozconfig" - <<EOF
+ac_add_options --enable-lto=cross,thin
 EOF
   ./mach build --priority normal
 }
 
 package() {
-  cd "$srcdir/$_srcroot"
+  cd "$srcdir"
 
   DESTDIR="$pkgdir" ./mach install
 
   # Upstream installs a generic Firefox launcher that conflicts with firefox.
   rm -f "$pkgdir/usr/bin/firefox"
 
+  rm -f "$pkgdir/usr/bin/firefox" "$pkgdir/usr/bin/zen"
+
   local _launcher='zen-browser'
   local _appdir="$pkgdir/usr/lib/$_launcher"
   local _size
 
-  if [[ -d "$pkgdir/usr/lib/firefox" && ! -d "$_appdir" ]]; then
-    mv "$pkgdir/usr/lib/firefox" "$_appdir"
-    ln -sf firefox "$_appdir/zen"
+  if [[ -d "$pkgdir/usr/lib/zen" && ! -d "$_appdir" ]]; then
+    mv "$pkgdir/usr/lib/zen" "$_appdir"
   fi
 
   install -Dm755 /dev/stdin "$pkgdir/usr/bin/$_launcher" <<'EOF'
