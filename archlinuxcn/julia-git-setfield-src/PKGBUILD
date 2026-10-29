@@ -1,6 +1,6 @@
 pkgname=julia-git-setfield-src
-pkgver=1.1.2
-_commit=7e87f1f040f37a64d38cdab5c53b32312d3eb7c3
+pkgver=1.2.0
+_commit=59ffe3bdf68bc74bb4c114ebde7e6705839c7b3e
 pkgrel=1
 pkgdesc="Setfield.jl"
 url="https://github.com/jw3126/Setfield.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/jw3126/Setfield.jl.git#commit=$_commit")
-sha256sums=('1048c390ad0a2243f07c5187a4b2c88f75f160140aa7616c6e846b36f58bde3c')
+sha256sums=('08375d190384b7115f11d460b09f026036610b2c1c19ee5ae8c5dd28b7a79852')
 
 package() {
   cd Setfield.jl
