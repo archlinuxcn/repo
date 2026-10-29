@@ -6,12 +6,15 @@ g = SimpleNamespace()
 
 # patch 清单, 元素为 source 中的完整条目(名称::URL 或本地文件名)
 _PATCHES = [
-    '5179.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5179.patch',
-    '1b169970bfd4da9f4dba87083e49e2b9740264cb.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/1b169970bfd4da9f4dba87083e49e2b9740264cb.patch',
-    'e68cf2168d3267e5d519787af521ed63cd9bb086.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e68cf2168d3267e5d519787af521ed63cd9bb086.patch',
-    '434500b28e78b810c654899d5a7235ce64be45c3.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/434500b28e78b810c654899d5a7235ce64be45c3.patch',
-    'f45985091f1b32785051789a0fc85f4aff7c95fb.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/f45985091f1b32785051789a0fc85f4aff7c95fb.patch',
-    '23f57438b858d09852662b70f1b3190ef940bb1b.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/23f57438b858d09852662b70f1b3190ef940bb1b.patch',
+    '5179-51.1.patch',   # MR 5179 rebased for 51.1 + opaque-blend fallback
+    '4ad98154f7e10ddec32b10082093eb207a68b831.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/4ad98154f7e10ddec32b10082093eb207a68b831.patch',
+    '558de4d2eb3ec5cce3858bfe8d2cec2a38f61ba7.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/558de4d2eb3ec5cce3858bfe8d2cec2a38f61ba7.patch',
+    'e60d5bcb6b1fdef8f8037f2bf919c99c66c56f71.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e60d5bcb6b1fdef8f8037f2bf919c99c66c56f71.patch',
+    '9623ac301603f7b0832904459d74f9b8fb48a888.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/9623ac301603f7b0832904459d74f9b8fb48a888.patch',
+    '717d07baa1bdc625af5ab12a8159a651a570337f.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/717d07baa1bdc625af5ab12a8159a651a570337f.patch',
+    '127c8a9ed7cb5bdef4884ffa544588e7ef18f0fe.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/127c8a9ed7cb5bdef4884ffa544588e7ef18f0fe.patch',
+    '53d2e108d35df1d1e10fd586f5ccf81eefe412fa.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/53d2e108d35df1d1e10fd586f5ccf81eefe412fa.patch',
+    'f6fa76c5a0dee31163929ac4188d88b83431c3ab.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/f6fa76c5a0dee31163929ac4188d88b83431c3ab.patch',
 ]
 
 def pre_build():
