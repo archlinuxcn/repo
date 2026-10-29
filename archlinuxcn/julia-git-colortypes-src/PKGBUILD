@@ -1,6 +1,6 @@
 pkgname=julia-git-colortypes-src
-pkgver=0.12.4
-_commit=59a21eb2307a63ac8194fd15d1f7458239cc8cd7
+pkgver=0.12.5
+_commit=d4608e4378026a10f37bb20f04fdba8dd7146b4a
 pkgrel=1
 pkgdesc="ColorTypes.jl"
 url="https://github.com/JuliaGraphics/ColorTypes.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaGraphics/ColorTypes.jl.git#commit=$_commit")
-sha256sums=('bc6e35e57e49a4e9708c31eddfed8d6d2b72592404e05bc8cd8ff3e9e0bb2a38')
+sha256sums=('a169f0d3e6efc19287396114370e327f6977438c6c8b45f883150e9a8e714807')
 
 package() {
   cd ColorTypes.jl
