@@ -1,7 +1,7 @@
 # Maintainer: Hao Long <imlonghao@archlinuxcn.org>
 
 pkgname=gatus
-pkgver=5.37.0
+pkgver=5.38.0
 pkgrel=1
 pkgdesc="Automated service health dashboard"
 arch=("x86_64")
@@ -17,7 +17,7 @@ source=('gatus.service'
 b2sums=('4ec6761e07afe08137d28ba38c208e6a6717c4943cea62fb732ce83cab7fa9455ac39ab2faab83a8f6554fbdc8443d99c4d400291d90dbe778e86a2c022e3f67'
         'a1818c1b4ff769285ea1eb3fcede9da445f0abbed0583d1817107b2b2798924559fac0b5e7a658a910c15a6bbf33f2fab4019e43e158eebf11b668a3af5f0a82'
         '29a8c9b50852dcb04c8e67b80d9a48d4d303caa9dfcae54fdb5026417752f11a4fe594fbe4f535527cc7e05201b442ac92f63cdee789de5bce9246cc8e102506'
-        '1e005111abc94d82bb274da3ca0188b5a043c28fa3107c9c5a149f7944161459206719cd6abe0ce6c902e86493e5a1f0a51579760fb88e572a4c1b3939fd173b')
+        '2dedf7082f19de12132d66acbe120c554c5d725b1ec8a1f0c2981d995c84b5f21e569a36343f9d3e0ad3dfda585e38b494159a29c5a6fa65b6684136f43f56ef')
 
 prepare() {
   cd "${pkgname}-${pkgver}"
