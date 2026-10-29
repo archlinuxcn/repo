@@ -3,7 +3,7 @@
 # Based on AUR3 PKGBUILD by Ken Tossell <ken@tossell.net>
 
 pkgname=libuvc
-pkgver=0.0.8
+pkgver=0.0.9
 pkgrel=1
 pkgdesc="a cross-platform library for USB video devices"
 arch=('i686' 'x86_64' 'aarch64')
@@ -12,7 +12,7 @@ license=('BSD-3-Clause')
 depends=(glibc)
 makedepends=(cmake libusb libjpeg-turbo)
 source=("$pkgname-$pkgver.tar.gz::https://github.com/libuvc/libuvc/archive/v$pkgver.tar.gz")
-sha256sums=('abe134716f4c53fe60db2004b42adf6af60e64e45808135acfa4311454371ece')
+sha256sums=('825775b21b8558ac2afcbc2561ab1e5081898c9b0296673fcaa7cabb6e94078e')
 
 options=(staticlibs)
 
