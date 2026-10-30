@@ -1,0 +1,52 @@
+From f7a16f69fe295f6d849cf029ed1485dd63899967 Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Sat, 5 Apr 2025 23:32:58 +0800
+Subject: [PATCH 7/7] add general optimize
+
+inherit from yuzu-early-access
+
+0	2	CMakeLists.txt
+1	1	src/sudachi/aboutdialog.ui
+1	0	src/video_core/CMakeLists.txt
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f6d072f..7f95c5d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -274,8 +274,6 @@ endif()
+ # Configure C++ standard
+ # ===========================
+ 
+-# boost asio's concept usage doesn't play nicely with some compilers yet.
+-add_definitions(-DBOOST_ASIO_DISABLE_CONCEPTS)
+ if (MSVC)
+     set(CMAKE_CXX_STANDARD 23)
+     # add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/std:c++23>)
+diff --git a/src/sudachi/aboutdialog.ui b/src/sudachi/aboutdialog.ui
+index a66e03e..7ffb1d7 100644
+--- a/src/sudachi/aboutdialog.ui
++++ b/src/sudachi/aboutdialog.ui
+@@ -82,7 +82,7 @@
+           </sizepolicy>
+          </property>
+          <property name="text">
+-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;%1 (%2)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
++          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;%1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
+        </item>
+diff --git a/src/video_core/CMakeLists.txt b/src/video_core/CMakeLists.txt
+index 4267993..623211f 100644
+--- a/src/video_core/CMakeLists.txt
++++ b/src/video_core/CMakeLists.txt
+@@ -357,6 +357,7 @@ else()
+ 
+     target_compile_options(video_core PRIVATE
+         -Wno-sign-conversion
++        -msse4.1
+     )
+ 
+     # xbyak
+-- 
+2.49.0
+
