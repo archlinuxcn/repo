@@ -2,12 +2,12 @@
 # Contributor: Zhang Hua <zhanghua.00@qq.com>
 
 # Check deps.json
-_rstd_commit=9cf950ecccb50b480ddeb51b7bcdf3b2141c9d89
+_rstd_commit=05748d842307476dd86dfa14237838295cb5ec77
 _luato_commit=df0c6f2d1cce2051b4711d36067619eda7933683
-_licrypto_commit=40da005cbd7faf1328fd29a01cb0c534d6998612
+_licrypto_commit=1199a8fe2b119774a85adbd33043fc5ef7b20d3c
 
 pkgname=lito
-pkgver=0.8.7
+pkgver=0.8.8
 pkgrel=1
 pkgdesc="Module-first C++ build tool with manifest"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -19,10 +19,10 @@ source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/litocpp/rstd.git#commit=${_rstd_commit}"
 	"git+https://github.com/litocpp/luato.git#commit=${_luato_commit}"
 	"git+https://github.com/litocpp/licrypto.git#commit=${_licrypto_commit}")
-sha256sums=('0859f4d33c2853e50eed1bd82a3c7c51b7a74657992d34c98dff9d08d95ee329'
-            '0c4530bbf1ebf3d5a6215c14b0b16f261ca579413c8582225bcd1793b172394d'
+sha256sums=('df5856bfbc68fdb7ccd4b840e601d21b373faef82a26270d195bd6d39df30f07'
+            'b3ce3796a942227faacbc82df46a26c274192610aee3efcb02af66b3c5357046'
             '255e260360f8a29c42e33e10549a1bc2caea8cabd568eb7ad81d08b38526e7c3'
-            'f7b1276b97797d7f50888cadd59d14dfeafb8963f2199d5f7f5ef03482090685')
+            '4f00968aaee40d9edca9f62f39a4f335fe5f65181136d6f4b5b27e3af9fe45de')
 options=('!lto') # Linking fails with LLVM 23 when LTO is enabled
 
 build() {
