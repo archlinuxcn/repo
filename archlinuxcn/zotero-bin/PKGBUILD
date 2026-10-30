@@ -3,7 +3,7 @@
 # Contributor: Matthias Kurz <m.kurz@irregular.at>
 
 pkgname=zotero-bin
-pkgver=10.0.6
+pkgver=10.0.7
 pkgrel=1
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
@@ -14,9 +14,9 @@ provides=('zotero')
 conflicts=('zotero')
 
 sha256sums=('f727308716741cf9746b92047b890c3f76c4b8b010bc5ed21b5cdb1be85e21e9')
-sha256sums_x86_64=('246c2574a9ac526abeaf3027ffd22fc45536a5ab25f227bb1df932fca9cedd63')
-sha256sums_i686=('f71fd2f8e271af23044b56a0fa7032a9375dac2e2da3222c6cc9eb81426cbe59')
-sha256sums_aarch64=('0df2782926a70d2744286640262c9d3e81725bc68182c0d752d855a2b620ea60')
+sha256sums_x86_64=('ddf43b50413f00ea9ba863c7913a4f1350288c1e81b45c2aaf192227b67d9549')
+sha256sums_i686=('9055c305f89376874afaf13745420ba225a2cdfcb7ea55f78a8958da10fff7c9')
+sha256sums_aarch64=('0f43d7c46008b11322dfe3ee9198ac4e1cedc383414b6e6c1c6bc0fd14e2145e')
 source=("zotero.desktop")
 source_x86_64=("Zotero-${pkgver}_linux_x86_64.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-x86_64&version=${pkgver}")
 source_i686=("Zotero-${pkgver}_linux_i686.tar.bz2::https://www.zotero.org/download/client/dl?channel=release&platform=linux-i686&version=${pkgver}")
