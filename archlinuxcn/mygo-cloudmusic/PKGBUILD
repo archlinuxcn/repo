@@ -1,8 +1,8 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=mygo-cloudmusic
-pkgver=0.1.20
-pkgrel=2
+pkgver=0.1.22
+pkgrel=1
 pkgdesc='Third-party NetEase Cloud Music desktop client, drawn natively without a web view'
 arch=('x86_64')
 url='https://github.com/egoist/mygo-cloudmusic'
@@ -19,7 +19,7 @@ optdepends=(
 makedepends=('go')
 options=('!debug')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('f1ce102a2805ba9655e3b320b9a00f37e5410e9c272add273ba814b7170a14ae')
+sha256sums=('2379a2fa962deab9283aae17340e006302d08895df517e126189fb38ae75d9f6')
 
 prepare() {
   cd "$pkgname-$pkgver"
