@@ -4,7 +4,7 @@
 # Contributor: Merrkry <merrkry@tsubasa.moe>
 
 pkgname=tsukimi
-pkgver=26.10.1
+pkgver=26.11.1
 pkgrel=1
 pkgdesc="A simple third-party GTK4 Emby/Jellyfin client"
 arch=('x86_64')
@@ -28,7 +28,7 @@ depends=(
 )
 makedepends=('cargo' 'meson' 'blueprint-compiler')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('0f512eba652282366e51a8f928e1d8e7fb45bc833e5651ed5d16c081dda1c12f')
+sha256sums=('8ed1ff2c7276ac56f97996a0074ffd66e2704ca11876bd22ef97263f84ee0cda')
 options=('!lto')
 
 build() {
