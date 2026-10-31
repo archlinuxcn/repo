@@ -11,13 +11,14 @@
 
 pkgname=fex-emu-rootfs-archcn
 pkgver=20261029
-pkgrel=2
+pkgrel=3
 pkgdesc='Arch Linux x86_64 rootfs image for FEX-Emu'
 arch=(any)
 url='https://github.com/yuyichao/archcn-fex-emu-rootfs'
 # Aggregate of the Arch Linux packages listed in pkglist, their licenses are
 # in /usr/share/licenses inside the image.
 license=('LicenseRef-custom')
+depends=(erofsfuse) # for kernels without erofs
 makedepends=(zstd)
 optdepends=('fex-emu: run x86 programs with this rootfs'
             'muvm: run x86 programs in a microVM with this rootfs'
@@ -34,8 +35,8 @@ source=("$pkgname-$pkgver.erofs.zst::$url/releases/download/$pkgver/default.erof
 noextract=("$pkgname-$pkgver.erofs.zst")
 sha256sums=('0b92f127f63d139479af3db042a32edc346303c512cee5b791fdbc5964a1330d'
             '8a35c45a49f49b16889c2d09a38f597b0324b0ee1012508e23938347234e53a5'
-            'aecbf6338ab86a0a130cc2c3d21728de3c3583d62b5779d7ddfd1580d137891c'
-            '6c908fd7ea0c62593dbad690394449102e6ec07f59dd794d4de5b3017444a0c9'
+            '6b23491b91703f06a7a8e9928303c621b0913878d3e49483c24c1a401a5ca1ba'
+            '9a32d5759ee2ad24c359d3a108b943900335c24cbcd85adfcd6591da14ff20d3'
             '44d607d9cb8cb9436f4ba69d4bbce6e23ff41ed733b3d45d4332d3bce92dda31')
 
 prepare() {

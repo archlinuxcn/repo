@@ -23,6 +23,20 @@ stop() {
   done
 }
 
+mount_erofs() {
+  # Some kernels (e.g. ALARM's linux-aarch64) don't have erofs, use erofsfuse
+  # for those. A FUSE mount is only accessible by the mounting user (root)
+  # without allow_other.
+  if grep -qw erofs /proc/filesystems || modprobe -q erofs; then
+    mount -t erofs -o ro "$1" "$2"
+  else
+    erofsfuse -o ro,allow_other,default_permissions "$1" "$2"
+    # The FUSE root inode has mode 0 until its attributes are fetched and
+    # overlayfs copies the mode of the top layer root when mounting.
+    stat "$2" > /dev/null
+  fi
+}
+
 start() {
   stop
 
@@ -31,7 +45,7 @@ start() {
     [[ -f $img ]] || continue
     layer=$rundir/layers/$(basename "$img" .erofs)
     mkdir -p "$layer"
-    mount -t erofs -o ro "$img" "$layer"
+    mount_erofs "$img" "$layer"
     # overlayfs takes the top layer first
     layers=("$layer" "${layers[@]}")
   done

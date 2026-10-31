@@ -7,6 +7,9 @@ Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/lib/fex-emu-rootfs/fex-emu-rootfs-stack start
 ExecStop=/usr/lib/fex-emu-rootfs/fex-emu-rootfs-stack stop
+# Leave the erofsfuse daemons (if any) alone, they exit by themselves once the
+# lazily unmounted layers are no longer used by running FEX-Emu processes.
+KillMode=process
 
 [Install]
 WantedBy=multi-user.target
