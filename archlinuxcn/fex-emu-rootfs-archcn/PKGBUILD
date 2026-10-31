@@ -10,8 +10,8 @@
 # Nothing is compiled: download + decompress, hence arch=(any).
 
 pkgname=fex-emu-rootfs-archcn
-pkgver=20261029
-pkgrel=4
+pkgver=20261030
+pkgrel=1
 pkgdesc='Arch Linux x86_64 rootfs image for FEX-Emu'
 arch=(any)
 url='https://github.com/yuyichao/archcn-fex-emu-rootfs'
@@ -33,8 +33,8 @@ source=("$pkgname-$pkgver.erofs.zst::$url/releases/download/$pkgver/default.erof
         fex-emu-rootfs.service
         fex-emu-rootfs.hook)
 noextract=("$pkgname-$pkgver.erofs.zst")
-sha256sums=('0b92f127f63d139479af3db042a32edc346303c512cee5b791fdbc5964a1330d'
-            '8a35c45a49f49b16889c2d09a38f597b0324b0ee1012508e23938347234e53a5'
+sha256sums=('770c4b6208db94d112ddafe33f22da5b464c6b9ba07fe1c79974327df54d9f75'
+            '5fe47a088194b310636eefd7d64da4a2b8459b0ae4f044f2fbd1c2f088d26a26'
             '6b23491b91703f06a7a8e9928303c621b0913878d3e49483c24c1a401a5ca1ba'
             '9a32d5759ee2ad24c359d3a108b943900335c24cbcd85adfcd6591da14ff20d3'
             '44d607d9cb8cb9436f4ba69d4bbce6e23ff41ed733b3d45d4332d3bce92dda31')
