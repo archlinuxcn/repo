@@ -4,8 +4,8 @@
 # Contributor: Y7n05h <Y7n05h@y7n05h.dev>
 
 pkgname=ecapture
-pkgver=2.9.0
-pkgrel=3
+pkgver=2.9.1
+pkgrel=1
 pkgdesc="Capture SSL/TLS plaintext with eBPF"
 arch=(x86_64)
 url="https://ecapture.cc"
@@ -13,7 +13,7 @@ license=("Apache-2.0")
 provides=("ecapture")
 conflicts=("ecapture-bin")
 source=("${pkgname}::git+https://github.com/gojue/ecapture.git#tag=v${pkgver}")
-b2sums=('aa8d1672406723dee5cc8fa633888038edd96b16bf9338dd49b85b863793be6b746ea568caacab901608a2b0dbe367d906a02678acf6767a08321f1dfd5764f7')
+b2sums=('c5248dad6c6878e63dbcce1ecbd42ec2febbf09a8f262afa8972feedf47ff42375ca8202e12f812d9888f3bfc71f4ba3c9e27a19c651e51905f371c47e6f5cd8')
 
 depends=(glibc)
 makedepends=(
