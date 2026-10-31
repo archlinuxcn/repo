@@ -6,7 +6,10 @@ maintainers:
 pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
+allowed_workers:
+  - yyc
+
 update_on:
   - source: vcs
   - source: manual
-    manual: 5
+    manual: 0
