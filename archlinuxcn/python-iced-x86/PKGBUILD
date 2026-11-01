@@ -1,8 +1,8 @@
 # Maintainer: RocketDev <ma2014119@outlook.com>
 # 如果需要拆包的话可以联系我
 pkgname=python-iced-x86
-pkgver=1.21.0
-pkgrel=3
+pkgver=1.22.0
+pkgrel=1
 pkgdesc='Blazing fast and correct x86/x64 disassembler, assembler, decoder, encoder'
 arch=('x86_64')
 url='https://github.com/icedland/iced'
@@ -21,7 +21,7 @@ makedepends=(
     'python-sphinx'
 )
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-b2sums=('2c5ed8a7fb2f797b18bedc39382ecf1c22dd704f61a0dc5f3c60b26e9125293598750047f8fae9c28a23b5ecda0e27e3865b7f5cab109238a84bc6a83cfd6f8c')
+b2sums=('939312daa93f9166aa0f153bf3d976f0da6981e48a567d45e3d235ebc9015e687ddeb1d6ba0e9a0934322440d8858e19f0492084cd731ac5303f15944ae4b7c2')
 
 prepare() {
     # Use rust code in tar instead of downloaded
