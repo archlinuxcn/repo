@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=bsk-cli
-pkgver=0.4.0
+pkgver=0.4.1
 pkgrel=1
 pkgdesc="BrowserSkill CLI — let AI agents drive your browser through a local bsk daemon and the built-in agent skill"
 arch=('x86_64' 'aarch64')
@@ -16,7 +16,7 @@ options=('!lto')
 depends=('glibc' 'gcc-libs')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/Tencent/BrowserSkill/archive/refs/tags/cli-v${pkgver}.tar.gz")
-b2sums=('ed23375a69fdc108d1cd7ee52e1fe02eff7ca3cb4920a4a8fa87405cc484fe078cd8d8b0c936b8d0a272f5c935afc65bba2b142af7325369acc0c21d71cd3c22')
+b2sums=('a0198606ef2084c7e4528dda9f3b3efd20699d279720a74534a02c99506973f98763154f3c2f586601d5b981778605383b15cdace0ccf94cbd0d7dd695254a65')
 
 prepare() {
     cd "BrowserSkill-cli-v${pkgver}"
