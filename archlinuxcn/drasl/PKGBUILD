@@ -2,8 +2,8 @@
 # Contributor: evan <mail@evangoo.de>
 _pkgname=drasl
 pkgname="${_pkgname}"
-pkgver=4.0.1
-pkgrel=2
+pkgver=4.0.2
+pkgrel=1
 pkgdesc="Yggdrasil-compatible API server for Minecraft"
 arch=('x86_64' 'aarch64')
 url="https://github.com/unmojang/drasl"
@@ -15,7 +15,7 @@ backup=("etc/drasl/config.toml")
 source=(
 	"${_pkgname}::git+https://github.com/unmojang/drasl.git#tag=v${pkgver}"
 )
-sha256sums=('846f9a2d78eb38788d5d7fa4064f25d13078cc3bf230d1f8770855ad678c3a9a')
+sha256sums=('37ea14b6063e81ba7bbd84f77d88cd2629bae0aedfdb0dd9fd57a89f65a145c3')
 
 #function pkgver() {
 #	cd "${srcdir}/${_pkgname}"
