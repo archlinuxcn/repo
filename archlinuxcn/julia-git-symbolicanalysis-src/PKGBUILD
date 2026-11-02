@@ -1,6 +1,6 @@
 pkgname=julia-git-symbolicanalysis-src
-pkgver=0.5.7
-_commit=40bd1b066d03eb453c5470e8af1386607b199615
+pkgver=0.5.8
+_commit=73ee05f84b2709197989920b648d333f93823dd7
 pkgrel=1
 pkgdesc="SymbolicAnalysis.jl"
 url="https://github.com/Vaibhavdixit02/SymbolicAnalysis.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Vaibhavdixit02/SymbolicAnalysis.jl.git#commit=$_commit")
-sha256sums=('7b97a29e29fe4d2b9241b928fb11bb167997697a9ccccd3add5518ea4ea7b6cb')
+sha256sums=('3956d59afae0042d05f6cbbce840641a4dc4ba27d9e3c02df4c950413f24c184')
 
 package() {
   cd SymbolicAnalysis.jl
