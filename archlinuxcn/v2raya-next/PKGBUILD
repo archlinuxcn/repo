@@ -2,7 +2,7 @@
 # Contributor: Dct Mei <dctxmei@yandex.com>
 
 pkgname=v2raya-next
-pkgver=2.5.10
+pkgver=2.5.13
 pkgrel=1
 pkgdesc="A web GUI client of Project V (with vibe-coded upstream updates)"
 arch=(x86_64)
@@ -12,7 +12,7 @@ depends=(glibc hicolor-icon-theme)
 makedepends=(git go nodejs yarn)
 source=("$pkgname::git+$url.git#tag=v$pkgver"
         "39-v2raya-restart.hook")
-b2sums=('42db09f60abe052aad03a2325ed2ce9750e09cd23bcd5cba9d879c7460d0602002daed2b4d6440266bf021a7435e149f0047c9f162bb44ac02d36c350d9a55ba'
+b2sums=('0bf67bc1c180214e47ba469d55a463cb34db2b970eb58ea7c9e331b82127eebead153eed18eaaa02cf743c2cc9003e0afae7f67cb67a5f92d7356190626bfa6f'
         '1e963c1d7b7865e6dc7897d1521420b20e13860632158824cc02ac0c8bd67b81c7cb45779b1f700eb31342b04326d76826507a86b9c4c99d89da720a71cf61aa')
 backup=("etc/default/v2raya")
 conflicts=(v2raya)
