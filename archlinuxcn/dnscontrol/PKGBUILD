@@ -3,7 +3,7 @@
 # Contributor: nirnakinho <aur at dominikbodi dot de>
 
 pkgname=dnscontrol
-pkgver=5.7.1
+pkgver=5.7.2
 pkgrel=1
 pkgdesc="Synchronize your DNS to multiple providers from a simple DSL"
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ license=('MIT')
 depends=('glibc')
 makedepends=('go')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/StackExchange/$pkgname/archive/v$pkgver.tar.gz")
-b2sums=('234b2617517c7858bb50ae2c3df126c95486323b8aff3919498be0ff2fef62c3040981d764503408b47720390f8c6b59dee309131a1af37475054f14c84d9c41')
+b2sums=('128d4585b65d02566e556b1e24956bfc4b34ce4a678dff3ed57421fa8d92f45886daf899ca7a16ccb5c89ec1375a3b5da4fd84dc6d51aa72a6da089ad12b1a21')
 
 prepare(){
     cd "$pkgname-$pkgver"
