@@ -1,6 +1,6 @@
 pkgname=julia-git-uris-src
-pkgver=1.7.2
-_commit=aab3f4b9ab958c024f4fc75566841b4f3181287a
+pkgver=1.7.3
+_commit=90be3d7254fe40ce5f47e548076f306e87021ba2
 pkgrel=1
 pkgdesc="URIs.jl"
 url="https://github.com/JuliaWeb/URIs.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaWeb/URIs.jl.git#commit=$_commit")
-sha256sums=('4ce3b78f8c7e2defcf00025fbabd742c688cdc2fd6e72e9b63c5fe0de29d612a')
+sha256sums=('e8eca82520e6f1331ca8d3abcdac6dc1017808c919bec7b497109e5bf41fdfd4')
 
 package() {
   cd URIs.jl
