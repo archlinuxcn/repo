@@ -1,17 +1,20 @@
 # Maintainer: Horror Proton <107091537+horror-proton@users.noreply.github.com>
 pkgname=maa-cli
-pkgver=0.7.6
-pkgrel=1
+pkgver=0.7.7
+pkgrel=2
 pkgdesc="A simple CLI for MAA by Rust."
 arch=('x86_64' 'aarch64')
 url="https://github.com/MaaAssistantArknights/maa-cli"
 license=('AGPL-3.0-only')
 depends=('gcc-libs' 'libgit2' 'openssl' 'zip')
-makedepends=('cargo')
-optdepends=('maa-assistant-arknights: for preinstalled maa core')
+makedepends=('cargo' 'git')
+optdepends=(
+  'maa-assistant-arknights: for preinstalled maa core'
+  'git: alternative git backend'
+)
 source=("$url/archive/refs/tags/v${pkgver}.tar.gz")
-md5sums=('d122bf42e19c65c4c5b78c89f11282f4')
-sha256sums=('2956d53732c8505de66c5ae1867dbbf493ec683efb0f0b61d78cc488e1867636')
+md5sums=('37bb15f5b0eaf018bebcbb6e9172d726')
+sha256sums=('c1a0a6ff6fd83c2aa8a6c66cc6b6afe9d877c6eecb9004905172ae0741b698eb')
 options=(!lto)
 
 prepare() {
