@@ -7,6 +7,7 @@ maintainers:
 build_prefix: extra-x86_64
 
 update_on:
-  - source: git
-    git: https://git.net-core.org/tome/t-engine4.git
-    use_max_tag: true
+  - source: regex
+    url: https://te4.org/download
+    regex: 't-engine4-src-([0-9]+\.[0-9]+\.[0-9]+)\.tar\.bz2'
+    sort_version_key: vercmp
