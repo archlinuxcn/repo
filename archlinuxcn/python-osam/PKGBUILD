@@ -2,7 +2,7 @@
 
 _pkgname=osam
 pkgname=python-osam
-pkgver=0.10.0
+pkgver=0.10.1
 pkgrel=1
 pkgdesc='A tool to run open-source promptable vision models locally'
 arch=('any')
@@ -26,7 +26,7 @@ makedepends=(
   python-wheel
 )
 source=("${_pkgname}-${pkgver}.tar.gz::https://github.com/wkentaro/osam/archive/refs/tags/v${pkgver}.tar.gz")
-sha512sums=('96131618fea2398b08d700c8ae7614becad3341a1e0b1cea035f407fc7af46f451d1b7e98f2d2abe165a92b883136b629dfa46bbf1fa3c3dd9db790301ec0f26')
+sha512sums=('4037452c4acbbea1b2c8b37ee8a27150cdab09724eeeb05a8e569d31d064bea04da5c613563c9dcba71d6fa45ba675cb1932b0a242384503d878b84452695d28')
 
 build() {
   cd "${_pkgname}-${pkgver}"
