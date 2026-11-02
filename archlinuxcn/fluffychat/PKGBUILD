@@ -8,7 +8,7 @@ export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 _pkgname="fluffychat"
 pkgname="$_pkgname"
 pkgver=2.11.4
-pkgrel=1
+pkgrel=2
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
 license=('AGPL-3.0-only')
@@ -18,7 +18,8 @@ depends=(
   'gtk3'
   'libpulse'  # flutter_webrtc
   'libsecret' # flutter_secure_storage
-  'openssl'   # sqlite encryption
+  'mpv'
+  'openssl' # sqlite encryption
   'webkit2gtk-4.1'
   'xdg-user-dirs' # path_provider
 )
