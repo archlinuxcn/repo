@@ -149,7 +149,7 @@ DLAGENTS="${DLAGENTS[@]/curl /curl -L}"
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.5.0'
+_pkgver='1.5.1'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
 _sfx=''
@@ -169,6 +169,7 @@ _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific 
   '1.4.8:20260604-387603f47cbb15c0d3dc3d67ae3396d3eb707daf'
   '1.4.9:20260702-7e1c392c62d39c364127307cd408421dd5f8cfb0'
   '1.5.0:20260925-94ec710894ecd548b4fe174ef781eca5c1a318c0'
+  '1.5.1:20261028-fae47e024dd83cef6aaecde0aa7d11731df11649'
 )
 _pkgverhbb="$(_fn_VCL "${_pkgver}" -eq "${_HBB[@]}")"; unset _HBB; test "$(_vercmp "${_pkgver}" '1.3.7')" -lt 0 -o ! -z "${_pkgverhbb}" || exit 1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -281,15 +282,15 @@ source+=("${_vcs[@]}")
     )
   fi
 ####
-md5sums=('ababb766c2c6ff58ab3e221681821286'
-         'e8c45043899e4f8b1ef4d82a3db8f536'
+md5sums=('e8bb0eb79740d8ff99654fc0aa39f6c9'
+         '0818e04dec386bb50bae1e91e0ac2480'
          '6acc4b5b14befec55ef84006b60c7ff5'
          'a77a4586f30f77de2eed63e160b3a051'
          '379cfba8479c2a92e05e3b855d1e6901'
          'f40cae9f445b22a00901678b72b320c0'
          '31921523e3f3c70c9c06666d65676a1a'
          '1efa96e6c35d1715dc6a7f83fd473953'
-         '13758576960f88c56b4bac6995715f6d'
+         '37f134dc03b0d43dd3aa7a3aed33fb07'
          '47d465f8ba76031a6717afc70c91eaf3'
          'f2f3868524b82915da3700267d116cdf'
          '4c7a93808c12b359733430c8377b7fcf'
@@ -297,15 +298,15 @@ md5sums=('ababb766c2c6ff58ab3e221681821286'
          '5f8157e206bc430cbed92fb62144f30b'
          'a3efc04e00cede00296f1a0dc323e8d1'
          'cc8e5418ff0c163228aabbe385ba2596')
-sha256sums=('52ef6e8e97a531faf572ad6b2df3daa3159f0043396ff44fc5c5673dd0ca3544'
-            '93ed115cc3186cc818259afc2399eb217b5469aaf5300548d033b142118666d3'
+sha256sums=('369c49a4a35b0ac6d46360b482a9f4c1b8f5dd141baa200b2766ddd1e4df59fa'
+            '25dde1ec04632a88b91218d362d45e4bbc89c1bfb1fe235b0534d66e249fe2f5'
             '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
             '82757ee1ab6b956a3c601f7db82e2d9ad80dbbcf2ba68c63059f0b529426ccd0'
             '359046f24f8a81b96a198000a1cfd7934c1f4870b2a1306e13f65694cefef68f'
             'e9255b62719c659f224fcc639b1bf4a6226e4996ad3fb006e18e1533cad77725'
             '12ca5979a3a625c8944e093c17c32c4c2bd03a48c8877354d88a7077860ef740'
             '90bb12369d296f2e0bea14832b421c4ba40d442e1519758e6e1e7855afab3149'
-            'ef335682ac9b46bedcdaa1469879eb15d9c86581ba40ee1ede1722121c2e863e'
+            '28820cf1c66dfb33f6bf07c2eb921656764a9e52d51ac9dc1cba224ef7dd055c'
             '980dd81f425082aa6d7c9e47fef27554ce7a9ffc8e2f6e863b97d263c5c50858'
             '73a4ecb598cd6824cb7a0a0d934d81b866e2762acd8eb465e1510063b4649659'
             '26fcd3db88045dee380e581862a6ef106f49b74b6396ee95c2993a260b4636aa'
