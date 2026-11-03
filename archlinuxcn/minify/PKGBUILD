@@ -3,7 +3,7 @@
 # Maintainer: meepzh <meep.aur@meepzh.com>
 
 pkgname=minify
-pkgver=2.24.24
+pkgver=2.24.25
 pkgrel=1
 pkgdesc="Minifier CLI for HTML, CSS, JS, JSON, SVG and XML"
 arch=('x86_64' 'aarch64' 'armv7h')
@@ -14,7 +14,7 @@ makedepends=('go')
 optdepends=('bash-completion: command-line autocomplete with bash')
 options=('!lto')
 source=("$url/archive/v$pkgver.tar.gz")
-sha256sums=('2be8768d569413804e1e8d035a12cf925f671c776871b2ebfeb884f60f8ae17d')
+sha256sums=('900bc080ae8a7da38eb6f78259392479abbf0a0ca8d81addd2230ff6dbbc9520')
 
 prepare() {
   cd "$pkgname-$pkgver"
