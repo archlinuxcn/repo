@@ -1,0 +1,16 @@
+--- a/src/slic3r/GUI/Overview/AssemblyStepsUtils.cpp
++++ b/src/slic3r/GUI/Overview/AssemblyStepsUtils.cpp
+@@ -37,7 +37,13 @@
+ #include <unordered_set>
+ #include <type_traits>
+ 
++// Upstream libharu installs its headers into include/hpdf/, while some
++// distributions (e.g. Arch Linux) install them directly into include/.
++#if __has_include(<hpdf/hpdf.h>)
+ #include <hpdf/hpdf.h>
++#else
++#include <hpdf.h>
++#endif
+ 
+ #include <GL/glew.h>
+ #include <wx/glcanvas.h>

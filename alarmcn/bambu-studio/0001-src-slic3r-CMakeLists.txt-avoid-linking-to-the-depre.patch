@@ -1,0 +1,26 @@
+From d1dbea5fec43bbef6dbfd397109648283fdd53df Mon Sep 17 00:00:00 2001
+From: Leo <i@hardrain980.com>
+Date: Sun, 19 Apr 2026 17:42:24 +0800
+Subject: [PATCH] src/slic3r/CMakeLists.txt: avoid linking to the deprecated
+ libOSMesa.so
+
+---
+ src/slic3r/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/slic3r/CMakeLists.txt b/src/slic3r/CMakeLists.txt
+index 8a707348d..e01206213 100644
+--- a/src/slic3r/CMakeLists.txt
++++ b/src/slic3r/CMakeLists.txt
+@@ -890,7 +890,7 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+     FIND_LIBRARY(WAYLAND_EGL_LIBRARIES    NAMES wayland-egl)
+     FIND_LIBRARY(WAYLAND_CLIENT_LIBRARIES NAMES wayland-client)
+     find_package(CURL REQUIRED)
+-    target_link_libraries(libslic3r_gui ${DBUS_LIBRARIES} OSMesa)
++    target_link_libraries(libslic3r_gui ${DBUS_LIBRARIES})
+     target_link_libraries(libslic3r_gui
+         OpenGL::EGL
+         ${WAYLAND_SERVER_LIBRARIES}
+-- 
+2.53.0
+

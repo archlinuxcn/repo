@@ -1,0 +1,258 @@
+--- a/src/libslic3r/GCode/PostProcessor.cpp
++++ b/src/libslic3r/GCode/PostProcessor.cpp
+@@ -149,9 +149,9 @@
+ 
+ #include <cstdlib>   // getenv()
+ #include <sstream>
+-#include <boost/process.hpp>
++#include <boost/process/v1.hpp>
+ 
+-namespace process = boost::process;
++namespace process = boost::process::v1;
+ 
+ static int run_script(const std::string &script, const std::string &gcode, std::string &std_err)
+ {
+--- a/src/libslic3r/PrintBase.cpp
++++ b/src/libslic3r/PrintBase.cpp
+@@ -80,7 +80,7 @@
+ 			cfg.opt_string("input_filename_base") + default_ext :
+ 			this->placeholder_parser().process(format, 0, &cfg);
+         if (filename.extension().empty())
+-            filename = boost::filesystem::change_extension(filename, default_ext);
++            filename.replace_extension(default_ext);
+         return filename.string();
+     } catch (std::runtime_error &err) {
+         throw Slic3r::PlaceholderParserError(L("Failed processing of the filename_format template.") + "\n" + err.what());
+--- a/src/libslic3r/utils.cpp
++++ b/src/libslic3r/utils.cpp
+@@ -685,7 +685,7 @@
+ 	// That may happen when copying on some exotic file system, for example Linux on Chrome.
+ 	copy_file_linux(source, target, ec);
+ #else // __linux__
+-	boost::filesystem::copy_file(source, target, boost::filesystem::copy_option::overwrite_if_exists, ec);
++	boost::filesystem::copy_file(source, target, boost::filesystem::copy_options::overwrite_existing, ec);
+ #endif // __linux__
+ 	if (ec) {
+ 		error_message = ec.message();
+--- a/src/slic3r/GUI/Auxiliary.cpp
++++ b/src/slic3r/GUI/Auxiliary.cpp
+@@ -345,7 +345,7 @@
+     }
+ 
+     auto     existing  = false;
+-    auto     dir       = m_file_path.branch_path();
++    auto     dir       = m_file_path.parent_path();
+     auto     new_fullname = new_file_name + m_file_path.extension().string();
+ 
+     
+@@ -461,8 +461,8 @@
+     wxGetApp().plater()->model().model_info->cover_file = path.string();
+     //wxGetApp().plater()->model().model_info->cover_file = m_file_name.ToStdString();
+ 
+-    auto full_path          = m_file_path.branch_path();
+-    auto full_root_path         = full_path.branch_path();
++    auto full_path          = m_file_path.parent_path();
++    auto full_root_path         = full_path.parent_path();
+     auto full_root_path_str = encode_path(full_root_path.string().c_str());
+     auto dir       = wxString::Format("%s/.thumbnails", full_root_path_str);
+ 
+@@ -506,8 +506,8 @@
+     auto     is_fine = fs::remove(bfs_path);
+ 
+     if (m_cover) {
+-        auto full_path          = m_file_path.branch_path();
+-        auto full_root_path     = full_path.branch_path();
++        auto full_path          = m_file_path.parent_path();
++        auto full_root_path     = full_path.parent_path();
+         auto full_root_path_str = encode_path(full_root_path.string().c_str());
+         auto dir                = wxString::Format("%s/.thumbnails", full_root_path_str);
+         fs::path dir_path(dir.c_str());
+@@ -948,7 +948,7 @@
+            
+ 
+             boost::system::error_code ec;
+-            if (!fs::copy_file(src_bfs_path, fs::path(dir_path.ToStdWstring()), fs::copy_option::overwrite_if_exists, ec)) continue;
++            if (!fs::copy_file(src_bfs_path, fs::path(dir_path.ToStdWstring()), fs::copy_options::overwrite_existing, ec)) continue;
+             Slic3r::put_other_changes();
+ 
+             // add in file list
+--- a/src/slic3r/GUI/AuxiliaryDataViewModel.cpp
++++ b/src/slic3r/GUI/AuxiliaryDataViewModel.cpp
+@@ -335,7 +335,7 @@
+         dir_path += "\\" + src_bfs_path.filename().generic_wstring();
+ 
+         boost::system::error_code ec;
+-        if (!fs::copy_file(src_bfs_path, fs::path(dir_path.ToStdWstring()), fs::copy_option::overwrite_if_exists, ec))
++        if (!fs::copy_file(src_bfs_path, fs::path(dir_path.ToStdWstring()), fs::copy_options::overwrite_existing, ec))
+             continue;
+ 
+         // Update model data
+--- a/src/slic3r/GUI/MediaPlayCtrl.cpp
++++ b/src/slic3r/GUI/MediaPlayCtrl.cpp
+@@ -18,9 +18,9 @@
+ #include <boost/nowide/cstdio.hpp>
+ #include <boost/nowide/utf8_codecvt.hpp>
+ #undef pid_t
+-#include <boost/process.hpp>
++#include <boost/process/v1.hpp>
+ #ifdef __WIN32__
+-#include <boost/process/windows.hpp>
++#include <boost/process/v1/windows.hpp>
+ #else
+ #include <sys/ipc.h>
+ #include <sys/shm.h>
+@@ -1447,7 +1447,7 @@
+         std::vector<std::string> configss;
+         boost::algorithm::split(configss, configs, boost::algorithm::is_any_of("\r\n"));
+         configss.erase(std::remove(configss.begin(), configss.end(), std::string()), configss.end());
+-        boost::process::pipe intermediate;
++        boost::process::v1::pipe intermediate;
+         boost::filesystem::path start_dir(boost::filesystem::path(data_dir()) / "plugins");
+ #ifdef __WXMSW__
+         auto plugins_dir = boost::nowide::widen(data_dir()) + L"\\plugins\\";
+@@ -1455,19 +1455,19 @@
+             auto file_dll  = tools_dir + dll;
+             auto file_dll2 = plugins_dir + dll;
+             if (!boost::filesystem::exists(file_dll) || boost::filesystem::last_write_time(file_dll) != boost::filesystem::last_write_time(file_dll2))
+-                boost::filesystem::copy_file(file_dll2, file_dll, boost::filesystem::copy_option::overwrite_if_exists);
++                boost::filesystem::copy_file(file_dll2, file_dll, boost::filesystem::copy_options::overwrite_existing);
+         }
+-        boost::process::child process_source(file_source, file_url2.ToStdWstring(), boost::process::start_dir(tools_dir),
+-                                             boost::process::windows::create_no_window,
+-                                             boost::process::std_out > intermediate, boost::process::limit_handles);
+-        boost::process::child process_ffmpeg(file_ffmpeg, configss, boost::process::windows::create_no_window,
+-                                             boost::process::std_in < intermediate, boost::process::limit_handles);
++        boost::process::v1::child process_source(file_source, file_url2.ToStdWstring(), boost::process::v1::start_dir(tools_dir),
++                                             boost::process::v1::windows::create_no_window,
++                                             boost::process::v1::std_out > intermediate, boost::process::v1::limit_handles);
++        boost::process::v1::child process_ffmpeg(file_ffmpeg, configss, boost::process::v1::windows::create_no_window,
++                                             boost::process::v1::std_in < intermediate, boost::process::v1::limit_handles);
+ #else
+         boost::filesystem::permissions(file_source, boost::filesystem::owner_exe | boost::filesystem::add_perms);
+         boost::filesystem::permissions(file_ffmpeg, boost::filesystem::owner_exe | boost::filesystem::add_perms);
+-        boost::process::child process_source(file_source, file_url2.data().AsInternal(), boost::process::start_dir(start_dir),
+-                                             boost::process::std_out > intermediate, boost::process::limit_handles);
+-        boost::process::child process_ffmpeg(file_ffmpeg, configss, boost::process::std_in < intermediate, boost::process::limit_handles);
++        boost::process::v1::child process_source(file_source, file_url2.data().AsInternal(), boost::process::v1::start_dir(start_dir),
++                                             boost::process::v1::std_out > intermediate, boost::process::v1::limit_handles);
++        boost::process::v1::child process_ffmpeg(file_ffmpeg, configss, boost::process::v1::std_in < intermediate, boost::process::v1::limit_handles);
+ #endif
+         process_source.detach();
+         process_ffmpeg.detach();
+--- a/src/slic3r/GUI/Overview/TinyExportMardDown.cpp
++++ b/src/slic3r/GUI/Overview/TinyExportMardDown.cpp
+@@ -41,7 +41,7 @@
+     if (src.empty() || !fs::exists(src, ec))
+         return false;
+     fs::create_directories(dest.parent_path(), ec);
+-    fs::copy_file(src, dest, fs::copy_option::overwrite_if_exists, ec);
++    fs::copy_file(src, dest, fs::copy_options::overwrite_existing, ec);
+     if (ec) {
+         BOOST_LOG_TRIVIAL(warning) << "assembly markdown export: failed to copy image "
+                                    << src << " -> " << dest.string()
+--- a/src/slic3r/GUI/Project.cpp
++++ b/src/slic3r/GUI/Project.cpp
+@@ -720,7 +720,7 @@
+                                 if (!fs::exists(src_path))
+                                     throw std::runtime_error("attachment not found: " + decoded_filepath);
+                                 boost::system::error_code ec;
+-                                fs::copy_file(src_path, dest_file, fs::copy_option::overwrite_if_exists, ec);
++                                fs::copy_file(src_path, dest_file, fs::copy_options::overwrite_existing, ec);
+                                 if (ec)
+                                     throw std::runtime_error("copy attachment failed: " + ec.message());
+                             }
+--- a/src/slic3r/GUI/RemovableDriveManager.cpp
++++ b/src/slic3r/GUI/RemovableDriveManager.cpp
+@@ -22,8 +22,7 @@
+ #include <pwd.h>
+ #include <boost/filesystem.hpp>
+ #include <boost/system/error_code.hpp>
+-#include <boost/filesystem/convenience.hpp>
+-#include <boost/process.hpp>
++#include <boost/process/v1.hpp>
+ #endif
+ 
+ namespace Slic3r {
+@@ -202,7 +201,7 @@
+ 				stat(path.c_str(), &buf);
+ 				uid_t uid = buf.st_uid;
+ 				if (getuid() == uid)
+-					out.emplace_back(DriveData{ boost::filesystem::basename(boost::filesystem::path(path)), path });
++					out.emplace_back(DriveData{ boost::filesystem::path(path).stem().string(), path });
+ 			}
+ 		}
+ 	}
+@@ -303,15 +302,15 @@
+ 		// but neither triggers "succesful safe removal messege"
+ 		
+ 		BOOST_LOG_TRIVIAL(info) << "Ejecting started";
+-		boost::process::ipstream istd_err;
+-    	boost::process::child child(
++		boost::process::v1::ipstream istd_err;
++    	boost::process::v1::child child(
+ #if __APPLE__		
+-			boost::process::search_path("diskutil"), "eject", correct_path.c_str(), (boost::process::std_out & boost::process::std_err) > istd_err);
++			boost::process::v1::search_path("diskutil"), "eject", correct_path.c_str(), (boost::process::v1::std_out & boost::process::v1::std_err) > istd_err);
+ 		//Another option how to eject at mac. Currently not working.
+ 		//used insted of system() command;
+ 		//this->eject_device(correct_path);
+ #else
+-    		boost::process::search_path("umount"), correct_path.c_str(), (boost::process::std_out & boost::process::std_err) > istd_err);
++    		boost::process::v1::search_path("umount"), correct_path.c_str(), (boost::process::v1::std_out & boost::process::v1::std_err) > istd_err);
+ #endif
+ 		std::string line;
+ 		while (child.running() && std::getline(istd_err, line)) {
+--- a/src/slic3r/Utils/Bonjour.cpp
++++ b/src/slic3r/Utils/Bonjour.cpp
+@@ -7,6 +7,7 @@
+ #include <string>
+ #include <map>
+ #include <thread>
++#include <chrono>
+ #include <boost/optional.hpp>
+ #include <boost/system/error_code.hpp>
+ #include <boost/endian/conversion.hpp>
+@@ -630,7 +631,7 @@
+ 	auto self = this;
+ 
+ 	try {
+-		boost::asio::io_service io_service;
++		boost::asio::io_context io_service;
+ 		udp::socket socket(io_service);
+ 		socket.open(udp::v4());
+ 		socket.set_option(udp::socket::reuse_address(true));
+@@ -639,7 +640,7 @@
+ 
+ 		bool expired = false;
+ 		bool retry = false;
+-		asio::deadline_timer timer(io_service);
++		asio::steady_timer timer(io_service);
+ 		retries--;
+ 		std::function<void(const error_code &)> timer_handler = [&](const error_code &error) {
+ 			if (retries == 0 || error) {
+@@ -650,12 +651,12 @@
+ 			} else {
+ 				retry = true;
+ 				retries--;
+-				timer.expires_from_now(boost::posix_time::seconds(timeout));
++				timer.expires_after(std::chrono::seconds(timeout));
+ 				timer.async_wait(timer_handler);
+ 			}
+ 		};
+ 
+-		timer.expires_from_now(boost::posix_time::seconds(timeout));
++		timer.expires_after(std::chrono::seconds(timeout));
+ 		timer.async_wait(timer_handler);
+ 
+ 		udp::endpoint recv_from;
+--- a/src/slic3r/Utils/TCPConsole.cpp
++++ b/src/slic3r/Utils/TCPConsole.cpp
+@@ -126,7 +126,7 @@
+ 
+         auto endpoints = m_resolver.resolve(m_host_name, m_port_name);
+ 
+-        m_socket.async_connect(endpoints->endpoint(),
++        m_socket.async_connect(endpoints.begin()->endpoint(),
+             boost::bind(&TCPConsole::handle_connect, this, _1)
+         );
+ 

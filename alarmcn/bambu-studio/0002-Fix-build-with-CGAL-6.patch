@@ -1,0 +1,192 @@
+--- a/src/libslic3r/CutSurface.cpp
++++ b/src/libslic3r/CutSurface.cpp
+@@ -30,6 +30,9 @@
+ #include <CGAL/Exact_integer.h>
+ #include <CGAL/Surface_mesh.h>
+ #include <CGAL/Cartesian_converter.h>
++#include <CGAL/AABB_face_graph_triangle_primitive.h>
++#include <CGAL/AABB_traits_3.h>
++#include <CGAL/AABB_tree.h>
+ #include <tbb/parallel_for.h>
+ 
+ // libslic3r
+@@ -1409,8 +1412,8 @@
+     // detect anomalities in visitor.
+     bool is_valid = true;
+     // NOTE: map are created when convert shapes to cgal model
+-    const EdgeShapeMap& edge_shape_map = cgal_shape.property_map<EI, IntersectingElement>(edge_shape_map_name).first;
+-    const FaceShapeMap& face_shape_map = cgal_shape.property_map<FI, IntersectingElement>(face_shape_map_name).first;
++    EdgeShapeMap edge_shape_map = cgal_shape.property_map<EI, IntersectingElement>(edge_shape_map_name).value();
++    FaceShapeMap face_shape_map = cgal_shape.property_map<FI, IntersectingElement>(face_shape_map_name).value();
+     Visitor visitor{cgal_model, cgal_shape, edge_shape_map, face_shape_map, vert_shape_map, &is_valid};
+ 
+     // a property map containing the constrained-or-not status of each edge
+@@ -1559,8 +1562,8 @@
+ 
+ void priv::create_reduce_map(ReductionMap &reduction_map, const CutMesh &mesh)
+ {
+-    const VertexShapeMap &vert_shape_map = mesh.property_map<VI, const IntersectingElement*>(vert_shape_map_name).first;
+-    const EdgeBoolMap &ecm = mesh.property_map<EI, bool>(is_constrained_edge_name).first;
++    VertexShapeMap vert_shape_map = mesh.property_map<VI, const IntersectingElement*>(vert_shape_map_name).value();
++    EdgeBoolMap ecm = mesh.property_map<EI, bool>(is_constrained_edge_name).value();
+ 
+     // check if vertex was made by edge_2 which is diagonal of quad
+     auto is_reducible_vertex = [&vert_shape_map](VI reduction_from) -> bool {
+@@ -1744,11 +1747,10 @@
+     priv::VDistances result(count_shapes_points);
+     for (const SurfacePatch &patch : patches) {
+         // map is created during intersection by corefine visitor
+-        const VertexShapeMap &vert_shape_map =
+-            models[patch.model_id].property_map<VI, const IntersectingElement *>(vert_shape_map_name).first;
++        VertexShapeMap vert_shape_map = models[patch.model_id].property_map<VI, const IntersectingElement *>(vert_shape_map_name).value();
+         uint32_t patch_index = &patch - &patches.front();
+         // map is created during patch creation / dividing
+-        const CvtVI2VI& cvt = patch.mesh.property_map<VI, VI>(patch_source_name).first;
++        CvtVI2VI cvt = patch.mesh.property_map<VI, VI>(patch_source_name).value();
+         // for each point on outline
+         for (const Loop &loop : patch.loops)
+         for (const VI &vi_patch : loop) {
+@@ -2764,7 +2766,7 @@
+ BBS create_bbs(const VCutAOIs &cuts, const CutMeshes &cut_models);
+ 
+ using Primitive = CGAL::AABB_face_graph_triangle_primitive<CutMesh>;
+-using Traits    = CGAL::AABB_traits<EpicKernel, Primitive>;
++using Traits    = CGAL::AABB_traits_3<EpicKernel, Primitive>;
+ using Ray       = EpicKernel::Ray_3;
+ using Tree      = CGAL::AABB_tree<Traits>;
+ using Trees     = std::vector<Tree>;
+@@ -2918,7 +2920,7 @@
+ uint32_t priv::get_shape_point_index(const CutAOI &cut, const CutMesh &model)
+ {
+     // map is created during intersection by corefine visitor
+-    const VertexShapeMap &vert_shape_map = model.property_map<VI, const IntersectingElement *>(vert_shape_map_name).first;
++    VertexShapeMap vert_shape_map = model.property_map<VI, const IntersectingElement *>(vert_shape_map_name).value();
+     // for each half edge of outline
+     for (HI hi : cut.second) {
+         VI vi = model.source(hi);
+@@ -2943,7 +2945,7 @@
+     patch_new.model_id     = patch.model_id;
+     patch_new.shape_id     = patch.shape_id;
+     // fix cvt
+-    CvtVI2VI cvt = patch_new.mesh.property_map<VI, VI>(patch_source_name).first;
++    CvtVI2VI cvt = patch_new.mesh.property_map<VI, VI>(patch_source_name).value();
+     for (VI &vi : cvt) {
+         if (!vi.is_valid()) continue;
+         vi = cvt_from[vi];
+@@ -2963,7 +2965,7 @@
+     std::string patch_number_name = "f:patch_number";
+     CutMesh::Property_map<FI,bool> is_processed = cm.add_property_map<FI, bool>(patch_number_name, false).first;
+ 
+-    const CvtVI2VI& cvt_from = patch.mesh.property_map<VI, VI>(patch_source_name).first;
++    CvtVI2VI cvt_from = patch.mesh.property_map<VI, VI>(patch_source_name).value();
+ 
+     std::vector<FI> fis;
+     fis.reserve(cm.faces().size());
+@@ -3150,7 +3152,7 @@
+                                 const CutMesh   &mesh)
+ {
+     // NonInterupted contour is without other point and contain all from shape
+-    const VertexShapeMap &vert_shape_map = mesh.property_map<VI, const IntersectingElement*>(vert_shape_map_name).first;
++    VertexShapeMap vert_shape_map = mesh.property_map<VI, const IntersectingElement*>(vert_shape_map_name).value();
+     for (HI hi : cutAOI.second) {
+         const IntersectingElement *ie_s = vert_shape_map[mesh.source(hi)];
+         const IntersectingElement *ie_t = vert_shape_map[mesh.target(hi)];
+--- a/src/libslic3r/MeshBoolean.cpp
++++ b/src/libslic3r/MeshBoolean.cpp
+@@ -23,6 +23,7 @@
+ // BBS: for segment
+ #include <CGAL/mesh_segmentation.h>
+ #include <CGAL/property_map.h>
++#include <CGAL/boost/graph/border.h>
+ #include <CGAL/boost/graph/copy_face_graph.h>
+ #include <CGAL/boost/graph/Face_filtered_graph.h>
+ // BBS: for boolean using mcut
+@@ -333,7 +334,7 @@
+         typedef boost::graph_traits<_EpicMesh>::halfedge_descriptor      halfedge_descriptor;
+         typedef boost::graph_traits<_EpicMesh>::vertex_descriptor        vertex_descriptor;
+         std::vector<halfedge_descriptor> border_cycles;
+-        CGAL::Polygon_mesh_processing::extract_boundary_cycles(out, std::back_inserter(border_cycles));
++        CGAL::extract_boundary_cycles(out, std::back_inserter(border_cycles));
+         for (halfedge_descriptor h : border_cycles)
+         {
+             std::vector<face_descriptor>  patch_facets;
+--- a/src/libslic3r/TextureToColor/ColorUtils.cpp
++++ b/src/libslic3r/TextureToColor/ColorUtils.cpp
+@@ -12,7 +12,7 @@
+ #include <boost/next_prior.hpp>
+ 
+ #include <CGAL/AABB_face_graph_triangle_primitive.h>
+-#include <CGAL/AABB_traits.h>
++#include <CGAL/AABB_traits_3.h>
+ #include <CGAL/AABB_tree.h>
+ #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+ #include <CGAL/Point_3.h>
+@@ -78,7 +78,7 @@
+ typedef boost::graph_traits<CGALMesh>::edge_descriptor edge_descriptor;
+ typedef boost::graph_traits<CGALMesh>::vertex_descriptor vertex_descriptor;
+ typedef CGAL::AABB_face_graph_triangle_primitive<CGALMesh> Primitive;
+-typedef CGAL::AABB_traits<CGALKernel, Primitive> Traits;
++typedef CGAL::AABB_traits_3<CGALKernel, Primitive> Traits;
+ typedef CGAL::AABB_tree<Traits> Tree;
+ typedef CGALMesh::template Property_map<vertex_descriptor, CGALKernel::Vector_3> VNMap;
+ 
+--- a/src/libslic3r/TextureToColor/Repair.hpp
++++ b/src/libslic3r/TextureToColor/Repair.hpp
+@@ -3,6 +3,7 @@
+ #include "CgalUtils.hpp"
+ #include "Callbacks.hpp"
+ #include <CGAL/Polygon_mesh_processing/border.h>
++#include <CGAL/boost/graph/border.h>
+ #include <CGAL/Polygon_mesh_processing/manifoldness.h>
+ #include <CGAL/Polygon_mesh_processing/repair_polygon_soup.h>
+ #include <CGAL/Polygon_mesh_processing/repair.h>
+@@ -36,6 +37,17 @@
+ // and rarely yields a usable result, so we skip hole closing entirely.
+ inline constexpr std::size_t MAX_REPAIRABLE_MESH_BOUNDARY_EDGES = 5000;
+ 
++// Equivalent to PMP::stitch_borders(mesh), but passes the boundary cycles
++// explicitly: with CGAL 6.2, the unqualified extract_boundary_cycles() call
++// inside PMP::stitch_borders(mesh) is ambiguous between the deprecated PMP::
++// and the new CGAL:: versions.
++inline std::size_t StitchAllBorders(cgalutils::CGALMesh& cgal_mesh)
++{
++    std::vector<boost::graph_traits<cgalutils::CGALMesh>::halfedge_descriptor> cycles;
++    CGAL::extract_boundary_cycles(cgal_mesh, std::back_inserter(cycles));
++    return PMP::stitch_borders(cycles, cgal_mesh);
++}
++
+ struct RepairSetting
+ {
+     // Skip triangulating a boundary cycle whose half-edge count exceeds this.
+@@ -60,7 +72,7 @@
+     using HalfedgeDescriptor = boost::graph_traits<CGALMesh>::halfedge_descriptor;
+ 
+     std::vector<HalfedgeDescriptor> border_cycles;
+-    PMP::extract_boundary_cycles(cgal_mesh, std::back_inserter(border_cycles));
++    CGAL::extract_boundary_cycles(cgal_mesh, std::back_inserter(border_cycles));
+ 
+     BoundaryEdgeStats stats;
+     stats.cycle_count = border_cycles.size();
+@@ -86,11 +98,11 @@
+     using HalfedgeDescriptor = boost::graph_traits<CGALMesh>::halfedge_descriptor;
+     using FaceDescriptor = boost::graph_traits<CGALMesh>::face_descriptor;
+ 
+-    PMP::stitch_borders(cgal_mesh);
++    StitchAllBorders(cgal_mesh);
+     PMP::duplicate_non_manifold_vertices(cgal_mesh);
+ 
+     std::vector<HalfedgeDescriptor> border_cycles;
+-    PMP::extract_boundary_cycles(cgal_mesh, std::back_inserter(border_cycles));
++    CGAL::extract_boundary_cycles(cgal_mesh, std::back_inserter(border_cycles));
+ 
+     for (const HalfedgeDescriptor h : border_cycles) {
+         std::vector<FaceDescriptor> patch_faces;
+@@ -194,7 +206,7 @@
+     BoundaryEdgeStats stats;
+     {
+         const auto t0 = Clock::now();
+-        PMP::stitch_borders(cgal_mesh);
++        StitchAllBorders(cgal_mesh);
+         PMP::duplicate_non_manifold_vertices(cgal_mesh);
+         stats = ComputeBoundaryEdgeStats(cgal_mesh);
+         BOOST_LOG_TRIVIAL(info) << "TextureToColor: RepairMesh stage=boundary_stats took="

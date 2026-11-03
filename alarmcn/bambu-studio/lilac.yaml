@@ -1,0 +1,61 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+allowed_workers:
+  - yyc
+
+update_on:
+  - source: github
+    github: bambulab/BambuStudio
+    use_latest_release: true
+    include_prereleases: false
+    prefix: v
+  # Rebuild when a linked library changes its soname
+  - alias: boost
+  - alias: libcrypto
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavcodec.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libavutil.so
+  - source: alpm
+    alpm: ffmpeg
+    provided: libswscale.so
+  - source: alpm
+    alpm: glew
+    provided: libGLEW.so
+  - source: alpmfiles
+    pkgname: opencv
+    strip_dir: true
+    filename: libopencv_core\.so\.\d+$
+  - source: alpmfiles
+    pkgname: opencascade
+    strip_dir: true
+    filename: libTKernel\.so\.\d+\.\d+$
+  - source: alpmfiles
+    pkgname: openvdb
+    strip_dir: true
+    filename: libopenvdb\.so\.\d+\.\d+$
+  - source: alpmfiles
+    pkgname: onetbb
+    strip_dir: true
+    filename: libtbb\.so\.\d+$
+  - source: alpmfiles
+    pkgname: assimp
+    strip_dir: true
+    filename: libassimp\.so\.\d+$
+  - source: alpmfiles
+    pkgname: imath
+    strip_dir: true
+    filename: libImath-\w+\.so\.\d+$
+  - source: alpmfiles
+    pkgname: libharu
+    strip_dir: true
+    filename: libhpdf\.so\.\d+\.\d+$
+  - source: alpmfiles
+    pkgname: wxwidgets-gtk3
+    strip_dir: true
+    filename: libwx_gtk3u_core-[\d.]+\.so\.\d+$

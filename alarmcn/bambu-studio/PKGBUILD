@@ -1,0 +1,89 @@
+# Maintainer: Leo LI <i@hardrain980.com>
+_raw_pkgver=02.09.01.70
+
+pkgname=bambu-studio
+pkgver=2.9.1.70
+pkgrel=1
+pkgdesc="PC Software for BambuLab and other 3D printers"
+arch=('aarch64' 'x86_64')
+url="https://github.com/bambulab/BambuStudio"
+license=('AGPL-3.0-or-later')
+groups=()
+depends=(
+  'at-spi2-core' 'bzip2' 'cairo' 'dbus' 'ffmpeg' 'fontconfig'
+  'gdk-pixbuf2' 'glib2' 'glibc' 'glu' 'glslang' 'gstreamer' 'gtk3'
+  'harfbuzz' 'imath' 'libgcc' 'libglvnd' 'libice' 'libjpeg-turbo'
+  'libsecret' 'libsm' 'libsoup3' 'libstdc++' 'libtiff' 'libx11' 'libxext'
+  'mesa' 'openssl' 'pango' 'wayland' 'webkit2gtk-4.1' 'xz' 'zlib' 'zstd'
+  'expat' 'gmp' 'mpfr' 'libpng' 'wxwidgets-common'
+  'boost-libs' 'onetbb' 'glew' 'glfw' 'cereal' 'nlopt' 'openvdb' 'libnoise'
+  'cgal' 'opencv' 'assimp' 'opencascade' 'wxwidgets-gtk3' 'libharu' 'curl'
+)
+makedepends=('cmake' 'extra-cmake-modules' 'git' 'libxkbcommon' 'libxkbcommon-x11' 'wayland-protocols' 'nasm' 'yasm' 'boost' 'nodejs' 'pnpm')
+# add '!lto' or ffmpeg build fails exact the same way described in this thread
+# https://bbs.archlinux.org/viewtopic.php?id=305489
+options=(!lto !strip !debug)
+source=(
+  "BambuStudio-$_raw_pkgver.tar.gz::https://github.com/bambulab/BambuStudio/archive/refs/tags/v$_raw_pkgver.tar.gz"
+  'BambuStudio.desktop'
+  '0001-src-slic3r-CMakeLists.txt-avoid-linking-to-the-depre.patch'
+  '0002-Fix-build-with-CGAL-6.patch'
+  '0003-Fix-linking-with-system-libraries.patch'
+  '0004-Fix-build-with-newer-Boost.patch'
+  '0005-Support-system-libharu-header-layout.patch'
+)
+sha256sums=('39175631bcd01e942e0936fd3610a9c4bd43b5920768eda0bb365b00985537b0'
+            '06137b1a4034f23fb5e55f9f291a30b28ed48c8d019982f53d182b4232d2cb41'
+            'c573fafdcad32fc6fd03e6ee6643d71629df9f76e04ca7fc62985cf34b6a9df7'
+            'd5f91214e96417e42ea89249be33e789eee1b1ea3ddd09ff2df89a1833506e4e'
+            '488b31075f11052822986c96b7af6862c7557ae1ba30b0844b4f3552b18a769a'
+            'b4e18468a8f1fd34782864acb22efaf7f3d9a88cfd1b80ac5bcac882616efe84'
+            '97b9d618ac22aa00231c9568e899fcefed56882d6a9c7fbf56abd6e683009af7')
+
+prepare() {
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0001-src-slic3r-CMakeLists.txt-avoid-linking-to-the-depre.patch
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0002-Fix-build-with-CGAL-6.patch
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0003-Fix-linking-with-system-libraries.patch
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0004-Fix-build-with-newer-Boost.patch
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0005-Support-system-libharu-header-layout.patch
+  mkdir -p \
+        BambuStudio_deps \
+        BambuStudio-$_raw_pkgver/build \
+        BambuStudio-$_raw_pkgver/deps/build
+}
+
+build() {
+  # Burrr, BBL is sticking with an old version of cmake ...
+  export CMAKE_POLICY_VERSION_MINIMUM=3.5
+  # GCC 15 defaults to c23, which breaks some old code ...
+  export CC='gcc -std=gnu99'
+
+  cd BambuStudio-$_raw_pkgver/build
+  cmake ../ \
+        -DSLIC3R_STATIC=0 \
+        -DSLIC3R_GTK=3 \
+        -DSLIC3R_FHS=1 \
+        -DBBL_RELEASE_TO_PUBLIC=1 \
+        -DBBL_INTERNAL_TESTING=0 \
+        -DCMAKE_INSTALL_PREFIX=/opt/BambuStudio \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DOPENSSL_ROOT_DIR=/usr \
+        -DLIBNOISE_INCLUDE_DIR=/usr/include/noise \
+        -DLIBNOISE_LIBRARY=/usr/lib/libnoise.so \
+        -DFLATPAK=On \
+        -DSLIC3R_ALLOW_MCUT_BOOLEAN=ON
+  cmake --build . --config Release
+}
+
+package() {
+  cd BambuStudio-$_raw_pkgver/build
+  mkdir -p "$pkgdir"/usr/bin
+  DESTDIR="$pkgdir" cmake --install .
+  ln -sf /opt/BambuStudio/bin/bambu-studio "$pkgdir"/usr/bin/bambu-studio
+  install -Dm0644 "$srcdir"/BambuStudio.desktop "$pkgdir"/usr/share/applications/BambuStudio.desktop
+  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/LICENSE "$pkgdir"/usr/share/licenses/BambuStudio/LICENSE
+  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/resources/images/BambuStudio_128px.png "$pkgdir"/usr/share/icons/hicolor/128x128/apps/BambuStudio.png
+  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/resources/images/BambuStudio_192px.png "$pkgdir"/usr/share/icons/hicolor/192x192/apps/BambuStudio.png
+  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/resources/images/BambuStudio_32px.png "$pkgdir"/usr/share/icons/hicolor/32x32/apps/BambuStudio.png
+  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/resources/images/BambuStudio.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/BambuStudio.svg
+}
