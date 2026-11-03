@@ -14,7 +14,7 @@ _vvk_version=0.1.0
 _rstd_version=0.1.7
 
 pkgname=qcm
-pkgver=1.3.8
+pkgver=1.3.9
 pkgrel=1
 pkgdesc="Qt client for netease cloud music"
 arch=('x86_64')
