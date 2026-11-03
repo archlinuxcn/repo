@@ -1,3 +1,139 @@
+## GE-Proton11-12
+
+# GE-Proton11-12
+
+Changes since GE-Proton11-11.
+
+## Component Updates
+
+- Wine: Valve bleeding-edge 2026-10-31, plus newer bleeding-edge commits:
+  - XInput now rescans controllers only when a device could have changed. This replaces the Far Cry 4 and Witcher 3 rescan hacks.
+  - The thread pool worker timeout is now 60 seconds.
+  - Voice Capture DSP (`mfwmaaec`) supports audio capture.
+  - HID input reports are cut to their declared length.
+  - The Radeon Software version is now set in the registry.
+  - nvapi is disabled for every game when the NVIDIA driver isn't loaded.
+  - Xalia was updated to 0.5.0.1.
+  - wineopenxr was updated to OpenXR 1.1.65, adds initial support for D3D-consumed swapchains and fixes extension string lengths.
+  - lsteamclient: better path resolution for `ISteamApps::GetFileDetails()`, and matchmaking request handles are now validated.
+- DXVK: v3.1.1-174:
+  - Command submission throttling and memory eviction rework.
+  - Present timing fixes, including an NVIDIA fence workaround.
+  - D3D9 YUV conversion fix and D3D11 `ForcedSampleCount` fix.
+- D7VK: large DirectDraw/D3D7 and older rework:
+  - Viewport, material and texture objects are shared between interface versions.
+  - Gamma, display mode and present handling fixes.
+  - New legacy aspect-ratio and overlay options.
+- VKD3D-Proton: v3.1:
+  - Arc Raiders wave32 workaround.
+  - UE4 ray tracing glitch fix on AMD.
+  - Memory allocation fallback across memory types.
+  - Fence event and present timing fixes.
+- VKD3D: shader compiler updates (HLSL namespaces, `.mips[][]`, d3dbc parsing).
+- DXVK-NVAPI: v0.9.3. Available video memory now matches `nvidia-smi`.
+- FEX: FEX-2610-116. Adds AVX-NE-CONVERT and x87 FIP, plus decoder fixes.
+- DXVK, D7VK and VKD3D-Proton built from a GE-patched tree now carry `-GE-Proton(dirty)` in their version string. This lets upstream developers see in bug reports that the build is modified.
+
+## Controllers
+
+- Final Fantasy VII Rebirth, Horizon Forbidden West and Horizon Zero Dawn Remastered: DualSense haptics and adaptive triggers now work together over USB. These games now default to `PROTON_SONY_WINDOWS_DEVICE_NAMES=1` ([#860](https://github.com/GloriousEggroll/proton-ge-custom/issues/860)).
+- Armored Core VI: controllers now work through the Steam Input fallback with Steam Input disabled. Previously the game received no input.
+- The automatic Sony Steam Input fallback is kept when Steam Input is disabled for one game but enabled globally for PlayStation controllers.
+- Added `PROTON_STEAM_INPUT_XBOX_PROMPTS`. It reports the Steam Deck and Steam Controller as an Xbox controller, so games show controller prompts instead of keyboard prompts. Enabled by default for Rune Factory 5 ([#841](https://github.com/GloriousEggroll/proton-ge-custom/issues/841)).
+- Where Winds Meet now defaults to `PROTON_SONY_AUTO_XINPUT=0`, which fixes the DualSense touchpad not working until replugged ([#829](https://github.com/GloriousEggroll/proton-ge-custom/issues/829)).
+- The Forest: fixed a crash when joining a dedicated server from the in-game browser.
+
+## Steam Overlay
+
+- Wine-Wayland on niri and other Smithay compositors: fixed the overlay cursor drifting or staying in place, and the overlay responding late to input ([#904](https://github.com/GloriousEggroll/proton-ge-custom/pull/904), thanks @yahya637).
+- Fixed the overlay cursor freezing in pointer-locked games on compositors that skip `wl_pointer.frame`.
+
+## Wayland and Windowing
+
+- Hyprland: fixed fullscreen games dropping to a tiled or maximized window. Examples are UT2004 rendering into a tile-sized viewport and UT4 losing fullscreen at the menu. This was a regression since GE-Proton11-7 ([#871](https://github.com/GloriousEggroll/proton-ge-custom/issues/871)).
+- Fixed IME input (Fcitx5) freezing games with `PROTON_ENABLE_WAYLAND=1` ([#798](https://github.com/GloriousEggroll/proton-ge-custom/issues/798)).
+- Fixed a Wine-Wayland deadlock during present and focus changes, and a hang on exit, in Galaxy Idle Clicker ([#908](https://github.com/GloriousEggroll/proton-ge-custom/issues/908)).
+- GNOME: fixed tray icons of Wine-Wayland applications not appearing. This was a regression in GE-Proton11-11 ([#872](https://github.com/GloriousEggroll/proton-ge-custom/issues/872)).
+- Wine-Wayland: animated game cursors now animate ([#919](https://github.com/GloriousEggroll/proton-ge-custom/issues/919)).
+- RuneScape (Vulkan beta): fixed the game window never appearing on Wine-Wayland with NVIDIA and antialiasing enabled ([#837](https://github.com/GloriousEggroll/proton-ge-custom/issues/837)).
+- Cinnamon: windows keep their title bars and borders again. GE-Proton now treats Muffin as its own window manager, like Valve's Proton does ([#767](https://github.com/GloriousEggroll/proton-ge-custom/issues/767)).
+- X11: games no longer hang waiting for a pointer grab on focus changes ([#920](https://github.com/GloriousEggroll/proton-ge-custom/pull/920), thanks @Syrupdesu).
+- Layered overlay windows such as Desktop Mate ([#897](https://github.com/GloriousEggroll/proton-ge-custom/pull/897), thanks @Mihnea8848):
+  - Fast readback is now kept for windows larger than the screen.
+  - New opt-in `WINE_LAYERED_OVERLAY_DIRECT=1` presents directly, which avoids duplicated or skipped frames.
+- Fixed DXVK and VKD3D-Proton device creation failing on Wayland when an OpenXR runtime is installed. This affected DayZ ([#852](https://github.com/GloriousEggroll/proton-ge-custom/issues/852)).
+
+## Video Playback
+
+- MSFS 2024: 4K intro videos no longer play in slow motion. The faster GPU conversion path is enabled again ([#389](https://github.com/GloriousEggroll/proton-ge-custom/issues/389)).
+- Warrior Cats: Clans of the Forest: intro videos with AAC audio no longer stop playback before the main menu ([#882](https://github.com/GloriousEggroll/proton-ge-custom/issues/882)).
+- VRChat TopazPlayer: RTSP streams are now reported as live, so AVPro Video no longer reloads them as stalled. Patch by @l12436 ([#896](https://github.com/GloriousEggroll/proton-ge-custom/issues/896)).
+- The Godfather: FMVs no longer flicker or flash at the edges ([#909](https://github.com/GloriousEggroll/proton-ge-custom/pull/909), thanks @AITUS95).
+- Arcade and Konami movie fixes, thanks @aderumier ([#880](https://github.com/GloriousEggroll/proton-ge-custom/pull/880), [#884](https://github.com/GloriousEggroll/proton-ge-custom/pull/884), [#894](https://github.com/GloriousEggroll/proton-ge-custom/pull/894), [#895](https://github.com/GloriousEggroll/proton-ge-custom/pull/895), [#905](https://github.com/GloriousEggroll/proton-ge-custom/pull/905), [#915](https://github.com/GloriousEggroll/proton-ge-custom/pull/915), [#918](https://github.com/GloriousEggroll/proton-ge-custom/pull/918)):
+  - Silent Hill: The Arcade: movies no longer stay black.
+  - Cooper's 9: MP42 movies play.
+  - Yu-Gi-Oh! 5D's Duel Terminal 6: mode previews no longer turn grey.
+  - Wangan Midnight Maximum Tune 5: WMV movies play.
+  - Need for Speed Underground (Global VR): no longer crashes at the first movie frame.
+  - Madden NFL Football Season 2 (Global VR): no longer crashes at the end of attract movies.
+  - PGA TOUR Golf Championship Edition III: gray blocks after fades are gone.
+- khdays-port: the game now gets past the first cutscene. Fixes a work queue shutdown deadlock ([#899](https://github.com/GloriousEggroll/proton-ge-custom/issues/899)).
+
+## Rendering and HDR
+
+- RuneScape: colors no longer look washed out. Swapchains now report the same first surface format as Windows ([#837](https://github.com/GloriousEggroll/proton-ge-custom/issues/837)).
+- KDE Plasma 6.8: MangoHud and the Steam overlay no longer look oversaturated in HDR10 games on Wine-Wayland. `WINE_WAYLAND_HDR_PASSTHROUGH=1` restores the previous behavior ([#898](https://github.com/GloriousEggroll/proton-ge-custom/issues/898), [#916](https://github.com/GloriousEggroll/proton-ge-custom/issues/916)).
+- HDR detection on KDE no longer uses KWin's private protocol and now uses the same standard check as other compositors ([#838](https://github.com/GloriousEggroll/proton-ge-custom/issues/838)).
+  - Added `PROTON_FORCE_HDR=1`. It reports HDR when KDE's SDR brightness is set to the monitor's peak, and on compositors that switch to HDR only for fullscreen HDR clients, such as Hyprland's `cm_auto_hdr`.
+- Star Citizen: DLSS works on NVIDIA again without disabling bottom-up allocation. GE-Proton now keeps free the address range the NVIDIA driver reserves for DLSS.
+- Titanfall 2 and the EA app on Wine-Wayland with NVIDIA: fixed the EA app crashing at startup. This works around an NVIDIA driver bug when Vulkan instances are destroyed ([#881](https://github.com/GloriousEggroll/proton-ge-custom/issues/881)).
+- Arc Raiders: fixed an NVIDIA crash when the window is unfocused while a level loads ([#891](https://github.com/GloriousEggroll/proton-ge-custom/issues/891)).
+- StarCraft II: the GPU hang workaround now applies only to Navi 10 (RX 5000) GPUs. Other GPUs keep constant buffer streaming ([#845](https://github.com/GloriousEggroll/proton-ge-custom/issues/845)).
+- Warhammer 40,000: Darktide: on AMD-only systems the game now uses its native AGS library without `amdxc64`, restoring the FSR 4 option on RDNA3. This is skipped when `PROTON_FSR4_UPGRADE` is set or `amdxc64` is overridden ([#869](https://github.com/GloriousEggroll/proton-ge-custom/issues/869)).
+
+## Protonfixes
+
+- Added `PROTON_STREAMLINE_UPGRADE`. It downloads a current NVIDIA Streamline so the DLSS frame generation override works in games that ship an old one ([#875](https://github.com/GloriousEggroll/proton-ge-custom/issues/875)).
+- Upscalers:
+  - User-defined DLLs can now be passed.
+  - `PROTON_FSR4_UPGRADE` and `PROTON_MLFG_UPGRADE` are now passed through.
+  - The FFX4 version is controlled through the FSR4 version when OptiScaler is used.
+  - Setup is skipped when the fix's conditions aren't met.
+- The Witcher 3: the Wine version is hidden for the other store versions too ([#879](https://github.com/GloriousEggroll/proton-ge-custom/issues/879)).
+- Kingdoms of Amalur: Re-Reckoning: installs `d3dcompiler_43` and `d3dcompiler_47` ([umu-database#159](https://github.com/Open-Wine-Components/umu-database/issues/159)).
+- Star Citizen:
+  - The libcuda workaround was replaced by the DLSS address-range fix above.
+  - `PROTON_DLL_COPY` is applied early for the .NET install.
+- Added a fix for Ultima Online (ClassicUO Launcher).
+- Removed the Gray Zone Warfare EAC hash fix.
+- Updated the umu database.
+- The protonfixes debug output now shows the Proton build and the prefix version.
+
+## Other Changes
+
+- Helldivers 2:
+  - Fixed a memory leak of about 34 GiB of address space and 360 MiB of RAM per hour ([#917](https://github.com/GloriousEggroll/proton-ge-custom/pull/917), thanks @jegglest).
+  - Fixed threads and file descriptors piling up during a session ([#921](https://github.com/GloriousEggroll/proton-ge-custom/pull/921), thanks @jegglest).
+  - Both leaks come from killed threads not being cleaned up.
+- Fixed unbounded heap growth. In EVE Online with 5 clients, memory growth went from 292 MiB/h to 28.5 MiB/h ([#907](https://github.com/GloriousEggroll/proton-ge-custom/pull/907), thanks @greg2010).
+- Space Marine 2: fixed crashes after long play sessions. This is Proton-JE's `RtlWaitOnAddress()` fix.
+- ntsync: a mutex whose owner dies is now abandoned even after its handles were closed, as on Windows. Waiters no longer block forever.
+- Persona 5 Royal: fixed crashes with Reloaded-II mods ([#873](https://github.com/GloriousEggroll/proton-ge-custom/issues/873)).
+- The Last of Us Part II: daily-run leaderboards work again ([#463](https://github.com/GloriousEggroll/proton-ge-custom/issues/463)).
+- NCSOFT PURPLE launcher ([#870](https://github.com/GloriousEggroll/proton-ge-custom/issues/870)):
+  - Runs in WoW64 mode.
+  - No longer stays closed after restarting itself for an update, which fixes `cmd /C choice /T` timeouts.
+- EA app: fixed installs failing with INST-14-1603. New prefixes include the Wine Mono support package again ([#857](https://github.com/GloriousEggroll/proton-ge-custom/issues/857), [#881](https://github.com/GloriousEggroll/proton-ge-custom/issues/881)).
+- Prefixes moved from Valve's Proton to GE-Proton no longer fail .NET 4.0 and 4.8 installs. Leftover read-only links to the other install are replaced.
+- Prefix upgrades:
+  - Prefix upgrade and downgrade logic runs again ([#900](https://github.com/GloriousEggroll/proton-ge-custom/issues/900)).
+  - The prefix version now follows Valve's (`11.0-100`). The log shows the GE build name.
+- 32-bit OpenXR applications are now supported ([#906](https://github.com/GloriousEggroll/proton-ge-custom/issues/906)).
+- Liarsoft games (codeX RScript): reduced audio crackling. The high-quality resampler is kept for any number of sound buffers ([#521](https://github.com/GloriousEggroll/proton-ge-custom/issues/521)).
+- Fixed WoW64 processes crashing on exit with the Wayland driver.
+- The compatibility report template now asks for Wine-Wayland and launcher details, and suggests `PROTON_LOG` channel presets for common problem areas.
+- Release workflow: an already uploaded release build is never replaced.
+
 ## GE-Proton11-11
 
 # GE-Proton11-11
