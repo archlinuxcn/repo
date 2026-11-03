@@ -1,8 +1,8 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=stellar-cli
-pkgver=27.1.0
-pkgrel=2
+pkgver=30.0.1
+pkgrel=1
 pkgdesc='Command-line multi-tool for running and deploying Stellar contracts on the Stellar network'
 url='https://stellar.org'
 arch=(x86_64)
@@ -11,7 +11,7 @@ depends=(glibc libgcc libstdc++ systemd-libs openssl dbus)
 makedepends=(git cargo clang)
 source=(git+https://github.com/stellar/$pkgname#tag=v$pkgver
         stellar-cli-gcc16-directory-iterator.patch::https://github.com/WebAssembly/binaryen/commit/6a78bf0af57dbff8f9d6a77b2527eb0ebb5b73e9.patch?full_index=1)
-sha512sums=('e798c8f290c75e084bb16e5028df312d146b7cc357f3d6119a6a9eb71f6076683e8c48b595b764dc63b19f83e28f8d7f536ee66b442415b9fa0bf2b0348fb277'
+sha512sums=('ed129502c71c97d359d9ea9d6d3cc80749a01e9ce1937c61a8b6cbfcc8f62f0fcdd78b67fe74d58e18f002d2e65a886a37d8ed6b996ea13f0fc2b0304a5550c1'
             'd9c4a1f387a402fffabb01a7a2a30599aad0693bde6be511175b1a869de91a492bd127b9713f088770e06246a117f5f3b7af7f61e1b510e112b827695e42bdbb')
 
 prepare() {
