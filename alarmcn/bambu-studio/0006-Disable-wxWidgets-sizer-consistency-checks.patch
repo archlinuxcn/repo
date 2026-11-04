@@ -1,0 +1,18 @@
+--- a/src/slic3r/GUI/GUI_App.cpp
++++ b/src/slic3r/GUI/GUI_App.cpp
+@@ -2918,6 +2918,15 @@
+ 
+ bool GUI_App::OnInit()
+ {
++#if wxCHECK_VERSION(3, 2, 0)
++    // Many sizer items in the GUI use alignment flags that wxWidgets' sizer
++    // consistency checks reject (e.g. wxALIGN_RIGHT in a horizontal sizer).
++    // Upstream builds use a static wxWidgets with wxDEBUG_LEVEL=0 so these
++    // never fire there, but a system wxWidgets with assertions enabled
++    // reports every one of them.
++    wxSizerFlags::DisableConsistencyChecks();
++#endif
++
+ #ifdef __APPLE__
+     RegisterMacPowerCallBack();
+ #endif
