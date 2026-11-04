@@ -1,9 +1,8 @@
-diff src/auto_cpufreq-2.4.0/auto_cpufreq/gui/app.py src.new/auto_cpufreq-2.4.0/auto_cpufreq/gui/app.py
---- src/auto_cpufreq-2.4.0/auto_cpufreq/gui/app.py
-+++ src.new/auto_cpufreq-2.4.0/auto_cpufreq/gui/app.py
-@@ -15,8 +15,8 @@ if IS_INSTALLED_WITH_SNAP:
-     CSS_FILE = "/snap/auto-cpufreq/current/style.css"
-     ICON_FILE = "/snap/auto-cpufreq/current/icon.png"
+--- a/auto-cpufreq-3.2.0/auto_cpufreq/gui/app.py
++++ b/auto-cpufreq-3.2.0/auto_cpufreq/gui/app.py
+@@ -28,8 +28,8 @@
+     CSS_FILE = "/opt/auto-cpufreq/current/share/scripts/style.css"
+     ICON_FILE = "/opt/auto-cpufreq/current/share/images/icon.png"
  else:
 -    CSS_FILE = "/usr/local/share/auto-cpufreq/scripts/style.css"
 -    ICON_FILE = "/usr/local/share/auto-cpufreq/images/icon.png"
@@ -11,4 +10,4 @@ diff src/auto_cpufreq-2.4.0/auto_cpufreq/gui/app.py src.new/auto_cpufreq-2.4.0/a
 +    ICON_FILE = "/usr/share/pixmaps/auto-cpufreq.png"
  
  HBOX_PADDING = 20
- PKEXEC_ERROR = "Error executing command as another user: Not authorized\n\nThis incident has been reported.\n"
+ CONTROL_OPTION_MARGIN = 8
