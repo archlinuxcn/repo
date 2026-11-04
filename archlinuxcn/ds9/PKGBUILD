@@ -1,7 +1,7 @@
 # Maintainer: Zhijun Zhang <zhangzhijun23@mails.ucas.ac.cn>
 
 pkgname=ds9
-pkgver=8.8
+pkgver=8.8.1
 pkgrel=1
 pkgdesc="SAOImage DS9: Astronomical Data Visualization Application"
 url="https://sites.google.com/cfa.harvard.edu/saoimageds9"
@@ -14,7 +14,7 @@ conflicts=('ds9' 'ds9-bin')
 source=("$pkgname::git+https://github.com/SAOImageDS9/SAOImageDS9.git#tag=v$pkgver"
         "ds9.desktop"
         )
-sha256sums=('1f4d2277fb206bcc2c745ade42001cbc8e870f75adb05017c330dbd2ac1bbcf0'
+sha256sums=('8a18f5911d0bb23940b062ca57e4932a195c6d178db4209f1166c5df92aeeb41'
             'cf41109f31b9be057ab04a96613a59a87fb6cb3ed405fa93545f6bfd8fd98975')
 
 build() {
