@@ -1,0 +1,68 @@
+--- a/src/physfs/archivers/bind_physfs.c
++++ b/src/physfs/archivers/bind_physfs.c
+@@ -195,7 +195,7 @@
+ 
+ 
+ static fvoid *doOpen(dvoid *opaque, const char *name,
+-                     void *(*openFunc)(const char *filename),
++                     PHYSFS_File *(*openFunc)(const char *filename),
+                      int *fileExists)
+ {
+     char *f = __BIND_PHYSFS_toDependent((char *) opaque, name, NULL);
+--- a/src/physfs/physfs.c
++++ b/src/physfs/physfs.c
+@@ -68,12 +68,13 @@
+ extern const PHYSFS_ArchiveInfo    __PHYSFS_ArchiveInfo_WAD;
+ extern const PHYSFS_Archiver       __PHYSFS_Archiver_WAD;
+ extern const PHYSFS_Archiver       __PHYSFS_Archiver_DIR;
++extern const PHYSFS_ArchiveInfo    __PHYSFS_ArchiveInfo_BIND_PHYSFS;
+ extern const PHYSFS_Archiver       __PHYSFS_Archiver_BIND_PHYSFS;
+ 
+ 
+ static const PHYSFS_ArchiveInfo *supported_types[] =
+ {
+-    &__PHYSFS_Archiver_BIND_PHYSFS,
++    &__PHYSFS_ArchiveInfo_BIND_PHYSFS,
+ #if (defined PHYSFS_SUPPORTS_ZIP)
+     &__PHYSFS_ArchiveInfo_SUBZIP,
+     &__PHYSFS_ArchiveInfo_ZIP,
+--- a/src/tgl.h
++++ b/src/tgl.h
+@@ -71,7 +71,7 @@
+ 
+ extern int gl_c_vertices_nb, gl_c_texcoords_nb, gl_c_colors_nb;
+ extern GLfloat *gl_c_vertices_ptr;
+-extern GLfloat *gl_c_texcoords_ptr;
++extern const GLvoid *gl_c_texcoords_ptr;
+ extern GLfloat *gl_c_colors_ptr;
+ #define glVertexPointer(nb, t, v, p) \
+ { \
+--- a/src/display_sdl.c
++++ b/src/display_sdl.c
+@@ -78,5 +78,5 @@
+ int nb_draws = 0;
+ int gl_c_vertices_nb = 0, gl_c_texcoords_nb = 0, gl_c_colors_nb = 0;
+ GLfloat *gl_c_vertices_ptr = NULL;
+-GLfloat *gl_c_texcoords_ptr = NULL;
++const GLvoid *gl_c_texcoords_ptr = NULL;
+ GLfloat *gl_c_colors_ptr = NULL;
+--- a/src/particles.c
++++ b/src/particles.c
+@@ -25,6 +25,7 @@
+ #include "core_lua.h"
+ #include "auxiliar.h"
+ #include "types.h"
++#include "lua_externs.h"
+ #include "core_lua.h"
+ #include <setjmp.h>
+ #include "particles.h"
+--- a/src/web.c
++++ b/src/web.c
+@@ -19,6 +19,7 @@
+     darkgod@te4.org
+ */
+ 
++#include <unistd.h>
+ #include "display.h"
+ #include "lua.h"
+ #include "lauxlib.h"
