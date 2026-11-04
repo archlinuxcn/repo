@@ -1,15 +1,15 @@
 # Maintainer: Denis Yantarev <denis dot yantarev at gmail dot com>
 
 pkgname=bstring
-pkgver=1.1.0
-pkgrel=2
+pkgver=1.1.1
+pkgrel=1
 pkgdesc='Better String Library'
 url='https://mike.steinert.ca/bstring'
 license=('BSD-3-Clause')
 
 source=("https://github.com/msteinert/bstring/releases/download/v${pkgver}/bstring-${pkgver}.tar.xz")
 
-md5sums=('72e6920f00587346da233ede274f5d6a')
+md5sums=('a2d1d07166930c3030d84dc41fef65d0')
 
 arch=('x86_64' 'i686' 'pentium4' 'armv6h' 'armv7h' 'aarch64')
 
