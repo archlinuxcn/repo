@@ -3,7 +3,7 @@
 
 pkgbase='frp'
 pkgname=('frpc' 'frps')
-pkgver=0.71.1
+pkgver=0.72.0
 pkgrel=1
 pkgdesc="A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
@@ -20,7 +20,7 @@ source=(
   "frps@.service"
 )
 
-sha512sums=('f797022929ef8a694d77e5eaf928f548a8f93dff1bd6c98ef5966d6523427fd96d82a4b3b777e0f3a6152d4577b3b981c3d80e2388cd88e9544c64cc16ec2b0c'
+sha512sums=('c31806760e3351acf304d470535d3cb512f4f1b8602db6478535f10198d2a2ea2e753fc3030aaf5277f8f54f9278da654789b7f20379b361283daf3a5a0020a6'
             '32f62f961f4f6c4fa192c511b5c5217b296a926e16b2da665c2164729fe0ec0ce3d0ed3c4e223469bbf85bc1d9592b2e1d934712cbbf8e2818fd82dd3f747c3b'
             'f1376736a8fa81d2a4dcf9252789ba34fb890a7df241148809b4f1fdc92f47db78397d49b61555f9bad6e5007422cc984c1713ef0604c52efb16d148476e182f'
             'd4e39337ec4cc5c53408f9d9c1a703f09a35a6011de16c289361843ca9d219ed8393c1c24b90fbbb5ad5c0df7eee7d3ac88f93d0be80e6a2e8bca55f5045dae4'
