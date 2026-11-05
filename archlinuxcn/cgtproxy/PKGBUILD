@@ -1,6 +1,6 @@
 pkgname=cgtproxy
-pkgver=0.3.3
-pkgrel=2
+pkgver=0.4.0
+pkgrel=1
 pkgdesc="A transparent proxy RULE manager written in go inspired by cgproxy."
 arch=(x86_64)
 url="https://github.com/black-desk/cgtproxy"
@@ -8,7 +8,7 @@ license=("GPL-3.0-or-later AND MIT")
 depends=(glibc)
 makedepends=(go git)
 source=("git+https://github.com/black-desk/cgtproxy#tag=v$pkgver")
-sha256sums=('7c0d6090e766d798c4e3532d690b60c593b965ba8c29db1ac1de5921665c8dff')
+sha256sums=('28919cb4007928ac3d3835dafefaf4ac13de6bbd882b04c7a45bf0aa730fcc9c')
 
 build() {
     cd "$pkgname"
