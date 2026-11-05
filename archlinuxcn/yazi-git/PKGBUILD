@@ -52,7 +52,6 @@ prepare() {
 
 build() {
 	cd "${_pkgname}/"
-	export YAZI_GEN_COMPLETIONS=true
 	export RUSTONIG_DYNAMIC_LIBONIG=1
 	cargo build --frozen --release --no-default-features
 }
@@ -68,10 +67,10 @@ package() {
 	install -Dm755 target/release/{${_pkgname},ya} -t "${pkgdir}/usr/bin/"
 	install -Dm644 LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
 
-	_install_completions "${_pkgname}-boot" "${_pkgname}"
-	_install_completions "${_pkgname}-cli" "ya"
-
 	cd assets
+	_install_completions "${_pkgname}"
+	_install_completions "ya"
+
 	install -Dm644 "${_pkgname}.desktop" -t "${pkgdir}/usr/share/applications/"
 	for r in 16 24 32 48 64 128 256 512; do
 		install -Dm644 <(magick logo.png -resize "${r}x${r}" -) "${pkgdir}/usr/share/icons/hicolor/${r}x${r}/apps/${_pkgname}.png"
@@ -79,10 +78,10 @@ package() {
 }
 
 _install_completions() {
-	pushd "$1/completions"
-	install -Dm644 "$2.bash" "${pkgdir}/usr/share/bash-completion/completions/$2"
-	install -Dm644 "$2.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
-	install -Dm644 "_$2" -t "${pkgdir}/usr/share/zsh/site-functions/"
-	install -Dm644 "$2.elv" -t "${pkgdir}/usr/share/elvish/lib/"
+	pushd completions
+	install -Dm644 "$1.bash" "${pkgdir}/usr/share/bash-completion/completions/$1"
+	install -Dm644 "$1.fish" -t "${pkgdir}/usr/share/fish/vendor_completions.d/"
+	install -Dm644 "_$1" -t "${pkgdir}/usr/share/zsh/site-functions/"
+	install -Dm644 "$1.elv" -t "${pkgdir}/usr/share/elvish/lib/"
 	popd
 }
