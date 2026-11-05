@@ -4,7 +4,7 @@
 # Contributor: Brian <brain@derelict.garden>
 
 pkgname=ladybird-git
-pkgver=r92114.9cda57078df
+pkgver=r92443.01514eb34a0
 pkgrel=1
 pkgdesc='Truly independent web browser'
 arch=(x86_64)
@@ -63,8 +63,10 @@ makedepends=(autoconf-archive automake cmake git nasm ninja patchelf skia-static
 options=('!lto' '!staticlibs' '!emptydirs' '!debug')
 source=(
 	"git+$url"
+	"https://github.com/llvm/llvm-project/archive/e54169423e7ee5d8b41c2f1b6f7a59000c901ee0.tar.gz"
 )
-sha256sums=('SKIP')
+sha256sums=('SKIP' 'db3ee51752d716118e3ff1109c7920a32dfc29bd414112e8d18ff6280e608c1c')
+noextract=("e54169423e7ee5d8b41c2f1b6f7a59000c901ee0.tar.gz")
 
 prepare() {
 	cd ladybird
@@ -72,6 +74,18 @@ prepare() {
 	sed -i "s|78.2|78.3|g" Libraries/LibUnicode/CMakeLists.txt || true
 	echo 'add_cxx_compile_options(-Wno-restrict)' >> Meta/CMake/compile_options.cmake
 	sed -e 's/mi_heap_get_default/mi_heap_main/' -i AK/kmalloc.cpp
+
+	rm -rf "$srcdir/llvm-libc" "$srcdir/llvm-libc-include"
+	mkdir -p "$srcdir/llvm-libc"
+	tar -xf "$srcdir/e54169423e7ee5d8b41c2f1b6f7a59000c901ee0.tar.gz" \
+		-C "$srcdir/llvm-libc" --strip-components=2 \
+		"llvm-project-e54169423e7ee5d8b41c2f1b6f7a59000c901ee0/libc"
+
+	mkdir -p "$srcdir/llvm-libc-include/llvm-libc"
+	cd "$srcdir/llvm-libc"
+	for d in hdr include shared src/__support src/string/memory_utils; do
+		find "$d" -name '*.h' -exec install -Dm644 {} "$srcdir/llvm-libc-include/llvm-libc/{}" \;
+	done
 }
 
 pkgver() {
@@ -87,6 +101,7 @@ build() {
 	cmake \
 		-B build \
 		-S ladybird \
+		-DLLVM_LIBC_INCLUDE_DIR="$srcdir/llvm-libc-include" \
 		-DENABLE_CI_BASELINE_CPU=ON \
 		-DBUILD_SHARED_LIBS=OFF \
 		-DLADYBIRD_CACHE_DIR="${srcdir}/build/Build/caches" \
