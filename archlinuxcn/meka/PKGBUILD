@@ -25,6 +25,7 @@ build() {
 	cd "${pkgname}-${pkgver}/"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
+	export AWS_LC_SYS_NO_JITTER_ENTROPY=1
 	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
 	export CFLAGS+=" -ffat-lto-objects"
 	cargo build --frozen --release --all-features
