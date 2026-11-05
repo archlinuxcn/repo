@@ -3,8 +3,8 @@
 
 pkgname=clash-verge-rev
 _pkgname=${pkgname%-rev}
-pkgver=2.5.8
-_ipc_ver=2.7.6
+pkgver=2.5.10
+_ipc_ver=2.7.7
 pkgrel=1
 pkgdesc="Continuation of Clash Verge | A Clash Meta GUI based on Tauri"
 arch=('x86_64' 'i686' 'aarch64' 'armv7h')
@@ -18,11 +18,11 @@ source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz"
 	"${_pkgname}-service-ipc-${_ipc_ver}.tar.gz::https://github.com/${pkgname}/${_pkgname}-service-ipc/archive/v${_ipc_ver}.tar.gz"
 	https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/{Country.mmdb,geo{ip,site}.dat}
 )
-sha512sums=('e381d642000641d9490fa53ec5adf346b263e48f7837f97fe8506091a307b24d36652317451847db263920a42944dc06aec8b34f31c505fc6bf970954e02b380'
-            '238b7aa9f9a202bad37c57877400d9a2b87fd9f06eb591941ca260877c6e49be0a83de76cd0cf91ef27d37ff9b554698a1fea2b98681e89df14ef7dd26f7d8be'
-            'ff3fac4e2b517c998d79c56c79d64be048cce44ffa67e5bb738bdfef2cea169843d2770a3a186e875df857b8da7d8472a701add1d87768889d48ff43b329defd'
-            '2752df0baf8217c95fbb0d602b5254ad5e5c9fd122664ea80ca74a4c540ea1a647dbb5b94009b4922722484c32d2feae5cc42fbe35bd9a99ff324fefd67b3927'
-            '397c6f7f0aac1c16a1c44e647345965049945bfd36e7d338f688968c9429d7d91d9a1c69afa29dc3310c6386f5b33e31bfbf9b83bcbf08638faac36dfa92bc4e')
+sha512sums=('7b28dcb41abe622a23a2ae625070d3c9bee5ea3bcab259f0b93a25a78843a22035110c972cf9d7f51953a9c2ab37114e466e3be5199f2a83e759ecaf0e90c932'
+            'fcfb16a27e754d352a523b9fb78f44b102c0f6c0413dc060352e9b32ddcf290cac9004c46fdbd9914feaa252e4f8dc5f2586b3b0837b2ad36799f0986e479415'
+            'ed86aae09266affd61c141fe17c8fea9faf84e6e5581161a1dec69e83254c61d75b083c6584f7ae0f96ac633ab25724655b1e33b049bcca6b11a8b9695943bb2'
+            'b16fd46388255d0900cd3e25f50366510893dbab935044c805f0c754300d66467caaa6c6e3d823b7706c64109c9e00786b9aa676ed84b7fd03a4476cba72d783'
+            '441399f024e827c4d6f1201003971d368283dd1be9865abf53ad708a3090c43e6587077cc58e6f08e1ef6a0eb3f85a785eb230dfaa2eee204e6461114bbdbb21')
 
 prepare() {
 	pushd "${_pkgname}-service-ipc-${_ipc_ver}/"
