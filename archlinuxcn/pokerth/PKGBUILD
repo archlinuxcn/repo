@@ -4,7 +4,7 @@
 # Patches: xx55tt, viktoracoric, Mailaender, jlocash
 
 pkgname=pokerth
-pkgver=2.1.10
+pkgver=2.1.11
 pkgrel=1
 pkgdesc="Client to online Poker game written in C++/Qt"
 arch=('x86_64')
@@ -29,7 +29,7 @@ makedepends=(
 )
 
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/pokerth/pokerth/archive/refs/tags/v${pkgver}.tar.gz")
-md5sums=('d15a62abefd681dedf0e6af90031fbc9')
+md5sums=('a1ed45d8d95b87747ad8a3a3186f5e5f')
 
 prepare() {
   sed -i \
@@ -66,6 +66,7 @@ package() {
   install -Dm644 docs/server_activity_schema.sql "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/server_live_stats_schema.sql "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/server_shadow_mute_schema.sql "${pkgdir}/usr/share/doc/pokerth/"
+  install -Dm644 docs/server_pending_pm_schema.sql "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/server_setup_howto.txt "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/third_party_services.md "${pkgdir}/usr/share/doc/pokerth/"
   install -Dm644 docs/widget_client_keyboard_shortcuts.md "${pkgdir}/usr/share/doc/pokerth/"
