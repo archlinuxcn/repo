@@ -9,6 +9,4 @@ pre_build: vcs_update
 post_build: git_pkgbuild_commit
 
 update_on:
-  # The upstream Git host is unreachable; follow AUR recipe updates for now.
-  - source: aur
-    aur: ryujinx-git
+  - source: vcs

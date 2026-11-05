@@ -1,121 +1,60 @@
-# Maintainer: username227 < gfrank227 [at] gmail [dot] com >
+# Maintainer: username227 <gfrank227@gmail.com>
 # Contributor: HurricanePootis <hurricanepootis@protonmail.com>
 # Contributor: Marco Rubin <marco.rubin@protonmail.com>
 
-## options
-if [ -z "$_srcinfo" ] && [ -z "$_pkgver" ]; then
-  : ${_autoupdate:=true}
-fi
-
-: ${_install_path:=usr/lib}
-
-## basic info
-_pkgname="ryujinx-git"
-pkgname="$_pkgname"
-pkgver=4402.e3fba4e32
-pkgrel=2
-pkgdesc="Experimental Nintendo Switch Emulator written in C#"
-url="https://ryujinx.app"
+pkgname=ryujinx-git
+pkgver=4871.a61a4268
+pkgrel=1
+pkgdesc='Experimental Nintendo Switch Emulator written in C#'
+url='https://ryujinx.app'
 license=('MIT')
 arch=('x86_64')
-
-depends=(
-  'gcc-libs'
-  'zlib'
-  'dotnet-runtime'
-)
-makedepends=(
-  'desktop-file-utils'
-  'dotnet-sdk'
-  'git'
-)
-
+depends=('dotnet-runtime-10.0' 'gcc-libs' 'zlib' 'sdl3' 'fontconfig'
+         'libsm' 'libx11' 'libxi' 'libxrandr' 'vulkan-icd-loader')
+makedepends=('desktop-file-utils' 'dotnet-sdk-10.0' 'git')
+optdepends=('openal: OpenAL audio backend' 'libsoundio: libsoundio audio backend')
+provides=('ryujinx')
+conflicts=('ryujinx')
 options=('!strip' '!debug')
-
-_source_ryujinx() {
-  # Use a distinct cache name for this remote; "ryujinx" may cache the old one.
-  _pkgsrc="ryubing"
-  _pkgext="tar.gz"
-  source=("$_pkgsrc::git+https://git.ryujinx.app/projects/Ryubing.git")
-  sha256sums=('SKIP')
-}
+source=('ryubing::git+https://git.ryujinx.app/projects/Ryubing.git')
+sha256sums=('SKIP')
 
 pkgver() {
-	cd "$srcdir/$_pkgsrc"
-	printf "%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  cd ryubing
+  printf '%s.%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-build() (
-  export HOME="$SRCDEST/nuget-home"
+prepare() {
+  cd ryubing
+  # Use Arch's .NET 10 SDK feature band.
+  sed -i 's/"version": "[^"]*"/"version": "10.0.100"/' global.json
+}
+
+build() {
+  export DOTNET_CLI_HOME="$srcdir/dotnet-cli"
+  export NUGET_PACKAGES="$srcdir/nuget-packages"
   export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-  local _args=(
-    -c Release
-    -p:DebugType=none
-    -o build
-  )
-  dotnet build "${_args[@]}" "$_pkgsrc/src/Ryujinx"
-
-
-  echo "Shutting down dotnet build server in background."
-  (timeout -k 45 30 dotnet build-server shutdown) > /dev/null 2>&1 &
-)
-
-package() {
-  # program
-  install -dm755 "$pkgdir/$_install_path/ryujinx"
-  install -dm755 "$pkgdir/$_install_path/Ryujinx.Headless.SDL2"
-  cp -a --update=none --reflink=auto $srcdir/build/* "$pkgdir/$_install_path/ryujinx/"
-
-  # symlinks
-  install -dm755 "$pkgdir/usr/bin"
-  ln -s "/$_install_path/ryujinx/Ryujinx" "$pkgdir/usr/bin/ryujinx"
-
-  # .desktop
-  install -Dm644 "$_pkgsrc"/distribution/linux/Ryujinx.desktop "$pkgdir/usr/share/applications/ryujinx.desktop"
-
-  # icon
-  install -Dm644 "$_pkgsrc"/distribution/misc/Logo.svg "$pkgdir/usr/share/pixmaps/ryujinx.svg"
-
-  # mimetype
-  install -Dm644 "$_pkgsrc"/distribution/linux/mime/Ryujinx.xml "$pkgdir/usr/share/mime/packages/ryujinx.xml"
-
-  # license
-  install -Dm644 "$_pkgsrc"/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-
-  # fix permissions
-  find "$pkgdir" -type d -exec chmod 755 {} \;
-  find "$pkgdir" -type f -exec chmod 644 {} \;
-  chmod 755 "$pkgdir/$_install_path/ryujinx/Ryujinx"
-  chmod 755 "$pkgdir/$_install_path/ryujinx/Ryujinx.sh"
-
-  # fix desktop file
-  desktop-file-edit --set-key="Exec" --set-value="ryujinx %f" "$pkgdir/usr/share/applications/ryujinx.desktop"
-  desktop-file-edit --set-icon="ryujinx" "$pkgdir/usr/share/applications/ryujinx.desktop"
+  dotnet publish ryubing/src/Ryujinx/Ryujinx.csproj \
+    --configuration Release --runtime linux-x64 --self-contained false \
+    --disable-build-servers \
+    -p:PublishSingleFile=false -p:PublishTrimmed=false \
+    -p:ExtraDefineConstants=DISABLE_UPDATER \
+    --output "$srcdir/publish"
 }
 
-# update_version() {
-#  : ${_pkgver:=$pkgver}
-#
-#  if [[ "${_autoupdate::1}" != "t" ]]; then
-#    return
-#  fi
-#
-#  local _response _tag _pkgver_new
-#  _response=$(curl -Ssf "$url/releases")
-#  _tag=$(
-#    printf '%s' "$_response" \
-#      | grep -E '/tree/([0-9\.]+)"' \
-#      | sed -E 's&^.*/tree/([0-9\.]+)".*$&\1&' \
-#      | sort -rV | head -1
-#  )
-#  _pkgver_new="${_tag#v}"
-#
-#  if [ "$_pkgver" != "${_pkgver_new:?}" ]; then
-#    _pkgver="${_pkgver_new:?}"
-#    else
-#  fi
-#}
+package() {
+  install -dm755 "$pkgdir/usr/lib/ryujinx" "$pkgdir/usr/bin"
+  cp -a "$srcdir/publish/." "$pkgdir/usr/lib/ryujinx/"
+  ln -s /usr/lib/ryujinx/Ryujinx "$pkgdir/usr/bin/ryujinx"
 
-# _update_version
-_source_ryujinx
+  install -Dm644 ryubing/distribution/linux/app.ryujinx.Ryujinx.desktop \
+    "$pkgdir/usr/share/applications/ryujinx.desktop"
+  desktop-file-edit --set-key=Exec --set-value='ryujinx %f' \
+    --set-icon=ryujinx "$pkgdir/usr/share/applications/ryujinx.desktop"
+  install -Dm644 ryubing/distribution/misc/Logo.png \
+    "$pkgdir/usr/share/pixmaps/ryujinx.png"
+  install -Dm644 ryubing/distribution/linux/mime/Ryujinx.xml \
+    "$pkgdir/usr/share/mime/packages/Ryujinx.xml"
+  install -Dm644 ryubing/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
