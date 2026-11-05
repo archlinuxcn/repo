@@ -1,7 +1,7 @@
 # Maintainer: Vita Yuzu <vita.yuzupon@gmail.com>
 pkgbase=ttf-furifont
 pkgname=(ttf-furifont-hiragana ttf-furifont-romaji)
-pkgver=0.6.2
+pkgver=0.7.0
 pkgrel=1
 pkgdesc='Japanese variable fonts with built-in furigana'
 arch=('any')
@@ -17,10 +17,10 @@ source=(
   "OFL-${pkgver}.txt::${_release}/OFL.txt"
   "DATA-LICENSE-${pkgver}.md::${_release}/DATA-LICENSE.md"
 )
-sha256sums=('5cd36ebcd9e9562351e01a8f06c9a0cccd2df610181f4d3e7a22381b7879c323'
-            'fd73120b5a040cfe5313dad5453026bd7adb88a86f54f7a83468f2bc895289ea'
-            'cdcdd8755df054ed5bbb136c0b754cbbfd1a372b099c08bf55b364c4957b9fa4'
-            '5fa534373326e40ac1b18bde9a56565fb2801dfedb1ddfa857a41376d4d48a1c'
+sha256sums=('141e54d8f23c55ad8c0cede8d4ac44cfc25c86f9784049418ef276aba32fd74a'
+            'be69b38af8b568f44a2f77b66990f0c45854425f0129dce8686f921362c0fef4'
+            '080122c2d78b17b865b418671925015e6f64d28e1ccc3b47a06a108cb085b4d3'
+            '5f281e32faa7d71a345d5392e9933cd36b4f06024ba4f8e3f6389c18e6230a68'
             'fcac737e761ec63dbfbdce11030a1780161920d80315edba9c8beff1c2bac5a2'
             '28989f9dfb9ee3d81f814efdf7d0c1d0bb750ba45ea1d908c93260dfd920f607')
 
