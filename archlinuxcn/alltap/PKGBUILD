@@ -1,0 +1,20 @@
+# Maintainer: kane250 <109224821+kane250@users.noreply.github.com>
+pkgname=alltap
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="把 (几乎) 所有 Linux 软件包格式转换成 Arch 包: deb/rpm/apk/tgz/AppImage/tarball, 含安装自愈闭环"
+arch=('any')
+url="https://github.com/kane250/alltap"
+license=('GPL-3.0-or-later')
+depends=('python' 'libarchive' 'zstd')
+optdepends=('pacman: 本地仓库匹配与安装支持')
+source=("$url/releases/download/v$pkgver/$pkgname-$pkgver.tar.gz")
+sha256sums=('bfca012ec0d7dcde80ec7133ab60198668e7e6cc10921778e149d646f371a218')
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm755 alltap "$pkgdir/usr/bin/alltap"
+  install -Dm644 data/dep-map.conf "$pkgdir/usr/share/alltap/dep-map.conf"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/alltap/README.md"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/alltap/LICENSE"
+}
