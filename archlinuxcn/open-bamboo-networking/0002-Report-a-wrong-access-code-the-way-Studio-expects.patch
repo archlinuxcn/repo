@@ -1,0 +1,21 @@
+--- a/src/lan_session.cpp
++++ b/src/lan_session.cpp
+@@ -111,10 +111,16 @@
+         } else {
+             OBN_WARN("LanSession mqtt connect failed rc=%d (%s)",
+                      rc, obn::mqtt::Client::connack_str(rc));
++            // Studio only treats the message "5" (CONNACK "not authorized")
++            // as a wrong access code, in which case it forgets the saved code
++            // so that the user can enter it again. Any other message keeps
++            // the wrong code and the connection keeps failing.
+             if (on_connected_)
+                 on_connected_(BBL::ConnectStatusFailed,
+-                              std::string("mqtt connect rc=")
+-                                  + obn::mqtt::Client::connack_str(rc));
++                              rc == 4 || rc == 5
++                                  ? std::string("5")
++                                  : std::string("mqtt connect rc=")
++                                        + obn::mqtt::Client::connack_str(rc));
+         }
+     });
+ 

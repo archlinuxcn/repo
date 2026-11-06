@@ -21,10 +21,12 @@ makedepends=('cjson' 'cmake' 'uthash')
 # patches (mosquitto_tls_verify_hostname_set) and links it statically.
 source=("$pkgname-$pkgver.tar.gz::https://github.com/ClusterM/open-bamboo-networking/archive/refs/tags/v$pkgver.tar.gz"
         "mosquitto-$_mosquitto_ver.tar.gz::https://github.com/eclipse/mosquitto/archive/refs/tags/v$_mosquitto_ver.tar.gz"
-        '0001-Allow-using-the-system-cJSON.patch')
+        '0001-Allow-using-the-system-cJSON.patch'
+        '0002-Report-a-wrong-access-code-the-way-Studio-expects.patch')
 sha256sums=('2b75e3b9e0123d56f6280df7e5bc2811e3f963241c2ddba15ccaf8be562886a0'
             '20e998aae86d1629e787a924c044bb912d21ac8f5d1c1b707f2af06eb4c6016d'
-            'c3ff00cb57efc67c56d68951e1a8d04edde4ecfc4247652003d5aa9410f3fb78')
+            'c3ff00cb57efc67c56d68951e1a8d04edde4ecfc4247652003d5aa9410f3fb78'
+            'c9909e28e3b07088afffd68d72f0050e38d7b74b2c7c0396eb36a33d73ae1efd')
 
 prepare() {
   cd $pkgname-$pkgver
@@ -41,6 +43,7 @@ prepare() {
   fi
 
   patch -Np1 < ../0001-Allow-using-the-system-cJSON.patch
+  patch -Np1 < ../0002-Report-a-wrong-access-code-the-way-Studio-expects.patch
 }
 
 build() {
