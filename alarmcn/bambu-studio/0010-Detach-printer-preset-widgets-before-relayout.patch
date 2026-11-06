@@ -1,0 +1,12 @@
+--- a/src/slic3r/GUI/Plater.cpp
++++ b/src/slic3r/GUI/Plater.cpp
+@@ -1255,6 +1255,9 @@
+     // Printer - preset
+     if (auto sizer = static_cast<wxBoxSizer *>(panel_printer_preset->GetSizer());
+             sizer == nullptr || isBBL != (sizer->GetOrientation() == wxVERTICAL)) {
++        // The windows are still in the old sizer and can't be added to the
++        // new one before they are detached, which deleting the old sizer does.
++        panel_printer_preset->SetSizer(nullptr);
+         wxBoxSizer *hsizer_printer_btn = new wxBoxSizer(wxHORIZONTAL);
+         hsizer_printer_btn->AddStretchSpacer(1);
+         hsizer_printer_btn->Add(btn_edit_printer, 0);
