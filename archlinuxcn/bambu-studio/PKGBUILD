@@ -92,7 +92,8 @@ build() {
 package() {
   cd BambuStudio-$_raw_pkgver/build
   mkdir -p "$pkgdir"/usr/bin
-  DESTDIR="$pkgdir" cmake --install .
+  # Only install bambu-studio itself, not the headers and docs of the bundled mcut
+  DESTDIR="$pkgdir" cmake --install . --component Unspecified
   ln -sf /opt/BambuStudio/bin/bambu-studio "$pkgdir"/usr/bin/bambu-studio
   install -Dm0644 "$srcdir"/BambuStudio.desktop "$pkgdir"/usr/share/applications/BambuStudio.desktop
   install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/LICENSE "$pkgdir"/usr/share/licenses/BambuStudio/LICENSE
