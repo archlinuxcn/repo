@@ -6,12 +6,12 @@
 
 pkgname=gpredict
 pkgver=2.6
-pkgrel=1
+pkgrel=2
 pkgdesc="Real-time satellite tracking and orbit prediction application"
 arch=('i686' 'x86_64' 'armv5h' 'armv6h' 'armv7h' 'aarch64')
 url="http://gpredict.oz9aec.net/"
 license=('GPL-2.0-only')
-depends=('curl>=7.19' 'goocanvas2' 'hamradio-menus')
+depends=('curl>=7.19' 'gtk3' 'hamradio-menus')
 makedepends=('autoconf' 'automake' 'intltool')
 provides=('gpredict')
 conflicts=('gpredict')
