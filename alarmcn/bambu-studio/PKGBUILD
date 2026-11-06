@@ -26,7 +26,7 @@ optdepends=('open-bamboo-networking: open-source network plugin, used when the o
 makedepends=('eigen' 'parallel-hashmap' 'cmake' 'extra-cmake-modules' 'git' 'libxkbcommon' 'libxkbcommon-x11' 'wayland-protocols' 'nasm' 'yasm' 'boost' 'nodejs' 'pnpm')
 # add '!lto' or ffmpeg build fails exact the same way described in this thread
 # https://bbs.archlinux.org/viewtopic.php?id=305489
-options=(!lto !strip !debug)
+options=(!lto debug)
 source=(
   "BambuStudio-$_raw_pkgver.tar.gz::https://github.com/bambulab/BambuStudio/archive/refs/tags/v$_raw_pkgver.tar.gz"
   'BambuStudio.desktop'
