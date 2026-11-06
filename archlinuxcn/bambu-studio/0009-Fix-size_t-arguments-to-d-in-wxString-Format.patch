@@ -1,0 +1,69 @@
+--- a/src/slic3r/GUI/MainFrame.cpp
++++ b/src/slic3r/GUI/MainFrame.cpp
+@@ -4136,7 +4136,7 @@
+             if (!files.empty())
+                 m_last_config = from_u8(files.back());
+             MessageDialog dlg(this, wxString::Format(_L_PLURAL("There is %d config exported. (Only non-system configs)",
+-                "There are %d configs exported. (Only non-system configs)", files.size()), files.size()),
++                "There are %d configs exported. (Only non-system configs)", files.size()), int(files.size())),
+                               _L("Export result"), wxOK);
+             dlg.ShowModal();
+         } catch (const std::exception &ex) {
+@@ -4185,7 +4185,7 @@
+     wxGetApp().preset_bundle->update_compatible(PresetSelectCompatibleType::Always);
+     update_side_preset_ui();
+     MessageDialog dlg2(this, wxString::Format(_L_PLURAL("There is %d config imported. (Only non-system and compatible configs)",
+-        "There are %d configs imported. (Only non-system and compatible configs)", cfiles.size()), cfiles.size()),
++        "There are %d configs imported. (Only non-system and compatible configs)", cfiles.size()), int(cfiles.size())),
+                         _L("Import result"), wxOK);
+     dlg2.ShowModal();
+ }
+--- a/src/slic3r/GUI/MsgDialog.cpp
++++ b/src/slic3r/GUI/MsgDialog.cpp
+@@ -355,9 +355,9 @@
+     bd->button = btn;
+     bd->type   = type;
+ 
+-    mb->id        = wxString::Format("%d", m_buttons.size());
++    mb->id        = wxString::Format("%d", int(m_buttons.size()));
+     mb->buttondata = bd;
+-    m_buttons[ wxString::Format("%d", m_buttons.size())] = mb;
++    m_buttons[ wxString::Format("%d", int(m_buttons.size()))] = mb;
+     return btn;
+ };
+ 
+--- a/src/slic3r/GUI/PartSkipDialog.cpp
++++ b/src/slic3r/GUI/PartSkipDialog.cpp
+@@ -938,7 +938,7 @@
+         confirm_dialog.SetMsgLabel(_L("Skipping all objects."));
+         confirm_dialog.SetTipLabel(_L("The printing job will be stopped. Continue?"));
+     } else {
+-        confirm_dialog.SetMsgLabel(wxString::Format(_L("Skipping %d objects."), m_partskip_ids.size()));
++        confirm_dialog.SetMsgLabel(wxString::Format(_L("Skipping %d objects."), int(m_partskip_ids.size())));
+         confirm_dialog.SetTipLabel(_L("This action cannot be undone. Continue?"));
+     }
+ 
+--- a/src/slic3r/GUI/Plater.cpp
++++ b/src/slic3r/GUI/Plater.cpp
+@@ -24404,7 +24404,7 @@
+         if (is_already_exist && vecFiles.size() >= 1) {
+             wxString extension = fs::path(filename.wx_str()).extension().c_str();
+             wxString name = filename.substr(0, filename.length() - extension.length());
+-            filename = wxString::Format("%s(%d)%s", name, vecFiles.size() + 1, extension).ToStdString();
++            filename = wxString::Format("%s(%d)%s", name, int(vecFiles.size() + 1), extension).ToStdString();
+         }
+ 
+ 
+--- a/src/slic3r/Utils/CalibUtils.cpp
++++ b/src/slic3r/Utils/CalibUtils.cpp
+@@ -410,8 +410,8 @@
+             machine_nozzle_diameters[idx] = obj->GetExtderSystem()->GetNozzleDiameter(idx);
+ 
+         if (config_nozzle_diameters.size() != machine_nozzle_diameters.size()) {
+-            wxString nozzle_in_preset  = wxString::Format(_L("nozzle size in preset: %d"), config_nozzle_diameters.size());
+-            wxString nozzle_in_printer = wxString::Format(_L("nozzle size memorized: %d"), machine_nozzle_diameters.size());
++            wxString nozzle_in_preset  = wxString::Format(_L("nozzle size in preset: %d"), int(config_nozzle_diameters.size()));
++            wxString nozzle_in_printer = wxString::Format(_L("nozzle size memorized: %d"), int(machine_nozzle_diameters.size()));
+             error_msg = _L("The size of nozzle type in preset is not consistent with memorized nozzle.Did you change your nozzle lately ? ") + "\n    " + nozzle_in_preset +
+                 "\n    " + nozzle_in_printer + "\n";
+             return false;
