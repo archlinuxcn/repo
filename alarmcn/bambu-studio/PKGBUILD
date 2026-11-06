@@ -1,5 +1,7 @@
 # Maintainer: Leo LI <i@hardrain980.com>
 _raw_pkgver=02.09.01.70
+# OpenMeshCraft commit pinned by deps/OpenMeshCraft/OpenMeshCraft.cmake
+_omc_commit=0e8d12c3df54804393593ab5d86c05caa340cbee
 
 pkgname=bambu-studio
 pkgver=2.9.1.70
@@ -7,7 +9,8 @@ pkgrel=4
 pkgdesc="PC Software for BambuLab and other 3D printers"
 arch=('aarch64' 'x86_64')
 url="https://github.com/bambulab/BambuStudio"
-license=('AGPL-3.0-or-later')
+# OpenMeshCraft (statically linked) is GPL-3.0-only
+license=('AGPL-3.0-or-later AND GPL-3.0-only')
 groups=()
 depends=(
   'at-spi2-core' 'bzip2' 'cairo' 'dbus' 'ffmpeg' 'fontconfig'
@@ -20,7 +23,7 @@ depends=(
   'cgal' 'opencv' 'assimp' 'opencascade' 'wxwidgets-gtk3' 'libharu' 'curl'
 )
 optdepends=('open-bamboo-networking: open-source network plugin, used when the official one is not installed')
-makedepends=('cmake' 'extra-cmake-modules' 'git' 'libxkbcommon' 'libxkbcommon-x11' 'wayland-protocols' 'nasm' 'yasm' 'boost' 'nodejs' 'pnpm')
+makedepends=('eigen' 'parallel-hashmap' 'cmake' 'extra-cmake-modules' 'git' 'libxkbcommon' 'libxkbcommon-x11' 'wayland-protocols' 'nasm' 'yasm' 'boost' 'nodejs' 'pnpm')
 # add '!lto' or ffmpeg build fails exact the same way described in this thread
 # https://bbs.archlinux.org/viewtopic.php?id=305489
 options=(!lto !strip !debug)
@@ -36,6 +39,8 @@ source=(
   '0007-Fix-null-window-in-topbar-button-bitmap-lookup.patch'
   '0008-Load-the-network-plugin-from-a-system-directory.patch'
   '0009-Fix-size_t-arguments-to-d-in-wxString-Format.patch'
+  "OpenMeshCraft-$_omc_commit.tar.gz::https://github.com/bambulab/OpenMeshCraft/archive/$_omc_commit.tar.gz"
+  'openmeshcraft-system-deps.patch'
 )
 sha256sums=('39175631bcd01e942e0936fd3610a9c4bd43b5920768eda0bb365b00985537b0'
             '06137b1a4034f23fb5e55f9f291a30b28ed48c8d019982f53d182b4232d2cb41'
@@ -47,7 +52,9 @@ sha256sums=('39175631bcd01e942e0936fd3610a9c4bd43b5920768eda0bb365b00985537b0'
             'bb5393d023abd4c4d41209518eea58d02beeed98b418bc238e9997bf65670aaa'
             'e3d1fa28eddd753c7b7846cd2a34abc0c918d5a1a770225f4f45bf8c8a4bf4b9'
             '89f2e89017903359f9ddc58c9def5a9c80623aefc9b229a5ffe4c6e08b153e5e'
-            'a59eb4e4e22d13025e72a35bd8601517a0230f6735789cc98bbd47581003d797')
+            'a59eb4e4e22d13025e72a35bd8601517a0230f6735789cc98bbd47581003d797'
+            'b8978c9258b400b101ca6828633f9a76dfef3dd3f776da80d57e15760a48a207'
+            'ea7442716608a58c53f8e8dc3b72d97e3635885088b7f6b2e3c9228e05485b69')
 
 prepare() {
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0001-src-slic3r-CMakeLists.txt-avoid-linking-to-the-depre.patch
@@ -61,6 +68,52 @@ prepare() {
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0009-Fix-size_t-arguments-to-d-in-wxString-Format.patch
 
   mkdir -p BambuStudio-$_raw_pkgver/build
+
+  # OpenMeshCraft is set up the same way as the PATCH_COMMAND in
+  # deps/OpenMeshCraft/OpenMeshCraft.cmake, except that the submodules it
+  # would fill in come from the system and {fmt} is replaced by std::format.
+  local recipe="$srcdir/BambuStudio-$_raw_pkgver/deps/OpenMeshCraft"
+  if ! grep -q "OpenMeshCraft/archive/$_omc_commit\.zip" "$recipe/OpenMeshCraft.cmake"; then
+    echo "Bambu Studio $_raw_pkgver does not use OpenMeshCraft $_omc_commit" >&2
+    return 1
+  fi
+  cd OpenMeshCraft-$_omc_commit
+  cp "$recipe/CMakeLists.txt.in" CMakeLists.txt
+  cp "$recipe/OpenMeshCraftConfig.cmake.in" OpenMeshCraftConfig.cmake.in
+  cp -r "$recipe/wrapper" bambu_wrapper
+  # The external/CMakeLists.txt overlay is embedded in the recipe
+  sed -n '/^file(WRITE "${_OMC_GEN_DIR}\/external_CMakeLists.txt" \[=\[$/,/^\]=\])$/p' \
+      "$recipe/OpenMeshCraft.cmake" | sed '1d;$d' > external/CMakeLists.txt
+  if [[ ! -s external/CMakeLists.txt ]]; then
+    echo "Cannot find the external/CMakeLists.txt overlay in the recipe" >&2
+    return 1
+  fi
+  patch -Np1 < ../openmeshcraft-system-deps.patch
+}
+
+_build_openmeshcraft() {
+  # Only use the baseline instruction set of each architecture
+  # (Arch still supports x86_64 CPUs without AVX)
+  local simd=(-DOMC_CMAKE_ENABLE_AVX=OFF -DOMC_CMAKE_ENABLE_AVX2=OFF -DOMC_CMAKE_ENABLE_FMA=OFF)
+  if [[ $CARCH == x86_64 ]]; then
+    simd+=(-DOMC_CMAKE_ENABLE_SSE2=ON)
+  else
+    simd+=(-DOMC_CMAKE_ENABLE_SSE2=OFF)
+  fi
+
+  # Static libraries, installed into a private prefix for bambu-studio
+  cmake -B "$srcdir/openmeshcraft-build" -S "$srcdir/OpenMeshCraft-$_omc_commit" \
+        -DCMAKE_BUILD_TYPE=None \
+        -DCMAKE_INSTALL_PREFIX="$srcdir/openmeshcraft" \
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+        -DOMC_BUILD_TEST=OFF \
+        -DOMC_MASTER_PROJECT=OFF \
+        -DOMC_BUILD_PREDICATES_GENERATOR=OFF \
+        -DOMC_CMAKE_ENABLE_DEBUG_INFO=OFF \
+        -DOMC_USE_STD_FORMAT=ON \
+        "${simd[@]}"
+  cmake --build "$srcdir/openmeshcraft-build"
+  cmake --install "$srcdir/openmeshcraft-build"
 }
 
 build() {
@@ -68,6 +121,8 @@ build() {
   export CMAKE_POLICY_VERSION_MINIMUM=3.5
   # GCC 15 defaults to c23, which breaks some old code ...
   export CC='gcc -std=gnu99'
+
+  _build_openmeshcraft
 
   cd BambuStudio-$_raw_pkgver/build
   cmake ../ \
@@ -82,8 +137,8 @@ build() {
         -DLIBNOISE_INCLUDE_DIR=/usr/include/noise \
         -DLIBNOISE_LIBRARY=/usr/lib/libnoise.so \
         -DFLATPAK=On \
-        -DSLIC3R_ALLOW_MCUT_BOOLEAN=ON \
-        -DSLIC3R_SYSTEM_PLUGIN_DIR=/usr/lib/bambu-studio/plugins
+        -DSLIC3R_SYSTEM_PLUGIN_DIR=/usr/lib/bambu-studio/plugins \
+        -DCMAKE_PREFIX_PATH="$srcdir/openmeshcraft"
   cmake --build . --config Release
 }
 

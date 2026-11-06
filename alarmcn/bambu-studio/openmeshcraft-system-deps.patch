@@ -1,0 +1,24 @@
+--- a/external/CMakeLists.txt
++++ b/external/CMakeLists.txt
+@@ -70,9 +70,10 @@
+ endif()
+ 
+ if(NOT TARGET Eigen3)
++  find_package(Eigen3 REQUIRED NO_MODULE)
+   add_library(Eigen3 INTERFACE IMPORTED GLOBAL)
+   set_target_properties(Eigen3 PROPERTIES
+-    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/eigen")
++    INTERFACE_LINK_LIBRARIES Eigen3::Eigen)
+ endif()
+ 
+ if(OMC_BUILD_TEST)
+@@ -86,7 +87,8 @@
+   endif()
+ endif()
+ 
+-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/parallel-hashmap EXCLUDE_FROM_ALL)
++# The system parallel-hashmap only installs its headers (no CMake config)
++add_library(phmap INTERFACE IMPORTED GLOBAL)
+ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/shewchuk-predicates EXCLUDE_FROM_ALL)
+ 
+ if(TBB_FOUND AND TARGET tbb)
