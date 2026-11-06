@@ -1,0 +1,23 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+repo_depends:
+  - bambu-studio
+
+# The plugin ABI follows the first three components of the bambu-studio
+# version, so only rebuild when those change.
+update_on_build:
+  - pkgbase: bambu-studio
+    from_pattern: '^(\d+\.\d+\.\d+)\..*'
+    to_pattern: '\1'
+
+update_on:
+  - source: github
+    github: ClusterM/open-bamboo-networking
+    use_latest_release: true
+    include_prereleases: false
+    prefix: v
+  - source: manual
+    manual: 1

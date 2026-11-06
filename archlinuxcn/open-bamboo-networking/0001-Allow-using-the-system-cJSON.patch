@@ -1,0 +1,29 @@
+--- a/cmake/VendorMosquitto.cmake
++++ b/cmake/VendorMosquitto.cmake
+@@ -1,6 +1,8 @@
+ # Bundled libmosquitto (static + PIC) via FetchContent for embedding into
+ # libbambu_networking.so without a system libmosquitto.a.
+ 
++option(OBN_SYSTEM_CJSON "Use the system cJSON instead of a vendored static copy" OFF)
++
+ function(obn_vendor_mosquitto_setup)
+     find_package(Threads REQUIRED)
+     include(FetchContent)
+@@ -10,8 +12,15 @@
+         cmake_policy(SET CMP0169 OLD)
+     endif()
+ 
+-    include("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/VendorCJSON.cmake")
+-    obn_vendor_cjson_setup()
++    if(OBN_SYSTEM_CJSON)
++        # Let mosquitto's own FindcJSON pick up the system libcjson
++        # (<cjson/cJSON.h>); the plugin then links it dynamically.
++        add_library(obn_vendor_cjson_iface INTERFACE)
++        message(STATUS "obn: using system cJSON")
++    else()
++        include("${CMAKE_CURRENT_FUNCTION_LIST_DIR}/VendorCJSON.cmake")
++        obn_vendor_cjson_setup()
++    endif()
+ 
+     # Upstream leaves WITH_ARGON2 undefined ("Disable until separate password
+     # handling thread is implemented") but still links libmosquitto_common
