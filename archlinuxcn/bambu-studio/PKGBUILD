@@ -59,10 +59,8 @@ prepare() {
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0007-Fix-null-window-in-topbar-button-bitmap-lookup.patch
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0008-Load-the-network-plugin-from-a-system-directory.patch
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0009-Fix-size_t-arguments-to-d-in-wxString-Format.patch
-  mkdir -p \
-        BambuStudio_deps \
-        BambuStudio-$_raw_pkgver/build \
-        BambuStudio-$_raw_pkgver/deps/build
+
+  mkdir -p BambuStudio-$_raw_pkgver/build
 }
 
 build() {
@@ -78,7 +76,7 @@ build() {
         -DSLIC3R_FHS=1 \
         -DBBL_RELEASE_TO_PUBLIC=1 \
         -DBBL_INTERNAL_TESTING=0 \
-        -DCMAKE_INSTALL_PREFIX=/opt/BambuStudio \
+        -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
         -DOPENSSL_ROOT_DIR=/usr \
         -DLIBNOISE_INCLUDE_DIR=/usr/include/noise \
@@ -91,14 +89,7 @@ build() {
 
 package() {
   cd BambuStudio-$_raw_pkgver/build
-  mkdir -p "$pkgdir"/usr/bin
   # Only install bambu-studio itself, not the headers and docs of the bundled mcut
   DESTDIR="$pkgdir" cmake --install . --component Unspecified
-  ln -sf /opt/BambuStudio/bin/bambu-studio "$pkgdir"/usr/bin/bambu-studio
-  install -Dm0644 "$srcdir"/BambuStudio.desktop "$pkgdir"/usr/share/applications/BambuStudio.desktop
   install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/LICENSE "$pkgdir"/usr/share/licenses/BambuStudio/LICENSE
-  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/resources/images/BambuStudio_128px.png "$pkgdir"/usr/share/icons/hicolor/128x128/apps/BambuStudio.png
-  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/resources/images/BambuStudio_192px.png "$pkgdir"/usr/share/icons/hicolor/192x192/apps/BambuStudio.png
-  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/resources/images/BambuStudio_32px.png "$pkgdir"/usr/share/icons/hicolor/32x32/apps/BambuStudio.png
-  install -Dm0644 "$srcdir"/BambuStudio-$_raw_pkgver/resources/images/BambuStudio.svg "$pkgdir"/usr/share/icons/hicolor/scalable/apps/BambuStudio.svg
 }
