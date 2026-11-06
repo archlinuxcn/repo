@@ -4,7 +4,7 @@
 # Contributor: Brian <brain@derelict.garden>
 
 pkgname=ladybird-git
-pkgver=r92443.01514eb34a0
+pkgver=r92586.9d52836aa54
 pkgrel=1
 pkgdesc='Truly independent web browser'
 arch=(x86_64)
@@ -65,7 +65,8 @@ source=(
 	"git+$url"
 	"https://github.com/llvm/llvm-project/archive/e54169423e7ee5d8b41c2f1b6f7a59000c901ee0.tar.gz"
 )
-sha256sums=('SKIP' 'db3ee51752d716118e3ff1109c7920a32dfc29bd414112e8d18ff6280e608c1c')
+sha256sums=('SKIP'
+            'db3ee51752d716118e3ff1109c7920a32dfc29bd414112e8d18ff6280e608c1c')
 noextract=("e54169423e7ee5d8b41c2f1b6f7a59000c901ee0.tar.gz")
 
 prepare() {
