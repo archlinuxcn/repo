@@ -9,62 +9,67 @@ pkgname=("${pkgbase}"
 	"${pkgbase}-host"
 	"obs-plugin-${pkgbase}")
 epoch=1
-pkgver=B7
-_pkgver=$(echo "$pkgver" | sed 's/\([A-Z]\+[0-9]\+\)\(rc\)/\1-\2/')
-pkgrel=4
+pkgver=B8rc1
+_pkgver=${pkgver/rc/-rc}
+pkgrel=1
 pkgdesc="An extremely low latency KVMFR (KVM FrameRelay) implementation for guests with VGA PCI Passthrough. (Candidate Version)"
 url="https://looking-glass.io/"
 arch=('x86_64')
 license=('GPL-2.0-or-later')
-makedepends=('cmake' 'fontconfig' 'libpipewire' 'libpulse'
-	'libsamplerate' 'libxi' 'libxpresent' 'libxss' 'obs-studio'
-	'spice-protocol' 'wayland-protocols')
+makedepends=('cmake' 'dkms' 'fontconfig' 'fuse3' 'libdecor' 'libegl' 'libelf' 'libpipewire'
+	'libpulse' 'libsamplerate' 'libunwind' 'libxi' 'libxinerama' 'libxpresent' 'libxrandr'
+	'libxss' 'obs-studio' 'simde' 'spice-protocol' 'usbredir' 'wayland-protocols')
 source=("looking-glass-${_pkgver}.tar.gz::https://looking-glass.io/artifact/${_pkgver}/source")
-sha256sums=('09e506660ccc1b9691d06caa70179b52ffb4393299895cff3c2f0e74fcd69985')
+sha256sums=('8820a77c1a68f823be0c19dbcddb1c3a3e6a08a388925da81703665b7e79f971')
 
 _lgdir="${_pkgname}-${_pkgver}"
 
+prepare() {
+	chmod -R a+rX "${srcdir}/${_lgdir}"
+}
+
 build() {
 	cd "${srcdir}/${_lgdir}"
-	for b in {client,host,obs}/build; do
-		mkdir "${b}"
-		pushd "${b}"
-		# OPTIMIZE_FOR_NATIVE defined in ../cmake/OptimizeForNative.cmake
-		# Defaults to AUTO and is automatically set if unspecified
-		cmake -DOPTIMIZE_FOR_NATIVE=x86-64-v2 -DCMAKE_INSTALL_PREFIX=/usr ..
-		make
-		popd
+	for component in client host obs; do
+		cmake -S "${component}" -B "${component}/build" \
+			-DOPTIMIZE_FOR_NATIVE=x86-64-v2 -DCMAKE_INSTALL_PREFIX=/usr
+		cmake --build "${component}/build"
 	done
 }
 
 package_looking-glass-rc() {
 	pkgdesc="A client application for accessing the LookingGlass IVSHMEM device of a VM"
-	depends=('binutils' 'fontconfig' 'gcc-libs' 'glibc' 'gmp' 'libegl' 'libgl'
-		'libpipewire' 'libpulse' 'libsamplerate' 'libx11' 'libxcursor'
-		'libxfixes' 'libxi' 'libxinerama' 'libxkbcommon' 'libxpresent'
-		'libxss' 'nettle' 'wayland' 'zlib' 'zstd' 'libsframe.so')
+	depends=('fontconfig' 'fuse3' 'glibc' 'gmp' 'hicolor-icon-theme' 'libdecor' 'libegl'
+		'libelf' 'libgcc' 'libgl' 'libpipewire' 'libpulse' 'libsamplerate' 'libstdc++' 'libunwind'
+		'libx11' 'libxcursor' 'libxfixes' 'libxi' 'libxinerama' 'libxkbcommon' 'libxpresent'
+		'libxrandr' 'libxss' 'nettle' 'usbredir' 'wayland')
+	# Preserve the client's own split debug file and its crash backtrace debuglink.
+	options=('!strip' '!debug')
 	provides=("${_pkgname}")
 	conflicts=("${_pkgname}")
 	cd "${srcdir}/${_lgdir}/client/build"
 	make DESTDIR="${pkgdir}" install
+	strip --strip-unneeded "${pkgdir}/usr/bin/looking-glass-client"
 }
 
 package_looking-glass-rc-module-dkms() {
 	pkgdesc="A kernel module that implements a basic interface to the IVSHMEM device for when using LookingGlass in VM->VM mode"
+	arch=('any')
 	depends=('dkms')
 	provides=("${_pkgname}-module-dkms")
 	conflicts=("${_pkgname}-module-dkms")
 	cd "${srcdir}/${_lgdir}/module"
-	install -Dm644 -t "${pkgdir}/usr/src/${_pkgname}-${_pkgver}" \
+	install -Dm644 -t "${pkgdir}/usr/src/kvmfr-${pkgver}" \
 		Makefile \
 		dkms.conf \
 		kvmfr.{h,c}
+	sed -i "s/^PACKAGE_VERSION=.*/PACKAGE_VERSION=\"${pkgver}\"/" \
+		"${pkgdir}/usr/src/kvmfr-${pkgver}/dkms.conf"
 }
 
 package_looking-glass-rc-host() {
 	pkgdesc="Linux host application for pushing frame data to the LookingGlass IVSHMEM device"
-	depends=('binutils' 'gcc-libs' 'glib2' 'glibc'
-		'libpipewire' 'libxcb' 'zlib' 'zstd')
+	depends=('glib2' 'glibc' 'libelf' 'libgcc' 'libpipewire' 'libunwind' 'libxcb')
 	provides=("${_pkgname}-host")
 	conflicts=("${_pkgname}-host")
 	cd "${srcdir}/${_lgdir}/host/build"
@@ -73,7 +78,7 @@ package_looking-glass-rc-host() {
 
 package_obs-plugin-looking-glass-rc() {
 	pkgdesc="Plugin for OBS Studio to stream directly from Looking Glass without having to record the Looking Glass client"
-	depends=('glibc' 'obs-studio')
+	depends=('glibc' 'libelf' 'libunwind' 'obs-studio')
 	provides=("obs-plugin-${_pkgname}")
 	conflicts=("obs-plugin-${_pkgname}")
 	install -Dm644 -t "${pkgdir}/usr/lib/obs-plugins" \
