@@ -1,0 +1,34 @@
+--- a/src/slic3r/GUI/FilamentBitmapUtils.cpp
++++ b/src/slic3r/GUI/FilamentBitmapUtils.cpp
+@@ -353,9 +353,18 @@
+     return bdc.bitmap;
+ }
+ 
+-wxBitmap create_filament_bitmap(const std::vector<wxColour>& colors, const wxSize& size, bool force_gradient)
++wxBitmap create_filament_bitmap(const std::vector<wxColour>& in_colors, const wxSize& size, bool force_gradient)
+ {
+-    if (colors.empty()) return wxNullBitmap;
++    if (in_colors.empty()) return wxNullBitmap;
++
++    // An empty or unparsable color string (e.g. an empty AMS tray) gives an
++    // invalid wxColour, whose accessors assert. Draw it as fully transparent,
++    // which is what those accessors return when the assertions are disabled.
++    std::vector<wxColour> colors(in_colors);
++    for (auto &c : colors) {
++        if (!c.IsOk())
++            c = wxColour(0, 0, 0, wxALPHA_TRANSPARENT);
++    }
+ 
+     if (force_gradient && colors.size() >= 2) {
+         return create_gradient_filament_bitmap(colors, size);
+--- a/src/slic3r/GUI/wxExtensions.cpp
++++ b/src/slic3r/GUI/wxExtensions.cpp
+@@ -785,7 +785,7 @@
+             dc.SetBackgroundMode(wxTRANSPARENT);
+ 
+             auto size   = dc.GetTextExtent(wxString(label));
+-            if (clr.Alpha() == 0)
++            if (!clr.IsOk() || clr.Alpha() == 0)
+                 dc.SetTextForeground(*wxBLACK);
+             else
+                 dc.SetTextForeground(clr.GetLuminance() < 0.51 ? *wxWHITE : *wxBLACK);

@@ -40,6 +40,8 @@ source=(
   '0008-Load-the-network-plugin-from-a-system-directory.patch'
   '0009-Fix-size_t-arguments-to-d-in-wxString-Format.patch'
   '0010-Detach-printer-preset-widgets-before-relayout.patch'
+  '0011-Treat-invalid-filament-colours-as-transparent.patch'
+  '0012-Pass-a-double-to-f-in-the-PA-calibration-range.patch'
   "OpenMeshCraft-$_omc_commit.tar.gz::https://github.com/bambulab/OpenMeshCraft/archive/$_omc_commit.tar.gz"
   'openmeshcraft-system-deps.patch'
 )
@@ -55,6 +57,8 @@ sha256sums=('39175631bcd01e942e0936fd3610a9c4bd43b5920768eda0bb365b00985537b0'
             '89f2e89017903359f9ddc58c9def5a9c80623aefc9b229a5ffe4c6e08b153e5e'
             'a59eb4e4e22d13025e72a35bd8601517a0230f6735789cc98bbd47581003d797'
             'fdba65341c300f6b08f1eeb1d9e017621a70c9db451d512e14656f30e571decc'
+            '5ff5c090875914a3272ae79ae947216a20a9068fb2e7d41e8f8e16f9fbd2fa79'
+            'edddfe8edf33cefc99d49a72af1d0b133d1c91797f7170489c8b38583551ea15'
             'b8978c9258b400b101ca6828633f9a76dfef3dd3f776da80d57e15760a48a207'
             'ea7442716608a58c53f8e8dc3b72d97e3635885088b7f6b2e3c9228e05485b69')
 
@@ -69,6 +73,8 @@ prepare() {
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0008-Load-the-network-plugin-from-a-system-directory.patch
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0009-Fix-size_t-arguments-to-d-in-wxString-Format.patch
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0010-Detach-printer-preset-widgets-before-relayout.patch
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0011-Treat-invalid-filament-colours-as-transparent.patch
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0012-Pass-a-double-to-f-in-the-PA-calibration-range.patch
 
   mkdir -p BambuStudio-$_raw_pkgver/build
 

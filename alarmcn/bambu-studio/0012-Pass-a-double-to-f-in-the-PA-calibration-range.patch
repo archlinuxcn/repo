@@ -1,0 +1,16 @@
+--- a/src/slic3r/GUI/CalibrationWizardPresetPage.cpp
++++ b/src/slic3r/GUI/CalibrationWizardPresetPage.cpp
+@@ -2399,11 +2399,11 @@
+                 }
+ 
+                 if (extruder_type == ExtruderType::etBowden) {
+-                    values.push_back(wxString::Format(wxT("%.0f"), 0));
++                    values.push_back(wxString::Format(wxT("%.0f"), 0.0));
+                     values.push_back(wxString::Format(wxT("%.1f"), 0.5));
+                     values.push_back(wxString::Format(wxT("%.2f"), 0.05));
+                 } else {
+-                    values.push_back(wxString::Format(wxT("%.0f"), 0));
++                    values.push_back(wxString::Format(wxT("%.0f"), 0.0));
+                     values.push_back(wxString::Format(wxT("%.2f"), 0.05));
+                     values.push_back(wxString::Format(wxT("%.3f"), 0.005));
+                 }
