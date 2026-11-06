@@ -1,0 +1,166 @@
+--- a/src/slic3r/CMakeLists.txt
++++ b/src/slic3r/CMakeLists.txt
+@@ -990,3 +990,10 @@
+ 
+ # Add a definition so that we can tell we are compiling slic3r.
+ target_compile_definitions(libslic3r_gui PRIVATE SLIC3R_CURRENTLY_COMPILING_GUI_MODULE)
++
++set(SLIC3R_SYSTEM_PLUGIN_DIR "" CACHE PATH
++    "System directory to load the network plugins from when the ones in the user data directory are missing or incompatible")
++if (SLIC3R_SYSTEM_PLUGIN_DIR)
++    set_property(SOURCE Utils/NetworkAgent.cpp APPEND PROPERTY
++        COMPILE_DEFINITIONS SLIC3R_SYSTEM_PLUGIN_DIR="${SLIC3R_SYSTEM_PLUGIN_DIR}")
++endif ()
+--- a/src/slic3r/GUI/GUI_App.cpp
++++ b/src/slic3r/GUI/GUI_App.cpp
+@@ -3898,12 +3898,22 @@
+ {
+     int  load_agent_dll       = Slic3r::NetworkAgent::initialize_network_module(false, !app_config->get_bool("ignore_module_cert"));
+     bool create_network_agent = false;
++    // Fall back to the plugin installed in the system directory (if any)
++    // when the one in the user data directory is missing or incompatible.
++    bool try_system           = true;
+ __retry:
+     if (!load_agent_dll) {
+         BOOST_LOG_TRIVIAL(info) << "load dll ok";
+         if (check_networking_version()) {
+             BOOST_LOG_TRIVIAL(info) << "compatibility version";
+             auto bambu_source = Slic3r::NetworkAgent::get_bambu_source_entry();
++            if (!bambu_source && try_system) {
++                int result = Slic3r::NetworkAgent::unload_network_module();
++                BOOST_LOG_TRIVIAL(info) << "can not get bambu source module, unload_network_module, result = " << result;
++                load_agent_dll = Slic3r::NetworkAgent::initialize_network_module(false, false, true);
++                try_system = false;
++                goto __retry;
++            }
+             if (!bambu_source) {
+                 BOOST_LOG_TRIVIAL(info) << "can not get bambu source module!";
+                 m_networking_compatible = false;
+@@ -3921,6 +3931,13 @@
+                 try_backup = false;
+                 goto __retry;
+             }
++            if (try_system) {
++                int result = Slic3r::NetworkAgent::unload_network_module();
++                BOOST_LOG_TRIVIAL(info) << "version mismatch, unload_network_module, result = " << result;
++                load_agent_dll = Slic3r::NetworkAgent::initialize_network_module(false, false, true);
++                try_system = false;
++                goto __retry;
++            }
+             BOOST_LOG_TRIVIAL(info) << "version dismatch, need upload network module";
+             if (app_config->get("installed_networking") == "1") {
+                 m_networking_need_update = true;
+@@ -3928,6 +3945,11 @@
+         }
+     } else {
+         BOOST_LOG_TRIVIAL(info) << "load dll failed";
++        if (try_system) {
++            load_agent_dll = Slic3r::NetworkAgent::initialize_network_module(false, false, true);
++            try_system = false;
++            goto __retry;
++        }
+         if (app_config->get("installed_networking") == "1") {
+             BOOST_LOG_TRIVIAL(info) << "need upload network module";
+             m_networking_need_update = true;
+--- a/src/slic3r/GUI/WebGuideDialog.cpp
++++ b/src/slic3r/GUI/WebGuideDialog.cpp
+@@ -1446,7 +1446,10 @@
+         m_Region = wxGetApp().app_config->get("region");
+         m_ProfileJson["region"] = m_Region;
+ 
+-        m_ProfileJson["network_plugin_install"] = wxGetApp().app_config->get("app","installed_networking");
++        // A compatible plugin may be loaded from the system plugin directory
++        // without ever being installed by the user.
++        m_ProfileJson["network_plugin_install"] = wxGetApp().is_compatibility_version() ? "1" :
++            wxGetApp().app_config->get("app","installed_networking");
+         m_ProfileJson["network_plugin_compability"] = wxGetApp().is_compatibility_version() ? "1" : "0";
+         network_plugin_ready = wxGetApp().is_compatibility_version();
+     }
+--- a/src/slic3r/Utils/NetworkAgent.cpp
++++ b/src/slic3r/Utils/NetworkAgent.cpp
+@@ -27,6 +27,17 @@
+ static void* networking_module = NULL;
+ static void* source_module = NULL;
+ #endif
++// Whether networking_module was loaded from SLIC3R_SYSTEM_PLUGIN_DIR
++static bool networking_module_is_system = false;
++
++static boost::filesystem::path get_plugin_folder()
++{
++#ifdef SLIC3R_SYSTEM_PLUGIN_DIR
++    if (networking_module_is_system)
++        return boost::filesystem::path(SLIC3R_SYSTEM_PLUGIN_DIR);
++#endif
++    return boost::filesystem::path(data_dir()) / "plugins";
++}
+ 
+ 
+ func_check_debug_consistent         NetworkAgent::check_debug_consistent_ptr = nullptr;
+@@ -202,15 +213,24 @@
+ }
+ 
+ 
+-int NetworkAgent::initialize_network_module(bool using_backup, bool validate_cert)
++int NetworkAgent::initialize_network_module(bool using_backup, bool validate_cert, bool using_system)
+ {
+     //int ret = -1;
+     std::string library;
+-    std::string data_dir_str = data_dir();
+-    boost::filesystem::path data_dir_path(data_dir_str);
+-    auto plugin_folder = data_dir_path / "plugins";
++    networking_module_is_system = false;
++    auto plugin_folder = get_plugin_folder();
+ 
+-    if (using_backup) {
++    if (using_system) {
++#ifdef SLIC3R_SYSTEM_PLUGIN_DIR
++        plugin_folder = boost::filesystem::path(SLIC3R_SYSTEM_PLUGIN_DIR);
++#else
++        return -1;
++#endif
++        // Installed by the system package manager, no signature to check
++        validate_cert = false;
++        BOOST_LOG_TRIVIAL(info) << "loading network module from system directory " << plugin_folder.string();
++    }
++    else if (using_backup) {
+         plugin_folder = plugin_folder/"backup";
+     }
+     std::optional<SignerSummary> self_cert_summary, module_cert_summary;
+@@ -297,6 +317,7 @@
+         return -1;
+     }
+     BOOST_LOG_TRIVIAL(info) << boost::format("successfully loaded library, using_backup %1%, module %2%")%using_backup %networking_module;
++    networking_module_is_system = using_system;
+ 
+     // load file transfer interface
+     InitFTModule(networking_module);
+@@ -459,6 +480,7 @@
+         source_module = NULL;
+     }
+ #endif
++    networking_module_is_system = false;
+ 
+     check_debug_consistent_ptr        =  nullptr;
+     get_version_ptr                   =  nullptr;
+@@ -596,9 +618,7 @@
+ 
+     //int ret = -1;
+     std::string library;
+-    std::string data_dir_str = data_dir();
+-    boost::filesystem::path data_dir_path(data_dir_str);
+-    auto plugin_folder = data_dir_path / "plugins";
++    auto plugin_folder = get_plugin_folder();
+ #if defined(_MSC_VER) || defined(_WIN32)
+     wchar_t lib_wstr[128];
+ 
+--- a/src/slic3r/Utils/NetworkAgent.hpp
++++ b/src/slic3r/Utils/NetworkAgent.hpp
+@@ -146,7 +146,7 @@
+ 
+ public:
+     static std::string get_libpath_in_current_directory(std::string library_name);
+-    static int initialize_network_module(bool using_backup = false, bool validate_cert = true);
++    static int initialize_network_module(bool using_backup = false, bool validate_cert = true, bool using_system = false);
+     static int unload_network_module();
+ #if defined(_MSC_VER) || defined(_WIN32)
+     static HMODULE get_bambu_source_entry();

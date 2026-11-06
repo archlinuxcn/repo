@@ -19,6 +19,7 @@ depends=(
   'boost-libs' 'onetbb' 'glew' 'glfw' 'cereal' 'nlopt' 'openvdb' 'libnoise'
   'cgal' 'opencv' 'assimp' 'opencascade' 'wxwidgets-gtk3' 'libharu' 'curl'
 )
+optdepends=('open-bamboo-networking: open-source network plugin, used when the official one is not installed')
 makedepends=('cmake' 'extra-cmake-modules' 'git' 'libxkbcommon' 'libxkbcommon-x11' 'wayland-protocols' 'nasm' 'yasm' 'boost' 'nodejs' 'pnpm')
 # add '!lto' or ffmpeg build fails exact the same way described in this thread
 # https://bbs.archlinux.org/viewtopic.php?id=305489
@@ -33,6 +34,7 @@ source=(
   '0005-Support-system-libharu-header-layout.patch'
   '0006-Disable-wxWidgets-sizer-consistency-checks.patch'
   '0007-Fix-null-window-in-topbar-button-bitmap-lookup.patch'
+  '0008-Load-the-network-plugin-from-a-system-directory.patch'
 )
 sha256sums=('39175631bcd01e942e0936fd3610a9c4bd43b5920768eda0bb365b00985537b0'
             '06137b1a4034f23fb5e55f9f291a30b28ed48c8d019982f53d182b4232d2cb41'
@@ -42,7 +44,8 @@ sha256sums=('39175631bcd01e942e0936fd3610a9c4bd43b5920768eda0bb365b00985537b0'
             'b4e18468a8f1fd34782864acb22efaf7f3d9a88cfd1b80ac5bcac882616efe84'
             '97b9d618ac22aa00231c9568e899fcefed56882d6a9c7fbf56abd6e683009af7'
             'bb5393d023abd4c4d41209518eea58d02beeed98b418bc238e9997bf65670aaa'
-            'e3d1fa28eddd753c7b7846cd2a34abc0c918d5a1a770225f4f45bf8c8a4bf4b9')
+            'e3d1fa28eddd753c7b7846cd2a34abc0c918d5a1a770225f4f45bf8c8a4bf4b9'
+            '89f2e89017903359f9ddc58c9def5a9c80623aefc9b229a5ffe4c6e08b153e5e')
 
 prepare() {
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0001-src-slic3r-CMakeLists.txt-avoid-linking-to-the-depre.patch
@@ -52,6 +55,7 @@ prepare() {
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0005-Support-system-libharu-header-layout.patch
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0006-Disable-wxWidgets-sizer-consistency-checks.patch
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0007-Fix-null-window-in-topbar-button-bitmap-lookup.patch
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0008-Load-the-network-plugin-from-a-system-directory.patch
   mkdir -p \
         BambuStudio_deps \
         BambuStudio-$_raw_pkgver/build \
@@ -77,7 +81,8 @@ build() {
         -DLIBNOISE_INCLUDE_DIR=/usr/include/noise \
         -DLIBNOISE_LIBRARY=/usr/lib/libnoise.so \
         -DFLATPAK=On \
-        -DSLIC3R_ALLOW_MCUT_BOOLEAN=ON
+        -DSLIC3R_ALLOW_MCUT_BOOLEAN=ON \
+        -DSLIC3R_SYSTEM_PLUGIN_DIR=/usr/lib/bambu-studio/plugins
   cmake --build . --config Release
 }
 
