@@ -1,7 +1,7 @@
 # Maintainer: Integral <integral@archlinuxcn.org>
 
 pkgname=clin-rs
-pkgver=0.13.2
+pkgver=0.14.1
 pkgrel=1
 pkgdesc="Feature-packed TUI note management app inspired by Obsidian"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ license=('GPL-3.0-only')
 depends=('glibc' 'hicolor-icon-theme' 'libgcc' 'libgit2')
 makedepends=('cargo')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('7a0ae7c0f60d81b05ac3e9f08981642838bd89f2c14ad421f846b093cc7d13ce')
+sha256sums=('03ca17bd95aa8cc2f796826e25c4ac40fec4025dbd6f7ab980e6817001d4db96')
 options=('!lto')
 
 prepare() {
