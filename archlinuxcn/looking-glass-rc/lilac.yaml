@@ -15,5 +15,6 @@ update_on:
     from_pattern: "-"
     to_pattern: ""
   - source: alpm
-    alpm: binutils
-    provided: libsframe.so
+    alpm: obs-studio
+    from_pattern: '^(\d+)\..*'
+    to_pattern: '\1'
