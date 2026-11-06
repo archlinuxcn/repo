@@ -30,7 +30,7 @@ prepare() {
 	popd
 
 	cd "${pkgname}-${pkgver}/"
-	jq '.bundle.createUpdaterArtifacts = false | del(.plugins.updater)' src-tauri/tauri.conf.json | sponge src-tauri/tauri.conf.json
+	jq '.bundle.createUpdaterArtifacts = false | .plugins.updater.endpoints = []' src-tauri/tauri.conf.json | sponge src-tauri/tauri.conf.json
 	pnpm i
 
 	cd src-tauri
