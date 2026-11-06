@@ -32,6 +32,7 @@ source=(
   '0004-Fix-build-with-newer-Boost.patch'
   '0005-Support-system-libharu-header-layout.patch'
   '0006-Disable-wxWidgets-sizer-consistency-checks.patch'
+  '0007-Fix-null-window-in-topbar-button-bitmap-lookup.patch'
 )
 sha256sums=('39175631bcd01e942e0936fd3610a9c4bd43b5920768eda0bb365b00985537b0'
             '06137b1a4034f23fb5e55f9f291a30b28ed48c8d019982f53d182b4232d2cb41'
@@ -40,7 +41,8 @@ sha256sums=('39175631bcd01e942e0936fd3610a9c4bd43b5920768eda0bb365b00985537b0'
             '488b31075f11052822986c96b7af6862c7557ae1ba30b0844b4f3552b18a769a'
             'b4e18468a8f1fd34782864acb22efaf7f3d9a88cfd1b80ac5bcac882616efe84'
             '97b9d618ac22aa00231c9568e899fcefed56882d6a9c7fbf56abd6e683009af7'
-            'bb5393d023abd4c4d41209518eea58d02beeed98b418bc238e9997bf65670aaa')
+            'bb5393d023abd4c4d41209518eea58d02beeed98b418bc238e9997bf65670aaa'
+            'e3d1fa28eddd753c7b7846cd2a34abc0c918d5a1a770225f4f45bf8c8a4bf4b9')
 
 prepare() {
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0001-src-slic3r-CMakeLists.txt-avoid-linking-to-the-depre.patch
@@ -49,6 +51,7 @@ prepare() {
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0004-Fix-build-with-newer-Boost.patch
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0005-Support-system-libharu-header-layout.patch
   patch -Np1 -d BambuStudio-$_raw_pkgver < 0006-Disable-wxWidgets-sizer-consistency-checks.patch
+  patch -Np1 -d BambuStudio-$_raw_pkgver < 0007-Fix-null-window-in-topbar-button-bitmap-lookup.patch
   mkdir -p \
         BambuStudio_deps \
         BambuStudio-$_raw_pkgver/build \

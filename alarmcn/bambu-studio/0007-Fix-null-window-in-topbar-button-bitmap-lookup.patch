@@ -1,0 +1,17 @@
+--- a/src/slic3r/GUI/BBLTopbar.cpp
++++ b/src/slic3r/GUI/BBLTopbar.cpp
+@@ -95,9 +95,11 @@
+     int bmpX = 0, bmpY = 0;
+     int textX = 0, textY = 0;
+ 
+-    const wxBitmap& bmp = item.GetState() & wxAUI_BUTTON_STATE_DISABLED
+-        ? item.GetDisabledBitmap()
+-        : item.GetBitmap();
++    // item.GetBitmap() uses the item's own window, which is only set for
++    // control items, so use the toolbar window to pick the bitmap scale.
++    const wxBitmap bmp = item.GetState() & wxAUI_BUTTON_STATE_DISABLED
++        ? item.GetDisabledBitmapFor(wnd)
++        : item.GetBitmapFor(wnd);
+ 
+     const wxSize bmpSize = bmp.IsOk() ? bmp.GetScaledSize() : wxSize(0, 0);
+ 
