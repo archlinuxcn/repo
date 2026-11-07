@@ -2,10 +2,7 @@ diff --git a/packages/coding-agent/scripts/build-binary.ts b/packages/coding-age
 index 746c00f..7339643 100644
 --- a/packages/coding-agent/scripts/build-binary.ts
 +++ b/packages/coding-agent/scripts/build-binary.ts
-@@ -90,7 +90,7 @@ async function main(): Promise<void> {
- 			entrypoint: path.join(packageDir, "src", "cli.ts"),
- 			outfile: outputPath,
- 			transformersVersion,
+@@ -90,4 +90,4 @@ async function main(): Promise<void> {
 -			native: crossBuild ?? { platform: process.platform, arch: process.arch },
 +			native: null,
  			target: crossBuild?.target,
