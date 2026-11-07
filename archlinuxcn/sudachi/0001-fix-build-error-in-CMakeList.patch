@@ -1,0 +1,78 @@
+From 69fd5143491f03254b5873fabdc3a5a5ea8416b7 Mon Sep 17 00:00:00 2001
+From: sukanka <su975853527@gmail.com>
+Date: Sat, 5 Apr 2025 19:07:45 +0800
+Subject: [PATCH 1/7] fix build error in  CMakeList
+
+build external after find package to skip unsupported cmake command
+
+change USE_SDL3_FROM_EXTERNALS to option to use system sdl3
+
+strip package ver so system packages work
+
+fix build error caused by Werror=conversion
+
+4	5	CMakeLists.txt
+1	1	src/input_common/CMakeLists.txt
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6d1b186..f6d072f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,7 +15,7 @@ include(CTest)
+ # Set bundled sdl3/qt as dependent options.
+ # OFF by default, but if ENABLE_SDL3 and MSVC are true then ON
+ option(ENABLE_SDL3 "Enable the SDL3 frontend" ON)
+-set(USE_SDL3_FROM_EXTERNALS "Uses SDL3 from the externals directory" ON)
++option(USE_SDL3_FROM_EXTERNALS "Uses SDL3 from the externals directory" ON)
+ CMAKE_DEPENDENT_OPTION(SUDACHI_USE_BUNDLED_SDL3 "Download bundled SDL3 binaries" ON "ENABLE_SDL3;MSVC" OFF)
+ # On Linux system SDL3 is likely to be lacking HIDAPI support which have drawbacks but is needed for SDL motion
+ CMAKE_DEPENDENT_OPTION(SUDACHI_USE_EXTERNAL_SDL3 "Compile external SDL3" ON "ENABLE_SDL3;NOT MSVC" OFF)
+@@ -304,13 +304,12 @@ set(FFmpeg_COMPONENTS
+     avutil
+     swscale)
+ 
+-add_subdirectory(externals)
+ 
+ # Enforce the search mode of non-required packages for better and shorter failure messages
+ find_package(Boost 1.79.0 REQUIRED context)
+ find_package(enet 1.3 MODULE)
+ find_package(fmt 9 REQUIRED)
+-find_package(LLVM 17.0.2 MODULE COMPONENTS Demangle)
++find_package(LLVM MODULE COMPONENTS Demangle)
+ find_package(lz4 REQUIRED)
+ find_package(nlohmann_json 3.8 REQUIRED)
+ find_package(Opus 1.3 MODULE)
+@@ -355,7 +354,7 @@ endif()
+ 
+ if (ENABLE_WEB_SERVICE)
+     find_package(cpp-jwt 1.4 CONFIG)
+-    find_package(httplib 0.12 MODULE COMPONENTS OpenSSL)
++    find_package(httplib MODULE COMPONENTS OpenSSL)
+ endif()
+ 
+ if (SUDACHI_TESTS)
+@@ -707,7 +706,7 @@ if (SUDACHI_USE_FASTER_LD AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+         add_link_options("-fuse-ld=lld")
+     endif()
+ endif()
+-
++add_subdirectory(externals)
+ add_subdirectory(src)
+ 
+ # Set sudachi project or sudachi-cmd project as default StartUp Project in Visual Studio depending on whether QT is enabled or not
+diff --git a/src/input_common/CMakeLists.txt b/src/input_common/CMakeLists.txt
+index 54f7741..b460f17 100644
+--- a/src/input_common/CMakeLists.txt
++++ b/src/input_common/CMakeLists.txt
+@@ -43,7 +43,7 @@ if (MSVC)
+     )
+ else()
+     target_compile_options(input_common PRIVATE
+-        -Werror=conversion
++        -Wno-error=conversion
+     )
+ endif()
+ 
+-- 
+2.49.0
+
