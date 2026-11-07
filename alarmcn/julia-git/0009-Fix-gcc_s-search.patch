@@ -1,4 +1,4 @@
-From 99f88285e2477dbd732c1b5f3b38710c1164d3a7 Mon Sep 17 00:00:00 2001
+From 0a588679678f47d4e036fe754add4a3d1c93b78c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Wed, 5 Aug 2026 00:49:20 -0400
 Subject: [PATCH 9/9] Fix gcc_s search
@@ -8,10 +8,10 @@ Subject: [PATCH 9/9] Fix gcc_s search
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/base/linking.jl b/base/linking.jl
-index 043ad3e4c9..e6eaf4d92d 100644
+index 14fffcaedd..6376200379 100644
 --- a/base/linking.jl
 +++ b/base/linking.jl
-@@ -207,7 +207,7 @@ function link_image_cmd(path, out)
+@@ -216,7 +216,7 @@ function link_image_cmd(path, out; is_sysimage::Bool = false)
          libc           = _find_loaded(r"/(?:libc|ld-musl-[^/]+)\.so\.\d+$")     # system libc
          ld_linux       = _find_loaded(r"/ld-(?:linux|musl|elf)[^/]*\.so\.\d+$") # system ld
          libc_nonshared = _find_static("libc_nonshared.a")

@@ -1,11 +1,11 @@
-From 3ed2a2292da18cad2bff5322d274cc6a9863d164 Mon Sep 17 00:00:00 2001
+From 0f12e2002515db8062e56266771131410f7a3296 Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
 Date: Tue, 22 Jun 2021 10:35:16 -0400
 Subject: [PATCH 3/9] Clear soname and hard code system lib path
 
 ---
- .../src/CompilerSupportLibraries_jll.jl       | 150 ++---------
- stdlib/GMP_jll/src/GMP_jll.jl                 |  45 +---
+ .../src/CompilerSupportLibraries_jll.jl       | 157 ++---------
+ stdlib/GMP_jll/src/GMP_jll.jl                 |  50 +---
  stdlib/LLD_jll/src/LLD_jll.jl                 |  63 +----
  .../src/LLVMLibUnwind_jll.jl                  |  17 +-
  stdlib/LibCURL_jll/src/LibCURL_jll.jl         |  36 +--
@@ -18,20 +18,20 @@ Subject: [PATCH 3/9] Clear soname and hard code system lib path
  stdlib/OpenLibm_jll/src/OpenLibm_jll.jl       |  30 +--
  stdlib/OpenSSL_jll/src/OpenSSL_jll.jl         |  51 +---
  stdlib/PCRE2_jll/src/PCRE2_jll.jl             |  29 +-
- stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl | 248 ++----------------
+ stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl | 253 ++----------------
  stdlib/Zlib_jll/src/Zlib_jll.jl               |  29 +-
  stdlib/Zstd_jll/src/Zstd_jll.jl               |  53 +---
- stdlib/libLLVM_jll/src/libLLVM_jll.jl         |  32 +--
+ stdlib/libLLVM_jll/src/libLLVM_jll.jl         |  34 +--
  .../src/libblastrampoline_jll.jl              |  24 +-
  stdlib/nghttp2_jll/src/nghttp2_jll.jl         |  30 +--
  stdlib/p7zip_jll/src/p7zip_jll.jl             |  30 +--
- 21 files changed, 151 insertions(+), 893 deletions(-)
+ 21 files changed, 151 insertions(+), 912 deletions(-)
 
 diff --git a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-index e13ca0bcf8..78e6f7e1a8 100644
+index da772799e3..78e6f7e1a8 100644
 --- a/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
 +++ b/stdlib/CompilerSupportLibraries_jll/src/CompilerSupportLibraries_jll.jl
-@@ -10,127 +10,24 @@ export libgfortran, libstdcxx, libgomp, libatomic, libgcc_s
+@@ -10,134 +10,24 @@ export libgfortran, libstdcxx, libgomp, libatomic, libgcc_s
  # These get calculated in __init__()
  const PATH = Ref("")
  const PATH_list = String[]
@@ -106,7 +106,10 @@ index e13ca0bcf8..78e6f7e1a8 100644
 -    else
 -        error("CompilerSupportLibraries_jll: Library 'libgfortran' is not available for $(Sys.KERNEL)")
 -    end;
--    dependencies = @static if @isdefined(libquadmath)
+-    # On aarch64 macOS, this library and libstdc++ do not link against libgcc_s
+-    dependencies = @static if Sys.isapple() && Sys.ARCH === :aarch64
+-        LazyLibrary[libquadmath]
+-    elseif @isdefined(libquadmath)
 -        LazyLibrary[libgcc_s, libquadmath]
 -    else
 -        LazyLibrary[libgcc_s]
@@ -124,7 +127,11 @@ index e13ca0bcf8..78e6f7e1a8 100644
 -    else
 -        error("CompilerSupportLibraries_jll: Library 'libstdcxx' is not available for $(Sys.KERNEL)")
 -    end;
--    dependencies = LazyLibrary[libgcc_s]
+-    dependencies = @static if Sys.isapple() && Sys.ARCH === :aarch64
+-        LazyLibrary[]
+-    else
+-        LazyLibrary[libgcc_s]
+-    end
 -)
 -
 -libgomp_path::String = ""
@@ -174,7 +181,7 @@ index e13ca0bcf8..78e6f7e1a8 100644
  
  # Conform to LazyJLLWrappers API
  function eager_mode()
-@@ -153,23 +50,6 @@ get_libgfortran_path() = libgfortran_path
+@@ -160,23 +50,6 @@ get_libgfortran_path() = libgfortran_path
  get_libstdcxx_path() = libstdcxx_path
  get_libgomp_path() = libgomp_path
  
@@ -199,10 +206,10 @@ index e13ca0bcf8..78e6f7e1a8 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/GMP_jll/src/GMP_jll.jl b/stdlib/GMP_jll/src/GMP_jll.jl
-index e7be670b1a..00a03e70c4 100644
+index 8f704fcef8..00a03e70c4 100644
 --- a/stdlib/GMP_jll/src/GMP_jll.jl
 +++ b/stdlib/GMP_jll/src/GMP_jll.jl
-@@ -12,38 +12,15 @@ export libgmp, libgmpxx
+@@ -12,43 +12,15 @@ export libgmp, libgmpxx
  # These get calculated in __init__()
  const PATH = Ref("")
  const PATH_list = String[]
@@ -221,6 +228,11 @@ index e7be670b1a..00a03e70c4 100644
 -        BundledLazyLibraryPath("libgmp.10.dylib")
 -    else
 -        BundledLazyLibraryPath("libgmp.so.10")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libgcc_s]
+-    else
+-        LazyLibrary[]
 -    end
 -)
 +const libgmp_path = "/usr/lib/libgmp.so"
@@ -248,7 +260,7 @@ index e7be670b1a..00a03e70c4 100644
  
  function eager_mode()
      @static if @isdefined CompilerSupportLibraries_jll
-@@ -58,14 +35,6 @@ is_available() = true
+@@ -63,14 +35,6 @@ is_available() = true
  get_libgmp_path() = libgmp_path
  get_libgmpxx_path() = libgmpxx_path
  
@@ -907,10 +919,10 @@ index 3734c5424a..d6b40cac0f 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
-index 33aa41d739..677e10dd31 100644
+index 66fe54a7e0..677e10dd31 100644
 --- a/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
 +++ b/stdlib/SuiteSparse_jll/src/SuiteSparse_jll.jl
-@@ -14,216 +14,45 @@ export libamd, libbtf, libcamd, libccolamd, libcholmod, libcolamd, libklu, libld
+@@ -14,221 +14,45 @@ export libamd, libbtf, libcamd, libccolamd, libcholmod, libcolamd, libklu, libld
  # Man I can't wait until these are automatically handled by an in-Base JLLWrappers clone.
  const PATH = Ref("")
  const PATH_list = String[]
@@ -931,6 +943,11 @@ index 33aa41d739..677e10dd31 100644
 -        BundledLazyLibraryPath("libsuitesparseconfig.so.7")
 -    else
 -        error("SuiteSparse_jll: Library 'libsuitesparseconfig' is not available for $(Sys.KERNEL)")
+-    end;
+-    dependencies = if Sys.iswindows() && Sys.WORD_SIZE == 32
+-        LazyLibrary[libgcc_s]
+-    else
+-        LazyLibrary[]
 -    end
 -)
 +const libsuitesparseconfig_path = "/usr/lib/libsuitesparseconfig.so"
@@ -1154,7 +1171,7 @@ index 33aa41d739..677e10dd31 100644
  
  function eager_mode()
      @static if @isdefined CompilerSupportLibraries_jll
-@@ -260,29 +89,6 @@ get_libspqr_path() = libspqr_path
+@@ -265,29 +89,6 @@ get_libspqr_path() = libspqr_path
  get_libsuitesparseconfig_path() = libsuitesparseconfig_path
  get_libumfpack_path() = libumfpack_path
  
@@ -1317,10 +1334,10 @@ index 1fbfd18446..5139d08ed4 100644
      precompile(eager_mode, ())
      precompile(is_available, ())
 diff --git a/stdlib/libLLVM_jll/src/libLLVM_jll.jl b/stdlib/libLLVM_jll/src/libLLVM_jll.jl
-index aabfbd5327..bbabb635fc 100644
+index c0f17635b1..bbabb635fc 100644
 --- a/stdlib/libLLVM_jll/src/libLLVM_jll.jl
 +++ b/stdlib/libLLVM_jll/src/libLLVM_jll.jl
-@@ -14,27 +14,12 @@ export libLLVM
+@@ -14,29 +14,12 @@ export libLLVM
  # These get calculated in __init__()
  const PATH = Ref("")
  const PATH_list = String[]
@@ -1344,6 +1361,8 @@ index aabfbd5327..bbabb635fc 100644
 -        LazyLibrary[libz, libzstd]
 -    elseif Sys.isfreebsd()
 -        LazyLibrary[libz, libzstd, libgcc_s]
+-    elseif Sys.iswindows() && Sys.WORD_SIZE == 64
+-        LazyLibrary[libz, libzstd, libstdcxx]
 -    else
 -        LazyLibrary[libz, libzstd, libstdcxx, libgcc_s]
 -    end
@@ -1353,7 +1372,7 @@ index aabfbd5327..bbabb635fc 100644
  
  function eager_mode()
      @static if @isdefined CompilerSupportLibraries_jll
-@@ -49,13 +34,6 @@ is_available() = true
+@@ -51,13 +34,6 @@ is_available() = true
  # JLLWrappers path compatibility accessor
  get_libLLVM_path() = libLLVM_path
  
