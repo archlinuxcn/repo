@@ -73,11 +73,11 @@ fi
 
 pkgbase=linux-xanmod-edge
 _major=7.3
-pkgver=${_major}.1
+pkgver=${_major}.3
 _branch=7.x
 xanmod=1
 _revision=
-_sf_branch=edge
+_sf_branch=main
 pkgrel=${xanmod}
 pkgdesc='Linux Xanmod - Rolling Release [EDGE]'
 url="http://www.xanmod.org/"
@@ -124,7 +124,7 @@ done
 
 sha256sums=('87363c24f10e06321eb362765521094e94471f6bff8bce2d6b3e40f39f004953'
             'SKIP'
-            'f5238a88337a2f06c43c31421d05c770cca1b99ec934296eeafe2bc0128cb5e3'
+            'a8996c759ae6e239028449f11cf369bf7818f38bb4dc8486915684c51f7e54c9'
             'f4acc1760990c54348a029315d1505ccb7c7270cd70a9aeb728bffcced51e767')
 
 export KBUILD_BUILD_HOST=${KBUILD_BUILD_HOST:-archlinux}
