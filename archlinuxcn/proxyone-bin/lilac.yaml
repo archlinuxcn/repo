@@ -1,0 +1,14 @@
+maintainers:
+  - github: zhuchentong
+    email: ProxyOne Maintainer <2037630@gmail.com>
+
+build_prefix: extra-x86_64
+
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: zhuchentong/proxy-one
+    use_latest_release: true
+    prefix: v

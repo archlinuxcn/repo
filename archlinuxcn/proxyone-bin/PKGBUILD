@@ -1,0 +1,29 @@
+# Maintainer: ProxyOne Maintainer <2037630@gmail.com>
+
+pkgname=proxyone-bin
+_pkgname=proxyone
+pkgver=0.0.3
+pkgrel=1
+pkgdesc="Lightweight proxy failover gateway with a mixed HTTP/SOCKS5 entry"
+arch=('x86_64')
+url="https://github.com/zhuchentong/proxy-one"
+license=('MIT' 'Apache-2.0')
+depends=('glibc' 'libgcc' 'gtk3' 'glib2' 'gdk-pixbuf2' 'openssl')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+options=('!strip')
+source=(
+  "${_pkgname}-linux-x64.tar.gz::${url}/releases/download/v${pkgver}/${_pkgname}-linux-x64.tar.gz"
+  "LICENSE-MIT::https://raw.githubusercontent.com/zhuchentong/proxy-one/v${pkgver}/LICENSE-MIT"
+  "LICENSE-APACHE::https://raw.githubusercontent.com/zhuchentong/proxy-one/v${pkgver}/LICENSE-APACHE"
+)
+sha256sums=('3145db0647606674f57f38aea33bf5f624fff5fb828cf11126dafea558619df4'
+            'a36e7cb54eba94dec949b3e882556c8b091a080ceba716cefcd4626a815bf373'
+            '496103d25dd6a6844cdbadaf4a70055365f19afff77678352d90bb271dc0f42e')
+
+package() {
+  install -Dm755 "${srcdir}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+  install -Dm644 "${srcdir}/README.md" "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+  install -Dm644 "${srcdir}/LICENSE-MIT" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-MIT"
+  install -Dm644 "${srcdir}/LICENSE-APACHE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-APACHE"
+}
