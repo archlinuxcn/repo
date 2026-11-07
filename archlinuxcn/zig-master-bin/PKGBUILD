@@ -2,7 +2,7 @@
 
 # shellcheck shell=bash
 pkgname=zig-master-bin
-pkgver=0.18.0dev.897+117fd40fb
+pkgver=0.18.0dev.930+1d9e7ec5a
 pkgrel=1
 pkgdesc="A general-purpose programming language and toolchain for maintaining robust, optimal, and reusable software (master release)"
 arch=('aarch64' 'armv7h' 'i686' 'loong64' 'powerpc64le' 'riscv64' 'x86_64')
@@ -17,20 +17,20 @@ options=('!strip')
 _master_version=${pkgver/dev/-dev}
 
 source_aarch64=("https://ziglang.org/builds/zig-aarch64-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-aarch64-linux-${_master_version}.tar.xz.minisig")
-sha256sums_aarch64=('44176d559c8fa9cd15362b8e5e57bdcdb1b3da9148fb4237395fa6c2255f3faf'
-                    'ac10a8b1a594465023729f6c6296063cf87d99ca4118d71ee940078731e8f758')
-sha256sums_armv7h=('bd6c880bec4867af730ea52087b0a08b73d4607cb286b1b862637e1ebbc91172'
-                   '9e22460c6303bcbba30f63b51be1220cd0b44fddd23b8a18ca35c1e70c17a8a6')
-sha256sums_i686=('fc0dd21ce3499322f6c812b7b7473a5ab279267f7a6dce24241226b93a9dc004'
-                 '67960eb854534557e5eaed896dab31f4d8c9b9bbc8c9f2b0c5e33b38da50288a')
-sha256sums_loong64=('41e089ebd83d9436da187e6d74788aad6c1f96f075eee7be89b3150774b88c16'
-                    '2fb488dbf9cc8ca38c5ea3be74d6e2f756779d0feec3a9722f9b813e1880fdcd')
-sha256sums_powerpc64le=('00e57a92207d4bc8740c0db7d1dee7782b6e5f6556fbfb0938c2c2aa144177a1'
-                        '29bcf14b68945a0a0603c096db0b77be897f6785952c98f2ee333e663775746f')
-sha256sums_riscv64=('77d25dc52e6b1466642b588ac229be3226329e1ddc75b11a51fbb853094ce4df'
-                    '2951ecb73f53be8e2bc20e4d6876e7cf7edb09484d8b2da95da0ca2f600c451c')
-sha256sums_x86_64=('21ebe61ed1ea090cc3b0a1af400812fe4f5303b52238314d1b9264f356591065'
-                   'ccd8de9c1393a350630a603b60a5e44b870163bcc10723b9a6e421d9327aa733')
+sha256sums_aarch64=('2e699682487d455c238c2ed81145a3d2800a4960f40ee41f51bf45e487cecfb0'
+                    '653ee2abdb120f2576b2c21ea1742f66149055605a7570a990963ae7aec5cacf')
+sha256sums_armv7h=('65e0d6350eae79d29f0e514339f06c194874c37c6b648c7243727ec5d580de4a'
+                   '3ed5ff5cff27560fa60be2cf55c87959afc14bff3375557f7706f36320a5f9f4')
+sha256sums_i686=('253a4c4d5515084b1e278ba99fc00d49e6a66b4cb276dd221fa89e65285d8e56'
+                 'e9299c827ee8e10e7dbfed2acbd2355fb632711d3a610f0033cb1672642c23d4')
+sha256sums_loong64=('796318758d7311875279b5cb91a5701bbcade98dfdfbf4e40f89dcf1fa9aad57'
+                    '15d631a97c1c379f17c0fc06815c680072812000a19cfa0a09ddf3b6be6a640e')
+sha256sums_powerpc64le=('ef98f2046449690caeb972d06d3b6a3542fbf06308b3aaebd7c3505ee28daae9'
+                        '340b20478bdacd12351e36b46c9619c07375e10a3be3037d6f3aaab34d48f532')
+sha256sums_riscv64=('9127ecf63ce72d216a785b4ebc7f4261056a38d4f35dd0589814aae2ea36126b'
+                    '1c3d2711bdfe11b44ed177119065e5a847cdcdb7f589bed2f02a68b82eaeeaa1')
+sha256sums_x86_64=('2af75c8076792918765eab5a24d436cee3d07535eac82fce1d8361af7191ffe7'
+                   '5b57f3d9148dff7aee5f288fd74b386488812df0863637ebc773bd4280d17f24')
 source_armv7h=("https://ziglang.org/builds/zig-arm-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-arm-linux-${_master_version}.tar.xz.minisig")
 source_i686=("https://ziglang.org/builds/zig-x86-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-x86-linux-${_master_version}.tar.xz.minisig")
 source_loong64=("https://ziglang.org/builds/zig-loongarch64-linux-${_master_version}.tar.xz" "https://ziglang.org/builds/zig-loongarch64-linux-${_master_version}.tar.xz.minisig")
