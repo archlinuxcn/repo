@@ -1,0 +1,146 @@
+diff --git a/applets/digital-clock/CalendarView.qml b/applets/digital-clock/CalendarView.qml
+index 6f2ebd891c..561fc3ddd4 100644
+--- a/applets/digital-clock/CalendarView.qml
++++ b/applets/digital-clock/CalendarView.qml
+@@ -261,6 +261,17 @@ PlasmaExtras.Representation {
+                         // Crashes if the type is declared as eventData (which is Q_GADGET)
+                         required property /*PlasmaCalendar.eventData*/var modelData
+ 
++                        // Prefer LOCATION field; fall back to DESCRIPTION (many feeds leave location empty).
++                        readonly property string agendaSubtitle: {
++                            const loc = modelData.location;
++                            const desc = modelData.description;
++                            const lt = loc !== undefined && loc !== null ? String(loc).trim() : "";
++                            if (lt.length > 0) {
++                                return lt;
++                            }
++                            return desc !== undefined && desc !== null ? String(desc).trim() : "";
++                        }
++
+                         width: ListView.view.width
+ 
+                         leftPadding: calendar.paddings
+@@ -268,7 +279,16 @@ PlasmaExtras.Representation {
+                         text: eventTitle.text
+                         hoverEnabled: true
+                         highlighted: ListView.isCurrentItem
+-                        Accessible.description: modelData.description
++                        Accessible.description: {
++                            const parts = [];
++                            if (modelData.location) {
++                                parts.push(modelData.location);
++                            }
++                            if (modelData.description) {
++                                parts.push(modelData.description);
++                            }
++                            return parts.join("; ");
++                        }
+                         readonly property bool hasTime: {
+                             // Explicitly all-day event
+                             if (modelData.isAllDay) {
+@@ -295,7 +315,16 @@ PlasmaExtras.Representation {
+                         }
+ 
+                         PlasmaComponents.ToolTip {
+-                            text: eventItem.modelData.description
++                            text: {
++                                const parts = [];
++                                if (eventItem.modelData.location) {
++                                    parts.push(eventItem.modelData.location);
++                                }
++                                if (eventItem.modelData.description) {
++                                    parts.push(eventItem.modelData.description);
++                                }
++                                return parts.join("\n\n");
++                            }
+                             visible: text !== "" && eventItem.hovered
+                         }
+ 
+@@ -357,19 +386,42 @@ PlasmaExtras.Representation {
+                                 visible: eventItem.hasTime
+                             }
+ 
+-                            PlasmaComponents.Label {
+-                                id: eventTitle
+-
++                            ColumnLayout {
+                                 Layout.row: 0
+                                 Layout.column: 2
++                                Layout.rowSpan: 2
+                                 Layout.fillWidth: true
++                                spacing: 0
+ 
+-                                elide: Text.ElideRight
+-                                text: eventItem.modelData.title
+-                                textFormat: Text.PlainText
+-                                verticalAlignment: Text.AlignVCenter
+-                                maximumLineCount: 2
+-                                wrapMode: Text.Wrap
++                                PlasmaComponents.Label {
++                                    id: eventTitle
++
++                                    Layout.fillWidth: true
++
++                                    elide: Text.ElideRight
++                                    text: eventItem.modelData.title
++                                    textFormat: Text.PlainText
++                                    verticalAlignment: Text.AlignVCenter
++                                    maximumLineCount: 2
++                                    wrapMode: Text.Wrap
++                                }
++
++                                PlasmaComponents.Label {
++                                    id: eventSubtitle
++
++                                    Layout.fillWidth: true
++
++                                    elide: Text.ElideRight
++                                    // NBSP keeps one subtitle line when location/description are empty so rows align.
++                                    text: eventItem.agendaSubtitle.length > 0 ? eventItem.agendaSubtitle : "\u00a0"
++                                    textFormat: Text.PlainText
++                                    font.pointSize: Math.max(1, Math.round(Kirigami.Theme.defaultFont.pointSize * 0.85))
++                                    font.family: Kirigami.Theme.defaultFont.family
++                                    opacity: 0.75
++                                    maximumLineCount: 2
++                                    wrapMode: Text.Wrap
++                                    Accessible.ignored: eventItem.agendaSubtitle.length === 0
++                                }
+                             }
+                         }
+                     }
+diff --git a/components/calendar/eventdatadecorator.cpp b/components/calendar/eventdatadecorator.cpp
+index c210455831..58faaf4e25 100644
+--- a/components/calendar/eventdatadecorator.cpp
++++ b/components/calendar/eventdatadecorator.cpp
+@@ -43,6 +43,11 @@ QString EventDataDecorator::description() const
+     return m_data.description();
+ }
+ 
++QString EventDataDecorator::location() const
++{
++    return m_data.location();
++}
++
+ QString EventDataDecorator::eventType() const
+ {
+     switch (m_data.type()) {
+diff --git a/components/calendar/eventdatadecorator.h b/components/calendar/eventdatadecorator.h
+index 27c4a91f3b..e8dc333a0e 100644
+--- a/components/calendar/eventdatadecorator.h
++++ b/components/calendar/eventdatadecorator.h
+@@ -23,6 +23,7 @@ class EventDataDecorator
+     Q_PROPERTY(bool isMinor READ isMinor CONSTANT FINAL)
+     Q_PROPERTY(QString title READ title CONSTANT FINAL)
+     Q_PROPERTY(QString description READ description CONSTANT FINAL)
++    Q_PROPERTY(QString location READ location CONSTANT FINAL)
+     Q_PROPERTY(QString eventColor READ eventColor CONSTANT FINAL)
+     Q_PROPERTY(QString eventType READ eventType CONSTANT FINAL)
+ 
+@@ -36,6 +37,7 @@ public:
+     bool isMinor() const;
+     QString title() const;
+     QString description() const;
++    QString location() const;
+     QString eventType() const;
+     QString eventColor() const;
+ 
