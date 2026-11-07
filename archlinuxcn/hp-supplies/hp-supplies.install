@@ -1,0 +1,15 @@
+# Arch: makepkg 的安装脚本（pacman 自动调用）
+post_install() {
+  udevadm control --reload >/dev/null 2>&1 || true
+  udevadm trigger >/dev/null 2>&1 || true
+  echo ">>> 提示: 重新插拔一次 USB 打印机线, 普通用户即可直接访问"
+  echo ">>> 运行: hp-supplies (GUI) 或 hp-supplies --text (终端)"
+}
+
+post_upgrade() {
+  post_install
+}
+
+pre_remove() {
+  true
+}
