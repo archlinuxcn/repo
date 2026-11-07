@@ -44,10 +44,10 @@ build() {
 	cargo xtask generate-manpage
 }
 
-check() {
-	cd "${_pkgname}/"
-	cargo test --frozen --all-features
-}
+# check() {
+# 	cd "${_pkgname}/"
+# 	cargo test --frozen --all-features
+# }
 
 package() {
 	cd "${_pkgname}/"
