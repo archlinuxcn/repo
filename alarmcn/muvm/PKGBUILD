@@ -15,14 +15,19 @@ source=(
   # Allow directories as FEX rootfs layers and use the rootfs managed by
   # fex-pacman (fex-emu-rootfs-pacman) by default when it's set up.
   fex-dir-layers.patch
+  # Allow running as root with --allow-root, for fex-pacman on hosts without
+  # 4K pages.
+  allow-root.patch
 )
 sha256sums=('3cf9ffe550a01ed6438d1f0a4ab31a5b98af4855655f603f71a84d57e7913c3f'
             'bd61ba908048f45e22a02784e3c9bd595307d8a3d838346dab9ca4a1b1217b93'
-            'c9eb03898283656dccac72b86bfd692746da998722e5f7d8ca0e59e76bcee8f8')
+            'c9eb03898283656dccac72b86bfd692746da998722e5f7d8ca0e59e76bcee8f8'
+            '8a867600aa4bdc60ae8ad319aabb88124cb9ef5363620d143b668cd19837eca7')
 
 prepare() {
   cd muvm-muvm-${pkgver}
   patch -Np1 -i ../fex-dir-layers.patch
+  patch -Np1 -i ../allow-root.patch
 }
 
 build() {

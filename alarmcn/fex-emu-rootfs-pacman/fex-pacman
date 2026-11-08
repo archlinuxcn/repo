@@ -14,6 +14,9 @@
 # libraries are looked up in the chroot. Copy those into the rootfs, together
 # with FEXServer, which FEX-Emu starts when there isn't one running.
 #
+# FEX-Emu needs 4K pages, on other hosts (e.g. Apple Silicon) pacman is run in
+# a muvm VM, which has the host root as its root and a 4K page kernel.
+#
 # After a transaction, the overlayfs mask hiding the host-specific parts of the
 # rootfs is regenerated and fex-emu-rootfs.service is restarted to restack.
 
@@ -43,6 +46,16 @@ die() {
 
 run_pacman() {
   pacman --config "$config" "$@"
+}
+
+check_fex() {
+  [[ -x /usr/bin/FEX ]] || die "FEX-Emu is not installed"
+  # 32-bit programs are run by the hooks of some lib32 packages too.
+  local handler
+  for handler in FEX-x86 FEX-x86_64; do
+    grep -qs '^flags: .*F' "/proc/sys/fs/binfmt_misc/$handler" ||
+      die "the $handler binfmt_misc handler isn't registered (with the F flag)"
+  done
 }
 
 # Copy the aarch64 parts of FEX-Emu needed to run x86_64 programs in the
@@ -105,13 +118,6 @@ if (( EUID != 0 )); then
   exec pacman --config "$config" "$@"
 fi
 
-[[ -x /usr/bin/FEX ]] || die "FEX-Emu is not installed"
-# 32-bit programs are run by the hooks of some lib32 packages too.
-for handler in FEX-x86 FEX-x86_64; do
-  grep -qs '^flags: .*F' "/proc/sys/fs/binfmt_misc/$handler" ||
-    die "the $handler binfmt_misc handler isn't registered (with the F flag)"
-done
-
 # FEX-Emu in the chroot must not use the host configuration/rootfs or talk to
 # a FEXServer outside the chroot (the socket is an abstract one so it's shared
 # with the host otherwise). The logging options are kept for debugging.
@@ -125,12 +131,51 @@ export FEX_APP_CACHE_LOCATION=/tmp/fex-emu/cache/
 export LD_LIBRARY_PATH=$hostdir/lib
 export PATH=$hostdir/bin:/usr/local/sbin:/usr/local/bin:/usr/bin
 
+# Run pacman (or --chroot) with FEX-Emu working in the chroot.
 pacman_ns() {
+  check_fex
   setup_fex
   # The mounts in the rootfs go away with the mount namespace and the FEXServer
   # (and anything else left behind by the scriptlets) with the pid namespace.
   _FEX_PACMAN_IN_NS=1 unshare --mount --propagation private --pid --fork \
                    --kill-child -- "$self" "$@"
+}
+
+# In the muvm VM (see run_x86), the exit status is passed back with a file.
+if [[ ${1-} == --in-vm ]]; then
+  status_file=$2
+  shift 2
+  status=0
+  pacman_ns "$@" || status=$?
+  echo "$status" > "$status_file"
+  exit "$status"
+fi
+
+# Next to the rootfs so that it's shared with the muvm VM.
+mkdir -p "${root%/*}"
+workdir=$(mktemp -d -p "${root%/*}" .fex-pacman.XXXXXXXX)
+trap 'rm -rf "$workdir"' EXIT
+
+run_x86() {
+  local muvm_args
+  if (( $(getconf PAGESIZE) == 4096 )); then
+    pacman_ns "$@"
+    return
+  fi
+  command -v muvm > /dev/null ||
+    die "FEX-Emu needs 4K pages, install muvm to run pacman in a VM"
+  # Attach to the command in case a VM is already running.
+  muvm_args=(-i)
+  if [[ -t 0 ]]; then
+    muvm_args+=(-t)
+  fi
+  rm -f "$workdir/status"
+  mkdir -m700 "$workdir/run"
+  XDG_RUNTIME_DIR=$workdir/run muvm --allow-root "${muvm_args[@]}" -- \
+                 "$self" --in-vm "$workdir/status" "$@" || true
+  rm -rf "$workdir/run"
+  [[ -e $workdir/status ]] || die "failed to run pacman in muvm"
+  return "$(< "$workdir/status")"
 }
 
 update_mask() {
@@ -156,8 +201,8 @@ if [[ ${1-} == --init ]]; then
   pacman-key --config "$config" --populate archlinux archlinuxcn
   # Install filesystem first so that the chroot has /lib, /proc etc.
   # for FEX-Emu.
-  pacman_ns -Sy --needed --noconfirm filesystem
-  pacman_ns -S --needed --noconfirm "${pkgs[@]}"
+  run_x86 -Sy --needed --noconfirm filesystem
+  run_x86 -S --needed --noconfirm "${pkgs[@]}"
   update_mask
   exit
 fi
@@ -165,15 +210,14 @@ fi
 [[ -d $root/var/lib/pacman/local ]] || die "run $0 --init first"
 
 if [[ ${1-} == --chroot ]]; then
-  pacman_ns "$@"
+  run_x86 "$@"
   exit
 fi
 
-stamp=$(mktemp)
-trap 'rm -f "$stamp"' EXIT
+touch "$workdir/stamp"
 status=0
-pacman_ns "$@" || status=$?
-if [[ -n $(find "$root/var/lib/pacman/local" -newer "$stamp" -print -quit) ]]; then
+run_x86 "$@" || status=$?
+if [[ -n $(find "$root/var/lib/pacman/local" -newer "$workdir/stamp" -print -quit) ]]; then
   update_mask
 fi
 exit $status

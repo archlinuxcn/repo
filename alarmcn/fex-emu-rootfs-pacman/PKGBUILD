@@ -5,6 +5,8 @@
 # and upgraded in place, so the stock mesa is used directly instead of the
 # mesa-fex-emu-overlay-* images. The parts of the rootfs that should come from
 # the host (/etc, /home, most programs, ...) are hidden by an overlayfs mask.
+# On hosts without 4K pages, which FEX-Emu needs, the scriptlets are run in a
+# muvm VM.
 # Both muvm and fex-emu-rootfs.service (for FEX-Emu without muvm) stack the
 # mask on top of the rootfs.
 
@@ -23,7 +25,7 @@ source=(fex-pacman
         fex-emu-rootfs-stack
         fex-emu-rootfs.service
         packages.x86_64)
-sha256sums=('d1f9ccfaa04c85d3a5ada9f376096adc210103b7a65326d9455a238a0ded764b'
+sha256sums=('d68910cc7f22622ef7738b3d66d4958a39af7e2745a4616150a5eee5c8b9c3f4'
             'bcf1c4edbacdb22d98df6b128004c36e1a0f90533050f7c248aeb2665ed86b8e'
             'b33d798655696e2f7a690a436761e1cee4dabd908345ea80f8d1f5d8bbb93059'
             '93f8b53b83a6e64bf15b03ad747fd521fb51ed6cd465177b6fc98624aceaa732'
@@ -34,7 +36,7 @@ package() {
   # Put depends in package() to avoid unnecessary build dependencies
   depends=(fex-emu pacman libarchive util-linux
            archlinux-keyring archlinuxcn-keyring)
-  optdepends=('muvm: run x86 programs in a microVM with this rootfs')
+  optdepends=('muvm: run x86 programs in a microVM with this rootfs, required on hosts without 4K pages')
   conflicts=(fex-emu-rootfs-archcn fex-emu-rootfs-arch)
 
   install -Dm755 fex-pacman -t "$pkgdir/usr/bin/"

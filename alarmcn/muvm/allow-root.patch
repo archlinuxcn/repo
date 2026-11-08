@@ -1,0 +1,53 @@
+diff --git a/crates/muvm/src/bin/muvm.rs b/crates/muvm/src/bin/muvm.rs
+index 36d0f7d..0f11198 100644
+--- a/crates/muvm/src/bin/muvm.rs
++++ b/crates/muvm/src/bin/muvm.rs
+@@ -104,12 +104,13 @@ fn pulse_path_from_pulse_server() -> Result<CString> {
+ fn main() -> Result<ExitCode> {
+     env_logger::init();
+ 
+-    if getuid().as_raw() == 0 || geteuid().as_raw() == 0 {
++    let options = options().fallback_to_usage().run();
++
++    if (getuid().as_raw() == 0 || geteuid().as_raw() == 0) && !options.allow_root {
+         println!("Running as root is not supported as it may break your system");
+         return Err(anyhow!("real user ID or effective user ID is 0"));
+     }
+ 
+-    let options = options().fallback_to_usage().run();
+     let config = Configuration::parse_config_file()?;
+ 
+     let mut init_commands = options.init_commands;
+diff --git a/crates/muvm/src/cli_options.rs b/crates/muvm/src/cli_options.rs
+index ec10fb3..926e5fa 100644
+--- a/crates/muvm/src/cli_options.rs
++++ b/crates/muvm/src/cli_options.rs
+@@ -43,6 +43,7 @@ pub struct Options {
+     pub interactive: bool,
+     pub tty: bool,
+     pub privileged: bool,
++    pub allow_root: bool,
+     pub gpu_mode: Option<GpuMode>,
+     pub publish_ports: Vec<String>,
+     pub emulator: Option<Emulator>,
+@@ -159,6 +160,12 @@ pub fn options() -> OptionParser<Options> {
+         This notably does not allow root access to the host fs.",
+         )
+         .switch();
++    let allow_root = long("allow-root")
++        .help(
++            "Allow running muvm as root.
++        The vm then has root access to the host fs, which may break your system.",
++        )
++        .switch();
+     let gpu_mode = long("gpu-mode")
+         .help("Use the given GPU virtualization method")
+         .argument::<GpuMode>("drm|venus|software")
+@@ -208,6 +215,7 @@ pub fn options() -> OptionParser<Options> {
+         interactive,
+         tty,
+         privileged,
++        allow_root,
+         gpu_mode,
+         publish_ports,
+         emulator,
