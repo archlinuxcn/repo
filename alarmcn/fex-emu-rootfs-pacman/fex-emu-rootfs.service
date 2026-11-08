@@ -1,0 +1,13 @@
+[Unit]
+Description=Stack the FEX-Emu rootfs managed by fex-pacman at /run/fex-emu/rootfs
+# Set up by fex-pacman --init
+ConditionPathIsDirectory=/var/lib/fex-emu/mask
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/lib/fex-emu-rootfs/fex-emu-rootfs-stack start
+ExecStop=/usr/lib/fex-emu-rootfs/fex-emu-rootfs-stack stop
+
+[Install]
+WantedBy=multi-user.target

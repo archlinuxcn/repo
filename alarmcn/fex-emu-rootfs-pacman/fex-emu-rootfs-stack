@@ -1,0 +1,35 @@
+#!/bin/bash
+# Stack the mask hiding the host specific parts of the rootfs managed by
+# fex-pacman on top of it at /run/fex-emu/rootfs to use FEX-Emu without muvm.
+# This mirrors what muvm does in its guest.
+
+set -euo pipefail
+
+root=/var/lib/fex-emu/root
+mask=/var/lib/fex-emu/mask
+target=/run/fex-emu/rootfs
+
+stop() {
+  # Lazy unmount so that a restart works while FEX-Emu processes are running.
+  if mountpoint -q "$target"; then
+    umount -l "$target"
+  fi
+  if [[ -d $target ]]; then
+    rmdir "$target"
+  fi
+}
+
+start() {
+  stop
+  mkdir -p "$target"
+  mount -t overlay overlay -o "lowerdir=$mask:$root" "$target"
+}
+
+case ${1-} in
+  start) start ;;
+  stop) stop ;;
+  *)
+    echo "Usage: $0 start|stop" >&2
+    exit 1
+    ;;
+esac

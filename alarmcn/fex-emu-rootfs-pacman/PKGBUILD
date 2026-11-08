@@ -1,0 +1,46 @@
+# Maintainer: Yichao Yu
+
+# x86_64 Arch Linux rootfs for FEX-Emu managed with pacman (fex-pacman) instead
+# of the prebuilt rootfs image (fex-emu-rootfs-archcn). Packages are installed
+# and upgraded in place, so the stock mesa is used directly instead of the
+# mesa-fex-emu-overlay-* images. The parts of the rootfs that should come from
+# the host (/etc, /home, most programs, ...) are hidden by an overlayfs mask.
+# Both muvm and fex-emu-rootfs.service (for FEX-Emu without muvm) stack the
+# mask on top of the rootfs.
+
+pkgname=fex-emu-rootfs-pacman
+pkgver=1
+pkgrel=1
+pkgdesc='Arch Linux x86_64 rootfs for FEX-Emu managed with pacman'
+arch=(any)
+url='https://github.com/yuyichao/archcn-fex-emu-rootfs'
+license=('MIT')
+backup=(etc/fex-pacman.conf)
+install=$pkgname.install
+source=(fex-pacman
+        fex-pacman.conf
+        fex-emu-rootfs-mask
+        fex-emu-rootfs-stack
+        fex-emu-rootfs.service
+        packages.x86_64)
+sha256sums=('512d08d6420ec526910e6652cc4ff05fa248551714ec520be9ba9fa4aebdc990'
+            'bcf1c4edbacdb22d98df6b128004c36e1a0f90533050f7c248aeb2665ed86b8e'
+            'b33d798655696e2f7a690a436761e1cee4dabd908345ea80f8d1f5d8bbb93059'
+            '93f8b53b83a6e64bf15b03ad747fd521fb51ed6cd465177b6fc98624aceaa732'
+            '519cc6de58b2f9d0f6ef00baa4c1fc9732765a5f16e8a2566798c746393e2950'
+            '6a0edf9a78576ed752b595f1ce7cf6e0c89f2ee54c2892af21293cdbcc1d23e3')
+
+package() {
+  # Put depends in package() to avoid unnecessary build dependencies
+  depends=(fex-emu pacman libarchive util-linux
+           archlinux-keyring archlinuxcn-keyring)
+  optdepends=('muvm: run x86 programs in a microVM with this rootfs')
+  conflicts=(fex-emu-rootfs-archcn fex-emu-rootfs-arch)
+
+  install -Dm755 fex-pacman -t "$pkgdir/usr/bin/"
+  install -Dm644 fex-pacman.conf -t "$pkgdir/etc/"
+  install -Dm644 packages.x86_64 -t "$pkgdir/usr/share/$pkgname/"
+  install -Dm755 fex-emu-rootfs-mask fex-emu-rootfs-stack \
+          -t "$pkgdir/usr/lib/fex-emu-rootfs/"
+  install -Dm644 fex-emu-rootfs.service -t "$pkgdir/usr/lib/systemd/system/"
+}

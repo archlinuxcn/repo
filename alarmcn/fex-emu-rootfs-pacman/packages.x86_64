@@ -1,0 +1,211 @@
+# Packages installed by fex-pacman --init into the x86_64 FEX-Emu rootfs.
+# Whitespace separated, '#' starts a comment.
+#
+# The same as the list of the rootfs image
+# (https://github.com/yuyichao/archcn-fex-emu-rootfs/blob/master/packages.x86_64)
+# except that the stock mesa is installed instead of mesa-fex-dummy.
+
+base
+archlinuxcn-keyring
+
+# The mesa drivers in the mesa-fex-emu-overlay-{x86_64,i386} images used with
+# the rootfs image.
+mesa lib32-mesa
+opencl-mesa lib32-opencl-mesa
+vulkan-asahi lib32-vulkan-asahi
+vulkan-broadcom lib32-vulkan-broadcom
+vulkan-freedreno lib32-vulkan-freedreno
+vulkan-intel lib32-vulkan-intel
+vulkan-nouveau lib32-vulkan-nouveau
+vulkan-panfrost lib32-vulkan-panfrost
+vulkan-powervr lib32-vulkan-powervr
+vulkan-radeon lib32-vulkan-radeon
+vulkan-swrast lib32-vulkan-swrast
+vulkan-virtio lib32-vulkan-virtio
+vulkan-mesa-layers lib32-vulkan-mesa-layers
+vulkan-mesa-implicit-layers lib32-vulkan-mesa-implicit-layers
+
+strace
+rsync
+lsb-release
+dbus lib32-dbus
+glibc lib32-glibc
+util-linux lib32-util-linux
+lm_sensors lib32-lm_sensors
+readline lib32-readline
+libelf lib32-libelf
+systemd lib32-systemd
+pulseaudio
+flac lib32-flac
+mesa-demos
+libatomic_ops
+xcb-util
+xcb-util-keysyms lib32-xcb-util-keysyms
+libxcomposite lib32-libxcomposite
+libxinerama lib32-libxinerama
+libxss lib32-libxss
+libxtst lib32-libxtst
+libasyncns lib32-libasyncns
+at-spi2-core lib32-at-spi2-core
+cairo lib32-cairo
+gdk-pixbuf2 lib32-gdk-pixbuf2
+gmp lib32-gmp
+kmod
+mpfr
+pango lib32-pango
+libgudev lib32-libgudev
+xcb-util-cursor
+xcb-util-errors
+xcb-util-image
+xcb-util-renderutil
+xcb-util-wm
+xcb-util-xrm
+xcb-imdkit
+libglvnd lib32-libglvnd
+spirv-llvm-translator lib32-spirv-llvm-translator
+spirv-tools lib32-spirv-tools
+glu lib32-glu
+libnm lib32-libnm
+mesa-utils lib32-mesa-utils
+libunwind lib32-libunwind
+sdl12-compat
+sdl2-compat
+sdl2_gfx
+sdl2_ttf
+sdl2_image
+sdl2_mixer
+sdl2_net
+libxslt
+zlib-ng
+freeglut lib32-freeglut
+libclc
+protobuf
+protobuf-c
+openal
+speex
+libvorbis lib32-libvorbis
+alsa-lib lib32-alsa-lib
+libpulse lib32-libpulse
+libsndfile lib32-libsndfile
+json-glib lib32-json-glib
+libtiff lib32-libtiff
+json-c lib32-json-c
+pcre2 lib32-pcre2
+libffi lib32-libffi
+libpng lib32-libpng
+pixman lib32-pixman
+usbutils
+pciutils
+libpciaccess lib32-libpciaccess
+glew lib32-glew
+libxcb lib32-libxcb
+libxkbcommon-x11 lib32-libxkbcommon-x11
+wayland lib32-wayland
+libx11 lib32-libx11
+libxext lib32-libxext
+libxcursor lib32-libxcursor
+libxi lib32-libxi
+libxfixes lib32-libxfixes
+libidn2 lib32-libidn2
+libxdamage lib32-libxdamage
+libxshmfence lib32-libxshmfence
+libxxf86vm lib32-libxxf86vm
+libxrandr lib32-libxrandr
+llvm-libs lib32-llvm-libs
+libva lib32-libva
+harfbuzz lib32-harfbuzz
+libvdpau
+fuse2
+fuse3
+libibus
+mangohud lib32-mangohud
+libnss_nis
+nss lib32-nss
+nspr lib32-nspr
+gobject-introspection
+python
+openssl lib32-openssl
+curl lib32-curl
+xz lib32-xz
+xterm
+zenity
+xdg-desktop-portal
+xdg-desktop-portal-gtk
+wine
+vulkan-tools
+vulkan-icd-loader lib32-vulkan-icd-loader
+vulkan-headers
+pkgconf
+lib32-fontconfig
+ocl-icd lib32-ocl-icd
+audit
+avahi
+numactl
+sssd
+libldap lib32-libldap
+openldap
+gawk
+gdb
+krb5 lib32-krb5
+pam
+sed
+bzip2 lib32-bzip2
+cdparanoia
+clang lib32-clang
+clang18
+colord lib32-colord
+libcups lib32-libcups
+cyrus-sasl
+elfutils
+libarchive
+expat lib32-expat
+gcc-libs lib32-gcc-libs
+libitm
+libgphobos
+libgo
+libdrm lib32-libdrm
+argon2
+dbus-glib
+libgpg-error lib32-libgpg-error
+zlib lib32-zlib
+libcap
+duktape
+e2fsprogs lib32-e2fsprogs
+libngtcp2 lib32-libngtcp2
+zstd lib32-zstd
+xorg-xauth
+xorg-xeyes
+libomxil-bellagio
+clinfo
+libc++
+
+# Legacy libraries (from AUR in asahi-alarm, from archlinuxcn here)
+libldap24
+gtk2 lib32-gtk2
+libtiff4 lib32-libtiff4
+openssl-1.1 lib32-openssl-1.1
+
+# AMD Vitis/Vivado, libraries from the depends/optdepends of the AUR vitis and
+# vivado packages that aren't already pulled in. Programs (git, zip, hostname,
+# ...) are left out since they are hidden from FEX-Emu anyway, the native ones
+# on the host are used instead.
+libxcrypt-compat
+ncurses5-compat-libs
+libpfm
+libxkbfile libyaml onetbb
+
+# Not available from a binary repo yet (dropped from multilib, AUR only).
+# Add to archlinuxcn first if needed.
+# lib32-xcb-util
+# lib32-sdl12-compat lib32-sdl2-compat
+# lib32-sdl2_ttf lib32-sdl2_image lib32-sdl2_mixer
+# lib32-libxslt
+# lib32-openal
+# lib32-speex
+# lib32-libvdpau
+# lib32-pam
+# lib32-cdparanoia
+# lib32-libarchive
+# lib32-dbus-glib
+# lib32-libcap
+# lib32-duktape

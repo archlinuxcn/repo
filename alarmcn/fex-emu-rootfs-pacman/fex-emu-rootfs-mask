@@ -1,0 +1,140 @@
+#!/bin/bash
+# Generate the overlayfs layer that hides parts of the x86_64 rootfs managed by
+# fex-pacman from FEX-Emu. The layer only contains whiteouts (0/0 character
+# devices). FEX-Emu uses the host file for a path that doesn't exist in the
+# rootfs, so the host configuration (/etc), user data (/home, /var, ...) and
+# native programs are used instead of the ones in the rootfs.
+#
+# The rules match cleanup.sh of the rootfs image
+# (https://github.com/yuyichao/archcn-fex-emu-rootfs).
+
+set -euo pipefail
+
+if (( $# != 2 )); then
+  echo "Usage: $0 <rootfs dir> <mask dir>" >&2
+  exit 1
+fi
+
+root=$(realpath -- "$1")
+mask=$2
+
+# Print the paths (relative to the rootfs) to hide, NUL separated.
+masked_paths() (
+  cd "$root"
+  shopt -s nullglob
+
+  local p
+  for p in {boot,dev,home,media,mnt,opt,proc,root,run,srv,sys,tmp,var} \
+           usr/lib/{locale,tmpfiles.d,systemd,modprobe.d,kbd,cmake} \
+           usr/lib/python* \
+           usr/{include,games,local,src,tmp} \
+           usr/lib/fex-emu-host usr/lib/ld-linux-aarch64.so.1; do
+    if [[ -e $p || -L $p ]]; then
+      printf '%s\0' "$p"
+    fi
+  done
+
+  # everything in /usr/share except wine and mesa related stuff
+  find usr/share -mindepth 1 -maxdepth 1 \
+       \! -name wine -a \
+       \! -name mesa-demos -a \
+       \! -name drirc.d -a \
+       \! -name glvnd -a \
+       \! -name vulkan -a \
+       \! -name licenses \
+       -print0
+
+  # everything in /etc except ld stuff and OpenCL vendors
+  find etc -mindepth 1 -maxdepth 1 \
+       \! -name 'ld.so*' -a \
+       \! -name OpenCL \
+       -print0
+
+  # most binaries except Wine stuff, Mesa stuff, the shell, path-related stuff,
+  # and system info tools.
+  find usr/bin -mindepth 1 -maxdepth 1 \
+       \! -name 'cat' -a \
+       \! -name 'strace' -a \
+       \! -name 'wine*' -a \
+       \! -name 'mango*' -a \
+       \! -name notepad -a \
+       \! -name 'msi*' -a \
+       \! -name regedit -a \
+       \! -name regsvr32 -a \
+       \! -name 'vulkan*' -a \
+       \! -name 'vk*' -a \
+       \! -name clinfo -a \
+       \! -name 'eglinfo*' -a \
+       \! -name 'glxinfo*' -a \
+       \! -name 'egltri_*' -a \
+       \! -name es2_info -a \
+       \! -name 'es2gears_*' -a \
+       \! -name es2tri -a \
+       \! -name 'glxgears*' -a \
+       \! -name vkgears -a \
+       \! -name '*eglgears*' -a \
+       \! -name 'xauth' -a \
+       \! -name 'xeyes' -a \
+       \! -name mesa-overlay-control.py -a \
+       \! -name ulimit -a \
+       \! -name ldd -a \
+       \! -name ldconfig -a \
+       \! -name env -a \
+       \! -name sh -a \
+       \! -name bash -a \
+       \! -name ls -a \
+       \! -name file -a \
+       \! -name stat -a \
+       \! -name dirname -a \
+       \! -name realpath -a \
+       \! -name readlink -a \
+       \! -name basename -a \
+       \! -name nproc -a \
+       \! -name uname -a \
+       \! -name arch \
+       -print0
+)
+
+# Escape a path for mtree (vis(3) style octal escapes) into $REPLY.
+mtree_escape() {
+  local LC_ALL=C path=$1 c i
+  REPLY=
+  if [[ $path != *[![:graph:]]* && $path != *[\\#]* ]]; then
+    REPLY=$path
+    return
+  fi
+  for (( i = 0; i < ${#path}; i++ )); do
+    c=${path:i:1}
+    if [[ $c == [[:graph:]] && $c != [\\#] ]]; then
+      REPLY+=$c
+    else
+      printf -v c '\\%03o' "'$c"
+      REPLY+=$c
+    fi
+  done
+}
+
+new=$mask.new
+old=$mask.old
+rm -rf -- "$new" "$old"
+mkdir -p -- "$new"
+# libarchive checks the mtree entries against the files relative to the current
+# directory, read it from an empty one.
+empty=$(mktemp -d)
+trap 'rm -rf -- "$empty"' EXIT
+
+# Create all the whiteouts with one bsdtar (mtree input) instead of running
+# mknod thousands of times.
+{
+  echo '#mtree'
+  while IFS= read -r -d '' path; do
+    mtree_escape "$path"
+    printf './%s type=char device=0 mode=0 uid=0 gid=0\n' "$REPLY"
+  done < <(masked_paths)
+} | bsdtar -cf - -C "$empty" @- | bsdtar -xpf - -C "$new"
+
+if [[ -e $mask ]]; then
+  mv -- "$mask" "$old"
+fi
+mv -- "$new" "$mask"
+rm -rf -- "$old"

@@ -1,0 +1,18 @@
+post_install() {
+  cat <<'EOF'
+==> Set up the rootfs (/var/lib/fex-emu/root) with
+      fex-pacman --init
+    and manage it with fex-pacman like pacman, e.g. fex-pacman -Syu.
+    muvm uses it directly. To use FEX-Emu without muvm, enable
+    fex-emu-rootfs.service, which stacks it at /run/fex-emu/rootfs:
+      systemctl enable --now fex-emu-rootfs.service
+    and set RootFS to /run/fex-emu/rootfs in ~/.config/fex-emu/Config.json
+    (e.g. with FEXConfig) or with the FEX_ROOTFS environment variable.
+EOF
+}
+
+post_remove() {
+  cat <<'EOF'
+==> The rootfs in /var/lib/fex-emu/{root,mask} is not removed.
+EOF
+}

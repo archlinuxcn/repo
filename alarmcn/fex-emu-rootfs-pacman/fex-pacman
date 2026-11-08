@@ -1,0 +1,168 @@
+#!/bin/bash
+# Manage the x86_64 FEX-Emu rootfs at /var/lib/fex-emu/root with pacman.
+#
+#   fex-pacman --init [<list>]     set up the keyring and install the packages
+#                                  in <list> (default: packages.x86_64)
+#   fex-pacman <pacman arguments>  e.g. fex-pacman -Syu, fex-pacman -S foo
+#
+# pacman runs the install scriptlets, hooks and ldconfig chrooted into the
+# rootfs, so the x86_64 programs run through the FEX-Emu binfmt_misc handler.
+# The handler is registered with the F flag so the kernel already has the host
+# /usr/bin/FEX open, but its program interpreter (the aarch64 ld.so) and
+# libraries are looked up in the chroot. Copy those into the rootfs, together
+# with FEXServer, which FEX-Emu starts when there isn't one running.
+#
+# After a transaction, the overlayfs mask hiding the host-specific parts of the
+# rootfs is regenerated and fex-emu-rootfs.service is restarted to restack.
+
+set -euo pipefail
+
+root=/var/lib/fex-emu/root
+mask=/var/lib/fex-emu/mask
+# Inside the rootfs
+hostdir=/usr/lib/fex-emu-host
+
+# Use the files next to this script when running from the package source
+self=$(realpath -- "$0")
+srcdir=$(dirname "$self")
+config=/etc/fex-pacman.conf
+mask_cmd=/usr/lib/fex-emu-rootfs/fex-emu-rootfs-mask
+packages=/usr/share/fex-emu-rootfs-pacman/packages.x86_64
+if [[ -e $srcdir/fex-emu-rootfs-mask ]]; then
+  config=$srcdir/fex-pacman.conf
+  mask_cmd=$srcdir/fex-emu-rootfs-mask
+  packages=$srcdir/packages.x86_64
+fi
+
+die() {
+  echo "error: $*" >&2
+  exit 1
+}
+
+run_pacman() {
+  pacman --config "$config" "$@"
+}
+
+# Copy the aarch64 parts of FEX-Emu needed to run x86_64 programs in the
+# chroot. Nothing can run before the filesystem package is installed.
+setup_fex() {
+  local interp= line lib
+  [[ -L $root/lib && -d $root/usr/lib ]] || return 0
+
+  # The program interpreter is the ldd line starting with its path
+  while read -r line; do
+    if [[ $line == /* ]]; then
+      interp=${line%% *}
+    fi
+  done < <(ldd /usr/bin/FEX)
+  if [[ -n $interp ]]; then
+    case $(realpath -m -- "$root$(dirname "$interp")") in
+      "$root"/*) ;;
+      *) die "$interp is not inside $root" ;;
+    esac
+    install -m755 "$interp" "$root$interp"
+  fi
+
+  rm -rf "${root:?}$hostdir"
+  install -Dm755 /usr/bin/FEXServer -t "$root$hostdir/bin/"
+  mkdir -p "$root$hostdir/lib"
+  { ldd /usr/bin/FEX /usr/bin/FEXServer || true; } |
+    sed -nE 's/^\s*\S+ => (\/\S+) \(0x[0-9a-f]+\)$/\1/p' | sort -u |
+    while read -r lib; do
+      cp -L "$lib" "$root$hostdir/lib/"
+    done
+}
+
+# Run in a private mount and pid namespace (see below)
+in_namespace() {
+  local d
+  if [[ -L $root/lib ]]; then
+    for d in dev sys; do
+      [[ -d $root/$d ]] && mount --rbind "/$d" "$root/$d"
+    done
+    [[ -d $root/proc ]] && mount -t proc proc "$root/proc"
+    # Scriptlets are extracted to /tmp, also keeps the files FEX-Emu creates
+    # out of the rootfs.
+    [[ -d $root/tmp ]] && mount -t tmpfs -o mode=1777 tmpfs "$root/tmp"
+  fi
+  run_pacman "$@"
+}
+
+if [[ ${_FEX_PACMAN_IN_NS-} == 1 ]]; then
+  unset _FEX_PACMAN_IN_NS
+  in_namespace "$@"
+  exit
+fi
+
+if (( EUID != 0 )); then
+  # Queries don't need anything special
+  exec pacman --config "$config" "$@"
+fi
+
+[[ -x /usr/bin/FEX ]] || die "FEX-Emu is not installed"
+# 32-bit programs are run by the hooks of some lib32 packages too.
+for handler in FEX-x86 FEX-x86_64; do
+  grep -qs '^flags: .*F' "/proc/sys/fs/binfmt_misc/$handler" ||
+    die "the $handler binfmt_misc handler isn't registered (with the F flag)"
+done
+
+# FEX-Emu in the chroot must not use the host configuration/rootfs or talk to
+# a FEXServer outside the chroot (the socket is an abstract one so it's shared
+# with the host otherwise).
+while IFS= read -r var; do
+  unset "$var"
+done < <(compgen -e | grep '^FEX_' || true)
+export FEX_SERVERSOCKETPATH=fex-pacman.$$
+export FEX_APP_CONFIG_LOCATION=/tmp/fex-emu/
+export FEX_APP_DATA_LOCATION=/tmp/fex-emu/
+export FEX_APP_CACHE_LOCATION=/tmp/fex-emu/cache/
+export LD_LIBRARY_PATH=$hostdir/lib
+export PATH=$hostdir/bin:/usr/local/sbin:/usr/local/bin:/usr/bin
+
+pacman_ns() {
+  setup_fex
+  # The mounts in the rootfs go away with the mount namespace and the FEXServer
+  # (and anything else left behind by the scriptlets) with the pid namespace.
+  _FEX_PACMAN_IN_NS=1 unshare --mount --propagation private --pid --fork \
+                   --kill-child -- "$self" "$@"
+}
+
+update_mask() {
+  "$mask_cmd" "$root" "$mask"
+  systemctl try-restart fex-emu-rootfs.service || true
+}
+
+if [[ ${1-} == --init ]]; then
+  (( $# <= 2 )) || die "--init takes at most one argument"
+  if (( $# == 2 )); then
+    packages=$2
+  fi
+  [[ -r $packages ]] || die "can't read the package list $packages"
+  mapfile -t pkgs < <(sed 's/#.*//' "$packages" | xargs -n1)
+  (( ${#pkgs[@]} )) || die "no package in $packages"
+  for keyring in archlinux archlinuxcn; do
+    [[ -e /usr/share/pacman/keyrings/$keyring.gpg ]] ||
+      die "install $keyring-keyring on the host first"
+  done
+  mkdir -p "$root"/var/lib/pacman "$root"/var/cache/pacman/pkg \
+        "$root"/var/log "$root"/etc/pacman.d/{gnupg,hooks}
+  pacman-key --config "$config" --init
+  pacman-key --config "$config" --populate archlinux archlinuxcn
+  # Install filesystem first so that the chroot has /lib, /proc etc.
+  # for FEX-Emu.
+  pacman_ns -Sy --needed --noconfirm filesystem
+  pacman_ns -S --needed --noconfirm "${pkgs[@]}"
+  update_mask
+  exit
+fi
+
+[[ -d $root/var/lib/pacman/local ]] || die "run $0 --init first"
+
+stamp=$(mktemp)
+trap 'rm -f "$stamp"' EXIT
+status=0
+pacman_ns "$@" || status=$?
+if [[ -n $(find "$root/var/lib/pacman/local" -newer "$stamp" -print -quit) ]]; then
+  update_mask
+fi
+exit $status
