@@ -4,6 +4,8 @@
 #   fex-pacman --init [<list>]     set up the keyring and install the packages
 #                                  in <list> (default: packages.x86_64)
 #   fex-pacman <pacman arguments>  e.g. fex-pacman -Syu, fex-pacman -S foo
+#   fex-pacman --chroot [<cmd>...] run a command (default: bash) in the rootfs
+#                                  the same way as the scriptlets, for debugging
 #
 # pacman runs the install scriptlets, hooks and ldconfig chrooted into the
 # rootfs, so the x86_64 programs run through the FEX-Emu binfmt_misc handler.
@@ -85,6 +87,10 @@ in_namespace() {
     # out of the rootfs.
     [[ -d $root/tmp ]] && mount -t tmpfs -o mode=1777 tmpfs "$root/tmp"
   fi
+  if [[ ${1-} == --chroot ]]; then
+    shift
+    exec chroot "$root" "${@:-/bin/bash}"
+  fi
   run_pacman "$@"
 }
 
@@ -108,10 +114,10 @@ done
 
 # FEX-Emu in the chroot must not use the host configuration/rootfs or talk to
 # a FEXServer outside the chroot (the socket is an abstract one so it's shared
-# with the host otherwise).
+# with the host otherwise). The logging options are kept for debugging.
 while IFS= read -r var; do
   unset "$var"
-done < <(compgen -e | grep '^FEX_' || true)
+done < <(compgen -e | grep '^FEX_' | grep -vx 'FEX_SILENTLOG\|FEX_OUTPUTLOG' || true)
 export FEX_SERVERSOCKETPATH=fex-pacman.$$
 export FEX_APP_CONFIG_LOCATION=/tmp/fex-emu/
 export FEX_APP_DATA_LOCATION=/tmp/fex-emu/
@@ -157,6 +163,11 @@ if [[ ${1-} == --init ]]; then
 fi
 
 [[ -d $root/var/lib/pacman/local ]] || die "run $0 --init first"
+
+if [[ ${1-} == --chroot ]]; then
+  pacman_ns "$@"
+  exit
+fi
 
 stamp=$(mktemp)
 trap 'rm -f "$stamp"' EXIT
