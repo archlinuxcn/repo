@@ -1,0 +1,220 @@
+diff --git a/crates/muvm/src/bin/muvm.rs b/crates/muvm/src/bin/muvm.rs
+index d865abe..9362ee7 100644
+--- a/crates/muvm/src/bin/muvm.rs
++++ b/crates/muvm/src/bin/muvm.rs
+@@ -27,7 +27,8 @@ use muvm::monitor::spawn_monitor;
+ use muvm::net::{connect_to_passt, start_passt};
+ use muvm::types::MiB;
+ use muvm::utils::launch::{
+-    GuestConfiguration, Launch, ATSPI_SOCKET, HIDPIPE_SOCKET, MUVM_GUEST_SOCKET, PULSE_SOCKET,
++    FexLayer, GuestConfiguration, Launch, ATSPI_SOCKET, HIDPIPE_SOCKET, MUVM_GUEST_SOCKET,
++    PULSE_SOCKET,
+ };
+ use nix::sys::sysinfo::sysinfo;
+ use nix::unistd::User;
+@@ -260,14 +261,25 @@ fn main() -> Result<ExitCode> {
+     let disks: Vec<String> = if !options.fex_images.is_empty() {
+         options.fex_images
+     } else {
+-        let default_disks = [
+-            "/usr/share/fex-emu/RootFS/default.erofs",
++        // The rootfs managed by fex-pacman (with the mask hiding the host
++        // specific parts of it on top), once set up, replaces the rootfs image.
++        let managed_root = "/var/lib/fex-emu/root";
++        let managed_mask = "/var/lib/fex-emu/mask";
++        let base_disks = if Path::new(managed_root)
++            .join("var/lib/pacman/local")
++            .is_dir()
++            && Path::new(managed_mask).is_dir()
++        {
++            vec![managed_root, managed_mask]
++        } else {
++            vec!["/usr/share/fex-emu/RootFS/default.erofs"]
++        };
++        let default_disks = base_disks.into_iter().chain([
+             "/usr/share/fex-emu/overlays/mesa-i386.erofs",
+             "/usr/share/fex-emu/overlays/mesa-x86_64.erofs",
+-        ];
++        ]);
+ 
+         default_disks
+-            .iter()
+             .map(|x| x.to_string())
+             .filter(|x| Path::new(x).exists())
+             .collect()
+@@ -279,8 +291,17 @@ fn main() -> Result<ExitCode> {
+         ));
+     }
+ 
++    let mut fex_layers = Vec::new();
+     for path in disks {
++        // The guest root is the host root, directories are used from there.
++        if Path::new(&path).is_dir() {
++            let path = fs::canonicalize(&path)
++                .with_context(|| format!("Failed to resolve FEX rootfs directory {path:?}"))?;
++            fex_layers.push(FexLayer::Dir(path));
++            continue;
++        }
+         add_ro_disk(ctx_id, &path, &path).context("Failed to configure disk")?;
++        fex_layers.push(FexLayer::Image);
+     }
+ 
+     {
+@@ -478,6 +499,7 @@ fn main() -> Result<ExitCode> {
+         gid: getgid().as_raw(),
+         host_display: display,
+         merged_rootfs: options.merged_rootfs,
++        fex_layers,
+         emulator: options.emulator,
+         cwd,
+         init_commands,
+diff --git a/crates/muvm/src/cli_options.rs b/crates/muvm/src/cli_options.rs
+index fc3ccf7..ec10fb3 100644
+--- a/crates/muvm/src/cli_options.rs
++++ b/crates/muvm/src/cli_options.rs
+@@ -122,7 +122,7 @@ pub fn options() -> OptionParser<Options> {
+     let fex_images = long("fex-image")
+         .short('f')
+         .help(
+-            "Adds an erofs file to be mounted as a FEX rootfs.
++            "Adds an erofs file or a directory to be mounted as a FEX rootfs.
+             May be specified multiple times.
+             First the base image, then overlays in order.",
+         )
+diff --git a/crates/muvm/src/guest/bin/muvm-guest.rs b/crates/muvm/src/guest/bin/muvm-guest.rs
+index eeba224..5aefa20 100644
+--- a/crates/muvm/src/guest/bin/muvm-guest.rs
++++ b/crates/muvm/src/guest/bin/muvm-guest.rs
+@@ -65,7 +65,7 @@ fn main() -> Result<ExitCode> {
+         setrlimit(Resource::Nofile, rlim).context("Failed to raise `RLIMIT_NOFILE`")?;
+     }
+ 
+-    if let Err(err) = mount_filesystems(options.merged_rootfs) {
++    if let Err(err) = mount_filesystems(options.merged_rootfs, &options.fex_layers) {
+         return Err(err).context("Failed to mount filesystems, bailing out");
+     }
+ 
+diff --git a/crates/muvm/src/guest/mount.rs b/crates/muvm/src/guest/mount.rs
+index 20fa348..bee39c7 100644
+--- a/crates/muvm/src/guest/mount.rs
++++ b/crates/muvm/src/guest/mount.rs
+@@ -14,6 +14,8 @@ use rustix::mount::{
+ use rustix::path::Arg;
+ use serde_json::json;
+ 
++use crate::utils::launch::FexLayer;
++
+ fn make_tmpfs<P>(dir: P) -> Result<()>
+ where
+     P: rustix::path::Arg,
+@@ -55,7 +57,7 @@ fn do_mount_recursive_bind(source: &str, target: PathBuf) -> Result<()> {
+     Ok(())
+ }
+ 
+-fn mount_fex_rootfs(merged_rootfs: bool) -> Result<()> {
++fn mount_fex_rootfs(merged_rootfs: bool, layers: &[FexLayer]) -> Result<()> {
+     let dir = Path::new("/run/fex-emu/");
+     let dir_rootfs = dir.join("rootfs");
+ 
+@@ -93,13 +95,28 @@ fn mount_fex_rootfs(merged_rootfs: bool) -> Result<()> {
+     // > The order in which filenames are read by successive calls to readdir() depends on the
+     // > filesystem implementation; it is unlikely that the names will be sorted in any fashion.
+     dev_vd_entries.sort_unstable_by_key(|entry| entry.file_name());
+-    for entry in dev_vd_entries {
+-        let target_dir = dir.join(entry.file_name());
+-        // Mount the erofs images.
+-        mkdir_fex(&target_dir);
+-        mount2(Some(entry.path()), &target_dir, Some("erofs"), flags, None)
+-            .context("Failed to mount erofs")?;
+-        images.push(target_dir);
++    let mut dev_vd_entries = dev_vd_entries.into_iter();
++    let mut has_dir = false;
++    for layer in layers {
++        match layer {
++            FexLayer::Image => {
++                let entry = dev_vd_entries
++                    .next()
++                    .context("Missing the disk of a FEX rootfs image")?;
++                let target_dir = dir.join(entry.file_name());
++                // Mount the erofs images.
++                mkdir_fex(&target_dir);
++                mount2(Some(entry.path()), &target_dir, Some("erofs"), flags, None)
++                    .context("Failed to mount erofs")?;
++                images.push(target_dir);
++            },
++            FexLayer::Dir(path) => {
++                // Use the host root without the mounts made in the guest.
++                let path = path.strip_prefix("/").unwrap_or(path);
++                images.push(Path::new("/run/muvm-host").join(path));
++                has_dir = true;
++            },
++        }
+     }
+ 
+     if images.is_empty() {
+@@ -196,7 +213,7 @@ fn mount_fex_rootfs(merged_rootfs: bool) -> Result<()> {
+     } else {
+         if images.len() >= 2 {
+             // Overlay the mounts together.
+-            let opts = format!(
++            let mut opts = format!(
+                 "lowerdir={lowerdir}",
+                 lowerdir = images
+                     .into_iter()
+@@ -205,6 +222,11 @@ fn mount_fex_rootfs(merged_rootfs: bool) -> Result<()> {
+                     .collect::<Vec<_>>()
+                     .join(":")
+             );
++            if has_dir {
++                // Same as merged rootfs mode, which also has the host
++                // (virtiofs) layers.
++                opts += ",metacopy=off,redirect_dir=nofollow,userxattr";
++            }
+             let opts = CString::new(opts).unwrap();
+             let overlay = "overlay".to_string();
+             let overlay_ = Some(&overlay);
+@@ -296,7 +318,7 @@ pub fn place_file(backing: &str, dest: &str, contents: Option<&str>) -> Result<(
+     overlay_file(backing, dest)
+ }
+ 
+-pub fn mount_filesystems(merged_rootfs: bool) -> Result<()> {
++pub fn mount_filesystems(merged_rootfs: bool, fex_layers: &[FexLayer]) -> Result<()> {
+     make_tmpfs("/var/run")?;
+ 
+     place_file("/run/resolv.conf", "/etc/resolv.conf", None)?;
+@@ -334,7 +356,7 @@ pub fn mount_filesystems(merged_rootfs: bool) -> Result<()> {
+     .context("Failed to mount `/dev/shm`")?;
+ 
+     // Do this last so it can pick up all the submounts made above.
+-    if let Err(e) = mount_fex_rootfs(merged_rootfs) {
++    if let Err(e) = mount_fex_rootfs(merged_rootfs, fex_layers) {
+         println!("Failed to mount FEX rootfs, carrying on without. Error: {e}");
+     }
+ 
+diff --git a/crates/muvm/src/utils/launch.rs b/crates/muvm/src/utils/launch.rs
+index 562068b..e45d5a1 100644
+--- a/crates/muvm/src/utils/launch.rs
++++ b/crates/muvm/src/utils/launch.rs
+@@ -35,6 +35,14 @@ impl FromStr for Emulator {
+     }
+ }
+ 
++#[derive(Clone, Eq, PartialEq, Debug, Deserialize, Serialize)]
++pub enum FexLayer {
++    /// An erofs image, attached as the next `/dev/vd*` disk.
++    Image,
++    /// A directory on the host.
++    Dir(PathBuf),
++}
++
+ #[derive(Clone, Eq, PartialEq, Debug, Deserialize, Serialize)]
+ pub struct GuestConfiguration {
+     pub command: Launch,
+@@ -42,6 +50,7 @@ pub struct GuestConfiguration {
+     pub gid: u32,
+     pub host_display: Option<String>,
+     pub merged_rootfs: bool,
++    pub fex_layers: Vec<FexLayer>,
+     pub emulator: Option<Emulator>,
+     pub cwd: PathBuf,
+     pub init_commands: Vec<PathBuf>,

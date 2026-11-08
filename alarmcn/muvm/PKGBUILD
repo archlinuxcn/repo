@@ -12,9 +12,18 @@ depends=('libkrun' 'socat' 'passt')
 source=(
   "muvm-${pkgver}.tar.gz::https://github.com/AsahiLinux/muvm/archive/refs/tags/muvm-${pkgver}.tar.gz"
   LICENSE
+  # Allow directories as FEX rootfs layers and use the rootfs managed by
+  # fex-pacman (fex-emu-rootfs-archcn) by default when it's set up.
+  fex-dir-layers.patch
 )
 sha256sums=('3cf9ffe550a01ed6438d1f0a4ab31a5b98af4855655f603f71a84d57e7913c3f'
-            'bd61ba908048f45e22a02784e3c9bd595307d8a3d838346dab9ca4a1b1217b93')
+            'bd61ba908048f45e22a02784e3c9bd595307d8a3d838346dab9ca4a1b1217b93'
+            '17d908d3909cd8ab9e0ed469076e5011e9a7b7b807a958e4ad2704be75c244cf')
+
+prepare() {
+  cd muvm-muvm-${pkgver}
+  patch -Np1 -i ../fex-dir-layers.patch
+}
 
 build() {
   cd muvm-muvm-${pkgver}
