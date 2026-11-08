@@ -1,5 +1,5 @@
 diff --git a/crates/muvm/src/bin/muvm.rs b/crates/muvm/src/bin/muvm.rs
-index d865abe..9362ee7 100644
+index d865abe..36d0f7d 100644
 --- a/crates/muvm/src/bin/muvm.rs
 +++ b/crates/muvm/src/bin/muvm.rs
 @@ -27,7 +27,8 @@ use muvm::monitor::spawn_monitor;
@@ -12,37 +12,42 @@ index d865abe..9362ee7 100644
  };
  use nix::sys::sysinfo::sysinfo;
  use nix::unistd::User;
-@@ -260,14 +261,25 @@ fn main() -> Result<ExitCode> {
+@@ -260,14 +261,28 @@ fn main() -> Result<ExitCode> {
      let disks: Vec<String> = if !options.fex_images.is_empty() {
          options.fex_images
      } else {
 -        let default_disks = [
 -            "/usr/share/fex-emu/RootFS/default.erofs",
-+        // The rootfs managed by fex-pacman (with the mask hiding the host
-+        // specific parts of it on top), once set up, replaces the rootfs image.
+-            "/usr/share/fex-emu/overlays/mesa-i386.erofs",
+-            "/usr/share/fex-emu/overlays/mesa-x86_64.erofs",
+-        ];
++        // The rootfs managed by fex-pacman (fex-emu-rootfs-pacman, with the
++        // mask hiding the host specific parts of it on top), once set up,
++        // replaces the rootfs image. It has mesa installed so the overlays
++        // aren't used.
 +        let managed_root = "/var/lib/fex-emu/root";
 +        let managed_mask = "/var/lib/fex-emu/mask";
-+        let base_disks = if Path::new(managed_root)
++        let default_disks = if Path::new(managed_root)
 +            .join("var/lib/pacman/local")
 +            .is_dir()
 +            && Path::new(managed_mask).is_dir()
 +        {
 +            vec![managed_root, managed_mask]
 +        } else {
-+            vec!["/usr/share/fex-emu/RootFS/default.erofs"]
++            vec![
++                "/usr/share/fex-emu/RootFS/default.erofs",
++                "/usr/share/fex-emu/overlays/mesa-i386.erofs",
++                "/usr/share/fex-emu/overlays/mesa-x86_64.erofs",
++            ]
 +        };
-+        let default_disks = base_disks.into_iter().chain([
-             "/usr/share/fex-emu/overlays/mesa-i386.erofs",
-             "/usr/share/fex-emu/overlays/mesa-x86_64.erofs",
--        ];
-+        ]);
  
          default_disks
 -            .iter()
++            .into_iter()
              .map(|x| x.to_string())
              .filter(|x| Path::new(x).exists())
              .collect()
-@@ -279,8 +291,17 @@ fn main() -> Result<ExitCode> {
+@@ -279,8 +294,17 @@ fn main() -> Result<ExitCode> {
          ));
      }
  
@@ -60,7 +65,7 @@ index d865abe..9362ee7 100644
      }
  
      {
-@@ -478,6 +499,7 @@ fn main() -> Result<ExitCode> {
+@@ -478,6 +502,7 @@ fn main() -> Result<ExitCode> {
          gid: getgid().as_raw(),
          host_display: display,
          merged_rootfs: options.merged_rootfs,
