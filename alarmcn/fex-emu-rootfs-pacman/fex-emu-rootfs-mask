@@ -2,11 +2,16 @@
 # Generate the overlayfs layer that hides parts of the x86_64 rootfs managed by
 # fex-pacman from FEX-Emu. The layer only contains whiteouts (0/0 character
 # devices). FEX-Emu uses the host file for a path that doesn't exist in the
-# rootfs, so the host configuration (/etc), user data (/home, /var, ...) and
-# native programs are used instead of the ones in the rootfs.
+# rootfs, so the host files are used instead of the hidden ones.
 #
-# The rules match cleanup.sh of the rootfs image
-# (https://github.com/yuyichao/archcn-fex-emu-rootfs).
+# Only what's known to belong to the host is hidden, anything else installed in
+# the rootfs stays visible:
+# * the host state and user data (/home, /var, /tmp, ...),
+# * the host identity and system configuration in /etc,
+# * data shared with the host that FEX-Emu doesn't merge (a directory in the
+#   rootfs is listed without the host files): locales, fonts, icons, themes,
+# * the programs of the base system, which are run natively instead, except
+#   for the shell and the tools that tell the system apart (e.g. uname).
 
 set -euo pipefail
 
@@ -21,78 +26,51 @@ mask=$2
 # Print the paths (relative to the rootfs) to hide, NUL separated.
 masked_paths() (
   cd "$root"
-  shopt -s nullglob
+  local p pkg dbdir= path
+  local -A pkgdirs=()
+  local -a deps=()
 
-  local p
-  for p in {boot,dev,home,media,mnt,opt,proc,root,run,srv,sys,tmp,var} \
-           usr/lib/{locale,tmpfiles.d,systemd,modprobe.d,kbd,cmake} \
-           usr/lib/python* \
-           usr/{include,games,local,src,tmp} \
+  for p in {boot,dev,home,media,mnt,proc,root,run,srv,sys,tmp,var} \
+           etc/{adjtime,arch-release,bash.bash_logout,bash.bashrc} \
+           etc/{ca-certificates,crypttab,default,environment,fstab} \
+           etc/{group,gshadow,host.conf,hostname,hosts,inputrc,issue} \
+           etc/{locale.conf,localtime,login.defs,machine-id} \
+           etc/{makepkg.conf,makepkg.conf.d,motd,mtab,nsswitch.conf} \
+           etc/{os-release,pacman.conf,pacman.d,pam.d,passwd,pki,profile} \
+           etc/{profile.d,resolv.conf,securetty,security,shadow,shells,skel} \
+           etc/{ssl,subgid,subuid,sudoers,sudoers.d,systemd,udev} \
+           etc/vconsole.conf \
+           usr/lib/locale usr/share/{fonts,icons,themes} \
            usr/lib/fex-emu-host usr/lib/ld-linux-aarch64.so.1; do
     if [[ -e $p || -L $p ]]; then
       printf '%s\0' "$p"
     fi
   done
 
-  # everything in /usr/share except wine and mesa related stuff
-  find usr/share -mindepth 1 -maxdepth 1 \
-       \! -name wine -a \
-       \! -name mesa-demos -a \
-       \! -name drirc.d -a \
-       \! -name glvnd -a \
-       \! -name vulkan -a \
-       \! -name licenses \
-       -print0
-
-  # everything in /etc except ld stuff and OpenCL vendors
-  find etc -mindepth 1 -maxdepth 1 \
-       \! -name 'ld.so*' -a \
-       \! -name OpenCL \
-       -print0
-
-  # most binaries except Wine stuff, Mesa stuff, the shell, path-related stuff,
-  # and system info tools.
-  find usr/bin -mindepth 1 -maxdepth 1 \
-       \! -name 'cat' -a \
-       \! -name 'strace' -a \
-       \! -name 'wine*' -a \
-       \! -name 'mango*' -a \
-       \! -name notepad -a \
-       \! -name 'msi*' -a \
-       \! -name regedit -a \
-       \! -name regsvr32 -a \
-       \! -name 'vulkan*' -a \
-       \! -name 'vk*' -a \
-       \! -name clinfo -a \
-       \! -name 'eglinfo*' -a \
-       \! -name 'glxinfo*' -a \
-       \! -name 'egltri_*' -a \
-       \! -name es2_info -a \
-       \! -name 'es2gears_*' -a \
-       \! -name es2tri -a \
-       \! -name 'glxgears*' -a \
-       \! -name vkgears -a \
-       \! -name '*eglgears*' -a \
-       \! -name 'xauth' -a \
-       \! -name 'xeyes' -a \
-       \! -name mesa-overlay-control.py -a \
-       \! -name ulimit -a \
-       \! -name ldd -a \
-       \! -name ldconfig -a \
-       \! -name env -a \
-       \! -name sh -a \
-       \! -name bash -a \
-       \! -name ls -a \
-       \! -name file -a \
-       \! -name stat -a \
-       \! -name dirname -a \
-       \! -name realpath -a \
-       \! -name readlink -a \
-       \! -name basename -a \
-       \! -name nproc -a \
-       \! -name uname -a \
-       \! -name arch \
-       -print0
+  # The programs in /usr/bin of the packages base depends on, from the local
+  # pacman database of the rootfs.
+  while IFS=$'\t' read -r pkg p; do
+    pkgdirs[$pkg]=${p%/desc}
+  done < <(awk '/^%NAME%$/ { getline; print $0 "\t" FILENAME; nextfile }' \
+               var/lib/pacman/local/*/desc 2> /dev/null)
+  [[ -n ${pkgdirs[base]-} ]] || return 0
+  mapfile -t deps < <(awk '/^%DEPENDS%$/ { while (getline > 0 && $0 != "") print }' \
+                          "${pkgdirs[base]}/desc" | sed -E 's/[<>=].*//')
+  for pkg in "${deps[@]}"; do
+    dbdir=${pkgdirs[$pkg]-}
+    [[ -n $dbdir ]] || continue
+    while IFS= read -r path; do
+      case ${path#usr/bin/} in
+        cat|ls|env|sh|bash|file|stat|dirname|realpath|readlink|basename|\
+          nproc|uname|arch|ulimit|ldd|ldconfig)
+          continue ;;
+      esac
+      if [[ -e $path || -L $path ]]; then
+        printf '%s\0' "$path"
+      fi
+    done < <(awk '/^%FILES%$/ { while (getline > 0 && $0 != "") print }' \
+                 "$dbdir/files" | grep -E '^usr/bin/[^/]+$')
+  done
 )
 
 # Escape a path for mtree (vis(3) style octal escapes) into $REPLY.

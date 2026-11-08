@@ -3,10 +3,10 @@
 # x86_64 Arch Linux rootfs for FEX-Emu managed with pacman (fex-pacman) instead
 # of the prebuilt rootfs image (fex-emu-rootfs-archcn). Packages are installed
 # and upgraded in place, so the stock mesa is used directly instead of the
-# mesa-fex-emu-overlay-* images. The parts of the rootfs that should come from
-# the host (/etc, /home, most programs, ...) are hidden by an overlayfs mask.
-# On hosts without 4K pages, which FEX-Emu needs, the scriptlets are run in a
-# muvm VM.
+# mesa-fex-emu-overlay-* images. The parts of the rootfs known to belong to the
+# host (system configuration, /home, base system programs, ...) are hidden by an
+# overlayfs mask. On hosts without 4K pages, which FEX-Emu needs, the scriptlets
+# are run in a muvm VM.
 # Both muvm and fex-emu-rootfs.service (for FEX-Emu without muvm) stack the
 # mask on top of the rootfs.
 
@@ -27,10 +27,10 @@ source=(fex-pacman
         packages.x86_64)
 sha256sums=('d68910cc7f22622ef7738b3d66d4958a39af7e2745a4616150a5eee5c8b9c3f4'
             'bcf1c4edbacdb22d98df6b128004c36e1a0f90533050f7c248aeb2665ed86b8e'
-            'b33d798655696e2f7a690a436761e1cee4dabd908345ea80f8d1f5d8bbb93059'
+            'acf15b5c55bf514ea576b4880ba66f4fadd76a36a26e724bb63f4c749ffc7433'
             '93f8b53b83a6e64bf15b03ad747fd521fb51ed6cd465177b6fc98624aceaa732'
             '519cc6de58b2f9d0f6ef00baa4c1fc9732765a5f16e8a2566798c746393e2950'
-            '6a0edf9a78576ed752b595f1ce7cf6e0c89f2ee54c2892af21293cdbcc1d23e3')
+            '91f2c46067fb85c899da9c11e8a4dfa3ae9fedcdb828416a47d97100f2f7989f')
 
 package() {
   # Put depends in package() to avoid unnecessary build dependencies
