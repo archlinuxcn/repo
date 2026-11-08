@@ -99,6 +99,19 @@ in_namespace() {
     # Scriptlets are extracted to /tmp, also keeps the files FEX-Emu creates
     # out of the rootfs.
     [[ -d $root/tmp ]] && mount -t tmpfs -o mode=1777 tmpfs "$root/tmp"
+    # Otherwise FEXServer is started by the first x86 program and keeps its
+    # stdout/stderr, which is the output of a scriptlet that pacman reads until
+    # it's closed. FEXServer only exits after its last client, so a daemon
+    # started by a scriptlet (e.g. gpg-agent) would hang pacman.
+    # The FEXServer goes away with the pid namespace.
+    if [[ -x $root$hostdir/bin/FEXServer ]]; then
+      chroot "$root" "$hostdir/bin/FEXServer" --foreground \
+             < /dev/null &> /dev/null &
+      for _ in {1..50}; do
+        [[ -S $root$FEX_SERVERSOCKETPATH ]] && break
+        sleep 0.1
+      done
+    fi
   fi
   if [[ ${1-} == --chroot ]]; then
     shift
@@ -124,7 +137,11 @@ fi
 while IFS= read -r var; do
   unset "$var"
 done < <(compgen -e | grep '^FEX_' | grep -vx 'FEX_SILENTLOG\|FEX_OUTPUTLOG' || true)
-export FEX_SERVERSOCKETPATH=fex-pacman.$$
+# FEXServer also creates a socket file, which is in $XDG_RUNTIME_DIR (or /tmp)
+# if the path isn't absolute. The runtime directory (set in the muvm VM) doesn't
+# exist in the chroot.
+unset XDG_RUNTIME_DIR
+export FEX_SERVERSOCKETPATH=/tmp/fex-pacman.$$
 export FEX_APP_CONFIG_LOCATION=/tmp/fex-emu/
 export FEX_APP_DATA_LOCATION=/tmp/fex-emu/
 export FEX_APP_CACHE_LOCATION=/tmp/fex-emu/cache/
@@ -199,6 +216,8 @@ if [[ ${1-} == --init ]]; then
         "$root"/var/log "$root"/etc/pacman.d/{gnupg,hooks}
   pacman-key --config "$config" --init
   pacman-key --config "$config" --populate archlinux archlinuxcn
+  # Don't leave the gpg-agent started by pacman-key running on the host.
+  gpgconf --homedir "$root/etc/pacman.d/gnupg" --kill all
   # Install filesystem first so that the chroot has /lib, /proc etc.
   # for FEX-Emu.
   run_x86 -Sy --needed --noconfirm filesystem
