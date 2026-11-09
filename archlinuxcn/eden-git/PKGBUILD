@@ -5,7 +5,7 @@
 _pkgname=eden
 pkgname=$_pkgname-git
 epoch=1
-pkgver=0.2.0.r444.g6e24dcb
+pkgver=0.2.0.r448.gae60f8e
 pkgrel=1
 pkgdesc="Nintendo Switch emulator forked from yuzu."
 arch=('x86_64' 'aarch64')
@@ -31,10 +31,7 @@ pkgver() {
 }
 build() {
 	cd "$srcdir"
-    export CXXFLAGS+=' -Wno-switch -include algorithm -include bit -include cctype -include cerrno'
-    export CXXFLAGS+=' -include cmath -include cstddef -include cstdint -include cstdio'
-    export CXXFLAGS+=' -include cstdlib -include cstring -include functional -include limits -include memory'
-    export CXXFLAGS+=' -include type_traits -include utility -include fmt/format.h'
+	export CXXFLAGS+=' -Wno-switch'
 	cmake -B build -S $_pkgname -GNinja \
 		-DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=None \
