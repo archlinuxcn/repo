@@ -9,9 +9,10 @@ url='https://github.com/LondyGhost/hp-supplies'
 license=('MIT')
 depends=('gtk3' 'libusb')
 makedepends=('make' 'gcc' 'pkgconf')
+options=(!debug)
 install=hp-supplies.install
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('be6822a8ac172957df5b4debea13c910d1c13c22cbee2e2fa7ecd743e798cdc1')
+sha256sums=('909f427d7cc0630c938190756ef37969e511b1fa7ef513777948d9e613e66349')
 
 build() {
   cd "$pkgname-$pkgver"
