@@ -1,7 +1,7 @@
 # Maintainer: zhicheng233
 
-pkgname=(moonlight-vplus)
-pkgver=6.5.3
+pkgname=moonlight-vplus
+pkgver=6.5.4
 pkgrel=1
 pkgdesc="Moonlight V+ for PC is an enhanced desktop client based on moonlight-stream/moonlight-qt, designed to work closely with Foundation Sunshine."
 arch=(
@@ -44,11 +44,11 @@ source=(
 )
 sha256sums=(
     'SKIP'
-    'SKIP'
+    '82f9e6023067ff196d3191952dcd580d037ae43bc0b795989ae06226cc418f93'
 )
 
 prepare() {
-    cd "$srcdir/moonlight-qt"
+    cd "moonlight-qt"
 
     git submodule update --init --recursive
 }
@@ -59,17 +59,21 @@ build() {
     make
 }
 
-package_moonlight-vplus() {
-    pkgdesc="Moonlight V+ for PC"
-
+package() {
     cd "moonlight-qt"
 
     install -Dm755 app/moonlight \
         "$pkgdir/usr/bin/moonlight-vplus"
+
+    install -Dm644 app/res/moonlight.svg \
+        "$pkgdir/usr/share/icons/hicolor/scalable/apps/moonlight-vplus.svg"
 
     install -Dm644 app/moonlight_wix.png \
         "$pkgdir/usr/share/icons/hicolor/64x64/apps/moonlight-vplus.png"
 
     install -Dm644 "$srcdir/moonlight-vplus.desktop" \
         "$pkgdir/usr/share/applications/moonlight-vplus.desktop"
+
+    install -Dm644 LICENSE \
+        "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
