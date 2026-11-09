@@ -1,0 +1,24 @@
+diff --git a/packages/coding-agent/scripts/json-parse-plugin.ts b/packages/coding-agent/scripts/json-parse-plugin.ts
+--- a/packages/coding-agent/scripts/json-parse-plugin.ts
++++ b/packages/coding-agent/scripts/json-parse-plugin.ts
+@@ -1,3 +1,4 @@
++import { relative, resolve } from "node:path";
+ import type { BunPlugin } from "bun";
+ 
+ /** Assets below this size stay object literals. */
+@@ -17,12 +18,13 @@ export function createJsonParsePlugin(minBytes: number = DEFAULT_MIN_BYTES): BunPlugin {
+ 		name: "omp-json-parse-asset",
+ 		target: "bun",
+ 		setup(build) {
++			const root = process.cwd();
+ 			build.onResolve({ filter: /^omp-json-asset:/ }, ({ path }) => ({
+-				path: `${path.slice("omp-json-asset:".length)}.zst`,
++				path: `${relative(root, path.slice("omp-json-asset:".length))}.zst`,
+ 				namespace: "omp-json-asset",
+ 			}));
+ 			build.onLoad({ filter: /.*/, namespace: "omp-json-asset" }, async ({ path }) => ({
+-				contents: Bun.zstdCompressSync(await Bun.file(path.slice(0, -4)).text()),
++				contents: Bun.zstdCompressSync(await Bun.file(resolve(root, path.slice(0, -4))).text()),
+ 				loader: "file",
+ 			}));
+ 			build.onLoad({ filter: /\.json$/ }, async ({ path }) => {

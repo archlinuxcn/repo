@@ -1,0 +1,12 @@
+diff --git a/crates/pi-shell/src/bash/vm/proc.rs b/crates/pi-shell/src/bash/vm/proc.rs
+--- a/crates/pi-shell/src/bash/vm/proc.rs
++++ b/crates/pi-shell/src/bash/vm/proc.rs
+@@ -757,7 +757,7 @@
+ 		})
+ 	}
+ 
+-	pub const fn has_work(&self) -> bool {
++	pub fn has_work(&self) -> bool {
+ 		!self.runs.is_empty() || !self.frames.is_empty()
+ 	}
+ 
