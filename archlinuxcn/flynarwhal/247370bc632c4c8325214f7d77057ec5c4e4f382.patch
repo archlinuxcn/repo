@@ -1,0 +1,27 @@
+From 247370bc632c4c8325214f7d77057ec5c4e4f382 Mon Sep 17 00:00:00 2001
+From: Dee HY <dongfengweixiao@hotmail.com>
+Date: Thu, 9 Apr 2026 00:04:25 +0800
+Subject: [PATCH] fix: crashes with SIGSEGV in libstdc++.so.6 during video
+ playback
+
+---
+ gradle/libs.versions.toml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+index 00039897..f5ae432e 100644
+--- a/gradle/libs.versions.toml
++++ b/gradle/libs.versions.toml
+@@ -11,10 +11,10 @@ androidx-espresso = "3.7.0"
+ androidx-lifecycle = "2.9.6"
+ androidx-collection = "1.5.0"
+ composeHotReload = "1.0.0"
+-composeMultiplatform = "1.9.3"
++composeMultiplatform = "1.10.3"
+ saralappsWebview = "0.1.5"
+ junit = "4.13.2"
+-kotlin = "2.1.0"
++kotlin = "2.1.20"
+ kotlinx-coroutines = "1.10.2"
+ kotlinx-collections-immutable = "0.4.0"
+ kotlinx-datetime = "0.7.1"
