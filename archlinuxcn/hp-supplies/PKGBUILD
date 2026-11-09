@@ -1,7 +1,7 @@
-# Maintainer: LondyGhost <londyghost@users.noreply.github.com>
+# Maintainer: LondyGhost <476729421@qq.com>
 
 pkgname=hp-supplies
-pkgver=1.2.2
+pkgver=1.2.3
 pkgrel=1
 pkgdesc='HP 打印机耗材与用量监控（LEDM over USB，无需 HPLIP）'
 arch=('x86_64')
@@ -10,17 +10,16 @@ license=('MIT')
 depends=('gtk3' 'libusb')
 makedepends=('make' 'gcc' 'pkgconf')
 options=(!debug)
-install=hp-supplies.install
-source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('909f427d7cc0630c938190756ef37969e511b1fa7ef513777948d9e613e66349')
+source=("$pkgname::git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
 
 build() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname"
   make APP_VERSION="$pkgver-$pkgrel"
 }
 
 package() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname"
   make install DESTDIR="$pkgdir" PREFIX=/usr APP_VERSION="$pkgver-$pkgrel"
 
   install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
