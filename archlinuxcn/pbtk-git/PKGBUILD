@@ -2,7 +2,7 @@
 
 _pkgbase=pbtk
 pkgname=$_pkgbase-git
-pkgver=2.0.0.r0.g7bc64ba
+pkgver=2.0.0.r2.g58d4587
 pkgrel=1
 pkgdesc='A toolset for reverse engineering and fuzzing Protobuf-based apps'
 url="https://github.com/marin-m/$_pkgbase"
@@ -10,12 +10,15 @@ arch=('any')
 license=('GPL-3.0-only')
 depends=(
     python
-    pyside6
+    python-gobject
+    gtk4
+    libadwaita
+    libsoup3
+    pango
+    glib2
+    webkitgtk-6.0
     python-protobuf
-    python-requests
     python-websocket-client
-    qt6-webengine
-    protobuf
     sh
 )
 optdepends=(
