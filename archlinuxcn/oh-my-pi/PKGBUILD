@@ -30,29 +30,24 @@ options=('!lto' '!strip')
 # the crate is needed.
 _opus_ver=0.4.0
 # Upstream builds with a pinned nightly; this package builds on stable (plus
-# RUSTC_BOOTSTRAP=1 for the crate-level feature gates), so it needs a stable
-# release that ships every library API upstream calls. 1.99 stabilized
+# RUSTC_BOOTSTRAP=1 for the crate-level feature gates and --ignore-rust-version
+# for the workspace's 1.101 MSRV), so it needs a stable release that ships
+# every library API upstream calls. 1.99 stabilized
 # fs::set_times{,_nofollow}, Box::{into,from}_non_null,
 # String::from_utf8_lossy_owned and Vec::from_parts, first used in 18.14.0
 # (pi-builtins also declares rust-version = "1.99.0").
-#
-# pi-shell inherits the workspace's 1.101 minimum, added with its new shell
-# engine in 18.17.0. The native build succeeds with stable 1.99, so patch only
-# pi-shell's declared minimum rather than the entire workspace.
 _rust_min=1.99.0
 source=(
     "${pkgname}-${pkgver}.tar.gz::https://github.com/can1357/oh-my-pi/archive/v${pkgver}.tar.gz"
     "https://static.crates.io/crates/opus/opus-${_opus_ver}.crate"
     "skip-native-embed-for-aur.patch"
     "system-grammars-for-aur.patch"
-    "pi-shell-stable-rust-for-aur.patch"
     "relative-json-assets-for-aur.patch"
 )
 sha256sums=('0a09d8f5f307d72ff4ced4fe8bd564eab024c243dd0fc72800b828bf4819cb94'
             '33718946cc77d4032911d4efe03a66dbcbfbd2bb16c3da06aaeadcc637c32216'
             '0f4c3a662fac5dc6420d260c7439ab0399061a1501dbbc1692e8fdf3e8db1785'
             '724888738f0e886693d8a6aa6cfd5f6dba9a98122353e4636a9ca946ae1fa9e7'
-            '8efebbee9b94c02ffaf08c51d4f895f31c34518c163a1834d695ea507a5d3361'
             'aa9a59cc6d6edce378a79e6c1b9194f49318d8ee777c6f58caf92faac67cbdaf')
 
 _variants=('baseline:x86-64-v2' 'modern:x86-64-v3')
@@ -82,7 +77,6 @@ prepare() {
 
     patch -p1 -i "${srcdir}/skip-native-embed-for-aur.patch"
     patch -p1 -i "${srcdir}/system-grammars-for-aur.patch"
-    patch -p1 -i "${srcdir}/pi-shell-stable-rust-for-aur.patch"
     # Avoid embedding absolute build paths in Bun's JSON asset module labels.
     patch -p1 -i "${srcdir}/relative-json-assets-for-aur.patch"
 
@@ -151,7 +145,8 @@ _build_native() {
     PCRE2_SYS_STATIC=0 \
     ZSTD_SYS_USE_PKG_CONFIG=1 \
     RUSTONIG_SYSTEM_LIBONIG=1 \
-        cargo build --frozen --config "${srcdir}/system-opus.toml" \
+        cargo build --frozen --ignore-rust-version \
+            --config "${srcdir}/system-opus.toml" \
             --profile ci --package pi-natives "${_cargo_features[@]}"
 
     # Fail loudly rather than silently shipping a statically linked libopus if
