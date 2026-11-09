@@ -1,7 +1,8 @@
 maintainers:
   - github: LondyGhost
+    email: 476729421@qq.com
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.removeprefix('v'))
 
 post_build_script: |
   git_pkgbuild_commit()

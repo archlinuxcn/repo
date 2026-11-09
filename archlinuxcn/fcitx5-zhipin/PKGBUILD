@@ -1,4 +1,4 @@
-# Maintainer: LondyGhost <londyghost@users.noreply.github.com>
+# Maintainer: LondyGhost <476729421@qq.com>
 
 pkgname=fcitx5-zhipin
 pkgver=1.0.0
@@ -11,21 +11,21 @@ depends=('fcitx5' 'librime' 'rime-prelude' 'hicolor-icon-theme')
 optdepends=('rime-ice: recommended dictionary base for the abc schema')
 makedepends=('cmake' 'ninja' 'gcc' 'pkgconf')
 options=(!debug)
-source=("$pkgname-$pkgver.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('90d846eb13954608e61bf157a81f24d570586beaff2f5307269795ad22ba05c3')
+source=("$pkgname::git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
 
 build() {
-  cmake -S "$pkgname-$pkgver" -B build -G Ninja \
+  cd "$pkgname"
+  cmake -S . -B build -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   cmake --build build
 }
 
 package() {
+  cd "$pkgname"
   DESTDIR="$pkgdir" cmake --install build
 
-  install -Dm644 "$pkgname-$pkgver/README.md" \
-    "$pkgdir/usr/share/doc/$pkgname/README.md"
-  install -Dm644 "$pkgname-$pkgver/LICENSE" \
-    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
