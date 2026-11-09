@@ -1,0 +1,173 @@
+From 229080075bd3d86cbc9625e99db8ea3253763542 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 30 Oct 2026 01:03:29 -0400
+Subject: [PATCH 04/21] slsqp: batch the BLAS calls in NNLS
+
+In each outer iteration NNLS computed the dual vector with one DDOT per
+column of the zero set and applied the new Householder transformation
+with one single-column DLARF per remaining column (as in SciPy).  With
+the LDP of a problem with many inequality constraints, that is millions
+of tiny BLAS calls.  Compute the dual vector with one DGEMV over all
+columns and apply the transformation with DLARF to the two contiguous
+column blocks on either side of the new column; the columns of the
+solution set are exactly zero in the rows involved, so they are
+unchanged.  DLARF needs a work array as long as the number of
+inequality rows, which is added to the buffer size.
+
+On a beam-spectrum problem with 200-320 variables and 400-3600
+constraints this cuts the time with OpenBLAS by 14% at equal evaluation
+counts.  The summation order changes with an external BLAS, so results
+can differ from SciPy's in the last bits (same optima); the built-in
+routines keep the previous loop order and results.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ src/algs/slsqp/README  |  7 ++++++
+ src/algs/slsqp/slsqp.c | 52 +++++++++++++++++++++++++-----------------
+ 2 files changed, 38 insertions(+), 21 deletions(-)
+
+diff --git a/src/algs/slsqp/README b/src/algs/slsqp/README
+index e6455f3..064e910 100644
+--- a/src/algs/slsqp/README
++++ b/src/algs/slsqp/README
+@@ -63,6 +63,13 @@ constraints), DGELSY's O(n^3) QR factorization, whose reflectors are all
+ the identity, is skipped: the rank estimate (DLAIC1) and triangular solve
+ of DGELSY are done directly, with bit-identical results, and DGELSY is
+ still used whenever it would rescale or the matrix is rank deficient.
++NNLS computes its dual vector with one DGEMV and applies each new
++Householder transformation with DLARF on whole column blocks, instead of
++one DDOT and one single-column DLARF per column; the columns already in
++the solution set are zero in the rows involved.  With many constraints
++this removes most of the BLAS call overhead (about 14% of the run time on
++a problem with ~1500 constraints); the summation order changes, so
++results differ from SciPy's in the last bits.
+ 
+ The BLAS/LAPACK library is chosen at configure time with the CMake
+ option NLOPT_BLAS: AUTO (default; use one if found), ON (require one),
+diff --git a/src/algs/slsqp/slsqp.c b/src/algs/slsqp/slsqp.c
+index 15c7acd..a2742a3 100644
+--- a/src/algs/slsqp/slsqp.c
++++ b/src/algs/slsqp/slsqp.c
+@@ -53,15 +53,15 @@
+ /********************************* NNLS ***********************************/
+ 
+ /* Lawson & Hanson nonnegative least squares, min |Ax - b| s.t. x >= 0.
+-   a is (m x n), b is (m), x, w are (n), zz is (m), indices is (n). */
++   a is (m x n), b is (m), x, w, work are (n), zz is (m), indices is (n). */
+ static void
+ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+-     double* restrict x, double* restrict w, double* restrict zz,
++     double* restrict x, double* restrict w, double* restrict zz, double* restrict work,
+      blas_int* restrict indices, const int64_t maxiter, double* rnorm, int64_t* info)
+ {
+     blas_int i = 0, ii = 0, ip = 0, indz = 0, iteration = 0, iz = 0, izmax = 0;
+     blas_int j = 0, jj = 0, k = 0, one = 1, tmpint = 0;
+-    double tau = 0.0, unorm = 0.0, ztest, alpha, cc, ss, wmax, T, tmp_work;
++    double tau = 0.0, unorm = 0.0, ztest, alpha, cc, ss, wmax, T, done = 1.0, dzero = 0.0;
+     double pivot = 1.0, tauvtb = 0.0, tmp = 0.0, spacing = 0.0;
+     *info = 1;
+     if (m <= 0 || n <= 0)
+@@ -77,15 +77,14 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+     // Outer loop
+     while (indz < (m < n ? m : n))
+     {
+-        // Compute the dual vector components in set Z.
+-        // Essentially a permuted gemv operation via BLAS ddot, in NumPy notation;
+-        // w[indices[indz:]] = A[indz:m, indices[indsz:]] @ b[indz:m]
+-        for (i = indz; i < n; i++)
+-        {
+-            j = indices[i];
+-            tmpint = m - indz;
+-            w[j] = NLOPT_BLAS(ddot)(&tmpint, &a[indz + j*m], &one, &b[indz], &one);
+-        }
++        // Compute the dual vector components in set Z, in NumPy notation;
++        // w[indices[indz:]] = A[indz:m, indices[indz:]].T @ b[indz:m]
++        // as one GEMV over all columns (rather than one DOT per column of Z
++        // as in scipy).  The columns in set P are zero in these rows; their dual
++        // components stay zero.
++        tmpint = m - indz;
++        NLOPT_BLAS(dgemv)("T", &tmpint, &n, &done, &a[indz], &m, &b[indz], &one, &dzero, w, &one);
++        for (i = 0; i < indz; i++) { w[indices[i]] = 0.0; }
+ 
+         // Find the next linearly independent column that corresponds to the
+         // largest entry in the dual vector w.
+@@ -152,13 +151,21 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+         indices[indz] = j;
+         indz++;
+         // Apply the householder transformation to the remaining columns.
++        // The columns in set P other than j are zero in rows indz-1:m, which
++        // the transformation leaves unchanged, so it is applied to all columns
++        // left and right of column j as two blocks rather than to each column
++        // of Z separately (as in scipy).
+         if (indz < n)
+         {
++            blas_int nleft = j, nright = n - j - 1;
+             tmpint = m - indz + 1;
+-            for (k = indz; k < n; k++)
++            if (nleft > 0)
++            {
++                NLOPT_BLAS(dlarf)("L", &tmpint, &nleft, &a[indz - 1 + j*m], &one, &tau, &a[indz - 1], &m, work);
++            }
++            if (nright > 0)
+             {
+-                jj = indices[k];
+-                NLOPT_BLAS(dlarf)("L", &tmpint, &one, &a[indz - 1 + j*m], &one, &tau, &a[indz - 1 + jj*m], &tmpint, &tmp_work);
++                NLOPT_BLAS(dlarf)("L", &tmpint, &nright, &a[indz - 1 + j*m], &one, &tau, &a[indz - 1 + (j + 1)*m], &m, work);
+             }
+         }
+         // Restore the pivot element into a, zero the subdiagonal elements in col j
+@@ -1213,7 +1220,7 @@ ORIGINAL_BASIS:
+  *      min |Ax - b|  subject to Gx >= h
+  *
+  * A is (ma x n), b is (ma), G is (mg x n), h is (mg), x is (n)
+- * buffer is at least (mg+2)*(n+1) + 2*mg
++ * buffer is at least (mg+2)*(n+1) + 3*mg
+  * jw is at least (mg)
+  * xnorm is the 2-norm of the residual vector
+  * mode is the integer return code
+@@ -1280,7 +1287,7 @@ lsi(blas_int ma, blas_int mg, blas_int n, double* restrict a, double* restrict b
+  *  min (1/2)|x|^2  subject to  Gx >= h
+  *
+  * G is (m x n), h is (m)
+- * buffer is at least (m+2)*(n+1) + 2*m
++ * buffer is at least (m+2)*(n+1) + 3*m
+  * indices is int(n)
+  * x is (n)
+  * xnorm is the norm of the solution if succeeded
+@@ -1310,6 +1317,7 @@ ldp(blas_int m, blas_int n, double* restrict g, double* restrict h, double* rest
+     double* restrict zz   = &buffer[(m+1)*(n+1)];
+     double* restrict y    = &buffer[(m+2)*(n+1)];
+     double* restrict w    = &buffer[(m+2)*(n+1) + m];
++    double* restrict work = &buffer[(m+2)*(n+1) + 2*m];
+ 
+     // Save the dual problem data into buffer
+     //       dual problem [G^T] [x] = [0]
+@@ -1330,7 +1338,7 @@ ldp(blas_int m, blas_int n, double* restrict g, double* restrict h, double* rest
+     b[n] = 1.0;
+ 
+     // Solve the dual problem
+-    nnls(n+1, m, a, b, y, w, zz, indices, 3*m, &rnorm, mode);
++    nnls(n+1, m, a, b, y, w, zz, work, indices, 3*m, &rnorm, mode);
+     if (*mode != 1) { return; }
+     *mode = 4;
+     if (rnorm <= 0.0) { return; }
+@@ -1445,11 +1453,13 @@ ldl_update(blas_int n, double* restrict a, double* restrict z, double sigma, dou
+      (n+1)*(n+2) + (n+1)*meq + m + (mineq + 2*n + 2)*(n+1) +  3*n + 3   # LSQ
+      mineq + 2n + 2 + 2*meq + (n+1) + (mineq + 3n + 3)*(n + 1 - meq)    # LSEI
+      (mineq + 2n + 2 + 2)*(n + 2) + mineq + 2n + 2                      # LDP
+-     mineq + 2n + 2                                                     # NNLS
+-   (from scipy/optimize/_slsqp_py.py) */
++     2*(mineq + 2n + 2)                                                 # NNLS
++   (from scipy/optimize/_slsqp_py.py, plus the NNLS work array for the
++   blocked Householder application) */
+ static size_t slsqp_buffer_size(int64_t m, int64_t meq, int64_t n)
+ {
+-     int64_t size = n*(n+1)/2 + 3*m*n - (m + 5*n + 7)*meq + 9*m + 8*n*n + 35*n + meq*meq + 28;
++     int64_t size = n*(n+1)/2 + 3*m*n - (m + 5*n + 7)*meq + 9*m + 8*n*n + 35*n + meq*meq + 28
++	  + (m - meq) + 2*n + 2;
+      /* if no inequality constraints are given, top up workspace for
+         the dgelsy path in lsei */
+      if (m == meq)
+-- 
+2.56.0
+

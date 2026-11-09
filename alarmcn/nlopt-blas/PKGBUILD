@@ -12,21 +12,59 @@ makedepends=(cmake python-numpy octave guile swig)
 optdepends=('python-numpy: to use with python')
 provides=("nlopt=$pkgver")
 conflicts=(nlopt)
+_patches=(0001-util-BLAS-LAPACK-detection-at-configure-time-with-bu.patch
+          0002-slsqp-replace-the-f2c-core-with-a-port-of-SciPy-s-BL.patch
+          0003-slsqp-skip-the-QR-of-the-triangular-LSQ-matrix-witho.patch
+          0004-slsqp-batch-the-BLAS-calls-in-NNLS.patch
+          0005-mma-ccsaq-traverse-the-constraint-gradients-row-wise.patch
+          0006-cobyla-restructure-the-per-iteration-O-n-3-and-O-m-n.patch
+          0007-luksan-use-the-unmasked-vector-operations-when-there.patch
+          0008-luksan-compute-four-inner-products-at-a-time-in-MXDR.patch
+          0009-luksan-keep-the-L-BFGS-history-in-a-circular-buffer.patch
+          0010-cobyla-use-DGEMM-for-the-roundoff-check-and-the-mode.patch
+          0011-luksan-use-BLAS-for-the-unmasked-inner-products-and-.patch
+          0012-mma-ccsaq-use-DGEMV-for-the-dual-function-s-sums-ove.patch
+          0013-newuoa-use-BLAS-for-the-model-products-for-n-100.patch
+          0014-bobyqa-use-BLAS-for-the-model-products-for-n-100.patch
+          0015-cobyla-use-DGEMV-and-DGER-for-the-update-of-the-simp.patch
+          0016-newuoa-use-level-3-BLAS-for-the-shift-of-XBASE-for-n.patch
+          0017-bobyqa-use-level-3-BLAS-for-the-shift-of-XBASE-for-n.patch
+          0018-luksan-use-DGER-for-the-rank-one-update-MXDCMU.patch
+          0019-doc-list-the-algorithms-that-use-BLAS-LAPACK.patch
+          0020-mma-ccsaq-Newton-type-dual-solver-behind-the-dual_ne.patch
+          0021-slsqp-solve-the-LDP-without-forming-G-R-1.patch)
 source=(https://github.com/stevengj/nlopt/archive/v${pkgver}/nlopt-${pkgver}.tar.gz
-        0001-slsqp-replace-the-f2c-core-with-a-port-of-SciPy-s-BL.patch
-        0002-slsqp-detect-BLAS-LAPACK-at-configure-time-with-a-bu.patch
-        0003-slsqp-skip-the-QR-of-the-triangular-LSQ-matrix-witho.patch)
+        "${_patches[@]}")
 sha256sums=('53e552d83e9294d67db37f0f4a23f15933a9ef698485301a18b98b40004cf0de'
-            '9d85da036be4b49d798ee978026bdb3549d43bb1a40a214d7566b3431ce73b0e'
-            '4086008dcf30ea0acaa212f873add05d54c00089ba25178906858bda417c3090'
-            '1b54bc810e36ffb10391cb517e6e5715f6eeedf02bb8f1ea1493687c085d6ee3')
+            'febdbf23875eec1a7944f62866db29f95772df49d41431fbf61ccb1922dc6542'
+            'c95ab0ac0765ce61bfa337f8b31954c638fa1fb88f3450b1e608cc601434d598'
+            'a15849ae5a2522c2de4ff7716df648cafa92a5ade1d9effe8c76bdea71ce40f2'
+            '0cd31d09b475773944f334d0e0c39408eff8c7ec49d6da5d0ee1b8c7b570b9c2'
+            '7ff46169cbb98979790067caddadd876190b14869a54fe65c39cf4a5f5045430'
+            '498e260f9f3ebd6b5bba70cc8c733cb2d5070ba717e7a81939aee7281ad31d92'
+            'b6810ec2040d21d8a2b10950a499f0985327934ad14a025683a1470a7924ea8f'
+            'e4a5deeb9236b7806a8ffd8fd68547102ed3b58594893d6ea74475bd8a3c9c6c'
+            'b38bc7431cdbd10431fa7cbf75b06f2cf5404d2add8c44938bec93262d57fc51'
+            'd7065609690a7f54b848a858cd57f672914850e33bcc5bd974fc633ef825fe4c'
+            '6e7d347e9659f688670cfe10eae8ea414633c9f7c7a5ea97193c44aed8a443d0'
+            '232fbf4618095cfa919e31c90e997f840059454c8eb624a6ba1ccecf3f48975d'
+            '836c54e8292cf87e60365f7e0476f1293f949754674da279c9fedbf2d35895c3'
+            'e310b42259ab721913f8c59185522d44cc7a77a5877df69bbe651e8f6c7dcf5c'
+            '9b73a4840bf422c67f003ea76f713bd8256ae82643660ca54eaa9d8fb6012724'
+            '8263c1700936982afcae82d7a281e0903fa4e0c4c9fafaabe7039f407fc95e8b'
+            '0d54ce6b20b548a165ea693fdda33636d1fda78973e1d870b3dbaedc5719d3a6'
+            'c53c94c2e29cecc62bc3cf1a915a3c4dbba05e28ee53a573f1ca6ff2911b6c9b'
+            '5f554e555609b606da248709bcf163acee626b1b579157b70e30a29ecfa70014'
+            '17f7cd7cb3499a7b579cdb023e29788191abd970ea0208a8a7daf917a3952d36'
+            'ba0f3054189eb0f8aba8da49cbb2372f83886fd7f1088466636f19b8175bf12b')
 
 prepare() {
   cd nlopt-$pkgver
 
-  patch -Np1 --no-backup-if-mismatch < "../0001-slsqp-replace-the-f2c-core-with-a-port-of-SciPy-s-BL.patch"
-  patch -Np1 --no-backup-if-mismatch < "../0002-slsqp-detect-BLAS-LAPACK-at-configure-time-with-a-bu.patch"
-  patch -Np1 --no-backup-if-mismatch < "../0003-slsqp-skip-the-QR-of-the-triangular-LSQ-matrix-witho.patch"
+  for _patch in "${_patches[@]}"; do
+    echo "Applying $_patch"
+    patch -Np1 --no-backup-if-mismatch < ../"${_patch}"
+  done
 
   # Fix build with octave 10+
   sed \
@@ -35,7 +73,7 @@ prepare() {
 }
 
 build() {
-    local cmake_options=(
+  local cmake_options=(
     -B build
     -S nlopt-$pkgver
     -D CMAKE_INSTALL_PREFIX=/usr

@@ -1,0 +1,124 @@
+From c4dc2648bddbcf8cbd4b90ab6a3ee8d2362121eb Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 30 Oct 2026 14:54:08 -0400
+Subject: [PATCH 15/21] cobyla: use DGEMV and DGER for the update of the
+ simplex inverse
+
+With an external BLAS/LAPACK, compute SIMI*DX for the choice of the
+vertex to drop with DGEMV, and the update of the other rows of SIMI
+after a vertex is replaced with DGEMV and DGER, using 2n doubles of W
+(which is free there).  Without one, the loops are kept, so the built-in
+build stays bit-identical to the original code.
+
+The summation order changes with BLAS, so results differ in the last
+bits.  Most of the remaining time is in the two DGEMMs of the previous
+commit, so the gain is small: with a cheap objective, the time per
+evaluation drops by another 1.0-1.1x (n = 50-200) with single-threaded
+OpenBLAS.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ src/algs/cobyla/cobyla.c | 45 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/src/algs/cobyla/cobyla.c b/src/algs/cobyla/cobyla.c
+index cb380b6..ab4c1fe 100644
+--- a/src/algs/cobyla/cobyla.c
++++ b/src/algs/cobyla/cobyla.c
+@@ -451,6 +451,26 @@ nlopt_result cobyla(int n, int m, double *x, double *minf, double rhobeg, double
+ } /* cobyla */
+ 
+ /* ------------------------------------------------------------------------- */
++#ifdef NLOPT_HAVE_BLAS
++/* The update of the rows J != JDROP of SIMI (0-based arrays, JDROP 1-based)
++   after the replacement of vertex JDROP by DX and the scaling of row JDROP:
++   SIMI(J,:) -= (SIMI(J,:) DX) SIMI(JDROP,:), as one DGEMV and one DGER,
++   with W(0:2N-1) as workspace. */
++static void update_simi_blas(int n, int jdrop, double *simi, const double *dx,
++                             double *w)
++{
++  blas_int nn = n, one = 1;
++  double d1 = 1., d0 = 0., dm1 = -1.;
++  double *t = w, *r = w + n;
++  int i;
++  NLOPT_BLAS(dgemv)("N", &nn, &nn, &d1, simi, &nn, dx, &one, &d0, t, &one);
++  t[jdrop - 1] = 0.;
++  for (i = 0; i < n; ++i) r[i] = simi[jdrop - 1 + i * n];
++  NLOPT_BLAS(dger)(&nn, &nn, &dm1, t, &one, r, &one, simi, &nn);
++  for (i = 0; i < n; ++i) simi[jdrop - 1 + i * n] = r[i];
++}
++#endif
++
+ static nlopt_result cobylb(int *n, int *m, int *mpp,
+    double *x, double *minf, double *rhobeg, double rhoend,
+     nlopt_stopping *stop, const double *lb, const double *ub,
+@@ -1002,6 +1022,13 @@ L140:
+   for (i__ = 1; i__ <= i__1; ++i__) {
+     simi[jdrop + i__ * simi_dim1] /= temp;
+   }
++#ifdef NLOPT_HAVE_BLAS
++  update_simi_blas(*n, jdrop, &simi[simi_offset], &dx[1], &w[1]);
++  i__1 = *n;
++  for (j = 1; j <= i__1; ++j) {
++    x[j] = sim[j + np * sim_dim1] + dx[j];
++  }
++#else
+   i__1 = *n;
+   for (j = 1; j <= i__1; ++j) {
+     if (j != jdrop) {
+@@ -1018,6 +1045,7 @@ L140:
+     }
+     x[j] = sim[j + np * sim_dim1] + dx[j];
+   }
++#endif
+   goto L40;
+ 
+ /* Calculate DX=x(*)-x(0). Branch if the length of DX is less than 0.5*RHO. */
+@@ -1136,13 +1164,26 @@ L440:
+     ratio = 1.f;
+   }
+   jdrop = 0;
++#ifdef NLOPT_HAVE_BLAS
++  /* SIMI DX in W */
++  {
++    blas_int nn = *n, one = 1;
++    double d1 = 1., d0 = 0.;
++    NLOPT_BLAS(dgemv)("N", &nn, &nn, &d1, &simi[simi_offset], &nn, &dx[1], &one,
++                      &d0, &w[1], &one);
++  }
++#endif
+   i__1 = *n;
+   for (j = 1; j <= i__1; ++j) {
++#ifdef NLOPT_HAVE_BLAS
++    temp = w[j];
++#else
+     temp = 0.;
+     i__2 = *n;
+     for (i__ = 1; i__ <= i__2; ++i__) {
+       temp += simi[j + i__ * simi_dim1] * dx[i__];
+     }
++#endif
+     temp = fabs(temp);
+     if (temp > ratio) {
+       jdrop = j;
+@@ -1193,6 +1234,9 @@ L440:
+   for (i__ = 1; i__ <= i__1; ++i__) {
+     simi[jdrop + i__ * simi_dim1] /= temp;
+   }
++#ifdef NLOPT_HAVE_BLAS
++  update_simi_blas(*n, jdrop, &simi[simi_offset], &dx[1], &w[1]);
++#else
+   i__1 = *n;
+   for (j = 1; j <= i__1; ++j) {
+     if (j != jdrop) {
+@@ -1208,6 +1252,7 @@ L440:
+       }
+     }
+   }
++#endif
+   i__1 = *mpp;
+   for (k = 1; k <= i__1; ++k) {
+     datmat[k + jdrop * datmat_dim1] = con[k];
+-- 
+2.56.0
+

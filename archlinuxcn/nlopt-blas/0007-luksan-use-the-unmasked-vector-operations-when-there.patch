@@ -1,0 +1,71 @@
+From 11c962c8186d5c369ffc46634d2eb096047d3b6f Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 29 Oct 2026 21:44:20 -0400
+Subject: [PATCH 07/21] luksan: use the unmasked vector operations when there
+ are no bounds
+
+The wrappers always passed nb = 1, so the vector kernels (MXUDOT, MXUDIR,
+...) ran their masked variants, which test the bound type of every
+component, even when all variables are unbounded.  Pass nb = 0 in that
+case.  No component is masked then, so the results are bit-identical;
+the plain loops are faster (L-BFGS and truncated Newton: about 1.2x per
+evaluation on an ill-conditioned quadratic with n = 1000-10000).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ src/algs/luksan/plip.c | 5 +++++
+ src/algs/luksan/plis.c | 5 +++++
+ src/algs/luksan/pnet.c | 5 +++++
+ 3 files changed, 15 insertions(+)
+
+diff --git a/src/algs/luksan/plip.c b/src/algs/luksan/plip.c
+index a0bdc9f..b4edd8f 100644
+--- a/src/algs/luksan/plip.c
++++ b/src/algs/luksan/plip.c
+@@ -473,6 +473,11 @@ nlopt_result luksan_plip(int n, nlopt_func f, void *f_data,
+ 	  xl[i] = lb[i];
+ 	  xu[i] = ub[i];
+      }
++     /* without any bounds, use the unmasked vector operations (the same
++	results, as no component is masked) */
++     nb = 0;
++     for (i = 0; i < n; ++i)
++	  if (ix[i] != 0) { nb = 1; break; }
+ 
+      /* ?  xo does not seem to be initialized in the
+ 	original Fortran code, but it is used upon
+diff --git a/src/algs/luksan/plis.c b/src/algs/luksan/plis.c
+index 32ade30..c520702 100644
+--- a/src/algs/luksan/plis.c
++++ b/src/algs/luksan/plis.c
+@@ -467,6 +467,11 @@ nlopt_result luksan_plis(int n, nlopt_func f, void *f_data,
+ 	  xl[i] = lb[i];
+ 	  xu[i] = ub[i];
+      }
++     /* without any bounds, use the unmasked vector operations (the same
++	results, as no component is masked) */
++     nb = 0;
++     for (i = 0; i < n; ++i)
++	  if (ix[i] != 0) { nb = 1; break; }
+ 
+      /* ?  xo does not seem to be initialized in the
+ 	original Fortran code, but it is used upon
+diff --git a/src/algs/luksan/pnet.c b/src/algs/luksan/pnet.c
+index 7f7799c..9f749b5 100644
+--- a/src/algs/luksan/pnet.c
++++ b/src/algs/luksan/pnet.c
+@@ -618,6 +618,11 @@ nlopt_result luksan_pnet(int n, nlopt_func f, void *f_data,
+ 	  xl[i] = lb[i];
+ 	  xu[i] = ub[i];
+      }
++     /* without any bounds, use the unmasked vector operations (the same
++	results, as no component is masked) */
++     nb = 0;
++     for (i = 0; i < n; ++i)
++	  if (ix[i] != 0) { nb = 1; break; }
+ 
+      /* ?  xo does not seem to be initialized in the
+ 	original Fortran code, but it is used upon
+-- 
+2.56.0
+

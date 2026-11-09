@@ -1,0 +1,180 @@
+From 35bd196dbe0d70b8f876600de21e6348b1840d43 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 30 Oct 2026 14:51:37 -0400
+Subject: [PATCH 17/21] bobyqa: use level-3 BLAS for the shift of XBASE for n
+ >= 100
+
+As for NEWUOA, with an external BLAS/LAPACK and n >= 100, do the whole
+O(n^3) shift of XBASE with level-2/3 BLAS: the per-point rank-two and
+rank-one updates of the lower triangle of BMAT(NPT+1:,:) become DSYR2K
+and DSYRK, the per-column products with ZMAT (DGEMV and DGER until now)
+two DGEMMs, and the update of HQ DSPR2.  This needs about 5n^2 doubles of
+workspace, allocated for each shift; if that fails, for smaller n, and
+without an external BLAS, the original loops are used.
+
+The summation order changes, so results differ in the last bits for
+n >= 100.  With a cheap objective, the time per evaluation drops by
+another 1.03-1.06x (n = 100) to 1.07-1.14x (n = 200) with
+single-threaded OpenBLAS.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ src/algs/bobyqa/bobyqa.c | 114 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 94 insertions(+), 20 deletions(-)
+
+diff --git a/src/algs/bobyqa/bobyqa.c b/src/algs/bobyqa/bobyqa.c
+index 7f1b1b6..ff425a0 100644
+--- a/src/algs/bobyqa/bobyqa.c
++++ b/src/algs/bobyqa/bobyqa.c
+@@ -1976,6 +1976,90 @@ L50:
+     return NLOPT_SUCCESS;
+ } /* prelim_ */
+ 
++#ifdef NLOPT_HAVE_BLAS
++/* The shift of XBASE by XOPT in BOBYQB (labels L90-L170, before XBASE, XOPT
++   and the other vectors are updated), with level-2/3 BLAS: the per-K
++   rank-two (L110) and rank-one (L150) updates of the lower triangle of
++   BMAT(NPT+1:,:) become DSYR2K and DSYRK, the per-JJ products with ZMAT
++   (L130, L140) DGEMM, and the update of HQ DSPR2.  Arrays are 0-based here;
++   W and VLAG are left as the loops leave them.  Returns 0, without changing
++   anything, if it cannot allocate its workspace. */
++static int shift_xbase_blas(int n, int npt, int ndim, double *xpt,
++			    double *bmat, const double *zmat, const double *pq,
++			    double *hq, const double *xopt, double xoptsq,
++			    double *w, double *vlag)
++{
++    const int nptm = npt - n - 1;
++    const double half = .5, fracsq = xoptsq * .25;
++    blas_int nn = n, np_ = npt, nm = nptm, ldb = ndim, one = 1;
++    double d1 = 1., d0 = 0., sumpq = 0;
++    double *xw, *wz, *vl, *c, *s = w + npt, *bbot = bmat + npt;
++    int i, j, k;
++
++    xw = (double *) malloc(sizeof(double) * ((size_t) npt * n + (size_t) npt * nptm
++					     + (size_t) n * nptm + nptm));
++    if (!xw) return 0;
++    wz = xw + (size_t) npt * n;
++    vl = wz + (size_t) npt * nptm;
++    c = vl + (size_t) n * nptm;
++
++    /* The changes to BMAT that do not depend on ZMAT: S = XPT XOPT -
++       XOPTSQ/2 and, with the rows S(K) XPT(K,:) + (FRACSQ - S(K)/2) XOPT^T
++       of XW, the lower triangle of BMAT(NPT+1:,:) += BMAT(1:NPT,:)^T XW +
++       XW^T BMAT(1:NPT,:). */
++    for (k = 0; k < npt; ++k) sumpq += pq[k];
++    NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, xpt, &np_, xopt, &one, &d0, s, &one);
++    for (k = 0; k < npt; ++k) s[k] -= half * xoptsq;
++    for (j = 0; j < n; ++j) {
++	const double *xptj = xpt + (size_t) j * npt;
++	double *xwj = xw + (size_t) j * npt;
++	for (k = 0; k < npt; ++k)
++	    xwj[k] = s[k] * xptj[k] + (fracsq - half * s[k]) * xopt[j];
++    }
++    NLOPT_BLAS(dsyr2k)("L", "T", &nn, &np_, &d1, bmat, &ldb, xw, &np_, &d1, bbot, &ldb);
++
++    /* The changes that depend on ZMAT: with WZ(:,JJ) = S .* ZMAT(:,JJ) and
++       VL = XPT^T WZ + XOPT C^T, where C(JJ) = FRACSQ SUM(ZMAT(:,JJ)) -
++       SUM(WZ(:,JJ))/2, BMAT(1:NPT,:) += ZMAT VL^T and the lower triangle of
++       BMAT(NPT+1:,:) += VL VL^T. */
++    for (k = 0; k < nptm; ++k) {
++	const double *zk = zmat + (size_t) k * npt;
++	double *wzk = wz + (size_t) k * npt, sumz = 0, sumw = 0;
++	for (i = 0; i < npt; ++i) {
++	    sumz += zk[i];
++	    wzk[i] = s[i] * zk[i];
++	    sumw += wzk[i];
++	}
++	c[k] = fracsq * sumz - half * sumw;
++    }
++    NLOPT_BLAS(dgemm)("T", "N", &nn, &nm, &np_, &d1, xpt, &np_, wz, &np_, &d0, vl, &nn);
++    for (k = 0; k < nptm; ++k) {
++	double *vlk = vl + (size_t) k * n;
++	for (j = 0; j < n; ++j) vlk[j] += c[k] * xopt[j];
++    }
++    NLOPT_BLAS(dgemm)("N", "T", &np_, &nn, &nm, &d1, zmat, &np_, vl, &nn, &d1, bmat, &ldb);
++    NLOPT_BLAS(dsyrk)("L", "N", &nn, &nm, &d1, vl, &nn, &d1, bbot, &ldb);
++    if (nptm > 0)
++	memcpy(vlag, wz + (size_t) (nptm - 1) * npt, sizeof(double) * npt);
++
++    /* Complete the shift: W = XPT^T PQ - SUM(PQ) XOPT/2, XPT -= XOPT,
++       HQ += W XOPT^T + XOPT W^T, and BMAT(NPT+1:,:) symmetric again. */
++    for (j = 0; j < n; ++j) w[j] = -half * sumpq * xopt[j];
++    NLOPT_BLAS(dgemv)("T", &np_, &nn, &d1, xpt, &np_, pq, &one, &d1, w, &one);
++    for (j = 0; j < n; ++j) {
++	double *xptj = xpt + (size_t) j * npt;
++	for (k = 0; k < npt; ++k) xptj[k] -= xopt[j];
++    }
++    NLOPT_BLAS(dspr2)("U", &nn, &d1, w, &one, xopt, &one, hq);
++    for (j = 0; j < n; ++j)
++	for (i = 0; i < j; ++i)
++	    bbot[i + (size_t) j * ndim] = bbot[j + (size_t) i * ndim];
++
++    free(xw);
++    return 1;
++}
++#endif
++
+ static nlopt_result bobyqb_(int *n, int *npt, double *x, 
+ 	const double *xl, const double *xu, double *rhobeg, double *
+ 	rhoend, 
+@@ -2241,6 +2325,15 @@ L60:
+ 
+ L90:
+     if (dsq <= xoptsq * .001) {
++#ifdef NLOPT_HAVE_BLAS
++	if (*n >= BOBYQA_BLAS_MIN_N
++	    && shift_xbase_blas(*n, *npt, *ndim, &xpt[xpt_offset],
++				&bmat[bmat_offset], &zmat[zmat_offset], &pq[1],
++				&hq[1], &xopt[1], xoptsq, &w[1], &vlag[1])) {
++	}
++	else
++#endif
++	{ /* the original loops */
+ 	fracsq = xoptsq * .25;
+ 	sumpq = zero;
+ 	i__1 = *npt;
+@@ -2281,25 +2374,6 @@ L90:
+ /* L120: */
+ 		sumw += vlag[k];
+ 	    }
+-#ifdef NLOPT_HAVE_BLAS
+-	    if (*n >= BOBYQA_BLAS_MIN_N)
+-	    /* W = (FRACSQ*SUMZ - SUMW/2) XOPT + XPT^T VLAG,
+-	       BMAT(1:NPT,:) += ZMAT(:,JJ) W^T */
+-	    {
+-		blas_int np_ = *npt, nn = *n, one = 1, ldb = *ndim;
+-		double d1 = 1.;
+-		i__2 = *n;
+-		for (j = 1; j <= i__2; ++j) {
+-		    w[j] = (fracsq * sumz - half * sumw) * xopt[j];
+-		}
+-		NLOPT_BLAS(dgemv)("T", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &vlag[1],
+-				  &one, &d1, &w[1], &one);
+-		NLOPT_BLAS(dger)(&np_, &nn, &d1, &zmat[1 + jj * zmat_dim1], &one, &w[1],
+-				 &one, &bmat[bmat_offset], &ldb);
+-	    }
+-	    else
+-#endif
+-	    { /* the original loops */
+ 	    i__2 = *n;
+ 	    for (j = 1; j <= i__2; ++j) {
+ 		sum = (fracsq * sumz - half * sumw) * xopt[j];
+@@ -2315,7 +2389,6 @@ L90:
+ 		    bmat[k + j * bmat_dim1] += sum * zmat[k + jj * zmat_dim1];
+ 		}
+ 	    }
+-	    }
+ 	    i__1 = *n;
+ 	    for (i__ = 1; i__ <= i__1; ++i__) {
+ 		ip = i__ + *npt;
+@@ -2350,6 +2423,7 @@ L90:
+ 			bmat_dim1];
+ 	    }
+ 	}
++	}
+ 	i__1 = *n;
+ 	for (i__ = 1; i__ <= i__1; ++i__) {
+ 	    xbase[i__] += xopt[i__];
+-- 
+2.56.0
+

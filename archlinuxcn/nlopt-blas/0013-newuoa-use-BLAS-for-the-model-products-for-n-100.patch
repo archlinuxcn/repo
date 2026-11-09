@@ -1,0 +1,256 @@
+From 741c5d4a566bdbb1ec7e8f70b1d35e5cd8d8744e Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 29 Oct 2026 22:48:04 -0400
+Subject: [PATCH 13/21] newuoa: use BLAS for the model products for n >= 100
+
+With an external BLAS/LAPACK and n >= 100, compute the Hessian-vector
+product of the trust-region subproblem (TRSAPP; HD = XPT^T (PQ .* (XPT D)),
+with NPT more doubles of workspace), the VLAG/BETA products of each
+iteration and the XBASE shift's BMAT updates with DGEMV, DDOT, DAXPY and
+DGER.  For smaller n, and without an external BLAS, the original loops
+are used: below n = 100, single-threaded OpenBLAS DGEMV made some sizes
+up to 3x slower than the loops (depending on the placement of the
+arrays), while above it the BLAS version was never slower.
+
+The summation order changes with BLAS, so results differ in the last
+bits for n >= 100.  With a cheap objective, the time per evaluation
+drops by 1.5x (n = 150) to 1.7x (n = 100, 200).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ CMakeLists.txt           |   4 +-
+ src/algs/newuoa/newuoa.c | 106 +++++++++++++++++++++++++++++++++++++--
+ src/util/nlopt-blas.h    |   1 +
+ 3 files changed, 104 insertions(+), 7 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 014bbd3..dcdb4d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,8 +144,8 @@ if (_blas_candidates)
+   foreach (_suffix IN LISTS _blas_suffixes)
+     set (_decls)
+     set (_calls)
+-    foreach (_r daxpy dscal dnrm2 ddot dgemv dgemm dtpmv dtpsv dtrsm dtrsv dgelsy dgeqr2
+-                dgerq2 dlaic1 dlarf dlarfgp dlartgp dorm2r dormr2)
++    foreach (_r daxpy dscal dnrm2 ddot dgemv dger dgemm dtpmv dtpsv dtrsm dtrsv dgelsy
++                dgeqr2 dgerq2 dlaic1 dlarf dlarfgp dlartgp dorm2r dormr2)
+       string (APPEND _decls "char ${_r}${_suffix}(void);\n")
+       string (APPEND _calls "  ${_r}${_suffix}();\n")
+     endforeach ()
+diff --git a/src/algs/newuoa/newuoa.c b/src/algs/newuoa/newuoa.c
+index a3428a6..87e74fb 100644
+--- a/src/algs/newuoa/newuoa.c
++++ b/src/algs/newuoa/newuoa.c
+@@ -31,6 +31,11 @@
+ #include <string.h>
+ 
+ #include "newuoa.h"
++#include "nlopt-blas.h"
++
++/* With an external BLAS, use it for N >= NEWUOA_BLAS_MIN_N only: for smaller
++   N, OpenBLAS's DGEMV made some sizes up to 3x slower than the loops. */
++#define NEWUOA_BLAS_MIN_N 100
+ 
+ #define MIN2(a,b) ((a) <= (b) ? (a) : (b))
+ #define MAX2(a,b) ((a) >= (b) ? (a) : (b))
+@@ -100,7 +105,8 @@ static nlopt_result trsapp_(int *n, int *npt, double *xopt,
+ 	double *xpt, double *gq, double *hq, double *pq,
+ 	double *delta, double *step, double *d__, double *g,
+ 	double *hd, double *hs, double *crvmin,
+-		    const double *xbase, const double *lb, const double *ub)
++		    const double *xbase, const double *lb, const double *ub,
++		    double *hxpt)
+ {
+     /* System generated locals */
+     int xpt_dim1, xpt_offset, i__1, i__2;
+@@ -141,6 +147,10 @@ static nlopt_result trsapp_(int *n, int *npt, double *xopt,
+ 
+ /* Initialization, which includes setting HD to H times XOPT. */
+ 
++#ifndef NLOPT_HAVE_BLAS
++    (void) hxpt; /* only used with BLAS */
++#endif
++
+     /* Parameter adjustments */
+     xpt_dim1 = *npt;
+     xpt_offset = 1 + xpt_dim1;
+@@ -446,6 +456,23 @@ L160:
+ /* by the value of ITERC. */
+ 
+ L170:
++#ifdef NLOPT_HAVE_BLAS
++    /* HD = XPT^T (PQ .* (XPT D)), with HXPT (length NPT) holding XPT D */
++    if (*n >= NEWUOA_BLAS_MIN_N)
++    {
++	blas_int np_ = *npt, nn = *n, one = 1;
++	double d1 = 1., d0 = 0.;
++	NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &d__[1], &one,
++			  &d0, hxpt, &one);
++	for (k = 0; k < *npt; ++k) {
++	    hxpt[k] *= pq[k + 1];
++	}
++	NLOPT_BLAS(dgemv)("T", &np_, &nn, &d1, &xpt[xpt_offset], &np_, hxpt, &one,
++			  &d0, &hd[1], &one);
++    }
++    else
++#endif
++    { /* the original loops */
+     i__1 = *n;
+     for (i__ = 1; i__ <= i__1; ++i__) {
+ /* L180: */
+@@ -466,6 +493,7 @@ L170:
+ 	    hd[i__] += temp * xpt[k + i__ * xpt_dim1];
+ 	}
+     }
++    }
+     ih = 0;
+     i__2 = *n;
+     for (j = 1; j <= i__2; ++j) {
+@@ -1588,7 +1616,7 @@ static nlopt_result newuob_(int *n, int *npt, double *x,
+ 		    double *xbase, double *xopt, double *xnew,
+ 		    double *xpt, double *fval, double *gq, double *hq,
+ 		    double *pq, double *bmat, double *zmat, int *ndim,
+-		    double *d__, double *vlag, double *w)
++		    double *d__, double *vlag, double *w, double *hxpt)
+ {
+     /* System generated locals */
+     int xpt_dim1, xpt_offset, bmat_dim1, bmat_offset, zmat_dim1,
+@@ -1857,7 +1885,7 @@ L100:
+     knew = 0;
+     rc2 = trsapp_(n, npt, &xopt[1], &xpt[xpt_offset], &gq[1], &hq[1], &pq[1], &
+ 	    delta, &d__[1], &w[1], &w[np], &w[np + *n], &w[np + (*n << 1)], &
+-	    crvmin, &xbase[1], lb, ub);
++	    crvmin, &xbase[1], lb, ub, hxpt);
+     if (rc2 < 0) { rc = rc2; goto L530; }
+     dsq = zero;
+     i__1 = *n;
+@@ -1933,6 +1961,24 @@ L120:
+ /* L150: */
+ 		w[i__] = w[*npt + i__] * zmat[i__ + k * zmat_dim1];
+ 	    }
++#ifdef NLOPT_HAVE_BLAS
++	    /* VLAG = TEMPQ*SUMZ*XOPT + XPT^T W, BMAT(1:NPT,:) += +-ZMAT(:,K) VLAG^T */
++	    if (*n >= NEWUOA_BLAS_MIN_N)
++	    {
++		blas_int np_ = *npt, nn = *n, one = 1, ldb = *ndim;
++		double d1 = 1., sgn = k < idz ? -1. : 1.;
++		i__2 = *n;
++		for (j = 1; j <= i__2; ++j) {
++		    vlag[j] = tempq * sumz * xopt[j];
++		}
++		NLOPT_BLAS(dgemv)("T", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &w[1],
++				  &one, &d1, &vlag[1], &one);
++		NLOPT_BLAS(dger)(&np_, &nn, &sgn, &zmat[1 + k * zmat_dim1], &one,
++				 &vlag[1], &one, &bmat[bmat_offset], &ldb);
++	    }
++	    else
++#endif
++	    { /* the original loops */
+ 	    i__2 = *n;
+ 	    for (j = 1; j <= i__2; ++j) {
+ 		sum = tempq * sumz * xopt[j];
+@@ -1952,6 +1998,7 @@ L120:
+ 			    zmat_dim1];
+ 		}
+ 	    }
++	    }
+ 	    i__1 = *n;
+ 	    for (i__ = 1; i__ <= i__1; ++i__) {
+ 		ip = i__ + *npt;
+@@ -2018,6 +2065,52 @@ L120:
+ /* Calculate VLAG and BETA for the current choice of D. The first NPT */
+ /* components of W_check will be held in W. */
+ 
++#ifdef NLOPT_HAVE_BLAS
++    if (*n >= NEWUOA_BLAS_MIN_N)
++    {
++	blas_int np_ = *npt, nn = *n, one = 1, ldb = *ndim;
++	double d1 = 1., d0 = 0.;
++	/* W(K) = SUMA, VLAG(K) = SUMB, then W(K) as below and VLAG = BMAT D */
++	NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &d__[1], &one,
++			  &d0, &w[1], &one);
++	NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &xopt[1], &one,
++			  &d0, &vlag[1], &one);
++	i__1 = *npt;
++	for (k = 1; k <= i__1; ++k) {
++	    w[k] *= half * w[k] + vlag[k];
++	}
++	NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, &bmat[bmat_offset], &ldb, &d__[1], &one,
++			  &d0, &vlag[1], &one);
++	beta = zero;
++	i__1 = nptm;
++	for (k = 1; k <= i__1; ++k) {
++	    sum = NLOPT_BLAS(ddot)(&np_, &zmat[1 + k * zmat_dim1], &one, &w[1], &one);
++	    if (k < idz) {
++		beta += sum * sum;
++		sum = -sum;
++	    } else {
++		beta -= sum * sum;
++	    }
++	    NLOPT_BLAS(daxpy)(&np_, &sum, &zmat[1 + k * zmat_dim1], &one, &vlag[1], &one);
++	}
++	/* VLAG(NPT+J) = BMAT(NPT+J,:) D + W(1:NPT)^T BMAT(1:NPT,J) */
++	NLOPT_BLAS(dgemv)("N", &nn, &nn, &d1, &bmat[*npt + 1 + bmat_dim1], &ldb, &d__[1],
++			  &one, &d0, &vlag[*npt + 1], &one);
++	bsum = zero;
++	dx = zero;
++	i__2 = *n;
++	for (j = 1; j <= i__2; ++j) {
++	    sum = NLOPT_BLAS(ddot)(&np_, &w[1], &one, &bmat[1 + j * bmat_dim1], &one);
++	    bsum += sum * d__[j];
++	    jp = *npt + j;
++	    vlag[jp] += sum;
++	    bsum += vlag[jp] * d__[j];
++	    dx += d__[j] * xopt[j];
++	}
++    }
++    else
++#endif
++    { /* the original loops */
+     i__1 = *npt;
+     for (k = 1; k <= i__1; ++k) {
+ 	suma = zero;
+@@ -2077,6 +2170,7 @@ L120:
+ /* L280: */
+ 	dx += d__[j] * xopt[j];
+     }
++    }
+     beta = dx * dx + dsq * (xoptsq + dx + dx + half * dsq) + beta - bsum;
+     vlag[kopt] += one;
+ 
+@@ -2560,7 +2654,8 @@ nlopt_result newuoa(int n, int npt, double *x,
+     ivl = id + n;
+     iw = ivl + ndim;
+ 
+-    w = (double *) malloc(sizeof(double) * ((npt+13)*(npt+n) + 3*(n*(n+3))/2));
++    /* the last NPT elements are scratch for TRSAPP's Hessian product */
++    w = (double *) malloc(sizeof(double) * ((npt+13)*(npt+n) + 3*(n*(n+3))/2 + npt));
+     if (!w) return NLOPT_OUT_OF_MEMORY;
+     --w;
+ 
+@@ -2572,7 +2667,8 @@ nlopt_result newuoa(int n, int npt, double *x,
+ 		  lb, ub, stop, minf, calfun, calfun_data,
+ 		  &w[ixb], &w[ixo], &w[ixn], &w[ixp], &w[ifv],
+ 		  &w[igq], &w[ihq], &w[ipq], &w[ibmat], &w[izmat],
+-		  &ndim, &w[id], &w[ivl], &w[iw]);
++		  &ndim, &w[id], &w[ivl], &w[iw],
++		  &w[(npt+13)*(npt+n) + 3*(n*(n+3))/2 + 1]);
+ 
+     ++w;
+     free(w);
+diff --git a/src/util/nlopt-blas.h b/src/util/nlopt-blas.h
+index 4510d1e..1600d1d 100644
+--- a/src/util/nlopt-blas.h
++++ b/src/util/nlopt-blas.h
+@@ -46,6 +46,7 @@ void   NLOPT_BLAS(dormr2)(const char* side, const char* trans, const blas_int* m
+ 
+ /* Used only with an external BLAS, without a built-in version: the
+    callers keep their own loops for the built-in case. */
++void   NLOPT_BLAS(dger)(const blas_int* m, const blas_int* n, const double* alpha, const double* x, const blas_int* incx, const double* y, const blas_int* incy, double* a, const blas_int* lda);
+ void   NLOPT_BLAS(dgemm)(const char* transa, const char* transb, const blas_int* m, const blas_int* n, const blas_int* k, const double* alpha, const double* a, const blas_int* lda, const double* b, const blas_int* ldb, const double* beta, double* c, const blas_int* ldc);
+ #else
+ typedef ptrdiff_t blas_int;
+-- 
+2.56.0
+

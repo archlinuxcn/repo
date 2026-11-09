@@ -1,15 +1,16 @@
-From a0098ed081d21ab1ae025695355d9e90eb738b72 Mon Sep 17 00:00:00 2001
+From a9b5e3bdb81cefabcf2f5d66249bb6566dd1f02c Mon Sep 17 00:00:00 2001
 From: Yichao Yu <yyc1992@gmail.com>
-Date: Thu, 29 Oct 2026 14:35:26 -0400
-Subject: [PATCH 1/3] slsqp: replace the f2c core with a port of SciPy's
+Date: Fri, 30 Oct 2026 01:03:21 -0400
+Subject: [PATCH 02/21] slsqp: replace the f2c core with a port of SciPy's
  BLAS/LAPACK-based C rewrite
 
 Replace the f2c translation of Kraft's SLSQP (main iteration, LSQ, LSEI,
 LSI, LDP, NNLS, LDL' update and the hand-written BLAS-1 loops) with a
 port of SciPy's C rewrite of the same routines (scipy/scipy#22524),
 which follows the same iterates but delegates the dense linear algebra
-to BLAS/LAPACK (dgeqr2/dorm2r, dgerq2/dormr2, dgelsy, dtrsm, dtpmv, ...).
-This cuts the time per iteration by 6-10x for a few hundred variables.
+to BLAS/LAPACK (dgeqr2/dorm2r, dgerq2/dormr2, dgelsy, dtrsm, dtpmv, ...)
+through nlopt-blas.h.  This cuts the time per iteration by 6-10x for a
+few hundred variables with an external BLAS/LAPACK.
 
 The NLopt wrapper and its stopping criteria are kept; the NLopt changes
 of the old translation are carried over (bound clamping, backing off
@@ -26,50 +27,25 @@ New algorithm parameters:
   kraft_acc (default 0, current behavior): enables Kraft's own
     convergence tests with the given accuracy (SciPy's ftol).
 
-NNLS includes a fix for an out-of-bounds write in SciPy's version when
-the last column leaves the passive set (scipy/scipy#26561).
-
-For now this links against an ILP64 BLAS/LAPACK with the "64_" suffix
-(libblas64).
-
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 ---
- CMakeLists.txt               |    7 +
  doc/docs/NLopt_Algorithms.md |    7 +
  src/algs/slsqp/COPYRIGHT     |    4 +
- src/algs/slsqp/README        |   30 +
- src/algs/slsqp/slsqp.c       | 3746 +++++++++++++---------------------
+ src/algs/slsqp/README        |   42 +
+ src/algs/slsqp/slsqp.c       | 3722 ++++++++++++----------------------
  src/algs/slsqp/slsqp.h       |    2 +-
  src/api/optimize.c           |    3 +-
- 7 files changed, 1416 insertions(+), 2383 deletions(-)
+ 6 files changed, 1397 insertions(+), 2383 deletions(-)
 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1baa9b5..341bfa4 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -232,6 +232,13 @@ endif ()
- if (M_LIBRARY)
-   target_link_libraries (${nlopt_lib} PRIVATE ${M_LIBRARY})
- endif ()
-+# SLSQP calls BLAS/LAPACK; for now this must be an ILP64 build with the
-+# "64_" symbol suffix (e.g. libblas64 from OpenBLAS)
-+find_library (NLOPT_BLAS64_LIBRARY NAMES blas64)
-+if (NOT NLOPT_BLAS64_LIBRARY)
-+  message (FATAL_ERROR "ILP64 BLAS/LAPACK (libblas64) not found")
-+endif ()
-+target_link_libraries (${nlopt_lib} PRIVATE ${NLOPT_BLAS64_LIBRARY})
- set_target_properties (${nlopt_lib} PROPERTIES SOVERSION ${SO_MAJOR})
- set_target_properties (${nlopt_lib} PROPERTIES VERSION "${SO_MAJOR}.${SO_MINOR}.${SO_PATCH}")
- if (NLOPT_CXX)
 diff --git a/doc/docs/NLopt_Algorithms.md b/doc/docs/NLopt_Algorithms.md
-index 975dd7a..43388a9 100644
+index 975dd7a..0893e29 100644
 --- a/doc/docs/NLopt_Algorithms.md
 +++ b/doc/docs/NLopt_Algorithms.md
 @@ -353,6 +353,13 @@ The Fortran code was obtained from the SciPy project, who are responsible for [o
  
  The code was modified for inclusion in NLopt by S. G. Johnson in 2010, with the following changes. The code was converted to C and manually cleaned up. It was modified to be re-entrant (preserving the reverse-communication interface but explicitly saving the state in a data structure). The reverse-communication interface was wrapped with an NLopt-style interface, with NLopt stopping conditions. The inexact line search was modified to evaluate the functions including gradients for the first step, since this removes the need to evaluate the function+gradient a second time for the same point in the common case when the inexact line search concludes after a single step; this is motivated by the fact that NLopt's interface combines the function and gradient computations. Since roundoff errors sometimes pushed SLSQP's parameters slightly outside the bound constraints (not allowed by NLopt), we added checks to force the parameters within the bounds. We fixed [a bug](http://projects.scipy.org/scipy/ticket/1231) in the LSEI subroutine (use of uninitialized variables) for the case where the number of equality constraints equals the dimension of the problem. The LSQ subroutine was modified to handle infinite lower/upper bounds (in which case those constraints are omitted).
  
-+The algorithm (main iteration and subproblem solvers) was later replaced by a port of SciPy's C rewrite of the same code ([scipy/scipy#22524](https://github.com/scipy/scipy/pull/22524)), which follows the same iterates but uses BLAS/LAPACK for the dense linear algebra, with the NLopt modifications above carried over. It currently requires an ILP64 BLAS/LAPACK library.
++The algorithm (main iteration and subproblem solvers) was later replaced by a port of SciPy's C rewrite of the same code ([scipy/scipy#22524](https://github.com/scipy/scipy/pull/22524)), which follows the same iterates but uses BLAS/LAPACK for the dense linear algebra, with the NLopt modifications above carried over. A BLAS/LAPACK library is used if one is found at configure time (see the `NLOPT_BLAS` option in the [installation instructions](NLopt_Installation.md)); otherwise NLopt uses built-in C versions of the few routines needed.
 +
 +The `NLOPT_LD_SLSQP` algorithm supports the following internal parameters, which can be specified using the [`nlopt_set_param` API](NLopt_Reference.md#algorithm-specific-parameters):
 +
@@ -95,10 +71,10 @@ index dbdb062..1aa3192 100644
  modification, are permitted provided that the following conditions are met:
  
 diff --git a/src/algs/slsqp/README b/src/algs/slsqp/README
-index d51fafd..021dbba 100644
+index d51fafd..693137e 100644
 --- a/src/algs/slsqp/README
 +++ b/src/algs/slsqp/README
-@@ -45,3 +45,33 @@ these kinds of algorithms), we plan to do so using a recursive call to
+@@ -45,3 +45,45 @@ these kinds of algorithms), we plan to do so using a recursive call to
  NLopt.  (This will allow a user-specified line-search algorithm to be
  used, and will allow the gradient to be exploited in the exact line
  search, in contrast to the routine provided with SLSQP.)
@@ -114,9 +90,21 @@ index d51fafd..021dbba 100644
 +further changes: unbounded variables are passed to the subproblem as
 +NaN bounds, as SciPy does, and the least-squares solve without
 +inequality constraints marks all columns as fixed for DGELSY
-+explicitly instead of relying on leftover workspace contents.  The
-+code currently requires an ILP64 BLAS/LAPACK with the "64_" symbol
-+suffix (see SLSQP_BLAS in slsqp.c).
++explicitly instead of relying on leftover workspace contents.
++
++The BLAS/LAPACK library is chosen at configure time with the CMake
++option NLOPT_BLAS: AUTO (default; use one if found), ON (require one),
++OFF, or the name(s) or path(s) of the library to use.  The symbol
++convention is detected from the library ("_64_", "_64", "_" or no
++suffix) by test-linking, without running anything; a "64" suffix implies
++64-bit integers, and no suffix 32-bit ones.  For libraries providing
++both, the interface with pointer-sized integers is preferred (32-bit on
++32-bit platforms).  Without a BLAS/LAPACK, src/util/nlopt-blas-builtin.h
++provides plain C ports (with pointer-sized integers) of the reference
++BLAS/LAPACK 3.12 routines that are needed, restricted to the arguments
++used here (DGELSY without column pivoting and without the minimum-norm
++solution for rank-deficient problems, which SLSQP treats as a failure
++anyway).
 +
 +Two algorithm parameters (nlopt_set_param) control the remaining
 +differences from the original algorithm:
@@ -133,10 +121,10 @@ index d51fafd..021dbba 100644
 +    violation below kraft_acc) are used in addition to NLopt's own
 +    stopping criteria; 0 disables them.
 diff --git a/src/algs/slsqp/slsqp.c b/src/algs/slsqp/slsqp.c
-index 2d9763e..9b7e409 100644
+index 2d9763e..89cb68f 100644
 --- a/src/algs/slsqp/slsqp.c
 +++ b/src/algs/slsqp/slsqp.c
-@@ -1,11 +1,16 @@
+@@ -1,11 +1,17 @@
  /* SLSQP: Sequentional Least Squares Programming (aka sequential quadratic programming SQP)
     method for nonlinearly constrained nonlinear optimization, by Dieter Kraft (1991).
     Fortran released under a free (BSD) license by ACM to the SciPy project and used there.
@@ -147,21 +135,22 @@ index 2d9763e..9b7e409 100644
 +   The f2c translation of the algorithm (main iteration, LSQ, LSEI, LSI, LDP, NNLS and the
 +   LDL' update) was later replaced by SciPy's C rewrite of the same routines
 +   (Ilhan Polat, scipy/scipy#22524, BSD license), which delegates the dense linear
-+   algebra to BLAS/LAPACK.  The NLopt-specific changes of the original translation
-+   (bound clamping, non-finite line-search steps, no iteration limit, gradient at
-+   the first line-search trial point) were carried over. */
++   algebra to BLAS/LAPACK (or to the built-in versions in util/nlopt-blas-builtin.h
++   when NLopt is configured without one).  The NLopt-specific changes of the original
++   translation (bound clamping, non-finite line-search steps, no iteration limit,
++   gradient at the first line-search trial point) were carried over. */
  
  #include <math.h>
 +#include <stdint.h>
  #include <stdlib.h>
  #include <string.h>
  
-@@ -41,2398 +46,1347 @@
+@@ -41,2398 +47,1322 @@
  /*      Fax. 212.869.0481 */
  /*      ------ */
  
 -/********************************* BLAS1 routines *************************/
-+/***************************** BLAS/LAPACK *******************************/
++#include "nlopt-blas.h"
  
 -/*     COPIES A VECTOR, X, TO A VECTOR, Y, with the given increments */
 -static void dcopy___(int *n_, const double *dx, int incx, 
@@ -180,36 +169,11 @@ index 2d9763e..9b7e409 100644
 -	  for (i = 0; i < n; ++i) dy[i*incy] = dx[i*incx];
 -     }
 -} /* dcopy___ */
-+/* For now this assumes an ILP64 BLAS/LAPACK with the "64_" symbol suffix,
-+   e.g. /usr/lib/libblas64.so (OpenBLAS) on Arch Linux. */
-+typedef int64_t blas_int;
-+#ifndef SLSQP_BLAS
-+#  define SLSQP_BLAS(name) name##_64_
-+#endif
++/********************************* NNLS ***********************************/
  
 -/* CONSTANT TIMES A VECTOR PLUS A VECTOR. */
 -static void daxpy_sl__(int *n_, const double *da_, const double *dx, 
 -		       int incx, double *dy, int incy)
-+void   SLSQP_BLAS(daxpy)(const blas_int* n, const double* alpha, const double* x, const blas_int* incx, double* y, const blas_int* incy);
-+void   SLSQP_BLAS(dscal)(const blas_int* n, const double* alpha, double* x, const blas_int* incx);
-+double SLSQP_BLAS(dnrm2)(const blas_int* n, const double* x, const blas_int* incx);
-+double SLSQP_BLAS(ddot)(const blas_int* n, const double* x, const blas_int* incx, const double* y, const blas_int* incy);
-+void   SLSQP_BLAS(dgemv)(const char* trans, const blas_int* m, const blas_int* n, const double* alpha, const double* a, const blas_int* lda, const double* x, const blas_int* incx, const double* beta, double* y, const blas_int* incy);
-+void   SLSQP_BLAS(dtpmv)(const char* uplo, const char* trans, const char* diag, const blas_int* n, const double* ap, double* x, const blas_int* incx);
-+void   SLSQP_BLAS(dtpsv)(const char* uplo, const char* trans, const char* diag, const blas_int* n, const double* ap, double* x, const blas_int* incx);
-+void   SLSQP_BLAS(dtrsm)(const char* side, const char* uplo, const char* transa, const char* diag, const blas_int* m, const blas_int* n, const double* alpha, const double* a, const blas_int* lda, double* b, const blas_int* ldb);
-+void   SLSQP_BLAS(dtrsv)(const char* uplo, const char* trans, const char* diag, const blas_int* n, const double* a, const blas_int* lda, double* x, const blas_int* incx);
-+void   SLSQP_BLAS(dgelsy)(const blas_int* m, const blas_int* n, const blas_int* nrhs, double* a, const blas_int* lda, double* b, const blas_int* ldb, blas_int* jpvt, const double* rcond, blas_int* rank, double* work, const blas_int* lwork, blas_int* info);
-+void   SLSQP_BLAS(dgeqr2)(const blas_int* m, const blas_int* n, double* a, const blas_int* lda, double* tau, double* work, blas_int* info);
-+void   SLSQP_BLAS(dgerq2)(const blas_int* m, const blas_int* n, double* a, const blas_int* lda, double* tau, double* work, blas_int* info);
-+void   SLSQP_BLAS(dlarf)(const char* side, const blas_int* m, const blas_int* n, const double* v, const blas_int* incv, const double* tau, double* c, const blas_int* ldc, double* work);
-+void   SLSQP_BLAS(dlarfgp)(const blas_int* n, double* alpha, double* x, const blas_int* incx, double* tau);
-+void   SLSQP_BLAS(dlartgp)(const double* f, const double* g, double* cs, double* sn, double* r);
-+void   SLSQP_BLAS(dorm2r)(const char* side, const char* trans, const blas_int* m, const blas_int* n, const blas_int* k, const double* a, const blas_int* lda, const double* tau, double* c, const blas_int* ldc, double* work, blas_int* info);
-+void   SLSQP_BLAS(dormr2)(const char* side, const char* trans, const blas_int* m, const blas_int* n, const blas_int* k, const double* a, const blas_int* lda, const double* tau, double* c, const blas_int* ldc, double* work, blas_int* info);
-+
-+/********************************* NNLS ***********************************/
-+
 +/* Lawson & Hanson nonnegative least squares, min |Ax - b| s.t. x >= 0.
 +   a is (m x n), b is (m), x, w are (n), zz is (m), indices is (n). */
 +static void
@@ -247,7 +211,7 @@ index 2d9763e..9b7e409 100644
 +        {
 +            j = indices[i];
 +            tmpint = m - indz;
-+            w[j] = SLSQP_BLAS(ddot)(&tmpint, &a[indz + j*m], &one, &b[indz], &one);
++            w[j] = NLOPT_BLAS(ddot)(&tmpint, &a[indz + j*m], &one, &b[indz], &one);
 +        }
 +
 +        // Find the next linearly independent column that corresponds to the
@@ -272,25 +236,25 @@ index 2d9763e..9b7e409 100644
 +            // are not modified until j is accepted.
 +
 +            // Compute the norm of a[0:indz, j] to check for linear dependence.
-+            unorm = (indz > 0 ? SLSQP_BLAS(dnrm2)(&indz, &a[j*m], &one) : 0.0);
++            unorm = (indz > 0 ? NLOPT_BLAS(dnrm2)(&indz, &a[j*m], &one) : 0.0);
 +            // unorm is nonnegative
 +            spacing = (unorm > 0.0 ? nextafter(unorm, 2*unorm) - unorm : 0.0);
 +
 +            // Test for independence by checking the new diagonal element for
 +            // zero. Its magnitude is the norm of a[indz:m, j].
 +            tmpint = m - indz;
-+            if (SLSQP_BLAS(dnrm2)(&tmpint, &a[indz + j*m], &one) > 100.0*spacing)
++            if (NLOPT_BLAS(dnrm2)(&tmpint, &a[indz + j*m], &one) > 100.0*spacing)
 +            {
 +                // Column j is sufficiently independent. Form the transformation
 +                // on a copy in zz[indz:m] and solve for ztest which is the new
 +                // prospective value for x[j].
 +                for (i = indz; i < m; i++) { zz[i] = a[i + j*m]; }
-+                SLSQP_BLAS(dlarfgp)(&tmpint, &zz[indz], &zz[indz + 1], &one, &tau);
++                NLOPT_BLAS(dlarfgp)(&tmpint, &zz[indz], &zz[indz + 1], &one, &tau);
 +                pivot = zz[indz];
 +                zz[indz] = 1.0;
 +                // (H*b)[indz] = b[indz] - tau*v'b, with v = zz[indz:m].
 +                tmpint = m - indz - 1;
-+                tauvtb = tau*(b[indz] + SLSQP_BLAS(ddot)(&tmpint, &zz[indz + 1], &one, &b[indz + 1], &one));
++                tauvtb = tau*(b[indz] + NLOPT_BLAS(ddot)(&tmpint, &zz[indz + 1], &one, &b[indz + 1], &one));
 +                // See if ztest is positive. This is from the original F77 code and
 +                // guards against round-off making the new x[j] nonpositive.
 +                ztest = (b[indz] - tauvtb) / pivot;
@@ -310,7 +274,7 @@ index 2d9763e..9b7e409 100644
 +        b[indz] -= tauvtb;
 +        tmpint = m - indz - 1;
 +        tmp = -tauvtb;
-+        SLSQP_BLAS(daxpy)(&tmpint, &tmp, &zz[indz + 1], &one, &b[indz + 1], &one);
++        NLOPT_BLAS(daxpy)(&tmpint, &tmp, &zz[indz + 1], &one, &b[indz + 1], &one);
 +        indices[iz] = indices[indz];
 +        indices[indz] = j;
 +        indz++;
@@ -321,7 +285,7 @@ index 2d9763e..9b7e409 100644
 +            for (k = indz; k < n; k++)
 +            {
 +                jj = indices[k];
-+                SLSQP_BLAS(dlarf)("L", &tmpint, &one, &a[indz - 1 + j*m], &one, &tau, &a[indz - 1 + jj*m], &tmpint, &tmp_work);
++                NLOPT_BLAS(dlarf)("L", &tmpint, &one, &a[indz - 1 + j*m], &one, &tau, &a[indz - 1 + jj*m], &tmpint, &tmp_work);
 +            }
 +        }
 +        // Restore the pivot element into a, zero the subdiagonal elements in col j
@@ -394,7 +358,7 @@ index 2d9763e..9b7e409 100644
 +                    {
 +                        ii = indices[j];
 +                        indices[j-1] = ii;
-+                        SLSQP_BLAS(dlartgp)(&a[j-1 + ii*m], &a[j + ii*m], &cc, &ss, &a[j-1 + ii*m]);
++                        NLOPT_BLAS(dlartgp)(&a[j-1 + ii*m], &a[j + ii*m], &cc, &ss, &a[j-1 + ii*m]);
 +                        a[j + ii*m] = 0.0;
 +                        // Apply the Givens rotation to all columns except ii.
 +                        // Because the columns are not ordered we do it manually.
@@ -463,7 +427,7 @@ index 2d9763e..9b7e409 100644
 +    if (indz < m)
 +    {
 +        tmpint = m - indz;
-+        *rnorm = SLSQP_BLAS(dnrm2)(&tmpint, &b[indz], &one);
++        *rnorm = NLOPT_BLAS(dnrm2)(&tmpint, &b[indz], &one);
 +    } else {
 +        for (i = 0; i < n; i++) { w[i] = 0.0; }
 +        *rnorm = 0.0;
@@ -685,11 +649,11 @@ index 2d9763e..9b7e409 100644
 +
 +    // Update multipliers for L1-test
 +    for (int64_t i = 0; i < n; i++) { v[i] = gradx[i]; }
-+    SLSQP_BLAS(dgemv)("T", &m, &n, &dmone, C, &lda, mult, &one, &done, v, &one);
++    NLOPT_BLAS(dgemv)("T", &m, &n, &dmone, C, &lda, mult, &one, &done, v, &one);
 +
 +    S->f0 = funx;
 +    for (int64_t i = 0; i < n; i++) { x0[i] = sol[i]; }
-+    S->gs = SLSQP_BLAS(ddot)(&n, gradx, &one, s, &one);
++    S->gs = NLOPT_BLAS(ddot)(&n, gradx, &one, s, &one);
 +    S->h1 = fabs(S->gs);
 +    S->h2 = 0.0;
 +    for (int64_t j = 0; j < m; j++)
@@ -735,9 +699,9 @@ index 2d9763e..9b7e409 100644
 +
 +    S->line++;
 +    S->h3 = (S->alpha) * (S->h3);
-+    SLSQP_BLAS(dscal)(&n, &S->alpha, s, &one);
++    NLOPT_BLAS(dscal)(&n, &S->alpha, s, &one);
 +    for (int64_t i = 0; i < n; i++) { sol[i] = x0[i]; }
-+    SLSQP_BLAS(daxpy)(&n, &done, s, &one, sol, &one);
++    NLOPT_BLAS(daxpy)(&n, &done, s, &one, sol, &one);
  
 -     for (i = 0; i < n; ++i) {
 -	  double x = dx[incx*i], y = dy[incy*i];
@@ -798,7 +762,7 @@ index 2d9763e..9b7e409 100644
 +        S->h3 = S->h3 + fmax(-d[j], S->h1);
 +    }
 +    if (
-+        ((fabs(funx - S->f0) < S->acc) || (SLSQP_BLAS(dnrm2)(&n, s, &one) < S->acc)) &&
++        ((fabs(funx - S->f0) < S->acc) || (NLOPT_BLAS(dnrm2)(&n, s, &one) < S->acc)) &&
 +        (S->h3 < S->acc) &&
 +        (!S->badlin) &&
 +        (funx == funx) // To filter for finite entries
@@ -833,7 +797,7 @@ index 2d9763e..9b7e409 100644
 +        }
 +        S->h3 = S->h3 + fmax(-d[j], S->h1);
 +    }
-+    if (((fabs(funx - S->f0) < S->tol) || (SLSQP_BLAS(dnrm2)(&n, s, &one) < S->tol)) &&
++    if (((fabs(funx - S->f0) < S->tol) || (NLOPT_BLAS(dnrm2)(&n, s, &one) < S->tol)) &&
 +        (S->h3 < S->tol) &&
 +        (!S->badlin) &&
 +        (funx == funx)
@@ -878,7 +842,7 @@ index 2d9763e..9b7e409 100644
 -static const int c__1 = 1;
 -static const int c__2 = 2;
 +    for (int64_t i = 0; i < n; i++) { u[i] = gradx[i]; }
-+    SLSQP_BLAS(dgemv)("T", &m, &n, &dmone, C, &lda, mult, &one, &done, u, &one);
++    NLOPT_BLAS(dgemv)("T", &m, &n, &dmone, C, &lda, mult, &one, &done, u, &one);
 +    for (int64_t i = 0; i < n; i++)
 +    {
 +        u[i] = u[i] - v[i];
@@ -888,7 +852,7 @@ index 2d9763e..9b7e409 100644
 -#define MAX2(a,b) ((a) >= (b) ? (a) : (b))
 +    // L'*S
 +    for (int64_t i = 0; i < n; i++) { v[i] = s[i]; }
-+    SLSQP_BLAS(dtpmv)("L", "T", "U", &n, bfgs, v, &one);
++    NLOPT_BLAS(dtpmv)("L", "T", "U", &n, bfgs, v, &one);
  
 -static void h12_(const int *mode, int *lpivot, int *l1, 
 -		 int *m, double *u, const int *iue, double *up, 
@@ -943,16 +907,16 @@ index 2d9763e..9b7e409 100644
 -    /* Function Body */
 -    if (0 >= *lpivot || *lpivot >= *l1 || *l1 > *m) {
 -	goto L80;
+-    }
+-    cl = (d__1 = u[*lpivot * u_dim1 + 1], fabs(d__1));
+-    if (*mode == 2) {
+-	goto L30;
 +    // D*L'*S
 +    j = 0;
 +    for (int64_t i = 0; i < n; i++) {
 +        v[i] = bfgs[j]*v[i];
 +        j += n - i;
      }
--    cl = (d__1 = u[*lpivot * u_dim1 + 1], fabs(d__1));
--    if (*mode == 2) {
--	goto L30;
--    }
 -/*     ****** CONSTRUCT THE TRANSFORMATION ****** */
 -    i__1 = *m;
 -    for (j = *l1; j <= i__1; ++j) {
@@ -1291,7 +1255,7 @@ index 2d9763e..9b7e409 100644
 -    return;
 -} /* nnls_ */
 +    // L*D*L'*S
-+    SLSQP_BLAS(dtpmv)("L", "N", "U", &n, bfgs, v, &one);
++    NLOPT_BLAS(dtpmv)("L", "N", "U", &n, bfgs, v, &one);
  
 -static void ldp_(double *g, int *mg, int *m, int *n, 
 -	double *h__, double *x, double *xnorm, double *w, 
@@ -1380,7 +1344,17 @@ index 2d9763e..9b7e409 100644
 -	++iw;
 -/* L30: */
 -	w[iw] = 0.0;
--    }
++    S->h1 = NLOPT_BLAS(ddot)(&n, s, &one, u, &one);
++    S->h2 = NLOPT_BLAS(ddot)(&n, s, &one, v, &one);
++    S->h3 = 0.2*(S->h2);
++    if (S->h1 < S->h3)
++    {
++        S->h4 = (S->h2 - S->h3) / (S->h2 - S->h1);
++        S->h1 = S->h3;
++        double tmp_dbl = 1.0 - S->h4;
++        NLOPT_BLAS(dscal)(&n, &S->h4, u, &one);
++        NLOPT_BLAS(daxpy)(&n, &tmp_dbl, v, &one, u, &one);
+     }
 -    w[iw + 1] = one;
 -    n1 = *n + 1;
 -    iz = iw + 2;
@@ -1408,17 +1382,7 @@ index 2d9763e..9b7e409 100644
 -    for (j = 1; j <= i__1; ++j) {
 -/* L40: */
 -	x[j] = fac * ddot_sl__(m, &g[j * g_dim1 + 1], 1, &w[iy], 1);
-+    S->h1 = SLSQP_BLAS(ddot)(&n, s, &one, u, &one);
-+    S->h2 = SLSQP_BLAS(ddot)(&n, s, &one, v, &one);
-+    S->h3 = 0.2*(S->h2);
-+    if (S->h1 < S->h3)
-+    {
-+        S->h4 = (S->h2 - S->h3) / (S->h2 - S->h1);
-+        S->h1 = S->h3;
-+        double tmp_dbl = 1.0 - S->h4;
-+        SLSQP_BLAS(dscal)(&n, &S->h4, u, &one);
-+        SLSQP_BLAS(daxpy)(&n, &tmp_dbl, v, &one, u, &one);
-     }
+-    }
 -    *xnorm = dnrm2___(n, &x[1], 1);
 -/*  COMPUTE LAGRANGE MULTIPLIERS FOR PRIMAL PROBLEM */
 -    w[1] = 0.0;
@@ -1662,7 +1626,7 @@ index 2d9763e..9b7e409 100644
 +
 +    // Compute b = - 1/sqrt(d[]) * inv(Lf[]) * gradx[]. Lf is already in packed format.
 +    for (int64_t i = 0; i < n; i++) { wb[i] = gradx[i]; }
-+    SLSQP_BLAS(dtpsv)("L", "N", "U", &n, Lf, wb, &one);
++    NLOPT_BLAS(dtpsv)("L", "N", "U", &n, Lf, wb, &one);
 +    cursor = 0;
 +    for (int64_t i = 0; i < n; i++)
 +    {
@@ -2256,11 +2220,11 @@ index 2d9763e..9b7e409 100644
 +    // Use top of the yet unutilized scratch space for throw-away work.
 +    lde = (me > 0 ? me : 1);
 +    ldg = (mg > 0 ? mg : 1);
-+    SLSQP_BLAS(dgerq2)(&me, &n, e, &lde, tau, lsi_scratch, &info);
++    NLOPT_BLAS(dgerq2)(&me, &n, e, &lde, tau, lsi_scratch, &info);
 +
 +    // Right triangularize E and apply Q.T to A and G from the right.
-+    SLSQP_BLAS(dormr2)("R", "T", &ma, &n, &me, e, &lde, tau, a, &ma, lsi_scratch, &info);
-+    SLSQP_BLAS(dormr2)("R", "T", &mg, &n, &me, e, &lde, tau, g, &ldg, lsi_scratch, &info);
++    NLOPT_BLAS(dormr2)("R", "T", &ma, &n, &me, e, &lde, tau, a, &ma, lsi_scratch, &info);
++    NLOPT_BLAS(dormr2)("R", "T", &mg, &n, &me, e, &lde, tau, g, &ldg, lsi_scratch, &info);
 +
 +    // Check the diagonal elements of E for rank deficiency.
 +    for (int64_t i = 0; i < me; i++)
@@ -2270,7 +2234,7 @@ index 2d9763e..9b7e409 100644
 +    // Solve E*x = f and modify b.
 +    // Note: RQ forms R at the right of E instead of [0, 0] position.
 +    for (int64_t i = 0; i < me; i++) { x[nvars + i] = f[i]; }
-+    SLSQP_BLAS(dtrsv)("U", "N", "N", &me, &e[(nvars)*me], &lde, &x[nvars], &one);
++    NLOPT_BLAS(dtrsv)("U", "N", "N", &me, &e[(nvars)*me], &lde, &x[nvars], &one);
 +
      *mode = 1;
 -    goto L50;
@@ -2331,7 +2295,7 @@ index 2d9763e..9b7e409 100644
 +    // Copy b into wb
 +    for (int64_t i = 0; i < ma; i++) { wb[i] = b[i]; }
 +    // Compute wb -= A1*xe
-+    SLSQP_BLAS(dgemv)("N", &ma, &me, &dmone, &a[ma*nvars], &ma, &x[nvars], &one, &done, wb, &one);
++    NLOPT_BLAS(dgemv)("N", &ma, &me, &dmone, &a[ma*nvars], &ma, &x[nvars], &one, &done, wb, &one);
 +
 +    // Store the transformed A2 and G2 in the buffer
 +    for (int64_t j = 0; j < nvars; j++)
@@ -2362,14 +2326,14 @@ index 2d9763e..9b7e409 100644
 +        for (int64_t i = 0; i < nvars; i++) { jw[i] = 1; }
 +        blas_int krank = 0;
 +        t = sqrt(epsmach);
-+        SLSQP_BLAS(dgelsy)(&ma, &nvars, &one, a2, &ma, wb, &ma, jw, &t, &krank, lsi_scratch, &lwork, &info);
++        NLOPT_BLAS(dgelsy)(&ma, &nvars, &one, a2, &ma, wb, &ma, jw, &t, &krank, lsi_scratch, &lwork, &info);
 +
 +        // Copy the solution to x
 +        for (int64_t i = 0; i < nvars; i++) { x[i] = wb[i]; }
 +
 +        // Compute the residual and its norm, use a since a2 is overwritten.
-+        SLSQP_BLAS(dgemv)("N", &ma, &nvars, &done, a, &ma, x, &one, &dmone, wb_orig, &one);
-+        *xnorm = SLSQP_BLAS(dnrm2)(&ma, wb_orig, &one);
++        NLOPT_BLAS(dgemv)("N", &ma, &nvars, &done, a, &ma, x, &one, &dmone, wb_orig, &one);
++        *xnorm = NLOPT_BLAS(dnrm2)(&ma, wb_orig, &one);
 +
 +        *mode = 7;
 +        if (krank < nvars) { return; }
@@ -2379,7 +2343,7 @@ index 2d9763e..9b7e409 100644
 +
 +    // Modify h, and solve the inequality constrained least squares problem.
 +    // h -= G1*xe
-+    SLSQP_BLAS(dgemv)("N", &mg, &me, &dmone, &g[mg*nvars], &ldg, &x[nvars], &one, &done, h, &one);
++    NLOPT_BLAS(dgemv)("N", &mg, &me, &dmone, &g[mg*nvars], &ldg, &x[nvars], &one, &done, h, &one);
 +
 +    lsi(ma, mg, nvars, a2, wb, g2, h, x, lsi_scratch, jw, xnorm, mode);
 +
@@ -2389,7 +2353,7 @@ index 2d9763e..9b7e409 100644
 +    // If no equality constraints this was an LSI problem all along.
 +    if (me == 0) { return; }
 +
-+    t = SLSQP_BLAS(dnrm2)(&me, &x[nvars], &one);
++    t = NLOPT_BLAS(dnrm2)(&me, &x[nvars], &one);
 +    // Modify the norm by adding the equality solution.
 +    *xnorm = hypot(*xnorm, t);
 +    if (*mode != 1) { return; }
@@ -2397,17 +2361,17 @@ index 2d9763e..9b7e409 100644
 +ORIGINAL_BASIS:
 +    // Convert the solution and multipliers to the original basis.
 +    // b = A*x - b (residuals)
-+    SLSQP_BLAS(dgemv)("N", &ma, &n, &done, a, &ma, x, &one, &dmone, b, &one);
++    NLOPT_BLAS(dgemv)("N", &ma, &n, &done, a, &ma, x, &one, &dmone, b, &one);
 +    // f = A1^T*b - G1^T*w
-+    SLSQP_BLAS(dgemv)("T", &ma, &me, &done, &a[nvars*ma], &ma, b, &one, &dzero, f, &one);
-+    SLSQP_BLAS(dgemv)("T", &mg, &me, &dmone, &g[nvars*mg], &ldg, gmults, &one, &done, f, &one);
++    NLOPT_BLAS(dgemv)("T", &ma, &me, &done, &a[nvars*ma], &ma, b, &one, &dzero, f, &one);
++    NLOPT_BLAS(dgemv)("T", &mg, &me, &dmone, &g[nvars*mg], &ldg, gmults, &one, &done, f, &one);
 +
 +    // x = Q.T*x
-+    SLSQP_BLAS(dormr2)("L", "T", &n, &one, &me, e, &lde, tau, x, &n, lsi_scratch, &info);
++    NLOPT_BLAS(dormr2)("L", "T", &n, &one, &me, e, &lde, tau, x, &n, lsi_scratch, &info);
 +
 +    // Solve the triangular system for the equality multipliers, emults.
 +    for (int64_t i = 0; i < me; i++) { emults[i] = f[i]; }
-+    SLSQP_BLAS(dtrsv)("U", "T", "N", &me, &e[(n - me)*me], &lde, emults, &one);
++    NLOPT_BLAS(dtrsv)("U", "T", "N", &me, &e[(n - me)*me], &lde, emults, &one);
 +
      return;
 -} /* lsei_ */
@@ -2455,7 +2419,7 @@ index 2d9763e..9b7e409 100644
 +    // We use the unblocked versions of the LAPACK routines to avoid
 +    // allocating extra "work" memory for the blocked versions.
 +    tmp_int = (ma < n ? ma : n);
-+    SLSQP_BLAS(dgeqr2)(&ma, &n, a, &ma, buffer, &buffer[tmp_int], &info);
++    NLOPT_BLAS(dgeqr2)(&ma, &n, a, &ma, buffer, &buffer[tmp_int], &info);
  
 -    /* Local variables */
 -    int i__, i1, i2, i3, i4, m1, n1, n2, n3, ic, id, ie, if__, ig, ih, il,
@@ -2464,7 +2428,7 @@ index 2d9763e..9b7e409 100644
 -    int mineq;
 -    double xnorm = 0.0;
 +    // Compute Q^T b
-+    SLSQP_BLAS(dorm2r)("L", "T", &ma, &one, &tmp_int, a, &ma, buffer, b, &ma, &buffer[tmp_int], &info);
++    NLOPT_BLAS(dorm2r)("L", "T", &ma, &one, &tmp_int, a, &ma, buffer, b, &ma, &buffer[tmp_int], &info);
  
 -/*   MINIMIZE with respect to X */
 -/*             ||E*X - F|| */
@@ -2659,21 +2623,21 @@ index 2d9763e..9b7e409 100644
 +    // The result is stored in G.
 +    // Note: There is an inherent assumption that ma >= n. This is a bug carried
 +    // over here from the original slsqp implementation.
-+    SLSQP_BLAS(dtrsm)("R", "U", "N", "N", &mg, &n, &done, a, &ma, g, &mg);
++    NLOPT_BLAS(dtrsm)("R", "U", "N", "N", &mg, &n, &done, a, &ma, g, &mg);
 +    // h = h - Xf
-+    SLSQP_BLAS(dgemv)("N", &mg, &n, &dmone, g, &mg, b, &one, &done, h, &one);
++    NLOPT_BLAS(dgemv)("N", &mg, &n, &dmone, g, &mg, b, &one, &done, h, &one);
 +
 +    // Solve the LDP problem.
 +    ldp(mg, n, g, h, x, buffer, jw, xnorm, mode);
 +    if (*mode != 1) { return; }
 +
 +    // Convert to the solution of the original problem.
-+    SLSQP_BLAS(daxpy)(&n, &done, b, &one, x, &one);
-+    SLSQP_BLAS(dtrsv)("U", "N", "N", &n, a, &ma, x, &one);
++    NLOPT_BLAS(daxpy)(&n, &done, b, &one, x, &one);
++    NLOPT_BLAS(dtrsv)("U", "N", "N", &n, a, &ma, x, &one);
 +
 +    // If any, compute the norm of the tail of b and add to xnorm
 +    tmp_int = ma - n;
-+    tmp_dbl = SLSQP_BLAS(dnrm2)(&tmp_int, &b[(n + 1 > ma ? ma : n + 1) - 1], &one);
++    tmp_dbl = NLOPT_BLAS(dnrm2)(&tmp_int, &b[(n + 1 > ma ? ma : n + 1) - 1], &one);
 +    *xnorm = hypot(*xnorm, tmp_dbl);
  
 -static void ldl_(int *n, double *a, double *z__, 
@@ -2945,7 +2909,7 @@ index 2d9763e..9b7e409 100644
 +    if (rnorm <= 0.0) { return; }
 +
 +    // Solve the primal problem
-+    double fac = 1.0 - SLSQP_BLAS(ddot)(&m, h, &one, y, &one);
++    double fac = 1.0 - NLOPT_BLAS(ddot)(&m, h, &one, y, &one);
 +    if (!((1.0 + fac) - 1.0 > 0.0)) { return; }
      *mode = 1;
 -    goto L100;
@@ -3072,8 +3036,8 @@ index 2d9763e..9b7e409 100644
 -} /* linmin_ */
 -#endif
 +    fac = 1.0 / fac;
-+    SLSQP_BLAS(dgemv)("T", &m, &n, &fac, g, &m, y, &one, &dzero, x, &one);
-+    *xnorm = SLSQP_BLAS(dnrm2)(&n, x, &one);
++    NLOPT_BLAS(dgemv)("T", &m, &n, &fac, g, &m, y, &one, &dzero, x, &one);
++    *xnorm = NLOPT_BLAS(dnrm2)(&n, x, &one);
  
 -typedef struct {
 -    double t, f0, h1, h2, h3, h4;
@@ -3851,7 +3815,7 @@ index 2d9763e..9b7e409 100644
  }
  
  nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
-@@ -2440,25 +1394,24 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
+@@ -2440,25 +1370,24 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
  			 unsigned p, nlopt_constraint *h,
  			 const double *lb, const double *ub,
  			 double *x, double *minf,
@@ -3884,7 +3848,7 @@ index 2d9763e..9b7e409 100644
       if (ptot > n) {
         nlopt_stop_msg(stop, "slsqp: more equality constraints than variables");
         return NLOPT_INVALID_ARGS;
-@@ -2466,24 +1419,49 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
+@@ -2466,24 +1395,49 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
  
       max_cdim = MAX2(nlopt_max_constraint_dim(m, fc),
  		    nlopt_max_constraint_dim(p, h));
@@ -3947,7 +3911,7 @@ index 2d9763e..9b7e409 100644
       memcpy(xcur, x, sizeof(double) * n);
       memcpy(xprev, x, sizeof(double) * n);
       fprev = fcur = *minf = HUGE_VAL;
-@@ -2492,12 +1470,17 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
+@@ -2492,12 +1446,17 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
       goto eval_f_and_grad; /* eval before calling slsqp the first time */
  
       do {
@@ -3971,7 +3935,7 @@ index 2d9763e..9b7e409 100644
  
  	  switch (mode) {
  	  case -1:  /* objective & gradient evaluation */
-@@ -2572,7 +1555,7 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
+@@ -2572,7 +1531,7 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
  		      stop->xtol_rel *= 10;
  		      if (nlopt_stop_ftol(stop, fcur, state.f0))
  			  ret = NLOPT_FTOL_REACHED;
@@ -3980,7 +3944,7 @@ index 2d9763e..9b7e409 100644
  			  ret = NLOPT_XTOL_REACHED;
  		      stop->ftol_rel = save_ftol_rel;
  		      stop->ftol_abs = save_ftol_abs;
-@@ -2581,7 +1564,7 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
+@@ -2581,7 +1540,7 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
  		  goto done;
  	      case 5: /* singular matrix E in LSQ subproblem */
  	      case 6: /* singular matrix C in LSQ subproblem */
@@ -3989,7 +3953,7 @@ index 2d9763e..9b7e409 100644
  		  ret = NLOPT_ROUNDOFF_LIMITED;
  		  goto done;
  	      case 4: /* inequality constraints incompatible */
-@@ -2591,8 +1574,8 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
+@@ -2591,8 +1550,8 @@ nlopt_result nlopt_slsqp(unsigned n, nlopt_func f, void *f_data,
  		  ret = NLOPT_FAILURE;
  		  goto done;
  	      case 2: /* number of equality constraints > n */
@@ -4000,7 +3964,7 @@ index 2d9763e..9b7e409 100644
  		  ret = NLOPT_INVALID_ARGS;
  		  goto done;
  	  }
-@@ -2638,6 +1621,7 @@ done:
+@@ -2638,6 +1597,7 @@ done:
  	  }
       }
  
@@ -4022,7 +3986,7 @@ index 44b7ab9..5cc39e4 100644
  }  /* extern "C" */
  #endif /* __cplusplus */
 diff --git a/src/api/optimize.c b/src/api/optimize.c
-index d973231..098b3f0 100644
+index 20268f9..28aee07 100644
 --- a/src/api/optimize.c
 +++ b/src/api/optimize.c
 @@ -949,7 +949,8 @@ static nlopt_result nlopt_optimize_(nlopt_opt opt, double *x, double *minf)

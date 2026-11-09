@@ -1,0 +1,229 @@
+From c0a374b753a832f5fcb693d2d367a7643e410bc9 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 29 Oct 2026 22:52:33 -0400
+Subject: [PATCH 14/21] bobyqa: use BLAS for the model products for n >= 100
+
+As for NEWUOA: with an external BLAS/LAPACK and n >= 100, compute the
+Hessian-vector product of TRSBOX (with NPT more doubles of workspace),
+the VLAG/BETA products of each iteration and the XBASE shift's BMAT
+updates with DGEMV, DDOT, DAXPY and DGER; otherwise the original loops
+are used.
+
+With a cheap objective, the time per evaluation drops by 1.2x (n = 100)
+to 1.3x (n = 200) with single-threaded OpenBLAS; over n = 30-150 the
+geometric mean is 1.2x.  The gain is smaller than for NEWUOA because the
+rest of BOBYQA's time is spread over many other loops, and it is not
+uniform: for some n (60, 96 and 112 in that scan) OpenBLAS's DGEMV on
+the XPT matrix was several times slower than usual, unless XPT was
+already in cache, making those runs up to 1.5x slower than the loops.
+The threshold avoids the smaller cases only.
+
+The summation order changes with BLAS, so results differ in the last
+bits for n >= 100.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ src/algs/bobyqa/bobyqa.c | 103 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 98 insertions(+), 5 deletions(-)
+
+diff --git a/src/algs/bobyqa/bobyqa.c b/src/algs/bobyqa/bobyqa.c
+index 0290abe..7f1b1b6 100644
+--- a/src/algs/bobyqa/bobyqa.c
++++ b/src/algs/bobyqa/bobyqa.c
+@@ -8,6 +8,11 @@
+ #include <string.h>
+ 
+ #include "bobyqa.h"
++#include "nlopt-blas.h"
++
++/* With an external BLAS, use it for N >= BOBYQA_BLAS_MIN_N only: as for
++   NEWUOA, OpenBLAS's DGEMV was slower than the loops for some smaller N. */
++#define BOBYQA_BLAS_MIN_N 100
+ 
+ typedef double (*bobyqa_func)(int n, const double *x, void *func_data);
+ 
+@@ -1162,7 +1167,7 @@ static void trsbox_(int *n, int *npt, double *xpt,
+ 	double *xopt, double *gopt, double *hq, double *pq, 
+ 	double *sl, double *su, double *delta, double *xnew, 
+ 	double *d__, double *gnew, double *xbdi, double *s, 
+-	double *hs, double *hred, double *dsq, double *crvmin)
++	double *hs, double *hred, double *dsq, double *crvmin, double *hxpt)
+ {
+     /* System generated locals */
+     int xpt_dim1, xpt_offset, i__1, i__2;
+@@ -1225,6 +1230,10 @@ static void trsbox_(int *n, int *npt, double *xpt,
+ 
+ /*     Set some constants. */
+ 
++#ifndef NLOPT_HAVE_BLAS
++    (void) hxpt; /* only used with BLAS */
++#endif
++
+     /* Parameter adjustments */
+     xpt_dim1 = *npt;
+     xpt_offset = 1 + xpt_dim1;
+@@ -1675,6 +1684,23 @@ L210:
+ 	    hs[i__] += hq[ih] * s[j];
+ 	}
+     }
++#ifdef NLOPT_HAVE_BLAS
++    if (*n >= BOBYQA_BLAS_MIN_N)
++    /* HS += XPT^T (PQ .* (XPT S)), with HXPT (length NPT) holding XPT S */
++    {
++	blas_int np_ = *npt, nn = *n, one = 1;
++	double d1 = 1., d0 = 0.;
++	NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &s[1], &one,
++			  &d0, hxpt, &one);
++	for (k = 0; k < *npt; ++k) {
++	    hxpt[k] *= pq[k + 1];
++	}
++	NLOPT_BLAS(dgemv)("T", &np_, &nn, &d1, &xpt[xpt_offset], &np_, hxpt, &one,
++			  &d1, &hs[1], &one);
++    }
++    else
++#endif
++    { /* the original loops */
+     i__2 = *npt;
+     for (k = 1; k <= i__2; ++k) {
+ 	if (pq[k] != zero) {
+@@ -1692,6 +1718,7 @@ L210:
+ 	    }
+ 	}
+ /* L250: */
++    }
+     }
+     if (*crvmin != zero) {
+ 	goto L50;
+@@ -1959,7 +1986,7 @@ static nlopt_result bobyqb_(int *n, int *npt, double *x,
+ 	double *xpt, double *fval, double *xopt, double *gopt,
+ 	 double *hq, double *pq, double *bmat, double *zmat, 
+ 	int *ndim, double *sl, double *su, double *xnew, 
+-	double *xalt, double *d__, double *vlag, double *w)
++	double *xalt, double *d__, double *vlag, double *w, double *hxpt)
+ {
+     /* System generated locals */
+     int xpt_dim1, xpt_offset, bmat_dim1, bmat_offset, zmat_dim1, 
+@@ -2150,7 +2177,7 @@ L20:
+ L60:
+     trsbox_(n, npt, &xpt[xpt_offset], &xopt[1], &gopt[1], &hq[1], &pq[1], &sl[
+ 	    1], &su[1], &delta, &xnew[1], &d__[1], &w[1], &w[np], &w[np + *n],
+-	     &w[np + (*n << 1)], &w[np + *n * 3], &dsq, &crvmin);
++	     &w[np + (*n << 1)], &w[np + *n * 3], &dsq, &crvmin, hxpt);
+ /* Computing MIN */
+     d__1 = delta, d__2 = sqrt(dsq);
+     dnorm = MIN2(d__1,d__2);
+@@ -2254,6 +2281,25 @@ L90:
+ /* L120: */
+ 		sumw += vlag[k];
+ 	    }
++#ifdef NLOPT_HAVE_BLAS
++	    if (*n >= BOBYQA_BLAS_MIN_N)
++	    /* W = (FRACSQ*SUMZ - SUMW/2) XOPT + XPT^T VLAG,
++	       BMAT(1:NPT,:) += ZMAT(:,JJ) W^T */
++	    {
++		blas_int np_ = *npt, nn = *n, one = 1, ldb = *ndim;
++		double d1 = 1.;
++		i__2 = *n;
++		for (j = 1; j <= i__2; ++j) {
++		    w[j] = (fracsq * sumz - half * sumw) * xopt[j];
++		}
++		NLOPT_BLAS(dgemv)("T", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &vlag[1],
++				  &one, &d1, &w[1], &one);
++		NLOPT_BLAS(dger)(&np_, &nn, &d1, &zmat[1 + jj * zmat_dim1], &one, &w[1],
++				 &one, &bmat[bmat_offset], &ldb);
++	    }
++	    else
++#endif
++	    { /* the original loops */
+ 	    i__2 = *n;
+ 	    for (j = 1; j <= i__2; ++j) {
+ 		sum = (fracsq * sumz - half * sumw) * xopt[j];
+@@ -2269,6 +2315,7 @@ L90:
+ 		    bmat[k + j * bmat_dim1] += sum * zmat[k + jj * zmat_dim1];
+ 		}
+ 	    }
++	    }
+ 	    i__1 = *n;
+ 	    for (i__ = 1; i__ <= i__1; ++i__) {
+ 		ip = i__ + *npt;
+@@ -2392,6 +2439,50 @@ L210:
+ /*     use when VQUAD is calculated. */
+ 
+ L230:
++#ifdef NLOPT_HAVE_BLAS
++    if (*n >= BOBYQA_BLAS_MIN_N)
++    {
++	blas_int np_ = *npt, nn = *n, one = 1, ldb = *ndim;
++	double d1 = 1., d0 = 0.;
++	/* W(NPT+K) = SUMA, W(K) = SUMB, then W(K) as below and VLAG = BMAT D */
++	NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &d__[1], &one,
++			  &d0, &w[*npt + 1], &one);
++	NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, &xpt[xpt_offset], &np_, &xopt[1], &one,
++			  &d0, &w[1], &one);
++	i__1 = *npt;
++	for (k = 1; k <= i__1; ++k) {
++	    suma = w[*npt + k];
++	    w[k] = suma * (half * suma + w[k]);
++	}
++	NLOPT_BLAS(dgemv)("N", &np_, &nn, &d1, &bmat[bmat_offset], &ldb, &d__[1], &one,
++			  &d0, &vlag[1], &one);
++	beta = zero;
++	i__1 = nptm;
++	for (jj = 1; jj <= i__1; ++jj) {
++	    sum = NLOPT_BLAS(ddot)(&np_, &zmat[1 + jj * zmat_dim1], &one, &w[1], &one);
++	    beta -= sum * sum;
++	    NLOPT_BLAS(daxpy)(&np_, &sum, &zmat[1 + jj * zmat_dim1], &one, &vlag[1], &one);
++	}
++	/* VLAG(NPT+J) = BMAT(NPT+J,:) D + W(1:NPT)^T BMAT(1:NPT,J) */
++	NLOPT_BLAS(dgemv)("N", &nn, &nn, &d1, &bmat[*npt + 1 + bmat_dim1], &ldb, &d__[1],
++			  &one, &d0, &vlag[*npt + 1], &one);
++	dsq = zero;
++	bsum = zero;
++	dx = zero;
++	i__2 = *n;
++	for (j = 1; j <= i__2; ++j) {
++	    dsq += d__[j] * d__[j];
++	    sum = NLOPT_BLAS(ddot)(&np_, &w[1], &one, &bmat[1 + j * bmat_dim1], &one);
++	    bsum += sum * d__[j];
++	    jp = *npt + j;
++	    vlag[jp] += sum;
++	    bsum += vlag[jp] * d__[j];
++	    dx += d__[j] * xopt[j];
++	}
++    }
++    else
++#endif
++    { /* the original loops */
+     i__1 = *npt;
+     for (k = 1; k <= i__1; ++k) {
+ 	suma = zero;
+@@ -2451,6 +2542,7 @@ L230:
+ /* L300: */
+ 	dx += d__[j] * xopt[j];
+     }
++    }
+     beta = dx * dx + dsq * (xoptsq + dx + dx + half * dsq) + beta - bsum;
+     vlag[kopt] += one;
+ 
+@@ -3203,7 +3295,8 @@ nlopt_result bobyqa(int n, int npt, double *x,
+     ivl = id + n;
+     iw = ivl + ndim;
+ 
+-    w0 = (double *) malloc(sizeof(double) * U((npt+5)*(npt+n)+3*n*(n+5)/2));
++    /* the last NPT elements are scratch for TRSBOX's Hessian product */
++    w0 = (double *) malloc(sizeof(double) * U((npt+5)*(npt+n)+3*n*(n+5)/2 + npt));
+     if (!w0) { ret = NLOPT_OUT_OF_MEMORY; goto done; }
+     w = w0 - 1;
+ 
+@@ -3264,7 +3357,7 @@ nlopt_result bobyqa(int n, int npt, double *x,
+ 		  stop, rescale_fun, &calfun_data, minf,
+ 		  &w[ixb], &w[ixp], &w[ifv], &w[ixo], &w[igo], &w[ihq], &w[ipq], 
+ 		  &w[ibmat], &w[izmat], &ndim, &w[isl], &w[isu], &w[ixn], &w[ixa],
+-		  &w[id], &w[ivl], &w[iw]);
++		  &w[id], &w[ivl], &w[iw], w0 + (npt+5)*(npt+n)+3*n*(n+5)/2);
+ 
+ done:
+     free(w0);
+-- 
+2.56.0
+

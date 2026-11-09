@@ -1,0 +1,980 @@
+From b9ca065485dd95e05d788e79321d0f537599ab81 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 30 Oct 2026 20:15:54 -0400
+Subject: [PATCH 20/21] mma, ccsaq: Newton-type dual solver behind the
+ "dual_newton" parameter
+
+The dual problems of MMA and CCSAQ are solved by a general bound-constrained
+optimizer (dual_algorithm, MMA by default), which uses only first
+derivatives and takes hundreds to tens of thousands of dual function
+evaluations per subproblem when there are many (nearly active) constraints.
+
+With "dual_newton" = 1 (default 0, which leaves the results unchanged), the
+dual problem is solved instead by a primal-dual interior point method with
+Mehrotra's predictor-corrector, using the Hessian of the dual function,
+B^T B with B = (G D^{1/2})^T: G is the Jacobian of the constraint
+approximations at x(y) and D the inverse second derivative of the separable
+Lagrangian in the components of x(y) not at a bound.  The new dual_hess
+functions of mma.c and ccsa_quadratic.c compute B from the state left by
+dual_func.  The Newton system is solved directly if there are fewer
+multipliers than free variables, and otherwise through the smaller matrix
+by the Woodbury identity, leaving out the negligible columns of the
+inactive constraints.  An active-set (projected) Newton method was tried
+first: it needs hundreds to thousands of iterations to identify the active
+constraints when there are many nearly active ones.
+
+dual_algorithm is still used for the subproblems of an infeasible start
+(upper bounds of 1e40 on the multipliers) and for CCSAQ with a
+preconditioner.  With an external BLAS/LAPACK, the Newton matrix is formed
+with dsyrk and factorized with dpotrf (added to the configure check).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ CMakeLists.txt                  |   4 +-
+ doc/docs/NLopt_Algorithms.md    |   1 +
+ src/algs/mma/ccsa_dual_newton.c | 442 ++++++++++++++++++++++++++++++++
+ src/algs/mma/ccsa_quadratic.c   |  74 +++++-
+ src/algs/mma/mma.c              |  81 +++++-
+ src/algs/mma/mma.h              |  19 +-
+ src/api/optimize.c              |   7 +-
+ src/util/nlopt-blas.h           |   1 +
+ test/CMakeLists.txt             |   1 +
+ test/t_ccsa_dual_newton.cxx     |  95 +++++++
+ 10 files changed, 708 insertions(+), 17 deletions(-)
+ create mode 100644 src/algs/mma/ccsa_dual_newton.c
+ create mode 100644 test/t_ccsa_dual_newton.cxx
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f098abc..3961176 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,7 +144,7 @@ if (_blas_candidates)
+   foreach (_suffix IN LISTS _blas_suffixes)
+     set (_decls)
+     set (_calls)
+-    foreach (_r daxpy dscal dnrm2 ddot dgemv dger dgemm dsyrk dsyr2k dspmv dspr2 dtpmv dtpsv
++    foreach (_r daxpy dscal dnrm2 ddot dgemv dger dgemm dsyrk dsyr2k dspmv dspr2 dpotrf dtpmv dtpsv
+                 dtrsm dtrsv dgelsy dgeqr2 dgerq2 dlaic1 dlarf dlarfgp dlartgp dorm2r dormr2)
+       string (APPEND _decls "char ${_r}${_suffix}(void);\n")
+       string (APPEND _calls "  ${_r}${_suffix}();\n")
+@@ -253,7 +253,7 @@ set (NLOPT_SOURCES
+   src/algs/praxis/praxis.c src/algs/praxis/praxis.h
+   src/algs/crs/crs.c src/algs/crs/crs.h
+   src/algs/mlsl/mlsl.c src/algs/mlsl/mlsl.h
+-  src/algs/mma/mma.c src/algs/mma/mma.h src/algs/mma/ccsa_quadratic.c
++  src/algs/mma/mma.c src/algs/mma/mma.h src/algs/mma/ccsa_quadratic.c src/algs/mma/ccsa_dual_newton.c
+   src/algs/cobyla/cobyla.c src/algs/cobyla/cobyla.h
+   src/algs/newuoa/newuoa.c src/algs/newuoa/newuoa.h
+   src/algs/neldermead/nldrmd.c src/algs/neldermead/neldermead.h src/algs/neldermead/sbplx.c
+diff --git a/doc/docs/NLopt_Algorithms.md b/doc/docs/NLopt_Algorithms.md
+index 0893e29..1fa7f54 100644
+--- a/doc/docs/NLopt_Algorithms.md
++++ b/doc/docs/NLopt_Algorithms.md
+@@ -335,6 +335,7 @@ specified using the [`nlopt_set_param` API](NLopt_Reference.md#algorithm-specifi
+ 
+ * `inner_maxeval`: If ≥ 0, gives maximum number of "inner" iterations of the algorithm where it tries to ensure that its approximatations are "conservative"; defaults to `0` (no limit).   It can be useful to specify a finite number (e.g. `5` or `10`) for this parameter if inaccuracies in your gradient or objective function are preventing the algorithm from making progress.
+ * `dual_algorithm` (defaults to `NLOPT_LD_MMA`), `dual_ftol_rel` (defaults to `1e-14`), `dual_ftol_abs` (defaults to `0`), `dual_xtol_rel` (defaults to `0`), `dual_xtol_abs` (defaults to `0`), `dual_maxeval` (defaults to `100000`): These specify how the algorithm internally solves the "dual" optimization problem for its approximate objective.   Because this subsidiary solve requires no evaluations of the user's objective function, it is typically fast enough that we can solve it to high precision without worrying too much about the details.  Howeve,r in high-dimensional problems you may notice that MMA/CCSA is taking a long time between optimization steps, in which case you may want to increase `dual_ftol_rel` or make other changes.   If these parameters are not specified, NLopt takes them from the [subsidiary-optimizer algorithm](NLopt_Reference.md#localsubsidiary-optimization-algorithm) if that has been specified, and otherwise uses the defaults indicated here.
++* `dual_newton` (defaults to `0`): if `1`, the dual problem is solved by a Newton-type (primal-dual interior-point) method that uses the second derivatives of the dual function, instead of by `dual_algorithm`, typically in 10–50 iterations. Each iteration costs more than an evaluation of the dual function (a dense linear system of size min(*m*, *n*) for *m* constraints and *n* variables), but this is usually much faster than the default when there are many constraints, especially many nearly active ones, and it solves the dual problem more accurately. Its stopping tolerances are `dual_ftol_rel` and `dual_ftol_abs` (and `dual_xtol_rel`, `dual_xtol_abs`, `dual_maxeval`), but the results are not identical to those with `dual_algorithm`. `dual_algorithm` is still used while the initial point is infeasible (until a feasible point is found), and for CCSAQ with a preconditioner.
+ * `verbosity`: If > 0, causes the algorithm to print internal status information on each iteration.
+ * `rho_init`: if specified, should be a rough upper bound for the second derivative (the biggest eigenvalue of the Hessian of the objective or constraints); defaults to `1.0`.   CCSA/MMA will adaptively adjust this as the optimization progresses, so even it if `rho_init` is completely wrong the algorithm will still converge.  A `rho_init` that is too large will cause the algorithm to take overly small steps at the beginning, while a `rho_init` that is too small will cause it to take overly large steps (and have to backtrack) at the beginning.   Similarly, you can also use the "initial stepsize" option ([NLopt reference](NLopt_Reference.md#initial-step-size)) to control the maximum size of the initial steps (half the diameter of the trust region).
+ * `inner_gradients` (defaults to `1`): if `0`, the gradient is *not* computed on "inner" iterations of the CCSA algorithm.  This can be useful in order to save computations on inner iterations, and also for the caller to distinguish inner and outer iterations.  However, that means that your functions are called twice on outer iterations: once for the last inner iteration (without gradients), and again with the gradient; to save wasted computation, you may want to cache the last function value and not recompute it (only compute the gradient) if `x` does not change between subsequent calls.
+diff --git a/src/algs/mma/ccsa_dual_newton.c b/src/algs/mma/ccsa_dual_newton.c
+new file mode 100644
+index 0000000..0106b2b
+--- /dev/null
++++ b/src/algs/mma/ccsa_dual_newton.c
+@@ -0,0 +1,442 @@
++/* Copyright (c) 2007-2014 Massachusetts Institute of Technology
++ *
++ * Permission is hereby granted, free of charge, to any person obtaining
++ * a copy of this software and associated documentation files (the
++ * "Software"), to deal in the Software without restriction, including
++ * without limitation the rights to use, copy, modify, merge, publish,
++ * distribute, sublicense, and/or sell copies of the Software, and to
++ * permit persons to whom the Software is furnished to do so, subject to
++ * the following conditions:
++ *
++ * The above copyright notice and this permission notice shall be
++ * included in all copies or substantial portions of the Software.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
++ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
++ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
++ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
++ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/* A Newton-type solver for the dual problems of MMA and CCSAQ (the
++   "dual_newton" parameter), in place of the general bound-constrained
++   optimizer dual_opt.
++
++   The dual function f(y), to be minimized over y >= lb, is the negated
++   minimum over x of the separable Lagrangian.  Its gradient is minus the
++   constraint approximations gc(x(y)), and its Hessian is G D G^T, where G is
++   the Jacobian of gc at x(y) and D is the diagonal inverse second
++   derivative of the Lagrangian in the components of x(y) that are not at a
++   bound (zero in the others); the caller supplies B = (G D^{1/2})^T.
++
++   The Hessian is singular when more multipliers are nonzero than
++   components of x are free, which is common when many constraints are
++   nearly active (e.g. a constraint at many sample points), and the dual
++   function is only once differentiable (its Hessian jumps where a component
++   of x(y) reaches a bound).  An active-set (projected) Newton method then
++   needs many iterations to find the multipliers that are zero at the
++   solution, so this is a primal-dual interior point method instead: with
++   multipliers z >= 0 for the bounds y >= lb and the distances s = y - lb,
++   each step is the Newton step for g - z = 0, s z = mu, that is
++       (B^T B + Z/S) dy = -(g - mu/s),
++   with Mehrotra's predictor-corrector choice of mu, a step of at most a
++   fraction of the distance to the bounds, and a backtracking search on the
++   barrier function f - mu sum(log(s)).  It stops when the decrease of f
++   still possible (estimated from the gradient, or from the Newton step) is
++   below dual_opt's ftol_rel/ftol_abs.  When there are more multipliers
++   than free components of x (k), the system is solved through a k-by-k
++   matrix by the Woodbury identity, leaving out the multipliers whose
++   contribution is negligible (most of the inactive constraints).
++
++   The solver needs a dual problem without upper bounds on y: the callers
++   use dual_opt for the subproblems of an infeasible start, whose upper
++   bounds of 1e40 put the dual function at a scale where the barrier terms
++   are lost to rounding. */
++
++#include <stdlib.h>
++#include <math.h>
++#include <string.h>
++#include <float.h>
++
++#include "mma.h"
++#include "nlopt-util.h"
++#include "nlopt-blas.h"
++
++#define MIN(a,b) ((a) < (b) ? (a) : (b))
++#define MAX(a,b) ((a) > (b) ? (a) : (b))
++
++#define ARMIJO 1e-4 /* sufficient decrease factor */
++#define MAXLS 30 /* maximum number of backtracking steps */
++#define FRAC_BOUNDARY 0.995 /* fraction of the step to the boundary */
++#define KAPPA 1e10 /* bound multipliers within [1/KAPPA, KAPPA] mu/s */
++#define INTERIOR 1e-8 /* initial distance from the bounds (times max(y, 1)
++			   for a warm start) */
++#define WEIGHT_MIN 1e-14 /* negligible columns in the Woodbury matrix */
++
++/* Cholesky factorization A = U^T U of the n-by-n symmetric positive
++   definite matrix a (upper triangle, column-major); returns 0 on success */
++static int cholesky(unsigned n, double *a)
++{
++#ifdef NLOPT_HAVE_BLAS
++     blas_int nn = n, info;
++     NLOPT_BLAS(dpotrf)("U", &nn, a, &nn, &info);
++     return info != 0;
++#else
++     unsigned i, j, k;
++     for (j = 0; j < n; ++j) {
++	  double *aj = a + j*n, d;
++	  for (i = 0; i < j; ++i) {
++	       const double *ai = a + i*n;
++	       double s = aj[i];
++	       for (k = 0; k < i; ++k) s -= ai[k] * aj[k];
++	       aj[i] = s / ai[i];
++	  }
++	  d = aj[j];
++	  for (k = 0; k < j; ++k) d -= aj[k] * aj[k];
++	  if (!(d > 0)) return 1;
++	  aj[j] = sqrt(d);
++     }
++     return 0;
++#endif
++}
++
++/* solve U^T U x = b in place, with U from cholesky */
++static void cholesky_solve(unsigned n, const double *u, double *x)
++{
++     blas_int nn = n, one = 1;
++     NLOPT_BLAS(dtrsv)("U", "T", "N", &nn, u, &nn, x, &one);
++     NLOPT_BLAS(dtrsv)("U", "N", "N", &nn, u, &nn, x, &one);
++}
++
++/* upper triangle of the n-by-n matrix a = b^T b (trans = 0) or b b^T
++   (trans = 1), for the k-by-n matrix (trans = 0) or n-by-k matrix
++   (trans = 1) b with leading dimension ldb */
++static void gram(unsigned n, unsigned k, const double *b, unsigned ldb,
++		 int trans, double *a)
++{
++#ifdef NLOPT_HAVE_BLAS
++     blas_int nn = n, kk = k, ld = ldb;
++     double d1 = 1, d0 = 0;
++     NLOPT_BLAS(dsyrk)("U", trans ? "N" : "T", &nn, &kk, &d1, b, &ld, &d0, a, &nn);
++#else
++     unsigned i, j, l;
++     if (!trans) {
++	  for (j = 0; j < n; ++j)
++	       for (i = 0; i <= j; ++i) {
++		    double s = 0;
++		    for (l = 0; l < k; ++l) s += b[l + i*ldb] * b[l + j*ldb];
++		    a[i + j*n] = s;
++	       }
++     }
++     else {
++	  for (j = 0; j < n; ++j)
++	       for (i = 0; i <= j; ++i) a[i + j*n] = 0;
++	  for (l = 0; l < k; ++l) {
++	       const double *bl = b + l*ldb;
++	       for (j = 0; j < n; ++j) {
++		    double blj = bl[j];
++		    double *aj = a + j*n;
++		    for (i = 0; i <= j; ++i) aj[i] += bl[i] * blj;
++	       }
++	  }
++     }
++#endif
++}
++
++/* solve (B^T B + Z/S) dy = r with the factorization in H (see
++   ccsa_dual_newton): directly (nF <= k), or else by the Woodbury identity
++   dy = W r - W B^T (I + B W B^T)^{-1} B W r with W = S/Z in w and the
++   columns K of B scaled by W^{1/2}; t (length k) and c (length nF) are
++   workspace */
++static void newton_solve(unsigned nF, unsigned k, unsigned nk, const double *H,
++			 const double *B, const unsigned *K, const double *w,
++			 const double *r, double *dy, double *t, double *c)
++{
++     blas_int kk = k, nn = nk, one = 1;
++     double d1 = 1, d0 = 0;
++     unsigned l;
++
++     if (nF <= k) {
++	  memcpy(dy, r, sizeof(double) * nF);
++	  cholesky_solve(nF, H, dy);
++	  return;
++     }
++     for (l = 0; l < nF; ++l) dy[l] = w[l] * r[l];
++     if (nk == 0) return;
++     for (l = 0; l < nk; ++l) c[l] = sqrt(w[K[l]]) * r[K[l]];
++     NLOPT_BLAS(dgemv)("N", &kk, &nn, &d1, B, &kk, c, &one, &d0, t, &one);
++     cholesky_solve(k, H, t);
++     NLOPT_BLAS(dgemv)("T", &kk, &nn, &d1, B, &kk, t, &one, &d0, c, &one);
++     for (l = 0; l < nk; ++l) dy[K[l]] -= sqrt(w[K[l]]) * c[l];
++}
++
++/* bound on f(y) - min f by convexity, f(y*) >= f(y) + g^T (y* - y): the
++   components with g > 0 can gain at most g (y - lb), those with g < 0 an
++   unknown amount, estimated as |g| (sum(y - lb) + 1) */
++static double gap_estimate(unsigned nF, const unsigned *F, const double *y,
++			   const double *lb, const double *g)
++{
++     double gap = 0, gneg = 0, ysum = 1;
++     unsigned l;
++     for (l = 0; l < nF; ++l) {
++	  unsigned i = F[l];
++	  if (g[i] > 0) gap += g[i] * (y[i] - lb[i]);
++	  else gneg = MAX(gneg, -g[i]);
++	  ysum += y[i] - lb[i];
++     }
++     return gap + gneg * ysum;
++}
++
++nlopt_result ccsa_dual_newton(unsigned m, nlopt_func f, ccsa_dual_hess hess,
++			      void *f_data, unsigned n, const double *lb,
++			      const double *inactive, double *y, double *minf,
++			      nlopt_opt dual_opt, nlopt_stopping *stop)
++{
++     nlopt_result ret = NLOPT_SUCCESS;
++     nlopt_stopping ds = *stop;
++     int nevals = 0;
++     double *work, *xtol_abs, *g, *gt, *yt, *y0, *z, *r, *dy, *w, *dya, *dza, *dz, *t;
++     double *B = NULL, *H = NULL;
++     unsigned *F, *K, nF = 0, i, l;
++     size_t Hsize = 0;
++     double fy = HUGE_VAL, ymax = 0, d, mu;
++
++     if (m == 0) {
++	  *minf = f(m, y, NULL, f_data);
++	  return NLOPT_SUCCESS;
++     }
++
++     ds.n = m;
++     ds.minf_max = -HUGE_VAL;
++     ds.ftol_rel = nlopt_get_ftol_rel(dual_opt);
++     ds.ftol_abs = nlopt_get_ftol_abs(dual_opt);
++     ds.xtol_rel = nlopt_get_xtol_rel(dual_opt);
++     ds.x_weights = NULL;
++     ds.nevals_p = &nevals;
++     ds.maxeval = nlopt_get_maxeval(dual_opt);
++
++     work = (double *) malloc(sizeof(double) * (12*m + n) + sizeof(unsigned) * 2*m);
++     if (!work) return NLOPT_OUT_OF_MEMORY;
++     g = work;
++     gt = g + m;
++     yt = gt + m;
++     y0 = yt + m;
++     z = y0 + m;
++     r = z + m;
++     dy = r + m;
++     w = dy + m;
++     dya = w + m;
++     dza = dya + m;
++     dz = dza + m;
++     xtol_abs = dz + m;
++     t = xtol_abs + m;
++     F = (unsigned *) (t + n);
++     K = F + m;
++     nlopt_get_xtol_abs(dual_opt, xtol_abs);
++     ds.xtol_abs = xtol_abs;
++     B = (double *) malloc(sizeof(double) * n * m);
++     if (!B) { ret = NLOPT_OUT_OF_MEMORY; goto done; }
++
++     /* the multipliers F that are not held fixed */
++     for (i = 0; i < m; ++i)
++	  if (!(inactive && nlopt_isnan(inactive[i]))) {
++	       F[nF++] = i;
++	       ymax = MAX(ymax, fabs(y[i] - lb[i]));
++	  }
++
++     /* nothing to do if the warm start y is optimal (e.g. y = lb with
++	all the constraint approximations satisfied) */
++     fy = f(m, y, g, f_data);
++     ++nevals;
++     if (gap_estimate(nF, F, y, lb, g) <= MAX(ds.ftol_abs, ds.ftol_rel * fabs(fy))) {
++	  ret = NLOPT_FTOL_REACHED;
++	  goto done;
++     }
++
++     /* move y strictly inside (the method needs s > 0), and start from
++	there or, if that is worse (e.g. after the large multipliers of an
++	infeasible subproblem), from near the bounds.  (hess needs the last
++	evaluation to be at the current y.) */
++     d = INTERIOR * MAX(ymax, 1.0);
++     memcpy(yt, y, sizeof(double) * m);
++     for (l = 0; l < nF; ++l) {
++	  i = F[l];
++	  if (y[i] < lb[i] + d) y[i] = lb[i] + d;
++	  yt[i] = lb[i] + INTERIOR;
++     }
++     {
++	  double fyt = f(m, yt, NULL, f_data);
++	  ++nevals;
++	  fy = f(m, y, g, f_data);
++	  ++nevals;
++	  if (fyt < fy) {
++	       memcpy(y, yt, sizeof(double) * m);
++	       fy = f(m, y, g, f_data);
++	       ++nevals;
++	  }
++     }
++
++     /* bound multipliers on the central path s z = mu */
++     mu = 0;
++     for (l = 0; l < nF; ++l) mu += (y[F[l]] - lb[F[l]]) * fabs(g[F[l]]);
++     mu = MAX(mu / nF, DBL_MIN);
++     for (l = 0; l < nF; ++l) z[l] = mu / (y[F[l]] - lb[F[l]]);
++
++     while (nF > 0) {
++	  double comp = 0, tol, slope = 0, alpha = 1, alpha_z = 1;
++	  double phi, phit, fyt = fy;
++	  unsigned k, nk = 0, ls;
++	  int accepted = 0;
++
++	  for (l = 0; l < nF; ++l) {
++	       i = F[l];
++	       comp += (y[i] - lb[i]) * z[l];
++	  }
++	  tol = MAX(ds.ftol_abs, ds.ftol_rel * fabs(fy));
++	  if (gap_estimate(nF, F, y, lb, g) <= tol) {
++	       ret = NLOPT_FTOL_REACHED;
++	       break;
++	  }
++
++	  /* the Newton matrix B^T B + Z/S, as a Cholesky factor in H if
++	     nF <= k, or else, with W = S/Z (in w), the Cholesky factor of
++	     I + B W B^T computed from the nk columns K with a non-negligible
++	     W |b|^2, stored in B scaled by W^{1/2} (for the Woodbury identity
++	     in newton_solve) */
++	  mu = comp / nF;
++	  for (l = 0; l < nF; ++l) w[l] = z[l] / (y[F[l]] - lb[F[l]]);
++	  k = hess(m, y, nF, F, B, f_data);
++	  if ((size_t) MIN(nF, k) * MIN(nF, k) > Hsize) {
++	       free(H);
++	       Hsize = (size_t) MIN(nF, k) * MIN(nF, k);
++	       H = (double *) malloc(sizeof(double) * Hsize);
++	       if (!H) { ret = NLOPT_OUT_OF_MEMORY; goto done; }
++	  }
++	  if (nF <= k) {
++	       gram(nF, k, B, k, 0, H);
++	       for (l = 0; l < nF; ++l) H[l + l*nF] += w[l];
++	       if (cholesky(nF, H)) { ret = NLOPT_FTOL_REACHED; break; }
++	  }
++	  else {
++	       for (l = 0; l < nF; ++l) {
++		    const double *b = B + l*k;
++		    double b2 = 0, sw;
++		    w[l] = 1 / w[l];
++		    for (i = 0; i < k; ++i) b2 += b[i] * b[i];
++		    if (w[l] * b2 < WEIGHT_MIN) continue;
++		    sw = sqrt(w[l]);
++		    for (i = 0; i < k; ++i) B[i + nk*k] = b[i] * sw;
++		    K[nk++] = l;
++	       }
++	       if (nk > 0) {
++		    gram(k, nk, B, k, 1, H);
++		    for (i = 0; i < k; ++i) H[i + i*k] += 1;
++		    if (cholesky(k, H)) { ret = NLOPT_FTOL_REACHED; break; }
++	       }
++	  }
++
++	  /* Mehrotra's predictor-corrector: the affine step (mu = 0) sets
++	     the centering sigma = (mu_aff / mu)^3 and the second-order
++	     correction of the complementarity s z */
++	  for (l = 0; l < nF; ++l) r[l] = -g[F[l]];
++	  newton_solve(nF, k, nk, H, B, K, w, r, dya, t, dz);
++	  {
++	       double ap = 1, ad = 1, mu_aff = 0;
++	       for (l = 0; l < nF; ++l) {
++		    double sl = y[F[l]] - lb[F[l]];
++		    dza[l] = -z[l] - z[l] * dya[l] / sl;
++		    if (dya[l] < 0) ap = MIN(ap, -sl / dya[l]);
++		    if (dza[l] < 0) ad = MIN(ad, -z[l] / dza[l]);
++	       }
++	       for (l = 0; l < nF; ++l)
++		    mu_aff += (y[F[l]] - lb[F[l]] + ap * dya[l]) * (z[l] + ad * dza[l]);
++	       mu_aff /= nF;
++	       mu *= MIN(1, mu_aff / mu) * MIN(1, mu_aff / mu) * MIN(1, mu_aff / mu);
++	       /* (no need to go much below the tolerance) */
++	       mu = MAX(mu, 0.1 * tol / nF);
++	  }
++	  for (l = 0; l < nF; ++l)
++	       r[l] = -g[F[l]] + (mu - dya[l] * dza[l]) / (y[F[l]] - lb[F[l]]);
++	  newton_solve(nF, k, nk, H, B, K, w, r, dy, t, dz);
++	  for (l = 0; l < nF; ++l)
++	       slope += (g[F[l]] - mu / (y[F[l]] - lb[F[l]])) * dy[l];
++	  if (!(slope < 0)) {
++	       /* the correction spoiled the descent on the barrier function
++		  phi = f - mu sum(log(s)): plain Newton step for mu */
++	       for (l = 0; l < nF; ++l) {
++		    r[l] = -g[F[l]] + mu / (y[F[l]] - lb[F[l]]);
++		    dza[l] = 0;
++	       }
++	       newton_solve(nF, k, nk, H, B, K, w, r, dy, t, dz);
++	       slope = 0;
++	       for (l = 0; l < nF; ++l) slope -= r[l] * dy[l];
++	  }
++
++	  /* converged also when the decrease predicted for the Newton step
++	     and the complementarity are below the tolerance (the gap
++	     estimate is pessimistic for the multipliers inside) */
++	  if (-slope <= tol && comp <= tol) {
++	       ret = NLOPT_FTOL_REACHED;
++	       break;
++	  }
++
++	  /* the longest steps keeping s and z positive */
++	  for (l = 0; l < nF; ++l) {
++	       double sl = y[F[l]] - lb[F[l]];
++	       dz[l] = (mu - sl * z[l] - dya[l] * dza[l] - z[l] * dy[l]) / sl;
++	       if (dy[l] < 0) alpha = MIN(alpha, -FRAC_BOUNDARY * sl / dy[l]);
++	       if (dz[l] < 0) alpha_z = MIN(alpha_z, -FRAC_BOUNDARY * z[l] / dz[l]);
++	  }
++
++	  /* backtracking search on phi */
++	  phi = fy;
++	  for (l = 0; l < nF; ++l) phi -= mu * log(y[F[l]] - lb[F[l]]);
++	  memcpy(yt, y, sizeof(double) * m);
++	  for (ls = 0; ls < MAXLS; ++ls) {
++	       for (l = 0; l < nF; ++l) yt[F[l]] = y[F[l]] + alpha * dy[l];
++	       fyt = f(m, yt, gt, f_data);
++	       ++nevals;
++	       phit = fyt;
++	       for (l = 0; l < nF; ++l) phit -= mu * log(yt[F[l]] - lb[F[l]]);
++	       if (phit <= phi + ARMIJO * alpha * slope) { accepted = 1; break; }
++	       if (nlopt_stop_evals(&ds) || nlopt_stop_time(&ds)
++		   || nlopt_stop_forced(&ds))
++		    break;
++	       alpha *= 0.5;
++	  }
++
++	  if (accepted) {
++	       double *tmp;
++	       /* the step of z, kept within a factor KAPPA of the central
++		  path mu/s */
++	       for (l = 0; l < nF; ++l) {
++		    double sl = yt[F[l]] - lb[F[l]], mus = MAX(mu, DBL_MIN);
++		    z[l] += alpha_z * dz[l];
++		    z[l] = MAX(MIN(z[l], KAPPA * mus / sl), mus / (KAPPA * sl));
++	       }
++	       tmp = g; g = gt; gt = tmp;
++	       memcpy(y0, y, sizeof(double) * m);
++	       memcpy(y, yt, sizeof(double) * m);
++	  }
++	  if (nlopt_stop_forced(&ds)) { ret = NLOPT_FORCED_STOP; break; }
++	  if (nlopt_stop_evals(&ds)) { ret = NLOPT_MAXEVAL_REACHED; break; }
++	  if (nlopt_stop_time(&ds)) { ret = NLOPT_MAXTIME_REACHED; break; }
++	  if (!accepted || (ls > 0 && fabs(fyt - fy) <= tol)) {
++	       /* no decrease possible: limited by roundoff */
++	       if (accepted) fy = fyt;
++	       ret = NLOPT_FTOL_REACHED;
++	       break;
++	  }
++	  fy = fyt;
++	  if (nlopt_stop_x(&ds, y, y0)) { ret = NLOPT_XTOL_REACHED; break; }
++     }
++
++ done:
++     *minf = fy;
++     free(H);
++     free(B);
++     free(work);
++     return ret;
++}
+diff --git a/src/algs/mma/ccsa_quadratic.c b/src/algs/mma/ccsa_quadratic.c
+index fab3de0..10dd075 100644
+--- a/src/algs/mma/ccsa_quadratic.c
++++ b/src/algs/mma/ccsa_quadratic.c
+@@ -74,6 +74,7 @@ typedef struct {
+      nlopt_precond *prec; void **prec_data; /* length = # constraints */
+      double *scratch; /* length = 2*n */
+      double *work; /* length = 3*n, for dual_func */
++     double *hwork; unsigned *hfree; /* length 2*n and n, for dual_hess */
+ } dual_data;
+ 
+ static double sqr(double x) { return x * x; }
+@@ -197,6 +198,48 @@ static double dual_func(unsigned m, const double *y, double *grad, void *d_)
+      return -val;
+ }
+ 
++/* For the Newton dual solver (ccsa_dual_newton.c): B = (G D^{1/2})^T for
++   the multipliers F at the x of the last dual_func call (at y), where G is
++   the Jacobian of the constraint approximations gc and D is the inverse of
++   the second derivative of the Lagrangian, sigma^2/u, in each component of
++   x that is not at a bound (the others do not depend on y). */
++static unsigned dual_hess(unsigned m, const double *y, unsigned nf,
++			  const unsigned *F, double *B, void *d_)
++{
++     dual_data *d = (dual_data *) d_;
++     unsigned n = d->n;
++     const double *x = d->x, *lb = d->lb, *ub = d->ub, *sigma = d->sigma;
++     const double *dfcdx = d->dfcdx, *rhoc = d->rhoc;
++     const double *v = d->work; /* as left by dual_func */
++     double *P = d->hwork, *R = P + n, u, su;
++     unsigned *J = d->hfree;
++     unsigned i, j, k = 0, l;
++
++     u = d->rho;
++     for (i = 0; i < m; ++i)
++	  u += rhoc[i] * y[i];
++     su = 1 / sqrt(u);
++     for (j = 0; j < n; ++j) {
++	  double dx, sigma2;
++	  if (sigma[j] == 0) continue;
++	  /* the unconstrained minimizer dx, as in dual_func */
++	  dx = -(sigma2 = sqr(sigma[j])) * v[j]/u;
++	  if (!(fabs(dx) < sigma[j] && x[j] + dx < ub[j] && x[j] + dx > lb[j]))
++	       continue;
++	  /* G = dfcdx + rhoc dx / sigma^2 */
++	  P[k] = sigma[j] * su;
++	  R[k] = dx / sigma[j] * su;
++	  J[k++] = j;
++     }
++     for (l = 0; l < nf; ++l) {
++	  const double *dfcdxi = dfcdx + F[l]*n;
++	  double rhoci = rhoc[F[l]], *b = B + l*k;
++	  for (i = 0; i < k; ++i)
++	       b[i] = dfcdxi[J[i]] * P[i] + rhoci * R[i];
++     }
++     return k;
++}
++
+ /***********************************************************************/
+ 
+ /* compute g(x - x0) and its gradient */
+@@ -270,7 +313,7 @@ nlopt_result ccsa_quadratic_minimize(
+      nlopt_stopping *stop,
+      nlopt_opt dual_opt, int inner_maxeval, unsigned verbose, double rho_init,
+ 	 int inner_gradients, int always_improve, double sigma_min,
+-	 const double *sigma_init)
++	 const double *sigma_init, int dual_newton)
+ {
+      nlopt_result ret = NLOPT_SUCCESS;
+      double *xcur, rho, *sigma, *dfdx, *dfdx_cur, *xprev, *xprevprev, fcur;
+@@ -325,6 +368,7 @@ nlopt_result ccsa_quadratic_minimize(
+      dd.pre = pre; dd.pre_data = f_data;
+      dd.prec = NULL; dd.prec_data = NULL;
+      dd.scratch = NULL;
++     dd.hwork = NULL; dd.hfree = NULL;
+ 
+      if (m) {
+ 	  dd.prec = (nlopt_precond *) malloc(sizeof(nlopt_precond) * m);
+@@ -347,6 +391,15 @@ nlopt_result ccsa_quadratic_minimize(
+ 	  for (i = 0; i < m; ++i)
+ 	       no_precond = no_precond && dd.prec[i] == NULL;
+ 
++     if (no_precond && dual_newton) {
++	  dd.hwork = (double *) malloc(sizeof(double) * 2*n);
++	  dd.hfree = (unsigned *) malloc(sizeof(unsigned) * n);
++	  if (!dd.hwork || !dd.hfree) {
++	       ret = NLOPT_OUT_OF_MEMORY;
++	       goto done;
++	  }
++     }
++
+      if (!no_precond) {
+ 	  dd.scratch = (double*) malloc(sizeof(double) * (4*n));
+ 	  if (!dd.scratch) {
+@@ -450,11 +503,18 @@ nlopt_result ccsa_quadratic_minimize(
+ 		    dd.rho = rho; dd.count = 0;
+ 		    save_verbose = ccsa_verbose;
+ 		    ccsa_verbose = 0; /* no recursive verbosity */
+-		    reti = nlopt_optimize_limited(dual_opt, y, &min_dual,
+-						  0,
+-						  stop->maxtime
+-						  - (nlopt_seconds()
+-						     - stop->start));
++		    /* (the upper bounds of an infeasible start are left to
++		       dual_opt) */
++		    if (dual_newton && (m == 0 || nlopt_isinf(dual_ub[0])))
++			 reti = ccsa_dual_newton(m, dual_func, dual_hess, &dd, n,
++						 dual_lb, NULL, y, &min_dual,
++						 dual_opt, stop);
++		    else
++			 reti = nlopt_optimize_limited(dual_opt, y, &min_dual,
++						       0,
++						       stop->maxtime
++						       - (nlopt_seconds()
++							  - stop->start));
+ 		    ccsa_verbose = save_verbose;
+ 		    if (reti < 0 || reti == NLOPT_MAXTIME_REACHED) {
+ 			 ret = reti;
+@@ -648,6 +708,8 @@ nlopt_result ccsa_quadratic_minimize(
+  done:
+      nlopt_destroy(pre_opt);
+      if (dd.scratch) free(dd.scratch);
++     free(dd.hfree);
++     free(dd.hwork);
+      if (m) {
+ 	  free(dd.prec_data);
+ 	  free(dd.prec);
+diff --git a/src/algs/mma/mma.c b/src/algs/mma/mma.c
+index 17e9ddb..642779c 100644
+--- a/src/algs/mma/mma.c
++++ b/src/algs/mma/mma.c
+@@ -54,6 +54,7 @@ typedef struct {
+      double *xcur; /* array of length n, output each time */
+      double gval, wval, *gcval; /* output each time (array length m) */
+      double *work; /* length 5*n */
++     double *hwork; unsigned *hfree; /* length 3*n and n, for dual_hess */
+ #ifdef NLOPT_HAVE_BLAS
+      double *dfcdx_abs; /* |dfcdx|, rows of NaN constraints zeroed in both */
+ #endif
+@@ -223,6 +224,59 @@ static double dual_func(unsigned m, const double *y, double *grad, void *d_)
+      return -val;
+ }
+ 
++/* For the Newton dual solver (ccsa_dual_newton.c): B = (G D^{1/2})^T for
++   the multipliers F at the x of the last dual_func call, where G is the
++   Jacobian of the constraint approximations gc and D is the inverse of the
++   second derivative of the Lagrangian in each component of x that is not
++   at a bound (the others do not depend on y). */
++static unsigned dual_hess(unsigned m, const double *y, unsigned nf,
++			  const unsigned *F, double *B, void *d_)
++{
++     dual_data *d = (dual_data *) d_;
++     unsigned n = d->n;
++     const double *x = d->x, *lb = d->lb, *ub = d->ub, *sigma = d->sigma;
++     const double *dfcdx = d->dfcdx, *rhoc = d->rhoc;
++     const double *u = d->work, *v = u + n; /* as left by dual_func */
++     double *P = d->hwork, *Q = P + n, *R = Q + n;
++     unsigned *J = d->hfree;
++     unsigned i, j, k = 0, l;
++
++     (void) m; (void) y;
++     for (j = 0; j < n; ++j) {
++	  double uj, vj, dx, sigma2, dx2, den, h, s;
++	  if (sigma[j] == 0) continue;
++	  /* the unconstrained minimizer dx, as in dual_func */
++	  uj = u[j] * (sigma2 = sqr(sigma[j]));
++	  vj = v[j];
++	  dx = (uj/vj) / (-1 - sqrt(fabs(1 - sqr(uj/(vj*sigma[j])))));
++	  if (!(fabs(dx) < 0.9*sigma[j] && x[j] + dx < ub[j] && x[j] + dx > lb[j]))
++	       continue;
++	  /* with the term (uj dx + vj dx^2) / (sigma^2 - dx^2) of the
++	     Lagrangian and the terms (p dx + q dx^2) / (sigma^2 - dx^2) of
++	     gc[i] (p = dfcdx sigma^2, q = |dfcdx| sigma + rhoc/2):
++	     d^2/dx^2 = 2 (uj dx (3 sigma^2 + dx^2) + vj sigma^2 (sigma^2 + 3 dx^2))
++	                / (sigma^2 - dx^2)^3 and
++	     G = (p (sigma^2 + dx^2) + 2 q sigma^2 dx) / (sigma^2 - dx^2)^2 */
++	  dx2 = dx * dx;
++	  den = sigma2 - dx2;
++	  h = 2 * (uj*dx*(3*sigma2 + dx2) + vj*sigma2*(sigma2 + 3*dx2)) / (den*den*den);
++	  s = 1 / (sqrt(h) * den*den);
++	  P[k] = sigma2 * (sigma2 + dx2) * s;
++	  Q[k] = 2 * sigma2 * sigma[j] * dx * s;
++	  R[k] = sigma2 * dx * s;
++	  J[k++] = j;
++     }
++     for (l = 0; l < nf; ++l) {
++	  const double *dfcdxi = dfcdx + F[l]*n;
++	  double rhoci = rhoc[F[l]], *b = B + l*k;
++	  for (i = 0; i < k; ++i) {
++	       double a = dfcdxi[J[i]];
++	       b[i] = a * P[i] + fabs(a) * Q[i] + rhoci * R[i];
++	  }
++     }
++     return k;
++}
++
+ /***********************************************************************/
+ 
+ /* note that we implement a hidden feature not in the standard
+@@ -237,7 +291,7 @@ nlopt_result mma_minimize(unsigned n, nlopt_func f, void *f_data,
+ 			  nlopt_stopping *stop,
+ 			  nlopt_opt dual_opt, int inner_maxeval, unsigned verbose, double rho_init,
+ 			  int inner_gradients, int always_improve, double sigma_min,
+-			  const double *sigma_init)
++			  const double *sigma_init, int dual_newton)
+ {
+      nlopt_result ret = NLOPT_SUCCESS;
+      double *xcur, rho, *sigma, *dfdx, *dfdx_cur, *xprev, *xprevprev, fcur;
+@@ -293,6 +347,15 @@ nlopt_result mma_minimize(unsigned n, nlopt_func f, void *f_data,
+      dd.rhoc = rhoc;
+      dd.xcur = xcur;
+      dd.gcval = gcval;
++     dd.hwork = NULL; dd.hfree = NULL;
++     if (dual_newton) {
++	  dd.hwork = (double *) malloc(sizeof(double) * 3*n);
++	  dd.hfree = (unsigned *) malloc(sizeof(unsigned) * n);
++	  if (!dd.hwork || !dd.hfree) {
++	       ret = NLOPT_OUT_OF_MEMORY;
++	       goto done;
++	  }
++     }
+ 
+      for (j = 0; j < n; ++j) {
+ 	  if (sigma_init && sigma_init[j] > 0)
+@@ -373,10 +436,16 @@ nlopt_result mma_minimize(unsigned n, nlopt_func f, void *f_data,
+ 	       dd.rho = rho; dd.count = 0;
+ 	       save_verbose = mma_verbose;
+ 	       mma_verbose = 0; /* no recursive verbosity */
+-	       reti = nlopt_optimize_limited(dual_opt, y, &min_dual,
+-					     0,
+-					     stop->maxtime - (nlopt_seconds()
+-							      - stop->start));
++	       /* (the upper bounds of an infeasible start are left to dual_opt) */
++	       if (dual_newton && (m == 0 || nlopt_isinf(dual_ub[0])))
++		    reti = ccsa_dual_newton(m, dual_func, dual_hess, &dd, n,
++					    dual_lb, fcval, y, &min_dual,
++					    dual_opt, stop);
++	       else
++		    reti = nlopt_optimize_limited(dual_opt, y, &min_dual,
++						  0,
++						  stop->maxtime - (nlopt_seconds()
++								   - stop->start));
+ 	       mma_verbose = save_verbose;
+ 	       if (reti < 0 || reti == NLOPT_MAXTIME_REACHED) {
+ 		    ret = reti;
+@@ -548,6 +617,8 @@ nlopt_result mma_minimize(unsigned n, nlopt_func f, void *f_data,
+      }
+ 
+  done:
++     free(dd.hfree);
++     free(dd.hwork);
+      free(sigma);
+      return ret;
+ }
+diff --git a/src/algs/mma/mma.h b/src/algs/mma/mma.h
+index 72a813c..f69fd4e 100644
+--- a/src/algs/mma/mma.h
++++ b/src/algs/mma/mma.h
+@@ -42,7 +42,7 @@ nlopt_result mma_minimize(unsigned n, nlopt_func f, void *f_data,
+ 			  nlopt_stopping *stop,
+ 			  nlopt_opt dual_opt, int inner_maxeval, unsigned verbose, double rho_init,
+                  int inner_gradients, int always_improve, double sigma_min,
+-                 const double *sigma_init);
++                 const double *sigma_init, int dual_newton);
+ 
+ nlopt_result ccsa_quadratic_minimize(
+      unsigned n, nlopt_func f, void *f_data,
+@@ -56,7 +56,22 @@ nlopt_result ccsa_quadratic_minimize(
+      nlopt_stopping *stop,
+      nlopt_opt dual_opt, int inner_maxeval, unsigned verbose, double rho_init,
+      int inner_gradients, int always_improve, double sigma_min,
+-     const double *sigma_init);
++     const double *sigma_init, int dual_newton);
++
++/* Newton-type solver for the dual problems, minimizing the dual function f
++   over y >= lb (ccsa_dual_newton.c).  hess is called after an evaluation
++   f(m, y, grad, f_data) of the dual function, with nf multipliers F; it
++   stores the k-by-nf matrix B = (G D^{1/2})^T in B (leading dimension k)
++   and returns k <= n, so that the Hessian of the dual function in F is
++   B^T B.  The multipliers i with NaN inactive[i] (if inactive is not NULL)
++   are held fixed. */
++typedef unsigned (*ccsa_dual_hess)(unsigned m, const double *y, unsigned nf,
++                                   const unsigned *F, double *B, void *f_data);
++
++nlopt_result ccsa_dual_newton(unsigned m, nlopt_func f, ccsa_dual_hess hess,
++                              void *f_data, unsigned n, const double *lb,
++                              const double *inactive, double *y, double *minf,
++                              nlopt_opt dual_opt, nlopt_stopping *stop);
+ 
+ #ifdef __cplusplus
+ }  /* extern "C" */
+diff --git a/src/api/optimize.c b/src/api/optimize.c
+index 28aee07..027a660 100644
+--- a/src/api/optimize.c
++++ b/src/api/optimize.c
+@@ -801,6 +801,7 @@ static nlopt_result nlopt_optimize_(nlopt_opt opt, double *x, double *minf)
+             int inner_gradients = (int)nlopt_get_param(opt, "inner_gradients",1);
+             int always_improve = (int)nlopt_get_param(opt, "always_improve",1);
+             double sigma_min = nlopt_get_param(opt, "sigma_min",0.0);
++            int dual_newton = (int)nlopt_get_param(opt, "dual_newton",0);
+             nlopt_opt dual_opt;
+             nlopt_result ret;
+ 
+@@ -812,6 +813,8 @@ static nlopt_result nlopt_optimize_(nlopt_opt opt, double *x, double *minf)
+                 RETURN_ERR(NLOPT_INVALID_ARGS, opt, "always_improve must be 0 or 1");
+             if (sigma_min < 0.0)
+                 RETURN_ERR(NLOPT_INVALID_ARGS, opt, "sigma_min must be non-negative");
++            if (dual_newton != 0 && dual_newton != 1)
++                RETURN_ERR(NLOPT_INVALID_ARGS, opt, "dual_newton must be 0 or 1");
+             verbosity = verbosity < 0 ? 0 : verbosity;
+ 
+ #define LO(param, def) (opt->local_opt ? opt->local_opt->param : (def))
+@@ -826,9 +829,9 @@ static nlopt_result nlopt_optimize_(nlopt_opt opt, double *x, double *minf)
+             nlopt_set_maxeval(dual_opt, (int)nlopt_get_param(opt, "dual_maxeval", LO(maxeval, 100000)));
+ #undef LO
+             if (algorithm == NLOPT_LD_MMA)
+-                ret = mma_minimize(n, f, f_data, opt->m, opt->fc, lb, ub, x, minf, &stop, dual_opt, inner_maxeval, (unsigned)verbosity, rho_init, inner_gradients, always_improve, sigma_min, opt->dx);
++                ret = mma_minimize(n, f, f_data, opt->m, opt->fc, lb, ub, x, minf, &stop, dual_opt, inner_maxeval, (unsigned)verbosity, rho_init, inner_gradients, always_improve, sigma_min, opt->dx, dual_newton);
+             else
+-                ret = ccsa_quadratic_minimize(n, f, f_data, opt->m, opt->fc, opt->pre, lb, ub, x, minf, &stop, dual_opt, inner_maxeval, (unsigned)verbosity, rho_init, inner_gradients, always_improve, sigma_min, opt->dx);
++                ret = ccsa_quadratic_minimize(n, f, f_data, opt->m, opt->fc, opt->pre, lb, ub, x, minf, &stop, dual_opt, inner_maxeval, (unsigned)verbosity, rho_init, inner_gradients, always_improve, sigma_min, opt->dx, dual_newton);
+             nlopt_destroy(dual_opt);
+             return ret;
+         }
+diff --git a/src/util/nlopt-blas.h b/src/util/nlopt-blas.h
+index 9d9b7c0..b9b056f 100644
+--- a/src/util/nlopt-blas.h
++++ b/src/util/nlopt-blas.h
+@@ -52,6 +52,7 @@ void   NLOPT_BLAS(dsyrk)(const char* uplo, const char* trans, const blas_int* n,
+ void   NLOPT_BLAS(dsyr2k)(const char* uplo, const char* trans, const blas_int* n, const blas_int* k, const double* alpha, const double* a, const blas_int* lda, const double* b, const blas_int* ldb, const double* beta, double* c, const blas_int* ldc);
+ void   NLOPT_BLAS(dspmv)(const char* uplo, const blas_int* n, const double* alpha, const double* ap, const double* x, const blas_int* incx, const double* beta, double* y, const blas_int* incy);
+ void   NLOPT_BLAS(dspr2)(const char* uplo, const blas_int* n, const double* alpha, const double* x, const blas_int* incx, const double* y, const blas_int* incy, double* ap);
++void   NLOPT_BLAS(dpotrf)(const char* uplo, const blas_int* n, double* a, const blas_int* lda, blas_int* info);
+ #else
+ typedef ptrdiff_t blas_int;
+ #define NLOPT_BLAS(name) nlopt_##name
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index f4d35ad..b140fd9 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -21,6 +21,7 @@ NLOPT_add_cpp_test(cpp_functor 0)
+ NLOPT_add_cpp_test(t_fbound 0)
+ NLOPT_add_cpp_test(t_except 1 0)
+ NLOPT_add_cpp_test(t_bounded 0 1 2 3 4 5 6 7 8 19 35 42 43)
++NLOPT_add_cpp_test(t_ccsa_dual_newton LD_MMA LD_CCSAQ)
+ 
+ # have to add timer.c and mt19937ar.c as symbols are declared extern
+ set (testopt_sources testfuncs.c testfuncs.h testopt.c ${PROJECT_SOURCE_DIR}/src/util/timer.c ${PROJECT_SOURCE_DIR}/src/util/mt19937ar.c)
+diff --git a/test/t_ccsa_dual_newton.cxx b/test/t_ccsa_dual_newton.cxx
+new file mode 100644
+index 0000000..bd94d20
+--- /dev/null
++++ b/test/t_ccsa_dual_newton.cxx
+@@ -0,0 +1,95 @@
++// MMA and CCSA with the Newton-type dual solver ("dual_newton" parameter) on
++// a box-bounded quadratic with fewer and with more linear inequality
++// constraints than variables (the two ways ccsa_dual_newton solves its
++// Newton system), from an infeasible start.  For MMA, a constraint that is
++// always NaN (inactive) is added.  The reference minima were computed with
++// both algorithms and both settings of NLOPT_BLAS, which agree to 1e-14 (the
++// default dual solver stops 1e-8 to 1e-7 away from them).
++
++#include <cmath>
++#include <cstdlib>
++#include <iomanip>
++#include <iostream>
++#include <vector>
++#include <nlopt.hpp>
++
++static const unsigned n = 8;
++
++double objective(const std::vector<double> &x, std::vector<double> &grad, void *data)
++{
++  (void)data;
++  double f = 0, s = 0;
++  for (unsigned j = 0; j < n; ++j) s += x[j];
++  for (unsigned j = 0; j < n; ++j) {
++    double c = 1.5 * std::cos(j + 1.0);
++    f += (x[j] - c) * (x[j] - c);
++    if (!grad.empty()) grad[j] = 2 * (x[j] - c) + 0.2 * s;
++  }
++  return f + 0.1 * s * s;
++}
++
++// a_i^T x <= 0.3 with a_ij = sin(i + 1.7 j + 1)
++void linear(unsigned m, double *result, unsigned nx, const double *x, double *grad, void *data)
++{
++  (void)data;
++  for (unsigned i = 0; i < m; ++i) {
++    result[i] = -0.3;
++    for (unsigned j = 0; j < nx; ++j) {
++      double a = std::sin(i + 1.7 * j + 1);
++      result[i] += a * x[j];
++      if (grad) grad[i*nx + j] = a;
++    }
++  }
++}
++
++double nan_constraint(const std::vector<double> &x, std::vector<double> &grad, void *data)
++{
++  (void)x; (void)data;
++  for (double &g : grad) g = 0;
++  return NAN;
++}
++
++static bool run(const char *alg, unsigned m, std::vector<double> &x, double &minf)
++{
++  nlopt::opt opt(alg, n);
++  opt.set_lower_bounds(std::vector<double>(n, -1.0));
++  opt.set_upper_bounds(std::vector<double>(n, 1.0));
++  opt.set_min_objective(objective, NULL);
++  opt.add_inequality_mconstraint(linear, NULL, std::vector<double>(m, 1e-10));
++  if (opt.get_algorithm() == nlopt::LD_MMA)
++    opt.add_inequality_constraint(nan_constraint, NULL, 0);
++  opt.set_param("dual_newton", 1);
++  opt.set_xtol_rel(1e-10);
++  opt.set_maxeval(5000);
++  x.assign(n, 0.9);
++  try {
++    nlopt::result result = opt.optimize(x, minf);
++    std::cout << opt.get_algorithm_name() << ", m = " << m << ": result " << result << ", f = " << std::setprecision(17) << minf << " after "
++              << opt.get_numevals() << " evaluations" << std::endl;
++    return result > 0;
++  }
++  catch (std::exception &e) {
++    std::cerr << "nlopt failed: " << e.what() << std::endl;
++    return false;
++  }
++}
++
++int main(int argc, char *argv[]) {
++  const char *alg = argc < 2 ? "LD_MMA" : argv[1];
++  bool ok = true;
++  const struct { unsigned m; double minf; } cases[] = {
++    {3, 0.59686349241284586}, {40, 0.71906716975323159}};
++  for (const auto &c : cases) {
++    std::vector<double> x, fc(c.m);
++    double minf, viol = 0;
++    ok = run(alg, c.m, x, minf) && ok;
++    linear(c.m, fc.data(), n, x.data(), NULL, NULL);
++    for (double fci : fc) viol = std::fmax(viol, fci);
++    if (!(std::fabs(minf - c.minf) <= 1e-9 && viol <= 1e-9)) {
++      std::cerr << "f = " << minf << " instead of " << c.minf
++                << ", constraint violation " << viol << std::endl;
++      ok = false;
++    }
++  }
++  return ok ? EXIT_SUCCESS : EXIT_FAILURE;
++}
+-- 
+2.56.0
+

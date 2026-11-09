@@ -1,0 +1,678 @@
+From def1114f07a2567d594d23e0bc26723752065ef0 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Sat, 31 Oct 2026 00:52:19 -0400
+Subject: [PATCH 21/21] slsqp: solve the LDP without forming G*R^-1
+
+LSI transformed the inequality constraints into those of a least
+distance problem by forming G*R^-1 (one row per constraint) with DTRSM,
+O(mg*n^2), and LDP copied it, transposed and extended by h, into the
+(n+1 x mg) matrix of its NNLS dual.  NNLS then applied every Householder
+reflection and Givens rotation to all mg columns and computed the dual
+vector from all of them, two or three sweeps over the whole matrix per
+outer iteration.
+
+Keep the matrix implicit instead.  NNLS accumulates the orthogonal
+transformation of the rows in an explicit (n+1 x n+1) matrix Q,
+transforms a column (one triangular solve with R and one product with
+Q) only when it is tested for entering the solution set, and keeps the
+transformed columns of the solution set by position.  The dual vector
+is computed from the residual in the original coordinates with one
+triangular solve and one DGEMV with the original G, and LDP's solution
+with one DGEMV and one triangular solve.  The time per NNLS outer
+iteration is O(n^2 + mg*n) and the LDP memory O(n^2 + mg) instead of
+O(mg*n).  LSI no longer modifies G, so LSEI no longer copies it either.
+The buffer size is rederived accordingly.
+
+LSI also returns mode 5 (A not of rank n) when A has fewer rows than
+columns; the original code assumed ma >= n without checking (it always
+holds in SLSQP, where A is the square factor of the BFGS matrix).
+
+The iterates are those of the original algorithm up to rounding.  On
+random LSEI problems the solutions agree to ~1e-9 (multipliers differ
+only where they are not unique), and on degenerate ones, where NNLS
+works at the rounding level, either version occasionally reports
+incompatible constraints when the other does not, about equally often.
+On a beam-spectrum problem with 200-320 variables and 400-3600
+constraints this cuts the solver time per evaluation by 2.4-5.9x with
+the built-in routines and 1.6-3.1x with OpenBLAS (three machines), with
+the same optima; evaluation counts can differ slightly.  With 800
+variables and 1600 linear constraints the gain is 11-12x and 3.2-5.9x.
+With few constraints (5-25, or 10 with 200-800 variables) the time is
+unchanged within the noise of the measurement (0.87-1.62x, no
+consistent slowdown).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ src/algs/slsqp/README  |  19 ++-
+ src/algs/slsqp/slsqp.c | 350 +++++++++++++++++++----------------------
+ 2 files changed, 173 insertions(+), 196 deletions(-)
+
+diff --git a/src/algs/slsqp/README b/src/algs/slsqp/README
+index 064e910..4a22af5 100644
+--- a/src/algs/slsqp/README
++++ b/src/algs/slsqp/README
+@@ -63,13 +63,18 @@ constraints), DGELSY's O(n^3) QR factorization, whose reflectors are all
+ the identity, is skipped: the rank estimate (DLAIC1) and triangular solve
+ of DGELSY are done directly, with bit-identical results, and DGELSY is
+ still used whenever it would rescale or the matrix is rank deficient.
+-NNLS computes its dual vector with one DGEMV and applies each new
+-Householder transformation with DLARF on whole column blocks, instead of
+-one DDOT and one single-column DLARF per column; the columns already in
+-the solution set are zero in the rows involved.  With many constraints
+-this removes most of the BLAS call overhead (about 14% of the run time on
+-a problem with ~1500 constraints); the summation order changes, so
+-results differ from SciPy's in the last bits.
++The least distance problem of LSI is solved without forming the
++transformed constraint matrix G*R^-1 (one row per inequality constraint)
++or the transposed copy of it that NNLS works on.  NNLS keeps the
++orthogonal transformation of the rows as an explicit (n+1) x (n+1)
++matrix, transforms the column of a constraint only when it is considered
++for the solution set, and computes the dual vector from the residual
++with a triangular solve and one DGEMV with the original G.  This removes
++the O(m*n^2) formation and the updates of all m columns in every NNLS
++iteration, so that the time per NNLS iteration is O(n^2 + m*n) and the
++memory O(n^2 + m) instead of O(m*n), and LSI no longer modifies G.  The
++iterates are the same up to rounding, but results differ from SciPy's in
++the last bits and evaluation counts can differ slightly.
+ 
+ The BLAS/LAPACK library is chosen at configure time with the CMake
+ option NLOPT_BLAS: AUTO (default; use one if found), ON (require one),
+diff --git a/src/algs/slsqp/slsqp.c b/src/algs/slsqp/slsqp.c
+index a2742a3..046c28f 100644
+--- a/src/algs/slsqp/slsqp.c
++++ b/src/algs/slsqp/slsqp.c
+@@ -52,15 +52,29 @@
+ 
+ /********************************* NNLS ***********************************/
+ 
+-/* Lawson & Hanson nonnegative least squares, min |Ax - b| s.t. x >= 0.
+-   a is (m x n), b is (m), x, w, work are (n), zz is (m), indices is (n). */
++/* Lawson & Hanson nonnegative least squares for the dual of the least distance
++   problem in ldp, min |E*y - e| s.t. y >= 0, where E = [R^-T*G^T; h^T] is
++   (n+1 x m) and e = (0, ..., 0, 1).
++   E is not formed.  The orthogonal transformation of its rows, which the
++   original algorithm applies to all columns of E, is accumulated in an explicit
++   (n+1 x n+1) matrix Q instead, and a column is transformed (with one
++   triangular solve with R and one product with Q) only when it is tested for
++   entering the set P.  The transformed columns of P are kept in p by their
++   position in P, so removing a column from P shifts the later ones.  The dual
++   vector, E^T*Q^T*[0; b[indz:]] in the original algorithm, is computed with the
++   original G.
++   r is (n x n) upper triangular with leading dimension ldr, g is (m x n) with
++   leading dimension m, h is (m), y, w are (m), indices is (m), work is at least
++   2*(n+1)*(n+1) + 4*(n+1). */
+ static void
+-nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+-     double* restrict x, double* restrict w, double* restrict zz, double* restrict work,
+-     blas_int* restrict indices, const int64_t maxiter, double* rnorm, int64_t* info)
++nnls(const blas_int n, const blas_int m, const double* restrict r, const blas_int ldr,
++     const double* restrict g, const double* restrict h, double* restrict y,
++     double* restrict w, double* restrict work, blas_int* restrict indices,
++     const int64_t maxiter, double* rnorm, int64_t* info)
+ {
+     blas_int i = 0, ii = 0, ip = 0, indz = 0, iteration = 0, iz = 0, izmax = 0;
+     blas_int j = 0, jj = 0, k = 0, one = 1, tmpint = 0;
++    const blas_int nr = n + 1;
+     double tau = 0.0, unorm = 0.0, ztest, alpha, cc, ss, wmax, T, done = 1.0, dzero = 0.0;
+     double pivot = 1.0, tauvtb = 0.0, tmp = 0.0, spacing = 0.0;
+     *info = 1;
+@@ -70,20 +84,34 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+         return;
+     }
+ 
+-    // Initialize the indices and the solution vector x.
+-    for (i = 0; i < n; i++) { indices[i] = i; }
+-    for (i = 0; i < n; i++) { x[i] = 0.0; }
++    // Define pointers for the variables on work
++    double* restrict q  = &work[0];          // Q (nr x nr)
++    double* restrict p  = &work[nr*nr];      // transformed columns of P (nr x nr)
++    double* restrict b  = &work[2*nr*nr];    // Q*e (nr)
++    double* restrict zz = &work[2*nr*nr + nr];
++    double* restrict v  = &work[2*nr*nr + 2*nr];
++    double* restrict wk = &work[2*nr*nr + 3*nr];
++
++    // Initialize the indices, the solution vector y, Q = I and b = e.
++    for (i = 0; i < m; i++) { indices[i] = i; }
++    for (i = 0; i < m; i++) { y[i] = 0.0; }
++    for (i = 0; i < nr*nr; i++) { q[i] = 0.0; }
++    for (i = 0; i < nr; i++) { q[i + i*nr] = 1.0; }
++    for (i = 0; i < n; i++) { b[i] = 0.0; }
++    b[n] = 1.0;
+ 
+     // Outer loop
+-    while (indz < (m < n ? m : n))
++    while (indz < (nr < m ? nr : m))
+     {
+-        // Compute the dual vector components in set Z, in NumPy notation;
+-        // w[indices[indz:]] = A[indz:m, indices[indz:]].T @ b[indz:m]
+-        // as one GEMV over all columns (rather than one DOT per column of Z
+-        // as in scipy).  The columns in set P are zero in these rows; their dual
+-        // components stay zero.
+-        tmpint = m - indz;
+-        NLOPT_BLAS(dgemv)("T", &tmpint, &n, &done, &a[indz], &m, &b[indz], &one, &dzero, w, &one);
++        // Compute the dual vector components in set Z,
++        // w = E^T*v = G*R^-1*v[0:n] + h*v[n], with v = Q[indz:nr, :]^T*b[indz:nr]
++        // the residual in the original coordinates.  The components in set P
++        // are zero (up to rounding) and are set to zero.
++        tmpint = nr - indz;
++        NLOPT_BLAS(dgemv)("T", &tmpint, &nr, &done, &q[indz], &nr, &b[indz], &one, &dzero, v, &one);
++        NLOPT_BLAS(dtrsv)("U", "N", "N", &n, r, &ldr, v, &one);
++        for (i = 0; i < m; i++) { w[i] = h[i]; }
++        NLOPT_BLAS(dgemv)("N", &m, &n, &done, g, &m, v, &one, &v[n], w, &one);
+         for (i = 0; i < indz; i++) { w[indices[i]] = 0.0; }
+ 
+         // Find the next linearly independent column that corresponds to the
+@@ -94,7 +122,7 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+             // Finding the largest w[j] and its index
+             // izmax, wmax = argmax(w[indices[indz:]])
+             wmax = 0.0;
+-            for (k = indz; k < n; k++)
++            for (k = indz; k < m; k++)
+             {
+                 j = indices[k];
+                 if (w[j] > wmax) { wmax = w[j]; izmax = k; }
+@@ -104,31 +132,34 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+             iz = izmax;
+             j = indices[iz];
+ 
+-            // The sign of wmax is OK for j to be moved to set p. Column j and b
+-            // are not modified until j is accepted.
++            // The sign of wmax is OK for j to be moved to set p.  Transform
++            // column j of E into zz = Q*[R^-T*G[j, :]^T; h[j]].
++            for (i = 0; i < n; i++) { v[i] = g[j + i*m]; }
++            NLOPT_BLAS(dtrsv)("U", "T", "N", &n, r, &ldr, v, &one);
++            v[n] = h[j];
++            NLOPT_BLAS(dgemv)("N", &nr, &nr, &done, q, &nr, v, &one, &dzero, zz, &one);
+ 
+-            // Compute the norm of a[0:indz, j] to check for linear dependence.
+-            unorm = (indz > 0 ? NLOPT_BLAS(dnrm2)(&indz, &a[j*m], &one) : 0.0);
++            // Compute the norm of zz[0:indz] to check for linear dependence.
++            unorm = (indz > 0 ? NLOPT_BLAS(dnrm2)(&indz, zz, &one) : 0.0);
+             // unorm is nonnegative
+             spacing = (unorm > 0.0 ? nextafter(unorm, 2*unorm) - unorm : 0.0);
+ 
+             // Test for independence by checking the new diagonal element for
+-            // zero. Its magnitude is the norm of a[indz:m, j].
+-            tmpint = m - indz;
+-            if (NLOPT_BLAS(dnrm2)(&tmpint, &a[indz + j*m], &one) > 100.0*spacing)
++            // zero. Its magnitude is the norm of zz[indz:nr].
++            tmpint = nr - indz;
++            if (NLOPT_BLAS(dnrm2)(&tmpint, &zz[indz], &one) > 100.0*spacing)
+             {
+                 // Column j is sufficiently independent. Form the transformation
+-                // on a copy in zz[indz:m] and solve for ztest which is the new
+-                // prospective value for x[j].
+-                for (i = indz; i < m; i++) { zz[i] = a[i + j*m]; }
++                // in zz[indz:nr] and solve for ztest which is the new
++                // prospective value for y[j].
+                 NLOPT_BLAS(dlarfgp)(&tmpint, &zz[indz], &zz[indz + 1], &one, &tau);
+                 pivot = zz[indz];
+                 zz[indz] = 1.0;
+-                // (H*b)[indz] = b[indz] - tau*v'b, with v = zz[indz:m].
+-                tmpint = m - indz - 1;
++                // (H*b)[indz] = b[indz] - tau*v'b, with v = zz[indz:nr].
++                tmpint = nr - indz - 1;
+                 tauvtb = tau*(b[indz] + NLOPT_BLAS(ddot)(&tmpint, &zz[indz + 1], &one, &b[indz + 1], &one));
+                 // See if ztest is positive. This is from the original F77 code and
+-                // guards against round-off making the new x[j] nonpositive.
++                // guards against round-off making the new y[j] nonpositive.
+                 ztest = (b[indz] - tauvtb) / pivot;
+                 if (ztest > 0.0) { break; }
+             }
+@@ -138,58 +169,28 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+         }
+         // ====================================================================
+ 
+-        // the index j=indices[iz]  has been selected to be moved from set z to
+-        // set p. Store the transformation in col j, apply it to b, update
+-        // indices, apply householder transformations to cols in new set z,
+-        // zero subdiagonal elements in col j,  set w(j)=0.
+-        for (i = indz; i < m; i++) { a[i + j*m] = zz[i]; }
++        // the index j=indices[iz] has been selected to be moved from set z to
++        // set p. Store its transformed column at position indz in p, apply the
++        // transformation to b and to the rows indz:nr of Q, update indices,
++        // set w(j)=0.  The columns of P are zero in these rows.
++        for (i = 0; i < indz; i++) { p[i + indz*nr] = zz[i]; }
++        p[indz + indz*nr] = pivot;
++        for (i = indz + 1; i < nr; i++) { p[i + indz*nr] = 0.0; }
+         b[indz] -= tauvtb;
+-        tmpint = m - indz - 1;
++        tmpint = nr - indz - 1;
+         tmp = -tauvtb;
+         NLOPT_BLAS(daxpy)(&tmpint, &tmp, &zz[indz + 1], &one, &b[indz + 1], &one);
++        tmpint = nr - indz;
++        NLOPT_BLAS(dlarf)("L", &tmpint, &nr, &zz[indz], &one, &tau, &q[indz], &nr, wk);
+         indices[iz] = indices[indz];
+         indices[indz] = j;
+         indz++;
+-        // Apply the householder transformation to the remaining columns.
+-        // The columns in set P other than j are zero in rows indz-1:m, which
+-        // the transformation leaves unchanged, so it is applied to all columns
+-        // left and right of column j as two blocks rather than to each column
+-        // of Z separately (as in scipy).
+-        if (indz < n)
+-        {
+-            blas_int nleft = j, nright = n - j - 1;
+-            tmpint = m - indz + 1;
+-            if (nleft > 0)
+-            {
+-                NLOPT_BLAS(dlarf)("L", &tmpint, &nleft, &a[indz - 1 + j*m], &one, &tau, &a[indz - 1], &m, work);
+-            }
+-            if (nright > 0)
+-            {
+-                NLOPT_BLAS(dlarf)("L", &tmpint, &nright, &a[indz - 1 + j*m], &one, &tau, &a[indz - 1 + (j + 1)*m], &m, work);
+-            }
+-        }
+-        // Restore the pivot element into a, zero the subdiagonal elements in col j
+-        a[indz - 1 + j*m] = pivot;
+-        if (indz < m) { for (i = indz; i < m; i++) { a[j*m + i] = 0.0; } }
+         // Zero the dual coefficient for the column.
+         w[j] = 0.0;
+ 
+-        // Solve the permuted triangular system, store in zz.
++        // Solve the triangular system, store in zz.
+         for (i = 0; i < indz; i++) { zz[i] = b[i]; }
+-        for (k = 0; k < indz; k++)
+-        {
+-            // ip traverses the indices of P set in reverse
+-            ip = indz - 1 - k;
+-            if (k != 0)
+-            {
+-                for (i = 0; i <= ip; i++)
+-                {
+-                    zz[i] = zz[i] - a[i + jj*m] * zz[ip + 1];
+-                }
+-            }
+-            jj = indices[ip];
+-            zz[ip] = zz[ip] / a[ip + jj*m];
+-        }
++        NLOPT_BLAS(dtrsv)("U", "N", "N", &indz, p, &nr, zz, &one);
+ 
+         // ****** Inner loop ******
+         while (1)
+@@ -205,7 +206,7 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+                 k = indices[ip];
+                 if (zz[ip] <= 0.0)
+                 {
+-                    T = -x[k] / (zz[ip] - x[k]);
++                    T = -y[k] / (zz[ip] - y[k]);
+                     if (alpha > T)
+                     {
+                         alpha = T;
+@@ -217,44 +218,45 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+             // 2.0. If so exit from secondary loop to main loop.
+             if (alpha == 2.0) { break; }  // Get back to outer loop
+ 
+-            // Otherwise interpolate between old x and zz.
++            // Otherwise interpolate between old y and zz.
+             for (ip = 0; ip < indz; ip++)
+             {
+                 k = indices[ip];
+-                x[k] = x[k] + alpha*(zz[ip] - x[k]);
++                y[k] = y[k] + alpha*(zz[ip] - y[k]);
+             }
+ 
+-            // Modify a, b, and the indices to move coefficient i from set p
++            // Modify p, b, Q and the indices to move coefficient i from set p
+             // to set z. While loop simulates a goto in the original F77 code.
+             i = indices[jj];
+             while (1)
+             {
+-                x[i] = 0.0;
++                y[i] = 0.0;
+ 
+-                if (jj != indz-1)
++                // Shift the columns after position jj one position left,
++                // restoring the triangular form with Givens rotations of the
++                // rows, which are also applied to the later columns, Q and b.
++                for (j = jj + 1; j < indz; j++)
+                 {
+-                    jj++;
+-                    for (j = jj; j < indz; j++)
++                    double* pj = &p[j*nr];
++                    indices[j-1] = indices[j];
++                    NLOPT_BLAS(dlartgp)(&pj[j-1], &pj[j], &cc, &ss, &pj[j-1]);
++                    pj[j] = 0.0;
++                    for (k = j + 1; k < indz; k++)
+                     {
+-                        ii = indices[j];
+-                        indices[j-1] = ii;
+-                        NLOPT_BLAS(dlartgp)(&a[j-1 + ii*m], &a[j + ii*m], &cc, &ss, &a[j-1 + ii*m]);
+-                        a[j + ii*m] = 0.0;
+-                        // Apply the Givens rotation to all columns except ii.
+-                        // Because the columns are not ordered we do it manually.
+-                        for (k = 0; k < n; k++)
+-                        {
+-                            if (k != ii)
+-                            {
+-                                tmp = a[j-1 + k*m];
+-                                a[j-1 + k*m] =  cc*tmp + ss*a[j + k*m];
+-                                a[j   + k*m] = -ss*tmp + cc*a[j + k*m];
+-                            }
+-                        }
+-                        tmp = b[j-1];
+-                        b[j-1] =  cc*tmp + ss*b[j];
+-                        b[j]   = -ss*tmp + cc*b[j];
++                        tmp = p[j-1 + k*nr];
++                        p[j-1 + k*nr] =  cc*tmp + ss*p[j + k*nr];
++                        p[j   + k*nr] = -ss*tmp + cc*p[j + k*nr];
+                     }
++                    for (k = 0; k < nr; k++)
++                    {
++                        tmp = q[j-1 + k*nr];
++                        q[j-1 + k*nr] =  cc*tmp + ss*q[j + k*nr];
++                        q[j   + k*nr] = -ss*tmp + cc*q[j + k*nr];
++                    }
++                    tmp = b[j-1];
++                    b[j-1] =  cc*tmp + ss*b[j];
++                    b[j]   = -ss*tmp + cc*b[j];
++                    for (ii = 0; ii <= j; ii++) { p[ii + (j-1)*nr] = pj[ii]; }
+                 }
+                 indz--;
+                 indices[indz] = i;
+@@ -269,28 +271,15 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+                 for (jj = 0; jj < indz; jj++)
+                 {
+                     i = indices[jj];
+-                    if (x[i] <= 0.0) { break; }
++                    if (y[i] <= 0.0) { break; }
+                     if (jj == indz - 1) { nobreak = 1; }
+                 }
+                 // If for loop completes without break, then leave the while loop
+                 if (nobreak) { break; }
+             }
+ 
+-            for (i = 0; i < m; i++) { zz[i] = b[i]; }
+-            for (k = 0; k < indz; k++)
+-            {
+-                ip = indz - 1 - k;
+-                if (k != 0)
+-                {
+-                    for (i = 0; i <= ip; i++)
+-                    {
+-                        zz[i] = zz[i] - a[i + jj*m] * zz[ip + 1];
+-
+-                    }
+-                }
+-                jj = indices[ip];
+-                zz[ip] = zz[ip] / a[ip + jj*m];
+-            }
++            for (i = 0; i < indz; i++) { zz[i] = b[i]; }
++            NLOPT_BLAS(dtrsv)("U", "N", "N", &indz, p, &nr, zz, &one);
+             // ****** end of inner loop ******
+         }
+ 
+@@ -298,18 +287,18 @@ nnls(const blas_int m, const blas_int n, double* restrict a, double* restrict b,
+         for (k = 0; k < indz; k++)
+         {
+             i = indices[k];
+-            x[i] = zz[k];
++            y[i] = zz[k];
+         }
+         // ****** end of outer loop ******
+     }
+ END:
+     // Compute the residual vector and its norm.
+-    if (indz < m)
++    if (indz < nr)
+     {
+-        tmpint = m - indz;
++        tmpint = nr - indz;
+         *rnorm = NLOPT_BLAS(dnrm2)(&tmpint, &b[indz], &one);
+     } else {
+-        for (i = 0; i < n; i++) { w[i] = 0.0; }
++        for (i = 0; i < m; i++) { w[i] = 0.0; }
+         *rnorm = 0.0;
+     }
+     return;
+@@ -328,8 +317,8 @@ typedef struct {
+     int eager_grad;
+ } slsqp_state;
+ 
+-static void ldp(blas_int m, blas_int n, double* restrict g, double* restrict h, double* restrict x, double* restrict buffer, blas_int* indices, double* xnorm, int64_t* mode);
+-static void lsi(blas_int ma, blas_int mg, blas_int n, double* restrict a, double* restrict b, double* restrict g, double* restrict h, double* restrict x, double* restrict buffer, blas_int* jw, double* xnorm, int64_t* mode);
++static void ldp(blas_int m, blas_int n, const double* restrict r, blas_int ldr, const double* restrict g, const double* restrict h, double* restrict x, double* restrict buffer, blas_int* indices, double* xnorm, int64_t* mode);
++static void lsi(blas_int ma, blas_int mg, blas_int n, double* restrict a, double* restrict b, const double* restrict g, double* restrict h, double* restrict x, double* restrict buffer, blas_int* jw, double* xnorm, int64_t* mode);
+ static void lsei(blas_int ma, blas_int me, blas_int mg, blas_int n, double* restrict a, double* restrict b, double* restrict e, double* restrict f, double* restrict g, double* restrict h, double* restrict x, double* restrict buffer, blas_int* jw, double* xnorm, int64_t* mode);
+ static void lsq(blas_int m, blas_int meq, blas_int n, blas_int augment, double aug_weight, const double* restrict Lf, const double* restrict gradx, const double* restrict C, const double* restrict d, double* restrict xl, double* restrict xu, double* restrict x, double* restrict y, double* buffer, blas_int* jw, int64_t* mode);
+ static void ldl_update(blas_int n, double* restrict a, double* restrict z, double sigma, double* restrict w);
+@@ -757,9 +746,8 @@ MODEM1:
+  * allows for enlarging the problem and hence the supplied buffer should accommodate
+  * for this extra space.
+  *
+- * The required buffer size is given by:
+- * (2*(m - meq)*(n + 1)+2)*(n - meq +1) + 2*2*(m-meq)*(n + 1) + 2*(m-meq)*(n + 1)
+- *  + 2*meq + ld + (ld + 2*(m-meq)*(n + 1))*(n - meq)
++ * The required buffer size is that of the arrays above plus that of lsei, with
++ * ma = n = ld and mg = m - meq + 2*ld; see slsqp_buffer_size.
+  *
+  */
+ static void
+@@ -1048,7 +1036,8 @@ lsq_triangular(blas_int m, blas_int n, const double* restrict a, double* restric
+  *  g          : matrix G (mg x n)
+  *  h          : vector h (mg)
+  *  x          : solution vector x (n)
+- *  buffer     : work buffer (mg + 2)*(n - me +1) + 3*mg + 2*me + ma + (ma + mg)*(n - me)
++ *  buffer     : work buffer mg + 2*me + ma + ma*(n - me)
++ *               + max(2*mg + 2*(n - me + 1)*(n - me + 3), (ma + 3)*(n - me) + ma + 1)
+  *  jw         : integer work array
+  *  xnorm      : norm of the solution
+  *  mode       : return code
+@@ -1089,8 +1078,7 @@ lsei(blas_int ma, blas_int me, blas_int mg, blas_int n,
+     double* restrict wb          = &buffer[me + mg];
+     double* restrict tau         = &buffer[me + mg + ma];
+     double* restrict a2          = &buffer[mg + 2*me + ma];
+-    double* restrict g2          = &buffer[mg + 2*me + ma + ma*nvars];
+-    double* restrict lsi_scratch = &buffer[mg + 2*me + ma + (ma + mg)*nvars];
++    double* restrict lsi_scratch = &buffer[mg + 2*me + ma + ma*nvars];
+ 
+     // RQ decomposition of equality constraint data E and application to A, G.
+     // LAPACK RQ routine dgerq2 forms R on the right.
+@@ -1127,17 +1115,14 @@ lsei(blas_int ma, blas_int me, blas_int mg, blas_int n,
+     // Compute wb -= A1*xe
+     NLOPT_BLAS(dgemv)("N", &ma, &me, &dmone, &a[ma*nvars], &ma, &x[nvars], &one, &done, wb, &one);
+ 
+-    // Store the transformed A2 and G2 in the buffer
++    // Store the transformed A2 in the buffer (lsi does not modify G2, the
++    // first nvars columns of g).
+     for (int64_t j = 0; j < nvars; j++)
+     {
+         for (int64_t i = 0; i < ma; i++)
+         {
+             a2[i + j*ma] = a[i + j*ma];
+         }
+-        for (int64_t i = 0; i < mg; i++)
+-        {
+-            g2[i + j*mg] = g[i + j*mg];
+-        }
+     }
+ 
+     if (mg == 0)
+@@ -1183,7 +1168,7 @@ lsei(blas_int ma, blas_int me, blas_int mg, blas_int n,
+     // h -= G1*xe
+     NLOPT_BLAS(dgemv)("N", &mg, &me, &dmone, &g[mg*nvars], &ldg, &x[nvars], &one, &done, h, &one);
+ 
+-    lsi(ma, mg, nvars, a2, wb, g2, h, x, lsi_scratch, jw, xnorm, mode);
++    lsi(ma, mg, nvars, a2, wb, g, h, x, lsi_scratch, jw, xnorm, mode);
+ 
+     // Copy multipliers from scratch to gmults
+     for (int64_t i = 0; i < mg; i++) { gmults[i] = lsi_scratch[i]; }
+@@ -1220,7 +1205,8 @@ ORIGINAL_BASIS:
+  *      min |Ax - b|  subject to Gx >= h
+  *
+  * A is (ma x n), b is (ma), G is (mg x n), h is (mg), x is (n)
+- * buffer is at least (mg+2)*(n+1) + 3*mg
++ * G is not modified
++ * buffer is at least 2*mg + 2*(n+1)*(n+3)
+  * jw is at least (mg)
+  * xnorm is the 2-norm of the residual vector
+  * mode is the integer return code
+@@ -1234,7 +1220,7 @@ ORIGINAL_BASIS:
+  *
+ */
+ static void
+-lsi(blas_int ma, blas_int mg, blas_int n, double* restrict a, double* restrict b, double* restrict g,
++lsi(blas_int ma, blas_int mg, blas_int n, double* restrict a, double* restrict b, const double* restrict g,
+     double* restrict h, double* restrict x, double* restrict buffer, blas_int* jw,
+     double* xnorm, int64_t* mode)
+ {
+@@ -1251,23 +1237,26 @@ lsi(blas_int ma, blas_int mg, blas_int n, double* restrict a, double* restrict b
+     // Compute Q^T b
+     NLOPT_BLAS(dorm2r)("L", "T", &ma, &one, &tmp_int, a, &ma, buffer, b, &ma, &buffer[tmp_int], &info);
+ 
+-    // Check the diagonal elements of R for rank deficiency.
++    // Check the diagonal elements of R for rank deficiency.  A has rank n
++    // only if ma >= n, which the original slsqp implementation (and scipy's)
++    // assumed without checking; it always holds in SLSQP.
+     *mode = 5;
+     *xnorm = 0.0;
+-    for (int64_t i = 0; i < tmp_int; i++) {
++    if (ma < n) { return; }
++    for (int64_t i = 0; i < n; i++) {
+         if (!(fabs(a[i + i*ma]) >= epsmach)) { return; }
+     }
+-    // Transform G and h to form the LDP problem.
+-    // Solve XR = G where R is the upper triangular matrix from the QR.
+-    // The result is stored in G.
+-    // Note: There is an inherent assumption that ma >= n. This is a bug carried
+-    // over here from the original slsqp implementation.
+-    NLOPT_BLAS(dtrsm)("R", "U", "N", "N", &mg, &n, &done, a, &ma, g, &mg);
+-    // h = h - Xf
+-    NLOPT_BLAS(dgemv)("N", &mg, &n, &dmone, g, &mg, b, &one, &done, h, &one);
++    // Transform h to form the LDP problem
++    //      min |x|  subject to  X*x >= h - X*f
++    // with X = G*R^-1, where R is the upper triangular matrix from the QR and
++    // f = (Q^T b)[0:n].  X is not formed (see ldp).
++    // h = h - G*(R^-1*f), using x as scratch.
++    for (int64_t i = 0; i < n; i++) { x[i] = b[i]; }
++    NLOPT_BLAS(dtrsv)("U", "N", "N", &n, a, &ma, x, &one);
++    NLOPT_BLAS(dgemv)("N", &mg, &n, &dmone, g, &mg, x, &one, &done, h, &one);
+ 
+     // Solve the LDP problem.
+-    ldp(mg, n, g, h, x, buffer, jw, xnorm, mode);
++    ldp(mg, n, a, ma, g, h, x, buffer, jw, xnorm, mode);
+     if (*mode != 1) { return; }
+ 
+     // Convert to the solution of the original problem.
+@@ -1284,14 +1273,16 @@ lsi(blas_int ma, blas_int mg, blas_int n, double* restrict a, double* restrict b
+ 
+ /*
+  * Solve least distance problem
+- *  min (1/2)|x|^2  subject to  Gx >= h
++ *  min (1/2)|x|^2  subject to  G*R^-1*x >= h
+  *
+- * G is (m x n), h is (m)
+- * buffer is at least (m+2)*(n+1) + 3*m
+- * indices is int(n)
++ * R is (n x n) upper triangular with leading dimension ldr, G is (m x n), h is (m)
++ * G*R^-1 is not formed; see nnls.
++ * buffer is at least 2*m + 2*(n+1)*(n+3)
++ * indices is int(m)
+  * x is (n)
+  * xnorm is the norm of the solution if succeeded
+  * mode is the return code integer
++ * On return with mode 1, buffer[0:m] holds the Lagrange multipliers.
+  *
+  * Mode return values
+  *  1  : solution found
+@@ -1301,8 +1292,9 @@ lsi(blas_int ma, blas_int mg, blas_int n, double* restrict a, double* restrict b
+  *
+ */
+ static void
+-ldp(blas_int m, blas_int n, double* restrict g, double* restrict h, double* restrict x,
+-    double* restrict buffer, blas_int* indices, double* xnorm, int64_t* mode)
++ldp(blas_int m, blas_int n, const double* restrict r, blas_int ldr, const double* restrict g,
++    const double* restrict h, double* restrict x, double* restrict buffer, blas_int* indices,
++    double* xnorm, int64_t* mode)
+ {
+     blas_int one = 1;
+     double dzero = 0.0, rnorm = 0.0;
+@@ -1312,47 +1304,29 @@ ldp(blas_int m, blas_int n, double* restrict g, double* restrict h, double* rest
+     if (m == 0) { *mode = 1; return; }
+ 
+     // Define pointers for the variables on buffer
+-    double* restrict a    = &buffer[0];
+-    double* restrict b    = &buffer[m*(n+1)];
+-    double* restrict zz   = &buffer[(m+1)*(n+1)];
+-    double* restrict y    = &buffer[(m+2)*(n+1)];
+-    double* restrict w    = &buffer[(m+2)*(n+1) + m];
+-    double* restrict work = &buffer[(m+2)*(n+1) + 2*m];
+-
+-    // Save the dual problem data into buffer
+-    //       dual problem [G^T] [x] = [0]
+-    //                    [h^T]       [1]
+-
+-    // LHS, G is (m x n), h is (m). Both transposed and stacked into (n+1) x m.
+-    for (int64_t j = 0; j < m; j++)
+-    {
+-        for (int64_t i = 0; i < n; i++)
+-        {
+-            a[i + j*(n+1)] = g[j + i*m];
+-        }
+-        // Place h in the last row.
+-        a[n + j*(n+1)] = h[j];
+-    }
+-    // RHS is (n+1)
+-    for (int64_t i = 0; i < n; i++) { b[i] = 0.0; }
+-    b[n] = 1.0;
++    double* restrict y    = &buffer[0];
++    double* restrict w    = &buffer[m];
++    double* restrict work = &buffer[2*m];
+ 
+     // Solve the dual problem
+-    nnls(n+1, m, a, b, y, w, zz, work, indices, 3*m, &rnorm, mode);
++    //       min |[(G*R^-1)^T] y - [0]|  subject to y >= 0
++    //           [h^T      ]     [1]
++    nnls(n, m, r, ldr, g, h, y, w, work, indices, 3*m, &rnorm, mode);
+     if (*mode != 1) { return; }
+     *mode = 4;
+     if (rnorm <= 0.0) { return; }
+ 
+-    // Solve the primal problem
++    // Solve the primal problem, x = fac*R^-T*G^T*y
+     double fac = 1.0 - NLOPT_BLAS(ddot)(&m, h, &one, y, &one);
+     if (!((1.0 + fac) - 1.0 > 0.0)) { return; }
+     *mode = 1;
+     fac = 1.0 / fac;
+     NLOPT_BLAS(dgemv)("T", &m, &n, &fac, g, &m, y, &one, &dzero, x, &one);
++    NLOPT_BLAS(dtrsv)("U", "T", "N", &n, r, &ldr, x, &one);
+     *xnorm = NLOPT_BLAS(dnrm2)(&n, x, &one);
+ 
+     // Compute the lagrange multipliers for the primal problem
+-    for (int64_t i = 0; i < m; i++) { buffer[i] = fac*y[i]; }
++    for (int64_t i = 0; i < m; i++) { y[i] *= fac; }
+     return;
+ }
+ 
+@@ -1451,19 +1425,17 @@ ldl_update(blas_int n, double* restrict a, double* restrict z, double sigma, dou
+ /* Worst-case size of the slsqp_body buffer, summed over
+      n*(n+1)//2 + m + 4*n + 3                                           # SLSQP
+      (n+1)*(n+2) + (n+1)*meq + m + (mineq + 2*n + 2)*(n+1) +  3*n + 3   # LSQ
+-     mineq + 2n + 2 + 2*meq + (n+1) + (mineq + 3n + 3)*(n + 1 - meq)    # LSEI
+-     (mineq + 2n + 2 + 2)*(n + 2) + mineq + 2n + 2                      # LDP
+-     2*(mineq + 2n + 2)                                                 # NNLS
+-   (from scipy/optimize/_slsqp_py.py, plus the NNLS work array for the
+-   blocked Householder application) */
++     mineq + 2n + 2 + 2*meq + (n+1) + (n+1)*(n + 1 - meq)               # LSEI
++     2*(mineq + 2n + 2) + 2*(n + 2)*(n + 4)                             # LSI/LDP/NNLS
++   (the first two from scipy/optimize/_slsqp_py.py).  The last one also covers
++   the dgelsy path of lsei without inequality constraints. */
+ static size_t slsqp_buffer_size(int64_t m, int64_t meq, int64_t n)
+ {
+-     int64_t size = n*(n+1)/2 + 3*m*n - (m + 5*n + 7)*meq + 9*m + 8*n*n + 35*n + meq*meq + 28
+-	  + (m - meq) + 2*n + 2;
+-     /* if no inequality constraints are given, top up workspace for
+-        the dgelsy path in lsei */
+-     if (m == meq)
+-	  size += 2*n*(n + 1);
++     int64_t mineq = m - meq;
++     int64_t size = n*(n+1)/2 + m + 4*n + 3
++	  + (n+1)*(n+2) + (n+1)*meq + m + (mineq + 2*n + 2)*(n+1) + 3*n + 3
++	  + mineq + 2*n + 2 + 2*meq + (n+1) + (n+1)*(n + 1 - meq)
++	  + 2*(mineq + 2*n + 2) + 2*(n + 2)*(n + 4);
+      return (size_t) (size > 1 ? size : 1);
+ }
+ 
+-- 
+2.56.0
+

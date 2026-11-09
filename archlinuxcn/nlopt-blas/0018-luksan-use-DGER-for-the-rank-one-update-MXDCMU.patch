@@ -1,0 +1,55 @@
+From 254150eee5f71de70b8cb01c52dfcd3275fd50d9 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 30 Oct 2026 14:43:53 -0400
+Subject: [PATCH 18/21] luksan: use DGER for the rank-one update MXDCMU
+
+With an external BLAS/LAPACK, do the rank-one update of the stored
+matrix of VAR1/VAR2 (MXDCMU, used while the limited-memory history is
+filled and for the VAR1 updates afterwards) with DGER.  On x86-64, where
+the loop is compiled for the baseline instruction set, single-threaded
+OpenBLAS DGER is 1.1-1.9x faster than the loop for this update; on
+aarch64 the two are equally fast.  The rank-two update MXDCMV is left as
+a loop: as two DGERs it reads the n-by-m matrix twice, which made it up
+to 1.5x slower (1.8x on aarch64) for n >= 10000, and as one DGEMM with
+k = 2 it was slower still.
+
+The rounding can change with BLAS, so results differ in the last bits.
+With a cheap objective, the time per evaluation of VAR1/VAR2 drops by
+1.03-1.11x for n = 1000; for larger n the update is a small part of the
+time.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ src/algs/luksan/mssubs.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/algs/luksan/mssubs.c b/src/algs/luksan/mssubs.c
+index db1ae90..7b497b2 100644
+--- a/src/algs/luksan/mssubs.c
++++ b/src/algs/luksan/mssubs.c
+@@ -228,6 +228,14 @@ void luksan_mxdcmu__(int *n, int *m, double *a,
+     --a;
+ 
+     /* Function Body */
++#ifdef NLOPT_HAVE_BLAS
++    (void) i__1; (void) i__2; (void) i__; (void) j; (void) k; (void) temp;
++    {
++	blas_int nn = *n, mm = *m, one = 1;
++	if (mm > 0 && nn > 0)
++	    NLOPT_BLAS(dger)(&nn, &mm, alf, &x[1], &one, &y[1], &one, &a[1], &nn);
++    }
++#else
+     k = 0;
+     i__1 = *m;
+     for (j = 1; j <= i__1; ++j) {
+@@ -240,6 +248,7 @@ void luksan_mxdcmu__(int *n, int *m, double *a,
+ 	k += *n;
+ /* L2: */
+     }
++#endif
+     return;
+ } /* luksan_mxdcmu__ */
+ 
+-- 
+2.56.0
+

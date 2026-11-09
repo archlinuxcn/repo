@@ -1,0 +1,157 @@
+From 4d5b6574beea99abe11a197f6dbefc710389b051 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 29 Oct 2026 22:36:49 -0400
+Subject: [PATCH 10/21] cobyla: use DGEMM for the roundoff check and the model
+ gradients
+
+With an external BLAS/LAPACK, compute SIMI*SIM - I and the gradients of
+the m+1 linear models (SIMI^T times the function differences) with
+DGEMM; the latter needs n*(m+1) more doubles of workspace.  Without one,
+the restructured loops of the previous commit are kept, so the built-in
+build stays bit-identical to the original code.
+
+The summation order changes with BLAS, so results differ in the last
+bits, and runs stopped by the evaluation limit stop at a different
+point.  With a cheap objective and 20-50 constraints, the time per
+evaluation drops by another 1.3x (n = 50), 2.3x (n = 100) and 3.1x
+(n = 200) with single-threaded OpenBLAS, 9.4x in total at n = 200.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ CMakeLists.txt           |  4 ++--
+ src/algs/cobyla/cobyla.c | 46 +++++++++++++++++++++++++++++++++++++++-
+ src/util/nlopt-blas.h    |  4 ++++
+ 3 files changed, 51 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3b273c9..014bbd3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,8 +144,8 @@ if (_blas_candidates)
+   foreach (_suffix IN LISTS _blas_suffixes)
+     set (_decls)
+     set (_calls)
+-    foreach (_r daxpy dscal dnrm2 ddot dgemv dtpmv dtpsv dtrsm dtrsv dgelsy dgeqr2 dgerq2
+-                dlaic1 dlarf dlarfgp dlartgp dorm2r dormr2)
++    foreach (_r daxpy dscal dnrm2 ddot dgemv dgemm dtpmv dtpsv dtrsm dtrsv dgelsy dgeqr2
++                dgerq2 dlaic1 dlarf dlarfgp dlartgp dorm2r dormr2)
+       string (APPEND _decls "char ${_r}${_suffix}(void);\n")
+       string (APPEND _calls "  ${_r}${_suffix}();\n")
+     endforeach ()
+diff --git a/src/algs/cobyla/cobyla.c b/src/algs/cobyla/cobyla.c
+index f1ea25a..cb380b6 100644
+--- a/src/algs/cobyla/cobyla.c
++++ b/src/algs/cobyla/cobyla.c
+@@ -43,6 +43,7 @@
+ #include <math.h>
+ 
+ #include "cobyla.h"
++#include "nlopt-blas.h"
+ 
+ /* SGJ, 2008: modified COBYLA code to take explicit account of bound
+    constraints.  Since bound constraints are linear, these should
+@@ -402,7 +403,8 @@ nlopt_result cobyla(int n, int m, double *x, double *minf, double rhobeg, double
+   }
+ 
+   /* workspace allocation */
+-  w = (double*) malloc(U(n*(3*n+2*m+11)+4*m+6)*sizeof(*w));
++  /* the last n*(m+1) elements are only used for the gradients with BLAS */
++  w = (double*) malloc(U(n*(3*n+2*m+11)+4*m+6 + n*(m+1))*sizeof(*w));
+   if (w == NULL)
+   {
+     if (iprint>=1) fprintf(stderr, "cobyla: memory allocation error.\n");
+@@ -496,6 +498,10 @@ static nlopt_result cobylb(int *n, int *m, int *mpp,
+ /* Further, SIMI holds the inverse of the matrix that is contained in the */
+ /* first N columns of SIM. */
+ 
++#ifdef NLOPT_HAVE_BLAS
++  (void) i__3; /* only used by the loops replaced by BLAS calls */
++#endif
++
+   /* Parameter adjustments */
+   a_dim1 = *n;
+   a_offset = 1 + a_dim1 * 1;
+@@ -735,6 +741,20 @@ L140:
+ /* Make an error return if SIGI is a poor approximation to the inverse of */
+ /* the leading N by N submatrix of SIG. */
+ 
++#ifdef NLOPT_HAVE_BLAS
++  /* SIMI*SIM - I in W (N*N elements are free here); the maximum is taken
++     below in the original order. */
++  {
++    blas_int nn = *n;
++    double one = 1., zero = 0.;
++    NLOPT_BLAS(dgemm)("N", "N", &nn, &nn, &nn, &one, &simi[simi_offset], &nn,
++                      &sim[sim_offset], &nn, &zero, &w[1], &nn);
++    i__1 = *n;
++    for (j = 1; j <= i__1; ++j) {
++      w[j + (j - 1) * *n] += -1.;
++    }
++  }
++#else
+   /* SIMI*SIM - I is formed column by column in W (N*N
+      elements are free here), accumulating each element over k in the same
+      order as an inner product would, but along the columns of SIMI; the
+@@ -757,6 +777,7 @@ L140:
+       }
+     }
+   }
++#endif
+   error = 0.;
+   i__1 = *n;
+   for (i__ = 1; i__ <= i__1; ++i__) {
+@@ -779,6 +800,28 @@ L140:
+ /* after the constraint gradients in the array A. The vector W is used for */
+ /* working space. */
+ 
++#ifdef NLOPT_HAVE_BLAS
++  /* A = SIMI^T W, where column K of W (N*(M+1) elements, after the N*N + 3*N
++     used above) is DATMAT(K,1:N) + CON(K); then negate the objective's. */
++  {
++    blas_int nn = *n, nmp = mp;
++    double one = 1., zero = 0.;
++    double *wk = &w[*n * *n + 3 * *n + 1];
++    for (k = 1; k <= mp; ++k) {
++      con[k] = -datmat[k + np * datmat_dim1];
++      i__1 = *n;
++      for (j = 1; j <= i__1; ++j) {
++        wk[(j - 1) + (k - 1) * *n] = datmat[k + j * datmat_dim1] + con[k];
++      }
++    }
++    NLOPT_BLAS(dgemm)("T", "N", &nn, &nmp, &nn, &one, &simi[simi_offset], &nn,
++                      wk, &nn, &zero, &a[a_offset], &nn);
++    i__1 = *n;
++    for (i__ = 1; i__ <= i__1; ++i__) {
++      a[i__ + mp * a_dim1] = -a[i__ + mp * a_dim1];
++    }
++  }
++#else
+   /* Four functions at a time (W holds four rows of N; N*N + 3*N elements
+      are free here), so that each column of SIMI is read once per four rows,
+      with each inner product accumulated in the same order. */
+@@ -848,6 +891,7 @@ L140:
+       }
+     }
+   }
++#endif
+ 
+ /* Calculate the values of sigma and eta, and set IFLAG=0 if the current */
+ /* simplex is not acceptable. */
+diff --git a/src/util/nlopt-blas.h b/src/util/nlopt-blas.h
+index a310c8e..4510d1e 100644
+--- a/src/util/nlopt-blas.h
++++ b/src/util/nlopt-blas.h
+@@ -43,6 +43,10 @@ void   NLOPT_BLAS(dlarfgp)(const blas_int* n, double* alpha, double* x, const bl
+ void   NLOPT_BLAS(dlartgp)(const double* f, const double* g, double* cs, double* sn, double* r);
+ void   NLOPT_BLAS(dorm2r)(const char* side, const char* trans, const blas_int* m, const blas_int* n, const blas_int* k, const double* a, const blas_int* lda, const double* tau, double* c, const blas_int* ldc, double* work, blas_int* info);
+ void   NLOPT_BLAS(dormr2)(const char* side, const char* trans, const blas_int* m, const blas_int* n, const blas_int* k, const double* a, const blas_int* lda, const double* tau, double* c, const blas_int* ldc, double* work, blas_int* info);
++
++/* Used only with an external BLAS, without a built-in version: the
++   callers keep their own loops for the built-in case. */
++void   NLOPT_BLAS(dgemm)(const char* transa, const char* transb, const blas_int* m, const blas_int* n, const blas_int* k, const double* alpha, const double* a, const blas_int* lda, const double* b, const blas_int* ldb, const double* beta, double* c, const blas_int* ldc);
+ #else
+ typedef ptrdiff_t blas_int;
+ #define NLOPT_BLAS(name) nlopt_##name
+-- 
+2.56.0
+
