@@ -2,7 +2,7 @@
 
 _name=uritools
 pkgname=python-$_name
-pkgver=6.1.5
+pkgver=7.0.0
 pkgrel=1
 pkgdesc="URI parsing, classification and composition"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python)
 makedepends=(python-build python-installer python-setuptools python-wheel python-setuptools-scm)
 checkdepends=(python-pytest)
 source=($pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz)
-sha512sums=('bb30f7a64659c0a3f0cf11a8ebe3242b6edadcda17246042f55c8223591cbc0442dfc71615a64d28015874fece15a16bc7f30b2d119a2b5eaf85d56bf5d57186')
+sha512sums=('c0371d88376205b3335675a7a5f29fc7a35389ad64b4c4b4460fc8f765050e2728e0ec8d5b20a6ffe1b50e282e146024239e905a38e57f8a31ec57b844450482')
 
 build() {
   cd $_name-$pkgver
