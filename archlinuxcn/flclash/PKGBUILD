@@ -4,8 +4,8 @@
 # Before executing makepkg, you can set FVM_CACHE_PATH to $HOME/fvm or the path specified by the cachePath field in the $HOME/.config/fvm/.fvmrc file.
 
 pkgname=flclash
-pkgver=0.9.2
-pkgrel=2
+pkgver=0.9.3
+pkgrel=1
 pkgdesc="A multi-platform proxy client based on ClashMeta,simple and easy to use, open-source and ad-free."
 url="https://github.com/chen08209/FlClash"
 license=('GPL-3.0-or-later')
@@ -47,10 +47,12 @@ source=(
   "0001-fix-build-error.patch"
   "com.follow.clash.desktop"
   "Clash.Meta::git+https://github.com/chen08209/Clash.Meta.git"
+  "prism_ui::git+https://github.com/chen08209/prism_ui.git"
 )
 sha256sums=('fdb05e178bfebbca27d15e198b46616f7160a8092181d02fe89a475455bac756'
             'b551c46a1577758c13bdd07868d41e4de817c6184114e1b10d39e04ae572a76a'
             '0601176d0b5df7aafb3c949417b7f0d98ab17d21b6fcc89c6f83a7e031bbe45d'
+            'SKIP'
             'SKIP')
 
 prepare() {
@@ -62,6 +64,7 @@ prepare() {
   cd "$srcdir/$pkgname"
   git submodule init
   git config submodule.core/Clash.Meta.url "$srcdir/Clash.Meta"
+  git config submodule.plugins/prism_ui.url "$srcdir/prism_ui"
   git -c protocol.file.allow=always submodule update
   patch -p1 -i "${srcdir}/0001-fix-build-error.patch"
 
