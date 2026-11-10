@@ -1,0 +1,61 @@
+From 65a3cfd2be02e1e59bcfcf09fe3edff5ed48a18a Mon Sep 17 00:00:00 2001
+From: crueter <crueter@eden-emu.dev>
+Date: Fri, 21 Aug 2026 23:17:46 +0200
+Subject: [PATCH] [common, yuzu] Fix compilation on newer httplib versions
+ (#4278)
+
+Required for newer httplib versions to compile.
+
+has_header is at least present on 0.38.0 on my local machine. Let's hope
+it works on Trixie
+
+Signed-off-by: crueter <crueter@eden-emu.dev>
+
+- [x] I have read and followed the [Contribution Guidelines](https://git.eden-emu.dev/eden-emu/eden/src/branch/master/CONTRIBUTING.md#code-contributions).
+- [x] I have read and followed the [AI Policy](https://git.eden-emu.dev/eden-emu/eden/src/branch/master/docs/policies/AI.md)
+- [x] I have read and followed the [Coding Guidelines](https://git.eden-emu.dev/eden-emu/eden/src/branch/master/docs/policies/Coding.md) to the best of my ability.
+
+-------------------
+
+Reviewed-on: https://git.eden-emu.dev/eden-emu/eden/pulls/4278
+Reviewed-by: CamilleLaVey <camillelavey99@gmail.com>
+Reviewed-by: Samuel <lizzie@eden-emu.dev>
+---
+ src/common/net/net.cpp             | 2 +-
+ src/yuzu/updater/update_dialog.cpp | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/common/net/net.cpp b/src/common/net/net.cpp
+index a4f681cd33..5c45e13701 100644
+--- a/src/common/net/net.cpp
++++ b/src/common/net/net.cpp
+@@ -241,7 +241,7 @@ std::optional<std::string> MakeRequest(const std::string& url, const std::string
+                       response.status);
+             return {};
+         }
+-        if (!response.headers.contains("content-type")) {
++        if (!response.has_header("content-type")) {
+             LOG_ERROR(Common, "GET to {}{} returned no content", url, path);
+             return {};
+         }
+diff --git a/src/yuzu/updater/update_dialog.cpp b/src/yuzu/updater/update_dialog.cpp
+index d5af18cbf1..f40fced357 100644
+--- a/src/yuzu/updater/update_dialog.cpp
++++ b/src/yuzu/updater/update_dialog.cpp
+@@ -74,6 +74,7 @@ UpdateDialog::~UpdateDialog() {
+     delete ui;
+ }
+ 
++// TODO: migrate to a net.cpp wrapper
+ void UpdateDialog::Download() {
+     const auto filename = QtCommon::Frontend::GetSaveFileName(
+         tr("New Version Location"),
+@@ -161,7 +162,7 @@ void UpdateDialog::Download() {
+                                               QString::number(response.status)));
+         return;
+     }
+-    if (!response.headers.contains("content-type")) {
++    if (!response.has_header("content-type")) {
+         LOG_ERROR(Frontend, "GET to {}{} returned no content", m_asset.url, m_asset.path);
+         return;
+     }
