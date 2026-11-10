@@ -6,6 +6,8 @@ update_on:
   use_max_tag: true
   include_regex: ".*_Linux"
 - alias: icu
+- alias: libssl
+- alias: libcrypto
 pre_build_script: |
   update_pkgver_and_pkgrel(_G.newver.removesuffix('_Linux'))
 post_build: git_pkgbuild_commit
