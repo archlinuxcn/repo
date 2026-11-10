@@ -8,7 +8,7 @@ pkgdesc="Eclipse Paho C Client Library for the MQTT Protocol"
 arch=('x86_64' 'aarch64')
 url="https://www.eclipse.org/paho/"
 license=('EPL-2.0')
-depends=('openssl-3' 'glibc')
+depends=('openssl' 'glibc')
 makedepends=('git' 'cmake' 'ninja' 'doxygen')
 source=("$_pkgbase"::git+https://github.com/eclipse-paho/paho.mqtt.c.git#tag=v${pkgver}?signed)
 b2sums=('01638cfb353e2544101aad91167e8c3c221a86081809399e828fc13b484e79cc81831260bff8834c2e8274bba0264cd73785ba410ebb33d8948623de9b41f31f')
@@ -17,7 +17,6 @@ validpgpkeys=('0C3CFB4764727BB13196B0ABA7AE1A8F2CCAB186') # Ian Craggs
 
 
 build() {
-    export PKG_CONFIG_PATH="/usr/lib/openssl-3/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
     local cmake_options=(
         -S "$_pkgbase"
         -B build
