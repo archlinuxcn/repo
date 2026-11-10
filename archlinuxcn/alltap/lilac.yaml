@@ -2,7 +2,11 @@ maintainers:
   - github: kane250
     email: kane250 <109224821+kane250@users.noreply.github.com>
 
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
+post_build_script: git_pkgbuild_commit()
+
 update_on:
   - source: github
     github: kane250/alltap
     use_latest_release: true
+    prefix: v
