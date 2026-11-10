@@ -1,7 +1,7 @@
 # Maintainer: Bin Jin <bjin@protonmail.com>
 
 pkgname=oh-my-pi
-pkgver=18.18.5
+pkgver=18.18.6
 pkgrel=1
 pkgdesc="Coding agent with the IDE wired in"
 arch=('x86_64')
@@ -49,7 +49,7 @@ source=(
     "stable-rust-const.patch"
     "relative-json-assets.patch"
 )
-sha256sums=('1bcc1573a1423460640d253ed08d76698a1b887d7a646ab70678510f2ed17f64'
+sha256sums=('93b9942126bfdb63087bed4f6bf758f67af961859f87cb85843523618373d741'
             '33718946cc77d4032911d4efe03a66dbcbfbd2bb16c3da06aaeadcc637c32216'
             '0f4c3a662fac5dc6420d260c7439ab0399061a1501dbbc1692e8fdf3e8db1785'
             '724888738f0e886693d8a6aa6cfd5f6dba9a98122353e4636a9ca946ae1fa9e7'
