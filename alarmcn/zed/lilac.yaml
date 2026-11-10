@@ -1,0 +1,16 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+time_limit_hours: 2
+
+allowed_workers:
+  - yyc
+
+update_on:
+  - source: alpm
+    dbpath: /home/lilydjwg/.lilac/pacmandb-x86_64
+    alpm: zed
+  - source: manual
+    manual: 0

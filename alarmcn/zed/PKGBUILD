@@ -1,0 +1,124 @@
+# Maintainer: Caleb Maclennan <caleb@alerque.com>
+# Contributor: Marcell Pardavi <marcell.pardavi@gmail.com>
+
+pkgname=zed
+pkgver=1.27.0
+pkgrel=1
+pkgdesc='A high-performance, multiplayer code editor from the creators of Atom and Tree-sitter'
+arch=(aarch64 x86_64)
+url=https://zed.dev
+_url="https://github.com/zed-industries/$pkgname"
+license=(GPL-3.0-or-later AGPL-3.0-or-later Apache-2.0)
+depends=(alsa-lib
+         curl
+         fontconfig
+         git
+         glib2
+         glibc # libc.so libm.so ld-linux-x86_64.so
+         libgcc
+         libstdc++
+         libxcb # libxcb.so libxcb-xkb.so
+         libx11 # libX11-xcb.so
+         libxkbcommon
+         libxkbcommon-x11
+         netcat
+         'nodejs>=18'
+         npm
+         sqlite
+         vulkan-driver
+         vulkan-icd-loader
+         vulkan-tools
+         wayland
+         zstd)
+makedepends=(cargo
+             cargo-about
+             clang
+             cmake
+             protobuf
+             vulkan-headers
+             vulkan-validation-layers)
+optdepends=('org.freedesktop.secrets: to keep you logged into your Zed account')
+replaces=(zed-editor)
+_archive="$pkgname-$pkgver"
+source=("$_url/archive/v$pkgver/$_archive.tar.gz")
+sha256sums=('0e7bec0a4f27ed4d3a9007b136bea8c820e50d60bd96a78a444a93c520726b0a')
+
+_binname=zeditor
+_appid=dev.zed.Zed
+
+_srcenv() {
+	cd "$_archive"
+	export CARGO_HOME="$srcdir"
+	export CARGO_PROFILE_RELEASE_DEBUG=2
+	export CARGO_PROFILE_RELEASE_STRIP=false
+	export CARGO_PROFILE_RELEASE_LTO=thin
+	export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+	export CARGO_PROFILE_RELEASE_OPT_LEVEL=3
+	CFLAGS+=' -ffat-lto-objects'
+	CXXFLAGS+=' -ffat-lto-objects'
+	RUSTFLAGS+=" --remap-path-prefix $PWD=/"
+	export LIBSQLITE3_SYS_USE_PKG_CONFIG=1
+	export ZSTD_SYS_USE_PKG_CONFIG=1
+}
+
+prepare() {
+	_srcenv
+	cargo fetch --locked --target host-tuple
+	export DO_STARTUP_NOTIFY="true"
+	export APP_ICON="zed"
+	export APP_NAME="Zed"
+	export APP_CLI="$_binname"
+	export APP_ID="$_appid"
+	export APP_ARGS="%U"
+	export BRANDING_LIGHT="#99c1f1"
+	export BRANDING_DARK="#1a5fb4"
+	envsubst < "crates/zed/resources/zed.desktop.in" > $_appid.desktop
+	envsubst < "crates/zed/resources/flatpak/zed.metainfo.xml.in" > $_appid.metainfo.xml
+	sed -i '/@release_info@/d' $_appid.metainfo.xml
+	./script/generate-licenses
+}
+
+build() {
+	_srcenv
+	export ZED_UPDATE_EXPLANATION='Updates are handled by pacman'
+	export RELEASE_VERSION="$pkgver"
+	export PROTOC=/usr/bin/protoc
+	export PROTOC_INCLUDE=/usr/include
+	cargo build --release --frozen --package zed --package cli
+	cp target/release/cli target/release/$_binname
+	target/release/$_binname --completions bash > completions.bash
+	target/release/$_binname --completions elvish > completions.elvish
+	target/release/$_binname --completions fish > completions.fish
+	target/release/$_binname --completions nushell > completions.nushell
+	target/release/$_binname --completions zsh > completions.zsh
+}
+
+# Tests assume access to vulkan video drivers, Wayland window creation,
+# detecting system keymaps, etc. Until there is something sensical for
+# a package to test in the suite, just skip it by default.
+check() {
+	_srcenv
+	# cargo test --frozen --all-features
+}
+
+package() {
+	depends+=(libasound.so
+	          libgio-2.0.so libglib-2.0.so libgobject-2.0.so
+	          libgcc_s.so
+	          libstdc++.so
+	          libxkbcommon.so
+	          libxkbcommon-x11.so
+	          libsqlite3.so
+	          libzstd.so)
+	cd "$_archive"
+	install -Dm0755 target/release/cli "$pkgdir/usr/bin/$_binname"
+	install -Dm0755 target/release/zed "$pkgdir/usr/lib/$pkgname/zed-editor"
+	install -Dm0644 -t "$pkgdir/usr/share/applications/" "$_appid.desktop"
+	install -Dm0644 -t "$pkgdir/usr/share/metainfo/" "$_appid.metainfo.xml"
+	install -Dm0644 crates/zed/resources/app-icon.png "$pkgdir/usr/share/icons/hicolor/512x512/apps/$pkgname.png"
+	install -Dm0644 completions.bash "$pkgdir/usr/share/bash-completion/completions/$_binname"
+	install -Dm0644 completions.elvish "$pkgdir/usr/share/elvish/lib/$_binname.elv"
+	install -Dm0644 completions.fish "$pkgdir/usr/share/fish/vendor_completions.d/$_binname.fish"
+	install -Dm0644 completions.nushell "$pkgdir/usr/share/nushell/vendor/autoload/$_binname.nu"
+	install -Dm0644 completions.zsh "$pkgdir/usr/share/zsh/site-functions/_$_binname"
+}
