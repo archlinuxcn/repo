@@ -38,9 +38,9 @@ export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EP
 prepare() {
   cd $_srcname
 
-  for f in tools/lib/*/*.c; do
-    sed -i '1i #define __u128 __uint128_t' "$f"
-  done
+  # for f in tools/lib/*/*.c; do
+  #   sed -i '1i #define __u128 __uint128_t' "$f"
+  # done
 
   echo "Setting version..."
   echo "-$_asahirel-$pkgrel" > localversion.10-pkgrel
