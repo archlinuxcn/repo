@@ -8,7 +8,7 @@ pkgdesc="Eclipse Paho C Client Library for the MQTT Protocol"
 arch=('x86_64' 'aarch64')
 url="https://www.eclipse.org/paho/"
 license=('EPL-2.0')
-depends=('openssl' 'glibc')
+depends=('openssl-3' 'glibc')
 makedepends=('git' 'cmake' 'ninja' 'doxygen')
 source=("$_pkgbase"::git+https://github.com/eclipse-paho/paho.mqtt.c.git#tag=v${pkgver}?signed)
 b2sums=('01638cfb353e2544101aad91167e8c3c221a86081809399e828fc13b484e79cc81831260bff8834c2e8274bba0264cd73785ba410ebb33d8948623de9b41f31f')
@@ -17,25 +17,29 @@ validpgpkeys=('0C3CFB4764727BB13196B0ABA7AE1A8F2CCAB186') # Ian Craggs
 
 
 build() {
-    cd "$_pkgbase"
-    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_INSTALL_DOCDIR="/$_pkgbase" \
-        -DPAHO_WITH_SSL=TRUE \
-        -DPAHO_WITH_UNIX_SOCKETS=TRUE \
-        -DPAHO_BUILD_DOCUMENTATION=TRUE \
-        -DPAHO_ENABLE_TESTING=FALSE \
-        -DCMAKE_C_STANDARD=11 \
-        -S . -B build -GNinja
+    export PKG_CONFIG_PATH="/usr/lib/openssl-3/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    local cmake_options=(
+        -S "$_pkgbase"
+        -B build
+        -GNinja
+        -DCMAKE_BUILD_TYPE=None
+        -DCMAKE_INSTALL_DOCDIR="/$_pkgbase"
+        -DCMAKE_INSTALL_PREFIX=/usr
+        -DPAHO_WITH_SSL=TRUE
+        -DPAHO_WITH_UNIX_SOCKETS=TRUE
+        -DPAHO_BUILD_DOCUMENTATION=TRUE
+        -DPAHO_ENABLE_TESTING=FALSE
+        -DCMAKE_C_STANDARD=11
+    )
+    cmake "${cmake_options[@]}"
     cmake --build build
 }
 
 package_paho-mqtt-c() {
-    cd "$_pkgbase"
     DESTDIR="$pkgdir/" cmake --install build
     # some trick to move doc to separated package
     mv "$pkgdir/$_pkgbase" build/$_pkgbase
-    install -Dm 0644 -t $pkgdir/usr/share/licenses/$_pkgbase/ LICENSE
+    install -Dm 0644 -t $pkgdir/usr/share/licenses/$_pkgbase/ "$_pkgbase/LICENSE"
 }
 
 package_paho-mqtt-c-docs() {
@@ -43,7 +47,6 @@ package_paho-mqtt-c-docs() {
     arch=('any')
     pkgdesc+=' (documentation)'
 
-    cd "$_pkgbase"
     # clean doxygen-generated manual pages, some have the same name and
     # it will be better to read html version
     rm -rf build/$_pkgbase/*/man
