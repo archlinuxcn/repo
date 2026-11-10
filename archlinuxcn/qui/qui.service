@@ -1,0 +1,35 @@
+[Unit]
+Description=Modern alternative webUI for qBittorrent
+After=network-online.target
+Wants=network-online.target
+Documentation=https://github.com/autobrr/qui
+
+[Service]
+Type=simple
+User=qui
+Group=qui
+Environment=HOME=/var/lib/qui
+Environment=QUI__CHECK_FOR_UPDATES=false
+Environment=QUI__DISABLE_SELF_UPDATE=true
+WorkingDirectory=/var/lib/qui
+ExecStart=/usr/bin/qui serve --config-dir /var/lib/qui --data-dir /var/lib/qui
+Restart=on-failure
+
+ProtectSystem=strict
+ReadWritePaths=/var/lib/qui
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+NoNewPrivileges=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+CapabilityBoundingSet=
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+
+[Install]
+WantedBy=multi-user.target
