@@ -17,7 +17,7 @@ depends=(
     python-systemd
     python-gobject
     # explicit dependencies
-    openssl
+    openssl-3
     glib2
     jsoncpp
     libcap-ng
@@ -78,7 +78,8 @@ prepare() {
 }
 
 build() {
-    export CXXFLAGS="$CXXFLAGS -Wno-unused-result"
+    export PKG_CONFIG_PATH="/usr/lib/openssl-3/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+    export CXXFLAGS="-I/usr/include/openssl-3 $CXXFLAGS -Wno-unused-result"
     arch-meson \
         -Dselinux=disabled \
         -Dselinux_policy=disabled \
