@@ -5,7 +5,11 @@ pre_build_script: |
   for line in edit_file('PKGBUILD'):
     if line.strip().startswith(': "${_use_cuda'):
       line = '_use_cuda=true'
+    elif '-D BUILD_WERROR=ON' in line:
+      line = line.replace('-D BUILD_WERROR=ON', '-D BUILD_WERROR=OFF')
     print(line)
+    if 'git submodule update' in line:
+      print("    sed -i 's|https://app.lizardbyte.dev/Sunshine/assets/img/screenshots/01-sunshine-welcome-page.png|https://sunshine.lizardbyte.dev/assets/sunshine-web-ui-light.jpg|' packaging/linux/dev.lizardbyte.app.Sunshine.metainfo.xml")
 post_build: aur_post_build
 update_on:
   - source: aur
