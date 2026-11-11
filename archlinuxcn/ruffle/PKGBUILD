@@ -9,8 +9,25 @@ pkgdesc="A Flash Player emulator written in Rust"
 url="https://ruffle.rs/"
 arch=("x86_64")
 license=("MIT OR Apache-2.0")
-depends=('alsa-lib' 'glibc' 'libgcc' 'libstdc++' 'hicolor-icon-theme' 'systemd-libs')
-makedepends=('cargo' 'clang' 'cmake' 'gcc' 'git' 'java-environment' 'librsvg')
+depends=(
+    'alsa-lib'
+    'freetype2'
+    'glibc'
+    'hicolor-icon-theme'
+    'libgcc'
+    'libstdc++'
+    'openssl'
+    'systemd-libs'
+)
+makedepends=(
+    'cargo'
+    'clang'
+    'cmake'
+    'gcc'
+    'git'
+    'java-environment'
+    'librsvg'
+)
 options=("!lto")
 source=("${pkgname}::git+https://github.com/ruffle-rs/ruffle.git#tag=v${pkgver}")
 sha256sums=('440b868b0d36906571f193596cc3f5d03de1676c99bd30dd4cc6e8bbacc18a63')
@@ -29,12 +46,7 @@ build() {
     export RUSTUP_TOOLCHAIN=stable
     export CARGO_TARGET_DIR=target
 
-    export CARGO_PROFILE_RELEASE_LTO=true
-    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
-
-    # TODO: use `--profile dist` when `Cargo.toml` is updated
-    # https://github.com/ruffle-rs/ruffle/commit/6b53abf411521bbe7f05feab9238b4b1e318365d
-    cargo build --package ruffle_desktop --frozen --release --all-features
+    cargo build --package ruffle_desktop --frozen --profile dist --all-features
 
     for res in 16 32 48 64 128 256 512 1024; do
         mkdir -p "icons-build/${res}x${res}"
@@ -47,16 +59,13 @@ check() {
 
     export RUSTUP_TOOLCHAIN=stable
 
-    export CARGO_PROFILE_RELEASE_LTO=true
-    export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
-
     cargo test --package ruffle_desktop --frozen --all-features
 }
 
 package() {
     cd "${pkgname}"
 
-    install -Dm 755 "target/release/ruffle_desktop" "${pkgdir}/usr/bin/ruffle"
+    install -Dm 755 "target/dist/ruffle_desktop" "${pkgdir}/usr/bin/ruffle"
     install -Dm 644 README.md -t "${pkgdir}/usr/share/doc/${pkgname}"
     install -Dm 644 LICENSE.md -t "${pkgdir}/usr/share/licenses/${pkgname}"
     install -Dm 644 "desktop/packages/linux/${_appid}.desktop" -t "${pkgdir}/usr/share/applications"
