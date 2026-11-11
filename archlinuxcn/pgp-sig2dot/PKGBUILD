@@ -1,18 +1,19 @@
 # Maintainer: Cryolitia <cryolitia at archlinuxcn dot org>>
 pkgname=pgp-sig2dot
-pkgver=0.4.3
+pkgver=0.4.4
 pkgrel=2
 pkgdesc="OpenPGP sign party tool —— Visualize the Web of Trust"
 arch=('x86_64')
 url="https://github.com/cryolitia/pgp-sig2dot"
 license=('MIT')
-depends=('curl' 'bash' 'bzip2' 'gcc-libs' 'glibc' 'gmp' 'nettle' 'openssl')
+depends=('curl' 'bash' 'libgcc' 'glibc' 'gmp' 'nettle3')
 makedepends=('cargo' 'clang')
 optdepends=('graphviz: for generating visualizations')
 source=("pgp-sig2dot-v$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz"
         "pgp-sig2dot-graphviz")
-sha256sums=('050c38a7ab10fbdd7e01c8638248ec262d47512e55b69352155a7a78e125badf'
+sha256sums=('SKIP'
             '75d9e150bba5c48b16ed97c83af9a6df7e12647b2c5df7dc61e51ebf67f1f2f3')
+options=('!lto')
 
 prepare() {
 	cd "$srcdir/$pkgname-$pkgver"
@@ -21,6 +22,10 @@ prepare() {
 }
 
 build() {
+	# Compatibility with Arch Linux's Nettle3 library
+	export PKG_CONFIG_PATH="/usr/lib/nettle3/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+	export RUSTFLAGS="-L native=/usr/lib/nettle3${RUSTFLAGS:+ $RUSTFLAGS}"
+	
 	cd "$srcdir/$pkgname-$pkgver"
 	export RUSTUP_TOOLCHAIN=stable
 	export CARGO_TARGET_DIR=target
