@@ -1,8 +1,9 @@
 # arg 1:  the new package version
 post_install() {
   if systemctl -q is-enabled 'rustdesk.service'; then
-    systemctl daemon-reload
-    systemctl restart 'rustdesk.service'
+    #systemctl daemon-reload
+    #systemctl restart 'rustdesk.service'
+    systemctl set-property 'rustdesk.service' Markers='needs-restart'
   fi
 }
 
@@ -10,6 +11,7 @@ post_install() {
 # arg 2:  the old package version
 post_upgrade() {
   if systemctl -q is-enabled 'rustdesk.service'; then
-    systemctl restart 'rustdesk.service'
+    #systemctl restart 'rustdesk.service'
+    systemctl set-property 'rustdesk.service' Markers='needs-restart'
   fi
 }
