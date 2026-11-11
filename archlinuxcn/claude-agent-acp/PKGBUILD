@@ -17,7 +17,8 @@ conflicts=('claude-code-acp')
 provides=('claude-code-acp')
 source=("$realname-$pkgver.tar.gz::https://github.com/$org/$realname/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('19dcdbef396ddb846999571c2efca5494aafc4ae2cb5e6a7464e86ec8b00a53b')
-options=(debug strip)
+# Stripping drops the bundled Bun-compiled claude binary's embedded app, leaving bare bun
+options=(!strip)
 
 build() {
   cd $realname-$pkgver
