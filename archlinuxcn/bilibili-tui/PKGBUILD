@@ -5,11 +5,11 @@ pkgver=1.0.14
 pkgrel=2
 pkgdesc="A terminal user interface (TUI) client for Bilibili"
 arch=('x86_64' 'aarch64' 'riscv64')
-url="https://maredevi.moe/projects/${pkgname}"
+url="https://github.com/MareDevi/${pkgname}"
 license=('MIT')
 depends=('glibc' 'libgcc' 'mpv' 'openssl' 'yt-dlp')
 makedepends=('cargo')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/MareDevi/${pkgname}/archive/v${pkgver}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
 sha256sums=('6a2a0168ef4dadffe7c8e46c20c406c20c72a0fa59cdb549ee3e975079a3dff0')
 
 prepare() {
