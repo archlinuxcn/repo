@@ -2,7 +2,18 @@ maintainers:
   - github: heavysink
     email: winstonwu91@gmail.com
 build_prefix: extra-x86_64
-pre_build_script: aur_pre_build(maintainers=['Muflone'])
+pre_build_script: |
+  aur_pre_build(maintainers=['Muflone'])
+  for line in edit_file('PKGBUILD'):
+    print(line.replace('https://cdn.mysql.com/Downloads/MySQL-',
+                       'https://cdn.mysql.com/archives/mysql-')
+              .replace("'openssl'", "'openssl-3'")
+              .replace("depends=('libsasl' 'zlib' 'zstd')",
+                       "depends=('libsasl' 'zlib' 'zstd' 'openssl-3')"))
+    if '-DWITH_SSL=system' in line:
+      print('    -DOPENSSL_INCLUDE_DIR=/usr/include/openssl-3 \\')
+      print('    -DOPENSSL_SSL_LIBRARY=/usr/lib/openssl-3/libssl.so \\')
+      print('    -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/openssl-3/libcrypto.so \\')
 post_build: aur_post_build
 update_on:
   - source: aur

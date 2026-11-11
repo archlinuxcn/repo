@@ -10,12 +10,12 @@ pkgver=9.7.1
 pkgrel=2
 pkgdesc="Fast SQL database server, community edition"
 arch=('x86_64')
-makedepends=('openssl' 'zlib' 'cmake' 'systemd-tools' 'systemd-libs' 'libaio'
+makedepends=('openssl-3' 'zlib' 'cmake' 'systemd-tools' 'systemd-libs' 'libaio'
              'jemalloc' 'rpcsvc-proto' 'libtirpc' 'icu' 'libedit' 'libevent'
              'libfido2' 're2' 'rapidjson')
 license=('GPL-2.0-only')
 url="https://www.mysql.com/products/community/"
-source=("https://cdn.mysql.com/Downloads/MySQL-9.7/${pkgbase}-${pkgver}.tar.gz"{,.asc}
+source=("https://cdn.mysql.com/archives/mysql-9.7/${pkgbase}-${pkgver}.tar.gz"{,.asc}
         "my-default.cnf"
         "mysql-ld.so.conf"
         "mysql.sysconfig"
@@ -64,6 +64,9 @@ build() {
     -DWITH_SYSTEM_LIBS=ON \
     -DWITH_FIDO=system \
     -DWITH_SSL=system \
+    -DOPENSSL_INCLUDE_DIR=/usr/include/openssl-3 \
+    -DOPENSSL_SSL_LIBRARY=/usr/lib/openssl-3/libssl.so \
+    -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/openssl-3/libcrypto.so \
     -DWITH_LIBWRAP=OFF \
     -DWITH_LTO=ON \
     -DWITH_JEMALLOC=ON \
@@ -95,7 +98,7 @@ check() {
 
 package_libmysqlclient(){
   pkgdesc="MySQL client libraries"
-  depends=('libsasl' 'zlib' 'zstd')
+  depends=('libsasl' 'zlib' 'zstd' 'openssl-3')
   conflicts=('libmariadbclient' 'mariadb-libs')
   provides=("libmariadbclient=${pkgver}" "libmysqlclient=${pkgver}" "mariadb-libs=${pkgver}")
 
@@ -112,7 +115,7 @@ package_libmysqlclient(){
 
 package_mysql-clients(){
   pkgdesc="MySQL client tools"
-  depends=('libmysqlclient' 'zlib' 'openssl' 'jemalloc' 'libedit' 'lz4' 'zstd' 'bash')
+  depends=('libmysqlclient' 'zlib' 'openssl-3' 'jemalloc' 'libedit' 'lz4' 'zstd' 'bash')
   conflicts=('mariadb-clients')
   provides=("mariadb-clients=${pkgver}" "mysql-clients=${pkgver}")
 
