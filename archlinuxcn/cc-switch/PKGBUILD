@@ -34,6 +34,11 @@ sha256sums=('b1b8ffc84663dc75edd4650e28218d2f068c35f286e92ff0eaf79f17bf768674')
 prepare() {
   export RUSTUP_TOOLCHAIN=stable
   cd "${pkgname}-${pkgver}"
+  # openssl-sys <0.9.114 / openssl <0.10.78 don't support OpenSSL 4 (Arch core
+  # is 4.1 now); bump the lock beyond the pinned versions. || true keeps the
+  # build working if upstream drops these transitive deps in a future release.
+  cargo update --manifest-path src-tauri/Cargo.toml -p openssl-sys --precise 0.9.118 || true
+  cargo update --manifest-path src-tauri/Cargo.toml -p openssl --precise 0.10.82 || true
   cargo fetch --locked --target host-tuple --manifest-path src-tauri/Cargo.toml
 }
 
