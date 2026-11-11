@@ -1,0 +1,47 @@
+# Maintainer: Yichao Yu <yyc1992@gmail.com>
+
+pkgname=kate-code-git
+pkgver=0.0.144.5ee5c7a
+pkgrel=1
+pkgdesc="Claude Code integration for Kate text editor"
+arch=(aarch64 x86_64)
+url="https://github.com/yuyichao/kate-code"
+license=('MIT')
+depends=(
+  'ktexteditor'
+  'ki18n'
+  'kcoreaddons'
+  'kxmlgui'
+  'syntax-highlighting'
+  'kpty'
+  'kparts'
+  'qt6-webengine'
+  'qt6-declarative'
+)
+makedepends=(
+  'cmake'
+  'extra-cmake-modules'
+  'git'
+)
+optdepends=(
+  'claude-agent-acp: Required for Claude Code functionality'
+)
+source=("git+https://github.com/yuyichao/kate-code.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd kate-code
+
+  echo "0.0.$(git rev-list --count main).$(git rev-parse --short main)"
+}
+
+build() {
+  cmake -B build -S kate-code \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
