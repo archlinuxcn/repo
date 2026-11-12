@@ -1,7 +1,7 @@
 pkgname=julia-git-ffta-src
-pkgver=0.3.1
-_commit=b3d386c9d3e3426134184e305a60caae39fb16f9
-pkgrel=2
+pkgver=0.3.3
+_commit=efc9ebc18a772ce94410daaacceb867b7ab0df40
+pkgrel=1
 pkgdesc="FFTA.jl"
 url="https://github.com/JuliaMath/FFTA.jl.git"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/FFTA.jl.git#commit=$_commit")
-sha256sums=('e23a9f949eacbf0bc119aeb3e7afb6e78ae5bd5489f1e76e1bbfb4deafd24809')
+sha256sums=('44a8fe2ee29b118609e5337e0e16dc7efde3690b86bdb967b46c35e0871e7109')
 
 package() {
   cd FFTA.jl
