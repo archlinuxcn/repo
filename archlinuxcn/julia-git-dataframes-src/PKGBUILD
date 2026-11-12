@@ -1,6 +1,6 @@
 pkgname=julia-git-dataframes-src
-pkgver=1.8.2
-_commit=946c72aff8898cd6c1e75f51dd9057abd87040b2
+pkgver=1.8.3
+_commit=909d65ed591162dc0f5d4884986dd00bb42c398d
 pkgrel=1
 pkgdesc="DataFrames.jl"
 url="https://github.com/JuliaData/DataFrames.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaData/DataFrames.jl.git#commit=$_commit")
-sha256sums=('0d1ea5dc2e320903cb1ba0a4bebb9b9079efc2c6381b160f38222e7b426b4b06')
+sha256sums=('b02ed400821c0e339a5b923e9044ad5f7003f44e90e1f830db1ea7c8a8ecd288')
 
 package() {
   cd DataFrames.jl
