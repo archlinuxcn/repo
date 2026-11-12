@@ -1,6 +1,6 @@
 pkgname=julia-git-tullio-src
-pkgver=0.3.9
-_commit=fc8e27024c9f9042fc7e9ed4717aff771e00771f
+pkgver=0.3.10
+_commit=6c9dd861c9a15db602c595a7106663fbf7a4ed5d
 pkgrel=1
 pkgdesc="Tullio.jl"
 url="https://github.com/mcabbott/Tullio.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/mcabbott/Tullio.jl.git#commit=$_commit")
-sha256sums=('a884d9dddd01145bca3000fc311c268070d00f102902cb08c10298467600750e')
+sha256sums=('8d7354f89ad7d40abeabc009400652da6a364f6c8202b1e6fe0e20a0da1f356b')
 
 prepare() {
   cd Tullio.jl
