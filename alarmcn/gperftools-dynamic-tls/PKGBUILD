@@ -7,7 +7,7 @@
 # Contributor: Jan Rüegg <rggjan@gmail.com>
 
 pkgname=gperftools-dynamic-tls
-pkgver=2.19.2
+pkgver=2.19.3
 pkgrel=1
 pkgdesc='Fast, multi-threaded malloc and nifty performance analysis tools'
 arch=(aarch64 x86_64)
@@ -24,7 +24,7 @@ makedepends=(
   git
 )
 source=("git+https://github.com/gperftools/gperftools.git#tag=gperftools-$pkgver")
-b2sums=(9c4889ea59c03bde9ecfa85924b4af98ebdb0cfba1f5a127b9770e6419953915dbdcc8465ec1af088ee157e8d15a16db9f6750708dbfca5c0b5cd91bb23d1f49)
+b2sums=(f40288c53ee886828494270ff1a4f66bceb2d8f30a343238204ddeaaef3a85a247370208f6bfd6aff8f368f2672465c0250a8fd8025bc2dc7e535625345cefcd)
 
 _prepare() {
   cd gperftools
