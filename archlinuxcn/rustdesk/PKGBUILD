@@ -149,7 +149,7 @@ DLAGENTS="${DLAGENTS[@]/curl /curl -L}"
 set -u
 _pkgname='rustdesk'
 pkgname="${_pkgname}"
-_pkgver='1.5.1'
+_pkgver='1.5.3'
 pkgver="${_pkgver//-/.}"
 pkgrel=1
 _sfx=''
@@ -170,6 +170,7 @@ _HBB=( # dates are retrieved from git fetch; tig. Every version gets a specific 
   '1.4.9:20260702-7e1c392c62d39c364127307cd408421dd5f8cfb0'
   '1.5.0:20260925-94ec710894ecd548b4fe174ef781eca5c1a318c0'
   '1.5.1:20261028-fae47e024dd83cef6aaecde0aa7d11731df11649'
+  '1.5.3:20261110-bb416bc94e48fa73046017f8ce4214324146cebe'
 )
 _pkgverhbb="$(_fn_VCL "${_pkgver}" -eq "${_HBB[@]}")"; unset _HBB; test "$(_vercmp "${_pkgver}" '1.3.7')" -lt 0 -o ! -z "${_pkgverhbb}" || exit 1
 pkgdesc='Yet another remote desktop software, written in Rust. Works out of the box, no configuration required. Great alternative to TeamViewer and AnyDesk!'
@@ -282,8 +283,8 @@ source+=("${_vcs[@]}")
     )
   fi
 ####
-md5sums=('e8bb0eb79740d8ff99654fc0aa39f6c9'
-         '0818e04dec386bb50bae1e91e0ac2480'
+md5sums=('2778f303db37f85c8457ac5860ce0f5c'
+         '53e2632b649be0e53969712f7cd2e74f'
          '6acc4b5b14befec55ef84006b60c7ff5'
          'a77a4586f30f77de2eed63e160b3a051'
          '379cfba8479c2a92e05e3b855d1e6901'
@@ -298,8 +299,8 @@ md5sums=('e8bb0eb79740d8ff99654fc0aa39f6c9'
          '5f8157e206bc430cbed92fb62144f30b'
          'a3efc04e00cede00296f1a0dc323e8d1'
          'cc8e5418ff0c163228aabbe385ba2596')
-sha256sums=('369c49a4a35b0ac6d46360b482a9f4c1b8f5dd141baa200b2766ddd1e4df59fa'
-            '25dde1ec04632a88b91218d362d45e4bbc89c1bfb1fe235b0534d66e249fe2f5'
+sha256sums=('97c63636a1110cb997354df1bf95ca6362abc8fd9875f633ef6d3056cf0cc0ac'
+            '1c4feba5d74f4bd5e7efe541ef75f8bf95ef0a58bf7577b35c06bd2ddd4a5e7f'
             '8f7f1019404ce47dc012ba7c546ad634b973452fc2c57ac64b62cdc7c1f54ea3'
             '82757ee1ab6b956a3c601f7db82e2d9ad80dbbcf2ba68c63059f0b529426ccd0'
             '359046f24f8a81b96a198000a1cfd7934c1f4870b2a1306e13f65694cefef68f'
@@ -565,6 +566,8 @@ EOF
   #cd '..'; cp -pr "${_srcdir}" 'a'; ln -s "${_srcdir}" 'b'; cp -pr "${_srcdirfrb}" 'fa'; ln -s "${_srcdirfrb}" 'fb'; false
   #cd '..'; cp -pr "${_srcdirvc}" 'va'; ln -s "${_srcdirvc}" 'vb'; false
   #diff -pNaru5 'a' 'b' > "0000-$RANDOM@domain.patch"
+  cargo update -p 'openssl-sys' # Google AI "rustdesk compile with openssl 4"
+  cargo update -p 'openssl'
 }
 
 build() {
