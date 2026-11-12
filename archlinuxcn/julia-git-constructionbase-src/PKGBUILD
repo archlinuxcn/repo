@@ -1,6 +1,6 @@
 pkgname=julia-git-constructionbase-src
-pkgver=1.6.0
-_commit=51da6157bc705212b39f29ad5e7c66168015fba5
+pkgver=1.6.1
+_commit=cdbca64242727291f1750fadd5bea5b7d16be848
 pkgrel=1
 pkgdesc="ConstructionBase.jl"
 url="https://github.com/JuliaObjects/ConstructionBase.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaObjects/ConstructionBase.jl.git#commit=$_commit")
-sha256sums=('a84b5ced492881800c6c51748b8d854f43d378bf9c0e5b54707c7d54b28ce5b2')
+sha256sums=('33a23de5b93f56810a2e07b8f37ae6d435865af31beed0ebdb2feea5d8ecb3d3')
 
 package() {
   cd ConstructionBase.jl
