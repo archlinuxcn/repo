@@ -1,6 +1,6 @@
 pkgname=julia-git-harfbuzz_jll-src
-pkgver=100.15000.0+0
-_commit=06fb21139c7e81506d168ff76cd4913c980572dd
+pkgver=100.15001.0+0
+_commit=b13ce63eedb6dac4d24557dfa86df67140ecfd4c
 pkgrel=1
 pkgdesc="HarfBuzz_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/HarfBuzz_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git harfbuzz)
 source=("git+https://github.com/JuliaBinaryWrappers/HarfBuzz_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('a21bc89e4e3822f4660bbc766b4ec3df178802d85645cb5f44e36909b40e2f26'
+sha256sums=('d46223dbcd53a682417ce04d31e6995b96a5054d09a06f0e97d2e9fad5c028a4'
             'bf34777870505abe405e19477efb6aab5d5ded74d63f9111b5c1ea7a7d15ea20')
 
 build() {
