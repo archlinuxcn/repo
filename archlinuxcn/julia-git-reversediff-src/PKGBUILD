@@ -1,6 +1,6 @@
 pkgname=julia-git-reversediff-src
-pkgver=1.18.7
-_commit=a6aec8d9f7dc887bcc957ec7e7fe721d022e8f63
+pkgver=1.18.9
+_commit=fdf1b3d824a576db2cc4535992516472b11f446e
 pkgrel=1
 pkgdesc="ReverseDiff.jl"
 url="https://github.com/JuliaDiff/ReverseDiff.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaDiff/ReverseDiff.jl.git#commit=$_commit")
-sha256sums=('36b3153ce78844e043462b2c0459a9af2168da09bf5c127e234ea35ab09d06f0')
+sha256sums=('70dea4107a7a202d670f45239fdab056a0a3b839daef1b2f801cc6dabfccc98b')
 
 package() {
   cd ReverseDiff.jl
