@@ -1,6 +1,6 @@
 pkgname=julia-git-offsetarrays-src
-pkgver=1.17.0
-_commit=fad142db4eaaf42d5680b85613be6178acd2c9e2
+pkgver=1.18.0
+_commit=44b84d8df8d03135e374167ea199f3c77588127a
 pkgrel=1
 pkgdesc="OffsetArrays.jl"
 url="https://github.com/JuliaArrays/OffsetArrays.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaArrays/OffsetArrays.jl.git#commit=$_commit")
-sha256sums=('a3eaa876455047ec0cfdfa8d2d0c8ffc03d5bce840c034b6a3bc4814d4ce0f8c')
+sha256sums=('3440124ad695eaa86d9a018450e0fefd220dc434e588d5118fd3fbba28347cbd')
 
 package() {
   cd OffsetArrays.jl
