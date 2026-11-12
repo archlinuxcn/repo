@@ -1,6 +1,6 @@
 pkgname=julia-git-expronicon-src
-pkgver=0.10.14
-_commit=9738174abf802703c56918db36294bb54191dbc3
+pkgver=0.10.16
+_commit=7d28beba64022826f2aca7ddc842fb5a10a78abf
 pkgrel=1
 pkgdesc="Expronicon.jl"
 url="https://github.com/Roger-luo/Expronicon.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/Roger-luo/Expronicon.jl.git#commit=$_commit")
-sha256sums=('6cc0fe9742bdb848f648573e659a201fe17a7b15ca0b939de7919ac99ee5bb09')
+sha256sums=('7b05fbea06b8d0faa87a74556c458de146d60b0f001a2538ea6e4363de7deb4f')
 
 package() {
   cd Expronicon.jl
