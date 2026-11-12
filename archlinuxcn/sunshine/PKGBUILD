@@ -10,7 +10,7 @@ _use_cuda=true
 
 pkgname='sunshine'
 pkgver=2026.914.233613
-pkgrel=2
+pkgrel=3
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
@@ -84,8 +84,18 @@ optdepends=(
 provides=()
 conflicts=()
 
-source=("$pkgname::git+https://github.com/LizardByte/Sunshine.git#commit=${_commit}")
-sha256sums=('SKIP')
+source=(
+  "$pkgname::git+https://github.com/LizardByte/Sunshine.git#commit=${_commit}"
+  '2026.914.233613-dac66dfd-openssl-4.1-signature-length.patch'
+  '2026.914.233613-6005-openssl-crypto-tests.patch'
+  '2026.914.233613-357bd98c-update-metainfo-urls.patch'
+)
+sha256sums=(
+  'SKIP'
+  '0a31ccdf628f13fcdc30dac2283f565b3ab6df295b3c21c7a7514f2925549eb8'
+  'b311d1aaab26503232bd3439ec2073cedb1d83db946ca1c8fe3e894a7729270d'
+  '3208f0e7ec1a748e5f5e5a0994f62c5479aea6e94804983876313a0734efb98c'
+)
 
 # Options Handling
 if [[ "${_use_cuda::1}" == "d" ]] && pacman -Qi cuda &> /dev/null; then
@@ -120,7 +130,17 @@ fi
 prepare() {
     cd "$pkgname"
     git submodule update --recursive --init --depth 1
-    sed -i 's|https://app.lizardbyte.dev/Sunshine/assets/img/screenshots/01-sunshine-welcome-page.png|https://sunshine.lizardbyte.dev/assets/sunshine-web-ui-light.jpg|' packaging/linux/dev.lizardbyte.app.Sunshine.metainfo.xml
+
+    # Backport https://github.com/SunshineStream/Sunshine/commit/dac66dfdd200c5f1bb4b31b4e34227690ca8c565
+    patch -Np1 -i "${srcdir}/2026.914.233613-dac66dfd-openssl-4.1-signature-length.patch"
+
+    # Backport the regression test and supported subject-name API from:
+    # https://github.com/SunshineStream/Sunshine/pull/6005
+    patch -Np1 -i "${srcdir}/2026.914.233613-6005-openssl-crypto-tests.patch"
+
+    # Backport the metainfo changes from:
+    # https://github.com/SunshineStream/Sunshine/commit/357bd98cb1e203dbacbd831dbc6ddfac76d22ac0
+    patch -Np1 -i "${srcdir}/2026.914.233613-357bd98c-update-metainfo-urls.patch"
 }
 
 build() {
@@ -141,7 +161,7 @@ build() {
       -B build
       -Wno-dev
       -D BUILD_DOCS=OFF
-      -D BUILD_WERROR=OFF
+      -D BUILD_WERROR=ON
       -D CMAKE_INSTALL_PREFIX=/usr
       -D SUNSHINE_EXECUTABLE_PATH=/usr/bin/sunshine
       -D SUNSHINE_ASSETS_DIR="share/sunshine"
