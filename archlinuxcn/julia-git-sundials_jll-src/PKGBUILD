@@ -1,8 +1,8 @@
 pkgname=julia-git-sundials_jll-src
 epoch=1
-pkgver=7.5.0+0
-_commit=0368dd14cdff00ecc201f6089f0d56e1fc2855f8
-pkgrel=2
+pkgver=7.5.1+0
+_commit=ea92e34148997e76238be943eb68ede5e103c21b
+pkgrel=1
 pkgdesc="Sundials_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/Sundials_jll.jl.git"
 arch=('any')
@@ -11,7 +11,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git sundials-lapack)
 source=("git+https://github.com/JuliaBinaryWrappers/Sundials_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('625db88d6ca434e42c28b37b0bc021b7b2c25bec14737a69b87c1d89609290a2'
+sha256sums=('b9e19e4afe7311e89f0e334b0f024527d9332c5190ac6a9d9eb5de33e7ac5bd1'
             '2f5381484c380a7e63be0c421608d99425b5e8afda22c8e342d287a833dfb5e6')
 
 build() {
