@@ -1,8 +1,8 @@
-# Maintainer: Martin Rys <https://rys.rs/contact> | Toss a coin on https://rys.rs/donate
+# Maintainer: Martin Rys <https://rys.rs/contact>
 
 pkgname=js-beautify
-pkgver=1.15.4
-pkgrel=2
+pkgver=2.0.3
+pkgrel=1
 pkgdesc="CSS, HTML & JavaScript unobfuscator and beautifier"
 arch=('any')
 url="https://beautifier.io"
@@ -12,7 +12,7 @@ makedepends=('npm')
 conflicts=('python-cssbeautifier' 'python-jsbeautifier')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/beautifier/js-beautify/archive/v${pkgver}.tar.gz")
 noextract=("${pkgname}-${pkgver}.tar.gz")
-sha256sums=('54f1d231b2ddd5727d8add4b6486ec7799508227ca0185bc08bb9da908c55ac5')
+sha256sums=('87ae2c001eba3186d0737be6adfd277d19cd66b16b48b454707805b5259e9fc7')
 
 package() {
 	npm install -g --prefix "${pkgdir}/usr" "${pkgname}-${pkgver}.tar.gz"
