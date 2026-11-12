@@ -1,6 +1,6 @@
 pkgname=julia-git-openssh_jll-src
-pkgver=10.6.1+0
-_commit=be3b222dd815db6c8f4bc427cb61dae3eeb592f9
+pkgver=10.6.2+0
+_commit=0b807b32d9246ae191d7fcb7213299b8f9524c59
 pkgrel=1
 pkgdesc="OpenSSH_jll.jl"
 url="https://github.com/JuliaBinaryWrappers/OpenSSH_jll.jl.git"
@@ -10,7 +10,7 @@ makedepends=(git julia-pkg-scripts)
 depends=(julia-git openssh)
 source=("git+https://github.com/JuliaBinaryWrappers/OpenSSH_jll.jl.git#commit=$_commit"
         jll.toml)
-sha256sums=('74cc71cf1988d35c3713fc069625e1d3c29d7303f4113f95c37449414964e4c9'
+sha256sums=('fa6df990cbdc1bd74dcf0fc368f786238f2ccca048dfc02f623e41918e651515'
             '04e880b1371e824140b0599b050ac85876922458e46edd794a421e78f1f613ab')
 
 build() {
