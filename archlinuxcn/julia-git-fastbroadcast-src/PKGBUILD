@@ -1,6 +1,6 @@
 pkgname=julia-git-fastbroadcast-src
-pkgver=1.5.0
-_commit=d9633f47ce627c1d1f04a2a39acf16ede0d03a85
+pkgver=1.5.1
+_commit=a9b5b4bb237401f2fa9d3ae4ea2736d9690f384a
 pkgrel=1
 pkgdesc="FastBroadcast.jl"
 url="https://github.com/YingboMa/FastBroadcast.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/YingboMa/FastBroadcast.jl.git#commit=$_commit")
-sha256sums=('8a9810496dab313f38ad00e60e98bda3403e99c4c017c3d0aaa0818ccf58ba0e')
+sha256sums=('ce107490102891081282e6fba937a8251846617ffb39b40718284f441cbbc328')
 
 package() {
   cd FastBroadcast.jl
