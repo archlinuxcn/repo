@@ -1,6 +1,6 @@
 pkgname=julia-git-gamma-src
-pkgver=1.2.0
-_commit=d44295bab5a9faba5660dae6d2c6d5362b4174eb
+pkgver=1.2.1
+_commit=513263b856c3fd4eb31044dadf9b2b952b7ea42e
 pkgrel=1
 pkgdesc="Gamma.jl"
 url="https://github.com/JuliaMath/Gamma.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaMath/Gamma.jl.git#commit=$_commit")
-sha256sums=('a53bd37a8fdd4cec3c3dce7cc09cd1d905ee375e740eb0aeb24193dac5389f32')
+sha256sums=('5071efb600cca89220770571f8ee344caf918705f1977f6ee63638a768a1b6cb')
 
 package() {
   cd Gamma.jl
