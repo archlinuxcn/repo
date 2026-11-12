@@ -1,6 +1,6 @@
 pkgname=julia-git-symbolicutils-src
-pkgver=4.54.0
-_commit=c606b50b7f5bb4c8b8748c9cbf21aad9da6dbe2a
+pkgver=4.56.0
+_commit=22f8e5c9f764a941d9ac8dd71d5dd4b85ead61ca
 pkgrel=1
 pkgdesc="SymbolicUtils.jl"
 url="https://github.com/JuliaSymbolics/SymbolicUtils.jl.git"
@@ -9,7 +9,7 @@ license=('MIT')
 makedepends=(git julia-pkg-scripts)
 depends=(julia-git)
 source=("git+https://github.com/JuliaSymbolics/SymbolicUtils.jl.git#commit=$_commit")
-sha256sums=('c1dcdae56bcd90c5967cb5007d58e43695b9ed73e9714a6117c06bdb22ba7f44')
+sha256sums=('77e5c806a97925889bcaa8ea490e2c2fb066a13639e3e0d647a84b933663048f')
 
 package() {
   cd SymbolicUtils.jl
