@@ -2,7 +2,7 @@
 # Contributor: aliu <aaron! liu! 0130! at! gmail! dot! com! woohoo>
 
 pkgname=ipatool
-pkgver=2.8.0
+pkgver=2.8.1
 pkgrel=1
 pkgdesc="CLI tool for searching and downloading app packages from the iOS App Store"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -10,7 +10,7 @@ url="https://github.com/majd/${pkgname}"
 license=('MIT')
 makedepends=('go')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
-sha256sums=('1354d2d11a71e1e1534c731f9fd544c04fcf298e321de8cf59d9574e61b1ff11')
+sha256sums=('88704a28231ac0019016c1900edebc9dea0cf14de4e5bc90aa96fd594925bdc0')
 
 prepare() {
 	cd "${pkgname}-${pkgver}/"
