@@ -9,6 +9,7 @@ pkgdesc='Corplink client written in Rust'
 arch=('i686' 'x86_64')
 url='https://github.com/PinkD/corplink-rs'
 license=('GPL-2.0-only')
+depends=('openssl')
 makedepends=('cargo' 'go' 'clang' 'git')
 conflicts=('corplink-rs')
 source=(
