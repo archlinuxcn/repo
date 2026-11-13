@@ -8,7 +8,7 @@
 
 _pkgname=maa-assistant-arknights
 pkgname=(maa-assistant-arknights)
-_pkgver=6.21.4
+_pkgver=6.22.0
 pkgver=${_pkgver//-/}
 pkgrel=1
 _pkgdesc="An Arknights assistant"
@@ -17,14 +17,14 @@ url="https://github.com/MaaAssistantArknights/MaaAssistantArknights"
 license=('AGPL-3.0-only')
 depends=(opencv onnxruntime)
 makedepends=(boost eigen git cmake nlohmann-json)
-_fastdeploy_ref=e962983da6daba7d0c12f6bf5f8ff7173be70982
+_fastdeploy_ref=e11935e4595360e7038573db1a7ab08dd0e096ec
 source=("git+$url.git#tag=v${_pkgver}"
 "git+https://github.com/MaaXYZ/MaaUtils.git"
 "FastDeploy-${_fastdeploy_ref}.tar.gz::https://github.com/MaaXYZ/FastDeploy/archive/$_fastdeploy_ref.tar.gz")
 install="${_pkgname}.install"
-md5sums=('78da7cae39d25635a30ffa7b2346aa56'
+md5sums=('e55e656676280ad570c11ce8a15f2edc'
          'SKIP'
-         '4555f8dce0cec02022356d50c8f2275c')
+         '4d8a06e81d5f3ccfe12ddcdaed8bbfcf')
 
 if ((WITH_CUDA)); then
     pkgname+=(maa-assistant-arknights-cuda)
