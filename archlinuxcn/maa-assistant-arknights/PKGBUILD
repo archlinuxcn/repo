@@ -15,8 +15,8 @@ _pkgdesc="An Arknights assistant"
 arch=(x86_64)
 url="https://github.com/MaaAssistantArknights/MaaAssistantArknights"
 license=('AGPL-3.0-only')
-depends=(opencv onnxruntime nlohmann-json)
-makedepends=(boost eigen git cmake)
+depends=(opencv onnxruntime)
+makedepends=(boost eigen git cmake nlohmann-json)
 _fastdeploy_ref=e962983da6daba7d0c12f6bf5f8ff7173be70982
 source=("git+$url.git#tag=v${_pkgver}"
 "git+https://github.com/MaaXYZ/MaaUtils.git"
