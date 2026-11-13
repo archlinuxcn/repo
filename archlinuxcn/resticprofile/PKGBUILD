@@ -3,8 +3,8 @@
 # Contributor: Kyle Brennan <kyle@metalspork.xyz>
 
 pkgname=resticprofile
-pkgver=0.33.1
-pkgrel=5
+pkgver=0.34.0
+pkgrel=1
 pkgdesc="Configuration profiles manager and scheduler for restic backup"
 arch=("x86_64" "aarch64")
 url="https://github.com/creativeprojects/resticprofile"
@@ -14,7 +14,7 @@ depends=("glibc" "restic")
 makedepends=("go" "git")
 options=(!lto)
 source=("git+https://github.com/creativeprojects/resticprofile.git#tag=v$pkgver")
-sha256sums=('4b423bd35674bd9e8f7d8e63d5f586c1e6b357c8d83dd30724036763ac4645c7')
+sha256sums=('bf2e71f73df7dc564a6a560381712aa7dd03c84bb3a98081d949ecff1a28bc12')
 
 prepare() {
     cd resticprofile
@@ -53,6 +53,6 @@ package() {
     install -Dm644 contrib/systemd/* "${pkgdir}/usr/share/resticprofile/contrib/systemd/"
 
     install -Dm644 contrib/completion/bash-completion.sh "${pkgdir}/usr/share/bash-completion/completions/resticprofile"
-    install -Dm644 contrib/completion/zsh-completion.sh "${pkgdir}/usr/share/zsh/site-functions/_resticprofile"
+    install -Dm644 contrib/completion/zsh-completion.zsh "${pkgdir}/usr/share/zsh/site-functions/_resticprofile"
     install -Dm644 contrib/completion/fish-completion.fish "${pkgdir}/usr/share/fish/vendor_completions.d/resticprofile.fish"
 }
