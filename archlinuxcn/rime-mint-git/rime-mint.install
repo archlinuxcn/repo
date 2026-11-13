@@ -1,0 +1,34 @@
+post_install() {
+  cat <<'EOF'
+------------------------------------------------------------
+薄荷拼音（oh-my-rime）已安装。启用方法：
+
+  在输入法框架的用户目录下创建/编辑 default.custom.yaml，然后重新部署：
+
+     patch:
+       __include: <方案>_suggestion:/
+
+  <方案> 换成安装的方案，例如：
+     rime_mint              薄荷拼音-全拼输入
+     rime_mint_flypy        薄荷拼音-小鹤混输
+     double_pinyin          自然码双拼
+     double_pinyin_abc      智能ABC双拼
+     double_pinyin_flypy    小鹤双拼
+     double_pinyin_mspy     微软双拼
+     double_pinyin_sogou    搜狗双拼
+     double_pinyin_ziguang  紫光双拼
+     wubi86_jidian          五笔86-极点五笔
+     wubi98_mint            五笔98-五笔小筑
+
+常见用户目录：
+  * Fcitx5: $HOME/.local/share/fcitx5/rime/
+  * IBus:   $HOME/.config/ibus/rime/
+
+配置文件改动请写进 *.custom.yaml，不要直接改 /usr/share/rime-data 下的文件。
+------------------------------------------------------------
+EOF
+}
+
+post_upgrade() {
+  post_install
+}

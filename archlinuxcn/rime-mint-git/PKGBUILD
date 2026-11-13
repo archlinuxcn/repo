@@ -1,0 +1,291 @@
+# Maintainer: Gavin Luo <lunt.luo@gmail.com>
+
+pkgbase=rime-mint-git
+pkgname=(
+  rime-mint-common-git
+  rime-mint-pinyin-git
+  rime-mint-flypy-git
+  rime-mint-double-pinyin-git
+  rime-mint-double-pinyin-abc-git
+  rime-mint-double-pinyin-flypy-git
+  rime-mint-double-pinyin-mspy-git
+  rime-mint-double-pinyin-sogou-git
+  rime-mint-double-pinyin-ziguang-git
+  rime-mint-wubi86-jidian-git
+  rime-mint-bhhw68-utxo-git
+)
+pkgver=r356.1d90ca2
+pkgrel=1
+pkgdesc='Rime 配置：薄荷拼音 | 全拼、双拼、五笔多方案'
+arch=('any')
+url='https://github.com/Mintimate/oh-my-rime'
+license=('GPL-3.0-only')
+makedepends=('git' 'librime' 'lua' 'rime-prelude')
+options=('!strip' '!debug')
+source=("rime-mint::git+${url}.git")
+sha256sums=('SKIP')
+
+# 预编译的方案。stroke / luna_pinyin / terra_pinyin 不在此列：
+#  * stroke 由 rime-stroke 提供，rime_mint 只借它的词库做笔画反查 Ui 前缀，
+#    而仓库里那份 stroke.schema.yaml 与官方版只差一个行尾换行；
+#  * luna_pinyin 由 rime-luna-pinyin 提供（stroke 的依赖）；
+#  * terra_pinyin 只能由官方 rime-terra-pinyin 提供：它经 librime → librime-data
+#    必装，同名文件无法覆盖；薄荷版词库是无调格式，也不能复用官方词库（实测编码不兼容）。
+_schemas=(
+  melt_eng
+  radical_pinyin
+  radical_pinyin_flypy
+  rime_mint
+  rime_mint_flypy
+  double_pinyin
+  double_pinyin_abc
+  double_pinyin_flypy
+  double_pinyin_mspy
+  double_pinyin_sogou
+  double_pinyin_ziguang
+  wubi86_jidian
+  wubi98_mint
+)
+
+pkgver() {
+  cd rime-mint
+  printf 'r%s.%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd rime-mint
+
+  # 上游部分文件是 CRLF，会让按行尾锚定的替换静默失效（编译结果与 LF 等价）
+  find . -type f \( -name '*.yaml' -o -name '*.lua' -o -name '*.json' -o -name '*.txt' \) \
+    -exec sed -i 's/\r$//' {} +
+
+  # symbols.yaml 与 rime-prelude 的同名文件冲突，改用带前缀的名字
+  mv symbols.yaml rime_mint_symbols.yaml
+  sed -i 's/^\(\s*\)import_preset: symbols$/\1import_preset: rime_mint_symbols/' *.schema.yaml
+  if grep -q 'import_preset: symbols$' *.schema.yaml; then
+    error 'import_preset: symbols 未全部替换'
+    return 1
+  fi
+
+  # 上游的 default.yaml 留给各方案生成 suggestion，编译期借 rime-prelude 的同名文件
+  mv default.yaml _default.yaml
+  local _f
+  for _f in $(pacman -Qql rime-prelude | grep -v '/$'); do
+    ln -sf "$_f" .
+  done
+}
+
+build() {
+  cd rime-mint
+
+  local _s
+  for _s in "${_schemas[@]}"; do
+    msg2 'compiling %s' "$_s"
+    rime_deployer --compile "${_s}.schema.yaml"
+  done
+
+  # 清掉为编译临时链接的 rime-prelude 文件
+  find . -maxdepth 1 -type l -delete
+}
+
+check() {
+  cd rime-mint
+
+  find lua -name '*.lua' -print0 | xargs -0 -n1 luac -p
+
+  local _n
+  for _n in $(grep -ho 'import_preset: *[a-zA-Z_][a-zA-Z0-9_]*' *.schema.yaml |
+    sed 's/.*: *//' | sort -u); do
+    [[ $_n == default ]] && continue
+    if [[ ! -f $_n.yaml ]]; then
+      error 'import_preset %s 缺少 %s.yaml' "$_n" "$_n"
+      return 1
+    fi
+  done
+
+  for _n in $(sed 's/#.*//' *.schema.yaml |
+    grep -oE 'lua_(translator|filter|processor)@\*?[A-Za-z_]+' |
+    sed 's/.*@\**//' | sort -u); do
+    if [[ ! -f "lua/${_n}.lua" ]]; then
+      error '缺少 lua 组件 %s' "$_n"
+      return 1
+    fi
+  done
+}
+
+_base() { printf '%s/usr/share/rime-data' "$pkgdir"; }
+
+_install_src() {
+  local _f
+  for _f in "$@"; do
+    install -Dm644 "$_f" "$(_base)/${_f}"
+  done
+}
+
+_install_bins() {
+  local _n _f
+  for _n in "$@"; do
+    for _f in "build/${_n}".*; do
+      [[ -f $_f ]] || continue
+      [[ $_f == *.txt ]] && continue
+      install -Dm644 "$_f" "$(_base)/${_f}"
+    done
+  done
+}
+
+_suggestion() {
+  local _tmp
+  _tmp=$(mktemp)
+  sed '/-[[:space:]]*schema:/d' _default.yaml >"$_tmp"
+  sed -i "/^schema_list:/a \\  - schema: $1" "$_tmp"
+  install -Dm644 "$_tmp" "$(_base)/$1_suggestion.yaml"
+  rm -f "$_tmp"
+}
+
+_scheme_pkg() {
+  _install_src "$1.schema.yaml"
+  install -Dm644 "build/$1.prism.bin" "$(_base)/build/$1.prism.bin"
+  install -Dm644 "build/$1.schema.yaml" "$(_base)/build/$1.schema.yaml"
+  _suggestion "$1"
+}
+
+package_rime-mint-common-git() {
+  cd "$srcdir/rime-mint"
+  pkgdesc='Rime 配置：薄荷拼音 - 共享数据（词库、Lua 脚本、OpenCC）'
+  depends=('librime' 'lua')
+  conflicts=(
+    rime-emoji
+    rime-ice-git
+    rime-ice-pinyin-git
+    rime-ice-double-pinyin-git
+    rime-ice-double-pinyin-abc-git
+    rime-ice-double-pinyin-flypy-git
+    rime-ice-double-pinyin-jiajia-git
+    rime-ice-double-pinyin-mspy-git
+    rime-ice-double-pinyin-sogou-git
+    rime-ice-double-pinyin-ziguang-git
+    # lua/ 与 opencc/ 底下的同名脚本/词表
+    rime-moe-pinyin
+    rime-moe-pinyin-git
+    rime-wanxiang-data
+    rime-wanxiang-pro-data
+  )
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgbase}/LICENSE"
+
+  local _f
+  for _f in dicts/*; do
+    case ${_f##*/} in
+      wubi86_core.dict.yaml | wubi98_base.dict.yaml) continue ;;
+    esac
+    install -Dm644 "$_f" "$(_base)/dicts/${_f##*/}"
+  done
+  find lua -type f -exec install -Dm644 {} "$(_base)/{}" \;
+  find opencc -type f -exec install -Dm644 {} "$(_base)/{}" \;
+
+  _install_src \
+    rime_mint.dict.yaml \
+    melt_eng.dict.yaml melt_eng.schema.yaml \
+    radical_pinyin.dict.yaml radical_pinyin.schema.yaml \
+    rime_mint_symbols.yaml rime.lua
+  # squirrel.yaml / weasel.yaml 是 macOS 与 Windows 客户端的外观配置，Linux 无人读；
+  # ibus_rime.yaml 归 ibus-rime 包所有，装进来会文件冲突。
+  _install_bins melt_eng radical_pinyin
+  install -Dm644 build/rime_mint.table.bin "$(_base)/build/rime_mint.table.bin"
+  install -Dm644 build/rime_mint.reverse.bin "$(_base)/build/rime_mint.reverse.bin"
+}
+
+package_rime-mint-pinyin-git() {
+  cd "$srcdir/rime-mint"
+  pkgdesc='Rime 配置：薄荷拼音-全拼输入'
+  depends=('rime-mint-common-git' 'rime-mint-bhhw68-utxo-git')
+  install='rime-mint.install'
+  _scheme_pkg rime_mint
+}
+
+package_rime-mint-flypy-git() {
+  cd "$srcdir/rime-mint"
+  pkgdesc='Rime 配置：薄荷拼音-小鹤混输（全拼与小鹤双拼混打）'
+  depends=('rime-mint-common-git' 'rime-mint-bhhw68-utxo-git')
+  install='rime-mint.install'
+  _scheme_pkg rime_mint_flypy
+}
+
+package_rime-mint-double-pinyin-git() {
+  cd "$srcdir/rime-mint"
+  conflicts=('rime-double-pinyin')
+  pkgdesc='Rime 配置：自然码双拼-薄荷定制'
+  depends=('rime-mint-common-git')
+  install='rime-mint.install'
+  _scheme_pkg double_pinyin
+}
+
+package_rime-mint-double-pinyin-abc-git() {
+  cd "$srcdir/rime-mint"
+  conflicts=('rime-double-pinyin')
+  pkgdesc='Rime 配置：智能ABC双拼-薄荷定制'
+  depends=('rime-mint-common-git')
+  install='rime-mint.install'
+  _scheme_pkg double_pinyin_abc
+}
+
+package_rime-mint-double-pinyin-flypy-git() {
+  cd "$srcdir/rime-mint"
+  conflicts=('rime-double-pinyin')
+  pkgdesc='Rime 配置：小鹤双拼-薄荷定制'
+  depends=('rime-mint-common-git' 'rime-mint-bhhw68-utxo-git')
+  install='rime-mint.install'
+  _scheme_pkg double_pinyin_flypy
+  _install_src radical_pinyin_flypy.schema.yaml
+  install -Dm644 build/flypy_radical_pinyin.prism.bin \
+    "$(_base)/build/flypy_radical_pinyin.prism.bin"
+  install -Dm644 build/radical_pinyin_flypy.schema.yaml \
+    "$(_base)/build/radical_pinyin_flypy.schema.yaml"
+}
+
+package_rime-mint-double-pinyin-mspy-git() {
+  cd "$srcdir/rime-mint"
+  conflicts=('rime-double-pinyin')
+  pkgdesc='Rime 配置：微软双拼-薄荷定制'
+  depends=('rime-mint-common-git')
+  install='rime-mint.install'
+  _scheme_pkg double_pinyin_mspy
+}
+
+package_rime-mint-double-pinyin-sogou-git() {
+  cd "$srcdir/rime-mint"
+  pkgdesc='Rime 配置：搜狗双拼-薄荷定制'
+  depends=('rime-mint-common-git')
+  install='rime-mint.install'
+  _scheme_pkg double_pinyin_sogou
+}
+
+package_rime-mint-double-pinyin-ziguang-git() {
+  cd "$srcdir/rime-mint"
+  pkgdesc='Rime 配置：紫光双拼-薄荷定制'
+  depends=('rime-mint-common-git')
+  install='rime-mint.install'
+  _scheme_pkg double_pinyin_ziguang
+}
+
+package_rime-mint-wubi86-jidian-git() {
+  cd "$srcdir/rime-mint"
+  pkgdesc='Rime 配置：五笔86-极点五笔'
+  depends=('rime-mint-common-git')
+  install='rime-mint.install'
+  _install_src wubi86_jidian.schema.yaml wubi86_jidian.dict.yaml
+  install -Dm644 dicts/wubi86_core.dict.yaml "$(_base)/dicts/wubi86_core.dict.yaml"
+  _install_bins wubi86_jidian
+  _suggestion wubi86_jidian
+}
+
+package_rime-mint-bhhw68-utxo-git() {
+  cd "$srcdir/rime-mint"
+  pkgdesc='Rime 配置：五笔98-五笔小筑'
+  depends=('rime-mint-common-git')
+  install='rime-mint.install'
+  _install_src wubi98_mint.schema.yaml wubi98_mint.dict.yaml
+  install -Dm644 dicts/wubi98_base.dict.yaml "$(_base)/dicts/wubi98_base.dict.yaml"
+  _install_bins wubi98_mint
+  _suggestion wubi98_mint
+}
