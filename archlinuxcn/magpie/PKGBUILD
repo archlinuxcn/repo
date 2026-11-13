@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=magpie
-pkgver=0.1.4054
+pkgver=0.1.4095
 pkgrel=1
 pkgdesc='One place to pick every AI coding agent model'
 arch=('x86_64' 'aarch64')
@@ -13,7 +13,7 @@ conflicts=('magpie-bin' 'magpie-git')
 options=('!debug')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/yetone/magpie/archive/refs/tags/v$pkgver.tar.gz"
         no-auto-update.patch)
-sha256sums=('75c2ec7ae1e9dedd3e0ec0facbbe78f66b5d04e93ea07014125380204c21d970'
+sha256sums=('c28429aff7bcc151b67f48acf3b4541b05e5e01b99ab2fee513f916da9667634'
             'bc210da9950142064c1f360fbc263aff99bca67a6ee031c7de5afad0ddc37a06')
 
 prepare() {
