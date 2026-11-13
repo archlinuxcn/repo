@@ -3,14 +3,14 @@
 
 pkgname=python312
 pkgver=3.12.16
-pkgrel=1
+pkgrel=2
 _pybasever=3.12
 _pymajver=3
 pkgdesc="Major release 3.12 of the Python programming language"
 arch=('i686' 'x86_64' 'aarch64')
 license=('PSF-2.0')
 url="https://www.python.org/"
-depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl' 'zlib')
+depends=('bzip2' 'expat' 'gdbm' 'libffi' 'libnsl' 'libxcrypt' 'openssl-3' 'zlib')
 makedepends=('bluez-libs' 'mpdecimal' 'gdb' 'tk')
 optdepends=('sqlite' 'mpdecimal: for decimal' 'xz: for lzma' 'tk: for tkinter')
 source=(https://www.python.org/ftp/python/${pkgver}/Python-${pkgver}.tar.xz)
@@ -42,6 +42,7 @@ build() {
   export CFLAGS_NODIST="${CFLAGS_NODIST} -fno-semantic-interposition"
   export LDFLAGS_NODIST="${LDFLAGS_NODIST} -fno-semantic-interposition"
 
+  PKG_CONFIG_PATH=/usr/lib/openssl-3/pkgconfig \
   ./configure ax_cv_c_float_words_bigendian=no \
               --prefix=/usr \
               --enable-shared \
