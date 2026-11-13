@@ -10,7 +10,7 @@ _use_cuda=true
 
 pkgname='sunshine'
 pkgver=2026.914.233613
-pkgrel=3
+pkgrel=4
 pkgdesc="Self-hosted game stream host for Moonlight"
 arch=('x86_64' 'aarch64')
 url=https://app.lizardbyte.dev/Sunshine
@@ -89,12 +89,16 @@ source=(
   '2026.914.233613-dac66dfd-openssl-4.1-signature-length.patch'
   '2026.914.233613-6005-openssl-crypto-tests.patch'
   '2026.914.233613-357bd98c-update-metainfo-urls.patch'
+  'https://github.com/boostorg/boost/releases/download/boost-1.89.0/boost-1.89.0-cmake.tar.xz'
+  'boost-1.89.0-locale-cmake-4.5.patch'
 )
 sha256sums=(
   'SKIP'
   '0a31ccdf628f13fcdc30dac2283f565b3ab6df295b3c21c7a7514f2925549eb8'
   'b311d1aaab26503232bd3439ec2073cedb1d83db946ca1c8fe3e894a7729270d'
   '3208f0e7ec1a748e5f5e5a0994f62c5479aea6e94804983876313a0734efb98c'
+  '67acec02d0d118b5de9eb441f5fb707b3a1cdd884be00ca24b9a73c995511f74'
+  '16657a0edcf998137ce7afb532c451dc90fce5811478a0878639bdd1c207d85e'
 )
 
 # Options Handling
@@ -141,6 +145,11 @@ prepare() {
     # Backport the metainfo changes from:
     # https://github.com/SunshineStream/Sunshine/commit/357bd98cb1e203dbacbd831dbc6ddfac76d22ac0
     patch -Np1 -i "${srcdir}/2026.914.233613-357bd98c-update-metainfo-urls.patch"
+
+    # Backport Boost.Locale's CMake 4.5 source grouping fixes:
+    # https://github.com/boostorg/locale/commit/1d070743d98469809a92c5bb3fca4720bd2bd782
+    # https://github.com/boostorg/locale/commit/f51b58cd34a2a0e3a1ce974287ec0ede0fc9d1fe
+    patch -Np1 -d "${srcdir}/boost-1.89.0" -i "${srcdir}/boost-1.89.0-locale-cmake-4.5.patch"
 }
 
 build() {
@@ -163,6 +172,8 @@ build() {
       -D BUILD_DOCS=OFF
       -D BUILD_WERROR=ON
       -D CMAKE_INSTALL_PREFIX=/usr
+      # Use the Boost sources patched in prepare() instead of downloading another copy.
+      -D FETCHCONTENT_SOURCE_DIR_BOOST="${srcdir}/boost-1.89.0"
       -D SUNSHINE_EXECUTABLE_PATH=/usr/bin/sunshine
       -D SUNSHINE_ASSETS_DIR="share/sunshine"
       -D SUNSHINE_PUBLISHER_NAME='LizardByte'
