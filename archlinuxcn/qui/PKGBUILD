@@ -1,0 +1,107 @@
+# Maintainer: Dee.H.Y <dongfengweixiao at hotmail dot com>
+# Contributor: Mike Wilson <aur at mjwilson dot org>
+# Contributor: katt <magunasu.b97@gmail.com>
+
+pkgname=qui
+pkgver=1.35.0
+pkgrel=1
+pkgdesc="A fast, modern web interface for qBittorrent"
+arch=(x86_64)
+url=https://github.com/autobrr/qui
+license=(GPL-2.0-or-later)
+depends=(glibc)
+makedepends=(
+	git
+	go
+	nodejs
+	pnpm
+)
+source=(git+"${url}".git#tag=v"${pkgver}"
+	"${pkgname}.service"
+	"${pkgname}.sysusers"
+	"${pkgname}.tmpfiles"
+	"${url}/commit/72b20d064dbc016207a5688f2525ac028d6bc1f1.patch")
+sha256sums=('988379f4d40ef4fca760d1e7b9a836fb8ad0505849071ce23a6b5db8cd811ef1'
+            '8fe4067e0f010b376241587c63f2f69c4b4607ef6ca2ffbcc47ea4fbdf2a4623'
+            '149029ffcc078976e0ac6cd1f002b25221bb1561a1c979362dc27d9e6ad5dda3'
+            '3bacde8867fbb7b6d566666b635589579c1cc079cd23418284f43a7b37f0c41b'
+            '58e3fa13e0a4d15a8c55c9aaf9b6f80d4c12103a833e5ace9f35c40577d7f116')
+
+prepare() {
+	cd "${pkgname}"
+	mkdir -p build
+
+	# https://github.com/autobrr/qui/issues/3787
+	patch -Np1 -i ../72b20d064dbc016207a5688f2525ac028d6bc1f1.patch
+
+	# Retrieve Go dependencies
+	export GOPATH="${srcdir}"
+	go mod download -modcacherw
+
+	# Retrieve NodeJS dependencies
+	cd web
+	pnpm install
+}
+
+build() {
+	cd "${pkgname}"
+
+	# Ensure build date is reproducible
+	local _build_date="$(date --utc --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y-%m-%d)"
+
+	# Build frontend
+	pnpm --dir web run build
+
+	# Set Go flags
+	export CGO_CPPFLAGS="${CPPFLAGS}"
+	export CGO_CFLAGS="${CFLAGS}"
+	export CGO_CXXFLAGS="${CXXFLAGS}"
+	export CGO_LDFLAGS="${LDFLAGS}"
+	export _LDFLAGS="${_LDFLAGS} -compressdwarf=false"
+	export _LDFLAGS="${_LDFLAGS} -linkmode=external"
+	export _LDFLAGS="${_LDFLAGS} -X github.com/autobrr/qui/internal/buildinfo.Version=${pkgver}"
+	export _LDFLAGS="${_LDFLAGS} -X github.com/autobrr/qui/internal/buildinfo.Commit=$(git rev-parse --verify HEAD)"
+	export _LDFLAGS="${_LDFLAGS} -X github.com/autobrr/qui/internal/buildinfo.Date=${_build_date}"
+	export _LDFLAGS="${_LDFLAGS} -extldflags \"${LDFLAGS}\""
+	export GOPATH="${srcdir}"
+
+	# Build backend
+	go build \
+		-buildmode=pie \
+		-mod=readonly \
+		-modcacherw \
+		-trimpath \
+		-ldflags "${_LDFLAGS}" \
+		-o build \
+		./cmd/...
+
+	# Generate shell completions
+	"build/${pkgname}" completion bash >bash_completion
+	"build/${pkgname}" completion zsh >zsh_completion
+	"build/${pkgname}" completion fish >fish_completion
+}
+
+check() {
+	cd "${pkgname}"
+	go test ./...
+}
+
+package() {
+	# systemd files
+	install -Dm644 "${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+	install -Dm644 "${pkgname}.sysusers" "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
+	install -Dm644 "${pkgname}.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/${pkgname}.conf"
+
+	cd "${pkgname}"
+
+	# Binary
+	install -Dm755 "build/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+
+	# License
+	install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+	# Shell Completions
+	install -Dm644 bash_completion "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+	install -Dm644 zsh_completion "${pkgdir}/usr/share/zsh/site-functions/${pkgname}"
+	install -Dm644 fish_completion "${pkgdir}/usr/share/fish/vendor_completions.d/${pkgname}.fish"
+}
