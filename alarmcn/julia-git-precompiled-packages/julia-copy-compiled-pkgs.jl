@@ -13,7 +13,7 @@ struct PkgInfo
 end
 
 @static if has_edition
-    get_syntax_version(d) = Base.project_get_edition(d)
+    get_syntax_version(d) = something(Base.project_get_edition(d), (1, 13))
 elseif has_syntax_ver
     get_syntax_version(d) = Base.project_get_syntax_version(d)
 else
