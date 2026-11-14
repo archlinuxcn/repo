@@ -4,7 +4,7 @@
 
 pkgname=zotero-bin
 pkgver=10.0.8
-pkgrel=1
+pkgrel=2
 pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
 url="https://www.zotero.org/download"
@@ -12,6 +12,7 @@ license=('AGPL-3.0-or-later')
 depends=('alsa-lib' 'gtk3' 'nss')
 provides=('zotero')
 conflicts=('zotero')
+options=(!strip !debug)
 
 sha256sums=('f727308716741cf9746b92047b890c3f76c4b8b010bc5ed21b5cdb1be85e21e9')
 sha256sums_x86_64=('a704cfd49f5de65507910e0cada4acf72097572201b3576583f0a92a32c1032b')
