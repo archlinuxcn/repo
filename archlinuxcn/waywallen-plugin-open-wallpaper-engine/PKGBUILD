@@ -1,0 +1,99 @@
+# Maintainer: nlsdt <nlsdt@archlinuxcn.org>
+
+pkgname=waywallen-plugin-open-wallpaper-engine
+pkgver=0.3.3
+pkgrel=1
+pkgdesc='Wallpaper Engine scene/web renderer plugin for waywallen'
+arch=(x86_64)
+url='https://github.com/waywallen/open-wallpaper-engine'
+license=('GPL-2.0-only' 'Apache-2.0')
+
+depends=(
+    cef
+    ffmpeg
+    fontconfig
+    freetype2
+    glfw
+    glslang
+    libglvnd
+    lz4
+    quickjs-ng
+    vulkan-icd-loader
+    wayland
+    'waywallen>=0.5.0'
+)
+
+makedepends=(
+    clang
+    cmake
+    eigen
+    git
+    lito
+    lld
+    llvm
+    ninja
+    vulkan-headers
+)
+
+options=(!lto)
+
+provides=("open-wallpaper-engine=${pkgver}")
+conflicts=(open-wallpaper-engine)
+
+source=(
+    "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+    '0001-lito-Use-system-cef.patch'
+    '0002-zygote-frames-no-stack-protector.patch'
+)
+sha256sums=(
+    '543ae3d387fa18fec43ab73791f6254e0484ee693ce3738afbbe1ccb8993c913'
+    '3629af4ae0b17d055fa869f3613f9dc975e4c5e084fa9fc0e993f2f27d812212'
+    '8c64bfc74ffc9b07d34de1fb894a5e02806cced6a63f2c01f0076d9b0e77ca64'
+)
+
+prepare() {
+    cd "${srcdir}/open-wallpaper-engine-${pkgver}"
+
+    patch -Np1 -i ../0001-lito-Use-system-cef.patch
+    # CEF zygote 在 fork 前重设栈 canary，跨 fork 的帧不能带 canary。
+    patch -Np1 -i ../0002-zygote-frames-no-stack-protector.patch
+
+    # 依赖由 lito.lock 固定，仅 C++ 库使用系统包。
+    mkdir -p .lito
+    cat > .lito/config.toml <<EOF
+[tools.cmake.overrides.Eigen3]
+source = "installed"
+
+[tools.cmake.overrides.glslang]
+source = "installed"
+
+[tools.cmake.overrides.qjs]
+source = "installed"
+
+[tools.cmake.overrides.CEF]
+source = "installed"
+EOF
+
+    lito fetch --all-features --locked
+}
+
+build() {
+    cd "${srcdir}/open-wallpaper-engine-${pkgver}"
+
+    # 见 llvm/llvm-project#121709
+    CXXFLAGS="${CXXFLAGS//-Wp,-D_FORTIFY_SOURCE=3/}"
+    CXXFLAGS+=" -Wno-error=undefined-var-template -Wno-error=unused-private-field"
+
+    lito build --profile plain --use-env-flags --locked \
+        --package owe-waywallen-scene-renderer \
+        --package owe-waywallen-web-renderer
+}
+
+package() {
+    cd "${srcdir}/open-wallpaper-engine-${pkgver}"
+
+    lito install --profile plain --no-build --prefix="${pkgdir}/usr" \
+        --package owe-waywallen-plugin
+
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

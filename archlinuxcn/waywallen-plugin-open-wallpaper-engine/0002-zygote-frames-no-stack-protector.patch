@@ -1,0 +1,42 @@
+--- a/src/Web/BrowserHost.cpp	2026-11-15 01:11:01.003916609 +0800
++++ b/src/Web/BrowserHost.cpp	2026-11-15 01:36:03.749069217 +0800
+@@ -167,7 +167,7 @@
+     if (! Shutdown()) rstd::panic("BrowserHost destroyed before browser close completed");
+ }
+ 
+-int BrowserHost::RunOrExitIfHelper(int argc, char** argv) {
++[[gnu::no_stack_protector]] int BrowserHost::RunOrExitIfHelper(int argc, char** argv) {
+     impl_->saved_argc = argc;
+     impl_->saved_argv = argv;
+ #if __is_target_os(macos)
+--- a/src/Web/BrowserHost.cppm	2026-11-15 01:11:00.995625606 +0800
++++ b/src/Web/BrowserHost.cppm	2026-11-15 01:36:03.748856587 +0800
+@@ -43,7 +43,7 @@
+     BrowserHost(const BrowserHost&)            = delete;
+     BrowserHost& operator=(const BrowserHost&) = delete;
+ 
+-    int  RunOrExitIfHelper(int argc, char** argv);
++    [[gnu::no_stack_protector]] int RunOrExitIfHelper(int argc, char** argv);
+     bool Init(const InitOptions& opts);
+ 
+     void SetAcceleratedPaintCallback(Option<AcceleratedPaintCallback> cb);
+--- a/waywallen/WebRenderer/web_entry.cpp	2026-11-15 01:11:01.017391358 +0800
++++ b/waywallen/WebRenderer/web_entry.cpp	2026-11-15 01:36:03.749531973 +0800
+@@ -519,7 +519,7 @@
+ 
+ namespace waywallen
+ {
+-int run(int argc, char** argv) {
++[[gnu::no_stack_protector]] int run(int argc, char** argv) {
+     // Keep the profile leased through BrowserHost destruction and CEF shutdown.
+     Option<weweb::CefProfileLease> profile;
+     // CRITICAL: CEF re-execs this binary as helper procs. Must run
+--- a/waywallen/WebRenderer/web_entry.cppm	2026-11-15 01:11:01.010481114 +0800
++++ b/waywallen/WebRenderer/web_entry.cppm	2026-11-15 01:36:03.749217611 +0800
+@@ -2,5 +2,5 @@
+ 
+ export namespace waywallen
+ {
+-int run(int argc, char** argv);
++[[gnu::no_stack_protector]] int run(int argc, char** argv);
+ }
