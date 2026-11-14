@@ -15,6 +15,7 @@ depends=(
   'syntax-highlighting'
   'kpty'
   'kparts'
+  'kio'
   'qt6-declarative'
   'qt6-svg'
   'qt6-webengine'
@@ -23,9 +24,12 @@ makedepends=(
   'cmake'
   'extra-cmake-modules'
   'git'
+  'fuse3'
 )
 optdepends=(
   'claude-agent-acp: Required for Claude Code functionality'
+  'fuse3: Remote folders (kate-remote-fs)'
+  'sshfs: Remote folders over ssh (kate-remote-fs)'
 )
 source=("git+https://github.com/yuyichao/kate-code.git")
 sha256sums=('SKIP')
