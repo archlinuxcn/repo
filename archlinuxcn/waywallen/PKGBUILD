@@ -1,0 +1,98 @@
+# Maintainer: nlsdt <nlsdt@archlinuxcn.org>
+
+
+pkgname=waywallen
+pkgver=0.6.0
+pkgrel=1
+pkgdesc='Wallpaper manager for Linux desktops'
+arch=(x86_64)
+url='https://github.com/waywallen/waywallen'
+license=('MIT' 'Apache-2.0')
+
+depends=(
+    ffmpeg
+    hicolor-icon-theme
+    libxml2
+    mesa
+    openssl
+    qmlmaterial
+    qt6-base
+    qt6-declarative
+    qt6-grpc
+    qt6-svg
+    qt6-wayland
+    qt6-websockets
+)
+
+makedepends=(
+    clang
+    cmake
+    git
+    git-lfs
+    'lito>=0.8.5'
+    lld
+    llvm
+    ninja
+    qt6-shadertools
+    qt6-tools
+    rust
+    vulkan-headers
+)
+
+optdepends=(
+    'vulkan-driver: Vulkan driver for hardware video decoding'
+    'waywallen-display: desktop integration for KDE, GNOME and layer-shell compositors'
+    'waywallen-plugin-open-wallpaper-engine: Wallpaper Engine scene/web wallpaper support'
+)
+
+options=(!lto)
+
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('2c27e42cd0e5715cb9d285dcaa4b890359bd99a9c091b7d774d476c0ce1db44d')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+
+    # 固定 commit 对应 qmlmaterial 0.7.0。
+    mkdir -p .lito
+    cat > .lito/config.toml <<'EOF'
+[tools.cmake.overrides.qml_material]
+source = "installed"
+EOF
+
+    lito fetch --locked --no-default-features
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+
+    # 见 llvm/llvm-project#121709
+    CXXFLAGS="${CXXFLAGS//-Wp,-D_FORTIFY_SOURCE=3/}"
+
+    lito --use-env-flags build \
+        --profile plain \
+        --locked \
+        --no-default-features
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+
+    lito install \
+        --profile plain \
+        --prefix "${pkgdir}/usr" \
+        --no-build \
+        --locked \
+        --no-default-features
+
+    install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+    cd "${pkgdir}/usr/share/waywallen/plugins/org.waywallen.sketchfab/helpers"
+    install -Dm755 waywallen-sketchfab-prepare \
+        "${pkgdir}/usr/lib/waywallen/waywallen-sketchfab-prepare"
+    cat > waywallen-sketchfab-prepare <<'EOF'
+#!/bin/sh
+exec /usr/lib/waywallen/waywallen-sketchfab-prepare "${@}"
+EOF
+    chmod 755 waywallen-sketchfab-prepare
+}
