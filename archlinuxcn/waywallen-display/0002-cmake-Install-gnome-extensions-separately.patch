@@ -1,0 +1,46 @@
+From 93dfd41a0942a6f799b07774030be9ce8ee2acb7 Mon Sep 17 00:00:00 2001
+From: Zhang Hua <zhanghua.00@qq.com>
+Date: Wed, 5 Aug 2026 11:44:38 +0800
+Subject: [PATCH 2/2] cmake: Install gnome extensions separately
+
+---
+ extensions/gnome/CMakeLists.txt | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+diff --git a/extensions/gnome/CMakeLists.txt b/extensions/gnome/CMakeLists.txt
+index 3bdd602..879b181 100644
+--- a/extensions/gnome/CMakeLists.txt
++++ b/extensions/gnome/CMakeLists.txt
+@@ -41,8 +41,6 @@ foreach(_lang IN LISTS _ww_gnome_languages)
+         DESTINATION "locale/${_lang}/LC_MESSAGES"
+         COMPONENT gnome_extension
+         EXCLUDE_FROM_ALL)
+-    install(FILES "${_mo}"
+-        DESTINATION "${CMAKE_INSTALL_DATADIR}/gnome-shell/extensions/${WW_GNOME_UUID}/locale/${_lang}/LC_MESSAGES")
+     install(FILES "${_mo}"
+         DESTINATION "${CMAKE_INSTALL_LOCALEDIR}/${_lang}/LC_MESSAGES")
+ endforeach()
+@@ -127,11 +125,15 @@ install(FILES
+ # --- System install (`cmake --install`, dev convenience) ------------------
+ 
+ install(FILES extension/schemas/${WW_GNOME_SCHEMA_ID}.gschema.xml
+-    DESTINATION ${CMAKE_INSTALL_DATADIR}/glib-2.0/schemas)
++    DESTINATION ${CMAKE_INSTALL_DATADIR}/glib-2.0/schemas
++    COMPONENT gnome_extension_packaging
++    EXCLUDE_FROM_ALL)
+ 
+ install(FILES ${_ext_files}
+-    DESTINATION ${CMAKE_INSTALL_DATADIR}/gnome-shell/extensions/${WW_GNOME_UUID})
+-install(FILES extension/schemas/${WW_GNOME_SCHEMA_ID}.gschema.xml
+-    DESTINATION ${CMAKE_INSTALL_DATADIR}/gnome-shell/extensions/${WW_GNOME_UUID}/schemas)
++    DESTINATION ${CMAKE_INSTALL_DATADIR}/gnome-shell/extensions/${WW_GNOME_UUID}
++    COMPONENT gnome_extension_packaging
++    EXCLUDE_FROM_ALL)
+ install(PROGRAMS renderer/renderer.js
+-    DESTINATION ${CMAKE_INSTALL_DATADIR}/gnome-shell/extensions/${WW_GNOME_UUID}/renderer)
++    DESTINATION ${CMAKE_INSTALL_DATADIR}/gnome-shell/extensions/${WW_GNOME_UUID}/renderer
++    COMPONENT gnome_extension_packaging
++    EXCLUDE_FROM_ALL)
+-- 
+2.55.0
+

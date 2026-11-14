@@ -1,0 +1,113 @@
+# Maintainer: nlsdt <nlsdt@archlinuxcn.org>
+
+
+pkgbase=waywallen-display
+pkgname=(waywallen-display plasma-wallpaper-waywallen gnome-shell-extension-waywallen)
+pkgver=0.4.6
+pkgrel=1
+arch=(x86_64)
+url='https://github.com/waywallen/waywallen-display'
+license=(MIT)
+
+depends=(libglvnd libxcb wayland)
+makedepends=(
+    cmake
+    gettext
+    glib2
+    glslang
+    gobject-introspection
+    gtk4
+    kirigami
+    libplasma
+    ninja
+    plasma-workspace
+    qt6-base
+    qt6-declarative
+    rust
+    vulkan-headers
+    wayland-protocols
+)
+
+options=(!lto)
+
+source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
+        '0001-cmake-Install-kde-wallpaper-to-correct-path.patch'
+        '0002-cmake-Install-gnome-extensions-separately.patch')
+sha256sums=('dbe2d6155edc662bb70c9d1d807125e535378345bcf498d88237293382e170ed'
+            'd05552ecf884b63e8ecdb59814ba1706f699ae2a8cb0497e34bb90759d3f91a4'
+            '5593469af684d71870cc6d41678ac2201879617f0538cc5c947fc990cb057c30')
+
+prepare() {
+    cd "${pkgbase}-${pkgver}"
+    patch -Np1 -i ../0001-cmake-Install-kde-wallpaper-to-correct-path.patch
+    patch -Np1 -i ../0002-cmake-Install-gnome-extensions-separately.patch
+    cargo fetch --locked
+}
+
+build() {
+    cd "${pkgbase}-${pkgver}"
+
+    cmake -B build -S . -G Ninja \
+        -DCMAKE_BUILD_TYPE=None \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWAYWALLEN_DISPLAY_PLUGIN_QML=ON \
+        -DWAYWALLEN_DISPLAY_PLUGIN_GOBJECT=ON \
+        -DWAYWALLEN_DISPLAY_PLUGIN_GNOME=ON
+    cmake --build build
+
+    cargo build --frozen --release --features x11 \
+        --package waywallen-display \
+        --bin waywallen-layer-shell \
+        --bin waywallen-x11
+}
+
+package_waywallen-display() {
+    pkgdesc='Desktop integration for the waywallen wallpaper daemon'
+    optdepends=(
+        'vulkan-icd-loader: Vulkan backend'
+        'qt6-base: QML plugin'
+        'qt6-declarative: QML plugin'
+        'gtk4: GObject plugin'
+        'graphene: GObject plugin'
+    )
+
+    DESTDIR="${pkgdir}" cmake --install "${srcdir}/${pkgbase}-${pkgver}/build"
+    install -Dm755 "${srcdir}/${pkgbase}-${pkgver}/target/release/waywallen-layer-shell" \
+        "${pkgdir}/usr/bin/waywallen-layer-shell"
+    install -Dm755 "${srcdir}/${pkgbase}-${pkgver}/target/release/waywallen-x11" \
+        "${pkgdir}/usr/bin/waywallen-x11"
+    install -Dm644 "${srcdir}/${pkgbase}-${pkgver}/LICENSE" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_plasma-wallpaper-waywallen() {
+    pkgdesc='Plasma 6 wallpaper plugin for waywallen'
+    arch=(any)
+    depends=(
+        waywallen
+        waywallen-display
+        qt6-base
+        qt6-declarative
+        libplasma
+        kirigami
+        plasma-workspace
+        kwindowsystem
+    )
+
+    DESTDIR="${pkgdir}" cmake --install "${srcdir}/${pkgbase}-${pkgver}/build" \
+        --component kde_extension
+    install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
+    ln -srf "${pkgdir}/usr/share/plasma/wallpapers/org.waywallen.kde/LICENSE" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/"
+}
+
+package_gnome-shell-extension-waywallen() {
+    pkgdesc='GNOME Shell extension for waywallen'
+    arch=(any)
+    depends=(waywallen waywallen-display gtk4 graphene dconf gnome-shell gjs)
+
+    DESTDIR="${pkgdir}" cmake --install "${srcdir}/${pkgbase}-${pkgver}/build" \
+        --component gnome_extension_packaging
+    install -Dm644 "${srcdir}/${pkgbase}-${pkgver}/LICENSE" \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
