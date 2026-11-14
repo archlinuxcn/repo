@@ -1,0 +1,44 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Tom Gundersen <teg@jklm.no>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: ice-man <icemanf@gmail.com>
+# Contributor: sergeantspoon <sergeantspoon@archlinux.us>
+
+pkgname=libssh-fix
+pkgver=0.12.2
+pkgrel=0
+pkgdesc='Library for accessing ssh client services through C libraries'
+url='https://www.libssh.org/'
+license=('LGPL-2.1-or-later')
+arch=(aarch64 x86_64)
+depends=(glibc
+         openssl
+         zlib)
+makedepends=(cmake
+             openssh
+             python)
+provides=(libssh.so)
+source=("https://www.libssh.org/files/${pkgver%.*}/libssh-${pkgver}.tar.xz"
+        0001-Skip-known_hosts-line-with-unknown-algorithms.patch)
+sha256sums=('49560f677d96e3706a904ac2de1116e25f3680937d51e5c92198fcba4a1c1e9f'
+            'SKIP')
+
+prepare() {
+  cd libssh-$pkgver
+
+  patch -Np1 --no-backup-if-mismatch < "../0001-Skip-known_hosts-line-with-unknown-algorithms.patch"
+}
+
+build() {
+  cmake \
+    -B build \
+    -S libssh-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DWITH_GSSAPI=OFF \
+    -DUNIT_TESTING=OFF
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}

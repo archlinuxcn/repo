@@ -1,0 +1,28 @@
+From 4c05be90d0385da7f3fa4cdf79fd3d43f89f0b1e Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Fri, 13 Nov 2026 23:13:29 -0500
+Subject: [PATCH 1/2] Skip known_hosts line with unknown algorithms
+
+Algorithms such as ssh-mldsa44-ed25519 are supported in openssh and may appear in known_hosts. While adding proper support might take some time/discussion, it should be safe to skip such lines to allow a later line to match. Currently, a line with a unknown algorithm shut down the parsing for the whole reset of the file..
+
+Signed-off-by: Yichao Yu <yyc1992@gmail.com>
+---
+ src/knownhosts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/knownhosts.c b/src/knownhosts.c
+index 31e79fb4..44d07927 100644
+--- a/src/knownhosts.c
++++ b/src/knownhosts.c
+@@ -784,7 +784,7 @@ int ssh_known_hosts_parse_line(const char *hostname,
+     key_type = ssh_key_type_from_name(p);
+     if (key_type == SSH_KEYTYPE_UNKNOWN) {
+         SSH_LOG(SSH_LOG_TRACE, "key type '%s' unknown!", p);
+-        rc = SSH_ERROR;
++        rc = SSH_AGAIN;
+         goto out;
+     }
+ 
+-- 
+2.56.0
+

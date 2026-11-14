@@ -1,0 +1,13 @@
+maintainers:
+  - github: yuyichao
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: git
+    git: https://gitlab.com/libssh/libssh-mirror
+    include_regex: libssh-.*
+    prefix: libssh-
+  - alias: libcrypto
+  - source: manual
+    manual: 1
