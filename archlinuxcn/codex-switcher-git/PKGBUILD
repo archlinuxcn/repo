@@ -4,7 +4,7 @@
 pkgname=codex-switcher-git
 _pkgname=codex-switcher
 pkgver=0.2.20.r14.g45ada5e
-pkgrel=1
+pkgrel=2
 pkgdesc='A multi-account manager for OpenAI Codex CLI'
 arch=('x86_64')
 url='https://github.com/Lampese/codex-switcher'
@@ -25,6 +25,9 @@ pkgver() {
 
 prepare() {
     cd "$_pkgname"
+    # The upstream lockfile predates support for Arch's OpenSSL 4.
+    cargo update --manifest-path src-tauri/Cargo.toml -p openssl-sys --precise 0.9.118
+    cargo update --manifest-path src-tauri/Cargo.toml -p openssl --precise 0.10.82
     export PNPM_HOME="$srcdir/.pnpm-store"
     pnpm install --frozen-lockfile
 }
