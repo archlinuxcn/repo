@@ -2,7 +2,7 @@
 
 pkgname=waywallen-plugin-open-wallpaper-engine
 pkgver=0.3.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Wallpaper Engine scene/web renderer plugin for waywallen'
 arch=(x86_64)
 url='https://github.com/waywallen/open-wallpaper-engine'
@@ -45,11 +45,9 @@ source=(
     '0001-lito-Use-system-cef.patch'
     '0002-zygote-frames-no-stack-protector.patch'
 )
-sha256sums=(
-    '543ae3d387fa18fec43ab73791f6254e0484ee693ce3738afbbe1ccb8993c913'
-    '3629af4ae0b17d055fa869f3613f9dc975e4c5e084fa9fc0e993f2f27d812212'
-    '8c64bfc74ffc9b07d34de1fb894a5e02806cced6a63f2c01f0076d9b0e77ca64'
-)
+sha256sums=('543ae3d387fa18fec43ab73791f6254e0484ee693ce3738afbbe1ccb8993c913'
+            '3629af4ae0b17d055fa869f3613f9dc975e4c5e084fa9fc0e993f2f27d812212'
+            '8c64bfc74ffc9b07d34de1fb894a5e02806cced6a63f2c01f0076d9b0e77ca64')
 
 prepare() {
     cd "${srcdir}/open-wallpaper-engine-${pkgver}"
