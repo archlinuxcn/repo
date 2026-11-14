@@ -6,7 +6,7 @@
 
 pkgname=libssh-fix
 pkgver=0.12.2
-pkgrel=0
+pkgrel=1
 pkgdesc='Library for accessing ssh client services through C libraries'
 url='https://www.libssh.org/'
 license=('LGPL-2.1-or-later')
@@ -17,7 +17,8 @@ depends=(glibc
 makedepends=(cmake
              openssh
              python)
-provides=(libssh.so)
+provides=(libssh.so libssh)
+conflicts=(libssh)
 source=("https://www.libssh.org/files/${pkgver%.*}/libssh-${pkgver}.tar.xz"
         0001-Skip-known_hosts-line-with-unknown-algorithms.patch)
 sha256sums=('49560f677d96e3706a904ac2de1116e25f3680937d51e5c92198fcba4a1c1e9f'
