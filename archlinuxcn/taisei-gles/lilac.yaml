@@ -7,8 +7,11 @@ post_build_script: git_pkgbuild_commit()
 
 repo_depends:
   - cglm
+
 update_on:
   - source: github
     github: taisei-project/taisei
     use_latest_release: true
     prefix: v
+
+  - alias: libcrypto
