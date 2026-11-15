@@ -1,72 +1,112 @@
-# Maintainer: c2h5oh
+# Maintainer: lod <aur@cyber-anlage.de>
 
-pkgname="orca-slicer"
-pkgver=2.3.2
+pkgname=orca-slicer
+pkgver=2.5.00
 pkgrel=1
-pkgdesc="Orca Slicer is a fork of Bambu Studio. It was previously known as BambuStudio-SoftFever"
+pkgdesc="G-code generator for 3D printers (Bambu, Prusa, Voron, VzBot, RatRig, Creality, etc.)"
 arch=('x86_64')
-url="https://github.com/SoftFever/OrcaSlicer"
-license=('AGPL3')
-depends=('bash' 'cairo' 'dbus' 'expat' 'fontconfig' 'freetype2' 'gcc-libs' 'gdk-pixbuf2' 'glib2' 'glibc' 'gst-plugins-base-libs' 'gstreamer' 'gtk3' 'hicolor-icon-theme' 'libglvnd' 'libjpeg-turbo' 'libspnav' 'libx11' 'mesa' 'mesa-utils' 'pango' 'python' 'wayland' 'webkit2gtk-4.1' 'zlib' 'zstd')
-makedepends=('cmake' 'extra-cmake-modules' 'git' 'glew' 'libigl' 'm4' 'ninja' 'pkgconf' 'wayland-protocols' 'wget')
+url="https://github.com/OrcaSlicer/OrcaSlicer"
+license=('AGPL-3.0-only')
+depends=('assimp' 'bash' 'cairo' 'curl' 'dbus' 'draco' 'expat' 'ffmpeg' 'fontconfig' 'gdk-pixbuf2' 'glib2' 'glibc' 'glfw' 'gmp' 'gspell' 
+         'gst-plugins-bad-libs' 'gstreamer' 'gtk3' 'hicolor-icon-theme' 'icu' 'imath' 'libdatachannel' 'libgcc' 'libglvnd' 'libjpeg-turbo'
+         'libnoise' 'libpng' 'libspnav' 'libstdc++' 'libx11' 'libxkbcommon' 'mesa' 'mesa-utils' 'mpfr' 'nlopt' 'opencascade' 'opencv'
+         'onetbb' 'openssl' 'openvdb' 'pango' 'python' 'python-matplotlib' 'python-numpy' 'python-shapely' 'python-trimesh' 'qhull' 'uv'
+         'wayland' 'webkit2gtk-4.1' 'zlib')
+makedepends=('cereal' 'cgal' 'cmake' 'eigen' 'extra-cmake-modules' 'git' 'glew' 'libigl' 'libmspack' 'm4' 'ninja'
+             'opencsg' 'pkgconf' 'superlu' 'wayland-protocols')
 optdepends=('nvidia-utils: for querying driver version')
 options=('!debug' '!emptydirs')
-provides=("orca-slicer")
-conflicts=("orca-slicer")
-source=(
-  "https://github.com/OrcaSlicer/OrcaSlicer/archive/refs/tags/v${pkgver}.tar.gz"
-  "orca-slicer.sh"
-  )
-sha256sums=('2c7eea7b1e3757011f2c9520dc1712d789b9182b5c276aba271bf814172b0a52'
-            'c1ca1fadba5f5c088af80f076f911c74fa594e8200cee7be65e4330f43909e7d')
+provides=('orca-slicer')
+conflicts=('orca-slicer')
+source=($pkgname::git+https://github.com/OrcaSlicer/OrcaSlicer.git#tag=v$pkgver
+        orca-slicer-wrapper.sh
+        fixes_boost.patch
+        fixes_igl.patch
+        fixes_libnoise.patch
+        fixes_opencv.patch
+        fixes_python.patch
+        fixes_qhull.patch
+        remove_bundled_libs_from_CMakeLists.patch)
+b2sums=('73d9c483472a85d7a3e621730e329e4142fc472981467f8072cd9bf02d002308270aa0018aa22313d54106441c35577d2edef4b6b4f3f84cb10a5ff4dec924b5'
+        '25eb7be624db4074fc5840a6904187f9bbf3f8ed96b14430f7fdc8bcc9ebb0ce9ad033fbe1fde51a905baf8f87693ebc33b4c82a9200f561e7b593e5bffab02f'
+        'e1fd371a17b0e37e9bff77dffa5750ae38f4dcbf215b803564a3ce590bb6782001b045377e268461102dc73fa7a210413cc8db7df05267758676d67e64cba45e'
+        'd6837b59b4e209eac9042644d5ed55cf63080e4662e3314b9fc21e9cf8484f2a86ee52690547c51f09935aecb8aab370939dc6d15ab7b50c871a3a17bfe66ebb'
+        'fe9e3e8d55480f6b1b6644e66b027efa48d8f04da5657f10d64b44f4fb443efe7d349de37e10da0f78d592eb9dd613785a8de7778931ac3ed54ea7748496266f'
+        '4744568a2f2d8225360177f8acb4b5aebf2cb4fd4cbd31d78dea545fe72fbd647821d2366b159ba49650b44b605bc223bbf95f81777f912366d2fe1cbfc5a849'
+        'ce8a8d4542b31054f6664595cafaecf9ebb4f5470c3639eaa50cb2c50ffc39639860fe16be833df4ed6c4565b294e6601ca7aaf747ac97995e9aac35fa8440e7'
+        '029f30d3328ead1ed8784f11529b0132739b74712400de88200e6f1e42de6f1802b45ba6cdb37dbed60baa0a5440e3c8f5ec459006bf3fc8d54974283bcec9d2'
+        '793fc3cbf42d3ce14d5036a5ba885c513aca49679f1591b9386f92ad7c5825c5632dbaba51e598fd161160f24f6b5747b78539227048779208dd85da7f27f474')
 
+prepare() {
+  cd $pkgname
+  
+  # list of bundled packages to drop
+  for _pkg in Assimp Blosc Boost Cereal CGAL CURL DataChannel Draco Eigen EXPAT FFMPEG FREETYPE GLFW GLEW GMP JPEG libnoise MPFR NLopt OpenCSG OpenCV OpenEXR OpenSSL OpenVDB PNG python3 Qhull TBB ZLIB; do
+    sed -i -e "s/dep_${_pkg}/\"\"/" -e "s|include(${_pkg}/${_pkg}.cmake)||" deps/CMakeLists.txt
+  done
+
+  patch -Np1 -i "${srcdir}"/fixes_boost.patch
+  patch -Np1 -i "${srcdir}"/fixes_igl.patch
+  patch -Np1 -i "${srcdir}"/fixes_libnoise.patch
+  patch -Np1 -i "${srcdir}"/fixes_opencv.patch
+  patch -Np1 -i "${srcdir}"/fixes_python.patch
+  patch -Np1 -i "${srcdir}"/fixes_qhull.patch
+  patch -Np1 -i "${srcdir}"/remove_bundled_libs_from_CMakeLists.patch
+}
 
 build() {
-  # cmake 4.x compatibility workaround
+  cd $pkgname
   export CMAKE_POLICY_VERSION_MINIMUM=3.5
 
-  cd "$srcdir/OrcaSlicer-${pkgver}"
-
-  # deps
-  cmake -S deps \
-    -B deps/build \
-    -G Ninja \
-    -DDEP_WX_GTK3=ON \
-    -DDESTDIR="$PWD/deps/build/destdir" \
-    -DDEP_DOWNLOAD_DIR="$PWD/deps/DL_CACHE" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCOLORED_OUTPUT=ON
-  ninja -C deps/build
+  _jobs=$(nproc)
+  if [[ $MAKEFLAGS =~ -j([0-9]+) ]]; then
+    _jobs="${BASH_REMATCH[1]}"
+  fi
+  _mem=$(awk '/MemAvailable/ { printf "%.0f\n", $2 / 1024 / 1024 }' /proc/meminfo)
+  if (( _jobs > _mem )); then
+    _jobs=$_mem
+  fi
+  
+  export CMAKE_BUILD_PARALLEL_LEVEL="$_jobs"
 
   cmake \
+    -G Ninja \
+    -S deps \
+    -B deps/build \
+    -DDESTDIR="$PWD/deps/build/destdir" \
+    -DDEP_DOWNLOAD_DIR="$PWD/deps/DL_CACHE" \
+    -DDEP_WX_GTK3=ON
+  ninja -C deps/build -j1
+
+  cmake \
+    -G Ninja \
     -S . \
     -B build \
-    -G Ninja \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_FULL_DATAROOTDIR=/usr/share/ \
     -DCMAKE_PREFIX_PATH="$PWD/deps/build/destdir/usr/local" \
+    -Dlibigl_DIR=/usr/lib/cmake/igl \
+    -DEigen3_DIR=/usr/lib/cmake/eigen3 \
+    -DOPENVDB_FIND_MODULE_PATH=/usr/lib/cmake/OpenVDB \
+    -DOpenVDB_openvdb_LIBRARY=/usr/lib/libopenvdb.so \
+    -DOpenVDB_INCLUDE_DIR=/usr/include \
+    -DORCA_BUNDLED_UV_EXECUTABLE=/usr/bin/uv \
     -DSLIC3R_STATIC=1 \
     -DORCA_TOOLS=1 \
     -DSLIC3R_FHS=1 \
-    -DSLIC3R_GTK=3 \
-    -DBBL_RELEASE_TO_PUBLIC=1 \
-    -DBBL_INTERNAL_TESTING=0 \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCOLORED_OUTPUT=ON
-  ninja -C build
+    -DSLIC3R_GTK=3
+  ninja -C build -j"$_jobs"
 
   # add localizations
-  ./scripts//run_gettext.sh --full
+  ./scripts/run_gettext.sh --full
 }
 
 package() {
-  cd "$srcdir/OrcaSlicer-${pkgver}"
+  cd $pkgname
   DESTDIR="$pkgdir" ninja -C build install
   install -d "$pkgdir/usr/lib/OrcaSlicer/"
   mv "$pkgdir/usr/bin/orca-slicer" "$pkgdir/usr/lib/OrcaSlicer/"
-  install -Dm755 ../orca-slicer.sh "$pkgdir/usr/bin/orca-slicer"
-  #install -Dm644 doc/*.md -t "$pkgdir/usr/share/doc/OrcaSlicer/"
+  install -Dm755 ../orca-slicer-wrapper.sh "$pkgdir/usr/bin/orca-slicer"
   install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/OrcaSlicer/LICENSE"
   rm -rf "$pkgdir/usr/LICENSE.txt"
 }
-

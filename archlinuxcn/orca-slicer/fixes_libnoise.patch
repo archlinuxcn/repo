@@ -1,0 +1,40 @@
+diff --git a/cmake/modules/Findlibnoise.cmake b/cmake/modules/Findlibnoise.cmake
+index 74e3a5e..5f964d4 100644
+--- a/cmake/modules/Findlibnoise.cmake
++++ b/cmake/modules/Findlibnoise.cmake
+@@ -1,6 +1,6 @@
+-find_path(LIBNOISE_INCLUDE_DIR libnoise/noise.h)
+-find_library(LIBNOISE_LIBRARY_RELEASE NAMES libnoise libnoise_static liblibnoise_static)
+-find_library(LIBNOISE_LIBRARY_DEBUG NAMES libnoised libnoise_staticd liblibnoise_staticd)
++find_path(LIBNOISE_INCLUDE_DIR noise/noise.h)
++find_library(LIBNOISE_LIBRARY_RELEASE NAMES noise libnoise_static liblibnoise_static)
++find_library(LIBNOISE_LIBRARY_DEBUG NAMES noised libnoise_staticd liblibnoise_staticd)
+ 
+ set(libnoise_LIB_FOUND FALSE)
+ if (LIBNOISE_LIBRARY_RELEASE OR LIBNOISE_LIBRARY_DEBUG)
+@@ -14,7 +14,7 @@ find_package_handle_standard_args(libnoise DEFAULT_MSG
+ )
+ 
+ if(libnoise_FOUND)
+-    add_library(noise::noise STATIC IMPORTED)
++    add_library(noise::noise SHARED IMPORTED)
+ 
+     set_target_properties(noise::noise PROPERTIES
+             INTERFACE_INCLUDE_DIRECTORIES "${LIBNOISE_INCLUDE_DIR}"
+diff --git a/a/src/libslic3r/Feature/FuzzySkin/FuzzySkin.cpp b/b/src/libslic3r/Feature/FuzzySkin/FuzzySkin.cpp
+index 11e2d08..fc90d14 100644
+--- a/src/libslic3r/Feature/FuzzySkin/FuzzySkin.cpp
++++ b/src/libslic3r/Feature/FuzzySkin/FuzzySkin.cpp
+@@ -1,3 +1,3 @@
+-#include <libnoise/module/modulebase.h>
++#include <noise/module/modulebase.h>
+ 
+ #include "FuzzySkin.hpp"
+@@ -13,6 +13,6 @@
+ 
+ #include "FuzzySkin.hpp"
+ 
+-#include "libnoise/noise.h"
++#include "noise/noise.h"
+ #include <functional>
+ 

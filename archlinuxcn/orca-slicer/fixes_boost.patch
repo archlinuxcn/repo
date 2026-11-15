@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e24e296..bd3be8a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -581,7 +581,7 @@ if(POLICY CMP0167)
+   cmake_policy(SET CMP0167 NEW)
+ endif()
+ set(Boost_NO_SYSTEM_PATHS TRUE)
+-find_package(Boost 1.83.0 REQUIRED COMPONENTS system filesystem thread log log_setup locale regex chrono atomic date_time iostreams program_options nowide)
++find_package(Boost 1.83.0 REQUIRED COMPONENTS filesystem thread log log_setup locale regex chrono atomic date_time iostreams program_options nowide)
+ 
+ # Find and configure Eigen3
+ find_package(Eigen3 5.0.1 REQUIRED)
+diff --git a/src/slic3r/Utils/TCPConsole.cpp b/src/slic3r/Utils/TCPConsole.cpp
+index 25802e3..63fd0a4 100644
+--- a/src/slic3r/Utils/TCPConsole.cpp
++++ b/src/slic3r/Utils/TCPConsole.cpp
+@@ -170,7 +170,7 @@ bool TCPConsole::run_queue()
+ 
+         auto endpoints = m_resolver.resolve(m_host_name, m_port_name);
+ 
+-        m_socket.async_connect(endpoints->endpoint(),
++        m_socket.async_connect(endpoints.begin()->endpoint(),
+             boost::bind(&TCPConsole::handle_connect, this, boost::placeholders::_1)
+         );
+ 

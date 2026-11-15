@@ -1,0 +1,28 @@
+--- a/src/libslic3r/CMakeLists.txt
++++ b/src/libslic3r/CMakeLists.txt
+@@ -522,7 +522,7 @@
+ # can't reach it; the default opts its Boost lookup into BoostConfig (CMP0167).
+ set(CMAKE_POLICY_DEFAULT_CMP0167 NEW)
+ find_package(CGAL 6.2 REQUIRED)
+-find_package(OpenCV REQUIRED core)
++find_package(OpenCV REQUIRED core imgproc imgcodecs)
+ find_package(assimp REQUIRED)
+ unset(CMAKE_POLICY_DEFAULT_CMP0167)
+ cmake_policy(POP)
+@@ -534,6 +534,7 @@
+     TryCatchSignal.hpp TryCatchSignal.cpp
+     Triangulation.hpp Triangulation.cpp
+ )
++target_include_directories(libslic3r PUBLIC ${OpenCV_INCLUDE_DIRS})
+ target_include_directories(libslic3r_cgal PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+ 
+ # Reset compile options of libslic3r_cgal. Despite it being linked privately, CGAL options
+@@ -607,7 +608,7 @@
+         libigl
+         libnest2d
+         miniz
+-        opencv_world
++        ${OpenCV_LIBS}
+         assimp::assimp
+     PRIVATE
+         ${CMAKE_DL_LIBS}

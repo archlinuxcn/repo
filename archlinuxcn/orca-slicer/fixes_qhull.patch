@@ -1,0 +1,11 @@
+--- a/deps_src/qhull/CMakeLists.txt
++++ b/deps_src/qhull/CMakeLists.txt
+@@ -17,7 +17,7 @@
+ if(Qhull_FOUND)
+ 
+ message(STATUS "Using qhull from system.")
+-if(SLIC3R_STATIC)
++if(False)
+     slic3r_remap_configs("Qhull::qhullcpp;Qhull::qhullstatic_r" RelWithDebInfo Release)
+     target_link_libraries(qhull INTERFACE Qhull::qhullcpp Qhull::qhullstatic_r)
+ else()

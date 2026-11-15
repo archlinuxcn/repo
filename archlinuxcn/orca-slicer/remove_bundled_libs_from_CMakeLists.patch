@@ -1,0 +1,65 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1177,53 +1177,6 @@
+ endfunction()
+ 
+ function(orcaslicer_copy_sos target config postfix output_sos)
+-
+-    get_property(_is_multi GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+-    get_target_property(_alt_out_dir ${target} RUNTIME_OUTPUT_DIRECTORY)
+-
+-    if (_alt_out_dir)
+-        set(_out_dir "${_alt_out_dir}")
+-    elseif (_is_multi)
+-        set(_out_dir "${CMAKE_CURRENT_BINARY_DIR}/${config}")
+-    else ()
+-        set(_out_dir "${CMAKE_CURRENT_BINARY_DIR}")
+-    endif ()
+-
+-    file(COPY ${CMAKE_PREFIX_PATH}/lib/libavformat.so
+-            ${CMAKE_PREFIX_PATH}/lib/libavformat.so.61
+-            ${CMAKE_PREFIX_PATH}/lib/libavformat.so.61.1.100
+-            ${CMAKE_PREFIX_PATH}/lib/libavcodec.so
+-            ${CMAKE_PREFIX_PATH}/lib/libavcodec.so.61
+-            ${CMAKE_PREFIX_PATH}/lib/libavcodec.so.61.3.100
+-            ${CMAKE_PREFIX_PATH}/lib/libavutil.so
+-            ${CMAKE_PREFIX_PATH}/lib/libavutil.so.59
+-            ${CMAKE_PREFIX_PATH}/lib/libavutil.so.59.8.100
+-            ${CMAKE_PREFIX_PATH}/lib/libswscale.so
+-            ${CMAKE_PREFIX_PATH}/lib/libswscale.so.8
+-            ${CMAKE_PREFIX_PATH}/lib/libswscale.so.8.1.100
+-            ${CMAKE_PREFIX_PATH}/lib/libswresample.so
+-            ${CMAKE_PREFIX_PATH}/lib/libswresample.so.5
+-            ${CMAKE_PREFIX_PATH}/lib/libswresample.so.5.1.100
+-         DESTINATION ${_out_dir})
+-
+-    set(${output_sos}
+-        ${_out_dir}/libavformat.so
+-        ${_out_dir}/libavformat.so.61
+-        ${_out_dir}/libavformat.so.61.1.100
+-        ${_out_dir}/libavcodec.so
+-        ${_out_dir}/libavcodec.so.61
+-        ${_out_dir}/libavcodec.so.61.3.100
+-        ${_out_dir}/libavutil.so
+-        ${_out_dir}/libavutil.so.59
+-        ${_out_dir}/libavutil.so.59.8.100
+-        ${_out_dir}/libswscale.so
+-        ${_out_dir}/libswscale.so.8
+-        ${_out_dir}/libswscale.so.8.1.100
+-        ${_out_dir}/libswresample.so
+-        ${_out_dir}/libswresample.so.5
+-        ${_out_dir}/libswresample.so.5.1.100
+-        PARENT_SCOPE
+-    )
+ endfunction()
+ 
+ # Bundled sources set their own warning flags, and a plain -Wall there means /Wall
+@@ -1337,7 +1337,7 @@
+     endif()
+ endif ()
+ 
+-if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
++if (false)
+     set(LIBRARY_FILES
+     ${LIBDIR_BIN}/libavcodec.so.61
+     ${LIBDIR_BIN}/libavcodec.so.61.3.100
