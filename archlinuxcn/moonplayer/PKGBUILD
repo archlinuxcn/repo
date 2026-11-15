@@ -4,12 +4,12 @@
 
 pkgname=moonplayer
 pkgver=4.3
-pkgrel=26
+pkgrel=27
 pkgdesc="A qt font-end for mplayer with the abilities of watching and downloading videos from chinese network"
 arch=('i686' 'x86_64')
 url="https://github.com/coslyk/moonplayer"
 license=('GPL-3.0-or-later')
-depends=('python' 'qt6-declarative' 'mpv')
+depends=('python' 'qt6-declarative' 'mpv' 'openssl')
 makedepends=('cmake' 'git' 'qt6-tools' 'clang')
 source=(
 	git+https://github.com/coslyk/moonplayer.git#tag=v$pkgver

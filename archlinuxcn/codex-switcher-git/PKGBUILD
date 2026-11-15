@@ -4,14 +4,14 @@
 pkgname=codex-switcher-git
 _pkgname=codex-switcher
 pkgver=0.2.21.r4.g8a917c9
-pkgrel=1
+pkgrel=2
 pkgdesc='A multi-account manager for OpenAI Codex CLI'
 arch=('x86_64')
 url='https://github.com/Lampese/codex-switcher'
 license=('unknown')
 makedepends=('git' 'rust' 'cargo' 'nodejs' 'pnpm' 'webkit2gtk-4.1' 'gtk3'
-             'libsoup3' 'openssl' 'appmenu-gtk-module' 'libappindicator-gtk3')
-depends=('webkit2gtk-4.1' 'gtk3')
+             'libsoup3' 'appmenu-gtk-module' 'libappindicator-gtk3')
+depends=('webkit2gtk-4.1' 'gtk3' 'openssl')
 provides=("$_pkgname")
 conflicts=("$_pkgname" "$_pkgname-bin")
 source=("git+https://github.com/Lampese/codex-switcher.git")
