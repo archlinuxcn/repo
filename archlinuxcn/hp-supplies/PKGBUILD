@@ -8,7 +8,7 @@ arch=('x86_64')
 url='https://github.com/LondyGhost/hp-supplies'
 license=('MIT')
 depends=('gtk3' 'libusb')
-makedepends=('make' 'gcc' 'pkgconf')
+makedepends=('make' 'gcc' 'pkgconf' 'git')
 options=(!debug)
 source=("$pkgname::git+$url.git#tag=v$pkgver")
 sha256sums=('SKIP')
