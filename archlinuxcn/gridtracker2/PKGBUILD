@@ -2,7 +2,7 @@
 
 pkgname=gridtracker2
 pkgver=2.261109.2
-pkgrel=1
+pkgrel=2
 pkgdesc="An Amateur Radio Companion"
 arch=('any')
 url="https://gridtracker.org"
@@ -35,8 +35,8 @@ build() {
 package() {
   cd "${pkgname}-v$pkgver"
 
-  install -Dvm644 -t "${pkgdir}/usr/share/${pkgname}/resources" \
-    ./dist/linux-unpacked/resources/*
+  install -dv "${pkgdir}/usr/share/${pkgname}"
+  cp -av ./dist/linux-unpacked/resources "${pkgdir}/usr/share/${pkgname}/"
   install -Dvm644 -t "${pkgdir}/usr/share/${pkgname}/locales" \
     ./dist/linux-unpacked/locales/*
   install -Dvm644 -t "${pkgdir}/usr/share/applications" \
