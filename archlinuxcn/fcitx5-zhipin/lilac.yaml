@@ -2,7 +2,7 @@ maintainers:
   - github: LondyGhost
     email: 476729421@qq.com
 
-pre_build_script: update_pkgver_and_pkgrel(_G.newver.removeprefix('v'))
+pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 
 post_build_script: |
   git_pkgbuild_commit()
@@ -12,3 +12,4 @@ update_on:
     github: LondyGhost/fcitx5-zhipin
     use_latest_release: true
     include_prereleases: false
+    prefix: v
