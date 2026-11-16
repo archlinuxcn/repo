@@ -5,6 +5,8 @@ maintainers:
 build_prefix: archlinuxcn-x86_64
 
 pre_build_script: |
+    from lilaclib import _next_pkgrel
+    
     pkgver, pkgrel = get_pkgver_and_pkgrel()
     assert pkgver is not None and pkgrel is not None
     newver = _G.newver
