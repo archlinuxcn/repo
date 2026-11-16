@@ -27,9 +27,9 @@
    # TODO(crbug.com/423789047): Remove this flag once fully committed to v7.
 -  use_typescript_go = true
 +  use_typescript_go = false
- }
  
- if (enable_cast_receiver || is_cast_android || is_castos) {
+   # Enable the WebUI tab strip new tab button
+   # (chrome://tabstrip-ntb.top-chrome).
 
 --- a/tools/typescript/ts_definitions.gni
 +++ b/tools/typescript/ts_definitions.gni
@@ -246,3 +246,21 @@
  
    files_list = out.split('\n')
    definitions_files = list(filter(lambda f: f.endswith('.d.ts'), files_list))
+--- a/third_party/typescript/tsgo.gni
++++ b/third_party/typescript/tsgo.gni
+@@ -23,7 +23,7 @@ assert(defined(_platform_dir), "Did not
+ 
+ tsgo_inputs = [
+   "//third_party/typescript/typescript.py",
+-  "//third_party/typescript/$_platform_dir/src/lib/$_binary_name",
++  "/usr/bin/tsc",
+ ]
+ 
+ _tsgo_lib_files = [
+@@ -138,5 +138,5 @@ _tsgo_lib_files = [
+ ]
+ 
+ foreach(file, _tsgo_lib_files) {
+-  tsgo_inputs += [ "//third_party/typescript/$_platform_dir/src/lib/$file" ]
++  tsgo_inputs += [ "//third_party/node/node_modules/typescript/lib/$file" ]
+ }

@@ -12,14 +12,18 @@
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
 
 pkgname=ungoogled-chromium
-pkgver=156.0.8078.79
+pkgver=157.0.8103.78
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
+# Check the CRUBIT_REVISION found in tools/rust/update_rust.py
+#_crubit_rev=20dc640430bd60ff2f7f8dbf69c311c5f807adde
+# The commit above cannot be built successfully, use the last known good commit for stable toolchain
+_crubit_rev=25d2c01bde904c3333bb2d48201e5cbb186a1c7f
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=156.0.8078.79-1
+_uc_ver=157.0.8103.78-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -78,8 +82,10 @@ makedepends=(
   'pipewire'
   'python'
   'qt6-base'
-  'rust-bindgen'
   'rust'
+  'rust-bindgen'
+  'rust-src'
+  'rustc-dev'
   'typescript'
   'vulkan-headers'
 )
@@ -93,6 +99,7 @@ provides=("chromium=$pkgver" "chromedriver=$pkgver")
 conflicts=('chromium' 'chromedriver')
 options=('!lto') # Chromium adds its own flags for ThinLTO
 source=(https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$pkgver-lite.tar.xz
+        "git+https://chromium.googlesource.com/external/github.com/google/crubit.git#commit=$_crubit_rev"
         $pkgname-$_uc_ver.tar.gz::https://github.com/$_uc_usr/ungoogled-chromium/archive/$_uc_ver.tar.gz
         https://github.com/foutrelis/chromium-launcher/archive/v$_launcher_ver/chromium-launcher-$_launcher_ver.tar.gz
         chromium-138-nodejs-version-check.patch
@@ -106,18 +113,18 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-153-hermetic-python.patch
         chromium-153-iamf-tools-unbundled-opus.patch
         chromium-155-use-system-esbuild.patch
-        chromium-156-crubit.patch
-        chromium-156-remove-private_verification_tokens.patch
-        chromium-156-revert-gn-check-includes.patch
-        chromium-156-typescript.patch
         chromium-156-isolatedDeclarations.patch
+        chromium-157-revert-gn-check-includes.patch
+        chromium-157-typescript.patch
+        chromium-157-crubit.patch
         compiler-rt-adjust-paths.patch
         increase-fortify-level.patch
         enable-widevine-arm64.patch
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
-sha256sums=('d9e8b637dbdd3a1cccb4966e81a66e3f3c4c29f5ce9732a70f5a4f949cd03923'
-            '6d77c1e7430737937a3a4b63c130a7b4623344482c9b2979a91dfad716414e82'
+sha256sums=('9fdce9d3c866f97f14f7a4250915e8e5b729dc952fcfb3a35507b126233f0660'
+            'a9c0f429c7a45d31cecd8bd36fc636fbedaf49ff57264a22e3f1eabd4cab523a'
+            '4028ace0113428dd9ffb0d27f27a54af1b3c1cec9431862ea130ec7f5a74cf9f'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
@@ -130,11 +137,10 @@ sha256sums=('d9e8b637dbdd3a1cccb4966e81a66e3f3c4c29f5ce9732a70f5a4f949cd03923'
             'ebf74154266d0b6d6cc957c413f845052c5fcfce7745befb8821595cdf3f7d49'
             '2ab9fbe653829ce692f83ee780aad07e8c83a6686e51ab9459ad736cfa2850ee'
             'ded2abcb912ac4b6ad139e56384eea8f3b470cf57ecb0baa2c2d042df7575a23'
-            '0c8bd7769496ab71116cd73ac17c096b0979fa70fb2e76676f76d34c7424449e'
-            '8170368b531a0ae70071da054db4a09a6902b8b7854083d5505570f86a73e644'
-            'c666f9b009d3a2c737501d714689677e6d474982695966651fe7cdbcbc6e5815'
-            '946d4f70daeb446b911197bca804983d305c0ee809bc5507d05451bd07fe9523'
             'f6aefbd3f70dbda9242cf815a1dca56af729632166bc57e5067755b119cc95de'
+            '3b663878c6b05e612ba103152c48f91dde27cabe7d55ba48427a72829ff4922f'
+            '655a43eaff824ba27f359790c31c43abd9fc4234026b0d039b8f2633dcb057cb'
+            'eda45eaa5ba6c2ee86389200d4b758f0a06ffb32f3d06c3d0b60f2714c5d237f'
             'ec8e49b7114e2fa2d359155c9ef722ff1ba5fe2c518fa48e30863d71d3b82863'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             '5ee4bb69379ac0cea7946c9f8f4ca9e20e0a9e4ee2ee9121eb0ebbb94dd7e928'
@@ -144,7 +150,7 @@ sha256sums=('d9e8b637dbdd3a1cccb4966e81a66e3f3c4c29f5ce9732a70f5a4f949cd03923'
 if (( _manual_clone )); then
   source[0]=fetch-chromium-release
   sha256sums[0]='2e2f36e3cd1ebc4ad57fd310774a5e5e9db77883d5f9374fedeaabd3c103b819'
-  makedepends+=('python-httplib2' 'python-pyparsing' 'python-six' 'npm' 'rsync')
+  makedepends+=('python-httplib2' 'python-pyparsing' 'npm' 'rsync')
 fi
 
 # Possible replacements are listed in build/linux/unbundle/replace_gn_files.py
@@ -254,18 +260,19 @@ prepare() {
 
   patch -Np1 -i ../chromium-155-use-system-esbuild.patch
 
-  patch -Np1 -i ../chromium-156-crubit.patch
+  patch -Np1 -i ../chromium-157-crubit.patch
 
-  patch -Np1 -i ../chromium-156-remove-private_verification_tokens.patch
-
-  patch -Np1 -i ../chromium-156-revert-gn-check-includes.patch
+  patch -Np1 -i ../chromium-157-revert-gn-check-includes.patch
 
   patch -Np1 -i ../chromium-156-isolatedDeclarations.patch
 
   # Work around TypeScript becoming a build dependency: disable tsgo for the
   # WebUI and point devtools at the system tsc binary
   # https://github.com/ungoogled-software/ungoogled-chromium/pull/3966
-  patch -Np1 -i ../chromium-156-typescript.patch
+  patch -Np1 -i ../chromium-157-typescript.patch
+
+  # The unbundled brotli doesn't provide brotli:headers
+  sed -i '/brotli:headers/ d' third_party/pdfium/core/fxcodec/BUILD.gn
 
   rm -rf third_party/devtools-frontend/src/node_modules/esbuild/
   ln -s /usr/lib/node_modules/esbuild/ third_party/devtools-frontend/src/node_modules/esbuild
@@ -296,12 +303,14 @@ prepare() {
            third_party/jdk/current/bin \
            third_party/gperf/cipd/bin \
            third_party/dawn/tools/golang/linux-amd64/bin \
+           third_party/rust-toolchain/crubit/lib/third_party/ \
 
   ln -s /usr/bin/node third_party/node/linux/node-linux-x64/bin/
   ln -s /usr/bin/java third_party/jdk/current/bin/
   ln -s /usr/bin/rustc third_party/rust-toolchain/bin/
   ln -s /usr/bin/gperf third_party/gperf/cipd/bin/
   ln -s /usr/bin/go third_party/dawn/tools/golang/linux-amd64/bin/
+  ln -s "$srcdir/crubit" third_party/rust-toolchain/crubit/lib/third_party/crubit
 
   # Remove bundled libraries for which we will use the system copies; this
   # *should* do what the remove_bundled_libraries.py script does, with the
@@ -332,6 +341,9 @@ prepare() {
       -s third_party/dawn --revision gpu/webgpu/DAWN_VERSION \
       --header gpu/webgpu/dawn_commit_hash.h
   fi
+
+  cd ../crubit
+  cargo fetch --locked --target host-tuple
 }
 
 build() {
@@ -351,6 +363,9 @@ build() {
     export AR=$_clang_path/llvm-ar
     export NM=$_clang_path/llvm-nm
   fi
+
+  # /usr for pacman managed rust
+  local _rust_sysroot="/usr"
 
   local _flags=(
     'custom_toolchain="//build/toolchain/linux/unbundle:default"'
@@ -376,6 +391,7 @@ build() {
     'enable_platform_hevc=true'
     'enable_hevc_parser_and_hw_decoder=true'
     'use_clang_modules=false'
+    'rust_crubit_root="//third_party/rust-toolchain/crubit/"'
   )
 
   if [[ -n ${_system_libs[icu]+set} ]]; then
@@ -405,7 +421,7 @@ build() {
     export RUSTC_BOOTSTRAP=1
 
     _flags+=(
-      'rust_sysroot_absolute="/usr"'
+      "rust_sysroot_absolute=\"$_rust_sysroot\""
       'rust_bindgen_root="/usr"'
       "rustc_version=\"$(rustc --version | awk '{ print $2 ;}')\""
     )
@@ -437,6 +453,16 @@ build() {
 
   # https://crbug.com/957519#c122
   CXXFLAGS=${CXXFLAGS/-Wp,-D_GLIBCXX_ASSERTIONS}
+
+  (
+    cd ../crubit
+    _rustc_libs="$_rust_sysroot/lib/rustlib/$(rustc --print host-tuple)/lib"
+    export CARGO_TARGET_DIR=target
+    export RUSTC_BOOTSTRAP=1
+    export RUSTFLAGS+=" -Clink-args=-Wl,-z,origin -Clink-args=-Wl,-rpath,$_rustc_libs"
+    cargo build --frozen --release -p cc_bindings_from_rs --bin cc_bindings_from_rs
+    install -Dm755 -t ../chromium-$pkgver/third_party/rust-toolchain/crubit/bin/ target/release/cc_bindings_from_rs
+  )
 
   msg2 'Configuring Chromium'
   gn gen out/Release --args="${_flags[*]}"
@@ -514,6 +540,13 @@ package() {
   for size in 16 32; do
     install -Dvm644 "chrome/app/theme/default_100_percent/chromium/product_logo_$size.png" \
       "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium.png"
+  done
+
+  # chromium uses the icon name "chromium-browser" internally
+  # https://github.com/chromium/chromium/blob/160.0.8155.1/chrome/browser/shell_integration_linux.cc#L604
+  for size in 16 24 32 48 64 128 256; do
+    ln -sv chromium.png \
+      "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps/chromium-browser.png"
   done
 
   install -Dvm644 LICENSE "$pkgdir/usr/share/licenses/chromium/LICENSE"
