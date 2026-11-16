@@ -5,16 +5,16 @@
 _pkgname='decaf-emu'
 pkgname="${_pkgname}-git"
 pkgver=5222.e6c528a2
-pkgrel=1
+pkgrel=2
 pkgdesc="An experimental open-source Nintendo Wii U emulator"
 arch=('x86_64')
 url="https://github.com/decaf-emu/decaf-emu"
 license=('GPL')
-depends=('c-ares' 'curl' 'ffmpeg' 'openssl' 'qt5-base' 'qt5-svg' 'sdl2' 'vulkan-icd-loader' 'zlib' 'qt5-x11extras')
-makedepends=('cmake' 'glslang' 'git' 'python' 'vulkan-validation-layers')
+depends=('c-ares' 'curl' 'ffmpeg' 'libuv' 'openssl' 'qt5-base' 'qt5-svg' 'sdl2' 'vulkan-icd-loader' 'zlib' 'qt5-x11extras')
+makedepends=('cmake' 'glslang' 'git' 'python' 'vulkan-headers' 'vulkan-validation-layers')
 optdepends=('qt5-wayland: for Wayland support')
-source=("git+$url")
-md5sums=('SKIP')
+source=("git+$url" 'vulkan-hpp.patch')
+md5sums=('SKIP' '55a5216047fdacfdc92bebfa4a5ee980')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
@@ -25,9 +25,12 @@ prepare() {
   cd "$srcdir/$_pkgname"
   
   git submodule update --init --recursive
+  patch -Np1 -i "$srcdir/vulkan-hpp.patch"
 }
 
 build() {
+  # Also apply to CMake scripts invoked while compiling the shaders.
+  export CMAKE_POLICY_VERSION_MINIMUM=3.5
   cd "$srcdir/$_pkgname"
     mkdir -p build && cd build
     cmake .. \
