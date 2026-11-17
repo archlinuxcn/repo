@@ -4,7 +4,7 @@
 
 pkgname=astrometry.net
 pkgver=0.99
-pkgrel=0
+pkgrel=1
 pkgdesc="Automatic recognition of astronomical images. Compiled with -march=x86-64 -mtune=core2 for most modern x86-64 CPUs."
 arch=('x86_64')
 url="https://astrometry.net/"
@@ -20,7 +20,7 @@ backup=(etc/astrometry.cfg)
 install=astrometry.net.install
 source=($pkgname::git+https://github.com/dstndstn/astrometry.net#tag=$pkgver
 )
-sha1sums=('SKIP')
+sha1sums=('929b1436d939e94ba403652d38621e0920e4e8e4')
 
 prepare() {
     cd ${pkgname}
