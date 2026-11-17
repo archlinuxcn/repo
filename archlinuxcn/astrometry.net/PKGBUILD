@@ -3,8 +3,8 @@
 # Contributor: Astro Benzene <universebenzene at sina dot com>
 
 pkgname=astrometry.net
-pkgver=0.97
-pkgrel=12
+pkgver=0.99
+pkgrel=0
 pkgdesc="Automatic recognition of astronomical images. Compiled with -march=x86-64 -mtune=core2 for most modern x86-64 CPUs."
 arch=('x86_64')
 url="https://astrometry.net/"
@@ -18,12 +18,12 @@ optdepends=(
 )
 backup=(etc/astrometry.cfg)
 install=astrometry.net.install
-source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz"
+source=($pkgname::git+https://github.com/dstndstn/astrometry.net#tag=$pkgver
 )
-sha1sums=('a6cfa360cc2ecb4fdf550afd67ac3a5cc8e20c7a')
+sha1sums=('SKIP')
 
 prepare() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname}
     # for fixing numpy 2.0
     #patch -p1 -i ../298.patch
     #patch -p1 -i ../299.patch
@@ -32,7 +32,7 @@ prepare() {
 }
 
 build() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname}
     # Parrallel build is broken and upstream is not going to fix it.
     # https://github.com/dstndstn/astrometry.net/issues/178#issuecomment-650149535
     # If no ARCH_FLAGS, it would compile with -march=native and not usable on older CPUs.
@@ -40,12 +40,12 @@ build() {
 }
 
 check() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname}
     make -j 1 SYSTEM_GSL=yes test
 }
 
 package() {
-    cd ${pkgname}-${pkgver}
+    cd ${pkgname}
     _pyver=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')
 
     make INSTALL_DIR="${pkgdir}/usr" \
