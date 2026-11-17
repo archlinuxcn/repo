@@ -9,7 +9,7 @@ pkgrel=1
 pkgdesc="NVIDIA open kernel modules for linux-cachyos"
 arch=('x86_64')
 url="https://github.com/NVIDIA/open-gpu-kernel-modules"
-depends=("nvidia-utils=${pkgver}" 'libglvnd')
+depends=("nvidia-utils=$pkgver" 'libglvnd')
 makedepends=('linux-cachyos-headers' "nvidia-open-dkms=$pkgver")
 license=('MIT AND GPL-2.0-only')
 options=('!strip' '!debug')
@@ -27,9 +27,9 @@ build() {
 }
 
 package() {
-    depends=('linux-cachyos' "nvidia-utils=${pkgver}" 'libglvnd')
-
     _kernver="$(</usr/src/linux-cachyos/version)"
+
+    depends=("linux-cachyos=${_kernver%%-*}" "nvidia-utils=$pkgver" 'libglvnd')
 
     install -Dt "${pkgdir}/usr/lib/modules/${_kernver}/extramodules" -m644 nvidia/${pkgver}/${_kernver}/${CARCH}/module/*.ko.zst
 
