@@ -2,12 +2,14 @@ maintainers:
   - github: RocketMaDev
     email: Rocket Ma <marocketbd@gmail.com>
 
-repo_depends:
-  - linux-cachyos: linux-cachyos
-  - linux-cachyos: linux-cachyos-headers
+build_prefix: archlinuxcn-x86_64
 
-repo_makedepends:
-  - linux-cachyos: linux-cachyos-headers
+# repo_depends:
+#   - linux-cachyos: linux-cachyos
+#   - linux-cachyos: linux-cachyos-headers
+#
+# repo_makedepends:
+#   - linux-cachyos: linux-cachyos-headers
 
 pre_build_script: update_pkgver_and_pkgrel(_G.newver)
 post_build_script: git_pkgbuild_commit()
@@ -17,5 +19,5 @@ update_on:
     alpm: nvidia-utils
     strip_release: true
 
-update_on_build:
-  - pkgbase: linux-cachyos
+# update_on_build:
+#   - pkgbase: linux-cachyos
