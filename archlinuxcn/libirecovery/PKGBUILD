@@ -1,5 +1,5 @@
 pkgname=libirecovery
-pkgver=1.3.1
+pkgver=1.4.0
 pkgrel=1
 pkgdesc="Library and utility to talk to iBoot/iBSS via USB"
 arch=('x86_64')
@@ -9,7 +9,7 @@ depends=('libimobiledevice-glue' 'libusb' 'readline')
 # systemd is needed to build udev rules and is not in base-devel
 makedepends=('git' 'systemd')
 source=("git+https://github.com/libimobiledevice/$pkgname.git#tag=$pkgver")
-sha256sums=('e20b7fd86e96d1a380f07d39c12b610ba1319c27d28fdd0e712ba2d0579c4ef8')
+sha256sums=('ded8778ec4d8dc24576bf6cad94794b831f09c900041deb39f7c6f3504526e57')
 
 prepare() {
   cd "$pkgname"
