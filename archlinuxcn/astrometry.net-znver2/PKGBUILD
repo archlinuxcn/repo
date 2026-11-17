@@ -4,8 +4,8 @@
 
 pkgname=astrometry.net-znver2
 _pkgname=astrometry.net
-pkgver=0.97
-pkgrel=12
+pkgver=0.99
+pkgrel=0
 pkgdesc="Automatic recognition of astronomical images. Compiled with -march=znver2 for AMD Ryzen CPUs."
 arch=('x86_64')
 url="https://astrometry.net/"
@@ -13,7 +13,7 @@ license=("GPL-3.0-or-later")
 provides=("astrometry.net")
 conflicts=("astrometry.net")
 depends=('bzip2' 'cairo' 'libpng' 'libjpeg-turbo' 'python-astropy' 'netpbm' 'cfitsio' 'gsl' 'swig')
-makedepends=('python-setuptools')
+makedepends=('python-setuptools' 'git')
 optdepends=(
 'astrometry.net-data-4108-wide: index data for wide field'
 'astrometry.net-data-5007: index data for features 22 to 30 arcmin'
@@ -21,33 +21,33 @@ optdepends=(
 )
 backup=(etc/astrometry.cfg)
 install=astrometry.net.install
-source=("https://github.com/dstndstn/astrometry.net/releases/download/${pkgver}/astrometry.net-${pkgver}.tar.gz"
+source=($pkgname::git+https://github.com/dstndstn/astrometry.net#tag=$pkgver
 )
-sha1sums=('a6cfa360cc2ecb4fdf550afd67ac3a5cc8e20c7a')
+sha1sums=('SKIP')
 
 prepare() {
-    cd ${_pkgname}-${pkgver}
+    cd ${pkgname}
     # for fixing numpy 2.0
     #patch -p1 -i ../298.patch
     #patch -p1 -i ../299.patch
-    rm util/util_wrap.c
+    rm util/util_wrap.c || echo 0
     #grep -RnI elsize . || echo 0
 }
 
 build() {
-    cd ${_pkgname}-${pkgver}
+    cd ${pkgname}
     # Parrallel build is broken and upstream is not going to fix it.
     # https://github.com/dstndstn/astrometry.net/issues/178#issuecomment-650149535
     ARCH_FLAGS='-march=znver2' make -j 1 SYSTEM_GSL=yes all py extra
 }
 
 check() {
-    cd ${_pkgname}-${pkgver}
+    cd ${pkgname}
     make -j 1 SYSTEM_GSL=yes test
 }
 
 package() {
-    cd ${_pkgname}-${pkgver}
+    cd ${pkgname}
     _pyver=$(python -c 'import sys; print("%d.%d" % sys.version_info[:2])')
 
     make INSTALL_DIR="${pkgdir}/usr" \
