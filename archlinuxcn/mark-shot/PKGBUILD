@@ -1,6 +1,6 @@
 # 【原生发布】【AUR源码包】固定源码提交，使用原生 Rust 与可重建媒体库
 pkgname=mark-shot
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc='Native screenshot, annotation and recording tool'
 arch=('x86_64' 'aarch64')
@@ -10,7 +10,7 @@ depends=('glibc' 'fontconfig' 'libxkbcommon' 'libxkbcommon-x11' 'libxcb' 'openss
 makedepends=('git' 'rust' 'clang' 'pkgconf' 'python' 'nasm' 'curl' 'xz')
 optdepends=('noto-fonts: fallback fonts' 'noto-fonts-cjk: CJK fonts' 'xdg-desktop-portal: portal capture')
 conflicts=('mark-shot-bin')
-_commit=7f18c5635ff325e41bacd3c91b30d0204ca7bd3e
+_commit=3ed6119833f3a4d6734532d0c9b1c85c3acd0257
 source=("mark-shot::git+https://github.com/jswysnemc/mark-shot.git#commit=$_commit")
 sha256sums=('SKIP')
 
