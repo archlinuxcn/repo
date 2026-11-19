@@ -7,7 +7,7 @@ export FVM_CACHE_PATH RUSTUP_TOOLCHAIN
 
 _pkgname="fluffychat"
 pkgname="$_pkgname"
-pkgver=2.11.5
+pkgver=2.11.6
 pkgrel=1
 pkgdesc="The cutest instant messenger in the [matrix]"
 url="https://github.com/krille-chan/fluffychat"
@@ -47,7 +47,7 @@ source=(
   "$_pkgsrc.$_pkgext"::"$url/archive/refs/tags/v$pkgver.$_pkgext"
   '0000-fix-wayland-gtk-csd.patch'
 )
-sha256sums=('c823b44008dd1d9f7b0360a7122d66ec5a96544f7ad28166f39bdc5eaeaf69d4'
+sha256sums=('b2403f18c937ce47d2617aab834c19ac7721596d80517734079c5866abd9d9d4'
   '04a373c2c25a9be1617ab1ccb19da48ae379ff392bb59a3938bcdec00ab82230')
 
 prepare() (
