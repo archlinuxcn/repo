@@ -1,7 +1,7 @@
 # Maintainer: Gavin Luo <lunt.luo@gmail.com>
 
 pkgname=gnome-shell-extension-window-nativizer
-pkgver=0.11.2
+pkgver=0.12.0
 pkgrel=1
 pkgdesc='Seamlessly nativize non-native applications into the GNOME desktop'
 arch=('any')
@@ -10,7 +10,7 @@ license=('GPL-2.0-or-later')
 depends=('gnome-shell>=50' 'dconf')
 makedepends=('gnome-shell' 'gettext' 'pnpm' 'nodejs')
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-b2sums=('0bab6dd1819518ad8755ff04463b4ff0c526e55cc4ba9b7d2512bf1f1dd8828644866de3fee7c5b032f55d8591a23519cd8cded0b5a92f8eb1808a754f09fbcf')
+b2sums=('cbf8417174283caf26d1aaa16f2874a499dbef26abc736590b06cb5ad5a49bdd3b90e6b4426834b8e580b7e6225948632a1cbf8c721a249d1ac353e83df9508f')
 
 build() {
     cd "${pkgname}-${pkgver}"
