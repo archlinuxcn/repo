@@ -1,6 +1,6 @@
-diff --git a/crates/pi-ast/src/language/grammar.rs b/crates/pi-ast/src/language/grammar.rs
---- a/crates/pi-ast/src/language/grammar.rs
-+++ b/crates/pi-ast/src/language/grammar.rs
+diff --git a/crates/ast/src/language/grammar.rs b/crates/ast/src/language/grammar.rs
+--- a/crates/ast/src/language/grammar.rs
++++ b/crates/ast/src/language/grammar.rs
 @@ -116,5 +116,11 @@
  fn module_path(file: &str) -> Option<PathBuf> {
 +	// Package-owned grammars take precedence over the writable download cache.
