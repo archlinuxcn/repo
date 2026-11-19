@@ -2,8 +2,8 @@
 # Contributor: Stephanie Wilde-Hobbs <hi@stephanie.is>
 
 pkgname=megacmd
-pkgver=2.7.0
-pkgrel=2
+pkgver=2.7.1
+pkgrel=1
 pkgdesc="MEGA Command Line Interactive and Scriptable Application"
 url="https://github.com/meganz/MEGAcmd"
 arch=('x86_64')
@@ -26,7 +26,7 @@ depends=(
 makedepends=('cmake' 'git')
 source=("git+https://github.com/meganz/MEGAcmd.git#tag=${pkgver}_Linux"
         "git+https://github.com/meganz/sdk.git")
-sha512sums=('f2e7219f52a229fcd9d6c81013b9e300b2495853a3e93e4e4d00f6efd63b2b0c6af3ba446ab0befcbcab42da4c593d9c1be2445ded2691394fc4975020db0927'
+sha512sums=('d5c575b6339e2d735d7a10b0d5a686cd088cefc29fc0860ab30ba6e75a20e2dab8f743f60effe880cf9dead5f777dfced17ed22438f535f3193c0052e3bb2d84'
             'SKIP')
 
 prepare() {
