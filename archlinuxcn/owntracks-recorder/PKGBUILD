@@ -1,5 +1,5 @@
 pkgname=owntracks-recorder
-pkgver=1.0.6
+pkgver=1.0.7
 pkgrel=1
 pkgdesc='Lightweight program for storing and accessing location data published via MQTT (or HTTP) by the OwnTracks apps.'
 arch=('x86_64')
@@ -31,7 +31,7 @@ source=(
 	"$pkgname-$pkgver.tar.gz::https://github.com/owntracks/recorder/archive/refs/tags/$pkgver.tar.gz"
 	"systemd.service"
 )
-sha256sums=('b191feaaca6ffecf60cbb3b9273a671a7997a721b6b1c6692c8932cfe9526bc8'
+sha256sums=('5053f886b4b773bf9db1cf2404dde6274c3882a98c86afc29152f9af4961aa3a'
             '79ba2e2e9446893e43c42eee10182123d6c8cfe110ea43f81bd6b41c2c084e02')
 
 build() {
