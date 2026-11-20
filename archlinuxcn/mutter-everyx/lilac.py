@@ -6,7 +6,7 @@ g = SimpleNamespace()
 
 # patch 清单, 元素为 source 中的完整条目(名称::URL 或本地文件名)
 _PATCHES = [
-    '5179-51.1.patch',   # MR 5179 rebased for 51.1 + opaque-blend fallback
+    '5179.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5179.patch',
     '4ad98154f7e10ddec32b10082093eb207a68b831.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/4ad98154f7e10ddec32b10082093eb207a68b831.patch',
     '558de4d2eb3ec5cce3858bfe8d2cec2a38f61ba7.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/558de4d2eb3ec5cce3858bfe8d2cec2a38f61ba7.patch',
     'e60d5bcb6b1fdef8f8037f2bf919c99c66c56f71.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e60d5bcb6b1fdef8f8037f2bf919c99c66c56f71.patch',
