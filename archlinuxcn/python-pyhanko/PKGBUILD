@@ -2,7 +2,7 @@
 
 _name=pyhanko
 pkgname=python-$_name
-pkgver=0.38.1
+pkgver=0.38.2
 pkgrel=1
 pkgdesc="sign and stamp PDF files"
 arch=(any)
@@ -12,7 +12,7 @@ depends=(python python-asn1crypto python-qrcode python-tzlocal python-pyhanko-ce
 makedepends=(git python-build python-installer python-setuptools python-wheel)
 checkdepends=(python-pytest python-requests-mock certomancer python-freezegun python-pytest-asyncio python-defusedxml python-certomancer-csc-dummy python-pytest-aiohttp)
 source=(git+$url.git#tag=v$pkgver)
-sha256sums=('18943878afd354829d6efdc14e96eaf4b4769a9e9eeeec04f12733284a86c221')
+sha256sums=('d6b7ec1d5bde7b54e62e530b9d5d27dea2f8b4d3e4e6962782d91c1b94fbb20d')
 
 prepare() {
   cd $_name
