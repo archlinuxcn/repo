@@ -1,6 +1,6 @@
 # Maintainer: Yuzu <aur at vitayuzu dot day>
 pkgname=iloader-bin
-pkgver=2.4.1
+pkgver=2.4.2
 pkgrel=1
 pkgdesc="User friendly sideloader"
 arch=(x86_64)
@@ -10,7 +10,7 @@ depends=(usbmuxd webkit2gtk-4.1 gtk3 cairo glibc glib2 libsoup3 hicolor-icon-the
 conflicts=(iloader-appimage)
 source=("${pkgname}-${pkgver}.deb::$url/releases/download/v$pkgver/iloader-linux-amd64.deb"
         "${pkgname}-${pkgver}-LICENSE::$url/raw/refs/heads/main/LICENSE")
-sha256sums=('93f1e66c173a47925704c4757c137e766ffa5133aec1f4176d831ff78529e979'
+sha256sums=('ee61cc27f043f1c58e10f8397ac88fb58dba51660d604d4c377b44699a7c5add'
             'c6e929e3490b6475e382b4f74aaddd068deb3bf27cca2109821591e692dfcb3b')
 
 prepare() {
