@@ -1,0 +1,92 @@
+pkgname=optiland
+pkgver=0.6.3
+pkgrel=1
+pkgdesc='Open source optical design in Python, with Qt GUI'
+arch=('any')
+url='https://github.com/optiland/optiland'
+license=('MIT')
+depends=('python' 'python-numpy' 'python-scipy' 'python-pandas' 'python-yaml'
+         'python-matplotlib' 'vtk' 'python-tabulate' 'python-numba'
+         'python-requests' 'python-seaborn' 'python-typing_extensions'
+         # GUI
+         'pyside6' 'python-qtconsole'
+         # vtk optdepends used by the VTK modules optiland imports
+         # (see prepare()); libglvnd, libx11 and libxcursor are dlopen'ed
+         'freetype2' 'libglvnd' 'libx11' 'libxcursor')
+makedepends=('git' 'python-build' 'python-installer' 'python-hatchling'
+             'python-versioningit')
+checkdepends=('python-pytest')
+optdepends=('python-rich: prescription console output'
+            'python-reportlab: prescription PDF export'
+            'python-trimesh: mesh geometry import for non-sequential systems'
+            'python-pytorch: PyTorch backend')
+source=("git+$url.git#tag=v$pkgver"
+        optiland.desktop
+        vtk-subset.py)
+sha256sums=('e22962389b324f0a2e5e7df420473b635adaa992289fca3b39d41b10a1c7b0e6'
+            '78ff55e59691f3fd82a566231dc6e294a19f140a516892507cd6a2b94defa962'
+            'b4d93850e695c0ef2dbeba0421e679340cbc7edc7d2500936417900310abddfb')
+
+prepare() {
+  cd optiland
+
+  # Arch's `vtk.py` loads every VTK module, which needs most of vtk's
+  # optdepends (and different ones on x86_64 and aarch64). Import only the
+  # VTK modules optiland actually uses instead.
+  python "$srcdir"/vtk-subset.py /usr/lib/vtk/hierarchy/VTK \
+         optiland/_vtk.py optiland._vtk optiland optiland_gui
+  python "$srcdir"/vtk-subset.py /usr/lib/vtk/hierarchy/VTK \
+         tests/_vtk.py tests._vtk tests
+  # versioningit appends +d<date> to the version of a modified checkout.
+  git ls-files -z --modified | xargs -0r git update-index --assume-unchanged
+}
+
+build() {
+  cd optiland
+
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd optiland
+
+  export QT_QPA_PLATFORM=offscreen
+  # Without a GPU, VTK renders with mesa's llvmpipe, which crashes once numba
+  # has loaded python-llvmlite's LLVM 22: llvm::AArch64::CpuAliases etc. are
+  # STB_GNU_UNIQUE symbols, so mesa's LLVM 23 ends up using LLVM 22's tables.
+  # softpipe doesn't use LLVM.
+  export GALLIUM_DRIVER=softpipe
+  # Some GUI tests start worker scripts that import optiland_gui.
+  export PYTHONPATH="$PWD"
+  # Make sure nothing loads the full `vtk` module anymore.
+  local novtk='import sys; sys.modules["vtk"] = None'
+
+  # Import every module using the VTK subset.
+  python -c "$novtk
+import importlib, pathlib
+for path in sorted(pathlib.Path().glob('optiland*/**/*.py')):
+    if 'optiland._vtk' in path.read_text():
+        parts = path.with_suffix('').parts
+        importlib.import_module('.'.join(parts[:-1] if parts[-1] == '__init__' else parts))
+"
+  # Tests exercising VTK
+  python -c "$novtk
+import pytest
+sys.exit(pytest.main(['-o', 'addopts=', 'tests/visualization',
+                      'tests/gui/test_layout_highlighting_3d.py',
+                      'tests/gui/test_layout_jobs.py',
+                      'tests/gui/test_planar_layout_mesh.py']))
+"
+}
+
+package() {
+  cd optiland
+
+  python -m installer --destdir="$pkgdir" dist/optiland-$pkgver-py3-none-any.whl
+
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  install -Dm644 "$srcdir"/optiland.desktop \
+          "$pkgdir"/usr/share/applications/optiland.desktop
+  install -Dm644 optiland_gui/resources/icons/optiland_icon.png \
+          "$pkgdir"/usr/share/icons/hicolor/512x512/apps/optiland.png
+}
