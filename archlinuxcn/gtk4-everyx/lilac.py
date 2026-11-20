@@ -12,6 +12,7 @@ _PATCHES = [
     'everyx-76ec6461552648a0a4f9224d7e5a458c74999319.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/76ec6461552648a0a4f9224d7e5a458c74999319.patch',
     'everyx-fba7287a450f118a56bf3e9cb13c1d4975a6ec5b.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/fba7287a450f118a56bf3e9cb13c1d4975a6ec5b.patch',
     'everyx-6005bdabfdb71939c25da030fcdbf9a50f50ee9c.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/6005bdabfdb71939c25da030fcdbf9a50f50ee9c.patch',
+    'everyx-64864b6c54297f9bbe1024d2daa936d4d8a03f54.patch::https://gitlab.gnome.org/everyx/gtk/-/commit/64864b6c54297f9bbe1024d2daa936d4d8a03f54.patch',
 ]
 
 
