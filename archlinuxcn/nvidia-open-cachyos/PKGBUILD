@@ -4,8 +4,8 @@
 # Maintainer: Peter Jung <ptr1337@archlinux.org>
 
 pkgname=nvidia-open-cachyos
-pkgver=620.70.06
-pkgrel=2
+pkgver=620.73.04
+pkgrel=1
 pkgdesc="NVIDIA open kernel modules for linux-cachyos"
 arch=('x86_64')
 url="https://github.com/NVIDIA/open-gpu-kernel-modules"
@@ -18,7 +18,7 @@ replaces=('nvidia<=580.119.02-2')
 provides=('NVIDIA-MODULE')
 
 source=('lilac.yaml')
-sha256sums=('b69f6bc8d247c1523be15305378f23e865a19d2c1df255dbd61c112a3dcf00b2')
+sha256sums=('8fe48474e9b19f60e7f7b224a184e1be29e6bad811d8d86134b0d2547990c20f')
 
 build() {
     _kernver=$(</usr/src/linux-cachyos/version)
