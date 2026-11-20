@@ -6,7 +6,7 @@
 # Contributor: Anmol <anmol@coder.com>
 
 pkgname=code-server
-pkgver=4.145.2
+pkgver=4.146.0
 pkgrel=1
 pkgdesc="VS Code in the browser"
 arch=("x86_64" "aarch64")
@@ -14,8 +14,8 @@ url="https://github.com/coder/code-server"
 license=(MIT)
 depends=(glibc)
 source=(
-  "$pkgname-$pkgver-user.service::https://raw.githubusercontent.com/cdr/code-server/v$pkgver/ci/build/code-server-user.service"
-  "$pkgname-$pkgver@.service::https://raw.githubusercontent.com/cdr/code-server/v$pkgver/ci/build/code-server@.service"
+  "$pkgname-$pkgver-user.service::https://raw.githubusercontent.com/coder/code-server/v$pkgver/ci/build/code-server-user.service"
+  "$pkgname-$pkgver@.service::https://raw.githubusercontent.com/coder/code-server/v$pkgver/ci/build/code-server@.service"
 )
 release_name="code-server-${pkgver}-linux"
 source_x86_64=(
@@ -26,8 +26,8 @@ source_aarch64=(
 )
 sha512sums=('7040df09c7404a56dbbb32e09d04ead3b622773520feae19c6710656cef46ca5d79b1972bfebb931e309e495d041b9938cd6a51c39fc0f8f6133dfe711be9280'
             'ab8e679c05f6184f163dccf0651e8c1fac22a29ae583148f8c93b6930ece27cdff45a48b425e8b15b8c8ce749015680a3ae8225b7e8037979ff3d228f396f629')
-sha512sums_x86_64=('737ea24883a4891b8f8af39a4b498b7ec5c3196b5aab63197b57a0bd9895451cd2625fa73dc923ca53ed6f9feddc6cc05f397dcf99569d0d0ca422ac56e71bc7')
-sha512sums_aarch64=('a5e38e7278c8ff8a0a5302809e644bcc0c979e04b898eebf5777a29672d7e7a86d1997c3abee603d251671b978e97030fcdf6a2e977d8b4b5873e9d34e08a386')
+sha512sums_x86_64=('47b1aa10fb69504c4d95335c6e0eab3ea8ff174afb7c830f11026ce9bea87b0ba58a12266017598ae2a26d82966323473649b9bd5668e6e7ab97b6ab87508a46')
+sha512sums_aarch64=('a29340e8185f27cef41e6e839d7c720e20aef82da1841d59e168e6cd3e431645bbd276339197001ea1c49e3596fba1594f9075f56420a88c5bbc910cb81e3bc0')
 package() {
   if [[ ${CARCH} == x86_64 ]]; then
     release_name+=-amd64
