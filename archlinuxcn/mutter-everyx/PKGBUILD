@@ -5,7 +5,7 @@
 
 pkgname=mutter-everyx
 pkgver=51.1
-pkgrel=3
+pkgrel=4
 pkgdesc="Window manager and compositor for GNOME (with patches picked from everyx)"
 url="https://gitlab.gnome.org/GNOME/mutter"
 arch=(x86_64)
@@ -86,7 +86,7 @@ source=(
   # Mutter tags use SSH signatures which makepkg doesn't understand
   "git+$url.git#tag=${pkgver/[a-z]/.&}"
   "git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
-  "5179-51.1.patch"
+  "5179.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5179.patch"
   "4ad98154f7e10ddec32b10082093eb207a68b831.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/4ad98154f7e10ddec32b10082093eb207a68b831.patch"
   "558de4d2eb3ec5cce3858bfe8d2cec2a38f61ba7.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/558de4d2eb3ec5cce3858bfe8d2cec2a38f61ba7.patch"
   "e60d5bcb6b1fdef8f8037f2bf919c99c66c56f71.patch::https://gitlab.gnome.org/everyx/mutter/-/commit/e60d5bcb6b1fdef8f8037f2bf919c99c66c56f71.patch"
@@ -111,7 +111,7 @@ b2sums=('0064caf6a85d9cb42d9544ad2dab31ef158a957d20d5a99aabe27f40986f128714f97a5
 
 prepare() {
   cd mutter
-  git apply -3 ../5179-51.1.patch
+  git apply -3 ../5179.patch
   git apply -3 ../4ad98154f7e10ddec32b10082093eb207a68b831.patch
   git apply -3 ../558de4d2eb3ec5cce3858bfe8d2cec2a38f61ba7.patch
   git apply -3 ../e60d5bcb6b1fdef8f8037f2bf919c99c66c56f71.patch
