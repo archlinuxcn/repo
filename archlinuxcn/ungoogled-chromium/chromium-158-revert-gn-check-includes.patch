@@ -1,0 +1,28 @@
+--- a/.gn
++++ b/.gn
+@@ -88,13 +88,6 @@
+   "//v8:cppgc_base",  # https://crbug.com/v8/7330
+   "//v8:v8_internal_headers",  # https://crbug.com/v8/7330
+   "//v8:v8_libplatform",  # https://crbug.com/v8/7330
+-]
+-
+-# These are the targets to skip generated header checking by default. The
+-# generated files in targets matching these patterns will not have their
+-# includes checked when you run "gn check --check-generated". The other files in
+-# these targets are still checked.
+-no_check_generated_targets = [
+   # TODO(crbug.com/558554239): Eliminate entries as header dependency
+   # violations are resolved.
+   "//base/logging/rust_logger:rust_logger_cxx_generated",
+@@ -472,10 +465,3 @@
+       "//components/policy/BUILD.gn",
+     ]
+ 
+-# Entries in the allowlist should have a justification for why we need them. New
+-# entries should in this list should be reviewed by a member of the chrome build
+-# team.
+-# entries in this list should be reviewed by a member of the chrome build team.
+-allow_circular_includes_from_allowlist =
+-    allow_circular_includes_from_untriaged + project_bedrock_circular_includes +
+-    []
+\ No newline at end of file

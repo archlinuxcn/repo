@@ -10,20 +10,19 @@
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 # Contributor: Jan "heftig" Steffens <jan.steffens@gmail.com>
 # Contributor: Daniel J Griffiths <ghost1227@archlinux.us>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=ungoogled-chromium
-pkgver=157.0.8103.78
+pkgver=158.0.8127.36
 pkgrel=1
 _launcher_ver=8
 _manual_clone=0
 _system_clang=1
 # Check the CRUBIT_REVISION found in tools/rust/update_rust.py
-#_crubit_rev=20dc640430bd60ff2f7f8dbf69c311c5f807adde
-# The commit above cannot be built successfully, use the last known good commit for stable toolchain
-_crubit_rev=25d2c01bde904c3333bb2d48201e5cbb186a1c7f
+_crubit_rev=d757594f6f7ac27c0cf9c8ea63d9136f8e1f77ae
 # ungoogled chromium variables
 _uc_usr=ungoogled-software
-_uc_ver=157.0.8103.78-1
+_uc_ver=158.0.8127.36-1
 pkgdesc="A lightweight approach to removing Google web service dependency"
 arch=('x86_64')
 url="https://github.com/ungoogled-software/ungoogled-chromium"
@@ -78,7 +77,6 @@ makedepends=(
   'lld'
   'ninja'
   'nodejs'
-  'opus'
   'pipewire'
   'python'
   'qt6-base'
@@ -106,41 +104,37 @@ source=(https://commondatastorage.googleapis.com/chromium-browser-official/chrom
         chromium-145-fix-SYS_SECCOMP.patch
         chromium-147-rust-1.95-bytemuck.patch
         chromium-147-simdutf-8.0-base-char.patch
-        chromium-149-use-of-undeclared-identifier-ERROR.patch
         chromium-150-revert-avx-flag-change.patch
         chromium-152-unbundle-minizip-undo-unicode.patch
         chromium-152-unbundle-opus-devtools.patch
         chromium-153-hermetic-python.patch
         chromium-153-iamf-tools-unbundled-opus.patch
         chromium-155-use-system-esbuild.patch
-        chromium-156-isolatedDeclarations.patch
-        chromium-157-revert-gn-check-includes.patch
+        chromium-158-isolatedDeclarations.patch
         chromium-157-typescript.patch
-        chromium-157-crubit.patch
+        chromium-158-revert-gn-check-includes.patch
         compiler-rt-adjust-paths.patch
         increase-fortify-level.patch
         enable-widevine-arm64.patch
         use-oauth2-client-switches-as-default.patch
         glibc-2.42-baud-rate-fix.patch)
-sha256sums=('9fdce9d3c866f97f14f7a4250915e8e5b729dc952fcfb3a35507b126233f0660'
-            'a9c0f429c7a45d31cecd8bd36fc636fbedaf49ff57264a22e3f1eabd4cab523a'
-            '4028ace0113428dd9ffb0d27f27a54af1b3c1cec9431862ea130ec7f5a74cf9f'
+sha256sums=('8a93030a68231ea046479c47d6b26dfae43becef1b5343cf95f8146109291d6d'
+            'fa10e66c8078c2e02cf7e1df0810b7c7d77b89592cc27fca7a756cc4a5ba06cb'
+            '7c6436fad80824245828b649ca776cb1c44f6827267858a7b1bb482ab62819c9'
             '213e50f48b67feb4441078d50b0fd431df34323be15be97c55302d3fdac4483a'
             '11a96ffa21448ec4c63dd5c8d6795a1998d8e5cd5a689d91aea4d2bdd13fb06e'
             '4fc040a0656a0a524dd8ad090cd129fc5b6cb21adcc66be82080165789e8c13e'
             'b9e6339221efe03540ffb360c161d93604a1fc93a5a1c53e5e9849066f987d05'
             '80e445d7a5cbd61d1252ecf46c5eaf0fb4a5e63bd1b9c976261df778a4586640'
-            '951514535be65f0e2f84e82305d96292be1da353c1427ba1048ea24be70003c4'
             '5f6ccb7b945c8a13c690493723bad816b36f2f25792d47e677b56f8200907e60'
             '890e5d98088ef1c7c075a551442f03385d1db266cad8a65576704a22720683f9'
             '3276453f2ce655b6286476f48d4df837be952d9447afa46583f79ec71f2288c3'
             'ebf74154266d0b6d6cc957c413f845052c5fcfce7745befb8821595cdf3f7d49'
             '2ab9fbe653829ce692f83ee780aad07e8c83a6686e51ab9459ad736cfa2850ee'
             'ded2abcb912ac4b6ad139e56384eea8f3b470cf57ecb0baa2c2d042df7575a23'
-            'f6aefbd3f70dbda9242cf815a1dca56af729632166bc57e5067755b119cc95de'
-            '3b663878c6b05e612ba103152c48f91dde27cabe7d55ba48427a72829ff4922f'
+            '1aa9498c8056d4c40e0e5adb690b0712b263d9a29ac44953aba60af417f4199e'
             '655a43eaff824ba27f359790c31c43abd9fc4234026b0d039b8f2633dcb057cb'
-            'eda45eaa5ba6c2ee86389200d4b758f0a06ffb32f3d06c3d0b60f2714c5d237f'
+            'a41079e62008c016c179643f085107a55b095c8e2d64867b701ff0047951b0b6'
             'ec8e49b7114e2fa2d359155c9ef722ff1ba5fe2c518fa48e30863d71d3b82863'
             'd634d2ce1fc63da7ac41f432b1e84c59b7cceabf19d510848a7cff40c8025342'
             '5ee4bb69379ac0cea7946c9f8f4ca9e20e0a9e4ee2ee9121eb0ebbb94dd7e928'
@@ -175,7 +169,9 @@ declare -gA _system_libs=(
   #[libvpx]=libvpx
   [libwebp]=libwebp
   [libxml]=libxml2
-  [libxslt]=libxslt
+  # https://gitlab.archlinux.org/archlinux/packaging/packages/libxslt/-/merge_requests/1
+  # unbundle again once the above MR is merged
+  #[libxslt]=libxslt
   [openh264]=openh264
   [opus]=opus
   #[re2]=re2          # needs libstdc++
@@ -236,8 +232,6 @@ prepare() {
   # https://crbug.com/456677057
   patch -Np1 -i ../glibc-2.42-baud-rate-fix.patch
 
-  patch -Np1 -i ../chromium-149-use-of-undeclared-identifier-ERROR.patch
-
   # Fix issue about missing AVX functions
   # Credit: https://github.com/ungoogled-software/ungoogled-chromium/pull/3837
   patch -Np1 -i ../chromium-150-revert-avx-flag-change.patch
@@ -260,16 +254,14 @@ prepare() {
 
   patch -Np1 -i ../chromium-155-use-system-esbuild.patch
 
-  patch -Np1 -i ../chromium-157-crubit.patch
-
-  patch -Np1 -i ../chromium-157-revert-gn-check-includes.patch
-
-  patch -Np1 -i ../chromium-156-isolatedDeclarations.patch
+  patch -Np1 -i ../chromium-158-isolatedDeclarations.patch
 
   # Work around TypeScript becoming a build dependency: disable tsgo for the
   # WebUI and point devtools at the system tsc binary
   # https://github.com/ungoogled-software/ungoogled-chromium/pull/3966
   patch -Np1 -i ../chromium-157-typescript.patch
+
+  patch -Np1 -i ../chromium-158-revert-gn-check-includes.patch
 
   # The unbundled brotli doesn't provide brotli:headers
   sed -i '/brotli:headers/ d' third_party/pdfium/core/fxcodec/BUILD.gn
@@ -424,6 +416,7 @@ build() {
       "rust_sysroot_absolute=\"$_rust_sysroot\""
       'rust_bindgen_root="/usr"'
       "rustc_version=\"$(rustc --version | awk '{ print $2 ;}')\""
+      'added_rust_stdlib_libs=["addr2line","adler2","gimli","miniz_oxide"]'
     )
   fi
 
