@@ -5,8 +5,8 @@
 # Contributor: Paul Mattal <paul@archlinux.org>
 
 pkgname=ffmpeg-nv13.0
-pkgver=9.0.2
-pkgrel=5
+pkgver=9.1
+pkgrel=1
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video (with Nvidias codec APIs version 13.0)'
 arch=(x86_64)
@@ -123,7 +123,7 @@ source=(
   git+https://git.ffmpeg.org/ffmpeg.git?signed#tag=n${pkgver}
   0001-Add-av_stream_get_first_dts-for-Chromium.patch
 )
-b2sums=('97bd244a79088e862f349ef91ae75f7a02c1a0c8c1e21601abf6fa5acae1d721d104c2afa4e6e955d7caf18ffd511c175b1a3965b99cc1122754f191b9098bc5'
+b2sums=('e1aaa1362a3c5bdc4db84bae74d5df76c30f78cfe2be44bd210f0891deb5816a25be1fe9b2a945dfa46b7776d943a544930b3831fd2bc3505d8f69673ecd5349'
         'e5f7b79f7731be9ee5a7280a9221fb531ac5a2d9820fc5870b68b0eabea667dfbe8f39f41c1e1763a4c84982896afaa54c81ff57847d203b70afafd726689e5d')
 validpgpkeys=(DD1EC9E8DE085C629B3E1846B18E8928B3948D64) # Michael Niedermayer <michael@niedermayer.cc>
 
@@ -204,7 +204,6 @@ build() {
     --enable-nvdec \
     --enable-nvenc \
     --enable-opencl \
-    --enable-opengl \
     --enable-shared \
     --enable-vapoursynth \
     --enable-version3 \
