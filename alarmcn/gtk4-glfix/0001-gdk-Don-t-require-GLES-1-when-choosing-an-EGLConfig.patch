@@ -1,0 +1,71 @@
+From 70667d8b130732a1da85a2343e75481bdf99ea94 Mon Sep 17 00:00:00 2001
+From: Yichao Yu <yyc1992@gmail.com>
+Date: Thu, 19 Nov 2026 18:43:34 -0500
+Subject: [PATCH] gdk: Don't require GLES 1 when choosing an EGLConfig
+
+eglChooseConfig() defaults EGL_RENDERABLE_TYPE to EGL_OPENGL_ES_BIT
+(OpenGL ES 1.x), which GDK never uses. Since Mesa 26.3, builds without
+GLES 1 support no longer set that bit on their configs, so no config
+matches and GL is disabled.
+
+The config is shared by GL and GLES contexts, and EGL_RENDERABLE_TYPE
+requires all bits in the mask, so match any renderable type and skip
+configs that support none of the allowed APIs instead.
+
+Signed-off-by: Yichao Yu <yyc1992@gmail.com>
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ gdk/gdkdisplay.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
+
+diff --git a/gdk/gdkdisplay.c b/gdk/gdkdisplay.c
+index ff32fee1af82ef1457c92ca1d52b023aa375281a..a86b0d8871a529b8f55265063fdcb0d37df06768 100644
+--- a/gdk/gdkdisplay.c
++++ b/gdk/gdkdisplay.c
+@@ -1352,12 +1352,26 @@ gdk_display_create_egl_config (GdkDisplay               *self,
+   EGLint count, alloced;
+   EGLConfig best_config;
+   guint best_score;
++  EGLint renderable_type;
+ 
+   int i = 0;
+ 
++  /* The config is shared by GL and GLES contexts, so accept any config
++   * that can render one of the APIs we may use. EGL_RENDERABLE_TYPE
++   * defaults to EGL_OPENGL_ES_BIT (GLES 1.x) and requires all bits in
++   * the mask, so match everything here and filter below. */
++  renderable_type = 0;
++  if (gdk_has_feature (GDK_FEATURE_GL_API))
++    renderable_type |= EGL_OPENGL_BIT;
++  if (gdk_has_feature (GDK_FEATURE_GLES_API))
++    renderable_type |= EGL_OPENGL_ES2_BIT;
++
+   attrs[i++] = EGL_SURFACE_TYPE;
+   attrs[i++] = EGL_WINDOW_BIT;
+ 
++  attrs[i++] = EGL_RENDERABLE_TYPE;
++  attrs[i++] = 0;
++
+   attrs[i++] = EGL_COLOR_BUFFER_TYPE;
+   attrs[i++] = EGL_RGB_BUFFER;
+ 
+@@ -1401,7 +1415,15 @@ gdk_display_create_egl_config (GdkDisplay               *self,
+ 
+   for (i = 0; i < count; i++)
+     {
+-      guint score = GDK_DISPLAY_GET_CLASS (self)->rate_egl_config (self, priv->egl_display, configs[i]);
++      EGLint config_renderable_type;
++      guint score;
++
++      if (renderable_type != 0 &&
++          (!eglGetConfigAttrib (priv->egl_display, configs[i], EGL_RENDERABLE_TYPE, &config_renderable_type) ||
++           (config_renderable_type & renderable_type) == 0))
++        continue;
++
++      score = GDK_DISPLAY_GET_CLASS (self)->rate_egl_config (self, priv->egl_display, configs[i]);
+ 
+       if (score < best_score)
+         {
+-- 
+2.56.1
+

@@ -1,0 +1,58 @@
+From 9dbbb0012f94a9de1433d6366dccca2d44373e16 Mon Sep 17 00:00:00 2001
+From: YummierGravy <48499148+YummierGravy@users.noreply.github.com>
+Date: Fri, 20 Nov 2026 00:20:31 +0100
+Subject: [PATCH] wayland: Set EGL_RENDERABLE_TYPE when choosing an EGLConfig
+
+eglChooseConfig() defaults EGL_RENDERABLE_TYPE to EGL_OPENGL_ES_BIT
+(OpenGL ES 1.x), which GDK never uses. Since Mesa 26.3, builds without
+GLES 1 support no longer set that bit on their configs, so no config
+matches and creating a GL context fails
+---
+ gdk/wayland/gdkglcontext-wayland.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/gdk/wayland/gdkglcontext-wayland.c b/gdk/wayland/gdkglcontext-wayland.c
+index d73e6e68d71..622b43ed1fb 100644
+--- a/gdk/wayland/gdkglcontext-wayland.c
++++ b/gdk/wayland/gdkglcontext-wayland.c
+@@ -372,6 +372,7 @@ gdk_wayland_display_init_gl (GdkDisplay *display,
+ 
+ static gboolean
+ find_eglconfig_for_window (GdkWindow  *window,
++                           gboolean    use_es,
+                            EGLConfig  *egl_config_out,
+                            EGLint     *min_swap_interval_out,
+                            GError    **error)
+@@ -389,6 +390,9 @@ find_eglconfig_for_window (GdkWindow  *window,
+   attrs[i++] = EGL_SURFACE_TYPE;
+   attrs[i++] = EGL_WINDOW_BIT;
+ 
++  attrs[i++] = EGL_RENDERABLE_TYPE;
++  attrs[i++] = use_es ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT;
++
+   attrs[i++] = EGL_COLOR_BUFFER_TYPE;
+   attrs[i++] = EGL_RGB_BUFFER;
+ 
+@@ -464,6 +468,7 @@ gdk_wayland_window_create_gl_context (GdkWindow     *window,
+   GdkWaylandDisplay *display_wayland = GDK_WAYLAND_DISPLAY (display);
+   GdkWaylandGLContext *context;
+   EGLConfig config;
++  gboolean use_es;
+ 
+   if (!gdk_wayland_display_init_gl (display, share))
+     {
+@@ -481,7 +486,10 @@ gdk_wayland_window_create_gl_context (GdkWindow     *window,
+       return NULL;
+     }
+ 
+-  if (!find_eglconfig_for_window (window, &config,
++  use_es = (_gdk_gl_flags & GDK_GL_GLES) != 0 ||
++           (share != NULL && gdk_gl_context_get_use_es (share));
++
++  if (!find_eglconfig_for_window (window, use_es, &config,
+                                   &display_wayland->egl_min_swap_interval,
+                                   error))
+     return NULL;
+-- 
+GitLab
+

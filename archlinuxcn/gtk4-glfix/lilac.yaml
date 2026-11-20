@@ -1,0 +1,12 @@
+maintainers:
+  - github: yuyichao
+
+# alpm version is [epoch:]pkgver-pkgrel; Arch Linux ARM may use pkgrel like 2.1
+pre_build_script: update_pkgver_and_pkgrel(_G.newver.split(':', 1)[-1].rsplit('-', 1)[0])
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: alpm
+    alpm: gtk4
+  - source: manual
+    manual: 1

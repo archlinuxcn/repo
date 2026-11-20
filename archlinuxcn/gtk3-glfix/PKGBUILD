@@ -1,0 +1,151 @@
+# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+
+pkgname=gtk3-glfix
+pkgver=3.24.52
+pkgrel=2
+epoch=1
+pkgdesc="GObject-based multi-platform GUI toolkit (with EGL config fix for Mesa without GLES 1)"
+url="https://www.gtk.org/"
+arch=(aarch64 x86_64)
+provides=("gtk3=$epoch:$pkgver")
+conflicts=(gtk3)
+license=(LGPL-2.1-or-later)
+depends=(
+  adwaita-fonts
+  adwaita-icon-theme
+  at-spi2-core
+  cairo
+  dconf
+  desktop-file-utils
+  fontconfig
+  fribidi
+  gdk-pixbuf2
+  glib2
+  glibc
+  harfbuzz
+  iso-codes
+  libcloudproviders
+  libcolord
+  libcups
+  libegl
+  libepoxy
+  libgl
+  librsvg
+  libx11
+  libxcomposite
+  libxcursor
+  libxdamage
+  libxext
+  libxfixes
+  libxi
+  libxinerama
+  libxkbcommon
+  libxrandr
+  libxrender
+  pango
+  shared-mime-info
+  tinysparql
+  wayland
+  zlib
+)
+makedepends=(
+  git
+  glib2-devel
+  gobject-introspection
+  docbook-xsl
+  hicolor-icon-theme
+  meson
+  sassc
+  wayland-protocols
+)
+source=(
+  "git+https://gitlab.gnome.org/GNOME/gtk.git#tag=$pkgver"
+  gtk-query-immodules-3.0.hook
+  gtk-remove-immodules-cache.hook
+  0001-Allow-disabling-legacy-Tracker-search.patch
+  0001-wayland-Set-EGL_RENDERABLE_TYPE-when-choosing-an-EGLConfig.patch
+)
+b2sums=('b351d0e48b074ea0b6d75dd8b47bd5ff5897dce01b2c69894a5d20fff0205b8cfc4603ce556331fdf3afe4f0380c58212ebac7cd832c9b6d3fd05cbf822250d8'
+        '920c797546da3a6698c86fe53872be8ccaec627cb687b163e144f65d1a6ad7cb80d2e6f53a7ba26b91642cedec5432c3f1d4ec41f8d972fb6098580b31cb43a5'
+        'bec30b4a00a885b03a49d49c8cdd3be2c9c81a375478fd4358e823845f292b410e033ddf728fb52aef4a3e99bfed3ce657131f17d8d68ae0d0d32c5621a85939'
+        '72075b7a95b61dacae009310f5884ea4474c2fd248f5cb65d6cc5fdfe2c0e55ea6f954f77d818ff27f531fba61baca13d178b93310a95459e629a9ec11b053c0'
+        'SKIP')
+
+prepare() {
+  cd gtk
+
+  # Don't require GLES 1 EGL configs (Mesa >= 26.3 built with -Dgles1=disabled)
+  # https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/10749
+  git apply -3 ../0001-wayland-Set-EGL_RENDERABLE_TYPE-when-choosing-an-EGLConfig.patch
+
+  # Don't try to use the old Tracker
+  git apply -3 ../0001-Allow-disabling-legacy-Tracker-search.patch
+}
+
+build() {
+  local meson_options=(
+    -D broadway_backend=true
+    -D cloudproviders=true
+    -D colord=yes
+    -D gtk_doc=false
+    -D introspection=true
+    -D man=true
+    -D tracker=false
+    -D tracker3=true
+  )
+
+  CFLAGS+=" -DG_DISABLE_CAST_CHECKS"
+  arch-meson gtk build "${meson_options[@]}"
+  meson compile -C build
+}
+
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+  done
+}
+
+package() {
+  depends+=(gtk-update-icon-cache)
+  optdepends=(
+    'papers: default print previewer'
+    'evince: legacy print previewer'
+  )
+  provides+=(
+    gtk3-print-backends
+    libgailutil-3.so
+    libgdk-3.so
+    libgtk-3.so
+  )
+  conflicts+=(gtk3-print-backends)
+
+  meson install -C build --destdir "$pkgdir"
+
+  install -Dm644 /dev/stdin "$pkgdir/usr/share/gtk-3.0/settings.ini" <<END
+[Settings]
+gtk-icon-theme-name = Adwaita
+gtk-theme-name = Adwaita
+gtk-font-name = Adwaita Sans 11
+END
+
+  install -Dm644 gtk-*.hook -t "$pkgdir/usr/share/libalpm/hooks"
+
+  cd "$pkgdir"
+
+  _pick demo usr/bin/gtk3-{demo,demo-application,icon-browser,widget-factory}
+  _pick demo usr/share/applications/gtk3-{demo,icon-browser,widget-factory}.desktop
+  _pick demo usr/share/glib-2.0/schemas/org.gtk.{Demo,exampleapp}.gschema.xml
+  _pick demo usr/share/icons/hicolor/*/apps/gtk3-{demo,widget-factory}[-.]*
+  _pick demo usr/share/man/man1/gtk3-{demo,demo-application,icon-browser,widget-factory}.1
+
+  # Built by GTK 4, shared with GTK 3
+  rm usr/bin/gtk-update-icon-cache
+  rm usr/share/man/man1/gtk-update-icon-cache.1
+}
+
+# vim:set sw=2 sts=-1 et:

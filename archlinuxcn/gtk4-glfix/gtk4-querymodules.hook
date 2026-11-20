@@ -1,0 +1,12 @@
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
+Target = usr/lib/gtk-4.0/4.0.0/*/
+
+[Action]
+Description = Updating GTK4 module cache...
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/gtk4-querymodules
+NeedsTargets
