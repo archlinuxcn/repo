@@ -1,7 +1,7 @@
 # Maintainer: Hu Butui <hot123tea123@gmail.com>
 
 pkgname=cc-switch
-pkgver=4.0.37
+pkgver=4.0.38
 pkgrel=1
 pkgdesc='All-in-One assistant tool for Claude Code, Codex, OpenCode, openclaw & Gemini CLI'
 arch=('x86_64')
@@ -29,7 +29,7 @@ makedepends=(
 source=(
   "${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz"
 )
-sha256sums=('909f30da498a28d7c9985926a84f49fcd77b10ef379afb9a8ab2d2e94ebc9458')
+sha256sums=('7f72e42105c6239a0024f9a3a2bea9579fbc2cd4cccab106da8da6f0f9bde8c3')
 
 prepare() {
   export RUSTUP_TOOLCHAIN=stable
