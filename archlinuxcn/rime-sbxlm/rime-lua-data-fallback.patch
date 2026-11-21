@@ -1,0 +1,166 @@
+diff --git a/lua/lib.lua b/lua/lib.lua
+--- a/lua/lib.lua
++++ b/lua/lib.lua
+@@ -783,4 +783,23 @@
+     return context.input:sub(segment.start + 1, segment._end)
+   end
+   
++---只读打开数据文件：用户目录优先，失败后尝试共享目录。
++---@param relative_path string 相对于 Rime 数据目录的路径
++function rime.open_data_file(relative_path)
++    local user_path = rime.api.get_user_data_dir() .. "/" .. relative_path
++    local file, user_error = io.open(user_path, "r")
++    if file then
++        return file
++    end
++
++    local shared_path = rime.api.get_shared_data_dir() .. "/" .. relative_path
++    local shared_error
++    file, shared_error = io.open(shared_path, "r")
++    if file then
++        return file
++    end
++
++    return nil, user_error .. "\n" .. shared_error
++end
++
+ return rime
+diff --git a/lua/sbxlm/auto_length.lua b/lua/sbxlm/auto_length.lua
+--- a/lua/sbxlm/auto_length.lua
++++ b/lua/sbxlm/auto_length.lua
+@@ -255,8 +255,7 @@
+   env.pure_char = false
+ 
+   env.char_lens = {}
+-  local path = rime.api.get_user_data_dir() .. "/lua/sbxlm/char_lens.txt"
+-  local file = io.open(path, "r")
++  local file = rime.open_data_file("lua/sbxlm/char_lens.txt")
+   if not file then
+     return
+   end
+@@ -268,8 +267,7 @@
+   file:close()
+ 
+   env.xm_lens = {}
+-  path = rime.api.get_user_data_dir() .. "/lua/sbxlm/xm_lens.txt"
+-  file = io.open(path, "r")
++  file = rime.open_data_file("lua/sbxlm/xm_lens.txt")
+   if not file then
+     return
+   end
+@@ -282,8 +280,7 @@
+ 
+   -- 读取笔画编码文件
+   env.strokes = {}
+-  path = rime.api.get_user_data_dir() .. "/lua/sbxlm/strokes.txt"
+-  file = io.open(path, "r")
++  file = rime.open_data_file("lua/sbxlm/strokes.txt")
+   if file then
+     for line in file:lines() do
+       ---@type string, string
+diff --git a/lua/sbxlm/emoji_key.lua b/lua/sbxlm/emoji_key.lua
+--- a/lua/sbxlm/emoji_key.lua
++++ b/lua/sbxlm/emoji_key.lua
+@@ -10,8 +10,7 @@
+ ---@return table<string, string[]>
+ local function load_emoji_dict()
+   local dict = {}
+-  local path = rime.api.get_user_data_dir() .. "/opencc/es.txt"
+-  local f = io.open(path, "r")
++  local f = rime.open_data_file("opencc/es.txt")
+   if not f then
+     return dict
+   end
+diff --git a/lua/sbxlm/fix.lua b/lua/sbxlm/fix.lua
+--- a/lua/sbxlm/fix.lua
++++ b/lua/sbxlm/fix.lua
+@@ -15,8 +15,7 @@
+ function this.init(env)
+   ---@type { string : string[] }
+   env.fixed = {}
+-  local path = rime.api.get_user_data_dir() .. ("/%s.fixed.txt"):format(env.engine.schema.schema_id)
+-  local file = io.open(path, "r")
++  local file = rime.open_data_file(("%s.fixed.txt"):format(env.engine.schema.schema_id))
+   if not file then
+     return
+   end
+diff --git a/lua/sbxlm/hint.lua b/lua/sbxlm/hint.lua
+--- a/lua/sbxlm/hint.lua
++++ b/lua/sbxlm/hint.lua
+@@ -37,7 +37,7 @@
+ 	-- 声笔简拼加载简码表中的三码字词，用于长码无候选时提示三码固定字词
+ 	if id == 'sbjp' then
+ 		env.jm_words = {}
+-		local jm_file = io.open(rime.api.get_user_data_dir() .. "/sbjm.dict.yaml", "r")
++		local jm_file = rime.open_data_file("sbjm.dict.yaml")
+ 		if jm_file then
+ 			for line in jm_file:lines() do
+ 				local text, code = line:match("^([^\t]+)\t([bpmfdtnlgkhjqxzcsrywv][a-z][a-z])\r?$")
+@@ -51,8 +51,7 @@
+ 			jm_file:close()
+ 		end
+ 	end
+-	local path = rime.api.get_user_data_dir() .. "/lua/sbxlm/xm_chars.txt"
+-	local file = io.open(path, "r")
++	local file = rime.open_data_file("lua/sbxlm/xm_chars.txt")
+ 	if not file then
+ 		return
+ 	end
+diff --git a/lua/sbxlm/lookup_filter.lua b/lua/sbxlm/lookup_filter.lua
+--- a/lua/sbxlm/lookup_filter.lua
++++ b/lua/sbxlm/lookup_filter.lua
+@@ -11,8 +11,7 @@
+ ---@param env LookupStrokesEnv
+ function this.init(env)
+   env.strokes = {}
+-  local dir = rime.api.get_user_data_dir() .. "/lua/sbxlm/"
+-  local file = io.open(dir .. "strokes.txt", "r")
++  local file = rime.open_data_file("lua/sbxlm/strokes.txt")
+   if not file then return end
+   for line in file:lines() do
+     ---@type string, string
+@@ -70,4 +69,4 @@
+   env.strokes = nil
+ end
+ 
+-return this
+\ No newline at end of file
++return this
+diff --git a/lua/sbxlm/radicals.lua b/lua/sbxlm/radicals.lua
+--- a/lua/sbxlm/radicals.lua
++++ b/lua/sbxlm/radicals.lua
+@@ -14,11 +14,11 @@
+ ---@param env RadicalsEnv
+ function this.init(env)
+   env.radicals = {}
+-  local path = rime.api.get_user_data_dir() .. "/lua/sbxlm/radicals.txt"
++  local path = "lua/sbxlm/radicals.txt"
+   if env.engine.schema.schema_id == "sbxm" then
+-    path = rime.api.get_user_data_dir() .. "/lua/sbxlm/sbxmcf.txt"
++    path = "lua/sbxlm/sbxmcf.txt"
+   end
+-  local file = io.open(path, "r")
++  local file = rime.open_data_file(path)
+   if not file then
+     return
+   end
+diff --git a/lua/sbxlm/stroke_filter.lua b/lua/sbxlm/stroke_filter.lua
+--- a/lua/sbxlm/stroke_filter.lua
++++ b/lua/sbxlm/stroke_filter.lua
+@@ -11,8 +11,7 @@
+ ---@param env StrokesEnv
+ function this.init(env)
+   env.strokes = {}
+-  local dir = rime.api.get_user_data_dir() .. "/lua/sbxlm/"
+-  local file = io.open(dir .. "strokes.txt", "r")
++  local file = rime.open_data_file("lua/sbxlm/strokes.txt")
+   if not file then return end
+   for line in file:lines() do
+     ---@type string, string
+@@ -90,4 +89,4 @@
+   env.strokes = nil
+ end
+ 
+-return this
+\ No newline at end of file
++return this
