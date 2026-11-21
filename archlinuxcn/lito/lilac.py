@@ -13,6 +13,8 @@ def pre_build():
     rstd_commit = deps["rstd"]["rev"]
     luato_commit = deps["luato"]["rev"]
     licrypto_commit = deps["licrypto"]["rev"]
+    ligraph_commit = deps["ligraph"]["rev"]
+    liresto_commit = deps["liresto"]["rev"]
 
     for line in edit_file('PKGBUILD'):
         if line.startswith('_rstd_commit='):
@@ -21,6 +23,10 @@ def pre_build():
             line = f"_luato_commit={luato_commit}"
         elif line.startswith('_licrypto_commit='):
             line = f"_licrypto_commit={licrypto_commit}"
+        elif line.startswith('_ligraph_commit='):
+            line = f"_ligraph_commit={ligraph_commit}"
+        elif line.startswith('_liresto_commit='):
+            line = f"_liresto_commit={liresto_commit}"
 
         print(line)
 
