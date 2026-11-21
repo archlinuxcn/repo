@@ -2,12 +2,14 @@
 # Contributor: Zhang Hua <zhanghua.00@qq.com>
 
 # Check deps.json
-_rstd_commit=05748d842307476dd86dfa14237838295cb5ec77
-_luato_commit=df0c6f2d1cce2051b4711d36067619eda7933683
-_licrypto_commit=1199a8fe2b119774a85adbd33043fc5ef7b20d3c
+_rstd_commit=4b2b7893a7c32135a9064a33fa85aab3a05bb684
+_luato_commit=34b0d9b6a64f23a54b7c158853a1b127f25a0056
+_licrypto_commit=4f5f0432d4566d66745b448d617f6b1b36ae6db9
+_ligraph_commit=26cfca9b2306f1de389487cabfe37f16363ee24f
+_liresto_commit=a36aa4edd009197cd123275143bfb00d67b3f769
 
 pkgname=lito
-pkgver=0.8.8
+pkgver=0.8.10
 pkgrel=1
 pkgdesc="Module-first C++ build tool with manifest"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -18,16 +20,24 @@ makedepends=('clang' 'cmake' 'git' 'libc++' 'lld' 'llvm' 'ninja')
 source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/litocpp/rstd.git#commit=${_rstd_commit}"
 	"git+https://github.com/litocpp/luato.git#commit=${_luato_commit}"
-	"git+https://github.com/litocpp/licrypto.git#commit=${_licrypto_commit}")
-sha256sums=('df5856bfbc68fdb7ccd4b840e601d21b373faef82a26270d195bd6d39df30f07'
-            'b3ce3796a942227faacbc82df46a26c274192610aee3efcb02af66b3c5357046'
-            '255e260360f8a29c42e33e10549a1bc2caea8cabd568eb7ad81d08b38526e7c3'
-            '4f00968aaee40d9edca9f62f39a4f335fe5f65181136d6f4b5b27e3af9fe45de')
+	"git+https://github.com/litocpp/licrypto.git#commit=${_licrypto_commit}"
+	"git+https://github.com/litocpp/ligraph.git#commit=${_ligraph_commit}"
+	"git+https://github.com/litocpp/liresto.git#commit=${_liresto_commit}")
+sha256sums=('042ff65e1a1f9f3c2c23a9b9d9de81518592365c456b3edf441a0a77d9752f13'
+            '85538d0fbaab692c4bb67093880c281a1b3c9a166068011381daba04a0b3bf7f'
+            'b8e4589fe724df1eaecf7f1009b466545ad63ac9c89eb28ad12953e66eb10c6e'
+            'a1b4edc2f1055d556f023fc6863f278fdcad906a72a2bc30615a4704aa2efd8a'
+            '90dd0eb2a90813149c0392cbb05ea74d6a23e2a0a76617713088a0bc2bd9f27b'
+            'e4b9605c35cbb63c8695651c459e0062928e44aa515178437b58d0b8178fca7e')
 options=('!lto') # Linking fails with LLVM 23 when LTO is enabled
 
 build() {
 	# ld.lld: error: undefined symbol: open(char const*, int pass_dynamic_object_size1, unsigned int)
 	CXXFLAGS="${CXXFLAGS//-Wp,-D_FORTIFY_SOURCE=3/}"
+
+	# Diagnostics while scanning dependencies for '/usr/include/c++/16/bits/std.cc':
+	# /usr/include/c++/16/bits/std.cc:26:10: fatal error: 'bits/stdc++.h' file not found
+	CXXFLAGS+=" --stdlib=libc++"
 
 	cmake -B build \
 		-S "${pkgname}" \
@@ -41,6 +51,8 @@ build() {
 		-D FETCHCONTENT_SOURCE_DIR_RSTD="${srcdir}/rstd" \
 		-D FETCHCONTENT_SOURCE_DIR_LUATO="${srcdir}/luato" \
 		-D FETCHCONTENT_SOURCE_DIR_LICRYPTO="${srcdir}/licrypto" \
+		-D FETCHCONTENT_SOURCE_DIR_LIGRAPH="${srcdir}/ligraph" \
+		-D FETCHCONTENT_SOURCE_DIR_LIRESTO="${srcdir}/liresto" \
 		-D LITO_USE_SYSTEM_ZSTD=ON
 
 	cmake --build build
