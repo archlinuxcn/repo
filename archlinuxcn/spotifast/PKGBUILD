@@ -1,0 +1,82 @@
+# Maintainer: Carmine Paolino <carmine@paolino.me>
+pkgname=spotifast
+pkgver=0.17.2
+pkgrel=1
+pkgdesc="Native Spotify client"
+arch=('x86_64' 'aarch64')
+url="https://github.com/crmne/spotifast"
+license=('MIT')
+install="${pkgname}.install"
+depends=('dbus' 'alsa-lib' 'libpipewire' 'libglvnd' 'libxkbcommon' 'wayland' 'libx11')
+makedepends=('cargo' 'cmake' 'clang')
+# The test suite uses ps where it cannot read a process any other way.
+checkdepends=('procps-ng')
+optdepends=('libxkbcommon-x11: keyboard handling in X11 sessions'
+            'pipewire-pulse: PipeWire as the PulseAudio server')
+conflicts=('spotifast-bin' 'spotifast-git')
+# !lto because ring compiles its own C and Arch's default CFLAGS put LTO
+# objects in the archive, which lld then cannot resolve: the link fails on
+# undefined ring_core_* symbols.
+options=('!debug' '!lto')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/releases/download/v${pkgver}/spotifast-v${pkgver}-source.tar.gz")
+sha256sums=('761ed18013781e4fb76f3a73be45e39166d12c46231d3881800d12707eeb5eef')
+
+_source_dir() {
+  printf '%s\n' "${srcdir}/spotifast-${pkgver}"
+}
+
+prepare() {
+  cd "$(_source_dir)"
+  export RUSTUP_TOOLCHAIN=stable
+  # Cargo.toml's rust-version is the oldest compiler that builds Spotifast.
+  # Check it before fetching, so an older stable fails at once and says how
+  # to update, rather than after every crate has downloaded.
+  local need have
+  need=$(sed -n 's/^rust-version = "\(.*\)"$/\1/p' Cargo.toml)
+  have=$(rustc --version 2>/dev/null | cut -d' ' -f2)
+  if [[ -n "${need}" && -n "${have}" && "$(vercmp "${have}" "${need}")" -lt 0 ]]; then
+    error "Spotifast needs Rust ${need} or newer, but rustc is ${have}."
+    plain "With rustup, run: rustup update stable"
+    plain "With Arch's rust package, update the system: pacman -Syu"
+    return 1
+  fi
+  cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+  cd "$(_source_dir)"
+  export RUSTUP_TOOLCHAIN=stable
+  export CARGO_TARGET_DIR=target
+  # Generated bindings inside glutin carry the path they were built at, which
+  # ends up in the binary and makes makepkg warn about a reference to $srcdir.
+  # Appended rather than assigned, so the distro's own flags survive.
+  export RUSTFLAGS="${RUSTFLAGS:-} --remap-path-prefix=${srcdir}=/"
+  cargo build --frozen --release
+}
+
+check() {
+  # The tests open many files at once; a lower hard limit is left as it is.
+  ulimit -n 4096 2>/dev/null || true
+  cd "$(_source_dir)"
+  export RUSTUP_TOOLCHAIN=stable
+  # The demo feature carries the headless render test, which lays out every
+  # page without a display and talks to nothing.
+  cargo test --frozen --features demo
+}
+
+package() {
+  cd "$(_source_dir)"
+
+  install -Dm755 "target/release/spotifast" "${pkgdir}/usr/bin/spotifast"
+  install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 "README.md" "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+  install -Dm644 "packaging/applications/spotifast.desktop" \
+    "${pkgdir}/usr/share/applications/spotifast.desktop"
+  install -Dm644 "packaging/icons/spotifast.svg" \
+    "${pkgdir}/usr/share/icons/hicolor/scalable/apps/spotifast.svg"
+  # Older release fixtures predate the optional integration.
+  if [[ -d contrib/omarchy ]]; then
+    install -Dm644 contrib/omarchy/spotifast.json.tpl "${pkgdir}/usr/share/spotifast/omarchy/spotifast.json.tpl"
+    install -Dm755 contrib/omarchy/spotifast-theme "${pkgdir}/usr/share/spotifast/omarchy/spotifast-theme"
+  fi
+}

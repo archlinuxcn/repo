@@ -1,0 +1,22 @@
+print_spotifast_post_install() {
+  cat <<'EOF2'
+Spotifast setup:
+
+  Launch it, press Sign in with Spotify, and approve in the browser.
+  Playing music on this computer is one more one-time approval from the
+  device menu (the speaker icon), and needs Spotify Premium.
+
+  Closing the window keeps the music playing in the system tray; quit from
+  the tray menu or with Ctrl+Q.
+
+Docs: https://spotifast.rocks/
+EOF2
+}
+
+post_install() {
+  print_spotifast_post_install
+}
+
+post_upgrade() {
+  print_spotifast_post_install
+}
