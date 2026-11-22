@@ -35,7 +35,7 @@ build() {
 
   cd "${_pkgname}-${pkgver}"
   export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
-  ./gradlew clean build --no-daemon
+  ./gradlew clean assemble --no-daemon
 }
 
 package() {
