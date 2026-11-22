@@ -73,7 +73,7 @@ diff -rupN FreeImage/Makefile.fip FreeImage-new/Makefile.fip
 diff -rupN FreeImage/Makefile.gnu FreeImage-new/Makefile.gnu
 --- FreeImage/Makefile.gnu	2015-03-10 08:04:00.000000000 +0100
 +++ FreeImage-new/Makefile.gnu	2018-07-31 23:37:58.556953201 +0200
-@@ -16,21 +16,11 @@ LIBRARIES = -lstdc++
+@@ -16,21 +16,32 @@ LIBRARIES = -lstdc++
  MODULES = $(SRCS:.c=.o)
  MODULES := $(MODULES:.cpp=.o)
  CFLAGS ?= -O3 -fPIC -fexceptions -fvisibility=hidden
@@ -88,8 +88,29 @@ diff -rupN FreeImage/Makefile.gnu FreeImage-new/Makefile.gnu
 -# LibJXR
 -CXXFLAGS += -D__ANSI__
 -CXXFLAGS += $(INCLUDE)
-+override CFLAGS += $(INCLUDE) $(shell pkg-config --cflags OpenEXR libopenjp2 libraw libpng libtiff-4 libwebp libwebpmux zlib libjxr)
-+override LDFLAGS += -ljpeg $(shell pkg-config --libs OpenEXR libopenjp2 libraw libpng libtiff-4 libwebp libwebpmux zlib libjxr)
++# One pkg-config call per module: a multi-module call is all-or-nothing, so a
++# single missing .pc would otherwise drop every -I and fail on a stray header.
++PKGCONF_MODULES = OpenEXR libopenjp2 libraw libpng libtiff-4 libwebp libwebpmux zlib
++override CFLAGS += $(INCLUDE) $(foreach m,$(PKGCONF_MODULES),$(shell pkg-config --cflags $(m) 2>/dev/null))
++override LDFLAGS += -ljpeg $(foreach m,$(PKGCONF_MODULES),$(shell pkg-config --libs $(m) 2>/dev/null))
++ifeq ($(strip $(shell pkg-config --cflags libopenjp2 2>/dev/null)),)
++override CFLAGS += $(addprefix -I,$(wildcard /usr/include/openjpeg-2.*))
++endif
++# JPEG-XR: pkg-config first, then the two header layouts jxrlib has shipped.
++JXR_CFLAGS := $(shell pkg-config --cflags libjxr 2>/dev/null)
++JXR_LIBS := $(shell pkg-config --libs libjxr 2>/dev/null)
++ifeq ($(strip $(JXR_CFLAGS)),)
++ifneq ($(wildcard /usr/include/libjxr/glue/JXRGlue.h),)
++JXR_CFLAGS := -I/usr/include/libjxr/common -I/usr/include/libjxr/image/x86 -I/usr/include/libjxr/image -I/usr/include/libjxr/glue -I/usr/include/libjxr/test -D__ANSI__ -DDISABLE_PERF_MEASUREMENT
++else ifneq ($(wildcard /usr/include/jxrlib/JXRGlue.h),)
++JXR_CFLAGS := -I/usr/include/jxrlib -D__ANSI__ -DDISABLE_PERF_MEASUREMENT
++endif
++endif
++ifeq ($(strip $(JXR_LIBS)),)
++JXR_LIBS := -ljpegxr -ljxrglue
++endif
++override CFLAGS += $(JXR_CFLAGS)
++override LDFLAGS += $(JXR_LIBS)
  
  ifeq ($(shell sh -c 'uname -m 2>/dev/null || echo not'),x86_64)
 -	CFLAGS += -fPIC
@@ -98,7 +119,7 @@ diff -rupN FreeImage/Makefile.gnu FreeImage-new/Makefile.gnu
  endif
  
  TARGET  = freeimage
-@@ -61,13 +51,13 @@ FreeImage: $(STATICLIB) $(SHAREDLIB)
+@@ -61,13 +72,13 @@ FreeImage: $(STATICLIB) $(SHAREDLIB)
  	$(CC) $(CFLAGS) -c $< -o $@
  
  .cpp.o:
