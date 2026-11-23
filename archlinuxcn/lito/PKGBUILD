@@ -2,15 +2,15 @@
 # Contributor: Zhang Hua <zhanghua.00@qq.com>
 
 # Check deps.json
-_rstd_commit=4b2b7893a7c32135a9064a33fa85aab3a05bb684
-_luato_commit=34b0d9b6a64f23a54b7c158853a1b127f25a0056
+_rstd_commit=c5a080604370563298a0dac46012e717f35fe643
+_luato_commit=500fa77514f1ea32c9dffd1d68a16ab5bd31e069
 _licrypto_commit=4f5f0432d4566d66745b448d617f6b1b36ae6db9
 _ligraph_commit=26cfca9b2306f1de389487cabfe37f16363ee24f
-_liresto_commit=a36aa4edd009197cd123275143bfb00d67b3f769
+_liresto_commit=39a1bc0f01762ce702a45a0cfcb92035229a5035
 
 pkgname=lito
-pkgver=0.8.10
-pkgrel=2
+pkgver=0.8.11
+pkgrel=1
 pkgdesc="Module-first C++ build tool with manifest"
 arch=('x86_64' 'aarch64' 'riscv64')
 url="https://github.com/litocpp/${pkgname}"
@@ -23,12 +23,12 @@ source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/litocpp/licrypto.git#commit=${_licrypto_commit}"
 	"git+https://github.com/litocpp/ligraph.git#commit=${_ligraph_commit}"
 	"git+https://github.com/litocpp/liresto.git#commit=${_liresto_commit}")
-sha256sums=('042ff65e1a1f9f3c2c23a9b9d9de81518592365c456b3edf441a0a77d9752f13'
-            '85538d0fbaab692c4bb67093880c281a1b3c9a166068011381daba04a0b3bf7f'
-            'b8e4589fe724df1eaecf7f1009b466545ad63ac9c89eb28ad12953e66eb10c6e'
+sha256sums=('ef34dbaf4aa4368943ffc2fece7fbe4b4c3289d1651ffd0c24415d1072b4e64b'
+            'c5926f25f4ca49ce02b0608ede079afcf7c0fadafa270d9cc050c821189adb1c'
+            '03c85e20d4a80e20552f6f2e6655409d68ebaac554dd0044e4c0b150a386f355'
             'a1b4edc2f1055d556f023fc6863f278fdcad906a72a2bc30615a4704aa2efd8a'
             '90dd0eb2a90813149c0392cbb05ea74d6a23e2a0a76617713088a0bc2bd9f27b'
-            'e4b9605c35cbb63c8695651c459e0062928e44aa515178437b58d0b8178fca7e')
+            'd35de0b3bcd803014dacc4d786e3a2a4e2bc42e965a32c6f46587d4a45361f7c')
 options=('!lto') # Linking fails with LLVM 23 when LTO is enabled
 
 build() {
