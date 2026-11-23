@@ -1,0 +1,25 @@
+diff --git a/src/main/index.ts b/src/main/index.ts
+index 4791891..da3f22e 100644
+--- a/src/main/index.ts
++++ b/src/main/index.ts
+@@ -242,6 +242,20 @@ import { resolveMainWindowStartupPlan } from './window/window-startup-plan'
+ 
+ // ─── Platform Early Setup ───────────────────────────────
+ 
++// Distribution packages can run Motrix with a system Electron. In that setup,
++// Electron's process.resourcesPath points to its own files under /usr/lib, so
++// let the launcher point Motrix at the separately installed application data.
++const systemElectronResourcesPath = process.env.MOTRIX_RESOURCES_PATH
++if (systemElectronResourcesPath) {
++  if (!path.isAbsolute(systemElectronResourcesPath)) {
++    throw new Error('MOTRIX_RESOURCES_PATH must be an absolute path')
++  }
++  Object.defineProperty(process, 'resourcesPath', {
++    configurable: true,
++    value: path.resolve(systemElectronResourcesPath),
++  })
++}
++
+ suppressMacOSAutomaticFullscreenMenuItem(process.platform, systemPreferences)
+ 
+ const distributionContext = resolveDistributionContext({

@@ -1,0 +1,5 @@
+#!/bin/bash
+export ELECTRON_IS_DEV=0
+export ELECTRON_FORCE_IS_PACKAGED=true
+export MOTRIX_RESOURCES_PATH=/usr/lib/motrix
+exec /usr/bin/electron44 /usr/lib/motrix/app.asar "$@"
