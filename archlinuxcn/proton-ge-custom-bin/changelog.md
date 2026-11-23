@@ -1,3 +1,28 @@
+## GE-Proton11-14
+
+# HOTFIX RELEASE
+
+# Changes since GE-Proton11-13.
+
+## Component Updates
+
+- D7VK updated to v2.5.
+- D3D8 games now use DXVK's d8vk by default instead of wined3d. Use `PROTON_NO_D8VK=1` to switch back to wined3d (`PROTON_USE_WINED3D=1` also does). `PROTON_DXVK_D3D8` is no longer needed. D3D9 and newer games are not affected.
+- 32-bit D3D7/6/5/3 games now use D7VK by default. DirectDraw-only (2D) calls are passed through to Wine's ddraw. Use `PROTON_NO_D7VK=1` to switch back to Wine's ddraw (`PROTON_USE_WINED3D=1` also does). `PROTON_USE_D7VK` is no longer needed.
+
+## Wayland and Windowing
+
+- GTA III (Wine-Wayland): the intro videos no longer start shifted left with the desktop showing on the right in its 4:3 fullscreen mode. More generally, older games that draw with GDI in a low-resolution fullscreen mode are now centered between black bars, on both Wine-Wayland and X11.
+- RuneScape (Wine-Wayland): fixed a black screen in fullscreen and maximized windows, a regression in 11-13 from the GTA III intro video fix. [#995](https://github.com/GloriousEggroll/proton-ge-custom/issues/995)
+
+## Rendering and HDR
+
+- Wine-Wayland: 32-bit Vulkan applications no longer fail to start, including 32-bit DXVK games and Battle.net/Ubisoft Connect's embedded browser. This was a regression in 11-13: the HDR colorspace layer was only built as 64-bit. It is now built for 32-bit as well, and Wine retries without the layer if it can't be loaded. `DISABLE_WINE_HDR_COLORSPACE_LAYER=1` is no longer needed as a workaround. [#996](https://github.com/GloriousEggroll/proton-ge-custom/issues/996) [#997](https://github.com/GloriousEggroll/proton-ge-custom/issues/997)
+
+## Known Issues
+
+- Cyberpunk 2077 on NVIDIA: the game can exit shortly after launch. A shader added in a recent game patch crashes NVIDIA's shader compiler. The log shows `Unsupported: ... extractelement <8 x i4>` followed by `Exception 0xc000001d` in `vkCreateComputePipelines`. This is a driver bug, not specific to GE-Proton: it happens on Proton Experimental and other Proton builds too, on the 595, 615 and 620 driver branches. NVIDIA has confirmed it and is tracking a fix (NVIDIA bug 7014466). It needs a driver update. A newer Proton version can make it appear on a setup where it worked before, because the shader then has to be recompiled. [#998](https://github.com/GloriousEggroll/proton-ge-custom/issues/998), [vkd3d-proton#3405](https://github.com/HansKristian-Work/vkd3d-proton/issues/3405)
+
 ## GE-Proton11-13
 
 # Changes since GE-Proton11-12:
