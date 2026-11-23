@@ -1,3 +1,130 @@
+## GE-Proton11-13
+
+# Changes since GE-Proton11-12:
+
+## Component Updates
+
+- Wine updated to Proton Experimental bleeding edge `experimental-wine-bleeding-edge-11.0-478690-20261121`.
+- DXVK updated to v3.1.1-235-gf90f1bf1.
+- vkd3d-proton updated to v3.1-83-gcae8353e.
+- DXVK-NVAPI updated to v0.9.3-10-g51a0f79.
+- vkd3d updated to vkd3d-2.1-271-g698cbfbd.
+- FEX updated to FEX-2611-68-g490bb02f6.
+- OpenXR SDK updated to release-1.1.63.
+- Xalia updated to 0.5.1.
+- Added the `sbc` and `piper-phonemize` submodules. piper now uses Valve's hosted onnxruntime, so the old workaround was removed.
+- Upstream Proton changes:
+  - Steam networking signaling wrappers.
+  - vrclient D3D12 BGRA texture mapping and IVRMailbox passthrough.
+  - wineopenxr pointer slot sizing.
+  - igdext path casing fix.
+  - Game settings for MONOMOON, Warhammer 40,000: Darktide and One Piece Pirate Warriors 3.
+
+## Controllers
+
+- **Bluetooth DualSense and DualSense Edge** are now presented to games as wired USB controllers by default when Steam Input is disabled for the game (`PROTON_DUALSENSE_BT_AS_USB`).
+  - HD haptics and speaker audio are sent over Bluetooth (`PROTON_DUALSENSE_BT_HAPTICS`). Haptics and speaker audio were confirmed working in several games.
+  - Output reports are coalesced, and state reports are capped at 33 ms (a Bluetooth airtime limit).
+  - Compatible vibration uses the motor rumble.
+- **Bluetooth DualShock 4** is presented as a wired USB controller with the USB report layout (`PROTON_DUALSHOCK4_BT_AS_USB`). Games get its speaker and headset microphone (`PROTON_DUALSHOCK4_BT_AUDIO`).
+- Sony pads stay on SDL with the native Sony report layout when hidraw is disabled for them.
+- Punishing: Gray Raven: disabled the automatic Sony XInput slot, so DualShock 4 and DualSense get Sony prompts and correct mappings with Steam Input off. [#616](https://github.com/GloriousEggroll/proton-ge-custom/issues/616)
+- FlatOut 2: fixed a startup freeze caused by XInput waiting on its update thread while the loader lock was held. [#939](https://github.com/GloriousEggroll/proton-ge-custom/issues/939)
+- Le Mans Ultimate: wheels are found again after reconnecting. [#944](https://github.com/GloriousEggroll/proton-ge-custom/issues/944)
+
+## Steam Overlay
+
+- The overlay focus proxy no longer takes focus from X11 apps, and keeps its focus target in a process Steam knows. [#950](https://github.com/GloriousEggroll/proton-ge-custom/issues/950)
+- Rockstar's in-game overlay no longer hides the mouse pointer: resource cursors are shared when they are created.
+
+## Wayland and Windowing
+
+- Battle.net and other Chromium apps on Wine-Wayland: fixed NVIDIA Xid GPU faults and Vulkan threading errors from the cross-process swapchain path. Confirmed by the reporter. [#952](https://github.com/GloriousEggroll/proton-ge-custom/issues/952)
+- GTA III, Vice City and San Andreas no longer look minimized during their intro videos on Wine-Wayland. [#958](https://github.com/GloriousEggroll/proton-ge-custom/issues/958)
+- Battlefield 4 no longer crashes on alt-tab or when applying graphics settings with server-side decorations.
+- Server-side decorations work with xdg-decoration version 1. [#955](https://github.com/GloriousEggroll/proton-ge-custom/issues/955)
+- Balatro: the pointer no longer jumps to the window corner after an early cursor lock. [#957](https://github.com/GloriousEggroll/proton-ge-custom/issues/957)
+- Enemy Territory: Quake Wars no longer crashes at startup from a spurious keyboard layout change message. [#629](https://github.com/GloriousEggroll/proton-ge-custom/issues/629)
+- Presentation is handed back to a retired presenter once the window's owner stops presenting. This replaces the earlier background presenter approach. [#960](https://github.com/GloriousEggroll/proton-ge-custom/issues/960)
+- winewayland uses `steam_app_<SteamAppId>` as the app ID, like winex11. [#937](https://github.com/GloriousEggroll/proton-ge-custom/issues/937)
+- When `SteamAppId` is 0 or `default`, the exe name is used as the WM_CLASS/app ID.
+- Windows are deactivated properly when the host focus loss can't change the foreground window (AION 2 mute on focus loss). [#877](https://github.com/GloriousEggroll/proton-ge-custom/issues/877)
+- Layered overlay windows: [#752](https://github.com/GloriousEggroll/proton-ge-custom/issues/752)
+  - The input shape is now sampled every 100 ms by default (`WINE_LAYERED_OVERLAY_SHAPE_INTERVAL`), which fixes stutter on large overlays.
+  - With `WINE_LAYERED_OVERLAY_DIRECT=1`, the input shape now updates correctly for windows that reach past the screen edge (Birdwatching Notebook).
+- `PROTON_NO_XIM=1` works again. Games get every key press, and dead keys combine like on Windows.
+- Stronghold Crusader HD: fixed the too-fast cursor and scrolling and the tiny cursor.
+
+## Video Playback
+
+- Daemonica: fixed corrupted intro and outro videos. The WMV decoder can now convert to RGB565 and RGB555. Verified in-game. [#994](https://github.com/GloriousEggroll/proton-ge-custom/issues/994)
+- Angel Wish no longer hangs at the logos, and needs no extra settings: [#982](https://github.com/GloriousEggroll/proton-ge-custom/issues/982)
+  - WM reader restart fixes.
+  - The reader's undocumented secure channel interface is now stubbed.
+  - Confirmed by the reporter.
+- Metro Awakening no longer hangs after its intro movies on first launch. [#993](https://github.com/GloriousEggroll/proton-ge-custom/issues/993)
+- NAudio-based games (MP3 playback through MediaFoundationReader) no longer fail on the first sample. [#931](https://github.com/GloriousEggroll/proton-ge-custom/issues/931)
+- Fixed movie playback in:
+  - Veggie Blast: WPF MediaElement, with a new HEVC decoder, Windows Media Player and EVR fixes.
+  - Big Foot Crush: looped Unity video under DXVK.
+  - Hoshi to Tsubasa no Paradox: seeking movies.
+  - Burning Striker: amstream DirectDraw streams, with a deadlock on stop and upside-down video.
+  - Gunslinger Stratos 2: Sample Grabber ARGB32.
+  - Hatsune Miku Project DIVA Arcade: separate output threads, with renderer pacing.
+  - KanColle Arcade: DXVA2 callers.
+  - Pokken Tournament: synchronous ANY_STREAM reads and demuxing without the source lock.
+  - Looped MPEG-4 Part 2 video through the source reader under DXVK.
+- Crimson Desert: video frames shared with D3D12 are now flushed promptly.
+- VMR9's default presenter device is created multithreaded.
+- Phantom Blade Zero: disabled `MF_SA_D3D11_AWARE` to avoid the cutscene freeze. Not yet run-tested on GE's decoder. [#903](https://github.com/GloriousEggroll/proton-ge-custom/issues/903)
+
+## Rendering and HDR
+
+- The native HDR colorspace is now opt-in with `WINE_WAYLAND_HDR_NATIVE=1`. The Windows image descriptions are back as the default. This avoids KWin crashes from invalid mastering primaries on some drivers. [#932](https://github.com/GloriousEggroll/proton-ge-custom/issues/932)
+- Added the `VK_LAYER_GE_hdr_colorspace` layer, which corrects the colors of the Steam overlay and MangoHud in Windows HDR mode. [#932](https://github.com/GloriousEggroll/proton-ge-custom/issues/932)
+- Arc Raiders: skip `vkSetLatencySleepModeNV` for managed swapchains, fixing a crash when the window is unfocused while a level loads. [#891](https://github.com/GloriousEggroll/proton-ge-custom/issues/891)
+- Assetto Corsa Rally: triple-screen mode now works. Viewports not set by `RSSetViewports` are disabled, like D3D12 on Windows.
+- `PROTON_STREAMLINE_UPGRADE` now also loads upgraded Streamline plugins the game doesn't ship (STAR WARS Jedi: Survivor frame generation). [#964](https://github.com/GloriousEggroll/proton-ge-custom/issues/964)
+- `PROTON_ENABLE_NGX_UPDATER` (NVIDIA R620+) lets the driver's NGX updater provide newer DLSS versions, and sets `DXVK_NVAPI_DRS_SETTINGS` to match.
+
+## Protonfixes
+
+- Streamline upgrade exposed through `PROTON_STREAMLINE_UPGRADE`.
+- New fixes: Wolfenstein: The New Order and The Old Blood, Cry of Fear, Kabounce and ElonaPlus (zh_Hans).
+- Fixes and settings:
+  - Le Mans Ultimate VR uses the builtin `d3dx11_43`.
+  - Stronghold Crusader HD fixup.
+- umu fixes:
+  - User-changed umu mount drive letters are kept. [#498](https://github.com/GloriousEggroll/proton-ge-custom/issues/498)
+  - Codenames are resolved from the local umu database.
+  - Steam VDF parsing is more robust.
+- The debug output shows the Proton build and the prefix version separately.
+- Fixed broken protonfixes in the build, and cleaned up deprecated or upstreamed protonfixes patches.
+
+## Other Changes
+
+- **winepipewire.drv (by M0n7y5, from CachyOS):** added as an opt-in with `PROTON_USE_PIPEWIRE=1` or `PROTON_ENABLE_PIPEWIRE=1`. It supports audio device hotplug, and routes USB and Bluetooth DualSense and DualShock 4 audio. Controller output volume scales USB DualSense haptics. [#692](https://github.com/GloriousEggroll/proton-ge-custom/issues/692)
+- **Built-in MIDI synth:** for games that expect one, such as RPG Maker titles. It uses FluidSynth with the bundled GeneralUser GS sound font. Disable it with `PROTON_NO_MIDI_SYNTH`, or use another font with `PROTON_MIDI_SOUNDFONT`. PipeWire's ALSA bridge ports are no longer mistaken for a host synth. [#949](https://github.com/GloriousEggroll/proton-ge-custom/issues/949)
+- **Ubisoft Connect:** closes after the game exits, so Steam no longer shows the game as running. Set `PROTON_KEEP_UBISOFT_LAUNCHER` to keep it open. It also stays open when it was launched directly.
+- **Battlefield 4:** PunkBuster's module scans no longer stall the game for 50-75 ms every few seconds. [#984](https://github.com/GloriousEggroll/proton-ge-custom/issues/984)
+- **The Witcher 3:** fixed stutter by caching `InternetGetConnectedState`.
+- **Le Mans Ultimate:** [#944](https://github.com/GloriousEggroll/proton-ge-custom/issues/944)
+  - Online play: added `KDF_SECRET_APPEND` support in bcrypt.
+  - CUR/ICO loading in d3dx for VR, with bounds checks and cursor transparency.
+- **CSP online signing:** implemented `CryptSIPVerifyIndirectData` for PE files.
+- **Ini and profile files:**
+  - HORGIHUGH: kernel32 reads the `[]` ini section.
+  - `WritePrivateProfileStringA` accepts values over 32766 characters.
+- **TriggerHeart EXELICA ENHANCED:** no longer aborts from exhausted user handles. `LoadAccelerators` tables are now cached.
+- **Fonts:** backported the upstream fix for lost Fonts registry keys.
+- **SteamVR and OpenXR:**
+  - SteamVR is no longer started by background OpenXR probes, such as Steam's startup driver query. [#942](https://github.com/GloriousEggroll/proton-ge-custom/issues/942)
+  - 32-bit wineopenxr now actually ships. [#906](https://github.com/GloriousEggroll/proton-ge-custom/issues/906)
+- **ntdll and wineserver:** fixes for threads that are created and killed in quick succession.
+- **Prefixes:** a game or Steam drive entry that isn't a symlink (for example, after a backup restore) is now repaired instead of aborting the launch. [#991](https://github.com/GloriousEggroll/proton-ge-custom/issues/991)
+- **ARM64 (FEX):** full x87 precision is used for Inno Setup (GOG) installers, fixing corrupted install paths.
+- **README:** fixed the install scripts with single-line GitHub API JSON.
+
 ## GE-Proton11-12
 
 # GE-Proton11-12
