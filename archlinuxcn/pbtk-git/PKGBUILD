@@ -34,7 +34,7 @@ makedepends=(
     python-wheel
 )
 source=(
-    "$pkgname::git+$url.git"
+    "$pkgname::git+$url.git#branch=master"
     use-system-binaries.patch
 )
 b2sums=('SKIP'
