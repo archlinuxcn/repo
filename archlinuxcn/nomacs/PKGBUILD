@@ -3,8 +3,8 @@
 # Contributor: speps <speps at aur dot archlinux dot org>
 
 pkgname=nomacs
-pkgver=3.23.3
-pkgrel=2
+pkgver=3.23.4
+pkgrel=1
 epoch=1
 pkgdesc="A Qt image viewer"
 arch=(x86_64)
@@ -19,6 +19,7 @@ depends=(
     libraw
     libstdc++
     libtiff
+    libxcb
     opencv      #libopencv_imgproc.so
     qt6-base
     qt6-svg
@@ -38,7 +39,7 @@ optdepends=(
     'qt6-imageformats: support additional image formats'
     )
 source=("git+https://github.com/nomacs/nomacs.git#tag=${pkgver}")
-b2sums=('ef320f1a517a093f66155d5cb860f9828477e7e3dd2ac6abb70fca186e0d0204b4cf742831d5b443d39578b1ebb26906c6590872040690e8654584a67f56bf96')
+b2sums=('2ed939c692e5b6b74e87c4b5ac260d57f1b13447a28d00fdda960984fcb4327f80d26ccfcba9b204a489a3457230f1a98e7df0b576ecf139d3201cf60ed482b0')
 
 build() {
   # Disable warning Detected locale "C" with character encoding "ANSI_X3.4-1968", which is not UTF-8.
