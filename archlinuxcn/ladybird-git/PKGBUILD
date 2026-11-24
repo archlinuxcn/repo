@@ -75,6 +75,7 @@ prepare() {
 	sed -i "s|78.2|78.3|g" Libraries/LibUnicode/CMakeLists.txt || true
 	echo 'add_cxx_compile_options(-Wno-restrict)' >> Meta/CMake/compile_options.cmake
 	sed -e 's/mi_heap_get_default/mi_heap_main/' -i AK/kmalloc.cpp
+	sed -e '/^add_cxx_compile_options(-Werror)$/i add_cxx_compile_options(-Wno-error=deprecated-declarations)' -i Meta/CMake/compile_options.cmake
 
 	rm -rf "$srcdir/llvm-libc" "$srcdir/llvm-libc-include"
 	mkdir -p "$srcdir/llvm-libc"
@@ -87,8 +88,6 @@ prepare() {
 	for d in hdr include shared src/__support src/string/memory_utils; do
 		find "$d" -name '*.h' -exec install -Dm644 {} "$srcdir/llvm-libc-include/llvm-libc/{}" \;
 	done
-
-	sed -e '/^add_cxx_compile_options(-Werror)$/i add_cxx_compile_options(-Wno-error=deprecated-declarations)' -i Meta/CMake/compile_options.cmake
 }
 
 pkgver() {
