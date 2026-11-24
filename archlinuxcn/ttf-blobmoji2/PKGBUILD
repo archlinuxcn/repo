@@ -1,8 +1,8 @@
 # Maintainer: Rocket Aaron <rocka@archlinuxcn.org>
 
 pkgname=ttf-blobmoji2
-pkgver=17r1
-pkgrel=2
+pkgver=18r1
+pkgrel=1
 pkgdesc='Fork of googlefonts/noto-emoji updated to use C1710/blobmoji (font name is Noto Color Emoji)'
 arch=(any)
 url='https://github.com/DavidBerdik/blobmoji2'
@@ -11,7 +11,7 @@ provides=(emoji-font)
 conflicts=(noto-fonts-emoji)
 source=("${pkgname}-${pkgver}.ttf::${url}/releases/download/blobmoji-${pkgver}/NotoColorEmoji.ttf"
         "${pkgname}-${pkgver}-LICENSE::${url}/raw/blobmoji-${pkgver}/LICENSE")
-b2sums=('9477eb9a0389e06ed47f051f32cd622908d95a2cd9062727db87f029adba7e629196933c08059f2ab47d90b61088d2f6c8e175dee6965b9b2369215115d61937'
+b2sums=('ab88d4468936f06bb02b1dfaa21007879a72696d7aeb38da16f9eb6d4ddf6ed8f5f1ee4fae21a5b620d7e62c1b4af6ef8aba036099d87eb5c6745e245e08a85a'
         '9587c1579c053aa5e4ddc29b74f80080eadf17fa944ef31a010c6f9e874945338bfa98f1848e5ca348cd23a3e56d7d0dff2402e02cb36c22c250442e408e6f2b')
 
 package() {
