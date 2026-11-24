@@ -87,6 +87,8 @@ prepare() {
 	for d in hdr include shared src/__support src/string/memory_utils; do
 		find "$d" -name '*.h' -exec install -Dm644 {} "$srcdir/llvm-libc-include/llvm-libc/{}" \;
 	done
+
+	sed -e '/^add_cxx_compile_options(-Werror)$/i add_cxx_compile_options(-Wno-error=deprecated-declarations)' -i Meta/CMake/compile_options.cmake
 }
 
 pkgver() {
