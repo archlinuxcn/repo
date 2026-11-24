@@ -3,18 +3,18 @@ From: DeepChirp <DeepChirp@outlook.com>
 Date: Wed, 30 Sep 2026 15:50:08 +0800
 Subject: [PATCH] [build] respect WITH_SYSTEM_PROVIDED_3PARTY for 3party
 
-Use find_package to locate system-provided blake3, glaze, minizip-ng,
-and glfw3 when WITH_SYSTEM_PROVIDED_3PARTY is enabled.
+Use find_package to locate system-provided blake3, glaze, and minizip-ng
+when WITH_SYSTEM_PROVIDED_3PARTY is enabled.
 ---
- 3party/CMakeLists.txt         | 14 ++++++++------
- 3party/minizip/CMakeLists.txt |  7 +++++++
- 3party/minizip/minizip.hpp    |  4 ++--
- CMakeLists.txt                |  4 ++++
- libs/coding/blake3.hpp        |  2 +-
- 5 files changed, 22 insertions(+), 9 deletions(-)
+ 3party/CMakeLists.txt         | 4 ++--
+ 3party/minizip/CMakeLists.txt | 7 +++++++
+ 3party/minizip/minizip.hpp    | 4 ++--
+ CMakeLists.txt                | 3 +++
+ libs/coding/blake3.hpp        | 2 +-
+ 5 files changed, 15 insertions(+), 5 deletions(-)
 
 diff --git a/3party/CMakeLists.txt b/3party/CMakeLists.txt
-index 8fe9dd43ff..9f984d85b2 100644
+index de75bc338d..3532631173 100644
 --- a/3party/CMakeLists.txt
 +++ b/3party/CMakeLists.txt
 @@ -43,6 +43,8 @@ if (NOT WITH_SYSTEM_PROVIDED_3PARTY)
@@ -35,24 +35,7 @@ index 8fe9dd43ff..9f984d85b2 100644
 -add_subdirectory(glaze)
  add_subdirectory(minizip)
  add_subdirectory(open-location-code)
- add_subdirectory(stb_image)
-@@ -107,10 +107,12 @@ if (PLATFORM_DESKTOP)
-   set(GLFW_BUILD_WAYLAND OFF CACHE BOOL "")
-   # Disable ARC for glfw and re-enable after it because it's globally set in the root CMakeLists.txt
-   set(CMAKE_OBJC_FLAGS "")
--  add_subdirectory(glfw)
--  set_target_properties(glfw PROPERTIES UNITY_BUILD OFF)
--  set_target_properties(glfw PROPERTIES XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC NO)
--  set(CMAKE_OBJC_FLAGS -fobjc-arc)
-+  if (NOT WITH_SYSTEM_PROVIDED_3PARTY)
-+    add_subdirectory(glfw)
-+    set_target_properties(glfw PROPERTIES UNITY_BUILD OFF)
-+    set_target_properties(glfw PROPERTIES XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC NO)
-+    set(CMAKE_OBJC_FLAGS -fobjc-arc)
-+  endif()
- 
-   add_subdirectory(imgui)
- endif()
+ add_subdirectory(sperr)
 diff --git a/3party/minizip/CMakeLists.txt b/3party/minizip/CMakeLists.txt
 index 9155391baf..8348ea1069 100644
 --- a/3party/minizip/CMakeLists.txt
@@ -90,17 +73,16 @@ index 595b850b76..7e8482f072 100644
  #include <array>
  #include <cstdint>
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e6e30deabf..d35b289c3e 100644
+index 58f742640c..2e18625838 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -212,6 +212,10 @@ if (WITH_SYSTEM_PROVIDED_3PARTY)
+@@ -224,6 +224,9 @@ if (WITH_SYSTEM_PROVIDED_3PARTY)
  
-   find_package(expat CONFIG REQUIRED)
+   find_package(expat 2.9.0 CONFIG REQUIRED)
  
 +  find_package(blake3 REQUIRED)
 +  find_package(glaze REQUIRED)
 +  find_package(minizip-ng REQUIRED)
-+  find_package(glfw3 REQUIRED)
    find_package(pugixml REQUIRED)
    find_package(utf8cpp REQUIRED)
    find_package(Boost REQUIRED)
@@ -118,4 +100,3 @@ index d4129783b0..86a6c7faf6 100644
  #include <cstddef>
 -- 
 2.55.0
-
