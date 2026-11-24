@@ -4,8 +4,8 @@
 
 pkgname=zotero-bin
 pkgver=10.0.8
-pkgrel=2
-pkgdesc="Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
+pkgrel=3
+pkgdesc="[Deprecated: use extra/zotero, see comments in AUR] Zotero Standalone. Is a free, easy-to-use tool to help you collect, organize, cite, and share your research sources."
 arch=('x86_64' 'i686' 'aarch64')
 url="https://www.zotero.org/download"
 license=('AGPL-3.0-or-later')
