@@ -5,7 +5,7 @@ pkgname=organicmaps
 _appid=app.organicmaps.desktop
 pkgver=2026.11.11_39
 _pkgver=2026.11.11-39-android
-pkgrel=1
+pkgrel=2
 pkgdesc="A privacy-focused offline maps & GPS app for hiking, cycling, biking, and driving"
 arch=('x86_64')
 # Reference: https://github.com/organicmaps/organicmaps/blob/master/docs/INSTALL.md
@@ -55,11 +55,11 @@ source=(
     "0001-build-do-not-hardcode-compile-and-link-flags.patch"
     "0002-build-respect-WITH_SYSTEM_PROVIDED_3PARTY-for-3party.patch"
 )
-sha256sums=('e0713b8685c87620776479eb7696d8373521dc8683a22b184664a9a803f7a440'
+sha256sums=('2ee785b59284d636acc4a4be4513d6b24c0c05b06b273add83878e540ea1ea21'
             'SKIP'
             'SKIP'
-            '4cb1168cf4de420296069a67d47c8e589b3722b7d42989e89cf5413e229a5e63'
-            '2b2069a3ff07c99f2b1297978e2396a218ca76c23b8f913d7658fd8771fa81ef')
+            'e5b8d66fb5a957abbe7ef4ba8467083dddf142d03cedbacc232e45a544191f34'
+            'eba60372f744e402553ca1f1fb9600c97d0d0aa5364d9be05af5cd770a8a1528')
 
 prepare() {
     cd "${pkgname}"
