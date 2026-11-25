@@ -72,7 +72,7 @@ noextract=("e54169423e7ee5d8b41c2f1b6f7a59000c901ee0.tar.gz")
 prepare() {
 	cd ladybird
 
-	sed -e '/march=/d' -e '/-Ctarget-cpu=native/d' -i ladybird/Meta/CMake/compile_options.cmake
+	sed -e '/march=/d' -e '/-Ctarget-cpu=native/d' -i Meta/CMake/compile_options.cmake
 
 	sed -e 's/\(lib[a-z]*\)-ladybird)/\1)/' -i Meta/CMake/check_for_dependencies.cmake
 	sed -i "s|78.2|78.3|g" Libraries/LibUnicode/CMakeLists.txt || true
