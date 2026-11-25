@@ -71,6 +71,9 @@ noextract=("e54169423e7ee5d8b41c2f1b6f7a59000c901ee0.tar.gz")
 
 prepare() {
 	cd ladybird
+
+	sed -e '/march=/d' -e '/-Ctarget-cpu=native/d' -i ladybird/Meta/CMake/compile_options.cmake
+
 	sed -e 's/\(lib[a-z]*\)-ladybird)/\1)/' -i Meta/CMake/check_for_dependencies.cmake
 	sed -i "s|78.2|78.3|g" Libraries/LibUnicode/CMakeLists.txt || true
 	echo 'add_cxx_compile_options(-Wno-restrict)' >> Meta/CMake/compile_options.cmake
@@ -104,7 +107,6 @@ build() {
 		-B build \
 		-S ladybird \
 		-DLLVM_LIBC_INCLUDE_DIR="$srcdir/llvm-libc-include" \
-		-DENABLE_CI_BASELINE_CPU=ON \
 		-DBUILD_SHARED_LIBS=OFF \
 		-DLADYBIRD_CACHE_DIR="${srcdir}/build/Build/caches" \
 		-DCMAKE_BUILD_TYPE=Release \
