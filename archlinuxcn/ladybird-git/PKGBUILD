@@ -108,6 +108,7 @@ build() {
 		-S ladybird \
 		-DLLVM_LIBC_INCLUDE_DIR="$srcdir/llvm-libc-include" \
 		-DBUILD_SHARED_LIBS=OFF \
+		-DBUILD_TESTING=OFF \
 		-DLADYBIRD_CACHE_DIR="${srcdir}/build/Build/caches" \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX='/usr' \
