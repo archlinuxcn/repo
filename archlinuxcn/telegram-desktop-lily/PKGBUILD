@@ -15,7 +15,6 @@ url="https://desktop.telegram.org/"
 license=('GPL-3.0-or-later WITH OpenSSL-exception')
 depends=(
   'abseil-cpp'
-  'ada'
   'cairo'
   'ffmpeg' 'libavfilter.so' 'libavformat.so' 'libavcodec.so' 'libavutil.so'
   'fontconfig'
@@ -79,8 +78,9 @@ makedepends=(
   'vulkan-headers'
 )
 optdepends=(
-  'geoclue: geoinformation support'
   'crow-translate: translation provider'
+  'enchant: system spellcheck dictionaries support'
+  'geoclue: geoinformation support'
   'webkit2gtk-4.1: embedded browser features provided by webkit2gtk-4.1 (gtk3)'
   'webkitgtk-6.0: embedded browser features provided by webkitgtk-6.0 (gtk4)'
   'xdg-desktop-portal: desktop integration'
@@ -158,6 +158,7 @@ build() {
   cmake -B build -S tdesktop-$pkgver-full -G Ninja \
     -DCMAKE_VERBOSE_MAKEFILE=ON \
     -DCMAKE_INSTALL_PREFIX="/usr" \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib \
     -Dtde2e_DIR="$PWD/td/install/lib/cmake/tde2e" \
     -DCMAKE_PREFIX_PATH="$PWD/wallet-engine-${_wallet_engine_ver}/install" \
     -DCMAKE_BUILD_TYPE=None \
