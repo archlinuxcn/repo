@@ -74,6 +74,8 @@ prepare() {
 
 	sed -e '/march=/d' -e '/-Ctarget-cpu=native/d' -i Meta/CMake/compile_options.cmake
 
+	sed -e 's/AV_HWACCEL_FLAG_LADYBIRD_CLEAR_UNUSED_REF_FRAME_MVS;/0;/' -i Libraries/LibMediaCodecs/FFmpeg/FFmpegVulkanVideoDecoder.cpp
+
 	sed -e 's/\(lib[a-z]*\)-ladybird)/\1)/' -i Meta/CMake/check_for_dependencies.cmake
 	sed -i "s|78.2|78.3|g" Libraries/LibUnicode/CMakeLists.txt || true
 	echo 'add_cxx_compile_options(-Wno-restrict)' >> Meta/CMake/compile_options.cmake
