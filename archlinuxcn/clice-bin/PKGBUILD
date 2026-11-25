@@ -1,0 +1,30 @@
+# Maintainer: Roc Gwei <roc.gui@foxmail.com>
+
+pkgname=clice-bin
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='A C/C++, Objective-C and CUDA language server built on Clang (prebuilt binary)'
+arch=('x86_64')
+url='https://github.com/clice-io/clice'
+license=('Apache-2.0')
+depends=('glibc')
+provides=('clice')
+conflicts=('clice')
+options=('!strip' '!debug')
+
+source=("clice-${pkgver}.x86_64-unknown-linux-gnu.tar.gz::${url}/releases/download/v${pkgver}/clice-${pkgver}.x86_64-unknown-linux-gnu.tar.gz")
+sha256sums=('9dd181aac9c81cae76b255e953da21c9e603fc5b406447eb26c95eaf67ed969a')
+
+package() {
+  # clice resolves its bundled clang headers relative to the binary, so bin/ and
+  # lib/ stay side by side under one prefix.
+  install -Dm755 "$srcdir/clice/bin/clice" "$pkgdir/usr/lib/clice/bin/clice"
+  install -dm755 "$pkgdir/usr/lib/clice/lib"
+  cp -a "$srcdir/clice/lib/clang" "$pkgdir/usr/lib/clice/lib/"
+
+  install -dm755 "$pkgdir/usr/bin"
+  ln -s /usr/lib/clice/bin/clice "$pkgdir/usr/bin/clice"
+
+  install -Dm644 "$srcdir/clice/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir/clice/clice.toml" "$pkgdir/usr/share/doc/$pkgname/clice.toml"
+}

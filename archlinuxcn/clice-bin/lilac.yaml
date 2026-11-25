@@ -1,0 +1,13 @@
+maintainers:
+  - github: RocGwei
+    email: Roc <roc.gui@foxmail.com>
+
+build_prefix: extra-x86_64
+
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: github
+    github: clice-io/clice
+    use_latest_release: true
+    prefix: v
