@@ -5,9 +5,9 @@
 pkgbase=qt6-base-24h
 pkgname=(qt6-base-24h)
 
-_pkgver=6.12.0
+_pkgver=6.12.1
 pkgver=${_pkgver/-/}
-pkgrel=6
+pkgrel=1.4
 arch=(x86_64)
 url='https://www.qt.io'
 license=(GPL-3.0-only
@@ -101,18 +101,13 @@ sha256sums=(
       '8c1599167d7ed0b326f6bc19ea8a93be584ae8144570104be3584d0c4eae677f'
       'd5ee2abac64158c04884a722f8ef4830ea22b6c74aac20185be2838db8eda788'
       '9660ebcab661e7a6bbb194a6c031fb89bea532af4f34fa5d99d653c20d9562cb'
-      'd97ef157dc50bdf0425337e9adede8135ab508a4ab2f1abae7e9cfc42c5f86db'
+      '57fc6f9184ada8a5b635f5c7d6bd481dcb302b20fc2f60629f75ef66c9b0e7fc'
             '5411edbe215c24b30448fac69bd0ba7c882f545e8cf05027b2b6e2227abc5e78'
             '4b93f6a79039e676a56f9d6990a324a64a36f143916065973ded89adc621e094')
 
 prepare() {
   patch -d $_pkgfn -p1 < qt6-base-cflags.patch # Use system CFLAGS
   patch -d $_pkgfn -p1 < qt6-base-nostrip.patch # Don't strip binaries with qmake
-
-  git -C $_pkgfn cherry-pick -n e320c929207aaea0d4c8fb2cd29b16de6cbd2b2c # Fix QtWebEngine detection in cmake
-  git -C $_pkgfn cherry-pick -n 032643f99e090e0304ef935c2ee11c109d55c8a1 # Fix build with md4c 0.6
-  git -C $_pkgfn cherry-pick -n 6b7ee05def510c333fbb8944ae669b72a48367f3 # Fix tab scrolling with mouse wheel
-  git -C $_pkgfn cherry-pick -n a64dfe20a4b447b33c0d482cbd926528e54d53d0 # Fix hangs with openssl 4.1
 
   cd $_pkgfn
   patch -p1 -i ../oldherl-24h.patch
