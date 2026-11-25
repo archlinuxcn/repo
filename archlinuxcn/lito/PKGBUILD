@@ -2,14 +2,14 @@
 # Contributor: Zhang Hua <zhanghua.00@qq.com>
 
 # Check deps.json
-_rstd_commit=c5a080604370563298a0dac46012e717f35fe643
+_rstd_commit=a664da0e8bdd62f5e60c2862b6bd481006ca4218
 _luato_commit=500fa77514f1ea32c9dffd1d68a16ab5bd31e069
 _licrypto_commit=4f5f0432d4566d66745b448d617f6b1b36ae6db9
 _ligraph_commit=26cfca9b2306f1de389487cabfe37f16363ee24f
 _liresto_commit=39a1bc0f01762ce702a45a0cfcb92035229a5035
 
 pkgname=lito
-pkgver=0.8.11
+pkgver=0.8.13
 pkgrel=1
 pkgdesc="Module-first C++ build tool with manifest"
 arch=('x86_64' 'aarch64' 'riscv64')
@@ -23,8 +23,8 @@ source=("git+${url}.git#tag=v${pkgver}"
 	"git+https://github.com/litocpp/licrypto.git#commit=${_licrypto_commit}"
 	"git+https://github.com/litocpp/ligraph.git#commit=${_ligraph_commit}"
 	"git+https://github.com/litocpp/liresto.git#commit=${_liresto_commit}")
-sha256sums=('ef34dbaf4aa4368943ffc2fece7fbe4b4c3289d1651ffd0c24415d1072b4e64b'
-            'c5926f25f4ca49ce02b0608ede079afcf7c0fadafa270d9cc050c821189adb1c'
+sha256sums=('3e285d4244f43160ddaa6e8421dc8784f3588f31b3b347454ae1a8560d799e3c'
+            '45e08a6ea55fad86afdb7e8c51dd5224021a3ca7d706d42e986ff9737a18eb6c'
             '03c85e20d4a80e20552f6f2e6655409d68ebaac554dd0044e4c0b150a386f355'
             'a1b4edc2f1055d556f023fc6863f278fdcad906a72a2bc30615a4704aa2efd8a'
             '90dd0eb2a90813149c0392cbb05ea74d6a23e2a0a76617713088a0bc2bd9f27b'
