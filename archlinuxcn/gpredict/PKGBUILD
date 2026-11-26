@@ -5,8 +5,8 @@
 # Original Submission: Bob Finch <w9ya@qrparci.net>
 
 pkgname=gpredict
-pkgver=2.6
-pkgrel=2
+pkgver=2.7
+pkgrel=1
 pkgdesc="Real-time satellite tracking and orbit prediction application"
 arch=('i686' 'x86_64' 'armv5h' 'armv6h' 'armv7h' 'aarch64')
 url="http://gpredict.oz9aec.net/"
@@ -43,5 +43,5 @@ package()
 	sed -i '$ a\X-DCOP-ServiceType=none' $pkgdir/usr/share/applications/$pkgname.desktop
 	sed -i '$ a\X-KDE-SubstituteUID=false' $pkgdir/usr/share/applications/$pkgname.desktop
 }
-md5sums=('621b2e23762d1746ea371fdb58fcd9f9')
-sha256sums=('f4e6967cb2eeb6d74b8e8208c90dc8f4b1c00955ae1049753ad8352c927e54a3')
+md5sums=('12893183f0cdb1c7ad2e8684ea35e222')
+sha256sums=('1d58b0fc4f13173cde6f64277a8b2e36e84cf0f2a27d8b8d0e48b76780b1236c')
