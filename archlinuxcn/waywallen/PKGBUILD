@@ -2,7 +2,7 @@
 
 
 pkgname=waywallen
-pkgver=0.6.2
+pkgver=0.6.3
 pkgrel=1
 pkgdesc='Wallpaper manager for Linux desktops'
 arch=(x86_64)
@@ -48,7 +48,7 @@ optdepends=(
 options=(!lto)
 
 source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('1cb5f2b07a76215edda16f94ff44f15738e422bee39e183ad7de2bffdfb5b666')
+sha256sums=('d12a87acd2aec7d72da72d4a4f6756d919f3476c5d731925f7c04fd6f76cf96e')
 
 prepare() {
     cd "${pkgname}-${pkgver}"
