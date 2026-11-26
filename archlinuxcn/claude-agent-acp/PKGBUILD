@@ -5,7 +5,7 @@
 org=agentclientprotocol
 realname=claude-agent-acp
 pkgname=$realname
-pkgver=0.110.1
+pkgver=0.113.0
 pkgrel=1
 pkgdesc="Use Claude Agent from any ACP client such as Zed!"
 arch=(aarch64 x86_64)
@@ -16,7 +16,7 @@ depends=('nodejs')
 conflicts=('claude-code-acp')
 provides=('claude-code-acp')
 source=("$realname-$pkgver.tar.gz::https://github.com/$org/$realname/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('cc2a768c99269aac9adb355e1c8019f9b64351a617066ea19fa4c03506778211')
+sha256sums=('3175eaa7088a46bd3e56d1874b4439bd9d37223b19e3ec4a72b15a32615b7fe3')
 # Stripping drops the bundled Bun-compiled claude binary's embedded app, leaving bare bun
 options=(!strip)
 
