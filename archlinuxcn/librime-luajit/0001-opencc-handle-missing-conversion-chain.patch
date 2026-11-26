@@ -1,0 +1,62 @@
+diff --git a/src/rime/gear/opencc.cc b/src/rime/gear/opencc.cc
+index 86f6d605..3cc44fb3 100644
+--- a/src/rime/gear/opencc.cc
++++ b/src/rime/gear/opencc.cc
+@@ -14,6 +14,21 @@
+ 
+ namespace rime {
+ 
++namespace {
++
++list<opencc::ConversionPtr> GetConversions(
++    const opencc::ConverterPtr& converter) {
++  if (converter == nullptr)
++    return {};
++  opencc::ConversionChainPtr conversion_chain =
++      converter->GetConversionChain();
++  if (conversion_chain == nullptr)
++    return {};
++  return conversion_chain->GetConversions();
++}
++
++}  // namespace
++
+ Opencc::Opencc(const path& config_path)
+     : initialized_(false), config_path_(config_path) {}
+ 
+@@ -26,8 +41,9 @@ void Opencc::Initialize() {
+     // opencc accepts file path encoded in UTF-8.
+     converter_ = config.NewFromFile(config_path_.to_utf8_string());
+ 
+-    const list<opencc::ConversionPtr> conversions =
+-        converter_->GetConversionChain()->GetConversions();
++    const list<opencc::ConversionPtr> conversions = GetConversions(converter_);
++    if (conversions.empty())
++      return;
+     dict_ = conversions.front()->GetDict();
+   } catch (...) {
+     LOG(ERROR) << "opencc config not found: " << config_path_;
+@@ -39,8 +55,9 @@ bool Opencc::ConvertWord(const string& text, vector<string>* forms) {
+   if (converter_ == nullptr) {
+     return false;
+   }
+-  const list<opencc::ConversionPtr> conversions =
+-      converter_->GetConversionChain()->GetConversions();
++  const list<opencc::ConversionPtr> conversions = GetConversions(converter_);
++  if (conversions.empty())
++    return false;
+   vector<string> original_words{text};
+   bool matched = false;
+   for (auto conversion : conversions) {
+@@ -103,8 +120,9 @@ bool Opencc::RandomConvertText(const string& text, string* simplified) {
+   Initialize();
+   if (dict_ == nullptr)
+     return false;
+-  const list<opencc::ConversionPtr> conversions =
+-      converter_->GetConversionChain()->GetConversions();
++  const list<opencc::ConversionPtr> conversions = GetConversions(converter_);
++  if (conversions.empty())
++    return false;
+   const char* phrase = text.c_str();
+   for (auto conversion : conversions) {
+     opencc::DictPtr dict = conversion->GetDict();

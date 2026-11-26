@@ -1,50 +1,60 @@
-# Maintainer: Gavin Luo <lunt.luo#gmail.com>
-# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
 # Contributor: GONG Chen <chen dot sst at gmail dot com>
 # Contributor: 網軍總司令
 
 pkgname=librime-luajit
-pkgver=1.17.0
-pkgrel=6
+pkgver=1.18.0
+_octagramcommit=57d18b9f58e5284bd891d559f6bdd16cf60341e9
+_luacommit=6da5d6cedb853380ed1b5b9b6979cb1a9c028353
+_charcodecommit=55e7f563e999802d41a13ba02657c1be4b2011b4
+_protocommit=657a923cd4c333e681dc943e6894e6f6d42d25b4
+_predictcommit=920bd41ebf6f9bf6855d14fbe80212e54e749791
+pkgrel=1
 epoch=1
 pkgdesc="Rime input method engine"
 arch=('x86_64')
+provides=("librime=$pkgver")
+conflicts=(librime)
 url="https://github.com/rime/librime"
 license=('BSD-3-Clause')
-depends=('boost-libs' 'capnproto' 'glibc' 'opencc' 'yaml-cpp' 'leveldb' 'librime-data' 'luajit' 'google-glog' 'marisa' 'libstdc++' 'libgcc')
+depends=('boost-libs' 'capnproto' 'glibc' 'leveldb' 'libgcc' 'librime-data' 'libstdc++' 'luajit' 'marisa' 'opencc' 'spdlog' 'yaml-cpp')
 makedepends=('git' 'cmake' 'boost' 'gtest' 'ninja')
 source=("git+https://github.com/rime/librime.git#tag=$pkgver"
-        "git+https://github.com/lotem/librime-octagram.git"
-        "git+https://github.com/hchunhui/librime-lua.git"
-        "git+https://github.com/rime/librime-charcode.git"
-        "git+https://github.com/lotem/librime-proto.git"
-        "git+https://github.com/rime/librime-predict.git")
-sha512sums=('411f3555e307910cc71304de796a5b55834226f840fd664ca92fe91ce9012c0cfa1870dc29b5e24afae859f5c2177960ea553774512affd9bef0f46e00b46cc0'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
-provides=("librime=${pkgver}")
-conflicts=(librime)
+        "git+https://github.com/lotem/librime-octagram.git#commit=$_octagramcommit"
+        "git+https://github.com/hchunhui/librime-lua.git#commit=$_luacommit"
+        "git+https://github.com/rime/librime-charcode.git#commit=$_charcodecommit"
+        "git+https://github.com/lotem/librime-proto.git#commit=$_protocommit"
+        "git+https://github.com/rime/librime-predict.git#commit=$_predictcommit"
+        '0001-opencc-handle-missing-conversion-chain.patch'
+        '0002-use-system-spdlog.patch')
+sha512sums=('7f90b75e5cc51456396fd035e297b93041a7d201538d8aac854f7a6fb464ca23fe094b93f60af735e0ef5a06f3cfa493bf9e8bec590c7ffb6081cf62787e4e5e'
+            '7d2152e7a7487d775e64fcc2e05eb7d56affe7d9f6476875823bc57d803a1b7ef4e14858aaaf167baca968a49855c1f72fbf000d3999c4df5606332aa9270f0d'
+            '8f0b846b074699aaea6f3f61fb2f22d18d6ef738a6b41ec9647d7b0c8256393b691cf453407fd580237009a1ebf24b771efe57ac7c0d1c68de51d1bdf9015262'
+            'c21a1384f7eba77afdcda4bd0cffcdfa1bc6989e009f02c685160de443f8fc658bee7def57fe93162b3d5f31d366b48271d7204b4f6e7dd057facb2787703a15'
+            'e9b2aa47a87f96af97fc55686e85d905bd7bb06b633a9a318aeeea2731d87b38e50f9f821c2e68a30d58f4daaeaff97124247c1028a049ced922c6e7b4cc20ab'
+            'cf7062baa8dfe6d97946979545094a1962b73347f233065219b69488f078b6022b46f9bf59d0643de01ef36fe45b2d72375f0578747f85a6d389bdef4acc6967'
+            'a7bb7cd6615ece227fb7a0fc97ae4d53c30f5e9dbaabd237bd9229eafafba27c26e7880a38ffb8b7abb137e83db3e18fcca311fc3ec67e0fa278fde26c09c624'
+            '316b7b3ad929a1db46d6686f3ab209964e3d88d704bd9d9551a4e89dd627236dc0cdd7ac244da7e8d98426d2bbb0d2aa928f4cee97ed35caccffb6bb2de7561a')
 
 prepare() {
-  cd ${srcdir}/librime
-  # Fix simplifier crashes with OpenCC converters without conversion chains:
+  cd librime
+  # Handle OpenCC converters without conversion chains:
   # https://github.com/rime/librime/pull/1184
-  git cherry-pick -n 96a55478ba6ae3f8e78a3c824809905745440d57
+  patch -Np1 -i ../0001-opencc-handle-missing-conversion-chain.patch
+  # Use Arch's shared spdlog instead of upstream's bundled static copy.
+  patch -Np1 -i ../0002-use-system-spdlog.patch
 
-  cd ${srcdir}/librime/plugins
-  ln -sf "$srcdir"/librime-octagram .
-  ln -sf "$srcdir"/librime-lua .
-  ln -sf "$srcdir"/librime-charcode .
-  ln -sf "$srcdir"/librime-proto .
-  ln -sf "$srcdir"/librime-predict .
+  cd plugins
+  ln -sf "$srcdir"/librime-octagram
+  ln -sf "$srcdir"/librime-lua
+  ln -sf "$srcdir"/librime-charcode
+  ln -sf "$srcdir"/librime-proto
+  ln -sf "$srcdir"/librime-predict
 }
 
 build() {
   cd librime
-  export CXXFLAGS="$CXXFLAGS -DNDEBUG -DGLOG_USE_GLOG_EXPORT -DGLOG_USE_GFLAGS"
+  export CXXFLAGS="$CXXFLAGS -DNDEBUG"
   cmake . -GNinja -Bbuild -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_MERGED_PLUGINS=Off -DENABLE_EXTERNAL_PLUGINS=On -Wno-dev -DLUA_VERSION=luajit
   cmake --build build
 }
