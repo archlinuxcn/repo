@@ -1,0 +1,20 @@
+--- a/src/mcp/tools/game_state_tools.cpp
++++ b/src/mcp/tools/game_state_tools.cpp
+@@ -991,7 +991,7 @@
+ /// when no such route exists.
+ std::optional<json> LoadRouteSteps(ToolContext& ctx, const json& args, std::string& error) {
+     if (args.contains("steps")) {
+-        return args["steps"];
++        return std::optional<json>{std::in_place, args["steps"]};
+     }
+     std::scoped_lock lock{g_store_mutex};
+     const json store = LoadStore("routes", ProgramId(ctx));
+@@ -1000,7 +1000,7 @@
+         error = "no route '" + name + "' for this game (route_list)";
+         return std::nullopt;
+     }
+-    return store["routes"][name]["steps"];
++    return std::optional<json>{std::in_place, store["routes"][name]["steps"]};
+ }
+ 
+ /// route_run tool: validates the steps, then either runs them on the calling thread (blocking

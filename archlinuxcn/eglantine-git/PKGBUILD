@@ -3,12 +3,13 @@
 
 pkgname=eglantine-git
 pkgver=0.r29964.g55cb315
-pkgrel=1
+pkgrel=2
 pkgdesc='Nintendo Switch emulator (development branch)'
 arch=('x86_64')
 url='https://github.com/Djihads80/Eglantine'
 license=('GPL-3.0-or-later')
 depends=(
+  'boost-libs'
   'enet'
   'ffmpeg'
   'libusb'
@@ -46,12 +47,20 @@ optdepends=(
 )
 provides=('eglantine')
 conflicts=('eglantine')
-source=("eglantine::git+https://github.com/Djihads80/Eglantine.git#branch=nx2")
-sha256sums=('SKIP')
+source=("eglantine::git+https://github.com/Djihads80/Eglantine.git#branch=nx2"
+        'explicit-optional-json.patch')
+sha256sums=('SKIP'
+            '37616bc50db1d8289043c5eb731f87735023cf9db6f958edc6df0d4a5c2f9b64')
 
 pkgver() {
   cd "$srcdir/eglantine"
   printf '0.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+prepare() {
+  cd "$srcdir/eglantine"
+  # Avoid ambiguous JSON conversion to std::optional with current nlohmann-json.
+  patch -Np1 -i "$srcdir/explicit-optional-json.patch"
 }
 
 build() {
