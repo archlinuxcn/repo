@@ -1,4 +1,4 @@
-From 2f5848d568e4f669b8f5dd4bcc60a5541074648a Mon Sep 17 00:00:00 2001
+From 38bd0758c32e42fc06904365731fb464317e8c0a Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Sun, 29 Oct 2023 18:14:47 +0800
 Subject: [PATCH 2/4] make blockquote markup less distractive
@@ -11,10 +11,10 @@ Subject: [PATCH 2/4] make blockquote markup less distractive
  4 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/Telegram/SourceFiles/chat_helpers/chat_helpers.style b/Telegram/SourceFiles/chat_helpers/chat_helpers.style
-index ba4a07b5a6..40eb8118df 100644
+index f155123687..7b48cd9f08 100644
 --- a/Telegram/SourceFiles/chat_helpers/chat_helpers.style
 +++ b/Telegram/SourceFiles/chat_helpers/chat_helpers.style
-@@ -1040,7 +1040,7 @@ historyQuoteStyle: QuoteStyle(defaultQuoteStyle) {
+@@ -1296,7 +1296,7 @@ historyQuoteStyle: QuoteStyle(defaultQuoteStyle) {
  	verticalSkip: 4px;
  	outline: 3px;
  	outlineShift: 2px;
@@ -24,10 +24,10 @@ index ba4a07b5a6..40eb8118df 100644
  historyTextStyle: TextStyle(defaultTextStyle) {
  	blockquote: QuoteStyle(historyQuoteStyle) {
 diff --git a/Telegram/SourceFiles/history/view/history_view_reply.cpp b/Telegram/SourceFiles/history/view/history_view_reply.cpp
-index ee4f18ed21..35fb9d9378 100644
+index fc6be2a759..313e97029d 100644
 --- a/Telegram/SourceFiles/history/view/history_view_reply.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_reply.cpp
-@@ -271,24 +271,24 @@ void FillBackgroundEmoji(
+@@ -318,24 +318,24 @@ void FillBackgroundEmoji(
  	};
  
  	if (firstGiftFrame.isNull()) {
@@ -64,10 +64,10 @@ index ee4f18ed21..35fb9d9378 100644
  
  	p.setClipping(false);
 diff --git a/Telegram/SourceFiles/ui/chat/chat_style.cpp b/Telegram/SourceFiles/ui/chat/chat_style.cpp
-index 974b85f192..a666991385 100644
+index ca2535cecb..5883e4af4b 100644
 --- a/Telegram/SourceFiles/ui/chat/chat_style.cpp
 +++ b/Telegram/SourceFiles/ui/chat/chat_style.cpp
-@@ -57,10 +57,10 @@ void EnsurePreCache(
+@@ -62,10 +62,10 @@ void EnsurePreCache(
  		cache->bg.setAlpha(kDefaultBgOpacity * 255);
  	}
  	cache->outlines[0] = color->c;
@@ -81,10 +81,10 @@ index 974b85f192..a666991385 100644
  	cache->icon.setAlpha(kDefaultOutline3Opacity * 255);
  }
 diff --git a/Telegram/SourceFiles/ui/chat/chat_style.h b/Telegram/SourceFiles/ui/chat/chat_style.h
-index f97cde14c2..3b2d936e94 100644
+index 351fb57612..a7d4b96a09 100644
 --- a/Telegram/SourceFiles/ui/chat/chat_style.h
 +++ b/Telegram/SourceFiles/ui/chat/chat_style.h
-@@ -36,7 +36,7 @@ inline constexpr auto kColorPatternsCount = Text::kMaxQuoteOutlines;
+@@ -53,7 +53,7 @@ inline constexpr auto kColorPatternsCount = Text::kMaxQuoteOutlines;
  inline constexpr auto kColorIndexCount = uint8(1 << 6);
  inline constexpr auto kSimpleColorIndexCount = uint8(7);
  
@@ -94,5 +94,5 @@ index f97cde14c2..3b2d936e94 100644
  inline constexpr auto kDefaultOutline2Opacity = 0.3;
  inline constexpr auto kDefaultOutline3Opacity = 0.6;
 -- 
-2.51.0
+2.56.1
 

@@ -1,7 +1,7 @@
-From a764d280c47c5bdcee5f891e67e5e846a7df85a6 Mon Sep 17 00:00:00 2001
+From dbf67117fe64ba1fca6152b97bd70250a60ce0ed Mon Sep 17 00:00:00 2001
 From: Megumi_fox <i@megumifox.com>
 Date: Wed, 14 Apr 2021 22:56:55 +0800
-Subject: [PATCH] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
+Subject: [PATCH 1/4] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
 
 ---
  Telegram/SourceFiles/core/application.cpp        | 2 ++
@@ -10,10 +10,10 @@ Subject: [PATCH] add TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME back
  3 files changed, 9 insertions(+)
 
 diff --git a/Telegram/SourceFiles/core/application.cpp b/Telegram/SourceFiles/core/application.cpp
-index 7a309ac..079de58 100644
+index f77eebd527..f06c918e48 100644
 --- a/Telegram/SourceFiles/core/application.cpp
 +++ b/Telegram/SourceFiles/core/application.cpp
-@@ -2070,6 +2070,7 @@ void Application::startShortcuts() {
+@@ -2211,6 +2211,7 @@ void Application::startShortcuts() {
  }
  
  void Application::RegisterUrlScheme() {
@@ -21,7 +21,7 @@ index 7a309ac..079de58 100644
  	const auto arguments = Launcher::Instance().customWorkingDir()
  		? u"-workdir \"%1\""_q.arg(cWorkingDir())
  		: QString();
-@@ -2106,6 +2107,7 @@ void Application::RegisterUrlScheme() {
+@@ -2247,6 +2248,7 @@ void Application::RegisterUrlScheme() {
  		.displayAppName = AppName.utf16(),
  		.displayAppDescription = AppName.utf16(),
  	});
@@ -30,10 +30,10 @@ index 7a309ac..079de58 100644
  
  bool IsAppLaunched() {
 diff --git a/Telegram/SourceFiles/settings/settings_codes.cpp b/Telegram/SourceFiles/settings/settings_codes.cpp
-index 78c4392..c3eac60 100644
+index 8461d3fd0d..50e2f35dd7 100644
 --- a/Telegram/SourceFiles/settings/settings_codes.cpp
 +++ b/Telegram/SourceFiles/settings/settings_codes.cpp
-@@ -164,6 +164,7 @@ auto GenerateCodes() {
+@@ -164,10 +164,12 @@ auto GenerateCodes() {
  			window->showSettings(Settings::FoldersId());
  		}
  	});
@@ -41,16 +41,13 @@ index 78c4392..c3eac60 100644
  	codes.emplace(u"registertg"_q, [](SessionController *window) {
  		Core::Application::RegisterUrlScheme();
  		Ui::Toast::Show("Forced custom scheme register.");
-@@ -183,6 +184,7 @@ auto GenerateCodes() {
- 			? u"WebView transport blocked."_q
- 			: u"WebView transport unblocked."_q);
  	});
 +#endif // !TDESKTOP_DISABLE_REGISTER_CUSTOM_SCHEME
- 
- 	auto audioFilters = u"Audio files (*.wav *.mp3);;"_q + FileDialog::AllFilesFilter();
- 	auto audioKeys = {
+ 	codes.emplace(u"numberbuttons"_q, [](SessionController *window) {
+ 		using namespace base::options;
+ 		auto &option = lookup<bool>(kOptionFastButtonsMode);
 diff --git a/Telegram/cmake/telegram_options.cmake b/Telegram/cmake/telegram_options.cmake
-index 049f39c..8f1526f 100644
+index 7ccb892ff0..a762fe263e 100644
 --- a/Telegram/cmake/telegram_options.cmake
 +++ b/Telegram/cmake/telegram_options.cmake
 @@ -6,6 +6,7 @@
@@ -73,5 +70,5 @@ index 049f39c..8f1526f 100644
      target_compile_definitions(Telegram PRIVATE TDESKTOP_ALLOW_CLOSED_ALPHA)
  endif()
 -- 
-2.56.0
+2.56.1
 

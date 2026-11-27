@@ -1,4 +1,4 @@
-From 300e676f09c276f88ed13f52519bacb49dd6ce32 Mon Sep 17 00:00:00 2001
+From fdffa699bc7152155c3efcaeb2b1de196022300a Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Fri, 3 May 2024 12:35:32 +0800
 Subject: [PATCH 3/4] make animated avatar follow power settings
@@ -8,18 +8,18 @@ Subject: [PATCH 3/4] make animated avatar follow power settings
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp b/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
-index 9f970a30d9..17c386becc 100644
+index 5b3a705fca..3d0d6f9307 100644
 --- a/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
 +++ b/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
 @@ -16,6 +16,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
- #include "dialogs/dialogs_entry.h"
  #include "dialogs/ui/dialogs_layout.h"
+ #include "dialogs/dialogs_entry.h"
  #include "ui/painter.h"
 +#include "ui/power_saving.h"
+ 
  #include "styles/style_dialogs.h"
  
- namespace Dialogs::Ui {
-@@ -166,7 +167,7 @@ void PaintUserpic(
+@@ -167,7 +168,7 @@ void PaintUserpic(
  		int size,
  		bool paused) {
  	if (videoUserpic) {
@@ -29,5 +29,5 @@ index 9f970a30d9..17c386becc 100644
  		peer->paintUserpicLeft(p, view, x, y, outerWidth, size);
  	}
 -- 
-2.51.0
+2.56.1
 

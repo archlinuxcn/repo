@@ -1,4 +1,4 @@
-From b53c57b5d8b01c7ff4ad8a156ee8d2412aae1dba Mon Sep 17 00:00:00 2001
+From a33bde96779e644146b468f51ef5a568d468f08b Mon Sep 17 00:00:00 2001
 From: lilydjwg <lilydjwg@gmail.com>
 Date: Thu, 7 Nov 2024 20:43:27 +0800
 Subject: [PATCH 4/4] don't ask which program to use when opening a file with
@@ -10,10 +10,10 @@ It's annoying. Just use the default one.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp b/Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp
-index f314fb0aff..8319684db8 100644
+index aa92f831a9..6c62a4cbb6 100644
 --- a/Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp
 +++ b/Telegram/SourceFiles/platform/linux/file_utilities_linux.cpp
-@@ -104,7 +104,7 @@ bool UnsafeShowOpenWith(const QString &filepath) {
+@@ -108,7 +108,7 @@ bool UnsafeShowOpenWith(const QString &filepath) {
  			GLib::Variant::new_dict_entry(
  				GLib::Variant::new_string("ask"),
  				GLib::Variant::new_variant(
@@ -23,5 +23,5 @@ index f314fb0aff..8319684db8 100644
  		Gio::UnixFDList::new_from_array(&fd, 1),
  		nullptr);
 -- 
-2.51.0
+2.56.1
 
