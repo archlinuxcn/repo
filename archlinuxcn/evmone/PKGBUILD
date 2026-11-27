@@ -1,7 +1,7 @@
 # Maintainer: Xeonacid <h.dwwwwww@gmail.com>
 
 pkgname=evmone
-pkgver=0.25.0
+pkgver=0.26.0
 pkgrel=1
 pkgdesc="Fast Ethereum Virtual Machine implementation"
 arch=(x86_64)
@@ -12,7 +12,7 @@ makedepends=(cmake git)
 source=(git+$url.git#tag=v$pkgver
         git+https://github.com/ethereum/evmc.git
         git+https://github.com/ipsilon/evm-benchmarks.git)
-sha256sums=('29d00747a3e86191d1699e59cbb5fe14b4ba0fd464cec22bf7a33ee83ab2a737'
+sha256sums=('ebcdf90736baa7d707c496c9dcdd8da4dd67ae45af5667c7e906b8c280d239f4'
             'SKIP'
             'SKIP')
 
