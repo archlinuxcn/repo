@@ -1,0 +1,50 @@
+# Maintainer: Mahdi Sarikhani <mahdisarikhani@outlook.com>
+# Contributor: Rafael Dominiquini <rafaeldominiquini at gmail dot com>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
+# Contributor: David Runge <dvzrv@archlinux.org>
+# Contributor: Bruno Pagani <archange@archlinux.org>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Florian Pritz <bluewind@xinu.at>
+# Contributor: Asa Marco <marcoasa90[at]gmail[.]com>
+
+pkgname=openshot
+pkgver=4.1.1
+pkgrel=2
+pkgdesc="An award-winning free and open-source video editor"
+arch=('any')
+url="https://www.openshot.org"
+license=('GPL-3.0-or-later')
+depends=('hicolor-icon-theme'
+         'libopenshot=1.1.1'
+         'python'
+         'python-certifi'
+         'python-defusedxml'
+         'python-distro'
+         'python-numpy'
+         'python-opengl'
+         'python-pillow'
+         'python-pyqt6'
+         'python-requests'
+         'qt6-scxml')
+makedepends=('python-build' 'python-installer' 'python-setuptools' 'python-wheel')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/OpenShot/openshot-qt/archive/v${pkgver}.tar.gz")
+sha512sums=('087de5f96885d1d4c8e705ee013ec86d885db3e29716e890aa578266f5c93816bb74c4658293a23e8047585e9ec680c59dcce97462b0f6d881467319ed81aebb')
+b2sums=('273e5a6ceb512846ecf9efd7f3be6c82ec8daf164d25e32dda56cafd5d7339ff42ef39e11882668785e1af4ee44c80a767273dd19f51c1365c3e8c818b31937c')
+
+prepare() {
+    cd "${pkgname}-qt-${pkgver}"
+    sed -i 's/from qt_api/from .qt_api/' src/launch.py
+}
+
+build() {
+    cd "${pkgname}-qt-${pkgver}"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "${pkgname}-qt-${pkgver}/dist"
+    python -m installer --destdir="${pkgdir}" *.whl
+
+    local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
+    rm -rf "${pkgdir}/${site_packages}/${pkgname}_qt/tests"
+}
