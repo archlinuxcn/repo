@@ -90,14 +90,17 @@ source=(
 	"git+$url.git#tag=${pkgver}"
 	"git+https://gitlab.gnome.org/GNOME/gvdb.git#commit=b54bc5da25127ef416858a3ad92e57159ff565b3"
 
-	# Fall back to presentation times for timelines
+	# Fall back to presentation times for timelines, bound for 51.2
 	5386.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5386.patch
 
-	# ScreenCast performance
+	# ScreenCast performance, bound for 51.2
 	5358.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5358.patch
 
-	# Track damage of secondary GPU buffers
+	# Track damage of secondary GPU buffers, bound for 51.2
 	5300.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5300.patch
+
+	# Use realtime EGL context where possible
+	5302.patch::https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/5302.patch
 )
 b2sums=('0064caf6a85d9cb42d9544ad2dab31ef158a957d20d5a99aabe27f40986f128714f97a5cbe970c1aba1cb9c86f0b94f2f279a22072bbfefb9c0c7e715d7a411f'
         'f989bc2ceb52aad3c6a23c439df3bbc672bc11d561a247d19971d30cc85ed5d42295de40f8e55b13404ed32aa44f12307c9f5b470f2e288d1c9c8329255c43bf'
@@ -116,6 +119,9 @@ prepare() {
 
 	echo 5300
 	git apply ../5300.patch
+
+	echo 5302
+	git apply ../5302.patch
 }
 
 build() {
