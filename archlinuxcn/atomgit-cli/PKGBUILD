@@ -1,8 +1,8 @@
 # Maintainer: 林观韬 (moyigeek) <moyi@archlinuxcn.org>
 
 pkgname=atomgit-cli
-pkgver=0.7.4
-pkgrel=2
+pkgver=0.7.5
+pkgrel=1
 pkgdesc="AtomGit CLI - 基于 AtomGit API 的命令行工具，参考 GitHub CLI (gh) 开发"
 arch=('x86_64')
 url="https://atomgit.com/hust-open-atom-club/atomgit-cli"
@@ -13,7 +13,7 @@ provides=('ag-cli')
 conflicts=('ag-cli')
 options=(!lto)
 source=("git+https://github.com/hust-open-atom-club/atomgit-cli.git#tag=v${pkgver}")
-sha256sums=('7c93a19e4c9c3f42b2529541fc2629fe4ef4ed39071979c7eecc87730d4098e9')
+sha256sums=('e10215aa0514e4ed4496e00b44b4ed40bdacd877b985b1317e45b1b5cd4f100d')
 
 build() {
     cd "${srcdir}/${pkgname}"
