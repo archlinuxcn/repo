@@ -97,7 +97,7 @@ package_wuffs-lib() {
 	install -vDm644 -t \
 		"${pkgdir}/usr/share/doc/wuffs-lib" \
 		release/c/README.md
-	install -vdm644 "${pkgdir}/usr/share/licenses"
+	install -vDm755 "${pkgdir}/usr/share/licenses"
 	ln -srf \
 		"${pkgdir}/usr/share/licenses/wuffs" \
 		"${pkgdir}/usr/share/licenses"/wuffs-lib
@@ -126,7 +126,7 @@ package_wuffs-examples() {
 	install -vDm644 -t \
 		"${pkgdir}/usr/share/doc/wuffs-examples" \
 		example/README.md
-	install -vdm644 "${pkgdir}/usr/share/licenses"
+	install -vDm755 "${pkgdir}/usr/share/licenses"
 	ln -srf \
 		"${pkgdir}/usr/share/licenses/wuffs" \
 		"${pkgdir}/usr/share/licenses"/wuffs-examples
@@ -154,7 +154,7 @@ package_wuffs-fuzzers() {
 		-t "${pkgdir}/usr/share/doc/wuffs-fuzzers" \
 		fuzz/c/std/README.md
 
-	install -vdm644 "${pkgdir}/usr/share/licenses"
+	install -vDm755 "${pkgdir}/usr/share/licenses"
 	ln -srf \
 		"${pkgdir}/usr/share/licenses/wuffs" \
 		"${pkgdir}/usr/share/licenses"/wuffs-fuzzers
@@ -189,7 +189,7 @@ package_wuffs-lang() {
 	install -Dvm755 \
 		-t "${pkgdir}/usr/bin" \
 		"${GOBIN}"/{dumbindent,ractool,wuffs,wuffs-c,wuffsfmt}
-	install -vdm644 \
+	install -vDm755 \
 		"${pkgdir}/usr/share/licenses"
 	ln -srf \
 		"${pkgdir}/usr/share/licenses/wuffs" \
@@ -210,7 +210,7 @@ package_wuffs-docs() {
 	cp -r \
 		doc \
 		"${pkgdir}/usr/share/doc/wuffs"/
-	install -vdm644 \
+	install -vDm755 \
 		"${pkgdir}/usr/share/licenses"
 	ln -srf \
 		"${pkgdir}/usr/share/licenses/wuffs" \
@@ -222,7 +222,7 @@ package_wuffs-license() {
 	depends=()
 	arch=('any')
 	cd source
-	install -vDm644 \
+	install -vDm755 \
 		-t "${pkgdir}/usr/share/licenses/wuffs" \
 		LICENSE*
 	ln -srf \
