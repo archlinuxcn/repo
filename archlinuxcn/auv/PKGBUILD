@@ -1,0 +1,54 @@
+# Maintainer: qyl27 <i@rain.cx>
+
+pkgname=auv
+pkgver=0.0.43
+pkgrel=1
+pkgdesc='Application Use Via... script-able OS automation library'
+arch=('x86_64' 'aarch64')
+url='https://github.com/moeru-ai/auv'
+license=('Apache-2.0')
+depends=(
+  'glibc'
+  'leptonica'
+  'libgcc'
+  'libpipewire'
+  'libxkbcommon'
+  'pipewire'
+  'tesseract'
+  'tesseract-data-eng'
+  'xdg-desktop-portal'
+)
+makedepends=('cargo' 'clang21' 'protobuf')
+optdepends=(
+  'at-spi2-core: list, crop and focus windows via AT-SPI'
+  'xdg-desktop-portal-gnome: ScreenCast and RemoteDesktop portal backend for GNOME'
+  'xdg-desktop-portal-kde: ScreenCast and RemoteDesktop portal backend for KDE Plasma'
+)
+options=('!lto')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('8224630a6e451f3970fb1d7b363667491dab8f1eec1ae7d19ab1fe9c7b506781')
+
+export PROTOC=/usr/bin/protoc
+export LIBCLANG_PATH=/usr/lib/llvm21/lib
+export CLANG_PATH=/usr/lib/llvm21/bin/clang
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  cargo fetch --locked --target "$(rustc --print host-tuple)"
+}
+
+build() {
+  cd "$pkgname-$pkgver"
+  cargo build --frozen --release --package auv-cli --bin auv
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  cargo test --frozen --release --package auv-cli
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  install -Dm755 target/release/auv -t "$pkgdir/usr/bin/"
+  install -Dm644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname/"
+}
