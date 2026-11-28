@@ -1,0 +1,18 @@
+maintainers:
+  - github: Aceared0829
+    email: zzn1982638980@gmail.com
+
+pre_build_script: |
+  update_pkgver_and_pkgrel(_G.newver.lstrip('v'))
+  run_protected(['updpkgsums'])
+
+post_build_script: |
+  git_pkgbuild_commit()
+
+update_on:
+  - source: github
+    github: Aceared0829/pkg-installer
+    use_latest_release: true
+    prefix: v
+
+build_prefix: extra-x86_64
