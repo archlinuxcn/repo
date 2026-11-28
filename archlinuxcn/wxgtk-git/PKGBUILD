@@ -3,7 +3,7 @@
 
 pkgbase=wxgtk-git
 pkgname=(wxwidgets-gtk3-git wxwidgets-qt5-git wxwidgets-common-git)
-pkgver=3.3.4.r310.g3a78644c896
+pkgver=3.3.4.r379.ga9375c8aee
 pkgrel=1
 # Supersede the published .rc version, which sorts after the final release.
 epoch=1
@@ -108,7 +108,7 @@ package_wxwidgets-common-git() {
   DESTDIR="${pkgdir}" cmake --install build-gtk3
   rm -r "${pkgdir}"/usr/{bin/wx-config,lib/{cmake,wx,libwx_gtk*}}
   rm "${pkgdir}"/usr/bin/wxrc
-  install -Dm644 wxWidgets/wxwin.m4 -t "${pkgdir}"/usr/share/aclocal/wxwin-3.3.m4
+  install -Dm644 wxWidgets/wxwin.m4 -t "${pkgdir}"/usr/share/aclocal/wxwin-3.9.m4
 # Install translations
   make DESTDIR="${pkgdir}" -C wxWidgets locale_install
 
@@ -122,7 +122,7 @@ package_wxwidgets-gtk3-git() {
   provides=(wxwidgets-gtk3=${pkgver})
 
   DESTDIR="${pkgdir}" cmake --install build-gtk3
-  mv "${pkgdir}"/usr/bin/wx-config "${pkgdir}"/usr/bin/wx-config-3.3
+  mv "${pkgdir}"/usr/bin/wx-config "${pkgdir}"/usr/bin/wx-config-3.9
   rm -r "${pkgdir}"/usr/{include,lib/libwx_base*,bin/wxrc*}
   rm -r "${pkgdir}"/usr/share/locale
 
@@ -138,11 +138,11 @@ package_wxwidgets-qt5-git() {
   rm -r "${pkgdir}"/usr/{include,lib/libwx_base*,bin/wxrc*}
   rm -r "${pkgdir}"/usr/share/locale
 
-  mv "${pkgdir}"/usr/bin/wx-config{,-qt-3.3} # Conflicts with wx-gtk3
+  mv "${pkgdir}"/usr/bin/wx-config{,-qt-3.9} # Conflicts with wx-gtk3
   # Rename cmake files for coinstallability
-  mv "${pkgdir}"/usr/lib/cmake/wxWidgets{-3.3,Qt-3.3}
-  for _f in "${pkgdir}"/usr/lib/cmake/wxWidgetsQt-3.3/*; do
-    sed -i -e 's/wxWidgets-3.3/wxWidgetsQt-3.3/g' $_f
+  mv "${pkgdir}"/usr/lib/cmake/wxWidgets{-3.9,Qt-3.9}
+  for _f in "${pkgdir}"/usr/lib/cmake/wxWidgetsQt-3.9/*; do
+    sed -i -e 's/wxWidgets-3.9/wxWidgetsQt-3.9/g' $_f
   done
 
   install -Dm644 wxWidgets/docs/licence.txt "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
