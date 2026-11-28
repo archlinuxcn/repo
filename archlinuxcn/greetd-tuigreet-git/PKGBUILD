@@ -1,17 +1,21 @@
 # Maintainer: Antoine POPINEAU <antoine at popineau dot eu>
 
 pkgname=greetd-tuigreet-git
-pkgver=0.11.0.r70.gbd10788
+pkgver=0.11.0.r91.g1587ae8
 pkgrel=1
 
 pkgdesc='A console UI greeter for greetd'
-url='https://github.com/apognu/tuigreet'
+url='https://github.com/tuigreet/tuigreet'
 license=('GPL-3.0-only')
-conflicts=(greetd-tuigreet greetd-tuigreet-bin)
-
+conflicts=(greetd-tuigreet)
+provides=(greetd-tuigreet greetd-greeter)
 arch=(x86_64)
-makedepends=(git rust scdoc)
-
+depends=(glibc # libc.so libm.so
+         greetd
+         libgcc
+         systemd)
+makedepends=(git rust)
+backup=(etc/tuigreet/config.toml)
 source=("git+${url}"
         'tuigreet.conf')
 sha256sums=('SKIP'
@@ -22,19 +26,27 @@ pkgver() {
   git describe --long | sed 's/-/.r/;s/-/./'
 }
 
+prepare() {
+  cd tuigreet
+  cargo fetch --locked --target host-tuple
+}
+
 build() {
   cd tuigreet
-
-  cargo build --release
-  scdoc < contrib/man/tuigreet-1.scd > contrib/man/tuigreet-1.roff
+  cargo build --frozen --release
+  target/release/xtask man --out-dir target/xtask/man
+  target/release/xtask comp --out-dir target/xtask/completions
 }
 
 package() {
-  depends=(gcc-libs)
-
-  install -Dm755 "${srcdir}/tuigreet/target/release/tuigreet" "${pkgdir}/usr/bin/tuigreet"
-  install -Dm755 "${srcdir}/tuigreet/contrib/man/tuigreet-1.roff" "${pkgdir}/usr/share/man/man1/tuigreet.1"
-  install -Dm644 "${srcdir}/tuigreet/LICENSE" "${pkgdir}/usr/share/licenses/tuigreet/LICENSE"
-
-  install -Dm644 "${srcdir}/tuigreet.conf" "${pkgdir}/usr/lib/tmpfiles.d/tuigreet.conf"
+  install -Dm755 "${srcdir}/tuigreet/target/release/tuigreet"                "${pkgdir}/usr/bin/tuigreet"
+  install -Dm644 "${srcdir}/tuigreet/target/xtask/man/tuigreet.1"            "${pkgdir}/usr/share/man/man1/tuigreet.1"
+  install -Dm644 "${srcdir}/tuigreet/target/xtask/completions/tuigreet.bash" "${pkgdir}/usr/share/bash-completion/completions/tuigreet"
+  install -Dm644 "${srcdir}/tuigreet/target/xtask/completions/_tuigreet"     "${pkgdir}/usr/share/zsh/site-functions/_tuigreet"
+  install -Dm644 "${srcdir}/tuigreet/target/xtask/completions/tuigreet.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/tuigreet.fish"
+  install -Dm644 "${srcdir}/tuigreet/target/xtask/completions/tuigreet.nu"   "${pkgdir}/usr/share/nushell/vendor/autoload/tuigreet.nu"
+  install -Dm644 "${srcdir}/tuigreet/target/xtask/completions/tuigreet.elv"  "${pkgdir}/usr/share/elvish/lib/tuigreet.elv"
+  install -Dm644 "${srcdir}/tuigreet/LICENSE"                                "${pkgdir}/usr/share/licenses/tuigreet/LICENSE"
+  install -Dm644 "${srcdir}/tuigreet/contrib/example.config.toml"            "${pkgdir}/etc/tuigreet/config.toml"
+  install -Dm644 "${srcdir}/tuigreet.conf"                                   "${pkgdir}/usr/lib/tmpfiles.d/tuigreet.conf"
 }
