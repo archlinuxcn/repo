@@ -1,0 +1,137 @@
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -300,7 +300,7 @@
+ 
+ if(YUZU_CMD)
+     add_subdirectory(yuzu_cmd)
+-    set_target_properties(yuzu-cmd PROPERTIES OUTPUT_NAME "eden-cli")
++    set_target_properties(yuzu-cmd PROPERTIES OUTPUT_NAME "eglantine-cli")
+ endif()
+ 
+ if(ENABLE_QT)
+--- a/dist/dev.eglantine.eglantine.metainfo.xml
++++ b/dist/dev.eglantine.eglantine.metainfo.xml
+@@ -38,7 +38,7 @@
+   <launchable type="desktop-id">dev.eglantine.eglantine.desktop</launchable>
+   <provides>
+     <binary>eglantine</binary>
+-    <binary>eden-cli</binary>
++    <binary>eglantine-cli</binary>
+   </provides>
+   <supports>
+     <control>pointing</control>
+--- a/src/yuzu_cmd/mcp_host_cli.cpp
++++ b/src/yuzu_cmd/mcp_host_cli.cpp
+@@ -25,7 +25,7 @@
+     : system{system_}, input{input_} {}
+ 
+ std::string CliMcpHost::FrontendName() const {
+-    return "eden-cli";
++    return "eglantine-cli";
+ }
+ 
+ Mcp::PerfSnapshot CliMcpHost::GetPerfSnapshot() {
+@@ -38,7 +38,7 @@
+ }
+ 
+ std::string CliMcpHost::BootGame(const std::string&) {
+-    return "eden-cli runs the game given on its command line; relaunch it with another game";
++    return "eglantine-cli runs the game given on its command line; relaunch it with another game";
+ }
+ 
+ /// Queues fn for the main thread and waits up to 30 s for its result.
+--- a/src/yuzu/main.cpp
++++ b/src/yuzu/main.cpp
+@@ -205,7 +205,7 @@
+ #endif
+ 
+     // Init settings params
+-    QCoreApplication::setOrganizationName(QStringLiteral("eden"));
++    QCoreApplication::setOrganizationName(QStringLiteral("eglantine"));
+     QCoreApplication::setApplicationName(QStringLiteral("Eglantine"));
+ 
+     // Increases the maximum open file limit.
+--- a/src/qt_common/util/content.cpp
++++ b/src/qt_common/util/content.cpp
+@@ -6,6 +6,7 @@
+ #include "qt_common/util/game.h"
+ 
+ #include "common/fs/fs.h"
++#include "common/fs/fs_paths.h"
+ #include "core/hle/service/acc/profile_manager.h"
+ #include "frontend_common/content_manager.h"
+ #include "frontend_common/data_manager.h"
+@@ -181,7 +182,7 @@
+ 
+ QString UnzipFirmwareToTmp(const QString& location) {
+     namespace fs = std::filesystem;
+-    fs::path tmp{fs::temp_directory_path() / "eden" / "firmware"};
++    fs::path tmp{fs::temp_directory_path() / EDEN_DIR / "firmware"};
+     std::error_code ec;
+     fs::remove_all(tmp, ec);
+     if (!fs::create_directories(tmp, ec)) {
+@@ -533,7 +534,7 @@
+     if (!qCacheDir.isEmpty()) {
+         QtCommon::Content::InstallFirmware(qCacheDir, true);
+         std::error_code ec;
+-        std::filesystem::remove_all(std::filesystem::temp_directory_path() / "eden" / "firmware",
++        std::filesystem::remove_all(std::filesystem::temp_directory_path() / EDEN_DIR / "firmware",
+                                     ec);
+ 
+         if (ec) {
+--- a/src/qt_common/util/mod.cpp
++++ b/src/qt_common/util/mod.cpp
+@@ -4,6 +4,7 @@
+ #include <filesystem>
+ #include <system_error>
+ #include <JlCompress.h>
++#include "common/fs/fs_paths.h"
+ #include "frontend_common/mod_manager.h"
+ #include "mod.h"
+ #include "qt_common/abstract/frontend.h"
+@@ -85,7 +86,7 @@
+             }
+ 
+             // now make a temp directory...
+-            const auto mod_dir = fs::temp_directory_path() / "eden" / "mod" / name.toStdString();
++            const auto mod_dir = fs::temp_directory_path() / EDEN_DIR / "mod" / name.toStdString();
+             const auto tmp = mod_dir / to_make;
+             std::error_code ec;
+             fs::remove_all(mod_dir, ec);
+@@ -120,7 +121,7 @@
+ // TODO(crueter): Make this a common extract_to_tmp func
+ const QString ExtractMod(const QString& path) {
+     namespace fs = std::filesystem;
+-    fs::path tmp{fs::temp_directory_path() / "eden" / "unzip_mod"};
++    fs::path tmp{fs::temp_directory_path() / EDEN_DIR / "unzip_mod"};
+     std::error_code ec;
+     fs::remove_all(tmp, ec);
+     if (!fs::create_directories(tmp, ec)) {
+--- a/src/yuzu/main_window.cpp
++++ b/src/yuzu/main_window.cpp
+@@ -416,19 +416,19 @@
+     Common::Log::SetGlobalFilter(filter);
+ 
+     if (user_data_migrator.migrated) {
+-        // Sort-of hack whereby we only move the old dir if it's a subfolder of the user dir
++        // Redirect migrated paths only when they are inside the old user directory.
+ 
+         using namespace Common::FS;
+ 
+         static constexpr const std::array<const EdenPath, 4> paths = {
+             EdenPath::NANDDir, EdenPath::SDMCDir, EdenPath::DumpDir, EdenPath::LoadDir};
+ 
++        const std::filesystem::path old_root = user_data_migrator.selected_emu.get_user_dir();
++        const auto new_root = GetEdenPath(EdenPath::EdenDir);
+         for (const EdenPath& path : paths) {
+-            std::string str_path = Common::FS::GetEdenPathString(path);
+-            if (str_path.starts_with(user_data_migrator.selected_emu.get_user_dir())) {
+-                boost::replace_all(
+-                    str_path, user_data_migrator.selected_emu.lower_name().toStdString(), "eden");
+-                Common::FS::SetEdenPath(path, str_path);
++            const auto relative = GetEdenPath(path).lexically_relative(old_root);
++            if (!relative.empty() && *relative.begin() != "..") {
++                SetEdenPath(path, new_root / relative);
+             }
+         }
+     }

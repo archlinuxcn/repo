@@ -3,7 +3,7 @@
 
 pkgname=eglantine-git
 pkgver=0.r30666.g835019f
-pkgrel=1
+pkgrel=2
 pkgdesc='Nintendo Switch emulator (development branch)'
 arch=('x86_64')
 url='https://github.com/Djihads80/Eglantine'
@@ -48,9 +48,11 @@ optdepends=(
 provides=('eglantine')
 conflicts=('eglantine')
 source=("eglantine::git+https://github.com/Djihads80/Eglantine.git#branch=nx2"
-        'explicit-optional-json.patch')
+        'explicit-optional-json.patch'
+        'eglantine-names.patch')
 sha256sums=('SKIP'
-            '37616bc50db1d8289043c5eb731f87735023cf9db6f958edc6df0d4a5c2f9b64')
+            '37616bc50db1d8289043c5eb731f87735023cf9db6f958edc6df0d4a5c2f9b64'
+            '82c9e7ad7c21c6aa7ca62244408297e09254a506b4a8ae8e8d913d427d907429')
 
 pkgver() {
   cd "$srcdir/eglantine"
@@ -61,6 +63,8 @@ prepare() {
   cd "$srcdir/eglantine"
   # Avoid ambiguous JSON conversion to std::optional with current nlohmann-json.
   patch -Np1 -i "$srcdir/explicit-optional-json.patch"
+  # Keep installed binaries and runtime paths separate from Eden.
+  patch -Np1 -i "$srcdir/eglantine-names.patch"
 }
 
 build() {
