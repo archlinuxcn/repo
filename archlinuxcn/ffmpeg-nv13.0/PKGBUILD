@@ -3,10 +3,11 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: Tom Newsom <Jeepster@gmx.co.uk>
 # Contributor: Paul Mattal <paul@archlinux.org>
+# Contributor: Caleb Maclennan <caleb@alerque.com>
 
 pkgname=ffmpeg-nv13.0
 pkgver=9.1
-pkgrel=1
+pkgrel=2
 epoch=2
 pkgdesc='Complete solution to record, convert and stream audio and video (with Nvidias codec APIs version 13.0)'
 arch=(x86_64)
@@ -46,6 +47,7 @@ depends=(
   libplacebo
   libpulse
   libraw1394
+  librist
   librsvg
   libsoxr
   libssh
@@ -178,6 +180,7 @@ build() {
     --enable-libplacebo \
     --enable-libpulse \
     --enable-librav1e \
+    --enable-librist \
     --enable-librsvg \
     --enable-librubberband \
     --enable-libsnappy \
@@ -226,6 +229,7 @@ package() {
     libopenmpt.so
 #    libplacebo.so
     librav1e.so
+#   librist.so
     librsvg-2.so
     librubberband.so
     libva.so
